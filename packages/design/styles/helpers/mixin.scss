@@ -1,0 +1,3 @@
+@mixin createAnimationTransition ($property, $duration: .1s, $func: ease-in-out) {
+  transition: $property $duration $func;
+}
