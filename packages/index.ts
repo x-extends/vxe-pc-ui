@@ -1,4 +1,4 @@
 import * as VxeUIExport from './components'
 
-export * from './all'
+export * from './components'
 export default VxeUIExport

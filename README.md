@@ -1,7 +1,5 @@
 # vxe-ui
 
-A [vue](https://www.npmjs.com/package/vue) component library.  
-
 简体中文 | [繁體中文](README.zh-TW.md) | [English](README.en.md)  
 
 [![star](https://gitee.com/xuliangzhan_admin/vxe-ui/badge/star.svg?theme=gvp)](https://gitee.com/xuliangzhan_admin/vxe-ui/stargazers)
@@ -13,6 +11,8 @@ A [vue](https://www.npmjs.com/package/vue) component library.
 [![pull requests](https://img.shields.io/github/issues-pr/x-extends/vxe-ui.svg)](https://github.com/x-extends/vxe-ui/pulls)
 [![pull requests closed](https://img.shields.io/github/issues-pr-closed/x-extends/vxe-ui.svg)](https://github.com/x-extends/vxe-ui/pulls?q=is%3Apr+is%3Aclosed)
 [![npm license](https://img.shields.io/github/license/mashape/apistatus.svg)](LICENSE)
+
+一个基于 [vue](https://www.npmjs.com/package/vue) 的 PC 端组件库  
 
 ## 浏览器支持
 
@@ -39,38 +39,6 @@ VxeUI.config({
 // ...
 const app = createApp(App)
 app.use(VxeUI)
-app.mount('#app')
-// ...
-```
-
-## 按需导入
-
-```shell
-npm install @vxe-ui/components
-```
-
-```javascript
-// ...
-import { createApp } from 'vue'
-import VxeUI from '@vxe-ui/core'
-import VxeRow from '@vxe-ui/components/row'
-import VxeCol from '@vxe-ui/components/col'
-import VxeDesign from '@vxe-ui/components/design'
-
-import '@vxe-ui/styles/row.css'
-import '@vxe-ui/styles/col.css'
-import '@vxe-ui/styles/design.css'
-// ...
-
-VxeUI.config({
-  size: null
-})
-
-// ...
-const app = createApp(App)
-app.use(VxeRow)
-app.use(VxeCol)
-app.use(VxeDesign)
 app.mount('#app')
 // ...
 ```

@@ -15,16 +15,23 @@ const commOutDir = 'lib'
 
 gulp.task('build_escode', function () {
   return gulp.src([
-    'src/**/*.ts',
-    '!src/index.ts'
-  ]).pipe(ts(tsconfig.compilerOptions))
+    'packages/**.ts',
+    'packages/**/*.ts',
+    '!packages/index.ts'
+  ])
+    .pipe(replace('process.env.VUE_APP_VXE_TABLE_VERSION', `"${pack.version}"`))
+    .pipe(replace('process.env.VUE_APP_VXE_TABLE_ENV', 'process.env.NODE_ENV'))
+    .pipe(ts(tsconfig.compilerOptions))
     .pipe(gulp.dest(esmOutDir))
 })
 
 gulp.task('build_esjs', gulp.series('build_escode', function () {
   return gulp.src([
-    'src/index.ts'
-  ]).pipe(ts(tsconfig.compilerOptions))
+    'packages/index.ts'
+  ])
+    .pipe(replace('process.env.VUE_APP_VXE_TABLE_VERSION', `"${pack.version}"`))
+    .pipe(replace('process.env.VUE_APP_VXE_TABLE_ENV', 'process.env.NODE_ENV'))
+    .pipe(ts(tsconfig.compilerOptions))
     .pipe(rename({
       basename: 'index',
       extname: '.esm.js'
@@ -34,9 +41,13 @@ gulp.task('build_esjs', gulp.series('build_escode', function () {
 
 gulp.task('build_commoncode', function () {
   return gulp.src([
-    'src/**/*.ts',
-    '!src/index.ts'
-  ]).pipe(ts(tsconfig.compilerOptions))
+    'packages/**.ts',
+    'packages/**/*.ts',
+    '!packages/index.ts'
+  ])
+    .pipe(replace('process.env.VUE_APP_VXE_TABLE_VERSION', `"${pack.version}"`))
+    .pipe(replace('process.env.VUE_APP_VXE_TABLE_ENV', 'process.env.NODE_ENV'))
+    .pipe(ts(tsconfig.compilerOptions))
     .pipe(babel({
       presets: ['@babel/env']
     }))
@@ -45,8 +56,11 @@ gulp.task('build_commoncode', function () {
 
 gulp.task('build_commonjs', gulp.series('build_commoncode', function () {
   return gulp.src([
-    'src/index.ts'
-  ]).pipe(ts(tsconfig.compilerOptions))
+    'packages/index.ts'
+  ])
+    .pipe(replace('process.env.VUE_APP_VXE_TABLE_VERSION', `"${pack.version}"`))
+    .pipe(replace('process.env.VUE_APP_VXE_TABLE_ENV', 'process.env.NODE_ENV'))
+    .pipe(ts(tsconfig.compilerOptions))
     .pipe(babel({
       presets: ['@babel/env']
     }))

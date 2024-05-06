@@ -1,8 +1,8 @@
 import { defineComponent, h, PropType } from 'vue'
-import VxeUI from '@vxe-ui/core'
+import VxeUI from '../../core'
 import 'xe-utils'
 
-import { VxeDesignPropTypes } from '../types'
+import { VxeDesignPropTypes } from '../../../types'
 
 export default defineComponent({
   name: 'VxeDesign',

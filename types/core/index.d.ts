@@ -18,6 +18,4 @@ export interface VxeUIExport {
 
 export declare const VxeUI: VxeUIExport
 
-export * from './util'
-export * from './component'
 export default VxeUI

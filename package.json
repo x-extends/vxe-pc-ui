@@ -1,11 +1,11 @@
 {
   "name": "@vxe-ui/components",
-  "version": "0.1.0",
-  "description": "A vue component library",
+  "version": "0.0.1",
+  "description": "一个基于 vue 的 PC 端组件库",
   "scripts": {
     "update": "npm install --legacy-peer-deps",
     "serve": "vue-cli-service serve",
-    "lib:pack": "vue-cli-service build --target lib --name index --dest lib_temp src/index.ts",
+    "lib:pack": "vue-cli-service build --target lib --name index --dest lib_temp packages/index.ts",
     "lib:modules": "gulp build",
     "lib": "npm run lib:pack && npm run lib:modules"
   },
@@ -13,14 +13,16 @@
     "lib",
     "es",
     "src",
-    "types"
+    "types",
+    "styles",
+    "packages"
   ],
   "main": "lib/index.common.js",
   "module": "es/index.esm.js",
   "typings": "types/index.d.ts",
   "dependencies": {
-    "@vxe-ui/core": "^0.1.0",
-    "@vxe-ui/design": "^0.1.0"
+    "dom-zindex": "^1.0.2",
+    "xe-utils": "^3.5.26"
   },
   "devDependencies": {
     "@types/resize-observer-browser": "^0.1.11",
@@ -56,7 +58,9 @@
     "sass": "^1.75.0",
     "sass-loader": "^14.2.0",
     "typescript": "~4.5.5",
-    "vue": "3.4.26"
+    "vue": "3.3.13",
+    "vue-router": "^4.3.2",
+    "vuex": "^4.1.0"
   },
   "repository": {
     "type": "git",

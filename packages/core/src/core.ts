@@ -1,11 +1,10 @@
 import XEUtils from 'xe-utils'
 import DomZIndex from 'dom-zindex'
+import globalConfigStore from './globalStore'
 
-import { VxeUIExport, VxeGlobalConfig } from '../types'
+import { VxeUIExport } from '../../../types'
 
-const globalConfigStore: VxeGlobalConfig = {}
-
-const VxeUI: VxeUIExport = {
+const VxeCore: VxeUIExport = {
   /**
    * 全局参数设置
    */
@@ -23,4 +22,4 @@ const VxeUI: VxeUIExport = {
   }
 }
 
-export default VxeUI
+export default VxeCore

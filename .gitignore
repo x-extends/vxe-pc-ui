@@ -8,13 +8,6 @@ node_modules
 package-lock.json
 yarn.lock
 
-# components files
-/components
-
-/row
-/col
-/design
-
 # local env files
 .env.local
 .env.*.local
