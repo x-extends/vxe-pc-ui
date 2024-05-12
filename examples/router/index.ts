@@ -1,15 +1,6 @@
 import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router'
 
-import StartUpgrade from '../views/start/Upgrade.vue'
-import StartInstall from '../views/start/Install.vue'
-import StartQuick from '../views/start/Quick.vue'
-import StartUse from '../views/start/Use.vue'
-import StartIcons from '../views/start/Icons.vue'
-import StartGlobal from '../views/start/Global.vue'
-import StartTheme from '../views/start/Theme.vue'
-import StartI18n from '../views/start/I18n.vue'
-
-import VXEAPI from '../views/api/API.vue'
+import StartInstall from '../views/start/StartInstall.vue'
 
 const routes: Array<RouteRecordRaw> = [
   {
@@ -25,49 +16,34 @@ const routes: Array<RouteRecordRaw> = [
     }
   },
   {
-    path: '/table/start/upgrade',
-    name: 'StartUpgrade',
-    component: StartUpgrade
-  },
-  {
     path: '/table/start/install',
     name: 'StartInstall',
     component: StartInstall
   },
   {
-    path: '/table/start/quick',
-    name: 'StartQuick',
-    component: StartQuick
+    path: '/component/container',
+    name: 'ContainerTest',
+    component: () => import('../views/layout/ContainerTest.vue')
   },
   {
-    path: '/table/start/use',
-    name: 'StartUse',
-    component: StartUse
+    path: '/component/layout',
+    name: 'LayoutTest',
+    component: () => import('../views/layout/LayoutTest.vue')
   },
   {
-    path: '/table/start/global',
-    name: 'StartGlobal',
-    component: StartGlobal
+    path: '/component/icon',
+    name: 'IconTest',
+    component: () => import('../views/icon/IconTest.vue')
   },
   {
-    path: '/table/start/icons',
-    name: 'StartIcons',
-    component: StartIcons
+    path: '/component/button',
+    name: 'ButtonTest',
+    component: () => import('../views/button/ButtonTest.vue')
   },
   {
-    path: '/table/start/theme',
-    name: 'StartTheme',
-    component: StartTheme
-  },
-  {
-    path: '/table/start/i18n',
-    name: 'StartI18n',
-    component: StartI18n
-  },
-  {
-    path: '/:name/api',
-    name: 'VXEAPI',
-    component: VXEAPI
+    path: '/component/anchor',
+    name: 'AnchorTest',
+    component: () => import('../views/anchor/AnchorTest.vue')
   }
 ]
 

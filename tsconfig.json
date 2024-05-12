@@ -33,8 +33,6 @@
   "include": [
     "src/**/*.ts",
     "src/**/*.tsx",
-    "packages/**/*.ts",
-    "packages/**/*.tsx",
     "examples/**/*.ts",
     "examples/**/*.tsx",
     "examples/**/*.vue",

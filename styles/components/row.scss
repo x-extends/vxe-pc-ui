@@ -1,0 +1,10 @@
+.vxe-row {
+  display: flex;
+  flex-direction: row;
+  &.is--vertical {
+    flex-direction: column;
+  }
+  &.is--wrap {
+    flex-wrap: wrap;
+  }
+}

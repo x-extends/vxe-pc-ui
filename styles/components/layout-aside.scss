@@ -1,0 +1,14 @@
+@import '../helpers/mixin.scss';
+
+.vxe-layout-aside {
+  flex-shrink: 0;
+  transition: width .3s;
+  overflow-y: auto;
+  overflow-x: hidden;
+  &.is--default-width {
+    width: var(--vxe-ui-layout-aside-default-width);
+  }
+  &.is--collapse {
+    width: var(--vxe-ui-layout-aside-collapse-width);
+  }
+}

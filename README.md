@@ -1,15 +1,15 @@
-# vxe-ui
+# vxe-pc-ui
 
 简体中文 | [繁體中文](README.zh-TW.md) | [English](README.en.md)  
 
-[![star](https://gitee.com/xuliangzhan_admin/vxe-ui/badge/star.svg?theme=gvp)](https://gitee.com/xuliangzhan_admin/vxe-ui/stargazers)
-[![npm version](https://img.shields.io/npm/v/vxe-ui.svg?style=flat-square)](https://www.npmjs.com/package/vxe-ui)
-[![npm build](https://travis-ci.com/x-extends/vxe-ui.svg?branch=master)](https://travis-ci.com/x-extends/vxe-ui)
-[![npm downloads](https://img.shields.io/npm/dt/@vxe-ui/components.svg?style=flat-square)](https://npm-stat.com/charts.html?package=@vxe-ui/components)
-[![issues](https://img.shields.io/github/issues/x-extends/vxe-ui.svg)](https://github.com/x-extends/vxe-ui/issues)
-[![issues closed](https://img.shields.io/github/issues-closed/x-extends/vxe-ui.svg)](https://github.com/x-extends/vxe-ui/issues?q=is%3Aissue+is%3Aclosed)
-[![pull requests](https://img.shields.io/github/issues-pr/x-extends/vxe-ui.svg)](https://github.com/x-extends/vxe-ui/pulls)
-[![pull requests closed](https://img.shields.io/github/issues-pr-closed/x-extends/vxe-ui.svg)](https://github.com/x-extends/vxe-ui/pulls?q=is%3Apr+is%3Aclosed)
+[![star](https://gitee.com/xuliangzhan_admin/vxe-pc-ui/badge/star.svg?theme=gvp)](https://gitee.com/xuliangzhan_admin/vxe-pc-ui/stargazers)
+[![npm version](https://img.shields.io/npm/v/vxe-pc-ui.svg?style=flat-square)](https://www.npmjs.com/package/vxe-pc-ui)
+[![npm build](https://travis-ci.com/x-extends/vxe-pc-ui.svg?branch=master)](https://travis-ci.com/x-extends/vxe-pc-ui)
+[![npm downloads](https://img.shields.io/npm/dt/vxe-pc-ui.svg?style=flat-square)](https://npm-stat.com/charts.html?package=vxe-pc-ui)
+[![issues](https://img.shields.io/github/issues/x-extends/vxe-pc-ui.svg)](https://github.com/x-extends/vxe-pc-ui/issues)
+[![issues closed](https://img.shields.io/github/issues-closed/x-extends/vxe-pc-ui.svg)](https://github.com/x-extends/vxe-pc-ui/issues?q=is%3Aissue+is%3Aclosed)
+[![pull requests](https://img.shields.io/github/issues-pr/x-extends/vxe-pc-ui.svg)](https://github.com/x-extends/vxe-pc-ui/pulls)
+[![pull requests closed](https://img.shields.io/github/issues-pr-closed/x-extends/vxe-pc-ui.svg)](https://github.com/x-extends/vxe-pc-ui/pulls?q=is%3Apr+is%3Aclosed)
 [![npm license](https://img.shields.io/github/license/mashape/apistatus.svg)](LICENSE)
 
 一个基于 [vue](https://www.npmjs.com/package/vue) 的 PC 端组件库  
@@ -23,13 +23,13 @@
 ## 导入全部
 
 ```shell
-npm install @vxe-ui/components
+npm install vxe-pc-ui
 ```
 
 ```javascript
 // ...
 import { createApp } from 'vue'
-import VxeUI from '@vxe-ui/components'
+import VxeUI from 'vxe-pc-ui'
 // ...
 
 VxeUI.config({

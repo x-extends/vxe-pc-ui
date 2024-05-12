@@ -1,7 +1,7 @@
 import { RenderFunction, SetupContext, Ref } from 'vue'
-import { defineVxeComponent, VxeComponentBase, VxeComponentEvent, VxeComponentSize, ValueOf } from '@vxe-ui/core'
+import { defineVxeComponent, VxeComponentBase, VxeComponentEvent, VxeComponentSize, ValueOf } from '../util'
 
-/* eslint-disable no-use-before-define */
+/* eslint-disable no-use-before-define,@typescript-eslint/ban-types */
 
 declare const VxeDesign: defineVxeComponent<VxeDesignProps, VxeDesignEventProps>
 
@@ -10,11 +10,12 @@ export interface VxeDesignConstructor extends VxeComponentBase, VxeDesignMethods
   context: SetupContext<VxeDesignEmits>
   reactData: DesignReactData
   getRefMaps(): DesignPrivateRef
+  getComputeMaps(): DesignPrivateComputed
   renderVN: RenderFunction
 }
 
 export interface DesignPrivateRef {
-  refElem: Ref<HTMLDivElement>
+  refElem: Ref<HTMLDivElement | undefined>
 }
 export interface VxeDesignPrivateRef extends DesignPrivateRef { }
 
@@ -25,6 +26,10 @@ export namespace VxeDesignPropTypes {
 export type VxeDesignProps = {
   size?: VxeDesignPropTypes.Size
 }
+
+export interface DesignPrivateComputed {
+}
+export interface VxeDesignPrivateComputed extends DesignPrivateComputed { }
 
 export interface DesignReactData {
 }
@@ -42,13 +47,11 @@ export type VxeDesignEmits = [
 
 export namespace VxeDesignDefines {
   export interface DesignEventParams extends VxeComponentEvent {
-    $Design: VxeDesignConstructor
+    $design: VxeDesignConstructor
   }
 }
 
-export type VxeDesignEventProps = {
-  // [key: string]: any
-}
+export type VxeDesignEventProps = {}
 
 export interface VxeDesignListeners { }
 

@@ -1,0 +1,67 @@
+$vxe-ui-font-color: #606266;
+$vxe-ui-primary-color: #409eff;
+$vxe-ui-success-color: #67c23a;
+$vxe-ui-info-color: #909399;
+$vxe-ui-warning-color: #e6a23c;
+$vxe-ui-danger-color: #f56c6c;
+
+:root {
+  /*font*/
+  --vxe-ui-font-family: -apple-system,BlinkMacSystemFont,Segoe UI,PingFang SC,Hiragino Sans GB,Microsoft YaHei,Helvetica Neue,Helvetica,Arial,sans-serif,Apple Color Emoji,Segoe UI Emoji,Segoe UI Symbol;
+  --vxe-ui-font-size: 14px;
+  --vxe-ui-font-size-medium: 14px;
+  --vxe-ui-font-size-small: 13px;
+  --vxe-ui-font-size-mini: 12px;
+
+  /*status*/
+  --vxe-ui-font-color: #{$vxe-ui-font-color};
+  --vxe-ui-primary-color: #{$vxe-ui-primary-color};
+  --vxe-ui-success-color: #{$vxe-ui-success-color};
+  --vxe-ui-info-color: #{$vxe-ui-info-color};
+  --vxe-ui-warning-color: #{$vxe-ui-warning-color};
+  --vxe-ui-danger-color: #{$vxe-ui-danger-color};
+
+  --vxe-ui-font-lighten-color: #{lighten($vxe-ui-font-color, 10%)};
+  --vxe-ui-primary-lighten-color: #{lighten($vxe-ui-primary-color, 10%)};
+  --vxe-ui-success-lighten-color: #{lighten($vxe-ui-success-color, 10%)};
+  --vxe-ui-info-lighten-color: #{lighten($vxe-ui-info-color, 10%)};
+  --vxe-ui-warning-lighten-color: #{lighten($vxe-ui-warning-color, 10%)};
+  --vxe-ui-danger-lighten-color: #{lighten($vxe-ui-danger-color, 10%)};
+  
+  --vxe-ui-font-darken-color: #{darken($vxe-ui-font-color, 10%)};
+  --vxe-ui-primary-darken-color: #{darken($vxe-ui-primary-color, 10%)};
+  --vxe-ui-success-darken-color: #{darken($vxe-ui-success-color, 10%)};
+  --vxe-ui-info-darken-color: #{darken($vxe-ui-info-color, 10%)};
+  --vxe-ui-warning-darken-color: #{darken($vxe-ui-warning-color, 10%)};
+  --vxe-ui-danger-darken-color: #{darken($vxe-ui-danger-color, 10%)};
+  
+  --vxe-ui-font-disabled-color: #BFBFBF;
+  --vxe-ui-primary-disabled-color: #{lighten($vxe-ui-primary-color, 20%)};
+  --vxe-ui-success-disabled-color: #{lighten($vxe-ui-success-color, 20%)};
+  --vxe-ui-info-disabled-color: #{lighten($vxe-ui-info-color, 20%)};
+  --vxe-ui-warning-disabled-color: #{lighten($vxe-ui-warning-color, 20%)};
+  --vxe-ui-danger-disabled-color: #{lighten($vxe-ui-danger-color, 20%)};
+
+  /*layout*/
+  --vxe-ui-layout-aside-default-width: 300px;
+  --vxe-ui-layout-aside-collapse-width: 60px;
+
+  // icon
+
+  // button
+  --vxe-ui-button-max-width: 500px;
+  --vxe-ui-button-default-background-color: #fff;
+  --vxe-ui-button-dropdown-panel-background-color: #fff;
+  --vxe-ui-button-height-default: 34px;
+  --vxe-ui-button-height-medium: 32px;
+  --vxe-ui-button-height-small: 30px;
+  --vxe-ui-button-height-mini: 28px;
+  --vxe-ui-button-round-border-radius-default: 17px;
+  --vxe-ui-button-round-border-radius-medium: 16px;
+  --vxe-ui-button-round-border-radius-small: 15px;
+  --vxe-ui-button-round-border-radius-mini: 14px;
+
+  // anchor
+  --vxe-ui-anchor-link-color: #909399;
+  --vxe-ui-anchor-link-active-color: var(--vxe-ui-primary-color);
+}

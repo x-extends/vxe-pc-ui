@@ -1,8 +1,8 @@
-import { defineComponent, h, PropType } from 'vue'
+import { defineComponent, ref, h, PropType, reactive } from 'vue'
 import VxeUI from '../../core'
-import 'xe-utils'
+import XEUtils from 'xe-utils'
 
-import { VxeDesignPropTypes } from '../../../types'
+import { VxeDesignPropTypes, DesignReactData, DesignPrivateRef, VxeDesignPrivateComputed, VxeDesignConstructor, VxeDesignPrivateMethods } from '../../../types'
 
 export default defineComponent({
   name: 'VxeDesign',
@@ -13,9 +13,43 @@ export default defineComponent({
     }
   },
   emits: [],
-  setup () {
-    return h('div', {
-      class: 'vxe-design'
+  setup (props, context) {
+    const xID = XEUtils.uniqueId()
+
+    const refElem = ref<HTMLDivElement>()
+
+    const reactData = reactive<DesignReactData>({
     })
+
+    const refMaps: DesignPrivateRef = {
+      refElem
+    }
+
+    const computeMaps: VxeDesignPrivateComputed = {
+    }
+
+    const $xedesign = {
+      xID,
+      props,
+      context,
+      reactData,
+
+      getRefMaps: () => refMaps,
+      getComputeMaps: () => computeMaps
+    } as unknown as VxeDesignConstructor & VxeDesignPrivateMethods
+
+    const renderVN = () => {
+      return h('div', {
+        ref: refElem,
+        class: 'vxe-design'
+      })
+    }
+
+    $xedesign.renderVN = renderVN
+
+    return $xedesign
+  },
+  render () {
+    return this.renderVN()
   }
 })

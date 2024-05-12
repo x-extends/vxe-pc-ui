@@ -1,0 +1,12 @@
+@import '../helpers/mixin.scss';
+
+.vxe-layout-footer {
+  flex-shrink: 0;
+  background-color: var(--vxe-ui-layout-background-color);
+  &.is--fixed {
+    position: sticky;
+    bottom: 0;
+    left: 0;
+    z-index: 9;
+  }
+}
