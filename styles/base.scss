@@ -1,4 +1,5 @@
-@import '../helpers/mixin.scss';
+@import './theme/default.scss';
+@import './theme/dark.scss';
 
 %boxSizing {
   box-sizing: border-box;

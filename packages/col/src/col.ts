@@ -1,6 +1,6 @@
 import { defineComponent, ref, h, reactive, computed, inject } from 'vue'
 import XEUtils from 'xe-utils'
-import { toCssUnit } from '../../core/src/dom'
+import { toCssUnit } from '../../ui/src/dom'
 
 import { ColReactData, ColPrivateRef, VxeColPrivateComputed, VxeColConstructor, VxeColPrivateMethods, VxeRowConstructor, VxeRowPrivateMethods } from '../../../types'
 

@@ -1,6 +1,6 @@
 import { defineComponent, ref, h, reactive, provide, PropType, computed } from 'vue'
 import XEUtils from 'xe-utils'
-import { toCssUnit } from '../../core/src/dom'
+import { toCssUnit } from '../../ui/src/dom'
 
 import { VxeRowPropTypes, RowReactData, RowPrivateRef, VxeRowPrivateComputed, VxeRowConstructor, VxeRowPrivateMethods } from '../../../types'
 

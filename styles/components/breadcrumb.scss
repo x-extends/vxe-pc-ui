@@ -1,0 +1,20 @@
+
+.vxe-breadcrumb {
+  color: var(--vxe-ui-breadcrumb-item-color);
+}
+.vxe-breadcrumb-item {
+  display: inline-block;
+  color: var(--vxe-ui-breadcrumb-color);
+  &:last-child {
+    .vxe-breadcrumb-item--content {
+      color: var(--vxe-ui-breadcrumb-current-item-color);
+    }
+    .vxe-breadcrumb-item--separator {
+      display: none;
+    }
+  }
+}
+.vxe-breadcrumb-item--separator {
+  margin: 0 0.6em;
+  color: var(--vxe-ui-font-placeholder-color);
+}

@@ -1,6 +1,6 @@
 import { defineComponent, ref, h, reactive, PropType, VNode, provide, nextTick, onBeforeUnmount, onMounted, watch, createCommentVNode, computed } from 'vue'
 import XEUtils from 'xe-utils'
-import { getOffsetPos } from '../../core/src/dom'
+import { getOffsetPos } from '../../ui/src/dom'
 import VxeAnchorLinkComponent from '../../anchor-link/src/anchor-link'
 
 import { VxeAnchorPropTypes, AnchorReactData, AnchorPrivateRef, VxeAnchorPrivateComputed, VxeAnchorConstructor, VxeAnchorPrivateMethods, AnchorMethods, AnchorPrivateMethods } from '../../../types'

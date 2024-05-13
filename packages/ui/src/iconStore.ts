@@ -1,8 +1,8 @@
-import { VxeIconConfig } from '../../../types'
+import { VxeGlobalIcon } from '../../../types'
 
 const iconPrefix = 'vxe-icon-'
 
-const iconConfigStore: VxeIconConfig = {
+const iconConfigStore: VxeGlobalIcon = {
   // loading
   LOADING: iconPrefix + 'spinner roll vxe-loading--default-icon',
 

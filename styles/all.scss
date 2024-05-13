@@ -1,7 +1,4 @@
-@import './theme/default.scss';
-@import './theme/dark.scss';
-
-@import './components/core.scss';
+@import './base.scss';
 
 @import './components/icon.scss';
 @import './components/layout-container.scss';
@@ -11,6 +8,8 @@
 @import './components/layout-footer.scss';
 @import './components/row.scss';
 @import './components/col.scss';
+@import './components/breadcrumb.scss';
+@import './components/breadcrumb-item.scss';
 @import './components/button.scss';
 @import './components/button-group.scss';
 @import './components/anchor.scss';

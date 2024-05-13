@@ -1,5 +1,5 @@
 import { defineComponent, h, provide, PropType } from 'vue'
-import globalConfigStore from '../../core/src/globalStore'
+import globalConfigStore from '../../ui/src/globalStore'
 import XEUtils from 'xe-utils'
 import VxeButtonComponent from '../../button/src/button'
 import { useSize } from '../../hooks/size'

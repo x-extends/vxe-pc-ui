@@ -5,7 +5,7 @@
   "scripts": {
     "update": "npm install --legacy-peer-deps",
     "serve": "vue-cli-service serve",
-    "lib:pack": "vue-cli-service build --target lib --name index --dest lib_temp packages/index.ts",
+    "lib:pack": "vue-cli-service build --target lib --name index --dest lib_temp index.ts",
     "lib:modules": "gulp build",
     "lib": "npm run lib:pack && npm run lib:modules"
   },

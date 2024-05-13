@@ -1,5 +1,5 @@
 import { defineComponent, ref, h, PropType, reactive } from 'vue'
-import VxeUI from '../../core'
+import VxeUI from '../../ui'
 import XEUtils from 'xe-utils'
 
 import { VxeDesignPropTypes, DesignReactData, DesignPrivateRef, VxeDesignPrivateComputed, VxeDesignConstructor, VxeDesignPrivateMethods } from '../../../types'

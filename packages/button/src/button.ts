@@ -1,12 +1,12 @@
 import { defineComponent, h, ref, Ref, computed, Teleport, VNode, onUnmounted, reactive, nextTick, PropType, onMounted, inject } from 'vue'
 import XEUtils from 'xe-utils'
-import globalConfigStore from '../../core/src/globalStore'
-import iconConfigStore from '../../core/src/iconStore'
+import globalConfigStore from '../../ui/src/globalStore'
+import iconConfigStore from '../../ui/src/iconStore'
 import { useSize } from '../../hooks/size'
-import { getAbsolutePos, getEventTargetNode } from '../../core/src/dom'
-import { getFuncText, getLastZIndex, nextZIndex } from '../../core/src/utils'
-import { GlobalEvent } from '../../core/src/event'
-import { warnLog } from '../../core/src/log'
+import { getAbsolutePos, getEventTargetNode } from '../../ui/src/dom'
+import { getFuncText, getLastZIndex, nextZIndex } from '../../ui/src/utils'
+import { GlobalEvent } from '../../ui/src/event'
+import { warnLog } from '../../ui/src/log'
 
 import { VxeButtonConstructor, VxeButtonPropTypes, VxeButtonEmits, ButtonReactData, ButtonMethods, ButtonPrivateRef, ButtonInternalData, VxeButtonGroupConstructor, VxeButtonGroupPrivateMethods } from '../../../types'
 

@@ -3,43 +3,43 @@
 $btnThemeList: (
   (
     name: "primary",
-    textColor: var(--vxe-ui-primary-color),
+    textColor: var(--vxe-ui-font-primary-color),
     btnColor: #fff,
-    btnLightenColor: var(--vxe-ui-primary-lighten-color),
-    btnDarkenColor: var(--vxe-ui-primary-darken-color),
-    btnDisabledColor: var(--vxe-ui-primary-disabled-color)
+    btnLightenColor: var(--vxe-ui-status-primary-lighten-color),
+    btnDarkenColor: var(--vxe-ui-status-primary-darken-color),
+    btnDisabledColor: var(--vxe-ui-status-primary-disabled-color)
   ),
   (
     name: "success",
-    textColor: var(--vxe-ui-success-color),
+    textColor: var(--vxe-ui-status-success-color),
     btnColor: #fff,
-    btnLightenColor: var(--vxe-ui-success-lighten-color),
-    btnDarkenColor: var(--vxe-ui-success-darken-color),
-    btnDisabledColor: var(--vxe-ui-success-disabled-color)
+    btnLightenColor: var(--vxe-ui-status-success-lighten-color),
+    btnDarkenColor: var(--vxe-ui-status-success-darken-color),
+    btnDisabledColor: var(--vxe-ui-status-success-disabled-color)
   ),
   (
     name: "info",
-    textColor: var(--vxe-ui-info-color),
+    textColor: var(--vxe-ui-status-info-color),
     btnColor: #fff,
-    btnLightenColor: var(--vxe-ui-info-lighten-color),
-    btnDarkenColor: var(--vxe-ui-info-darken-color),
-    btnDisabledColor: var(--vxe-ui-info-disabled-color)
+    btnLightenColor: var(--vxe-ui-status-info-lighten-color),
+    btnDarkenColor: var(--vxe-ui-status-info-darken-color),
+    btnDisabledColor: var(--vxe-ui-status-info-disabled-color)
   ),
   (
     name: "warning",
-    textColor: var(--vxe-ui-warning-color),
+    textColor: var(--vxe-ui-status-warning-color),
     btnColor: #fff,
-    btnLightenColor: var(--vxe-ui-warning-lighten-color),
-    btnDarkenColor: var(--vxe-ui-warning-darken-color),
-    btnDisabledColor: var(--vxe-ui-warning-disabled-color)
+    btnLightenColor: var(--vxe-ui-status-warning-lighten-color),
+    btnDarkenColor: var(--vxe-ui-status-warning-darken-color),
+    btnDisabledColor: var(--vxe-ui-status-warning-disabled-color)
   ),
   (
     name: "danger",
-    textColor: var(--vxe-ui-danger-color),
+    textColor: var(--vxe-ui-status-danger-color),
     btnColor: #fff,
-    btnLightenColor: var(--vxe-ui-danger-lighten-color),
-    btnDarkenColor: var(--vxe-ui-danger-darken-color),
-    btnDisabledColor: var(--vxe-ui-danger-disabled-color)
+    btnLightenColor: var(--vxe-ui-status-danger-lighten-color),
+    btnDarkenColor: var(--vxe-ui-status-danger-darken-color),
+    btnDisabledColor: var(--vxe-ui-status-danger-disabled-color)
   ),
   (
     name: "perfect",
@@ -100,7 +100,7 @@ $btnThemeList: (
         color: var(--vxe-ui-font-darken-color);
       }
       &:hover {
-        color: var(--vxe-ui-primary-lighten-color);
+        color: var(--vxe-ui-status-primary-lighten-color);
       }
     }
     @for $index from 0 to length($btnThemeList) {
@@ -142,14 +142,14 @@ $btnThemeList: (
     }
     &:not(.is--disabled) {
       &:hover {
-        color: var(--vxe-ui-primary-lighten-color);
+        color: var(--vxe-ui-status-primary-lighten-color);
       }
       &:focus {
-        border-color: var(--vxe-ui-primary-color);
+        border-color: var(--vxe-ui-font-primary-color);
       }
       &:active {
-        color: var(--vxe-ui-primary-darken-color);
-        border-color: var(--vxe-ui-primary-darken-color);
+        color: var(--vxe-ui-status-primary-darken-color);
+        border-color: var(--vxe-ui-status-primary-darken-color);
         background-color: var(--vxe-ui-button-default-background-color);
       }
     }
@@ -274,7 +274,7 @@ $btnThemeList: (
   &.is--active {
     & > .vxe-button {
       &:not(.is--disabled) {
-        color: var(--vxe-ui-primary-lighten-color);
+        color: var(--vxe-ui-status-primary-lighten-color);
       }
       &.type--text {
         @for $index from 0 to length($btnThemeList) {

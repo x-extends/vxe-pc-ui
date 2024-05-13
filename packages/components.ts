@@ -1,6 +1,6 @@
 import { App } from 'vue'
 import XEUtils from 'xe-utils'
-import VxeUI from './core'
+import { setConfig } from './ui'
 import VxeIcon from './icon'
 import VxeLayoutContainer from './layout-container'
 import VxeLayoutHeader from './layout-header'
@@ -9,6 +9,8 @@ import VxeLayoutBody from './layout-body'
 import VxeLayoutFooter from './layout-footer'
 import VxeRow from './row'
 import VxeCol from './col'
+import VxeBreadcrumb from './breadcrumb'
+import VxeBreadcrumbItem from './breadcrumb-item'
 import VxeButton from './button'
 import VxeButtonGroup from './button-group'
 import VxeAnchor from './anchor'
@@ -20,12 +22,12 @@ import zhCN from './locale/lang/zh-CN'
 import { VxeGlobalConfig } from '../types'
 
 // 默认中文
-VxeUI.config({
+setConfig({
   i18n: (key: string, args: any) => XEUtils.toFormatString(XEUtils.get(zhCN, key), args)
 })
 
 export function install (app: App, options?: VxeGlobalConfig) {
-  VxeUI.config(options)
+  setConfig(options)
 
   app.use(VxeIcon)
   app.use(VxeLayoutContainer)
@@ -35,6 +37,8 @@ export function install (app: App, options?: VxeGlobalConfig) {
   app.use(VxeLayoutFooter)
   app.use(VxeRow)
   app.use(VxeCol)
+  app.use(VxeBreadcrumb)
+  app.use(VxeBreadcrumbItem)
   app.use(VxeButton)
   app.use(VxeButtonGroup)
   app.use(VxeAnchor)
@@ -42,7 +46,7 @@ export function install (app: App, options?: VxeGlobalConfig) {
   app.use(VxeDesign)
 }
 
-export * from './core'
+export * from './ui'
 
 // Components
 export * from './icon'
@@ -53,6 +57,8 @@ export * from './layout-body'
 export * from './layout-footer'
 export * from './row'
 export * from './col'
+export * from './breadcrumb'
+export * from './breadcrumb-item'
 export * from './button'
 export * from './button-group'
 export * from './anchor'

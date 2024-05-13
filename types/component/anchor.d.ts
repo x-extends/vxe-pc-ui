@@ -1,5 +1,5 @@
 import { RenderFunction, SetupContext, Ref } from 'vue'
-import { defineVxeComponent, VxeComponentBase, VxeComponentEvent, ValueOf } from '../util'
+import { defineVxeComponent, VxeComponentBase, VxeComponentEvent, ValueOf } from '../tool'
 import { VxeAnchorLinkProps, VxeAnchorLinkPropTypes, VxeAnchorLinkDefines } from './anchor-link'
 
 /* eslint-disable no-use-before-define,@typescript-eslint/ban-types */

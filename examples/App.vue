@@ -41,6 +41,7 @@ const navList = ref([
   { name: 'ContainerTest' },
   { name: 'LayoutTest' },
   { name: 'IconTest' },
+  { name: 'BreadcrumbTest' },
   { name: 'ButtonTest' },
   { name: 'AnchorTest' }
 ])
