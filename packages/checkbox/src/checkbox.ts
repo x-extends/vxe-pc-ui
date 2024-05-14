@@ -1,10 +1,10 @@
 import { defineComponent, h, computed, inject, PropType } from 'vue'
 import XEUtils from 'xe-utils'
-import { getFuncText } from '../../tools/utils'
-import GlobalConfig from '../../v-x-e-table/src/conf'
+import { getFuncText } from '../../ui/src/utils'
+import globalConfigStore from '../../ui/src/globalStore'
 import { useSize } from '../../hooks/size'
 
-import { VxeCheckboxConstructor, VxeCheckboxGroupConstructor, VxeCheckboxEmits, VxeCheckboxGroupPrivateMethods, CheckboxMethods, VxeCheckboxPropTypes, VxeFormConstructor, VxeFormPrivateMethods, VxeFormDefines } from '../../../types/all'
+import { VxeCheckboxConstructor, VxeCheckboxGroupConstructor, VxeCheckboxEmits, VxeCheckboxGroupPrivateMethods, CheckboxMethods, VxeCheckboxPropTypes, VxeFormConstructor, VxeFormPrivateMethods, VxeFormDefines } from '../../../types'
 
 export default defineComponent({
   name: 'VxeCheckbox',
@@ -17,7 +17,7 @@ export default defineComponent({
     uncheckedValue: { type: [String, Number, Boolean] as PropType<VxeCheckboxPropTypes.UncheckedValue>, default: false },
     content: [String, Number] as PropType<VxeCheckboxPropTypes.Content>,
     disabled: Boolean as PropType<VxeCheckboxPropTypes.Disabled>,
-    size: { type: String as PropType<VxeCheckboxPropTypes.Size>, default: () => GlobalConfig.checkbox.size || GlobalConfig.size }
+    size: { type: String as PropType<VxeCheckboxPropTypes.Size>, default: () => globalConfigStore.checkbox.size || globalConfigStore.size }
   },
   emits: [
     'update:modelValue',
@@ -25,8 +25,8 @@ export default defineComponent({
   ] as VxeCheckboxEmits,
   setup (props, context) {
     const { slots, emit } = context
-    const $xeform = inject<VxeFormConstructor & VxeFormPrivateMethods | null>('$xeform', null)
-    const $xeformiteminfo = inject<VxeFormDefines.ProvideItemInfo | null>('$xeformiteminfo', null)
+    const $xeform = inject<VxeFormConstructor & VxeFormPrivateMethods | null>('$xeForm', null)
+    const $xeformiteminfo = inject<VxeFormDefines.ProvideItemInfo | null>('$xeFormItemInfo', null)
 
     const xID = XEUtils.uniqueId()
 

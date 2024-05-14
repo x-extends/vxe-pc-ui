@@ -1,10 +1,10 @@
 import { defineComponent, h, provide, PropType, computed, inject } from 'vue'
-import GlobalConfig from '../../v-x-e-table/src/conf'
+import globalConfigStore from '../../ui/src/globalStore'
 import XEUtils from 'xe-utils'
 import VxeCheckboxComponent from './checkbox'
 import { useSize } from '../../hooks/size'
 
-import { VxeCheckboxGroupConstructor, VxeCheckboxGroupEmits, VxeCheckboxGroupPrivateMethods, CheckboxGroupPrivateMethods, CheckboxPrivateComputed, CheckboxGroupMethods, VxeCheckboxGroupPropTypes, VxeFormConstructor, VxeFormPrivateMethods, VxeFormDefines } from '../../../types/all'
+import { VxeCheckboxGroupConstructor, VxeCheckboxGroupEmits, VxeCheckboxGroupPrivateMethods, CheckboxGroupPrivateMethods, CheckboxPrivateComputed, CheckboxGroupMethods, VxeCheckboxGroupPropTypes, VxeFormConstructor, VxeFormPrivateMethods, VxeFormDefines } from '../../../types'
 
 export default defineComponent({
   name: 'VxeCheckboxGroup',
@@ -14,7 +14,7 @@ export default defineComponent({
     optionProps: Object as PropType<VxeCheckboxGroupPropTypes.OptionProps>,
     disabled: Boolean as PropType<VxeCheckboxGroupPropTypes.Disabled>,
     max: { type: [String, Number] as PropType<VxeCheckboxGroupPropTypes.Max>, default: null },
-    size: { type: String as PropType<VxeCheckboxGroupPropTypes.Size>, default: () => GlobalConfig.checkboxGroup.size || GlobalConfig.size }
+    size: { type: String as PropType<VxeCheckboxGroupPropTypes.Size>, default: () => globalConfigStore.checkboxGroup.size || globalConfigStore.size }
   },
   emits: [
     'update:modelValue',
@@ -22,8 +22,8 @@ export default defineComponent({
   ] as VxeCheckboxGroupEmits,
   setup (props, context) {
     const { slots, emit } = context
-    const $xeform = inject<VxeFormConstructor & VxeFormPrivateMethods | null>('$xeform', null)
-    const $xeformiteminfo = inject<VxeFormDefines.ProvideItemInfo | null>('$xeformiteminfo', null)
+    const $xeform = inject<VxeFormConstructor & VxeFormPrivateMethods | null>('$xeForm', null)
+    const $xeformiteminfo = inject<VxeFormDefines.ProvideItemInfo | null>('$xeFormItemInfo', null)
 
     const xID = XEUtils.uniqueId()
 
@@ -105,13 +105,17 @@ export default defineComponent({
       const disabledField = computeDisabledField.value as 'disabled'
       return h('div', {
         class: 'vxe-checkbox-group'
-      }, defaultSlot ? defaultSlot({}) : (options ? options.map(item => {
-        return h(VxeCheckboxComponent, {
-          label: item[valueField],
-          content: item[labelField],
-          disabled: item[disabledField]
-        })
-      }) : []))
+      }, defaultSlot
+        ? defaultSlot({})
+        : (options
+            ? options.map(item => {
+              return h(VxeCheckboxComponent, {
+                label: item[valueField],
+                content: item[labelField],
+                disabled: item[disabledField]
+              })
+            })
+            : []))
     }
 
     $xecheckboxgroup.renderVN = renderVN

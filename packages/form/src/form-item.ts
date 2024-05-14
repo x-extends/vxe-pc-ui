@@ -8,7 +8,7 @@ import { getI18n } from '../../ui/src/i18n'
 import { createItem, watchItem, destroyItem, assemItem, XEFormItemProvide, isActivetem } from './util'
 import { renderTitle } from './render'
 
-import { VxeComponentSlot, VxeFormConstructor, VxeFormDefines, VxeFormItemPropTypes, VxeFormPrivateMethods } from '../../../types/all'
+import { VxeComponentSlot, VxeFormConstructor, VxeFormDefines, VxeFormItemPropTypes, VxeFormPrivateMethods } from '../../../types'
 
 export const formItemProps = {
   title: String as PropType<VxeFormItemPropTypes.Title>,
@@ -63,13 +63,13 @@ export default defineComponent({
   props: formItemProps,
   setup (props, { slots }) {
     const refElem = ref() as Ref<HTMLDivElement>
-    const $xeform = inject('$xeform', {} as VxeFormConstructor & VxeFormPrivateMethods)
+    const $xeform = inject('$xeForm', {} as VxeFormConstructor & VxeFormPrivateMethods)
     const formGather = inject('$xeformgather', null as XEFormItemProvide | null)
     const formItem = reactive(createItem($xeform, props))
     formItem.slots = slots
 
     const formItemInfo = { itemConfig: formItem }
-    provide('$xeformiteminfo', formItemInfo)
+    provide('$xeFormItemInfo', formItemInfo)
 
     watchItem(props, formItem)
 

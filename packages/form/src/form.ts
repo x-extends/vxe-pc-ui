@@ -13,7 +13,7 @@ import VxeFormConfigItem from './form-config-item'
 import VxeLoading from '../../loading/index'
 import { getSlotVNs } from '../../ui/src/vn'
 
-import { VxeFormConstructor, VxeFormPropTypes, VxeFormEmits, FormReactData, FormMethods, FormPrivateRef, VxeFormPrivateMethods, VxeFormDefines, VxeFormItemPropTypes, VxeTooltipInstance, FormInternalData, VxeFormPrivateComputed } from '../../../types/all'
+import { VxeFormConstructor, VxeFormPropTypes, VxeFormEmits, FormReactData, FormMethods, FormPrivateRef, VxeFormPrivateMethods, VxeFormDefines, VxeFormItemPropTypes, VxeTooltipInstance, FormInternalData, VxeFormPrivateComputed } from '../../../types'
 
 class Rule {
   constructor (rule: any) {
@@ -703,10 +703,10 @@ export default defineComponent({
 
     $xeform.renderVN = renderVN
 
-    provide('$xeform', $xeform)
+    provide('$xeForm', $xeform)
     provide('$xeformgather', null)
     provide('$xeformitem', null)
-    provide('$xeformiteminfo', null)
+    provide('$xeFormItemInfo', null)
 
     return $xeform
   },

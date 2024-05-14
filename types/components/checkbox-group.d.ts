@@ -1,5 +1,5 @@
 import { RenderFunction, SetupContext, Ref, ComponentPublicInstance } from 'vue'
-import { defineVxeComponent, VxeComponentBase, VxeComponentEvent } from '../tool'
+import { defineVxeComponent, VxeComponentBase, VxeComponentEvent, VxeComponentSize, ValueOf } from '../tool'
 
 /* eslint-disable no-use-before-define,@typescript-eslint/ban-types */
 
@@ -22,11 +22,36 @@ export interface CheckboxGroupPrivateRef {
 export interface VxeCheckboxGroupPrivateRef extends CheckboxGroupPrivateRef { }
 
 export namespace VxeCheckboxGroupPropTypes {
+  export type Size = VxeComponentSize
+  export type ModelValue = any[]
+  export type Options = {
+    value?: VxeCheckboxPropTypes.Label
+    label?: VxeCheckboxPropTypes.Content
+
+    [key: string]: any
+  }[]
+  export type OptionProps = VxeGlobalRendererHandles.RenderOptionProps
+  export type Max = string | number
+  export type Disabled = boolean
 }
 
-export type VxeCheckboxGroupProps = {}
+export type VxeCheckboxGroupProps = {
+  size?: VxeCheckboxGroupPropTypes.Size
+  options?: VxeCheckboxGroupPropTypes.Options
+  optionProps?: VxeCheckboxGroupPropTypes.OptionProps
+  /**
+   * 绑定值
+   */
+  modelValue?: VxeCheckboxGroupPropTypes.ModelValue
+  max?: VxeCheckboxGroupPropTypes.Max
+  /**
+   * 是否禁用
+   */
+  disabled?: VxeCheckboxGroupPropTypes.Disabled
+}
 
 export interface CheckboxGroupPrivateComputed {
+  computeIsMaximize: ComputedRef<boolean>
 }
 export interface VxeCheckboxGroupPrivateComputed extends CheckboxGroupPrivateComputed { }
 
@@ -34,28 +59,49 @@ export interface CheckboxGroupReactData {
 }
 
 export interface CheckboxGroupMethods {
+  dispatchEvent(type: ValueOf<VxeCheckboxGroupEmits>, params: any, evnt: Event): void
 }
 export interface VxeCheckboxGroupMethods extends CheckboxGroupMethods { }
 
-export interface CheckboxGroupPrivateMethods { }
+export interface CheckboxGroupPrivateMethods {
+  handleChecked(params: {
+    checked: boolean
+    value: VxeCheckboxPropTypes.ModelValue
+    label: VxeCheckboxPropTypes.Label
+  }, evnt: Event): void
+}
 export interface VxeCheckboxGroupPrivateMethods extends CheckboxGroupPrivateMethods { }
 
-export type VxeCheckboxGroupEmits = []
+export type VxeCheckboxGroupEmits = [
+  'update:modelValue',
+  'change'
+]
 
 export namespace VxeCheckboxGroupDefines {
   export interface CheckboxGroupEventParams extends VxeComponentEvent {
     $checkboxGroup: VxeCheckboxGroupConstructor
   }
+
+  export type ChangeParams = {
+    checklist: any[]
+  }
+  export interface ChangeEventParams extends CheckboxGroupEventParams, ChangeParams { }
 }
 
-export type VxeCheckboxGroupEventProps = {}
+export type VxeCheckboxGroupEventProps = {
+  onChange?: VxeCheckboxGroupEvents.Change
+}
 
-export interface VxeCheckboxGroupListeners { }
+export interface VxeCheckboxGroupListeners {
+  change?: VxeCheckboxGroupEvents.Change
+}
 
 export namespace VxeCheckboxGroupEvents { }
 
 export namespace VxeCheckboxGroupSlotTypes {
-  export interface DefaultSlotParams {}
+  export interface DefaultSlotParams {
+    [key: string]: any
+  }
 }
 
 export interface VxeCheckboxGroupSlots {

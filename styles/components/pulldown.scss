@@ -1,4 +1,4 @@
-@import './helpers/mixin.scss';
+@import '../helpers/mixin.scss';
 
 .vxe-pulldown {
   position: relative;
@@ -37,7 +37,7 @@
   }
 }
 .vxe-pulldown--panel-wrapper {
-  background-color: var(--vxe-pulldown-panel-background-color);
+  background-color: var(--vxe-ui-pulldown-panel-background-color);
 }
 
 .vxe-pulldown,

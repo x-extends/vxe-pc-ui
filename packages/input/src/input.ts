@@ -1,14 +1,16 @@
 import { defineComponent, h, Teleport, ref, Ref, computed, reactive, inject, nextTick, watch, onUnmounted, PropType } from 'vue'
 import XEUtils from 'xe-utils'
-import GlobalConfig from '../../v-x-e-table/src/conf'
+import globalConfigStore from '../../ui/src/globalStore'
+import iconConfigStore from '../../ui/src/iconStore'
 import { useSize } from '../../hooks/size'
-import { getFuncText, getLastZIndex, nextZIndex } from '../../tools/utils'
-import { hasClass, getAbsolutePos, getEventTargetNode } from '../../tools/dom'
-import { GlobalEvent, hasEventKey, EVENT_KEYS } from '../../tools/event'
+import { getFuncText, getLastZIndex, nextZIndex } from '../../ui/src/utils'
+import { hasClass, getAbsolutePos, getEventTargetNode } from '../../ui/src/dom'
+import { GlobalEvent, hasEventKey, EVENT_KEYS } from '../../ui/src/event'
+import { getI18n } from '../../ui/src/i18n'
 import { toStringTimeDate, getDateQuarter } from './date'
 import { handleNumber, toFloatValueFixed } from './number'
 
-import { VNodeStyle, VxeInputConstructor, VxeInputEmits, InputReactData, InputMethods, VxeInputPropTypes, InputPrivateRef, VxeFormConstructor, VxeFormPrivateMethods, VxeFormDefines } from '../../../types/all'
+import { VxeComponentStyle, VxeInputConstructor, VxeInputEmits, InputReactData, InputMethods, VxeInputPropTypes, InputPrivateRef, VxeFormConstructor, VxeFormPrivateMethods, VxeFormDefines } from '../../../types'
 
 interface DateYearItem {
   date: Date;
@@ -63,19 +65,19 @@ export default defineComponent({
     immediate: { type: Boolean as PropType<VxeInputPropTypes.Immediate>, default: true },
     name: String as PropType<VxeInputPropTypes.Name>,
     type: { type: String as PropType<VxeInputPropTypes.Type>, default: 'text' },
-    clearable: { type: Boolean as PropType<VxeInputPropTypes.Clearable>, default: () => GlobalConfig.input.clearable },
+    clearable: { type: Boolean as PropType<VxeInputPropTypes.Clearable>, default: () => globalConfigStore.input.clearable },
     readonly: Boolean as PropType<VxeInputPropTypes.Readonly>,
     disabled: Boolean as PropType<VxeInputPropTypes.Disabled>,
     placeholder: {
       type: String as PropType<VxeInputPropTypes.Placeholder>,
-      default: () => XEUtils.eqNull(GlobalConfig.input.placeholder) ? GlobalConfig.i18n('vxe.base.pleaseInput') : GlobalConfig.input.placeholder
+      default: () => XEUtils.eqNull(globalConfigStore.input.placeholder) ? getI18n('vxe.base.pleaseInput') : globalConfigStore.input.placeholder
     },
     maxlength: [String, Number] as PropType<VxeInputPropTypes.Maxlength>,
     autocomplete: { type: String as PropType<VxeInputPropTypes.Autocomplete>, default: 'off' },
     align: String as PropType<VxeInputPropTypes.Align>,
     form: String as PropType<VxeInputPropTypes.Form>,
     className: String as PropType<VxeInputPropTypes.ClassName>,
-    size: { type: String as PropType<VxeInputPropTypes.Size>, default: () => GlobalConfig.input.size || GlobalConfig.size },
+    size: { type: String as PropType<VxeInputPropTypes.Size>, default: () => globalConfigStore.input.size || globalConfigStore.size },
     multiple: Boolean as PropType<VxeInputPropTypes.Multiple>,
 
     // text
@@ -86,35 +88,35 @@ export default defineComponent({
     min: { type: [String, Number] as PropType<VxeInputPropTypes.Min>, default: null },
     max: { type: [String, Number] as PropType<VxeInputPropTypes.Max>, default: null },
     step: [String, Number] as PropType<VxeInputPropTypes.Step>,
-    exponential: { type: Boolean as PropType<VxeInputPropTypes.Exponential>, default: () => GlobalConfig.input.exponential },
+    exponential: { type: Boolean as PropType<VxeInputPropTypes.Exponential>, default: () => globalConfigStore.input.exponential },
 
     // number、integer、float、password
-    controls: { type: Boolean as PropType<VxeInputPropTypes.Controls>, default: () => GlobalConfig.input.controls },
+    controls: { type: Boolean as PropType<VxeInputPropTypes.Controls>, default: () => globalConfigStore.input.controls },
 
     // float
-    digits: { type: [String, Number] as PropType<VxeInputPropTypes.Digits>, default: () => GlobalConfig.input.digits },
+    digits: { type: [String, Number] as PropType<VxeInputPropTypes.Digits>, default: () => globalConfigStore.input.digits },
 
     // date、week、month、quarter、year
-    startDate: { type: [String, Number, Date] as PropType<VxeInputPropTypes.MinDate>, default: () => GlobalConfig.input.startDate },
-    endDate: { type: [String, Number, Date] as PropType<VxeInputPropTypes.MaxDate>, default: () => GlobalConfig.input.endDate },
+    startDate: { type: [String, Number, Date] as PropType<VxeInputPropTypes.MinDate>, default: () => globalConfigStore.input.startDate },
+    endDate: { type: [String, Number, Date] as PropType<VxeInputPropTypes.MaxDate>, default: () => globalConfigStore.input.endDate },
     minDate: [String, Number, Date] as PropType<VxeInputPropTypes.MinDate>,
     maxDate: [String, Number, Date] as PropType<VxeInputPropTypes.MaxDate>,
     // 已废弃 startWeek，被 startDay 替换
     startWeek: Number as PropType<VxeInputPropTypes.StartDay>,
-    startDay: { type: [String, Number] as PropType<VxeInputPropTypes.StartDay>, default: () => GlobalConfig.input.startDay },
-    labelFormat: { type: String as PropType<VxeInputPropTypes.LabelFormat>, default: () => GlobalConfig.input.labelFormat },
-    valueFormat: { type: String as PropType<VxeInputPropTypes.ValueFormat>, default: () => GlobalConfig.input.valueFormat },
+    startDay: { type: [String, Number] as PropType<VxeInputPropTypes.StartDay>, default: () => globalConfigStore.input.startDay },
+    labelFormat: { type: String as PropType<VxeInputPropTypes.LabelFormat>, default: () => globalConfigStore.input.labelFormat },
+    valueFormat: { type: String as PropType<VxeInputPropTypes.ValueFormat>, default: () => globalConfigStore.input.valueFormat },
     editable: { type: Boolean as PropType<VxeInputPropTypes.Editable>, default: true },
-    festivalMethod: { type: Function as PropType<VxeInputPropTypes.FestivalMethod>, default: () => GlobalConfig.input.festivalMethod },
-    disabledMethod: { type: Function as PropType<VxeInputPropTypes.DisabledMethod>, default: () => GlobalConfig.input.disabledMethod },
+    festivalMethod: { type: Function as PropType<VxeInputPropTypes.FestivalMethod>, default: () => globalConfigStore.input.festivalMethod },
+    disabledMethod: { type: Function as PropType<VxeInputPropTypes.DisabledMethod>, default: () => globalConfigStore.input.disabledMethod },
 
     // week
-    selectDay: { type: [String, Number] as PropType<VxeInputPropTypes.SelectDay>, default: () => GlobalConfig.input.selectDay },
+    selectDay: { type: [String, Number] as PropType<VxeInputPropTypes.SelectDay>, default: () => globalConfigStore.input.selectDay },
 
     prefixIcon: String as PropType<VxeInputPropTypes.PrefixIcon>,
     suffixIcon: String as PropType<VxeInputPropTypes.SuffixIcon>,
     placement: String as PropType<VxeInputPropTypes.Placement>,
-    transfer: { type: Boolean as PropType<VxeInputPropTypes.Transfer>, default: () => GlobalConfig.input.transfer }
+    transfer: { type: Boolean as PropType<VxeInputPropTypes.Transfer>, default: () => globalConfigStore.input.transfer }
   },
   emits: [
     'update:modelValue',
@@ -139,8 +141,8 @@ export default defineComponent({
   ] as VxeInputEmits,
   setup (props, context) {
     const { slots, emit } = context
-    const $xeform = inject<VxeFormConstructor & VxeFormPrivateMethods | null>('$xeform', null)
-    const $xeformiteminfo = inject<VxeFormDefines.ProvideItemInfo | null>('$xeformiteminfo', null)
+    const $xeform = inject<VxeFormConstructor & VxeFormPrivateMethods | null>('$xeForm', null)
+    const $xeformiteminfo = inject<VxeFormDefines.ProvideItemInfo | null>('$xeFormItemInfo', null)
 
     const xID = XEUtils.uniqueId()
 
@@ -341,7 +343,7 @@ export default defineComponent({
     const computeDateLabelFormat = computed(() => {
       const isDatePickerType = computeIsDatePickerType.value
       if (isDatePickerType) {
-        return props.labelFormat || GlobalConfig.i18n(`vxe.input.date.labelFormat.${props.type}`)
+        return props.labelFormat || getI18n(`vxe.input.date.labelFormat.${props.type}`)
       }
       return null
     })
@@ -381,13 +383,13 @@ export default defineComponent({
           month = selectMonth.getMonth() + 1
         }
         if (datePanelType === 'quarter') {
-          return GlobalConfig.i18n('vxe.input.date.quarterLabel', [year])
+          return getI18n('vxe.input.date.quarterLabel', [year])
         } else if (datePanelType === 'month') {
-          return GlobalConfig.i18n('vxe.input.date.monthLabel', [year])
+          return getI18n('vxe.input.date.monthLabel', [year])
         } else if (datePanelType === 'year') {
           return yearList.length ? `${yearList[0].year} - ${yearList[yearList.length - 1].year}` : ''
         }
-        return GlobalConfig.i18n('vxe.input.date.dayLabel', [year, month ? GlobalConfig.i18n(`vxe.input.date.m${month}`) : '-'])
+        return getI18n('vxe.input.date.dayLabel', [year, month ? getI18n(`vxe.input.date.m${month}`) : '-'])
       }
       return ''
     })
@@ -422,7 +424,7 @@ export default defineComponent({
         return weekDatas.map((day) => {
           return {
             value: day,
-            label: GlobalConfig.i18n(`vxe.input.date.weeks.w${day}`)
+            label: getI18n(`vxe.input.date.weeks.w${day}`)
           }
         })
       }
@@ -433,7 +435,7 @@ export default defineComponent({
       const isDatePickerType = computeIsDatePickerType.value
       if (isDatePickerType) {
         const dateHeaders = computeDateHeaders.value
-        return [{ label: GlobalConfig.i18n('vxe.input.date.weeks.w') }].concat(dateHeaders)
+        return [{ label: getI18n('vxe.input.date.weeks.w') }].concat(dateHeaders)
       }
       return []
     })
@@ -1516,7 +1518,7 @@ export default defineComponent({
           const panelHeight = panelElem.offsetHeight
           const panelWidth = panelElem.offsetWidth
           const marginSize = 5
-          const panelStyle: VNodeStyle = {
+          const panelStyle: VxeComponentStyle = {
             zIndex: panelIndex
           }
           const { boundingTop, boundingLeft, visibleHeight, visibleWidth } = getAbsolutePos(targetElem)
@@ -1737,13 +1739,15 @@ export default defineComponent({
             class: ['vxe-input--date-label', {
               'is-notice': festivalItem.notice
             }]
-          }, extraItem && extraItem.label ? [
-            h('span', label),
-            h('span', {
-              class: ['vxe-input--date-label--extra', extraItem.important ? 'is-important' : '', extraItem.className],
-              style: extraItem.style
-            }, XEUtils.toValueString(extraItem.label))
-          ] : label)
+          }, extraItem && extraItem.label
+            ? [
+                h('span', label),
+                h('span', {
+                  class: ['vxe-input--date-label--extra', extraItem.important ? 'is-important' : '', extraItem.className],
+                  style: extraItem.style
+                }, XEUtils.toValueString(extraItem.label))
+              ]
+            : label)
         ]
         const festivalLabel = festivalItem.label
         if (festivalLabel) {
@@ -1754,11 +1758,13 @@ export default defineComponent({
               class: ['vxe-input--date-festival', festivalItem.important ? 'is-important' : '', festivalItem.className],
               style: festivalItem.style
             }, [
-              festivalLabels.length > 1 ? h('span', {
-                class: ['vxe-input--date-festival--overlap', `overlap--${festivalLabels.length}`]
-              }, festivalLabels.map(label => h('span', label.substring(0, 3)))) : h('span', {
-                class: 'vxe-input--date-festival--label'
-              }, festivalLabels[0].substring(0, 3))
+              festivalLabels.length > 1
+                ? h('span', {
+                  class: ['vxe-input--date-festival--overlap', `overlap--${festivalLabels.length}`]
+                }, festivalLabels.map(label => h('span', label.substring(0, 3))))
+                : h('span', {
+                  class: 'vxe-input--date-festival--label'
+                }, festivalLabels[0].substring(0, 3))
             ])
           )
         }
@@ -1880,7 +1886,7 @@ export default defineComponent({
                 },
                 onClick: () => dateSelectEvent(item),
                 onMouseenter: () => dateMouseenterEvent(item)
-              }, renderDateLabel(item, GlobalConfig.i18n(`vxe.input.date.months.m${item.month}`)))
+              }, renderDateLabel(item, getI18n(`vxe.input.date.months.m${item.month}`)))
             }))
           }))
         ])
@@ -1915,7 +1921,7 @@ export default defineComponent({
                 },
                 onClick: () => dateSelectEvent(item),
                 onMouseenter: () => dateMouseenterEvent(item)
-              }, renderDateLabel(item, GlobalConfig.i18n(`vxe.input.date.quarters.q${item.quarter}`)))
+              }, renderDateLabel(item, getI18n(`vxe.input.date.quarters.q${item.quarter}`)))
             }))
           }))
         ])
@@ -1985,12 +1991,14 @@ export default defineComponent({
           h('div', {
             class: 'vxe-input--date-picker-type-wrapper'
           }, [
-            datePanelType === 'year' ? h('span', {
-              class: 'vxe-input--date-picker-label'
-            }, selectDatePanelLabel) : h('span', {
-              class: 'vxe-input--date-picker-btn',
-              onClick: dateToggleTypeEvent
-            }, selectDatePanelLabel)
+            datePanelType === 'year'
+              ? h('span', {
+                class: 'vxe-input--date-picker-label'
+              }, selectDatePanelLabel)
+              : h('span', {
+                class: 'vxe-input--date-picker-btn',
+                onClick: dateToggleTypeEvent
+              }, selectDatePanelLabel)
           ]),
           h('div', {
             class: 'vxe-input--date-picker-btn-wrapper'
@@ -2023,15 +2031,17 @@ export default defineComponent({
                 class: 'vxe-icon-caret-right'
               })
             ]),
-            multiple && computeSupportMultiples.value ? h('span', {
-              class: 'vxe-input--date-picker-btn vxe-input--date-picker-confirm-btn'
-            }, [
-              h('button', {
-                class: 'vxe-input--date-picker-confirm',
-                type: 'button',
-                onClick: dateConfirmEvent
-              }, GlobalConfig.i18n('vxe.button.confirm'))
-            ]) : null
+            multiple && computeSupportMultiples.value
+              ? h('span', {
+                class: 'vxe-input--date-picker-btn vxe-input--date-picker-confirm-btn'
+              }, [
+                h('button', {
+                  class: 'vxe-input--date-picker-confirm',
+                  type: 'button',
+                  onClick: dateConfirmEvent
+                }, getI18n('vxe.button.confirm'))
+              ])
+              : null
           ])
         ]),
         h('div', {
@@ -2057,7 +2067,7 @@ export default defineComponent({
             class: 'vxe-input--time-picker-confirm',
             type: 'button',
             onClick: dateConfirmEvent
-          }, GlobalConfig.i18n('vxe.button.confirm'))
+          }, getI18n('vxe.button.confirm'))
         ]),
         h('div', {
           ref: refInputTimeBody,
@@ -2168,7 +2178,7 @@ export default defineComponent({
           onMouseleave: numberStopDown
         }, [
           h('i', {
-            class: ['vxe-input--number-prev-icon', GlobalConfig.icon.INPUT_PREV_NUM]
+            class: ['vxe-input--number-prev-icon', iconConfigStore.INPUT_PREV_NUM]
           })
         ]),
         h('span', {
@@ -2180,7 +2190,7 @@ export default defineComponent({
           onMouseleave: numberStopDown
         }, [
           h('i', {
-            class: ['vxe-input--number-next-icon', GlobalConfig.icon.INPUT_NEXT_NUM]
+            class: ['vxe-input--number-next-icon', iconConfigStore.INPUT_NEXT_NUM]
           })
         ])
       ])
@@ -2192,7 +2202,7 @@ export default defineComponent({
         onClick: datePickerOpenEvent
       }, [
         h('i', {
-          class: ['vxe-input--date-picker-icon', GlobalConfig.icon.INPUT_DATE]
+          class: ['vxe-input--date-picker-icon', iconConfigStore.INPUT_DATE]
         })
       ])
     }
@@ -2203,7 +2213,7 @@ export default defineComponent({
         onClick: searchEvent
       }, [
         h('i', {
-          class: ['vxe-input--search-icon', GlobalConfig.icon.INPUT_SEARCH]
+          class: ['vxe-input--search-icon', iconConfigStore.INPUT_SEARCH]
         })
       ])
     }
@@ -2215,7 +2225,7 @@ export default defineComponent({
         onClick: passwordToggleEvent
       }, [
         h('i', {
-          class: ['vxe-input--password-icon', showPwd ? GlobalConfig.icon.INPUT_SHOW_PWD : GlobalConfig.icon.INPUT_PWD]
+          class: ['vxe-input--password-icon', showPwd ? iconConfigStore.INPUT_SHOW_PWD : iconConfigStore.INPUT_PWD]
         })
       ])
     }
@@ -2237,10 +2247,12 @@ export default defineComponent({
           })
         )
       }
-      return icons.length ? h('span', {
-        class: 'vxe-input--prefix',
-        onClick: clickPrefixEvent
-      }, icons) : null
+      return icons.length
+        ? h('span', {
+          class: 'vxe-input--prefix',
+          onClick: clickPrefixEvent
+        }, icons)
+        : null
     }
 
     const renderSuffixIcon = () => {
@@ -2265,16 +2277,18 @@ export default defineComponent({
       if (isClearable) {
         icons.push(
           h('i', {
-            class: ['vxe-input--clear-icon', GlobalConfig.icon.INPUT_CLEAR]
+            class: ['vxe-input--clear-icon', iconConfigStore.INPUT_CLEAR]
           })
         )
       }
-      return icons.length ? h('span', {
-        class: ['vxe-input--suffix', {
-          'is--clear': isClearable && !disabled && !(inputValue === '' || XEUtils.eqNull(inputValue))
-        }],
-        onClick: clickSuffixEvent
-      }, icons) : null
+      return icons.length
+        ? h('span', {
+          class: ['vxe-input--suffix', {
+            'is--clear': isClearable && !disabled && !(inputValue === '' || XEUtils.eqNull(inputValue))
+          }],
+          onClick: clickSuffixEvent
+        }, icons)
+        : null
     }
 
     const renderExtraSuffixIcon = () => {
@@ -2295,9 +2309,11 @@ export default defineComponent({
       } else if (isSearchType) {
         icons = renderSearchIcon()
       }
-      return icons ? h('span', {
-        class: 'vxe-input--extra-suffix'
-      }, [icons]) : null
+      return icons
+        ? h('span', {
+          class: 'vxe-input--extra-suffix'
+        }, [icons])
+        : null
     }
 
     inputMethods = {

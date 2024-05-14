@@ -22,9 +22,42 @@ export interface OptionPrivateRef {
 export interface VxeOptionPrivateRef extends OptionPrivateRef { }
 
 export namespace VxeOptionPropTypes {
+  export type Value = any
+  export type Label = string | number | boolean
+  export type Visible = boolean
+  export type ClassName = string | ((params: {
+    option: any
+    $select: VxeSelectConstructor
+  }) => string)
+  export type Disabled = boolean
+  export type Slots = {
+    default?: string | ((params: {
+      option: any
+      $select: VxeSelectConstructor
+    }) => SlotVNodeType | SlotVNodeType[]) | null
+  }
 }
 
-export type VxeOptionProps = {}
+export type VxeOptionProps = {
+  /**
+  * 绑定值
+  */
+  value?: VxeOptionPropTypes.Value
+  /**
+  * 显示内容
+  */
+  label?: VxeOptionPropTypes.Label
+  /**
+  * 是否显示
+  */
+  visible?: VxeOptionPropTypes.Visible
+  className?: VxeOptionPropTypes.ClassName
+  /**
+  * 是否禁用
+  */
+  disabled?: VxeOptionPropTypes.Disabled
+  slots?: VxeOptionPropTypes.Slots
+}
 
 export interface OptionPrivateComputed {
 }

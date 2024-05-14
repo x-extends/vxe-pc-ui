@@ -3,7 +3,7 @@ import { errLog } from '../../ui/src/log'
 import { createItem, watchItem, destroyItem, assemItem, XEFormItemProvide } from './util'
 import { formItemProps } from './form-item'
 
-import { VxeFormConstructor, VxeFormPrivateMethods } from '../../../types/all'
+import { VxeFormConstructor, VxeFormPrivateMethods } from '../../../types'
 
 export default defineComponent({
   name: 'VxeFormGather',

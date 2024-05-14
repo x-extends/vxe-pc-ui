@@ -8,7 +8,7 @@ import { getI18n } from '../../ui/src/i18n'
 import { renderTitle } from './render'
 import { isActivetem } from './util'
 
-import { VxeFormConstructor, VxeFormDefines, VxeFormPrivateMethods, VxeComponentSlot } from '../../../types/all'
+import { VxeFormConstructor, VxeFormDefines, VxeFormPrivateMethods, VxeComponentSlot } from '../../../types'
 
 const VxeFormConfigItem = defineComponent({
   name: 'VxeFormConfigItem',
@@ -16,7 +16,7 @@ const VxeFormConfigItem = defineComponent({
     itemConfig: Object as PropType<VxeFormDefines.ItemInfo>
   },
   setup (props) {
-    const $xeform = inject('$xeform', {} as VxeFormConstructor & VxeFormPrivateMethods)
+    const $xeform = inject('$xeForm', {} as VxeFormConstructor & VxeFormPrivateMethods)
     const xeformiteminfo = { itemConfig: props.itemConfig }
     provide('$xeFormItemInfo', xeformiteminfo)
 

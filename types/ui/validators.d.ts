@@ -1,4 +1,4 @@
-import { VxeFormDefines } from '../component/form'
+import { VxeFormDefines } from '../components/form'
 
 /* eslint-disable no-use-before-define */
 

@@ -1,14 +1,16 @@
 import { defineComponent, h, Teleport, PropType, ref, Ref, inject, computed, provide, onUnmounted, reactive, nextTick, watch, onMounted, createCommentVNode } from 'vue'
 import XEUtils from 'xe-utils'
-import GlobalConfig from '../../v-x-e-table/src/conf'
+import globalConfigStore from '../../ui/src/globalStore'
+import iconConfigStore from '../../ui/src/iconStore'
 import { useSize } from '../../hooks/size'
-import { getEventTargetNode, getAbsolutePos } from '../../tools/dom'
-import { getLastZIndex, nextZIndex, getFuncText, formatText } from '../../tools/utils'
-import { GlobalEvent, hasEventKey, EVENT_KEYS } from '../../tools/event'
+import { getEventTargetNode, getAbsolutePos } from '../../ui/src/dom'
+import { getLastZIndex, nextZIndex, getFuncText, formatText } from '../../ui/src/utils'
+import { GlobalEvent, hasEventKey, EVENT_KEYS } from '../../ui/src/event'
+import { getI18n } from '../../ui/src/i18n'
 import VxeInputComponent from '../../input/src/input'
-import { getSlotVNs } from '../../tools/vn'
+import { getSlotVNs } from '../../ui/src/vn'
 
-import { VxeSelectPropTypes, VxeSelectConstructor, SelectReactData, VxeSelectEmits, VxeInputConstructor, SelectMethods, SelectPrivateRef, VxeSelectMethods, VxeOptgroupProps, VxeOptionProps, VxeFormDefines, VxeFormConstructor, VxeFormPrivateMethods, VxeInputDefines, SlotVNodeType } from '../../../types/all'
+import { VxeSelectPropTypes, VxeSelectConstructor, SelectReactData, VxeSelectEmits, VxeInputConstructor, SelectMethods, SelectPrivateRef, VxeSelectMethods, VxeOptgroupProps, VxeOptionProps, VxeFormDefines, VxeFormConstructor, VxeFormPrivateMethods, VxeInputDefines, VxeComponentSlot } from '../../../types'
 
 function isOptionVisible (option: any) {
   return option.visible !== false
@@ -25,12 +27,12 @@ export default defineComponent({
     clearable: Boolean as PropType<VxeSelectPropTypes.Clearable>,
     placeholder: {
       type: String as PropType<VxeSelectPropTypes.Placeholder>,
-      default: () => XEUtils.eqNull(GlobalConfig.select.placeholder) ? GlobalConfig.i18n('vxe.base.pleaseSelect') : GlobalConfig.select.placeholder
+      default: () => XEUtils.eqNull(globalConfigStore.select.placeholder) ? getI18n('vxe.base.pleaseSelect') : globalConfigStore.select.placeholder
     },
     loading: Boolean as PropType<VxeSelectPropTypes.Loading>,
     disabled: Boolean as PropType<VxeSelectPropTypes.Disabled>,
     multiple: Boolean as PropType<VxeSelectPropTypes.Multiple>,
-    multiCharOverflow: { type: [Number, String] as PropType<VxeSelectPropTypes.MultiCharOverflow>, default: () => GlobalConfig.select.multiCharOverflow },
+    multiCharOverflow: { type: [Number, String] as PropType<VxeSelectPropTypes.MultiCharOverflow>, default: () => globalConfigStore.select.multiCharOverflow },
     prefixIcon: String as PropType<VxeSelectPropTypes.PrefixIcon>,
     placement: String as PropType<VxeSelectPropTypes.Placement>,
     options: Array as PropType<VxeSelectPropTypes.Options>,
@@ -41,17 +43,17 @@ export default defineComponent({
     className: [String, Function] as PropType<VxeSelectPropTypes.ClassName>,
     popupClassName: [String, Function] as PropType<VxeSelectPropTypes.PopupClassName>,
     max: { type: [String, Number] as PropType<VxeSelectPropTypes.Max>, default: null },
-    size: { type: String as PropType<VxeSelectPropTypes.Size>, default: () => GlobalConfig.select.size || GlobalConfig.size },
+    size: { type: String as PropType<VxeSelectPropTypes.Size>, default: () => globalConfigStore.select.size || globalConfigStore.size },
     filterable: Boolean as PropType<VxeSelectPropTypes.Filterable>,
     filterMethod: Function as PropType<VxeSelectPropTypes.FilterMethod>,
     remote: Boolean as PropType<VxeSelectPropTypes.Remote>,
     remoteMethod: Function as PropType<VxeSelectPropTypes.RemoteMethod>,
     emptyText: String as PropType<VxeSelectPropTypes.EmptyText>,
     // 已废弃，被 option-config.keyField 替换
-    optionId: { type: String as PropType<VxeSelectPropTypes.OptionId>, default: () => GlobalConfig.select.optionId },
+    optionId: { type: String as PropType<VxeSelectPropTypes.OptionId>, default: () => globalConfigStore.select.optionId },
     // 已废弃，被 option-config.useKey 替换
     optionKey: Boolean as PropType<VxeSelectPropTypes.OptionKey>,
-    transfer: { type: Boolean as PropType<VxeSelectPropTypes.Transfer>, default: () => GlobalConfig.select.transfer }
+    transfer: { type: Boolean as PropType<VxeSelectPropTypes.Transfer>, default: () => globalConfigStore.select.transfer }
   },
   emits: [
     'update:modelValue',
@@ -62,8 +64,8 @@ export default defineComponent({
   ] as VxeSelectEmits,
   setup (props, context) {
     const { slots, emit } = context
-    const $xeform = inject<VxeFormConstructor & VxeFormPrivateMethods | null>('$xeform', null)
-    const $xeformiteminfo = inject<VxeFormDefines.ProvideItemInfo | null>('$xeformiteminfo', null)
+    const $xeform = inject<VxeFormConstructor & VxeFormPrivateMethods | null>('$xeForm', null)
+    const $xeformiteminfo = inject<VxeFormDefines.ProvideItemInfo | null>('$xeFormItemInfo', null)
 
     const xID = XEUtils.uniqueId()
 
@@ -146,7 +148,7 @@ export default defineComponent({
     })
 
     const computeOptionOpts = computed(() => {
-      return Object.assign({}, GlobalConfig.select.optionConfig, props.optionConfig)
+      return Object.assign({}, globalConfigStore.select.optionConfig, props.optionConfig)
     })
 
     const computeIsGroup = computed(() => {
@@ -157,7 +159,7 @@ export default defineComponent({
       return XEUtils.toNumber(props.multiCharOverflow)
     })
 
-    const callSlot = <T>(slotFunc: ((params: T) => SlotVNodeType | SlotVNodeType[]) | string | null, params: T) => {
+    const callSlot = <T>(slotFunc: ((params: T) => VxeComponentSlot | VxeComponentSlot[]) | string | null, params: T) => {
       if (slotFunc) {
         if (XEUtils.isString(slotFunc)) {
           slotFunc = slots[slotFunc] || null
@@ -726,33 +728,35 @@ export default defineComponent({
         const optid = getOptid(option)
         const defaultSlot = slots ? slots.default : null
         const optParams = { option, group: null, $select: $xeselect }
-        return isVisible ? h('div', {
-          key: useKey || optionKey ? optid : cIndex,
-          class: ['vxe-select-option', className ? (XEUtils.isFunction(className) ? className(optParams) : className) : '', {
-            'is--disabled': isDisabled,
-            'is--selected': isSelected,
-            'is--hover': currentValue === optionValue
-          }],
-          // attrs
-          optid: optid,
-          // event
-          onMousedown: (evnt: MouseEvent) => {
-            const isLeftBtn = evnt.button === 0
-            if (isLeftBtn) {
-              evnt.stopPropagation()
+        return isVisible
+          ? h('div', {
+            key: useKey || optionKey ? optid : cIndex,
+            class: ['vxe-select-option', className ? (XEUtils.isFunction(className) ? className(optParams) : className) : '', {
+              'is--disabled': isDisabled,
+              'is--selected': isSelected,
+              'is--hover': currentValue === optionValue
+            }],
+            // attrs
+            optid: optid,
+            // event
+            onMousedown: (evnt: MouseEvent) => {
+              const isLeftBtn = evnt.button === 0
+              if (isLeftBtn) {
+                evnt.stopPropagation()
+              }
+            },
+            onClick: (evnt: MouseEvent) => {
+              if (!isDisabled) {
+                changeOptionEvent(evnt, optionValue, option)
+              }
+            },
+            onMouseenter: () => {
+              if (!isDisabled) {
+                setCurrentOption(option)
+              }
             }
-          },
-          onClick: (evnt: MouseEvent) => {
-            if (!isDisabled) {
-              changeOptionEvent(evnt, optionValue, option)
-            }
-          },
-          onMouseenter: () => {
-            if (!isDisabled) {
-              setCurrentOption(option)
-            }
-          }
-        }, optionSlot ? callSlot(optionSlot, optParams) : (defaultSlot ? callSlot(defaultSlot, optParams) : formatText(getFuncText(option[labelField as 'label'])))) : null
+          }, optionSlot ? callSlot(optionSlot, optParams) : (defaultSlot ? callSlot(defaultSlot, optParams) : formatText(getFuncText(option[labelField as 'label']))))
+          : createCommentVNode()
       })
     }
 
@@ -797,11 +801,11 @@ export default defineComponent({
             class: 'vxe-select--search-loading'
           }, [
             h('i', {
-              class: ['vxe-select--search-icon', GlobalConfig.icon.SELECT_LOADED]
+              class: ['vxe-select--search-icon', iconConfigStore.SELECT_LOADED]
             }),
             h('span', {
               class: 'vxe-select--search-text'
-            }, GlobalConfig.i18n('vxe.select.loadingText'))
+            }, getI18n('vxe.select.loadingText'))
           ])
         ]
       }
@@ -817,7 +821,7 @@ export default defineComponent({
       return [
         h('div', {
           class: 'vxe-select--empty-placeholder'
-        }, props.emptyText || GlobalConfig.i18n('vxe.select.emptyText'))
+        }, props.emptyText || getI18n('vxe.select.emptyText'))
       ]
     }
 
@@ -943,16 +947,18 @@ export default defineComponent({
           disabled: disabled,
           type: 'text',
           prefixIcon: props.prefixIcon,
-          suffixIcon: loading ? GlobalConfig.icon.SELECT_LOADED : (visiblePanel ? GlobalConfig.icon.SELECT_OPEN : GlobalConfig.icon.SELECT_CLOSE),
+          suffixIcon: loading ? iconConfigStore.SELECT_LOADED : (visiblePanel ? iconConfigStore.SELECT_OPEN : iconConfigStore.SELECT_CLOSE),
           modelValue: selectLabel,
           onClear: clearEvent,
           onClick: togglePanelEvent,
           onFocus: focusEvent,
           onBlur: blurEvent,
           onSuffixClick: togglePanelEvent
-        }, prefixSlot ? {
-          prefix: () => prefixSlot({})
-        } : {}),
+        }, prefixSlot
+          ? {
+              prefix: () => prefixSlot({})
+            }
+          : {}),
         h(Teleport, {
           to: 'body',
           disabled: transfer ? !inited : true
@@ -967,43 +973,51 @@ export default defineComponent({
             }],
             placement: reactData.panelPlacement,
             style: reactData.panelStyle
-          }, inited ? [
-            filterable ? h('div', {
-              class: 'vxe-select--panel-search'
-            }, [
-              h(VxeInputComponent, {
-                ref: refInpSearch,
-                class: 'vxe-select-search--input',
-                modelValue: reactData.searchValue,
-                clearable: true,
-                placeholder: GlobalConfig.i18n('vxe.select.search'),
-                prefixIcon: GlobalConfig.icon.INPUT_SEARCH,
-                'onUpdate:modelValue': modelSearchEvent,
-                onFocus: focusSearchEvent,
-                onKeydown: keydownSearchEvent,
-                onChange: triggerSearchEvent,
-                onSearch: triggerSearchEvent
-              })
-            ]) : createCommentVNode(),
-            h('div', {
-              class: 'vxe-select--panel-wrapper'
-            }, [
-              headerSlot ? h('div', {
-                class: 'vxe-select--panel-header'
-              }, headerSlot({})) : createCommentVNode(),
-              h('div', {
-                class: 'vxe-select--panel-body'
-              }, [
+          }, inited
+            ? [
+                filterable
+                  ? h('div', {
+                    class: 'vxe-select--panel-search'
+                  }, [
+                    h(VxeInputComponent, {
+                      ref: refInpSearch,
+                      class: 'vxe-select-search--input',
+                      modelValue: reactData.searchValue,
+                      clearable: true,
+                      placeholder: getI18n('vxe.select.search'),
+                      prefixIcon: iconConfigStore.INPUT_SEARCH,
+                      'onUpdate:modelValue': modelSearchEvent,
+                      onFocus: focusSearchEvent,
+                      onKeydown: keydownSearchEvent,
+                      onChange: triggerSearchEvent,
+                      onSearch: triggerSearchEvent
+                    })
+                  ])
+                  : createCommentVNode(),
                 h('div', {
-                  ref: refOptionWrapper,
-                  class: 'vxe-select-option--wrapper'
-                }, renderOpts())
-              ]),
-              footerSlot ? h('div', {
-                class: 'vxe-select--panel-footer'
-              }, footerSlot({})) : createCommentVNode()
-            ])
-          ] : [])
+                  class: 'vxe-select--panel-wrapper'
+                }, [
+                  headerSlot
+                    ? h('div', {
+                      class: 'vxe-select--panel-header'
+                    }, headerSlot({}))
+                    : createCommentVNode(),
+                  h('div', {
+                    class: 'vxe-select--panel-body'
+                  }, [
+                    h('div', {
+                      ref: refOptionWrapper,
+                      class: 'vxe-select-option--wrapper'
+                    }, renderOpts())
+                  ]),
+                  footerSlot
+                    ? h('div', {
+                      class: 'vxe-select--panel-footer'
+                    }, footerSlot({}))
+                    : createCommentVNode()
+                ])
+              ]
+            : [])
         ])
       ])
     }

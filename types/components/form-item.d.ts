@@ -1,5 +1,5 @@
 import { RenderFunction, SetupContext, Ref } from 'vue'
-import { defineVxeComponent, VxeComponentBase, VxeComponentEvent } from '../tool'
+import { defineVxeComponent, VxeComponentBase, VxeComponentEvent, VxeComponentSlot, VxeComponentStyle } from '../tool'
 
 /* eslint-disable no-use-before-define,@typescript-eslint/ban-types */
 
@@ -47,13 +47,13 @@ export namespace VxeFormItemPropTypes {
   export type ContentClassName = string | ((params: ContentClassNameParams) => string)
 
   interface ContentStyleParams extends ClassNameParams{}
-  export type ContentStyle = VNodeStyle | ((params: ContentStyleParams) => VNodeStyle)
+  export type ContentStyle = VxeComponentStyle | ((params: ContentStyleParams) => VxeComponentStyle)
 
   interface TitleClassNameParams extends ClassNameParams{}
   export type TitleClassName = string | ((params: TitleClassNameParams) => string)
 
   interface TitleStyleParams extends ClassNameParams{}
-  export type TitleStyle = VNodeStyle | ((params: TitleStyleParams) => VNodeStyle)
+  export type TitleStyle = VxeComponentStyle | ((params: TitleStyleParams) => VxeComponentStyle)
 
   export type Readonly = boolean
 

@@ -1,5 +1,5 @@
 import { RenderFunction, SetupContext, Ref } from 'vue'
-import { defineVxeComponent, VxeComponentBase, VxeComponentEvent, VxeComponentSize, ValueOf } from '../tool'
+import { defineVxeComponent, VxeComponentBase, VxeComponentEvent, VxeComponentSize, VxeComponentStyle, ValueOf } from '../tool'
 
 /* eslint-disable no-use-before-define,@typescript-eslint/ban-types */
 
@@ -110,7 +110,7 @@ export interface ButtonReactData {
   showPanel: boolean
   animatVisible: boolean
   panelIndex: number
-  panelStyle: VNodeStyle
+  panelStyle: VxeComponentStyle
   panelPlacement: any
 }
 

@@ -5,7 +5,7 @@ import { renderer } from '../../ui/src/renderer'
 import { getFuncText, isEnableConf } from '../../ui/src/utils'
 import { getSlotVNs } from '../../ui/src/vn'
 
-import { VxeFormConstructor, VxeFormDefines, VxeFormItemPropTypes, VxeFormPrivateMethods } from '../../../types/all'
+import { VxeFormConstructor, VxeFormDefines, VxeFormItemPropTypes, VxeFormPrivateMethods } from '../../../types'
 
 function renderPrefixIcon (titlePrefix: VxeFormItemPropTypes.TitlePrefix) {
   return h('span', {

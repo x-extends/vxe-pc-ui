@@ -1,5 +1,5 @@
 import { RenderFunction, SetupContext, Ref, ComponentPublicInstance } from 'vue'
-import { defineVxeComponent, VxeComponentBase, VxeComponentEvent } from '../tool'
+import { defineVxeComponent, VxeComponentBase, VxeComponentEvent, VxeComponentSize, VxeComponentStyle, ValueOf } from '../tool'
 
 /* eslint-disable no-use-before-define,@typescript-eslint/ban-types */
 
@@ -22,7 +22,7 @@ export interface TooltipPrivateRef {
 export interface VxeTooltipPrivateRef extends TooltipPrivateRef { }
 
 export namespace VxeTooltipPropTypes {
-  export type Size = SizeType
+  export type Size = VxeComponentSize
   export type ModelValue = boolean
   export type Trigger = 'hover' | 'click' | 'manual' | '' | null
   export type Theme = string
@@ -66,9 +66,9 @@ export interface TooltipReactData {
   tipTarget: HTMLElement | null
   tipZindex: number
   tipStore: {
-    style: VNodeStyle
+    style: VxeComponentStyle
     placement: any
-    arrowStyle: VNodeStyle
+    arrowStyle: VxeComponentStyle
   }
 }
 

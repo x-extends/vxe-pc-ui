@@ -6,7 +6,7 @@ import { getLastZIndex, nextZIndex, formatText } from '../../ui/src/utils'
 import { getAbsolutePos, getDomNode } from '../../ui/src/dom'
 import { getSlotVNs } from '../../ui/src/vn'
 
-import { VxeTooltipPropTypes, VxeTooltipConstructor, VxeTooltipEmits, TooltipReactData, TooltipMethods, TooltipPrivateRef } from '../../../types/all'
+import { VxeTooltipPropTypes, VxeTooltipConstructor, VxeTooltipEmits, TooltipReactData, TooltipMethods, TooltipPrivateRef } from '../../../types'
 
 export default defineComponent({
   name: 'VxeTooltip',

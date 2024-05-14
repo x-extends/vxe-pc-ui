@@ -1,42 +1,44 @@
 import { defineComponent, h, PropType, computed, inject, ref, Ref, reactive, nextTick, watch } from 'vue'
 import XEUtils from 'xe-utils'
-import GlobalConfig from '../../v-x-e-table/src/conf'
+import globalConfigStore from '../../ui/src/globalStore'
+import iconConfigStore from '../../ui/src/iconStore'
 import VxeSelectComponent from '../../select'
-import { hasEventKey, EVENT_KEYS } from '../../tools/event'
+import { hasEventKey, EVENT_KEYS } from '../../ui/src/event'
+import { getI18n } from '../../ui/src/i18n'
 import { useSize } from '../../hooks/size'
-import { errLog } from '../../tools/log'
+import { errLog } from '../../ui/src/log'
 
-import { VxePagerPropTypes, VxePagerConstructor, VxePagerEmits, VxeSelectEvents, PagerPrivateRef, VxeGridConstructor, PagerMethods, PagerPrivateMethods, VxePagerPrivateMethods, PagerReactData } from '../../../types/all'
+import { VxePagerPropTypes, VxePagerConstructor, VxePagerEmits, VxeSelectEvents, PagerPrivateRef, PagerMethods, PagerPrivateMethods, VxePagerPrivateMethods, PagerReactData } from '../../../types'
 
 export default defineComponent({
   name: 'VxePager',
   props: {
-    size: { type: String as PropType<VxePagerPropTypes.Size>, default: () => GlobalConfig.pager.size || GlobalConfig.size },
+    size: { type: String as PropType<VxePagerPropTypes.Size>, default: () => globalConfigStore.pager.size || globalConfigStore.size },
     // 自定义布局
-    layouts: { type: Array as PropType<VxePagerPropTypes.Layouts>, default: () => GlobalConfig.pager.layouts || ['PrevJump', 'PrevPage', 'Jump', 'PageCount', 'NextPage', 'NextJump', 'Sizes', 'Total'] },
+    layouts: { type: Array as PropType<VxePagerPropTypes.Layouts>, default: () => globalConfigStore.pager.layouts || ['PrevJump', 'PrevPage', 'Jump', 'PageCount', 'NextPage', 'NextJump', 'Sizes', 'Total'] },
     // 当前页
     currentPage: { type: Number as PropType<VxePagerPropTypes.CurrentPage>, default: 1 },
     // 加载中
     loading: Boolean as PropType<VxePagerPropTypes.Loading>,
     // 每页大小
-    pageSize: { type: Number as PropType<VxePagerPropTypes.PageSize>, default: () => GlobalConfig.pager.pageSize || 10 },
+    pageSize: { type: Number as PropType<VxePagerPropTypes.PageSize>, default: () => globalConfigStore.pager.pageSize || 10 },
     // 总条数
     total: { type: Number as PropType<VxePagerPropTypes.Total>, default: 0 },
     // 显示页码按钮的数量
-    pagerCount: { type: Number as PropType<VxePagerPropTypes.PagerCount>, default: () => GlobalConfig.pager.pagerCount || 7 },
+    pagerCount: { type: Number as PropType<VxePagerPropTypes.PagerCount>, default: () => globalConfigStore.pager.pagerCount || 7 },
     // 每页大小选项列表
-    pageSizes: { type: Array as PropType<VxePagerPropTypes.PageSizes>, default: () => GlobalConfig.pager.pageSizes || [10, 15, 20, 50, 100] },
+    pageSizes: { type: Array as PropType<VxePagerPropTypes.PageSizes>, default: () => globalConfigStore.pager.pageSizes || [10, 15, 20, 50, 100] },
     // 列对其方式
-    align: { type: String as PropType<VxePagerPropTypes.Align>, default: () => GlobalConfig.pager.align },
+    align: { type: String as PropType<VxePagerPropTypes.Align>, default: () => globalConfigStore.pager.align },
     // 带边框
-    border: { type: Boolean as PropType<VxePagerPropTypes.Border>, default: () => GlobalConfig.pager.border },
+    border: { type: Boolean as PropType<VxePagerPropTypes.Border>, default: () => globalConfigStore.pager.border },
     // 带背景颜色
-    background: { type: Boolean as PropType<VxePagerPropTypes.Background>, default: () => GlobalConfig.pager.background },
+    background: { type: Boolean as PropType<VxePagerPropTypes.Background>, default: () => globalConfigStore.pager.background },
     // 配套的样式
-    perfect: { type: Boolean as PropType<VxePagerPropTypes.Perfect>, default: () => GlobalConfig.pager.perfect },
+    perfect: { type: Boolean as PropType<VxePagerPropTypes.Perfect>, default: () => globalConfigStore.pager.perfect },
     // 当只有一页时隐藏
-    autoHidden: { type: Boolean as PropType<VxePagerPropTypes.AutoHidden>, default: () => GlobalConfig.pager.autoHidden },
-    transfer: { type: Boolean as PropType<VxePagerPropTypes.Transfer>, default: () => GlobalConfig.pager.transfer },
+    autoHidden: { type: Boolean as PropType<VxePagerPropTypes.AutoHidden>, default: () => globalConfigStore.pager.autoHidden },
+    transfer: { type: Boolean as PropType<VxePagerPropTypes.Transfer>, default: () => globalConfigStore.pager.transfer },
     className: [String, Function] as PropType<VxePagerPropTypes.ClassName>,
     // 自定义图标
     iconPrevPage: String as PropType<VxePagerPropTypes.IconPrevPage>,
@@ -59,7 +61,7 @@ export default defineComponent({
 
     const computeSize = useSize(props)
 
-    const $xegrid = inject('$xegrid', null as VxeGridConstructor | null)
+    const $xegrid = inject('$xegrid', null as any)
 
     const reactData = reactive<PagerReactData>({
       inpCurrPage: props.currentPage
@@ -134,7 +136,7 @@ export default defineComponent({
         if (XEUtils.isNumber(item)) {
           return {
             value: item,
-            label: `${GlobalConfig.i18n('vxe.pager.pagesize', [item])}`
+            label: `${getI18n('vxe.pager.pagesize', [item])}`
           }
         }
         return { value: '', label: '', ...item }
@@ -220,11 +222,11 @@ export default defineComponent({
           'is--disabled': props.currentPage <= 1
         }],
         type: 'button',
-        title: GlobalConfig.i18n('vxe.pager.homePageTitle'),
+        title: getI18n('vxe.pager.homePageTitle'),
         onClick: handleHomePage
       }, [
         h('i', {
-          class: ['vxe-pager--btn-icon', props.iconHomePage || GlobalConfig.icon.PAGER_HOME]
+          class: ['vxe-pager--btn-icon', props.iconHomePage || iconConfigStore.PAGER_HOME]
         })
       ])
     }
@@ -236,11 +238,11 @@ export default defineComponent({
           'is--disabled': props.currentPage <= 1
         }],
         type: 'button',
-        title: GlobalConfig.i18n('vxe.pager.prevPageTitle'),
+        title: getI18n('vxe.pager.prevPageTitle'),
         onClick: handlePrevPage
       }, [
         h('i', {
-          class: ['vxe-pager--btn-icon', props.iconPrevPage || GlobalConfig.icon.PAGER_PREV_PAGE]
+          class: ['vxe-pager--btn-icon', props.iconPrevPage || iconConfigStore.PAGER_PREV_PAGE]
         })
       ])
     }
@@ -253,14 +255,16 @@ export default defineComponent({
           'is--disabled': props.currentPage <= 1
         }],
         type: 'button',
-        title: GlobalConfig.i18n('vxe.pager.prevJumpTitle'),
+        title: getI18n('vxe.pager.prevJumpTitle'),
         onClick: handlePrevJump
       }, [
-        tagName ? h('i', {
-          class: ['vxe-pager--jump-more-icon', props.iconJumpMore || GlobalConfig.icon.PAGER_JUMP_MORE]
-        }) : null,
+        tagName
+          ? h('i', {
+            class: ['vxe-pager--jump-more-icon', props.iconJumpMore || iconConfigStore.PAGER_JUMP_MORE]
+          })
+          : null,
         h('i', {
-          class: ['vxe-pager--jump-icon', props.iconJumpPrev || GlobalConfig.icon.PAGER_JUMP_PREV]
+          class: ['vxe-pager--jump-icon', props.iconJumpPrev || iconConfigStore.PAGER_JUMP_PREV]
         })
       ])
     }
@@ -274,14 +278,16 @@ export default defineComponent({
           'is--disabled': props.currentPage >= pageCount
         }],
         type: 'button',
-        title: GlobalConfig.i18n('vxe.pager.nextJumpTitle'),
+        title: getI18n('vxe.pager.nextJumpTitle'),
         onClick: handleNextJump
       }, [
-        tagName ? h('i', {
-          class: ['vxe-pager--jump-more-icon', props.iconJumpMore || GlobalConfig.icon.PAGER_JUMP_MORE]
-        }) : null,
+        tagName
+          ? h('i', {
+            class: ['vxe-pager--jump-more-icon', props.iconJumpMore || iconConfigStore.PAGER_JUMP_MORE]
+          })
+          : null,
         h('i', {
-          class: ['vxe-pager--jump-icon', props.iconJumpNext || GlobalConfig.icon.PAGER_JUMP_NEXT]
+          class: ['vxe-pager--jump-icon', props.iconJumpNext || iconConfigStore.PAGER_JUMP_NEXT]
         })
       ])
     }
@@ -294,11 +300,11 @@ export default defineComponent({
           'is--disabled': props.currentPage >= pageCount
         }],
         type: 'button',
-        title: GlobalConfig.i18n('vxe.pager.nextPageTitle'),
+        title: getI18n('vxe.pager.nextPageTitle'),
         onClick: handleNextPage
       }, [
         h('i', {
-          class: ['vxe-pager--btn-icon', props.iconNextPage || GlobalConfig.icon.PAGER_NEXT_PAGE]
+          class: ['vxe-pager--btn-icon', props.iconNextPage || iconConfigStore.PAGER_NEXT_PAGE]
         })
       ])
     }
@@ -311,11 +317,11 @@ export default defineComponent({
           'is--disabled': props.currentPage >= pageCount
         }],
         type: 'button',
-        title: GlobalConfig.i18n('vxe.pager.endPageTitle'),
+        title: getI18n('vxe.pager.endPageTitle'),
         onClick: handleEndPage
       }, [
         h('i', {
-          class: ['vxe-pager--btn-icon', props.iconEndPage || GlobalConfig.icon.PAGER_END]
+          class: ['vxe-pager--btn-icon', props.iconEndPage || iconConfigStore.PAGER_END]
         })
       ])
     }
@@ -401,9 +407,11 @@ export default defineComponent({
       return h('span', {
         class: 'vxe-pager--jump'
       }, [
-        isFull ? h('span', {
-          class: 'vxe-pager--goto-text'
-        }, GlobalConfig.i18n('vxe.pager.goto')) : null,
+        isFull
+          ? h('span', {
+            class: 'vxe-pager--goto-text'
+          }, getI18n('vxe.pager.goto'))
+          : null,
         h('input', {
           class: 'vxe-pager--goto',
           value: reactData.inpCurrPage,
@@ -413,9 +421,11 @@ export default defineComponent({
           onKeydown: jumpKeydownEvent,
           onBlur: triggerJumpEvent
         }),
-        isFull ? h('span', {
-          class: 'vxe-pager--classifier-text'
-        }, GlobalConfig.i18n('vxe.pager.pageClassifier')) : null
+        isFull
+          ? h('span', {
+            class: 'vxe-pager--classifier-text'
+          }, getI18n('vxe.pager.pageClassifier'))
+          : null
       ])
     }
 
@@ -441,7 +451,7 @@ export default defineComponent({
     const renderTotal = () => {
       return h('span', {
         class: 'vxe-pager--total'
-      }, GlobalConfig.i18n('vxe.pager.total', [props.total]))
+      }, getI18n('vxe.pager.total', [props.total]))
     }
 
     pagerMethods = {

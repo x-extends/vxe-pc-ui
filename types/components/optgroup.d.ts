@@ -24,7 +24,21 @@ export interface VxeOptgroupPrivateRef extends OptgroupPrivateRef { }
 export namespace VxeOptgroupPropTypes {
 }
 
-export type VxeOptgroupProps = {}
+export type VxeOptgroupProps = {
+  /**
+   * 显示内容
+   */
+  label?: VxeOptionPropTypes.Label
+  /**
+   * 是否禁用
+   */
+  visible?: VxeOptionPropTypes.Visible
+  className?: VxeOptionPropTypes.ClassName
+  /**
+   * 是否禁用
+   */
+  disabled?: VxeOptionPropTypes.Disabled
+}
 
 export interface OptgroupPrivateComputed {
 }

@@ -1,17 +1,17 @@
 import { defineComponent, h, ref, Ref, computed, reactive, nextTick, createCommentVNode, PropType, inject } from 'vue'
 import XEUtils from 'xe-utils'
-import GlobalConfig from '../../v-x-e-table/src/conf'
+import globalConfigStore from '../../ui/src/globalStore'
 import { useSize } from '../../hooks/size'
-import { getFuncText } from '../../tools/utils'
+import { getFuncText } from '../../ui/src/utils'
 
-import { VxeSwitchPropTypes, VxeSwitchConstructor, VxeSwitchEmits, SwitchReactData, SwitchMethods, VxeFormConstructor, VxeFormPrivateMethods, VxeFormDefines } from '../../../types/all'
+import { VxeSwitchPropTypes, VxeSwitchConstructor, VxeSwitchEmits, SwitchReactData, SwitchMethods, VxeFormConstructor, VxeFormPrivateMethods, VxeFormDefines } from '../../../types'
 
 export default defineComponent({
   name: 'VxeSwitch',
   props: {
     modelValue: [String, Number, Boolean] as PropType<VxeSwitchPropTypes.ModelValue>,
     disabled: Boolean as PropType<VxeSwitchPropTypes.Disabled>,
-    size: { type: String as PropType<VxeSwitchPropTypes.Size>, default: () => GlobalConfig.switch.size || GlobalConfig.size },
+    size: { type: String as PropType<VxeSwitchPropTypes.Size>, default: () => globalConfigStore.switch.size || globalConfigStore.size },
     openLabel: String as PropType<VxeSwitchPropTypes.OpenLabel>,
     closeLabel: String as PropType<VxeSwitchPropTypes.CloseLabel>,
     openValue: { type: [String, Number, Boolean] as PropType<VxeSwitchPropTypes.OpenValue>, default: true },
@@ -27,8 +27,8 @@ export default defineComponent({
   ] as VxeSwitchEmits,
   setup (props, context) {
     const { emit } = context
-    const $xeform = inject<VxeFormConstructor & VxeFormPrivateMethods | null>('$xeform', null)
-    const $xeformiteminfo = inject<VxeFormDefines.ProvideItemInfo | null>('$xeformiteminfo', null)
+    const $xeform = inject<VxeFormConstructor & VxeFormPrivateMethods | null>('$xeForm', null)
+    const $xeformiteminfo = inject<VxeFormDefines.ProvideItemInfo | null>('$xeFormItemInfo', null)
 
     const xID = XEUtils.uniqueId()
 
@@ -137,17 +137,21 @@ export default defineComponent({
           h('span', {
             class: 'vxe-switch--label vxe-switch--label-on'
           }, [
-            openIcon ? h('i', {
-              class: ['vxe-switch--label-icon', openIcon]
-            }) : createCommentVNode(),
+            openIcon
+              ? h('i', {
+                class: ['vxe-switch--label-icon', openIcon]
+              })
+              : createCommentVNode(),
             onShowLabel
           ]),
           h('span', {
             class: 'vxe-switch--label vxe-switch--label-off'
           }, [
-            closeIcon ? h('i', {
-              class: ['vxe-switch--label-icon', closeIcon]
-            }) : createCommentVNode(),
+            closeIcon
+              ? h('i', {
+                class: ['vxe-switch--label-icon', closeIcon]
+              })
+              : createCommentVNode(),
             offShowLabel
           ]),
           h('span', {

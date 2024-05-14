@@ -4,12 +4,12 @@ import { dynamicApp } from '../dynamics'
 
 export const VxeSwitch = Object.assign(VxeSwitchComponent, {
   install: function (app: App) {
-    app.component(VxeSwitchComponent.name, VxeSwitchComponent)
+    app.component(VxeSwitchComponent.name as string, VxeSwitchComponent)
   }
 })
 
 export const Switch = VxeSwitch
 
-dynamicApp.component(VxeSwitchComponent.name, VxeSwitchComponent)
+dynamicApp.component(VxeSwitchComponent.name as string, VxeSwitchComponent)
 
 export default VxeSwitch

@@ -1,12 +1,12 @@
 import { defineComponent, h, Teleport, ref, Ref, onUnmounted, reactive, nextTick, PropType, watch, createCommentVNode } from 'vue'
 import XEUtils from 'xe-utils'
-import GlobalConfig from '../../v-x-e-table/src/conf'
+import globalConfigStore from '../../ui/src/globalStore'
 import { useSize } from '../../hooks/size'
-import { getAbsolutePos, getEventTargetNode } from '../../tools/dom'
-import { getLastZIndex, nextZIndex } from '../../tools/utils'
-import { GlobalEvent } from '../../tools/event'
+import { getAbsolutePos, getEventTargetNode } from '../../ui/src/dom'
+import { getLastZIndex, nextZIndex } from '../../ui/src/utils'
+import { GlobalEvent } from '../../ui/src/event'
 
-import { VNodeStyle, VxePulldownConstructor, VxePulldownPropTypes, VxePulldownEmits, PulldownReactData, PulldownMethods, PulldownPrivateRef, VxePulldownMethods } from '../../../types/all'
+import { VxeComponentStyle, VxePulldownConstructor, VxePulldownPropTypes, VxePulldownEmits, PulldownReactData, PulldownMethods, PulldownPrivateRef, VxePulldownMethods } from '../../../types'
 
 export default defineComponent({
   name: 'VxePulldown',
@@ -14,7 +14,7 @@ export default defineComponent({
     modelValue: Boolean as PropType<VxePulldownPropTypes.ModelValue>,
     disabled: Boolean as PropType<VxePulldownPropTypes.Disabled>,
     placement: String as PropType<VxePulldownPropTypes.Placement>,
-    size: { type: String as PropType<VxePulldownPropTypes.Size>, default: () => GlobalConfig.size },
+    size: { type: String as PropType<VxePulldownPropTypes.Size>, default: () => globalConfigStore.size },
     className: [String, Function] as PropType<VxePulldownPropTypes.ClassName>,
     popupClassName: [String, Function] as PropType<VxePulldownPropTypes.PopupClassName>,
     destroyOnClose: Boolean as PropType<VxePulldownPropTypes.DestroyOnClose>,
@@ -85,7 +85,7 @@ export default defineComponent({
             const panelHeight = panelElem.offsetHeight
             const panelWidth = panelElem.offsetWidth
             const marginSize = 5
-            const panelStyle: VNodeStyle = {
+            const panelStyle: VxeComponentStyle = {
               zIndex: panelIndex
             }
             const { boundingTop, boundingLeft, visibleHeight, visibleWidth } = getAbsolutePos(targetElem)
@@ -312,21 +312,29 @@ export default defineComponent({
             }],
             placement: panelPlacement,
             style: panelStyle
-          }, dropdownSlot ? [
-            h('div', {
-              class: 'vxe-pulldown--panel-wrapper'
-            }, !inited || (destroyOnClose && !visiblePanel && !animatVisible) ? [] : [
-              headerSlot ? h('div', {
-                class: 'vxe-pulldown--panel-header'
-              }, headerSlot({ $pulldown: $xepulldown })) : createCommentVNode(),
-              h('div', {
-                class: 'vxe-pulldown--panel-body'
-              }, dropdownSlot({ $pulldown: $xepulldown })),
-              footerSlot ? h('div', {
-                class: 'vxe-pulldown--panel-footer'
-              }, footerSlot({ $pulldown: $xepulldown })) : createCommentVNode()
-            ])
-          ] : [])
+          }, dropdownSlot
+            ? [
+                h('div', {
+                  class: 'vxe-pulldown--panel-wrapper'
+                }, !inited || (destroyOnClose && !visiblePanel && !animatVisible)
+                  ? []
+                  : [
+                      headerSlot
+                        ? h('div', {
+                          class: 'vxe-pulldown--panel-header'
+                        }, headerSlot({ $pulldown: $xepulldown }))
+                        : createCommentVNode(),
+                      h('div', {
+                        class: 'vxe-pulldown--panel-body'
+                      }, dropdownSlot({ $pulldown: $xepulldown })),
+                      footerSlot
+                        ? h('div', {
+                          class: 'vxe-pulldown--panel-footer'
+                        }, footerSlot({ $pulldown: $xepulldown }))
+                        : createCommentVNode()
+                    ])
+              ]
+            : [])
         ])
       ])
     }

@@ -12,7 +12,7 @@ import VxeLoading from '../../loading/index'
 import { getSlotVNs } from '../../ui/src/vn'
 import { getI18n } from '../../ui/src/i18n'
 
-import { VxeModalConstructor, VxeModalPropTypes, ModalReactData, VxeModalEmits, ModalEventTypes, VxeButtonInstance, ModalMethods, ModalPrivateRef, VxeModalMethods } from '../../../types/all'
+import { VxeModalConstructor, VxeModalPropTypes, ModalReactData, VxeModalEmits, ModalEventTypes, VxeButtonInstance, ModalMethods, ModalPrivateRef, VxeModalMethods } from '../../../types'
 
 export const allActivedModals: VxeModalConstructor[] = []
 export const msgQueue: VxeModalConstructor[] = []

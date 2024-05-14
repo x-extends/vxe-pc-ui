@@ -83,10 +83,10 @@
 .vxe-table--tooltip-wrapper {
   &.theme--light {
     background-color: var(--vxe-ui-tooltip-light-background-color);
-    border: 1px solid var(--vxe-input-border-color);
+    border: 1px solid var(--vxe-ui-input-border-color);
     &.placement--top {
       .vxe-table--tooltip-arrow {
-        border-top-color: var(--vxe-input-border-color);
+        border-top-color: var(--vxe-ui-input-border-color);
         &:before {
           border-top-color: var(--vxe-ui-tooltip-light-background-color);
         }
@@ -94,7 +94,7 @@
     }
     &.placement--bottom {
       .vxe-table--tooltip-arrow {
-        border-bottom-color: var(--vxe-input-border-color);
+        border-bottom-color: var(--vxe-ui-input-border-color);
         &:before {
           border-bottom-color: var(--vxe-ui-tooltip-light-background-color);
         }

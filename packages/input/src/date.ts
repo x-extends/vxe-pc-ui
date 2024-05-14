@@ -1,6 +1,6 @@
 import XEUtils from 'xe-utils'
 
-import { VxeInputPropTypes } from '../../../types/all'
+import { VxeInputPropTypes } from '../../../types'
 
 export function toStringTimeDate (str: VxeInputPropTypes.ModelValue) {
   if (str) {

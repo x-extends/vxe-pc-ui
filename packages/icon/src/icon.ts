@@ -1,6 +1,6 @@
 import { defineComponent, h, PropType } from 'vue'
 
-import { VxeIconPropTypes, VxeIconEmits } from '../../../types/all'
+import { VxeIconPropTypes, VxeIconEmits } from '../../../types'
 
 export default defineComponent({
   name: 'VxeIcon',

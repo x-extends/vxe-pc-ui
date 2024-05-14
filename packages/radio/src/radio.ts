@@ -1,10 +1,10 @@
 import { defineComponent, h, computed, inject, PropType } from 'vue'
 import XEUtils from 'xe-utils'
-import { getFuncText } from '../../tools/utils'
-import GlobalConfig from '../../v-x-e-table/src/conf'
+import { getFuncText } from '../../ui/src/utils'
+import globalConfigStore from '../../ui/src/globalStore'
 import { useSize } from '../../hooks/size'
 
-import { VxeRadioPropTypes, VxeRadioConstructor, VxeRadioEmits, VxeRadioGroupConstructor, VxeRadioGroupPrivateMethods, RadioMethods, VxeFormConstructor, VxeFormPrivateMethods, VxeFormDefines } from '../../../types/all'
+import { VxeRadioPropTypes, VxeRadioConstructor, VxeRadioEmits, VxeRadioGroupConstructor, VxeRadioGroupPrivateMethods, RadioMethods, VxeFormConstructor, VxeFormPrivateMethods, VxeFormDefines } from '../../../types'
 
 export default defineComponent({
   name: 'VxeRadio',
@@ -15,8 +15,8 @@ export default defineComponent({
     content: [String, Number] as PropType<VxeRadioPropTypes.Content>,
     disabled: Boolean as PropType<VxeRadioPropTypes.Disabled>,
     name: String as PropType<VxeRadioPropTypes.Name>,
-    strict: { type: Boolean as PropType<VxeRadioPropTypes.Strict>, default: () => GlobalConfig.radio.strict },
-    size: { type: String as PropType<VxeRadioPropTypes.Size>, default: () => GlobalConfig.radio.size || GlobalConfig.size }
+    strict: { type: Boolean as PropType<VxeRadioPropTypes.Strict>, default: () => globalConfigStore.radio.strict },
+    size: { type: String as PropType<VxeRadioPropTypes.Size>, default: () => globalConfigStore.radio.size || globalConfigStore.size }
   },
   emits: [
     'update:modelValue',
@@ -24,8 +24,8 @@ export default defineComponent({
   ] as VxeRadioEmits,
   setup (props, context) {
     const { slots, emit } = context
-    const $xeform = inject<VxeFormConstructor & VxeFormPrivateMethods | null>('$xeform', null)
-    const $xeformiteminfo = inject<VxeFormDefines.ProvideItemInfo | null>('$xeformiteminfo', null)
+    const $xeform = inject<VxeFormConstructor & VxeFormPrivateMethods | null>('$xeForm', null)
+    const $xeformiteminfo = inject<VxeFormDefines.ProvideItemInfo | null>('$xeFormItemInfo', null)
 
     const xID = XEUtils.uniqueId()
 

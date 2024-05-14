@@ -1,5 +1,5 @@
 import { RenderFunction, SetupContext, Ref, ComponentPublicInstance } from 'vue'
-import { defineVxeComponent, VxeComponentBase, VxeComponentSize, VxeComponentEvent } from '../tool'
+import { defineVxeComponent, VxeComponentBase, VxeComponentSize, VxeComponentEvent, ValueOf } from '../tool'
 import { VxeButtonProps, VxeButtonPropTypes } from './button'
 
 /* eslint-disable no-use-before-define,@typescript-eslint/ban-types */

@@ -4,7 +4,7 @@ import XEUtils from 'xe-utils'
 import { ItemInfo } from './itemInfo'
 import { isEnableConf } from '../../ui/src/utils'
 
-import { VxeFormConstructor, VxeFormDefines } from '../../../types/all'
+import { VxeFormConstructor, VxeFormDefines } from '../../../types'
 
 export interface XEFormItemProvide {
   formItem: ItemInfo;

@@ -1,0 +1,13 @@
+%boxSizing {
+  box-sizing: border-box;
+}
+
+[class*="vxe-"] {
+  font-variant: tabular-nums;
+  font-feature-settings: 'tnum';
+  @extend %boxSizing;
+  &:after, &:before,
+  *:after, *:before {
+    @extend %boxSizing;
+  }
+}

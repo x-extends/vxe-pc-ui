@@ -2,7 +2,7 @@ import { VxeGlobalConfig } from './global-config'
 import { VxeGlobalIcon } from './global-icon'
 import { VxeGlobalRenderer } from './renderer'
 import { VxeGlobalValidators } from './validators'
-import { ModalController } from '../component/modal'
+import { ModalController } from '../components/modal'
 
 export function setConfig(options?: VxeGlobalConfig): Readonly<VxeGlobalConfig>
 

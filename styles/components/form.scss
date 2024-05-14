@@ -205,7 +205,7 @@
   .vxe-default-textarea,
   .vxe-default-select {
     outline: 0;
-    border: 1px solid var(--vxe-input-border-color);
+    border: 1px solid var(--vxe-ui-input-border-color);
     border-radius: var(--vxe-ui-border-radius);
   }
   .vxe-default-input,
@@ -235,7 +235,7 @@
     }
     &[disabled] {
       cursor: not-allowed;
-      background-color: var(--vxe-input-disabled-background-color);
+      background-color: var(--vxe-ui-input-disabled-background-color);
     }
   }
   .vxe-default-input[type="submit"],
@@ -260,7 +260,7 @@
       height: 24px;
     }
     &::placeholder {
-      color: var(--vxe-input-placeholder-color);
+      color: var(--vxe-ui-input-placeholder-color);
     }
   }
   .vxe-default-input[type="text"],
@@ -273,7 +273,7 @@
     resize: none;
     vertical-align: middle;
     &::placeholder {
-      color: var(--vxe-input-placeholder-color);
+      color: var(--vxe-ui-input-placeholder-color);
     }
   }
 }
