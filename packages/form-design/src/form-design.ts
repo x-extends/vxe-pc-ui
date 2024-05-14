@@ -1,4 +1,4 @@
-import { defineComponent, ref, h, PropType, reactive, computed, provide, watch } from 'vue'
+import { defineComponent, ref, h, PropType, reactive, provide, watch } from 'vue'
 import globalConfigStore from '../../ui/src/globalStore'
 import XEUtils from 'xe-utils'
 import WidgetComponent from './widget'

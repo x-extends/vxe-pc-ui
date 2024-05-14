@@ -1,6 +1,6 @@
 import { defineComponent, h, createApp, resolveComponent, reactive } from 'vue'
 
-import { VxeModalDefines } from '../../../types'
+import { VxeModalDefines } from '../../types'
 
 let dynamicContainerElem: HTMLElement
 

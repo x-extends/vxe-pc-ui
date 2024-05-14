@@ -69,6 +69,11 @@ const routes: Array<RouteRecordRaw> = [
     path: '/component/formDesign',
     name: 'FormDesignTest',
     component: () => import('../views/form-design/FormDesignTest.vue')
+  },
+  {
+    path: '/component/modalTest',
+    name: 'ModalTest',
+    component: () => import('../views/modal/ModalTest.vue')
   }
 ]
 

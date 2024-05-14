@@ -2,7 +2,7 @@ import { App } from 'vue'
 import XEUtils from 'xe-utils'
 import VxeModalComponent, { allActivedModals } from './src/modal'
 import VxeCore from '../ui/src/core'
-import { dynamicApp, dynamicStore, checkDynamic } from './src/dynamics'
+import { dynamicApp, dynamicStore, checkDynamic } from '../dynamics'
 
 import { VxeModalPropTypes, ModalEventTypes, VxeModalDefines } from '../../types'
 
