@@ -1,5 +1,6 @@
 import { App } from 'vue'
 import { VxeUIExport, VxeGlobalConfig } from './ui'
+
 import VxeIcon from './component/icon'
 import VxeLayoutContainer from './component/layout-container'
 import VxeLayoutHeader from './component/layout-header'
@@ -14,7 +15,14 @@ import VxeButton from './component/button'
 import VxeButtonGroup from './component/button-group'
 import VxeAnchor from './component/anchor'
 import VxeAnchorLink from './component/anchor-link'
-import VxeDesign from './component/design'
+import VxeLoading from './component/loading'
+import VxeTooltip from './component/tooltip'
+import VxeForm from './component/form'
+import VxeFormItem from './component/form-item'
+import VxeFormGather from './component/form-gather'
+import VxeFormDesign from './component/form-design'
+import VxeListDesign from './component/list-design'
+import VxeModal from './component/modal'
 
 export function install (app: App, options?: VxeGlobalConfig): void
 
@@ -34,9 +42,14 @@ declare module '@vue/runtime-core' {
     VxeButtonGroup: typeof VxeButtonGroup
     VxeAnchor: typeof VxeAnchor
     VxeAnchorLink: typeof VxeAnchorLink
-    VxeButton: typeof Button
-    VxeButtonGroup: typeof ButtonGroup
-    VxeDesign: typeof VxeDesign
+    VxeLoading: typeof VxeLoading
+    VxeTooltip: typeof VxeTooltip
+    VxeForm: typeof VxeForm
+    VxeFormItem: typeof VxeFormItem
+    VxeFormGather: typeof VxeFormGather
+    VxeFormDesign: typeof VxeFormDesign
+    VxeListDesign: typeof VxeListDesign
+    VxeModal: typeof VxeModal
   }
 }
 
@@ -64,4 +77,11 @@ export * from './component/button'
 export * from './component/button-group'
 export * from './component/anchor'
 export * from './component/anchor-link'
-export * from './component/design'
+export * from './component/loading'
+export * from './component/tooltip'
+export * from './component/form'
+export * from './component/form-item'
+export * from './component/form-gather'
+export * from './component/form-design'
+export * from './component/list-design'
+export * from './component/modal'

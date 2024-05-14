@@ -1,9 +1,11 @@
-import { RenderFunction, SetupContext, Ref } from 'vue'
+import { RenderFunction, SetupContext, Ref, ComponentPublicInstance } from 'vue'
 import { defineVxeComponent, VxeComponentBase, VxeComponentEvent } from '../tool'
 
 /* eslint-disable no-use-before-define,@typescript-eslint/ban-types */
 
-declare const VxeBreadcrumb: defineVxeComponent<VxeBreadcrumbProps, VxeBreadcrumbEventProps>
+export declare const VxeBreadcrumb: defineVxeComponent<VxeBreadcrumbProps, VxeBreadcrumbEventProps>
+
+export type VxeBreadcrumbInstance = ComponentPublicInstance<VxeBreadcrumbProps, VxeBreadcrumbConstructor>
 
 export interface VxeBreadcrumbConstructor extends VxeComponentBase, VxeBreadcrumbMethods {
   props: VxeBreadcrumbProps
@@ -55,7 +57,13 @@ export interface VxeBreadcrumbListeners { }
 
 export namespace VxeBreadcrumbEvents { }
 
-export interface VxeBreadcrumbSlots {
+export namespace VxeBreadcrumbSlotTypes {
+  export interface DefaultSlotParams {}
 }
 
+export interface VxeBreadcrumbSlots {
+  default: (params: VxeBreadcrumbSlotTypes.DefaultSlotParams) => any
+}
+
+export const Breadcrumb: typeof VxeBreadcrumb
 export default VxeBreadcrumb

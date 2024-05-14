@@ -1,5 +1,5 @@
 import { App } from 'vue'
-import VxeButtonGroupComponent from './src/button-group'
+import VxeButtonGroupComponent from '../button/src/button-group'
 
 const VxeButtonGroup = Object.assign({}, VxeButtonGroupComponent, {
   install (app: App) {

@@ -49,6 +49,26 @@ const routes: Array<RouteRecordRaw> = [
     path: '/component/anchor',
     name: 'AnchorTest',
     component: () => import('../views/anchor/AnchorTest.vue')
+  },
+  {
+    path: '/component/loading',
+    name: 'LoadingTest',
+    component: () => import('../views/loading/LoadingTest.vue')
+  },
+  {
+    path: '/component/tooltip',
+    name: 'TooltipTest',
+    component: () => import('../views/tooltip/TooltipTest.vue')
+  },
+  {
+    path: '/component/form',
+    name: 'FormTest',
+    component: () => import('../views/form/FormTest.vue')
+  },
+  {
+    path: '/component/formDesign',
+    name: 'FormDesignTest',
+    component: () => import('../views/form-design/FormDesignTest.vue')
   }
 ]
 

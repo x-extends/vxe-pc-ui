@@ -1,10 +1,12 @@
-import { RenderFunction, SetupContext, Ref } from 'vue'
+import { RenderFunction, SetupContext, Ref, ComponentPublicInstance } from 'vue'
 import { defineVxeComponent, VxeComponentBase, VxeComponentSize, VxeComponentEvent } from '../tool'
 import { VxeButtonProps, VxeButtonPropTypes } from './button'
 
 /* eslint-disable no-use-before-define,@typescript-eslint/ban-types */
 
-declare const VxeButtonGroup: defineVxeComponent<VxeButtonGroupProps, VxeButtonGroupEventProps>
+export declare const VxeButtonGroup: defineVxeComponent<VxeButtonGroupProps, VxeButtonGroupEventProps>
+
+export type VxeButtonGroupInstance = ComponentPublicInstance<VxeButtonGroupProps, VxeButtonGroupConstructor>
 
 export interface VxeButtonGroupConstructor extends VxeComponentBase, VxeButtonGroupMethods {
   props: VxeButtonGroupProps
@@ -80,7 +82,13 @@ export interface VxeButtonGroupListeners { }
 
 export namespace VxeButtonGroupEvents { }
 
-export interface VxeButtonGroupSlots {
+export namespace VxeButtonGroupSlotTypes {
+  export interface DefaultSlotParams {}
 }
 
+export interface VxeButtonGroupSlots {
+  default: (params: VxeButtonGroupSlotTypes.DefaultSlotParams) => any
+}
+
+export const ButtonGroup: typeof VxeButtonGroup
 export default VxeButtonGroup

@@ -3,7 +3,9 @@ import { defineVxeComponent, VxeComponentBase, VxeComponentEvent } from '../tool
 
 /* eslint-disable no-use-before-define,@typescript-eslint/ban-types */
 
-declare const VxeCol: defineVxeComponent<VxeColProps, VxeColEventProps>
+export declare const VxeCol: defineVxeComponent<VxeColProps, VxeColEventProps>
+
+export type VxeColInstance = ComponentPublicInstance<VxeColProps, VxeColConstructor>
 
 export interface VxeColConstructor extends VxeComponentBase, VxeColMethods {
   props: VxeColProps
@@ -52,7 +54,13 @@ export interface VxeColListeners { }
 
 export namespace VxeColEvents { }
 
-export interface VxeColSlots {
+export namespace VxeColSlotTypes {
+  export interface DefaultSlotParams {}
 }
 
+export interface VxeColSlots {
+  default: (params: VxeColSlotTypes.DefaultSlotParams) => any
+}
+
+export const Col: typeof VxeCol
 export default VxeCol

@@ -1,9 +1,11 @@
-import { RenderFunction, SetupContext, Ref } from 'vue'
+import { RenderFunction, SetupContext, Ref, ComponentPublicInstance } from 'vue'
 import { defineVxeComponent, VxeComponentBase, VxeComponentEvent } from '../tool'
 
 /* eslint-disable no-use-before-define,@typescript-eslint/ban-types */
 
-declare const VxeLayoutAside: defineVxeComponent<VxeLayoutAsideProps, VxeLayoutAsideEventProps>
+export declare const VxeLayoutAside: defineVxeComponent<VxeLayoutAsideProps, VxeLayoutAsideEventProps>
+
+export type VxeLayoutAsideInstance = ComponentPublicInstance<VxeLayoutAsideProps, VxeLayoutAsideConstructor>
 
 export interface VxeLayoutAsideConstructor extends VxeComponentBase, VxeLayoutAsideMethods {
   props: VxeLayoutAsideProps
@@ -51,7 +53,13 @@ export interface VxeLayoutAsideListeners { }
 
 export namespace VxeLayoutAsideEvents { }
 
-export interface VxeLayoutAsideSlots {
+export namespace VxeLayoutAsideSlotTypes {
+  export interface DefaultSlotParams {}
 }
 
+export interface VxeLayoutAsideSlots {
+  default: (params: VxeLayoutAsideSlotTypes.DefaultSlotParams) => any
+}
+
+export const LayoutAside: typeof VxeLayoutAside
 export default VxeLayoutAside

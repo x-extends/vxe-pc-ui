@@ -1,10 +1,12 @@
-import { RenderFunction, SetupContext, Ref } from 'vue'
+import { RenderFunction, SetupContext, Ref, ComponentPublicInstance } from 'vue'
 import { defineVxeComponent, VxeComponentBase, VxeComponentEvent, ValueOf } from '../tool'
 import { VxeAnchorLinkProps, VxeAnchorLinkPropTypes, VxeAnchorLinkDefines } from './anchor-link'
 
 /* eslint-disable no-use-before-define,@typescript-eslint/ban-types */
 
-declare const VxeAnchor: defineVxeComponent<VxeAnchorProps, VxeAnchorEventProps>
+export declare const VxeAnchor: defineVxeComponent<VxeAnchorProps, VxeAnchorEventProps>
+
+export type VxeAnchorInstance = ComponentPublicInstance<VxeAnchorProps, VxeAnchorConstructor>
 
 export interface VxeAnchorConstructor extends VxeComponentBase, VxeAnchorMethods {
   props: VxeAnchorProps
@@ -73,7 +75,13 @@ export interface VxeAnchorListeners { }
 
 export namespace VxeAnchorEvents { }
 
-export interface VxeAnchorSlots {
+export namespace VxeAnchorSlotTypes {
+  export interface DefaultSlotParams {}
 }
 
+export interface VxeAnchorSlots {
+  default: (params: VxeAnchorSlotTypes.DefaultSlotParams) => any
+}
+
+export const Anchor: typeof VxeAnchor
 export default VxeAnchor

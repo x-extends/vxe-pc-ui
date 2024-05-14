@@ -1,6 +1,6 @@
 import { defineComponent, h, ref, Ref, computed, Teleport, VNode, onUnmounted, reactive, nextTick, PropType, onMounted, inject } from 'vue'
 import XEUtils from 'xe-utils'
-import globalConfigStore from '../../ui/src/globalStore'
+import { getConfig } from '../../ui/src/core'
 import iconConfigStore from '../../ui/src/iconStore'
 import { useSize } from '../../hooks/size'
 import { getAbsolutePos, getEventTargetNode } from '../../ui/src/dom'
@@ -23,7 +23,7 @@ export default defineComponent({
     /**
      * 按钮尺寸
      */
-    size: { type: String as PropType<VxeButtonPropTypes.Size>, default: () => globalConfigStore.button.size || globalConfigStore.size },
+    size: { type: String as PropType<VxeButtonPropTypes.Size>, default: () => getConfig('button.size') || getConfig('size') },
     /**
      * 用来标识这一项
      */
@@ -71,7 +71,7 @@ export default defineComponent({
     /**
      * 是否将弹框容器插入于 body 内
      */
-    transfer: { type: Boolean as PropType<VxeButtonPropTypes.Transfer>, default: () => globalConfigStore.button.transfer }
+    transfer: { type: Boolean as PropType<VxeButtonPropTypes.Transfer>, default: () => getConfig('button.transfer') }
   },
   emits: [
     'click',

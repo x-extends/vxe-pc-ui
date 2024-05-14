@@ -1,9 +1,11 @@
-import { RenderFunction, SetupContext, Ref } from 'vue'
+import { RenderFunction, SetupContext, Ref, ComponentPublicInstance } from 'vue'
 import { defineVxeComponent, VxeComponentBase, VxeComponentEvent } from '../tool'
 
 /* eslint-disable no-use-before-define,@typescript-eslint/ban-types */
 
-declare const VxeLayoutFooter: defineVxeComponent<VxeLayoutFooterProps, VxeLayoutFooterEventProps>
+export declare const VxeLayoutFooter: defineVxeComponent<VxeLayoutFooterProps, VxeLayoutFooterEventProps>
+
+export type VxeLayoutFooterInstance = ComponentPublicInstance<VxeLayoutFooterProps, VxeLayoutFooterConstructor>
 
 export interface VxeLayoutFooterConstructor extends VxeComponentBase, VxeLayoutFooterMethods {
   props: VxeLayoutFooterProps
@@ -52,7 +54,13 @@ export interface VxeLayoutFooterListeners { }
 
 export namespace VxeLayoutFooterEvents { }
 
-export interface VxeLayoutFooterSlots {
+export namespace VxeLayoutFooterSlotTypes {
+  export interface DefaultSlotParams {}
 }
 
+export interface VxeLayoutFooterSlots {
+  default: (params: VxeLayoutFooterSlotTypes.DefaultSlotParams) => any
+}
+
+export const LayoutFooter: typeof VxeLayoutFooter
 export default VxeLayoutFooter

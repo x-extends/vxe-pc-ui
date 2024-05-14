@@ -1,6 +1,6 @@
 {
   "name": "vxe-pc-ui",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "一个基于 vue 的 PC 端组件库",
   "scripts": {
     "update": "npm install --legacy-peer-deps",

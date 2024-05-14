@@ -5,6 +5,7 @@ $vxe-ui-status-success-color: #67c23a;
 $vxe-ui-status-info-color: #909399;
 $vxe-ui-status-warning-color: #e6a23c;
 $vxe-ui-status-danger-color: #f56c6c;
+$vxe-ui-status-error-color: #f56c6c;
 
 :root {
   /*font*/
@@ -19,8 +20,14 @@ $vxe-ui-status-danger-color: #f56c6c;
   /*font color*/
   --vxe-ui-font-color: #{$vxe-ui-font-color}; // 全局默认字体颜色
   --vxe-ui-font-primary-color: #{$vxe-ui-font-primary-color}; // 主要字体颜色
+  --vxe-ui-font-primary-lighten-color: #{lighten($vxe-ui-font-primary-color, 10%)};
+  --vxe-ui-font-primary-darken-color: #{darken($vxe-ui-font-primary-color, 10%)};
+  --vxe-ui-font-primary-disabled-color: #{lighten($vxe-ui-font-primary-color, 20%)};
   --vxe-ui-font-secondary-color: #909399; // 次要字体颜色
   --vxe-ui-font-placeholder-color: #a8abb2; // 占位符字体颜色
+  --vxe-ui-font-lighten-color: #{lighten($vxe-ui-font-color, 10%)};
+  --vxe-ui-font-darken-color: #{darken($vxe-ui-font-color, 10%)};
+  --vxe-ui-font-disabled-color: #BFBFBF;
 
   /*base border*/
   --vxe-ui-border-radius: 4px;
@@ -30,29 +37,29 @@ $vxe-ui-status-danger-color: #f56c6c;
   --vxe-ui-status-info-color: #{$vxe-ui-status-info-color};
   --vxe-ui-status-warning-color: #{$vxe-ui-status-warning-color};
   --vxe-ui-status-danger-color: #{$vxe-ui-status-danger-color};
+  --vxe-ui-status-error-color: #{$vxe-ui-status-error-color};
 
-  --vxe-ui-status-font-lighten-color: #{lighten($vxe-ui-font-color, 10%)};
-  --vxe-ui-status-primary-lighten-color: #{lighten($vxe-ui-font-primary-color, 10%)};
   --vxe-ui-status-success-lighten-color: #{lighten($vxe-ui-status-success-color, 10%)};
   --vxe-ui-status-info-lighten-color: #{lighten($vxe-ui-status-info-color, 10%)};
   --vxe-ui-status-warning-lighten-color: #{lighten($vxe-ui-status-warning-color, 10%)};
   --vxe-ui-status-danger-lighten-color: #{lighten($vxe-ui-status-danger-color, 10%)};
+  --vxe-ui-status-error-lighten-color: #{lighten($vxe-ui-status-error-color, 10%)};
   
-  --vxe-ui-status-font-darken-color: #{darken($vxe-ui-font-color, 10%)};
-  --vxe-ui-status-primary-darken-color: #{darken($vxe-ui-font-primary-color, 10%)};
   --vxe-ui-status-success-darken-color: #{darken($vxe-ui-status-success-color, 10%)};
   --vxe-ui-status-info-darken-color: #{darken($vxe-ui-status-info-color, 10%)};
   --vxe-ui-status-warning-darken-color: #{darken($vxe-ui-status-warning-color, 10%)};
   --vxe-ui-status-danger-darken-color: #{darken($vxe-ui-status-danger-color, 10%)};
+  --vxe-ui-status-error-lighten-color: #{lighten($vxe-ui-status-error-color, 10%)};
   
-  --vxe-ui-status-font-disabled-color: #BFBFBF;
-  --vxe-ui-status-primary-disabled-color: #{lighten($vxe-ui-font-primary-color, 20%)};
   --vxe-ui-status-success-disabled-color: #{lighten($vxe-ui-status-success-color, 20%)};
   --vxe-ui-status-info-disabled-color: #{lighten($vxe-ui-status-info-color, 20%)};
   --vxe-ui-status-warning-disabled-color: #{lighten($vxe-ui-status-warning-color, 20%)};
   --vxe-ui-status-danger-disabled-color: #{lighten($vxe-ui-status-danger-color, 20%)};
+  --vxe-ui-status-error-lighten-color: #{lighten($vxe-ui-status-error-color, 10%)};
 
   /*layout*/
+  --vxe-ui-layout-padding-default: 8px;
+  --vxe-ui-layout-padding-half: calc(var(--vxe-ui-layout-padding-default) / 2);
   --vxe-ui-layout-aside-default-width: 300px;
   --vxe-ui-layout-aside-collapse-width: 60px;
 
@@ -78,4 +85,32 @@ $vxe-ui-status-danger-color: #f56c6c;
   // breadcrumb
   --vxe-ui-breadcrumb-color: var(--vxe-ui-font-secondary-color);
   --vxe-ui-breadcrumb-current-item-color: var(--vxe-ui-font-color);
+
+  /*loading*/
+  --vxe-ui-loading-color: var(--vxe-ui-font-primary-color);
+  --vxe-ui-loading-background-color: rgba(255, 255, 255, 0.5);
+  --vxe-ui-loading-z-index: 999;
+
+  /*tooltip*/
+  --vxe-ui-tooltip-dark-color: #fff;
+  --vxe-ui-tooltip-dark-background-color: #303133;
+  --vxe-ui-tooltip-light-background-color: #fff;
+
+  /*form*/
+  --vxe-ui-form-item-min-height-default: 36px;
+  --vxe-ui-form-item-min-height-medium: 34px;
+  --vxe-ui-form-item-min-height-small: 32px;
+  --vxe-ui-form-item-min-height-mini: 30px;
+  --vxe-ui-form-background-color: #fff;
+  --vxe-ui-form-validate-error-color: var(--vxe-ui-status-error-color);
+  --vxe-ui-form-validate-error-background-color: inherit;
+
+  // design-form
+  --vxe-ui-design-form-widget-item-background-color: #fff;
+  --vxe-ui-design-form-widget-item-hover-background-color: #{lighten($vxe-ui-font-primary-color, 10%)};
+
+  /*modal*/
+  --vxe-ui-modal-header-background-color: #F8F8F8;
+  --vxe-ui-modal-body-background-color: #fff;
+  --vxe-ui-modal-border-color: #ebeef5;
 }

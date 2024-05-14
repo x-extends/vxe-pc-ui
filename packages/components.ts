@@ -15,7 +15,12 @@ import VxeButton from './button'
 import VxeButtonGroup from './button-group'
 import VxeAnchor from './anchor'
 import VxeAnchorLink from './anchor-link'
-import VxeDesign from './design'
+import VxeLoading from './loading'
+import VxeTooltip from './tooltip'
+import VxeForm from './form'
+import VxeFormDesign from './form-design'
+import VxeListDesign from './list-design'
+import VxeModal from './modal'
 
 import zhCN from './locale/lang/zh-CN'
 
@@ -43,7 +48,12 @@ export function install (app: App, options?: VxeGlobalConfig) {
   app.use(VxeButtonGroup)
   app.use(VxeAnchor)
   app.use(VxeAnchorLink)
-  app.use(VxeDesign)
+  app.use(VxeLoading)
+  app.use(VxeTooltip)
+  app.use(VxeForm)
+  app.use(VxeFormDesign)
+  app.use(VxeListDesign)
+  app.use(VxeModal)
 }
 
 export * from './ui'
@@ -63,4 +73,9 @@ export * from './button'
 export * from './button-group'
 export * from './anchor'
 export * from './anchor-link'
-export * from './design'
+export * from './loading'
+export * from './tooltip'
+export * from './form'
+export * from './form-design'
+export * from './list-design'
+export * from './modal'

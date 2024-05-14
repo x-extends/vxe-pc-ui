@@ -1,5 +1,5 @@
 import { App } from 'vue'
-import VxeAnchorLinkComponent from './src/anchor-link'
+import VxeAnchorLinkComponent from '../anchor/src/anchor-link'
 
 const VxeAnchorLink = Object.assign({}, VxeAnchorLinkComponent, {
   install (app: App) {

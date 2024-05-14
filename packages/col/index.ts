@@ -1,5 +1,5 @@
 import { App } from 'vue'
-import VxeColComponent from './src/col'
+import VxeColComponent from '../row/src/col'
 
 const VxeCol = Object.assign({}, VxeColComponent, {
   install (app: App) {

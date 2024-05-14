@@ -1,7 +1,7 @@
-import globalConfigStore from './globalStore'
+import { getI18n } from './i18n'
 
 export function getLog (message: string, params?: any) {
-  return `[vxe-table v${process.env.VUE_APP_VXE_TABLE_VERSION}] ${globalConfigStore.i18n(message, params)}`
+  return `[vxe-table v${process.env.VUE_APP_VXE_TABLE_VERSION}] ${getI18n(message, params)}`
 }
 
 function outLog (type: 'log' | 'warn' | 'error') {

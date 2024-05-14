@@ -3,7 +3,9 @@ import { defineVxeComponent, VxeComponentBase, VxeComponentEvent } from '../tool
 
 /* eslint-disable no-use-before-define,@typescript-eslint/ban-types */
 
-declare const VxeBreadcrumbItem: defineVxeComponent<VxeBreadcrumbItemProps, VxeBreadcrumbItemEventProps>
+export declare const VxeBreadcrumbItem: defineVxeComponent<VxeBreadcrumbItemProps, VxeBreadcrumbItemEventProps>
+
+export type VxeBreadcrumbItemInstance = ComponentPublicInstance<VxeBreadcrumbItemProps, VxeBreadcrumbItemConstructor>
 
 export interface VxeBreadcrumbItemConstructor extends VxeComponentBase, VxeBreadcrumbItemMethods {
   props: VxeBreadcrumbItemProps
@@ -52,7 +54,16 @@ export interface VxeBreadcrumbItemListeners { }
 
 export namespace VxeBreadcrumbItemEvents { }
 
-export interface VxeBreadcrumbItemSlots {
+export namespace VxeBreadcrumbItemSlotTypes {
+  export interface DefaultSlotParams {}
 }
 
+export interface VxeBreadcrumbItemSlots {
+  /**
+   * 自定义显示内容模板
+   */
+  default: (params: VxeBreadcrumbItemSlotTypes.DefaultSlotParams) => any
+}
+
+export const BreadcrumbItem: typeof VxeBreadcrumbItem
 export default VxeBreadcrumbItem

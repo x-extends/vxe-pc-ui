@@ -1,9 +1,11 @@
-import { RenderFunction, SetupContext, Ref } from 'vue'
+import { RenderFunction, SetupContext, Ref, ComponentPublicInstance } from 'vue'
 import { defineVxeComponent, VxeComponentBase, VxeComponentEvent } from '../tool'
 
 /* eslint-disable no-use-before-define,@typescript-eslint/ban-types */
 
-declare const VxeRow: defineVxeComponent<VxeRowProps, VxeRowEventProps>
+export declare const VxeRow: defineVxeComponent<VxeRowProps, VxeRowEventProps>
+
+export type VxeRowInstance = ComponentPublicInstance<VxeRowProps, VxeRowConstructor>
 
 export interface VxeRowConstructor extends VxeComponentBase, VxeRowMethods {
   props: VxeRowProps
@@ -59,7 +61,13 @@ export interface VxeRowListeners { }
 
 export namespace VxeRowEvents { }
 
-export interface VxeRowSlots {
+export namespace VxeRowSlotTypes {
+  export interface DefaultSlotParams {}
 }
 
+export interface VxeRowSlots {
+  default: (params: VxeRowSlotTypes.DefaultSlotParams) => any
+}
+
+export const Row: typeof VxeRow
 export default VxeRow

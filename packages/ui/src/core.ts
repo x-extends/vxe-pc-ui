@@ -3,6 +3,9 @@ import DomZIndex from 'dom-zindex'
 import globalConfigStore from './globalStore'
 import iconConfigStore from './iconStore'
 import setTheme from './theme'
+import { getI18n } from './i18n'
+import { renderer } from './renderer'
+import { validators } from './validators'
 
 import { VxeUIExport, VxeGlobalConfig } from '../../../types'
 
@@ -43,9 +46,18 @@ const VxeCore: VxeUIExport = {
   setConfig,
   getConfig,
   setIcon,
-  getIcon
+  getIcon,
+  getI18n,
+  renderer,
+  validators,
+
+  modal: null as any
 }
 
 setTheme()
+
+export * from './i18n'
+export * from './renderer'
+export * from './validators'
 
 export default VxeCore

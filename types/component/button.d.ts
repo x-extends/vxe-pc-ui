@@ -3,7 +3,9 @@ import { defineVxeComponent, VxeComponentBase, VxeComponentEvent, VxeComponentSi
 
 /* eslint-disable no-use-before-define,@typescript-eslint/ban-types */
 
-declare const VxeButton: defineVxeComponent<VxeButtonProps, VxeButtonEventProps>
+export declare const VxeButton: defineVxeComponent<VxeButtonProps, VxeButtonEventProps>
+
+export type VxeButtonInstance = ComponentPublicInstance<VxeButtonProps, VxeButtonConstructor>
 
 export interface VxeButtonConstructor extends VxeComponentBase, VxeButtonMethods {
   props: VxeButtonProps
@@ -151,7 +153,16 @@ export interface VxeButtonListeners { }
 
 export namespace VxeButtonEvents { }
 
-export interface VxeButtonSlots {
+export namespace VxeButtonSlotTypes {
+  export interface DefaultSlotParams {}
 }
 
+export interface VxeButtonSlots {
+  /**
+   * 自定义显示内容模板
+   */
+  default: (params: VxeButtonSlotTypes.DefaultSlotParams) => any
+}
+
+export const Button: typeof VxeButton
 export default VxeButton

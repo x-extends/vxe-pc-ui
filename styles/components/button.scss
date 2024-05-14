@@ -5,9 +5,9 @@ $btnThemeList: (
     name: "primary",
     textColor: var(--vxe-ui-font-primary-color),
     btnColor: #fff,
-    btnLightenColor: var(--vxe-ui-status-primary-lighten-color),
-    btnDarkenColor: var(--vxe-ui-status-primary-darken-color),
-    btnDisabledColor: var(--vxe-ui-status-primary-disabled-color)
+    btnLightenColor: var(--vxe-ui-font-primary-lighten-color),
+    btnDarkenColor: var(--vxe-ui-font-primary-darken-color),
+    btnDisabledColor: var(--vxe-ui-font-primary-disabled-color)
   ),
   (
     name: "success",
@@ -100,7 +100,7 @@ $btnThemeList: (
         color: var(--vxe-ui-font-darken-color);
       }
       &:hover {
-        color: var(--vxe-ui-status-primary-lighten-color);
+        color: var(--vxe-ui-font-primary-lighten-color);
       }
     }
     @for $index from 0 to length($btnThemeList) {
@@ -142,14 +142,14 @@ $btnThemeList: (
     }
     &:not(.is--disabled) {
       &:hover {
-        color: var(--vxe-ui-status-primary-lighten-color);
+        color: var(--vxe-ui-font-primary-lighten-color);
       }
       &:focus {
         border-color: var(--vxe-ui-font-primary-color);
       }
       &:active {
-        color: var(--vxe-ui-status-primary-darken-color);
-        border-color: var(--vxe-ui-status-primary-darken-color);
+        color: var(--vxe-ui-font-primary-darken-color);
+        border-color: var(--vxe-ui-font-primary-darken-color);
         background-color: var(--vxe-ui-button-default-background-color);
       }
     }
@@ -274,7 +274,7 @@ $btnThemeList: (
   &.is--active {
     & > .vxe-button {
       &:not(.is--disabled) {
-        color: var(--vxe-ui-status-primary-lighten-color);
+        color: var(--vxe-ui-font-primary-lighten-color);
       }
       &.type--text {
         @for $index from 0 to length($btnThemeList) {

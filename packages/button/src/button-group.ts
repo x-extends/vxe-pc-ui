@@ -1,5 +1,5 @@
 import { defineComponent, h, provide, PropType } from 'vue'
-import globalConfigStore from '../../ui/src/globalStore'
+import { getConfig } from '../../ui/src/core'
 import XEUtils from 'xe-utils'
 import VxeButtonComponent from '../../button/src/button'
 import { useSize } from '../../hooks/size'
@@ -16,7 +16,7 @@ export default defineComponent({
     circle: Boolean as PropType<VxeButtonGroupPropTypes.Circle>,
     className: [String, Function] as PropType<VxeButtonGroupPropTypes.ClassName>,
     disabled: Boolean as PropType<VxeButtonGroupPropTypes.Disabled>,
-    size: { type: String as PropType<VxeButtonGroupPropTypes.Size>, default: () => globalConfigStore.buttonGroup.size || globalConfigStore.size }
+    size: { type: String as PropType<VxeButtonGroupPropTypes.Size>, default: () => getConfig('buttonGroup.size') || getConfig('size') }
   },
   emits: [
     'click'

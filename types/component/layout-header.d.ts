@@ -3,7 +3,7 @@ import { defineVxeComponent, VxeComponentBase, VxeComponentEvent } from '../tool
 
 /* eslint-disable no-use-before-define,@typescript-eslint/ban-types */
 
-declare const VxeLayoutHeader: defineVxeComponent<VxeLayoutHeaderProps, VxeLayoutHeaderEventProps>
+export declare const VxeLayoutHeader: defineVxeComponent<VxeLayoutHeaderProps, VxeLayoutHeaderEventProps>
 
 export interface VxeLayoutHeaderConstructor extends VxeComponentBase, VxeLayoutHeaderMethods {
   props: VxeLayoutHeaderProps
@@ -52,7 +52,13 @@ export interface VxeLayoutHeaderListeners { }
 
 export namespace VxeLayoutHeaderEvents { }
 
-export interface VxeLayoutHeaderSlots {
+export namespace VxeLayoutHeaderSlotTypes {
+  export interface DefaultSlotParams {}
 }
 
+export interface VxeLayoutHeaderSlots {
+  default: (params: VxeLayoutHeaderSlotTypes.DefaultSlotParams) => any
+}
+
+export const LayoutHeader: typeof VxeLayoutHeader
 export default VxeLayoutHeader

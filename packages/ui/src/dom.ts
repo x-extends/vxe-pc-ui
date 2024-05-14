@@ -101,3 +101,26 @@ export function getAbsolutePos (elem: any) {
   const { scrollTop, scrollLeft, visibleHeight, visibleWidth } = getDomNode()
   return { boundingTop, top: scrollTop + boundingTop, boundingLeft, left: scrollLeft + boundingLeft, visibleHeight, visibleWidth }
 }
+
+const scrollIntoViewIfNeeded = 'scrollIntoViewIfNeeded'
+const scrollIntoView = 'scrollIntoView'
+
+export function scrollToView (elem: any) {
+  if (elem) {
+    if (elem[scrollIntoViewIfNeeded]) {
+      elem[scrollIntoViewIfNeeded]()
+    } else if (elem[scrollIntoView]) {
+      elem[scrollIntoView]()
+    }
+  }
+}
+
+export function triggerEvent (targetElem: Element, type: string) {
+  if (targetElem) {
+    targetElem.dispatchEvent(new Event(type))
+  }
+}
+
+export function isNodeElement (elem: any): elem is HTMLElement {
+  return elem && elem.nodeType === 1
+}

@@ -14,16 +14,16 @@
   }
   &.is--checked,
   &.is--indeterminate {
-    color: var(--vxe-primary-color);
+    color: var(--vxe-ui-font-primary-color);
     .vxe-checkbox--icon {
-      color: var(--vxe-primary-color);
+      color: var(--vxe-ui-font-primary-color);
     }
   }
   &:not(.is--disabled) {
     cursor: pointer;
     &:hover {
       .vxe-checkbox--icon {
-        color: var(--vxe-primary-color);
+        color: var(--vxe-ui-font-primary-color);
       }
     }
   }
@@ -31,7 +31,7 @@
     cursor: default;
   }
   &.is--disabled {
-    color: var(--vxe-font-disabled-color);
+    color: var(--vxe-ui-font-disabled-color);
     cursor: not-allowed;
     .vxe-checkbox--icon {
       color: var(--vxe-input-disabled-color);
@@ -55,21 +55,21 @@
     user-select: none;
   }
   &.is--checked {
-    color: var(--vxe-primary-color);
+    color: var(--vxe-ui-font-primary-color);
     .vxe-radio--icon {
-      color: var(--vxe-primary-color);
+      color: var(--vxe-ui-font-primary-color);
     }
   }
   &:not(.is--disabled) {
     cursor: pointer;
     &:hover {
       .vxe-radio--icon {
-        color: var(--vxe-primary-color);
+        color: var(--vxe-ui-font-primary-color);
       }
     }
   }
   &.is--disabled {
-    color: var(--vxe-font-disabled-color);
+    color: var(--vxe-ui-font-disabled-color);
     cursor: not-allowed;
     .vxe-radio--icon {
       color: var(--vxe-input-disabled-color);

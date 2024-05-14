@@ -1,9 +1,11 @@
-import { RenderFunction, SetupContext, Ref } from 'vue'
+import { RenderFunction, SetupContext, Ref, ComponentPublicInstance } from 'vue'
 import { defineVxeComponent, VxeComponentBase, VxeComponentEvent } from '../tool'
 
 /* eslint-disable no-use-before-define,@typescript-eslint/ban-types */
 
-declare const VxeIcon: defineVxeComponent<VxeIconProps, VxeIconEventProps>
+export declare const VxeIcon: defineVxeComponent<VxeIconProps, VxeIconEventProps>
+
+export type VxeIconInstance = ComponentPublicInstance<VxeIconProps, VxeIconConstructor>
 
 export interface VxeIconConstructor extends VxeComponentBase, VxeIconMethods {
   props: VxeIconProps
@@ -61,7 +63,10 @@ export interface VxeIconListeners { }
 
 export namespace VxeIconEvents { }
 
+export namespace VxeIconSlotTypes {}
+
 export interface VxeIconSlots {
 }
 
+export const Icon: typeof VxeIcon
 export default VxeIcon

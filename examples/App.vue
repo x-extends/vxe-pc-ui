@@ -43,15 +43,16 @@ const navList = ref([
   { name: 'IconTest' },
   { name: 'BreadcrumbTest' },
   { name: 'ButtonTest' },
-  { name: 'AnchorTest' }
+  { name: 'AnchorTest' },
+  { name: 'LoadingTest' },
+  { name: 'TooltipTest' },
+  { name: 'FormTest' },
+  { name: 'FormDesignTest' }
 ])
 </script>
 
 <style lang="scss" scoped>
 .nav {
   display: block;
-}
-.vxe-layout-body {
-  padding: 16px;
 }
 </style>

@@ -1,0 +1,93 @@
+@import '../helpers/mixin.scss';
+
+.vxe-design-form {
+  display: flex;
+  flex-direction: row;
+}
+
+.vxe-design-form--widget {
+  width: 260px;
+  flex-shrink: 0;
+  overflow: auto;
+  margin-right: var(--vxe-ui-layout-padding-default);
+}
+
+.vxe-design-form--preview {
+  flex-grow: 1;
+  overflow: auto;
+}
+
+.vxe-design-form--setting {
+  width: 280px;
+  flex-shrink: 0;
+  overflow: auto;
+  margin-left: var(--vxe-ui-layout-padding-default);
+}
+
+.vxe-design-form--widget,
+.vxe-design-form--setting {
+  padding: var(--vxe-ui-layout-padding-default);
+  border-radius: var(--vxe-ui-border-radius);
+  background-color: var(--vxe-ui-layout-background-color);
+}
+
+.vxe-design-form--preview {
+  padding: var(--vxe-ui-layout-padding-default) 0;
+  border-radius: var(--vxe-ui-border-radius);
+  background-color: var(--vxe-ui-layout-background-color);
+  user-select: none;
+}
+
+.vxe-design-form--widget-list {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+}
+.vxe-design-form--widget-item {
+  width: 50%;
+  padding: var(--vxe-ui-layout-padding-half);
+}
+.vxe-design-form--widget-box {
+  height: 32px;
+  line-height: 32px;
+  padding: 0 var(--vxe-ui-layout-padding-half);
+  border-radius: var(--vxe-ui-border-radius);
+  border: 1px solid var(--vxe-ui-font-primary-lighten-color);
+  background-color: var(--vxe-ui-design-form-widget-item-background-color);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  cursor: grabbing;
+  user-select: none;
+}
+
+.vxe-design-form--preview-list-move {
+  transition: transform 0.35s;
+}
+
+.vxe-design-form--preview-item {
+  position: relative;
+  display: block;
+  padding: var(--vxe-ui-layout-padding-half);
+  border: 1px solid transparent;
+  cursor: grabbing;
+  &::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+  }
+  &.is--active {
+    border: 1px dashed var(--vxe-ui-font-primary-color);
+    background-color: #ebf3fc;
+  }
+  &.is--sort {
+    background-color: #dde9fd;
+  }
+  &.is--drag {
+    background-color: #dde9fd;
+  }
+}

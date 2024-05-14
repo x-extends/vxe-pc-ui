@@ -1,9 +1,11 @@
-import { RenderFunction, SetupContext, Ref } from 'vue'
+import { RenderFunction, SetupContext, Ref, ComponentPublicInstance } from 'vue'
 import { defineVxeComponent, VxeComponentBase, VxeComponentEvent } from '../tool'
 
 /* eslint-disable no-use-before-define,@typescript-eslint/ban-types */
 
-declare const VxeLayoutBody: defineVxeComponent<VxeLayoutBodyProps, VxeLayoutBodyEventProps>
+export declare const VxeLayoutBody: defineVxeComponent<VxeLayoutBodyProps, VxeLayoutBodyEventProps>
+
+export type VxeLayoutBodyInstance = ComponentPublicInstance<VxeLayoutBodyProps, VxeLayoutBodyConstructor>
 
 export interface VxeLayoutBodyConstructor extends VxeComponentBase, VxeLayoutBodyMethods {
   props: VxeLayoutBodyProps
@@ -52,7 +54,13 @@ export interface VxeLayoutBodyListeners { }
 
 export namespace VxeLayoutBodyEvents { }
 
-export interface VxeLayoutBodySlots {
+export namespace VxeLayoutBodySlotTypes {
+  export interface DefaultSlotParams {}
 }
 
+export interface VxeLayoutBodySlots {
+  default: (params: VxeLayoutBodySlotTypes.DefaultSlotParams) => any
+}
+
+export const LayoutBody: typeof VxeLayoutBody
 export default VxeLayoutBody
