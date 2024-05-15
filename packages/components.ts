@@ -35,6 +35,8 @@ import VxeRadioGroup from './radio-group'
 import VxeRow from './row'
 import VxeSelect from './select'
 import VxeSwitch from './switch'
+import VxeTabPane from './tab-pane'
+import VxeTabs from './tabs'
 import VxeTextarea from './textarea'
 import VxeTooltip from './tooltip'
 
@@ -81,6 +83,8 @@ const components = [
   VxeRow,
   VxeSelect,
   VxeSwitch,
+  VxeTabPane,
+  VxeTabs,
   VxeTextarea,
   VxeTooltip
 ]
@@ -127,5 +131,7 @@ export * from './radio-group'
 export * from './row'
 export * from './select'
 export * from './switch'
+export * from './tab-pane'
+export * from './tabs'
 export * from './textarea'
 export * from './tooltip'

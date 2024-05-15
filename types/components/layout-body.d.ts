@@ -22,9 +22,12 @@ export interface LayoutBodyPrivateRef {
 export interface VxeLayoutBodyPrivateRef extends LayoutBodyPrivateRef { }
 
 export namespace VxeLayoutBodyPropTypes {
+  export type Padding = boolean
 }
 
-export type VxeLayoutBodyProps = {}
+export type VxeLayoutBodyProps = {
+  padding?: VxeLayoutBodyPropTypes.Padding
+}
 
 export interface LayoutBodyPrivateComputed {
 }

@@ -37,6 +37,11 @@ export interface VxeComponentEvent {
 export type VxeComponentSize = null | '' | 'medium' | 'small' | 'mini'
 
 /**
+ * 组件对齐方式
+ */
+export type VxeComponentAlign = null | '' | 'left' | 'right' | 'center'
+
+/**
  * 组件样式类型
  */
 export type VxeComponentStyle = Record<string, string | number>

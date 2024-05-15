@@ -2,7 +2,7 @@ import XEUtils from 'xe-utils'
 
 import { VxeAnchorLinkDefines, VxeAnchorConstructor, VxeAnchorPrivateMethods, VxeAnchorLinkConstructor, VxeAnchorLinkPrivateMethods } from '../../../types'
 
-export function assemAnchorLink ($xeAnchor: VxeAnchorConstructor & VxeAnchorPrivateMethods, elem: HTMLElement, linkConfig: VxeAnchorLinkDefines.LinkConfig, $xeParentAnchorLink: (VxeAnchorLinkConstructor & VxeAnchorLinkPrivateMethods) | null) {
+export function assembleAnchorLink ($xeAnchor: VxeAnchorConstructor & VxeAnchorPrivateMethods, elem: HTMLElement, linkConfig: VxeAnchorLinkDefines.LinkConfig, $xeParentAnchorLink: (VxeAnchorLinkConstructor & VxeAnchorLinkPrivateMethods) | null) {
   const staticLinks = $xeAnchor.reactData.staticLinks
   const parentElem = elem.parentNode
   const parentLinkConfig = $xeParentAnchorLink ? $xeParentAnchorLink.linkConfig : null

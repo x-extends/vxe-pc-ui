@@ -13,7 +13,7 @@ export default defineComponent({
   },
   setup (props, { slots }) {
     const elem = ref() as Ref<HTMLDivElement>
-    const $xeselect = inject('$xeselect', {} as VxeSelectConstructor)
+    const $xeselect = inject('$xeSelect', {} as VxeSelectConstructor)
     const option = createOption($xeselect, props)
     const xeoption: XEOptionProvide = { option }
     option.options = []

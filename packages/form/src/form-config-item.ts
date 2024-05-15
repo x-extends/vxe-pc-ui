@@ -18,7 +18,7 @@ const VxeFormConfigItem = defineComponent({
   setup (props) {
     const $xeform = inject('$xeForm', {} as VxeFormConstructor & VxeFormPrivateMethods)
     const xeformiteminfo = { itemConfig: props.itemConfig }
-    provide('$xeFormItemInfo', xeformiteminfo)
+    provide('xeFormItemInfo', xeformiteminfo)
 
     const renderVN = () => {
       const { reactData } = $xeform

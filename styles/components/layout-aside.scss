@@ -3,7 +3,6 @@
 .vxe-layout-aside {
   flex-shrink: 0;
   transition: width .3s;
-  padding: var(--vxe-ui-layout-padding-default);
   overflow-y: auto;
   overflow-x: hidden;
   &.is--default-width {
@@ -11,5 +10,8 @@
   }
   &.is--collapse {
     width: var(--vxe-ui-layout-aside-collapse-width);
+  }
+  &.is--padding {
+    padding: var(--vxe-ui-layout-padding-default);
   }
 }

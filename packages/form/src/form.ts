@@ -127,6 +127,8 @@ export default defineComponent({
       }
     })
 
+    provide('xeFormItemInfo', null)
+
     const $xegrid = inject<any>('$xegrid', null)
 
     const refElem = ref<HTMLFormElement>()
@@ -704,9 +706,8 @@ export default defineComponent({
     $xeform.renderVN = renderVN
 
     provide('$xeForm', $xeform)
-    provide('$xeformgather', null)
-    provide('$xeformitem', null)
-    provide('$xeFormItemInfo', null)
+    provide('$xeFormGather', null)
+    provide('$xeFormItem', null)
 
     return $xeform
   },

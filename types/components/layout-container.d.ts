@@ -22,9 +22,12 @@ export interface LayoutContainerPrivateRef {
 export interface VxeLayoutContainerPrivateRef extends LayoutContainerPrivateRef { }
 
 export namespace VxeLayoutContainerPropTypes {
+  export type Vertical = boolean
 }
 
-export type VxeLayoutContainerProps = {}
+export type VxeLayoutContainerProps = {
+  vertical?: VxeLayoutContainerPropTypes.Vertical
+}
 
 export interface LayoutContainerPrivateComputed {
 }

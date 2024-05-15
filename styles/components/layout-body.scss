@@ -2,5 +2,7 @@
 
 .vxe-layout-body {
   flex-grow: 1;
-  padding: var(--vxe-ui-layout-padding-default);
+  &.is--padding {
+    padding: var(--vxe-ui-layout-padding-default);
+  }
 }

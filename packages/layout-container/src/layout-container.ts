@@ -1,12 +1,12 @@
-import { defineComponent, ref, h, reactive } from 'vue'
+import { defineComponent, ref, h, reactive, PropType } from 'vue'
 import XEUtils from 'xe-utils'
 
-import { LayoutContainerReactData, LayoutContainerPrivateRef, VxeLayoutContainerPrivateComputed, VxeLayoutContainerConstructor, VxeLayoutContainerPrivateMethods } from '../../../types'
+import { VxeLayoutContainerPropTypes, LayoutContainerReactData, LayoutContainerPrivateRef, VxeLayoutContainerPrivateComputed, VxeLayoutContainerConstructor, VxeLayoutContainerPrivateMethods } from '../../../types'
 
 export default defineComponent({
   name: 'VxeLayoutContainer',
   props: {
-    vertical: Boolean
+    vertical: Boolean as PropType<VxeLayoutContainerPropTypes.Vertical>
   },
   emits: [],
   setup (props, context) {
@@ -37,11 +37,12 @@ export default defineComponent({
     } as unknown as VxeLayoutContainerConstructor & VxeLayoutContainerPrivateMethods
 
     const renderVN = () => {
+      const { vertical } = props
       const defaultSlot = slots.default
       return h('div', {
         ref: refElem,
         class: ['vxe-layout-container', {
-          'is--vertical': props.vertical
+          'is--vertical': vertical
         }]
       }, defaultSlot ? defaultSlot({}) : [])
     }

@@ -48,7 +48,8 @@ const navList = ref([
   { name: 'TooltipTest' },
   { name: 'FormTest' },
   { name: 'FormDesignTest' },
-  { name: 'ModalTest' }
+  { name: 'ModalTest' },
+  { name: 'TabsTest' }
 ])
 </script>
 

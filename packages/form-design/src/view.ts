@@ -40,7 +40,7 @@ export default defineComponent({
       }
     }
 
-    const sortDragendEvent = (evnt: DragEvent) => {
+    const sortDragendEvent = () => {
       reactData.activeWidget = reactData.sortWidget
       reactData.sortWidget = null
     }

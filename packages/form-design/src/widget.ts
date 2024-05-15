@@ -34,7 +34,7 @@ export default defineComponent({
       reactData.dragWidget = dragWidget
     }
 
-    const dragendEvent = (evnt: DragEvent) => {
+    const dragendEvent = () => {
       if (reactData.dragWidget) {
         reactData.activeWidget = reactData.dragWidget
       }

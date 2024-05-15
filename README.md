@@ -30,6 +30,7 @@ npm install vxe-pc-ui
 // ...
 import { createApp } from 'vue'
 import VxeUI from 'vxe-pc-ui'
+import 'vxe-pc-ui/lib/style.css'
 // ...
 
 VxeUI.config({
@@ -42,6 +43,12 @@ app.use(VxeUI)
 app.mount('#app')
 // ...
 ```
+
+## Contributors
+
+Thank you to everyone who contributed to this project.
+
+[![vxe-pc-ui](https://contrib.rocks/image?repo=x-extends/vxe-pc-ui)](https://github.com/x-extends/vxe-pc-ui/graphs/contributors)
 
 ## License
 

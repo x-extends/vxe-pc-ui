@@ -64,12 +64,12 @@ export default defineComponent({
   setup (props, { slots }) {
     const refElem = ref() as Ref<HTMLDivElement>
     const $xeform = inject('$xeForm', {} as VxeFormConstructor & VxeFormPrivateMethods)
-    const formGather = inject('$xeformgather', null as XEFormItemProvide | null)
+    const formGather = inject('$xeFormGather', null as XEFormItemProvide | null)
     const formItem = reactive(createItem($xeform, props))
     formItem.slots = slots
 
     const formItemInfo = { itemConfig: formItem }
-    provide('$xeFormItemInfo', formItemInfo)
+    provide('xeFormItemInfo', formItemInfo)
 
     watchItem(props, formItem)
 
@@ -242,8 +242,8 @@ export default defineComponent({
       renderVN
     }
 
-    provide('$xeformitem', $xeformitem)
-    provide('$xeformgather', null)
+    provide('$xeFormItem', $xeformitem)
+    provide('$xeFormGather', null)
 
     return $xeformitem
   },

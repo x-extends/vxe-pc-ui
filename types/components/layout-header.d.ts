@@ -20,9 +20,12 @@ export interface LayoutHeaderPrivateRef {
 export interface VxeLayoutHeaderPrivateRef extends LayoutHeaderPrivateRef { }
 
 export namespace VxeLayoutHeaderPropTypes {
+  export type Fixed = boolean
 }
 
-export type VxeLayoutHeaderProps = {}
+export type VxeLayoutHeaderProps = {
+  fixed?: VxeLayoutHeaderPropTypes.Fixed
+}
 
 export interface LayoutHeaderPrivateComputed {
 }

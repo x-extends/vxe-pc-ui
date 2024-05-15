@@ -14,7 +14,7 @@ export default defineComponent({
   },
   setup (props, { slots }) {
     const elem = ref() as Ref<HTMLDivElement>
-    const $xeselect = inject('$xeselect', {} as VxeSelectConstructor)
+    const $xeselect = inject('$xeSelect', {} as VxeSelectConstructor)
     const optgroup = inject('xeoptgroup', null as XEOptionProvide | null)
     const option = createOption($xeselect, props)
     option.slots = slots

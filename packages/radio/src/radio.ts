@@ -25,7 +25,7 @@ export default defineComponent({
   setup (props, context) {
     const { slots, emit } = context
     const $xeform = inject<VxeFormConstructor & VxeFormPrivateMethods | null>('$xeForm', null)
-    const $xeformiteminfo = inject<VxeFormDefines.ProvideItemInfo | null>('$xeFormItemInfo', null)
+    const formItemInfo = inject<VxeFormDefines.ProvideItemInfo | null>('xeFormItemInfo', null)
 
     const xID = XEUtils.uniqueId()
 
@@ -37,7 +37,7 @@ export default defineComponent({
 
     const computeSize = useSize(props)
 
-    const $xeradiogroup = inject('$xeradiogroup', null as (VxeRadioGroupConstructor & VxeRadioGroupPrivateMethods) | null)
+    const $xeradiogroup = inject('$xeRadioGroup', null as (VxeRadioGroupConstructor & VxeRadioGroupPrivateMethods) | null)
 
     let radioMethods = {} as RadioMethods
 
@@ -65,8 +65,8 @@ export default defineComponent({
         emit('update:modelValue', label)
         radioMethods.dispatchEvent('change', { label }, evnt)
         // 自动更新校验状态
-        if ($xeform && $xeformiteminfo) {
-          $xeform.triggerItemEvent(evnt, $xeformiteminfo.itemConfig.field, label)
+        if ($xeform && formItemInfo) {
+          $xeform.triggerItemEvent(evnt, formItemInfo.itemConfig.field, label)
         }
       }
     }

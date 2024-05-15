@@ -1,5 +1,5 @@
 import { RenderFunction, SetupContext, Ref, ComponentPublicInstance } from 'vue'
-import { defineVxeComponent, VxeComponentBase, VxeComponentEvent } from '../tool'
+import { defineVxeComponent, VxeComponentBase, VxeComponentEvent, VxeComponentAlign } from '../tool'
 
 /* eslint-disable no-use-before-define,@typescript-eslint/ban-types */
 
@@ -22,9 +22,14 @@ export interface LayoutFooterPrivateRef {
 export interface VxeLayoutFooterPrivateRef extends LayoutFooterPrivateRef { }
 
 export namespace VxeLayoutFooterPropTypes {
+  export type Fixed = boolean
+  export type Align = VxeComponentAlign
 }
 
-export type VxeLayoutFooterProps = {}
+export type VxeLayoutFooterProps = {
+  fixed?: VxeLayoutFooterPropTypes.Fixed
+  align?: VxeLayoutFooterPropTypes.Align
+}
 
 export interface LayoutFooterPrivateComputed {
 }

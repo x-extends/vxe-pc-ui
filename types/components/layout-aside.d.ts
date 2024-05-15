@@ -22,9 +22,18 @@ export interface LayoutAsidePrivateRef {
 export interface VxeLayoutAsidePrivateRef extends LayoutAsidePrivateRef { }
 
 export namespace VxeLayoutAsidePropTypes {
+  export type Width = string | number
+  export type Collapsed = boolean
+  export type CollapseWidth = string | number
+  export type Padding = boolean
 }
 
-export type VxeLayoutAsideProps = {}
+export type VxeLayoutAsideProps = {
+  width?: VxeLayoutAsidePropTypes.Width
+  collapsed?: VxeLayoutAsidePropTypes.Collapsed
+  collapseWidth?: VxeLayoutAsidePropTypes.CollapseWidth
+  padding?: VxeLayoutAsidePropTypes.Padding
+}
 
 export interface LayoutAsidePrivateComputed {
 }

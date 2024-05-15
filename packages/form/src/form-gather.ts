@@ -17,7 +17,7 @@ export default defineComponent({
     formItem.children = []
 
     const formItemInfo = { itemConfig: formItem }
-    provide('$xeFormItemInfo', formItemInfo)
+    provide('xeFormItemInfo', formItemInfo)
 
     watchItem(props, formItem)
 

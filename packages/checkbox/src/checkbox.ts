@@ -26,7 +26,7 @@ export default defineComponent({
   setup (props, context) {
     const { slots, emit } = context
     const $xeform = inject<VxeFormConstructor & VxeFormPrivateMethods | null>('$xeForm', null)
-    const $xeformiteminfo = inject<VxeFormDefines.ProvideItemInfo | null>('$xeFormItemInfo', null)
+    const formItemInfo = inject<VxeFormDefines.ProvideItemInfo | null>('xeFormItemInfo', null)
 
     const xID = XEUtils.uniqueId()
 
@@ -76,8 +76,8 @@ export default defineComponent({
           emit('update:modelValue', value)
           checkboxMethods.dispatchEvent('change', params, evnt)
           // 自动更新校验状态
-          if ($xeform && $xeformiteminfo) {
-            $xeform.triggerItemEvent(evnt, $xeformiteminfo.itemConfig.field, value)
+          if ($xeform && formItemInfo) {
+            $xeform.triggerItemEvent(evnt, formItemInfo.itemConfig.field, value)
           }
         }
       }

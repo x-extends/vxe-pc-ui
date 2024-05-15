@@ -1,12 +1,12 @@
-import { defineComponent, ref, h, reactive } from 'vue'
+import { defineComponent, ref, h, reactive, PropType } from 'vue'
 import XEUtils from 'xe-utils'
 
-import { LayoutHeaderReactData, LayoutHeaderPrivateRef, VxeLayoutHeaderPrivateComputed, VxeLayoutHeaderConstructor, VxeLayoutHeaderPrivateMethods } from '../../../types'
+import { VxeLayoutHeaderPropTypes, LayoutHeaderReactData, LayoutHeaderPrivateRef, VxeLayoutHeaderPrivateComputed, VxeLayoutHeaderConstructor, VxeLayoutHeaderPrivateMethods } from '../../../types'
 
 export default defineComponent({
   name: 'VxeLayoutHeader',
   props: {
-    fixed: Boolean
+    fixed: Boolean as PropType<VxeLayoutHeaderPropTypes.Fixed>
   },
   emits: [],
   setup (props, context) {

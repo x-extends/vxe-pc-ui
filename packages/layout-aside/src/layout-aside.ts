@@ -1,15 +1,16 @@
-import { defineComponent, ref, h, reactive, onMounted, computed } from 'vue'
+import { defineComponent, ref, h, reactive, onMounted, computed, PropType } from 'vue'
 import XEUtils from 'xe-utils'
 import { toCssUnit } from '../../ui/src/dom'
 
-import { LayoutAsideReactData, LayoutAsidePrivateRef, VxeLayoutAsidePrivateComputed, VxeLayoutAsideConstructor, VxeLayoutAsidePrivateMethods } from '../../../types'
+import { VxeLayoutAsidePropTypes, LayoutAsideReactData, LayoutAsidePrivateRef, VxeLayoutAsidePrivateComputed, VxeLayoutAsideConstructor, VxeLayoutAsidePrivateMethods } from '../../../types'
 
 export default defineComponent({
   name: 'VxeLayoutAside',
   props: {
-    width: [String, Number],
-    collapsed: Boolean,
-    collapseWidth: [String, Number]
+    width: [String, Number] as PropType<VxeLayoutAsidePropTypes.Width>,
+    collapsed: Boolean as PropType<VxeLayoutAsidePropTypes.Collapsed>,
+    collapseWidth: [String, Number] as PropType<VxeLayoutAsidePropTypes.CollapseWidth>,
+    padding: Boolean as PropType<VxeLayoutAsidePropTypes.Padding>
   },
   emits: [],
   setup (props, context) {
@@ -53,13 +54,14 @@ export default defineComponent({
     } as unknown as VxeLayoutAsideConstructor & VxeLayoutAsidePrivateMethods
 
     const renderVN = () => {
-      const { width, collapsed } = props
+      const { width, collapsed, padding } = props
       const wrapperWidth = computeWrapperWidth.value
       const defaultSlot = slots.default
 
       return h('div', {
         ref: refElem,
         class: ['vxe-layout-aside', {
+          'is--padding': padding,
           'is--default-width': !width,
           'is--collapse': collapsed
         }],

@@ -1,6 +1,6 @@
 import { defineComponent, ref, h, computed, reactive, PropType, inject, createCommentVNode, onMounted, onUnmounted, provide, watch } from 'vue'
 import XEUtils from 'xe-utils'
-import { assemAnchorLink, destroyAnchorLink } from './util'
+import { assembleAnchorLink, destroyAnchorLink } from './util'
 
 import { VxeAnchorLinkDefines, VxeAnchorLinkPropTypes, AnchorLinkReactData, AnchorLinkPrivateRef, VxeAnchorLinkPrivateComputed, VxeAnchorLinkConstructor, VxeAnchorLinkPrivateMethods, VxeAnchorConstructor, VxeAnchorPrivateMethods } from '../../../types'
 
@@ -70,7 +70,7 @@ export default defineComponent({
 
     onMounted(() => {
       if ($xeAnchor && refElem.value) {
-        assemAnchorLink($xeAnchor, refElem.value, linkConfig, $xeParentAnchorLink)
+        assembleAnchorLink($xeAnchor, refElem.value, linkConfig, $xeParentAnchorLink)
       }
     })
 

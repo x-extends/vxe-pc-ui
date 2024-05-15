@@ -2,7 +2,6 @@
 
 .vxe-layout-header {
   flex-shrink: 0;
-  padding: var(--vxe-ui-layout-padding-default);
   background-color: var(--vxe-ui-layout-background-color);
   &.is--fixed {
     position: sticky;
