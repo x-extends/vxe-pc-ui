@@ -95,6 +95,7 @@
     border: 1px solid var(--vxe-ui-font-primary-color);
     pointer-events: none;
     z-index: 1;
+    box-shadow: 0 0 8px rgba(0, 0, 0, 0.1);
   }
   .vxe-tabs-header {
     border-radius: var(--vxe-ui-border-radius) var(--vxe-ui-border-radius) 0 0;
@@ -162,6 +163,11 @@
     &:last-child {
       margin-right: 0;
     }
+  }
+  .vxe-tab-pane--item {
+    border-bottom: 1px solid var(--vxe-ui-input-border-color);
+    border-left: 1px solid var(--vxe-ui-input-border-color);
+    border-right: 1px solid var(--vxe-ui-input-border-color);
   }
   .vxe-tabs-pane {
     background-color: var(--vxe-ui-layout-background-color);

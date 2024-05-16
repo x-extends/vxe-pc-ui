@@ -204,6 +204,94 @@ export namespace VxeFormItemDefines {
   }
 }
 
+/**
+ * 项渲染配置项
+ */
+export interface FormItemRenderOptions extends VxeGlobalRendererHandles.RenderOptions {
+  /**
+   * 下拉选项列表（需要渲染器支持）
+   */
+  options?: any[]
+  /**
+   * 下拉选项属性参数配置（需要渲染器支持）
+   */
+  optionProps?: VxeGlobalRendererHandles.RenderOptionProps
+  /**
+   * 下拉分组选项列表（需要渲染器支持）
+   */
+  optionGroups?: any[]
+  /**
+   * 下拉分组选项属性参数配置（需要渲染器支持）
+   */
+  optionGroupProps?: VxeGlobalRendererHandles.RenderOptionGroupProps
+  /**
+   * 渲染组件的内容（需要渲染器支持）
+   */
+  content?: string
+  autofocus?: string
+  defaultValue?: ((params: { item: VxeFormItemProps }) => any) | null | undefined | string | number | RegExp | object | any[] | Date
+}
+
+/**
+ * 项标题渲染参数
+ */
+export interface FormItemTitleRenderParams {
+  $form: VxeFormConstructor
+  $grid: VxeGridConstructor | null
+  data: any
+  item: VxeFormDefines.ItemInfo
+  field: string
+  /**
+   * @deprecated
+   */
+  property: string
+}
+
+/**
+ * 项内容渲染参数
+ */
+export interface FormItemContentRenderParams {
+  $form: VxeFormConstructor
+  $grid: VxeGridConstructor | null
+  data: any
+  item: VxeFormDefines.ItemInfo
+  field: string
+  /**
+   * @deprecated
+   */
+  property: string
+}
+
+/**
+ * 项可视方法参数
+ */
+export interface FormItemVisibleParams {
+  $form: VxeFormConstructor
+  $grid: VxeGridConstructor | null
+  data: any
+  item: VxeFormDefines.ItemInfo
+  field: string
+  /**
+   * @deprecated
+   */
+  property: string
+}
+
+/**
+ * 项重置方法参数
+ */
+export interface FormItemResetParams {
+  $form: VxeFormConstructor
+  $grid: VxeGridConstructor | null
+  data: any
+  item: VxeFormDefines.ItemInfo
+  field: string
+  /**
+   * @deprecated
+   */
+  property: string
+}
+
 export type VxeFormItemEventProps = {}
 
 export interface VxeFormItemListeners { }

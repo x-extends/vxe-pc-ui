@@ -54,7 +54,12 @@ export interface VxeTabsMethods extends TabsMethods { }
 export interface TabsPrivateMethods { }
 export interface VxeTabsPrivateMethods extends TabsPrivateMethods { }
 
-export type VxeTabsEmits = []
+export type VxeTabsEmits = [
+  'update:modelValue',
+  'change',
+  'tab-click',
+  'tab-load'
+]
 
 export namespace VxeTabsDefines {
   export interface TabsEventParams extends VxeComponentEvent {

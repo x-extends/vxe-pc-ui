@@ -202,10 +202,10 @@ export default {
       customRestore: 'Restaurar',
       fixedLeft: 'Freeze on the left',
       fixedRight: 'Freeze on the right',
-      cancelfixed: 'Unfreeze column'
+      cancelFixed: 'Unfreeze column'
     },
-    entrada: {
-      fecha: {
+    input: {
+      date: {
         m1: 'Enero',
         m2: 'Febrero',
         m3: 'Marzo',
@@ -260,6 +260,13 @@ export default {
           q3: 'Tercer trimestre',
           q4: 'Cuarto trimestre'
         }
+      }
+    },
+    formDesign: {
+      widget: {
+        input: 'Input',
+        textarea: 'Textarea',
+        select: 'Select'
       }
     },
 

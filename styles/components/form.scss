@@ -12,6 +12,26 @@
   text-align: left;
 }
 
+.vxe-form--row {
+  $spans: 4.16667%, 8.33333%, 12.5%, 16.66667%, 20.83333%, 25%, 29.16667%, 33.33333%,
+          37.5%, 41.66667%, 45.83333%, 50%, 54.16667%, 58.33333%, 62.5%, 66.66667%,
+          70.83333%, 75%, 79.16667%, 83.33333%, 87.5%, 91.66667%, 95.83333%, 100%;
+  &:after {
+    content: '';
+    display: block;
+    clear: both;
+    height: 0;
+    overflow: hidden;
+    visibility: hidden;
+  }
+  @for $index from 0 to length($spans) {
+    & > .vxe-form--col#{$index + 1} {
+      float: left;
+      width: nth($spans, $index + 1);
+    }
+  }
+}
+
 .vxe-form-slots {
   display: none;
 }
@@ -105,6 +125,9 @@
   .vxe-form--item {
     display: none;
     padding: 0.5em 0.8em 0.5em 0;
+    &.is--vertical {
+      padding: 0.25em 0 0.25em 0;
+    }
     &.is--active {
       &:not(.is--hidden) {
         display: inline-flex;

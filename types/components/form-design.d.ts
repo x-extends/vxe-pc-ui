@@ -1,5 +1,7 @@
 import { RenderFunction, SetupContext, Ref, ComponentPublicInstance } from 'vue'
 import { defineVxeComponent, VxeComponentBase, VxeComponentEvent, VxeComponentSize, ValueOf } from '../tool'
+import { VxeFormProps } from '../components/form'
+import { VxeFormItemProps } from '../components/form-item'
 
 /* eslint-disable no-use-before-define,@typescript-eslint/ban-types */
 
@@ -29,11 +31,15 @@ export namespace VxeFormDesignPropTypes {
     children: string[]
   }
   export type Widgets = WidgetItem[]
+  export interface FormRender {
+    name: string
+  }
 }
 
 export type VxeFormDesignProps = {
   size?: VxeFormDesignPropTypes.Size
   widgets?: VxeFormDesignPropTypes.Widgets
+  formRender?: VxeFormDesignPropTypes.FormRender
 }
 
 export interface FormDesignPrivateComputed {
@@ -41,6 +47,7 @@ export interface FormDesignPrivateComputed {
 export interface VxeFormDesignPrivateComputed extends FormDesignPrivateComputed { }
 
 export interface FormDesignReactData {
+  formConfig: VxeFormProps,
   widgetConfigs: VxeFormDesignPropTypes.Widgets
   widgetObjList: VxeFormDesignDefines.WidgetObjItem[]
   dragWidget: VxeFormDesignDefines.WidgetObjItem | null
@@ -59,6 +66,8 @@ export interface FormDesignPrivateMethods {
 export interface VxeFormDesignPrivateMethods extends FormDesignPrivateMethods { }
 
 export type VxeFormDesignEmits = [
+  'add-widget',
+  'remove-widget'
 ]
 
 export namespace VxeFormDesignDefines {
@@ -69,8 +78,12 @@ export namespace VxeFormDesignDefines {
   export interface WidgetObjItem {
     id: number
     name: string
+    formConfig: VxeFormProps,
+    model: {
+      update: boolean
+      value: any
+    }
     children?: WidgetObjItem[]
-    [key: string]: any
   }
 }
 

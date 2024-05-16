@@ -16,14 +16,14 @@ const VxeFormConfigItem = defineComponent({
     itemConfig: Object as PropType<VxeFormDefines.ItemInfo>
   },
   setup (props) {
-    const $xeform = inject('$xeForm', {} as VxeFormConstructor & VxeFormPrivateMethods)
+    const $xeForm = inject('$xeForm', {} as VxeFormConstructor & VxeFormPrivateMethods)
     const xeformiteminfo = { itemConfig: props.itemConfig }
     provide('xeFormItemInfo', xeformiteminfo)
 
     const renderVN = () => {
-      const { reactData } = $xeform
-      const { data, rules, span: allSpan, align: allAlign, titleAlign: allTitleAlign, titleWidth: allTitleWidth, titleColon: allTitleColon, titleAsterisk: allTitleAsterisk, titleOverflow: allTitleOverflow, vertical: allVertical } = $xeform.props
-      const { computeValidOpts } = $xeform.getComputeMaps()
+      const { reactData } = $xeForm
+      const { data, rules, span: allSpan, align: allAlign, titleAlign: allTitleAlign, titleWidth: allTitleWidth, titleColon: allTitleColon, titleAsterisk: allTitleAsterisk, titleOverflow: allTitleOverflow, vertical: allVertical } = $xeForm.props
+      const { computeValidOpts } = $xeForm.getComputeMaps()
       const item = props.itemConfig as VxeFormDefines.ItemInfo
       const { collapseAll } = reactData
       const validOpts = computeValidOpts.value
@@ -49,7 +49,7 @@ const VxeFormConfigItem = defineComponent({
       const ovTitle = itemOverflow === 'title'
       const ovTooltip = itemOverflow === true || itemOverflow === 'tooltip'
       const hasEllipsis = ovTitle || ovTooltip || ovEllipsis
-      const params = { data, field, property: field, item, $form: $xeform, $grid: $xeform.xegrid }
+      const params = { data, field, property: field, item, $form: $xeForm, $grid: $xeForm.xegrid }
       if (visible === false) {
         return createCommentVNode()
       }
@@ -71,13 +71,13 @@ const VxeFormConfigItem = defineComponent({
         })
         return childVNs.length
           ? h('div', {
-            class: ['vxe-form--gather vxe-row', item.id, span ? `vxe-col--${span} is--span` : '', className ? (XEUtils.isFunction(className) ? className(params) : className) : '']
+            class: ['vxe-form--gather vxe-form-row', item.id, span ? `vxe-form--col${span} is--span` : '', className ? (XEUtils.isFunction(className) ? className(params) : className) : '']
           }, childVNs)
           : createCommentVNode()
       }
       let contentVNs: VxeComponentSlot[] = []
       if (defaultSlot) {
-        contentVNs = $xeform.callSlot(defaultSlot, params)
+        contentVNs = $xeForm.callSlot(defaultSlot, params)
       } else if (compConf && compConf.renderItemContent) {
         contentVNs = getSlotVNs(compConf.renderItemContent(itemRender, params))
       } else if (field) {
@@ -87,7 +87,7 @@ const VxeFormConfigItem = defineComponent({
         contentVNs.push(
           h('div', {
             class: 'vxe-form--item-trigger-node',
-            onClick: $xeform.toggleCollapseEvent
+            onClick: $xeForm.toggleCollapseEvent
           }, [
             h('span', {
               class: 'vxe-form--item-trigger-text'
@@ -113,16 +113,16 @@ const VxeFormConfigItem = defineComponent({
       const ons = ovTooltip
         ? {
             onMouseenter (evnt: MouseEvent) {
-              $xeform.triggerTitleTipEvent(evnt, params)
+              $xeForm.triggerTitleTipEvent(evnt, params)
             },
-            onMouseleave: $xeform.handleTitleTipLeaveEvent
+            onMouseleave: $xeForm.handleTitleTipLeaveEvent
           }
         : {}
       return h('div', {
         class: [
           'vxe-form--item',
           item.id,
-          span ? `vxe-col--${span} is--span` : '',
+          span ? `vxe-form--col${span} is--span` : '',
           className ? (XEUtils.isFunction(className) ? className(params) : className) : '',
           itemClassName ? (XEUtils.isFunction(itemClassName) ? itemClassName(params) : itemClassName) : '',
           {
@@ -132,7 +132,7 @@ const VxeFormConfigItem = defineComponent({
             'is--asterisk': titleAsterisk,
             'is--required': isRequired,
             'is--hidden': folding && collapseAll,
-            'is--active': isActivetem($xeform, item),
+            'is--active': isActivetem($xeForm, item),
             'is--error': showError
           }
         ],
@@ -162,7 +162,7 @@ const VxeFormConfigItem = defineComponent({
               ),
               title: ovTitle ? getFuncText(title) : null,
               ...ons
-            }, renderTitle($xeform, item))
+            }, renderTitle($xeForm, item))
             : null,
           h('div', {
             class: [
@@ -177,13 +177,13 @@ const VxeFormConfigItem = defineComponent({
       ])
     }
 
-    const $xeformconfigitem = {
+    const $xeFormconfigitem = {
       renderVN
     }
 
     provide('$xeFormGather', null)
 
-    return $xeformconfigitem
+    return $xeFormconfigitem
   },
   render () {
     return this.renderVN()

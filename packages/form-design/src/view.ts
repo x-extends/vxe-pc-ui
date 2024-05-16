@@ -2,7 +2,7 @@ import { defineComponent, h, inject, TransitionGroup } from 'vue'
 import { renderer } from '../../ui/src/renderer'
 import { getSlotVNs } from '../../ui/src/vn'
 
-import { VxeFormDesignConstructor, VxeFormDesignPrivateMethods } from '../../../types'
+import { VxeFormDesignConstructor, VxeFormDesignPrivateMethods, VxeGlobalRendererHandles } from '../../../types'
 import XEUtils from 'xe-utils'
 
 export default defineComponent({
@@ -98,7 +98,9 @@ export default defineComponent({
             return widgetObjList.map(item => {
               const { name } = item
               const compConf = renderer.get(name) || {}
-              const renderFormDesignWidgetView = compConf.renderFormDesignWidgetView
+              const renderWidgetView = compConf.renderFormDesignWidgetView
+              const renderOpts: VxeGlobalRendererHandles.RenderFormDesignWidgetViewOptions = item
+              const params: VxeGlobalRendererHandles.RenderFormDesignWidgetViewParams = { item }
               return h('div', {
                 key: item.id,
                 'data-widget-id': item.id,
@@ -115,7 +117,9 @@ export default defineComponent({
                 onClick (evnt: KeyboardEvent) {
                   $xeFormDesign.handleClickWidget(evnt, item)
                 }
-              }, renderFormDesignWidgetView ? getSlotVNs(renderFormDesignWidgetView({}, {})) : [])
+              }, [
+                h('div', {}, renderWidgetView ? getSlotVNs(renderWidgetView(renderOpts, params)) : [])
+              ])
             })
           }
         })

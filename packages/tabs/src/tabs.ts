@@ -3,7 +3,7 @@ import XEUtils from 'xe-utils'
 import VxeTabPaneComponent from './tab-pane'
 import { getSlotVNs } from '../../ui/src/vn'
 
-import { VxeTabsPropTypes, VxeTabPaneProps, TabsReactData, TabsPrivateRef, VxeTabsPrivateComputed, VxeTabsConstructor, VxeTabsPrivateMethods, VxeTabPaneDefines } from '../../../types'
+import { VxeTabsPropTypes, VxeTabPaneProps, VxeTabsEmits, TabsReactData, TabsPrivateRef, VxeTabsPrivateComputed, VxeTabsConstructor, VxeTabsPrivateMethods, VxeTabPaneDefines } from '../../../types'
 
 export default defineComponent({
   name: 'VxeTabs',
@@ -15,10 +15,10 @@ export default defineComponent({
   },
   emits: [
     'update:modelValue',
-    'click',
     'change',
-    'load'
-  ],
+    'tab-click',
+    'tab-load'
+  ] as VxeTabsEmits,
   setup (props, context) {
     const { slots, emit } = context
 
@@ -120,9 +120,9 @@ export default defineComponent({
       if (name !== activeName) {
         emit('change', { value, name, $event: evnt })
       }
-      emit('click', { name, $event: evnt })
+      emit('tab-click', { name, $event: evnt })
       if (isInit) {
-        emit('load', { name, $event: evnt })
+        emit('tab-load', { name, $event: evnt })
       }
     }
 

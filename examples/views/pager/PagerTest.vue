@@ -99,11 +99,11 @@ const page2 = reactive({
   totalResult: 200
 })
 
-const page3 = reactive({
-  currentPage: 1,
-  pageSize: 10,
-  totalResult: 200
-})
+// const page3 = reactive({
+//   currentPage: 1,
+//   pageSize: 10,
+//   totalResult: 200
+// })
 
 const page4 = reactive({
   currentPage: 1,

@@ -17,7 +17,9 @@ export default defineComponent({
     openValue: { type: [String, Number, Boolean] as PropType<VxeSwitchPropTypes.OpenValue>, default: true },
     closeValue: { type: [String, Number, Boolean] as PropType<VxeSwitchPropTypes.CloseValue>, default: false },
     openIcon: String as PropType<VxeSwitchPropTypes.OpenIcon>,
-    closeIcon: String as PropType<VxeSwitchPropTypes.CloseIcon>
+    closeIcon: String as PropType<VxeSwitchPropTypes.CloseIcon>,
+    openActiveIcon: String as PropType<VxeSwitchPropTypes.OpenActiveIcon>,
+    closeActiveIcon: String as PropType<VxeSwitchPropTypes.CloseActiveIcon>
   },
   emits: [
     'update:modelValue',
@@ -27,7 +29,7 @@ export default defineComponent({
   ] as VxeSwitchEmits,
   setup (props, context) {
     const { emit } = context
-    const $xeform = inject<VxeFormConstructor & VxeFormPrivateMethods | null>('$xeForm', null)
+    const $xeForm = inject<VxeFormConstructor & VxeFormPrivateMethods | null>('$xeForm', null)
     const formItemInfo = inject<VxeFormDefines.ProvideItemInfo | null>('xeFormItemInfo', null)
 
     const xID = XEUtils.uniqueId()
@@ -40,7 +42,7 @@ export default defineComponent({
       offsetLeft: 0
     })
 
-    const $xeswitch = {
+    const $xeSwitch = {
       xID,
       props,
       context,
@@ -73,8 +75,8 @@ export default defineComponent({
         emit('update:modelValue', value)
         switchMethods.dispatchEvent('change', { value }, evnt)
         // 自动更新校验状态
-        if ($xeform && formItemInfo) {
-          $xeform.triggerItemEvent(evnt, formItemInfo.itemConfig.field, value)
+        if ($xeForm && formItemInfo) {
+          $xeForm.triggerItemEvent(evnt, formItemInfo.itemConfig.field, value)
         }
         _atimeout = setTimeout(() => {
           reactData.hasAnimat = false
@@ -94,7 +96,7 @@ export default defineComponent({
 
     switchMethods = {
       dispatchEvent (type, params, evnt) {
-        emit(type, Object.assign({ $switch: $xeswitch, $event: evnt }, params))
+        emit(type, Object.assign({ $switch: $xeSwitch, $event: evnt }, params))
       },
       focus () {
         const btnElem = refButton.value
@@ -110,10 +112,10 @@ export default defineComponent({
       }
     }
 
-    Object.assign($xeswitch, switchMethods)
+    Object.assign($xeSwitch, switchMethods)
 
     const renderVN = () => {
-      const { disabled, openIcon, closeIcon } = props
+      const { disabled, openIcon, closeIcon, openActiveIcon, closeActiveIcon } = props
       const isChecked = computeIsChecked.value
       const vSize = computeSize.value
       const onShowLabel = computeOnShowLabel.value
@@ -155,15 +157,21 @@ export default defineComponent({
             offShowLabel
           ]),
           h('span', {
-            class: 'vxe-switch--icon'
-          })
+            class: ['vxe-switch--icon']
+          }, openActiveIcon || closeActiveIcon
+            ? [
+                h('i', {
+                  class: isChecked ? openActiveIcon : closeActiveIcon
+                })
+              ]
+            : [])
         ])
       ])
     }
 
-    $xeswitch.renderVN = renderVN
+    $xeSwitch.renderVN = renderVN
 
-    return $xeswitch
+    return $xeSwitch
   },
   render () {
     return this.renderVN()

@@ -202,7 +202,7 @@ export default {
       customRestore: '重置',
       fixedLeft: '冻结在左側',
       fixedRight: '冻结在右側',
-      cancelfixed: '取消冻结列'
+      cancelFixed: '取消冻结列'
     },
     input: {
       date: {
@@ -260,6 +260,13 @@ export default {
           q3: '第三季度',
           q4: '第四季度'
         }
+      }
+    },
+    formDesign: {
+      widget: {
+        input: '輸入框',
+        textarea: '文本域',
+        select: '下拉框'
       }
     },
 

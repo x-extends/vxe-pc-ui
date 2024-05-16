@@ -202,7 +202,7 @@ export default {
       customRestore: 'Reset',
       fixedLeft: 'Freeze on the left',
       fixedRight: 'Freeze on the right',
-      cancelfixed: 'Unfreeze column'
+      cancelFixed: 'Unfreeze column'
     },
     input: {
       date: {
@@ -260,6 +260,13 @@ export default {
           q3: 'Third quarter',
           q4: 'Fourth quarter'
         }
+      }
+    },
+    formDesign: {
+      widget: {
+        input: 'Input',
+        textarea: 'Textarea',
+        select: 'Select'
       }
     },
 

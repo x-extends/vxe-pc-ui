@@ -1,7 +1,7 @@
 import XEUtils from 'xe-utils'
 
 export class ItemInfo {
-  constructor ($xeform: any, item: any) {
+  constructor ($xeForm: any, item: any) {
     Object.assign(this, {
       id: XEUtils.uniqueId('item_'),
       title: item.title,

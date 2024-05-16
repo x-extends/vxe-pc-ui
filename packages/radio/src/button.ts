@@ -23,7 +23,7 @@ export default defineComponent({
   ] as VxeRadioButtonEmits,
   setup (props, context) {
     const { slots, emit } = context
-    const $xeform = inject<VxeFormConstructor & VxeFormPrivateMethods | null>('$xeForm', null)
+    const $xeForm = inject<VxeFormConstructor & VxeFormPrivateMethods | null>('$xeForm', null)
     const xeFormItemInfo = inject<VxeFormDefines.ProvideItemInfo | null>('xeFormItemInfo', null)
 
     const xID = XEUtils.uniqueId()
@@ -72,8 +72,8 @@ export default defineComponent({
         emit('update:modelValue', label)
         radioButtonMethods.dispatchEvent('change', { label }, evnt)
         // 自动更新校验状态
-        if ($xeform && xeFormItemInfo) {
-          $xeform.triggerItemEvent(evnt, xeFormItemInfo.itemConfig.field, label)
+        if ($xeForm && xeFormItemInfo) {
+          $xeForm.triggerItemEvent(evnt, xeFormItemInfo.itemConfig.field, label)
         }
       }
     }

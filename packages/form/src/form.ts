@@ -154,7 +154,7 @@ export default defineComponent({
       computeTooltipOpts
     }
 
-    const $xeform = {
+    const $xeForm = {
       xID,
       props,
       context,
@@ -192,8 +192,8 @@ export default defineComponent({
             }
           })
         }
-        reactData.staticItems = XEUtils.mapTree(list, item => createItem($xeform, item), { children: 'children' })
       }
+      reactData.staticItems = XEUtils.mapTree(list, item => createItem($xeForm, item), { children: 'children' })
       return nextTick()
     }
 
@@ -236,7 +236,7 @@ export default defineComponent({
         }
         fields.forEach((field: any) => {
           if (field) {
-            const item = handleFieldOrItem($xeform, field)
+            const item = handleFieldOrItem($xeForm, field)
             if (item) {
               item.showError = false
             }
@@ -259,7 +259,7 @@ export default defineComponent({
           if (isEnableConf(itemRender)) {
             const compConf = renderer.get(itemRender.name)
             if (compConf && compConf.itemResetMethod) {
-              compConf.itemResetMethod({ data, field, property: field, item, $form: $xeform, $grid: $xeform.xegrid })
+              compConf.itemResetMethod({ data, field, property: field, item, $form: $xeForm, $grid: $xeForm.xegrid })
             } else if (field) {
               XEUtils.set(data, field, resetValue === null ? getResetValue(XEUtils.get(data, field), undefined) : XEUtils.clone(resetValue, true))
             }
@@ -345,7 +345,7 @@ export default defineComponent({
                       data,
                       field: property,
                       property,
-                      $form: $xeform
+                      $form: $xeForm
                     }
                     let customValid: any
                     if (XEUtils.isString(validator)) {
@@ -401,7 +401,7 @@ export default defineComponent({
             if (errorRules.length) {
               errorMaps[property] = errorRules.map(rule => {
                 return {
-                  $form: $xeform,
+                  $form: $xeForm,
                   rule,
                   data,
                   field: property,
@@ -430,7 +430,7 @@ export default defineComponent({
       if (data && formRules) {
         itemList.forEach((item) => {
           const { field } = item
-          if (field && !isHiddenItem($xeform, item) && isActivetem($xeform, item)) {
+          if (field && !isHiddenItem($xeForm, item) && isActivetem($xeForm, item)) {
             itemValids.push(
               validItemRules(type || 'all', field).then(() => {
                 item.errRule = null
@@ -492,7 +492,7 @@ export default defineComponent({
       } else {
         fields = [fieldOrItem]
       }
-      return beginValidate(fields.map(field => handleFieldOrItem($xeform, field) as VxeFormDefines.ItemInfo), '', callback)
+      return beginValidate(fields.map(field => handleFieldOrItem($xeForm, field) as VxeFormDefines.ItemInfo), '', callback)
     }
 
     const submitEvent = (evnt: Event) => {
@@ -596,7 +596,7 @@ export default defineComponent({
 
     formMethods = {
       dispatchEvent (type, params, evnt) {
-        emit(type, Object.assign({ $form: $xeform, $grid: $xeGrid, $event: evnt }, params))
+        emit(type, Object.assign({ $form: $xeForm, $grid: $xeGrid, $event: evnt }, params))
       },
       reset,
       validate,
@@ -617,7 +617,56 @@ export default defineComponent({
       handleTitleTipLeaveEvent
     }
 
-    Object.assign($xeform, formMethods, formPrivateMethods)
+    Object.assign($xeForm, formMethods, formPrivateMethods)
+
+    const renderVN = () => {
+      const { loading, className, data, customLayout } = props
+      const { formItems } = reactData
+      // const formItems: any[] = []
+      const vSize = computeSize.value
+      const tooltipOpts = computeTooltipOpts.value
+      const defaultSlot = slots.default
+      return h('form', {
+        ref: refElem,
+        class: ['vxe-form', className ? (XEUtils.isFunction(className) ? className({ items: formItems, data, $form: $xeForm }) : className) : '', {
+          [`size--${vSize}`]: vSize,
+          'is--loading': loading
+        }],
+        onSubmit: submitEvent,
+        onReset: resetEvent
+      }, [
+        h('div', {
+          class: 'vxe-form--wrapper vxe-form--row'
+        }, customLayout
+          ? (defaultSlot ? defaultSlot({}) : [])
+          : formItems.map((item, index) => {
+            return h(VxeFormConfigItem, {
+              key: index,
+              itemConfig: item
+            })
+          })),
+        h('div', {
+          class: 'vxe-form-slots',
+          ref: 'hideItem'
+        }, customLayout ? [] : (defaultSlot ? defaultSlot({}) : [])),
+        /**
+         * 加载中
+         */
+        h(VxeLoading, {
+          class: 'vxe-form--loading',
+          modelValue: loading
+        }),
+        /**
+         * 工具提示
+         */
+        h(VxeTooltipComponent, {
+          ref: refTooltip,
+          ...tooltipOpts
+        })
+      ])
+    }
+
+    $xeForm.renderVN = renderVN
 
     const staticItemFlag = ref(0)
     watch(() => reactData.staticItems.length, () => {
@@ -652,64 +701,16 @@ export default defineComponent({
             errLog('vxe.error.errConflicts', ['custom-layout', 'items'])
           }
         }
-        loadItem(props.items || [])
       })
     })
 
-    const renderVN = () => {
-      const { loading, className, data, customLayout } = props
-      const { formItems } = reactData
-      // const formItems: any[] = []
-      const vSize = computeSize.value
-      const tooltipOpts = computeTooltipOpts.value
-      const defaultSlot = slots.default
-      return h('form', {
-        ref: refElem,
-        class: ['vxe-form', className ? (XEUtils.isFunction(className) ? className({ items: formItems, data, $form: $xeform }) : className) : '', {
-          [`size--${vSize}`]: vSize,
-          'is--loading': loading
-        }],
-        onSubmit: submitEvent,
-        onReset: resetEvent
-      }, [
-        h('div', {
-          class: 'vxe-form--wrapper vxe-row'
-        }, customLayout
-          ? (defaultSlot ? defaultSlot({}) : [])
-          : formItems.map((item, index) => {
-            return h(VxeFormConfigItem, {
-              key: index,
-              itemConfig: item
-            })
-          })),
-        h('div', {
-          class: 'vxe-form-slots',
-          ref: 'hideItem'
-        }, customLayout ? [] : (defaultSlot ? defaultSlot({}) : [])),
-        /**
-         * 加载中
-         */
-        h(VxeLoading, {
-          class: 'vxe-form--loading',
-          modelValue: loading
-        }),
-        /**
-         * 工具提示
-         */
-        h(VxeTooltipComponent, {
-          ref: refTooltip,
-          ...tooltipOpts
-        })
-      ])
-    }
+    loadItem(props.items || [])
 
-    $xeform.renderVN = renderVN
-
-    provide('$xeForm', $xeform)
+    provide('$xeForm', $xeForm)
     provide('$xeFormGather', null)
     provide('$xeFormItem', null)
 
-    return $xeform
+    return $xeForm
   },
   render () {
     return this.renderVN()

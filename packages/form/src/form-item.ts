@@ -63,9 +63,9 @@ export default defineComponent({
   props: formItemProps,
   setup (props, { slots }) {
     const refElem = ref() as Ref<HTMLDivElement>
-    const $xeform = inject('$xeForm', {} as VxeFormConstructor & VxeFormPrivateMethods)
+    const $xeForm = inject('$xeForm', {} as VxeFormConstructor & VxeFormPrivateMethods)
     const formGather = inject('$xeFormGather', null as XEFormItemProvide | null)
-    const formItem = reactive(createItem($xeform, props))
+    const formItem = reactive(createItem($xeForm, props))
     formItem.slots = slots
 
     const formItemInfo = { itemConfig: formItem }
@@ -74,18 +74,18 @@ export default defineComponent({
     watchItem(props, formItem)
 
     onMounted(() => {
-      assemItem($xeform, refElem.value, formItem, formGather)
+      assemItem($xeForm, refElem.value, formItem, formGather)
     })
 
     onUnmounted(() => {
-      destroyItem($xeform, formItem)
+      destroyItem($xeForm, formItem)
     })
 
-    const renderItem = ($xeform: VxeFormConstructor & VxeFormPrivateMethods, item: VxeFormDefines.ItemInfo) => {
-      const { props, reactData } = $xeform
+    const renderItem = ($xeForm: VxeFormConstructor & VxeFormPrivateMethods, item: VxeFormDefines.ItemInfo) => {
+      const { props, reactData } = $xeForm
       const { data, rules, titleAlign: allTitleAlign, titleWidth: allTitleWidth, titleColon: allTitleColon, titleAsterisk: allTitleAsterisk, titleOverflow: allTitleOverflow, vertical: allVertical } = props
       const { collapseAll } = reactData
-      const { computeValidOpts } = $xeform.getComputeMaps()
+      const { computeValidOpts } = $xeForm.getComputeMaps()
       const validOpts = computeValidOpts.value
       const { slots, title, visible, folding, field, collapseNode, itemRender, showError, errRule, className, titleOverflow, vertical, showTitle, contentClassName, contentStyle, titleClassName, titleStyle } = item
       const compConf = isEnableConf(itemRender) ? renderer.get(itemRender.name) : null
@@ -109,7 +109,7 @@ export default defineComponent({
       const ovTitle = itemOverflow === 'title'
       const ovTooltip = itemOverflow === true || itemOverflow === 'tooltip'
       const hasEllipsis = ovTitle || ovTooltip || ovEllipsis
-      const params = { data, field, property: field, item, $form: $xeform, $grid: $xeform.xegrid }
+      const params = { data, field, property: field, item, $form: $xeForm, $grid: $xeForm.xegrid }
       let isRequired = false
       if (visible === false) {
         return createCommentVNode()
@@ -122,7 +122,7 @@ export default defineComponent({
       }
       let contentVNs: VxeComponentSlot[] = []
       if (defaultSlot) {
-        contentVNs = $xeform.callSlot(defaultSlot, params)
+        contentVNs = $xeForm.callSlot(defaultSlot, params)
       } else if (compConf && compConf.renderItemContent) {
         contentVNs = getSlotVNs(compConf.renderItemContent(itemRender, params))
       } else if (field) {
@@ -132,7 +132,7 @@ export default defineComponent({
         contentVNs.push(
           h('div', {
             class: 'vxe-form--item-trigger-node',
-            onClick: $xeform.toggleCollapseEvent
+            onClick: $xeForm.toggleCollapseEvent
           }, [
             h('span', {
               class: 'vxe-form--item-trigger-text'
@@ -158,9 +158,9 @@ export default defineComponent({
       const ons = ovTooltip
         ? {
             onMouseenter (evnt: MouseEvent) {
-              $xeform.triggerTitleTipEvent(evnt, params)
+              $xeForm.triggerTitleTipEvent(evnt, params)
             },
-            onMouseleave: $xeform.handleTitleTipLeaveEvent
+            onMouseleave: $xeForm.handleTitleTipLeaveEvent
           }
         : {}
       return h('div', {
@@ -168,7 +168,7 @@ export default defineComponent({
         class: [
           'vxe-form--item',
           item.id,
-          span ? `vxe-col--${span} is--span` : '',
+          span ? `vxe-form--col${span} is--span` : '',
           className ? (XEUtils.isFunction(className) ? className(params) : className) : '',
           itemClassName ? (XEUtils.isFunction(itemClassName) ? itemClassName(params) : itemClassName) : '',
           {
@@ -178,7 +178,7 @@ export default defineComponent({
             'is--asterisk': titleAsterisk,
             'is--required': isRequired,
             'is--hidden': folding && collapseAll,
-            'is--active': isActivetem($xeform, item),
+            'is--active': isActivetem($xeForm, item),
             'is--error': showError
           }
         ],
@@ -208,7 +208,7 @@ export default defineComponent({
               ),
               title: ovTitle ? getFuncText(title) : null,
               ...ons
-            }, renderTitle($xeform, item))
+            }, renderTitle($xeForm, item))
             : null,
           h('div', {
             class: [
@@ -228,24 +228,24 @@ export default defineComponent({
     }
 
     const renderVN = () => {
-      const formProps = $xeform ? $xeform.props : null
+      const formProps = $xeForm ? $xeForm.props : null
       return formProps && formProps.customLayout
-        ? renderItem($xeform, formItem as unknown as VxeFormDefines.ItemInfo)
+        ? renderItem($xeForm, formItem as unknown as VxeFormDefines.ItemInfo)
         : h('div', {
           ref: refElem
         })
     }
 
-    const $xeformitem = {
+    const $xeFormitem = {
       formItem,
 
       renderVN
     }
 
-    provide('$xeFormItem', $xeformitem)
+    provide('$xeFormItem', $xeFormitem)
     provide('$xeFormGather', null)
 
-    return $xeformitem
+    return $xeFormitem
   },
   render () {
     return this.renderVN()

@@ -14,25 +14,25 @@ export function isFormItem (item: any): item is ItemInfo {
   return item instanceof ItemInfo
 }
 
-export function createItem ($xeform: VxeFormConstructor, _vm: any) {
-  return isFormItem(_vm) ? _vm : new ItemInfo($xeform, _vm)
+export function createItem ($xeForm: VxeFormConstructor, _vm: any) {
+  return isFormItem(_vm) ? _vm : new ItemInfo($xeForm, _vm)
 }
 
-export function handleFieldOrItem ($xeform: VxeFormConstructor, fieldOrItem: string | VxeFormDefines.ItemInfo) {
+export function handleFieldOrItem ($xeForm: VxeFormConstructor, fieldOrItem: string | VxeFormDefines.ItemInfo) {
   if (fieldOrItem) {
-    return XEUtils.isString(fieldOrItem) ? $xeform.getItemByField(fieldOrItem) : fieldOrItem
+    return XEUtils.isString(fieldOrItem) ? $xeForm.getItemByField(fieldOrItem) : fieldOrItem
   }
   return null
 }
 
-export function isHiddenItem ($xeform: VxeFormConstructor, formItem: VxeFormDefines.ItemInfo) {
-  const { reactData } = $xeform
+export function isHiddenItem ($xeForm: VxeFormConstructor, formItem: VxeFormDefines.ItemInfo) {
+  const { reactData } = $xeForm
   const { collapseAll } = reactData
   const { folding, visible } = formItem
   return visible === false || (folding && collapseAll)
 }
 
-export function isActivetem ($xeform: VxeFormConstructor, formItem: VxeFormDefines.ItemInfo) {
+export function isActivetem ($xeForm: VxeFormConstructor, formItem: VxeFormDefines.ItemInfo) {
   let { visibleMethod, itemRender, visible, field } = formItem
   if (visible === false) {
     return visible
@@ -44,8 +44,8 @@ export function isActivetem ($xeform: VxeFormConstructor, formItem: VxeFormDefin
   if (!visibleMethod) {
     return true
   }
-  const { data } = $xeform.props
-  return visibleMethod({ data, field, property: field, item: formItem, $form: $xeform, $grid: $xeform.xegrid })
+  const { data } = $xeForm.props
+  return visibleMethod({ data, field, property: field, item: formItem, $form: $xeForm, $grid: $xeForm.xegrid })
 }
 
 export function watchItem (props: any, formItem: ItemInfo) {
@@ -56,8 +56,8 @@ export function watchItem (props: any, formItem: ItemInfo) {
   })
 }
 
-export function assemItem ($xeform: VxeFormConstructor, el: HTMLDivElement, formItem: ItemInfo, formGather: XEFormItemProvide | null) {
-  const { reactData } = $xeform
+export function assemItem ($xeForm: VxeFormConstructor, el: HTMLDivElement, formItem: ItemInfo, formGather: XEFormItemProvide | null) {
+  const { reactData } = $xeForm
   const { staticItems } = reactData
   const parentElem = el.parentNode
   const parentItem = formGather ? formGather.formItem : null
@@ -68,8 +68,8 @@ export function assemItem ($xeform: VxeFormConstructor, el: HTMLDivElement, form
   }
 }
 
-export function destroyItem ($xeform: VxeFormConstructor, formItem: ItemInfo) {
-  const { reactData } = $xeform
+export function destroyItem ($xeForm: VxeFormConstructor, formItem: ItemInfo) {
+  const { reactData } = $xeForm
   const { staticItems } = reactData
   const index = XEUtils.findIndexOf(staticItems, item => item.id === formItem.id)
   if (index > -1) {

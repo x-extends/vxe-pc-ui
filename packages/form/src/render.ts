@@ -27,13 +27,13 @@ function renderSuffixIcon (titleSuffix: VxeFormItemPropTypes.TitleSuffix) {
   ])
 }
 
-export function renderTitle ($xeform: VxeFormConstructor & VxeFormPrivateMethods, item: VxeFormDefines.ItemInfo) {
-  const { data } = $xeform.props
-  const { computeTooltipOpts } = $xeform.getComputeMaps()
+export function renderTitle ($xeForm: VxeFormConstructor & VxeFormPrivateMethods, item: VxeFormDefines.ItemInfo) {
+  const { data } = $xeForm.props
+  const { computeTooltipOpts } = $xeForm.getComputeMaps()
   const { slots, field, itemRender, titlePrefix, titleSuffix } = item
   const tooltipOpts = computeTooltipOpts.value
   const compConf = isEnableConf(itemRender) ? renderer.get(itemRender.name) : null
-  const params = { data, field, property: field, item, $form: $xeform, $grid: $xeform.xegrid }
+  const params = { data, field, property: field, item, $form: $xeForm, $grid: $xeForm.xegrid }
   const titleSlot = slots ? slots.title : null
   const contVNs = []
   const titVNs = []
@@ -53,7 +53,7 @@ export function renderTitle ($xeform: VxeFormConstructor & VxeFormPrivateMethods
   titVNs.push(
     h('span', {
       class: 'vxe-form--item-title-label'
-    }, compConf && compConf.renderItemTitle ? getSlotVNs(compConf.renderItemTitle(itemRender, params)) : (titleSlot ? $xeform.callSlot(titleSlot, params) : getFuncText(item.title)))
+    }, compConf && compConf.renderItemTitle ? getSlotVNs(compConf.renderItemTitle(itemRender, params)) : (titleSlot ? $xeForm.callSlot(titleSlot, params) : getFuncText(item.title)))
   )
   contVNs.push(
     h('div', {

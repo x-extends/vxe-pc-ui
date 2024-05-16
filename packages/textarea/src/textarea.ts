@@ -44,7 +44,7 @@ export default defineComponent({
   ] as VxeTextareaEmits,
   setup (props, context) {
     const { emit } = context
-    const $xeform = inject<VxeFormConstructor & VxeFormPrivateMethods | null>('$xeForm', null)
+    const $xeForm = inject<VxeFormConstructor & VxeFormPrivateMethods | null>('$xeForm', null)
     const formItemInfo = inject<VxeFormDefines.ProvideItemInfo | null>('xeFormItemInfo', null)
 
     const xID = XEUtils.uniqueId()
@@ -63,7 +63,7 @@ export default defineComponent({
       refTextarea
     }
 
-    const $xetextarea = {
+    const $xeTextarea = {
       xID,
       props,
       context,
@@ -134,7 +134,7 @@ export default defineComponent({
 
     const triggerEvent = (evnt: Event & { type: 'focus' | 'blur' | 'change' }) => {
       const value = reactData.inputValue
-      $xetextarea.dispatchEvent(evnt.type, { value }, evnt)
+      $xeTextarea.dispatchEvent(evnt.type, { value }, evnt)
     }
 
     const emitUpdate = (value: string, evnt: Event) => {
@@ -143,8 +143,8 @@ export default defineComponent({
       if (XEUtils.toValueString(props.modelValue) !== value) {
         textareaMethods.dispatchEvent('change', { value }, evnt)
         // 自动更新校验状态
-        if ($xeform && formItemInfo) {
-          $xeform.triggerItemEvent(evnt, formItemInfo.itemConfig.field, value)
+        if ($xeForm && formItemInfo) {
+          $xeForm.triggerItemEvent(evnt, formItemInfo.itemConfig.field, value)
         }
       }
     }
@@ -157,7 +157,7 @@ export default defineComponent({
       if (immediate) {
         emitUpdate(value, evnt)
       }
-      $xetextarea.dispatchEvent('input', { value }, evnt)
+      $xeTextarea.dispatchEvent('input', { value }, evnt)
       handleResize()
     }
 
@@ -176,12 +176,12 @@ export default defineComponent({
       if (!immediate) {
         emitUpdate(inputValue, evnt)
       }
-      $xetextarea.dispatchEvent('blur', { value: inputValue }, evnt)
+      $xeTextarea.dispatchEvent('blur', { value: inputValue }, evnt)
     }
 
     textareaMethods = {
       dispatchEvent (type, params, evnt) {
-        emit(type, Object.assign({ $textarea: $xetextarea, $event: evnt }, params))
+        emit(type, Object.assign({ $textarea: $xeTextarea, $event: evnt }, params))
       },
 
       focus () {
@@ -197,7 +197,7 @@ export default defineComponent({
       }
     }
 
-    Object.assign($xetextarea, textareaMethods)
+    Object.assign($xeTextarea, textareaMethods)
 
     watch(() => props.modelValue, (val) => {
       reactData.inputValue = val
@@ -263,9 +263,9 @@ export default defineComponent({
       ])
     }
 
-    $xetextarea.renderVN = renderVN
+    $xeTextarea.renderVN = renderVN
 
-    return $xetextarea
+    return $xeTextarea
   },
   render () {
     return this.renderVN()

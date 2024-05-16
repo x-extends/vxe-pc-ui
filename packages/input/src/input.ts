@@ -141,7 +141,7 @@ export default defineComponent({
   ] as VxeInputEmits,
   setup (props, context) {
     const { slots, emit } = context
-    const $xeform = inject<VxeFormConstructor & VxeFormPrivateMethods | null>('$xeForm', null)
+    const $xeForm = inject<VxeFormConstructor & VxeFormPrivateMethods | null>('$xeForm', null)
     const formItemInfo = inject<VxeFormDefines.ProvideItemInfo | null>('xeFormItemInfo', null)
 
     const xID = XEUtils.uniqueId()
@@ -176,7 +176,7 @@ export default defineComponent({
       refInput: refInputTarget
     }
 
-    const $xeinput = {
+    const $xeInput = {
       xID,
       props,
       context,
@@ -689,8 +689,8 @@ export default defineComponent({
       if (XEUtils.toValueString(props.modelValue) !== value) {
         inputMethods.dispatchEvent('change', { value }, evnt)
         // 自动更新校验状态
-        if ($xeform && formItemInfo) {
-          $xeform.triggerItemEvent(evnt, formItemInfo.itemConfig.field, value)
+        if ($xeForm && formItemInfo) {
+          $xeForm.triggerItemEvent(evnt, formItemInfo.itemConfig.field, value)
         }
       }
     }
@@ -1224,7 +1224,7 @@ export default defineComponent({
     const isDateDisabled = (item: { date: Date }) => {
       const { disabledMethod } = props
       const { datePanelType } = reactData
-      return disabledMethod && disabledMethod({ type: datePanelType, viewType: datePanelType, date: item.date, $input: $xeinput })
+      return disabledMethod && disabledMethod({ type: datePanelType, viewType: datePanelType, date: item.date, $input: $xeInput })
     }
 
     const dateSelectItem = (date: Date) => {
@@ -1731,7 +1731,7 @@ export default defineComponent({
       const { festivalMethod } = props
       if (festivalMethod) {
         const { datePanelType } = reactData
-        const festivalRest = festivalMethod({ type: datePanelType, viewType: datePanelType, date: item.date, $input: $xeinput })
+        const festivalRest = festivalMethod({ type: datePanelType, viewType: datePanelType, date: item.date, $input: $xeInput })
         const festivalItem = festivalRest ? (XEUtils.isString(festivalRest) ? { label: festivalRest } : festivalRest) : {}
         const extraItem = festivalItem.extra ? (XEUtils.isString(festivalItem.extra) ? { label: festivalItem.extra } : festivalItem.extra) : null
         const labels = [
@@ -2318,7 +2318,7 @@ export default defineComponent({
 
     inputMethods = {
       dispatchEvent (type, params, evnt) {
-        emit(type, Object.assign({ $input: $xeinput, $event: evnt }, params))
+        emit(type, Object.assign({ $input: $xeInput, $event: evnt }, params))
       },
 
       focus () {
@@ -2344,7 +2344,7 @@ export default defineComponent({
       updatePlacement
     }
 
-    Object.assign($xeinput, inputMethods)
+    Object.assign($xeInput, inputMethods)
 
     watch(() => props.modelValue, (val) => {
       reactData.inputValue = val
@@ -2374,18 +2374,18 @@ export default defineComponent({
     })
 
     nextTick(() => {
-      GlobalEvent.on($xeinput, 'mousewheel', handleGlobalMousewheelEvent)
-      GlobalEvent.on($xeinput, 'mousedown', handleGlobalMousedownEvent)
-      GlobalEvent.on($xeinput, 'keydown', handleGlobalKeydownEvent)
-      GlobalEvent.on($xeinput, 'blur', handleGlobalBlurEvent)
+      GlobalEvent.on($xeInput, 'mousewheel', handleGlobalMousewheelEvent)
+      GlobalEvent.on($xeInput, 'mousedown', handleGlobalMousedownEvent)
+      GlobalEvent.on($xeInput, 'keydown', handleGlobalKeydownEvent)
+      GlobalEvent.on($xeInput, 'blur', handleGlobalBlurEvent)
     })
 
     onUnmounted(() => {
       numberStopDown()
-      GlobalEvent.off($xeinput, 'mousewheel')
-      GlobalEvent.off($xeinput, 'mousedown')
-      GlobalEvent.off($xeinput, 'keydown')
-      GlobalEvent.off($xeinput, 'blur')
+      GlobalEvent.off($xeInput, 'mousewheel')
+      GlobalEvent.off($xeInput, 'mousedown')
+      GlobalEvent.off($xeInput, 'keydown')
+      GlobalEvent.off($xeInput, 'blur')
     })
 
     initValue()
@@ -2470,9 +2470,9 @@ export default defineComponent({
       }, childs)
     }
 
-    $xeinput.renderVN = renderVN
+    $xeInput.renderVN = renderVN
 
-    return $xeinput
+    return $xeInput
   },
   render () {
     return this.renderVN()

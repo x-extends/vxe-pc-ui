@@ -1,10 +1,11 @@
 import { defineComponent, h, inject, VNode } from 'vue'
 import XEUtils from 'xe-utils'
+import iconConfigStore from '../../ui/src/iconStore'
 import { renderer } from '../../ui/src/renderer'
 import { getSlotVNs } from '../../ui/src/vn'
 import { getNewWidgetId } from './util'
 
-import { VxeFormDesignPropTypes, VxeFormDesignConstructor, VxeFormDesignPrivateMethods } from '../../../types'
+import { VxeFormDesignPropTypes, VxeFormDesignConstructor, VxeFormDesignDefines, VxeFormDesignPrivateMethods, VxeFormProps } from '../../../types'
 
 export default defineComponent({
   props: {},
@@ -18,15 +19,46 @@ export default defineComponent({
 
     const { reactData } = $xeFormDesign
 
-    const dragstartEvent = (evnt: DragEvent) => {
+    const createWidgetFormData = (formItems: any) => {
+      const data: any = {}
+      XEUtils.eachTree(formItems, item => {
+        const { field } = item
+        if (field) {
+          data[field] = null
+        }
+      }, { children: 'children' })
+      return data
+    }
+
+    const createWidgetItem = (name: string) => {
       const { widgetObjList } = reactData
+      const compConf = renderer.get(name) || {}
+      let formConfig: VxeFormProps = {}
+      const widgetId = getNewWidgetId(widgetObjList)
+      if (compConf) {
+        const createPropFormConfig = compConf.createFormDesignWidgetSettingPropFormConfig
+        if (createPropFormConfig) {
+          formConfig = createPropFormConfig({ name }) || {}
+          formConfig.data = formConfig.data || createWidgetFormData(formConfig.items)
+        }
+      }
+      const widgetItem: VxeFormDesignDefines.WidgetObjItem = {
+        id: widgetId,
+        name: name,
+        formConfig,
+        model: {
+          update: false,
+          value: ''
+        }
+      }
+      return widgetItem
+    }
+
+    const dragstartEvent = (evnt: DragEvent) => {
       const divEl = evnt.currentTarget as HTMLDivElement
       const dataTransfer = evnt.dataTransfer
       const widgetName = divEl.getAttribute('data-widget-name') || ''
-      const dragWidget = {
-        id: getNewWidgetId(widgetObjList),
-        name: widgetName
-      }
+      const dragWidget = createWidgetItem(widgetName)
       if (dataTransfer) {
         dataTransfer.setData('text/plain', widgetName)
       }
@@ -34,9 +66,10 @@ export default defineComponent({
       reactData.dragWidget = dragWidget
     }
 
-    const dragendEvent = () => {
+    const dragendEvent = (evnt: DragEvent) => {
       if (reactData.dragWidget) {
         reactData.activeWidget = reactData.dragWidget
+        $xeFormDesign.dispatchEvent('add-widget', {}, evnt)
       }
       reactData.dragWidget = null
       reactData.sortWidget = null
@@ -49,9 +82,20 @@ export default defineComponent({
           const rest = XEUtils.findTree(widgetObjList, item => item.id === dragWidget.id, { children: 'children' })
           if (rest) {
             rest.items.splice(rest.index, 1)
+            reactData.dragWidget = null
           }
         }
       }
+    }
+
+    const addNewWidget = (evnt: KeyboardEvent, widgetName: string) => {
+      const { widgetObjList } = reactData
+      const dragWidget = createWidgetItem(widgetName)
+      widgetObjList.push(dragWidget)
+      reactData.activeWidget = dragWidget
+      reactData.sortWidget = null
+      reactData.dragWidget = null
+      $xeFormDesign.dispatchEvent('add-widget', {}, evnt)
     }
 
     const renderWidgetList = (group: VxeFormDesignPropTypes.WidgetItem) => {
@@ -59,7 +103,7 @@ export default defineComponent({
       if (group.children) {
         group.children.forEach((name, index) => {
           const compConf = renderer.get(name) || {}
-          const formDesignWidgetName = compConf.formDesignWidgetName
+          const widgetName = compConf.formDesignWidgetName
           const formDesignWidgetIcon = compConf.formDesignWidgetIcon
           const renderFormDesignWidgetItem = compConf.renderFormDesignWidgetItem
           widgetVNs.push(
@@ -80,7 +124,17 @@ export default defineComponent({
                   }),
                   h('span', {
                     class: 'vxe-design-form--widget-item-name'
-                  }, `${formDesignWidgetName || name}`)
+                  }, `${(XEUtils.isFunction(widgetName) ? widgetName({ name }) : widgetName) || name}`),
+                  h('span', {
+                    class: 'vxe-design-form--widget-item-add',
+                    onClick (evnt: KeyboardEvent) {
+                      addNewWidget(evnt, name)
+                    }
+                  }, [
+                    h('i', {
+                      class: iconConfigStore.DESIGN_FORM_WIDGET_ADD
+                    })
+                  ])
                 ]))
           )
         })

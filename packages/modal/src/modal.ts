@@ -101,7 +101,7 @@ export default defineComponent({
       refElem
     }
 
-    const $xemodal = {
+    const $xeModal = {
       xID,
       props,
       context,
@@ -179,8 +179,8 @@ export default defineComponent({
     }
 
     const removeMsgQueue = () => {
-      if (msgQueue.indexOf($xemodal) > -1) {
-        XEUtils.remove(msgQueue, comp => comp === $xemodal)
+      if (msgQueue.indexOf($xeModal) > -1) {
+        XEUtils.remove(msgQueue, comp => comp === $xeModal)
       }
       updateStyle()
     }
@@ -200,7 +200,7 @@ export default defineComponent({
             if (!remember) {
               reactData.zoomLocat = null
             }
-            XEUtils.remove(allActivedModals, item => item === $xemodal)
+            XEUtils.remove(allActivedModals, item => item === $xeModal)
             modalMethods.dispatchEvent('before-hide', params)
             setTimeout(() => {
               reactData.visible = false
@@ -274,8 +274,8 @@ export default defineComponent({
     }
 
     const addMsgQueue = () => {
-      if (msgQueue.indexOf($xemodal) === -1) {
-        msgQueue.push($xemodal)
+      if (msgQueue.indexOf($xeModal) === -1) {
+        msgQueue.push($xeModal)
       }
       updateStyle()
     }
@@ -340,7 +340,7 @@ export default defineComponent({
         reactData.visible = true
         reactData.contentVisible = false
         updateZindex()
-        allActivedModals.push($xemodal)
+        allActivedModals.push($xeModal)
         setTimeout(() => {
           reactData.contentVisible = true
           nextTick(() => {
@@ -405,7 +405,7 @@ export default defineComponent({
         // 多个时，只关掉最上层的窗口
         if (lastModal) {
           setTimeout(() => {
-            if (lastModal === $xemodal && (lastModal as VxeModalConstructor).props.escClosable) {
+            if (lastModal === $xeModal && (lastModal as VxeModalConstructor).props.escClosable) {
               closeModal('exit')
             }
           }, 10)
@@ -696,14 +696,14 @@ export default defineComponent({
       const titVNs = [
         h('div', {
           class: 'vxe-modal--header-title'
-        }, titleSlot ? getSlotVNs(titleSlot({ $modal: $xemodal })) : (title ? getFuncText(title) : getI18n('vxe.alert.title')))
+        }, titleSlot ? getSlotVNs(titleSlot({ $modal: $xeModal })) : (title ? getFuncText(title) : getI18n('vxe.alert.title')))
       ]
       const rightVNs = []
       if (cornerSlot) {
         rightVNs.push(
           h('span', {
             class: 'vxe-modal--corner-wrapper'
-          }, getSlotVNs(cornerSlot({ $modal: $xemodal })))
+          }, getSlotVNs(cornerSlot({ $modal: $xeModal })))
         )
       }
       if (showZoom) {
@@ -755,7 +755,7 @@ export default defineComponent({
               'is--ellipsis': !isMsg && props.showTitleOverflow
             }],
             ...headerOns
-          }, headerSlot ? (!reactData.inited || (props.destroyOnClose && !reactData.visible) ? [] : getSlotVNs(headerSlot({ $modal: $xemodal }))) : renderTitles())
+          }, headerSlot ? (!reactData.inited || (props.destroyOnClose && !reactData.visible) ? [] : getSlotVNs(headerSlot({ $modal: $xeModal }))) : renderTitles())
         )
       }
       return headVNs
@@ -781,7 +781,7 @@ export default defineComponent({
       contVNs.push(
         h('div', {
           class: 'vxe-modal--content'
-        }, defaultSlot ? (!reactData.inited || (props.destroyOnClose && !reactData.visible) ? [] : getSlotVNs(defaultSlot({ $modal: $xemodal }))) as VNode[] : getFuncText(content))
+        }, defaultSlot ? (!reactData.inited || (props.destroyOnClose && !reactData.visible) ? [] : getSlotVNs(defaultSlot({ $modal: $xeModal }))) as VNode[] : getFuncText(content))
       )
       if (!isMsg) {
         /**
@@ -833,7 +833,7 @@ export default defineComponent({
         footVNs.push(
           h('div', {
             class: 'vxe-modal--footer'
-          }, footerSlot ? (!reactData.inited || (props.destroyOnClose && !reactData.visible) ? [] : getSlotVNs(footerSlot({ $modal: $xemodal }))) as VNode[] : renderBtns())
+          }, footerSlot ? (!reactData.inited || (props.destroyOnClose && !reactData.visible) ? [] : getSlotVNs(footerSlot({ $modal: $xeModal }))) as VNode[] : renderBtns())
         )
       }
       if (!isMsg && props.resize) {
@@ -854,7 +854,7 @@ export default defineComponent({
 
     modalMethods = {
       dispatchEvent (type, params, evnt) {
-        emit(type, Object.assign({ $modal: $xemodal, $event: evnt }, params))
+        emit(type, Object.assign({ $modal: $xeModal, $event: evnt }, params))
       },
       open: openModal,
       close () {
@@ -869,7 +869,7 @@ export default defineComponent({
       revert
     }
 
-    Object.assign($xemodal, modalMethods)
+    Object.assign($xeModal, modalMethods)
 
     watch(() => props.width, recalculate)
     watch(() => props.height, recalculate)
@@ -893,12 +893,12 @@ export default defineComponent({
         recalculate()
       })
       if (props.escClosable) {
-        GlobalEvent.on($xemodal, 'keydown', handleGlobalKeydownEvent)
+        GlobalEvent.on($xeModal, 'keydown', handleGlobalKeydownEvent)
       }
     })
 
     onUnmounted(() => {
-      GlobalEvent.off($xemodal, 'keydown')
+      GlobalEvent.off($xeModal, 'keydown')
       removeMsgQueue()
     })
 
@@ -940,9 +940,9 @@ export default defineComponent({
       ])
     }
 
-    $xemodal.renderVN = renderVN
+    $xeModal.renderVN = renderVN
 
-    return $xemodal
+    return $xeModal
   },
   render () {
     return this.renderVN()

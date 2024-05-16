@@ -49,8 +49,8 @@ export namespace VxePagerPropTypes {
   export type IconJumpNext = string
   export type IconNextPage = string
   export type IconJumpMore = string
-  export type IconHome = string
-  export type IconEnd = string
+  export type IconHomePage = string
+  export type IconEndPage = string
 }
 
 export type VxePagerProps = {
@@ -113,8 +113,8 @@ export type VxePagerProps = {
   iconJumpNext?: VxePagerPropTypes.IconJumpNext
   iconNextPage?: VxePagerPropTypes.IconNextPage
   iconJumpMore?: VxePagerPropTypes.IconJumpMore
-  iconHome?: VxePagerPropTypes.IconHome
-  iconEnd?: VxePagerPropTypes.IconEnd
+  iconHomePage?: VxePagerPropTypes.IconHomePage
+  iconEndPage?: VxePagerPropTypes.IconEndPage
 }
 
 export interface PagerPrivateComputed {
