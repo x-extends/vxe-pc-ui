@@ -18,6 +18,11 @@ const tsconfig = require('./tsconfig.json')
 
 const sass = gulpSass(dartSass)
 
+const tsSettings = {
+  ...tsconfig.compilerOptions,
+  target: 'es2016'
+}
+
 const exportModuleName = 'VxeUI'
 const esmOutDir = 'es'
 const commOutDir = 'lib'
@@ -46,6 +51,7 @@ const componentList = [
   'layout-footer',
   'layout-header',
   'list-design',
+  'list',
   'loading',
   'modal',
   'optgroup',
@@ -111,7 +117,7 @@ gulp.task('build_escode', function () {
   ])
     .pipe(replace('process.env.VUE_APP_VXE_TABLE_VERSION', `"${pack.version}"`))
     .pipe(replace('process.env.VUE_APP_VXE_TABLE_ENV', 'process.env.NODE_ENV'))
-    .pipe(ts(tsconfig.compilerOptions))
+    .pipe(ts(tsSettings))
     .pipe(gulp.dest(esmOutDir))
 })
 
@@ -121,7 +127,7 @@ gulp.task('build_esjs', gulp.series('build_escode', function () {
   ])
     .pipe(replace('process.env.VUE_APP_VXE_TABLE_VERSION', `"${pack.version}"`))
     .pipe(replace('process.env.VUE_APP_VXE_TABLE_ENV', 'process.env.NODE_ENV'))
-    .pipe(ts(tsconfig.compilerOptions))
+    .pipe(ts(tsSettings))
     .pipe(rename({
       basename: 'index',
       extname: '.esm.js'
@@ -139,7 +145,7 @@ gulp.task('build_commoncode', function () {
   ])
     .pipe(replace('process.env.VUE_APP_VXE_TABLE_VERSION', `"${pack.version}"`))
     .pipe(replace('process.env.VUE_APP_VXE_TABLE_ENV', 'process.env.NODE_ENV'))
-    .pipe(ts(tsconfig.compilerOptions))
+    .pipe(ts(tsSettings))
     .pipe(babel({
       presets: ['@babel/env']
     }))
@@ -158,7 +164,7 @@ gulp.task('build_commonjs', gulp.series('build_commoncode', function () {
   ])
     .pipe(replace('process.env.VUE_APP_VXE_TABLE_VERSION', `"${pack.version}"`))
     .pipe(replace('process.env.VUE_APP_VXE_TABLE_ENV', 'process.env.NODE_ENV'))
-    .pipe(ts(tsconfig.compilerOptions))
+    .pipe(ts(tsSettings))
     .pipe(babel({
       presets: ['@babel/env']
     }))
@@ -222,7 +228,7 @@ gulp.task('build_i18n', () => {
     const name = XEUtils.camelCase(code).replace(/^[a-z]/, firstChat => firstChat.toUpperCase())
     const isZHTC = ['zh-HK', 'zh-MO', 'zh-TW'].includes(code)
     return gulp.src(`packages_temp/locale/lang/${isZHTC ? 'zh-TC' : code}.ts`)
-      .pipe(ts(tsconfig.compilerOptions))
+      .pipe(ts(tsSettings))
       .pipe(babel({
         moduleId: `vxe-ui-language.${code}`,
         presets: ['@babel/env'],

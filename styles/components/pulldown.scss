@@ -3,7 +3,7 @@
 .vxe-pulldown {
   position: relative;
   display: inline-block;
-  color: var(--vxe-font-color);
+  color: var(--vxe-ui-font-color);
   text-align: left;
 }
 
@@ -12,7 +12,7 @@
   position: absolute;
   left: 0;
   padding: 4px 0;
-  color: var(--vxe-font-color);
+  color: var(--vxe-ui-font-color);
   text-align: left;
   &:not(.is--transfer) {
     min-width: 100%;

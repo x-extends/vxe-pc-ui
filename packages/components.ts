@@ -23,6 +23,7 @@ import VxeLayoutContainer from './layout-container'
 import VxeLayoutFooter from './layout-footer'
 import VxeLayoutHeader from './layout-header'
 import VxeListDesign from './list-design'
+import VxeList from './list'
 import VxeLoading from './loading'
 import VxeModal from './modal'
 import VxeOptgroup from './optgroup'
@@ -71,6 +72,7 @@ const components = [
   VxeLayoutFooter,
   VxeLayoutHeader,
   VxeListDesign,
+  VxeList,
   VxeLoading,
   VxeModal,
   VxeOptgroup,
@@ -119,6 +121,7 @@ export * from './layout-container'
 export * from './layout-footer'
 export * from './layout-header'
 export * from './list-design'
+export * from './list'
 export * from './loading'
 export * from './modal'
 export * from './optgroup'

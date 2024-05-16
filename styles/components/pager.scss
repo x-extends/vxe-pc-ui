@@ -5,7 +5,7 @@
   position: relative;
   display: flex;
   align-items: center;
-  color: var(--vxe-font-color);
+  color: var(--vxe-ui-font-color);
   font-family: var(--vxe-font-family);
   text-align: right;
   background-color: var(--vxe-ui-pager-background-color);
@@ -246,7 +246,7 @@
   .vxe-pager--jump .vxe-pager--goto {
     border-radius: var(--vxe-border-radius);
     border: 1px solid var(--vxe-ui-input-border-color);
-    color: var(--vxe-font-color);
+    color: var(--vxe-ui-font-color);
     transition: border .2s ease-in-out;
     padding: 0 0.4em;
     background-color: var(--vxe-ui-input-background-color);

@@ -7,25 +7,21 @@ const globalConfigStore: Required<VxeGlobalConfig> = {
   zIndex: 999,
   emptyCell: '　',
   loadingText: '',
+  resizeInterval: 500,
 
   i18n: (key: string) => key,
 
-  tooltip: {
-    // size: null,
-    trigger: 'hover',
-    theme: 'dark',
-    enterDelay: 500,
-    leaveDelay: 300
+  anchor: {},
+  anchorLink: {},
+  breadcrumb: {
+    separator: '/'
   },
-  pager: {
-    // size: null,
-    // autoHidden: false,
-    // perfect: true,
-    // pageSize: 10,
-    // pagerCount: 7,
-    // pageSizes: [10, 15, 20, 50, 100],
-    // layouts: ['PrevJump', 'PrevPage', 'Jump', 'PageCount', 'NextPage', 'NextJump', 'Sizes', 'Total']
-  },
+  breadcrumbItem: {},
+  button: {},
+  buttonGroup: {},
+  checkbox: {},
+  checkboxGroup: {},
+  col: {},
   form: {
     // preventSubmit: false,
     // size: null,
@@ -39,6 +35,10 @@ const globalConfigStore: Required<VxeGlobalConfig> = {
     },
     titleAsterisk: true
   },
+  formDesign: {},
+  formGather: {},
+  formItem: {},
+  icon: {},
   input: {
     // size: null,
     // transfer: false
@@ -52,49 +52,21 @@ const globalConfigStore: Required<VxeGlobalConfig> = {
     digits: 2,
     controls: true
   },
-  textarea: {
+  layoutAside: {},
+  layoutBody: {},
+  layoutContainer: {},
+  layoutFooter: {},
+  layoutHeader: {},
+  listDesign: {},
+  list: {
     // size: null,
-    // autosize: {
-    //   minRows: 1,
-    //   maxRows: 10
-    // }
+    scrollY: {
+      enabled: true,
+      gt: 100
+      // oSize: 0
+    }
   },
-  select: {
-    // size: null,
-    // transfer: false,
-    // optionConfig: {
-    //   keyField: '_X_OPTION_KEY'
-    // },
-    multiCharOverflow: 8
-  },
-  button: {
-    // size: null,
-    // transfer: false
-  },
-  buttonGroup: {
-    // size: null
-  },
-  radio: {
-    // size: null,
-    strict: true
-  },
-  radioButton: {
-    // size: null,
-    strict: true
-  },
-  radioGroup: {
-    // size: null,
-    strict: true
-  },
-  checkbox: {
-    // size: null
-  },
-  checkboxGroup: {
-    // size: null
-  },
-  switch: {
-    // size: null
-  },
+  loading: {},
   modal: {
     // size: null,
     top: 15,
@@ -113,16 +85,42 @@ const globalConfigStore: Required<VxeGlobalConfig> = {
     // storage: false,
     storageKey: 'VXE_MODAL_POSITION'
   },
-  list: {
+  optgroup: {},
+  option: {},
+  pager: {
     // size: null,
-    scrollY: {
-      enabled: true,
-      gt: 100
-      // oSize: 0
-    }
+    // autoHidden: false,
+    // perfect: true,
+    // pageSize: 10,
+    // pagerCount: 7,
+    // pageSizes: [10, 15, 20, 50, 100],
+    // layouts: ['PrevJump', 'PrevPage', 'Jump', 'PageCount', 'NextPage', 'NextJump', 'Sizes', 'Total']
   },
-  breadcrumb: {},
-  formDesign: {}
+  pulldown: {},
+  radio: {
+    strict: true
+  },
+  radioButton: {
+    strict: true
+  },
+  radioGroup: {
+    strict: true
+  },
+  row: {},
+  select: {
+    multiCharOverflow: 8
+  },
+  switch: {},
+  tabPane: {},
+  tabs: {},
+  textarea: {},
+  tooltip: {
+    // size: null,
+    trigger: 'hover',
+    theme: 'dark',
+    enterDelay: 500,
+    leaveDelay: 300
+  }
 }
 
 export default globalConfigStore

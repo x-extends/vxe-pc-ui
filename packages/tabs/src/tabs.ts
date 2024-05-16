@@ -80,16 +80,27 @@ export default defineComponent({
         const { type, options } = props
         const { staticTabs, activeName } = reactData
         const headerWrapperEl = refHeaderElem.value
-        if (headerWrapperEl && !type) {
+        let lintWidth = 0
+        let lintLeft = 0
+        if (headerWrapperEl) {
           const index = XEUtils.findIndexOf(staticTabs.length ? staticTabs : options, item => item.name === activeName)
           if (index > -1) {
             const tabEl = headerWrapperEl.children[index] as HTMLDivElement
             const tabWidth = tabEl.clientWidth
-            const lintWidth = Math.max(4, Math.floor(tabWidth * 0.6))
-            reactData.lintLeft = tabEl.offsetLeft + Math.floor((tabWidth - lintWidth) / 2)
-            reactData.lintWidth = lintWidth
+            if (type === 'card') {
+              lintWidth = tabWidth + 1
+              lintLeft = tabEl.offsetLeft
+            } else if (type === 'border-card') {
+              lintWidth = tabWidth + 1
+              lintLeft = tabEl.offsetLeft - 1
+            } else if (!type) {
+              lintWidth = Math.max(4, Math.floor(tabWidth * 0.6))
+              lintLeft = tabEl.offsetLeft + Math.floor((tabWidth - lintWidth) / 2)
+            }
           }
         }
+        reactData.lintLeft = lintLeft
+        reactData.lintWidth = lintWidth
       })
     }
 
@@ -111,7 +122,6 @@ export default defineComponent({
       if (isInit) {
         emit('load', { name, $event: evnt })
       }
-      updateLineStyle()
     }
 
     const renderTabHeader = (list: VxeTabsPropTypes.Options | VxeTabPaneDefines.TabConfig[]) => {
@@ -140,15 +150,13 @@ export default defineComponent({
             }, tabSlot ? callSlot(tabSlot, { name, title }) : `${title}`)
           ])
         })),
-        type
-          ? null
-          : h('span', {
-            class: 'vxe-tabs-header--active-line',
-            style: {
-              left: `${lintLeft}px`,
-              width: `${lintWidth}px`
-            }
-          })
+        h('span', {
+          class: `vxe-tabs-header--active-line-${type || 'default'}`,
+          style: {
+            left: `${lintLeft}px`,
+            width: `${lintWidth}px`
+          }
+        })
       ])
     }
 
@@ -223,6 +231,9 @@ export default defineComponent({
 
     watch(() => props.modelValue, (val) => {
       reactData.activeName = val
+    })
+
+    watch(() => reactData.activeName, () => {
       updateLineStyle()
     })
 

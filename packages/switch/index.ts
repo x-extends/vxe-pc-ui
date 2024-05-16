@@ -8,8 +8,7 @@ export const VxeSwitch = Object.assign(VxeSwitchComponent, {
   }
 })
 
-export const Switch = VxeSwitch
-
 dynamicApp.component(VxeSwitchComponent.name as string, VxeSwitchComponent)
 
+export const Switch = VxeSwitch
 export default VxeSwitch

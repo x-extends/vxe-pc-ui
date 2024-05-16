@@ -152,29 +152,6 @@ export default defineComponent({
 
     Object.assign($xeAnchor, anchorMethods, anchorPrivateMethods)
 
-    watch(() => props.modelValue, (val) => {
-      reactData.activeHref = val
-    })
-
-    watch(() => reactData.activeHref, () => {
-      updateMarkerPos()
-    })
-
-    watch(() => props.container, () => {
-      removeContainerElemScroll()
-      updateContainerElem()
-    })
-
-    onMounted(() => {
-      nextTick(() => {
-        updateContainerElem()
-      })
-    })
-
-    onBeforeUnmount(() => {
-      removeContainerElemScroll()
-    })
-
     const renderSubItems = (options?: VxeAnchorPropTypes.Options) => {
       const itemVNs: VNode[] = []
       if (options) {
@@ -220,6 +197,29 @@ export default defineComponent({
           : createCommentVNode()
       ])
     }
+
+    watch(() => props.modelValue, (val) => {
+      reactData.activeHref = val
+    })
+
+    watch(() => reactData.activeHref, () => {
+      updateMarkerPos()
+    })
+
+    watch(() => props.container, () => {
+      removeContainerElemScroll()
+      updateContainerElem()
+    })
+
+    onMounted(() => {
+      nextTick(() => {
+        updateContainerElem()
+      })
+    })
+
+    onBeforeUnmount(() => {
+      removeContainerElemScroll()
+    })
 
     $xeAnchor.renderVN = renderVN
 

@@ -61,7 +61,7 @@ export default defineComponent({
 
     const computeSize = useSize(props)
 
-    const $xegrid = inject('$xegrid', null as any)
+    const $xeGrid = inject('$xeGrid', null as any)
 
     const reactData = reactive<PagerReactData>({
       inpCurrPage: props.currentPage
@@ -506,7 +506,7 @@ export default defineComponent({
         childNodes.push(
           h('span', {
             class: 'vxe-pager--left-wrapper'
-          }, slots.left({ $grid: $xegrid }))
+          }, slots.left({ $grid: $xeGrid }))
         )
       }
       layouts.forEach((name) => {
@@ -564,7 +564,7 @@ export default defineComponent({
         childNodes.push(
           h('span', {
             class: 'vxe-pager--right-wrapper'
-          }, slots.right({ $grid: $xegrid }))
+          }, slots.right({ $grid: $xeGrid }))
         )
       }
       return h('div', {

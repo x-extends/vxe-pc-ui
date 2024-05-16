@@ -4,12 +4,11 @@ import { dynamicApp } from '../dynamics'
 
 export const VxeSelect = Object.assign(VxeSelectComponent, {
   install: function (app: App) {
-    app.component(VxeSelectComponent.name, VxeSelectComponent)
+    app.component(VxeSelectComponent.name as string, VxeSelectComponent)
   }
 })
 
+dynamicApp.component(VxeSelectComponent.name as string, VxeSelectComponent)
+
 export const Select = VxeSelect
-
-dynamicApp.component(VxeSelectComponent.name, VxeSelectComponent)
-
 export default VxeSelect

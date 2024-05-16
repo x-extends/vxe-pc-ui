@@ -4,12 +4,11 @@ import { dynamicApp } from '../dynamics'
 
 export const VxeCheckboxGroup = Object.assign(VxeCheckboxGroupComponent, {
   install (app: App) {
-    app.component(VxeCheckboxGroupComponent.name, VxeCheckboxGroupComponent)
+    app.component(VxeCheckboxGroupComponent.name as string, VxeCheckboxGroupComponent)
   }
 })
 
+dynamicApp.component(VxeCheckboxGroupComponent.name as string, VxeCheckboxGroupComponent)
+
 export const CheckboxGroup = VxeCheckboxGroup
-
-dynamicApp.component(VxeCheckboxGroupComponent.name, VxeCheckboxGroupComponent)
-
 export default VxeCheckboxGroup

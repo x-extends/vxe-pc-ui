@@ -4,12 +4,11 @@ import { dynamicApp } from '../dynamics'
 
 export const VxeRadioButton = Object.assign(VxeRadioButtonComponent, {
   install: function (app: App) {
-    app.component(VxeRadioButtonComponent.name, VxeRadioButtonComponent)
+    app.component(VxeRadioButtonComponent.name as string, VxeRadioButtonComponent)
   }
 })
 
+dynamicApp.component(VxeRadioButtonComponent.name as string, VxeRadioButtonComponent)
+
 export const RadioButton = VxeRadioButton
-
-dynamicApp.component(VxeRadioButtonComponent.name, VxeRadioButtonComponent)
-
 export default VxeRadioButton

@@ -14,7 +14,7 @@
   outline: 0;
   font-size: inherit;
   padding: 0 0.6em;
-  color: var(--vxe-font-color);
+  color: var(--vxe-ui-font-color);
   line-height: inherit;
   border: 1px solid var(--vxe-ui-input-border-color);
   background-color: var(--vxe-ui-textarea-background-color);
@@ -35,7 +35,7 @@
 .vxe-textarea--inner,
 .vxe-textarea--autosize {
   line-height: var(--vxe-ui-textarea-line-height);
-  color: var(--vxe-font-color);
+  color: var(--vxe-ui-font-color);
   font-family: var(--vxe-font-family);
 }
 

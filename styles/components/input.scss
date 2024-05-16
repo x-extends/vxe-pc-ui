@@ -12,7 +12,7 @@ $iconWidth: 1.6em;
   font-family: inherit;
   line-height: inherit;
   padding: 0 0.6em;
-  color: var(--vxe-font-color);
+  color: var(--vxe-ui-font-color);
   border: 1px solid var(--vxe-ui-input-border-color);
   background-color: var(--vxe-ui-input-background-color);
   box-shadow: none;
@@ -205,7 +205,7 @@ $iconWidth: 1.6em;
     .vxe-input--suffix {
       &:hover {
         .vxe-input--clear-icon {
-          color: var(--vxe-font-color);
+          color: var(--vxe-ui-font-color);
         }
       }
       &:active {
@@ -218,7 +218,7 @@ $iconWidth: 1.6em;
       &:hover {
         .vxe-input--search-suffix,
         .vxe-input--password-suffix {
-          color: var(--vxe-font-color);
+          color: var(--vxe-ui-font-color);
         }
       }
       &:active {
@@ -231,7 +231,7 @@ $iconWidth: 1.6em;
     .vxe-input--number-prev,
     .vxe-input--number-next {
       &:hover {
-        color: var(--vxe-font-color);
+        color: var(--vxe-ui-font-color);
       }
       &:active {
         color: var(--vxe-primary-color);
@@ -303,7 +303,7 @@ $iconWidth: 1.6em;
   position: absolute;
   left: 0;
   padding: 4px 0;
-  color: var(--vxe-font-color);
+  color: var(--vxe-ui-font-color);
   font-size: var(--vxe-font-size);
   text-align: left;
   &:not(.is--transfer) {

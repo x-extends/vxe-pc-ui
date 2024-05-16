@@ -58,7 +58,7 @@ export default defineComponent({
       computeIsMaximize
     }
 
-    const $xecheckboxgroup = {
+    const $xeCheckboxGroup = {
       xID,
       props,
       context,
@@ -70,7 +70,7 @@ export default defineComponent({
 
     const checkboxGroupMethods: CheckboxGroupMethods = {
       dispatchEvent (type, params, evnt) {
-        emit(type, Object.assign({ $checkboxGroup: $xecheckboxgroup, $event: evnt }, params))
+        emit(type, Object.assign({ $checkboxGroup: $xeCheckboxGroup, $event: evnt }, params))
       }
     }
 
@@ -87,7 +87,7 @@ export default defineComponent({
           checklist.splice(checkIndex, 1)
         }
         emit('update:modelValue', checklist)
-        $xecheckboxgroup.dispatchEvent('change', Object.assign({ checklist }, params), evnt)
+        $xeCheckboxGroup.dispatchEvent('change', Object.assign({ checklist }, params), evnt)
         // 自动更新校验状态
         if ($xeform && formItemInfo) {
           $xeform.triggerItemEvent(evnt, formItemInfo.itemConfig.field, checklist)
@@ -95,7 +95,7 @@ export default defineComponent({
       }
     }
 
-    Object.assign($xecheckboxgroup, checkboxGroupMethods, checkboxGroupPrivateMethods)
+    Object.assign($xeCheckboxGroup, checkboxGroupMethods, checkboxGroupPrivateMethods)
 
     const renderVN = () => {
       const { options } = props
@@ -118,9 +118,9 @@ export default defineComponent({
             : []))
     }
 
-    $xecheckboxgroup.renderVN = renderVN
+    $xeCheckboxGroup.renderVN = renderVN
 
-    provide('$xecheckboxgroup', $xecheckboxgroup)
+    provide('$xeCheckboxGroup', $xeCheckboxGroup)
 
     return renderVN
   }

@@ -40,11 +40,11 @@ export default defineComponent({
 
     const computeSize = useSize(props)
 
-    const $xecheckboxgroup = inject('$xecheckboxgroup', null as (VxeCheckboxGroupConstructor & VxeCheckboxGroupPrivateMethods) | null)
+    const $xeCheckboxGroup = inject('$xeCheckboxGroup', null as (VxeCheckboxGroupConstructor & VxeCheckboxGroupPrivateMethods) | null)
 
     const computeIsChecked = computed(() => {
-      if ($xecheckboxgroup) {
-        return XEUtils.includes($xecheckboxgroup.props.modelValue, props.label)
+      if ($xeCheckboxGroup) {
+        return XEUtils.includes($xeCheckboxGroup.props.modelValue, props.label)
       }
       return props.modelValue === props.checkedValue
     })
@@ -53,9 +53,9 @@ export default defineComponent({
       if (props.disabled) {
         return true
       }
-      if ($xecheckboxgroup) {
-        const { props: groupProps } = $xecheckboxgroup
-        const { computeIsMaximize } = $xecheckboxgroup.getComputeMaps()
+      if ($xeCheckboxGroup) {
+        const { props: groupProps } = $xeCheckboxGroup
+        const { computeIsMaximize } = $xeCheckboxGroup.getComputeMaps()
         const isMaximize = computeIsMaximize.value
         const isChecked = computeIsChecked.value
         return groupProps.disabled || (isMaximize && !isChecked)
@@ -70,8 +70,8 @@ export default defineComponent({
         const checked = evnt.target.checked
         const value = checked ? checkedValue : uncheckedValue
         const params = { checked, value, label: props.label }
-        if ($xecheckboxgroup) {
-          $xecheckboxgroup.handleChecked(params, evnt)
+        if ($xeCheckboxGroup) {
+          $xeCheckboxGroup.handleChecked(params, evnt)
         } else {
           emit('update:modelValue', value)
           checkboxMethods.dispatchEvent('change', params, evnt)

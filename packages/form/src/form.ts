@@ -8,7 +8,7 @@ import { errLog, warnLog } from '../../ui/src/log'
 import { scrollToView } from '../../ui/src/dom'
 import { createItem, handleFieldOrItem, isHiddenItem, isActivetem } from './util'
 import { useSize } from '../../hooks/size'
-import VxeTooltipComponent from '../../tooltip'
+import VxeTooltipComponent from '../../tooltip/src/tooltip'
 import VxeFormConfigItem from './form-config-item'
 import VxeLoading from '../../loading/index'
 import { getSlotVNs } from '../../ui/src/vn'
@@ -129,7 +129,7 @@ export default defineComponent({
 
     provide('xeFormItemInfo', null)
 
-    const $xegrid = inject<any>('$xegrid', null)
+    const $xeGrid = inject<any>('$xeGrid', null)
 
     const refElem = ref<HTMLFormElement>()
     const refTooltip = ref() as Ref<VxeTooltipInstance>
@@ -160,7 +160,7 @@ export default defineComponent({
       context,
       reactData,
 
-      xegrid: $xegrid,
+      xegrid: $xeGrid,
       getRefMaps: () => refMaps,
       getComputeMaps: () => computeMaps
     } as unknown as VxeFormConstructor & VxeFormPrivateMethods
@@ -596,7 +596,7 @@ export default defineComponent({
 
     formMethods = {
       dispatchEvent (type, params, evnt) {
-        emit(type, Object.assign({ $form: $xeform, $grid: $xegrid, $event: evnt }, params))
+        emit(type, Object.assign({ $form: $xeform, $grid: $xeGrid, $event: evnt }, params))
       },
       reset,
       validate,
