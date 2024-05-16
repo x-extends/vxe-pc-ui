@@ -22,19 +22,19 @@ $btnThemeList: (
   ),
   (
     name: "success",
-    textColor: var(--vxe-success-color),
+    textColor: var(--vxe-ui-status-success-colo),
   ),
   (
     name: "info",
-    textColor: var(--vxe-info-color),
+    textColor: var(--vxe-ui-status-info-color),
   ),
   (
     name: "warning",
-    textColor: var(--vxe-warning-color),
+    textColor: var(--vxe-ui-status-warning-color),
   ),
   (
     name: "danger",
-    textColor: var(--vxe-danger-color),
+    textColor: var(--vxe-ui-status-danger-color),
   )
 );
 

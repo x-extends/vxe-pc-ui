@@ -26,7 +26,7 @@ export namespace VxeTabsPropTypes {
   export type ModelValue = undefined | null | VxeTabPanePropTypes.Name
   export type Options = VxeTabPaneProps[]
   export type DestroyOnClose = boolean
-  export type Type = null | '' | 'default' | 'card' | 'border-card'
+  export type Type = null | '' | 'default' | 'card' | 'border-card' | 'round-card'
 }
 
 export type VxeTabsProps = {

@@ -87,13 +87,15 @@ export default defineComponent({
           if (index > -1) {
             const tabEl = headerWrapperEl.children[index] as HTMLDivElement
             const tabWidth = tabEl.clientWidth
-            if (type === 'card') {
-              lintWidth = tabWidth + 1
-              lintLeft = tabEl.offsetLeft
-            } else if (type === 'border-card') {
-              lintWidth = tabWidth + 1
-              lintLeft = tabEl.offsetLeft - 1
-            } else if (!type) {
+            if (type) {
+              if (type === 'card') {
+                lintWidth = tabWidth + 2
+                lintLeft = tabEl.offsetLeft
+              } else if (type === 'border-card') {
+                lintWidth = tabWidth + 2
+                lintLeft = tabEl.offsetLeft - 1
+              }
+            } else {
               lintWidth = Math.max(4, Math.floor(tabWidth * 0.6))
               lintLeft = tabEl.offsetLeft + Math.floor((tabWidth - lintWidth) / 2)
             }

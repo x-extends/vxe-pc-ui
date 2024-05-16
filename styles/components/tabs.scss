@@ -1,8 +1,5 @@
 @import '../helpers/mixin.scss';
 
-.vxe-tabs {
-  background-color: var(--vxe-ui-layout-background-color);
-}
 .vxe-tabs-header {
   position: relative;
   &::after {
@@ -12,7 +9,8 @@
     bottom: 0;
     width: 100%;
     height: 1px;
-    background-color: #e4e7ed;
+    background-color: var(--vxe-ui-input-border-color);
+    z-index: 0;
   }
 }
 .vxe-tabs-header--wrapper {
@@ -29,13 +27,15 @@
   }
 }
 .vxe-tabs-header--active-line-card,
-.vxe-tabs-header--active-line-border-card,
 .vxe-tab-header--item-name {
   height: 40px;
   line-height: 40px;
 }
+.vxe-tabs-header--active-line-border-card {
+  height: 41px;
+  line-height: 41px;
+}
 .vxe-tab-header--item-name {
-  border-bottom: 2px solid transparent;
   @include createAnimationTransition(color, .3s);
 }
 .vxe-tab-pane--item {
@@ -51,15 +51,27 @@
 }
 .vxe-tabs-header--active-line-default,
 .vxe-tabs-header--active-line-card,
-.vxe-tabs-header--active-line-border-card {
+.vxe-tabs-header--active-line-border-card,
+.vxe-tabs-header--active-line-round-card {
   display: none;
 }
 .vxe-tabs-header--active-line-border-card {
-  border-left: 1px solid #e4e7ed;
-  border-right: 1px solid #e4e7ed;
+  border-left: 1px solid var(--vxe-ui-input-border-color);
+  border-right: 1px solid var(--vxe-ui-input-border-color);
+}
+
+.vxe-tabs--default,
+.vxe-tabs--card,
+.vxe-tabs--border-card,
+.vxe-tabs--round-card {
+  border-radius: var(--vxe-ui-border-radius) var(--vxe-ui-border-radius) 0 0;
+  background-color: var(--vxe-ui-layout-background-color);
 }
 
 .vxe-tabs--default {
+  .vxe-tab-header--item-name {
+    border-bottom: 2px solid transparent;
+  }
   .vxe-tabs-header--active-line-default {
     display: block;
     position: absolute;
@@ -68,7 +80,7 @@
     height: 2px;
     width: 4px;
     background-color: var(--vxe-ui-font-primary-color);
-    z-index: 1;
+    z-index: 2;
     @include createAnimationTransition(all, .3s);
   }
 }
@@ -85,16 +97,17 @@
     z-index: 1;
   }
   .vxe-tabs-header {
-    border-top: 1px solid #e4e7ed;
-    border-left: 1px solid #e4e7ed;
+    border-radius: var(--vxe-ui-border-radius) var(--vxe-ui-border-radius) 0 0;
+    border-top: 1px solid var(--vxe-ui-input-border-color);
+    border-left: 1px solid var(--vxe-ui-input-border-color);
   }
   .vxe-tab-header--item {
-    border-left: 1px solid #e4e7ed;
+    border-left: 1px solid var(--vxe-ui-input-border-color);
     &:first-child {
       border-left: 0;
     }
     &:last-child {
-      border-right: 1px solid #e4e7ed;
+      border-right: 1px solid var(--vxe-ui-input-border-color);
     }
   }
 }
@@ -108,19 +121,49 @@
     top: 0;
     left: 0;
     width: 4px;
-    background-color: #ffffff;
+    background-color: var(--vxe-ui-layout-background-color);
     pointer-events: none;
     z-index: 1;
   }
   .vxe-tab-pane--item {
-    border-bottom: 1px solid #e4e7ed;
-    border-left: 1px solid #e4e7ed;
-    border-right: 1px solid #e4e7ed;
+    border-bottom: 1px solid var(--vxe-ui-input-border-color);
+    border-left: 1px solid var(--vxe-ui-input-border-color);
+    border-right: 1px solid var(--vxe-ui-input-border-color);
   }
   .vxe-tabs-header {
-    border-top: 1px solid #e4e7ed;
-    border-left: 1px solid #e4e7ed;
-    border-right: 1px solid #e4e7ed;
+    border-radius: var(--vxe-ui-border-radius) var(--vxe-ui-border-radius) 0 0;
+    border-top: 1px solid var(--vxe-ui-input-border-color);
+    border-left: 1px solid var(--vxe-ui-input-border-color);
+    border-right: 1px solid var(--vxe-ui-input-border-color);
     background-color: #f5f7fa;
+  }
+}
+
+.vxe-tabs--round-card {
+  .vxe-tabs-header--wrapper {
+    z-index: 2;
+  }
+  .vxe-tab-header--item {
+    position: relative;
+    z-index: 2;
+    margin: 0 2px;
+    border-top: 1px solid var(--vxe-ui-input-border-color);
+    border-left: 1px solid var(--vxe-ui-input-border-color);
+    border-right: 1px solid var(--vxe-ui-input-border-color);
+    border-radius: var(--vxe-ui-border-radius) var(--vxe-ui-border-radius) 0 0;
+    background-color: rgba(0, 0, 0, 0.02);
+    @include createAnimationTransition(all, .3s);
+    &.is--active {
+      background-color: var(--vxe-ui-layout-background-color);
+    }
+    &:first-child {
+      margin-left: 0;
+    }
+    &:last-child {
+      margin-right: 0;
+    }
+  }
+  .vxe-tabs-pane {
+    background-color: var(--vxe-ui-layout-background-color);
   }
 }

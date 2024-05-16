@@ -6,7 +6,7 @@
   display: flex;
   align-items: center;
   color: var(--vxe-ui-font-color);
-  font-family: var(--vxe-font-family);
+  font-family: var(--vxe-ui-font-family);
   text-align: right;
   background-color: var(--vxe-ui-pager-background-color);
   &.is--hidden {
@@ -26,9 +26,9 @@
       left: 0;
       width: 100%;
       height: 100%;
-      z-index: var(--vxe-loading-z-index);
+      z-index: var(--vxe-ui-loading-z-index);
       user-select: none;
-      background-color: var(--vxe-loading-background-color);
+      background-color: var(--vxe-ui-loading-background-color);
     }
   }
   .vxe-pager--prev-btn,
@@ -43,10 +43,10 @@
     font-size: inherit;
     &:not(.is--disabled) {
       &:focus {
-        box-shadow: 0 0 0.25em 0 var(--vxe-primary-color);
+        box-shadow: 0 0 0.25em 0 var(--vxe-ui-font-primary-color);
       }
       &:hover {
-        color: var(--vxe-primary-lighten-color);
+        color: var(--vxe-ui-font-primary-lighten-color);
       }
       &:active {
         background-color: #fff;
@@ -80,30 +80,30 @@
       &:not(.is--disabled) {
         &.is--active {
           color: #fff;
-          background-color: var(--vxe-primary-color);
+          background-color: var(--vxe-ui-font-primary-color);
           &:hover {
-            background-color: var(--vxe-primary-lighten-color);
+            background-color: var(--vxe-ui-font-primary-lighten-color);
           }
           &:focus {
-            border-color: var(--vxe-primary-color);
+            border-color: var(--vxe-ui-font-primary-color);
           }
           &:active {
-            border-color: var(--vxe-primary-darken-color);
-            background-color: var(--vxe-primary-darken-color);
+            border-color: var(--vxe-ui-font-primary-darken-color);
+            background-color: var(--vxe-ui-font-primary-darken-color);
           }
         }
       }
     }
   }
   &.is--perfect {
-    border: 1px solid var(--vxe-table-border-color);
+    border: 1px solid var(--vxe-ui-input-border-color);
     border-top-width: 0;
     background-color: var(--vxe-ui-pager-perfect-background-color);
   }
   &.is--border {
     .vxe-pager--num-btn {
       &.is--active {
-        border-color: var(--vxe-primary-color);
+        border-color: var(--vxe-ui-font-primary-color);
       }
     }
   }
@@ -193,27 +193,27 @@
   .vxe-pager--jump-next,
   .vxe-pager--num-btn {
     text-align: center;
-    border-radius: var(--vxe-border-radius);
+    border-radius: var(--vxe-ui-border-radius);
     margin: 0 0.25em;
     user-select: none;
     background-color: var(--vxe-ui-pager-background-color);
     &:not(.is--disabled) {
       &:hover {
-        color: var(--vxe-primary-lighten-color);
+        color: var(--vxe-ui-font-primary-lighten-color);
       }
       &.is--active,
       &:focus {
-        color: var(--vxe-primary-color);
+        color: var(--vxe-ui-font-primary-color);
       }
       &:active {
-        color: var(--vxe-primary-darken-color);
+        color: var(--vxe-ui-font-primary-darken-color);
       }
     }
     &.is--disabled {
       cursor: no-drop;
-      color: var(--vxe-font-disabled-color);
+      color: var(--vxe-ui-font-disabled-color);
       &:hover {
-        color: var(--vxe-font-disabled-color);
+        color: var(--vxe-ui-font-disabled-color);
       }
     }
   }
@@ -244,14 +244,14 @@
     }
   }
   .vxe-pager--jump .vxe-pager--goto {
-    border-radius: var(--vxe-border-radius);
+    border-radius: var(--vxe-ui-border-radius);
     border: 1px solid var(--vxe-ui-input-border-color);
     color: var(--vxe-ui-font-color);
     transition: border .2s ease-in-out;
     padding: 0 0.4em;
     background-color: var(--vxe-ui-input-background-color);
     &:focus {
-      border: 1px solid var(--vxe-primary-color);
+      border: 1px solid var(--vxe-ui-font-primary-color);
       outline: 0;
     }
   }
@@ -270,18 +270,18 @@
 }
 
 .vxe-pager {
-  font-size: var(--vxe-font-size);
-  height: var(--vxe-table-row-height-default);
+  font-size: var(--vxe-ui-font-size);
+  height: 48px;
   &.size--medium {
-    font-size: var(--vxe-font-size-medium);
-    height: var(--vxe-table-row-height-medium);
+    font-size: var(--vxe-ui-font-size-medium);
+    height: 44px;
   }
   &.size--small {
-    font-size: var(--vxe-font-size-small);
-    height: var(--vxe-table-row-height-small);
+    font-size: var(--vxe-ui-font-size-small);
+    height: 40px;
   }
   &.size--mini {
-    font-size: var(--vxe-font-size-mini);
-    height: var(--vxe-table-row-height-mini);
+    font-size: var(--vxe-ui-font-size-mini);
+    height: 36px;
   }
 }

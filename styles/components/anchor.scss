@@ -2,6 +2,8 @@
 
 .vxe-anchor {
   position: relative;
+  color: var(--vxe-ui-font-color);
+  font-family: var(--vxe-ui-font-family);
 }
 .vxe-anchor--marker {
   position: absolute;

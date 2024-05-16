@@ -47,9 +47,19 @@ const navList = ref([
   { name: 'LoadingTest' },
   { name: 'TooltipTest' },
   { name: 'FormTest' },
+  { name: 'ListDesignTest' },
   { name: 'FormDesignTest' },
   { name: 'ModalTest' },
-  { name: 'TabsTest' }
+  { name: 'TabsTest' },
+  { name: 'ListTest' },
+  { name: 'InputTest' },
+  { name: 'TextareaTest' },
+  { name: 'SwitchTest' },
+  { name: 'SelectTest' },
+  { name: 'PulldownTest' },
+  { name: 'CheckboxTest' },
+  { name: 'RadioTest' },
+  { name: 'PagerTest' }
 ])
 </script>
 

@@ -1,6 +1,6 @@
 %ButtonHover {
-  color: var(--vxe-primary-lighten-color);
-  border-color: var(--vxe-primary-lighten-color);
+  color: var(--vxe-ui-font-primary-lighten-color);
+  border-color: var(--vxe-ui-font-primary-lighten-color);
 }
 
 .vxe-form {
@@ -210,7 +210,7 @@
   }
   .vxe-default-input,
   .vxe-default-select {
-    height: var(--vxe-button-height-default);
+    height: var(--vxe-ui-button-height-default);
   }
   .vxe-default-input {
     padding: 0 0.8em;
@@ -240,15 +240,15 @@
   }
   .vxe-default-input[type="submit"],
   .vxe-default-input[type="reset"] {
-    line-height: calc(var(--vxe-button-height-default) - 2px);
+    line-height: calc(var(--vxe-ui-button-height-default) - 2px);
     background-color: #fff;
     cursor: pointer;
     &:hover {
       @extend %ButtonHover;
     }
     &:active {
-      color: var(--vxe-primary-darken-color);
-      border-color: var(--vxe-primary-darken-color);
+      color: var(--vxe-ui-font-primary-darken-color);
+      border-color: var(--vxe-ui-font-primary-darken-color);
     }
   }
   .vxe-default-input {
@@ -298,12 +298,12 @@
     }
     .vxe-default-input[type="submit"],
     .vxe-default-input[type="reset"] {
-      line-height: calc(var(--vxe-button-height-medium) - 2px);
+      line-height: calc(var(--vxe-ui-button-height-medium) - 2px);
     }
     .vxe-default-input,
     .vxe-default-input,
     .vxe-default-select {
-      height: var(--vxe-button-height-medium);
+      height: var(--vxe-ui-button-height-medium);
     }
   }
   &.size--small {
@@ -313,12 +313,12 @@
     }
     .vxe-default-input[type="submit"],
     .vxe-default-input[type="reset"] {
-      line-height: calc(var(--vxe-button-height-small) - 2px);
+      line-height: calc(var(--vxe-ui-button-height-small) - 2px);
     }
     .vxe-default-input,
     .vxe-default-input,
     .vxe-default-select {
-      height: var(--vxe-button-height-small);
+      height: var(--vxe-ui-button-height-small);
     }
   }
   &.size--mini {
@@ -328,12 +328,12 @@
     }
     .vxe-default-input[type="submit"],
     .vxe-default-input[type="reset"] {
-      line-height: calc(var(--vxe-button-height-mini) - 2px);
+      line-height: calc(var(--vxe-ui-button-height-mini) - 2px);
     }
     .vxe-default-input,
     .vxe-default-input,
     .vxe-default-select {
-      height: var(--vxe-button-height-mini);
+      height: var(--vxe-ui-button-height-mini);
     }
   }
 }

@@ -36,7 +36,7 @@
     &:not(.is--filter) {
       & > .vxe-input {
         .vxe-input--inner {
-          border: 1px solid var(--vxe-primary-color);
+          border: 1px solid var(--vxe-ui-font-primary-color);
         }
       }
     }
@@ -86,7 +86,7 @@
 
 .vxe-select--panel-wrapper {
   position: relative;
-  border-radius: var(--vxe-border-radius);
+  border-radius: var(--vxe-ui-border-radius);
   border: 1px solid var(---vxe-ui-base-popup-border-color);
   box-shadow: 0 0 6px 2px rgba(0, 0, 0, 0.1);
   background-color: var(--vxe-ui-select-panel-background-color);
@@ -116,7 +116,7 @@
 .vxe-optgroup {
   .vxe-optgroup--title {
     padding: 0 6px;
-    color: var(--vxe-optgroup-title-color);
+    color: var(--vxe-ui-select-title-color);
     font-size: 12px;
   }
 }
@@ -137,7 +137,7 @@
   user-select: none;
   &.is--selected {
     font-weight: 700;
-    color: var(--vxe-primary-color);
+    color: var(--vxe-ui-font-primary-color);
   }
   &:not(.is--disabled) {
     cursor: pointer;
@@ -146,7 +146,7 @@
     }
   }
   &.is--disabled {
-    color: var(--vxe-font-disabled-color);
+    color: var(--vxe-ui-font-disabled-color);
     cursor: no-drop;
   }
 }
@@ -164,15 +164,15 @@
 
 .vxe-select,
 .vxe-select--panel {
-  font-size: var(--vxe-font-size);
+  font-size: var(--vxe-ui-font-size);
   &.size--medium {
-    font-size: var(--vxe-font-size-medium);
+    font-size: var(--vxe-ui-font-size-medium);
   }
   &.size--small {
-    font-size: var(--vxe-font-size-small);
+    font-size: var(--vxe-ui-font-size-small);
   }
   &.size--mini {
-    font-size: var(--vxe-font-size-mini);
+    font-size: var(--vxe-ui-font-size-mini);
   }
 }
 

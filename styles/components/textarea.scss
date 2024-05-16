@@ -10,7 +10,7 @@
 }
 
 .vxe-textarea--inner {
-  border-radius: var(--vxe-border-radius);
+  border-radius: var(--vxe-ui-border-radius);
   outline: 0;
   font-size: inherit;
   padding: 0 0.6em;
@@ -24,7 +24,7 @@
     color: var(--vxe-ui-input-placeholder-color);
   }
   &:focus {
-    border: 1px solid var(--vxe-primary-color);
+    border: 1px solid var(--vxe-ui-font-primary-color);
   }
   &[disabled] {
     cursor: not-allowed;
@@ -36,7 +36,7 @@
 .vxe-textarea--autosize {
   line-height: var(--vxe-ui-textarea-line-height);
   color: var(--vxe-ui-font-color);
-  font-family: var(--vxe-font-family);
+  font-family: var(--vxe-ui-font-family);
 }
 
 .vxe-textarea--autosize {
@@ -67,15 +67,15 @@
 
 .vxe-textarea,
 .vxe-textarea--autosize {
-  font-size: var(--vxe-font-size);
+  font-size: var(--vxe-ui-font-size);
   &.size--medium {
-    font-size: var(--vxe-font-size-medium);
+    font-size: var(--vxe-ui-font-size-medium);
   }
   &.size--small {
-    font-size: var(--vxe-font-size-small);
+    font-size: var(--vxe-ui-font-size-small);
   }
   &.size--mini {
-    font-size: var(--vxe-font-size-mini);
+    font-size: var(--vxe-ui-font-size-mini);
   }
 }
 
@@ -84,7 +84,7 @@
     min-height: var(--vxe-ui-input-height-default);
   }
   &.size--medium {
-    font-size: var(--vxe-font-size-medium);
+    font-size: var(--vxe-ui-font-size-medium);
     &:not(.is--autosize) {
       min-height: var(--vxe-ui-input-height-medium);
     }

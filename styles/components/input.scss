@@ -5,7 +5,7 @@ $iconWidth: 1.6em;
 .vxe-input--inner {
   width: 100%;
   height: 100%;
-  border-radius: var(--vxe-border-radius);
+  border-radius: var(--vxe-ui-border-radius);
   outline: 0;
   margin: 0;
   font-size: inherit;
@@ -34,7 +34,7 @@ $iconWidth: 1.6em;
   }
   &[disabled] {
     cursor: not-allowed;
-    color: var(--vxe-font-disabled-color);
+    color: var(--vxe-ui-font-disabled-color);
     background-color: var(--vxe-ui-input-disabled-background-color);
   }
 }
@@ -61,7 +61,7 @@ $iconWidth: 1.6em;
     }
     &.is--active {
       .vxe-input--inner {
-        border: 1px solid var(--vxe-primary-color);
+        border: 1px solid var(--vxe-ui-font-primary-color);
       }
     }
   }
@@ -76,7 +76,7 @@ $iconWidth: 1.6em;
     user-select: none;
     align-items: center;
     justify-content: center;
-    color: var(--vxe-table-column-icon-border-color);
+    color: var(--vxe-ui-font-color);
   }
 }
 
@@ -210,7 +210,7 @@ $iconWidth: 1.6em;
       }
       &:active {
         .vxe-input--clear-icon {
-          color: var(--vxe-primary-color);
+          color: var(--vxe-ui-font-primary-color);
         }
       }
     }
@@ -224,7 +224,7 @@ $iconWidth: 1.6em;
       &:active {
         .vxe-input--search-suffix,
         .vxe-input--password-suffix {
-          color: var(--vxe-primary-color);
+          color: var(--vxe-ui-font-primary-color);
         }
       }
     }
@@ -234,7 +234,7 @@ $iconWidth: 1.6em;
         color: var(--vxe-ui-font-color);
       }
       &:active {
-        color: var(--vxe-primary-color);
+        color: var(--vxe-ui-font-primary-color);
       }
       &.is--disabled {
         cursor: no-drop;
@@ -304,7 +304,7 @@ $iconWidth: 1.6em;
   left: 0;
   padding: 4px 0;
   color: var(--vxe-ui-font-color);
-  font-size: var(--vxe-font-size);
+  font-size: var(--vxe-ui-font-size);
   text-align: left;
   &:not(.is--transfer) {
     min-width: 100%;
@@ -335,7 +335,7 @@ $iconWidth: 1.6em;
   background-color: var(--vxe-ui-input-panel-background-color);
   border: 1px solid var(---vxe-ui-base-popup-border-color);
   box-shadow: 0 0 6px 2px rgba(0, 0, 0, 0.1);
-  border-radius: var(--vxe-border-radius);
+  border-radius: var(--vxe-ui-border-radius);
 }
 
 .vxe-input--panel-wrapper {
@@ -406,7 +406,7 @@ $iconWidth: 1.6em;
   display: inline-block;
   text-align: center;
   border: 1px solid var(--vxe-ui-input-border-color);
-  border-radius: var(--vxe-border-radius);
+  border-radius: var(--vxe-ui-border-radius);
 }
 .vxe-input--time-picker-confirm {
   position: absolute;
@@ -417,18 +417,18 @@ $iconWidth: 1.6em;
 .vxe-input--date-picker-confirm {
   outline: 0;
   border: 1px solid var(--vxe-ui-input-border-color);
-  border-radius: var(--vxe-border-radius);
+  border-radius: var(--vxe-ui-border-radius);
   cursor: pointer;
   color: var(--vxe-ui-input-date-time-confirm-button-color);
-  border-color: var(--vxe-primary-color);
-  background-color: var(--vxe-primary-color);
+  border-color: var(--vxe-ui-font-primary-color);
+  background-color: var(--vxe-ui-font-primary-color);
   &:hover {
-    background-color: var(--vxe-primary-lighten-color);
-    border-color: var(--vxe-primary-lighten-color);
+    background-color: var(--vxe-ui-font-primary-lighten-color);
+    border-color: var(--vxe-ui-font-primary-lighten-color);
   }
   &:active {
-    background-color: var(--vxe-primary-darken-color);
-    border-color: var(--vxe-primary-darken-color);
+    background-color: var(--vxe-ui-font-primary-darken-color);
+    border-color: var(--vxe-ui-font-primary-darken-color);
   }
 }
 
@@ -465,11 +465,11 @@ $iconWidth: 1.6em;
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: var(--vxe-button-default-background-color);
+  background-color: var(--vxe-ui-button-default-background-color);
 }
 .vxe-input--date-picker-btn {
   &.is--disabled {
-    color: var(--vxe-font-disabled-color);
+    color: var(--vxe-ui-font-disabled-color);
     cursor: no-drop;
   }
   &:not(.is--disabled) {
@@ -483,7 +483,7 @@ $iconWidth: 1.6em;
   }
 }
 .vxe-input--date-picker-body {
-  border-radius: var(--vxe-border-radius);
+  border-radius: var(--vxe-ui-border-radius);
   border: 1px solid var(---vxe-ui-base-popup-border-color);
   user-select: none;
   table {
@@ -504,20 +504,20 @@ $iconWidth: 1.6em;
   td {
     &.is--prev,
     &.is--next {
-      color: var(--vxe-font-disabled-color);
+      color: var(--vxe-ui-font-disabled-color);
       .vxe-input--date-label,
       .vxe-input--date-festival {
-        color: var(--vxe-font-disabled-color);
+        color: var(--vxe-ui-font-disabled-color);
       }
     }
     &.is--now {
       box-shadow: inset 0 0 0 1px var(---vxe-ui-base-popup-border-color);
       &:not(.is--selected) {
         &.is--current {
-          color: var(--vxe-primary-color);
+          color: var(--vxe-ui-font-primary-color);
           .vxe-input--date-label,
           .vxe-input--date-festival {
-            color: var(--vxe-primary-color);
+            color: var(--vxe-ui-font-primary-color);
           }
         }
       }
@@ -527,10 +527,10 @@ $iconWidth: 1.6em;
     }
     &.is--selected {
       color: var(--vxe-ui-input-date-picker-selected-color);
-      background-color: var(--vxe-primary-color);
+      background-color: var(--vxe-ui-font-primary-color);
       &.is--prev,
       &.is--next {
-        background-color: var(--vxe-primary-lighten-color);
+        background-color: var(--vxe-ui-font-primary-lighten-color);
       }
       .vxe-input--date-label,
       .vxe-input--date-festival {
@@ -665,7 +665,7 @@ $iconWidth: 1.6em;
   flex-direction: row;
   border: 1px solid var(---vxe-ui-base-popup-border-color);
   flex-grow: 1;
-  border-radius: var(--vxe-border-radius);
+  border-radius: var(--vxe-ui-border-radius);
   user-select: none;
   & > ul {
     height: 100%;
@@ -688,7 +688,7 @@ $iconWidth: 1.6em;
       }
       &.is--selected {
         font-weight: 700;
-        color: var(--vxe-primary-color);
+        color: var(--vxe-ui-font-primary-color);
       }
     }
   }
@@ -701,7 +701,7 @@ $iconWidth: 1.6em;
 }
 
 .vxe-input {
-  font-size: var(--vxe-font-size);
+  font-size: var(--vxe-ui-font-size);
   height: var(--vxe-ui-input-height-default);
   line-height: var(--vxe-ui-input-height-default);
   .vxe-input--inner {
@@ -718,7 +718,7 @@ $iconWidth: 1.6em;
     }
   }
   &.size--medium {
-    font-size: var(--vxe-font-size-medium);
+    font-size: var(--vxe-ui-font-size-medium);
     height: var(--vxe-ui-input-height-medium);
     line-height: var(--vxe-ui-input-height-medium);
     .vxe-input--inner {
@@ -730,7 +730,7 @@ $iconWidth: 1.6em;
     }
   }
   &.size--small {
-    font-size: var(--vxe-font-size-small);
+    font-size: var(--vxe-ui-font-size-small);
     height: var(--vxe-ui-input-height-small);
     line-height: var(--vxe-ui-input-height-small);
     .vxe-input--inner {
@@ -742,7 +742,7 @@ $iconWidth: 1.6em;
     }
   }
   &.size--mini {
-    font-size: var(--vxe-font-size-mini);
+    font-size: var(--vxe-ui-font-size-mini);
     height: var(--vxe-ui-input-height-mini);
     line-height: var(--vxe-ui-input-height-mini);
     .vxe-input--inner {
@@ -756,7 +756,7 @@ $iconWidth: 1.6em;
 }
 
 @mixin getPanelStyle ($sizeIndex) {
-  $fontSizeList: var(--vxe-font-size), var(--vxe-font-size-medium), var(--vxe-font-size-small), var(--vxe-font-size-mini);
+  $fontSizeList: var(--vxe-ui-font-size), var(--vxe-ui-font-size-medium), var(--vxe-ui-font-size-small), var(--vxe-ui-font-size-mini);
   $timeWeekRowHeightList: var(--vxe-ui-input-date-time-week-row-height-default), var(--vxe-ui-input-date-time-week-row-height-medium), var(--vxe-ui-input-date-time-week-row-height-small), var(--vxe-ui-input-date-time-week-row-height-mini);
   $monthYearRowHeightList: var(--vxe-ui-input-date-month-year-row-height-default), var(--vxe-ui-input-date-month-year-row-height-medium), var(--vxe-ui-input-date-month-year-row-height-small), var(--vxe-ui-input-date-month-year-row-height-mini);
   $quarterRowHeightList: var(--vxe-ui-input-date-quarter-row-height-default), var(--vxe-ui-input-date-quarter-row-height-medium), var(--vxe-ui-input-date-quarter-row-height-small), var(--vxe-ui-input-date-quarter-row-height-mini);
@@ -825,7 +825,7 @@ $iconWidth: 1.6em;
     .vxe-input--date-picker-current-btn,
     .vxe-input--date-picker-next-btn {
       width: 31px - $sizeIndex;
-      border-radius: var(--vxe-border-radius);
+      border-radius: var(--vxe-ui-border-radius);
       border: 1px solid var(--vxe-ui-input-border-color);
     }
   }

@@ -38,7 +38,7 @@
   &:not(.is--disabled) {
     > input {
       &:focus+.vxe-radio--icon {
-        color: var(--vxe-primary-color);
+        color: var(--vxe-ui-font-primary-color);
       }
     }
   }
@@ -56,24 +56,24 @@
   &:first-child {
     .vxe-radio--label {
       border-left: 1px solid var(--vxe-ui-input-border-color);
-      border-radius: var(--vxe-border-radius) 0 0 var(--vxe-border-radius);
+      border-radius: var(--vxe-ui-border-radius) 0 0 var(--vxe-ui-border-radius);
     }
   }
   &:last-child {
     .vxe-radio--label {
-      border-radius: 0 var(--vxe-border-radius) var(--vxe-border-radius) 0;
+      border-radius: 0 var(--vxe-ui-border-radius) var(--vxe-ui-border-radius) 0;
     }
   }
   > input {
     &:checked+.vxe-radio--label {
       color: #fff;
-      background-color: var(--vxe-primary-color);
-      border-color: var(--vxe-primary-color);
+      background-color: var(--vxe-ui-font-primary-color);
+      border-color: var(--vxe-ui-font-primary-color);
     }
   }
   .vxe-radio--label {
     padding: 0 1em;
-    line-height: calc(var(--vxe-button-height-default) - 2px);
+    line-height: calc(var(--vxe-ui-button-height-default) - 2px);
     display: inline-block;
     border-style: solid;
     border-color: var(--vxe-ui-input-border-color);
@@ -93,8 +93,8 @@
       }
       &:checked {
         &+.vxe-radio--label {
-          border-color: var(--vxe-primary-lighten-color);
-          background-color: var(--vxe-primary-lighten-color);
+          border-color: var(--vxe-ui-font-primary-lighten-color);
+          background-color: var(--vxe-ui-font-primary-lighten-color);
         }
       }
     }
@@ -103,8 +103,8 @@
     & > input {
       &:focus {
         &+.vxe-radio--label {
-          border-color: var(--vxe-primary-color);
-          box-shadow: 0 0 0.2em 0 var(--vxe-primary-color);
+          border-color: var(--vxe-ui-font-primary-color);
+          box-shadow: 0 0 0.2em 0 var(--vxe-ui-font-primary-color);
         }
       }
     }
@@ -112,7 +112,7 @@
       > input {
         &:not(:checked) {
           &+.vxe-radio--label {
-            color: var(--vxe-primary-color);
+            color: var(--vxe-ui-font-primary-color);
           }
         }
       }
@@ -120,30 +120,30 @@
   }
   &.size--medium {
     .vxe-radio--label {
-      line-height: calc(var(--vxe-button-height-medium) - 2px);
+      line-height: calc(var(--vxe-ui-button-height-medium) - 2px);
     }
   }
   &.size--small {
     .vxe-radio--label {
-      line-height: calc(var(--vxe-button-height-small) - 2px);
+      line-height: calc(var(--vxe-ui-button-height-small) - 2px);
     }
   }
   &.size--mini {
     .vxe-radio--label {
-      line-height: calc(var(--vxe-button-height-mini) - 2px);
+      line-height: calc(var(--vxe-ui-button-height-mini) - 2px);
     }
   }
 }
 
 .vxe-radio {
-  font-size: var(--vxe-font-size);
+  font-size: var(--vxe-ui-font-size);
   &.size--medium {
-    font-size: var(--vxe-font-size-medium);
+    font-size: var(--vxe-ui-font-size-medium);
   }
   &.size--small {
-    font-size: var(--vxe-font-size-small);
+    font-size: var(--vxe-ui-font-size-small);
   }
   &.size--mini {
-    font-size: var(--vxe-font-size-mini);
+    font-size: var(--vxe-ui-font-size-mini);
   }
 }

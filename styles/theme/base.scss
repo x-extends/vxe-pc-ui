@@ -34,9 +34,9 @@ $vxe-ui-status-error-color: #f56c6c;
 
   /*input/radio/checkbox*/
   --vxe-ui-input-border-color: #dcdfe6;
-  --vxe-ui-input-disabled-color: #8D9095;
-  --vxe-ui-input-disabled-background-color: #585656;
-  --vxe-ui-input-placeholder-color: #8D9095;
+  --vxe-ui-input-disabled-color: #dcdfe6;
+  --vxe-ui-input-disabled-background-color: #f3f3f3;
+  --vxe-ui-input-placeholder-color: #C0C4CC;
 
   /*popup*/
   --vxe-ui-base-popup-border-color: #424242;
@@ -73,6 +73,8 @@ $vxe-ui-status-error-color: #f56c6c;
   --vxe-ui-layout-aside-collapse-width: 60px;
 
   // icon
+  --vxe-ui-icon-font-family: Verdana,Arial,Tahoma;
+  --vxe-ui-icon-background-color: #fff;
 
   // button
   --vxe-ui-button-max-width: 500px;
@@ -199,7 +201,7 @@ $vxe-ui-status-error-color: #f56c6c;
   --vxe-ui-select-option-hover-background-color: #f5f7fa;
   --vxe-ui-select-panel-background-color: #fff;
   --vxe-ui-select-empty-color: #C0C4CC;
-  --vxe-optgroup-title-color: #909399;
+  --vxe-ui-select-title-color: #909399;
 
   /*switch*/
   --vxe-ui-switch-font-color: #fff;

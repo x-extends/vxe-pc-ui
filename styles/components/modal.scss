@@ -9,7 +9,7 @@
   width: calc(100% + 18px);
   height: calc(100% + 18px);
   color: var(--vxe-ui-font-color);
-  font-family: var(--vxe-font-family);
+  font-family: var(--vxe-ui-font-family);
   transition: top .4s ease-in-out;
   &.is--active {
     display: block;
@@ -35,7 +35,7 @@
     .vxe-modal--header,
     .vxe-modal--footer {
       position: relative;
-      border-bottom-color: var(--vxe-loading-background-color);
+      border-bottom-color: var(--vxe-ui-loading-background-color);
       &:before {
         content: "";
         position: absolute;
@@ -45,7 +45,7 @@
         height: 100%;
         z-index: 1;
         user-select: none;
-        background-color: var(--vxe-loading-background-color);
+        background-color: var(--vxe-ui-loading-background-color);
       }
     }
   }
@@ -160,7 +160,7 @@
     visibility: hidden;
     width: 420px;
     background-color: var(--vxe-ui-modal-body-background-color);
-    border-radius: var(--vxe-border-radius);
+    border-radius: var(--vxe-ui-border-radius);
     border: 1px solid var(--vxe-ui-modal-border-color);
     text-align: left;
     pointer-events: auto;
@@ -188,28 +188,28 @@
   }
   &.status--info {
     .vxe-modal--status-wrapper {
-      color: var(--vxe-info-color);
+      color: var(--vxe-ui-status-info-color);
     }
   }
   &.status--warning,
   &.status--question {
     .vxe-modal--status-wrapper {
-      color: var(--vxe-warning-color);
+      color: var(--vxe-ui-status-warning-color);
     }
   }
   &.status--success {
     .vxe-modal--status-wrapper {
-      color: var(--vxe-success-color);
+      color: var(--vxe-ui-status-success-colo);
     }
   }
   &.status--error {
     .vxe-modal--status-wrapper {
-      color: var(--vxe-danger-color);
+      color: var(--vxe-ui-status-danger-color);
     }
   }
   &.status--loading {
     .vxe-modal--status-wrapper {
-      color: var(--vxe-font-disabled-color);
+      color: var(--vxe-ui-font-disabled-color);
     }
   }
   .vxe-modal--status-wrapper {
@@ -239,7 +239,7 @@
     font-weight: 700;
     border-bottom: 1px solid var(--vxe-ui-modal-border-color);
     background-color: var(--vxe-ui-modal-header-background-color);
-    border-radius: var(--vxe-border-radius) var(--vxe-border-radius) 0 0;
+    border-radius: var(--vxe-ui-border-radius) var(--vxe-ui-border-radius) 0 0;
     user-select: none;
     &.is--draggable {
       .vxe-modal--header-title {
@@ -267,7 +267,7 @@
     cursor: pointer;
     margin-left: 0.6em;
     &:hover {
-      color: var(--vxe-primary-color);
+      color: var(--vxe-ui-font-primary-color);
     }
   }
   .vxe-modal--footer {
@@ -370,14 +370,14 @@
 }
 
 .vxe-modal--wrapper {
-  font-size: var(--vxe-font-size);
+  font-size: var(--vxe-ui-font-size);
   &.size--medium {
-    font-size: var(--vxe-font-size-medium);
+    font-size: var(--vxe-ui-font-size-medium);
   }
   &.size--small {
-    font-size: var(--vxe-font-size-small);
+    font-size: var(--vxe-ui-font-size-small);
   }
   &.size--mini {
-    font-size: var(--vxe-font-size-mini);
+    font-size: var(--vxe-ui-font-size-mini);
   }
 }

@@ -49,7 +49,7 @@
     .vxe-switch--button {
       cursor: pointer;
       &:focus {
-        box-shadow: 0 0 0.4em 0 var(--vxe-primary-color);
+        box-shadow: 0 0 0.4em 0 var(--vxe-ui-font-primary-color);
       }
     }
   }
@@ -59,7 +59,7 @@
     }
     &.is--on {
       .vxe-switch--button {
-        background-color: var(--vxe-primary-lighten-color);
+        background-color: var(--vxe-ui-font-primary-lighten-color);
       }
     }
     &.is--off {
@@ -100,14 +100,14 @@
 }
 
 .vxe-switch {
-  font-size: var(--vxe-font-size);
+  font-size: var(--vxe-ui-font-size);
   &.size--medium {
-    font-size: var(--vxe-font-size-medium);
+    font-size: var(--vxe-ui-font-size-medium);
   }
   &.size--small {
-    font-size: var(--vxe-font-size-small);
+    font-size: var(--vxe-ui-font-size-small);
   }
   &.size--mini {
-    font-size: var(--vxe-font-size-mini);
+    font-size: var(--vxe-ui-font-size-mini);
   }
 }

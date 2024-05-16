@@ -66,6 +66,11 @@ const routes: Array<RouteRecordRaw> = [
     component: () => import('../views/form/FormTest.vue')
   },
   {
+    path: '/component/listDesign',
+    name: 'ListDesignTest',
+    component: () => import('../views/list-design/ListDesignTest.vue')
+  },
+  {
     path: '/component/formDesign',
     name: 'FormDesignTest',
     component: () => import('../views/form-design/FormDesignTest.vue')
@@ -79,6 +84,51 @@ const routes: Array<RouteRecordRaw> = [
     path: '/component/tabs',
     name: 'TabsTest',
     component: () => import('../views/tabs/TabsTest.vue')
+  },
+  {
+    path: '/component/list',
+    name: 'ListTest',
+    component: () => import('../views/list/ListTest.vue')
+  },
+  {
+    path: '/component/input',
+    name: 'InputTest',
+    component: () => import('../views/input/InputTest.vue')
+  },
+  {
+    path: '/component/textarea',
+    name: 'TextareaTest',
+    component: () => import('../views/textarea/TextareaTest.vue')
+  },
+  {
+    path: '/component/switch',
+    name: 'SwitchTest',
+    component: () => import('../views/switch/SwitchTest.vue')
+  },
+  {
+    path: '/component/select',
+    name: 'SelectTest',
+    component: () => import('../views/select/SelectTest.vue')
+  },
+  {
+    path: '/component/pulldown',
+    name: 'PulldownTest',
+    component: () => import('../views/pulldown/PulldownTest.vue')
+  },
+  {
+    path: '/component/checkbox',
+    name: 'CheckboxTest',
+    component: () => import('../views/checkbox/CheckboxTest.vue')
+  },
+  {
+    path: '/component/radio',
+    name: 'RadioTest',
+    component: () => import('../views/radio/RadioTest.vue')
+  },
+  {
+    path: '/component/pager',
+    name: 'PagerTest',
+    component: () => import('../views/pager/PagerTest.vue')
   }
 ]
 

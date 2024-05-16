@@ -30,7 +30,7 @@
     > input {
       &:not(:checked) {
         &+.vxe-checkbox--icon {
-          color: var(--vxe-primary-color);
+          color: var(--vxe-ui-font-primary-color);
         }
       }
     }
@@ -39,15 +39,15 @@
     & > input {
       &:focus {
         &+.vxe-checkbox--icon {
-          color: var(--vxe-primary-color);
-          box-shadow: 0 0 0.2em 0 var(--vxe-primary-color);
+          color: var(--vxe-ui-font-primary-color);
+          box-shadow: 0 0 0.2em 0 var(--vxe-ui-font-primary-color);
         }
       }
     }
     &:hover {
       > input {
         &+.vxe-checkbox--icon {
-          border-color: var(--vxe-primary-color);
+          border-color: var(--vxe-ui-font-primary-color);
         }
       }
     }
@@ -58,7 +58,7 @@
       &+.vxe-checkbox--icon {
         color: var(--vxe-ui-input-disabled-color);
         &+.vxe-checkbox--label {
-          color: var(--vxe-font-disabled-color);
+          color: var(--vxe-ui-font-disabled-color);
         }
       }
       &:checked+.vxe-checkbox--icon {
@@ -78,14 +78,14 @@
 }
 
 .vxe-checkbox {
-  font-size: var(--vxe-font-size);
+  font-size: var(--vxe-ui-font-size);
   &.size--medium {
-    font-size: var(--vxe-font-size-medium);
+    font-size: var(--vxe-ui-font-size-medium);
   }
   &.size--small {
-    font-size: var(--vxe-font-size-small);
+    font-size: var(--vxe-ui-font-size-small);
   }
   &.size--mini {
-    font-size: var(--vxe-font-size-mini);
+    font-size: var(--vxe-ui-font-size-mini);
   }
 }

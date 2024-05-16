@@ -4,6 +4,7 @@
   position: relative;
   display: inline-block;
   color: var(--vxe-ui-font-color);
+  font-family: var(--vxe-ui-font-family);
   text-align: left;
 }
 
@@ -42,14 +43,14 @@
 
 .vxe-pulldown,
 .vxe-pulldown--panel {
-  font-size: var(--vxe-font-size);
+  font-size: var(--vxe-ui-font-size);
   &.size--medium {
-    font-size: var(--vxe-font-size-medium);
+    font-size: var(--vxe-ui-font-size-medium);
   }
   &.size--small {
-    font-size: var(--vxe-font-size-small);
+    font-size: var(--vxe-ui-font-size-small);
   }
   &.size--mini {
-    font-size: var(--vxe-font-size-mini);
+    font-size: var(--vxe-ui-font-size-mini);
   }
 }
