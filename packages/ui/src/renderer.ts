@@ -4,35 +4,13 @@ import globalConfigStore from './globalStore'
 import { getFuncText, formatText, isEmptyValue } from './utils'
 import { errLog, warnLog } from './log'
 import { getI18n } from './i18n'
-import { getOnName } from './vn'
+import { getOnName, getModelEvent, getChangeEvent } from './vn'
 
 import { VxeGlobalRendererHandles, VxeGlobalRenderer, RendererOptions } from '../../../types/all'
 
 const componentDefaultModelProp = 'modelValue'
 
 const defaultCompProps = { transfer: true }
-
-function getModelEvent (renderOpts: any) {
-  switch (renderOpts.name) {
-    case 'input':
-    case 'textarea':
-      return 'input'
-  }
-  return 'update:modelValue'
-}
-
-function getChangeEvent (renderOpts: any) {
-  switch (renderOpts.name) {
-    case 'input':
-    case 'textarea':
-    case 'VxeInput':
-    case 'VxeTextarea':
-    case '$input':
-    case '$textarea':
-      return 'input'
-  }
-  return 'change'
-}
 
 function parseDate (value: any, props: any) {
   return value && props.valueFormat ? XEUtils.toStringDate(value, props.valueFormat) : value
@@ -274,16 +252,6 @@ function getNativeEditOns (renderOpts: any, params: any) {
   })
 }
 
-function getNativeFormDesignOns (renderOpts: any, params: any) {
-  const { item } = params
-  const { model } = item
-  return getElementOns(renderOpts, params, (evnt: any) => {
-    const itemValue = evnt.target.value
-    model.update = true
-    model.value = itemValue
-  })
-}
-
 function getNativeFilterOns (renderOpts: any, params: any, option: any) {
   return getElementOns(renderOpts, params, (evnt: any) => {
     // 处理 model 值双向绑定
@@ -321,21 +289,6 @@ function nativeEditRender (renderOpts: any, params: any) {
       ...getNativeEditOns(renderOpts, params)
     })
   ]
-}
-
-/**
- * 设计器预览表单渲染-原生的标签
- * input、textarea、select
- */
-function nativeFormDesignRender (renderOpts: VxeGlobalRendererHandles.RenderFormDesignWidgetViewOptions, params: VxeGlobalRendererHandles.RenderFormDesignWidgetViewParams) {
-  const { name } = renderOpts
-  const { item } = params
-  return h('input', {
-    class: `vxe-default-${name}`,
-    ...getNativeAttrs({ name, attrs: item.formConfig.data }),
-    value: item.model.value,
-    ...getNativeFormDesignOns(renderOpts, params)
-  })
 }
 
 function defaultCellRender (renderOpts: any, params: any) {
@@ -707,10 +660,6 @@ function oldFormItemRadioAndCheckboxRender (renderOpts: any, params: any) {
   ]
 }
 
-const defaultFormDesignWidgetName = ({ name }: {name: string}) => {
-  return getI18n(`vxe.formDesign.widget.component.${name}`)
-}
-
 /**
  * 内置的组件渲染
  */
@@ -721,41 +670,12 @@ const renderMap: { [name: string]: RendererOptions } = {
     renderDefault: nativeEditRender,
     renderFilter: nativeFilterRender,
     defaultFilterMethod: handleFilterMethod,
-    renderItemContent: nativeItemRender,
-
-    formDesignWidgetName: defaultFormDesignWidgetName,
-    formDesignWidgetIcon: 'vxe-icon-feedback',
-    renderFormDesignWidgetView: nativeFormDesignRender,
-    createFormDesignWidgetSettingPropFormConfig (params) {
-      return {
-        data: {
-          itemTitle: defaultFormDesignWidgetName(params)
-        },
-        items: [
-          { title: '控件名称', field: 'itemTitle', itemRender: { name: 'input', attrs: { placeholder: getI18n('vxe.base.pleaseInput') } } }
-        ]
-      }
-    }
+    renderItemContent: nativeItemRender
   },
   textarea: {
     autofocus: 'textarea',
     renderEdit: nativeEditRender,
-    renderItemContent: nativeItemRender,
-
-    formDesignWidgetName: defaultFormDesignWidgetName,
-    formDesignWidgetIcon: 'vxe-icon-feedback',
-    formDesignWidgetGroup: 'layout',
-    renderFormDesignWidgetView: nativeFormDesignRender,
-    createFormDesignWidgetSettingPropFormConfig (params) {
-      return {
-        data: {
-          itemTitle: defaultFormDesignWidgetName(params)
-        },
-        items: [
-          { title: '控件名称', field: 'itemTitle', itemRender: { name: 'input', attrs: { placeholder: getI18n('vxe.base.pleaseInput') } } }
-        ]
-      }
-    }
+    renderItemContent: nativeItemRender
   },
   select: {
     renderEdit: nativeSelectEditRender,
@@ -786,21 +706,7 @@ const renderMap: { [name: string]: RendererOptions } = {
         renderOpts.optionGroups ? renderNativeOptgroups(renderOpts, params, renderNativeFormOptions) : renderNativeFormOptions(renderOpts.options, renderOpts, params))
       ]
     },
-    exportMethod: handleExportSelectMethod,
-
-    formDesignWidgetName: defaultFormDesignWidgetName,
-    formDesignWidgetIcon: 'vxe-icon-feedback',
-    renderFormDesignWidgetView: nativeFormDesignRender,
-    createFormDesignWidgetSettingPropFormConfig (params) {
-      return {
-        data: {
-          itemTitle: defaultFormDesignWidgetName(params)
-        },
-        items: [
-          { title: '控件名称', field: 'itemTitle', itemRender: { name: 'input', attrs: { placeholder: getI18n('vxe.base.pleaseInput') } } }
-        ]
-      }
-    }
+    exportMethod: handleExportSelectMethod
   },
   VxeInput: {
     autofocus: '.vxe-input--inner',

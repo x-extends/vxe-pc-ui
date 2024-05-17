@@ -4,7 +4,7 @@ import { getSlotVNs } from '../../ui/src/vn'
 import VxeTabsComponent from '../../tabs/src/tabs'
 import VxeTabPaneComponent from '../../tabs/src/tab-pane'
 import VxeFormComponent from '../../form/src/form'
-import VxeFormItemComponent from '../../form/src/form-item'
+import { DefaultSettingFormViewComponent } from './setting-form'
 
 import { VxeFormDesignConstructor, VxeFormDesignPrivateMethods } from '../../../types'
 
@@ -25,45 +25,18 @@ export default defineComponent({
     const renderSettingWidgetForm = () => {
       const { activeWidget } = formDesignReactData
       if (activeWidget) {
+        const compConf = renderer.get(activeWidget.name)
+        const renderWidgetFormView = compConf ? compConf.renderFormDesignWidgetFormView : null
+        if (renderWidgetFormView) {
+          return h('div', {
+            class: 'vxe-design-form--custom-widget-form-view'
+          }, getSlotVNs(renderWidgetFormView(activeWidget, { widget: activeWidget })))
+        }
         return h(VxeFormComponent, {
           key: activeWidget.id,
-          items: activeWidget.formConfig.items,
-          data: activeWidget.formConfig.data,
+          items: activeWidget.widgetFormItems,
+          data: activeWidget.widgetFormData,
           vertical: true
-        })
-      }
-      return createCommentVNode()
-    }
-
-    const renderDefaultSettingForm = () => {
-      const { formConfig } = formDesignReactData
-      if (formConfig) {
-        return h(VxeFormComponent, {
-          data: formConfig.data,
-          vertical: true
-        }, {
-          default () {
-            return [
-              h(VxeFormItemComponent, {
-                title: '显示设置',
-                field: 'sdfg',
-                span: 24
-              }, {
-                default () {
-                  return h('div', '345435')
-                }
-              }),
-              h(VxeFormItemComponent, {
-                title: '显示设置',
-                field: 'sdfg',
-                span: 24
-              }, {
-                default () {
-                  return h('div', '345435')
-                }
-              })
-            ]
-          }
         })
       }
       return createCommentVNode()
@@ -71,15 +44,22 @@ export default defineComponent({
 
     const renderSettingConfigForm = () => {
       const { formRender } = formDesignProps
+      const { formConfig, formData, formItems } = formDesignReactData
       if (formRender) {
         const compConf = renderer.get(formRender.name)
-        const renderSettingForm = compConf ? compConf.renderFormDesignSettingForm : null
-        if (renderSettingForm) {
-          return h('div', {}, getSlotVNs(renderSettingForm({}, {})))
+        const renderSettingView = compConf ? compConf.renderFormDesignSettingView : null
+        if (renderSettingView) {
+          return h('div', {
+            class: 'vxe-design-form--custom-setting-form-view'
+          }, getSlotVNs(renderSettingView({}, {})))
         }
         return createCommentVNode()
       }
-      return renderDefaultSettingForm()
+      return h(DefaultSettingFormViewComponent, {
+        formConfig,
+        formData,
+        formItems
+      })
     }
 
     watch(() => formDesignReactData.activeWidget, () => {

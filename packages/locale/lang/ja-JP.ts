@@ -271,7 +271,8 @@ export default {
         component: {
           input: 'Input',
           textarea: 'Textarea',
-          select: 'Select'
+          select: 'Select',
+          rows: 'One-row multi-column'
         }
       }
     },

@@ -1,6 +1,6 @@
 import { RenderFunction, SetupContext, Ref, ComponentPublicInstance } from 'vue'
 import { defineVxeComponent, VxeComponentBase, VxeComponentEvent, VxeComponentSize, ValueOf } from '../tool'
-import { VxeFormProps } from '../components/form'
+import { VxeFormProps, VxeFormPropTypes } from '../components/form'
 
 /* eslint-disable no-use-before-define,@typescript-eslint/ban-types */
 
@@ -24,6 +24,7 @@ export interface VxeFormDesignPrivateRef extends FormDesignPrivateRef { }
 
 export namespace VxeFormDesignPropTypes {
   export type Size = VxeComponentSize
+  export type ModelValue = any[]
 
   export type Height = string | number
   export interface WidgetItem {
@@ -31,6 +32,8 @@ export namespace VxeFormDesignPropTypes {
     children: string[]
   }
   export type Widgets = WidgetItem[]
+
+  export type FormData = VxeFormPropTypes.Data
   export interface FormRender {
     name: string
   }
@@ -38,8 +41,10 @@ export namespace VxeFormDesignPropTypes {
 
 export type VxeFormDesignProps = {
   size?: VxeFormDesignPropTypes.Size
+  modelValue?: VxeFormDesignPropTypes.ModelValue
   height?: VxeFormDesignPropTypes.Height
   widgets?: VxeFormDesignPropTypes.Widgets
+  formData?: VxeFormDesignPropTypes.FormData
   formRender?: VxeFormDesignPropTypes.FormRender
 }
 
@@ -48,7 +53,9 @@ export interface FormDesignPrivateComputed {
 export interface VxeFormDesignPrivateComputed extends FormDesignPrivateComputed { }
 
 export interface FormDesignReactData {
-  formConfig: VxeFormProps,
+  formConfig: VxeFormProps<VxeFormDesignDefines.DefaultSettingFormObjVO>,
+  formData: VxeFormDesignDefines.DefaultSettingFormObjVO,
+  formItems: VxeFormPropTypes.Items,
   widgetConfigs: VxeFormDesignDefines.WidgetConfigItem[]
   widgetObjList: VxeFormDesignDefines.WidgetObjItem[]
   dragWidget: VxeFormDesignDefines.WidgetObjItem | null
@@ -69,6 +76,7 @@ export interface FormDesignPrivateMethods {
 export interface VxeFormDesignPrivateMethods extends FormDesignPrivateMethods { }
 
 export type VxeFormDesignEmits = [
+  'update:modelValue',
   'click-widget',
   'add-widget',
   'copy-widget',
@@ -80,18 +88,42 @@ export namespace VxeFormDesignDefines {
     $formDesign: VxeFormDesignConstructor
   }
 
+  export interface FormDesignViewItemInfo {
+    itemIndex: number
+    item: WidgetObjItem
+    items: WidgetObjItem[]
+  }
+
+  export interface FormDesignViewColItemInfo {
+    itemIndex: number
+    item: ViewColObjItem
+    items: ViewColObjItem[]
+  }
+
+  export interface ViewColObjItem {
+    span: number
+    widget: any
+  }
+
   export interface WidgetConfigItem extends VxeFormDesignPropTypes.WidgetItem {
   }
 
-  export interface WidgetObjItem {
+  export interface WidgetObjItem<D = any> {
     id: number
     name: string
-    formConfig: VxeFormProps,
+    widgetFormConfig: VxeFormProps
+    widgetFormData: D
+    widgetFormItems: VxeFormPropTypes.Items
     model: {
       update: boolean
       value: any
     }
     children?: WidgetObjItem[]
+  }
+
+  export interface DefaultSettingFormObjVO {
+    showPC: boolean
+    showMobile: boolean
   }
 }
 

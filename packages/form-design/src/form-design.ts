@@ -8,8 +8,9 @@ import XEUtils from 'xe-utils'
 import WidgetComponent from './widget'
 import ViewComponent from './view'
 import SettingComponent from './setting'
+import { getDefaultSettingFormData } from './setting-form'
 
-import { VxeFormDesignDefines, VxeFormDesignPropTypes, VxeFormDesignEmits, FormDesignReactData, FormDesignPrivateRef, VxeFormDesignPrivateComputed, VxeFormDesignConstructor, VxeFormDesignPrivateMethods, FormDesignMethods, FormDesignPrivateMethods, VxeFormProps } from '../../../types'
+import { VxeFormPropTypes, VxeFormDesignDefines, VxeFormDesignPropTypes, VxeFormDesignEmits, FormDesignReactData, FormDesignPrivateRef, VxeFormDesignPrivateComputed, VxeFormDesignConstructor, VxeFormDesignPrivateMethods, FormDesignMethods, FormDesignPrivateMethods, VxeFormProps } from '../../../types'
 
 export default defineComponent({
   name: 'VxeFormDesign',
@@ -18,14 +19,20 @@ export default defineComponent({
       type: String as PropType<VxeFormDesignPropTypes.Size>,
       default: () => globalConfigStore.formDesign.size
     },
+    modelValue: Array as PropType<VxeFormDesignPropTypes.ModelValue>,
     height: [String, Number] as PropType<VxeFormDesignPropTypes.Height>,
     widgets: {
       type: Array as PropType<VxeFormDesignPropTypes.Widgets>,
-      default: () => []
+      default: () => XEUtils.clone(globalConfigStore.formDesign.widgets) || []
+    },
+    formData: {
+      type: Array as PropType<VxeFormDesignPropTypes.FormData>,
+      default: () => XEUtils.clone(globalConfigStore.formDesign.formData, true)
     },
     formRender: Object as PropType<VxeFormDesignPropTypes.FormRender>
   },
   emits: [
+    'update:modelValue',
     'click-widget',
     'add-widget',
     'copy-widget',
@@ -40,6 +47,8 @@ export default defineComponent({
 
     const reactData = reactive<FormDesignReactData>({
       formConfig: {},
+      formData: {} as VxeFormDesignDefines.DefaultSettingFormObjVO,
+      formItems: [],
       widgetConfigs: [],
       widgetObjList: [],
       dragWidget: null,
@@ -146,7 +155,7 @@ export default defineComponent({
           evnt.stopPropagation()
           const newWidgetItem = createWidgetItem(item.name, widgetObjList)
           // 标题副本
-          if (newWidgetItem.formConfig.data.itemTitle) {
+          if (newWidgetItem.widgetFormData.itemTitle) {
             XEUtils.set(newWidgetItem, 'formConfig.data.itemTitle', getI18n('vxe.formDesign.widget.copyTitle', [`${XEUtils.get(item, 'formConfig.data.itemTitle', '')}`.replace(getI18n('vxe.formDesign.widget.copyTitle', ['']), '')]))
           }
           if (index >= widgetObjList.length - 1) {
@@ -174,24 +183,24 @@ export default defineComponent({
       }
     }
 
-    const createDefaultSettingForm = () => {
-      return {
-        data: {
-          showPC: true,
-          showMobile: true
-        }
-      }
-    }
-
     const createSettingForm = () => {
       const { formRender } = props
-      let formConfig: VxeFormProps = createDefaultSettingForm()
+      let formConfig: VxeFormProps = getDefaultSettingFormData()
+      let formData = {} as VxeFormDesignDefines.DefaultSettingFormObjVO
+      let formItems: VxeFormPropTypes.Items = []
       if (formRender) {
         const compConf = renderer.get(formRender.name)
-        const createFormConfig = compConf ? compConf.createFormDesignWidgetSettingFormConfig : null
+        const createFormConfig = compConf ? compConf.createFormDesignSettingFormConfig : null
         formConfig = (createFormConfig ? createFormConfig({}) : {}) || {}
       }
+      formData = formConfig.data || {}
+      formItems = formConfig.items || []
+      delete formConfig.data
+      delete formConfig.items
+
       reactData.formConfig = formConfig
+      reactData.formData = formData
+      reactData.formItems = formItems
     }
 
     Object.assign($xeFormDesign, formDesignMethods, formDesignPrivateMethods)

@@ -1,5 +1,6 @@
 import { RenderFunction, SetupContext, Ref } from 'vue'
 import { defineVxeComponent, VxeComponentBase, VxeComponentEvent, VxeComponentSlot, VxeComponentStyle } from '../tool'
+import { VxeGlobalRendererHandles } from '../ui/renderer'
 
 /* eslint-disable no-use-before-define,@typescript-eslint/ban-types */
 

@@ -168,7 +168,7 @@ export default defineComponent({
         class: [
           'vxe-form--item',
           item.id,
-          span ? `vxe-form--col${span} is--span` : '',
+          span ? `vxe-form--item-col_${span} is--span` : '',
           className ? (XEUtils.isFunction(className) ? className(params) : className) : '',
           itemClassName ? (XEUtils.isFunction(itemClassName) ? itemClassName(params) : itemClassName) : '',
           {

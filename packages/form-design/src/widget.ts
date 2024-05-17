@@ -80,7 +80,10 @@ export default defineComponent({
               'data-widget-name': name,
               draggable: true,
               onDragstart: dragstartEvent,
-              onDragend: dragendEvent
+              onDragend: dragendEvent,
+              onDblclick (evnt: KeyboardEvent) {
+                addNewWidget(evnt, name)
+              }
             }, renderFormDesignWidgetItem
               ? getSlotVNs(renderFormDesignWidgetItem({}, {}))
               : [
@@ -120,7 +123,7 @@ export default defineComponent({
           }, title ? (`${XEUtils.isFunction(title) ? title({}) : title}`) : ''),
           h('div', {
             class: 'vxe-design-form--widget-list',
-            onDragover (evnt:DragEvent) {
+            onDragover (evnt: DragEvent) {
               cancelDragoverItem(evnt, group)
             }
           }, renderWidgetList(group))

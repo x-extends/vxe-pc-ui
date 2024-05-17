@@ -14,9 +14,11 @@ export default defineComponent({
     },
     vertical: Boolean as PropType<VxeRowPropTypes.Vertical>
   },
-  emits: [],
+  emits: [
+    'click'
+  ],
   setup (props, context) {
-    const { slots } = context
+    const { slots, emit } = context
 
     const xID = XEUtils.uniqueId()
 
@@ -61,6 +63,10 @@ export default defineComponent({
       getComputeMaps: () => computeMaps
     } as unknown as VxeRowConstructor & VxeRowPrivateMethods
 
+    const handleDefaultEvent = (evnt: Event & { type: 'click' }) => {
+      emit(evnt.type, { $event: evnt })
+    }
+
     const renderVN = () => {
       const { vertical } = props
       const rowStyle = computeRowStyle.value
@@ -70,7 +76,8 @@ export default defineComponent({
         class: ['vxe-row', {
           'is--vertical': vertical
         }],
-        style: rowStyle
+        style: rowStyle,
+        onClick: handleDefaultEvent
       }, defaultSlot ? defaultSlot({}) : [])
     }
 

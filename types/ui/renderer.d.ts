@@ -63,14 +63,14 @@ export interface DefineRendererOption<T> {
   // 设计表单
   formDesignWidgetName?: string | ((params: VxeGlobalRendererHandles.FormDesignWidgetNameParams) => string)
   formDesignWidgetIcon?: string
-  formDesignWidgetGroup?: null | '' | 'base' | 'layout' | 'advanced' | string
+  formDesignWidgetGroup?: null | '' | 'base' | 'layout' | 'advanced'
   formDesignWidgetCustomGroup?: string | ((params: VxeGlobalRendererHandles.FormDesignWidgetCustomGroupParams) => string)
-  createFormDesignWidgetSettingFormConfig?(params: VxeGlobalRendererHandles.CreateFormDesignWidgetSettingFormConfigParams): VxeFormProps
-  createFormDesignWidgetSettingPropFormConfig?(params: VxeGlobalRendererHandles.CreateFormDesignWidgetSettingPropFormConfig): VxeFormProps
-  renderFormDesignWidgetItem?(renderOpts: VxeGlobalRendererHandles.RenderFormDesignWidgetOptions, params: VxeGlobalRendererHandles.RenderFormDesignWidgetParams): T
+  createFormDesignSettingFormConfig?(params: VxeGlobalRendererHandles.CreateFormDesignSettingFormConfigParams): VxeFormProps
+  renderFormDesignSettingView?(renderOpts: VxeGlobalRendererHandles.RenderFormDesignSettingViewOptions, params: VxeGlobalRendererHandles.RenderFormDesignSettingViewParams): T
+  createFormDesignWidgetFormConfig?(params: VxeGlobalRendererHandles.CreateFormDesignWidgetFormConfigParams): VxeFormProps
+  renderFormDesignWidgetFormView?(renderOpts: VxeGlobalRendererHandles.RenderFormDesignWidgetFormViewOptions, params: VxeGlobalRendererHandles.RenderFormDesignWidgetFormViewParams): T
+  renderFormDesignWidgetItem?(renderOpts: VxeGlobalRendererHandles.RenderFormDesignWidgetItemOptions, params: VxeGlobalRendererHandles.RenderFormDesignWidgetItemParams): T
   renderFormDesignWidgetView?(renderOpts: VxeGlobalRendererHandles.RenderFormDesignWidgetViewOptions, params: VxeGlobalRendererHandles.RenderFormDesignWidgetViewParams): T
-  renderFormDesignWidgetSetting?(renderOpts: VxeGlobalRendererHandles.RenderFormDesignWidgetOptions, params: VxeGlobalRendererHandles.RenderFormDesignWidgetParams): T
-  renderFormDesignSettingForm?(renderOpts: VxeGlobalRendererHandles.RenderFormDesignSettingFormOptions, params: VxeGlobalRendererHandles.RenderFormDesignSettingFormParamss): T
 
   // 空内容渲染
   renderEmpty?(renderOpts: VxeGlobalRendererHandles.RenderEmptyOptions, params: VxeGlobalRendererHandles.RenderEmptyParams): T
@@ -283,20 +283,29 @@ export namespace VxeGlobalRendererHandles {
   export interface FormDesignWidgetCustomGroupParams {
   }
 
-  export interface CreateFormDesignWidgetSettingFormConfigParams {
+  export interface CreateFormDesignSettingFormConfigParams {
   }
 
-  export interface CreateFormDesignWidgetSettingPropFormConfig {
+  export interface CreateFormDesignWidgetFormConfigParams {
     name: string
   }
+
+  export interface RenderFormDesignWidgetItemOptions {}
+
+  export interface RenderFormDesignWidgetItemParams {}
 
   export interface RenderFormDesignWidgetViewOptions extends VxeFormDesignDefines.WidgetObjItem {}
   export interface RenderFormDesignWidgetViewParams {
     item: VxeFormDesignDefines.WidgetObjItem
   }
 
-  export interface RenderFormDesignSettingFormOptions {}
-  export interface RenderFormDesignSettingFormParamss {}
+  export interface RenderFormDesignWidgetFormViewOptions extends VxeFormDesignDefines.WidgetObjItem {}
+  export interface RenderFormDesignWidgetFormViewParams {
+    widget: VxeFormDesignDefines.WidgetObjItem
+  }
+
+  export interface RenderFormDesignSettingViewOptions {}
+  export interface RenderFormDesignSettingViewParams {}
 }
 
 /**

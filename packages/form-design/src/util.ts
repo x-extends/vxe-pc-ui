@@ -1,7 +1,7 @@
 import XEUtils from 'xe-utils'
 import { renderer } from '../../ui/src/renderer'
 
-import { VxeFormDesignDefines, VxeFormProps } from '../../../types'
+import { VxeFormPropTypes, VxeFormDesignDefines, VxeFormProps } from '../../../types'
 
 export function getNewWidgetId (widgetObjList: VxeFormDesignDefines.WidgetObjItem[]) {
   let max = 10000
@@ -11,7 +11,7 @@ export function getNewWidgetId (widgetObjList: VxeFormDesignDefines.WidgetObjIte
   return max + 1
 }
 
-export const createWidgetFormData = (formItems: any) => {
+export const getWidgetFormData = (formItems: any) => {
   const data: any = {}
   XEUtils.eachTree(formItems, item => {
     const { field } = item
@@ -24,23 +24,38 @@ export const createWidgetFormData = (formItems: any) => {
 
 export const createWidgetItem = (name: string, widgetObjList: VxeFormDesignDefines.WidgetObjItem[]) => {
   const compConf = renderer.get(name) || {}
-  let formConfig: VxeFormProps = {}
+  let widgetFormConfig: VxeFormProps = {}
+  let widgetFormItems: VxeFormPropTypes.Items[] = []
+  let widgetFormData: VxeFormPropTypes.Data = {}
   const widgetId = getNewWidgetId(widgetObjList)
   if (compConf) {
-    const createPropFormConfig = compConf.createFormDesignWidgetSettingPropFormConfig
-    if (createPropFormConfig) {
-      formConfig = createPropFormConfig({ name }) || {}
-      formConfig.data = formConfig.data || createWidgetFormData(formConfig.items)
+    const createWidgetFormConfig = compConf.createFormDesignWidgetFormConfig
+    if (createWidgetFormConfig) {
+      widgetFormConfig = createWidgetFormConfig({ name }) || {}
+      widgetFormItems = widgetFormConfig.items || []
+      widgetFormData = widgetFormConfig.data || getWidgetFormData(widgetFormItems)
+      delete widgetFormConfig.data
+      delete widgetFormConfig.items
     }
   }
   const widgetItem: VxeFormDesignDefines.WidgetObjItem = {
     id: widgetId,
     name: name,
-    formConfig,
+    widgetFormConfig,
+    widgetFormData,
+    widgetFormItems,
     model: {
       update: false,
       value: ''
     }
   }
   return widgetItem
+}
+
+/**
+ * 判断是否布局控件
+ */
+export const hasLayoutGroup = (name: string) => {
+  const compConf = renderer.get(name) || {}
+  return compConf && compConf.formDesignWidgetGroup === 'layout'
 }

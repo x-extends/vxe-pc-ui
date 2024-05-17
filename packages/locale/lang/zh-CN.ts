@@ -271,7 +271,8 @@ export default {
         component: {
           input: '输入框',
           textarea: '文本域',
-          select: '下拉框'
+          select: '下拉框',
+          rows: '一行多列'
         }
       }
     },

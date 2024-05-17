@@ -636,7 +636,7 @@ export default defineComponent({
         onReset: resetEvent
       }, [
         h('div', {
-          class: 'vxe-form--wrapper vxe-form--row'
+          class: 'vxe-form--wrapper vxe-form--item-row'
         }, customLayout
           ? (defaultSlot ? defaultSlot({}) : [])
           : formItems.map((item, index) => {
