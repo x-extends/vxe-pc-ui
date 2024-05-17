@@ -264,9 +264,15 @@ export default {
     },
     formDesign: {
       widget: {
-        input: '输入框',
-        textarea: '文本域',
-        select: '下拉框'
+        baseGroup: '基础控件',
+        layoutGroup: '布局控件',
+        advancedGroup: '高级控件',
+        copyTitle: '副本_{0}',
+        component: {
+          input: '输入框',
+          textarea: '文本域',
+          select: '下拉框'
+        }
       }
     },
 

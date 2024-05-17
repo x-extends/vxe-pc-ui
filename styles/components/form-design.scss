@@ -33,7 +33,7 @@
 }
 
 .vxe-design-form--setting {
-  width: 300px;
+  width: 280px;
   flex-shrink: 0;
   padding-left: var(--vxe-ui-layout-padding-half);
   overflow: auto;
@@ -73,7 +73,7 @@
   font-size: var(--vxe-ui-design-form-widget-item-font-size);
   padding: 0 var(--vxe-ui-layout-padding-half);
   border-radius: var(--vxe-ui-border-radius);
-  border: 1px solid var(--vxe-ui-font-primary-lighten-color);
+  border: 1px solid var(--vxe-ui-input-border-color);
   background-color: var(--vxe-ui-design-form-widget-item-background-color);
   overflow: hidden;
   text-overflow: ellipsis;
@@ -81,6 +81,8 @@
   cursor: grabbing;
   user-select: none;
   &:hover {
+    border-color: var(--vxe-ui-font-primary-lighten-color);
+    background-color: #f4f8fc;
     .vxe-design-form--widget-item-add {
       display: block;
     }
@@ -96,6 +98,7 @@
   right: var(--vxe-ui-layout-padding-default);
   width: 1em;
   height: 100%;
+  cursor: pointer;
   &:hover {
     color: var(--vxe-ui-font-primary-color);
   }
@@ -103,6 +106,8 @@
 
 .vxe-design-form--preview-list {
   height: 100%;
+  overflow: auto;
+  padding: var(--vxe-ui-layout-padding-default) 0;
   background-color: var(--vxe-ui-layout-background-color);
   border-radius: var(--vxe-ui-border-radius);
   box-shadow: 0 0 8px rgba(0, 0, 0, 0.1);
@@ -140,6 +145,12 @@
   &.is--drag {
     background-color: #dde9fd;
   }
+}
+.vxe-design-form--preview-item-operate {
+  position: absolute;
+  top: calc(var(--vxe-ui-layout-padding-default) * -1);
+  right: var(--vxe-ui-layout-padding-default);
+  z-index: 3;
 }
 
 .vxe-design-form--preview-item {

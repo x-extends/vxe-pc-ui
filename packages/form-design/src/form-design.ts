@@ -1,6 +1,9 @@
 import { defineComponent, ref, h, PropType, reactive, provide, watch } from 'vue'
 import globalConfigStore from '../../ui/src/globalStore'
 import { renderer } from '../../ui/src/renderer'
+import { getI18n } from '../../ui/src/i18n'
+import { toCssUnit } from '../../ui/src/dom'
+import { createWidgetItem } from './util'
 import XEUtils from 'xe-utils'
 import WidgetComponent from './widget'
 import ViewComponent from './view'
@@ -15,6 +18,7 @@ export default defineComponent({
       type: String as PropType<VxeFormDesignPropTypes.Size>,
       default: () => globalConfigStore.formDesign.size
     },
+    height: [String, Number] as PropType<VxeFormDesignPropTypes.Height>,
     widgets: {
       type: Array as PropType<VxeFormDesignPropTypes.Widgets>,
       default: () => []
@@ -22,7 +26,9 @@ export default defineComponent({
     formRender: Object as PropType<VxeFormDesignPropTypes.FormRender>
   },
   emits: [
+    'click-widget',
     'add-widget',
+    'copy-widget',
     'remove-widget'
   ] as VxeFormDesignEmits,
   setup (props, context) {
@@ -65,12 +71,106 @@ export default defineComponent({
     }
 
     const updateWidgetConfigs = () => {
-      reactData.widgetConfigs = props.widgets && props.widgets.length ? props.widgets.slice(0) : []
+      const { widgets } = props
+      let widgetConfs: VxeFormDesignDefines.WidgetConfigItem[] = []
+      if (widgets && widgets.length) {
+        widgetConfs = props.widgets.slice(0)
+      } else {
+        const baseWidgets: string[] = []
+        const layoutWidgets: string[] = []
+        const advancedWidgets: string[] = []
+        const customGroups: VxeFormDesignDefines.WidgetConfigItem[] = []
+        renderer.forEach((item, name) => {
+          const { formDesignWidgetName, formDesignWidgetGroup, formDesignWidgetCustomGroup } = item
+          if (formDesignWidgetName) {
+            // 如果自定义组
+            if (formDesignWidgetCustomGroup) {
+              const cusGroup = customGroups.find(item => item.title === formDesignWidgetCustomGroup)
+              if (cusGroup) {
+                cusGroup.children.push(name)
+              } else {
+                customGroups.push({
+                  title: formDesignWidgetCustomGroup,
+                  children: [name]
+                })
+              }
+            } else {
+              switch (formDesignWidgetGroup) {
+                case 'layout':
+                  layoutWidgets.push(name)
+                  break
+                case 'advanced':
+                  advancedWidgets.push(name)
+                  break
+                default:
+                  baseWidgets.push(name)
+                  break
+              }
+            }
+          }
+        })
+        if (baseWidgets.length) {
+          widgetConfs.push({
+            title: getI18n('vxe.formDesign.widget.baseGroup'),
+            children: baseWidgets
+          })
+        }
+        if (layoutWidgets.length) {
+          widgetConfs.push({
+            title: getI18n('vxe.formDesign.widget.layoutGroup'),
+            children: layoutWidgets
+          })
+        }
+        if (advancedWidgets.length) {
+          widgetConfs.push({
+            title: getI18n('vxe.formDesign.widget.advancedGroup'),
+            children: advancedWidgets
+          })
+        }
+        if (customGroups.length) {
+          widgetConfs.push(...customGroups)
+        }
+      }
+      reactData.widgetConfigs = widgetConfs
     }
 
     const formDesignPrivateMethods: FormDesignPrivateMethods = {
       handleClickWidget (evnt: KeyboardEvent, item: VxeFormDesignDefines.WidgetObjItem) {
         reactData.activeWidget = item
+        formDesignMethods.dispatchEvent('click-widget', { item }, evnt)
+      },
+      handleCopyWidget (evnt: KeyboardEvent, item: VxeFormDesignDefines.WidgetObjItem) {
+        const { widgetObjList } = reactData
+        const index = XEUtils.findIndexOf(widgetObjList, obj => obj.id === item.id)
+        if (index > -1) {
+          evnt.stopPropagation()
+          const newWidgetItem = createWidgetItem(item.name, widgetObjList)
+          // 标题副本
+          if (newWidgetItem.formConfig.data.itemTitle) {
+            XEUtils.set(newWidgetItem, 'formConfig.data.itemTitle', getI18n('vxe.formDesign.widget.copyTitle', [`${XEUtils.get(item, 'formConfig.data.itemTitle', '')}`.replace(getI18n('vxe.formDesign.widget.copyTitle', ['']), '')]))
+          }
+          if (index >= widgetObjList.length - 1) {
+            widgetObjList.push(newWidgetItem)
+          } else {
+            widgetObjList.splice(index + 1, 0, newWidgetItem)
+          }
+          reactData.activeWidget = newWidgetItem
+          formDesignMethods.dispatchEvent('copy-widget', { targetItem: item, newItem: newWidgetItem }, evnt)
+        }
+      },
+      handleRemoveWidget (evnt: KeyboardEvent, item: VxeFormDesignDefines.WidgetObjItem) {
+        const { widgetObjList } = reactData
+        const index = XEUtils.findIndexOf(widgetObjList, obj => obj.id === item.id)
+        if (index > -1) {
+          evnt.stopPropagation()
+          if (index >= widgetObjList.length - 1) {
+            reactData.activeWidget = widgetObjList[index - 1]
+          } else {
+            reactData.activeWidget = widgetObjList[index + 1]
+          }
+          widgetObjList.splice(index, 1)
+          formDesignMethods.dispatchEvent('remove-widget', { item }, evnt)
+        }
       }
     }
 
@@ -97,9 +197,15 @@ export default defineComponent({
     Object.assign($xeFormDesign, formDesignMethods, formDesignPrivateMethods)
 
     const renderVN = () => {
+      const { height } = props
       return h('div', {
         ref: refElem,
-        class: 'vxe-design-form'
+        class: 'vxe-design-form',
+        style: height
+          ? {
+              height: toCssUnit(height)
+            }
+          : null
       }, [
         h(WidgetComponent),
         h(ViewComponent),

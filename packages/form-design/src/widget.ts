@@ -3,9 +3,9 @@ import XEUtils from 'xe-utils'
 import iconConfigStore from '../../ui/src/iconStore'
 import { renderer } from '../../ui/src/renderer'
 import { getSlotVNs } from '../../ui/src/vn'
-import { getNewWidgetId } from './util'
+import { createWidgetItem } from './util'
 
-import { VxeFormDesignPropTypes, VxeFormDesignConstructor, VxeFormDesignDefines, VxeFormDesignPrivateMethods, VxeFormProps } from '../../../types'
+import { VxeFormDesignPropTypes, VxeFormDesignConstructor, VxeFormDesignPrivateMethods } from '../../../types'
 
 export default defineComponent({
   props: {},
@@ -17,84 +17,49 @@ export default defineComponent({
       return
     }
 
-    const { reactData } = $xeFormDesign
-
-    const createWidgetFormData = (formItems: any) => {
-      const data: any = {}
-      XEUtils.eachTree(formItems, item => {
-        const { field } = item
-        if (field) {
-          data[field] = null
-        }
-      }, { children: 'children' })
-      return data
-    }
-
-    const createWidgetItem = (name: string) => {
-      const { widgetObjList } = reactData
-      const compConf = renderer.get(name) || {}
-      let formConfig: VxeFormProps = {}
-      const widgetId = getNewWidgetId(widgetObjList)
-      if (compConf) {
-        const createPropFormConfig = compConf.createFormDesignWidgetSettingPropFormConfig
-        if (createPropFormConfig) {
-          formConfig = createPropFormConfig({ name }) || {}
-          formConfig.data = formConfig.data || createWidgetFormData(formConfig.items)
-        }
-      }
-      const widgetItem: VxeFormDesignDefines.WidgetObjItem = {
-        id: widgetId,
-        name: name,
-        formConfig,
-        model: {
-          update: false,
-          value: ''
-        }
-      }
-      return widgetItem
-    }
+    const { reactData: formDesignReactData } = $xeFormDesign
 
     const dragstartEvent = (evnt: DragEvent) => {
+      const { widgetObjList } = formDesignReactData
       const divEl = evnt.currentTarget as HTMLDivElement
       const dataTransfer = evnt.dataTransfer
       const widgetName = divEl.getAttribute('data-widget-name') || ''
-      const dragWidget = createWidgetItem(widgetName)
+      const dragWidget = createWidgetItem(widgetName, widgetObjList)
       if (dataTransfer) {
         dataTransfer.setData('text/plain', widgetName)
       }
-      reactData.sortWidget = null
-      reactData.dragWidget = dragWidget
+      formDesignReactData.sortWidget = null
+      formDesignReactData.dragWidget = dragWidget
     }
 
     const dragendEvent = (evnt: DragEvent) => {
-      if (reactData.dragWidget) {
-        reactData.activeWidget = reactData.dragWidget
+      if (formDesignReactData.dragWidget) {
+        formDesignReactData.activeWidget = formDesignReactData.dragWidget
         $xeFormDesign.dispatchEvent('add-widget', {}, evnt)
       }
-      reactData.dragWidget = null
-      reactData.sortWidget = null
+      formDesignReactData.dragWidget = null
+      formDesignReactData.sortWidget = null
     }
 
     const cancelDragoverItem = (evnt: DragEvent, group: VxeFormDesignPropTypes.WidgetItem) => {
-      const { widgetObjList, dragWidget } = reactData
+      const { widgetObjList, dragWidget } = formDesignReactData
       if (dragWidget) {
         if (group.children.includes(dragWidget.name)) {
           const rest = XEUtils.findTree(widgetObjList, item => item.id === dragWidget.id, { children: 'children' })
           if (rest) {
             rest.items.splice(rest.index, 1)
-            reactData.dragWidget = null
           }
         }
       }
     }
 
     const addNewWidget = (evnt: KeyboardEvent, widgetName: string) => {
-      const { widgetObjList } = reactData
-      const dragWidget = createWidgetItem(widgetName)
+      const { widgetObjList } = formDesignReactData
+      const dragWidget = createWidgetItem(widgetName, widgetObjList)
       widgetObjList.push(dragWidget)
-      reactData.activeWidget = dragWidget
-      reactData.sortWidget = null
-      reactData.dragWidget = null
+      formDesignReactData.activeWidget = dragWidget
+      formDesignReactData.sortWidget = null
+      formDesignReactData.dragWidget = null
       $xeFormDesign.dispatchEvent('add-widget', {}, evnt)
     }
 
@@ -143,15 +108,16 @@ export default defineComponent({
     }
 
     const renderWidgetGroups = () => {
-      const { widgetConfigs } = reactData
+      const { widgetConfigs } = formDesignReactData
       return widgetConfigs.map((group, gIndex) => {
+        const { title } = group
         return h('div', {
           key: gIndex,
           class: 'vxe-design-form--widget-group'
         }, [
           h('div', {
             class: 'vxe-design-form--widget-title'
-          }, `${group.title}`),
+          }, title ? (`${XEUtils.isFunction(title) ? title({}) : title}`) : ''),
           h('div', {
             class: 'vxe-design-form--widget-list',
             onDragover (evnt:DragEvent) {

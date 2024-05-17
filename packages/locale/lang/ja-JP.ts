@@ -264,9 +264,15 @@ export default {
     },
     formDesign: {
       widget: {
-        input: 'Input',
-        textarea: 'Textarea',
-        select: 'Select'
+        baseGroup: 'Base control',
+        layoutGroup: 'Layout control',
+        advancedGroup: 'Advanced control',
+        copyTitle: 'Copy_{0}',
+        component: {
+          input: 'Input',
+          textarea: 'Textarea',
+          select: 'Select'
+        }
       }
     },
 

@@ -10,7 +10,7 @@ import { createItem, handleFieldOrItem, isHiddenItem, isActivetem } from './util
 import { useSize } from '../../hooks/size'
 import VxeTooltipComponent from '../../tooltip/src/tooltip'
 import VxeFormConfigItem from './form-config-item'
-import VxeLoading from '../../loading/index'
+import VxeLoadingComponent from '../../loading/src/loading'
 import { getSlotVNs } from '../../ui/src/vn'
 
 import { VxeFormConstructor, VxeFormPropTypes, VxeFormEmits, FormReactData, FormMethods, FormPrivateRef, VxeFormPrivateMethods, VxeFormDefines, VxeFormItemPropTypes, VxeTooltipInstance, FormInternalData, VxeFormPrivateComputed } from '../../../types'
@@ -652,7 +652,7 @@ export default defineComponent({
         /**
          * 加载中
          */
-        h(VxeLoading, {
+        h(VxeLoadingComponent, {
           class: 'vxe-form--loading',
           modelValue: loading
         }),

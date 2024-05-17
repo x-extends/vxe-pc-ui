@@ -708,27 +708,13 @@ function oldFormItemRadioAndCheckboxRender (renderOpts: any, params: any) {
 }
 
 const defaultFormDesignWidgetName = ({ name }: {name: string}) => {
-  return getI18n(`vxe.formDesign.widget.${name}`)
+  return getI18n(`vxe.formDesign.widget.component.${name}`)
 }
 
 /**
  * 内置的组件渲染
  */
 const renderMap: { [name: string]: RendererOptions } = {
-  aa: {
-    createFormDesignWidgetSettingFormConfig (params) {
-      return {
-        data: {
-        },
-        items: [
-          { title: '111', field: 'itemTitle', itemRender: { name: 'input', attrs: { placeholder: getI18n('vxe.base.pleaseInput') } } }
-        ]
-      }
-    },
-    renderFormDesignSettingForm () {
-      return h('div', '12111')
-    }
-  },
   input: {
     autofocus: 'input',
     renderEdit: nativeEditRender,
@@ -758,6 +744,7 @@ const renderMap: { [name: string]: RendererOptions } = {
 
     formDesignWidgetName: defaultFormDesignWidgetName,
     formDesignWidgetIcon: 'vxe-icon-feedback',
+    formDesignWidgetGroup: 'layout',
     renderFormDesignWidgetView: nativeFormDesignRender,
     createFormDesignWidgetSettingPropFormConfig (params) {
       return {
@@ -799,7 +786,21 @@ const renderMap: { [name: string]: RendererOptions } = {
         renderOpts.optionGroups ? renderNativeOptgroups(renderOpts, params, renderNativeFormOptions) : renderNativeFormOptions(renderOpts.options, renderOpts, params))
       ]
     },
-    exportMethod: handleExportSelectMethod
+    exportMethod: handleExportSelectMethod,
+
+    formDesignWidgetName: defaultFormDesignWidgetName,
+    formDesignWidgetIcon: 'vxe-icon-feedback',
+    renderFormDesignWidgetView: nativeFormDesignRender,
+    createFormDesignWidgetSettingPropFormConfig (params) {
+      return {
+        data: {
+          itemTitle: defaultFormDesignWidgetName(params)
+        },
+        items: [
+          { title: '控件名称', field: 'itemTitle', itemRender: { name: 'input', attrs: { placeholder: getI18n('vxe.base.pleaseInput') } } }
+        ]
+      }
+    }
   },
   VxeInput: {
     autofocus: '.vxe-input--inner',
@@ -1028,6 +1029,10 @@ export const renderer: VxeGlobalRenderer = {
         renderMap[name] = options
       }
     }
+    return renderer
+  },
+  forEach (callback) {
+    XEUtils.objectEach(renderMap, callback)
     return renderer
   },
   delete (name) {

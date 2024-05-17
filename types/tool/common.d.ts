@@ -42,6 +42,11 @@ export type VxeComponentSize = null | '' | 'medium' | 'small' | 'mini'
 export type VxeComponentAlign = null | '' | 'left' | 'right' | 'center'
 
 /**
+ * 组件状态
+ */
+export type VxeComponentStatus = null | '' | 'primary' | 'success' | 'info' | 'warning' | 'danger' | 'error'
+
+/**
  * 组件样式类型
  */
 export type VxeComponentStyle = Record<string, string | number>

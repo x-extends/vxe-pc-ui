@@ -1,5 +1,5 @@
 import { RenderFunction, SetupContext, Ref } from 'vue'
-import { defineVxeComponent, VxeComponentBase, VxeComponentEvent, VxeComponentSize, VxeComponentStyle, ValueOf } from '../tool'
+import { defineVxeComponent, VxeComponentBase, VxeComponentEvent, VxeComponentStatus, VxeComponentSize, VxeComponentStyle, ValueOf } from '../tool'
 
 /* eslint-disable no-use-before-define,@typescript-eslint/ban-types */
 
@@ -31,7 +31,7 @@ export namespace VxeButtonPropTypes {
   export type Name = string | number
   export type Content = string | number
   export type Placement = string
-  export type Status = string
+  export type Status = VxeComponentStatus
   export type Title = string
   export type Icon = string
   export type Round = boolean

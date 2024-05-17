@@ -51,4 +51,6 @@ export interface VxeGlobalIcon {
 
   // design-form
   DESIGN_FORM_WIDGET_ADD: string
+  DESIGN_FORM_WIDGET_COPY: string
+  DESIGN_FORM_WIDGET_DELETE: string
 }

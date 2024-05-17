@@ -63,6 +63,8 @@ export interface DefineRendererOption<T> {
   // 设计表单
   formDesignWidgetName?: string | ((params: VxeGlobalRendererHandles.FormDesignWidgetNameParams) => string)
   formDesignWidgetIcon?: string
+  formDesignWidgetGroup?: null | '' | 'base' | 'layout' | 'advanced' | string
+  formDesignWidgetCustomGroup?: string | ((params: VxeGlobalRendererHandles.FormDesignWidgetCustomGroupParams) => string)
   createFormDesignWidgetSettingFormConfig?(params: VxeGlobalRendererHandles.CreateFormDesignWidgetSettingFormConfigParams): VxeFormProps
   createFormDesignWidgetSettingPropFormConfig?(params: VxeGlobalRendererHandles.CreateFormDesignWidgetSettingPropFormConfig): VxeFormProps
   renderFormDesignWidgetItem?(renderOpts: VxeGlobalRendererHandles.RenderFormDesignWidgetOptions, params: VxeGlobalRendererHandles.RenderFormDesignWidgetParams): T
@@ -278,8 +280,10 @@ export namespace VxeGlobalRendererHandles {
     name: string
   }
 
-  export interface CreateFormDesignWidgetSettingFormConfigParams {
+  export interface FormDesignWidgetCustomGroupParams {
+  }
 
+  export interface CreateFormDesignWidgetSettingFormConfigParams {
   }
 
   export interface CreateFormDesignWidgetSettingPropFormConfig {
@@ -304,5 +308,8 @@ export interface VxeGlobalRenderer {
   }): VxeGlobalRenderer
   get(name: string | null | undefined): DefineRendererOption<VxeGlobalRendererHandles.RenderResult>
   add(name: string, options: RendererOptions): VxeGlobalRenderer
+  forEach(callback: (item: DefineRendererOption<VxeGlobalRendererHandles.RenderResult>, name: string, renderMap: {
+    [name: string]: RendererOptions
+  }) => void): VxeGlobalRenderer
   delete(name: string): void
 }

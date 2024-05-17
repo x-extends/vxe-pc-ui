@@ -73,7 +73,9 @@ export default defineComponent({
     'close',
     'confirm',
     'cancel',
-    'zoom'
+    'zoom',
+    'resize',
+    'move'
   ] as VxeModalEmits,
   setup (props, context) {
     const { slots, emit } = context
@@ -521,6 +523,7 @@ export default defineComponent({
           boxElem.style.left = `${left}px`
           boxElem.style.top = `${top}px`
           boxElem.className = boxElem.className.replace(/\s?is--drag/, '') + ' is--drag'
+          emit('move', { type: 'move', $event: evnt })
         }
         document.onmouseup = () => {
           document.onmousemove = domMousemove
@@ -676,7 +679,7 @@ export default defineComponent({
         if (remember && storage) {
           savePosStorage()
         }
-        modalMethods.dispatchEvent('zoom', params, evnt)
+        modalMethods.dispatchEvent('resize', params, evnt)
       }
       document.onmouseup = () => {
         reactData.zoomLocat = null

@@ -1,6 +1,6 @@
 <template>
   <div>
-    <vxe-form-design :widgets="widgets"></vxe-form-design>
+    <vxe-form-design :height="600" :widgets="widgets"></vxe-form-design>
   </div>
 </template>
 
@@ -8,17 +8,17 @@
 import { ref } from 'vue'
 
 const widgets = ref([
-  {
-    title: '布局控件',
-    children: [
-      'input'
-    ]
-  },
-  {
-    title: '基础控件',
-    children: [
-      'textarea'
-    ]
-  }
+  // {
+  //   title: '布局控件',
+  //   children: [
+  //     'input'
+  //   ]
+  // },
+  // {
+  //   title: '基础控件',
+  //   children: [
+  //     'textarea'
+  //   ]
+  // }
 ])
 </script>

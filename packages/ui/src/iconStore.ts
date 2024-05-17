@@ -51,7 +51,9 @@ const iconConfigStore: VxeGlobalIcon = {
   FORM_UNFOLDING: iconPrefix + 'arrow-up',
 
   // design-form
-  DESIGN_FORM_WIDGET_ADD: iconPrefix + 'square-plus-fill'
+  DESIGN_FORM_WIDGET_ADD: iconPrefix + 'square-plus-fill',
+  DESIGN_FORM_WIDGET_COPY: iconPrefix + 'copy',
+  DESIGN_FORM_WIDGET_DELETE: iconPrefix + 'delete'
 }
 
 export default iconConfigStore

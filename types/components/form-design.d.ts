@@ -1,7 +1,6 @@
 import { RenderFunction, SetupContext, Ref, ComponentPublicInstance } from 'vue'
 import { defineVxeComponent, VxeComponentBase, VxeComponentEvent, VxeComponentSize, ValueOf } from '../tool'
 import { VxeFormProps } from '../components/form'
-import { VxeFormItemProps } from '../components/form-item'
 
 /* eslint-disable no-use-before-define,@typescript-eslint/ban-types */
 
@@ -26,8 +25,9 @@ export interface VxeFormDesignPrivateRef extends FormDesignPrivateRef { }
 export namespace VxeFormDesignPropTypes {
   export type Size = VxeComponentSize
 
+  export type Height = string | number
   export interface WidgetItem {
-    title: string
+    title: string | ((params: any) => string)
     children: string[]
   }
   export type Widgets = WidgetItem[]
@@ -38,6 +38,7 @@ export namespace VxeFormDesignPropTypes {
 
 export type VxeFormDesignProps = {
   size?: VxeFormDesignPropTypes.Size
+  height?: VxeFormDesignPropTypes.Height
   widgets?: VxeFormDesignPropTypes.Widgets
   formRender?: VxeFormDesignPropTypes.FormRender
 }
@@ -48,7 +49,7 @@ export interface VxeFormDesignPrivateComputed extends FormDesignPrivateComputed 
 
 export interface FormDesignReactData {
   formConfig: VxeFormProps,
-  widgetConfigs: VxeFormDesignPropTypes.Widgets
+  widgetConfigs: VxeFormDesignDefines.WidgetConfigItem[]
   widgetObjList: VxeFormDesignDefines.WidgetObjItem[]
   dragWidget: VxeFormDesignDefines.WidgetObjItem | null
   sortWidget: VxeFormDesignDefines.WidgetObjItem | null
@@ -62,17 +63,24 @@ export interface VxeFormDesignMethods extends FormDesignMethods { }
 
 export interface FormDesignPrivateMethods {
   handleClickWidget (evnt: KeyboardEvent, item: VxeFormDesignDefines.WidgetObjItem): void
+  handleCopyWidget (evnt: KeyboardEvent, item: VxeFormDesignDefines.WidgetObjItem): void
+  handleRemoveWidget (evnt: KeyboardEvent, item: VxeFormDesignDefines.WidgetObjItem): void
 }
 export interface VxeFormDesignPrivateMethods extends FormDesignPrivateMethods { }
 
 export type VxeFormDesignEmits = [
+  'click-widget',
   'add-widget',
+  'copy-widget',
   'remove-widget'
 ]
 
 export namespace VxeFormDesignDefines {
   export interface FormDesignEventParams extends VxeComponentEvent {
     $formDesign: VxeFormDesignConstructor
+  }
+
+  export interface WidgetConfigItem extends VxeFormDesignPropTypes.WidgetItem {
   }
 
   export interface WidgetObjItem {
