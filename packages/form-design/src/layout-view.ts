@@ -1,10 +1,9 @@
-import { defineComponent, h, inject, TransitionGroup } from 'vue'
+import { defineComponent, h, inject, TransitionGroup, resolveComponent } from 'vue'
 import { renderer } from '../../ui/src/renderer'
 import { getSlotVNs } from '../../ui/src/vn'
-import VxeFormComponent from '../../form/src/form'
-import ViewItemComponent from './view-item'
+import { ViewItemComponent } from './view-item'
 
-import { VxeFormDesignConstructor, VxeFormDesignPrivateMethods, VxeGlobalRendererHandles } from '../../../types'
+import { VxeFormDesignConstructor, VxeFormDesignPrivateMethods, VxeGlobalRendererHandles, VxeFormDesignDefines, VxeFormComponent } from '../../../types'
 import XEUtils from 'xe-utils'
 
 export default defineComponent({
@@ -23,7 +22,7 @@ export default defineComponent({
       const { widgetObjList, dragWidget } = formDesignReactData
       if (dragWidget) {
         evnt.preventDefault()
-        const rest = XEUtils.findTree(widgetObjList, item => item.id === dragWidget.id, { children: 'children' })
+        const rest = XEUtils.findTree(widgetObjList, item => item && item.id === dragWidget.id, { children: 'children' })
         if (!rest) {
           formDesignReactData.sortWidget = dragWidget
           widgetObjList.push(dragWidget)
@@ -37,7 +36,7 @@ export default defineComponent({
         class: 'vxe-design-form--preview',
         onDragover: dragoverEvent
       }, [
-        h(VxeFormComponent, {
+        h(resolveComponent('vxe-form') as VxeFormComponent<VxeFormDesignDefines.DefaultSettingFormObjVO>, {
           customLayout: true,
           vertical: formConfig.vertical
         }, {
@@ -48,19 +47,19 @@ export default defineComponent({
               name: 'vxe-design-form--preview-list'
             }, {
               default: () => {
-                return widgetObjList.map((item, itemIndex) => {
+                return widgetObjList.map((widget, widgetIndex) => {
                   return h(ViewItemComponent, {
-                    key: item.id,
-                    item,
-                    itemIndex,
+                    key: widget.id,
+                    item: widget,
+                    itemIndex: widgetIndex,
                     items: widgetObjList
                   }, {
                     default () {
-                      const { name } = item
+                      const { name } = widget
                       const compConf = renderer.get(name) || {}
                       const renderWidgetView = compConf.renderFormDesignWidgetView
-                      const renderOpts: VxeGlobalRendererHandles.RenderFormDesignWidgetViewOptions = item
-                      const params: VxeGlobalRendererHandles.RenderFormDesignWidgetViewParams = { item }
+                      const renderOpts: VxeGlobalRendererHandles.RenderFormDesignWidgetViewOptions = widget
+                      const params: VxeGlobalRendererHandles.RenderFormDesignWidgetViewParams = { widget }
                       return renderWidgetView ? getSlotVNs(renderWidgetView(renderOpts, params)) : []
                     }
                   })

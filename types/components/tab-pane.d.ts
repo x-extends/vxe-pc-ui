@@ -1,9 +1,10 @@
-import { RenderFunction, SetupContext, Ref, ComponentPublicInstance } from 'vue'
+import { RenderFunction, SetupContext, Ref, ComponentPublicInstance, DefineComponent } from 'vue'
 import { defineVxeComponent, VxeComponentBase, VxeComponentEvent, VxeComponentSlot } from '../tool'
 
 /* eslint-disable no-use-before-define,@typescript-eslint/ban-types */
 
 export declare const VxeTabPane: defineVxeComponent<VxeTabPaneProps, VxeTabPaneEventProps>
+export type VxeTabPaneComponent = DefineComponent<VxeTabPaneProps, VxeTabPaneEmits>
 
 export type VxeTabPaneInstance = ComponentPublicInstance<VxeTabPaneProps, VxeTabPaneConstructor>
 

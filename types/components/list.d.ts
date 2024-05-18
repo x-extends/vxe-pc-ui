@@ -1,9 +1,10 @@
-import { RenderFunction, SetupContext, Ref, ComponentPublicInstance } from 'vue'
+import { RenderFunction, SetupContext, Ref, ComponentPublicInstance, DefineComponent } from 'vue'
 import { defineVxeComponent, VxeComponentBase, VxeComponentEvent, VxeComponentSize } from '../tool'
 
 /* eslint-disable no-use-before-define,@typescript-eslint/ban-types */
 
 export declare const VxeList: defineVxeComponent<VxeListProps, VxeListEventProps>
+export type VxeListComponent = DefineComponent<VxeListProps, VxeListEmits>
 
 export type VxeListInstance = ComponentPublicInstance<VxeListProps, VxeListConstructor>
 
@@ -134,7 +135,7 @@ export type VxeListEmits = [
 ]
 
 export namespace VxeListDefines {
-  export interface ListEventParams extends VxeEvent {
+  export interface ListEventParams extends VxeComponentEvent {
     $list: VxeListConstructor
   }
 

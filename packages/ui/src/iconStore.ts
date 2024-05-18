@@ -39,7 +39,7 @@ const iconConfigStore: VxeGlobalIcon = {
   MODAL_CLOSE: iconPrefix + 'close',
   MODAL_INFO: iconPrefix + 'info-circle-fill',
   MODAL_SUCCESS: iconPrefix + 'success-circle-fill',
-  MODAL_WARNING: iconPrefix + 'warnion-circle-fill',
+  MODAL_WARNING: iconPrefix + 'warning-circle-fill',
   MODAL_ERROR: iconPrefix + 'error-circle-fill',
   MODAL_QUESTION: iconPrefix + 'question-circle-fill',
   MODAL_LOADING: iconPrefix + 'spinner roll',
@@ -53,7 +53,10 @@ const iconConfigStore: VxeGlobalIcon = {
   // design-form
   DESIGN_FORM_WIDGET_ADD: iconPrefix + 'square-plus-fill',
   DESIGN_FORM_WIDGET_COPY: iconPrefix + 'copy',
-  DESIGN_FORM_WIDGET_DELETE: iconPrefix + 'delete'
+  DESIGN_FORM_WIDGET_DELETE: iconPrefix + 'delete',
+  DESIGN_FORM_WIDGET_OPTION_DELETE: iconPrefix + 'delete',
+  DESIGN_FORM_WIDGET_OPTION_EXPAND_OPEN: iconPrefix + 'square-plus',
+  DESIGN_FORM_WIDGET_OPTION_EXPAND_CLOSE: iconPrefix + 'square-minus'
 }
 
 export default iconConfigStore

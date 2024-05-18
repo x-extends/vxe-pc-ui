@@ -1,9 +1,10 @@
-import { RenderFunction, SetupContext, Ref, ComponentPublicInstance } from 'vue'
+import { RenderFunction, SetupContext, Ref, ComponentPublicInstance, DefineComponent } from 'vue'
 import { defineVxeComponent, VxeComponentSize, VxeComponentBase, VxeComponentEvent, ValueOf, VxeComponentSlot } from '../tool'
 
 /* eslint-disable no-use-before-define,@typescript-eslint/ban-types */
 
 export declare const VxeModal: defineVxeComponent<VxeModalProps, VxeModalEventProps>
+export type VxeModalComponent = DefineComponent<VxeModalProps, VxeModalEmits>
 
 export type VxeModalInstance = ComponentPublicInstance<VxeModalProps, VxeModalConstructor>
 
@@ -59,7 +60,9 @@ export namespace VxeModalPropTypes {
    * @deprecated
    */
   export type Message = Content
+  export type ShowCancelButton = boolean | null
   export type CancelButtonText = string
+  export type ShowConfirmButton = boolean | null
   export type ConfirmButtonText = string
   export type LockView = boolean
   export type LockScroll = boolean
@@ -105,7 +108,9 @@ export type VxeModalProps = {
   title?: VxeModalPropTypes.Title
   duration?: VxeModalPropTypes.Duration
   content?: VxeModalPropTypes.Content
+  showCancelButton?: VxeModalPropTypes.ShowCancelButton
   cancelButtonText?: VxeModalPropTypes.CancelButtonText
+  showConfirmButton?: VxeModalPropTypes.ShowConfirmButton
   confirmButtonText?: VxeModalPropTypes.ConfirmButtonText
   lockView?: VxeModalPropTypes.LockView
   lockScroll?: VxeModalPropTypes.LockScroll

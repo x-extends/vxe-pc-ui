@@ -33,7 +33,9 @@ export default defineComponent({
     duration: { type: [Number, String] as PropType<VxeModalPropTypes.Duration>, default: () => globalConfigStore.modal.duration },
     message: [Number, String] as PropType<VxeModalPropTypes.Message>,
     content: [Number, String] as PropType<VxeModalPropTypes.Content>,
+    showCancelButton: { type: Boolean as PropType<VxeModalPropTypes.ShowCancelButton>, default: null },
     cancelButtonText: { type: String as PropType<VxeModalPropTypes.CancelButtonText>, default: () => globalConfigStore.modal.cancelButtonText },
+    showConfirmButton: { type: Boolean as PropType<VxeModalPropTypes.ShowConfirmButton>, default: () => globalConfigStore.modal.showConfirmButton },
     confirmButtonText: { type: String as PropType<VxeModalPropTypes.ConfirmButtonText>, default: () => globalConfigStore.modal.confirmButtonText },
     lockView: { type: Boolean as PropType<VxeModalPropTypes.LockView>, default: () => globalConfigStore.modal.lockView },
     lockScroll: Boolean as PropType<VxeModalPropTypes.LockScroll>,
@@ -805,25 +807,29 @@ export default defineComponent({
     }
 
     const renderBtns = () => {
-      const { type } = props
+      const { showCancelButton, showConfirmButton, type } = props
       const btnVNs = []
-      if (type === 'confirm') {
+      if (XEUtils.isBoolean(showCancelButton) ? showCancelButton : type === 'confirm') {
         btnVNs.push(
           h(VxeButtonConstructor, {
+            key: 1,
             ref: refCancelBtn,
             content: props.cancelButtonText || getI18n('vxe.button.cancel'),
             onClick: cancelEvent
           })
         )
       }
-      btnVNs.push(
-        h(VxeButtonConstructor, {
-          ref: refConfirmBtn,
-          status: 'primary',
-          content: props.confirmButtonText || getI18n('vxe.button.confirm'),
-          onClick: confirmEvent
-        })
-      )
+      if (XEUtils.isBoolean(showConfirmButton) ? showConfirmButton : (type === 'confirm' || type === 'alert')) {
+        btnVNs.push(
+          h(VxeButtonConstructor, {
+            key: 2,
+            ref: refConfirmBtn,
+            status: 'primary',
+            content: props.confirmButtonText || getI18n('vxe.button.confirm'),
+            onClick: confirmEvent
+          })
+        )
+      }
       return btnVNs
     }
 

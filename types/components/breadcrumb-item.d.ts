@@ -1,9 +1,10 @@
-import { RenderFunction, SetupContext, Ref } from 'vue'
+import { RenderFunction, SetupContext, Ref, DefineComponent } from 'vue'
 import { defineVxeComponent, VxeComponentBase, VxeComponentEvent } from '../tool'
 
 /* eslint-disable no-use-before-define,@typescript-eslint/ban-types */
 
 export declare const VxeBreadcrumbItem: defineVxeComponent<VxeBreadcrumbItemProps, VxeBreadcrumbItemEventProps>
+export type VxeBreadcrumbItemComponent = DefineComponent<VxeBreadcrumbItemProps, VxeBreadcrumbItemEmits>
 
 export type VxeBreadcrumbItemInstance = ComponentPublicInstance<VxeBreadcrumbItemProps, VxeBreadcrumbItemConstructor>
 

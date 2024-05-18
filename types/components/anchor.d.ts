@@ -1,10 +1,11 @@
-import { RenderFunction, SetupContext, Ref, ComponentPublicInstance } from 'vue'
+import { RenderFunction, SetupContext, Ref, ComponentPublicInstance, DefineComponent } from 'vue'
 import { defineVxeComponent, VxeComponentBase, VxeComponentEvent, ValueOf } from '../tool'
 import { VxeAnchorLinkProps, VxeAnchorLinkPropTypes, VxeAnchorLinkDefines } from './anchor-link'
 
 /* eslint-disable no-use-before-define,@typescript-eslint/ban-types */
 
 export declare const VxeAnchor: defineVxeComponent<VxeAnchorProps, VxeAnchorEventProps>
+export type VxeAnchorComponent = DefineComponent<VxeAnchorProps, VxeAnchorEmits>
 
 export type VxeAnchorInstance = ComponentPublicInstance<VxeAnchorProps, VxeAnchorConstructor>
 

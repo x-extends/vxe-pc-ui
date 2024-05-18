@@ -1,9 +1,10 @@
-import { RenderFunction, SetupContext, Ref, ComponentPublicInstance } from 'vue'
+import { RenderFunction, SetupContext, Ref, ComponentPublicInstance, DefineComponent } from 'vue'
 import { defineVxeComponent, VxeComponentBase, VxeComponentEvent } from '../tool'
 
 /* eslint-disable no-use-before-define,@typescript-eslint/ban-types */
 
 export declare const VxeOptgroup: defineVxeComponent<VxeOptgroupProps, VxeOptgroupEventProps>
+export type VxeOptgroupComponent = DefineComponent<VxeOptgroupProps, VxeOptgroupEmits>
 
 export type VxeOptgroupInstance = ComponentPublicInstance<VxeOptgroupProps, VxeOptgroupConstructor>
 

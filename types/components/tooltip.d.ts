@@ -1,9 +1,10 @@
-import { RenderFunction, SetupContext, Ref, ComponentPublicInstance } from 'vue'
+import { RenderFunction, SetupContext, Ref, ComponentPublicInstance, DefineComponent } from 'vue'
 import { defineVxeComponent, VxeComponentBase, VxeComponentEvent, VxeComponentSize, VxeComponentStyle, ValueOf } from '../tool'
 
 /* eslint-disable no-use-before-define,@typescript-eslint/ban-types */
 
 export declare const VxeTooltip: defineVxeComponent<VxeTooltipProps, VxeTooltipEventProps>
+export type VxeTooltipComponent = DefineComponent<VxeTooltipProps, VxeTooltipEmits>
 
 export type VxeTooltipInstance = ComponentPublicInstance<VxeTooltipProps, VxeTooltipConstructor>
 

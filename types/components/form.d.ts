@@ -1,9 +1,10 @@
-import { RenderFunction, SetupContext, Ref, ComponentPublicInstance } from 'vue'
+import { RenderFunction, SetupContext, Ref, ComponentPublicInstance, DefineComponent } from 'vue'
 import { defineVxeComponent, VxeComponentBase, VxeComponentEvent, VxeComponentSize, ValueOf } from '../tool'
 
 /* eslint-disable no-use-before-define,@typescript-eslint/ban-types */
 
 export declare const VxeForm: defineVxeComponent<VxeFormProps, VxeFormEventProps>
+export type VxeFormComponent<D = any> = DefineComponent<VxeFormProps<D>, VxeFormEmits>
 
 export type VxeFormInstance = ComponentPublicInstance<VxeFormProps, VxeFormConstructor>
 

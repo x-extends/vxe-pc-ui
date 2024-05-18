@@ -82,6 +82,7 @@ const globalConfigStore: Required<VxeGlobalConfig> = {
     animat: true,
     showClose: true,
     draggable: true,
+    showConfirmButton: null,
     // storage: false,
     storageKey: 'VXE_MODAL_POSITION'
   },

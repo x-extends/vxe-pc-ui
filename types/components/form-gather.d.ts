@@ -1,9 +1,10 @@
-import { RenderFunction, SetupContext, Ref } from 'vue'
+import { RenderFunction, SetupContext, Ref, DefineComponent } from 'vue'
 import { defineVxeComponent, VxeComponentBase, VxeComponentEvent } from '../tool'
 
 /* eslint-disable no-use-before-define,@typescript-eslint/ban-types */
 
 export declare const VxeFormGather: defineVxeComponent<VxeFormGatherProps, VxeFormGatherEventProps>
+export type VxeFormGatherComponent = DefineComponent<VxeFormGatherProps, VxeFormGatherEmits>
 
 export interface VxeFormGatherConstructor extends VxeComponentBase, VxeFormGatherMethods {
   props: VxeFormGatherProps

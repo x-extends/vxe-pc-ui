@@ -294,12 +294,16 @@ export namespace VxeGlobalRendererHandles {
 
   export interface RenderFormDesignWidgetItemParams {}
 
-  export interface RenderFormDesignWidgetViewOptions extends VxeFormDesignDefines.WidgetObjItem {}
+  export interface RenderFormDesignWidgetViewOptions {
+    name: string
+  }
   export interface RenderFormDesignWidgetViewParams {
-    item: VxeFormDesignDefines.WidgetObjItem
+    widget: VxeFormDesignDefines.WidgetObjItem
   }
 
-  export interface RenderFormDesignWidgetFormViewOptions extends VxeFormDesignDefines.WidgetObjItem {}
+  export interface RenderFormDesignWidgetFormViewOptions {
+    name: string
+  }
   export interface RenderFormDesignWidgetFormViewParams {
     widget: VxeFormDesignDefines.WidgetObjItem
   }

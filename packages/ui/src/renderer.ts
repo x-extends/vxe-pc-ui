@@ -113,8 +113,8 @@ function getCellLabelVNs (renderOpts: any, params: any, cellLabel: any) {
  */
 function getElementOns (renderOpts: any, params: any, modelFunc?: any, changeFunc?: any) {
   const { events } = renderOpts
-  const modelEvent = getModelEvent(renderOpts)
-  const changeEvent = getChangeEvent(renderOpts)
+  const modelEvent = getModelEvent(renderOpts.name)
+  const changeEvent = getChangeEvent(renderOpts.name)
   const isSameEvent = changeEvent === modelEvent
   const ons: any = {}
   if (events) {
@@ -155,8 +155,8 @@ function getElementOns (renderOpts: any, params: any, modelFunc?: any, changeFun
  */
 function getComponentOns (renderOpts: any, params: any, modelFunc?: any, changeFunc?: any) {
   const { events } = renderOpts
-  const modelEvent = getModelEvent(renderOpts)
-  const changeEvent = getChangeEvent(renderOpts)
+  const modelEvent = getModelEvent(renderOpts.name)
+  const changeEvent = getChangeEvent(renderOpts.name)
   const ons: any = {}
   XEUtils.objectEach(events, (func, key: any) => {
     ons[getOnName(key)] = function (...args: any[]) {
@@ -275,7 +275,7 @@ function getNativeItemOns (renderOpts: any, params: any) {
 
 /**
  * 单元格可编辑渲染-原生的标签
- * input、textarea、select
+ * input、textarea
  */
 function nativeEditRender (renderOpts: any, params: any) {
   const { row, column } = params
@@ -663,7 +663,7 @@ function oldFormItemRadioAndCheckboxRender (renderOpts: any, params: any) {
 /**
  * 内置的组件渲染
  */
-const renderMap: { [name: string]: RendererOptions } = {
+const renderMap: Record<string, RendererOptions> = {
   input: {
     autofocus: 'input',
     renderEdit: nativeEditRender,

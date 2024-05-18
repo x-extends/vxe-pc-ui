@@ -1,4 +1,4 @@
-import { RenderFunction, SetupContext, Ref, ComponentPublicInstance } from 'vue'
+import { RenderFunction, SetupContext, Ref, ComponentPublicInstance, DefineComponent } from 'vue'
 import { defineVxeComponent, VxeComponentBase, VxeComponentEvent, VxeComponentSize, VxeComponentStyle, ValueOf } from '../tool'
 import { VxeGlobalRendererHandles } from '../ui'
 import { VxeOptgroupProps } from './optgroup'
@@ -7,6 +7,7 @@ import { VxeOptionProps, VxeOptionPropTypes } from './option'
 /* eslint-disable no-use-before-define,@typescript-eslint/ban-types */
 
 export declare const VxeSelect: defineVxeComponent<VxeSelectProps, VxeSelectEventProps>
+export type VxeSelectComponent = DefineComponent<VxeSelectProps, VxeSelectEmits>
 
 export type VxeSelectInstance = ComponentPublicInstance<VxeSelectProps, VxeSelectConstructor>
 

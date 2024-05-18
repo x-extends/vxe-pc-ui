@@ -1,4 +1,4 @@
-import { warnLog } from '../../ui/src/log'
+import { warnLog } from './log'
 import XEUtils from 'xe-utils'
 
 /**

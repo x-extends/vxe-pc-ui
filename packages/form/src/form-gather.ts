@@ -1,7 +1,7 @@
-import { defineComponent, h, onUnmounted, inject, ref, Ref, reactive, onMounted, provide, nextTick } from 'vue'
-import { errLog } from '../../ui/src/log'
+import { defineComponent, h, onUnmounted, inject, ref, Ref, reactive, onMounted, provide } from 'vue'
 import { createItem, watchItem, destroyItem, assemItem, XEFormItemProvide } from './util'
 import { formItemProps } from './form-item'
+import XEUtils from 'xe-utils'
 
 import { VxeFormConstructor, VxeFormPrivateMethods } from '../../../types'
 
@@ -29,17 +29,11 @@ export default defineComponent({
       destroyItem($xeForm, formItem)
     })
 
-    if (process.env.VUE_APP_VXE_TABLE_ENV === 'development') {
-      nextTick(() => {
-        if ($xeForm && $xeForm.props.customLayout) {
-          errLog('vxe.error.errConflicts', ['custom-layout', '<form-gather ...>'])
-        }
-      })
-    }
-
     const renderVN = () => {
+      const { span, className, field } = props
       return h('div', {
-        ref: refElem
+        ref: refElem,
+        class: ['vxe-form--gather vxe-form--item-row', formItem.id, span ? `vxe-form--item-col_${span} is--span` : '', className ? (XEUtils.isFunction(className) ? className({ $form: $xeForm, data: $xeForm ? $xeForm.props.data : {}, item: formItem, field: field as string, property: field as string }) : className) : '']
       }, defaultSlot ? defaultSlot() : [])
     }
 

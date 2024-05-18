@@ -1,9 +1,10 @@
-import { RenderFunction, SetupContext, Ref } from 'vue'
+import { RenderFunction, SetupContext, Ref, DefineComponent } from 'vue'
 import { defineVxeComponent, VxeComponentBase, VxeComponentEvent } from '../tool'
 
 /* eslint-disable no-use-before-define,@typescript-eslint/ban-types */
 
 export declare const VxeCol: defineVxeComponent<VxeColProps, VxeColEventProps>
+export type VxeColComponent = DefineComponent<VxeColProps, VxeColEmits>
 
 export type VxeColInstance = ComponentPublicInstance<VxeColProps, VxeColConstructor>
 

@@ -3,7 +3,6 @@ import XEUtils from 'xe-utils'
 import iconConfigStore from '../../ui/src/iconStore'
 import { renderer } from '../../ui/src/renderer'
 import { getSlotVNs } from '../../ui/src/vn'
-import { createWidgetItem } from './util'
 
 import { VxeFormDesignPropTypes, VxeFormDesignConstructor, VxeFormDesignPrivateMethods } from '../../../types'
 
@@ -20,11 +19,10 @@ export default defineComponent({
     const { reactData: formDesignReactData } = $xeFormDesign
 
     const dragstartEvent = (evnt: DragEvent) => {
-      const { widgetObjList } = formDesignReactData
       const divEl = evnt.currentTarget as HTMLDivElement
       const dataTransfer = evnt.dataTransfer
       const widgetName = divEl.getAttribute('data-widget-name') || ''
-      const dragWidget = createWidgetItem(widgetName, widgetObjList)
+      const dragWidget = $xeFormDesign.createWidget(widgetName)
       if (dataTransfer) {
         dataTransfer.setData('text/plain', widgetName)
       }
@@ -45,7 +43,7 @@ export default defineComponent({
       const { widgetObjList, dragWidget } = formDesignReactData
       if (dragWidget) {
         if (group.children.includes(dragWidget.name)) {
-          const rest = XEUtils.findTree(widgetObjList, item => item.id === dragWidget.id, { children: 'children' })
+          const rest = XEUtils.findTree(widgetObjList, item => item && item.id === dragWidget.id, { children: 'children' })
           if (rest) {
             rest.items.splice(rest.index, 1)
           }
@@ -55,7 +53,7 @@ export default defineComponent({
 
     const addNewWidget = (evnt: KeyboardEvent, widgetName: string) => {
       const { widgetObjList } = formDesignReactData
-      const dragWidget = createWidgetItem(widgetName, widgetObjList)
+      const dragWidget = $xeFormDesign.createWidget(widgetName)
       widgetObjList.push(dragWidget)
       formDesignReactData.activeWidget = dragWidget
       formDesignReactData.sortWidget = null

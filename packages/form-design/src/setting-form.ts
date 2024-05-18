@@ -5,17 +5,7 @@ import VxeSwitchComponent from '../../switch/src/switch'
 
 import { VxeFormDesignDefines, VxeFormPropTypes, VxeFormProps } from '../../../types'
 
-export const getDefaultSettingFormData = (): VxeFormProps<VxeFormDesignDefines.DefaultSettingFormObjVO> => {
-  return {
-    vertical: true,
-    data: {
-      showPC: true,
-      showMobile: true
-    }
-  }
-}
-
-export const DefaultSettingFormViewComponent = defineComponent({
+export const DefaultSettingFormComponent = defineComponent({
   name: 'DefaultSettingFormView',
   props: {
     formConfig: {

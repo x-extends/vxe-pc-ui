@@ -1,10 +1,11 @@
-import { RenderFunction, SetupContext, Ref } from 'vue'
-import { defineVxeComponent, VxeComponentBase, VxeComponentEvent, VxeComponentSlot, VxeComponentStyle } from '../tool'
+import { RenderFunction, SetupContext, Ref, DefineComponent } from 'vue'
+import { defineVxeComponent, VxeComponentBase, VxeComponentEvent, VxeComponentStyle } from '../tool'
 import { VxeGlobalRendererHandles } from '../ui/renderer'
 
 /* eslint-disable no-use-before-define,@typescript-eslint/ban-types */
 
 export declare const VxeFormItem: defineVxeComponent<VxeFormItemProps, VxeFormItemEventProps>
+export type VxeFormItemComponent = DefineComponent<VxeFormItemProps, VxeFormItemEmits>
 
 export interface VxeFormItemConstructor extends VxeComponentBase, VxeFormItemMethods {
   props: VxeFormItemProps

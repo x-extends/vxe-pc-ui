@@ -1,6 +1,6 @@
 import { App } from 'vue'
 import VxeFormDesignComponent from './src/form-design'
-import renderMaps from './widget-form/render'
+import renderMaps from './render'
 import { dynamicApp } from '../dynamics'
 import VxeCore from '../ui/src/core'
 

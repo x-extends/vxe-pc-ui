@@ -1,9 +1,10 @@
-import { RenderFunction, SetupContext, Ref, ComponentPublicInstance } from 'vue'
+import { RenderFunction, SetupContext, Ref, ComponentPublicInstance, DefineComponent } from 'vue'
 import { defineVxeComponent, VxeComponentBase, VxeComponentEvent, VxeComponentStyle, VxeComponentSize } from '../tool'
 
 /* eslint-disable no-use-before-define,@typescript-eslint/ban-types */
 
 export declare const VxeInput: defineVxeComponent<VxeInputProps, VxeInputEventProps>
+export type VxeInputComponent = DefineComponent<VxeInputProps, VxeInputEmits>
 
 export type VxeInputInstance = ComponentPublicInstance<VxeInputProps, VxeInputConstructor>
 

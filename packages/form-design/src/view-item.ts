@@ -1,12 +1,11 @@
-import { h, defineComponent, PropType, inject, provide, createCommentVNode } from 'vue'
+import { h, defineComponent, PropType, inject, createCommentVNode } from 'vue'
 import XEUtils from 'xe-utils'
 import iconConfigStore from '../../ui/src/iconStore'
 import VxeButtonComponent from '../../button/src/button'
 
 import { VxeFormDesignDefines, VxeFormDesignConstructor, VxeFormDesignPrivateMethods } from '../../../types'
 
-export default defineComponent({
-  name: 'ViewItem',
+export const ViewItemComponent = defineComponent({
   props: {
     item: {
       type: Object as PropType<VxeFormDesignDefines.WidgetObjItem>,
@@ -30,19 +29,12 @@ export default defineComponent({
     }
 
     const { reactData: formDesignReactData } = $xeFormDesign
-    const formDesignViewItem: VxeFormDesignDefines.FormDesignViewItemInfo = {
-      itemIndex: props.itemIndex,
-      item: props.item,
-      items: props.items
-    }
-
-    provide('xeFormDesignViewItem', formDesignViewItem)
 
     const sortDragstartEvent = (evnt: DragEvent) => {
       const { widgetObjList } = formDesignReactData
       const divEl = evnt.currentTarget as HTMLDivElement
       const widgetId = Number(divEl.getAttribute('data-widget-id'))
-      const currRest = XEUtils.findTree(widgetObjList, item => item.id === widgetId, { children: 'children' })
+      const currRest = XEUtils.findTree(widgetObjList, item => item && item.id === widgetId, { children: 'children' })
       if (currRest) {
         formDesignReactData.dragWidget = null
         formDesignReactData.sortWidget = currRest.item
@@ -67,9 +59,9 @@ export default defineComponent({
         evnt.preventDefault()
         const widgetId = Number(divEl.getAttribute('data-widget-id'))
         if (widgetId !== sortWidget.id) {
-          const targetRest = XEUtils.findTree(widgetObjList, item => item.id === widgetId, { children: 'children' })
+          const targetRest = XEUtils.findTree(widgetObjList, item => item && item.id === widgetId, { children: 'children' })
           if (targetRest) {
-            const currRest = XEUtils.findTree(widgetObjList, item => item.id === sortWidget.id, { children: 'children' })
+            const currRest = XEUtils.findTree(widgetObjList, item => item && item.id === sortWidget.id, { children: 'children' })
             if (currRest) {
               // 控件换位置
               currRest.items.splice(currRest.index, 1)
