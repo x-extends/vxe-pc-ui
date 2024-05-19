@@ -9,11 +9,11 @@ import { VxeGlobalInterceptor } from './interceptor'
 import { VxeGlobalHooks } from './hooks'
 import { ModalController } from '../components/modal'
 
-export function setConfig(options?: VxeGlobalConfig): Readonly<VxeGlobalConfig>
+export function setConfig(options?: VxeGlobalConfig): typeof VxeUIExport
 
 export function getConfig(key: string | number | null | undefined, defaultValue?: any): any
 
-export function setIcon(options?: VxeGlobalIcon): Readonly<VxeGlobalIcon>
+export function setIcon(options?: VxeGlobalIcon): typeof VxeUIExport
 
 export function getIcon(key: string): any
 

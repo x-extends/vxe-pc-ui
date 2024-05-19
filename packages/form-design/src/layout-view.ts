@@ -1,7 +1,7 @@
 import { defineComponent, h, inject, TransitionGroup, resolveComponent } from 'vue'
 import { renderer } from '../../ui/src/renderer'
 import { getSlotVNs } from '../../ui/src/vn'
-import { ViewItemComponent } from './view-item'
+import { ViewItemComponent } from './layout-view-item'
 
 import { VxeFormDesignConstructor, VxeFormDesignPrivateMethods, VxeGlobalRendererHandles, VxeFormDesignDefines, VxeFormComponent } from '../../../types'
 import XEUtils from 'xe-utils'

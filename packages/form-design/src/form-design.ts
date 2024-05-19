@@ -193,8 +193,10 @@ export default defineComponent({
 
     const formDesignPrivateMethods: FormDesignPrivateMethods = {
       handleClickWidget (evnt: KeyboardEvent, item: VxeFormDesignDefines.WidgetObjItem) {
-        reactData.activeWidget = item
-        formDesignMethods.dispatchEvent('click-widget', { item }, evnt)
+        if (item && item.name) {
+          reactData.activeWidget = item
+          formDesignMethods.dispatchEvent('click-widget', { item }, evnt)
+        }
       },
       handleCopyWidget (evnt: KeyboardEvent, widget: VxeFormDesignDefines.WidgetObjItem) {
         const { widgetObjList } = reactData

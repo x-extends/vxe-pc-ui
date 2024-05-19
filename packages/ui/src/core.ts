@@ -25,8 +25,9 @@ export function setConfig (options?: VxeGlobalConfig) {
     if (options.zIndex) {
       DomZIndex.setCurrent(options.zIndex)
     }
+    XEUtils.merge(globalConfigStore, options)
   }
-  return options ? XEUtils.merge(globalConfigStore, options) : globalConfigStore
+  return VxeCore
 }
 
 /**
@@ -37,7 +38,10 @@ export function getConfig (key: string | number | null | undefined, defaultValue
 }
 
 export function setIcon (options?: any) {
-  return options ? Object.assign(iconConfigStore, options) : iconConfigStore
+  if (options) {
+    Object.assign(iconConfigStore, options)
+  }
+  return VxeCore
 }
 
 export function getIcon (key: string) {
