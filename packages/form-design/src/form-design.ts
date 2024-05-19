@@ -10,7 +10,7 @@ import LayoutViewComponent from './layout-view'
 import LayoutSettingComponent from './layout-setting'
 import { getDefaultSettingFormData } from './setting-data'
 
-import { VxeFormPropTypes, VxeFormDesignDefines, VxeFormDesignPropTypes, VxeFormDesignEmits, FormDesignReactData, FormDesignPrivateRef, VxeFormDesignPrivateComputed, VxeFormDesignConstructor, VxeFormDesignPrivateMethods, FormDesignMethods, FormDesignPrivateMethods, VxeFormProps } from '../../../types'
+import { VxeFormDesignDefines, VxeFormDesignPropTypes, VxeFormDesignEmits, FormDesignReactData, FormDesignPrivateRef, VxeFormDesignPrivateComputed, VxeFormDesignConstructor, VxeFormDesignPrivateMethods, FormDesignMethods, FormDesignPrivateMethods, VxeFormProps } from '../../../types'
 
 export default defineComponent({
   name: 'VxeFormDesign',
@@ -24,9 +24,9 @@ export default defineComponent({
       type: Array as PropType<VxeFormDesignPropTypes.Widgets>,
       default: () => XEUtils.clone(globalConfigStore.formDesign.widgets) || []
     },
-    formData: {
-      type: Array as PropType<VxeFormDesignPropTypes.FormData>,
-      default: () => XEUtils.clone(globalConfigStore.formDesign.formData, true)
+    formConfig: {
+      type: Object as PropType<VxeFormDesignPropTypes.FormConfig>,
+      default: () => XEUtils.clone(globalConfigStore.formDesign.formConfig, true)
     },
     formRender: Object as PropType<VxeFormDesignPropTypes.FormRender>
   },
@@ -45,8 +45,7 @@ export default defineComponent({
 
     const reactData = reactive<FormDesignReactData>({
       formConfig: {},
-      formData: {} as VxeFormDesignDefines.DefaultSettingFormObjVO,
-      formItems: [],
+      formData: {} as VxeFormDesignPropTypes.FormData,
       widgetConfigs: [],
       widgetObjList: [],
       dragWidget: null,
@@ -81,8 +80,8 @@ export default defineComponent({
 
     const loadConfig = (config: VxeFormDesignDefines.FormDesignConfig) => {
       if (config) {
-        const { formData, widgetData } = config
-        loadFormConfig(formData || {})
+        const { formConfig, widgetData } = config
+        loadFormConfig(formConfig || {})
         loadWidgetData(widgetData || [])
       }
       return nextTick()
@@ -92,8 +91,8 @@ export default defineComponent({
       return Object.assign({}, reactData.formConfig)
     }
 
-    const loadFormConfig = (formData: VxeFormProps) => {
-      reactData.formConfig = Object.assign({}, formData)
+    const loadFormConfig = (formConfig: VxeFormProps) => {
+      reactData.formConfig = Object.assign({}, formConfig)
       return nextTick()
     }
 
@@ -114,7 +113,8 @@ export default defineComponent({
       createEmptyWidget,
       getConfig () {
         return {
-          formData: getFormConfig(),
+          formConfig: getFormConfig(),
+          formData: reactData.formData,
           widgetData: getWidgetData()
         }
       },
@@ -242,23 +242,16 @@ export default defineComponent({
     }
 
     const createSettingForm = () => {
-      const { formRender } = props
-      let formConfig: VxeFormProps = getDefaultSettingFormData()
-      let formData = {} as VxeFormDesignDefines.DefaultSettingFormObjVO
-      let formItems: VxeFormPropTypes.Items = []
+      const { formConfig, formRender } = props
+      let formData: Record<string, any> = getDefaultSettingFormData()
       if (formRender) {
         const compConf = renderer.get(formRender.name)
         const createFormConfig = compConf ? compConf.createFormDesignSettingFormConfig : null
-        formConfig = (createFormConfig ? createFormConfig({}) : {}) || {}
+        formData = (createFormConfig ? createFormConfig({}) : {}) || {}
       }
-      formData = formConfig.data || {}
-      formItems = formConfig.items || []
-      delete formConfig.data
-      delete formConfig.items
 
       reactData.formConfig = formConfig
       reactData.formData = formData
-      reactData.formItems = formItems
     }
 
     Object.assign($xeFormDesign, formDesignMethods, formDesignPrivateMethods)

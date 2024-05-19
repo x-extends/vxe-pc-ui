@@ -1,10 +1,10 @@
-import { defineComponent, ref, h, reactive, nextTick, PropType, watch } from 'vue'
+import { defineComponent, ref, h, reactive, nextTick, PropType, provide, watch } from 'vue'
 import XEUtils from 'xe-utils'
 import { renderer } from '../../ui/src/renderer'
 import { getSlotVNs } from '../../ui/src/vn'
 import VxeFormComponent from '../../form/src/form'
 
-import { VxeGlobalRendererHandles, VxeFormViewPropTypes, FormViewReactData, FormViewPrivateRef, FormViewMethods, FormViewPrivateMethods, VxeFormViewEmits, VxeFormViewPrivateComputed, VxeFormProps, VxeFormDesignDefines, VxeFormViewConstructor, VxeFormViewPrivateMethods, VxeFormPropTypes } from '../../../types'
+import { VxeGlobalRendererHandles, VxeFormViewPropTypes, FormViewReactData, ValueOf, FormViewPrivateRef, FormViewMethods, FormViewPrivateMethods, VxeFormViewEmits, VxeFormViewPrivateComputed, VxeFormProps, VxeFormDesignDefines, VxeFormViewConstructor, VxeFormViewPrivateMethods, VxeFormPropTypes, VxeFormInstance } from '../../../types'
 
 export default defineComponent({
   name: 'VxeFormView',
@@ -16,11 +16,15 @@ export default defineComponent({
     }
   },
   emits: [
+    'update:modelValue'
   ] as VxeFormViewEmits,
   setup (props, context) {
+    const { emit } = context
+
     const xID = XEUtils.uniqueId()
 
     const refElem = ref<HTMLDivElement>()
+    const formRef = ref<VxeFormInstance>()
 
     const reactData = reactive<FormViewReactData>({
       formConfig: {},
@@ -47,30 +51,32 @@ export default defineComponent({
 
     const loadConfig = (config: VxeFormDesignDefines.FormDesignConfig) => {
       if (config) {
-        const { formData, widgetData } = config
-        loadFormConfig(formData || {})
+        const { formConfig, widgetData } = config
+        loadFormConfig(formConfig || {})
         loadWidgetData(widgetData || [])
       }
       return nextTick()
     }
 
-    const loadFormConfig = (formData: VxeFormProps) => {
-      reactData.formConfig = Object.assign({}, formData)
+    const loadFormConfig = (formConfig: VxeFormProps) => {
+      reactData.formConfig = Object.assign({}, formConfig)
       return nextTick()
     }
 
     const loadWidgetData = (widgetData: VxeFormDesignDefines.WidgetObjItem[]) => {
       reactData.widgetObjList = widgetData ? widgetData.slice(0) : []
-      updateWidgetRules()
+      updateWidgetInfo()
       return nextTick()
     }
 
-    const updateWidgetRules = () => {
+    const updateWidgetInfo = () => {
+      const formData: VxeFormPropTypes.Data = Object.assign({}, props.modelValue)
       const formRules: VxeFormPropTypes.Rules = {}
       XEUtils.eachTree(reactData.widgetObjList, widget => {
         const { name, field, required } = widget
         const compConf = renderer.get(name) || {}
         const createWidgetViewRules = compConf.createFormDesignWidgetViewRules
+        formData[field] = null
         if (createWidgetViewRules) {
           const rules = createWidgetViewRules({ widget })
           if (rules && rules.length) {
@@ -83,12 +89,51 @@ export default defineComponent({
         }
       }, { children: 'children' })
       reactData.formRules = formRules
+      emit('update:modelValue', formData)
+    }
+
+    const updateItemStatus = (widget: VxeFormDesignDefines.WidgetObjItem, value: any) => {
+      const { field } = widget
+      const $form = formRef.value
+      if ($form) {
+        $form.updateStatus({ field }, value)
+      }
+      return nextTick()
+    }
+
+    const setItemValue = (widget: VxeFormDesignDefines.WidgetObjItem, value: any) => {
+      const { modelValue } = props
+      const { field } = widget
+      const $form = formRef.value
+      if (modelValue) {
+        modelValue[field] = value
+      }
+      if ($form) {
+        $form.updateStatus({ field }, value)
+      }
+      return nextTick()
+    }
+
+    const getItemValue = (widget: VxeFormDesignDefines.WidgetObjItem) => {
+      const { modelValue } = props
+      if (modelValue) {
+        return modelValue[widget.field]
+      }
+      return null
+    }
+
+    const dispatchEvent = (type: ValueOf<VxeFormViewEmits>, params: any, evnt: Event) => {
+      emit(type, Object.assign({ $xeFormView, $event: evnt }, params))
     }
 
     const formViewMethods: FormViewMethods = {
+      dispatchEvent,
       loadConfig,
       loadFormConfig,
-      loadWidgetData
+      loadWidgetData,
+      updateItemStatus,
+      setItemValue,
+      getItemValue
     }
 
     const formViewPrivateMethods: FormViewPrivateMethods = {
@@ -103,9 +148,11 @@ export default defineComponent({
         class: ['vxe-form-view']
       }, [
         h(VxeFormComponent, {
+          ref: formRef,
           customLayout: true,
           span: 24,
           vertical: formConfig.vertical,
+          titleWidth: formConfig.titleWidth,
           rules: formRules
         }, {
           default () {
@@ -130,6 +177,8 @@ export default defineComponent({
     })
 
     loadConfig(props.config)
+
+    provide('$xeFormView', $xeFormView)
 
     return $xeFormView
   },

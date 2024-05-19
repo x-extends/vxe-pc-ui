@@ -3,22 +3,18 @@ import VxeFormComponent from '../../form/src/form'
 import VxeFormItemComponent from '../../form/src/form-item'
 import VxeSwitchComponent from '../../switch/src/switch'
 
-import { VxeFormDesignDefines, VxeFormPropTypes, VxeFormProps } from '../../../types'
+import { VxeFormDesignDefines, VxeFormDesignPropTypes } from '../../../types'
 
 export const DefaultSettingFormComponent = defineComponent({
   name: 'DefaultSettingFormView',
   props: {
     formConfig: {
-      type: Object as PropType<VxeFormProps<VxeFormDesignDefines.DefaultSettingFormObjVO>>,
+      type: Object as PropType<VxeFormDesignPropTypes.FormConfig>,
       default: () => ({})
     },
     formData: {
-      type: Object as PropType<VxeFormDesignDefines.DefaultSettingFormObjVO>,
+      type: Object as PropType<VxeFormDesignDefines.DefaultSettingFormDataObjVO>,
       default: () => ({})
-    },
-    formItems: {
-      type: Array as PropType<VxeFormPropTypes.Items>,
-      default: () => []
     }
   },
   emits: [],

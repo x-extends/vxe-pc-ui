@@ -83,7 +83,7 @@ export interface DefineRendererOption<T> {
   /**
    * 表单设计器 - 创建设计器表单数据
    */
-  createFormDesignSettingFormConfig?(params: VxeGlobalRendererHandles.CreateFormDesignSettingFormConfigParams): VxeFormProps
+  createFormDesignSettingFormConfig?(params: VxeGlobalRendererHandles.CreateFormDesignSettingFormConfigParams): Record<string, any>
   /**
    * 表单设计器 - 渲染设计器表单视图
    */

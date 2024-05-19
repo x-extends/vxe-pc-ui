@@ -37,7 +37,7 @@ export default defineComponent({
 
     const renderSettingConfigForm = () => {
       const { formRender } = formDesignProps
-      const { formConfig, formData, formItems } = formDesignReactData
+      const { formConfig, formData } = formDesignReactData
       if (formRender) {
         const compConf = renderer.get(formRender.name)
         const renderSettingView = compConf ? compConf.renderFormDesignSettingView : null
@@ -46,12 +46,10 @@ export default defineComponent({
             class: 'vxe-design-form--custom-setting-form-view'
           }, getSlotVNs(renderSettingView({}, {})))
         }
-        return createCommentVNode()
       }
       return h(DefaultSettingFormComponent, {
         formConfig,
-        formData,
-        formItems
+        formData
       })
     }
 

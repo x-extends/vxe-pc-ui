@@ -1,6 +1,7 @@
 import { RenderFunction, SetupContext, Ref, ComponentPublicInstance, DefineComponent } from 'vue'
 import { defineVxeComponent, VxeComponentBase, VxeComponentEvent, VxeComponentSize, ValueOf } from '../tool'
 import { VxeFormProps, VxeFormPropTypes } from '../components/form'
+import { VxeFormItemPropTypes } from '../components/form-item'
 
 /* eslint-disable no-use-before-define,@typescript-eslint/ban-types */
 
@@ -33,7 +34,11 @@ export namespace VxeFormDesignPropTypes {
   }
   export type Widgets = WidgetItem[]
 
-  export type FormData = VxeFormPropTypes.Data
+  export interface FormConfig {
+    vertical?: VxeFormItemPropTypes.Vertical
+    titleWidth?: VxeFormItemPropTypes.TitleWidth
+  }
+  export type FormData = Record<string, any>
   export interface FormRender {
     name: string
   }
@@ -43,6 +48,7 @@ export type VxeFormDesignProps = {
   size?: VxeFormDesignPropTypes.Size
   height?: VxeFormDesignPropTypes.Height
   widgets?: VxeFormDesignPropTypes.Widgets
+  formConfig?: VxeFormDesignPropTypes.FormConfig
   formData?: VxeFormDesignPropTypes.FormData
   formRender?: VxeFormDesignPropTypes.FormRender
 }
@@ -51,10 +57,9 @@ export interface FormDesignPrivateComputed {
 }
 export interface VxeFormDesignPrivateComputed extends FormDesignPrivateComputed { }
 
-export interface FormDesignReactData {
-  formConfig: VxeFormProps<VxeFormDesignDefines.DefaultSettingFormObjVO>,
-  formData: VxeFormDesignDefines.DefaultSettingFormObjVO,
-  formItems: VxeFormPropTypes.Items,
+export interface FormDesignReactData<D = any> {
+  formConfig: VxeFormDesignPropTypes.FormConfig,
+  formData: D,
   widgetConfigs: VxeFormDesignDefines.WidgetConfigItem[]
   widgetObjList: VxeFormDesignDefines.WidgetObjItem[]
   dragWidget: VxeFormDesignDefines.WidgetObjItem | null
@@ -95,8 +100,9 @@ export namespace VxeFormDesignDefines {
   }
 
   export interface FormDesignConfig {
-    formData?: VxeFormProps
-    widgetData?: WidgetObjItem[]
+    formConfig: VxeFormProps
+    formData: VxeFormDesignPropTypes.FormData
+    widgetData: WidgetObjItem[]
   }
 
   export interface WidgetConfigItem extends VxeFormDesignPropTypes.WidgetItem {
@@ -116,7 +122,7 @@ export namespace VxeFormDesignDefines {
     children: WidgetObjItem[]
   }
 
-  export interface DefaultSettingFormObjVO {
+  export interface DefaultSettingFormDataObjVO {
     showPC: boolean
     showMobile: boolean
   }

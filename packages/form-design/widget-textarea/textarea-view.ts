@@ -1,9 +1,9 @@
-import { PropType, defineComponent, h } from 'vue'
+import { PropType, defineComponent, h, inject } from 'vue'
 import { WidgetTextareaFormObjVO } from './textarea-data'
 import { useKebabCaseName } from '../render/hooks'
 import VxeFormItemComponent from '../../form/src/form-item'
 
-import { VxeGlobalRendererHandles } from '../../../types'
+import { VxeGlobalRendererHandles, VxeFormViewConstructor, VxeFormViewPrivateMethods } from '../../../types'
 
 export const WidgetTextareaViewComponent = defineComponent({
   props: {
@@ -18,12 +18,30 @@ export const WidgetTextareaViewComponent = defineComponent({
   },
   emits: [],
   setup (props) {
+    const $xeFormView = inject<(VxeFormViewConstructor & VxeFormViewPrivateMethods) | null>('$xeFormView', null)
+
     const computeKebabCaseName = useKebabCaseName(props)
+
+    const inputEvent = (evnt: InputEvent & { target: HTMLInputElement }) => {
+      const { renderParams } = props
+      const { widget } = renderParams
+      if ($xeFormView) {
+        $xeFormView.setItemValue(widget, evnt.target.value)
+      }
+    }
+
+    const changeEvent = (evnt: InputEvent & { target: HTMLInputElement }) => {
+      const { renderParams } = props
+      const { widget } = renderParams
+      if ($xeFormView) {
+        $xeFormView.updateItemStatus(widget, evnt.target.value)
+      }
+    }
 
     return () => {
       const { renderParams } = props
       const { widget } = renderParams
-      const { options, model } = widget
+      const { options } = widget
       const kebabCaseName = computeKebabCaseName.value
 
       return h(VxeFormItemComponent, {
@@ -35,10 +53,9 @@ export const WidgetTextareaViewComponent = defineComponent({
           return h('textarea', {
             class: 'vxe-default-textarea',
             placeholder: options.placeholder,
-            value: model.value,
-            onInput (evnt: InputEvent & { target: HTMLInputElement }) {
-              model.value = evnt.target.value
-            }
+            value: $xeFormView ? $xeFormView.getItemValue(widget) : null,
+            onInput: inputEvent,
+            onChange: changeEvent
           })
         }
       })

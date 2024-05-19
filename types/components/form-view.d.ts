@@ -39,22 +39,28 @@ export interface FormViewPrivateComputed {
 export interface VxeFormViewPrivateComputed extends FormViewPrivateComputed { }
 
 export interface FormViewReactData {
-  formConfig: VxeFormProps<VxeFormDesignDefines.DefaultSettingFormObjVO>,
+  formConfig: VxeFormProps<VxeFormDesignPropTypes.FormData>,
   formRules: VxeFormPropTypes.Rules
   widgetObjList: VxeFormDesignDefines.WidgetObjItem[]
 }
 
 export interface FormViewMethods {
+  dispatchEvent(type: ValueOf<VxeFormViewEmits>, params: any, evnt: Event): void
   loadConfig (config: VxeFormDesignDefines.FormDesignConfig): Promise<any>
   loadFormConfig (formData: VxeFormProps): Promise<any>
   loadWidgetData (widgetData: VxeFormDesignDefines.WidgetObjItem[]): Promise<any>
+  updateItemStatus(widget: VxeFormDesignDefines.WidgetObjItem, value: any): Promise<any>
+  setItemValue(widget: VxeFormDesignDefines.WidgetObjItem, value: any): Promise<any>
+  getItemValue(widget: VxeFormDesignDefines.WidgetObjItem): any
 }
 export interface VxeFormViewMethods extends FormViewMethods { }
 
 export interface FormViewPrivateMethods { }
 export interface VxeFormViewPrivateMethods extends FormViewPrivateMethods { }
 
-export type VxeFormViewEmits = []
+export type VxeFormViewEmits = [
+  'update:modelValue'
+]
 
 export namespace VxeFormViewDefines {
   export interface FormViewEventParams extends VxeComponentEvent {

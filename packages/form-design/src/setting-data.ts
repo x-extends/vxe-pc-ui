@@ -1,11 +1,8 @@
-import { VxeFormDesignDefines, VxeFormProps } from '../../../types'
+import { VxeFormDesignDefines } from '../../../types'
 
-export const getDefaultSettingFormData = (): VxeFormProps<VxeFormDesignDefines.DefaultSettingFormObjVO> => {
+export const getDefaultSettingFormData = (): VxeFormDesignDefines.DefaultSettingFormDataObjVO => {
   return {
-    vertical: true,
-    data: {
-      showPC: true,
-      showMobile: true
-    }
+    showPC: true,
+    showMobile: true
   }
 }

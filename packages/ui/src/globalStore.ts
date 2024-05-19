@@ -35,7 +35,11 @@ const globalConfigStore: Required<VxeGlobalConfig> = {
     },
     titleAsterisk: true
   },
-  formDesign: {},
+  formDesign: {
+    formConfig: {
+      vertical: true
+    }
+  },
   formGather: {},
   formItem: {},
   icon: {},

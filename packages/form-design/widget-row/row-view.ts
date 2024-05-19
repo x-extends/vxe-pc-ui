@@ -120,7 +120,7 @@ const ViewColItemComponent = defineComponent({
               ])
               : h('div', {
                 class: 'vxe-design-form--widget-row-view-empty'
-              }, '从左侧将控件拖拽进来')
+              }, '控件位置')
           ])
         }
       })

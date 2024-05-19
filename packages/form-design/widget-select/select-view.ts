@@ -1,9 +1,9 @@
-import { PropType, defineComponent, h } from 'vue'
+import { PropType, defineComponent, h, inject } from 'vue'
 import VxeFormItemComponent from '../../form/src/form-item'
 import { WidgetSelectFormObjVO } from './select-data'
 import { useKebabCaseName } from '../render/hooks'
 
-import { VxeGlobalRendererHandles } from '../../../types'
+import { VxeGlobalRendererHandles, VxeFormViewConstructor, VxeFormViewPrivateMethods } from '../../../types'
 
 export const WidgetSelectViewComponent = defineComponent({
   props: {
@@ -18,7 +18,17 @@ export const WidgetSelectViewComponent = defineComponent({
   },
   emits: [],
   setup (props) {
+    const $xeFormView = inject<(VxeFormViewConstructor & VxeFormViewPrivateMethods) | null>('$xeFormView', null)
+
     const computeKebabCaseName = useKebabCaseName(props)
+
+    const changeEvent = (evnt: Event & { target: HTMLSelectElement }) => {
+      const { renderParams } = props
+      const { widget } = renderParams
+      if ($xeFormView) {
+        $xeFormView.setItemValue(widget, evnt.target.value)
+      }
+    }
 
     const renderOptions = () => {
       const { renderParams } = props
@@ -43,7 +53,6 @@ export const WidgetSelectViewComponent = defineComponent({
     return () => {
       const { renderParams } = props
       const { widget, isViewMode } = renderParams
-      const { model } = widget
       const kebabCaseName = computeKebabCaseName.value
 
       return h(VxeFormItemComponent, {
@@ -54,7 +63,8 @@ export const WidgetSelectViewComponent = defineComponent({
         default () {
           return h('select', {
             class: 'vxe-default-select',
-            value: model.value
+            value: $xeFormView ? $xeFormView.getItemValue(widget) : null,
+            onChange: changeEvent
           }, isViewMode ? renderOptions() : [])
         }
       })

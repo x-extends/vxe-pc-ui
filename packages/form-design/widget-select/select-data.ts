@@ -10,14 +10,12 @@ export interface WidgetSelectFormOptionObjVO {
 }
 
 export interface WidgetSelectFormObjVO {
-  required: false
   options?: WidgetSelectFormOptionObjVO[]
 }
 
 export const getWidgetSelectFormData = (): VxeFormProps<WidgetSelectFormObjVO> => {
   return {
     data: {
-      required: false,
       options: [
         { value: '选项1' },
         { value: '选项2' },
