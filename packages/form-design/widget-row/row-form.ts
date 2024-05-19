@@ -1,14 +1,22 @@
-import { PropType, defineComponent, h, ref, resolveComponent, computed, inject } from 'vue'
+import { PropType, defineComponent, h, ref, computed, inject } from 'vue'
 import { useKebabCaseName } from '../render/hooks'
-import { WidgetRowsFormObjVO } from './rows-data'
+import { WidgetRowFormObjVO } from './row-data'
+import VxeFormComponent from '../../form/src/form'
+import VxeFormItemComponent from '../../form/src/form-item'
+import VxeRowComponent from '../../row/src/row'
+import VxeColComponent from '../../row/src/col'
 import XEUtils from 'xe-utils'
 
-import { VxeFormDesignDefines, VxeFormComponent, VxeFormItemComponent, VxeRowComponent, VxeColComponent, VxeFormDesignConstructor, VxeFormDesignPrivateMethods } from '../../../types'
+import { VxeGlobalRendererHandles, VxeFormDesignConstructor, VxeFormDesignPrivateMethods } from '../../../types'
 
-export const WidgetRowsFormComponent = defineComponent({
+export const WidgetRowFormComponent = defineComponent({
   props: {
-    widget: {
-      type: Object as PropType<VxeFormDesignDefines.WidgetObjItem<WidgetRowsFormObjVO>>,
+    renderOpts: {
+      type: Object as PropType<VxeGlobalRendererHandles.RenderFormDesignWidgetFormViewOptions>,
+      default: () => ({})
+    },
+    renderParams: {
+      type: Object as PropType<VxeGlobalRendererHandles.RenderFormDesignWidgetFormViewParams<WidgetRowFormObjVO>>,
       default: () => ({})
     }
   },
@@ -17,7 +25,7 @@ export const WidgetRowsFormComponent = defineComponent({
     const $xeFormDesign = inject<(VxeFormDesignConstructor & VxeFormDesignPrivateMethods) | null>('$xeFormDesign', null)
 
     if (!$xeFormDesign) {
-      return
+      return () => []
     }
 
     const computeKebabCaseName = useKebabCaseName(props)
@@ -70,50 +78,52 @@ export const WidgetRowsFormComponent = defineComponent({
     }
 
     const computeSelectSpanItem = computed(() => {
-      const { widget } = props
-      const { widgetFormData } = widget
-      return spanOptions.value.find(item => item.value === widgetFormData.colSize)
+      const { renderParams } = props
+      const { widget } = renderParams
+      const { options } = widget
+      return spanOptions.value.find(item => item.value === options.colSize)
     })
 
     const changeColSpan = (item: {
       value: string
       spans: number[]
     }) => {
-      const { widget } = props
-      const { widgetFormData } = widget
-      widgetFormData.colSpan = item.value
-      widget.children = XEUtils.range(0, widgetFormData.colSize).map(() => {
+      const { renderParams } = props
+      const { widget } = renderParams
+      const { options } = widget
+      options.colSpan = item.value
+      widget.children = XEUtils.range(0, options.colSize).map(() => {
         return $xeFormDesign.createEmptyWidget()
       })
     }
     return () => {
-      const { widget } = props
-      const { widgetFormData } = widget
+      const { renderParams } = props
+      const { widget } = renderParams
       const kebabCaseName = computeKebabCaseName.value
 
-      return h(resolveComponent('vxe-form') as VxeFormComponent<WidgetRowsFormObjVO>, {
+      return h(VxeFormComponent, {
         class: `vxe-design-form--widget-${kebabCaseName}-form`,
         vertical: true,
         span: 24,
-        data: widgetFormData
+        data: widget.options
       }, {
         default () {
           return [
-            h(resolveComponent('vxe-form-item') as VxeFormItemComponent, {
+            h(VxeFormItemComponent, {
               title: '列数',
               field: 'colSize',
               itemRender: { name: 'VxeRadioGroup', options: spanOptions.value, props: { type: 'button' } }
             }),
-            h(resolveComponent('vxe-form-item') as VxeFormItemComponent, {
+            h(VxeFormItemComponent, {
               title: '布局'
             }, {
               default () {
                 const selectSpanItem = computeSelectSpanItem.value
                 if (selectSpanItem) {
                   return selectSpanItem.list.map(item => {
-                    return h(resolveComponent('vxe-row') as VxeRowComponent, {
-                      class: ['vxe-design-form--widget-rows-form-row', {
-                        'is--active': item.value === widgetFormData.colSpan
+                    return h(VxeRowComponent, {
+                      class: [`vxe-design-form--widget-${kebabCaseName}-form-row`, {
+                        'is--active': item.value === widget.options.colSpan
                       }],
                       onClick () {
                         changeColSpan(item)
@@ -121,8 +131,8 @@ export const WidgetRowsFormComponent = defineComponent({
                     }, {
                       default () {
                         return item.spans.map(span => {
-                          return h(resolveComponent('vxe-col') as VxeColComponent, {
-                            class: 'vxe-design-form--widget-rows-form-col',
+                          return h(VxeColComponent, {
+                            class: `vxe-design-form--widget-${kebabCaseName}-form-col`,
                             span
                           }, {
                             default () {

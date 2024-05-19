@@ -125,7 +125,7 @@
 .vxe-design-form--preview-item {
   position: relative;
   display: block;
-  padding: var(--vxe-ui-layout-padding-default) var(--vxe-ui-layout-padding-double);
+  padding: var(--vxe-ui-layout-padding-default);
   border: 1px solid transparent;
   cursor: grabbing;
   &::after {
@@ -149,12 +149,6 @@
   }
   &.is--drag {
     background-color: #dde9fd;
-  }
-  &.rows {
-    padding: var(--vxe-ui-layout-padding-default) 0;
-    &::after {
-      display: none;
-    }
   }
 }
 .vxe-design-form--preview-item-view {

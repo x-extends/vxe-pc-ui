@@ -1,12 +1,12 @@
 import { computed } from 'vue'
 import XEUtils from 'xe-utils'
 
-import { VxeFormDesignDefines } from '../../../types'
+import { VxeGlobalRendererHandles } from '../../../types'
 
-export function useKebabCaseName (props: { widget: VxeFormDesignDefines.WidgetObjItem }) {
+export function useKebabCaseName (props: { renderOpts: VxeGlobalRendererHandles.RenderFormDesignWidgetFormViewOptions }) {
   const computeKebabCaseName = computed(() => {
-    const { widget } = props
-    return widget ? XEUtils.kebabCase(widget.name) : ''
+    const { renderOpts } = props
+    return renderOpts ? XEUtils.kebabCase(renderOpts.name) : ''
   })
   return computeKebabCaseName
 }

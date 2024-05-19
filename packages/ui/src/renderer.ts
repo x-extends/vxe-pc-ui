@@ -6,7 +6,7 @@ import { errLog, warnLog } from './log'
 import { getI18n } from './i18n'
 import { getOnName, getModelEvent, getChangeEvent } from './vn'
 
-import { VxeGlobalRendererHandles, VxeGlobalRenderer, RendererOptions } from '../../../types/all'
+import { VxeGlobalRendererHandles, VxeGlobalRenderer, RendererOptions, VxeButtonComponent } from '../../../types/all'
 
 const componentDefaultModelProp = 'modelValue'
 
@@ -332,7 +332,7 @@ function oldEditRender (renderOpts: VxeGlobalRendererHandles.RenderEditOptions, 
  */
 function oldButtonEditRender (renderOpts: any, params: any) {
   return [
-    h(resolveComponent('vxe-button') as ComponentOptions, {
+    h(resolveComponent('vxe-button') as VxeButtonComponent, {
       ...getCellEditProps(renderOpts, params, null),
       ...getComponentOns(renderOpts, params)
     })
@@ -551,7 +551,7 @@ function oldItemRender (renderOpts: any, params: any) {
  */
 function oldButtonItemRender (renderOpts: any, params: any) {
   return [
-    h(resolveComponent('vxe-button') as ComponentOptions, {
+    h(resolveComponent('vxe-button') as VxeButtonComponent, {
       ...getComponentFormItemProps(renderOpts, params, null),
       ...getComponentOns(renderOpts, params)
     })

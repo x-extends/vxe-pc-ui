@@ -79,6 +79,15 @@ export default defineComponent({
       return new FormDesignWidgetInfo('', reactData.widgetObjList) as VxeFormDesignDefines.WidgetObjItem
     }
 
+    const loadConfig = (config: VxeFormDesignDefines.FormDesignConfig) => {
+      if (config) {
+        const { formData, widgetData } = config
+        loadFormConfig(formData || {})
+        loadWidgetData(widgetData || [])
+      }
+      return nextTick()
+    }
+
     const getFormConfig = (): VxeFormProps => {
       return Object.assign({}, reactData.formConfig)
     }
@@ -109,18 +118,7 @@ export default defineComponent({
           widgetData: getWidgetData()
         }
       },
-      loadConfig (config) {
-        if (config) {
-          const { formData, widgetData } = config
-          if (formData) {
-            loadFormConfig(formData)
-          }
-          if (widgetData) {
-            loadWidgetData(widgetData)
-          }
-        }
-        return nextTick()
-      },
+      loadConfig,
       getFormConfig,
       loadFormConfig,
       getWidgetData,
@@ -207,8 +205,8 @@ export default defineComponent({
           const rootIndex = Number(path[0])
           const newWidget = createWidget(widget.name)
           // 标题副本
-          if (newWidget.widgetFormData.itemTitle) {
-            newWidget.widgetFormData.itemTitle = getI18n('vxe.formDesign.widget.copyTitle', [`${widget.widgetFormData.itemTitle}`.replace(getI18n('vxe.formDesign.widget.copyTitle', ['']), '')])
+          if (newWidget.title) {
+            newWidget.title = getI18n('vxe.formDesign.widget.copyTitle', [`${widget.title}`.replace(getI18n('vxe.formDesign.widget.copyTitle', ['']), '')])
           }
           if (rootIndex >= widgetObjList.length - 1) {
             widgetObjList.push(newWidget)

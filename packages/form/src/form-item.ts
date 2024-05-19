@@ -55,7 +55,8 @@ export const formItemProps = {
   visible: { type: Boolean as PropType<VxeFormItemPropTypes.Visible>, default: null },
   folding: Boolean as PropType<VxeFormItemPropTypes.Folding>,
   collapseNode: Boolean as PropType<VxeFormItemPropTypes.CollapseNode>,
-  itemRender: Object as PropType<VxeFormItemPropTypes.ItemRender>
+  itemRender: Object as PropType<VxeFormItemPropTypes.ItemRender>,
+  rules: Array as PropType<VxeFormItemPropTypes.Rules>
 }
 
 export default defineComponent({

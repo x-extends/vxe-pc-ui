@@ -30,19 +30,31 @@ export default defineComponent({
 
     const $xeRow = inject<(VxeRowConstructor & VxeRowPrivateMethods) | null>('$xeRow', null)
 
-    const computeColGutter = computed(() => {
+    const computeRowGutter = computed(() => {
       if ($xeRow) {
         return $xeRow.props.gutter
       }
       return null
     })
 
+    const computeRowVertical = computed(() => {
+      if ($xeRow) {
+        return $xeRow.props.vertical
+      }
+      return null
+    })
+
     const computeColStyle = computed(() => {
       const { width } = props
-      const colGutter = computeColGutter.value
+      const rowGutter = computeRowGutter.value
+      const rowVertical = computeRowVertical.value
       const style: Record<string, string | number> = {}
-      if (colGutter) {
-        const [lrGutter, tbGutter] = XEUtils.isArray(colGutter) ? colGutter : [colGutter]
+      if (rowGutter) {
+        let [lrGutter, tbGutter] = XEUtils.isArray(rowGutter) ? rowGutter : [rowGutter]
+        if (rowVertical) {
+          tbGutter = lrGutter
+          lrGutter = ''
+        }
         if (lrGutter) {
           const padding = XEUtils.isNumber(lrGutter) ? toCssUnit(lrGutter / 2) : `calc(${toCssUnit(lrGutter)} / 2)`
           style.paddingLeft = padding

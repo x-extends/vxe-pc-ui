@@ -1,9 +1,10 @@
-import { defineComponent, h, inject, TransitionGroup, resolveComponent } from 'vue'
+import { defineComponent, h, inject, TransitionGroup } from 'vue'
 import { renderer } from '../../ui/src/renderer'
 import { getSlotVNs } from '../../ui/src/vn'
 import { ViewItemComponent } from './layout-view-item'
+import VxeFormComponent from '../../form/src/form'
 
-import { VxeFormDesignConstructor, VxeFormDesignPrivateMethods, VxeGlobalRendererHandles, VxeFormDesignDefines, VxeFormComponent } from '../../../types'
+import { VxeFormDesignConstructor, VxeFormDesignPrivateMethods, VxeGlobalRendererHandles } from '../../../types'
 import XEUtils from 'xe-utils'
 
 export default defineComponent({
@@ -13,7 +14,7 @@ export default defineComponent({
     const $xeFormDesign = inject<(VxeFormDesignConstructor & VxeFormDesignPrivateMethods) | null>('$xeFormDesign', null)
 
     if (!$xeFormDesign) {
-      return
+      return () => []
     }
 
     const { reactData: formDesignReactData } = $xeFormDesign
@@ -36,8 +37,9 @@ export default defineComponent({
         class: 'vxe-design-form--preview',
         onDragover: dragoverEvent
       }, [
-        h(resolveComponent('vxe-form') as VxeFormComponent<VxeFormDesignDefines.DefaultSettingFormObjVO>, {
+        h(VxeFormComponent, {
           customLayout: true,
+          span: 24,
           vertical: formConfig.vertical
         }, {
           default () {
@@ -57,10 +59,10 @@ export default defineComponent({
                     default () {
                       const { name } = widget
                       const compConf = renderer.get(name) || {}
-                      const renderWidgetView = compConf.renderFormDesignWidgetView
+                      const renderWidgetDesignView = compConf.renderFormDesignWidgetEdit || compConf.renderFormDesignWidgetView
                       const renderOpts: VxeGlobalRendererHandles.RenderFormDesignWidgetViewOptions = widget
-                      const params: VxeGlobalRendererHandles.RenderFormDesignWidgetViewParams = { widget }
-                      return renderWidgetView ? getSlotVNs(renderWidgetView(renderOpts, params)) : []
+                      const params: VxeGlobalRendererHandles.RenderFormDesignWidgetViewParams = { widget, isEditMode: true, isViewMode: false }
+                      return renderWidgetDesignView ? getSlotVNs(renderWidgetDesignView(renderOpts, params)) : []
                     }
                   })
                 })

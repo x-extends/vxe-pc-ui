@@ -14,22 +14,6 @@
       </vxe-layout-container>
     </vxe-layout-container>
   </vxe-layout-container>
-  <!-- <vxe-layout-container>
-    <vxe-layout-aside width="200px">
-        <div style="height: 300px;">111</div>
-        <div style="height: 300px;">111</div>
-        <div style="height: 300px;">111</div>
-        <div style="height: 300px;">111</div>
-        <div style="height: 300px;">111</div>
-      </vxe-layout-aside>
-    <vxe-layout-container vertical>
-      <vxe-layout-header fixed>22222222</vxe-layout-header>
-      <vxe-layout-body>
-        <RouterView />
-      </vxe-layout-body>
-      <vxe-layout-footer fixed>11111</vxe-layout-footer>
-    </vxe-layout-container>
-  </vxe-layout-container> -->
 </template>
 
 <script lang="ts" setup>

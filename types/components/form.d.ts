@@ -1,5 +1,6 @@
 import { RenderFunction, SetupContext, Ref, ComponentPublicInstance, DefineComponent } from 'vue'
 import { defineVxeComponent, VxeComponentBase, VxeComponentEvent, VxeComponentSize, ValueOf } from '../tool'
+import { VxeFormItemPropTypes } from './form-item'
 
 /* eslint-disable no-use-before-define,@typescript-eslint/ban-types */
 
@@ -224,6 +225,7 @@ export namespace VxeFormDefines {
     titleStyle: VxeFormItemPropTypes.TitleStyle
     readonly: VxeFormItemPropTypes.Readonly
     itemRender: VxeFormItemPropTypes.ItemRender
+    rules: VxeFormItemPropTypes.Rules
     // 渲染属性
     showError: boolean
     errRule: any

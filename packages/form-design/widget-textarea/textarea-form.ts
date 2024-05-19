@@ -1,13 +1,21 @@
-import { PropType, defineComponent, h, resolveComponent } from 'vue'
+import { PropType, defineComponent, h } from 'vue'
 import { WidgetTextareaFormObjVO } from './textarea-data'
 import { useKebabCaseName } from '../render/hooks'
+import VxeFormComponent from '../../form/src/form'
+import VxeFormItemComponent from '../../form/src/form-item'
+import VxeInputComponent from '../../input/src/input'
+import VxeSwitchComponent from '../../switch/src/switch'
 
-import { VxeFormDesignDefines, VxeFormComponent, VxeFormItemComponent } from '../../../types'
+import { VxeGlobalRendererHandles } from '../../../types'
 
 export const WidgetTextareaFormComponent = defineComponent({
   props: {
-    widget: {
-      type: Object as PropType<VxeFormDesignDefines.WidgetObjItem<WidgetTextareaFormObjVO>>,
+    renderOpts: {
+      type: Object as PropType<VxeGlobalRendererHandles.RenderFormDesignWidgetFormViewOptions>,
+      default: () => ({})
+    },
+    renderParams: {
+      type: Object as PropType<VxeGlobalRendererHandles.RenderFormDesignWidgetFormViewParams<WidgetTextareaFormObjVO>>,
       default: () => ({})
     }
   },
@@ -16,27 +24,46 @@ export const WidgetTextareaFormComponent = defineComponent({
     const computeKebabCaseName = useKebabCaseName(props)
 
     return () => {
-      const { widget } = props
-      const { widgetFormData } = widget
+      const { renderParams } = props
+      const { widget } = renderParams
       const kebabCaseName = computeKebabCaseName.value
 
-      return h(resolveComponent('vxe-form') as VxeFormComponent<WidgetTextareaFormObjVO>, {
+      return h(VxeFormComponent, {
         class: `vxe-design-form--widget-${kebabCaseName}-form`,
         vertical: true,
         span: 24,
-        data: widgetFormData
+        data: widget.options
       }, {
         default () {
           return [
-            h(resolveComponent('vxe-form-item') as VxeFormItemComponent, {
-              title: '控件名称',
-              field: 'itemTitle',
-              itemRender: { name: 'VxeInput' }
+            h(VxeFormItemComponent, {
+              title: '控件名称'
+            }, {
+              default () {
+                return h(VxeInputComponent, {
+                  modelValue: widget.title,
+                  'onUpdate:modelValue' (val) {
+                    widget.title = val
+                  }
+                })
+              }
             }),
-            h(resolveComponent('vxe-form-item') as VxeFormItemComponent, {
+            h(VxeFormItemComponent, {
               title: '控件提示',
               field: 'placeholder',
               itemRender: { name: 'VxeInput' }
+            }),
+            h(VxeFormItemComponent, {
+              title: '是否必填'
+            }, {
+              default () {
+                return h(VxeSwitchComponent, {
+                  modelValue: widget.required,
+                  'onUpdate:modelValue' (val) {
+                    widget.required = val
+                  }
+                })
+              }
             })
           ]
         }

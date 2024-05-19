@@ -25,7 +25,7 @@ export const ViewItemComponent = defineComponent({
     const $xeFormDesign = inject<(VxeFormDesignConstructor & VxeFormDesignPrivateMethods) | null>('$xeFormDesign', null)
 
     if (!$xeFormDesign) {
-      return
+      return () => []
     }
 
     const { reactData: formDesignReactData } = $xeFormDesign

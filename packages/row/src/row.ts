@@ -32,10 +32,14 @@ export default defineComponent({
     }
 
     const computeRowStyle = computed(() => {
-      const { gutter } = props
+      const { gutter, vertical } = props
       const style: Record<string, string | number> = {}
       if (gutter) {
-        const [lrGutter, tbGutter] = XEUtils.isArray(gutter) ? gutter : [gutter]
+        let [lrGutter, tbGutter] = XEUtils.isArray(gutter) ? gutter : [gutter]
+        if (vertical) {
+          tbGutter = lrGutter
+          lrGutter = ''
+        }
         if (lrGutter) {
           const offsetSize = XEUtils.isNumber(lrGutter) ? toCssUnit(-(lrGutter / 2)) : `calc(${toCssUnit(lrGutter)} / 2 * -1)`
           style.marginLeft = offsetSize

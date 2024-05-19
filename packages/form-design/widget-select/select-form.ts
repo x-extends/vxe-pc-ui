@@ -3,17 +3,23 @@ import iconConfigStore from '../../ui/src/iconStore'
 import VxeFormComponent from '../../form/src/form'
 import VxeFormItemComponent from '../../form/src/form-item'
 import VxeButtonComponent from '../../button/src/button'
+import VxeInputComponent from '../../input/src/input'
 import VxeTextareaComponent from '../../textarea/src/textarea'
+import VxeSwitchComponent from '../../switch/src/switch'
 import { modal } from '../../modal'
 import { WidgetSelectFormObjVO, WidgetSelectFormOptionObjVO, WidgetSelectFormOptionSubObjVO } from './select-data'
 import { useKebabCaseName } from '../render/hooks'
 
-import { VxeFormDesignDefines } from '../../../types'
+import { VxeGlobalRendererHandles } from '../../../types'
 
 export const WidgetSelectFormComponent = defineComponent({
   props: {
-    widget: {
-      type: Object as PropType<VxeFormDesignDefines.WidgetObjItem<WidgetSelectFormObjVO>>,
+    renderOpts: {
+      type: Object as PropType<VxeGlobalRendererHandles.RenderFormDesignWidgetFormViewOptions>,
+      default: () => ({})
+    },
+    renderParams: {
+      type: Object as PropType<VxeGlobalRendererHandles.RenderFormDesignWidgetFormViewParams<WidgetSelectFormObjVO>>,
       default: () => ({})
     }
   },
@@ -22,16 +28,16 @@ export const WidgetSelectFormComponent = defineComponent({
     const computeKebabCaseName = useKebabCaseName(props)
 
     const optionsContent = ref('')
-    const expandIndexs = ref<number[]>([])
+    const expandIndexList = ref<number[]>([])
 
     const addOptionEvent = () => {
-      const { widget } = props
-      const { widgetFormData } = widget
-      const options = widgetFormData.options || []
+      const { renderParams } = props
+      const { widget } = renderParams
+      const options = widget.options.options || []
       options.push({
         value: `选项${options.length + 1}`
       })
-      widgetFormData.options = [...options]
+      widget.options.options = [...options]
     }
 
     const subRE = /^(\s|\t)+/
@@ -41,31 +47,31 @@ export const WidgetSelectFormComponent = defineComponent({
     }
 
     const expandAllOption = () => {
-      const { widget } = props
-      const { widgetFormData } = widget
-      const options = widgetFormData.options || []
-      const indexs: number[] = []
+      const { renderParams } = props
+      const { widget } = renderParams
+      const options = widget.options.options || []
+      const indexList: number[] = []
       options.forEach((group, gIndex) => {
         const { options } = group
         if (options && options.length) {
-          indexs.push(gIndex)
+          indexList.push(gIndex)
         }
       })
-      expandIndexs.value = indexs
+      expandIndexList.value = indexList
     }
 
     const toggleExpandOption = (item: WidgetSelectFormOptionSubObjVO, gIndex: number) => {
-      if (expandIndexs.value.includes(gIndex)) {
-        expandIndexs.value = expandIndexs.value.filter(num => num !== gIndex)
+      if (expandIndexList.value.includes(gIndex)) {
+        expandIndexList.value = expandIndexList.value.filter(num => num !== gIndex)
       } else {
-        expandIndexs.value.push(gIndex)
+        expandIndexList.value.push(gIndex)
       }
     }
 
     const confirmBatchAddOptionEvent = () => {
-      const { widget } = props
-      const { widgetFormData } = widget
-      const options: WidgetSelectFormOptionSubObjVO[] = []
+      const { renderParams } = props
+      const { widget } = renderParams
+      const optList: WidgetSelectFormOptionSubObjVO[] = []
       const rowList = optionsContent.value.split('\n')
       let prevGroup: Required<WidgetSelectFormOptionObjVO> | null = null
       rowList.forEach((str, index) => {
@@ -83,9 +89,9 @@ export const WidgetSelectFormComponent = defineComponent({
             return
           }
           prevGroup = null
-          options.push(item)
+          optList.push(item)
         } else {
-          options.push(item)
+          optList.push(item)
         }
         if (nextStr) {
           if (hasSubOption(nextStr)) {
@@ -93,17 +99,17 @@ export const WidgetSelectFormComponent = defineComponent({
           }
         }
       })
-      widgetFormData.options = options
+      widget.options.options = optList
       expandAllOption()
     }
 
     const openPopupEditEvent = () => {
-      const { widget } = props
-      const { widgetFormData } = widget
+      const { renderParams } = props
+      const { widget } = renderParams
       const kebabCaseName = computeKebabCaseName.value
 
       const contList: string[] = []
-      widgetFormData.options?.forEach(group => {
+      widget.options.options?.forEach(group => {
         contList.push(group.value)
         group.options?.forEach(item => {
           contList.push(`\t${item.value}`)
@@ -113,7 +119,7 @@ export const WidgetSelectFormComponent = defineComponent({
       optionsContent.value = contList.join('\n')
 
       modal.open({
-        title: `${widgetFormData.itemTitle} - 批量编辑选项`,
+        title: `${widget.title} - 批量编辑选项`,
         width: 500,
         height: '50vh ',
         resize: true,
@@ -129,7 +135,7 @@ export const WidgetSelectFormComponent = defineComponent({
             }, [
               h('div', {
                 class: `vxe-design-form--widget-${kebabCaseName}-form-options-popup-title`
-              }, '每行对应一个选项，如果是分组，子项可以是空格或制表键开头'),
+              }, '每行对应一个选项，如果是分组，子项可以是空格或制表键开头，可从 Excel 或 WPS 中复制。'),
               h(VxeTextareaComponent, {
                 resize: 'none',
                 modelValue: optionsContent.value,
@@ -179,15 +185,16 @@ export const WidgetSelectFormComponent = defineComponent({
     }
 
     const renderOptions = () => {
-      const { widget } = props
-      const { widgetFormData } = widget
-      const groups = widgetFormData.options
+      const { renderParams } = props
+      const { widget } = renderParams
+      const { options } = widget
+      const groups = options.options
       const kebabCaseName = computeKebabCaseName.value
       const optVNs: VNode[] = []
       if (groups) {
         groups.forEach((group, gIndex) => {
           const { options } = group
-          const isExpand = expandIndexs.value.includes(gIndex)
+          const isExpand = expandIndexList.value.includes(gIndex)
           if (options && options.length) {
             optVNs.push(renderOption(group, true, isExpand, gIndex, true, gIndex === 0, gIndex === groups.length - 1))
             if (isExpand) {
@@ -205,7 +212,7 @@ export const WidgetSelectFormComponent = defineComponent({
       return optVNs
     }
 
-    watch(() => props.widget, () => {
+    watch(() => props.renderParams.widget, () => {
       expandAllOption()
     })
 
@@ -214,22 +221,41 @@ export const WidgetSelectFormComponent = defineComponent({
     })
 
     return () => {
-      const { widget } = props
-      const { widgetFormData } = widget
+      const { renderParams } = props
+      const { widget } = renderParams
       const kebabCaseName = computeKebabCaseName.value
 
       return h(VxeFormComponent, {
         class: `vxe-design-form--widget-${kebabCaseName}-form`,
         vertical: true,
         span: 24,
-        data: widgetFormData
+        data: widget.options
       }, {
         default () {
           return [
             h(VxeFormItemComponent, {
-              title: '控件名称',
-              field: 'itemTitle',
-              itemRender: { name: 'VxeInput' }
+              title: '控件名称'
+            }, {
+              default () {
+                return h(VxeInputComponent, {
+                  modelValue: widget.title,
+                  'onUpdate:modelValue' (val) {
+                    widget.title = val
+                  }
+                })
+              }
+            }),
+            h(VxeFormItemComponent, {
+              title: '是否必填'
+            }, {
+              default () {
+                return h(VxeSwitchComponent, {
+                  modelValue: widget.required,
+                  'onUpdate:modelValue' (val) {
+                    widget.required = val
+                  }
+                })
+              }
             }),
             h(VxeFormItemComponent, {
               title: '数据源',

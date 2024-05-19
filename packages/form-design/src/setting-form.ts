@@ -25,6 +25,7 @@ export const DefaultSettingFormComponent = defineComponent({
   setup (props) {
     return () => {
       const { formData } = props
+
       return h(VxeFormComponent, {
         data: formData,
         span: 24,

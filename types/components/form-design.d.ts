@@ -66,11 +66,11 @@ export interface FormDesignMethods {
   dispatchEvent(type: ValueOf<VxeFormDesignEmits>, params: any, evnt: Event): void
   createWidget (name: string): VxeFormDesignDefines.WidgetObjItem
   createEmptyWidget (): VxeFormDesignDefines.WidgetObjItem
-  getConfig (config): VxeFormDesignDefines.FormDesignConfig
+  getConfig (): VxeFormDesignDefines.FormDesignConfig
   loadConfig (config: VxeFormDesignDefines.FormDesignConfig): Promise<any>
   getFormConfig(): VxeFormProps
   loadFormConfig (formData: VxeFormProps): Promise<any>
-  getWidgetData (w): VxeFormDesignDefines.WidgetObjItem[]
+  getWidgetData (): VxeFormDesignDefines.WidgetObjItem[]
   loadWidgetData (widgetData: VxeFormDesignDefines.WidgetObjItem[]): Promise<any>
 }
 export interface VxeFormDesignMethods extends FormDesignMethods { }
@@ -95,8 +95,8 @@ export namespace VxeFormDesignDefines {
   }
 
   export interface FormDesignConfig {
-    formData: VxeFormProps
-    widgetData: WidgetObjItem[]
+    formData?: VxeFormProps
+    widgetData?: WidgetObjItem[]
   }
 
   export interface WidgetConfigItem extends VxeFormDesignPropTypes.WidgetItem {
@@ -104,10 +104,11 @@ export namespace VxeFormDesignDefines {
 
   export interface WidgetObjItem<D = any> {
     id: number
+    field: string
+    title: string
     name: string
-    widgetFormConfig: VxeFormProps
-    widgetFormData: D
-    widgetFormItems: VxeFormPropTypes.Items
+    required: false
+    options: D
     model: {
       update: boolean
       value: any

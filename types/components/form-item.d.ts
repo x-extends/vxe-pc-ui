@@ -80,6 +80,7 @@ export namespace VxeFormItemPropTypes {
   export type Folding = boolean
   export type CollapseNode = boolean
   export type ItemRender = FormItemRenderOptions
+  export type Rules = VxeFormDefines.FormRule[]
   export type Slots = {
     title?: string | ((params: FormItemTitleRenderParams) => SlotVNodeType | SlotVNodeType[]) | null
     default?: string | ((params: FormItemContentRenderParams) => SlotVNodeType | SlotVNodeType[]) | null
@@ -180,6 +181,7 @@ export type VxeFormItemProps = {
    * 项渲染配置项
    */
   itemRender?: FormItemRenderOptions
+  Rules?: VxeFormItemPropTypes.Rules
   slots?: VxeFormItemPropTypes.Slots
   children?: VxeFormItemProps[]
 }

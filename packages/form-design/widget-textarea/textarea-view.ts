@@ -1,13 +1,18 @@
-import { PropType, defineComponent, h, resolveComponent } from 'vue'
+import { PropType, defineComponent, h } from 'vue'
 import { WidgetTextareaFormObjVO } from './textarea-data'
 import { useKebabCaseName } from '../render/hooks'
+import VxeFormItemComponent from '../../form/src/form-item'
 
-import { VxeFormDesignDefines, VxeFormItemComponent } from '../../../types'
+import { VxeGlobalRendererHandles } from '../../../types'
 
 export const WidgetTextareaViewComponent = defineComponent({
   props: {
-    widget: {
-      type: Object as PropType<VxeFormDesignDefines.WidgetObjItem<WidgetTextareaFormObjVO>>,
+    renderOpts: {
+      type: Object as PropType<VxeGlobalRendererHandles.RenderFormDesignWidgetViewOptions>,
+      default: () => ({})
+    },
+    renderParams: {
+      type: Object as PropType<VxeGlobalRendererHandles.RenderFormDesignWidgetViewParams<WidgetTextareaFormObjVO>>,
       default: () => ({})
     }
   },
@@ -16,20 +21,20 @@ export const WidgetTextareaViewComponent = defineComponent({
     const computeKebabCaseName = useKebabCaseName(props)
 
     return () => {
-      const { widget } = props
-      const { widgetFormData, model } = widget
+      const { renderParams } = props
+      const { widget } = renderParams
+      const { options, model } = widget
       const kebabCaseName = computeKebabCaseName.value
 
-      return h(resolveComponent('vxe-form-item') as VxeFormItemComponent, {
+      return h(VxeFormItemComponent, {
         className: `vxe-design-form--widget-${kebabCaseName}-view`,
-        title: widgetFormData.itemTitle,
-        span: 24,
-        data: {}
+        title: widget.title,
+        field: widget.field
       }, {
         default () {
           return h('textarea', {
             class: 'vxe-default-textarea',
-            placeholder: widgetFormData.placeholder,
+            placeholder: options.placeholder,
             value: model.value,
             onInput (evnt: InputEvent & { target: HTMLInputElement }) {
               model.value = evnt.target.value

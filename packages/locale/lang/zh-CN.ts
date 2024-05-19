@@ -272,7 +272,7 @@ export default {
           input: '输入框',
           textarea: '文本域',
           select: '下拉框',
-          rows: '一行多列'
+          row: '一行多列'
         }
       }
     },

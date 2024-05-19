@@ -1,6 +1,4 @@
-import { getFormDesignWidgetName } from '../render/util'
-
-import { VxeGlobalRendererHandles, VxeFormProps } from '../../../types'
+import { VxeFormProps } from '../../../types'
 
 export interface WidgetSelectFormOptionSubObjVO {
   value: string,
@@ -12,14 +10,14 @@ export interface WidgetSelectFormOptionObjVO {
 }
 
 export interface WidgetSelectFormObjVO {
-  itemTitle: string
+  required: false
   options?: WidgetSelectFormOptionObjVO[]
 }
 
-export const getWidgetSelectFormData = (params: VxeGlobalRendererHandles.CreateFormDesignWidgetFormConfigParams): VxeFormProps<WidgetSelectFormObjVO> => {
+export const getWidgetSelectFormData = (): VxeFormProps<WidgetSelectFormObjVO> => {
   return {
     data: {
-      itemTitle: getFormDesignWidgetName(params.name),
+      required: false,
       options: [
         { value: '选项1' },
         { value: '选项2' },

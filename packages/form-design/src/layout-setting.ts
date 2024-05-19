@@ -1,11 +1,11 @@
-import { defineComponent, h, inject, createCommentVNode, watch, ref, resolveComponent } from 'vue'
+import { defineComponent, h, inject, createCommentVNode, watch, ref } from 'vue'
 import { renderer } from '../../ui/src/renderer'
 import { getSlotVNs } from '../../ui/src/vn'
 import VxeTabsComponent from '../../tabs/src/tabs'
 import VxeTabPaneComponent from '../../tabs/src/tab-pane'
 import { DefaultSettingFormComponent } from './setting-form'
 
-import { VxeFormDesignConstructor, VxeFormDesignPrivateMethods, VxeFormComponent } from '../../../types'
+import { VxeFormDesignConstructor, VxeFormDesignPrivateMethods } from '../../../types'
 
 export default defineComponent({
   props: {},
@@ -14,7 +14,7 @@ export default defineComponent({
     const $xeFormDesign = inject<(VxeFormDesignConstructor & VxeFormDesignPrivateMethods) | null>('$xeFormDesign', null)
 
     if (!$xeFormDesign) {
-      return
+      return () => []
     }
 
     const { props: formDesignProps, reactData: formDesignReactData } = $xeFormDesign
@@ -31,12 +31,6 @@ export default defineComponent({
             class: 'vxe-design-form--custom-widget-form-view'
           }, getSlotVNs(renderWidgetFormView(activeWidget, { widget: activeWidget })))
         }
-        return h(resolveComponent('vxe-form') as VxeFormComponent, {
-          key: activeWidget.id,
-          items: activeWidget.widgetFormItems,
-          data: activeWidget.widgetFormData,
-          vertical: true
-        })
       }
       return createCommentVNode()
     }

@@ -1,6 +1,6 @@
 import { defineComponent, h, createApp, resolveComponent, reactive } from 'vue'
 
-import { VxeModalDefines } from '../../types'
+import { VxeModalDefines, VxeModalComponent } from '../../types'
 
 let dynamicContainerElem: HTMLElement
 
@@ -17,7 +17,7 @@ const VxeDynamics = defineComponent({
       const { modals } = dynamicStore
       return h('div', {
         class: 'vxe-dynamics--modal'
-      }, modals.map((item) => h(resolveComponent('vxe-modal'), item)))
+      }, modals.map((item) => h(resolveComponent('vxe-modal') as VxeModalComponent, item)))
     }
   }
 })

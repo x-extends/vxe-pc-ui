@@ -1,6 +1,6 @@
 <template>
   <div>
-    <p>
+    <div class="row-wrapper">
       <vxe-row :gutter="5">
         <vxe-col>
           <div class="mybg">自适应宽度1</div>
@@ -12,9 +12,9 @@
           <div class="mybg">自适应宽度3</div>
         </vxe-col>
       </vxe-row>
-    </p>
+    </div>
 
-    <p>
+    <div class="row-wrapper">
       <vxe-row :gutter="[10, 10]">
         <vxe-col>
           <div class="mybg">自适应宽度1</div>
@@ -26,9 +26,9 @@
           <div class="mybg">自适应宽度3</div>
         </vxe-col>
       </vxe-row>
-    </p>
+    </div>
 
-    <p>
+    <div class="row-wrapper">
       <vxe-row :gutter="['5px', '16px']">
         <vxe-col span="8">
           <div class="mybg">平分1</div>
@@ -52,9 +52,9 @@
           <div class="mybg">平分1</div>
         </vxe-col>
       </vxe-row>
-    </p>
+    </div>
 
-    <p>
+    <div class="row-wrapper">
       <vxe-row :gutter="10" vertical>
         <vxe-col>
           <div class="mybg">平分1</div>
@@ -69,9 +69,9 @@
           <div class="mybg">平分4</div>
         </vxe-col>
       </vxe-row>
-    </p>
+    </div>
 
-    <p>
+    <div class="row-wrapper">
       <vxe-row>
         <vxe-col span="8">
           <div class="mybg">平分1</div>
@@ -80,10 +80,10 @@
           <div class="mybg">超出自动换行超出自动换行超出自动换行超出自动换行超出自动换行超出自动换行</div>
         </vxe-col>
         <vxe-col span="8" ellipsis>
-          <div class="mybg">超出省略隐藏超出省略隐藏超出省略隐藏超出省略隐藏超出省略隐藏</div>
+          <span class="mybg">超出省略隐藏超出省略隐藏超出省略隐藏超出省略隐藏超出省略隐藏</span>
         </vxe-col>
       </vxe-row>
-    </p>
+    </div>
   </div>
 </template>
 
@@ -91,8 +91,10 @@
 </script>
 
 <style lang="scss" scoped>
-p {
+.row-wrapper {
+  width: 90%;
   margin: 10px 0;
+  border: 1px solid red;
 }
 .mybg {
   background-color: #409eff;

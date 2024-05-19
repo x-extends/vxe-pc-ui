@@ -272,7 +272,7 @@ export default {
           input: 'Input',
           textarea: 'Textarea',
           select: 'Select',
-          rows: 'One-row multi-column'
+          row: 'One-row multi-column'
         }
       }
     },

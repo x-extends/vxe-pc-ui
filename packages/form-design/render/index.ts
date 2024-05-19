@@ -1,8 +1,8 @@
 import { h } from 'vue'
 import { getFormDesignWidgetName } from './util'
 
-import { getWidgetRowsFormData, WidgetRowsViewComponent, WidgetRowsFormComponent } from '../widget-rows'
-import { getWidgetInputFormData, WidgetInputViewComponent, WidgetInputFormComponent } from '../widget-input'
+import { getWidgetRowFormData, WidgetRowEditComponent, WidgetRowViewComponent, WidgetRowFormComponent } from '../widget-row'
+import { getWidgetInputFormData, createWidgetInputViewRules, WidgetInputViewComponent, WidgetInputFormComponent } from '../widget-input'
 import { getWidgetTextareaFormData, WidgetTextareaViewComponent, WidgetTextareaFormComponent } from '../widget-textarea'
 import { getWidgetSelectFormData, WidgetSelectViewComponent, WidgetSelectFormComponent } from '../widget-select'
 
@@ -16,65 +16,53 @@ const defaultFormDesignWidgetName = (params: VxeGlobalRendererHandles.FormDesign
  * 表单设计器 - 渲染器
  */
 const renderMap: Record<string, RendererOptions> = {
-  rows: {
+  row: {
     formDesignWidgetName: defaultFormDesignWidgetName,
     formDesignWidgetIcon: 'vxe-icon-feedback',
     formDesignWidgetGroup: 'layout',
-    renderFormDesignWidgetView (renderOpts, params) {
-      const { widget } = params
-      return h(WidgetRowsViewComponent, { widget })
+    renderFormDesignWidgetEdit (renderOpts, renderParams) {
+      return h(WidgetRowEditComponent, { renderOpts, renderParams })
     },
-    createFormDesignWidgetFormConfig: getWidgetRowsFormData,
-    renderFormDesignWidgetFormView (renderOpts, params) {
-      const { widget } = params
-      return h(WidgetRowsFormComponent, {
-        widget
-      })
+    renderFormDesignWidgetView (renderOpts, renderParams) {
+      return h(WidgetRowViewComponent, { renderOpts, renderParams })
+    },
+    createFormDesignWidgetFormConfig: getWidgetRowFormData,
+    renderFormDesignWidgetFormView (renderOpts, renderParams) {
+      return h(WidgetRowFormComponent, { renderOpts, renderParams })
     }
   },
   input: {
     formDesignWidgetName: defaultFormDesignWidgetName,
     formDesignWidgetIcon: 'vxe-icon-feedback',
-    renderFormDesignWidgetView (renderOpts, params) {
-      const { widget } = params
-      return h(WidgetInputViewComponent, { widget })
+    renderFormDesignWidgetView (renderOpts, renderParams) {
+      return h(WidgetInputViewComponent, { renderOpts, renderParams })
     },
     createFormDesignWidgetFormConfig: getWidgetInputFormData,
-    renderFormDesignWidgetFormView (renderOpts, params) {
-      const { widget } = params
-      return h(WidgetInputFormComponent, {
-        widget
-      })
-    }
+    renderFormDesignWidgetFormView (renderOpts, renderParams) {
+      return h(WidgetInputFormComponent, { renderOpts, renderParams })
+    },
+    createFormDesignWidgetViewRules: createWidgetInputViewRules
   },
   textarea: {
     formDesignWidgetName: defaultFormDesignWidgetName,
     formDesignWidgetIcon: 'vxe-icon-feedback',
-    renderFormDesignWidgetView (renderOpts, params) {
-      const { widget } = params
-      return h(WidgetTextareaViewComponent, { widget })
+    renderFormDesignWidgetView (renderOpts, renderParams) {
+      return h(WidgetTextareaViewComponent, { renderOpts, renderParams })
     },
     createFormDesignWidgetFormConfig: getWidgetTextareaFormData,
-    renderFormDesignWidgetFormView (renderOpts, params) {
-      const { widget } = params
-      return h(WidgetTextareaFormComponent, {
-        widget
-      })
+    renderFormDesignWidgetFormView (renderOpts, renderParams) {
+      return h(WidgetTextareaFormComponent, { renderOpts, renderParams })
     }
   },
   select: {
     formDesignWidgetName: defaultFormDesignWidgetName,
     formDesignWidgetIcon: 'vxe-icon-feedback',
-    renderFormDesignWidgetView (renderOpts, params) {
-      const { widget } = params
-      return h(WidgetSelectViewComponent, { widget })
+    renderFormDesignWidgetView (renderOpts, renderParams) {
+      return h(WidgetSelectViewComponent, { renderOpts, renderParams })
     },
     createFormDesignWidgetFormConfig: getWidgetSelectFormData,
-    renderFormDesignWidgetFormView (renderOpts, params) {
-      const { widget } = params
-      return h(WidgetSelectFormComponent, {
-        widget
-      })
+    renderFormDesignWidgetFormView (renderOpts, renderParams) {
+      return h(WidgetSelectFormComponent, { renderOpts, renderParams })
     }
   }
 }

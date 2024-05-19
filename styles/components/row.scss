@@ -1,7 +1,8 @@
 .vxe-row {
-  width: 100%;
+  position: relative;
   display: flex;
   flex-direction: row;
+  flex-grow: 1;
   &.is--vertical {
     flex-direction: column;
   }
