@@ -10,6 +10,10 @@ const iconConfigStore: VxeGlobalIcon = {
   BUTTON_DROPDOWN: iconPrefix + 'arrow-down',
   BUTTON_LOADING: iconPrefix + 'spinner roll',
 
+  // menu
+  MENU_ITEM_EXPAND_OPEN: iconPrefix + 'arrow-down rotate180',
+  MENU_ITEM_EXPAND_CLOSE: iconPrefix + 'arrow-down',
+
   // select
   SELECT_LOADED: iconPrefix + 'spinner roll',
   SELECT_OPEN: iconPrefix + 'caret-down rotate180',

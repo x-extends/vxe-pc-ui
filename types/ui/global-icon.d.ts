@@ -9,6 +9,10 @@ export interface VxeGlobalIcon {
   BUTTON_DROPDOWN: string
   BUTTON_LOADING: string
 
+  // menu
+  MENU_ITEM_EXPAND_OPEN: string
+  MENU_ITEM_EXPAND_CLOSE: string
+
   // select
   SELECT_LOADED: string
   SELECT_OPEN: string

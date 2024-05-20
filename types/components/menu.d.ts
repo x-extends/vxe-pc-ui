@@ -23,9 +23,39 @@ export interface MenuPrivateRef {
 export interface VxeMenuPrivateRef extends MenuPrivateRef { }
 
 export namespace VxeMenuPropTypes {
+  export type ModelValue = string | number | null
+
+  export interface MenuOneOption extends MenuOption {
+    children?: MenuTwoOption[]
+  }
+
+  export interface MenuTwoOption extends MenuOption {
+    children?: MenuThreeOption[]
+  }
+
+  export interface MenuThreeOption extends MenuOption {
+    children?: MenuOption[]
+  }
+
+  export interface MenuOption {
+    name?: VxeMenuPropTypes.ModelValue
+    title?: string | number
+    icon?: string
+    routerLink?: {
+      path?: string
+      name?: VxeMenuPropTypes.ModelValue
+      query?: any
+      params?: any
+      target?: null | '' | '_blank' | '_self' | '_parent' | '_top'
+    }
+  }
+
+  export type Options = MenuOneOption[]
 }
 
 export type VxeMenuProps = {
+  modelValue?: VxeMenuPropTypes.ModelValue
+  options?: VxeMenuPropTypes.Options
 }
 
 export interface MenuPrivateComputed {
@@ -33,6 +63,9 @@ export interface MenuPrivateComputed {
 export interface VxeMenuPrivateComputed extends MenuPrivateComputed { }
 
 export interface MenuReactData {
+  activeName: undefined | null | VxeMenuPropTypes.ModelValue
+  menuList: VxeMenuDefines.MenuItem[]
+  itemHeight: number
 }
 
 export interface MenuMethods {
@@ -42,11 +75,27 @@ export interface VxeMenuMethods extends MenuMethods { }
 export interface MenuPrivateMethods { }
 export interface VxeMenuPrivateMethods extends MenuPrivateMethods { }
 
-export type VxeMenuEmits = []
+export type VxeMenuEmits = [
+  'update:modelValue',
+  'click'
+]
 
 export namespace VxeMenuDefines {
   export interface MenuEventParams extends VxeComponentEvent {
     $menu: VxeMenuConstructor
+  }
+
+  export interface MenuItem extends VxeMenuPropTypes.MenuOption {
+    itemKey: string | number
+    level: number,
+    parentKey: string | number
+    isExactActive: boolean
+    isActive: boolean
+    isExpand: boolean
+    hasChild: boolean
+    childList: MenuItem[]
+    allChildSize: number
+    childHeight: number
   }
 }
 

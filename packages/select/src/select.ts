@@ -23,7 +23,7 @@ function getOptUniqueId () {
 export default defineComponent({
   name: 'VxeSelect',
   props: {
-    modelValue: null,
+    modelValue: [String, Number, Array] as PropType<VxeSelectPropTypes.ModelValue>,
     clearable: Boolean as PropType<VxeSelectPropTypes.Clearable>,
     placeholder: {
       type: String as PropType<VxeSelectPropTypes.Placeholder>,

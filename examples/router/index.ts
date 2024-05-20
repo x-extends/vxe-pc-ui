@@ -31,6 +31,11 @@ const routes: Array<RouteRecordRaw> = [
     component: () => import('../views/layout/LayoutTest.vue')
   },
   {
+    path: '/component/menu',
+    name: 'MenuTest',
+    component: () => import('../views/menu/MenuTest.vue')
+  },
+  {
     path: '/component/breadcrumb',
     name: 'BreadcrumbTest',
     component: () => import('../views/breadcrumb/BreadcrumbTest.vue')
