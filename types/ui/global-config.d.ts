@@ -9,6 +9,7 @@ import { VxeButtonGroupProps } from '../components/button-group'
 import { VxeCheckboxProps } from '../components/checkbox'
 import { VxeCheckboxGroupProps } from '../components/checkbox-group'
 import { VxeColProps } from '../components/col'
+import { VxeDrawerProps } from '../components/drawer'
 import { VxeFormProps } from '../components/form'
 import { VxeFormDesignProps } from '../components/form-design'
 import { VxeFormGatherProps } from '../components/form-gather'
@@ -62,6 +63,7 @@ export interface VxeGlobalConfig {
   checkbox?: VxeCheckboxProps
   checkboxGroup?: VxeCheckboxGroupProps
   col?: VxeColProps
+  drawer?: VxeDrawerProps
   form?: VxeFormProps
   formDesign?: VxeFormDesignProps
   formGather?: VxeFormGatherProps

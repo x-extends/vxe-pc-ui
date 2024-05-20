@@ -7,14 +7,14 @@ import { errLog } from '../../ui/src/log'
 import { GlobalEvent, hasEventKey, EVENT_KEYS } from '../../ui/src/event'
 import globalConfigStore from '../../ui/src/globalStore'
 import iconConfigStore from '../../ui/src/iconStore'
-import VxeButtonConstructor from '../../button/src/button'
-import VxeLoading from '../../loading/index'
+import VxeButtonComponent from '../../button/src/button'
+import VxeLoadingComponent from '../../loading/index'
 import { getSlotVNs } from '../../ui/src/vn'
 import { getI18n } from '../../ui/src/i18n'
 
 import { VxeModalConstructor, VxeModalPropTypes, ModalReactData, VxeModalEmits, ModalEventTypes, VxeButtonInstance, ModalMethods, ModalPrivateRef, VxeModalMethods } from '../../../types'
 
-export const allActivedModals: VxeModalConstructor[] = []
+export const allActiveModals: VxeModalConstructor[] = []
 export const msgQueue: VxeModalConstructor[] = []
 
 export default defineComponent({
@@ -96,10 +96,10 @@ export default defineComponent({
       firstOpen: true
     })
 
-    const refElem = ref() as Ref<HTMLDivElement>
+    const refElem = ref<HTMLDivElement>()
     const refModalBox = ref() as Ref<HTMLDivElement>
-    const refConfirmBtn = ref() as Ref<VxeButtonInstance>
-    const refCancelBtn = ref() as Ref<VxeButtonInstance>
+    const refConfirmBtn = ref<VxeButtonInstance>()
+    const refCancelBtn = ref<VxeButtonInstance>()
 
     const refMaps: ModalPrivateRef = {
       refElem
@@ -204,7 +204,7 @@ export default defineComponent({
             if (!remember) {
               reactData.zoomLocat = null
             }
-            XEUtils.remove(allActivedModals, item => item === $xeModal)
+            XEUtils.remove(allActiveModals, item => item === $xeModal)
             modalMethods.dispatchEvent('before-hide', params)
             setTimeout(() => {
               reactData.visible = false
@@ -344,7 +344,7 @@ export default defineComponent({
         reactData.visible = true
         reactData.contentVisible = false
         updateZindex()
-        allActivedModals.push($xeModal)
+        allActiveModals.push($xeModal)
         setTimeout(() => {
           reactData.contentVisible = true
           nextTick(() => {
@@ -405,7 +405,7 @@ export default defineComponent({
     const handleGlobalKeydownEvent = (evnt: KeyboardEvent) => {
       const isEsc = hasEventKey(evnt, EVENT_KEYS.ESCAPE)
       if (isEsc) {
-        const lastModal = XEUtils.max(allActivedModals, (item) => item.reactData.modalZindex)
+        const lastModal = XEUtils.max(allActiveModals, (item) => item.reactData.modalZindex)
         // 多个时，只关掉最上层的窗口
         if (lastModal) {
           setTimeout(() => {
@@ -483,7 +483,7 @@ export default defineComponent({
 
     const boxMousedownEvent = () => {
       const { modalZindex } = reactData
-      if (allActivedModals.some(comp => comp.reactData.visible && comp.reactData.modalZindex > modalZindex)) {
+      if (allActiveModals.some(comp => comp.reactData.visible && comp.reactData.modalZindex > modalZindex)) {
         updateZindex()
       }
     }
@@ -693,6 +693,25 @@ export default defineComponent({
       }
     }
 
+    modalMethods = {
+      dispatchEvent (type, params, evnt) {
+        emit(type, Object.assign({ $modal: $xeModal, $event: evnt }, params))
+      },
+      open: openModal,
+      close () {
+        return closeModal('close')
+      },
+      getBox,
+      getPosition,
+      setPosition,
+      isMaximized,
+      zoom,
+      maximize,
+      revert
+    }
+
+    Object.assign($xeModal, modalMethods)
+
     const renderTitles = () => {
       const { slots: propSlots = {}, showClose, showZoom, title } = props
       const { zoomLocat } = reactData
@@ -793,7 +812,7 @@ export default defineComponent({
          * 加载中
          */
         contVNs.push(
-          h(VxeLoading, {
+          h(VxeLoadingComponent, {
             class: 'vxe-modal--loading',
             modelValue: props.loading
           })
@@ -811,7 +830,7 @@ export default defineComponent({
       const btnVNs = []
       if (XEUtils.isBoolean(showCancelButton) ? showCancelButton : type === 'confirm') {
         btnVNs.push(
-          h(VxeButtonConstructor, {
+          h(VxeButtonComponent, {
             key: 1,
             ref: refCancelBtn,
             content: props.cancelButtonText || getI18n('vxe.button.cancel'),
@@ -821,7 +840,7 @@ export default defineComponent({
       }
       if (XEUtils.isBoolean(showConfirmButton) ? showConfirmButton : (type === 'confirm' || type === 'alert')) {
         btnVNs.push(
-          h(VxeButtonConstructor, {
+          h(VxeButtonComponent, {
             key: 2,
             ref: refConfirmBtn,
             status: 'primary',
@@ -860,56 +879,6 @@ export default defineComponent({
       }
       return footVNs
     }
-
-    modalMethods = {
-      dispatchEvent (type, params, evnt) {
-        emit(type, Object.assign({ $modal: $xeModal, $event: evnt }, params))
-      },
-      open: openModal,
-      close () {
-        return closeModal('close')
-      },
-      getBox,
-      getPosition,
-      setPosition,
-      isMaximized,
-      zoom,
-      maximize,
-      revert
-    }
-
-    Object.assign($xeModal, modalMethods)
-
-    watch(() => props.width, recalculate)
-    watch(() => props.height, recalculate)
-
-    watch(() => props.modelValue, (value) => {
-      if (value) {
-        openModal()
-      } else {
-        closeModal('model')
-      }
-    })
-
-    onMounted(() => {
-      nextTick(() => {
-        if (props.storage && !props.id) {
-          errLog('vxe.error.reqProp', ['modal.id'])
-        }
-        if (props.modelValue) {
-          openModal()
-        }
-        recalculate()
-      })
-      if (props.escClosable) {
-        GlobalEvent.on($xeModal, 'keydown', handleGlobalKeydownEvent)
-      }
-    })
-
-    onUnmounted(() => {
-      GlobalEvent.off($xeModal, 'keydown')
-      removeMsgQueue()
-    })
 
     const renderVN = () => {
       const { className, type, animat, loading, status, lockScroll, lockView, mask, resize } = props
@@ -950,6 +919,37 @@ export default defineComponent({
     }
 
     $xeModal.renderVN = renderVN
+
+    watch(() => props.width, recalculate)
+    watch(() => props.height, recalculate)
+
+    watch(() => props.modelValue, (value) => {
+      if (value) {
+        openModal()
+      } else {
+        closeModal('model')
+      }
+    })
+
+    onMounted(() => {
+      nextTick(() => {
+        if (props.storage && !props.id) {
+          errLog('vxe.error.reqProp', ['modal.id'])
+        }
+        if (props.modelValue) {
+          openModal()
+        }
+        recalculate()
+      })
+      if (props.escClosable) {
+        GlobalEvent.on($xeModal, 'keydown', handleGlobalKeydownEvent)
+      }
+    })
+
+    onUnmounted(() => {
+      GlobalEvent.off($xeModal, 'keydown')
+      removeMsgQueue()
+    })
 
     return $xeModal
   },

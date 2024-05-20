@@ -44,6 +44,7 @@ const componentList = [
   'collapse',
   'collapse-pane',
   'date-input',
+  'drawer',
   'form',
   'form-design',
   'form-gather',

@@ -1,11 +1,12 @@
-import { defineComponent, h, createApp, resolveComponent, reactive } from 'vue'
+import { defineComponent, h, createApp, resolveComponent, reactive, createCommentVNode } from 'vue'
 
-import { VxeModalDefines, VxeModalComponent } from '../../types'
+import { VxeModalDefines, VxeModalComponent, VxeDrawerDefines, VxeDrawerComponent } from '../../types'
 
 let dynamicContainerElem: HTMLElement
 
 export const dynamicStore = reactive({
-  modals: [] as VxeModalDefines.ModalOptions[]
+  modals: [] as VxeModalDefines.ModalOptions[],
+  drawers: [] as VxeDrawerDefines.DrawerOptions[]
 })
 
 /**
@@ -14,10 +15,19 @@ export const dynamicStore = reactive({
 const VxeDynamics = defineComponent({
   setup () {
     return () => {
-      const { modals } = dynamicStore
-      return h('div', {
-        class: 'vxe-dynamics--modal'
-      }, modals.map((item) => h(resolveComponent('vxe-modal') as VxeModalComponent, item)))
+      const { modals, drawers } = dynamicStore
+      return [
+        modals.length
+          ? h('div', {
+            class: 'vxe-dynamics--modal'
+          }, modals.map((item) => h(resolveComponent('vxe-modal') as VxeModalComponent, item)))
+          : createCommentVNode(),
+        drawers.length
+          ? h('div', {
+            class: 'vxe-dynamics--drawer'
+          }, drawers.map((item) => h(resolveComponent('vxe-drawer') as VxeDrawerComponent, item)))
+          : createCommentVNode()
+      ]
     }
   }
 })

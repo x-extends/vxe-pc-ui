@@ -81,6 +81,11 @@ const routes: Array<RouteRecordRaw> = [
     component: () => import('../views/modal/ModalTest.vue')
   },
   {
+    path: '/component/drawer',
+    name: 'DrawerTest',
+    component: () => import('../views/drawer/DrawerTest.vue')
+  },
+  {
     path: '/component/tabs',
     name: 'TabsTest',
     component: () => import('../views/tabs/TabsTest.vue')

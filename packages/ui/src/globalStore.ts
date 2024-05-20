@@ -22,6 +22,14 @@ const globalConfigStore: Required<VxeGlobalConfig> = {
   checkbox: {},
   checkboxGroup: {},
   col: {},
+  drawer: {
+    // size: null,
+    showHeader: true,
+    lockView: true,
+    mask: true,
+    showTitleOverflow: true,
+    showClose: true
+  },
   form: {
     // preventSubmit: false,
     // size: null,

@@ -8,6 +8,7 @@ import { VxeGlobalCommands } from './commands'
 import { VxeGlobalInterceptor } from './interceptor'
 import { VxeGlobalHooks } from './hooks'
 import { ModalController } from '../components/modal'
+import { DrawerController } from '../components/drawer'
 
 export function setConfig(options?: VxeGlobalConfig): typeof VxeUIExport
 
@@ -36,6 +37,8 @@ export const interceptor: VxeGlobalInterceptor
 export const hooks: VxeGlobalHooks
 
 export const modal: ModalController
+
+export const drawer: DrawerController
 
 export interface VxeUIExport {
   /**
@@ -93,6 +96,9 @@ export interface VxeUIExport {
 
   // 全局弹窗对象
   modal: ModalController
+
+  // 全局抽屉对象
+  drawer: DrawerController
 }
 
 export declare const VxeUI: VxeUIExport

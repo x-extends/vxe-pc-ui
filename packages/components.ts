@@ -16,6 +16,7 @@ import VxeCol from './col'
 import VxeCollapse from './collapse'
 import VxeCollapsePane from './collapse-pane'
 import VxeDateInput from './date-input'
+import VxeDrawer from './drawer'
 import VxeForm from './form'
 import VxeFormDesign from './form-design'
 import VxeFormGather from './form-gather'
@@ -78,6 +79,7 @@ const components = [
   VxeCollapse,
   VxeCollapsePane,
   VxeDateInput,
+  VxeDrawer,
   VxeForm,
   VxeFormDesign,
   VxeFormGather,
@@ -140,6 +142,7 @@ export * from './col'
 export * from './collapse'
 export * from './collapse-pane'
 export * from './date-input'
+export * from './drawer'
 export * from './form'
 export * from './form-design'
 export * from './form-gather'

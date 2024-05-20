@@ -66,7 +66,8 @@ const VxeCore: VxeUIExport = {
 
   hooks,
 
-  modal: null as any
+  modal: null as any,
+  drawer: null as any
 }
 
 setTheme()
