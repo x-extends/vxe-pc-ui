@@ -1,8 +1,8 @@
 import { defineComponent, h, ref, Ref, nextTick, onBeforeUnmount, onMounted, reactive, watch, PropType } from 'vue'
 import XEUtils from 'xe-utils'
-import globalConfigStore from '../../ui/src/globalStore'
+import { getConfig } from '@vxe-ui/core'
 import { useSize } from '../../hooks/size'
-import { getLastZIndex, nextZIndex, formatText } from '../../ui/src/utils'
+import { getLastZIndex, nextZIndex } from '../../ui/src/utils'
 import { getAbsolutePos, getDomNode } from '../../ui/src/dom'
 import { getSlotVNs } from '../../ui/src/vn'
 
@@ -12,17 +12,17 @@ export default defineComponent({
   name: 'VxeTooltip',
   props: {
     modelValue: Boolean,
-    size: { type: String as PropType<VxeTooltipPropTypes.Size>, default: () => globalConfigStore.tooltip.size || globalConfigStore.size },
-    trigger: { type: String as PropType<VxeTooltipPropTypes.Trigger>, default: () => globalConfigStore.tooltip.trigger || 'hover' },
-    theme: { type: String as PropType<VxeTooltipPropTypes.Theme>, default: () => globalConfigStore.tooltip.theme || 'dark' },
+    size: { type: String as PropType<VxeTooltipPropTypes.Size>, default: () => getConfig().tooltip.size || getConfig().size },
+    trigger: { type: String as PropType<VxeTooltipPropTypes.Trigger>, default: () => getConfig().tooltip.trigger || 'hover' },
+    theme: { type: String as PropType<VxeTooltipPropTypes.Theme>, default: () => getConfig().tooltip.theme || 'dark' },
     content: { type: [String, Number] as PropType<VxeTooltipPropTypes.Content>, default: null },
     useHTML: Boolean as PropType<VxeTooltipPropTypes.UseHTML>,
     zIndex: [String, Number] as PropType<VxeTooltipPropTypes.ZIndex>,
     popupClassName: [String, Function] as PropType<VxeTooltipPropTypes.PopupClassName>,
     isArrow: { type: Boolean as PropType<VxeTooltipPropTypes.IsArrow>, default: true },
     enterable: Boolean as PropType<VxeTooltipPropTypes.Enterable>,
-    enterDelay: { type: Number as PropType<VxeTooltipPropTypes.EnterDelay>, default: () => globalConfigStore.tooltip.enterDelay },
-    leaveDelay: { type: Number as PropType<VxeTooltipPropTypes.LeaveDelay>, default: () => globalConfigStore.tooltip.leaveDelay }
+    enterDelay: { type: Number as PropType<VxeTooltipPropTypes.EnterDelay>, default: () => getConfig().tooltip.enterDelay },
+    leaveDelay: { type: Number as PropType<VxeTooltipPropTypes.LeaveDelay>, default: () => getConfig().tooltip.leaveDelay }
   },
   emits: [
     'update:modelValue'
@@ -313,7 +313,7 @@ export default defineComponent({
       return h('div', {
         key: 3,
         class: 'vxe-table--tooltip-content'
-      }, formatText(tipContent))
+      }, `${tipContent}`)
     }
 
     const renderVN = () => {

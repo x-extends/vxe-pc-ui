@@ -1,6 +1,6 @@
 import { defineComponent, ref, h, reactive, nextTick, PropType, provide, watch } from 'vue'
 import XEUtils from 'xe-utils'
-import { renderer } from '../../ui/src/renderer'
+import { renderer } from '@vxe-ui/core'
 import { getSlotVNs } from '../../ui/src/vn'
 import VxeFormComponent from '../../form/src/form'
 

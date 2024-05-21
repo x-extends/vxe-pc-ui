@@ -1,6 +1,6 @@
 import { h, defineComponent, PropType, inject, createCommentVNode } from 'vue'
 import XEUtils from 'xe-utils'
-import iconConfigStore from '../../ui/src/iconStore'
+import { getIcon } from '@vxe-ui/core'
 import VxeButtonComponent from '../../button/src/button'
 
 import { VxeFormDesignDefines, VxeFormDesignConstructor, VxeFormDesignPrivateMethods } from '../../../types'
@@ -115,7 +115,7 @@ export const ViewItemComponent = defineComponent({
             class: 'vxe-design-form--preview-item-operate'
           }, [
             h(VxeButtonComponent, {
-              icon: iconConfigStore.DESIGN_FORM_WIDGET_COPY,
+              icon: getIcon().DESIGN_FORM_WIDGET_COPY,
               status: 'primary',
               size: 'mini',
               circle: true,
@@ -124,7 +124,7 @@ export const ViewItemComponent = defineComponent({
               }
             }),
             h(VxeButtonComponent, {
-              icon: iconConfigStore.DESIGN_FORM_WIDGET_DELETE,
+              icon: getIcon().DESIGN_FORM_WIDGET_DELETE,
               status: 'danger',
               size: 'mini',
               circle: true,

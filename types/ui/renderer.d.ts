@@ -1,384 +1,128 @@
-import { VxeComponentSlot, VxeComponentStyle, VxeComponentClassName } from '../tool'
-import { FormItemRenderOptions, FormItemTitleRenderParams, FormItemContentRenderParams, FormItemVisibleParams, FormItemResetParams } from '../components/form-item'
+import { VxeComponentStyle, VxeComponentClassName } from '../tool'
+import { VxeFormItemPropTypes, FormItemTitleRenderParams, FormItemContentRenderParams, FormItemVisibleParams, FormItemResetParams } from '../components/form-item'
 import { VxeFormDefines, VxeFormProps } from '../components/form'
 import { VxeFormDesignDefines } from '../components/form-design'
 
 /* eslint-disable no-use-before-define */
 
-type RendererOptions = DefineRendererOption<VxeGlobalRendererHandles.RenderResult>
+// 表单
+declare module '@vxe-ui/core' {
+  export interface VxeGlobalRendererOptions {
+    // 表单-项渲染
+    formItemAutoFocus?: boolean
+    itemClassName?: string | ((params: VxeGlobalRendererHandles.RenderItemTitleParams) => string | VxeComponentClassName)
+    itemStyle?: VxeComponentStyle | ((params: VxeGlobalRendererHandles.RenderItemTitleParams) => VxeComponentStyle)
+    itemContentClassName?: string | ((params: VxeGlobalRendererHandles.RenderItemTitleParams) => string | VxeComponentClassName)
+    itemContentStyle?: VxeComponentStyle | ((params: VxeGlobalRendererHandles.RenderItemTitleParams) => VxeComponentStyle)
+    itemTitleClassName?: string | ((params: VxeGlobalRendererHandles.RenderItemTitleParams) => string | VxeComponentClassName)
+    itemTitleStyle?: VxeComponentStyle | ((params: VxeGlobalRendererHandles.RenderItemTitleParams) => VxeComponentStyle)
+    renderItemTitle?(renderOpts: VxeGlobalRendererHandles.RenderItemTitleOptions, params: VxeGlobalRendererHandles.RenderItemTitleParams): VxeComponentSlot | VxeComponentSlot[]
+    renderItemContent?(renderOpts: VxeGlobalRendererHandles.RenderItemContentOptions, params: VxeGlobalRendererHandles.RenderItemContentParams): VxeComponentSlot | VxeComponentSlot[]
+    itemVisibleMethod?(params: VxeGlobalRendererHandles.ItemVisibleMethodParams): boolean
+    itemResetMethod?(params: VxeGlobalRendererHandles.ItemResetMethodParams): void
 
-export interface DefineRendererOption<T> {
-  /**
-   * @deprecated 已废弃
-   */
-  className?: string
+    /**
+     * 已废弃
+     * @deprecated
+     */
+    autofocus?: boolean
+  }
 
-  // 筛选渲染
-  filterClassName?: string | ((params: VxeGlobalRendererHandles.RenderFilterParams<any>) => string | VxeComponentClassName)
-  showFilterFooter?: boolean
-  renderFilter?(renderOpts: VxeGlobalRendererHandles.RenderFilterOptions, params: VxeGlobalRendererHandles.RenderFilterParams<any>): T
-  filterMethod?(params: VxeGlobalRendererHandles.FilterMethodParams<any>): boolean
-  filterRemoteMethod?(params: VxeGlobalRendererHandles.FilterRemoteMethod<any>): boolean
-  filterResetMethod?(params: VxeGlobalRendererHandles.FilterResetMethodParams<any>): void
-  filterRecoverMethod?(params: VxeGlobalRendererHandles.FilterRecoverMethodParams<any>): void
-  // 默认行为
-  defaultFilterMethod?(params: VxeGlobalRendererHandles.FilterMethodParams<any>): boolean
-
-  // 单元格渲染
-  cellClassName?: string | ((params: VxeGlobalRendererHandles.RenderDefaultParams<any>) => string | VxeComponentClassName)
-  cellStyle?: VxeComponentStyle | ((params: VxeGlobalRendererHandles.RenderDefaultParams<any>) => VxeComponentStyle)
-  renderHeader?(renderOpts: VxeGlobalRendererHandles.RenderHeaderOptions, params: VxeGlobalRendererHandles.RenderHeaderParams<any>): T
-  renderDefault?(renderOpts: VxeGlobalRendererHandles.RenderDefaultOptions, params: VxeGlobalRendererHandles.RenderDefaultParams<any>): T
-  renderFooter?(renderOpts: VxeGlobalRendererHandles.RenderFooterOptions, params: VxeGlobalRendererHandles.RenderFooterParams<any>): T
-  exportMethod?(params: VxeGlobalRendererHandles.ExportMethodParams<any>): string
-  footerExportMethod?(params: VxeGlobalRendererHandles.FooterExportMethodParams<any>): string
-
-  // 编辑渲染
-  autofocus?: string | ((params: VxeGlobalRendererHandles.RenderEditParams<any> | VxeGlobalRendererHandles.RenderCellParams<any>) => HTMLElement | null)
-  autoselect?: boolean
-  renderEdit?(renderOpts: VxeGlobalRendererHandles.RenderEditOptions<any>, params: VxeGlobalRendererHandles.RenderEditParams<any>): T
-  renderCell?(renderOpts: VxeGlobalRendererHandles.RenderCellOptions<any>, params: VxeGlobalRendererHandles.RenderCellParams<any>): T
-
-  // 内容渲染
-  renderExpand?(renderOpts: VxeGlobalRendererHandles.RenderExpandOptions, params: VxeGlobalRendererHandles.RenderExpandParams<any>): T
-
-  // 工具栏-按钮渲染
-  toolbarButtonClassName?: string | ((params: VxeGlobalRendererHandles.RenderButtonParams<any>) => string | VxeComponentClassName)
-  renderToolbarButton?(renderOpts: VxeGlobalRendererHandles.RenderButtonOptions, params: VxeGlobalRendererHandles.RenderButtonParams<any>): T
-  toolbarToolClassName?: string | ((params: VxeGlobalRendererHandles.RenderToolParams<any>) => string | VxeComponentClassName)
-  renderToolbarTool?(renderOpts: VxeGlobalRendererHandles.RenderToolOptions, params: VxeGlobalRendererHandles.RenderToolParams<any>): T
-
-  // 表单-项渲染
-  itemClassName?: string | ((params: VxeGlobalRendererHandles.RenderItemTitleParams) => string | VxeComponentClassName)
-  itemStyle?: VxeComponentStyle | ((params: VxeGlobalRendererHandles.RenderItemTitleParams) => VxeComponentStyle)
-  itemContentClassName?: string | ((params: VxeGlobalRendererHandles.RenderItemTitleParams) => string | VxeComponentClassName)
-  itemContentStyle?: VxeComponentStyle | ((params: VxeGlobalRendererHandles.RenderItemTitleParams) => VxeComponentStyle)
-  itemTitleClassName?: string | ((params: VxeGlobalRendererHandles.RenderItemTitleParams) => string | VxeComponentClassName)
-  itemTitleStyle?: VxeComponentStyle | ((params: VxeGlobalRendererHandles.RenderItemTitleParams) => VxeComponentStyle)
-  renderItemTitle?(renderOpts: VxeGlobalRendererHandles.RenderItemTitleOptions, params: VxeGlobalRendererHandles.RenderItemTitleParams): T
-  renderItemContent?(renderOpts: VxeGlobalRendererHandles.RenderItemContentOptions, params: VxeGlobalRendererHandles.RenderItemContentParams): T
-  itemVisibleMethod?(params: VxeGlobalRendererHandles.ItemVisibleMethodParams): boolean
-  itemResetMethod?(params: VxeGlobalRendererHandles.ItemResetMethodParams): void
-
-  /**
-   * 表单设计器 - 左侧控件名称
-   */
-  formDesignWidgetName?: string | ((params: VxeGlobalRendererHandles.FormDesignWidgetNameParams) => string)
-  /**
-   * 表单设计器 - 左侧控件图标
-   */
-  formDesignWidgetIcon?: string
-  /**
-   * 表单设计器 - 左侧控件分组
-   */
-  formDesignWidgetGroup?: null | '' | 'base' | 'layout' | 'advanced'
-  /**
-   * 表单设计器 - 左侧自定义控件分组
-   */
-  formDesignWidgetCustomGroup?: string | ((params: VxeGlobalRendererHandles.FormDesignWidgetCustomGroupParams) => string)
-  /**
-   * 表单设计器 - 渲染左侧控件项
-   */
-  renderFormDesignWidgetItem?(renderOpts: VxeGlobalRendererHandles.RenderFormDesignWidgetItemOptions, params: VxeGlobalRendererHandles.RenderFormDesignWidgetItemParams): T
-  /**
-   * 表单设计器 - 创建设计器表单数据
-   */
-  createFormDesignSettingFormConfig?(params: VxeGlobalRendererHandles.CreateFormDesignSettingFormConfigParams): Record<string, any>
-  /**
-   * 表单设计器 - 渲染设计器表单视图
-   */
-  renderFormDesignSettingView?(renderOpts: VxeGlobalRendererHandles.RenderFormDesignSettingViewOptions, params: VxeGlobalRendererHandles.RenderFormDesignSettingViewParams): T
-  /**
-   * 表单设计器 - 创建右侧控件字段表单数据
-   */
-  createFormDesignWidgetFormConfig?(params: VxeGlobalRendererHandles.CreateFormDesignWidgetFormConfigParams): VxeFormProps
-  /**
-   * 表单设计器 - 渲染右侧控件表单视图
-   */
-  renderFormDesignWidgetFormView?(renderOpts: VxeGlobalRendererHandles.RenderFormDesignWidgetFormViewOptions, params: VxeGlobalRendererHandles.RenderFormDesignWidgetFormViewParams): T
-  /**
-   * 表单设计器 - 控件渲染器（设计时）
-   * 如果不设置，则使用 renderFormDesignWidgetView 渲染
-   */
-  renderFormDesignWidgetEdit?(renderOpts: VxeGlobalRendererHandles.RenderFormDesignWidgetEditOptions, params: VxeGlobalRendererHandles.RenderFormDesignWidgetEditParams): T
-  /**
-   * 表单设计器 - 控件渲染器（运行时）
-   */
-  renderFormDesignWidgetView?(renderOpts: VxeGlobalRendererHandles.RenderFormDesignWidgetViewOptions, params: VxeGlobalRendererHandles.RenderFormDesignWidgetViewParams): T
-  /**
-   * 表单设计器 - 创建控件校验规则
-   */
-  createFormDesignWidgetViewRules?(params: VxeGlobalRendererHandles.CreateFormDesignWidgetViewRulesParams): VxeFormDefines.FormRule[]
-
-  /**
-   * 表格 - 渲染空内容
-   */
-  renderTableEmptyView?(renderOpts: VxeGlobalRendererHandles.RenderTableEmptyViewOptions, params: VxeGlobalRendererHandles.RenderEmptyParams): T
-
-  /**
-   * 已废弃，请使用 renderTableEmptyView
-   * @deprecated
-   */
-  renderEmpty?(renderOpts: VxeGlobalRendererHandles.RenderTableEmptyViewOptions, params: VxeGlobalRendererHandles.RenderEmptyParams): T
+  export namespace VxeGlobalRendererHandles {
+    export type RenderItemTitleOptions = VxeFormItemPropTypes.ItemRender
+    export type RenderItemTitleParams = FormItemTitleRenderParams
+    export type RenderItemContentOptions = any
+    export type RenderItemContentParams = FormItemContentRenderParams
+    export type ItemVisibleMethodParams = FormItemVisibleParams
+    export type ItemResetMethodParams = FormItemResetParams
+  }
 }
 
-export namespace VxeGlobalRendererHandles {
-  export type RenderResult = VxeComponentSlot | VxeComponentSlot[]
-
-  export interface RenderFilterOptions {}
-
-  export interface RenderParams {}
-
-  export type RenderFilterParams<D = any> = {
-    $table: any
-    $panel: any
-    column: any
-    columnIndex: number
-    $columnIndex: number
-    $rowIndex: number
-  }
-
-  export type FilterMethodParams<D = any> = {
-    $table: any
-    value: any
-    option: any
-    cellValue: any
-    row: any
-    column: any
-  }
-
-  export interface FilterRemoteMethod<D = any> {
-    $table: any
-  }
-
-  export interface FilterResetMethodParams<D = any> {
-    $table: any
-    options: any[]
-    column: any
-  }
-
-  export interface FilterRecoverMethodParams<D = any> {
-    $table: any
-    option: any
-    column: any
-  }
-
-  export interface RenderHeaderOptions extends VxeGlobalRendererHandles.RenderOptions { }
-
-  export interface RenderHeaderParams<D = any> {
-    $table: any
-    column:any
-    columnIndex: number
-    $columnIndex: number
-    $rowIndex: number
-  }
-
-  export type RenderDefaultOptions<D = any> = {
-    [ket: string]: any
-  }
-  export type RenderDefaultParams<D = any> = RenderEditParams<D>
-
-  export interface RenderFooterOptions extends VxeGlobalRendererHandles.RenderOptions { }
-
-  export interface RenderFooterParams<D = any> {
-    $table: any
-    column: any
-    columnIndex: number
-    _columnIndex: number
-    $columnIndex: number
-    $rowIndex: number
-    items: any[]
-    data: D[][]
-  }
-
-  export interface ExportMethodParams<D = any> {
-    row: D
-    column: any
-    options: any[]
-  }
-
-  export interface FooterExportMethodParams<D = any> {
-    items: any[]
-    _columnIndex: number
-    column: any
-    options: any[]
-  }
-
-  export type RenderEditOptions<D = any> = {
-    [ket: string]: any
-  }
-
-  export interface RenderEditParams<D = any> {
-    $table: any
-    $grid: any
-    column: any
-    columnIndex: number
-    $columnIndex: number
-    rowid: string
-    row: D
-    rowIndex: number
-    $rowIndex: number
-    isHidden: boolean
-    fixed: any
-    type: string
-  }
-
-  export type RenderCellOptions<D = any> = {
-    [ket: string]: any
-  }
-  export type RenderCellParams<D = any> = {
-    $table: any
-    $grid: any
-    column: any
-    columnIndex: number
-    $columnIndex: number
-    rowid: string
-    row: D
-    rowIndex: number
-    $rowIndex: number
-    isHidden: boolean
-    fixed: any
-    type: string
-  }
-
-  export interface RenderExpandOptions { }
-  export type RenderExpandParams<D = any> = RenderEditParams<D>
-
-  export interface RenderButtonOptions extends VxeGlobalRendererHandles.RenderOptions { }
-  export interface RenderButtonParams<D = any> {
-    $grid: any
-    $table: any
-    button: any
-  }
-
-  export interface RenderToolOptions extends VxeGlobalRendererHandles.RenderOptions { }
-  export interface RenderToolParams<D = any> {
-    $grid: any
-    $table: any
-    tool: any
-  }
-
-  export type RenderItemTitleOptions = FormItemRenderOptions
-  export type RenderItemTitleParams = FormItemTitleRenderParams
-  export type RenderItemContentOptions = FormItemRenderOptions
-  export type RenderItemContentParams = FormItemContentRenderParams
-  export type ItemVisibleMethodParams = FormItemVisibleParams
-  export type ItemResetMethodParams = FormItemResetParams
-
-  export type RenderTableEmptyViewOptions = {
-    [key: string]: any
-  }
-
-  export interface RenderEmptyParams<D = any> {
-    $table: any
-  }
-
-  /**
-   * 渲染选项
-   */
-  export interface RenderOptions {
+// 表单设计器
+declare module '@vxe-ui/core' {
+  export interface VxeGlobalRendererOptions {
     /**
-     * 渲染器名称
+     * 表单设计器 - 左侧控件名称
      */
-    name?: string
+    formDesignWidgetName?: string | ((params: VxeGlobalRendererHandles.FormDesignWidgetNameParams) => string)
     /**
-     * 目标组件渲染的参数
+     * 表单设计器 - 左侧控件图标
      */
-    props?: { [key: string]: any }
+    formDesignWidgetIcon?: string
     /**
-     * 目标组件渲染的属性
+     * 表单设计器 - 左侧控件分组
      */
-    attrs?: { [key: string]: any }
+    formDesignWidgetGroup?: null | '' | 'base' | 'layout' | 'advanced'
     /**
-     * 目标组件渲染的事件
+     * 表单设计器 - 左侧自定义控件分组
      */
-    events?: { [key: string]: (...args: any[]) => any }
+    formDesignWidgetCustomGroup?: string | ((params: VxeGlobalRendererHandles.FormDesignWidgetCustomGroupParams) => string)
     /**
-     * 多目标渲染
+     * 表单设计器 - 渲染左侧控件项
      */
-    children?: any[]
+    renderFormDesignWidgetItem?(renderOpts: VxeGlobalRendererHandles.RenderFormDesignWidgetItemOptions, params: VxeGlobalRendererHandles.RenderFormDesignWidgetItemParams): VxeComponentSlot | VxeComponentSlot[]
     /**
-     * 渲染类型
+     * 表单设计器 - 创建设计器表单数据
      */
-    cellType?: 'string' | 'number'
+    createFormDesignSettingFormConfig?(params: VxeGlobalRendererHandles.CreateFormDesignSettingFormConfigParams): Record<string, any>
+    /**
+     * 表单设计器 - 渲染设计器表单视图
+     */
+    renderFormDesignSettingView?(renderOpts: VxeGlobalRendererHandles.RenderFormDesignSettingViewOptions, params: VxeGlobalRendererHandles.RenderFormDesignSettingViewParams): VxeComponentSlot | VxeComponentSlot[]
+    /**
+     * 表单设计器 - 创建右侧控件字段表单数据
+     */
+    createFormDesignWidgetFormConfig?(params: VxeGlobalRendererHandles.CreateFormDesignWidgetFormConfigParams): VxeFormProps
+    /**
+     * 表单设计器 - 渲染右侧控件表单视图
+     */
+    renderFormDesignWidgetFormView?(renderOpts: VxeGlobalRendererHandles.RenderFormDesignWidgetFormViewOptions, params: VxeGlobalRendererHandles.RenderFormDesignWidgetFormViewParams): VxeComponentSlot | VxeComponentSlot[]
+    /**
+     * 表单设计器 - 控件渲染器（设计时）
+     * 如果不设置，则使用 renderFormDesignWidgetView 渲染
+     */
+    renderFormDesignWidgetEdit?(renderOpts: VxeGlobalRendererHandles.RenderFormDesignWidgetEditOptions, params: VxeGlobalRendererHandles.RenderFormDesignWidgetEditParams): VxeComponentSlot | VxeComponentSlot[]
+    /**
+     * 表单设计器 - 控件渲染器（运行时）
+     */
+    renderFormDesignWidgetView?(renderOpts: VxeGlobalRendererHandles.RenderFormDesignWidgetViewOptions, params: VxeGlobalRendererHandles.RenderFormDesignWidgetViewParams): VxeComponentSlot | VxeComponentSlot[]
+    /**
+     * 表单设计器 - 创建控件校验规则
+     */
+    createFormDesignWidgetViewRules?(params: VxeGlobalRendererHandles.CreateFormDesignWidgetViewRulesParams): VxeFormDefines.FormRule[]
   }
 
-  /**
-   * 选项参数
-   */
-  export interface RenderOptionProps {
-    value?: string
-    label?: string
-    disabled?: string
-    key?: string
+  export namespace VxeGlobalRendererHandles {
+    export interface FormDesignWidgetNameParams {
+      name: string
+    }
+    export interface FormDesignWidgetCustomGroupParams {}
+    export interface CreateFormDesignSettingFormConfigParams {}
+    export interface CreateFormDesignWidgetFormConfigParams {
+      name: string
+    }
+    export interface RenderFormDesignWidgetItemOptions {}
+    export interface RenderFormDesignWidgetItemParams {}
+    export interface RenderFormDesignWidgetViewOptions {
+      name: string
+    }
+    export interface RenderFormDesignWidgetViewParams<D = any> {
+      widget: VxeFormDesignDefines.WidgetObjItem<D>
+      isEditMode: boolean
+      isViewMode: boolean
+    }
+    export interface CreateFormDesignWidgetViewRulesParams<D = any> {
+      widget: VxeFormDesignDefines.WidgetObjItem<D>
+    }
+    export interface RenderFormDesignWidgetEditOptions extends RenderFormDesignWidgetFormViewOptions {}
+    export interface RenderFormDesignWidgetFormViewOptions {
+      name: string
+    }
+    export interface RenderFormDesignWidgetFormViewParams<D = any> {
+      widget: VxeFormDesignDefines.WidgetObjItem<D>
+    }
+    export interface RenderFormDesignWidgetEditParams<D = any> extends RenderFormDesignWidgetViewParams<D> {}
+    export interface RenderFormDesignSettingViewOptions {}
+    export interface RenderFormDesignSettingViewParams {}
   }
-
-  /**
-   * 分组选项参数
-   */
-  export interface RenderOptionGroupProps {
-    options?: string
-    label?: string
-    key?: string
-  }
-
-  export interface FormDesignWidgetNameParams {
-    name: string
-  }
-
-  export interface FormDesignWidgetCustomGroupParams {
-  }
-
-  export interface CreateFormDesignSettingFormConfigParams {
-  }
-
-  export interface CreateFormDesignWidgetFormConfigParams {
-    name: string
-  }
-
-  export interface RenderFormDesignWidgetItemOptions {}
-
-  export interface RenderFormDesignWidgetItemParams {}
-
-  export interface RenderFormDesignWidgetViewOptions {
-    name: string
-  }
-  export interface RenderFormDesignWidgetViewParams<D = any> {
-    widget: VxeFormDesignDefines.WidgetObjItem<D>
-    isEditMode: boolean
-    isViewMode: boolean
-  }
-
-  export interface CreateFormDesignWidgetViewRulesParams<D = any> {
-    widget: VxeFormDesignDefines.WidgetObjItem<D>
-  }
-
-  export interface RenderFormDesignWidgetEditOptions extends RenderFormDesignWidgetFormViewOptions {}
-
-  export interface RenderFormDesignWidgetFormViewOptions {
-    name: string
-  }
-  export interface RenderFormDesignWidgetFormViewParams<D = any> {
-    widget: VxeFormDesignDefines.WidgetObjItem<D>
-  }
-
-  export interface RenderFormDesignWidgetEditParams<D = any> extends RenderFormDesignWidgetViewParams<D> {}
-
-  export interface RenderFormDesignSettingViewOptions {}
-  export interface RenderFormDesignSettingViewParams {}
-}
-
-/**
- * 渲染器
- */
-export interface VxeGlobalRenderer {
-  mixin(options: {
-    [name: string]: RendererOptions
-  }): VxeGlobalRenderer
-  get(name: string | null | undefined): DefineRendererOption<VxeGlobalRendererHandles.RenderResult>
-  add(name: string, options: RendererOptions): VxeGlobalRenderer
-  forEach(callback: (item: DefineRendererOption<VxeGlobalRendererHandles.RenderResult>, name: string, renderMap: {
-    [name: string]: RendererOptions
-  }) => void): VxeGlobalRenderer
-  delete(name: string): void
 }

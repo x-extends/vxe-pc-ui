@@ -1,8 +1,7 @@
 import { PropType, defineComponent, h, inject, computed, createCommentVNode } from 'vue'
 import { hasFormDesignLayoutType } from '../src/util'
-import { renderer } from '../../ui/src/renderer'
+import { renderer, getIcon } from '@vxe-ui/core'
 import { getSlotVNs } from '../../ui/src/vn'
-import iconConfigStore from '../../ui/src/iconStore'
 import XEUtils from 'xe-utils'
 import { WidgetRowFormObjVO } from './row-data'
 import VxeFormGatherComponent from '../../form/src/form-gather'
@@ -98,7 +97,7 @@ const ViewColItemComponent = defineComponent({
                     class: 'vxe-design-form--preview-item-operate'
                   }, [
                     h(VxeButtonComponent, {
-                      icon: iconConfigStore.DESIGN_FORM_WIDGET_COPY,
+                      icon: getIcon().DESIGN_FORM_WIDGET_COPY,
                       status: 'primary',
                       size: 'mini',
                       circle: true,
@@ -107,7 +106,7 @@ const ViewColItemComponent = defineComponent({
                       }
                     }),
                     h(VxeButtonComponent, {
-                      icon: iconConfigStore.DESIGN_FORM_WIDGET_DELETE,
+                      icon: getIcon().DESIGN_FORM_WIDGET_DELETE,
                       status: 'danger',
                       size: 'mini',
                       circle: true,

@@ -21,8 +21,8 @@ export function getChangeEvent (name: string) {
     case 'textarea':
     case 'VxeInput':
     case 'VxeTextarea':
-    case '$input':
-    case '$textarea':
+    case '$input':// 已废弃
+    case '$textarea':// 已废弃
       return 'input'
   }
   return 'change'

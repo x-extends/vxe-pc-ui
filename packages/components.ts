@@ -1,6 +1,5 @@
 import { App } from 'vue'
-import XEUtils from 'xe-utils'
-import { setConfig } from './ui'
+import { setConfig } from '@vxe-ui/core'
 
 import VxeAnchor from './anchor'
 import VxeAnchorLink from './anchor-link'
@@ -55,14 +54,7 @@ import VxeTree from './tree'
 import VxeTreeSelect from './tree-select'
 import VxeUpload from './upload'
 
-import zhCN from './locale/lang/zh-CN'
-
 import { VxeGlobalConfig } from '../types'
-
-// 默认中文
-setConfig({
-  i18n: (key: string, args: any) => XEUtils.toFormatString(XEUtils.get(zhCN, key), args)
-})
 
 const components = [
   VxeAnchor,

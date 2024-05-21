@@ -1,44 +1,40 @@
 import { defineComponent, h, PropType, computed, inject, ref, Ref, reactive, nextTick, watch } from 'vue'
 import XEUtils from 'xe-utils'
-import globalConfigStore from '../../ui/src/globalStore'
-import iconConfigStore from '../../ui/src/iconStore'
+import { getIcon, getConfig, getI18n, globalEvents, GLOBAL_EVENT_KEYS, log } from '@vxe-ui/core'
 import VxeSelectComponent from '../../select'
-import { hasEventKey, EVENT_KEYS } from '../../ui/src/event'
-import { getI18n } from '../../ui/src/i18n'
 import { useSize } from '../../hooks/size'
-import { errLog } from '../../ui/src/log'
 
 import { VxePagerPropTypes, VxePagerConstructor, VxePagerEmits, VxeSelectEvents, PagerPrivateRef, PagerMethods, PagerPrivateMethods, VxePagerPrivateMethods, PagerReactData } from '../../../types'
 
 export default defineComponent({
   name: 'VxePager',
   props: {
-    size: { type: String as PropType<VxePagerPropTypes.Size>, default: () => globalConfigStore.pager.size || globalConfigStore.size },
+    size: { type: String as PropType<VxePagerPropTypes.Size>, default: () => getConfig().pager.size || getConfig().size },
     // 自定义布局
-    layouts: { type: Array as PropType<VxePagerPropTypes.Layouts>, default: () => globalConfigStore.pager.layouts || ['PrevJump', 'PrevPage', 'Jump', 'PageCount', 'NextPage', 'NextJump', 'Sizes', 'Total'] },
+    layouts: { type: Array as PropType<VxePagerPropTypes.Layouts>, default: () => getConfig().pager.layouts || ['PrevJump', 'PrevPage', 'Jump', 'PageCount', 'NextPage', 'NextJump', 'Sizes', 'Total'] },
     // 当前页
     currentPage: { type: Number as PropType<VxePagerPropTypes.CurrentPage>, default: 1 },
     // 加载中
     loading: Boolean as PropType<VxePagerPropTypes.Loading>,
     // 每页大小
-    pageSize: { type: Number as PropType<VxePagerPropTypes.PageSize>, default: () => globalConfigStore.pager.pageSize || 10 },
+    pageSize: { type: Number as PropType<VxePagerPropTypes.PageSize>, default: () => getConfig().pager.pageSize || 10 },
     // 总条数
     total: { type: Number as PropType<VxePagerPropTypes.Total>, default: 0 },
     // 显示页码按钮的数量
-    pagerCount: { type: Number as PropType<VxePagerPropTypes.PagerCount>, default: () => globalConfigStore.pager.pagerCount || 7 },
+    pagerCount: { type: Number as PropType<VxePagerPropTypes.PagerCount>, default: () => getConfig().pager.pagerCount || 7 },
     // 每页大小选项列表
-    pageSizes: { type: Array as PropType<VxePagerPropTypes.PageSizes>, default: () => globalConfigStore.pager.pageSizes || [10, 15, 20, 50, 100] },
+    pageSizes: { type: Array as PropType<VxePagerPropTypes.PageSizes>, default: () => getConfig().pager.pageSizes || [10, 15, 20, 50, 100] },
     // 列对其方式
-    align: { type: String as PropType<VxePagerPropTypes.Align>, default: () => globalConfigStore.pager.align },
+    align: { type: String as PropType<VxePagerPropTypes.Align>, default: () => getConfig().pager.align },
     // 带边框
-    border: { type: Boolean as PropType<VxePagerPropTypes.Border>, default: () => globalConfigStore.pager.border },
+    border: { type: Boolean as PropType<VxePagerPropTypes.Border>, default: () => getConfig().pager.border },
     // 带背景颜色
-    background: { type: Boolean as PropType<VxePagerPropTypes.Background>, default: () => globalConfigStore.pager.background },
+    background: { type: Boolean as PropType<VxePagerPropTypes.Background>, default: () => getConfig().pager.background },
     // 配套的样式
-    perfect: { type: Boolean as PropType<VxePagerPropTypes.Perfect>, default: () => globalConfigStore.pager.perfect },
+    perfect: { type: Boolean as PropType<VxePagerPropTypes.Perfect>, default: () => getConfig().pager.perfect },
     // 当只有一页时隐藏
-    autoHidden: { type: Boolean as PropType<VxePagerPropTypes.AutoHidden>, default: () => globalConfigStore.pager.autoHidden },
-    transfer: { type: Boolean as PropType<VxePagerPropTypes.Transfer>, default: () => globalConfigStore.pager.transfer },
+    autoHidden: { type: Boolean as PropType<VxePagerPropTypes.AutoHidden>, default: () => getConfig().pager.autoHidden },
+    transfer: { type: Boolean as PropType<VxePagerPropTypes.Transfer>, default: () => getConfig().pager.transfer },
     className: [String, Function] as PropType<VxePagerPropTypes.ClassName>,
     // 自定义图标
     iconPrevPage: String as PropType<VxePagerPropTypes.IconPrevPage>,
@@ -204,12 +200,12 @@ export default defineComponent({
     }
 
     const jumpKeydownEvent = (evnt: KeyboardEvent) => {
-      if (hasEventKey(evnt, EVENT_KEYS.ENTER)) {
+      if (globalEvents.hasKey(evnt, GLOBAL_EVENT_KEYS.ENTER)) {
         triggerJumpEvent(evnt)
-      } else if (hasEventKey(evnt, EVENT_KEYS.ARROW_UP)) {
+      } else if (globalEvents.hasKey(evnt, GLOBAL_EVENT_KEYS.ARROW_UP)) {
         evnt.preventDefault()
         handleNextPage(evnt)
-      } else if (hasEventKey(evnt, EVENT_KEYS.ARROW_DOWN)) {
+      } else if (globalEvents.hasKey(evnt, GLOBAL_EVENT_KEYS.ARROW_DOWN)) {
         evnt.preventDefault()
         handlePrevPage(evnt)
       }
@@ -226,7 +222,7 @@ export default defineComponent({
         onClick: handleHomePage
       }, [
         h('i', {
-          class: ['vxe-pager--btn-icon', props.iconHomePage || iconConfigStore.PAGER_HOME]
+          class: ['vxe-pager--btn-icon', props.iconHomePage || getIcon().PAGER_HOME]
         })
       ])
     }
@@ -242,7 +238,7 @@ export default defineComponent({
         onClick: handlePrevPage
       }, [
         h('i', {
-          class: ['vxe-pager--btn-icon', props.iconPrevPage || iconConfigStore.PAGER_PREV_PAGE]
+          class: ['vxe-pager--btn-icon', props.iconPrevPage || getIcon().PAGER_PREV_PAGE]
         })
       ])
     }
@@ -260,11 +256,11 @@ export default defineComponent({
       }, [
         tagName
           ? h('i', {
-            class: ['vxe-pager--jump-more-icon', props.iconJumpMore || iconConfigStore.PAGER_JUMP_MORE]
+            class: ['vxe-pager--jump-more-icon', props.iconJumpMore || getIcon().PAGER_JUMP_MORE]
           })
           : null,
         h('i', {
-          class: ['vxe-pager--jump-icon', props.iconJumpPrev || iconConfigStore.PAGER_JUMP_PREV]
+          class: ['vxe-pager--jump-icon', props.iconJumpPrev || getIcon().PAGER_JUMP_PREV]
         })
       ])
     }
@@ -283,11 +279,11 @@ export default defineComponent({
       }, [
         tagName
           ? h('i', {
-            class: ['vxe-pager--jump-more-icon', props.iconJumpMore || iconConfigStore.PAGER_JUMP_MORE]
+            class: ['vxe-pager--jump-more-icon', props.iconJumpMore || getIcon().PAGER_JUMP_MORE]
           })
           : null,
         h('i', {
-          class: ['vxe-pager--jump-icon', props.iconJumpNext || iconConfigStore.PAGER_JUMP_NEXT]
+          class: ['vxe-pager--jump-icon', props.iconJumpNext || getIcon().PAGER_JUMP_NEXT]
         })
       ])
     }
@@ -304,7 +300,7 @@ export default defineComponent({
         onClick: handleNextPage
       }, [
         h('i', {
-          class: ['vxe-pager--btn-icon', props.iconNextPage || iconConfigStore.PAGER_NEXT_PAGE]
+          class: ['vxe-pager--btn-icon', props.iconNextPage || getIcon().PAGER_NEXT_PAGE]
         })
       ])
     }
@@ -321,7 +317,7 @@ export default defineComponent({
         onClick: handleEndPage
       }, [
         h('i', {
-          class: ['vxe-pager--btn-icon', props.iconEndPage || iconConfigStore.PAGER_END]
+          class: ['vxe-pager--btn-icon', props.iconEndPage || getIcon().PAGER_END]
         })
       ])
     }
@@ -556,7 +552,7 @@ export default defineComponent({
           childNodes.push(renderFn())
         } else {
           if (process.env.VUE_APP_VXE_TABLE_ENV === 'development') {
-            errLog('vxe.error.notProp', [`layouts -> ${name}`])
+            log.err('vxe.error.notProp', [`layouts -> ${name}`])
           }
         }
       })

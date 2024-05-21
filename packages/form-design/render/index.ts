@@ -1,12 +1,13 @@
 import { h } from 'vue'
 import { getFormDesignWidgetName } from './util'
+import { renderer } from '@vxe-ui/core'
 
 import { getWidgetRowFormData, WidgetRowEditComponent, WidgetRowViewComponent, WidgetRowFormComponent } from '../widget-row'
 import { getWidgetInputFormData, createWidgetInputViewRules, WidgetInputViewComponent, WidgetInputFormComponent } from '../widget-input'
 import { getWidgetTextareaFormData, WidgetTextareaViewComponent, WidgetTextareaFormComponent } from '../widget-textarea'
 import { getWidgetSelectFormData, WidgetSelectViewComponent, WidgetSelectFormComponent } from '../widget-select'
 
-import { RendererOptions, VxeGlobalRendererHandles } from '../../../types'
+import { VxeGlobalRendererHandles } from '../../../types'
 
 const defaultFormDesignWidgetName = (params: VxeGlobalRendererHandles.FormDesignWidgetNameParams) => {
   return getFormDesignWidgetName(params.name)
@@ -15,7 +16,7 @@ const defaultFormDesignWidgetName = (params: VxeGlobalRendererHandles.FormDesign
 /**
  * 表单设计器 - 渲染器
  */
-const renderMap: Record<string, RendererOptions> = {
+renderer.mixin({
   row: {
     formDesignWidgetName: defaultFormDesignWidgetName,
     formDesignWidgetIcon: 'vxe-icon-feedback',
@@ -65,6 +66,4 @@ const renderMap: Record<string, RendererOptions> = {
       return h(WidgetSelectFormComponent, { renderOpts, renderParams })
     }
   }
-}
-
-export default renderMap
+})

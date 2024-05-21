@@ -23,9 +23,16 @@ export interface LoadingPrivateRef {
 export interface VxeLoadingPrivateRef extends LoadingPrivateRef { }
 
 export namespace VxeLoadingPropTypes {
+  export type ModelValue = boolean
+  export type Icon = string
+  export type Text = string
 }
 
-export type VxeLoadingProps = {}
+export type VxeLoadingProps = {
+  modelValue?: VxeLoadingPropTypes.ModelValue
+  icon?: VxeLoadingPropTypes.Icon
+  text?: VxeLoadingPropTypes.Text
+}
 
 export interface LoadingPrivateComputed {
 }

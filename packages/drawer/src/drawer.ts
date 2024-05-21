@@ -2,11 +2,8 @@ import { defineComponent, h, Teleport, ref, Ref, reactive, nextTick, watch, Prop
 import XEUtils from 'xe-utils'
 import { useSize } from '../../hooks/size'
 import { getLastZIndex, nextZIndex, getFuncText } from '../../ui/src/utils'
-import globalConfigStore from '../../ui/src/globalStore'
-import iconConfigStore from '../../ui/src/iconStore'
-import { GlobalEvent, hasEventKey, EVENT_KEYS } from '../../ui/src/event'
+import { getIcon, getConfig, getI18n, globalEvents, GLOBAL_EVENT_KEYS } from '@vxe-ui/core'
 import { getSlotVNs } from '../../ui/src/vn'
-import { getI18n } from '../../ui/src/i18n'
 import VxeButtonComponent from '../../button/src/button'
 import VxeLoadingComponent from '../../loading/index'
 
@@ -23,27 +20,27 @@ export default defineComponent({
     loading: { type: Boolean as PropType<VxeDrawerPropTypes.Loading>, default: null },
     className: String as PropType<VxeDrawerPropTypes.ClassName>,
     position: [String, Object] as PropType<VxeDrawerPropTypes.Position>,
-    lockView: { type: Boolean as PropType<VxeDrawerPropTypes.LockView>, default: () => globalConfigStore.drawer.lockView },
+    lockView: { type: Boolean as PropType<VxeDrawerPropTypes.LockView>, default: () => getConfig().drawer.lockView },
     lockScroll: Boolean as PropType<VxeDrawerPropTypes.LockScroll>,
-    mask: { type: Boolean as PropType<VxeDrawerPropTypes.Mask>, default: () => globalConfigStore.drawer.mask },
-    maskClosable: { type: Boolean as PropType<VxeDrawerPropTypes.MaskClosable>, default: () => globalConfigStore.drawer.maskClosable },
-    escClosable: { type: Boolean as PropType<VxeDrawerPropTypes.EscClosable>, default: () => globalConfigStore.drawer.escClosable },
-    showHeader: { type: Boolean as PropType<VxeDrawerPropTypes.ShowHeader>, default: () => globalConfigStore.drawer.showHeader },
-    showFooter: { type: Boolean as PropType<VxeDrawerPropTypes.ShowFooter>, default: () => globalConfigStore.drawer.showFooter },
-    showClose: { type: Boolean as PropType<VxeDrawerPropTypes.ShowClose>, default: () => globalConfigStore.drawer.showClose },
+    mask: { type: Boolean as PropType<VxeDrawerPropTypes.Mask>, default: () => getConfig().drawer.mask },
+    maskClosable: { type: Boolean as PropType<VxeDrawerPropTypes.MaskClosable>, default: () => getConfig().drawer.maskClosable },
+    escClosable: { type: Boolean as PropType<VxeDrawerPropTypes.EscClosable>, default: () => getConfig().drawer.escClosable },
+    showHeader: { type: Boolean as PropType<VxeDrawerPropTypes.ShowHeader>, default: () => getConfig().drawer.showHeader },
+    showFooter: { type: Boolean as PropType<VxeDrawerPropTypes.ShowFooter>, default: () => getConfig().drawer.showFooter },
+    showClose: { type: Boolean as PropType<VxeDrawerPropTypes.ShowClose>, default: () => getConfig().drawer.showClose },
     content: [Number, String] as PropType<VxeDrawerPropTypes.Content>,
     showCancelButton: { type: Boolean as PropType<VxeDrawerPropTypes.ShowCancelButton>, default: null },
-    cancelButtonText: { type: String as PropType<VxeDrawerPropTypes.CancelButtonText>, default: () => globalConfigStore.drawer.cancelButtonText },
-    showConfirmButton: { type: Boolean as PropType<VxeDrawerPropTypes.ShowConfirmButton>, default: () => globalConfigStore.drawer.showConfirmButton },
-    confirmButtonText: { type: String as PropType<VxeDrawerPropTypes.ConfirmButtonText>, default: () => globalConfigStore.drawer.confirmButtonText },
-    destroyOnClose: { type: Boolean as PropType<VxeDrawerPropTypes.DestroyOnClose>, default: () => globalConfigStore.drawer.destroyOnClose },
-    showTitleOverflow: { type: Boolean as PropType<VxeDrawerPropTypes.ShowTitleOverflow>, default: () => globalConfigStore.drawer.showTitleOverflow },
+    cancelButtonText: { type: String as PropType<VxeDrawerPropTypes.CancelButtonText>, default: () => getConfig().drawer.cancelButtonText },
+    showConfirmButton: { type: Boolean as PropType<VxeDrawerPropTypes.ShowConfirmButton>, default: () => getConfig().drawer.showConfirmButton },
+    confirmButtonText: { type: String as PropType<VxeDrawerPropTypes.ConfirmButtonText>, default: () => getConfig().drawer.confirmButtonText },
+    destroyOnClose: { type: Boolean as PropType<VxeDrawerPropTypes.DestroyOnClose>, default: () => getConfig().drawer.destroyOnClose },
+    showTitleOverflow: { type: Boolean as PropType<VxeDrawerPropTypes.ShowTitleOverflow>, default: () => getConfig().drawer.showTitleOverflow },
     width: [Number, String] as PropType<VxeDrawerPropTypes.Width>,
     height: [Number, String] as PropType<VxeDrawerPropTypes.Height>,
     zIndex: Number as PropType<VxeDrawerPropTypes.ZIndex>,
-    transfer: { type: Boolean as PropType<VxeDrawerPropTypes.Transfer>, default: () => globalConfigStore.drawer.transfer },
-    size: { type: String as PropType<VxeDrawerPropTypes.Size>, default: () => globalConfigStore.drawer.size || globalConfigStore.size },
-    beforeHideMethod: { type: Function as PropType<VxeDrawerPropTypes.BeforeHideMethod>, default: () => globalConfigStore.drawer.beforeHideMethod },
+    transfer: { type: Boolean as PropType<VxeDrawerPropTypes.Transfer>, default: () => getConfig().drawer.transfer },
+    size: { type: String as PropType<VxeDrawerPropTypes.Size>, default: () => getConfig().drawer.size || getConfig().size },
+    beforeHideMethod: { type: Function as PropType<VxeDrawerPropTypes.BeforeHideMethod>, default: () => getConfig().drawer.beforeHideMethod },
     slots: Number as PropType<VxeDrawerPropTypes.Slots>
   },
   emits: [
@@ -223,7 +220,7 @@ export default defineComponent({
     }
 
     const handleGlobalKeydownEvent = (evnt: KeyboardEvent) => {
-      const isEsc = hasEventKey(evnt, EVENT_KEYS.ESCAPE)
+      const isEsc = globalEvents.hasKey(evnt, GLOBAL_EVENT_KEYS.ESCAPE)
       if (isEsc) {
         const lastDrawer = XEUtils.max(allActiveDrawers, (item) => item.reactData.drawerZIndex)
         // 多个时，只关掉最上层的窗口
@@ -268,7 +265,7 @@ export default defineComponent({
       if (showClose) {
         rightVNs.push(
           h('i', {
-            class: ['vxe-drawer--close-btn', 'trigger--btn', iconConfigStore.MODAL_CLOSE],
+            class: ['vxe-drawer--close-btn', 'trigger--btn', getIcon().MODAL_CLOSE],
             title: getI18n('vxe.drawer.close'),
             onClick: closeEvent
           })
@@ -415,12 +412,12 @@ export default defineComponent({
         recalculate()
       })
       if (props.escClosable) {
-        GlobalEvent.on($xeDrawer, 'keydown', handleGlobalKeydownEvent)
+        globalEvents.on($xeDrawer, 'keydown', handleGlobalKeydownEvent)
       }
     })
 
     onUnmounted(() => {
-      GlobalEvent.off($xeDrawer, 'keydown')
+      globalEvents.off($xeDrawer, 'keydown')
     })
 
     return $xeDrawer

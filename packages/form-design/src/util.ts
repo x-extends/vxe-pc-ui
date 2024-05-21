@@ -1,5 +1,5 @@
 import XEUtils from 'xe-utils'
-import { renderer } from '../../ui/src/renderer'
+import { renderer } from '@vxe-ui/core'
 
 import { VxeFormDesignDefines } from '../../../types'
 

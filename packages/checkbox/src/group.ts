@@ -1,5 +1,5 @@
 import { defineComponent, h, provide, PropType, computed, inject } from 'vue'
-import globalConfigStore from '../../ui/src/globalStore'
+import { getConfig } from '@vxe-ui/core'
 import XEUtils from 'xe-utils'
 import VxeCheckboxComponent from './checkbox'
 import { useSize } from '../../hooks/size'
@@ -14,7 +14,7 @@ export default defineComponent({
     optionProps: Object as PropType<VxeCheckboxGroupPropTypes.OptionProps>,
     disabled: Boolean as PropType<VxeCheckboxGroupPropTypes.Disabled>,
     max: { type: [String, Number] as PropType<VxeCheckboxGroupPropTypes.Max>, default: null },
-    size: { type: String as PropType<VxeCheckboxGroupPropTypes.Size>, default: () => globalConfigStore.checkboxGroup.size || globalConfigStore.size }
+    size: { type: String as PropType<VxeCheckboxGroupPropTypes.Size>, default: () => getConfig().checkboxGroup.size || getConfig().size }
   },
   emits: [
     'update:modelValue',

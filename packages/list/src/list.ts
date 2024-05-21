@@ -1,10 +1,8 @@
 import { defineComponent, h, PropType, ref, Ref, computed, onUnmounted, watch, reactive, nextTick, onActivated } from 'vue'
 import XEUtils from 'xe-utils'
-import globalConfigStore from '../../ui/src/globalStore'
+import { getConfig, globalEvents, globalResize } from '@vxe-ui/core'
 import { useSize } from '../../hooks/size'
-import { createResizeEvent, XEResizeObserver } from '../../ui/src/resize'
 import { browse } from '../../ui/src/dom'
-import { GlobalEvent } from '../../ui/src/event'
 import VxeLoadingComponent from '../../loading/src/loading'
 
 import { VxeListConstructor, VxeListPropTypes, VxeListEmits, ListReactData, ListInternalData, ListMethods, ListPrivateRef, VxeListMethods } from '../../../types'
@@ -17,8 +15,8 @@ export default defineComponent({
     maxHeight: [Number, String] as PropType<VxeListPropTypes.MaxHeight>,
     loading: Boolean as PropType<VxeListPropTypes.Loading>,
     className: [String, Function] as PropType<VxeListPropTypes.ClassName>,
-    size: { type: String as PropType<VxeListPropTypes.Size>, default: () => globalConfigStore.list.size || globalConfigStore.size },
-    autoResize: { type: Boolean as PropType<VxeListPropTypes.AutoResize>, default: () => globalConfigStore.list.autoResize },
+    size: { type: String as PropType<VxeListPropTypes.Size>, default: () => getConfig().list.size || getConfig().size },
+    autoResize: { type: Boolean as PropType<VxeListPropTypes.AutoResize>, default: () => getConfig().list.autoResize },
     syncResize: [Boolean, String, Number] as PropType<VxeListPropTypes.SyncResize>,
     scrollY: Object as PropType<VxeListPropTypes.ScrollY>
   },
@@ -73,7 +71,7 @@ export default defineComponent({
     let listMethods = {} as ListMethods
 
     const computeSYOpts = computed(() => {
-      return Object.assign({} as { gt: number }, globalConfigStore.list.scrollY, props.scrollY)
+      return Object.assign({} as { gt: number }, getConfig().list.scrollY, props.scrollY)
     })
 
     const computeStyles = computed(() => {
@@ -299,15 +297,15 @@ export default defineComponent({
       recalculate().then(() => refreshScroll())
     })
 
-    let resizeObserver: XEResizeObserver
+    let resizeObserver: ResizeObserver
 
     nextTick(() => {
-      GlobalEvent.on($xeList, 'resize', () => {
+      globalEvents.on($xeList, 'resize', () => {
         recalculate()
       })
       if (props.autoResize) {
         const el = refElem.value
-        resizeObserver = createResizeEvent(() => recalculate())
+        resizeObserver = globalResize.create(() => recalculate())
         resizeObserver.observe(el)
       }
       listMethods.loadData(props.data || [])
@@ -317,7 +315,7 @@ export default defineComponent({
       if (resizeObserver) {
         resizeObserver.disconnect()
       }
-      GlobalEvent.off($xeList, 'resize')
+      globalEvents.off($xeList, 'resize')
     })
 
     const renderVN = () => {

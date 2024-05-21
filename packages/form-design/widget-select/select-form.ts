@@ -1,5 +1,5 @@
 import { PropType, VNode, defineComponent, h, onMounted, ref, watch } from 'vue'
-import iconConfigStore from '../../ui/src/iconStore'
+import { getIcon } from '@vxe-ui/core'
 import VxeFormComponent from '../../form/src/form'
 import VxeFormItemComponent from '../../form/src/form-item'
 import VxeButtonComponent from '../../button/src/button'
@@ -162,7 +162,7 @@ export const WidgetSelectFormComponent = defineComponent({
         }, hasFirstLevel && hasSub
           ? [
               h('i', {
-                class: isExpand ? iconConfigStore.DESIGN_FORM_WIDGET_OPTION_EXPAND_CLOSE : iconConfigStore.DESIGN_FORM_WIDGET_OPTION_EXPAND_OPEN,
+                class: isExpand ? getIcon().DESIGN_FORM_WIDGET_OPTION_EXPAND_CLOSE : getIcon().DESIGN_FORM_WIDGET_OPTION_EXPAND_OPEN,
                 onClick () {
                   toggleExpandOption(item, gIndex)
                 }
@@ -179,7 +179,7 @@ export const WidgetSelectFormComponent = defineComponent({
         h(VxeButtonComponent, {
           status: 'danger',
           mode: 'text',
-          icon: iconConfigStore.DESIGN_FORM_WIDGET_DELETE
+          icon: getIcon().DESIGN_FORM_WIDGET_DELETE
         })
       ])
     }

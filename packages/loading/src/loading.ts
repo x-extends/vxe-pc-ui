@@ -1,23 +1,27 @@
-import { defineComponent, h, computed } from 'vue'
-import globalConfigStore from '../../ui/src/globalStore'
-import iconConfigStore from '../../ui/src/iconStore'
-import { getI18n } from '../../ui/src/i18n'
+import { defineComponent, h, computed, PropType } from 'vue'
+import { getConfig, getIcon, getI18n } from '@vxe-ui/core'
+import XEUtils from 'xe-utils'
+
+import { VxeLoadingPropTypes } from '../../../types'
 
 export default defineComponent({
   name: 'VxeLoading',
   props: {
-    modelValue: Boolean,
-    icon: String,
-    text: String
+    modelValue: Boolean as PropType<VxeLoadingPropTypes.ModelValue>,
+    icon: String as PropType<VxeLoadingPropTypes.Icon>,
+    text: {
+      type: String as PropType<VxeLoadingPropTypes.Text>,
+      default: () => getConfig().loading.text
+    }
   },
   setup (props, { slots }) {
     const computeLoadingIcon = computed(() => {
-      return props.icon || iconConfigStore.LOADING
+      return props.icon || getIcon().LOADING
     })
 
     const computeLoadingText = computed(() => {
-      const loadingText = globalConfigStore.loadingText
-      return props.text || (loadingText === null ? loadingText : getI18n('vxe.loading.text'))
+      const { text } = props
+      return XEUtils.isString(text) ? text : getI18n('vxe.loading.text')
     })
 
     return () => {

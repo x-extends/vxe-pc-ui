@@ -1,12 +1,9 @@
 import { defineComponent, h, Teleport, ref, Ref, computed, reactive, inject, nextTick, watch, onUnmounted, PropType } from 'vue'
 import XEUtils from 'xe-utils'
-import globalConfigStore from '../../ui/src/globalStore'
-import iconConfigStore from '../../ui/src/iconStore'
+import { getConfig, getIcon, getI18n, globalEvents, GLOBAL_EVENT_KEYS } from '@vxe-ui/core'
 import { useSize } from '../../hooks/size'
 import { getFuncText, getLastZIndex, nextZIndex } from '../../ui/src/utils'
 import { hasClass, getAbsolutePos, getEventTargetNode } from '../../ui/src/dom'
-import { GlobalEvent, hasEventKey, EVENT_KEYS } from '../../ui/src/event'
-import { getI18n } from '../../ui/src/i18n'
 import { toStringTimeDate, getDateQuarter } from './date'
 import { handleNumber, toFloatValueFixed } from './number'
 
@@ -65,19 +62,19 @@ export default defineComponent({
     immediate: { type: Boolean as PropType<VxeInputPropTypes.Immediate>, default: true },
     name: String as PropType<VxeInputPropTypes.Name>,
     type: { type: String as PropType<VxeInputPropTypes.Type>, default: 'text' },
-    clearable: { type: Boolean as PropType<VxeInputPropTypes.Clearable>, default: () => globalConfigStore.input.clearable },
+    clearable: { type: Boolean as PropType<VxeInputPropTypes.Clearable>, default: () => getConfig().input.clearable },
     readonly: Boolean as PropType<VxeInputPropTypes.Readonly>,
     disabled: Boolean as PropType<VxeInputPropTypes.Disabled>,
     placeholder: {
       type: String as PropType<VxeInputPropTypes.Placeholder>,
-      default: () => XEUtils.eqNull(globalConfigStore.input.placeholder) ? getI18n('vxe.base.pleaseInput') : globalConfigStore.input.placeholder
+      default: () => XEUtils.eqNull(getConfig().input.placeholder) ? getI18n('vxe.base.pleaseInput') : getConfig().input.placeholder
     },
     maxlength: [String, Number] as PropType<VxeInputPropTypes.Maxlength>,
     autocomplete: { type: String as PropType<VxeInputPropTypes.Autocomplete>, default: 'off' },
     align: String as PropType<VxeInputPropTypes.Align>,
     form: String as PropType<VxeInputPropTypes.Form>,
     className: String as PropType<VxeInputPropTypes.ClassName>,
-    size: { type: String as PropType<VxeInputPropTypes.Size>, default: () => globalConfigStore.input.size || globalConfigStore.size },
+    size: { type: String as PropType<VxeInputPropTypes.Size>, default: () => getConfig().input.size || getConfig().size },
     multiple: Boolean as PropType<VxeInputPropTypes.Multiple>,
 
     // text
@@ -88,35 +85,35 @@ export default defineComponent({
     min: { type: [String, Number] as PropType<VxeInputPropTypes.Min>, default: null },
     max: { type: [String, Number] as PropType<VxeInputPropTypes.Max>, default: null },
     step: [String, Number] as PropType<VxeInputPropTypes.Step>,
-    exponential: { type: Boolean as PropType<VxeInputPropTypes.Exponential>, default: () => globalConfigStore.input.exponential },
+    exponential: { type: Boolean as PropType<VxeInputPropTypes.Exponential>, default: () => getConfig().input.exponential },
 
     // number、integer、float、password
-    controls: { type: Boolean as PropType<VxeInputPropTypes.Controls>, default: () => globalConfigStore.input.controls },
+    controls: { type: Boolean as PropType<VxeInputPropTypes.Controls>, default: () => getConfig().input.controls },
 
     // float
-    digits: { type: [String, Number] as PropType<VxeInputPropTypes.Digits>, default: () => globalConfigStore.input.digits },
+    digits: { type: [String, Number] as PropType<VxeInputPropTypes.Digits>, default: () => getConfig().input.digits },
 
     // date、week、month、quarter、year
-    startDate: { type: [String, Number, Date] as PropType<VxeInputPropTypes.MinDate>, default: () => globalConfigStore.input.startDate },
-    endDate: { type: [String, Number, Date] as PropType<VxeInputPropTypes.MaxDate>, default: () => globalConfigStore.input.endDate },
+    startDate: { type: [String, Number, Date] as PropType<VxeInputPropTypes.MinDate>, default: () => getConfig().input.startDate },
+    endDate: { type: [String, Number, Date] as PropType<VxeInputPropTypes.MaxDate>, default: () => getConfig().input.endDate },
     minDate: [String, Number, Date] as PropType<VxeInputPropTypes.MinDate>,
     maxDate: [String, Number, Date] as PropType<VxeInputPropTypes.MaxDate>,
     // 已废弃 startWeek，被 startDay 替换
     startWeek: Number as PropType<VxeInputPropTypes.StartDay>,
-    startDay: { type: [String, Number] as PropType<VxeInputPropTypes.StartDay>, default: () => globalConfigStore.input.startDay },
-    labelFormat: { type: String as PropType<VxeInputPropTypes.LabelFormat>, default: () => globalConfigStore.input.labelFormat },
-    valueFormat: { type: String as PropType<VxeInputPropTypes.ValueFormat>, default: () => globalConfigStore.input.valueFormat },
+    startDay: { type: [String, Number] as PropType<VxeInputPropTypes.StartDay>, default: () => getConfig().input.startDay },
+    labelFormat: { type: String as PropType<VxeInputPropTypes.LabelFormat>, default: () => getConfig().input.labelFormat },
+    valueFormat: { type: String as PropType<VxeInputPropTypes.ValueFormat>, default: () => getConfig().input.valueFormat },
     editable: { type: Boolean as PropType<VxeInputPropTypes.Editable>, default: true },
-    festivalMethod: { type: Function as PropType<VxeInputPropTypes.FestivalMethod>, default: () => globalConfigStore.input.festivalMethod },
-    disabledMethod: { type: Function as PropType<VxeInputPropTypes.DisabledMethod>, default: () => globalConfigStore.input.disabledMethod },
+    festivalMethod: { type: Function as PropType<VxeInputPropTypes.FestivalMethod>, default: () => getConfig().input.festivalMethod },
+    disabledMethod: { type: Function as PropType<VxeInputPropTypes.DisabledMethod>, default: () => getConfig().input.disabledMethod },
 
     // week
-    selectDay: { type: [String, Number] as PropType<VxeInputPropTypes.SelectDay>, default: () => globalConfigStore.input.selectDay },
+    selectDay: { type: [String, Number] as PropType<VxeInputPropTypes.SelectDay>, default: () => getConfig().input.selectDay },
 
     prefixIcon: String as PropType<VxeInputPropTypes.PrefixIcon>,
     suffixIcon: String as PropType<VxeInputPropTypes.SuffixIcon>,
     placement: String as PropType<VxeInputPropTypes.Placement>,
-    transfer: { type: Boolean as PropType<VxeInputPropTypes.Transfer>, default: () => globalConfigStore.input.transfer }
+    transfer: { type: Boolean as PropType<VxeInputPropTypes.Transfer>, default: () => getConfig().input.transfer }
   },
   emits: [
     'update:modelValue',
@@ -1054,8 +1051,8 @@ export default defineComponent({
     }
 
     const numberKeydownEvent = (evnt: KeyboardEvent) => {
-      const isUpArrow = hasEventKey(evnt, EVENT_KEYS.ARROW_UP)
-      const isDwArrow = hasEventKey(evnt, EVENT_KEYS.ARROW_DOWN)
+      const isUpArrow = globalEvents.hasKey(evnt, GLOBAL_EVENT_KEYS.ARROW_UP)
+      const isDwArrow = globalEvents.hasKey(evnt, GLOBAL_EVENT_KEYS.ARROW_DOWN)
       if (isUpArrow || isDwArrow) {
         evnt.preventDefault()
         if (isUpArrow) {
@@ -1074,7 +1071,7 @@ export default defineComponent({
         const isShiftKey = evnt.shiftKey
         const isAltKey = evnt.altKey
         const keyCode = evnt.keyCode
-        if (!isCtrlKey && !isShiftKey && !isAltKey && (hasEventKey(evnt, EVENT_KEYS.SPACEBAR) || ((!exponential || keyCode !== 69) && (keyCode >= 65 && keyCode <= 90)) || (keyCode >= 186 && keyCode <= 188) || keyCode >= 191)) {
+        if (!isCtrlKey && !isShiftKey && !isAltKey && (globalEvents.hasKey(evnt, GLOBAL_EVENT_KEYS.SPACEBAR) || ((!exponential || keyCode !== 69) && (keyCode >= 65 && keyCode <= 90)) || (keyCode >= 186 && keyCode <= 188) || keyCode >= 191)) {
           evnt.preventDefault()
         }
         if (controls) {
@@ -1402,10 +1399,10 @@ export default defineComponent({
       const { isActivated, datePanelValue, datePanelType } = reactData
       if (isActivated) {
         evnt.preventDefault()
-        const isLeftArrow = hasEventKey(evnt, EVENT_KEYS.ARROW_LEFT)
-        const isUpArrow = hasEventKey(evnt, EVENT_KEYS.ARROW_UP)
-        const isRightArrow = hasEventKey(evnt, EVENT_KEYS.ARROW_RIGHT)
-        const isDwArrow = hasEventKey(evnt, EVENT_KEYS.ARROW_DOWN)
+        const isLeftArrow = globalEvents.hasKey(evnt, GLOBAL_EVENT_KEYS.ARROW_LEFT)
+        const isUpArrow = globalEvents.hasKey(evnt, GLOBAL_EVENT_KEYS.ARROW_UP)
+        const isRightArrow = globalEvents.hasKey(evnt, GLOBAL_EVENT_KEYS.ARROW_RIGHT)
+        const isDwArrow = globalEvents.hasKey(evnt, GLOBAL_EVENT_KEYS.ARROW_DOWN)
         if (datePanelType === 'year') {
           let offsetYear = XEUtils.getWhatYear(datePanelValue || Date.now(), 0, 'first')
           if (isLeftArrow) {
@@ -1462,7 +1459,7 @@ export default defineComponent({
     const datePgOffsetEvent = (evnt: KeyboardEvent) => {
       const { isActivated } = reactData
       if (isActivated) {
-        const isPgUp = hasEventKey(evnt, EVENT_KEYS.PAGE_UP)
+        const isPgUp = globalEvents.hasKey(evnt, GLOBAL_EVENT_KEYS.PAGE_UP)
         evnt.preventDefault()
         if (isPgUp) {
           datePrevEvent(evnt)
@@ -1642,16 +1639,16 @@ export default defineComponent({
       const { visiblePanel } = reactData
       const isDatePickerType = computeIsDatePickerType.value
       if (!disabled) {
-        const isTab = hasEventKey(evnt, EVENT_KEYS.TAB)
-        const isDel = hasEventKey(evnt, EVENT_KEYS.DELETE)
-        const isEsc = hasEventKey(evnt, EVENT_KEYS.ESCAPE)
-        const isEnter = hasEventKey(evnt, EVENT_KEYS.ENTER)
-        const isLeftArrow = hasEventKey(evnt, EVENT_KEYS.ARROW_LEFT)
-        const isUpArrow = hasEventKey(evnt, EVENT_KEYS.ARROW_UP)
-        const isRightArrow = hasEventKey(evnt, EVENT_KEYS.ARROW_RIGHT)
-        const isDwArrow = hasEventKey(evnt, EVENT_KEYS.ARROW_DOWN)
-        const isPgUp = hasEventKey(evnt, EVENT_KEYS.PAGE_UP)
-        const isPgDn = hasEventKey(evnt, EVENT_KEYS.PAGE_DOWN)
+        const isTab = globalEvents.hasKey(evnt, GLOBAL_EVENT_KEYS.TAB)
+        const isDel = globalEvents.hasKey(evnt, GLOBAL_EVENT_KEYS.DELETE)
+        const isEsc = globalEvents.hasKey(evnt, GLOBAL_EVENT_KEYS.ESCAPE)
+        const isEnter = globalEvents.hasKey(evnt, GLOBAL_EVENT_KEYS.ENTER)
+        const isLeftArrow = globalEvents.hasKey(evnt, GLOBAL_EVENT_KEYS.ARROW_LEFT)
+        const isUpArrow = globalEvents.hasKey(evnt, GLOBAL_EVENT_KEYS.ARROW_UP)
+        const isRightArrow = globalEvents.hasKey(evnt, GLOBAL_EVENT_KEYS.ARROW_RIGHT)
+        const isDwArrow = globalEvents.hasKey(evnt, GLOBAL_EVENT_KEYS.ARROW_DOWN)
+        const isPgUp = globalEvents.hasKey(evnt, GLOBAL_EVENT_KEYS.PAGE_UP)
+        const isPgDn = globalEvents.hasKey(evnt, GLOBAL_EVENT_KEYS.PAGE_DOWN)
         const operArrow = isLeftArrow || isUpArrow || isRightArrow || isDwArrow
         let isActivated = reactData.isActivated
         if (isTab) {
@@ -2178,7 +2175,7 @@ export default defineComponent({
           onMouseleave: numberStopDown
         }, [
           h('i', {
-            class: ['vxe-input--number-prev-icon', iconConfigStore.INPUT_PREV_NUM]
+            class: ['vxe-input--number-prev-icon', getIcon().INPUT_PREV_NUM]
           })
         ]),
         h('span', {
@@ -2190,7 +2187,7 @@ export default defineComponent({
           onMouseleave: numberStopDown
         }, [
           h('i', {
-            class: ['vxe-input--number-next-icon', iconConfigStore.INPUT_NEXT_NUM]
+            class: ['vxe-input--number-next-icon', getIcon().INPUT_NEXT_NUM]
           })
         ])
       ])
@@ -2202,7 +2199,7 @@ export default defineComponent({
         onClick: datePickerOpenEvent
       }, [
         h('i', {
-          class: ['vxe-input--date-picker-icon', iconConfigStore.INPUT_DATE]
+          class: ['vxe-input--date-picker-icon', getIcon().INPUT_DATE]
         })
       ])
     }
@@ -2213,7 +2210,7 @@ export default defineComponent({
         onClick: searchEvent
       }, [
         h('i', {
-          class: ['vxe-input--search-icon', iconConfigStore.INPUT_SEARCH]
+          class: ['vxe-input--search-icon', getIcon().INPUT_SEARCH]
         })
       ])
     }
@@ -2225,7 +2222,7 @@ export default defineComponent({
         onClick: passwordToggleEvent
       }, [
         h('i', {
-          class: ['vxe-input--password-icon', showPwd ? iconConfigStore.INPUT_SHOW_PWD : iconConfigStore.INPUT_PWD]
+          class: ['vxe-input--password-icon', showPwd ? getIcon().INPUT_SHOW_PWD : getIcon().INPUT_PWD]
         })
       ])
     }
@@ -2277,7 +2274,7 @@ export default defineComponent({
       if (isClearable) {
         icons.push(
           h('i', {
-            class: ['vxe-input--clear-icon', iconConfigStore.INPUT_CLEAR]
+            class: ['vxe-input--clear-icon', getIcon().INPUT_CLEAR]
           })
         )
       }
@@ -2374,18 +2371,18 @@ export default defineComponent({
     })
 
     nextTick(() => {
-      GlobalEvent.on($xeInput, 'mousewheel', handleGlobalMousewheelEvent)
-      GlobalEvent.on($xeInput, 'mousedown', handleGlobalMousedownEvent)
-      GlobalEvent.on($xeInput, 'keydown', handleGlobalKeydownEvent)
-      GlobalEvent.on($xeInput, 'blur', handleGlobalBlurEvent)
+      globalEvents.on($xeInput, 'mousewheel', handleGlobalMousewheelEvent)
+      globalEvents.on($xeInput, 'mousedown', handleGlobalMousedownEvent)
+      globalEvents.on($xeInput, 'keydown', handleGlobalKeydownEvent)
+      globalEvents.on($xeInput, 'blur', handleGlobalBlurEvent)
     })
 
     onUnmounted(() => {
       numberStopDown()
-      GlobalEvent.off($xeInput, 'mousewheel')
-      GlobalEvent.off($xeInput, 'mousedown')
-      GlobalEvent.off($xeInput, 'keydown')
-      GlobalEvent.off($xeInput, 'blur')
+      globalEvents.off($xeInput, 'mousewheel')
+      globalEvents.off($xeInput, 'mousedown')
+      globalEvents.off($xeInput, 'keydown')
+      globalEvents.off($xeInput, 'blur')
     })
 
     initValue()

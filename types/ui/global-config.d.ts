@@ -1,5 +1,3 @@
-import { VxeComponentSize } from '../tool'
-
 import { VxeAnchorProps } from '../components/anchor'
 import { VxeAnchorLinkProps } from '../components/anchor-link'
 import { VxeBreadcrumbProps } from '../components/breadcrumb'
@@ -40,20 +38,7 @@ import { VxeTabsProps } from '../components/tabs'
 import { VxeTextareaProps } from '../components/textarea'
 import { VxeTooltipProps } from '../components/tooltip'
 
-/**
- * 全局参数对象
- */
-export interface VxeGlobalConfig {
-  zIndex?: number
-  size?: VxeComponentSize
-  version?: string | number
-  theme?: null | '' | 'default' | 'dark'
-  emptyCell?: string
-  loadingText?: string
-  resizeInterval?: number
-
-  i18n?(key: string, args?: any): string
-
+export interface VxeUIGlobalConfig {
   anchor?: VxeAnchorProps
   anchorLink?: VxeAnchorLinkProps
   breadcrumb?: VxeBreadcrumbProps
@@ -88,7 +73,7 @@ export interface VxeGlobalConfig {
   radioGroup?: VxeRadioGroupProps
   row?: VxeRowProps
   select?: VxeSelectProps
-  'switch'?: VxeSwitchProps
+  switch?: VxeSwitchProps
   tabPane?: VxeTabPaneProps
   tabs?: VxeTabsProps
   textarea?: VxeTextareaProps

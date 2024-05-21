@@ -1,7 +1,5 @@
 import { defineComponent, ref, h, PropType, reactive, provide, watch, nextTick } from 'vue'
-import globalConfigStore from '../../ui/src/globalStore'
-import { renderer } from '../../ui/src/renderer'
-import { getI18n } from '../../ui/src/i18n'
+import { getConfig, getI18n, renderer } from '@vxe-ui/core'
 import { toCssUnit } from '../../ui/src/dom'
 import { FormDesignWidgetInfo } from './widget-info'
 import XEUtils from 'xe-utils'
@@ -17,16 +15,16 @@ export default defineComponent({
   props: {
     size: {
       type: String as PropType<VxeFormDesignPropTypes.Size>,
-      default: () => globalConfigStore.formDesign.size
+      default: () => getConfig().formDesign.size
     },
     height: [String, Number] as PropType<VxeFormDesignPropTypes.Height>,
     widgets: {
       type: Array as PropType<VxeFormDesignPropTypes.Widgets>,
-      default: () => XEUtils.clone(globalConfigStore.formDesign.widgets) || []
+      default: () => XEUtils.clone(getConfig().formDesign.widgets) || []
     },
     formConfig: {
       type: Object as PropType<VxeFormDesignPropTypes.FormConfig>,
-      default: () => XEUtils.clone(globalConfigStore.formDesign.formConfig, true)
+      default: () => XEUtils.clone(getConfig().formDesign.formConfig, true)
     },
     formRender: Object as PropType<VxeFormDesignPropTypes.FormRender>
   },

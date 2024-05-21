@@ -1,10 +1,9 @@
 import { defineComponent, h, Teleport, ref, Ref, onUnmounted, reactive, nextTick, PropType, watch, createCommentVNode } from 'vue'
 import XEUtils from 'xe-utils'
-import globalConfigStore from '../../ui/src/globalStore'
+import { getConfig, globalEvents } from '@vxe-ui/core'
 import { useSize } from '../../hooks/size'
 import { getAbsolutePos, getEventTargetNode } from '../../ui/src/dom'
 import { getLastZIndex, nextZIndex } from '../../ui/src/utils'
-import { GlobalEvent } from '../../ui/src/event'
 
 import { VxeComponentStyle, VxePulldownConstructor, VxePulldownPropTypes, VxePulldownEmits, PulldownReactData, PulldownMethods, PulldownPrivateRef, VxePulldownMethods } from '../../../types'
 
@@ -14,7 +13,7 @@ export default defineComponent({
     modelValue: Boolean as PropType<VxePulldownPropTypes.ModelValue>,
     disabled: Boolean as PropType<VxePulldownPropTypes.Disabled>,
     placement: String as PropType<VxePulldownPropTypes.Placement>,
-    size: { type: String as PropType<VxePulldownPropTypes.Size>, default: () => globalConfigStore.size },
+    size: { type: String as PropType<VxePulldownPropTypes.Size>, default: () => getConfig().size },
     className: [String, Function] as PropType<VxePulldownPropTypes.ClassName>,
     popupClassName: [String, Function] as PropType<VxePulldownPropTypes.PopupClassName>,
     destroyOnClose: Boolean as PropType<VxePulldownPropTypes.DestroyOnClose>,
@@ -266,15 +265,15 @@ export default defineComponent({
     })
 
     nextTick(() => {
-      GlobalEvent.on($xepulldown, 'mousewheel', handleGlobalMousewheelEvent)
-      GlobalEvent.on($xepulldown, 'mousedown', handleGlobalMousedownEvent)
-      GlobalEvent.on($xepulldown, 'blur', handleGlobalBlurEvent)
+      globalEvents.on($xepulldown, 'mousewheel', handleGlobalMousewheelEvent)
+      globalEvents.on($xepulldown, 'mousedown', handleGlobalMousedownEvent)
+      globalEvents.on($xepulldown, 'blur', handleGlobalBlurEvent)
     })
 
     onUnmounted(() => {
-      GlobalEvent.off($xepulldown, 'mousewheel')
-      GlobalEvent.off($xepulldown, 'mousedown')
-      GlobalEvent.off($xepulldown, 'blur')
+      globalEvents.off($xepulldown, 'mousewheel')
+      globalEvents.off($xepulldown, 'mousedown')
+      globalEvents.off($xepulldown, 'blur')
     })
 
     const renderVN = () => {

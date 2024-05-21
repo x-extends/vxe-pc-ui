@@ -1,7 +1,6 @@
 import { defineComponent, h, inject, VNode } from 'vue'
 import XEUtils from 'xe-utils'
-import iconConfigStore from '../../ui/src/iconStore'
-import { renderer } from '../../ui/src/renderer'
+import { getIcon, renderer } from '@vxe-ui/core'
 import { getSlotVNs } from '../../ui/src/vn'
 
 import { VxeFormDesignPropTypes, VxeFormDesignConstructor, VxeFormDesignPrivateMethods } from '../../../types'
@@ -98,7 +97,7 @@ export default defineComponent({
                     }
                   }, [
                     h('i', {
-                      class: iconConfigStore.DESIGN_FORM_WIDGET_ADD
+                      class: getIcon().DESIGN_FORM_WIDGET_ADD
                     })
                   ])
                 ]))

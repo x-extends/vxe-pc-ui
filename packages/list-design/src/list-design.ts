@@ -1,6 +1,6 @@
 import { defineComponent, ref, h, PropType, reactive } from 'vue'
 import XEUtils from 'xe-utils'
-import globalConfigStore from '../../ui/src/globalStore'
+import { getConfig } from '@vxe-ui/core'
 
 import { VxeListDesignPropTypes, ListDesignReactData, ListDesignPrivateRef, VxeListDesignPrivateComputed, VxeListDesignConstructor, VxeListDesignPrivateMethods } from '../../../types'
 
@@ -9,7 +9,7 @@ export default defineComponent({
   props: {
     size: {
       type: String as PropType<VxeListDesignPropTypes.Size>,
-      default: () => globalConfigStore.formDesign.size
+      default: () => getConfig().formDesign.size
     }
   },
   emits: [],

@@ -1,5 +1,5 @@
 import { defineComponent, h, inject, createCommentVNode, watch, ref } from 'vue'
-import { renderer } from '../../ui/src/renderer'
+import { renderer } from '@vxe-ui/core'
 import { getSlotVNs } from '../../ui/src/vn'
 import VxeTabsComponent from '../../tabs/src/tabs'
 import VxeTabPaneComponent from '../../tabs/src/tab-pane'

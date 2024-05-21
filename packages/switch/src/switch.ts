@@ -1,6 +1,6 @@
 import { defineComponent, h, ref, Ref, computed, reactive, nextTick, createCommentVNode, PropType, inject } from 'vue'
 import XEUtils from 'xe-utils'
-import globalConfigStore from '../../ui/src/globalStore'
+import { getConfig } from '@vxe-ui/core'
 import { useSize } from '../../hooks/size'
 import { getFuncText } from '../../ui/src/utils'
 
@@ -11,7 +11,7 @@ export default defineComponent({
   props: {
     modelValue: [String, Number, Boolean] as PropType<VxeSwitchPropTypes.ModelValue>,
     disabled: Boolean as PropType<VxeSwitchPropTypes.Disabled>,
-    size: { type: String as PropType<VxeSwitchPropTypes.Size>, default: () => globalConfigStore.switch.size || globalConfigStore.size },
+    size: { type: String as PropType<VxeSwitchPropTypes.Size>, default: () => getConfig().switch.size || getConfig().size },
     openLabel: String as PropType<VxeSwitchPropTypes.OpenLabel>,
     closeLabel: String as PropType<VxeSwitchPropTypes.CloseLabel>,
     openValue: { type: [String, Number, Boolean] as PropType<VxeSwitchPropTypes.OpenValue>, default: true },

@@ -1,4 +1,4 @@
-import { renderer } from '../../ui/src/renderer'
+import { renderer } from '@vxe-ui/core'
 import { getNewWidgetId } from './util'
 
 import { VxeFormPropTypes, VxeFormDesignDefines, VxeFormProps } from '../../../types'

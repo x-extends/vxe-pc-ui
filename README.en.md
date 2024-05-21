@@ -1,6 +1,6 @@
 # vxe-pc-ui
 
-简体中文 | [繁體中文](README.zh-TW.md) | [English](README.en.md)  
+[简体中文](README.md) | [繁體中文](README.zh-TW.md) | English  
 
 [![star](https://gitee.com/xuliangzhan_admin/vxe-pc-ui/badge/star.svg?theme=gvp)](https://gitee.com/xuliangzhan_admin/vxe-pc-ui/stargazers)
 [![npm version](https://img.shields.io/npm/v/vxe-pc-ui.svg?style=flat-square)](https://www.npmjs.com/package/vxe-pc-ui)
@@ -14,13 +14,13 @@
 
 一个基于 [vue](https://www.npmjs.com/package/vue) 的 PC 端组件库  
 
-## 浏览器支持
+## Browser Support
 
 ![Edge](https://raw.github.com/alrra/browser-logos/master/src/edge/edge_48x48.png) | ![Chrome](https://raw.github.com/alrra/browser-logos/master/src/chrome/chrome_48x48.png) | ![Firefox](https://raw.github.com/alrra/browser-logos/master/src/firefox/firefox_48x48.png) | ![Opera](https://raw.github.com/alrra/browser-logos/master/src/opera/opera_48x48.png) | ![Safari](https://raw.github.com/alrra/browser-logos/master/src/safari/safari_48x48.png)
 --- | --- | --- | --- | --- |
 80+ ✔ | 80+ ✔ | 90+ ✔ | 75+ ✔ | 10+ ✔ |
 
-## 安装
+## Use
 
 ```shell
 npm install vxe-pc-ui

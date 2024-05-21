@@ -1,12 +1,9 @@
 import { defineComponent, h, ref, Ref, computed, Teleport, VNode, onUnmounted, reactive, nextTick, PropType, onMounted, inject } from 'vue'
 import XEUtils from 'xe-utils'
-import { getConfig } from '../../ui/src/core'
-import iconConfigStore from '../../ui/src/iconStore'
+import { getConfig, globalEvents, log, getIcon } from '@vxe-ui/core'
 import { useSize } from '../../hooks/size'
 import { getAbsolutePos, getEventTargetNode } from '../../ui/src/dom'
 import { getFuncText, getLastZIndex, nextZIndex } from '../../ui/src/utils'
-import { GlobalEvent } from '../../ui/src/event'
-import { warnLog } from '../../ui/src/log'
 
 import { VxeButtonConstructor, VxeButtonPropTypes, VxeButtonEmits, ButtonReactData, ButtonMethods, ButtonPrivateRef, ButtonInternalData, VxeButtonGroupConstructor, VxeButtonGroupPrivateMethods } from '../../../types'
 
@@ -23,7 +20,7 @@ export default defineComponent({
     /**
      * 按钮尺寸
      */
-    size: { type: String as PropType<VxeButtonPropTypes.Size>, default: () => getConfig('button.size') || getConfig('size') },
+    size: { type: String as PropType<VxeButtonPropTypes.Size>, default: () => getConfig().button.size || getConfig().size },
     /**
      * 用来标识这一项
      */
@@ -71,7 +68,7 @@ export default defineComponent({
     /**
      * 是否将弹框容器插入于 body 内
      */
-    transfer: { type: Boolean as PropType<VxeButtonPropTypes.Transfer>, default: () => getConfig('button.transfer') }
+    transfer: { type: Boolean as PropType<VxeButtonPropTypes.Transfer>, default: () => getConfig().button.transfer }
   },
   emits: [
     'click',
@@ -361,7 +358,7 @@ export default defineComponent({
       if (loading) {
         contVNs.push(
           h('i', {
-            class: ['vxe-button--loading-icon', iconConfigStore.BUTTON_LOADING]
+            class: ['vxe-button--loading-icon', getIcon().BUTTON_LOADING]
           })
         )
       } else if (slots.icon) {
@@ -414,11 +411,11 @@ export default defineComponent({
     onMounted(() => {
       if (process.env.VUE_APP_VXE_TABLE_ENV === 'development') {
         if (props.type === 'text') {
-          warnLog('vxe.error.delProp', ['type=text', 'mode=text'])
+          log.warn('vxe.error.delProp', ['type=text', 'mode=text'])
         }
       }
 
-      GlobalEvent.on($xeButton, 'mousewheel', (evnt: Event) => {
+      globalEvents.on($xeButton, 'mousewheel', (evnt: Event) => {
         const panelElem = refBtnPanel.value
         if (reactData.showPanel && !getEventTargetNode(evnt, panelElem).flag) {
           closePanel()
@@ -427,7 +424,7 @@ export default defineComponent({
     })
 
     onUnmounted(() => {
-      GlobalEvent.off($xeButton, 'mousewheel')
+      globalEvents.off($xeButton, 'mousewheel')
     })
 
     const renderVN = () => {
@@ -466,7 +463,7 @@ export default defineComponent({
             onClick: clickEvent
           }, renderContent().concat([
             h('i', {
-              class: `vxe-button--dropdown-arrow ${iconConfigStore.BUTTON_DROPDOWN}`
+              class: `vxe-button--dropdown-arrow ${getIcon().BUTTON_DROPDOWN}`
             })
           ])),
           h(Teleport, {

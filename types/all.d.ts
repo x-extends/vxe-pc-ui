@@ -1,5 +1,5 @@
 import { App } from 'vue'
-import { VxeUIExport, VxeGlobalConfig } from './ui'
+import { VxeGlobalConfig } from './ui'
 
 import VxeAnchor from './components/anchor'
 import VxeAnchorLink from './components/anchor-link'
@@ -113,12 +113,6 @@ declare module '@vue/runtime-core' {
   }
 }
 
-declare global {
-  interface Window {
-    VxeUI: VxeUIExport;
-  }
-}
-
 export * from './tool'
 export * from './ui'
 
@@ -175,3 +169,5 @@ export * from './components/tooltip'
 export * from './components/tree'
 export * from './components/tree-select'
 export * from './components/upload'
+
+export * from '@vue/runtime-core'

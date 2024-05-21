@@ -1,7 +1,7 @@
 import { defineComponent, h, computed, inject, PropType } from 'vue'
 import XEUtils from 'xe-utils'
 import { getFuncText } from '../../ui/src/utils'
-import globalConfigStore from '../../ui/src/globalStore'
+import { getConfig } from '@vxe-ui/core'
 import { useSize } from '../../hooks/size'
 
 import { VxeRadioPropTypes, VxeRadioConstructor, VxeRadioEmits, VxeRadioGroupConstructor, VxeRadioGroupPrivateMethods, RadioMethods, VxeFormConstructor, VxeFormPrivateMethods, VxeFormDefines } from '../../../types'
@@ -15,8 +15,8 @@ export default defineComponent({
     content: [String, Number] as PropType<VxeRadioPropTypes.Content>,
     disabled: Boolean as PropType<VxeRadioPropTypes.Disabled>,
     name: String as PropType<VxeRadioPropTypes.Name>,
-    strict: { type: Boolean as PropType<VxeRadioPropTypes.Strict>, default: () => globalConfigStore.radio.strict },
-    size: { type: String as PropType<VxeRadioPropTypes.Size>, default: () => globalConfigStore.radio.size || globalConfigStore.size }
+    strict: { type: Boolean as PropType<VxeRadioPropTypes.Strict>, default: () => getConfig().radio.strict },
+    size: { type: String as PropType<VxeRadioPropTypes.Size>, default: () => getConfig().radio.size || getConfig().size }
   },
   emits: [
     'update:modelValue',

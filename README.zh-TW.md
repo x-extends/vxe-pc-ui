@@ -1,6 +1,6 @@
 # vxe-pc-ui
 
-简体中文 | [繁體中文](README.zh-TW.md) | [English](README.en.md)  
+[简体中文](README.md) | 繁體中文 | [English](README.en.md)  
 
 [![star](https://gitee.com/xuliangzhan_admin/vxe-pc-ui/badge/star.svg?theme=gvp)](https://gitee.com/xuliangzhan_admin/vxe-pc-ui/stargazers)
 [![npm version](https://img.shields.io/npm/v/vxe-pc-ui.svg?style=flat-square)](https://www.npmjs.com/package/vxe-pc-ui)
@@ -20,7 +20,7 @@
 --- | --- | --- | --- | --- |
 80+ ✔ | 80+ ✔ | 90+ ✔ | 75+ ✔ | 10+ ✔ |
 
-## 安装
+## 使用
 
 ```shell
 npm install vxe-pc-ui

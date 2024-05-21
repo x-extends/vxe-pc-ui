@@ -1,12 +1,9 @@
 import { defineComponent, h, Teleport, PropType, ref, Ref, inject, computed, provide, onUnmounted, reactive, nextTick, watch, onMounted, createCommentVNode } from 'vue'
 import XEUtils from 'xe-utils'
-import globalConfigStore from '../../ui/src/globalStore'
-import iconConfigStore from '../../ui/src/iconStore'
+import { getConfig, getIcon, getI18n, globalEvents, GLOBAL_EVENT_KEYS } from '@vxe-ui/core'
 import { useSize } from '../../hooks/size'
 import { getEventTargetNode, getAbsolutePos } from '../../ui/src/dom'
-import { getLastZIndex, nextZIndex, getFuncText, formatText } from '../../ui/src/utils'
-import { GlobalEvent, hasEventKey, EVENT_KEYS } from '../../ui/src/event'
-import { getI18n } from '../../ui/src/i18n'
+import { getLastZIndex, nextZIndex, getFuncText } from '../../ui/src/utils'
 import VxeInputComponent from '../../input/src/input'
 import { getSlotVNs } from '../../ui/src/vn'
 
@@ -27,12 +24,12 @@ export default defineComponent({
     clearable: Boolean as PropType<VxeSelectPropTypes.Clearable>,
     placeholder: {
       type: String as PropType<VxeSelectPropTypes.Placeholder>,
-      default: () => XEUtils.eqNull(globalConfigStore.select.placeholder) ? getI18n('vxe.base.pleaseSelect') : globalConfigStore.select.placeholder
+      default: () => XEUtils.eqNull(getConfig().select.placeholder) ? getI18n('vxe.base.pleaseSelect') : getConfig().select.placeholder
     },
     loading: Boolean as PropType<VxeSelectPropTypes.Loading>,
     disabled: Boolean as PropType<VxeSelectPropTypes.Disabled>,
     multiple: Boolean as PropType<VxeSelectPropTypes.Multiple>,
-    multiCharOverflow: { type: [Number, String] as PropType<VxeSelectPropTypes.MultiCharOverflow>, default: () => globalConfigStore.select.multiCharOverflow },
+    multiCharOverflow: { type: [Number, String] as PropType<VxeSelectPropTypes.MultiCharOverflow>, default: () => getConfig().select.multiCharOverflow },
     prefixIcon: String as PropType<VxeSelectPropTypes.PrefixIcon>,
     placement: String as PropType<VxeSelectPropTypes.Placement>,
     options: Array as PropType<VxeSelectPropTypes.Options>,
@@ -43,17 +40,17 @@ export default defineComponent({
     className: [String, Function] as PropType<VxeSelectPropTypes.ClassName>,
     popupClassName: [String, Function] as PropType<VxeSelectPropTypes.PopupClassName>,
     max: { type: [String, Number] as PropType<VxeSelectPropTypes.Max>, default: null },
-    size: { type: String as PropType<VxeSelectPropTypes.Size>, default: () => globalConfigStore.select.size || globalConfigStore.size },
+    size: { type: String as PropType<VxeSelectPropTypes.Size>, default: () => getConfig().select.size || getConfig().size },
     filterable: Boolean as PropType<VxeSelectPropTypes.Filterable>,
     filterMethod: Function as PropType<VxeSelectPropTypes.FilterMethod>,
     remote: Boolean as PropType<VxeSelectPropTypes.Remote>,
     remoteMethod: Function as PropType<VxeSelectPropTypes.RemoteMethod>,
     emptyText: String as PropType<VxeSelectPropTypes.EmptyText>,
     // 已废弃，被 option-config.keyField 替换
-    optionId: { type: String as PropType<VxeSelectPropTypes.OptionId>, default: () => globalConfigStore.select.optionId },
+    optionId: { type: String as PropType<VxeSelectPropTypes.OptionId>, default: () => getConfig().select.optionId },
     // 已废弃，被 option-config.useKey 替换
     optionKey: Boolean as PropType<VxeSelectPropTypes.OptionKey>,
-    transfer: { type: Boolean as PropType<VxeSelectPropTypes.Transfer>, default: () => globalConfigStore.select.transfer }
+    transfer: { type: Boolean as PropType<VxeSelectPropTypes.Transfer>, default: () => getConfig().select.transfer }
   },
   emits: [
     'update:modelValue',
@@ -148,7 +145,7 @@ export default defineComponent({
     })
 
     const computeOptionOpts = computed(() => {
-      return Object.assign({}, globalConfigStore.select.optionConfig, props.optionConfig)
+      return Object.assign({}, getConfig().select.optionConfig, props.optionConfig)
     })
 
     const computeIsGroup = computed(() => {
@@ -588,13 +585,13 @@ export default defineComponent({
       const { clearable, disabled } = props
       const { visiblePanel, currentValue, currentOption } = reactData
       if (!disabled) {
-        const isTab = hasEventKey(evnt, EVENT_KEYS.TAB)
-        const isEnter = hasEventKey(evnt, EVENT_KEYS.ENTER)
-        const isEsc = hasEventKey(evnt, EVENT_KEYS.ESCAPE)
-        const isUpArrow = hasEventKey(evnt, EVENT_KEYS.ARROW_UP)
-        const isDwArrow = hasEventKey(evnt, EVENT_KEYS.ARROW_DOWN)
-        const isDel = hasEventKey(evnt, EVENT_KEYS.DELETE)
-        const isSpacebar = hasEventKey(evnt, EVENT_KEYS.SPACEBAR)
+        const isTab = globalEvents.hasKey(evnt, GLOBAL_EVENT_KEYS.TAB)
+        const isEnter = globalEvents.hasKey(evnt, GLOBAL_EVENT_KEYS.ENTER)
+        const isEsc = globalEvents.hasKey(evnt, GLOBAL_EVENT_KEYS.ESCAPE)
+        const isUpArrow = globalEvents.hasKey(evnt, GLOBAL_EVENT_KEYS.ARROW_UP)
+        const isDwArrow = globalEvents.hasKey(evnt, GLOBAL_EVENT_KEYS.ARROW_DOWN)
+        const isDel = globalEvents.hasKey(evnt, GLOBAL_EVENT_KEYS.DELETE)
+        const isSpacebar = globalEvents.hasKey(evnt, GLOBAL_EVENT_KEYS.SPACEBAR)
         if (isTab) {
           reactData.isActivated = false
         }
@@ -665,7 +662,7 @@ export default defineComponent({
 
     const keydownSearchEvent = (params: VxeInputDefines.KeydownEventParams) => {
       const { $event } = params
-      const isEnter = hasEventKey($event, EVENT_KEYS.ENTER)
+      const isEnter = globalEvents.hasKey($event, GLOBAL_EVENT_KEYS.ENTER)
       if (isEnter) {
         $event.preventDefault()
         $event.stopPropagation()
@@ -755,7 +752,7 @@ export default defineComponent({
                 setCurrentOption(option)
               }
             }
-          }, optionSlot ? callSlot(optionSlot, optParams) : (defaultSlot ? callSlot(defaultSlot, optParams) : formatText(getFuncText(option[labelField as 'label']))))
+          }, optionSlot ? callSlot(optionSlot, optParams) : (defaultSlot ? callSlot(defaultSlot, optParams) : getFuncText(option[labelField as 'label'])))
           : createCommentVNode()
       })
     }
@@ -801,7 +798,7 @@ export default defineComponent({
             class: 'vxe-select--search-loading'
           }, [
             h('i', {
-              class: ['vxe-select--search-icon', iconConfigStore.SELECT_LOADED]
+              class: ['vxe-select--search-icon', getIcon().SELECT_LOADED]
             }),
             h('span', {
               class: 'vxe-select--search-text'
@@ -902,17 +899,17 @@ export default defineComponent({
         }
         cacheItemMap()
       })
-      GlobalEvent.on($xeselect, 'mousewheel', handleGlobalMousewheelEvent)
-      GlobalEvent.on($xeselect, 'mousedown', handleGlobalMousedownEvent)
-      GlobalEvent.on($xeselect, 'keydown', handleGlobalKeydownEvent)
-      GlobalEvent.on($xeselect, 'blur', handleGlobalBlurEvent)
+      globalEvents.on($xeselect, 'mousewheel', handleGlobalMousewheelEvent)
+      globalEvents.on($xeselect, 'mousedown', handleGlobalMousedownEvent)
+      globalEvents.on($xeselect, 'keydown', handleGlobalKeydownEvent)
+      globalEvents.on($xeselect, 'blur', handleGlobalBlurEvent)
     })
 
     onUnmounted(() => {
-      GlobalEvent.off($xeselect, 'mousewheel')
-      GlobalEvent.off($xeselect, 'mousedown')
-      GlobalEvent.off($xeselect, 'keydown')
-      GlobalEvent.off($xeselect, 'blur')
+      globalEvents.off($xeselect, 'mousewheel')
+      globalEvents.off($xeselect, 'mousedown')
+      globalEvents.off($xeselect, 'keydown')
+      globalEvents.off($xeselect, 'blur')
     })
 
     const renderVN = () => {
@@ -947,7 +944,7 @@ export default defineComponent({
           disabled: disabled,
           type: 'text',
           prefixIcon: props.prefixIcon,
-          suffixIcon: loading ? iconConfigStore.SELECT_LOADED : (visiblePanel ? iconConfigStore.SELECT_OPEN : iconConfigStore.SELECT_CLOSE),
+          suffixIcon: loading ? getIcon().SELECT_LOADED : (visiblePanel ? getIcon().SELECT_OPEN : getIcon().SELECT_CLOSE),
           modelValue: selectLabel,
           onClear: clearEvent,
           onClick: togglePanelEvent,
@@ -985,7 +982,7 @@ export default defineComponent({
                       modelValue: reactData.searchValue,
                       clearable: true,
                       placeholder: getI18n('vxe.select.search'),
-                      prefixIcon: iconConfigStore.INPUT_SEARCH,
+                      prefixIcon: getIcon().INPUT_SEARCH,
                       'onUpdate:modelValue': modelSearchEvent,
                       onFocus: focusSearchEvent,
                       onKeydown: keydownSearchEvent,

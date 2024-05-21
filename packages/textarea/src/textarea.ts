@@ -1,8 +1,7 @@
 import { defineComponent, h, ref, Ref, computed, nextTick, watch, PropType, reactive, inject } from 'vue'
 import XEUtils from 'xe-utils'
-import globalConfigStore from '../../ui/src/globalStore'
+import { getConfig, getI18n } from '@vxe-ui/core'
 import { getFuncText } from '../../ui/src/utils'
-import { getI18n } from '../../ui/src/i18n'
 import { useSize } from '../../hooks/size'
 
 import { VxeTextareaPropTypes, TextareaReactData, TextareaMethods, VxeTextareaConstructor, VxeTextareaEmits, TextareaPrivateRef, VxeFormConstructor, VxeFormPrivateMethods, VxeFormDefines } from '../../../types'
@@ -20,7 +19,7 @@ export default defineComponent({
     disabled: Boolean as PropType<VxeTextareaPropTypes.Disabled>,
     placeholder: {
       type: String as PropType<VxeTextareaPropTypes.Placeholder>,
-      default: () => XEUtils.eqNull(globalConfigStore.textarea.placeholder) ? getI18n('vxe.base.pleaseInput') : globalConfigStore.textarea.placeholder
+      default: () => XEUtils.eqNull(getConfig().textarea.placeholder) ? getI18n('vxe.base.pleaseInput') : getConfig().textarea.placeholder
     },
     maxlength: [String, Number] as PropType<VxeTextareaPropTypes.Maxlength>,
     rows: { type: [String, Number] as PropType<VxeTextareaPropTypes.Rows>, default: 2 },
@@ -29,8 +28,8 @@ export default defineComponent({
     countMethod: Function as PropType<VxeTextareaPropTypes.CountMethod>,
     autosize: [Boolean, Object] as PropType<VxeTextareaPropTypes.Autosize>,
     form: String as PropType<VxeTextareaPropTypes.Form>,
-    resize: { type: String as PropType<VxeTextareaPropTypes.Resize>, default: () => globalConfigStore.textarea.resize },
-    size: { type: String as PropType<VxeTextareaPropTypes.Size>, default: () => globalConfigStore.textarea.size || globalConfigStore.size }
+    resize: { type: String as PropType<VxeTextareaPropTypes.Resize>, default: () => getConfig().textarea.resize },
+    size: { type: String as PropType<VxeTextareaPropTypes.Size>, default: () => getConfig().textarea.size || getConfig().size }
   },
   emits: [
     'update:modelValue',
@@ -83,7 +82,7 @@ export default defineComponent({
     })
 
     const computeSizeOpts = computed(() => {
-      return Object.assign({ minRows: 1, maxRows: 10 }, globalConfigStore.textarea.autosize, props.autosize)
+      return Object.assign({ minRows: 1, maxRows: 10 }, getConfig().textarea.autosize, props.autosize)
     })
 
     const updateAutoTxt = () => {

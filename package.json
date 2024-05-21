@@ -1,6 +1,6 @@
 {
   "name": "vxe-pc-ui",
-  "version": "1.0.2",
+  "version": "1.1.0",
   "description": "一个基于 vue 的 PC 端组件库",
   "scripts": {
     "update": "npm install --legacy-peer-deps",
@@ -21,8 +21,7 @@
   "module": "es/index.esm.js",
   "typings": "types/index.d.ts",
   "dependencies": {
-    "dom-zindex": "^1.0.2",
-    "xe-utils": "^3.5.26"
+    "@vxe-ui/core": "^0.1.0"
   },
   "devDependencies": {
     "@types/resize-observer-browser": "^0.1.11",
@@ -62,6 +61,10 @@
     "vue-i18n": "^9.13.1",
     "vue-router": "^4.3.2",
     "vuex": "^4.1.0"
+  },
+  "vetur": {
+    "tags": "helper/vetur/tags.json",
+    "attributes": "helper/vetur/attributes.json"
   },
   "repository": {
     "type": "git",

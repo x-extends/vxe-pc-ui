@@ -1,7 +1,7 @@
 import { defineComponent, h, computed, inject, PropType } from 'vue'
 import XEUtils from 'xe-utils'
 import { getFuncText } from '../../ui/src/utils'
-import globalConfigStore from '../../ui/src/globalStore'
+import { getConfig } from '@vxe-ui/core'
 import { useSize } from '../../hooks/size'
 
 import { VxeCheckboxConstructor, VxeCheckboxGroupConstructor, VxeCheckboxEmits, VxeCheckboxGroupPrivateMethods, CheckboxMethods, VxeCheckboxPropTypes, VxeFormConstructor, VxeFormPrivateMethods, VxeFormDefines } from '../../../types'
@@ -17,7 +17,7 @@ export default defineComponent({
     uncheckedValue: { type: [String, Number, Boolean] as PropType<VxeCheckboxPropTypes.UncheckedValue>, default: false },
     content: [String, Number] as PropType<VxeCheckboxPropTypes.Content>,
     disabled: Boolean as PropType<VxeCheckboxPropTypes.Disabled>,
-    size: { type: String as PropType<VxeCheckboxPropTypes.Size>, default: () => globalConfigStore.checkbox.size || globalConfigStore.size }
+    size: { type: String as PropType<VxeCheckboxPropTypes.Size>, default: () => getConfig().checkbox.size || getConfig().size }
   },
   emits: [
     'update:modelValue',

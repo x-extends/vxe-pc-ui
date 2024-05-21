@@ -1,10 +1,8 @@
 import { defineComponent, h, onUnmounted, inject, ref, Ref, provide, onMounted, PropType, createCommentVNode, reactive } from 'vue'
 import XEUtils from 'xe-utils'
-import iconConfigStore from '../../ui/src/iconStore'
-import { renderer } from '../../ui/src/renderer'
+import { getIcon, getI18n, renderer } from '@vxe-ui/core'
 import { getFuncText, isEnableConf } from '../../ui/src/utils'
 import { getSlotVNs } from '../../ui/src/vn'
-import { getI18n } from '../../ui/src/i18n'
 import { createItem, watchItem, destroyItem, assemItem, XEFormItemProvide, isActivetem } from './util'
 import { renderTitle } from './render'
 
@@ -139,7 +137,7 @@ export default defineComponent({
               class: 'vxe-form--item-trigger-text'
             }, collapseAll ? getI18n('vxe.form.unfolding') : getI18n('vxe.form.folding')),
             h('i', {
-              class: ['vxe-form--item-trigger-icon', collapseAll ? iconConfigStore.FORM_FOLDING : iconConfigStore.FORM_UNFOLDING]
+              class: ['vxe-form--item-trigger-icon', collapseAll ? getIcon().FORM_FOLDING : getIcon().FORM_UNFOLDING]
             })
           ])
         )

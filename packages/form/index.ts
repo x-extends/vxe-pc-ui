@@ -1,6 +1,7 @@
 import { App } from 'vue'
 import VxeFormComponent from './src/form'
 import { dynamicApp } from '../dynamics'
+import './render'
 
 export const VxeForm = Object.assign(VxeFormComponent, {
   install (app: App) {

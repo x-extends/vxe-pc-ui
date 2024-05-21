@@ -1,7 +1,7 @@
 import { App } from 'vue'
 import XEUtils from 'xe-utils'
 import VxeModalComponent, { allActiveModals } from './src/modal'
-import VxeCore from '../ui/src/core'
+import { VxeUI } from '@vxe-ui/core'
 import { dynamicApp, dynamicStore, checkDynamic } from '../dynamics'
 
 import { VxeModalPropTypes, ModalEventTypes, VxeModalDefines } from '../../types'
@@ -99,7 +99,7 @@ export const modal = ModalController
 export const VxeModal = Object.assign(VxeModalComponent, {
   install: function (app: App) {
     app.component(VxeModalComponent.name as string, VxeModalComponent)
-    VxeCore.modal = ModalController
+    VxeUI.modal = ModalController
   }
 })
 

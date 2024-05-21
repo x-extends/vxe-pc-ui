@@ -1,9 +1,8 @@
 import { h } from 'vue'
-import iconConfigStore from '../../ui/src/iconStore'
-import VxeTooltipComponent from '../../tooltip'
-import { renderer } from '../../ui/src/renderer'
+import { getIcon, renderer } from '@vxe-ui/core'
 import { getFuncText, isEnableConf } from '../../ui/src/utils'
 import { getSlotVNs } from '../../ui/src/vn'
+import VxeTooltipComponent from '../../tooltip'
 
 import { VxeFormConstructor, VxeFormDefines, VxeFormItemPropTypes, VxeFormPrivateMethods } from '../../../types'
 
@@ -12,7 +11,7 @@ function renderPrefixIcon (titlePrefix: VxeFormItemPropTypes.TitlePrefix) {
     class: 'vxe-form--item-title-prefix'
   }, [
     h('i', {
-      class: titlePrefix.icon || iconConfigStore.FORM_PREFIX
+      class: titlePrefix.icon || getIcon().FORM_PREFIX
     })
   ])
 }
@@ -22,7 +21,7 @@ function renderSuffixIcon (titleSuffix: VxeFormItemPropTypes.TitleSuffix) {
     class: 'vxe-form--item-title-suffix'
   }, [
     h('i', {
-      class: titleSuffix.icon || iconConfigStore.FORM_SUFFIX
+      class: titleSuffix.icon || getIcon().FORM_SUFFIX
     })
   ])
 }

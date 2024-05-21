@@ -1,10 +1,7 @@
 import { defineComponent, h, ref, Ref, provide, computed, inject, reactive, watch, nextTick, PropType, onMounted } from 'vue'
 import XEUtils from 'xe-utils'
-import globalConfigStore from '../../ui/src/globalStore'
-import { renderer } from '../../ui/src/renderer'
-import { validators } from '../../ui/src/validators'
+import { getConfig, validators, renderer, log } from '@vxe-ui/core'
 import { getFuncText, isEnableConf, eqEmptyValue } from '../../ui/src/utils'
-import { errLog, warnLog } from '../../ui/src/log'
 import { scrollToView } from '../../ui/src/dom'
 import { createItem, handleFieldOrItem, isHiddenItem, isActivetem } from './util'
 import { useSize } from '../../hooks/size'
@@ -77,13 +74,13 @@ export default defineComponent({
     collapseStatus: { type: Boolean as PropType<VxeFormPropTypes.CollapseStatus>, default: true },
     loading: Boolean as PropType<VxeFormPropTypes.Loading>,
     data: Object as PropType<VxeFormPropTypes.Data>,
-    size: { type: String as PropType<VxeFormPropTypes.Size>, default: () => globalConfigStore.form.size || globalConfigStore.size },
-    span: { type: [String, Number] as PropType<VxeFormPropTypes.Span>, default: () => globalConfigStore.form.span },
-    align: { type: String as PropType<VxeFormPropTypes.Align>, default: () => globalConfigStore.form.align },
-    titleAlign: { type: String as PropType<VxeFormPropTypes.TitleAlign>, default: () => globalConfigStore.form.titleAlign },
-    titleWidth: { type: [String, Number] as PropType<VxeFormPropTypes.TitleWidth>, default: () => globalConfigStore.form.titleWidth },
-    titleColon: { type: Boolean as PropType<VxeFormPropTypes.TitleColon>, default: () => globalConfigStore.form.titleColon },
-    titleAsterisk: { type: Boolean as PropType<VxeFormPropTypes.TitleAsterisk>, default: () => globalConfigStore.form.titleAsterisk },
+    size: { type: String as PropType<VxeFormPropTypes.Size>, default: () => getConfig().form.size || getConfig().size },
+    span: { type: [String, Number] as PropType<VxeFormPropTypes.Span>, default: () => getConfig().form.span },
+    align: { type: String as PropType<VxeFormPropTypes.Align>, default: () => getConfig().form.align },
+    titleAlign: { type: String as PropType<VxeFormPropTypes.TitleAlign>, default: () => getConfig().form.titleAlign },
+    titleWidth: { type: [String, Number] as PropType<VxeFormPropTypes.TitleWidth>, default: () => getConfig().form.titleWidth },
+    titleColon: { type: Boolean as PropType<VxeFormPropTypes.TitleColon>, default: () => getConfig().form.titleColon },
+    titleAsterisk: { type: Boolean as PropType<VxeFormPropTypes.TitleAsterisk>, default: () => getConfig().form.titleAsterisk },
     titleOverflow: { type: [Boolean, String] as PropType<VxeFormPropTypes.TitleOverflow>, default: null },
     vertical: {
       type: Boolean as PropType<VxeFormPropTypes.Vertical>,
@@ -93,10 +90,10 @@ export default defineComponent({
     readonly: Boolean as PropType<VxeFormPropTypes.Readonly>,
     items: Array as PropType<VxeFormPropTypes.Items>,
     rules: Object as PropType<VxeFormPropTypes.Rules>,
-    preventSubmit: { type: Boolean as PropType<VxeFormPropTypes.PreventSubmit>, default: () => globalConfigStore.form.preventSubmit },
+    preventSubmit: { type: Boolean as PropType<VxeFormPropTypes.PreventSubmit>, default: () => getConfig().form.preventSubmit },
     validConfig: Object as PropType<VxeFormPropTypes.ValidConfig>,
     tooltipConfig: Object as PropType<VxeFormPropTypes.TooltipConfig>,
-    customLayout: { type: Boolean as PropType<VxeFormPropTypes.CustomLayout>, default: () => globalConfigStore.form.customLayout }
+    customLayout: { type: Boolean as PropType<VxeFormPropTypes.CustomLayout>, default: () => getConfig().form.customLayout }
   },
   emits: [
     'update:collapseStatus',
@@ -137,11 +134,11 @@ export default defineComponent({
     let formMethods = {} as FormMethods
 
     const computeValidOpts = computed(() => {
-      return Object.assign({}, globalConfigStore.form.validConfig, props.validConfig)
+      return Object.assign({}, getConfig().form.validConfig, props.validConfig)
     })
 
     const computeTooltipOpts = computed(() => {
-      return Object.assign({}, globalConfigStore.tooltip, globalConfigStore.form.tooltipConfig, props.tooltipConfig)
+      return Object.assign({}, getConfig().tooltip, getConfig().form.tooltipConfig, props.tooltipConfig)
     })
 
     const refMaps: FormPrivateRef = {
@@ -185,7 +182,7 @@ export default defineComponent({
               XEUtils.each(item.slots, (func) => {
                 if (!XEUtils.isFunction(func)) {
                   if (!slots[func]) {
-                    errLog('vxe.error.notSlot', [func])
+                    log.err('vxe.error.notSlot', [func])
                   }
                 }
               })
@@ -355,12 +352,12 @@ export default defineComponent({
                           customValid = gvItem.itemValidatorMethod(validParams)
                         } else {
                           if (process.env.VUE_APP_VXE_TABLE_ENV === 'development') {
-                            warnLog('vxe.error.notValidators', [validator])
+                            log.warn('vxe.error.notValidators', [validator])
                           }
                         }
                       } else {
                         if (process.env.VUE_APP_VXE_TABLE_ENV === 'development') {
-                          errLog('vxe.error.notValidators', [validator])
+                          log.err('vxe.error.notValidators', [validator])
                         }
                       }
                     } else {
@@ -698,7 +695,7 @@ export default defineComponent({
       nextTick(() => {
         if (process.env.VUE_APP_VXE_TABLE_ENV === 'development') {
           if (props.customLayout && props.items) {
-            errLog('vxe.error.errConflicts', ['custom-layout', 'items'])
+            log.err('vxe.error.errConflicts', ['custom-layout', 'items'])
           }
         }
       })

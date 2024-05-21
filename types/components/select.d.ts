@@ -39,9 +39,17 @@ export namespace VxeSelectPropTypes {
   export type PrefixIcon = string
   export type Placement = string
   export type Options = VxeSelectDefines.SelectOptions[]
-  export type OptionProps = VxeGlobalRendererHandles.RenderOptionProps
+  export type OptionProps = {
+    value?: string
+    label?: string
+    disabled?: string
+  }
   export type OptionGroups = VxeSelectDefines.SelectOptgroups[]
-  export type OptionGroupProps = VxeGlobalRendererHandles.RenderOptionGroupProps
+  export type OptionGroupProps = {
+    options?: string
+    label?: string
+    key?: string
+  }
   export type Filterable = boolean
   export type FilterMethod = (params: { group: any, option: any, searchValue: string }) => boolean
   export type Remote = boolean

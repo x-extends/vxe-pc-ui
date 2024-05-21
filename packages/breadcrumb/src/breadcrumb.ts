@@ -1,5 +1,5 @@
 import { defineComponent, ref, h, reactive, provide, PropType } from 'vue'
-import globalConfigStore from '../../ui/src/globalStore'
+import { getConfig } from '@vxe-ui/core'
 import XEUtils from 'xe-utils'
 
 import { VxeBreadcrumbPropTypes, BreadcrumbReactData, BreadcrumbPrivateRef, VxeBreadcrumbPrivateComputed, VxeBreadcrumbConstructor, VxeBreadcrumbPrivateMethods } from '../../../types'
@@ -9,7 +9,7 @@ export default defineComponent({
   props: {
     separator: {
       type: String as PropType<VxeBreadcrumbPropTypes.Separator>,
-      default: () => globalConfigStore.breadcrumb.separator
+      default: () => getConfig().breadcrumb.separator
     }
   },
   emits: [],

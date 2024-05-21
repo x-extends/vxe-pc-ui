@@ -1,7 +1,7 @@
 import { App } from 'vue'
 import XEUtils from 'xe-utils'
 import VxeDrawerComponent, { allActiveDrawers } from './src/drawer'
-import VxeCore from '../ui/src/core'
+import { VxeUI } from '@vxe-ui/core'
 import { dynamicApp, dynamicStore, checkDynamic } from '../dynamics'
 
 import { VxeDrawerPropTypes, DrawerEventTypes, VxeDrawerDefines } from '../../types'
@@ -62,7 +62,7 @@ export const drawer = DrawerController
 export const VxeDrawer = Object.assign(VxeDrawerComponent, {
   install: function (app: App) {
     app.component(VxeDrawerComponent.name as string, VxeDrawerComponent)
-    VxeCore.drawer = DrawerController
+    VxeUI.drawer = DrawerController
   }
 })
 

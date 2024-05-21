@@ -1,5 +1,5 @@
 import { defineComponent, h, inject, TransitionGroup } from 'vue'
-import { renderer } from '../../ui/src/renderer'
+import { renderer } from '@vxe-ui/core'
 import { getSlotVNs } from '../../ui/src/vn'
 import { ViewItemComponent } from './layout-view-item'
 import VxeFormComponent from '../../form/src/form'

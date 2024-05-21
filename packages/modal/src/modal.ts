@@ -3,14 +3,10 @@ import XEUtils from 'xe-utils'
 import { useSize } from '../../hooks/size'
 import { getDomNode, getEventTargetNode } from '../../ui/src/dom'
 import { getLastZIndex, nextZIndex, getFuncText } from '../../ui/src/utils'
-import { errLog } from '../../ui/src/log'
-import { GlobalEvent, hasEventKey, EVENT_KEYS } from '../../ui/src/event'
-import globalConfigStore from '../../ui/src/globalStore'
-import iconConfigStore from '../../ui/src/iconStore'
+import { getConfig, getIcon, getI18n, globalEvents, GLOBAL_EVENT_KEYS, log } from '@vxe-ui/core'
 import VxeButtonComponent from '../../button/src/button'
 import VxeLoadingComponent from '../../loading/index'
 import { getSlotVNs } from '../../ui/src/vn'
-import { getI18n } from '../../ui/src/i18n'
 
 import { VxeModalConstructor, VxeModalPropTypes, ModalReactData, VxeModalEmits, ModalEventTypes, VxeButtonInstance, ModalMethods, ModalPrivateRef, VxeModalMethods } from '../../../types'
 
@@ -27,44 +23,44 @@ export default defineComponent({
     status: String as PropType<VxeModalPropTypes.Status>,
     iconStatus: String as PropType<VxeModalPropTypes.IconStatus>,
     className: String as PropType<VxeModalPropTypes.ClassName>,
-    top: { type: [Number, String] as PropType<VxeModalPropTypes.Top>, default: () => globalConfigStore.modal.top },
+    top: { type: [Number, String] as PropType<VxeModalPropTypes.Top>, default: () => getConfig().modal.top },
     position: [String, Object] as PropType<VxeModalPropTypes.Position>,
     title: String as PropType<VxeModalPropTypes.Title>,
-    duration: { type: [Number, String] as PropType<VxeModalPropTypes.Duration>, default: () => globalConfigStore.modal.duration },
+    duration: { type: [Number, String] as PropType<VxeModalPropTypes.Duration>, default: () => getConfig().modal.duration },
     message: [Number, String] as PropType<VxeModalPropTypes.Message>,
     content: [Number, String] as PropType<VxeModalPropTypes.Content>,
     showCancelButton: { type: Boolean as PropType<VxeModalPropTypes.ShowCancelButton>, default: null },
-    cancelButtonText: { type: String as PropType<VxeModalPropTypes.CancelButtonText>, default: () => globalConfigStore.modal.cancelButtonText },
-    showConfirmButton: { type: Boolean as PropType<VxeModalPropTypes.ShowConfirmButton>, default: () => globalConfigStore.modal.showConfirmButton },
-    confirmButtonText: { type: String as PropType<VxeModalPropTypes.ConfirmButtonText>, default: () => globalConfigStore.modal.confirmButtonText },
-    lockView: { type: Boolean as PropType<VxeModalPropTypes.LockView>, default: () => globalConfigStore.modal.lockView },
+    cancelButtonText: { type: String as PropType<VxeModalPropTypes.CancelButtonText>, default: () => getConfig().modal.cancelButtonText },
+    showConfirmButton: { type: Boolean as PropType<VxeModalPropTypes.ShowConfirmButton>, default: () => getConfig().modal.showConfirmButton },
+    confirmButtonText: { type: String as PropType<VxeModalPropTypes.ConfirmButtonText>, default: () => getConfig().modal.confirmButtonText },
+    lockView: { type: Boolean as PropType<VxeModalPropTypes.LockView>, default: () => getConfig().modal.lockView },
     lockScroll: Boolean as PropType<VxeModalPropTypes.LockScroll>,
-    mask: { type: Boolean as PropType<VxeModalPropTypes.Mask>, default: () => globalConfigStore.modal.mask },
-    maskClosable: { type: Boolean as PropType<VxeModalPropTypes.MaskClosable>, default: () => globalConfigStore.modal.maskClosable },
-    escClosable: { type: Boolean as PropType<VxeModalPropTypes.EscClosable>, default: () => globalConfigStore.modal.escClosable },
+    mask: { type: Boolean as PropType<VxeModalPropTypes.Mask>, default: () => getConfig().modal.mask },
+    maskClosable: { type: Boolean as PropType<VxeModalPropTypes.MaskClosable>, default: () => getConfig().modal.maskClosable },
+    escClosable: { type: Boolean as PropType<VxeModalPropTypes.EscClosable>, default: () => getConfig().modal.escClosable },
     resize: Boolean as PropType<VxeModalPropTypes.Resize>,
-    showHeader: { type: Boolean as PropType<VxeModalPropTypes.ShowHeader>, default: () => globalConfigStore.modal.showHeader },
-    showFooter: { type: Boolean as PropType<VxeModalPropTypes.ShowFooter>, default: () => globalConfigStore.modal.showFooter },
+    showHeader: { type: Boolean as PropType<VxeModalPropTypes.ShowHeader>, default: () => getConfig().modal.showHeader },
+    showFooter: { type: Boolean as PropType<VxeModalPropTypes.ShowFooter>, default: () => getConfig().modal.showFooter },
     showZoom: Boolean as PropType<VxeModalPropTypes.ShowZoom>,
-    showClose: { type: Boolean as PropType<VxeModalPropTypes.ShowClose>, default: () => globalConfigStore.modal.showClose },
-    dblclickZoom: { type: Boolean as PropType<VxeModalPropTypes.DblclickZoom>, default: () => globalConfigStore.modal.dblclickZoom },
+    showClose: { type: Boolean as PropType<VxeModalPropTypes.ShowClose>, default: () => getConfig().modal.showClose },
+    dblclickZoom: { type: Boolean as PropType<VxeModalPropTypes.DblclickZoom>, default: () => getConfig().modal.dblclickZoom },
     width: [Number, String] as PropType<VxeModalPropTypes.Width>,
     height: [Number, String] as PropType<VxeModalPropTypes.Height>,
-    minWidth: { type: [Number, String] as PropType<VxeModalPropTypes.MinWidth>, default: () => globalConfigStore.modal.minWidth },
-    minHeight: { type: [Number, String] as PropType<VxeModalPropTypes.MinHeight>, default: () => globalConfigStore.modal.minHeight },
+    minWidth: { type: [Number, String] as PropType<VxeModalPropTypes.MinWidth>, default: () => getConfig().modal.minWidth },
+    minHeight: { type: [Number, String] as PropType<VxeModalPropTypes.MinHeight>, default: () => getConfig().modal.minHeight },
     zIndex: Number as PropType<VxeModalPropTypes.ZIndex>,
-    marginSize: { type: [Number, String] as PropType<VxeModalPropTypes.MarginSize>, default: () => globalConfigStore.modal.marginSize },
+    marginSize: { type: [Number, String] as PropType<VxeModalPropTypes.MarginSize>, default: () => getConfig().modal.marginSize },
     fullscreen: Boolean as PropType<VxeModalPropTypes.Fullscreen>,
-    draggable: { type: Boolean as PropType<VxeModalPropTypes.Draggable>, default: () => globalConfigStore.modal.draggable },
-    remember: { type: Boolean, default: () => globalConfigStore.modal.remember },
-    destroyOnClose: { type: Boolean as PropType<VxeModalPropTypes.DestroyOnClose>, default: () => globalConfigStore.modal.destroyOnClose },
-    showTitleOverflow: { type: Boolean as PropType<VxeModalPropTypes.ShowTitleOverflow>, default: () => globalConfigStore.modal.showTitleOverflow },
-    transfer: { type: Boolean as PropType<VxeModalPropTypes.Transfer>, default: () => globalConfigStore.modal.transfer },
-    storage: { type: Boolean as PropType<VxeModalPropTypes.Storage>, default: () => globalConfigStore.modal.storage },
-    storageKey: { type: String as PropType<VxeModalPropTypes.StorageKey>, default: () => globalConfigStore.modal.storageKey },
-    animat: { type: Boolean as PropType<VxeModalPropTypes.Animat>, default: () => globalConfigStore.modal.animat },
-    size: { type: String as PropType<VxeModalPropTypes.Size>, default: () => globalConfigStore.modal.size || globalConfigStore.size },
-    beforeHideMethod: { type: Function as PropType<VxeModalPropTypes.BeforeHideMethod>, default: () => globalConfigStore.modal.beforeHideMethod },
+    draggable: { type: Boolean as PropType<VxeModalPropTypes.Draggable>, default: () => getConfig().modal.draggable },
+    remember: { type: Boolean, default: () => getConfig().modal.remember },
+    destroyOnClose: { type: Boolean as PropType<VxeModalPropTypes.DestroyOnClose>, default: () => getConfig().modal.destroyOnClose },
+    showTitleOverflow: { type: Boolean as PropType<VxeModalPropTypes.ShowTitleOverflow>, default: () => getConfig().modal.showTitleOverflow },
+    transfer: { type: Boolean as PropType<VxeModalPropTypes.Transfer>, default: () => getConfig().modal.transfer },
+    storage: { type: Boolean as PropType<VxeModalPropTypes.Storage>, default: () => getConfig().modal.storage },
+    storageKey: { type: String as PropType<VxeModalPropTypes.StorageKey>, default: () => getConfig().modal.storageKey },
+    animat: { type: Boolean as PropType<VxeModalPropTypes.Animat>, default: () => getConfig().modal.animat },
+    size: { type: String as PropType<VxeModalPropTypes.Size>, default: () => getConfig().modal.size || getConfig().size },
+    beforeHideMethod: { type: Function as PropType<VxeModalPropTypes.BeforeHideMethod>, default: () => getConfig().modal.beforeHideMethod },
     slots: Object as PropType<VxeModalPropTypes.Slots>
   },
   emits: [
@@ -236,7 +232,7 @@ export default defineComponent({
     }
 
     const getStorageMap = (key: string) => {
-      const version = globalConfigStore.version
+      const version = getConfig().version
       const rest = XEUtils.toStringJSON(localStorage.getItem(key) || '')
       return rest && rest._v === version ? rest : { _v: version }
     }
@@ -403,7 +399,7 @@ export default defineComponent({
     }
 
     const handleGlobalKeydownEvent = (evnt: KeyboardEvent) => {
-      const isEsc = hasEventKey(evnt, EVENT_KEYS.ESCAPE)
+      const isEsc = globalEvents.hasKey(evnt, GLOBAL_EVENT_KEYS.ESCAPE)
       if (isEsc) {
         const lastModal = XEUtils.max(allActiveModals, (item) => item.reactData.modalZindex)
         // 多个时，只关掉最上层的窗口
@@ -733,7 +729,7 @@ export default defineComponent({
       if (showZoom) {
         rightVNs.push(
           h('i', {
-            class: ['vxe-modal--zoom-btn', 'trigger--btn', zoomLocat ? iconConfigStore.MODAL_ZOOM_OUT : iconConfigStore.MODAL_ZOOM_IN],
+            class: ['vxe-modal--zoom-btn', 'trigger--btn', zoomLocat ? getIcon().MODAL_ZOOM_OUT : getIcon().MODAL_ZOOM_IN],
             title: getI18n(`vxe.modal.zoom${zoomLocat ? 'Out' : 'In'}`),
             onClick: toggleZoomEvent
           })
@@ -742,7 +738,7 @@ export default defineComponent({
       if (showClose) {
         rightVNs.push(
           h('i', {
-            class: ['vxe-modal--close-btn', 'trigger--btn', iconConfigStore.MODAL_CLOSE],
+            class: ['vxe-modal--close-btn', 'trigger--btn', getIcon().MODAL_CLOSE],
             title: getI18n('vxe.modal.close'),
             onClick: closeEvent
           })
@@ -797,7 +793,7 @@ export default defineComponent({
             class: 'vxe-modal--status-wrapper'
           }, [
             h('i', {
-              class: ['vxe-modal--status-icon', props.iconStatus || iconConfigStore[`MODAL_${status}`.toLocaleUpperCase() as 'MODAL_SUCCESS' | 'MODAL_ERROR']]
+              class: ['vxe-modal--status-icon', props.iconStatus || getIcon()[`MODAL_${status}`.toLocaleUpperCase() as 'MODAL_SUCCESS' | 'MODAL_ERROR']]
             })
           ])
         )
@@ -934,7 +930,7 @@ export default defineComponent({
     onMounted(() => {
       nextTick(() => {
         if (props.storage && !props.id) {
-          errLog('vxe.error.reqProp', ['modal.id'])
+          log.err('vxe.error.reqProp', ['modal.id'])
         }
         if (props.modelValue) {
           openModal()
@@ -942,12 +938,12 @@ export default defineComponent({
         recalculate()
       })
       if (props.escClosable) {
-        GlobalEvent.on($xeModal, 'keydown', handleGlobalKeydownEvent)
+        globalEvents.on($xeModal, 'keydown', handleGlobalKeydownEvent)
       }
     })
 
     onUnmounted(() => {
-      GlobalEvent.off($xeModal, 'keydown')
+      globalEvents.off($xeModal, 'keydown')
       removeMsgQueue()
     })
 

@@ -114,7 +114,7 @@ const delDir = (directory) => {
 
 function toExportName (name) {
   const str = XEUtils.camelCase(name)
-  return `${str.slice(0, 1).toUpperCase()}${str.slice(1)}`
+  return name === 'ui' ? 'UI' : `${str.slice(0, 1).toUpperCase()}${str.slice(1)}`
 }
 
 gulp.task('build_escode', function () {

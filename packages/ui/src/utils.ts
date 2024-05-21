@@ -1,6 +1,5 @@
 import XEUtils from 'xe-utils'
 import DomZIndex from 'dom-zindex'
-import globalConfigStore from './globalStore'
 
 export function isEnableConf (conf: any): boolean {
   return conf && conf.enabled !== false
@@ -20,10 +19,6 @@ export function getLastZIndex () {
 
 export function getFuncText (content?: string | number | boolean | null) {
   return content ? XEUtils.toValueString(content) : ''
-}
-
-export function formatText (value: any, placeholder?: any) {
-  return '' + (isEmptyValue(value) ? (placeholder ? globalConfigStore.emptyCell : '') : value)
 }
 
 /**

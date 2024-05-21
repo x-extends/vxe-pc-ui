@@ -31,7 +31,11 @@ export namespace VxeCheckboxGroupPropTypes {
 
     [key: string]: any
   }[]
-  export type OptionProps = VxeGlobalRendererHandles.RenderOptionProps
+  export type OptionProps = {
+    value?: string
+    label?: string
+    disabled?: string
+  }
   export type Max = string | number
   export type Disabled = boolean
 }

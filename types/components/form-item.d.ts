@@ -1,6 +1,6 @@
 import { RenderFunction, SetupContext, Ref, DefineComponent } from 'vue'
+import { VxeGlobalRendererHandles } from '@vxe-ui/core'
 import { defineVxeComponent, VxeComponentBase, VxeComponentEvent, VxeComponentStyle } from '../tool'
-import { VxeGlobalRendererHandles } from '../ui/renderer'
 
 /* eslint-disable no-use-before-define,@typescript-eslint/ban-types */
 
@@ -79,7 +79,42 @@ export namespace VxeFormItemPropTypes {
   export type VisibleMethod = (params: FormItemVisibleParams) => boolean
   export type Folding = boolean
   export type CollapseNode = boolean
-  export type ItemRender = FormItemRenderOptions
+  export interface ItemRender {
+    name?: string
+    props?: any
+    attrs?: any
+    events?: any
+    /**
+     * 下拉选项列表（需要渲染器支持）
+     */
+    options?: any[]
+    /**
+     * 下拉选项属性参数配置（需要渲染器支持）
+     */
+    optionProps?: {
+      value?: string
+      label?: string
+      disabled?: string
+    }
+    /**
+     * 下拉分组选项列表（需要渲染器支持）
+     */
+    optionGroups?: any[]
+    /**
+     * 下拉分组选项属性参数配置（需要渲染器支持）
+     */
+    optionGroupProps?: {
+      options?: string
+      label?: string
+      key?: string
+    }
+    /**
+     * 渲染组件的内容（需要渲染器支持）
+     */
+    content?: string
+    autofocus?: string
+    defaultValue?: ((params: { item: VxeFormItemProps }) => any) | null | undefined | string | number | RegExp | object | any[] | Date
+  }
   export type Rules = VxeFormDefines.FormRule[]
   export type Slots = {
     title?: string | ((params: FormItemTitleRenderParams) => SlotVNodeType | SlotVNodeType[]) | null
@@ -180,7 +215,7 @@ export type VxeFormItemProps = {
   /**
    * 项渲染配置项
    */
-  itemRender?: FormItemRenderOptions
+  itemRender?: VxeFormItemPropTypes.ItemRender
   Rules?: VxeFormItemPropTypes.Rules
   slots?: VxeFormItemPropTypes.Slots
   children?: VxeFormItemProps[]
@@ -206,34 +241,6 @@ export namespace VxeFormItemDefines {
   export interface FormItemEventParams extends VxeComponentEvent {
     $formItem: VxeFormItemConstructor
   }
-}
-
-/**
- * 项渲染配置项
- */
-export interface FormItemRenderOptions extends VxeGlobalRendererHandles.RenderOptions {
-  /**
-   * 下拉选项列表（需要渲染器支持）
-   */
-  options?: any[]
-  /**
-   * 下拉选项属性参数配置（需要渲染器支持）
-   */
-  optionProps?: VxeGlobalRendererHandles.RenderOptionProps
-  /**
-   * 下拉分组选项列表（需要渲染器支持）
-   */
-  optionGroups?: any[]
-  /**
-   * 下拉分组选项属性参数配置（需要渲染器支持）
-   */
-  optionGroupProps?: VxeGlobalRendererHandles.RenderOptionGroupProps
-  /**
-   * 渲染组件的内容（需要渲染器支持）
-   */
-  content?: string
-  autofocus?: string
-  defaultValue?: ((params: { item: VxeFormItemProps }) => any) | null | undefined | string | number | RegExp | object | any[] | Date
 }
 
 /**

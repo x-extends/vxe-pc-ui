@@ -32,7 +32,11 @@ export namespace VxeRadioGroupPropTypes {
 
     [key: string]: any
   }[]
-  export type OptionProps = VxeGlobalRendererHandles.RenderOptionProps
+  export type OptionProps = {
+    value?: string
+    label?: string
+    disabled?: string
+  }
   export type ModelValue = any
   export type Strict = boolean
   export type Disabled = boolean
