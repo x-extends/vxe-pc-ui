@@ -3,7 +3,7 @@ import { WidgetInputFormObjVO } from './input-data'
 import { useKebabCaseName } from '../render/hooks'
 import VxeFormItemComponent from '../../form/src/form-item'
 
-import { VxeGlobalRendererHandles, VxeFormViewConstructor, VxeFormViewPrivateMethods } from '../../../types'
+import type { VxeGlobalRendererHandles, VxeFormViewConstructor, VxeFormViewPrivateMethods } from '../../../types'
 
 export const WidgetInputViewComponent = defineComponent({
   props: {

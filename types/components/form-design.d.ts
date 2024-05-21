@@ -1,5 +1,5 @@
 import { RenderFunction, SetupContext, Ref, ComponentPublicInstance, DefineComponent } from 'vue'
-import { defineVxeComponent, VxeComponentBase, VxeComponentEvent, VxeComponentSize, ValueOf } from '../tool'
+import { defineVxeComponent, VxeComponentBaseOptions, VxeComponentEventParams, VxeComponentSizeType, ValueOf } from '@vxe-ui/core'
 import { VxeFormProps, VxeFormPropTypes } from '../components/form'
 import { VxeFormItemPropTypes } from '../components/form-item'
 
@@ -10,7 +10,7 @@ export type VxeFormDesignComponent = DefineComponent<VxeFormDesignProps, VxeForm
 
 export type VxeFormDesignInstance = ComponentPublicInstance<VxeFormDesignProps, VxeFormDesignConstructor>
 
-export interface VxeFormDesignConstructor extends VxeComponentBase, VxeFormDesignMethods {
+export interface VxeFormDesignConstructor extends VxeComponentBaseOptions, VxeFormDesignMethods {
   props: VxeFormDesignProps
   context: SetupContext<VxeFormDesignEmits>
   reactData: FormDesignReactData
@@ -25,7 +25,7 @@ export interface FormDesignPrivateRef {
 export interface VxeFormDesignPrivateRef extends FormDesignPrivateRef { }
 
 export namespace VxeFormDesignPropTypes {
-  export type Size = VxeComponentSize
+  export type Size = VxeComponentSizeType
 
   export type Height = string | number
   export interface WidgetItem {
@@ -95,7 +95,7 @@ export type VxeFormDesignEmits = [
 ]
 
 export namespace VxeFormDesignDefines {
-  export interface FormDesignEventParams extends VxeComponentEvent {
+  export interface FormDesignEventParams extends VxeComponentEventParams {
     $formDesign: VxeFormDesignConstructor
   }
 

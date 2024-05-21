@@ -1,7 +1,7 @@
 import { defineComponent, ref, h, reactive } from 'vue'
 import XEUtils from 'xe-utils'
 
-import { UploadReactData, VxeUploadEmits, UploadPrivateRef, VxeUploadPrivateComputed, VxeUploadConstructor, VxeUploadPrivateMethods } from '../../../types'
+import type { UploadReactData, VxeUploadEmits, UploadPrivateRef, VxeUploadPrivateComputed, VxeUploadConstructor, VxeUploadPrivateMethods } from '../../../types'
 
 export default defineComponent({
   name: 'VxeUpload',

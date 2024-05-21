@@ -3,7 +3,7 @@ import VxeFormComponent from '../../form/src/form'
 import VxeFormItemComponent from '../../form/src/form-item'
 import VxeSwitchComponent from '../../switch/src/switch'
 
-import { VxeFormDesignDefines, VxeFormDesignPropTypes } from '../../../types'
+import type { VxeFormDesignDefines, VxeFormDesignPropTypes } from '../../../types'
 
 export const DefaultSettingFormComponent = defineComponent({
   name: 'DefaultSettingFormView',

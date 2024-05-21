@@ -3,7 +3,7 @@ import VxeFormItemComponent from '../../form/src/form-item'
 import { WidgetSelectFormObjVO } from './select-data'
 import { useKebabCaseName } from '../render/hooks'
 
-import { VxeGlobalRendererHandles, VxeFormViewConstructor, VxeFormViewPrivateMethods } from '../../../types'
+import type { VxeGlobalRendererHandles, VxeFormViewConstructor, VxeFormViewPrivateMethods } from '../../../types'
 
 export const WidgetSelectViewComponent = defineComponent({
   props: {

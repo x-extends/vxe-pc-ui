@@ -1,4 +1,4 @@
-import { VxeFormProps, VxeFormDefines, VxeGlobalRendererHandles } from '../../../types'
+import type { VxeFormProps, VxeFormDefines, VxeGlobalRendererHandles } from '../../../types'
 
 export interface WidgetInputFormObjVO {
   placeholder: string

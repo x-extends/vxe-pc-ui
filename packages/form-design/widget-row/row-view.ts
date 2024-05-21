@@ -10,7 +10,7 @@ import VxeRowComponent from '../../row/src/row'
 import VxeColComponent from '../../row/src/col'
 import VxeButtonComponent from '../../button/src/button'
 
-import { VxeGlobalRendererHandles, VxeFormDesignDefines, VxeFormDesignConstructor, VxeFormDesignPrivateMethods } from '../../../types'
+import type { VxeGlobalRendererHandles, VxeFormDesignDefines, VxeFormDesignConstructor, VxeFormDesignPrivateMethods } from '../../../types'
 
 const ViewColItemComponent = defineComponent({
   props: {

@@ -7,7 +7,7 @@ import { getWidgetInputFormData, createWidgetInputViewRules, WidgetInputViewComp
 import { getWidgetTextareaFormData, WidgetTextareaViewComponent, WidgetTextareaFormComponent } from '../widget-textarea'
 import { getWidgetSelectFormData, WidgetSelectViewComponent, WidgetSelectFormComponent } from '../widget-select'
 
-import { VxeGlobalRendererHandles } from '../../../types'
+import type { VxeGlobalRendererHandles } from '../../../types'
 
 const defaultFormDesignWidgetName = (params: VxeGlobalRendererHandles.FormDesignWidgetNameParams) => {
   return getFormDesignWidgetName(params.name)

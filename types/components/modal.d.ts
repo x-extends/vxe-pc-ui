@@ -1,5 +1,5 @@
 import { RenderFunction, SetupContext, Ref, ComponentPublicInstance, DefineComponent } from 'vue'
-import { defineVxeComponent, VxeComponentSize, VxeComponentBase, VxeComponentEvent, ValueOf, VxeComponentSlot } from '../tool'
+import { defineVxeComponent, VxeComponentSizeType, VxeComponentBaseOptions, VxeComponentEventParams, ValueOf, VxeComponentSlotType } from '@vxe-ui/core'
 
 /* eslint-disable no-use-before-define,@typescript-eslint/ban-types */
 
@@ -8,7 +8,7 @@ export type VxeModalComponent = DefineComponent<VxeModalProps, VxeModalEmits>
 
 export type VxeModalInstance = ComponentPublicInstance<VxeModalProps, VxeModalConstructor>
 
-export interface VxeModalConstructor extends VxeComponentBase, VxeModalMethods {
+export interface VxeModalConstructor extends VxeComponentBaseOptions, VxeModalMethods {
   props: VxeModalProps
   context: SetupContext<VxeModalEmits>
   reactData: ModalReactData
@@ -42,7 +42,7 @@ export type ModalPosition = {
 export type ModalEventTypes = 'model' | 'mask' | 'close' | 'confirm' | 'cancel' | 'exit' | 'exist'
 
 export namespace VxeModalPropTypes {
-  export type Size = VxeComponentSize
+  export type Size = VxeComponentSizeType
   export type ModelValue = boolean
   export type ID = string | null
   export type Type = ModalType
@@ -166,7 +166,7 @@ export interface ModalReactData {
 }
 
 export interface ModalMethods {
-  dispatchEvent(type: ValueOf<VxeModalEmits>, params: any, evnt?: Event): void
+  dispatchEvent(type: ValueOf<VxeModalEmits>, params: Record<string, any>, evnt: Event | null): void
   /**
    * 手动打开窗口
    */
@@ -230,7 +230,7 @@ export namespace VxeModalDefines {
     key?: string | number
   }
 
-  interface ModalEventParams extends VxeComponentEvent {
+  interface ModalEventParams extends VxeComponentEventParams {
     $modal: VxeModalConstructor & VxeModalMethods
   }
 
@@ -377,23 +377,23 @@ export interface VxeModalSlots {
   /**
    * 自定义窗口内容模板
    */
-  default?(params: ModalDefaultSlotParams): VxeComponentSlot[] | VxeComponentSlot
+  default?(params: ModalDefaultSlotParams): VxeComponentSlotType[] | VxeComponentSlotType
   /**
    * 自定义窗口头部的模板
    */
-  header?(params: ModalHeaderSlotParams): VxeComponentSlot[] | VxeComponentSlot
+  header?(params: ModalHeaderSlotParams): VxeComponentSlotType[] | VxeComponentSlotType
   /**
    * 自定义窗口标题的模板（如果使用了 header 插槽，则该插槽无效）
    */
-  title?(params: ModalTitleSlotParams): VxeComponentSlot[] | VxeComponentSlot
+  title?(params: ModalTitleSlotParams): VxeComponentSlotType[] | VxeComponentSlotType
   /**
    * 自定义窗口右上角的模板
    */
-  corner?(params: ModalTitleSlotParams): VxeComponentSlot[] | VxeComponentSlot
+  corner?(params: ModalTitleSlotParams): VxeComponentSlotType[] | VxeComponentSlotType
   /**
    * 自定义窗口底部的模板
    */
-  footer?(params: ModalFooterSlotParams): VxeComponentSlot[] | VxeComponentSlot
+  footer?(params: ModalFooterSlotParams): VxeComponentSlotType[] | VxeComponentSlotType
 }
 
 export const Modal: typeof VxeModal

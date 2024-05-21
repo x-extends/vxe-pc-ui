@@ -1,5 +1,5 @@
 import { RenderFunction, SetupContext, Ref, ComponentPublicInstance, DefineComponent } from 'vue'
-import { defineVxeComponent, VxeComponentBase, VxeComponentEvent } from '../tool'
+import { defineVxeComponent, VxeComponentBaseOptions, VxeComponentEventParams } from '@vxe-ui/core'
 
 /* eslint-disable no-use-before-define,@typescript-eslint/ban-types */
 
@@ -8,7 +8,7 @@ export type VxeOptionComponent = DefineComponent<VxeOptionProps, VxeOptionEmits>
 
 export type VxeOptionInstance = ComponentPublicInstance<VxeOptionProps, VxeOptionConstructor>
 
-export interface VxeOptionConstructor extends VxeComponentBase, VxeOptionMethods {
+export interface VxeOptionConstructor extends VxeComponentBaseOptions, VxeOptionMethods {
   props: VxeOptionProps
   context: SetupContext<VxeOptionEmits>
   reactData: OptionReactData
@@ -77,7 +77,7 @@ export interface VxeOptionPrivateMethods extends OptionPrivateMethods { }
 export type VxeOptionEmits = []
 
 export namespace VxeOptionDefines {
-  export interface OptionEventParams extends VxeComponentEvent {
+  export interface OptionEventParams extends VxeComponentEventParams {
     $option: VxeOptionConstructor
   }
 }

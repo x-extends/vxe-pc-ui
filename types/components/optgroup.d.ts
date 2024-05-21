@@ -1,5 +1,5 @@
 import { RenderFunction, SetupContext, Ref, ComponentPublicInstance, DefineComponent } from 'vue'
-import { defineVxeComponent, VxeComponentBase, VxeComponentEvent } from '../tool'
+import { defineVxeComponent, VxeComponentBaseOptions, VxeComponentEventParams } from '@vxe-ui/core'
 
 /* eslint-disable no-use-before-define,@typescript-eslint/ban-types */
 
@@ -8,7 +8,7 @@ export type VxeOptgroupComponent = DefineComponent<VxeOptgroupProps, VxeOptgroup
 
 export type VxeOptgroupInstance = ComponentPublicInstance<VxeOptgroupProps, VxeOptgroupConstructor>
 
-export interface VxeOptgroupConstructor extends VxeComponentBase, VxeOptgroupMethods {
+export interface VxeOptgroupConstructor extends VxeComponentBaseOptions, VxeOptgroupMethods {
   props: VxeOptgroupProps
   context: SetupContext<VxeOptgroupEmits>
   reactData: OptgroupReactData
@@ -58,7 +58,7 @@ export interface VxeOptgroupPrivateMethods extends OptgroupPrivateMethods { }
 export type VxeOptgroupEmits = []
 
 export namespace VxeOptgroupDefines {
-  export interface OptgroupEventParams extends VxeComponentEvent {
+  export interface OptgroupEventParams extends VxeComponentEventParams {
     $optgroup: VxeOptgroupConstructor
   }
 }

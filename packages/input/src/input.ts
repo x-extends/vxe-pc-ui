@@ -1,13 +1,13 @@
 import { defineComponent, h, Teleport, ref, Ref, computed, reactive, inject, nextTick, watch, onUnmounted, PropType } from 'vue'
 import XEUtils from 'xe-utils'
-import { getConfig, getIcon, getI18n, globalEvents, GLOBAL_EVENT_KEYS } from '@vxe-ui/core'
+import { getConfig, getIcon, getI18n, globalEvents, GLOBAL_EVENT_KEYS, createEvent } from '@vxe-ui/core'
 import { useSize } from '../../hooks/size'
 import { getFuncText, getLastZIndex, nextZIndex } from '../../ui/src/utils'
 import { hasClass, getAbsolutePos, getEventTargetNode } from '../../ui/src/dom'
 import { toStringTimeDate, getDateQuarter } from './date'
 import { handleNumber, toFloatValueFixed } from './number'
 
-import { VxeComponentStyle, VxeInputConstructor, VxeInputEmits, InputReactData, InputMethods, VxeInputPropTypes, InputPrivateRef, VxeFormConstructor, VxeFormPrivateMethods, VxeFormDefines } from '../../../types'
+import type { VxeComponentStyleType, VxeInputConstructor, VxeInputEmits, InputReactData, InputMethods, VxeInputPropTypes, InputPrivateRef, VxeFormConstructor, VxeFormPrivateMethods, VxeFormDefines } from '../../../types'
 
 interface DateYearItem {
   date: Date;
@@ -682,9 +682,9 @@ export default defineComponent({
     const emitModel = (value: string, evnt: Event | { type: string }) => {
       reactData.inputValue = value
       emit('update:modelValue', value)
-      inputMethods.dispatchEvent('input', { value }, evnt)
+      inputMethods.dispatchEvent('input', { value }, evnt as any)
       if (XEUtils.toValueString(props.modelValue) !== value) {
-        inputMethods.dispatchEvent('change', { value }, evnt)
+        inputMethods.dispatchEvent('change', { value }, evnt as any)
         // 自动更新校验状态
         if ($xeForm && formItemInfo) {
           $xeForm.triggerItemEvent(evnt, formItemInfo.itemConfig.field, value)
@@ -1515,7 +1515,7 @@ export default defineComponent({
           const panelHeight = panelElem.offsetHeight
           const panelWidth = panelElem.offsetWidth
           const marginSize = 5
-          const panelStyle: VxeComponentStyle = {
+          const panelStyle: VxeComponentStyleType = {
             zIndex: panelIndex
           }
           const { boundingTop, boundingLeft, visibleHeight, visibleWidth } = getAbsolutePos(targetElem)
@@ -2315,7 +2315,7 @@ export default defineComponent({
 
     inputMethods = {
       dispatchEvent (type, params, evnt) {
-        emit(type, Object.assign({ $input: $xeInput, $event: evnt }, params))
+        emit(type, createEvent(evnt, { $input: $xeInput }, params))
       },
 
       focus () {

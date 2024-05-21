@@ -10,7 +10,7 @@ import { modal } from '../../modal'
 import { WidgetSelectFormObjVO, WidgetSelectFormOptionObjVO, WidgetSelectFormOptionSubObjVO } from './select-data'
 import { useKebabCaseName } from '../render/hooks'
 
-import { VxeGlobalRendererHandles } from '../../../types'
+import type { VxeGlobalRendererHandles } from '../../../types'
 
 export const WidgetSelectFormComponent = defineComponent({
   props: {

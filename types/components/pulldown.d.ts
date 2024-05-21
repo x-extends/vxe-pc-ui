@@ -1,5 +1,5 @@
 import { RenderFunction, SetupContext, Ref, ComponentPublicInstance, DefineComponent } from 'vue'
-import { defineVxeComponent, VxeComponentBase, VxeComponentEvent, VxeComponentSize, VxeComponentStyle, ValueOf } from '../tool'
+import { defineVxeComponent, VxeComponentBaseOptions, VxeComponentEventParams, VxeComponentSizeType, VxeComponentStyleType, ValueOf } from '@vxe-ui/core'
 
 /* eslint-disable no-use-before-define,@typescript-eslint/ban-types */
 
@@ -8,7 +8,7 @@ export type VxePulldownComponent = DefineComponent<VxePulldownProps, VxePulldown
 
 export type VxePulldownInstance = ComponentPublicInstance<VxePulldownProps, VxePulldownConstructor>
 
-export interface VxePulldownConstructor extends VxeComponentBase, VxePulldownMethods {
+export interface VxePulldownConstructor extends VxeComponentBaseOptions, VxePulldownMethods {
   props: VxePulldownProps
   context: SetupContext<VxePulldownEmits>
   reactData: PulldownReactData
@@ -24,7 +24,7 @@ export interface VxePulldownPrivateRef extends PulldownPrivateRef { }
 
 export namespace VxePulldownPropTypes {
   export type ModelValue = boolean
-  export type Size = VxeComponentSize
+  export type Size = VxeComponentSizeType
   export type Disabled = boolean
   export type Placement = string
   export type ClassName = string | ((params: { $pulldown: VxePulldownConstructor }) => string)
@@ -63,7 +63,7 @@ export interface VxePulldownPrivateComputed extends PulldownPrivateComputed { }
 export interface PulldownReactData {
   inited: boolean
   panelIndex: number
-  panelStyle: VxeComponentStyle | null
+  panelStyle: VxeComponentStyleType | null
   panelPlacement: string | null
   visiblePanel: boolean
   animatVisible: boolean
@@ -71,7 +71,7 @@ export interface PulldownReactData {
 }
 
 export interface PulldownMethods {
-  dispatchEvent(type: ValueOf<VxePulldownEmits>, params: any, evnt: Event): void
+  dispatchEvent(type: ValueOf<VxePulldownEmits>, params: Record<string, any>, evnt: Event | null): void
   /**
    * 判断下拉面板是否可视
    */
@@ -103,7 +103,7 @@ export type VxePulldownEmits = [
 ]
 
 export namespace VxePulldownDefines {
-  export interface PulldownEventParams extends VxeComponentEvent {
+  export interface PulldownEventParams extends VxeComponentEventParams {
     $pulldown: VxePulldownConstructor
   }
 }
@@ -116,7 +116,9 @@ export interface VxePulldownListeners {
   hidePanel?: VxePulldownEvents.HidePanel
 }
 
-export namespace VxePulldownEvents { }
+export namespace VxePulldownEvents {
+  export type HidePanel = (params: VxePulldownDefines.HidePanelEventParams) => void
+ }
 
 export namespace VxePulldownSlotTypes {
   export interface DefaultSlotParams {

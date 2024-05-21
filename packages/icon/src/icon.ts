@@ -1,6 +1,7 @@
 import { defineComponent, h, PropType } from 'vue'
+import { createEvent } from '@vxe-ui/core'
 
-import { VxeIconPropTypes, VxeIconEmits } from '../../../types'
+import type { VxeIconPropTypes, VxeIconEmits } from '../../../types'
 
 export default defineComponent({
   name: 'VxeIcon',
@@ -14,8 +15,9 @@ export default defineComponent({
   ] as VxeIconEmits,
   setup (props, { emit }) {
     const clickEvent = (evnt: KeyboardEvent) => {
-      emit('click', { $event: evnt })
+      emit('click', createEvent(evnt, { }))
     }
+
     return () => {
       const { name, roll, status } = props
       return h('i', {

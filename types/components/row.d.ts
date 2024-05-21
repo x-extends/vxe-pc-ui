@@ -1,5 +1,5 @@
 import { RenderFunction, SetupContext, Ref, ComponentPublicInstance, DefineComponent } from 'vue'
-import { defineVxeComponent, VxeComponentBase, VxeComponentEvent } from '../tool'
+import { defineVxeComponent, VxeComponentBaseOptions, VxeComponentEventParams } from '@vxe-ui/core'
 
 /* eslint-disable no-use-before-define,@typescript-eslint/ban-types */
 
@@ -8,7 +8,7 @@ export type VxeRowComponent = DefineComponent<VxeRowProps, VxeRowEmits>
 
 export type VxeRowInstance = ComponentPublicInstance<VxeRowProps, VxeRowConstructor>
 
-export interface VxeRowConstructor extends VxeComponentBase, VxeRowMethods {
+export interface VxeRowConstructor extends VxeComponentBaseOptions, VxeRowMethods {
   props: VxeRowProps
   context: SetupContext<VxeRowEmits>
   reactData: RowReactData
@@ -42,6 +42,7 @@ export interface RowReactData {
 }
 
 export interface RowMethods {
+  dispatchEvent(type: ValueOf<VxeRowEmits>, params: Record<string, any>, evnt: Event | null): void
 }
 export interface VxeRowMethods extends RowMethods { }
 
@@ -51,7 +52,7 @@ export interface VxeRowPrivateMethods extends RowPrivateMethods { }
 export type VxeRowEmits = []
 
 export namespace VxeRowDefines {
-  export interface RowEventParams extends VxeComponentEvent {
+  export interface RowEventParams extends VxeComponentEventParams {
     $row: VxeRowConstructor
   }
 }

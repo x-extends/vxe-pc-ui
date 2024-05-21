@@ -1,7 +1,7 @@
 import { defineComponent, ref, h, reactive } from 'vue'
 import XEUtils from 'xe-utils'
 
-import { CalendarReactData, VxeCalendarEmits, CalendarPrivateRef, VxeCalendarPrivateComputed, VxeCalendarConstructor, VxeCalendarPrivateMethods } from '../../../types'
+import type { CalendarReactData, VxeCalendarEmits, CalendarPrivateRef, VxeCalendarPrivateComputed, VxeCalendarConstructor, VxeCalendarPrivateMethods } from '../../../types'
 
 export default defineComponent({
   name: 'VxeCalendar',

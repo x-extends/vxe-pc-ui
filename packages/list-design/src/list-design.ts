@@ -2,7 +2,7 @@ import { defineComponent, ref, h, PropType, reactive } from 'vue'
 import XEUtils from 'xe-utils'
 import { getConfig } from '@vxe-ui/core'
 
-import { VxeListDesignPropTypes, ListDesignReactData, ListDesignPrivateRef, VxeListDesignPrivateComputed, VxeListDesignConstructor, VxeListDesignPrivateMethods } from '../../../types'
+import type { VxeListDesignPropTypes, ListDesignReactData, ListDesignPrivateRef, VxeListDesignPrivateComputed, VxeListDesignConstructor, VxeListDesignPrivateMethods } from '../../../types'
 
 export default defineComponent({
   name: 'VxeListDesign',

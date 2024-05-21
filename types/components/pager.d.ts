@@ -1,5 +1,5 @@
 import { RenderFunction, SetupContext, Ref, ComponentPublicInstance, DefineComponent } from 'vue'
-import { defineVxeComponent, VxeComponentBase, VxeComponentEvent, VxeComponentSize, ValueOf } from '../tool'
+import { defineVxeComponent, VxeComponentBaseOptions, VxeComponentEventParams, VxeComponentSizeType, ValueOf } from '@vxe-ui/core'
 
 /* eslint-disable no-use-before-define,@typescript-eslint/ban-types */
 
@@ -8,7 +8,7 @@ export type VxePagerComponent = DefineComponent<VxePagerProps, VxePagerEmits>
 
 export type VxePagerInstance = ComponentPublicInstance<VxePagerProps, VxePagerConstructor>
 
-export interface VxePagerConstructor extends VxeComponentBase, VxePagerMethods {
+export interface VxePagerConstructor extends VxeComponentBaseOptions, VxePagerMethods {
   props: VxePagerProps
   context: SetupContext<VxePagerEmits>
   reactData: PagerReactData
@@ -28,7 +28,7 @@ export type PageSizeItemType = number | {
 }
 
 export namespace VxePagerPropTypes {
-  export type Size = VxeComponentSize
+  export type Size = VxeComponentSizeType
   export type Layouts = Array<'Home' | 'PrevJump' | 'PrevPage' | 'Number' | 'JumpNumber' | 'NextPage' | 'NextJump' | 'End' | 'Sizes' | 'Jump' | 'FullJump' | 'PageCount' | 'Total'>
   export type CurrentPage = number
   export type Loading = boolean
@@ -127,7 +127,7 @@ export interface PagerReactData {
 }
 
 export interface PagerMethods {
-  dispatchEvent(type: ValueOf<VxePagerEmits>, params: any, evnt?: Event): void
+  dispatchEvent(type: ValueOf<VxePagerEmits>, params: Record<string, any>, evnt: Event | null): void
   /**
    * 首页
    */
@@ -170,7 +170,7 @@ export type VxePagerEmits = [
 ]
 
 export namespace VxePagerDefines {
-  export interface PagerEventParams extends VxeComponentEvent {
+  export interface PagerEventParams extends VxeComponentEventParams {
     $pager: VxePagerConstructor
   }
 

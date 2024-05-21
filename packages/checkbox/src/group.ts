@@ -1,10 +1,10 @@
 import { defineComponent, h, provide, PropType, computed, inject } from 'vue'
-import { getConfig } from '@vxe-ui/core'
+import { getConfig, createEvent } from '@vxe-ui/core'
 import XEUtils from 'xe-utils'
 import VxeCheckboxComponent from './checkbox'
 import { useSize } from '../../hooks/size'
 
-import { VxeCheckboxGroupConstructor, VxeCheckboxGroupEmits, VxeCheckboxGroupPrivateMethods, CheckboxGroupPrivateMethods, CheckboxPrivateComputed, CheckboxGroupMethods, VxeCheckboxGroupPropTypes, VxeFormConstructor, VxeFormPrivateMethods, VxeFormDefines } from '../../../types'
+import type { VxeCheckboxGroupConstructor, VxeCheckboxGroupEmits, VxeCheckboxGroupPrivateMethods, CheckboxGroupPrivateMethods, CheckboxPrivateComputed, CheckboxGroupMethods, VxeCheckboxGroupPropTypes, VxeFormConstructor, VxeFormPrivateMethods, VxeFormDefines } from '../../../types'
 
 export default defineComponent({
   name: 'VxeCheckboxGroup',
@@ -70,7 +70,7 @@ export default defineComponent({
 
     const checkboxGroupMethods: CheckboxGroupMethods = {
       dispatchEvent (type, params, evnt) {
-        emit(type, Object.assign({ $checkboxGroup: $xeCheckboxGroup, $event: evnt }, params))
+        emit(type, createEvent(evnt, { $checkboxGroup: $xeCheckboxGroup }, params))
       }
     }
 

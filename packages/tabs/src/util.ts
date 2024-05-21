@@ -1,6 +1,6 @@
 import XEUtils from 'xe-utils'
 
-import { VxeTabsConstructor, VxeTabsPrivateMethods, VxeTabPaneDefines } from '../../../types'
+import type { VxeTabsConstructor, VxeTabsPrivateMethods, VxeTabPaneDefines } from '../../../types'
 
 export function assembleAnchorTab ($xeTabs: VxeTabsConstructor & VxeTabsPrivateMethods, elem: HTMLElement, tabConfig: VxeTabPaneDefines.TabConfig) {
   const staticLinks = $xeTabs.reactData.staticTabs

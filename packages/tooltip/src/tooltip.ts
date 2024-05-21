@@ -1,12 +1,12 @@
 import { defineComponent, h, ref, Ref, nextTick, onBeforeUnmount, onMounted, reactive, watch, PropType } from 'vue'
 import XEUtils from 'xe-utils'
-import { getConfig } from '@vxe-ui/core'
+import { getConfig, createEvent } from '@vxe-ui/core'
 import { useSize } from '../../hooks/size'
 import { getLastZIndex, nextZIndex } from '../../ui/src/utils'
 import { getAbsolutePos, getDomNode } from '../../ui/src/dom'
 import { getSlotVNs } from '../../ui/src/vn'
 
-import { VxeTooltipPropTypes, VxeTooltipConstructor, VxeTooltipEmits, TooltipReactData, TooltipMethods, TooltipPrivateRef } from '../../../types'
+import type { VxeTooltipPropTypes, VxeTooltipConstructor, VxeTooltipEmits, TooltipReactData, TooltipMethods, TooltipPrivateRef } from '../../../types'
 
 export default defineComponent({
   name: 'VxeTooltip',
@@ -171,7 +171,7 @@ export default defineComponent({
 
     tooltipMethods = {
       dispatchEvent (type, params, evnt) {
-        emit(type, Object.assign({ $tooltip: $xetooltip, $event: evnt }, params))
+        emit(type, createEvent(evnt, { $tooltip: $xetooltip }, params))
       },
       open (target?: HTMLElement, content?: VxeTooltipPropTypes.Content) {
         return tooltipMethods.toVisible(target || reactData.target as HTMLElement, content)

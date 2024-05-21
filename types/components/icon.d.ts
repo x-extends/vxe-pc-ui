@@ -1,5 +1,5 @@
 import { RenderFunction, SetupContext, Ref, ComponentPublicInstance, DefineComponent } from 'vue'
-import { defineVxeComponent, VxeComponentBase, VxeComponentEvent } from '../tool'
+import { defineVxeComponent, VxeComponentBaseOptions, VxeComponentEventParams } from '@vxe-ui/core'
 
 /* eslint-disable no-use-before-define,@typescript-eslint/ban-types */
 
@@ -8,7 +8,7 @@ export type VxeIconComponent = DefineComponent<VxeIconProps, VxeIconEmits>
 
 export type VxeIconInstance = ComponentPublicInstance<VxeIconProps, VxeIconConstructor>
 
-export interface VxeIconConstructor extends VxeComponentBase, VxeIconMethods {
+export interface VxeIconConstructor extends VxeComponentBaseOptions, VxeIconMethods {
   props: VxeIconProps
   context: SetupContext<VxeIconEmits>
   reactData: IconReactData
@@ -42,6 +42,7 @@ export interface IconReactData {
 }
 
 export interface IconMethods {
+  dispatchEvent(type: ValueOf<VxeIconEmits>, params: Record<string, any>, evnt: Event | null): void
 }
 export interface VxeIconMethods extends IconMethods { }
 
@@ -53,16 +54,25 @@ export type VxeIconEmits = [
 ]
 
 export namespace VxeIconDefines {
-  export interface IconEventParams extends VxeComponentEvent {
+  export interface IconEventParams extends VxeComponentEventParams {
     $icon: VxeIconConstructor
   }
+
+  export interface ClickParams {}
+  export interface ClickEventParams extends IconKeyboardEventParams, ClickParams { }
 }
 
-export type VxeIconEventProps = {}
+export type VxeIconEventProps = {
+  onClick?: VxeIconEvents.Click
+}
 
-export interface VxeIconListeners { }
+export interface VxeIconListeners {
+  onClick?: VxeIconEvents.Click
+}
 
-export namespace VxeIconEvents { }
+export namespace VxeIconEvents {
+  export type Click = (params: VxeIconDefines.ClickEventParams) => void
+ }
 
 export namespace VxeIconSlotTypes {}
 

@@ -1,8 +1,9 @@
 import { defineComponent, ref, h, reactive, provide, PropType, computed } from 'vue'
 import XEUtils from 'xe-utils'
+import { createEvent } from '@vxe-ui/core'
 import { toCssUnit } from '../../ui/src/dom'
 
-import { VxeRowPropTypes, RowReactData, RowPrivateRef, VxeRowPrivateComputed, VxeRowConstructor, VxeRowPrivateMethods } from '../../../types'
+import type { VxeRowPropTypes, RowReactData, RowPrivateRef, VxeRowPrivateComputed, VxeRowConstructor, VxeRowPrivateMethods } from '../../../types'
 
 export default defineComponent({
   name: 'VxeRow',
@@ -68,7 +69,7 @@ export default defineComponent({
     } as unknown as VxeRowConstructor & VxeRowPrivateMethods
 
     const handleDefaultEvent = (evnt: Event & { type: 'click' }) => {
-      emit(evnt.type, { $event: evnt })
+      emit(evnt.type, createEvent(evnt, { }))
     }
 
     const renderVN = () => {

@@ -1,7 +1,7 @@
 import { defineComponent, ref, h, reactive, computed, inject, createCommentVNode } from 'vue'
 import XEUtils from 'xe-utils'
 
-import { BreadcrumbItemReactData, BreadcrumbItemPrivateRef, VxeBreadcrumbItemPrivateComputed, VxeBreadcrumbItemConstructor, VxeBreadcrumbItemPrivateMethods, VxeBreadcrumbConstructor, VxeBreadcrumbPrivateMethods } from '../../../types'
+import type { BreadcrumbItemReactData, BreadcrumbItemPrivateRef, VxeBreadcrumbItemPrivateComputed, VxeBreadcrumbItemConstructor, VxeBreadcrumbItemPrivateMethods, VxeBreadcrumbConstructor, VxeBreadcrumbPrivateMethods } from '../../../types'
 
 export default defineComponent({
   name: 'VxeBreadcrumbItem',

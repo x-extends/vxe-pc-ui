@@ -1,5 +1,5 @@
 import { RenderFunction, SetupContext, Ref, ComponentPublicInstance, DefineComponent } from 'vue'
-import { defineVxeComponent, VxeComponentBase, VxeComponentEvent } from '../tool'
+import { defineVxeComponent, VxeComponentBaseOptions, VxeComponentEventParams } from '@vxe-ui/core'
 
 /* eslint-disable no-use-before-define,@typescript-eslint/ban-types */
 
@@ -8,7 +8,7 @@ export type VxeBreadcrumbComponent = DefineComponent<VxeBreadcrumbProps, VxeBrea
 
 export type VxeBreadcrumbInstance = ComponentPublicInstance<VxeBreadcrumbProps, VxeBreadcrumbConstructor>
 
-export interface VxeBreadcrumbConstructor extends VxeComponentBase, VxeBreadcrumbMethods {
+export interface VxeBreadcrumbConstructor extends VxeComponentBaseOptions, VxeBreadcrumbMethods {
   props: VxeBreadcrumbProps
   context: SetupContext<VxeBreadcrumbEmits>
   reactData: BreadcrumbReactData
@@ -38,6 +38,7 @@ export interface BreadcrumbReactData {
 }
 
 export interface BreadcrumbMethods {
+  dispatchEvent(type: ValueOf<VxeBreadcrumbEmits>, params: Record<string, any>, evnt: Event | null): void
 }
 export interface VxeBreadcrumbMethods extends BreadcrumbMethods { }
 
@@ -47,7 +48,7 @@ export interface VxeBreadcrumbPrivateMethods extends BreadcrumbPrivateMethods { 
 export type VxeBreadcrumbEmits = []
 
 export namespace VxeBreadcrumbDefines {
-  export interface BreadcrumbEventParams extends VxeComponentEvent {
+  export interface BreadcrumbEventParams extends VxeComponentEventParams {
     $breadcrumb: VxeBreadcrumbConstructor
   }
 }

@@ -1,5 +1,5 @@
 import { RenderFunction, SetupContext, Ref, ComponentPublicInstance, DefineComponent } from 'vue'
-import { defineVxeComponent, VxeComponentBase, VxeComponentEvent } from '../tool'
+import { defineVxeComponent, VxeComponentBaseOptions, VxeComponentEventParams } from '@vxe-ui/core'
 
 /* eslint-disable no-use-before-define,@typescript-eslint/ban-types */
 
@@ -8,7 +8,7 @@ export type VxeCollapsePaneComponent = DefineComponent<VxeCollapsePaneProps, Vxe
 
 export type VxeCollapsePaneInstance = ComponentPublicInstance<VxeCollapsePaneProps, VxeCollapsePaneConstructor>
 
-export interface VxeCollapsePaneConstructor extends VxeComponentBase, VxeCollapsePaneMethods {
+export interface VxeCollapsePaneConstructor extends VxeComponentBaseOptions, VxeCollapsePaneMethods {
   props: VxeCollapsePaneProps
   context: SetupContext<VxeCollapsePaneEmits>
   reactData: CollapsePaneReactData
@@ -45,7 +45,7 @@ export interface VxeCollapsePanePrivateMethods extends CollapsePanePrivateMethod
 export type VxeCollapsePaneEmits = []
 
 export namespace VxeCollapsePaneDefines {
-  export interface CollapsePaneEventParams extends VxeComponentEvent {
+  export interface CollapsePaneEventParams extends VxeComponentEventParams {
     $collapsePane: VxeCollapsePaneConstructor
   }
 }

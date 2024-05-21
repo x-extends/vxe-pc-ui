@@ -1,5 +1,5 @@
 import { RenderFunction, SetupContext, Ref, ComponentPublicInstance, DefineComponent } from 'vue'
-import { defineVxeComponent, VxeComponentBase, VxeComponentEvent, VxeComponentAlign } from '../tool'
+import { defineVxeComponent, VxeComponentBaseOptions, VxeComponentEventParams, VxeComponentAlignType } from '@vxe-ui/core'
 
 /* eslint-disable no-use-before-define,@typescript-eslint/ban-types */
 
@@ -8,7 +8,7 @@ export type VxeLayoutFooterComponent = DefineComponent<VxeLayoutFooterProps, Vxe
 
 export type VxeLayoutFooterInstance = ComponentPublicInstance<VxeLayoutFooterProps, VxeLayoutFooterConstructor>
 
-export interface VxeLayoutFooterConstructor extends VxeComponentBase, VxeLayoutFooterMethods {
+export interface VxeLayoutFooterConstructor extends VxeComponentBaseOptions, VxeLayoutFooterMethods {
   props: VxeLayoutFooterProps
   context: SetupContext<VxeLayoutFooterEmits>
   reactData: LayoutFooterReactData
@@ -24,7 +24,7 @@ export interface VxeLayoutFooterPrivateRef extends LayoutFooterPrivateRef { }
 
 export namespace VxeLayoutFooterPropTypes {
   export type Fixed = boolean
-  export type Align = VxeComponentAlign
+  export type Align = VxeComponentAlignType
 }
 
 export type VxeLayoutFooterProps = {
@@ -40,6 +40,7 @@ export interface LayoutFooterReactData {
 }
 
 export interface LayoutFooterMethods {
+  dispatchEvent(type: ValueOf<VxeLayoutFooterEmits>, params: Record<string, any>, evnt: Event | null): void
 }
 export interface VxeLayoutFooterMethods extends LayoutFooterMethods { }
 
@@ -49,7 +50,7 @@ export interface VxeLayoutFooterPrivateMethods extends LayoutFooterPrivateMethod
 export type VxeLayoutFooterEmits = []
 
 export namespace VxeLayoutFooterDefines {
-  export interface LayoutFooterEventParams extends VxeComponentEvent {
+  export interface LayoutFooterEventParams extends VxeComponentEventParams {
     $layoutFooter: VxeLayoutFooterConstructor
   }
 }

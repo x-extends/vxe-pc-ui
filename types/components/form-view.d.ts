@@ -1,5 +1,5 @@
 import { RenderFunction, SetupContext, Ref, ComponentPublicInstance, DefineComponent } from 'vue'
-import { defineVxeComponent, VxeComponentBase, VxeComponentEvent } from '../tool'
+import { defineVxeComponent, VxeComponentBaseOptions, VxeComponentEventParams } from '@vxe-ui/core'
 import { VxeFormDesignDefines } from './form-design'
 import { VxeFormProps, VxeFormPropTypes } from './form'
 
@@ -10,7 +10,7 @@ export type VxeFormViewComponent = DefineComponent<VxeFormViewProps, VxeFormView
 
 export type VxeFormViewInstance = ComponentPublicInstance<VxeFormViewProps, VxeFormViewConstructor>
 
-export interface VxeFormViewConstructor extends VxeComponentBase, VxeFormViewMethods {
+export interface VxeFormViewConstructor extends VxeComponentBaseOptions, VxeFormViewMethods {
   props: VxeFormViewProps
   context: SetupContext<VxeFormViewEmits>
   reactData: FormViewReactData
@@ -63,7 +63,7 @@ export type VxeFormViewEmits = [
 ]
 
 export namespace VxeFormViewDefines {
-  export interface FormViewEventParams extends VxeComponentEvent {
+  export interface FormViewEventParams extends VxeComponentEventParams {
     $formView: VxeFormViewConstructor
   }
 }

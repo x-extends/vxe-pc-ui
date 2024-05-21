@@ -1,10 +1,10 @@
 import { defineComponent, h, computed, inject, PropType } from 'vue'
 import XEUtils from 'xe-utils'
 import { getFuncText } from '../../ui/src/utils'
-import { getConfig } from '@vxe-ui/core'
+import { getConfig, createEvent } from '@vxe-ui/core'
 import { useSize } from '../../hooks/size'
 
-import { VxeRadioButtonPropTypes, VxeRadioGroupConstructor, VxeRadioButtonConstructor, VxeRadioButtonEmits, VxeRadioGroupPrivateMethods, RadioButtonMethods, VxeFormConstructor, VxeFormPrivateMethods, VxeFormDefines } from '../../../types'
+import type { VxeRadioButtonPropTypes, VxeRadioGroupConstructor, VxeRadioButtonConstructor, VxeRadioButtonEmits, VxeRadioGroupPrivateMethods, RadioButtonMethods, VxeFormConstructor, VxeFormPrivateMethods, VxeFormDefines } from '../../../types'
 
 export default defineComponent({
   name: 'VxeRadioButton',
@@ -59,7 +59,7 @@ export default defineComponent({
 
     radioButtonMethods = {
       dispatchEvent (type, params, evnt) {
-        emit(type, Object.assign({ $radioButton: $xeradiobutton, $event: evnt }, params))
+        emit(type, createEvent(evnt, { $radioButton: $xeradiobutton }, params))
       }
     }
 

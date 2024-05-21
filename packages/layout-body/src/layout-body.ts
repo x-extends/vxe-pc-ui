@@ -1,7 +1,7 @@
 import { defineComponent, ref, h, reactive, PropType } from 'vue'
 import XEUtils from 'xe-utils'
 
-import { VxeLayoutBodyPropTypes, LayoutBodyReactData, LayoutBodyPrivateRef, VxeLayoutBodyPrivateComputed, VxeLayoutBodyConstructor, VxeLayoutBodyPrivateMethods } from '../../../types'
+import type { VxeLayoutBodyPropTypes, LayoutBodyReactData, LayoutBodyPrivateRef, VxeLayoutBodyPrivateComputed, VxeLayoutBodyConstructor, VxeLayoutBodyPrivateMethods } from '../../../types'
 
 export default defineComponent({
   name: 'VxeLayoutBody',

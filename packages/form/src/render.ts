@@ -4,7 +4,7 @@ import { getFuncText, isEnableConf } from '../../ui/src/utils'
 import { getSlotVNs } from '../../ui/src/vn'
 import VxeTooltipComponent from '../../tooltip'
 
-import { VxeFormConstructor, VxeFormDefines, VxeFormItemPropTypes, VxeFormPrivateMethods } from '../../../types'
+import type { VxeFormConstructor, VxeFormDefines, VxeFormItemPropTypes, VxeFormPrivateMethods } from '../../../types'
 
 function renderPrefixIcon (titlePrefix: VxeFormItemPropTypes.TitlePrefix) {
   return h('span', {

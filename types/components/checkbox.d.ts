@@ -1,5 +1,5 @@
 import { RenderFunction, SetupContext, Ref, ComponentPublicInstance, DefineComponent } from 'vue'
-import { defineVxeComponent, VxeComponentBase, VxeComponentEvent, VxeComponentSize, ValueOf } from '../tool'
+import { defineVxeComponent, VxeComponentBaseOptions, VxeComponentEventParams, VxeComponentSizeType, ValueOf } from '@vxe-ui/core'
 
 /* eslint-disable no-use-before-define,@typescript-eslint/ban-types */
 
@@ -8,7 +8,7 @@ export type VxeCheckboxComponent = DefineComponent<VxeCheckboxProps, VxeCheckbox
 
 export type VxeCheckboxInstance = ComponentPublicInstance<VxeCheckboxProps, VxeCheckboxConstructor>
 
-export interface VxeCheckboxConstructor extends VxeComponentBase, VxeCheckboxMethods {
+export interface VxeCheckboxConstructor extends VxeComponentBaseOptions, VxeCheckboxMethods {
   props: VxeCheckboxProps
   context: SetupContext<VxeCheckboxEmits>
   reactData: CheckboxReactData
@@ -23,7 +23,7 @@ export interface CheckboxPrivateRef {
 export interface VxeCheckboxPrivateRef extends CheckboxPrivateRef { }
 
 export namespace VxeCheckboxPropTypes {
-  export type Size = VxeComponentSize
+  export type Size = VxeComponentSizeType
   export type ModelValue = string | number | boolean
   export type Label = string | number
   export type Indeterminate = boolean
@@ -72,7 +72,7 @@ export interface CheckboxReactData {
 }
 
 export interface CheckboxMethods {
-  dispatchEvent(type: ValueOf<VxeCheckboxEmits>, params: any, evnt: Event): void
+  dispatchEvent(type: ValueOf<VxeCheckboxEmits>, params: Record<string, any>, evnt: Event | null): void
 }
 export interface VxeCheckboxMethods extends CheckboxMethods { }
 
@@ -85,7 +85,7 @@ export type VxeCheckboxEmits = [
 ]
 
 export namespace VxeCheckboxDefines {
-  export interface CheckboxEventParams extends VxeComponentEvent {
+  export interface CheckboxEventParams extends VxeComponentEventParams {
     $checkbox: VxeCheckboxConstructor
   }
 

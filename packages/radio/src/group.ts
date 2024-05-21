@@ -1,11 +1,11 @@
 import { defineComponent, h, provide, PropType, inject, computed } from 'vue'
 import XEUtils from 'xe-utils'
-import { getConfig } from '@vxe-ui/core'
+import { getConfig, createEvent } from '@vxe-ui/core'
 import VxeRadioComponent from './radio'
 import VxeRadioButtonComponent from './button'
 import { useSize } from '../../hooks/size'
 
-import { VxeRadioGroupPropTypes, VxeRadioGroupConstructor, VxeRadioGroupEmits, VxeRadioGroupPrivateMethods, RadioGroupPrivateMethods, RadioGroupMethods, VxeFormConstructor, VxeFormPrivateMethods, VxeFormDefines } from '../../../types'
+import type { VxeRadioGroupPropTypes, VxeRadioGroupConstructor, VxeRadioGroupEmits, VxeRadioGroupPrivateMethods, RadioGroupPrivateMethods, RadioGroupMethods, VxeFormConstructor, VxeFormPrivateMethods, VxeFormDefines } from '../../../types'
 
 export default defineComponent({
   name: 'VxeRadioGroup',
@@ -62,7 +62,7 @@ export default defineComponent({
     const radioGroupPrivateMethods: RadioGroupPrivateMethods = {
       handleChecked (params, evnt) {
         emit('update:modelValue', params.label)
-        radioGroupMethods.dispatchEvent('change', params)
+        radioGroupMethods.dispatchEvent('change', params, evnt)
         // 自动更新校验状态
         if ($xeForm && formItemInfo) {
           $xeForm.triggerItemEvent(evnt, formItemInfo.itemConfig.field, params.label)
@@ -72,7 +72,7 @@ export default defineComponent({
 
     radioGroupMethods = {
       dispatchEvent (type, params, evnt) {
-        emit(type, Object.assign({ $radioGroup: $xeradiogroup, $event: evnt }, params))
+        emit(type, createEvent(evnt, { $radioGroup: $xeradiogroup }, params))
       }
     }
 

@@ -3,7 +3,7 @@ import XEUtils from 'xe-utils'
 import { getIcon, renderer } from '@vxe-ui/core'
 import { getSlotVNs } from '../../ui/src/vn'
 
-import { VxeFormDesignPropTypes, VxeFormDesignConstructor, VxeFormDesignPrivateMethods } from '../../../types'
+import type { VxeFormDesignPropTypes, VxeFormDesignConstructor, VxeFormDesignPrivateMethods } from '../../../types'
 
 export default defineComponent({
   props: {},

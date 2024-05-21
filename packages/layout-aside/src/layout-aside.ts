@@ -2,7 +2,7 @@ import { defineComponent, ref, h, reactive, onMounted, computed, PropType } from
 import XEUtils from 'xe-utils'
 import { toCssUnit } from '../../ui/src/dom'
 
-import { VxeLayoutAsidePropTypes, LayoutAsideReactData, LayoutAsidePrivateRef, VxeLayoutAsidePrivateComputed, VxeLayoutAsideConstructor, VxeLayoutAsidePrivateMethods } from '../../../types'
+import type { VxeLayoutAsidePropTypes, LayoutAsideReactData, LayoutAsidePrivateRef, VxeLayoutAsidePrivateComputed, VxeLayoutAsideConstructor, VxeLayoutAsidePrivateMethods } from '../../../types'
 
 export default defineComponent({
   name: 'VxeLayoutAside',

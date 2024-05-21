@@ -1,5 +1,5 @@
 import { RenderFunction, SetupContext, Ref, ComponentPublicInstance, DefineComponent } from 'vue'
-import { defineVxeComponent, VxeComponentBase, VxeComponentEvent, VxeComponentSize, VxeComponentStyle, ValueOf } from '../tool'
+import { defineVxeComponent, VxeComponentBaseOptions, VxeComponentEventParams, VxeComponentSizeType, VxeComponentStyleType, ValueOf } from '@vxe-ui/core'
 
 /* eslint-disable no-use-before-define,@typescript-eslint/ban-types */
 
@@ -8,7 +8,7 @@ export type VxeTooltipComponent = DefineComponent<VxeTooltipProps, VxeTooltipEmi
 
 export type VxeTooltipInstance = ComponentPublicInstance<VxeTooltipProps, VxeTooltipConstructor>
 
-export interface VxeTooltipConstructor extends VxeComponentBase, VxeTooltipMethods {
+export interface VxeTooltipConstructor extends VxeComponentBaseOptions, VxeTooltipMethods {
   props: VxeTooltipProps
   context: SetupContext<VxeTooltipEmits>
   reactData: TooltipReactData
@@ -23,7 +23,7 @@ export interface TooltipPrivateRef {
 export interface VxeTooltipPrivateRef extends TooltipPrivateRef { }
 
 export namespace VxeTooltipPropTypes {
-  export type Size = VxeComponentSize
+  export type Size = VxeComponentSizeType
   export type ModelValue = boolean
   export type Trigger = 'hover' | 'click' | 'manual' | '' | null
   export type Theme = string
@@ -67,14 +67,14 @@ export interface TooltipReactData {
   tipTarget: HTMLElement | null
   tipZindex: number
   tipStore: {
-    style: VxeComponentStyle
+    style: VxeComponentStyleType
     placement: any
-    arrowStyle: VxeComponentStyle
+    arrowStyle: VxeComponentStyleType
   }
 }
 
 export interface TooltipMethods {
-  dispatchEvent(type: ValueOf<VxeTooltipEmits>, params: any, evnt: Event): void
+  dispatchEvent(type: ValueOf<VxeTooltipEmits>, params: Record<string, any>, evnt: Event | null): void
   /**
    * 显示
    * @param target 自定义目标元素
@@ -100,7 +100,7 @@ export type VxeTooltipEmits = [
 ]
 
 export namespace VxeTooltipDefines {
-  export interface TooltipEventParams extends VxeComponentEvent {
+  export interface TooltipEventParams extends VxeComponentEventParams {
     $tooltip: VxeTooltipConstructor
   }
 }

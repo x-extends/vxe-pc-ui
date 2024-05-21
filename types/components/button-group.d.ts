@@ -1,5 +1,5 @@
 import { RenderFunction, SetupContext, Ref, ComponentPublicInstance, DefineComponent } from 'vue'
-import { defineVxeComponent, VxeComponentBase, VxeComponentSize, VxeComponentEvent, ValueOf } from '../tool'
+import { defineVxeComponent, VxeComponentBaseOptions, VxeComponentSizeType, VxeComponentEventParams, ValueOf } from '@vxe-ui/core'
 import { VxeButtonProps, VxeButtonPropTypes } from './button'
 
 /* eslint-disable no-use-before-define,@typescript-eslint/ban-types */
@@ -9,7 +9,7 @@ export type VxeButtonGroupComponent = DefineComponent<VxeButtonGroupProps, VxeBu
 
 export type VxeButtonGroupInstance = ComponentPublicInstance<VxeButtonGroupProps, VxeButtonGroupConstructor>
 
-export interface VxeButtonGroupConstructor extends VxeComponentBase, VxeButtonGroupMethods {
+export interface VxeButtonGroupConstructor extends VxeComponentBaseOptions, VxeButtonGroupMethods {
   props: VxeButtonGroupProps
   context: SetupContext<VxeButtonGroupEmits>
   reactData: ButtonGroupReactData
@@ -24,7 +24,7 @@ export interface ButtonGroupPrivateRef {
 export interface VxeButtonGroupPrivateRef extends ButtonGroupPrivateRef { }
 
 export namespace VxeButtonGroupPropTypes {
-  export type Size = VxeComponentSize
+  export type Size = VxeComponentSizeType
   export type Options = VxeButtonProps[]
   export type Round = boolean
   export type Circle = boolean
@@ -72,16 +72,24 @@ export type VxeButtonGroupEmits = [
 ]
 
 export namespace VxeButtonGroupDefines {
-  export interface ButtonGroupEventParams extends VxeComponentEvent {
+  export interface ButtonGroupEventParams extends VxeComponentEventParams {
     $buttonGroup: VxeButtonGroupConstructor
   }
+
+  export interface ClickEventParams extends ButtonGroupEventParams { }
 }
 
-export type VxeButtonGroupEventProps = {}
+export type VxeButtonGroupEventProps = {
+  onClick?: VxeButtonGroupEvents.Click
+}
 
-export interface VxeButtonGroupListeners { }
+export interface VxeButtonGroupListeners {
+  click?: VxeButtonGroupEvents.Click
+}
 
-export namespace VxeButtonGroupEvents { }
+export namespace VxeButtonGroupEvents {
+  export type Click = (params: VxeButtonGroupDefines.ClickEventParams) => void
+}
 
 export namespace VxeButtonGroupSlotTypes {
   export interface DefaultSlotParams {}

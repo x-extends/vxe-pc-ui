@@ -38,44 +38,46 @@ import { VxeTabsProps } from '../components/tabs'
 import { VxeTextareaProps } from '../components/textarea'
 import { VxeTooltipProps } from '../components/tooltip'
 
-export interface VxeUIGlobalConfig {
-  anchor?: VxeAnchorProps
-  anchorLink?: VxeAnchorLinkProps
-  breadcrumb?: VxeBreadcrumbProps
-  breadcrumbItem?: VxeBreadcrumbItemProps
-  button?: VxeButtonProps
-  buttonGroup?: VxeButtonGroupProps
-  checkbox?: VxeCheckboxProps
-  checkboxGroup?: VxeCheckboxGroupProps
-  col?: VxeColProps
-  drawer?: VxeDrawerProps
-  form?: VxeFormProps
-  formDesign?: VxeFormDesignProps
-  formGather?: VxeFormGatherProps
-  formItem?: VxeFormItemProps
-  icon?: VxeIconProps
-  input?: VxeInputProps
-  layoutAside?: VxeLayoutAsideProps
-  layoutBody?: VxeLayoutBodyProps
-  layoutContainer?: VxeLayoutContainerProps
-  layoutFooter?: VxeLayoutFooterProps
-  layoutHeader?: VxeLayoutHeaderProps
-  listDesign?: VxeListDesignProps
-  list?: VxeListProps
-  loading?: VxeLoadingProps
-  modal?: VxeModalProps
-  optgroup?: VxeOptgroupProps
-  option?: VxeOptionProps
-  pager?: VxePagerProps
-  pulldown?: VxePulldownProps
-  radio?: VxeRadioProps
-  radioButton?: VxeRadioButtonProps
-  radioGroup?: VxeRadioGroupProps
-  row?: VxeRowProps
-  select?: VxeSelectProps
-  switch?: VxeSwitchProps
-  tabPane?: VxeTabPaneProps
-  tabs?: VxeTabsProps
-  textarea?: VxeTextareaProps
-  tooltip?: VxeTooltipProps
+declare module '@vxe-ui/core' {
+  export interface VxeGlobalConfig {
+    anchor?: VxeAnchorProps
+    anchorLink?: VxeAnchorLinkProps
+    breadcrumb?: VxeBreadcrumbProps
+    breadcrumbItem?: VxeBreadcrumbItemProps
+    button?: VxeButtonProps
+    buttonGroup?: VxeButtonGroupProps
+    checkbox?: VxeCheckboxProps
+    checkboxGroup?: VxeCheckboxGroupProps
+    col?: VxeColProps
+    drawer?: VxeDrawerProps
+    form?: VxeFormProps
+    formDesign?: VxeFormDesignProps
+    formGather?: VxeFormGatherProps
+    formItem?: VxeFormItemProps
+    icon?: VxeIconProps
+    input?: VxeInputProps
+    layoutAside?: VxeLayoutAsideProps
+    layoutBody?: VxeLayoutBodyProps
+    layoutContainer?: VxeLayoutContainerProps
+    layoutFooter?: VxeLayoutFooterProps
+    layoutHeader?: VxeLayoutHeaderProps
+    listDesign?: VxeListDesignProps
+    list?: VxeListProps
+    loading?: VxeLoadingProps
+    modal?: VxeModalProps
+    optgroup?: VxeOptgroupProps
+    option?: VxeOptionProps
+    pager?: VxePagerProps
+    pulldown?: VxePulldownProps
+    radio?: VxeRadioProps
+    radioButton?: VxeRadioButtonProps
+    radioGroup?: VxeRadioGroupProps
+    row?: VxeRowProps
+    select?: VxeSelectProps
+    switch?: VxeSwitchProps
+    tabPane?: VxeTabPaneProps
+    tabs?: VxeTabsProps
+    textarea?: VxeTextareaProps
+    tooltip?: VxeTooltipProps
+  }
 }

@@ -1,5 +1,5 @@
 import { RenderFunction, SetupContext, Ref, ComponentPublicInstance, DefineComponent } from 'vue'
-import { defineVxeComponent, VxeComponentBase, VxeComponentEvent } from '../tool'
+import { defineVxeComponent, VxeComponentBaseOptions, VxeComponentEventParams } from '@vxe-ui/core'
 import { VxeTabPaneProps, VxeTabPaneDefines, VxeTabPanePropTypes } from './tab-pane'
 
 /* eslint-disable no-use-before-define,@typescript-eslint/ban-types */
@@ -9,7 +9,7 @@ export type VxeTabsComponent = DefineComponent<VxeTabsProps, VxeTabsEmits>
 
 export type VxeTabsInstance = ComponentPublicInstance<VxeTabsProps, VxeTabsConstructor>
 
-export interface VxeTabsConstructor extends VxeComponentBase, VxeTabsMethods {
+export interface VxeTabsConstructor extends VxeComponentBaseOptions, VxeTabsMethods {
   props: VxeTabsProps
   context: SetupContext<VxeTabsEmits>
   reactData: TabsReactData
@@ -49,6 +49,7 @@ export interface TabsReactData {
 }
 
 export interface TabsMethods {
+  dispatchEvent(type: ValueOf<VxeTabsEmits>, params: Record<string, any>, evnt: Event | null): void
 }
 export interface VxeTabsMethods extends TabsMethods { }
 
@@ -63,7 +64,7 @@ export type VxeTabsEmits = [
 ]
 
 export namespace VxeTabsDefines {
-  export interface TabsEventParams extends VxeComponentEvent {
+  export interface TabsEventParams extends VxeComponentEventParams {
     $tabs: VxeTabsConstructor
   }
 }

@@ -2,7 +2,7 @@ import { defineComponent, ref, h, reactive, PropType, watch, inject, onMounted, 
 import XEUtils from 'xe-utils'
 import { assembleAnchorTab, destroyAnchorTab } from './util'
 
-import { VxeTabPanePropTypes, TabPaneReactData, TabPanePrivateRef, VxeTabPanePrivateComputed, VxeTabPaneConstructor, VxeTabPanePrivateMethods, VxeTabPaneDefines, VxeTabsConstructor, VxeTabsPrivateMethods } from '../../../types'
+import type { VxeTabPanePropTypes, TabPaneReactData, TabPanePrivateRef, VxeTabPanePrivateComputed, VxeTabPaneConstructor, VxeTabPanePrivateMethods, VxeTabPaneDefines, VxeTabsConstructor, VxeTabsPrivateMethods } from '../../../types'
 
 export default defineComponent({
   name: 'VxeTabPane',

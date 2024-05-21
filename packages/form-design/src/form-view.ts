@@ -1,10 +1,10 @@
 import { defineComponent, ref, h, reactive, nextTick, PropType, provide, watch } from 'vue'
 import XEUtils from 'xe-utils'
-import { renderer } from '@vxe-ui/core'
+import { renderer, createEvent } from '@vxe-ui/core'
 import { getSlotVNs } from '../../ui/src/vn'
 import VxeFormComponent from '../../form/src/form'
 
-import { VxeGlobalRendererHandles, VxeFormViewPropTypes, FormViewReactData, ValueOf, FormViewPrivateRef, FormViewMethods, FormViewPrivateMethods, VxeFormViewEmits, VxeFormViewPrivateComputed, VxeFormProps, VxeFormDesignDefines, VxeFormViewConstructor, VxeFormViewPrivateMethods, VxeFormPropTypes, VxeFormInstance } from '../../../types'
+import type { VxeGlobalRendererHandles, VxeFormViewPropTypes, FormViewReactData, ValueOf, FormViewPrivateRef, FormViewMethods, FormViewPrivateMethods, VxeFormViewEmits, VxeFormViewPrivateComputed, VxeFormProps, VxeFormDesignDefines, VxeFormViewConstructor, VxeFormViewPrivateMethods, VxeFormPropTypes, VxeFormInstance } from '../../../types'
 
 export default defineComponent({
   name: 'VxeFormView',
@@ -123,7 +123,7 @@ export default defineComponent({
     }
 
     const dispatchEvent = (type: ValueOf<VxeFormViewEmits>, params: any, evnt: Event) => {
-      emit(type, Object.assign({ $xeFormView, $event: evnt }, params))
+      emit(type, createEvent(evnt, { $xeFormView }, params))
     }
 
     const formViewMethods: FormViewMethods = {

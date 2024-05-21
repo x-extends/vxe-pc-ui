@@ -7,7 +7,7 @@ import VxeRowComponent from '../../row/src/row'
 import VxeColComponent from '../../row/src/col'
 import XEUtils from 'xe-utils'
 
-import { VxeGlobalRendererHandles, VxeFormDesignConstructor, VxeFormDesignPrivateMethods } from '../../../types'
+import type { VxeGlobalRendererHandles, VxeFormDesignConstructor, VxeFormDesignPrivateMethods } from '../../../types'
 
 export const WidgetRowFormComponent = defineComponent({
   props: {

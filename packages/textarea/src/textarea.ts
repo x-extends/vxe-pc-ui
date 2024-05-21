@@ -1,10 +1,10 @@
 import { defineComponent, h, ref, Ref, computed, nextTick, watch, PropType, reactive, inject } from 'vue'
 import XEUtils from 'xe-utils'
-import { getConfig, getI18n } from '@vxe-ui/core'
+import { getConfig, getI18n, createEvent } from '@vxe-ui/core'
 import { getFuncText } from '../../ui/src/utils'
 import { useSize } from '../../hooks/size'
 
-import { VxeTextareaPropTypes, TextareaReactData, TextareaMethods, VxeTextareaConstructor, VxeTextareaEmits, TextareaPrivateRef, VxeFormConstructor, VxeFormPrivateMethods, VxeFormDefines } from '../../../types'
+import type { VxeTextareaPropTypes, TextareaReactData, TextareaMethods, VxeTextareaConstructor, VxeTextareaEmits, TextareaPrivateRef, VxeFormConstructor, VxeFormPrivateMethods, VxeFormDefines } from '../../../types'
 
 let autoTxtElem: HTMLDivElement
 
@@ -180,7 +180,7 @@ export default defineComponent({
 
     textareaMethods = {
       dispatchEvent (type, params, evnt) {
-        emit(type, Object.assign({ $textarea: $xeTextarea, $event: evnt }, params))
+        emit(type, createEvent(evnt, { $textarea: $xeTextarea }, params))
       },
 
       focus () {

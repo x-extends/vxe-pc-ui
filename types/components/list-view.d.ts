@@ -1,5 +1,5 @@
 import { RenderFunction, SetupContext, Ref, ComponentPublicInstance, DefineComponent } from 'vue'
-import { defineVxeComponent, VxeComponentBase, VxeComponentEvent } from '../tool'
+import { defineVxeComponent, VxeComponentBaseOptions, VxeComponentEventParams } from '@vxe-ui/core'
 
 /* eslint-disable no-use-before-define,@typescript-eslint/ban-types */
 
@@ -8,7 +8,7 @@ export type VxeListViewComponent = DefineComponent<VxeListViewProps, VxeListView
 
 export type VxeListViewInstance = ComponentPublicInstance<VxeListViewProps, VxeListViewConstructor>
 
-export interface VxeListViewConstructor extends VxeComponentBase, VxeListViewMethods {
+export interface VxeListViewConstructor extends VxeComponentBaseOptions, VxeListViewMethods {
   props: VxeListViewProps
   context: SetupContext<VxeListViewEmits>
   reactData: ListViewReactData
@@ -36,6 +36,7 @@ export interface ListViewReactData {
 }
 
 export interface ListViewMethods {
+  dispatchEvent(type: ValueOf<VxeListViewEmits>, params: Record<string, any>, evnt: Event | null): void
 }
 export interface VxeListViewMethods extends ListViewMethods { }
 
@@ -45,7 +46,7 @@ export interface VxeListViewPrivateMethods extends ListViewPrivateMethods { }
 export type VxeListViewEmits = []
 
 export namespace VxeListViewDefines {
-  export interface ListViewEventParams extends VxeComponentEvent {
+  export interface ListViewEventParams extends VxeComponentEventParams {
     $listView: VxeListViewConstructor
   }
 }

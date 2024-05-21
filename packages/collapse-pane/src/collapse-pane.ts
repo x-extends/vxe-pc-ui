@@ -1,7 +1,7 @@
 import { defineComponent, ref, h, reactive } from 'vue'
 import XEUtils from 'xe-utils'
 
-import { CollapsePaneReactData, VxeCollapsePaneEmits, CollapsePanePrivateRef, VxeCollapsePanePrivateComputed, VxeCollapsePaneConstructor, VxeCollapsePanePrivateMethods } from '../../../types'
+import type { CollapsePaneReactData, VxeCollapsePaneEmits, CollapsePanePrivateRef, VxeCollapsePanePrivateComputed, VxeCollapsePaneConstructor, VxeCollapsePanePrivateMethods } from '../../../types'
 
 export default defineComponent({
   name: 'VxeCollapsePane',

@@ -6,7 +6,7 @@ import { getSlotVNs } from '../../ui/src/vn'
 import { createItem, watchItem, destroyItem, assemItem, XEFormItemProvide, isActivetem } from './util'
 import { renderTitle } from './render'
 
-import { VxeComponentSlot, VxeFormConstructor, VxeFormDefines, VxeFormItemPropTypes, VxeFormPrivateMethods } from '../../../types'
+import type { VxeComponentSlotType, VxeFormConstructor, VxeFormDefines, VxeFormItemPropTypes, VxeFormPrivateMethods } from '../../../types'
 
 export const formItemProps = {
   title: String as PropType<VxeFormItemPropTypes.Title>,
@@ -119,7 +119,7 @@ export default defineComponent({
           isRequired = itemRules.some((rule) => rule.required)
         }
       }
-      let contentVNs: VxeComponentSlot[] = []
+      let contentVNs: VxeComponentSlotType[] = []
       if (defaultSlot) {
         contentVNs = $xeForm.callSlot(defaultSlot, params)
       } else if (compConf && compConf.renderItemContent) {

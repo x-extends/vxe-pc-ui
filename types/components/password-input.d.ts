@@ -1,5 +1,5 @@
 import { RenderFunction, SetupContext, Ref, ComponentPublicInstance, DefineComponent } from 'vue'
-import { defineVxeComponent, VxeComponentBase, VxeComponentEvent } from '../tool'
+import { defineVxeComponent, VxeComponentBaseOptions, VxeComponentEventParams } from '@vxe-ui/core'
 
 /* eslint-disable no-use-before-define,@typescript-eslint/ban-types */
 
@@ -8,7 +8,7 @@ export type VxePasswordInputComponent = DefineComponent<VxePasswordInputProps, V
 
 export type VxePasswordInputInstance = ComponentPublicInstance<VxePasswordInputProps, VxePasswordInputConstructor>
 
-export interface VxePasswordInputConstructor extends VxeComponentBase, VxePasswordInputMethods {
+export interface VxePasswordInputConstructor extends VxeComponentBaseOptions, VxePasswordInputMethods {
   props: VxePasswordInputProps
   context: SetupContext<VxePasswordInputEmits>
   reactData: PasswordInputReactData
@@ -45,7 +45,7 @@ export interface VxePasswordInputPrivateMethods extends PasswordInputPrivateMeth
 export type VxePasswordInputEmits = []
 
 export namespace VxePasswordInputDefines {
-  export interface PasswordInputEventParams extends VxeComponentEvent {
+  export interface PasswordInputEventParams extends VxeComponentEventParams {
     $passwordInput: VxePasswordInputConstructor
   }
 }

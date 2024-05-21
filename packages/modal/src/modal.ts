@@ -3,12 +3,12 @@ import XEUtils from 'xe-utils'
 import { useSize } from '../../hooks/size'
 import { getDomNode, getEventTargetNode } from '../../ui/src/dom'
 import { getLastZIndex, nextZIndex, getFuncText } from '../../ui/src/utils'
-import { getConfig, getIcon, getI18n, globalEvents, GLOBAL_EVENT_KEYS, log } from '@vxe-ui/core'
+import { getConfig, getIcon, getI18n, globalEvents, GLOBAL_EVENT_KEYS, log, createEvent } from '@vxe-ui/core'
 import VxeButtonComponent from '../../button/src/button'
 import VxeLoadingComponent from '../../loading/index'
 import { getSlotVNs } from '../../ui/src/vn'
 
-import { VxeModalConstructor, VxeModalPropTypes, ModalReactData, VxeModalEmits, ModalEventTypes, VxeButtonInstance, ModalMethods, ModalPrivateRef, VxeModalMethods } from '../../../types'
+import type { VxeModalConstructor, VxeModalPropTypes, ModalReactData, VxeModalEmits, ModalEventTypes, VxeButtonInstance, ModalMethods, ModalPrivateRef, VxeModalMethods } from '../../../types'
 
 export const allActiveModals: VxeModalConstructor[] = []
 export const msgQueue: VxeModalConstructor[] = []
@@ -201,11 +201,11 @@ export default defineComponent({
               reactData.zoomLocat = null
             }
             XEUtils.remove(allActiveModals, item => item === $xeModal)
-            modalMethods.dispatchEvent('before-hide', params)
+            modalMethods.dispatchEvent('before-hide', params, null)
             setTimeout(() => {
               reactData.visible = false
               emit('update:modelValue', false)
-              modalMethods.dispatchEvent('hide', params)
+              modalMethods.dispatchEvent('hide', params, null)
             }, 200)
           }
         }).catch(e => e)
@@ -355,7 +355,7 @@ export default defineComponent({
             const type = ''
             const params = { type }
             emit('update:modelValue', true)
-            modalMethods.dispatchEvent('show', params)
+            modalMethods.dispatchEvent('show', params, null)
           })
         }, 10)
         if (isMsg) {
@@ -521,7 +521,7 @@ export default defineComponent({
           boxElem.style.left = `${left}px`
           boxElem.style.top = `${top}px`
           boxElem.className = boxElem.className.replace(/\s?is--drag/, '') + ' is--drag'
-          emit('move', { type: 'move', $event: evnt })
+          emit('move', createEvent(evnt, { type: 'move' }))
         }
         document.onmouseup = () => {
           document.onmousemove = domMousemove
@@ -691,7 +691,7 @@ export default defineComponent({
 
     modalMethods = {
       dispatchEvent (type, params, evnt) {
-        emit(type, Object.assign({ $modal: $xeModal, $event: evnt }, params))
+        emit(type, createEvent(evnt, { $modal: $xeModal }, params))
       },
       open: openModal,
       close () {

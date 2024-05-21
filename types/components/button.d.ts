@@ -1,5 +1,5 @@
 import { RenderFunction, SetupContext, Ref, DefineComponent } from 'vue'
-import { defineVxeComponent, VxeComponentBase, VxeComponentEvent, VxeComponentStatus, VxeComponentSize, VxeComponentStyle, ValueOf } from '../tool'
+import { defineVxeComponent, VxeComponentBaseOptions, VxeComponentEventParams, VxeComponentStatusType, VxeComponentSizeType, VxeComponentStyleType, ValueOf } from '@vxe-ui/core'
 
 /* eslint-disable no-use-before-define,@typescript-eslint/ban-types */
 
@@ -8,7 +8,7 @@ export type VxeButtonComponent = DefineComponent<VxeButtonProps, VxeButtonEmits>
 
 export type VxeButtonInstance = ComponentPublicInstance<VxeButtonProps, VxeButtonConstructor>
 
-export interface VxeButtonConstructor extends VxeComponentBase, VxeButtonMethods {
+export interface VxeButtonConstructor extends VxeComponentBaseOptions, VxeButtonMethods {
   props: VxeButtonProps
   context: SetupContext<VxeButtonEmits>
   reactData: ButtonReactData
@@ -24,7 +24,7 @@ export interface ButtonPrivateRef {
 export interface VxeButtonPrivateRef extends ButtonPrivateRef { }
 
 export namespace VxeButtonPropTypes {
-  export type Size = VxeComponentSize
+  export type Size = VxeComponentSizeType
   export type Type = string
   export type Mode = null | '' | 'button' | 'text'
   export type ClassName = string | ((params: { $button: VxeButtonConstructor }) => string)
@@ -32,7 +32,7 @@ export namespace VxeButtonPropTypes {
   export type Name = string | number
   export type Content = string | number
   export type Placement = string
-  export type Status = VxeComponentStatus
+  export type Status = VxeComponentStatusType
   export type Title = string
   export type Icon = string
   export type Round = boolean
@@ -111,7 +111,7 @@ export interface ButtonReactData {
   showPanel: boolean
   animatVisible: boolean
   panelIndex: number
-  panelStyle: VxeComponentStyle
+  panelStyle: VxeComponentStyleType
   panelPlacement: any
 }
 
@@ -120,7 +120,7 @@ export interface ButtonInternalData {
 }
 
 export interface ButtonMethods {
-  dispatchEvent(type: ValueOf<VxeButtonEmits>, params: any, evnt: Event): void
+  dispatchEvent(type: ValueOf<VxeButtonEmits>, params: Record<string, any>, evnt: Event | null): void
   /**
    * 获取焦点
    */
@@ -143,16 +143,43 @@ export type VxeButtonEmits = [
 ]
 
 export namespace VxeButtonDefines {
-  export interface ButtonEventParams extends VxeComponentEvent {
+  export interface ButtonEventParams extends VxeComponentEventParams {
     $button: VxeButtonConstructor
   }
+
+  export interface ClickParams { }
+  export interface ClickEventParams extends ButtonEventParams, ClickParams { }
+
+  export interface MouseenterParams { }
+  export interface MouseenterEventParams extends ButtonEventParams, MouseenterParams { }
+
+  export interface MouseleaveParams { }
+  export interface MouseleaveEventParams extends ButtonEventParams, MouseleaveParams { }
+
+  export interface DropdownClickParams { }
+  export interface DropdownClickEventParams extends ButtonEventParams, DropdownClickParams { }
 }
 
-export type VxeButtonEventProps = {}
+export type VxeButtonEventProps = {
+  onClick?: VxeButtonEvents.Click
+  onMouseenter?: VxeButtonEvents.Mouseenter
+  onMouseleave?: VxeButtonEvents.Mouseleave
+  onDropdownClick?: VxeButtonEvents.DropdownClick
+}
 
-export interface VxeButtonListeners { }
+export interface VxeButtonListeners {
+  click?: VxeButtonEvents.Click
+  mouseenter?: VxeButtonEvents.Mouseenter
+  mouseleave?: VxeButtonEvents.Mouseleave
+  dropdownClick?: VxeButtonEvents.DropdownClick
+}
 
-export namespace VxeButtonEvents { }
+export namespace VxeButtonEvents {
+  export type Click = (params: VxeButtonDefines.ClickEventParams) => void
+  export type Mouseenter = (params: VxeButtonDefines.MouseenterEventParams) => void
+  export type Mouseleave = (params: VxeButtonDefines.MouseleaveEventParams) => void
+  export type DropdownClick = (params: VxeButtonDefines.DropdownClickParams) => void
+}
 
 export namespace VxeButtonSlotTypes {
   export interface DefaultSlotParams {}
@@ -160,9 +187,23 @@ export namespace VxeButtonSlotTypes {
 
 export interface VxeButtonSlots {
   /**
-   * 自定义显示内容模板
+   * 自定义按钮内容
    */
-  default: (params: VxeButtonSlotTypes.DefaultSlotParams) => any
+  default: (params: {
+    [key: string]: any
+  }) => any
+  /**
+   * 自定义自定义图标
+   */
+  icon: (params: {
+    [key: string]: any
+  }) => any
+  /**
+   * 自定义下拉按钮
+   */
+  dropdowns: (params: {
+    [key: string]: any
+  }) => any
 }
 
 export const Button: typeof VxeButton

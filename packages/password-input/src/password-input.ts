@@ -1,7 +1,7 @@
 import { defineComponent, ref, h, reactive } from 'vue'
 import XEUtils from 'xe-utils'
 
-import { PasswordInputReactData, VxePasswordInputEmits, PasswordInputPrivateRef, VxePasswordInputPrivateComputed, VxePasswordInputConstructor, VxePasswordInputPrivateMethods } from '../../../types'
+import type { PasswordInputReactData, VxePasswordInputEmits, PasswordInputPrivateRef, VxePasswordInputPrivateComputed, VxePasswordInputConstructor, VxePasswordInputPrivateMethods } from '../../../types'
 
 export default defineComponent({
   name: 'VxePasswordInput',

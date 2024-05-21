@@ -1,5 +1,5 @@
 import { RenderFunction, SetupContext, Ref, ComponentPublicInstance, DefineComponent } from 'vue'
-import { defineVxeComponent, VxeComponentBase, VxeComponentEvent, VxeComponentStyle, VxeComponentSize } from '../tool'
+import { defineVxeComponent, VxeComponentBaseOptions, VxeComponentEventParams, VxeComponentStyleType, VxeComponentSizeType } from '@vxe-ui/core'
 
 /* eslint-disable no-use-before-define,@typescript-eslint/ban-types */
 
@@ -8,7 +8,7 @@ export type VxeInputComponent = DefineComponent<VxeInputProps, VxeInputEmits>
 
 export type VxeInputInstance = ComponentPublicInstance<VxeInputProps, VxeInputConstructor>
 
-export interface VxeInputConstructor extends VxeComponentBase, VxeInputMethods {
+export interface VxeInputConstructor extends VxeComponentBaseOptions, VxeInputMethods {
   props: VxeInputProps
   context: SetupContext<VxeInputEmits>
   reactData: InputReactData
@@ -24,7 +24,7 @@ export interface InputPrivateRef {
 export interface VxeInputPrivateRef extends InputPrivateRef { }
 
 export namespace VxeInputPropTypes {
-  export type Size = VxeComponentSize
+  export type Size = VxeComponentSizeType
   export type ModelValue = string | number | Date | null
   export type ClassName = string
   export type Immediate = boolean
@@ -140,7 +140,7 @@ export interface InputReactData {
   showPwd: boolean
   visiblePanel: boolean
   animatVisible: boolean
-  panelStyle: VxeComponentStyle | null
+  panelStyle: VxeComponentStyleType | null
   panelPlacement: VxeInputPropTypes.Placement
   isActivated: boolean
   inputValue: any
@@ -153,7 +153,7 @@ export interface InputReactData {
 }
 
 export interface InputMethods {
-  dispatchEvent: (type: ValueOf<VxeInputEmits>, params: any, evnt?: Event | { type: string }) => void
+  dispatchEvent(type: ValueOf<VxeInputEmits>, params: Record<string, any>, evnt: Event | null): void
   /**
    * 获取焦点
    */
@@ -214,7 +214,7 @@ export namespace VxeInputDefines {
      */
     important?: boolean
     className?: string
-    style?: VxeComponentStyle
+    style?: VxeComponentStyleType
   }
 
   /**

@@ -121,7 +121,7 @@
         <template #default>信息颜色</template>
         <template #dropdowns>
           <vxe-button mode="text" content="下拉按钮1"></vxe-button>
-          <vxe-button mode="text" content="下拉按钮2" status="my-purple"></vxe-button>
+          <vxe-button mode="text" content="下拉按钮2" class="my-purple"></vxe-button>
           <vxe-button mode="text" content="下拉按钮3"></vxe-button>
         </template>
       </vxe-button>
@@ -204,7 +204,7 @@
       <vxe-button mode="text" icon="fa fa-plus"></vxe-button>
       <vxe-button mode="text" icon="fa fa-refresh"></vxe-button>
       <vxe-button content="图标按钮" status="primary" icon="fa fa-download"></vxe-button>
-      <vxe-button content="自定义按钮颜色" status="my-purple" icon="fa fa-save"></vxe-button>
+      <vxe-button content="自定义按钮颜色" class="my-purple" icon="fa fa-save"></vxe-button>
       <vxe-button content="自定义图标颜色" icon="fa fa-graduation-cap my-green"></vxe-button>
     </p>
 
@@ -215,20 +215,20 @@
 </script>
 
 <style lang="scss">
-.vxe-button.type--button.theme--my-purple,
-.vxe-button.type--button.theme--my-purple:hover {
+.vxe-button.type--button.my-purple,
+.vxe-button.type--button.my-purple:hover {
   color: #fff;
 }
-.vxe-button.type--button.theme--my-purple {
+.vxe-button.type--button.my-purple {
   background-color: #800080;
 }
-.vxe-button.type--button.theme--my-purple:active {
+.vxe-button.type--button.my-purple:active {
   background-color: #a50aa5;
 }
-.vxe-button.type--text.theme--my-purple {
+.vxe-button.type--text.my-purple {
   color: #800080;
 }
-.vxe-button.type--text.theme--my-purple:not(.is--disabled):hover {
+.vxe-button.type--text.my-purple:not(.is--disabled):hover {
   color: #a50aa5;
 }
 .my-green {

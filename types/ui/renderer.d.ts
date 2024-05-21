@@ -1,4 +1,4 @@
-import { VxeComponentStyle, VxeComponentClassName } from '../tool'
+import { VxeComponentStyleType, VxeComponentClassNameType } from '@vxe-ui/core'
 import { VxeFormItemPropTypes, FormItemTitleRenderParams, FormItemContentRenderParams, FormItemVisibleParams, FormItemResetParams } from '../components/form-item'
 import { VxeFormDefines, VxeFormProps } from '../components/form'
 import { VxeFormDesignDefines } from '../components/form-design'
@@ -10,14 +10,14 @@ declare module '@vxe-ui/core' {
   export interface VxeGlobalRendererOptions {
     // 表单-项渲染
     formItemAutoFocus?: boolean
-    itemClassName?: string | ((params: VxeGlobalRendererHandles.RenderItemTitleParams) => string | VxeComponentClassName)
-    itemStyle?: VxeComponentStyle | ((params: VxeGlobalRendererHandles.RenderItemTitleParams) => VxeComponentStyle)
-    itemContentClassName?: string | ((params: VxeGlobalRendererHandles.RenderItemTitleParams) => string | VxeComponentClassName)
-    itemContentStyle?: VxeComponentStyle | ((params: VxeGlobalRendererHandles.RenderItemTitleParams) => VxeComponentStyle)
-    itemTitleClassName?: string | ((params: VxeGlobalRendererHandles.RenderItemTitleParams) => string | VxeComponentClassName)
-    itemTitleStyle?: VxeComponentStyle | ((params: VxeGlobalRendererHandles.RenderItemTitleParams) => VxeComponentStyle)
-    renderItemTitle?(renderOpts: VxeGlobalRendererHandles.RenderItemTitleOptions, params: VxeGlobalRendererHandles.RenderItemTitleParams): VxeComponentSlot | VxeComponentSlot[]
-    renderItemContent?(renderOpts: VxeGlobalRendererHandles.RenderItemContentOptions, params: VxeGlobalRendererHandles.RenderItemContentParams): VxeComponentSlot | VxeComponentSlot[]
+    itemClassName?: string | ((params: VxeGlobalRendererHandles.RenderItemTitleParams) => string | VxeComponentClassNameType)
+    itemStyle?: VxeComponentStyleType | ((params: VxeGlobalRendererHandles.RenderItemTitleParams) => VxeComponentStyleType)
+    itemContentClassName?: string | ((params: VxeGlobalRendererHandles.RenderItemTitleParams) => string | VxeComponentClassNameType)
+    itemContentStyle?: VxeComponentStyleType | ((params: VxeGlobalRendererHandles.RenderItemTitleParams) => VxeComponentStyleType)
+    itemTitleClassName?: string | ((params: VxeGlobalRendererHandles.RenderItemTitleParams) => string | VxeComponentClassNameType)
+    itemTitleStyle?: VxeComponentStyleType | ((params: VxeGlobalRendererHandles.RenderItemTitleParams) => VxeComponentStyleType)
+    renderItemTitle?(renderOpts: VxeGlobalRendererHandles.RenderItemTitleOptions, params: VxeGlobalRendererHandles.RenderItemTitleParams): VxeComponentSlotType | VxeComponentSlotType[]
+    renderItemContent?(renderOpts: VxeGlobalRendererHandles.RenderItemContentOptions, params: VxeGlobalRendererHandles.RenderItemContentParams): VxeComponentSlotType | VxeComponentSlotType[]
     itemVisibleMethod?(params: VxeGlobalRendererHandles.ItemVisibleMethodParams): boolean
     itemResetMethod?(params: VxeGlobalRendererHandles.ItemResetMethodParams): void
 
@@ -60,7 +60,7 @@ declare module '@vxe-ui/core' {
     /**
      * 表单设计器 - 渲染左侧控件项
      */
-    renderFormDesignWidgetItem?(renderOpts: VxeGlobalRendererHandles.RenderFormDesignWidgetItemOptions, params: VxeGlobalRendererHandles.RenderFormDesignWidgetItemParams): VxeComponentSlot | VxeComponentSlot[]
+    renderFormDesignWidgetItem?(renderOpts: VxeGlobalRendererHandles.RenderFormDesignWidgetItemOptions, params: VxeGlobalRendererHandles.RenderFormDesignWidgetItemParams): VxeComponentSlotType | VxeComponentSlotType[]
     /**
      * 表单设计器 - 创建设计器表单数据
      */
@@ -68,7 +68,7 @@ declare module '@vxe-ui/core' {
     /**
      * 表单设计器 - 渲染设计器表单视图
      */
-    renderFormDesignSettingView?(renderOpts: VxeGlobalRendererHandles.RenderFormDesignSettingViewOptions, params: VxeGlobalRendererHandles.RenderFormDesignSettingViewParams): VxeComponentSlot | VxeComponentSlot[]
+    renderFormDesignSettingView?(renderOpts: VxeGlobalRendererHandles.RenderFormDesignSettingViewOptions, params: VxeGlobalRendererHandles.RenderFormDesignSettingViewParams): VxeComponentSlotType | VxeComponentSlotType[]
     /**
      * 表单设计器 - 创建右侧控件字段表单数据
      */
@@ -76,16 +76,16 @@ declare module '@vxe-ui/core' {
     /**
      * 表单设计器 - 渲染右侧控件表单视图
      */
-    renderFormDesignWidgetFormView?(renderOpts: VxeGlobalRendererHandles.RenderFormDesignWidgetFormViewOptions, params: VxeGlobalRendererHandles.RenderFormDesignWidgetFormViewParams): VxeComponentSlot | VxeComponentSlot[]
+    renderFormDesignWidgetFormView?(renderOpts: VxeGlobalRendererHandles.RenderFormDesignWidgetFormViewOptions, params: VxeGlobalRendererHandles.RenderFormDesignWidgetFormViewParams): VxeComponentSlotType | VxeComponentSlotType[]
     /**
      * 表单设计器 - 控件渲染器（设计时）
      * 如果不设置，则使用 renderFormDesignWidgetView 渲染
      */
-    renderFormDesignWidgetEdit?(renderOpts: VxeGlobalRendererHandles.RenderFormDesignWidgetEditOptions, params: VxeGlobalRendererHandles.RenderFormDesignWidgetEditParams): VxeComponentSlot | VxeComponentSlot[]
+    renderFormDesignWidgetEdit?(renderOpts: VxeGlobalRendererHandles.RenderFormDesignWidgetEditOptions, params: VxeGlobalRendererHandles.RenderFormDesignWidgetEditParams): VxeComponentSlotType | VxeComponentSlotType[]
     /**
      * 表单设计器 - 控件渲染器（运行时）
      */
-    renderFormDesignWidgetView?(renderOpts: VxeGlobalRendererHandles.RenderFormDesignWidgetViewOptions, params: VxeGlobalRendererHandles.RenderFormDesignWidgetViewParams): VxeComponentSlot | VxeComponentSlot[]
+    renderFormDesignWidgetView?(renderOpts: VxeGlobalRendererHandles.RenderFormDesignWidgetViewOptions, params: VxeGlobalRendererHandles.RenderFormDesignWidgetViewParams): VxeComponentSlotType | VxeComponentSlotType[]
     /**
      * 表单设计器 - 创建控件校验规则
      */

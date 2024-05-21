@@ -1,13 +1,12 @@
 import { RenderFunction, SetupContext, Ref, DefineComponent } from 'vue'
-import { VxeGlobalRendererHandles } from '@vxe-ui/core'
-import { defineVxeComponent, VxeComponentBase, VxeComponentEvent, VxeComponentStyle } from '../tool'
+import { VxeGlobalRendererHandles, defineVxeComponent, VxeComponentBaseOptions, VxeComponentEventParams, VxeComponentStyleType } from '@vxe-ui/core'
 
 /* eslint-disable no-use-before-define,@typescript-eslint/ban-types */
 
 export declare const VxeFormItem: defineVxeComponent<VxeFormItemProps, VxeFormItemEventProps>
 export type VxeFormItemComponent = DefineComponent<VxeFormItemProps, VxeFormItemEmits>
 
-export interface VxeFormItemConstructor extends VxeComponentBase, VxeFormItemMethods {
+export interface VxeFormItemConstructor extends VxeComponentBaseOptions, VxeFormItemMethods {
   props: VxeFormItemProps
   context: SetupContext<VxeFormItemEmits>
   reactData: FormItemReactData
@@ -49,13 +48,13 @@ export namespace VxeFormItemPropTypes {
   export type ContentClassName = string | ((params: ContentClassNameParams) => string)
 
   interface ContentStyleParams extends ClassNameParams{}
-  export type ContentStyle = VxeComponentStyle | ((params: ContentStyleParams) => VxeComponentStyle)
+  export type ContentStyle = VxeComponentStyleType | ((params: ContentStyleParams) => VxeComponentStyleType)
 
   interface TitleClassNameParams extends ClassNameParams{}
   export type TitleClassName = string | ((params: TitleClassNameParams) => string)
 
   interface TitleStyleParams extends ClassNameParams{}
-  export type TitleStyle = VxeComponentStyle | ((params: TitleStyleParams) => VxeComponentStyle)
+  export type TitleStyle = VxeComponentStyleType | ((params: TitleStyleParams) => VxeComponentStyleType)
 
   export type Readonly = boolean
 
@@ -238,7 +237,7 @@ export interface VxeFormItemPrivateMethods extends FormItemPrivateMethods { }
 export type VxeFormItemEmits = []
 
 export namespace VxeFormItemDefines {
-  export interface FormItemEventParams extends VxeComponentEvent {
+  export interface FormItemEventParams extends VxeComponentEventParams {
     $formItem: VxeFormItemConstructor
   }
 }

@@ -1,5 +1,5 @@
 import { RenderFunction, SetupContext, Ref, ComponentPublicInstance, DefineComponent } from 'vue'
-import { defineVxeComponent, VxeComponentBase, VxeComponentEvent } from '../tool'
+import { defineVxeComponent, VxeComponentBaseOptions, VxeComponentEventParams } from '@vxe-ui/core'
 
 /* eslint-disable no-use-before-define,@typescript-eslint/ban-types */
 
@@ -8,7 +8,7 @@ export type VxeLoadingComponent = DefineComponent<VxeLoadingProps, VxeLoadingEmi
 
 export type VxeLoadingInstance = ComponentPublicInstance<VxeLoadingProps, VxeLoadingConstructor>
 
-export interface VxeLoadingConstructor extends VxeComponentBase, VxeLoadingMethods {
+export interface VxeLoadingConstructor extends VxeComponentBaseOptions, VxeLoadingMethods {
   props: VxeLoadingProps
   context: SetupContext<VxeLoadingEmits>
   reactData: LoadingReactData
@@ -51,7 +51,7 @@ export interface VxeLoadingPrivateMethods extends LoadingPrivateMethods { }
 export type VxeLoadingEmits = []
 
 export namespace VxeLoadingDefines {
-  export interface LoadingEventParams extends VxeComponentEvent {
+  export interface LoadingEventParams extends VxeComponentEventParams {
     $loading: VxeLoadingConstructor
   }
 }

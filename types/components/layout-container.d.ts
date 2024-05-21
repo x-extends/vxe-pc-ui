@@ -1,5 +1,5 @@
 import { RenderFunction, SetupContext, Ref, ComponentPublicInstance, DefineComponent } from 'vue'
-import { defineVxeComponent, VxeComponentBase, VxeComponentEvent } from '../tool'
+import { defineVxeComponent, VxeComponentBaseOptions, VxeComponentEventParams } from '@vxe-ui/core'
 
 /* eslint-disable no-use-before-define,@typescript-eslint/ban-types */
 
@@ -8,7 +8,7 @@ export type VxeLayoutContainerComponent = DefineComponent<VxeLayoutContainerProp
 
 export type VxeLayoutContainerInstance = ComponentPublicInstance<VxeLayoutContainerProps, VxeLayoutContainerConstructor>
 
-export interface VxeLayoutContainerConstructor extends VxeComponentBase, VxeLayoutContainerMethods {
+export interface VxeLayoutContainerConstructor extends VxeComponentBaseOptions, VxeLayoutContainerMethods {
   props: VxeLayoutContainerProps
   context: SetupContext<VxeLayoutContainerEmits>
   reactData: LayoutContainerReactData
@@ -38,6 +38,7 @@ export interface LayoutContainerReactData {
 }
 
 export interface LayoutContainerMethods {
+  dispatchEvent(type: ValueOf<VxeLayoutContainerEmits>, params: Record<string, any>, evnt: Event | null): void
 }
 export interface VxeLayoutContainerMethods extends LayoutContainerMethods { }
 
@@ -47,7 +48,7 @@ export interface VxeLayoutContainerPrivateMethods extends LayoutContainerPrivate
 export type VxeLayoutContainerEmits = []
 
 export namespace VxeLayoutContainerDefines {
-  export interface LayoutContainerEventParams extends VxeComponentEvent {
+  export interface LayoutContainerEventParams extends VxeComponentEventParams {
     $layoutContainer: VxeLayoutContainerConstructor
   }
 }

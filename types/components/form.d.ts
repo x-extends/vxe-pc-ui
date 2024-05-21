@@ -1,5 +1,5 @@
 import { RenderFunction, SetupContext, Ref, ComponentPublicInstance, DefineComponent } from 'vue'
-import { defineVxeComponent, VxeComponentBase, VxeComponentEvent, VxeComponentSize, ValueOf } from '../tool'
+import { defineVxeComponent, VxeComponentBaseOptions, VxeComponentEventParams, VxeComponentSizeType, ValueOf } from '@vxe-ui/core'
 import { VxeFormItemPropTypes } from './form-item'
 
 /* eslint-disable no-use-before-define,@typescript-eslint/ban-types */
@@ -9,7 +9,7 @@ export type VxeFormComponent<D = any> = DefineComponent<VxeFormProps<D>, VxeForm
 
 export type VxeFormInstance = ComponentPublicInstance<VxeFormProps, VxeFormConstructor>
 
-export interface VxeFormConstructor extends VxeComponentBase, VxeFormMethods {
+export interface VxeFormConstructor extends VxeComponentBaseOptions, VxeFormMethods {
   props: VxeFormProps
   context: SetupContext<VxeFormEmits>
   reactData: FormReactData
@@ -27,7 +27,7 @@ export interface FormPrivateRef {
 export interface VxeFormPrivateRef extends FormPrivateRef { }
 
 export namespace VxeFormPropTypes {
-  export type Size = VxeComponentSize
+  export type Size = VxeComponentSizeType
   export type CollapseStatus = boolean
   export type Loading = boolean
   export type Data = any
@@ -124,7 +124,7 @@ export interface FormInternalData {
 }
 
 export interface FormMethods {
-  dispatchEvent(type: ValueOf<VxeFormEmits>, params: any, evnt: Event): void
+  dispatchEvent(type: ValueOf<VxeFormEmits>, params: Record<string, any>, evnt: Event | null): void
   /**
    * 重置表单
    */
@@ -298,7 +298,7 @@ export namespace VxeFormDefines {
     [field: string]: ValidateErrorParams[]
   }
 
-  interface FormEventParams extends VxeComponentEvent {
+  interface FormEventParams extends VxeComponentEventParams {
     $form: VxeFormConstructor
   }
 

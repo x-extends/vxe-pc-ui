@@ -1,6 +1,6 @@
 import { defineComponent, h, ref, Ref, provide, computed, inject, reactive, watch, nextTick, PropType, onMounted } from 'vue'
 import XEUtils from 'xe-utils'
-import { getConfig, validators, renderer, log } from '@vxe-ui/core'
+import { getConfig, validators, renderer, log, createEvent } from '@vxe-ui/core'
 import { getFuncText, isEnableConf, eqEmptyValue } from '../../ui/src/utils'
 import { scrollToView } from '../../ui/src/dom'
 import { createItem, handleFieldOrItem, isHiddenItem, isActivetem } from './util'
@@ -10,7 +10,7 @@ import VxeFormConfigItem from './form-config-item'
 import VxeLoadingComponent from '../../loading/src/loading'
 import { getSlotVNs } from '../../ui/src/vn'
 
-import { VxeFormConstructor, VxeFormPropTypes, VxeFormEmits, FormReactData, FormMethods, FormPrivateRef, VxeFormPrivateMethods, VxeFormDefines, VxeFormItemPropTypes, VxeTooltipInstance, FormInternalData, VxeFormPrivateComputed } from '../../../types'
+import type { VxeFormConstructor, VxeFormPropTypes, VxeFormEmits, FormReactData, FormMethods, FormPrivateRef, VxeFormPrivateMethods, VxeFormDefines, VxeFormItemPropTypes, VxeTooltipInstance, FormInternalData, VxeFormPrivateComputed } from '../../../types'
 
 class Rule {
   constructor (rule: any) {
@@ -593,7 +593,7 @@ export default defineComponent({
 
     formMethods = {
       dispatchEvent (type, params, evnt) {
-        emit(type, Object.assign({ $form: $xeForm, $grid: $xeGrid, $event: evnt }, params))
+        emit(type, createEvent(evnt, { $form: $xeForm, $grid: $xeGrid }, params))
       },
       reset,
       validate,

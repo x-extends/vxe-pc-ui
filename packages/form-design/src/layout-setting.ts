@@ -5,7 +5,7 @@ import VxeTabsComponent from '../../tabs/src/tabs'
 import VxeTabPaneComponent from '../../tabs/src/tab-pane'
 import { DefaultSettingFormComponent } from './setting-form'
 
-import { VxeFormDesignConstructor, VxeFormDesignPrivateMethods } from '../../../types'
+import type { VxeFormDesignConstructor, VxeFormDesignPrivateMethods } from '../../../types'
 
 export default defineComponent({
   props: {},

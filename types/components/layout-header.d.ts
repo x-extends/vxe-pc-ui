@@ -1,12 +1,12 @@
 import { RenderFunction, SetupContext, Ref, DefineComponent } from 'vue'
-import { defineVxeComponent, VxeComponentBase, VxeComponentEvent } from '../tool'
+import { defineVxeComponent, VxeComponentBaseOptions, VxeComponentEventParams } from '@vxe-ui/core'
 
 /* eslint-disable no-use-before-define,@typescript-eslint/ban-types */
 
 export declare const VxeLayoutHeader: defineVxeComponent<VxeLayoutHeaderProps, VxeLayoutHeaderEventProps>
 export type VxeLayoutHeaderComponent = DefineComponent<VxeLayoutHeaderProps, VxeLayoutHeaderEmits>
 
-export interface VxeLayoutHeaderConstructor extends VxeComponentBase, VxeLayoutHeaderMethods {
+export interface VxeLayoutHeaderConstructor extends VxeComponentBaseOptions, VxeLayoutHeaderMethods {
   props: VxeLayoutHeaderProps
   context: SetupContext<VxeLayoutHeaderEmits>
   reactData: LayoutHeaderReactData
@@ -36,6 +36,7 @@ export interface LayoutHeaderReactData {
 }
 
 export interface LayoutHeaderMethods {
+  dispatchEvent(type: ValueOf<VxeLayoutHeaderEmits>, params: Record<string, any>, evnt: Event | null): void
 }
 export interface VxeLayoutHeaderMethods extends LayoutHeaderMethods { }
 
@@ -45,7 +46,7 @@ export interface VxeLayoutHeaderPrivateMethods extends LayoutHeaderPrivateMethod
 export type VxeLayoutHeaderEmits = []
 
 export namespace VxeLayoutHeaderDefines {
-  export interface LayoutHeaderEventParams extends VxeComponentEvent {
+  export interface LayoutHeaderEventParams extends VxeComponentEventParams {
     $layoutHeader: VxeLayoutHeaderConstructor
   }
 }

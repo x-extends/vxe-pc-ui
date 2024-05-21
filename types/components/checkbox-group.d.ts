@@ -1,5 +1,5 @@
 import { RenderFunction, SetupContext, Ref, ComponentPublicInstance, DefineComponent } from 'vue'
-import { defineVxeComponent, VxeComponentBase, VxeComponentEvent, VxeComponentSize, ValueOf } from '../tool'
+import { defineVxeComponent, VxeComponentBaseOptions, VxeComponentEventParams, VxeComponentSizeType, ValueOf } from '@vxe-ui/core'
 
 /* eslint-disable no-use-before-define,@typescript-eslint/ban-types */
 
@@ -8,7 +8,7 @@ export type VxeCheckboxGroupComponent = DefineComponent<VxeCheckboxGroupProps, V
 
 export type VxeCheckboxGroupInstance = ComponentPublicInstance<VxeCheckboxGroupProps, VxeCheckboxGroupConstructor>
 
-export interface VxeCheckboxGroupConstructor extends VxeComponentBase, VxeCheckboxGroupMethods {
+export interface VxeCheckboxGroupConstructor extends VxeComponentBaseOptions, VxeCheckboxGroupMethods {
   props: VxeCheckboxGroupProps
   context: SetupContext<VxeCheckboxGroupEmits>
   reactData: CheckboxGroupReactData
@@ -23,7 +23,7 @@ export interface CheckboxGroupPrivateRef {
 export interface VxeCheckboxGroupPrivateRef extends CheckboxGroupPrivateRef { }
 
 export namespace VxeCheckboxGroupPropTypes {
-  export type Size = VxeComponentSize
+  export type Size = VxeComponentSizeType
   export type ModelValue = any[]
   export type Options = {
     value?: VxeCheckboxPropTypes.Label
@@ -64,7 +64,7 @@ export interface CheckboxGroupReactData {
 }
 
 export interface CheckboxGroupMethods {
-  dispatchEvent(type: ValueOf<VxeCheckboxGroupEmits>, params: any, evnt: Event): void
+  dispatchEvent(type: ValueOf<VxeCheckboxGroupEmits>, params: Record<string, any>, evnt: Event | null): void
 }
 export interface VxeCheckboxGroupMethods extends CheckboxGroupMethods { }
 
@@ -83,7 +83,7 @@ export type VxeCheckboxGroupEmits = [
 ]
 
 export namespace VxeCheckboxGroupDefines {
-  export interface CheckboxGroupEventParams extends VxeComponentEvent {
+  export interface CheckboxGroupEventParams extends VxeComponentEventParams {
     $checkboxGroup: VxeCheckboxGroupConstructor
   }
 
@@ -101,7 +101,9 @@ export interface VxeCheckboxGroupListeners {
   change?: VxeCheckboxGroupEvents.Change
 }
 
-export namespace VxeCheckboxGroupEvents { }
+export namespace VxeCheckboxGroupEvents {
+  export type Change = (params: VxeCheckboxGroupDefines.ChangeEventParams) => void
+ }
 
 export namespace VxeCheckboxGroupSlotTypes {
   export interface DefaultSlotParams {

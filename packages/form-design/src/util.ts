@@ -1,7 +1,7 @@
 import XEUtils from 'xe-utils'
 import { renderer } from '@vxe-ui/core'
 
-import { VxeFormDesignDefines } from '../../../types'
+import type { VxeFormDesignDefines } from '../../../types'
 
 export function getNewWidgetId (widgetObjList: VxeFormDesignDefines.WidgetObjItem[]) {
   let max = 10000

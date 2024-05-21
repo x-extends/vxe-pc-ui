@@ -1,5 +1,5 @@
 import { RenderFunction, SetupContext, Ref, ComponentPublicInstance, DefineComponent } from 'vue'
-import { defineVxeComponent, VxeComponentBase, VxeComponentEvent } from '../tool'
+import { defineVxeComponent, VxeComponentBaseOptions, VxeComponentEventParams } from '@vxe-ui/core'
 
 /* eslint-disable no-use-before-define,@typescript-eslint/ban-types */
 
@@ -8,7 +8,7 @@ export type VxeCalendarComponent = DefineComponent<VxeCalendarProps, VxeCalendar
 
 export type VxeCalendarInstance = ComponentPublicInstance<VxeCalendarProps, VxeCalendarConstructor>
 
-export interface VxeCalendarConstructor extends VxeComponentBase, VxeCalendarMethods {
+export interface VxeCalendarConstructor extends VxeComponentBaseOptions, VxeCalendarMethods {
   props: VxeCalendarProps
   context: SetupContext<VxeCalendarEmits>
   reactData: CalendarReactData
@@ -45,7 +45,7 @@ export interface VxeCalendarPrivateMethods extends CalendarPrivateMethods { }
 export type VxeCalendarEmits = []
 
 export namespace VxeCalendarDefines {
-  export interface CalendarEventParams extends VxeComponentEvent {
+  export interface CalendarEventParams extends VxeComponentEventParams {
     $calendar: VxeCalendarConstructor
   }
 }

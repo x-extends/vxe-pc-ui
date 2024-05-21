@@ -3,7 +3,7 @@ import XEUtils from 'xe-utils'
 import { renderer, log } from '@vxe-ui/core'
 import { getOnName, getModelEvent, getChangeEvent } from '../../ui/src/vn'
 
-import { VxeButtonComponent } from '../../../types/all'
+import type { VxeButtonComponent } from '../../../types/all'
 
 const componentDefaultModelProp = 'modelValue'
 

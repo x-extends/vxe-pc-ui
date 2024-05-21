@@ -1,5 +1,5 @@
 import { RenderFunction, SetupContext, Ref, ComponentPublicInstance, DefineComponent } from 'vue'
-import { defineVxeComponent, VxeComponentBase, VxeComponentEvent, VxeComponentSize, ValueOf } from '../tool'
+import { defineVxeComponent, VxeComponentBaseOptions, VxeComponentEventParams, VxeComponentSizeType, ValueOf } from '@vxe-ui/core'
 
 /* eslint-disable no-use-before-define,@typescript-eslint/ban-types */
 
@@ -8,7 +8,7 @@ export type VxeSwitchComponent = DefineComponent<VxeSwitchProps, VxeSwitchEmits>
 
 export type VxeSwitchInstance = ComponentPublicInstance<VxeSwitchProps, VxeSwitchConstructor>
 
-export interface VxeSwitchConstructor extends VxeComponentBase, VxeSwitchMethods {
+export interface VxeSwitchConstructor extends VxeComponentBaseOptions, VxeSwitchMethods {
   props: VxeSwitchProps
   context: SetupContext<VxeSwitchEmits>
   reactData: SwitchReactData
@@ -23,7 +23,7 @@ export interface SwitchPrivateRef {
 export interface VxeSwitchPrivateRef extends SwitchPrivateRef { }
 
 export namespace VxeSwitchPropTypes {
-  export type Size = VxeComponentSize
+  export type Size = VxeComponentSizeType
   export type ModelValue = string | number | boolean
   export type Disabled = boolean
   export type OpenLabel = string
@@ -61,7 +61,7 @@ export interface SwitchReactData {
 }
 
 export interface SwitchMethods {
-  dispatchEvent(type: ValueOf<VxeSwitchEmits>, params: any, evnt: Event): void
+  dispatchEvent(type: ValueOf<VxeSwitchEmits>, params: Record<string, any>, evnt: Event | null): void
   /**
    * 获取焦点
    */
@@ -84,7 +84,7 @@ export type VxeSwitchEmits = [
 ]
 
 export namespace VxeSwitchDefines {
-  interface SwitchEventParams extends VxeComponentEvent {
+  interface SwitchEventParams extends VxeComponentEventParams {
     $switch: VxeSwitchConstructor
   }
 

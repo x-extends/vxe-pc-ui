@@ -1,5 +1,5 @@
 import { RenderFunction, SetupContext, Ref, ComponentPublicInstance, DefineComponent } from 'vue'
-import { defineVxeComponent, VxeComponentBase, VxeComponentEvent } from '../tool'
+import { defineVxeComponent, VxeComponentBaseOptions, VxeComponentEventParams } from '@vxe-ui/core'
 
 /* eslint-disable no-use-before-define,@typescript-eslint/ban-types */
 
@@ -8,7 +8,7 @@ export type VxeUploadComponent = DefineComponent<VxeUploadProps, VxeUploadEmits>
 
 export type VxeUploadInstance = ComponentPublicInstance<VxeUploadProps, VxeUploadConstructor>
 
-export interface VxeUploadConstructor extends VxeComponentBase, VxeUploadMethods {
+export interface VxeUploadConstructor extends VxeComponentBaseOptions, VxeUploadMethods {
   props: VxeUploadProps
   context: SetupContext<VxeUploadEmits>
   reactData: UploadReactData
@@ -36,6 +36,7 @@ export interface UploadReactData {
 }
 
 export interface UploadMethods {
+  dispatchEvent(type: ValueOf<VxeUploadEmits>, params: Record<string, any>, evnt: Event | null): void
 }
 export interface VxeUploadMethods extends UploadMethods { }
 
@@ -45,7 +46,7 @@ export interface VxeUploadPrivateMethods extends UploadPrivateMethods { }
 export type VxeUploadEmits = []
 
 export namespace VxeUploadDefines {
-  export interface UploadEventParams extends VxeComponentEvent {
+  export interface UploadEventParams extends VxeComponentEventParams {
     $upload: VxeUploadConstructor
   }
 }

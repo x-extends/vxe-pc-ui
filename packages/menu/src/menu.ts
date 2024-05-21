@@ -1,8 +1,8 @@
 import { defineComponent, ref, h, reactive, PropType, resolveComponent, createCommentVNode, nextTick, watch, VNode, onMounted } from 'vue'
 import XEUtils from 'xe-utils'
-import { getIcon } from '@vxe-ui/core'
+import { getIcon, createEvent } from '@vxe-ui/core'
 
-import { VxeMenuDefines, VxeMenuPropTypes, MenuReactData, VxeMenuEmits, MenuPrivateRef, VxeMenuPrivateComputed, VxeMenuConstructor, VxeMenuPrivateMethods } from '../../../types'
+import type { VxeMenuDefines, VxeMenuPropTypes, MenuReactData, VxeMenuEmits, MenuPrivateRef, VxeMenuPrivateComputed, VxeMenuConstructor, VxeMenuPrivateMethods } from '../../../types'
 
 export default defineComponent({
   name: 'VxeMenu',
@@ -134,7 +134,7 @@ export default defineComponent({
           handleClickIconCollapse(evnt, item)
         }
       }
-      emit('click', { $menu: $xeMenu, menu: item, $event: evnt })
+      emit('click', createEvent(evnt, { $menu: $xeMenu, menu: item }))
     }
 
     const renderMenuTitle = (item: VxeMenuDefines.MenuItem) => {

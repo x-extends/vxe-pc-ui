@@ -1,11 +1,11 @@
 import { defineComponent, h, ref, Ref, computed, Teleport, VNode, onUnmounted, reactive, nextTick, PropType, onMounted, inject } from 'vue'
 import XEUtils from 'xe-utils'
-import { getConfig, globalEvents, log, getIcon } from '@vxe-ui/core'
+import { getConfig, globalEvents, log, getIcon, createEvent } from '@vxe-ui/core'
 import { useSize } from '../../hooks/size'
 import { getAbsolutePos, getEventTargetNode } from '../../ui/src/dom'
 import { getFuncText, getLastZIndex, nextZIndex } from '../../ui/src/utils'
 
-import { VxeButtonConstructor, VxeButtonPropTypes, VxeButtonEmits, ButtonReactData, ButtonMethods, ButtonPrivateRef, ButtonInternalData, VxeButtonGroupConstructor, VxeButtonGroupPrivateMethods } from '../../../types'
+import type { VxeButtonConstructor, VxeButtonPropTypes, VxeButtonEmits, ButtonReactData, ButtonMethods, ButtonPrivateRef, ButtonInternalData, VxeButtonGroupConstructor, VxeButtonGroupPrivateMethods } from '../../../types'
 
 export default defineComponent({
   name: 'VxeButton',
@@ -320,11 +320,11 @@ export default defineComponent({
     }
 
     const mouseenterEvent = (evnt: MouseEvent) => {
-      emit('mouseenter', { $event: evnt })
+      emit('mouseenter', createEvent(evnt, {}))
     }
 
     const mouseleaveEvent = (evnt: MouseEvent) => {
-      emit('mouseleave', { $event: evnt })
+      emit('mouseleave', createEvent(evnt, {}))
     }
 
     const closePanel = () => {
@@ -392,7 +392,7 @@ export default defineComponent({
 
     buttonMethods = {
       dispatchEvent (type, params, evnt) {
-        emit(type, Object.assign({ $button: $xeButton, $event: evnt }, params))
+        emit(type, createEvent(evnt, { $button: $xeButton }, params))
       },
       focus () {
         const btnElem = refButton.value

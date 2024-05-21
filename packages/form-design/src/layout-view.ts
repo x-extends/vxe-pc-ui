@@ -3,9 +3,9 @@ import { renderer } from '@vxe-ui/core'
 import { getSlotVNs } from '../../ui/src/vn'
 import { ViewItemComponent } from './layout-view-item'
 import VxeFormComponent from '../../form/src/form'
-
-import { VxeFormDesignConstructor, VxeFormDesignPrivateMethods, VxeGlobalRendererHandles } from '../../../types'
 import XEUtils from 'xe-utils'
+
+import type { VxeFormDesignConstructor, VxeFormDesignPrivateMethods, VxeGlobalRendererHandles } from '../../../types'
 
 export default defineComponent({
   props: {},

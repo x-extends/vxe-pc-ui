@@ -3,7 +3,7 @@ import { createItem, watchItem, destroyItem, assemItem, XEFormItemProvide } from
 import { formItemProps } from './form-item'
 import XEUtils from 'xe-utils'
 
-import { VxeFormConstructor, VxeFormPrivateMethods } from '../../../types'
+import type { VxeFormConstructor, VxeFormPrivateMethods } from '../../../types'
 
 export default defineComponent({
   name: 'VxeFormGather',

@@ -1,13 +1,13 @@
 import { defineComponent, h, Teleport, PropType, ref, Ref, inject, computed, provide, onUnmounted, reactive, nextTick, watch, onMounted, createCommentVNode } from 'vue'
 import XEUtils from 'xe-utils'
-import { getConfig, getIcon, getI18n, globalEvents, GLOBAL_EVENT_KEYS } from '@vxe-ui/core'
+import { getConfig, getIcon, getI18n, globalEvents, GLOBAL_EVENT_KEYS, createEvent } from '@vxe-ui/core'
 import { useSize } from '../../hooks/size'
 import { getEventTargetNode, getAbsolutePos } from '../../ui/src/dom'
 import { getLastZIndex, nextZIndex, getFuncText } from '../../ui/src/utils'
 import VxeInputComponent from '../../input/src/input'
 import { getSlotVNs } from '../../ui/src/vn'
 
-import { VxeSelectPropTypes, VxeSelectConstructor, SelectReactData, VxeSelectEmits, VxeInputConstructor, SelectMethods, SelectPrivateRef, VxeSelectMethods, VxeOptgroupProps, VxeOptionProps, VxeFormDefines, VxeFormConstructor, VxeFormPrivateMethods, VxeInputDefines, VxeComponentSlot } from '../../../types'
+import type { VxeSelectPropTypes, VxeSelectConstructor, SelectReactData, VxeSelectEmits, VxeInputConstructor, SelectMethods, SelectPrivateRef, VxeSelectMethods, VxeOptgroupProps, VxeOptionProps, VxeFormDefines, VxeFormConstructor, VxeFormPrivateMethods, VxeInputDefines, VxeComponentSlotType } from '../../../types'
 
 function isOptionVisible (option: any) {
   return option.visible !== false
@@ -98,7 +98,7 @@ export default defineComponent({
       refElem
     }
 
-    const $xeselect = {
+    const $xeSelect = {
       xID,
       props,
       context,
@@ -156,7 +156,7 @@ export default defineComponent({
       return XEUtils.toNumber(props.multiCharOverflow)
     })
 
-    const callSlot = <T>(slotFunc: ((params: T) => VxeComponentSlot | VxeComponentSlot[]) | string | null, params: T) => {
+    const callSlot = <T>(slotFunc: ((params: T) => VxeComponentSlotType | VxeComponentSlotType[]) | string | null, params: T) => {
       if (slotFunc) {
         if (XEUtils.isString(slotFunc)) {
           slotFunc = slots[slotFunc] || null
@@ -724,7 +724,7 @@ export default defineComponent({
         const isDisabled = checkOptionDisabled(isSelected, option, group)
         const optid = getOptid(option)
         const defaultSlot = slots ? slots.default : null
-        const optParams = { option, group: null, $select: $xeselect }
+        const optParams = { option, group: null, $select: $xeSelect }
         return isVisible
           ? h('div', {
             key: useKey || optionKey ? optid : cIndex,
@@ -770,7 +770,7 @@ export default defineComponent({
         const optid = getOptid(group)
         const isGroupDisabled = group.disabled
         const defaultSlot = slots ? slots.default : null
-        const optParams = { option: group, group, $select: $xeselect }
+        const optParams = { option: group, group, $select: $xeSelect }
         return h('div', {
           key: useKey || optionKey ? optid : gIndex,
           class: ['vxe-optgroup', className ? (XEUtils.isFunction(className) ? className(optParams) : className) : '', {
@@ -824,7 +824,7 @@ export default defineComponent({
 
     selectMethods = {
       dispatchEvent (type, params, evnt) {
-        emit(type, Object.assign({ $select: $xeselect, $event: evnt }, params))
+        emit(type, createEvent(evnt, { $select: $xeSelect }, params))
       },
       isPanelVisible () {
         return reactData.visiblePanel
@@ -864,7 +864,7 @@ export default defineComponent({
       }
     }
 
-    Object.assign($xeselect, selectMethods)
+    Object.assign($xeSelect, selectMethods)
 
     watch(() => reactData.staticOptions, (value) => {
       if (value.some((item) => item.options && item.options.length)) {
@@ -899,17 +899,17 @@ export default defineComponent({
         }
         cacheItemMap()
       })
-      globalEvents.on($xeselect, 'mousewheel', handleGlobalMousewheelEvent)
-      globalEvents.on($xeselect, 'mousedown', handleGlobalMousedownEvent)
-      globalEvents.on($xeselect, 'keydown', handleGlobalKeydownEvent)
-      globalEvents.on($xeselect, 'blur', handleGlobalBlurEvent)
+      globalEvents.on($xeSelect, 'mousewheel', handleGlobalMousewheelEvent)
+      globalEvents.on($xeSelect, 'mousedown', handleGlobalMousedownEvent)
+      globalEvents.on($xeSelect, 'keydown', handleGlobalKeydownEvent)
+      globalEvents.on($xeSelect, 'blur', handleGlobalBlurEvent)
     })
 
     onUnmounted(() => {
-      globalEvents.off($xeselect, 'mousewheel')
-      globalEvents.off($xeselect, 'mousedown')
-      globalEvents.off($xeselect, 'keydown')
-      globalEvents.off($xeselect, 'blur')
+      globalEvents.off($xeSelect, 'mousewheel')
+      globalEvents.off($xeSelect, 'mousedown')
+      globalEvents.off($xeSelect, 'keydown')
+      globalEvents.off($xeSelect, 'blur')
     })
 
     const renderVN = () => {
@@ -923,7 +923,7 @@ export default defineComponent({
       const prefixSlot = slots.prefix
       return h('div', {
         ref: refElem,
-        class: ['vxe-select', className ? (XEUtils.isFunction(className) ? className({ $select: $xeselect }) : className) : '', {
+        class: ['vxe-select', className ? (XEUtils.isFunction(className) ? className({ $select: $xeSelect }) : className) : '', {
           [`size--${vSize}`]: vSize,
           'is--visivle': visiblePanel,
           'is--disabled': disabled,
@@ -962,7 +962,7 @@ export default defineComponent({
         }, [
           h('div', {
             ref: refOptionPanel,
-            class: ['vxe-table--ignore-clear vxe-select--panel', popupClassName ? (XEUtils.isFunction(popupClassName) ? popupClassName({ $select: $xeselect }) : popupClassName) : '', {
+            class: ['vxe-table--ignore-clear vxe-select--panel', popupClassName ? (XEUtils.isFunction(popupClassName) ? popupClassName({ $select: $xeSelect }) : popupClassName) : '', {
               [`size--${vSize}`]: vSize,
               'is--transfer': transfer,
               'animat--leave': !loading && reactData.animatVisible,
@@ -1019,11 +1019,11 @@ export default defineComponent({
       ])
     }
 
-    $xeselect.renderVN = renderVN
+    $xeSelect.renderVN = renderVN
 
-    provide('$xeSelect', $xeselect)
+    provide('$xeSelect', $xeSelect)
 
-    return $xeselect
+    return $xeSelect
   },
   render () {
     return this.renderVN()

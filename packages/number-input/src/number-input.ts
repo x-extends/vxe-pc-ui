@@ -1,7 +1,7 @@
 import { defineComponent, ref, h, reactive } from 'vue'
 import XEUtils from 'xe-utils'
 
-import { NumberInputReactData, VxeNumberInputEmits, NumberInputPrivateRef, VxeNumberInputPrivateComputed, VxeNumberInputConstructor, VxeNumberInputPrivateMethods } from '../../../types'
+import type { NumberInputReactData, VxeNumberInputEmits, NumberInputPrivateRef, VxeNumberInputPrivateComputed, VxeNumberInputConstructor, VxeNumberInputPrivateMethods } from '../../../types'
 
 export default defineComponent({
   name: 'VxeNumberInput',

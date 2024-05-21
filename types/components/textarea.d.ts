@@ -1,5 +1,5 @@
 import { RenderFunction, SetupContext, Ref, ComponentPublicInstance, DefineComponent } from 'vue'
-import { defineVxeComponent, VxeComponentBase, VxeComponentEvent, VxeComponentSize, ValueOf } from '../tool'
+import { defineVxeComponent, VxeComponentBaseOptions, VxeComponentEventParams, VxeComponentSizeType, ValueOf } from '@vxe-ui/core'
 
 /* eslint-disable no-use-before-define,@typescript-eslint/ban-types */
 
@@ -8,7 +8,7 @@ export type VxeTextareaComponent = DefineComponent<VxeTextareaProps, VxeTextarea
 
 export type VxeTextareaInstance = ComponentPublicInstance<VxeTextareaProps, VxeTextareaConstructor>
 
-export interface VxeTextareaConstructor extends VxeComponentBase, VxeTextareaMethods {
+export interface VxeTextareaConstructor extends VxeComponentBaseOptions, VxeTextareaMethods {
   props: VxeTextareaProps
   context: SetupContext<VxeTextareaEmits>
   reactData: TextareaReactData
@@ -24,7 +24,7 @@ export interface TextareaPrivateRef {
 export interface VxeTextareaPrivateRef extends TextareaPrivateRef { }
 
 export namespace VxeTextareaPropTypes {
-  export type Size = VxeComponentSize
+  export type Size = VxeComponentSizeType
   export type ModelValue = string | number
   export type ClassName = string
   export type Immediate = boolean
@@ -114,7 +114,7 @@ export interface TextareaReactData {
 }
 
 export interface TextareaMethods {
-  dispatchEvent(type: ValueOf<VxeTextareaEmits>, params: any, evnt: Event): void
+  dispatchEvent(type: ValueOf<VxeTextareaEmits>, params: Record<string, any>, evnt: Event | null): void
   /**
    * 获取焦点
    */
@@ -141,7 +141,7 @@ export type VxeTextareaEmits = [
 ]
 
 export namespace VxeTextareaDefines {
-  export interface TextareaEventParams extends VxeComponentEvent {
+  export interface TextareaEventParams extends VxeComponentEventParams {
     $textarea: VxeTextareaConstructor
   }
 

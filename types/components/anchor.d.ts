@@ -1,5 +1,5 @@
 import { RenderFunction, SetupContext, Ref, ComponentPublicInstance, DefineComponent } from 'vue'
-import { defineVxeComponent, VxeComponentBase, VxeComponentEvent, ValueOf } from '../tool'
+import { defineVxeComponent, VxeComponentBaseOptions, VxeComponentEventParams, ValueOf } from '@vxe-ui/core'
 import { VxeAnchorLinkProps, VxeAnchorLinkPropTypes, VxeAnchorLinkDefines } from './anchor-link'
 
 /* eslint-disable no-use-before-define,@typescript-eslint/ban-types */
@@ -9,7 +9,7 @@ export type VxeAnchorComponent = DefineComponent<VxeAnchorProps, VxeAnchorEmits>
 
 export type VxeAnchorInstance = ComponentPublicInstance<VxeAnchorProps, VxeAnchorConstructor>
 
-export interface VxeAnchorConstructor extends VxeComponentBase, VxeAnchorMethods {
+export interface VxeAnchorConstructor extends VxeComponentBaseOptions, VxeAnchorMethods {
   props: VxeAnchorProps
   context: SetupContext<VxeAnchorEmits>
   reactData: AnchorReactData
@@ -49,7 +49,7 @@ export interface AnchorReactData {
 }
 
 export interface AnchorMethods {
-  dispatchEvent(type: ValueOf<VxeAnchorEmits>, params: any, evnt: Event): void
+  dispatchEvent(type: ValueOf<VxeAnchorEmits>, params: Record<string, any>, evnt: Event | null): void
 }
 export interface VxeAnchorMethods extends AnchorMethods { }
 
@@ -65,7 +65,7 @@ export type VxeAnchorEmits = [
 ]
 
 export namespace VxeAnchorDefines {
-  export interface AnchorEventParams extends VxeComponentEvent {
+  export interface AnchorEventParams extends VxeComponentEventParams {
     $anchor: VxeAnchorConstructor
   }
 }

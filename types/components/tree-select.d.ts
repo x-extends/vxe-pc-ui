@@ -1,5 +1,5 @@
 import { RenderFunction, SetupContext, Ref, ComponentPublicInstance, DefineComponent } from 'vue'
-import { defineVxeComponent, VxeComponentBase, VxeComponentEvent } from '../tool'
+import { defineVxeComponent, VxeComponentBaseOptions, VxeComponentEventParams } from '@vxe-ui/core'
 
 /* eslint-disable no-use-before-define,@typescript-eslint/ban-types */
 
@@ -8,7 +8,7 @@ export type VxeTreeSelectComponent = DefineComponent<VxeTreeSelectProps, VxeTree
 
 export type VxeTreeSelectInstance = ComponentPublicInstance<VxeTreeSelectProps, VxeTreeSelectConstructor>
 
-export interface VxeTreeSelectConstructor extends VxeComponentBase, VxeTreeSelectMethods {
+export interface VxeTreeSelectConstructor extends VxeComponentBaseOptions, VxeTreeSelectMethods {
   props: VxeTreeSelectProps
   context: SetupContext<VxeTreeSelectEmits>
   reactData: TreeSelectReactData
@@ -36,6 +36,7 @@ export interface TreeSelectReactData {
 }
 
 export interface TreeSelectMethods {
+  dispatchEvent(type: ValueOf<VxeTreeSelectEmits>, params: Record<string, any>, evnt: Event | null): void
 }
 export interface VxeTreeSelectMethods extends TreeSelectMethods { }
 
@@ -45,7 +46,7 @@ export interface VxeTreeSelectPrivateMethods extends TreeSelectPrivateMethods { 
 export type VxeTreeSelectEmits = []
 
 export namespace VxeTreeSelectDefines {
-  export interface TreeSelectEventParams extends VxeComponentEvent {
+  export interface TreeSelectEventParams extends VxeComponentEventParams {
     $treeSelect: VxeTreeSelectConstructor
   }
 }

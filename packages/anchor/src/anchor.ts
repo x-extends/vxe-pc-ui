@@ -1,9 +1,10 @@
 import { defineComponent, ref, h, reactive, PropType, VNode, provide, nextTick, onBeforeUnmount, onMounted, watch, createCommentVNode, computed } from 'vue'
 import XEUtils from 'xe-utils'
+import { createEvent } from '@vxe-ui/core'
 import { getOffsetPos } from '../../ui/src/dom'
 import VxeAnchorLinkComponent from './anchor-link'
 
-import { VxeAnchorPropTypes, AnchorReactData, AnchorPrivateRef, VxeAnchorPrivateComputed, VxeAnchorConstructor, VxeAnchorPrivateMethods, AnchorMethods, AnchorPrivateMethods } from '../../../types'
+import type { VxeAnchorPropTypes, AnchorReactData, AnchorPrivateRef, VxeAnchorPrivateComputed, VxeAnchorConstructor, VxeAnchorPrivateMethods, AnchorMethods, AnchorPrivateMethods } from '../../../types'
 
 export default defineComponent({
   name: 'VxeAnchor',
@@ -63,7 +64,7 @@ export default defineComponent({
 
     const anchorMethods: AnchorMethods = {
       dispatchEvent (type, params, evnt) {
-        emit(type, Object.assign({ $xeAnchor, $event: evnt }, params))
+        emit(type, createEvent(evnt, { $xeAnchor }, params))
       }
     }
 

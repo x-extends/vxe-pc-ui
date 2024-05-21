@@ -1,6 +1,9 @@
 import { VxeUI, setConfig, setIcon } from '@vxe-ui/core'
+import { dynamicApp } from '../dynamics'
 
 VxeUI.uiVersion = process.env.VUE_APP_VXE_UI_VERSION as string
+
+VxeUI.dynamicApp = dynamicApp
 
 setConfig({
   anchor: {},

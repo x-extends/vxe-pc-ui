@@ -1,7 +1,7 @@
 import { defineComponent, ref, h, reactive } from 'vue'
 import XEUtils from 'xe-utils'
 
-import { DateInputReactData, VxeDateInputEmits, DateInputPrivateRef, VxeDateInputPrivateComputed, VxeDateInputConstructor, VxeDateInputPrivateMethods } from '../../../types'
+import type { DateInputReactData, VxeDateInputEmits, DateInputPrivateRef, VxeDateInputPrivateComputed, VxeDateInputConstructor, VxeDateInputPrivateMethods } from '../../../types'
 
 export default defineComponent({
   name: 'VxeDateInput',

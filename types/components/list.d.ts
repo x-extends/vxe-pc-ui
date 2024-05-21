@@ -1,5 +1,5 @@
 import { RenderFunction, SetupContext, Ref, ComponentPublicInstance, DefineComponent } from 'vue'
-import { defineVxeComponent, VxeComponentBase, VxeComponentEvent, VxeComponentSize } from '../tool'
+import { defineVxeComponent, VxeComponentBaseOptions, VxeComponentEventParams, VxeComponentSizeType } from '@vxe-ui/core'
 
 /* eslint-disable no-use-before-define,@typescript-eslint/ban-types */
 
@@ -8,7 +8,7 @@ export type VxeListComponent = DefineComponent<VxeListProps, VxeListEmits>
 
 export type VxeListInstance = ComponentPublicInstance<VxeListProps, VxeListConstructor>
 
-export interface VxeListConstructor extends VxeComponentBase, VxeListMethods {
+export interface VxeListConstructor extends VxeComponentBaseOptions, VxeListMethods {
   props: VxeListProps
   context: SetupContext<VxeListEmits>
   reactData: ListReactData
@@ -24,7 +24,7 @@ export interface ListPrivateRef {
 export interface VxeListPrivateRef extends ListPrivateRef { }
 
 export namespace VxeListPropTypes {
-  export type Size = VxeComponentSize
+  export type Size = VxeComponentSizeType
   export type Data = any[]
   export type Height = number | string
   export type MaxHeight = number | string
@@ -90,7 +90,7 @@ export interface ListInternalData {
 }
 
 export interface ListMethods {
-  dispatchEvent(type: ValueOf<VxeListEmits>, params: any, evnt: Event): void
+  dispatchEvent(type: ValueOf<VxeListEmits>, params: Record<string, any>, evnt: Event | null): void
   /**
    * 加载数据
    * @param data 列表数据
@@ -135,7 +135,7 @@ export type VxeListEmits = [
 ]
 
 export namespace VxeListDefines {
-  export interface ListEventParams extends VxeComponentEvent {
+  export interface ListEventParams extends VxeComponentEventParams {
     $list: VxeListConstructor
   }
 

@@ -1,5 +1,5 @@
 import { RenderFunction, SetupContext, Ref, ComponentPublicInstance, DefineComponent } from 'vue'
-import { defineVxeComponent, VxeComponentBase, VxeComponentEvent, VxeComponentSize, ValueOf } from '../tool'
+import { defineVxeComponent, VxeComponentBaseOptions, VxeComponentEventParams, VxeComponentSizeType, ValueOf } from '@vxe-ui/core'
 
 /* eslint-disable no-use-before-define,@typescript-eslint/ban-types */
 
@@ -8,7 +8,7 @@ export type VxeRadioGroupComponent = DefineComponent<VxeRadioGroupProps, VxeRadi
 
 export type VxeRadioGroupInstance = ComponentPublicInstance<VxeRadioGroupProps, VxeRadioGroupConstructor>
 
-export interface VxeRadioGroupConstructor extends VxeComponentBase, VxeRadioGroupMethods {
+export interface VxeRadioGroupConstructor extends VxeComponentBaseOptions, VxeRadioGroupMethods {
   name: string
   props: VxeRadioGroupProps
   context: SetupContext<VxeRadioGroupEmits>
@@ -24,7 +24,7 @@ export interface RadioGroupPrivateRef {
 export interface VxeRadioGroupPrivateRef extends RadioGroupPrivateRef { }
 
 export namespace VxeRadioGroupPropTypes {
-  export type Size = VxeComponentSize
+  export type Size = VxeComponentSizeType
   export type Type = 'button' | 'default' | '' | null
   export type Options = {
     value?: VxeRadioPropTypes.Label
@@ -63,7 +63,7 @@ export interface RadioGroupReactData {
 }
 
 export interface RadioGroupMethods {
-  dispatchEvent(type: ValueOf<VxeRadioGroupEmits>, params: any, evnt?: Event): void
+  dispatchEvent(type: ValueOf<VxeRadioGroupEmits>, params: Record<string, any>, evnt: Event | null): void
 }
 export interface VxeRadioGroupMethods extends RadioGroupMethods { }
 
@@ -78,7 +78,7 @@ export type VxeRadioGroupEmits = [
 ]
 
 export namespace VxeRadioGroupDefines {
-  interface RadioGroupEventParams extends VxeComponentEvent {
+  interface RadioGroupEventParams extends VxeComponentEventParams {
     $radioGroup: VxeRadioGroupConstructor
   }
 

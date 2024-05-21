@@ -2,7 +2,7 @@ import { defineComponent, ref, h, computed, reactive, PropType, inject, createCo
 import XEUtils from 'xe-utils'
 import { assembleAnchorLink, destroyAnchorLink } from './util'
 
-import { VxeAnchorLinkDefines, VxeAnchorLinkPropTypes, AnchorLinkReactData, AnchorLinkPrivateRef, VxeAnchorLinkPrivateComputed, VxeAnchorLinkConstructor, VxeAnchorLinkPrivateMethods, VxeAnchorConstructor, VxeAnchorPrivateMethods } from '../../../types'
+import type { VxeAnchorLinkDefines, VxeAnchorLinkPropTypes, AnchorLinkReactData, AnchorLinkPrivateRef, VxeAnchorLinkPrivateComputed, VxeAnchorLinkConstructor, VxeAnchorLinkPrivateMethods, VxeAnchorConstructor, VxeAnchorPrivateMethods } from '../../../types'
 
 export default defineComponent({
   name: 'VxeAnchorLink',

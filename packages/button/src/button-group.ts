@@ -1,10 +1,10 @@
 import { defineComponent, h, provide, PropType } from 'vue'
-import { getConfig } from '@vxe-ui/core'
+import { getConfig, createEvent } from '@vxe-ui/core'
 import XEUtils from 'xe-utils'
 import { useSize } from '../../hooks/size'
 import VxeButtonComponent from '../../button/src/button'
 
-import { VxeButtonGroupPropTypes, VxeButtonGroupEmits, VxeButtonGroupConstructor, VxeButtonGroupPrivateMethods, ButtonGroupMethods, ButtonPrivateComputed, ButtonGroupPrivateMethods } from '../../../types'
+import type { VxeButtonGroupPropTypes, VxeButtonGroupEmits, VxeButtonGroupConstructor, VxeButtonGroupPrivateMethods, ButtonGroupMethods, ButtonPrivateComputed, ButtonGroupPrivateMethods } from '../../../types'
 
 export default defineComponent({
   name: 'VxeButtonGroup',
@@ -40,7 +40,7 @@ export default defineComponent({
 
     const buttonGroupMethods: ButtonGroupMethods = {
       dispatchEvent (type, params, evnt) {
-        emit(type, Object.assign({ $buttonGroup: $xeButtonGroup, $event: evnt }, params))
+        emit(type, createEvent(evnt, { $buttonGroup: $xeButtonGroup }, params))
       }
     }
 

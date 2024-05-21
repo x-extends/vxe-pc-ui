@@ -1,7 +1,7 @@
 import { defineComponent, ref, h, reactive } from 'vue'
 import XEUtils from 'xe-utils'
 
-import { TreeReactData, VxeTreeEmits, TreePrivateRef, VxeTreePrivateComputed, VxeTreeConstructor, VxeTreePrivateMethods } from '../../../types'
+import type { TreeReactData, VxeTreeEmits, TreePrivateRef, VxeTreePrivateComputed, VxeTreeConstructor, VxeTreePrivateMethods } from '../../../types'
 
 export default defineComponent({
   name: 'VxeTree',

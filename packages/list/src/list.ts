@@ -1,11 +1,11 @@
 import { defineComponent, h, PropType, ref, Ref, computed, onUnmounted, watch, reactive, nextTick, onActivated } from 'vue'
 import XEUtils from 'xe-utils'
-import { getConfig, globalEvents, globalResize } from '@vxe-ui/core'
+import { getConfig, globalEvents, globalResize, createEvent } from '@vxe-ui/core'
 import { useSize } from '../../hooks/size'
 import { browse } from '../../ui/src/dom'
 import VxeLoadingComponent from '../../loading/src/loading'
 
-import { VxeListConstructor, VxeListPropTypes, VxeListEmits, ListReactData, ListInternalData, ListMethods, ListPrivateRef, VxeListMethods } from '../../../types'
+import type { VxeListConstructor, VxeListPropTypes, VxeListEmits, ListReactData, ListInternalData, ListMethods, ListPrivateRef, VxeListMethods } from '../../../types'
 
 export default defineComponent({
   name: 'VxeList',
@@ -236,7 +236,7 @@ export default defineComponent({
 
     listMethods = {
       dispatchEvent (type, params, evnt) {
-        emit(type, Object.assign({ $list: $xeList, $event: evnt }, params))
+        emit(type, createEvent(evnt, { $list: $xeList }, params))
       },
       /**
        * 加载数据

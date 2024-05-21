@@ -21,7 +21,7 @@
   "module": "es/index.esm.js",
   "typings": "types/index.d.ts",
   "dependencies": {
-    "@vxe-ui/core": "^0.1.0"
+    "@vxe-ui/core": "^0.1.1"
   },
   "devDependencies": {
     "@types/resize-observer-browser": "^0.1.11",

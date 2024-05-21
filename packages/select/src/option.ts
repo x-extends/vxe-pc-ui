@@ -1,7 +1,7 @@
 import { defineComponent, h, onUnmounted, inject, ref, Ref, onMounted, PropType } from 'vue'
 import { XEOptionProvide, createOption, watchOption, destroyOption, assemOption } from './util'
 
-import { VxeSelectConstructor, VxeOptionPropTypes } from '../../../types'
+import type { VxeSelectConstructor, VxeOptionPropTypes } from '../../../types'
 
 export default defineComponent({
   name: 'VxeOption',

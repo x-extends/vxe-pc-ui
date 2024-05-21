@@ -1,5 +1,5 @@
 import { RenderFunction, SetupContext, Ref, ComponentPublicInstance, DefineComponent } from 'vue'
-import { defineVxeComponent, VxeComponentBase, VxeComponentEvent } from '../tool'
+import { defineVxeComponent, VxeComponentBaseOptions, VxeComponentEventParams } from '@vxe-ui/core'
 
 /* eslint-disable no-use-before-define,@typescript-eslint/ban-types */
 
@@ -8,7 +8,7 @@ export type VxeAnchorLinkComponent = DefineComponent<VxeAnchorLinkProps, VxeAnch
 
 export type VxeAnchorLinkInstance = ComponentPublicInstance<VxeAnchorLinkProps, VxeAnchorLinkConstructor>
 
-export interface VxeAnchorLinkConstructor extends VxeComponentBase, VxeAnchorLinkMethods {
+export interface VxeAnchorLinkConstructor extends VxeComponentBaseOptions, VxeAnchorLinkMethods {
   props: VxeAnchorLinkProps
   context: SetupContext<VxeAnchorLinkEmits>
   reactData: AnchorLinkReactData
@@ -60,7 +60,7 @@ export namespace VxeAnchorLinkDefines {
     children: StaticLinkObj[]
   }
 
-  export interface AnchorLinkEventParams extends VxeComponentEvent {
+  export interface AnchorLinkEventParams extends VxeComponentEventParams {
     $anchorLink: VxeAnchorLinkConstructor
   }
 }

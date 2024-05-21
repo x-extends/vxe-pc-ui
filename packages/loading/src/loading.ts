@@ -2,7 +2,7 @@ import { defineComponent, h, computed, PropType } from 'vue'
 import { getConfig, getIcon, getI18n } from '@vxe-ui/core'
 import XEUtils from 'xe-utils'
 
-import { VxeLoadingPropTypes } from '../../../types'
+import type { VxeLoadingPropTypes } from '../../../types'
 
 export default defineComponent({
   name: 'VxeLoading',

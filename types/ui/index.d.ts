@@ -1,20 +1,19 @@
+import { App } from 'vue'
 import { ModalController } from '../components/modal'
 import { DrawerController } from '../components/drawer'
-import { VxeUIGlobalConfig } from './global-config'
-import { VxeUIGlobalIcon } from './global-icon'
 
+export const uiVersion: string
 export const modal: ModalController
 export const drawer: DrawerController
+export const dynamicApp: App<Element>
 
 declare module '@vxe-ui/core' {
   export interface VxeUIExport {
     uiVersion: string
     modal: ModalController
     drawer: DrawerController
+    dynamicApp: App<Element>
   }
-  export interface VxeGlobalConfig extends VxeUIGlobalConfig {}
-
-  export interface VxeGlobalIcon extends VxeUIGlobalIcon {}
 }
 
 export * from './global-config'

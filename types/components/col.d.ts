@@ -1,5 +1,5 @@
 import { RenderFunction, SetupContext, Ref, DefineComponent } from 'vue'
-import { defineVxeComponent, VxeComponentBase, VxeComponentEvent } from '../tool'
+import { defineVxeComponent, VxeComponentBaseOptions, VxeComponentEventParams } from '@vxe-ui/core'
 
 /* eslint-disable no-use-before-define,@typescript-eslint/ban-types */
 
@@ -8,7 +8,7 @@ export type VxeColComponent = DefineComponent<VxeColProps, VxeColEmits>
 
 export type VxeColInstance = ComponentPublicInstance<VxeColProps, VxeColConstructor>
 
-export interface VxeColConstructor extends VxeComponentBase, VxeColMethods {
+export interface VxeColConstructor extends VxeComponentBaseOptions, VxeColMethods {
   props: VxeColProps
   context: SetupContext<VxeColEmits>
   reactData: ColReactData
@@ -44,7 +44,7 @@ export interface VxeColPrivateMethods extends ColPrivateMethods { }
 export type VxeColEmits = []
 
 export namespace VxeColDefines {
-  export interface ColEventParams extends VxeComponentEvent {
+  export interface ColEventParams extends VxeComponentEventParams {
     $col: VxeColConstructor
   }
 }

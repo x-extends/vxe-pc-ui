@@ -1,5 +1,5 @@
 import { RenderFunction, SetupContext, Ref, ComponentPublicInstance, DefineComponent } from 'vue'
-import { defineVxeComponent, VxeComponentBase, VxeComponentEvent } from '../tool'
+import { defineVxeComponent, VxeComponentBaseOptions, VxeComponentEventParams } from '@vxe-ui/core'
 
 /* eslint-disable no-use-before-define,@typescript-eslint/ban-types */
 
@@ -8,7 +8,7 @@ export type VxeCardComponent = DefineComponent<VxeCardProps, VxeCardEmits>
 
 export type VxeCardInstance = ComponentPublicInstance<VxeCardProps, VxeCardConstructor>
 
-export interface VxeCardConstructor extends VxeComponentBase, VxeCardMethods {
+export interface VxeCardConstructor extends VxeComponentBaseOptions, VxeCardMethods {
   props: VxeCardProps
   context: SetupContext<VxeCardEmits>
   reactData: CardReactData
@@ -45,7 +45,7 @@ export interface VxeCardPrivateMethods extends CardPrivateMethods { }
 export type VxeCardEmits = []
 
 export namespace VxeCardDefines {
-  export interface CardEventParams extends VxeComponentEvent {
+  export interface CardEventParams extends VxeComponentEventParams {
     $card: VxeCardConstructor
   }
 }

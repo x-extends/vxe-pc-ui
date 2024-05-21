@@ -1,5 +1,5 @@
 import { RenderFunction, SetupContext, Ref, ComponentPublicInstance, DefineComponent } from 'vue'
-import { defineVxeComponent, VxeComponentBase, VxeComponentEvent, VxeComponentSlot } from '../tool'
+import { defineVxeComponent, VxeComponentBaseOptions, VxeComponentEventParams, VxeComponentSlotType } from '@vxe-ui/core'
 
 /* eslint-disable no-use-before-define,@typescript-eslint/ban-types */
 
@@ -8,7 +8,7 @@ export type VxeTabPaneComponent = DefineComponent<VxeTabPaneProps, VxeTabPaneEmi
 
 export type VxeTabPaneInstance = ComponentPublicInstance<VxeTabPaneProps, VxeTabPaneConstructor>
 
-export interface VxeTabPaneConstructor extends VxeComponentBase, VxeTabPaneMethods {
+export interface VxeTabPaneConstructor extends VxeComponentBaseOptions, VxeTabPaneMethods {
   props: VxeTabPaneProps
   context: SetupContext<VxeTabPaneEmits>
   reactData: TabPaneReactData
@@ -32,8 +32,8 @@ export type VxeTabPaneProps = {
   name?: VxeTabPanePropTypes.Name
 
   slots?: {
-    tab?: string | ((params: { [key: string]: any }) => VxeComponentSlot | VxeComponentSlot[])
-    default?: string | ((params: { [key: string]: any }) => VxeComponentSlot | VxeComponentSlot[])
+    tab?: string | ((params: { [key: string]: any }) => VxeComponentSlotType | VxeComponentSlotType[])
+    default?: string | ((params: { [key: string]: any }) => VxeComponentSlotType | VxeComponentSlotType[])
   }
 }
 
@@ -54,7 +54,7 @@ export interface VxeTabPanePrivateMethods extends TabPanePrivateMethods { }
 export type VxeTabPaneEmits = []
 
 export namespace VxeTabPaneDefines {
-  export interface TabPaneEventParams extends VxeComponentEvent {
+  export interface TabPaneEventParams extends VxeComponentEventParams {
     $tabPane: VxeTabPaneConstructor
   }
 

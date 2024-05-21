@@ -1,7 +1,7 @@
 import { defineComponent, ref, h, reactive } from 'vue'
 import XEUtils from 'xe-utils'
 
-import { CollapseReactData, VxeCollapseEmits, CollapsePrivateRef, VxeCollapsePrivateComputed, VxeCollapseConstructor, VxeCollapsePrivateMethods } from '../../../types'
+import type { CollapseReactData, VxeCollapseEmits, CollapsePrivateRef, VxeCollapsePrivateComputed, VxeCollapseConstructor, VxeCollapsePrivateMethods } from '../../../types'
 
 export default defineComponent({
   name: 'VxeCollapse',

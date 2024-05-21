@@ -6,7 +6,7 @@ import { getSlotVNs } from '../../ui/src/vn'
 import { renderTitle } from './render'
 import { isActivetem } from './util'
 
-import { VxeFormConstructor, VxeFormDefines, VxeFormPrivateMethods, VxeComponentSlot } from '../../../types'
+import type { VxeFormConstructor, VxeFormDefines, VxeFormPrivateMethods, VxeComponentSlotType } from '../../../types'
 
 const VxeFormConfigItem = defineComponent({
   name: 'VxeFormConfigItem',
@@ -73,7 +73,7 @@ const VxeFormConfigItem = defineComponent({
           }, childVNs)
           : createCommentVNode()
       }
-      let contentVNs: VxeComponentSlot[] = []
+      let contentVNs: VxeComponentSlotType[] = []
       if (defaultSlot) {
         contentVNs = $xeForm.callSlot(defaultSlot, params)
       } else if (compConf && compConf.renderItemContent) {

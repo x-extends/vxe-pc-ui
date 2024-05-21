@@ -1,12 +1,12 @@
 import { RenderFunction, SetupContext, Ref, DefineComponent } from 'vue'
-import { defineVxeComponent, VxeComponentBase, VxeComponentEvent } from '../tool'
+import { defineVxeComponent, VxeComponentBaseOptions, VxeComponentEventParams } from '@vxe-ui/core'
 
 /* eslint-disable no-use-before-define,@typescript-eslint/ban-types */
 
 export declare const VxeFormGather: defineVxeComponent<VxeFormGatherProps, VxeFormGatherEventProps>
 export type VxeFormGatherComponent = DefineComponent<VxeFormGatherProps, VxeFormGatherEmits>
 
-export interface VxeFormGatherConstructor extends VxeComponentBase, VxeFormGatherMethods {
+export interface VxeFormGatherConstructor extends VxeComponentBaseOptions, VxeFormGatherMethods {
   props: VxeFormGatherProps
   context: SetupContext<VxeFormGatherEmits>
   reactData: FormGatherReactData
@@ -51,7 +51,7 @@ export interface VxeFormGatherPrivateMethods extends FormGatherPrivateMethods { 
 export type VxeFormGatherEmits = []
 
 export namespace VxeFormGatherDefines {
-  export interface FormGatherEventParams extends VxeComponentEvent {
+  export interface FormGatherEventParams extends VxeComponentEventParams {
     $formGather: VxeFormGatherConstructor
   }
 }

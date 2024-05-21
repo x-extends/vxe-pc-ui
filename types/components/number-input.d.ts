@@ -1,5 +1,5 @@
 import { RenderFunction, SetupContext, Ref, ComponentPublicInstance, DefineComponent } from 'vue'
-import { defineVxeComponent, VxeComponentBase, VxeComponentEvent } from '../tool'
+import { defineVxeComponent, VxeComponentBaseOptions, VxeComponentEventParams } from '@vxe-ui/core'
 
 /* eslint-disable no-use-before-define,@typescript-eslint/ban-types */
 
@@ -8,7 +8,7 @@ export type VxeNumberInputComponent = DefineComponent<VxeNumberInputProps, VxeNu
 
 export type VxeNumberInputInstance = ComponentPublicInstance<VxeNumberInputProps, VxeNumberInputConstructor>
 
-export interface VxeNumberInputConstructor extends VxeComponentBase, VxeNumberInputMethods {
+export interface VxeNumberInputConstructor extends VxeComponentBaseOptions, VxeNumberInputMethods {
   props: VxeNumberInputProps
   context: SetupContext<VxeNumberInputEmits>
   reactData: NumberInputReactData
@@ -45,7 +45,7 @@ export interface VxeNumberInputPrivateMethods extends NumberInputPrivateMethods 
 export type VxeNumberInputEmits = []
 
 export namespace VxeNumberInputDefines {
-  export interface NumberInputEventParams extends VxeComponentEvent {
+  export interface NumberInputEventParams extends VxeComponentEventParams {
     $numberInput: VxeNumberInputConstructor
   }
 }

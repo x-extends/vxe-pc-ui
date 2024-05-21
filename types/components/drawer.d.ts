@@ -1,5 +1,5 @@
 import { RenderFunction, SetupContext, Ref, ComponentPublicInstance, DefineComponent } from 'vue'
-import { defineVxeComponent, VxeComponentBase, VxeComponentEvent } from '../tool'
+import { defineVxeComponent, VxeComponentBaseOptions, VxeComponentEventParams } from '@vxe-ui/core'
 
 /* eslint-disable no-use-before-define,@typescript-eslint/ban-types */
 
@@ -8,7 +8,7 @@ export type VxeDrawerComponent = DefineComponent<VxeDrawerProps, VxeDrawerEmits>
 
 export type VxeDrawerInstance = ComponentPublicInstance<VxeDrawerProps, VxeDrawerConstructor>
 
-export interface VxeDrawerConstructor extends VxeComponentBase, VxeDrawerMethods {
+export interface VxeDrawerConstructor extends VxeComponentBaseOptions, VxeDrawerMethods {
   props: VxeDrawerProps
   context: SetupContext<VxeDrawerEmits>
   reactData: DrawerReactData
@@ -33,7 +33,7 @@ export type DrawerPosition = 'top' | 'bottom' | 'left' | 'right'
 export type DrawerEventTypes = 'model' | 'mask' | 'close' | 'confirm' | 'cancel' | 'exit' | 'exist'
 
 export namespace VxeDrawerPropTypes {
-  export type Size = VxeComponentSize
+  export type Size = VxeComponentSizeType
   export type ModelValue = boolean
   export type ID = string | null
   export type Loading = boolean
@@ -107,7 +107,7 @@ export interface DrawerReactData {
 }
 
 export interface DrawerMethods {
-  dispatchEvent(type: ValueOf<VxeDrawerEmits>, params: any, evnt?: Event): void
+  dispatchEvent(type: ValueOf<VxeDrawerEmits>, params: Record<string, any>, evnt: Event | null): void
   /**
    * 手动打开窗口
    */
@@ -137,7 +137,7 @@ export type VxeDrawerEmits = [
 ]
 
 export namespace VxeDrawerDefines {
-  export interface DrawerEventParams extends VxeComponentEvent {
+  export interface DrawerEventParams extends VxeComponentEventParams {
     $drawer: VxeDrawerConstructor
   }
 
@@ -177,7 +177,7 @@ export namespace VxeDrawerEvents {
 }
 
 export namespace VxeDrawerSlotTypes {
-  interface DrawerEventParams extends VxeComponentEvent {
+  interface DrawerEventParams extends VxeComponentEventParams {
     $drawer: VxeDrawerConstructor & VxeDrawerMethods
   }
 
@@ -222,23 +222,23 @@ export interface VxeDrawerSlots {
   /**
    * 自定义窗口内容模板
    */
-  default?(params: VxeDrawerSlotTypes.DefaultSlotParams): VxeComponentSlot[] | VxeComponentSlot
+  default?(params: VxeDrawerSlotTypes.DefaultSlotParams): VxeComponentSlotType[] | VxeComponentSlotType
   /**
    * 自定义窗口头部的模板
    */
-  header?(params: VxeDrawerSlotTypes.HeaderSlotParams): VxeComponentSlot[] | VxeComponentSlot
+  header?(params: VxeDrawerSlotTypes.HeaderSlotParams): VxeComponentSlotType[] | VxeComponentSlotType
   /**
    * 自定义窗口标题的模板（如果使用了 header 插槽，则该插槽无效）
    */
-  title?(params: VxeDrawerSlotTypes.TitleSlotParams): VxeComponentSlot[] | VxeComponentSlot
+  title?(params: VxeDrawerSlotTypes.TitleSlotParams): VxeComponentSlotType[] | VxeComponentSlotType
   /**
    * 自定义窗口右上角的模板
    */
-  corner?(params: VxeDrawerSlotTypes.TitleSlotParams): VxeComponentSlot[] | VxeComponentSlot
+  corner?(params: VxeDrawerSlotTypes.TitleSlotParams): VxeComponentSlotType[] | VxeComponentSlotType
   /**
    * 自定义窗口底部的模板
    */
-  footer?(params: VxeDrawerSlotTypes.FooterSlotParams): VxeComponentSlot[] | VxeComponentSlot
+  footer?(params: VxeDrawerSlotTypes.FooterSlotParams): VxeComponentSlotType[] | VxeComponentSlotType
 }
 
 export const Drawer: typeof VxeDrawer

@@ -1,8 +1,8 @@
 import { renderer } from '@vxe-ui/core'
 import { getNewWidgetId } from './util'
-
-import { VxeFormPropTypes, VxeFormDesignDefines, VxeFormProps } from '../../../types'
 import XEUtils from 'xe-utils'
+
+import type { VxeFormPropTypes, VxeFormDesignDefines, VxeFormProps } from '../../../types'
 
 export class FormDesignWidgetInfo {
   id = 0

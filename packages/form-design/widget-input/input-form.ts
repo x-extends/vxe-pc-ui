@@ -6,7 +6,7 @@ import VxeSwitchComponent from '../../switch/src/switch'
 import { WidgetInputFormObjVO } from './input-data'
 import { useKebabCaseName } from '../render/hooks'
 
-import { VxeGlobalRendererHandles } from '../../../types'
+import type { VxeGlobalRendererHandles } from '../../../types'
 
 export const WidgetInputFormComponent = defineComponent({
   props: {

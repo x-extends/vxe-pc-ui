@@ -1,9 +1,10 @@
 import { defineComponent, ref, h, reactive, PropType, provide, computed, createCommentVNode, watch, nextTick, onMounted } from 'vue'
 import XEUtils from 'xe-utils'
+import { createEvent } from '@vxe-ui/core'
 import VxeTabPaneComponent from './tab-pane'
 import { getSlotVNs } from '../../ui/src/vn'
 
-import { VxeTabsPropTypes, VxeTabPaneProps, VxeTabsEmits, TabsReactData, TabsPrivateRef, VxeTabsPrivateComputed, VxeTabsConstructor, VxeTabsPrivateMethods, VxeTabPaneDefines } from '../../../types'
+import type { VxeTabsPropTypes, VxeTabPaneProps, VxeTabsEmits, TabsReactData, TabsPrivateRef, VxeTabsPrivateComputed, VxeTabsConstructor, VxeTabsPrivateMethods, VxeTabPaneDefines, TabsMethods, TabsPrivateMethods } from '../../../types'
 
 export default defineComponent({
   name: 'VxeTabs',
@@ -125,6 +126,17 @@ export default defineComponent({
         emit('tab-load', { name, $event: evnt })
       }
     }
+
+    const tabsMethods: TabsMethods = {
+      dispatchEvent (type, params, evnt) {
+        emit(type, createEvent(evnt, { $tabs: $xeTabs }, params))
+      }
+    }
+
+    const tabsPrivateMethods: TabsPrivateMethods = {
+    }
+
+    Object.assign($xeTabs, tabsMethods, tabsPrivateMethods)
 
     const renderTabHeader = (list: VxeTabsPropTypes.Options | VxeTabPaneDefines.TabConfig[]) => {
       const { type } = props

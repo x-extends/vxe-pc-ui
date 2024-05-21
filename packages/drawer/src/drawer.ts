@@ -2,12 +2,12 @@ import { defineComponent, h, Teleport, ref, Ref, reactive, nextTick, watch, Prop
 import XEUtils from 'xe-utils'
 import { useSize } from '../../hooks/size'
 import { getLastZIndex, nextZIndex, getFuncText } from '../../ui/src/utils'
-import { getIcon, getConfig, getI18n, globalEvents, GLOBAL_EVENT_KEYS } from '@vxe-ui/core'
+import { getIcon, getConfig, getI18n, globalEvents, GLOBAL_EVENT_KEYS, createEvent } from '@vxe-ui/core'
 import { getSlotVNs } from '../../ui/src/vn'
 import VxeButtonComponent from '../../button/src/button'
 import VxeLoadingComponent from '../../loading/index'
 
-import { VxeDrawerPropTypes, DrawerReactData, VxeDrawerEmits, DrawerPrivateRef, DrawerMethods, DrawerPrivateMethods, VxeDrawerPrivateComputed, VxeDrawerConstructor, VxeDrawerPrivateMethods, VxeButtonInstance, DrawerEventTypes } from '../../../types'
+import type { VxeDrawerPropTypes, DrawerReactData, VxeDrawerEmits, DrawerPrivateRef, DrawerMethods, DrawerPrivateMethods, VxeDrawerPrivateComputed, VxeDrawerConstructor, VxeDrawerPrivateMethods, VxeButtonInstance, DrawerEventTypes } from '../../../types'
 
 export const allActiveDrawers: VxeDrawerConstructor[] = []
 
@@ -126,11 +126,11 @@ export default defineComponent({
           if (!XEUtils.isError(rest)) {
             reactData.contentVisible = false
             XEUtils.remove(allActiveDrawers, item => item === $xeDrawer)
-            drawerMethods.dispatchEvent('before-hide', params)
+            drawerMethods.dispatchEvent('before-hide', params, null)
             setTimeout(() => {
               reactData.visible = false
               emit('update:modelValue', false)
-              drawerMethods.dispatchEvent('hide', params)
+              drawerMethods.dispatchEvent('hide', params, null)
             }, 200)
           }
         }).catch(e => e)
@@ -182,7 +182,7 @@ export default defineComponent({
             const type = ''
             const params = { type }
             emit('update:modelValue', true)
-            drawerMethods.dispatchEvent('show', params)
+            drawerMethods.dispatchEvent('show', params, null)
           })
         }, 10)
         nextTick(() => {
@@ -202,7 +202,7 @@ export default defineComponent({
 
     const drawerMethods: DrawerMethods = {
       dispatchEvent (type, params, evnt) {
-        emit(type, Object.assign({ $drawer: $xeDrawer, $event: evnt }, params))
+        emit(type, createEvent(evnt, { $drawer: $xeDrawer }, params))
       },
       open: openDrawer,
       close () {

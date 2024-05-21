@@ -1,7 +1,7 @@
 import { defineComponent, ref, h, reactive, PropType } from 'vue'
 import XEUtils from 'xe-utils'
 
-import { VxeLayoutFooterPropTypes, LayoutFooterReactData, LayoutFooterPrivateRef, VxeLayoutFooterPrivateComputed, VxeLayoutFooterConstructor, VxeLayoutFooterPrivateMethods } from '../../../types'
+import type { VxeLayoutFooterPropTypes, LayoutFooterReactData, LayoutFooterPrivateRef, VxeLayoutFooterPrivateComputed, VxeLayoutFooterConstructor, VxeLayoutFooterPrivateMethods } from '../../../types'
 
 export default defineComponent({
   name: 'VxeLayoutFooter',

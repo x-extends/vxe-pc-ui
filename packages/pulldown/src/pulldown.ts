@@ -1,11 +1,11 @@
 import { defineComponent, h, Teleport, ref, Ref, onUnmounted, reactive, nextTick, PropType, watch, createCommentVNode } from 'vue'
 import XEUtils from 'xe-utils'
-import { getConfig, globalEvents } from '@vxe-ui/core'
+import { getConfig, globalEvents, createEvent } from '@vxe-ui/core'
 import { useSize } from '../../hooks/size'
 import { getAbsolutePos, getEventTargetNode } from '../../ui/src/dom'
 import { getLastZIndex, nextZIndex } from '../../ui/src/utils'
 
-import { VxeComponentStyle, VxePulldownConstructor, VxePulldownPropTypes, VxePulldownEmits, PulldownReactData, PulldownMethods, PulldownPrivateRef, VxePulldownMethods } from '../../../types'
+import type { VxeComponentStyleType, VxePulldownConstructor, VxePulldownPropTypes, VxePulldownEmits, PulldownReactData, PulldownMethods, PulldownPrivateRef, VxePulldownMethods } from '../../../types'
 
 export default defineComponent({
   name: 'VxePulldown',
@@ -84,7 +84,7 @@ export default defineComponent({
             const panelHeight = panelElem.offsetHeight
             const panelWidth = panelElem.offsetWidth
             const marginSize = 5
-            const panelStyle: VxeComponentStyle = {
+            const panelStyle: VxeComponentStyleType = {
               zIndex: panelIndex
             }
             const { boundingTop, boundingLeft, visibleHeight, visibleWidth } = getAbsolutePos(targetElem)
@@ -246,7 +246,7 @@ export default defineComponent({
 
     pulldownMethods = {
       dispatchEvent (type, params, evnt) {
-        emit(type, Object.assign({ $pulldown: $xepulldown, $event: evnt }, params))
+        emit(type, createEvent(evnt, { $pulldown: $xepulldown }, params))
       },
       isPanelVisible,
       togglePanel,

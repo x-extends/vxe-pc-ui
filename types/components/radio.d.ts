@@ -1,5 +1,5 @@
 import { RenderFunction, SetupContext, Ref, ComponentPublicInstance, DefineComponent } from 'vue'
-import { defineVxeComponent, VxeComponentBase, VxeComponentEvent, VxeComponentSize, ValueOf } from '../tool'
+import { defineVxeComponent, VxeComponentBaseOptions, VxeComponentEventParams, VxeComponentSizeType, ValueOf } from '@vxe-ui/core'
 
 /* eslint-disable no-use-before-define,@typescript-eslint/ban-types */
 
@@ -8,7 +8,7 @@ export type VxeRadioComponent = DefineComponent<VxeRadioProps, VxeRadioEmits>
 
 export type VxeRadioInstance = ComponentPublicInstance<VxeRadioProps, VxeRadioConstructor>
 
-export interface VxeRadioConstructor extends VxeComponentBase, VxeRadioMethods {
+export interface VxeRadioConstructor extends VxeComponentBaseOptions, VxeRadioMethods {
   props: VxeRadioProps
   context: SetupContext<VxeRadioEmits>
   reactData: RadioReactData
@@ -23,7 +23,7 @@ export interface RadioPrivateRef {
 export interface VxeRadioPrivateRef extends RadioPrivateRef { }
 
 export namespace VxeRadioPropTypes {
-  export type Size = VxeComponentSize
+  export type Size = VxeComponentSizeType
   export type Strict = boolean
   export type ModelValue = any
   export type Label = any
@@ -73,7 +73,7 @@ export interface RadioReactData {
 }
 
 export interface RadioMethods {
-  dispatchEvent(type: ValueOf<VxeRadioEmits>, params: any, evnt: Event): void
+  dispatchEvent(type: ValueOf<VxeRadioEmits>, params: Record<string, any>, evnt: Event | null): void
 }
 export interface VxeRadioMethods extends RadioMethods { }
 
@@ -86,7 +86,7 @@ export type VxeRadioEmits = [
 ]
 
 export namespace VxeRadioDefines {
-  interface RadioEventParams extends VxeComponentEvent {
+  interface RadioEventParams extends VxeComponentEventParams {
     $radio: VxeRadioConstructor
   }
 

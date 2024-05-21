@@ -1,10 +1,10 @@
 import { defineComponent, h, PropType, computed, inject, ref, Ref, reactive, nextTick, watch } from 'vue'
 import XEUtils from 'xe-utils'
-import { getIcon, getConfig, getI18n, globalEvents, GLOBAL_EVENT_KEYS, log } from '@vxe-ui/core'
+import { getIcon, getConfig, getI18n, globalEvents, GLOBAL_EVENT_KEYS, log, createEvent } from '@vxe-ui/core'
 import VxeSelectComponent from '../../select'
 import { useSize } from '../../hooks/size'
 
-import { VxePagerPropTypes, VxePagerConstructor, VxePagerEmits, VxeSelectEvents, PagerPrivateRef, PagerMethods, PagerPrivateMethods, VxePagerPrivateMethods, PagerReactData } from '../../../types'
+import type { VxePagerPropTypes, VxePagerConstructor, VxePagerEmits, VxeSelectEvents, PagerPrivateRef, PagerMethods, PagerPrivateMethods, VxePagerPrivateMethods, PagerReactData } from '../../../types'
 
 export default defineComponent({
   name: 'VxePager',
@@ -191,7 +191,7 @@ export default defineComponent({
         emit('update:currentPage', pageCount)
       }
       emit('update:pageSize', pageSize)
-      pagerMethods.dispatchEvent('page-change', { type: 'size', pageSize, currentPage })
+      pagerMethods.dispatchEvent('page-change', { type: 'size', pageSize, currentPage }, params.$event)
     }
 
     const jumpInputEvent = (evnt: KeyboardEvent) => {
@@ -452,7 +452,7 @@ export default defineComponent({
 
     pagerMethods = {
       dispatchEvent (type, params, evnt) {
-        emit(type, Object.assign({ $pager: $xepager, $event: evnt }, params))
+        emit(type, createEvent(evnt, { $pager: $xepager }, params))
       },
       homePage () {
         handleHomePage()

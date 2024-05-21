@@ -1,5 +1,5 @@
 import { RenderFunction, SetupContext, Ref, ComponentPublicInstance, DefineComponent } from 'vue'
-import { defineVxeComponent, VxeComponentBase, VxeComponentEvent } from '../tool'
+import { defineVxeComponent, VxeComponentBaseOptions, VxeComponentEventParams } from '@vxe-ui/core'
 
 /* eslint-disable no-use-before-define,@typescript-eslint/ban-types */
 
@@ -8,7 +8,7 @@ export type VxeDateInputComponent = DefineComponent<VxeDateInputProps, VxeDateIn
 
 export type VxeDateInputInstance = ComponentPublicInstance<VxeDateInputProps, VxeDateInputConstructor>
 
-export interface VxeDateInputConstructor extends VxeComponentBase, VxeDateInputMethods {
+export interface VxeDateInputConstructor extends VxeComponentBaseOptions, VxeDateInputMethods {
   props: VxeDateInputProps
   context: SetupContext<VxeDateInputEmits>
   reactData: DateInputReactData
@@ -36,6 +36,7 @@ export interface DateInputReactData {
 }
 
 export interface DateInputMethods {
+  dispatchEvent(type: ValueOf<VxeDateInputEmits>, params: Record<string, any>, evnt: Event | null): void
 }
 export interface VxeDateInputMethods extends DateInputMethods { }
 
@@ -45,7 +46,7 @@ export interface VxeDateInputPrivateMethods extends DateInputPrivateMethods { }
 export type VxeDateInputEmits = []
 
 export namespace VxeDateInputDefines {
-  export interface DateInputEventParams extends VxeComponentEvent {
+  export interface DateInputEventParams extends VxeComponentEventParams {
     $dateInput: VxeDateInputConstructor
   }
 }

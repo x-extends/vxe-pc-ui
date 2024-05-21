@@ -2,7 +2,7 @@ import { defineComponent, ref, h, reactive, provide, PropType } from 'vue'
 import { getConfig } from '@vxe-ui/core'
 import XEUtils from 'xe-utils'
 
-import { VxeBreadcrumbPropTypes, BreadcrumbReactData, BreadcrumbPrivateRef, VxeBreadcrumbPrivateComputed, VxeBreadcrumbConstructor, VxeBreadcrumbPrivateMethods } from '../../../types'
+import type { VxeBreadcrumbPropTypes, BreadcrumbReactData, BreadcrumbPrivateRef, VxeBreadcrumbPrivateComputed, VxeBreadcrumbConstructor, VxeBreadcrumbPrivateMethods } from '../../../types'
 
 export default defineComponent({
   name: 'VxeBreadcrumb',

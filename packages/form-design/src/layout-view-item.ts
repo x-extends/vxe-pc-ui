@@ -3,7 +3,7 @@ import XEUtils from 'xe-utils'
 import { getIcon } from '@vxe-ui/core'
 import VxeButtonComponent from '../../button/src/button'
 
-import { VxeFormDesignDefines, VxeFormDesignConstructor, VxeFormDesignPrivateMethods } from '../../../types'
+import type { VxeFormDesignDefines, VxeFormDesignConstructor, VxeFormDesignPrivateMethods } from '../../../types'
 
 export const ViewItemComponent = defineComponent({
   props: {

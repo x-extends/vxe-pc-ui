@@ -1,6 +1,5 @@
 import { RenderFunction, SetupContext, Ref, ComponentPublicInstance, DefineComponent } from 'vue'
-import { defineVxeComponent, VxeComponentBase, VxeComponentEvent, VxeComponentSize, VxeComponentStyle, ValueOf } from '../tool'
-import { VxeGlobalRendererHandles } from '../ui'
+import { defineVxeComponent, VxeComponentBaseOptions, VxeComponentEventParams, VxeComponentSizeType, VxeComponentStyleType, ValueOf } from '@vxe-ui/core'
 import { VxeOptgroupProps } from './optgroup'
 import { VxeOptionProps, VxeOptionPropTypes } from './option'
 
@@ -11,7 +10,7 @@ export type VxeSelectComponent = DefineComponent<VxeSelectProps, VxeSelectEmits>
 
 export type VxeSelectInstance = ComponentPublicInstance<VxeSelectProps, VxeSelectConstructor>
 
-export interface VxeSelectConstructor extends VxeComponentBase, VxeSelectMethods {
+export interface VxeSelectConstructor extends VxeComponentBaseOptions, VxeSelectMethods {
   props: VxeSelectProps
   context: SetupContext<VxeSelectEmits>
   reactData: SelectReactData
@@ -26,7 +25,7 @@ export interface SelectPrivateRef {
 export interface VxeSelectPrivateRef extends SelectPrivateRef { }
 
 export namespace VxeSelectPropTypes {
-  export type Size = VxeComponentSize
+  export type Size = VxeComponentSizeType
   export type ModelValue = any
   export type Clearable = boolean
   export type Placeholder = string
@@ -121,7 +120,7 @@ export interface SelectReactData {
     result: any
   }[]
   panelIndex: number
-  panelStyle: VxeComponentStyle
+  panelStyle: VxeComponentStyleType
   panelPlacement: any
   currentOption: any
   currentValue: any
@@ -133,7 +132,7 @@ export interface SelectReactData {
 }
 
 export interface SelectMethods {
-  dispatchEvent(type: ValueOf<VxeSelectEmits>, params: any, evnt?: Event): void
+  dispatchEvent(type: ValueOf<VxeSelectEmits>, params: Record<string, any>, evnt: Event | null): void
   /**
    * 判断下拉面板是否可视
    */
@@ -198,7 +197,7 @@ export namespace VxeSelectDefines {
     slots?: VxeOptionPropTypes.Slots
   }
 
-  interface SelectEventParams extends VxeComponentEvent {
+  interface SelectEventParams extends VxeComponentEventParams {
     $select: VxeSelectConstructor
   }
 

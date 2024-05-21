@@ -1,5 +1,5 @@
 import { RenderFunction, SetupContext, Ref, ComponentPublicInstance, DefineComponent } from 'vue'
-import { defineVxeComponent, VxeComponentBase, VxeComponentEvent, VxeComponentSize, ValueOf } from '../tool'
+import { defineVxeComponent, VxeComponentBaseOptions, VxeComponentEventParams, VxeComponentSizeType, ValueOf } from '@vxe-ui/core'
 
 /* eslint-disable no-use-before-define,@typescript-eslint/ban-types */
 
@@ -8,7 +8,7 @@ export type VxeListDesignComponent = DefineComponent<VxeListDesignProps, VxeList
 
 export type VxeListDesignInstance = ComponentPublicInstance<VxeListDesignProps, VxeListDesignConstructor>
 
-export interface VxeListDesignConstructor extends VxeComponentBase, VxeListDesignMethods {
+export interface VxeListDesignConstructor extends VxeComponentBaseOptions, VxeListDesignMethods {
   props: VxeListDesignProps
   context: SetupContext<VxeListDesignEmits>
   reactData: ListDesignReactData
@@ -23,7 +23,7 @@ export interface ListDesignPrivateRef {
 export interface VxeListDesignPrivateRef extends ListDesignPrivateRef { }
 
 export namespace VxeListDesignPropTypes {
-  export type Size = VxeComponentSize
+  export type Size = VxeComponentSizeType
 }
 
 export type VxeListDesignProps = {
@@ -38,7 +38,7 @@ export interface ListDesignReactData {
 }
 
 export interface ListDesignMethods {
-  dispatchEvent(type: ValueOf<VxeListDesignEmits>, params: any, evnt: Event): void
+  dispatchEvent(type: ValueOf<VxeListDesignEmits>, params: Record<string, any>, evnt: Event | null): void
 }
 export interface VxeListDesignMethods extends ListDesignMethods { }
 
@@ -49,7 +49,7 @@ export type VxeListDesignEmits = [
 ]
 
 export namespace VxeListDesignDefines {
-  export interface ListDesignEventParams extends VxeComponentEvent {
+  export interface ListDesignEventParams extends VxeComponentEventParams {
     $listDesign: VxeListDesignConstructor
   }
 }

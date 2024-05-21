@@ -6,7 +6,7 @@ import VxeFormItemComponent from '../../form/src/form-item'
 import VxeInputComponent from '../../input/src/input'
 import VxeSwitchComponent from '../../switch/src/switch'
 
-import { VxeGlobalRendererHandles } from '../../../types'
+import type { VxeGlobalRendererHandles } from '../../../types'
 
 export const WidgetTextareaFormComponent = defineComponent({
   props: {

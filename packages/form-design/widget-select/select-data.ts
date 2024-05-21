@@ -1,4 +1,4 @@
-import { VxeFormProps } from '../../../types'
+import type { VxeFormProps } from '../../../types'
 
 export interface WidgetSelectFormOptionSubObjVO {
   value: string,

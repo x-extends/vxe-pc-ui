@@ -1,5 +1,5 @@
 import { RenderFunction, SetupContext, Ref, ComponentPublicInstance, DefineComponent } from 'vue'
-import { defineVxeComponent, VxeComponentBase, VxeComponentEvent } from '../tool'
+import { defineVxeComponent, VxeComponentBaseOptions, VxeComponentEventParams } from '@vxe-ui/core'
 
 /* eslint-disable no-use-before-define,@typescript-eslint/ban-types */
 
@@ -8,7 +8,7 @@ export type VxeLayoutAsideComponent = DefineComponent<VxeLayoutAsideProps, VxeLa
 
 export type VxeLayoutAsideInstance = ComponentPublicInstance<VxeLayoutAsideProps, VxeLayoutAsideConstructor>
 
-export interface VxeLayoutAsideConstructor extends VxeComponentBase, VxeLayoutAsideMethods {
+export interface VxeLayoutAsideConstructor extends VxeComponentBaseOptions, VxeLayoutAsideMethods {
   props: VxeLayoutAsideProps
   context: SetupContext<VxeLayoutAsideEmits>
   reactData: LayoutAsideReactData
@@ -43,6 +43,7 @@ export interface VxeLayoutAsidePrivateComputed extends LayoutAsidePrivateCompute
 export interface LayoutAsideReactData {}
 
 export interface LayoutAsideMethods {
+  dispatchEvent(type: ValueOf<VxeLayoutAsideEmits>, params: Record<string, any>, evnt: Event | null): void
 }
 export interface VxeLayoutAsideMethods extends LayoutAsideMethods { }
 
@@ -52,7 +53,7 @@ export interface VxeLayoutAsidePrivateMethods extends LayoutAsidePrivateMethods 
 export type VxeLayoutAsideEmits = []
 
 export namespace VxeLayoutAsideDefines {
-  export interface LayoutAsideEventParams extends VxeComponentEvent {
+  export interface LayoutAsideEventParams extends VxeComponentEventParams {
     $layoutAside: VxeLayoutAsideConstructor
   }
 }

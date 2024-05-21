@@ -1,10 +1,10 @@
 import { defineComponent, h, ref, Ref, computed, reactive, nextTick, createCommentVNode, PropType, inject } from 'vue'
 import XEUtils from 'xe-utils'
-import { getConfig } from '@vxe-ui/core'
+import { getConfig, createEvent } from '@vxe-ui/core'
 import { useSize } from '../../hooks/size'
 import { getFuncText } from '../../ui/src/utils'
 
-import { VxeSwitchPropTypes, VxeSwitchConstructor, VxeSwitchEmits, SwitchReactData, SwitchMethods, VxeFormConstructor, VxeFormPrivateMethods, VxeFormDefines } from '../../../types'
+import type { VxeSwitchPropTypes, VxeSwitchConstructor, VxeSwitchEmits, SwitchReactData, SwitchMethods, VxeFormConstructor, VxeFormPrivateMethods, VxeFormDefines } from '../../../types'
 
 export default defineComponent({
   name: 'VxeSwitch',
@@ -96,7 +96,7 @@ export default defineComponent({
 
     switchMethods = {
       dispatchEvent (type, params, evnt) {
-        emit(type, Object.assign({ $switch: $xeSwitch, $event: evnt }, params))
+        emit(type, createEvent(evnt, { $switch: $xeSwitch }, params))
       },
       focus () {
         const btnElem = refButton.value

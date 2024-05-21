@@ -1,10 +1,10 @@
 import { defineComponent, h, computed, inject, PropType } from 'vue'
 import XEUtils from 'xe-utils'
 import { getFuncText } from '../../ui/src/utils'
-import { getConfig } from '@vxe-ui/core'
+import { getConfig, createEvent } from '@vxe-ui/core'
 import { useSize } from '../../hooks/size'
 
-import { VxeCheckboxConstructor, VxeCheckboxGroupConstructor, VxeCheckboxEmits, VxeCheckboxGroupPrivateMethods, CheckboxMethods, VxeCheckboxPropTypes, VxeFormConstructor, VxeFormPrivateMethods, VxeFormDefines } from '../../../types'
+import type { VxeCheckboxConstructor, VxeCheckboxGroupConstructor, VxeCheckboxEmits, VxeCheckboxGroupPrivateMethods, CheckboxMethods, VxeCheckboxPropTypes, VxeFormConstructor, VxeFormPrivateMethods, VxeFormDefines } from '../../../types'
 
 export default defineComponent({
   name: 'VxeCheckbox',
@@ -85,7 +85,7 @@ export default defineComponent({
 
     checkboxMethods = {
       dispatchEvent (type, params, evnt) {
-        emit(type, Object.assign({ $checkbox: $xecheckbox, $event: evnt }, params))
+        emit(type, createEvent(evnt, { $checkbox: $xecheckbox }, params))
       }
     }
 

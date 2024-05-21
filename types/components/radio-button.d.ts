@@ -1,5 +1,5 @@
 import { RenderFunction, SetupContext, Ref, ComponentPublicInstance, DefineComponent } from 'vue'
-import { defineVxeComponent, VxeComponentBase, VxeComponentEvent } from '../tool'
+import { defineVxeComponent, VxeComponentBaseOptions, VxeComponentEventParams } from '@vxe-ui/core'
 
 /* eslint-disable no-use-before-define,@typescript-eslint/ban-types */
 
@@ -8,7 +8,7 @@ export type VxeRadioButtonComponent = DefineComponent<VxeRadioButtonProps, VxeRa
 
 export type VxeRadioButtonInstance = ComponentPublicInstance<VxeRadioButtonProps, VxeRadioButtonConstructor>
 
-export interface VxeRadioButtonConstructor extends VxeComponentBase, VxeRadioButtonMethods {
+export interface VxeRadioButtonConstructor extends VxeComponentBaseOptions, VxeRadioButtonMethods {
   props: VxeRadioButtonProps
   context: SetupContext<VxeRadioButtonEmits>
   reactData: RadioButtonReactData
@@ -53,7 +53,7 @@ export interface RadioButtonReactData {
 }
 
 export interface RadioButtonMethods {
-  dispatchEvent(type: ValueOf<VxeRadioButtonEmits>, params: any, evnt: Event): void
+  dispatchEvent(type: ValueOf<VxeRadioButtonEmits>, params: Record<string, any>, evnt: Event | null): void
 }
 export interface VxeRadioButtonMethods extends RadioButtonMethods { }
 
@@ -66,7 +66,7 @@ export type VxeRadioButtonEmits = [
 ]
 
 export namespace VxeRadioButtonDefines {
-  interface RadioButtonEventParams extends VxeComponentEvent {
+  interface RadioButtonEventParams extends VxeComponentEventParams {
     $radioButton: VxeRadioButtonConstructor
   }
 

@@ -1,5 +1,5 @@
 import { defineComponent, ref, h, PropType, reactive, provide, watch, nextTick } from 'vue'
-import { getConfig, getI18n, renderer } from '@vxe-ui/core'
+import { getConfig, getI18n, renderer, createEvent } from '@vxe-ui/core'
 import { toCssUnit } from '../../ui/src/dom'
 import { FormDesignWidgetInfo } from './widget-info'
 import XEUtils from 'xe-utils'
@@ -8,7 +8,7 @@ import LayoutViewComponent from './layout-view'
 import LayoutSettingComponent from './layout-setting'
 import { getDefaultSettingFormData } from './setting-data'
 
-import { VxeFormDesignDefines, VxeFormDesignPropTypes, VxeFormDesignEmits, FormDesignReactData, FormDesignPrivateRef, VxeFormDesignPrivateComputed, VxeFormDesignConstructor, VxeFormDesignPrivateMethods, FormDesignMethods, FormDesignPrivateMethods, VxeFormProps } from '../../../types'
+import type { VxeFormDesignDefines, VxeFormDesignPropTypes, VxeFormDesignEmits, FormDesignReactData, FormDesignPrivateRef, VxeFormDesignPrivateComputed, VxeFormDesignConstructor, VxeFormDesignPrivateMethods, FormDesignMethods, FormDesignPrivateMethods, VxeFormProps } from '../../../types'
 
 export default defineComponent({
   name: 'VxeFormDesign',
@@ -105,7 +105,7 @@ export default defineComponent({
 
     const formDesignMethods: FormDesignMethods = {
       dispatchEvent (type, params, evnt) {
-        emit(type, Object.assign({ $xeFormDesign, $event: evnt }, params))
+        emit(type, createEvent(evnt, { $xeFormDesign }, params))
       },
       createWidget,
       createEmptyWidget,

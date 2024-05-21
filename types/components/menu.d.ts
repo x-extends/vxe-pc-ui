@@ -1,5 +1,5 @@
 import { RenderFunction, SetupContext, Ref, ComponentPublicInstance, DefineComponent } from 'vue'
-import { defineVxeComponent, VxeComponentBase, VxeComponentEvent } from '../tool'
+import { defineVxeComponent, VxeComponentBaseOptions, VxeComponentEventParams } from '@vxe-ui/core'
 
 /* eslint-disable no-use-before-define,@typescript-eslint/ban-types */
 
@@ -8,7 +8,7 @@ export type VxeMenuComponent = DefineComponent<VxeMenuProps, VxeMenuEmits>
 
 export type VxeMenuInstance = ComponentPublicInstance<VxeMenuProps, VxeMenuConstructor>
 
-export interface VxeMenuConstructor extends VxeComponentBase, VxeMenuMethods {
+export interface VxeMenuConstructor extends VxeComponentBaseOptions, VxeMenuMethods {
   props: VxeMenuProps
   context: SetupContext<VxeMenuEmits>
   reactData: MenuReactData
@@ -69,6 +69,7 @@ export interface MenuReactData {
 }
 
 export interface MenuMethods {
+  dispatchEvent(type: ValueOf<VxeMenuEmits>, params: Record<string, any>, evnt: Event | null): void
 }
 export interface VxeMenuMethods extends MenuMethods { }
 
@@ -81,7 +82,7 @@ export type VxeMenuEmits = [
 ]
 
 export namespace VxeMenuDefines {
-  export interface MenuEventParams extends VxeComponentEvent {
+  export interface MenuEventParams extends VxeComponentEventParams {
     $menu: VxeMenuConstructor
   }
 
