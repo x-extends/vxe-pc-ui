@@ -34,7 +34,7 @@ export default defineComponent({
       const span = props.span || ($xeForm ? $xeForm.props.span : null)
       return h('div', {
         ref: refElem,
-        class: ['vxe-form--gather vxe-form--item-row', formItem.id, span ? `vxe-form--item-col_${span} is--span` : '', className ? (XEUtils.isFunction(className) ? className({ $form: $xeForm, data: $xeForm ? $xeForm.props.data : {}, item: formItem, field: field as string, property: field as string }) : className) : '']
+        class: ['vxe-form--gather vxe-form--item-row', formItem.id, span ? `vxe-form--item-col_${span} is--span` : '', className ? (XEUtils.isFunction(className) ? className({ $form: $xeForm, data: $xeForm ? $xeForm.props.data : {}, item: formItem as any, field: field as string, property: field as string }) : className) : '']
       }, defaultSlot ? defaultSlot() : [])
     }
 

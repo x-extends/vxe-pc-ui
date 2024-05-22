@@ -1,5 +1,8 @@
 import { RenderFunction, SetupContext, Ref, DefineComponent } from 'vue'
-import { VxeGlobalRendererHandles, defineVxeComponent, VxeComponentBaseOptions, VxeComponentEventParams, VxeComponentStyleType } from '@vxe-ui/core'
+import { defineVxeComponent, VxeComponentBaseOptions, VxeComponentEventParams, VxeComponentStyleType, VxeComponentSlotType } from '@vxe-ui/core'
+import { VxeFormDefines, VxeFormConstructor, VxeFormPropTypes } from './form'
+import { VxeGridConstructor } from './grid'
+import { VxeTooltipPropTypes } from './tooltip'
 
 /* eslint-disable no-use-before-define,@typescript-eslint/ban-types */
 
@@ -107,6 +110,7 @@ export namespace VxeFormItemPropTypes {
       label?: string
       key?: string
     }
+    children?: any[]
     /**
      * 渲染组件的内容（需要渲染器支持）
      */
@@ -116,8 +120,8 @@ export namespace VxeFormItemPropTypes {
   }
   export type Rules = VxeFormDefines.FormRule[]
   export type Slots = {
-    title?: string | ((params: FormItemTitleRenderParams) => SlotVNodeType | SlotVNodeType[]) | null
-    default?: string | ((params: FormItemContentRenderParams) => SlotVNodeType | SlotVNodeType[]) | null
+    title?: string | ((params: FormItemTitleRenderParams) => VxeComponentSlotType | VxeComponentSlotType[]) | null
+    default?: string | ((params: FormItemContentRenderParams) => VxeComponentSlotType | VxeComponentSlotType[]) | null
   }
 }
 

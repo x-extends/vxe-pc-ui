@@ -2,6 +2,7 @@ import { VxeUI, setConfig, setIcon } from '@vxe-ui/core'
 import { dynamicApp } from '../dynamics'
 
 VxeUI.uiVersion = process.env.VUE_APP_VXE_VERSION as string
+VxeUI.tableVersion = ''
 
 VxeUI.dynamicApp = dynamicApp
 
@@ -17,6 +18,10 @@ setConfig({
   checkbox: {},
   checkboxGroup: {},
   col: {},
+  colgroup: {},
+  collapse: {},
+  collapsePane: {},
+  column: {},
   drawer: {
     // size: null,
     showHeader: true,
@@ -45,6 +50,7 @@ setConfig({
   },
   formGather: {},
   formItem: {},
+  grid: {},
   icon: {},
   input: {
     // size: null,
@@ -120,8 +126,10 @@ setConfig({
   },
   switch: {},
   tabPane: {},
+  table: {},
   tabs: {},
   textarea: {},
+  toolbar: {},
   tooltip: {
     // size: null,
     trigger: 'hover',

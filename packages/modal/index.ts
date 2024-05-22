@@ -94,8 +94,6 @@ const ModalController = {
   message: openMessage
 }
 
-export const modal = ModalController
-
 export const VxeModal = Object.assign(VxeModalComponent, {
   install: function (app: App) {
     app.component(VxeModalComponent.name as string, VxeModalComponent)

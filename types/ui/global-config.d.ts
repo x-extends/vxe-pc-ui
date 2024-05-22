@@ -7,11 +7,16 @@ import { VxeButtonGroupProps } from '../components/button-group'
 import { VxeCheckboxProps } from '../components/checkbox'
 import { VxeCheckboxGroupProps } from '../components/checkbox-group'
 import { VxeColProps } from '../components/col'
+import { VxeColgroupProps } from '../components/colgroup'
+import { VxeCollapseProps } from '../components/collapse'
+import { VxeCollapsePaneProps } from '../components/collapse-pane'
+import { VxeColumnProps } from '../components/column'
 import { VxeDrawerProps } from '../components/drawer'
 import { VxeFormProps } from '../components/form'
 import { VxeFormDesignProps } from '../components/form-design'
 import { VxeFormGatherProps } from '../components/form-gather'
 import { VxeFormItemProps } from '../components/form-item'
+import { VxeGridProps } from '../components/grid'
 import { VxeIconProps } from '../components/icon'
 import { VxeInputProps } from '../components/input'
 import { VxeLayoutAsideProps } from '../components/layout-aside'
@@ -34,8 +39,10 @@ import { VxeRowProps } from '../components/row'
 import { VxeSelectProps } from '../components/select'
 import { VxeSwitchProps } from '../components/switch'
 import { VxeTabPaneProps } from '../components/tab-pane'
+import { VxeTableProps } from '../components/table'
 import { VxeTabsProps } from '../components/tabs'
 import { VxeTextareaProps } from '../components/textarea'
+import { VxeToolbarProps } from '../components/toolbar'
 import { VxeTooltipProps } from '../components/tooltip'
 
 declare module '@vxe-ui/core' {
@@ -49,11 +56,16 @@ declare module '@vxe-ui/core' {
     checkbox?: VxeCheckboxProps
     checkboxGroup?: VxeCheckboxGroupProps
     col?: VxeColProps
+    colgroup?: VxeColgroupProps
+    collapse?: VxeCollapseProps
+    collapsePane?: VxeCollapsePaneProps
+    column?: VxeColumnProps
     drawer?: VxeDrawerProps
     form?: VxeFormProps
     formDesign?: VxeFormDesignProps
     formGather?: VxeFormGatherProps
     formItem?: VxeFormItemProps
+    grid?: VxeGridProps
     icon?: VxeIconProps
     input?: VxeInputProps
     layoutAside?: VxeLayoutAsideProps
@@ -76,8 +88,39 @@ declare module '@vxe-ui/core' {
     select?: VxeSelectProps
     switch?: VxeSwitchProps
     tabPane?: VxeTabPaneProps
+    table?: VxeTableProps
     tabs?: VxeTabsProps
     textarea?: VxeTextareaProps
+    toolbar?: VxeToolbarProps
     tooltip?: VxeTooltipProps
+
+    /**
+     * 获取导出的所有文件类型
+     * @deprecated
+     */
+    exportTypes?: string[]
+    /**
+     * 获取导入的所有文件类型
+     * @deprecated
+     */
+    importTypes?: string[]
+    /**
+     * @deprecated
+     */
+    emptyCell?: string
+    /**
+     * @deprecated
+     */
+    translate?(key: string, args?: any): string
+    /**
+     * 还原成老的校验样式
+     * @deprecated
+     */
+    cellVaildMode?: 'obsolete'
+    /**
+     * 返回老的校验结果
+     * @deprecated
+     */
+    validToReject?: 'obsolete'
   }
 }

@@ -1,5 +1,5 @@
 import { App } from 'vue'
-import { setConfig } from '@vxe-ui/core'
+import { setConfig, VxeGlobalConfig } from '@vxe-ui/core'
 
 import VxeAnchor from './anchor'
 import VxeAnchorLink from './anchor-link'
@@ -54,8 +54,6 @@ import VxeTooltip from './tooltip'
 import VxeTree from './tree'
 import VxeTreeSelect from './tree-select'
 import VxeUpload from './upload'
-
-import type { VxeGlobalConfig } from '../types'
 
 const components = [
   VxeAnchor,

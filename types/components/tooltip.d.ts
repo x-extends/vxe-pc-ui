@@ -26,7 +26,7 @@ export namespace VxeTooltipPropTypes {
   export type Size = VxeComponentSizeType
   export type ModelValue = boolean
   export type Trigger = 'hover' | 'click' | 'manual' | '' | null
-  export type Theme = string
+  export type Theme = '' | 'light' | 'dark'
   export type Content = string | number
   export type UseHTML = boolean
   export type ZIndex = string | number

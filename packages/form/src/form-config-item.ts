@@ -1,12 +1,12 @@
 import { defineComponent, h, inject, provide, PropType, createCommentVNode } from 'vue'
 import XEUtils from 'xe-utils'
-import { getIcon, getI18n, renderer } from '@vxe-ui/core'
+import { getIcon, getI18n, renderer, VxeComponentSlotType } from '@vxe-ui/core'
 import { getFuncText, isEnableConf } from '../../ui/src/utils'
 import { getSlotVNs } from '../../ui/src/vn'
 import { renderTitle } from './render'
 import { isActiveItem } from './util'
 
-import type { VxeFormConstructor, VxeFormDefines, VxeFormPrivateMethods, VxeComponentSlotType } from '../../../types'
+import type { VxeFormConstructor, VxeFormDefines, VxeFormPrivateMethods } from '../../../types'
 
 const VxeFormConfigItem = defineComponent({
   name: 'VxeFormConfigItem',

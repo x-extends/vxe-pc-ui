@@ -57,8 +57,6 @@ const DrawerController = {
   open: openDrawer
 }
 
-export const drawer = DrawerController
-
 export const VxeDrawer = Object.assign(VxeDrawerComponent, {
   install: function (app: App) {
     app.component(VxeDrawerComponent.name as string, VxeDrawerComponent)

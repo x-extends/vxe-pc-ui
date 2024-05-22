@@ -4,17 +4,10 @@ import { DrawerController } from '../components/drawer'
 import { VxePrintDefines } from '../components/print'
 import { VxeUploadDefines } from '../components/upload'
 
-export const uiVersion: string
-export const modal: ModalController
-export const drawer: DrawerController
-export const dynamicApp: App<Element>
-export const print: VxePrintDefines.PrintFunction
-export const saveFile: VxeUploadDefines.SaveFileFunction
-export const readFile: VxeUploadDefines.ReadFileFunction
-
 declare module '@vxe-ui/core' {
   export interface VxeUIExport {
     uiVersion: string
+    tableVersion: string
     modal: ModalController
     drawer: DrawerController
     dynamicApp: App<Element>
@@ -27,7 +20,12 @@ declare module '@vxe-ui/core' {
 export * from './global-config'
 export * from './global-icon'
 export * from './renderer'
+export * from './interceptor'
+export * from './commands'
+export * from './formats'
+export * from './menus'
 export * from './validators'
+export * from './hooks'
 
 export * from '@vxe-ui/core'
 export default VxeUI

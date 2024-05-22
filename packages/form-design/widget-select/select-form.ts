@@ -1,12 +1,11 @@
 import { PropType, VNode, defineComponent, h, onMounted, ref, watch } from 'vue'
-import { getIcon } from '@vxe-ui/core'
+import { VxeUI, getIcon } from '@vxe-ui/core'
 import VxeFormComponent from '../../form/src/form'
 import VxeFormItemComponent from '../../form/src/form-item'
 import VxeButtonComponent from '../../button/src/button'
 import VxeInputComponent from '../../input/src/input'
 import VxeTextareaComponent from '../../textarea/src/textarea'
 import VxeSwitchComponent from '../../switch/src/switch'
-import { modal } from '../../modal'
 import { WidgetSelectFormObjVO, WidgetSelectFormOptionObjVO, WidgetSelectFormOptionSubObjVO } from './select-data'
 import { useKebabCaseName } from '../render/hooks'
 
@@ -118,7 +117,7 @@ export const WidgetSelectFormComponent = defineComponent({
 
       optionsContent.value = contList.join('\n')
 
-      modal.open({
+      VxeUI.modal.open({
         title: `${widget.title} - 批量编辑选项`,
         width: 500,
         height: '50vh ',

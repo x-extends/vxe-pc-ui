@@ -1,12 +1,12 @@
 import { defineComponent, h, Teleport, PropType, ref, Ref, inject, computed, provide, onUnmounted, reactive, nextTick, watch, onMounted, createCommentVNode } from 'vue'
 import XEUtils from 'xe-utils'
-import { getConfig, getIcon, getI18n, globalEvents, GLOBAL_EVENT_KEYS, createEvent, useSize } from '@vxe-ui/core'
+import { getConfig, getIcon, getI18n, globalEvents, GLOBAL_EVENT_KEYS, createEvent, useSize, VxeComponentSlotType } from '@vxe-ui/core'
 import { getEventTargetNode, getAbsolutePos } from '../../ui/src/dom'
 import { getLastZIndex, nextZIndex, getFuncText } from '../../ui/src/utils'
 import VxeInputComponent from '../../input/src/input'
 import { getSlotVNs } from '../../ui/src/vn'
 
-import type { VxeSelectPropTypes, VxeSelectConstructor, SelectReactData, VxeSelectEmits, VxeInputConstructor, SelectMethods, SelectPrivateRef, VxeSelectMethods, VxeOptgroupProps, VxeOptionProps, VxeFormDefines, VxeFormConstructor, VxeFormPrivateMethods, VxeInputDefines, VxeComponentSlotType } from '../../../types'
+import type { VxeSelectPropTypes, VxeSelectConstructor, SelectReactData, VxeSelectEmits, VxeInputConstructor, SelectMethods, SelectPrivateRef, VxeSelectMethods, VxeOptgroupProps, VxeOptionProps, VxeFormDefines, VxeFormConstructor, VxeFormPrivateMethods, VxeInputDefines } from '../../../types'
 
 function isOptionVisible (option: any) {
   return option.visible !== false

@@ -1,5 +1,5 @@
 import { RenderFunction, SetupContext, Ref, ComponentPublicInstance, DefineComponent } from 'vue'
-import { defineVxeComponent, VxeComponentBaseOptions, VxeComponentEventParams, VxeComponentSizeType, ValueOf } from '@vxe-ui/core'
+import { defineVxeComponent, VxeComponentBaseOptions, VxeComponentEventParams, VxeComponentSizeType, ValueOf, VxeComponentSlotType } from '@vxe-ui/core'
 import { VxeFormItemPropTypes } from './form-item'
 
 /* eslint-disable no-use-before-define,@typescript-eslint/ban-types */
@@ -177,7 +177,7 @@ export interface FormMethods {
 export interface VxeFormMethods extends FormMethods { }
 
 export interface FormPrivateMethods {
-  callSlot<T>(slotFunc: ((params: T) => SlotVNodeType | SlotVNodeType[]) | string | null, params: T): SlotVNodeType[]
+  callSlot<T>(slotFunc: ((params: T) => VxeComponentSlotType | VxeComponentSlotType[]) | string | null, params: T): VxeComponentSlotType[]
   triggerItemEvent(evnt: Event | { type: string }, field: string, itemValue?: any): Promise<any>
   toggleCollapseEvent(evnt: Event): void
   triggerTitleTipEvent(evnt: MouseEvent, params: {

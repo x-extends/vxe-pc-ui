@@ -1,12 +1,12 @@
 import { defineComponent, h, onUnmounted, inject, ref, Ref, provide, onMounted, PropType, createCommentVNode, reactive } from 'vue'
 import XEUtils from 'xe-utils'
-import { getIcon, getI18n, renderer } from '@vxe-ui/core'
+import { getIcon, getI18n, renderer, VxeComponentSlotType } from '@vxe-ui/core'
 import { getFuncText, isEnableConf } from '../../ui/src/utils'
 import { getSlotVNs } from '../../ui/src/vn'
 import { createItem, watchItem, destroyItem, assembleItem, XEFormItemProvide, isActiveItem } from './util'
 import { renderTitle } from './render'
 
-import type { VxeComponentSlotType, VxeFormConstructor, VxeFormDefines, VxeFormItemPropTypes, VxeFormPrivateMethods } from '../../../types'
+import type { VxeFormConstructor, VxeFormDefines, VxeFormItemPropTypes, VxeFormPrivateMethods } from '../../../types'
 
 export const formItemProps = {
   title: String as PropType<VxeFormItemPropTypes.Title>,
