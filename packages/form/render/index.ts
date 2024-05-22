@@ -97,7 +97,7 @@ function getComponentOns (renderOpts: any, params: any, modelFunc?: any, changeF
   const ons: any = {}
   XEUtils.objectEach(events, (func, key: any) => {
     ons[getOnName(key)] = function (...args: any[]) {
-      if (process.env.VUE_APP_VXE_TABLE_ENV === 'development') {
+      if (process.env.VUE_APP_VXE_ENV === 'development') {
         if (!XEUtils.isFunction(func)) {
           log.err('vxe.error.errFunc', [func])
         }

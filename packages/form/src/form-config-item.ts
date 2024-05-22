@@ -4,7 +4,7 @@ import { getIcon, getI18n, renderer } from '@vxe-ui/core'
 import { getFuncText, isEnableConf } from '../../ui/src/utils'
 import { getSlotVNs } from '../../ui/src/vn'
 import { renderTitle } from './render'
-import { isActivetem } from './util'
+import { isActiveItem } from './util'
 
 import type { VxeFormConstructor, VxeFormDefines, VxeFormPrivateMethods, VxeComponentSlotType } from '../../../types'
 
@@ -130,7 +130,7 @@ const VxeFormConfigItem = defineComponent({
             'is--asterisk': titleAsterisk,
             'is--required': isRequired,
             'is--hidden': folding && collapseAll,
-            'is--active': isActivetem($xeForm, item),
+            'is--active': isActiveItem($xeForm, item),
             'is--error': showError
           }
         ],

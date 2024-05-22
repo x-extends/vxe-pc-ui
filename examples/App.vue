@@ -63,7 +63,8 @@ const navList = ref([
   { name: 'PulldownTest', routerLink: { name: 'PulldownTest' } },
   { name: 'CheckboxTest', routerLink: { name: 'CheckboxTest' } },
   { name: 'RadioTest', routerLink: { name: 'RadioTest' } },
-  { name: 'PagerTest', routerLink: { name: 'PagerTest' } }
+  { name: 'PagerTest', routerLink: { name: 'PagerTest' } },
+  { name: 'PrintTest', routerLink: { name: 'PrintTest' } }
 ])
 </script>
 

@@ -139,6 +139,11 @@ const routes: Array<RouteRecordRaw> = [
     path: '/component/pager',
     name: 'PagerTest',
     component: () => import('../views/pager/PagerTest.vue')
+  },
+  {
+    path: '/component/print',
+    name: 'PrintTest',
+    component: () => import('../views/print/PrintTest.vue')
   }
 ]
 

@@ -1,5 +1,5 @@
 import { RenderFunction, SetupContext, Ref, ComponentPublicInstance, DefineComponent } from 'vue'
-import { defineVxeComponent, VxeComponentBaseOptions, VxeComponentEventParams } from '@vxe-ui/core'
+import { defineVxeComponent, VxeComponentBaseOptions, VxeComponentEventParams, ValueOf } from '@vxe-ui/core'
 import { VxeFormDesignDefines } from './form-design'
 import { VxeFormProps, VxeFormPropTypes } from './form'
 

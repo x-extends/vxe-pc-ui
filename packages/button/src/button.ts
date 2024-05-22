@@ -1,7 +1,6 @@
 import { defineComponent, h, ref, Ref, computed, Teleport, VNode, onUnmounted, reactive, nextTick, PropType, onMounted, inject } from 'vue'
 import XEUtils from 'xe-utils'
-import { getConfig, globalEvents, log, getIcon, createEvent } from '@vxe-ui/core'
-import { useSize } from '../../hooks/size'
+import { getConfig, globalEvents, log, getIcon, createEvent, useSize } from '@vxe-ui/core'
 import { getAbsolutePos, getEventTargetNode } from '../../ui/src/dom'
 import { getFuncText, getLastZIndex, nextZIndex } from '../../ui/src/utils'
 
@@ -81,7 +80,7 @@ export default defineComponent({
 
     const xID = XEUtils.uniqueId()
 
-    const computeSize = useSize(props)
+    const { computeSize } = useSize(props)
 
     const reactData = reactive<ButtonReactData>({
       inited: false,
@@ -409,7 +408,7 @@ export default defineComponent({
     Object.assign($xeButton, buttonMethods)
 
     onMounted(() => {
-      if (process.env.VUE_APP_VXE_TABLE_ENV === 'development') {
+      if (process.env.VUE_APP_VXE_ENV === 'development') {
         if (props.type === 'text') {
           log.warn('vxe.error.delProp', ['type=text', 'mode=text'])
         }

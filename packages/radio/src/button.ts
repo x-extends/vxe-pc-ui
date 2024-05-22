@@ -1,8 +1,7 @@
 import { defineComponent, h, computed, inject, PropType } from 'vue'
 import XEUtils from 'xe-utils'
 import { getFuncText } from '../../ui/src/utils'
-import { getConfig, createEvent } from '@vxe-ui/core'
-import { useSize } from '../../hooks/size'
+import { getConfig, createEvent, useSize } from '@vxe-ui/core'
 
 import type { VxeRadioButtonPropTypes, VxeRadioGroupConstructor, VxeRadioButtonConstructor, VxeRadioButtonEmits, VxeRadioGroupPrivateMethods, RadioButtonMethods, VxeFormConstructor, VxeFormPrivateMethods, VxeFormDefines } from '../../../types'
 
@@ -28,7 +27,7 @@ export default defineComponent({
 
     const xID = XEUtils.uniqueId()
 
-    const computeSize = useSize(props)
+    const { computeSize } = useSize(props)
 
     const $xeradiobutton = {
       xID,

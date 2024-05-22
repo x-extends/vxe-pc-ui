@@ -1,10 +1,9 @@
 import { defineComponent, h, ref, Ref, provide, computed, inject, reactive, watch, nextTick, PropType, onMounted } from 'vue'
 import XEUtils from 'xe-utils'
-import { getConfig, validators, renderer, log, createEvent } from '@vxe-ui/core'
+import { getConfig, validators, renderer, log, createEvent, useSize } from '@vxe-ui/core'
 import { getFuncText, isEnableConf, eqEmptyValue } from '../../ui/src/utils'
 import { scrollToView } from '../../ui/src/dom'
-import { createItem, handleFieldOrItem, isHiddenItem, isActivetem } from './util'
-import { useSize } from '../../hooks/size'
+import { createItem, handleFieldOrItem, isHiddenItem, isActiveItem } from './util'
 import VxeTooltipComponent from '../../tooltip/src/tooltip'
 import VxeFormConfigItem from './form-config-item'
 import VxeLoadingComponent from '../../loading/src/loading'
@@ -108,7 +107,7 @@ export default defineComponent({
 
     const xID = XEUtils.uniqueId()
 
-    const computeSize = useSize(props)
+    const { computeSize } = useSize(props)
 
     const reactData = reactive<FormReactData>({
       collapseAll: props.collapseStatus,
@@ -176,7 +175,7 @@ export default defineComponent({
 
     const loadItem = (list: VxeFormPropTypes.Items) => {
       if (list.length) {
-        if (process.env.VUE_APP_VXE_TABLE_ENV === 'development') {
+        if (process.env.VUE_APP_VXE_ENV === 'development') {
           list.forEach((item) => {
             if (item.slots) {
               XEUtils.each(item.slots, (func) => {
@@ -348,15 +347,16 @@ export default defineComponent({
                     if (XEUtils.isString(validator)) {
                       const gvItem = validators.get(validator)
                       if (gvItem) {
-                        if (gvItem.itemValidatorMethod) {
-                          customValid = gvItem.itemValidatorMethod(validParams)
+                        const validatorMethod = gvItem.formItemValidatorMethod || gvItem.itemValidatorMethod
+                        if (validatorMethod) {
+                          customValid = validatorMethod(validParams)
                         } else {
-                          if (process.env.VUE_APP_VXE_TABLE_ENV === 'development') {
+                          if (process.env.VUE_APP_VXE_ENV === 'development') {
                             log.warn('vxe.error.notValidators', [validator])
                           }
                         }
                       } else {
-                        if (process.env.VUE_APP_VXE_TABLE_ENV === 'development') {
+                        if (process.env.VUE_APP_VXE_ENV === 'development') {
                           log.err('vxe.error.notValidators', [validator])
                         }
                       }
@@ -427,7 +427,7 @@ export default defineComponent({
       if (data && formRules) {
         itemList.forEach((item) => {
           const { field } = item
-          if (field && !isHiddenItem($xeForm, item) && isActivetem($xeForm, item)) {
+          if (field && !isHiddenItem($xeForm, item) && isActiveItem($xeForm, item)) {
             itemValids.push(
               validItemRules(type || 'all', field).then(() => {
                 item.errRule = null
@@ -693,7 +693,7 @@ export default defineComponent({
 
     onMounted(() => {
       nextTick(() => {
-        if (process.env.VUE_APP_VXE_TABLE_ENV === 'development') {
+        if (process.env.VUE_APP_VXE_ENV === 'development') {
           if (props.customLayout && props.items) {
             log.err('vxe.error.errConflicts', ['custom-layout', 'items'])
           }
@@ -701,7 +701,9 @@ export default defineComponent({
       })
     })
 
-    loadItem(props.items || [])
+    if (props.items) {
+      loadItem(props.items)
+    }
 
     provide('$xeForm', $xeForm)
     provide('$xeFormGather', null)

@@ -1,8 +1,7 @@
 import { defineComponent, h, computed, inject, PropType } from 'vue'
 import XEUtils from 'xe-utils'
 import { getFuncText } from '../../ui/src/utils'
-import { getConfig, createEvent } from '@vxe-ui/core'
-import { useSize } from '../../hooks/size'
+import { getConfig, createEvent, useSize } from '@vxe-ui/core'
 
 import type { VxeRadioPropTypes, VxeRadioConstructor, VxeRadioEmits, VxeRadioGroupConstructor, VxeRadioGroupPrivateMethods, RadioMethods, VxeFormConstructor, VxeFormPrivateMethods, VxeFormDefines } from '../../../types'
 
@@ -35,7 +34,7 @@ export default defineComponent({
       context
     } as unknown as VxeRadioConstructor
 
-    const computeSize = useSize(props)
+    const { computeSize } = useSize(props)
 
     const $xeradiogroup = inject('$xeRadioGroup', null as (VxeRadioGroupConstructor & VxeRadioGroupPrivateMethods) | null)
 

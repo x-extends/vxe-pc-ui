@@ -1,8 +1,7 @@
 import { defineComponent, h, provide, PropType, computed, inject } from 'vue'
-import { getConfig, createEvent } from '@vxe-ui/core'
+import { getConfig, createEvent, useSize } from '@vxe-ui/core'
 import XEUtils from 'xe-utils'
 import VxeCheckboxComponent from './checkbox'
-import { useSize } from '../../hooks/size'
 
 import type { VxeCheckboxGroupConstructor, VxeCheckboxGroupEmits, VxeCheckboxGroupPrivateMethods, CheckboxGroupPrivateMethods, CheckboxPrivateComputed, CheckboxGroupMethods, VxeCheckboxGroupPropTypes, VxeFormConstructor, VxeFormPrivateMethods, VxeFormDefines } from '../../../types'
 

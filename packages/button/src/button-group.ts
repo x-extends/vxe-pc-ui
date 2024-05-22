@@ -1,7 +1,6 @@
 import { defineComponent, h, provide, PropType } from 'vue'
-import { getConfig, createEvent } from '@vxe-ui/core'
+import { getConfig, createEvent, useSize } from '@vxe-ui/core'
 import XEUtils from 'xe-utils'
-import { useSize } from '../../hooks/size'
 import VxeButtonComponent from '../../button/src/button'
 
 import type { VxeButtonGroupPropTypes, VxeButtonGroupEmits, VxeButtonGroupConstructor, VxeButtonGroupPrivateMethods, ButtonGroupMethods, ButtonPrivateComputed, ButtonGroupPrivateMethods } from '../../../types'

@@ -1,8 +1,7 @@
 import { defineComponent, h, PropType, computed, inject, ref, Ref, reactive, nextTick, watch } from 'vue'
 import XEUtils from 'xe-utils'
-import { getIcon, getConfig, getI18n, globalEvents, GLOBAL_EVENT_KEYS, log, createEvent } from '@vxe-ui/core'
+import { getIcon, getConfig, getI18n, globalEvents, GLOBAL_EVENT_KEYS, log, createEvent, useSize } from '@vxe-ui/core'
 import VxeSelectComponent from '../../select'
-import { useSize } from '../../hooks/size'
 
 import type { VxePagerPropTypes, VxePagerConstructor, VxePagerEmits, VxeSelectEvents, PagerPrivateRef, PagerMethods, PagerPrivateMethods, VxePagerPrivateMethods, PagerReactData } from '../../../types'
 
@@ -55,7 +54,7 @@ export default defineComponent({
 
     const xID = XEUtils.uniqueId()
 
-    const computeSize = useSize(props)
+    const { computeSize } = useSize(props)
 
     const $xeGrid = inject('$xeGrid', null as any)
 
@@ -551,7 +550,7 @@ export default defineComponent({
         if (renderFn) {
           childNodes.push(renderFn())
         } else {
-          if (process.env.VUE_APP_VXE_TABLE_ENV === 'development') {
+          if (process.env.VUE_APP_VXE_ENV === 'development') {
             log.err('vxe.error.notProp', [`layouts -> ${name}`])
           }
         }

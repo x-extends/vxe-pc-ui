@@ -32,7 +32,7 @@ export function isHiddenItem ($xeForm: VxeFormConstructor, formItem: VxeFormDefi
   return visible === false || (folding && collapseAll)
 }
 
-export function isActivetem ($xeForm: VxeFormConstructor, formItem: VxeFormDefines.ItemInfo) {
+export function isActiveItem ($xeForm: VxeFormConstructor, formItem: VxeFormDefines.ItemInfo) {
   let { visibleMethod, itemRender, visible, field } = formItem
   if (visible === false) {
     return visible
@@ -56,7 +56,7 @@ export function watchItem (props: any, formItem: ItemInfo) {
   })
 }
 
-export function assemItem ($xeForm: VxeFormConstructor, el: HTMLDivElement, formItem: ItemInfo, formGather: XEFormItemProvide | null) {
+export function assembleItem ($xeForm: VxeFormConstructor, el: HTMLDivElement, formItem: ItemInfo, formGather: XEFormItemProvide | null) {
   const { reactData } = $xeForm
   const { staticItems } = reactData
   const parentElem = el.parentNode

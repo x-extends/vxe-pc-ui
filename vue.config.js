@@ -6,11 +6,12 @@ function resolve (dir) {
   return path.join(__dirname, '.', dir)
 }
 
-process.env.VUE_APP_VXE_TABLE_VERSION = pkg.version
-process.env.VUE_APP_VXE_TABLE_ENV = 'development'
+process.env.VUE_APP_VXE_UI_VERSION = pkg.version
+process.env.VUE_APP_VXE_ENV = 'development'
 
 const externalMaps = {
-  'xe-utils': 'XEUtils'
+  'xe-utils': 'XEUtils',
+  '@vxe-ui/core': 'VxeCore'
 }
 
 const externals = {}

@@ -1,5 +1,5 @@
 import { defineComponent, h, onUnmounted, provide, inject, ref, Ref, onMounted, PropType } from 'vue'
-import { XEOptionProvide, createOption, watchOption, destroyOption, assemOption } from './util'
+import { XEOptionProvide, createOption, watchOption, destroyOption, assembleOption } from './util'
 
 import type { VxeSelectConstructor, VxeOptionPropTypes } from '../../../types'
 
@@ -23,7 +23,7 @@ export default defineComponent({
     watchOption(props, option)
 
     onMounted(() => {
-      assemOption($xeselect, elem.value, option)
+      assembleOption($xeselect, elem.value, option)
     })
 
     onUnmounted(() => {

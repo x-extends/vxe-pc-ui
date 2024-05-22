@@ -1,9 +1,8 @@
 import { defineComponent, h, provide, PropType, inject, computed } from 'vue'
 import XEUtils from 'xe-utils'
-import { getConfig, createEvent } from '@vxe-ui/core'
+import { getConfig, createEvent, useSize } from '@vxe-ui/core'
 import VxeRadioComponent from './radio'
 import VxeRadioButtonComponent from './button'
-import { useSize } from '../../hooks/size'
 
 import type { VxeRadioGroupPropTypes, VxeRadioGroupConstructor, VxeRadioGroupEmits, VxeRadioGroupPrivateMethods, RadioGroupPrivateMethods, RadioGroupMethods, VxeFormConstructor, VxeFormPrivateMethods, VxeFormDefines } from '../../../types'
 

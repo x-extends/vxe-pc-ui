@@ -1,7 +1,6 @@
 import { defineComponent, h, Teleport, ref, Ref, computed, reactive, inject, nextTick, watch, onUnmounted, PropType } from 'vue'
 import XEUtils from 'xe-utils'
-import { getConfig, getIcon, getI18n, globalEvents, GLOBAL_EVENT_KEYS, createEvent } from '@vxe-ui/core'
-import { useSize } from '../../hooks/size'
+import { getConfig, getIcon, getI18n, globalEvents, GLOBAL_EVENT_KEYS, createEvent, useSize } from '@vxe-ui/core'
 import { getFuncText, getLastZIndex, nextZIndex } from '../../ui/src/utils'
 import { hasClass, getAbsolutePos, getEventTargetNode } from '../../ui/src/dom'
 import { toStringTimeDate, getDateQuarter } from './date'
@@ -143,7 +142,7 @@ export default defineComponent({
 
     const xID = XEUtils.uniqueId()
 
-    const computeSize = useSize(props)
+    const { computeSize } = useSize(props)
 
     const reactData = reactive<InputReactData>({
       inited: false,

@@ -1,7 +1,6 @@
 import { defineComponent, h, Teleport, PropType, ref, Ref, inject, computed, provide, onUnmounted, reactive, nextTick, watch, onMounted, createCommentVNode } from 'vue'
 import XEUtils from 'xe-utils'
-import { getConfig, getIcon, getI18n, globalEvents, GLOBAL_EVENT_KEYS, createEvent } from '@vxe-ui/core'
-import { useSize } from '../../hooks/size'
+import { getConfig, getIcon, getI18n, globalEvents, GLOBAL_EVENT_KEYS, createEvent, useSize } from '@vxe-ui/core'
 import { getEventTargetNode, getAbsolutePos } from '../../ui/src/dom'
 import { getLastZIndex, nextZIndex, getFuncText } from '../../ui/src/utils'
 import VxeInputComponent from '../../input/src/input'
@@ -66,7 +65,7 @@ export default defineComponent({
 
     const xID = XEUtils.uniqueId()
 
-    const computeSize = useSize(props)
+    const { computeSize } = useSize(props)
 
     const reactData = reactive<SelectReactData>({
       inited: false,

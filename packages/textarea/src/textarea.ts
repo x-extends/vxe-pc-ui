@@ -1,8 +1,7 @@
 import { defineComponent, h, ref, Ref, computed, nextTick, watch, PropType, reactive, inject } from 'vue'
 import XEUtils from 'xe-utils'
-import { getConfig, getI18n, createEvent } from '@vxe-ui/core'
+import { getConfig, getI18n, createEvent, useSize } from '@vxe-ui/core'
 import { getFuncText } from '../../ui/src/utils'
-import { useSize } from '../../hooks/size'
 
 import type { VxeTextareaPropTypes, TextareaReactData, TextareaMethods, VxeTextareaConstructor, VxeTextareaEmits, TextareaPrivateRef, VxeFormConstructor, VxeFormPrivateMethods, VxeFormDefines } from '../../../types'
 
@@ -48,7 +47,7 @@ export default defineComponent({
 
     const xID = XEUtils.uniqueId()
 
-    const computeSize = useSize(props)
+    const { computeSize } = useSize(props)
 
     const reactData = reactive<TextareaReactData>({
       inputValue: props.modelValue

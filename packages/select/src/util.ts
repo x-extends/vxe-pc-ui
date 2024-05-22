@@ -1,6 +1,6 @@
 import { watch } from 'vue'
 import XEUtils from 'xe-utils'
-import { OptionInfo } from './optionInfo'
+import { OptionInfo } from './option-info'
 
 import type { VxeSelectConstructor } from '../../../types'
 
@@ -24,7 +24,7 @@ export function watchOption (props: any, option: OptionInfo) {
   })
 }
 
-export function assemOption ($xeselect: VxeSelectConstructor, el: HTMLDivElement, option: OptionInfo, optgroup?: XEOptionProvide | null) {
+export function assembleOption ($xeselect: VxeSelectConstructor, el: HTMLDivElement, option: OptionInfo, optgroup?: XEOptionProvide | null) {
   const { reactData } = $xeselect
   const { staticOptions } = reactData
   const parentElem = el.parentNode

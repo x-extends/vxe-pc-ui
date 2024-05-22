@@ -1,9 +1,8 @@
 import { defineComponent, h, Teleport, ref, Ref, computed, reactive, nextTick, watch, PropType, VNode, onMounted, onUnmounted } from 'vue'
 import XEUtils from 'xe-utils'
-import { useSize } from '../../hooks/size'
 import { getDomNode, getEventTargetNode } from '../../ui/src/dom'
 import { getLastZIndex, nextZIndex, getFuncText } from '../../ui/src/utils'
-import { getConfig, getIcon, getI18n, globalEvents, GLOBAL_EVENT_KEYS, log, createEvent } from '@vxe-ui/core'
+import { getConfig, getIcon, getI18n, globalEvents, GLOBAL_EVENT_KEYS, log, createEvent, useSize } from '@vxe-ui/core'
 import VxeButtonComponent from '../../button/src/button'
 import VxeLoadingComponent from '../../loading/index'
 import { getSlotVNs } from '../../ui/src/vn'
@@ -80,7 +79,7 @@ export default defineComponent({
 
     const xID = XEUtils.uniqueId()
 
-    const computeSize = useSize(props)
+    const { computeSize } = useSize(props)
 
     const reactData = reactive<ModalReactData>({
       inited: false,

@@ -1,5 +1,5 @@
 import { RenderFunction, SetupContext, Ref, ComponentPublicInstance, DefineComponent } from 'vue'
-import { defineVxeComponent, VxeComponentBaseOptions, VxeComponentEventParams } from '@vxe-ui/core'
+import { defineVxeComponent, VxeComponentBaseOptions, VxeComponentEventParams, ValueOf } from '@vxe-ui/core'
 
 /* eslint-disable no-use-before-define,@typescript-eslint/ban-types */
 
@@ -49,6 +49,22 @@ export namespace VxeUploadDefines {
   export interface UploadEventParams extends VxeComponentEventParams {
     $upload: VxeUploadConstructor
   }
+
+  export type SaveFileFunction = (options: {
+    filename: string
+    type: string
+    content: string | Blob
+  }) => Promise<any>
+
+  export type ReadFileFunction = (options?: {
+    multiple?: boolean
+    types?: string[]
+    message?: boolean
+  }) => Promise<{
+    status: boolean
+    files: FileList
+    file: File
+  }>
 }
 
 export type VxeUploadEventProps = {}

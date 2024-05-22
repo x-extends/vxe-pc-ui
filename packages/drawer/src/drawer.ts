@@ -1,8 +1,7 @@
 import { defineComponent, h, Teleport, ref, Ref, reactive, nextTick, watch, PropType, VNode, onMounted, onUnmounted } from 'vue'
 import XEUtils from 'xe-utils'
-import { useSize } from '../../hooks/size'
+import { useSize, getIcon, getConfig, getI18n, globalEvents, GLOBAL_EVENT_KEYS, createEvent } from '@vxe-ui/core'
 import { getLastZIndex, nextZIndex, getFuncText } from '../../ui/src/utils'
-import { getIcon, getConfig, getI18n, globalEvents, GLOBAL_EVENT_KEYS, createEvent } from '@vxe-ui/core'
 import { getSlotVNs } from '../../ui/src/vn'
 import VxeButtonComponent from '../../button/src/button'
 import VxeLoadingComponent from '../../loading/index'
@@ -57,7 +56,7 @@ export default defineComponent({
 
     const xID = XEUtils.uniqueId()
 
-    const computeSize = useSize(props)
+    const { computeSize } = useSize(props)
 
     const refElem = ref<HTMLDivElement>()
     const refDrawerBox = ref() as Ref<HTMLDivElement>

@@ -1,5 +1,5 @@
 import { RenderFunction, SetupContext, Ref, ComponentPublicInstance, DefineComponent } from 'vue'
-import { defineVxeComponent, VxeComponentBaseOptions, VxeComponentEventParams, VxeComponentAlignType } from '@vxe-ui/core'
+import { defineVxeComponent, VxeComponentBaseOptions, VxeComponentEventParams, VxeComponentAlignType, ValueOf } from '@vxe-ui/core'
 
 /* eslint-disable no-use-before-define,@typescript-eslint/ban-types */
 

@@ -1,7 +1,6 @@
 import { defineComponent, h, ref, Ref, computed, reactive, nextTick, createCommentVNode, PropType, inject } from 'vue'
 import XEUtils from 'xe-utils'
-import { getConfig, createEvent } from '@vxe-ui/core'
-import { useSize } from '../../hooks/size'
+import { getConfig, createEvent, useSize } from '@vxe-ui/core'
 import { getFuncText } from '../../ui/src/utils'
 
 import type { VxeSwitchPropTypes, VxeSwitchConstructor, VxeSwitchEmits, SwitchReactData, SwitchMethods, VxeFormConstructor, VxeFormPrivateMethods, VxeFormDefines } from '../../../types'
@@ -34,7 +33,7 @@ export default defineComponent({
 
     const xID = XEUtils.uniqueId()
 
-    const computeSize = useSize(props)
+    const { computeSize } = useSize(props)
 
     const reactData = reactive<SwitchReactData>({
       isActivated: false,

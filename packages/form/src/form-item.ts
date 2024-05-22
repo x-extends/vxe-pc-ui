@@ -3,7 +3,7 @@ import XEUtils from 'xe-utils'
 import { getIcon, getI18n, renderer } from '@vxe-ui/core'
 import { getFuncText, isEnableConf } from '../../ui/src/utils'
 import { getSlotVNs } from '../../ui/src/vn'
-import { createItem, watchItem, destroyItem, assemItem, XEFormItemProvide, isActivetem } from './util'
+import { createItem, watchItem, destroyItem, assembleItem, XEFormItemProvide, isActiveItem } from './util'
 import { renderTitle } from './render'
 
 import type { VxeComponentSlotType, VxeFormConstructor, VxeFormDefines, VxeFormItemPropTypes, VxeFormPrivateMethods } from '../../../types'
@@ -73,7 +73,7 @@ export default defineComponent({
     watchItem(props, formItem)
 
     onMounted(() => {
-      assemItem($xeForm, refElem.value, formItem, formGather)
+      assembleItem($xeForm, refElem.value, formItem, formGather)
     })
 
     onUnmounted(() => {
@@ -177,7 +177,7 @@ export default defineComponent({
             'is--asterisk': titleAsterisk,
             'is--required': isRequired,
             'is--hidden': folding && collapseAll,
-            'is--active': isActivetem($xeForm, item),
+            'is--active': isActiveItem($xeForm, item),
             'is--error': showError
           }
         ],

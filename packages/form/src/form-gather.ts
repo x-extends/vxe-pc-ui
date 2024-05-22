@@ -1,5 +1,5 @@
 import { defineComponent, h, onUnmounted, inject, ref, Ref, reactive, onMounted, provide } from 'vue'
-import { createItem, watchItem, destroyItem, assemItem, XEFormItemProvide } from './util'
+import { createItem, watchItem, destroyItem, assembleItem, XEFormItemProvide } from './util'
 import { formItemProps } from './form-item'
 import XEUtils from 'xe-utils'
 
@@ -22,7 +22,7 @@ export default defineComponent({
     watchItem(props, formItem)
 
     onMounted(() => {
-      assemItem($xeForm, refElem.value, formItem, parentFormGather)
+      assembleItem($xeForm, refElem.value, formItem, parentFormGather)
     })
 
     onUnmounted(() => {

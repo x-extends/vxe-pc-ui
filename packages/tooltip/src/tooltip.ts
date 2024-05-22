@@ -1,7 +1,6 @@
 import { defineComponent, h, ref, Ref, nextTick, onBeforeUnmount, onMounted, reactive, watch, PropType } from 'vue'
 import XEUtils from 'xe-utils'
-import { getConfig, createEvent } from '@vxe-ui/core'
-import { useSize } from '../../hooks/size'
+import { getConfig, createEvent, useSize } from '@vxe-ui/core'
 import { getLastZIndex, nextZIndex } from '../../ui/src/utils'
 import { getAbsolutePos, getDomNode } from '../../ui/src/dom'
 import { getSlotVNs } from '../../ui/src/vn'
@@ -32,7 +31,7 @@ export default defineComponent({
 
     const xID = XEUtils.uniqueId()
 
-    const computeSize = useSize(props)
+    const { computeSize } = useSize(props)
 
     const reactData = reactive<TooltipReactData>({
       target: null,
@@ -55,7 +54,7 @@ export default defineComponent({
       refElem
     }
 
-    const $xetooltip = {
+    const $xeTooltip = {
       xID,
       props,
       context,
@@ -171,7 +170,7 @@ export default defineComponent({
 
     tooltipMethods = {
       dispatchEvent (type, params, evnt) {
-        emit(type, createEvent(evnt, { $tooltip: $xetooltip }, params))
+        emit(type, createEvent(evnt, { $tooltip: $xeTooltip }, params))
       },
       open (target?: HTMLElement, content?: VxeTooltipPropTypes.Content) {
         return tooltipMethods.toVisible(target || reactData.target as HTMLElement, content)
@@ -221,7 +220,7 @@ export default defineComponent({
       }
     }
 
-    Object.assign($xetooltip, tooltipMethods)
+    Object.assign($xeTooltip, tooltipMethods)
 
     watch(() => props.content, () => {
       reactData.tipContent = props.content
@@ -330,7 +329,7 @@ export default defineComponent({
       }
       return h('div', {
         ref: refElem,
-        class: ['vxe-table--tooltip-wrapper', `theme--${theme}`, popupClassName ? (XEUtils.isFunction(popupClassName) ? popupClassName({ $tooltip: $xetooltip }) : popupClassName) : '', {
+        class: ['vxe-table--tooltip-wrapper', `theme--${theme}`, popupClassName ? (XEUtils.isFunction(popupClassName) ? popupClassName({ $tooltip: $xeTooltip }) : popupClassName) : '', {
           [`size--${vSize}`]: vSize,
           [`placement--${tipStore.placement}`]: tipStore.placement,
           'is--enterable': enterable,
@@ -350,9 +349,9 @@ export default defineComponent({
       ])
     }
 
-    $xetooltip.renderVN = renderVN
+    $xeTooltip.renderVN = renderVN
 
-    return $xetooltip
+    return $xeTooltip
   },
   render () {
     return this.renderVN()

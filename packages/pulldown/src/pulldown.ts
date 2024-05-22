@@ -1,7 +1,6 @@
 import { defineComponent, h, Teleport, ref, Ref, onUnmounted, reactive, nextTick, PropType, watch, createCommentVNode } from 'vue'
 import XEUtils from 'xe-utils'
-import { getConfig, globalEvents, createEvent } from '@vxe-ui/core'
-import { useSize } from '../../hooks/size'
+import { getConfig, globalEvents, createEvent, useSize } from '@vxe-ui/core'
 import { getAbsolutePos, getEventTargetNode } from '../../ui/src/dom'
 import { getLastZIndex, nextZIndex } from '../../ui/src/utils'
 
@@ -28,7 +27,7 @@ export default defineComponent({
 
     const xID = XEUtils.uniqueId()
 
-    const computeSize = useSize(props)
+    const { computeSize } = useSize(props)
 
     const reactData = reactive<PulldownReactData>({
       inited: false,

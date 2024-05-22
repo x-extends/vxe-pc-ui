@@ -1,7 +1,6 @@
 import { defineComponent, h, PropType, ref, Ref, computed, onUnmounted, watch, reactive, nextTick, onActivated } from 'vue'
 import XEUtils from 'xe-utils'
-import { getConfig, globalEvents, globalResize, createEvent } from '@vxe-ui/core'
-import { useSize } from '../../hooks/size'
+import { getConfig, globalEvents, globalResize, createEvent, useSize } from '@vxe-ui/core'
 import { browse } from '../../ui/src/dom'
 import VxeLoadingComponent from '../../loading/src/loading'
 
@@ -28,7 +27,7 @@ export default defineComponent({
 
     const xID = XEUtils.uniqueId()
 
-    const computeSize = useSize(props)
+    const { computeSize } = useSize(props)
 
     const reactData = reactive({
       scrollYLoad: false,

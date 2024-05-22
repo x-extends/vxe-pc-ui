@@ -1,8 +1,7 @@
 import { defineComponent, h, computed, inject, PropType } from 'vue'
 import XEUtils from 'xe-utils'
 import { getFuncText } from '../../ui/src/utils'
-import { getConfig, createEvent } from '@vxe-ui/core'
-import { useSize } from '../../hooks/size'
+import { getConfig, createEvent, useSize } from '@vxe-ui/core'
 
 import type { VxeCheckboxConstructor, VxeCheckboxGroupConstructor, VxeCheckboxEmits, VxeCheckboxGroupPrivateMethods, CheckboxMethods, VxeCheckboxPropTypes, VxeFormConstructor, VxeFormPrivateMethods, VxeFormDefines } from '../../../types'
 
@@ -38,7 +37,7 @@ export default defineComponent({
 
     let checkboxMethods = {} as CheckboxMethods
 
-    const computeSize = useSize(props)
+    const { computeSize } = useSize(props)
 
     const $xeCheckboxGroup = inject('$xeCheckboxGroup', null as (VxeCheckboxGroupConstructor & VxeCheckboxGroupPrivateMethods) | null)
 

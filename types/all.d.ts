@@ -1,5 +1,5 @@
 import { App } from 'vue'
-import { VxeUIExport, VxeGlobalConfig } from './ui'
+import { VxeGlobalConfig } from './ui'
 
 import VxeAnchor from './components/anchor'
 import VxeAnchorLink from './components/anchor-link'
@@ -39,6 +39,7 @@ import VxeOptgroup from './components/optgroup'
 import VxeOption from './components/option'
 import VxePager from './components/pager'
 import VxePasswordInput from './components/password-input'
+import VxePrint from './components/print'
 import VxePulldown from './components/pulldown'
 import VxeRadio from './components/radio'
 import VxeRadioButton from './components/radio-button'
@@ -96,6 +97,7 @@ declare module '@vue/runtime-core' {
     VxeOption: typeof VxeOption
     VxePager: typeof VxePager
     VxePasswordInput: typeof VxePasswordInput
+    VxePrint: typeof VxePrint
     VxePulldown: typeof VxePulldown
     VxeRadio: typeof VxeRadio
     VxeRadioButton: typeof VxeRadioButton
@@ -154,6 +156,7 @@ export * from './components/optgroup'
 export * from './components/option'
 export * from './components/pager'
 export * from './components/password-input'
+export * from './components/print'
 export * from './components/pulldown'
 export * from './components/radio'
 export * from './components/radio-button'

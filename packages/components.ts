@@ -39,6 +39,7 @@ import VxeOptgroup from './optgroup'
 import VxeOption from './option'
 import VxePager from './pager'
 import VxePasswordInput from './password-input'
+import VxePrint from './print'
 import VxePulldown from './pulldown'
 import VxeRadio from './radio'
 import VxeRadioButton from './radio-button'
@@ -54,7 +55,7 @@ import VxeTree from './tree'
 import VxeTreeSelect from './tree-select'
 import VxeUpload from './upload'
 
-import { VxeGlobalConfig } from '../types'
+import type { VxeGlobalConfig } from '../types'
 
 const components = [
   VxeAnchor,
@@ -95,6 +96,7 @@ const components = [
   VxeOption,
   VxePager,
   VxePasswordInput,
+  VxePrint,
   VxePulldown,
   VxeRadio,
   VxeRadioButton,
@@ -158,6 +160,7 @@ export * from './optgroup'
 export * from './option'
 export * from './pager'
 export * from './password-input'
+export * from './print'
 export * from './pulldown'
 export * from './radio'
 export * from './radio-button'

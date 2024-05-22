@@ -68,6 +68,7 @@ const componentList = [
   'option',
   'pager',
   'password-input',
+  'print',
   'pulldown',
   'radio',
   'radio-button',
@@ -117,8 +118,8 @@ gulp.task('build_escode', function () {
     'packages_temp/**/*.ts',
     '!packages_temp/index.ts'
   ])
-    .pipe(replace('process.env.VUE_APP_VXE_TABLE_VERSION', `"${pack.version}"`))
-    .pipe(replace('process.env.VUE_APP_VXE_TABLE_ENV', 'process.env.NODE_ENV'))
+    .pipe(replace('process.env.VUE_APP_VXE_UI_VERSION', `"${pack.version}"`))
+    .pipe(replace('process.env.VUE_APP_VXE_ENV', 'process.env.NODE_ENV'))
     .pipe(ts(tsSettings))
     .pipe(gulp.dest(esmOutDir))
 })
@@ -127,8 +128,8 @@ gulp.task('build_esjs', gulp.series('build_escode', function () {
   return gulp.src([
     'packages_temp/index.ts'
   ])
-    .pipe(replace('process.env.VUE_APP_VXE_TABLE_VERSION', `"${pack.version}"`))
-    .pipe(replace('process.env.VUE_APP_VXE_TABLE_ENV', 'process.env.NODE_ENV'))
+    .pipe(replace('process.env.VUE_APP_VXE_UI_VERSION', `"${pack.version}"`))
+    .pipe(replace('process.env.VUE_APP_VXE_ENV', 'process.env.NODE_ENV'))
     .pipe(ts(tsSettings))
     .pipe(rename({
       basename: 'index',
@@ -145,8 +146,8 @@ gulp.task('build_commoncode', function () {
     'packages_temp/**/*.ts',
     '!packages_temp/index.ts'
   ])
-    .pipe(replace('process.env.VUE_APP_VXE_TABLE_VERSION', `"${pack.version}"`))
-    .pipe(replace('process.env.VUE_APP_VXE_TABLE_ENV', 'process.env.NODE_ENV'))
+    .pipe(replace('process.env.VUE_APP_VXE_UI_VERSION', `"${pack.version}"`))
+    .pipe(replace('process.env.VUE_APP_VXE_ENV', 'process.env.NODE_ENV'))
     .pipe(ts(tsSettings))
     .pipe(babel({
       presets: ['@babel/env']
@@ -164,8 +165,8 @@ gulp.task('build_commonjs', gulp.series('build_commoncode', function () {
   return gulp.src([
     'packages_temp/index.ts'
   ])
-    .pipe(replace('process.env.VUE_APP_VXE_TABLE_VERSION', `"${pack.version}"`))
-    .pipe(replace('process.env.VUE_APP_VXE_TABLE_ENV', 'process.env.NODE_ENV'))
+    .pipe(replace('process.env.VUE_APP_VXE_UI_VERSION', `"${pack.version}"`))
+    .pipe(replace('process.env.VUE_APP_VXE_ENV', 'process.env.NODE_ENV'))
     .pipe(ts(tsSettings))
     .pipe(babel({
       presets: ['@babel/env']
