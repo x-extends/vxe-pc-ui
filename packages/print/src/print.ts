@@ -11,7 +11,7 @@ export default defineComponent({
     title: String as PropType<VxePrintPropTypes.Title>,
     content: String as PropType<VxePrintPropTypes.Content>,
     customStyle: String as PropType<VxePrintPropTypes.CustomStyle>,
-    beforeMethod: Function as PropType<VxePrintPropTypes.beforeMethod>
+    beforeMethod: Function as PropType<VxePrintPropTypes.BeforeMethod>
   },
   emits: [],
   setup (props, context) {

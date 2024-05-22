@@ -118,7 +118,7 @@ gulp.task('build_escode', function () {
     'packages_temp/**/*.ts',
     '!packages_temp/index.ts'
   ])
-    .pipe(replace('process.env.VUE_APP_VXE_UI_VERSION', `"${pack.version}"`))
+    .pipe(replace('process.env.VUE_APP_VXE_VERSION', `"${pack.version}"`))
     .pipe(replace('process.env.VUE_APP_VXE_ENV', 'process.env.NODE_ENV'))
     .pipe(ts(tsSettings))
     .pipe(gulp.dest(esmOutDir))
@@ -128,7 +128,7 @@ gulp.task('build_esjs', gulp.series('build_escode', function () {
   return gulp.src([
     'packages_temp/index.ts'
   ])
-    .pipe(replace('process.env.VUE_APP_VXE_UI_VERSION', `"${pack.version}"`))
+    .pipe(replace('process.env.VUE_APP_VXE_VERSION', `"${pack.version}"`))
     .pipe(replace('process.env.VUE_APP_VXE_ENV', 'process.env.NODE_ENV'))
     .pipe(ts(tsSettings))
     .pipe(rename({
@@ -146,7 +146,7 @@ gulp.task('build_commoncode', function () {
     'packages_temp/**/*.ts',
     '!packages_temp/index.ts'
   ])
-    .pipe(replace('process.env.VUE_APP_VXE_UI_VERSION', `"${pack.version}"`))
+    .pipe(replace('process.env.VUE_APP_VXE_VERSION', `"${pack.version}"`))
     .pipe(replace('process.env.VUE_APP_VXE_ENV', 'process.env.NODE_ENV'))
     .pipe(ts(tsSettings))
     .pipe(babel({
@@ -165,7 +165,7 @@ gulp.task('build_commonjs', gulp.series('build_commoncode', function () {
   return gulp.src([
     'packages_temp/index.ts'
   ])
-    .pipe(replace('process.env.VUE_APP_VXE_UI_VERSION', `"${pack.version}"`))
+    .pipe(replace('process.env.VUE_APP_VXE_VERSION', `"${pack.version}"`))
     .pipe(replace('process.env.VUE_APP_VXE_ENV', 'process.env.NODE_ENV'))
     .pipe(ts(tsSettings))
     .pipe(babel({
@@ -225,9 +225,10 @@ gulp.task('build_umd_all', gulp.parallel('build_umdjs', 'build_umdcss'))
 gulp.task('build_icon', () => {
   const timeNow = Date.now()
   return merge(
-    gulp.src('lib_temp/index.css')
+    gulp.src(['lib/style.css', 'lib/style.min.css'])
       .pipe(replace(' format("woff2")', ` format("woff2"),url("./iconfont.${timeNow}.woff") format("woff"),url("./iconfont.${timeNow}.ttf") format("truetype")`))
-      .pipe(gulp.dest('lib_temp')),
+      .pipe(gulp.dest('lib'))
+      .pipe(gulp.dest('es')),
     gulp.src('lib/icon/style/style.css')
       .pipe(replace(' format("woff2")', ` format("woff2"),url("./iconfont.${timeNow}.woff") format("woff"),url("./iconfont.${timeNow}.ttf") format("truetype")`))
       .pipe(gulp.dest('lib/icon/style'))
@@ -297,7 +298,7 @@ gulp.task('clear', () => {
 
 gulp.task('build_all', gulp.parallel('build_es_all', 'build_common_all', 'build_umd_all'))
 
-gulp.task('build', gulp.series('clear', 'copy_pack', 'build_all', 'build_single_style', () => {
+gulp.task('build', gulp.series('clear', 'copy_pack', 'build_all', 'build_single_style', 'build_icon', () => {
   [coreName, ...componentList].forEach(name => {
     fs.writeFileSync(`lib/${name}/style/index.js`, styleCode)
     fs.writeFileSync(`lib/vxe-${name}/style/index.js`, styleCode)

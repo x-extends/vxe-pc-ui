@@ -26,7 +26,7 @@ export namespace VxePrintPropTypes {
   export type Title = string
   export type Content = string
   export type CustomStyle = string
-  export type beforeMethod = (params: {
+  export type BeforeMethod = (params: {
     content: string
     options: VxePrintProps
   }) => string
@@ -36,7 +36,7 @@ export type VxePrintProps = {
   title?: VxePrintPropTypes.Title
   content?: VxePrintPropTypes.Content
   customStyle?: VxePrintPropTypes.CustomStyle
-  beforeMethod?: VxePrintPropTypes.beforeMethod
+  beforeMethod?: VxePrintPropTypes.BeforeMethod
 }
 
 export interface PrintPrivateComputed {
@@ -62,7 +62,23 @@ export namespace VxePrintDefines {
     $print: VxePrintConstructor
   }
 
-  export type PrintFunction = (options?: VxePrintProps) => Promise<any>
+  export type PrintFunction = (options?: VxePrintProps & {
+    /**
+     * 请使用 title
+     * @deprecated
+     */
+    sheetName?: string
+    /**
+     * 请使用 customStyle
+     * @deprecated
+     */
+    style?: string
+    /**
+     * 请使用 customStyle
+     * @deprecated
+     */
+    beforePrintMethod?: VxePrintPropTypes.BeforeMethod
+  }) => Promise<any>
 }
 
 export type VxePrintEventProps = {}

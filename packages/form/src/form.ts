@@ -290,8 +290,11 @@ export default defineComponent({
               inputElem = el.querySelector(`.${item.id} ${itemRender.autofocus}`) as HTMLInputElement
             }
             // 渲染器的聚焦处理
-            if (!inputElem && compConf && compConf.autofocus) {
-              inputElem = el.querySelector(`.${item.id} ${compConf.autofocus}`) as HTMLInputElement
+            if (!inputElem) {
+              const formItemAutoFocus = compConf ? compConf.formItemAutoFocus : null
+              if (formItemAutoFocus) {
+                inputElem = el.querySelector(`.${item.id} ${formItemAutoFocus}`) as HTMLInputElement
+              }
             }
             if (inputElem) {
               inputElem.focus()

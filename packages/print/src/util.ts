@@ -87,5 +87,14 @@ function handlePrint (opts: VxePrintProps, content = '') {
 
 export const printHtml: VxePrintDefines.PrintFunction = (options) => {
   const opts = Object.assign({}, options)
+  if (opts.sheetName) {
+    opts.title = opts.title || opts.sheetName
+  }
+  if (opts.style) {
+    opts.customStyle = opts.customStyle || opts.style
+  }
+  if (opts.beforePrintMethod) {
+    opts.beforeMethod = opts.beforeMethod || opts.beforePrintMethod
+  }
   return handlePrint(opts, opts.content)
 }

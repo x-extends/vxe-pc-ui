@@ -8,8 +8,10 @@ import { VxeFormDesignDefines } from '../components/form-design'
 // 表单
 declare module '@vxe-ui/core' {
   export interface VxeGlobalRendererOptions {
-    // 表单-项渲染
-    formItemAutoFocus?: boolean
+    /**
+     * 表单项 - 设置自动聚焦元素
+     */
+    formItemAutoFocus?: string
     itemClassName?: string | ((params: VxeGlobalRendererHandles.RenderItemTitleParams) => string | VxeComponentClassNameType)
     itemStyle?: VxeComponentStyleType | ((params: VxeGlobalRendererHandles.RenderItemTitleParams) => VxeComponentStyleType)
     itemContentClassName?: string | ((params: VxeGlobalRendererHandles.RenderItemTitleParams) => string | VxeComponentClassNameType)
@@ -20,12 +22,6 @@ declare module '@vxe-ui/core' {
     renderItemContent?(renderOpts: VxeGlobalRendererHandles.RenderItemContentOptions, params: VxeGlobalRendererHandles.RenderItemContentParams): VxeComponentSlotType | VxeComponentSlotType[]
     itemVisibleMethod?(params: VxeGlobalRendererHandles.ItemVisibleMethodParams): boolean
     itemResetMethod?(params: VxeGlobalRendererHandles.ItemResetMethodParams): void
-
-    /**
-     * 已废弃
-     * @deprecated
-     */
-    autofocus?: boolean
   }
 
   export namespace VxeGlobalRendererHandles {
