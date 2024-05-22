@@ -1,6 +1,6 @@
 {
   "name": "vxe-pc-ui",
-  "version": "1.3.0",
+  "version": "1.4.0",
   "description": "一个基于 vue 的 PC 端组件库",
   "scripts": {
     "update": "npm install --legacy-peer-deps",
@@ -25,7 +25,7 @@
   "style": "lib/style.css",
   "typings": "types/index.d.ts",
   "dependencies": {
-    "@vxe-ui/core": "^0.3.0"
+    "@vxe-ui/core": "^0.4.0"
   },
   "devDependencies": {
     "@types/resize-observer-browser": "^0.1.11",
