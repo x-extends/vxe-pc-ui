@@ -58,7 +58,7 @@ export default defineComponent({
       const wrapperWidth = computeWrapperWidth.value
       const defaultSlot = slots.default
 
-      return h('div', {
+      return h('aside', {
         ref: refElem,
         class: ['vxe-layout-aside', {
           'is--padding': padding,

@@ -1,5 +1,6 @@
 import { RenderFunction, SetupContext, Ref, ComponentPublicInstance, DefineComponent } from 'vue'
 import { defineVxeComponent, VxeComponentBaseOptions, VxeComponentEventParams, ValueOf } from '@vxe-ui/core'
+import { VxeLinkPropTypes } from './link'
 
 /* eslint-disable no-use-before-define,@typescript-eslint/ban-types */
 
@@ -41,13 +42,7 @@ export namespace VxeMenuPropTypes {
     name?: VxeMenuPropTypes.ModelValue
     title?: string | number
     icon?: string
-    routerLink?: {
-      path?: string
-      name?: VxeMenuPropTypes.ModelValue
-      query?: any
-      params?: any
-      target?: null | '' | '_blank' | '_self' | '_parent' | '_top'
-    }
+    routerLink?: VxeLinkPropTypes.RouterLink
   }
 
   export type Options = MenuOneOption[]

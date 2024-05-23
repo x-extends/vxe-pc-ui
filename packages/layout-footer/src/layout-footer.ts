@@ -40,7 +40,7 @@ export default defineComponent({
     const renderVN = () => {
       const { fixed, align } = props
       const defaultSlot = slots.default
-      return h('div', {
+      return h('footer', {
         ref: refElem,
         class: ['vxe-layout-footer', align ? `align--${align}` : '', {
           'is--fixed': fixed

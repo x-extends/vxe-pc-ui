@@ -28,6 +28,7 @@ import VxeLayoutBody from './layout-body'
 import VxeLayoutContainer from './layout-container'
 import VxeLayoutFooter from './layout-footer'
 import VxeLayoutHeader from './layout-header'
+import VxeLink from './link'
 import VxeListDesign from './list-design'
 import VxeListView from './list-view'
 import VxeList from './list'
@@ -83,6 +84,7 @@ const components = [
   VxeLayoutContainer,
   VxeLayoutFooter,
   VxeLayoutHeader,
+  VxeLink,
   VxeListDesign,
   VxeListView,
   VxeList,
@@ -147,6 +149,7 @@ export * from './layout-body'
 export * from './layout-container'
 export * from './layout-footer'
 export * from './layout-header'
+export * from './link'
 export * from './list-design'
 export * from './list-view'
 export * from './list'

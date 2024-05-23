@@ -38,7 +38,7 @@ export default defineComponent({
 
     const renderVN = () => {
       const defaultSlot = slots.default
-      return h('div', {
+      return h('header', {
         ref: refElem,
         class: ['vxe-layout-header', {
           'is--fixed': props.fixed

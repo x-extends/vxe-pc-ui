@@ -42,6 +42,14 @@ $btnThemeList: (
     btnDisabledColor: var(--vxe-ui-status-danger-disabled-color)
   ),
   (
+    name: "error",
+    textColor: var(--vxe-ui-status-error-color),
+    btnColor: #fff,
+    btnLightenColor: var(--vxe-ui-status-error-lighten-color),
+    btnDarkenColor: var(--vxe-ui-status-error-darken-color),
+    btnDisabledColor: var(--vxe-ui-status-error-disabled-color)
+  ),
+  (
     name: "perfect",
     textColor: var(--vxe-ui-table-header-background-color),
     btnColor: var(--vxe-ui-font-color),

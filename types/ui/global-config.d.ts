@@ -24,6 +24,7 @@ import { VxeLayoutBodyProps } from '../components/layout-body'
 import { VxeLayoutContainerProps } from '../components/layout-container'
 import { VxeLayoutFooterProps } from '../components/layout-footer'
 import { VxeLayoutHeaderProps } from '../components/layout-header'
+import { VxeLinkProps } from '../components/link'
 import { VxeListDesignProps } from '../components/list-design'
 import { VxeListProps } from '../components/list'
 import { VxeLoadingProps } from '../components/loading'
@@ -73,6 +74,7 @@ declare module '@vxe-ui/core' {
     layoutContainer?: VxeLayoutContainerProps
     layoutFooter?: VxeLayoutFooterProps
     layoutHeader?: VxeLayoutHeaderProps
+    link?: VxeLinkProps
     listDesign?: VxeListDesignProps
     list?: VxeListProps
     loading?: VxeLoadingProps

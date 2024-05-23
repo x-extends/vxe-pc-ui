@@ -28,6 +28,7 @@ import VxeLayoutBody from './components/layout-body'
 import VxeLayoutContainer from './components/layout-container'
 import VxeLayoutFooter from './components/layout-footer'
 import VxeLayoutHeader from './components/layout-header'
+import VxeLink from './components/link'
 import VxeListDesign from './components/list-design'
 import VxeListView from './components/list-view'
 import VxeList from './components/list'
@@ -86,6 +87,7 @@ declare module '@vue/runtime-core' {
     VxeLayoutContainer: typeof VxeLayoutContainer
     VxeLayoutFooter: typeof VxeLayoutFooter
     VxeLayoutHeader: typeof VxeLayoutHeader
+    VxeLink: typeof VxeLink
     VxeListDesign: typeof VxeListDesign
     VxeListView: typeof VxeListView
     VxeList: typeof VxeList
@@ -145,6 +147,7 @@ export * from './components/layout-body'
 export * from './components/layout-container'
 export * from './components/layout-footer'
 export * from './components/layout-header'
+export * from './components/link'
 export * from './components/list-design'
 export * from './components/list-view'
 export * from './components/list'

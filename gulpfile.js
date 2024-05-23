@@ -57,6 +57,7 @@ const componentList = [
   'layout-container',
   'layout-footer',
   'layout-header',
+  'link',
   'list-design',
   'list-view',
   'list',

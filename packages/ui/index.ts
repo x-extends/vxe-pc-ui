@@ -70,6 +70,9 @@ setConfig({
   layoutContainer: {},
   layoutFooter: {},
   layoutHeader: {},
+  link: {
+    underline: true
+  },
   listDesign: {},
   list: {
     // size: null,
