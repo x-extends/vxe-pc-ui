@@ -5,7 +5,7 @@ $iconWidth: 1.6em;
 .vxe-input--inner {
   width: 100%;
   height: 100%;
-  border-radius: var(--vxe-ui-border-radius);
+  border-radius: var(--vxe-ui-base-border-radius);
   outline: 0;
   margin: 0;
   font-size: inherit;
@@ -14,13 +14,13 @@ $iconWidth: 1.6em;
   padding: 0 0.6em;
   color: var(--vxe-ui-font-color);
   border: 1px solid var(--vxe-ui-input-border-color);
-  background-color: var(--vxe-ui-input-background-color);
+  background-color: var(--vxe-ui-layout-background-color);
   box-shadow: none;
   &::placeholder {
     color: var(--vxe-ui-input-placeholder-color);
   }
   &::-webkit-autofill {
-    background-color: var(--vxe-ui-input-background-color);
+    background-color: var(--vxe-ui-layout-background-color);
   }
   &[type="number"] {
     appearance: none;
@@ -86,7 +86,7 @@ $iconWidth: 1.6em;
   right: 0.5em;
   height: calc(100% - 2px);
   color: var(--vxe-ui-input-count-color);
-  background-color: var(--vxe-ui-input-count-background-color);
+  background-color: var(--vxe-ui-layout-background-color);
   &.is--error {
     color: var(--vxe-ui-input-count-error-color);
   }
@@ -304,7 +304,7 @@ $iconWidth: 1.6em;
   left: 0;
   padding: 4px 0;
   color: var(--vxe-ui-font-color);
-  font-size: var(--vxe-ui-font-size);
+  font-size: var(--vxe-ui-font-size-default);
   text-align: left;
   &:not(.is--transfer) {
     min-width: 100%;
@@ -332,10 +332,10 @@ $iconWidth: 1.6em;
 
 .vxe-input--panel-wrapper,
 .vxe-input--panel-layout-wrapper {
-  background-color: var(--vxe-ui-input-panel-background-color);
-  border: 1px solid var(---vxe-ui-base-popup-border-color);
+  background-color: var(--vxe-ui-layout-background-color);
+  border: 1px solid var(--vxe-ui-base-popup-border-color);
   box-shadow: 0 0 6px 2px rgba(0, 0, 0, 0.1);
-  border-radius: var(--vxe-ui-border-radius);
+  border-radius: var(--vxe-ui-base-border-radius);
 }
 
 .vxe-input--panel-wrapper {
@@ -406,7 +406,7 @@ $iconWidth: 1.6em;
   display: inline-block;
   text-align: center;
   border: 1px solid var(--vxe-ui-input-border-color);
-  border-radius: var(--vxe-ui-border-radius);
+  border-radius: var(--vxe-ui-base-border-radius);
 }
 .vxe-input--time-picker-confirm {
   position: absolute;
@@ -417,7 +417,7 @@ $iconWidth: 1.6em;
 .vxe-input--date-picker-confirm {
   outline: 0;
   border: 1px solid var(--vxe-ui-input-border-color);
-  border-radius: var(--vxe-ui-border-radius);
+  border-radius: var(--vxe-ui-base-border-radius);
   cursor: pointer;
   color: var(--vxe-ui-input-date-time-confirm-button-color);
   border-color: var(--vxe-ui-font-primary-color);
@@ -465,7 +465,7 @@ $iconWidth: 1.6em;
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: var(--vxe-ui-button-default-background-color);
+  background-color: var(--vxe-ui-layout-background-color);
 }
 .vxe-input--date-picker-btn {
   &.is--disabled {
@@ -483,8 +483,8 @@ $iconWidth: 1.6em;
   }
 }
 .vxe-input--date-picker-body {
-  border-radius: var(--vxe-ui-border-radius);
-  border: 1px solid var(---vxe-ui-base-popup-border-color);
+  border-radius: var(--vxe-ui-base-border-radius);
+  border: 1px solid var(--vxe-ui-base-popup-border-color);
   user-select: none;
   table {
     border: 0;
@@ -499,7 +499,7 @@ $iconWidth: 1.6em;
     font-weight: normal;
   }
   th {
-    box-shadow: inset 0 -1px 0 0 var(---vxe-ui-base-popup-border-color);
+    box-shadow: inset 0 -1px 0 0 var(--vxe-ui-base-popup-border-color);
   }
   td {
     &.is--prev,
@@ -511,7 +511,7 @@ $iconWidth: 1.6em;
       }
     }
     &.is--now {
-      box-shadow: inset 0 0 0 1px var(---vxe-ui-base-popup-border-color);
+      box-shadow: inset 0 0 0 1px var(--vxe-ui-base-popup-border-color);
       &:not(.is--selected) {
         &.is--current {
           color: var(--vxe-ui-font-primary-color);
@@ -562,12 +562,12 @@ $iconWidth: 1.6em;
 .vxe-input--date-week-view {
   th {
     &:first-child {
-      box-shadow: inset -1px -1px 0 0 var(---vxe-ui-base-popup-border-color);
+      box-shadow: inset -1px -1px 0 0 var(--vxe-ui-base-popup-border-color);
     }
   }
   td {
     &:first-child {
-      box-shadow: inset -1px 0 0 0 var(---vxe-ui-base-popup-border-color);
+      box-shadow: inset -1px 0 0 0 var(--vxe-ui-base-popup-border-color);
     }
   }
 }
@@ -663,9 +663,9 @@ $iconWidth: 1.6em;
   position: relative;
   display: flex;
   flex-direction: row;
-  border: 1px solid var(---vxe-ui-base-popup-border-color);
+  border: 1px solid var(--vxe-ui-base-popup-border-color);
   flex-grow: 1;
-  border-radius: var(--vxe-ui-border-radius);
+  border-radius: var(--vxe-ui-base-border-radius);
   user-select: none;
   & > ul {
     height: 100%;
@@ -693,15 +693,15 @@ $iconWidth: 1.6em;
     }
   }
   .vxe-input--time-picker-minute-list {
-    border-left: 1px solid var(---vxe-ui-base-popup-border-color);
+    border-left: 1px solid var(--vxe-ui-base-popup-border-color);
   }
   .vxe-input--time-picker-second-list {
-    border-left: 1px solid var(---vxe-ui-base-popup-border-color);
+    border-left: 1px solid var(--vxe-ui-base-popup-border-color);
   }
 }
 
 .vxe-input {
-  font-size: var(--vxe-ui-font-size);
+  font-size: var(--vxe-ui-font-size-default);
   height: var(--vxe-ui-input-height-default);
   line-height: var(--vxe-ui-input-height-default);
   .vxe-input--inner {
@@ -756,7 +756,7 @@ $iconWidth: 1.6em;
 }
 
 @mixin getPanelStyle ($sizeIndex) {
-  $fontSizeList: var(--vxe-ui-font-size), var(--vxe-ui-font-size-medium), var(--vxe-ui-font-size-small), var(--vxe-ui-font-size-mini);
+  $fontSizeList: var(--vxe-ui-font-size-default), var(--vxe-ui-font-size-medium), var(--vxe-ui-font-size-small), var(--vxe-ui-font-size-mini);
   $timeWeekRowHeightList: var(--vxe-ui-input-date-time-week-row-height-default), var(--vxe-ui-input-date-time-week-row-height-medium), var(--vxe-ui-input-date-time-week-row-height-small), var(--vxe-ui-input-date-time-week-row-height-mini);
   $monthYearRowHeightList: var(--vxe-ui-input-date-month-year-row-height-default), var(--vxe-ui-input-date-month-year-row-height-medium), var(--vxe-ui-input-date-month-year-row-height-small), var(--vxe-ui-input-date-month-year-row-height-mini);
   $quarterRowHeightList: var(--vxe-ui-input-date-quarter-row-height-default), var(--vxe-ui-input-date-quarter-row-height-medium), var(--vxe-ui-input-date-quarter-row-height-small), var(--vxe-ui-input-date-quarter-row-height-mini);
@@ -825,7 +825,7 @@ $iconWidth: 1.6em;
     .vxe-input--date-picker-current-btn,
     .vxe-input--date-picker-next-btn {
       width: 31px - $sizeIndex;
-      border-radius: var(--vxe-ui-border-radius);
+      border-radius: var(--vxe-ui-base-border-radius);
       border: 1px solid var(--vxe-ui-input-border-color);
     }
   }

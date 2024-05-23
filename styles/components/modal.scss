@@ -139,7 +139,7 @@
       position: fixed;
       left: 50%;
       top: 0;
-      box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.2);
+      box-shadow: var(--vxe-ui-base-popup-box-shadow);
     }
     .vxe-modal--body {
       overflow: auto;
@@ -159,9 +159,9 @@
   .vxe-modal--box {
     visibility: hidden;
     width: 420px;
-    background-color: var(--vxe-ui-modal-body-background-color);
-    border-radius: var(--vxe-ui-border-radius);
-    border: 1px solid var(--vxe-ui-modal-border-color);
+    background-color: var(--vxe-ui-layout-background-color);
+    border-radius: var(--vxe-ui-base-border-radius);
+    border: 1px solid var(--vxe-ui-base-popup-border-color);
     text-align: left;
     pointer-events: auto;
     opacity: 0;
@@ -237,9 +237,9 @@
     flex-shrink: 0;
     font-size: 1.1em;
     font-weight: 700;
-    border-bottom: 1px solid var(--vxe-ui-modal-border-color);
+    border-bottom: 1px solid var(--vxe-ui-input-border-color);
     background-color: var(--vxe-ui-modal-header-background-color);
-    border-radius: var(--vxe-ui-border-radius) var(--vxe-ui-border-radius) 0 0;
+    border-radius: var(--vxe-ui-base-border-radius) var(--vxe-ui-base-border-radius) 0 0;
     user-select: none;
     &.is--draggable {
       .vxe-modal--header-title {
@@ -370,7 +370,7 @@
 }
 
 .vxe-modal--wrapper {
-  font-size: var(--vxe-ui-font-size);
+  font-size: var(--vxe-ui-font-size-default);
   &.size--medium {
     font-size: var(--vxe-ui-font-size-medium);
   }

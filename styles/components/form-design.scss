@@ -9,7 +9,7 @@
 }
 
 .vxe-design-form {
-  font-size: var(--vxe-ui-font-size);
+  font-size: var(--vxe-ui-font-size-default);
   &.size--medium {
     font-size: var(--vxe-ui-font-size-medium);
   }
@@ -30,7 +30,7 @@
 .vxe-design-form--widget,
 .vxe-design-form--setting {
   padding: var(--vxe-ui-layout-padding-default);
-  border-radius: var(--vxe-ui-border-radius);
+  border-radius: var(--vxe-ui-base-border-radius);
 }
 
 .vxe-design-form--setting {
@@ -51,8 +51,8 @@
     overflow: auto;
     padding: var(--vxe-ui-layout-padding-default) 0;
     background-color: var(--vxe-ui-layout-background-color);
-    border-radius: var(--vxe-ui-border-radius);
-    box-shadow: 0 0 8px rgba(0, 0, 0, 0.1);
+    border-radius: var(--vxe-ui-base-border-radius);
+    border: 1px solid var(--vxe-ui-input-border-color);
   }
 }
 
@@ -66,11 +66,11 @@
   padding: var(--vxe-ui-layout-padding-half) 0 var(--vxe-ui-layout-padding-half) var(--vxe-ui-layout-padding-half);
 }
 .vxe-design-form--widget-group {
-  border-radius: var(--vxe-ui-border-radius);
+  border-radius: var(--vxe-ui-base-border-radius);
   padding: var(--vxe-ui-layout-padding-default);
   margin-bottom: var(--vxe-ui-layout-padding-default);
   background-color: var(--vxe-ui-layout-background-color);
-  box-shadow: 0 0 8px rgba(0, 0, 0, 0.1);
+  border: 1px solid var(--vxe-ui-input-border-color);
 }
 .vxe-design-form--widget-item {
   width: 50%;
@@ -82,9 +82,9 @@
   line-height: 32px;
   font-size: var(--vxe-ui-design-form-widget-item-font-size);
   padding: 0 var(--vxe-ui-layout-padding-half);
-  border-radius: var(--vxe-ui-border-radius);
+  border-radius: var(--vxe-ui-base-border-radius);
   border: 1px solid var(--vxe-ui-input-border-color);
-  background-color: var(--vxe-ui-design-form-widget-item-background-color);
+  background-color: var(--vxe-ui-layout-background-color);
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -92,7 +92,7 @@
   user-select: none;
   &:hover {
     border-color: var(--vxe-ui-font-primary-lighten-color);
-    background-color: #f4f8fc;
+    background-color: var(--vxe-ui-base-active-background-color);
     .vxe-design-form--widget-item-add {
       display: block;
     }
@@ -138,17 +138,15 @@
     z-index: 1;
   }
   &:hover {
-    background-color: #f1f3f5;
+    background-color: var(--vxe-ui-form-design-widget-hover-background-color);
   }
   &.is--active {
     border: 1px dashed var(--vxe-ui-font-primary-color);
-    background-color: #ebf3fc;
+    background-color: var(--vxe-ui-base-active-background-color);
   }
+  &.is--drag,
   &.is--sort {
-    background-color: #dde9fd;
-  }
-  &.is--drag {
-    background-color: #dde9fd;
+    background-color: var(--vxe-ui-base-drag-background-color);
   }
 }
 .vxe-design-form--preview-item-view {
@@ -163,6 +161,6 @@
 
 .vxe-design-form--setting-form {
   height: 100%;
-  background-color: var(--vxe-ui-form-background-color);
-  box-shadow: 0 0 8px rgba(0, 0, 0, 0.1);
+  background-color: var(--vxe-ui-layout-background-color);
+  border: 1px solid var(--vxe-ui-input-border-color);
 }

@@ -5,10 +5,10 @@
 
 .vxe-form {
   position: relative;
-  font-size: var(--vxe-ui-font-size);
+  font-size: var(--vxe-ui-font-size-default);
   color: var(--vxe-ui-font-color);
   font-family: var(--vxe-ui-font-family);
-  background-color: var(--vxe-ui-form-background-color);
+  background-color: var(--vxe-ui-layout-background-color);
   text-align: left;
   .vxe-row {
     flex-shrink: 0;
@@ -226,7 +226,7 @@
   .vxe-default-select {
     outline: 0;
     border: 1px solid var(--vxe-ui-input-border-color);
-    border-radius: var(--vxe-ui-border-radius);
+    border-radius: var(--vxe-ui-base-border-radius);
   }
   .vxe-default-input,
   .vxe-default-select {

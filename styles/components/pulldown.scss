@@ -38,12 +38,12 @@
   }
 }
 .vxe-pulldown--panel-wrapper {
-  background-color: var(--vxe-ui-pulldown-panel-background-color);
+  background-color: var(--vxe-ui-layout-background-color);
 }
 
 .vxe-pulldown,
 .vxe-pulldown--panel {
-  font-size: var(--vxe-ui-font-size);
+  font-size: var(--vxe-ui-font-size-default);
   &.size--medium {
     font-size: var(--vxe-ui-font-size-medium);
   }

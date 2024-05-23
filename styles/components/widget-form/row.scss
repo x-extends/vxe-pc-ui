@@ -1,7 +1,7 @@
 .vxe-design-form--widget-row-form-row {
   border: 1px solid var( --vxe-ui-input-border-color);
   margin-bottom: var(--vxe-ui-layout-padding-default);
-  border-radius: var(--vxe-ui-border-radius);
+  border-radius: var(--vxe-ui-base-border-radius);
   cursor: pointer;
   &:hover {
     border-color: var(--vxe-ui-font-primary-color);
@@ -20,9 +20,9 @@
   padding: var(--vxe-ui-layout-padding-default);
   & > div {
     line-height: 24px;
-    background: #e8eaf0;
+    background: var(--vxe-ui-base-hover-background-color);
     text-align: center;
-    border-radius: var(--vxe-ui-border-radius);
+    border-radius: var(--vxe-ui-base-border-radius);
   }
 }
 
@@ -40,18 +40,16 @@
     height: 100%;
     z-index: 1;
   }
+  &:hover {
+    background-color: var(--vxe-ui-form-design-sub-widget-hover-background-color);
+  }
   &.is--active {
     border: 1px dashed var(--vxe-ui-font-primary-color);
-    background-color: #ebf3fc;
+    background-color: var(--vxe-ui-base-active-background-color);
   }
+  &.is--drag,
   &.is--sort {
-    background-color: #dde9fd;
-  }
-  &.is--drag {
-    background-color: #dde9fd;
-  }
-  &:hover {
-    background-color: #f1f3f5;
+    background-color: var(--vxe-ui-base-drag-background-color);
   }
 }
 

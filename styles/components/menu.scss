@@ -2,10 +2,10 @@
 
 .vxe-menu {
   position: relative;
-  font-size: var(--vxe-ui-font-size);
+  font-size: var(--vxe-ui-font-size-default);
   color: var(--vxe-ui-font-color);
   font-family: var(--vxe-ui-font-family);
-  background-color: var(--vxe-ui-form-background-color);
+  background-color: var(--vxe-ui-layout-background-color);
 }
 .vxe-menu--item-link {
   display: flex;
@@ -15,13 +15,13 @@
   color: var(--vxe-ui-font-color);
   text-decoration: none;
   user-select: none;
-  @include createAnimationTransition(all, 0.2s);
   &:hover {
-    background-color: rgba(0, 0, 0, 0.06);
+    color: var(--vxe-ui-menu-item-hover-color);
+    background-color: var(--vxe-ui-base-hover-background-color);
   }
   &.router-link-exact-active {
     color: var(--vxe-ui-font-primary-color);
-    background-color: #e6f4ff;
+    background-color: var(--vxe-ui-base-active-background-color);
   }
 }
 .vxe-menu--item-link-icon {

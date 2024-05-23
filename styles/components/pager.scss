@@ -8,7 +8,7 @@
   color: var(--vxe-ui-font-color);
   font-family: var(--vxe-ui-font-family);
   text-align: right;
-  background-color: var(--vxe-ui-pager-background-color);
+  background-color: var(--vxe-ui-layout-background-color);
   &.is--hidden {
     display: none;
   }
@@ -72,7 +72,7 @@
     .vxe-pager--jump-prev,
     .vxe-pager--num-btn,
     .vxe-pager--jump-next {
-      background-color: var(--vxe-ui-pager-perfect-button-background-color);
+      background-color: var(--vxe-ui-layout-background-color);
     }
     .vxe-pager--jump-prev,
     .vxe-pager--num-btn,
@@ -98,7 +98,7 @@
   &.is--perfect {
     border: 1px solid var(--vxe-ui-input-border-color);
     border-top-width: 0;
-    background-color: var(--vxe-ui-pager-perfect-background-color);
+    background-color: var(--vxe-ui-layout-background-color);
   }
   &.is--border {
     .vxe-pager--num-btn {
@@ -193,10 +193,10 @@
   .vxe-pager--jump-next,
   .vxe-pager--num-btn {
     text-align: center;
-    border-radius: var(--vxe-ui-border-radius);
+    border-radius: var(--vxe-ui-base-border-radius);
     margin: 0 0.25em;
     user-select: none;
-    background-color: var(--vxe-ui-pager-background-color);
+    background-color: var(--vxe-ui-layout-background-color);
     &:not(.is--disabled) {
       &:hover {
         color: var(--vxe-ui-font-primary-lighten-color);
@@ -244,12 +244,12 @@
     }
   }
   .vxe-pager--jump .vxe-pager--goto {
-    border-radius: var(--vxe-ui-border-radius);
+    border-radius: var(--vxe-ui-base-border-radius);
     border: 1px solid var(--vxe-ui-input-border-color);
     color: var(--vxe-ui-font-color);
     transition: border .2s ease-in-out;
     padding: 0 0.4em;
-    background-color: var(--vxe-ui-input-background-color);
+    background-color: var(--vxe-ui-layout-background-color);
     &:focus {
       border: 1px solid var(--vxe-ui-font-primary-color);
       outline: 0;
@@ -270,7 +270,7 @@
 }
 
 .vxe-pager {
-  font-size: var(--vxe-ui-font-size);
+  font-size: var(--vxe-ui-font-size-default);
   height: 48px;
   &.size--medium {
     font-size: var(--vxe-ui-font-size-medium);

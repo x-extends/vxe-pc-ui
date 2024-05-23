@@ -1,12 +1,15 @@
 <template>
   <vxe-layout-container vertical>
-    <vxe-layout-header @click="collapsed = !collapsed">22222222</vxe-layout-header>
+    <vxe-layout-header>
+      <vxe-button @click="collapsed = !collapsed">折叠</vxe-button>
+      <vxe-switch v-model="theme" close-value="default" open-value="dark" @click="changeTheme">主题切换</vxe-switch>
+    </vxe-layout-header>
     <vxe-layout-container>
       <vxe-layout-aside class="page-layout-aside" :collapsed="collapsed">
         <VxeMenu :options="navList" />
       </vxe-layout-aside>
       <vxe-layout-container vertical>
-        <vxe-layout-body>
+        <vxe-layout-body padding>
           <RouterView />
         </vxe-layout-body>
         <vxe-layout-footer fixed>11111</vxe-layout-footer>
@@ -17,6 +20,7 @@
 
 <script lang="ts" setup>
 import { ref } from 'vue'
+import { VxeUI } from '../packages'
 
 const collapsed = ref(false)
 
@@ -29,16 +33,16 @@ const navList = ref([
       { name: 'ContainerTest', icon: 'vxe-icon-user-fill', routerLink: { name: 'ContainerTest' } },
       { name: 'LayoutTest', icon: 'vxe-icon-user-fill', routerLink: { name: 'LayoutTest' } },
       {
-        name: 'MenuTest',
-        routerLink: { name: 'MenuTest' },
+        name: 'ccc',
         icon: 'vxe-icon-user-fill',
         children: [
+          { name: 'MenuTest', icon: 'vxe-icon-user-fill', routerLink: { name: 'MenuTest' } },
           { name: 'BreadcrumbTest', icon: 'vxe-icon-user-fill', routerLink: { name: 'BreadcrumbTest' } },
           {
-            name: 'ButtonTest',
+            name: 'tttt',
             icon: 'vxe-icon-user-fill',
-            routerLink: { name: 'ButtonTest' },
             children: [
+              { name: 'ButtonTest', icon: 'vxe-icon-user-fill', routerLink: { name: 'ButtonTest' } },
               { name: 'AnchorTest', icon: 'vxe-icon-user-fill', routerLink: { name: 'AnchorTest' } },
               { name: 'LoadingTest', icon: 'vxe-icon-user-fill', routerLink: { name: 'LoadingTest' } },
               { name: 'TooltipTest', icon: 'vxe-icon-user-fill', routerLink: { name: 'TooltipTest' } }
@@ -66,6 +70,15 @@ const navList = ref([
   { name: 'PagerTest', routerLink: { name: 'PagerTest' } },
   { name: 'PrintTest', routerLink: { name: 'PrintTest' } }
 ])
+
+const theme = ref((localStorage.getItem('VXE_THEME') as 'default' | 'dark') || 'default')
+VxeUI.setTheme(theme.value)
+const changeTheme = () => {
+  const themeName = VxeUI.getTheme() === 'dark' ? 'default' : 'dark'
+  theme.value = themeName
+  VxeUI.setTheme(themeName)
+  localStorage.setItem('VXE_THEME', themeName)
+}
 </script>
 
 <style lang="scss" scoped>

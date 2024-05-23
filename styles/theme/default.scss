@@ -1,5 +1,44 @@
 @import './base.scss';
 
 [data-vxe-ui-theme="default"] {
+  $vxe-ui-font-color: #606266;
+
+  /*font*/
+  --vxe-ui-font-color: #{$vxe-ui-font-color};
+  --vxe-ui-font-lighten-color: #{lighten($vxe-ui-font-color, 10%)};
+  --vxe-ui-font-darken-color: #{darken($vxe-ui-font-color, 10%)};
+
+  /*base*/
+  --vxe-ui-base-popup-border-color: #DADCE0;
+  --vxe-ui-base-popup-box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.16);
+  --vxe-ui-base-drag-background-color: #dde9fd;
+  --vxe-ui-base-active-background-color: #e6f4ff;
+  --vxe-ui-base-hover-background-color: rgba(0, 0, 0, 0.04);
+
+  /*layout*/
   --vxe-ui-layout-background-color: #ffffff;
+
+  /*input*/
+  --vxe-ui-input-border-color: #dcdfe6;
+  --vxe-ui-input-placeholder-color: #C0C4CC;
+  --vxe-ui-input-disabled-background-color: #f3f3f3;
+  
+  /*modal*/
+  --vxe-ui-modal-header-background-color: #F8F8F8;
+
+  /*tabs*/
+  --vxe-ui-tabs-card-header-background-color: #f5f7fa;
+
+  /*menu*/
+  --vxe-ui-menu-item-hover-color: var(--vxe-ui-font-primary-color);
+
+  /*loading*/
+  --vxe-ui-loading-background-color: rgba(255, 255, 255, 0.5);
+   
+  /*form-design*/
+  --vxe-ui-form-design-widget-hover-background-color: var(--vxe-ui-base-hover-background-color);
+  --vxe-ui-form-design-sub-widget-hover-background-color: rgba(0, 0, 0, 0.05);
+
+  /*switch*/
+  --vxe-ui-switch-close-background-color: rgba(0,0,0,0.35);
 }

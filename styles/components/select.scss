@@ -86,18 +86,18 @@
 
 .vxe-select--panel-wrapper {
   position: relative;
-  border-radius: var(--vxe-ui-border-radius);
-  border: 1px solid var(---vxe-ui-base-popup-border-color);
+  border-radius: var(--vxe-ui-base-border-radius);
+  border: 1px solid var(--vxe-ui-base-popup-border-color);
   box-shadow: 0 0 6px 2px rgba(0, 0, 0, 0.1);
-  background-color: var(--vxe-ui-select-panel-background-color);
+  background-color: var(--vxe-ui-layout-background-color);
 }
 
 .vxe-select--panel-header {
-  border-bottom: 1px solid var(---vxe-ui-base-popup-border-color);
+  border-bottom: 1px solid var(--vxe-ui-base-popup-border-color);
 }
 
 .vxe-select--panel-footer {
-  border-top: 1px solid var(---vxe-ui-base-popup-border-color);
+  border-top: 1px solid var(--vxe-ui-base-popup-border-color);
 }
 
 .vxe-select--panel-header,
@@ -142,7 +142,7 @@
   &:not(.is--disabled) {
     cursor: pointer;
     &.is--hover {
-      background-color: var(--vxe-ui-select-option-hover-background-color);
+      background-color: var(--vxe-ui-base-hover-background-color);
     }
   }
   &.is--disabled {
@@ -164,7 +164,7 @@
 
 .vxe-select,
 .vxe-select--panel {
-  font-size: var(--vxe-ui-font-size);
+  font-size: var(--vxe-ui-font-size-default);
   &.size--medium {
     font-size: var(--vxe-ui-font-size-medium);
   }

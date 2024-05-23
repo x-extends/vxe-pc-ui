@@ -51,17 +51,17 @@
 
 .vxe-radio-button {
   .vxe-radio--label {
-    background-color: var(--vxe-ui-radio-button-default-background-color);
+    background-color: var(--vxe-ui-layout-background-color);
   }
   &:first-child {
     .vxe-radio--label {
       border-left: 1px solid var(--vxe-ui-input-border-color);
-      border-radius: var(--vxe-ui-border-radius) 0 0 var(--vxe-ui-border-radius);
+      border-radius: var(--vxe-ui-base-border-radius) 0 0 var(--vxe-ui-base-border-radius);
     }
   }
   &:last-child {
     .vxe-radio--label {
-      border-radius: 0 var(--vxe-ui-border-radius) var(--vxe-ui-border-radius) 0;
+      border-radius: 0 var(--vxe-ui-base-border-radius) var(--vxe-ui-base-border-radius) 0;
     }
   }
   > input {
@@ -136,7 +136,7 @@
 }
 
 .vxe-radio {
-  font-size: var(--vxe-ui-font-size);
+  font-size: var(--vxe-ui-font-size-default);
   &.size--medium {
     font-size: var(--vxe-ui-font-size-medium);
   }

@@ -1,4 +1,3 @@
-$vxe-ui-font-color: #606266;
 $vxe-ui-font-primary-color: #409eff;
 
 $vxe-ui-status-success-color: #67c23a;
@@ -12,34 +11,22 @@ $vxe-ui-status-error-color: #f56c6c;
   --vxe-ui-font-family: -apple-system,BlinkMacSystemFont,Segoe UI,PingFang SC,Hiragino Sans GB,Microsoft YaHei,Helvetica Neue,Helvetica,Arial,sans-serif,Apple Color Emoji,Segoe UI Emoji,Segoe UI Symbol;
   
   /*font size*/
-  --vxe-ui-font-size: 14px;
+  --vxe-ui-font-size-default: 14px;
   --vxe-ui-font-size-medium: 14px;
   --vxe-ui-font-size-small: 13px;
   --vxe-ui-font-size-mini: 12px;
 
   /*font color*/
-  --vxe-ui-font-color: #{$vxe-ui-font-color}; // 全局默认字体颜色
   --vxe-ui-font-primary-color: #{$vxe-ui-font-primary-color}; // 主要字体颜色
   --vxe-ui-font-primary-lighten-color: #{lighten($vxe-ui-font-primary-color, 10%)};
   --vxe-ui-font-primary-darken-color: #{darken($vxe-ui-font-primary-color, 10%)};
   --vxe-ui-font-primary-disabled-color: #{lighten($vxe-ui-font-primary-color, 20%)};
   --vxe-ui-font-secondary-color: #909399; // 次要字体颜色
   --vxe-ui-font-placeholder-color: #a8abb2; // 占位符字体颜色
-  --vxe-ui-font-lighten-color: #{lighten($vxe-ui-font-color, 10%)};
-  --vxe-ui-font-darken-color: #{darken($vxe-ui-font-color, 10%)};
   --vxe-ui-font-disabled-color: #BFBFBF;
 
-  /*base border*/
-  --vxe-ui-border-radius: 4px;
-
-  /*input/radio/checkbox*/
-  --vxe-ui-input-border-color: #dcdfe6;
-  --vxe-ui-input-disabled-color: #dcdfe6;
-  --vxe-ui-input-disabled-background-color: #f3f3f3;
-  --vxe-ui-input-placeholder-color: #C0C4CC;
-
-  /*popup*/
-  --vxe-ui-base-popup-border-color: #424242;
+  /*base*/
+  --vxe-ui-base-border-radius: 4px;
 
   /*base status*/
   --vxe-ui-status-success-color: #{$vxe-ui-status-success-color};
@@ -77,14 +64,8 @@ $vxe-ui-status-error-color: #f56c6c;
   --vxe-ui-menu-item-height: 44px;
   --vxe-ui-menu-icon-width: 1.5em;
 
-  // icon
-  --vxe-ui-icon-font-family: Verdana,Arial,Tahoma;
-  --vxe-ui-icon-background-color: #fff;
-
   // button
   --vxe-ui-button-max-width: 500px;
-  --vxe-ui-button-default-background-color: #fff;
-  --vxe-ui-button-dropdown-panel-background-color: #fff;
   --vxe-ui-button-height-default: 34px;
   --vxe-ui-button-height-medium: 32px;
   --vxe-ui-button-height-small: 30px;
@@ -95,8 +76,7 @@ $vxe-ui-status-error-color: #f56c6c;
   --vxe-ui-button-round-border-radius-mini: 14px;
 
   /*input*/
-  --vxe-ui-input-background-color: #fff;
-  --vxe-ui-input-panel-background-color: var(--vxe-ui-input-background-color);
+  --vxe-ui-input-disabled-color: #dcdfe6;
   --vxe-ui-input-number-disabled-color: #e4e7ed;
   --vxe-ui-input-date-festival-color: #999999;
   --vxe-ui-input-date-festival-important-color: var(--vxe-ui-font-primary-color);
@@ -129,12 +109,7 @@ $vxe-ui-status-error-color: #f56c6c;
   --vxe-ui-input-height-small: var(--vxe-ui-button-height-small);
   --vxe-ui-input-height-mini: var(--vxe-ui-button-height-mini);
   --vxe-ui-input-count-color: #999;
-  --vxe-ui-input-count-background-color: #fff;
   --vxe-ui-input-count-error-color: var(--vxe-ui-status-error-color);
-
-  /*textarea*/
-  --vxe-ui-textarea-line-height: 1.5715;
-  --vxe-ui-textarea-background-color: #fff;
 
   // anchor
   --vxe-ui-anchor-link-color: var(--vxe-ui-font-secondary-color);
@@ -146,36 +121,26 @@ $vxe-ui-status-error-color: #f56c6c;
 
   /*loading*/
   --vxe-ui-loading-color: var(--vxe-ui-font-primary-color);
-  --vxe-ui-loading-background-color: rgba(255, 255, 255, 0.5);
   --vxe-ui-loading-z-index: 999;
 
   /*tooltip*/
   --vxe-ui-tooltip-dark-color: #fff;
   --vxe-ui-tooltip-dark-background-color: #303133;
-  --vxe-ui-tooltip-light-background-color: #fff;
 
   /*form*/
   --vxe-ui-form-item-min-height-default: 36px;
   --vxe-ui-form-item-min-height-medium: 34px;
   --vxe-ui-form-item-min-height-small: 32px;
   --vxe-ui-form-item-min-height-mini: 30px;
-  --vxe-ui-form-background-color: #fff;
   --vxe-ui-form-validate-error-color: var(--vxe-ui-status-error-color);
   --vxe-ui-form-validate-error-background-color: inherit;
 
   // design-form
   --vxe-ui-design-form-widget-item-font-size: 0.9em;
-  --vxe-ui-design-form-widget-item-background-color: #fff;
   --vxe-ui-design-form-widget-item-hover-background-color: #{lighten($vxe-ui-font-primary-color, 10%)};
-
-  /*modal*/
-  --vxe-ui-modal-header-background-color: #F8F8F8;
-  --vxe-ui-modal-body-background-color: #fff;
-  --vxe-ui-modal-border-color: #ebeef5;
 
   /*drawer*/
   --vxe-ui-drawer-header-background-color: #F8F8F8;
-  --vxe-ui-drawer-body-background-color: #fff;
   --vxe-ui-drawer-border-color: #ebeef5;
 
   /*checkbox*/
@@ -202,15 +167,12 @@ $vxe-ui-status-error-color: #f56c6c;
   --vxe-ui-radio-icon-background-color: #fff;
   --vxe-ui-radio-checked-icon-background-color: #fff;
   --vxe-ui-radio-indeterminate-icon-background-color: #fff;
-  --vxe-ui-radio-button-default-background-color: #fff;
 
   /*select*/
   --vxe-ui-select-option-height-default: 30px;
   --vxe-ui-select-option-height-medium: 28px;
   --vxe-ui-select-option-height-small: 26px;
   --vxe-ui-select-option-height-mini: 24px;
-  --vxe-ui-select-option-hover-background-color: #f5f7fa;
-  --vxe-ui-select-panel-background-color: #fff;
   --vxe-ui-select-empty-color: #C0C4CC;
   --vxe-ui-select-title-color: #909399;
 
@@ -218,14 +180,5 @@ $vxe-ui-status-error-color: #f56c6c;
   --vxe-ui-switch-font-color: #fff;
   --vxe-ui-switch-icon-background-color: #fff;
   --vxe-ui-switch-open-background-color: var(--vxe-ui-font-primary-color);
-  --vxe-ui-switch-close-background-color: rgba(0,0,0,0.35);
   --vxe-ui-switch-disabled-background-color: rgba(0,0,0,0.15) ;
-
-  /*pulldown*/
-  --vxe-ui-pulldown-panel-background-color: #fff;
-
-  /*pager*/
-  --vxe-ui-pager-background-color: #fff;
-  --vxe-ui-pager-perfect-background-color: #fff;
-  --vxe-ui-pager-perfect-button-background-color: #f4f4f5;
 }

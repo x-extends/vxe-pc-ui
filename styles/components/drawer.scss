@@ -137,7 +137,7 @@
     display: flex;
     flex-direction: column;
     position: fixed;
-    background-color: var(--vxe-ui-drawer-body-background-color);
+    background-color: var(--vxe-ui-layout-background-color);
     border: 1px solid var(--vxe-ui-drawer-border-color);
     text-align: left;
     pointer-events: auto;
@@ -201,7 +201,7 @@
 }
 
 .vxe-drawer--wrapper {
-  font-size: var(--vxe-ui-font-size);
+  font-size: var(--vxe-ui-font-size-default);
   &.size--medium {
     font-size: var(--vxe-ui-font-size-medium);
   }

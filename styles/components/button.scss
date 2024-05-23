@@ -54,9 +54,9 @@ $btnThemeList: (
 .vxe-button {
   position: relative;
   text-align: center;
-  background-color: var(--vxe-ui-button-default-background-color);
+  background-color: var(--vxe-ui-layout-background-color);
   outline: 0;
-  font-size: var(--vxe-ui-font-size);
+  font-size: var(--vxe-ui-font-size-default);
   max-width: var(--vxe-ui-button-max-width);
   line-height: 1.5;
   overflow: hidden;
@@ -130,7 +130,7 @@ $btnThemeList: (
       border-radius: var(--vxe-ui-button-round-border-radius-default);
     }
     &:not(.is--round) {
-      border-radius: var(--vxe-ui-border-radius);
+      border-radius: var(--vxe-ui-base-border-radius);
     }
     &.is--circle {
       padding: 0 0.5em;
@@ -150,7 +150,7 @@ $btnThemeList: (
       &:active {
         color: var(--vxe-ui-font-primary-darken-color);
         border-color: var(--vxe-ui-font-primary-darken-color);
-        background-color: var(--vxe-ui-button-default-background-color);
+        background-color: var(--vxe-ui-layout-background-color);
       }
     }
     @for $index from 0 to length($btnThemeList) {
@@ -244,7 +244,7 @@ $btnThemeList: (
 }
 .vxe-button--loading-icon,
 .vxe-button--icon {
-  min-width: var(--vxe-ui-font-size);
+  min-width: var(--vxe-ui-font-size-default);
   &+.vxe-button--content {
     margin-left: 4px;
   }
@@ -332,8 +332,8 @@ $btnThemeList: (
 }
 .vxe-button--dropdown-wrapper {
   padding: 5px;
-  background-color: var(--vxe-ui-button-dropdown-panel-background-color);
-  border-radius: var(--vxe-ui-border-radius);
+  background-color: var(--vxe-ui-layout-background-color);
+  border-radius: var(--vxe-ui-base-border-radius);
   border: 1px solid var(--vxe-ui-input-border-color);
   box-shadow: 0 1px 6px rgba(0,0,0,.2);
   & > .vxe-button.type--text,

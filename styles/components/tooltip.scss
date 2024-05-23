@@ -5,7 +5,7 @@
   left: -100%;
   font-size: 12px;
   max-width: 600px;
-  border-radius: var(--vxe-ui-border-radius);
+  border-radius: var(--vxe-ui-base-border-radius);
   padding: 8px 12px;
   white-space: normal;
   word-break: break-word;
@@ -82,13 +82,13 @@
 }
 .vxe-table--tooltip-wrapper {
   &.theme--light {
-    background-color: var(--vxe-ui-tooltip-light-background-color);
+    background-color: var(--vxe-ui-layout-background-color);
     border: 1px solid var(--vxe-ui-input-border-color);
     &.placement--top {
       .vxe-table--tooltip-arrow {
         border-top-color: var(--vxe-ui-input-border-color);
         &:before {
-          border-top-color: var(--vxe-ui-tooltip-light-background-color);
+          border-top-color: var(--vxe-ui-layout-background-color);
         }
       }
     }
@@ -96,7 +96,7 @@
       .vxe-table--tooltip-arrow {
         border-bottom-color: var(--vxe-ui-input-border-color);
         &:before {
-          border-bottom-color: var(--vxe-ui-tooltip-light-background-color);
+          border-bottom-color: var(--vxe-ui-layout-background-color);
         }
       }
     }

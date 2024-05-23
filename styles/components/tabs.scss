@@ -47,7 +47,7 @@
 }
 .vxe-tabs-header--active-line-card,
 .vxe-tabs-header--active-line-border-card {
-  @include createAnimationTransition(all, .3s);
+  transition: color,left 0.3s ease-in-out;
 }
 .vxe-tabs-header--active-line-default,
 .vxe-tabs-header--active-line-card,
@@ -64,7 +64,7 @@
 .vxe-tabs--card,
 .vxe-tabs--border-card,
 .vxe-tabs--round-card {
-  border-radius: var(--vxe-ui-border-radius) var(--vxe-ui-border-radius) 0 0;
+  border-radius: var(--vxe-ui-base-border-radius) var(--vxe-ui-base-border-radius) 0 0;
   background-color: var(--vxe-ui-layout-background-color);
 }
 
@@ -98,7 +98,7 @@
     box-shadow: 0 0 8px rgba(0, 0, 0, 0.1);
   }
   .vxe-tabs-header {
-    border-radius: var(--vxe-ui-border-radius) var(--vxe-ui-border-radius) 0 0;
+    border-radius: var(--vxe-ui-base-border-radius) var(--vxe-ui-base-border-radius) 0 0;
     border-top: 1px solid var(--vxe-ui-input-border-color);
     border-left: 1px solid var(--vxe-ui-input-border-color);
   }
@@ -132,11 +132,11 @@
     border-right: 1px solid var(--vxe-ui-input-border-color);
   }
   .vxe-tabs-header {
-    border-radius: var(--vxe-ui-border-radius) var(--vxe-ui-border-radius) 0 0;
+    border-radius: var(--vxe-ui-base-border-radius) var(--vxe-ui-base-border-radius) 0 0;
     border-top: 1px solid var(--vxe-ui-input-border-color);
     border-left: 1px solid var(--vxe-ui-input-border-color);
     border-right: 1px solid var(--vxe-ui-input-border-color);
-    background-color: #f5f7fa;
+    background-color: var(--vxe-ui-tabs-card-header-background-color);
   }
 }
 
@@ -151,9 +151,9 @@
     border-top: 1px solid var(--vxe-ui-input-border-color);
     border-left: 1px solid var(--vxe-ui-input-border-color);
     border-right: 1px solid var(--vxe-ui-input-border-color);
-    border-radius: var(--vxe-ui-border-radius) var(--vxe-ui-border-radius) 0 0;
+    border-radius: var(--vxe-ui-base-border-radius) var(--vxe-ui-base-border-radius) 0 0;
     background-color: rgba(0, 0, 0, 0.02);
-    @include createAnimationTransition(all, .3s);
+    @include createAnimationTransition(color, .3s);
     &.is--active {
       background-color: var(--vxe-ui-layout-background-color);
     }

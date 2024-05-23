@@ -3,5 +3,44 @@
 [data-vxe-ui-theme="dark"] {
   color-scheme: dark;
 
+  $vxe-ui-font-color: #a0a3a7;
+
+  /*font*/
+  --vxe-ui-font-color: #{$vxe-ui-font-color};
+  --vxe-ui-font-lighten-color: #{lighten($vxe-ui-font-color, 10%)};
+  --vxe-ui-font-darken-color: #{darken($vxe-ui-font-color, 10%)};
+  
+  /*base*/
+  --vxe-ui-base-popup-border-color: var(--vxe-ui-layout-background-color);
+  --vxe-ui-base-popup-box-shadow: 0px 12px 30px 8px rgba(0, 0, 0, 0.5);
+  --vxe-ui-base-drag-background-color: #2e3741;
+  --vxe-ui-base-active-background-color: #18222c;
+  --vxe-ui-base-hover-background-color: #191a1c;
+
+  /*layout*/
   --vxe-ui-layout-background-color: #121212;
+
+  /*input*/
+  --vxe-ui-input-border-color: #424242;
+  --vxe-ui-input-placeholder-color: #8D9095;
+  --vxe-ui-input-disabled-background-color: #262727;
+
+  /*modal*/
+  --vxe-ui-modal-header-background-color: var(--vxe-ui-layout-background-color);
+
+  /*tabs*/
+  --vxe-ui-tabs-card-header-background-color: #1d1e1f;
+
+  /*menu*/
+  --vxe-ui-menu-item-hover-color: var(--vxe-ui-font-primary-color);
+  
+  /*loading*/
+  --vxe-ui-loading-background-color: rgba(255, 255, 255, 0.1);
+
+  /*form-design*/
+  --vxe-ui-form-design-widget-hover-background-color: var(--vxe-ui-base-hover-background-color);
+  --vxe-ui-form-design-sub-widget-hover-background-color: #27292b;
+  
+  /*switch*/
+  --vxe-ui-switch-close-background-color: #4C4D4F;
 }
