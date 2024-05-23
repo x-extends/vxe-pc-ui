@@ -32,9 +32,9 @@ declare module '@vxe-ui/core' {
     TOOLBAR_TOOLS_MINIMIZE?: string
     TOOLBAR_TOOLS_CUSTOM?: string
     TOOLBAR_TOOLS_FIXED_LEFT?: string
-    TOOLBAR_TOOLS_FIXED_LEFT_ACTIVED?: string
+    TOOLBAR_TOOLS_FIXED_LEFT_ACTIVE?: string
     TOOLBAR_TOOLS_FIXED_RIGHT?: string
-    TOOLBAR_TOOLS_FIXED_RIGHT_ACTIVED?: string
+    TOOLBAR_TOOLS_FIXED_RIGHT_ACTIVE?: string
 
     // loading
     LOADING?: string
