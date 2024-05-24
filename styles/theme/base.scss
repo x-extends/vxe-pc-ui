@@ -18,6 +18,7 @@ $vxe-ui-status-error-color: #f56c6c;
 
   /*font color*/
   --vxe-ui-font-primary-color: #{$vxe-ui-font-primary-color}; // 主要字体颜色
+  --vxe-ui-font-primary-tinge-color: #{lighten($vxe-ui-font-primary-color, 33%)};
   --vxe-ui-font-primary-lighten-color: #{lighten($vxe-ui-font-primary-color, 10%)};
   --vxe-ui-font-primary-darken-color: #{darken($vxe-ui-font-primary-color, 10%)};
   --vxe-ui-font-primary-disabled-color: #{lighten($vxe-ui-font-primary-color, 20%)};
@@ -35,28 +36,35 @@ $vxe-ui-status-error-color: #f56c6c;
   --vxe-ui-status-danger-color: #{$vxe-ui-status-danger-color};
   --vxe-ui-status-error-color: #{$vxe-ui-status-error-color};
 
+  --vxe-ui-status-success-tinge-color: #{lighten($vxe-ui-status-success-color, 45%)};
+  --vxe-ui-status-info-tinge-color: #{lighten($vxe-ui-status-info-color, 38%)};
+  --vxe-ui-status-warning-tinge-color: #{lighten($vxe-ui-status-warning-color, 38%)};
+  --vxe-ui-status-danger-tinge-color: var(--vxe-ui-status-error-tinge-color);
+  --vxe-ui-status-error-tinge-color: #{lighten($vxe-ui-status-error-color, 28%)};
+
   --vxe-ui-status-success-lighten-color: #{lighten($vxe-ui-status-success-color, 10%)};
   --vxe-ui-status-info-lighten-color: #{lighten($vxe-ui-status-info-color, 10%)};
   --vxe-ui-status-warning-lighten-color: #{lighten($vxe-ui-status-warning-color, 10%)};
-  --vxe-ui-status-danger-lighten-color: #{lighten($vxe-ui-status-danger-color, 10%)};
+  --vxe-ui-status-danger-lighten-color: var(--vxe-ui-status-error-lighten-color);
   --vxe-ui-status-error-lighten-color: #{lighten($vxe-ui-status-error-color, 10%)};
   
   --vxe-ui-status-success-darken-color: #{darken($vxe-ui-status-success-color, 10%)};
   --vxe-ui-status-info-darken-color: #{darken($vxe-ui-status-info-color, 10%)};
   --vxe-ui-status-warning-darken-color: #{darken($vxe-ui-status-warning-color, 10%)};
-  --vxe-ui-status-danger-darken-color: #{darken($vxe-ui-status-danger-color, 10%)};
+  --vxe-ui-status-danger-darken-color: var(--vxe-ui-status-error-lighten-color);
   --vxe-ui-status-error-lighten-color: #{lighten($vxe-ui-status-error-color, 10%)};
   
   --vxe-ui-status-success-disabled-color: #{lighten($vxe-ui-status-success-color, 20%)};
   --vxe-ui-status-info-disabled-color: #{lighten($vxe-ui-status-info-color, 20%)};
   --vxe-ui-status-warning-disabled-color: #{lighten($vxe-ui-status-warning-color, 20%)};
-  --vxe-ui-status-danger-disabled-color: #{lighten($vxe-ui-status-danger-color, 20%)};
+  --vxe-ui-status-danger-disabled-color: var(--vxe-ui-status-danger-disabled-color);
   --vxe-ui-status-error-lighten-color: #{lighten($vxe-ui-status-error-color, 10%)};
 
   /*layout*/
-  --vxe-ui-layout-padding-double: 16px;
+  --vxe-ui-layout-padding-half: 4px;
   --vxe-ui-layout-padding-default: 8px;
-  --vxe-ui-layout-padding-half: calc(var(--vxe-ui-layout-padding-default) / 2);
+  --vxe-ui-layout-padding-double: 16px;
+  --vxe-ui-layout-padding-threefold: 24px;
   --vxe-ui-layout-aside-default-width: 300px;
   --vxe-ui-layout-aside-collapse-width: 60px;
 

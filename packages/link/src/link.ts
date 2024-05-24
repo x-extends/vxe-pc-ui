@@ -1,4 +1,4 @@
-import { defineComponent, ref, h, reactive, PropType, createCommentVNode } from 'vue'
+import { defineComponent, ref, h, reactive, PropType, createCommentVNode, resolveComponent } from 'vue'
 import XEUtils from 'xe-utils'
 import { getConfig } from '@vxe-ui/core'
 import { getSlotVNs } from '../../ui/src/vn'
@@ -13,7 +13,7 @@ export default defineComponent({
     status: String as PropType<VxeLinkPropTypes.Status>,
     title: [String, Number] as PropType<VxeLinkPropTypes.Title>,
     icon: String as PropType<VxeLinkPropTypes.Icon>,
-    routerLink: String as PropType<VxeLinkPropTypes.RouterLink>,
+    routerLink: Object as PropType<VxeLinkPropTypes.RouterLink>,
     underline: {
       type: Boolean as PropType<VxeLinkPropTypes.Underline>,
       default: () => getConfig().link.underline
@@ -48,20 +48,11 @@ export default defineComponent({
       getComputeMaps: () => computeMaps
     } as unknown as VxeLinkConstructor & VxeLinkPrivateMethods
 
-    const renderVN = () => {
-      const { status, target, href, title, underline, icon, content } = props
+    const renderContent = () => {
+      const { icon, content } = props
       const defaultSlot = slots.default
       const iconSlot = slots.icon
-      return h('a', {
-        ref: refElem,
-        href,
-        target,
-        title,
-        class: ['vxe-link', {
-          'is--underline': underline,
-          [`theme--${status}`]: status
-        }]
-      }, [
+      return [
         iconSlot || icon
           ? h('span', {
             class: 'vxe-link--icon'
@@ -76,7 +67,36 @@ export default defineComponent({
         h('span', {
           class: 'vxe-link--content'
         }, defaultSlot ? defaultSlot({}) : XEUtils.toValueString(content))
-      ])
+      ]
+    }
+
+    const renderVN = () => {
+      const { status, target, href, title, underline, routerLink } = props
+      if (routerLink) {
+        return h(resolveComponent('router-link'), {
+          class: ['vxe-link', {
+            'is--underline': underline,
+            [`theme--${status}`]: status
+          }],
+          title,
+          target,
+          to: routerLink
+        }, {
+          default () {
+            return renderContent()
+          }
+        })
+      }
+      return h('a', {
+        ref: refElem,
+        href,
+        target,
+        title,
+        class: ['vxe-link', {
+          'is--underline': underline,
+          [`theme--${status}`]: status
+        }]
+      }, renderContent())
     }
 
     $xeLink.renderVN = renderVN

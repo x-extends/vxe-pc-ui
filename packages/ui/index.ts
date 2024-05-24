@@ -133,6 +133,9 @@ setConfig({
   tabs: {},
   textarea: {},
   toolbar: {},
+  tips: {
+    title: 'Tip'
+  },
   tooltip: {
     // size: null,
     trigger: 'hover',

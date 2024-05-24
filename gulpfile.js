@@ -80,6 +80,7 @@ const componentList = [
   'tab-pane',
   'tabs',
   'textarea',
+  'tips',
   'tooltip',
   'tree',
   'tree-select',

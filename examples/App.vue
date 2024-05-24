@@ -32,26 +32,15 @@ const navList = ref([
     children: [
       { name: 'ContainerTest', icon: 'vxe-icon-user-fill', routerLink: { name: 'ContainerTest' } },
       { name: 'LayoutTest', icon: 'vxe-icon-user-fill', routerLink: { name: 'LayoutTest' } },
-      {
-        name: 'ccc',
-        icon: 'vxe-icon-user-fill',
-        children: [
-          { name: 'MenuTest', icon: 'vxe-icon-user-fill', routerLink: { name: 'MenuTest' } },
-          { name: 'BreadcrumbTest', icon: 'vxe-icon-user-fill', routerLink: { name: 'BreadcrumbTest' } },
-          {
-            name: 'tttt',
-            icon: 'vxe-icon-user-fill',
-            children: [
-              { name: 'LinkTest', icon: 'vxe-icon-user-fill', routerLink: { name: 'LinkTest' } },
-              { name: 'ButtonTest', icon: 'vxe-icon-user-fill', routerLink: { name: 'ButtonTest' } },
-              { name: 'AnchorTest', icon: 'vxe-icon-user-fill', routerLink: { name: 'AnchorTest' } },
-              { name: 'LoadingTest', icon: 'vxe-icon-user-fill', routerLink: { name: 'LoadingTest' } },
-              { name: 'TooltipTest', icon: 'vxe-icon-user-fill', routerLink: { name: 'TooltipTest' } }
-            ]
-          },
-          { name: 'IconTest', icon: 'vxe-icon-user-fill', routerLink: { name: 'IconTest' } }
-        ]
-      }
+      { name: 'MenuTest', icon: 'vxe-icon-user-fill', routerLink: { name: 'MenuTest' } },
+      { name: 'BreadcrumbTest', icon: 'vxe-icon-user-fill', routerLink: { name: 'BreadcrumbTest' } },
+      { name: 'LinkTest', icon: 'vxe-icon-user-fill', routerLink: { name: 'LinkTest' } },
+      { name: 'TipsTest', icon: 'vxe-icon-user-fill', routerLink: { name: 'TipsTest' } },
+      { name: 'ButtonTest', icon: 'vxe-icon-user-fill', routerLink: { name: 'ButtonTest' } },
+      { name: 'AnchorTest', icon: 'vxe-icon-user-fill', routerLink: { name: 'AnchorTest' } },
+      { name: 'LoadingTest', icon: 'vxe-icon-user-fill', routerLink: { name: 'LoadingTest' } },
+      { name: 'TooltipTest', icon: 'vxe-icon-user-fill', routerLink: { name: 'TooltipTest' } },
+      { name: 'IconTest', icon: 'vxe-icon-user-fill', routerLink: { name: 'IconTest' } }
     ]
   },
   { name: 'FormTest', icon: 'vxe-icon-user-fill', routerLink: { name: 'FormTest' } },

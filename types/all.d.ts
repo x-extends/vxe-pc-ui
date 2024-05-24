@@ -51,6 +51,7 @@ import VxeSwitch from './components/switch'
 import VxeTabPane from './components/tab-pane'
 import VxeTabs from './components/tabs'
 import VxeTextarea from './components/textarea'
+import VxeTips from './components/tips'
 import VxeTooltip from './components/tooltip'
 import VxeTree from './components/tree'
 import VxeTreeSelect from './components/tree-select'
@@ -110,6 +111,7 @@ declare module '@vue/runtime-core' {
     VxeTabPane: typeof VxeTabPane
     VxeTabs: typeof VxeTabs
     VxeTextarea: typeof VxeTextarea
+    VxeTips: typeof VxeTips
     VxeTooltip: typeof VxeTooltip
     VxeTree: typeof VxeTree
     VxeTreeSelect: typeof VxeTreeSelect
@@ -170,6 +172,7 @@ export * from './components/switch'
 export * from './components/tab-pane'
 export * from './components/tabs'
 export * from './components/textarea'
+export * from './components/tips'
 export * from './components/tooltip'
 export * from './components/tree'
 export * from './components/tree-select'

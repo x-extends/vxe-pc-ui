@@ -51,6 +51,7 @@ import VxeSwitch from './switch'
 import VxeTabPane from './tab-pane'
 import VxeTabs from './tabs'
 import VxeTextarea from './textarea'
+import VxeTips from './tips'
 import VxeTooltip from './tooltip'
 import VxeTree from './tree'
 import VxeTreeSelect from './tree-select'
@@ -107,6 +108,7 @@ const components = [
   VxeTabPane,
   VxeTabs,
   VxeTextarea,
+  VxeTips,
   VxeTooltip,
   VxeTree,
   VxeTreeSelect,
@@ -172,6 +174,7 @@ export * from './switch'
 export * from './tab-pane'
 export * from './tabs'
 export * from './textarea'
+export * from './tips'
 export * from './tooltip'
 export * from './tree'
 export * from './tree-select'

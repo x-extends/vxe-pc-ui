@@ -19,7 +19,7 @@ const defaultFormDesignWidgetName = (params: VxeGlobalRendererHandles.FormDesign
 renderer.mixin({
   row: {
     formDesignWidgetName: defaultFormDesignWidgetName,
-    formDesignWidgetIcon: 'vxe-icon-feedback',
+    formDesignWidgetIcon: 'vxe-icon-row-col',
     formDesignWidgetGroup: 'layout',
     renderFormDesignWidgetEdit (renderOpts, renderParams) {
       return h(WidgetRowEditComponent, { renderOpts, renderParams })
@@ -34,7 +34,7 @@ renderer.mixin({
   },
   input: {
     formDesignWidgetName: defaultFormDesignWidgetName,
-    formDesignWidgetIcon: 'vxe-icon-feedback',
+    formDesignWidgetIcon: 'vxe-icon-input',
     renderFormDesignWidgetView (renderOpts, renderParams) {
       return h(WidgetInputViewComponent, { renderOpts, renderParams })
     },
@@ -46,7 +46,7 @@ renderer.mixin({
   },
   textarea: {
     formDesignWidgetName: defaultFormDesignWidgetName,
-    formDesignWidgetIcon: 'vxe-icon-feedback',
+    formDesignWidgetIcon: 'vxe-icon-textarea',
     renderFormDesignWidgetView (renderOpts, renderParams) {
       return h(WidgetTextareaViewComponent, { renderOpts, renderParams })
     },
@@ -57,7 +57,7 @@ renderer.mixin({
   },
   select: {
     formDesignWidgetName: defaultFormDesignWidgetName,
-    formDesignWidgetIcon: 'vxe-icon-feedback',
+    formDesignWidgetIcon: 'vxe-icon-select',
     renderFormDesignWidgetView (renderOpts, renderParams) {
       return h(WidgetSelectViewComponent, { renderOpts, renderParams })
     },

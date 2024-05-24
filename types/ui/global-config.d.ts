@@ -44,6 +44,7 @@ import { VxeTableProps } from '../components/table'
 import { VxeTabsProps } from '../components/tabs'
 import { VxeTextareaProps } from '../components/textarea'
 import { VxeToolbarProps } from '../components/toolbar'
+import { VxeTipsProps } from '../components/tips'
 import { VxeTooltipProps } from '../components/tooltip'
 
 declare module '@vxe-ui/core' {
@@ -94,6 +95,7 @@ declare module '@vxe-ui/core' {
     tabs?: VxeTabsProps
     textarea?: VxeTextareaProps
     toolbar?: VxeToolbarProps
+    tips?: VxeTipsProps
     tooltip?: VxeTooltipProps
 
     /**

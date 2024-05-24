@@ -61,11 +61,16 @@
   }
 }
 
+.vxe-menu--item-level3 {
+  font-size: 13px;
+}
+
 .vxe-menu--item-group {
-  height: 0;
-  overflow: hidden;
-  opacity: 1;
-  @include createAnimationTransition(all, 0.35s);
+  display: none;
+  // height: 0;
+  // overflow: hidden;
+  // opacity: 1;
+  // @include createAnimationTransition(all, 0.35s);
 }
 .vxe-menu--item-wrapper {
   &.is--active {
@@ -80,7 +85,8 @@
   }
   &.is--expand {
     & > .vxe-menu--item-group {
-      opacity: 1;
+      display: block;
+      // opacity: 1;
     }
   }
 }

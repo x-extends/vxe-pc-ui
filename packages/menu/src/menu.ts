@@ -170,7 +170,7 @@ export default defineComponent({
     }
 
     const renderChildren = (item: VxeMenuDefines.MenuItem): VNode => {
-      const { itemKey, level, hasChild, isActive, isExactActive, isExpand, routerLink, childList, childHeight } = item
+      const { itemKey, level, hasChild, isActive, isExactActive, isExpand, routerLink, childList } = item
       return h('div', {
         key: itemKey,
         class: ['vxe-menu--item-wrapper', `vxe-menu--item-level${level}`, {
@@ -199,7 +199,7 @@ export default defineComponent({
           ? h('div', {
             class: 'vxe-menu--item-group',
             style: {
-              height: `${childHeight}px`
+              // height: `${childHeight}px`
             }
           }, childList.map(child => renderChildren(child)))
           : createCommentVNode()
