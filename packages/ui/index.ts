@@ -44,6 +44,7 @@ setConfig({
     titleAsterisk: true
   },
   formDesign: {
+    height: 400,
     formConfig: {
       vertical: true
     }

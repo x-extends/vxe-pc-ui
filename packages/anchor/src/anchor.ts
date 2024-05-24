@@ -11,7 +11,7 @@ export default defineComponent({
   props: {
     modelValue: String as PropType<VxeAnchorPropTypes.ModelValue>,
     options: Array as PropType<VxeAnchorPropTypes.Options>,
-    container: [String, Object, Function] as PropType<VxeAnchorPropTypes.Options>,
+    container: [String, Object, Function] as PropType<VxeAnchorPropTypes.Container>,
     showMarker: {
       type: Boolean as PropType<VxeAnchorPropTypes.ShowMarker>,
       default: true
@@ -75,10 +75,10 @@ export default defineComponent({
           return container
         }
         if (XEUtils.isString(container)) {
-          return document.querySelector(container)
+          return document.querySelector(container) as HTMLElement | null
         }
         if (XEUtils.isFunction(container)) {
-          return container({ $xeAnchor })
+          return container({ $anchor: $xeAnchor })
         }
       }
       return null

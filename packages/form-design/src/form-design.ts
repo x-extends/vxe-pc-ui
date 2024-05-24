@@ -17,7 +17,10 @@ export default defineComponent({
       type: String as PropType<VxeFormDesignPropTypes.Size>,
       default: () => getConfig().formDesign.size
     },
-    height: [String, Number] as PropType<VxeFormDesignPropTypes.Height>,
+    height: {
+      type: [String, Number] as PropType<VxeFormDesignPropTypes.Height>,
+      default: () => getConfig().formDesign.height
+    },
     widgets: {
       type: Array as PropType<VxeFormDesignPropTypes.Widgets>,
       default: () => XEUtils.clone(getConfig().formDesign.widgets) || []
