@@ -8,6 +8,7 @@ export class ItemInfo {
       field: item.field,
       span: item.span,
       align: item.align,
+      titleBold: item.titleBold,
       titleAlign: item.titleAlign,
       titleWidth: item.titleWidth,
       titleColon: item.titleColon,

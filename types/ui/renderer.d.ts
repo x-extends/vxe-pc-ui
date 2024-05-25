@@ -4,7 +4,8 @@ import { VxeGridConstructor } from '../components/grid'
 import { VxeColumnPropTypes } from '../components/column'
 import { VxeToolbarPropTypes } from '../components/toolbar'
 import { VxeFormDefines, VxeFormProps } from '../components/form'
-import { VxeFormDesignDefines } from '../components/form-design'
+import { VxeFormDesignDefines, VxeFormDesignConstructor } from '../components/form-design'
+import { VxeFormViewDefines } from '../components/form-view'
 
 /* eslint-disable no-use-before-define */
 
@@ -258,39 +259,31 @@ declare module '@vxe-ui/core' {
 declare module '@vxe-ui/core' {
   export interface VxeGlobalRendererOptions {
     /**
-     * 表单设计器 - 左侧控件名称
-     */
-    formDesignWidgetName?: string | ((params: VxeGlobalRendererHandles.FormDesignWidgetNameParams) => string)
-    /**
-     * 表单设计器 - 左侧控件图标
-     */
-    formDesignWidgetIcon?: string
-    /**
-     * 表单设计器 - 左侧控件分组
-     */
-    formDesignWidgetGroup?: null | '' | 'base' | 'layout' | 'advanced'
-    /**
-     * 表单设计器 - 左侧自定义控件分组
-     */
-    formDesignWidgetCustomGroup?: string | ((params: VxeGlobalRendererHandles.FormDesignWidgetCustomGroupParams) => string)
-    /**
      * 表单设计器 - 渲染左侧控件项
      */
     renderFormDesignWidgetItem?(renderOpts: VxeGlobalRendererHandles.RenderFormDesignWidgetItemOptions, params: VxeGlobalRendererHandles.RenderFormDesignWidgetItemParams): VxeComponentSlotType | VxeComponentSlotType[]
     /**
-     * 表单设计器 - 创建设计器表单数据
+     * 表单设计器 - 创建设计器-表单属性数据
      */
     createFormDesignSettingFormConfig?(params: VxeGlobalRendererHandles.CreateFormDesignSettingFormConfigParams): Record<string, any>
     /**
-     * 表单设计器 - 渲染设计器表单视图
+     * 表单设计器 - 渲染设计器-属性表单
      */
-    renderFormDesignSettingView?(renderOpts: VxeGlobalRendererHandles.RenderFormDesignSettingViewOptions, params: VxeGlobalRendererHandles.RenderFormDesignSettingViewParams): VxeComponentSlotType | VxeComponentSlotType[]
+    renderFormDesignSettingFormView?(renderOpts: VxeGlobalRendererHandles.RenderFormDesignSettingFormViewOptions, params: VxeGlobalRendererHandles.RenderFormDesignSettingFormViewParams): VxeComponentSlotType | VxeComponentSlotType[]
     /**
-     * 表单设计器 - 创建右侧控件字段表单数据
+     * 表单设计器 - 渲染设计器-电脑端表单
      */
-    createFormDesignWidgetFormConfig?(params: VxeGlobalRendererHandles.CreateFormDesignWidgetFormConfigParams): VxeFormProps
+    renderFormDesignStyleFormView?(renderOpts: VxeGlobalRendererHandles.RenderFormDesignStyleFormViewOptions, params: VxeGlobalRendererHandles.RenderFormDesignStyleFormViewParams): VxeComponentSlotType | VxeComponentSlotType[]
     /**
-     * 表单设计器 - 渲染右侧控件表单视图
+     * 表单设计器 - 渲染设计器-手机端表单
+     */
+    renderFormDesignMobileStyleFormView?(renderOpts: VxeGlobalRendererHandles.RenderFormDesignMobileStyleFormViewOptions, params: VxeGlobalRendererHandles.RenderFormDesignMobileStyleFormViewParams): VxeComponentSlotType | VxeComponentSlotType[]
+    /**
+     * 表单设计器 - 创建控件-定义控件信息和控件表单数据
+     */
+    createFormDesignWidgetConfig?(params: VxeGlobalRendererHandles.CreateFormDesignWidgetConfigParams): VxeGlobalRendererHandles.CreateFormDesignWidgetConfigObj
+    /**
+     * 表单设计器 - 渲染右侧-控件表单
      */
     renderFormDesignWidgetFormView?(renderOpts: VxeGlobalRendererHandles.RenderFormDesignWidgetFormViewOptions, params: VxeGlobalRendererHandles.RenderFormDesignWidgetFormViewParams): VxeComponentSlotType | VxeComponentSlotType[]
     /**
@@ -299,13 +292,32 @@ declare module '@vxe-ui/core' {
      */
     renderFormDesignWidgetEdit?(renderOpts: VxeGlobalRendererHandles.RenderFormDesignWidgetEditOptions, params: VxeGlobalRendererHandles.RenderFormDesignWidgetEditParams): VxeComponentSlotType | VxeComponentSlotType[]
     /**
+     * 表单设计器 - 控件渲染器（预览时 - 电脑端）
+     * 如果不设置，则使用 renderFormDesignWidgetView 渲染
+     */
+    renderFormDesignWidgetPreview?(renderOpts: VxeGlobalRendererHandles.RenderFormDesignWidgetPreviewOptions, params: VxeGlobalRendererHandles.RenderFormDesignWidgetPreviewParams): VxeComponentSlotType | VxeComponentSlotType[]
+    /**
+     * 表单设计器 - 控件渲染器（预览时 - 手机端）
+     * 如果不设置，则使用 renderFormDesignWidgetView 渲染
+     */
+    renderFormDesignWidgetMobilePreview?(renderOpts: VxeGlobalRendererHandles.RenderFormDesignWidgetMobilePreviewOptions, params: VxeGlobalRendererHandles.RenderFormDesignWidgetMobilePreviewParams): VxeComponentSlotType | VxeComponentSlotType[]
+    /**
      * 表单设计器 - 控件渲染器（运行时）
      */
     renderFormDesignWidgetView?(renderOpts: VxeGlobalRendererHandles.RenderFormDesignWidgetViewOptions, params: VxeGlobalRendererHandles.RenderFormDesignWidgetViewParams): VxeComponentSlotType | VxeComponentSlotType[]
     /**
      * 表单设计器 - 创建控件校验规则
      */
-    createFormDesignWidgetViewRules?(params: VxeGlobalRendererHandles.CreateFormDesignWidgetViewRulesParams): VxeFormDefines.FormRule[]
+    createFormDesignWidgetRules?(params: VxeGlobalRendererHandles.CreateFormDesignWidgetRulesParams): VxeFormDefines.FormRule[]
+
+    /**
+     * 表单视图 - 创建渲染电脑端表单
+     */
+    createFormViewFormConfig?(params: VxeGlobalRendererHandles.CreateFormViewFormConfigParams): VxeFormProps
+    /**
+     * 表单视图 - 创建渲染手机端端表单
+     */
+    createFormViewMobileFormConfig?(params: VxeGlobalRendererHandles.CreateFormViewMobileFormConfigParams): VxeFormProps
   }
 
   export namespace VxeGlobalRendererHandles {
@@ -314,11 +326,28 @@ declare module '@vxe-ui/core' {
     }
     export interface FormDesignWidgetCustomGroupParams {}
     export interface CreateFormDesignSettingFormConfigParams {}
-    export interface CreateFormDesignWidgetFormConfigParams {
+    export interface CreateFormDesignWidgetConfigParams {
       name: string
+      $formDesign: null | VxeFormDesignConstructor
     }
+    export interface CreateFormDesignWidgetConfigObj<D = any> {
+      title?: string | number
+      group?: null | '' | 'base' | 'layout' | 'advanced'
+      customGroup?: null | string
+      icon?: string
+      options?: D
+      children?: VxeFormDesignDefines.WidgetObjItem[]
+    }
+
     export interface RenderFormDesignWidgetItemOptions {}
     export interface RenderFormDesignWidgetItemParams {}
+
+    export interface RenderFormDesignWidgetPreviewOptions extends RenderFormDesignWidgetViewOptions {}
+    export interface RenderFormDesignWidgetPreviewParams<D = any> extends RenderFormDesignWidgetViewParams<D> {}
+
+    export interface RenderFormDesignWidgetMobilePreviewOptions extends RenderFormDesignWidgetPreviewOptions {}
+    export interface RenderFormDesignWidgetMobilePreviewParams<D = any> extends RenderFormDesignWidgetPreviewParams<D> {}
+
     export interface RenderFormDesignWidgetViewOptions {
       name: string
     }
@@ -327,7 +356,7 @@ declare module '@vxe-ui/core' {
       isEditMode: boolean
       isViewMode: boolean
     }
-    export interface CreateFormDesignWidgetViewRulesParams<D = any> {
+    export interface CreateFormDesignWidgetRulesParams<D = any> {
       widget: VxeFormDesignDefines.WidgetObjItem<D>
     }
     export interface RenderFormDesignWidgetEditOptions extends RenderFormDesignWidgetFormViewOptions {}
@@ -338,7 +367,18 @@ declare module '@vxe-ui/core' {
       widget: VxeFormDesignDefines.WidgetObjItem<D>
     }
     export interface RenderFormDesignWidgetEditParams<D = any> extends RenderFormDesignWidgetViewParams<D> {}
-    export interface RenderFormDesignSettingViewOptions {}
-    export interface RenderFormDesignSettingViewParams {}
+    export interface RenderFormDesignSettingFormViewOptions {}
+    export interface RenderFormDesignSettingFormViewParams {}
+
+    export interface RenderFormDesignStyleFormViewOptions {}
+    export interface RenderFormDesignStyleFormViewParams<D = any> extends VxeFormDesignDefines.FormDesignDefaultParams {
+      formConfig: D
+    }
+
+    export interface RenderFormDesignMobileStyleFormViewOptions {}
+    export interface RenderFormDesignMobileStyleFormViewParams<D = any> extends RenderFormDesignStyleFormViewParams<D> {}
+
+    export interface CreateFormViewFormConfigParams<D = any> extends VxeFormViewDefines.CreateFormConfigParams<D> {}
+    export interface CreateFormViewMobileFormConfigParams<D = any> extends CreateFormViewFormConfigParams {}
   }
 }

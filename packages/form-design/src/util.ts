@@ -1,22 +1,23 @@
 import XEUtils from 'xe-utils'
-import { renderer } from '@vxe-ui/core'
+import { getWidgetGroup } from './widget-info'
 
 import type { VxeFormDesignDefines } from '../../../types'
 
+let maxWidgetId = 100000
+
 export function getNewWidgetId (widgetObjList: VxeFormDesignDefines.WidgetObjItem[]) {
-  let max = 10000
+  let max = ++maxWidgetId
   XEUtils.eachTree(widgetObjList, item => {
     if (item) {
       max = Math.max(max, item.id)
     }
   }, { children: 'children' })
-  return max + 1
+  return maxWidgetId
 }
 
 /**
  * 判断是否布局控件
  */
-export const hasFormDesignLayoutType = (name: string) => {
-  const compConf = renderer.get(name) || {}
-  return compConf && compConf.formDesignWidgetGroup === 'layout'
+export const hasFormDesignLayoutType = (widget: VxeFormDesignDefines.WidgetObjItem) => {
+  return widget && getWidgetGroup(widget.name) === 'layout'
 }

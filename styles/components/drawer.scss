@@ -138,7 +138,7 @@
     flex-direction: column;
     position: fixed;
     background-color: var(--vxe-ui-layout-background-color);
-    border: 1px solid var(--vxe-ui-drawer-border-color);
+    border: 1px solid var(--vxe-ui-base-popup-border-color);
     text-align: left;
     pointer-events: auto;
     opacity: 0;
@@ -168,7 +168,7 @@
     flex-shrink: 0;
     font-size: 1.1em;
     font-weight: 700;
-    border-bottom: 1px solid var(--vxe-ui-drawer-border-color);
+    border-bottom: 1px solid var(--vxe-ui-base-popup-border-color);
     background-color: var(--vxe-ui-drawer-header-background-color);
     &.is--ellipsis {
       .vxe-drawer--header-title {

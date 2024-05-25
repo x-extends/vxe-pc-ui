@@ -45,9 +45,7 @@ setConfig({
   },
   formDesign: {
     height: 400,
-    formConfig: {
-      vertical: true
-    }
+    showPC: true
   },
   formGather: {},
   formItem: {},

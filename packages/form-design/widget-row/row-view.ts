@@ -39,33 +39,34 @@ const ViewColItemComponent = defineComponent({
     const { reactData: formDesignReactData } = $xeFormDesign
 
     const handleDragoverColItem = (evnt: DragEvent) => {
-      const { parentWidget } = props
+      const { parentWidget, colItemIndex } = props
       const { widgetObjList, sortWidget } = formDesignReactData
-      const currWidget = parentWidget.children[props.colItemIndex]
+      const currWidget = parentWidget.children[colItemIndex]
       evnt.stopPropagation()
-      if (sortWidget && parentWidget && (!currWidget || !currWidget.name) && !hasFormDesignLayoutType(sortWidget.name)) {
-        const index = XEUtils.findIndexOf(widgetObjList, item => item.id === sortWidget.id)
-        if (index > -1) {
-          // 动态调整子控件长度
-          if (!parentWidget.children.length) {
-            parentWidget.children = XEUtils.range(0, parentWidget.options.colSize).map(() => {
-              return $xeFormDesign.createEmptyWidget()
-            })
+      if (sortWidget && parentWidget && sortWidget.id !== parentWidget.id && !hasFormDesignLayoutType(sortWidget)) {
+        if ((!currWidget || !currWidget.name) && !hasFormDesignLayoutType(currWidget)) {
+          const index = XEUtils.findIndexOf(widgetObjList, item => item.id === sortWidget.id)
+          if (index > -1) {
+            // 如果数据异常，动态修复
+            if (!parentWidget.children.length) {
+              parentWidget.children = XEUtils.range(0, parentWidget.options.colSize).map(() => {
+                return $xeFormDesign.createEmptyWidget()
+              })
+            }
+            parentWidget.children[colItemIndex] = sortWidget
+            widgetObjList.splice(index, 1)
           }
-          parentWidget.children[props.colItemIndex] = sortWidget
-          widgetObjList.splice(index, 1)
         }
       }
     }
 
     return () => {
-      const { span } = props
+      const { widget, span } = props
+      const { dragWidget, activeWidget, sortWidget } = formDesignReactData
       return h(VxeFormItemComponent, {
         span
       }, {
         default () {
-          const { widget } = props
-          const { dragWidget, activeWidget, sortWidget } = formDesignReactData
           const name = widget ? widget.name : ''
           const compConf = renderer.get(name) || {}
           const renderWidgetDesignView = compConf.renderFormDesignWidgetEdit || compConf.renderFormDesignWidgetView
@@ -79,6 +80,7 @@ const ViewColItemComponent = defineComponent({
               'is--sort': sortWidget && widget && sortWidget.id === widget.id,
               'is--drag': dragWidget && widget && dragWidget.id === widget.id
             }],
+            'data-widget-id': widget.id,
             onDragover: handleDragoverColItem,
             onClick (evnt: KeyboardEvent) {
               if (widget) {
@@ -88,7 +90,9 @@ const ViewColItemComponent = defineComponent({
             }
           }, [
             renderWidgetDesignView
-              ? h('div', {}, [
+              ? h('div', {
+                class: 'vxe-design-form--widget-row-view-wrapper'
+              }, [
                 h('div', {
                   class: 'vxe-form--item-row'
                 }, getSlotVNs(renderWidgetDesignView(renderOpts, params))),
@@ -204,6 +208,7 @@ export const WidgetRowViewComponent = defineComponent({
         default () {
           return colObjList.map((span, colItemIndex) => {
             return h(VxeColComponent, {
+              key: colItemIndex,
               class: 'vxe-form--item-row',
               span
             }, {

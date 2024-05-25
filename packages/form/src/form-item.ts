@@ -13,6 +13,10 @@ export const formItemProps = {
   field: String as PropType<VxeFormItemPropTypes.Field>,
   span: [String, Number] as PropType<VxeFormItemPropTypes.Span>,
   align: String as PropType<VxeFormItemPropTypes.Align>,
+  titleBold: {
+    type: Boolean as PropType<VxeFormItemPropTypes.TitleBold>,
+    default: null
+  },
   titleAlign: {
     type: String as PropType<VxeFormItemPropTypes.TitleAlign>,
     default: null
@@ -82,7 +86,7 @@ export default defineComponent({
 
     const renderItem = ($xeForm: VxeFormConstructor & VxeFormPrivateMethods, item: VxeFormDefines.ItemInfo) => {
       const { props, reactData } = $xeForm
-      const { data, rules, titleAlign: allTitleAlign, titleWidth: allTitleWidth, titleColon: allTitleColon, titleAsterisk: allTitleAsterisk, titleOverflow: allTitleOverflow, vertical: allVertical } = props
+      const { data, rules, titleBold: allTitleBold, titleAlign: allTitleAlign, titleWidth: allTitleWidth, titleColon: allTitleColon, titleAsterisk: allTitleAsterisk, titleOverflow: allTitleOverflow, vertical: allVertical } = props
       const { collapseAll } = reactData
       const { computeValidOpts } = $xeForm.getComputeMaps()
       const validOpts = computeValidOpts.value
@@ -98,6 +102,7 @@ export default defineComponent({
       const titleSlot = slots ? slots.title : null
       const span = item.span || props.span
       const align = item.align || props.align
+      const titleBold = XEUtils.eqNull(item.titleBold) ? allTitleBold : item.titleBold
       const titleAlign = XEUtils.eqNull(item.titleAlign) ? allTitleAlign : item.titleAlign
       const titleWidth = XEUtils.eqNull(item.titleWidth) ? allTitleWidth : item.titleWidth
       const titleColon = XEUtils.eqNull(item.titleColon) ? allTitleColon : item.titleColon
@@ -173,6 +178,7 @@ export default defineComponent({
           {
             'is--title': title,
             'is--colon': titleColon,
+            'is--bold': titleBold,
             'is--vertical': itemVertical,
             'is--asterisk': titleAsterisk,
             'is--required': isRequired,

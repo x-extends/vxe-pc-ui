@@ -1,14 +1,15 @@
-import { defineComponent, ref, h, PropType, reactive, provide, watch, nextTick } from 'vue'
+import { defineComponent, ref, h, PropType, reactive, provide, watch, nextTick, ComponentOptions } from 'vue'
 import { getConfig, getI18n, renderer, createEvent } from '@vxe-ui/core'
 import { toCssUnit } from '../../ui/src/dom'
-import { FormDesignWidgetInfo } from './widget-info'
+import { FormDesignWidgetInfo, getWidgetGroup, getWidgetCustomGroup } from './widget-info'
 import XEUtils from 'xe-utils'
 import LayoutWidgetComponent from './layout-widget'
 import LayoutViewComponent from './layout-view'
 import LayoutSettingComponent from './layout-setting'
-import { getDefaultSettingFormData } from './setting-data'
+import LayoutStyleComponent from './layout-style'
+import { getDefaultSettingFormData } from './default-setting-data'
 
-import type { VxeFormDesignDefines, VxeFormDesignPropTypes, VxeFormDesignEmits, FormDesignReactData, FormDesignPrivateRef, VxeFormDesignPrivateComputed, VxeFormDesignConstructor, VxeFormDesignPrivateMethods, FormDesignMethods, FormDesignPrivateMethods, VxeFormProps } from '../../../types'
+import type { VxeFormDesignDefines, VxeFormDesignPropTypes, VxeFormDesignEmits, FormDesignInternalData, FormDesignReactData, FormDesignPrivateRef, VxeFormDesignPrivateComputed, VxeFormDesignConstructor, VxeFormDesignPrivateMethods, FormDesignMethods, FormDesignPrivateMethods, VxeFormProps } from '../../../types'
 
 export default defineComponent({
   name: 'VxeFormDesign',
@@ -25,9 +26,13 @@ export default defineComponent({
       type: Array as PropType<VxeFormDesignPropTypes.Widgets>,
       default: () => XEUtils.clone(getConfig().formDesign.widgets) || []
     },
-    formConfig: {
-      type: Object as PropType<VxeFormDesignPropTypes.FormConfig>,
-      default: () => XEUtils.clone(getConfig().formDesign.formConfig, true)
+    showPC: {
+      type: Boolean as PropType<VxeFormDesignPropTypes.ShowPC>,
+      default: () => getConfig().formDesign.showPC
+    },
+    showMobile: {
+      type: Boolean as PropType<VxeFormDesignPropTypes.ShowMobile>,
+      default: () => getConfig().formDesign.showMobile
     },
     formRender: Object as PropType<VxeFormDesignPropTypes.FormRender>
   },
@@ -43,15 +48,18 @@ export default defineComponent({
     const xID = XEUtils.uniqueId()
 
     const refElem = ref<HTMLDivElement>()
+    const refLayoutStyle = ref<any>()
 
     const reactData = reactive<FormDesignReactData>({
-      formConfig: {},
       formData: {} as VxeFormDesignPropTypes.FormData,
       widgetConfigs: [],
       widgetObjList: [],
       dragWidget: null,
       sortWidget: null,
       activeWidget: null
+    })
+
+    const internalData = reactive<FormDesignInternalData>({
     })
 
     const refMaps: FormDesignPrivateRef = {
@@ -66,17 +74,18 @@ export default defineComponent({
       props,
       context,
       reactData,
+      internalData,
 
       getRefMaps: () => refMaps,
       getComputeMaps: () => computeMaps
     } as unknown as VxeFormDesignConstructor & VxeFormDesignPrivateMethods
 
     const createWidget = (name: string) => {
-      return new FormDesignWidgetInfo(name, reactData.widgetObjList) as VxeFormDesignDefines.WidgetObjItem
+      return new FormDesignWidgetInfo($xeFormDesign, name, reactData.widgetObjList) as VxeFormDesignDefines.WidgetObjItem
     }
 
     const createEmptyWidget = () => {
-      return new FormDesignWidgetInfo('', reactData.widgetObjList) as VxeFormDesignDefines.WidgetObjItem
+      return new FormDesignWidgetInfo($xeFormDesign, '', reactData.widgetObjList) as VxeFormDesignDefines.WidgetObjItem
     }
 
     const loadConfig = (config: VxeFormDesignDefines.FormDesignConfig) => {
@@ -89,11 +98,11 @@ export default defineComponent({
     }
 
     const getFormConfig = (): VxeFormProps => {
-      return Object.assign({}, reactData.formConfig)
+      return Object.assign({}, reactData.formData)
     }
 
     const loadFormConfig = (formConfig: VxeFormProps) => {
-      reactData.formConfig = Object.assign({}, formConfig)
+      reactData.formData = Object.assign({}, formConfig)
       return nextTick()
     }
 
@@ -123,71 +132,94 @@ export default defineComponent({
       getFormConfig,
       loadFormConfig,
       getWidgetData,
-      loadWidgetData
+      loadWidgetData,
+      refreshPreviewView () {
+        const $layoutStyle = refLayoutStyle.value
+        if ($layoutStyle) {
+          $layoutStyle.updatePreviewView()
+        }
+        return nextTick()
+      }
     }
 
     const updateWidgetConfigs = () => {
       const { widgets } = props
-      let widgetConfs: VxeFormDesignDefines.WidgetConfigItem[] = []
-      if (widgets && widgets.length) {
-        widgetConfs = props.widgets.slice(0)
-      } else {
-        const baseWidgets: string[] = []
-        const layoutWidgets: string[] = []
-        const advancedWidgets: string[] = []
-        const customGroups: VxeFormDesignDefines.WidgetConfigItem[] = []
-        renderer.forEach((item, name) => {
-          const { formDesignWidgetName, formDesignWidgetGroup, formDesignWidgetCustomGroup } = item
-          if (formDesignWidgetName) {
-            // 如果自定义组
-            if (formDesignWidgetCustomGroup) {
-              const cusGroup = customGroups.find(item => item.title === formDesignWidgetCustomGroup)
-              if (cusGroup) {
-                cusGroup.children.push(name)
-              } else {
-                customGroups.push({
-                  title: formDesignWidgetCustomGroup,
-                  children: [name]
-                })
-              }
+      const widgetConfs: VxeFormDesignDefines.WidgetConfigGroup[] = []
+      const baseWidgets: VxeFormDesignDefines.WidgetObjItem[] = []
+      const layoutWidgets: VxeFormDesignDefines.WidgetObjItem[] = []
+      const advancedWidgets: VxeFormDesignDefines.WidgetObjItem[] = []
+      const customGroups: VxeFormDesignDefines.WidgetConfigGroup[] = []
+
+      renderer.forEach((item, name) => {
+        const { createFormDesignWidgetConfig } = item
+        if (createFormDesignWidgetConfig) {
+          const widthItem = createWidget(name)
+          const widgetGroup = getWidgetGroup(name)
+          const widgetCustomGroup = getWidgetCustomGroup(name)
+          // 如果自定义组
+          if (widgetCustomGroup) {
+            const cusGroup = customGroups.find(item => item.title === widgetCustomGroup)
+            if (cusGroup) {
+              cusGroup.children.push(widthItem)
             } else {
-              switch (formDesignWidgetGroup) {
-                case 'layout':
-                  layoutWidgets.push(name)
-                  break
-                case 'advanced':
-                  advancedWidgets.push(name)
-                  break
-                default:
-                  baseWidgets.push(name)
-                  break
-              }
+              customGroups.push({
+                title: widgetCustomGroup,
+                children: [widthItem]
+              })
+            }
+          } else {
+            switch (widgetGroup) {
+              case 'layout':
+                layoutWidgets.push(widthItem)
+                break
+              case 'advanced':
+                advancedWidgets.push(widthItem)
+                break
+              default:
+                baseWidgets.push(widthItem)
+                break
             }
           }
+        }
+      })
+
+      if (baseWidgets.length) {
+        widgetConfs.push({
+          title: getI18n('vxe.formDesign.widget.baseGroup'),
+          children: baseWidgets
         })
-        if (baseWidgets.length) {
-          widgetConfs.push({
-            title: getI18n('vxe.formDesign.widget.baseGroup'),
-            children: baseWidgets
-          })
-        }
-        if (layoutWidgets.length) {
-          widgetConfs.push({
-            title: getI18n('vxe.formDesign.widget.layoutGroup'),
-            children: layoutWidgets
-          })
-        }
-        if (advancedWidgets.length) {
-          widgetConfs.push({
-            title: getI18n('vxe.formDesign.widget.advancedGroup'),
-            children: advancedWidgets
-          })
-        }
-        if (customGroups.length) {
-          widgetConfs.push(...customGroups)
-        }
       }
-      reactData.widgetConfigs = widgetConfs
+      if (layoutWidgets.length) {
+        widgetConfs.push({
+          title: getI18n('vxe.formDesign.widget.layoutGroup'),
+          children: layoutWidgets
+        })
+      }
+      if (advancedWidgets.length) {
+        widgetConfs.push({
+          title: getI18n('vxe.formDesign.widget.advancedGroup'),
+          children: advancedWidgets
+        })
+      }
+      if (customGroups.length) {
+        widgetConfs.push(...customGroups)
+      }
+
+      if (widgets && widgets.length) {
+        reactData.widgetConfigs = props.widgets.map(group => {
+          return {
+            title: group.title,
+            children: group.children
+              ? group.children.map(name => {
+                const widthItem = createWidget(name)
+                return widthItem
+              })
+              : []
+          }
+        })
+      } else {
+        reactData.widgetConfigs = widgetConfs
+      }
     }
 
     const formDesignPrivateMethods: FormDesignPrivateMethods = {
@@ -243,19 +275,41 @@ export default defineComponent({
     }
 
     const createSettingForm = () => {
-      const { formConfig, formRender } = props
-      let formData: Record<string, any> = getDefaultSettingFormData()
+      const { formRender, showPC, showMobile } = props
+      let formData: Record<string, any> = getDefaultSettingFormData({
+        pcVisible: showPC,
+        mobileVisible: showMobile
+      })
       if (formRender) {
         const compConf = renderer.get(formRender.name)
         const createFormConfig = compConf ? compConf.createFormDesignSettingFormConfig : null
         formData = (createFormConfig ? createFormConfig({}) : {}) || {}
       }
 
-      reactData.formConfig = formConfig
       reactData.formData = formData
     }
 
     Object.assign($xeFormDesign, formDesignMethods, formDesignPrivateMethods)
+
+    const renderLayoutTop = () => {
+      return h('div', {
+        class: 'vxe-design-form--header-wrapper'
+      }, [
+        h('div', {
+          class: 'vxe-design-form--header-left'
+        }),
+        h('div', {
+          class: 'vxe-design-form--header-middle'
+        }),
+        h('div', {
+          class: 'vxe-design-form--header-right'
+        }, [
+          h(LayoutStyleComponent as ComponentOptions, {
+            ref: refLayoutStyle
+          })
+        ])
+      ])
+    }
 
     const renderVN = () => {
       const { height } = props
@@ -268,9 +322,16 @@ export default defineComponent({
             }
           : null
       }, [
-        h(LayoutWidgetComponent),
-        h(LayoutViewComponent),
-        h(LayoutSettingComponent)
+        h('div', {
+          class: 'vxe-design-form--header'
+        }, renderLayoutTop()),
+        h('div', {
+          class: 'vxe-design-form--body'
+        }, [
+          h(LayoutWidgetComponent),
+          h(LayoutViewComponent),
+          h(LayoutSettingComponent)
+        ])
       ])
     }
 

@@ -120,8 +120,9 @@ export const WidgetRowFormComponent = defineComponent({
               default () {
                 const selectSpanItem = computeSelectSpanItem.value
                 if (selectSpanItem) {
-                  return selectSpanItem.list.map(item => {
+                  return selectSpanItem.list.map((item, rIndex) => {
                     return h(VxeRowComponent, {
+                      key: rIndex,
                       class: [`vxe-design-form--widget-${kebabCaseName}-form-row`, {
                         'is--active': item.value === widget.options.colSpan
                       }],
@@ -130,8 +131,9 @@ export const WidgetRowFormComponent = defineComponent({
                       }
                     }, {
                       default () {
-                        return item.spans.map(span => {
+                        return item.spans.map((span, sIndex) => {
                           return h(VxeColComponent, {
+                            key: `${rIndex}${sIndex}`,
                             class: `vxe-design-form--widget-${kebabCaseName}-form-col`,
                             span
                           }, {

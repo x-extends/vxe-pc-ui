@@ -1,9 +1,10 @@
 @import '../helpers/mixin.scss';
 @import './widget-form/all.scss';
+@import './widget-item/all.scss';
 
 .vxe-design-form {
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
   color: var(--vxe-ui-font-color);
   font-family: var(--vxe-ui-font-family);
 }
@@ -19,6 +20,68 @@
   &.size--mini {
     font-size: var(--vxe-ui-font-size-mini);
   }
+}
+
+.vxe-design-form--body {
+  display: flex;
+  flex-direction: row;
+  flex-grow: 1;
+  overflow: hidden;
+}
+
+.vxe-design-form--header {
+  flex-shrink: 0;
+  padding: 0 var(--vxe-ui-layout-padding-default);
+}
+.vxe-design-form--header-wrapper {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  width: 100%;
+  min-height: 3em;
+  border: 1px solid var(--vxe-ui-input-border-color);
+  border-radius: var(--vxe-ui-base-border-radius);
+}
+.vxe-design-form--header-left,
+.vxe-design-form--header-right {
+  flex-shrink: 0;
+}
+.vxe-design-form--header-middle {
+  flex-grow: 1;
+}
+
+.vxe-design-form--layout-style {
+  display: flex;
+  flex-direction: row;
+  height: 100%;
+  overflow: hidden;
+}
+.vxe-design-form--layout-style-preview {
+  flex-grow: 1;
+  padding-right: var(--vxe-ui-layout-padding-default);
+  overflow: hidden;
+  & > .vxe-form-view {
+    height: 100%;
+    width: 100%;
+    border: 1px solid var(--vxe-ui-input-border-color);
+    border-radius: var(--vxe-ui-base-border-radius);
+    overflow: auto;
+  }
+  &.is--mobile {
+    & > .vxe-form-view {
+      width: 400px;
+      margin: 0 auto;
+    }
+  }
+}
+.vxe-design-form--layout-style-setting {
+  flex-shrink: 0;
+  width: 280px;
+  border: 1px solid var(--vxe-ui-input-border-color);
+  border-radius: var(--vxe-ui-base-border-radius);
+  background-color: var(--vxe-ui-layout-background-color);
+  z-index: 1;
+  overflow: auto;
 }
 
 .vxe-design-form--widget {

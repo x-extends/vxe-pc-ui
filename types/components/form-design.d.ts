@@ -1,7 +1,6 @@
-import { RenderFunction, SetupContext, Ref, ComponentPublicInstance, DefineComponent } from 'vue'
+import { RenderFunction, SetupContext, Ref, ComponentPublicInstance, DefineComponent, UnwrapNestedRefs } from 'vue'
 import { defineVxeComponent, VxeComponentBaseOptions, VxeComponentEventParams, VxeComponentSizeType, ValueOf } from '@vxe-ui/core'
 import { VxeFormProps, VxeFormPropTypes } from '../components/form'
-import { VxeFormItemPropTypes } from '../components/form-item'
 
 /* eslint-disable no-use-before-define,@typescript-eslint/ban-types */
 
@@ -14,6 +13,7 @@ export interface VxeFormDesignConstructor extends VxeComponentBaseOptions, VxeFo
   props: VxeFormDesignProps
   context: SetupContext<VxeFormDesignEmits>
   reactData: FormDesignReactData
+  internalData: FormDesignInternalData
   getRefMaps(): FormDesignPrivateRef
   getComputeMaps(): FormDesignPrivateComputed
   renderVN: RenderFunction
@@ -29,16 +29,15 @@ export namespace VxeFormDesignPropTypes {
 
   export type Height = string | number
   export interface WidgetItem {
-    title: string | ((params: any) => string)
+    title: string
     children: string[]
   }
   export type Widgets = WidgetItem[]
 
-  export interface FormConfig {
-    vertical?: VxeFormItemPropTypes.Vertical
-    titleWidth?: VxeFormItemPropTypes.TitleWidth
-  }
   export type FormData = Record<string, any>
+
+  export type ShowPC = boolean
+  export type ShowMobile = boolean
   export interface FormRender {
     name: string
   }
@@ -48,7 +47,8 @@ export type VxeFormDesignProps = {
   size?: VxeFormDesignPropTypes.Size
   height?: VxeFormDesignPropTypes.Height
   widgets?: VxeFormDesignPropTypes.Widgets
-  formConfig?: VxeFormDesignPropTypes.FormConfig
+  showPC?: VxeFormDesignPropTypes.ShowPC
+  showMobile?: VxeFormDesignPropTypes.ShowMobile
   formData?: VxeFormDesignPropTypes.FormData
   formRender?: VxeFormDesignPropTypes.FormRender
 }
@@ -58,13 +58,15 @@ export interface FormDesignPrivateComputed {
 export interface VxeFormDesignPrivateComputed extends FormDesignPrivateComputed { }
 
 export interface FormDesignReactData<D = any> {
-  formConfig: VxeFormDesignPropTypes.FormConfig,
   formData: D,
-  widgetConfigs: VxeFormDesignDefines.WidgetConfigItem[]
+  widgetConfigs: VxeFormDesignDefines.WidgetConfigGroup[]
   widgetObjList: VxeFormDesignDefines.WidgetObjItem[]
   dragWidget: VxeFormDesignDefines.WidgetObjItem | null
   sortWidget: VxeFormDesignDefines.WidgetObjItem | null
   activeWidget: VxeFormDesignDefines.WidgetObjItem | null
+}
+
+export interface FormDesignInternalData {
 }
 
 export interface FormDesignMethods {
@@ -77,6 +79,7 @@ export interface FormDesignMethods {
   loadFormConfig (formData: VxeFormProps): Promise<any>
   getWidgetData (): VxeFormDesignDefines.WidgetObjItem[]
   loadWidgetData (widgetData: VxeFormDesignDefines.WidgetObjItem[]): Promise<any>
+  refreshPreviewView(): Promise<any>
 }
 export interface VxeFormDesignMethods extends FormDesignMethods { }
 
@@ -94,18 +97,30 @@ export type VxeFormDesignEmits = [
   'remove-widget'
 ]
 
+export interface VxeFormDesignLayoutStyle {
+  reactData: UnwrapNestedRefs<{
+    activeTab: number
+  }>
+  renderVN: RenderFunction
+}
+
 export namespace VxeFormDesignDefines {
-  export interface FormDesignEventParams extends VxeComponentEventParams {
+
+  export interface FormDesignDefaultParams {
     $formDesign: VxeFormDesignConstructor
   }
 
+  export interface FormDesignEventParams extends FormDesignDefaultParams, VxeComponentEventParams {
+  }
+
   export interface FormDesignConfig {
-    formConfig: VxeFormProps
-    formData: VxeFormDesignPropTypes.FormData
+    formConfig: VxeFormDesignPropTypes.FormData
     widgetData: WidgetObjItem[]
   }
 
-  export interface WidgetConfigItem extends VxeFormDesignPropTypes.WidgetItem {
+  export interface WidgetConfigGroup {
+    title: string
+    children: VxeFormDesignDefines.WidgetObjItem[]
   }
 
   export interface WidgetObjItem<D = any> {
@@ -123,8 +138,12 @@ export namespace VxeFormDesignDefines {
   }
 
   export interface DefaultSettingFormDataObjVO {
-    showPC: boolean
-    showMobile: boolean
+    pcVisible: boolean
+    pcVertical: VxeFormPropTypes.Vertical
+    pcTitleBold: VxeFormPropTypes.TitleBold
+    mobileVisible: boolean
+    mobileVertical: VxeFormPropTypes.Vertical
+    mobileTitleBold: VxeFormPropTypes.TitleBold
   }
 }
 

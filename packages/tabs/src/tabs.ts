@@ -3,6 +3,7 @@ import XEUtils from 'xe-utils'
 import { createEvent } from '@vxe-ui/core'
 import VxeTabPaneComponent from './tab-pane'
 import { getSlotVNs } from '../../ui/src/vn'
+import { toCssUnit } from '../..//ui/src/dom'
 
 import type { VxeTabsPropTypes, VxeTabPaneProps, VxeTabsEmits, TabsReactData, TabsPrivateRef, VxeTabsPrivateComputed, VxeTabsConstructor, VxeTabsPrivateMethods, VxeTabPaneDefines, TabsMethods, TabsPrivateMethods } from '../../../types'
 
@@ -12,6 +13,8 @@ export default defineComponent({
     modelValue: [String, Number, Boolean] as PropType<VxeTabsPropTypes.ModelValue>,
     options: Array as PropType<VxeTabsPropTypes.Options>,
     destroyOnClose: Boolean as PropType<VxeTabsPropTypes.DestroyOnClose>,
+    titleWidth: [String, Number] as PropType<VxeTabsPropTypes.TitleWidth>,
+    titleAlign: [String, Number] as PropType<VxeTabsPropTypes.TitleAlign>,
     type: String as PropType<VxeTabsPropTypes.Type>
   },
   emits: [
@@ -139,7 +142,7 @@ export default defineComponent({
     Object.assign($xeTabs, tabsMethods, tabsPrivateMethods)
 
     const renderTabHeader = (list: VxeTabsPropTypes.Options | VxeTabPaneDefines.TabConfig[]) => {
-      const { type } = props
+      const { type, titleWidth: allTitleWidth, titleAlign: allTitleAlign } = props
       const { activeName, lintLeft, lintWidth } = reactData
       return h('div', {
         class: 'vxe-tabs-header'
@@ -147,14 +150,21 @@ export default defineComponent({
         h('div', {
           ref: refHeaderElem,
           class: 'vxe-tabs-header--wrapper'
-        }, list.map(item => {
-          const { title, name, slots } = item
+        }, list.map((item) => {
+          const { title, titleWidth, titleAlign, name, slots } = item
           const tabSlot = slots ? slots.tab : null
+          const itemWidth = titleWidth || allTitleWidth
+          const itemAlign = titleAlign || allTitleAlign
           return h('div', {
-            key: name,
-            class: ['vxe-tab-header--item', {
+            key: `${name}`,
+            class: ['vxe-tab-header--item', itemAlign ? `align--${itemAlign}` : '', {
               'is--active': activeName === name
             }],
+            style: itemWidth
+              ? {
+                  width: toCssUnit(itemWidth)
+                }
+              : null,
             onClick (evnt: KeyboardEvent) {
               clickEvent(evnt, item)
             }

@@ -8,6 +8,7 @@ import XEUtils from 'xe-utils'
 import type { VxeFormDesignConstructor, VxeFormDesignPrivateMethods, VxeGlobalRendererHandles } from '../../../types'
 
 export default defineComponent({
+  name: 'FormDesignLayoutView',
   props: {},
   emits: [],
   setup () {
@@ -32,7 +33,7 @@ export default defineComponent({
     }
 
     return () => {
-      const { widgetObjList, formConfig } = formDesignReactData
+      const { widgetObjList } = formDesignReactData
       return h('div', {
         class: 'vxe-design-form--preview',
         onDragover: dragoverEvent
@@ -40,7 +41,7 @@ export default defineComponent({
         h(VxeFormComponent, {
           customLayout: true,
           span: 24,
-          vertical: formConfig.vertical
+          vertical: true
         }, {
           default () {
             return h(TransitionGroup, {

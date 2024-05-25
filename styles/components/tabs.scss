@@ -25,6 +25,15 @@
   &.is--active {
     color: var(--vxe-ui-font-primary-color);;
   }
+  &.align--left {
+    text-align: left;
+  }
+  &.align--center {
+    text-align: center;
+  }
+  &.align--right {
+    text-align: right;
+  }
 }
 .vxe-tabs-header--active-line-card,
 .vxe-tab-header--item-name {

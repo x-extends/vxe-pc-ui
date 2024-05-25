@@ -2,8 +2,9 @@ import { defineComponent, h, inject, VNode } from 'vue'
 import XEUtils from 'xe-utils'
 import { getIcon, renderer } from '@vxe-ui/core'
 import { getSlotVNs } from '../../ui/src/vn'
+import { getWidgetIcon } from './widget-info'
 
-import type { VxeFormDesignPropTypes, VxeFormDesignConstructor, VxeFormDesignPrivateMethods } from '../../../types'
+import type { VxeFormDesignConstructor, VxeFormDesignPrivateMethods, VxeFormDesignDefines } from '../../../types'
 
 export default defineComponent({
   props: {},
@@ -38,10 +39,10 @@ export default defineComponent({
       formDesignReactData.sortWidget = null
     }
 
-    const cancelDragoverItem = (evnt: DragEvent, group: VxeFormDesignPropTypes.WidgetItem) => {
+    const cancelDragoverItem = (evnt: DragEvent, group: VxeFormDesignDefines.WidgetConfigGroup) => {
       const { widgetObjList, dragWidget } = formDesignReactData
       if (dragWidget) {
-        if (group.children.includes(dragWidget.name)) {
+        if (group.children.some(widget => widget.name === dragWidget.name)) {
           const rest = XEUtils.findTree(widgetObjList, item => item && item.id === dragWidget.id, { children: 'children' })
           if (rest) {
             rest.items.splice(rest.index, 1)
@@ -60,13 +61,12 @@ export default defineComponent({
       $xeFormDesign.dispatchEvent('add-widget', {}, evnt)
     }
 
-    const renderWidgetList = (group: VxeFormDesignPropTypes.WidgetItem) => {
+    const renderWidgetList = (group: VxeFormDesignDefines.WidgetConfigGroup) => {
       const widgetVNs: VNode[] = []
       if (group.children) {
-        group.children.forEach((name, index) => {
+        group.children.forEach((widget, index) => {
+          const { title, name } = widget
           const compConf = renderer.get(name) || {}
-          const widgetName = compConf.formDesignWidgetName
-          const formDesignWidgetIcon = compConf.formDesignWidgetIcon
           const renderFormDesignWidgetItem = compConf.renderFormDesignWidgetItem
           widgetVNs.push(
             h('div', {
@@ -85,11 +85,11 @@ export default defineComponent({
               ? getSlotVNs(renderFormDesignWidgetItem({}, {}))
               : [
                   h('i', {
-                    class: ['vxe-design-form--widget-item-icon', formDesignWidgetIcon]
+                    class: ['vxe-design-form--widget-item-icon', getWidgetIcon(name)]
                   }),
                   h('span', {
                     class: 'vxe-design-form--widget-item-name'
-                  }, `${(XEUtils.isFunction(widgetName) ? widgetName({ name }) : widgetName) || name}`),
+                  }, `${title}`),
                   h('span', {
                     class: 'vxe-design-form--widget-item-add',
                     onClick (evnt: KeyboardEvent) {
@@ -117,7 +117,7 @@ export default defineComponent({
         }, [
           h('div', {
             class: 'vxe-design-form--widget-title'
-          }, title ? (`${XEUtils.isFunction(title) ? title({}) : title}`) : ''),
+          }, title),
           h('div', {
             class: 'vxe-design-form--widget-list',
             onDragover (evnt: DragEvent) {

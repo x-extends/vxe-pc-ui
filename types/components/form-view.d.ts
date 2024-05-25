@@ -1,5 +1,5 @@
 import { RenderFunction, SetupContext, Ref, ComponentPublicInstance, DefineComponent } from 'vue'
-import { defineVxeComponent, VxeComponentBaseOptions, VxeComponentEventParams, ValueOf } from '@vxe-ui/core'
+import { defineVxeComponent, VxeComponentBaseOptions, VxeComponentEventParams, VxeGlobalRendererHandles, ValueOf } from '@vxe-ui/core'
 import { VxeFormDesignDefines } from './form-design'
 import { VxeFormProps, VxeFormPropTypes } from './form'
 
@@ -26,12 +26,18 @@ export interface VxeFormViewPrivateRef extends FormViewPrivateRef { }
 
 export namespace VxeFormViewPropTypes {
   export type ModelValue = VxeFormPropTypes.Data
-  export type Config = VxeFormDesignDefines.FormDesignConfig
+  export type Config = null | VxeFormDesignDefines.FormDesignConfig
+  export type ViewRender = {
+    name?: string
+  }
+  export type CreateFormConfig = (params: VxeFormViewDefines.CreateFormConfigParams) => VxeFormProps
 }
 
 export type VxeFormViewProps = {
   modelValue?: VxeFormViewPropTypes.ModelValue
   config?: VxeFormViewPropTypes.Config
+  viewRender?: VxeFormViewPropTypes.ViewRender
+  createFormConfig?: VxeFormViewPropTypes.CreateFormConfig
 }
 
 export interface FormViewPrivateComputed {
@@ -65,6 +71,11 @@ export type VxeFormViewEmits = [
 export namespace VxeFormViewDefines {
   export interface FormViewEventParams extends VxeComponentEventParams {
     $formView: VxeFormViewConstructor
+  }
+
+  export interface CreateFormConfigParams<D = any> {
+    viewRender: undefined | VxeFormViewPropTypes.ViewRender
+    formConfig: D
   }
 }
 

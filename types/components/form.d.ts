@@ -33,6 +33,7 @@ export namespace VxeFormPropTypes {
   export type Data = any
   export type Span = string | number
   export type Align = 'left' | 'center' | 'right' | '' | null
+  export type TitleBold = boolean
   export type TitleAlign = Align
   export type TitleWidth = string | number
   export type TitleColon = boolean
@@ -86,6 +87,7 @@ export type VxeFormProps<D = any> = {
   data?: D
   span?: VxeFormPropTypes.Span
   align?: VxeFormPropTypes.Align
+  titleBold?: VxeFormPropTypes.TitleBold
   titleAlign?: VxeFormPropTypes.TitleAlign
   titleWidth?: VxeFormPropTypes.TitleWidth
   titleColon?: VxeFormPropTypes.TitleColon
@@ -204,6 +206,7 @@ export namespace VxeFormDefines {
     field: VxeFormItemPropTypes.Field
     span: VxeFormItemPropTypes.Span
     align: VxeFormItemPropTypes.Align
+    titleBold: VxeFormItemPropTypes.TitleBold
     titleAlign: VxeFormItemPropTypes.TitleAlign
     titleWidth: VxeFormItemPropTypes.TitleWidth
     titleColon: VxeFormItemPropTypes.TitleColon

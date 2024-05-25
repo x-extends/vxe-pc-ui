@@ -1,10 +1,12 @@
-import { defineComponent, ref, h, reactive, nextTick, PropType, provide, watch } from 'vue'
+import { defineComponent, ref, h, reactive, nextTick, PropType, inject, provide, watch } from 'vue'
 import XEUtils from 'xe-utils'
 import { renderer, createEvent } from '@vxe-ui/core'
 import { getSlotVNs } from '../../ui/src/vn'
+import { createDefaultFormViewPCFormConfig } from './default-setting-data'
 import VxeFormComponent from '../../form/src/form'
+import VxeFormGatherComponent from '../../form/src/form-gather'
 
-import type { VxeGlobalRendererHandles, VxeFormViewPropTypes, FormViewReactData, ValueOf, FormViewPrivateRef, FormViewMethods, FormViewPrivateMethods, VxeFormViewEmits, VxeFormViewPrivateComputed, VxeFormProps, VxeFormDesignDefines, VxeFormViewConstructor, VxeFormViewPrivateMethods, VxeFormPropTypes, VxeFormInstance } from '../../../types'
+import type { VxeGlobalRendererHandles, VxeFormViewPropTypes, FormViewReactData, ValueOf, FormViewPrivateRef, FormViewMethods, FormViewPrivateMethods, VxeFormViewEmits, VxeFormViewPrivateComputed, VxeFormProps, VxeFormDesignDefines, VxeFormViewConstructor, VxeFormViewPrivateMethods, VxeFormPropTypes, VxeFormInstance, VxeFormViewDefines, VxeFormDesignLayoutStyle } from '../../../types'
 
 export default defineComponent({
   name: 'VxeFormView',
@@ -13,7 +15,9 @@ export default defineComponent({
     config: {
       type: Object as PropType<VxeFormViewPropTypes.Config>,
       default: () => ({})
-    }
+    },
+    viewRender: Object as PropType<VxeFormViewPropTypes.ViewRender>,
+    createFormConfig: Function as PropType<VxeFormViewPropTypes.CreateFormConfig>
   },
   emits: [
     'update:modelValue'
@@ -25,6 +29,8 @@ export default defineComponent({
 
     const refElem = ref<HTMLDivElement>()
     const formRef = ref<VxeFormInstance>()
+
+    const $xeFormDesignLayoutStyle = inject<VxeFormDesignLayoutStyle | null>('$xeFormDesignLayoutStyle', null)
 
     const reactData = reactive<FormViewReactData>({
       formConfig: {},
@@ -49,7 +55,7 @@ export default defineComponent({
       getComputeMaps: () => computeMaps
     } as unknown as VxeFormViewConstructor & VxeFormViewPrivateMethods
 
-    const loadConfig = (config: VxeFormDesignDefines.FormDesignConfig) => {
+    const loadConfig = (config: VxeFormDesignDefines.FormDesignConfig | null) => {
       if (config) {
         const { formConfig, widgetData } = config
         loadFormConfig(formConfig || {})
@@ -59,7 +65,17 @@ export default defineComponent({
     }
 
     const loadFormConfig = (formConfig: VxeFormProps) => {
-      reactData.formConfig = Object.assign({}, formConfig)
+      const { viewRender } = props
+      const { createFormConfig } = props
+      const params: VxeFormViewDefines.CreateFormConfigParams = { viewRender, formConfig }
+      if (createFormConfig) {
+        reactData.formConfig = createFormConfig(params)
+      } else {
+        const { name } = viewRender || {}
+        const compConf = renderer.get(name) || {}
+        const createPCFormConfig = compConf ? compConf.createFormViewFormConfig : null
+        reactData.formConfig = Object.assign({}, createPCFormConfig ? createPCFormConfig(params) : createDefaultFormViewPCFormConfig(params))
+      }
       return nextTick()
     }
 
@@ -75,7 +91,7 @@ export default defineComponent({
       XEUtils.eachTree(reactData.widgetObjList, widget => {
         const { name, field, required } = widget
         const compConf = renderer.get(name) || {}
-        const createWidgetViewRules = compConf.createFormDesignWidgetViewRules
+        const createWidgetViewRules = compConf.createFormDesignWidgetRules
         formData[field] = null
         if (createWidgetViewRules) {
           const rules = createWidgetViewRules({ widget })
@@ -153,6 +169,7 @@ export default defineComponent({
           span: 24,
           vertical: formConfig.vertical,
           titleWidth: formConfig.titleWidth,
+          titleBold: formConfig.titleBold,
           rules: formRules
         }, {
           default () {
@@ -161,9 +178,27 @@ export default defineComponent({
               const { name } = widget
               const compConf = renderer.get(name) || {}
               const renderWidgetDesignView = compConf.renderFormDesignWidgetView
+              const renderWidgetDesignPreview = compConf.renderFormDesignWidgetPreview
+              const renderWidgetDesignMobilePreview = compConf.renderFormDesignWidgetMobilePreview
               const renderOpts: VxeGlobalRendererHandles.RenderFormDesignWidgetViewOptions = widget
               const params: VxeGlobalRendererHandles.RenderFormDesignWidgetViewParams = { widget, isEditMode: false, isViewMode: true }
-              return renderWidgetDesignView ? getSlotVNs(renderWidgetDesignView(renderOpts, params)) : []
+              return h(VxeFormGatherComponent, {}, {
+                default () {
+                  // 如果处于表单设计器-样式设置-预览模式下
+                  if ($xeFormDesignLayoutStyle) {
+                    if ($xeFormDesignLayoutStyle.reactData.activeTab === 2) {
+                      if (renderWidgetDesignMobilePreview) {
+                        return getSlotVNs(renderWidgetDesignMobilePreview(renderOpts, params))
+                      }
+                    } else {
+                      if (renderWidgetDesignPreview) {
+                        return getSlotVNs(renderWidgetDesignPreview(renderOpts, params))
+                      }
+                    }
+                  }
+                  return renderWidgetDesignView ? getSlotVNs(renderWidgetDesignView(renderOpts, params)) : []
+                }
+              })
             })
           }
         })

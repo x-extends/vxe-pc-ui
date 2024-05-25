@@ -1,6 +1,10 @@
 <template>
   <div>
-    <VxeFormDesign ref="formDesignRef" :height="600" />
+    <p>电脑端</p>
+    <VxeFormDesign ref="formDesignRef" :height="400" />
+
+    <p>电脑端和手机端</p>
+    <VxeFormDesign :height="400" showMobile />
 
     <p @click="previewEvent">点击预览</p>
 

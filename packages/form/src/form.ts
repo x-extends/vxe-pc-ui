@@ -76,6 +76,7 @@ export default defineComponent({
     size: { type: String as PropType<VxeFormPropTypes.Size>, default: () => getConfig().form.size || getConfig().size },
     span: { type: [String, Number] as PropType<VxeFormPropTypes.Span>, default: () => getConfig().form.span },
     align: { type: String as PropType<VxeFormPropTypes.Align>, default: () => getConfig().form.align },
+    titleBold: { type: Boolean as PropType<VxeFormPropTypes.TitleBold>, default: () => getConfig().form.titleBold },
     titleAlign: { type: String as PropType<VxeFormPropTypes.TitleAlign>, default: () => getConfig().form.titleAlign },
     titleWidth: { type: [String, Number] as PropType<VxeFormPropTypes.TitleWidth>, default: () => getConfig().form.titleWidth },
     titleColon: { type: Boolean as PropType<VxeFormPropTypes.TitleColon>, default: () => getConfig().form.titleColon },

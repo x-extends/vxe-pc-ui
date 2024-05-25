@@ -1,0 +1,84 @@
+.vxe-design-form--widget-form-item-layout {
+  display: flex;
+  flex-direction: row;
+}
+.vxe-design-form--widget-form-item-option {
+  width: 50%;
+  text-align: center;
+  padding: var(--vxe-ui-layout-padding-default);
+  margin: 0 var(--vxe-ui-layout-padding-default);
+  border: 1px solid var(--vxe-ui-input-border-color);
+  border-radius: var(--vxe-ui-base-border-radius);
+  cursor: pointer;
+  &.is--vertical {
+    .vxe-design-form--widget-form-item-option-row {
+      display: flex;
+      flex-direction: column;
+      &:nth-child(1) {
+        &::before {
+          content: "";
+          display: block;
+          width: 30%;
+          height: 1em;
+          margin: 2px;
+          background-color: var(--vxe-ui-font-tinge-color);
+          border-radius: var(--vxe-ui-base-border-radius);
+        }
+      }
+      &:nth-child(2) {
+        &::before {
+          content: "";
+          display: block;
+          width: 100%;
+          height: 1em;
+          margin: 2px;
+          background-color: var(--vxe-ui-font-tinge-color);
+          border-radius: var(--vxe-ui-base-border-radius);
+        }
+      }
+    }
+  }
+  &.is--horizontal {
+    .vxe-design-form--widget-form-item-option-row {
+      display: flex;
+      flex-direction: row;
+      &:nth-child(1),
+      &:nth-child(2) {
+        &::before {
+          content: "";
+          display: block;
+          width: 30%;
+          height: 1em;
+          margin: 2px;
+          background-color: var(--vxe-ui-font-tinge-color);
+          border-radius: var(--vxe-ui-base-border-radius);
+        }
+        &::after {
+          content: "";
+          display: block;
+          width: 70%;
+          height: 1em;
+          margin: 2px;
+          background-color: var(--vxe-ui-font-tinge-color);
+          border-radius: var(--vxe-ui-base-border-radius);
+        }
+      }
+    }
+  }
+  &:hover {
+    border-color: var(--vxe-ui-font-primary-color);
+  }
+  &.is--active {
+    color: var(--vxe-ui-font-primary-color);
+    border-color: var(--vxe-ui-font-primary-color);
+    .vxe-design-form--widget-form-item-option-row {
+      &:nth-child(1),
+      &:nth-child(2) {
+        &::before,
+        &::after {
+          background-color: var(--vxe-ui-font-primary-color);
+        }
+      }
+    }
+  }
+}

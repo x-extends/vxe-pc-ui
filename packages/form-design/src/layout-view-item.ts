@@ -6,6 +6,7 @@ import VxeButtonComponent from '../../button/src/button'
 import type { VxeFormDesignDefines, VxeFormDesignConstructor, VxeFormDesignPrivateMethods } from '../../../types'
 
 export const ViewItemComponent = defineComponent({
+  name: 'FormDesignLayoutViewItem',
   props: {
     item: {
       type: Object as PropType<VxeFormDesignDefines.WidgetObjItem>,

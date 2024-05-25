@@ -5,6 +5,7 @@
 
   /*font*/
   --vxe-ui-font-color: #{$vxe-ui-font-color};
+  --vxe-ui-font-tinge-color: #d4d5d7; // 浅色字体颜色
   --vxe-ui-font-lighten-color: #{lighten($vxe-ui-font-color, 10%)};
   --vxe-ui-font-darken-color: #{darken($vxe-ui-font-color, 10%)};
 
@@ -25,6 +26,9 @@
   
   /*modal*/
   --vxe-ui-modal-header-background-color: #F8F8F8;
+
+  /*drawer*/
+  --vxe-ui-drawer-header-background-color: #F8F8F8;
 
   /*tabs*/
   --vxe-ui-tabs-card-header-background-color: #f5f7fa;

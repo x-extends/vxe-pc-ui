@@ -15,6 +15,7 @@
   }
 }
 
+.vxe-form--item-content,
 .vxe-form--item-row {
   display: flex;
   flex-direction: row;
@@ -134,6 +135,13 @@
 }
 
 .vxe-form--item {
+  &.is--bold {
+    & > .vxe-form--item-inner {
+      & > .vxe-form--item-title {
+        font-weight: bold;
+      }
+    }
+  }
   &.is--colon {
     .vxe-form--item-title-postfix {
       &:after {

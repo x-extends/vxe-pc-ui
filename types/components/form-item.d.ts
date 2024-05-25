@@ -28,6 +28,7 @@ export namespace VxeFormItemPropTypes {
   export type Field = string
   export type Span = VxeFormPropTypes.Span
   export type Align = VxeFormPropTypes.Align
+  export type TitleBold = VxeFormPropTypes.TitleBold
   export type TitleAlign = VxeFormPropTypes.TitleAlign
   export type TitleWidth = VxeFormPropTypes.TitleWidth
   export type TitleColon = VxeFormPropTypes.TitleColon
@@ -142,6 +143,10 @@ export type VxeFormItemProps = {
    * 内容对齐方式
    */
   align?: VxeFormItemPropTypes.Align
+  /**
+   * 标题加粗
+   */
+  titleBold?: VxeFormItemPropTypes.TitleBold
   /**
    * 标题对齐方式
    */

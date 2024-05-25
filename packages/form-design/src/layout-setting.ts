@@ -3,11 +3,12 @@ import { renderer } from '@vxe-ui/core'
 import { getSlotVNs } from '../../ui/src/vn'
 import VxeTabsComponent from '../../tabs/src/tabs'
 import VxeTabPaneComponent from '../../tabs/src/tab-pane'
-import { DefaultSettingFormComponent } from './setting-form'
+import { DefaultSettingFormComponent } from './default-setting-form'
 
 import type { VxeFormDesignConstructor, VxeFormDesignPrivateMethods } from '../../../types'
 
 export default defineComponent({
+  name: 'FormDesignLayoutSetting',
   props: {},
   emits: [],
   setup () {
@@ -37,18 +38,17 @@ export default defineComponent({
 
     const renderSettingConfigForm = () => {
       const { formRender } = formDesignProps
-      const { formConfig, formData } = formDesignReactData
+      const { formData } = formDesignReactData
       if (formRender) {
         const compConf = renderer.get(formRender.name)
-        const renderSettingView = compConf ? compConf.renderFormDesignSettingView : null
+        const renderSettingView = compConf ? compConf.renderFormDesignSettingFormView : null
         if (renderSettingView) {
           return h('div', {
             class: 'vxe-design-form--custom-setting-form-view'
-          }, getSlotVNs(renderSettingView({}, {})))
+          }, getSlotVNs(renderSettingView({}, { $formDesign: $xeFormDesign })))
         }
       }
       return h(DefaultSettingFormComponent, {
-        formConfig,
         formData
       })
     }
@@ -66,6 +66,8 @@ export default defineComponent({
         }, [
           h(VxeTabsComponent, {
             modelValue: activeTab.value,
+            titleWidth: '50%',
+            titleAlign: 'center',
             'onUpdate:modelValue' (val) {
               activeTab.value = val
             }

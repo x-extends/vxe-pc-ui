@@ -1,5 +1,5 @@
 import { RenderFunction, SetupContext, Ref, ComponentPublicInstance, DefineComponent } from 'vue'
-import { defineVxeComponent, VxeComponentBaseOptions, VxeComponentEventParams, VxeComponentSlotType } from '@vxe-ui/core'
+import { defineVxeComponent, VxeComponentBaseOptions, VxeComponentEventParams, VxeComponentAlignType, VxeComponentSlotType } from '@vxe-ui/core'
 
 /* eslint-disable no-use-before-define,@typescript-eslint/ban-types */
 
@@ -25,11 +25,15 @@ export interface VxeTabPanePrivateRef extends TabPanePrivateRef { }
 export namespace VxeTabPanePropTypes {
   export type Title = string | number
   export type Name = string | number
+  export type TitleWidth = string | number
+  export type TitleAlign = VxeComponentAlignType
 }
 
 export type VxeTabPaneProps = {
   title?: VxeTabPanePropTypes.Title
   name?: VxeTabPanePropTypes.Name
+  titleWidth?: VxeTabPanePropTypes.TitleWidth
+  titleAlign?: VxeTabPanePropTypes.TitleAlign
 
   slots?: {
     tab?: string | ((params: { [key: string]: any }) => VxeComponentSlotType | VxeComponentSlotType[])
@@ -58,11 +62,8 @@ export namespace VxeTabPaneDefines {
     $tabPane: VxeTabPaneConstructor
   }
 
-  export interface TabConfig {
+  export interface TabConfig extends VxeTabPaneProps {
     id: string
-    title?: VxeTabPanePropTypes.Title
-    name?: VxeTabPanePropTypes.Name
-    slots?: Readonly<VxeTabPaneSlots>
   }
 }
 

@@ -20,7 +20,7 @@ const VxeFormConfigItem = defineComponent({
 
     const renderVN = () => {
       const { reactData } = $xeForm
-      const { data, rules, span: allSpan, align: allAlign, titleAlign: allTitleAlign, titleWidth: allTitleWidth, titleColon: allTitleColon, titleAsterisk: allTitleAsterisk, titleOverflow: allTitleOverflow, vertical: allVertical } = $xeForm.props
+      const { data, rules, span: allSpan, align: allAlign, titleBold: allTitleBold, titleAlign: allTitleAlign, titleWidth: allTitleWidth, titleColon: allTitleColon, titleAsterisk: allTitleAsterisk, titleOverflow: allTitleOverflow, vertical: allVertical } = $xeForm.props
       const { computeValidOpts } = $xeForm.getComputeMaps()
       const item = props.itemConfig as VxeFormDefines.ItemInfo
       const { collapseAll } = reactData
@@ -37,6 +37,7 @@ const VxeFormConfigItem = defineComponent({
       const titleSlot = slots ? slots.title : null
       const span = item.span || allSpan
       const align = item.align || allAlign
+      const titleBold = XEUtils.eqNull(item.titleBold) ? allTitleBold : item.titleBold
       const titleAlign = XEUtils.eqNull(item.titleAlign) ? allTitleAlign : item.titleAlign
       const titleWidth = XEUtils.eqNull(item.titleWidth) ? allTitleWidth : item.titleWidth
       const titleColon = XEUtils.eqNull(item.titleColon) ? allTitleColon : item.titleColon
@@ -126,6 +127,7 @@ const VxeFormConfigItem = defineComponent({
           {
             'is--title': title,
             'is--colon': titleColon,
+            'is--bold': titleBold,
             'is--vertical': itemVertical,
             'is--asterisk': titleAsterisk,
             'is--required': isRequired,

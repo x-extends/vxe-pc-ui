@@ -8,7 +8,9 @@ export default defineComponent({
   name: 'VxeTabPane',
   props: {
     title: [String, Number] as PropType<VxeTabPanePropTypes.Title>,
-    name: [String, Number, Boolean] as PropType<VxeTabPanePropTypes.Name>
+    name: [String, Number, Boolean] as PropType<VxeTabPanePropTypes.Name>,
+    titleWidth: [String, Number] as PropType<VxeTabPanePropTypes.TitleWidth>,
+    titleAlign: [String, Number] as PropType<VxeTabPanePropTypes.TitleAlign>
   },
   emits: [],
   setup (props, context) {
@@ -27,6 +29,8 @@ export default defineComponent({
       id: xID,
       title: props.title,
       name: props.name,
+      titleWidth: props.titleWidth,
+      titleAlign: props.titleAlign,
       slots: {
         default: slots.default
       }
