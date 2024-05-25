@@ -1,13 +1,17 @@
-import { RenderFunction, SetupContext, Ref, ComponentPublicInstance, DefineComponent } from 'vue'
+import { RenderFunction, SetupContext, Ref, ComponentPublicInstance, ComputedRef, DefineComponent, VNode } from 'vue'
 import { defineVxeComponent, VxeComponentBaseOptions, VxeComponentEventParams, VxeComponentSizeType, ValueOf, VxeGlobalConfig, VxeComponentStyleType, VxeComponentSlotType } from '@vxe-ui/core'
-import { VxeColumnPropTypes, VxeColumnProps } from './column'
+import { VxeColumnPropTypes, VxeColumnProps, VxeColumnSlotTypes } from './column'
+import { VxeTableProDefines, VxeTableProEmits } from './table-plugins'
+import { VxeGridConstructor } from './grid'
+import { VxeTooltipInstance } from './tooltip'
+import { VxeToolbarConstructor, VxeToolbarInstance } from './toolbar'
 
 /* eslint-disable no-use-before-define,@typescript-eslint/ban-types */
 
 export declare const VxeTable: defineVxeComponent<VxeTableProps, VxeTableEventProps>
 export type VxeTableComponent = DefineComponent<VxeTableProps, VxeTableEmits>
 
-export type VxeTableInstance = ComponentPublicInstance<VxeTableProps, VxeTableConstructor>
+export type VxeTableInstance<D = any> = ComponentPublicInstance<VxeTableProps<D>, VxeTableConstructor>
 
 export interface VxeTableConstructor<D = any> extends VxeComponentBaseOptions, VxeTableMethods {
   props: VxeTableProps
@@ -27,7 +31,7 @@ export interface TablePrivateRef {
   refValidTooltip: Ref<VxeTooltipInstance>
   refTableFilter: Ref<ComponentPublicInstance>
   refTableCustom: Ref<ComponentPublicInstance>
-  refTableMenu: Ref<VxeTableMenuPanelInstance>
+  refTableMenu: Ref<any>
   refTableHeader: Ref<ComponentPublicInstance>
   refTableBody: Ref<ComponentPublicInstance>
   refTableFooter: Ref<ComponentPublicInstance>
@@ -322,7 +326,7 @@ export namespace VxeTablePropTypes {
     /**
      * 是否启用 localStorage 本地保存，会将列操作状态保留在本地（需要有 id）
      */
-    storage?: boolean | VxeTableCustomStorageObj
+    storage?: boolean | VxeTableDefines.VxeTableCustomStorageObj
     mode?: 'simple' | 'popup' | '' | null
     trigger?: string,
     immediate?: boolean
@@ -1919,7 +1923,7 @@ export type VxeTableProps<D = any> = {
   delayHover?: VxeTablePropTypes.DelayHover
 }
 
-export interface TablePrivateComputed {
+export interface TablePrivateComputed<D = any> {
   computeSize: ComputedRef<VxeTablePropTypes.Size>
   computeValidOpts: ComputedRef<VxeTablePropTypes.ValidOpts<D>>
   computeSXOpts: ComputedRef<VxeTablePropTypes.SXOpts>
@@ -2038,7 +2042,7 @@ export interface TableReactData<D = any> {
     custom: boolean
   },
   // 自定义列相关的信息
-  customStore: VxeTableCustomStoreObj,
+  customStore: VxeTableDefines.VxeTableCustomStoreObj,
   customColumnList: VxeTableDefines.ColumnInfo<D>[]
   // 当前选中的筛选列
   filterStore: {
@@ -2316,7 +2320,7 @@ export interface TableInternalData<D = any> {
   _currMenuParams?: any
 }
 
-export interface TableMethods<D = any> {
+export interface TableMethods<DT = any> {
   dispatchEvent(type: ValueOf<VxeTableEmits>, params: Record<string, any>, evnt: Event | null): void
   /**
    * 手动清除表格所有条件，还原到初始状态
@@ -3284,6 +3288,7 @@ export namespace VxeTableDefines {
   }
 
   interface TableBaseCellParams<D = any> {
+    cell: any
     row: D
     rowIndex: number
     $rowIndex: number
@@ -3473,7 +3478,9 @@ export namespace VxeTableDefines {
   }
   export interface ToggleRowExpandEventParams<D = any> extends TableEventParams<D>, ToggleRowExpandParams { }
 
-  export interface ToggleTreeExpandParams<D = any> extends TableBaseCellParams<D> { }
+  export interface ToggleTreeExpandParams<D = any> extends TableBaseCellParams<D> {
+    expanded: boolean
+  }
   export interface ToggleTreeExpandEventParams<D = any> extends TableEventParams<D>, ToggleTreeExpandParams<D> { }
 
   export interface MenuClickParams<D = any> extends TableBaseCellParams<D> {
@@ -3540,6 +3547,70 @@ export namespace VxeTableDefines {
     datas: any[]
     columns: VxeTableDefines.ColumnInfo[]
     colgroups: VxeTableDefines.ColumnInfo[][]
+  }
+
+  export interface ValidatorRule<D = any> {
+    /**
+     * 是否必填
+     */
+    required?: boolean
+    /**
+     * 最小长度/值
+     */
+    min?: number | string
+    /**
+     * 最大长度/值
+     */
+    max?: number | string
+    /**
+     * 数据类型
+     */
+    type?: 'number' | 'string' | 'array' | '' | null
+    /**
+     * 使用正则表达式校验
+     */
+    pattern?: string | RegExp
+    /**
+     * 使用自定义校验函数，接收一个 Promise
+     * @param params 参数
+     */
+    validator?: string | ((params: RuleValidatorParams<D>) => void | Error | Promise<void>)
+    /**
+     * 提示消息
+     */
+    content?: string
+    trigger?: 'blur' | 'change' | 'manual' | '' | null
+    maxWidth?: number
+    /**
+     * @deprecated 已废弃，请使用 content
+     */
+    message?: string
+  }
+  export interface RuleValidatorParams<D = any> {
+    $table: VxeTableConstructor<D>
+    $grid: VxeGridConstructor<D> | null
+    cellValue: any
+    rule: ValidatorRule<D>
+    rules: ValidatorRule<D>[]
+    column: VxeTableDefines.ColumnInfo<D>
+    columnIndex: number
+    row: D
+    rowIndex: number
+    field: string
+  }
+  export interface ValidatorErrorParams<D = any> {
+    $table: VxeTableConstructor<D>
+    cellValue: any
+    rule: ValidatorRule<D>
+    rules: ValidatorRule<D>[]
+    column: VxeTableDefines.ColumnInfo<D>
+    columnIndex: number
+    row: D
+    rowIndex: number
+    field: string
+  }
+  export interface ValidatorErrorMapParams<D = any> {
+    [key: string]: VxeTableDefines.ValidatorErrorParams<D>[]
   }
 }
 
@@ -3690,7 +3761,7 @@ export namespace VxeTableSlotTypes {
   export interface DefaultSlotParams {}
 }
 
-export interface VxeTableSlots {
+export interface VxeTableSlots<D = any> {
   /**
    * 自定义空数据时显示模板
    */

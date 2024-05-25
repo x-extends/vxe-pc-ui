@@ -11,7 +11,7 @@ import { VxeFormItemProps } from './form-item'
 export declare const VxeGrid: defineVxeComponent<VxeGridProps, VxeGridEventProps>
 export type VxeGridComponent = DefineComponent<VxeGridProps, VxeGridEmits>
 
-export type VxeGridInstance = ComponentPublicInstance<VxeGridProps, VxeGridConstructor>
+export type VxeGridInstance<D = any> = ComponentPublicInstance<VxeGridProps<D>, VxeGridConstructor>
 
 export interface VxeGridConstructor<D = any> extends VxeComponentBaseOptions, VxeGridMethods<D> {
   props: VxeGridProps
@@ -291,7 +291,7 @@ export interface GridMethods<D = any> {
   //   }
   // }): Promise<any>
 }
-export interface VxeGridMethods<D = any> extends GridMethods<D>, TableMethods<D> { }
+export interface VxeGridMethods<D = any> extends GridMethods<D>, Omit<TableMethods<D>, 'dispatchEvent'> { }
 
 export interface GridPrivateMethods {
   callSlot<T = any>(slotFunc: ((params: T) => VxeComponentSlotType | VxeComponentSlotType[]) | string | null, params: T): VxeComponentSlotType[]

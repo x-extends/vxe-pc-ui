@@ -99,6 +99,11 @@ declare module '@vxe-ui/core' {
     tooltip?: VxeTooltipProps
 
     /**
+     * 无效，已废弃
+     * @deprecated
+     */
+    i18n?(key: string, args?: any): string
+    /**
      * 获取导出的所有文件类型
      * @deprecated
      */
@@ -112,10 +117,6 @@ declare module '@vxe-ui/core' {
      * @deprecated
      */
     emptyCell?: string
-    /**
-     * @deprecated
-     */
-    translate?(key: string, args?: any): string
     /**
      * 还原成老的校验样式
      * @deprecated
