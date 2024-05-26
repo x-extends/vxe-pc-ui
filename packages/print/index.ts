@@ -4,7 +4,7 @@ import { dynamicApp } from '../dynamics'
 import { VxeUI } from '@vxe-ui/core'
 import { printHtml } from './src/util'
 
-const VxePrint = Object.assign({}, VxePrintComponent, {
+export const VxePrint = Object.assign({}, VxePrintComponent, {
   install (app: App) {
     app.component(VxePrintComponent.name as string, VxePrintComponent)
     VxeUI.print = printHtml

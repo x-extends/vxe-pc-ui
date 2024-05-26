@@ -2,7 +2,7 @@ import { App } from 'vue'
 import VxeLayoutContainerComponent from './src/layout-container'
 import { dynamicApp } from '../dynamics'
 
-const VxeLayoutContainer = Object.assign({}, VxeLayoutContainerComponent, {
+export const VxeLayoutContainer = Object.assign({}, VxeLayoutContainerComponent, {
   install (app: App) {
     app.component(VxeLayoutContainerComponent.name as string, VxeLayoutContainerComponent)
   }

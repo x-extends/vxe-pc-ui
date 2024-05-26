@@ -2,7 +2,7 @@ import { App } from 'vue'
 import VxeMenuComponent from './src/menu'
 import { dynamicApp } from '../dynamics'
 
-const VxeMenu = Object.assign({}, VxeMenuComponent, {
+export const VxeMenu = Object.assign({}, VxeMenuComponent, {
   install (app: App) {
     app.component(VxeMenuComponent.name as string, VxeMenuComponent)
   }

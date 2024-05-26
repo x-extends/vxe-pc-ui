@@ -98,14 +98,11 @@ npm install vxe-pc-ui
 
 ```javascript
 // ...
-import { createApp } from 'vue'
 import VxeUI from 'vxe-pc-ui'
 import 'vxe-pc-ui/lib/style.css'
 // ...
 
-// ...
 createApp(App).use(VxeUI).mount('#app')
-// ...
 ```
 
 ## Contributors

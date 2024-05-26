@@ -2,7 +2,7 @@ import { App } from 'vue'
 import VxeCardComponent from './src/card'
 import { dynamicApp } from '../dynamics'
 
-const VxeCard = Object.assign({}, VxeCardComponent, {
+export const VxeCard = Object.assign({}, VxeCardComponent, {
   install (app: App) {
     app.component(VxeCardComponent.name as string, VxeCardComponent)
   }

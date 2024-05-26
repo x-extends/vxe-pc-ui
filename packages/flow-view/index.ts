@@ -2,7 +2,7 @@ import { App } from 'vue'
 import VxeFlowViewComponent from './src/flow-view'
 import { dynamicApp } from '../dynamics'
 
-const VxeFlowView = Object.assign({}, VxeFlowViewComponent, {
+export const VxeFlowView = Object.assign({}, VxeFlowViewComponent, {
   install (app: App) {
     app.component(VxeFlowViewComponent.name as string, VxeFlowViewComponent)
   }

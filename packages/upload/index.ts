@@ -4,7 +4,7 @@ import { VxeUI } from '@vxe-ui/core'
 import { dynamicApp } from '../dynamics'
 import { saveLocalFile, readLocalFile } from './src/util'
 
-const VxeUpload = Object.assign({}, VxeUploadComponent, {
+export const VxeUpload = Object.assign({}, VxeUploadComponent, {
   install (app: App) {
     app.component(VxeUploadComponent.name as string, VxeUploadComponent)
     VxeUI.saveFile = saveLocalFile

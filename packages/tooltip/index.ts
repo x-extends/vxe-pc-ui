@@ -2,7 +2,7 @@ import { App } from 'vue'
 import VxeTooltipComponent from './src/tooltip'
 import { dynamicApp } from '../dynamics'
 
-const VxeTooltip = Object.assign({}, VxeTooltipComponent, {
+export const VxeTooltip = Object.assign({}, VxeTooltipComponent, {
   install (app: App) {
     app.component(VxeTooltipComponent.name as string, VxeTooltipComponent)
   }

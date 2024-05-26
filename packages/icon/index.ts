@@ -2,7 +2,7 @@ import { App } from 'vue'
 import VxeIconComponent from './src/icon'
 import { dynamicApp } from '../dynamics'
 
-const VxeIcon = Object.assign({}, VxeIconComponent, {
+export const VxeIcon = Object.assign({}, VxeIconComponent, {
   install (app: App) {
     app.component(VxeIconComponent.name as string, VxeIconComponent)
   }

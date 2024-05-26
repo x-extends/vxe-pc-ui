@@ -2,7 +2,7 @@ import { App } from 'vue'
 import VxeColComponent from '../row/src/col'
 import { dynamicApp } from '../dynamics'
 
-const VxeCol = Object.assign({}, VxeColComponent, {
+export const VxeCol = Object.assign({}, VxeColComponent, {
   install (app: App) {
     app.component(VxeColComponent.name as string, VxeColComponent)
   }

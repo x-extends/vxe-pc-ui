@@ -2,7 +2,7 @@ import { App } from 'vue'
 import VxeCollapsePaneComponent from './src/collapse-pane'
 import { dynamicApp } from '../dynamics'
 
-const VxeCollapsePane = Object.assign({}, VxeCollapsePaneComponent, {
+export const VxeCollapsePane = Object.assign({}, VxeCollapsePaneComponent, {
   install (app: App) {
     app.component(VxeCollapsePaneComponent.name as string, VxeCollapsePaneComponent)
   }

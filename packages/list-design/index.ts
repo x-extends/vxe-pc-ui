@@ -2,7 +2,7 @@ import { App } from 'vue'
 import VxeListDesignComponent from './src/list-design'
 import { dynamicApp } from '../dynamics'
 
-const VxeListDesign = Object.assign({}, VxeListDesignComponent, {
+export const VxeListDesign = Object.assign({}, VxeListDesignComponent, {
   install (app: App) {
     app.component(VxeListDesignComponent.name as string, VxeListDesignComponent)
   }

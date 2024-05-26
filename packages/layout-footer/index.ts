@@ -2,7 +2,7 @@ import { App } from 'vue'
 import VxeLayoutFooterComponent from './src/layout-footer'
 import { dynamicApp } from '../dynamics'
 
-const VxeLayoutFooter = Object.assign({}, VxeLayoutFooterComponent, {
+export const VxeLayoutFooter = Object.assign({}, VxeLayoutFooterComponent, {
   install (app: App) {
     app.component(VxeLayoutFooterComponent.name as string, VxeLayoutFooterComponent)
   }

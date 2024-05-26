@@ -2,7 +2,7 @@ import { App } from 'vue'
 import VxeTipsComponent from './src/tips'
 import { dynamicApp } from '../dynamics'
 
-const VxeTips = Object.assign({}, VxeTipsComponent, {
+export const VxeTips = Object.assign({}, VxeTipsComponent, {
   install (app: App) {
     app.component(VxeTipsComponent.name as string, VxeTipsComponent)
   }

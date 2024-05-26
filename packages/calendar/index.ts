@@ -2,7 +2,7 @@ import { App } from 'vue'
 import VxeCalendarComponent from './src/calendar'
 import { dynamicApp } from '../dynamics'
 
-const VxeCalendar = Object.assign({}, VxeCalendarComponent, {
+export const VxeCalendar = Object.assign({}, VxeCalendarComponent, {
   install (app: App) {
     app.component(VxeCalendarComponent.name as string, VxeCalendarComponent)
   }
