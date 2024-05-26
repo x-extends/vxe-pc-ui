@@ -1,6 +1,6 @@
 import { VxeTableConstructor, VxeTableDefines, VxeTablePrivateMethods } from '../components/table'
 import { VxeGridConstructor } from '../components/grid'
-import { VxeGlobalRendererHandles } from './renderer'
+import { VxeGlobalRendererHandles } from '@vxe-ui/core'
 
 declare module '@vxe-ui/core' {
   export namespace VxeGlobalMenusHandles {

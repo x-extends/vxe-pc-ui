@@ -66,14 +66,4 @@ declare module '../grid' {
 declare module '../table' {
   export interface VxeTableMethods<D = any> extends TableFilterMethods<D> { }
   export interface VxeTablePrivateMethods<D = any> extends TableFilterPrivateMethods<D> { }
-  export namespace VxeTableDefines {
-    export interface FilterOption {
-      label: string | number
-      value: any
-      data: any
-      resetValue: any
-      checked: boolean
-      _checked: boolean
-    }
-  }
 }

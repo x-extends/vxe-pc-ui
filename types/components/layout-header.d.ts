@@ -51,7 +51,7 @@ export namespace VxeLayoutHeaderDefines {
   }
 }
 
-export type VxeBLayoutHeaderEventProps = {}
+export type VxeLayoutHeaderEventProps = {}
 
 export interface VxeLayoutHeaderListeners { }
 

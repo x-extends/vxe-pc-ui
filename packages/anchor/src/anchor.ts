@@ -42,7 +42,7 @@ export default defineComponent({
     const computeAllHrefList = computed(() => {
       const list: VxeAnchorPropTypes.ModelValue[] = []
       XEUtils.eachTree(reactData.staticLinks, item => {
-        list.push(item.href)
+        list.push(item.href || '')
       }, { children: 'children' })
       return list
     })

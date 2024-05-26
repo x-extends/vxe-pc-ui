@@ -1,5 +1,6 @@
 import { RenderFunction, SetupContext, Ref, ComponentPublicInstance, DefineComponent } from 'vue'
 import { defineVxeComponent, VxeComponentBaseOptions, VxeComponentEventParams } from '@vxe-ui/core'
+import { VxeAnchorPropTypes } from './anchor'
 
 /* eslint-disable no-use-before-define,@typescript-eslint/ban-types */
 
@@ -57,7 +58,7 @@ export namespace VxeAnchorLinkDefines {
   export interface LinkConfig {
     id: string
     href: VxeAnchorPropTypes.ModelValue | undefined
-    children: StaticLinkObj[]
+    children: LinkConfig[]
   }
 
   export interface AnchorLinkEventParams extends VxeComponentEventParams {

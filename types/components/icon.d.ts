@@ -59,7 +59,7 @@ export namespace VxeIconDefines {
   }
 
   export interface ClickParams {}
-  export interface ClickEventParams extends IconKeyboardEventParams, ClickParams { }
+  export interface ClickEventParams extends IconEventParams, ClickParams { }
 }
 
 export type VxeIconEventProps = {

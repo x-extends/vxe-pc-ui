@@ -106,6 +106,9 @@ export namespace VxePulldownDefines {
   export interface PulldownEventParams extends VxeComponentEventParams {
     $pulldown: VxePulldownConstructor
   }
+
+  export interface HidePanelParams { }
+  export type HidePanelEventParams = HidePanelParams
 }
 
 export type VxePulldownEventProps = {

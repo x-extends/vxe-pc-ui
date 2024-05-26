@@ -1,5 +1,5 @@
 import { RenderFunction, SetupContext, Ref, ComponentPublicInstance, DefineComponent } from 'vue'
-import { defineVxeComponent, VxeComponentBaseOptions, VxeComponentEventParams } from '@vxe-ui/core'
+import { defineVxeComponent, VxeComponentBaseOptions, VxeComponentEventParams, ValueOf } from '@vxe-ui/core'
 import { VxeColumnPropTypes, VxeColumnSlotTypes } from './column'
 
 /* eslint-disable no-use-before-define,@typescript-eslint/ban-types */
@@ -122,7 +122,7 @@ export namespace VxeColgroupSlotTypes {
   export interface DefaultSlotParams {}
 }
 
-export interface VxeColgroupSlots {
+export interface VxeColgroupSlots<D = any> {
   /**
    * 自定义表头内容的模板
    */

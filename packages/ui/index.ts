@@ -1,8 +1,12 @@
 import { VxeUI, setConfig, setIcon } from '@vxe-ui/core'
 import { dynamicApp } from '../dynamics'
+import { getFuncText } from './src/utils'
 
 VxeUI.uiVersion = process.env.VUE_APP_VXE_VERSION as string
 VxeUI.tableVersion = ''
+VxeUI.t = VxeUI.getI18n
+VxeUI._t = getFuncText
+VxeUI.version = process.env.VUE_APP_VXE_VERSION as string
 
 VxeUI.dynamicApp = dynamicApp
 

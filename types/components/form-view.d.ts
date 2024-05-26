@@ -1,6 +1,6 @@
 import { RenderFunction, SetupContext, Ref, ComponentPublicInstance, DefineComponent } from 'vue'
-import { defineVxeComponent, VxeComponentBaseOptions, VxeComponentEventParams, VxeGlobalRendererHandles, ValueOf } from '@vxe-ui/core'
-import { VxeFormDesignDefines } from './form-design'
+import { defineVxeComponent, VxeComponentBaseOptions, VxeComponentEventParams, ValueOf } from '@vxe-ui/core'
+import { VxeFormDesignDefines, VxeFormDesignPropTypes } from './form-design'
 import { VxeFormProps, VxeFormPropTypes } from './form'
 
 /* eslint-disable no-use-before-define,@typescript-eslint/ban-types */

@@ -30,7 +30,7 @@ export namespace VxeLinkPropTypes {
   export type Icon = string
   export type RouterLink = {
     path?: string
-    name?: VxeMenuPropTypes.ModelValue
+    name?: string | number | null
     query?: any
     params?: any
     target?: null | '' | '_blank' | '_self' | '_parent' | '_top'

@@ -1,4 +1,5 @@
 import { App } from 'vue'
+import { VxeUI, getI18n } from '@vxe-ui/core'
 import { ModalController } from '../components/modal'
 import { DrawerController } from '../components/drawer'
 import { VxePrintDefines } from '../components/print'
@@ -14,6 +15,20 @@ declare module '@vxe-ui/core' {
     print: VxePrintDefines.PrintFunction
     saveFile: VxeUploadDefines.SaveFileFunction
     readFile: VxeUploadDefines.ReadFileFunction
+
+    /**
+     * 请使用 getI18n
+     * @deprecated
+     */
+    t: typeof getI18n
+    /**
+     * @deprecated
+     */
+    _t(key: string, args?: any): string
+    /**
+     * @deprecated
+     */
+    version: string
   }
 }
 

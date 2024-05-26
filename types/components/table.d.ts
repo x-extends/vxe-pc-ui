@@ -3618,6 +3618,42 @@ export namespace VxeTableDefines {
   export interface ValidatorErrorMapParams<D = any> {
     [key: string]: VxeTableDefines.ValidatorErrorParams<D>[]
   }
+
+  export interface MenuOptions {
+    disabled?: boolean
+    options?: MenuFirstOption[][]
+  }
+  export interface MenuFirstOption {
+    code?: string
+    name?: string
+    prefixIcon?: string
+    suffixIcon?: string
+    className?: string
+    visible?: boolean
+    disabled?: boolean
+    children?: MenuChildOption[]
+    params?: any
+    [key: string]: any
+  }
+  export interface MenuChildOption {
+    code?: string
+    name?: string
+    prefixIcon?: string
+    className?: string
+    visible?: boolean
+    disabled?: boolean
+    params?: any
+    [key: string]: any
+  }
+
+  export interface FilterOption {
+    label: string | number
+    value: any
+    data: any
+    resetValue: any
+    checked: boolean
+    _checked: boolean
+  }
 }
 
 export interface VxeTableEventProps<D = any> {

@@ -1,6 +1,8 @@
 import { RenderFunction, SetupContext, Ref, ComponentPublicInstance, DefineComponent } from 'vue'
-import { defineVxeComponent, VxeComponentBaseOptions, VxeComponentEventParams, VxeComponentSlotType } from '@vxe-ui/core'
-import { VxeTableDefines } from './table'
+import { defineVxeComponent, VxeComponentBaseOptions, VxeComponentEventParams, VxeComponentSlotType, ValueOf } from '@vxe-ui/core'
+import { VxeTableDefines, VxeTablePropTypes, VxeTableConstructor } from './table'
+import { VxeTooltipPropTypes } from './tooltip'
+import { VxeGlobalRendererHandles } from '../ui'
 
 /* eslint-disable no-use-before-define,@typescript-eslint/ban-types */
 
@@ -213,10 +215,6 @@ export namespace VxeColumnPropTypes {
      * 目标组件渲染的属性
      */
     attrs?: { [key: string]: any }
-    /**
-     * 目标组件渲染的事件
-     */
-    events?: { [key: string]: (...args: any[]) => any }
     /**
      * 多目标渲染
      */
@@ -507,7 +505,7 @@ export namespace VxeColumnEvents { }
 
 export namespace VxeColumnSlotTypes {
   export interface FilterSlotParams<D = any> {
-    $panel: VxeTableDefines.VxeFilterPanel
+    $panel: any
     column: {
       filters: VxeTableDefines.FilterOption[]
     } & VxeTableDefines.ColumnInfo<D>

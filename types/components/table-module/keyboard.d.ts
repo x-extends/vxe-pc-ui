@@ -1,5 +1,3 @@
-import { any } from '../table'
-
 /* eslint-disable no-use-before-define */
 
 export interface TableKeyboardMethods<D = any> {}

@@ -1,4 +1,4 @@
-import { RenderFunction, SetupContext, Ref, DefineComponent } from 'vue'
+import { RenderFunction, SetupContext, Ref, DefineComponent, ComponentPublicInstance } from 'vue'
 import { defineVxeComponent, VxeComponentBaseOptions, VxeComponentEventParams, VxeComponentStatusType, VxeComponentSizeType, VxeComponentStyleType, ValueOf } from '@vxe-ui/core'
 
 /* eslint-disable no-use-before-define,@typescript-eslint/ban-types */

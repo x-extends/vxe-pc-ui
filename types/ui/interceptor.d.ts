@@ -7,9 +7,7 @@ declare module '@vxe-ui/core' {
     export type EventType = 'event.clearEdit' | 'event.clearActived' | 'event.clearFilter' | 'event.clearAreas' | 'event.showMenu' | 'event.keydown' | 'event.export' | 'event.import'
     export type Type = HookType | EventType
 
-    export type InterceptorCallback = (params: any) => any
-
-    interface InterceptorParams {
+    export interface InterceptorParams {
       $grid?: VxeGridConstructor<any> & VxeGridPrivateMethods<any>
       $table: VxeTableConstructor<any> & VxeTablePrivateMethods<any>
       $event: Event

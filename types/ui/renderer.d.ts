@@ -1,4 +1,5 @@
-import { VxeComponentStyleType, VxeComponentClassNameType } from '@vxe-ui/core'
+import { VxeComponentStyleType, VxeComponentClassNameType, VxeComponentSlotType } from '@vxe-ui/core'
+import { VxeTableConstructor, VxeTablePropTypes, VxeTableDefines, VxeTablePrivateMethods } from '../components/table'
 import { VxeFormItemPropTypes, FormItemTitleRenderParams, FormItemContentRenderParams, FormItemVisibleParams, FormItemResetParams } from '../components/form-item'
 import { VxeGridConstructor } from '../components/grid'
 import { VxeColumnPropTypes } from '../components/column'
@@ -176,6 +177,36 @@ declare module '@vxe-ui/core' {
     export interface RenderEmptyParams<D = any> {
       $table: VxeTableConstructor<D> & VxeTablePrivateMethods<D>
     }
+
+    /**
+   * 渲染选项
+   */
+  export interface RenderOptions {
+    /**
+     * 渲染器名称
+     */
+    name?: string
+    /**
+     * 目标组件渲染的参数
+     */
+    props?: { [key: string]: any }
+    /**
+     * 目标组件渲染的属性
+     */
+    attrs?: { [key: string]: any }
+    /**
+     * 目标组件渲染的事件
+     */
+    events?: { [key: string]: (...args: any[]) => any }
+    /**
+     * 多目标渲染
+     */
+    children?: any[]
+    /**
+     * 渲染类型
+     */
+    cellType?: 'string' | 'number'
+  }
 
     /**
      * 选项参数

@@ -1,5 +1,6 @@
 import { RenderFunction, SetupContext, Ref, ComponentPublicInstance, DefineComponent } from 'vue'
 import { defineVxeComponent, VxeComponentBaseOptions, VxeComponentEventParams, VxeComponentSlotType } from '@vxe-ui/core'
+import { VxeSelectConstructor } from './select'
 
 /* eslint-disable no-use-before-define,@typescript-eslint/ban-types */
 

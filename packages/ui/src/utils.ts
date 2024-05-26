@@ -1,4 +1,5 @@
 import XEUtils from 'xe-utils'
+import { getConfig } from '@vxe-ui/core'
 import DomZIndex from 'dom-zindex'
 
 export function isEnableConf (conf: any): boolean {
@@ -14,7 +15,11 @@ export function getLastZIndex () {
 }
 
 export function getFuncText (content?: string | number | boolean | null) {
-  return content ? XEUtils.toValueString(content) : ''
+  if (content) {
+    const translate = getConfig().translate
+    return XEUtils.toValueString(translate ? translate('' + content) : content)
+  }
+  return ''
 }
 
 /**

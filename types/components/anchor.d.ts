@@ -54,7 +54,7 @@ export interface AnchorMethods {
 export interface VxeAnchorMethods extends AnchorMethods { }
 
 export interface AnchorPrivateMethods {
-  handleClickLink(evnt: KeyboardEvent, href?: VxeAnchorLinkPropTypes.Href)
+  handleClickLink(evnt: KeyboardEvent, href?: VxeAnchorLinkPropTypes.Href): void
 }
 export interface VxeAnchorPrivateMethods extends AnchorPrivateMethods { }
 
