@@ -102,17 +102,12 @@ declare module '@vxe-ui/core' {
      * 无效，已废弃
      * @deprecated
      */
+    export?: Record<string, any>
+    /**
+     * 无效，已废弃
+     * @deprecated
+     */
     i18n?(key: string, args?: any): string
-    /**
-     * 获取导出的所有文件类型
-     * @deprecated
-     */
-    exportTypes?: string[]
-    /**
-     * 获取导入的所有文件类型
-     * @deprecated
-     */
-    importTypes?: string[]
     /**
      * @deprecated
      */

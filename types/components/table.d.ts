@@ -1358,6 +1358,9 @@ export namespace VxeTablePropTypes {
      * 导入参数
      */
   export interface ImportConfig {
+    // 内置属性
+    _typeMaps?: Record<string, number>
+
     /**
      * 可选文件类型列表
      */
@@ -1414,6 +1417,9 @@ export namespace VxeTablePropTypes {
    * 导出参数
    */
   export interface ExportConfig {
+    // 内置属性
+    _typeMaps?: Record<string, number>
+
     /**
      * 文件名
      */
