@@ -16,6 +16,8 @@ import VxeCollapse from './components/collapse'
 import VxeCollapsePane from './components/collapse-pane'
 import VxeDateInput from './components/date-input'
 import VxeDrawer from './components/drawer'
+import VxeFlowDesign from './components/flow-design'
+import VxeFlowView from './components/flow-view'
 import VxeForm from './components/form'
 import VxeFormDesign from './components/form-design'
 import VxeFormGather from './components/form-gather'
@@ -76,6 +78,8 @@ declare module '@vue/runtime-core' {
     VxeCollapsePane: typeof VxeCollapsePane
     VxeDateInput: typeof VxeDateInput
     VxeDrawer: typeof VxeDrawer
+    VxeFlowDesign: typeof VxeFlowDesign
+    VxeFlowView: typeof VxeFlowView
     VxeForm: typeof VxeForm
     VxeFormDesign: typeof VxeFormDesign
     VxeFormGather: typeof VxeFormGather
@@ -135,8 +139,10 @@ export * from './components/checkbox-group'
 export * from './components/col'
 export * from './components/collapse'
 export * from './components/collapse-pane'
-export * from './components/drawer'
 export * from './components/date-input'
+export * from './components/drawer'
+export * from './components/flow-design'
+export * from './components/flow-view'
 export * from './components/form'
 export * from './components/form-design'
 export * from './components/form-gather'
