@@ -30,17 +30,17 @@ A [vue](https://www.npmjs.com/package/vue) based PC side component library.
 * [x] breadcrumb-item 面包屑-项
 * [x] button 按钮
 * [x] button-group 按钮组
-* [] calendar 日历
-* [] card 卡片
+* [ ] calendar 日历
+* [ ] card 卡片
 * [x] checkbox 复选框
 * [x] checkbox-group 复选框-组
 * [x] col 列
-* [] collapse 展开面板
-* [] collapse-pane 展开面板-容器
+* [ ] collapse 展开面板
+* [ ] collapse-pane 展开面板-容器
 * [x] date-input 日期选择器
 * [x] drawer 抽屉
-* [] flow-design 流程设计器
-* [] flow-view 流程设计器-视图渲染
+* [ ] flow-design 流程设计器
+* [ ] flow-view 流程设计器-视图渲染
 * [x] form 表单
 * [x] form-design 表单设计器
 * [x] form-gather 表单-容器
@@ -78,9 +78,9 @@ A [vue](https://www.npmjs.com/package/vue) based PC side component library.
 * [x] textarea 文本域
 * [x] tips 段落提示
 * [x] tooltip 文字提示
-* [] tree 树形组件
-* [] tree-select 树形下拉框
-* [] upload 附件上传
+* [ ] tree 树形组件
+* [ ] tree-select 树形下拉框
+* [ ] upload 附件上传
 
 [👀 Table](https://vxetable.cn)  
 

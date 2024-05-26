@@ -1,6 +1,6 @@
 import { defineComponent, ref, h, reactive, PropType, provide, computed, createCommentVNode, watch, nextTick, onMounted } from 'vue'
 import XEUtils from 'xe-utils'
-import { createEvent } from '@vxe-ui/core'
+import { createEvent, getConfig } from '@vxe-ui/core'
 import VxeTabPaneComponent from './tab-pane'
 import { getSlotVNs } from '../../ui/src/vn'
 import { toCssUnit } from '../..//ui/src/dom'
@@ -12,10 +12,15 @@ export default defineComponent({
   props: {
     modelValue: [String, Number, Boolean] as PropType<VxeTabsPropTypes.ModelValue>,
     options: Array as PropType<VxeTabsPropTypes.Options>,
+    height: [String, Number] as PropType<VxeTabsPropTypes.Height>,
     destroyOnClose: Boolean as PropType<VxeTabsPropTypes.DestroyOnClose>,
     titleWidth: [String, Number] as PropType<VxeTabsPropTypes.TitleWidth>,
     titleAlign: [String, Number] as PropType<VxeTabsPropTypes.TitleAlign>,
-    type: String as PropType<VxeTabsPropTypes.Type>
+    type: String as PropType<VxeTabsPropTypes.Type>,
+    padding: {
+      type: Boolean as PropType<VxeTabsPropTypes.Padding>,
+      default: () => getConfig().tabs.padding
+    }
   },
   emits: [
     'update:modelValue',
@@ -235,13 +240,20 @@ export default defineComponent({
     }
 
     const renderVN = () => {
-      const { type, options } = props
+      const { type, height, padding, options } = props
       const { staticTabs } = reactData
       const defaultSlot = slots.default
 
       return h('div', {
         ref: refElem,
-        class: ['vxe-tabs', `vxe-tabs--${type || 'default'}`]
+        class: ['vxe-tabs', `vxe-tabs--${type || 'default'}`, {
+          'is--padding': padding
+        }],
+        style: height
+          ? {
+              height: toCssUnit(height)
+            }
+          : null
       }, [
         h('div', {
           class: 'vxe-tabs-slots'

@@ -27,17 +27,22 @@ export namespace VxeTabsPropTypes {
   export type ModelValue = undefined | null | VxeTabPanePropTypes.Name
   export type Options = VxeTabPaneProps[]
   export type DestroyOnClose = boolean
+  export type Height = string | number
   export type TitleWidth = VxeTabPanePropTypes.TitleWidth
   export type TitleAlign = VxeTabPanePropTypes.TitleAlign
   export type Type = null | '' | 'default' | 'card' | 'border-card' | 'round-card'
+  export type Padding = boolean
 }
 
 export type VxeTabsProps = {
   modelValue?: VxeTabsPropTypes.ModelValue
   options?: VxeTabsPropTypes.Options
   destroyOnClose?: VxeTabsPropTypes.DestroyOnClose
+  height?: VxeTabsPropTypes.Height
   titleWidth?: VxeTabsPropTypes.TitleWidth
   titleAlign?: VxeTabsPropTypes.TitleAlign
+  type?: VxeTabsPropTypes.Type
+  padding?: VxeTabsPropTypes.Padding
 }
 
 export interface TabsPrivateComputed {

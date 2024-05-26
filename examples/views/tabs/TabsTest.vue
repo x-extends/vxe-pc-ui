@@ -21,7 +21,7 @@
     </p>
 
     <p>
-      <vxe-tabs  modelValue="3" type="border-card">
+      <vxe-tabs  modelValue="3" type="border-card" padding>
         <vxe-tab-pane title="xxx1" name="1">xxxx</vxe-tab-pane>
         <vxe-tab-pane title="xxx2" name="2">cccc</vxe-tab-pane>
         <vxe-tab-pane title="xxx3" name="3">vvvv</vxe-tab-pane>
@@ -31,7 +31,7 @@
     </p>
 
     <p>
-      <vxe-tabs modelValue="3" type="round-card">
+      <vxe-tabs modelValue="3" type="round-card" :height="300" padding>
         <vxe-tab-pane title="xxx1" name="1">xxxx</vxe-tab-pane>
         <vxe-tab-pane title="xxx2" name="2">cccc</vxe-tab-pane>
         <vxe-tab-pane title="xxx3" name="3">vvvv</vxe-tab-pane>

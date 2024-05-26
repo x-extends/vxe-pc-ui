@@ -1,7 +1,19 @@
 @import '../helpers/mixin.scss';
 
+.vxe-tabs {
+  display: flex;
+  flex-direction: column;
+  color: var(--vxe-ui-font-color);
+  font-family: var(--vxe-ui-font-family);
+  &.is--padding {
+    .vxe-tab-pane--item {
+      padding: var(--vxe-ui-layout-padding-default);
+    }
+  }
+}
 .vxe-tabs-header {
   position: relative;
+  flex-shrink: 0;
   &::after {
     content: "";
     position: absolute;
@@ -47,9 +59,15 @@
 .vxe-tab-header--item-name {
   @include createAnimationTransition(color, .3s);
 }
+
+.vxe-tabs-pane {
+  flex-grow: 1;
+  overflow: hidden;
+}
 .vxe-tab-pane--item {
   display: none;
-  padding: var(--vxe-ui-layout-padding-default);
+  height: 100%;
+  overflow: auto;
   &.is--visible {
     display: block;
   }
