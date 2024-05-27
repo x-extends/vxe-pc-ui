@@ -1,11 +1,11 @@
 @import '../../helpers/mixin.scss';
 
-.vxe-design-form--widget-select-form-options {
+.vxe-form-design--widget-select-form-options {
   max-height: 30vh;
   min-height: 140px;
   overflow: auto;
 }
-.vxe-design-form--widget-select-form-options-option {
+.vxe-form-design--widget-select-form-options-option {
   position: relative;
   display: flex;
   flex-direction: row;
@@ -43,7 +43,7 @@
   .vxe-button {
     flex-shrink: 0;
   }
-  .vxe-design-form--widget-expand-btn {
+  .vxe-form-design--widget-expand-btn {
     display: flex;
     flex-direction: row;
     align-items: center;
@@ -56,7 +56,7 @@
     }
   }
 }
-.vxe-design-form--widget-select-form-options-subs {
+.vxe-form-design--widget-select-form-options-subs {
   position: relative;
   &::before {
     content: "";
@@ -73,7 +73,7 @@
       display: none;
     }
   }
-  .vxe-design-form--widget-select-form-options-option {
+  .vxe-form-design--widget-select-form-options-option {
     padding-left: var(--vxe-ui-layout-padding-double);
     &:first-child {
       &::before {
@@ -93,7 +93,7 @@
   }
 }
 
-.vxe-design-form--widget-select-form-options-popup {
+.vxe-form-design--widget-select-form-options-popup {
   height: 100%;
   display: flex;
   flex-direction: column;
@@ -104,8 +104,4 @@
       height: 100%;
     }
   }
-}
-.vxe-design-form--widget-select-form-options-popup-title {
-  flex-shrink: 0;
-  padding-bottom: var(--vxe-ui-layout-padding-default);
 }

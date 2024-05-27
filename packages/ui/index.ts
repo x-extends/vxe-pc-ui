@@ -223,7 +223,10 @@ setIcon({
   FORM_FOLDING: iconPrefix + 'arrow-up rotate180',
   FORM_UNFOLDING: iconPrefix + 'arrow-up',
 
-  // design-form
+  // form-design
+  DESIGN_FORM_STYLE_SETTING: iconPrefix + 'layout',
+  DESIGN_FORM_PROPS_PC: iconPrefix + 'pc',
+  DESIGN_FORM_PROPS_MOBILE: iconPrefix + 'mobile',
   DESIGN_FORM_WIDGET_ADD: iconPrefix + 'square-plus-fill',
   DESIGN_FORM_WIDGET_COPY: iconPrefix + 'copy',
   DESIGN_FORM_WIDGET_DELETE: iconPrefix + 'delete',

@@ -56,7 +56,7 @@ export const WidgetSelectViewComponent = defineComponent({
       const kebabCaseName = computeKebabCaseName.value
 
       return h(VxeFormItemComponent, {
-        className: `vxe-design-form--widget-${kebabCaseName}-view`,
+        className: `vxe-form-design--widget-${kebabCaseName}-view`,
         field: widget.field,
         title: widget.title
       }, {

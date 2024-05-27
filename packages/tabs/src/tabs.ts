@@ -156,13 +156,13 @@ export default defineComponent({
           ref: refHeaderElem,
           class: 'vxe-tabs-header--wrapper'
         }, list.map((item) => {
-          const { title, titleWidth, titleAlign, name, slots } = item
+          const { title, titleWidth, titleAlign, icon, name, slots } = item
           const tabSlot = slots ? slots.tab : null
           const itemWidth = titleWidth || allTitleWidth
           const itemAlign = titleAlign || allTitleAlign
           return h('div', {
             key: `${name}`,
-            class: ['vxe-tab-header--item', itemAlign ? `align--${itemAlign}` : '', {
+            class: ['vxe-tabs-header--item', itemAlign ? `align--${itemAlign}` : '', {
               'is--active': activeName === name
             }],
             style: itemWidth
@@ -175,8 +175,21 @@ export default defineComponent({
             }
           }, [
             h('div', {
-              class: 'vxe-tab-header--item-name'
-            }, tabSlot ? callSlot(tabSlot, { name, title }) : `${title}`)
+              class: 'vxe-tabs-header--item-inner'
+            }, [
+              icon
+                ? h('div', {
+                  class: 'vxe-tabs-header--item-icon'
+                }, [
+                  h('i', {
+                    class: icon
+                  })
+                ])
+                : createCommentVNode(),
+              h('div', {
+                class: 'vxe-tabs-header--item-name'
+              }, tabSlot ? callSlot(tabSlot, { name, title }) : `${title}`)
+            ])
           ])
         })),
         h('span', {
@@ -198,7 +211,7 @@ export default defineComponent({
           return name && initNames.includes(name)
             ? h('div', {
               key: name,
-              class: ['vxe-tab-pane--item', {
+              class: ['vxe-tabs-pane--item', {
                 'is--visible': activeName === name
               }]
             }, callSlot(defaultSlot, {}))
@@ -223,7 +236,7 @@ export default defineComponent({
       return name && initNames.includes(name)
         ? h('div', {
           key: name,
-          class: ['vxe-tab-pane--item', {
+          class: ['vxe-tabs-pane--item', {
             'is--visible': activeName === name
           }]
         }, callSlot(defaultSlot, {}))

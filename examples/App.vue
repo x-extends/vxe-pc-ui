@@ -3,6 +3,7 @@
     <vxe-layout-header>
       <vxe-button @click="collapsed = !collapsed">折叠</vxe-button>
       <vxe-switch v-model="theme" close-value="default" open-value="dark" @click="changeTheme">主题切换</vxe-switch>
+      <vxe-radio-group v-model="language" :options="langOptions" @change="changeLanguage"></vxe-radio-group>
     </vxe-layout-header>
     <vxe-layout-container>
       <vxe-layout-aside class="page-layout-aside" :collapsed="collapsed">
@@ -26,6 +27,7 @@ const collapsed = ref(false)
 
 const navList = ref([
   { name: 'Home', icon: 'vxe-icon-user-fill', routerLink: { path: '/' } },
+  { name: 'LinkText', icon: 'vxe-icon-user-fill', routerLink: { name: 'LinkText' } },
   {
     title: 'xx',
     icon: 'vxe-icon-user-fill',
@@ -68,6 +70,16 @@ const changeTheme = () => {
   theme.value = themeName
   VxeUI.setTheme(themeName)
   localStorage.setItem('VXE_THEME', themeName)
+}
+
+const language = ref((localStorage.getItem('VXE_LANGUAGE') as 'zh-CN' | 'en-US') || 'zh-CN')
+const langOptions = ref([
+  { value: 'zh-CN', label: '中文' },
+  { value: 'en-US', label: '英文' }
+])
+const changeLanguage = () => {
+  VxeUI.setLanguage(language.value)
+  localStorage.setItem('VXE_LANGUAGE', language.value)
 }
 </script>
 

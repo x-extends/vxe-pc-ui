@@ -5,9 +5,17 @@ export const getDefaultSettingFormData = (defOpts?: Partial<VxeFormDesignDefines
     pcVisible: defOpts ? !!defOpts.pcVisible : true,
     pcVertical: true,
     pcTitleBold: false,
+    pcTitleColon: false,
+    pcTitleAlign: '',
+    pcTitleWidth: '',
+    pcTitleWidthUnit: '',
     mobileVisible: defOpts ? !!defOpts.mobileVisible : true,
     mobileVertical: true,
-    mobileTitleBold: false
+    mobileTitleBold: false,
+    mobileTitleColon: false,
+    mobileTitleAlign: '',
+    mobileTitleWidth: '',
+    mobileTitleWidthUnit: ''
   }
 }
 
@@ -15,7 +23,10 @@ export const createDefaultFormViewPCFormConfig = (params: VxeGlobalRendererHandl
   const { formConfig } = params
   return {
     vertical: formConfig.pcVertical,
-    titleBold: formConfig.pcTitleBold
+    titleBold: formConfig.pcTitleBold,
+    titleColon: formConfig.pcTitleColon,
+    titleAlign: formConfig.pcTitleAlign,
+    titleWidth: formConfig.pcTitleWidth
   }
 }
 
@@ -23,6 +34,9 @@ export const createDefaultFormViewMobileFormConfig = (params: VxeGlobalRendererH
   const { formConfig } = params
   return {
     vertical: formConfig.mobileVertical,
-    titleBold: formConfig.mobileTitleBold
+    titleBold: formConfig.mobileTitleBold,
+    titleColon: formConfig.mobileTitleColon,
+    titleAlign: formConfig.mobileTitleAlign,
+    titleWidth: formConfig.mobileTitleWidth
   }
 }

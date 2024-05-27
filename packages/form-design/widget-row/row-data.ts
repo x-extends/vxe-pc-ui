@@ -1,5 +1,5 @@
 import XEUtils from 'xe-utils'
-import { getFormDesignWidgetName } from '../render/util'
+import { handleGetFormDesignWidgetName } from '../render/util'
 
 import type { VxeGlobalRendererHandles } from '../../../types'
 
@@ -12,7 +12,7 @@ export const getWidgetRowConfig = (params: VxeGlobalRendererHandles.CreateFormDe
   const { $formDesign } = params
   const defaultColSize = 2
   return {
-    title: getFormDesignWidgetName(params.name),
+    title: handleGetFormDesignWidgetName,
     group: 'layout',
     icon: 'vxe-icon-row-col',
     options: {

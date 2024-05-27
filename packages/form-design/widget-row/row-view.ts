@@ -75,7 +75,7 @@ const ViewColItemComponent = defineComponent({
           const isActive = activeWidget && widget && activeWidget.id === widget.id
 
           return h('div', {
-            class: ['vxe-design-form--widget-row-view', {
+            class: ['vxe-form-design--widget-row-view', {
               'is--active': isActive,
               'is--sort': sortWidget && widget && sortWidget.id === widget.id,
               'is--drag': dragWidget && widget && dragWidget.id === widget.id
@@ -84,21 +84,20 @@ const ViewColItemComponent = defineComponent({
             onDragover: handleDragoverColItem,
             onClick (evnt: KeyboardEvent) {
               if (widget) {
-                evnt.stopPropagation()
                 $xeFormDesign.handleClickWidget(evnt, widget)
               }
             }
           }, [
             renderWidgetDesignView
               ? h('div', {
-                class: 'vxe-design-form--widget-row-view-wrapper'
+                class: 'vxe-form-design--widget-row-view-wrapper'
               }, [
                 h('div', {
                   class: 'vxe-form--item-row'
                 }, getSlotVNs(renderWidgetDesignView(renderOpts, params))),
                 isActive
                   ? h('div', {
-                    class: 'vxe-design-form--preview-item-operate'
+                    class: 'vxe-form-design--preview-item-operate'
                   }, [
                     h(VxeButtonComponent, {
                       icon: getIcon().DESIGN_FORM_WIDGET_COPY,
@@ -122,7 +121,7 @@ const ViewColItemComponent = defineComponent({
                   : createCommentVNode()
               ])
               : h('div', {
-                class: 'vxe-design-form--widget-row-view-empty'
+                class: 'vxe-form-design--widget-row-view-empty'
               }, '控件位置')
           ])
         }

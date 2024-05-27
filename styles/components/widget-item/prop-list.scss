@@ -1,0 +1,28 @@
+.vxe-form-design {
+  .vxe-form-design--widget-form-item-prop-list {
+    margin-bottom: var(--vxe-ui-layout-padding-double);
+    padding: 0 var(--vxe-ui-layout-padding-default);
+    &:first-child {
+      margin-top: var(--vxe-ui-layout-padding-default);
+    }
+    & > span {
+      padding: 0 0.5em;
+      &:first-child {
+        padding: 0;
+        padding-right: var(--vxe-ui-layout-padding-default);
+      }
+    }
+    & > span:first-child,
+    .vxe-form-design--widget-form-item-prop-width,
+    .vxe-form-design--widget-form-item-prop-unit { 
+      display: inline-block;
+      vertical-align: middle;
+    }
+    .vxe-form-design--widget-form-item-prop-width {
+      width: 90px;
+    }
+    .vxe-form-design--widget-form-item-prop-unit {
+      width: 90px;
+    }
+  }
+}

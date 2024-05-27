@@ -1,17 +1,15 @@
-import { getFormDesignWidgetName } from '../render/util'
-
-import type { VxeGlobalRendererHandles } from '../../../types'
+import { handleGetFormDesignWidgetName } from '../render/util'
 
 export interface WidgetTextareaFormObjVO {
   placeholder: string
 }
 
-export const getWidgetTextareaConfig = (params: VxeGlobalRendererHandles.CreateFormDesignWidgetConfigParams): VxeGlobalRendererHandles.CreateFormDesignWidgetConfigObj<WidgetTextareaFormObjVO> => {
+export const getWidgetTextareaConfig = () => {
   return {
-    title: getFormDesignWidgetName(params.name),
+    title: handleGetFormDesignWidgetName,
     icon: 'vxe-icon-textarea',
     options: {
-      placeholder: '请输入'
+      placeholder: ''
     }
   }
 }

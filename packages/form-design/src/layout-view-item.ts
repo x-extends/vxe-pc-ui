@@ -95,7 +95,7 @@ export const ViewItemComponent = defineComponent({
         key: item.id,
         'data-widget-id': item.id,
         draggable: true,
-        class: ['vxe-design-form--preview-item', XEUtils.kebabCase(name), {
+        class: ['vxe-form-design--preview-item', XEUtils.kebabCase(name), {
           'is--active': isActive,
           'is--sort': sortWidget && sortWidget.id === item.id,
           'is--drag': dragWidget && dragWidget.id === item.id
@@ -109,11 +109,11 @@ export const ViewItemComponent = defineComponent({
         }
       }, [
         h('div', {
-          class: 'vxe-design-form--preview-item-view vxe-form--item-row'
+          class: 'vxe-form-design--preview-item-view vxe-form--item-row'
         }, defaultSlot ? defaultSlot({}) : []),
         isActive
           ? h('div', {
-            class: 'vxe-design-form--preview-item-operate'
+            class: 'vxe-form-design--preview-item-operate'
           }, [
             h(VxeButtonComponent, {
               icon: getIcon().DESIGN_FORM_WIDGET_COPY,

@@ -2,7 +2,7 @@ import { h } from 'vue'
 import { renderer } from '@vxe-ui/core'
 
 import { getWidgetRowConfig, WidgetRowEditComponent, WidgetRowViewComponent, WidgetRowFormComponent } from '../widget-row'
-import { getWidgetInputConfig, createWidgetInputViewRules, WidgetInputViewComponent, WidgetInputFormComponent } from '../widget-input'
+import { getWidgetInputConfig, WidgetInputViewComponent, WidgetInputFormComponent } from '../widget-input'
 import { getWidgetTextareaConfig, WidgetTextareaViewComponent, WidgetTextareaFormComponent } from '../widget-textarea'
 import { getWidgetSelectConfig, WidgetSelectViewComponent, WidgetSelectFormComponent } from '../widget-select'
 
@@ -29,8 +29,7 @@ renderer.mixin({
     createFormDesignWidgetConfig: getWidgetInputConfig,
     renderFormDesignWidgetFormView (renderOpts, renderParams) {
       return h(WidgetInputFormComponent, { renderOpts, renderParams })
-    },
-    createFormDesignWidgetRules: createWidgetInputViewRules
+    }
   },
   textarea: {
     renderFormDesignWidgetView (renderOpts, renderParams) {

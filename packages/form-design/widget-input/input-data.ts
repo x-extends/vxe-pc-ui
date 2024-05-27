@@ -1,29 +1,15 @@
-import { getFormDesignWidgetName } from '../render/util'
-
-import type { VxeFormDefines, VxeGlobalRendererHandles } from '../../../types'
+import { handleGetFormDesignWidgetName } from '../render/util'
 
 export interface WidgetInputFormObjVO {
   placeholder: string
 }
 
-export const getWidgetInputConfig = (params: VxeGlobalRendererHandles.CreateFormDesignWidgetConfigParams): VxeGlobalRendererHandles.CreateFormDesignWidgetConfigObj<WidgetInputFormObjVO> => {
+export const getWidgetInputConfig = () => {
   return {
-    title: getFormDesignWidgetName(params.name),
+    title: handleGetFormDesignWidgetName,
     icon: 'vxe-icon-input',
     options: {
-      placeholder: '请输入'
+      placeholder: ''
     }
   }
-}
-
-export const createWidgetInputViewRules = (params: VxeGlobalRendererHandles.CreateFormDesignWidgetRulesParams<WidgetInputFormObjVO>) => {
-  const { widget } = params
-  const rules: VxeFormDefines.FormRule[] = []
-  if (widget.required) {
-    rules.push({
-      required: true,
-      content: '必填 ！'
-    })
-  }
-  return rules
 }

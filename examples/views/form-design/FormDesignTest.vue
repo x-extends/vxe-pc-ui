@@ -1,7 +1,7 @@
 <template>
   <div>
     <p>电脑端</p>
-    <VxeFormDesign ref="formDesignRef" :height="400" />
+    <VxeFormDesign ref="formDesignRef" :widgets="widgetConfigs" :height="400" />
 
     <p>电脑端和手机端</p>
     <VxeFormDesign :height="400" showMobile />
@@ -14,12 +14,27 @@
 
 <script lang="ts" setup>
 import { ref } from 'vue'
-import { VxeFormDesignInstance, VxeFormDesignDefines } from '../../../types'
+import { VxeFormDesignInstance, VxeFormDesignPropTypes, VxeFormViewPropTypes } from '../../../types'
 
 const formDesignRef = ref<VxeFormDesignInstance>()
 
+const widgetConfigs = ref<VxeFormDesignPropTypes.Widgets>([
+  {
+    customGroup: 'xxx',
+    children: [
+      'input'
+    ]
+  },
+  {
+    group: 'layout',
+    children: [
+      'input'
+    ]
+  }
+])
+
 const formDesignFormData = ref({})
-const formDesignConfig = ref<VxeFormDesignDefines.FormDesignConfig>({})
+const formDesignConfig = ref<VxeFormViewPropTypes.Config>(null)
 
 const previewEvent = () => {
   const $formDesign = formDesignRef.value

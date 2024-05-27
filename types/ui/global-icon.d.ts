@@ -87,7 +87,10 @@ declare module '@vxe-ui/core' {
     FORM_FOLDING?: string
     FORM_UNFOLDING?: string
 
-    // design-form
+    // form-design
+    DESIGN_FORM_STYLE_SETTING?: string
+    DESIGN_FORM_PROPS_PC?: string
+    DESIGN_FORM_PROPS_MOBILE?: string
     DESIGN_FORM_WIDGET_ADD?: string
     DESIGN_FORM_WIDGET_COPY?: string
     DESIGN_FORM_WIDGET_DELETE?: string

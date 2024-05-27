@@ -1,5 +1,5 @@
 import { defineComponent, h, inject, createCommentVNode, watch, ref } from 'vue'
-import { renderer } from '@vxe-ui/core'
+import { getI18n, renderer } from '@vxe-ui/core'
 import { getSlotVNs } from '../../ui/src/vn'
 import VxeTabsComponent from '../../tabs/src/tabs'
 import VxeTabPaneComponent from '../../tabs/src/tab-pane'
@@ -29,7 +29,7 @@ export default defineComponent({
         const renderWidgetFormView = compConf ? compConf.renderFormDesignWidgetFormView : null
         if (renderWidgetFormView) {
           return h('div', {
-            class: 'vxe-design-form--custom-widget-form-view'
+            class: 'vxe-form-design--custom-widget-form-view'
           }, getSlotVNs(renderWidgetFormView(activeWidget, { widget: activeWidget })))
         }
       }
@@ -44,7 +44,7 @@ export default defineComponent({
         const renderSettingView = compConf ? compConf.renderFormDesignSettingFormView : null
         if (renderSettingView) {
           return h('div', {
-            class: 'vxe-design-form--custom-setting-form-view'
+            class: 'vxe-form-design--custom-setting-form-view'
           }, getSlotVNs(renderSettingView({}, { $formDesign: $xeFormDesign })))
         }
       }
@@ -59,15 +59,17 @@ export default defineComponent({
 
     return () => {
       return h('div', {
-        class: 'vxe-design-form--setting'
+        class: 'vxe-form-design--setting'
       }, [
         h('div', {
-          class: 'vxe-design-form--setting-form'
+          class: 'vxe-form-design--setting-form'
         }, [
           h(VxeTabsComponent, {
             modelValue: activeTab.value,
             titleWidth: '50%',
             titleAlign: 'center',
+            padding: true,
+            class: 'vxe-form-design--setting-form-tabs',
             'onUpdate:modelValue' (val) {
               activeTab.value = val
             }
@@ -75,7 +77,7 @@ export default defineComponent({
             default () {
               return [
                 h(VxeTabPaneComponent, {
-                  title: '控件属性',
+                  title: getI18n('vxe.formDesign.widgetPropTab'),
                   name: 1
                 }, {
                   default () {
@@ -83,7 +85,7 @@ export default defineComponent({
                   }
                 }),
                 h(VxeTabPaneComponent, {
-                  title: '表单属性',
+                  title: getI18n('vxe.formDesign.widgetFormTab'),
                   name: 2
                 }, {
                   default () {

@@ -362,9 +362,15 @@ declare module '@vxe-ui/core' {
       $formDesign: null | VxeFormDesignConstructor
     }
     export interface CreateFormDesignWidgetConfigObj<D = any> {
-      title?: string | number
-      group?: null | '' | 'base' | 'layout' | 'advanced'
-      customGroup?: null | string
+      title?: string | number | ((params: {
+        name: string
+        $formDesign: null | VxeFormDesignConstructor
+      }) => string)
+      group?: VxeFormDesignDefines.WidgetGroup
+      customGroup?: string | number | ((params: {
+        name: string
+        $formDesign: null | VxeFormDesignConstructor
+      }) => string)
       icon?: string
       options?: D
       children?: VxeFormDesignDefines.WidgetObjItem[]

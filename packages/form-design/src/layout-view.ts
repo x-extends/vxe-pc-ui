@@ -35,7 +35,7 @@ export default defineComponent({
     return () => {
       const { widgetObjList } = formDesignReactData
       return h('div', {
-        class: 'vxe-design-form--preview',
+        class: 'vxe-form-design--preview',
         onDragover: dragoverEvent
       }, [
         h(VxeFormComponent, {
@@ -45,9 +45,9 @@ export default defineComponent({
         }, {
           default () {
             return h(TransitionGroup, {
-              class: 'vxe-design-form--preview-list',
+              class: 'vxe-form-design--preview-list',
               tag: 'div',
-              name: 'vxe-design-form--preview-list'
+              name: 'vxe-form-design--preview-list'
             }, {
               default: () => {
                 return widgetObjList.map((widget, widgetIndex) => {

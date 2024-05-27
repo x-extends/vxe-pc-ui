@@ -1,4 +1,5 @@
 import { PropType, defineComponent, h } from 'vue'
+import { getI18n } from '@vxe-ui/core'
 import { WidgetTextareaFormObjVO } from './textarea-data'
 import { useKebabCaseName } from '../render/hooks'
 import VxeFormComponent from '../../form/src/form'
@@ -29,15 +30,16 @@ export const WidgetTextareaFormComponent = defineComponent({
       const kebabCaseName = computeKebabCaseName.value
 
       return h(VxeFormComponent, {
-        class: `vxe-design-form--widget-${kebabCaseName}-form`,
+        class: `vxe-form-design--widget-${kebabCaseName}-form`,
         vertical: true,
         span: 24,
+        titleBold: true,
         data: widget.options
       }, {
         default () {
           return [
             h(VxeFormItemComponent, {
-              title: '控件名称'
+              title: getI18n('vxe.formDesign.widgetProp.name')
             }, {
               default () {
                 return h(VxeInputComponent, {
@@ -49,12 +51,12 @@ export const WidgetTextareaFormComponent = defineComponent({
               }
             }),
             h(VxeFormItemComponent, {
-              title: '控件提示',
+              title: getI18n('vxe.formDesign.widgetProp.placeholder'),
               field: 'placeholder',
               itemRender: { name: 'VxeInput' }
             }),
             h(VxeFormItemComponent, {
-              title: '是否必填'
+              title: getI18n('vxe.formDesign.widgetProp.required')
             }, {
               default () {
                 return h(VxeSwitchComponent, {

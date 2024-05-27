@@ -1,4 +1,5 @@
 import { PropType, defineComponent, h, ref, computed, inject } from 'vue'
+import { getI18n } from '@vxe-ui/core'
 import { useKebabCaseName } from '../render/hooks'
 import { WidgetRowFormObjVO } from './row-data'
 import VxeFormComponent from '../../form/src/form'
@@ -32,7 +33,7 @@ export const WidgetRowFormComponent = defineComponent({
 
     const spanOptions = ref([
       {
-        label: '两列',
+        label: getI18n('vxe.formDesign.widgetProp.rowProp.col3'),
         value: 2,
         list: [
           { value: '12,12', spans: [12, 12] },
@@ -43,7 +44,7 @@ export const WidgetRowFormComponent = defineComponent({
         ]
       },
       {
-        label: '三列',
+        label: getI18n('vxe.formDesign.widgetProp.rowProp.col3'),
         value: 3,
         list: [
           { value: '8,8,8', spans: [8, 8, 8] },
@@ -53,14 +54,14 @@ export const WidgetRowFormComponent = defineComponent({
         ]
       },
       {
-        label: '四列',
+        label: getI18n('vxe.formDesign.widgetProp.rowProp.col4'),
         value: 4,
         list: [
           { value: '6,6,6,6', spans: [6, 6, 6, 6] }
         ]
       },
       {
-        label: '六列',
+        label: getI18n('vxe.formDesign.widgetProp.rowProp.col6'),
         value: 6,
         list: [
           { value: '4,4,4,4,4,4', spans: [4, 4, 4, 4, 4, 4] }
@@ -102,20 +103,21 @@ export const WidgetRowFormComponent = defineComponent({
       const kebabCaseName = computeKebabCaseName.value
 
       return h(VxeFormComponent, {
-        class: `vxe-design-form--widget-${kebabCaseName}-form`,
+        class: `vxe-form-design--widget-${kebabCaseName}-form`,
         vertical: true,
         span: 24,
+        titleBold: true,
         data: widget.options
       }, {
         default () {
           return [
             h(VxeFormItemComponent, {
-              title: '列数',
+              title: getI18n('vxe.formDesign.widgetProp.rowProp.colSize'),
               field: 'colSize',
               itemRender: { name: 'VxeRadioGroup', options: spanOptions.value, props: { type: 'button' } }
             }),
             h(VxeFormItemComponent, {
-              title: '布局'
+              title: getI18n('vxe.formDesign.widgetProp.rowProp.layout')
             }, {
               default () {
                 const selectSpanItem = computeSelectSpanItem.value
@@ -123,7 +125,7 @@ export const WidgetRowFormComponent = defineComponent({
                   return selectSpanItem.list.map((item, rIndex) => {
                     return h(VxeRowComponent, {
                       key: rIndex,
-                      class: [`vxe-design-form--widget-${kebabCaseName}-form-row`, {
+                      class: [`vxe-form-design--widget-${kebabCaseName}-form-row`, {
                         'is--active': item.value === widget.options.colSpan
                       }],
                       onClick () {
@@ -134,7 +136,7 @@ export const WidgetRowFormComponent = defineComponent({
                         return item.spans.map((span, sIndex) => {
                           return h(VxeColComponent, {
                             key: `${rIndex}${sIndex}`,
-                            class: `vxe-design-form--widget-${kebabCaseName}-form-col`,
+                            class: `vxe-form-design--widget-${kebabCaseName}-form-col`,
                             span
                           }, {
                             default () {

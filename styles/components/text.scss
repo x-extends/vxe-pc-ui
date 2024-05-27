@@ -49,32 +49,13 @@ $btnThemeList: (
   )
 );
 
-.vxe-link {
+.vxe-text {
   font-size: var(--vxe-ui-font-size-default);
-  text-decoration: none;
-  &:not(.is--disabled) {
-    color: var(--vxe-ui-font-color);
-    cursor: pointer;
-    &:hover {
-      color: var(--vxe-ui-font-primary-color);
-      text-decoration: underline;
-    }
-  }
+  color: var(--vxe-ui-font-color);
   @for $index from 0 to length($btnThemeList) {
     $item: nth($btnThemeList, $index + 1);
     &.theme--#{map-get($item, name)} {
       color: map-get($item, textColor);
-      &:not(.is--disabled) {
-        &:focus {
-          color: map-get($item, btnDarkenColor);
-        }
-        &:hover {
-          color: map-get($item, btnLightenColor);
-        }
-      }
-      &.is--disabled {
-        color: map-get($item, btnDisabledColor);
-      }
     }
   }
   &.size--medium {
@@ -87,9 +68,9 @@ $btnThemeList: (
     font-size: var(--vxe-ui-font-size-mini);
   }
 }
-.vxe-link--icon {
+.vxe-text--icon {
   padding: 0 0.1em;
 }
-.vxe-link--content {
+.vxe-text--content {
   padding: 0 0.1em;
 }

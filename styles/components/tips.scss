@@ -36,7 +36,7 @@ $btnThemeList: (
   display: flex;
   flex-direction: row;
   color: var(--vxe-ui-font-color);
-  margin: var(--vxe-ui-layout-padding-double) 0;
+  margin-bottom: var(--vxe-ui-layout-padding-double);
   padding: var(--vxe-ui-layout-padding-default) var(--vxe-ui-layout-padding-threefold) var(--vxe-ui-layout-padding-double) var(--vxe-ui-layout-padding-threefold);
   font-size: var(--vxe-ui-font-size-default);
   &::after {

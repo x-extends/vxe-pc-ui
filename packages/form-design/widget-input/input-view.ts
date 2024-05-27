@@ -1,4 +1,5 @@
 import { PropType, defineComponent, h, inject } from 'vue'
+import { getI18n } from '@vxe-ui/core'
 import { WidgetInputFormObjVO } from './input-data'
 import { useKebabCaseName } from '../render/hooks'
 import VxeFormItemComponent from '../../form/src/form-item'
@@ -45,7 +46,7 @@ export const WidgetInputViewComponent = defineComponent({
       const kebabCaseName = computeKebabCaseName.value
 
       return h(VxeFormItemComponent, {
-        className: `vxe-design-form--widget-${kebabCaseName}-view`,
+        className: `vxe-form-design--widget-${kebabCaseName}-view`,
         field: widget.field,
         title: widget.title
       }, {
@@ -53,7 +54,7 @@ export const WidgetInputViewComponent = defineComponent({
           return h('input', {
             class: 'vxe-default-input',
             type: 'text',
-            placeholder: options.placeholder,
+            placeholder: options.placeholder || getI18n('vxe.base.pleaseInput'),
             value: $xeFormView ? $xeFormView.getItemValue(widget) : null,
             onInput: inputEvent,
             onChange: changeEvent

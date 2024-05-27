@@ -81,6 +81,7 @@ const componentList = [
   'switch',
   'tab-pane',
   'tabs',
+  'text',
   'textarea',
   'tips',
   'tooltip',

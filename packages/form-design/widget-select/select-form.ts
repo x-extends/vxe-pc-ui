@@ -1,11 +1,12 @@
 import { PropType, VNode, defineComponent, h, onMounted, ref, watch } from 'vue'
-import { VxeUI, getIcon } from '@vxe-ui/core'
+import { VxeUI, getIcon, getI18n } from '@vxe-ui/core'
 import VxeFormComponent from '../../form/src/form'
 import VxeFormItemComponent from '../../form/src/form-item'
 import VxeButtonComponent from '../../button/src/button'
 import VxeInputComponent from '../../input/src/input'
 import VxeTextareaComponent from '../../textarea/src/textarea'
 import VxeSwitchComponent from '../../switch/src/switch'
+import VxeTipsComponent from '../../tips/src/tips'
 import { WidgetSelectFormObjVO, WidgetSelectFormOptionObjVO, WidgetSelectFormOptionSubObjVO } from './select-data'
 import { useKebabCaseName } from '../render/hooks'
 
@@ -34,7 +35,7 @@ export const WidgetSelectFormComponent = defineComponent({
       const { widget } = renderParams
       const options = widget.options.options || []
       options.push({
-        value: `选项${options.length + 1}`
+        value: getI18n('vxe.formDesign.widgetProp.dataSource.defValue', [options.length + 1])
       })
       widget.options.options = [...options]
     }
@@ -118,23 +119,25 @@ export const WidgetSelectFormComponent = defineComponent({
       optionsContent.value = contList.join('\n')
 
       VxeUI.modal.open({
-        title: `${widget.title} - 批量编辑选项`,
+        title: `${widget.title} - ${getI18n('vxe.formDesign.widgetProp.dataSource.batchEditOption')}`,
         width: 500,
         height: '50vh ',
         resize: true,
         showFooter: true,
         showCancelButton: true,
         showConfirmButton: true,
-        confirmButtonText: '生成选项',
+        confirmButtonText: getI18n('vxe.formDesign.widgetProp.dataSource.buildOption'),
         onConfirm: confirmBatchAddOptionEvent,
         slots: {
           default () {
             return h('div', {
-              class: `vxe-design-form--widget-${kebabCaseName}-form-options-popup`
+              class: `vxe-form-design--widget-${kebabCaseName}-form-options-popup`
             }, [
-              h('div', {
-                class: `vxe-design-form--widget-${kebabCaseName}-form-options-popup-title`
-              }, '每行对应一个选项，如果是分组，子项可以是空格或制表键开头，可从 Excel 或 WPS 中复制。'),
+              h(VxeTipsComponent, {
+                status: 'primary',
+                title: '',
+                content: '每行对应一个选项，如果是分组，子项可以是空格或制表键开头，可从 Excel 或 WPS 中复制。'
+              }),
               h(VxeTextareaComponent, {
                 resize: 'none',
                 modelValue: optionsContent.value,
@@ -151,13 +154,13 @@ export const WidgetSelectFormComponent = defineComponent({
     const renderOption = (item: WidgetSelectFormOptionSubObjVO, hasFirstLevel: boolean, isExpand: boolean, gIndex: number, hasSub: boolean, isFirst: boolean, isLast: boolean) => {
       const kebabCaseName = computeKebabCaseName.value
       return h('div', {
-        class: [`vxe-design-form--widget-${kebabCaseName}-form-options-option`, {
+        class: [`vxe-form-design--widget-${kebabCaseName}-form-options-option`, {
           'is--first': isFirst,
           'is--last': isLast
         }]
       }, [
         h('div', {
-          class: 'vxe-design-form--widget-expand-btn'
+          class: 'vxe-form-design--widget-expand-btn'
         }, hasFirstLevel && hasSub
           ? [
               h('i', {
@@ -199,7 +202,7 @@ export const WidgetSelectFormComponent = defineComponent({
             if (isExpand) {
               optVNs.push(
                 h('div', {
-                  class: `vxe-design-form--widget-${kebabCaseName}-form-options-subs`
+                  class: `vxe-form-design--widget-${kebabCaseName}-form-options-subs`
                 }, options.map(item => renderOption(item, false, isExpand, 0, false, false, false)))
               )
             }
@@ -225,15 +228,16 @@ export const WidgetSelectFormComponent = defineComponent({
       const kebabCaseName = computeKebabCaseName.value
 
       return h(VxeFormComponent, {
-        class: `vxe-design-form--widget-${kebabCaseName}-form`,
+        class: `vxe-form-design--widget-${kebabCaseName}-form`,
         vertical: true,
         span: 24,
+        titleBold: true,
         data: widget.options
       }, {
         default () {
           return [
             h(VxeFormItemComponent, {
-              title: '控件名称'
+              title: getI18n('vxe.formDesign.widgetProp.name')
             }, {
               default () {
                 return h(VxeInputComponent, {
@@ -245,7 +249,7 @@ export const WidgetSelectFormComponent = defineComponent({
               }
             }),
             h(VxeFormItemComponent, {
-              title: '是否必填'
+              title: getI18n('vxe.formDesign.widgetProp.required')
             }, {
               default () {
                 return h(VxeSwitchComponent, {
@@ -257,7 +261,7 @@ export const WidgetSelectFormComponent = defineComponent({
               }
             }),
             h(VxeFormItemComponent, {
-              title: '数据源',
+              title: getI18n('vxe.formDesign.widgetProp.dataSource.name'),
               field: 'options'
             }, {
               default () {
@@ -266,18 +270,18 @@ export const WidgetSelectFormComponent = defineComponent({
                     h(VxeButtonComponent, {
                       status: 'primary',
                       mode: 'text',
-                      content: '添加选项',
+                      content: getI18n('vxe.formDesign.widgetProp.dataSource.addOption'),
                       onClick: addOptionEvent
                     }),
                     h(VxeButtonComponent, {
                       status: 'primary',
                       mode: 'text',
-                      content: '批量编辑',
+                      content: getI18n('vxe.formDesign.widgetProp.dataSource.batchEditOption'),
                       onClick: openPopupEditEvent
                     })
                   ]),
                   h('div', {
-                    class: `vxe-design-form--widget-${kebabCaseName}-form-options`
+                    class: `vxe-form-design--widget-${kebabCaseName}-form-options`
                   }, renderOptions())
                 ]
               }

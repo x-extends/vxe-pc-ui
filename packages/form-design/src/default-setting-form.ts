@@ -1,7 +1,9 @@
 import { h, defineComponent, PropType, inject, createCommentVNode } from 'vue'
+import { getIcon, getI18n } from '@vxe-ui/core'
 import VxeFormComponent from '../../form/src/form'
 import VxeFormItemComponent from '../../form/src/form-item'
 import VxeSwitchComponent from '../../switch/src/switch'
+import VxeTextComponent from '../../text/src/text'
 
 import type { VxeFormDesignDefines, VxeFormDesignConstructor, VxeFormDesignPrivateMethods } from '../../../types'
 
@@ -29,41 +31,48 @@ export const DefaultSettingFormComponent = defineComponent({
       return h(VxeFormComponent, {
         data: formData,
         span: 24,
-        vertical: true
+        vertical: true,
+        titleBold: true
       }, {
         default () {
           const { showPC, showMobile } = formDesignProps
           return [
             showPC && showMobile
               ? h(VxeFormItemComponent, {
-                title: '显示设置'
+                title: getI18n('vxe.formDesign.widgetProp.displaySetting.name')
               }, {
                 default () {
                   return [
                     h('div', {
-                      class: 'vxe-design-form--widget-form-item-devices'
+                      class: 'vxe-form-design--widget-form-item-devices'
                     }, [
                       h('div', {
-                        class: 'vxe-design-form--widget-form-item-pc'
+                        class: 'vxe-form-design--widget-form-item-pc'
                       }, [
-                        h('span', {}, '电脑端'),
+                        h(VxeTextComponent, {
+                          icon: getIcon().DESIGN_FORM_PROPS_PC,
+                          content: getI18n('vxe.formDesign.widgetProp.displaySetting.pc')
+                        }),
                         h(VxeSwitchComponent, {
                           modelValue: formData.pcVisible,
-                          openLabel: '显示',
-                          closeLabel: '隐藏',
+                          openLabel: getI18n('vxe.formDesign.widgetProp.displaySetting.visible'),
+                          closeLabel: getI18n('vxe.formDesign.widgetProp.displaySetting.hidden'),
                           'onUpdate:modelValue' (val) {
                             formData.pcVisible = val
                           }
                         })
                       ]),
                       h('div', {
-                        class: 'vxe-design-form--widget-form-item-mobile'
+                        class: 'vxe-form-design--widget-form-item-mobile'
                       }, [
-                        h('span', {}, '手机端'),
+                        h(VxeTextComponent, {
+                          icon: getIcon().DESIGN_FORM_PROPS_MOBILE,
+                          content: getI18n('vxe.formDesign.widgetProp.displaySetting.mobile')
+                        }),
                         h(VxeSwitchComponent, {
                           modelValue: formData.mobileVisible,
-                          openLabel: '显示',
-                          closeLabel: '隐藏',
+                          openLabel: getI18n('vxe.formDesign.widgetProp.displaySetting.visible'),
+                          closeLabel: getI18n('vxe.formDesign.widgetProp.displaySetting.hidden'),
                           'onUpdate:modelValue' (val) {
                             formData.mobileVisible = val
                           }

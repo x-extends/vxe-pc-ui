@@ -1,4 +1,4 @@
-.vxe-design-form--widget-row-form-row {
+.vxe-form-design--widget-row-form-row {
   border: 1px solid var( --vxe-ui-input-border-color);
   margin-bottom: var(--vxe-ui-layout-padding-default);
   border-radius: var(--vxe-ui-base-border-radius);
@@ -9,14 +9,14 @@
   &.is--active {
     border-color: var(--vxe-ui-font-primary-color);
     color: var(--vxe-ui-layout-background-color);
-    .vxe-design-form--widget-row-form-col {
+    .vxe-form-design--widget-row-form-col {
       div {
         background: var(--vxe-ui-font-primary-color);
       }
     }
   }
 }
-.vxe-design-form--widget-row-form-col {
+.vxe-form-design--widget-row-form-col {
   padding: var(--vxe-ui-layout-padding-default);
   & > div {
     line-height: 24px;
@@ -26,7 +26,7 @@
   }
 }
 
-.vxe-design-form--widget-row-view {
+.vxe-form-design--widget-row-view {
   position: relative;
   min-height: 100%;
   padding: var(--vxe-ui-layout-padding-default);
@@ -54,7 +54,7 @@
   }
 }
 
-.vxe-design-form--widget-row-view-empty {
+.vxe-form-design--widget-row-view-empty {
   text-align: center;
   height: 78px;
   padding: var(--vxe-ui-layout-padding-default);
@@ -63,7 +63,7 @@
   border: 2px dashed var(--vxe-ui-input-border-color);
   font-size: 0.95em;
 }
-.vxe-design-form--preview-item {
+.vxe-form-design--preview-item {
   &.row {
     padding: var(--vxe-ui-layout-padding-default) 0;
     &::after {

@@ -25,6 +25,7 @@ export interface VxeTabPanePrivateRef extends TabPanePrivateRef { }
 export namespace VxeTabPanePropTypes {
   export type Title = string | number
   export type Name = string | number
+  export type Icon = string
   export type TitleWidth = string | number
   export type TitleAlign = VxeComponentAlignType
 }
@@ -32,6 +33,7 @@ export namespace VxeTabPanePropTypes {
 export type VxeTabPaneProps = {
   title?: VxeTabPanePropTypes.Title
   name?: VxeTabPanePropTypes.Name
+  icon?: VxeTabPanePropTypes.Icon
   titleWidth?: VxeTabPanePropTypes.TitleWidth
   titleAlign?: VxeTabPanePropTypes.TitleAlign
 

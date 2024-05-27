@@ -1,7 +1,7 @@
 import { defineComponent, ref, h, PropType, reactive, provide, watch, nextTick, ComponentOptions } from 'vue'
 import { getConfig, getI18n, renderer, createEvent } from '@vxe-ui/core'
 import { toCssUnit } from '../../ui/src/dom'
-import { FormDesignWidgetInfo, getWidgetGroup, getWidgetCustomGroup } from './widget-info'
+import { FormDesignWidgetInfo, getWidgetConfigGroup, getWidgetConfigCustomGroup } from './widget-info'
 import XEUtils from 'xe-utils'
 import LayoutWidgetComponent from './layout-widget'
 import LayoutViewComponent from './layout-view'
@@ -154,8 +154,8 @@ export default defineComponent({
         const { createFormDesignWidgetConfig } = item
         if (createFormDesignWidgetConfig) {
           const widthItem = createWidget(name)
-          const widgetGroup = getWidgetGroup(name)
-          const widgetCustomGroup = getWidgetCustomGroup(name)
+          const widgetGroup = getWidgetConfigGroup(name)
+          const widgetCustomGroup = getWidgetConfigCustomGroup(name, $xeFormDesign)
           // 如果自定义组
           if (widgetCustomGroup) {
             const cusGroup = customGroups.find(item => item.title === widgetCustomGroup)
@@ -185,19 +185,19 @@ export default defineComponent({
 
       if (baseWidgets.length) {
         widgetConfs.push({
-          title: getI18n('vxe.formDesign.widget.baseGroup'),
+          group: 'base',
           children: baseWidgets
         })
       }
       if (layoutWidgets.length) {
         widgetConfs.push({
-          title: getI18n('vxe.formDesign.widget.layoutGroup'),
+          group: 'layout',
           children: layoutWidgets
         })
       }
       if (advancedWidgets.length) {
         widgetConfs.push({
-          title: getI18n('vxe.formDesign.widget.advancedGroup'),
+          group: 'advanced',
           children: advancedWidgets
         })
       }
@@ -206,11 +206,12 @@ export default defineComponent({
       }
 
       if (widgets && widgets.length) {
-        reactData.widgetConfigs = props.widgets.map(group => {
+        reactData.widgetConfigs = props.widgets.map(config => {
           return {
-            title: group.title,
-            children: group.children
-              ? group.children.map(name => {
+            title: config.customGroup,
+            group: config.group,
+            children: config.children
+              ? config.children.map(name => {
                 const widthItem = createWidget(name)
                 return widthItem
               })
@@ -225,6 +226,7 @@ export default defineComponent({
     const formDesignPrivateMethods: FormDesignPrivateMethods = {
       handleClickWidget (evnt: KeyboardEvent, item: VxeFormDesignDefines.WidgetObjItem) {
         if (item && item.name) {
+          evnt.stopPropagation()
           reactData.activeWidget = item
           formDesignMethods.dispatchEvent('click-widget', { item }, evnt)
         }
@@ -293,16 +295,16 @@ export default defineComponent({
 
     const renderLayoutTop = () => {
       return h('div', {
-        class: 'vxe-design-form--header-wrapper'
+        class: 'vxe-form-design--header-wrapper'
       }, [
         h('div', {
-          class: 'vxe-design-form--header-left'
+          class: 'vxe-form-design--header-left'
         }),
         h('div', {
-          class: 'vxe-design-form--header-middle'
+          class: 'vxe-form-design--header-middle'
         }),
         h('div', {
-          class: 'vxe-design-form--header-right'
+          class: 'vxe-form-design--header-right'
         }, [
           h(LayoutStyleComponent as ComponentOptions, {
             ref: refLayoutStyle
@@ -315,7 +317,7 @@ export default defineComponent({
       const { height } = props
       return h('div', {
         ref: refElem,
-        class: 'vxe-design-form',
+        class: 'vxe-form-design',
         style: height
           ? {
               height: toCssUnit(height)
@@ -323,10 +325,10 @@ export default defineComponent({
           : null
       }, [
         h('div', {
-          class: 'vxe-design-form--header'
+          class: 'vxe-form-design--header'
         }, renderLayoutTop()),
         h('div', {
-          class: 'vxe-design-form--body'
+          class: 'vxe-form-design--body'
         }, [
           h(LayoutWidgetComponent),
           h(LayoutViewComponent),
@@ -341,8 +343,8 @@ export default defineComponent({
       updateWidgetConfigs()
     })
 
-    watch(() => props.formRender, () => {
-      createSettingForm()
+    watch(() => props.widgets, () => {
+      updateWidgetConfigs()
     })
 
     createSettingForm()

@@ -8,7 +8,8 @@ export default defineComponent({
   name: 'VxeTabPane',
   props: {
     title: [String, Number] as PropType<VxeTabPanePropTypes.Title>,
-    name: [String, Number, Boolean] as PropType<VxeTabPanePropTypes.Name>,
+    name: [String, Number] as PropType<VxeTabPanePropTypes.Name>,
+    icon: String as PropType<VxeTabPanePropTypes.Icon>,
     titleWidth: [String, Number] as PropType<VxeTabPanePropTypes.TitleWidth>,
     titleAlign: [String, Number] as PropType<VxeTabPanePropTypes.TitleAlign>
   },
@@ -29,6 +30,7 @@ export default defineComponent({
       id: xID,
       title: props.title,
       name: props.name,
+      icon: props.icon,
       titleWidth: props.titleWidth,
       titleAlign: props.titleAlign,
       slots: {
@@ -59,6 +61,10 @@ export default defineComponent({
 
     watch(() => props.name, (val) => {
       tabConfig.name = val
+    })
+
+    watch(() => props.icon, (val) => {
+      tabConfig.icon = val
     })
 
     onMounted(() => {

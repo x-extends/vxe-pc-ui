@@ -1,5 +1,5 @@
 import { VNode, createCommentVNode, defineComponent, h, inject, ref, reactive, provide } from 'vue'
-import { renderer } from '@vxe-ui/core'
+import { getIcon, getI18n, renderer } from '@vxe-ui/core'
 import { getSlotVNs } from '../../ui/src/vn'
 import VxeButtonComponent from '../../button/src/button'
 import VxeDrawerComponent from '../../drawer/src/drawer'
@@ -76,12 +76,8 @@ export default defineComponent({
     const renderStylePreview = () => {
       const { activeTab } = reactData
       return h('div', {
-        class: ['vxe-design-form--layout-style-preview', `is--${activeTab === 2 ? 'mobile' : 'pc'}`]
+        class: ['vxe-form-design--layout-style-preview', `is--${activeTab === 2 ? 'mobile' : 'pc'}`]
       }, [
-        h(VxeFormViewComponent, {
-          config: settingConfig.value,
-          createFormConfig: createFormViewFormConfig
-        }),
         h(VxeFormViewComponent, {
           config: settingConfig.value,
           createFormConfig: createFormViewFormConfig
@@ -97,7 +93,7 @@ export default defineComponent({
         const renderSettingMobileFormView = compConf ? compConf.renderFormDesignMobileStyleFormView : null
         if (renderSettingMobileFormView) {
           return h('div', {
-            class: 'vxe-design-form--custom-setting-mobile-form-view'
+            class: 'vxe-form-design--custom-setting-mobile-form-view'
           }, getSlotVNs(renderSettingMobileFormView({ }, { $formDesign: $xeFormDesign, formConfig: formData })))
         }
       }
@@ -114,7 +110,7 @@ export default defineComponent({
         const renderStylePCFormView = compConf ? compConf.renderFormDesignStyleFormView : null
         if (renderStylePCFormView) {
           return h('div', {
-            class: 'vxe-design-form--custom-setting-pc-form-view'
+            class: 'vxe-form-design--custom-setting-pc-form-view'
           }, getSlotVNs(renderStylePCFormView({ }, { $formDesign: $xeFormDesign, formConfig: formData })))
         }
       }
@@ -127,12 +123,13 @@ export default defineComponent({
       const { showPC, showMobile } = formDesignProps
       const { activeTab } = reactData
       return h('div', {
-        class: 'vxe-design-form--layout-style-setting'
+        class: 'vxe-form-design--layout-style-setting'
       }, [
         h(VxeTabsComponent, {
           modelValue: activeTab,
           titleWidth: showPC && showMobile ? '50%' : '100%',
           titleAlign: 'center',
+          padding: true,
           onChange: updatePreviewView,
           'onUpdate:modelValue' (val) {
             reactData.activeTab = val
@@ -143,7 +140,8 @@ export default defineComponent({
             if (showPC) {
               tabVNs.push(
                 h(VxeTabPaneComponent, {
-                  title: '电脑端',
+                  title: getI18n('vxe.formDesign.widgetProp.displaySetting.pc'),
+                  icon: getIcon().DESIGN_FORM_PROPS_PC,
                   k: 1,
                   name: 1
                 }, {
@@ -156,7 +154,8 @@ export default defineComponent({
             if (showMobile) {
               tabVNs.push(
                 h(VxeTabPaneComponent, {
-                  title: '手机端',
+                  title: getI18n('vxe.formDesign.widgetProp.displaySetting.mobile'),
+                  icon: getIcon().DESIGN_FORM_PROPS_MOBILE,
                   key: 2,
                   name: 2
                 }, {
@@ -178,12 +177,13 @@ export default defineComponent({
         h(VxeButtonComponent, {
           mode: 'text',
           status: 'primary',
-          content: '样式设置',
+          icon: getIcon().DESIGN_FORM_STYLE_SETTING,
+          content: getI18n('vxe.formDesign.styleSetting.btn'),
           onClick: openPreviewEvent
         }),
         h(VxeDrawerComponent, {
           modelValue: settingVisible.value,
-          title: '表单样式设置',
+          title: getI18n('vxe.formDesign.styleSetting.title'),
           height: '90vh',
           maskClosable: true,
           position: 'bottom',
@@ -193,7 +193,7 @@ export default defineComponent({
         }, {
           default () {
             return h('div', {
-              class: 'vxe-design-form--layout-style'
+              class: 'vxe-form-design--layout-style'
             }, [
               renderStylePreview(),
               showPC || showMobile ? renderStyleSetting() : createCommentVNode()

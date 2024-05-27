@@ -29,7 +29,8 @@ export namespace VxeFormDesignPropTypes {
 
   export type Height = string | number
   export interface WidgetItem {
-    title: string
+    customGroup?: string
+    group?: VxeFormDesignDefines.WidgetGroup
     children: string[]
   }
   export type Widgets = WidgetItem[]
@@ -110,6 +111,8 @@ export namespace VxeFormDesignDefines {
     $formDesign: VxeFormDesignConstructor
   }
 
+  export type WidgetGroup = null | '' | 'base' | 'layout' | 'advanced'
+
   export interface FormDesignEventParams extends FormDesignDefaultParams, VxeComponentEventParams {
   }
 
@@ -119,7 +122,8 @@ export namespace VxeFormDesignDefines {
   }
 
   export interface WidgetConfigGroup {
-    title: string
+    title?: string
+    group?: VxeFormDesignDefines.WidgetGroup
     children: VxeFormDesignDefines.WidgetObjItem[]
   }
 
@@ -141,9 +145,17 @@ export namespace VxeFormDesignDefines {
     pcVisible: boolean
     pcVertical: VxeFormPropTypes.Vertical
     pcTitleBold: VxeFormPropTypes.TitleBold
+    pcTitleColon: boolean
+    pcTitleAlign: VxeFormPropTypes.TitleAlign
+    pcTitleWidth: VxeFormPropTypes.TitleWidth
+    pcTitleWidthUnit: null | '' | 'px' | '%'
     mobileVisible: boolean
     mobileVertical: VxeFormPropTypes.Vertical
     mobileTitleBold: VxeFormPropTypes.TitleBold
+    mobileTitleColon: boolean
+    mobileTitleAlign: VxeFormPropTypes.TitleAlign
+    mobileTitleWidth: VxeFormPropTypes.TitleWidth
+    mobileTitleWidthUnit: null | '' | 'px' | '%'
   }
 }
 

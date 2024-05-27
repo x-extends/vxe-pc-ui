@@ -168,8 +168,10 @@ export default defineComponent({
           customLayout: true,
           span: 24,
           vertical: formConfig.vertical,
-          titleWidth: formConfig.titleWidth,
           titleBold: formConfig.titleBold,
+          titleColon: formConfig.titleColon,
+          titleAlign: formConfig.titleAlign,
+          titleWidth: formConfig.titleWidth,
           rules: formRules
         }, {
           default () {
