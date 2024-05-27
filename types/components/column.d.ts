@@ -121,6 +121,7 @@ export namespace VxeColumnPropTypes {
     optionGroups?: any[]
     optionGroupProps?: VxeGlobalRendererHandles.RenderOptionGroupProps
     content?: string
+    cellType?: 'number' | 'string' | '' | null
   }
 
   export type TreeNode = boolean

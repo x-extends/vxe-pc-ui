@@ -279,7 +279,7 @@ declare module '@vxe-ui/core' {
   export namespace VxeGlobalRendererHandles {
     export type RenderItemTitleOptions = VxeFormItemPropTypes.ItemRender
     export type RenderItemTitleParams = FormItemTitleRenderParams
-    export type RenderItemContentOptions = any
+    export type RenderItemContentOptions = VxeFormItemPropTypes.ItemRender
     export type RenderItemContentParams = FormItemContentRenderParams
     export type ItemVisibleMethodParams = FormItemVisibleParams
     export type ItemResetMethodParams = FormItemResetParams

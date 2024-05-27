@@ -122,5 +122,10 @@ declare module '@vxe-ui/core' {
      * @deprecated
      */
     validToReject?: 'obsolete'
+    /**
+     * 无效，已废弃
+     * @deprecated
+     */
+    v?: string
   }
 }

@@ -1,9 +1,37 @@
 import { App } from 'vue'
-import { VxeUI, getI18n } from '@vxe-ui/core'
+import { VxeUI, getI18n, setConfig } from '@vxe-ui/core'
 import { ModalController } from '../components/modal'
 import { DrawerController } from '../components/drawer'
 import { VxePrintDefines } from '../components/print'
 import { VxeUploadDefines } from '../components/upload'
+
+/**
+ * 已废弃，请使用 setConfig
+ * @deprecated
+ */
+export const config: typeof setConfig
+/**
+ * 已废弃，请使用 setConfig
+ * @deprecated
+ */
+export const setup: typeof setConfig
+
+/**
+ * 已废弃
+ * @deprecated
+ */
+export interface VxeGlobalStore {
+  [key: string]: any
+  clipboard?: {
+    text: string
+    html: string
+  }
+}
+/**
+ * 已废弃
+ * @deprecated
+ */
+export const globalStore: VxeGlobalStore
 
 declare module '@vxe-ui/core' {
   export interface VxeUIExport {
@@ -17,6 +45,16 @@ declare module '@vxe-ui/core' {
     readFile: VxeUploadDefines.ReadFileFunction
 
     /**
+     * 已废弃，请使用 setConfig
+     * @deprecated
+     */
+    config: typeof setConfig
+    /**
+     * 已废弃，请使用 setConfig
+     * @deprecated
+     */
+    setup: typeof setConfig
+    /**
      * 请使用 getI18n
      * @deprecated
      */
@@ -25,6 +63,11 @@ declare module '@vxe-ui/core' {
      * @deprecated
      */
     _t(key: string, args?: any): string
+    /**
+     * 已废弃
+     * @deprecated
+     */
+    globalStore: VxeGlobalStore
     /**
      * @deprecated
      */
