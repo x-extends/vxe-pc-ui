@@ -105,6 +105,26 @@ import 'vxe-pc-ui/lib/style.css'
 createApp(App).use(VxeUI).mount('#app')
 ```
 
+## 運行項目
+
+安裝依賴
+
+```shell
+npm install
+```
+
+啓動本地調試
+
+```shell
+npm run serve
+```
+
+編譯打包，生成編譯後的目錄：es,lib
+
+```shell
+npm run lib
+```
+
 ## Contributors
 
 Thank you to everyone who contributed to this project.

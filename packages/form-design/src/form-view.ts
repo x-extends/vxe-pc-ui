@@ -6,7 +6,7 @@ import { createDefaultFormViewPCFormConfig } from './default-setting-data'
 import VxeFormComponent from '../../form/src/form'
 import VxeFormGatherComponent from '../../form/src/form-gather'
 import VxeFormItemComponent from '../../form/src/form-item'
-import { FormViewWidgetInfo } from './widget-info'
+import { configToWidget } from './widget-info'
 
 import type { VxeGlobalRendererHandles, VxeFormViewPropTypes, FormViewReactData, ValueOf, FormViewPrivateRef, FormViewMethods, FormViewPrivateMethods, VxeFormViewEmits, VxeFormViewPrivateComputed, VxeFormProps, VxeFormDesignDefines, VxeFormViewConstructor, VxeFormViewPrivateMethods, VxeFormPropTypes, VxeFormInstance, VxeFormViewDefines, VxeFormDesignLayoutStyle, VxeFormEvents } from '../../../types'
 
@@ -84,7 +84,7 @@ export default defineComponent({
     }
 
     const loadWidgetData = (widgetData: VxeFormDesignDefines.WidgetObjItem[]) => {
-      reactData.widgetObjList = (widgetData || []).map(item => new FormViewWidgetInfo($xeFormView, item))
+      reactData.widgetObjList = (widgetData || []).map(item => configToWidget(item))
       updateWidgetInfo()
       return nextTick()
     }

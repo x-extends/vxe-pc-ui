@@ -3,7 +3,7 @@ import { renderer } from '@vxe-ui/core'
 import { getNewWidgetId } from './util'
 import XEUtils from 'xe-utils'
 
-import type { VxeFormPropTypes, VxeFormDesignConstructor, VxeFormViewConstructor, VxeFormDesignDefines } from '../../../types'
+import type { VxeFormPropTypes, VxeFormDesignConstructor, VxeFormDesignDefines } from '../../../types'
 
 // 控件原始配置信息，带响应
 interface WidgetReactConfigItem {
@@ -101,22 +101,21 @@ export class FormDesignWidgetInfo {
   }
 }
 
-export class FormViewWidgetInfo extends FormDesignWidgetInfo {
-  constructor ($xeFormView: VxeFormViewConstructor, conf: {
-    name: string
-    id: number
-    field: string
-    title: string
-    required: boolean
-    options?: any
-    children?: VxeFormDesignDefines.WidgetObjItem[]
-  }) {
-    super(null, conf.name, [])
-    this.id = conf.id
-    this.title = conf.title
-    this.field = conf.field
-    this.required = conf.required
-    this.options = Object.assign({}, this.options, conf.options)
-    this.children = conf.children ? conf.children.map(item => new FormViewWidgetInfo($xeFormView, item)) : []
-  }
+export function configToWidget (conf: {
+  name: string
+  id: number
+  field: string
+  title: string
+  required: boolean
+  options?: any
+  children?: VxeFormDesignDefines.WidgetObjItem[]
+}) {
+  const widget = new FormDesignWidgetInfo(null, conf.name, [])
+  widget.id = conf.id
+  widget.title = conf.title
+  widget.field = conf.field
+  widget.required = conf.required
+  widget.options = Object.assign({}, widget.options, conf.options)
+  widget.children = conf.children ? conf.children.map(item => configToWidget(item)) : []
+  return widget
 }

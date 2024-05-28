@@ -105,6 +105,26 @@ import 'vxe-pc-ui/lib/style.css'
 createApp(App).use(VxeUI).mount('#app')
 ```
 
+## Run the project
+
+Install dependencies
+
+```shell
+npm install
+```
+
+Start local debugging
+
+```shell
+npm run serve
+```
+
+Compile packaging, generated compiled directory: es,lib
+
+```shell
+npm run lib
+```
+
 ## Contributors
 
 Thank you to everyone who contributed to this project.

@@ -1,7 +1,7 @@
 import { defineComponent, ref, h, PropType, reactive, provide, watch, nextTick, ComponentOptions } from 'vue'
 import { getConfig, getIcon, getI18n, renderer, createEvent } from '@vxe-ui/core'
 import { toCssUnit } from '../../ui/src/dom'
-import { FormDesignWidgetInfo, getWidgetConfigGroup, getWidgetConfigCustomGroup } from './widget-info'
+import { FormDesignWidgetInfo, getWidgetConfigGroup, getWidgetConfigCustomGroup, configToWidget } from './widget-info'
 import XEUtils from 'xe-utils'
 import VxeButtonComponent from '../../button/src/button'
 import LayoutWidgetComponent from './layout-widget'
@@ -112,7 +112,7 @@ export default defineComponent({
     }
 
     const loadWidgetData = (widgetData: VxeFormDesignDefines.WidgetObjItem[]) => {
-      reactData.widgetObjList = widgetData ? widgetData.slice(0) : []
+      reactData.widgetObjList = (widgetData || []).map(item => configToWidget(item))
       return nextTick()
     }
 
