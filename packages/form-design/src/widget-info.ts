@@ -25,9 +25,12 @@ export const refWidgetReactConfigMaps = ref<Record<string, WidgetReactConfigItem
 export function getWidgetConfigTitle (name: string, $xeFormDesign: VxeFormDesignConstructor | null) {
   const widgetReactConfigMaps = refWidgetReactConfigMaps.value
   const configMaps = widgetReactConfigMaps[name]
-  const configTitle = configMaps.title
-  const params = { name, $formDesign: $xeFormDesign }
-  return XEUtils.toValueString(XEUtils.isFunction(configTitle) ? configTitle(params) : configTitle)
+  if (configMaps) {
+    const configTitle = configMaps.title
+    const params = { name, $formDesign: $xeFormDesign }
+    return XEUtils.toValueString(XEUtils.isFunction(configTitle) ? configTitle(params) : configTitle)
+  }
+  return name
 }
 
 export function getWidgetConfigIcon (name: string) {
@@ -45,9 +48,12 @@ export function getWidgetConfigGroup (name: string) {
 export function getWidgetConfigCustomGroup (name: string, $xeFormDesign: VxeFormDesignConstructor | null) {
   const widgetReactConfigMaps = refWidgetReactConfigMaps.value
   const configMaps = widgetReactConfigMaps[name]
-  const configCustomGroup = configMaps.customGroup
-  const params = { name, $formDesign: $xeFormDesign }
-  return XEUtils.toValueString(XEUtils.isFunction(configCustomGroup) ? configCustomGroup(params) : configCustomGroup)
+  if (configMaps) {
+    const configCustomGroup = configMaps.customGroup
+    const params = { name, $formDesign: $xeFormDesign }
+    return XEUtils.toValueString(XEUtils.isFunction(configCustomGroup) ? configCustomGroup(params) : configCustomGroup)
+  }
+  return name
 }
 
 export class FormDesignWidgetInfo {

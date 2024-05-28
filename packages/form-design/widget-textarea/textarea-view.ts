@@ -23,19 +23,12 @@ export const WidgetTextareaViewComponent = defineComponent({
 
     const computeKebabCaseName = useKebabCaseName(props)
 
-    const inputEvent = (evnt: InputEvent & { target: HTMLInputElement }) => {
+    const changeEvent = () => {
       const { renderParams } = props
       const { widget } = renderParams
       if ($xeFormView) {
-        $xeFormView.setItemValue(widget, evnt.target.value)
-      }
-    }
-
-    const changeEvent = (evnt: InputEvent & { target: HTMLInputElement }) => {
-      const { renderParams } = props
-      const { widget } = renderParams
-      if ($xeFormView) {
-        $xeFormView.updateItemStatus(widget, evnt.target.value)
+        const itemValue = $xeFormView ? $xeFormView.getItemValue(widget) : null
+        $xeFormView.updateItemStatus(widget, itemValue)
       }
     }
 
@@ -46,7 +39,7 @@ export const WidgetTextareaViewComponent = defineComponent({
       const kebabCaseName = computeKebabCaseName.value
 
       return h(VxeFormItemComponent, {
-        className: `vxe-form-design--widget-${kebabCaseName}-view`,
+        class: ['vxe-form-design--widget-render-form-item', `widget-${kebabCaseName}`],
         title: widget.title,
         field: widget.field
       }, {
@@ -55,8 +48,12 @@ export const WidgetTextareaViewComponent = defineComponent({
             class: 'vxe-default-textarea',
             placeholder: options.placeholder || getI18n('vxe.base.pleaseInput'),
             value: $xeFormView ? $xeFormView.getItemValue(widget) : null,
-            onInput: inputEvent,
-            onChange: changeEvent
+            onChange: changeEvent,
+            onInput (evnt: InputEvent & { target: HTMLTextAreaElement }) {
+              if ($xeFormView) {
+                $xeFormView.setItemValue(widget, evnt.target.value)
+              }
+            }
           })
         }
       })

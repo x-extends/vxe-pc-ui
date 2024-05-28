@@ -56,6 +56,9 @@ $btnThemeList: (
       &::after {
         background-color: map-get($item, borderColor);
       }
+      .vxe-tips--icon {
+        color: map-get($item, borderColor);
+      }
     }
   }
   &.size--medium {

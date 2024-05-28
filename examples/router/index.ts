@@ -121,6 +121,21 @@ const routes: Array<RouteRecordRaw> = [
     component: () => import('../views/input/InputTest.vue')
   },
   {
+    path: '/component/number-input',
+    name: 'NumberInputTest',
+    component: () => import('../views/number-input/NumberInputTest.vue')
+  },
+  {
+    path: '/component/password-input',
+    name: 'PasswordInputTest',
+    component: () => import('../views/password-input/PasswordInputTest.vue')
+  },
+  {
+    path: '/component/date-input',
+    name: 'DateInputTest',
+    component: () => import('../views/date-input/DateInputTest.vue')
+  },
+  {
     path: '/component/textarea',
     name: 'TextareaTest',
     component: () => import('../views/textarea/TextareaTest.vue')

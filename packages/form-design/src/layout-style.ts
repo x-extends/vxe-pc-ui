@@ -1,7 +1,6 @@
 import { VNode, createCommentVNode, defineComponent, h, inject, ref, reactive, provide } from 'vue'
 import { getIcon, getI18n, renderer } from '@vxe-ui/core'
 import { getSlotVNs } from '../../ui/src/vn'
-import VxeButtonComponent from '../../button/src/button'
 import VxeDrawerComponent from '../../drawer/src/drawer'
 import VxeTabsComponent from '../../tabs/src/tabs'
 import VxeTabPaneComponent from '../../tabs/src/tab-pane'
@@ -38,14 +37,10 @@ export default defineComponent({
 
     const settingVisible = ref(false)
     const settingConfig = ref<VxeFormDesignDefines.FormDesignConfig | null>(null)
+    const settingFormData = ref({})
 
     const updatePreviewView = () => {
       settingConfig.value = $xeFormDesign.getConfig()
-    }
-
-    const openPreviewEvent = () => {
-      updatePreviewView()
-      settingVisible.value = true
     }
 
     const createFormViewFormConfig = (params: VxeFormViewDefines.CreateFormConfigParams<VxeFormDesignDefines.DefaultSettingFormDataObjVO>) => {
@@ -68,7 +63,11 @@ export default defineComponent({
     }
 
     const formDesignLayoutStyleMethod = {
-      updatePreviewView
+      updatePreviewView,
+      openStylePreview () {
+        updatePreviewView()
+        settingVisible.value = true
+      }
     }
 
     Object.assign($xeFormDesignLayoutStyle, formDesignLayoutStyleMethod)
@@ -79,8 +78,12 @@ export default defineComponent({
         class: ['vxe-form-design--layout-style-preview', `is--${activeTab === 2 ? 'mobile' : 'pc'}`]
       }, [
         h(VxeFormViewComponent, {
+          modelValue: settingFormData.value,
           config: settingConfig.value,
-          createFormConfig: createFormViewFormConfig
+          createFormConfig: createFormViewFormConfig,
+          'onUpdate:modelValue' (val) {
+            settingFormData.value = val
+          }
         })
       ])
     }
@@ -173,34 +176,26 @@ export default defineComponent({
 
     const renderVN = () => {
       const { showPC, showMobile } = formDesignProps
-      return [
-        h(VxeButtonComponent, {
-          mode: 'text',
-          status: 'primary',
-          icon: getIcon().DESIGN_FORM_STYLE_SETTING,
-          content: getI18n('vxe.formDesign.styleSetting.btn'),
-          onClick: openPreviewEvent
-        }),
-        h(VxeDrawerComponent, {
-          modelValue: settingVisible.value,
-          title: getI18n('vxe.formDesign.styleSetting.title'),
-          height: '90vh',
-          maskClosable: true,
-          position: 'bottom',
-          'onUpdate:modelValue' (val) {
-            settingVisible.value = val
-          }
-        }, {
-          default () {
-            return h('div', {
-              class: 'vxe-form-design--layout-style'
-            }, [
-              renderStylePreview(),
-              showPC || showMobile ? renderStyleSetting() : createCommentVNode()
-            ])
-          }
-        })
-      ]
+      return h(VxeDrawerComponent, {
+        modelValue: settingVisible.value,
+        title: getI18n('vxe.formDesign.styleSetting.title'),
+        height: '90vh',
+        maskClosable: true,
+        destroyOnClose: true,
+        position: 'bottom',
+        'onUpdate:modelValue' (val) {
+          settingVisible.value = val
+        }
+      }, {
+        default () {
+          return h('div', {
+            class: 'vxe-form-design--layout-style'
+          }, [
+            renderStylePreview(),
+            showPC || showMobile ? renderStyleSetting() : createCommentVNode()
+          ])
+        }
+      })
     }
 
     $xeFormDesignLayoutStyle.renderVN = renderVN

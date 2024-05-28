@@ -1,18 +1,10 @@
 import { handleGetFormDesignWidgetName } from '../render/util'
 import { getI18n } from '@vxe-ui/core'
 import XEUtils from 'xe-utils'
-
-export interface WidgetSelectFormOptionSubObjVO {
-  value: string,
-}
-
-export interface WidgetSelectFormOptionObjVO {
-  value: string,
-  options?: WidgetSelectFormOptionSubObjVO[]
-}
+import { WidgetDataSourceOptionObjVO } from '../render/use-widget-form'
 
 export interface WidgetSelectFormObjVO {
-  options?: WidgetSelectFormOptionObjVO[]
+  options: WidgetDataSourceOptionObjVO[]
 }
 
 export const getWidgetSelectConfig = () => {

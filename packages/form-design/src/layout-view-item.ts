@@ -95,7 +95,7 @@ export const ViewItemComponent = defineComponent({
         key: item.id,
         'data-widget-id': item.id,
         draggable: true,
-        class: ['vxe-form-design--preview-item', XEUtils.kebabCase(name), {
+        class: ['vxe-form-design--preview-item', `widget-${XEUtils.kebabCase(name)}`, {
           'is--active': isActive,
           'is--sort': sortWidget && sortWidget.id === item.id,
           'is--drag': dragWidget && dragWidget.id === item.id

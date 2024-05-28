@@ -1,8 +1,9 @@
 import { defineComponent, ref, h, PropType, reactive, provide, watch, nextTick, ComponentOptions } from 'vue'
-import { getConfig, getI18n, renderer, createEvent } from '@vxe-ui/core'
+import { getConfig, getIcon, getI18n, renderer, createEvent } from '@vxe-ui/core'
 import { toCssUnit } from '../../ui/src/dom'
 import { FormDesignWidgetInfo, getWidgetConfigGroup, getWidgetConfigCustomGroup } from './widget-info'
 import XEUtils from 'xe-utils'
+import VxeButtonComponent from '../../button/src/button'
 import LayoutWidgetComponent from './layout-widget'
 import LayoutViewComponent from './layout-view'
 import LayoutSettingComponent from './layout-setting'
@@ -43,7 +44,7 @@ export default defineComponent({
     'remove-widget'
   ] as VxeFormDesignEmits,
   setup (props, context) {
-    const { emit } = context
+    const { emit, slots } = context
 
     const xID = XEUtils.uniqueId()
 
@@ -115,6 +116,14 @@ export default defineComponent({
       return nextTick()
     }
 
+    const openStyleSetting = () => {
+      const $layoutStyle = refLayoutStyle.value
+      if ($layoutStyle) {
+        $layoutStyle.openStylePreview()
+      }
+      return nextTick()
+    }
+
     const formDesignMethods: FormDesignMethods = {
       dispatchEvent (type, params, evnt) {
         emit(type, createEvent(evnt, { $xeFormDesign }, params))
@@ -124,13 +133,20 @@ export default defineComponent({
       getConfig () {
         return {
           formConfig: getFormConfig(),
-          formData: reactData.formData,
           widgetData: getWidgetData()
         }
       },
       loadConfig,
       getFormConfig,
       loadFormConfig,
+      getFormData () {
+        const { widgetObjList } = reactData
+        const formData: Record<string, any> = {}
+        XEUtils.eachTree(widgetObjList, widget => {
+          formData[widget.field] = null
+        }, { children: 'children' })
+        return formData
+      },
       getWidgetData,
       loadWidgetData,
       refreshPreviewView () {
@@ -139,7 +155,8 @@ export default defineComponent({
           $layoutStyle.updatePreviewView()
         }
         return nextTick()
-      }
+      },
+      openStyleSetting
     }
 
     const updateWidgetConfigs = () => {
@@ -291,9 +308,13 @@ export default defineComponent({
       reactData.formData = formData
     }
 
+    const openStylePreviewEvent = () => {
+      openStyleSetting()
+    }
+
     Object.assign($xeFormDesign, formDesignMethods, formDesignPrivateMethods)
 
-    const renderLayoutTop = () => {
+    const renderLayoutHeader = () => {
       return h('div', {
         class: 'vxe-form-design--header-wrapper'
       }, [
@@ -306,8 +327,12 @@ export default defineComponent({
         h('div', {
           class: 'vxe-form-design--header-right'
         }, [
-          h(LayoutStyleComponent as ComponentOptions, {
-            ref: refLayoutStyle
+          h(VxeButtonComponent, {
+            mode: 'text',
+            status: 'primary',
+            icon: getIcon().DESIGN_FORM_STYLE_SETTING,
+            content: getI18n('vxe.formDesign.styleSetting.btn'),
+            onClick: openStylePreviewEvent
           })
         ])
       ])
@@ -315,6 +340,7 @@ export default defineComponent({
 
     const renderVN = () => {
       const { height } = props
+      const headerSlot = slots.header
       return h('div', {
         ref: refElem,
         class: 'vxe-form-design',
@@ -326,13 +352,16 @@ export default defineComponent({
       }, [
         h('div', {
           class: 'vxe-form-design--header'
-        }, renderLayoutTop()),
+        }, headerSlot ? headerSlot({}) : renderLayoutHeader()),
         h('div', {
           class: 'vxe-form-design--body'
         }, [
           h(LayoutWidgetComponent),
           h(LayoutViewComponent),
-          h(LayoutSettingComponent)
+          h(LayoutSettingComponent),
+          h(LayoutStyleComponent as ComponentOptions, {
+            ref: refLayoutStyle
+          })
         ])
       ])
     }

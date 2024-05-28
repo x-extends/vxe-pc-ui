@@ -2,6 +2,7 @@ import { VxeGlobalRendererHandles, VxeFormDesignDefines, VxeFormProps } from '..
 
 export const getDefaultSettingFormData = (defOpts?: Partial<VxeFormDesignDefines.DefaultSettingFormDataObjVO>): VxeFormDesignDefines.DefaultSettingFormDataObjVO => {
   return {
+    title: '',
     pcVisible: defOpts ? !!defOpts.pcVisible : true,
     pcVertical: true,
     pcTitleBold: false,

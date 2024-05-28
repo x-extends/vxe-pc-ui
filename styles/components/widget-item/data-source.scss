@@ -1,0 +1,105 @@
+.vxe-form-design--widget-form-item-data-source {
+  max-height: 30vh;
+  min-height: 140px;
+  overflow: auto;
+}
+.vxe-form-design--widget-form-item-data-source-option {
+  position: relative;
+  display: flex;
+  flex-direction: row;
+  padding: var(--vxe-ui-layout-padding-half) 0;
+  &::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: var(--vxe-ui-layout-padding-half);
+    width: var(--vxe-ui-layout-padding-default);
+    height: 100%;
+    border: 1px dotted var(--vxe-ui-base-popup-border-color);
+    border-width: 0 0 0 1px;
+  }
+  &::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: var(--vxe-ui-layout-padding-half);
+    width: var(--vxe-ui-layout-padding-default);
+    height: 0;
+    border-top: 1px dotted var(--vxe-ui-base-popup-border-color);
+  }
+  &.is--first {
+    &::before {
+      top: 50%;
+      height: 50%;
+    }
+  }
+  &.is--last {
+    &::before {
+      height: 50%;
+    }
+  }
+  .vxe-button {
+    flex-shrink: 0;
+  }
+  .vxe-form-design--widget-expand-btn {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    width: 2em;
+    i {
+      cursor: pointer;
+      background-color: var(--vxe-ui-layout-background-color);
+      @include createAnimationTransition(transform, 0.1s);
+      z-index: 2;
+    }
+  }
+}
+.vxe-form-design--widget-form-item-data-source-sub-option {
+  position: relative;
+  &::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: var(--vxe-ui-layout-padding-half);
+    width: var(--vxe-ui-layout-padding-default);
+    height: 100%;
+    border: 1px dotted var(--vxe-ui-base-popup-border-color);
+    border-width: 0 0 0 1px;
+  }
+  &:last-child {
+    &::before {
+      display: none;
+    }
+  }
+  .vxe-form-design--widget-form-item-data-source-option {
+    padding-left: var(--vxe-ui-layout-padding-double);
+    &:first-child {
+      &::before {
+        top: 0;
+        height: 50%;
+      }
+    }
+    &::before {
+      top: -50%;
+      left: calc(var(--vxe-ui-layout-padding-double) + 0.5em);
+      width: var(--vxe-ui-layout-padding-default);
+      height: 100%;
+    }
+    &::after {
+      left: calc(var(--vxe-ui-layout-padding-double) + 0.5em);
+    }
+  }
+}
+
+.vxe-form-design--widget-form-item-data-source-popup {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  overflow: auto;
+  & > .vxe-textarea {
+    flex-grow: 1;
+    .vxe-textarea--inner {
+      height: 100%;
+    }
+  }
+}

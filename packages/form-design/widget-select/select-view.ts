@@ -22,11 +22,12 @@ export const WidgetSelectViewComponent = defineComponent({
 
     const computeKebabCaseName = useKebabCaseName(props)
 
-    const changeEvent = (evnt: Event & { target: HTMLSelectElement }) => {
+    const changeEvent = () => {
       const { renderParams } = props
       const { widget } = renderParams
       if ($xeFormView) {
-        $xeFormView.setItemValue(widget, evnt.target.value)
+        const itemValue = $xeFormView ? $xeFormView.getItemValue(widget) : null
+        $xeFormView.setItemValue(widget, itemValue)
       }
     }
 
@@ -56,7 +57,7 @@ export const WidgetSelectViewComponent = defineComponent({
       const kebabCaseName = computeKebabCaseName.value
 
       return h(VxeFormItemComponent, {
-        className: `vxe-form-design--widget-${kebabCaseName}-view`,
+        class: ['vxe-form-design--widget-render-form-item', `widget-${kebabCaseName}`],
         field: widget.field,
         title: widget.title
       }, {

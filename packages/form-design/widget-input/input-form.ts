@@ -30,7 +30,7 @@ export const WidgetInputFormComponent = defineComponent({
       const kebabCaseName = computeKebabCaseName.value
 
       return h(VxeFormComponent, {
-        class: `vxe-form-design--widget-${kebabCaseName}-form`,
+        class: ['vxe-form-design--widget-render-form-wrapper', `widget-${kebabCaseName}`],
         vertical: true,
         span: 24,
         data: widget.options

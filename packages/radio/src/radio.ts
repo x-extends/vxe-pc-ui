@@ -118,7 +118,7 @@ export default defineComponent({
           onClick: clickEvent
         }),
         h('span', {
-          class: ['vxe-radio--icon', isChecked ? 'vxe-icon-radio-checked' : 'vxe-icon-radio-unchecked']
+          class: ['vxe-radio--icon', isChecked ? 'vxe-icon-radio-checked-fill' : 'vxe-icon-radio-unchecked']
         }),
         h('span', {
           class: 'vxe-radio--label'

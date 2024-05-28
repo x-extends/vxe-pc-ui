@@ -37,6 +37,11 @@ export const DefaultSettingFormComponent = defineComponent({
         default () {
           const { showPC, showMobile } = formDesignProps
           return [
+            h(VxeFormItemComponent, {
+              title: getI18n('vxe.formDesign.formName'),
+              field: 'title',
+              itemRender: { name: 'input' }
+            }),
             showPC && showMobile
               ? h(VxeFormItemComponent, {
                 title: getI18n('vxe.formDesign.widgetProp.displaySetting.name')

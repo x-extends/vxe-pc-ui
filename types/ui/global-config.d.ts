@@ -4,19 +4,20 @@ import { VxeBreadcrumbProps } from '../components/breadcrumb'
 import { VxeBreadcrumbItemProps } from '../components/breadcrumb-item'
 import { VxeButtonProps } from '../components/button'
 import { VxeButtonGroupProps } from '../components/button-group'
+import { VxeCalendarProps } from '../components/calendar'
+import { VxeCardProps } from '../components/card'
 import { VxeCheckboxProps } from '../components/checkbox'
 import { VxeCheckboxGroupProps } from '../components/checkbox-group'
 import { VxeColProps } from '../components/col'
-import { VxeColgroupProps } from '../components/colgroup'
 import { VxeCollapseProps } from '../components/collapse'
 import { VxeCollapsePaneProps } from '../components/collapse-pane'
-import { VxeColumnProps } from '../components/column'
+import { VxeDateInputProps } from '../components/date-input'
 import { VxeDrawerProps } from '../components/drawer'
 import { VxeFormProps } from '../components/form'
 import { VxeFormDesignProps } from '../components/form-design'
 import { VxeFormGatherProps } from '../components/form-gather'
 import { VxeFormItemProps } from '../components/form-item'
-import { VxeGridProps } from '../components/grid'
+import { VxeFormViewProps } from '../components/form-view'
 import { VxeIconProps } from '../components/icon'
 import { VxeInputProps } from '../components/input'
 import { VxeLayoutAsideProps } from '../components/layout-aside'
@@ -26,12 +27,17 @@ import { VxeLayoutFooterProps } from '../components/layout-footer'
 import { VxeLayoutHeaderProps } from '../components/layout-header'
 import { VxeLinkProps } from '../components/link'
 import { VxeListDesignProps } from '../components/list-design'
+import { VxeListViewProps } from '../components/list-view'
 import { VxeListProps } from '../components/list'
 import { VxeLoadingProps } from '../components/loading'
+import { VxeMenuProps } from '../components/menu'
 import { VxeModalProps } from '../components/modal'
+import { VxeNumberInputProps } from '../components/number-input'
 import { VxeOptgroupProps } from '../components/optgroup'
 import { VxeOptionProps } from '../components/option'
 import { VxePagerProps } from '../components/pager'
+import { VxePasswordInputProps } from '../components/password-input'
+import { VxePrintProps } from '../components/print'
 import { VxePulldownProps } from '../components/pulldown'
 import { VxeRadioProps } from '../components/radio'
 import { VxeRadioButtonProps } from '../components/radio-button'
@@ -40,13 +46,14 @@ import { VxeRowProps } from '../components/row'
 import { VxeSelectProps } from '../components/select'
 import { VxeSwitchProps } from '../components/switch'
 import { VxeTabPaneProps } from '../components/tab-pane'
-import { VxeTableProps } from '../components/table'
 import { VxeTabsProps } from '../components/tabs'
 import { VxeTextProps } from '../components/text'
 import { VxeTextareaProps } from '../components/textarea'
-import { VxeToolbarProps } from '../components/toolbar'
 import { VxeTipsProps } from '../components/tips'
 import { VxeTooltipProps } from '../components/tooltip'
+import { VxeTreeProps } from '../components/tree'
+import { VxeTreeSelectProps } from '../components/tree-select'
+import { VxeUploadProps } from '../components/upload'
 
 declare module '@vxe-ui/core' {
   export interface VxeGlobalConfig {
@@ -56,6 +63,8 @@ declare module '@vxe-ui/core' {
     breadcrumbItem?: VxeBreadcrumbItemProps
     button?: VxeButtonProps
     buttonGroup?: VxeButtonGroupProps
+    calendar?: VxeCalendarProps
+    card?: VxeCardProps
     checkbox?: VxeCheckboxProps
     checkboxGroup?: VxeCheckboxGroupProps
     col?: VxeColProps
@@ -63,6 +72,7 @@ declare module '@vxe-ui/core' {
     collapse?: VxeCollapseProps
     collapsePane?: VxeCollapsePaneProps
     column?: VxeColumnProps
+    dateInput?: VxeDateInputProps
     drawer?: VxeDrawerProps
     form?: VxeFormProps
     formDesign?: VxeFormDesignProps
@@ -70,6 +80,7 @@ declare module '@vxe-ui/core' {
     formItem?: VxeFormItemProps
     grid?: VxeGridProps
     icon?: VxeIconProps
+    formView?: VxeFormViewProps
     input?: VxeInputProps
     layoutAside?: VxeLayoutAsideProps
     layoutBody?: VxeLayoutBodyProps
@@ -78,12 +89,17 @@ declare module '@vxe-ui/core' {
     layoutHeader?: VxeLayoutHeaderProps
     link?: VxeLinkProps
     listDesign?: VxeListDesignProps
+    listView?: VxeListViewProps
     list?: VxeListProps
     loading?: VxeLoadingProps
+    menu?: VxeMenuProps
     modal?: VxeModalProps
+    numberInput?: VxeNumberInputProps
     optgroup?: VxeOptgroupProps
     option?: VxeOptionProps
     pager?: VxePagerProps
+    passwordInput?: VxePasswordInputProps
+    print?: VxePrintProps
     pulldown?: VxePulldownProps
     radio?: VxeRadioProps
     radioButton?: VxeRadioButtonProps
@@ -99,6 +115,9 @@ declare module '@vxe-ui/core' {
     toolbar?: VxeToolbarProps
     tips?: VxeTipsProps
     tooltip?: VxeTooltipProps
+    tree?: VxeTreeProps
+    treeSelect?: VxeTreeSelectProps
+    upload?: VxeUploadProps
 
     /**
      * 无效，已废弃

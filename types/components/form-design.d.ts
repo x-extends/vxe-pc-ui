@@ -78,9 +78,11 @@ export interface FormDesignMethods {
   loadConfig (config: VxeFormDesignDefines.FormDesignConfig): Promise<any>
   getFormConfig(): VxeFormProps
   loadFormConfig (formData: VxeFormProps): Promise<any>
+  getFormData(): Record<string, any>
   getWidgetData (): VxeFormDesignDefines.WidgetObjItem[]
   loadWidgetData (widgetData: VxeFormDesignDefines.WidgetObjItem[]): Promise<any>
   refreshPreviewView(): Promise<any>
+  openStyleSetting(): Promise<any>
 }
 export interface VxeFormDesignMethods extends FormDesignMethods { }
 
@@ -142,6 +144,7 @@ export namespace VxeFormDesignDefines {
   }
 
   export interface DefaultSettingFormDataObjVO {
+    title: string
     pcVisible: boolean
     pcVertical: VxeFormPropTypes.Vertical
     pcTitleBold: VxeFormPropTypes.TitleBold
