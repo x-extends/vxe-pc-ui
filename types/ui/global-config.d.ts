@@ -1,3 +1,4 @@
+// Vxe UI
 import { VxeAnchorProps } from '../components/anchor'
 import { VxeAnchorLinkProps } from '../components/anchor-link'
 import { VxeBreadcrumbProps } from '../components/breadcrumb'
@@ -55,6 +56,13 @@ import { VxeTreeProps } from '../components/tree'
 import { VxeTreeSelectProps } from '../components/tree-select'
 import { VxeUploadProps } from '../components/upload'
 
+// Vxe Table
+import { VxeTableProps } from '../components/table'
+import { VxeColumnProps } from '../components/column'
+import { VxeColgroupProps } from '../components/colgroup'
+import { VxeGridProps } from '../components/grid'
+import { VxeToolbarProps } from '../components/toolbar'
+
 declare module '@vxe-ui/core' {
   export interface VxeGlobalConfig {
     anchor?: VxeAnchorProps
@@ -78,7 +86,6 @@ declare module '@vxe-ui/core' {
     formDesign?: VxeFormDesignProps
     formGather?: VxeFormGatherProps
     formItem?: VxeFormItemProps
-    grid?: VxeGridProps
     icon?: VxeIconProps
     formView?: VxeFormViewProps
     input?: VxeInputProps
@@ -108,16 +115,20 @@ declare module '@vxe-ui/core' {
     select?: VxeSelectProps
     switch?: VxeSwitchProps
     tabPane?: VxeTabPaneProps
-    table?: VxeTableProps
     tabs?: VxeTabsProps
     text?: VxeTextProps
     textarea?: VxeTextareaProps
-    toolbar?: VxeToolbarProps
     tips?: VxeTipsProps
     tooltip?: VxeTooltipProps
     tree?: VxeTreeProps
     treeSelect?: VxeTreeSelectProps
     upload?: VxeUploadProps
+
+    table?: VxeTableProps
+    column?: VxeColumnProps
+    colgroup?: VxeColgroupProps
+    grid?: VxeGridProps
+    toolbar?: VxeToolbarProps
 
     /**
      * 无效，已废弃
