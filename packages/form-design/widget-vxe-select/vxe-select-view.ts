@@ -24,11 +24,12 @@ export const WidgetVxeSelectViewComponent = defineComponent({
 
     const computeKebabCaseName = useKebabCaseName(props)
 
-    const changeEvent = (evnt: InputEvent & { target: HTMLInputElement }) => {
+    const changeEvent = () => {
       const { renderParams } = props
       const { widget } = renderParams
       if ($xeFormView) {
-        $xeFormView.updateItemStatus(widget, evnt.target.value)
+        const itemValue = $xeFormView ? $xeFormView.getItemValue(widget) : null
+        $xeFormView.updateItemStatus(widget, itemValue)
       }
     }
 
@@ -47,7 +48,7 @@ export const WidgetVxeSelectViewComponent = defineComponent({
           return h(VxeSelectComponent, {
             modelValue: $xeFormView ? $xeFormView.getItemValue(widget) : null,
             placeholder: options.placeholder || getI18n('vxe.base.pleaseSelect'),
-            optionGroups: options.options,
+            options: options.options,
             optionProps: { label: 'value', value: 'value' },
             onChange: changeEvent,
             'onUpdate:modelValue' (val) {

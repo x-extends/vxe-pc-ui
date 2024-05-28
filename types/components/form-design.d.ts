@@ -134,7 +134,7 @@ export namespace VxeFormDesignDefines {
     field: string
     title: string
     name: string
-    required: false
+    required: boolean
     options: D
     model: {
       update: boolean

@@ -3,8 +3,6 @@ import XEUtils from 'xe-utils'
 import { getConfig, getIcon, getI18n, globalEvents, GLOBAL_EVENT_KEYS, createEvent, useSize, VxeComponentStyleType } from '@vxe-ui/core'
 import { getFuncText, getLastZIndex, nextZIndex } from '../../ui/src/utils'
 import { hasClass, getAbsolutePos, getEventTargetNode } from '../../ui/src/dom'
-import { toStringTimeDate, getDateQuarter } from './date'
-import { handleNumber, toFloatValueFixed } from './number'
 
 import type { VxeInputConstructor, VxeInputEmits, InputReactData, InputMethods, VxeInputPropTypes, InputPrivateRef, VxeFormConstructor, VxeFormPrivateMethods, VxeFormDefines } from '../../../types'
 
@@ -54,13 +52,52 @@ const yearSize = 12
 const monthSize = 20
 const quarterSize = 8
 
+export function toStringTimeDate (str: VxeInputPropTypes.ModelValue) {
+  if (str) {
+    const rest = new Date()
+    let h = 0
+    let m = 0
+    let s = 0
+    if (XEUtils.isDate(str)) {
+      h = str.getHours()
+      m = str.getMinutes()
+      s = str.getSeconds()
+    } else {
+      str = XEUtils.toValueString(str)
+      const parses = str.match(/^(\d{1,2})(:(\d{1,2}))?(:(\d{1,2}))?/)
+      if (parses) {
+        h = XEUtils.toNumber(parses[1])
+        m = XEUtils.toNumber(parses[3])
+        s = XEUtils.toNumber(parses[5])
+      }
+    }
+    rest.setHours(h)
+    rest.setMinutes(m)
+    rest.setSeconds(s)
+    return rest
+  }
+  return new Date('')
+}
+
+export function getDateQuarter (date: Date) {
+  const month = date.getMonth()
+  if (month < 3) {
+    return 1
+  } else if (month < 6) {
+    return 2
+  } else if (month < 9) {
+    return 3
+  }
+  return 4
+}
+
 export default defineComponent({
   name: 'VxeDateInput',
   props: {
     modelValue: [String, Number, Date] as PropType<VxeInputPropTypes.ModelValue>,
     immediate: { type: Boolean as PropType<VxeInputPropTypes.Immediate>, default: true },
     name: String as PropType<VxeInputPropTypes.Name>,
-    type: { type: String as PropType<VxeInputPropTypes.Type>, default: 'text' },
+    type: { type: String as PropType<VxeInputPropTypes.Type>, default: 'date' },
     clearable: { type: Boolean as PropType<VxeInputPropTypes.Clearable>, default: () => getConfig().input.clearable },
     readonly: Boolean as PropType<VxeInputPropTypes.Readonly>,
     disabled: Boolean as PropType<VxeInputPropTypes.Disabled>,
@@ -195,54 +232,15 @@ export default defineComponent({
       return type === 'time' || type === 'datetime'
     })
 
-    const computeIsNumType = computed(() => {
-      return ['number', 'integer', 'float'].indexOf(props.type) > -1
-    })
-
-    const computeInputCount = computed(() => {
-      return XEUtils.getSize(reactData.inputValue)
-    })
-
-    const computeIsCountError = computed(() => {
-      const inputCount = computeInputCount.value
-      return props.maxlength && inputCount > XEUtils.toNumber(props.maxlength)
-    })
-
     const computeIsDatePickerType = computed(() => {
       const isDateTimeType = computeIsDateTimeType.value
       return isDateTimeType || ['date', 'week', 'month', 'quarter', 'year'].indexOf(props.type) > -1
     })
 
-    const computeIsPawdType = computed(() => {
-      return props.type === 'password'
-    })
-
-    const computeIsSearchType = computed(() => {
-      return props.type === 'search'
-    })
-
-    const computeDigitsValue = computed(() => {
-      return XEUtils.toInteger(props.digits) || 1
-    })
-
-    const computeStepValue = computed(() => {
-      const { type } = props
-      const digitsValue = computeDigitsValue.value
-      const step = props.step
-      if (type === 'integer') {
-        return XEUtils.toInteger(step) || 1
-      } else if (type === 'float') {
-        return XEUtils.toNumber(step) || (1 / Math.pow(10, digitsValue))
-      }
-      return XEUtils.toNumber(step) || 1
-    })
-
     const computeIsClearable = computed(() => {
       const { type } = props
-      const isNumType = computeIsNumType.value
       const isDatePickerType = computeIsDatePickerType.value
-      const isPawdType = computeIsPawdType.value
-      return props.clearable && (isPawdType || isNumType || isDatePickerType || type === 'text' || type === 'search')
+      return props.clearable && (isDatePickerType || type === 'text' || type === 'search')
     })
 
     const computeDateStartTime = computed(() => {
@@ -596,18 +594,6 @@ export default defineComponent({
       return readonly || multiple || !editable || type === 'week' || type === 'quarter'
     })
 
-    const computeInputType = computed(() => {
-      const { type } = props
-      const { showPwd } = reactData
-      const isNumType = computeIsNumType.value
-      const isDatePickerType = computeIsDatePickerType.value
-      const isPawdType = computeIsPawdType.value
-      if (isDatePickerType || isNumType || (isPawdType && showPwd) || type === 'number') {
-        return 'text'
-      }
-      return type
-    })
-
     const computeInpPlaceholder = computed(() => {
       const { placeholder } = props
       if (placeholder) {
@@ -616,62 +602,10 @@ export default defineComponent({
       return ''
     })
 
-    const computeInpMaxlength = computed(() => {
-      const { maxlength } = props
-      const isNumType = computeIsNumType.value
-      // 数值最大长度限制 16 位，包含小数
-      return isNumType && !XEUtils.toNumber(maxlength) ? 16 : maxlength
-    })
-
     const computeInpImmediate = computed(() => {
       const { type, immediate } = props
-      return immediate || !(type === 'text' || type === 'number' || type === 'integer' || type === 'float')
+      return immediate || !(type === 'text')
     })
-
-    const computeNumValue = computed(() => {
-      const { type } = props
-      const { inputValue } = reactData
-      const isNumType = computeIsNumType.value
-      if (isNumType) {
-        return type === 'integer' ? XEUtils.toInteger(handleNumber(inputValue)) : XEUtils.toNumber(handleNumber(inputValue))
-      }
-      return 0
-    })
-
-    const computeIsDisabledSubtractNumber = computed(() => {
-      const { min } = props
-      const { inputValue } = reactData
-      const isNumType = computeIsNumType.value
-      const numValue = computeNumValue.value
-      // 当有值时再进行判断
-      if ((inputValue || inputValue === 0) && isNumType && min !== null) {
-        return numValue <= XEUtils.toNumber(min)
-      }
-      return false
-    })
-
-    const computeIsDisabledAddNumber = computed(() => {
-      const { max } = props
-      const { inputValue } = reactData
-      const isNumType = computeIsNumType.value
-      const numValue = computeNumValue.value
-      // 当有值时再进行判断
-      if ((inputValue || inputValue === 0) && isNumType && max !== null) {
-        return numValue >= XEUtils.toNumber(max)
-      }
-      return false
-    })
-
-    const getNumberValue = (val: any) => {
-      const { type, exponential } = props
-      const inpMaxlength = computeInpMaxlength.value
-      const digitsValue = computeDigitsValue.value
-      const restVal = (type === 'float' ? toFloatValueFixed(val, digitsValue) : XEUtils.toValueString(val))
-      if (exponential && (val === restVal || XEUtils.toValueString(val).toLowerCase() === XEUtils.toNumber(restVal).toExponential())) {
-        return val
-      }
-      return restVal.slice(0, inpMaxlength)
-    }
 
     const triggerEvent = (evnt: Event & { type: 'input' | 'change' | 'keydown' | 'keyup' | 'wheel' | 'click' | 'focus' | 'blur' }) => {
       const { inputValue } = reactData
@@ -747,14 +681,9 @@ export default defineComponent({
     }
 
     const clearValueEvent = (evnt: Event, value: VxeInputPropTypes.ModelValue) => {
-      const { type } = props
-      const isNumType = computeIsNumType.value
       const isDatePickerType = computeIsDatePickerType.value
       if (isDatePickerType) {
         hidePanel()
-      }
-      if (isNumType || ['text', 'search', 'password'].indexOf(type) > -1) {
-        focus()
       }
       inputMethods.dispatchEvent('clear', { value }, evnt)
     }
@@ -820,28 +749,10 @@ export default defineComponent({
      * 检查初始值
      */
     const initValue = () => {
-      const { type } = props
-      const { inputValue } = reactData
       const isDatePickerType = computeIsDatePickerType.value
-      const digitsValue = computeDigitsValue.value
       if (isDatePickerType) {
         changeValue()
-      } else if (type === 'float') {
-        if (inputValue) {
-          const validValue = toFloatValueFixed(inputValue, digitsValue)
-          if (inputValue !== validValue) {
-            emitModel(validValue, { type: 'init' })
-          }
-        }
       }
-    }
-
-    const vaildMaxNum = (num: number | string) => {
-      return props.max === null || XEUtils.toNumber(num) <= XEUtils.toNumber(props.max)
-    }
-
-    const vaildMinNum = (num: number | string) => {
-      return props.min === null || XEUtils.toNumber(num) >= XEUtils.toNumber(props.min)
     }
 
     const dateRevert = () => {
@@ -910,30 +821,13 @@ export default defineComponent({
     }
 
     const afterCheckValue = () => {
-      const { type, min, max, exponential } = props
+      const { type } = props
       const { inputValue, datetimePanelValue } = reactData
-      const isNumType = computeIsNumType.value
       const isDatePickerType = computeIsDatePickerType.value
       const dateLabelFormat = computeDateLabelFormat.value
       const inpReadonly = computeInpReadonly.value
       if (!inpReadonly) {
-        if (isNumType) {
-          if (inputValue) {
-            let inpNumVal: number | string = type === 'integer' ? XEUtils.toInteger(handleNumber(inputValue)) : XEUtils.toNumber(handleNumber(inputValue))
-            if (!vaildMinNum(inpNumVal)) {
-              inpNumVal = min
-            } else if (!vaildMaxNum(inpNumVal)) {
-              inpNumVal = max
-            }
-            if (exponential) {
-              const inpStringVal = XEUtils.toValueString(inputValue).toLowerCase()
-              if (inpStringVal === XEUtils.toNumber(inpNumVal).toExponential()) {
-                inpNumVal = inpStringVal
-              }
-            }
-            emitModel(getNumberValue(inpNumVal), { type: 'check' })
-          }
-        } else if (isDatePickerType) {
+        if (isDatePickerType) {
           if (inputValue) {
             let inpDateVal: VxeInputPropTypes.ModelValue = parseDate(inputValue, dateLabelFormat as string)
             if (XEUtils.isValidDate(inpDateVal)) {
@@ -985,153 +879,11 @@ export default defineComponent({
       inputMethods.dispatchEvent('blur', { value: inputValue }, evnt)
     }
 
-    // 密码
-    const passwordToggleEvent = (evnt: Event) => {
-      const { readonly, disabled } = props
-      const { showPwd } = reactData
-      if (!disabled && !readonly) {
-        reactData.showPwd = !showPwd
-      }
-      inputMethods.dispatchEvent('toggle-visible', { visible: reactData.showPwd }, evnt)
-    }
-    // 密码
-
-    // 搜索
-    const searchEvent = (evnt: Event) => {
-      inputMethods.dispatchEvent('search-click', {}, evnt)
-    }
-    // 搜索
-
-    // 数值
-    const numberChange = (isPlus: boolean, evnt: Event) => {
-      const { min, max, type } = props
-      const { inputValue } = reactData
-      const stepValue = computeStepValue.value
-      const numValue = type === 'integer' ? XEUtils.toInteger(handleNumber(inputValue)) : XEUtils.toNumber(handleNumber(inputValue))
-      const newValue = isPlus ? XEUtils.add(numValue, stepValue) : XEUtils.subtract(numValue, stepValue)
-      let restNum: number | string
-      if (!vaildMinNum(newValue)) {
-        restNum = min
-      } else if (!vaildMaxNum(newValue)) {
-        restNum = max
-      } else {
-        restNum = newValue
-      }
-      emitInputEvent(getNumberValue(restNum), evnt as (Event & { type: 'input' }))
-    }
-
-    let downbumTimeout: number
-
-    const numberNextEvent = (evnt: Event) => {
-      const { readonly, disabled } = props
-      const isDisabledSubtractNumber = computeIsDisabledSubtractNumber.value
-      clearTimeout(downbumTimeout)
-      if (!disabled && !readonly && !isDisabledSubtractNumber) {
-        numberChange(false, evnt)
-      }
-      inputMethods.dispatchEvent('next-number', {}, evnt)
-    }
-
-    const numberDownNextEvent = (evnt: Event) => {
-      downbumTimeout = window.setTimeout(() => {
-        numberNextEvent(evnt)
-        numberDownNextEvent(evnt)
-      }, 60)
-    }
-
-    const numberPrevEvent = (evnt: Event) => {
-      const { readonly, disabled } = props
-      const isDisabledAddNumber = computeIsDisabledAddNumber.value
-      clearTimeout(downbumTimeout)
-      if (!disabled && !readonly && !isDisabledAddNumber) {
-        numberChange(true, evnt)
-      }
-      inputMethods.dispatchEvent('prev-number', {}, evnt)
-    }
-
-    const numberKeydownEvent = (evnt: KeyboardEvent) => {
-      const isUpArrow = globalEvents.hasKey(evnt, GLOBAL_EVENT_KEYS.ARROW_UP)
-      const isDwArrow = globalEvents.hasKey(evnt, GLOBAL_EVENT_KEYS.ARROW_DOWN)
-      if (isUpArrow || isDwArrow) {
-        evnt.preventDefault()
-        if (isUpArrow) {
-          numberPrevEvent(evnt)
-        } else {
-          numberNextEvent(evnt)
-        }
-      }
-    }
-
     const keydownEvent = (evnt: KeyboardEvent & { type: 'keydown' }) => {
-      const { exponential, controls } = props
-      const isNumType = computeIsNumType.value
-      if (isNumType) {
-        const isCtrlKey = evnt.ctrlKey
-        const isShiftKey = evnt.shiftKey
-        const isAltKey = evnt.altKey
-        const keyCode = evnt.keyCode
-        if (!isCtrlKey && !isShiftKey && !isAltKey && (globalEvents.hasKey(evnt, GLOBAL_EVENT_KEYS.SPACEBAR) || ((!exponential || keyCode !== 69) && (keyCode >= 65 && keyCode <= 90)) || (keyCode >= 186 && keyCode <= 188) || keyCode >= 191)) {
-          evnt.preventDefault()
-        }
-        if (controls) {
-          numberKeydownEvent(evnt)
-        }
-      }
       triggerEvent(evnt)
     }
 
     const keyupEvent = (evnt: KeyboardEvent & { type: 'keyup' }) => {
-      triggerEvent(evnt)
-    }
-
-    // 数值
-
-    const numberStopDown = () => {
-      clearTimeout(downbumTimeout)
-    }
-
-    const numberDownPrevEvent = (evnt: Event) => {
-      downbumTimeout = window.setTimeout(() => {
-        numberPrevEvent(evnt)
-        numberDownPrevEvent(evnt)
-      }, 60)
-    }
-
-    const numberMousedownEvent = (evnt: MouseEvent) => {
-      numberStopDown()
-      if (evnt.button === 0) {
-        const isPrevNumber = hasClass(evnt.currentTarget, 'is--prev')
-        if (isPrevNumber) {
-          numberPrevEvent(evnt)
-        } else {
-          numberNextEvent(evnt)
-        }
-        downbumTimeout = window.setTimeout(() => {
-          if (isPrevNumber) {
-            numberDownPrevEvent(evnt)
-          } else {
-            numberDownNextEvent(evnt)
-          }
-        }, 500)
-      }
-    }
-
-    const wheelEvent = (evnt: WheelEvent & {
-      type: 'wheel';
-      wheelDelta: number;
-    }) => {
-      const isNumType = computeIsNumType.value
-      if (isNumType && props.controls) {
-        if (reactData.isActivated) {
-          const delta = evnt.deltaY
-          if (delta > 0) {
-            numberNextEvent(evnt)
-          } else if (delta < 0) {
-            numberPrevEvent(evnt)
-          }
-          evnt.preventDefault()
-        }
-      }
       triggerEvent(evnt)
     }
 
@@ -1731,14 +1483,14 @@ export default defineComponent({
         const extraItem = festivalItem.extra ? (XEUtils.isString(festivalItem.extra) ? { label: festivalItem.extra } : festivalItem.extra) : null
         const labels = [
           h('span', {
-            class: ['vxe-input--date-label', {
+            class: ['vxe-date-input--date-label', {
               'is-notice': festivalItem.notice
             }]
           }, extraItem && extraItem.label
             ? [
                 h('span', label),
                 h('span', {
-                  class: ['vxe-input--date-label--extra', extraItem.important ? 'is-important' : '', extraItem.className],
+                  class: ['vxe-date-input--date-label--extra', extraItem.important ? 'is-important' : '', extraItem.className],
                   style: extraItem.style
                 }, XEUtils.toValueString(extraItem.label))
               ]
@@ -1750,15 +1502,15 @@ export default defineComponent({
           const festivalLabels = XEUtils.toValueString(festivalLabel).split(',')
           labels.push(
             h('span', {
-              class: ['vxe-input--date-festival', festivalItem.important ? 'is-important' : '', festivalItem.className],
+              class: ['vxe-date-input--date-festival', festivalItem.important ? 'is-important' : '', festivalItem.className],
               style: festivalItem.style
             }, [
               festivalLabels.length > 1
                 ? h('span', {
-                  class: ['vxe-input--date-festival--overlap', `overlap--${festivalLabels.length}`]
+                  class: ['vxe-date-input--date-festival--overlap', `overlap--${festivalLabels.length}`]
                 }, festivalLabels.map(label => h('span', label.substring(0, 3))))
                 : h('span', {
-                  class: 'vxe-input--date-festival--label'
+                  class: 'vxe-date-input--date-festival--label'
                 }, festivalLabels[0].substring(0, 3))
             ])
           )
@@ -1778,7 +1530,7 @@ export default defineComponent({
       const matchFormat = 'yyyyMMdd'
       return [
         h('table', {
-          class: `vxe-input--date-${datePanelType}-view`,
+          class: `vxe-date-input--date-${datePanelType}-view`,
           cellspacing: 0,
           cellpadding: 0,
           border: 0
@@ -1819,7 +1571,7 @@ export default defineComponent({
       const matchFormat = 'yyyyMMdd'
       return [
         h('table', {
-          class: `vxe-input--date-${datePanelType}-view`,
+          class: `vxe-date-input--date-${datePanelType}-view`,
           cellspacing: 0,
           cellpadding: 0,
           border: 0
@@ -1862,7 +1614,7 @@ export default defineComponent({
       const matchFormat = 'yyyyMM'
       return [
         h('table', {
-          class: `vxe-input--date-${datePanelType}-view`,
+          class: `vxe-date-input--date-${datePanelType}-view`,
           cellspacing: 0,
           cellpadding: 0,
           border: 0
@@ -1897,7 +1649,7 @@ export default defineComponent({
       const matchFormat = 'yyyyq'
       return [
         h('table', {
-          class: `vxe-input--date-${datePanelType}-view`,
+          class: `vxe-date-input--date-${datePanelType}-view`,
           cellspacing: 0,
           cellpadding: 0,
           border: 0
@@ -1932,7 +1684,7 @@ export default defineComponent({
       const matchFormat = 'yyyy'
       return [
         h('table', {
-          class: `vxe-input--date-${datePanelType}-view`,
+          class: `vxe-date-input--date-${datePanelType}-view`,
           cellspacing: 0,
           cellpadding: 0,
           border: 0
@@ -1981,25 +1733,25 @@ export default defineComponent({
       const selectDatePanelLabel = computeSelectDatePanelLabel.value
       return [
         h('div', {
-          class: 'vxe-input--date-picker-header'
+          class: 'vxe-date-input--date-picker-header'
         }, [
           h('div', {
-            class: 'vxe-input--date-picker-type-wrapper'
+            class: 'vxe-date-input--date-picker-type-wrapper'
           }, [
             datePanelType === 'year'
               ? h('span', {
-                class: 'vxe-input--date-picker-label'
+                class: 'vxe-date-input--date-picker-label'
               }, selectDatePanelLabel)
               : h('span', {
-                class: 'vxe-input--date-picker-btn',
+                class: 'vxe-date-input--date-picker-btn',
                 onClick: dateToggleTypeEvent
               }, selectDatePanelLabel)
           ]),
           h('div', {
-            class: 'vxe-input--date-picker-btn-wrapper'
+            class: 'vxe-date-input--date-picker-btn-wrapper'
           }, [
             h('span', {
-              class: ['vxe-input--date-picker-btn vxe-input--date-picker-prev-btn', {
+              class: ['vxe-date-input--date-picker-btn vxe-date-input--date-picker-prev-btn', {
                 'is--disabled': isDisabledPrevDateBtn
               }],
               onClick: datePrevEvent
@@ -2009,7 +1761,7 @@ export default defineComponent({
               })
             ]),
             h('span', {
-              class: 'vxe-input--date-picker-btn vxe-input--date-picker-current-btn',
+              class: 'vxe-date-input--date-picker-btn vxe-date-input--date-picker-current-btn',
               onClick: dateTodayMonthEvent
             }, [
               h('i', {
@@ -2017,7 +1769,7 @@ export default defineComponent({
               })
             ]),
             h('span', {
-              class: ['vxe-input--date-picker-btn vxe-input--date-picker-next-btn', {
+              class: ['vxe-date-input--date-picker-btn vxe-date-input--date-picker-next-btn', {
                 'is--disabled': isDisabledNextDateBtn
               }],
               onClick: dateNextEvent
@@ -2028,10 +1780,10 @@ export default defineComponent({
             ]),
             multiple && computeSupportMultiples.value
               ? h('span', {
-                class: 'vxe-input--date-picker-btn vxe-input--date-picker-confirm-btn'
+                class: 'vxe-date-input--date-picker-btn vxe-date-input--date-picker-confirm-btn'
               }, [
                 h('button', {
-                  class: 'vxe-input--date-picker-confirm',
+                  class: 'vxe-date-input--date-picker-confirm',
                   type: 'button',
                   onClick: dateConfirmEvent
                 }, getI18n('vxe.button.confirm'))
@@ -2040,7 +1792,7 @@ export default defineComponent({
           ])
         ]),
         h('div', {
-          class: 'vxe-input--date-picker-body'
+          class: 'vxe-date-input--date-picker-body'
         }, renderDateTable())
       ]
     }
@@ -2053,23 +1805,23 @@ export default defineComponent({
       const secondList = computeSecondList.value
       return [
         h('div', {
-          class: 'vxe-input--time-picker-header'
+          class: 'vxe-date-input--time-picker-header'
         }, [
           h('span', {
-            class: 'vxe-input--time-picker-title'
+            class: 'vxe-date-input--time-picker-title'
           }, dateTimeLabel),
           h('button', {
-            class: 'vxe-input--time-picker-confirm',
+            class: 'vxe-date-input--time-picker-confirm',
             type: 'button',
             onClick: dateConfirmEvent
           }, getI18n('vxe.button.confirm'))
         ]),
         h('div', {
           ref: refInputTimeBody,
-          class: 'vxe-input--time-picker-body'
+          class: 'vxe-date-input--time-picker-body'
         }, [
           h('ul', {
-            class: 'vxe-input--time-picker-hour-list'
+            class: 'vxe-date-input--time-picker-hour-list'
           }, hourList.map((item, index) => {
             return h('li', {
               key: index,
@@ -2080,7 +1832,7 @@ export default defineComponent({
             }, item.label)
           })),
           h('ul', {
-            class: 'vxe-input--time-picker-minute-list'
+            class: 'vxe-date-input--time-picker-minute-list'
           }, minuteList.map((item, index) => {
             return h('li', {
               key: index,
@@ -2091,7 +1843,7 @@ export default defineComponent({
             }, item.label)
           })),
           h('ul', {
-            class: 'vxe-input--time-picker-second-list'
+            class: 'vxe-date-input--time-picker-second-list'
           }, secondList.map((item, index) => {
             return h('li', {
               key: index,
@@ -2115,26 +1867,26 @@ export default defineComponent({
         if (type === 'datetime') {
           renders.push(
             h('div', {
-              class: 'vxe-input--panel-layout-wrapper'
+              class: 'vxe-date-input--panel-layout-wrapper'
             }, [
               h('div', {
-                class: 'vxe-input--panel-left-wrapper'
+                class: 'vxe-date-input--panel-left-wrapper'
               }, renderDatePanel()),
               h('div', {
-                class: 'vxe-input--panel-right-wrapper'
+                class: 'vxe-date-input--panel-right-wrapper'
               }, renderTimePanel())
             ])
           )
         } else if (type === 'time') {
           renders.push(
             h('div', {
-              class: 'vxe-input--panel-wrapper'
+              class: 'vxe-date-input--panel-wrapper'
             }, renderTimePanel())
           )
         } else {
           renders.push(
             h('div', {
-              class: 'vxe-input--panel-wrapper'
+              class: 'vxe-date-input--panel-wrapper'
             }, renderDatePanel())
           )
         }
@@ -2144,7 +1896,7 @@ export default defineComponent({
         }, [
           h('div', {
             ref: refInputPanel,
-            class: ['vxe-table--ignore-clear vxe-input--panel', `type--${type}`, {
+            class: ['vxe-table--ignore-clear vxe-date-input--panel', `type--${type}`, {
               [`size--${vSize}`]: vSize,
               'is--transfer': transfer,
               'animat--leave': animatVisible,
@@ -2158,69 +1910,13 @@ export default defineComponent({
       return null
     }
 
-    const renderNumberIcon = () => {
-      const isDisabledAddNumber = computeIsDisabledAddNumber.value
-      const isDisabledSubtractNumber = computeIsDisabledSubtractNumber.value
-      return h('span', {
-        class: 'vxe-input--number-suffix'
-      }, [
-        h('span', {
-          class: ['vxe-input--number-prev is--prev', {
-            'is--disabled': isDisabledAddNumber
-          }],
-          onMousedown: numberMousedownEvent,
-          onMouseup: numberStopDown,
-          onMouseleave: numberStopDown
-        }, [
-          h('i', {
-            class: ['vxe-input--number-prev-icon', getIcon().INPUT_PREV_NUM]
-          })
-        ]),
-        h('span', {
-          class: ['vxe-input--number-next is--next', {
-            'is--disabled': isDisabledSubtractNumber
-          }],
-          onMousedown: numberMousedownEvent,
-          onMouseup: numberStopDown,
-          onMouseleave: numberStopDown
-        }, [
-          h('i', {
-            class: ['vxe-input--number-next-icon', getIcon().INPUT_NEXT_NUM]
-          })
-        ])
-      ])
-    }
-
     const renderDatePickerIcon = () => {
       return h('span', {
-        class: 'vxe-input--date-picker-suffix',
+        class: 'vxe-date-input--date-picker-suffix',
         onClick: datePickerOpenEvent
       }, [
         h('i', {
-          class: ['vxe-input--date-picker-icon', getIcon().INPUT_DATE]
-        })
-      ])
-    }
-
-    const renderSearchIcon = () => {
-      return h('span', {
-        class: 'vxe-input--search-suffix',
-        onClick: searchEvent
-      }, [
-        h('i', {
-          class: ['vxe-input--search-icon', getIcon().INPUT_SEARCH]
-        })
-      ])
-    }
-
-    const renderPasswordIcon = () => {
-      const { showPwd } = reactData
-      return h('span', {
-        class: 'vxe-input--password-suffix',
-        onClick: passwordToggleEvent
-      }, [
-        h('i', {
-          class: ['vxe-input--password-icon', showPwd ? getIcon().INPUT_SHOW_PWD : getIcon().INPUT_PWD]
+          class: ['vxe-date-input--date-picker-icon', getIcon().INPUT_DATE]
         })
       ])
     }
@@ -2232,19 +1928,19 @@ export default defineComponent({
       if (prefixSlot) {
         icons.push(
           h('span', {
-            class: 'vxe-input--prefix-icon'
+            class: 'vxe-date-input--prefix-icon'
           }, prefixSlot({}))
         )
       } else if (prefixIcon) {
         icons.push(
           h('i', {
-            class: ['vxe-input--prefix-icon', prefixIcon]
+            class: ['vxe-date-input--prefix-icon', prefixIcon]
           })
         )
       }
       return icons.length
         ? h('span', {
-          class: 'vxe-input--prefix',
+          class: 'vxe-date-input--prefix',
           onClick: clickPrefixEvent
         }, icons)
         : null
@@ -2259,26 +1955,26 @@ export default defineComponent({
       if (suffixSlot) {
         icons.push(
           h('span', {
-            class: 'vxe-input--suffix-icon'
+            class: 'vxe-date-input--suffix-icon'
           }, suffixSlot({}))
         )
       } else if (suffixIcon) {
         icons.push(
           h('i', {
-            class: ['vxe-input--suffix-icon', suffixIcon]
+            class: ['vxe-date-input--suffix-icon', suffixIcon]
           })
         )
       }
       if (isClearable) {
         icons.push(
           h('i', {
-            class: ['vxe-input--clear-icon', getIcon().INPUT_CLEAR]
+            class: ['vxe-date-input--clear-icon', getIcon().INPUT_CLEAR]
           })
         )
       }
       return icons.length
         ? h('span', {
-          class: ['vxe-input--suffix', {
+          class: ['vxe-date-input--suffix', {
             'is--clear': isClearable && !disabled && !(inputValue === '' || XEUtils.eqNull(inputValue))
           }],
           onClick: clickSuffixEvent
@@ -2287,26 +1983,14 @@ export default defineComponent({
     }
 
     const renderExtraSuffixIcon = () => {
-      const { controls } = props
-      const isNumType = computeIsNumType.value
       const isDatePickerType = computeIsDatePickerType.value
-      const isPawdType = computeIsPawdType.value
-      const isSearchType = computeIsSearchType.value
       let icons
-      if (isPawdType) {
-        icons = renderPasswordIcon()
-      } else if (isNumType) {
-        if (controls) {
-          icons = renderNumberIcon()
-        }
-      } else if (isDatePickerType) {
+      if (isDatePickerType) {
         icons = renderDatePickerIcon()
-      } else if (isSearchType) {
-        icons = renderSearchIcon()
       }
       return icons
         ? h('span', {
-          class: 'vxe-input--extra-suffix'
+          class: 'vxe-date-input--extra-suffix'
         }, [icons])
         : null
     }
@@ -2376,7 +2060,6 @@ export default defineComponent({
     })
 
     onUnmounted(() => {
-      numberStopDown()
       globalEvents.off($xeInput, 'mousewheel')
       globalEvents.off($xeInput, 'mousedown')
       globalEvents.off($xeInput, 'keydown')
@@ -2386,15 +2069,11 @@ export default defineComponent({
     initValue()
 
     const renderVN = () => {
-      const { className, controls, type, align, showWordCount, countMethod, name, disabled, readonly, autocomplete } = props
+      const { className, controls, type, align, name, disabled, readonly, autocomplete } = props
       const { inputValue, visiblePanel, isActivated } = reactData
       const vSize = computeSize.value
-      const isCountError = computeIsCountError.value
-      const inputCount = computeInputCount.value
       const isDatePickerType = computeIsDatePickerType.value
       const inpReadonly = computeInpReadonly.value
-      const inpMaxlength = computeInpMaxlength.value
-      const inputType = computeInputType.value
       const inpPlaceholder = computeInpPlaceholder.value
       const childs = []
       const prefix = rendePrefixIcon()
@@ -2407,18 +2086,16 @@ export default defineComponent({
       childs.push(
         h('input', {
           ref: refInputTarget,
-          class: 'vxe-input--inner',
+          class: 'vxe-date-input--inner',
           value: inputValue,
           name,
-          type: inputType,
+          type: 'text',
           placeholder: inpPlaceholder,
-          maxlength: inpMaxlength,
           readonly: inpReadonly,
           disabled,
           autocomplete,
           onKeydown: keydownEvent,
           onKeyup: keyupEvent,
-          onWheel: wheelEvent,
           onClick: clickEvent,
           onInput: inputEvent,
           onChange: changeEvent,
@@ -2436,21 +2113,9 @@ export default defineComponent({
       if (isDatePickerType) {
         childs.push(renderPanel())
       }
-      let isWordCount = false
-      // 统计字数
-      if (showWordCount && ['text', 'search'].includes(type)) {
-        isWordCount = true
-        childs.push(
-          h('span', {
-            class: ['vxe-input--count', {
-              'is--error': isCountError
-            }]
-          }, countMethod ? `${countMethod({ value: inputValue })}` : `${inputCount}${inpMaxlength ? `/${inpMaxlength}` : ''}`)
-        )
-      }
       return h('div', {
         ref: refElem,
-        class: ['vxe-input', `type--${type}`, className, {
+        class: ['vxe-date-input', `type--${type}`, className, {
           [`size--${vSize}`]: vSize,
           [`is--${align}`]: align,
           'is--controls': controls,
@@ -2458,7 +2123,6 @@ export default defineComponent({
           'is--suffix': !!suffix,
           'is--readonly': readonly,
           'is--visivle': visiblePanel,
-          'is--count': isWordCount,
           'is--disabled': disabled,
           'is--active': isActivated
         }]

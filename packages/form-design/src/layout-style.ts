@@ -65,7 +65,9 @@ export default defineComponent({
     const formDesignLayoutStyleMethod = {
       updatePreviewView,
       openStylePreview () {
+        const { showPC } = formDesignProps
         updatePreviewView()
+        reactData.activeTab = showPC ? 1 : 2
         settingVisible.value = true
       }
     }

@@ -23,11 +23,12 @@ export const WidgetVxeTextareaViewComponent = defineComponent({
 
     const computeKebabCaseName = useKebabCaseName(props)
 
-    const changeEvent = (evnt: InputEvent & { target: HTMLInputElement }) => {
+    const changeEvent = () => {
       const { renderParams } = props
       const { widget } = renderParams
       if ($xeFormView) {
-        $xeFormView.updateItemStatus(widget, evnt.target.value)
+        const itemValue = $xeFormView ? $xeFormView.getItemValue(widget) : null
+        $xeFormView.updateItemStatus(widget, itemValue)
       }
     }
 

@@ -1,0 +1,291 @@
+@import '../helpers/mixin.scss';
+
+$iconWidth: 1.6em;
+
+.vxe-number-input--inner {
+  width: 100%;
+  height: 100%;
+  border-radius: var(--vxe-ui-base-border-radius);
+  outline: 0;
+  margin: 0;
+  font-size: inherit;
+  font-family: inherit;
+  line-height: inherit;
+  padding: 0 0.6em;
+  color: var(--vxe-ui-font-color);
+  border: 1px solid var(--vxe-ui-input-border-color);
+  background-color: var(--vxe-ui-layout-background-color);
+  box-shadow: none;
+  &::placeholder {
+    color: var(--vxe-ui-input-placeholder-color);
+  }
+  &::-webkit-autofill {
+    background-color: var(--vxe-ui-layout-background-color);
+  }
+  &[type="number"] {
+    appearance: none;
+    -moz-appearance: textfield;
+  }
+  &[type="number"]::-webkit-outer-spin-button,
+  &[type="number"]::-webkit-inner-spin-button {
+    appearance: none;
+  }
+  &[disabled] {
+    cursor: not-allowed;
+    color: var(--vxe-ui-font-disabled-color);
+    background-color: var(--vxe-ui-input-disabled-background-color);
+  }
+}
+
+.vxe-number-input {
+  display: inline-block;
+  position: relative;
+  width: 180px;
+  &.is--disabled {
+    .vxe-number-input--suffix,
+    .vxe-number-input--number-suffix {
+      cursor: no-drop;
+    }
+  }
+  &:not(.is--disabled) {
+    .vxe-number-input--clear-icon,
+    .vxe-number-input--number-suffix {
+      cursor: pointer;
+    }
+    &.is--active {
+      .vxe-number-input--inner {
+        border: 1px solid var(--vxe-ui-font-primary-color);
+      }
+    }
+  }
+  .vxe-number-input--prefix,
+  .vxe-number-input--suffix,
+  .vxe-number-input--extra-suffix {
+    display: flex;
+    position: absolute;
+    top: 0;
+    width: $iconWidth;
+    height: 100%;
+    user-select: none;
+    align-items: center;
+    justify-content: center;
+    color: var(--vxe-ui-font-color);
+  }
+}
+
+.vxe-number-input--count {
+  position: absolute;
+  top: 1px;
+  right: 0.5em;
+  height: calc(100% - 2px);
+  color: var(--vxe-ui-input-count-color);
+  background-color: var(--vxe-ui-layout-background-color);
+  &.is--error {
+    color: var(--vxe-ui-input-count-error-color);
+  }
+}
+
+// 前缀图标
+.vxe-number-input {
+  .vxe-number-input--prefix {
+    left: 0.2em;
+  }
+  &.is--prefix {
+    .vxe-number-input--inner {
+      padding-left: $iconWidth + 0.2em;
+    }
+  }
+}
+
+// 后缀图标
+.vxe-number-input {
+  .vxe-number-input--clear-icon {
+    display: none;
+  }
+  .vxe-number-input--suffix,
+  .vxe-number-input--extra-suffix {
+    right: 0.2em;
+  }
+  &.is--suffix {
+    .vxe-number-input--inner {
+      padding-right: $iconWidth + 0.2em;
+    }
+    &.is--count {
+      .vxe-number-input--inner {
+        padding-right: 5em;
+      }
+    }
+    .vxe-number-input--count {
+      right: $iconWidth + 0.5em;
+    }
+  }
+  &.is--left {
+    .vxe-number-input--inner {
+      text-align: left;
+    }
+  }
+  &.is--center {
+    .vxe-number-input--inner {
+      text-align: center;
+    }
+  }
+  &.is--right {
+    .vxe-number-input--inner {
+      text-align: right;
+    }
+  }
+  &.is--count {
+    .vxe-number-input--inner {
+      padding-right: 3.4em;
+    }
+  }
+  &.is--controls {
+    &.type--number,
+    &.type--integer,
+    &.type--float{
+      .vxe-number-input--inner {
+        padding-right: $iconWidth + 0.2em;
+      }
+      .vxe-number-input--suffix {
+        right: $iconWidth;
+      }
+    }
+  }
+  &.is--suffix {
+    &.is--controls {
+      &.type--integer,
+      &.type--float,
+      &.type--date {
+        .vxe-number-input--inner {
+          padding-right: $iconWidth * 2;
+        }
+      }
+    }
+  }
+  &.is--suffix {
+    &:hover {
+      .vxe-number-input--suffix {
+        &.is--clear {
+          .vxe-number-input--suffix-icon {
+            display: none;
+          }
+          .vxe-number-input--clear-icon {
+            display: inline;
+          }
+        }
+      }
+    }
+  }
+  &:not(.is--disabled) {
+    .vxe-number-input--suffix {
+      &:hover {
+        .vxe-number-input--clear-icon {
+          color: var(--vxe-ui-font-color);
+        }
+      }
+      &:active {
+        .vxe-number-input--clear-icon {
+          color: var(--vxe-ui-font-primary-color);
+        }
+      }
+    }
+    .vxe-number-input--number-prev,
+    .vxe-number-input--number-next {
+      &:hover {
+        color: var(--vxe-ui-font-color);
+      }
+      &:active {
+        color: var(--vxe-ui-font-primary-color);
+      }
+      &.is--disabled {
+        cursor: no-drop;
+        color: var(--vxe-ui-input-number-disabled-color);
+      }
+    }
+  }
+}
+
+.vxe-number-input {
+  .vxe-number-input--number-suffix {
+    position: relative;
+    width: 100%;
+    height: 100%;
+  }
+
+  .vxe-number-input--number-prev,
+  .vxe-number-input--number-next {
+    position: relative;
+    display: block;
+    height: 50%;
+    width: 100%;
+    text-align: center;
+  }
+  .vxe-number-input--number-prev-icon,
+  .vxe-number-input--number-next-icon {
+    line-height: 0.8em;
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+  }
+  .vxe-number-input--number-prev-icon {
+    bottom: 0;
+  }
+  .vxe-number-input--number-next-icon {
+    top: 0;
+  }
+}
+
+.vxe-number-input {
+  font-size: var(--vxe-ui-font-size-default);
+  height: var(--vxe-ui-input-height-default);
+  line-height: var(--vxe-ui-input-height-default);
+  .vxe-number-input--inner {
+    &[type="date"]::-webkit-inner-spin-button,
+    &[type="month"]::-webkit-inner-spin-button,
+    &[type="week"]::-webkit-inner-spin-button {
+      margin-top: 6px;
+    }
+    &[type="date"]::-webkit-inner-spin-button,
+    &[type="month"]::-webkit-inner-spin-button,
+    &[type="week"]::-webkit-inner-spin-button,
+    &[type="number"]::-webkit-inner-spin-button {
+      height: 24px;
+    }
+  }
+  &.size--medium {
+    font-size: var(--vxe-ui-font-size-medium);
+    height: var(--vxe-ui-input-height-medium);
+    line-height: var(--vxe-ui-input-height-medium);
+    .vxe-number-input--inner {
+      &[type="date"]::-webkit-inner-spin-button,
+      &[type="month"]::-webkit-inner-spin-button,
+      &[type="week"]::-webkit-inner-spin-button {
+        margin-top: 4px;
+      }
+    }
+  }
+  &.size--small {
+    font-size: var(--vxe-ui-font-size-small);
+    height: var(--vxe-ui-input-height-small);
+    line-height: var(--vxe-ui-input-height-small);
+    .vxe-number-input--inner {
+      &[type="date"]::-webkit-inner-spin-button,
+      &[type="month"]::-webkit-inner-spin-button,
+      &[type="week"]::-webkit-inner-spin-button {
+        margin-top: 2px;
+      }
+    }
+  }
+  &.size--mini {
+    font-size: var(--vxe-ui-font-size-mini);
+    height: var(--vxe-ui-input-height-mini);
+    line-height: var(--vxe-ui-input-height-mini);
+    .vxe-number-input--inner {
+      &[type="date"]::-webkit-inner-spin-button,
+      &[type="month"]::-webkit-inner-spin-button,
+      &[type="week"]::-webkit-inner-spin-button {
+        margin-top: 0;
+      }
+    }
+  }
+}

@@ -3,7 +3,7 @@ import { renderer } from '@vxe-ui/core'
 import { getNewWidgetId } from './util'
 import XEUtils from 'xe-utils'
 
-import type { VxeFormPropTypes, VxeFormDesignConstructor, VxeFormDesignDefines } from '../../../types'
+import type { VxeFormPropTypes, VxeFormDesignConstructor, VxeFormViewConstructor, VxeFormDesignDefines } from '../../../types'
 
 // 控件原始配置信息，带响应
 interface WidgetReactConfigItem {
@@ -63,38 +63,60 @@ export class FormDesignWidgetInfo {
   name = ''
   required = false
   options: VxeFormPropTypes.Data = {}
-  children: (FormDesignWidgetInfo | null)[] = []
+  children: FormDesignWidgetInfo[] = []
   model = {
     update: false,
     value: ''
   }
 
   constructor ($xeFormDesign: VxeFormDesignConstructor | null, name: string, widgetObjList: VxeFormDesignDefines.WidgetObjItem<any>[]) {
-    const compConf = renderer.get(name) || {}
-    const widgetId = getNewWidgetId(widgetObjList)
-    if (compConf) {
-      const widgetReactConfigMaps = refWidgetReactConfigMaps.value
-      const createWidgetFormConfig = compConf.createFormDesignWidgetConfig
-      if (createWidgetFormConfig) {
-        const params = { name, $formDesign: $xeFormDesign }
-        const widgetConfig = createWidgetFormConfig(params) || {}
-        const titleConf = widgetConfig.title
-        this.title = XEUtils.toValueString(XEUtils.isFunction(titleConf) ? titleConf(params) : titleConf)
-        this.options = widgetConfig.options || {}
-        this.children = widgetConfig.children || []
-        if (!widgetReactConfigMaps[name]) {
-          widgetReactConfigMaps[name] = {
-            title: titleConf,
-            icon: widgetConfig.icon,
-            group: widgetConfig.group,
-            customGroup: widgetConfig.customGroup
+    if (name) {
+      const compConf = renderer.get(name) || {}
+      if (compConf) {
+        const widgetReactConfigMaps = refWidgetReactConfigMaps.value
+        const createWidgetFormConfig = compConf.createFormDesignWidgetConfig
+        if (createWidgetFormConfig) {
+          const params = { name, $formDesign: $xeFormDesign }
+          const widgetConfig = createWidgetFormConfig(params) || {}
+          const titleConf = widgetConfig.title
+          this.title = XEUtils.toValueString(XEUtils.isFunction(titleConf) ? titleConf(params) : titleConf)
+          this.options = widgetConfig.options || {}
+          this.children = widgetConfig.children || []
+          if (!widgetReactConfigMaps[name]) {
+            widgetReactConfigMaps[name] = {
+              title: titleConf,
+              icon: widgetConfig.icon,
+              group: widgetConfig.group,
+              customGroup: widgetConfig.customGroup
+            }
+            refWidgetReactConfigMaps.value = Object.assign({}, widgetReactConfigMaps)
           }
-          refWidgetReactConfigMaps.value = Object.assign({}, widgetReactConfigMaps)
         }
       }
     }
+    const widgetId = getNewWidgetId(widgetObjList)
     this.id = widgetId
     this.field = `${name}${widgetId}`
     this.name = name
+  }
+}
+
+export class FormViewWidgetInfo extends FormDesignWidgetInfo {
+  constructor ($xeFormView: VxeFormViewConstructor, conf: {
+    name: string
+    id: number
+    field: string
+    title: string
+    required: boolean
+    options?: any
+    children?: VxeFormDesignDefines.WidgetObjItem[]
+  }) {
+    super(null, conf.name, [])
+    this.id = conf.id
+    this.title = conf.title
+    this.field = conf.field
+    this.required = conf.required
+    this.options = Object.assign({}, this.options, conf.options)
+    this.children = conf.children ? conf.children.map(item => new FormViewWidgetInfo($xeFormView, item)) : []
   }
 }

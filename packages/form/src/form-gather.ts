@@ -12,7 +12,6 @@ export default defineComponent({
     const refElem = ref() as Ref<HTMLDivElement>
     const $xeForm = inject('$xeForm', {} as VxeFormConstructor & VxeFormPrivateMethods)
     const parentFormGather = inject('$xeFormGather', null as XEFormItemProvide | null)
-    const defaultSlot = slots.default
     const formItem = reactive(createItem($xeForm, props))
     formItem.children = []
 
@@ -32,10 +31,11 @@ export default defineComponent({
     const renderVN = () => {
       const { className, field } = props
       const span = props.span || ($xeForm ? $xeForm.props.span : null)
+      const defaultSlot = slots.default
       return h('div', {
         ref: refElem,
         class: ['vxe-form--gather vxe-form--item-row', formItem.id, span ? `vxe-form--item-col_${span} is--span` : '', className ? (XEUtils.isFunction(className) ? className({ $form: $xeForm, data: $xeForm ? $xeForm.props.data : {}, item: formItem as any, field: field as string, property: field as string }) : className) : '']
-      }, defaultSlot ? defaultSlot() : [])
+      }, defaultSlot ? defaultSlot({}) : [])
     }
 
     const $xeFormGather = {

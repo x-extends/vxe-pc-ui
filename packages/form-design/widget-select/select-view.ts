@@ -27,7 +27,7 @@ export const WidgetSelectViewComponent = defineComponent({
       const { widget } = renderParams
       if ($xeFormView) {
         const itemValue = $xeFormView ? $xeFormView.getItemValue(widget) : null
-        $xeFormView.setItemValue(widget, itemValue)
+        $xeFormView.updateItemStatus(widget, itemValue)
       }
     }
 

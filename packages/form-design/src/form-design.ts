@@ -99,7 +99,7 @@ export default defineComponent({
     }
 
     const getFormConfig = (): VxeFormProps => {
-      return Object.assign({}, reactData.formData)
+      return XEUtils.clone(reactData.formData, true)
     }
 
     const loadFormConfig = (formConfig: VxeFormProps) => {
@@ -108,7 +108,7 @@ export default defineComponent({
     }
 
     const getWidgetData = (): VxeFormDesignDefines.WidgetObjItem[] => {
-      return reactData.widgetObjList.slice(0)
+      return XEUtils.clone(reactData.widgetObjList, true)
     }
 
     const loadWidgetData = (widgetData: VxeFormDesignDefines.WidgetObjItem[]) => {

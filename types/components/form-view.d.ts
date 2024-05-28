@@ -65,7 +65,9 @@ export interface FormViewPrivateMethods { }
 export interface VxeFormViewPrivateMethods extends FormViewPrivateMethods { }
 
 export type VxeFormViewEmits = [
-  'update:modelValue'
+  'update:modelValue',
+  'submit',
+  'reset'
 ]
 
 export namespace VxeFormViewDefines {
