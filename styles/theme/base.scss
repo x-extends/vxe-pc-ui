@@ -72,7 +72,7 @@ $vxe-ui-status-error-color: #f56c6c;
   --vxe-ui-menu-item-height: 44px;
   --vxe-ui-menu-icon-width: 1.5em;
 
-  // button
+  /*button*/
   --vxe-ui-button-max-width: 500px;
   --vxe-ui-button-height-default: 34px;
   --vxe-ui-button-height-medium: 32px;
@@ -119,11 +119,11 @@ $vxe-ui-status-error-color: #f56c6c;
   --vxe-ui-input-count-color: #999;
   --vxe-ui-input-count-error-color: var(--vxe-ui-status-error-color);
 
-  // anchor
+  /*anchor*/
   --vxe-ui-anchor-link-color: var(--vxe-ui-font-secondary-color);
   --vxe-ui-anchor-link-active-color: var(--vxe-ui-font-primary-color);
 
-  // breadcrumb
+  /*breadcrumb*/
   --vxe-ui-breadcrumb-color: var(--vxe-ui-font-secondary-color);
   --vxe-ui-breadcrumb-current-item-color: var(--vxe-ui-font-color);
 
@@ -142,7 +142,7 @@ $vxe-ui-status-error-color: #f56c6c;
   --vxe-ui-form-validate-error-color: var(--vxe-ui-status-error-color);
   --vxe-ui-form-validate-error-background-color: inherit;
 
-  // form-design
+  /*form-design*/
   --vxe-ui-form-design-widget-item-font-size: 0.9em;
   --vxe-ui-form-design-widget-item-hover-background-color: #{lighten($vxe-ui-font-primary-color, 10%)};
 

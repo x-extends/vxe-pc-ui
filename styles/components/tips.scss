@@ -2,32 +2,32 @@ $btnThemeList: (
   (
     name: "primary",
     borderColor: var(--vxe-ui-font-primary-color),
-    bgColor: var(--vxe-ui-font-primary-tinge-color),
+    bgColor: var(--vxe-ui-tips-primary-background-color),
   ),
   (
     name: "success",
     borderColor: var(--vxe-ui-status-success-color),
-    bgColor: var(--vxe-ui-status-success-tinge-color),
+    bgColor: var(--vxe-ui-tips-success-background-color),
   ),
   (
     name: "info",
     borderColor: var(--vxe-ui-status-info-color),
-    bgColor: var(--vxe-ui-status-info-tinge-color),
+    bgColor: var(--vxe-ui-tips-info-background-color),
   ),
   (
     name: "warning",
     borderColor: var(--vxe-ui-status-warning-color),
-    bgColor: var(--vxe-ui-status-warning-tinge-color),
+    bgColor: var(--vxe-ui-tips-warning-background-color),
   ),
   (
     name: "danger",
     borderColor: var(--vxe-ui-status-danger-color),
-    bgColor: var(--vxe-ui-status-danger-tinge-color),
+    bgColor: var(--vxe-ui-tips-danger-background-color),
   ),
   (
     name: "error",
     borderColor: var(--vxe-ui-status-error-color),
-    bgColor: var(--vxe-ui-status-error-tinge-color),
+    bgColor: var(--vxe-ui-tips-error-background-color),
   )
 );
 

@@ -47,4 +47,12 @@
   
   /*switch*/
   --vxe-ui-switch-close-background-color: #4C4D4F;
+
+  /*tips*/
+  --vxe-ui-tips-primary-background-color: #3a4653;
+  --vxe-ui-tips-success-background-color: #33412f;
+  --vxe-ui-tips-info-background-color: #38383b;
+  --vxe-ui-tips-warning-background-color: #332c22;
+  --vxe-ui-tips-danger-background-color: var(--vxe-ui-tips-error-background-color);
+  --vxe-ui-tips-error-background-color: #372525;
 }

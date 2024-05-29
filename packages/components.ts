@@ -1,5 +1,7 @@
 import { App } from 'vue'
-import { setConfig, VxeGlobalConfig } from '@vxe-ui/core'
+import { setI18n, setLanguage, setTheme, setConfig, VxeGlobalConfig } from '@vxe-ui/core'
+
+import zhCN from './language/zh-CN'
 
 import VxeAnchor from './anchor'
 import VxeAnchorLink from './anchor-link'
@@ -122,6 +124,12 @@ export function install (app: App, options?: VxeGlobalConfig) {
 
   components.forEach(component => app.use(component))
 }
+
+// 默认中文
+const defaultLanguage = 'zh-CN'
+setI18n(defaultLanguage, zhCN)
+setLanguage(defaultLanguage)
+setTheme('light')
 
 export * from './ui'
 
