@@ -27,7 +27,8 @@ const collapsed = ref(false)
 
 const navList = ref([
   { name: 'Home', icon: 'vxe-icon-user-fill', routerLink: { path: '/' } },
-  { name: 'LinkText', icon: 'vxe-icon-user-fill', routerLink: { name: 'LinkText' } },
+  { name: 'TagTest', icon: 'vxe-icon-user-fill', routerLink: { name: 'TagTest' } },
+  { name: 'TextTest', icon: 'vxe-icon-user-fill', routerLink: { name: 'TextTest' } },
   {
     title: 'xx',
     icon: 'vxe-icon-user-fill',

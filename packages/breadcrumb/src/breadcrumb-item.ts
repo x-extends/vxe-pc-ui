@@ -1,11 +1,14 @@
-import { defineComponent, ref, h, reactive, computed, inject, createCommentVNode } from 'vue'
+import { defineComponent, ref, h, reactive, computed, inject, createCommentVNode, PropType } from 'vue'
 import XEUtils from 'xe-utils'
 
-import type { BreadcrumbItemReactData, BreadcrumbItemPrivateRef, VxeBreadcrumbItemPrivateComputed, VxeBreadcrumbItemConstructor, VxeBreadcrumbItemPrivateMethods, VxeBreadcrumbConstructor, VxeBreadcrumbPrivateMethods } from '../../../types'
+import type { VxeBreadcrumbItemPropTypes, BreadcrumbItemReactData, BreadcrumbItemPrivateRef, VxeBreadcrumbItemPrivateComputed, VxeBreadcrumbItemConstructor, VxeBreadcrumbItemPrivateMethods, VxeBreadcrumbConstructor, VxeBreadcrumbPrivateMethods } from '../../../types'
 
 export default defineComponent({
   name: 'VxeBreadcrumbItem',
-  props: {},
+  props: {
+    title: String as PropType<VxeBreadcrumbItemPropTypes.Title>,
+    RouterLink: Object as PropType<VxeBreadcrumbItemPropTypes.RouterLink>
+  },
   emits: [],
   setup (props, context) {
     const { slots } = context
@@ -30,6 +33,10 @@ export default defineComponent({
       return ''
     })
 
+    const clickEvent = () => {
+
+    }
+
     const computeMaps: VxeBreadcrumbItemPrivateComputed = {
     }
 
@@ -44,15 +51,18 @@ export default defineComponent({
     } as unknown as VxeBreadcrumbItemConstructor & VxeBreadcrumbItemPrivateMethods
 
     const renderVN = () => {
+      const { title } = props
       const separator = computeSeparator.value
       const defaultSlot = slots.default
+
       return h('span', {
         ref: refElem,
-        class: 'vxe-breadcrumb-item'
+        class: 'vxe-breadcrumb-item',
+        onClick: clickEvent
       }, [
         h('span', {
           class: 'vxe-breadcrumb-item--content'
-        }, defaultSlot ? defaultSlot({}) : []),
+        }, defaultSlot ? defaultSlot({}) : `${title || ''}`),
         separator
           ? h('span', {
             class: 'vxe-breadcrumb-item--separator'

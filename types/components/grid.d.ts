@@ -591,9 +591,23 @@ export interface VxeGridSlots<D = any> {
     $grid: VxeGridConstructor<D> | null | undefined
   }): any
   /**
-   * 表格底部模板
+   * 自定义表格底部模板
    */
   bottom?(params: {
+    $table: VxeTableConstructor<D>
+    $grid: VxeGridConstructor<D> | null | undefined
+  }): any
+  /**
+   * 自定义表格左侧模板
+   */
+  left?(params: {
+    $table: VxeTableConstructor<D>
+    $grid: VxeGridConstructor<D> | null | undefined
+  }): any
+  /**
+   * 自定义表格右侧模板
+   */
+  right?(params: {
     $table: VxeTableConstructor<D>
     $grid: VxeGridConstructor<D> | null | undefined
   }): any

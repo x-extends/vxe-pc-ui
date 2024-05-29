@@ -49,6 +49,7 @@ setConfig({
   column: {},
   drawer: {
     // size: null,
+    position: 'left',
     showHeader: true,
     lockView: true,
     mask: true,
@@ -157,9 +158,7 @@ setConfig({
   tabs: {},
   textarea: {},
   toolbar: {},
-  tips: {
-    title: 'Tip'
-  },
+  tips: {},
   tooltip: {
     // size: null,
     trigger: 'hover',

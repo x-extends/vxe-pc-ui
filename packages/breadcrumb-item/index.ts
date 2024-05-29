@@ -1,5 +1,5 @@
 import { App } from 'vue'
-import VxeBreadcrumbItemComponent from './src/breadcrumb-item'
+import VxeBreadcrumbItemComponent from '../breadcrumb/src/breadcrumb-item'
 import { dynamicApp } from '../dynamics'
 
 export const VxeBreadcrumbItem = Object.assign({}, VxeBreadcrumbItemComponent, {

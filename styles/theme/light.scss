@@ -46,11 +46,11 @@
   /*switch*/
   --vxe-ui-switch-close-background-color: rgba(0,0,0,0.35);
 
-  /*tips*/
-  --vxe-ui-tips-primary-background-color: var(--vxe-ui-font-primary-tinge-color);
-  --vxe-ui-tips-success-background-color: var(--vxe-ui-status-success-tinge-color);
-  --vxe-ui-tips-info-background-color: var(--vxe-ui-status-info-tinge-color);
-  --vxe-ui-tips-warning-background-color: var(--vxe-ui-status-warning-tinge-color);
-  --vxe-ui-tips-danger-background-color: var(--vxe-ui-tips-error-background-color);
-  --vxe-ui-tips-error-background-color: var(--vxe-ui-status-error-tinge-color);
+  /*tag*/
+  --vxe-ui-tag-primary-background-color: var(--vxe-ui-font-primary-tinge-color);
+  --vxe-ui-tag-success-background-color: var(--vxe-ui-status-success-tinge-color);
+  --vxe-ui-tag-info-background-color: var(--vxe-ui-status-info-tinge-color);
+  --vxe-ui-tag-warning-background-color: var(--vxe-ui-status-warning-tinge-color);
+  --vxe-ui-tag-danger-background-color: var(--vxe-ui-tag-error-background-color);
+  --vxe-ui-tag-error-background-color: var(--vxe-ui-status-error-tinge-color);
 }

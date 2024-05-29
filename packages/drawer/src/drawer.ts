@@ -18,7 +18,10 @@ export default defineComponent({
     title: String as PropType<VxeDrawerPropTypes.Title>,
     loading: { type: Boolean as PropType<VxeDrawerPropTypes.Loading>, default: null },
     className: String as PropType<VxeDrawerPropTypes.ClassName>,
-    position: [String, Object] as PropType<VxeDrawerPropTypes.Position>,
+    position: {
+      type: [String, Object] as PropType<VxeDrawerPropTypes.Position>,
+      default: () => getConfig().drawer.position
+    },
     lockView: { type: Boolean as PropType<VxeDrawerPropTypes.LockView>, default: () => getConfig().drawer.lockView },
     lockScroll: Boolean as PropType<VxeDrawerPropTypes.LockScroll>,
     mask: { type: Boolean as PropType<VxeDrawerPropTypes.Mask>, default: () => getConfig().drawer.mask },

@@ -1,5 +1,6 @@
 import { RenderFunction, SetupContext, Ref, ComponentPublicInstance, DefineComponent } from 'vue'
 import { defineVxeComponent, VxeComponentBaseOptions, VxeComponentEventParams, ValueOf } from '@vxe-ui/core'
+import { VxeBreadcrumbItemProps } from './breadcrumb-item'
 
 /* eslint-disable no-use-before-define,@typescript-eslint/ban-types */
 
@@ -24,6 +25,7 @@ export interface VxeBreadcrumbPrivateRef extends BreadcrumbPrivateRef { }
 
 export namespace VxeBreadcrumbPropTypes {
   export type Separator = string
+  export type Options = VxeBreadcrumbItemProps[]
 }
 
 export type VxeBreadcrumbProps = {
@@ -42,10 +44,14 @@ export interface BreadcrumbMethods {
 }
 export interface VxeBreadcrumbMethods extends BreadcrumbMethods { }
 
-export interface BreadcrumbPrivateMethods { }
+export interface BreadcrumbPrivateMethods {
+  handleClickLink(evnt: KeyboardEvent, item?: VxeBreadcrumbItemProps): void
+ }
 export interface VxeBreadcrumbPrivateMethods extends BreadcrumbPrivateMethods { }
 
-export type VxeBreadcrumbEmits = []
+export type VxeBreadcrumbEmits = [
+  'click'
+]
 
 export namespace VxeBreadcrumbDefines {
   export interface BreadcrumbEventParams extends VxeComponentEventParams {

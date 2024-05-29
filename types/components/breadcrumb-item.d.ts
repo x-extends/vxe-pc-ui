@@ -23,9 +23,19 @@ export interface BreadcrumbItemPrivateRef {
 export interface VxeBreadcrumbItemPrivateRef extends BreadcrumbItemPrivateRef { }
 
 export namespace VxeBreadcrumbItemPropTypes {
+  export type Title = string
+  export type RouterLink = {
+    path?: string
+    name?: string | number | null
+    query?: any
+    params?: any
+  }
 }
 
-export type VxeBreadcrumbItemProps = {}
+export type VxeBreadcrumbItemProps = {
+  title?: VxeBreadcrumbItemPropTypes.Title
+  routerLink?: VxeBreadcrumbItemPropTypes.RouterLink
+}
 
 export interface BreadcrumbItemPrivateComputed {
 }

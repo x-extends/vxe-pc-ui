@@ -1,8 +1,9 @@
 import { defineComponent, ref, h, reactive, provide, PropType } from 'vue'
-import { getConfig } from '@vxe-ui/core'
+import { getConfig, createEvent } from '@vxe-ui/core'
 import XEUtils from 'xe-utils'
+import VxeBreadcrumbItemComponent from './breadcrumb-item'
 
-import type { VxeBreadcrumbPropTypes, BreadcrumbReactData, BreadcrumbPrivateRef, VxeBreadcrumbPrivateComputed, VxeBreadcrumbConstructor, VxeBreadcrumbPrivateMethods } from '../../../types'
+import type { VxeBreadcrumbPropTypes, BreadcrumbReactData, BreadcrumbPrivateRef, VxeBreadcrumbPrivateComputed, VxeBreadcrumbConstructor, BreadcrumbPrivateMethods, VxeBreadcrumbPrivateMethods, BreadcrumbMethods } from '../../../types'
 
 export default defineComponent({
   name: 'VxeBreadcrumb',
@@ -10,11 +11,14 @@ export default defineComponent({
     separator: {
       type: String as PropType<VxeBreadcrumbPropTypes.Separator>,
       default: () => getConfig().breadcrumb.separator
-    }
+    },
+    options: Array as PropType<VxeBreadcrumbPropTypes.Options>
   },
-  emits: [],
+  emits: [
+    'click'
+  ],
   setup (props, context) {
-    const { slots } = context
+    const { emit, slots } = context
 
     const xID = XEUtils.uniqueId()
 
@@ -40,12 +44,39 @@ export default defineComponent({
       getComputeMaps: () => computeMaps
     } as unknown as VxeBreadcrumbConstructor & VxeBreadcrumbPrivateMethods
 
+    const breadcrumbMethods: BreadcrumbMethods = {
+      dispatchEvent (type, params, evnt) {
+        emit(type, createEvent(evnt, { $xeBreadcrumb }, params))
+      }
+    }
+
+    const breadcrumbPrivateMethods: BreadcrumbPrivateMethods = {
+      handleClickLink (evnt, option) {
+        breadcrumbMethods.dispatchEvent('click', { option }, evnt)
+      }
+    }
+
+    Object.assign($xeBreadcrumb, breadcrumbMethods, breadcrumbPrivateMethods)
+
+    const renderItems = () => {
+      const { options } = props
+      if (options && options.length) {
+        return options.map(item => {
+          return h(VxeBreadcrumbItemComponent, {
+            title: item.title,
+            routerLink: item.routerLink
+          })
+        })
+      }
+      return []
+    }
+
     const renderVN = () => {
       const defaultSlot = slots.default
       return h('div', {
         ref: refElem,
         class: 'vxe-breadcrumb'
-      }, defaultSlot ? defaultSlot({}) : [])
+      }, defaultSlot ? defaultSlot({}) : renderItems())
     }
 
     $xeBreadcrumb.renderVN = renderVN

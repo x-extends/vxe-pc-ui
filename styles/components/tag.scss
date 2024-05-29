@@ -1,0 +1,61 @@
+$btnThemeList: (
+  (
+    name: "primary",
+    textColor: var(--vxe-ui-font-primary-color),
+    bgColor: var(--vxe-ui-tag-primary-background-color)
+  ),
+  (
+    name: "success",
+    textColor: var(--vxe-ui-status-success-color),
+    bgColor: var(--vxe-ui-tag-success-background-color)
+  ),
+  (
+    name: "info",
+    textColor: var(--vxe-ui-status-info-color),
+    bgColor: var(--vxe-ui-tag-info-background-color)
+  ),
+  (
+    name: "warning",
+    textColor: var(--vxe-ui-status-warning-color),
+    bgColor: var(--vxe-ui-tag-warning-background-color)
+  ),
+  (
+    name: "danger",
+    textColor: var(--vxe-ui-status-danger-color),
+    bgColor: var(--vxe-ui-tag-danger-background-color)
+  ),
+  (
+    name: "error",
+    textColor: var(--vxe-ui-status-error-color),
+    bgColor: var(--vxe-ui-tag-error-background-color)
+  )
+);
+
+.vxe-tag {
+  padding: var(--vxe-ui-layout-padding-half) var(--vxe-ui-layout-padding-default);
+  font-size: var(--vxe-ui-font-size-default);
+  color: var(--vxe-ui-font-color);
+  border-radius: var(--vxe-ui-base-border-radius);
+  @for $index from 0 to length($btnThemeList) {
+    $item: nth($btnThemeList, $index + 1);
+    &.theme--#{map-get($item, name)} {
+      color: map-get($item, textColor);
+      background-color: map-get($item, bgColor);
+    }
+  }
+  &.size--medium {
+    font-size: var(--vxe-ui-font-size-medium);
+  }
+  &.size--small {
+    font-size: var(--vxe-ui-font-size-small);
+  }
+  &.size--mini {
+    font-size: var(--vxe-ui-font-size-mini);
+  }
+}
+.vxe-tag--icon {
+  padding: 0 0.1em;
+}
+.vxe-tag--content {
+  padding: 0 0.1em;
+}

@@ -47,8 +47,13 @@ const routes: Array<RouteRecordRaw> = [
   },
   {
     path: '/component/text',
-    name: 'LinkText',
-    component: () => import('../views/text/LinkText.vue')
+    name: 'TextTest',
+    component: () => import('../views/text/TextTest.vue')
+  },
+  {
+    path: '/component/tag',
+    name: 'TagTest',
+    component: () => import('../views/tag/TagTest.vue')
   },
   {
     path: '/component/link',

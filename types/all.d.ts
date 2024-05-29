@@ -52,6 +52,7 @@ import VxeSelect from './components/select'
 import VxeSwitch from './components/switch'
 import VxeTabPane from './components/tab-pane'
 import VxeTabs from './components/tabs'
+import VxeTag from './components/tag'
 import VxeText from './components/text'
 import VxeTextarea from './components/textarea'
 import VxeTips from './components/tips'
@@ -115,6 +116,7 @@ declare module '@vue/runtime-core' {
     VxeSwitch: typeof VxeSwitch
     VxeTabPane: typeof VxeTabPane
     VxeTabs: typeof VxeTabs
+    VxeTag: typeof VxeTag
     VxeText: typeof VxeText
     VxeTextarea: typeof VxeTextarea
     VxeTips: typeof VxeTips
@@ -179,6 +181,7 @@ export * from './components/select'
 export * from './components/switch'
 export * from './components/tab-pane'
 export * from './components/tabs'
+export * from './components/tag'
 export * from './components/text'
 export * from './components/textarea'
 export * from './components/tips'
