@@ -196,6 +196,15 @@ setIcon({
   PAGER_NEXT_PAGE: iconPrefix + 'arrow-right',
   PAGER_JUMP_MORE: iconPrefix + 'ellipsis-h',
 
+  // radio
+  RADIO_CHECKED: iconPrefix + 'radio-checked-fill',
+  RADIO_UNCHECKED: iconPrefix + 'radio-unchecked',
+
+  // checkbox
+  CHECKBOX_INDETERMINATE: iconPrefix + 'checkbox-indeterminate-fill',
+  CHECKBOX_CHECKED: iconPrefix + 'checkbox-checked-fill',
+  CHECKBOX_UNCHECKED: iconPrefix + 'checkbox-unchecked',
+
   // input
   INPUT_CLEAR: iconPrefix + 'error-circle-fill',
   INPUT_PWD: iconPrefix + 'eye-fill',
@@ -223,15 +232,19 @@ setIcon({
   FORM_UNFOLDING: iconPrefix + 'arrow-up',
 
   // form-design
-  DESIGN_FORM_STYLE_SETTING: iconPrefix + 'layout',
-  DESIGN_FORM_PROPS_PC: iconPrefix + 'pc',
-  DESIGN_FORM_PROPS_MOBILE: iconPrefix + 'mobile',
-  DESIGN_FORM_WIDGET_ADD: iconPrefix + 'square-plus-fill',
-  DESIGN_FORM_WIDGET_COPY: iconPrefix + 'copy',
-  DESIGN_FORM_WIDGET_DELETE: iconPrefix + 'delete',
-  DESIGN_FORM_WIDGET_OPTION_DELETE: iconPrefix + 'delete',
-  DESIGN_FORM_WIDGET_OPTION_EXPAND_OPEN: iconPrefix + 'square-plus',
-  DESIGN_FORM_WIDGET_OPTION_EXPAND_CLOSE: iconPrefix + 'square-minus'
+  FORM_DESIGN_STYLE_SETTING: iconPrefix + 'layout',
+  FORM_DESIGN_PROPS_PC: iconPrefix + 'pc',
+  FORM_DESIGN_PROPS_MOBILE: iconPrefix + 'mobile',
+  FORM_DESIGN_WIDGET_ADD: iconPrefix + 'square-plus-fill',
+  FORM_DESIGN_WIDGET_COPY: iconPrefix + 'copy',
+  FORM_DESIGN_WIDGET_DELETE: iconPrefix + 'delete',
+  FORM_DESIGN_WIDGET_OPTION_DELETE: iconPrefix + 'delete',
+  FORM_DESIGN_WIDGET_OPTION_EXPAND_OPEN: iconPrefix + 'square-plus',
+  FORM_DESIGN_WIDGET_OPTION_EXPAND_CLOSE: iconPrefix + 'square-minus',
+
+  // list-design
+  LIST_DESIGN_FIELD_SETTING: iconPrefix + 'custom-column',
+  LIST_DESIGN_LIST_SETTING: iconPrefix + 'menu'
 })
 
 export * from '@vxe-ui/core'

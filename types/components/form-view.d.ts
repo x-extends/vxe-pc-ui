@@ -45,7 +45,7 @@ export interface FormViewPrivateComputed {
 export interface VxeFormViewPrivateComputed extends FormViewPrivateComputed { }
 
 export interface FormViewReactData {
-  formConfig: VxeFormProps<VxeFormDesignPropTypes.FormData>,
+  formConfig: VxeFormProps,
   formRules: VxeFormPropTypes.Rules
   widgetObjList: VxeFormDesignDefines.WidgetObjItem[]
 }

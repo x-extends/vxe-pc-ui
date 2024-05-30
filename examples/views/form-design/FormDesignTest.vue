@@ -1,10 +1,11 @@
 <template>
   <div>
     <p>电脑端</p>
-    <VxeFormDesign ref="formDesignRef" :widgets="widgetConfigs" :height="400" />
+    <vxe-button @click="clickEvent">获取JSON</vxe-button>
+    <VxeFormDesign ref="formDesignRef" :height="400" />
 
     <p>电脑端和手机端</p>
-    <VxeFormDesign :height="400" showMobile />
+    <VxeFormDesign :height="400" :widgets="widgetConfigs" showMobile />
 
     <p @click="previewEvent">点击预览</p>
 
@@ -22,13 +23,15 @@ const widgetConfigs = ref<VxeFormDesignPropTypes.Widgets>([
   {
     customGroup: 'xxx',
     children: [
-      'input'
+      'input',
+      'textarea'
     ]
   },
   {
     group: 'layout',
     children: [
-      'input'
+      'VxeInput',
+      'VxeTextarea'
     ]
   }
 ])
@@ -40,6 +43,13 @@ const previewEvent = () => {
   const $formDesign = formDesignRef.value
   if ($formDesign) {
     formDesignConfig.value = $formDesign.getConfig()
+  }
+}
+
+const clickEvent = () => {
+  const $formDesign = formDesignRef.value
+  if ($formDesign) {
+    console.log(JSON.stringify($formDesign.getConfig()))
   }
 }
 </script>

@@ -69,7 +69,7 @@ export default defineComponent({
     } as unknown as VxeRowConstructor & VxeRowPrivateMethods
 
     const handleDefaultEvent = (evnt: Event & { type: 'click' }) => {
-      emit(evnt.type, createEvent(evnt, { }))
+      emit(evnt.type, createEvent(evnt, { $row: $xeRow }))
     }
 
     const renderVN = () => {

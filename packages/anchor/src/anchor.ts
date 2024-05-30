@@ -64,7 +64,7 @@ export default defineComponent({
 
     const anchorMethods: AnchorMethods = {
       dispatchEvent (type, params, evnt) {
-        emit(type, createEvent(evnt, { $xeAnchor }, params))
+        emit(type, createEvent(evnt, { $anchor: $xeAnchor }, params))
       }
     }
 

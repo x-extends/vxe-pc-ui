@@ -46,7 +46,7 @@ export default defineComponent({
 
     const breadcrumbMethods: BreadcrumbMethods = {
       dispatchEvent (type, params, evnt) {
-        emit(type, createEvent(evnt, { $xeBreadcrumb }, params))
+        emit(type, createEvent(evnt, { $breadcrumb: $xeBreadcrumb }, params))
       }
     }
 

@@ -143,7 +143,7 @@ export default defineComponent({
     }
 
     const dispatchEvent = (type: ValueOf<VxeFormViewEmits>, params: any, evnt: Event) => {
-      emit(type, createEvent(evnt, { $xeFormView }, params))
+      emit(type, createEvent(evnt, { $formView: $xeFormView }, params))
     }
 
     const formViewMethods: FormViewMethods = {

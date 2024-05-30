@@ -1,4 +1,4 @@
-import { defineComponent, ref, h, reactive } from 'vue'
+import { defineComponent, ref, h, reactive, provide } from 'vue'
 import XEUtils from 'xe-utils'
 
 import type { ListViewReactData, ListViewPrivateRef, VxeListViewEmits, VxeListViewPrivateComputed, VxeListViewConstructor, VxeListViewPrivateMethods } from '../../../types'
@@ -46,6 +46,8 @@ export default defineComponent({
     }
 
     $xeListView.renderVN = renderVN
+
+    provide('$xeListView', $xeListView)
 
     return $xeListView
   },

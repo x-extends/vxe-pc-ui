@@ -68,7 +68,7 @@ export default defineComponent({
       refElem
     }
 
-    const $xepager = {
+    const $xePager = {
       xID,
       props,
       context,
@@ -451,7 +451,7 @@ export default defineComponent({
 
     pagerMethods = {
       dispatchEvent (type, params, evnt) {
-        emit(type, createEvent(evnt, { $pager: $xepager }, params))
+        emit(type, createEvent(evnt, { $pager: $xePager }, params))
       },
       homePage () {
         handleHomePage()
@@ -486,7 +486,7 @@ export default defineComponent({
       handleNextJump
     }
 
-    Object.assign($xepager, pagerMethods, pagerPrivateMethods)
+    Object.assign($xePager, pagerMethods, pagerPrivateMethods)
 
     watch(() => props.currentPage, (value) => {
       reactData.inpCurrPage = value
@@ -564,7 +564,7 @@ export default defineComponent({
       }
       return h('div', {
         ref: refElem,
-        class: ['vxe-pager', className ? (XEUtils.isFunction(className) ? className({ $pager: $xepager }) : className) : '', {
+        class: ['vxe-pager', className ? (XEUtils.isFunction(className) ? className({ $pager: $xePager }) : className) : '', {
           [`size--${vSize}`]: vSize,
           [`align--${align}`]: align,
           'is--border': props.border,
@@ -580,9 +580,9 @@ export default defineComponent({
       ])
     }
 
-    $xepager.renderVN = renderVN
+    $xePager.renderVN = renderVN
 
-    return $xepager
+    return $xePager
   },
   render () {
     return this.renderVN()

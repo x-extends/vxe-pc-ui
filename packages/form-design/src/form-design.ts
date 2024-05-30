@@ -5,12 +5,12 @@ import { FormDesignWidgetInfo, getWidgetConfigGroup, getWidgetConfigCustomGroup,
 import XEUtils from 'xe-utils'
 import VxeButtonComponent from '../../button/src/button'
 import LayoutWidgetComponent from './layout-widget'
-import LayoutViewComponent from './layout-view'
+import LayoutPreviewComponent from './layout-preview'
 import LayoutSettingComponent from './layout-setting'
 import LayoutStyleComponent from './layout-style'
 import { getDefaultSettingFormData } from './default-setting-data'
 
-import type { VxeFormDesignDefines, VxeFormDesignPropTypes, VxeFormDesignEmits, FormDesignInternalData, FormDesignReactData, FormDesignPrivateRef, VxeFormDesignPrivateComputed, VxeFormDesignConstructor, VxeFormDesignPrivateMethods, FormDesignMethods, FormDesignPrivateMethods, VxeFormProps } from '../../../types'
+import type { VxeFormDesignDefines, VxeFormDesignPropTypes, VxeFormDesignEmits, FormDesignInternalData, FormDesignReactData, FormDesignPrivateRef, VxeFormDesignPrivateComputed, VxeFormDesignConstructor, VxeFormDesignPrivateMethods, FormDesignMethods, FormDesignPrivateMethods } from '../../../types'
 
 export default defineComponent({
   name: 'VxeFormDesign',
@@ -98,17 +98,21 @@ export default defineComponent({
       return nextTick()
     }
 
-    const getFormConfig = (): VxeFormProps => {
+    const getFormConfig = (): VxeFormDesignPropTypes.FormData => {
       return XEUtils.clone(reactData.formData, true)
     }
 
-    const loadFormConfig = (formConfig: VxeFormProps) => {
-      reactData.formData = Object.assign({}, formConfig)
+    const loadFormConfig = (data: VxeFormDesignPropTypes.FormData) => {
+      reactData.formData = Object.assign({}, data)
       return nextTick()
     }
 
     const getWidgetData = (): VxeFormDesignDefines.WidgetObjItem[] => {
-      return XEUtils.clone(reactData.widgetObjList, true)
+      const objList = XEUtils.clone(reactData.widgetObjList, true)
+      XEUtils.eachTree(objList, item => {
+        item.model.value = null
+      }, { children: 'children' })
+      return objList
     }
 
     const loadWidgetData = (widgetData: VxeFormDesignDefines.WidgetObjItem[]) => {
@@ -330,7 +334,7 @@ export default defineComponent({
           h(VxeButtonComponent, {
             mode: 'text',
             status: 'primary',
-            icon: getIcon().DESIGN_FORM_STYLE_SETTING,
+            icon: getIcon().FORM_DESIGN_STYLE_SETTING,
             content: getI18n('vxe.formDesign.styleSetting.btn'),
             onClick: openStylePreviewEvent
           })
@@ -357,7 +361,7 @@ export default defineComponent({
           class: 'vxe-form-design--body'
         }, [
           h(LayoutWidgetComponent),
-          h(LayoutViewComponent),
+          h(LayoutPreviewComponent),
           h(LayoutSettingComponent),
           h(LayoutStyleComponent as ComponentOptions, {
             ref: refLayoutStyle

@@ -352,6 +352,10 @@ export default {
         }
       }
     },
+    listDesign: {
+      fieldSettingTab: 'Field setting',
+      listSettingTab: 'List setting'
+    },
 
     /**
      * 扩展插件

@@ -1,7 +1,7 @@
 import { defineComponent, h, computed, inject, PropType } from 'vue'
 import XEUtils from 'xe-utils'
 import { getFuncText } from '../../ui/src/utils'
-import { getConfig, createEvent, useSize } from '@vxe-ui/core'
+import { getConfig, createEvent, useSize, getIcon } from '@vxe-ui/core'
 
 import type { VxeCheckboxConstructor, VxeCheckboxGroupConstructor, VxeCheckboxEmits, VxeCheckboxGroupPrivateMethods, CheckboxMethods, VxeCheckboxPropTypes, VxeFormConstructor, VxeFormPrivateMethods, VxeFormDefines } from '../../../types'
 
@@ -29,7 +29,7 @@ export default defineComponent({
 
     const xID = XEUtils.uniqueId()
 
-    const $xecheckbox = {
+    const $xeCheckbox = {
       xID,
       props,
       context
@@ -84,11 +84,11 @@ export default defineComponent({
 
     checkboxMethods = {
       dispatchEvent (type, params, evnt) {
-        emit(type, createEvent(evnt, { $checkbox: $xecheckbox }, params))
+        emit(type, createEvent(evnt, { $checkbox: $xeCheckbox }, params))
       }
     }
 
-    Object.assign($xecheckbox, checkboxMethods)
+    Object.assign($xeCheckbox, checkboxMethods)
 
     const renderVN = () => {
       const vSize = computeSize.value
@@ -112,7 +112,7 @@ export default defineComponent({
           onChange: changeEvent
         }),
         h('span', {
-          class: ['vxe-checkbox--icon', indeterminate ? 'vxe-icon-checkbox-indeterminate-fill' : (isChecked ? 'vxe-icon-checkbox-checked-fill' : 'vxe-icon-checkbox-unchecked')]
+          class: ['vxe-checkbox--icon', indeterminate ? getIcon().CHECKBOX_INDETERMINATE : (isChecked ? getIcon().CHECKBOX_CHECKED : getIcon().CHECKBOX_UNCHECKED)]
         }),
         h('span', {
           class: 'vxe-checkbox--label'
@@ -120,9 +120,9 @@ export default defineComponent({
       ])
     }
 
-    $xecheckbox.renderVN = renderVN
+    $xeCheckbox.renderVN = renderVN
 
-    return $xecheckbox
+    return $xeCheckbox
   },
   render () {
     return this.renderVN()

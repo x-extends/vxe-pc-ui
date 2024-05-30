@@ -1,10 +1,8 @@
-import { getI18n } from '@vxe-ui/core'
-
 import { VxeGlobalRendererHandles, VxeFormDesignDefines, VxeFormProps } from '../../../types'
 
 export const getDefaultSettingFormData = (defOpts?: Partial<VxeFormDesignDefines.DefaultSettingFormDataObjVO>): VxeFormDesignDefines.DefaultSettingFormDataObjVO => {
   return {
-    title: getI18n('vxe.formDesign.defFormTitle'),
+    title: '',
     pcVisible: defOpts ? !!defOpts.pcVisible : true,
     pcVertical: true,
     pcTitleBold: false,

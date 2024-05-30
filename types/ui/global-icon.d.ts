@@ -61,6 +61,15 @@ declare module '@vxe-ui/core' {
     PAGER_NEXT_PAGE?: string
     PAGER_JUMP_MORE?: string
 
+    // radio
+    RADIO_CHECKED?: string
+    RADIO_UNCHECKED?: string
+
+    // checkbox
+    CHECKBOX_INDETERMINATE?: string
+    CHECKBOX_CHECKED?: string
+    CHECKBOX_UNCHECKED?: string
+
     // input
     INPUT_CLEAR?: string
     INPUT_PWD?: string
@@ -88,14 +97,18 @@ declare module '@vxe-ui/core' {
     FORM_UNFOLDING?: string
 
     // form-design
-    DESIGN_FORM_STYLE_SETTING?: string
-    DESIGN_FORM_PROPS_PC?: string
-    DESIGN_FORM_PROPS_MOBILE?: string
-    DESIGN_FORM_WIDGET_ADD?: string
-    DESIGN_FORM_WIDGET_COPY?: string
-    DESIGN_FORM_WIDGET_DELETE?: string
-    DESIGN_FORM_WIDGET_OPTION_DELETE?: string
-    DESIGN_FORM_WIDGET_OPTION_EXPAND_OPEN?: string
-    DESIGN_FORM_WIDGET_OPTION_EXPAND_CLOSE?: string
+    FORM_DESIGN_STYLE_SETTING?: string
+    FORM_DESIGN_PROPS_PC?: string
+    FORM_DESIGN_PROPS_MOBILE?: string
+    FORM_DESIGN_WIDGET_ADD?: string
+    FORM_DESIGN_WIDGET_COPY?: string
+    FORM_DESIGN_WIDGET_DELETE?: string
+    FORM_DESIGN_WIDGET_OPTION_DELETE?: string
+    FORM_DESIGN_WIDGET_OPTION_EXPAND_OPEN?: string
+    FORM_DESIGN_WIDGET_OPTION_EXPAND_CLOSE?: string
+
+    // list-design
+    LIST_DESIGN_FIELD_SETTING?: string
+    LIST_DESIGN_LIST_SETTING?: string
   }
 }

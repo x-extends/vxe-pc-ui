@@ -116,7 +116,7 @@ export const ViewItemComponent = defineComponent({
             class: 'vxe-form-design--preview-item-operate'
           }, [
             h(VxeButtonComponent, {
-              icon: getIcon().DESIGN_FORM_WIDGET_COPY,
+              icon: getIcon().FORM_DESIGN_WIDGET_COPY,
               status: 'primary',
               size: 'mini',
               circle: true,
@@ -125,7 +125,7 @@ export const ViewItemComponent = defineComponent({
               }
             }),
             h(VxeButtonComponent, {
-              icon: getIcon().DESIGN_FORM_WIDGET_DELETE,
+              icon: getIcon().FORM_DESIGN_WIDGET_DELETE,
               status: 'danger',
               size: 'mini',
               circle: true,

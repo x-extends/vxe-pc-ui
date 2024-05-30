@@ -61,6 +61,13 @@ import VxeTree from './components/tree'
 import VxeTreeSelect from './components/tree-select'
 import VxeUpload from './components/upload'
 
+// Vxe Table
+import VxeColumn from './components/column'
+import VxeColgroup from './components/colgroup'
+import VxeTable from './components/table'
+import VxeGrid from './components/grid'
+import VxeToolbar from './components/toolbar'
+
 export function install (app: App, options?: VxeGlobalConfig): void
 
 declare module '@vue/runtime-core' {
@@ -124,6 +131,13 @@ declare module '@vue/runtime-core' {
     VxeTree: typeof VxeTree
     VxeTreeSelect: typeof VxeTreeSelect
     VxeUpload: typeof VxeUpload
+
+    // Vxe Table
+    VxeColumn: typeof VxeColumn
+    VxeColgroup: typeof VxeColgroup
+    VxeTable: typeof VxeTable
+    VxeGrid: typeof VxeGrid
+    VxeToolbar: typeof VxeToolbar
   }
 }
 
@@ -189,3 +203,10 @@ export * from './components/tooltip'
 export * from './components/tree'
 export * from './components/tree-select'
 export * from './components/upload'
+
+// Vxe Table
+export * from './components/column'
+export * from './components/colgroup'
+export * from './components/table'
+export * from './components/grid'
+export * from './components/toolbar'

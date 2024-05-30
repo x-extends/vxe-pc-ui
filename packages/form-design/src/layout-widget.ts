@@ -99,7 +99,7 @@ export default defineComponent({
                     }
                   }, [
                     h('i', {
-                      class: getIcon().DESIGN_FORM_WIDGET_ADD
+                      class: getIcon().FORM_DESIGN_WIDGET_ADD
                     })
                   ])
                 ]))

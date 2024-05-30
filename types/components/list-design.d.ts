@@ -1,5 +1,8 @@
 import { RenderFunction, SetupContext, Ref, ComponentPublicInstance, DefineComponent } from 'vue'
 import { defineVxeComponent, VxeComponentBaseOptions, VxeComponentEventParams, VxeComponentSizeType, ValueOf } from '@vxe-ui/core'
+import { VxeFormDesignDefines } from './form-design'
+import { VxeGridPropTypes } from './grid'
+import { VxeFormPropTypes } from './form'
 
 /* eslint-disable no-use-before-define,@typescript-eslint/ban-types */
 
@@ -24,10 +27,14 @@ export interface VxeListDesignPrivateRef extends ListDesignPrivateRef { }
 
 export namespace VxeListDesignPropTypes {
   export type Size = VxeComponentSizeType
+  export type Height = string | number
+  export type Config = null | VxeListDesignDefines.ListDesignConfig
 }
 
 export type VxeListDesignProps = {
   size?: VxeListDesignPropTypes.Size
+  height?: VxeListDesignPropTypes.Height
+  config?: VxeListDesignPropTypes.Config
 }
 
 export interface ListDesignPrivateComputed {
@@ -35,10 +42,14 @@ export interface ListDesignPrivateComputed {
 export interface VxeListDesignPrivateComputed extends ListDesignPrivateComputed { }
 
 export interface ListDesignReactData {
+  formDesignConfig: null | VxeFormDesignDefines.FormDesignConfig
+  searchFormItems: VxeFormPropTypes.Items
+  listTableColumns: VxeGridPropTypes.Columns
 }
 
 export interface ListDesignMethods {
   dispatchEvent(type: ValueOf<VxeListDesignEmits>, params: Record<string, any>, evnt: Event | null): void
+  setFormDesignConfig(config: VxeFormDesignDefines.FormDesignConfig): Promise<any>
 }
 export interface VxeListDesignMethods extends ListDesignMethods { }
 
@@ -51,6 +62,10 @@ export type VxeListDesignEmits = [
 export namespace VxeListDesignDefines {
   export interface ListDesignEventParams extends VxeComponentEventParams {
     $listDesign: VxeListDesignConstructor
+  }
+
+  export interface ListDesignConfig {
+
   }
 }
 

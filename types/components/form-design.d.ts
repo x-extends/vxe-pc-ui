@@ -76,8 +76,8 @@ export interface FormDesignMethods {
   createEmptyWidget (): VxeFormDesignDefines.WidgetObjItem
   getConfig (): VxeFormDesignDefines.FormDesignConfig
   loadConfig (config: VxeFormDesignDefines.FormDesignConfig): Promise<any>
-  getFormConfig(): VxeFormProps
-  loadFormConfig (formData: VxeFormProps): Promise<any>
+  getFormConfig(): VxeFormDesignPropTypes.FormData
+  loadFormConfig (formData: VxeFormDesignPropTypes.FormData): Promise<any>
   getFormData(): Record<string, any>
   getWidgetData (): VxeFormDesignDefines.WidgetObjItem[]
   loadWidgetData (widgetData: VxeFormDesignDefines.WidgetObjItem[]): Promise<any>

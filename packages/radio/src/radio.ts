@@ -1,7 +1,7 @@
 import { defineComponent, h, computed, inject, PropType } from 'vue'
 import XEUtils from 'xe-utils'
 import { getFuncText } from '../../ui/src/utils'
-import { getConfig, createEvent, useSize } from '@vxe-ui/core'
+import { getConfig, createEvent, useSize, getIcon } from '@vxe-ui/core'
 
 import type { VxeRadioPropTypes, VxeRadioConstructor, VxeRadioEmits, VxeRadioGroupConstructor, VxeRadioGroupPrivateMethods, RadioMethods, VxeFormConstructor, VxeFormPrivateMethods, VxeFormDefines } from '../../../types'
 
@@ -118,7 +118,7 @@ export default defineComponent({
           onClick: clickEvent
         }),
         h('span', {
-          class: ['vxe-radio--icon', isChecked ? 'vxe-icon-radio-checked-fill' : 'vxe-icon-radio-unchecked']
+          class: ['vxe-radio--icon', isChecked ? getIcon().RADIO_CHECKED : getIcon().RADIO_UNCHECKED]
         }),
         h('span', {
           class: 'vxe-radio--label'

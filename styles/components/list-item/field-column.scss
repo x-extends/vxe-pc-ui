@@ -1,0 +1,9 @@
+@import '../../helpers/mixin.scss';
+
+.vxe-list-design--field-checkbox-option {
+  @include createCheckboxIcon();
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  flex-grow: 1;
+}

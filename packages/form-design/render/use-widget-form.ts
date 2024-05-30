@@ -167,7 +167,7 @@ export function useWidgetPropDataSource (props: {
       }, hasFirstLevel && hasSub
         ? [
             h('i', {
-              class: isExpand ? getIcon().DESIGN_FORM_WIDGET_OPTION_EXPAND_CLOSE : getIcon().DESIGN_FORM_WIDGET_OPTION_EXPAND_OPEN,
+              class: isExpand ? getIcon().FORM_DESIGN_WIDGET_OPTION_EXPAND_CLOSE : getIcon().FORM_DESIGN_WIDGET_OPTION_EXPAND_OPEN,
               onClick () {
                 toggleExpandOption(item, gIndex)
               }
@@ -184,7 +184,7 @@ export function useWidgetPropDataSource (props: {
       h(VxeButtonComponent, {
         status: 'danger',
         mode: 'text',
-        icon: getIcon().DESIGN_FORM_WIDGET_DELETE
+        icon: getIcon().FORM_DESIGN_WIDGET_DELETE
       })
     ])
   }

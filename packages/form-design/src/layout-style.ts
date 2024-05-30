@@ -146,7 +146,7 @@ export default defineComponent({
               tabVNs.push(
                 h(VxeTabPaneComponent, {
                   title: getI18n('vxe.formDesign.widgetProp.displaySetting.pc'),
-                  icon: getIcon().DESIGN_FORM_PROPS_PC,
+                  icon: getIcon().FORM_DESIGN_PROPS_PC,
                   k: 1,
                   name: 1
                 }, {
@@ -160,7 +160,7 @@ export default defineComponent({
               tabVNs.push(
                 h(VxeTabPaneComponent, {
                   title: getI18n('vxe.formDesign.widgetProp.displaySetting.mobile'),
-                  icon: getIcon().DESIGN_FORM_PROPS_MOBILE,
+                  icon: getIcon().FORM_DESIGN_PROPS_MOBILE,
                   key: 2,
                   name: 2
                 }, {

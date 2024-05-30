@@ -54,7 +54,7 @@ export default defineComponent({
       refInput: refInputTarget
     }
 
-    const $$xePasswordInput = {
+    const $xePasswordInput = {
       xID,
       props,
       context,
@@ -146,7 +146,7 @@ export default defineComponent({
 
     passwordInputMethods = {
       dispatchEvent (type, params, evnt) {
-        emit(type, createEvent(evnt, { $input: $$xePasswordInput }, params))
+        emit(type, createEvent(evnt, { $passwordInput: $xePasswordInput }, params))
       },
 
       focus () {
@@ -169,7 +169,7 @@ export default defineComponent({
       }
     }
 
-    Object.assign($$xePasswordInput, passwordInputMethods)
+    Object.assign($xePasswordInput, passwordInputMethods)
 
     watch(() => props.modelValue, (val) => {
       reactData.inputValue = val
@@ -209,9 +209,9 @@ export default defineComponent({
       ])
     }
 
-    $$xePasswordInput.renderVN = renderVN
+    $xePasswordInput.renderVN = renderVN
 
-    return $$xePasswordInput
+    return $xePasswordInput
   },
   render () {
     return this.renderVN()
