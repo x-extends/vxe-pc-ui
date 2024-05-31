@@ -53,6 +53,7 @@ const componentList = [
   'form-item',
   'form-view',
   'icon',
+  'image',
   'input',
   'layout-aside',
   'layout-body',

@@ -110,5 +110,28 @@ declare module '@vxe-ui/core' {
     // list-design
     LIST_DESIGN_FIELD_SETTING?: string
     LIST_DESIGN_LIST_SETTING?: string
+
+    // upload
+    UPLOAD_FILE_ERROR?: string
+    UPLOAD_FILE_ADD?: string
+    UPLOAD_FILE_DELETE?: string
+    UPLOAD_IMAGE_RE_UPLOAD?: string
+    UPLOAD_IMAGE_ADD?: string
+    UPLOAD_IMAGE_DELETE?: string
+    UPLOAD_LOADING?: string
+    UPLOAD_FILE_TYPE_DEFAULT?: string
+    UPLOAD_FILE_TYPE_XLSX?: string
+    UPLOAD_FILE_TYPE_XLS?: string
+    UPLOAD_FILE_TYPE_PDF?: string
+    UPLOAD_FILE_TYPE_PNG?: string
+    UPLOAD_FILE_TYPE_GIF?: string
+    UPLOAD_FILE_TYPE_JPG?: string
+    UPLOAD_FILE_TYPE_JPEG?: string
+    UPLOAD_FILE_TYPE_MD?: string
+    UPLOAD_FILE_TYPE_PPD?: string
+    UPLOAD_FILE_TYPE_DOCX?: string
+    UPLOAD_FILE_TYPE_DOC?: string
+    UPLOAD_FILE_TYPE_ZIP?: string
+    UPLOAD_FILE_TYPE_TXT?: string
   }
 }

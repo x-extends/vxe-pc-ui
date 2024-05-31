@@ -33,6 +33,13 @@ export interface VxeGlobalStore {
  */
 export const globalStore: VxeGlobalStore
 
+// 兼容老版本
+export const modal: ModalController
+export const drawer: DrawerController
+export const print: VxePrintDefines.PrintFunction
+export const saveFile: VxeUploadDefines.SaveFileFunction
+export const readFile: VxeUploadDefines.ReadFileFunction
+
 declare module '@vxe-ui/core' {
   export interface VxeUIExport {
     uiVersion: string

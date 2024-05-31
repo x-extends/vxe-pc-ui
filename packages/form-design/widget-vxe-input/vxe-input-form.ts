@@ -33,6 +33,8 @@ export const WidgetVxeInputFormComponent = defineComponent({
         class: ['vxe-form-design--widget-render-form-wrapper', `widget-${kebabCaseName}`],
         vertical: true,
         span: 24,
+        titleBold: true,
+        titleOverflow: true,
         data: widget.options
       }, {
         default () {

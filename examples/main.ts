@@ -7,7 +7,7 @@ import './styles/index.scss'
 
 // 引入组件库
 import VxeUI from '../packages'
-import enUS from '@vxe-ui/core/lib/language/en-US'
+import enUS from '../packages/language/en-US'
 import '../styles/all.scss'
 
 VxeUI.setI18n('en-US', enUS)

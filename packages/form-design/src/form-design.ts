@@ -27,9 +27,9 @@ export default defineComponent({
       type: Array as PropType<VxeFormDesignPropTypes.Widgets>,
       default: () => XEUtils.clone(getConfig().formDesign.widgets) || []
     },
-    showPC: {
-      type: Boolean as PropType<VxeFormDesignPropTypes.ShowPC>,
-      default: () => getConfig().formDesign.showPC
+    showPc: {
+      type: Boolean as PropType<VxeFormDesignPropTypes.ShowPc>,
+      default: () => getConfig().formDesign.showPc
     },
     showMobile: {
       type: Boolean as PropType<VxeFormDesignPropTypes.ShowMobile>,
@@ -298,9 +298,9 @@ export default defineComponent({
     }
 
     const createSettingForm = () => {
-      const { formRender, showPC, showMobile } = props
+      const { formRender, showPc, showMobile } = props
       let formData: Record<string, any> = getDefaultSettingFormData({
-        pcVisible: showPC,
+        pcVisible: showPc,
         mobileVisible: showMobile
       })
       if (formRender) {

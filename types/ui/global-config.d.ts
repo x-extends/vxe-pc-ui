@@ -20,6 +20,7 @@ import { VxeFormGatherProps } from '../components/form-gather'
 import { VxeFormItemProps } from '../components/form-item'
 import { VxeFormViewProps } from '../components/form-view'
 import { VxeIconProps } from '../components/icon'
+import { VxeImageProps } from '../components/image'
 import { VxeInputProps } from '../components/input'
 import { VxeLayoutAsideProps } from '../components/layout-aside'
 import { VxeLayoutBodyProps } from '../components/layout-body'
@@ -88,6 +89,7 @@ declare module '@vxe-ui/core' {
     formItem?: VxeFormItemProps
     icon?: VxeIconProps
     formView?: VxeFormViewProps
+    image?: VxeImageProps
     input?: VxeInputProps
     layoutAside?: VxeLayoutAsideProps
     layoutBody?: VxeLayoutBodyProps

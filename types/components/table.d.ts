@@ -2356,7 +2356,13 @@ export interface TableMethods<DT = any> {
    */
   reloadData(data: any[]): Promise<void>
   /**
-   * 局部加载行数据并恢复到初始状态
+   * 修改行数据
+   * @param rows 行对象
+   * @param record 新数据
+   */
+  setRow(rows: any | any[], record?: any): Promise<void>
+  /**
+   * 修改行数据并恢复到初始状态，比如编辑之后需要修改成未编辑状态
    * @param rows 行对象
    * @param record 新数据
    * @param field 指定字段名

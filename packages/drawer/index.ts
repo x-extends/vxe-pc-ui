@@ -51,7 +51,7 @@ function closeDrawer (id?: VxeDrawerPropTypes.ID) {
   return Promise.all(restPromises)
 }
 
-const DrawerController = {
+export const DrawerController = {
   get: getDrawer,
   close: closeDrawer,
   open: openDrawer

@@ -37,7 +37,7 @@ export namespace VxeFormDesignPropTypes {
 
   export type FormData = Record<string, any>
 
-  export type ShowPC = boolean
+  export type ShowPc = boolean
   export type ShowMobile = boolean
   export interface FormRender {
     name: string
@@ -48,7 +48,7 @@ export type VxeFormDesignProps = {
   size?: VxeFormDesignPropTypes.Size
   height?: VxeFormDesignPropTypes.Height
   widgets?: VxeFormDesignPropTypes.Widgets
-  showPC?: VxeFormDesignPropTypes.ShowPC
+  showPc?: VxeFormDesignPropTypes.ShowPc
   showMobile?: VxeFormDesignPropTypes.ShowMobile
   formData?: VxeFormDesignPropTypes.FormData
   formRender?: VxeFormDesignPropTypes.FormRender

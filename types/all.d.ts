@@ -24,6 +24,7 @@ import VxeFormGather from './components/form-gather'
 import VxeFormItem from './components/form-item'
 import VxeFormView from './components/form-view'
 import VxeIcon from './components/icon'
+import VxeImage from './components/image'
 import VxeInput from './components/input'
 import VxeLayoutAside from './components/layout-aside'
 import VxeLayoutBody from './components/layout-body'
@@ -95,6 +96,7 @@ declare module '@vue/runtime-core' {
     VxeFormItem: typeof VxeFormItem
     VxeFormView: typeof VxeFormView
     VxeIcon: typeof VxeIcon
+    VxeImage: typeof VxeImage
     VxeInput: typeof VxeInput
     VxeLayoutAside: typeof VxeLayoutAside
     VxeLayoutBody: typeof VxeLayoutBody
@@ -167,6 +169,7 @@ export * from './components/form-gather'
 export * from './components/form-item'
 export * from './components/form-view'
 export * from './components/icon'
+export * from './components/image'
 export * from './components/input'
 export * from './components/layout-aside'
 export * from './components/layout-body'

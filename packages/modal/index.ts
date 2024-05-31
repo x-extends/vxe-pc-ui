@@ -85,7 +85,7 @@ function openMessage (content: VxeModalPropTypes.Content | VxeModalDefines.Modal
   }, content, '', options)
 }
 
-const ModalController = {
+export const ModalController = {
   get: getModal,
   close: closeModal,
   open: openModal,

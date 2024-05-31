@@ -52,13 +52,13 @@ $vxe-ui-status-error-color: #f56c6c;
   --vxe-ui-status-info-darken-color: #{darken($vxe-ui-status-info-color, 10%)};
   --vxe-ui-status-warning-darken-color: #{darken($vxe-ui-status-warning-color, 10%)};
   --vxe-ui-status-danger-darken-color: var(--vxe-ui-status-error-lighten-color);
-  --vxe-ui-status-error-lighten-color: #{lighten($vxe-ui-status-error-color, 10%)};
+  --vxe-ui-status-error-darken-color: #{lighten($vxe-ui-status-error-color, 10%)};
   
   --vxe-ui-status-success-disabled-color: #{lighten($vxe-ui-status-success-color, 20%)};
   --vxe-ui-status-info-disabled-color: #{lighten($vxe-ui-status-info-color, 20%)};
   --vxe-ui-status-warning-disabled-color: #{lighten($vxe-ui-status-warning-color, 20%)};
   --vxe-ui-status-danger-disabled-color: var(--vxe-ui-status-danger-disabled-color);
-  --vxe-ui-status-error-lighten-color: #{lighten($vxe-ui-status-error-color, 10%)};
+  --vxe-ui-status-error-disabled-color: #{lighten($vxe-ui-status-error-color, 10%)};
 
   /*layout*/
   --vxe-ui-layout-padding-half: 4px;
@@ -192,4 +192,10 @@ $vxe-ui-status-error-color: #f56c6c;
   --vxe-ui-tips-warning-background-color: var(--vxe-ui-tag-warning-background-color);
   --vxe-ui-tips-danger-background-color: var(--vxe-ui-tag-danger-background-color);
   --vxe-ui-tips-error-background-color: var(-vxe-ui-tag-error-background-color);
+
+  /*upload*/
+  --vxe-ui-upload-image-wh-default: 120px;
+  --vxe-ui-upload-image-wh-medium: 110px;
+  --vxe-ui-upload-image-wh-small: 100px;
+  --vxe-ui-upload-image-wh-mini: 90px;
 }

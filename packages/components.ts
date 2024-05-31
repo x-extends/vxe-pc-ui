@@ -17,13 +17,14 @@ import VxeCol from './col'
 import VxeCollapse from './collapse'
 import VxeCollapsePane from './collapse-pane'
 import VxeDateInput from './date-input'
-import VxeDrawer from './drawer'
+import VxeDrawer, { DrawerController } from './drawer'
 import VxeForm from './form'
 import VxeFormDesign from './form-design'
 import VxeFormGather from './form-gather'
 import VxeFormItem from './form-item'
 import VxeFormView from './form-view'
 import VxeIcon from './icon'
+import VxeImage from './image'
 import VxeInput from './input'
 import VxeLayoutAside from './layout-aside'
 import VxeLayoutBody from './layout-body'
@@ -36,7 +37,7 @@ import VxeListView from './list-view'
 import VxeList from './list'
 import VxeLoading from './loading'
 import VxeMenu from './menu'
-import VxeModal from './modal'
+import VxeModal, { ModalController } from './modal'
 import VxeNumberInput from './number-input'
 import VxeOptgroup from './optgroup'
 import VxeOption from './option'
@@ -61,6 +62,8 @@ import VxeTree from './tree'
 import VxeTreeSelect from './tree-select'
 import VxeUpload from './upload'
 
+import { saveLocalFile, readLocalFile } from './upload/src/util'
+
 const components = [
   VxeAnchor,
   VxeAnchorLink,
@@ -83,6 +86,7 @@ const components = [
   VxeFormItem,
   VxeFormView,
   VxeIcon,
+  VxeImage,
   VxeInput,
   VxeLayoutAside,
   VxeLayoutBody,
@@ -133,6 +137,12 @@ setI18n(defaultLanguage, zhCN)
 setLanguage(defaultLanguage)
 setTheme('light')
 
+// 兼容老版本
+export const modal = ModalController
+export const drawer = DrawerController
+export const saveFile = saveLocalFile
+export const readFile = readLocalFile
+
 export * from './ui'
 
 // Components
@@ -157,6 +167,7 @@ export * from './form-gather'
 export * from './form-item'
 export * from './form-view'
 export * from './icon'
+export * from './image'
 export * from './input'
 export * from './layout-aside'
 export * from './layout-body'

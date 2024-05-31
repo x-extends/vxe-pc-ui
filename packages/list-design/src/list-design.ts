@@ -5,7 +5,7 @@ import { getConfig, createEvent } from '@vxe-ui/core'
 import LayoutPreviewComponent from './layout-preview'
 import LayoutSettingComponent from './layout-setting'
 
-import type { VxeListDesignPropTypes, ListDesignReactData, ListDesignPrivateRef, VxeListDesignPrivateComputed, VxeListDesignConstructor, VxeListDesignPrivateMethods, ListDesignMethods, ListDesignPrivateMethods, VxeFormDesignDefines, VxeGridPropTypes } from '../../../types'
+import type { VxeListDesignDefines, VxeListDesignPropTypes, ListDesignReactData, ListDesignPrivateRef, VxeListDesignPrivateComputed, VxeListDesignConstructor, VxeListDesignPrivateMethods, ListDesignMethods, ListDesignPrivateMethods, VxeFormDesignDefines } from '../../../types'
 
 export default defineComponent({
   name: 'VxeListDesign',
@@ -21,6 +21,14 @@ export default defineComponent({
     config: {
       type: Object as PropType<VxeListDesignPropTypes.Config>,
       default: () => ({})
+    },
+    showPc: {
+      type: Boolean as PropType<VxeListDesignPropTypes.ShowPc>,
+      default: () => getConfig().listDesign.showPc
+    },
+    showMobile: {
+      type: Boolean as PropType<VxeListDesignPropTypes.ShowMobile>,
+      default: () => getConfig().listDesign.showMobile
     }
   },
   emits: [],
@@ -32,7 +40,6 @@ export default defineComponent({
     const refElem = ref<HTMLDivElement>()
 
     const reactData = reactive<ListDesignReactData>({
-      formDesignConfig: null,
       searchFormItems: [],
       listTableColumns: []
     })
@@ -58,7 +65,7 @@ export default defineComponent({
       return {
         title: widget.title,
         field: widget.field,
-        visible: false
+        visible: true
       }
     }
 
@@ -66,7 +73,7 @@ export default defineComponent({
      * 解析表单设计 JSON
      */
     const parseFormDesignColumns = (config: VxeFormDesignDefines.FormDesignConfig) => {
-      const tableColumns: VxeGridPropTypes.Columns = []
+      const tableColumns: VxeListDesignDefines.ListColumnObjItem[] = []
       if (config) {
         const { widgetData } = config
         if (widgetData) {
@@ -85,15 +92,75 @@ export default defineComponent({
       return tableColumns
     }
 
+    const configToSearchItems = (searchItems: VxeListDesignDefines.SearchItemObjItem[]): VxeListDesignDefines.SearchItemObjItem[] => {
+      if (searchItems) {
+        return searchItems.map(item => {
+          return {
+            field: item.field,
+            title: item.title
+          }
+        })
+      }
+      return []
+    }
+
+    const configToListColumns = (listColumns: VxeListDesignDefines.ListColumnObjItem[]): VxeListDesignDefines.ListColumnObjItem[] => {
+      if (listColumns) {
+        return listColumns.map(item => {
+          return {
+            field: item.field,
+            title: item.title,
+            visible: !!item.visible
+          }
+        })
+      }
+      return []
+    }
+
+    const setConfig = (config: VxeListDesignDefines.ListDesignConfig) => {
+      setSearchItems(config.searchItems)
+      reactData.listTableColumns = configToListColumns(config.listColumns)
+      return nextTick()
+    }
+
+    const getSearchItems = () => {
+      return reactData.searchFormItems
+    }
+
+    const setSearchItems = (searchItems: VxeListDesignDefines.SearchItemObjItem[]) => {
+      reactData.searchFormItems = configToSearchItems(searchItems)
+      return nextTick()
+    }
+
+    const getListColumns = () => {
+      return reactData.listTableColumns
+    }
+
+    const setListColumns = (listColumns: VxeListDesignDefines.ListColumnObjItem[]) => {
+      reactData.listTableColumns = configToListColumns(listColumns)
+      return nextTick()
+    }
+
     const listDesignMethods: ListDesignMethods = {
       dispatchEvent (type, params, evnt) {
         emit(type, createEvent(evnt, { $listDesign: $xeListDesign }, params))
       },
       setFormDesignConfig (config) {
-        reactData.formDesignConfig = config
         reactData.listTableColumns = parseFormDesignColumns(config)
         return nextTick()
-      }
+      },
+      getSearchItems,
+      setSearchItems,
+      getListColumns,
+      setListColumns,
+      getConfig () {
+        return {
+          formConfig: {},
+          searchItems: getSearchItems(),
+          listColumns: getListColumns()
+        }
+      },
+      setConfig
     }
 
     const listDesignPrivateMethods: ListDesignPrivateMethods = {

@@ -2,7 +2,9 @@ export default {
   vxe: {
     base: {
       pleaseInput: 'Please input',
-      pleaseSelect: 'Select'
+      pleaseSelect: 'Select',
+      comma: ',',
+      fullStop: '.'
     },
     loading: {
       text: 'Loading...'
@@ -181,6 +183,7 @@ export default {
       expCancel: 'Cancel'
     },
     modal: {
+      errTitle: 'Error',
       zoomIn: 'Maximization',
       zoomOut: 'Reduction',
       close: 'Close'
@@ -265,6 +268,22 @@ export default {
         }
       }
     },
+    upload: {
+      fileBtnText: 'Click or drag',
+      imgBtnText: 'Click or drag',
+      imgSizeHint: 'Single {0}',
+      imgCountHint: 'Up to {0}',
+      fileTypeHint: 'Support {0} file types',
+      fileSizeHint: 'Single file size does not exceed {0}',
+      fileCountHint: 'Up to {0} file can be uploaded',
+      overCountErr: 'You can only choose {0} file!',
+      overCountExtraErr: 'It has exceeded the maximum number {0}, and more than {0} file will be ignored!超出最大数量 1 个，超出的 1 个文件将被忽略！',
+      overSizeErr: 'The size of the file is not more than {0}}!',
+      reUpload: 'Re upload',
+      uploadProgress: 'Uploading {0}%',
+      uploadErr: 'Fail to upload',
+      uploadSuccess: 'Successfully upload'
+    },
     formDesign: {
       formName: 'Form name',
       defFormTitle: 'Unnamed form',
@@ -308,7 +327,9 @@ export default {
           VxeTextarea: 'Textarea',
           VxeSelect: 'Select',
           VxeRadioGroup: 'Radio',
-          VxeCheckboxGroup: 'Checkbox'
+          VxeCheckboxGroup: 'Checkbox',
+          VxeUploadFile: 'File',
+          VxeUploadImage: 'Image'
         }
       },
       widgetProp: {
@@ -349,6 +370,14 @@ export default {
           boldTitle: 'Font bold',
           fontNormal: 'Normal',
           fontBold: 'Bold'
+        },
+        uploadProp: {
+          limitFileCount: 'File quantity limitation',
+          limitFileSize: 'File size limitation',
+          multiFile: 'Allows multiple files',
+          limitImgCount: 'Image quantity limitation',
+          limitImgSize: 'Image size limitation',
+          multiImg: 'Allows multiple images'
         }
       }
     },

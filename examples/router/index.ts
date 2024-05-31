@@ -179,6 +179,11 @@ const routes: Array<RouteRecordRaw> = [
     path: '/component/print',
     name: 'PrintTest',
     component: () => import('../views/print/PrintTest.vue')
+  },
+  {
+    path: '/component/upload',
+    name: 'UploadTest',
+    component: () => import('../views/upload/UploadTest.vue')
   }
 ]
 

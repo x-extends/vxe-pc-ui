@@ -29,12 +29,16 @@ export namespace VxeListDesignPropTypes {
   export type Size = VxeComponentSizeType
   export type Height = string | number
   export type Config = null | VxeListDesignDefines.ListDesignConfig
+  export type ShowPc = boolean
+  export type ShowMobile = boolean
 }
 
 export type VxeListDesignProps = {
   size?: VxeListDesignPropTypes.Size
   height?: VxeListDesignPropTypes.Height
   config?: VxeListDesignPropTypes.Config
+  showPc?: VxeListDesignPropTypes.ShowPc
+  showMobile?: VxeListDesignPropTypes.ShowMobile
 }
 
 export interface ListDesignPrivateComputed {
@@ -42,14 +46,19 @@ export interface ListDesignPrivateComputed {
 export interface VxeListDesignPrivateComputed extends ListDesignPrivateComputed { }
 
 export interface ListDesignReactData {
-  formDesignConfig: null | VxeFormDesignDefines.FormDesignConfig
-  searchFormItems: VxeFormPropTypes.Items
-  listTableColumns: VxeGridPropTypes.Columns
+  searchFormItems: VxeListDesignDefines.SearchItemObjItem[]
+  listTableColumns: VxeListDesignDefines.ListColumnObjItem[]
 }
 
 export interface ListDesignMethods {
   dispatchEvent(type: ValueOf<VxeListDesignEmits>, params: Record<string, any>, evnt: Event | null): void
   setFormDesignConfig(config: VxeFormDesignDefines.FormDesignConfig): Promise<any>
+  getSearchItems(): VxeListDesignDefines.SearchItemObjItem[]
+  setSearchItems(searchItems: VxeListDesignDefines.SearchItemObjItem[]): Promise<any>
+  getListColumns(): VxeListDesignDefines.ListColumnObjItem[]
+  setListColumns(listColumns: VxeListDesignDefines.ListColumnObjItem[]): Promise<any>
+  getConfig (): VxeListDesignDefines.ListDesignConfig
+  setConfig(config: VxeListDesignDefines.ListDesignConfig): Promise<any>
 }
 export interface VxeListDesignMethods extends ListDesignMethods { }
 
@@ -65,7 +74,20 @@ export namespace VxeListDesignDefines {
   }
 
   export interface ListDesignConfig {
+    formConfig: any
+    searchItems: SearchItemObjItem[]
+    listColumns: ListColumnObjItem[]
+  }
 
+  export interface SearchItemObjItem {
+    field: string
+    title: string
+  }
+
+  export interface ListColumnObjItem {
+    field: string
+    title: string
+    visible: boolean
   }
 }
 

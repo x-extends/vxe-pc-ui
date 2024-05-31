@@ -71,12 +71,13 @@ setConfig({
   },
   formDesign: {
     height: 400,
-    showPC: true
+    showPc: true
   },
   formGather: {},
   formItem: {},
   grid: {},
   icon: {},
+  image: {},
   input: {
     // size: null,
     // transfer: false
@@ -98,7 +99,10 @@ setConfig({
   link: {
     underline: true
   },
-  listDesign: {},
+  listDesign: {
+    height: 400,
+    showPc: true
+  },
   list: {
     // size: null,
     scrollY: {
@@ -165,6 +169,12 @@ setConfig({
     theme: 'dark',
     enterDelay: 500,
     leaveDelay: 300
+  },
+  tree: {},
+  treeSelect: {},
+  upload: {
+    mode: 'all',
+    imageTypes: ['jpg', 'jpeg', 'png', 'gif']
   }
 })
 
@@ -244,7 +254,30 @@ setIcon({
 
   // list-design
   LIST_DESIGN_FIELD_SETTING: iconPrefix + 'custom-column',
-  LIST_DESIGN_LIST_SETTING: iconPrefix + 'menu'
+  LIST_DESIGN_LIST_SETTING: iconPrefix + 'menu',
+
+  // upload
+  UPLOAD_FILE_ERROR: iconPrefix + 'warning-circle-fill',
+  UPLOAD_FILE_ADD: iconPrefix + 'upload',
+  UPLOAD_FILE_DELETE: iconPrefix + 'delete',
+  UPLOAD_IMAGE_RE_UPLOAD: iconPrefix + 'repeat',
+  UPLOAD_IMAGE_ADD: iconPrefix + 'add',
+  UPLOAD_IMAGE_DELETE: iconPrefix + 'close',
+  UPLOAD_LOADING: iconPrefix + 'spinner roll vxe-loading--default-icon',
+  UPLOAD_FILE_TYPE_DEFAULT: iconPrefix + 'file',
+  UPLOAD_FILE_TYPE_XLSX: iconPrefix + 'file-excel',
+  UPLOAD_FILE_TYPE_XLS: iconPrefix + 'file-excel',
+  UPLOAD_FILE_TYPE_PDF: iconPrefix + 'file-pdf',
+  UPLOAD_FILE_TYPE_PNG: iconPrefix + 'file-image',
+  UPLOAD_FILE_TYPE_GIF: iconPrefix + 'file-image',
+  UPLOAD_FILE_TYPE_JPG: iconPrefix + 'file-image',
+  UPLOAD_FILE_TYPE_JPEG: iconPrefix + 'file-image',
+  UPLOAD_FILE_TYPE_MD: iconPrefix + 'file-markdown',
+  UPLOAD_FILE_TYPE_PPD: iconPrefix + 'file-ppt',
+  UPLOAD_FILE_TYPE_DOCX: iconPrefix + 'file-word',
+  UPLOAD_FILE_TYPE_DOC: iconPrefix + 'file-word',
+  UPLOAD_FILE_TYPE_ZIP: iconPrefix + 'file-zip',
+  UPLOAD_FILE_TYPE_TXT: iconPrefix + 'file-txt'
 })
 
 export * from '@vxe-ui/core'

@@ -65,9 +65,9 @@ export default defineComponent({
     const formDesignLayoutStyleMethod = {
       updatePreviewView,
       openStylePreview () {
-        const { showPC } = formDesignProps
+        const { showPc } = formDesignProps
         updatePreviewView()
-        reactData.activeTab = showPC ? 1 : 2
+        reactData.activeTab = showPc ? 1 : 2
         settingVisible.value = true
       }
     }
@@ -125,14 +125,14 @@ export default defineComponent({
     }
 
     const renderStyleSetting = () => {
-      const { showPC, showMobile } = formDesignProps
+      const { showPc, showMobile } = formDesignProps
       const { activeTab } = reactData
       return h('div', {
         class: 'vxe-form-design--layout-style-setting'
       }, [
         h(VxeTabsComponent, {
           modelValue: activeTab,
-          titleWidth: showPC && showMobile ? '50%' : '100%',
+          titleWidth: showPc && showMobile ? '50%' : '100%',
           titleAlign: 'center',
           padding: true,
           onChange: updatePreviewView,
@@ -142,7 +142,7 @@ export default defineComponent({
         }, {
           default () {
             const tabVNs: VNode[] = []
-            if (showPC) {
+            if (showPc) {
               tabVNs.push(
                 h(VxeTabPaneComponent, {
                   title: getI18n('vxe.formDesign.widgetProp.displaySetting.pc'),
@@ -177,7 +177,7 @@ export default defineComponent({
     }
 
     const renderVN = () => {
-      const { showPC, showMobile } = formDesignProps
+      const { showPc, showMobile } = formDesignProps
       return h(VxeDrawerComponent, {
         modelValue: settingVisible.value,
         title: getI18n('vxe.formDesign.styleSetting.title'),
@@ -194,7 +194,7 @@ export default defineComponent({
             class: 'vxe-form-design--layout-style'
           }, [
             renderStylePreview(),
-            showPC || showMobile ? renderStyleSetting() : createCommentVNode()
+            showPc || showMobile ? renderStyleSetting() : createCommentVNode()
           ])
         }
       })

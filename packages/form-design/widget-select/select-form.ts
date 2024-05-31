@@ -37,6 +37,7 @@ export const WidgetSelectFormComponent = defineComponent({
         vertical: true,
         span: 24,
         titleBold: true,
+        titleOverflow: true,
         data: widget.options
       }, {
         default () {
