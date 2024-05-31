@@ -52,8 +52,14 @@ export default defineComponent({
       type: Boolean as PropType<VxeUploadPropTypes.ShowErrorStatus>,
       default: () => getConfig().upload.showErrorStatus
     },
-    autoHiddenButton: Boolean as PropType<VxeUploadPropTypes.AutoHiddenButton>,
-    buttonText: String as PropType<VxeUploadPropTypes.ButtonText>,
+    autoHiddenButton: {
+      type: Boolean as PropType<VxeUploadPropTypes.AutoHiddenButton>,
+      default: () => getConfig().upload.autoHiddenButton
+    },
+    buttonText: {
+      type: String as PropType<VxeUploadPropTypes.ButtonText>,
+      default: () => getConfig().upload.buttonText
+    },
     hintText: String as PropType<VxeUploadPropTypes.HintText>,
     uploadMethod: Function as PropType<VxeUploadPropTypes.UploadMethod>
   },

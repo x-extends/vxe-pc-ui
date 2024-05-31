@@ -172,7 +172,7 @@ export const DefaultPCStyleFormComponent = defineComponent({
                     : h('div', {
                       class: 'vxe-form-design--widget-form-item-prop-list'
                     }, [
-                      h('span', {}, getI18n('vxe.formDesign.styleSetting.alignTitle')),
+                      h('span', {}, getI18n('vxe.formDesign.styleSetting.widthTitle')),
                       h(VxeInputComponent, {
                         class: 'vxe-form-design--widget-form-item-prop-width',
                         modelValue: formData.pcTitleWidth,
