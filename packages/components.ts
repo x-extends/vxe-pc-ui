@@ -25,6 +25,7 @@ import VxeFormItem from './form-item'
 import VxeFormView from './form-view'
 import VxeIcon from './icon'
 import VxeImage from './image'
+import VxeImagePreview from './image-preview'
 import VxeInput from './input'
 import VxeLayoutAside from './layout-aside'
 import VxeLayoutBody from './layout-body'
@@ -87,6 +88,7 @@ const components = [
   VxeFormView,
   VxeIcon,
   VxeImage,
+  VxeImagePreview,
   VxeInput,
   VxeLayoutAside,
   VxeLayoutBody,
@@ -168,6 +170,7 @@ export * from './form-item'
 export * from './form-view'
 export * from './icon'
 export * from './image'
+export * from './image-preview'
 export * from './input'
 export * from './layout-aside'
 export * from './layout-body'

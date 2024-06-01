@@ -10,8 +10,16 @@ import VxeUI from '../packages'
 import enUS from '../packages/language/en-US'
 import '../styles/all.scss'
 
+declare global {
+  interface Window {
+    axios: any;
+  }
+}
+
 VxeUI.setI18n('en-US', enUS)
 VxeUI.setLanguage((localStorage.getItem('VXE_LANGUAGE') as 'zh-CN' | 'en-US') || 'zh-CN')
+
+window.axios.defaults.baseURL = 'https://api.vxetable.cn/demo'
 
 const app = createApp(App)
 

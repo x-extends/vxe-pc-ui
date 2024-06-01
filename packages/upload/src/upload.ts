@@ -184,7 +184,20 @@ export default defineComponent({
 
     const updateFileList = () => {
       const { modelValue } = props
-      reactData.fileList = modelValue ? modelValue.slice(0) : []
+      const nameProp = computeNameProp.value
+      const typeProp = computeTypeProp.value
+      const urlProp = computeUrlProp.value
+      const sizeProp = computeSizeProp.value
+      reactData.fileList = modelValue
+        ? modelValue.map(item => {
+          const name = item[nameProp] || ''
+          item[nameProp] = name
+          item[typeProp] = item[typeProp] || getFileType(name)
+          item[urlProp] = item[urlProp] || ''
+          item[sizeProp] = item[sizeProp] || 0
+          return Object.assign({}, item)
+        })
+        : []
     }
 
     const getFileType = (name: string) => {
@@ -203,6 +216,21 @@ export default defineComponent({
 
     const emitModel = (value: VxeUploadDefines.FileObjItem[]) => {
       emit('update:modelValue', value ? value.slice(0) : [])
+    }
+
+    const getFileUrl = (item: VxeUploadDefines.FileObjItem) => {
+      const urlProp = computeUrlProp.value
+      return item[urlProp]
+    }
+
+    const handlePreviewImageEvent = (evnt: MouseEvent, item: VxeUploadDefines.FileObjItem, index: number) => {
+      const { fileList } = reactData
+      if (VxeUI.previewImage) {
+        VxeUI.previewImage({
+          urlList: fileList.map(item => getFileUrl(item)),
+          activeIndex: index
+        })
+      }
     }
 
     const handleUpload = (item: VxeUploadDefines.FileObjItem, file: File) => {
@@ -469,7 +497,6 @@ export default defineComponent({
     const renderImageMode = () => {
       const { buttonText, showErrorStatus, autoHiddenButton } = props
       const { fileList } = reactData
-      const urlProp = computeUrlProp.value
       const defHintText = computedDefHintText.value
       const overCount = computeOverCount.value
       const defaultSlot = slots.default
@@ -492,7 +519,12 @@ export default defineComponent({
             }]
           }, [
             h('div', {
-              class: 'vxe-upload--image-item-box'
+              class: 'vxe-upload--image-item-box',
+              onClick (evnt) {
+                if (!isLoading && !isError) {
+                  handlePreviewImageEvent(evnt, item, index)
+                }
+              }
             }, [
               isLoading && item._X_DATA
                 ? h('div', {
@@ -528,7 +560,7 @@ export default defineComponent({
                       ])
                       : h('img', {
                         class: 'vxe-upload--image-item-img',
-                        src: item[urlProp]
+                        src: getFileUrl(item)
                       })
                   )
                 : createCommentVNode(),

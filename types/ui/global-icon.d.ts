@@ -133,5 +133,17 @@ declare module '@vxe-ui/core' {
     UPLOAD_FILE_TYPE_DOC?: string
     UPLOAD_FILE_TYPE_ZIP?: string
     UPLOAD_FILE_TYPE_TXT?: string
+
+    // image-preview
+    IMAGE_PREVIEW_CLOSE?: string
+    IMAGE_PREVIEW_PREVIOUS?: string
+    IMAGE_PREVIEW_NEXT?: string
+    IMAGE_PREVIEW_PCT_FULL?: string
+    IMAGE_PREVIEW_PCT_1_1?: string
+    IMAGE_PREVIEW_ZOOM_IN?: string
+    IMAGE_PREVIEW_ZOOM_OUT?: string
+    IMAGE_PREVIEW_ROTATE_LEFT?: string
+    IMAGE_PREVIEW_ROTATE_RIGHT?: string
+    IMAGE_PREVIEW_PRINT?: string
   }
 }

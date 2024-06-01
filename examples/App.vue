@@ -65,7 +65,8 @@ const navList = ref([
   { name: 'RadioTest', routerLink: { name: 'RadioTest' } },
   { name: 'PagerTest', routerLink: { name: 'PagerTest' } },
   { name: 'PrintTest', routerLink: { name: 'PrintTest' } },
-  { name: 'UploadTest', routerLink: { name: 'UploadTest' } }
+  { name: 'UploadTest', routerLink: { name: 'UploadTest' } },
+  { name: 'ImageTest', routerLink: { name: 'ImageTest' } }
 ])
 
 const theme = ref((localStorage.getItem('VXE_THEME') as 'default' | 'dark') || 'default')

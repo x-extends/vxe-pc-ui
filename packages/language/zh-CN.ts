@@ -268,6 +268,8 @@ export default {
         }
       }
     },
+    imagePreview: {
+    },
     upload: {
       fileBtnText: '点击或拖拽上传',
       imgBtnText: '点击或拖拽上传',

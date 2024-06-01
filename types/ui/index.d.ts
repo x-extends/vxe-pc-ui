@@ -4,6 +4,7 @@ import { ModalController } from '../components/modal'
 import { DrawerController } from '../components/drawer'
 import { VxePrintDefines } from '../components/print'
 import { VxeUploadDefines } from '../components/upload'
+import { VxeImageDefines } from '../components/image'
 
 /**
  * 已废弃，请使用 setConfig
@@ -50,6 +51,7 @@ declare module '@vxe-ui/core' {
     print: VxePrintDefines.PrintFunction
     saveFile: VxeUploadDefines.SaveFileFunction
     readFile: VxeUploadDefines.ReadFileFunction
+    previewImage: VxeImageDefines.PreviewImageFunction
 
     /**
      * 已废弃，请使用 setConfig

@@ -163,7 +163,7 @@
   }
 }
 .vxe-upload--image-item-img {
-  width: 100%;
+  max-width: 100%;
   max-height: 100%;
   border-radius: var(--vxe-ui-base-border-radius);
 }

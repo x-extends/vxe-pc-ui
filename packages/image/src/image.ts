@@ -1,16 +1,25 @@
-import { defineComponent, ref, h, reactive } from 'vue'
+import { defineComponent, ref, h, reactive, PropType, computed } from 'vue'
+import { createEvent } from '@vxe-ui/core'
 import XEUtils from 'xe-utils'
+import { toCssUnit } from '../..//ui/src/dom'
 
-import type { ImageReactData, VxeImageEmits, ImagePrivateRef, VxeImagePrivateComputed, VxeImageConstructor, VxeImagePrivateMethods } from '../../../types'
+import type { VxeImagePropTypes, ImageReactData, VxeImageEmits, ImagePrivateRef, VxeImagePrivateComputed, VxeImageConstructor, VxeImagePrivateMethods, ImageMethods, ImagePrivateMethods } from '../../../types'
 
 export default defineComponent({
   name: 'VxeImage',
   props: {
+    src: String as PropType<VxeImagePropTypes.Src>,
+    alt: [String, Number] as PropType<VxeImagePropTypes.Alt>,
+    loading: String as PropType<VxeImagePropTypes.Loading>,
+    title: [String, Number] as PropType<VxeImagePropTypes.Title>,
+    width: String as PropType<VxeImagePropTypes.Width>,
+    height: String as PropType<VxeImagePropTypes.Height>
   },
   emits: [
+    'click'
   ] as VxeImageEmits,
   setup (props, context) {
-    const { slots } = context
+    const { emit } = context
 
     const xID = XEUtils.uniqueId()
 
@@ -22,6 +31,18 @@ export default defineComponent({
     const refMaps: ImagePrivateRef = {
       refElem
     }
+
+    const computeImgStyle = computed(() => {
+      const { width, height } = props
+      const style: Record<string, string> = {}
+      if (width) {
+        style.width = toCssUnit(width)
+      }
+      if (height) {
+        style.height = toCssUnit(height)
+      }
+      return style
+    })
 
     const computeMaps: VxeImagePrivateComputed = {
     }
@@ -36,12 +57,28 @@ export default defineComponent({
       getComputeMaps: () => computeMaps
     } as unknown as VxeImageConstructor & VxeImagePrivateMethods
 
+    const imageMethods: ImageMethods = {
+      dispatchEvent (type, params, evnt) {
+        emit(type, createEvent(evnt, { $image: $xeImage }, params))
+      }
+    }
+
+    const imagePrivateMethods: ImagePrivateMethods = {
+    }
+
+    Object.assign($xeImage, imageMethods, imagePrivateMethods)
+
     const renderVN = () => {
-      const defaultSlot = slots.default
-      return h('div', {
+      const { src, alt, loading } = props
+      const imgStyle = computeImgStyle.value
+      return h('img', {
         ref: refElem,
-        class: 'vxe-image'
-      }, defaultSlot ? defaultSlot({}) : [])
+        class: 'vxe-image',
+        src,
+        alt,
+        loading,
+        style: imgStyle
+      })
     }
 
     $xeImage.renderVN = renderVN

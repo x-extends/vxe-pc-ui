@@ -13,22 +13,27 @@
 import { ref } from 'vue'
 import { VxeUploadPropTypes } from '../../../types'
 
-const fileList = ref([])
-const imgList = ref([])
+const fileList = ref<VxeUploadPropTypes.ModelValue>([
+  { name: '673.gif', type: 'gif', url: 'https://vxeui.com/resource/img/bq673.gif' }
+])
+const imgList = ref([
+  { name: 'fj577.jpg', url: 'https://vxeui.com/resource/img/fj577.jpg' },
+  { name: 'fj581.jpeg', url: 'https://vxeui.com/resource/img/fj581.jpeg' },
+  { name: 'fj573.jpeg', url: 'https://vxeui.com/resource/img/fj573.jpeg' },
+  { name: 'fj562.png', url: 'https://vxeui.com/resource/img/fj562.png' },
+  { name: 'fj187.jpg', url: 'https://vxeui.com/resource/img/fj187.jpg' }
+])
 
 const uploadMethod: VxeUploadPropTypes.UploadMethod = ({ file, updateProgress }) => {
   const formData = new FormData()
   formData.append('file', file)
-  return window.axios.post('https://api.vxetable.cn/demo/api/pub/upload/single', formData, {
+  return window.axios.post('/api/pub/upload/single', formData, {
     onUploadProgress (progressEvent: any) {
       const percentCompleted = Math.round((progressEvent.loaded * 100) / progressEvent.total)
       updateProgress(percentCompleted)
     }
   }).then((res: any) => {
-    return {
-      ...res.data,
-      url: `https://api.vxetable.cn${res.data.url}`
-    }
+    return res.data
   })
 }
 </script>

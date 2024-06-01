@@ -1,5 +1,5 @@
 import { RenderFunction, SetupContext, Ref, ComponentPublicInstance, DefineComponent } from 'vue'
-import { defineVxeComponent, VxeComponentBaseOptions, VxeComponentEventParams } from '@vxe-ui/core'
+import { defineVxeComponent, VxeComponentBaseOptions, VxeComponentEventParams, ValueOf } from '@vxe-ui/core'
 
 /* eslint-disable no-use-before-define,@typescript-eslint/ban-types */
 
@@ -23,9 +23,21 @@ export interface ImagePrivateRef {
 export interface VxeImagePrivateRef extends ImagePrivateRef { }
 
 export namespace VxeImagePropTypes {
+  export type Src = string
+  export type Alt = number | string
+  export type Loading = '' | 'lazy'
+  export type Title = number | string
+  export type Width = number | string
+  export type Height = number | string
 }
 
 export type VxeImageProps = {
+  src?: VxeImagePropTypes.Src
+  alt?: VxeImagePropTypes.Alt
+  loading?: VxeImagePropTypes.Loading
+  title?: VxeImagePropTypes.Title
+  width?: VxeImagePropTypes.Width
+  height?: VxeImagePropTypes.Height
 }
 
 export interface ImagePrivateComputed {
@@ -36,18 +48,27 @@ export interface ImageReactData {
 }
 
 export interface ImageMethods {
+  dispatchEvent(type: ValueOf<VxeImageEmits>, params: Record<string, any>, evnt: Event | null): void
 }
 export interface VxeImageMethods extends ImageMethods { }
 
-export interface ImagePrivateMethods { }
+export interface ImagePrivateMethods {}
 export interface VxeImagePrivateMethods extends ImagePrivateMethods { }
 
-export type VxeImageEmits = []
+export type VxeImageEmits = [
+  'click'
+]
 
 export namespace VxeImageDefines {
   export interface ImageEventParams extends VxeComponentEventParams {
     $image: VxeImageConstructor
   }
+
+  export type PreviewImageFunction = (options: {
+    url?: string
+    urlList?: string[]
+    activeIndex?: number
+  }) => Promise<any>
 }
 
 export type VxeImageEventProps = {}

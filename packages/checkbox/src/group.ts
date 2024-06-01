@@ -3,7 +3,7 @@ import { getConfig, createEvent, useSize } from '@vxe-ui/core'
 import XEUtils from 'xe-utils'
 import VxeCheckboxComponent from './checkbox'
 
-import type { VxeCheckboxGroupConstructor, VxeCheckboxGroupEmits, VxeCheckboxGroupPrivateMethods, CheckboxGroupPrivateMethods, CheckboxPrivateComputed, CheckboxGroupMethods, VxeCheckboxGroupPropTypes, VxeFormConstructor, VxeFormPrivateMethods, VxeFormDefines } from '../../../types'
+import type { VxeCheckboxGroupConstructor, VxeCheckboxGroupEmits, VxeCheckboxGroupPrivateMethods, CheckboxGroupPrivateMethods, CheckboxGroupPrivateComputed, CheckboxGroupMethods, VxeCheckboxGroupPropTypes, VxeFormConstructor, VxeFormPrivateMethods, VxeFormDefines } from '../../../types'
 
 export default defineComponent({
   name: 'VxeCheckboxGroup',
@@ -53,7 +53,7 @@ export default defineComponent({
       return propsOpts.disabled || 'disabled'
     })
 
-    const computeMaps: CheckboxPrivateComputed = {
+    const computeMaps: CheckboxGroupPrivateComputed = {
       computeIsMaximize
     }
 

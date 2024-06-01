@@ -23,7 +23,7 @@ export interface UploadPrivateRef {
 export interface VxeUploadPrivateRef extends UploadPrivateRef { }
 
 export namespace VxeUploadPropTypes {
-  export type ModelValue = any[]
+  export type ModelValue = VxeUploadDefines.FileObjItem[]
   export type Mode = null | '' | 'all' | 'image'
   export type ImageTypes = string[]
   export type FileTypes = string[]

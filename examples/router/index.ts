@@ -184,6 +184,11 @@ const routes: Array<RouteRecordRaw> = [
     path: '/component/upload',
     name: 'UploadTest',
     component: () => import('../views/upload/UploadTest.vue')
+  },
+  {
+    path: '/component/image',
+    name: 'ImageTest',
+    component: () => import('../views/image/ImageTest.vue')
   }
 ]
 

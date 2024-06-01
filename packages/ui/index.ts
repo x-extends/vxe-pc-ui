@@ -277,7 +277,19 @@ setIcon({
   UPLOAD_FILE_TYPE_DOCX: iconPrefix + 'file-word',
   UPLOAD_FILE_TYPE_DOC: iconPrefix + 'file-word',
   UPLOAD_FILE_TYPE_ZIP: iconPrefix + 'file-zip',
-  UPLOAD_FILE_TYPE_TXT: iconPrefix + 'file-txt'
+  UPLOAD_FILE_TYPE_TXT: iconPrefix + 'file-txt',
+
+  // image-preview
+  IMAGE_PREVIEW_CLOSE: iconPrefix + 'close',
+  IMAGE_PREVIEW_PREVIOUS: iconPrefix + 'arrow-left',
+  IMAGE_PREVIEW_NEXT: iconPrefix + 'arrow-right',
+  IMAGE_PREVIEW_PCT_FULL: iconPrefix + 'pct-full',
+  IMAGE_PREVIEW_PCT_1_1: iconPrefix + 'pct-1-1',
+  IMAGE_PREVIEW_ZOOM_OUT: iconPrefix + 'search-zoom-out',
+  IMAGE_PREVIEW_ZOOM_IN: iconPrefix + 'search-zoom-in',
+  IMAGE_PREVIEW_ROTATE_LEFT: iconPrefix + 'rotate-left',
+  IMAGE_PREVIEW_ROTATE_RIGHT: iconPrefix + 'rotate-right',
+  IMAGE_PREVIEW_PRINT: iconPrefix + 'print'
 })
 
 export * from '@vxe-ui/core'
