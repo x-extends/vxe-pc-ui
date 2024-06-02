@@ -1,15 +1,60 @@
 @import './base.scss';
 
 [data-vxe-ui-theme="dark"] {
+  $vxe-ui-font-primary-color: #409eff;
+
+  $vxe-ui-status-success-color: #67c23a;
+  $vxe-ui-status-info-color: #909399;
+  $vxe-ui-status-warning-color: #e6a23c;
+  $vxe-ui-status-danger-color: #f56c6c;
+  $vxe-ui-status-error-color: #f56c6c;
+
   color-scheme: dark;
 
   $vxe-ui-font-color: #a0a3a7;
 
-  /*font*/
+  /*font color*/
   --vxe-ui-font-color: #{$vxe-ui-font-color};
   --vxe-ui-font-tinge-color: #33353b; // 浅色字体颜色
   --vxe-ui-font-lighten-color: #{lighten($vxe-ui-font-color, 10%)};
   --vxe-ui-font-darken-color: #{darken($vxe-ui-font-color, 10%)};
+  
+  /*font status color*/
+  --vxe-ui-font-primary-color: #409eff;
+  --vxe-ui-font-primary-tinge-color: #3a4653;
+  --vxe-ui-font-primary-lighten-color: #73b8ff;
+  --vxe-ui-font-primary-darken-color: #0d84ff;
+  --vxe-ui-font-primary-disabled-color: #a6d2ff;
+
+  --vxe-ui-status-success-color: #67c23a;
+  --vxe-ui-status-info-color: #909399;
+  --vxe-ui-status-warning-color: #e6a23c;
+  --vxe-ui-status-danger-color: #f56c6c;
+  --vxe-ui-status-error-color: #f56c6c;
+
+  --vxe-ui-status-success-tinge-color: #33412f;
+  --vxe-ui-status-info-tinge-color: #38383b;
+  --vxe-ui-status-warning-tinge-color: #332c22;
+  --vxe-ui-status-danger-tinge-color: var(--vxe-ui-status-error-tinge-color);
+  --vxe-ui-status-error-tinge-color: #372525;
+
+  --vxe-ui-status-success-lighten-color: #85cf60;
+  --vxe-ui-status-info-lighten-color: #abadb1;
+  --vxe-ui-status-warning-lighten-color: #ecb869;
+  --vxe-ui-status-danger-lighten-color: var(--vxe-ui-status-error-lighten-color);
+  --vxe-ui-status-error-lighten-color: #f89c9c;
+  
+  --vxe-ui-status-success-darken-color: #529b2e;
+  --vxe-ui-status-info-darken-color: #767980;
+  --vxe-ui-status-warning-darken-color: #d48a1b;
+  --vxe-ui-status-danger-darken-color: var(--vxe-ui-status-error-lighten-color);
+  --vxe-ui-status-error-darken-color: #f89c9c;
+  
+  --vxe-ui-status-success-disabled-color: #a3db87;
+  --vxe-ui-status-info-disabled-color: #c5c7ca;
+  --vxe-ui-status-warning-disabled-color: #f2cd96;
+  --vxe-ui-status-danger-disabled-color: var(--vxe-ui-status-danger-disabled-color);
+  --vxe-ui-status-error-disabled-color: #f89c9c;
   
   /*base*/
   --vxe-ui-base-popup-border-color: var(--vxe-ui-layout-background-color);
@@ -29,9 +74,6 @@
   /*modal*/
   --vxe-ui-modal-header-background-color: var(--vxe-ui-layout-background-color);
 
-  /*drawer*/
-  --vxe-ui-drawer-header-background-color: var(--vxe-ui-layout-background-color);
-
   /*tabs*/
   --vxe-ui-tabs-card-header-background-color: #1d1e1f;
 
@@ -47,12 +89,4 @@
   
   /*switch*/
   --vxe-ui-switch-close-background-color: #4C4D4F;
-
-  /*tag*/
-  --vxe-ui-tag-primary-background-color: #3a4653;
-  --vxe-ui-tag-success-background-color: #33412f;
-  --vxe-ui-tag-info-background-color: #38383b;
-  --vxe-ui-tag-warning-background-color: #332c22;
-  --vxe-ui-tag-danger-background-color: var(--vxe-ui-tag-error-background-color);
-  --vxe-ui-tag-error-background-color: #372525;
 }

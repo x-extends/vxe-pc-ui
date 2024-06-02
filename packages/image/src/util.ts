@@ -8,7 +8,7 @@ import type { VxeImageDefines } from '../../../types'
 export const openPreviewImage: VxeImageDefines.PreviewImageFunction = (options) => {
   if (VxeUI.modal) {
     const opts = Object.assign({}, options)
-    const { url, urlList, activeIndex } = opts
+    const { urlList, activeIndex } = opts
     const modalId = XEUtils.uniqueId('image-preview')
     VxeUI.modal.open({
       id: modalId,
@@ -24,7 +24,6 @@ export const openPreviewImage: VxeImageDefines.PreviewImageFunction = (options) 
           return h(VxeImagePreviewComponent, {
             modelValue: activeIndex,
             urlList,
-            url,
             onClose () {
               VxeUI.modal.close(modalId)
             }

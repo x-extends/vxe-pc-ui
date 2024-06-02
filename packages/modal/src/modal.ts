@@ -57,6 +57,7 @@ export default defineComponent({
     transfer: { type: Boolean as PropType<VxeModalPropTypes.Transfer>, default: () => getConfig().modal.transfer },
     storage: { type: Boolean as PropType<VxeModalPropTypes.Storage>, default: () => getConfig().modal.storage },
     storageKey: { type: String as PropType<VxeModalPropTypes.StorageKey>, default: () => getConfig().modal.storageKey },
+    padding: { type: Boolean as PropType<VxeModalPropTypes.Padding>, default: () => getConfig().modal.padding },
     animat: { type: Boolean as PropType<VxeModalPropTypes.Animat>, default: () => getConfig().modal.animat },
     size: { type: String as PropType<VxeModalPropTypes.Size>, default: () => getConfig().modal.size || getConfig().size },
     beforeHideMethod: { type: Function as PropType<VxeModalPropTypes.BeforeHideMethod>, default: () => getConfig().modal.beforeHideMethod },
@@ -876,7 +877,7 @@ export default defineComponent({
     }
 
     const renderVN = () => {
-      const { className, type, animat, loading, status, lockScroll, lockView, mask, resize } = props
+      const { className, type, animat, loading, status, lockScroll, padding, lockView, mask, resize } = props
       const { inited, zoomLocat, modalTop, contentVisible, visible } = reactData
       const vSize = computeSize.value
       return h(Teleport, {
@@ -888,6 +889,7 @@ export default defineComponent({
           class: ['vxe-modal--wrapper', `type--${type}`, className || '', {
             [`size--${vSize}`]: vSize,
             [`status--${status}`]: status,
+            'is--padding': padding,
             'is--animat': animat,
             'lock--scroll': lockScroll,
             'lock--view': lockView,

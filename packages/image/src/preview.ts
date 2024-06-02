@@ -1,6 +1,7 @@
-import { defineComponent, h, provide, PropType, reactive, computed, watch, onMounted, onUnmounted } from 'vue'
-import { VxeUI, createEvent, getIcon, globalEvents, GLOBAL_EVENT_KEYS } from '@vxe-ui/core'
+import { defineComponent, h, provide, PropType, reactive, computed, watch, onMounted, onUnmounted, createCommentVNode } from 'vue'
+import { VxeUI, getConfig, createEvent, getIcon, globalEvents, GLOBAL_EVENT_KEYS } from '@vxe-ui/core'
 import XEUtils from 'xe-utils'
+import { getDomNode } from '../..//ui/src/dom'
 
 import type { VxeImagePreviewConstructor, ImagePreviewReactData, VxeGlobalIcon, VxeImagePreviewEmits, VxeImagePreviewPrivateMethods, ImagePreviewPrivateMethods, ImagePreviewPrivateComputed, ImagePreviewMethods, VxeImagePreviewPropTypes } from '../../../types'
 
@@ -8,8 +9,15 @@ export default defineComponent({
   name: 'VxeImagePreview',
   props: {
     modelValue: Number as PropType<VxeImagePreviewPropTypes.ModelValue>,
-    url: String as PropType<VxeImagePreviewPropTypes.Url>,
-    urlList: Array as PropType<VxeImagePreviewPropTypes.UrlList>
+    urlList: Array as PropType<VxeImagePreviewPropTypes.UrlList>,
+    urlField: {
+      type: String as PropType<VxeImagePreviewPropTypes.UrlField>,
+      default: () => getConfig().imagePreview.urlField
+    },
+    marginSize: {
+      type: String as PropType<VxeImagePreviewPropTypes.MarginSize>,
+      default: () => getConfig().imagePreview.marginSize
+    }
   },
   emits: [
     'update:modelValue',
@@ -22,7 +30,9 @@ export default defineComponent({
     const xID = XEUtils.uniqueId()
 
     const reactData = reactive<ImagePreviewReactData>({
-      activeIndex: props.modelValue,
+      activeIndex: props.modelValue || 0,
+      targetHeight: 0,
+      targetWidth: 0,
       offsetPct11: false,
       offsetScale: 0,
       offsetRotate: 0,
@@ -30,25 +40,70 @@ export default defineComponent({
       offsetTop: 0
     })
 
+    const computeUrlProp = computed(() => {
+      return props.urlField || 'url'
+    })
+
+    const computeMarginSize = computed(() => {
+      return XEUtils.toNumber(props.marginSize || 0) || 16
+    })
+
     const computeImgList = computed(() => {
-      const { url, urlList } = props
-      let list: string[] = []
+      const { urlList } = props
+      const urlProp = computeUrlProp.value
       if (urlList && urlList.length) {
-        list = urlList
-      } else if (url) {
-        list = [url]
+        return urlList.map(item => {
+          if (XEUtils.isString(item)) {
+            return item
+          }
+          if (item[urlProp]) {
+            return item[urlProp]
+          }
+          return ''
+        })
       }
-      return list
+      return []
     })
 
     const computeImgTransform = computed(() => {
-      const { offsetScale, offsetRotate } = reactData
+      let { offsetScale, offsetRotate, offsetLeft, offsetTop } = reactData
       const stys: string[] = []
-      if (offsetScale) {
-        stys.push(`scale(${1 + offsetScale})`)
+      let targetScale = 1
+      if (targetScale) {
+        targetScale = 1 + offsetScale
+        stys.push(`scale(${targetScale})`)
       }
       if (offsetRotate) {
         stys.push(`rotate(${offsetRotate}deg)`)
+      }
+      if (offsetLeft || offsetTop) {
+        // 缩放与位移
+        offsetLeft /= targetScale
+        offsetTop /= targetScale
+
+        let targetOffsetLeft = offsetLeft
+        let targetOffsetTop = offsetTop
+        if (offsetRotate) {
+          // 转向与位移
+          switch (offsetRotate % 360) {
+            case 90:
+            case -270:
+              targetOffsetLeft = offsetTop
+              targetOffsetTop = -offsetLeft
+              break
+            case 180:
+            case -180:
+              targetOffsetLeft = -offsetLeft
+              targetOffsetTop = -offsetTop
+              break
+            case 270:
+            case -90:
+              targetOffsetLeft = -offsetTop
+              targetOffsetTop = offsetLeft
+              break
+          }
+        }
+        stys.push(`translate(${targetOffsetLeft}px, ${targetOffsetTop}px)`)
       }
       return stys.length ? stys.join(' ') : ''
     })
@@ -85,19 +140,46 @@ export default defineComponent({
     }
 
     const resetStyle = () => {
-      reactData.offsetPct11 = false
-      reactData.offsetScale = 0
-      reactData.offsetRotate = 0
-      reactData.offsetTop = 0
-      reactData.offsetLeft = 0
+      Object.assign(reactData, {
+        targetHeight: 0,
+        targetWidth: 0,
+        offsetPct11: false,
+        offsetScale: 0,
+        offsetRotate: 0,
+        offsetLeft: 0,
+        offsetTop: 0
+      })
     }
 
     const handleZoom = (isAdd: boolean) => {
       const { offsetScale } = reactData
+      let stepNum = 0.02
+      console.log(offsetScale)
+      if (offsetScale >= -0.6) {
+        stepNum = 0.04
+        if (offsetScale >= -0.4) {
+          stepNum = 0.07
+          if (offsetScale >= 0) {
+            stepNum = 0.1
+            if (offsetScale >= 3) {
+              stepNum = 0.2
+              if (offsetScale >= 8) {
+                stepNum = 0.3
+                if (offsetScale >= 18) {
+                  stepNum = 0.4
+                  if (offsetScale >= 38) {
+                    stepNum = 0.5
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
       if (isAdd) {
-        reactData.offsetScale = Number(Math.min(10, offsetScale + 0.1).toFixed(2))
+        reactData.offsetScale = Number(Math.min(50, offsetScale + stepNum).toFixed(2))
       } else {
-        reactData.offsetScale = Number(Math.max(-0.6, offsetScale - 0.1).toFixed(2))
+        reactData.offsetScale = Number(Math.max(-0.9, offsetScale - stepNum).toFixed(2))
       }
     }
 
@@ -117,6 +199,7 @@ export default defineComponent({
           activeIndex--
         }
       }
+      resetStyle()
       reactData.activeIndex = activeIndex
       emitModel(activeIndex)
     }
@@ -132,6 +215,7 @@ export default defineComponent({
     }
 
     const handlePct11 = () => {
+      resetStyle()
       reactData.offsetPct11 = true
     }
 
@@ -178,13 +262,87 @@ export default defineComponent({
       }
     }
 
+    const wheelEvent = (evnt: WheelEvent) => {
+      const delta = evnt.deltaY
+      if (delta > 0) {
+        handleZoom(false)
+      } else if (delta < 0) {
+        handleZoom(true)
+      }
+    }
+
+    const moveEvent = (evnt: MouseEvent) => {
+      const { offsetTop, offsetLeft } = reactData
+      evnt.preventDefault()
+      const domMousemove = document.onmousemove
+      const domMouseup = document.onmouseup
+      const startX = evnt.pageX
+      const startY = evnt.pageY
+      const marginSize = computeMarginSize.value
+      document.onmousemove = et => {
+        const { pageX, pageY } = et
+        const { visibleHeight, visibleWidth } = getDomNode()
+        et.preventDefault()
+        console.log(et.pageX)
+        // 限制边界值
+        if (pageX > marginSize && pageY > marginSize && pageX < (visibleWidth - marginSize) && pageY < (visibleHeight - marginSize)) {
+          reactData.offsetLeft = offsetLeft + pageX - startX
+          reactData.offsetTop = offsetTop + pageY - startY
+        }
+      }
+      document.onmouseup = () => {
+        document.onmousemove = domMousemove
+        document.onmouseup = domMouseup
+      }
+    }
+
     const handleGlobalKeydownEvent = (evnt: KeyboardEvent) => {
+      const hasCtrlKey = evnt.ctrlKey
+      const hasShiftKey = evnt.shiftKey
+      const isUpArrow = globalEvents.hasKey(evnt, GLOBAL_EVENT_KEYS.ARROW_UP)
+      const isDownArrow = globalEvents.hasKey(evnt, GLOBAL_EVENT_KEYS.ARROW_DOWN)
       const isLeftArrow = globalEvents.hasKey(evnt, GLOBAL_EVENT_KEYS.ARROW_LEFT)
       const isRightArrow = globalEvents.hasKey(evnt, GLOBAL_EVENT_KEYS.ARROW_RIGHT)
-      if (isLeftArrow) {
-        handleChange(false)
+      const isR = globalEvents.hasKey(evnt, GLOBAL_EVENT_KEYS.R)
+      const isP = globalEvents.hasKey(evnt, GLOBAL_EVENT_KEYS.P)
+      if (isUpArrow) {
+        evnt.preventDefault()
+        if (hasShiftKey) {
+          reactData.offsetTop -= 1
+        } else {
+          handleZoom(true)
+        }
+      } else if (isDownArrow) {
+        evnt.preventDefault()
+        if (hasShiftKey) {
+          reactData.offsetTop += 1
+        } else {
+          handleZoom(false)
+        }
+      } else if (isLeftArrow) {
+        evnt.preventDefault()
+        if (hasShiftKey) {
+          reactData.offsetLeft -= 1
+        } else {
+          handleChange(false)
+        }
       } else if (isRightArrow) {
-        handleChange(true)
+        evnt.preventDefault()
+        if (hasShiftKey) {
+          reactData.offsetLeft += 1
+        } else {
+          handleChange(true)
+        }
+      } else if (isR && hasCtrlKey) {
+        evnt.preventDefault()
+        if (hasShiftKey) {
+          handleRotateImg(false)
+        } else {
+          handleRotateImg(true)
+        }
+      } else if (isP && hasCtrlKey) {
+        evnt.preventDefault()
+        handlePrintImg()
       }
     }
 
@@ -207,7 +365,10 @@ export default defineComponent({
             ? {
                 transform: imgTransform
               }
-            : null
+            : null,
+          onMousedown (evnt) {
+            moveEvent(evnt)
+          }
         })
       }))
     }
@@ -247,26 +408,30 @@ export default defineComponent({
             class: 'vxe-image-preview--close-bg'
           })
         ]),
-        h('div', {
-          class: 'vxe-image-preview--previous-btn',
-          onClick () {
-            handleChange(false)
-          }
-        }, [
-          h('i', {
-            class: getIcon().IMAGE_PREVIEW_PREVIOUS
-          })
-        ]),
-        h('div', {
-          class: 'vxe-image-preview--next-btn',
-          onClick () {
-            handleChange(true)
-          }
-        }, [
-          h('i', {
-            class: getIcon().IMAGE_PREVIEW_NEXT
-          })
-        ]),
+        imgList.length > 1
+          ? h('div', {
+            class: 'vxe-image-preview--previous-btn',
+            onClick () {
+              handleChange(false)
+            }
+          }, [
+            h('i', {
+              class: getIcon().IMAGE_PREVIEW_PREVIOUS
+            })
+          ])
+          : createCommentVNode(),
+        imgList.length > 1
+          ? h('div', {
+            class: 'vxe-image-preview--next-btn',
+            onClick () {
+              handleChange(true)
+            }
+          }, [
+            h('i', {
+              class: getIcon().IMAGE_PREVIEW_NEXT
+            })
+          ])
+          : createCommentVNode(),
         h('div', {
           class: 'vxe-image-preview--operation-wrapper'
         }, [
@@ -289,7 +454,8 @@ export default defineComponent({
       return h('div', {
         class: ['vxe-image-preview', {
           'is--pct11': offsetPct11
-        }]
+        }],
+        onWheel: wheelEvent
       }, [
         renderImgWrapper(),
         renderBtnWrapper()

@@ -30,6 +30,7 @@ const commOutDir = 'lib'
 const coreName = 'ui'
 
 const componentList = [
+  'alert',
   'anchor',
   'anchor-link',
   'breadcrumb',

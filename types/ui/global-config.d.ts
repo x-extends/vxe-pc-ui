@@ -1,4 +1,5 @@
 // Vxe UI
+import { VxeAlertProps } from '../components/alert'
 import { VxeAnchorProps } from '../components/anchor'
 import { VxeAnchorLinkProps } from '../components/anchor-link'
 import { VxeBreadcrumbProps } from '../components/breadcrumb'
@@ -21,6 +22,7 @@ import { VxeFormItemProps } from '../components/form-item'
 import { VxeFormViewProps } from '../components/form-view'
 import { VxeIconProps } from '../components/icon'
 import { VxeImageProps } from '../components/image'
+import { VxeImagePreviewProps } from '../components/image-preview'
 import { VxeInputProps } from '../components/input'
 import { VxeLayoutAsideProps } from '../components/layout-aside'
 import { VxeLayoutBodyProps } from '../components/layout-body'
@@ -66,6 +68,7 @@ import { VxeToolbarProps } from '../components/toolbar'
 
 declare module '@vxe-ui/core' {
   export interface VxeGlobalConfig {
+    alert?: VxeAlertProps
     anchor?: VxeAnchorProps
     anchorLink?: VxeAnchorLinkProps
     breadcrumb?: VxeBreadcrumbProps
@@ -87,9 +90,10 @@ declare module '@vxe-ui/core' {
     formDesign?: VxeFormDesignProps
     formGather?: VxeFormGatherProps
     formItem?: VxeFormItemProps
-    icon?: VxeIconProps
     formView?: VxeFormViewProps
+    icon?: VxeIconProps
     image?: VxeImageProps
+    imagePreview?: VxeImagePreviewProps
     input?: VxeInputProps
     layoutAside?: VxeLayoutAsideProps
     layoutBody?: VxeLayoutBodyProps

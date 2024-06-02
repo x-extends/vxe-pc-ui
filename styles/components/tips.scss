@@ -2,32 +2,32 @@ $btnThemeList: (
   (
     name: "primary",
     borderColor: var(--vxe-ui-font-primary-color),
-    bgColor: var(--vxe-ui-tips-primary-background-color),
+    bgColor: var(--vxe-ui-font-primary-tinge-color)
   ),
   (
     name: "success",
     borderColor: var(--vxe-ui-status-success-color),
-    bgColor: var(--vxe-ui-tips-success-background-color),
+    bgColor: var(--vxe-ui-status-success-tinge-color)
   ),
   (
     name: "info",
     borderColor: var(--vxe-ui-status-info-color),
-    bgColor: var(--vxe-ui-tips-info-background-color),
+    bgColor: var(--vxe-ui-status-info-tinge-color)
   ),
   (
     name: "warning",
     borderColor: var(--vxe-ui-status-warning-color),
-    bgColor: var(--vxe-ui-tips-warning-background-color),
+    bgColor: var(--vxe-ui-status-warning-tinge-color)
   ),
   (
     name: "danger",
     borderColor: var(--vxe-ui-status-danger-color),
-    bgColor: var(--vxe-ui-tips-danger-background-color),
+    bgColor: var(--vxe-ui-status-danger-tinge-color)
   ),
   (
     name: "error",
     borderColor: var(--vxe-ui-status-error-color),
-    bgColor: var(--vxe-ui-tips-error-background-color),
+    bgColor: var(--vxe-ui-status-error-tinge-color)
   )
 );
 
@@ -36,8 +36,8 @@ $btnThemeList: (
   display: flex;
   flex-direction: row;
   color: var(--vxe-ui-font-color);
-  margin-bottom: var(--vxe-ui-layout-padding-double);
-  padding: var(--vxe-ui-layout-padding-default) var(--vxe-ui-layout-padding-threefold) var(--vxe-ui-layout-padding-double) var(--vxe-ui-layout-padding-threefold);
+  margin-bottom: var(--vxe-ui-layout-padding-default);
+  padding: var(--vxe-ui-layout-padding-default) var(--vxe-ui-layout-padding-double) var(--vxe-ui-layout-padding-double) var(--vxe-ui-layout-padding-double);
   font-size: var(--vxe-ui-font-size-default);
   &::after {
     content: "";
@@ -74,6 +74,7 @@ $btnThemeList: (
 .vxe-tips--icon {
   flex-shrink: 0;
   font-size: 1.2em;
+  line-height: 2em;
   padding-right: var(--vxe-ui-layout-padding-half);
 }
 .vxe-tips--body {
@@ -81,6 +82,6 @@ $btnThemeList: (
 }
 .vxe-tips--title {
   font-size: 1.1em;
-  margin-bottom: 0.7em;
+  line-height: 2em;
   font-weight: 700;
 }

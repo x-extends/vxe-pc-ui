@@ -65,7 +65,6 @@ export namespace VxeImageDefines {
   }
 
   export type PreviewImageFunction = (options: {
-    url?: string
     urlList?: string[]
     activeIndex?: number
   }) => Promise<any>

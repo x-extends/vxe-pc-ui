@@ -145,5 +145,12 @@ declare module '@vxe-ui/core' {
     IMAGE_PREVIEW_ROTATE_LEFT?: string
     IMAGE_PREVIEW_ROTATE_RIGHT?: string
     IMAGE_PREVIEW_PRINT?: string
+
+    // alert
+    ALERT_CLOSE?: string
+    ALERT_INFO?: string
+    ALERT_SUCCESS?: string
+    ALERT_WARNING?: string
+    ALERT_ERROR?: string
   }
 }

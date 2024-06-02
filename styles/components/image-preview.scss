@@ -23,7 +23,7 @@
 .vxe-image-preview--img-item {
   display: none;
   cursor: grabbing;
-  @include createAnimationTransition(transform, 0.3s);
+  // @include createAnimationTransition(transform, 0.3s);
   &.is--active {
     display: block;
   }
@@ -82,7 +82,7 @@
   justify-content: center;
   top: 50%;
   border-radius: 50%;
-  font-size: 2em;
+  font-size: 1.6em;
   padding: 0.5em;
   transform: translateY(-50%);
   background-color: rgba(0, 0, 0, 0.8);
@@ -117,11 +117,12 @@
   display: flex;
   flex-direction: row;
   align-items: center;
+  justify-content: center;
   font-size: 1.2em;
-  padding: 0 0.5em;
+  min-width: 2.5em;
 }
 .vxe-image-preview--operation-btn {
-  font-size: 2em;
+  font-size: 1.6em;
   padding: 0.5em;
   cursor: pointer;
   @include createAnimationTransition(all, 0.1s);
@@ -139,7 +140,9 @@
   &.vxe-modal--wrapper {
     &.type--modal {
       .vxe-modal--box {
+        border: 0;
         background-color: rgba(0, 0, 0, 0.1);
+        box-shadow: none;
       }
       .vxe-modal--content {
         padding: 0;

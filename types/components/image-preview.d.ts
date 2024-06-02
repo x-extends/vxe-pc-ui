@@ -26,12 +26,15 @@ export namespace VxeImagePreviewPropTypes {
   export type ModelValue = null | number
   export type Url = string
   export type UrlList = string[]
+  export type UrlField = string
+  export type MarginSize = string | number
 }
 
 export type VxeImagePreviewProps = {
   modelValue?: VxeImagePreviewPropTypes.ModelValue
-  url?: VxeImagePreviewPropTypes.Url
   urlList?: VxeImagePreviewPropTypes.UrlList
+  urlField?: VxeImagePreviewPropTypes.UrlField
+  marginSize?: VxeImagePreviewPropTypes.MarginSize
 }
 
 export interface ImagePreviewPrivateComputed {
@@ -41,6 +44,8 @@ export interface VxeImagePreviewPrivateComputed extends ImagePreviewPrivateCompu
 
 export interface ImagePreviewReactData {
   activeIndex: undefined | VxeImagePreviewPropTypes.ModelValue
+  targetHeight: number
+  targetWidth: number
   offsetPct11: boolean
   offsetScale: number
   offsetRotate: number

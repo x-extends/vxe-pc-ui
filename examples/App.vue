@@ -39,6 +39,7 @@ const navList = ref([
       { name: 'BreadcrumbTest', icon: 'vxe-icon-user-fill', routerLink: { name: 'BreadcrumbTest' } },
       { name: 'LinkTest', icon: 'vxe-icon-user-fill', routerLink: { name: 'LinkTest' } },
       { name: 'TipsTest', icon: 'vxe-icon-user-fill', routerLink: { name: 'TipsTest' } },
+      { name: 'AlertTest', icon: 'vxe-icon-user-fill', routerLink: { name: 'AlertTest' } },
       { name: 'ButtonTest', icon: 'vxe-icon-user-fill', routerLink: { name: 'ButtonTest' } },
       { name: 'AnchorTest', icon: 'vxe-icon-user-fill', routerLink: { name: 'AnchorTest' } },
       { name: 'LoadingTest', icon: 'vxe-icon-user-fill', routerLink: { name: 'LoadingTest' } },

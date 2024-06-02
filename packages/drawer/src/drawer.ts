@@ -41,6 +41,7 @@ export default defineComponent({
     height: [Number, String] as PropType<VxeDrawerPropTypes.Height>,
     zIndex: Number as PropType<VxeDrawerPropTypes.ZIndex>,
     transfer: { type: Boolean as PropType<VxeDrawerPropTypes.Transfer>, default: () => getConfig().drawer.transfer },
+    padding: { type: Boolean as PropType<VxeDrawerPropTypes.Padding>, default: () => getConfig().drawer.padding },
     size: { type: String as PropType<VxeDrawerPropTypes.Size>, default: () => getConfig().drawer.size || getConfig().size },
     beforeHideMethod: { type: Function as PropType<VxeDrawerPropTypes.BeforeHideMethod>, default: () => getConfig().drawer.beforeHideMethod },
     slots: Number as PropType<VxeDrawerPropTypes.Slots>
@@ -361,7 +362,7 @@ export default defineComponent({
     }
 
     const renderVN = () => {
-      const { className, position, loading, lockScroll, lockView, mask } = props
+      const { className, position, loading, lockScroll, padding, lockView, mask } = props
       const { inited, contentVisible, visible } = reactData
       const vSize = computeSize.value
       return h(Teleport, {
@@ -372,6 +373,7 @@ export default defineComponent({
           ref: refElem,
           class: ['vxe-drawer--wrapper', `pos--${position}`, className || '', {
             [`size--${vSize}`]: vSize,
+            'is--padding': padding,
             'lock--scroll': lockScroll,
             'lock--view': lockView,
             'is--mask': mask,

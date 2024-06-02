@@ -3,7 +3,7 @@ import XEUtils from 'xe-utils'
 import { getConfig } from '@vxe-ui/core'
 import { getSlotVNs } from '../..//ui/src/vn'
 
-import type { VxeTipsPropTypes, TipsReactData, TipsPrivateRef, VxeTipsPrivateComputed, VxeTipsConstructor, VxeTipsPrivateMethods } from '../../../types'
+import type { VxeTipsPropTypes, TipsReactData, VxeTipsEmits, TipsPrivateRef, VxeTipsPrivateComputed, VxeTipsConstructor, VxeTipsPrivateMethods } from '../../../types'
 
 export default defineComponent({
   name: 'VxeTips',
@@ -19,7 +19,8 @@ export default defineComponent({
       default: () => getConfig().tips.icon
     }
   },
-  emits: [],
+  emits: [
+  ] as VxeTipsEmits,
   setup (props, context) {
     const { slots } = context
 

@@ -1,6 +1,7 @@
 import { App } from 'vue'
 import { VxeGlobalConfig } from './ui'
 
+import VxeAlert from './components/alert'
 import VxeAnchor from './components/anchor'
 import VxeAnchorLink from './components/anchor-link'
 import VxeBreadcrumb from './components/breadcrumb'
@@ -74,6 +75,7 @@ export function install (app: App, options?: VxeGlobalConfig): void
 
 declare module '@vue/runtime-core' {
   export interface GlobalComponents {
+    VxeAlert: typeof VxeAlert
     VxeAnchor: typeof VxeAnchor
     VxeAnchorLink: typeof VxeAnchorLink
     VxeBreadcrumb: typeof VxeBreadcrumb
@@ -148,6 +150,7 @@ declare module '@vue/runtime-core' {
 export * from './ui'
 
 // Components
+export * from './components/alert'
 export * from './components/anchor'
 export * from './components/anchor-link'
 export * from './components/breadcrumb'

@@ -19,12 +19,11 @@
         background-color: rgba(0, 0, 0, 0.5);
       }
     }
-    
-  &.pos--left {
-    .vxe-drawer--box {
-      left: 0;
+    &.pos--left {
+      .vxe-drawer--box {
+        left: 0;
+      }
     }
-  }
     &.pos--right {
       .vxe-drawer--box {
         right: 0;
@@ -132,6 +131,11 @@
       height: 30%;
     }
   }
+  &.is--padding {
+    .vxe-drawer--content {
+      padding: 0.8em 1em;
+    }
+  }
 
   .vxe-drawer--box {
     display: flex;
@@ -146,7 +150,6 @@
   }
   .vxe-drawer--content {
     flex-grow: 1;
-    padding: 0.8em 1em;
     white-space: pre-line;
   }
   .vxe-drawer--header,
@@ -169,7 +172,6 @@
     font-size: 1.1em;
     font-weight: 700;
     border-bottom: 1px solid var(--vxe-ui-base-popup-border-color);
-    background-color: var(--vxe-ui-drawer-header-background-color);
     &.is--ellipsis {
       .vxe-drawer--header-title {
         overflow: hidden;

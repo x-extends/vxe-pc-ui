@@ -59,6 +59,7 @@ export namespace VxeDrawerPropTypes {
   export type DestroyOnClose = boolean
   export type ShowTitleOverflow = boolean
   export type Transfer = boolean
+  export type Padding = boolean
   export type BeforeHideMethod = (params: VxeDrawerDefines.DrawerVisibleParams) => Promise<any>
   export type Slots = VxeDrawerSlots
 }
@@ -90,6 +91,7 @@ export type VxeDrawerProps = {
   destroyOnClose?: VxeDrawerPropTypes.DestroyOnClose
   showTitleOverflow?: VxeDrawerPropTypes.ShowTitleOverflow
   transfer?: VxeDrawerPropTypes.Transfer
+  padding?: VxeDrawerPropTypes.Padding
   beforeHideMethod?: VxeDrawerPropTypes.BeforeHideMethod
   slots?: VxeDrawerPropTypes.Slots
 }

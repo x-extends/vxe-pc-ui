@@ -2,6 +2,7 @@ import { defineComponent, ref, h, reactive, PropType, computed } from 'vue'
 import { createEvent } from '@vxe-ui/core'
 import XEUtils from 'xe-utils'
 import { toCssUnit } from '../..//ui/src/dom'
+import { openPreviewImage } from './util'
 
 import type { VxeImagePropTypes, ImageReactData, VxeImageEmits, ImagePrivateRef, VxeImagePrivateComputed, VxeImageConstructor, VxeImagePrivateMethods, ImageMethods, ImagePrivateMethods } from '../../../types'
 
@@ -12,8 +13,8 @@ export default defineComponent({
     alt: [String, Number] as PropType<VxeImagePropTypes.Alt>,
     loading: String as PropType<VxeImagePropTypes.Loading>,
     title: [String, Number] as PropType<VxeImagePropTypes.Title>,
-    width: String as PropType<VxeImagePropTypes.Width>,
-    height: String as PropType<VxeImagePropTypes.Height>
+    width: [String, Number] as PropType<VxeImagePropTypes.Width>,
+    height: [String, Number] as PropType<VxeImagePropTypes.Height>
   },
   emits: [
     'click'
@@ -63,6 +64,16 @@ export default defineComponent({
       }
     }
 
+    const clickEvent = (evnt: MouseEvent) => {
+      const { src } = props
+      if (src) {
+        openPreviewImage({
+          urlList: [src]
+        })
+      }
+      imageMethods.dispatchEvent('click', {}, evnt)
+    }
+
     const imagePrivateMethods: ImagePrivateMethods = {
     }
 
@@ -77,7 +88,8 @@ export default defineComponent({
         src,
         alt,
         loading,
-        style: imgStyle
+        style: imgStyle,
+        onClick: clickEvent
       })
     }
 

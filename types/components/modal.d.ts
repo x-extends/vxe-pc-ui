@@ -90,6 +90,7 @@ export namespace VxeModalPropTypes {
   export type Storage = boolean
   export type StorageKey = string
   export type Animat = boolean
+  export type Padding = boolean
   export type BeforeHideMethod = (params: ModalVisibleParams) => Promise<any>
   export type Slots = VxeModalSlots
 }
@@ -138,6 +139,7 @@ export type VxeModalProps = {
   storage?: VxeModalPropTypes.Storage
   storageKey?: VxeModalPropTypes.StorageKey
   animat?: VxeModalPropTypes.Animat
+  padding?: VxeModalPropTypes.Padding
   beforeHideMethod?: VxeModalPropTypes.BeforeHideMethod
   slots?: VxeModalPropTypes.Slots
   /**

@@ -71,6 +71,11 @@ const routes: Array<RouteRecordRaw> = [
     component: () => import('../views/tips/TipsTest.vue')
   },
   {
+    path: '/component/alert',
+    name: 'AlertTest',
+    component: () => import('../views/alert/AlertTest.vue')
+  },
+  {
     path: '/component/anchor',
     name: 'AnchorTest',
     component: () => import('../views/anchor/AnchorTest.vue')

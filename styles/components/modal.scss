@@ -212,6 +212,11 @@
       color: var(--vxe-ui-font-disabled-color);
     }
   }
+  &.is--padding {
+    .vxe-modal--content {
+      padding: 0.8em 1em;
+    }
+  }
   .vxe-modal--status-wrapper {
     flex-shrink: 0;
     display: flex;
@@ -219,7 +224,6 @@
   }
   .vxe-modal--content {
     flex-grow: 1;
-    padding: 0.8em 1em;
     white-space: pre-line;
   }
   .vxe-modal--header,

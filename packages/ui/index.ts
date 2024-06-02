@@ -32,6 +32,7 @@ export const globalStore = {}
 VxeUI.globalStore = globalStore
 
 setConfig({
+  alert: {},
   anchor: {},
   anchorLink: {},
   breadcrumb: {
@@ -54,7 +55,8 @@ setConfig({
     lockView: true,
     mask: true,
     showTitleOverflow: true,
-    showClose: true
+    showClose: true,
+    padding: true
   },
   form: {
     // preventSubmit: false,
@@ -75,9 +77,11 @@ setConfig({
   },
   formGather: {},
   formItem: {},
+  formView: {},
   grid: {},
   icon: {},
   image: {},
+  imagePreview: {},
   input: {
     // size: null,
     // transfer: false
@@ -126,6 +130,7 @@ setConfig({
     showTitleOverflow: true,
     animat: true,
     showClose: true,
+    padding: true,
     draggable: true,
     showConfirmButton: null,
     // storage: false,
@@ -289,7 +294,14 @@ setIcon({
   IMAGE_PREVIEW_ZOOM_IN: iconPrefix + 'search-zoom-in',
   IMAGE_PREVIEW_ROTATE_LEFT: iconPrefix + 'rotate-left',
   IMAGE_PREVIEW_ROTATE_RIGHT: iconPrefix + 'rotate-right',
-  IMAGE_PREVIEW_PRINT: iconPrefix + 'print'
+  IMAGE_PREVIEW_PRINT: iconPrefix + 'print',
+
+  // alert
+  ALERT_CLOSE: iconPrefix + 'close',
+  ALERT_INFO: iconPrefix + 'info-circle-fill',
+  ALERT_SUCCESS: iconPrefix + 'success-circle-fill',
+  ALERT_WARNING: iconPrefix + 'warning-circle-fill',
+  ALERT_ERROR: iconPrefix + 'error-circle-fill'
 })
 
 export * from '@vxe-ui/core'

@@ -1,6 +1,6 @@
 {
   "name": "vxe-pc-ui",
-  "version": "1.8.13",
+  "version": "1.9.0",
   "description": "A vue based PC side component library",
   "scripts": {
     "update": "npm install --legacy-peer-deps",
@@ -25,7 +25,7 @@
   "style": "lib/style.css",
   "typings": "types/index.d.ts",
   "dependencies": {
-    "@vxe-ui/core": "^0.12.0"
+    "@vxe-ui/core": "^0.12.2"
   },
   "devDependencies": {
     "@types/resize-observer-browser": "^0.1.11",

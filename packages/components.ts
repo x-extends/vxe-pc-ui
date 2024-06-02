@@ -3,6 +3,7 @@ import { setI18n, setLanguage, setTheme, setConfig, VxeGlobalConfig } from '@vxe
 
 import zhCN from './language/zh-CN'
 
+import VxeAlert from './alert'
 import VxeAnchor from './anchor'
 import VxeAnchorLink from './anchor-link'
 import VxeBreadcrumb from './breadcrumb'
@@ -66,6 +67,7 @@ import VxeUpload from './upload'
 import { saveLocalFile, readLocalFile } from './upload/src/util'
 
 const components = [
+  VxeAlert,
   VxeAnchor,
   VxeAnchorLink,
   VxeBreadcrumb,
@@ -148,6 +150,7 @@ export const readFile = readLocalFile
 export * from './ui'
 
 // Components
+export * from './alert'
 export * from './anchor'
 export * from './anchor-link'
 export * from './breadcrumb'
