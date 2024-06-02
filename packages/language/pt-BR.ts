@@ -271,6 +271,7 @@ export default {
     upload: {
       fileBtnText: 'Click or drag',
       imgBtnText: 'Click or drag',
+      dragPlaceholder: 'Please drag and drop the file into this area to upload it.',
       imgSizeHint: 'Single {0}',
       imgCountHint: 'Up to {0}',
       fileTypeHint: 'Support {0} file types',

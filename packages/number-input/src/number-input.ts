@@ -20,7 +20,7 @@ export function toFloatValueFixed (inputValue: string | number, digitsValue: num
 export default defineComponent({
   name: 'VxeNumberInput',
   props: {
-    modelValue: [String, Number, Date] as PropType<VxeNumberInputPropTypes.ModelValue>,
+    modelValue: [String, Number] as PropType<VxeNumberInputPropTypes.ModelValue>,
     immediate: { type: Boolean as PropType<VxeNumberInputPropTypes.Immediate>, default: true },
     name: String as PropType<VxeNumberInputPropTypes.Name>,
     type: { type: String as PropType<VxeNumberInputPropTypes.Type>, default: 'number' },
@@ -214,7 +214,7 @@ export default defineComponent({
 
     const emitModel = (value: string, evnt: Event | { type: string }) => {
       reactData.inputValue = value
-      emit('update:modelValue', value)
+      emit('update:modelValue', value ? Number(value) : null)
       inputMethods.dispatchEvent('input', { value }, evnt as any)
       if (XEUtils.toValueString(props.modelValue) !== value) {
         inputMethods.dispatchEvent('change', { value }, evnt as any)
@@ -556,7 +556,7 @@ export default defineComponent({
       ])
     }
 
-    const rendePrefixIcon = () => {
+    const renderPrefixIcon = () => {
       const { prefixIcon } = props
       const prefixSlot = slots.prefix
       const icons = []
@@ -697,7 +697,7 @@ export default defineComponent({
       const inpMaxlength = computeInpMaxlength.value
       const inpPlaceholder = computeInpPlaceholder.value
       const childs = []
-      const prefix = rendePrefixIcon()
+      const prefix = renderPrefixIcon()
       const suffix = renderSuffixIcon()
       // 前缀图标
       if (prefix) {

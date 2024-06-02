@@ -1,9 +1,9 @@
-import { defineComponent, h, provide, PropType, reactive, computed, watch, onMounted, onUnmounted, createCommentVNode } from 'vue'
+import { defineComponent, h, provide, PropType, ref, reactive, computed, watch, onMounted, onUnmounted, createCommentVNode, onBeforeUnmount } from 'vue'
 import { VxeUI, getConfig, createEvent, getIcon, globalEvents, GLOBAL_EVENT_KEYS } from '@vxe-ui/core'
 import XEUtils from 'xe-utils'
-import { getDomNode } from '../..//ui/src/dom'
+import { getDomNode, addClass, removeClass } from '../..//ui/src/dom'
 
-import type { VxeImagePreviewConstructor, ImagePreviewReactData, VxeGlobalIcon, VxeImagePreviewEmits, VxeImagePreviewPrivateMethods, ImagePreviewPrivateMethods, ImagePreviewPrivateComputed, ImagePreviewMethods, VxeImagePreviewPropTypes } from '../../../types'
+import type { VxeImagePreviewConstructor, ImagePreviewReactData, ImagePreviewPrivateRef, VxeGlobalIcon, VxeImagePreviewEmits, VxeImagePreviewPrivateMethods, ImagePreviewPrivateMethods, ImagePreviewPrivateComputed, ImagePreviewMethods, VxeImagePreviewPropTypes } from '../../../types'
 
 export default defineComponent({
   name: 'VxeImagePreview',
@@ -13,6 +13,14 @@ export default defineComponent({
     urlField: {
       type: String as PropType<VxeImagePreviewPropTypes.UrlField>,
       default: () => getConfig().imagePreview.urlField
+    },
+    maskClosable: {
+      type: Boolean as PropType<VxeImagePreviewPropTypes.MaskClosable>,
+      default: () => getConfig().imagePreview.maskClosable
+    },
+    escClosable: {
+      type: Boolean as PropType<VxeImagePreviewPropTypes.EscClosable>,
+      default: () => getConfig().imagePreview.escClosable
     },
     marginSize: {
       type: String as PropType<VxeImagePreviewPropTypes.MarginSize>,
@@ -28,11 +36,14 @@ export default defineComponent({
     const { emit } = context
 
     const xID = XEUtils.uniqueId()
+    const refElem = ref<HTMLDivElement>()
+
+    const refMaps: ImagePreviewPrivateRef = {
+      refElem
+    }
 
     const reactData = reactive<ImagePreviewReactData>({
       activeIndex: props.modelValue || 0,
-      targetHeight: 0,
-      targetWidth: 0,
       offsetPct11: false,
       offsetScale: 0,
       offsetRotate: 0,
@@ -69,7 +80,7 @@ export default defineComponent({
       let { offsetScale, offsetRotate, offsetLeft, offsetTop } = reactData
       const stys: string[] = []
       let targetScale = 1
-      if (targetScale) {
+      if (offsetScale) {
         targetScale = 1 + offsetScale
         stys.push(`scale(${targetScale})`)
       }
@@ -118,6 +129,7 @@ export default defineComponent({
       context,
       reactData,
 
+      getRefMaps: () => refMaps,
       getComputeMaps: () => computeMaps
     } as unknown as VxeImagePreviewConstructor & VxeImagePreviewPrivateMethods
 
@@ -140,9 +152,9 @@ export default defineComponent({
     }
 
     const resetStyle = () => {
+      const elem = refElem.value
+      removeClass(elem, 'is--move')
       Object.assign(reactData, {
-        targetHeight: 0,
-        targetWidth: 0,
         offsetPct11: false,
         offsetScale: 0,
         offsetRotate: 0,
@@ -154,7 +166,6 @@ export default defineComponent({
     const handleZoom = (isAdd: boolean) => {
       const { offsetScale } = reactData
       let stepNum = 0.02
-      console.log(offsetScale)
       if (offsetScale >= -0.6) {
         stepNum = 0.04
         if (offsetScale >= -0.4) {
@@ -273,6 +284,7 @@ export default defineComponent({
 
     const moveEvent = (evnt: MouseEvent) => {
       const { offsetTop, offsetLeft } = reactData
+      const elem = refElem.value
       evnt.preventDefault()
       const domMousemove = document.onmousemove
       const domMouseup = document.onmouseup
@@ -283,7 +295,7 @@ export default defineComponent({
         const { pageX, pageY } = et
         const { visibleHeight, visibleWidth } = getDomNode()
         et.preventDefault()
-        console.log(et.pageX)
+        addClass(elem, 'is--move')
         // 限制边界值
         if (pageX > marginSize && pageY > marginSize && pageX < (visibleWidth - marginSize) && pageY < (visibleHeight - marginSize)) {
           reactData.offsetLeft = offsetLeft + pageX - startX
@@ -293,6 +305,7 @@ export default defineComponent({
       document.onmouseup = () => {
         document.onmousemove = domMousemove
         document.onmouseup = domMouseup
+        removeClass(elem, 'is--move')
       }
     }
 
@@ -346,6 +359,14 @@ export default defineComponent({
       }
     }
 
+    const handleClickMaskEvent = (evnt: MouseEvent) => {
+      if (props.maskClosable) {
+        if (evnt.target === evnt.currentTarget) {
+          imagePreviewMethods.dispatchEvent('close', {}, evnt)
+        }
+      }
+    }
+
     Object.assign($xeImagePreview, imagePreviewMethods, imagePreviewPrivateMethods)
 
     const renderImgWrapper = () => {
@@ -353,7 +374,8 @@ export default defineComponent({
       const imgList = computeImgList.value
       const imgTransform = computeImgTransform.value
       return h('div', {
-        class: 'vxe-image-preview--img-list'
+        class: 'vxe-image-preview--img-list',
+        onClick: handleClickMaskEvent
       }, imgList.map((url, index) => {
         const isActive = activeIndex === index
         return h('img', {
@@ -452,6 +474,7 @@ export default defineComponent({
     const renderVN = () => {
       const { offsetPct11 } = reactData
       return h('div', {
+        ref: refElem,
         class: ['vxe-image-preview', {
           'is--pct11': offsetPct11
         }],
@@ -471,6 +494,11 @@ export default defineComponent({
 
     onMounted(() => {
       globalEvents.on($xeImagePreview, 'keydown', handleGlobalKeydownEvent)
+    })
+
+    onBeforeUnmount(() => {
+      const elem = refElem.value
+      removeClass(elem, 'is--move')
     })
 
     onUnmounted(() => {

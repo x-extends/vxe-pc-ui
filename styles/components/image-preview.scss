@@ -11,6 +11,11 @@
       max-height: 100%;
     }
   }
+  &:not(.is--move) {
+    .vxe-image-preview--img-item {
+      @include createAnimationTransition(transform, 0.3s);
+    }
+  }
 }
 .vxe-image-preview--img-list {
   display: flex;
@@ -23,7 +28,6 @@
 .vxe-image-preview--img-item {
   display: none;
   cursor: grabbing;
-  // @include createAnimationTransition(transform, 0.3s);
   &.is--active {
     display: block;
   }

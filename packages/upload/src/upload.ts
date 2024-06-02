@@ -1,4 +1,4 @@
-import { defineComponent, ref, h, reactive, watch, computed, PropType, createCommentVNode } from 'vue'
+import { defineComponent, ref, h, reactive, watch, computed, PropType, createCommentVNode, onUnmounted } from 'vue'
 import XEUtils from 'xe-utils'
 import { VxeUI, getConfig, getI18n, getIcon, createEvent } from '@vxe-ui/core'
 import VxeButtonComponent from '../../button/src/button'
@@ -61,7 +61,8 @@ export default defineComponent({
       default: () => getConfig().upload.buttonText
     },
     hintText: String as PropType<VxeUploadPropTypes.HintText>,
-    uploadMethod: Function as PropType<VxeUploadPropTypes.UploadMethod>
+    uploadMethod: Function as PropType<VxeUploadPropTypes.UploadMethod>,
+    getUrlMethod: Function as PropType<VxeUploadPropTypes.GetUrlMethod>
   },
   emits: [
     'update:modelValue',
@@ -78,6 +79,7 @@ export default defineComponent({
     const refElem = ref<HTMLDivElement>()
 
     const reactData = reactive<UploadReactData>({
+      isDrag: false,
       fileList: []
     })
 
@@ -110,7 +112,7 @@ export default defineComponent({
     })
 
     const computeLimitMaxCount = computed(() => {
-      return XEUtils.toNumber(props.limitCount)
+      return props.multiple ? XEUtils.toNumber(props.limitCount) : 1
     })
 
     const computeOverCount = computed(() => {
@@ -183,21 +185,22 @@ export default defineComponent({
     } as unknown as VxeUploadConstructor & VxeUploadPrivateMethods
 
     const updateFileList = () => {
-      const { modelValue } = props
+      const { modelValue, multiple } = props
       const nameProp = computeNameProp.value
       const typeProp = computeTypeProp.value
       const urlProp = computeUrlProp.value
       const sizeProp = computeSizeProp.value
-      reactData.fileList = modelValue
+      const fileList = modelValue
         ? modelValue.map(item => {
           const name = item[nameProp] || ''
           item[nameProp] = name
           item[typeProp] = item[typeProp] || getFileType(name)
           item[urlProp] = item[urlProp] || ''
           item[sizeProp] = item[sizeProp] || 0
-          return Object.assign({}, item)
+          return item
         })
         : []
+      reactData.fileList = multiple ? fileList : (fileList.slice(0, 1))
     }
 
     const getFileType = (name: string) => {
@@ -219,8 +222,9 @@ export default defineComponent({
     }
 
     const getFileUrl = (item: VxeUploadDefines.FileObjItem) => {
+      const getUrlFn = props.getUrlMethod || getConfig().upload.getUrlMethod
       const urlProp = computeUrlProp.value
-      return item[urlProp]
+      return getUrlFn ? getUrlFn({ option: item }) : item[urlProp]
     }
 
     const handlePreviewImageEvent = (evnt: MouseEvent, item: VxeUploadDefines.FileObjItem, index: number) => {
@@ -233,7 +237,7 @@ export default defineComponent({
       }
     }
 
-    const handleUpload = (item: VxeUploadDefines.FileObjItem, file: File) => {
+    const handleUploadResult = (item: VxeUploadDefines.FileObjItem, file: File) => {
       const { showErrorStatus } = props
       const uploadFn = props.uploadMethod || getConfig().upload.uploadMethod
       if (uploadFn && item._X_DATA) {
@@ -268,111 +272,114 @@ export default defineComponent({
           s: '',
           p: 0
         })
-        handleUpload(item, file)
+        handleUploadResult(item, file)
       }
     }
-
-    const clickEvent = (evnt: MouseEvent) => {
-      const { multiple, imageTypes, fileTypes } = props
+    const uploadFile = (files: File[], evnt: Event) => {
+      const { multiple } = props
+      const { fileList } = reactData
       const uploadFn = props.uploadMethod || getConfig().upload.uploadMethod
-      const isImage = computeIsImage.value
       const nameProp = computeNameProp.value
       const typeProp = computeTypeProp.value
       const urlProp = computeUrlProp.value
       const sizeProp = computeSizeProp.value
+      const limitMaxSizeB = computeLimitMaxSizeB.value
+      const limitMaxCount = computeLimitMaxCount.value
+      const limitSizeUnit = computeLimitSizeUnit.value
+      let selectFiles = files
+
+      if (limitMaxCount) {
+        // 校验文件数量
+        if (fileList.length >= limitMaxCount) {
+          VxeUI.modal.message({
+            title: getI18n('vxe.modal.errTitle'),
+            status: 'error',
+            content: getI18n('vxe.upload.overCountErr', [limitMaxCount])
+          })
+          return
+        }
+        const overNum = selectFiles.length - (limitMaxCount - fileList.length)
+        if (overNum > 0) {
+          const overExtraList = selectFiles.slice(limitMaxCount - fileList.length)
+          VxeUI.modal.message({
+            title: getI18n('vxe.modal.errTitle'),
+            status: 'error',
+            slots: {
+              default () {
+                return h('div', {
+                  class: 'vxe-upload--file-message-over-error'
+                }, [
+                  h('div', {}, getI18n('vxe.upload.overCountExtraErr', [limitMaxCount, overNum])),
+                  h('div', {
+                    class: 'vxe-upload--file-message-over-extra'
+                  }, overExtraList.map((file, index) => {
+                    return h('div', {
+                      key: index,
+                      class: 'vxe-upload--file-message-over-extra-item'
+                    }, file.name)
+                  }))
+                ])
+              }
+            }
+          })
+        }
+        selectFiles = selectFiles.slice(0, limitMaxCount - fileList.length)
+      }
+
+      // 校验文件大小
+      if (limitMaxSizeB) {
+        for (let i = 0; i < files.length; i++) {
+          const file = files[0]
+          if (file.size > limitMaxSizeB) {
+            if (VxeUI.modal) {
+              VxeUI.modal.message({
+                title: getI18n('vxe.modal.errTitle'),
+                status: 'error',
+                content: getI18n('vxe.upload.overSizeErr', [limitSizeUnit])
+              })
+            }
+            return
+          }
+        }
+      }
+
+      const newFileList = multiple ? fileList : []
+      selectFiles.forEach(file => {
+        const { name } = file
+        const fileObj: VxeUploadDefines.FileObjItem = {
+          [nameProp]: name,
+          [typeProp]: getFileType(name),
+          [sizeProp]: file.size,
+          [urlProp]: ''
+        }
+        if (uploadFn) {
+          fileObj._X_DATA = {
+            k: XEUtils.uniqueId(),
+            f: file,
+            l: true,
+            s: '',
+            p: 0
+          }
+        }
+        const item = reactive(fileObj)
+        if (uploadFn) {
+          handleUploadResult(item, file)
+        }
+        newFileList.push(item)
+        uploadMethods.dispatchEvent('add', { option: item }, evnt)
+      })
+      reactData.fileList = newFileList
+      emitModel(newFileList)
+    }
+
+    const clickEvent = (evnt: MouseEvent) => {
+      const { multiple, imageTypes, fileTypes } = props
+      const isImage = computeIsImage.value
       readLocalFile({
         multiple,
         types: isImage ? imageTypes : fileTypes
       }).then(({ files }) => {
-        const { fileList } = reactData
-        const limitMaxSizeB = computeLimitMaxSizeB.value
-        const limitMaxCount = computeLimitMaxCount.value
-        const limitSizeUnit = computeLimitSizeUnit.value
-        let selectFiles = Array.from(files)
-
-        if (limitMaxCount) {
-          // 校验文件数量
-          if (fileList.length >= limitMaxCount) {
-            VxeUI.modal.message({
-              title: getI18n('vxe.modal.errTitle'),
-              status: 'error',
-              content: getI18n('vxe.upload.overCountErr', [limitMaxCount])
-            })
-            return
-          }
-          const overNum = selectFiles.length - (limitMaxCount - fileList.length)
-          if (overNum > 0) {
-            const overExtraList = selectFiles.slice(limitMaxCount - fileList.length)
-            console.log(overExtraList)
-            VxeUI.modal.message({
-              title: getI18n('vxe.modal.errTitle'),
-              status: 'error',
-              slots: {
-                default () {
-                  return h('div', {
-                    class: 'vxe-upload--file-message-over-error'
-                  }, [
-                    h('div', {}, getI18n('vxe.upload.overCountExtraErr', [limitMaxCount, overNum])),
-                    h('div', {
-                      class: 'vxe-upload--file-message-over-extra'
-                    }, overExtraList.map((file, index) => {
-                      return h('div', {
-                        key: index,
-                        class: 'vxe-upload--file-message-over-extra-item'
-                      }, file.name)
-                    }))
-                  ])
-                }
-              }
-            })
-          }
-          selectFiles = selectFiles.slice(0, limitMaxCount - fileList.length)
-        }
-
-        // 校验文件大小
-        if (limitMaxSizeB) {
-          for (let i = 0; i < files.length; i++) {
-            const file = files[0]
-            if (file.size > limitMaxSizeB) {
-              if (VxeUI.modal) {
-                VxeUI.modal.message({
-                  title: getI18n('vxe.modal.errTitle'),
-                  status: 'error',
-                  content: getI18n('vxe.upload.overSizeErr', [limitSizeUnit])
-                })
-              }
-              return
-            }
-          }
-        }
-
-        const newFileList = multiple ? fileList : []
-        selectFiles.forEach(file => {
-          const { name } = file
-          const fileObj: VxeUploadDefines.FileObjItem = reactive({
-            [nameProp]: name,
-            [typeProp]: getFileType(name),
-            [sizeProp]: file.size,
-            [urlProp]: ''
-          })
-          if (uploadFn) {
-            fileObj._X_DATA = {
-              k: XEUtils.uniqueId(),
-              f: file,
-              l: true,
-              s: '',
-              p: 0
-            }
-          }
-          const item = reactive(fileObj)
-          if (uploadFn) {
-            handleUpload(item, file)
-          }
-          newFileList.push(item)
-          uploadMethods.dispatchEvent('add', { option: item }, evnt)
-        })
-        reactData.fileList = newFileList
-        emitModel(newFileList)
+        uploadFile(files, evnt)
       }).catch(() => {
         // 错误文件类型
       })
@@ -383,6 +390,47 @@ export default defineComponent({
       fileList.splice(index, 1)
       emitModel(fileList)
       uploadMethods.dispatchEvent('remove', { option: item }, evnt)
+    }
+
+    const handleDragleaveEvent = (evnt: DragEvent) => {
+      const elem = refElem.value
+      const { clientX, clientY } = evnt
+      if (elem) {
+        const { x: targetX, y: targetY, height: targetHeight, width: targetWidth } = elem.getBoundingClientRect()
+        if (clientX < targetX || clientX > targetX + targetWidth || clientY < targetY || clientY > targetY + targetHeight) {
+          reactData.isDrag = false
+        }
+      }
+    }
+
+    const handleDragoverEvent = (evnt: DragEvent) => {
+      const dataTransfer = evnt.dataTransfer
+      if (dataTransfer) {
+        const { items } = dataTransfer
+        if (items && items.length) {
+          evnt.preventDefault()
+          reactData.isDrag = true
+        }
+      }
+    }
+
+    const handleDropEvent = (evnt: DragEvent) => {
+      const dataTransfer = evnt.dataTransfer
+      if (dataTransfer) {
+        const { items } = dataTransfer
+        if (items && items.length) {
+          const files: File[] = []
+          Array.from(items).forEach(item => {
+            const file = item.getAsFile()
+            if (file) {
+              files.push(file)
+            }
+          })
+          uploadFile(files, evnt)
+          evnt.preventDefault()
+        }
+      }
+      reactData.isDrag = false
     }
 
     const uploadPrivateMethods: UploadPrivateMethods = {
@@ -568,6 +616,7 @@ export default defineComponent({
                 ? h('div', {
                   class: 'vxe-upload--image-item-remove-icon',
                   onClick (evnt: MouseEvent) {
+                    evnt.stopPropagation()
                     handleRemoveEvent(evnt, item, index)
                   }
                 }, [
@@ -617,14 +666,24 @@ export default defineComponent({
 
     const renderVN = () => {
       const { showErrorStatus } = props
+      const { isDrag } = reactData
       const isImage = computeIsImage.value
       return h('div', {
         ref: refElem,
         class: ['vxe-upload', {
-          'show--error': showErrorStatus
-        }]
+          'show--error': showErrorStatus,
+          'is--drag': isDrag
+        }],
+        onDragover: handleDragoverEvent,
+        onDragleave: handleDragleaveEvent,
+        onDrop: handleDropEvent
       }, [
-        isImage ? renderImageMode() : renderAllMode()
+        isImage ? renderImageMode() : renderAllMode(),
+        isDrag
+          ? h('div', {
+            class: 'vxe-upload--drag-placeholder'
+          }, getI18n('vxe.upload.dragPlaceholder'))
+          : createCommentVNode()
       ])
     }
 
@@ -639,6 +698,10 @@ export default defineComponent({
     })
     watch(listFlag, () => {
       updateFileList()
+    })
+
+    onUnmounted(() => {
+      reactData.isDrag = false
     })
 
     updateFileList()

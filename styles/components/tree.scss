@@ -1,4 +1,46 @@
+@import '../helpers/mixin.scss';
+
 .vxe-tree {
   color: var(--vxe-ui-font-color);
   font-family: var(--vxe-ui-font-family);
+  &.row--trigger {
+    .vxe-tree--node-item-wrapper {
+      user-select: none;
+      cursor: pointer;
+    }
+  }
+  &.row--hover {
+    .vxe-tree--node-item-wrapper {
+      &:hover {
+        background-color: var(--vxe-ui-font-primary-tinge-color);
+      }
+    }
+  }
+}
+.vxe-tree--node-item-wrapper {
+  display: flex;
+  flex-direction: row;
+  line-height: 1.6em;
+}
+.vxe-tree--node-item-switcher {
+  width: 1.4em;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  user-select: none;
+}
+.vxe-tree--node-item-icon {
+  cursor: pointer;
+  & > i {
+    display: inline-flex;
+    @include createAnimationTransition(all, 0.2s);
+  }
+}
+.vxe-tree--node-item-label {
+  flex-grow: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }

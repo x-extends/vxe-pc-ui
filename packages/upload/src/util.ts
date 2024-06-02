@@ -38,7 +38,8 @@ export const readLocalFile: VxeUploadDefines.ReadFileFunction = (options) => {
     fileInput.multiple = !!opts.multiple
     fileInput.accept = isAllType ? '' : `.${types.join(', .')}`
     fileInput.onchange = (evnt) => {
-      const { files } = evnt.target as (EventTarget & { files: FileList })
+      const eventTarget = evnt.target as (EventTarget & { files: FileList })
+      const files = Array.from(eventTarget.files || [])
       const file = files[0]
       let errType = ''
       // 校验类型

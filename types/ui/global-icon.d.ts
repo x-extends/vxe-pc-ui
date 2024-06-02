@@ -152,5 +152,9 @@ declare module '@vxe-ui/core' {
     ALERT_SUCCESS?: string
     ALERT_WARNING?: string
     ALERT_ERROR?: string
+
+     // node
+    TREE_NODE_OPEN?: string
+    TREE_NODE_CLOSE?: string
   }
 }

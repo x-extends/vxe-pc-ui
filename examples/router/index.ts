@@ -194,6 +194,11 @@ const routes: Array<RouteRecordRaw> = [
     path: '/component/image',
     name: 'ImageTest',
     component: () => import('../views/image/ImageTest.vue')
+  },
+  {
+    path: '/component/tree',
+    name: 'TreeTest',
+    component: () => import('../views/tree/TreeTest.vue')
   }
 ]
 

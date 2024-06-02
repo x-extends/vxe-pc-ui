@@ -81,7 +81,9 @@ setConfig({
   grid: {},
   icon: {},
   image: {},
-  imagePreview: {},
+  imagePreview: {
+    escClosable: true
+  },
   input: {
     // size: null,
     // transfer: false
@@ -175,7 +177,9 @@ setConfig({
     enterDelay: 500,
     leaveDelay: 300
   },
-  tree: {},
+  tree: {
+    indent: 20
+  },
   treeSelect: {},
   upload: {
     mode: 'all',
@@ -301,7 +305,11 @@ setIcon({
   ALERT_INFO: iconPrefix + 'info-circle-fill',
   ALERT_SUCCESS: iconPrefix + 'success-circle-fill',
   ALERT_WARNING: iconPrefix + 'warning-circle-fill',
-  ALERT_ERROR: iconPrefix + 'error-circle-fill'
+  ALERT_ERROR: iconPrefix + 'error-circle-fill',
+
+  // node
+  TREE_NODE_OPEN: iconPrefix + 'caret-right rotate90',
+  TREE_NODE_CLOSE: iconPrefix + 'caret-right'
 })
 
 export * from '@vxe-ui/core'

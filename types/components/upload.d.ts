@@ -43,6 +43,9 @@ export namespace VxeUploadPropTypes {
     option: VxeUploadDefines.FileObjItem
     updateProgress: (percentNum: number) => void
   }) => any)
+  export type GetUrlMethod = undefined | ((params: {
+    option: VxeUploadDefines.FileObjItem
+  }) => any)
 }
 
 export type VxeUploadProps = {
@@ -65,6 +68,7 @@ export type VxeUploadProps = {
   autoHiddenButton?: VxeUploadPropTypes.AutoHiddenButton
   hintText?: VxeUploadPropTypes.HintText
   uploadMethod?: VxeUploadPropTypes.UploadMethod
+  getUrlMethod?: VxeUploadPropTypes.GetUrlMethod
 }
 
 export interface UploadPrivateComputed {
@@ -72,6 +76,7 @@ export interface UploadPrivateComputed {
 export interface VxeUploadPrivateComputed extends UploadPrivateComputed { }
 
 export interface UploadReactData {
+  isDrag: boolean
   fileList: VxeUploadDefines.FileObjItem[]
 }
 
@@ -108,7 +113,7 @@ export namespace VxeUploadDefines {
     message?: boolean
   }) => Promise<{
     status: boolean
-    files: FileList
+    files: File[]
     file: File
   }>
 

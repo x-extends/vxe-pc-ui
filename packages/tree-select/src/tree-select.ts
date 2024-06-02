@@ -1,7 +1,8 @@
 import { defineComponent, ref, h, reactive } from 'vue'
+import { createEvent } from '@vxe-ui/core'
 import XEUtils from 'xe-utils'
 
-import type { TreeSelectReactData, VxeTreeSelectEmits, TreeSelectPrivateRef, VxeTreeSelectPrivateComputed, VxeTreeSelectConstructor, VxeTreeSelectPrivateMethods } from '../../../types'
+import type { TreeSelectReactData, VxeTreeSelectEmits, TreeSelectPrivateRef, TreeSelectPrivateMethods, TreeSelectMethods, VxeTreeSelectPrivateComputed, VxeTreeSelectConstructor, VxeTreeSelectPrivateMethods } from '../../../types'
 
 export default defineComponent({
   name: 'VxeTreeSelect',
@@ -10,7 +11,7 @@ export default defineComponent({
   emits: [
   ] as VxeTreeSelectEmits,
   setup (props, context) {
-    const { slots } = context
+    const { emit, slots } = context
 
     const xID = XEUtils.uniqueId()
 
@@ -35,6 +36,17 @@ export default defineComponent({
       getRefMaps: () => refMaps,
       getComputeMaps: () => computeMaps
     } as unknown as VxeTreeSelectConstructor & VxeTreeSelectPrivateMethods
+
+    const treeSelectMethods: TreeSelectMethods = {
+      dispatchEvent (type, params, evnt) {
+        emit(type, createEvent(evnt, { $treeSelect: $xeTreeSelect }, params))
+      }
+    }
+
+    const treeSelectPrivateMethods: TreeSelectPrivateMethods = {
+    }
+
+    Object.assign($xeTreeSelect, treeSelectMethods, treeSelectPrivateMethods)
 
     const renderVN = () => {
       const defaultSlot = slots.default

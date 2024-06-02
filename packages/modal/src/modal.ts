@@ -58,10 +58,14 @@ export default defineComponent({
     storage: { type: Boolean as PropType<VxeModalPropTypes.Storage>, default: () => getConfig().modal.storage },
     storageKey: { type: String as PropType<VxeModalPropTypes.StorageKey>, default: () => getConfig().modal.storageKey },
     padding: { type: Boolean as PropType<VxeModalPropTypes.Padding>, default: () => getConfig().modal.padding },
-    animat: { type: Boolean as PropType<VxeModalPropTypes.Animat>, default: () => getConfig().modal.animat },
     size: { type: String as PropType<VxeModalPropTypes.Size>, default: () => getConfig().modal.size || getConfig().size },
     beforeHideMethod: { type: Function as PropType<VxeModalPropTypes.BeforeHideMethod>, default: () => getConfig().modal.beforeHideMethod },
-    slots: Object as PropType<VxeModalPropTypes.Slots>
+    slots: Object as PropType<VxeModalPropTypes.Slots>,
+
+    /**
+     * 已废弃
+     */
+    animat: { type: Boolean as PropType<VxeModalPropTypes.Animat>, default: () => getConfig().modal.animat }
   },
   emits: [
     'update:modelValue',

@@ -271,6 +271,7 @@ export default {
     upload: {
       fileBtnText: '点击或拖拽上传',
       imgBtnText: '点击或拖拽上传',
+      dragPlaceholder: '请把文件拖放到这个区域即可上传',
       imgSizeHint: '单张{0}',
       imgCountHint: '最多{0}张',
       fileTypeHint: '支持 {0} 文件类型',

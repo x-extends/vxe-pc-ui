@@ -24,7 +24,7 @@ export interface VxeNumberInputPrivateRef extends NumberInputPrivateRef { }
 
 export namespace VxeNumberInputPropTypes {
   export type Size = VxeComponentSizeType
-  export type ModelValue = string | number | Date | null
+  export type ModelValue = string | number | null
   export type ClassName = string
   export type Immediate = boolean
   export type Name = string
