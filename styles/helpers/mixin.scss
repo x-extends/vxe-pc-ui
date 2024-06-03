@@ -4,7 +4,7 @@
 
 @mixin createCheckboxIcon {
   .vxe-checkbox--icon {
-    font-size: 1.34em;
+    font-size: 1.22em;
   }
   .vxe-checkbox--icon {
     color: var(--vxe-ui-input-border-color);
@@ -46,7 +46,7 @@
 @mixin createRadioIcon {
   cursor: pointer;
   .vxe-radio--icon {
-    font-size: 1.4em;
+    font-size: 1.26em;
   }
   .vxe-radio--icon {
     color: var(--vxe-ui-input-border-color);

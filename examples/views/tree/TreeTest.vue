@@ -1,10 +1,10 @@
 <template>
   <div>
     <p>
-      <vxe-tree :data="treeList1"></vxe-tree>
+      <vxe-tree :data="treeList1" :checkbox-config="{checkStrictly: true}" show-checkbox show-radio></vxe-tree>
     </p>
     <p>
-      <vxe-tree :data="treeList2" trigger="row" is-hover></vxe-tree>
+      <vxe-tree :data="treeList2" trigger="row" v-model:checkbox-check-row-keys="checkboxCheckRowKeys" v-model:radio-check-row-key="checkboxCheckRowKey" checkStrictly is-hover is-current show-checkbox show-radio></vxe-tree>
     </p>
   </div>
 </template>
@@ -81,4 +81,7 @@ const treeList2 = ref([
   { title: '10567' },
   { title: '8003425' }
 ])
+
+const checkboxCheckRowKey = ref()
+const checkboxCheckRowKeys = ref([])
 </script>

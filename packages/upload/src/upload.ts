@@ -52,6 +52,10 @@ export default defineComponent({
       type: Boolean as PropType<VxeUploadPropTypes.ShowErrorStatus>,
       default: () => getConfig().upload.showErrorStatus
     },
+    showProgress: {
+      type: Boolean as PropType<VxeUploadPropTypes.ShowProgress>,
+      default: () => getConfig().upload.showProgress
+    },
     autoHiddenButton: {
       type: Boolean as PropType<VxeUploadPropTypes.AutoHiddenButton>,
       default: () => getConfig().upload.autoHiddenButton
@@ -439,7 +443,7 @@ export default defineComponent({
     Object.assign($xeUpload, uploadMethods, uploadPrivateMethods)
 
     const renderAllMode = () => {
-      const { buttonText, showErrorStatus, autoHiddenButton } = props
+      const { buttonText, showProgress, showErrorStatus, autoHiddenButton } = props
       const { fileList } = reactData
       const defaultSlot = slots.default
       const hintSlot = slots.hint
@@ -505,7 +509,7 @@ export default defineComponent({
                 })
               ])
               : createCommentVNode(),
-            isLoading && item._X_DATA
+            showProgress && isLoading && item._X_DATA
               ? h('div', {
                 class: 'vxe-upload--file-item-loading-text'
               }, getI18n('vxe.upload.uploadProgress', [item._X_DATA.p]))
@@ -543,7 +547,7 @@ export default defineComponent({
     }
 
     const renderImageMode = () => {
-      const { buttonText, showErrorStatus, autoHiddenButton } = props
+      const { buttonText, showProgress, showErrorStatus, autoHiddenButton } = props
       const { fileList } = reactData
       const defHintText = computedDefHintText.value
       const overCount = computeOverCount.value
@@ -585,9 +589,11 @@ export default defineComponent({
                       class: getIcon().UPLOAD_LOADING
                     })
                   ]),
-                  h('div', {
-                    class: 'vxe-upload--image-item-loading-text'
-                  }, getI18n('vxe.upload.uploadProgress', [item._X_DATA.p]))
+                  showProgress
+                    ? h('div', {
+                      class: 'vxe-upload--image-item-loading-text'
+                    }, getI18n('vxe.upload.uploadProgress', [item._X_DATA.p]))
+                    : createCommentVNode()
                 ])
                 : createCommentVNode(),
               !isLoading

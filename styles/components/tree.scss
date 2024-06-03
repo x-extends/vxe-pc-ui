@@ -12,6 +12,13 @@
   &.row--hover {
     .vxe-tree--node-item-wrapper {
       &:hover {
+        background-color: var(--vxe-ui-font-primary-hover-color);
+      }
+    }
+  }
+  .vxe-tree--node-item-row {
+    &.is--current {
+      & > .vxe-tree--node-item-wrapper {
         background-color: var(--vxe-ui-font-primary-tinge-color);
       }
     }
@@ -43,4 +50,12 @@
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+}
+.vxe-tree--checkbox-option {
+  @include createCheckboxIcon();
+  padding-right: 0.4em;
+}
+.vxe-tree--radio-option {
+  @include createRadioIcon();
+  padding-right: 0.4em;
 }

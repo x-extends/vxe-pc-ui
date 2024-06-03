@@ -178,7 +178,10 @@ setConfig({
     leaveDelay: 300
   },
   tree: {
-    indent: 20
+    indent: 20,
+    radioConfig: {
+      strict: true
+    }
   },
   treeSelect: {},
   upload: {

@@ -37,6 +37,7 @@ export namespace VxeUploadPropTypes {
   export type HintText = string
   export type ButtonText = string
   export type ShowErrorStatus = boolean
+  export type ShowProgress = boolean
   export type AutoHiddenButton = boolean
   export type UploadMethod = undefined | ((params: {
     file: File,
@@ -65,6 +66,7 @@ export type VxeUploadProps = {
   sizeField?: VxeUploadPropTypes.SizeField
   buttonText?: VxeUploadPropTypes.ButtonText
   showErrorStatus?: VxeUploadPropTypes.ShowErrorStatus
+  showProgress?: VxeUploadPropTypes.ShowProgress
   autoHiddenButton?: VxeUploadPropTypes.AutoHiddenButton
   hintText?: VxeUploadPropTypes.HintText
   uploadMethod?: VxeUploadPropTypes.UploadMethod
