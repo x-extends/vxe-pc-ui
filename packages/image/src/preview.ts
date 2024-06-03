@@ -59,6 +59,14 @@ export default defineComponent({
       return XEUtils.toNumber(props.marginSize || 0) || 16
     })
 
+    const computeScaleText = computed(() => {
+      const { offsetScale } = reactData
+      if (offsetScale) {
+        return `${XEUtils.ceil((1 + offsetScale) * 100)}%`
+      }
+      return '100%'
+    })
+
     const computeImgList = computed(() => {
       const { urlList } = props
       const urlProp = computeUrlProp.value
@@ -163,7 +171,7 @@ export default defineComponent({
       })
     }
 
-    const handleZoom = (isAdd: boolean) => {
+    const getOffsetZoomStep = () => {
       const { offsetScale } = reactData
       let stepNum = 0.02
       if (offsetScale >= -0.6) {
@@ -173,13 +181,22 @@ export default defineComponent({
           if (offsetScale >= 0) {
             stepNum = 0.1
             if (offsetScale >= 3) {
-              stepNum = 0.2
+              stepNum = 0.25
               if (offsetScale >= 8) {
-                stepNum = 0.3
-                if (offsetScale >= 18) {
-                  stepNum = 0.4
-                  if (offsetScale >= 38) {
-                    stepNum = 0.5
+                stepNum = 0.4
+                if (offsetScale >= 16) {
+                  stepNum = 0.6
+                  if (offsetScale >= 24) {
+                    stepNum = 0.9
+                    if (offsetScale >= 32) {
+                      stepNum = 1.3
+                      if (offsetScale >= 39) {
+                        stepNum = 1.9
+                        if (offsetScale >= 45) {
+                          stepNum = 2.5
+                        }
+                      }
+                    }
                   }
                 }
               }
@@ -187,8 +204,14 @@ export default defineComponent({
           }
         }
       }
+      return stepNum
+    }
+
+    const handleZoom = (isAdd: boolean) => {
+      const { offsetScale } = reactData
+      const stepNum = getOffsetZoomStep()
       if (isAdd) {
-        reactData.offsetScale = Number(Math.min(50, offsetScale + stepNum).toFixed(2))
+        reactData.offsetScale = Number(Math.min(49, offsetScale + stepNum).toFixed(2))
       } else {
         reactData.offsetScale = Number(Math.max(-0.9, offsetScale - stepNum).toFixed(2))
       }
@@ -411,6 +434,7 @@ export default defineComponent({
     const renderBtnWrapper = () => {
       const { activeIndex } = reactData
       const imgList = computeImgList.value
+      const scaleText = computeScaleText.value
 
       return h('div', {
         class: 'vxe-image-preview--btn-wrapper'
@@ -454,6 +478,9 @@ export default defineComponent({
             })
           ])
           : createCommentVNode(),
+        h('div', {
+          class: 'vxe-image-preview--operation-scale-pct'
+        }, scaleText),
         h('div', {
           class: 'vxe-image-preview--operation-wrapper'
         }, [

@@ -70,6 +70,7 @@
     }
   }
 }
+.vxe-image-preview--operation-scale-pct,
 .vxe-image-preview--close-btn,
 .vxe-image-preview--previous-btn,
 .vxe-image-preview--next-btn,
@@ -107,6 +108,16 @@
   right: 1vw;
 }
 
+.vxe-image-preview--operation-scale-pct {
+  right: 0.2em;
+  bottom: 0.2em;
+  font-size: 1em;
+  padding: 0.3em 0;
+  width: 4em;
+  border-radius: var(--vxe-ui-base-border-radius);
+  text-align: center;
+  background-color: rgba(0, 0, 0, 0.8);
+}
 .vxe-image-preview--operation-wrapper {
   display: flex;
   flex-direction: row;
