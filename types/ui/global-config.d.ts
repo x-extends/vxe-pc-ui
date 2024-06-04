@@ -42,6 +42,7 @@ import { VxeOptionProps } from '../components/option'
 import { VxePagerProps } from '../components/pager'
 import { VxePasswordInputProps } from '../components/password-input'
 import { VxePrintProps } from '../components/print'
+import { VxePrintPageBreakProps } from '../components/print-page-break'
 import { VxePulldownProps } from '../components/pulldown'
 import { VxeRadioProps } from '../components/radio'
 import { VxeRadioButtonProps } from '../components/radio-button'
@@ -113,6 +114,7 @@ declare module '@vxe-ui/core' {
     pager?: VxePagerProps
     passwordInput?: VxePasswordInputProps
     print?: VxePrintProps
+    printPageBreak?: VxePrintPageBreakProps
     pulldown?: VxePulldownProps
     radio?: VxeRadioProps
     radioButton?: VxeRadioButtonProps

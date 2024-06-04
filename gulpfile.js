@@ -74,6 +74,7 @@ const componentList = [
   'option',
   'pager',
   'password-input',
+  'print-page-break',
   'print',
   'pulldown',
   'radio',

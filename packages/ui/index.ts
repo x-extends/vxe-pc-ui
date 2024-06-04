@@ -149,6 +149,9 @@ setConfig({
     // pageSizes: [10, 15, 20, 50, 100],
     // layouts: ['PrevJump', 'PrevPage', 'Jump', 'PageCount', 'NextPage', 'NextJump', 'Sizes', 'Total']
   },
+  passwordInput: {},
+  print: {},
+  printPageBreak: {},
   pulldown: {},
   radio: {
     strict: true

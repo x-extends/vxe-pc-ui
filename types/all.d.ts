@@ -45,6 +45,7 @@ import VxeOptgroup from './components/optgroup'
 import VxeOption from './components/option'
 import VxePager from './components/pager'
 import VxePasswordInput from './components/password-input'
+import VxePrintPageBreak from './components/print-page-break'
 import VxePrint from './components/print'
 import VxePulldown from './components/pulldown'
 import VxeRadio from './components/radio'
@@ -119,6 +120,7 @@ declare module '@vue/runtime-core' {
     VxeOption: typeof VxeOption
     VxePager: typeof VxePager
     VxePasswordInput: typeof VxePasswordInput
+    VxePrintPageBreak: typeof VxePrintPageBreak
     VxePrint: typeof VxePrint
     VxePulldown: typeof VxePulldown
     VxeRadio: typeof VxeRadio
@@ -194,6 +196,7 @@ export * from './components/optgroup'
 export * from './components/option'
 export * from './components/pager'
 export * from './components/password-input'
+export * from './components/print-page-break'
 export * from './components/print'
 export * from './components/pulldown'
 export * from './components/radio'

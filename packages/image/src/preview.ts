@@ -259,8 +259,12 @@ export default defineComponent({
       const imgUrl = imgList[activeIndex || 0]
       if (VxeUI.print) {
         VxeUI.print({
-          customStyle: '@page {size: auto;margin: 0mm;}html,body{height:100%;}body{display: flex;flex-direction: row;align-items: center;justify-content: center;}',
-          content: `<img src="${imgUrl}" style="display: block;max-width:90%;max-height:90%;">`
+          align: 'center',
+          pageBreaks: [
+            {
+              bodyHtml: `<img src="${imgUrl}" style="max-width:100%;max-height:100%;">`
+            }
+          ]
         })
       }
     }

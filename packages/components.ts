@@ -45,6 +45,7 @@ import VxeOptgroup from './optgroup'
 import VxeOption from './option'
 import VxePager from './pager'
 import VxePasswordInput from './password-input'
+import VxePrintPageBreak from './print-page-break'
 import VxePrint from './print'
 import VxePulldown from './pulldown'
 import VxeRadio from './radio'
@@ -109,6 +110,7 @@ const components = [
   VxeOption,
   VxePager,
   VxePasswordInput,
+  VxePrintPageBreak,
   VxePrint,
   VxePulldown,
   VxeRadio,
@@ -192,6 +194,7 @@ export * from './optgroup'
 export * from './option'
 export * from './pager'
 export * from './password-input'
+export * from './print-page-break'
 export * from './print'
 export * from './pulldown'
 export * from './radio'

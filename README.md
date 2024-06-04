@@ -21,8 +21,9 @@
 
 ## 功能点
 
-[👀 UI](https://vxeui.com)  
+[👀 Vxe UI](https://vxeui.com)  
 
+* [x] alert 警告提示
 * [x] anchor 锚点
 * [x] anchor-link 锚点-链接
 * [x] breadcrumb 面包屑
@@ -39,13 +40,15 @@
 * [x] date-input 日期选择器
 * [x] drawer 抽屉
 * [ ] flow-design 流程设计器
-* [ ] flow-view 流程设计器-视图渲染
+* [*] flow-view 流程设计器-视图渲染
 * [x] form 表单
 * [x] form-design 表单设计器
 * [x] form-gather 表单-容器
 * [x] form-item 表单-项
 * [x] form-view 表单设计器-视图渲染
 * [x] icon 图标
+* [x] image 图片
+* [x] image-preview 图片预览
 * [x] input 输入框
 * [x] layout-aside 页面布局-左侧
 * [x] layout-body 页面布局-内容
@@ -77,11 +80,11 @@
 * [x] textarea 文本域
 * [x] tips 段落提示
 * [x] tooltip 文字提示
-* [ ] tree 树形组件
+* [*] tree 树形组件
 * [ ] tree-select 树形下拉框
-* [ ] upload 附件上传
+* [*] upload 附件上传
 
-[👀 Table](https://vxetable.cn)  
+[👀 Vxe Table](https://vxetable.cn)  
 
 * [x] table 表格
 * [x] column 表格-列
