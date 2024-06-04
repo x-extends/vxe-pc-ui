@@ -59,6 +59,14 @@ export default defineComponent({
       return XEUtils.toNumber(props.marginSize || 0) || 16
     })
 
+    const computeRotateText = computed(() => {
+      const { offsetRotate } = reactData
+      if (offsetRotate) {
+        return `${offsetRotate}°`
+      }
+      return '0°'
+    })
+
     const computeScaleText = computed(() => {
       const { offsetScale } = reactData
       if (offsetScale) {
@@ -438,6 +446,7 @@ export default defineComponent({
     const renderBtnWrapper = () => {
       const { activeIndex } = reactData
       const imgList = computeImgList.value
+      const rotateText = computeRotateText.value
       const scaleText = computeScaleText.value
 
       return h('div', {
@@ -483,8 +492,15 @@ export default defineComponent({
           ])
           : createCommentVNode(),
         h('div', {
-          class: 'vxe-image-preview--operation-scale-pct'
-        }, scaleText),
+          class: 'vxe-image-preview--operation-info'
+        }, [
+          h('div', {
+            class: 'vxe-image-preview--operation-deg'
+          }, rotateText),
+          h('div', {
+            class: 'vxe-image-preview--operation-pct'
+          }, scaleText)
+        ]),
         h('div', {
           class: 'vxe-image-preview--operation-wrapper'
         }, [

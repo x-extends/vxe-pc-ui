@@ -81,9 +81,9 @@
 * [x] textarea 文本域
 * [x] tips 段落提示
 * [x] tooltip 文字提示
-* [*] tree 树形组件
+* [x] tree 树形组件
 * [ ] tree-select 树形下拉框
-* [*] upload 附件上传
+* [x] upload 附件上传
 
 [👀 Vxe Table](https://vxetable.cn)  
 
