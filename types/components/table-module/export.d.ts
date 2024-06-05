@@ -44,6 +44,9 @@ export interface TableExportMethods<D = any> {
    * @param options 参数
    */
   print: PrintFunction
+  getPrintHtml(options?: VxeTablePropTypes.PrintConfig): Promise<{
+    html: string
+  }>
   /**
    * 打开高级打印
    * @param options 参数

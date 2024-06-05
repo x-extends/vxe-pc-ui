@@ -3,12 +3,15 @@ import { renderer } from '@vxe-ui/core'
 
 import { getWidgetTextConfig, WidgetTextViewComponent, WidgetTextFormComponent } from '../widget-text'
 import { getWidgetRowConfig, WidgetRowEditComponent, WidgetRowViewComponent, WidgetRowFormComponent } from '../widget-row'
+// import { getWidgetSublistConfig, WidgetSublistEditComponent, WidgetSublistViewComponent, WidgetSublistFormComponent } from '../widget-sublist'
 
 import { getWidgetInputConfig, WidgetInputViewComponent, WidgetInputFormComponent } from '../widget-input'
 import { getWidgetTextareaConfig, WidgetTextareaViewComponent, WidgetTextareaFormComponent } from '../widget-textarea'
 import { getWidgetSelectConfig, WidgetSelectViewComponent, WidgetSelectFormComponent } from '../widget-select'
 
 import { getWidgetVxeInputConfig, WidgetVxeInputViewComponent, WidgetVxeInputFormComponent } from '../widget-vxe-input'
+import { getWidgetVxeNumberInputConfig, WidgetVxeNumberInputViewComponent, WidgetVxeNumberInputFormComponent } from '../widget-vxe-number-input'
+import { getWidgetVxeDateInputConfig, WidgetVxeDateInputViewComponent, WidgetVxeDateInputFormComponent } from '../widget-vxe-date-input'
 import { getWidgetVxeTextareaConfig, WidgetVxeTextareaViewComponent, WidgetVxeTextareaFormComponent } from '../widget-vxe-textarea'
 import { getWidgetVxeSwitchConfig, WidgetVxeSwitchViewComponent, WidgetVxeSwitchFormComponent } from '../widget-vxe-switch'
 import { getWidgetVxeSelectConfig, WidgetVxeSelectViewComponent, WidgetVxeSelectFormComponent } from '../widget-vxe-select'
@@ -42,6 +45,18 @@ renderer.mixin({
       return h(WidgetRowFormComponent, { renderOpts, renderParams })
     }
   },
+  // sublist: {
+  //   createFormDesignWidgetConfig: getWidgetSublistConfig,
+  //   renderFormDesignWidgetEdit (renderOpts, renderParams) {
+  //     return h(WidgetSublistEditComponent, { renderOpts, renderParams })
+  //   },
+  //   renderFormDesignWidgetView (renderOpts, renderParams) {
+  //     return h(WidgetSublistViewComponent, { renderOpts, renderParams })
+  //   },
+  //   renderFormDesignWidgetFormView (renderOpts, renderParams) {
+  //     return h(WidgetSublistFormComponent, { renderOpts, renderParams })
+  //   }
+  // },
   input: {
     createFormDesignWidgetConfig: getWidgetInputConfig,
     renderFormDesignWidgetView (renderOpts, renderParams) {
@@ -78,13 +93,22 @@ renderer.mixin({
       return h(WidgetVxeInputFormComponent, { renderOpts, renderParams })
     }
   },
-  VxeSwitch: {
-    createFormDesignWidgetConfig: getWidgetVxeSwitchConfig,
+  VxeNumberInput: {
+    createFormDesignWidgetConfig: getWidgetVxeNumberInputConfig,
     renderFormDesignWidgetView (renderOpts, renderParams) {
-      return h(WidgetVxeSwitchViewComponent, { renderOpts, renderParams })
+      return h(WidgetVxeNumberInputViewComponent, { renderOpts, renderParams })
     },
     renderFormDesignWidgetFormView (renderOpts, renderParams) {
-      return h(WidgetVxeSwitchFormComponent, { renderOpts, renderParams })
+      return h(WidgetVxeNumberInputFormComponent, { renderOpts, renderParams })
+    }
+  },
+  VxeDateInput: {
+    createFormDesignWidgetConfig: getWidgetVxeDateInputConfig,
+    renderFormDesignWidgetView (renderOpts, renderParams) {
+      return h(WidgetVxeDateInputViewComponent, { renderOpts, renderParams })
+    },
+    renderFormDesignWidgetFormView (renderOpts, renderParams) {
+      return h(WidgetVxeDateInputFormComponent, { renderOpts, renderParams })
     }
   },
   VxeTextarea: {
@@ -94,6 +118,15 @@ renderer.mixin({
     },
     renderFormDesignWidgetFormView (renderOpts, renderParams) {
       return h(WidgetVxeTextareaFormComponent, { renderOpts, renderParams })
+    }
+  },
+  VxeSwitch: {
+    createFormDesignWidgetConfig: getWidgetVxeSwitchConfig,
+    renderFormDesignWidgetView (renderOpts, renderParams) {
+      return h(WidgetVxeSwitchViewComponent, { renderOpts, renderParams })
+    },
+    renderFormDesignWidgetFormView (renderOpts, renderParams) {
+      return h(WidgetVxeSwitchFormComponent, { renderOpts, renderParams })
     }
   },
   VxeSelect: {

@@ -124,7 +124,7 @@
     display: none;
     padding: 0.5em 0.8em 0.5em 0;
     &.is--vertical {
-      padding: 0.25em 0 0.25em 0;
+      padding: 0.4em 0 0.4em 0;
     }
     &.is--active {
       &:not(.is--hidden) {
@@ -185,6 +185,8 @@
     .vxe-default-textarea,
     .vxe-default-select,
     .vxe-input,
+    .vxe-number-input,
+    .vxe-date-input,
     .vxe-textarea,
     .vxe-select {
       width: 100%;
@@ -192,7 +194,11 @@
   }
   &.is--error {
     .vxe-input > .vxe-input--inner,
+    .vxe-number-input > .vxe-number-input--inner,
+    .vxe-date-input > .vxe-date-input--inner,
     .vxe-textarea > .vxe-textarea--inner,
+    .vxe-upload .vxe-upload--image-action-box,
+    .vxe-upload .vxe-upload--file-action-btn > .vxe-button,
     .vxe-select,
     .vxe-select.is--active > .vxe-input .vxe-input--inner,
     .vxe-default-input,
@@ -201,6 +207,8 @@
       border-color: var(--vxe-ui-form-validate-error-color);
     }
     .vxe-input>.vxe-input--inner,
+    .vxe-number-input>.vxe-number-input--inner,
+    .vxe-date-input>.vxe-date-input--inner,
     .vxe-textarea>.vxe-textarea--inner,
     .vxe-default-input[type="text"],
     .vxe-default-input[type="search"],
