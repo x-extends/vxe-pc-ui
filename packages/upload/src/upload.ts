@@ -1,6 +1,6 @@
 import { defineComponent, ref, h, reactive, watch, computed, PropType, createCommentVNode, onUnmounted } from 'vue'
 import XEUtils from 'xe-utils'
-import { VxeUI, getConfig, getI18n, getIcon, createEvent } from '@vxe-ui/core'
+import { VxeUI, getConfig, getI18n, getIcon, createEvent } from '../../ui'
 import VxeButtonComponent from '../../button/src/button'
 import { getSlotVNs } from '../..//ui/src/vn'
 import { readLocalFile } from './util'

@@ -1,6 +1,6 @@
 import { defineComponent, h, Teleport, ref, Ref, computed, reactive, inject, nextTick, watch, onUnmounted, PropType } from 'vue'
 import XEUtils from 'xe-utils'
-import { getConfig, getIcon, getI18n, globalEvents, GLOBAL_EVENT_KEYS, createEvent, useSize, VxeComponentStyleType } from '@vxe-ui/core'
+import { getConfig, getIcon, getI18n, globalEvents, GLOBAL_EVENT_KEYS, createEvent, useSize, VxeComponentStyleType } from '../../ui'
 import { getFuncText, getLastZIndex, nextZIndex } from '../../ui/src/utils'
 import { hasClass, getAbsolutePos, getEventTargetNode } from '../../ui/src/dom'
 import { toStringTimeDate, getDateQuarter } from './date'

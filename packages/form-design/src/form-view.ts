@@ -1,6 +1,6 @@
 import { defineComponent, ref, h, reactive, nextTick, PropType, inject, provide, watch, createCommentVNode } from 'vue'
 import XEUtils from 'xe-utils'
-import { renderer, createEvent } from '@vxe-ui/core'
+import { renderer, createEvent } from '../../ui'
 import { getSlotVNs } from '../../ui/src/vn'
 import { createDefaultFormViewPCFormConfig } from './default-setting-data'
 import VxeFormComponent from '../../form/src/form'

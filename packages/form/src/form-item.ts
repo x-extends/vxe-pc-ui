@@ -1,6 +1,6 @@
 import { defineComponent, h, onUnmounted, inject, ref, Ref, provide, onMounted, PropType, createCommentVNode, reactive } from 'vue'
 import XEUtils from 'xe-utils'
-import { getIcon, getI18n, renderer, VxeComponentSlotType } from '@vxe-ui/core'
+import { getIcon, getI18n, renderer, VxeComponentSlotType } from '../../ui'
 import { getFuncText, isEnableConf } from '../../ui/src/utils'
 import { getSlotVNs } from '../../ui/src/vn'
 import { createItem, watchItem, destroyItem, assembleItem, XEFormItemProvide, isActiveItem } from './util'

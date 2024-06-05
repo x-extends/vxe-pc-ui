@@ -1,6 +1,6 @@
 import { defineComponent, h, provide, PropType, inject, computed } from 'vue'
 import XEUtils from 'xe-utils'
-import { getConfig, createEvent, useSize } from '@vxe-ui/core'
+import { getConfig, createEvent, useSize } from '../../ui'
 import VxeRadioComponent from './radio'
 import VxeRadioButtonComponent from './button'
 

@@ -1,6 +1,7 @@
 import { defineComponent, ref, h, reactive, inject, onMounted, onUnmounted } from 'vue'
 import XEUtils from 'xe-utils'
 import { assemblePageBreak, destroyPageBreak } from './util'
+
 import type { PrintPageBreakReactData, PrintPageBreakPrivateRef, VxePrintDefines, VxePrintPageBreakPrivateComputed, VxePrintConstructor, VxePrintPrivateMethods, VxePrintPageBreakConstructor, VxePrintPageBreakPrivateMethods } from '../../../types'
 
 export default defineComponent({

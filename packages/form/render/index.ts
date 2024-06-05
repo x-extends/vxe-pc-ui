@@ -1,6 +1,6 @@
 import { h, resolveComponent, ComponentOptions } from 'vue'
 import XEUtils from 'xe-utils'
-import { renderer, log } from '@vxe-ui/core'
+import { renderer, log } from '../../ui'
 import { getOnName, getModelEvent, getChangeEvent } from '../../ui/src/vn'
 
 import type { VxeButtonComponent } from '../../../types/all'

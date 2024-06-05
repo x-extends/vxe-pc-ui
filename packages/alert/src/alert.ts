@@ -1,6 +1,6 @@
 import { defineComponent, ref, h, reactive, PropType, createCommentVNode } from 'vue'
 import XEUtils from 'xe-utils'
-import { getConfig, getIcon, createEvent } from '@vxe-ui/core'
+import { getConfig, getIcon, createEvent } from '../../ui'
 import { getSlotVNs } from '../../ui/src/vn'
 
 import type { VxeAlertPropTypes, AlertReactData, AlertPrivateRef, VxeAlertEmits, AlertMethods, AlertPrivateMethods, VxeAlertPrivateComputed, VxeAlertConstructor, VxeAlertPrivateMethods } from '../../../types'

@@ -1,6 +1,6 @@
 import { defineComponent, h, PropType, computed, inject, ref, Ref, reactive, nextTick, watch } from 'vue'
 import XEUtils from 'xe-utils'
-import { getIcon, getConfig, getI18n, globalEvents, GLOBAL_EVENT_KEYS, log, createEvent, useSize } from '@vxe-ui/core'
+import { getIcon, getConfig, getI18n, globalEvents, GLOBAL_EVENT_KEYS, log, createEvent, useSize } from '../../ui'
 import VxeSelectComponent from '../../select'
 
 import type { VxePagerPropTypes, VxePagerConstructor, VxePagerEmits, VxeSelectEvents, PagerPrivateRef, PagerMethods, PagerPrivateMethods, VxePagerPrivateMethods, PagerReactData } from '../../../types'

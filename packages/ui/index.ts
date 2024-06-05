@@ -313,7 +313,7 @@ setIcon({
   ALERT_WARNING: iconPrefix + 'warning-circle-fill',
   ALERT_ERROR: iconPrefix + 'error-circle-fill',
 
-  // node
+  // tree
   TREE_NODE_OPEN: iconPrefix + 'caret-right rotate90',
   TREE_NODE_CLOSE: iconPrefix + 'caret-right'
 })

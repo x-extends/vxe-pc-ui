@@ -1,5 +1,5 @@
 import { h } from 'vue'
-import { getIcon, renderer } from '@vxe-ui/core'
+import { getIcon, renderer } from '../../ui'
 import { getFuncText, isEnableConf } from '../../ui/src/utils'
 import { getSlotVNs } from '../../ui/src/vn'
 import VxeTooltipComponent from '../../tooltip'

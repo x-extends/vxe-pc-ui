@@ -1,6 +1,6 @@
 import { defineComponent, h, ref, Ref, nextTick, onBeforeUnmount, onMounted, reactive, watch, PropType } from 'vue'
 import XEUtils from 'xe-utils'
-import { getConfig, createEvent, useSize } from '@vxe-ui/core'
+import { getConfig, createEvent, useSize } from '../../ui'
 import { getLastZIndex, nextZIndex } from '../../ui/src/utils'
 import { getAbsolutePos, getDomNode } from '../../ui/src/dom'
 import { getSlotVNs } from '../../ui/src/vn'

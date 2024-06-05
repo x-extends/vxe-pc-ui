@@ -2,7 +2,7 @@ import { defineComponent, h, Teleport, ref, Ref, computed, reactive, nextTick, w
 import XEUtils from 'xe-utils'
 import { getDomNode, getEventTargetNode } from '../../ui/src/dom'
 import { getLastZIndex, nextZIndex, getFuncText } from '../../ui/src/utils'
-import { getConfig, getIcon, getI18n, globalEvents, GLOBAL_EVENT_KEYS, log, createEvent, useSize } from '@vxe-ui/core'
+import { getConfig, getIcon, getI18n, globalEvents, GLOBAL_EVENT_KEYS, log, createEvent, useSize } from '../../ui'
 import VxeButtonComponent from '../../button/src/button'
 import VxeLoadingComponent from '../../loading/index'
 import { getSlotVNs } from '../../ui/src/vn'

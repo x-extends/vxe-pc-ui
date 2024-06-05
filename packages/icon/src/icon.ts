@@ -1,5 +1,5 @@
 import { defineComponent, h, PropType } from 'vue'
-import { createEvent } from '@vxe-ui/core'
+import { createEvent } from '../../ui'
 
 import type { VxeIconPropTypes, VxeIconEmits } from '../../../types'
 

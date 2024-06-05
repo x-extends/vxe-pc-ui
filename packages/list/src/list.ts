@@ -1,6 +1,6 @@
 import { defineComponent, h, PropType, ref, Ref, computed, onUnmounted, watch, reactive, nextTick, onActivated } from 'vue'
 import XEUtils from 'xe-utils'
-import { getConfig, globalEvents, globalResize, createEvent, useSize } from '@vxe-ui/core'
+import { getConfig, globalEvents, globalResize, createEvent, useSize } from '../../ui'
 import { browse } from '../../ui/src/dom'
 import VxeLoadingComponent from '../../loading/src/loading'
 

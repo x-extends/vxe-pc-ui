@@ -1,5 +1,5 @@
 import { defineComponent, ref, h, PropType, reactive, provide, watch, nextTick, ComponentOptions } from 'vue'
-import { getConfig, getIcon, getI18n, renderer, createEvent } from '@vxe-ui/core'
+import { getConfig, getIcon, getI18n, renderer, createEvent } from '../../ui'
 import { toCssUnit } from '../../ui/src/dom'
 import { FormDesignWidgetInfo, getWidgetConfigGroup, getWidgetConfigCustomGroup, configToWidget } from './widget-info'
 import XEUtils from 'xe-utils'

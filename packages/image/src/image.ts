@@ -1,5 +1,5 @@
 import { defineComponent, ref, h, reactive, PropType, computed } from 'vue'
-import { createEvent } from '@vxe-ui/core'
+import { createEvent } from '../../ui'
 import XEUtils from 'xe-utils'
 import { toCssUnit } from '../..//ui/src/dom'
 import { openPreviewImage } from './util'

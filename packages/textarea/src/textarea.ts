@@ -1,6 +1,6 @@
 import { defineComponent, h, ref, Ref, computed, nextTick, watch, PropType, reactive, inject } from 'vue'
 import XEUtils from 'xe-utils'
-import { getConfig, getI18n, createEvent, useSize } from '@vxe-ui/core'
+import { getConfig, getI18n, createEvent, useSize } from '../../ui'
 import { getFuncText } from '../../ui/src/utils'
 
 import type { VxeTextareaPropTypes, TextareaReactData, TextareaMethods, VxeTextareaConstructor, VxeTextareaEmits, TextareaPrivateRef, VxeFormConstructor, VxeFormPrivateMethods, VxeFormDefines } from '../../../types'

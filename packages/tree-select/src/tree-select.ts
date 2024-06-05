@@ -1,5 +1,5 @@
 import { defineComponent, ref, h, reactive } from 'vue'
-import { createEvent } from '@vxe-ui/core'
+import { createEvent } from '../../ui'
 import XEUtils from 'xe-utils'
 
 import type { TreeSelectReactData, VxeTreeSelectEmits, TreeSelectPrivateRef, TreeSelectPrivateMethods, TreeSelectMethods, VxeTreeSelectPrivateComputed, VxeTreeSelectConstructor, VxeTreeSelectPrivateMethods } from '../../../types'

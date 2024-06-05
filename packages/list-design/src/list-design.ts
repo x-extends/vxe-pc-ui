@@ -1,7 +1,7 @@
 import { defineComponent, ref, h, PropType, reactive, nextTick, provide } from 'vue'
 import XEUtils from 'xe-utils'
 import { toCssUnit } from '../../ui/src/dom'
-import { getConfig, createEvent } from '@vxe-ui/core'
+import { getConfig, createEvent } from '../../ui'
 import LayoutPreviewComponent from './layout-preview'
 import LayoutSettingComponent from './layout-setting'
 

@@ -1,6 +1,6 @@
 import { defineComponent, h, ref, Ref, computed, reactive, inject, nextTick, watch, PropType } from 'vue'
 import XEUtils from 'xe-utils'
-import { getConfig, getIcon, getI18n, createEvent, useSize } from '@vxe-ui/core'
+import { getConfig, getIcon, getI18n, createEvent, useSize } from '../../ui'
 import { getFuncText } from '../../ui/src/utils'
 
 import type { VxePasswordInputConstructor, VxePasswordInputEmits, PasswordInputReactData, PasswordInputMethods, VxePasswordInputPropTypes, InputPrivateRef, VxeFormConstructor, VxeFormPrivateMethods, VxeFormDefines } from '../../../types'

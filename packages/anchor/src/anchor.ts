@@ -1,6 +1,6 @@
 import { defineComponent, ref, h, reactive, PropType, VNode, provide, nextTick, onBeforeUnmount, onMounted, watch, createCommentVNode, computed } from 'vue'
 import XEUtils from 'xe-utils'
-import { createEvent } from '@vxe-ui/core'
+import { createEvent } from '../../ui'
 import { getOffsetPos } from '../../ui/src/dom'
 import VxeAnchorLinkComponent from './anchor-link'
 

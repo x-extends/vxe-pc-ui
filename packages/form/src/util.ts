@@ -1,5 +1,5 @@
 import { watch } from 'vue'
-import { renderer } from '@vxe-ui/core'
+import { renderer } from '../../ui'
 import XEUtils from 'xe-utils'
 import { ItemInfo } from './itemInfo'
 import { isEnableConf } from '../../ui/src/utils'

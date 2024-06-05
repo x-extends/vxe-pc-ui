@@ -1,5 +1,5 @@
 import { defineComponent, h, provide, PropType, computed, inject } from 'vue'
-import { getConfig, createEvent, useSize } from '@vxe-ui/core'
+import { getConfig, createEvent, useSize } from '../../ui'
 import XEUtils from 'xe-utils'
 import VxeCheckboxComponent from './checkbox'
 

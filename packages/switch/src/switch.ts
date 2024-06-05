@@ -1,6 +1,6 @@
 import { defineComponent, h, ref, Ref, computed, reactive, nextTick, createCommentVNode, PropType, inject } from 'vue'
 import XEUtils from 'xe-utils'
-import { getConfig, createEvent, useSize } from '@vxe-ui/core'
+import { getConfig, createEvent, useSize } from '../../ui'
 import { getFuncText } from '../../ui/src/utils'
 
 import type { VxeSwitchPropTypes, VxeSwitchConstructor, VxeSwitchEmits, SwitchReactData, SwitchMethods, VxeFormConstructor, VxeFormPrivateMethods, VxeFormDefines } from '../../../types'

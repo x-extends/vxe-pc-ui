@@ -1,6 +1,6 @@
 import { defineComponent, h, ref, Ref, provide, computed, inject, reactive, watch, nextTick, PropType, onMounted } from 'vue'
 import XEUtils from 'xe-utils'
-import { getConfig, validators, renderer, log, createEvent, useSize } from '@vxe-ui/core'
+import { getConfig, validators, renderer, log, createEvent, useSize } from '../../ui'
 import { getFuncText, isEnableConf, eqEmptyValue } from '../../ui/src/utils'
 import { scrollToView } from '../../ui/src/dom'
 import { createItem, handleFieldOrItem, isHiddenItem, isActiveItem } from './util'

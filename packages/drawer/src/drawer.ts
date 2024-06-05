@@ -1,6 +1,6 @@
 import { defineComponent, h, Teleport, ref, Ref, reactive, nextTick, watch, PropType, VNode, onMounted, onUnmounted } from 'vue'
 import XEUtils from 'xe-utils'
-import { useSize, getIcon, getConfig, getI18n, globalEvents, GLOBAL_EVENT_KEYS, createEvent } from '@vxe-ui/core'
+import { useSize, getIcon, getConfig, getI18n, globalEvents, GLOBAL_EVENT_KEYS, createEvent } from '../../ui'
 import { getLastZIndex, nextZIndex, getFuncText } from '../../ui/src/utils'
 import { getSlotVNs } from '../../ui/src/vn'
 import VxeButtonComponent from '../../button/src/button'

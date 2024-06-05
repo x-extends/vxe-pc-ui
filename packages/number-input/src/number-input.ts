@@ -1,6 +1,6 @@
 import { defineComponent, h, ref, Ref, computed, reactive, inject, nextTick, watch, onUnmounted, PropType } from 'vue'
 import XEUtils from 'xe-utils'
-import { getConfig, getIcon, getI18n, globalEvents, GLOBAL_EVENT_KEYS, createEvent, useSize } from '@vxe-ui/core'
+import { getConfig, getIcon, getI18n, globalEvents, GLOBAL_EVENT_KEYS, createEvent, useSize } from '../../ui'
 import { getFuncText } from '../../ui/src/utils'
 import { hasClass, getEventTargetNode } from '../../ui/src/dom'
 

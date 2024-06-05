@@ -1,6 +1,6 @@
 import { defineComponent, ref, h, reactive, PropType, provide, computed, createCommentVNode, watch, nextTick, onMounted } from 'vue'
 import XEUtils from 'xe-utils'
-import { createEvent, getConfig } from '@vxe-ui/core'
+import { createEvent, getConfig } from '../../ui'
 import VxeTabPaneComponent from './tab-pane'
 import { getSlotVNs } from '../../ui/src/vn'
 import { toCssUnit } from '../..//ui/src/dom'

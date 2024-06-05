@@ -1,6 +1,6 @@
 import { defineComponent, ref, h, reactive, PropType, resolveComponent, createCommentVNode, nextTick, watch, VNode, onMounted } from 'vue'
 import XEUtils from 'xe-utils'
-import { getIcon, createEvent } from '@vxe-ui/core'
+import { getIcon, createEvent } from '../../ui'
 
 import type { VxeMenuDefines, VxeMenuPropTypes, MenuReactData, VxeMenuEmits, MenuPrivateRef, VxeMenuPrivateComputed, VxeMenuConstructor, VxeMenuPrivateMethods } from '../../../types'
 

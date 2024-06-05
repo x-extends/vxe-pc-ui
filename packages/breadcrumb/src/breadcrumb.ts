@@ -1,5 +1,5 @@
 import { defineComponent, ref, h, reactive, provide, PropType } from 'vue'
-import { getConfig, createEvent } from '@vxe-ui/core'
+import { getConfig, createEvent } from '../../ui'
 import XEUtils from 'xe-utils'
 import VxeBreadcrumbItemComponent from './breadcrumb-item'
 

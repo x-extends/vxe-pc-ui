@@ -1,5 +1,5 @@
 import { defineComponent, h, provide, PropType, ref, reactive, computed, watch, onMounted, onUnmounted, createCommentVNode, onBeforeUnmount } from 'vue'
-import { VxeUI, getConfig, createEvent, getIcon, globalEvents, GLOBAL_EVENT_KEYS } from '@vxe-ui/core'
+import { VxeUI, getConfig, createEvent, getIcon, globalEvents, GLOBAL_EVENT_KEYS } from '../../ui'
 import XEUtils from 'xe-utils'
 import { getDomNode, addClass, removeClass } from '../..//ui/src/dom'
 

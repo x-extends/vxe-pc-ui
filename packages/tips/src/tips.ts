@@ -1,6 +1,6 @@
 import { defineComponent, ref, h, reactive, PropType, createCommentVNode } from 'vue'
 import XEUtils from 'xe-utils'
-import { getConfig } from '@vxe-ui/core'
+import { getConfig } from '../../ui'
 import { getSlotVNs } from '../..//ui/src/vn'
 
 import type { VxeTipsPropTypes, TipsReactData, VxeTipsEmits, TipsPrivateRef, VxeTipsPrivateComputed, VxeTipsConstructor, VxeTipsPrivateMethods } from '../../../types'

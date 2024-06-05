@@ -1,6 +1,6 @@
 import { defineComponent, ref, h, reactive, PropType, provide, createCommentVNode } from 'vue'
 import XEUtils from 'xe-utils'
-import { getConfig, createEvent } from '@vxe-ui/core'
+import { getConfig, createEvent } from '../../ui'
 import { printHtml } from './util'
 import { getSlotVNs } from '../..//ui/src/vn'
 

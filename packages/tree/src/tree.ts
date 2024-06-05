@@ -1,5 +1,5 @@
 import { defineComponent, ref, h, reactive, PropType, computed, VNode, createCommentVNode, watch, onUnmounted } from 'vue'
-import { createEvent, getIcon, getConfig } from '@vxe-ui/core'
+import { createEvent, getIcon, getConfig } from '../../ui'
 import XEUtils from 'xe-utils'
 import { getSlotVNs } from '../..//ui/src/vn'
 

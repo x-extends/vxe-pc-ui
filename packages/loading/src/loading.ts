@@ -1,5 +1,5 @@
 import { defineComponent, h, computed, PropType } from 'vue'
-import { getConfig, getIcon, getI18n } from '@vxe-ui/core'
+import { getConfig, getIcon, getI18n } from '../../ui'
 import XEUtils from 'xe-utils'
 
 import type { VxeLoadingPropTypes } from '../../../types'
