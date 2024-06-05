@@ -7,7 +7,7 @@ export default defineComponent({
   name: 'VxeBreadcrumbItem',
   props: {
     title: String as PropType<VxeBreadcrumbItemPropTypes.Title>,
-    RouterLink: Object as PropType<VxeBreadcrumbItemPropTypes.RouterLink>
+    routerLink: Object as PropType<VxeBreadcrumbItemPropTypes.RouterLink>
   },
   emits: [],
   setup (props, context) {

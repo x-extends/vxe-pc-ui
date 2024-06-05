@@ -73,7 +73,7 @@ export default defineComponent({
       type: Object as PropType<VxeTreePropTypes.CheckboxConfig>,
       default: () => XEUtils.clone(getConfig().tree.checkboxConfig, true)
     },
-    toggleMethod: Object as PropType<VxeTreePropTypes.CheckboxConfig>,
+    toggleMethod: Function as PropType<VxeTreePropTypes.ToggleMethod>,
     showIcon: {
       type: Boolean as PropType<VxeTreePropTypes.ShowIcon>,
       default: () => getConfig().tree.showIcon

@@ -4,7 +4,7 @@ import { getConfig, getIcon, getI18n, globalEvents, GLOBAL_EVENT_KEYS, createEve
 import { getFuncText, getLastZIndex, nextZIndex } from '../../ui/src/utils'
 import { hasClass, getAbsolutePos, getEventTargetNode } from '../../ui/src/dom'
 
-import type { VxeInputConstructor, VxeInputEmits, InputReactData, InputMethods, VxeInputPropTypes, InputPrivateRef, VxeFormConstructor, VxeFormPrivateMethods, VxeFormDefines } from '../../../types'
+import type { VxeInputConstructor, VxeInputEmits, InputReactData, InputMethods, VxeDateInputPropTypes, InputPrivateRef, VxeFormConstructor, VxeFormPrivateMethods, VxeFormDefines } from '../../../types'
 
 interface DateYearItem {
   date: Date;
@@ -52,7 +52,7 @@ const yearSize = 12
 const monthSize = 20
 const quarterSize = 8
 
-export function toStringTimeDate (str: VxeInputPropTypes.ModelValue) {
+export function toStringTimeDate (str: VxeDateInputPropTypes.ModelValue) {
   if (str) {
     const rest = new Date()
     let h = 0
@@ -94,62 +94,62 @@ export function getDateQuarter (date: Date) {
 export default defineComponent({
   name: 'VxeDateInput',
   props: {
-    modelValue: [String, Number, Date] as PropType<VxeInputPropTypes.ModelValue>,
-    immediate: { type: Boolean as PropType<VxeInputPropTypes.Immediate>, default: true },
-    name: String as PropType<VxeInputPropTypes.Name>,
-    type: { type: String as PropType<VxeInputPropTypes.Type>, default: 'date' },
-    clearable: { type: Boolean as PropType<VxeInputPropTypes.Clearable>, default: () => getConfig().input.clearable },
-    readonly: Boolean as PropType<VxeInputPropTypes.Readonly>,
-    disabled: Boolean as PropType<VxeInputPropTypes.Disabled>,
+    modelValue: [String, Number, Date] as PropType<VxeDateInputPropTypes.ModelValue>,
+    immediate: { type: Boolean as PropType<VxeDateInputPropTypes.Immediate>, default: true },
+    name: String as PropType<VxeDateInputPropTypes.Name>,
+    type: { type: String as PropType<VxeDateInputPropTypes.Type>, default: 'date' },
+    clearable: { type: Boolean as PropType<VxeDateInputPropTypes.Clearable>, default: () => getConfig().input.clearable },
+    readonly: Boolean as PropType<VxeDateInputPropTypes.Readonly>,
+    disabled: Boolean as PropType<VxeDateInputPropTypes.Disabled>,
     placeholder: {
-      type: String as PropType<VxeInputPropTypes.Placeholder>,
+      type: String as PropType<VxeDateInputPropTypes.Placeholder>,
       default: () => XEUtils.eqNull(getConfig().input.placeholder) ? getI18n('vxe.base.pleaseInput') : getConfig().input.placeholder
     },
-    maxlength: [String, Number] as PropType<VxeInputPropTypes.Maxlength>,
-    autocomplete: { type: String as PropType<VxeInputPropTypes.Autocomplete>, default: 'off' },
-    align: String as PropType<VxeInputPropTypes.Align>,
-    form: String as PropType<VxeInputPropTypes.Form>,
-    className: String as PropType<VxeInputPropTypes.ClassName>,
-    size: { type: String as PropType<VxeInputPropTypes.Size>, default: () => getConfig().input.size || getConfig().size },
-    multiple: Boolean as PropType<VxeInputPropTypes.Multiple>,
+    maxlength: [String, Number] as PropType<VxeDateInputPropTypes.Maxlength>,
+    autocomplete: { type: String as PropType<VxeDateInputPropTypes.Autocomplete>, default: 'off' },
+    align: String as PropType<VxeDateInputPropTypes.Align>,
+    form: String as PropType<VxeDateInputPropTypes.Form>,
+    className: String as PropType<VxeDateInputPropTypes.ClassName>,
+    size: { type: String as PropType<VxeDateInputPropTypes.Size>, default: () => getConfig().input.size || getConfig().size },
+    multiple: Boolean as PropType<VxeDateInputPropTypes.Multiple>,
 
     // text
-    showWordCount: Boolean as PropType<VxeInputPropTypes.ShowWordCount>,
-    countMethod: Function as PropType<VxeInputPropTypes.CountMethod>,
+    showWordCount: Boolean as PropType<VxeDateInputPropTypes.ShowWordCount>,
+    countMethod: Function as PropType<VxeDateInputPropTypes.CountMethod>,
 
     // number、integer、float
-    min: { type: [String, Number] as PropType<VxeInputPropTypes.Min>, default: null },
-    max: { type: [String, Number] as PropType<VxeInputPropTypes.Max>, default: null },
-    step: [String, Number] as PropType<VxeInputPropTypes.Step>,
-    exponential: { type: Boolean as PropType<VxeInputPropTypes.Exponential>, default: () => getConfig().input.exponential },
+    min: { type: [String, Number] as PropType<VxeDateInputPropTypes.Min>, default: null },
+    max: { type: [String, Number] as PropType<VxeDateInputPropTypes.Max>, default: null },
+    step: [String, Number] as PropType<VxeDateInputPropTypes.Step>,
+    exponential: { type: Boolean as PropType<VxeDateInputPropTypes.Exponential>, default: () => getConfig().input.exponential },
 
     // number、integer、float、password
-    controls: { type: Boolean as PropType<VxeInputPropTypes.Controls>, default: () => getConfig().input.controls },
+    controls: { type: Boolean as PropType<VxeDateInputPropTypes.Controls>, default: () => getConfig().input.controls },
 
     // float
-    digits: { type: [String, Number] as PropType<VxeInputPropTypes.Digits>, default: () => getConfig().input.digits },
+    digits: { type: [String, Number] as PropType<VxeDateInputPropTypes.Digits>, default: () => getConfig().input.digits },
 
     // date、week、month、quarter、year
-    startDate: { type: [String, Number, Date] as PropType<VxeInputPropTypes.MinDate>, default: () => getConfig().input.startDate },
-    endDate: { type: [String, Number, Date] as PropType<VxeInputPropTypes.MaxDate>, default: () => getConfig().input.endDate },
-    minDate: [String, Number, Date] as PropType<VxeInputPropTypes.MinDate>,
-    maxDate: [String, Number, Date] as PropType<VxeInputPropTypes.MaxDate>,
+    startDate: { type: [String, Number, Date] as PropType<VxeDateInputPropTypes.MinDate>, default: () => getConfig().input.startDate },
+    endDate: { type: [String, Number, Date] as PropType<VxeDateInputPropTypes.MaxDate>, default: () => getConfig().input.endDate },
+    minDate: [String, Number, Date] as PropType<VxeDateInputPropTypes.MinDate>,
+    maxDate: [String, Number, Date] as PropType<VxeDateInputPropTypes.MaxDate>,
     // 已废弃 startWeek，被 startDay 替换
-    startWeek: Number as PropType<VxeInputPropTypes.StartDay>,
-    startDay: { type: [String, Number] as PropType<VxeInputPropTypes.StartDay>, default: () => getConfig().input.startDay },
-    labelFormat: { type: String as PropType<VxeInputPropTypes.LabelFormat>, default: () => getConfig().input.labelFormat },
-    valueFormat: { type: String as PropType<VxeInputPropTypes.ValueFormat>, default: () => getConfig().input.valueFormat },
-    editable: { type: Boolean as PropType<VxeInputPropTypes.Editable>, default: true },
-    festivalMethod: { type: Function as PropType<VxeInputPropTypes.FestivalMethod>, default: () => getConfig().input.festivalMethod },
-    disabledMethod: { type: Function as PropType<VxeInputPropTypes.DisabledMethod>, default: () => getConfig().input.disabledMethod },
+    startWeek: Number as PropType<VxeDateInputPropTypes.StartDay>,
+    startDay: { type: [String, Number] as PropType<VxeDateInputPropTypes.StartDay>, default: () => getConfig().input.startDay },
+    labelFormat: { type: String as PropType<VxeDateInputPropTypes.LabelFormat>, default: () => getConfig().input.labelFormat },
+    valueFormat: { type: String as PropType<VxeDateInputPropTypes.ValueFormat>, default: () => getConfig().input.valueFormat },
+    editable: { type: Boolean as PropType<VxeDateInputPropTypes.Editable>, default: true },
+    festivalMethod: { type: Function as PropType<VxeDateInputPropTypes.FestivalMethod>, default: () => getConfig().input.festivalMethod },
+    disabledMethod: { type: Function as PropType<VxeDateInputPropTypes.DisabledMethod>, default: () => getConfig().input.disabledMethod },
 
     // week
-    selectDay: { type: [String, Number] as PropType<VxeInputPropTypes.SelectDay>, default: () => getConfig().input.selectDay },
+    selectDay: { type: [String, Number] as PropType<VxeDateInputPropTypes.SelectDay>, default: () => getConfig().input.selectDay },
 
-    prefixIcon: String as PropType<VxeInputPropTypes.PrefixIcon>,
-    suffixIcon: String as PropType<VxeInputPropTypes.SuffixIcon>,
-    placement: String as PropType<VxeInputPropTypes.Placement>,
-    transfer: { type: Boolean as PropType<VxeInputPropTypes.Transfer>, default: () => getConfig().input.transfer }
+    prefixIcon: String as PropType<VxeDateInputPropTypes.PrefixIcon>,
+    suffixIcon: String as PropType<VxeDateInputPropTypes.SuffixIcon>,
+    placement: String as PropType<VxeDateInputPropTypes.Placement>,
+    transfer: { type: Boolean as PropType<VxeDateInputPropTypes.Transfer>, default: () => getConfig().input.transfer }
   },
   emits: [
     'update:modelValue',
@@ -219,7 +219,7 @@ export default defineComponent({
 
     let inputMethods = {} as InputMethods
 
-    const parseDate = (value: VxeInputPropTypes.ModelValue, format: string) => {
+    const parseDate = (value: VxeDateInputPropTypes.ModelValue, format: string) => {
       const { type } = props
       if (type === 'time') {
         return toStringTimeDate(value)
@@ -238,9 +238,7 @@ export default defineComponent({
     })
 
     const computeIsClearable = computed(() => {
-      const { type } = props
-      const isDatePickerType = computeIsDatePickerType.value
-      return props.clearable && (isDatePickerType || type === 'text' || type === 'search')
+      return props.clearable
     })
 
     const computeDateStartTime = computed(() => {
@@ -390,7 +388,7 @@ export default defineComponent({
 
     const computeFirstDayOfWeek = computed(() => {
       const { startDay, startWeek } = props
-      return XEUtils.toNumber(XEUtils.isNumber(startDay) || XEUtils.isString(startDay) ? startDay : startWeek) as VxeInputPropTypes.StartDay
+      return XEUtils.toNumber(XEUtils.isNumber(startDay) || XEUtils.isString(startDay) ? startDay : startWeek) as VxeDateInputPropTypes.StartDay
     })
 
     const computeWeekDatas = computed(() => {
@@ -603,8 +601,8 @@ export default defineComponent({
     })
 
     const computeInpImmediate = computed(() => {
-      const { type, immediate } = props
-      return immediate || !(type === 'text')
+      const { immediate } = props
+      return immediate
     })
 
     const triggerEvent = (evnt: Event & { type: 'input' | 'change' | 'keydown' | 'keyup' | 'wheel' | 'click' | 'focus' | 'blur' }) => {
@@ -680,7 +678,7 @@ export default defineComponent({
       })
     }
 
-    const clearValueEvent = (evnt: Event, value: VxeInputPropTypes.ModelValue) => {
+    const clearValueEvent = (evnt: Event, value: VxeDateInputPropTypes.ModelValue) => {
       const isDatePickerType = computeIsDatePickerType.value
       if (isDatePickerType) {
         hidePanel()
@@ -701,7 +699,7 @@ export default defineComponent({
       }
     }
 
-    const dateParseValue = (value?: VxeInputPropTypes.ModelValue) => {
+    const dateParseValue = (value?: VxeDateInputPropTypes.ModelValue) => {
       const { type } = props
       const { valueFormat } = props
       const dateLabelFormat = computeDateLabelFormat.value
@@ -773,7 +771,7 @@ export default defineComponent({
       const dateValueFormat = computeDateValueFormat.value
       const firstDayOfWeek = computeFirstDayOfWeek.value
       if (props.type === 'week') {
-        const sWeek = XEUtils.toNumber(props.selectDay) as VxeInputPropTypes.SelectDay
+        const sWeek = XEUtils.toNumber(props.selectDay) as VxeDateInputPropTypes.SelectDay
         date = XEUtils.getWhatWeek(date, 0, sWeek, firstDayOfWeek)
       } else if (isDateTimeType) {
         date.setHours(datetimePanelValue.getHours())
@@ -829,7 +827,7 @@ export default defineComponent({
       if (!inpReadonly) {
         if (isDatePickerType) {
           if (inputValue) {
-            let inpDateVal: VxeInputPropTypes.ModelValue = parseDate(inputValue, dateLabelFormat as string)
+            let inpDateVal: VxeDateInputPropTypes.ModelValue = parseDate(inputValue, dateLabelFormat as string)
             if (XEUtils.isValidDate(inpDateVal)) {
               if (type === 'time') {
                 inpDateVal = XEUtils.toDateString(inpDateVal, dateLabelFormat)
@@ -1270,7 +1268,7 @@ export default defineComponent({
             zIndex: panelIndex
           }
           const { boundingTop, boundingLeft, visibleHeight, visibleWidth } = getAbsolutePos(targetElem)
-          let panelPlacement: VxeInputPropTypes.Placement = 'bottom'
+          let panelPlacement: VxeDateInputPropTypes.Placement = 'bottom'
           if (transfer) {
             let left = boundingLeft
             let top = boundingTop + targetHeight

@@ -21,6 +21,7 @@ declare module '@vxe-ui/core' {
     TABLE_CHECKBOX_INDETERMINATE?: string
     TABLE_RADIO_CHECKED?: string
     TABLE_RADIO_UNCHECKED?: string
+    TABLE_CUSTOM_SORT?: string
 
     // toolbar
     TOOLBAR_TOOLS_REFRESH?: string

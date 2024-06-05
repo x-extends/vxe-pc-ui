@@ -289,10 +289,9 @@ export default defineComponent({
 
     // 下一页
     const renderNextPage = () => {
-      const pageCount = computePageCount.value
       return h('button', {
         class: ['vxe-pager--next-btn', {
-          'is--disabled': props.currentPage >= pageCount
+          'is--disabled': props.currentPage <= 1
         }],
         type: 'button',
         title: getI18n('vxe.pager.nextPageTitle'),

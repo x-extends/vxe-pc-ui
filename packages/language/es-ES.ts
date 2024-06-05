@@ -61,8 +61,9 @@ export default {
       expOriginFilename: 'Exportar_original_{0}',
       customTitle: 'Configuraciones de columna',
       customAll: 'Todo',
-      customConfirm: 'Confirmar',
-      customRestore: 'Restaurar',
+      customConfirm: 'Confirm',
+      customCancel: 'Cancel',
+      customRestore: 'Restore default',
       maxFixedCol: 'The maximum number of Freeze columns cannot exceed {0}'
     },
     grid: {
@@ -118,7 +119,7 @@ export default {
         colSort: 'Sort',
         sortHelpTip: 'Click and drag the icon to adjust the order of the columns.',
         colTitle: 'Title',
-        colVisible: 'Visible',
+        colVisible: 'Display',
         colFixed: 'Freeze columns (Max {0})',
         fixedLeft: 'Left',
         fixedUnset: 'Unset',

@@ -327,6 +327,14 @@ export namespace VxeTablePropTypes {
      * 是否启用 localStorage 本地保存，会将列操作状态保留在本地（需要有 id）
      */
     storage?: boolean | VxeTableDefines.VxeTableCustomStorageObj
+    restoreStore?(params: {
+      id: string
+    }): VxeTableDefines.CustomStoreData
+    updateStore?(params: {
+      id: string
+      type: '' | 'confirm' | 'reset'
+      storeData: VxeTableDefines.CustomStoreData
+    }): Promise<any>
     mode?: 'simple' | 'popup' | '' | null
     trigger?: string,
     immediate?: boolean
@@ -339,6 +347,7 @@ export namespace VxeTablePropTypes {
      */
     visibleMethod?(params: { column: VxeTableDefines.ColumnInfo }): boolean
     allowFixed?: boolean
+    allowSort?: boolean
     showFooter?: boolean
     icon?: string
     resetButtonText?: string
@@ -3207,6 +3216,9 @@ export namespace VxeTableDefines {
     sortNumber: number
     renderSortNumber: number
 
+    renderFixed: VxeColumnPropTypes.Fixed
+    renderVisible: VxeColumnPropTypes.Visible
+
     renderWidth: number
     renderHeight: number
     resizeWidth: number
@@ -3543,6 +3555,9 @@ export namespace VxeTableDefines {
     activeWrapper: boolean
     visible: boolean
     maxHeight: number
+    oldSortMaps: Record<string, number>
+    oldFixedMaps: Record<string, VxeColumnPropTypes.Fixed>
+    oldVisibleMaps: Record<string, boolean>
   }
 
   export interface VxeTableCustomStorageObj {
@@ -3660,6 +3675,16 @@ export namespace VxeTableDefines {
     checked: boolean
     _checked: boolean
   }
+
+  export interface CustomStoreItem {
+    resizable: number
+    sortData: number
+    visibleData: boolean
+    fixedData: VxeColumnPropTypes.Fixed
+  }
+
+  export type CustomStoreData = Record<string, CustomStoreItem>
+
 }
 
 export interface VxeTableEventProps<D = any> {

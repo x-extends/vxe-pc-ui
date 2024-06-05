@@ -61,8 +61,9 @@ export default {
       expSrcFilename: 'エクスポート_ソース_{0}',
       customTitle: '列設定',
       customAll: '全部',
-      customConfirm: 'OK',
-      customRestore: 'リセット',
+      customConfirm: 'Confirm',
+      customCancel: 'Cancel',
+      customRestore: 'Restore default',
       maxFixedCol: '最大固定列数が {0} です。'
     },
     grid: {
@@ -118,7 +119,7 @@ export default {
         colSort: 'ソート',
         sortHelpTip: 'Click and drag the icon to adjust the order of the columns.',
         colTitle: 'タイトル',
-        colVisible: '表示',
+        colVisible: 'Display',
         colFixed: '冻结列（最多 {0} 列）',
         fixedLeft: '左側',
         fixedUnset: '指定しない',

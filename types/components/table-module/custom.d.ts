@@ -19,7 +19,7 @@ export interface TableCustomPrivateMethods<D = any> {
   emitCustomEvent(type: string, evnt: Event): void
   triggerCustomEvent(evnt: MouseEvent): void
   customOpenEvent (evnt: Event): void
-  customColseEvent (evnt: Event): void
+  customCloseEvent (evnt: Event): void
 }
 
 declare module '../grid' {

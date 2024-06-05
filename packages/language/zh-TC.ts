@@ -61,8 +61,9 @@ export default {
       expSrcFilename: '匯出_從_{0}',
       customTitle: '列設定',
       customAll: '全部',
-      customConfirm: '確認',
-      customRestore: '重置',
+      customConfirm: '确认',
+      customCancel: '取消',
+      customRestore: '恢复默认',
       maxFixedCol: '最大冻结列的數量不能超過 {0} 個'
     },
     grid: {
@@ -204,8 +205,6 @@ export default {
       zoomOut: '還原',
       custom: '列設定',
       customAll: '全部',
-      customConfirm: '確認',
-      customRestore: '重置',
       fixedLeft: '冻结在左側',
       fixedRight: '冻结在右側',
       cancelFixed: '取消冻结列'
