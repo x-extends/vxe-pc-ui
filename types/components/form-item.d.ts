@@ -126,7 +126,7 @@ export namespace VxeFormItemPropTypes {
   }
 }
 
-export type VxeFormItemProps = {
+export interface VxeFormItemProps<D = any> {
   /**
    * 标题
    */
@@ -224,9 +224,9 @@ export type VxeFormItemProps = {
    * 项渲染配置项
    */
   itemRender?: VxeFormItemPropTypes.ItemRender
-  Rules?: VxeFormItemPropTypes.Rules
+  Rules?: VxeFormItemPropTypes.Rules<D>
   slots?: VxeFormItemPropTypes.Slots
-  children?: VxeFormItemProps[]
+  children?: VxeFormItemProps<D>[]
 }
 
 export interface FormItemPrivateComputed {

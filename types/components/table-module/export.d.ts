@@ -74,7 +74,7 @@ export type ReadFileFunction = (options?: {
   message?: boolean
 }) => Promise<{
   status: boolean
-  files: FileList
+  files: File[]
   file: File
 }>
 

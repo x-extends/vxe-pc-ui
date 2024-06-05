@@ -7,10 +7,10 @@ import { VxeFormItemPropTypes, VxeFormItemProps } from './form-item'
 export declare const VxeForm: defineVxeComponent<VxeFormProps, VxeFormEventProps>
 export type VxeFormComponent<D = any> = DefineComponent<VxeFormProps<D>, VxeFormEmits>
 
-export type VxeFormInstance = ComponentPublicInstance<VxeFormProps, VxeFormConstructor>
+export type VxeFormInstance<D = any> = ComponentPublicInstance<VxeFormProps<D>, VxeFormConstructor<D>>
 
-export interface VxeFormConstructor extends VxeComponentBaseOptions, VxeFormMethods {
-  props: VxeFormProps
+export interface VxeFormConstructor<D = any> extends VxeComponentBaseOptions, VxeFormMethods<D> {
+  props: VxeFormProps<D>
   context: SetupContext<VxeFormEmits>
   reactData: FormReactData
   internalData: FormInternalData
@@ -55,8 +55,8 @@ export namespace VxeFormPropTypes {
   /**
    * 校验规则配置项
    */
-  export interface Rules {
-    [field: string]: VxeFormDefines.FormRule[]
+  export interface Rules<D = any> {
+    [field: string]: VxeFormDefines.FormRule<D>[]
   }
 
   export type PreventSubmit = boolean
@@ -97,7 +97,7 @@ export type VxeFormProps<D = any> = {
   className?: VxeFormPropTypes.ClassName
   readonly?: VxeFormPropTypes.Readonly
   items?: VxeFormPropTypes.Items
-  rules?: VxeFormPropTypes.Rules
+  rules?: VxeFormPropTypes.Rules<D>
   preventSubmit?: VxeFormPropTypes.PreventSubmit
   validConfig?: VxeFormPropTypes.ValidConfig
   tooltipConfig?: VxeFormPropTypes.TooltipConfig
@@ -125,7 +125,7 @@ export interface FormInternalData {
   }
 }
 
-export interface FormMethods {
+export interface FormMethods<D = any> {
   dispatchEvent(type: ValueOf<VxeFormEmits>, params: Record<string, any>, evnt: Event | null): void
   /**
    * 重置表单
@@ -176,7 +176,7 @@ export interface FormMethods {
    */
   toggleCollapse(): Promise<any>
 }
-export interface VxeFormMethods extends FormMethods { }
+export interface VxeFormMethods<D = any> extends FormMethods<D> { }
 
 export interface FormPrivateMethods {
   callSlot<T>(slotFunc: ((params: T) => VxeComponentSlotType | VxeComponentSlotType[]) | string | null, params: T): VxeComponentSlotType[]
@@ -236,7 +236,7 @@ export namespace VxeFormDefines {
     children: ItemInfo[]
   }
 
-  export interface FormRule {
+  export interface FormRule<D = any> {
     /**
      * 是否必填
      */
@@ -261,7 +261,7 @@ export namespace VxeFormDefines {
      * 使用自定义校验函数，接收一个 Promise
      * @param params 参数
      */
-    validator?: string | ((params: RuleValidatorParams) => void | Error | Promise<any>)
+    validator?: string | ((params: RuleValidatorParams<D>) => void | Error | Promise<any>)
     /**
      * 提示消息
      */
@@ -274,17 +274,17 @@ export namespace VxeFormDefines {
     message?: string
   }
 
-  export interface RuleValidatorParams {
+  export interface RuleValidatorParams<D = any> {
     $form: VxeFormConstructor
     itemValue: any
-    rule: VxeFormDefines.FormRule
-    rules: VxeFormDefines.FormRule[]
-    data: any
+    rule: VxeFormDefines.FormRule<D>
+    rules: VxeFormDefines.FormRule<D>[]
+    data: D
     field: string
   }
   export interface ValidateErrorParams {
     $form: VxeFormConstructor,
-    rule: VxeFormDefines.FormRule
+    rule: VxeFormDefines.FormRule<D>
     data: any
     field: string
     /**
@@ -301,25 +301,25 @@ export namespace VxeFormDefines {
     [field: string]: ValidateErrorParams[]
   }
 
-  interface FormEventParams extends VxeComponentEventParams {
+  interface FormEventParams<D = any> extends VxeComponentEventParams {
     $form: VxeFormConstructor
   }
 
-  interface FormBaseParams {
-    data: any
+  interface FormBaseParams<D = any> {
+    data: D
   }
 
-  export interface CollapseParams extends FormBaseParams { }
-  export interface CollapseEventParams extends FormEventParams, CollapseParams { }
+  export interface CollapseParams<D = any> extends FormBaseParams<D> { }
+  export interface CollapseEventParams<D = any> extends FormEventParams<D>, CollapseParams<D> { }
 
-  export interface SubmitParams extends FormBaseParams { }
-  export interface SubmitEventParams extends FormEventParams, SubmitParams { }
+  export interface SubmitParams<D = any> extends FormBaseParams<D> { }
+  export interface SubmitEventParams<D = any> extends FormEventParams<D>, SubmitParams<D> { }
 
-  export interface SubmitInvalidParams extends FormBaseParams { }
-  export interface SubmitInvalidEventParams extends FormEventParams, SubmitInvalidParams { }
+  export interface SubmitInvalidParams<D = any> extends FormBaseParams<D> { }
+  export interface SubmitInvalidEventParams<D = any> extends FormEventParams<D>, SubmitInvalidParams<D> { }
 
-  export interface ResetParams extends FormBaseParams { }
-  export interface ResetEventParams extends FormEventParams, ResetParams { }
+  export interface ResetParams<D = any> extends FormBaseParams<D> { }
+  export interface ResetEventParams<D = any> extends FormEventParams<D>, ResetParams<D> { }
 }
 
 export type VxeFormEventProps = {
@@ -329,18 +329,18 @@ export type VxeFormEventProps = {
   onReset?: VxeFormEvents.Reset
 }
 
-export interface VxeFormListeners {
-  collapse?: VxeFormEvents.Collapse
-  submit?: VxeFormEvents.Submit
-  submitInvalid?: VxeFormEvents.SubmitInvalid
-  reset?: VxeFormEvents.Reset
+export interface VxeFormListeners<D = any> {
+  collapse?: VxeFormEvents.Collapse<D>
+  submit?: VxeFormEvents.Submit<D>
+  submitInvalid?: VxeFormEvents.SubmitInvalid<D>
+  reset?: VxeFormEvents.Reset<D>
 }
 
 export namespace VxeFormEvents {
-  export type Collapse = (params: VxeFormDefines.CollapseEventParams) => void
-  export type Submit = (params: VxeFormDefines.SubmitEventParams) => void
-  export type SubmitInvalid = (params: VxeFormDefines.SubmitInvalidEventParams) => void
-  export type Reset = (params: VxeFormDefines.ResetEventParams) => void
+  export type Collapse<D = any> = (params: VxeFormDefines.CollapseEventParams<D>) => void
+  export type Submit<D = any> = (params: VxeFormDefines.SubmitEventParams<D>) => void
+  export type SubmitInvalid<D = any> = (params: VxeFormDefines.SubmitInvalidEventParams<D>) => void
+  export type Reset<D = any> = (params: VxeFormDefines.ResetEventParams<D>) => void
 }
 
 export namespace VxeFormSlotTypes {
