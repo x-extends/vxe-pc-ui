@@ -7,7 +7,9 @@ import type { VxeImageDefines } from '../../../types'
 
 export const openPreviewImage: VxeImageDefines.PreviewImageFunction = (options) => {
   if (VxeUI.modal) {
-    const opts = Object.assign({}, options)
+    const opts = Object.assign({
+      escClosable: true
+    }, options)
     const { urlList, activeIndex } = opts
     const modalId = XEUtils.uniqueId('image-preview')
     VxeUI.modal.open({
@@ -17,13 +19,16 @@ export const openPreviewImage: VxeImageDefines.PreviewImageFunction = (options) 
       height: '100%',
       showHeader: false,
       showFooter: false,
-      escClosable: true,
+      escClosable: opts.escClosable,
       className: 'vxe-image-preview-popup-wrapper',
       slots: {
         default () {
           return h(VxeImagePreviewComponent, {
             modelValue: activeIndex,
             urlList,
+            urlField: opts.urlField,
+            marginSize: opts.marginSize,
+            maskClosable: opts.maskClosable,
             onClose () {
               VxeUI.modal.close(modalId)
             }

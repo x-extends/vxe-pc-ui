@@ -18,10 +18,6 @@ export default defineComponent({
       type: Boolean as PropType<VxeImagePreviewPropTypes.MaskClosable>,
       default: () => getConfig().imagePreview.maskClosable
     },
-    escClosable: {
-      type: Boolean as PropType<VxeImagePreviewPropTypes.EscClosable>,
-      default: () => getConfig().imagePreview.escClosable
-    },
     marginSize: {
       type: String as PropType<VxeImagePreviewPropTypes.MarginSize>,
       default: () => getConfig().imagePreview.marginSize

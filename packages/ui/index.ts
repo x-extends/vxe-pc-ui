@@ -81,9 +81,7 @@ setConfig({
   grid: {},
   icon: {},
   image: {},
-  imagePreview: {
-    escClosable: true
-  },
+  imagePreview: {},
   input: {
     // size: null,
     // transfer: false

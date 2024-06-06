@@ -110,6 +110,12 @@ export interface TreeInternalData {
 
 export interface TreeMethods {
   dispatchEvent(type: ValueOf<VxeTreeEmits>, params: Record<string, any>, evnt: Event | null): void
+  clearExpand(): Promise<any>
+  setExpandByRowid(rowids: any, expanded: boolean): Promise<any>
+  setExpand(rows: any, expanded: boolean): Promise<any>
+  toggleExpandByRowid(rowids: any): Promise<any>
+  toggleExpand(rows: any): Promise<any>
+  setAllExpand(expanded: boolean): Promise<any>
   isExpandByRow(row: any): boolean
   isCheckedByRadioRowid(rowid: any): boolean
   isCheckedByRadioRow(row: any): boolean

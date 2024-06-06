@@ -1,5 +1,6 @@
 import { RenderFunction, SetupContext, Ref, ComponentPublicInstance, DefineComponent } from 'vue'
 import { defineVxeComponent, VxeComponentBaseOptions, VxeComponentEventParams, ValueOf } from '@vxe-ui/core'
+import { VxeImagePreviewProps, VxeImagePreviewPropTypes } from './image-preview'
 
 /* eslint-disable no-use-before-define,@typescript-eslint/ban-types */
 
@@ -64,9 +65,9 @@ export namespace VxeImageDefines {
     $image: VxeImageConstructor
   }
 
-  export type PreviewImageFunction = (options: {
-    urlList?: string[]
-    activeIndex?: number
+  export type PreviewImageFunction = (options: VxeImagePreviewProps & {
+    activeIndex?: VxeImagePreviewPropTypes.ModelValue
+    escClosable?: boolean
   }) => Promise<any>
 }
 

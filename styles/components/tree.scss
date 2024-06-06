@@ -5,7 +5,6 @@
   font-family: var(--vxe-ui-font-family);
   &.row--trigger {
     .vxe-tree--node-item-wrapper {
-      user-select: none;
       cursor: pointer;
     }
   }

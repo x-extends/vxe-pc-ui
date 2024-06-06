@@ -25,10 +25,9 @@ export interface VxeImagePreviewPrivateRef extends ImagePreviewPrivateRef { }
 export namespace VxeImagePreviewPropTypes {
   export type ModelValue = null | number
   export type Url = string
-  export type UrlList = string[]
+  export type UrlList = any[]
   export type UrlField = string
   export type MaskClosable = boolean
-  export type EscClosable = boolean
   export type MarginSize = string | number
 }
 
@@ -37,7 +36,6 @@ export type VxeImagePreviewProps = {
   urlList?: VxeImagePreviewPropTypes.UrlList
   urlField?: VxeImagePreviewPropTypes.UrlField
   maskClosable?: VxeImagePreviewPropTypes.MaskClosable
-  escClosable?: VxeImagePreviewPropTypes.EscClosable
   marginSize?: VxeImagePreviewPropTypes.MarginSize
 }
 

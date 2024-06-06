@@ -1,4 +1,4 @@
-import { defineComponent, ref, h, reactive, PropType, computed, VNode, createCommentVNode, watch, onUnmounted } from 'vue'
+import { defineComponent, ref, h, reactive, PropType, computed, VNode, createCommentVNode, watch, onUnmounted, nextTick } from 'vue'
 import { createEvent, getIcon, getConfig } from '../../ui'
 import XEUtils from 'xe-utils'
 import { getSlotVNs } from '../..//ui/src/vn'
@@ -211,9 +211,89 @@ export default defineComponent({
       reactData.selectCheckboxMaps = selectKeyMaps
     }
 
+    const handleSetExpand = (rowid: string, expanded: boolean, expandedMaps: Record<string, boolean>) => {
+      if (expanded) {
+        if (expandedMaps[rowid]) {
+          expandedMaps[rowid] = true
+        }
+      } else {
+        if (expandedMaps[rowid]) {
+          delete expandedMaps[rowid]
+        }
+      }
+    }
+
     const treeMethods: TreeMethods = {
       dispatchEvent (type, params, evnt) {
         emit(type, createEvent(evnt, { $tree: $xeTree }, params))
+      },
+      clearExpand () {
+        reactData.treeExpandedMaps = {}
+        return nextTick()
+      },
+      setExpandByRowid (rowids, expanded) {
+        const expandedMaps: Record<string, boolean> = Object.assign(reactData.treeExpandedMaps)
+        if (rowids) {
+          if (!XEUtils.isArray(rowids)) {
+            rowids = [rowids]
+          }
+          rowids.forEach((rowid: string) => {
+            handleSetExpand(rowid, expanded, expandedMaps)
+          })
+          reactData.treeExpandedMaps = expandedMaps
+        }
+        return nextTick()
+      },
+      setExpand (rows, expanded) {
+        const expandedMaps: Record<string, boolean> = Object.assign(reactData.treeExpandedMaps)
+        if (rows) {
+          if (!XEUtils.isArray(rows)) {
+            rows = [rows]
+          }
+          rows.forEach((row: any) => {
+            const rowid = getRowid(row)
+            handleSetExpand(rowid, expanded, expandedMaps)
+          })
+          reactData.treeExpandedMaps = expandedMaps
+        }
+        return nextTick()
+      },
+      toggleExpandByRowid (rowids) {
+        const expandedMaps: Record<string, boolean> = Object.assign(reactData.treeExpandedMaps)
+        if (rowids) {
+          if (!XEUtils.isArray(rowids)) {
+            rowids = [rowids]
+          }
+          rowids.forEach((rowid: string) => {
+            handleSetExpand(rowid, !expandedMaps[rowid], expandedMaps)
+          })
+          reactData.treeExpandedMaps = expandedMaps
+        }
+        return nextTick()
+      },
+      toggleExpand (rows) {
+        const expandedMaps: Record<string, boolean> = Object.assign(reactData.treeExpandedMaps)
+        if (rows) {
+          if (!XEUtils.isArray(rows)) {
+            rows = [rows]
+          }
+          rows.forEach((row: any) => {
+            const rowid = getRowid(row)
+            handleSetExpand(rowid, !expandedMaps[rowid], expandedMaps)
+          })
+          reactData.treeExpandedMaps = expandedMaps
+        }
+        return nextTick()
+      },
+      setAllExpand () {
+        const expandedMaps: Record<string, boolean> = Object.assign(reactData.treeExpandedMaps)
+        const childrenField = computeChildrenField.value
+        XEUtils.eachTree(reactData.treeList, (row) => {
+          const rowid = getRowid(row)
+          expandedMaps[rowid] = true
+        }, { children: childrenField })
+        reactData.treeExpandedMaps = expandedMaps
+        return nextTick()
       },
       isExpandByRow,
       isCheckedByRadioRowid,
