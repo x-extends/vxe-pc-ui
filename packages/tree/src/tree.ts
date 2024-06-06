@@ -3,7 +3,7 @@ import { createEvent, getIcon, getConfig } from '../../ui'
 import XEUtils from 'xe-utils'
 import { getSlotVNs } from '../..//ui/src/vn'
 
-import type { TreeReactData, VxeTreeEmits, VxeTreePropTypes, TreeInternalData, TreePrivateRef, VxeTreePrivateComputed, TreePrivateMethods, TreeMethods, VxeTreeConstructor, VxeTreePrivateMethods } from '../../../types'
+import type { TreeReactData, VxeTreeEmits, VxeTreePropTypes, TreeInternalData, TreePrivateRef, VxeTreePrivateComputed, TreePrivateMethods, TreeMethods, ValueOf, VxeTreeConstructor, VxeTreePrivateMethods } from '../../../types'
 
 /**
  * 生成节点的唯一主键
@@ -94,7 +94,9 @@ export default defineComponent({
   emits: [
     'update:modelValue',
     'update:radioCheckRowKey',
-    'update:checkboxCheckRowKeys'
+    'update:checkboxCheckRowKeys',
+    'row-click',
+    'row-dblclick'
   ] as VxeTreeEmits,
   setup (props, context) {
     const { emit, slots } = context
@@ -223,10 +225,12 @@ export default defineComponent({
       }
     }
 
+    const dispatchEvent = (type: ValueOf<VxeTreeEmits>, params: Record<string, any>, evnt: Event | null) => {
+      emit(type, createEvent(evnt, { $tree: $xeTree }, params))
+    }
+
     const treeMethods: TreeMethods = {
-      dispatchEvent (type, params, evnt) {
-        emit(type, createEvent(evnt, { $tree: $xeTree }, params))
-      },
+      dispatchEvent,
       clearExpand () {
         reactData.treeExpandedMaps = {}
         return nextTick()
@@ -329,24 +333,35 @@ export default defineComponent({
       reactData.treeList = list ? list.slice(0) : []
     }
 
-    const handleNodeEvent = (evnt: MouseEvent, row: any) => {
+    const handleNodeClickEvent = (evnt: MouseEvent, row: any) => {
       const { trigger, isCurrent } = props
       const radioOpts = computeRadioOpts.value
       const checkboxOpts = computeCheckboxOpts.value
+      let triggerRadio = false
+      let triggerCheckbox = false
+      let triggerExpand = false
       if (isCurrent) {
         reactData.currentNode = row
       } else {
         reactData.currentNode = null
       }
       if (trigger === 'row') {
+        triggerExpand = true
         toggleExpandEvent(evnt, row)
       }
       if (radioOpts.trigger === 'row') {
+        triggerRadio = true
         changeRadioEvent(evnt, row)
       }
       if (checkboxOpts.trigger === 'row') {
+        triggerCheckbox = true
         changeCheckboxEvent(evnt, row)
       }
+      dispatchEvent('row-click', { row, triggerRadio, triggerCheckbox, triggerExpand }, evnt)
+    }
+
+    const handleNodeDblclickEvent = (evnt: MouseEvent, row: any) => {
+      dispatchEvent('row-dblclick', { row }, evnt)
     }
 
     const toggleExpandEvent = (evnt: MouseEvent, row: any) => {
@@ -546,7 +561,10 @@ export default defineComponent({
             paddingLeft: `${(nodeItem.level - 1) * (indent || 1)}px`
           },
           onClick (evnt) {
-            handleNodeEvent(evnt, row)
+            handleNodeClickEvent(evnt, row)
+          },
+          onDblclick (evnt) {
+            handleNodeDblclickEvent(evnt, row)
           }
         }, [
           h('div', {

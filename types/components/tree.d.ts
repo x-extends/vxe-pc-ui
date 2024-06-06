@@ -131,7 +131,9 @@ export interface VxeTreePrivateMethods extends TreePrivateMethods { }
 export type VxeTreeEmits = [
   'update:modelValue',
   'update:radioCheckRowKey',
-  'update:checkboxCheckRowKeys'
+  'update:checkboxCheckRowKeys',
+  'row-click',
+  'row-dblclick'
 ]
 
 export namespace VxeTreeDefines {

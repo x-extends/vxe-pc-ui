@@ -41,6 +41,10 @@ setConfig({
   breadcrumbItem: {},
   button: {},
   buttonGroup: {},
+  card: {
+    border: true,
+    padding: true
+  },
   checkbox: {},
   checkboxGroup: {},
   col: {},

@@ -23,9 +23,23 @@ export interface CardPrivateRef {
 export interface VxeCardPrivateRef extends CardPrivateRef { }
 
 export namespace VxeCardPropTypes {
+  export type Title = string | number
+  export type ShowTitleOverflow = boolean
+  export type Height = string | number
+  export type Width = string | number
+  export type Border = boolean
+  export type Shadow = boolean
+  export type Padding = boolean
 }
 
 export type VxeCardProps = {
+  title?: VxeCardPropTypes.Title
+  showTitleOverflow?: VxeCardPropTypes.ShowTitleOverflow
+  height?: VxeCardPropTypes.Height
+  width?: VxeCardPropTypes.Width
+  border?: VxeCardPropTypes.Border
+  shadow?: VxeCardPropTypes.Shadow
+  padding?: VxeCardPropTypes.Padding
 }
 
 export interface CardPrivateComputed {

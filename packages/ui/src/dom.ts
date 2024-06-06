@@ -53,10 +53,10 @@ export function addClass (elem: any, cls: string) {
 }
 
 export function toCssUnit (val?: number | string) {
-  if (XEUtils.isNumber(val)) {
+  if (/^\d+$/.test(`${val}`)) {
     return `${val}px`
   }
-  return val || ''
+  return `${val || ''}`
 }
 
 export function getDomNode () {

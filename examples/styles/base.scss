@@ -7,6 +7,10 @@ ul,ol {
   list-style: none
 }
 
+p+p {
+  margin-top: 16px;
+}
+
 img {
   vertical-align: middle;
   border-style: none
