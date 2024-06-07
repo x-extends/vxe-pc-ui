@@ -338,6 +338,7 @@ export namespace VxeTablePropTypes {
     mode?: 'simple' | 'popup' | '' | null
     trigger?: string,
     immediate?: boolean
+    placement?: 'left' | 'right' | 'topLeft' | 'topRight' | 'bottomLeft' | 'bottomRight'
     /**
      * 自定义列是否允许列选中的方法，该方法的返回值用来决定这一列的 checkbox 是否可以选中
      */
@@ -346,8 +347,10 @@ export namespace VxeTablePropTypes {
      * 自定义列是否的方法，该方法的返回值用来决定这一列是否显示
      */
     visibleMethod?(params: { column: VxeTableDefines.ColumnInfo }): boolean
+    allowVisible?: boolean
     allowFixed?: boolean
     allowSort?: boolean
+    allowResizable?: boolean
     showFooter?: boolean
     icon?: string
     resetButtonText?: string
@@ -2981,6 +2984,11 @@ export interface TableMethods<DT = any> {
    * 使表格失去焦点
    */
   blur(): Promise<void>
+
+  /**
+   * 用于 custom-config，用于获取自定义列设置信息，用于服务端保持
+   */
+  getCustomStoreData(): VxeTableDefines.CustomStoreData
 }
 export interface VxeTableMethods<D = any> extends TableMethods<D> { }
 
@@ -3221,6 +3229,7 @@ export namespace VxeTableDefines {
 
     renderWidth: number
     renderHeight: number
+    renderResizeWidth: number
     resizeWidth: number
     model: {
       update: boolean
@@ -3542,8 +3551,10 @@ export namespace VxeTableDefines {
     target: HTMLDivElement
   }
 
+  export type CustomType = '' | 'confirm' | 'reset' | 'cancel' | 'close' | 'open'
+
   export interface CustomParams {
-    type: string
+    type: CustomType
   }
   export interface CustomEventParams<D = any> extends TableEventParams<D>, CustomParams { }
 
@@ -3558,6 +3569,13 @@ export namespace VxeTableDefines {
     oldSortMaps: Record<string, number>
     oldFixedMaps: Record<string, VxeColumnPropTypes.Fixed>
     oldVisibleMaps: Record<string, boolean>
+  }
+
+  export interface CustomStoreData {
+    resizableData: Record<string, number>
+    sortData: Record<string, number>
+    visibleData: Record<string, boolean>
+    fixedData: Record<string, VxeColumnPropTypes.Fixed>
   }
 
   export interface VxeTableCustomStorageObj {
@@ -3675,15 +3693,6 @@ export namespace VxeTableDefines {
     checked: boolean
     _checked: boolean
   }
-
-  export interface CustomStoreItem {
-    resizable: number
-    sortData: number
-    visibleData: boolean
-    fixedData: VxeColumnPropTypes.Fixed
-  }
-
-  export type CustomStoreData = Record<string, CustomStoreItem>
 
 }
 

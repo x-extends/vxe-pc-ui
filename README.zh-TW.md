@@ -32,7 +32,8 @@
 * [x] button 按钮
 * [x] button-group 按钮组
 * [ ] calendar 日历
-* [ ] card 卡片
+* [x] card 卡片
+* [ ] carousel 走马灯
 * [x] checkbox 复选框
 * [x] checkbox-group 复选框-组
 * [x] col 列
@@ -41,7 +42,7 @@
 * [x] date-input 日期选择器
 * [x] drawer 抽屉
 * [ ] flow-design 流程设计器
-* [*] flow-view 流程设计器-视图渲染
+* [ ] flow-view 流程设计器-视图渲染
 * [x] form 表单
 * [x] form-design 表单设计器
 * [x] form-gather 表单-容器

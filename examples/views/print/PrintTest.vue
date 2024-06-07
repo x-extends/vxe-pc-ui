@@ -77,7 +77,7 @@ const printEvent1 = () => {
 const printEvent2 = () => {
   VxeUI.print({
     title: 'fgh',
-    content: 'sdfsdf'
+    content: '<div style="height:200px">sdfsdf</div><div style="height:200px">sdfsdf</div><div style="height:200px">sdfsdf</div><div style="height:200px">sdfsdf</div><div style="height:200px">sdfsdf</div>'
   })
 }
 
@@ -86,7 +86,7 @@ const printEvent3 = () => {
     title: 'sdfg',
     pageBreaks: [
       {
-        bodyContent () {
+        bodyHtml () {
           return 'sdfsdff'
         }
       }

@@ -119,6 +119,7 @@ export default {
         colSort: 'Sort',
         sortHelpTip: 'Click and drag the icon to adjust the order of the columns.',
         colTitle: 'Title',
+        colResizable: 'Column width (px)',
         colVisible: 'Display',
         colFixed: 'Freeze columns (Max {0})',
         fixedLeft: 'Left',

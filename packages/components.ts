@@ -12,6 +12,7 @@ import VxeButton from './button'
 import VxeButtonGroup from './button-group'
 import VxeCalendar from './calendar'
 import VxeCard from './card'
+import VxeCarousel from './carousel'
 import VxeCheckbox from './checkbox'
 import VxeCheckboxGroup from './checkbox-group'
 import VxeCol from './col'
@@ -77,6 +78,7 @@ const components = [
   VxeButtonGroup,
   VxeCalendar,
   VxeCard,
+  VxeCarousel,
   VxeCheckbox,
   VxeCheckboxGroup,
   VxeCol,
@@ -161,6 +163,7 @@ export * from './button'
 export * from './button-group'
 export * from './calendar'
 export * from './card'
+export * from './carousel'
 export * from './checkbox'
 export * from './checkbox-group'
 export * from './col'

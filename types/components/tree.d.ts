@@ -140,13 +140,29 @@ export namespace VxeTreeDefines {
   export interface TreeEventParams extends VxeComponentEventParams {
     $tree: VxeTreeConstructor
   }
+
+  export interface RowClickParams<D = any> {
+    row: D
+  }
+  export interface RowClickEventParams<D = any> extends TreeEventParams, RowClickParams<D> { }
+
+  export interface RowDblclickEventParams<D = any> extends RowClickEventParams<D> { }
 }
 
-export type VxeTreeEventProps = {}
+export type VxeTreeEventProps = {
+  onRowClick?: VxeTreeEvents.RowClick
+  onRowDblclick?: VxeTreeEvents.RowDblclick
+}
 
-export interface VxeTreeListeners { }
+export interface VxeTreeListeners {
+  rowClick?: VxeTreeEvents.RowClick
+  rowDblclick?: VxeTreeEvents.RowDblclick
+}
 
-export namespace VxeTreeEvents { }
+export namespace VxeTreeEvents {
+  export type RowClick<D = any> = (params: VxeTreeDefines.RowClickEventParams<D>) => void
+  export type RowDblclick<D = any> = (params: VxeTreeDefines.RowDblclickEventParams<D>) => void
+}
 
 export namespace VxeTreeSlotTypes {
   export interface DefaultSlotParams {}

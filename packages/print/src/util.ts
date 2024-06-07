@@ -42,15 +42,15 @@ function getExportBlobByString (str: string, type: string) {
 
 const printMargin = 80
 
-function createHtmlPage (opts: VxePrintProps, printHtml: string): string {
+function createHtmlPage (opts: VxePrintProps & { _pageBreaks: boolean }, printHtml: string): string {
   const { customStyle } = opts
   return [
     '<!DOCTYPE html><html>',
     '<head>',
     '<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no,minimal-ui">',
     `<title>${opts.title}</title>`,
-    '<style media="print">@page {size: auto;margin: 0mm;}</style>',
-    `<style>.vxe-print--default{padding:${printMargin}px}.vxe-print-slots{display: none;}.vxe-print-page-break.align--center{text-align:center;}.vxe-print-page-break.align--left{text-align:left;}.vxe-print-page-break.align--right{text-align:right;}.vxe-print-page-break--header-title{font-size:1.8em;text-align:center;line-height:${printMargin}px;}.vxe-print-page-break{page-break-before:always;display:flex;flex-direction:column;height:100vh;overflow:hidden;}.vxe-print-page-break--body{display:flex;flex-direction:row;flex-grow:1;overflow: hidden;}.vxe-print-page-break--left,.vxe-print-page-break--right{flex-shrink:0;width:${printMargin}px;height:100%;}.vxe-print-page-break--header,.vxe-print-page-break--footer{flex-shrink:0;height:${printMargin}px;width:100%;}.vxe-print-page-break--content{flex-grow: 1;overflow: hidden;}.vxe-print-page-break--footer-page-number{line-height:${printMargin}px;text-align:center;}</style>`,
+    opts._pageBreaks || (opts.pageBreaks && opts.pageBreaks.length) ? '<style media="print">@page {size: auto;margin: 0mm;}</style>' : '',
+    `<style>.vxe-print-slots{display: none;}.vxe-print-page-break.align--center{text-align:center;}.vxe-print-page-break.align--left{text-align:left;}.vxe-print-page-break.align--right{text-align:right;}.vxe-print-page-break--header-title{font-size:1.8em;text-align:center;line-height:${printMargin}px;}.vxe-print-page-break{page-break-before:always;display:flex;flex-direction:column;height:100vh;overflow:hidden;}.vxe-print-page-break--body{display:flex;flex-direction:row;flex-grow:1;overflow: hidden;}.vxe-print-page-break--left,.vxe-print-page-break--right{flex-shrink:0;width:${printMargin}px;height:100%;}.vxe-print-page-break--header,.vxe-print-page-break--footer{flex-shrink:0;height:${printMargin}px;width:100%;}.vxe-print-page-break--content{flex-grow: 1;overflow: hidden;}.vxe-print-page-break--footer-page-number{line-height:${printMargin}px;text-align:center;}</style>`,
     `<style>${defaultHtmlStyle}</style>`,
     customStyle ? `<style>${customStyle}</style>` : '',
     '</head>',
@@ -61,7 +61,7 @@ function createHtmlPage (opts: VxePrintProps, printHtml: string): string {
   ].join('')
 }
 
-function handlePrint (opts: VxePrintProps, printHtml = '') {
+function handlePrint (opts: VxePrintProps & { _pageBreaks: boolean }, printHtml = '') {
   const { beforeMethod } = opts
   if (beforeMethod) {
     printHtml = beforeMethod({ content: printHtml, html: printHtml, options: opts }) || ''
@@ -132,7 +132,7 @@ function createPageBreak (opts: VxePrintProps) {
 }
 
 export const printHtml: VxePrintDefines.PrintFunction = (options) => {
-  const opts = Object.assign({ customLayout: true }, options)
+  const opts = Object.assign({ _pageBreaks: false, customLayout: true }, options)
   if (opts.sheetName) {
     opts.title = opts.title || opts.sheetName
   }
@@ -146,7 +146,7 @@ export const printHtml: VxePrintDefines.PrintFunction = (options) => {
     return handlePrint(opts, createPageBreak(opts))
   }
   const printHtml = opts.html || opts.content
-  return handlePrint(opts, opts.customLayout ? `<div class="vxe-print--default">${printHtml}</div>` : printHtml)
+  return handlePrint(opts, printHtml)
 }
 
 export function assemblePageBreak ($xePageBreak: VxePrintConstructor & VxePrintPrivateMethods, elem: HTMLElement, pageBreakConfig: VxePrintDefines.PageBreakConfig) {

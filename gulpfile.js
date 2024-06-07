@@ -39,6 +39,7 @@ const componentList = [
   'button-group',
   'calendar',
   'card',
+  'carousel',
   'checkbox',
   'checkbox-group',
   'col',

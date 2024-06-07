@@ -80,6 +80,7 @@ export default defineComponent({
       print () {
         const elem = refElem.value
         return printHtml(Object.assign({}, props, {
+          _pageBreaks: !!reactData.staticPageBreaks.length,
           html: (elem ? elem.outerHTML : '') || props.html || props.content || ''
         }))
       }

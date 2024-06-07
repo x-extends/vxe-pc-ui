@@ -2,10 +2,11 @@ import { defineComponent, h, Teleport, ref, Ref, computed, reactive, nextTick, w
 import XEUtils from 'xe-utils'
 import { getDomNode, getEventTargetNode } from '../../ui/src/dom'
 import { getLastZIndex, nextZIndex, getFuncText } from '../../ui/src/utils'
-import { getConfig, getIcon, getI18n, globalEvents, GLOBAL_EVENT_KEYS, log, createEvent, useSize } from '../../ui'
+import { getConfig, getIcon, getI18n, globalEvents, GLOBAL_EVENT_KEYS, createEvent, useSize } from '../../ui'
 import VxeButtonComponent from '../../button/src/button'
 import VxeLoadingComponent from '../../loading/index'
 import { getSlotVNs } from '../../ui/src/vn'
+import { errLog } from '../../ui/src/log'
 
 import type { VxeModalConstructor, VxeModalPropTypes, ModalReactData, VxeModalEmits, ModalEventTypes, VxeButtonInstance, ModalMethods, ModalPrivateRef, VxeModalMethods } from '../../../types'
 
@@ -935,7 +936,7 @@ export default defineComponent({
     onMounted(() => {
       nextTick(() => {
         if (props.storage && !props.id) {
-          log.err('vxe.error.reqProp', ['modal.id'])
+          errLog('vxe.error.reqProp', ['modal.id'])
         }
         if (props.modelValue) {
           openModal()

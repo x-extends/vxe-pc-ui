@@ -8,6 +8,7 @@ import { VxeButtonProps } from '../components/button'
 import { VxeButtonGroupProps } from '../components/button-group'
 import { VxeCalendarProps } from '../components/calendar'
 import { VxeCardProps } from '../components/card'
+import { VxeCarouselProps } from '../components/carousel'
 import { VxeCheckboxProps } from '../components/checkbox'
 import { VxeCheckboxGroupProps } from '../components/checkbox-group'
 import { VxeColProps } from '../components/col'
@@ -78,6 +79,7 @@ declare module '@vxe-ui/core' {
     buttonGroup?: VxeButtonGroupProps
     calendar?: VxeCalendarProps
     card?: VxeCardProps
+    carousel?: VxeCarouselProps
     checkbox?: VxeCheckboxProps
     checkboxGroup?: VxeCheckboxGroupProps
     col?: VxeColProps

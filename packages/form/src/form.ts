@@ -1,6 +1,6 @@
 import { defineComponent, h, ref, Ref, provide, computed, inject, reactive, watch, nextTick, PropType, onMounted } from 'vue'
 import XEUtils from 'xe-utils'
-import { getConfig, validators, renderer, log, createEvent, useSize } from '../../ui'
+import { getConfig, validators, renderer, createEvent, useSize } from '../../ui'
 import { getFuncText, isEnableConf, eqEmptyValue } from '../../ui/src/utils'
 import { scrollToView } from '../../ui/src/dom'
 import { createItem, handleFieldOrItem, isHiddenItem, isActiveItem } from './util'
@@ -8,6 +8,7 @@ import VxeTooltipComponent from '../../tooltip/src/tooltip'
 import VxeFormConfigItem from './form-config-item'
 import VxeLoadingComponent from '../../loading/src/loading'
 import { getSlotVNs } from '../../ui/src/vn'
+import { warnLog, errLog } from '../../ui/src/log'
 
 import type { VxeFormConstructor, VxeFormPropTypes, VxeFormEmits, FormReactData, FormMethods, FormPrivateRef, VxeFormPrivateMethods, VxeFormDefines, VxeFormItemPropTypes, VxeTooltipInstance, FormInternalData, VxeFormPrivateComputed } from '../../../types'
 
@@ -182,7 +183,7 @@ export default defineComponent({
               XEUtils.each(item.slots, (func) => {
                 if (!XEUtils.isFunction(func)) {
                   if (!slots[func]) {
-                    log.err('vxe.error.notSlot', [func])
+                    errLog('vxe.error.notSlot', [func])
                   }
                 }
               })
@@ -356,12 +357,12 @@ export default defineComponent({
                           customValid = validatorMethod(validParams)
                         } else {
                           if (process.env.VUE_APP_VXE_ENV === 'development') {
-                            log.warn('vxe.error.notValidators', [validator])
+                            warnLog('vxe.error.notValidators', [validator])
                           }
                         }
                       } else {
                         if (process.env.VUE_APP_VXE_ENV === 'development') {
-                          log.err('vxe.error.notValidators', [validator])
+                          errLog('vxe.error.notValidators', [validator])
                         }
                       }
                     } else {
@@ -699,7 +700,7 @@ export default defineComponent({
       nextTick(() => {
         if (process.env.VUE_APP_VXE_ENV === 'development') {
           if (props.customLayout && props.items) {
-            log.err('vxe.error.errConflicts', ['custom-layout', 'items'])
+            errLog('vxe.error.errConflicts', ['custom-layout', 'items'])
           }
         }
       })

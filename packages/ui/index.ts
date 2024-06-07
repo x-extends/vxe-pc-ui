@@ -1,6 +1,7 @@
-import { VxeUI, setConfig, setIcon, log } from '@vxe-ui/core'
+import { VxeUI, setConfig, setIcon } from '@vxe-ui/core'
 import { dynamicApp } from '../dynamics'
 import { getFuncText } from './src/utils'
+import { warnLog } from './src/log'
 
 import { VxeGlobalConfig } from '../../types'
 
@@ -12,12 +13,12 @@ VxeUI._t = getFuncText
 VxeUI.dynamicApp = dynamicApp
 
 export function config (options?: VxeGlobalConfig) {
-  log.warn('vxe.error.delFunc', ['config', 'setConfig'])
+  warnLog('vxe.error.delFunc', ['config', 'setConfig'])
   return setConfig(options)
 }
 
 export function setup (options?: VxeGlobalConfig) {
-  log.warn('vxe.error.delFunc', ['setup', 'setConfig'])
+  warnLog('vxe.error.delFunc', ['setup', 'setConfig'])
   return setConfig(options)
 }
 

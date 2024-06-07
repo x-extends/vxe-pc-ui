@@ -10,6 +10,7 @@ import VxeButton from './components/button'
 import VxeButtonGroup from './components/button-group'
 import VxeCalendar from './components/calendar'
 import VxeCard from './components/card'
+import VxeCarousel from './components/carousel'
 import VxeCheckbox from './components/checkbox'
 import VxeCheckboxGroup from './components/checkbox-group'
 import VxeCol from './components/col'
@@ -85,6 +86,7 @@ declare module '@vue/runtime-core' {
     VxeButtonGroup: typeof VxeButtonGroup
     VxeCalendar: typeof VxeCalendar
     VxeCard: typeof VxeCard
+    VxeCarousel: typeof VxeCarousel
     VxeCheckbox: typeof VxeCheckbox
     VxeCheckboxGroup: typeof VxeCheckboxGroup
     VxeCol: typeof VxeCol
@@ -161,6 +163,7 @@ export * from './components/button'
 export * from './components/button-group'
 export * from './components/calendar'
 export * from './components/card'
+export * from './components/carousel'
 export * from './components/checkbox'
 export * from './components/checkbox-group'
 export * from './components/col'

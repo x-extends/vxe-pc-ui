@@ -1,7 +1,8 @@
 import { h, resolveComponent, ComponentOptions } from 'vue'
 import XEUtils from 'xe-utils'
-import { renderer, log } from '../../ui'
+import { renderer } from '../../ui'
 import { getOnName, getModelEvent, getChangeEvent } from '../../ui/src/vn'
+import { errLog } from '../../ui/src/log'
 
 import type { VxeButtonComponent } from '../../../types/all'
 
@@ -99,7 +100,7 @@ function getComponentOns (renderOpts: any, params: any, modelFunc?: any, changeF
     ons[getOnName(key)] = function (...args: any[]) {
       if (process.env.VUE_APP_VXE_ENV === 'development') {
         if (!XEUtils.isFunction(func)) {
-          log.err('vxe.error.errFunc', [func])
+          errLog('vxe.error.errFunc', [func])
         }
       }
       func(params, ...args)

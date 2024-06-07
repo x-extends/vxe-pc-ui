@@ -1,6 +1,7 @@
 import { defineComponent, h, PropType, computed, inject, ref, Ref, reactive, nextTick, watch } from 'vue'
 import XEUtils from 'xe-utils'
-import { getIcon, getConfig, getI18n, globalEvents, GLOBAL_EVENT_KEYS, log, createEvent, useSize } from '../../ui'
+import { getIcon, getConfig, getI18n, globalEvents, GLOBAL_EVENT_KEYS, createEvent, useSize } from '../../ui'
+import { errLog } from '../../ui/src/log'
 import VxeSelectComponent from '../../select'
 
 import type { VxePagerPropTypes, VxePagerConstructor, VxePagerEmits, VxeSelectEvents, PagerPrivateRef, PagerMethods, PagerPrivateMethods, VxePagerPrivateMethods, PagerReactData } from '../../../types'
@@ -550,7 +551,7 @@ export default defineComponent({
           childNodes.push(renderFn())
         } else {
           if (process.env.VUE_APP_VXE_ENV === 'development') {
-            log.err('vxe.error.notProp', [`layouts -> ${name}`])
+            errLog('vxe.error.notProp', [`layouts -> ${name}`])
           }
         }
       })

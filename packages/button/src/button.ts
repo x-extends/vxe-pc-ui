@@ -1,8 +1,9 @@
 import { defineComponent, h, ref, Ref, computed, Teleport, VNode, onUnmounted, reactive, nextTick, PropType, onMounted, inject } from 'vue'
 import XEUtils from 'xe-utils'
-import { getConfig, globalEvents, log, getIcon, createEvent, useSize } from '../../ui'
+import { getConfig, globalEvents, getIcon, createEvent, useSize } from '../../ui'
 import { getAbsolutePos, getEventTargetNode } from '../../ui/src/dom'
 import { getFuncText, getLastZIndex, nextZIndex } from '../../ui/src/utils'
+import { warnLog } from '../../ui/src/log'
 
 import type { VxeButtonConstructor, VxeButtonPropTypes, VxeButtonEmits, ButtonReactData, ButtonMethods, ButtonPrivateRef, ButtonInternalData, VxeButtonGroupConstructor, VxeButtonGroupPrivateMethods } from '../../../types'
 
@@ -410,7 +411,7 @@ export default defineComponent({
     onMounted(() => {
       if (process.env.VUE_APP_VXE_ENV === 'development') {
         if (props.type === 'text') {
-          log.warn('vxe.error.delProp', ['type=text', 'mode=text'])
+          warnLog('vxe.error.delProp', ['type=text', 'mode=text'])
         }
       }
 
