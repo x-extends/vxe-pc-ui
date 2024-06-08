@@ -1,26 +1,26 @@
 import { defineComponent, ref, h, reactive, PropType, createCommentVNode } from 'vue'
 import XEUtils from 'xe-utils'
 import { getConfig } from '../../ui'
-import { getSlotVNs } from '../..//ui/src/vn'
+import { getSlotVNs } from '../../ui/src/vn'
 
-import type { VxeTipsPropTypes, TipsReactData, VxeTipsEmits, TipsPrivateRef, VxeTipsPrivateComputed, VxeTipsConstructor, VxeTipsPrivateMethods } from '../../../types'
+import type { VxeTipPropTypes, TipReactData, VxeTipEmits, TipPrivateRef, VxeTipPrivateComputed, VxeTipConstructor, VxeTipPrivateMethods } from '../../../types'
 
 export default defineComponent({
-  name: 'VxeTips',
+  name: 'VxeTip',
   props: {
     title: {
-      type: [String, Number] as PropType<VxeTipsPropTypes.Title>,
-      default: () => getConfig().tips.title
+      type: [String, Number] as PropType<VxeTipPropTypes.Title>,
+      default: () => getConfig().tip.title
     },
-    content: [String, Number] as PropType<VxeTipsPropTypes.Content>,
-    status: String as PropType<VxeTipsPropTypes.Status>,
+    content: [String, Number] as PropType<VxeTipPropTypes.Content>,
+    status: String as PropType<VxeTipPropTypes.Status>,
     icon: {
-      type: String as PropType<VxeTipsPropTypes.Icon>,
-      default: () => getConfig().tips.icon
+      type: String as PropType<VxeTipPropTypes.Icon>,
+      default: () => getConfig().tip.icon
     }
   },
   emits: [
-  ] as VxeTipsEmits,
+  ] as VxeTipEmits,
   setup (props, context) {
     const { slots } = context
 
@@ -28,17 +28,17 @@ export default defineComponent({
 
     const refElem = ref<HTMLDivElement>()
 
-    const reactData = reactive<TipsReactData>({
+    const reactData = reactive<TipReactData>({
     })
 
-    const refMaps: TipsPrivateRef = {
+    const refMaps: TipPrivateRef = {
       refElem
     }
 
-    const computeMaps: VxeTipsPrivateComputed = {
+    const computeMaps: VxeTipPrivateComputed = {
     }
 
-    const $xeTips = {
+    const $xeTip = {
       xID,
       props,
       context,
@@ -46,7 +46,7 @@ export default defineComponent({
 
       getRefMaps: () => refMaps,
       getComputeMaps: () => computeMaps
-    } as unknown as VxeTipsConstructor & VxeTipsPrivateMethods
+    } as unknown as VxeTipConstructor & VxeTipPrivateMethods
 
     const renderVN = () => {
       const { status, content, icon, title } = props
@@ -55,13 +55,13 @@ export default defineComponent({
       const iconSlot = slots.icon
       return h('div', {
         ref: refElem,
-        class: ['vxe-tips', {
+        class: ['vxe-tip', {
           [`theme--${status}`]: status
         }]
       }, [
         iconSlot || icon
           ? h('div', {
-            class: 'vxe-tips--icon'
+            class: 'vxe-tip--icon'
           }, iconSlot
             ? getSlotVNs(iconSlot({}))
             : [
@@ -71,23 +71,23 @@ export default defineComponent({
               ])
           : createCommentVNode(),
         h('div', {
-          class: 'vxe-tips--body'
+          class: 'vxe-tip--body'
         }, [
           titleSlot || title
             ? h('div', {
-              class: 'vxe-tips--title'
+              class: 'vxe-tip--title'
             }, titleSlot ? getSlotVNs(titleSlot({})) : XEUtils.toValueString(title))
             : createCommentVNode(),
           h('div', {
-            class: 'vxe-tips--content'
+            class: 'vxe-tip--content'
           }, defaultSlot ? getSlotVNs(defaultSlot({})) : XEUtils.toValueString(content))
         ])
       ])
     }
 
-    $xeTips.renderVN = renderVN
+    $xeTip.renderVN = renderVN
 
-    return $xeTips
+    return $xeTip
   },
   render () {
     return this.renderVN()

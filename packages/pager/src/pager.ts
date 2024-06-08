@@ -36,6 +36,10 @@ export default defineComponent({
     autoHidden: { type: Boolean as PropType<VxePagerPropTypes.AutoHidden>, default: () => getConfig().pager.autoHidden },
     transfer: { type: Boolean as PropType<VxePagerPropTypes.Transfer>, default: () => getConfig().pager.transfer },
     className: [String, Function] as PropType<VxePagerPropTypes.ClassName>,
+    pageSizePlacement: {
+      type: String as PropType<VxePagerPropTypes.PageSizePlacement>,
+      default: () => getConfig().pager.pageSizePlacement
+    },
     // 自定义图标
     iconPrevPage: String as PropType<VxePagerPropTypes.IconPrevPage>,
     iconJumpPrev: String as PropType<VxePagerPropTypes.IconJumpPrev>,
@@ -290,9 +294,10 @@ export default defineComponent({
 
     // 下一页
     const renderNextPage = () => {
+      const pageCount = computePageCount.value
       return h('button', {
         class: ['vxe-pager--next-btn', {
-          'is--disabled': props.currentPage <= 1
+          'is--disabled': props.currentPage >= pageCount
         }],
         type: 'button',
         title: getI18n('vxe.pager.nextPageTitle'),
@@ -390,7 +395,7 @@ export default defineComponent({
       return h(VxeSelectComponent, {
         class: 'vxe-pager--sizes',
         modelValue: props.pageSize,
-        placement: 'top',
+        placement: props.pageSizePlacement,
         transfer: props.transfer,
         options: sizeList,
         onChange: pageSizeEvent

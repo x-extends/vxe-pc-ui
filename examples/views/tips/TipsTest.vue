@@ -1,31 +1,31 @@
 <template>
   <div>
-    <vxe-tips>
+    <vxe-tip>
       sadasdsadasdasddaddad
-    </vxe-tips>
-    <vxe-tips title="标题sss">
+    </vxe-tip>
+    <vxe-tip title="标题sss">
       sadasdsadasdasddaddad
-    </vxe-tips>
-    <vxe-tips title="标题sss" status="primary">
+    </vxe-tip>
+    <vxe-tip title="标题sss" status="primary">
       sadasdsadasdasddaddad
-    </vxe-tips>
-    <vxe-tips title="标题sss" status="success">
+    </vxe-tip>
+    <vxe-tip title="标题sss" status="success">
       sadasdsadasdasddaddad
-    </vxe-tips>
-    <vxe-tips title="标题sss" status="info">
+    </vxe-tip>
+    <vxe-tip title="标题sss" status="info">
       sadasdsadasdasddaddad
-    </vxe-tips>
-    <vxe-tips title="标题sss" status="warning">
+    </vxe-tip>
+    <vxe-tip title="标题sss" status="warning">
       sadasdsadasdasddaddad
-    </vxe-tips>
-    <vxe-tips title="标题sss" status="error">
+    </vxe-tip>
+    <vxe-tip title="标题sss" status="error">
       sadasdsadasdasddaddad
-    </vxe-tips>
-    <vxe-tips title="标题sss" status="danger">
+    </vxe-tip>
+    <vxe-tip title="标题sss" status="danger">
       sadasdsadasdasddaddad
-    </vxe-tips>
-    <vxe-tips title="标题sss" status="primary" icon="vxe-icon-info-circle">
+    </vxe-tip>
+    <vxe-tip title="标题sss" status="primary" icon="vxe-icon-info-circle">
       sadasdsadasdasddaddad
-    </vxe-tips>
+    </vxe-tip>
   </div>
 </template>

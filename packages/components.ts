@@ -60,7 +60,7 @@ import VxeTabs from './tabs'
 import VxeTag from './tag'
 import VxeText from './text'
 import VxeTextarea from './textarea'
-import VxeTips from './tips'
+import VxeTip from './tip'
 import VxeTooltip from './tooltip'
 import VxeTree from './tree'
 import VxeTreeSelect from './tree-select'
@@ -126,7 +126,7 @@ const components = [
   VxeTag,
   VxeText,
   VxeTextarea,
-  VxeTips,
+  VxeTip,
   VxeTooltip,
   VxeTree,
   VxeTreeSelect,
@@ -211,7 +211,7 @@ export * from './tabs'
 export * from './tag'
 export * from './text'
 export * from './textarea'
-export * from './tips'
+export * from './tip'
 export * from './tooltip'
 export * from './tree'
 export * from './tree-select'

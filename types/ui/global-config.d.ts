@@ -55,7 +55,7 @@ import { VxeTabPaneProps } from '../components/tab-pane'
 import { VxeTabsProps } from '../components/tabs'
 import { VxeTextProps } from '../components/text'
 import { VxeTextareaProps } from '../components/textarea'
-import { VxeTipsProps } from '../components/tips'
+import { VxeTipProps } from '../components/tip'
 import { VxeTooltipProps } from '../components/tooltip'
 import { VxeTreeProps } from '../components/tree'
 import { VxeTreeSelectProps } from '../components/tree-select'
@@ -128,7 +128,7 @@ declare module '@vxe-ui/core' {
     tabs?: VxeTabsProps
     text?: VxeTextProps
     textarea?: VxeTextareaProps
-    tips?: VxeTipsProps
+    tip?: VxeTipProps
     tooltip?: VxeTooltipProps
     tree?: VxeTreeProps
     treeSelect?: VxeTreeSelectProps

@@ -31,7 +31,7 @@ $btnThemeList: (
   )
 );
 
-.vxe-tips {
+.vxe-tip {
   position: relative;
   display: flex;
   flex-direction: row;
@@ -56,7 +56,7 @@ $btnThemeList: (
       &::after {
         background-color: map-get($item, borderColor);
       }
-      .vxe-tips--icon {
+      .vxe-tip--icon {
         color: map-get($item, borderColor);
       }
     }
@@ -71,16 +71,16 @@ $btnThemeList: (
     font-size: var(--vxe-ui-font-size-mini);
   }
 }
-.vxe-tips--icon {
+.vxe-tip--icon {
   flex-shrink: 0;
   font-size: 1.2em;
   line-height: 2em;
   padding-right: var(--vxe-ui-layout-padding-half);
 }
-.vxe-tips--body {
+.vxe-tip--body {
   flex-grow: 1;
 }
-.vxe-tips--title {
+.vxe-tip--title {
   font-size: 1.1em;
   line-height: 2em;
   font-weight: 700;

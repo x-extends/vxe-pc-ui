@@ -144,6 +144,7 @@ setConfig({
   optgroup: {},
   option: {},
   pager: {
+    pageSizePlacement: 'top'
     // size: null,
     // autoHidden: false,
     // perfect: true,
@@ -175,7 +176,7 @@ setConfig({
   tabs: {},
   textarea: {},
   toolbar: {},
-  tips: {},
+  tip: {},
   tooltip: {
     // size: null,
     trigger: 'hover',

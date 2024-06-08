@@ -60,7 +60,7 @@ import VxeTabs from './components/tabs'
 import VxeTag from './components/tag'
 import VxeText from './components/text'
 import VxeTextarea from './components/textarea'
-import VxeTips from './components/tips'
+import VxeTip from './components/tip'
 import VxeTooltip from './components/tooltip'
 import VxeTree from './components/tree'
 import VxeTreeSelect from './components/tree-select'
@@ -136,7 +136,7 @@ declare module '@vue/runtime-core' {
     VxeTag: typeof VxeTag
     VxeText: typeof VxeText
     VxeTextarea: typeof VxeTextarea
-    VxeTips: typeof VxeTips
+    VxeTip: typeof VxeTip
     VxeTooltip: typeof VxeTooltip
     VxeTree: typeof VxeTree
     VxeTreeSelect: typeof VxeTreeSelect
@@ -213,7 +213,7 @@ export * from './components/tabs'
 export * from './components/tag'
 export * from './components/text'
 export * from './components/textarea'
-export * from './components/tips'
+export * from './components/tip'
 export * from './components/tooltip'
 export * from './components/tree'
 export * from './components/tree-select'

@@ -1,5 +1,6 @@
 import { RenderFunction, SetupContext, Ref, ComponentPublicInstance, DefineComponent } from 'vue'
 import { defineVxeComponent, VxeComponentBaseOptions, VxeComponentEventParams, VxeComponentSizeType, ValueOf } from '@vxe-ui/core'
+import { VxeSelectPropTypes } from './select'
 
 /* eslint-disable no-use-before-define,@typescript-eslint/ban-types */
 
@@ -45,6 +46,7 @@ export namespace VxePagerPropTypes {
   export type ClassName = string | ((params: {
     $pager: VxePagerConstructor
   }) => string)
+  export type PageSizePlacement = VxeSelectPropTypes.Placement
   export type IconPrevPage = string
   export type IconJumpPrev = string
   export type IconJumpNext = string
@@ -106,6 +108,7 @@ export type VxePagerProps = {
   autoHidden?: VxePagerPropTypes.AutoHidden
   transfer?: VxePagerPropTypes.Transfer
   className?: VxePagerPropTypes.ClassName
+  pageSizePlacement?: VxePagerPropTypes.PageSizePlacement
   /**
    * 自定义图标
    */

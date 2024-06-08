@@ -89,7 +89,7 @@ const componentList = [
   'tag',
   'text',
   'textarea',
-  'tips',
+  'tip',
   'tooltip',
   'tree',
   'tree-select',

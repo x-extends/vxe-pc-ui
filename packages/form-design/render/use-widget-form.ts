@@ -3,7 +3,7 @@ import { VxeUI, getIcon, getI18n } from '@vxe-ui/core'
 import VxeFormItemComponent from '../../form/src/form-item'
 import VxeButtonComponent from '../../button/src/button'
 import VxeTextareaComponent from '../../textarea/src/textarea'
-import VxeTipsComponent from '../../tips/src/tips'
+import VxeTipComponent from '../../tip/src/tip'
 
 import type { VxeGlobalRendererHandles } from '../../../types'
 
@@ -136,7 +136,7 @@ export function useWidgetPropDataSource (props: {
             class: 'vxe-form-design--widget-form-item-data-source-popup'
           }, [
             isSubOption
-              ? h(VxeTipsComponent, {
+              ? h(VxeTipComponent, {
                 status: 'primary',
                 title: '',
                 content: '每行对应一个选项，如果是分组，子项可以是空格或制表键开头，可从 Excel 或 WPS 中复制。'
