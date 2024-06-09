@@ -186,6 +186,7 @@ export default {
     },
     modal: {
       errTitle: '错误提示',
+      zoomMin: '最小化',
       zoomIn: '最大化',
       zoomOut: '还原',
       close: '关闭'

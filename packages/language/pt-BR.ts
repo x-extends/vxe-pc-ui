@@ -186,7 +186,8 @@ export default {
     },
     modal: {
       errTitle: 'Error',
-      zoomIn: 'Maximizar',
+      zoomMin: 'Minimize',
+      zoomIn: 'Maximize',
       zoomOut: 'Restaurar',
       close: 'Fechar'
     },

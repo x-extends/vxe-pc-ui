@@ -338,7 +338,7 @@ export namespace VxeTablePropTypes {
     mode?: 'simple' | 'popup' | '' | null
     trigger?: string,
     immediate?: boolean
-    placement?: 'left' | 'right' | 'topLeft' | 'topRight' | 'bottomLeft' | 'bottomRight'
+    placement?: 'left' | 'right' | 'top-left' | 'top-right' | 'bottom-left' | 'bottom-right'
     /**
      * 自定义列是否允许列选中的方法，该方法的返回值用来决定这一列的 checkbox 是否可以选中
      */

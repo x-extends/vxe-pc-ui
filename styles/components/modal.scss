@@ -10,7 +10,6 @@
   height: calc(100% + 18px);
   color: var(--vxe-ui-font-color);
   font-family: var(--vxe-ui-font-family);
-  transition: top .4s ease-in-out;
   &.is--active {
     display: block;
   }
@@ -18,12 +17,6 @@
     &.is--mask {
       &:before {
         background-color: rgba(0, 0, 0, 0.5);
-      }
-    }
-    &.type--message {
-      .vxe-modal--box {
-        opacity: 1;
-        transform: translateY(0);
       }
     }
     .vxe-modal--box {
@@ -52,7 +45,25 @@
   &:not(.lock--view) {
     pointer-events: none;
   }
-  &:not(.type--message) {
+  &.is--draggable {
+    &.zoom--revert,
+    &.zoom--minimize {
+      .vxe-modal--header-title {
+        cursor: move;
+      }
+    }
+  }
+  &.zoom--minimize {
+    & > .vxe-modal--box {
+      & > .vxe-modal--body,
+      & > .vxe-modal--footer {
+        display: none;
+      }
+    }
+  }
+  &.type--modal,
+  &.type--alert,
+  &.type--confirm {
     &.lock--scroll {
       overflow: hidden;
     }
@@ -84,15 +95,9 @@
         @include createAnimationTransition(background-color, .2s);
       }
     }
-    &.type--message {
-      .vxe-modal--box {
-        &:not(.is--drag) {
-          @include createAnimationTransition(all, .4s, ease-out);
-        }
-      }
-    }
   }
   &.type--message,
+  &.type--notification,
   &.type--alert,
   &.type--confirm {
     .vxe-modal--body {
@@ -101,15 +106,51 @@
     }
   }
   &.type--message {
+    .vxe-modal--box {
+      opacity: 0;
+      transform: translate(0, -100%);
+    }
+    &.is--visible {
+      .vxe-modal--box {
+        opacity: 1;
+        transform: translate(0, 0);
+      }
+    }
+  }
+  &.type--notification {
+    &.pos--top-right {
+      .vxe-modal--box {
+        opacity: 0;
+        transform: translate(100%, 0);
+      }
+      &.is--visible {
+        .vxe-modal--box {
+          opacity: 1;
+          transform: translate(0, 0);
+        }
+      }
+    }
+  }
+  &.type--message,
+  &.type--notification {
+    width: 100%;
+    height: 100%;
+    padding: 0 var(--vxe-ui-layout-padding-double);
     text-align: center;
+    transition: top .3s ease-in-out;
+    &.pos--top-left {
+      text-align: left;
+    }
+    &.pos--top-right {
+      text-align: right;
+    }
     .vxe-modal--box {
       display: inline-block;
       padding: 2px 0;
       margin-top: 0;
       width: auto;
       box-shadow: 0 0 8px 0 rgba(0, 0, 0, 0.1);
-      opacity: 0;
-      transform: translateY(-100%);
+      @include createAnimationTransition(all, .3s, ease-out);
       .vxe-modal--body {
         &:after {
           content: '';
@@ -238,6 +279,8 @@
   .vxe-modal--header {
     display: flex;
     flex-direction: row;
+    align-items: center;
+    height: 2.8em;
     flex-shrink: 0;
     font-size: 1.1em;
     font-weight: 700;
@@ -245,11 +288,6 @@
     background-color: var(--vxe-ui-modal-header-background-color);
     border-radius: var(--vxe-ui-base-border-radius) var(--vxe-ui-base-border-radius) 0 0;
     user-select: none;
-    &.is--draggable {
-      .vxe-modal--header-title {
-        cursor: move;
-      }
-    }
     &.is--ellipsis {
       .vxe-modal--header-title {
         overflow: hidden;
@@ -264,12 +302,17 @@
   }
   .vxe-modal--header-right {
     flex-shrink: 0;
-    padding: 0.6em 1em 0.6em 0;
+    padding: 0 0.6em 0 0;
   }
   .vxe-modal--zoom-btn,
   .vxe-modal--close-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 1.6em;
+    height: 1.6em;
+    margin-left: 0.5em;
     cursor: pointer;
-    margin-left: 0.6em;
     &:hover {
       color: var(--vxe-ui-font-primary-color);
     }

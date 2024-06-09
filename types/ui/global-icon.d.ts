@@ -81,6 +81,8 @@ declare module '@vxe-ui/core' {
     INPUT_SEARCH?: string
 
     // modal
+    MODAL_ZOOM_MIN?: string
+    MODAL_ZOOM_REVERT?: string
     MODAL_ZOOM_IN?: string
     MODAL_ZOOM_OUT?: string
     MODAL_CLOSE?: string

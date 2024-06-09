@@ -64,6 +64,7 @@ function handleOpen (defOpts: VxeModalDefines.ModalOptions, content: VxeModalPro
 function openAlert (content: VxeModalPropTypes.Content | VxeModalDefines.ModalOptions, title?: VxeModalPropTypes.Title, options?: VxeModalDefines.ModalOptions) {
   return handleOpen({
     type: 'alert',
+    showHeader: true,
     showFooter: true
   }, content, title, options)
 }
@@ -72,6 +73,7 @@ function openConfirm (content: VxeModalPropTypes.Content | VxeModalDefines.Modal
   return handleOpen({
     type: 'confirm',
     status: 'question',
+    showHeader: true,
     showFooter: true
   }, content, title, options)
 }
@@ -85,13 +87,26 @@ function openMessage (content: VxeModalPropTypes.Content | VxeModalDefines.Modal
   }, content, '', options)
 }
 
+function openNotification (content: VxeModalPropTypes.Content | VxeModalDefines.ModalOptions, options?: VxeModalDefines.ModalOptions) {
+  return handleOpen({
+    type: 'notification',
+    mask: false,
+    lockView: false,
+    showHeader: true,
+    draggable: false,
+    position: 'top-right',
+    width: 320
+  }, content, '', options)
+}
+
 export const ModalController = {
   get: getModal,
   close: closeModal,
   open: openModal,
   alert: openAlert,
   confirm: openConfirm,
-  message: openMessage
+  message: openMessage,
+  notification: openNotification
 }
 
 export const VxeModal = Object.assign(VxeModalComponent, {

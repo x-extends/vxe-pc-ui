@@ -11,6 +11,16 @@
     </p>
 
     <p>
+      <vxe-button content="默认通知框" @click="openNotification({ content: '通知提示' })"></vxe-button>
+      <vxe-button content="info" @click="openNotification({ content: 'info 通知提示', status: 'info' })"></vxe-button>
+      <vxe-button content="warning" @click="openNotification({ content: 'warning 通知提示', status: 'warning' })"></vxe-button>
+      <vxe-button content="question" @click="openNotification({ content: 'question 通知提示', status: 'question' })"></vxe-button>
+      <vxe-button content="success" @click="openNotification({ content: 'success 通知提示', status: 'success' })"></vxe-button>
+      <vxe-button content="error" @click="openNotification({ content: 'error 通知提示', status: 'error' })"></vxe-button>
+      <vxe-button content="loading" @click="openNotification({ content: 'loading 通知提示', status: 'loading' })"></vxe-button>
+    </p>
+
+    <p>
       <vxe-button content="基本提示框" @click="openAlert({ content: '基本提示框', title: '标题1' })"></vxe-button>
       <vxe-button content="info" @click="openAlert({ content: 'info 提示框', status: 'info' })"></vxe-button>
       <vxe-button content="warning" @click="openAlert({ content: 'warning 提示框', status: 'warning' })"></vxe-button>
@@ -65,7 +75,7 @@
 
     <p>
       <vxe-button content="自定义模板" @click="demo1.value5 = true"></vxe-button>
-      <vxe-modal v-model="demo1.value5" width="600" show-footer>
+      <vxe-modal v-model="demo1.value5" width="600" :lock-view="false" :mask="false" show-zoom show-footer>
         <template #title>
           <span style="color:red">自定义标题</span>
         </template>
@@ -195,7 +205,8 @@
 
 <script lang="ts" setup>
 import { reactive } from 'vue'
-import { VxeUI, VxeModalDefines } from '../../../packages'
+import { VxeUI } from '../../../packages'
+import { VxeGridPropTypes, VxeModalDefines } from '../../../types'
 
 const demo1 = reactive({
   value1: false,
@@ -270,7 +281,7 @@ const demo1 = reactive({
       ]
     },
     { field: 'describe', title: 'Describe' }
-  ]
+  ] as VxeGridPropTypes.Columns
 })
 
 const beforeHideMethod = async () => {
@@ -285,6 +296,10 @@ const beforeHideMethod = async () => {
 
 const openMessage = (options: VxeModalDefines.ModalOptions) => {
   VxeUI.modal.message(options)
+}
+
+const openNotification = (options: VxeModalDefines.ModalOptions) => {
+  VxeUI.modal.notification(options)
 }
 
 const openAlert = (options: VxeModalDefines.ModalOptions) => {

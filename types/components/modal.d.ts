@@ -25,7 +25,8 @@ export interface VxeModalPrivateRef extends ModalPrivateRef { }
 /**
  * 窗口类型
  */
-export type ModalType = 'alert' | 'confirm' | 'message' | 'modal'
+export type ModalType = 'alert' | 'confirm' | 'message' | 'notification' | 'modal'
+
 /**
  * 窗口状态
  */
@@ -51,7 +52,7 @@ export namespace VxeModalPropTypes {
   export type IconStatus = string
   export type ClassName = string
   export type Top = number | string
-  export type Position = 'center' | ModalPosition
+  export type Position = 'center' | 'top-left' | 'top-right' | ModalPosition
   export type Title = string | number
   export type Duration = number | string
   export type Content = number | string | null
@@ -158,6 +159,7 @@ export interface ModalReactData {
   contentVisible: boolean
   modalTop: number
   modalZindex: number
+  zoomStatus: '' | 'minimize' | 'maximize'
   zoomLocat: {
     left: number
     top: number
@@ -199,7 +201,11 @@ export interface ModalMethods {
   /**
    * 切换窗口最大化/还原
    */
-  zoom(): Promise<boolean>
+  zoom(type?: '' | 'minimize' | 'maximize' | 'revert'): Promise<'minimize' | 'maximize' | 'revert'>
+  /**
+   * 最小化窗口
+   */
+  minimize(): Promise<any>
   /**
    * 如果窗口处于常规状态，则最大化窗口
    */
@@ -229,6 +235,22 @@ export type VxeModalEmits = [
 
 export namespace VxeModalDefines {
   export interface ModalOptions extends VxeModalProps, VxeModalEventProps {
+    key?: string | number
+  }
+
+  export interface MessageOptions extends Pick<VxeModalProps, 'type' | 'content' | 'duration' | 'width' | 'height' | 'status' | 'iconStatus' | 'loading' | 'id' | 'slots'>, VxeModalEventProps {
+    key?: string | number
+  }
+
+  export interface NotificationOptions extends Pick<VxeModalProps, 'type' | 'content' | 'duration' | 'width' | 'height' | 'title' | 'showHeader' | 'status' | 'iconStatus' | 'loading' | 'id' | 'slots'>, VxeModalEventProps {
+    key?: string | number
+  }
+
+  export interface AlertOptions extends Omit<VxeModalProps, 'top' | 'duration'>, VxeModalEventProps {
+    key?: string | number
+  }
+
+  export interface ConfirmOptions extends Omit<VxeModalProps, 'top' | 'duration'>, VxeModalEventProps {
     key?: string | number
   }
 
@@ -305,36 +327,48 @@ export interface ModalController {
    * @param title 标题
    * @param options 参数
    */
-  alert(content: VxeModalPropTypes.Content, title?: VxeModalPropTypes.Title, options?: VxeModalDefines.ModalOptions): Promise<ModalEventTypes>
+  alert(content: VxeModalPropTypes.Content, title?: VxeModalPropTypes.Title, options?: VxeModalDefines.AlertOptions): Promise<ModalEventTypes>
   /**
    * 创建提示框
    * @param options 参数
    */
-  alert(options: VxeModalDefines.ModalOptions): Promise<ModalEventTypes>
+  alert(options: VxeModalDefines.AlertOptions): Promise<ModalEventTypes>
   /**
    * 创建确认框
    * @param content 消息内容
    * @param title 标题
    * @param options 参数
    */
-  confirm(content: VxeModalPropTypes.Content, title?: VxeModalPropTypes.Title, options?: VxeModalDefines.ModalOptions): Promise<ModalEventTypes>
+  confirm(content: VxeModalPropTypes.Content, title?: VxeModalPropTypes.Title, options?: VxeModalDefines.ConfirmOptions): Promise<ModalEventTypes>
   /**
    * 创建确认框
    * @param options 参数
    */
-  confirm(options: VxeModalDefines.ModalOptions): Promise<ModalEventTypes>
+  confirm(options: VxeModalDefines.ConfirmOptions): Promise<ModalEventTypes>
   /**
    * 创建消息提示
    * @param content 消息内容
    * @param title 标题
    * @param options 参数
    */
-  message(content: VxeModalPropTypes.Content, options?: VxeModalDefines.ModalOptions): Promise<ModalEventTypes>
+  message(content: VxeModalPropTypes.Content, options?: VxeModalDefines.MessageOptions): Promise<ModalEventTypes>
   /**
    * 创建消息提示
    * @param options 参数
    */
-  message(options: VxeModalDefines.ModalOptions): Promise<ModalEventTypes>
+  message(options: VxeModalDefines.MessageOptions): Promise<ModalEventTypes>
+  /**
+   * 创建消息通知
+   * @param content 消息内容
+   * @param title 标题
+   * @param options 参数
+   */
+  notification(content: VxeModalPropTypes.Content, options?: VxeModalDefines.NotificationOptions): Promise<ModalEventTypes>
+  /**
+   * 创建消息通知
+   * @param options 参数
+   */
+  notification(options: VxeModalDefines.NotificationOptions): Promise<ModalEventTypes>
   /**
    * 获取动态的活动窗口
    * @param id 窗口唯一标识

@@ -123,7 +123,7 @@ setConfig({
   loading: {},
   modal: {
     // size: null,
-    top: 15,
+    top: 16,
     showHeader: true,
     minWidth: 340,
     minHeight: 140,
@@ -244,6 +244,8 @@ setIcon({
   INPUT_SEARCH: iconPrefix + 'search',
 
   // modal
+  MODAL_ZOOM_MIN: iconPrefix + 'minus',
+  MODAL_ZOOM_REVERT: iconPrefix + 'recover',
   MODAL_ZOOM_IN: iconPrefix + 'square',
   MODAL_ZOOM_OUT: iconPrefix + 'maximize',
   MODAL_CLOSE: iconPrefix + 'close',

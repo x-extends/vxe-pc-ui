@@ -295,37 +295,41 @@ export default defineComponent({
       if (limitMaxCount) {
         // 校验文件数量
         if (fileList.length >= limitMaxCount) {
-          VxeUI.modal.message({
-            title: getI18n('vxe.modal.errTitle'),
-            status: 'error',
-            content: getI18n('vxe.upload.overCountErr', [limitMaxCount])
-          })
+          if (VxeUI.modal) {
+            VxeUI.modal.notification({
+              title: getI18n('vxe.modal.errTitle'),
+              status: 'error',
+              content: getI18n('vxe.upload.overCountErr', [limitMaxCount])
+            })
+          }
           return
         }
         const overNum = selectFiles.length - (limitMaxCount - fileList.length)
         if (overNum > 0) {
           const overExtraList = selectFiles.slice(limitMaxCount - fileList.length)
-          VxeUI.modal.message({
-            title: getI18n('vxe.modal.errTitle'),
-            status: 'error',
-            slots: {
-              default () {
-                return h('div', {
-                  class: 'vxe-upload--file-message-over-error'
-                }, [
-                  h('div', {}, getI18n('vxe.upload.overCountExtraErr', [limitMaxCount, overNum])),
-                  h('div', {
-                    class: 'vxe-upload--file-message-over-extra'
-                  }, overExtraList.map((file, index) => {
-                    return h('div', {
-                      key: index,
-                      class: 'vxe-upload--file-message-over-extra-item'
-                    }, file.name)
-                  }))
-                ])
+          if (VxeUI.modal) {
+            VxeUI.modal.notification({
+              title: getI18n('vxe.modal.errTitle'),
+              status: 'error',
+              slots: {
+                default () {
+                  return h('div', {
+                    class: 'vxe-upload--file-message-over-error'
+                  }, [
+                    h('div', {}, getI18n('vxe.upload.overCountExtraErr', [limitMaxCount, overNum])),
+                    h('div', {
+                      class: 'vxe-upload--file-message-over-extra'
+                    }, overExtraList.map((file, index) => {
+                      return h('div', {
+                        key: index,
+                        class: 'vxe-upload--file-message-over-extra-item'
+                      }, file.name)
+                    }))
+                  ])
+                }
               }
-            }
-          })
+            })
+          }
         }
         selectFiles = selectFiles.slice(0, limitMaxCount - fileList.length)
       }
@@ -336,7 +340,7 @@ export default defineComponent({
           const file = files[0]
           if (file.size > limitMaxSizeB) {
             if (VxeUI.modal) {
-              VxeUI.modal.message({
+              VxeUI.modal.notification({
                 title: getI18n('vxe.modal.errTitle'),
                 status: 'error',
                 content: getI18n('vxe.upload.overSizeErr', [limitSizeUnit])

@@ -1,4 +1,4 @@
-import { defineComponent, h, Teleport, ref, Ref, computed, reactive, nextTick, watch, PropType, VNode, onMounted, onUnmounted } from 'vue'
+import { defineComponent, h, Teleport, ref, Ref, computed, reactive, nextTick, watch, PropType, VNode, onMounted, onUnmounted, createCommentVNode } from 'vue'
 import XEUtils from 'xe-utils'
 import { getDomNode, getEventTargetNode } from '../../ui/src/dom'
 import { getLastZIndex, nextZIndex, getFuncText } from '../../ui/src/utils'
@@ -11,7 +11,8 @@ import { errLog } from '../../ui/src/log'
 import type { VxeModalConstructor, VxeModalPropTypes, ModalReactData, VxeModalEmits, ModalEventTypes, VxeButtonInstance, ModalMethods, ModalPrivateRef, VxeModalMethods } from '../../../types'
 
 export const allActiveModals: VxeModalConstructor[] = []
-export const msgQueue: VxeModalConstructor[] = []
+const msgQueue: VxeModalConstructor[] = []
+const notifyQueue: VxeModalConstructor[] = []
 
 export default defineComponent({
   name: 'VxeModal',
@@ -60,7 +61,7 @@ export default defineComponent({
     storageKey: { type: String as PropType<VxeModalPropTypes.StorageKey>, default: () => getConfig().modal.storageKey },
     padding: { type: Boolean as PropType<VxeModalPropTypes.Padding>, default: () => getConfig().modal.padding },
     size: { type: String as PropType<VxeModalPropTypes.Size>, default: () => getConfig().modal.size || getConfig().size },
-    beforeHideMethod: { type: Function as PropType<VxeModalPropTypes.BeforeHideMethod>, default: () => getConfig().modal.beforeHideMethod },
+    beforeHideMethod: Function as PropType<VxeModalPropTypes.BeforeHideMethod>,
     slots: Object as PropType<VxeModalPropTypes.Slots>,
 
     /**
@@ -93,12 +94,14 @@ export default defineComponent({
       contentVisible: false,
       modalTop: 0,
       modalZindex: 0,
+      zoomStatus: '',
       zoomLocat: null,
       firstOpen: true
     })
 
     const refElem = ref<HTMLDivElement>()
     const refModalBox = ref() as Ref<HTMLDivElement>
+    const refHeaderElem = ref() as Ref<HTMLDivElement>
     const refConfirmBtn = ref<VxeButtonInstance>()
     const refCancelBtn = ref<VxeButtonInstance>()
 
@@ -117,7 +120,7 @@ export default defineComponent({
     let modalMethods = {} as ModalMethods
 
     const computeIsMsg = computed(() => {
-      return props.type === 'message'
+      return props.type === 'message' || props.type === 'notification'
     })
 
     const getBox = () => {
@@ -173,8 +176,10 @@ export default defineComponent({
 
     const updateStyle = () => {
       nextTick(() => {
+        const { type } = props
+        const queueList = type === 'notification' ? notifyQueue : msgQueue
         let offsetTop = 0
-        msgQueue.forEach(comp => {
+        queueList.forEach(comp => {
           const boxElem = comp.getBox()
           offsetTop += XEUtils.toNumber(comp.props.top)
           comp.reactData.modalTop = offsetTop
@@ -184,26 +189,29 @@ export default defineComponent({
     }
 
     const removeMsgQueue = () => {
-      if (msgQueue.indexOf($xeModal) > -1) {
-        XEUtils.remove(msgQueue, comp => comp === $xeModal)
+      const { type } = props
+      const queueList = type === 'notification' ? notifyQueue : msgQueue
+      if (queueList.indexOf($xeModal) > -1) {
+        XEUtils.remove(queueList, comp => comp === $xeModal)
       }
       updateStyle()
     }
 
     const closeModal = (type: ModalEventTypes) => {
-      const { remember, beforeHideMethod } = props
+      const { remember } = props
       const { visible } = reactData
       const isMsg = computeIsMsg.value
+      const beforeHideFn = props.beforeHideMethod || getConfig().modal.beforeHideMethod
       const params = { type }
       if (visible) {
-        Promise.resolve(beforeHideMethod ? beforeHideMethod(params) : null).then((rest) => {
+        Promise.resolve(beforeHideFn ? beforeHideFn(params) : null).then((rest) => {
           if (!XEUtils.isError(rest)) {
             if (isMsg) {
               removeMsgQueue()
             }
             reactData.contentVisible = false
             if (!remember) {
-              reactData.zoomLocat = null
+              handleRevert()
             }
             XEUtils.remove(allActiveModals, item => item === $xeModal)
             modalMethods.dispatchEvent('before-hide', params, null)
@@ -279,8 +287,10 @@ export default defineComponent({
     }
 
     const addMsgQueue = () => {
-      if (msgQueue.indexOf($xeModal) === -1) {
-        msgQueue.push($xeModal)
+      const { type } = props
+      const queueList = type === 'notification' ? notifyQueue : msgQueue
+      if (queueList.indexOf($xeModal) === -1) {
+        queueList.push($xeModal)
       }
       updateStyle()
     }
@@ -308,31 +318,74 @@ export default defineComponent({
       }
     }
 
-    const maximize = () => {
+    const handleMinimize = () => {
+      reactData.zoomStatus = 'minimize'
       return nextTick().then(() => {
-        if (!reactData.zoomLocat) {
-          const marginSize = Math.max(0, XEUtils.toNumber(props.marginSize))
-          const boxElem = getBox()
-          const { visibleHeight, visibleWidth } = getDomNode()
-          reactData.zoomLocat = {
-            top: boxElem.offsetTop,
-            left: boxElem.offsetLeft,
-            width: boxElem.offsetWidth + (boxElem.style.width ? 0 : 1),
-            height: boxElem.offsetHeight + (boxElem.style.height ? 0 : 1)
-          }
-          Object.assign(boxElem.style, {
-            top: `${marginSize}px`,
-            left: `${marginSize}px`,
-            width: `${visibleWidth - marginSize * 2}px`,
-            height: `${visibleHeight - marginSize * 2}px`
-          })
-          savePosStorage()
+        const boxElem = getBox()
+        const headerEl = refHeaderElem.value
+        if (!headerEl) {
+          return
         }
+        const { visibleHeight } = getDomNode()
+        reactData.zoomLocat = {
+          top: boxElem.offsetTop,
+          left: boxElem.offsetLeft,
+          width: boxElem.offsetWidth + (boxElem.style.width ? 0 : 1),
+          height: boxElem.offsetHeight + (boxElem.style.height ? 0 : 1)
+        }
+        const lastMinModal = XEUtils.findLast(allActiveModals, item => item.xID !== $xeModal.xID && item.props.type === 'modal' && item.reactData.zoomStatus === 'minimize')
+        let minTop = visibleHeight - headerEl.offsetHeight - 16
+        let minLeft = 16
+        if (lastMinModal) {
+          const lastBoxElem = lastMinModal.getBox()
+          if (lastBoxElem) {
+            minTop = XEUtils.toNumber(lastBoxElem.style.top) - 8
+            minLeft = XEUtils.toNumber(lastBoxElem.style.left) + 8
+          }
+        }
+        Object.assign(boxElem.style, {
+          top: `${minTop}px`,
+          left: `${minLeft}px`,
+          width: '200px',
+          height: `${headerEl.offsetHeight}px`
+        })
+        savePosStorage()
       })
     }
 
+    const handleMaximize = () => {
+      reactData.zoomStatus = 'maximize'
+      return nextTick().then(() => {
+        const marginSize = Math.max(0, XEUtils.toNumber(props.marginSize))
+        const boxElem = getBox()
+        const { visibleHeight, visibleWidth } = getDomNode()
+        reactData.zoomLocat = {
+          top: boxElem.offsetTop,
+          left: boxElem.offsetLeft,
+          width: boxElem.offsetWidth + (boxElem.style.width ? 0 : 1),
+          height: boxElem.offsetHeight + (boxElem.style.height ? 0 : 1)
+        }
+        Object.assign(boxElem.style, {
+          top: `${marginSize}px`,
+          left: `${marginSize}px`,
+          width: `${visibleWidth - marginSize * 2}px`,
+          height: `${visibleHeight - marginSize * 2}px`
+        })
+        savePosStorage()
+      })
+    }
+
+    let msgTimeout: any = null
+
+    const handleMsgAutoClose = () => {
+      const { duration } = props
+      if (duration !== -1) {
+        msgTimeout = setTimeout(() => closeModal('close'), XEUtils.toNumber(duration))
+      }
+    }
+
     const openModal = () => {
-      const { duration, remember, showFooter } = props
+      const { remember, showFooter } = props
       const { inited, visible } = reactData
       const isMsg = computeIsMsg.value
       if (!inited) {
@@ -365,9 +418,7 @@ export default defineComponent({
         }, 10)
         if (isMsg) {
           addMsgQueue()
-          if (duration !== -1) {
-            setTimeout(() => closeModal('close'), XEUtils.toNumber(duration))
-          }
+          handleMsgAutoClose()
         } else {
           nextTick(() => {
             const { fullscreen } = props
@@ -382,11 +433,11 @@ export default defineComponent({
               if (hasPosStorage()) {
                 restorePosStorage()
               } else if (fullscreen) {
-                nextTick(() => maximize())
+                nextTick(() => handleMaximize())
               }
             } else {
               if (fullscreen) {
-                nextTick(() => maximize())
+                nextTick(() => handleMaximize())
               }
             }
           })
@@ -400,6 +451,26 @@ export default defineComponent({
       if (props.maskClosable && evnt.target === el) {
         const type = 'mask'
         closeModal(type)
+      }
+    }
+
+    const selfMouseoverEvent = () => {
+      if (msgTimeout === null) {
+        return
+      }
+      const isMsg = computeIsMsg.value
+      if (isMsg) {
+        clearTimeout(msgTimeout)
+        msgTimeout = null
+      }
+    }
+
+    const selfMouseoutEvent = () => {
+      if (msgTimeout === null) {
+        const isMsg = computeIsMsg.value
+        if (isMsg) {
+          handleMsgAutoClose()
+        }
       }
     }
 
@@ -422,7 +493,8 @@ export default defineComponent({
       return !!reactData.zoomLocat
     }
 
-    const revert = () => {
+    const handleRevert = () => {
+      reactData.zoomStatus = ''
       return nextTick().then(() => {
         const { zoomLocat } = reactData
         if (zoomLocat) {
@@ -435,21 +507,45 @@ export default defineComponent({
             height: `${zoomLocat.height}px`
           })
           savePosStorage()
+          return nextTick()
         }
       })
     }
 
-    const zoom = () => {
-      if (reactData.zoomLocat) {
-        return revert().then(() => isMaximized())
-      }
-      return maximize().then(() => isMaximized())
+    const handleZoom = (type?: 'minimize' | 'revert' | 'maximize') => {
+      const { zoomStatus } = reactData
+      return new Promise(resolve => {
+        if (type) {
+          if (type === 'maximize') {
+            resolve(handleMaximize())
+            return
+          }
+          if (type === 'minimize') {
+            resolve(handleMinimize())
+            return
+          }
+          resolve(handleRevert())
+          return
+        }
+        resolve(zoomStatus ? handleRevert() : handleMaximize())
+      }).then(() => {
+        return reactData.zoomStatus || 'revert'
+      })
     }
 
-    const toggleZoomEvent = (evnt: Event) => {
-      const { zoomLocat } = reactData
-      const params = { type: zoomLocat ? 'revert' : 'max' }
-      return zoom().then(() => {
+    const toggleZoomMinEvent = (evnt: Event) => {
+      const { zoomStatus } = reactData
+      return handleZoom(zoomStatus === 'minimize' ? 'revert' : 'minimize').then((type) => {
+        const params = { type }
+        console.log(params)
+        modalMethods.dispatchEvent('zoom', params, evnt)
+      })
+    }
+
+    const toggleZoomMaxEvent = (evnt: Event) => {
+      return handleZoom().then((type) => {
+        const params = { type }
+        console.log(params)
         modalMethods.dispatchEvent('zoom', params, evnt)
       })
     }
@@ -491,10 +587,10 @@ export default defineComponent({
 
     const mousedownEvent = (evnt: MouseEvent) => {
       const { remember, storage } = props
-      const { zoomLocat } = reactData
+      const { zoomStatus } = reactData
       const marginSize = XEUtils.toNumber(props.marginSize)
       const boxElem = getBox()
-      if (!zoomLocat && evnt.button === 0 && !getEventTargetNode(evnt, boxElem, 'trigger--btn').flag) {
+      if (zoomStatus !== 'maximize' && evnt.button === 0 && !getEventTargetNode(evnt, boxElem, 'trigger--btn').flag) {
         evnt.preventDefault()
         const domMousemove = document.onmousemove
         const domMouseup = document.onmouseup
@@ -706,55 +802,66 @@ export default defineComponent({
       getPosition,
       setPosition,
       isMaximized,
-      zoom,
-      maximize,
-      revert
+      zoom: handleZoom,
+      minimize: handleMinimize,
+      maximize: handleMaximize,
+      revert: handleRevert
     }
 
     Object.assign($xeModal, modalMethods)
 
     const renderTitles = () => {
       const { slots: propSlots = {}, showClose, showZoom, title } = props
-      const { zoomLocat } = reactData
+      const { zoomStatus } = reactData
       const titleSlot = slots.title || propSlots.title
       const cornerSlot = slots.corner || propSlots.corner
-      const titVNs = [
+      return [
         h('div', {
           class: 'vxe-modal--header-title'
-        }, titleSlot ? getSlotVNs(titleSlot({ $modal: $xeModal })) : (title ? getFuncText(title) : getI18n('vxe.alert.title')))
-      ]
-      const rightVNs = []
-      if (cornerSlot) {
-        rightVNs.push(
-          h('span', {
-            class: 'vxe-modal--corner-wrapper'
-          }, getSlotVNs(cornerSlot({ $modal: $xeModal })))
-        )
-      }
-      if (showZoom) {
-        rightVNs.push(
-          h('i', {
-            class: ['vxe-modal--zoom-btn', 'trigger--btn', zoomLocat ? getIcon().MODAL_ZOOM_OUT : getIcon().MODAL_ZOOM_IN],
-            title: getI18n(`vxe.modal.zoom${zoomLocat ? 'Out' : 'In'}`),
-            onClick: toggleZoomEvent
-          })
-        )
-      }
-      if (showClose) {
-        rightVNs.push(
-          h('i', {
-            class: ['vxe-modal--close-btn', 'trigger--btn', getIcon().MODAL_CLOSE],
-            title: getI18n('vxe.modal.close'),
-            onClick: closeEvent
-          })
-        )
-      }
-      titVNs.push(
+        }, titleSlot ? getSlotVNs(titleSlot({ $modal: $xeModal })) : (title ? getFuncText(title) : getI18n('vxe.alert.title'))),
         h('div', {
           class: 'vxe-modal--header-right'
-        }, rightVNs)
-      )
-      return titVNs
+        }, [
+          cornerSlot
+            ? h('span', {
+              class: 'vxe-modal--corner-wrapper'
+            }, getSlotVNs(cornerSlot({ $modal: $xeModal })))
+            : createCommentVNode(),
+          showZoom && zoomStatus !== 'maximize'
+            ? h('span', {
+              class: ['vxe-modal--zoom-btn', 'trigger--btn'],
+              title: getI18n(`vxe.modal.zoom${zoomStatus === 'minimize' ? 'Out' : 'Min'}`),
+              onClick: toggleZoomMinEvent
+            }, [
+              h('i', {
+                class: zoomStatus === 'minimize' ? getIcon().MODAL_ZOOM_REVERT : getIcon().MODAL_ZOOM_MIN
+              })
+            ])
+            : createCommentVNode(),
+          showZoom && zoomStatus !== 'minimize'
+            ? h('span', {
+              class: ['vxe-modal--zoom-btn', 'trigger--btn'],
+              title: getI18n(`vxe.modal.zoom${zoomStatus === 'maximize' ? 'Out' : 'In'}`),
+              onClick: toggleZoomMaxEvent
+            }, [
+              h('i', {
+                class: zoomStatus === 'maximize' ? getIcon().MODAL_ZOOM_OUT : getIcon().MODAL_ZOOM_IN
+              })
+            ])
+            : createCommentVNode(),
+          showClose
+            ? h('span', {
+              class: ['vxe-modal--close-btn', 'trigger--btn'],
+              title: getI18n('vxe.modal.close'),
+              onClick: closeEvent
+            }, [
+              h('i', {
+                class: getIcon().MODAL_CLOSE
+              })
+            ])
+            : createCommentVNode()
+        ])
+      ]
     }
 
     const renderHeaders = () => {
@@ -763,42 +870,41 @@ export default defineComponent({
       const headerSlot = slots.header || propSlots.header
       const headVNs: VNode[] = []
       if (props.showHeader) {
-        const headerOns: {
-          onMousedown?: typeof mousedownEvent;
-          onDblclick?: typeof toggleZoomEvent;
-        } = {}
+        const headerOns: Record<string, any> = {}
         if (draggable) {
           headerOns.onMousedown = mousedownEvent
         }
         if (showZoom && props.dblclickZoom && props.type === 'modal') {
-          headerOns.onDblclick = toggleZoomEvent
+          headerOns.onDblclick = toggleZoomMaxEvent
         }
         headVNs.push(
           h('div', {
+            ref: refHeaderElem,
             class: ['vxe-modal--header', {
-              'is--draggable': draggable,
               'is--ellipsis': !isMsg && props.showTitleOverflow
             }],
             ...headerOns
-          }, headerSlot ? (!reactData.inited || (props.destroyOnClose && !reactData.visible) ? [] : getSlotVNs(headerSlot({ $modal: $xeModal }))) : renderTitles())
+          }, headerSlot
+            ? (!reactData.inited || (props.destroyOnClose && !reactData.visible) ? [] : getSlotVNs(headerSlot({ $modal: $xeModal })))
+            : renderTitles())
         )
       }
       return headVNs
     }
 
     const renderBodys = () => {
-      const { slots: propSlots = {}, status, message } = props
+      const { slots: propSlots = {}, status, message, iconStatus } = props
       const content = props.content || message
       const isMsg = computeIsMsg.value
       const defaultSlot = slots.default || propSlots.default
       const contVNs: VNode[] = []
-      if (status) {
+      if (status || iconStatus) {
         contVNs.push(
           h('div', {
             class: 'vxe-modal--status-wrapper'
           }, [
             h('i', {
-              class: ['vxe-modal--status-icon', props.iconStatus || getIcon()[`MODAL_${status}`.toLocaleUpperCase() as 'MODAL_SUCCESS' | 'MODAL_ERROR']]
+              class: ['vxe-modal--status-icon', iconStatus || getIcon()[`MODAL_${status}`.toLocaleUpperCase() as 'MODAL_SUCCESS' | 'MODAL_ERROR']]
             })
           ])
         )
@@ -882,22 +988,29 @@ export default defineComponent({
     }
 
     const renderVN = () => {
-      const { className, type, animat, loading, status, lockScroll, padding, lockView, mask, resize } = props
-      const { inited, zoomLocat, modalTop, contentVisible, visible } = reactData
+      const { className, type, animat, draggable, position, loading, status, lockScroll, padding, lockView, mask, resize } = props
+      const { inited, zoomLocat, modalTop, contentVisible, visible, zoomStatus } = reactData
       const vSize = computeSize.value
+      const isMsg = computeIsMsg.value
+      const ons: Record<string, any> = {}
+      if (isMsg) {
+        ons.onMouseover = selfMouseoverEvent
+        ons.onMouseout = selfMouseoutEvent
+      }
       return h(Teleport, {
         to: 'body',
         disabled: props.transfer ? !inited : true
       }, [
         h('div', {
           ref: refElem,
-          class: ['vxe-modal--wrapper', `type--${type}`, className || '', {
+          class: ['vxe-modal--wrapper', `type--${type}`, `zoom--${zoomStatus || 'revert'}`, className || '', position ? `pos--${position}` : '', {
             [`size--${vSize}`]: vSize,
             [`status--${status}`]: status,
             'is--padding': padding,
             'is--animat': animat,
             'lock--scroll': lockScroll,
             'lock--view': lockView,
+            'is--draggable': draggable,
             'is--resize': resize,
             'is--mask': mask,
             'is--maximize': zoomLocat,
@@ -909,7 +1022,8 @@ export default defineComponent({
             zIndex: reactData.modalZindex,
             top: modalTop ? `${modalTop}px` : null
           },
-          onClick: selfClickEvent
+          onClick: selfClickEvent,
+          ...ons
         }, [
           h('div', {
             ref: refModalBox,
