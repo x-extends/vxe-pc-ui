@@ -542,6 +542,7 @@ export namespace VxeTablePropTypes {
     lazy?: boolean
     reserve?: boolean
     height?: number
+    padding?: boolean
     loadMethod?(params: {
       $table: VxeTableConstructor<D> & VxeTablePrivateMethods<D>
       row: D
