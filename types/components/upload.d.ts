@@ -36,7 +36,7 @@ export namespace VxeUploadPropTypes {
   export type TypeField = string
   export type UrlField = string
   export type SizeField = string
-  export type HintText = string
+  export type TipText = string
   export type ButtonText = string
   export type ShowErrorStatus = boolean
   export type ShowProgress = boolean
@@ -49,6 +49,12 @@ export namespace VxeUploadPropTypes {
   export type GetUrlMethod = undefined | ((params: {
     option: VxeUploadDefines.FileObjItem
   }) => any)
+
+  /**
+   * 已废弃，请使用 TipText
+   * @deprecated
+   */
+  export type HintText = string
 }
 
 export type VxeUploadProps = {
@@ -72,9 +78,15 @@ export type VxeUploadProps = {
   showErrorStatus?: VxeUploadPropTypes.ShowErrorStatus
   showProgress?: VxeUploadPropTypes.ShowProgress
   autoHiddenButton?: VxeUploadPropTypes.AutoHiddenButton
-  hintText?: VxeUploadPropTypes.HintText
+  tipText?: VxeUploadPropTypes.TipText
   uploadMethod?: VxeUploadPropTypes.UploadMethod
   getUrlMethod?: VxeUploadPropTypes.GetUrlMethod
+
+  /**
+   * 已废弃，请使用 tipText
+   * @deprecated
+   */
+  hintText?: VxeUploadPropTypes.HintText
 }
 
 export interface UploadPrivateComputed {
@@ -152,6 +164,7 @@ export namespace VxeUploadSlotTypes {
 
 export interface VxeUploadSlots {
   default: (params: VxeUploadSlotTypes.DefaultSlotParams) => any
+  tip: (params: VxeUploadSlotTypes.DefaultSlotParams) => any
 }
 
 export const Upload: typeof VxeUpload

@@ -66,6 +66,7 @@ export default defineComponent({
       type: String as PropType<VxeUploadPropTypes.ButtonText>,
       default: () => getConfig().upload.buttonText
     },
+    tipText: String as PropType<VxeUploadPropTypes.TipText>,
     hintText: String as PropType<VxeUploadPropTypes.HintText>,
     uploadMethod: Function as PropType<VxeUploadPropTypes.UploadMethod>,
     getUrlMethod: Function as PropType<VxeUploadPropTypes.GetUrlMethod>
@@ -149,11 +150,12 @@ export default defineComponent({
     })
 
     const computedDefHintText = computed(() => {
-      const { hintText, limitSize, fileTypes, multiple, limitCount } = props
+      const { limitSize, fileTypes, multiple, limitCount } = props
+      const tipText = props.tipText || props.hintText
       const isImage = computeIsImage.value
       const limitSizeUnit = computeLimitSizeUnit.value
-      if (XEUtils.isString(hintText)) {
-        return hintText
+      if (XEUtils.isString(tipText)) {
+        return tipText
       }
       const defHints: string[] = []
       if (isImage) {
@@ -455,7 +457,7 @@ export default defineComponent({
       const { readonly, disabled, buttonText, showProgress, showErrorStatus, autoHiddenButton } = props
       const { fileList } = reactData
       const defaultSlot = slots.default
-      const hintSlot = slots.hint
+      const tipSlot = slots.tip || slots.hint
       const nameProp = computeNameProp.value
       const typeProp = computeTypeProp.value
       const defHintText = computedDefHintText.value
@@ -484,10 +486,10 @@ export default defineComponent({
                       disabled
                     })
                   ]),
-            defHintText || hintSlot
+            defHintText || tipSlot
               ? h('div', {
-                class: 'vxe-upload--file-action-hint'
-              }, hintSlot ? getSlotVNs(hintSlot({ $upload: $xeUpload })) : defHintText)
+                class: 'vxe-upload--file-action-tip'
+              }, tipSlot ? getSlotVNs(tipSlot({ $upload: $xeUpload })) : defHintText)
               : createCommentVNode()
           ]),
         h('div', {
