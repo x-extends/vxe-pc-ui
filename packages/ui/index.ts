@@ -55,7 +55,7 @@ setConfig({
   column: {},
   drawer: {
     // size: null,
-    position: 'left',
+    position: 'right',
     showHeader: true,
     lockView: true,
     mask: true,
@@ -311,6 +311,7 @@ setIcon({
   IMAGE_PREVIEW_ROTATE_LEFT: iconPrefix + 'rotate-left',
   IMAGE_PREVIEW_ROTATE_RIGHT: iconPrefix + 'rotate-right',
   IMAGE_PREVIEW_PRINT: iconPrefix + 'print',
+  IMAGE_PREVIEW_DOWNLOAD: iconPrefix + 'download',
 
   // alert
   ALERT_CLOSE: iconPrefix + 'close',

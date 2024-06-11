@@ -18,6 +18,12 @@
       }
     }
   }
+  &.is--disabled {
+    .vxe-upload--file-action-btn,
+    .vxe-upload--image-action-box {
+      cursor: no-drop;
+    }
+  }
 }
 .vxe-upload--drag-placeholder {
   display: flex;
@@ -150,6 +156,21 @@
   &:hover {
     color: var(--vxe-ui-font-primary-color);
     border-color: var(--vxe-ui-font-primary-color);
+  }
+}
+.vxe-upload {
+  &.is--disabled {
+    .vxe-upload--file-action-btn,
+    .vxe-upload--image-action-box {
+      color: var(--vxe-ui-font-disabled-color);
+      cursor: no-drop;
+    }
+    .vxe-upload--image-action-box {
+      &:hover {
+        color: var(--vxe-ui-font-disabled-color);
+        border: 1px solid var(--vxe-ui-input-border-color);
+      }
+    }
   }
 }
 .vxe-upload--image-item {

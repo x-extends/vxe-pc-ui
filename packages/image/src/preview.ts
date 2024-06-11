@@ -1,5 +1,5 @@
 import { defineComponent, h, provide, PropType, ref, reactive, computed, watch, onMounted, onUnmounted, createCommentVNode, onBeforeUnmount } from 'vue'
-import { VxeUI, getConfig, createEvent, getIcon, globalEvents, GLOBAL_EVENT_KEYS } from '../../ui'
+import { VxeUI, getConfig, createEvent, getIcon, globalEvents, GLOBAL_EVENT_KEYS, getI18n } from '../../ui'
 import XEUtils from 'xe-utils'
 import { getDomNode, addClass, removeClass } from '../..//ui/src/dom'
 
@@ -273,6 +273,22 @@ export default defineComponent({
       }
     }
 
+    const handleDownloadImg = () => {
+      const { activeIndex } = reactData
+      const imgList = computeImgList.value
+      const imgUrl = imgList[activeIndex || 0]
+      if (VxeUI.saveFile) {
+        fetch(imgUrl).then(res => {
+          res.blob().then(blob => {
+            VxeUI.saveFile({
+              filename: imgUrl,
+              content: blob
+            })
+          })
+        })
+      }
+    }
+
     const handleOperationBtn = (code: string) => {
       const { activeIndex } = reactData
       const imgList = computeImgList.value
@@ -299,6 +315,9 @@ export default defineComponent({
             break
           case 'print':
             handlePrintImg()
+            break
+          case 'download':
+            handleDownloadImg()
             break
         }
       }
@@ -429,6 +448,7 @@ export default defineComponent({
     const renderOperationBtn = (code: string, icon: keyof VxeGlobalIcon) => {
       return h('div', {
         class: 'vxe-image-preview--operation-btn',
+        title: getI18n(`vxe.imagePreview.operBtn.${code}`),
         onClick () {
           handleOperationBtn(code)
         }
@@ -509,7 +529,8 @@ export default defineComponent({
           renderOperationBtn('pct11', 'IMAGE_PREVIEW_PCT_1_1'),
           renderOperationBtn('rotateLeft', 'IMAGE_PREVIEW_ROTATE_LEFT'),
           renderOperationBtn('rotateRight', 'IMAGE_PREVIEW_ROTATE_RIGHT'),
-          renderOperationBtn('print', 'IMAGE_PREVIEW_PRINT')
+          renderOperationBtn('print', 'IMAGE_PREVIEW_PRINT'),
+          renderOperationBtn('download', 'IMAGE_PREVIEW_DOWNLOAD')
         ])
       ])
     }

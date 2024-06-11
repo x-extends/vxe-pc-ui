@@ -11,6 +11,8 @@ export default defineComponent({
   name: 'VxeUpload',
   props: {
     modelValue: Array as PropType<VxeUploadPropTypes.ModelValue>,
+    readonly: Boolean as PropType<VxeUploadPropTypes.Readonly>,
+    disabled: Boolean as PropType<VxeUploadPropTypes.Disabled>,
     mode: {
       type: String as PropType<VxeUploadPropTypes.Mode>,
       default: () => getConfig().upload.mode
@@ -381,8 +383,11 @@ export default defineComponent({
     }
 
     const clickEvent = (evnt: MouseEvent) => {
-      const { multiple, imageTypes, fileTypes } = props
+      const { disabled, multiple, imageTypes, fileTypes } = props
       const isImage = computeIsImage.value
+      if (disabled) {
+        return
+      }
       readLocalFile({
         multiple,
         types: isImage ? imageTypes : fileTypes
@@ -447,7 +452,7 @@ export default defineComponent({
     Object.assign($xeUpload, uploadMethods, uploadPrivateMethods)
 
     const renderAllMode = () => {
-      const { buttonText, showProgress, showErrorStatus, autoHiddenButton } = props
+      const { readonly, disabled, buttonText, showProgress, showErrorStatus, autoHiddenButton } = props
       const { fileList } = reactData
       const defaultSlot = slots.default
       const hintSlot = slots.hint
@@ -460,28 +465,31 @@ export default defineComponent({
         key: 'all',
         class: 'vxe-upload--file-wrapper'
       }, [
-        h('div', {
-          class: 'vxe-upload--file-action'
-        }, [
-          autoHiddenButton && overCount
-            ? createCommentVNode()
-            : h('div', {
-              class: 'vxe-upload--file-action-btn',
-              onClick: clickEvent
-            }, defaultSlot
-              ? getSlotVNs(defaultSlot({ $upload: $xeUpload }))
-              : [
-                  h(VxeButtonComponent, {
-                    content: buttonText ? `${buttonText}` : getI18n('vxe.upload.fileBtnText'),
-                    icon: getIcon().UPLOAD_FILE_ADD
-                  })
-                ]),
-          defHintText || hintSlot
-            ? h('div', {
-              class: 'vxe-upload--file-action-hint'
-            }, hintSlot ? getSlotVNs(hintSlot({ $upload: $xeUpload })) : defHintText)
-            : createCommentVNode()
-        ]),
+        readonly
+          ? createCommentVNode()
+          : h('div', {
+            class: 'vxe-upload--file-action'
+          }, [
+            autoHiddenButton && overCount
+              ? createCommentVNode()
+              : h('div', {
+                class: 'vxe-upload--file-action-btn',
+                onClick: clickEvent
+              }, defaultSlot
+                ? getSlotVNs(defaultSlot({ $upload: $xeUpload }))
+                : [
+                    h(VxeButtonComponent, {
+                      content: buttonText ? `${buttonText}` : getI18n('vxe.upload.fileBtnText'),
+                      icon: getIcon().UPLOAD_FILE_ADD,
+                      disabled
+                    })
+                  ]),
+            defHintText || hintSlot
+              ? h('div', {
+                class: 'vxe-upload--file-action-hint'
+              }, hintSlot ? getSlotVNs(hintSlot({ $upload: $xeUpload })) : defHintText)
+              : createCommentVNode()
+          ]),
         h('div', {
           class: 'vxe-upload--file-list'
         }, fileList.map((item, index) => {
@@ -533,7 +541,7 @@ export default defineComponent({
                 })
               ])
               : createCommentVNode(),
-            !isLoading
+            !readonly && !disabled && !isLoading
               ? h('div', {
                 class: 'vxe-upload--file-item-remove-icon',
                 onClick (evnt: MouseEvent) {
@@ -551,7 +559,7 @@ export default defineComponent({
     }
 
     const renderImageMode = () => {
-      const { buttonText, showProgress, showErrorStatus, autoHiddenButton } = props
+      const { readonly, disabled, buttonText, showProgress, showErrorStatus, autoHiddenButton } = props
       const { fileList } = reactData
       const defHintText = computedDefHintText.value
       const overCount = computeOverCount.value
@@ -622,7 +630,7 @@ export default defineComponent({
                       })
                   )
                 : createCommentVNode(),
-              !isLoading
+              !readonly && !disabled && !isLoading
                 ? h('div', {
                   class: 'vxe-upload--image-item-remove-icon',
                   onClick (evnt: MouseEvent) {
@@ -637,7 +645,7 @@ export default defineComponent({
                 : createCommentVNode()
             ])
           ])
-        }).concat(autoHiddenButton && overCount
+        }).concat(readonly || (autoHiddenButton && overCount)
           ? []
           : [
               h('div', {
@@ -675,12 +683,14 @@ export default defineComponent({
     }
 
     const renderVN = () => {
-      const { showErrorStatus } = props
+      const { readonly, disabled, showErrorStatus } = props
       const { isDrag } = reactData
       const isImage = computeIsImage.value
       return h('div', {
         ref: refElem,
         class: ['vxe-upload', {
+          'is--readonly': readonly,
+          'is--disabled': disabled,
           'show--error': showErrorStatus,
           'is--drag': isDrag
         }],

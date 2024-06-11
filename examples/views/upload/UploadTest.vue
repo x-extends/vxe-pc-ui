@@ -6,6 +6,18 @@
     <p>
       <vxe-upload v-model="imgList" mode="image" multiple show-error-status :upload-method="uploadMethod"></vxe-upload>
     </p>
+    <p>
+      <vxe-upload v-model="fileList" multiple :limit-size="30" readonly autoHiddenButton show-error-status :limit-count="10" :upload-method="uploadMethod"></vxe-upload>
+    </p>
+    <p>
+      <vxe-upload v-model="imgList" mode="image" multiple readonly show-error-status :upload-method="uploadMethod"></vxe-upload>
+    </p>
+    <p>
+      <vxe-upload v-model="fileList" multiple :limit-size="30" disabled autoHiddenButton show-error-status :limit-count="10" :upload-method="uploadMethod"></vxe-upload>
+    </p>
+    <p>
+      <vxe-upload v-model="imgList" mode="image" multiple disabled show-error-status :upload-method="uploadMethod"></vxe-upload>
+    </p>
   </div>
 </template>
 
@@ -14,7 +26,8 @@ import { ref } from 'vue'
 import { VxeUploadPropTypes } from '../../../types'
 
 const fileList = ref<VxeUploadPropTypes.ModelValue>([
-  { name: '673.gif', type: 'gif', url: 'https://vxeui.com/resource/img/bq673.gif' }
+  { name: '673.gif', type: 'gif', url: 'https://vxeui.com/resource/img/bq673.gif' },
+  { name: '673.gif', type: 'gif', url: 'https://vxeui.com/resource/img/img/fj573.jpeg' }
 ])
 const imgList = ref([
   { name: 'fj577.jpg', url: 'https://vxeui.com/resource/img/fj577.jpg' },

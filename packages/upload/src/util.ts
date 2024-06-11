@@ -77,10 +77,11 @@ export function getExportBlobByContent (content: string, options: { type: string
  * 保存文件到本地
  */
 export const saveLocalFile: VxeUploadDefines.SaveFileFunction = (options) => {
-  const { filename, type, content } = options
-  const name = `${filename}.${type}`
+  const opts = Object.assign({ type: '' }, options)
+  const { filename, type, content } = opts
+  const name = type ? `${filename}.${type}` : `${filename}`
   if (window.Blob) {
-    const blob = content instanceof Blob ? content : getExportBlobByContent(XEUtils.toValueString(content), options)
+    const blob = content instanceof Blob ? content : getExportBlobByContent(XEUtils.toValueString(content), opts)
     const winNavigator = window.navigator as Navigator & { msSaveBlob(blob: Blob, name: string): any }
     if (winNavigator.msSaveBlob) {
       winNavigator.msSaveBlob(blob, name)

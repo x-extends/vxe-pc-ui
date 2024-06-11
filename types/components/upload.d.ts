@@ -25,6 +25,8 @@ export interface VxeUploadPrivateRef extends UploadPrivateRef { }
 export namespace VxeUploadPropTypes {
   export type ModelValue = VxeUploadDefines.FileObjItem[]
   export type Mode = null | '' | 'all' | 'image'
+  export type Readonly = boolean
+  export type Disabled = boolean
   export type ImageTypes = string[]
   export type FileTypes = string[]
   export type Multiple = boolean
@@ -52,6 +54,8 @@ export namespace VxeUploadPropTypes {
 export type VxeUploadProps = {
   modelValue?: VxeUploadPropTypes.ModelValue
   mode?: VxeUploadPropTypes.Mode
+  readonly?: VxeUploadPropTypes.Readonly
+  disabled?: VxeUploadPropTypes.Disabled
   imageTypes?: VxeUploadPropTypes.ImageTypes
   fileTypes?: VxeUploadPropTypes.FileTypes
   multiple?: VxeUploadPropTypes.Multiple
@@ -107,6 +111,10 @@ export namespace VxeUploadDefines {
     filename: string
     type: string
     content: string | Blob
+  } | {
+    filename: string
+    type?: string
+    content: Blob
   }) => Promise<any>
 
   export type ReadFileFunction = (options?: {

@@ -271,6 +271,18 @@ export default {
         }
       }
     },
+    imagePreview: {
+      operBtn: {
+        zoomOut: 'Reduce',
+        zoomIn: 'Enlarge',
+        pctFull: 'Proportional scaling',
+        pct11: 'Show original size',
+        rotateLeft: 'Rotate left',
+        rotateRight: 'Rotate right',
+        print: 'Click to print',
+        download: 'Click to download'
+      }
+    },
     upload: {
       fileBtnText: 'Click or drag',
       imgBtnText: 'Click or drag',

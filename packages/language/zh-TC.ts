@@ -269,6 +269,18 @@ export default {
         }
       }
     },
+    imagePreview: {
+      operBtn: {
+        zoomOut: '缩小',
+        zoomIn: '放大',
+        pctFull: '等比例缩放',
+        pct11: '显示原始尺寸',
+        rotateLeft: '向左旋转',
+        rotateRight: '向右旋转',
+        print: '点击打印图片',
+        download: '点击下载图片'
+      }
+    },
     upload: {
       fileBtnText: '点击或拖拽上传',
       imgBtnText: '点击或拖拽上传',
