@@ -22,7 +22,7 @@ $btnThemeList: (
   ),
   (
     name: "success",
-    textColor: var(--vxe-ui-status-success-colo),
+    textColor: var(--vxe-ui-status-success-color),
   ),
   (
     name: "info",
@@ -35,6 +35,10 @@ $btnThemeList: (
   (
     name: "danger",
     textColor: var(--vxe-ui-status-danger-color),
+  ),
+  (
+    name: "error",
+    textColor: var(--vxe-ui-status-error-color),
   )
 );
 

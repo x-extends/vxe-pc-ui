@@ -45,12 +45,24 @@ export interface TablePrivateRef {
   refRightContainer: Ref<HTMLDivElement>
   refCellResizeBar: Ref<HTMLDivElement>
 }
-export interface VxeTablePrivateRef extends TablePrivateRef { }
+
+export interface VxeTableDataRow extends TablePrivateRef { }
+
+/**
+ * 已废弃，被 VxeTablePropTypes.Row 替换
+ * @deprecated
+ */
+export type VxeTablePropTypes = VxeTablePropTypes.Row
 
 export namespace VxeTablePropTypes {
   export type Size = VxeComponentSizeType
   export type ID = string
-  export type Data<T = any> = T[]
+
+  export interface Row {
+    [key: string]: any
+  }
+
+  export type Data<T = Row> = T[]
   export type Height = number | string
   export type MinHeight = number | string
   export type MaxHeight = number | string
@@ -78,7 +90,7 @@ export namespace VxeTablePropTypes {
     data: D[]
   }) => Array<string | number | null>[] | any[]
 
-  export type RowClassName<D = any> = string | ((params: {
+  export type RowClassName<D = VxeTablePropTypes.Row> = string | ((params: {
     $table: VxeTableConstructor<D> & VxeTablePrivateMethods<D>
     row: D
     rowIndex: number
@@ -86,7 +98,7 @@ export namespace VxeTablePropTypes {
     _rowIndex: number
   }) => void | null | string | { [key: string]: boolean })
 
-  export type CellClassName<D = any> = string | ((params: {
+  export type CellClassName<D = VxeTablePropTypes.Row> = string | ((params: {
     $table: VxeTableConstructor<D> & VxeTablePrivateMethods<D>
     row: D
     rowIndex: number
@@ -98,14 +110,14 @@ export namespace VxeTablePropTypes {
     _columnIndex: number
   }) => void | null | string | { [key: string]: boolean })
 
-  export type HeaderRowClassName<D = any> = string | ((params: {
+  export type HeaderRowClassName<D = VxeTablePropTypes.Row> = string | ((params: {
     $table: VxeTableConstructor<D> & VxeTablePrivateMethods<D>
     $rowIndex: number
     fixed: VxeColumnPropTypes.Fixed
     type: string
   }) => void | null | string | { [key: string]: boolean })
 
-  export type HeaderCellClassName<D = any> = string | ((params: {
+  export type HeaderCellClassName<D = VxeTablePropTypes.Row> = string | ((params: {
     $table: VxeTableConstructor<D> & VxeTablePrivateMethods<D>
     $rowIndex: number
     column: VxeTableDefines.ColumnInfo<D>
@@ -113,7 +125,7 @@ export namespace VxeTablePropTypes {
     type: string
   }) => void | null | string | { [key: string]: boolean })
 
-  export type FooterRowClassName<D = any> = string | ((params: {
+  export type FooterRowClassName<D = VxeTablePropTypes.Row> = string | ((params: {
     $table: VxeTableConstructor<D> & VxeTablePrivateMethods<D>
     row: D
     $rowIndex: number
@@ -122,7 +134,7 @@ export namespace VxeTablePropTypes {
     type: string
   }) => void | null | string | { [key: string]: boolean })
 
-  export type FooterCellClassName<D = any> = string | ((params: {
+  export type FooterCellClassName<D = VxeTablePropTypes.Row> = string | ((params: {
     $table: VxeTableConstructor<D> & VxeTablePrivateMethods<D>
     row: D
     $rowIndex: number
@@ -133,7 +145,7 @@ export namespace VxeTablePropTypes {
     _columnIndex: number
   }) => void | null | string | { [key: string]: boolean })
 
-  export type CellStyle<D = any> = VxeComponentStyleType | ((params: {
+  export type CellStyle<D = VxeTablePropTypes.Row> = VxeComponentStyleType | ((params: {
     row: D
     rowIndex: number
     $rowIndex: number
@@ -144,7 +156,7 @@ export namespace VxeTablePropTypes {
     _columnIndex: number
   }) => void | null | VxeComponentStyleType)
 
-  export type HeaderCellStyle<D = any> = VxeComponentStyleType | ((params: {
+  export type HeaderCellStyle<D = VxeTablePropTypes.Row> = VxeComponentStyleType | ((params: {
     $table: VxeTableConstructor<D> & VxeTablePrivateMethods<D>
     $rowIndex: number
     column: VxeTableDefines.ColumnInfo<D>
@@ -162,7 +174,7 @@ export namespace VxeTablePropTypes {
     _columnIndex: number
   }) => void | null | VxeComponentStyleType)
 
-  export type RowStyle<D = any> = VxeComponentStyleType | ((params: {
+  export type RowStyle<D = VxeTablePropTypes.Row> = VxeComponentStyleType | ((params: {
     $table: VxeTableConstructor<D> & VxeTablePrivateMethods<D>
     row: D
     rowIndex: number
@@ -170,7 +182,7 @@ export namespace VxeTablePropTypes {
     _rowIndex: number
   }) => void | null | VxeComponentStyleType)
 
-  export type HeaderRowStyle<D = any> = VxeComponentStyleType | ((params: {
+  export type HeaderRowStyle<D = VxeTablePropTypes.Row> = VxeComponentStyleType | ((params: {
     $table: VxeTableConstructor<D> & VxeTablePrivateMethods<D>
     $rowIndex: number
     fixed: VxeColumnPropTypes.Fixed
@@ -186,12 +198,12 @@ export namespace VxeTablePropTypes {
     type: string
   }) => void | null | VxeComponentStyleType)
 
-  export type MergeCell<D = any> = VxeTableDefines.MergeOptions<D>
-  export type MergeCells<D = any> = MergeCell<D>[]
+  export type MergeCell<D = VxeTablePropTypes.Row> = VxeTableDefines.MergeOptions<D>
+  export type MergeCells<D = VxeTablePropTypes.Row> = MergeCell<D>[]
   export type MergeFooterItem<D = any> = VxeTableDefines.MergeOptions<D>
   export type MergeFooterItems<D = any> = MergeFooterItem<D>[]
 
-  export type SpanMethod<D = any> = (params: {
+  export type SpanMethod<D = VxeTablePropTypes.Row> = (params: {
     $table: VxeTableConstructor<D> & VxeTablePrivateMethods<D>
     column: VxeTableDefines.ColumnInfo<D>
     columnIndex: number
@@ -322,7 +334,7 @@ export namespace VxeTablePropTypes {
   /**
    * 自定义列配置项
    */
-  export interface CustomConfig<D = any> {
+  export interface CustomConfig<D = VxeTablePropTypes.Row> {
     /**
      * 是否启用 localStorage 本地保存，会将列操作状态保留在本地（需要有 id）
      */
@@ -356,12 +368,12 @@ export namespace VxeTablePropTypes {
     resetButtonText?: string
     confirmButtonText?: string
   }
-  export interface CustomOpts<D = any> extends CustomConfig<D> { }
+  export interface CustomOpts<D = VxeTablePropTypes.Row> extends CustomConfig<D> { }
 
   /**
    * 列调整配置项
    */
-  export interface ResizableConfig<D = any> {
+  export interface ResizableConfig<D = VxeTablePropTypes.Row> {
     /**
      * 列宽拖动的最小宽度
      */
@@ -385,12 +397,12 @@ export namespace VxeTablePropTypes {
       cell: HTMLElement
     }) => number | string)
   }
-  export interface ResizableOpts<D = any> extends ResizableConfig<D> { }
+  export interface ResizableOpts<D = VxeTablePropTypes.Row> extends ResizableConfig<D> { }
 
   /**
    * 序号配置项
    */
-  export interface SeqConfig<D = any> {
+  export interface SeqConfig<D = VxeTablePropTypes.Row> {
     startIndex?: number
     seqMethod?(params: {
       column: VxeTableDefines.ColumnInfo<D>
@@ -401,7 +413,7 @@ export namespace VxeTablePropTypes {
       $rowIndex: number
     }): number | string
   }
-  export interface SeqOpts<D = any> extends SeqConfig<D> { }
+  export interface SeqOpts<D = VxeTablePropTypes.Row> extends SeqConfig<D> { }
 
   interface SortConfigDefaultSort {
     field: string
@@ -411,7 +423,7 @@ export namespace VxeTablePropTypes {
   /**
    * 排序配置项
    */
-  export interface SortConfig<D = any> {
+  export interface SortConfig<D = VxeTablePropTypes.Row> {
     defaultSort?: SortConfigDefaultSort | SortConfigDefaultSort[]
     orders?: SortOrder[]
     sortMethod?(params: {
@@ -429,14 +441,14 @@ export namespace VxeTablePropTypes {
     iconDesc?: string
   }
   export type SortOrder = 'asc' | 'desc' | '' | null
-  export interface SortOpts<D = any> extends SortConfig<D> {
+  export interface SortOpts<D = VxeTablePropTypes.Row> extends SortConfig<D> {
     orders: SortOrder[]
   }
 
   /**
    * 筛选配置项
    */
-  export interface FilterConfig<D = any> {
+  export interface FilterConfig<D = VxeTablePropTypes.Row> {
     filterMethod?:(params: {
       options: VxeTableDefines.FilterOption[]
       values: any[]
@@ -451,12 +463,12 @@ export namespace VxeTablePropTypes {
     confirmButtonText?: string
     resetButtonText?: string
   }
-  export interface FilterOpts<D = any> extends FilterConfig<D> { }
+  export interface FilterOpts<D = VxeTablePropTypes.Row> extends FilterConfig<D> { }
 
   /**
    * 单选框配置
    */
-  export interface RadioConfig<D = any> {
+  export interface RadioConfig<D = VxeTablePropTypes.Row> {
     reserve?: boolean
     labelField?: string
     checkRowKey?: string | number
@@ -470,12 +482,12 @@ export namespace VxeTablePropTypes {
     highlight?: boolean
     strict?: boolean
   }
-  export interface RadioOpts<D = any> extends RadioConfig<D> { }
+  export interface RadioOpts<D = VxeTablePropTypes.Row> extends RadioConfig<D> { }
 
   /**
    * 复选框配置项
    */
-  export interface CheckboxConfig<D = any> {
+  export interface CheckboxConfig<D = VxeTablePropTypes.Row> {
     reserve?: boolean
     labelField?: string
     checkField?: string
@@ -502,12 +514,12 @@ export namespace VxeTablePropTypes {
      */
     halfField?: string
   }
-  export interface CheckboxOpts<D = any> extends CheckboxConfig<D> { }
+  export interface CheckboxOpts<D = VxeTablePropTypes.Row> extends CheckboxConfig<D> { }
 
   /**
    * 提示信息配置项
    */
-  export interface TooltipConfig<D = any> {
+  export interface TooltipConfig<D = VxeTablePropTypes.Row> {
     showAll?: boolean
     theme?: 'dark' | 'light' | '' | null
     enterable?: boolean
@@ -3799,45 +3811,45 @@ export interface VxeTableListeners<D = any> {
 }
 
 export namespace VxeTableEvents {
-  export type KeydownStart<D = any> = (params: VxeTableDefines.KeydownStartEventParams<D>) => void
-  export type Keydown<D = any> = (params: VxeTableDefines.KeydownEventParams<D>) => void
-  export type KeydownEnd<D = any> = (params: VxeTableDefines.KeydownEndEventParams<D>) => void
-  export type Paste<D = any> = (params: VxeTableDefines.PasteEventParams<D>) => void
-  export type Copy<D = any> = (params: VxeTableDefines.CopyEventParams<D>) => void
-  export type Cut<D = any> = (params: VxeTableDefines.CutEventParams<D>) => void
-  export type CurrentChange<D = any> = (params: VxeTableDefines.CurrentChangeEventParams<D>) => void
-  export type RadioChange<D = any> = (params: VxeTableDefines.RadioChangeEventParams<D>) => void
-  export type CheckboxChange<D = any> = (params: VxeTableDefines.CheckboxChangeEventParams<D>) => void
-  export type CheckboxAll<D = any> = (params: VxeTableDefines.CheckboxAllEventParams<D>) => void
-  export type CheckboxRangeStart<D = any> = (params: VxeTableDefines.CheckboxRangeStartEventParams<D>) => void
-  export type CheckboxRangeChange<D = any> = (params: VxeTableDefines.CheckboxRangeChangeEventParams<D>) => void
-  export type CheckboxRangeEnd<D = any> = (params: VxeTableDefines.CheckboxRangeEndEventParams<D>) => void
-  export type CheckboxRangeSelect<D = any> = (params: VxeTableDefines.CheckboxRangeSelectEventParams<D>) => void
-  export type CellClick<D = any> = (params: VxeTableDefines.CellClickEventParams<D>) => void
-  export type CellDblclick<D = any> = (params: VxeTableDefines.CellDblclickEventParams<D>) => void
-  export type CellMenu<D = any> = (params: VxeTableDefines.CellMenuEventParams<D>) => void
-  export type CellMouseenter<D = any> = (params: VxeTableDefines.CellMouseenterEventParams<D>) => void
-  export type CellMouseleave<D = any> = (params: VxeTableDefines.CellMouseleaveEventParams<D>) => void
-  export type CellDeleteValue<D = any> = (params: VxeTableDefines.CellDeleteValueEventParams<D>) => void
-  export type HeaderCellClick<D = any> = (params: VxeTableDefines.HeaderCellClickEventParams<D>) => void
-  export type HeaderCellDblclick<D = any> = (params: VxeTableDefines.HeaderCellDblclickEventParams<D>) => void
-  export type HeaderCellMenu<D = any> = (params: VxeTableDefines.HeaderCellMenuEventParams<D>) => void
-  export type FooterCellClick<D = any> = (params: VxeTableDefines.FooterCellClickEventParams<D>) => void
-  export type FooterCellDblclick<D = any> = (params: VxeTableDefines.FooterCellDblclickEventParams<D>) => void
-  export type FooterCellMenu<D = any> = (params: VxeTableDefines.FooterCellMenuEventParams<D>) => void
-  export type SortChange<D = any> = (params: VxeTableDefines.SortChangeEventParams<D>) => void
-  export type FilterChange<D = any> = (params: VxeTableDefines.FilterChangeEventParams<D>) => void
-  export type FilterVisible<D = any> = (params: VxeTableDefines.FilterVisibleEventParams<D>) => void
-  export type ResizableChange<D = any> = (params: VxeTableDefines.ResizableChangeEventParams<D>) => void
-  export type ToggleRowExpand<D = any> = (params: VxeTableDefines.ToggleRowExpandEventParams<D>) => void
-  export type ToggleTreeExpand<D = any> = (params: VxeTableDefines.ToggleTreeExpandEventParams<D>) => void
-  export type MenuClick<D = any> = (params: VxeTableDefines.MenuClickEventParams<D>) => void
-  export type EditClosed<D = any> = (params: VxeTableDefines.EditClosedEventParams<D>) => void
-  export type EditActived<D = any> = (params: VxeTableDefines.EditActivedEventParams<D>) => void
-  export type EditDisabled<D = any> = (params: VxeTableDefines.EditDisabledEventParams<D>) => void
-  export type ValidError<D = any> = (params: VxeTableDefines.ValidErrorEventParams<D>) => void
-  export type Scroll<D = any> = (params: VxeTableDefines.ScrollEventParams<D>) => void
-  export type Custom<D = any> = (params: VxeTableDefines.CustomEventParams<D>) => void
+  export type KeydownStart<D = VxeTablePropTypes.Row> = (params: VxeTableDefines.KeydownStartEventParams<D>) => void
+  export type Keydown<D = VxeTablePropTypes.Row> = (params: VxeTableDefines.KeydownEventParams<D>) => void
+  export type KeydownEnd<D = VxeTablePropTypes.Row> = (params: VxeTableDefines.KeydownEndEventParams<D>) => void
+  export type Paste<D = VxeTablePropTypes.Row> = (params: VxeTableDefines.PasteEventParams<D>) => void
+  export type Copy<D = VxeTablePropTypes.Row> = (params: VxeTableDefines.CopyEventParams<D>) => void
+  export type Cut<D = VxeTablePropTypes.Row> = (params: VxeTableDefines.CutEventParams<D>) => void
+  export type CurrentChange<D = VxeTablePropTypes.Row> = (params: VxeTableDefines.CurrentChangeEventParams<D>) => void
+  export type RadioChange<D = VxeTablePropTypes.Row> = (params: VxeTableDefines.RadioChangeEventParams<D>) => void
+  export type CheckboxChange<D = VxeTablePropTypes.Row> = (params: VxeTableDefines.CheckboxChangeEventParams<D>) => void
+  export type CheckboxAll<D = VxeTablePropTypes.Row> = (params: VxeTableDefines.CheckboxAllEventParams<D>) => void
+  export type CheckboxRangeStart<D = VxeTablePropTypes.Row> = (params: VxeTableDefines.CheckboxRangeStartEventParams<D>) => void
+  export type CheckboxRangeChange<D = VxeTablePropTypes.Row> = (params: VxeTableDefines.CheckboxRangeChangeEventParams<D>) => void
+  export type CheckboxRangeEnd<D = VxeTablePropTypes.Row> = (params: VxeTableDefines.CheckboxRangeEndEventParams<D>) => void
+  export type CheckboxRangeSelect<D = VxeTablePropTypes.Row> = (params: VxeTableDefines.CheckboxRangeSelectEventParams<D>) => void
+  export type CellClick<D = VxeTablePropTypes.Row> = (params: VxeTableDefines.CellClickEventParams<D>) => void
+  export type CellDblclick<D = VxeTablePropTypes.Row> = (params: VxeTableDefines.CellDblclickEventParams<D>) => void
+  export type CellMenu<D = VxeTablePropTypes.Row> = (params: VxeTableDefines.CellMenuEventParams<D>) => void
+  export type CellMouseenter<D = VxeTablePropTypes.Row> = (params: VxeTableDefines.CellMouseenterEventParams<D>) => void
+  export type CellMouseleave<D = VxeTablePropTypes.Row> = (params: VxeTableDefines.CellMouseleaveEventParams<D>) => void
+  export type CellDeleteValue<D = VxeTablePropTypes.Row> = (params: VxeTableDefines.CellDeleteValueEventParams<D>) => void
+  export type HeaderCellClick<D = VxeTablePropTypes.Row> = (params: VxeTableDefines.HeaderCellClickEventParams<D>) => void
+  export type HeaderCellDblclick<D = VxeTablePropTypes.Row> = (params: VxeTableDefines.HeaderCellDblclickEventParams<D>) => void
+  export type HeaderCellMenu<D = VxeTablePropTypes.Row> = (params: VxeTableDefines.HeaderCellMenuEventParams<D>) => void
+  export type FooterCellClick<D = VxeTablePropTypes.Row> = (params: VxeTableDefines.FooterCellClickEventParams<D>) => void
+  export type FooterCellDblclick<D = VxeTablePropTypes.Row> = (params: VxeTableDefines.FooterCellDblclickEventParams<D>) => void
+  export type FooterCellMenu<D = VxeTablePropTypes.Row> = (params: VxeTableDefines.FooterCellMenuEventParams<D>) => void
+  export type SortChange<D = VxeTablePropTypes.Row> = (params: VxeTableDefines.SortChangeEventParams<D>) => void
+  export type FilterChange<D = VxeTablePropTypes.Row> = (params: VxeTableDefines.FilterChangeEventParams<D>) => void
+  export type FilterVisible<D = VxeTablePropTypes.Row> = (params: VxeTableDefines.FilterVisibleEventParams<D>) => void
+  export type ResizableChange<D = VxeTablePropTypes.Row> = (params: VxeTableDefines.ResizableChangeEventParams<D>) => void
+  export type ToggleRowExpand<D = VxeTablePropTypes.Row> = (params: VxeTableDefines.ToggleRowExpandEventParams<D>) => void
+  export type ToggleTreeExpand<D = VxeTablePropTypes.Row> = (params: VxeTableDefines.ToggleTreeExpandEventParams<D>) => void
+  export type MenuClick<D = VxeTablePropTypes.Row> = (params: VxeTableDefines.MenuClickEventParams<D>) => void
+  export type EditClosed<D = VxeTablePropTypes.Row> = (params: VxeTableDefines.EditClosedEventParams<D>) => void
+  export type EditActived<D = VxeTablePropTypes.Row> = (params: VxeTableDefines.EditActivedEventParams<D>) => void
+  export type EditDisabled<D = VxeTablePropTypes.Row> = (params: VxeTableDefines.EditDisabledEventParams<D>) => void
+  export type ValidError<D = VxeTablePropTypes.Row> = (params: VxeTableDefines.ValidErrorEventParams<D>) => void
+  export type Scroll<D = VxeTablePropTypes.Row> = (params: VxeTableDefines.ScrollEventParams<D>) => void
+  export type Custom<D = VxeTablePropTypes.Row> = (params: VxeTableDefines.CustomEventParams<D>) => void
 }
 
 export namespace VxeTableSlotTypes {

@@ -52,6 +52,9 @@ $btnThemeList: (
   &.size--mini {
     font-size: var(--vxe-ui-font-size-mini);
   }
+  & + .vxe-tag {
+    margin-left: 8px;
+  }
 }
 .vxe-tag--icon {
   padding: 0 0.1em;
