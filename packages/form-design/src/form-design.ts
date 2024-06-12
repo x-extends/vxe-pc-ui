@@ -57,7 +57,8 @@ export default defineComponent({
       widgetObjList: [],
       dragWidget: null,
       sortWidget: null,
-      activeWidget: null
+      activeWidget: null,
+      sortSubWidget: null
     })
 
     const internalData = reactive<FormDesignInternalData>({
@@ -285,8 +286,8 @@ export default defineComponent({
           } else {
             reactData.activeWidget = items[index + 1] || null
           }
-          // 如果是子控件
-          if (parent) {
+          // 如果是行控件，使用空的控件占位
+          if (parent && parent.name === 'row') {
             items[index] = createEmptyWidget()
           } else {
             items.splice(index, 1)

@@ -43,18 +43,22 @@ const ViewColItemComponent = defineComponent({
       const { widgetObjList, sortWidget } = formDesignReactData
       const currWidget = parentWidget.children[colItemIndex]
       evnt.stopPropagation()
-      if (sortWidget && parentWidget && sortWidget.id !== parentWidget.id && !hasFormDesignLayoutType(sortWidget)) {
+      if (sortWidget && parentWidget && sortWidget.id !== parentWidget.id) {
+        if (hasFormDesignLayoutType(sortWidget)) {
+          return
+        }
         if ((!currWidget || !currWidget.name) && !hasFormDesignLayoutType(currWidget)) {
-          const index = XEUtils.findIndexOf(widgetObjList, item => item.id === sortWidget.id)
-          if (index > -1) {
+          const rest = XEUtils.findTree(widgetObjList, item => item.id === sortWidget.id, { children: 'children' })
+          if (rest) {
+            const { item, index, items } = rest
             // 如果数据异常，动态修复
             if (!parentWidget.children.length) {
               parentWidget.children = XEUtils.range(0, parentWidget.options.colSize).map(() => {
                 return $xeFormDesign.createEmptyWidget()
               })
             }
-            parentWidget.children[colItemIndex] = sortWidget
-            widgetObjList.splice(index, 1)
+            parentWidget.children[colItemIndex] = item
+            items.splice(index, 1)
           }
         }
       }
@@ -90,10 +94,10 @@ const ViewColItemComponent = defineComponent({
           }, [
             renderWidgetDesignView
               ? h('div', {
-                class: 'vxe-form-design--widget-row-view-wrapper'
+                class: 'vxe-form-design--widget-row-view-item-wrapper'
               }, [
                 h('div', {
-                  class: 'vxe-form--item-row'
+                  class: 'vxe-form-design--widget-row-view-item-box vxe-form--item-row'
                 }, getSlotVNs(renderWidgetDesignView(renderOpts, params))),
                 isActive
                   ? h('div', {

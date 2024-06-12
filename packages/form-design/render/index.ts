@@ -3,7 +3,7 @@ import { renderer } from '@vxe-ui/core'
 
 import { getWidgetTextConfig, WidgetTextViewComponent, WidgetTextFormComponent } from '../widget-text'
 import { getWidgetRowConfig, WidgetRowEditComponent, WidgetRowViewComponent, WidgetRowFormComponent } from '../widget-row'
-// import { getWidgetSubtableConfig, WidgetSubtableEditComponent, WidgetSubtableViewComponent, WidgetSubtableFormComponent } from '../widget-subtable'
+import { getWidgetSubtableConfig, WidgetSubtableEditComponent, WidgetSubtableViewComponent, WidgetSubtableFormComponent } from '../widget-subtable'
 
 import { getWidgetInputConfig, WidgetInputViewComponent, WidgetInputFormComponent } from '../widget-input'
 import { getWidgetTextareaConfig, WidgetTextareaViewComponent, WidgetTextareaFormComponent } from '../widget-textarea'
@@ -45,18 +45,18 @@ renderer.mixin({
       return h(WidgetRowFormComponent, { renderOpts, renderParams })
     }
   },
-  // subtable: {
-  //   createFormDesignWidgetConfig: getWidgetSubtableConfig,
-  //   renderFormDesignWidgetEdit (renderOpts, renderParams) {
-  //     return h(WidgetSubtableEditComponent, { renderOpts, renderParams })
-  //   },
-  //   renderFormDesignWidgetView (renderOpts, renderParams) {
-  //     return h(WidgetSubtableViewComponent, { renderOpts, renderParams })
-  //   },
-  //   renderFormDesignWidgetFormView (renderOpts, renderParams) {
-  //     return h(WidgetSubtableFormComponent, { renderOpts, renderParams })
-  //   }
-  // },
+  subtable: {
+    createFormDesignWidgetConfig: getWidgetSubtableConfig,
+    renderFormDesignWidgetEdit (renderOpts, renderParams) {
+      return h(WidgetSubtableEditComponent, { renderOpts, renderParams })
+    },
+    renderFormDesignWidgetView (renderOpts, renderParams) {
+      return h(WidgetSubtableViewComponent, { renderOpts, renderParams })
+    },
+    renderFormDesignWidgetFormView (renderOpts, renderParams) {
+      return h(WidgetSubtableFormComponent, { renderOpts, renderParams })
+    }
+  },
   input: {
     createFormDesignWidgetConfig: getWidgetInputConfig,
     renderFormDesignWidgetView (renderOpts, renderParams) {

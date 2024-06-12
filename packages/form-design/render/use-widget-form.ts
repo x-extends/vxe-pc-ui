@@ -1,4 +1,4 @@
-import { VNode, createCommentVNode, h, onMounted, ref, watch } from 'vue'
+import { VNode, h, onMounted, ref, watch } from 'vue'
 import { VxeUI, getIcon, getI18n } from '@vxe-ui/core'
 import VxeFormItemComponent from '../../form/src/form-item'
 import VxeButtonComponent from '../../button/src/button'
@@ -135,13 +135,11 @@ export function useWidgetPropDataSource (props: {
           return h('div', {
             class: 'vxe-form-design--widget-form-item-data-source-popup'
           }, [
-            isSubOption
-              ? h(VxeTipComponent, {
-                status: 'primary',
-                title: '',
-                content: '每行对应一个选项，如果是分组，子项可以是空格或制表键开头，可从 Excel 或 WPS 中复制。'
-              })
-              : createCommentVNode(),
+            h(VxeTipComponent, {
+              status: 'primary',
+              title: '',
+              content: getI18n(`vxe.formDesign.widgetProp.dataSource.${isSubOption ? 'batchEditSubTip' : 'batchEditTip'}`)
+            }),
             h(VxeTextareaComponent, {
               resize: 'none',
               modelValue: optionsContent.value,

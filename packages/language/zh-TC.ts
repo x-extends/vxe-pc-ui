@@ -365,7 +365,8 @@ export default {
           defValue: '选项{0}',
           addOption: '添加选项',
           batchEditOption: '批量编辑',
-          batchEditTip: '每行对应一个选项，如果是分组，子项可以是空格或制表键开头，可从 Excel 或 WPS 中复制。',
+          batchEditTip: '每行对应一个选项，支持从表格、Excel、WPS 中直接复制粘贴。',
+          batchEditSubTip: '每行对应一个选项，如果是分组，子项可以是空格或制表键开头，支持从表格、Excel、WPS 中直接复制粘贴。',
           buildOption: '生成选项'
         },
         rowProp: {
@@ -387,6 +388,12 @@ export default {
           boldTitle: '字体加粗',
           fontNormal: '常规',
           fontBold: '加粗'
+        },
+        subtableProp: {
+          seqTitle: '序号',
+          showSeq: '显示序号',
+          showCheckbox: '允许多选',
+          errSubDrag: '子表不支持该控件，请使用其他控件'
         },
         uploadProp: {
           uploadProp: {

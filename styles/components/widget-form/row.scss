@@ -43,6 +43,9 @@
   }
   &:hover {
     background-color: var(--vxe-ui-form-design-sub-widget-hover-background-color);
+    .vxe-form-design--widget-row-view-empty {
+      background-color: transparent;
+    }
   }
   &.is--active {
     border: 1px dashed var(--vxe-ui-font-primary-color);
@@ -55,19 +58,25 @@
 }
 
 .vxe-form-design--widget-row-view-empty {
-  text-align: center;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
   height: 78px;
   padding: var(--vxe-ui-layout-padding-default);
-  padding-top: 18px;
   color: var(--vxe-ui-font-placeholder-color);
   border: 2px dashed var(--vxe-ui-input-border-color);
   font-size: 0.95em;
+  background-color: var(--vxe-ui-layout-background-color);
 }
 .vxe-form-design--preview-item {
-  &.widget-row {
-    padding: var(--vxe-ui-layout-padding-default) 0;
+  &.widget-row,
+  &.widget-subtable {
     &::after {
       display: none;
     }
+  }
+  &.widget-row {
+    padding: var(--vxe-ui-layout-padding-default) 0;
   }
 }

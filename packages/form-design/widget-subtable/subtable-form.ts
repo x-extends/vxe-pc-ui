@@ -5,6 +5,7 @@ import { WidgetSubtableFormObjVO } from './subtable-data'
 import VxeFormComponent from '../../form/src/form'
 import VxeFormItemComponent from '../../form/src/form-item'
 import VxeInputComponent from '../../input/src/input'
+import VxeSwitchComponent from '../../switch/src/switch'
 
 import type { VxeGlobalRendererHandles, VxeFormDesignConstructor, VxeFormDesignPrivateMethods } from '../../../types'
 
@@ -32,6 +33,7 @@ export const WidgetSubtableFormComponent = defineComponent({
     return () => {
       const { renderParams } = props
       const { widget } = renderParams
+      const { options } = widget
       const kebabCaseName = computeKebabCaseName.value
 
       return h(VxeFormComponent, {
@@ -40,7 +42,7 @@ export const WidgetSubtableFormComponent = defineComponent({
         span: 24,
         titleBold: true,
         titleOverflow: true,
-        data: widget.options
+        data: options
       }, {
         default () {
           return [
@@ -52,6 +54,19 @@ export const WidgetSubtableFormComponent = defineComponent({
                   modelValue: widget.title,
                   'onUpdate:modelValue' (val) {
                     widget.title = val
+                  }
+                })
+              }
+            }),
+            h(VxeFormItemComponent, {
+              title: getI18n('vxe.formDesign.widgetProp.subtableProp.showCheckbox'),
+              field: 'showCheckbox'
+            }, {
+              default () {
+                return h(VxeSwitchComponent, {
+                  modelValue: options.showCheckbox,
+                  'onUpdate:modelValue' (val) {
+                    options.showCheckbox = val
                   }
                 })
               }

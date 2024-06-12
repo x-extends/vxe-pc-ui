@@ -3,7 +3,7 @@ import { handleGetFormDesignWidgetName } from '../render/util'
 import type { VxeGlobalRendererHandles } from '../../../types'
 
 export interface WidgetSubtableFormObjVO {
-  showSeq: boolean
+  showCheckbox: boolean
 }
 
 export const getWidgetSubtableConfig = (): VxeGlobalRendererHandles.CreateFormDesignWidgetConfigObj<WidgetSubtableFormObjVO> => {
@@ -12,7 +12,7 @@ export const getWidgetSubtableConfig = (): VxeGlobalRendererHandles.CreateFormDe
     group: 'layout',
     icon: 'vxe-icon-subtable',
     options: {
-      showSeq: true
+      showCheckbox: false
     }
   }
 }

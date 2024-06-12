@@ -32,13 +32,18 @@ export const ViewItemComponent = defineComponent({
     const { reactData: formDesignReactData } = $xeFormDesign
 
     const sortDragstartEvent = (evnt: DragEvent) => {
-      const { widgetObjList } = formDesignReactData
+      const { widgetObjList, sortSubWidget } = formDesignReactData
+      if (sortSubWidget) {
+        evnt.preventDefault()
+        return
+      }
       const divEl = evnt.currentTarget as HTMLDivElement
       const widgetId = Number(divEl.getAttribute('data-widget-id'))
       const currRest = XEUtils.findTree(widgetObjList, item => item && item.id === widgetId, { children: 'children' })
       if (currRest) {
         formDesignReactData.dragWidget = null
         formDesignReactData.sortWidget = currRest.item
+        formDesignReactData.sortSubWidget = null
       }
     }
 
@@ -50,8 +55,8 @@ export const ViewItemComponent = defineComponent({
     let isDragAnimate = false
 
     const sortDragenterEvent = (evnt: DragEvent) => {
-      const { widgetObjList, sortWidget } = formDesignReactData
-      if (isDragAnimate) {
+      const { widgetObjList, sortWidget, sortSubWidget } = formDesignReactData
+      if (isDragAnimate || sortSubWidget) {
         evnt.preventDefault()
         return
       }
@@ -78,10 +83,15 @@ export const ViewItemComponent = defineComponent({
     }
 
     const dragoverItemEvent = (evnt: DragEvent) => {
-      const { sortWidget, dragWidget } = formDesignReactData
-      if (sortWidget || dragWidget) {
+      const { sortWidget, dragWidget, sortSubWidget } = formDesignReactData
+      if (sortWidget || dragWidget || sortSubWidget) {
         evnt.preventDefault()
       }
+    }
+
+    const handleClickEvent = (evnt: KeyboardEvent, item: VxeFormDesignDefines.WidgetObjItem) => {
+      $xeFormDesign.handleClickWidget(evnt, item)
+      formDesignReactData.sortSubWidget = null
     }
 
     return () => {
@@ -105,7 +115,7 @@ export const ViewItemComponent = defineComponent({
         onDragenter: sortDragenterEvent,
         onDragover: dragoverItemEvent,
         onClick (evnt: KeyboardEvent) {
-          $xeFormDesign.handleClickWidget(evnt, item)
+          handleClickEvent(evnt, item)
         }
       }, [
         h('div', {

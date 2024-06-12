@@ -1,27 +1,79 @@
+@import '../../helpers/mixin.scss';
+
 .vxe-form-design--widget-subtable-view {
-  width: 100%;
   display: flex;
   flex-direction: row;
-  flex-wrap: nowrap;
-  border: 1px solid var(--vxe-ui-input-border-color);
+  max-width: 100%;
   border-radius: var(--vxe-ui-base-border-radius);
+  overflow-y: hidden;
+  overflow-x: auto;
 }
-.vxe-form-design--widget-subtable-col,
-.vxe-form-design--widget-subtable-view-wrapper {
-  position: relative;
+.vxe-form-design--widget-subtable-view-box {
+  border: 1px solid var(--vxe-ui-input-border-color);
+  border-width: 1px 1px 1px 0;
+  display: inline-flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+}
+.vxe-form-design--widget-subtable-view-left {
+  position: sticky;
+  left: 0;
+  top: 0;
+  display: flex;
   flex-shrink: 0;
+  padding-top: var(--vxe-ui-layout-padding-default);
+  box-shadow: 8px 0px 10px -5px rgba(0,0,0,.12);
+  border-radius: var(--vxe-ui-base-border-radius) 0 0 var(--vxe-ui-base-border-radius);
+  z-index: 5;
 }
-.vxe-form-design--widget-subtable-head,
-.vxe-form-design--widget-subtable-body,
-.vxe-form-design--widget-subtable-view-wrapper  {
-  padding: var(--vxe-ui-layout-padding-default);
+.vxe-form-design--widget-subtable-view-right {
+  flex-grow: 1;
+  padding-top: var(--vxe-ui-layout-padding-default);
 }
 .vxe-form-design--widget-subtable-col {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  min-width: 54px;
   text-align: center;
+  border-top: 1px solid var(--vxe-ui-input-border-color);
   border-right: 1px solid var(--vxe-ui-input-border-color);
+  border-bottom: 1px solid var(--vxe-ui-input-border-color);
+  background-color: var(--vxe-ui-layout-background-color);
+  &:first-child {
+    border-left: 1px solid var(--vxe-ui-input-border-color);
+    border-radius: var(--vxe-ui-base-border-radius) 0 0 var(--vxe-ui-base-border-radius);
+  }
+  &::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+  }
 }
 .vxe-form-design--widget-subtable-head {
+  flex-shrink: 0;
+  height: 2.8em;
+  line-height: 2.8em;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  padding: 0 var(--vxe-ui-layout-padding-default);
   border-bottom: 1px solid var(--vxe-ui-input-border-color);
+}
+.vxe-form-design--widget-subtable-body {
+  flex-grow: 1;
+  padding: var(--vxe-ui-layout-padding-default);
+}
+.vxe-form-design--widget-subtable-head,
+.vxe-form-design--widget-subtable-body {
+  width: 100%;
 }
 .vxe-form-design--widget-subtable-body,
 .vxe-form-design--widget-subtable-view-empty {
@@ -34,10 +86,96 @@
 .vxe-form-design--widget-subtable-view-wrapper {
   display: flex;
   flex-direction: row;
+  border: 1px solid var(--vxe-ui-input-border-color);
+  border-left: 0;
+  background-color: var(--vxe-ui-layout-background-color);
+  border-radius: 0 var(--vxe-ui-base-border-radius) var(--vxe-ui-base-border-radius) 0;
+}
+.vxe-form-design--widget-subtable-view-list {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  & > .vxe-form-design--widget-subtable-view-item {
+    border-right: 1px solid var(--vxe-ui-input-border-color);
+  }
+}
+.vxe-form-design--widget-subtable-view-list-move {
+  @include createAnimationTransition(transform, 0.35s);
+}
+
+.vxe-form-design--widget-subtable-view-item {
+  position: relative;
+  min-width: 200px;
+  cursor: grabbing;
+  &:hover {
+    background: var(--vxe-ui-base-active-background-color);
+  }
+  &.is--active {
+    background: var(--vxe-ui-base-active-background-color);
+    &::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      border: 1px dashed var(--vxe-ui-font-primary-color);
+      pointer-events: none;
+      z-index: 2;
+    }
+  }
+}
+.vxe-form-design--widget-subtable-view-item-box {
+  height: 100%;
+  &::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+  }
 }
 
 .vxe-form-design--widget-subtable-view-empty {
+  flex-grow: 1;
   color: var(--vxe-ui-font-placeholder-color);
   padding: 0 var(--vxe-ui-layout-padding-threefold);
   min-height: 78px;
+  min-width: 260px;
+  cursor: default;
+}
+
+.vxe-form-design--widget-subtable-form-item {
+  overflow: hidden;
+  & > .vxe-form--item-inner {
+    overflow: hidden;
+    & > .vxe-form--item-content {
+      overflow: hidden;
+    }
+  }
+}
+.vxe-form-design--widget-subtable-view-item-wrapper {
+  height: 100%;
+  .vxe-form--item {
+    &.is--vertical {
+      padding: 0;
+      .vxe-form--item-title {
+        height: 2.8em;
+        line-height: 2.8em;
+        padding: 0 var(--vxe-ui-layout-padding-default);
+      }
+      .vxe-form--item-content {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: center;
+        padding: var(--vxe-ui-layout-padding-default);
+      }
+    }
+  }
+  .vxe-form--item-title {
+    border-bottom: 1px solid var(--vxe-ui-input-border-color);
+  }
 }

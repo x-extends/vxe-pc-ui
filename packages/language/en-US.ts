@@ -338,7 +338,7 @@ export default {
           select: 'Select',
           row: 'Row/column',
           title: 'Text',
-          subtable: '子表',
+          subtable: 'Subtable',
           VxeSwitch: 'Yes/no',
           VxeInput: 'Input',
           VxeNumberInput: 'Number',
@@ -367,7 +367,8 @@ export default {
           defValue: 'Option {0}',
           addOption: 'Add option',
           batchEditOption: 'Batch edit',
-          batchEditTip: 'Each row corresponds to an option. If grouped, the sub items can start with spaces or tab keys and can be copied from Excel or WPS.',
+          batchEditTip: 'Each row corresponds to an option, supporting direct copying and pasting from tables, Excel, and WPS.',
+          batchEditSubTip: 'Each row corresponds to an option. If grouped, the sub items can start with spaces or tab keys, and can be directly copied and pasted from tables, Excel, or WPS.',
           buildOption: 'Build option'
         },
         rowProp: {
@@ -389,6 +390,12 @@ export default {
           boldTitle: 'Font bold',
           fontNormal: 'Normal',
           fontBold: 'Bold'
+        },
+        subtableProp: {
+          seqTitle: 'S/N',
+          showSeq: 'Display serial number',
+          showCheckbox: 'Allow multiple selections',
+          errSubDrag: 'The sub table does not support this control. Please use another control.'
         },
         uploadProp: {
           limitFileCount: 'File quantity limitation',

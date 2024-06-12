@@ -65,6 +65,7 @@ export interface FormDesignReactData<D = any> {
   dragWidget: VxeFormDesignDefines.WidgetObjItem | null
   sortWidget: VxeFormDesignDefines.WidgetObjItem | null
   activeWidget: VxeFormDesignDefines.WidgetObjItem | null
+  sortSubWidget: VxeFormDesignDefines.WidgetObjItem | null
 }
 
 export interface FormDesignInternalData {
