@@ -342,10 +342,12 @@ export namespace VxeTablePropTypes {
     storage?: boolean | VxeTableDefines.VxeTableCustomStorageObj
     restoreStore?(params: {
       id: string
+      type: 'restore'
+      storeData: VxeTableDefines.CustomStoreData
     }): VxeTableDefines.CustomStoreData
     updateStore?(params: {
       id: string
-      type: '' | 'confirm' | 'reset'
+      type: 'reset' | 'confirm' | 'update:width' | 'update:fixed' | 'update:sort' | 'update:visible'
       storeData: VxeTableDefines.CustomStoreData
     }): Promise<any>
     mode?: 'simple' | 'popup' | '' | null
@@ -3028,10 +3030,7 @@ export interface TablePrivateMethods<D = any> {
   handleTableData(force?: boolean): Promise<any>
   cacheRowMap(isSource?: boolean): void
   cacheSourceMap(fullData: any[]): void
-  saveCustomResizable(isReset?: boolean): void
-  saveCustomSort(isReset?: boolean): void
-  saveCustomVisible(): void
-  saveCustomFixed(): void
+  saveCustomStore(type: 'confirm' | 'reset' | 'update:width' | 'update:fixed' | 'update:sort' | 'update:visible'): Promise<any>
   analyColumnWidth(): void
   checkSelectionStatus(): void
   handleSelectRow(params: any, value: any, isForce?: boolean): void
@@ -3594,10 +3593,10 @@ export namespace VxeTableDefines {
   }
 
   export interface CustomStoreData {
-    resizableData: Record<string, number>
-    sortData: Record<string, number>
-    visibleData: Record<string, boolean>
-    fixedData: Record<string, VxeColumnPropTypes.Fixed>
+    resizableData: Record<string, number> | null | undefined
+    sortData: Record<string, number> | null | undefined
+    visibleData: Record<string, boolean> | null | undefined
+    fixedData: Record<string, VxeColumnPropTypes.Fixed> | null | undefined
   }
 
   export interface VxeTableCustomStorageObj {
