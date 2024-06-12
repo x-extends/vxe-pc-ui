@@ -4,6 +4,7 @@ import { VxeColumnPropTypes, VxeColumnProps, VxeColumnSlotTypes } from './column
 import { VxeTableProDefines, VxeTableProEmits } from './table-plugins'
 import { VxeGridConstructor } from './grid'
 import { VxeTooltipInstance } from './tooltip'
+import { VxeModalPropTypes } from './modal'
 import { VxeToolbarConstructor, VxeToolbarInstance } from './toolbar'
 
 /* eslint-disable no-use-before-define,@typescript-eslint/ban-types */
@@ -348,6 +349,14 @@ export namespace VxeTablePropTypes {
       storeData: VxeTableDefines.CustomStoreData
     }): Promise<any>
     mode?: 'simple' | 'popup' | '' | null
+    modalOptions?: {
+      title?: VxeModalPropTypes.Title
+      width?: VxeModalPropTypes.Width
+      minWidth?: VxeModalPropTypes.MinWidth
+      height?: VxeModalPropTypes.Height
+      minHeight?: VxeModalPropTypes.MinHeight
+      className?: VxeModalPropTypes.ClassName
+    }
     trigger?: string,
     immediate?: boolean
     placement?: 'left' | 'right' | 'top-left' | 'top-right' | 'bottom-left' | 'bottom-right'
