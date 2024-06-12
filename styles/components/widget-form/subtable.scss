@@ -1,0 +1,43 @@
+.vxe-form-design--widget-subtable-view {
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  border: 1px solid var(--vxe-ui-input-border-color);
+  border-radius: var(--vxe-ui-base-border-radius);
+}
+.vxe-form-design--widget-subtable-col,
+.vxe-form-design--widget-subtable-view-wrapper {
+  position: relative;
+  flex-shrink: 0;
+}
+.vxe-form-design--widget-subtable-head,
+.vxe-form-design--widget-subtable-body,
+.vxe-form-design--widget-subtable-view-wrapper  {
+  padding: var(--vxe-ui-layout-padding-default);
+}
+.vxe-form-design--widget-subtable-col {
+  text-align: center;
+  border-right: 1px solid var(--vxe-ui-input-border-color);
+}
+.vxe-form-design--widget-subtable-head {
+  border-bottom: 1px solid var(--vxe-ui-input-border-color);
+}
+.vxe-form-design--widget-subtable-body,
+.vxe-form-design--widget-subtable-view-empty {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+}
+
+.vxe-form-design--widget-subtable-view-wrapper {
+  display: flex;
+  flex-direction: row;
+}
+
+.vxe-form-design--widget-subtable-view-empty {
+  color: var(--vxe-ui-font-placeholder-color);
+  padding: 0 var(--vxe-ui-layout-padding-threefold);
+  min-height: 78px;
+}

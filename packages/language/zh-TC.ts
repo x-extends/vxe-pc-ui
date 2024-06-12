@@ -336,7 +336,7 @@ export default {
           select: '下拉框',
           row: '一行多列',
           title: '文本',
-          sublist: '子表',
+          subtable: '子表',
           VxeSwitch: '是/否',
           VxeInput: '输入框',
           VxeNumberInput: '数字',

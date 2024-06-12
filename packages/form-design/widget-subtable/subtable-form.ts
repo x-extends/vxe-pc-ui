@@ -1,21 +1,21 @@
 import { PropType, defineComponent, h, inject } from 'vue'
 import { getI18n } from '@vxe-ui/core'
 import { useKebabCaseName } from '../render/hooks'
-import { WidgetSublistFormObjVO } from './sublist-data'
+import { WidgetSubtableFormObjVO } from './subtable-data'
 import VxeFormComponent from '../../form/src/form'
 import VxeFormItemComponent from '../../form/src/form-item'
 import VxeInputComponent from '../../input/src/input'
 
 import type { VxeGlobalRendererHandles, VxeFormDesignConstructor, VxeFormDesignPrivateMethods } from '../../../types'
 
-export const WidgetSublistFormComponent = defineComponent({
+export const WidgetSubtableFormComponent = defineComponent({
   props: {
     renderOpts: {
       type: Object as PropType<VxeGlobalRendererHandles.RenderFormDesignWidgetFormViewOptions>,
       default: () => ({})
     },
     renderParams: {
-      type: Object as PropType<VxeGlobalRendererHandles.RenderFormDesignWidgetFormViewParams<WidgetSublistFormObjVO>>,
+      type: Object as PropType<VxeGlobalRendererHandles.RenderFormDesignWidgetFormViewParams<WidgetSubtableFormObjVO>>,
       default: () => ({})
     }
   },

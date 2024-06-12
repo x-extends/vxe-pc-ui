@@ -10,8 +10,7 @@ process.env.VUE_APP_VXE_VERSION = pkg.version
 process.env.VUE_APP_VXE_ENV = 'development'
 
 const externalMaps = {
-  'xe-utils': 'XEUtils',
-  '@vxe-ui/core': 'VxeCore'
+  'xe-utils': 'XEUtils'
 }
 
 const externals = {}

@@ -2,11 +2,11 @@ import { handleGetFormDesignWidgetName } from '../render/util'
 
 import type { VxeGlobalRendererHandles } from '../../../types'
 
-export interface WidgetSublistFormObjVO {
+export interface WidgetSubtableFormObjVO {
   showSeq: boolean
 }
 
-export const getWidgetSublistConfig = (): VxeGlobalRendererHandles.CreateFormDesignWidgetConfigObj<WidgetSublistFormObjVO> => {
+export const getWidgetSubtableConfig = (): VxeGlobalRendererHandles.CreateFormDesignWidgetConfigObj<WidgetSubtableFormObjVO> => {
   return {
     title: handleGetFormDesignWidgetName,
     group: 'layout',

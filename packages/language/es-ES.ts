@@ -338,7 +338,7 @@ export default {
           select: 'Select',
           row: 'Row/column',
           title: 'Text',
-          sublist: '子表',
+          subtable: '子表',
           VxeSwitch: 'Yes/no',
           VxeInput: 'Input',
           VxeNumberInput: 'Number',
