@@ -46,13 +46,13 @@ export interface TablePrivateRef {
   refCellResizeBar: Ref<HTMLDivElement>
 }
 
-export interface VxeTableDataRow extends TablePrivateRef { }
+export interface VxeTablePrivateRef extends TablePrivateRef { }
 
 /**
  * 已废弃，被 VxeTablePropTypes.Row 替换
  * @deprecated
  */
-export type VxeTablePropTypes = VxeTablePropTypes.Row
+export type VxeTableDataRow = VxeTablePropTypes.Row
 
 export namespace VxeTablePropTypes {
   export type Size = VxeComponentSizeType
