@@ -187,6 +187,26 @@ export default defineComponent({
       return fullOptionList.find((item) => optionValue === item[valueField])
     }
 
+    const findVisibleOption = (optionValue: any) => {
+      const { visibleOptionList, visibleGroupList } = reactData
+      const isGroup = computeIsGroup.value
+      const valueField = computeValueField.value as 'value'
+      if (isGroup) {
+        for (let gIndex = 0; gIndex < visibleGroupList.length; gIndex++) {
+          const group = visibleGroupList[gIndex]
+          if (group.options) {
+            for (let index = 0; index < group.options.length; index++) {
+              const option = group.options[index]
+              if (optionValue === option[valueField]) {
+                return option
+              }
+            }
+          }
+        }
+      }
+      return visibleOptionList.find((item) => optionValue === item[valueField])
+    }
+
     const getRemoteSelectLabel = (value: any) => {
       const { remoteValueList } = reactData
       const labelField = computeLabelField.value
@@ -604,7 +624,7 @@ export default defineComponent({
           } else if (isUpArrow || isDwArrow) {
             evnt.preventDefault()
             let { firstOption, offsetOption } = findOffsetOption(currentValue, isUpArrow)
-            if (!offsetOption && !findOption(currentValue)) {
+            if (!offsetOption && !findVisibleOption(currentValue)) {
               offsetOption = firstOption
             }
             setCurrentOption(offsetOption)
@@ -657,15 +677,6 @@ export default defineComponent({
 
     const focusSearchEvent = () => {
       reactData.isActivated = true
-    }
-
-    const keydownSearchEvent = (params: VxeInputDefines.KeydownEventParams) => {
-      const { $event } = params
-      const isEnter = globalEvents.hasKey($event, GLOBAL_EVENT_KEYS.ENTER)
-      if (isEnter) {
-        $event.preventDefault()
-        $event.stopPropagation()
-      }
     }
 
     const triggerSearchEvent = XEUtils.debounce(function () {
@@ -984,7 +995,6 @@ export default defineComponent({
                       prefixIcon: getIcon().INPUT_SEARCH,
                       'onUpdate:modelValue': modelSearchEvent,
                       onFocus: focusSearchEvent,
-                      onKeydown: keydownSearchEvent,
                       onChange: triggerSearchEvent,
                       onSearch: triggerSearchEvent
                     })
