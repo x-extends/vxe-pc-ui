@@ -344,7 +344,7 @@ export namespace VxeTablePropTypes {
       id: string
       type: 'restore'
       storeData: VxeTableDefines.CustomStoreData
-    }): VxeTableDefines.CustomStoreData
+    }): VxeTableDefines.CustomStoreData | Promise<VxeTableDefines.CustomStoreData>
     updateStore?(params: {
       id: string
       type: 'reset' | 'confirm' | 'update:width' | 'update:fixed' | 'update:sort' | 'update:visible'
@@ -2224,6 +2224,7 @@ export interface TableReactData<D = any> {
   },
   scrollVMLoading: boolean
   _isResize: boolean
+  _isLoading: boolean
 }
 
 export interface TableInternalData<D = any> {
@@ -3593,10 +3594,10 @@ export namespace VxeTableDefines {
   }
 
   export interface CustomStoreData {
-    resizableData: Record<string, number> | null | undefined
-    sortData: Record<string, number> | null | undefined
-    visibleData: Record<string, boolean> | null | undefined
-    fixedData: Record<string, VxeColumnPropTypes.Fixed> | null | undefined
+    resizableData?: Record<string, number>
+    sortData?: Record<string, number>
+    visibleData?: Record<string, boolean>
+    fixedData?: Record<string, VxeColumnPropTypes.Fixed>
   }
 
   export interface VxeTableCustomStorageObj {
