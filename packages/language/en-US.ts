@@ -342,7 +342,7 @@ export default {
           VxeSwitch: 'Yes/no',
           VxeInput: 'Input',
           VxeNumberInput: 'Number',
-          VxeDateInput: 'Date',
+          VxeDatePicker: 'Date',
           VxeTextarea: 'Textarea',
           VxeSelect: 'Select',
           VxeRadioGroup: 'Radio',

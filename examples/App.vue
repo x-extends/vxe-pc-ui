@@ -57,7 +57,7 @@ const navList = ref([
   { name: 'InputTest', routerLink: { name: 'InputTest' } },
   { name: 'NumberInputTest', routerLink: { name: 'NumberInputTest' } },
   { name: 'PasswordInputTest', routerLink: { name: 'PasswordInputTest' } },
-  { name: 'DateInputTest', routerLink: { name: 'DateInputTest' } },
+  { name: 'DatePickerTest', routerLink: { name: 'DatePickerTest' } },
   { name: 'TextareaTest', routerLink: { name: 'TextareaTest' } },
   { name: 'SwitchTest', routerLink: { name: 'SwitchTest' } },
   { name: 'SelectTest', routerLink: { name: 'SelectTest' } },

@@ -14,7 +14,7 @@ import { VxeCheckboxGroupProps } from '../components/checkbox-group'
 import { VxeColProps } from '../components/col'
 import { VxeCollapseProps } from '../components/collapse'
 import { VxeCollapsePaneProps } from '../components/collapse-pane'
-import { VxeDateInputProps } from '../components/date-input'
+import { VxeDatePickerProps } from '../components/date-picker'
 import { VxeDrawerProps } from '../components/drawer'
 import { VxeFormProps } from '../components/form'
 import { VxeFormDesignProps } from '../components/form-design'
@@ -87,7 +87,7 @@ declare module '@vxe-ui/core' {
     collapse?: VxeCollapseProps
     collapsePane?: VxeCollapsePaneProps
     column?: VxeColumnProps
-    dateInput?: VxeDateInputProps
+    datePicker?: VxeDatePickerProps
     drawer?: VxeDrawerProps
     form?: VxeFormProps
     formDesign?: VxeFormDesignProps

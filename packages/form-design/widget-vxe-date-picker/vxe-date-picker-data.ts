@@ -1,11 +1,11 @@
 import { handleGetFormDesignWidgetName } from '../render/util'
 
 import type { VxeGlobalRendererHandles } from '../../../types'
-export interface WidgetVxeDateInputFormObjVO {
+export interface WidgetVxeDatePickerFormObjVO {
   placeholder: string
 }
 
-export const getWidgetVxeDateInputConfig = (): VxeGlobalRendererHandles.CreateFormDesignWidgetConfigObj<WidgetVxeDateInputFormObjVO> => {
+export const getWidgetVxeDatePickerConfig = (): VxeGlobalRendererHandles.CreateFormDesignWidgetConfigObj<WidgetVxeDatePickerFormObjVO> => {
   return {
     title: handleGetFormDesignWidgetName,
     icon: 'vxe-icon-calendar',

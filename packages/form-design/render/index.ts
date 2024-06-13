@@ -11,7 +11,7 @@ import { getWidgetSelectConfig, WidgetSelectViewComponent, WidgetSelectFormCompo
 
 import { getWidgetVxeInputConfig, WidgetVxeInputViewComponent, WidgetVxeInputFormComponent } from '../widget-vxe-input'
 import { getWidgetVxeNumberInputConfig, WidgetVxeNumberInputViewComponent, WidgetVxeNumberInputFormComponent } from '../widget-vxe-number-input'
-import { getWidgetVxeDateInputConfig, WidgetVxeDateInputViewComponent, WidgetVxeDateInputFormComponent } from '../widget-vxe-date-input'
+import { getWidgetVxeDatePickerConfig, WidgetVxeDatePickerViewComponent, WidgetVxeDatePickerFormComponent } from '../widget-vxe-date-picker'
 import { getWidgetVxeTextareaConfig, WidgetVxeTextareaViewComponent, WidgetVxeTextareaFormComponent } from '../widget-vxe-textarea'
 import { getWidgetVxeSwitchConfig, WidgetVxeSwitchViewComponent, WidgetVxeSwitchFormComponent } from '../widget-vxe-switch'
 import { getWidgetVxeSelectConfig, WidgetVxeSelectViewComponent, WidgetVxeSelectFormComponent } from '../widget-vxe-select'
@@ -102,13 +102,13 @@ renderer.mixin({
       return h(WidgetVxeNumberInputFormComponent, { renderOpts, renderParams })
     }
   },
-  VxeDateInput: {
-    createFormDesignWidgetConfig: getWidgetVxeDateInputConfig,
+  VxeDatePicker: {
+    createFormDesignWidgetConfig: getWidgetVxeDatePickerConfig,
     renderFormDesignWidgetView (renderOpts, renderParams) {
-      return h(WidgetVxeDateInputViewComponent, { renderOpts, renderParams })
+      return h(WidgetVxeDatePickerViewComponent, { renderOpts, renderParams })
     },
     renderFormDesignWidgetFormView (renderOpts, renderParams) {
-      return h(WidgetVxeDateInputFormComponent, { renderOpts, renderParams })
+      return h(WidgetVxeDatePickerFormComponent, { renderOpts, renderParams })
     }
   },
   VxeTextarea: {

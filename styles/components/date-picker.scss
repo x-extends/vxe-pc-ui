@@ -2,7 +2,7 @@
 
 $iconWidth: 1.6em;
 
-.vxe-date-input--inner {
+.vxe-date-picker--inner {
   width: 100%;
   height: 100%;
   border-radius: var(--vxe-ui-base-border-radius);
@@ -29,31 +29,31 @@ $iconWidth: 1.6em;
   }
 }
 
-.vxe-date-input {
+.vxe-date-picker {
   display: inline-block;
   position: relative;
   width: 180px;
   &.is--disabled {
-    .vxe-date-input--date-picker-suffix,
-    .vxe-date-input--search-suffix,
-    .vxe-date-input--suffix {
+    .vxe-date-picker--date-picker-suffix,
+    .vxe-date-picker--search-suffix,
+    .vxe-date-picker--suffix {
       cursor: no-drop;
     }
   }
   &:not(.is--disabled) {
-    .vxe-date-input--search-suffix,
-    .vxe-date-input--clear-icon {
+    .vxe-date-picker--search-suffix,
+    .vxe-date-picker--clear-icon {
       cursor: pointer;
     }
     &.is--active {
-      .vxe-date-input--inner {
+      .vxe-date-picker--inner {
         border: 1px solid var(--vxe-ui-font-primary-color);
       }
     }
   }
-  .vxe-date-input--prefix,
-  .vxe-date-input--suffix,
-  .vxe-date-input--extra-suffix {
+  .vxe-date-picker--prefix,
+  .vxe-date-picker--suffix,
+  .vxe-date-picker--extra-suffix {
     display: flex;
     position: absolute;
     top: 0;
@@ -66,7 +66,7 @@ $iconWidth: 1.6em;
   }
 }
 
-.vxe-date-input--count {
+.vxe-date-picker--count {
   position: absolute;
   top: 1px;
   right: 0.5em;
@@ -79,56 +79,56 @@ $iconWidth: 1.6em;
 }
 
 // 前缀图标
-.vxe-date-input {
-  .vxe-date-input--prefix {
+.vxe-date-picker {
+  .vxe-date-picker--prefix {
     left: 0.2em;
   }
   &.is--prefix {
-    .vxe-date-input--inner {
+    .vxe-date-picker--inner {
       padding-left: $iconWidth + 0.2em;
     }
   }
 }
 
 // 后缀图标
-.vxe-date-input {
-  .vxe-date-input--clear-icon {
+.vxe-date-picker {
+  .vxe-date-picker--clear-icon {
     display: none;
   }
-  .vxe-date-input--suffix,
-  .vxe-date-input--extra-suffix {
+  .vxe-date-picker--suffix,
+  .vxe-date-picker--extra-suffix {
     right: 0.2em;
   }
   &.is--suffix {
-    .vxe-date-input--inner {
+    .vxe-date-picker--inner {
       padding-right: $iconWidth + 0.2em;
     }
     &.is--count {
-      .vxe-date-input--inner {
+      .vxe-date-picker--inner {
         padding-right: 5em;
       }
     }
-    .vxe-date-input--count {
+    .vxe-date-picker--count {
       right: $iconWidth + 0.5em;
     }
   }
   &.is--left {
-    .vxe-date-input--inner {
+    .vxe-date-picker--inner {
       text-align: left;
     }
   }
   &.is--center {
-    .vxe-date-input--inner {
+    .vxe-date-picker--inner {
       text-align: center;
     }
   }
   &.is--right {
-    .vxe-date-input--inner {
+    .vxe-date-picker--inner {
       text-align: right;
     }
   }
   &.is--count {
-    .vxe-date-input--inner {
+    .vxe-date-picker--inner {
       padding-right: 3.4em;
     }
   }
@@ -140,10 +140,10 @@ $iconWidth: 1.6em;
     &.type--quarter,
     &.type--year,
     &.type--time {
-      .vxe-date-input--inner {
+      .vxe-date-picker--inner {
         padding-right: $iconWidth + 0.2em;
       }
-      .vxe-date-input--suffix {
+      .vxe-date-picker--suffix {
         right: $iconWidth;
       }
     }
@@ -157,7 +157,7 @@ $iconWidth: 1.6em;
       &.type--quarter,
       &.type--year,
       &.type--time {
-        .vxe-date-input--inner {
+        .vxe-date-picker--inner {
           padding-right: $iconWidth * 2;
         }
       }
@@ -165,12 +165,12 @@ $iconWidth: 1.6em;
   }
   &.is--suffix {
     &:hover {
-      .vxe-date-input--suffix {
+      .vxe-date-picker--suffix {
         &.is--clear {
-          .vxe-date-input--suffix-icon {
+          .vxe-date-picker--suffix-icon {
             display: none;
           }
-          .vxe-date-input--clear-icon {
+          .vxe-date-picker--clear-icon {
             display: inline;
           }
         }
@@ -178,14 +178,14 @@ $iconWidth: 1.6em;
     }
   }
   &:not(.is--disabled) {
-    .vxe-date-input--suffix {
+    .vxe-date-picker--suffix {
       &:hover {
-        .vxe-date-input--clear-icon {
+        .vxe-date-picker--clear-icon {
           color: var(--vxe-ui-font-color);
         }
       }
       &:active {
-        .vxe-date-input--clear-icon {
+        .vxe-date-picker--clear-icon {
           color: var(--vxe-ui-font-primary-color);
         }
       }
@@ -193,15 +193,15 @@ $iconWidth: 1.6em;
   }
 }
 
-.vxe-date-input {
-  .vxe-date-input--date-picker-suffix,
-  .vxe-date-input--search-suffix {
+.vxe-date-picker {
+  .vxe-date-picker--date-picker-suffix,
+  .vxe-date-picker--search-suffix {
     position: relative;
     width: 100%;
     height: 100%;
   }
 
-  .vxe-date-input--date-picker-icon {
+  .vxe-date-picker--date-picker-icon {
     position: absolute;
     left: 50%;
     top: 50%;
@@ -211,17 +211,17 @@ $iconWidth: 1.6em;
     }
   }
 
-  .vxe-date-input--date-picker-suffix {
+  .vxe-date-picker--date-picker-suffix {
     display: flex;
     align-items: center;
     justify-content: center;
-    .vxe-date-input--panel-icon {
+    .vxe-date-picker--panel-icon {
       @include createAnimationTransition(transform, .2s);
     }
   }
 }
 
-.vxe-date-input--panel {
+.vxe-date-picker--panel {
   display: none;
   position: absolute;
   left: 0;
@@ -253,25 +253,25 @@ $iconWidth: 1.6em;
   }
 }
 
-.vxe-date-input--panel-wrapper,
-.vxe-date-input--panel-layout-wrapper {
+.vxe-date-picker--panel-wrapper,
+.vxe-date-picker--panel-layout-wrapper {
   background-color: var(--vxe-ui-layout-background-color);
   border: 1px solid var(--vxe-ui-base-popup-border-color);
   box-shadow: 0 0 6px 2px rgba(0, 0, 0, 0.1);
   border-radius: var(--vxe-ui-base-border-radius);
 }
 
-.vxe-date-input--panel-wrapper {
+.vxe-date-picker--panel-wrapper {
   overflow-x: hidden;
   overflow-y: auto;
 }
 
-.vxe-date-input--panel-layout-wrapper {
+.vxe-date-picker--panel-layout-wrapper {
   display: flex;
   flex-direction: row;
 }
 
-.vxe-date-input--panel {
+.vxe-date-picker--panel {
   &.type--date,
   &.type--week,
   &.type--month,
@@ -280,7 +280,7 @@ $iconWidth: 1.6em;
     user-select: none;
   }
   &.type--datetime {
-    .vxe-date-input--panel-right-wrapper {
+    .vxe-date-picker--panel-right-wrapper {
       display: flex;
       flex-direction: column;
       border-left: 1px solid var(--vxe-ui-input-border-color);
@@ -288,14 +288,14 @@ $iconWidth: 1.6em;
   }
   &.type--date,
   &.type--datetime {
-    .vxe-date-input--date-picker-body {
+    .vxe-date-picker--date-picker-body {
       th {
         width: 14.28571%;
       }
     }
   }
   &.type--week {
-    .vxe-date-input--date-picker-body {
+    .vxe-date-picker--date-picker-body {
       table {
         th {
           width: 12%;
@@ -307,7 +307,7 @@ $iconWidth: 1.6em;
     }
   }
   &.type--quarter {
-    .vxe-date-input--date-picker-body {
+    .vxe-date-picker--date-picker-body {
       table {
         th {
           width: 50%;
@@ -317,7 +317,7 @@ $iconWidth: 1.6em;
   }
   &.type--month,
   &.type--year {
-    .vxe-date-input--date-picker-body {
+    .vxe-date-picker--date-picker-body {
       td {
         width: 25%;
       }
@@ -325,19 +325,19 @@ $iconWidth: 1.6em;
   }
 }
 
-.vxe-date-input--time-picker-title {
+.vxe-date-picker--time-picker-title {
   display: inline-block;
   text-align: center;
   border: 1px solid var(--vxe-ui-input-border-color);
   border-radius: var(--vxe-ui-base-border-radius);
 }
-.vxe-date-input--time-picker-confirm {
+.vxe-date-picker--time-picker-confirm {
   position: absolute;
   right: 0;
   top: 0;
 }
-.vxe-date-input--time-picker-confirm,
-.vxe-date-input--date-picker-confirm {
+.vxe-date-picker--time-picker-confirm,
+.vxe-date-picker--date-picker-confirm {
   outline: 0;
   border: 1px solid var(--vxe-ui-input-border-color);
   border-radius: var(--vxe-ui-base-border-radius);
@@ -355,42 +355,42 @@ $iconWidth: 1.6em;
   }
 }
 
-.vxe-date-input--time-picker-header {
+.vxe-date-picker--time-picker-header {
   display: flex;
   position: relative;
   flex-shrink: 0;
 }
 
-.vxe-date-input--date-picker-header {
+.vxe-date-picker--date-picker-header {
   display: flex;
   flex-direction: row;
   user-select: none;
-  .vxe-date-input--date-picker-type-wrapper {
+  .vxe-date-picker--date-picker-type-wrapper {
     flex-grow: 1;
   }
-  .vxe-date-input--date-picker-btn-wrapper {
+  .vxe-date-picker--date-picker-btn-wrapper {
     flex-shrink: 0;
     text-align: center;
   }
 }
-.vxe-date-input--date-picker-type-wrapper {
-  .vxe-date-input--date-picker-label,
-  .vxe-date-input--date-picker-btn {
+.vxe-date-picker--date-picker-type-wrapper {
+  .vxe-date-picker--date-picker-label,
+  .vxe-date-picker--date-picker-btn {
     display: inline-block;
   }
 }
-.vxe-date-input--date-picker-btn-wrapper {
+.vxe-date-picker--date-picker-btn-wrapper {
   display: flex;
   flex-direction: row;
 }
-.vxe-date-input--date-picker-label,
-.vxe-date-input--date-picker-btn {
+.vxe-date-picker--date-picker-label,
+.vxe-date-picker--date-picker-btn {
   display: flex;
   align-items: center;
   justify-content: center;
   background-color: var(--vxe-ui-layout-background-color);
 }
-.vxe-date-input--date-picker-btn {
+.vxe-date-picker--date-picker-btn {
   &.is--disabled {
     color: var(--vxe-ui-font-disabled-color);
     cursor: no-drop;
@@ -405,7 +405,7 @@ $iconWidth: 1.6em;
     }
   }
 }
-.vxe-date-input--date-picker-body {
+.vxe-date-picker--date-picker-body {
   border-radius: var(--vxe-ui-base-border-radius);
   border: 1px solid var(--vxe-ui-base-popup-border-color);
   user-select: none;
@@ -428,8 +428,8 @@ $iconWidth: 1.6em;
     &.is--prev,
     &.is--next {
       color: var(--vxe-ui-font-disabled-color);
-      .vxe-date-input--date-label,
-      .vxe-date-input--date-festival {
+      .vxe-date-picker--date-label,
+      .vxe-date-picker--date-festival {
         color: var(--vxe-ui-font-disabled-color);
       }
     }
@@ -438,8 +438,8 @@ $iconWidth: 1.6em;
       &:not(.is--selected) {
         &.is--current {
           color: var(--vxe-ui-font-primary-color);
-          .vxe-date-input--date-label,
-          .vxe-date-input--date-festival {
+          .vxe-date-picker--date-label,
+          .vxe-date-picker--date-festival {
             color: var(--vxe-ui-font-primary-color);
           }
         }
@@ -455,11 +455,11 @@ $iconWidth: 1.6em;
       &.is--next {
         background-color: var(--vxe-ui-font-primary-lighten-color);
       }
-      .vxe-date-input--date-label,
-      .vxe-date-input--date-festival {
+      .vxe-date-picker--date-label,
+      .vxe-date-picker--date-festival {
         color: var(--vxe-ui-input-date-picker-festival-selected-color);
       }
-      .vxe-date-input--date-label {
+      .vxe-date-picker--date-label {
         &.is-notice {
           &:before {
             background-color: var(--vxe-ui-input-date-picker-notice-selected-background-color);
@@ -474,15 +474,15 @@ $iconWidth: 1.6em;
       cursor: no-drop;
       color: var(--vxe-ui-input-disabled-color);
       background-color: var(--vxe-ui-input-disabled-background-color);
-      .vxe-date-input--date-label,
-      .vxe-date-input--date-festival {
+      .vxe-date-picker--date-label,
+      .vxe-date-picker--date-festival {
         color: var(--vxe-ui-input-disabled-color);
       }
     }
   }
 }
 
-.vxe-date-input--date-week-view {
+.vxe-date-picker--date-week-view {
   th {
     &:first-child {
       box-shadow: inset -1px -1px 0 0 var(--vxe-ui-base-popup-border-color);
@@ -495,13 +495,13 @@ $iconWidth: 1.6em;
   }
 }
 
-.vxe-date-input--date-label,
-.vxe-date-input--date-festival {
+.vxe-date-picker--date-label,
+.vxe-date-picker--date-festival {
   display: block;
   overflow: hidden;
 }
 
-.vxe-date-input--date-label {
+.vxe-date-picker--date-label {
   position: relative;
   &.is-notice {
     &:before {
@@ -517,7 +517,7 @@ $iconWidth: 1.6em;
     }
   }
 }
-.vxe-date-input--date-label--extra {
+.vxe-date-picker--date-label--extra {
   position: absolute;
   right: 0.1em;
   top: -0.2em;
@@ -530,7 +530,7 @@ $iconWidth: 1.6em;
   }
 }
 
-.vxe-date-input--date-festival {
+.vxe-date-picker--date-festival {
   color: var(--vxe-ui-input-date-festival-color);
   height: 14px;
   line-height: 1;
@@ -539,7 +539,7 @@ $iconWidth: 1.6em;
     color: var(--vxe-ui-input-date-festival-important-color);
   }
 }
-.vxe-date-input--date-festival--label {
+.vxe-date-picker--date-festival--label {
   display: block;
   font-size: 12px;
   transform: scale(0.8);
@@ -566,7 +566,7 @@ $iconWidth: 1.6em;
   }
 }
 
-.vxe-date-input--date-festival--overlap {
+.vxe-date-picker--date-festival--overlap {
   display: block;
   font-size: 12px;
   &.overlap--2 {
@@ -582,7 +582,7 @@ $iconWidth: 1.6em;
   }
 }
 
-.vxe-date-input--time-picker-body {
+.vxe-date-picker--time-picker-body {
   position: relative;
   display: flex;
   flex-direction: row;
@@ -615,19 +615,19 @@ $iconWidth: 1.6em;
       }
     }
   }
-  .vxe-date-input--time-picker-minute-list {
+  .vxe-date-picker--time-picker-minute-list {
     border-left: 1px solid var(--vxe-ui-base-popup-border-color);
   }
-  .vxe-date-input--time-picker-second-list {
+  .vxe-date-picker--time-picker-second-list {
     border-left: 1px solid var(--vxe-ui-base-popup-border-color);
   }
 }
 
-.vxe-date-input {
+.vxe-date-picker {
   font-size: var(--vxe-ui-font-size-default);
   height: var(--vxe-ui-input-height-default);
   line-height: var(--vxe-ui-input-height-default);
-  .vxe-date-input--inner {
+  .vxe-date-picker--inner {
     &[type="date"]::-webkit-inner-spin-button,
     &[type="month"]::-webkit-inner-spin-button,
     &[type="week"]::-webkit-inner-spin-button {
@@ -643,7 +643,7 @@ $iconWidth: 1.6em;
     font-size: var(--vxe-ui-font-size-medium);
     height: var(--vxe-ui-input-height-medium);
     line-height: var(--vxe-ui-input-height-medium);
-    .vxe-date-input--inner {
+    .vxe-date-picker--inner {
       &[type="date"]::-webkit-inner-spin-button,
       &[type="month"]::-webkit-inner-spin-button,
       &[type="week"]::-webkit-inner-spin-button {
@@ -655,7 +655,7 @@ $iconWidth: 1.6em;
     font-size: var(--vxe-ui-font-size-small);
     height: var(--vxe-ui-input-height-small);
     line-height: var(--vxe-ui-input-height-small);
-    .vxe-date-input--inner {
+    .vxe-date-picker--inner {
       &[type="date"]::-webkit-inner-spin-button,
       &[type="month"]::-webkit-inner-spin-button,
       &[type="week"]::-webkit-inner-spin-button {
@@ -667,7 +667,7 @@ $iconWidth: 1.6em;
     font-size: var(--vxe-ui-font-size-mini);
     height: var(--vxe-ui-input-height-mini);
     line-height: var(--vxe-ui-input-height-mini);
-    .vxe-date-input--inner {
+    .vxe-date-picker--inner {
       &[type="date"]::-webkit-inner-spin-button,
       &[type="month"]::-webkit-inner-spin-button,
       &[type="week"]::-webkit-inner-spin-button {
@@ -685,7 +685,7 @@ $iconWidth: 1.6em;
   $titleRowHeightList: var(--vxe-ui-input-date-title-height-default), var(--vxe-ui-input-date-title-height-medium), var(--vxe-ui-input-date-title-height-small), var(--vxe-ui-input-date-title-height-mini);
   
   font-size: nth($fontSizeList, $sizeIndex);
-  .vxe-date-input--panel-wrapper {
+  .vxe-date-picker--panel-wrapper {
     max-height: 400px - $sizeIndex * 20;
   }
   &.type--date,
@@ -694,7 +694,7 @@ $iconWidth: 1.6em;
   &.type--month,
   &.type--quarter,
   &.type--year {
-    .vxe-date-input--panel-wrapper {
+    .vxe-date-picker--panel-wrapper {
       padding: 12px - $sizeIndex;
     }
   }
@@ -702,71 +702,71 @@ $iconWidth: 1.6em;
   &.type--month,
   &.type--quarter,
   &.type--year {
-    .vxe-date-input--panel-wrapper {
+    .vxe-date-picker--panel-wrapper {
       $widthList: 336px, 336px, 312px, 288px;
       width: nth($widthList, $sizeIndex);
     }
   }
   &.type--week {
-    .vxe-date-input--panel-wrapper {
+    .vxe-date-picker--panel-wrapper {
       $widthList: 380px, 380px, 354px, 326px;
       width: nth($widthList, $sizeIndex);
     }
   }
   &.type--time {
-    .vxe-date-input--panel-wrapper {
+    .vxe-date-picker--panel-wrapper {
       $widthList: 170px, 168px, 154px, 146px;
       width: nth($widthList, $sizeIndex);
     }
   }
   &.type--datetime {
-    .vxe-date-input--panel-left-wrapper {
+    .vxe-date-picker--panel-left-wrapper {
       $widthList: 336px, 336px, 312px, 288px;
       width: nth($widthList, $sizeIndex);
     }
-    .vxe-date-input--panel-left-wrapper,
-    .vxe-date-input--panel-right-wrapper {
+    .vxe-date-picker--panel-left-wrapper,
+    .vxe-date-picker--panel-right-wrapper {
       padding: 12px - $sizeIndex;
     }
   }
-  .vxe-date-input--time-picker-title {
+  .vxe-date-picker--time-picker-title {
     height: 31px - $sizeIndex;
     line-height: 31px - $sizeIndex;
     padding: 0 12px - $sizeIndex;
   }
-  .vxe-date-input--date-picker-label,
-  .vxe-date-input--date-picker-btn {
+  .vxe-date-picker--date-picker-label,
+  .vxe-date-picker--date-picker-btn {
     height: 31px - $sizeIndex;
     line-height: 31px - $sizeIndex;
   }
-  .vxe-date-input--date-picker-btn-wrapper {
-    .vxe-date-input--date-picker-btn {
+  .vxe-date-picker--date-picker-btn-wrapper {
+    .vxe-date-picker--date-picker-btn {
       margin-left: 9px - $sizeIndex;
     }
-    .vxe-date-input--date-picker-prev-btn,
-    .vxe-date-input--date-picker-current-btn,
-    .vxe-date-input--date-picker-next-btn {
+    .vxe-date-picker--date-picker-prev-btn,
+    .vxe-date-picker--date-picker-current-btn,
+    .vxe-date-picker--date-picker-next-btn {
       width: 31px - $sizeIndex;
       border-radius: var(--vxe-ui-base-border-radius);
       border: 1px solid var(--vxe-ui-input-border-color);
     }
   }
-  .vxe-date-input--date-picker-type-wrapper {
-    .vxe-date-input--date-picker-label,
-    .vxe-date-input--date-picker-btn {
+  .vxe-date-picker--date-picker-type-wrapper {
+    .vxe-date-picker--date-picker-label,
+    .vxe-date-picker--date-picker-btn {
       padding: 0 10px - $sizeIndex;
     }
   }
-  .vxe-date-input--time-picker-header,
-  .vxe-date-input--date-picker-header {
+  .vxe-date-picker--time-picker-header,
+  .vxe-date-picker--date-picker-header {
     $paddingBottomList: 8px, 7px, 6px, 5px;
     padding-bottom: nth($paddingBottomList, $sizeIndex);
   }
-  .vxe-date-input--date-picker-body table,
-  .vxe-date-input--time-picker-body {
+  .vxe-date-picker--date-picker-body table,
+  .vxe-date-picker--time-picker-body {
     height: calc(nth($timeWeekRowHeightList, $sizeIndex) * 6 + nth($titleRowHeightList, $sizeIndex));
   }
-  .vxe-date-input--time-picker-body {
+  .vxe-date-picker--time-picker-body {
     $ulWidthList: 48px, 48px, 44px, 42px;
     & > ul {
       width: nth($ulWidthList, $sizeIndex);
@@ -780,46 +780,46 @@ $iconWidth: 1.6em;
         padding-left: 10px - $sizeIndex;
       }
     }
-    .vxe-date-input--time-picker-minute-list {
+    .vxe-date-picker--time-picker-minute-list {
       left: nth($ulWidthList, $sizeIndex);
     }
-    .vxe-date-input--time-picker-second-list {
+    .vxe-date-picker--time-picker-second-list {
       left: calc(nth($ulWidthList, $sizeIndex) * 2);
     }
   }
-  .vxe-date-input--date-day-view,
-  .vxe-date-input--date-week-view {
+  .vxe-date-picker--date-day-view,
+  .vxe-date-picker--date-week-view {
     td {
       height: nth($timeWeekRowHeightList, $sizeIndex);
     }
   }
-  .vxe-date-input--date-quarter-view {
+  .vxe-date-picker--date-quarter-view {
     td {
       height: nth($quarterRowHeightList, $sizeIndex);
     }
   }
-  .vxe-date-input--date-month-view,
-  .vxe-date-input--date-year-view {
+  .vxe-date-picker--date-month-view,
+  .vxe-date-picker--date-year-view {
     td {
       height: nth($monthYearRowHeightList, $sizeIndex);
     }
   }
-  .vxe-date-input--date-picker-body {
+  .vxe-date-picker--date-picker-body {
     th {
       height: nth($titleRowHeightList, $sizeIndex);
     }
   }
-  .vxe-date-input--time-picker-confirm,
-  .vxe-date-input--date-picker-confirm {
+  .vxe-date-picker--time-picker-confirm,
+  .vxe-date-picker--date-picker-confirm {
     height: 31px - $sizeIndex;
     padding: 0 10px - $sizeIndex;
   }
-  .vxe-date-input--date-label {
+  .vxe-date-picker--date-label {
     line-height: calc(nth($fontSizeList, $sizeIndex) + 1px);
   }
 }
 
-.vxe-date-input--panel {
+.vxe-date-picker--panel {
   @include getPanelStyle(1);
   &.size--medium {
     @include getPanelStyle(2);

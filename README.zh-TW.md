@@ -39,7 +39,7 @@
 * [x] col 列
 * [ ] collapse 展开面板
 * [ ] collapse-pane 展开面板-容器
-* [x] date-input 日期选择器
+* [x] date-picker 日期选择器
 * [x] drawer 抽屉
 * [ ] flow-design 流程设计器
 * [ ] flow-view 流程设计器-视图渲染

@@ -340,7 +340,7 @@ export default {
           VxeSwitch: '是/否',
           VxeInput: '输入框',
           VxeNumberInput: '数字',
-          VxeDateInput: '日期',
+          VxeDatePicker: '日期',
           VxeTextarea: '文本域',
           VxeSelect: '下拉框',
           VxeRadioGroup: '单选框',

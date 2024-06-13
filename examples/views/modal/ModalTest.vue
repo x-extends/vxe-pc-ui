@@ -1,5 +1,6 @@
 <template>
   <div>
+
     <p>
       <vxe-button content="默认消息框" @click="openMessage({ content: '消息提示' })"></vxe-button>
       <vxe-button content="info" @click="openMessage({ content: 'info 消息提示', status: 'info' })"></vxe-button>
@@ -200,6 +201,9 @@
       </vxe-modal>
     </p>
 
+    <p>
+    <vxe-button content="点击弹出" @click="openEvent"></vxe-button>
+    </p>
   </div>
 </template>
 
@@ -304,5 +308,21 @@ const openNotification = (options: VxeModalDefines.ModalOptions) => {
 
 const openAlert = (options: VxeModalDefines.ModalOptions) => {
   VxeUI.modal.alert(options)
+}
+
+let num = 1
+
+const openEvent = () => {
+  VxeUI.modal.open({
+    title: `标题 ${num}`,
+    content: `我是第 ${num} 个`,
+    mask: false,
+    lockView: false,
+    escClosable: true,
+    width: 600,
+    height: 400,
+    showZoom: true
+  })
+  num++
 }
 </script>

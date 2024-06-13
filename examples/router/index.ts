@@ -141,9 +141,9 @@ const routes: Array<RouteRecordRaw> = [
     component: () => import('../views/password-input/PasswordInputTest.vue')
   },
   {
-    path: '/component/date-input',
-    name: 'DateInputTest',
-    component: () => import('../views/date-input/DateInputTest.vue')
+    path: '/component/date-picker',
+    name: 'DatePickerTest',
+    component: () => import('../views/date-picker/DatePickerTest.vue')
   },
   {
     path: '/component/textarea',

@@ -186,7 +186,7 @@
     .vxe-default-select,
     .vxe-input,
     .vxe-number-input,
-    .vxe-date-input,
+    .vxe-date-picker,
     .vxe-textarea,
     .vxe-select {
       width: 100%;
@@ -195,7 +195,7 @@
   &.is--error {
     .vxe-input > .vxe-input--inner,
     .vxe-number-input > .vxe-number-input--inner,
-    .vxe-date-input > .vxe-date-input--inner,
+    .vxe-date-picker > .vxe-date-picker--inner,
     .vxe-textarea > .vxe-textarea--inner,
     .vxe-upload .vxe-upload--image-action-box,
     .vxe-upload .vxe-upload--file-action-btn > .vxe-button,
@@ -208,7 +208,7 @@
     }
     .vxe-input>.vxe-input--inner,
     .vxe-number-input>.vxe-number-input--inner,
-    .vxe-date-input>.vxe-date-input--inner,
+    .vxe-date-picker>.vxe-date-picker--inner,
     .vxe-textarea>.vxe-textarea--inner,
     .vxe-default-input[type="text"],
     .vxe-default-input[type="search"],

@@ -1,19 +1,19 @@
 import { PropType, defineComponent, h, inject } from 'vue'
-import { WidgetVxeDateInputFormObjVO } from './vxe-date-input-data'
+import { WidgetVxeDatePickerFormObjVO } from './vxe-date-picker-data'
 import { useKebabCaseName } from '../render/hooks'
 import VxeFormItemComponent from '../../form/src/form-item'
-import VxeDateInputComponent from '../../date-input/src/date-input'
+import VxeDatePickerComponent from '../../date-picker/src/date-picker'
 
 import type { VxeGlobalRendererHandles, VxeFormViewConstructor, VxeFormViewPrivateMethods } from '../../../types'
 
-export const WidgetVxeDateInputViewComponent = defineComponent({
+export const WidgetVxeDatePickerViewComponent = defineComponent({
   props: {
     renderOpts: {
       type: Object as PropType<VxeGlobalRendererHandles.RenderFormDesignWidgetViewOptions>,
       default: () => ({})
     },
     renderParams: {
-      type: Object as PropType<VxeGlobalRendererHandles.RenderFormDesignWidgetViewParams<WidgetVxeDateInputFormObjVO>>,
+      type: Object as PropType<VxeGlobalRendererHandles.RenderFormDesignWidgetViewParams<WidgetVxeDatePickerFormObjVO>>,
       default: () => ({})
     }
   },
@@ -43,7 +43,7 @@ export const WidgetVxeDateInputViewComponent = defineComponent({
         field: widget.field
       }, {
         default () {
-          return h(VxeDateInputComponent, {
+          return h(VxeDatePickerComponent, {
             modelValue: $xeFormView ? $xeFormView.getItemValue(widget) : null,
             onChange: changeEvent,
             'onUpdate:modelValue' (val) {

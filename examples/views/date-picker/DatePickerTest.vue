@@ -1,65 +1,65 @@
 <template>
   <div>
     <p>
-      <vxe-date-input v-model="demo1.value100" placeholder="默认尺寸"></vxe-date-input>
-      <vxe-date-input v-model="demo1.value101" placeholder="中等尺寸" size="medium"></vxe-date-input>
-      <vxe-date-input v-model="demo1.value102" placeholder="小型尺寸" size="small"></vxe-date-input>
-      <vxe-date-input v-model="demo1.value103" placeholder="超小尺寸" size="mini"></vxe-date-input>
+      <vxe-date-picker v-model="demo1.value100" placeholder="默认尺寸"></vxe-date-picker>
+      <vxe-date-picker v-model="demo1.value101" placeholder="中等尺寸" size="medium"></vxe-date-picker>
+      <vxe-date-picker v-model="demo1.value102" placeholder="小型尺寸" size="small"></vxe-date-picker>
+      <vxe-date-picker v-model="demo1.value103" placeholder="超小尺寸" size="mini"></vxe-date-picker>
     </p>
 
     <p>
-      <vxe-date-input v-model="demo1.value400" placeholder="日期选择" type="date" parse-format="yyyy-dd-MM"></vxe-date-input>
-      <vxe-date-input v-model="demo1.value401" placeholder="周选择" type="week" clearable></vxe-date-input>
-      <vxe-date-input v-model="demo1.value402" placeholder="月选择" type="month" valueFormat="yyyy-MM-dd"></vxe-date-input>
-      <vxe-date-input v-model="demo1.value403" placeholder="季选择" type="quarter" clearable></vxe-date-input>
-      <vxe-date-input v-model="demo1.value404" placeholder="年选择" type="year" clearable></vxe-date-input>
-      <vxe-date-input v-model="demo1.value405" placeholder="时间选择" type="time" clearable></vxe-date-input>
-      <vxe-date-input v-model="demo1.value406" placeholder="日期和时间选择" type="datetime" transfer></vxe-date-input>
-      <vxe-date-input v-model="demo1.value407" placeholder="禁用日期" type="date" :disabled-method="disabledDateMethod" transfer></vxe-date-input>
-      <vxe-date-input v-model="demo1.value408" placeholder="小圆点" type="date" :festival-method="festivalNoticeMethod" transfer></vxe-date-input>
-      <vxe-date-input v-model="demo1.value409" placeholder="农历节日" type="date" :festival-method="festivalCalendarMethod" transfer></vxe-date-input>
+      <vxe-date-picker v-model="demo1.value400" placeholder="日期选择" type="date" parse-format="yyyy-dd-MM"></vxe-date-picker>
+      <vxe-date-picker v-model="demo1.value401" placeholder="周选择" type="week" clearable></vxe-date-picker>
+      <vxe-date-picker v-model="demo1.value402" placeholder="月选择" type="month" valueFormat="yyyy-MM-dd"></vxe-date-picker>
+      <vxe-date-picker v-model="demo1.value403" placeholder="季选择" type="quarter" clearable></vxe-date-picker>
+      <vxe-date-picker v-model="demo1.value404" placeholder="年选择" type="year" clearable></vxe-date-picker>
+      <vxe-date-picker v-model="demo1.value405" placeholder="时间选择" type="time" clearable></vxe-date-picker>
+      <vxe-date-picker v-model="demo1.value406" placeholder="日期和时间选择" type="datetime" transfer></vxe-date-picker>
+      <vxe-date-picker v-model="demo1.value407" placeholder="禁用日期" type="date" :disabled-method="disabledDateMethod" transfer></vxe-date-picker>
+      <vxe-date-picker v-model="demo1.value408" placeholder="小圆点" type="date" :festival-method="festivalNoticeMethod" transfer></vxe-date-picker>
+      <vxe-date-picker v-model="demo1.value409" placeholder="农历节日" type="date" :festival-method="festivalCalendarMethod" transfer></vxe-date-picker>
     </p>
 
     <p>
-      <vxe-date-input v-model="demo1.value800" placeholder="日期多选" type="date" multiple></vxe-date-input>
-      <vxe-date-input v-model="demo1.value801" placeholder="日期多选" type="month" multiple></vxe-date-input>
-      <vxe-date-input v-model="demo1.value802" placeholder="日期多选" type="quarter" multiple></vxe-date-input>
-      <vxe-date-input v-model="demo1.value803" placeholder="日期多选" type="year" multiple></vxe-date-input>
-      <vxe-date-input v-model="demo1.value804" placeholder="日期多选" type="week" multiple></vxe-date-input>
-      <vxe-date-input v-model="demo1.value805" placeholder="日期多选" type="datetime" multiple></vxe-date-input>
+      <vxe-date-picker v-model="demo1.value800" placeholder="日期多选" type="date" multiple></vxe-date-picker>
+      <vxe-date-picker v-model="demo1.value801" placeholder="日期多选" type="month" multiple></vxe-date-picker>
+      <vxe-date-picker v-model="demo1.value802" placeholder="日期多选" type="quarter" multiple></vxe-date-picker>
+      <vxe-date-picker v-model="demo1.value803" placeholder="日期多选" type="year" multiple></vxe-date-picker>
+      <vxe-date-picker v-model="demo1.value804" placeholder="日期多选" type="week" multiple></vxe-date-picker>
+      <vxe-date-picker v-model="demo1.value805" placeholder="日期多选" type="datetime" multiple></vxe-date-picker>
     </p>
 
     <p>
-      <vxe-date-input v-model="demo1.value701" placeholder="周选择" type="week" :start-day="0" clearable></vxe-date-input>
-      <vxe-date-input v-model="demo1.value702" placeholder="周选择" type="week" :start-day="1" clearable></vxe-date-input>
-      <vxe-date-input v-model="demo1.value703" placeholder="周选择" type="week" :start-day="2" clearable></vxe-date-input>
-      <vxe-date-input v-model="demo1.value704" placeholder="周选择" type="week" :start-day="3" clearable></vxe-date-input>
-      <vxe-date-input v-model="demo1.value705" placeholder="周选择" type="week" :start-day="4" clearable></vxe-date-input>
-      <vxe-date-input v-model="demo1.value706" placeholder="周选择" type="week" :start-day="5" clearable></vxe-date-input>
-      <vxe-date-input v-model="demo1.value707" placeholder="周选择" type="week" :start-day="6" clearable></vxe-date-input>
+      <vxe-date-picker v-model="demo1.value701" placeholder="周选择" type="week" :start-day="0" clearable></vxe-date-picker>
+      <vxe-date-picker v-model="demo1.value702" placeholder="周选择" type="week" :start-day="1" clearable></vxe-date-picker>
+      <vxe-date-picker v-model="demo1.value703" placeholder="周选择" type="week" :start-day="2" clearable></vxe-date-picker>
+      <vxe-date-picker v-model="demo1.value704" placeholder="周选择" type="week" :start-day="3" clearable></vxe-date-picker>
+      <vxe-date-picker v-model="demo1.value705" placeholder="周选择" type="week" :start-day="4" clearable></vxe-date-picker>
+      <vxe-date-picker v-model="demo1.value706" placeholder="周选择" type="week" :start-day="5" clearable></vxe-date-picker>
+      <vxe-date-picker v-model="demo1.value707" placeholder="周选择" type="week" :start-day="6" clearable></vxe-date-picker>
     </p>
 
     <p>
-      <vxe-date-input v-model="demo1.value600" placeholder="自定义前缀图标">
+      <vxe-date-picker v-model="demo1.value600" placeholder="自定义前缀图标">
         <template #prefix>
           <i class="fa fa-search my-red"></i>
         </template>
-      </vxe-date-input>
-      <vxe-date-input v-model="demo1.value601" placeholder="自定义后缀图标">
+      </vxe-date-picker>
+      <vxe-date-picker v-model="demo1.value601" placeholder="自定义后缀图标">
         <template #suffix>
           <i class="fa fa-search my-green"></i>
         </template>
-      </vxe-date-input>
-      <vxe-date-input v-model="demo1.value602" class="my-domain" placeholder="自定义前缀模板">
+      </vxe-date-picker>
+      <vxe-date-picker v-model="demo1.value602" class="my-domain" placeholder="自定义前缀模板">
         <template #prefix>
           <span>Http://</span>
         </template>
-      </vxe-date-input>
-      <vxe-date-input v-model="demo1.value603" class="my-search" placeholder="自定义后缀模板">
+      </vxe-date-picker>
+      <vxe-date-picker v-model="demo1.value603" class="my-search" placeholder="自定义后缀模板">
         <template #suffix>
           <i class="fa fa-search"></i>
         </template>
-      </vxe-date-input>
+      </vxe-date-picker>
     </p>
   </div>
 </template>

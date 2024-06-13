@@ -333,14 +333,17 @@ export default defineComponent({
           width: boxElem.offsetWidth + (boxElem.style.width ? 0 : 1),
           height: boxElem.offsetHeight + (boxElem.style.height ? 0 : 1)
         }
-        const lastMinModal = XEUtils.findLast(allActiveModals, item => item.xID !== $xeModal.xID && item.props.type === 'modal' && item.reactData.zoomStatus === 'minimize')
+        const minModal = XEUtils.min(allActiveModals.filter(item => item.xID !== $xeModal.xID && item.props.type === 'modal' && item.reactData.zoomStatus === 'minimize'), ($modal) => {
+          const boxElem = $modal.getBox()
+          return boxElem ? XEUtils.toNumber(boxElem.style.top) : 0
+        })
         let minTop = visibleHeight - headerEl.offsetHeight - 16
-        let minLeft = 16
-        if (lastMinModal) {
-          const lastBoxElem = lastMinModal.getBox()
-          if (lastBoxElem) {
-            minTop = XEUtils.toNumber(lastBoxElem.style.top) - 8
-            minLeft = XEUtils.toNumber(lastBoxElem.style.left) + 8
+        const minLeft = 16
+        if (minModal) {
+          const minBoxElem = minModal.getBox()
+          if (minBoxElem) {
+            minTop = XEUtils.toNumber(minBoxElem.style.top) - 8
+            // minLeft = XEUtils.toNumber(minBoxElem.style.left) + 8
           }
         }
         Object.assign(boxElem.style, {
