@@ -97,7 +97,7 @@ export namespace VxeTablePropTypes {
     rowIndex: number
     $rowIndex: number
     _rowIndex: number
-  }) => void | null | string | { [key: string]: boolean })
+  }) => void | null | string | { [key: string]: boolean | null | undefined })
 
   export type CellClassName<D = VxeTablePropTypes.Row> = string | ((params: {
     $table: VxeTableConstructor<D> & VxeTablePrivateMethods<D>
@@ -109,14 +109,14 @@ export namespace VxeTablePropTypes {
     columnIndex: number
     $columnIndex: number
     _columnIndex: number
-  }) => void | null | string | { [key: string]: boolean })
+  }) => void | null | string | { [key: string]: boolean | null | undefined })
 
   export type HeaderRowClassName<D = VxeTablePropTypes.Row> = string | ((params: {
     $table: VxeTableConstructor<D> & VxeTablePrivateMethods<D>
     $rowIndex: number
     fixed: VxeColumnPropTypes.Fixed
     type: string
-  }) => void | null | string | { [key: string]: boolean })
+  }) => void | null | string | { [key: string]: boolean | null | undefined })
 
   export type HeaderCellClassName<D = VxeTablePropTypes.Row> = string | ((params: {
     $table: VxeTableConstructor<D> & VxeTablePrivateMethods<D>
@@ -124,7 +124,7 @@ export namespace VxeTablePropTypes {
     column: VxeTableDefines.ColumnInfo<D>
     fixed: VxeColumnPropTypes.Fixed
     type: string
-  }) => void | null | string | { [key: string]: boolean })
+  }) => void | null | string | { [key: string]: boolean | null | undefined })
 
   export type FooterRowClassName<D = VxeTablePropTypes.Row> = string | ((params: {
     $table: VxeTableConstructor<D> & VxeTablePrivateMethods<D>
@@ -133,7 +133,7 @@ export namespace VxeTablePropTypes {
     _rowIndex: number
     fixed: VxeColumnPropTypes.Fixed
     type: string
-  }) => void | null | string | { [key: string]: boolean })
+  }) => void | null | string | { [key: string]: boolean | null | undefined })
 
   export type FooterCellClassName<D = VxeTablePropTypes.Row> = string | ((params: {
     $table: VxeTableConstructor<D> & VxeTablePrivateMethods<D>
@@ -144,7 +144,7 @@ export namespace VxeTablePropTypes {
     columnIndex: number
     $columnIndex: number
     _columnIndex: number
-  }) => void | null | string | { [key: string]: boolean })
+  }) => void | null | string | { [key: string]: boolean | null | undefined })
 
   export type CellStyle<D = VxeTablePropTypes.Row> = VxeComponentStyleType | ((params: {
     row: D

@@ -63,7 +63,7 @@ export default {
       customAll: '全部',
       customConfirm: 'Confirm',
       customCancel: 'Cancel',
-      customRestore: 'Restore default',
+      customRestore: 'Restore',
       maxFixedCol: '最大固定列数が {0} です。'
     },
     grid: {

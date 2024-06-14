@@ -901,7 +901,7 @@ export default defineComponent({
       const isMsg = computeIsMsg.value
       const defaultSlot = slots.default || propSlots.default
       const contVNs: VNode[] = []
-      if (status || iconStatus) {
+      if (!isMsg && (status || iconStatus)) {
         contVNs.push(
           h('div', {
             class: 'vxe-modal--status-wrapper'
@@ -991,8 +991,9 @@ export default defineComponent({
     }
 
     const renderVN = () => {
-      const { className, type, animat, draggable, position, loading, status, lockScroll, padding, lockView, mask, resize } = props
+      const { className, type, animat, draggable, iconStatus, position, loading, status, lockScroll, padding, lockView, mask, resize } = props
       const { inited, zoomLocat, modalTop, contentVisible, visible, zoomStatus } = reactData
+      const asideSlot = slots.aside
       const vSize = computeSize.value
       const isMsg = computeIsMsg.value
       const ons: Record<string, any> = {}
@@ -1032,7 +1033,30 @@ export default defineComponent({
             ref: refModalBox,
             class: 'vxe-modal--box',
             onMousedown: boxMousedownEvent
-          }, renderHeaders().concat(renderBodys(), renderFooters()))
+          }, [
+            isMsg || asideSlot
+              ? h('div', {
+                class: 'vxe-modal--aside'
+              },
+              asideSlot
+                ? getSlotVNs(asideSlot({ $modal: $xeModal }))
+                : [
+                    status || iconStatus
+                      ? h('div', {
+                        class: 'vxe-modal--status-wrapper'
+                      }, [
+                        h('i', {
+                          class: ['vxe-modal--status-icon', iconStatus || getIcon()[`MODAL_${status}`.toLocaleUpperCase() as 'MODAL_SUCCESS' | 'MODAL_ERROR']]
+                        })
+                      ])
+                      : createCommentVNode()
+                  ]
+              )
+              : createCommentVNode(),
+            h('div', {
+              class: 'vxe-modal--container'
+            }, renderHeaders().concat(renderBodys(), renderFooters()))
+          ])
         ])
       ])
     }

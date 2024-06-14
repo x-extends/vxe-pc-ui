@@ -63,7 +63,7 @@ export default {
       customAll: 'All',
       customConfirm: 'Confirm',
       customCancel: 'Cancel',
-      customRestore: 'Restore default',
+      customRestore: 'Restore',
       maxFixedCol: 'The maximum number of Freeze columns cannot exceed {0}'
     },
     grid: {
