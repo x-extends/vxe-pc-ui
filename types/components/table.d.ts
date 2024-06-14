@@ -2734,10 +2734,15 @@ export interface TableMethods<DT = any> {
    */
   getPendingRecords(): DT[]
   /**
+   * 请使用 isPendingByRow
+   * @deprecated
+   */
+  hasPendingByRow(row: any): boolean
+  /**
    * 判断行是否为待删除状态
    * @param row 指定行
    */
-  hasPendingByRow(row: any): boolean
+  isPendingByRow(row: any): boolean
   /**
    * 清除所有标记状态
    */

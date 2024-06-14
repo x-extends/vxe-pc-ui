@@ -238,11 +238,11 @@ export namespace VxeModalDefines {
     key?: string | number
   }
 
-  export interface MessageOptions extends Pick<VxeModalProps, 'type' | 'content' | 'message' | 'duration' | 'width' | 'height' | 'status' | 'iconStatus' | 'loading' | 'id' | 'slots'>, VxeModalEventProps {
+  export interface MessageOptions extends Omit<VxeModalProps, 'type'>, VxeModalEventProps {
     key?: string | number
   }
 
-  export interface NotificationOptions extends Pick<VxeModalProps, 'type' | 'content' | 'message' | 'duration' | 'width' | 'height' | 'title' | 'showHeader' | 'status' | 'iconStatus' | 'loading' | 'id' | 'slots'>, VxeModalEventProps {
+  export interface NotificationOptions extends Omit<VxeModalProps, 'type'>, VxeModalEventProps {
     key?: string | number
   }
 

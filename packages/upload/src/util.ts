@@ -57,7 +57,10 @@ export const readLocalFile: VxeUploadDefines.ReadFileFunction = (options) => {
       } else {
         if (opts.message !== false) {
           if (VxeUI.modal) {
-            VxeUI.modal.message({ content: getI18n('vxe.error.notType', [errType]), status: 'error' })
+            VxeUI.modal.message({
+              content: getI18n('vxe.error.notType', [errType]),
+              status: 'error'
+            })
           }
         }
         const params = { status: false, files, file }
