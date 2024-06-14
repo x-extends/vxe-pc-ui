@@ -74,7 +74,8 @@ setConfig({
     tooltipConfig: {
       enterable: true
     },
-    titleAsterisk: true
+    titleAsterisk: true,
+    titleOverflow: false
   },
   formDesign: {
     height: 400,

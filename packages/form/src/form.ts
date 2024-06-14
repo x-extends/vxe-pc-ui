@@ -74,27 +74,60 @@ export default defineComponent({
     collapseStatus: { type: Boolean as PropType<VxeFormPropTypes.CollapseStatus>, default: true },
     loading: Boolean as PropType<VxeFormPropTypes.Loading>,
     data: Object as PropType<VxeFormPropTypes.Data>,
-    size: { type: String as PropType<VxeFormPropTypes.Size>, default: () => getConfig().form.size || getConfig().size },
-    span: { type: [String, Number] as PropType<VxeFormPropTypes.Span>, default: () => getConfig().form.span },
-    align: { type: String as PropType<VxeFormPropTypes.Align>, default: () => getConfig().form.align },
-    titleBold: { type: Boolean as PropType<VxeFormPropTypes.TitleBold>, default: () => getConfig().form.titleBold },
-    titleAlign: { type: String as PropType<VxeFormPropTypes.TitleAlign>, default: () => getConfig().form.titleAlign },
-    titleWidth: { type: [String, Number] as PropType<VxeFormPropTypes.TitleWidth>, default: () => getConfig().form.titleWidth },
-    titleColon: { type: Boolean as PropType<VxeFormPropTypes.TitleColon>, default: () => getConfig().form.titleColon },
-    titleAsterisk: { type: Boolean as PropType<VxeFormPropTypes.TitleAsterisk>, default: () => getConfig().form.titleAsterisk },
-    titleOverflow: { type: [Boolean, String] as PropType<VxeFormPropTypes.TitleOverflow>, default: null },
+    size: {
+      type: String as PropType<VxeFormPropTypes.Size>,
+      default: () => getConfig().form.size || getConfig().size
+    },
+    span: {
+      type: [String, Number] as PropType<VxeFormPropTypes.Span>,
+      default: () => getConfig().form.span
+    },
+    align: {
+      type: String as PropType<VxeFormPropTypes.Align>,
+      default: () => getConfig().form.align
+    },
+    titleBold: {
+      type: Boolean as PropType<VxeFormPropTypes.TitleBold>,
+      default: () => getConfig().form.titleBold
+    },
+    titleAlign: {
+      type: String as PropType<VxeFormPropTypes.TitleAlign>,
+      default: () => getConfig().form.titleAlign
+    },
+    titleWidth: {
+      type: [String, Number] as PropType<VxeFormPropTypes.TitleWidth>,
+      default: () => getConfig().form.titleWidth
+    },
+    titleColon: {
+      type: Boolean as PropType<VxeFormPropTypes.TitleColon>,
+      default: () => getConfig().form.titleColon
+    },
+    titleAsterisk: {
+      type: Boolean as PropType<VxeFormPropTypes.TitleAsterisk>,
+      default: () => getConfig().form.titleAsterisk
+    },
+    titleOverflow: {
+      type: [Boolean, String] as PropType<VxeFormPropTypes.TitleOverflow>,
+      default: () => getConfig().form.titleOverflow
+    },
     vertical: {
       type: Boolean as PropType<VxeFormPropTypes.Vertical>,
-      default: null
+      default: () => getConfig().form.vertical
     },
     className: [String, Function] as PropType<VxeFormPropTypes.ClassName>,
     readonly: Boolean as PropType<VxeFormPropTypes.Readonly>,
     items: Array as PropType<VxeFormPropTypes.Items>,
     rules: Object as PropType<VxeFormPropTypes.Rules>,
-    preventSubmit: { type: Boolean as PropType<VxeFormPropTypes.PreventSubmit>, default: () => getConfig().form.preventSubmit },
+    preventSubmit: {
+      type: Boolean as PropType<VxeFormPropTypes.PreventSubmit>,
+      default: () => getConfig().form.preventSubmit
+    },
     validConfig: Object as PropType<VxeFormPropTypes.ValidConfig>,
     tooltipConfig: Object as PropType<VxeFormPropTypes.TooltipConfig>,
-    customLayout: { type: Boolean as PropType<VxeFormPropTypes.CustomLayout>, default: () => getConfig().form.customLayout }
+    customLayout: {
+      type: Boolean as PropType<VxeFormPropTypes.CustomLayout>,
+      default: () => getConfig().form.customLayout
+    }
   },
   emits: [
     'update:collapseStatus',
