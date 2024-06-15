@@ -1,6 +1,6 @@
 {
   "name": "vxe-pc-ui",
-  "version": "4.0.13",
+  "version": "4.0.14",
   "description": "A vue based PC side component library",
   "scripts": {
     "update": "npm install --legacy-peer-deps",
@@ -63,7 +63,8 @@
     "typescript": "~4.5.5",
     "vue": "3.4.27",
     "vue-i18n": "^9.13.1",
-    "vue-router": "^4.3.2"
+    "vue-router": "^4.3.2",
+    "vxe-table": "^4.7.16"
   },
   "vetur": {
     "tags": "helper/vetur/tags.json",

@@ -1,6 +1,6 @@
 import { RenderFunction, SetupContext, Ref, ComponentPublicInstance, DefineComponent, UnwrapNestedRefs } from 'vue'
 import { defineVxeComponent, VxeComponentBaseOptions, VxeComponentEventParams, VxeComponentSizeType, ValueOf } from '@vxe-ui/core'
-import { VxeFormProps, VxeFormPropTypes } from '../components/form'
+import { VxeFormPropTypes } from '../components/form'
 
 /* eslint-disable no-use-before-define,@typescript-eslint/ban-types */
 
@@ -27,6 +27,7 @@ export interface VxeFormDesignPrivateRef extends FormDesignPrivateRef { }
 export namespace VxeFormDesignPropTypes {
   export type Size = VxeComponentSizeType
 
+  export type Config = null | VxeFormDesignDefines.FormDesignConfig
   export type Height = string | number
   export interface WidgetItem {
     customGroup?: string
@@ -40,12 +41,13 @@ export namespace VxeFormDesignPropTypes {
   export type ShowPc = boolean
   export type ShowMobile = boolean
   export interface FormRender {
-    name: string
+    name?: string
   }
 }
 
 export type VxeFormDesignProps = {
   size?: VxeFormDesignPropTypes.Size
+  config?: VxeFormDesignPropTypes.Config
   height?: VxeFormDesignPropTypes.Height
   widgets?: VxeFormDesignPropTypes.Widgets
   showPc?: VxeFormDesignPropTypes.ShowPc
@@ -58,7 +60,7 @@ export interface FormDesignPrivateComputed {
 }
 export interface VxeFormDesignPrivateComputed extends FormDesignPrivateComputed { }
 
-export interface FormDesignReactData<D = any> {
+export interface FormDesignReactData<D = VxeFormDesignDefines.DefaultSettingFormDataObjVO> {
   formData: D,
   widgetConfigs: VxeFormDesignDefines.WidgetConfigGroup[]
   widgetObjList: VxeFormDesignDefines.WidgetObjItem[]
@@ -76,7 +78,8 @@ export interface FormDesignMethods {
   createWidget (name: string): VxeFormDesignDefines.WidgetObjItem
   createEmptyWidget (): VxeFormDesignDefines.WidgetObjItem
   getConfig (): VxeFormDesignDefines.FormDesignConfig
-  loadConfig (config: VxeFormDesignDefines.FormDesignConfig): Promise<any>
+  clearConfig (): Promise<any>
+  loadConfig (config: Partial<VxeFormDesignDefines.FormDesignConfig>): Promise<any>
   getFormConfig(): VxeFormDesignPropTypes.FormData
   loadFormConfig (formData: VxeFormDesignPropTypes.FormData): Promise<any>
   getFormData(): Record<string, any>

@@ -14,10 +14,10 @@ export function getLastZIndex () {
   return DomZIndex.getCurrent()
 }
 
-export function getFuncText (content?: string | number | boolean | null) {
+export function getFuncText (content: string | number | boolean | null | undefined, args?: any) {
   if (content) {
     const translate = getConfig().translate
-    return XEUtils.toValueString(translate ? translate('' + content) : content)
+    return XEUtils.toValueString(translate ? translate('' + content, args) : content)
   }
   return ''
 }

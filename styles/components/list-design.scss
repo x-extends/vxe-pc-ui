@@ -33,7 +33,7 @@
 }
 
 .vxe-list-design--setting {
-  width: 280px;
+  width: 300px;
   flex-shrink: 0;
   padding: var(--vxe-ui-layout-padding-default);
   border-radius: var(--vxe-ui-base-border-radius);
@@ -67,5 +67,33 @@
 
 .vxe-list-design--preview-title {
   font-weight: 700;
-  padding: var(--vxe-ui-layout-padding-default) var(--vxe-ui-layout-padding-double);
+  padding: var(--vxe-ui-layout-padding-default);
+}
+.vxe-list-design--preview-search,
+.vxe-list-design--preview-table {
+  padding: var(--vxe-ui-layout-padding-default);
+}
+
+.vxe-form-design--widget-form-item-devices-item {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  margin-bottom: var(--vxe-ui-layout-padding-default);
+}
+.vxe-form-design--widget-form-item-devices-left {
+  flex-shrink: 0;
+  padding: 0 var(--vxe-ui-layout-padding-default);
+}
+.vxe-form-design--widget-form-item-devices-select {
+  flex-grow: 1;
+}
+
+.vxe-form-design--widget-form-item-render-view-item {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  height: 2.6em;
+  padding: 0 var(--vxe-ui-layout-padding-default);
+  border: 1px solid var(--vxe-ui-input-border-color);
+  border-radius: var(--vxe-ui-base-border-radius);
 }

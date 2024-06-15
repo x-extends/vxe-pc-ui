@@ -419,3 +419,16 @@ declare module '@vxe-ui/core' {
     export interface CreateFormViewMobileFormConfigParams<D = any> extends CreateFormViewFormConfigParams {}
   }
 }
+
+// 表单设计器
+declare module '@vxe-ui/core' {
+  export interface VxeGlobalRendererOptions {
+    /**
+     * 列表设计器 - 创建设计器-表单属性数据
+     */
+    createListDesignSettingFormConfig?(params: VxeGlobalRendererHandles.CreateListDesignSettingFormConfigParams): Record<string, any>
+  }
+  export namespace VxeGlobalRendererHandles {
+    export interface CreateListDesignSettingFormConfigParams {}
+  }
+}

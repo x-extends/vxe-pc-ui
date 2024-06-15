@@ -19,6 +19,7 @@ export default defineComponent({
       type: String as PropType<VxeFormDesignPropTypes.Size>,
       default: () => getConfig().formDesign.size
     },
+    config: Object as PropType<VxeFormDesignPropTypes.Config>,
     height: {
       type: [String, Number] as PropType<VxeFormDesignPropTypes.Height>,
       default: () => getConfig().formDesign.height
@@ -52,7 +53,7 @@ export default defineComponent({
     const refLayoutStyle = ref<any>()
 
     const reactData = reactive<FormDesignReactData>({
-      formData: {} as VxeFormDesignPropTypes.FormData,
+      formData: {} as VxeFormDesignDefines.DefaultSettingFormDataObjVO,
       widgetConfigs: [],
       widgetObjList: [],
       dragWidget: null,
@@ -90,7 +91,7 @@ export default defineComponent({
       return new FormDesignWidgetInfo($xeFormDesign, '', reactData.widgetObjList) as VxeFormDesignDefines.WidgetObjItem
     }
 
-    const loadConfig = (config: VxeFormDesignDefines.FormDesignConfig) => {
+    const loadConfig = (config: Partial<VxeFormDesignDefines.FormDesignConfig>) => {
       if (config) {
         const { formConfig, widgetData } = config
         loadFormConfig(formConfig || {})
@@ -104,7 +105,7 @@ export default defineComponent({
     }
 
     const loadFormConfig = (data: VxeFormDesignPropTypes.FormData) => {
-      reactData.formData = Object.assign({}, data)
+      reactData.formData = Object.assign({}, data) as VxeFormDesignDefines.DefaultSettingFormDataObjVO
       return nextTick()
     }
 
@@ -140,6 +141,11 @@ export default defineComponent({
           formConfig: getFormConfig(),
           widgetData: getWidgetData()
         }
+      },
+      clearConfig () {
+        reactData.widgetObjList = []
+        createSettingForm()
+        return nextTick()
       },
       loadConfig,
       getFormConfig,
@@ -310,7 +316,7 @@ export default defineComponent({
         formData = (createFormConfig ? createFormConfig({}) : {}) || {}
       }
 
-      reactData.formData = formData
+      reactData.formData = formData as VxeFormDesignDefines.DefaultSettingFormDataObjVO
     }
 
     const openStylePreviewEvent = () => {
@@ -381,8 +387,15 @@ export default defineComponent({
       updateWidgetConfigs()
     })
 
+    watch(() => props.config, (value) => {
+      loadConfig(value || {})
+    })
+
     createSettingForm()
     updateWidgetConfigs()
+    if (props.config) {
+      loadConfig(props.config)
+    }
 
     provide('$xeFormDesign', $xeFormDesign)
 

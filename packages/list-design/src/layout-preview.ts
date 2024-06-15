@@ -61,9 +61,15 @@ export default defineComponent({
             h('div', {
               class: 'vxe-list-design--preview-title'
             }, '查询条件'),
-            h(VxeFormComponent, {
-              items: searchFormItems
-            })
+            searchFormItems.length
+              ? h(VxeFormComponent, {
+                items: searchFormItems
+              })
+              : h('div', {
+                class: 'vxe-list-design--widget-form-empty-data'
+              }, [
+                h('span', {}, '暂无查询条件')
+              ])
           ]),
           h('div', {
             class: 'vxe-list-design--preview-table'

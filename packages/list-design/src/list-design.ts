@@ -1,7 +1,8 @@
-import { defineComponent, ref, h, PropType, reactive, nextTick, provide } from 'vue'
+import { defineComponent, ref, h, PropType, reactive, nextTick, provide, watch } from 'vue'
 import XEUtils from 'xe-utils'
 import { toCssUnit } from '../../ui/src/dom'
-import { getConfig, createEvent } from '../../ui'
+import { getConfig, createEvent, renderer } from '../../ui'
+import { getDefaultSettingFormData } from './default-setting-data'
 import LayoutPreviewComponent from './layout-preview'
 import LayoutSettingComponent from './layout-setting'
 
@@ -29,7 +30,8 @@ export default defineComponent({
     showMobile: {
       type: Boolean as PropType<VxeListDesignPropTypes.ShowMobile>,
       default: () => getConfig().listDesign.showMobile
-    }
+    },
+    formRender: Object as PropType<VxeListDesignPropTypes.FormRender>
   },
   emits: [],
   setup (props, context) {
@@ -40,6 +42,7 @@ export default defineComponent({
     const refElem = ref<HTMLDivElement>()
 
     const reactData = reactive<ListDesignReactData>({
+      formData: {} as VxeListDesignDefines.DefaultSettingFormDataObjVO,
       searchFormItems: [],
       listTableColumns: []
     })
@@ -72,7 +75,7 @@ export default defineComponent({
     /**
      * 解析表单设计 JSON
      */
-    const parseFormDesignColumns = (config: VxeFormDesignDefines.FormDesignConfig) => {
+    const parseFormDesignColumns = (config: Partial<VxeFormDesignDefines.FormDesignConfig>) => {
       const tableColumns: VxeListDesignDefines.ListColumnObjItem[] = []
       if (config) {
         const { widgetData } = config
@@ -117,9 +120,9 @@ export default defineComponent({
       return []
     }
 
-    const setConfig = (config: VxeListDesignDefines.ListDesignConfig) => {
-      setSearchItems(config.searchItems)
-      reactData.listTableColumns = configToListColumns(config.listColumns)
+    const loadConfig = (config: Partial<VxeListDesignDefines.ListDesignConfig>) => {
+      setSearchItems(config.searchItems || [])
+      reactData.listTableColumns = configToListColumns(config.listColumns || [])
       return nextTick()
     }
 
@@ -141,11 +144,23 @@ export default defineComponent({
       return nextTick()
     }
 
+    const createSettingForm = () => {
+      const { formRender } = props
+      let formData: Record<string, any> = getDefaultSettingFormData()
+      if (formRender) {
+        const compConf = renderer.get(formRender.name)
+        const createFormConfig = compConf ? compConf.createListDesignSettingFormConfig : null
+        formData = (createFormConfig ? createFormConfig({}) : {}) || {}
+      }
+
+      reactData.formData = formData as VxeListDesignDefines.DefaultSettingFormDataObjVO
+    }
+
     const listDesignMethods: ListDesignMethods = {
       dispatchEvent (type, params, evnt) {
         emit(type, createEvent(evnt, { $listDesign: $xeListDesign }, params))
       },
-      setFormDesignConfig (config) {
+      loadFormDesignConfig (config) {
         reactData.listTableColumns = parseFormDesignColumns(config)
         return nextTick()
       },
@@ -160,7 +175,13 @@ export default defineComponent({
           listColumns: getListColumns()
         }
       },
-      setConfig
+      loadConfig,
+      clearConfig () {
+        reactData.searchFormItems = []
+        reactData.listTableColumns = []
+        createSettingForm()
+        return nextTick()
+      }
     }
 
     const listDesignPrivateMethods: ListDesignPrivateMethods = {
@@ -196,6 +217,15 @@ export default defineComponent({
     $xeListDesign.renderVN = renderVN
 
     provide('$xeListDesign', $xeListDesign)
+
+    watch(() => props.config, (value) => {
+      loadConfig(value || {})
+    })
+
+    createSettingForm()
+    if (props.config) {
+      loadConfig(props.config)
+    }
 
     return $xeListDesign
   },

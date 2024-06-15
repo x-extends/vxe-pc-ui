@@ -31,6 +31,9 @@ export namespace VxeListDesignPropTypes {
   export type Config = null | VxeListDesignDefines.ListDesignConfig
   export type ShowPc = boolean
   export type ShowMobile = boolean
+  export interface FormRender {
+    name?: string
+  }
 }
 
 export type VxeListDesignProps = {
@@ -39,26 +42,29 @@ export type VxeListDesignProps = {
   config?: VxeListDesignPropTypes.Config
   showPc?: VxeListDesignPropTypes.ShowPc
   showMobile?: VxeListDesignPropTypes.ShowMobile
+  formRender?: VxeListDesignPropTypes.FormRender
 }
 
 export interface ListDesignPrivateComputed {
 }
 export interface VxeListDesignPrivateComputed extends ListDesignPrivateComputed { }
 
-export interface ListDesignReactData {
+export interface ListDesignReactData<D = VxeListDesignDefines.DefaultSettingFormDataObjVO> {
+  formData: D
   searchFormItems: VxeListDesignDefines.SearchItemObjItem[]
   listTableColumns: VxeListDesignDefines.ListColumnObjItem[]
 }
 
 export interface ListDesignMethods {
   dispatchEvent(type: ValueOf<VxeListDesignEmits>, params: Record<string, any>, evnt: Event | null): void
-  setFormDesignConfig(config: VxeFormDesignDefines.FormDesignConfig): Promise<any>
+  loadFormDesignConfig(config: Partial<VxeFormDesignDefines.FormDesignConfig>): Promise<any>
   getSearchItems(): VxeListDesignDefines.SearchItemObjItem[]
   setSearchItems(searchItems: VxeListDesignDefines.SearchItemObjItem[]): Promise<any>
   getListColumns(): VxeListDesignDefines.ListColumnObjItem[]
   setListColumns(listColumns: VxeListDesignDefines.ListColumnObjItem[]): Promise<any>
   getConfig (): VxeListDesignDefines.ListDesignConfig
-  setConfig(config: VxeListDesignDefines.ListDesignConfig): Promise<any>
+  clearConfig (): Promise<any>
+  loadConfig(config: Partial<VxeListDesignDefines.ListDesignConfig>): Promise<any>
 }
 export interface VxeListDesignMethods extends ListDesignMethods { }
 
@@ -88,6 +94,28 @@ export namespace VxeListDesignDefines {
     field: string
     title: string
     visible: boolean
+  }
+
+  export interface DefaultSettingFormActiveBtnItem {
+    content?: string
+    icon?: string
+  }
+
+  export interface DefaultSettingFormDataObjVO {
+    listView: {
+      enabled: boolean
+    }
+    ganttView: {
+      enabled: boolean
+    }
+    chartView: {
+      enabled: boolean
+    }
+    showCheckbox: boolean | 'auto'
+    showSeq: boolean
+    mobileDefaultView: 'list' | 'gantt' | 'chart'
+    pcDefaultView: 'list' | 'gantt' | 'chart'
+    activeBtnList: DefaultSettingFormActiveBtnItem[]
   }
 }
 

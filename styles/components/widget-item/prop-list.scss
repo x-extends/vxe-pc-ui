@@ -26,3 +26,23 @@
     }
   }
 }
+
+.vxe-list-design {
+  .vxe-list-design--widget-form-item-prop-list {
+    margin-bottom: var(--vxe-ui-layout-padding-double);
+    padding: 0 var(--vxe-ui-layout-padding-default);
+    &:first-child {
+      margin-top: var(--vxe-ui-layout-padding-default);
+    }
+    &:last-child {
+      margin-bottom: 0;
+    }
+    & > span {
+      padding: 0 0.5em;
+      &:first-child {
+        padding: 0;
+        padding-right: var(--vxe-ui-layout-padding-default);
+      }
+    }
+  }
+}
