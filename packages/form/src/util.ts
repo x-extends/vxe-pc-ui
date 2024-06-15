@@ -38,8 +38,9 @@ export function isActiveItem ($xeForm: VxeFormConstructor, formItem: VxeFormDefi
     return visible
   }
   const compConf = isEnableConf(itemRender) ? renderer.get(itemRender.name) : null
-  if (!visibleMethod && compConf && compConf.itemVisibleMethod) {
-    visibleMethod = compConf.itemVisibleMethod
+  const fiVisibleMethod = compConf ? (compConf.formItemVisibleMethod || compConf.itemVisibleMethod) : null
+  if (!visibleMethod && fiVisibleMethod) {
+    visibleMethod = fiVisibleMethod
   }
   if (!visibleMethod) {
     return true

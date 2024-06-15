@@ -13,38 +13,195 @@ import { VxeFormViewDefines } from '../components/form-view'
 // 表格
 declare module '@vxe-ui/core' {
   export interface VxeGlobalRendererOptions {
-    // 筛选渲染
-    filterClassName?: string | ((params: VxeGlobalRendererHandles.RenderFilterParams<any>) => string | VxeComponentClassNameType)
-    showFilterFooter?: boolean
-    renderFilter?(renderOpts: VxeGlobalRendererHandles.RenderFilterOptions, params: VxeGlobalRendererHandles.RenderFilterParams<any>): VxeComponentSlotType | VxeComponentSlotType[]
+    /**
+     * 表格 - 设置筛选容器 class
+     */
+    tableFilterClassName?: string | ((params: VxeGlobalRendererHandles.RenderTableFilterParams<any>) => string | VxeComponentClassNameType)
+    /**
+     * 表格 - 筛选容器是否显示尾部
+     */
+    showTableFilterFooter?: boolean
+    /**
+     * 表格 - 自定义筛选渲染内容
+     */
+    renderTableFilter?(renderOpts: VxeGlobalRendererHandles.RenderTableFilterOptions, params: VxeGlobalRendererHandles.RenderTableFilterParams<any>): VxeComponentSlotType | VxeComponentSlotType[]
+    /**
+     * 表格 - 自定义筛选逻辑方法
+     */
+    tableFilterMethod?(params: VxeGlobalRendererHandles.FilterMethodParams<any>): boolean
+    /**
+     * 表格 - 自定义筛选远程逻辑方法
+     */
+    tableFilterRemoteMethod?(params: VxeGlobalRendererHandles.FilterRemoteMethod<any>): boolean
+    /**
+     * 表格 - 自定义筛选重置逻辑方法
+     */
+    tableFilterResetMethod?(params: VxeGlobalRendererHandles.FilterResetMethodParams<any>): void
+    /**
+     * 表格 - 自定义筛选还原逻辑方法
+     */
+    tableFilterRecoverMethod?(params: VxeGlobalRendererHandles.FilterRecoverMethodParams<any>): void
+    /**
+     * 表格 - 默认筛选处理方法，如果同时存在，会被 tableFilterMethod 覆盖
+     */
+    defaultTableFilterMethod?(params: VxeGlobalRendererHandles.FilterMethodParams<any>): boolean
+
+    /**
+     * 表格单元格设置 class
+     */
+    tableCellClassName?: string | ((params: VxeGlobalRendererHandles.RenderDefaultParams<any>) => string | VxeComponentClassNameType)
+    /**
+     * 表格单元格设置样式
+     */
+    tableCellStyle?: VxeComponentStyleType | ((params: VxeGlobalRendererHandles.RenderDefaultParams<any>) => VxeComponentStyleType)
+    /**
+     * 表格渲染头部
+     */
+    renderTableHeader?(renderOpts: VxeGlobalRendererHandles.RenderTableHeaderOptions, params: VxeGlobalRendererHandles.RenderTableHeaderParams<any>): VxeComponentSlotType | VxeComponentSlotType[]
+    /**
+     * 表格渲染单元格
+     */
+    renderTableDefault?(renderOpts: VxeGlobalRendererHandles.RenderTableDefaultOptions, params: VxeGlobalRendererHandles.RenderTableDefaultParams<any>): VxeComponentSlotType | VxeComponentSlotType[]
+    /**
+     * 表格渲染尾部
+     */
+    renderTableFooter?(renderOpts: VxeGlobalRendererHandles.RenderTableFooterOptions, params: VxeGlobalRendererHandles.RenderTableFooterParams<any>): VxeComponentSlotType | VxeComponentSlotType[]
+    /**
+     * 表格自定义单元格导出逻辑
+     */
+    tableExportMethod?(params: VxeGlobalRendererHandles.TableExportMethodParams<any>): string
+    /**
+     * 表格自定义表尾单元格导出逻辑
+     */
+    tableFooterExportMethod?(params: VxeGlobalRendererHandles.TableFooterExportMethodParams<any>): string
+
+    /**
+     * 表格激活编辑状态时，设置自动聚焦的 class
+     */
+    tableAutofocus?: string | ((params: VxeGlobalRendererHandles.RenderTableEditParams<any> | VxeGlobalRendererHandles.RenderTableCellParams<any>) => HTMLElement | null)
+    /**
+     * 表格激活编辑状态时，设置是否自动选中 tableAutofocus 指定的元素
+     */
+    tableAutoSelect?: boolean
+    /**
+     * 表格渲染编辑状态时
+     */
+    renderTableEdit?(renderOpts: VxeGlobalRendererHandles.RenderTableEditOptions<any>, params: VxeGlobalRendererHandles.RenderTableEditParams<any>): VxeComponentSlotType | VxeComponentSlotType[]
+    /**
+     * 表格渲染非编辑状态时
+     */
+    renderTableCell?(renderOpts: VxeGlobalRendererHandles.RenderTableCellOptions<any>, params: VxeGlobalRendererHandles.RenderTableCellParams<any>): VxeComponentSlotType | VxeComponentSlotType[]
+
+    /**
+     * 表格展开行渲染
+     */
+    renderTableExpand?(renderOpts: VxeGlobalRendererHandles.RenderTableExpandOptions, params: VxeGlobalRendererHandles.RenderTableExpandParams<any>): VxeComponentSlotType | VxeComponentSlotType[]
+
+    /**
+     * 表格空数据时渲染
+     */
+    renderTableEmptyView?(renderOpts: VxeGlobalRendererHandles.RenderTableEmptyViewOptions, params: VxeGlobalRendererHandles.RenderTableEmptyParams): VxeComponentSlotType | VxeComponentSlotType[]
+
+    /**
+     * 已废弃，请使用 tableFilterMethod
+     * @deprecated
+     */
     filterMethod?(params: VxeGlobalRendererHandles.FilterMethodParams<any>): boolean
+    /**
+     * 已废弃，请使用 tableFilterRemoteMethod
+     * @deprecated
+     */
     filterRemoteMethod?(params: VxeGlobalRendererHandles.FilterRemoteMethod<any>): boolean
+    /**
+     * 已废弃，请使用 tableFilterResetMethod
+     * @deprecated
+     */
     filterResetMethod?(params: VxeGlobalRendererHandles.FilterResetMethodParams<any>): void
+    /**
+     * 已废弃，请使用 tableFilterRecoverMethod
+     * @deprecated
+     */
     filterRecoverMethod?(params: VxeGlobalRendererHandles.FilterRecoverMethodParams<any>): void
-    // 默认行为
+    /**
+     * 已废弃，请使用 defaultTableFilterMethod
+     * @deprecated
+     */
     defaultFilterMethod?(params: VxeGlobalRendererHandles.FilterMethodParams<any>): boolean
-
-    // 单元格渲染
+    /**
+     * 已废弃，请使用 tableFilterClassName
+     * @deprecated
+     */
+    filterClassName?: string | ((params: VxeGlobalRendererHandles.RenderTableFilterParams<any>) => string | VxeComponentClassNameType)
+    /**
+     * 已废弃，请使用 showTableFilterFooter
+     * @deprecated
+     */
+    showFilterFooter?: boolean
+    /**
+     * 已废弃，请使用 tableCellClassName
+     * @deprecated
+     */
     cellClassName?: string | ((params: VxeGlobalRendererHandles.RenderDefaultParams<any>) => string | VxeComponentClassNameType)
+    /**
+     * 已废弃，请使用 tableCellStyle
+     * @deprecated
+     */
     cellStyle?: VxeComponentStyleType | ((params: VxeGlobalRendererHandles.RenderDefaultParams<any>) => VxeComponentStyleType)
-    renderHeader?(renderOpts: VxeGlobalRendererHandles.RenderHeaderOptions, params: VxeGlobalRendererHandles.RenderHeaderParams<any>): VxeComponentSlotType | VxeComponentSlotType[]
-    renderDefault?(renderOpts: VxeGlobalRendererHandles.RenderDefaultOptions, params: VxeGlobalRendererHandles.RenderDefaultParams<any>): VxeComponentSlotType | VxeComponentSlotType[]
-    renderFooter?(renderOpts: VxeGlobalRendererHandles.RenderFooterOptions, params: VxeGlobalRendererHandles.RenderFooterParams<any>): VxeComponentSlotType | VxeComponentSlotType[]
-    exportMethod?(params: VxeGlobalRendererHandles.ExportMethodParams<any>): string
-    footerExportMethod?(params: VxeGlobalRendererHandles.FooterExportMethodParams<any>): string
-
-    // 编辑渲染
-    autofocus?: string | ((params: VxeGlobalRendererHandles.RenderEditParams<any> | VxeGlobalRendererHandles.RenderCellParams<any>) => HTMLElement | null)
+    /**
+     * 已废弃，请使用 tableAutofocus
+     * @deprecated
+     */
+    autofocus?: string | ((params: VxeGlobalRendererHandles.RenderTableEditParams<any> | VxeGlobalRendererHandles.RenderTableCellParams<any>) => HTMLElement | null)
+    /**
+     * 已废弃，请使用 tableAutoSelect
+     * @deprecated
+     */
     autoselect?: boolean
-    renderEdit?(renderOpts: VxeGlobalRendererHandles.RenderEditOptions<any>, params: VxeGlobalRendererHandles.RenderEditParams<any>): VxeComponentSlotType | VxeComponentSlotType[]
-    renderCell?(renderOpts: VxeGlobalRendererHandles.RenderCellOptions<any>, params: VxeGlobalRendererHandles.RenderCellParams<any>): VxeComponentSlotType | VxeComponentSlotType[]
-
-    // 内容渲染
-    renderExpand?(renderOpts: VxeGlobalRendererHandles.RenderExpandOptions, params: VxeGlobalRendererHandles.RenderExpandParams<any>): VxeComponentSlotType | VxeComponentSlotType[]
-
-    // 空内容渲染
-    renderTableEmptyView?(renderOpts: VxeGlobalRendererHandles.RenderTableEmptyViewOptions, params: VxeGlobalRendererHandles.RenderEmptyParams): VxeComponentSlotType | VxeComponentSlotType[]
-
+    /**
+     * 已废弃，请使用 tableExportMethod
+     * @deprecated
+     */
+    exportMethod?(params: VxeGlobalRendererHandles.TableExportMethodParams<any>): string
+    /**
+     * 已废弃，请使用 tableFooterExportMethod
+     * @deprecated
+     */
+    footerExportMethod?(params: VxeGlobalRendererHandles.TableFooterExportMethodParams<any>): string
+    /**
+     * 已废弃，请使用 renderTableHeader
+     * @deprecated
+     */
+    renderHeader?(renderOpts: VxeGlobalRendererHandles.RenderTableHeaderOptions, params: VxeGlobalRendererHandles.RenderHeaderParams<any>): VxeComponentSlotType | VxeComponentSlotType[]
+    /**
+     * 已废弃，请使用 renderTableFooter
+     * @deprecated
+     */
+    renderFooter?(renderOpts: VxeGlobalRendererHandles.RenderTableFooterOptions, params: VxeGlobalRendererHandles.RenderFooterParams<any>): VxeComponentSlotType | VxeComponentSlotType[]
+    /**
+     * 已废弃，请使用 renderTableFilter
+     * @deprecated
+     */
+    renderFilter?(renderOpts: VxeGlobalRendererHandles.RenderTableFilterOptions, params: VxeGlobalRendererHandles.RenderTableFilterParams<any>): VxeComponentSlotType | VxeComponentSlotType[]
+    /**
+     * 已废弃，请使用 renderTableDefault
+     * @deprecated
+     */
+    renderDefault?(renderOpts: VxeGlobalRendererHandles.RenderTableDefaultOptions, params: VxeGlobalRendererHandles.RenderDefaultParams<any>): VxeComponentSlotType | VxeComponentSlotType[]
+    /**
+     * 已废弃，请使用 renderTableEdit
+     * @deprecated
+     */
+    renderEdit?(renderOpts: VxeGlobalRendererHandles.RenderTableEditOptions<any>, params: VxeGlobalRendererHandles.RenderEditParams<any>): VxeComponentSlotType | VxeComponentSlotType[]
+    /**
+     * 已废弃，请使用 renderTableCell
+     * @deprecated
+     */
+    renderCell?(renderOpts: VxeGlobalRendererHandles.RenderTableCellOptions<any>, params: VxeGlobalRendererHandles.RenderCellParams<any>): VxeComponentSlotType | VxeComponentSlotType[]
+    /**
+     * 已废弃，请使用 renderTableExpand
+     * @deprecated
+     */
+    renderExpand?(renderOpts: VxeGlobalRendererHandles.RenderTableExpandOptions, params: VxeGlobalRendererHandles.RenderTableExpandParams<any>): VxeComponentSlotType | VxeComponentSlotType[]
     /**
      * @deprecated 已废弃
      */
@@ -53,15 +210,23 @@ declare module '@vxe-ui/core' {
      * 已废弃，请使用 renderTableEmptyView
      * @deprecated
      */
-    renderEmpty?(renderOpts: VxeGlobalRendererHandles.RenderTableEmptyViewOptions, params: VxeGlobalRendererHandles.RenderEmptyParams): VxeComponentSlotType | VxeComponentSlotType[]
+    renderEmpty?(renderOpts: VxeGlobalRendererHandles.RenderTableEmptyViewOptions, params: VxeGlobalRendererHandles.RenderTableEmptyParams): VxeComponentSlotType | VxeComponentSlotType[]
   }
 
   export namespace VxeGlobalRendererHandles {
-    export interface RenderFilterOptions extends VxeColumnPropTypes.FilterRender {}
+    /**
+     * @deprecated
+     */
+    export interface RenderFilterOptions extends RenderTableFilterOptions {}
+    export interface RenderTableFilterOptions extends VxeColumnPropTypes.FilterRender {}
 
     export interface RenderParams {}
 
-    export type RenderFilterParams<D = any> = {
+    /**
+     * @deprecated
+     */
+    export interface RenderFilterParams<D = any> extends RenderTableFilterParams<D> {}
+    export interface RenderTableFilterParams<D = any> {
       $table: VxeTableConstructor<D> & VxeTablePrivateMethods<D>
       $panel: any
       column: {
@@ -97,9 +262,14 @@ declare module '@vxe-ui/core' {
       column: VxeTableDefines.ColumnInfo<D>
     }
 
-    export interface RenderHeaderOptions extends VxeGlobalRendererHandles.RenderOptions { }
+    /**
+     * @deprecated
+     */
+    export interface RenderHeaderOptions extends RenderTableHeaderOptions { }
+    export interface RenderTableHeaderOptions extends VxeGlobalRendererHandles.RenderOptions { }
 
-    export interface RenderHeaderParams<D = any> {
+    export interface RenderHeaderParams<D = any> extends RenderTableHeaderParams<D> {}
+    export interface RenderTableHeaderParams<D = any> {
       $table: VxeTableConstructor<D> & VxeTablePrivateMethods<D>
       column: VxeTableDefines.ColumnInfo<D>
       columnIndex: number
@@ -107,12 +277,23 @@ declare module '@vxe-ui/core' {
       $rowIndex: number
     }
 
-    export type RenderDefaultOptions<D = any> = VxeColumnPropTypes.EditRender<D>
-    export type RenderDefaultParams<D = any> = RenderEditParams<D>
+    export interface RenderDefaultOptions<D = any> extends RenderTableDefaultOptions<D> {}
+    export interface RenderTableDefaultOptions<D = any> extends VxeColumnPropTypes.EditRender<D> {}
 
-    export interface RenderFooterOptions extends VxeGlobalRendererHandles.RenderOptions { }
+    /**
+     * @deprecated
+     */
+    export interface RenderDefaultParams<D = any> extends RenderTableDefaultParams<D> {}
+    export interface RenderTableDefaultParams<D = any> extends RenderEditParams<D> {}
 
-    export interface RenderFooterParams<D = any> {
+    /**
+     * @deprecated
+     */
+    export interface RenderFooterOptions extends RenderTableFooterOptions { }
+    export interface RenderTableFooterOptions extends VxeGlobalRendererHandles.RenderOptions { }
+
+    export interface RenderFooterParams<D = any> extends RenderTableFooterParams<D>{}
+    export interface RenderTableFooterParams<D = any> {
       $table: VxeTableConstructor<D> & VxeTablePrivateMethods<D>
       column: VxeTableDefines.ColumnInfo<D>
       columnIndex: number
@@ -123,22 +304,32 @@ declare module '@vxe-ui/core' {
       data: D[][]
     }
 
-    export interface ExportMethodParams<D = any> {
+    export interface ExportMethodParams<D = any> extends TableExportMethodParams<D> {}
+    export interface TableExportMethodParams<D = any> {
       row: D
       column: VxeTableDefines.ColumnInfo<D>
       options: VxeTablePropTypes.ExportHandleOptions
     }
 
-    export interface FooterExportMethodParams<D = any> {
+    export interface FooterExportMethodParams<D = any> extends TableFooterExportMethodParams<D> {}
+    export interface TableFooterExportMethodParams<D = any> {
       items: any[]
       _columnIndex: number
       column: VxeTableDefines.ColumnInfo<D>
       options: VxeTablePropTypes.ExportHandleOptions
     }
 
-    export type RenderEditOptions<D = any> = VxeColumnPropTypes.EditRender<D>
+    /**
+     * @deprecated
+     */
+    export interface RenderEditOptions<D = any> extends RenderTableEditOptions<D> {}
+    export interface RenderTableEditOptions<D = any> extends VxeColumnPropTypes.EditRender<D> {}
 
-    export interface RenderEditParams<D = any> {
+    /**
+     * @deprecated
+     */
+    export interface RenderEditParams<D = any> extends RenderTableEditParams<D> {}
+    export interface RenderTableEditParams<D = any> {
       $table: VxeTableConstructor<D> & VxeTablePrivateMethods<D>
       $grid: VxeGridConstructor<D> | null
       column: VxeTableDefines.ColumnInfo<D>
@@ -153,8 +344,17 @@ declare module '@vxe-ui/core' {
       type: string
     }
 
-    export type RenderCellOptions<D = any> = VxeColumnPropTypes.EditRender<D>
-    export type RenderCellParams<D = any> = {
+    /**
+     * @deprecated
+     */
+    export interface RenderCellOptions<D = any> extends RenderTableCellOptions<D> {}
+    export interface RenderTableCellOptions<D = any> extends VxeColumnPropTypes.EditRender<D> {}
+
+    /**
+     * @deprecated
+     */
+    export interface RenderCellParams<D = any> extends RenderTableCellParams<D> {}
+    export interface RenderTableCellParams<D = any> {
       $table: VxeTableConstructor<D> & VxeTablePrivateMethods<D>
       $grid: VxeGridConstructor<D> | null
       column: VxeTableDefines.ColumnInfo<D>
@@ -169,12 +369,25 @@ declare module '@vxe-ui/core' {
       type: string
     }
 
-    export interface RenderExpandOptions extends VxeColumnPropTypes.ContentRender { }
-    export type RenderExpandParams<D = any> = RenderEditParams<D>
+    /**
+     * @deprecated
+     */
+    export interface RenderExpandOptions extends RenderTableExpandOptions {}
+    export interface RenderTableExpandOptions extends VxeColumnPropTypes.ContentRender { }
+
+    /**
+     * @deprecated
+     */
+    export interface RenderExpandParams<D = any> extends RenderTableExpandParams<D> {}
+    export interface RenderTableExpandParams<D = any> extends RenderTableEditParams<D> {}
 
     export type RenderTableEmptyViewOptions = VxeTablePropTypes.EmptyRender
 
-    export interface RenderEmptyParams<D = any> {
+    /**
+     * @deprecated
+     */
+    export interface RenderEmptyParams<D = any> extends RenderTableEmptyParams<D> {}
+    export interface RenderTableEmptyParams<D = any> {
       $table: VxeTableConstructor<D> & VxeTablePrivateMethods<D>
     }
 
@@ -232,10 +445,21 @@ declare module '@vxe-ui/core' {
 // 工具栏
 declare module '@vxe-ui/core' {
   export interface VxeGlobalRendererOptions {
-    // 工具栏-按钮渲染
+    /**
+     * 工具栏 - 左侧按钮设置 class
+     */
     toolbarButtonClassName?: string | ((params: VxeGlobalRendererHandles.RenderButtonParams<any>) => string | VxeComponentClassNameType)
+    /**
+     * 工具栏 - 渲染左侧按钮
+     */
     renderToolbarButton?(renderOpts: VxeGlobalRendererHandles.RenderButtonOptions, params: VxeGlobalRendererHandles.RenderButtonParams<any>): VxeComponentSlotType | VxeComponentSlotType[]
+    /**
+     * 工具栏 - 右侧按钮设置 class
+     */
     toolbarToolClassName?: string | ((params: VxeGlobalRendererHandles.RenderToolParams<any>) => string | VxeComponentClassNameType)
+    /**
+     * 工具栏 - 渲染右侧按钮
+     */
     renderToolbarTool?(renderOpts: VxeGlobalRendererHandles.RenderToolOptions, params: VxeGlobalRendererHandles.RenderToolParams<any>): VxeComponentSlotType | VxeComponentSlotType[]
   }
 
@@ -264,15 +488,96 @@ declare module '@vxe-ui/core' {
      * 表单项 - 设置自动聚焦元素
      */
     formItemAutoFocus?: string
+    /**
+     * 表单项 - 设置表单项的 class
+     */
+    formItemClassName?: string | ((params: VxeGlobalRendererHandles.RenderItemTitleParams) => string | VxeComponentClassNameType)
+    /**
+     * 表单项 - 设置表单项的样式
+     */
+    formItemStyle?: VxeComponentStyleType | ((params: VxeGlobalRendererHandles.RenderItemTitleParams) => VxeComponentStyleType)
+    /**
+     * 表单项 - 设置表单项内容元素的 class
+     */
+    formItemContentClassName?: string | ((params: VxeGlobalRendererHandles.RenderItemTitleParams) => string | VxeComponentClassNameType)
+    /**
+     * 表单项 - 设置表单项内容元素的样式
+     */
+    formItemContentStyle?: VxeComponentStyleType | ((params: VxeGlobalRendererHandles.RenderItemTitleParams) => VxeComponentStyleType)
+    /**
+     * 表单项 - 设置表单项标题元素的 class
+     */
+    formItemTitleClassName?: string | ((params: VxeGlobalRendererHandles.RenderItemTitleParams) => string | VxeComponentClassNameType)
+    /**
+     * 表单项 - 设置表单项标题元素的样式
+     */
+    formItemTitleStyle?: VxeComponentStyleType | ((params: VxeGlobalRendererHandles.RenderItemTitleParams) => VxeComponentStyleType)
+    /**
+     * 表单项 - 渲染表单项标题
+     */
+    renderFormItemTitle?(renderOpts: VxeGlobalRendererHandles.RenderItemTitleOptions, params: VxeGlobalRendererHandles.RenderItemTitleParams): VxeComponentSlotType | VxeComponentSlotType[]
+    /**
+     * 表单项 - 渲染表单项内容
+     */
+    renderFormItemContent?(renderOpts: VxeGlobalRendererHandles.RenderItemContentOptions, params: VxeGlobalRendererHandles.RenderItemContentParams): VxeComponentSlotType | VxeComponentSlotType[]
+    /**
+     * 表单项 - 自定义表单项被显示隐藏逻辑
+     */
+    formItemVisibleMethod?(params: VxeGlobalRendererHandles.ItemVisibleMethodParams): boolean
+    /**
+     * 表单项 - 自定义表单项被重置时的逻辑
+     */
+    formItemResetMethod?(params: VxeGlobalRendererHandles.ItemResetMethodParams): void
+
+    /**
+     * 已废弃，请使用 formItemClassName
+     * @deprecated
+     */
     itemClassName?: string | ((params: VxeGlobalRendererHandles.RenderItemTitleParams) => string | VxeComponentClassNameType)
+    /**
+     * 已废弃，请使用 formItemStyle
+     * @deprecated
+     */
     itemStyle?: VxeComponentStyleType | ((params: VxeGlobalRendererHandles.RenderItemTitleParams) => VxeComponentStyleType)
+    /**
+     * 已废弃，请使用 formItemContentClassName
+     * @deprecated
+     */
     itemContentClassName?: string | ((params: VxeGlobalRendererHandles.RenderItemTitleParams) => string | VxeComponentClassNameType)
+    /**
+     * 已废弃，请使用 formItemContentStyle
+     * @deprecated
+     */
     itemContentStyle?: VxeComponentStyleType | ((params: VxeGlobalRendererHandles.RenderItemTitleParams) => VxeComponentStyleType)
+    /**
+     * 已废弃，请使用 formItemTitleClassName
+     * @deprecated
+     */
     itemTitleClassName?: string | ((params: VxeGlobalRendererHandles.RenderItemTitleParams) => string | VxeComponentClassNameType)
+    /**
+     * 已废弃，请使用 formItemTitleStyle
+     * @deprecated
+     */
     itemTitleStyle?: VxeComponentStyleType | ((params: VxeGlobalRendererHandles.RenderItemTitleParams) => VxeComponentStyleType)
+    /**
+     * 已废弃，请使用 renderFormItemTitle
+     * @deprecated
+     */
     renderItemTitle?(renderOpts: VxeGlobalRendererHandles.RenderItemTitleOptions, params: VxeGlobalRendererHandles.RenderItemTitleParams): VxeComponentSlotType | VxeComponentSlotType[]
+    /**
+     * 已废弃，请使用 renderFormItemContent
+     * @deprecated
+     */
     renderItemContent?(renderOpts: VxeGlobalRendererHandles.RenderItemContentOptions, params: VxeGlobalRendererHandles.RenderItemContentParams): VxeComponentSlotType | VxeComponentSlotType[]
+    /**
+     * 已废弃，请使用 formItemVisibleMethod
+     * @deprecated
+     */
     itemVisibleMethod?(params: VxeGlobalRendererHandles.ItemVisibleMethodParams): boolean
+    /**
+     * 已废弃，请使用 formItemResetMethod
+     * @deprecated
+     */
     itemResetMethod?(params: VxeGlobalRendererHandles.ItemResetMethodParams): void
   }
 

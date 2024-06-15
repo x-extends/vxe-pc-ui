@@ -49,10 +49,11 @@ export function renderTitle ($xeForm: VxeFormConstructor & VxeFormPrivateMethods
         : renderPrefixIcon(titlePrefix)
     )
   }
+  const rftTitle = compConf ? (compConf.renderFormItemTitle || compConf.renderItemTitle) : null
   titVNs.push(
     h('span', {
       class: 'vxe-form--item-title-label'
-    }, compConf && compConf.renderItemTitle ? getSlotVNs(compConf.renderItemTitle(itemRender, params)) : (titleSlot ? $xeForm.callSlot(titleSlot, params) : getFuncText(item.title)))
+    }, titleSlot ? $xeForm.callSlot(titleSlot, params) : (rftTitle ? getSlotVNs(rftTitle(itemRender, params)) : getFuncText(item.title)))
   )
   contVNs.push(
     h('div', {

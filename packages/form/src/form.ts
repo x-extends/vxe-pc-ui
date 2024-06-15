@@ -289,8 +289,9 @@ export default defineComponent({
           const { field, resetValue, itemRender } = item
           if (isEnableConf(itemRender)) {
             const compConf = renderer.get(itemRender.name)
-            if (compConf && compConf.itemResetMethod) {
-              compConf.itemResetMethod({ data, field, property: field, item, $form: $xeForm, $grid: $xeForm.xegrid })
+            const fiResetMethod = compConf ? (compConf.formItemResetMethod || compConf.itemResetMethod) : null
+            if (compConf && fiResetMethod) {
+              fiResetMethod({ data, field, property: field, item, $form: $xeForm, $grid: $xeForm.xegrid })
             } else if (field) {
               XEUtils.set(data, field, resetValue === null ? getResetValue(XEUtils.get(data, field), undefined) : XEUtils.clone(resetValue, true))
             }

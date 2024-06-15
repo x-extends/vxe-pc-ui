@@ -489,7 +489,7 @@ export namespace VxeTablePropTypes {
     visibleMethod?(params: {
       row: D
     }): boolean
-    trigger?: 'default' | 'cell' | 'row' | '' | null
+    trigger?: 'default' | 'cell' | 'row' | 'manual' | '' | null
     highlight?: boolean
     strict?: boolean
   }
@@ -515,7 +515,7 @@ export namespace VxeTablePropTypes {
     visibleMethod?(params: {
       row: D
     }): boolean
-    trigger?: 'default' | 'cell' | 'row' | '' | null
+    trigger?: 'default' | 'cell' | 'row' | 'manual' | '' | null
     highlight?: boolean
     range?: boolean
 
@@ -561,7 +561,7 @@ export namespace VxeTablePropTypes {
     expandAll?: boolean
     expandRowKeys?: string[] | number[]
     accordion?: boolean
-    trigger?: 'default' | 'cell' | 'row' | '' | null
+    trigger?: 'default' | 'cell' | 'row' | 'manual' |'' | null
     lazy?: boolean
     reserve?: boolean
     height?: number
@@ -637,7 +637,7 @@ export namespace VxeTablePropTypes {
     /**
      * 触发方式（注：当多种功能重叠时，会同时触发）
      */
-    trigger?: 'default' | 'cell' | 'row' | '' | null
+    trigger?: 'default' | 'cell' | 'row' | 'manual' |'' | null
     /**
      * 是否使用懒加载（启用后只有指定 hasChildField 字段的节点才允许被点击）
      */

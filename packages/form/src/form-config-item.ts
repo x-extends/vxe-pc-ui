@@ -27,12 +27,12 @@ const VxeFormConfigItem = defineComponent({
       const validOpts = computeValidOpts.value
       const { slots, title, visible, folding, field, collapseNode, itemRender, showError, errRule, className, titleOverflow, vertical, children, showTitle, contentClassName, contentStyle, titleClassName, titleStyle } = item
       const compConf = isEnableConf(itemRender) ? renderer.get(itemRender.name) : null
-      const itemClassName = compConf ? compConf.itemClassName : ''
-      const itemStyle = compConf ? compConf.itemStyle : null
-      const itemContentClassName = compConf ? compConf.itemContentClassName : ''
-      const itemContentStyle = compConf ? compConf.itemContentStyle : null
-      const itemTitleClassName = compConf ? compConf.itemTitleClassName : ''
-      const itemTitleStyle = compConf ? compConf.itemTitleStyle : null
+      const itemClassName = compConf ? (compConf.formItemClassName || compConf.itemClassName) : ''
+      const itemStyle = compConf ? (compConf.formItemStyle || compConf.itemStyle) : null
+      const itemContentClassName = compConf ? (compConf.formItemContentClassName || compConf.itemContentClassName) : ''
+      const itemContentStyle = compConf ? (compConf.formItemContentStyle || compConf.itemContentStyle) : null
+      const itemTitleClassName = compConf ? (compConf.formItemTitleClassName || compConf.itemTitleClassName) : ''
+      const itemTitleStyle = compConf ? (compConf.formItemTitleStyle || compConf.itemTitleStyle) : null
       const defaultSlot = slots ? slots.default : null
       const titleSlot = slots ? slots.title : null
       const span = item.span || allSpan
@@ -75,10 +75,11 @@ const VxeFormConfigItem = defineComponent({
           : createCommentVNode()
       }
       let contentVNs: VxeComponentSlotType[] = []
+      const rftContent = compConf ? (compConf.renderFormItemContent || compConf.renderItemContent) : null
       if (defaultSlot) {
         contentVNs = $xeForm.callSlot(defaultSlot, params)
-      } else if (compConf && compConf.renderItemContent) {
-        contentVNs = getSlotVNs(compConf.renderItemContent(itemRender, params))
+      } else if (rftContent) {
+        contentVNs = getSlotVNs(rftContent(itemRender, params))
       } else if (field) {
         contentVNs = [XEUtils.toValueString(XEUtils.get(data, field))]
       }
