@@ -3,6 +3,13 @@ import { VxeGridConstructor, VxeGridPrivateMethods } from '../components/grid'
 
 declare module '@vxe-ui/core' {
   export namespace VxeGlobalInterceptorHandles {
+    export interface InterceptorOptions {
+      /**
+       * 表格 - 自定义菜单方法
+       */
+      tableInterceptorMethod?: (params: any) => any
+    }
+
     export type HookType = 'created' | 'mounted' | 'activated' | 'beforeUnmount' | 'unmounted'
     export type EventType = 'event.clearEdit' | 'event.clearActived' | 'event.clearFilter' | 'event.clearAreas' | 'event.showMenu' | 'event.keydown' | 'event.export' | 'event.import'
     export type Type = HookType | EventType

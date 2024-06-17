@@ -6,20 +6,25 @@ import { VxeTableDefines } from '../components/table'
 declare module '@vxe-ui/core' {
   export namespace VxeGlobalValidatorsHandles {
     export interface ValidatorsOptions {
-      formItemValidatorMethod?: ItemValidatorMethod
-      cellValidatorMethod?: CellValidatorMethod
+      formItemValidatorMethod?: FormItemValidatorMethod
+      tableCellValidatorMethod?: TableCellValidatorMethod
 
+      /**
+       * 已废弃，请使用 tableCellValidatorMethod
+       * @deprecated
+       */
+      cellValidatorMethod?: TableCellValidatorMethod
       /**
        * 已废弃，请使用 formItemValidatorMethod
        * @deprecated
        */
-      itemValidatorMethod?: ItemValidatorMethod
+      itemValidatorMethod?: FormItemValidatorMethod
     }
 
-    export type ItemValidatorMethod = (params: ItemValidatorParams, ...args: any[]) => void | Error | Promise<any>
-    export interface ItemValidatorParams extends VxeFormDefines.RuleValidatorParams {}
+    export type FormItemValidatorMethod = (params: FormItemValidatorParams, ...args: any[]) => void | Error | Promise<any>
+    export interface FormItemValidatorParams extends VxeFormDefines.RuleValidatorParams {}
 
-    export type CellValidatorMethod<D = any> = (params: CellValidatorParams<D>, ...args: any[]) => void | Error | Promise<any>
-    export interface CellValidatorParams<D = any> extends VxeTableDefines.RuleValidatorParams<D> {}
+    export type TableCellValidatorMethod<D = any> = (params: TableCellValidatorParams<D>, ...args: any[]) => void | Error | Promise<any>
+    export interface TableCellValidatorParams<D = any> extends VxeTableDefines.RuleValidatorParams<D> {}
   }
 }
