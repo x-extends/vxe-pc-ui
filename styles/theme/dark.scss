@@ -18,6 +18,7 @@
   --vxe-ui-font-tinge-color: #33353b; // 浅色字体颜色
   --vxe-ui-font-lighten-color: #{lighten($vxe-ui-font-color, 10%)};
   --vxe-ui-font-darken-color: #{darken($vxe-ui-font-color, 10%)};
+  --vxe-ui-font-disabled-color: #292a2a;
   
   /*font status color*/
   --vxe-ui-font-primary-color: #409eff;

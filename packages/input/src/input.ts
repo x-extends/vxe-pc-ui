@@ -1,10 +1,11 @@
-import { defineComponent, h, Teleport, ref, Ref, computed, reactive, inject, nextTick, watch, onUnmounted, PropType } from 'vue'
+import { defineComponent, h, Teleport, ref, Ref, computed, reactive, inject, nextTick, watch, onUnmounted, PropType, createCommentVNode } from 'vue'
 import XEUtils from 'xe-utils'
 import { getConfig, getIcon, getI18n, globalEvents, GLOBAL_EVENT_KEYS, createEvent, useSize, VxeComponentStyleType } from '../../ui'
 import { getFuncText, getLastZIndex, nextZIndex } from '../../ui/src/utils'
 import { hasClass, getAbsolutePos, getEventTargetNode } from '../../ui/src/dom'
 import { toStringTimeDate, getDateQuarter } from './date'
 import { handleNumber, toFloatValueFixed } from './number'
+import { getSlotVNs } from '../..//ui/src/vn'
 
 import type { VxeInputConstructor, VxeInputEmits, InputReactData, InputMethods, VxeInputPropTypes, InputPrivateRef, VxeFormConstructor, VxeFormPrivateMethods, VxeFormDefines } from '../../../types'
 
@@ -756,19 +757,15 @@ export default defineComponent({
       if (isNumType || ['text', 'search', 'password'].indexOf(type) > -1) {
         focus()
       }
+      emitModel('', evnt)
       inputMethods.dispatchEvent('clear', { value }, evnt)
     }
 
     const clickSuffixEvent = (evnt: Event) => {
       const { disabled } = props
       if (!disabled) {
-        if (hasClass(evnt.currentTarget, 'is--clear')) {
-          emitModel('', evnt)
-          clearValueEvent(evnt, '')
-        } else {
-          const { inputValue } = reactData
-          inputMethods.dispatchEvent('suffix-click', { value: inputValue }, evnt)
-        }
+        const { inputValue } = reactData
+        inputMethods.dispatchEvent('suffix-click', { value: inputValue }, evnt)
       }
     }
 
@@ -2155,45 +2152,49 @@ export default defineComponent({
           }, renders)
         ])
       }
-      return null
+      return createCommentVNode()
     }
 
     const renderNumberIcon = () => {
       const isDisabledAddNumber = computeIsDisabledAddNumber.value
       const isDisabledSubtractNumber = computeIsDisabledSubtractNumber.value
-      return h('span', {
-        class: 'vxe-input--number-suffix'
+      return h('div', {
+        class: 'vxe-input--control-icon'
       }, [
-        h('span', {
-          class: ['vxe-input--number-prev is--prev', {
-            'is--disabled': isDisabledAddNumber
-          }],
-          onMousedown: numberMousedownEvent,
-          onMouseup: numberStopDown,
-          onMouseleave: numberStopDown
+        h('div', {
+          class: 'vxe-input--number-icon'
         }, [
-          h('i', {
-            class: ['vxe-input--number-prev-icon', getIcon().INPUT_PREV_NUM]
-          })
-        ]),
-        h('span', {
-          class: ['vxe-input--number-next is--next', {
-            'is--disabled': isDisabledSubtractNumber
-          }],
-          onMousedown: numberMousedownEvent,
-          onMouseup: numberStopDown,
-          onMouseleave: numberStopDown
-        }, [
-          h('i', {
-            class: ['vxe-input--number-next-icon', getIcon().INPUT_NEXT_NUM]
-          })
+          h('div', {
+            class: ['vxe-input--number-btn is--prev', {
+              'is--disabled': isDisabledAddNumber
+            }],
+            onMousedown: numberMousedownEvent,
+            onMouseup: numberStopDown,
+            onMouseleave: numberStopDown
+          }, [
+            h('i', {
+              class: getIcon().INPUT_PREV_NUM
+            })
+          ]),
+          h('div', {
+            class: ['vxe-input--number-btn is--next', {
+              'is--disabled': isDisabledSubtractNumber
+            }],
+            onMousedown: numberMousedownEvent,
+            onMouseup: numberStopDown,
+            onMouseleave: numberStopDown
+          }, [
+            h('i', {
+              class: getIcon().INPUT_NEXT_NUM
+            })
+          ])
         ])
       ])
     }
 
     const renderDatePickerIcon = () => {
-      return h('span', {
-        class: 'vxe-input--date-picker-suffix',
+      return h('div', {
+        class: 'vxe-input--control-icon',
         onClick: datePickerOpenEvent
       }, [
         h('i', {
@@ -2203,8 +2204,8 @@ export default defineComponent({
     }
 
     const renderSearchIcon = () => {
-      return h('span', {
-        class: 'vxe-input--search-suffix',
+      return h('div', {
+        class: 'vxe-input--control-icon',
         onClick: searchEvent
       }, [
         h('i', {
@@ -2215,8 +2216,8 @@ export default defineComponent({
 
     const renderPasswordIcon = () => {
       const { showPwd } = reactData
-      return h('span', {
-        class: 'vxe-input--password-suffix',
+      return h('div', {
+        class: 'vxe-input--control-icon',
         onClick: passwordToggleEvent
       }, [
         h('i', {
@@ -2225,28 +2226,24 @@ export default defineComponent({
       ])
     }
 
-    const rendePrefixIcon = () => {
+    const renderPrefixIcon = () => {
       const { prefixIcon } = props
       const prefixSlot = slots.prefix
-      const icons = []
-      if (prefixSlot) {
-        icons.push(
-          h('span', {
-            class: 'vxe-input--prefix-icon'
-          }, prefixSlot({}))
-        )
-      } else if (prefixIcon) {
-        icons.push(
-          h('i', {
-            class: ['vxe-input--prefix-icon', prefixIcon]
-          })
-        )
-      }
-      return icons.length
-        ? h('span', {
+      return prefixSlot || prefixIcon
+        ? h('div', {
           class: 'vxe-input--prefix',
           onClick: clickPrefixEvent
-        }, icons)
+        }, [
+          h('div', {
+            class: 'vxe-input--prefix-icon'
+          }, prefixSlot
+            ? getSlotVNs(prefixSlot({}))
+            : [
+                h('i', {
+                  class: prefixIcon
+                })
+              ])
+        ])
         : null
     }
 
@@ -2254,35 +2251,42 @@ export default defineComponent({
       const { disabled, suffixIcon } = props
       const { inputValue } = reactData
       const suffixSlot = slots.suffix
+      const isNumType = computeIsNumType.value
+      const isDatePickerType = computeIsDatePickerType.value
+      const isPawdType = computeIsPawdType.value
+      const isSearchType = computeIsSearchType.value
       const isClearable = computeIsClearable.value
-      const icons = []
-      if (suffixSlot) {
-        icons.push(
-          h('span', {
-            class: 'vxe-input--suffix-icon'
-          }, suffixSlot({}))
-        )
-      } else if (suffixIcon) {
-        icons.push(
-          h('i', {
-            class: ['vxe-input--suffix-icon', suffixIcon]
-          })
-        )
-      }
-      if (isClearable) {
-        icons.push(
-          h('i', {
-            class: ['vxe-input--clear-icon', getIcon().INPUT_CLEAR]
-          })
-        )
-      }
-      return icons.length
-        ? h('span', {
+      const isExtraBtn = isPawdType || isNumType || isDatePickerType || isSearchType
+      return isClearable || suffixSlot || suffixIcon
+        ? h('div', {
           class: ['vxe-input--suffix', {
             'is--clear': isClearable && !disabled && !(inputValue === '' || XEUtils.eqNull(inputValue))
-          }],
-          onClick: clickSuffixEvent
-        }, icons)
+          }]
+        }, [
+          isClearable
+            ? h('div', {
+              class: 'vxe-input--clear-icon',
+              onClick: clearValueEvent
+            }, [
+              h('i', {
+                class: getIcon().INPUT_CLEAR
+              })
+            ])
+            : createCommentVNode(),
+          isExtraBtn ? renderExtraSuffixIcon() : createCommentVNode(),
+          suffixSlot || suffixIcon
+            ? h('div', {
+              class: 'vxe-input--suffix-icon',
+              onClick: clickSuffixEvent
+            }, suffixSlot
+              ? getSlotVNs(suffixSlot({}))
+              : [
+                  h('i', {
+                    class: suffixIcon
+                  })
+                ])
+            : createCommentVNode()
+        ])
         : null
     }
 
@@ -2292,23 +2296,21 @@ export default defineComponent({
       const isDatePickerType = computeIsDatePickerType.value
       const isPawdType = computeIsPawdType.value
       const isSearchType = computeIsSearchType.value
-      let icons
       if (isPawdType) {
-        icons = renderPasswordIcon()
-      } else if (isNumType) {
-        if (controls) {
-          icons = renderNumberIcon()
-        }
-      } else if (isDatePickerType) {
-        icons = renderDatePickerIcon()
-      } else if (isSearchType) {
-        icons = renderSearchIcon()
+        return renderPasswordIcon()
       }
-      return icons
-        ? h('span', {
-          class: 'vxe-input--extra-suffix'
-        }, [icons])
-        : null
+      if (isNumType) {
+        if (controls) {
+          return renderNumberIcon()
+        }
+      }
+      if (isDatePickerType) {
+        return renderDatePickerIcon()
+      }
+      if (isSearchType) {
+        return renderSearchIcon()
+      }
+      return createCommentVNode()
     }
 
     inputMethods = {
@@ -2391,63 +2393,14 @@ export default defineComponent({
       const vSize = computeSize.value
       const isCountError = computeIsCountError.value
       const inputCount = computeInputCount.value
-      const isDatePickerType = computeIsDatePickerType.value
       const inpReadonly = computeInpReadonly.value
       const inpMaxlength = computeInpMaxlength.value
       const inputType = computeInputType.value
       const inpPlaceholder = computeInpPlaceholder.value
-      const childs = []
-      const prefix = rendePrefixIcon()
+      const isClearable = computeIsClearable.value
+      const isWordCount = showWordCount && ['text', 'search'].includes(type)
+      const prefix = renderPrefixIcon()
       const suffix = renderSuffixIcon()
-      // 前缀图标
-      if (prefix) {
-        childs.push(prefix)
-      }
-      // 输入框
-      childs.push(
-        h('input', {
-          ref: refInputTarget,
-          class: 'vxe-input--inner',
-          value: inputValue,
-          name,
-          type: inputType,
-          placeholder: inpPlaceholder,
-          maxlength: inpMaxlength,
-          readonly: inpReadonly,
-          disabled,
-          autocomplete,
-          onKeydown: keydownEvent,
-          onKeyup: keyupEvent,
-          onWheel: wheelEvent,
-          onClick: clickEvent,
-          onInput: inputEvent,
-          onChange: changeEvent,
-          onFocus: focusEvent,
-          onBlur: blurEvent
-        })
-      )
-      // 后缀图标
-      if (suffix) {
-        childs.push(suffix)
-      }
-      // 特殊功能图标
-      childs.push(renderExtraSuffixIcon())
-      // 面板容器
-      if (isDatePickerType) {
-        childs.push(renderPanel())
-      }
-      let isWordCount = false
-      // 统计字数
-      if (showWordCount && ['text', 'search'].includes(type)) {
-        isWordCount = true
-        childs.push(
-          h('span', {
-            class: ['vxe-input--count', {
-              'is--error': isCountError
-            }]
-          }, countMethod ? `${countMethod({ value: inputValue })}` : `${inputCount}${inpMaxlength ? `/${inpMaxlength}` : ''}`)
-        )
-      }
       return h('div', {
         ref: refElem,
         class: ['vxe-input', `type--${type}`, className, {
@@ -2460,9 +2413,47 @@ export default defineComponent({
           'is--visivle': visiblePanel,
           'is--count': isWordCount,
           'is--disabled': disabled,
-          'is--active': isActivated
+          'is--active': isActivated,
+          'show--clear': isClearable && !disabled && !(inputValue === '' || XEUtils.eqNull(inputValue))
         }]
-      }, childs)
+      }, [
+        prefix || createCommentVNode(),
+        h('div', {
+          class: 'vxe-input--wrapper'
+        }, [
+          h('input', {
+            ref: refInputTarget,
+            class: 'vxe-input--inner',
+            value: inputValue,
+            name,
+            type: inputType,
+            placeholder: inpPlaceholder,
+            maxlength: inpMaxlength,
+            readonly: inpReadonly,
+            disabled,
+            autocomplete,
+            onKeydown: keydownEvent,
+            onKeyup: keyupEvent,
+            onWheel: wheelEvent,
+            onClick: clickEvent,
+            onInput: inputEvent,
+            onChange: changeEvent,
+            onFocus: focusEvent,
+            onBlur: blurEvent
+          })
+        ]),
+        suffix || createCommentVNode(),
+        // 下拉面板
+        renderPanel(),
+        // 字数统计
+        isWordCount
+          ? h('span', {
+            class: ['vxe-input--count', {
+              'is--error': isCountError
+            }]
+          }, countMethod ? `${countMethod({ value: inputValue })}` : `${inputCount}${inpMaxlength ? `/${inpMaxlength}` : ''}`)
+          : createCommentVNode()
+      ])
     }
 
     $xeInput.renderVN = renderVN

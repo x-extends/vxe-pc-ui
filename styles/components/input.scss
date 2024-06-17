@@ -1,19 +1,22 @@
 @import '../helpers/mixin.scss';
 
-$iconWidth: 1.6em;
-
+.vxe-input--wrapper {
+  flex-grow: 1;
+  overflow: hidden;
+}
 .vxe-input--inner {
+  display: block;
   width: 100%;
   height: 100%;
-  border-radius: var(--vxe-ui-base-border-radius);
   outline: 0;
   margin: 0;
   font-size: inherit;
   font-family: inherit;
   line-height: inherit;
-  padding: 0 0.6em;
+  padding: 0 0.5em;
   color: var(--vxe-ui-font-color);
-  border: 1px solid var(--vxe-ui-input-border-color);
+  border: 0;
+  border-radius: var(--vxe-ui-base-border-radius);
   background-color: var(--vxe-ui-layout-background-color);
   box-shadow: none;
   &::placeholder {
@@ -39,93 +42,106 @@ $iconWidth: 1.6em;
   }
 }
 
+// 禁用
 .vxe-input {
-  display: inline-block;
-  position: relative;
-  width: 180px;
   &.is--disabled {
-    .vxe-input--date-picker-suffix,
-    .vxe-input--search-suffix,
-    .vxe-input--suffix,
-    .vxe-input--password-suffix,
-    .vxe-input--number-suffix {
-      cursor: no-drop;
-    }
-  }
-  &:not(.is--disabled) {
-    .vxe-input--search-suffix,
+    .vxe-input--prefix,
+    .vxe-input--suffix-icon,
     .vxe-input--clear-icon,
-    .vxe-input--password-suffix,
-    .vxe-input--number-suffix {
-      cursor: pointer;
+    .vxe-input--control-icon {
+      cursor: not-allowed;
+      background-color: var(--vxe-ui-input-disabled-background-color);
     }
-    &.is--active {
-      .vxe-input--inner {
-        border: 1px solid var(--vxe-ui-font-primary-color);
-      }
-    }
-  }
-  .vxe-input--prefix,
-  .vxe-input--suffix,
-  .vxe-input--extra-suffix {
-    display: flex;
-    position: absolute;
-    top: 0;
-    width: $iconWidth;
-    height: 100%;
-    user-select: none;
-    align-items: center;
-    justify-content: center;
-    color: var(--vxe-ui-font-color);
   }
 }
 
+// 图标
+.vxe-input {
+  display: inline-flex;
+  flex-direction: row;
+  position: relative;
+  border-radius: var(--vxe-ui-base-border-radius);
+  width: 180px;
+  border: 1px solid var(--vxe-ui-input-border-color);
+  &.is--active {
+    border: 1px solid var(--vxe-ui-font-primary-color);
+  }
+  &.show--clear {
+    &:hover {
+      .vxe-input--clear-icon {
+        display: block;
+      }
+    }
+  }
+}
+.vxe-input--prefix,
+.vxe-input--suffix {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  flex-shrink: 0;
+}
+.vxe-input--prefix-icon {
+  padding-left: 0.5em;
+}
+.vxe-input--clear-icon,
+.vxe-input--control-icon,
+.vxe-input--suffix-icon {
+  padding-right: 0.5em;
+}
+.vxe-input--clear-icon,
+.vxe-input--control-icon {
+  height: 100%;
+  color: var(--vxe-ui-input-placeholder-color);
+  cursor: pointer;
+}
+.vxe-input--clear-icon {
+  display: none;
+  &:hover {
+    color: var(--vxe-ui-font-color);
+  }
+  &:active {
+    color: var(--vxe-ui-font-primary-color);
+  }
+}
+
+.vxe-input--number-btn {
+  height: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  &:hover {
+    color: var(--vxe-ui-font-color);
+  }
+  &:active {
+    color: var(--vxe-ui-font-primary-color);
+  }
+}
+.vxe-input--number-icon {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  .vxe-input--number-btn {
+    &.is--disabled {
+      cursor: no-drop;
+      color: var(--vxe-ui-font-disabled-color);
+    }
+  }
+}
+
+// 统计字数
 .vxe-input--count {
-  position: absolute;
-  top: 1px;
-  right: 0.5em;
-  height: calc(100% - 2px);
+  flex-shrink: 0;
   color: var(--vxe-ui-input-count-color);
   background-color: var(--vxe-ui-layout-background-color);
+  padding-right: 0.6em;
   &.is--error {
     color: var(--vxe-ui-input-count-error-color);
   }
 }
 
-// 前缀图标
+// 对齐方式
 .vxe-input {
-  .vxe-input--prefix {
-    left: 0.2em;
-  }
-  &.is--prefix {
-    .vxe-input--inner {
-      padding-left: $iconWidth + 0.2em;
-    }
-  }
-}
-
-// 后缀图标
-.vxe-input {
-  .vxe-input--clear-icon {
-    display: none;
-  }
-  .vxe-input--suffix,
-  .vxe-input--extra-suffix {
-    right: 0.2em;
-  }
-  &.is--suffix {
-    .vxe-input--inner {
-      padding-right: $iconWidth + 0.2em;
-    }
-    &.is--count {
-      .vxe-input--inner {
-        padding-right: 5em;
-      }
-    }
-    .vxe-input--count {
-      right: $iconWidth + 0.5em;
-    }
-  }
   &.is--left {
     .vxe-input--inner {
       text-align: left;
@@ -140,161 +156,6 @@ $iconWidth: 1.6em;
     .vxe-input--inner {
       text-align: right;
     }
-  }
-  &.is--count {
-    .vxe-input--inner {
-      padding-right: 3.4em;
-    }
-  }
-  &.is--controls {
-    &.type--search,
-    &.type--password,
-    &.type--number,
-    &.type--integer,
-    &.type--float,
-    &.type--date,
-    &.type--datetime,
-    &.type--week,
-    &.type--month,
-    &.type--quarter,
-    &.type--year,
-    &.type--time {
-      .vxe-input--inner {
-        padding-right: $iconWidth + 0.2em;
-      }
-      .vxe-input--suffix {
-        right: $iconWidth;
-      }
-    }
-  }
-  &.is--suffix {
-    &.is--controls {
-      &.type--search,
-      &.type--password,
-      &.type--number,
-      &.type--integer,
-      &.type--float,
-      &.type--date,
-      &.type--datetime,
-      &.type--week,
-      &.type--month,
-      &.type--quarter,
-      &.type--year,
-      &.type--time {
-        .vxe-input--inner {
-          padding-right: $iconWidth * 2;
-        }
-      }
-    }
-  }
-  &.is--suffix {
-    &:hover {
-      .vxe-input--suffix {
-        &.is--clear {
-          .vxe-input--suffix-icon {
-            display: none;
-          }
-          .vxe-input--clear-icon {
-            display: inline;
-          }
-        }
-      }
-    }
-  }
-  &:not(.is--disabled) {
-    .vxe-input--suffix {
-      &:hover {
-        .vxe-input--clear-icon {
-          color: var(--vxe-ui-font-color);
-        }
-      }
-      &:active {
-        .vxe-input--clear-icon {
-          color: var(--vxe-ui-font-primary-color);
-        }
-      }
-    }
-    .vxe-input--extra-suffix {
-      &:hover {
-        .vxe-input--search-suffix,
-        .vxe-input--password-suffix {
-          color: var(--vxe-ui-font-color);
-        }
-      }
-      &:active {
-        .vxe-input--search-suffix,
-        .vxe-input--password-suffix {
-          color: var(--vxe-ui-font-primary-color);
-        }
-      }
-    }
-    .vxe-input--number-prev,
-    .vxe-input--number-next {
-      &:hover {
-        color: var(--vxe-ui-font-color);
-      }
-      &:active {
-        color: var(--vxe-ui-font-primary-color);
-      }
-      &.is--disabled {
-        cursor: no-drop;
-        color: var(--vxe-ui-input-number-disabled-color);
-      }
-    }
-  }
-}
-
-.vxe-input {
-  .vxe-input--password-suffix,
-  .vxe-input--number-suffix,
-  .vxe-input--date-picker-suffix,
-  .vxe-input--search-suffix {
-    position: relative;
-    width: 100%;
-    height: 100%;
-  }
-
-  .vxe-input--date-picker-icon,
-  .vxe-input--search-icon,
-  .vxe-input--password-icon {
-    position: absolute;
-    left: 50%;
-    top: 50%;
-    transform: translate(-50%, -50%);
-    &[class*="vxe-icon-"] {
-      font-size: 1.2em;
-    }
-  }
-
-  .vxe-input--date-picker-suffix {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    .vxe-input--panel-icon {
-      @include createAnimationTransition(transform, .2s);
-    }
-  }
-
-  .vxe-input--number-prev,
-  .vxe-input--number-next {
-    position: relative;
-    display: block;
-    height: 50%;
-    width: 100%;
-    text-align: center;
-  }
-  .vxe-input--number-prev-icon,
-  .vxe-input--number-next-icon {
-    line-height: 0.8em;
-    position: absolute;
-    left: 50%;
-    transform: translateX(-50%);
-  }
-  .vxe-input--number-prev-icon {
-    bottom: 0;
-  }
-  .vxe-input--number-next-icon {
-    top: 0;
   }
 }
 

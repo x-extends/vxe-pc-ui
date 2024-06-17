@@ -11,9 +11,9 @@
       <vxe-input v-model="demo1.value200" placeholder="可清除" showWordCount></vxe-input>
       <vxe-input v-model="demo1.value200" placeholder="可清除" showWordCount maxlength="20"></vxe-input>
       <vxe-input v-model="demo1.value200" placeholder="可清除" showWordCount clearable></vxe-input>
-      <vxe-input v-model="demo1.value201" placeholder="带图标" prefix-icon="fa fa-user" suffix-icon="fa fa-search" clearable></vxe-input>
-      <vxe-input v-model="demo1.value202" placeholder="只读的" suffix-icon="fa fa-search" readonly></vxe-input>
-      <vxe-input v-model="demo1.value203" placeholder="禁用的" prefix-icon="fa fa-user-o" disabled></vxe-input>
+      <vxe-input v-model="demo1.value201" placeholder="带图标" prefix-icon="vxe-icon-time" suffix-icon="vxe-icon-time" clearable></vxe-input>
+      <vxe-input v-model="demo1.value202" placeholder="只读的" suffix-icon="vxe-icon-time" readonly></vxe-input>
+      <vxe-input v-model="demo1.value203" placeholder="禁用的" prefix-icon="vxe-icon-time" disabled></vxe-input>
     </p>
 
     <p>
@@ -71,22 +71,22 @@
     <p>
       <vxe-input v-model="demo1.value600" placeholder="自定义前缀图标">
         <template #prefix>
-          <i class="fa fa-search my-red"></i>
+          <i class="vxe-icon-time my-red"></i>
         </template>
       </vxe-input>
       <vxe-input v-model="demo1.value601" placeholder="自定义后缀图标">
         <template #suffix>
-          <i class="fa fa-search my-green"></i>
+          <i class="vxe-icon-time my-green"></i>
         </template>
       </vxe-input>
-      <vxe-input v-model="demo1.value602" class="my-domain" placeholder="自定义前缀模板">
+      <vxe-input v-model="demo1.value602" placeholder="自定义前缀模板">
         <template #prefix>
           <span>Http://</span>
         </template>
       </vxe-input>
-      <vxe-input v-model="demo1.value603" class="my-search" placeholder="自定义后缀模板">
+      <vxe-input v-model="demo1.value603" placeholder="自定义后缀模板">
         <template #suffix>
-          <i class="fa fa-search"></i>
+          <i class="vxe-icon-time"></i>
         </template>
       </vxe-input>
     </p>
@@ -250,38 +250,5 @@ const festivalCalendarMethod: VxeInputPropTypes.FestivalMethod = (params) => {
 }
 .my-green {
   color: green;
-}
-.my-domain.vxe-input {
-  height: 34px;
-  width: 300px;
-}
-.my-domain.vxe-input:deep() .vxe-input--prefix {
-  width: 60px;
-  height: 32px;
-  top: 1px;
-  text-align: center;
-  border-right: 1px solid #dcdfe6;
-  background-color: #f5f7fa;
-}
-.my-domain.vxe-input:deep() .vxe-input--inner {
-  padding-left: 72px;
-  border: 1px solid #dcdfe6;
-}
-.my-search.vxe-input {
-  height: 34px;
-  width: 300px;
-}
-.my-search.vxe-input:deep() .vxe-input--suffix {
-  width: 60px;
-  height: 32px;
-  top: 1px;
-  text-align: center;
-  border-left: 1px solid #dcdfe6;
-  background-color: #f5f7fa;
-  cursor: pointer;
-}
-.my-search.vxe-input:deep() .vxe-input--inner {
-  padding-right: 72px;
-  border: 1px solid #dcdfe6;
 }
 </style>
