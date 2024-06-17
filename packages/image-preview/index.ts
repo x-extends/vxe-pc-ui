@@ -7,6 +7,7 @@ import { openPreviewImage } from '../image/src/util'
 export const VxeImagePreview = Object.assign(VxeImagePreviewComponent, {
   install (app: App) {
     app.component(VxeImagePreviewComponent.name as string, VxeImagePreviewComponent)
+    VxeUI.component(VxeImagePreviewComponent)
     VxeUI.previewImage = openPreviewImage
   }
 })

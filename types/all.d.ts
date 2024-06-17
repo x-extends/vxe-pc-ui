@@ -75,80 +75,86 @@ import VxeToolbar from './components/toolbar'
 
 export function install (app: App, options?: VxeGlobalConfig): void
 
-declare module '@vue/runtime-core' {
-  export interface GlobalComponents {
-    VxeAlert: typeof VxeAlert
-    VxeAnchor: typeof VxeAnchor
-    VxeAnchorLink: typeof VxeAnchorLink
-    VxeBreadcrumb: typeof VxeBreadcrumb
-    VxeBreadcrumbItem: typeof VxeBreadcrumbItem
-    VxeButton: typeof VxeButton
-    VxeButtonGroup: typeof VxeButtonGroup
-    VxeCalendar: typeof VxeCalendar
-    VxeCard: typeof VxeCard
-    VxeCarousel: typeof VxeCarousel
-    VxeCheckbox: typeof VxeCheckbox
-    VxeCheckboxGroup: typeof VxeCheckboxGroup
-    VxeCol: typeof VxeCol
-    VxeCollapse: typeof VxeCollapse
-    VxeCollapsePane: typeof VxeCollapsePane
-    VxeDatePicker: typeof VxeDatePicker
-    VxeDrawer: typeof VxeDrawer
-    VxeFlowDesign: typeof VxeFlowDesign
-    VxeFlowView: typeof VxeFlowView
-    VxeForm: typeof VxeForm
-    VxeFormDesign: typeof VxeFormDesign
-    VxeFormGather: typeof VxeFormGather
-    VxeFormItem: typeof VxeFormItem
-    VxeFormView: typeof VxeFormView
-    VxeIcon: typeof VxeIcon
-    VxeImage: typeof VxeImage
-    VxeImagePreview: typeof VxeImagePreview
-    VxeInput: typeof VxeInput
-    VxeLayoutAside: typeof VxeLayoutAside
-    VxeLayoutBody: typeof VxeLayoutBody
-    VxeLayoutContainer: typeof VxeLayoutContainer
-    VxeLayoutFooter: typeof VxeLayoutFooter
-    VxeLayoutHeader: typeof VxeLayoutHeader
-    VxeLink: typeof VxeLink
-    VxeListDesign: typeof VxeListDesign
-    VxeListView: typeof VxeListView
-    VxeList: typeof VxeList
-    VxeLoading: typeof VxeLoading
-    VxeMenu: typeof VxeMenu
-    VxeModal: typeof VxeModal
-    VxeNumberInput: typeof VxeNumberInput
-    VxeOptgroup: typeof VxeOptgroup
-    VxeOption: typeof VxeOption
-    VxePager: typeof VxePager
-    VxePasswordInput: typeof VxePasswordInput
-    VxePrintPageBreak: typeof VxePrintPageBreak
-    VxePrint: typeof VxePrint
-    VxePulldown: typeof VxePulldown
-    VxeRadio: typeof VxeRadio
-    VxeRadioButton: typeof VxeRadioButton
-    VxeRadioGroup: typeof VxeRadioGroup
-    VxeRow: typeof VxeRow
-    VxeSelect: typeof VxeSelect
-    VxeSwitch: typeof VxeSwitch
-    VxeTabPane: typeof VxeTabPane
-    VxeTabs: typeof VxeTabs
-    VxeTag: typeof VxeTag
-    VxeText: typeof VxeText
-    VxeTextarea: typeof VxeTextarea
-    VxeTip: typeof VxeTip
-    VxeTooltip: typeof VxeTooltip
-    VxeTree: typeof VxeTree
-    VxeTreeSelect: typeof VxeTreeSelect
-    VxeUpload: typeof VxeUpload
+interface AllComponents {
+  VxeAlert: typeof VxeAlert
+  VxeAnchor: typeof VxeAnchor
+  VxeAnchorLink: typeof VxeAnchorLink
+  VxeBreadcrumb: typeof VxeBreadcrumb
+  VxeBreadcrumbItem: typeof VxeBreadcrumbItem
+  VxeButton: typeof VxeButton
+  VxeButtonGroup: typeof VxeButtonGroup
+  VxeCalendar: typeof VxeCalendar
+  VxeCard: typeof VxeCard
+  VxeCarousel: typeof VxeCarousel
+  VxeCheckbox: typeof VxeCheckbox
+  VxeCheckboxGroup: typeof VxeCheckboxGroup
+  VxeCol: typeof VxeCol
+  VxeCollapse: typeof VxeCollapse
+  VxeCollapsePane: typeof VxeCollapsePane
+  VxeDatePicker: typeof VxeDatePicker
+  VxeDrawer: typeof VxeDrawer
+  VxeFlowDesign: typeof VxeFlowDesign
+  VxeFlowView: typeof VxeFlowView
+  VxeForm: typeof VxeForm
+  VxeFormDesign: typeof VxeFormDesign
+  VxeFormGather: typeof VxeFormGather
+  VxeFormItem: typeof VxeFormItem
+  VxeFormView: typeof VxeFormView
+  VxeIcon: typeof VxeIcon
+  VxeImage: typeof VxeImage
+  VxeImagePreview: typeof VxeImagePreview
+  VxeInput: typeof VxeInput
+  VxeLayoutAside: typeof VxeLayoutAside
+  VxeLayoutBody: typeof VxeLayoutBody
+  VxeLayoutContainer: typeof VxeLayoutContainer
+  VxeLayoutFooter: typeof VxeLayoutFooter
+  VxeLayoutHeader: typeof VxeLayoutHeader
+  VxeLink: typeof VxeLink
+  VxeListDesign: typeof VxeListDesign
+  VxeListView: typeof VxeListView
+  VxeList: typeof VxeList
+  VxeLoading: typeof VxeLoading
+  VxeMenu: typeof VxeMenu
+  VxeModal: typeof VxeModal
+  VxeNumberInput: typeof VxeNumberInput
+  VxeOptgroup: typeof VxeOptgroup
+  VxeOption: typeof VxeOption
+  VxePager: typeof VxePager
+  VxePasswordInput: typeof VxePasswordInput
+  VxePrintPageBreak: typeof VxePrintPageBreak
+  VxePrint: typeof VxePrint
+  VxePulldown: typeof VxePulldown
+  VxeRadio: typeof VxeRadio
+  VxeRadioButton: typeof VxeRadioButton
+  VxeRadioGroup: typeof VxeRadioGroup
+  VxeRow: typeof VxeRow
+  VxeSelect: typeof VxeSelect
+  VxeSwitch: typeof VxeSwitch
+  VxeTabPane: typeof VxeTabPane
+  VxeTabs: typeof VxeTabs
+  VxeTag: typeof VxeTag
+  VxeText: typeof VxeText
+  VxeTextarea: typeof VxeTextarea
+  VxeTip: typeof VxeTip
+  VxeTooltip: typeof VxeTooltip
+  VxeTree: typeof VxeTree
+  VxeTreeSelect: typeof VxeTreeSelect
+  VxeUpload: typeof VxeUpload
 
-    // Vxe Table
-    VxeColumn: typeof VxeColumn
-    VxeColgroup: typeof VxeColgroup
-    VxeTable: typeof VxeTable
-    VxeGrid: typeof VxeGrid
-    VxeToolbar: typeof VxeToolbar
-  }
+  // Vxe Table
+  VxeColumn: typeof VxeColumn
+  VxeColgroup: typeof VxeColgroup
+  VxeTable: typeof VxeTable
+  VxeGrid: typeof VxeGrid
+  VxeToolbar: typeof VxeToolbar
+}
+
+declare module '@vue/runtime-core' {
+  export interface GlobalComponents extends AllComponents {}
+}
+
+declare module '@vxe-ui/core' {
+  export interface VxeGlobalComponents extends AllComponents {}
 }
 
 export * from './ui'

@@ -60,13 +60,15 @@ $btnThemeList: (
 );
 
 .vxe-button {
+  display: inline-flex;
+  flex-direction: row;
+  align-items: center;
   position: relative;
   text-align: center;
   background-color: var(--vxe-ui-layout-background-color);
   outline: 0;
   font-size: var(--vxe-ui-font-size-default);
   max-width: var(--vxe-ui-button-max-width);
-  line-height: 1.5;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;

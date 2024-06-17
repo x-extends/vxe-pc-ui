@@ -47,7 +47,7 @@ export default {
     table: {
       emptyText: 'データがありません',
       allTitle: '全て選択/取消',
-      seqTitle: '#',
+      seqTitle: 'N/S',
       confirmFilter: 'OK',
       resetFilter: 'リセット',
       allFilter: '全て',
@@ -272,6 +272,7 @@ export default {
       }
     },
     imagePreview: {
+      popupTitle: 'Preview',
       operBtn: {
         zoomOut: 'Reduce',
         zoomIn: 'Enlarge',

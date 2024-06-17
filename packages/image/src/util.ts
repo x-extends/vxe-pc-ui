@@ -19,6 +19,7 @@ export const openPreviewImage: VxeImageDefines.PreviewImageFunction = (options) 
       height: '100%',
       showHeader: false,
       showFooter: false,
+      padding: false,
       escClosable: opts.escClosable,
       className: 'vxe-image-preview-popup-wrapper',
       slots: {

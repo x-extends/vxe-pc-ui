@@ -47,7 +47,7 @@ export default {
     table: {
       emptyText: '暂无数据',
       allTitle: '全选/取消',
-      seqTitle: '#',
+      seqTitle: '序号',
       confirmFilter: '筛选',
       resetFilter: '重置',
       allFilter: '全部',
@@ -272,6 +272,7 @@ export default {
       }
     },
     imagePreview: {
+      popupTitle: '预览',
       operBtn: {
         zoomOut: '缩小',
         zoomIn: '放大',

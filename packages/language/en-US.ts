@@ -47,7 +47,7 @@ export default {
     table: {
       emptyText: 'No Data',
       allTitle: 'Select all / cancel',
-      seqTitle: '#',
+      seqTitle: 'N/S',
       confirmFilter: 'Confirm',
       resetFilter: 'Reset',
       allFilter: 'All',
@@ -272,6 +272,7 @@ export default {
       }
     },
     imagePreview: {
+      popupTitle: 'Preview',
       operBtn: {
         zoomOut: 'Reduce',
         zoomIn: 'Enlarge',

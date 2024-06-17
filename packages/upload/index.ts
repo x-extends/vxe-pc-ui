@@ -7,6 +7,7 @@ import { saveLocalFile, readLocalFile } from './src/util'
 export const VxeUpload = Object.assign({}, VxeUploadComponent, {
   install (app: App) {
     app.component(VxeUploadComponent.name as string, VxeUploadComponent)
+    VxeUI.component(VxeUploadComponent)
     VxeUI.saveFile = saveLocalFile
     VxeUI.readFile = readLocalFile
   }
