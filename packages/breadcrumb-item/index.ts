@@ -6,11 +6,11 @@ import { dynamicApp } from '../dynamics'
 export const VxeBreadcrumbItem = Object.assign({}, VxeBreadcrumbItemComponent, {
   install (app: App) {
     app.component(VxeBreadcrumbItemComponent.name as string, VxeBreadcrumbItemComponent)
-    VxeUI.component(VxeBreadcrumbItemComponent)
   }
 })
 
 dynamicApp.component(VxeBreadcrumbItemComponent.name as string, VxeBreadcrumbItemComponent)
+VxeUI.component(VxeBreadcrumbItemComponent)
 
 export const BreadcrumbItem = VxeBreadcrumbItem
 export default VxeBreadcrumbItem

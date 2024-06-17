@@ -6,11 +6,11 @@ import { dynamicApp } from '../dynamics'
 export const VxeAnchor = Object.assign({}, VxeAnchorComponent, {
   install (app: App) {
     app.component(VxeAnchorComponent.name as string, VxeAnchorComponent)
-    VxeUI.component(VxeAnchorComponent)
   }
 })
 
 dynamicApp.component(VxeAnchorComponent.name as string, VxeAnchorComponent)
+VxeUI.component(VxeAnchorComponent)
 
 export const Anchor = VxeAnchor
 export default VxeAnchor

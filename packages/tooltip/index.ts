@@ -6,11 +6,11 @@ import { dynamicApp } from '../dynamics'
 export const VxeTooltip = Object.assign({}, VxeTooltipComponent, {
   install (app: App) {
     app.component(VxeTooltipComponent.name as string, VxeTooltipComponent)
-    VxeUI.component(VxeTooltipComponent)
   }
 })
 
 dynamicApp.component(VxeTooltipComponent.name as string, VxeTooltipComponent)
+VxeUI.component(VxeTooltipComponent)
 
 export const Tooltip = VxeTooltip
 export default VxeTooltip

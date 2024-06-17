@@ -6,11 +6,11 @@ import { dynamicApp } from '../dynamics'
 export const VxeLayoutContainer = Object.assign({}, VxeLayoutContainerComponent, {
   install (app: App) {
     app.component(VxeLayoutContainerComponent.name as string, VxeLayoutContainerComponent)
-    VxeUI.component(VxeLayoutContainerComponent)
   }
 })
 
 dynamicApp.component(VxeLayoutContainerComponent.name as string, VxeLayoutContainerComponent)
+VxeUI.component(VxeLayoutContainerComponent)
 
 export const LayoutContainer = VxeLayoutContainer
 export default VxeLayoutContainer

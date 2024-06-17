@@ -6,11 +6,11 @@ import { dynamicApp } from '../dynamics'
 export const VxeLink = Object.assign({}, VxeLinkComponent, {
   install (app: App) {
     app.component(VxeLinkComponent.name as string, VxeLinkComponent)
-    VxeUI.component(VxeLinkComponent)
   }
 })
 
 dynamicApp.component(VxeLinkComponent.name as string, VxeLinkComponent)
+VxeUI.component(VxeLinkComponent)
 
 export const Link = VxeLink
 export default VxeLink

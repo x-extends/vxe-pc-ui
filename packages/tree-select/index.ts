@@ -6,11 +6,11 @@ import { dynamicApp } from '../dynamics'
 export const VxeTreeSelect = Object.assign({}, VxeTreeSelectComponent, {
   install (app: App) {
     app.component(VxeTreeSelectComponent.name as string, VxeTreeSelectComponent)
-    VxeUI.component(VxeTreeSelectComponent)
   }
 })
 
 dynamicApp.component(VxeTreeSelectComponent.name as string, VxeTreeSelectComponent)
+VxeUI.component(VxeTreeSelectComponent)
 
 export const TreeSelect = VxeTreeSelect
 export default VxeTreeSelect

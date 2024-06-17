@@ -6,11 +6,11 @@ import { dynamicApp } from '../dynamics'
 export const VxeFormGather = Object.assign(VxeFormGatherComponent, {
   install (app: App) {
     app.component(VxeFormGatherComponent.name as string, VxeFormGatherComponent)
-    VxeUI.component(VxeFormGatherComponent)
   }
 })
 
 dynamicApp.component(VxeFormGatherComponent.name as string, VxeFormGatherComponent)
+VxeUI.component(VxeFormGatherComponent)
 
 export const FormGather = VxeFormGather
 export default VxeFormGather

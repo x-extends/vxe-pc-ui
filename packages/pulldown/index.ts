@@ -6,11 +6,11 @@ import { dynamicApp } from '../dynamics'
 export const VxePulldown = Object.assign(VxePulldownComponent, {
   install: function (app: App) {
     app.component(VxePulldownComponent.name as string, VxePulldownComponent)
-    VxeUI.component(VxePulldownComponent)
   }
 })
 
 dynamicApp.component(VxePulldownComponent.name as string, VxePulldownComponent)
+VxeUI.component(VxePulldownComponent)
 
 export const Pulldown = VxePulldown
 export default VxePulldown

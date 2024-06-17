@@ -7,11 +7,11 @@ export const VxeDatePicker = Object.assign({}, VxeDatePickerComponent, {
   install (app: App) {
     app.component(VxeDatePickerComponent.name as string, VxeDatePickerComponent)
     app.component('VxeDateInput', VxeDatePickerComponent)
-    VxeUI.component(VxeDatePickerComponent)
   }
 })
 
 dynamicApp.component(VxeDatePickerComponent.name as string, VxeDatePickerComponent)
+VxeUI.component(VxeDatePickerComponent)
 
 export const DatePicker = VxeDatePicker
 export default VxeDatePicker

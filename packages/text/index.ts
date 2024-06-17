@@ -6,11 +6,11 @@ import { dynamicApp } from '../dynamics'
 export const VxeText = Object.assign({}, VxeTextComponent, {
   install (app: App) {
     app.component(VxeTextComponent.name as string, VxeTextComponent)
-    VxeUI.component(VxeTextComponent)
   }
 })
 
 dynamicApp.component(VxeTextComponent.name as string, VxeTextComponent)
+VxeUI.component(VxeTextComponent)
 
 export const Text = VxeText
 export default VxeText

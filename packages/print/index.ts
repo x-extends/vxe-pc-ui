@@ -7,12 +7,12 @@ import { printHtml } from './src/util'
 export const VxePrint = Object.assign({}, VxePrintComponent, {
   install (app: App) {
     app.component(VxePrintComponent.name as string, VxePrintComponent)
-    VxeUI.component(VxePrintComponent)
     VxeUI.print = printHtml
   }
 })
 
 dynamicApp.component(VxePrintComponent.name as string, VxePrintComponent)
+VxeUI.component(VxePrintComponent)
 
 export const Print = VxePrint
 export default VxePrint

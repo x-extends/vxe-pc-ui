@@ -6,11 +6,11 @@ import { dynamicApp } from '../dynamics'
 export const VxePager = Object.assign(VxePagerComponent, {
   install: function (app: App) {
     app.component(VxePagerComponent.name as string, VxePagerComponent)
-    VxeUI.component(VxePagerComponent)
   }
 })
 
 dynamicApp.component(VxePagerComponent.name as string, VxePagerComponent)
+VxeUI.component(VxePagerComponent)
 
 export const Pager = VxePager
 export default VxePager

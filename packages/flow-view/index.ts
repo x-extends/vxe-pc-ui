@@ -6,11 +6,11 @@ import { dynamicApp } from '../dynamics'
 export const VxeFlowView = Object.assign({}, VxeFlowViewComponent, {
   install (app: App) {
     app.component(VxeFlowViewComponent.name as string, VxeFlowViewComponent)
-    VxeUI.component(VxeFlowViewComponent)
   }
 })
 
 dynamicApp.component(VxeFlowViewComponent.name as string, VxeFlowViewComponent)
+VxeUI.component(VxeFlowViewComponent)
 
 export const FlowView = VxeFlowView
 export default VxeFlowView

@@ -6,11 +6,11 @@ import { dynamicApp } from '../dynamics'
 export const VxeTextarea = Object.assign(VxeTextareaComponent, {
   install: function (app: App) {
     app.component(VxeTextareaComponent.name as string, VxeTextareaComponent)
-    VxeUI.component(VxeTextareaComponent)
   }
 })
 
 dynamicApp.component(VxeTextareaComponent.name as string, VxeTextareaComponent)
+VxeUI.component(VxeTextareaComponent)
 
 export const Textarea = VxeTextarea
 export default VxeTextarea

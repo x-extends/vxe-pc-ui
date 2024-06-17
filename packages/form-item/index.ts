@@ -6,11 +6,11 @@ import { dynamicApp } from '../dynamics'
 export const VxeFormItem = Object.assign(VxeFormItemComponent, {
   install (app: App) {
     app.component(VxeFormItemComponent.name as string, VxeFormItemComponent)
-    VxeUI.component(VxeFormItemComponent)
   }
 })
 
 dynamicApp.component(VxeFormItemComponent.name as string, VxeFormItemComponent)
+VxeUI.component(VxeFormItemComponent)
 
 export const FormItem = VxeFormItem
 export default VxeFormItem

@@ -6,11 +6,11 @@ import { dynamicApp } from '../dynamics'
 export const VxeTabs = Object.assign({}, VxeTabsComponent, {
   install (app: App) {
     app.component(VxeTabsComponent.name as string, VxeTabsComponent)
-    VxeUI.component(VxeTabsComponent)
   }
 })
 
 dynamicApp.component(VxeTabsComponent.name as string, VxeTabsComponent)
+VxeUI.component(VxeTabsComponent)
 
 export const Tabs = VxeTabs
 export default VxeTabs

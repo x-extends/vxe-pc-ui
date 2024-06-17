@@ -6,11 +6,11 @@ import { dynamicApp } from '../dynamics'
 export const VxeRadio = Object.assign(VxeRadioComponent, {
   install: function (app: App) {
     app.component(VxeRadioComponent.name as string, VxeRadioComponent)
-    VxeUI.component(VxeRadioComponent)
   }
 })
 
 dynamicApp.component(VxeRadioComponent.name as string, VxeRadioComponent)
+VxeUI.component(VxeRadioComponent)
 
 export const Radio = VxeRadio
 export default VxeRadio

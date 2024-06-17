@@ -7,11 +7,11 @@ import './render'
 export const VxeForm = Object.assign(VxeFormComponent, {
   install (app: App) {
     app.component(VxeFormComponent.name as string, VxeFormComponent)
-    VxeUI.component(VxeFormComponent)
   }
 })
 
 dynamicApp.component(VxeFormComponent.name as string, VxeFormComponent)
+VxeUI.component(VxeFormComponent)
 
 export const Form = VxeForm
 export default VxeForm

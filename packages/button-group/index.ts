@@ -6,11 +6,11 @@ import { dynamicApp } from '../dynamics'
 export const VxeButtonGroup = Object.assign({}, VxeButtonGroupComponent, {
   install (app: App) {
     app.component(VxeButtonGroupComponent.name as string, VxeButtonGroupComponent)
-    VxeUI.component(VxeButtonGroupComponent)
   }
 })
 
 dynamicApp.component(VxeButtonGroupComponent.name as string, VxeButtonGroupComponent)
+VxeUI.component(VxeButtonGroupComponent)
 
 export const ButtonGroup = VxeButtonGroup
 export default VxeButtonGroup

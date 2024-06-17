@@ -6,11 +6,11 @@ import { dynamicApp } from '../dynamics'
 export const VxePasswordInput = Object.assign({}, VxePasswordInputComponent, {
   install (app: App) {
     app.component(VxePasswordInputComponent.name as string, VxePasswordInputComponent)
-    VxeUI.component(VxePasswordInputComponent)
   }
 })
 
 dynamicApp.component(VxePasswordInputComponent.name as string, VxePasswordInputComponent)
+VxeUI.component(VxePasswordInputComponent)
 
 export const PasswordInput = VxePasswordInput
 export default VxePasswordInput
