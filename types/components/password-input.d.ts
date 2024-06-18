@@ -1,5 +1,5 @@
 import { RenderFunction, SetupContext, Ref, ComponentPublicInstance, DefineComponent } from 'vue'
-import { defineVxeComponent, VxeComponentBaseOptions, VxeComponentEventParams, ValueOf } from '@vxe-ui/core'
+import { defineVxeComponent, VxeComponentBaseOptions, VxeComponentEventParams, ValueOf, VxeComponentSizeType } from '@vxe-ui/core'
 
 /* eslint-disable no-use-before-define,@typescript-eslint/ban-types */
 
@@ -39,7 +39,6 @@ export type VxePasswordInputProps = {
   modelValue?: VxePasswordInputPropTypes.ModelValue
   className?: VxePasswordInputPropTypes.ClassName
   name?: VxePasswordInputPropTypes.Name
-  type?: VxePasswordInputPropTypes.Type
   clearable?: VxePasswordInputPropTypes.Clearable
   readonly?: VxePasswordInputPropTypes.Readonly
   disabled?: VxePasswordInputPropTypes.Disabled

@@ -282,7 +282,7 @@ export namespace VxeFormDefines {
     data: D
     field: string
   }
-  export interface ValidateErrorParams {
+  export interface ValidateErrorParams<D = any> {
     $form: VxeFormConstructor,
     rule: VxeFormDefines.FormRule<D>
     data: any

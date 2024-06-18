@@ -311,26 +311,22 @@ export default defineComponent({
       const el = refElem.value
       if (el) {
         for (let i = 0; i < fields.length; i++) {
-          const property = fields[i]
-          const item = getItemByField(property)
+          const field = fields[i]
+          const item = getItemByField(field)
           if (item && isEnableConf(item.itemRender)) {
             const { itemRender } = item
             const compConf = renderer.get(itemRender.name)
-            let inputElem: HTMLInputElement | null = null
             // 定位到第一个
             if (!i) {
               scrollToView(el.querySelector(`.${item.id}`))
             }
+            let inputElem: HTMLElement | null = null
+            const autofocus = compConf ? compConf.formItemAutoFocus : null
             // 如果指定了聚焦 class
-            if (itemRender.autofocus) {
-              inputElem = el.querySelector(`.${item.id} ${itemRender.autofocus}`) as HTMLInputElement
-            }
-            // 渲染器的聚焦处理
-            if (!inputElem) {
-              const formItemAutoFocus = compConf ? compConf.formItemAutoFocus : null
-              if (formItemAutoFocus) {
-                inputElem = el.querySelector(`.${item.id} ${formItemAutoFocus}`) as HTMLInputElement
-              }
+            if (XEUtils.isFunction(autofocus)) {
+              inputElem = autofocus({ $form: $xeForm, $grid: $xeGrid, item, data: props.data, field })
+            } else if (autofocus) {
+              inputElem = el.querySelector(`.${item.id} ${autofocus}`) as HTMLInputElement
             }
             if (inputElem) {
               inputElem.focus()

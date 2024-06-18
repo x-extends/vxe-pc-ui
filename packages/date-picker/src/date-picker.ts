@@ -4,7 +4,7 @@ import { getConfig, getIcon, getI18n, globalEvents, GLOBAL_EVENT_KEYS, createEve
 import { getFuncText, getLastZIndex, nextZIndex } from '../../ui/src/utils'
 import { hasClass, getAbsolutePos, getEventTargetNode } from '../../ui/src/dom'
 
-import type { VxeInputConstructor, VxeInputEmits, InputReactData, InputMethods, VxeDatePickerPropTypes, InputPrivateRef, VxeFormConstructor, VxeFormPrivateMethods, VxeFormDefines } from '../../../types'
+import type { VxeDatePickerConstructor, VxeDatePickerEmits, DatePickerReactData, DatePickerMethods, VxeDatePickerPropTypes, DatePickerPrivateRef, VxeFormConstructor, VxeFormPrivateMethods, VxeFormDefines } from '../../../types'
 
 interface DateYearItem {
   date: Date;
@@ -162,16 +162,12 @@ export default defineComponent({
     'focus',
     'blur',
     'clear',
-    'search-click',
-    'toggle-visible',
-    'prev-number',
-    'next-number',
     'prefix-click',
     'suffix-click',
     'date-prev',
     'date-today',
     'date-next'
-  ] as VxeInputEmits,
+  ] as VxeDatePickerEmits,
   setup (props, context) {
     const { slots, emit } = context
     const $xeForm = inject<VxeFormConstructor & VxeFormPrivateMethods | null>('$xeForm', null)
@@ -181,7 +177,7 @@ export default defineComponent({
 
     const { computeSize } = useSize(props)
 
-    const reactData = reactive<InputReactData>({
+    const reactData = reactive<DatePickerReactData>({
       inited: false,
       panelIndex: 0,
       showPwd: false,
@@ -204,20 +200,20 @@ export default defineComponent({
     const refInputPanel = ref() as Ref<HTMLDivElement>
     const refInputTimeBody = ref() as Ref<HTMLDivElement>
 
-    const refMaps: InputPrivateRef = {
+    const refMaps: DatePickerPrivateRef = {
       refElem,
       refInput: refInputTarget
     }
 
-    const $xeInput = {
+    const $xeDatePicker = {
       xID,
       props,
       context,
       reactData,
       getRefMaps: () => refMaps
-    } as unknown as VxeInputConstructor
+    } as unknown as VxeDatePickerConstructor
 
-    let inputMethods = {} as InputMethods
+    let datePickerMethods = {} as DatePickerMethods
 
     const parseDate = (value: VxeDatePickerPropTypes.ModelValue, format: string) => {
       const { type } = props
@@ -607,15 +603,15 @@ export default defineComponent({
 
     const triggerEvent = (evnt: Event & { type: 'input' | 'change' | 'keydown' | 'keyup' | 'wheel' | 'click' | 'focus' | 'blur' }) => {
       const { inputValue } = reactData
-      inputMethods.dispatchEvent(evnt.type, { value: inputValue }, evnt)
+      datePickerMethods.dispatchEvent(evnt.type, { value: inputValue }, evnt)
     }
 
     const emitModel = (value: string, evnt: Event | { type: string }) => {
       reactData.inputValue = value
       emit('update:modelValue', value)
-      inputMethods.dispatchEvent('input', { value }, evnt as any)
+      datePickerMethods.dispatchEvent('input', { value }, evnt as any)
       if (XEUtils.toValueString(props.modelValue) !== value) {
-        inputMethods.dispatchEvent('change', { value }, evnt as any)
+        datePickerMethods.dispatchEvent('change', { value }, evnt as any)
         // 自动更新校验状态
         if ($xeForm && formItemInfo) {
           $xeForm.triggerItemEvent(evnt, formItemInfo.itemConfig.field, value)
@@ -631,7 +627,7 @@ export default defineComponent({
         if (inpImmediate) {
           emitModel(value, evnt)
         } else {
-          inputMethods.dispatchEvent('input', { value }, evnt)
+          datePickerMethods.dispatchEvent('input', { value }, evnt)
         }
       }
     }
@@ -662,7 +658,7 @@ export default defineComponent({
       const { disabled } = props
       if (!disabled) {
         const { inputValue } = reactData
-        inputMethods.dispatchEvent('prefix-click', { value: inputValue }, evnt)
+        datePickerMethods.dispatchEvent('prefix-click', { value: inputValue }, evnt)
       }
     }
 
@@ -683,7 +679,7 @@ export default defineComponent({
       if (isDatePickerType) {
         hidePanel()
       }
-      inputMethods.dispatchEvent('clear', { value }, evnt)
+      datePickerMethods.dispatchEvent('clear', { value }, evnt)
     }
 
     const clickSuffixEvent = (evnt: Event) => {
@@ -694,7 +690,7 @@ export default defineComponent({
           clearValueEvent(evnt, '')
         } else {
           const { inputValue } = reactData
-          inputMethods.dispatchEvent('suffix-click', { value: inputValue }, evnt)
+          datePickerMethods.dispatchEvent('suffix-click', { value: inputValue }, evnt)
         }
       }
     }
@@ -874,7 +870,7 @@ export default defineComponent({
       if (!reactData.visiblePanel) {
         reactData.isActivated = false
       }
-      inputMethods.dispatchEvent('blur', { value: inputValue }, evnt)
+      datePickerMethods.dispatchEvent('blur', { value: inputValue }, evnt)
     }
 
     const keydownEvent = (evnt: KeyboardEvent & { type: 'keydown' }) => {
@@ -928,7 +924,7 @@ export default defineComponent({
             reactData.selectMonth = XEUtils.getWhatMonth(selectMonth, -1, 'first')
           }
         }
-        inputMethods.dispatchEvent('date-prev', { type }, evnt)
+        datePickerMethods.dispatchEvent('date-prev', { type }, evnt)
       }
     }
 
@@ -938,7 +934,7 @@ export default defineComponent({
         dateChange(reactData.currentDate)
         hidePanel()
       }
-      inputMethods.dispatchEvent('date-today', { type: props.type }, evnt)
+      datePickerMethods.dispatchEvent('date-today', { type: props.type }, evnt)
     }
 
     const dateNextEvent = (evnt: Event) => {
@@ -963,14 +959,14 @@ export default defineComponent({
             reactData.selectMonth = XEUtils.getWhatMonth(selectMonth, 1, 'first')
           }
         }
-        inputMethods.dispatchEvent('date-next', { type }, evnt)
+        datePickerMethods.dispatchEvent('date-next', { type }, evnt)
       }
     }
 
     const isDateDisabled = (item: { date: Date }) => {
       const { disabledMethod } = props
       const { datePanelType } = reactData
-      return disabledMethod && disabledMethod({ type: datePanelType, viewType: datePanelType, date: item.date, $input: $xeInput })
+      return disabledMethod && disabledMethod({ type: datePanelType, viewType: datePanelType, date: item.date, $datePicker: $xeDatePicker })
     }
 
     const dateSelectItem = (date: Date) => {
@@ -1476,7 +1472,7 @@ export default defineComponent({
       const { festivalMethod } = props
       if (festivalMethod) {
         const { datePanelType } = reactData
-        const festivalRest = festivalMethod({ type: datePanelType, viewType: datePanelType, date: item.date, $input: $xeInput })
+        const festivalRest = festivalMethod({ type: datePanelType, viewType: datePanelType, date: item.date, $datePicker: $xeDatePicker })
         const festivalItem = festivalRest ? (XEUtils.isString(festivalRest) ? { label: festivalRest } : festivalRest) : {}
         const extraItem = festivalItem.extra ? (XEUtils.isString(festivalItem.extra) ? { label: festivalItem.extra } : festivalItem.extra) : null
         const labels = [
@@ -1993,9 +1989,9 @@ export default defineComponent({
         : null
     }
 
-    inputMethods = {
+    datePickerMethods = {
       dispatchEvent (type, params, evnt) {
-        emit(type, createEvent(evnt, { $input: $xeInput }, params))
+        emit(type, createEvent(evnt, { $input: $xeDatePicker }, params))
       },
 
       focus () {
@@ -2021,7 +2017,7 @@ export default defineComponent({
       updatePlacement
     }
 
-    Object.assign($xeInput, inputMethods)
+    Object.assign($xeDatePicker, datePickerMethods)
 
     watch(() => props.modelValue, (val) => {
       reactData.inputValue = val
@@ -2051,17 +2047,17 @@ export default defineComponent({
     })
 
     nextTick(() => {
-      globalEvents.on($xeInput, 'mousewheel', handleGlobalMousewheelEvent)
-      globalEvents.on($xeInput, 'mousedown', handleGlobalMousedownEvent)
-      globalEvents.on($xeInput, 'keydown', handleGlobalKeydownEvent)
-      globalEvents.on($xeInput, 'blur', handleGlobalBlurEvent)
+      globalEvents.on($xeDatePicker, 'mousewheel', handleGlobalMousewheelEvent)
+      globalEvents.on($xeDatePicker, 'mousedown', handleGlobalMousedownEvent)
+      globalEvents.on($xeDatePicker, 'keydown', handleGlobalKeydownEvent)
+      globalEvents.on($xeDatePicker, 'blur', handleGlobalBlurEvent)
     })
 
     onUnmounted(() => {
-      globalEvents.off($xeInput, 'mousewheel')
-      globalEvents.off($xeInput, 'mousedown')
-      globalEvents.off($xeInput, 'keydown')
-      globalEvents.off($xeInput, 'blur')
+      globalEvents.off($xeDatePicker, 'mousewheel')
+      globalEvents.off($xeDatePicker, 'mousedown')
+      globalEvents.off($xeDatePicker, 'keydown')
+      globalEvents.off($xeDatePicker, 'blur')
     })
 
     initValue()
@@ -2127,9 +2123,9 @@ export default defineComponent({
       }, childs)
     }
 
-    $xeInput.renderVN = renderVN
+    $xeDatePicker.renderVN = renderVN
 
-    return $xeInput
+    return $xeDatePicker
   },
   render () {
     return this.renderVN()

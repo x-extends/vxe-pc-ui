@@ -4,7 +4,7 @@ import { VxeFormItemPropTypes, FormItemTitleRenderParams, FormItemContentRenderP
 import { VxeGridConstructor } from '../components/grid'
 import { VxeColumnPropTypes } from '../components/column'
 import { VxeToolbarPropTypes } from '../components/toolbar'
-import { VxeFormDefines, VxeFormProps } from '../components/form'
+import { VxeFormConstructor, VxeFormDefines, VxeFormProps } from '../components/form'
 import { VxeFormDesignDefines, VxeFormDesignConstructor } from '../components/form-design'
 import { VxeFormViewDefines } from '../components/form-view'
 
@@ -504,9 +504,9 @@ declare module '@vxe-ui/core' {
 declare module '@vxe-ui/core' {
   export interface VxeGlobalRendererOptions {
     /**
-     * 表单项 - 设置自动聚焦元素
+     * 表单项 - 设置自动聚焦元素 class
      */
-    formItemAutoFocus?: string
+    formItemAutoFocus?: string | ((params: VxeGlobalRendererHandles.RenderFormItemAutoFocusParams) => HTMLElement | null)
     /**
      * 表单项 - 设置表单项的 class
      */
@@ -601,6 +601,14 @@ declare module '@vxe-ui/core' {
   }
 
   export namespace VxeGlobalRendererHandles {
+    export interface RenderFormItemAutoFocusParams {
+      $form: VxeFormConstructor
+      $grid: VxeGridConstructor | null
+      data: any
+      item: VxeFormDefines.ItemInfo
+      field: string
+    }
+
     /**
      * @deprecated
      */

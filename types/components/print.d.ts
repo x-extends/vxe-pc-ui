@@ -34,10 +34,10 @@ export namespace VxePrintPropTypes {
   export type ShowPageNumber = boolean
   export type CustomStyle = string
   export type ShowAllPageTitle = boolean
-  export type HeaderHtml = string | ((params: VxePrintDefines.PageBreakParam) => string)
-  export type FooterHtml = string | ((params: VxePrintDefines.PageBreakParam) => string)
-  export type LeftHtml = string | ((params: VxePrintDefines.PageBreakParam) => string)
-  export type RightHtml = string | ((params: VxePrintDefines.PageBreakParam) => string)
+  export type HeaderHtml = string | ((params: VxePrintDefines.PageBreakParams) => string)
+  export type FooterHtml = string | ((params: VxePrintDefines.PageBreakParams) => string)
+  export type LeftHtml = string | ((params: VxePrintDefines.PageBreakParams) => string)
+  export type RightHtml = string | ((params: VxePrintDefines.PageBreakParams) => string)
   export type BeforeMethod = (params: {
     html: string
     options: VxePrintProps
@@ -104,7 +104,7 @@ export namespace VxePrintDefines {
   }
 
   export interface PageBreakObj {
-    bodyHtml?: string | ((params: VxePrintDefines.PageBreakParam) => string)
+    bodyHtml?: string | ((params: VxePrintDefines.PageBreakParams) => string)
     headerHtml?: string | VxePrintPropTypes.HeaderHtml
     footerHtml?: string | VxePrintPropTypes.FooterHtml
     leftHtml?: string | VxePrintPropTypes.LeftHtml

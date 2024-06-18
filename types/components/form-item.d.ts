@@ -119,7 +119,7 @@ export namespace VxeFormItemPropTypes {
     autofocus?: string
     defaultValue?: ((params: { item: VxeFormItemProps }) => any) | null | undefined | string | number | RegExp | object | any[] | Date
   }
-  export type Rules = VxeFormDefines.FormRule[]
+  export type Rules<D = any> = VxeFormDefines.FormRule<D>[]
   export type Slots = {
     title?: string | ((params: FormItemTitleRenderParams) => VxeComponentSlotType | VxeComponentSlotType[]) | null
     default?: string | ((params: FormItemContentRenderParams) => VxeComponentSlotType | VxeComponentSlotType[]) | null

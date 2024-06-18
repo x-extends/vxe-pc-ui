@@ -1,5 +1,5 @@
 import { RenderFunction, SetupContext, Ref, ComponentPublicInstance, DefineComponent } from 'vue'
-import { defineVxeComponent, VxeComponentBaseOptions, VxeComponentEventParams, ValueOf } from '@vxe-ui/core'
+import { defineVxeComponent, VxeComponentBaseOptions, VxeComponentEventParams, ValueOf, VxeComponentStyleType, VxeComponentSizeType } from '@vxe-ui/core'
 
 /* eslint-disable no-use-before-define,@typescript-eslint/ban-types */
 
@@ -19,6 +19,7 @@ export interface VxeDatePickerConstructor extends VxeComponentBaseOptions, VxeDa
 
 export interface DatePickerPrivateRef {
   refElem: Ref<HTMLDivElement | undefined>
+  refInput: Ref<HTMLInputElement>
 }
 export interface VxeDatePickerPrivateRef extends DatePickerPrivateRef { }
 
@@ -126,6 +127,21 @@ export interface DatePickerPrivateComputed {
 export interface VxeDatePickerPrivateComputed extends DatePickerPrivateComputed { }
 
 export interface DatePickerReactData {
+  inited: boolean
+  panelIndex: number
+  showPwd: boolean
+  visiblePanel: boolean
+  animatVisible: boolean
+  panelStyle: VxeComponentStyleType | null
+  panelPlacement: VxeDatePickerPropTypes.Placement
+  isActivated: boolean
+  inputValue: any
+  datetimePanelValue: any
+  datePanelValue: Date | null
+  datePanelLabel: string
+  datePanelType: DatePanelType
+  selectMonth: any
+  currentDate: any
 }
 
 export interface DatePickerMethods {
@@ -157,7 +173,25 @@ export interface VxeDatePickerMethods extends DatePickerMethods { }
 export interface DatePickerPrivateMethods { }
 export interface VxeDatePickerPrivateMethods extends DatePickerPrivateMethods { }
 
-export type VxeDatePickerEmits = []
+export type VxeDatePickerEmits = [
+  'update:modelValue',
+  'input',
+  'change',
+  'keydown',
+  'keyup',
+  'wheel',
+  'click',
+  'focus',
+  'blur',
+  'clear',
+  'prefix-click',
+  'suffix-click',
+  'date-prev',
+  'date-today',
+  'date-next'
+]
+
+type DatePanelType = 'year' | 'quarter' | 'month' | 'week' | 'day'
 
 export namespace VxeDatePickerDefines {
   export interface DatePickerEventParams extends VxeComponentEventParams {
@@ -192,14 +226,14 @@ export namespace VxeDatePickerDefines {
   }
 
   export interface DateFestivalParams {
-    $input: VxeInputConstructor
+    $datePicker: VxeDatePickerConstructor
     type: string
     viewType: DatePanelType
     date: Date
   }
 
   export interface DateDisabledParams {
-    $input: VxeInputConstructor
+    $datePicker: VxeDatePickerConstructor
     type: string
     viewType: DatePanelType
     date: Date

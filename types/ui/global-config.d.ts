@@ -83,10 +83,8 @@ declare module '@vxe-ui/core' {
     checkbox?: VxeCheckboxProps
     checkboxGroup?: VxeCheckboxGroupProps
     col?: VxeColProps
-    colgroup?: VxeColgroupProps
     collapse?: VxeCollapseProps
     collapsePane?: VxeCollapsePaneProps
-    column?: VxeColumnProps
     datePicker?: VxeDatePickerProps
     drawer?: VxeDrawerProps
     form?: VxeFormProps
