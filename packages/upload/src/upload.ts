@@ -11,6 +11,10 @@ export default defineComponent({
   name: 'VxeUpload',
   props: {
     modelValue: Array as PropType<VxeUploadPropTypes.ModelValue>,
+    showList: {
+      type: Boolean as PropType<VxeUploadPropTypes.ShowList>,
+      default: () => getConfig().upload.showList
+    },
     readonly: Boolean as PropType<VxeUploadPropTypes.Readonly>,
     disabled: Boolean as PropType<VxeUploadPropTypes.Disabled>,
     mode: {
@@ -492,71 +496,73 @@ export default defineComponent({
               }, tipSlot ? getSlotVNs(tipSlot({ $upload: $xeUpload })) : defHintText)
               : createCommentVNode()
           ]),
-        h('div', {
-          class: 'vxe-upload--file-list'
-        }, fileList.map((item, index) => {
-          const isLoading = item._X_DATA && item._X_DATA.l
-          const isError = item._X_DATA && item._X_DATA.s === 'error'
-          return h('div', {
-            key: index,
-            class: ['vxe-upload--file-item', {
-              'is--loading': isLoading,
-              'is--error': isError
-            }]
-          }, [
-            h('div', {
-              class: 'vxe-upload--file-item-icon'
+        fileList.length
+          ? h('div', {
+            class: 'vxe-upload--file-list'
+          }, fileList.map((item, index) => {
+            const isLoading = item._X_DATA && item._X_DATA.l
+            const isError = item._X_DATA && item._X_DATA.s === 'error'
+            return h('div', {
+              key: index,
+              class: ['vxe-upload--file-item', {
+                'is--loading': isLoading,
+                'is--error': isError
+              }]
             }, [
-              h('i', {
-                class: getIcon()[`UPLOAD_FILE_TYPE_${`${item[typeProp]}`.toLocaleUpperCase() as 'DEFAULT'}`] || getIcon().UPLOAD_FILE_TYPE_DEFAULT
-              })
-            ]),
-            h('div', {
-              class: 'vxe-upload--file-item-name'
-            }, `${item[nameProp] || ''}`),
-            isLoading
-              ? h('div', {
-                class: 'vxe-upload--file-item-loading-icon'
+              h('div', {
+                class: 'vxe-upload--file-item-icon'
               }, [
                 h('i', {
-                  class: getIcon().UPLOAD_LOADING
+                  class: getIcon()[`UPLOAD_FILE_TYPE_${`${item[typeProp]}`.toLocaleUpperCase() as 'DEFAULT'}`] || getIcon().UPLOAD_FILE_TYPE_DEFAULT
                 })
-              ])
-              : createCommentVNode(),
-            showProgress && isLoading && item._X_DATA
-              ? h('div', {
-                class: 'vxe-upload--file-item-loading-text'
-              }, getI18n('vxe.upload.uploadProgress', [item._X_DATA.p]))
-              : createCommentVNode(),
-            showErrorStatus && isError
-              ? h('div', {
-                class: 'vxe-upload--image-item-error'
-              }, [
-                h(VxeButtonComponent, {
-                  icon: getIcon().UPLOAD_IMAGE_RE_UPLOAD,
-                  mode: 'text',
-                  status: 'primary',
-                  content: getI18n('vxe.upload.reUpload'),
-                  onClick () {
-                    handleReUpload(item)
+              ]),
+              h('div', {
+                class: 'vxe-upload--file-item-name'
+              }, `${item[nameProp] || ''}`),
+              isLoading
+                ? h('div', {
+                  class: 'vxe-upload--file-item-loading-icon'
+                }, [
+                  h('i', {
+                    class: getIcon().UPLOAD_LOADING
+                  })
+                ])
+                : createCommentVNode(),
+              showProgress && isLoading && item._X_DATA
+                ? h('div', {
+                  class: 'vxe-upload--file-item-loading-text'
+                }, getI18n('vxe.upload.uploadProgress', [item._X_DATA.p]))
+                : createCommentVNode(),
+              showErrorStatus && isError
+                ? h('div', {
+                  class: 'vxe-upload--image-item-error'
+                }, [
+                  h(VxeButtonComponent, {
+                    icon: getIcon().UPLOAD_IMAGE_RE_UPLOAD,
+                    mode: 'text',
+                    status: 'primary',
+                    content: getI18n('vxe.upload.reUpload'),
+                    onClick () {
+                      handleReUpload(item)
+                    }
+                  })
+                ])
+                : createCommentVNode(),
+              !readonly && !disabled && !isLoading
+                ? h('div', {
+                  class: 'vxe-upload--file-item-remove-icon',
+                  onClick (evnt: MouseEvent) {
+                    handleRemoveEvent(evnt, item, index)
                   }
-                })
-              ])
-              : createCommentVNode(),
-            !readonly && !disabled && !isLoading
-              ? h('div', {
-                class: 'vxe-upload--file-item-remove-icon',
-                onClick (evnt: MouseEvent) {
-                  handleRemoveEvent(evnt, item, index)
-                }
-              }, [
-                h('i', {
-                  class: getIcon().UPLOAD_FILE_DELETE
-                })
-              ])
-              : createCommentVNode()
-          ])
-        }))
+                }, [
+                  h('i', {
+                    class: getIcon().UPLOAD_FILE_DELETE
+                  })
+                ])
+                : createCommentVNode()
+            ])
+          }))
+          : createCommentVNode()
       ])
     }
 

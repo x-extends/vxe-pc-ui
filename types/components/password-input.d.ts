@@ -32,6 +32,8 @@ export namespace VxePasswordInputPropTypes {
   export type Disabled = boolean
   export type Placeholder = string
   export type Autocomplete = string
+  export type PrefixIcon = string
+  export type SuffixIcon = string
 }
 
 export type VxePasswordInputProps = {
@@ -44,6 +46,8 @@ export type VxePasswordInputProps = {
   disabled?: VxePasswordInputPropTypes.Disabled
   placeholder?: VxePasswordInputPropTypes.Placeholder
   autocomplete?: VxePasswordInputPropTypes.Autocomplete
+  prefixIcon?: VxeInputPropTypes.PrefixIcon
+  suffixIcon?: VxeInputPropTypes.SuffixIcon
 }
 
 export interface PasswordInputPrivateComputed {
@@ -84,7 +88,9 @@ export type VxePasswordInputEmits = [
   'focus',
   'blur',
   'clear',
-  'toggle-visible'
+  'toggle-visible',
+  'prefix-click',
+  'suffix-click'
 ]
 
 export namespace VxePasswordInputDefines {

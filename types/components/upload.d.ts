@@ -24,6 +24,7 @@ export interface VxeUploadPrivateRef extends UploadPrivateRef { }
 
 export namespace VxeUploadPropTypes {
   export type ModelValue = VxeUploadDefines.FileObjItem[]
+  export type ShowList = boolean
   export type Mode = null | '' | 'all' | 'image'
   export type Readonly = boolean
   export type Disabled = boolean
@@ -59,6 +60,7 @@ export namespace VxeUploadPropTypes {
 
 export type VxeUploadProps = {
   modelValue?: VxeUploadPropTypes.ModelValue
+  showList?: VxeUploadPropTypes.ShowList
   mode?: VxeUploadPropTypes.Mode
   readonly?: VxeUploadPropTypes.Readonly
   disabled?: VxeUploadPropTypes.Disabled

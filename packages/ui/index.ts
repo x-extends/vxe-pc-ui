@@ -197,7 +197,8 @@ setConfig({
   treeSelect: {},
   upload: {
     mode: 'all',
-    imageTypes: ['jpg', 'jpeg', 'png', 'gif']
+    imageTypes: ['jpg', 'jpeg', 'png', 'gif'],
+    showList: true
   }
 })
 

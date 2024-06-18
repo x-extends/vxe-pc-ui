@@ -100,7 +100,7 @@ declare module '@vxe-ui/core' {
     /**
      * 表格 - 空数据时渲染
      */
-    renderTableEmptyView?(renderOpts: VxeGlobalRendererHandles.RenderTableEmptyViewOptions, params: VxeGlobalRendererHandles.RenderTableEmptyParams): VxeComponentSlotType | VxeComponentSlotType[]
+    renderTableEmpty?(renderOpts: VxeGlobalRendererHandles.RenderTableEmptyOptions, params: VxeGlobalRendererHandles.RenderTableEmptyParams): VxeComponentSlotType | VxeComponentSlotType[]
 
     /**
      * 已废弃，请使用 tableFilterMethod
@@ -220,7 +220,8 @@ declare module '@vxe-ui/core' {
      * 已废弃，请使用 renderTableEmptyView
      * @deprecated
      */
-    renderEmpty?(renderOpts: VxeGlobalRendererHandles.RenderTableEmptyViewOptions, params: VxeGlobalRendererHandles.RenderTableEmptyParams): VxeComponentSlotType | VxeComponentSlotType[]
+    renderEmpty?(renderOpts: VxeGlobalRendererHandles.RenderTableEmptyOptions, params: VxeGlobalRendererHandles.RenderTableEmptyParams): VxeComponentSlotType | VxeComponentSlotType[]
+    renderTableEmptyView?(renderOpts: VxeGlobalRendererHandles.RenderTableEmptyOptions, params: VxeGlobalRendererHandles.RenderTableEmptyParams): VxeComponentSlotType | VxeComponentSlotType[]
   }
 
   export namespace VxeGlobalRendererHandles {
@@ -410,7 +411,7 @@ declare module '@vxe-ui/core' {
     export interface RenderExpandParams<D = any> extends RenderTableExpandParams<D> {}
     export interface RenderTableExpandParams<D = any> extends RenderTableEditParams<D> {}
 
-    export type RenderTableEmptyViewOptions = VxeTablePropTypes.EmptyRender
+    export type RenderTableEmptyOptions = VxeTablePropTypes.EmptyRender
 
     /**
      * @deprecated
@@ -623,37 +624,37 @@ declare module '@vxe-ui/core' {
      * @deprecated
      */
     export type RenderItemTitleOptions = RenderFormItemTitleOptions
-    export type RenderFormItemTitleOptions = VxeFormItemPropTypes.ItemRender
+    export interface RenderFormItemTitleOptions extends VxeFormItemPropTypes.ItemRender {}
 
     /**
      * @deprecated
      */
     export type RenderItemTitleParams = RenderFormItemTitleParams
-    export type RenderFormItemTitleParams = FormItemTitleRenderParams
+    export interface RenderFormItemTitleParams extends FormItemTitleRenderParams {}
 
     /**
      * @deprecated
      */
     export type RenderItemContentOptions = RenderFormItemContentOptions
-    export type RenderFormItemContentOptions = VxeFormItemPropTypes.ItemRender
+    export interface RenderFormItemContentOptions extends VxeFormItemPropTypes.ItemRender {}
 
     /**
      * @deprecated
      */
     export type RenderItemContentParams = RenderFormItemContentParams
-    export type RenderFormItemContentParams = FormItemContentRenderParams
+    export interface RenderFormItemContentParams extends FormItemContentRenderParams {}
 
     /**
      * @deprecated
      */
     export type ItemVisibleMethodParams = FormItemVisibleMethodParams
-    export type FormItemVisibleMethodParams = FormItemVisibleParams
+    export interface FormItemVisibleMethodParams extends FormItemVisibleParams {}
 
     /**
      * @deprecated
      */
     export type ItemResetMethodParams = FormItemResetMethodParams
-    export type FormItemResetMethodParams = FormItemResetParams
+    export interface FormItemResetMethodParams extends FormItemResetParams {}
   }
 }
 

@@ -19,38 +19,42 @@
   border-radius: var(--vxe-ui-base-border-radius);
   background-color: var(--vxe-ui-layout-background-color);
   box-shadow: none;
-  &::placeholder {
-    color: var(--vxe-ui-input-placeholder-color);
-  }
-  &::-webkit-autofill {
-    background-color: var(--vxe-ui-layout-background-color);
-  }
-  &[type="number"] {
-    appearance: none;
-    -moz-appearance: textfield;
-  }
-  &[type="search"],
-  &[type="search"]::-webkit-search-cancel-button,
-  &[type="number"]::-webkit-outer-spin-button,
-  &[type="number"]::-webkit-inner-spin-button {
-    appearance: none;
-  }
-  &[disabled] {
-    cursor: not-allowed;
-    color: var(--vxe-ui-font-disabled-color);
-    background-color: var(--vxe-ui-input-disabled-background-color);
+}
+.vxe-input {
+  .vxe-input--inner {
+    &::placeholder {
+      color: var(--vxe-ui-input-placeholder-color);
+    }
+    &::-webkit-autofill {
+      background-color: var(--vxe-ui-layout-background-color);
+    }
+    &[type="number"] {
+      appearance: none;
+      -moz-appearance: textfield;
+    }
+    &[type="search"],
+    &[type="search"]::-webkit-search-cancel-button,
+    &[type="number"]::-webkit-outer-spin-button,
+    &[type="number"]::-webkit-inner-spin-button {
+      appearance: none;
+    }
+    &[disabled] {
+      cursor: not-allowed;
+      color: var(--vxe-ui-font-disabled-color);
+      background-color: var(--vxe-ui-input-disabled-background-color);
+    }
   }
 }
 
 // 禁用
 .vxe-input {
   &.is--disabled {
+    background-color: var(--vxe-ui-input-disabled-background-color);
     .vxe-input--prefix,
-    .vxe-input--suffix-icon,
+    .vxe-input--suffix,
     .vxe-input--clear-icon,
     .vxe-input--control-icon {
       cursor: not-allowed;
-      background-color: var(--vxe-ui-input-disabled-background-color);
     }
   }
 }
@@ -88,6 +92,10 @@
 .vxe-input--control-icon,
 .vxe-input--suffix-icon {
   padding-right: 0.5em;
+}
+.vxe-input--prefix-icon,
+.vxe-input--suffix-icon {
+  color: var(--vxe-ui-input-placeholder-color);
 }
 .vxe-input--clear-icon,
 .vxe-input--control-icon {

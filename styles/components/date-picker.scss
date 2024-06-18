@@ -1,19 +1,22 @@
 @import '../helpers/mixin.scss';
 
-$iconWidth: 1.6em;
-
+.vxe-date-picker--wrapper {
+  flex-grow: 1;
+  overflow: hidden;
+}
 .vxe-date-picker--inner {
+  display: block;
   width: 100%;
   height: 100%;
-  border-radius: var(--vxe-ui-base-border-radius);
   outline: 0;
   margin: 0;
   font-size: inherit;
   font-family: inherit;
   line-height: inherit;
-  padding: 0 0.6em;
+  padding: 0 0.5em;
   color: var(--vxe-ui-font-color);
-  border: 1px solid var(--vxe-ui-input-border-color);
+  border: 0;
+  border-radius: var(--vxe-ui-base-border-radius);
   background-color: var(--vxe-ui-layout-background-color);
   box-shadow: none;
   &::placeholder {
@@ -22,6 +25,16 @@ $iconWidth: 1.6em;
   &::-webkit-autofill {
     background-color: var(--vxe-ui-layout-background-color);
   }
+  &[type="number"] {
+    appearance: none;
+    -moz-appearance: textfield;
+  }
+  &[type="search"],
+  &[type="search"]::-webkit-search-cancel-button,
+  &[type="number"]::-webkit-outer-spin-button,
+  &[type="number"]::-webkit-inner-spin-button {
+    appearance: none;
+  }
   &[disabled] {
     cursor: not-allowed;
     color: var(--vxe-ui-font-disabled-color);
@@ -29,89 +42,106 @@ $iconWidth: 1.6em;
   }
 }
 
+// 禁用
 .vxe-date-picker {
-  display: inline-block;
-  position: relative;
-  width: 180px;
   &.is--disabled {
-    .vxe-date-picker--date-picker-suffix,
-    .vxe-date-picker--search-suffix,
-    .vxe-date-picker--suffix {
-      cursor: no-drop;
+    .vxe-date-picker--prefix,
+    .vxe-date-picker--suffix-icon,
+    .vxe-date-picker--clear-icon,
+    .vxe-date-picker--control-icon {
+      cursor: not-allowed;
+      background-color: var(--vxe-ui-input-disabled-background-color);
     }
-  }
-  &:not(.is--disabled) {
-    .vxe-date-picker--search-suffix,
-    .vxe-date-picker--clear-icon {
-      cursor: pointer;
-    }
-    &.is--active {
-      .vxe-date-picker--inner {
-        border: 1px solid var(--vxe-ui-font-primary-color);
-      }
-    }
-  }
-  .vxe-date-picker--prefix,
-  .vxe-date-picker--suffix,
-  .vxe-date-picker--extra-suffix {
-    display: flex;
-    position: absolute;
-    top: 0;
-    width: $iconWidth;
-    height: 100%;
-    user-select: none;
-    align-items: center;
-    justify-content: center;
-    color: var(--vxe-ui-font-color);
   }
 }
 
+// 图标
+.vxe-date-picker {
+  display: inline-flex;
+  flex-direction: row;
+  position: relative;
+  border-radius: var(--vxe-ui-base-border-radius);
+  width: 180px;
+  border: 1px solid var(--vxe-ui-input-border-color);
+  &.is--active {
+    border: 1px solid var(--vxe-ui-font-primary-color);
+  }
+  &.show--clear {
+    &:hover {
+      .vxe-date-picker--clear-icon {
+        display: block;
+      }
+    }
+  }
+}
+.vxe-date-picker--prefix,
+.vxe-date-picker--suffix {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  flex-shrink: 0;
+}
+.vxe-date-picker--prefix-icon {
+  padding-left: 0.5em;
+}
+.vxe-date-picker--clear-icon,
+.vxe-date-picker--control-icon,
+.vxe-date-picker--suffix-icon {
+  padding-right: 0.5em;
+}
+.vxe-date-picker--clear-icon,
+.vxe-date-picker--control-icon {
+  height: 100%;
+  color: var(--vxe-ui-input-placeholder-color);
+  cursor: pointer;
+}
+.vxe-date-picker--clear-icon {
+  display: none;
+  &:hover {
+    color: var(--vxe-ui-font-color);
+  }
+  &:active {
+    color: var(--vxe-ui-font-primary-color);
+  }
+}
+
+.vxe-date-picker--number-btn {
+  height: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  &:hover {
+    color: var(--vxe-ui-font-color);
+  }
+  &:active {
+    color: var(--vxe-ui-font-primary-color);
+  }
+}
+.vxe-date-picker--number-icon {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  .vxe-date-picker--number-btn {
+    &.is--disabled {
+      cursor: no-drop;
+      color: var(--vxe-ui-font-disabled-color);
+    }
+  }
+}
+
+// 统计字数
 .vxe-date-picker--count {
-  position: absolute;
-  top: 1px;
-  right: 0.5em;
-  height: calc(100% - 2px);
+  flex-shrink: 0;
   color: var(--vxe-ui-input-count-color);
   background-color: var(--vxe-ui-layout-background-color);
+  padding-right: 0.6em;
   &.is--error {
     color: var(--vxe-ui-input-count-error-color);
   }
 }
 
-// 前缀图标
+// 对齐方式
 .vxe-date-picker {
-  .vxe-date-picker--prefix {
-    left: 0.2em;
-  }
-  &.is--prefix {
-    .vxe-date-picker--inner {
-      padding-left: $iconWidth + 0.2em;
-    }
-  }
-}
-
-// 后缀图标
-.vxe-date-picker {
-  .vxe-date-picker--clear-icon {
-    display: none;
-  }
-  .vxe-date-picker--suffix,
-  .vxe-date-picker--extra-suffix {
-    right: 0.2em;
-  }
-  &.is--suffix {
-    .vxe-date-picker--inner {
-      padding-right: $iconWidth + 0.2em;
-    }
-    &.is--count {
-      .vxe-date-picker--inner {
-        padding-right: 5em;
-      }
-    }
-    .vxe-date-picker--count {
-      right: $iconWidth + 0.5em;
-    }
-  }
   &.is--left {
     .vxe-date-picker--inner {
       text-align: left;
@@ -125,98 +155,6 @@ $iconWidth: 1.6em;
   &.is--right {
     .vxe-date-picker--inner {
       text-align: right;
-    }
-  }
-  &.is--count {
-    .vxe-date-picker--inner {
-      padding-right: 3.4em;
-    }
-  }
-  &.is--controls {
-    &.type--date,
-    &.type--datetime,
-    &.type--week,
-    &.type--month,
-    &.type--quarter,
-    &.type--year,
-    &.type--time {
-      .vxe-date-picker--inner {
-        padding-right: $iconWidth + 0.2em;
-      }
-      .vxe-date-picker--suffix {
-        right: $iconWidth;
-      }
-    }
-  }
-  &.is--suffix {
-    &.is--controls {
-      &.type--date,
-      &.type--datetime,
-      &.type--week,
-      &.type--month,
-      &.type--quarter,
-      &.type--year,
-      &.type--time {
-        .vxe-date-picker--inner {
-          padding-right: $iconWidth * 2;
-        }
-      }
-    }
-  }
-  &.is--suffix {
-    &:hover {
-      .vxe-date-picker--suffix {
-        &.is--clear {
-          .vxe-date-picker--suffix-icon {
-            display: none;
-          }
-          .vxe-date-picker--clear-icon {
-            display: inline;
-          }
-        }
-      }
-    }
-  }
-  &:not(.is--disabled) {
-    .vxe-date-picker--suffix {
-      &:hover {
-        .vxe-date-picker--clear-icon {
-          color: var(--vxe-ui-font-color);
-        }
-      }
-      &:active {
-        .vxe-date-picker--clear-icon {
-          color: var(--vxe-ui-font-primary-color);
-        }
-      }
-    }
-  }
-}
-
-.vxe-date-picker {
-  .vxe-date-picker--date-picker-suffix,
-  .vxe-date-picker--search-suffix {
-    position: relative;
-    width: 100%;
-    height: 100%;
-  }
-
-  .vxe-date-picker--date-picker-icon {
-    position: absolute;
-    left: 50%;
-    top: 50%;
-    transform: translate(-50%, -50%);
-    &[class*="vxe-icon-"] {
-      font-size: 1.2em;
-    }
-  }
-
-  .vxe-date-picker--date-picker-suffix {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    .vxe-date-picker--panel-icon {
-      @include createAnimationTransition(transform, .2s);
     }
   }
 }
@@ -635,7 +573,8 @@ $iconWidth: 1.6em;
     }
     &[type="date"]::-webkit-inner-spin-button,
     &[type="month"]::-webkit-inner-spin-button,
-    &[type="week"]::-webkit-inner-spin-button {
+    &[type="week"]::-webkit-inner-spin-button,
+    &[type="number"]::-webkit-inner-spin-button {
       height: 24px;
     }
   }

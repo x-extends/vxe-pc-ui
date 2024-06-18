@@ -186,6 +186,7 @@
     .vxe-default-select,
     .vxe-input,
     .vxe-number-input,
+    .vxe-password-input,
     .vxe-date-picker,
     .vxe-textarea,
     .vxe-select {
@@ -193,22 +194,24 @@
     }
   }
   &.is--error {
-    .vxe-input > .vxe-input--inner,
-    .vxe-number-input > .vxe-number-input--inner,
-    .vxe-date-picker > .vxe-date-picker--inner,
+    .vxe-input,
+    .vxe-number-input,
+    .vxe-password-input,
+    .vxe-date-picker,
     .vxe-textarea > .vxe-textarea--inner,
     .vxe-upload .vxe-upload--image-action-box,
     .vxe-upload .vxe-upload--file-action-btn > .vxe-button,
     .vxe-select,
-    .vxe-select.is--active > .vxe-input .vxe-input--inner,
+    .vxe-select.is--active > .vxe-input,
     .vxe-default-input,
     .vxe-default-textarea,
     .vxe-default-select {
       border-color: var(--vxe-ui-form-validate-error-color);
     }
-    .vxe-input>.vxe-input--inner,
-    .vxe-number-input>.vxe-number-input--inner,
-    .vxe-date-picker>.vxe-date-picker--inner,
+    .vxe-input,
+    .vxe-number-input,
+    .vxe-password-input,
+    .vxe-date-picker,
     .vxe-textarea>.vxe-textarea--inner,
     .vxe-default-input[type="text"],
     .vxe-default-input[type="search"],

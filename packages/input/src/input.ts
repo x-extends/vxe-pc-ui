@@ -2410,7 +2410,7 @@ export default defineComponent({
           'is--prefix': !!prefix,
           'is--suffix': !!suffix,
           'is--readonly': readonly,
-          'is--visivle': visiblePanel,
+          'is--visible': visiblePanel,
           'is--count': isWordCount,
           'is--disabled': disabled,
           'is--active': isActivated,

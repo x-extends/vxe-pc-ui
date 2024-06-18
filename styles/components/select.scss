@@ -27,7 +27,7 @@
   }
   & > .vxe-input {
     width: 100%;
-    .vxe-input--suffix-icon {
+    .vxe-input--suffix-icon > i {
       display: inline-block;
       @include createAnimationTransition(transform, .2s);
     }
@@ -35,9 +35,7 @@
   &.is--active {
     &:not(.is--filter) {
       & > .vxe-input {
-        .vxe-input--inner {
-          border: 1px solid var(--vxe-ui-font-primary-color);
-        }
+        border-color: var(--vxe-ui-font-primary-color);
       }
     }
   }

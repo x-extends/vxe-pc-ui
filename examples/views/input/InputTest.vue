@@ -13,7 +13,9 @@
       <vxe-input v-model="demo1.value200" placeholder="可清除" showWordCount clearable></vxe-input>
       <vxe-input v-model="demo1.value201" placeholder="带图标" prefix-icon="vxe-icon-time" suffix-icon="vxe-icon-time" clearable></vxe-input>
       <vxe-input v-model="demo1.value202" placeholder="只读的" suffix-icon="vxe-icon-time" readonly></vxe-input>
+      <vxe-input v-model="demo1.value203" placeholder="禁用的" disabled></vxe-input>
       <vxe-input v-model="demo1.value203" placeholder="禁用的" prefix-icon="vxe-icon-time" disabled></vxe-input>
+      <vxe-input v-model="demo1.value203" placeholder="禁用的" prefix-icon="vxe-icon-time" suffix-icon="vxe-icon-time" disabled></vxe-input>
     </p>
 
     <p>
