@@ -44,7 +44,7 @@ declare module '@vxe-ui/core' {
     /**
      * 表格 - 默认筛选处理方法，如果同时存在，会被 tableFilterMethod 覆盖
      */
-    defaultTableFilterMethod?(params: VxeGlobalRendererHandles.TableFilterMethodParams<any>): boolean
+    tableFilterDefaultMethod?(params: VxeGlobalRendererHandles.TableFilterMethodParams<any>): boolean
 
     /**
      * 表格 - 单元格设置 class
@@ -78,9 +78,9 @@ declare module '@vxe-ui/core' {
     /**
      * 表格 - 激活编辑状态时，设置自动聚焦的 class
      */
-    tableAutofocus?: string | ((params: VxeGlobalRendererHandles.RenderTableEditParams<any> | VxeGlobalRendererHandles.RenderTableCellParams<any>) => HTMLElement | null)
+    tableAutoFocus?: string | ((params: VxeGlobalRendererHandles.RenderTableEditParams<any> | VxeGlobalRendererHandles.RenderTableCellParams<any>) => HTMLElement | null)
     /**
-     * 表格 - 激活编辑状态时，设置是否自动选中 tableAutofocus 指定的元素
+     * 表格 - 激活编辑状态时，设置是否自动选中 tableAutoFocus 指定的元素
      */
     tableAutoSelect?: boolean
     /**
@@ -123,10 +123,15 @@ declare module '@vxe-ui/core' {
      */
     filterRecoverMethod?(params: VxeGlobalRendererHandles.TableFilterRecoverMethodParams<any>): void
     /**
-     * 已废弃，请使用 defaultTableFilterMethod
+     * 已废弃，请使用 tableFilterDefaultMethod
      * @deprecated
      */
     defaultFilterMethod?(params: VxeGlobalRendererHandles.TableFilterMethodParams<any>): boolean
+    /**
+     * 已废弃，请使用 tableFilterDefaultMethod
+     * @deprecated
+     */
+    defaultTableFilterMethod?(params: VxeGlobalRendererHandles.TableFilterMethodParams<any>): boolean
     /**
      * 已废弃，请使用 tableFilterClassName
      * @deprecated
@@ -148,10 +153,15 @@ declare module '@vxe-ui/core' {
      */
     cellStyle?: VxeComponentStyleType | ((params: VxeGlobalRendererHandles.RenderTableDefaultParams<any>) => VxeComponentStyleType)
     /**
-     * 已废弃，请使用 tableAutofocus
+     * 已废弃，请使用 tableAutoFocus
      * @deprecated
      */
     autofocus?: string | ((params: VxeGlobalRendererHandles.RenderTableEditParams<any> | VxeGlobalRendererHandles.RenderTableCellParams<any>) => HTMLElement | null)
+    /**
+     * 已废弃，请使用 tableAutoFocus
+     * @deprecated
+     */
+    tableAutofocus?: string | ((params: VxeGlobalRendererHandles.RenderTableEditParams<any> | VxeGlobalRendererHandles.RenderTableCellParams<any>) => HTMLElement | null)
     /**
      * 已废弃，请使用 tableAutoSelect
      * @deprecated

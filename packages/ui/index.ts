@@ -5,7 +5,10 @@ import { warnLog } from './src/log'
 
 import { VxeGlobalConfig } from '../../types'
 
-VxeUI.uiVersion = process.env.VUE_APP_VXE_VERSION as string
+export const version = process.env.VUE_APP_VXE_VERSION as string
+VxeUI.version = version
+
+VxeUI.uiVersion = version
 VxeUI.tableVersion = ''
 VxeUI.t = VxeUI.getI18n
 VxeUI._t = getFuncText
