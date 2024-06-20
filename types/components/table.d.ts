@@ -2524,6 +2524,11 @@ export interface TableMethods<DT = any> {
   getColumns(): VxeTableDefines.ColumnInfo<DT>[]
   getColumns(columnIndex?: number): VxeTableDefines.ColumnInfo<DT>
   /**
+   * 根据列获取列的唯一主键
+   * @param fieldOrColumn
+   */
+  getColid(fieldOrColumn: VxeColumnPropTypes.Field | VxeTableDefines.ColumnInfo<any> | null): string | null
+  /**
    * 根据列的唯一主键获取列
    * @param colid 列主键
    */
@@ -2532,7 +2537,7 @@ export interface TableMethods<DT = any> {
    * 根据列的字段名获取列
    * @param field 字段名
    */
-  getColumnByField(field: string | null): VxeTableDefines.ColumnInfo<DT> | null
+  getColumnByField(field: VxeColumnPropTypes.Field | null): VxeTableDefines.ColumnInfo<DT> | null
   /**
    * 获取当前表格的列
    * 收集到的全量列、全量表头列、处理条件之后的全量表头列、当前渲染中的表头列

@@ -30,7 +30,7 @@ export default defineComponent({
         if (renderWidgetFormView) {
           return h('div', {
             class: 'vxe-form-design--custom-widget-form-view'
-          }, getSlotVNs(renderWidgetFormView(activeWidget, { widget: activeWidget })))
+          }, getSlotVNs(renderWidgetFormView(activeWidget, { widget: activeWidget, $formDesign: $xeFormDesign })))
         }
       }
       return createCommentVNode()

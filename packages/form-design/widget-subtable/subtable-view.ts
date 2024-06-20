@@ -1,14 +1,15 @@
-import { PropType, defineComponent, inject, h, createCommentVNode, TransitionGroup } from 'vue'
+import { PropType, defineComponent, inject, h, createCommentVNode, TransitionGroup, computed } from 'vue'
 import { VxeUI, renderer, getIcon, getI18n } from '@vxe-ui/core'
 import XEUtils from 'xe-utils'
 import { hasFormDesignLayoutType } from '../src/util'
 import { WidgetSubtableFormObjVO } from './subtable-data'
 import { getSlotVNs } from '../../ui/src/vn'
+import { useKebabCaseName } from '../render/hooks'
 import VxeFormItemComponent from '../../form/src/form-item'
 import VxeButtonComponent from '../../button/src/button'
 import VxeCheckboxComponent from '../../checkbox/src/checkbox'
 
-import type { VxeGlobalRendererHandles, VxeFormDesignConstructor, VxeFormDesignDefines, VxeFormDesignPrivateMethods } from '../../../types'
+import type { VxeGlobalRendererHandles, VxeFormDesignConstructor, VxeFormDesignDefines, VxeFormDesignPrivateMethods, VxeFormViewConstructor, VxeFormViewPrivateMethods, VxeGridComponent, VxeGridPropTypes } from '../../../types'
 
 const ViewSubItemComponent = defineComponent({
   props: {
@@ -109,7 +110,7 @@ const ViewSubItemComponent = defineComponent({
       const compConf = renderer.get(name) || {}
       const renderWidgetDesignView = compConf.renderFormDesignWidgetEdit || compConf.renderFormDesignWidgetView
       const renderOpts: VxeGlobalRendererHandles.RenderFormDesignWidgetViewOptions = widget || { name }
-      const params: VxeGlobalRendererHandles.RenderFormDesignWidgetViewParams = { widget, isEditMode: true, isViewMode: false }
+      const params: VxeGlobalRendererHandles.RenderFormDesignWidgetViewParams = { widget, isEditMode: true, isViewMode: false, $formDesign: $xeFormDesign, $formView: null }
       const isActive = activeWidget && widget && activeWidget.id === widget.id
 
       return h('div', {
@@ -305,9 +306,64 @@ export const WidgetSubtableViewComponent = defineComponent({
     }
   },
   emits: [],
-  setup () {
+  setup (props) {
+    const VxeTableGridComponent = VxeUI.getComponent<VxeGridComponent>('VxeGrid')
+
+    const $xeFormView = inject<(VxeFormViewConstructor & VxeFormViewPrivateMethods) | null>('$xeFormView', null)
+
+    const computeKebabCaseName = useKebabCaseName(props)
+
+    const computeSubtableColumns = computed(() => {
+      const { renderParams } = props
+      const { widget } = renderParams
+      const { children, options } = widget
+      const columns: VxeGridPropTypes.Columns = []
+      if (options.showCheckbox) {
+        columns.push({
+          type: 'checkbox',
+          width: 60
+        })
+      }
+      columns.push({
+        type: 'seq',
+        width: 60
+      })
+      if (children) {
+        children.forEach(childWidget => {
+          columns.push({
+            field: childWidget.field,
+            title: childWidget.title
+          })
+        })
+      }
+      return columns
+    })
+
     return () => {
-      return h('div', 'eeee')
+      const { renderParams } = props
+      const { widget } = renderParams
+      const kebabCaseName = computeKebabCaseName.value
+      const subtableColumns = computeSubtableColumns.value
+
+      return h(VxeFormItemComponent, {
+        class: ['vxe-form-design--widget-render-form-item', `widget-${kebabCaseName}`],
+        title: widget.title,
+        field: widget.field,
+        span: 24
+      }, {
+        default () {
+          return VxeTableGridComponent
+            ? h(VxeTableGridComponent, {
+              border: true,
+              columnConfig: {
+                resizable: true
+              },
+              data: $xeFormView ? $xeFormView.getItemValue(widget) : null,
+              columns: subtableColumns
+            })
+            : createCommentVNode()
+        }
+      })
     }
   }
 })

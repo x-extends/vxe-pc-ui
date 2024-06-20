@@ -46,8 +46,8 @@ export type VxePasswordInputProps = {
   disabled?: VxePasswordInputPropTypes.Disabled
   placeholder?: VxePasswordInputPropTypes.Placeholder
   autocomplete?: VxePasswordInputPropTypes.Autocomplete
-  prefixIcon?: VxeInputPropTypes.PrefixIcon
-  suffixIcon?: VxeInputPropTypes.SuffixIcon
+  prefixIcon?: VxePasswordInputPropTypes.PrefixIcon
+  suffixIcon?: VxePasswordInputPropTypes.SuffixIcon
 }
 
 export interface PasswordInputPrivateComputed {

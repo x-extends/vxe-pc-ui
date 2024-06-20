@@ -6,7 +6,7 @@ import { VxeColumnPropTypes } from '../components/column'
 import { VxeToolbarPropTypes } from '../components/toolbar'
 import { VxeFormConstructor, VxeFormDefines, VxeFormProps } from '../components/form'
 import { VxeFormDesignDefines, VxeFormDesignConstructor } from '../components/form-design'
-import { VxeFormViewDefines } from '../components/form-view'
+import { VxeFormViewDefines, VxeFormViewConstructor } from '../components/form-view'
 
 /* eslint-disable no-use-before-define */
 
@@ -749,7 +749,9 @@ declare module '@vxe-ui/core' {
     }
 
     export interface RenderFormDesignWidgetItemOptions {}
-    export interface RenderFormDesignWidgetItemParams {}
+    export interface RenderFormDesignWidgetItemParams {
+      $formDesign: null | VxeFormDesignConstructor
+    }
 
     export interface RenderFormDesignWidgetPreviewOptions extends RenderFormDesignWidgetViewOptions {}
     export interface RenderFormDesignWidgetPreviewParams<D = any> extends RenderFormDesignWidgetViewParams<D> {}
@@ -761,6 +763,8 @@ declare module '@vxe-ui/core' {
       name: string
     }
     export interface RenderFormDesignWidgetViewParams<D = any> {
+      $formView: null | VxeFormViewConstructor
+      $formDesign: null | VxeFormDesignConstructor
       widget: VxeFormDesignDefines.WidgetObjItem<D>
       isEditMode: boolean
       isViewMode: boolean
@@ -773,14 +777,18 @@ declare module '@vxe-ui/core' {
       name: string
     }
     export interface RenderFormDesignWidgetFormViewParams<D = any> {
+      $formDesign: VxeFormDesignConstructor
       widget: VxeFormDesignDefines.WidgetObjItem<D>
     }
     export interface RenderFormDesignWidgetEditParams<D = any> extends RenderFormDesignWidgetViewParams<D> {}
     export interface RenderFormDesignSettingFormViewOptions {}
-    export interface RenderFormDesignSettingFormViewParams {}
+    export interface RenderFormDesignSettingFormViewParams {
+      $formDesign: VxeFormDesignConstructor
+    }
 
     export interface RenderFormDesignStyleFormViewOptions {}
     export interface RenderFormDesignStyleFormViewParams<D = any> extends VxeFormDesignDefines.FormDesignDefaultParams {
+      $formDesign: VxeFormDesignConstructor
       formConfig: D
     }
 

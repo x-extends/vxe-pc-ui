@@ -89,27 +89,39 @@ export default defineComponent({
       return nextTick()
     }
 
+    const getWidgetDefaultValue = (widget: VxeFormDesignDefines.WidgetObjItem) => {
+      switch (widget.name) {
+        case 'subtable':
+          return []
+      }
+      return null
+    }
+
+    const getWidgetDefaultRule = () => {
+      return [
+        { required: true, content: '该填写该字段！' }
+      ]
+    }
+
     const updateWidgetInfo = () => {
-      const formData: VxeFormPropTypes.Data = Object.assign({}, props.modelValue)
+      const formData: VxeFormPropTypes.Data = {}
       const formRules: VxeFormPropTypes.Rules = {}
       XEUtils.eachTree(reactData.widgetObjList, widget => {
         const { name, field, required } = widget
         const compConf = renderer.get(name) || {}
         const createWidgetViewRules = compConf.createFormDesignWidgetRules
-        formData[field] = null
+        formData[field] = getWidgetDefaultValue(widget)
         if (createWidgetViewRules) {
           const rules = createWidgetViewRules({ widget })
           if (rules && rules.length) {
             formRules[field] = rules
           }
         } else if (required) {
-          formRules[field] = [
-            { required: true, content: '该填写该字段！' }
-          ]
+          formRules[field] = getWidgetDefaultRule()
         }
       }, { children: 'children' })
       reactData.formRules = formRules
-      emit('update:modelValue', formData)
+      emit('update:modelValue', Object.assign(formData, props.modelValue))
     }
 
     const updateItemStatus = (widget: VxeFormDesignDefines.WidgetObjItem, value: any) => {
@@ -209,7 +221,7 @@ export default defineComponent({
                 const renderWidgetDesignPreview = compConf.renderFormDesignWidgetPreview
                 const renderWidgetDesignMobilePreview = compConf.renderFormDesignWidgetMobilePreview
                 const renderOpts: VxeGlobalRendererHandles.RenderFormDesignWidgetViewOptions = widget
-                const params: VxeGlobalRendererHandles.RenderFormDesignWidgetViewParams = { widget, isEditMode: false, isViewMode: true }
+                const params: VxeGlobalRendererHandles.RenderFormDesignWidgetViewParams = { widget, isEditMode: false, isViewMode: true, $formDesign: null, $formView: $xeFormView }
                 return h(VxeFormGatherComponent, {
                   key: widget.id
                 }, {

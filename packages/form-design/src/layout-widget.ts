@@ -68,7 +68,7 @@ export default defineComponent({
           const { name } = widget
           const configTitle = getWidgetConfigTitle(name, $xeFormDesign)
           const compConf = renderer.get(name) || {}
-          const renderFormDesignWidgetItem = compConf.renderFormDesignWidgetItem
+          const renderWidgetItem = compConf.renderFormDesignWidgetItem
           widgetVNs.push(
             h('div', {
               key: index,
@@ -83,8 +83,8 @@ export default defineComponent({
               onDblclick (evnt: KeyboardEvent) {
                 addNewWidget(evnt, name)
               }
-            }, renderFormDesignWidgetItem
-              ? getSlotVNs(renderFormDesignWidgetItem({}, {}))
+            }, renderWidgetItem
+              ? getSlotVNs(renderWidgetItem({}, { $formDesign: $xeFormDesign }))
               : [
                   h('i', {
                     class: ['vxe-form-design--widget-item-icon', getWidgetConfigIcon(name)]

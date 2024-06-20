@@ -104,7 +104,7 @@ export default defineComponent({
     disabled: Boolean as PropType<VxeDatePickerPropTypes.Disabled>,
     placeholder: {
       type: String as PropType<VxeDatePickerPropTypes.Placeholder>,
-      default: () => XEUtils.eqNull(getConfig().input.placeholder) ? getI18n('vxe.base.pleaseDatePicker') : getConfig().input.placeholder
+      default: () => XEUtils.eqNull(getConfig().input.placeholder) ? getI18n('vxe.base.pleaseSelect') : getConfig().input.placeholder
     },
     maxlength: [String, Number] as PropType<VxeDatePickerPropTypes.Maxlength>,
     autocomplete: { type: String as PropType<VxeDatePickerPropTypes.Autocomplete>, default: 'off' },

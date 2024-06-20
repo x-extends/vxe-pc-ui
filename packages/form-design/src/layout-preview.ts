@@ -65,7 +65,7 @@ export default defineComponent({
                         const compConf = renderer.get(name) || {}
                         const renderWidgetDesignView = compConf.renderFormDesignWidgetEdit || compConf.renderFormDesignWidgetView
                         const renderOpts: VxeGlobalRendererHandles.RenderFormDesignWidgetViewOptions = widget
-                        const params: VxeGlobalRendererHandles.RenderFormDesignWidgetViewParams = { widget, isEditMode: true, isViewMode: false }
+                        const params: VxeGlobalRendererHandles.RenderFormDesignWidgetViewParams = { widget, isEditMode: true, isViewMode: false, $formDesign: $xeFormDesign, $formView: null }
                         return renderWidgetDesignView ? getSlotVNs(renderWidgetDesignView(renderOpts, params)) : []
                       }
                     })
