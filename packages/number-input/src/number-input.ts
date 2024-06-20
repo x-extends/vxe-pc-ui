@@ -25,32 +25,32 @@ export default defineComponent({
     immediate: { type: Boolean as PropType<VxeNumberInputPropTypes.Immediate>, default: true },
     name: String as PropType<VxeNumberInputPropTypes.Name>,
     type: { type: String as PropType<VxeNumberInputPropTypes.Type>, default: 'number' },
-    clearable: { type: Boolean as PropType<VxeNumberInputPropTypes.Clearable>, default: () => getConfig().input.clearable },
+    clearable: { type: Boolean as PropType<VxeNumberInputPropTypes.Clearable>, default: () => getConfig().numberInput.clearable },
     readonly: Boolean as PropType<VxeNumberInputPropTypes.Readonly>,
     disabled: Boolean as PropType<VxeNumberInputPropTypes.Disabled>,
     placeholder: {
       type: String as PropType<VxeNumberInputPropTypes.Placeholder>,
-      default: () => XEUtils.eqNull(getConfig().input.placeholder) ? getI18n('vxe.base.pleaseInput') : getConfig().input.placeholder
+      default: () => XEUtils.eqNull(getConfig().numberInput.placeholder) ? getI18n('vxe.base.pleaseInput') : getConfig().numberInput.placeholder
     },
     maxlength: [String, Number] as PropType<VxeNumberInputPropTypes.Maxlength>,
     autocomplete: { type: String as PropType<VxeNumberInputPropTypes.Autocomplete>, default: 'off' },
     align: String as PropType<VxeNumberInputPropTypes.Align>,
     form: String as PropType<VxeNumberInputPropTypes.Form>,
     className: String as PropType<VxeNumberInputPropTypes.ClassName>,
-    size: { type: String as PropType<VxeNumberInputPropTypes.Size>, default: () => getConfig().input.size || getConfig().size },
+    size: { type: String as PropType<VxeNumberInputPropTypes.Size>, default: () => getConfig().numberInput.size || getConfig().size },
     multiple: Boolean as PropType<VxeNumberInputPropTypes.Multiple>,
 
     // number、integer、float
     min: { type: [String, Number] as PropType<VxeNumberInputPropTypes.Min>, default: null },
     max: { type: [String, Number] as PropType<VxeNumberInputPropTypes.Max>, default: null },
     step: [String, Number] as PropType<VxeNumberInputPropTypes.Step>,
-    exponential: { type: Boolean as PropType<VxeNumberInputPropTypes.Exponential>, default: () => getConfig().input.exponential },
+    exponential: { type: Boolean as PropType<VxeNumberInputPropTypes.Exponential>, default: () => getConfig().numberInput.exponential },
 
     // number、integer、float
-    controls: { type: Boolean as PropType<VxeNumberInputPropTypes.Controls>, default: () => getConfig().input.controls },
+    controls: { type: Boolean as PropType<VxeNumberInputPropTypes.Controls>, default: () => getConfig().numberInput.controls },
 
     // float
-    digits: { type: [String, Number] as PropType<VxeNumberInputPropTypes.Digits>, default: () => getConfig().input.digits },
+    digits: { type: [String, Number] as PropType<VxeNumberInputPropTypes.Digits>, default: () => getConfig().numberInput.digits },
 
     prefixIcon: String as PropType<VxeNumberInputPropTypes.PrefixIcon>,
     suffixIcon: String as PropType<VxeNumberInputPropTypes.SuffixIcon>

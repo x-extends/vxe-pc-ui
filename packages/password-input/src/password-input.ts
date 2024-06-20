@@ -11,16 +11,16 @@ export default defineComponent({
   props: {
     modelValue: String as PropType<VxePasswordInputPropTypes.ModelValue>,
     name: String as PropType<VxePasswordInputPropTypes.Name>,
-    clearable: { type: Boolean as PropType<VxePasswordInputPropTypes.Clearable>, default: () => getConfig().input.clearable },
+    clearable: { type: Boolean as PropType<VxePasswordInputPropTypes.Clearable>, default: () => getConfig().passwordInput.clearable },
     readonly: Boolean as PropType<VxePasswordInputPropTypes.Readonly>,
     disabled: Boolean as PropType<VxePasswordInputPropTypes.Disabled>,
     placeholder: {
       type: String as PropType<VxePasswordInputPropTypes.Placeholder>,
-      default: () => XEUtils.eqNull(getConfig().input.placeholder) ? getI18n('vxe.base.pleaseInput') : getConfig().input.placeholder
+      default: () => XEUtils.eqNull(getConfig().passwordInput.placeholder) ? getI18n('vxe.base.pleaseInput') : getConfig().passwordInput.placeholder
     },
     autocomplete: { type: String as PropType<VxePasswordInputPropTypes.Autocomplete>, default: 'off' },
     className: String as PropType<VxePasswordInputPropTypes.ClassName>,
-    size: { type: String as PropType<VxePasswordInputPropTypes.Size>, default: () => getConfig().input.size || getConfig().size },
+    size: { type: String as PropType<VxePasswordInputPropTypes.Size>, default: () => getConfig().passwordInput.size || getConfig().size },
     prefixIcon: String as PropType<VxePasswordInputPropTypes.PrefixIcon>,
     suffixIcon: String as PropType<VxePasswordInputPropTypes.SuffixIcon>
   },

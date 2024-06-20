@@ -5,7 +5,7 @@ import { getAbsolutePos, getEventTargetNode } from '../../ui/src/dom'
 import { getFuncText, getLastZIndex, nextZIndex } from '../../ui/src/utils'
 import { warnLog } from '../../ui/src/log'
 
-import type { VxeButtonConstructor, VxeButtonPropTypes, VxeButtonEmits, ButtonReactData, ButtonMethods, ButtonPrivateRef, ButtonInternalData, VxeButtonGroupConstructor, VxeButtonGroupPrivateMethods } from '../../../types'
+import type { VxeButtonConstructor, VxeButtonPropTypes, VxeButtonEmits, ButtonReactData, ButtonMethods, ButtonPrivateRef, ButtonInternalData, VxeButtonGroupConstructor, VxeButtonGroupPrivateMethods, VxeTableConstructor, VxeTablePrivateMethods } from '../../../types'
 
 export default defineComponent({
   name: 'VxeButton',
@@ -68,7 +68,10 @@ export default defineComponent({
     /**
      * 是否将弹框容器插入于 body 内
      */
-    transfer: { type: Boolean as PropType<VxeButtonPropTypes.Transfer>, default: () => getConfig().button.transfer }
+    transfer: {
+      type: Boolean as PropType<VxeButtonPropTypes.Transfer>,
+      default: null
+    }
   },
   emits: [
     'click',
@@ -78,6 +81,9 @@ export default defineComponent({
   ] as VxeButtonEmits,
   setup (props, context) {
     const { slots, emit } = context
+
+    const $xeTable = inject<VxeTableConstructor & VxeTablePrivateMethods | null>('$xeTable', null)
+    const $xeButtonGroup = inject<(VxeButtonGroupConstructor & VxeButtonGroupPrivateMethods) | null>('$xeButtonGroup', null)
 
     const xID = XEUtils.uniqueId()
 
@@ -113,9 +119,21 @@ export default defineComponent({
       getRefMaps: () => refMaps
     } as unknown as VxeButtonConstructor
 
-    const $xeButtonGroup = inject<(VxeButtonGroupConstructor & VxeButtonGroupPrivateMethods) | null>('$xeButtonGroup', null)
-
     let buttonMethods = {} as ButtonMethods
+
+    const compTransfer = computed(() => {
+      const { transfer } = props
+      if (transfer === null) {
+        const globalTransfer = getConfig().button.transfer
+        if (XEUtils.isBoolean(globalTransfer)) {
+          return globalTransfer
+        }
+        if ($xeTable) {
+          return true
+        }
+      }
+      return transfer
+    })
 
     const computeIsFormBtn = computed(() => {
       const { type } = props
@@ -174,10 +192,11 @@ export default defineComponent({
 
     const updatePlacement = () => {
       return nextTick().then(() => {
-        const { transfer, placement } = props
+        const { placement } = props
         const { panelIndex } = reactData
         const targetElem = refButton.value
         const panelElem = refBtnPanel.value
+        const transfer = compTransfer.value
         if (panelElem && targetElem) {
           const targetHeight = targetElem.offsetHeight
           const targetWidth = targetElem.offsetWidth
@@ -428,13 +447,14 @@ export default defineComponent({
     })
 
     const renderVN = () => {
-      const { className, popupClassName, transfer, title, type, destroyOnClose, name, disabled, loading } = props
+      const { className, popupClassName, title, type, destroyOnClose, name, disabled, loading } = props
       const { inited, showPanel } = reactData
       const isFormBtn = computeIsFormBtn.value
       const btnMode = computeBtnMode.value
       const btnStatus = computeBtnStatus.value
       const btnRound = computeBtnRound.value
       const btnCircle = computeBtnCircle.value
+      const transfer = compTransfer.value
       const vSize = computeSize.value
       if (slots.dropdowns) {
         return h('div', {

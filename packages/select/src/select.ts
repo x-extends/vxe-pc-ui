@@ -6,7 +6,7 @@ import { getLastZIndex, nextZIndex, getFuncText } from '../../ui/src/utils'
 import VxeInputComponent from '../../input/src/input'
 import { getSlotVNs } from '../../ui/src/vn'
 
-import type { VxeSelectPropTypes, VxeSelectConstructor, SelectReactData, VxeSelectEmits, VxeInputConstructor, SelectMethods, SelectPrivateRef, VxeSelectMethods, VxeOptgroupProps, VxeOptionProps, VxeFormDefines, VxeFormConstructor, VxeFormPrivateMethods } from '../../../types'
+import type { VxeSelectPropTypes, VxeSelectConstructor, SelectReactData, VxeSelectEmits, VxeInputConstructor, SelectMethods, SelectPrivateRef, VxeSelectMethods, VxeOptgroupProps, VxeOptionProps, VxeTableConstructor, VxeTablePrivateMethods, VxeFormDefines, VxeFormConstructor, VxeFormPrivateMethods } from '../../../types'
 
 function isOptionVisible (option: any) {
   return option.visible !== false
@@ -49,7 +49,10 @@ export default defineComponent({
     optionId: { type: String as PropType<VxeSelectPropTypes.OptionId>, default: () => getConfig().select.optionId },
     // 已废弃，被 option-config.useKey 替换
     optionKey: Boolean as PropType<VxeSelectPropTypes.OptionKey>,
-    transfer: { type: Boolean as PropType<VxeSelectPropTypes.Transfer>, default: () => getConfig().select.transfer }
+    transfer: {
+      type: Boolean as PropType<VxeSelectPropTypes.Transfer>,
+      default: null
+    }
   },
   emits: [
     'update:modelValue',
@@ -60,6 +63,8 @@ export default defineComponent({
   ] as VxeSelectEmits,
   setup (props, context) {
     const { slots, emit } = context
+
+    const $xeTable = inject<VxeTableConstructor & VxeTablePrivateMethods | null>('$xeTable', null)
     const $xeForm = inject<VxeFormConstructor & VxeFormPrivateMethods | null>('$xeForm', null)
     const formItemInfo = inject<VxeFormDefines.ProvideItemInfo | null>('xeFormItemInfo', null)
 
@@ -106,6 +111,20 @@ export default defineComponent({
     } as unknown as VxeSelectConstructor & VxeSelectMethods
 
     let selectMethods = {} as SelectMethods
+
+    const compTransfer = computed(() => {
+      const { transfer } = props
+      if (transfer === null) {
+        const globalTransfer = getConfig().select.transfer
+        if (XEUtils.isBoolean(globalTransfer)) {
+          return globalTransfer
+        }
+        if ($xeTable) {
+          return true
+        }
+      }
+      return transfer
+    })
 
     const computePropsOpts = computed(() => {
       return props.optionProps || {}
@@ -343,10 +362,11 @@ export default defineComponent({
 
     const updatePlacement = () => {
       return nextTick().then(() => {
-        const { transfer, placement } = props
+        const { placement } = props
         const { panelIndex } = reactData
         const el = refElem.value
         const panelElem = refOptionPanel.value
+        const transfer = compTransfer.value
         if (panelElem && el) {
           const targetHeight = el.offsetHeight
           const targetWidth = el.offsetWidth
@@ -923,10 +943,11 @@ export default defineComponent({
     })
 
     const renderVN = () => {
-      const { className, popupClassName, transfer, disabled, loading, filterable } = props
+      const { className, popupClassName, disabled, loading, filterable } = props
       const { inited, isActivated, visiblePanel } = reactData
       const vSize = computeSize.value
       const selectLabel = computeSelectLabel.value
+      const transfer = compTransfer.value
       const defaultSlot = slots.default
       const headerSlot = slots.header
       const footerSlot = slots.footer

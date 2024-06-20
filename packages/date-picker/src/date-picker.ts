@@ -5,7 +5,7 @@ import { getFuncText, getLastZIndex, nextZIndex } from '../../ui/src/utils'
 import { getAbsolutePos, getEventTargetNode } from '../../ui/src/dom'
 import { getSlotVNs } from '../..//ui/src/vn'
 
-import type { VxeDatePickerConstructor, VxeDatePickerEmits, DatePickerReactData, DatePickerMethods, VxeDatePickerPropTypes, DatePickerPrivateRef, VxeFormConstructor, VxeFormPrivateMethods, VxeFormDefines } from '../../../types'
+import type { VxeDatePickerConstructor, VxeDatePickerEmits, DatePickerReactData, DatePickerMethods, VxeDatePickerPropTypes, DatePickerPrivateRef, VxeFormConstructor, VxeFormPrivateMethods, VxeFormDefines, VxeTableConstructor, VxeTablePrivateMethods } from '../../../types'
 
 interface DateYearItem {
   date: Date;
@@ -99,42 +99,45 @@ export default defineComponent({
     immediate: { type: Boolean as PropType<VxeDatePickerPropTypes.Immediate>, default: true },
     name: String as PropType<VxeDatePickerPropTypes.Name>,
     type: { type: String as PropType<VxeDatePickerPropTypes.Type>, default: 'text' },
-    clearable: { type: Boolean as PropType<VxeDatePickerPropTypes.Clearable>, default: () => getConfig().input.clearable },
+    clearable: { type: Boolean as PropType<VxeDatePickerPropTypes.Clearable>, default: () => getConfig().datePicker.clearable },
     readonly: Boolean as PropType<VxeDatePickerPropTypes.Readonly>,
     disabled: Boolean as PropType<VxeDatePickerPropTypes.Disabled>,
     placeholder: {
       type: String as PropType<VxeDatePickerPropTypes.Placeholder>,
-      default: () => XEUtils.eqNull(getConfig().input.placeholder) ? getI18n('vxe.base.pleaseSelect') : getConfig().input.placeholder
+      default: () => XEUtils.eqNull(getConfig().datePicker.placeholder) ? getI18n('vxe.base.pleaseSelect') : getConfig().datePicker.placeholder
     },
     maxlength: [String, Number] as PropType<VxeDatePickerPropTypes.Maxlength>,
     autocomplete: { type: String as PropType<VxeDatePickerPropTypes.Autocomplete>, default: 'off' },
     align: String as PropType<VxeDatePickerPropTypes.Align>,
     form: String as PropType<VxeDatePickerPropTypes.Form>,
     className: String as PropType<VxeDatePickerPropTypes.ClassName>,
-    size: { type: String as PropType<VxeDatePickerPropTypes.Size>, default: () => getConfig().input.size || getConfig().size },
+    size: { type: String as PropType<VxeDatePickerPropTypes.Size>, default: () => getConfig().datePicker.size || getConfig().size },
     multiple: Boolean as PropType<VxeDatePickerPropTypes.Multiple>,
 
     // date、week、month、quarter、year
-    startDate: { type: [String, Number, Date] as PropType<VxeDatePickerPropTypes.MinDate>, default: () => getConfig().input.startDate },
-    endDate: { type: [String, Number, Date] as PropType<VxeDatePickerPropTypes.MaxDate>, default: () => getConfig().input.endDate },
+    startDate: { type: [String, Number, Date] as PropType<VxeDatePickerPropTypes.MinDate>, default: () => getConfig().datePicker.startDate },
+    endDate: { type: [String, Number, Date] as PropType<VxeDatePickerPropTypes.MaxDate>, default: () => getConfig().datePicker.endDate },
     minDate: [String, Number, Date] as PropType<VxeDatePickerPropTypes.MinDate>,
     maxDate: [String, Number, Date] as PropType<VxeDatePickerPropTypes.MaxDate>,
     // 已废弃 startWeek，被 startDay 替换
     startWeek: Number as PropType<VxeDatePickerPropTypes.StartDay>,
-    startDay: { type: [String, Number] as PropType<VxeDatePickerPropTypes.StartDay>, default: () => getConfig().input.startDay },
-    labelFormat: { type: String as PropType<VxeDatePickerPropTypes.LabelFormat>, default: () => getConfig().input.labelFormat },
-    valueFormat: { type: String as PropType<VxeDatePickerPropTypes.ValueFormat>, default: () => getConfig().input.valueFormat },
+    startDay: { type: [String, Number] as PropType<VxeDatePickerPropTypes.StartDay>, default: () => getConfig().datePicker.startDay },
+    labelFormat: { type: String as PropType<VxeDatePickerPropTypes.LabelFormat>, default: () => getConfig().datePicker.labelFormat },
+    valueFormat: { type: String as PropType<VxeDatePickerPropTypes.ValueFormat>, default: () => getConfig().datePicker.valueFormat },
     editable: { type: Boolean as PropType<VxeDatePickerPropTypes.Editable>, default: true },
-    festivalMethod: { type: Function as PropType<VxeDatePickerPropTypes.FestivalMethod>, default: () => getConfig().input.festivalMethod },
-    disabledMethod: { type: Function as PropType<VxeDatePickerPropTypes.DisabledMethod>, default: () => getConfig().input.disabledMethod },
+    festivalMethod: { type: Function as PropType<VxeDatePickerPropTypes.FestivalMethod>, default: () => getConfig().datePicker.festivalMethod },
+    disabledMethod: { type: Function as PropType<VxeDatePickerPropTypes.DisabledMethod>, default: () => getConfig().datePicker.disabledMethod },
 
     // week
-    selectDay: { type: [String, Number] as PropType<VxeDatePickerPropTypes.SelectDay>, default: () => getConfig().input.selectDay },
+    selectDay: { type: [String, Number] as PropType<VxeDatePickerPropTypes.SelectDay>, default: () => getConfig().datePicker.selectDay },
 
     prefixIcon: String as PropType<VxeDatePickerPropTypes.PrefixIcon>,
     suffixIcon: String as PropType<VxeDatePickerPropTypes.SuffixIcon>,
     placement: String as PropType<VxeDatePickerPropTypes.Placement>,
-    transfer: { type: Boolean as PropType<VxeDatePickerPropTypes.Transfer>, default: () => getConfig().input.transfer }
+    transfer: {
+      type: Boolean as PropType<VxeDatePickerPropTypes.Transfer>,
+      default: null
+    }
   },
   emits: [
     'update:modelValue',
@@ -155,6 +158,8 @@ export default defineComponent({
   ] as VxeDatePickerEmits,
   setup (props, context) {
     const { slots, emit } = context
+
+    const $xeTable = inject<VxeTableConstructor & VxeTablePrivateMethods | null>('$xeTable', null)
     const $xeForm = inject<VxeFormConstructor & VxeFormPrivateMethods | null>('$xeForm', null)
     const formItemInfo = inject<VxeFormDefines.ProvideItemInfo | null>('xeFormItemInfo', null)
 
@@ -207,6 +212,20 @@ export default defineComponent({
       }
       return XEUtils.toStringDate(value, format)
     }
+
+    const compTransfer = computed(() => {
+      const { transfer } = props
+      if (transfer === null) {
+        const globalTransfer = getConfig().datePicker.transfer
+        if (XEUtils.isBoolean(globalTransfer)) {
+          return globalTransfer
+        }
+        if ($xeTable) {
+          return true
+        }
+      }
+      return transfer
+    })
 
     const computeIsDateTimeType = computed(() => {
       const { type } = props
@@ -1239,10 +1258,11 @@ export default defineComponent({
 
     const updatePlacement = () => {
       return nextTick().then(() => {
-        const { transfer, placement } = props
+        const { placement } = props
         const { panelIndex } = reactData
         const targetElem = refInputTarget.value
         const panelElem = refDatePickerPanel.value
+        const transfer = compTransfer.value
         if (targetElem && panelElem) {
           const targetHeight = targetElem.offsetHeight
           const targetWidth = targetElem.offsetWidth
@@ -1841,10 +1861,11 @@ export default defineComponent({
     }
 
     const renderPanel = () => {
-      const { type, transfer } = props
+      const { type } = props
       const { inited, animatVisible, visiblePanel, panelPlacement, panelStyle } = reactData
       const vSize = computeSize.value
       const isDatePickerType = computeIsDatePickerType.value
+      const transfer = compTransfer.value
       const renders = []
       if (isDatePickerType) {
         if (type === 'datetime') {

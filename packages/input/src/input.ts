@@ -7,7 +7,7 @@ import { toStringTimeDate, getDateQuarter } from './date'
 import { handleNumber, toFloatValueFixed } from './number'
 import { getSlotVNs } from '../..//ui/src/vn'
 
-import type { VxeInputConstructor, VxeInputEmits, InputReactData, InputMethods, VxeInputPropTypes, InputPrivateRef, VxeFormConstructor, VxeFormPrivateMethods, VxeFormDefines } from '../../../types'
+import type { VxeInputConstructor, VxeInputEmits, InputReactData, InputMethods, VxeInputPropTypes, InputPrivateRef, VxeFormConstructor, VxeFormPrivateMethods, VxeFormDefines, VxeTableConstructor, VxeTablePrivateMethods } from '../../../types'
 
 interface DateYearItem {
   date: Date;
@@ -113,7 +113,10 @@ export default defineComponent({
     prefixIcon: String as PropType<VxeInputPropTypes.PrefixIcon>,
     suffixIcon: String as PropType<VxeInputPropTypes.SuffixIcon>,
     placement: String as PropType<VxeInputPropTypes.Placement>,
-    transfer: { type: Boolean as PropType<VxeInputPropTypes.Transfer>, default: () => getConfig().input.transfer }
+    transfer: {
+      type: Boolean as PropType<VxeInputPropTypes.Transfer>,
+      default: null
+    }
   },
   emits: [
     'update:modelValue',
@@ -138,6 +141,8 @@ export default defineComponent({
   ] as VxeInputEmits,
   setup (props, context) {
     const { slots, emit } = context
+
+    const $xeTable = inject<VxeTableConstructor & VxeTablePrivateMethods | null>('$xeTable', null)
     const $xeForm = inject<VxeFormConstructor & VxeFormPrivateMethods | null>('$xeForm', null)
     const formItemInfo = inject<VxeFormDefines.ProvideItemInfo | null>('xeFormItemInfo', null)
 
@@ -190,6 +195,20 @@ export default defineComponent({
       }
       return XEUtils.toStringDate(value, format)
     }
+
+    const compTransfer = computed(() => {
+      const { transfer } = props
+      if (transfer === null) {
+        const globalTransfer = getConfig().input.transfer
+        if (XEUtils.isBoolean(globalTransfer)) {
+          return globalTransfer
+        }
+        if ($xeTable) {
+          return true
+        }
+      }
+      return transfer
+    })
 
     const computeIsDateTimeType = computed(() => {
       const { type } = props
@@ -1501,10 +1520,11 @@ export default defineComponent({
 
     const updatePlacement = () => {
       return nextTick().then(() => {
-        const { transfer, placement } = props
+        const { placement } = props
         const { panelIndex } = reactData
         const targetElem = refInputTarget.value
         const panelElem = refInputPanel.value
+        const transfer = compTransfer.value
         if (targetElem && panelElem) {
           const targetHeight = targetElem.offsetHeight
           const targetWidth = targetElem.offsetWidth
@@ -2103,9 +2123,10 @@ export default defineComponent({
     }
 
     const renderPanel = () => {
-      const { type, transfer } = props
+      const { type } = props
       const { inited, animatVisible, visiblePanel, panelPlacement, panelStyle } = reactData
       const vSize = computeSize.value
+      const transfer = compTransfer.value
       const isDatePickerType = computeIsDatePickerType.value
       const renders = []
       if (isDatePickerType) {

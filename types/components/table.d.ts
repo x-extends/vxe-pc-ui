@@ -2503,6 +2503,14 @@ export interface TableMethods<DT = any> {
    */
   clearData(rows?: any | any[], field?: string): Promise<any>
   /**
+   * 获取单元格 td 元素
+   */
+  getCellElement(row: any, fieldOrColumn: VxeColumnPropTypes.Field | VxeTableDefines.ColumnInfo<any> | null): HTMLTableDataCellElement | null
+  /**
+   * 获取单元格显示值
+   */
+  getCellLabel(row: any, fieldOrColumn: VxeColumnPropTypes.Field | VxeTableDefines.ColumnInfo<any> | null): string | number | null
+  /**
    * 用于 edit-config，判断行是否为新增的临时数据
    * @param row 指定行
    */
@@ -3085,8 +3093,11 @@ export interface TablePrivateMethods<D = any> {
   triggerHoverEvent(evnt: any, params: any): void
   setHoverRow(row: any): void
   clearHoverRow(): void
+  /**
+   * 已废弃，被 getCellElement 替换
+   * @deprecated
+   */
   getCell(row: any, column: VxeTableDefines.ColumnInfo<any>): HTMLTableDataCellElement | null
-  getCellLabel(row: any, column: VxeTableDefines.ColumnInfo<any>): any
   findRowIndexOf(list: any[], row: any): number
   eqRow(row1: any, row2: any): boolean
 }

@@ -56,6 +56,17 @@ setConfig({
   collapse: {},
   collapsePane: {},
   column: {},
+  datePicker: {
+    // size: null,
+    // transfer: false
+    // parseFormat: 'yyyy-MM-dd HH:mm:ss.SSS',
+    // labelFormat: '',
+    // valueFormat: '',
+    startDate: new Date(1900, 0, 1),
+    endDate: new Date(2100, 0, 1),
+    startDay: 1,
+    selectDay: 1
+  },
   drawer: {
     // size: null,
     position: 'right',
@@ -145,6 +156,12 @@ setConfig({
     // storage: false,
     storageKey: 'VXE_MODAL_POSITION'
   },
+  numberInput: {
+    // size: null,
+    // transfer: false
+    digits: 2,
+    controls: true
+  },
   optgroup: {},
   option: {},
   pager: {
@@ -157,8 +174,8 @@ setConfig({
     // pageSizes: [10, 15, 20, 50, 100],
     // layouts: ['PrevJump', 'PrevPage', 'Jump', 'PageCount', 'NextPage', 'NextJump', 'Sizes', 'Total']
   },
-  passwordInput: {},
   print: {},
+  passwordInput: {},
   printPageBreak: {},
   pulldown: {},
   radio: {

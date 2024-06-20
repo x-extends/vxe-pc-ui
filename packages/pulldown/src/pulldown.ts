@@ -1,10 +1,10 @@
-import { defineComponent, h, Teleport, ref, Ref, onUnmounted, reactive, nextTick, PropType, watch, createCommentVNode } from 'vue'
+import { defineComponent, h, Teleport, ref, Ref, onUnmounted, reactive, inject, computed, nextTick, PropType, watch, createCommentVNode } from 'vue'
 import XEUtils from 'xe-utils'
 import { getConfig, globalEvents, createEvent, useSize, VxeComponentStyleType } from '../../ui'
 import { getAbsolutePos, getEventTargetNode } from '../../ui/src/dom'
 import { getLastZIndex, nextZIndex } from '../../ui/src/utils'
 
-import type { VxePulldownConstructor, VxePulldownPropTypes, VxePulldownEmits, PulldownReactData, PulldownMethods, PulldownPrivateRef, VxePulldownMethods } from '../../../types'
+import type { VxePulldownConstructor, VxePulldownPropTypes, VxePulldownEmits, PulldownReactData, PulldownMethods, PulldownPrivateRef, VxePulldownMethods, VxeTableConstructor, VxeTablePrivateMethods } from '../../../types'
 
 export default defineComponent({
   name: 'VxePulldown',
@@ -16,7 +16,10 @@ export default defineComponent({
     className: [String, Function] as PropType<VxePulldownPropTypes.ClassName>,
     popupClassName: [String, Function] as PropType<VxePulldownPropTypes.PopupClassName>,
     destroyOnClose: Boolean as PropType<VxePulldownPropTypes.DestroyOnClose>,
-    transfer: Boolean as PropType<VxePulldownPropTypes.Transfer>
+    transfer: {
+      type: Boolean as PropType<VxePulldownPropTypes.Transfer>,
+      default: null
+    }
   },
   emits: [
     'update:modelValue',
@@ -24,6 +27,8 @@ export default defineComponent({
   ] as VxePulldownEmits,
   setup (props, context) {
     const { slots, emit } = context
+
+    const $xeTable = inject<VxeTableConstructor & VxeTablePrivateMethods | null>('$xeTable', null)
 
     const xID = XEUtils.uniqueId()
 
@@ -42,6 +47,20 @@ export default defineComponent({
     const refElem = ref() as Ref<HTMLDivElement>
     const refPulldowContent = ref() as Ref<HTMLDivElement>
     const refPulldowPnanel = ref() as Ref<HTMLDivElement>
+
+    const compTransfer = computed(() => {
+      const { transfer } = props
+      if (transfer === null) {
+        const globalTransfer = getConfig().pulldown.transfer
+        if (XEUtils.isBoolean(globalTransfer)) {
+          return globalTransfer
+        }
+        if ($xeTable) {
+          return true
+        }
+      }
+      return transfer
+    })
 
     const refMaps: PulldownPrivateRef = {
       refElem
@@ -72,8 +91,9 @@ export default defineComponent({
      */
     const updatePlacement = () => {
       return nextTick().then(() => {
-        const { transfer, placement } = props
+        const { placement } = props
         const { panelIndex, visiblePanel } = reactData
+        const transfer = compTransfer.value
         if (visiblePanel) {
           const targetElem = refPulldowContent.value
           const panelElem = refPulldowPnanel.value
@@ -276,8 +296,9 @@ export default defineComponent({
     })
 
     const renderVN = () => {
-      const { className, popupClassName, destroyOnClose, transfer, disabled } = props
+      const { className, popupClassName, destroyOnClose, disabled } = props
       const { inited, isActivated, animatVisible, visiblePanel, panelStyle, panelPlacement } = reactData
+      const transfer = compTransfer.value
       const vSize = computeSize.value
       const defaultSlot = slots.default
       const headerSlot = slots.header
