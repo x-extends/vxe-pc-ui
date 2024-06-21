@@ -1596,7 +1596,7 @@ export namespace VxeTablePropTypes {
     /**
      * 自定义打印内容
      */
-    content?: string
+    html?: string
     /**
      * 列过滤方法
      */
@@ -1614,9 +1614,21 @@ export namespace VxeTablePropTypes {
      */
     beforePrintMethod?(params: {
       $table: VxeTableConstructor | null
-      content: string
+      html: string
       options: PrintHandleOptions
+
+      /**
+       * 已被 html 替换
+       * @deprecated
+       */
+      content: string
     }): string
+
+    /**
+     * 已被 html 替换
+     * @deprecated
+     */
+    content?: string
   }
   export interface PrintOpts extends PrintConfig { }
   export interface PrintHandleOptions extends PrintConfig { }
