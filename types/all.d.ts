@@ -225,7 +225,7 @@ export * from './components/tree'
 export * from './components/tree-select'
 export * from './components/upload'
 
-// Vxe Table
+// 兼容老版本
 export * from './components/column'
 export * from './components/colgroup'
 export * from './components/table'

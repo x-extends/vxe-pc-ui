@@ -5,7 +5,7 @@ declare module '@vxe-ui/core' {
   export namespace VxeGlobalInterceptorHandles {
     export interface InterceptorOptions {
       /**
-       * 表格 - 自定义菜单方法
+       * 表格 - 事件处理方法
        */
       tableInterceptorMethod?: (params: any) => any
     }

@@ -17,10 +17,11 @@
   color: var(--vxe-ui-font-color);
   border: 0;
   border-radius: var(--vxe-ui-base-border-radius);
-  background-color: var(--vxe-ui-layout-background-color);
+  background-color: inherit;
   box-shadow: none;
 }
 .vxe-input {
+  background-color: var(--vxe-ui-layout-background-color);
   .vxe-input--inner {
     &::placeholder {
       color: var(--vxe-ui-input-placeholder-color);
