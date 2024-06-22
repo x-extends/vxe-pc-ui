@@ -844,6 +844,10 @@ export namespace VxeTablePropTypes {
      */
     isDel?: boolean
     /**
+     * 是否开启回退键功能
+     */
+    isBack?: boolean
+    /**
      * 是否开启回车移动上下行移动
      */
     isEnter?: boolean
@@ -3138,6 +3142,7 @@ export type VxeTableEmits = [
   'cell-mouseleave',
   'cell-selected',
   'cell-delete-value',
+  'cell-backspace-value',
   'header-cell-click',
   'header-cell-dblclick',
   'header-cell-menu',
