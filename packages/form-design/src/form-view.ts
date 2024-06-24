@@ -109,10 +109,11 @@ export default defineComponent({
       XEUtils.eachTree(reactData.widgetObjList, widget => {
         const { name, field, required } = widget
         const compConf = renderer.get(name) || {}
-        const createWidgetViewRules = compConf.createFormDesignWidgetRules
-        formData[field] = getWidgetDefaultValue(widget)
-        if (createWidgetViewRules) {
-          const rules = createWidgetViewRules({ widget })
+        const createWidgetFieldValue = compConf.createFormDesignWidgetFieldValue
+        const createWidgetFieldRules = compConf.createFormDesignWidgetFieldRules
+        formData[field] = createWidgetFieldValue ? createWidgetFieldValue({ widget, $formView: $xeFormView }) : getWidgetDefaultValue(widget)
+        if (createWidgetFieldRules) {
+          const rules = createWidgetFieldRules({ widget, $formView: $xeFormView })
           if (rules && rules.length) {
             formRules[field] = rules
           }

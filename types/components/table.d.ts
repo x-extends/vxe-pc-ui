@@ -359,7 +359,7 @@ export namespace VxeTablePropTypes {
       minHeight?: VxeModalPropTypes.MinHeight
       className?: VxeModalPropTypes.ClassName
     }
-    trigger?: string,
+    trigger?: 'manual' | 'hover' | 'click' | '' | null
     immediate?: boolean
     placement?: 'left' | 'right' | 'top-left' | 'top-right' | 'bottom-left' | 'bottom-right'
     /**
@@ -2421,6 +2421,10 @@ export interface TableMethods<DT = any> {
    * @param field 指定字段名
    */
   reloadRow(rows: any | any[], record?: any, field?: string): Promise<void>
+  /**
+   * 获取自定义的 params 属性
+   */
+  getParams (): any
   /**
    * 用于树结构，给行数据加载子节点
    * @param row 行对象

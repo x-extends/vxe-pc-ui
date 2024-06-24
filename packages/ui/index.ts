@@ -43,7 +43,9 @@ setConfig({
     separator: '/'
   },
   breadcrumbItem: {},
-  button: {},
+  button: {
+    trigger: 'hover'
+  },
   buttonGroup: {},
   card: {
     border: true,

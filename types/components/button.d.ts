@@ -39,6 +39,7 @@ export namespace VxeButtonPropTypes {
   export type Circle = boolean
   export type Disabled = boolean
   export type Loading = boolean
+  export type Trigger = 'manual' | 'hover' | 'click' | '' | null
   export type DestroyOnClose = boolean
   export type Transfer = boolean
 }
@@ -92,6 +93,7 @@ export type VxeButtonProps = {
    * 是否加载中
    */
   loading?: VxeButtonPropTypes.Loading
+  trigger?: VxeButtonPropTypes.Trigger
   /**
    * 在下拉面板关闭时销毁内容
    */
@@ -108,8 +110,9 @@ export interface VxeButtonPrivateComputed extends ButtonPrivateComputed { }
 
 export interface ButtonReactData {
   inited: boolean
-  showPanel: boolean
+  visiblePanel: boolean
   animatVisible: boolean
+  isActivated: boolean
   panelIndex: number
   panelStyle: VxeComponentStyleType
   panelPlacement: any
@@ -121,6 +124,8 @@ export interface ButtonInternalData {
 
 export interface ButtonMethods {
   dispatchEvent(type: ValueOf<VxeButtonEmits>, params: Record<string, any>, evnt: Event | null): void
+  openPanel(): Promise<any>
+  closePanel(): Promise<any>
   /**
    * 获取焦点
    */

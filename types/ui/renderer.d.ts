@@ -709,9 +709,13 @@ declare module '@vxe-ui/core' {
      */
     renderFormDesignWidgetView?(renderOpts: VxeGlobalRendererHandles.RenderFormDesignWidgetViewOptions, params: VxeGlobalRendererHandles.RenderFormDesignWidgetViewParams): VxeComponentSlotType | VxeComponentSlotType[]
     /**
-     * 表单设计器 - 创建控件校验规则
+     * 表单设计器 - 创建控件字段的默认值
      */
-    createFormDesignWidgetRules?(params: VxeGlobalRendererHandles.CreateFormDesignWidgetRulesParams): VxeFormDefines.FormRule[]
+    createFormDesignWidgetFieldValue?(params: VxeGlobalRendererHandles.CreateFormDesignWidgetFieldValue): any
+    /**
+     * 表单设计器 - 创建控件字段的校验规则
+     */
+    createFormDesignWidgetFieldRules?(params: VxeGlobalRendererHandles.CreateFormDesignWidgetFieldRules): VxeFormDefines.FormRule[]
 
     /**
      * 表单视图 - 创建渲染电脑端表单
@@ -769,9 +773,12 @@ declare module '@vxe-ui/core' {
       isEditMode: boolean
       isViewMode: boolean
     }
-    export interface CreateFormDesignWidgetRulesParams<D = any> {
+
+    export interface CreateFormDesignWidgetFieldValue<D = any> {
+      $formView: null | VxeFormViewConstructor
       widget: VxeFormDesignDefines.WidgetObjItem<D>
     }
+    export interface CreateFormDesignWidgetFieldRules<D = any> extends CreateFormDesignWidgetFieldValue<D> {}
     export interface RenderFormDesignWidgetEditOptions extends RenderFormDesignWidgetFormViewOptions {}
     export interface RenderFormDesignWidgetFormViewOptions {
       name: string

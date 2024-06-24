@@ -144,6 +144,25 @@
     </p>
 
     <p>
+      <vxe-button status="danger" transfer trigger="manual">
+        <template #default>手动</template>
+        <template #dropdowns>
+          <vxe-button mode="text" content="下拉按钮1"></vxe-button>
+          <vxe-button mode="text" content="下拉按钮2" status="danger"></vxe-button>
+          <vxe-button mode="text" content="下拉按钮3"></vxe-button>
+        </template>
+      </vxe-button>
+      <vxe-button status="danger" transfer trigger="click">
+        <template #default>点击</template>
+        <template #dropdowns>
+          <vxe-button mode="text" content="下拉按钮1"></vxe-button>
+          <vxe-button mode="text" content="下拉按钮2" status="danger"></vxe-button>
+          <vxe-button mode="text" content="下拉按钮3"></vxe-button>
+        </template>
+      </vxe-button>
+    </p>
+
+    <p>
       <vxe-button icon="fa fa-plus" content="使用第三方图标"></vxe-button>
       <vxe-button status="primary" content="主要图标颜色" icon="fa fa-save"></vxe-button>
       <vxe-button status="success" content="成功图标颜色" icon="fa fa-check"></vxe-button>
