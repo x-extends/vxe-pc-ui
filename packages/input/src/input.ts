@@ -2278,7 +2278,7 @@ export default defineComponent({
       const isSearchType = computeIsSearchType.value
       const isClearable = computeIsClearable.value
       const isExtraBtn = isPawdType || isNumType || isDatePickerType || isSearchType
-      return isClearable || suffixSlot || suffixIcon
+      return isClearable || suffixSlot || suffixIcon || isExtraBtn
         ? h('div', {
           class: ['vxe-input--suffix', {
             'is--clear': isClearable && !disabled && !(inputValue === '' || XEUtils.eqNull(inputValue))

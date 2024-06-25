@@ -340,7 +340,13 @@ renderer.mixin({
   VxeInput: {
     renderItemContent: defaultItemRender
   },
+  VxeNumberInput: {
+    renderItemContent: defaultItemRender
+  },
   VxeTextarea: {
+    renderItemContent: defaultItemRender
+  },
+  VxeDatePicker: {
     renderItemContent: defaultItemRender
   },
   VxeButton: {
