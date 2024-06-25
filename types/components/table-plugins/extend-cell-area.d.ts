@@ -263,6 +263,11 @@ export namespace VxeTableProDefines {
   }
   export interface ClearCellAreaMergeEventParams<D = any> extends EventParams<D>, ClearCellAreaMergeParams<D> { }
 
+  export interface ClearCellAreaSelectionParams<D = any> {
+    cellAreas: VxeTableProDefines.MouseCellArea<D>[]
+  }
+  export interface ClearCellAreaSelectionEventParams<D = any> extends EventParams<D>, ClearCellAreaSelectionParams<D> { }
+
   export interface HeaderCellAreaSelectionParams<D = any> {
     targetRows: D[]
     targetCols: VxeTableDefines.ColumnInfo<D>[]
@@ -379,6 +384,7 @@ export type VxeTableProEmits = [
   'cell-area-cut',
   'cell-area-paste',
   'cell-area-merge',
+  'clear-cell-area-selection',
   'clear-cell-area-merge',
   'header-cell-area-selection',
   'cell-area-selection-invalid',
@@ -409,6 +415,7 @@ declare module '../table' {
     onCellAreaPaste?: VxeTableEvents.CellAreaPaste<D>
     onCellAreaMerge?: VxeTableEvents.CellAreaMerge<D>
     onClearCellAreaMerge?: VxeTableEvents.ClearCellAreaMerge<D>
+    onClearCellAreaSelection?: VxeTableEvents.ClearCellAreaSelection<D>
     onHeaderCellAreaSelection?: VxeTableEvents.HeaderCellAreaSelection<D>
     onCellAreaSelectionInvalid?: VxeTableEvents.CellAreaSelectionInvalid<D>
     onCellAreaSelectionStart?: VxeTableEvents.CellAreaSelectionStart<D>
@@ -454,6 +461,7 @@ declare module '../table' {
     cellAreaPaste?: VxeTableEvents.CellAreaPaste<D>
     cellAreaMerge?: VxeTableEvents.CellAreaMerge<D>
     clearCellAreaMerge?: VxeTableEvents.ClearCellAreaMerge<D>
+    clearCellAreaSelection?: VxeTableEvents.ClearCellAreaSelection<D>
     headerCellAreaSelection?: VxeTableEvents.HeaderCellAreaSelection<D>
     cellAreaSelectionInvalidtart?: VxeTableEvents.CellAreaSelectionInvalid<D>
     cellAreaSelectionStart?: VxeTableEvents.CellAreaSelectionStart<D>
@@ -481,6 +489,7 @@ declare module '../table' {
     export type CellAreaPaste<D = any> = (params: VxeTableProDefines.CellAreaPasteParams<D>) => void
     export type CellAreaMerge<D = any> = (params: VxeTableProDefines.CellAreaMergeEventParams<D>) => void
     export type ClearCellAreaMerge<D = any> = (params: VxeTableProDefines.ClearCellAreaMergeEventParams<D>) => void
+    export type ClearCellAreaSelection<D = any> = (params: VxeTableProDefines.ClearCellAreaSelectionEventParams<D>) => void
     export type HeaderCellAreaSelection<D = any> = (params: VxeTableProDefines.HeaderCellAreaSelectionEventParams<D>) => void
     export type CellAreaSelectionInvalid<D = any> = (params: VxeTableProDefines.CellAreaSelectionInvalidEventParams<D>) => void
     export type CellAreaSelectionStart<D = any> = (params: VxeTableProDefines.CellAreaSelectionStartEventParams<D>) => void
@@ -511,6 +520,7 @@ declare module '../grid' {
     onCellAreaPaste?: VxeGridEvents.CellAreaPaste<D>
     onCellAreaMerge?: VxeGridEvents.CellAreaMerge<D>
     onClearCellAreaMerge?: VxeGridEvents.ClearCellAreaMerge<D>
+    onClearCellAreaSelection?: VxeGridEvents.ClearCellAreaSelection<D>
     onHeaderCellAreaSelection?: VxeGridEvents.HeaderCellAreaSelection<D>
     onCellAreaSelectionInvalid?: VxeGridEvents.CellAreaSelectionInvalid<D>
     onCellAreaSelectionStart?: VxeGridEvents.CellAreaSelectionStart<D>
@@ -556,6 +566,7 @@ declare module '../grid' {
     cellAreaPaste?: VxeGridEvents.CellAreaPaste<D>
     cellAreaMerge?: VxeGridEvents.CellAreaMerge<D>
     clearCellAreaMerge?: VxeGridEvents.ClearCellAreaMerge<D>
+    clearCellAreaSelection?: VxeGridEvents.ClearCellAreaSelection<D>
     headerCellAreaSelection?: VxeGridEvents.HeaderCellAreaSelection<D>
     cellAreaSelectionInvalid?: VxeGridEvents.CellAreaSelectionInvalid<D>
     cellAreaSelectionStart?: VxeGridEvents.CellAreaSelectionStart<D>
@@ -583,6 +594,7 @@ declare module '../grid' {
     export type CellAreaPaste<D = any> = (params: VxeTableProDefines.CellAreaPasteParams<D>) => void
     export type CellAreaMerge<D = any> = (params: VxeTableProDefines.CellAreaMergeParams<D>) => void
     export type ClearCellAreaMerge<D = any> = (params: VxeTableProDefines.ClearCellAreaMergeParams<D>) => void
+    export type ClearCellAreaSelection<D = any> = (params: VxeTableProDefines.ClearCellAreaSelectionParams<D>) => void
     export type HeaderCellAreaSelection<D = any> = (params: VxeTableProDefines.HeaderCellAreaSelectionParams<D>) => void
     export type CellAreaSelectionInvalid<D = any> = (params: VxeTableProDefines.CellAreaSelectionInvalidEventParams<D>) => void
     export type CellAreaSelectionStart<D = any> = (params: VxeTableProDefines.CellAreaSelectionStartEventParams<D>) => void
