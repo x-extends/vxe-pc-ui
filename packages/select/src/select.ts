@@ -119,7 +119,7 @@ export default defineComponent({
         if (XEUtils.isBoolean(globalTransfer)) {
           return globalTransfer
         }
-        if ($xeTable) {
+        if ($xeTable || $xeForm) {
           return true
         }
       }

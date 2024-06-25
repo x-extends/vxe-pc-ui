@@ -171,6 +171,7 @@ export default defineComponent({
     const refElem = ref() as Ref<HTMLDivElement>
     const refInputTarget = ref() as Ref<HTMLInputElement>
     const refInputPanel = ref() as Ref<HTMLDivElement>
+    const refPanelWrapper = ref() as Ref<HTMLDivElement>
     const refInputTimeBody = ref() as Ref<HTMLDivElement>
 
     const refMaps: InputPrivateRef = {
@@ -203,7 +204,7 @@ export default defineComponent({
         if (XEUtils.isBoolean(globalTransfer)) {
           return globalTransfer
         }
-        if ($xeTable) {
+        if ($xeTable || $xeForm) {
           return true
         }
       }
@@ -1632,9 +1633,9 @@ export default defineComponent({
       const { visiblePanel, isActivated } = reactData
       const isDatePickerType = computeIsDatePickerType.value
       const el = refElem.value
-      const panelElem = refInputPanel.value
+      const panelWrapperElem = refPanelWrapper.value
       if (!disabled && isActivated) {
-        reactData.isActivated = getEventTargetNode(evnt, el).flag || getEventTargetNode(evnt, panelElem).flag
+        reactData.isActivated = getEventTargetNode(evnt, el).flag || getEventTargetNode(evnt, panelWrapperElem).flag
         if (!reactData.isActivated) {
           // 如果是日期类型
           if (isDatePickerType) {
@@ -1718,8 +1719,8 @@ export default defineComponent({
       const { visiblePanel } = reactData
       if (!disabled) {
         if (visiblePanel) {
-          const panelElem = refInputPanel.value
-          if (getEventTargetNode(evnt, panelElem).flag) {
+          const panelWrapperElem = refPanelWrapper.value
+          if (getEventTargetNode(evnt, panelWrapperElem).flag) {
             updatePlacement()
           } else {
             hidePanel()
@@ -2133,6 +2134,8 @@ export default defineComponent({
         if (type === 'datetime') {
           renders.push(
             h('div', {
+              key: type,
+              ref: refPanelWrapper,
               class: 'vxe-input--panel-layout-wrapper'
             }, [
               h('div', {
@@ -2146,12 +2149,16 @@ export default defineComponent({
         } else if (type === 'time') {
           renders.push(
             h('div', {
+              key: type,
+              ref: refPanelWrapper,
               class: 'vxe-input--panel-wrapper'
             }, renderTimePanel())
           )
         } else {
           renders.push(
             h('div', {
+              key: type || 'default',
+              ref: refPanelWrapper,
               class: 'vxe-input--panel-wrapper'
             }, renderDatePanel())
           )

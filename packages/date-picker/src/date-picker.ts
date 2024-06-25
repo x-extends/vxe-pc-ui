@@ -187,8 +187,9 @@ export default defineComponent({
 
     const refElem = ref() as Ref<HTMLDivElement>
     const refInputTarget = ref() as Ref<HTMLInputElement>
-    const refDatePickerPanel = ref() as Ref<HTMLDivElement>
-    const refDatePickerTimeBody = ref() as Ref<HTMLDivElement>
+    const refInputPanel = ref() as Ref<HTMLDivElement>
+    const refPanelWrapper = ref() as Ref<HTMLDivElement>
+    const refInputTimeBody = ref() as Ref<HTMLDivElement>
 
     const refMaps: DatePickerPrivateRef = {
       refElem,
@@ -220,7 +221,7 @@ export default defineComponent({
         if (XEUtils.isBoolean(globalTransfer)) {
           return globalTransfer
         }
-        if ($xeTable) {
+        if ($xeTable || $xeForm) {
           return true
         }
       }
@@ -1241,7 +1242,7 @@ export default defineComponent({
       if (isDateTimeType) {
         reactData.datetimePanelValue = reactData.datePanelValue || XEUtils.getWhatDay(Date.now(), 0, 'first')
         nextTick(() => {
-          const timeBodyElem = refDatePickerTimeBody.value
+          const timeBodyElem = refInputTimeBody.value
           XEUtils.arrayEach(timeBodyElem.querySelectorAll('li.is--selected'), updateTimePos)
         })
       }
@@ -1261,7 +1262,7 @@ export default defineComponent({
         const { placement } = props
         const { panelIndex } = reactData
         const targetElem = refInputTarget.value
-        const panelElem = refDatePickerPanel.value
+        const panelElem = refInputPanel.value
         const transfer = compTransfer.value
         if (targetElem && panelElem) {
           const targetHeight = targetElem.offsetHeight
@@ -1370,9 +1371,9 @@ export default defineComponent({
       const { visiblePanel, isActivated } = reactData
       const isDatePickerType = computeIsDatePickerType.value
       const el = refElem.value
-      const panelElem = refDatePickerPanel.value
+      const panelWrapperElem = refPanelWrapper.value
       if (!disabled && isActivated) {
-        reactData.isActivated = getEventTargetNode(evnt, el).flag || getEventTargetNode(evnt, panelElem).flag
+        reactData.isActivated = getEventTargetNode(evnt, el).flag || getEventTargetNode(evnt, panelWrapperElem).flag
         if (!reactData.isActivated) {
           // 如果是日期类型
           if (isDatePickerType) {
@@ -1456,8 +1457,8 @@ export default defineComponent({
       const { visiblePanel } = reactData
       if (!disabled) {
         if (visiblePanel) {
-          const panelElem = refDatePickerPanel.value
-          if (getEventTargetNode(evnt, panelElem).flag) {
+          const panelWrapperElem = refPanelWrapper.value
+          if (getEventTargetNode(evnt, panelWrapperElem).flag) {
             updatePlacement()
           } else {
             hidePanel()
@@ -1820,7 +1821,7 @@ export default defineComponent({
           }, getI18n('vxe.button.confirm'))
         ]),
         h('div', {
-          ref: refDatePickerTimeBody,
+          ref: refInputTimeBody,
           class: 'vxe-date-picker--time-picker-body'
         }, [
           h('ul', {
@@ -1871,6 +1872,8 @@ export default defineComponent({
         if (type === 'datetime') {
           renders.push(
             h('div', {
+              key: type,
+              ref: refPanelWrapper,
               class: 'vxe-date-picker--panel-layout-wrapper'
             }, [
               h('div', {
@@ -1884,12 +1887,16 @@ export default defineComponent({
         } else if (type === 'time') {
           renders.push(
             h('div', {
+              key: type,
+              ref: refPanelWrapper,
               class: 'vxe-date-picker--panel-wrapper'
             }, renderTimePanel())
           )
         } else {
           renders.push(
             h('div', {
+              key: type || 'default',
+              ref: refPanelWrapper,
               class: 'vxe-date-picker--panel-wrapper'
             }, renderDatePanel())
           )
@@ -1899,7 +1906,7 @@ export default defineComponent({
           disabled: transfer ? !inited : true
         }, [
           h('div', {
-            ref: refDatePickerPanel,
+            ref: refInputPanel,
             class: ['vxe-table--ignore-clear vxe-date-picker--panel', `type--${type}`, {
               [`size--${vSize}`]: vSize,
               'is--transfer': transfer,

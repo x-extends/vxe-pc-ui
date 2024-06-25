@@ -5,7 +5,7 @@ import { getAbsolutePos, getEventTargetNode } from '../../ui/src/dom'
 import { getFuncText, getLastZIndex, nextZIndex } from '../../ui/src/utils'
 import { warnLog } from '../../ui/src/log'
 
-import type { VxeButtonConstructor, VxeButtonPropTypes, VxeButtonEmits, ButtonReactData, ButtonMethods, ButtonPrivateRef, ButtonInternalData, VxeButtonGroupConstructor, VxeButtonGroupPrivateMethods, VxeTableConstructor, VxeTablePrivateMethods } from '../../../types'
+import type { VxeButtonConstructor, VxeButtonPropTypes, VxeButtonEmits, ButtonReactData, ButtonMethods, ButtonPrivateRef, ButtonInternalData, VxeButtonGroupConstructor, VxeButtonGroupPrivateMethods, VxeTableConstructor, VxeTablePrivateMethods, VxeFormConstructor, VxeFormPrivateMethods } from '../../../types'
 
 export default defineComponent({
   name: 'VxeButton',
@@ -84,6 +84,7 @@ export default defineComponent({
     const { slots, emit } = context
 
     const $xeTable = inject<VxeTableConstructor & VxeTablePrivateMethods | null>('$xeTable', null)
+    const $xeForm = inject<VxeFormConstructor & VxeFormPrivateMethods | null>('$xeForm', null)
     const $xeButtonGroup = inject<(VxeButtonGroupConstructor & VxeButtonGroupPrivateMethods) | null>('$xeButtonGroup', null)
 
     const xID = XEUtils.uniqueId()
@@ -130,7 +131,7 @@ export default defineComponent({
         if (XEUtils.isBoolean(globalTransfer)) {
           return globalTransfer
         }
-        if ($xeTable) {
+        if ($xeTable || $xeForm) {
           return true
         }
       }

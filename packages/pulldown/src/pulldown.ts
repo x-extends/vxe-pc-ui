@@ -4,7 +4,7 @@ import { getConfig, globalEvents, createEvent, useSize, VxeComponentStyleType } 
 import { getAbsolutePos, getEventTargetNode } from '../../ui/src/dom'
 import { getLastZIndex, nextZIndex } from '../../ui/src/utils'
 
-import type { VxePulldownConstructor, VxePulldownPropTypes, VxePulldownEmits, PulldownReactData, PulldownMethods, PulldownPrivateRef, VxePulldownMethods, VxeTableConstructor, VxeTablePrivateMethods } from '../../../types'
+import type { VxePulldownConstructor, VxePulldownPropTypes, VxePulldownEmits, PulldownReactData, PulldownMethods, PulldownPrivateRef, VxePulldownMethods, VxeTableConstructor, VxeTablePrivateMethods, VxeFormConstructor, VxeFormPrivateMethods } from '../../../types'
 
 export default defineComponent({
   name: 'VxePulldown',
@@ -29,6 +29,7 @@ export default defineComponent({
     const { slots, emit } = context
 
     const $xeTable = inject<VxeTableConstructor & VxeTablePrivateMethods | null>('$xeTable', null)
+    const $xeForm = inject<VxeFormConstructor & VxeFormPrivateMethods | null>('$xeForm', null)
 
     const xID = XEUtils.uniqueId()
 
@@ -55,7 +56,7 @@ export default defineComponent({
         if (XEUtils.isBoolean(globalTransfer)) {
           return globalTransfer
         }
-        if ($xeTable) {
+        if ($xeTable || $xeForm) {
           return true
         }
       }

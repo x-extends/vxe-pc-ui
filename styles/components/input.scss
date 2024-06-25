@@ -200,8 +200,13 @@
   }
 }
 
+.vxe-input--panel {
+  pointer-events: none;
+}
+
 .vxe-input--panel-wrapper,
 .vxe-input--panel-layout-wrapper {
+  pointer-events: auto;
   background-color: var(--vxe-ui-layout-background-color);
   border: 1px solid var(--vxe-ui-base-popup-border-color);
   box-shadow: 0 0 6px 2px rgba(0, 0, 0, 0.1);
@@ -214,7 +219,7 @@
 }
 
 .vxe-input--panel-layout-wrapper {
-  display: flex;
+  display: inline-flex;
   flex-direction: row;
 }
 
