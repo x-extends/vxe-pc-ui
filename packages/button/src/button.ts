@@ -525,14 +525,14 @@ export default defineComponent({
                 'animat--enter': visiblePanel
               }],
               placement: reactData.panelPlacement,
-              style: reactData.panelStyle
+              style: reactData.panelStyle,
+              ...panelOns
             }, inited
               ? [
                   h('div', {
                     class: 'vxe-button--dropdown-wrapper',
                     onMousedown: mousedownDropdownEvent,
-                    onClick: clickDropdownEvent,
-                    ...panelOns
+                    onClick: clickDropdownEvent
                   }, destroyOnClose && !visiblePanel ? [] : slots.dropdowns({}))
                 ]
               : [])
