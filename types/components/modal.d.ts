@@ -363,7 +363,7 @@ export interface ModalController {
    * @param title 标题
    * @param options 参数
    */
-  notification(content: VxeModalPropTypes.Content, options?: VxeModalDefines.NotificationOptions): Promise<ModalEventTypes>
+  notification(content: VxeModalPropTypes.Content, title?: VxeModalPropTypes.Title, options?: VxeModalDefines.NotificationOptions): Promise<ModalEventTypes>
   /**
    * 创建消息通知
    * @param options 参数

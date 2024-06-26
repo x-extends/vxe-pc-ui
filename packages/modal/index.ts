@@ -87,7 +87,7 @@ function openMessage (content: VxeModalPropTypes.Content | VxeModalDefines.Modal
   }, content, '', options)
 }
 
-function openNotification (content: VxeModalPropTypes.Content | VxeModalDefines.ModalOptions, options?: VxeModalDefines.ModalOptions) {
+function openNotification (content: VxeModalPropTypes.Content | VxeModalDefines.ModalOptions, title?: VxeModalPropTypes.Title, options?: VxeModalDefines.ModalOptions) {
   return handleOpen({
     type: 'notification',
     mask: false,
@@ -96,7 +96,7 @@ function openNotification (content: VxeModalPropTypes.Content | VxeModalDefines.
     draggable: false,
     position: 'top-right',
     width: 320
-  }, content, '', options)
+  }, content, title, options)
 }
 
 export const ModalController = {

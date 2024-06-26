@@ -67,6 +67,7 @@ import VxeTreeSelect from './tree-select'
 import VxeUpload from './upload'
 
 import { saveLocalFile, readLocalFile } from './upload/src/util'
+import { printHtml } from './print/src/util'
 
 const components = [
   VxeAlert,
@@ -148,6 +149,7 @@ setTheme('light')
 // 兼容老版本
 export const modal = ModalController
 export const drawer = DrawerController
+export const print = printHtml
 export const saveFile = saveLocalFile
 export const readFile = readLocalFile
 
