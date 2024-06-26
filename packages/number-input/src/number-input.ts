@@ -583,37 +583,35 @@ export default defineComponent({
       const { inputValue } = reactData
       const suffixSlot = slots.suffix
       const isClearable = computeIsClearable.value
-      return isClearable || suffixSlot || suffixIcon
-        ? h('div', {
-          class: ['vxe-number-input--suffix', {
-            'is--clear': isClearable && !disabled && !(inputValue === '' || XEUtils.eqNull(inputValue))
-          }]
-        }, [
-          isClearable
-            ? h('div', {
-              class: 'vxe-number-input--clear-icon',
-              onClick: clearValueEvent
-            }, [
-              h('i', {
-                class: getIcon().INPUT_CLEAR
-              })
-            ])
-            : createCommentVNode(),
-          renderExtraSuffixIcon(),
-          suffixSlot || suffixIcon
-            ? h('div', {
-              class: 'vxe-number-input--suffix-icon',
-              onClick: clickSuffixEvent
-            }, suffixSlot
-              ? getSlotVNs(suffixSlot({}))
-              : [
-                  h('i', {
-                    class: suffixIcon
-                  })
-                ])
-            : createCommentVNode()
-        ])
-        : null
+      return h('div', {
+        class: ['vxe-number-input--suffix', {
+          'is--clear': isClearable && !disabled && !(inputValue === '' || XEUtils.eqNull(inputValue))
+        }]
+      }, [
+        isClearable
+          ? h('div', {
+            class: 'vxe-number-input--clear-icon',
+            onClick: clearValueEvent
+          }, [
+            h('i', {
+              class: getIcon().INPUT_CLEAR
+            })
+          ])
+          : createCommentVNode(),
+        renderExtraSuffixIcon(),
+        suffixSlot || suffixIcon
+          ? h('div', {
+            class: 'vxe-number-input--suffix-icon',
+            onClick: clickSuffixEvent
+          }, suffixSlot
+            ? getSlotVNs(suffixSlot({}))
+            : [
+                h('i', {
+                  class: suffixIcon
+                })
+              ])
+          : createCommentVNode()
+      ])
     }
 
     const renderExtraSuffixIcon = () => {

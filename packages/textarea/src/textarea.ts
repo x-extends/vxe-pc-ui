@@ -202,6 +202,11 @@ export default defineComponent({
       updateAutoTxt()
     })
 
+    watch(computeSizeOpts, () => {
+      updateAutoTxt()
+      handleResize()
+    })
+
     nextTick(() => {
       const { autosize } = props
       if (autosize) {

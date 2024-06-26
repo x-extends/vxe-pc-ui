@@ -1,5 +1,5 @@
-import { RenderFunction, SetupContext, Ref, ComponentPublicInstance, DefineComponent, UnwrapNestedRefs } from 'vue'
-import { defineVxeComponent, VxeComponentBaseOptions, VxeComponentEventParams, VxeComponentSizeType, ValueOf } from '@vxe-ui/core'
+import { RenderFunction, SetupContext, Ref, ComputedRef, WritableComputedRef, ComponentPublicInstance, DefineComponent, UnwrapNestedRefs } from 'vue'
+import { defineVxeComponent, VxeComponentBaseOptions, VxeComponentEventParams, VxeComponentSizeType, ValueOf, VxeGlobalRendererHandles } from '@vxe-ui/core'
 import { VxeFormPropTypes } from '../components/form'
 
 /* eslint-disable no-use-before-define,@typescript-eslint/ban-types */
@@ -174,6 +174,16 @@ export namespace VxeFormDesignEvents { }
 
 export namespace VxeFormDesignSlotTypes {}
 export interface VxeFormDesignSlots {
+}
+
+export interface FormDesignExport {
+  useWidgetView<T = any>(props: {
+    renderOpts: any
+    renderParams: any
+  }): {
+    currWidget: ComputedRef<VxeFormDesignDefines.WidgetObjItem<T>>,
+    widgetModel: WritableComputedRef<any>
+  }
 }
 
 export const FormDesign: typeof VxeFormDesign
