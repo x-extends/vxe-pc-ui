@@ -1409,7 +1409,13 @@ export namespace VxeTablePropTypes {
      * 导入数据的方式
      */
     mode?: string
-    modes?: string[]
+    /**
+     * 导入数据的方式列表
+     */
+    modes?: (string | {
+      label?: string | number
+      value: string | number
+    })[]
     /**
      * 是否显示内置的消息提示
      */
@@ -1438,9 +1444,7 @@ export namespace VxeTablePropTypes {
       status: boolean
     }): void
   }
-  export interface ImportOpts extends ImportConfig {
-    modes: string[]
-  }
+  export interface ImportOpts extends ImportConfig {}
   export interface ImportHandleOptions extends ImportConfig {
     data: any[]
     columns: VxeTableDefines.ColumnInfo[]
@@ -1477,13 +1481,16 @@ export namespace VxeTablePropTypes {
      */
     types?: string[]
     /**
-     * 输出数据的方式
+     * 导出数据的方式
      */
     mode?: string
     /**
-     * 输出数据的方式列表
+     * 导出数据的方式列表
      */
-    modes?: string[]
+    modes?: (string | {
+      label?: string | number
+      value: string | number
+    })[]
     /**
      * 是否为源数据
      */
@@ -1566,13 +1573,16 @@ export namespace VxeTablePropTypes {
      */
     sheetName?: string
     /**
-     * 输出数据的方式
+     * 导出数据的方式
      */
     mode?: string
     /**
-     * 输出数据的方式列表
+     * 导出数据的方式列表
      */
-    modes?: string[]
+    modes?: (string | {
+      label?: string | number
+      value: string | number
+    })[]
     /**
      * 是否为源数据
      */

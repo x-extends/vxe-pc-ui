@@ -129,14 +129,17 @@ export default {
     },
     import: {
       modes: {
-        covering: '覆盖',
-        insert: '新增'
+        covering: '覆盖方式（直接覆盖表格数据）',
+        insert: '底部追加（在表格的底部追加新数据）',
+        insertTop: '顶部追加（在表格的顶部追加新数据）',
+        insertBottom: '底部追加（在表格的底部追加新数据）'
       },
       impTitle: '导入数据',
       impFile: '文件名',
       impSelect: '选择文件',
       impType: '文件类型',
       impOpts: '参数设置',
+      impMode: '导入模式',
       impConfirm: '导入',
       impCancel: '取消'
     },
