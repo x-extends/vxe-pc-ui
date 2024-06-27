@@ -538,7 +538,7 @@ export default defineComponent({
             onMouseleave: numberStopDown
           }, [
             h('i', {
-              class: getIcon().INPUT_PREV_NUM
+              class: getIcon().NUMBER_INPUT_PREV_NUM
             })
           ]),
           h('div', {
@@ -550,7 +550,7 @@ export default defineComponent({
             onMouseleave: numberStopDown
           }, [
             h('i', {
-              class: getIcon().INPUT_NEXT_NUM
+              class: getIcon().NUMBER_INPUT_NEXT_NUM
             })
           ])
         ])

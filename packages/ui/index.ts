@@ -260,12 +260,18 @@ setIcon({
 
   // input
   INPUT_CLEAR: iconPrefix + 'error-circle-fill',
-  INPUT_PWD: iconPrefix + 'eye-fill',
-  INPUT_SHOW_PWD: iconPrefix + 'eye-fill-close',
-  INPUT_PREV_NUM: iconPrefix + 'caret-up',
-  INPUT_NEXT_NUM: iconPrefix + 'caret-down',
-  INPUT_DATE: iconPrefix + 'calendar',
   INPUT_SEARCH: iconPrefix + 'search',
+
+  // number-picker
+  NUMBER_INPUT_PREV_NUM: iconPrefix + 'caret-up',
+  NUMBER_INPUT_NEXT_NUM: iconPrefix + 'caret-down',
+
+  // date-picker
+  DATE_PICKER_DATE: iconPrefix + 'calendar',
+
+  // password-input
+  PASSWORD_INPUT_SHOW_PWD: iconPrefix + 'eye-fill-close',
+  PASSWORD_INPUT_HIDE_PWD: iconPrefix + 'eye-fill',
 
   // modal
   MODAL_ZOOM_MIN: iconPrefix + 'minus',

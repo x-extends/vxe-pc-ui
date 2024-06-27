@@ -98,7 +98,7 @@ export default defineComponent({
     modelValue: [String, Number, Date] as PropType<VxeDatePickerPropTypes.ModelValue>,
     immediate: { type: Boolean as PropType<VxeDatePickerPropTypes.Immediate>, default: true },
     name: String as PropType<VxeDatePickerPropTypes.Name>,
-    type: { type: String as PropType<VxeDatePickerPropTypes.Type>, default: 'text' },
+    type: { type: String as PropType<VxeDatePickerPropTypes.Type>, default: 'date' },
     clearable: { type: Boolean as PropType<VxeDatePickerPropTypes.Clearable>, default: () => getConfig().datePicker.clearable },
     readonly: Boolean as PropType<VxeDatePickerPropTypes.Readonly>,
     disabled: Boolean as PropType<VxeDatePickerPropTypes.Disabled>,
@@ -1921,17 +1921,6 @@ export default defineComponent({
       return createCommentVNode()
     }
 
-    const renderDatePickerIcon = () => {
-      return h('div', {
-        class: 'vxe-date-picker--control-icon',
-        onClick: datePickerOpenEvent
-      }, [
-        h('i', {
-          class: ['vxe-date-picker--date-picker-icon', getIcon().INPUT_DATE]
-        })
-      ])
-    }
-
     const renderPrefixIcon = () => {
       const { prefixIcon } = props
       const prefixSlot = slots.prefix
@@ -1958,41 +1947,46 @@ export default defineComponent({
       const { inputValue } = reactData
       const suffixSlot = slots.suffix
       const isClearable = computeIsClearable.value
-      return isClearable || suffixSlot || suffixIcon
-        ? h('div', {
-          class: ['vxe-date-picker--suffix', {
-            'is--clear': isClearable && !disabled && !(inputValue === '' || XEUtils.eqNull(inputValue))
-          }]
-        }, [
-          isClearable
-            ? h('div', {
-              class: 'vxe-date-picker--clear-icon',
-              onClick: clearValueEvent
-            }, [
-              h('i', {
-                class: getIcon().INPUT_CLEAR
-              })
-            ])
-            : createCommentVNode(),
-          renderExtraSuffixIcon(),
-          suffixSlot || suffixIcon
-            ? h('div', {
-              class: 'vxe-date-picker--suffix-icon',
-              onClick: clickSuffixEvent
-            }, suffixSlot
-              ? getSlotVNs(suffixSlot({}))
-              : [
-                  h('i', {
-                    class: suffixIcon
-                  })
-                ])
-            : createCommentVNode()
-        ])
-        : null
+      return h('div', {
+        class: ['vxe-date-picker--suffix', {
+          'is--clear': isClearable && !disabled && !(inputValue === '' || XEUtils.eqNull(inputValue))
+        }]
+      }, [
+        isClearable
+          ? h('div', {
+            class: 'vxe-date-picker--clear-icon',
+            onClick: clearValueEvent
+          }, [
+            h('i', {
+              class: getIcon().INPUT_CLEAR
+            })
+          ])
+          : createCommentVNode(),
+        renderExtraSuffixIcon(),
+        suffixSlot || suffixIcon
+          ? h('div', {
+            class: 'vxe-date-picker--suffix-icon',
+            onClick: clickSuffixEvent
+          }, suffixSlot
+            ? getSlotVNs(suffixSlot({}))
+            : [
+                h('i', {
+                  class: suffixIcon
+                })
+              ])
+          : createCommentVNode()
+      ])
     }
 
     const renderExtraSuffixIcon = () => {
-      return renderDatePickerIcon()
+      return h('div', {
+        class: 'vxe-date-picker--control-icon',
+        onClick: datePickerOpenEvent
+      }, [
+        h('i', {
+          class: ['vxe-date-picker--date-picker-icon', getIcon().DATE_PICKER_DATE]
+        })
+      ])
     }
 
     datePickerMethods = {

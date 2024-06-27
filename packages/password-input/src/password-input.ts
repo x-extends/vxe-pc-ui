@@ -184,7 +184,7 @@ export default defineComponent({
         onClick: passwordToggleEvent
       }, [
         h('i', {
-          class: ['password-input--password-icon', showPwd ? getIcon().INPUT_SHOW_PWD : getIcon().INPUT_PWD]
+          class: ['password-input--password-icon', showPwd ? getIcon().PASSWORD_INPUT_SHOW_PWD : getIcon().PASSWORD_INPUT_HIDE_PWD]
         })
       ])
     }

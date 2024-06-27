@@ -2201,7 +2201,7 @@ export default defineComponent({
             onMouseleave: numberStopDown
           }, [
             h('i', {
-              class: getIcon().INPUT_PREV_NUM
+              class: getIcon().NUMBER_INPUT_PREV_NUM
             })
           ]),
           h('div', {
@@ -2213,7 +2213,7 @@ export default defineComponent({
             onMouseleave: numberStopDown
           }, [
             h('i', {
-              class: getIcon().INPUT_NEXT_NUM
+              class: getIcon().NUMBER_INPUT_NEXT_NUM
             })
           ])
         ])
@@ -2226,7 +2226,7 @@ export default defineComponent({
         onClick: datePickerOpenEvent
       }, [
         h('i', {
-          class: ['vxe-input--date-picker-icon', getIcon().INPUT_DATE]
+          class: ['vxe-input--date-picker-icon', getIcon().DATE_PICKER_DATE]
         })
       ])
     }
@@ -2249,7 +2249,7 @@ export default defineComponent({
         onClick: passwordToggleEvent
       }, [
         h('i', {
-          class: ['vxe-input--password-icon', showPwd ? getIcon().INPUT_SHOW_PWD : getIcon().INPUT_PWD]
+          class: ['vxe-input--password-icon', showPwd ? getIcon().PASSWORD_INPUT_SHOW_PWD : getIcon().PASSWORD_INPUT_HIDE_PWD]
         })
       ])
     }

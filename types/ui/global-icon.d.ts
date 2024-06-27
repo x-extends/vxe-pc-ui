@@ -73,12 +73,18 @@ declare module '@vxe-ui/core' {
 
     // input
     INPUT_CLEAR?: string
-    INPUT_PWD?: string
-    INPUT_SHOW_PWD?: string
-    INPUT_PREV_NUM?: string
-    INPUT_NEXT_NUM?: string
-    INPUT_DATE?: string
     INPUT_SEARCH?: string
+
+    // number-picker
+    NUMBER_INPUT_PREV_NUM?: string
+    NUMBER_INPUT_NEXT_NUM?: string
+
+    // date-picker
+    DATE_PICKER_DATE?: string
+
+    // password-input
+    PASSWORD_INPUT_SHOW_PWD?: string
+    PASSWORD_INPUT_HIDE_PWD?: string
 
     // modal
     MODAL_ZOOM_MIN?: string

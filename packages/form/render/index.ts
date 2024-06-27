@@ -394,6 +394,9 @@ renderer.mixin({
   VxeSwitch: {
     renderItemContent: defaultItemRender
   },
+  VxeUpload: {
+    renderItemContent: defaultItemRender
+  },
 
   // 以下已废弃
   $input: {
