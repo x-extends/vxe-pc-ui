@@ -1,5 +1,5 @@
 import { RenderFunction, SetupContext, Ref, ComponentPublicInstance, DefineComponent } from 'vue'
-import { defineVxeComponent, VxeComponentBaseOptions, VxeComponentSizeType, VxeComponentEventParams, ValueOf } from '@vxe-ui/core'
+import { defineVxeComponent, VxeComponentBaseOptions, VxeComponentSizeType, VxeComponentEventParams, VxeComponentPermissionCodeType, VxeComponentPermissionMethod, ValueOf } from '@vxe-ui/core'
 import { VxeButtonProps, VxeButtonPropTypes } from './button'
 
 /* eslint-disable no-use-before-define,@typescript-eslint/ban-types */
@@ -25,6 +25,8 @@ export interface VxeButtonGroupPrivateRef extends ButtonGroupPrivateRef { }
 
 export namespace VxeButtonGroupPropTypes {
   export type Size = VxeComponentSizeType
+  export type PermissionCode = VxeComponentPermissionCodeType
+  export type PermissionMethod = VxeComponentPermissionMethod
   export type Options = VxeButtonProps[]
   export type Round = boolean
   export type Circle = boolean
@@ -36,6 +38,8 @@ export namespace VxeButtonGroupPropTypes {
 
 export type VxeButtonGroupProps = {
   size?: VxeButtonGroupPropTypes.Size
+  permissionCode?: VxeButtonGroupPropTypes.PermissionCode
+  permissionMethod?: VxeButtonGroupPropTypes.PermissionMethod
   options?: VxeButtonGroupPropTypes.Options
   mode?: VxeButtonGroupPropTypes.Mode
   status?: VxeButtonGroupPropTypes.Status

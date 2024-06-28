@@ -1,6 +1,6 @@
-import { defineComponent, h, ref, Ref, computed, Teleport, VNode, onUnmounted, reactive, nextTick, PropType, onMounted, inject } from 'vue'
+import { defineComponent, h, ref, Ref, computed, Teleport, VNode, onUnmounted, reactive, nextTick, PropType, onMounted, inject, createCommentVNode } from 'vue'
 import XEUtils from 'xe-utils'
-import { getConfig, globalEvents, getIcon, createEvent, useSize } from '../../ui'
+import { getConfig, globalEvents, getIcon, createEvent, useSize, usePermission } from '../../ui'
 import { getAbsolutePos, getEventTargetNode } from '../../ui/src/dom'
 import { getFuncText, getLastZIndex, nextZIndex } from '../../ui/src/utils'
 import { warnLog } from '../../ui/src/log'
@@ -25,6 +25,11 @@ export default defineComponent({
      * 用来标识这一项
      */
     name: [String, Number] as PropType<VxeButtonPropTypes.Name>,
+    /**
+     * 权限码
+     */
+    permissionCode: [String, Number] as PropType<VxeButtonPropTypes.PermissionCode>,
+    permissionMethod: Function as PropType<VxeButtonPropTypes.PermissionMethod>,
     /**
      * 按钮内容
      */
@@ -91,6 +96,8 @@ export default defineComponent({
 
     const { computeSize } = useSize(props)
 
+    const { computePermissionInfo } = usePermission(props)
+
     const reactData = reactive<ButtonReactData>({
       inited: false,
       visiblePanel: false,
@@ -136,6 +143,12 @@ export default defineComponent({
         }
       }
       return transfer
+    })
+
+    const computeBtnDisabled = computed(() => {
+      const { disabled } = props
+      const permissionInfo = computePermissionInfo.value
+      return disabled || permissionInfo.disabled
     })
 
     const computeIsFormBtn = computed(() => {
@@ -450,9 +463,9 @@ export default defineComponent({
     }
 
     const handleGlobalMousedownEvent = (evnt: MouseEvent) => {
-      const { disabled } = props
+      const btnDisabled = computeBtnDisabled.value
       const { visiblePanel } = reactData
-      if (!disabled) {
+      if (!btnDisabled) {
         const el = refElem.value
         const panelElem = refBtnPanel.value
         reactData.isActivated = getEventTargetNode(evnt, el).flag || getEventTargetNode(evnt, panelElem).flag
@@ -465,7 +478,7 @@ export default defineComponent({
     Object.assign($xeButton, buttonMethods)
 
     const renderVN = () => {
-      const { className, popupClassName, trigger, title, type, destroyOnClose, name, disabled, loading } = props
+      const { className, popupClassName, trigger, title, type, destroyOnClose, name, loading } = props
       const { inited, visiblePanel } = reactData
       const isFormBtn = computeIsFormBtn.value
       const btnMode = computeBtnMode.value
@@ -473,7 +486,12 @@ export default defineComponent({
       const btnRound = computeBtnRound.value
       const btnCircle = computeBtnCircle.value
       const transfer = compTransfer.value
+      const btnDisabled = computeBtnDisabled.value
+      const permissionInfo = computePermissionInfo.value
       const vSize = computeSize.value
+      if (!permissionInfo.visible) {
+        return createCommentVNode()
+      }
       if (slots.dropdowns) {
         const btnOns: Record<string, any> = {}
         const panelOns: Record<string, any> = {}
@@ -499,13 +517,13 @@ export default defineComponent({
               [`theme--${btnStatus}`]: btnStatus,
               'is--round': btnRound,
               'is--circle': btnCircle,
-              'is--disabled': disabled || loading,
+              'is--disabled': btnDisabled || loading,
               'is--loading': loading
             }],
             title,
             name,
             type: isFormBtn ? type : 'button',
-            disabled: disabled || loading,
+            disabled: btnDisabled || loading,
             onClick: clickTargetEvent,
             ...btnOns
           }, renderContent().concat([
@@ -546,13 +564,13 @@ export default defineComponent({
           [`theme--${btnStatus}`]: btnStatus,
           'is--round': btnRound,
           'is--circle': btnCircle,
-          'is--disabled': disabled || loading,
+          'is--disabled': btnDisabled || loading,
           'is--loading': loading
         }],
         title,
         name,
         type: isFormBtn ? type : 'button',
-        disabled: disabled || loading,
+        disabled: btnDisabled || loading,
         onClick: clickEvent,
         onMouseenter: mouseenterEvent,
         onMouseleave: mouseleaveEvent

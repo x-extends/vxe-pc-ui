@@ -11,7 +11,8 @@ export default defineComponent({
     name: [String, Number] as PropType<VxeTabPanePropTypes.Name>,
     icon: String as PropType<VxeTabPanePropTypes.Icon>,
     titleWidth: [String, Number] as PropType<VxeTabPanePropTypes.TitleWidth>,
-    titleAlign: [String, Number] as PropType<VxeTabPanePropTypes.TitleAlign>
+    titleAlign: [String, Number] as PropType<VxeTabPanePropTypes.TitleAlign>,
+    permissionCode: [String, Number] as PropType<VxeTabPanePropTypes.PermissionCode>
   },
   emits: [],
   setup (props, context) {
@@ -33,6 +34,7 @@ export default defineComponent({
       icon: props.icon,
       titleWidth: props.titleWidth,
       titleAlign: props.titleAlign,
+      permissionCode: props.permissionCode,
       slots: {
         default: slots.default
       }
@@ -65,6 +67,10 @@ export default defineComponent({
 
     watch(() => props.icon, (val) => {
       tabConfig.icon = val
+    })
+
+    watch(() => props.permissionCode, (val) => {
+      tabConfig.permissionCode = val
     })
 
     onMounted(() => {

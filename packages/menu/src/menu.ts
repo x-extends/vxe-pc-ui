@@ -1,6 +1,6 @@
 import { defineComponent, ref, h, reactive, PropType, resolveComponent, createCommentVNode, nextTick, watch, VNode, onMounted } from 'vue'
 import XEUtils from 'xe-utils'
-import { getIcon, createEvent } from '../../ui'
+import { getIcon, createEvent, permission } from '../../ui'
 
 import type { VxeMenuDefines, VxeMenuPropTypes, MenuReactData, VxeMenuEmits, MenuPrivateRef, VxeMenuPrivateComputed, VxeMenuConstructor, VxeMenuPrivateMethods } from '../../../types'
 
@@ -171,6 +171,11 @@ export default defineComponent({
 
     const renderChildren = (item: VxeMenuDefines.MenuItem): VNode => {
       const { itemKey, level, hasChild, isActive, isExactActive, isExpand, routerLink, childList } = item
+      if (item.permissionCode) {
+        if (!permission.checkVisible(item.permissionCode)) {
+          return createCommentVNode()
+        }
+      }
       return h('div', {
         key: itemKey,
         class: ['vxe-menu--item-wrapper', `vxe-menu--item-level${level}`, {

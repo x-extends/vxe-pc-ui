@@ -1,6 +1,6 @@
 import { defineComponent, ref, h, reactive, PropType, provide, computed, createCommentVNode, watch, nextTick, onMounted } from 'vue'
 import XEUtils from 'xe-utils'
-import { createEvent, getConfig } from '../../ui'
+import { createEvent, getConfig, permission } from '../../ui'
 import VxeTabPaneComponent from './tab-pane'
 import { getSlotVNs } from '../../ui/src/vn'
 import { toCssUnit } from '../..//ui/src/dom'
@@ -48,15 +48,36 @@ export default defineComponent({
       refElem
     }
 
-    const computeActiveOptionTab = computed(() => {
+    const handleFilterTab = (item: VxeTabPaneProps | VxeTabPaneDefines.TabConfig) => {
+      const { permissionCode } = item
+      if (permissionCode) {
+        if (!permission.checkVisible(permissionCode)) {
+          return false
+        }
+      }
+      return true
+    }
+
+    const computeTabOptions = computed(() => {
       const { options } = props
+      return (options || []).filter(handleFilterTab)
+    })
+
+    const computeTabStaticOptions = computed(() => {
+      const { staticTabs } = reactData
+      return staticTabs.filter(handleFilterTab)
+    })
+
+    const computeActiveOptionTab = computed(() => {
       const { activeName } = reactData
-      return options ? options.find(item => item.name === activeName) : null
+      const tabOptions = computeTabOptions.value
+      return tabOptions.find(item => item.name === activeName)
     })
 
     const computeActiveDefaultTab = computed(() => {
-      const { staticTabs, activeName } = reactData
-      return staticTabs.find(item => item.name === activeName)
+      const { activeName } = reactData
+      const tabStaticOptions = computeTabStaticOptions.value
+      return tabStaticOptions.find(item => item.name === activeName)
     })
 
     const computeMaps: VxeTabsPrivateComputed = {
@@ -86,13 +107,15 @@ export default defineComponent({
 
     const updateLineStyle = () => {
       nextTick(() => {
-        const { type, options } = props
-        const { staticTabs, activeName } = reactData
+        const { type } = props
+        const { activeName } = reactData
+        const tabOptions = computeTabOptions.value
+        const tabStaticOptions = computeTabStaticOptions.value
         const headerWrapperEl = refHeaderElem.value
         let lintWidth = 0
         let lintLeft = 0
         if (headerWrapperEl) {
-          const index = XEUtils.findIndexOf(staticTabs.length ? staticTabs : options, item => item.name === activeName)
+          const index = XEUtils.findIndexOf(tabStaticOptions.length ? tabStaticOptions : tabOptions, item => item.name === activeName)
           if (index > -1) {
             const tabEl = headerWrapperEl.children[index] as HTMLDivElement
             const tabWidth = tabEl.clientWidth
@@ -206,7 +229,10 @@ export default defineComponent({
       const { initNames, activeName } = reactData
       const { name, slots } = item
       const defaultSlot = slots ? slots.default : null
-      return h(VxeTabPaneComponent, item, {
+      return h(VxeTabPaneComponent, {
+        key: name,
+        ...item
+      }, {
         default () {
           return name && initNames.includes(name)
             ? h('div', {
@@ -220,13 +246,13 @@ export default defineComponent({
       })
     }
 
-    const renderOptionContent = (options: VxeTabsPropTypes.Options) => {
+    const renderOptionContent = (tabList: VxeTabsPropTypes.Options) => {
       const { destroyOnClose } = props
       const activeOptionTab = computeActiveOptionTab.value
       if (destroyOnClose) {
         return activeOptionTab ? [renderOptionPane(activeOptionTab)] : createCommentVNode()
       }
-      return options.map(renderOptionPane)
+      return tabList.map(renderOptionPane)
     }
 
     const renderDefaultPane = (item: VxeTabPaneDefines.TabConfig) => {
@@ -243,18 +269,19 @@ export default defineComponent({
         : createCommentVNode()
     }
 
-    const renderDefaultContent = (staticTabs: VxeTabPaneDefines.TabConfig[]) => {
+    const renderDefaultContent = (staticTabList: VxeTabPaneDefines.TabConfig[]) => {
       const { destroyOnClose } = props
       const activeDefaultTab = computeActiveDefaultTab.value
       if (destroyOnClose) {
         return activeDefaultTab ? [renderDefaultPane(activeDefaultTab)] : createCommentVNode()
       }
-      return staticTabs.map(renderDefaultPane)
+      return staticTabList.map(renderDefaultPane)
     }
 
     const renderVN = () => {
-      const { type, height, padding, options } = props
-      const { staticTabs } = reactData
+      const { type, height, padding } = props
+      const tabOptions = computeTabOptions.value
+      const tabStaticOptions = computeTabStaticOptions.value
       const defaultSlot = slots.default
 
       return h('div', {
@@ -271,10 +298,10 @@ export default defineComponent({
         h('div', {
           class: 'vxe-tabs-slots'
         }, defaultSlot ? defaultSlot({}) : []),
-        renderTabHeader(defaultSlot ? staticTabs : (options || [])),
+        renderTabHeader(defaultSlot ? tabStaticOptions : tabOptions),
         h('div', {
           class: 'vxe-tabs-pane'
-        }, defaultSlot ? renderDefaultContent(staticTabs) : renderOptionContent(options || []))
+        }, defaultSlot ? renderDefaultContent(tabStaticOptions) : renderOptionContent(tabOptions))
       ])
     }
 

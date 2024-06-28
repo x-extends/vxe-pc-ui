@@ -1,5 +1,5 @@
 import { RenderFunction, SetupContext, Ref, ComponentPublicInstance, DefineComponent } from 'vue'
-import { defineVxeComponent, VxeComponentBaseOptions, VxeComponentEventParams, ValueOf, VxeComponentStatusType } from '@vxe-ui/core'
+import { defineVxeComponent, VxeComponentBaseOptions, VxeComponentEventParams, VxeComponentPermissionCodeType, VxeComponentPermissionMethod, ValueOf, VxeComponentStatusType } from '@vxe-ui/core'
 
 /* eslint-disable no-use-before-define,@typescript-eslint/ban-types */
 
@@ -36,6 +36,8 @@ export namespace VxeLinkPropTypes {
     target?: null | '' | '_blank' | '_self' | '_parent' | '_top'
   }
   export type Underline = boolean
+  export type PermissionCode = VxeComponentPermissionCodeType
+  export type PermissionMethod = VxeComponentPermissionMethod
   export type Content = string | number
 }
 
@@ -47,6 +49,14 @@ export type VxeLinkProps = {
   icon?: VxeLinkPropTypes.Icon
   routerLink?: VxeLinkPropTypes.RouterLink
   underline?: VxeLinkPropTypes.Underline
+  /**
+   * 权限码
+   */
+  permissionCode?: VxeLinkPropTypes.PermissionCode
+  /**
+   * 用于 permissionCode，权限码判断逻辑
+   */
+  permissionMethod?: VxeLinkPropTypes.PermissionMethod
   content?: VxeLinkPropTypes.Content
 }
 

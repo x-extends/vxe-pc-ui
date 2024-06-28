@@ -1,5 +1,5 @@
-import { defineComponent, h, provide, PropType } from 'vue'
-import { getConfig, createEvent, useSize } from '@vxe-ui/core'
+import { defineComponent, h, provide, PropType, createCommentVNode } from 'vue'
+import { getConfig, createEvent, useSize, usePermission } from '@vxe-ui/core'
 import XEUtils from 'xe-utils'
 import VxeButtonComponent from '../../button/src/button'
 
@@ -15,6 +15,8 @@ export default defineComponent({
     circle: Boolean as PropType<VxeButtonGroupPropTypes.Circle>,
     className: [String, Function] as PropType<VxeButtonGroupPropTypes.ClassName>,
     disabled: Boolean as PropType<VxeButtonGroupPropTypes.Disabled>,
+    permissionCode: [String, Number] as PropType<VxeButtonGroupPropTypes.PermissionCode>,
+    permissionMethod: Function as PropType<VxeButtonGroupPropTypes.PermissionMethod>,
     size: { type: String as PropType<VxeButtonGroupPropTypes.Size>, default: () => getConfig().buttonGroup.size || getConfig().size }
   },
   emits: [
@@ -37,6 +39,8 @@ export default defineComponent({
 
     useSize(props)
 
+    const { computePermissionInfo } = usePermission(props)
+
     const buttonGroupMethods: ButtonGroupMethods = {
       dispatchEvent (type, params, evnt) {
         emit(type, createEvent(evnt, { $buttonGroup: $xeButtonGroup }, params))
@@ -56,7 +60,11 @@ export default defineComponent({
 
     const renderVN = () => {
       const { className, options } = props
+      const permissionInfo = computePermissionInfo.value
       const defaultSlot = slots.default
+      if (!permissionInfo.visible) {
+        return createCommentVNode()
+      }
       return h('div', {
         class: ['vxe-button-group', className ? (XEUtils.isFunction(className) ? className({ $buttonGroup: $xeButtonGroup }) : className) : '']
       }, defaultSlot

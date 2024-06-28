@@ -19,6 +19,21 @@ declare global {
   }
 }
 
+VxeUI.setConfig({
+  permissionMethod ({ code }) {
+    if (code === 'xx') {
+      return {
+        visible: true,
+        disabled: true
+      }
+    }
+    return {
+      visible: false,
+      disabled: true
+    }
+  }
+})
+
 VxeUI.setI18n('en-US', enUS)
 VxeUI.setLanguage((localStorage.getItem('VXE_LANGUAGE') as 'zh-CN' | 'en-US') || 'zh-CN')
 

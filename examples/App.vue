@@ -23,9 +23,11 @@
 import { ref } from 'vue'
 import { VxeUI } from '../packages'
 
+import { VxeMenuPropTypes } from '../types'
+
 const collapsed = ref(false)
 
-const navList = ref([
+const navList = ref<VxeMenuPropTypes.Options>([
   { name: 'Home', icon: 'vxe-icon-user-fill', routerLink: { path: '/' } },
   { name: 'TagTest', icon: 'vxe-icon-user-fill', routerLink: { name: 'TagTest' } },
   { name: 'TextTest', icon: 'vxe-icon-user-fill', routerLink: { name: 'TextTest' } },

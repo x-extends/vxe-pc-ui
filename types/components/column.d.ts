@@ -121,7 +121,7 @@ export namespace VxeColumnPropTypes {
     optionGroups?: any[]
     optionGroupProps?: VxeGlobalRendererHandles.RenderOptionGroupProps
     content?: string
-    cellType?: 'number' | 'string' | '' | null
+    cellType?: VxeColumnPropTypes.CellType
   }
 
   export type TreeNode = boolean
@@ -172,7 +172,7 @@ export namespace VxeColumnPropTypes {
     icon?: string
   }
 
-  export type CellType = 'auto' | 'number' | 'string'
+  export type CellType = 'auto' | 'number' | 'string' | '' | null
 
   export interface CellRender<D = any> {
     /**

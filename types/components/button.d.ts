@@ -1,5 +1,5 @@
 import { RenderFunction, SetupContext, Ref, DefineComponent, ComponentPublicInstance } from 'vue'
-import { defineVxeComponent, VxeComponentBaseOptions, VxeComponentEventParams, VxeComponentStatusType, VxeComponentSizeType, VxeComponentStyleType, ValueOf } from '@vxe-ui/core'
+import { defineVxeComponent, VxeComponentBaseOptions, VxeComponentEventParams, VxeComponentPermissionCodeType, VxeComponentPermissionMethod, VxeComponentStatusType, VxeComponentSizeType, VxeComponentStyleType, ValueOf } from '@vxe-ui/core'
 
 /* eslint-disable no-use-before-define,@typescript-eslint/ban-types */
 
@@ -30,6 +30,8 @@ export namespace VxeButtonPropTypes {
   export type ClassName = string | ((params: { $button: VxeButtonConstructor }) => string)
   export type PopupClassName = string | ((params: { $button: VxeButtonConstructor }) => string)
   export type Name = string | number
+  export type PermissionCode = VxeComponentPermissionCodeType
+  export type PermissionMethod = VxeComponentPermissionMethod
   export type Content = string | number
   export type Placement = string
   export type Status = VxeComponentStatusType
@@ -60,6 +62,14 @@ export type VxeButtonProps = {
    * 用来标识这一项
    */
   name?: VxeButtonPropTypes.Name
+  /**
+   * 权限码
+   */
+  permissionCode?: VxeButtonPropTypes.PermissionCode
+  /**
+   * 用于 permissionCode，权限码判断逻辑
+   */
+  permissionMethod?: VxeButtonPropTypes.PermissionMethod
   title?: VxeButtonPropTypes.Title
   /**
    * 按钮内容

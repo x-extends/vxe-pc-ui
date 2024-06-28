@@ -95,6 +95,9 @@ export default defineComponent({
           document.body.appendChild(autoTxtElem)
         }
         const textElem = refTextarea.value
+        if (!textElem) {
+          return
+        }
         const textStyle = getComputedStyle(textElem)
         autoTxtElem.className = ['vxe-textarea--autosize', size ? `size--${size}` : ''].join(' ')
         autoTxtElem.style.width = `${textElem.clientWidth}px`
@@ -109,6 +112,9 @@ export default defineComponent({
           const sizeOpts = computeSizeOpts.value
           const { minRows, maxRows } = sizeOpts
           const textElem = refTextarea.value
+          if (!textElem) {
+            return
+          }
           const sizeHeight = autoTxtElem.clientHeight
           const textStyle = getComputedStyle(textElem)
           const lineHeight = XEUtils.toNumber(textStyle.lineHeight)

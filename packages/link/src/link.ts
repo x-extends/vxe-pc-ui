@@ -1,6 +1,6 @@
 import { defineComponent, ref, h, reactive, PropType, createCommentVNode, resolveComponent } from 'vue'
 import XEUtils from 'xe-utils'
-import { getConfig } from '../../ui'
+import { getConfig, usePermission } from '../../ui'
 import { getSlotVNs } from '../../ui/src/vn'
 
 import type { VxeLinkPropTypes, LinkReactData, LinkPrivateRef, VxeLinkPrivateComputed, VxeLinkConstructor, VxeLinkPrivateMethods } from '../../../types'
@@ -18,6 +18,11 @@ export default defineComponent({
       type: Boolean as PropType<VxeLinkPropTypes.Underline>,
       default: () => getConfig().link.underline
     },
+    /**
+     * 权限码
+     */
+    permissionCode: [String, Number] as PropType<VxeLinkPropTypes.PermissionCode>,
+    permissionMethod: Function as PropType<VxeLinkPropTypes.PermissionMethod>,
     content: [String, Number] as PropType<VxeLinkPropTypes.Content>
   },
   emits: [],
@@ -25,6 +30,8 @@ export default defineComponent({
     const { slots } = context
 
     const xID = XEUtils.uniqueId()
+
+    const { computePermissionInfo } = usePermission(props)
 
     const refElem = ref<HTMLDivElement>()
 
@@ -72,6 +79,10 @@ export default defineComponent({
 
     const renderVN = () => {
       const { status, target, href, title, underline, routerLink } = props
+      const permissionInfo = computePermissionInfo.value
+      if (!permissionInfo.visible) {
+        return createCommentVNode()
+      }
       if (routerLink) {
         return h(resolveComponent('router-link'), {
           class: ['vxe-link', {

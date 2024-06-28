@@ -448,7 +448,7 @@ declare module '@vxe-ui/core' {
     /**
      * 渲染类型
      */
-    cellType?: 'string' | 'number'
+    cellType?: VxeColumnPropTypes.CellType
   }
 
     /**

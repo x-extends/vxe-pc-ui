@@ -1,5 +1,5 @@
 import { RenderFunction, SetupContext, Ref, ComponentPublicInstance, DefineComponent } from 'vue'
-import { defineVxeComponent, VxeComponentBaseOptions, VxeComponentEventParams, VxeComponentAlignType, VxeComponentSlotType } from '@vxe-ui/core'
+import { defineVxeComponent, VxeComponentBaseOptions, VxeComponentEventParams, VxeComponentPermissionCodeType, VxeComponentAlignType, VxeComponentSlotType } from '@vxe-ui/core'
 
 /* eslint-disable no-use-before-define,@typescript-eslint/ban-types */
 
@@ -28,6 +28,7 @@ export namespace VxeTabPanePropTypes {
   export type Icon = string
   export type TitleWidth = string | number
   export type TitleAlign = VxeComponentAlignType
+  export type PermissionCode = VxeComponentPermissionCodeType
 }
 
 export type VxeTabPaneProps = {
@@ -36,6 +37,7 @@ export type VxeTabPaneProps = {
   icon?: VxeTabPanePropTypes.Icon
   titleWidth?: VxeTabPanePropTypes.TitleWidth
   titleAlign?: VxeTabPanePropTypes.TitleAlign
+  permissionCode?: VxeTabPanePropTypes.PermissionCode
 
   slots?: {
     tab?: string | ((params: { [key: string]: any }) => VxeComponentSlotType | VxeComponentSlotType[])

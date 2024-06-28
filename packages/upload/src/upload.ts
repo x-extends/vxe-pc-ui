@@ -197,7 +197,7 @@ export default defineComponent({
     } as unknown as VxeUploadConstructor & VxeUploadPrivateMethods
 
     const updateFileList = () => {
-      const { modelValue, multiple } = props
+      const { modelValue, multiple, readonly } = props
       const nameProp = computeNameProp.value
       const typeProp = computeTypeProp.value
       const urlProp = computeUrlProp.value
@@ -212,7 +212,7 @@ export default defineComponent({
           return item
         })
         : []
-      reactData.fileList = multiple ? fileList : (fileList.slice(0, 1))
+      reactData.fileList = (readonly || multiple) ? fileList : (fileList.slice(0, 1))
     }
 
     const getFileType = (name: string) => {

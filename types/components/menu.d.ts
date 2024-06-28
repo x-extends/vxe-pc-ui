@@ -43,6 +43,7 @@ export namespace VxeMenuPropTypes {
     title?: string | number
     icon?: string
     routerLink?: VxeLinkPropTypes.RouterLink
+    permissionCode?: VxeComponentPermissionCodeType
   }
 
   export type Options = MenuOneOption[]
