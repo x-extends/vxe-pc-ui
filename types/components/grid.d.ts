@@ -11,7 +11,7 @@ import { VxeFormItemProps } from './form-item'
 export declare const VxeGrid: defineVxeComponent<VxeGridProps, VxeGridEventProps>
 export type VxeGridComponent = DefineComponent<VxeGridProps, VxeGridEmits>
 
-export type VxeGridInstance<D = any> = ComponentPublicInstance<VxeGridProps<D>, VxeGridConstructor>
+export type VxeGridInstance<D = any> = ComponentPublicInstance<VxeGridProps<D>, VxeGridConstructor<D>>
 
 export interface VxeGridConstructor<D = any> extends VxeComponentBaseOptions, VxeGridMethods<D> {
   props: VxeGridProps
