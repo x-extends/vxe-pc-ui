@@ -1,5 +1,5 @@
 import { RenderFunction, SetupContext, Ref, ComponentPublicInstance, DefineComponent } from 'vue'
-import { defineVxeComponent, VxeComponentBaseOptions, VxeComponentEventParams, ValueOf } from '@vxe-ui/core'
+import { defineVxeComponent, VxeComponentBaseOptions, VxeComponentEventParams, ValueOf, VxeComponentPermissionCodeType } from '@vxe-ui/core'
 import { VxeLinkPropTypes } from './link'
 
 /* eslint-disable no-use-before-define,@typescript-eslint/ban-types */
@@ -43,14 +43,17 @@ export namespace VxeMenuPropTypes {
     title?: string | number
     icon?: string
     routerLink?: VxeLinkPropTypes.RouterLink
+    expanded?: boolean
     permissionCode?: VxeComponentPermissionCodeType
   }
 
+  export type ExpandAll = boolean
   export type Options = MenuOneOption[]
 }
 
 export type VxeMenuProps = {
   modelValue?: VxeMenuPropTypes.ModelValue
+  expandAll?: VxeMenuPropTypes.ExpandAll
   options?: VxeMenuPropTypes.Options
 }
 

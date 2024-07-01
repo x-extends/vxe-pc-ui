@@ -8,6 +8,7 @@ export default defineComponent({
   name: 'VxeMenu',
   props: {
     modelValue: [String, Number] as PropType<VxeMenuPropTypes.ModelValue>,
+    expandAll: Boolean as PropType<VxeMenuPropTypes.ExpandAll>,
     options: {
       type: Array as PropType<VxeMenuPropTypes.Options>,
       default: () => []
@@ -96,6 +97,7 @@ export default defineComponent({
     }
 
     const updateMenuConfig = () => {
+      const { expandAll } = props
       reactData.menuList = XEUtils.mapTree(props.options, (item, index, items, path, parent) => {
         const objItem = {
           ...item,
@@ -104,7 +106,7 @@ export default defineComponent({
           itemKey: item.name || path.join(','),
           isExactActive: false,
           isActive: false,
-          isExpand: false,
+          isExpand: XEUtils.isBoolean(item.expanded) ? item.expanded : !!expandAll,
           hasChild: item.children && item.children.length > 0,
           childHeight: 0
         } as VxeMenuDefines.MenuItem
