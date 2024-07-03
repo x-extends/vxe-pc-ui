@@ -358,6 +358,13 @@ export namespace VxeTablePropTypes {
       height?: VxeModalPropTypes.Height
       minHeight?: VxeModalPropTypes.MinHeight
       className?: VxeModalPropTypes.ClassName
+      showZoom?: VxeModalPropTypes.ShowZoom
+      showMaximize?: VxeModalPropTypes.ShowMaximize
+      showMinimize?: VxeModalPropTypes.ShowMinimize
+      mask?: VxeModalPropTypes.Mask
+      lockView?: VxeModalPropTypes.LockView
+      resize?: VxeModalPropTypes.Resize
+      escClosable?: VxeModalPropTypes.EscClosable
     }
     trigger?: 'manual' | 'hover' | 'click' | '' | null
     immediate?: boolean
@@ -3252,7 +3259,7 @@ export namespace VxeTableDefines {
     sortable: VxeColumnPropTypes.Sortable
     sortBy: VxeColumnPropTypes.SortBy
     sortType: VxeColumnPropTypes.SortType
-    filters: VxeColumnPropTypes.Filter[]
+    filters: VxeColumnPropTypes.FilterItem[]
     filterMultiple: VxeColumnPropTypes.FilterMultiple
     filterMethod: VxeColumnPropTypes.FilterMethod<D>
     filterRender: VxeColumnPropTypes.FilterRender

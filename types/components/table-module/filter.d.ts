@@ -38,8 +38,9 @@ export interface TableFilterMethods<D = any> {
    * 在筛选条件更新之后可以调用 updateData 函数处理表格数据
    * @param columnOrField 列对象或字段名
    * @param options 选项列表
+   * @param update 是否同时更新数据
    */
-  setFilter(fieldOrColumn: VxeColumnPropTypes.Field | VxeTableDefines.ColumnInfo<any>, options: VxeColumnPropTypes.Filter[]): Promise<void>
+  setFilter(fieldOrColumn: VxeColumnPropTypes.Field | VxeTableDefines.ColumnInfo<any>, options: VxeColumnPropTypes.FilterItem[], update?: boolean): Promise<void>
   /**
    * 手动清空筛选条件
    * 如果不传 column 则清空所有筛选条件，数据会恢复成未筛选的状态

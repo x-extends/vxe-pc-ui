@@ -122,7 +122,8 @@ export default {
         colTitle: '標題',
         colResizable: '列宽（像素）',
         colVisible: '是否顯示',
-        colFixed: '冻结列（最多 {0} 列）',
+        colFixed: '冻结列',
+        colFixedMax: '冻结列（最多 {0} 列）',
         fixedLeft: '左側',
         fixedUnset: '不設定',
         fixedRight: '右側'

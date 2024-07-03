@@ -122,7 +122,8 @@ export default {
         colTitle: 'タイトル',
         colResizable: 'Column width (px)',
         colVisible: 'Display',
-        colFixed: '冻结列（最多 {0} 列）',
+        colFixed: '冻结列',
+        colFixedMax: '冻结列（最多 {0} 列）',
         fixedLeft: '左側',
         fixedUnset: '指定しない',
         fixedRight: '右側'

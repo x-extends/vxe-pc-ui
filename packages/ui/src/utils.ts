@@ -28,3 +28,7 @@ export function getFuncText (content: string | number | boolean | null | undefin
 export function eqEmptyValue (cellValue: any) {
   return cellValue === null || cellValue === undefined || cellValue === ''
 }
+
+export function handleBooleanDefaultValue (value: boolean | undefined | null) {
+  return XEUtils.isBoolean(value) ? value : null
+}

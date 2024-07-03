@@ -1,7 +1,7 @@
 import { defineComponent, h, Teleport, ref, Ref, computed, reactive, nextTick, watch, PropType, VNode, onMounted, onUnmounted, createCommentVNode } from 'vue'
 import XEUtils from 'xe-utils'
 import { getDomNode, getEventTargetNode } from '../../ui/src/dom'
-import { getLastZIndex, nextZIndex, getFuncText } from '../../ui/src/utils'
+import { getLastZIndex, nextZIndex, getFuncText, handleBooleanDefaultValue } from '../../ui/src/utils'
 import { getConfig, getIcon, getI18n, globalEvents, GLOBAL_EVENT_KEYS, createEvent, useSize } from '../../ui'
 import VxeButtonComponent from '../../button/src/button'
 import VxeLoadingComponent from '../../loading/index'
@@ -43,6 +43,14 @@ export default defineComponent({
     showHeader: { type: Boolean as PropType<VxeModalPropTypes.ShowHeader>, default: () => getConfig().modal.showHeader },
     showFooter: { type: Boolean as PropType<VxeModalPropTypes.ShowFooter>, default: () => getConfig().modal.showFooter },
     showZoom: Boolean as PropType<VxeModalPropTypes.ShowZoom>,
+    showMaximize: {
+      type: Boolean as PropType<VxeModalPropTypes.ShowMaximize>,
+      default: () => handleBooleanDefaultValue(getConfig().modal.showMaximize)
+    },
+    showMinimize: {
+      type: Boolean as PropType<VxeModalPropTypes.ShowMinimize>,
+      default: () => handleBooleanDefaultValue(getConfig().modal.showMinimize)
+    },
     showClose: { type: Boolean as PropType<VxeModalPropTypes.ShowClose>, default: () => getConfig().modal.showClose },
     dblclickZoom: { type: Boolean as PropType<VxeModalPropTypes.DblclickZoom>, default: () => getConfig().modal.dblclickZoom },
     width: [Number, String] as PropType<VxeModalPropTypes.Width>,
@@ -814,7 +822,7 @@ export default defineComponent({
     Object.assign($xeModal, modalMethods)
 
     const renderTitles = () => {
-      const { slots: propSlots = {}, showClose, showZoom, title } = props
+      const { slots: propSlots = {}, showClose, showZoom, showMaximize, showMinimize, title } = props
       const { zoomStatus } = reactData
       const titleSlot = slots.title || propSlots.title
       const cornerSlot = slots.corner || propSlots.corner
@@ -830,7 +838,7 @@ export default defineComponent({
               class: 'vxe-modal--corner-wrapper'
             }, getSlotVNs(cornerSlot({ $modal: $xeModal })))
             : createCommentVNode(),
-          showZoom && zoomStatus !== 'maximize'
+          (XEUtils.isBoolean(showMinimize) ? showMinimize : showZoom) && zoomStatus !== 'maximize'
             ? h('span', {
               class: ['vxe-modal--zoom-btn', 'trigger--btn'],
               title: getI18n(`vxe.modal.zoom${zoomStatus === 'minimize' ? 'Out' : 'Min'}`),
@@ -841,7 +849,7 @@ export default defineComponent({
               })
             ])
             : createCommentVNode(),
-          showZoom && zoomStatus !== 'minimize'
+          (XEUtils.isBoolean(showMaximize) ? showMaximize : showZoom) && zoomStatus !== 'minimize'
             ? h('span', {
               class: ['vxe-modal--zoom-btn', 'trigger--btn'],
               title: getI18n(`vxe.modal.zoom${zoomStatus === 'maximize' ? 'Out' : 'In'}`),
@@ -868,7 +876,7 @@ export default defineComponent({
     }
 
     const renderHeaders = () => {
-      const { slots: propSlots = {}, showZoom, draggable } = props
+      const { slots: propSlots = {}, showZoom, showMaximize, draggable } = props
       const isMsg = computeIsMsg.value
       const headerSlot = slots.header || propSlots.header
       const headVNs: VNode[] = []
@@ -877,7 +885,7 @@ export default defineComponent({
         if (draggable) {
           headerOns.onMousedown = mousedownEvent
         }
-        if (showZoom && props.dblclickZoom && props.type === 'modal') {
+        if ((XEUtils.isBoolean(showMaximize) ? showMaximize : showZoom) && props.dblclickZoom && props.type === 'modal') {
           headerOns.onDblclick = toggleZoomMaxEvent
         }
         headVNs.push(

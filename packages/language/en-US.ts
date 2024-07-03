@@ -122,7 +122,8 @@ export default {
         colTitle: 'Title',
         colResizable: 'Column width (px)',
         colVisible: 'Display',
-        colFixed: 'Freeze columns (Max. {0})',
+        colFixed: 'Freeze columns',
+        colFixedMax: 'Freeze columns (Max. {0})',
         fixedLeft: 'Left',
         fixedUnset: 'Unset',
         fixedRight: 'Right'

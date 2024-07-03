@@ -58,14 +58,19 @@ export namespace VxeColumnPropTypes {
   }) => string | number)
   export type SortType = 'auto' | 'string' | 'number' | null
 
-  export interface Filter {
+  export interface FilterItem {
     label?: string | number
     value?: any
     data?: any
     resetValue?: any
     checked?: boolean
   }
-  export type Filters = Filter[]
+  /**
+   * 请使用 FilterItem
+   * @deprecated
+   */
+  export interface Filter extends FilterItem {}
+  export type Filters = FilterItem[]
 
   export type FilterMultiple = boolean
 
@@ -116,6 +121,7 @@ export namespace VxeColumnPropTypes {
      */
     children?: any[]
 
+    enabled?: boolean
     options?: any[]
     optionProps?: VxeGlobalRendererHandles.RenderOptionProps
     optionGroups?: any[]
@@ -407,7 +413,7 @@ export type VxeColumnProps<D = any> = {
   /**
    * 配置筛选条件数组
    */
-  filters?: VxeColumnPropTypes.Filter[]
+  filters?: VxeColumnPropTypes.Filters
   /**
    * 筛选是否允许多选
    */

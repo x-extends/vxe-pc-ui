@@ -74,6 +74,8 @@ export namespace VxeModalPropTypes {
   export type ShowHeader = boolean
   export type ShowFooter = boolean
   export type ShowZoom = boolean
+  export type ShowMaximize = boolean
+  export type ShowMinimize = boolean
   export type ShowClose = boolean
   export type DblclickZoom = boolean
   export type Width = number | string
@@ -123,6 +125,8 @@ export type VxeModalProps = {
   showHeader?: VxeModalPropTypes.ShowHeader
   showFooter?: VxeModalPropTypes.ShowFooter
   showZoom?: VxeModalPropTypes.ShowZoom
+  showMaximize?: VxeModalPropTypes.ShowMaximize
+  showMinimize?: VxeModalPropTypes.ShowMinimize
   showClose?: VxeModalPropTypes.ShowClose
   dblclickZoom?: VxeModalPropTypes.DblclickZoom
   draggable?: VxeModalPropTypes.Draggable
