@@ -5,6 +5,7 @@ import { VxeTableProDefines, VxeTableProEmits } from './table-plugins'
 import { VxeGridConstructor } from './grid'
 import { VxeTooltipInstance } from './tooltip'
 import { VxeModalPropTypes } from './modal'
+import { VxeDrawerPropTypes } from './drawer'
 import { VxeToolbarConstructor, VxeToolbarInstance } from './toolbar'
 
 /* eslint-disable no-use-before-define,@typescript-eslint/ban-types */
@@ -350,7 +351,7 @@ export namespace VxeTablePropTypes {
       type: 'reset' | 'confirm' | 'update:width' | 'update:fixed' | 'update:sort' | 'update:visible'
       storeData: VxeTableDefines.CustomStoreData
     }): Promise<any>
-    mode?: 'simple' | 'popup' | '' | null
+    mode?: 'default' | 'modal' | 'drawer' | 'simple' | 'popup' | '' | null
     modalOptions?: {
       title?: VxeModalPropTypes.Title
       width?: VxeModalPropTypes.Width
@@ -365,6 +366,13 @@ export namespace VxeTablePropTypes {
       lockView?: VxeModalPropTypes.LockView
       resize?: VxeModalPropTypes.Resize
       escClosable?: VxeModalPropTypes.EscClosable
+    }
+    drawerOptions?: {
+      title?: VxeDrawerPropTypes.Title
+      width?: VxeDrawerPropTypes.Width
+      className?: VxeDrawerPropTypes.ClassName
+      position?: VxeDrawerPropTypes.Position
+      escClosable?: VxeDrawerPropTypes.EscClosable
     }
     trigger?: 'manual' | 'hover' | 'click' | '' | null
     immediate?: boolean

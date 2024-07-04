@@ -138,7 +138,9 @@ export namespace VxePrintDefines {
      * @deprecated
      */
     beforePrintMethod?: VxePrintPropTypes.BeforeMethod
-  }) => Promise<any>
+  }) => Promise<{
+    status: boolean
+  }>
 }
 
 export type VxePrintEventProps = {}

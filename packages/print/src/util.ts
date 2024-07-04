@@ -68,26 +68,42 @@ function handlePrint (opts: VxePrintProps & { _pageBreaks: boolean }, printHtml 
   }
   printHtml = createHtmlPage(opts, printHtml)
   const blob = getExportBlobByString(printHtml, 'html')
-  if (XEUtils.browse().msie) {
-    removeFrame()
-    printFrame = createPrintFrame()
-    appendPrintFrame()
-    printFrame.contentDocument.write(printHtml)
-    printFrame.contentDocument.execCommand('print')
-  } else {
-    if (!printFrame) {
+  return new Promise<{
+    status: boolean
+  }>(resolve => {
+    if (XEUtils.browse().msie) {
+      removeFrame()
       printFrame = createPrintFrame()
-      printFrame.onload = (evnt: any) => {
-        if (evnt.target.src) {
-          evnt.target.contentWindow.onafterprint = afterPrintEvent
-          evnt.target.contentWindow.print()
+      appendPrintFrame()
+      printFrame.contentDocument.write(printHtml)
+      printFrame.contentDocument.execCommand('print')
+      setTimeout(() => {
+        resolve({
+          status: true
+        })
+      }, 300)
+    } else {
+      if (!printFrame) {
+        printFrame = createPrintFrame()
+        printFrame.onload = (evnt: any) => {
+          if (evnt.target.src) {
+            evnt.target.contentWindow.onafterprint = afterPrintEvent
+            evnt.target.contentWindow.print()
+          }
+          resolve({
+            status: true
+          })
+        }
+        printFrame.onerror = () => {
+          resolve({
+            status: false
+          })
         }
       }
+      appendPrintFrame()
+      printFrame.src = URL.createObjectURL(blob)
     }
-    appendPrintFrame()
-    printFrame.src = URL.createObjectURL(blob)
-  }
-  return Promise.resolve()
+  })
 }
 
 function createPageBreak (opts: VxePrintProps) {

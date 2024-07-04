@@ -462,6 +462,13 @@ export default defineComponent({
       }
     }
 
+    const handleGlobalMousewheelEvent = (evnt: Event) => {
+      const panelElem = refBtnPanel.value
+      if (reactData.visiblePanel && !getEventTargetNode(evnt, panelElem).flag) {
+        closePanel()
+      }
+    }
+
     const handleGlobalMousedownEvent = (evnt: MouseEvent) => {
       const btnDisabled = computeBtnDisabled.value
       const { visiblePanel } = reactData
@@ -586,12 +593,7 @@ export default defineComponent({
         }
       }
 
-      globalEvents.on($xeButton, 'mousewheel', (evnt: Event) => {
-        const panelElem = refBtnPanel.value
-        if (reactData.visiblePanel && !getEventTargetNode(evnt, panelElem).flag) {
-          closePanel()
-        }
-      })
+      globalEvents.on($xeButton, 'mousewheel', handleGlobalMousewheelEvent)
       globalEvents.on($xeButton, 'mousedown', handleGlobalMousedownEvent)
     })
 

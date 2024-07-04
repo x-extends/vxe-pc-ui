@@ -112,6 +112,9 @@ $btnThemeList: (
       &:hover {
         color: var(--vxe-ui-font-primary-lighten-color);
       }
+      &:active {
+        color: var(--vxe-ui-font-primary-darken-color);
+      }
     }
     @for $index from 0 to length($btnThemeList) {
       $item: nth($btnThemeList, $index + 1);
@@ -123,6 +126,9 @@ $btnThemeList: (
           }
           &:hover {
             color: map-get($item, btnLightenColor);
+          }
+          &:active {
+            color: map-get($item, btnDarkenColor);
           }
         }
         &.is--disabled {

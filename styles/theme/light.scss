@@ -47,14 +47,14 @@
   --vxe-ui-status-success-darken-color: #529b2e;
   --vxe-ui-status-info-darken-color: #767980;
   --vxe-ui-status-warning-darken-color: #d48a1b;
-  --vxe-ui-status-danger-darken-color: var(--vxe-ui-status-error-lighten-color);
-  --vxe-ui-status-error-darken-color: #f89c9c;
+  --vxe-ui-status-danger-darken-color: var(--vxe-ui-status-error-darken-color);
+  --vxe-ui-status-error-darken-color: #f56c6c;
   
   --vxe-ui-status-success-disabled-color: #a3db87;
   --vxe-ui-status-info-disabled-color: #c5c7ca;
   --vxe-ui-status-warning-disabled-color: #f2cd96;
-  --vxe-ui-status-danger-disabled-color: var(--vxe-ui-status-danger-disabled-color);
-  --vxe-ui-status-error-disabled-color: #f89c9c;
+  --vxe-ui-status-danger-disabled-color: var(--vxe-ui-status-error-disabled-color);
+  --vxe-ui-status-error-disabled-color: #f5a8a8;
 
   /*base*/
   --vxe-ui-base-popup-border-color: #DADCE0;
