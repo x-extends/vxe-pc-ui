@@ -57,10 +57,3 @@ body:
     placeholder: "例如：4.7.45"
   validations:
     required: true
-- type: checkbox
-  id: issue_confirm_latest_version
-  attributes:
-    label: "我已确认是使用当前的最新版本，如果不是最新版本，请先更新最新版本之后再提！"
-    description: 请先搜索您遇到的问题是否已经存在。
-  validations:
-    required: true
