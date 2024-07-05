@@ -58,9 +58,10 @@ body:
   validations:
     required: true
 - type: checkboxes
+  id: issue_confirm_latest_version
   attributes:
-    label: Is there an existing issue for this?
-    description: Please search to see if an issue already exists for the bug you encountered.
+    label: "是否使用当前最新版本？"
+    description: "官方只维护最新版本，如果不是最新版本，请先更新最新版本之后再提！"
     options:
-    - label: I have searched the existing issues
+    - label: "我已确认是使用当前的最新版本。"
       required: true
