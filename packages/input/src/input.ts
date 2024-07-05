@@ -1574,10 +1574,12 @@ export default defineComponent({
               panelStyle.bottom = `${targetHeight}px`
             } else if (!placement) {
               // 如果下面不够放，则向上
+              panelStyle.top = `${targetHeight}px`
               if (boundingTop + targetHeight + panelHeight > visibleHeight) {
                 // 如果上面不够放，则向下（优先）
                 if (boundingTop - targetHeight - panelHeight > marginSize) {
                   panelPlacement = 'top'
+                  panelStyle.top = ''
                   panelStyle.bottom = `${targetHeight}px`
                 }
               }

@@ -254,7 +254,7 @@ export namespace VxeTablePropTypes {
   /**
    * 列配置信息
    */
-  export interface ColumnConfig {
+  export interface ColumnConfig<D = any> {
     /**
      * 是否需要为每一列的 VNode 设置 key 属性
      */
@@ -267,6 +267,9 @@ export namespace VxeTablePropTypes {
      * 当鼠标移到列头时，是否要高亮当前头
      */
     isHover?: boolean
+    currentMethod?(params: {
+      column: VxeTableDefines.ColumnInfo<D>
+    }): boolean
     /**
      * 每一列是否启用列宽调整
      */
@@ -300,12 +303,12 @@ export namespace VxeTablePropTypes {
      */
     footerExportMethod?: VxeColumnPropTypes.FooterExportMethod<any>
   }
-  export interface ColumnOpts extends ColumnConfig { }
+  export interface ColumnOpts<D = any> extends ColumnConfig<D> { }
 
   /**
    * 行配置信息
    */
-  export interface RowConfig {
+  export interface RowConfig<D = any> {
     /**
      * 是否需要为每一行的 VNode 设置 key 属性
      */
@@ -318,6 +321,9 @@ export namespace VxeTablePropTypes {
      * 当鼠标点击行时，是否要高亮当前行
      */
     isCurrent?: boolean
+    currentMethod?(params: {
+      row: D
+    }): boolean
     /**
      * 当鼠标移到行时，是否要高亮当前行
      */
@@ -331,7 +337,7 @@ export namespace VxeTablePropTypes {
      */
     height?: number
   }
-  export interface RowOpts extends RowConfig { }
+  export interface RowOpts<D = any> extends RowConfig<D> { }
 
   /**
    * 自定义列配置项
@@ -1822,11 +1828,11 @@ export type VxeTableProps<D = any> = {
   /**
    * 列配置信息
    */
-  columnConfig?: VxeTablePropTypes.ColumnConfig
+  columnConfig?: VxeTablePropTypes.ColumnConfig<D>
   /**
    * 行配置信息
    */
-  rowConfig?: VxeTablePropTypes.RowConfig
+  rowConfig?: VxeTablePropTypes.RowConfig<D>
   /**
    * 个性化信息配置项
    */
@@ -3115,6 +3121,9 @@ export interface TablePrivateMethods<D = any> {
   triggerCheckRowEvent(evnt: Event, params: { row: any }, value: boolean): void
   triggerCheckAllEvent(evnt: MouseEvent | null, value: boolean): void
   triggerRadioRowEvent(evnt: Event, params: { row: any }): void
+  triggerCurrentColumnEvent(evnt: Event, params: {
+    column: VxeTableDefines.ColumnInfo<any>
+  }): void
   triggerCurrentRowEvent(evnt: Event, params: {
     $table: VxeTableConstructor<any> & VxeTablePrivateMethods<any>
     row: any
