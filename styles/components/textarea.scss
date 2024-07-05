@@ -8,7 +8,10 @@
     }
   }
 }
-
+.vxe-textarea--readonly {
+  color: var(--vxe-ui-font-color);
+  display: inline-flex;
+}
 .vxe-textarea--inner {
   border-radius: var(--vxe-ui-base-border-radius);
   outline: 0;

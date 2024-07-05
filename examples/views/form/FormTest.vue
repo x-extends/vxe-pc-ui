@@ -107,6 +107,7 @@
     <p class="tip">表单校验</p>
 
     <vxe-form
+    readonly
       title-colon
       ref="xForm"
       title-align="right"
@@ -163,6 +164,7 @@
     <p class="tip">默认渲染方式为配置式，不支持自定义的布局，可以通过设置 custom-layout 切换为自定义布局</p>
 
     <vxe-form
+    readonly
       ref="xForm3"
       v-model:collapseStatus="demo3.collapseStatus3"
       :data="demo3.formData3"
@@ -220,6 +222,14 @@
               <vxe-checkbox label="2" content="跑步"></vxe-checkbox>
               <vxe-checkbox label="3" content="听歌"></vxe-checkbox>
             </vxe-checkbox-group>
+          </template>
+        </vxe-form-item>
+        <vxe-form-item title="运动" field="exercise" :item-render="{}" folding>
+          <template #default="{ data }">
+            <vxe-radio-group v-model="data.exercise">
+              <vxe-radio label="1" content="爬山"></vxe-radio>
+              <vxe-radio label="2" content="跑步"></vxe-radio>
+            </vxe-radio-group>
           </template>
         </vxe-form-item>
         <div>
@@ -298,14 +308,15 @@ const demo3 = reactive({
   formData3: {
     name: '',
     nickname: '',
-    sex: '',
+    sex: '2',
     age: 30,
     status: '1',
     weight: null,
     date: null,
     active: false,
     single: '1',
-    flagList: []
+    flagList: [],
+    exercise: '1'
   },
   formRules3: {
     name: [

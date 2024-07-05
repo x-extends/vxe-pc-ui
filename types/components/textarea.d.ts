@@ -30,6 +30,7 @@ export namespace VxeTextareaPropTypes {
   export type Immediate = boolean
   export type Name = string
   export type Readonly = boolean
+  export type Editable = boolean
   export type Disabled = boolean
   export type Placeholder = string
   export type Maxlength = string | number
@@ -63,6 +64,7 @@ export type VxeTextareaProps = {
    * 是否只读
    */
   readonly?: VxeTextareaPropTypes.Readonly
+  editable?: VxeTextareaPropTypes.Editable
   /**
    * 是否禁用
    */

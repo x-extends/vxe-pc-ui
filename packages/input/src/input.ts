@@ -63,8 +63,14 @@ export default defineComponent({
     name: String as PropType<VxeInputPropTypes.Name>,
     type: { type: String as PropType<VxeInputPropTypes.Type>, default: 'text' },
     clearable: { type: Boolean as PropType<VxeInputPropTypes.Clearable>, default: () => getConfig().input.clearable },
-    readonly: Boolean as PropType<VxeInputPropTypes.Readonly>,
-    disabled: Boolean as PropType<VxeInputPropTypes.Disabled>,
+    readonly: {
+      type: Boolean as PropType<VxeInputPropTypes.Readonly>,
+      default: null
+    },
+    disabled: {
+      type: Boolean as PropType<VxeInputPropTypes.Disabled>,
+      default: null
+    },
     placeholder: {
       type: String as PropType<VxeInputPropTypes.Placeholder>,
       default: () => XEUtils.eqNull(getConfig().input.placeholder) ? getI18n('vxe.base.pleaseInput') : getConfig().input.placeholder
@@ -197,7 +203,7 @@ export default defineComponent({
       return XEUtils.toStringDate(value, format)
     }
 
-    const compTransfer = computed(() => {
+    const computeTransfer = computed(() => {
       const { transfer } = props
       if (transfer === null) {
         const globalTransfer = getConfig().input.transfer
@@ -209,6 +215,29 @@ export default defineComponent({
         }
       }
       return transfer
+    })
+
+    const computeFormReadonly = computed(() => {
+      if ($xeForm) {
+        return $xeForm.props.readonly
+      }
+      return false
+    })
+
+    const computeIsReadonly = computed(() => {
+      const { readonly } = props
+      return readonly
+    })
+
+    const computeIsDisabled = computed(() => {
+      const { disabled } = props
+      if (disabled === null) {
+        if ($xeForm) {
+          return $xeForm.props.disabled
+        }
+        return false
+      }
+      return disabled
     })
 
     const computeIsDateTimeType = computed(() => {
@@ -612,9 +641,10 @@ export default defineComponent({
       return minuteList
     })
 
-    const computeInpReadonly = computed(() => {
-      const { type, readonly, editable, multiple } = props
-      return readonly || multiple || !editable || type === 'week' || type === 'quarter'
+    const computeInputReadonly = computed(() => {
+      const { type, editable, multiple } = props
+      const isReadonly = computeIsReadonly.value
+      return isReadonly || multiple || !editable || type === 'week' || type === 'quarter'
     })
 
     const computeInputType = computed(() => {
@@ -748,8 +778,8 @@ export default defineComponent({
     }
 
     const clickPrefixEvent = (evnt: Event) => {
-      const { disabled } = props
-      if (!disabled) {
+      const isDisabled = computeIsDisabled.value
+      if (!isDisabled) {
         const { inputValue } = reactData
         inputMethods.dispatchEvent('prefix-click', { value: inputValue }, evnt)
       }
@@ -782,8 +812,8 @@ export default defineComponent({
     }
 
     const clickSuffixEvent = (evnt: Event) => {
-      const { disabled } = props
-      if (!disabled) {
+      const isDisabled = computeIsDisabled.value
+      if (!isDisabled) {
         const { inputValue } = reactData
         inputMethods.dispatchEvent('suffix-click', { value: inputValue }, evnt)
       }
@@ -932,8 +962,8 @@ export default defineComponent({
       const isNumType = computeIsNumType.value
       const isDatePickerType = computeIsDatePickerType.value
       const dateLabelFormat = computeDateLabelFormat.value
-      const inpReadonly = computeInpReadonly.value
-      if (!inpReadonly) {
+      const inputReadonly = computeInputReadonly.value
+      if (!inputReadonly) {
         if (isNumType) {
           if (inputValue) {
             let inpNumVal: number | string = type === 'integer' ? XEUtils.toInteger(handleNumber(inputValue)) : XEUtils.toNumber(handleNumber(inputValue))
@@ -1004,9 +1034,10 @@ export default defineComponent({
 
     // 密码
     const passwordToggleEvent = (evnt: Event) => {
-      const { readonly, disabled } = props
       const { showPwd } = reactData
-      if (!disabled && !readonly) {
+      const isDisabled = computeIsDisabled.value
+      const isReadonly = computeIsReadonly.value
+      if (!isDisabled && !isReadonly) {
         reactData.showPwd = !showPwd
       }
       inputMethods.dispatchEvent('toggle-visible', { visible: reactData.showPwd }, evnt)
@@ -1040,10 +1071,11 @@ export default defineComponent({
     let downbumTimeout: number
 
     const numberNextEvent = (evnt: Event) => {
-      const { readonly, disabled } = props
+      const isDisabled = computeIsDisabled.value
+      const isReadonly = computeIsReadonly.value
       const isDisabledSubtractNumber = computeIsDisabledSubtractNumber.value
       clearTimeout(downbumTimeout)
-      if (!disabled && !readonly && !isDisabledSubtractNumber) {
+      if (!isDisabled && !isReadonly && !isDisabledSubtractNumber) {
         numberChange(false, evnt)
       }
       inputMethods.dispatchEvent('next-number', {}, evnt)
@@ -1057,10 +1089,11 @@ export default defineComponent({
     }
 
     const numberPrevEvent = (evnt: Event) => {
-      const { readonly, disabled } = props
+      const isDisabled = computeIsDisabled.value
+      const isReadonly = computeIsReadonly.value
       const isDisabledAddNumber = computeIsDisabledAddNumber.value
       clearTimeout(downbumTimeout)
-      if (!disabled && !readonly && !isDisabledAddNumber) {
+      if (!isDisabled && !isReadonly && !isDisabledAddNumber) {
         numberChange(true, evnt)
       }
       inputMethods.dispatchEvent('prev-number', {}, evnt)
@@ -1525,7 +1558,7 @@ export default defineComponent({
         const { panelIndex } = reactData
         const targetElem = refInputTarget.value
         const panelElem = refInputPanel.value
-        const transfer = compTransfer.value
+        const transfer = computeTransfer.value
         if (targetElem && panelElem) {
           const targetHeight = targetElem.offsetHeight
           const targetWidth = targetElem.offsetWidth
@@ -1593,10 +1626,10 @@ export default defineComponent({
     }
 
     const showPanel = () => {
-      const { disabled } = props
       const { visiblePanel } = reactData
+      const isDisabled = computeIsDisabled.value
       const isDatePickerType = computeIsDatePickerType.value
-      if (!disabled && !visiblePanel) {
+      if (!isDisabled && !visiblePanel) {
         if (!reactData.inited) {
           reactData.inited = true
         }
@@ -1616,8 +1649,8 @@ export default defineComponent({
     }
 
     const datePickerOpenEvent = (evnt: Event) => {
-      const { readonly } = props
-      if (!readonly) {
+      const isReadonly = computeIsReadonly.value
+      if (!isReadonly) {
         evnt.preventDefault()
         showPanel()
       }
@@ -1631,12 +1664,12 @@ export default defineComponent({
 
     // 全局事件
     const handleGlobalMousedownEvent = (evnt: Event) => {
-      const { disabled } = props
       const { visiblePanel, isActivated } = reactData
       const isDatePickerType = computeIsDatePickerType.value
       const el = refElem.value
       const panelWrapperElem = refPanelWrapper.value
-      if (!disabled && isActivated) {
+      const isDisabled = computeIsDisabled.value
+      if (!isDisabled && isActivated) {
         reactData.isActivated = getEventTargetNode(evnt, el).flag || getEventTargetNode(evnt, panelWrapperElem).flag
         if (!reactData.isActivated) {
           // 如果是日期类型
@@ -1653,10 +1686,11 @@ export default defineComponent({
     }
 
     const handleGlobalKeydownEvent = (evnt: KeyboardEvent) => {
-      const { clearable, disabled } = props
+      const { clearable } = props
       const { visiblePanel } = reactData
+      const isDisabled = computeIsDisabled.value
       const isDatePickerType = computeIsDatePickerType.value
-      if (!disabled) {
+      if (!isDisabled) {
         const isTab = globalEvents.hasKey(evnt, GLOBAL_EVENT_KEYS.TAB)
         const isDel = globalEvents.hasKey(evnt, GLOBAL_EVENT_KEYS.DELETE)
         const isEsc = globalEvents.hasKey(evnt, GLOBAL_EVENT_KEYS.ESCAPE)
@@ -1717,9 +1751,9 @@ export default defineComponent({
     }
 
     const handleGlobalMousewheelEvent = (evnt: Event) => {
-      const { disabled } = props
       const { visiblePanel } = reactData
-      if (!disabled) {
+      const isDisabled = computeIsDisabled.value
+      if (!isDisabled) {
         if (visiblePanel) {
           const panelWrapperElem = refPanelWrapper.value
           if (getEventTargetNode(evnt, panelWrapperElem).flag) {
@@ -2129,7 +2163,7 @@ export default defineComponent({
       const { type } = props
       const { inited, animatVisible, visiblePanel, panelPlacement, panelStyle } = reactData
       const vSize = computeSize.value
-      const transfer = compTransfer.value
+      const transfer = computeTransfer.value
       const isDatePickerType = computeIsDatePickerType.value
       const renders = []
       if (isDatePickerType) {
@@ -2278,9 +2312,10 @@ export default defineComponent({
     }
 
     const renderSuffixIcon = () => {
-      const { disabled, suffixIcon } = props
+      const { suffixIcon } = props
       const { inputValue } = reactData
       const suffixSlot = slots.suffix
+      const isDisabled = computeIsDisabled.value
       const isNumType = computeIsNumType.value
       const isDatePickerType = computeIsDatePickerType.value
       const isPawdType = computeIsPawdType.value
@@ -2290,7 +2325,7 @@ export default defineComponent({
       return isClearable || suffixSlot || suffixIcon || isExtraBtn
         ? h('div', {
           class: ['vxe-input--suffix', {
-            'is--clear': isClearable && !disabled && !(inputValue === '' || XEUtils.eqNull(inputValue))
+            'is--clear': isClearable && !isDisabled && !(inputValue === '' || XEUtils.eqNull(inputValue))
           }]
         }, [
           isClearable
@@ -2418,12 +2453,20 @@ export default defineComponent({
     initValue()
 
     const renderVN = () => {
-      const { className, controls, type, align, showWordCount, countMethod, name, disabled, readonly, autocomplete } = props
+      const { className, controls, type, align, showWordCount, countMethod, name, autocomplete } = props
       const { inputValue, visiblePanel, isActivated } = reactData
       const vSize = computeSize.value
+      const isDisabled = computeIsDisabled.value
+      const formReadonly = computeFormReadonly.value
+      if (formReadonly) {
+        return h('div', {
+          ref: refElem,
+          class: ['vxe-input--readonly', `type--${type}`, className]
+        }, inputValue)
+      }
       const isCountError = computeIsCountError.value
       const inputCount = computeInputCount.value
-      const inpReadonly = computeInpReadonly.value
+      const inputReadonly = computeInputReadonly.value
       const inpMaxlength = computeInpMaxlength.value
       const inputType = computeInputType.value
       const inpPlaceholder = computeInpPlaceholder.value
@@ -2439,12 +2482,11 @@ export default defineComponent({
           'is--controls': controls,
           'is--prefix': !!prefix,
           'is--suffix': !!suffix,
-          'is--readonly': readonly,
           'is--visible': visiblePanel,
           'is--count': isWordCount,
-          'is--disabled': disabled,
+          'is--disabled': isDisabled,
           'is--active': isActivated,
-          'show--clear': isClearable && !disabled && !(inputValue === '' || XEUtils.eqNull(inputValue))
+          'show--clear': isClearable && !isDisabled && !(inputValue === '' || XEUtils.eqNull(inputValue))
         }]
       }, [
         prefix || createCommentVNode(),
@@ -2459,8 +2501,8 @@ export default defineComponent({
             type: inputType,
             placeholder: inpPlaceholder,
             maxlength: inpMaxlength,
-            readonly: inpReadonly,
-            disabled,
+            readonly: inputReadonly,
+            disabled: isDisabled,
             autocomplete,
             onKeydown: keydownEvent,
             onKeyup: keyupEvent,

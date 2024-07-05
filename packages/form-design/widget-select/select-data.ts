@@ -1,7 +1,7 @@
 import { handleGetFormDesignWidgetName } from '../render/util'
 import { getI18n } from '@vxe-ui/core'
 import XEUtils from 'xe-utils'
-import { WidgetDataSourceOptionObjVO } from '../render/use-widget-form'
+import { WidgetDataSourceOptionObjVO } from '../../form-design/src/use'
 
 export interface WidgetSelectFormObjVO {
   options: WidgetDataSourceOptionObjVO[]

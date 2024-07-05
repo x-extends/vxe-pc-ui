@@ -4,13 +4,16 @@ import { getConfig, createEvent, useSize } from '../../ui'
 import VxeRadioComponent from './radio'
 import VxeRadioButtonComponent from './button'
 
-import type { VxeRadioGroupPropTypes, VxeRadioGroupConstructor, VxeRadioGroupEmits, VxeRadioGroupPrivateMethods, RadioGroupPrivateMethods, RadioGroupMethods, VxeFormConstructor, VxeFormPrivateMethods, VxeFormDefines } from '../../../types'
+import type { VxeRadioGroupPropTypes, VxeRadioGroupConstructor, VxeRadioGroupEmits, VxeRadioGroupPrivateMethods, RadioGroupPrivateMethods, RadioGroupPrivateComputed, RadioGroupMethods, VxeFormConstructor, VxeFormPrivateMethods, VxeFormDefines } from '../../../types'
 
 export default defineComponent({
   name: 'VxeRadioGroup',
   props: {
     modelValue: [String, Number, Boolean] as PropType<VxeRadioGroupPropTypes.ModelValue>,
-    disabled: Boolean as PropType<VxeRadioGroupPropTypes.Disabled>,
+    disabled: {
+      type: Boolean as PropType<VxeRadioGroupPropTypes.Disabled>,
+      default: null
+    },
     type: String as PropType<VxeRadioGroupPropTypes.Type>,
     options: Array as PropType<VxeRadioGroupPropTypes.Options>,
     optionProps: Object as PropType<VxeRadioGroupPropTypes.OptionProps>,
@@ -28,11 +31,28 @@ export default defineComponent({
 
     const xID = XEUtils.uniqueId()
 
+    const computeIsDisabled = computed(() => {
+      const { disabled } = props
+      if (disabled === null) {
+        if ($xeForm) {
+          return $xeForm.props.readonly || $xeForm.props.disabled
+        }
+        return false
+      }
+      return disabled
+    })
+
+    const computeMaps: RadioGroupPrivateComputed = {
+      computeIsDisabled
+    }
+
     const $xeradiogroup = {
       xID,
       props,
       context,
-      name: XEUtils.uniqueId('xegroup_')
+      name: XEUtils.uniqueId('xegroup_'),
+
+      getComputeMaps: () => computeMaps
     } as unknown as VxeRadioGroupConstructor & VxeRadioGroupPrivateMethods
 
     const computePropsOpts = computed(() => {

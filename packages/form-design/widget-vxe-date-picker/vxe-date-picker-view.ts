@@ -1,6 +1,6 @@
 import { PropType, defineComponent, h, inject } from 'vue'
 import { WidgetVxeDatePickerFormObjVO } from './vxe-date-picker-data'
-import { useKebabCaseName } from '../render/hooks'
+import { useKebabCaseName } from '../../form-design/src/use'
 import VxeFormItemComponent from '../../form/src/form-item'
 import VxeDatePickerComponent from '../../date-picker/src/date-picker'
 

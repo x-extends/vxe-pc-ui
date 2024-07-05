@@ -11,7 +11,10 @@ export default defineComponent({
     modelValue: Array as PropType<VxeCheckboxGroupPropTypes.ModelValue>,
     options: Array as PropType<VxeCheckboxGroupPropTypes.Options>,
     optionProps: Object as PropType<VxeCheckboxGroupPropTypes.OptionProps>,
-    disabled: Boolean as PropType<VxeCheckboxGroupPropTypes.Disabled>,
+    disabled: {
+      type: Boolean as PropType<VxeCheckboxGroupPropTypes.Disabled>,
+      default: null
+    },
     max: { type: [String, Number] as PropType<VxeCheckboxGroupPropTypes.Max>, default: null },
     size: { type: String as PropType<VxeCheckboxGroupPropTypes.Size>, default: () => getConfig().checkboxGroup.size || getConfig().size }
   },
@@ -25,6 +28,17 @@ export default defineComponent({
     const formItemInfo = inject<VxeFormDefines.ProvideItemInfo | null>('xeFormItemInfo', null)
 
     const xID = XEUtils.uniqueId()
+
+    const computeIsDisabled = computed(() => {
+      const { disabled } = props
+      if (disabled === null) {
+        if ($xeForm) {
+          return $xeForm.props.readonly || $xeForm.props.disabled
+        }
+        return false
+      }
+      return disabled
+    })
 
     const computeIsMaximize = computed(() => {
       const { modelValue, max } = props
@@ -54,7 +68,8 @@ export default defineComponent({
     })
 
     const computeMaps: CheckboxGroupPrivateComputed = {
-      computeIsMaximize
+      computeIsMaximize,
+      computeIsDisabled
     }
 
     const $xeCheckboxGroup = {

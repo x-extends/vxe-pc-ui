@@ -1,6 +1,6 @@
 import { PropType, defineComponent, h, inject } from 'vue'
 import { WidgetVxeNumberInputFormObjVO } from './vxe-number-input-data'
-import { useKebabCaseName } from '../render/hooks'
+import { useKebabCaseName } from '../../form-design/src/use'
 import VxeFormItemComponent from '../../form/src/form-item'
 import VxeNumberInputComponent from '../../number-input/src/number-input'
 

@@ -21,7 +21,7 @@
         <vxe-radio label="4" content="SASS"></vxe-radio>
         <vxe-radio label="5" content="LESS"></vxe-radio>
       </vxe-radio-group>
-      <vxe-radio-group v-model="demo1.value3" :options="demo1.opts1"></vxe-radio-group>
+      <vxe-radio-group v-model="demo1.value3" :options="demo1.opts1" ></vxe-radio-group>
     </p>
 
     <p>

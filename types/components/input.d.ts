@@ -31,6 +31,7 @@ export namespace VxeInputPropTypes {
   export type Name = string
   export type Type = 'text' | 'search' | 'number' | 'integer' | 'float' | 'password' | 'date' | 'time' | 'datetime' | 'week' | 'month' | 'quarter' | 'year'
   export type Clearable = boolean
+  export type Editable = boolean
   export type Readonly = boolean
   export type Disabled = boolean
   export type Placeholder = string
@@ -57,7 +58,6 @@ export namespace VxeInputPropTypes {
   export type SelectDay = 0 | 1 | 2 | 3 | 4 | 5 | 6
   export type LabelFormat = string
   export type ValueFormat = string
-  export type Editable = boolean
   export type FestivalMethod = (params: VxeInputDefines.DateFestivalParams) => VxeInputDefines.DateFestivalInfo | null | void
   export type DisabledMethod = (params: VxeInputDefines.DateDisabledParams) => boolean
   export type PrefixIcon = string

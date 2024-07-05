@@ -49,7 +49,7 @@ export default defineComponent({
     const refPulldowContent = ref() as Ref<HTMLDivElement>
     const refPulldowPnanel = ref() as Ref<HTMLDivElement>
 
-    const compTransfer = computed(() => {
+    const computeTransfer = computed(() => {
       const { transfer } = props
       if (transfer === null) {
         const globalTransfer = getConfig().pulldown.transfer
@@ -94,7 +94,7 @@ export default defineComponent({
       return nextTick().then(() => {
         const { placement } = props
         const { panelIndex, visiblePanel } = reactData
-        const transfer = compTransfer.value
+        const transfer = computeTransfer.value
         if (visiblePanel) {
           const targetElem = refPulldowContent.value
           const panelElem = refPulldowPnanel.value
@@ -299,7 +299,7 @@ export default defineComponent({
     const renderVN = () => {
       const { className, popupClassName, destroyOnClose, disabled } = props
       const { inited, isActivated, animatVisible, visiblePanel, panelStyle, panelPlacement } = reactData
-      const transfer = compTransfer.value
+      const transfer = computeTransfer.value
       const vSize = computeSize.value
       const defaultSlot = slots.default
       const headerSlot = slots.header
@@ -309,7 +309,7 @@ export default defineComponent({
         ref: refElem,
         class: ['vxe-pulldown', className ? (XEUtils.isFunction(className) ? className({ $pulldown: $xepulldown }) : className) : '', {
           [`size--${vSize}`]: vSize,
-          'is--visivle': visiblePanel,
+          'is--visible': visiblePanel,
           'is--disabled': disabled,
           'is--active': isActivated
         }]

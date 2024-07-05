@@ -7,6 +7,14 @@
   line-height: 1;
 }
 
+.vxe-checkbox-slots {
+  display: none;
+}
+.vxe-checkbox--readonly {
+  color: var(--vxe-ui-font-color);
+  display: inline-flex;
+}
+
 /*checkbox*/
 .vxe-checkbox {
   @include createCheckboxIcon();

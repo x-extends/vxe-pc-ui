@@ -1,7 +1,7 @@
 import { PropType, defineComponent, h, inject } from 'vue'
 import { getI18n } from '@vxe-ui/core'
 import { WidgetTextareaFormObjVO } from './textarea-data'
-import { useKebabCaseName } from '../render/hooks'
+import { useKebabCaseName } from '../../form-design/src/use'
 import VxeFormItemComponent from '../../form/src/form-item'
 
 import type { VxeGlobalRendererHandles, VxeFormViewConstructor, VxeFormViewPrivateMethods } from '../../../types'

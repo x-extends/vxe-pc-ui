@@ -131,7 +131,7 @@ export default defineComponent({
 
     let buttonMethods = {} as ButtonMethods
 
-    const compTransfer = computed(() => {
+    const computeTransfer = computed(() => {
       const { transfer } = props
       if (transfer === null) {
         const globalTransfer = getConfig().button.transfer
@@ -212,7 +212,7 @@ export default defineComponent({
         const { panelIndex } = reactData
         const targetElem = refButton.value
         const panelElem = refBtnPanel.value
-        const transfer = compTransfer.value
+        const transfer = computeTransfer.value
         if (panelElem && targetElem) {
           const targetHeight = targetElem.offsetHeight
           const targetWidth = targetElem.offsetWidth
@@ -492,7 +492,7 @@ export default defineComponent({
       const btnStatus = computeBtnStatus.value
       const btnRound = computeBtnRound.value
       const btnCircle = computeBtnCircle.value
-      const transfer = compTransfer.value
+      const transfer = computeTransfer.value
       const btnDisabled = computeBtnDisabled.value
       const permissionInfo = computePermissionInfo.value
       const vSize = computeSize.value

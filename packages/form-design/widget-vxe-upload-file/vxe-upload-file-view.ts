@@ -1,6 +1,6 @@
 import { PropType, defineComponent, h, inject } from 'vue'
 import { WidgetVxeUploadFileFormObjVO } from './vxe-upload-file-data'
-import { useKebabCaseName } from '../render/hooks'
+import { useKebabCaseName } from '../../form-design/src/use'
 import VxeFormItemComponent from '../../form/src/form-item'
 import VxeUploadComponent from '../../upload/src/upload'
 

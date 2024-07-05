@@ -1,7 +1,7 @@
 import { PropType, defineComponent, h, ref, createCommentVNode } from 'vue'
 import { getI18n } from '@vxe-ui/core'
 import { WidgetVxeUploadFileFormObjVO, getLimitSizeOptions } from './vxe-upload-file-data'
-import { useKebabCaseName } from '../render/hooks'
+import { useKebabCaseName } from '../../form-design/src/use'
 import VxeFormComponent from '../../form/src/form'
 import VxeFormItemComponent from '../../form/src/form-item'
 import VxeInputComponent from '../../input/src/input'

@@ -26,6 +26,7 @@ export namespace VxeSwitchPropTypes {
   export type Size = VxeComponentSizeType
   export type ModelValue = string | number | boolean
   export type Disabled = boolean
+  export type Readonly = boolean
   export type OpenLabel = string
   export type CloseLabel = string
   export type OpenValue = string | number | boolean
@@ -40,6 +41,7 @@ export type VxeSwitchProps = {
   size?: VxeSwitchPropTypes.Size
   modelValue?: VxeSwitchPropTypes.ModelValue
   disabled?: VxeSwitchPropTypes.Disabled
+  readonly?: VxeSwitchPropTypes.Readonly
   openLabel?: VxeSwitchPropTypes.OpenLabel
   closeLabel?: VxeSwitchPropTypes.CloseLabel
   openValue?: VxeSwitchPropTypes.OpenValue

@@ -26,8 +26,14 @@ export default defineComponent({
     name: String as PropType<VxeNumberInputPropTypes.Name>,
     type: { type: String as PropType<VxeNumberInputPropTypes.Type>, default: 'number' },
     clearable: { type: Boolean as PropType<VxeNumberInputPropTypes.Clearable>, default: () => getConfig().numberInput.clearable },
-    readonly: Boolean as PropType<VxeNumberInputPropTypes.Readonly>,
-    disabled: Boolean as PropType<VxeNumberInputPropTypes.Disabled>,
+    readonly: {
+      type: Boolean as PropType<VxeNumberInputPropTypes.Readonly>,
+      default: null
+    },
+    disabled: {
+      type: Boolean as PropType<VxeNumberInputPropTypes.Disabled>,
+      default: null
+    },
     placeholder: {
       type: String as PropType<VxeNumberInputPropTypes.Placeholder>,
       default: () => XEUtils.eqNull(getConfig().numberInput.placeholder) ? getI18n('vxe.base.pleaseInput') : getConfig().numberInput.placeholder
@@ -118,6 +124,28 @@ export default defineComponent({
 
     let inputMethods = {} as NumberInputMethods
 
+    const computeFormReadonly = computed(() => {
+      const { readonly } = props
+      if (readonly === null) {
+        if ($xeForm) {
+          return $xeForm.props.readonly
+        }
+        return false
+      }
+      return readonly
+    })
+
+    const computeIsDisabled = computed(() => {
+      const { disabled } = props
+      if (disabled === null) {
+        if ($xeForm) {
+          return $xeForm.props.disabled
+        }
+        return false
+      }
+      return disabled
+    })
+
     const computeIsNumType = computed(() => {
       return true
     })
@@ -142,9 +170,10 @@ export default defineComponent({
       return props.clearable
     })
 
-    const computeInpReadonly = computed(() => {
-      const { readonly, multiple } = props
-      return readonly || multiple
+    const computeInputReadonly = computed(() => {
+      const { multiple } = props
+      const formReadonly = computeFormReadonly.value
+      return formReadonly || multiple
     })
 
     const computeInpPlaceholder = computed(() => {
@@ -157,9 +186,8 @@ export default defineComponent({
 
     const computeInpMaxlength = computed(() => {
       const { maxlength } = props
-      const isNumType = computeIsNumType.value
       // 数值最大长度限制 16 位，包含小数
-      return isNumType && !XEUtils.toNumber(maxlength) ? 16 : maxlength
+      return !XEUtils.toNumber(maxlength) ? 16 : maxlength
     })
 
     const computeInpImmediate = computed(() => {
@@ -259,8 +287,8 @@ export default defineComponent({
     }
 
     const clickPrefixEvent = (evnt: Event) => {
-      const { disabled } = props
-      if (!disabled) {
+      const isDisabled = computeIsDisabled.value
+      if (!isDisabled) {
         const { inputValue } = reactData
         inputMethods.dispatchEvent('prefix-click', { value: inputValue }, evnt)
       }
@@ -273,8 +301,8 @@ export default defineComponent({
     }
 
     const clickSuffixEvent = (evnt: Event) => {
-      const { disabled } = props
-      if (!disabled) {
+      const isDisabled = computeIsDisabled.value
+      if (!isDisabled) {
         const { inputValue } = reactData
         inputMethods.dispatchEvent('suffix-click', { value: inputValue }, evnt)
       }
@@ -308,8 +336,8 @@ export default defineComponent({
     const afterCheckValue = () => {
       const { type, min, max, exponential } = props
       const { inputValue } = reactData
-      const inpReadonly = computeInpReadonly.value
-      if (!inpReadonly) {
+      const inputReadonly = computeInputReadonly.value
+      if (!inputReadonly) {
         if (inputValue) {
           let inpNumVal: number | string = type === 'integer' ? XEUtils.toInteger(handleNumber(inputValue)) : XEUtils.toNumber(handleNumber(inputValue))
           if (!vaildMinNum(inpNumVal)) {
@@ -362,10 +390,11 @@ export default defineComponent({
     let downbumTimeout: number
 
     const numberNextEvent = (evnt: Event) => {
-      const { readonly, disabled } = props
+      const isDisabled = computeIsDisabled.value
+      const formReadonly = computeFormReadonly.value
       const isDisabledSubtractNumber = computeIsDisabledSubtractNumber.value
       clearTimeout(downbumTimeout)
-      if (!disabled && !readonly && !isDisabledSubtractNumber) {
+      if (!isDisabled && !formReadonly && !isDisabledSubtractNumber) {
         numberChange(false, evnt)
       }
       inputMethods.dispatchEvent('next-number', {}, evnt)
@@ -379,10 +408,11 @@ export default defineComponent({
     }
 
     const numberPrevEvent = (evnt: Event) => {
-      const { readonly, disabled } = props
+      const isDisabled = computeIsDisabled.value
+      const formReadonly = computeFormReadonly.value
       const isDisabledAddNumber = computeIsDisabledAddNumber.value
       clearTimeout(downbumTimeout)
-      if (!disabled && !readonly && !isDisabledAddNumber) {
+      if (!isDisabled && !formReadonly && !isDisabledAddNumber) {
         numberChange(true, evnt)
       }
       inputMethods.dispatchEvent('prev-number', {}, evnt)
@@ -480,11 +510,11 @@ export default defineComponent({
 
     // 全局事件
     const handleGlobalMousedownEvent = (evnt: Event) => {
-      const { disabled } = props
       const { isActivated } = reactData
       const el = refElem.value
       const panelElem = refInputPanel.value
-      if (!disabled && isActivated) {
+      const isDisabled = computeIsDisabled.value
+      if (!isDisabled && isActivated) {
         reactData.isActivated = getEventTargetNode(evnt, el).flag || getEventTargetNode(evnt, panelElem).flag
         if (!reactData.isActivated) {
           afterCheckValue()
@@ -493,8 +523,9 @@ export default defineComponent({
     }
 
     const handleGlobalKeydownEvent = (evnt: KeyboardEvent) => {
-      const { clearable, disabled } = props
-      if (!disabled) {
+      const { clearable } = props
+      const isDisabled = computeIsDisabled.value
+      if (!isDisabled) {
         const isTab = globalEvents.hasKey(evnt, GLOBAL_EVENT_KEYS.TAB)
         const isDel = globalEvents.hasKey(evnt, GLOBAL_EVENT_KEYS.DELETE)
         let isActivated = reactData.isActivated
@@ -579,13 +610,14 @@ export default defineComponent({
     }
 
     const renderSuffixIcon = () => {
-      const { disabled, suffixIcon } = props
+      const { suffixIcon } = props
       const { inputValue } = reactData
       const suffixSlot = slots.suffix
+      const isDisabled = computeIsDisabled.value
       const isClearable = computeIsClearable.value
       return h('div', {
         class: ['vxe-number-input--suffix', {
-          'is--clear': isClearable && !disabled && !(inputValue === '' || XEUtils.eqNull(inputValue))
+          'is--clear': isClearable && !isDisabled && !(inputValue === '' || XEUtils.eqNull(inputValue))
         }]
       }, [
         isClearable
@@ -683,10 +715,18 @@ export default defineComponent({
     initValue()
 
     const renderVN = () => {
-      const { className, controls, type, align, name, disabled, readonly, autocomplete } = props
+      const { className, controls, type, align, name, autocomplete } = props
       const { inputValue, isActivated } = reactData
       const vSize = computeSize.value
-      const inpReadonly = computeInpReadonly.value
+      const isDisabled = computeIsDisabled.value
+      const formReadonly = computeFormReadonly.value
+      if (formReadonly) {
+        return h('div', {
+          ref: refElem,
+          class: ['vxe-number-input--readonly', `type--${type}`, className]
+        }, inputValue)
+      }
+      const inputReadonly = computeInputReadonly.value
       const inpMaxlength = computeInpMaxlength.value
       const inpPlaceholder = computeInpPlaceholder.value
       const isClearable = computeIsClearable.value
@@ -700,10 +740,9 @@ export default defineComponent({
           'is--controls': controls,
           'is--prefix': !!prefix,
           'is--suffix': !!suffix,
-          'is--readonly': readonly,
-          'is--disabled': disabled,
+          'is--disabled': isDisabled,
           'is--active': isActivated,
-          'show--clear': isClearable && !disabled && !(inputValue === '' || XEUtils.eqNull(inputValue))
+          'show--clear': isClearable && !isDisabled && !(inputValue === '' || XEUtils.eqNull(inputValue))
         }]
       }, [
         prefix || createCommentVNode(),
@@ -718,8 +757,8 @@ export default defineComponent({
             type: 'text',
             placeholder: inpPlaceholder,
             maxlength: inpMaxlength,
-            readonly: inpReadonly,
-            disabled,
+            readonly: inputReadonly,
+            disabled: isDisabled,
             autocomplete,
             onKeydown: keydownEvent,
             onKeyup: keyupEvent,

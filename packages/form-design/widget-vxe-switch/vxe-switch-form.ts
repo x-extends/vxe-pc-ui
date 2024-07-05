@@ -1,7 +1,7 @@
 import { PropType, defineComponent, h } from 'vue'
 import { getI18n } from '@vxe-ui/core'
 import { WidgetVxeSwitchFormObjVO } from './vxe-switch-data'
-import { useKebabCaseName } from '../render/hooks'
+import { useKebabCaseName } from '../../form-design/src/use'
 import VxeFormComponent from '../../form/src/form'
 import VxeInputComponent from '../../input/src/input'
 import VxeFormItemComponent from '../../form/src/form-item'

@@ -1,6 +1,6 @@
 import { PropType, defineComponent, h } from 'vue'
 import { WidgetTextFormObjVO } from './text-data'
-import { useKebabCaseName } from '../render/hooks'
+import { useKebabCaseName } from '../../form-design/src/use'
 import VxeFormItemComponent from '../../form/src/form-item'
 
 import type { VxeGlobalRendererHandles } from '../../../types'

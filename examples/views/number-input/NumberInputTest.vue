@@ -42,6 +42,9 @@
         </template>
       </vxe-number-input>
     </p>
+    <p>
+      <vxe-number-input v-model="demo1.value700" readonly></vxe-number-input>
+    </p>
   </div>
 </template>
 
@@ -63,10 +66,11 @@ const demo1 = reactive({
   value507: null,
   value508: null,
   value509: null,
-  value600: null,
+  value600: 22,
   value601: null,
   value602: null,
-  value603: null
+  value603: null,
+  value700: 1234
 })
 </script>
 

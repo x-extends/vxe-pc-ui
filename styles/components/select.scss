@@ -40,6 +40,10 @@
     }
   }
 }
+.vxe-select--readonly {
+  color: var(--vxe-ui-font-color);
+  display: inline-flex;
+}
 
 .vxe-select-slots {
   display: none;

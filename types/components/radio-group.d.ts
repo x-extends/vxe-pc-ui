@@ -1,4 +1,4 @@
-import { RenderFunction, SetupContext, Ref, ComponentPublicInstance, DefineComponent } from 'vue'
+import { RenderFunction, SetupContext, Ref, ComputedRef, ComponentPublicInstance, DefineComponent } from 'vue'
 import { defineVxeComponent, VxeComponentBaseOptions, VxeComponentEventParams, VxeComponentSizeType, ValueOf } from '@vxe-ui/core'
 import { VxeRadioPropTypes } from './radio'
 
@@ -57,6 +57,7 @@ export type VxeRadioGroupProps = {
 }
 
 export interface RadioGroupPrivateComputed {
+  computeIsDisabled: ComputedRef<boolean | undefined>
 }
 export interface VxeRadioGroupPrivateComputed extends RadioGroupPrivateComputed { }
 

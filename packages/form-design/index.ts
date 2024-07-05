@@ -1,7 +1,7 @@
 import { App } from 'vue'
 import { VxeUI } from '@vxe-ui/core'
 import VxeFormDesignComponent from './src/form-design'
-import { useWidgetView } from './src/use'
+import { useWidgetView, useKebabCaseName, useWidgetPropDataSource } from './src/use'
 import { dynamicApp } from '../dynamics'
 import './render'
 
@@ -14,7 +14,9 @@ export const VxeFormDesign = Object.assign({}, VxeFormDesignComponent, {
 })
 
 const formDesign: FormDesignExport = {
-  useWidgetView
+  useKebabCaseName,
+  useWidgetView,
+  useWidgetPropDataSource
 }
 
 dynamicApp.component(VxeFormDesignComponent.name as string, VxeFormDesignComponent)

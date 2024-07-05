@@ -15,7 +15,10 @@ export default defineComponent({
     checkedValue: { type: [String, Number, Boolean] as PropType<VxeCheckboxPropTypes.CheckedValue>, default: true },
     uncheckedValue: { type: [String, Number, Boolean] as PropType<VxeCheckboxPropTypes.UncheckedValue>, default: false },
     content: [String, Number] as PropType<VxeCheckboxPropTypes.Content>,
-    disabled: Boolean as PropType<VxeCheckboxPropTypes.Disabled>,
+    disabled: {
+      type: Boolean as PropType<VxeCheckboxPropTypes.Disabled>,
+      default: null
+    },
     size: { type: String as PropType<VxeCheckboxPropTypes.Size>, default: () => getConfig().checkbox.size || getConfig().size }
   },
   emits: [
@@ -24,8 +27,10 @@ export default defineComponent({
   ] as VxeCheckboxEmits,
   setup (props, context) {
     const { slots, emit } = context
+
     const $xeForm = inject<VxeFormConstructor & VxeFormPrivateMethods | null>('$xeForm', null)
     const formItemInfo = inject<VxeFormDefines.ProvideItemInfo | null>('xeFormItemInfo', null)
+    const $xeCheckboxGroup = inject('$xeCheckboxGroup', null as (VxeCheckboxGroupConstructor & VxeCheckboxGroupPrivateMethods) | null)
 
     const xID = XEUtils.uniqueId()
 
@@ -39,8 +44,6 @@ export default defineComponent({
 
     const { computeSize } = useSize(props)
 
-    const $xeCheckboxGroup = inject('$xeCheckboxGroup', null as (VxeCheckboxGroupConstructor & VxeCheckboxGroupPrivateMethods) | null)
-
     const computeIsChecked = computed(() => {
       if ($xeCheckboxGroup) {
         return XEUtils.includes($xeCheckboxGroup.props.modelValue, props.label)
@@ -49,17 +52,16 @@ export default defineComponent({
     })
 
     const computeIsDisabled = computed(() => {
-      if (props.disabled) {
-        return true
+      const { disabled } = props
+      if (disabled === null) {
+        if ($xeCheckboxGroup) {
+          const { computeIsDisabled, computeIsMaximize } = $xeCheckboxGroup.getComputeMaps()
+          const isMaximize = computeIsMaximize.value
+          const isChecked = computeIsChecked.value
+          return computeIsDisabled.value || (isMaximize && !isChecked)
+        }
       }
-      if ($xeCheckboxGroup) {
-        const { props: groupProps } = $xeCheckboxGroup
-        const { computeIsMaximize } = $xeCheckboxGroup.getComputeMaps()
-        const isMaximize = computeIsMaximize.value
-        const isChecked = computeIsChecked.value
-        return groupProps.disabled || (isMaximize && !isChecked)
-      }
-      return false
+      return disabled
     })
 
     const changeEvent = (evnt: Event & { target: { checked: boolean } }) => {

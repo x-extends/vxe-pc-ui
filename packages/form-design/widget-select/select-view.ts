@@ -1,7 +1,7 @@
 import { PropType, defineComponent, h, inject } from 'vue'
 import VxeFormItemComponent from '../../form/src/form-item'
 import { WidgetSelectFormObjVO } from './select-data'
-import { useKebabCaseName } from '../render/hooks'
+import { useKebabCaseName } from '../../form-design/src/use'
 
 import type { VxeGlobalRendererHandles, VxeFormViewConstructor, VxeFormViewPrivateMethods } from '../../../types'
 

@@ -11,6 +11,11 @@
   }
 }
 
+.vxe-radio--readonly {
+  color: var(--vxe-ui-font-color);
+  display: inline-flex;
+}
+
 /*radio*/
 .vxe-radio {
   @include createRadioIcon();

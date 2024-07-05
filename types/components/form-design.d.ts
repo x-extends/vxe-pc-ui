@@ -1,4 +1,4 @@
-import { RenderFunction, SetupContext, Ref, ComputedRef, WritableComputedRef, ComponentPublicInstance, DefineComponent, UnwrapNestedRefs } from 'vue'
+import { RenderFunction, SetupContext, Ref, VNode, ComputedRef, WritableComputedRef, ComponentPublicInstance, DefineComponent, UnwrapNestedRefs } from 'vue'
 import { defineVxeComponent, VxeComponentBaseOptions, VxeComponentEventParams, VxeComponentSizeType, ValueOf, VxeGlobalRendererHandles } from '@vxe-ui/core'
 import { VxeFormPropTypes } from '../components/form'
 
@@ -183,6 +183,16 @@ export interface FormDesignExport {
   }): {
     currWidget: ComputedRef<VxeFormDesignDefines.WidgetObjItem<T>>,
     widgetModel: WritableComputedRef<any>
+  }
+  useKebabCaseName(props: {
+    renderOpts: any
+    renderParams: any
+  }): ComputedRef<string>
+  useWidgetPropDataSource(props: {
+    renderOpts: any
+    renderParams: any
+  }, isSubOption?: boolean): {
+    renderDataSourceFormItem(): VNode
   }
 }
 

@@ -12,7 +12,10 @@ export default defineComponent({
     label: { type: [String, Number, Boolean] as PropType<VxeRadioPropTypes.Label>, default: null },
     title: [String, Number] as PropType<VxeRadioPropTypes.Title>,
     content: [String, Number] as PropType<VxeRadioPropTypes.Content>,
-    disabled: Boolean as PropType<VxeRadioPropTypes.Disabled>,
+    disabled: {
+      type: Boolean as PropType<VxeRadioPropTypes.Disabled>,
+      default: null
+    },
     name: String as PropType<VxeRadioPropTypes.Name>,
     strict: { type: Boolean as PropType<VxeRadioPropTypes.Strict>, default: () => getConfig().radio.strict },
     size: { type: String as PropType<VxeRadioPropTypes.Size>, default: () => getConfig().radio.size || getConfig().size }
@@ -23,8 +26,10 @@ export default defineComponent({
   ] as VxeRadioEmits,
   setup (props, context) {
     const { slots, emit } = context
+
     const $xeForm = inject<VxeFormConstructor & VxeFormPrivateMethods | null>('$xeForm', null)
     const formItemInfo = inject<VxeFormDefines.ProvideItemInfo | null>('xeFormItemInfo', null)
+    const $xeRadioGroup = inject('$xeRadioGroup', null as (VxeRadioGroupConstructor & VxeRadioGroupPrivateMethods) | null)
 
     const xID = XEUtils.uniqueId()
 
@@ -36,30 +41,35 @@ export default defineComponent({
 
     const { computeSize } = useSize(props)
 
-    const $xeradiogroup = inject('$xeRadioGroup', null as (VxeRadioGroupConstructor & VxeRadioGroupPrivateMethods) | null)
-
     let radioMethods = {} as RadioMethods
 
-    const computeDisabled = computed(() => {
-      return props.disabled || ($xeradiogroup && $xeradiogroup.props.disabled)
+    const computeIsDisabled = computed(() => {
+      const { disabled } = props
+      if (disabled === null) {
+        if ($xeRadioGroup) {
+          const { computeIsDisabled } = $xeRadioGroup.getComputeMaps()
+          return computeIsDisabled.value
+        }
+      }
+      return disabled
     })
 
     const computeName = computed(() => {
-      return $xeradiogroup ? $xeradiogroup.name : props.name
+      return $xeRadioGroup ? $xeRadioGroup.name : props.name
     })
 
     const computeStrict = computed(() => {
-      return $xeradiogroup ? $xeradiogroup.props.strict : props.strict
+      return $xeRadioGroup ? $xeRadioGroup.props.strict : props.strict
     })
 
     const computeChecked = computed(() => {
       const { modelValue, label } = props
-      return $xeradiogroup ? $xeradiogroup.props.modelValue === label : modelValue === label
+      return $xeRadioGroup ? $xeRadioGroup.props.modelValue === label : modelValue === label
     })
 
     const handleValue = (label: VxeRadioPropTypes.Label, evnt: Event) => {
-      if ($xeradiogroup) {
-        $xeradiogroup.handleChecked({ label }, evnt)
+      if ($xeRadioGroup) {
+        $xeRadioGroup.handleChecked({ label }, evnt)
       } else {
         emit('update:modelValue', label)
         radioMethods.dispatchEvent('change', { label }, evnt)
@@ -71,17 +81,17 @@ export default defineComponent({
     }
 
     const changeEvent = (evnt: Event) => {
-      const isDisabled = computeDisabled.value
+      const isDisabled = computeIsDisabled.value
       if (!isDisabled) {
         handleValue(props.label, evnt)
       }
     }
 
     const clickEvent = (evnt: Event) => {
-      const isDisabled = computeDisabled.value
+      const isDisabled = computeIsDisabled.value
       const isStrict = computeStrict.value
       if (!isDisabled && !isStrict) {
-        if (props.label === ($xeradiogroup ? $xeradiogroup.props.modelValue : props.modelValue)) {
+        if (props.label === ($xeRadioGroup ? $xeRadioGroup.props.modelValue : props.modelValue)) {
           handleValue(null, evnt)
         }
       }
@@ -97,7 +107,7 @@ export default defineComponent({
 
     const renderVN = () => {
       const vSize = computeSize.value
-      const isDisabled = computeDisabled.value
+      const isDisabled = computeIsDisabled.value
       const name = computeName.value
       const isChecked = computeChecked.value
       return h('label', {

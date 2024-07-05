@@ -1,12 +1,11 @@
 import { PropType, defineComponent, h } from 'vue'
 import { getI18n } from '@vxe-ui/core'
 import { WidgetVxeRadioGroupFormObjVO } from './vxe-radio-group-data'
-import { useKebabCaseName } from '../render/hooks'
 import VxeFormComponent from '../../form/src/form'
 import VxeFormItemComponent from '../../form/src/form-item'
 import VxeInputComponent from '../../input/src/input'
 import VxeSwitchComponent from '../../switch/src/switch'
-import { useWidgetPropDataSource } from '../render/use-widget-form'
+import { useKebabCaseName, useWidgetPropDataSource } from '../../form-design/src/use'
 
 import type { VxeGlobalRendererHandles } from '../../../types'
 

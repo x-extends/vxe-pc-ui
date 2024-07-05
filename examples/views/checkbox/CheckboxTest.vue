@@ -25,7 +25,7 @@
         <vxe-checkbox label="4" content="SASS"></vxe-checkbox>
         <vxe-checkbox label="5" content="LESS"></vxe-checkbox>
       </vxe-checkbox-group>
-      <vxe-checkbox-group v-model="demo1.value12" :options="demo1.opts1"></vxe-checkbox-group>
+      <vxe-checkbox-group v-model="demo1.value12" :options="demo1.opts1" ></vxe-checkbox-group>
     </p>
 
     <p>

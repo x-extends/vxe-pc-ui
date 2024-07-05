@@ -12,7 +12,10 @@ export default defineComponent({
     label: { type: [String, Number, Boolean] as PropType<VxeRadioButtonPropTypes.Label>, default: null },
     title: [String, Number] as PropType<VxeRadioButtonPropTypes.Title>,
     content: [String, Number] as PropType<VxeRadioButtonPropTypes.Content>,
-    disabled: Boolean as PropType<VxeRadioButtonPropTypes.Disabled>,
+    disabled: {
+      type: Boolean as PropType<VxeRadioButtonPropTypes.Disabled>,
+      default: null
+    },
     strict: { type: Boolean as PropType<VxeRadioButtonPropTypes.Strict>, default: () => getConfig().radioButton.strict },
     size: { type: String as PropType<VxeRadioButtonPropTypes.Size>, default: () => getConfig().radioButton.size || getConfig().size }
   },
@@ -22,8 +25,10 @@ export default defineComponent({
   ] as VxeRadioButtonEmits,
   setup (props, context) {
     const { slots, emit } = context
+
     const $xeForm = inject<VxeFormConstructor & VxeFormPrivateMethods | null>('$xeForm', null)
     const xeFormItemInfo = inject<VxeFormDefines.ProvideItemInfo | null>('xeFormItemInfo', null)
+    const $xeRadioGroup = inject('$xeRadioGroup', null as (VxeRadioGroupConstructor & VxeRadioGroupPrivateMethods) | null)
 
     const xID = XEUtils.uniqueId()
 
@@ -37,23 +42,28 @@ export default defineComponent({
 
     let radioButtonMethods = {} as RadioButtonMethods
 
-    const $xeradiogroup = inject('$xeRadioGroup', null as (VxeRadioGroupConstructor & VxeRadioGroupPrivateMethods) | null)
-
-    const computeDisabled = computed(() => {
-      return props.disabled || ($xeradiogroup && $xeradiogroup.props.disabled)
+    const computeIsDisabled = computed(() => {
+      const { disabled } = props
+      if (disabled === null) {
+        if ($xeRadioGroup) {
+          const { computeIsDisabled } = $xeRadioGroup.getComputeMaps()
+          return computeIsDisabled.value
+        }
+      }
+      return disabled
     })
 
     const computeName = computed(() => {
-      return $xeradiogroup ? $xeradiogroup.name : null
+      return $xeRadioGroup ? $xeRadioGroup.name : null
     })
 
     const computeStrict = computed(() => {
-      return $xeradiogroup ? $xeradiogroup.props.strict : props.strict
+      return $xeRadioGroup ? $xeRadioGroup.props.strict : props.strict
     })
 
     const computeChecked = computed(() => {
       const { modelValue, label } = props
-      return $xeradiogroup ? $xeradiogroup.props.modelValue === label : modelValue === label
+      return $xeRadioGroup ? $xeRadioGroup.props.modelValue === label : modelValue === label
     })
 
     radioButtonMethods = {
@@ -65,8 +75,8 @@ export default defineComponent({
     Object.assign($xeradiobutton, radioButtonMethods)
 
     const handleValue = (label: VxeRadioButtonPropTypes.Label, evnt: Event) => {
-      if ($xeradiogroup) {
-        $xeradiogroup.handleChecked({ label }, evnt)
+      if ($xeRadioGroup) {
+        $xeRadioGroup.handleChecked({ label }, evnt)
       } else {
         emit('update:modelValue', label)
         radioButtonMethods.dispatchEvent('change', { label }, evnt)
@@ -78,17 +88,17 @@ export default defineComponent({
     }
 
     const changeEvent = (evnt: Event) => {
-      const isDisabled = computeDisabled.value
+      const isDisabled = computeIsDisabled.value
       if (!isDisabled) {
         handleValue(props.label, evnt)
       }
     }
 
     const clickEvent = (evnt: Event) => {
-      const isDisabled = computeDisabled.value
+      const isDisabled = computeIsDisabled.value
       const isStrict = computeStrict.value
       if (!isDisabled && !isStrict) {
-        if (props.label === ($xeradiogroup ? $xeradiogroup.props.modelValue : props.modelValue)) {
+        if (props.label === ($xeRadioGroup ? $xeRadioGroup.props.modelValue : props.modelValue)) {
           handleValue(null, evnt)
         }
       }
@@ -96,7 +106,7 @@ export default defineComponent({
 
     const renderVN = () => {
       const vSize = computeSize.value
-      const isDisabled = computeDisabled.value
+      const isDisabled = computeIsDisabled.value
       const name = computeName.value
       const checked = computeChecked.value
       return h('label', {

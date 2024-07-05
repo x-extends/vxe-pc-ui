@@ -1,5 +1,9 @@
 @import '../helpers/mixin.scss';
 
+.vxe-number-input--readonly {
+  color: var(--vxe-ui-font-color);
+  display: inline-flex;
+}
 .vxe-number-input--wrapper {
   flex-grow: 1;
   overflow: hidden;

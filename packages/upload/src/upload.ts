@@ -1,11 +1,11 @@
-import { defineComponent, ref, h, reactive, watch, computed, PropType, createCommentVNode, onUnmounted } from 'vue'
+import { defineComponent, ref, h, reactive, watch, computed, PropType, inject, createCommentVNode, onUnmounted } from 'vue'
 import XEUtils from 'xe-utils'
 import { VxeUI, getConfig, getI18n, getIcon, createEvent } from '../../ui'
 import VxeButtonComponent from '../../button/src/button'
 import { getSlotVNs } from '../..//ui/src/vn'
 import { readLocalFile } from './util'
 
-import type { VxeUploadDefines, VxeUploadPropTypes, UploadReactData, UploadPrivateMethods, UploadMethods, VxeUploadEmits, UploadPrivateRef, VxeUploadPrivateComputed, VxeUploadConstructor, VxeUploadPrivateMethods } from '../../../types'
+import type { VxeUploadDefines, VxeUploadPropTypes, UploadReactData, UploadPrivateMethods, UploadMethods, VxeUploadEmits, UploadPrivateRef, VxeUploadPrivateComputed, VxeUploadConstructor, VxeUploadPrivateMethods, VxeFormDefines, VxeFormConstructor, VxeFormPrivateMethods } from '../../../types'
 
 export default defineComponent({
   name: 'VxeUpload',
@@ -15,8 +15,14 @@ export default defineComponent({
       type: Boolean as PropType<VxeUploadPropTypes.ShowList>,
       default: () => getConfig().upload.showList
     },
-    readonly: Boolean as PropType<VxeUploadPropTypes.Readonly>,
-    disabled: Boolean as PropType<VxeUploadPropTypes.Disabled>,
+    readonly: {
+      type: Boolean as PropType<VxeUploadPropTypes.Readonly>,
+      default: null
+    },
+    disabled: {
+      type: Boolean as PropType<VxeUploadPropTypes.Disabled>,
+      default: null
+    },
     mode: {
       type: String as PropType<VxeUploadPropTypes.Mode>,
       default: () => getConfig().upload.mode
@@ -85,6 +91,9 @@ export default defineComponent({
   setup (props, context) {
     const { emit, slots } = context
 
+    const $xeForm = inject<VxeFormConstructor & VxeFormPrivateMethods | null>('$xeForm', null)
+    const formItemInfo = inject<VxeFormDefines.ProvideItemInfo | null>('xeFormItemInfo', null)
+
     const xID = XEUtils.uniqueId()
 
     const refElem = ref<HTMLDivElement>()
@@ -97,6 +106,28 @@ export default defineComponent({
     const refMaps: UploadPrivateRef = {
       refElem
     }
+
+    const computeFormReadonly = computed(() => {
+      const { readonly } = props
+      if (readonly === null) {
+        if ($xeForm) {
+          return $xeForm.props.readonly
+        }
+        return false
+      }
+      return readonly
+    })
+
+    const computeIsDisabled = computed(() => {
+      const { disabled } = props
+      if (disabled === null) {
+        if ($xeForm) {
+          return $xeForm.props.disabled
+        }
+        return false
+      }
+      return disabled
+    })
 
     const computeIsImage = computed(() => {
       return props.mode === 'image'
@@ -197,7 +228,8 @@ export default defineComponent({
     } as unknown as VxeUploadConstructor & VxeUploadPrivateMethods
 
     const updateFileList = () => {
-      const { modelValue, multiple, readonly } = props
+      const { modelValue, multiple } = props
+      const formReadonly = computeFormReadonly.value
       const nameProp = computeNameProp.value
       const typeProp = computeTypeProp.value
       const urlProp = computeUrlProp.value
@@ -212,7 +244,7 @@ export default defineComponent({
           return item
         })
         : []
-      reactData.fileList = (readonly || multiple) ? fileList : (fileList.slice(0, 1))
+      reactData.fileList = (formReadonly || multiple) ? fileList : (fileList.slice(0, 1))
     }
 
     const getFileType = (name: string) => {
@@ -386,12 +418,17 @@ export default defineComponent({
       })
       reactData.fileList = newFileList
       emitModel(newFileList)
+      // 自动更新校验状态
+      if ($xeForm && formItemInfo) {
+        $xeForm.triggerItemEvent(evnt, formItemInfo.itemConfig.field, newFileList)
+      }
     }
 
     const clickEvent = (evnt: MouseEvent) => {
-      const { disabled, multiple, imageTypes, fileTypes } = props
+      const { multiple, imageTypes, fileTypes } = props
+      const isDisabled = computeIsDisabled.value
       const isImage = computeIsImage.value
-      if (disabled) {
+      if (isDisabled) {
         return
       }
       readLocalFile({
@@ -409,6 +446,10 @@ export default defineComponent({
       fileList.splice(index, 1)
       emitModel(fileList)
       uploadMethods.dispatchEvent('remove', { option: item }, evnt)
+      // 自动更新校验状态
+      if ($xeForm && formItemInfo) {
+        $xeForm.triggerItemEvent(evnt, formItemInfo.itemConfig.field, fileList)
+      }
     }
 
     const handleDragleaveEvent = (evnt: DragEvent) => {
@@ -458,10 +499,12 @@ export default defineComponent({
     Object.assign($xeUpload, uploadMethods, uploadPrivateMethods)
 
     const renderAllMode = () => {
-      const { readonly, disabled, buttonText, showProgress, showErrorStatus, autoHiddenButton } = props
+      const { buttonText, showProgress, showErrorStatus, autoHiddenButton } = props
       const { fileList } = reactData
       const defaultSlot = slots.default
       const tipSlot = slots.tip || slots.hint
+      const isDisabled = computeIsDisabled.value
+      const formReadonly = computeFormReadonly.value
       const nameProp = computeNameProp.value
       const typeProp = computeTypeProp.value
       const defHintText = computedDefHintText.value
@@ -471,7 +514,7 @@ export default defineComponent({
         key: 'all',
         class: 'vxe-upload--file-wrapper'
       }, [
-        readonly
+        formReadonly
           ? createCommentVNode()
           : h('div', {
             class: 'vxe-upload--file-action'
@@ -487,7 +530,7 @@ export default defineComponent({
                     h(VxeButtonComponent, {
                       content: buttonText ? `${buttonText}` : getI18n('vxe.upload.fileBtnText'),
                       icon: getIcon().UPLOAD_FILE_ADD,
-                      disabled
+                      disabled: isDisabled
                     })
                   ]),
             defHintText || tipSlot
@@ -548,7 +591,7 @@ export default defineComponent({
                   })
                 ])
                 : createCommentVNode(),
-              !readonly && !disabled && !isLoading
+              !formReadonly && !isDisabled && !isLoading
                 ? h('div', {
                   class: 'vxe-upload--file-item-remove-icon',
                   onClick (evnt: MouseEvent) {
@@ -567,8 +610,10 @@ export default defineComponent({
     }
 
     const renderImageMode = () => {
-      const { readonly, disabled, buttonText, showProgress, showErrorStatus, autoHiddenButton } = props
+      const { buttonText, showProgress, showErrorStatus, autoHiddenButton } = props
       const { fileList } = reactData
+      const isDisabled = computeIsDisabled.value
+      const formReadonly = computeFormReadonly.value
       const defHintText = computedDefHintText.value
       const overCount = computeOverCount.value
       const defaultSlot = slots.default
@@ -638,7 +683,7 @@ export default defineComponent({
                       })
                   )
                 : createCommentVNode(),
-              !readonly && !disabled && !isLoading
+              !formReadonly && !isDisabled && !isLoading
                 ? h('div', {
                   class: 'vxe-upload--image-item-remove-icon',
                   onClick (evnt: MouseEvent) {
@@ -653,7 +698,7 @@ export default defineComponent({
                 : createCommentVNode()
             ])
           ])
-        }).concat(readonly || (autoHiddenButton && overCount)
+        }).concat(formReadonly || (autoHiddenButton && overCount)
           ? []
           : [
               h('div', {
@@ -691,14 +736,16 @@ export default defineComponent({
     }
 
     const renderVN = () => {
-      const { readonly, disabled, showErrorStatus } = props
+      const { showErrorStatus } = props
       const { isDrag } = reactData
+      const isDisabled = computeIsDisabled.value
+      const formReadonly = computeFormReadonly.value
       const isImage = computeIsImage.value
       return h('div', {
         ref: refElem,
         class: ['vxe-upload', {
-          'is--readonly': readonly,
-          'is--disabled': disabled,
+          'is--readonly': formReadonly,
+          'is--disabled': isDisabled,
           'show--error': showErrorStatus,
           'is--drag': isDrag
         }],

@@ -51,6 +51,7 @@ export namespace VxeFormPropTypes {
   export type Items = VxeFormItemProps[]
 
   export type Readonly = boolean
+  export type Disabled = boolean
 
   /**
    * 校验规则配置项
@@ -96,6 +97,7 @@ export type VxeFormProps<D = any> = {
   vertical?: VxeFormPropTypes.Vertical
   className?: VxeFormPropTypes.ClassName
   readonly?: VxeFormPropTypes.Readonly
+  disabled?: VxeFormPropTypes.Disabled
   items?: VxeFormPropTypes.Items
   rules?: VxeFormPropTypes.Rules<D>
   preventSubmit?: VxeFormPropTypes.PreventSubmit

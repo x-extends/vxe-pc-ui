@@ -25,8 +25,15 @@ export default defineComponent({
       type: String as PropType<VxeSelectPropTypes.Placeholder>,
       default: () => XEUtils.eqNull(getConfig().select.placeholder) ? getI18n('vxe.base.pleaseSelect') : getConfig().select.placeholder
     },
+    readonly: {
+      type: Boolean as PropType<VxeSelectPropTypes.Readonly>,
+      default: null
+    },
     loading: Boolean as PropType<VxeSelectPropTypes.Loading>,
-    disabled: Boolean as PropType<VxeSelectPropTypes.Disabled>,
+    disabled: {
+      type: Boolean as PropType<VxeSelectPropTypes.Disabled>,
+      default: null
+    },
     multiple: Boolean as PropType<VxeSelectPropTypes.Multiple>,
     multiCharOverflow: { type: [Number, String] as PropType<VxeSelectPropTypes.MultiCharOverflow>, default: () => getConfig().select.multiCharOverflow },
     prefixIcon: String as PropType<VxeSelectPropTypes.PrefixIcon>,
@@ -112,7 +119,29 @@ export default defineComponent({
 
     let selectMethods = {} as SelectMethods
 
-    const compTransfer = computed(() => {
+    const computeFormReadonly = computed(() => {
+      const { readonly } = props
+      if (readonly === null) {
+        if ($xeForm) {
+          return $xeForm.props.readonly
+        }
+        return false
+      }
+      return readonly
+    })
+
+    const computeIsDisabled = computed(() => {
+      const { disabled } = props
+      if (disabled === null) {
+        if ($xeForm) {
+          return $xeForm.props.disabled
+        }
+        return false
+      }
+      return disabled
+    })
+
+    const computeTransfer = computed(() => {
       const { transfer } = props
       if (transfer === null) {
         const globalTransfer = getConfig().select.transfer
@@ -366,7 +395,7 @@ export default defineComponent({
         const { panelIndex } = reactData
         const el = refElem.value
         const panelElem = refOptionPanel.value
-        const transfer = compTransfer.value
+        const transfer = computeTransfer.value
         if (panelElem && el) {
           const targetHeight = el.offsetHeight
           const targetWidth = el.offsetWidth
@@ -434,8 +463,9 @@ export default defineComponent({
     let hidePanelTimeout: number
 
     const showOptionPanel = () => {
-      const { loading, disabled, filterable } = props
-      if (!loading && !disabled) {
+      const { loading, filterable } = props
+      const isDisabled = computeIsDisabled.value
+      if (!loading && !isDisabled) {
         clearTimeout(hidePanelTimeout)
         if (!reactData.inited) {
           reactData.inited = true
@@ -520,9 +550,9 @@ export default defineComponent({
     }
 
     const handleGlobalMousewheelEvent = (evnt: MouseEvent) => {
-      const { disabled } = props
       const { visiblePanel } = reactData
-      if (!disabled) {
+      const isDisabled = computeIsDisabled.value
+      if (!isDisabled) {
         if (visiblePanel) {
           const panelElem = refOptionPanel.value
           if (getEventTargetNode(evnt, panelElem).flag) {
@@ -535,9 +565,9 @@ export default defineComponent({
     }
 
     const handleGlobalMousedownEvent = (evnt: MouseEvent) => {
-      const { disabled } = props
       const { visiblePanel } = reactData
-      if (!disabled) {
+      const isDisabled = computeIsDisabled.value
+      if (!isDisabled) {
         const el = refElem.value
         const panelElem = refOptionPanel.value
         reactData.isActivated = getEventTargetNode(evnt, el).flag || getEventTargetNode(evnt, panelElem).flag
@@ -621,9 +651,10 @@ export default defineComponent({
     }
 
     const handleGlobalKeydownEvent = (evnt: KeyboardEvent) => {
-      const { clearable, disabled } = props
+      const { clearable } = props
       const { visiblePanel, currentValue, currentOption } = reactData
-      if (!disabled) {
+      const isDisabled = computeIsDisabled.value
+      if (!isDisabled) {
         const isTab = globalEvents.hasKey(evnt, GLOBAL_EVENT_KEYS.TAB)
         const isEnter = globalEvents.hasKey(evnt, GLOBAL_EVENT_KEYS.ENTER)
         const isEsc = globalEvents.hasKey(evnt, GLOBAL_EVENT_KEYS.ESCAPE)
@@ -680,7 +711,8 @@ export default defineComponent({
     }
 
     const focusEvent = (evnt: FocusEvent) => {
-      if (!props.disabled) {
+      const isDisabled = computeIsDisabled.value
+      if (!isDisabled) {
         reactData.isActivated = true
       }
       selectMethods.dispatchEvent('focus', {}, evnt)
@@ -943,21 +975,37 @@ export default defineComponent({
     })
 
     const renderVN = () => {
-      const { className, popupClassName, disabled, loading, filterable } = props
+      const { className, popupClassName, loading, filterable } = props
       const { inited, isActivated, visiblePanel } = reactData
       const vSize = computeSize.value
+      const isDisabled = computeIsDisabled.value
       const selectLabel = computeSelectLabel.value
-      const transfer = compTransfer.value
+      const transfer = computeTransfer.value
+      const formReadonly = computeFormReadonly.value
       const defaultSlot = slots.default
       const headerSlot = slots.header
       const footerSlot = slots.footer
       const prefixSlot = slots.prefix
+      if (formReadonly) {
+        return h('div', {
+          ref: refElem,
+          class: ['vxe-select--readonly', className]
+        }, [
+          h('div', {
+            class: 'vxe-select-slots',
+            ref: 'hideOption'
+          }, defaultSlot ? defaultSlot({}) : []),
+          h('span', {
+            class: 'vxe-select-label'
+          }, selectLabel)
+        ])
+      }
       return h('div', {
         ref: refElem,
         class: ['vxe-select', className ? (XEUtils.isFunction(className) ? className({ $select: $xeSelect }) : className) : '', {
           [`size--${vSize}`]: vSize,
-          'is--visivle': visiblePanel,
-          'is--disabled': disabled,
+          'is--visible': visiblePanel,
+          'is--disabled': isDisabled,
           'is--filter': filterable,
           'is--loading': loading,
           'is--active': isActivated
@@ -971,8 +1019,8 @@ export default defineComponent({
           ref: refInput,
           clearable: props.clearable,
           placeholder: props.placeholder,
-          readonly: true,
-          disabled: disabled,
+          readonly: false,
+          disabled: isDisabled,
           type: 'text',
           prefixIcon: props.prefixIcon,
           suffixIcon: loading ? getIcon().SELECT_LOADED : (visiblePanel ? getIcon().SELECT_OPEN : getIcon().SELECT_CLOSE),

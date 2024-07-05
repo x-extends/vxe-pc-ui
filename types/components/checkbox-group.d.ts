@@ -58,6 +58,7 @@ export type VxeCheckboxGroupProps = {
 
 export interface CheckboxGroupPrivateComputed {
   computeIsMaximize: ComputedRef<boolean>
+  computeIsDisabled: ComputedRef<boolean | undefined>
 }
 export interface VxeCheckboxGroupPrivateComputed extends CheckboxGroupPrivateComputed { }
 

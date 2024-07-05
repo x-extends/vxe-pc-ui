@@ -14,8 +14,15 @@ export default defineComponent({
     className: String as PropType<VxeTextareaPropTypes.ClassName>,
     immediate: { type: Boolean as PropType<VxeTextareaPropTypes.Immediate>, default: true },
     name: String as PropType<VxeTextareaPropTypes.Name>,
-    readonly: Boolean as PropType<VxeTextareaPropTypes.Readonly>,
-    disabled: Boolean as PropType<VxeTextareaPropTypes.Disabled>,
+    readonly: {
+      type: Boolean as PropType<VxeTextareaPropTypes.Readonly>,
+      default: null
+    },
+    editable: { type: Boolean as PropType<VxeTextareaPropTypes.Readonly>, default: true },
+    disabled: {
+      type: Boolean as PropType<VxeTextareaPropTypes.Disabled>,
+      default: null
+    },
     placeholder: {
       type: String as PropType<VxeTextareaPropTypes.Placeholder>,
       default: () => XEUtils.eqNull(getConfig().textarea.placeholder) ? getI18n('vxe.base.pleaseInput') : getConfig().textarea.placeholder
@@ -70,6 +77,34 @@ export default defineComponent({
     } as unknown as VxeTextareaConstructor
 
     let textareaMethods = {} as TextareaMethods
+
+    const computeFormReadonly = computed(() => {
+      const { readonly } = props
+      if (readonly === null) {
+        if ($xeForm) {
+          return $xeForm.props.readonly
+        }
+        return false
+      }
+      return readonly
+    })
+
+    const computeIsDisabled = computed(() => {
+      const { disabled } = props
+      if (disabled === null) {
+        if ($xeForm) {
+          return $xeForm.props.disabled
+        }
+        return false
+      }
+      return disabled
+    })
+
+    const computeInputReadonly = computed(() => {
+      const { editable } = props
+      const formReadonly = computeFormReadonly.value
+      return formReadonly || !editable
+    })
 
     const computeInputCount = computed(() => {
       return XEUtils.getSize(reactData.inputValue)
@@ -222,18 +257,27 @@ export default defineComponent({
     })
 
     const renderVN = () => {
-      const { className, resize, placeholder, disabled, maxlength, autosize, showWordCount, countMethod, rows, cols } = props
+      const { className, resize, placeholder, maxlength, autosize, showWordCount, countMethod, rows, cols } = props
       const { inputValue } = reactData
       const vSize = computeSize.value
+      const isDisabled = computeIsDisabled.value
       const isCountError = computeIsCountError.value
       const inputCount = computeInputCount.value
+      const inputReadonly = computeInputReadonly.value
+      const formReadonly = computeFormReadonly.value
+      if (formReadonly) {
+        return h('div', {
+          ref: refElem,
+          class: ['vxe-textarea--readonly', className]
+        }, inputValue)
+      }
       return h('div', {
         ref: refElem,
         class: ['vxe-textarea', className, {
           [`size--${vSize}`]: vSize,
           'is--autosize': autosize,
           'is--count': showWordCount,
-          'is--disabled': disabled,
+          'is--disabled': isDisabled,
           'def--rows': !XEUtils.eqNull(rows),
           'def--cols': !XEUtils.eqNull(cols)
         }]
@@ -245,8 +289,8 @@ export default defineComponent({
           name: props.name,
           placeholder: placeholder ? getFuncText(placeholder) : null,
           maxlength,
-          readonly: props.readonly,
-          disabled,
+          readonly: inputReadonly,
+          disabled: isDisabled,
           rows,
           cols,
           style: resize

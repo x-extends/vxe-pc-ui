@@ -5,8 +5,7 @@ import VxeFormItemComponent from '../../form/src/form-item'
 import VxeInputComponent from '../../input/src/input'
 import VxeSwitchComponent from '../../switch/src/switch'
 import { WidgetSelectFormObjVO } from './select-data'
-import { useKebabCaseName } from '../render/hooks'
-import { useWidgetPropDataSource } from '../render/use-widget-form'
+import { useKebabCaseName, useWidgetPropDataSource } from '../../form-design/src/use'
 
 import type { VxeGlobalRendererHandles } from '../../../types'
 

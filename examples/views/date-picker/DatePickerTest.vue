@@ -61,6 +61,9 @@
         </template>
       </vxe-date-picker>
     </p>
+    <p>
+      <vxe-date-picker v-model="demo1.value900" readonly></vxe-date-picker>
+    </p>
   </div>
 </template>
 
@@ -118,7 +121,8 @@ const demo1 = reactive({
   value802: '',
   value803: '',
   value804: '',
-  value805: ''
+  value805: '',
+  value900: '2017-12-18'
 })
 
 const disabledDateMethod: VxeInputPropTypes.DisabledMethod = (params) => {

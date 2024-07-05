@@ -9,7 +9,10 @@ export default defineComponent({
   name: 'VxeSwitch',
   props: {
     modelValue: [String, Number, Boolean] as PropType<VxeSwitchPropTypes.ModelValue>,
-    disabled: Boolean as PropType<VxeSwitchPropTypes.Disabled>,
+    disabled: {
+      type: Boolean as PropType<VxeSwitchPropTypes.Disabled>,
+      default: null
+    },
     size: { type: String as PropType<VxeSwitchPropTypes.Size>, default: () => getConfig().switch.size || getConfig().size },
     openLabel: String as PropType<VxeSwitchPropTypes.OpenLabel>,
     closeLabel: String as PropType<VxeSwitchPropTypes.CloseLabel>,
@@ -52,6 +55,17 @@ export default defineComponent({
 
     let switchMethods = {} as SwitchMethods
 
+    const computeIsDisabled = computed(() => {
+      const { disabled } = props
+      if (disabled === null) {
+        if ($xeForm) {
+          return $xeForm.props.readonly || $xeForm.props.disabled
+        }
+        return false
+      }
+      return disabled
+    })
+
     const computeOnShowLabel = computed(() => {
       return getFuncText(props.openLabel)
     })
@@ -66,7 +80,8 @@ export default defineComponent({
 
     let _atimeout: any
     const clickEvent = (evnt: Event) => {
-      if (!props.disabled) {
+      const isDisabled = computeIsDisabled.value
+      if (!isDisabled) {
         const isChecked = computeIsChecked.value
         clearTimeout(_atimeout)
         const value = isChecked ? props.closeValue : props.openValue
@@ -114,15 +129,16 @@ export default defineComponent({
     Object.assign($xeSwitch, switchMethods)
 
     const renderVN = () => {
-      const { disabled, openIcon, closeIcon, openActiveIcon, closeActiveIcon } = props
-      const isChecked = computeIsChecked.value
+      const { openIcon, closeIcon, openActiveIcon, closeActiveIcon } = props
       const vSize = computeSize.value
+      const isChecked = computeIsChecked.value
       const onShowLabel = computeOnShowLabel.value
       const offShowLabel = computeOffShowLabel.value
+      const isDisabled = computeIsDisabled.value
       return h('div', {
         class: ['vxe-switch', isChecked ? 'is--on' : 'is--off', {
           [`size--${vSize}`]: vSize,
-          'is--disabled': disabled,
+          'is--disabled': isDisabled,
           'is--animat': reactData.hasAnimat
         }]
       }, [
@@ -130,7 +146,7 @@ export default defineComponent({
           ref: refButton,
           class: 'vxe-switch--button',
           type: 'button',
-          disabled,
+          disabled: isDisabled,
           onClick: clickEvent,
           onFocus: focusEvent,
           onBlur: blurEvent

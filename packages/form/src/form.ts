@@ -116,6 +116,7 @@ export default defineComponent({
     },
     className: [String, Function] as PropType<VxeFormPropTypes.ClassName>,
     readonly: Boolean as PropType<VxeFormPropTypes.Readonly>,
+    disabled: Boolean as PropType<VxeFormPropTypes.Disabled>,
     items: Array as PropType<VxeFormPropTypes.Items>,
     rules: Object as PropType<VxeFormPropTypes.Rules>,
     preventSubmit: {

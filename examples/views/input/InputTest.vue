@@ -92,6 +92,9 @@
         </template>
       </vxe-input>
     </p>
+    <p>
+      <vxe-input v-model="demo1.value900" readonly></vxe-input>
+    </p>
   </div>
 </template>
 
@@ -149,7 +152,8 @@ const demo1 = reactive({
   value802: '',
   value803: '',
   value804: '',
-  value805: ''
+  value805: '',
+  value900: '11111111'
 })
 
 const disabledDateMethod: VxeInputPropTypes.DisabledMethod = (params) => {
