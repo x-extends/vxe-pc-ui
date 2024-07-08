@@ -86,7 +86,7 @@ export default defineComponent({
 
     const renderItem = ($xeForm: VxeFormConstructor & VxeFormPrivateMethods, item: VxeFormDefines.ItemInfo) => {
       const { props, reactData } = $xeForm
-      const { data, rules, titleBold: allTitleBold, titleAlign: allTitleAlign, titleWidth: allTitleWidth, titleColon: allTitleColon, titleAsterisk: allTitleAsterisk, titleOverflow: allTitleOverflow, vertical: allVertical } = props
+      const { data, rules, readonly, titleBold: allTitleBold, titleAlign: allTitleAlign, titleWidth: allTitleWidth, titleColon: allTitleColon, titleAsterisk: allTitleAsterisk, titleOverflow: allTitleOverflow, vertical: allVertical } = props
       const { collapseAll } = reactData
       const { computeValidOpts } = $xeForm.getComputeMaps()
       const validOpts = computeValidOpts.value
@@ -118,7 +118,7 @@ export default defineComponent({
       if (visible === false) {
         return createCommentVNode()
       }
-      if (rules) {
+      if (!readonly && rules) {
         const itemRules = rules[field]
         if (itemRules) {
           isRequired = itemRules.some((rule) => rule.required)

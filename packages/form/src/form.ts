@@ -513,12 +513,20 @@ export default defineComponent({
       return Promise.resolve()
     }
 
-    const validate = (callback: any) => {
+    const validate = (callback: any): Promise<any> => {
+      const { readonly } = props
       clearValidate()
+      if (readonly) {
+        return nextTick()
+      }
       return beginValidate(getItems(), '', callback)
     }
 
     const validateField = (fieldOrItem: VxeFormItemPropTypes.Field | VxeFormItemPropTypes.Field[] | VxeFormDefines.ItemInfo | VxeFormDefines.ItemInfo[], callback: any) => {
+      const { readonly } = props
+      if (readonly) {
+        return nextTick()
+      }
       let fields: any[] = []
       if (XEUtils.isArray(fieldOrItem)) {
         fields = fieldOrItem
@@ -529,9 +537,14 @@ export default defineComponent({
     }
 
     const submitEvent = (evnt: Event) => {
+      const { readonly } = props
       evnt.preventDefault()
       if (!props.preventSubmit) {
         clearValidate()
+        if (readonly) {
+          formMethods.dispatchEvent('submit', { data: props.data }, evnt)
+          return
+        }
         beginValidate(getItems()).then((errMap) => {
           if (errMap) {
             formMethods.dispatchEvent('submit-invalid', { data: props.data, errMap }, evnt)
@@ -725,6 +738,14 @@ export default defineComponent({
 
     watch(() => props.collapseStatus, (value) => {
       reactData.collapseAll = !!value
+    })
+
+    watch(() => props.readonly, () => {
+      clearValidate()
+    })
+
+    watch(() => props.disabled, () => {
+      clearValidate()
     })
 
     onMounted(() => {

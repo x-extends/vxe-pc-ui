@@ -3,6 +3,7 @@ import { defineVxeComponent, VxeComponentBaseOptions, VxeComponentEventParams, V
 import { VxeFormDefines, VxeFormConstructor, VxeFormPropTypes } from './form'
 import { VxeGridConstructor } from './grid'
 import { VxeTooltipPropTypes } from './tooltip'
+import { VxeIconPropTypes } from './icon'
 
 /* eslint-disable no-use-before-define,@typescript-eslint/ban-types */
 
@@ -67,9 +68,12 @@ export namespace VxeFormItemPropTypes {
     content?: VxeTooltipPropTypes.Content
     enterable?: VxeTooltipPropTypes.Enterable
     theme?: VxeTooltipPropTypes.Theme
-    icon?: string
+    icon?: VxeIconPropTypes.ClassName
+    iconStatus?: VxeIconPropTypes.Status
+
     /**
-     * @deprecated 已废弃，请使用 content
+     * 已废弃，请使用 content
+     * @deprecated
      */
     message?: string
   }

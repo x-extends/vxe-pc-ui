@@ -24,12 +24,14 @@ export interface VxeIconPrivateRef extends IconPrivateRef { }
 
 export namespace VxeIconPropTypes {
   export type Name = string
+  export type ClassName = string
   export type Roll = boolean
   export type Status = string
 }
 
 export type VxeIconProps = {
   name?: VxeIconPropTypes.Name
+  className?: VxeIconPropTypes.Name
   roll?: VxeIconPropTypes.Roll
   status?: VxeIconPropTypes.Status
 }

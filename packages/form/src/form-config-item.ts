@@ -20,7 +20,7 @@ const VxeFormConfigItem = defineComponent({
 
     const renderVN = () => {
       const { reactData } = $xeForm
-      const { data, rules, span: allSpan, align: allAlign, titleBold: allTitleBold, titleAlign: allTitleAlign, titleWidth: allTitleWidth, titleColon: allTitleColon, titleAsterisk: allTitleAsterisk, titleOverflow: allTitleOverflow, vertical: allVertical } = $xeForm.props
+      const { data, rules, readonly, span: allSpan, align: allAlign, titleBold: allTitleBold, titleAlign: allTitleAlign, titleWidth: allTitleWidth, titleColon: allTitleColon, titleAsterisk: allTitleAsterisk, titleOverflow: allTitleOverflow, vertical: allVertical } = $xeForm.props
       const { computeValidOpts } = $xeForm.getComputeMaps()
       const item = props.itemConfig as VxeFormDefines.ItemInfo
       const { collapseAll } = reactData
@@ -53,7 +53,7 @@ const VxeFormConfigItem = defineComponent({
         return createCommentVNode()
       }
       let isRequired = false
-      if (rules) {
+      if (!readonly && rules) {
         const itemRules = rules[field]
         if (itemRules) {
           isRequired = itemRules.some((rule) => rule.required)
