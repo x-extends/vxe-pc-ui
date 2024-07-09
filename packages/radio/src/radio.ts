@@ -33,7 +33,7 @@ export default defineComponent({
 
     const xID = XEUtils.uniqueId()
 
-    const $xeradio = {
+    const $xeRadio = {
       xID,
       props,
       context
@@ -99,11 +99,11 @@ export default defineComponent({
 
     radioMethods = {
       dispatchEvent (type, params, evnt) {
-        emit(type, createEvent(evnt, { $radio: $xeradio }, params))
+        emit(type, createEvent(evnt, { $radio: $xeRadio }, params))
       }
     }
 
-    Object.assign($xeradio, radioMethods)
+    Object.assign($xeRadio, radioMethods)
 
     const renderVN = () => {
       const vSize = computeSize.value
@@ -136,9 +136,9 @@ export default defineComponent({
       ])
     }
 
-    $xeradio.renderVN = renderVN
+    $xeRadio.renderVN = renderVN
 
-    return $xeradio
+    return $xeRadio
   },
   render () {
     return this.renderVN()
