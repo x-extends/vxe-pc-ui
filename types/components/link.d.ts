@@ -78,13 +78,23 @@ export namespace VxeLinkDefines {
   export interface LinkEventParams extends VxeComponentEventParams {
     $link: VxeLinkConstructor
   }
+
+  export interface ClickParams {
+  }
+  export interface ClickEventParams extends LinkEventParams, ClickParams { }
 }
 
-export type VxeLinkEventProps = {}
+export type VxeLinkEventProps = {
+  onClick?: VxeLinkEvents.Click
+}
 
-export interface VxeLinkListeners { }
+export interface VxeLinkListeners {
+  click?: VxeLinkEvents.Click
+}
 
-export namespace VxeLinkEvents { }
+export namespace VxeLinkEvents {
+  export type Click = (params: VxeLinkDefines.ClickEventParams) => void
+}
 
 export namespace VxeLinkSlotTypes {
   export interface DefaultSlotParams {}

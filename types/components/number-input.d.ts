@@ -129,13 +129,30 @@ export namespace VxeNumberInputDefines {
   export interface NumberInputEventParams extends VxeComponentEventParams {
     $numberInput: VxeNumberInputConstructor
   }
+
+  export interface NumberInputParams {
+    value: number
+  }
+  export interface InputEventParams extends NumberInputEventParams, NumberInputParams { }
+
+  export interface ChangeParams extends NumberInputParams {}
+  export interface ChangeEventParams extends NumberInputEventParams, ChangeParams { }
 }
 
-export type VxeNumberInputEventProps = {}
+export type VxeNumberInputEventProps = {
+  onInput?: VxeNumberInputEvents.Input
+  onChange?: VxeNumberInputEvents.Change
+}
 
-export interface VxeNumberInputListeners { }
+export interface VxeNumberInputListeners {
+  input?: VxeNumberInputEvents.Input
+  change?: VxeNumberInputEvents.Change
+}
 
-export namespace VxeNumberInputEvents { }
+export namespace VxeNumberInputEvents {
+  export type Input = (params: VxeNumberInputDefines.InputEventParams) => void
+  export type Change = (params: VxeNumberInputDefines.ChangeEventParams) => void
+}
 
 export namespace VxeNumberInputSlotTypes {
   export interface DefaultSlotParams {}

@@ -59,13 +59,23 @@ export namespace VxeTextDefines {
   export interface TextEventParams extends VxeComponentEventParams {
     $text: VxeTextConstructor
   }
+
+  export interface ClickParams {
+  }
+  export interface ClickEventParams extends TextEventParams, ClickParams { }
 }
 
-export type VxeTextEventProps = {}
+export type VxeTextEventProps = {
+  onClick?: VxeTextEvents.Click
+}
 
-export interface VxeTextListeners { }
+export interface VxeTextListeners {
+  click?: VxeTextEvents.Click
+}
 
-export namespace VxeTextEvents { }
+export namespace VxeTextEvents {
+  export type Click = (params: VxeTextDefines.ClickEventParams) => void
+}
 
 export namespace VxeTextSlotTypes {
   export interface DefaultSlotParams {}

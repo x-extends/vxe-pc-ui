@@ -59,13 +59,23 @@ export namespace VxeTagDefines {
   export interface TagEventParams extends VxeComponentEventParams {
     $tag: VxeTagConstructor
   }
+
+  export interface ClickParams {
+  }
+  export interface ClickEventParams extends TagEventParams, ClickParams { }
 }
 
-export type VxeTagEventProps = {}
+export type VxeTagEventProps = {
+  onClick?: VxeTagEvents.Click
+}
 
-export interface VxeTagListeners { }
+export interface VxeTagListeners {
+  click?: VxeTagEvents.Click
+}
 
-export namespace VxeTagEvents { }
+export namespace VxeTagEvents {
+  export type Click = (params: VxeTagDefines.ClickEventParams) => void
+}
 
 export namespace VxeTagSlotTypes {
   export interface DefaultSlotParams {}

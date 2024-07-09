@@ -238,13 +238,30 @@ export namespace VxeDatePickerDefines {
     viewType: DatePanelType
     date: Date
   }
+
+  export interface DatePickerParams {
+    value: string
+  }
+  export interface InputEventParams extends DatePickerEventParams, DatePickerParams { }
+
+  export interface ChangeParams extends DatePickerParams {}
+  export interface ChangeEventParams extends DatePickerEventParams, ChangeParams { }
 }
 
-export type VxeDatePickerEventProps = {}
+export type VxeDatePickerEventProps = {
+  onInput?: VxeDatePickerEvents.Input
+  onChange?: VxeDatePickerEvents.Change
+}
 
-export interface VxeDatePickerListeners { }
+export interface VxeDatePickerListeners {
+  input?: VxeDatePickerEvents.Input
+  change?: VxeDatePickerEvents.Change
+}
 
-export namespace VxeDatePickerEvents { }
+export namespace VxeDatePickerEvents {
+  export type Input = (params: VxeDatePickerDefines.InputEventParams) => void
+  export type Change = (params: VxeDatePickerDefines.ChangeEventParams) => void
+}
 
 export namespace VxeDatePickerSlotTypes {
   export interface DefaultSlotParams {}

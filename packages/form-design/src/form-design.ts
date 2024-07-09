@@ -256,7 +256,7 @@ export default defineComponent({
         if (item && item.name) {
           evnt.stopPropagation()
           reactData.activeWidget = item
-          formDesignMethods.dispatchEvent('click-widget', { item }, evnt)
+          formDesignMethods.dispatchEvent('click-widget', { widget: item }, evnt)
         }
       },
       handleCopyWidget (evnt: KeyboardEvent, widget: VxeFormDesignDefines.WidgetObjItem) {

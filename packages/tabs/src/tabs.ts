@@ -5,7 +5,7 @@ import VxeTabPaneComponent from './tab-pane'
 import { getSlotVNs } from '../../ui/src/vn'
 import { toCssUnit } from '../..//ui/src/dom'
 
-import type { VxeTabsPropTypes, VxeTabPaneProps, VxeTabsEmits, TabsReactData, TabsPrivateRef, VxeTabsPrivateComputed, VxeTabsConstructor, VxeTabsPrivateMethods, VxeTabPaneDefines, TabsMethods, TabsPrivateMethods } from '../../../types'
+import type { VxeTabsPropTypes, VxeTabPaneProps, VxeTabsEmits, TabsReactData, TabsPrivateRef, VxeTabsPrivateComputed, VxeTabsConstructor, VxeTabsPrivateMethods, VxeTabPaneDefines, ValueOf, TabsMethods, TabsPrivateMethods } from '../../../types'
 
 export default defineComponent({
   name: 'VxeTabs',
@@ -138,6 +138,10 @@ export default defineComponent({
       })
     }
 
+    const dispatchEvent = (type: ValueOf<VxeTabsEmits>, params: Record<string, any>, evnt: Event | null) => {
+      emit(type, createEvent(evnt, { $tabs: $xeTabs }, params))
+    }
+
     const clickEvent = (evnt: KeyboardEvent, item: VxeTabPaneProps | VxeTabPaneDefines.TabConfig) => {
       const { initNames, activeName } = reactData
       const { name } = item
@@ -150,18 +154,16 @@ export default defineComponent({
       reactData.activeName = name
       emit('update:modelValue', value)
       if (name !== activeName) {
-        emit('change', { value, name, $event: evnt })
+        dispatchEvent('change', { value, name }, evnt)
       }
-      emit('tab-click', { name, $event: evnt })
+      dispatchEvent('tab-click', { name }, evnt)
       if (isInit) {
-        emit('tab-load', { name, $event: evnt })
+        dispatchEvent('tab-load', { name }, evnt)
       }
     }
 
     const tabsMethods: TabsMethods = {
-      dispatchEvent (type, params, evnt) {
-        emit(type, createEvent(evnt, { $tabs: $xeTabs }, params))
-      }
+      dispatchEvent
     }
 
     const tabsPrivateMethods: TabsPrivateMethods = {

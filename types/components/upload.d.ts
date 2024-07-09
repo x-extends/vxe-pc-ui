@@ -152,13 +152,44 @@ export namespace VxeUploadDefines {
 
     [key: string]: any
   }
+
+  export interface AddParams {
+    option: VxeUploadDefines.FileObjItem
+  }
+  export interface AddEventParams extends UploadEventParams, AddParams { }
+
+  export interface RemoveEventParams extends UploadEventParams {
+    option: VxeUploadDefines.FileObjItem
+  }
+
+  export interface UploadSuccessEventParams extends UploadEventParams {
+    option: VxeUploadDefines.FileObjItem
+    data: any
+  }
+
+  export interface UploadErrorEventParams extends UploadSuccessEventParams {}
 }
 
-export type VxeUploadEventProps = {}
+export type VxeUploadEventProps = {
+  onAdd?: VxeUploadEvents.Add
+  onRemove?: VxeUploadEvents.Remove
+  onUploadSuccess?: VxeUploadEvents.UploadSuccess
+  onUploadError?: VxeUploadEvents.UploadError
+}
 
-export interface VxeUploadListeners { }
+export interface VxeUploadListeners {
+  add?: VxeUploadEvents.Add
+  remove?: VxeUploadEvents.Remove
+  uploadSuccess?: VxeUploadEvents.UploadSuccess
+  uploadError?: VxeUploadEvents.UploadError
+}
 
-export namespace VxeUploadEvents { }
+export namespace VxeUploadEvents {
+  export type Add = (params: VxeUploadDefines.AddEventParams) => void
+  export type Remove = (params: VxeUploadDefines.RemoveEventParams) => void
+  export type UploadSuccess = (params: VxeUploadDefines.UploadSuccessEventParams) => void
+  export type UploadError = (params: VxeUploadDefines.UploadErrorEventParams) => void
+}
 
 export namespace VxeUploadSlotTypes {
   export interface DefaultSlotParams {}
