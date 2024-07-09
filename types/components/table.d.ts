@@ -3,7 +3,7 @@ import { defineVxeComponent, VxeComponentBaseOptions, VxeComponentEventParams, V
 import { VxeColumnPropTypes, VxeColumnProps, VxeColumnSlotTypes } from './column'
 import { VxeTableProDefines, VxeTableProEmits } from './table-plugins'
 import { VxeGridConstructor } from './grid'
-import { VxeTooltipInstance } from './tooltip'
+import { VxeTooltipInstance, VxeTooltipPropTypes } from './tooltip'
 import { VxeModalPropTypes } from './modal'
 import { VxeDrawerPropTypes } from './drawer'
 import { VxeToolbarConstructor, VxeToolbarInstance } from './toolbar'
@@ -2212,7 +2212,12 @@ export interface TableReactData<D = any> {
     row: D | null
     column: any
     content: any
-    visible: boolean
+    visible: boolean,
+    currOpts: {
+      useHTML?: VxeTooltipPropTypes.UseHTML
+      enterable?: VxeTooltipPropTypes.Enterable
+      theme?: VxeTooltipPropTypes.Theme
+    }
   }
   // 存放数据校验相关信息
   validStore: {
