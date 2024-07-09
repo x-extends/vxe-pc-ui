@@ -16,7 +16,6 @@ export default defineComponent({
     className: [String, Function] as PropType<VxeButtonGroupPropTypes.ClassName>,
     disabled: Boolean as PropType<VxeButtonGroupPropTypes.Disabled>,
     permissionCode: [String, Number] as PropType<VxeButtonGroupPropTypes.PermissionCode>,
-    permissionMethod: Function as PropType<VxeButtonGroupPropTypes.PermissionMethod>,
     size: { type: String as PropType<VxeButtonGroupPropTypes.Size>, default: () => getConfig().buttonGroup.size || getConfig().size }
   },
   emits: [

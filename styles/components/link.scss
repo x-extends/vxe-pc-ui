@@ -57,7 +57,13 @@ $btnThemeList: (
     cursor: pointer;
     &:hover {
       color: var(--vxe-ui-font-primary-color);
-      text-decoration: underline;
+    }
+  }
+  &.is--underline {
+    &:not(.is--disabled) {
+      &:hover {
+        text-decoration: underline;
+      }
     }
   }
   @for $index from 0 to length($btnThemeList) {

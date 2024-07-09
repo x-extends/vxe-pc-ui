@@ -37,7 +37,6 @@ export namespace VxeLinkPropTypes {
   }
   export type Underline = boolean
   export type PermissionCode = VxeComponentPermissionCodeType
-  export type PermissionMethod = VxeComponentPermissionMethod
   export type Content = string | number
 }
 
@@ -53,10 +52,6 @@ export type VxeLinkProps = {
    * 权限码
    */
   permissionCode?: VxeLinkPropTypes.PermissionCode
-  /**
-   * 用于 permissionCode，权限码判断逻辑
-   */
-  permissionMethod?: VxeLinkPropTypes.PermissionMethod
   content?: VxeLinkPropTypes.Content
 }
 

@@ -29,7 +29,6 @@ export default defineComponent({
      * 权限码
      */
     permissionCode: [String, Number] as PropType<VxeButtonPropTypes.PermissionCode>,
-    permissionMethod: Function as PropType<VxeButtonPropTypes.PermissionMethod>,
     /**
      * 按钮内容
      */

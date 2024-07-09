@@ -22,7 +22,6 @@ export default defineComponent({
      * 权限码
      */
     permissionCode: [String, Number] as PropType<VxeLinkPropTypes.PermissionCode>,
-    permissionMethod: Function as PropType<VxeLinkPropTypes.PermissionMethod>,
     content: [String, Number] as PropType<VxeLinkPropTypes.Content>
   },
   emits: [],
