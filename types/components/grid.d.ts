@@ -357,7 +357,7 @@ export namespace VxeGridDefines {
   export interface ToggleTreeExpandEventParams<D = any> extends GridEventParams<D>, VxeTableDefines.ToggleTreeExpandEventParams<D> { }
   export interface MenuClickEventParams<D = any> extends GridEventParams<D>, VxeTableDefines.MenuClickEventParams<D> { }
   export interface EditClosedEventParams<D = any> extends GridEventParams<D>, VxeTableDefines.EditClosedEventParams<D> { }
-  export interface EditActivedEventParams<D = any> extends GridEventParams<D>, VxeTableDefines.EditActivedEventParams<D> { }
+  export interface EditActivatedEventParams<D = any> extends GridEventParams<D>, VxeTableDefines.EditActivatedEventParams<D> { }
   export interface EditDisabledEventParams<D = any> extends GridEventParams<D>, VxeTableDefines.EditDisabledEventParams<D> { }
   export interface ValidErrorEventParams<D = any> extends GridEventParams<D>, VxeTableDefines.ValidErrorEventParams<D> { }
   export interface ScrollEventParams<D = any> extends GridEventParams<D>, VxeTableDefines.ScrollEventParams<D> { }
@@ -429,7 +429,7 @@ export interface VxeGridEventProps<D = any> {
   onToggleTreeExpand?: VxeGridEvents.ToggleTreeExpand<D>
   onMenuClick?: VxeGridEvents.MenuClick<D>
   onEditClosed?: VxeGridEvents.EditClosed<D>
-  onEditActived?: VxeGridEvents.EditActived<D>
+  onEditActivated?: VxeGridEvents.EditActivated<D>
   onEditDisabled?: VxeGridEvents.EditDisabled<D>
   onValidError?: VxeGridEvents.ValidError<D>
   onScroll?: VxeGridEvents.Scroll<D>
@@ -447,6 +447,12 @@ export interface VxeGridEventProps<D = any> {
   onToolbarButtonClick?: VxeGridEvents.ToolbarButtonClick<D>
   onToolbarToolClick?: VxeGridEvents.ToolbarToolClick<D>
   onZoom?: VxeGridEvents.Zoom<D>
+
+  /**
+   * 已废弃，请使用 onEditActivated
+   * @deprecated
+   */
+  onEditActived?: VxeGridEvents.EditActivated<D>
 }
 
 export interface VxeGridListeners<D = any> {
@@ -480,7 +486,7 @@ export interface VxeGridListeners<D = any> {
   toggleTreeExpand?: VxeGridEvents.ToggleTreeExpand<D>
   menuClick?: VxeGridEvents.MenuClick<D>
   editClosed?: VxeGridEvents.EditClosed<D>
-  editActived?: VxeGridEvents.EditActived<D>
+  editActivated?: VxeGridEvents.EditActivated<D>
   editDisabled?: VxeGridEvents.EditDisabled<D>
   validError?: VxeGridEvents.ValidError<D>
   scroll?: VxeGridEvents.Scroll<D>
@@ -498,6 +504,12 @@ export interface VxeGridListeners<D = any> {
   toolbarButtonClick?: VxeGridEvents.ToolbarButtonClick<D>
   toolbarToolClick?: VxeGridEvents.ToolbarToolClick<D>
   zoom?: VxeGridEvents.Zoom<D>
+
+  /**
+   * 已废弃，请使用 editActivated
+   * @deprecated
+   */
+  editActived?: VxeGridEvents.EditActivated<D>
 }
 
 export namespace VxeGridEvents {
@@ -531,7 +543,7 @@ export namespace VxeGridEvents {
   export type ToggleTreeExpand<D = any> = (params: VxeGridDefines.ToggleTreeExpandEventParams<D>) => void
   export type MenuClick<D = any> = (params: VxeGridDefines.MenuClickEventParams<D>) => void
   export type EditClosed<D = any> = (params: VxeGridDefines.EditClosedEventParams<D>) => void
-  export type EditActived<D = any> = (params: VxeGridDefines.EditActivedEventParams<D>) => void
+  export type EditActivated<D = any> = (params: VxeGridDefines.EditActivatedEventParams<D>) => void
   export type EditDisabled<D = any> = (params: VxeGridDefines.EditDisabledEventParams<D>) => void
   export type ValidError<D = any> = (params: VxeGridDefines.ValidErrorEventParams<D>) => void
   export type Scroll<D = any> = (params: VxeGridDefines.ScrollEventParams<D>) => void
@@ -548,6 +560,12 @@ export namespace VxeGridEvents {
   export type ToolbarButtonClick<D = any> = (params: VxeGridDefines.ToolbarButtonClickEventParams<D>) => void
   export type ToolbarToolClick<D = any> = (params: VxeGridDefines.ToolbarToolClickEventParams<D>) => void
   export type Zoom<D = any> = (params: VxeGridDefines.ZoomEventParams<D>) => void
+
+  /**
+   * 已废弃，请使用 EditActivated
+   * @deprecated
+   */
+  export type EditActived<D = any> = (params: VxeGridDefines.EditActivatedEventParams<D>) => void
 }
 
 export namespace VxeGridSlotTypes {

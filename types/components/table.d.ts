@@ -3841,7 +3841,7 @@ export interface VxeTableEventProps<D = any> {
   onCustom?: VxeTableEvents.Custom<D>
 
   /**
-   * 已废弃，请使用 editActivated
+   * 已废弃，请使用 onEditActivated
    * @deprecated
    */
   onEditActived?: VxeTableEvents.EditActivated<D>
@@ -3954,7 +3954,7 @@ export namespace VxeTableEvents {
   export type Custom<D = VxeTablePropTypes.Row> = (params: VxeTableDefines.CustomEventParams<D>) => void
 
   /**
-   * 已废弃，请使用 editActivated
+   * 已废弃，请使用 EditActivated
    * @deprecated
    */
   export type EditActived<D = VxeTablePropTypes.Row> = (params: VxeTableDefines.EditActivatedEventParams<D>) => void
