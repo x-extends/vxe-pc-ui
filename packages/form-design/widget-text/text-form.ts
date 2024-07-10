@@ -2,7 +2,7 @@ import { PropType, defineComponent, h, ref } from 'vue'
 import XEUtils from 'xe-utils'
 import { getI18n } from '@vxe-ui/core'
 import { WidgetTextFormObjVO } from './text-data'
-import { useKebabCaseName } from '../../form-design/src/use'
+import { useWidgetName } from '../../form-design/src/use'
 import VxeFormComponent from '../../form/src/form'
 import VxeInputComponent from '../../input/src/input'
 import VxeFormItemComponent from '../../form/src/form-item'
@@ -43,7 +43,7 @@ export const WidgetTextFormComponent = defineComponent({
   },
   emits: [],
   setup (props) {
-    const computeKebabCaseName = useKebabCaseName(props)
+    const { computeKebabCaseName } = useWidgetName(props)
 
     const alignOpts = ref(getAlignOptions())
     const boldOpts = ref(getBoldOptions())

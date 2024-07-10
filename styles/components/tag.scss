@@ -33,7 +33,6 @@ $btnThemeList: (
 
 .vxe-tag {
   padding: var(--vxe-ui-layout-padding-half) var(--vxe-ui-layout-padding-default);
-  font-size: var(--vxe-ui-font-size-default);
   color: var(--vxe-ui-font-color);
   border-radius: var(--vxe-ui-base-border-radius);
   @for $index from 0 to length($btnThemeList) {
@@ -61,4 +60,17 @@ $btnThemeList: (
 }
 .vxe-tag--content {
   padding: 0 0.1em;
+}
+
+.vxe-tag {
+  font-size: var(--vxe-ui-font-size-default);
+  &.size--medium {
+    font-size: var(--vxe-ui-font-size-medium);
+  }
+  &.size--small {
+    font-size: var(--vxe-ui-font-size-small);
+  }
+  &.size--mini {
+    font-size: var(--vxe-ui-font-size-mini);
+  }
 }

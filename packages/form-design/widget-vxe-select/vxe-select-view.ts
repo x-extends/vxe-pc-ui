@@ -1,7 +1,7 @@
 import { PropType, defineComponent, h, inject } from 'vue'
 import { getI18n } from '@vxe-ui/core'
 import { WidgetVxeSelectFormObjVO } from './vxe-select-data'
-import { useKebabCaseName } from '../../form-design/src/use'
+import { useWidgetName } from '../../form-design/src/use'
 import VxeFormItemComponent from '../../form/src/form-item'
 import VxeSelectComponent from '../../select/src/select'
 
@@ -22,7 +22,7 @@ export const WidgetVxeSelectViewComponent = defineComponent({
   setup (props) {
     const $xeFormView = inject<(VxeFormViewConstructor & VxeFormViewPrivateMethods) | null>('$xeFormView', null)
 
-    const computeKebabCaseName = useKebabCaseName(props)
+    const { computeKebabCaseName } = useWidgetName(props)
 
     const changeEvent = () => {
       const { renderParams } = props

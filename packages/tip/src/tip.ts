@@ -1,6 +1,6 @@
 import { defineComponent, ref, h, reactive, PropType, createCommentVNode } from 'vue'
 import XEUtils from 'xe-utils'
-import { getConfig } from '../../ui'
+import { getConfig, useSize } from '../../ui'
 import { getSlotVNs } from '../../ui/src/vn'
 
 import type { VxeTipPropTypes, TipReactData, VxeTipEmits, TipPrivateRef, VxeTipPrivateComputed, VxeTipConstructor, VxeTipPrivateMethods } from '../../../types'
@@ -17,7 +17,8 @@ export default defineComponent({
     icon: {
       type: String as PropType<VxeTipPropTypes.Icon>,
       default: () => getConfig().tip.icon
-    }
+    },
+    size: { type: String as PropType<VxeTipPropTypes.Size>, default: () => getConfig().tip.size || getConfig().size }
   },
   emits: [
   ] as VxeTipEmits,
@@ -25,6 +26,8 @@ export default defineComponent({
     const { slots } = context
 
     const xID = XEUtils.uniqueId()
+
+    const { computeSize } = useSize(props)
 
     const refElem = ref<HTMLDivElement>()
 
@@ -53,9 +56,11 @@ export default defineComponent({
       const defaultSlot = slots.default
       const titleSlot = slots.title
       const iconSlot = slots.icon
+      const vSize = computeSize.value
       return h('div', {
         ref: refElem,
         class: ['vxe-tip', {
+          [`size--${vSize}`]: vSize,
           [`theme--${status}`]: status
         }]
       }, [

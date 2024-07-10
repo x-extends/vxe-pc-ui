@@ -75,6 +75,19 @@ $btnThemeList: (
   }
 }
 
+.vxe-icon {
+  font-size: var(--vxe-ui-font-size-default);
+  &.size--medium {
+    font-size: var(--vxe-ui-font-size-medium);
+  }
+  &.size--small {
+    font-size: var(--vxe-ui-font-size-small);
+  }
+  &.size--mini {
+    font-size: var(--vxe-ui-font-size-mini);
+  }
+}
+
 .vxe-icon-align-left:before {
   content: "\e6bb";
 }

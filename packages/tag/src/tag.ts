@@ -1,5 +1,6 @@
 import { defineComponent, ref, h, reactive, PropType, createCommentVNode } from 'vue'
 import XEUtils from 'xe-utils'
+import { getConfig, useSize } from '../../ui'
 import { getSlotVNs } from '../../ui/src/vn'
 
 import type { VxeTagPropTypes, TagReactData, TagPrivateRef, VxeTagPrivateComputed, VxeTagConstructor, VxeTagPrivateMethods } from '../../../types'
@@ -10,13 +11,16 @@ export default defineComponent({
     status: String as PropType<VxeTagPropTypes.Status>,
     title: [String, Number] as PropType<VxeTagPropTypes.Title>,
     icon: String as PropType<VxeTagPropTypes.Icon>,
-    content: [String, Number] as PropType<VxeTagPropTypes.Content>
+    content: [String, Number] as PropType<VxeTagPropTypes.Content>,
+    size: { type: String as PropType<VxeTagPropTypes.Size>, default: () => getConfig().tag.size || getConfig().size }
   },
   emits: [],
   setup (props, context) {
     const { slots } = context
 
     const xID = XEUtils.uniqueId()
+
+    const { computeSize } = useSize(props)
 
     const refElem = ref<HTMLDivElement>()
 
@@ -64,10 +68,12 @@ export default defineComponent({
 
     const renderVN = () => {
       const { status, title } = props
+      const vSize = computeSize.value
       return h('span', {
         ref: refElem,
         title,
         class: ['vxe-tag', {
+          [`size--${vSize}`]: vSize,
           [`theme--${status}`]: status
         }]
       }, renderContent())

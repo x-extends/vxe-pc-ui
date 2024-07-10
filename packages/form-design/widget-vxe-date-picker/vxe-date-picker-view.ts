@@ -1,6 +1,6 @@
 import { PropType, defineComponent, h, inject } from 'vue'
 import { WidgetVxeDatePickerFormObjVO } from './vxe-date-picker-data'
-import { useKebabCaseName } from '../../form-design/src/use'
+import { useWidgetName } from '../../form-design/src/use'
 import VxeFormItemComponent from '../../form/src/form-item'
 import VxeDatePickerComponent from '../../date-picker/src/date-picker'
 
@@ -21,7 +21,7 @@ export const WidgetVxeDatePickerViewComponent = defineComponent({
   setup (props) {
     const $xeFormView = inject<(VxeFormViewConstructor & VxeFormViewPrivateMethods) | null>('$xeFormView', null)
 
-    const computeKebabCaseName = useKebabCaseName(props)
+    const { computeKebabCaseName } = useWidgetName(props)
 
     const changeEvent = () => {
       const { renderParams } = props

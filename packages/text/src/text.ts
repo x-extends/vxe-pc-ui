@@ -1,5 +1,6 @@
 import { defineComponent, ref, h, reactive, PropType, createCommentVNode } from 'vue'
 import XEUtils from 'xe-utils'
+import { getConfig, useSize } from '../../ui'
 import { getSlotVNs } from '../../ui/src/vn'
 
 import type { VxeTextPropTypes, TextReactData, TextPrivateRef, VxeTextPrivateComputed, VxeTextConstructor, VxeTextPrivateMethods } from '../../../types'
@@ -10,13 +11,16 @@ export default defineComponent({
     status: String as PropType<VxeTextPropTypes.Status>,
     title: [String, Number] as PropType<VxeTextPropTypes.Title>,
     icon: String as PropType<VxeTextPropTypes.Icon>,
-    content: [String, Number] as PropType<VxeTextPropTypes.Content>
+    content: [String, Number] as PropType<VxeTextPropTypes.Content>,
+    size: { type: String as PropType<VxeTextPropTypes.Size>, default: () => getConfig().text.size || getConfig().size }
   },
   emits: [],
   setup (props, context) {
     const { slots } = context
 
     const xID = XEUtils.uniqueId()
+
+    const { computeSize } = useSize(props)
 
     const refElem = ref<HTMLDivElement>()
 
@@ -64,10 +68,12 @@ export default defineComponent({
 
     const renderVN = () => {
       const { status, title } = props
+      const vSize = computeSize.value
       return h('span', {
         ref: refElem,
         title,
         class: ['vxe-text', {
+          [`size--${vSize}`]: vSize,
           [`theme--${status}`]: status
         }]
       }, renderContent())

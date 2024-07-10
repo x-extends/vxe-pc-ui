@@ -4,7 +4,7 @@ import XEUtils from 'xe-utils'
 import { hasFormDesignLayoutType } from '../src/util'
 import { WidgetSubtableFormObjVO } from './subtable-data'
 import { getSlotVNs } from '../../ui/src/vn'
-import { useKebabCaseName } from '../../form-design/src/use'
+import { useWidgetName } from '../../form-design/src/use'
 import VxeFormItemComponent from '../../form/src/form-item'
 import VxeButtonComponent from '../../button/src/button'
 import VxeCheckboxComponent from '../../checkbox/src/checkbox'
@@ -311,7 +311,7 @@ export const WidgetSubtableViewComponent = defineComponent({
 
     const $xeFormView = inject<(VxeFormViewConstructor & VxeFormViewPrivateMethods) | null>('$xeFormView', null)
 
-    const computeKebabCaseName = useKebabCaseName(props)
+    const { computeKebabCaseName } = useWidgetName(props)
 
     const computeSubtableColumns = computed(() => {
       const { renderParams } = props

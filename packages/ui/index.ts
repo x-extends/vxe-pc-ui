@@ -197,6 +197,8 @@ setConfig({
   tabPane: {},
   table: {},
   tabs: {},
+  tag: {},
+  text: {},
   textarea: {},
   toolbar: {},
   tip: {},

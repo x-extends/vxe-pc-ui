@@ -215,10 +215,12 @@ export interface FormDesignExport {
     currWidget: ComputedRef<VxeFormDesignDefines.WidgetObjItem<T>>,
     widgetModel: WritableComputedRef<any>
   }
-  useKebabCaseName(props: {
+  useWidgetName(props: {
     renderOpts: any
     renderParams: any
-  }): ComputedRef<string>
+  }): {
+    computeKebabCaseName: ComputedRef<string>
+  }
   useWidgetPropDataSource(props: {
     renderOpts: any
     renderParams: any

@@ -1,5 +1,5 @@
 import { defineComponent, ref, h, reactive, PropType, computed, VNode, createCommentVNode, watch, onUnmounted, nextTick } from 'vue'
-import { createEvent, getIcon, getConfig } from '../../ui'
+import { createEvent, getIcon, getConfig, useSize } from '../../ui'
 import XEUtils from 'xe-utils'
 import { getSlotVNs } from '../..//ui/src/vn'
 
@@ -76,7 +76,7 @@ export default defineComponent({
     toggleMethod: Function as PropType<VxeTreePropTypes.ToggleMethod>,
     showIcon: {
       type: Boolean as PropType<VxeTreePropTypes.ShowIcon>,
-      default: () => getConfig().tree.showIcon
+      default: true
     },
     iconOpen: {
       type: String as PropType<VxeTreePropTypes.IconOpen>,
@@ -89,7 +89,8 @@ export default defineComponent({
     iconLoaded: {
       type: String as PropType<VxeTreePropTypes.IconLoaded>,
       default: () => getConfig().tree.iconLoaded
-    }
+    },
+    size: { type: String as PropType<VxeTreePropTypes.Size>, default: () => getConfig().tree.size || getConfig().size }
   },
   emits: [
     'update:modelValue',
@@ -102,6 +103,8 @@ export default defineComponent({
     const { emit, slots } = context
 
     const xID = XEUtils.uniqueId()
+
+    const { computeSize } = useSize(props)
 
     const refElem = ref<HTMLDivElement>()
 
@@ -536,7 +539,7 @@ export default defineComponent({
     }
 
     const renderNode = (row: any): VNode => {
-      const { indent, iconOpen, iconClose } = props
+      const { showLine, indent, iconOpen, iconClose, showIcon } = props
       const { treeExpandedMaps, currentNode } = reactData
       const { nodeMaps } = internalData
       const childrenField = computeChildrenField.value
@@ -548,6 +551,24 @@ export default defineComponent({
       const isExpand = treeExpandedMaps[rowid]
       const nodeItem = nodeMaps[rowid]
       const nodeValue = XEUtils.get(row, titleField)
+      const childVns: VNode[] = []
+      if (hasChild && treeExpandedMaps[rowid]) {
+        if (showLine) {
+          childVns.push(
+            h('div', {
+              key: 'line',
+              class: 'vxe-tree--node-child-line',
+              style: {
+                height: `calc(${childList.length} * var(--vxe-ui-tree-node-height) - var(--vxe-ui-tree-node-height) / 2)`,
+                left: `${(nodeItem.level + 1) * (indent || 1)}px`
+              }
+            })
+          )
+        }
+        childList.forEach(childItem => {
+          childVns.push(renderNode(childItem))
+        })
+      }
 
       return h('div', {
         class: ['vxe-tree--node-item-row', `node--level-${nodeItem.level}`, {
@@ -567,22 +588,24 @@ export default defineComponent({
             handleNodeDblclickEvent(evnt, row)
           }
         }, [
-          h('div', {
-            class: 'vxe-tree--node-item-switcher'
-          }, hasChild
-            ? [
-                h('div', {
-                  class: 'vxe-tree--node-item-icon',
-                  onClick (evnt) {
-                    toggleExpandEvent(evnt, row)
-                  }
-                }, [
-                  h('i', {
-                    class: isExpand ? (iconOpen || getIcon().TREE_NODE_OPEN) : (iconClose || getIcon().TREE_NODE_CLOSE)
-                  })
-                ])
-              ]
-            : []),
+          showIcon || showLine
+            ? h('div', {
+              class: 'vxe-tree--node-item-switcher'
+            }, showIcon && hasChild
+              ? [
+                  h('div', {
+                    class: 'vxe-tree--node-item-icon',
+                    onClick (evnt) {
+                      toggleExpandEvent(evnt, row)
+                    }
+                  }, [
+                    h('i', {
+                      class: isExpand ? (iconOpen || getIcon().TREE_NODE_OPEN) : (iconClose || getIcon().TREE_NODE_CLOSE)
+                    })
+                  ])
+                ]
+              : [])
+            : createCommentVNode(),
           renderRadio(row, rowid),
           renderCheckbox(row, rowid),
           h('div', {
@@ -592,7 +615,7 @@ export default defineComponent({
         hasChild && treeExpandedMaps[rowid]
           ? h('div', {
             class: 'vxe-tree--node-child-wrapper'
-          }, childList.map(childItem => renderNode(childItem)))
+          }, childVns)
           : createCommentVNode()
       ])
     }
@@ -605,10 +628,13 @@ export default defineComponent({
     }
 
     const renderVN = () => {
-      const { trigger, isHover } = props
+      const { trigger, showLine, isHover } = props
+      const vSize = computeSize.value
       return h('div', {
         ref: refElem,
         class: ['vxe-tree', {
+          [`size--${vSize}`]: vSize,
+          'show--line': showLine,
           'row--hover': isHover,
           'row--trigger': trigger === 'row'
         }]

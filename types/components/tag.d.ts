@@ -1,5 +1,5 @@
 import { RenderFunction, SetupContext, Ref, ComponentPublicInstance, DefineComponent } from 'vue'
-import { defineVxeComponent, VxeComponentBaseOptions, VxeComponentEventParams, ValueOf, VxeComponentStatusType } from '@vxe-ui/core'
+import { defineVxeComponent, VxeComponentBaseOptions, VxeComponentEventParams, VxeComponentSizeType, ValueOf, VxeComponentStatusType } from '@vxe-ui/core'
 
 /* eslint-disable no-use-before-define,@typescript-eslint/ban-types */
 
@@ -27,6 +27,7 @@ export namespace VxeTagPropTypes {
   export type Title = string | number
   export type Icon = string
   export type Content = string | number
+  export type Size = VxeComponentSizeType
 }
 
 export type VxeTagProps = {
@@ -34,6 +35,7 @@ export type VxeTagProps = {
   title?: VxeTagPropTypes.Title
   icon?: VxeTagPropTypes.Icon
   content?: VxeTagPropTypes.Content
+  size?: VxeTagPropTypes.Size
 }
 
 export interface TagPrivateComputed {

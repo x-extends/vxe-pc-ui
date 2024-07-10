@@ -2,7 +2,7 @@ import { PropType, createCommentVNode, defineComponent, h, ref } from 'vue'
 import { getI18n } from '@vxe-ui/core'
 import { WidgetVxeUploadImageFormObjVO } from './vxe-upload-image-data'
 import { getLimitSizeOptions } from '../widget-vxe-upload-file/vxe-upload-file-data'
-import { useKebabCaseName } from '../../form-design/src/use'
+import { useWidgetName } from '../../form-design/src/use'
 import VxeFormComponent from '../../form/src/form'
 import VxeFormItemComponent from '../../form/src/form-item'
 import VxeInputComponent from '../../input/src/input'
@@ -23,7 +23,7 @@ export const WidgetVxeUploadImageFormComponent = defineComponent({
   },
   emits: [],
   setup (props) {
-    const computeKebabCaseName = useKebabCaseName(props)
+    const { computeKebabCaseName } = useWidgetName(props)
 
     const limitSizeOptions = ref(getLimitSizeOptions())
 

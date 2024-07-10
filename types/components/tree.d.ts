@@ -1,5 +1,5 @@
 import { RenderFunction, SetupContext, Ref, ComponentPublicInstance, DefineComponent } from 'vue'
-import { defineVxeComponent, VxeComponentBaseOptions, VxeComponentEventParams, ValueOf } from '@vxe-ui/core'
+import { defineVxeComponent, VxeComponentBaseOptions, VxeComponentEventParams, VxeComponentSizeType, ValueOf } from '@vxe-ui/core'
 
 /* eslint-disable no-use-before-define,@typescript-eslint/ban-types */
 
@@ -60,6 +60,7 @@ export namespace VxeTreePropTypes {
   export type IconOpen = string
   export type IconClose = string
   export type IconLoaded = string
+  export type Size = VxeComponentSizeType
 }
 
 export type VxeTreeProps = {
@@ -84,6 +85,7 @@ export type VxeTreeProps = {
   iconOpen?: VxeTreePropTypes.IconOpen
   iconClose?: VxeTreePropTypes.IconClose
   iconLoaded?: VxeTreePropTypes.IconLoaded
+  size?: VxeTreePropTypes.Size
 }
 
 export interface TreePrivateComputed {

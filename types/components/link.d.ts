@@ -1,5 +1,5 @@
 import { RenderFunction, SetupContext, Ref, ComponentPublicInstance, DefineComponent } from 'vue'
-import { defineVxeComponent, VxeComponentBaseOptions, VxeComponentEventParams, VxeComponentPermissionCodeType, VxeComponentPermissionMethod, ValueOf, VxeComponentStatusType } from '@vxe-ui/core'
+import { defineVxeComponent, VxeComponentBaseOptions, VxeComponentEventParams, VxeComponentSizeType, VxeComponentPermissionCodeType, VxeComponentPermissionMethod, ValueOf, VxeComponentStatusType } from '@vxe-ui/core'
 
 /* eslint-disable no-use-before-define,@typescript-eslint/ban-types */
 
@@ -38,6 +38,7 @@ export namespace VxeLinkPropTypes {
   export type Underline = boolean
   export type PermissionCode = VxeComponentPermissionCodeType
   export type Content = string | number
+  export type Size = VxeComponentSizeType
 }
 
 export type VxeLinkProps = {
@@ -53,6 +54,7 @@ export type VxeLinkProps = {
    */
   permissionCode?: VxeLinkPropTypes.PermissionCode
   content?: VxeLinkPropTypes.Content
+  size?: VxeLinkPropTypes.Size
 }
 
 export interface LinkPrivateComputed {

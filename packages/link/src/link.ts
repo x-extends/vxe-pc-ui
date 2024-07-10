@@ -1,6 +1,6 @@
 import { defineComponent, ref, h, reactive, PropType, createCommentVNode, resolveComponent } from 'vue'
 import XEUtils from 'xe-utils'
-import { getConfig, usePermission } from '../../ui'
+import { getConfig, usePermission, useSize } from '../../ui'
 import { getSlotVNs } from '../../ui/src/vn'
 
 import type { VxeLinkPropTypes, LinkReactData, LinkPrivateRef, VxeLinkPrivateComputed, VxeLinkConstructor, VxeLinkPrivateMethods } from '../../../types'
@@ -22,13 +22,16 @@ export default defineComponent({
      * 权限码
      */
     permissionCode: [String, Number] as PropType<VxeLinkPropTypes.PermissionCode>,
-    content: [String, Number] as PropType<VxeLinkPropTypes.Content>
+    content: [String, Number] as PropType<VxeLinkPropTypes.Content>,
+    size: { type: String as PropType<VxeLinkPropTypes.Size>, default: () => getConfig().link.size || getConfig().size }
   },
   emits: [],
   setup (props, context) {
     const { slots } = context
 
     const xID = XEUtils.uniqueId()
+
+    const { computeSize } = useSize(props)
 
     const { computePermissionInfo } = usePermission(props)
 
@@ -79,14 +82,16 @@ export default defineComponent({
     const renderVN = () => {
       const { status, target, href, title, underline, routerLink } = props
       const permissionInfo = computePermissionInfo.value
+      const vSize = computeSize.value
       if (!permissionInfo.visible) {
         return createCommentVNode()
       }
       if (routerLink) {
         return h(resolveComponent('router-link'), {
           class: ['vxe-link', {
-            'is--underline': underline,
-            [`theme--${status}`]: status
+            [`size--${vSize}`]: vSize,
+            [`theme--${status}`]: status,
+            'is--underline': underline
           }],
           title,
           target,
@@ -103,8 +108,9 @@ export default defineComponent({
         target,
         title,
         class: ['vxe-link', {
-          'is--underline': underline,
-          [`theme--${status}`]: status
+          [`size--${vSize}`]: vSize,
+          [`theme--${status}`]: status,
+          'is--underline': underline
         }]
       }, renderContent())
     }

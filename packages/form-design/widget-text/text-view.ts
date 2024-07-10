@@ -1,6 +1,6 @@
 import { PropType, defineComponent, h } from 'vue'
 import { WidgetTextFormObjVO } from './text-data'
-import { useKebabCaseName } from '../../form-design/src/use'
+import { useWidgetName } from '../../form-design/src/use'
 import VxeFormItemComponent from '../../form/src/form-item'
 
 import type { VxeGlobalRendererHandles } from '../../../types'
@@ -18,7 +18,7 @@ export const WidgetTextViewComponent = defineComponent({
   },
   emits: [],
   setup (props) {
-    const computeKebabCaseName = useKebabCaseName(props)
+    const { computeKebabCaseName } = useWidgetName(props)
 
     return () => {
       const { renderParams } = props

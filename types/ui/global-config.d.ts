@@ -53,6 +53,7 @@ import { VxeSelectProps } from '../components/select'
 import { VxeSwitchProps } from '../components/switch'
 import { VxeTabPaneProps } from '../components/tab-pane'
 import { VxeTabsProps } from '../components/tabs'
+import { VxeTagProps } from '../components/tag'
 import { VxeTextProps } from '../components/text'
 import { VxeTextareaProps } from '../components/textarea'
 import { VxeTipProps } from '../components/tip'
@@ -124,6 +125,7 @@ declare module '@vxe-ui/core' {
     switch?: VxeSwitchProps
     tabPane?: VxeTabPaneProps
     tabs?: VxeTabsProps
+    tag?: VxeTagProps
     text?: VxeTextProps
     textarea?: VxeTextareaProps
     tip?: VxeTipProps
