@@ -80,7 +80,7 @@ export default defineComponent({
     const { computeSize } = useSize(props)
 
     const reactData = reactive<SelectReactData>({
-      inited: false,
+      initialized: false,
       staticOptions: [],
       fullGroupList: [],
       fullOptionList: [],
@@ -467,8 +467,8 @@ export default defineComponent({
       const isDisabled = computeIsDisabled.value
       if (!loading && !isDisabled) {
         clearTimeout(hidePanelTimeout)
-        if (!reactData.inited) {
-          reactData.inited = true
+        if (!reactData.initialized) {
+          reactData.initialized = true
         }
         reactData.isActivated = true
         reactData.animatVisible = true
@@ -928,55 +928,9 @@ export default defineComponent({
 
     Object.assign($xeSelect, selectMethods)
 
-    watch(() => reactData.staticOptions, (value) => {
-      if (value.some((item) => item.options && item.options.length)) {
-        reactData.fullOptionList = []
-        reactData.fullGroupList = value
-      } else {
-        reactData.fullGroupList = []
-        reactData.fullOptionList = value || []
-      }
-      cacheItemMap()
-    })
-
-    watch(() => props.options, (value) => {
-      reactData.fullGroupList = []
-      reactData.fullOptionList = value || []
-      cacheItemMap()
-    })
-
-    watch(() => props.optionGroups, (value) => {
-      reactData.fullOptionList = []
-      reactData.fullGroupList = value || []
-      cacheItemMap()
-    })
-
-    onMounted(() => {
-      nextTick(() => {
-        const { options, optionGroups } = props
-        if (optionGroups) {
-          reactData.fullGroupList = optionGroups
-        } else if (options) {
-          reactData.fullOptionList = options
-        }
-        cacheItemMap()
-      })
-      globalEvents.on($xeSelect, 'mousewheel', handleGlobalMousewheelEvent)
-      globalEvents.on($xeSelect, 'mousedown', handleGlobalMousedownEvent)
-      globalEvents.on($xeSelect, 'keydown', handleGlobalKeydownEvent)
-      globalEvents.on($xeSelect, 'blur', handleGlobalBlurEvent)
-    })
-
-    onUnmounted(() => {
-      globalEvents.off($xeSelect, 'mousewheel')
-      globalEvents.off($xeSelect, 'mousedown')
-      globalEvents.off($xeSelect, 'keydown')
-      globalEvents.off($xeSelect, 'blur')
-    })
-
     const renderVN = () => {
       const { className, popupClassName, loading, filterable } = props
-      const { inited, isActivated, visiblePanel } = reactData
+      const { initialized, isActivated, visiblePanel } = reactData
       const vSize = computeSize.value
       const isDisabled = computeIsDisabled.value
       const selectLabel = computeSelectLabel.value
@@ -1037,7 +991,7 @@ export default defineComponent({
           : {}),
         h(Teleport, {
           to: 'body',
-          disabled: transfer ? !inited : true
+          disabled: transfer ? !initialized : true
         }, [
           h('div', {
             ref: refOptionPanel,
@@ -1049,7 +1003,7 @@ export default defineComponent({
             }],
             placement: reactData.panelPlacement,
             style: reactData.panelStyle
-          }, inited
+          }, initialized
             ? [
                 filterable
                   ? h('div', {
@@ -1098,6 +1052,52 @@ export default defineComponent({
     }
 
     $xeSelect.renderVN = renderVN
+
+    watch(() => reactData.staticOptions, (value) => {
+      if (value.some((item) => item.options && item.options.length)) {
+        reactData.fullOptionList = []
+        reactData.fullGroupList = value
+      } else {
+        reactData.fullGroupList = []
+        reactData.fullOptionList = value || []
+      }
+      cacheItemMap()
+    })
+
+    watch(() => props.options, (value) => {
+      reactData.fullGroupList = []
+      reactData.fullOptionList = value || []
+      cacheItemMap()
+    })
+
+    watch(() => props.optionGroups, (value) => {
+      reactData.fullOptionList = []
+      reactData.fullGroupList = value || []
+      cacheItemMap()
+    })
+
+    onMounted(() => {
+      nextTick(() => {
+        const { options, optionGroups } = props
+        if (optionGroups) {
+          reactData.fullGroupList = optionGroups
+        } else if (options) {
+          reactData.fullOptionList = options
+        }
+        cacheItemMap()
+      })
+      globalEvents.on($xeSelect, 'mousewheel', handleGlobalMousewheelEvent)
+      globalEvents.on($xeSelect, 'mousedown', handleGlobalMousedownEvent)
+      globalEvents.on($xeSelect, 'keydown', handleGlobalKeydownEvent)
+      globalEvents.on($xeSelect, 'blur', handleGlobalBlurEvent)
+    })
+
+    onUnmounted(() => {
+      globalEvents.off($xeSelect, 'mousewheel')
+      globalEvents.off($xeSelect, 'mousedown')
+      globalEvents.off($xeSelect, 'keydown')
+      globalEvents.off($xeSelect, 'blur')
+    })
 
     provide('$xeSelect', $xeSelect)
 

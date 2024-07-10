@@ -163,8 +163,13 @@ declare module '@vxe-ui/core' {
     ALERT_WARNING?: string
     ALERT_ERROR?: string
 
-     // node
+     // tree
     TREE_NODE_OPEN?: string
     TREE_NODE_CLOSE?: string
+
+    // tree-select
+    TREE_SELECT_LOADED?: string
+    TREE_SELECT_OPEN?: string
+    TREE_SELECT_CLOSE?: string
   }
 }

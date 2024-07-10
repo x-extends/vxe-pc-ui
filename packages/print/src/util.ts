@@ -51,6 +51,7 @@ function createHtmlPage (opts: VxePrintProps & { _pageBreaks: boolean }, printHt
     `<title>${opts.title}</title>`,
     opts._pageBreaks || (opts.pageBreaks && opts.pageBreaks.length) ? '<style media="print">@page {size: auto;margin: 0mm;}</style>' : '',
     `<style>.vxe-print-slots{display: none;}.vxe-print-page-break.align--center{text-align:center;}.vxe-print-page-break.align--left{text-align:left;}.vxe-print-page-break.align--right{text-align:right;}.vxe-print-page-break--header-title{font-size:1.8em;text-align:center;line-height:${printMargin}px;}.vxe-print-page-break{page-break-before:always;display:flex;flex-direction:column;height:100vh;overflow:hidden;}.vxe-print-page-break--body{display:flex;flex-direction:row;flex-grow:1;overflow: hidden;}.vxe-print-page-break--left,.vxe-print-page-break--right{flex-shrink:0;width:${printMargin}px;height:100%;}.vxe-print-page-break--header,.vxe-print-page-break--footer{flex-shrink:0;height:${printMargin}px;width:100%;}.vxe-print-page-break--content{flex-grow: 1;overflow: hidden;}.vxe-print-page-break--footer-page-number{line-height:${printMargin}px;text-align:center;}</style>`,
+    '<style>.vxe-table{white-space:pre;}</style>',
     `<style>${defaultHtmlStyle}</style>`,
     customStyle ? `<style>${customStyle}</style>` : '',
     '</head>',

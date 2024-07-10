@@ -204,6 +204,11 @@ const routes: Array<RouteRecordRaw> = [
     path: '/component/card',
     name: 'CardTest',
     component: () => import('../views/card/CardTest.vue')
+  },
+  {
+    path: '/component/treeSelect',
+    name: 'TreeSelectTest',
+    component: () => import('../views/treeSelect/TreeSelectTest.vue')
   }
 ]
 

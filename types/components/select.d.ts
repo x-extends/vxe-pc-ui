@@ -111,7 +111,7 @@ export interface SelectPrivateComputed {
 export interface VxeSelectPrivateComputed extends SelectPrivateComputed { }
 
 export interface SelectReactData {
-  inited: boolean
+  initialized: boolean
   staticOptions: VxeSelectDefines.OptionInfo[]
   fullGroupList: any[]
   fullOptionList: any[]

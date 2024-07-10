@@ -36,7 +36,7 @@
         border-left-style: var(--vxe-ui-tree-node-line-style);
         border-left-color: var(--vxe-ui-tree-node-line-color);
         pointer-events: none;
-        z-index: 9;
+        z-index: 5;
       }
     }
     .vxe-tree--node-child-line {
@@ -49,7 +49,7 @@
       border-left-style: var(--vxe-ui-tree-node-line-style);
       border-left-color: var(--vxe-ui-tree-node-line-color);
       pointer-events: none;
-      z-index: 9;
+      z-index: 5;
     }
     .vxe-tree--node-item-switcher {
       position: relative;
@@ -63,7 +63,7 @@
         border-bottom-style: var(--vxe-ui-tree-node-line-style);
         border-bottom-color: var(--vxe-ui-tree-node-line-color);
         pointer-events: none;
-        z-index: 9;
+        z-index: 5;
       }
     }
   }
@@ -78,16 +78,20 @@
   line-height: var(--vxe-ui-tree-node-height);
 }
 .vxe-tree--node-item-switcher {
+  position: relative;
   width: 1.4em;
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: center;
   flex-shrink: 0;
   user-select: none;
 }
 .vxe-tree--node-item-icon {
+  position: absolute;
+  display: inline-flex;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
   cursor: pointer;
+  text-align: center;
+  z-index: 7;
   & > i {
     display: inline-flex;
     @include createAnimationTransition(all, 0.2s);
