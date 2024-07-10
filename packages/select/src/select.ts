@@ -1019,7 +1019,7 @@ export default defineComponent({
           ref: refInput,
           clearable: props.clearable,
           placeholder: props.placeholder,
-          readonly: false,
+          readonly: true,
           disabled: isDisabled,
           type: 'text',
           prefixIcon: props.prefixIcon,
