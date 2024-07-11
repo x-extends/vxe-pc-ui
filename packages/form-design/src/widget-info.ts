@@ -63,6 +63,7 @@ export class FormDesignWidgetInfo {
   name = ''
   required = false
   options: VxeFormPropTypes.Data = {}
+  // eslint-disable-next-line no-use-before-define
   children: FormDesignWidgetInfo[] = []
   model = {
     update: false,

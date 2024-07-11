@@ -109,7 +109,7 @@
   --vxe-ui-checkbox-checked-height: 0.64em;
   --vxe-ui-checkbox-indeterminate-width: 0.6em;
   --vxe-ui-checkbox-indeterminate-height: 2px;
-  --vxe-ui-checkbox-border-width: 2px; 
+  --vxe-ui-checkbox-border-width: 2px;
   --vxe-ui-checkbox-border-radius: 2px;
   --vxe-ui-checkbox-icon-background-color: #fff;
   --vxe-ui-checkbox-checked-icon-border-color: #fff;
@@ -147,4 +147,17 @@
 
   /*card*/
   --vxe-ui-card-padding: 12px;
+  
+  /*tag*/
+  --vxe-ui-tag-default-color: #bbbccc;
+  --vxe-ui-tag-padding: 0.1em 0.5em ;
+  --vxe-ui-tag-border-radius: 4px ;
+  --vxe-ui-tag-line-height--mini: 1.2 ;
+  --vxe-ui-tag-line-height--small: 1.35 ;
+  --vxe-ui-tag-line-height--medium: 1.6 ;
+  --vxe-ui-tag-line-height--large: 1.7 ;
+  --vxe-ui-tag-font-size-mini: 11px ;
+  --vxe-ui-tag-font-size-small: 13px ;
+  --vxe-ui-tag-font-size-medium: 14px;
+  --vxe-ui-tag-font-size-large: 15px;
 }
