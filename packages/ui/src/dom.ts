@@ -95,9 +95,11 @@ export function getOffsetPos (elem: any, container: any) {
 }
 
 export function getAbsolutePos (elem: any) {
-  const bounding = elem.getBoundingClientRect()
-  const boundingTop = bounding.top
-  const boundingLeft = bounding.left
+  // 当页面作为子应用或者嵌套在iframe内时，计算tooltip边界值需要考虑body的边界距离，避免造成tooltip的位置偏离，其他组件不受影响
+  const bodyBounding = document.body.getBoundingClientRect();
+  const bounding = elem.getBoundingClientRect();
+  const boundingTop = bounding.top - bodyBounding.top;
+  const boundingLeft = bounding.left - bodyBounding.left;
   const { scrollTop, scrollLeft, visibleHeight, visibleWidth } = getDomNode()
   return { boundingTop, top: scrollTop + boundingTop, boundingLeft, left: scrollLeft + boundingLeft, visibleHeight, visibleWidth }
 }
