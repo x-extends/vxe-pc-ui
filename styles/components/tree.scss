@@ -4,12 +4,12 @@
   position: relative;
   color: var(--vxe-ui-font-color);
   font-family: var(--vxe-ui-font-family);
-  &.row--trigger {
+  &.node--trigger {
     .vxe-tree--node-item-wrapper {
       cursor: pointer;
     }
   }
-  &.row--hover {
+  &.node--hover {
     .vxe-tree--node-item-wrapper {
       &:hover {
         background-color: var(--vxe-ui-font-primary-hover-color);

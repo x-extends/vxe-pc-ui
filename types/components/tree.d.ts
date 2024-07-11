@@ -42,17 +42,18 @@ export namespace VxeTreePropTypes {
     visibleMethod?: (params: { node: any }) => boolean
     checkMethod?: (params: { node: any }) => boolean
     highlight?: boolean
+    showIcon?: boolean
     trigger?: '' | 'default' | 'node'
   }
   export type CheckboxCheckNodeKeys = (string | number)[]
   export type ShowCheckbox = boolean
   export interface CheckboxConfig {
     showHeader?: boolean
-    checkAll?: boolean
     checkStrictly?: boolean
     highlight?: boolean
     visibleMethod?: (params: { node: any }) => boolean
     checkMethod?: (params: { node: any }) => boolean
+    showIcon?: boolean
     trigger?: '' | 'default' | 'node'
   }
   export type ToggleMethod = (params: { node: any }) => boolean
@@ -63,7 +64,7 @@ export namespace VxeTreePropTypes {
   export type Size = VxeComponentSizeType
 }
 
-export type VxeTreeProps = {
+export interface VxeTreeProps {
   data?: VxeTreePropTypes.Data
   parentField?: VxeTreePropTypes.ParentField
   keyField?: VxeTreePropTypes.KeyField

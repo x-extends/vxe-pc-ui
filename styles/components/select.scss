@@ -138,7 +138,6 @@
   white-space: nowrap;
   user-select: none;
   &.is--selected {
-    font-weight: 700;
     color: var(--vxe-ui-font-primary-color);
   }
   &:not(.is--disabled) {
