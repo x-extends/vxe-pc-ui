@@ -26,7 +26,6 @@ export interface VxeButtonGroupPrivateRef extends ButtonGroupPrivateRef { }
 export namespace VxeButtonGroupPropTypes {
   export type Size = VxeComponentSizeType
   export type PermissionCode = VxeComponentPermissionCodeType
-  export type PermissionMethod = VxeComponentPermissionMethod
   export type Options = VxeButtonProps[]
   export type Round = boolean
   export type Circle = boolean
@@ -39,7 +38,6 @@ export namespace VxeButtonGroupPropTypes {
 export type VxeButtonGroupProps = {
   size?: VxeButtonGroupPropTypes.Size
   permissionCode?: VxeButtonGroupPropTypes.PermissionCode
-  permissionMethod?: VxeButtonGroupPropTypes.PermissionMethod
   options?: VxeButtonGroupPropTypes.Options
   mode?: VxeButtonGroupPropTypes.Mode
   status?: VxeButtonGroupPropTypes.Status

@@ -31,7 +31,6 @@ export namespace VxeButtonPropTypes {
   export type PopupClassName = string | ((params: { $button: VxeButtonConstructor }) => string)
   export type Name = string | number
   export type PermissionCode = VxeComponentPermissionCodeType
-  export type PermissionMethod = VxeComponentPermissionMethod
   export type Content = string | number
   export type Placement = string
   export type Status = VxeComponentStatusType
@@ -66,10 +65,6 @@ export type VxeButtonProps = {
    * 权限码
    */
   permissionCode?: VxeButtonPropTypes.PermissionCode
-  /**
-   * 用于 permissionCode，权限码判断逻辑
-   */
-  permissionMethod?: VxeButtonPropTypes.PermissionMethod
   title?: VxeButtonPropTypes.Title
   /**
    * 按钮内容

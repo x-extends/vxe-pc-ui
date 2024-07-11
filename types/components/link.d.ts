@@ -1,5 +1,5 @@
 import { RenderFunction, SetupContext, Ref, ComponentPublicInstance, DefineComponent } from 'vue'
-import { defineVxeComponent, VxeComponentBaseOptions, VxeComponentEventParams, VxeComponentPermissionCodeType, VxeComponentPermissionMethod, ValueOf, VxeComponentStatusType } from '@vxe-ui/core'
+import { defineVxeComponent, VxeComponentBaseOptions, VxeComponentEventParams, VxeComponentSizeType, VxeComponentPermissionCodeType, VxeComponentPermissionMethod, ValueOf, VxeComponentStatusType } from '@vxe-ui/core'
 
 /* eslint-disable no-use-before-define,@typescript-eslint/ban-types */
 
@@ -37,8 +37,8 @@ export namespace VxeLinkPropTypes {
   }
   export type Underline = boolean
   export type PermissionCode = VxeComponentPermissionCodeType
-  export type PermissionMethod = VxeComponentPermissionMethod
   export type Content = string | number
+  export type Size = VxeComponentSizeType
 }
 
 export type VxeLinkProps = {
@@ -53,11 +53,8 @@ export type VxeLinkProps = {
    * 权限码
    */
   permissionCode?: VxeLinkPropTypes.PermissionCode
-  /**
-   * 用于 permissionCode，权限码判断逻辑
-   */
-  permissionMethod?: VxeLinkPropTypes.PermissionMethod
   content?: VxeLinkPropTypes.Content
+  size?: VxeLinkPropTypes.Size
 }
 
 export interface LinkPrivateComputed {
@@ -83,13 +80,23 @@ export namespace VxeLinkDefines {
   export interface LinkEventParams extends VxeComponentEventParams {
     $link: VxeLinkConstructor
   }
+
+  export interface ClickParams {
+  }
+  export interface ClickEventParams extends LinkEventParams, ClickParams { }
 }
 
-export type VxeLinkEventProps = {}
+export type VxeLinkEventProps = {
+  onClick?: VxeLinkEvents.Click
+}
 
-export interface VxeLinkListeners { }
+export interface VxeLinkListeners {
+  click?: VxeLinkEvents.Click
+}
 
-export namespace VxeLinkEvents { }
+export namespace VxeLinkEvents {
+  export type Click = (params: VxeLinkDefines.ClickEventParams) => void
+}
 
 export namespace VxeLinkSlotTypes {
   export interface DefaultSlotParams {}

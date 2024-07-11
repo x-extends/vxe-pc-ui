@@ -3,7 +3,7 @@ import { defineVxeComponent, VxeComponentBaseOptions, VxeComponentEventParams, V
 import { VxeColumnPropTypes, VxeColumnProps, VxeColumnSlotTypes } from './column'
 import { VxeTableProDefines, VxeTableProEmits } from './table-plugins'
 import { VxeGridConstructor } from './grid'
-import { VxeTooltipInstance } from './tooltip'
+import { VxeTooltipInstance, VxeTooltipPropTypes } from './tooltip'
 import { VxeModalPropTypes } from './modal'
 import { VxeDrawerPropTypes } from './drawer'
 import { VxeToolbarConstructor, VxeToolbarInstance } from './toolbar'
@@ -2212,7 +2212,12 @@ export interface TableReactData<D = any> {
     row: D | null
     column: any
     content: any
-    visible: boolean
+    visible: boolean,
+    currOpts: {
+      useHTML?: VxeTooltipPropTypes.UseHTML
+      enterable?: VxeTooltipPropTypes.Enterable
+      theme?: VxeTooltipPropTypes.Theme
+    }
   }
   // 存放数据校验相关信息
   validStore: {
@@ -3623,8 +3628,8 @@ export namespace VxeTableDefines {
   export interface EditClosedParams<D = any> extends TableBaseCellParams<D> { }
   export interface EditClosedEventParams<D = any> extends TableEventParams<D>, EditClosedParams<D> { }
 
-  export interface EditActivedParams<D = any> extends TableBaseCellParams<D> { }
-  export interface EditActivedEventParams<D = any> extends TableEventParams<D>, EditActivedParams<D> { }
+  export interface EditActivatedParams<D = any> extends TableBaseCellParams<D> { }
+  export interface EditActivatedEventParams<D = any> extends TableEventParams<D>, EditActivatedParams<D> { }
 
   export interface EditDisabledParams<D = any> extends TableBaseCellParams<D> { }
   export interface EditDisabledEventParams<D = any> extends TableEventParams<D>, EditDisabledParams<D> { }
@@ -3829,11 +3834,17 @@ export interface VxeTableEventProps<D = any> {
   onToggleTreeExpand?: VxeTableEvents.ToggleTreeExpand<D>
   onMenuClick?: VxeTableEvents.MenuClick<D>
   onEditClosed?: VxeTableEvents.EditClosed<D>
-  onEditActived?: VxeTableEvents.EditActived<D>
+  onEditActivated?: VxeTableEvents.EditActivated<D>
   onEditDisabled?: VxeTableEvents.EditDisabled<D>
   onValidError?: VxeTableEvents.ValidError<D>
   onScroll?: VxeTableEvents.Scroll<D>
   onCustom?: VxeTableEvents.Custom<D>
+
+  /**
+   * 已废弃，请使用 onEditActivated
+   * @deprecated
+   */
+  onEditActived?: VxeTableEvents.EditActivated<D>
 }
 
 export interface VxeTableListeners<D = any> {
@@ -3879,7 +3890,7 @@ export interface VxeTableListeners<D = any> {
   toggleTreeExpand?: VxeTableEvents.ToggleTreeExpand<D>
   menuClick?: VxeTableEvents.MenuClick<D>
   editClosed?: VxeTableEvents.EditClosed<D>
-  editActived?: VxeTableEvents.EditActived<D>
+  editActivated?: VxeTableEvents.EditActivated<D>
   editDisabled?: VxeTableEvents.EditDisabled<D>
   /**
    * 只对 edit-rules 配置时有效，当数据校验不通过时会触发该事件
@@ -3893,6 +3904,12 @@ export interface VxeTableListeners<D = any> {
    * 如果与工具栏关联，在自定义列按钮被手动点击后会触发该事件
    */
   custom?: VxeTableEvents.Custom<D>
+
+  /**
+   * 已废弃，请使用 editActivated
+   * @deprecated
+   */
+  editActived?: VxeTableEvents.EditActivated<D>
 }
 
 export namespace VxeTableEvents {
@@ -3930,11 +3947,17 @@ export namespace VxeTableEvents {
   export type ToggleTreeExpand<D = VxeTablePropTypes.Row> = (params: VxeTableDefines.ToggleTreeExpandEventParams<D>) => void
   export type MenuClick<D = VxeTablePropTypes.Row> = (params: VxeTableDefines.MenuClickEventParams<D>) => void
   export type EditClosed<D = VxeTablePropTypes.Row> = (params: VxeTableDefines.EditClosedEventParams<D>) => void
-  export type EditActived<D = VxeTablePropTypes.Row> = (params: VxeTableDefines.EditActivedEventParams<D>) => void
+  export type EditActivated<D = VxeTablePropTypes.Row> = (params: VxeTableDefines.EditActivatedEventParams<D>) => void
   export type EditDisabled<D = VxeTablePropTypes.Row> = (params: VxeTableDefines.EditDisabledEventParams<D>) => void
   export type ValidError<D = VxeTablePropTypes.Row> = (params: VxeTableDefines.ValidErrorEventParams<D>) => void
   export type Scroll<D = VxeTablePropTypes.Row> = (params: VxeTableDefines.ScrollEventParams<D>) => void
   export type Custom<D = VxeTablePropTypes.Row> = (params: VxeTableDefines.CustomEventParams<D>) => void
+
+  /**
+   * 已废弃，请使用 EditActivated
+   * @deprecated
+   */
+  export type EditActived<D = VxeTablePropTypes.Row> = (params: VxeTableDefines.EditActivatedEventParams<D>) => void
 }
 
 export namespace VxeTableSlotTypes {

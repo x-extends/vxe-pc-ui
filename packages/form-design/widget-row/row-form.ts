@@ -1,6 +1,6 @@
 import { PropType, defineComponent, h, ref, computed, inject } from 'vue'
 import { getI18n } from '@vxe-ui/core'
-import { useKebabCaseName } from '../../form-design/src/use'
+import { useWidgetName } from '../../form-design/src/use'
 import { WidgetRowFormObjVO } from './row-data'
 import VxeFormComponent from '../../form/src/form'
 import VxeFormItemComponent from '../../form/src/form-item'
@@ -29,7 +29,7 @@ export const WidgetRowFormComponent = defineComponent({
       return () => []
     }
 
-    const computeKebabCaseName = useKebabCaseName(props)
+    const { computeKebabCaseName } = useWidgetName(props)
 
     const spanOptions = ref([
       {

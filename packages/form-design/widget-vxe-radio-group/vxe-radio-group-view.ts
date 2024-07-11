@@ -1,6 +1,6 @@
 import { PropType, defineComponent, h, inject } from 'vue'
 import { WidgetVxeRadioGroupFormObjVO } from './vxe-radio-group-data'
-import { useKebabCaseName } from '../../form-design/src/use'
+import { useWidgetName } from '../../form-design/src/use'
 import VxeFormItemComponent from '../../form/src/form-item'
 import VxeRadioGroupComponent from '../../radio/src/group'
 
@@ -21,7 +21,7 @@ export const WidgetVxeRadioGroupViewComponent = defineComponent({
   setup (props) {
     const $xeFormView = inject<(VxeFormViewConstructor & VxeFormViewPrivateMethods) | null>('$xeFormView', null)
 
-    const computeKebabCaseName = useKebabCaseName(props)
+    const { computeKebabCaseName } = useWidgetName(props)
 
     const changeEvent = () => {
       const { renderParams } = props

@@ -32,8 +32,9 @@ export default defineComponent({
 
     const dragendEvent = (evnt: DragEvent) => {
       if (formDesignReactData.dragWidget) {
-        formDesignReactData.activeWidget = formDesignReactData.dragWidget
-        $xeFormDesign.dispatchEvent('add-widget', {}, evnt)
+        const newWidget = formDesignReactData.dragWidget
+        formDesignReactData.activeWidget = newWidget
+        $xeFormDesign.dispatchEvent('add-widget', { newWidget }, evnt)
       }
       formDesignReactData.dragWidget = null
       formDesignReactData.sortWidget = null
@@ -58,7 +59,7 @@ export default defineComponent({
       formDesignReactData.activeWidget = dragWidget
       formDesignReactData.sortWidget = null
       formDesignReactData.dragWidget = null
-      $xeFormDesign.dispatchEvent('add-widget', {}, evnt)
+      $xeFormDesign.dispatchEvent('add-widget', { newWidget: dragWidget }, evnt)
     }
 
     const renderWidgetList = (group: VxeFormDesignDefines.WidgetConfigGroup) => {

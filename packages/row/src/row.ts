@@ -1,6 +1,6 @@
 import { defineComponent, ref, h, reactive, provide, PropType, computed } from 'vue'
 import XEUtils from 'xe-utils'
-import { createEvent } from '../../ui'
+import { createEvent, getConfig } from '../../ui'
 import { toCssUnit } from '../../ui/src/dom'
 
 import type { VxeRowPropTypes, RowReactData, RowPrivateRef, VxeRowPrivateComputed, VxeRowConstructor, VxeRowPrivateMethods } from '../../../types'
@@ -11,7 +11,7 @@ export default defineComponent({
     gutter: [Number, String, Array] as PropType<VxeRowPropTypes.Gutter>,
     wrap: {
       type: Boolean as PropType<VxeRowPropTypes.Wrap>,
-      default: true
+      default: () => getConfig().row.wrap
     },
     vertical: Boolean as PropType<VxeRowPropTypes.Vertical>
   },
@@ -73,13 +73,14 @@ export default defineComponent({
     }
 
     const renderVN = () => {
-      const { vertical } = props
+      const { vertical, wrap } = props
       const rowStyle = computeRowStyle.value
       const defaultSlot = slots.default
       return h('div', {
         ref: refElem,
         class: ['vxe-row', {
-          'is--vertical': vertical
+          'is--vertical': vertical,
+          'is--wrap': wrap
         }],
         style: rowStyle,
         onClick: handleDefaultEvent

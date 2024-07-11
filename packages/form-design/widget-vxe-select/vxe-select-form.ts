@@ -5,7 +5,7 @@ import VxeFormComponent from '../../form/src/form'
 import VxeFormItemComponent from '../../form/src/form-item'
 import VxeInputComponent from '../../input/src/input'
 import VxeSwitchComponent from '../../switch/src/switch'
-import { useKebabCaseName, useWidgetPropDataSource } from '../../form-design/src/use'
+import { useWidgetName, useWidgetPropDataSource } from '../../form-design/src/use'
 
 import type { VxeGlobalRendererHandles } from '../../../types'
 
@@ -24,7 +24,7 @@ export const WidgetVxeSelectFormComponent = defineComponent({
   setup (props) {
     const { renderDataSourceFormItem } = useWidgetPropDataSource(props, false)
 
-    const computeKebabCaseName = useKebabCaseName(props)
+    const { computeKebabCaseName } = useWidgetName(props)
 
     return () => {
       const { renderParams } = props

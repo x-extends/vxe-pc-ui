@@ -36,10 +36,7 @@ export default defineComponent({
     autoHidden: { type: Boolean as PropType<VxePagerPropTypes.AutoHidden>, default: () => getConfig().pager.autoHidden },
     transfer: { type: Boolean as PropType<VxePagerPropTypes.Transfer>, default: () => getConfig().pager.transfer },
     className: [String, Function] as PropType<VxePagerPropTypes.ClassName>,
-    pageSizePlacement: {
-      type: String as PropType<VxePagerPropTypes.PageSizePlacement>,
-      default: () => getConfig().pager.pageSizePlacement
-    },
+    pageSizePlacement: { type: String as PropType<VxePagerPropTypes.PageSizePlacement>, default: () => getConfig().pager.pageSizePlacement },
     // 自定义图标
     iconPrevPage: String as PropType<VxePagerPropTypes.IconPrevPage>,
     iconJumpPrev: String as PropType<VxePagerPropTypes.IconJumpPrev>,

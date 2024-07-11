@@ -86,7 +86,7 @@ export default defineComponent({
 
     const renderItem = ($xeForm: VxeFormConstructor & VxeFormPrivateMethods, item: VxeFormDefines.ItemInfo) => {
       const { props, reactData } = $xeForm
-      const { data, rules, readonly, titleBold: allTitleBold, titleAlign: allTitleAlign, titleWidth: allTitleWidth, titleColon: allTitleColon, titleAsterisk: allTitleAsterisk, titleOverflow: allTitleOverflow, vertical: allVertical } = props
+      const { data, rules, readonly, disabled, titleBold: allTitleBold, titleAlign: allTitleAlign, titleWidth: allTitleWidth, titleColon: allTitleColon, titleAsterisk: allTitleAsterisk, titleOverflow: allTitleOverflow, vertical: allVertical } = props
       const { collapseAll } = reactData
       const { computeValidOpts } = $xeForm.getComputeMaps()
       const validOpts = computeValidOpts.value
@@ -113,7 +113,7 @@ export default defineComponent({
       const ovTitle = itemOverflow === 'title'
       const ovTooltip = itemOverflow === true || itemOverflow === 'tooltip'
       const hasEllipsis = ovTitle || ovTooltip || ovEllipsis
-      const params = { data, field, property: field, item, $form: $xeForm, $grid: $xeForm.xegrid }
+      const params = { data, disabled, readonly, field, property: field, item, $form: $xeForm, $grid: $xeForm.xegrid }
       let isRequired = false
       if (visible === false) {
         return createCommentVNode()

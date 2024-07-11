@@ -5,7 +5,7 @@ import VxeFormItemComponent from '../../form/src/form-item'
 import VxeInputComponent from '../../input/src/input'
 import VxeSwitchComponent from '../../switch/src/switch'
 import { WidgetInputFormObjVO } from './input-data'
-import { useKebabCaseName } from '../../form-design/src/use'
+import { useWidgetName } from '../../form-design/src/use'
 
 import type { VxeGlobalRendererHandles } from '../../../types'
 
@@ -22,7 +22,7 @@ export const WidgetInputFormComponent = defineComponent({
   },
   emits: [],
   setup (props) {
-    const computeKebabCaseName = useKebabCaseName(props)
+    const { computeKebabCaseName } = useWidgetName(props)
 
     return () => {
       const { renderParams } = props

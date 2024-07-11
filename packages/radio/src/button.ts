@@ -34,7 +34,7 @@ export default defineComponent({
 
     const { computeSize } = useSize(props)
 
-    const $xeradiobutton = {
+    const $xeRadioButton = {
       xID,
       props,
       context
@@ -68,11 +68,11 @@ export default defineComponent({
 
     radioButtonMethods = {
       dispatchEvent (type, params, evnt) {
-        emit(type, createEvent(evnt, { $radioButton: $xeradiobutton }, params))
+        emit(type, createEvent(evnt, { $radioButton: $xeRadioButton }, params))
       }
     }
 
-    Object.assign($xeradiobutton, radioButtonMethods)
+    Object.assign($xeRadioButton, radioButtonMethods)
 
     const handleValue = (label: VxeRadioButtonPropTypes.Label, evnt: Event) => {
       if ($xeRadioGroup) {
@@ -131,7 +131,7 @@ export default defineComponent({
       ])
     }
 
-    Object.assign($xeradiobutton, {
+    Object.assign($xeRadioButton, {
       renderVN,
       dispatchEvent
     })

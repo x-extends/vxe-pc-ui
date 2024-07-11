@@ -197,6 +197,8 @@ setConfig({
   tabPane: {},
   table: {},
   tabs: {},
+  tag: {},
+  text: {},
   textarea: {},
   toolbar: {},
   tip: {},
@@ -352,7 +354,12 @@ setIcon({
 
   // tree
   TREE_NODE_OPEN: iconPrefix + 'caret-right rotate90',
-  TREE_NODE_CLOSE: iconPrefix + 'caret-right'
+  TREE_NODE_CLOSE: iconPrefix + 'caret-right',
+
+  // tree-select
+  TREE_SELECT_LOADED: iconPrefix + 'spinner roll',
+  TREE_SELECT_OPEN: iconPrefix + 'caret-down rotate180',
+  TREE_SELECT_CLOSE: iconPrefix + 'caret-down'
 })
 
 export * from '@vxe-ui/core'

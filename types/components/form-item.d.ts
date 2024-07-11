@@ -262,6 +262,8 @@ export interface FormItemTitleRenderParams {
   $form: VxeFormConstructor
   $grid: VxeGridConstructor | null
   data: any
+  disabled: boolean | undefined
+  readonly: boolean | undefined
   item: VxeFormDefines.ItemInfo
   field: string
   /**
@@ -278,6 +280,8 @@ export interface FormItemContentRenderParams {
   $grid: VxeGridConstructor | null
   data: any
   item: VxeFormDefines.ItemInfo
+  disabled: boolean | undefined
+  readonly: boolean | undefined
   field: string
   /**
    * @deprecated

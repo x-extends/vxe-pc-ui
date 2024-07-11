@@ -38,7 +38,6 @@ $btnThemeList: (
   color: var(--vxe-ui-font-color);
   margin-bottom: var(--vxe-ui-layout-padding-default);
   padding: var(--vxe-ui-layout-padding-default) var(--vxe-ui-layout-padding-double) var(--vxe-ui-layout-padding-double) var(--vxe-ui-layout-padding-double);
-  font-size: var(--vxe-ui-font-size-default);
   &::after {
     content: "";
     position: absolute;
@@ -84,4 +83,17 @@ $btnThemeList: (
   font-size: 1.1em;
   line-height: 2em;
   font-weight: 700;
+}
+
+.vxe-tip {
+  font-size: var(--vxe-ui-font-size-default);
+  &.size--medium {
+    font-size: var(--vxe-ui-font-size-medium);
+  }
+  &.size--small {
+    font-size: var(--vxe-ui-font-size-small);
+  }
+  &.size--mini {
+    font-size: var(--vxe-ui-font-size-mini);
+  }
 }

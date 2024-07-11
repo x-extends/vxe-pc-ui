@@ -1,5 +1,5 @@
 import { RenderFunction, SetupContext, Ref, ComponentPublicInstance, DefineComponent } from 'vue'
-import { defineVxeComponent, VxeComponentBaseOptions, VxeComponentEventParams, VxeComponentStatusType, ValueOf } from '@vxe-ui/core'
+import { defineVxeComponent, VxeComponentBaseOptions, VxeComponentEventParams, VxeComponentSizeType, VxeComponentStatusType, ValueOf } from '@vxe-ui/core'
 
 /* eslint-disable no-use-before-define,@typescript-eslint/ban-types */
 
@@ -29,6 +29,7 @@ export namespace VxeAlertPropTypes {
   export type ShowIcon = boolean
   export type ShowClose = boolean
   export type Icon = string
+  export type Size = VxeComponentSizeType
 }
 
 export type VxeAlertProps = {
@@ -38,6 +39,7 @@ export type VxeAlertProps = {
   showIcon?: VxeAlertPropTypes.ShowIcon
   showClose?: VxeAlertPropTypes.ShowClose
   icon?: VxeAlertPropTypes.Icon
+  size?: VxeAlertPropTypes.Size
 }
 
 export interface AlertPrivateComputed {

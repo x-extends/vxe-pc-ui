@@ -1,7 +1,7 @@
 import { PropType, defineComponent, h } from 'vue'
 import { getI18n } from '@vxe-ui/core'
 import { WidgetVxeNumberInputFormObjVO } from './vxe-number-input-data'
-import { useKebabCaseName } from '../../form-design/src/use'
+import { useWidgetName } from '../../form-design/src/use'
 import VxeFormComponent from '../../form/src/form'
 import VxeFormItemComponent from '../../form/src/form-item'
 import VxeInputComponent from '../../input/src/input'
@@ -22,7 +22,7 @@ export const WidgetVxeNumberInputFormComponent = defineComponent({
   },
   emits: [],
   setup (props) {
-    const computeKebabCaseName = useKebabCaseName(props)
+    const { computeKebabCaseName } = useWidgetName(props)
 
     return () => {
       const { renderParams } = props

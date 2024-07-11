@@ -1,7 +1,7 @@
 import { PropType, defineComponent, h } from 'vue'
 import { getI18n } from '@vxe-ui/core'
 import { WidgetVxeDatePickerFormObjVO } from './vxe-date-picker-data'
-import { useKebabCaseName } from '../../form-design/src/use'
+import { useWidgetName } from '../../form-design/src/use'
 import VxeFormComponent from '../../form/src/form'
 import VxeFormItemComponent from '../../form/src/form-item'
 import VxeInputComponent from '../../input/src/input'
@@ -22,7 +22,7 @@ export const WidgetVxeDatePickerFormComponent = defineComponent({
   },
   emits: [],
   setup (props) {
-    const computeKebabCaseName = useKebabCaseName(props)
+    const { computeKebabCaseName } = useWidgetName(props)
 
     return () => {
       const { renderParams } = props

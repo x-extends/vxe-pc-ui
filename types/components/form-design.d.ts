@@ -164,13 +164,44 @@ export namespace VxeFormDesignDefines {
     mobileTitleWidth: VxeFormPropTypes.TitleWidth
     mobileTitleWidthUnit: null | '' | 'px' | '%'
   }
+
+  export interface ClickWidgetParams<D = any> {
+    widget: VxeFormDesignDefines.WidgetObjItem<D>
+  }
+  export interface ClickWidgetEventParams<D = any> extends FormDesignEventParams, ClickWidgetParams<D> { }
+
+  export interface AddWidgetEventParams<D = any> extends FormDesignEventParams {
+    newWidget: VxeFormDesignDefines.WidgetObjItem<D>
+  }
+  export interface CopyWidgetEventParams<D = any> extends FormDesignEventParams {
+    widget: VxeFormDesignDefines.WidgetObjItem<D>
+    newWidget: VxeFormDesignDefines.WidgetObjItem<D>
+  }
+  export interface RemoveWidgetEventParams<D = any> extends FormDesignEventParams {
+    widget: VxeFormDesignDefines.WidgetObjItem<D>
+  }
 }
 
-export type VxeFormDesignEventProps = {}
+export type VxeFormDesignEventProps = {
+  onClickWidget?: VxeFormDesignEvents.ClickWidget
+  onAddWidget?: VxeFormDesignEvents.AddWidget
+  onCopyWidget?: VxeFormDesignEvents.CopyWidget
+  onRemoveWidget?: VxeFormDesignEvents.RemoveWidget
+}
 
-export interface VxeFormDesignListeners { }
+export interface VxeFormDesignListeners {
+  clickWidget?: VxeFormDesignEvents.ClickWidget
+  addWidget?: VxeFormDesignEvents.AddWidget
+  copyWidget?: VxeFormDesignEvents.CopyWidget
+  removeWidget?: VxeFormDesignEvents.RemoveWidget
+}
 
-export namespace VxeFormDesignEvents { }
+export namespace VxeFormDesignEvents {
+  export type ClickWidget<D = any> = (params: VxeFormDesignDefines.ClickWidgetEventParams<D>) => void
+  export type AddWidget<D = any> = (params: VxeFormDesignDefines.AddWidgetEventParams<D>) => void
+  export type CopyWidget<D = any> = (params: VxeFormDesignDefines.CopyWidgetEventParams<D>) => void
+  export type RemoveWidget<D = any> = (params: VxeFormDesignDefines.RemoveWidgetEventParams<D>) => void
+ }
 
 export namespace VxeFormDesignSlotTypes {}
 export interface VxeFormDesignSlots {
@@ -184,10 +215,12 @@ export interface FormDesignExport {
     currWidget: ComputedRef<VxeFormDesignDefines.WidgetObjItem<T>>,
     widgetModel: WritableComputedRef<any>
   }
-  useKebabCaseName(props: {
+  useWidgetName(props: {
     renderOpts: any
     renderParams: any
-  }): ComputedRef<string>
+  }): {
+    computeKebabCaseName: ComputedRef<string>
+  }
   useWidgetPropDataSource(props: {
     renderOpts: any
     renderParams: any

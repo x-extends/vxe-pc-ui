@@ -50,14 +50,19 @@ $btnThemeList: (
 );
 
 .vxe-link {
-  font-size: var(--vxe-ui-font-size-default);
   text-decoration: none;
   &:not(.is--disabled) {
     color: var(--vxe-ui-font-color);
     cursor: pointer;
     &:hover {
       color: var(--vxe-ui-font-primary-color);
-      text-decoration: underline;
+    }
+  }
+  &.is--underline {
+    &:not(.is--disabled) {
+      &:hover {
+        text-decoration: underline;
+      }
     }
   }
   @for $index from 0 to length($btnThemeList) {
@@ -92,4 +97,17 @@ $btnThemeList: (
 }
 .vxe-link--content {
   padding: 0 0.1em;
+}
+
+.vxe-link {
+  font-size: var(--vxe-ui-font-size-default);
+  &.size--medium {
+    font-size: var(--vxe-ui-font-size-medium);
+  }
+  &.size--small {
+    font-size: var(--vxe-ui-font-size-small);
+  }
+  &.size--mini {
+    font-size: var(--vxe-ui-font-size-mini);
+  }
 }

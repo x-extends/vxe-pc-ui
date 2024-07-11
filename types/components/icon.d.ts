@@ -1,5 +1,5 @@
 import { RenderFunction, SetupContext, Ref, ComponentPublicInstance, DefineComponent } from 'vue'
-import { defineVxeComponent, VxeComponentBaseOptions, VxeComponentEventParams, ValueOf } from '@vxe-ui/core'
+import { defineVxeComponent, VxeComponentBaseOptions, VxeComponentEventParams, VxeComponentSizeType, ValueOf } from '@vxe-ui/core'
 
 /* eslint-disable no-use-before-define,@typescript-eslint/ban-types */
 
@@ -27,6 +27,7 @@ export namespace VxeIconPropTypes {
   export type ClassName = string
   export type Roll = boolean
   export type Status = string
+  export type Size = VxeComponentSizeType
 }
 
 export type VxeIconProps = {
@@ -34,6 +35,7 @@ export type VxeIconProps = {
   className?: VxeIconPropTypes.Name
   roll?: VxeIconPropTypes.Roll
   status?: VxeIconPropTypes.Status
+  size?: VxeIconPropTypes.Size
 }
 
 export interface IconPrivateComputed {

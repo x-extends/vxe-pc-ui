@@ -97,13 +97,24 @@ export namespace VxeMenuDefines {
     allChildSize: number
     childHeight: number
   }
+
+  export interface ClickParams {
+    menu: VxeMenuDefines.MenuItem
+  }
+  export interface ClickEventParams extends MenuEventParams, ClickParams { }
 }
 
-export type VxeMenuEventProps = {}
+export type VxeMenuEventProps = {
+  onClick?: VxeMenuEvents.Click
+}
 
-export interface VxeMenuListeners { }
+export interface VxeMenuListeners {
+  click?: VxeMenuEvents.Click
+}
 
-export namespace VxeMenuEvents { }
+export namespace VxeMenuEvents {
+  export type Click = (params: VxeMenuDefines.ClickEventParams) => void
+}
 
 export namespace VxeMenuSlotTypes {
   export interface DefaultSlotParams {}

@@ -79,13 +79,31 @@ export namespace VxeFormViewDefines {
     viewRender: undefined | VxeFormViewPropTypes.ViewRender
     formConfig: D
   }
+
+  export interface SubmitParams<D = any> {
+    data: D
+  }
+  export interface SubmitEventParams<D = any> extends FormViewEventParams, SubmitParams<D> { }
+
+  export interface ResetEventParams<D = any> extends FormViewEventParams {
+    data: D
+  }
 }
 
-export type VxeFormViewEventProps = {}
+export interface VxeFormViewEventProps<D = any> {
+  onSubmit?: VxeFormViewEvents.Submit<D>
+  onReset?: VxeFormViewEvents.Reset<D>
+}
 
-export interface VxeFormViewListeners { }
+export interface VxeFormViewListeners<D = any> {
+  submit?: VxeFormViewEvents.Submit<D>
+  reset?: VxeFormViewEvents.Reset<D>
+ }
 
-export namespace VxeFormViewEvents { }
+export namespace VxeFormViewEvents {
+  export type Submit<D = any> = (params: VxeFormViewDefines.SubmitEventParams<D>) => void
+  export type Reset<D = any> = (params: VxeFormViewDefines.ResetEventParams<D>) => void
+}
 
 export namespace VxeFormViewSlotTypes {
   export interface DefaultSlotParams {}

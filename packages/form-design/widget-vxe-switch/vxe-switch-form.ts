@@ -1,7 +1,7 @@
 import { PropType, defineComponent, h } from 'vue'
 import { getI18n } from '@vxe-ui/core'
 import { WidgetVxeSwitchFormObjVO } from './vxe-switch-data'
-import { useKebabCaseName } from '../../form-design/src/use'
+import { useWidgetName } from '../../form-design/src/use'
 import VxeFormComponent from '../../form/src/form'
 import VxeInputComponent from '../../input/src/input'
 import VxeFormItemComponent from '../../form/src/form-item'
@@ -21,7 +21,7 @@ export const WidgetVxeSwitchFormComponent = defineComponent({
   },
   emits: [],
   setup (props) {
-    const computeKebabCaseName = useKebabCaseName(props)
+    const { computeKebabCaseName } = useWidgetName(props)
 
     return () => {
       const { renderParams } = props

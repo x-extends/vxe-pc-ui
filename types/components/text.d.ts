@@ -1,5 +1,5 @@
 import { RenderFunction, SetupContext, Ref, ComponentPublicInstance, DefineComponent } from 'vue'
-import { defineVxeComponent, VxeComponentBaseOptions, VxeComponentEventParams, ValueOf, VxeComponentStatusType } from '@vxe-ui/core'
+import { defineVxeComponent, VxeComponentBaseOptions, VxeComponentEventParams, VxeComponentSizeType, ValueOf, VxeComponentStatusType } from '@vxe-ui/core'
 
 /* eslint-disable no-use-before-define,@typescript-eslint/ban-types */
 
@@ -27,6 +27,7 @@ export namespace VxeTextPropTypes {
   export type Title = string | number
   export type Icon = string
   export type Content = string | number
+  export type Size = VxeComponentSizeType
 }
 
 export type VxeTextProps = {
@@ -34,6 +35,7 @@ export type VxeTextProps = {
   title?: VxeTextPropTypes.Title
   icon?: VxeTextPropTypes.Icon
   content?: VxeTextPropTypes.Content
+  size?: VxeTextPropTypes.Size
 }
 
 export interface TextPrivateComputed {
@@ -59,13 +61,23 @@ export namespace VxeTextDefines {
   export interface TextEventParams extends VxeComponentEventParams {
     $text: VxeTextConstructor
   }
+
+  export interface ClickParams {
+  }
+  export interface ClickEventParams extends TextEventParams, ClickParams { }
 }
 
-export type VxeTextEventProps = {}
+export type VxeTextEventProps = {
+  onClick?: VxeTextEvents.Click
+}
 
-export interface VxeTextListeners { }
+export interface VxeTextListeners {
+  click?: VxeTextEvents.Click
+}
 
-export namespace VxeTextEvents { }
+export namespace VxeTextEvents {
+  export type Click = (params: VxeTextDefines.ClickEventParams) => void
+}
 
 export namespace VxeTextSlotTypes {
   export interface DefaultSlotParams {}

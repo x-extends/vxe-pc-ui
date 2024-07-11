@@ -1,5 +1,5 @@
 import { RenderFunction, SetupContext, Ref, ComponentPublicInstance, DefineComponent } from 'vue'
-import { defineVxeComponent, VxeComponentBaseOptions, VxeComponentEventParams, ValueOf } from '@vxe-ui/core'
+import { defineVxeComponent, VxeComponentBaseOptions, VxeComponentEventParams, VxeComponentSizeType, ValueOf } from '@vxe-ui/core'
 
 /* eslint-disable no-use-before-define,@typescript-eslint/ban-types */
 
@@ -29,37 +29,38 @@ export namespace VxeTreePropTypes {
   export type KeyField = string
   export type TitleField = string
   export type ChildrenField = string
-  export type Trigger = '' | 'default' | 'row'
+  export type Trigger = '' | 'default' | 'node'
   export type IsCurrent = boolean
   export type IsHover = boolean
   export type ShowLine = boolean
   export type Indent = number
   export type ShowRadio = boolean
-  export type RadioCheckRowKey = string | number
+  export type RadioCheckNodeKey = string | number
   export interface RadioConfig {
-    checkRowKey?: string
+    checkNodeKey?: string
     strict?: boolean
-    visibleMethod?: (params: { row: any }) => boolean
-    checkMethod?: (params: { row: any }) => boolean
+    visibleMethod?: (params: { node: any }) => boolean
+    checkMethod?: (params: { node: any }) => boolean
     highlight?: boolean
-    trigger?: '' | 'default' | 'row'
+    trigger?: '' | 'default' | 'node'
   }
-  export type CheckboxCheckRowKeys = (string | number)[]
+  export type CheckboxCheckNodeKeys = (string | number)[]
   export type ShowCheckbox = boolean
   export interface CheckboxConfig {
     showHeader?: boolean
     checkAll?: boolean
     checkStrictly?: boolean
     highlight?: boolean
-    visibleMethod?: (params: { row: any }) => boolean
-    checkMethod?: (params: { row: any }) => boolean
-    trigger?: '' | 'default' | 'row'
+    visibleMethod?: (params: { node: any }) => boolean
+    checkMethod?: (params: { node: any }) => boolean
+    trigger?: '' | 'default' | 'node'
   }
-  export type ToggleMethod = (params: { row: any }) => boolean
+  export type ToggleMethod = (params: { node: any }) => boolean
   export type ShowIcon = boolean
   export type IconOpen = string
   export type IconClose = string
   export type IconLoaded = string
+  export type Size = VxeComponentSizeType
 }
 
 export type VxeTreeProps = {
@@ -74,16 +75,17 @@ export type VxeTreeProps = {
   showLine?: VxeTreePropTypes.ShowLine
   indent?: VxeTreePropTypes.Indent
   showRadio?: VxeTreePropTypes.ShowRadio
-  radioCheckRowKey?: VxeTreePropTypes.RadioCheckRowKey
+  radioCheckNodeKey?: VxeTreePropTypes.RadioCheckNodeKey
   radioConfig?: VxeTreePropTypes.RadioConfig
   showCheckbox?: VxeTreePropTypes.ShowCheckbox
-  checkboxCheckRowKeys?: VxeTreePropTypes.CheckboxCheckRowKeys
+  checkboxCheckNodeKeys?: VxeTreePropTypes.CheckboxCheckNodeKeys
   checkboxConfig?: VxeTreePropTypes.CheckboxConfig
   toggleMethod?: VxeTreePropTypes.ToggleMethod
   showIcon?: VxeTreePropTypes.ShowIcon
   iconOpen?: VxeTreePropTypes.IconOpen
   iconClose?: VxeTreePropTypes.IconClose
   iconLoaded?: VxeTreePropTypes.IconLoaded
+  size?: VxeTreePropTypes.Size
 }
 
 export interface TreePrivateComputed {
@@ -92,7 +94,7 @@ export interface VxeTreePrivateComputed extends TreePrivateComputed { }
 
 export interface TreeReactData {
   currentNode: any
-  selectRadioKey: VxeTreePropTypes.RadioCheckRowKey
+  selectRadioKey: VxeTreePropTypes.RadioCheckNodeKey
   treeList: any[]
   treeExpandedMaps: Record<string, boolean>
   selectCheckboxMaps: Record<string, boolean>
@@ -101,8 +103,8 @@ export interface TreeReactData {
 
 export interface TreeInternalData {
   nodeMaps: Record<string, {
-    row: any
-    rowIndex: number
+    node: any
+    nodeIndex: number
     parent: any
     level: number
   }>
@@ -111,17 +113,17 @@ export interface TreeInternalData {
 export interface TreeMethods {
   dispatchEvent(type: ValueOf<VxeTreeEmits>, params: Record<string, any>, evnt: Event | null): void
   clearExpand(): Promise<any>
-  setExpandByRowid(rowids: any, expanded: boolean): Promise<any>
-  setExpand(rows: any, expanded: boolean): Promise<any>
-  toggleExpandByRowid(rowids: any): Promise<any>
-  toggleExpand(rows: any): Promise<any>
+  setExpandByNodeid(nodeids: any, expanded: boolean): Promise<any>
+  setExpand(nodes: any, expanded: boolean): Promise<any>
+  toggleExpandByNodeid(nodeids: any): Promise<any>
+  toggleExpand(nodes: any): Promise<any>
   setAllExpand(expanded: boolean): Promise<any>
-  isExpandByRow(row: any): boolean
-  isCheckedByRadioRowid(rowid: any): boolean
-  isCheckedByRadioRow(row: any): boolean
-  isCheckedByCheckboxRowid(rowid: any): boolean
-  isIndeterminateByCheckboxRow(row: any): boolean
-  isCheckedByCheckboxRow(row: any): boolean
+  isExpandByNode(node: any): boolean
+  isCheckedByRadioNodeid(nodeid: any): boolean
+  isCheckedByRadioNode(node: any): boolean
+  isCheckedByCheckboxNodeid(nodeid: any): boolean
+  isIndeterminateByCheckboxNode(node: any): boolean
+  isCheckedByCheckboxNode(node: any): boolean
 }
 export interface VxeTreeMethods extends TreeMethods { }
 
@@ -130,10 +132,12 @@ export interface VxeTreePrivateMethods extends TreePrivateMethods { }
 
 export type VxeTreeEmits = [
   'update:modelValue',
-  'update:radioCheckRowKey',
-  'update:checkboxCheckRowKeys',
-  'row-click',
-  'row-dblclick'
+  'update:radioCheckNodeKey',
+  'update:checkboxCheckNodeKeys',
+  'node-click',
+  'node-dblclick',
+  'radio-change',
+  'checkbox-change'
 ]
 
 export namespace VxeTreeDefines {
@@ -141,27 +145,40 @@ export namespace VxeTreeDefines {
     $tree: VxeTreeConstructor
   }
 
-  export interface RowClickParams<D = any> {
-    row: D
+  export interface NodeClickParams<D = any> {
+    node: D
   }
-  export interface RowClickEventParams<D = any> extends TreeEventParams, RowClickParams<D> { }
+  export interface NodeClickEventParams<D = any> extends TreeEventParams, NodeClickParams<D> { }
 
-  export interface RowDblclickEventParams<D = any> extends RowClickEventParams<D> { }
+  export interface NodeDblclickEventParams<D = any> extends NodeClickEventParams<D> { }
+
+  export interface RadioChangeEventParams<D = any> extends TreeEventParams<D> {
+    value: VxeTreePropTypes.RadioCheckNodeKey
+   }
+  export interface CheckboxChangeEventParams<D = any> extends TreeEventParams<D> {
+    value: VxeTreePropTypes.CheckboxCheckNodeKeys
+  }
 }
 
 export type VxeTreeEventProps = {
-  onRowClick?: VxeTreeEvents.RowClick
-  onRowDblclick?: VxeTreeEvents.RowDblclick
+  onNodeClick?: VxeTreeEvents.NodeClick
+  onNodeDblclick?: VxeTreeEvents.NodeDblclick
+  onRadioChange?: VxeTreeEvents.RadioChange
+  onCheckboxChange?: VxeTreeEvents.CheckboxChange
 }
 
 export interface VxeTreeListeners {
-  rowClick?: VxeTreeEvents.RowClick
-  rowDblclick?: VxeTreeEvents.RowDblclick
+  nodeClick?: VxeTreeEvents.NodeClick
+  nodeDblclick?: VxeTreeEvents.NodeDblclick
+  radioChange?: VxeTreeEvents.RadioChange
+  checkboxChange?: VxeTreeEvents.CheckboxChange
 }
 
 export namespace VxeTreeEvents {
-  export type RowClick<D = any> = (params: VxeTreeDefines.RowClickEventParams<D>) => void
-  export type RowDblclick<D = any> = (params: VxeTreeDefines.RowDblclickEventParams<D>) => void
+  export type NodeClick<D = any> = (params: VxeTreeDefines.NodeClickEventParams<D>) => void
+  export type NodeDblclick<D = any> = (params: VxeTreeDefines.NodeDblclickEventParams<D>) => void
+  export type RadioChange<D = any> = (params: VxeTreeDefines.RadioChangeEventParams<D>) => void
+  export type CheckboxChange<D = any> = (params: VxeTreeDefines.CheckboxChangeEventParams<D>) => void
 }
 
 export namespace VxeTreeSlotTypes {

@@ -255,12 +255,14 @@ export function useWidgetPropDataSource (props: {
   }
 }
 
-export function useKebabCaseName (props: { renderOpts: VxeGlobalRendererHandles.RenderFormDesignWidgetFormViewOptions }) {
+export function useWidgetName (props: { renderOpts: VxeGlobalRendererHandles.RenderFormDesignWidgetFormViewOptions }) {
   const computeKebabCaseName = computed(() => {
     const { renderOpts } = props
     return renderOpts ? XEUtils.kebabCase(renderOpts.name) : ''
   })
-  return computeKebabCaseName
+  return {
+    computeKebabCaseName
+  }
 }
 
 export function useWidgetView <T = any> (props: {

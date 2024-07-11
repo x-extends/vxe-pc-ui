@@ -76,13 +76,39 @@ export namespace VxeTabsDefines {
   export interface TabsEventParams extends VxeComponentEventParams {
     $tabs: VxeTabsConstructor
   }
+
+  export interface ChangeParams {
+    value: VxeTabsPropTypes.ModelValue
+    name: VxeTabsPropTypes.ModelValue
+  }
+  export interface ChangeEventParams extends TabsEventParams, ChangeParams { }
+
+  export interface TabClickEventParams extends TabsEventParams {
+    name: VxeTabsPropTypes.ModelValue
+  }
+
+  export interface TabLoadEventParams extends TabsEventParams {
+    name: VxeTabsPropTypes.ModelValue
+  }
 }
 
-export type VxeTabsEventProps = {}
+export type VxeTabsEventProps = {
+  onChange?: VxeTabsEvents.Change
+  onTabClick?: VxeTabsEvents.TabClick
+  onTabLoad?: VxeTabsEvents.TabLoad
+}
 
-export interface VxeTabsListeners { }
+export interface VxeTabsListeners {
+  change?: VxeTabsEvents.Change
+  tabClick?: VxeTabsEvents.TabClick
+  tabLoad?: VxeTabsEvents.TabLoad
+}
 
-export namespace VxeTabsEvents { }
+export namespace VxeTabsEvents {
+  export type Change = (params: VxeTabsDefines.ChangeEventParams) => void
+  export type TabClick = (params: VxeTabsDefines.TabClickEventParams) => void
+  export type TabLoad = (params: VxeTabsDefines.TabLoadEventParams) => void
+}
 
 export namespace VxeTabsSlotTypes {
   export interface DefaultSlotParams {}

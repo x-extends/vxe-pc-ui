@@ -235,9 +235,10 @@ export default defineComponent({
       const digitsValue = computeDigitsValue.value
       const restVal = (type === 'float' ? toFloatValueFixed(val, digitsValue) : XEUtils.toValueString(val))
       if (exponential && (val === restVal || XEUtils.toValueString(val).toLowerCase() === XEUtils.toNumber(restVal).toExponential())) {
-        return val
+        return Number(val)
       }
-      return restVal.slice(0, inpMaxlength)
+      const rest = restVal.slice(0, inpMaxlength)
+      return rest ? Number(rest) : null
     }
 
     const triggerEvent = (evnt: Event & { type: 'input' | 'change' | 'keydown' | 'keyup' | 'wheel' | 'click' | 'focus' | 'blur' }) => {
@@ -245,11 +246,11 @@ export default defineComponent({
       inputMethods.dispatchEvent(evnt.type, { value: inputValue }, evnt)
     }
 
-    const emitModel = (value: string, evnt: Event | { type: string }) => {
+    const emitModel = (value: number | null, evnt: Event | { type: string }) => {
       reactData.inputValue = value
       emit('update:modelValue', value ? Number(value) : null)
       inputMethods.dispatchEvent('input', { value }, evnt as any)
-      if (XEUtils.toValueString(props.modelValue) !== value) {
+      if (XEUtils.toValueString(props.modelValue) !== XEUtils.toValueString(value)) {
         inputMethods.dispatchEvent('change', { value }, evnt as any)
         // 自动更新校验状态
         if ($xeForm && formItemInfo) {
@@ -258,9 +259,10 @@ export default defineComponent({
       }
     }
 
-    const emitInputEvent = (value: any, evnt: Event) => {
+    const emitInputEvent = (inputValue: any, evnt: Event) => {
       const inpImmediate = computeInpImmediate.value
-      reactData.inputValue = value
+      const value = inputValue ? Number(inputValue) : null
+      reactData.inputValue = inputValue
       if (inpImmediate) {
         emitModel(value, evnt)
       } else {
@@ -296,7 +298,7 @@ export default defineComponent({
 
     const clearValueEvent = (evnt: Event, value: VxeNumberInputPropTypes.ModelValue) => {
       focus()
-      emitModel('', evnt)
+      emitModel(null, evnt)
       inputMethods.dispatchEvent('clear', { value }, evnt)
     }
 
@@ -317,7 +319,7 @@ export default defineComponent({
       const digitsValue = computeDigitsValue.value
       if (type === 'float') {
         if (inputValue) {
-          const validValue = toFloatValueFixed(inputValue, digitsValue)
+          const validValue = inputValue ? Number(toFloatValueFixed(inputValue, digitsValue)) : null
           if (inputValue !== validValue) {
             emitModel(validValue, { type: 'init' })
           }
@@ -339,16 +341,16 @@ export default defineComponent({
       const inputReadonly = computeInputReadonly.value
       if (!inputReadonly) {
         if (inputValue) {
-          let inpNumVal: number | string = type === 'integer' ? XEUtils.toInteger(handleNumber(inputValue)) : XEUtils.toNumber(handleNumber(inputValue))
+          let inpNumVal = type === 'integer' ? XEUtils.toInteger(handleNumber(inputValue)) : XEUtils.toNumber(handleNumber(inputValue))
           if (!vaildMinNum(inpNumVal)) {
-            inpNumVal = min
+            inpNumVal = Number(min)
           } else if (!vaildMaxNum(inpNumVal)) {
-            inpNumVal = max
+            inpNumVal = Number(max)
           }
           if (exponential) {
             const inpStringVal = XEUtils.toValueString(inputValue).toLowerCase()
             if (inpStringVal === XEUtils.toNumber(inpNumVal).toExponential()) {
-              inpNumVal = inpStringVal
+              inpNumVal = Number(inpStringVal)
             }
           }
           emitModel(getNumberValue(inpNumVal), { type: 'check' })
@@ -359,14 +361,15 @@ export default defineComponent({
     const blurEvent = (evnt: Event & { type: 'blur' }) => {
       const { inputValue } = reactData
       const inpImmediate = computeInpImmediate.value
+      const value = inputValue ? Number(inputValue) : null
       if (!inpImmediate) {
-        emitModel(inputValue, evnt)
+        emitModel(value, evnt)
       }
       afterCheckValue()
       if (!reactData.visiblePanel) {
         reactData.isActivated = false
       }
-      inputMethods.dispatchEvent('blur', { value: inputValue }, evnt)
+      inputMethods.dispatchEvent('blur', { value }, evnt)
     }
 
     // 数值
