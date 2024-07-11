@@ -351,6 +351,7 @@ export default {
           VxeDatePicker: 'Date',
           VxeTextarea: 'Textarea',
           VxeSelect: 'Select',
+          VxeTreeSelect: 'Tree select',
           VxeRadioGroup: 'Radio',
           VxeCheckboxGroup: 'Checkbox',
           VxeUploadFile: 'File',
@@ -361,6 +362,7 @@ export default {
         name: 'Field name',
         placeholder: 'Field placeholder',
         required: 'Required',
+        multiple: 'Allow to select multiple',
         displaySetting: {
           name: 'Display setting',
           pc: 'PC',

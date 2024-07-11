@@ -1,29 +1,27 @@
 import { PropType, defineComponent, h } from 'vue'
 import { getI18n } from '@vxe-ui/core'
-import { WidgetVxeSelectFormObjVO } from './vxe-select-data'
+import { WidgetVxeTreeSelectFormObjVO } from './vxe-tree-select-data'
 import VxeFormComponent from '../../form/src/form'
 import VxeFormItemComponent from '../../form/src/form-item'
 import VxeInputComponent from '../../input/src/input'
 import VxeSwitchComponent from '../../switch/src/switch'
-import { useWidgetName, useWidgetPropDataSource } from '../../form-design/src/use'
+import { useWidgetName } from '../src/use'
 
 import type { VxeGlobalRendererHandles } from '../../../types'
 
-export const WidgetVxeSelectFormComponent = defineComponent({
+export const WidgetVxeTreeSelectFormComponent = defineComponent({
   props: {
     renderOpts: {
       type: Object as PropType<VxeGlobalRendererHandles.RenderFormDesignWidgetFormViewOptions>,
       default: () => ({})
     },
     renderParams: {
-      type: Object as PropType<VxeGlobalRendererHandles.RenderFormDesignWidgetFormViewParams<WidgetVxeSelectFormObjVO>>,
+      type: Object as PropType<VxeGlobalRendererHandles.RenderFormDesignWidgetFormViewParams<WidgetVxeTreeSelectFormObjVO>>,
       default: () => ({})
     }
   },
   emits: [],
   setup (props) {
-    const { renderDataSourceFormItem } = useWidgetPropDataSource(props, false)
-
     const { computeKebabCaseName } = useWidgetName(props)
 
     return () => {
@@ -63,7 +61,6 @@ export const WidgetVxeSelectFormComponent = defineComponent({
               field: 'multiple',
               itemRender: { name: 'VxeSwitch' }
             }),
-            renderDataSourceFormItem(),
             h(VxeFormItemComponent, {
               title: getI18n('vxe.formDesign.widgetProp.required')
             }, {

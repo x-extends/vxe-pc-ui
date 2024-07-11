@@ -379,6 +379,19 @@ renderer.mixin({
       ]
     }
   },
+  VxeTreeSelect: {
+    renderItemContent (renderOpts: any, params: any) {
+      const { data, property } = params
+      const { options, optionProps } = renderOpts
+      const itemValue = XEUtils.get(data, property)
+      return [
+        h(getDefaultComponent(renderOpts), {
+          ...getComponentFormItemProps(renderOpts, params, itemValue, { options, optionProps }),
+          ...getItemOns(renderOpts, params)
+        })
+      ]
+    }
+  },
   VxeRadio: {
     renderItemContent: defaultFormItemRender
   },

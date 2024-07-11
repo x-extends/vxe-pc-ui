@@ -1,20 +1,20 @@
 import { handleGetFormDesignWidgetName } from '../render/util'
 import { getI18n } from '@vxe-ui/core'
 import XEUtils from 'xe-utils'
-import { WidgetDataSourceOptionObjVO } from '../../form-design/src/use'
+import { WidgetDataSourceOptionObjVO } from '../src/use'
 
-import type { VxeGlobalRendererHandles, VxeSelectPropTypes } from '../../../types'
+import type { VxeGlobalRendererHandles, VxeTreeSelectPropTypes } from '../../../types'
 
-export interface WidgetVxeSelectFormObjVO {
+export interface WidgetVxeTreeSelectFormObjVO {
   placeholder: string
   options: WidgetDataSourceOptionObjVO[],
-  multiple: VxeSelectPropTypes.Multiple
+  multiple: VxeTreeSelectPropTypes.Multiple
 }
 
-export const getWidgetVxeSelectConfig = (): VxeGlobalRendererHandles.CreateFormDesignWidgetConfigObj<WidgetVxeSelectFormObjVO> => {
+export const getWidgetVxeTreeSelectConfig = (): VxeGlobalRendererHandles.CreateFormDesignWidgetConfigObj<WidgetVxeTreeSelectFormObjVO> => {
   return {
     title: handleGetFormDesignWidgetName,
-    icon: 'vxe-icon-select',
+    icon: 'vxe-icon-tree-select',
     options: {
       placeholder: '',
       options: XEUtils.range(0, 3).map((v, i) => {

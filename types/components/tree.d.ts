@@ -35,7 +35,7 @@ export namespace VxeTreePropTypes {
   export type ShowLine = boolean
   export type Indent = number
   export type ShowRadio = boolean
-  export type RadioCheckNodeKey = string | number
+  export type CheckNodeKey = string | number
   export interface RadioConfig {
     checkNodeKey?: string
     strict?: boolean
@@ -45,7 +45,7 @@ export namespace VxeTreePropTypes {
     showIcon?: boolean
     trigger?: '' | 'default' | 'node'
   }
-  export type CheckboxCheckNodeKeys = (string | number)[]
+  export type CheckNodeKeys = (string | number)[]
   export type ShowCheckbox = boolean
   export interface CheckboxConfig {
     showHeader?: boolean
@@ -76,10 +76,10 @@ export interface VxeTreeProps {
   showLine?: VxeTreePropTypes.ShowLine
   indent?: VxeTreePropTypes.Indent
   showRadio?: VxeTreePropTypes.ShowRadio
-  radioCheckNodeKey?: VxeTreePropTypes.RadioCheckNodeKey
+  checkNodeKey?: VxeTreePropTypes.CheckNodeKey
   radioConfig?: VxeTreePropTypes.RadioConfig
   showCheckbox?: VxeTreePropTypes.ShowCheckbox
-  checkboxCheckNodeKeys?: VxeTreePropTypes.CheckboxCheckNodeKeys
+  checkNodeKeys?: VxeTreePropTypes.CheckNodeKeys
   checkboxConfig?: VxeTreePropTypes.CheckboxConfig
   toggleMethod?: VxeTreePropTypes.ToggleMethod
   showIcon?: VxeTreePropTypes.ShowIcon
@@ -95,6 +95,7 @@ export interface VxeTreePrivateComputed extends TreePrivateComputed { }
 
 export interface TreeReactData {
   currentNode: any
+  nodeMaps: Record<string, VxeTreeDefines.NodeCacheItem>
   selectRadioKey: VxeTreePropTypes.RadioCheckNodeKey
   treeList: any[]
   treeExpandedMaps: Record<string, boolean>
@@ -103,12 +104,6 @@ export interface TreeReactData {
 }
 
 export interface TreeInternalData {
-  nodeMaps: Record<string, {
-    node: any
-    nodeIndex: number
-    parent: any
-    level: number
-  }>
 }
 
 export interface TreeMethods {
@@ -133,8 +128,8 @@ export interface VxeTreePrivateMethods extends TreePrivateMethods { }
 
 export type VxeTreeEmits = [
   'update:modelValue',
-  'update:radioCheckNodeKey',
-  'update:checkboxCheckNodeKeys',
+  'update:checkNodeKey',
+  'update:checkNodeKeys',
   'node-click',
   'node-dblclick',
   'radio-change',
@@ -144,6 +139,15 @@ export type VxeTreeEmits = [
 export namespace VxeTreeDefines {
   export interface TreeEventParams extends VxeComponentEventParams {
     $tree: VxeTreeConstructor
+  }
+
+  export interface NodeCacheItem {
+    item: any
+    itemIndex: number
+    nodes: any[]
+    parent: any
+    level: number
+    lineCount: number
   }
 
   export interface NodeClickParams<D = any> {
@@ -183,11 +187,13 @@ export namespace VxeTreeEvents {
 }
 
 export namespace VxeTreeSlotTypes {
-  export interface DefaultSlotParams {}
+  export interface DefaultSlotParams {
+    node: any
+  }
 }
 
 export interface VxeTreeSlots {
-  default: (params: VxeTreeSlotTypes.DefaultSlotParams) => any
+  node: (params: VxeTreeSlotTypes.DefaultSlotParams) => any
 }
 
 export const Tree: typeof VxeTree

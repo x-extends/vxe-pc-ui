@@ -500,8 +500,12 @@ export default defineComponent({
       }
     }
 
+    const isMinimized = () => {
+      return reactData.zoomStatus === 'minimize'
+    }
+
     const isMaximized = () => {
-      return !!reactData.zoomLocat
+      return reactData.zoomStatus === 'maximize'
     }
 
     const handleRevert = () => {
@@ -812,6 +816,7 @@ export default defineComponent({
       getBox,
       getPosition,
       setPosition,
+      isMinimized,
       isMaximized,
       zoom: handleZoom,
       minimize: handleMinimize,

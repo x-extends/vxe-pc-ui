@@ -199,15 +199,19 @@ export interface ModalMethods {
    */
   setPosition(top?: number, left?: number): Promise<any>
   /**
-   * 判断是否最大化显示
+   * 判断是否处于最小化
+   */
+  isMinimized(): boolean
+  /**
+   * 判断是否处于最大化
    */
   isMaximized(): boolean
   /**
-   * 切换窗口最大化/还原
+   * 在窗口最大化/还原/最小化之间切换状态
    */
   zoom(type?: '' | 'minimize' | 'maximize' | 'revert'): Promise<'minimize' | 'maximize' | 'revert'>
   /**
-   * 最小化窗口
+   * 如果窗口处于常规状态，则最小化窗口
    */
   minimize(): Promise<any>
   /**

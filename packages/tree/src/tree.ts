@@ -3,7 +3,7 @@ import { createEvent, getIcon, getConfig, useSize } from '../../ui'
 import XEUtils from 'xe-utils'
 import { getSlotVNs } from '../..//ui/src/vn'
 
-import type { TreeReactData, VxeTreeEmits, VxeTreePropTypes, TreeInternalData, TreePrivateRef, VxeTreePrivateComputed, TreePrivateMethods, TreeMethods, ValueOf, VxeTreeConstructor, VxeTreePrivateMethods } from '../../../types'
+import type { TreeReactData, VxeTreeEmits, VxeTreePropTypes, TreeInternalData, TreePrivateRef, VxeTreeDefines, VxeTreePrivateComputed, TreePrivateMethods, TreeMethods, ValueOf, VxeTreeConstructor, VxeTreePrivateMethods } from '../../../types'
 
 /**
  * 生成节点的唯一主键
@@ -53,9 +53,9 @@ export default defineComponent({
       type: Boolean as PropType<VxeTreePropTypes.ShowRadio>,
       default: () => getConfig().tree.showRadio
     },
-    radioCheckNodeKey: {
-      type: [String, Number] as PropType<VxeTreePropTypes.RadioCheckNodeKey>,
-      default: () => getConfig().tree.radioCheckNodeKey
+    checkNodeKey: {
+      type: [String, Number] as PropType<VxeTreePropTypes.CheckNodeKey>,
+      default: () => getConfig().tree.checkNodeKey
     },
     radioConfig: {
       type: Object as PropType<VxeTreePropTypes.RadioConfig>,
@@ -65,9 +65,9 @@ export default defineComponent({
       type: Boolean as PropType<VxeTreePropTypes.ShowCheckbox>,
       default: () => getConfig().tree.showCheckbox
     },
-    checkboxCheckNodeKeys: {
-      type: Array as PropType<VxeTreePropTypes.CheckboxCheckNodeKeys>,
-      default: () => getConfig().tree.checkboxCheckNodeKeys
+    checkNodeKeys: {
+      type: Array as PropType<VxeTreePropTypes.CheckNodeKeys>,
+      default: () => getConfig().tree.checkNodeKeys
     },
     checkboxConfig: {
       type: Object as PropType<VxeTreePropTypes.CheckboxConfig>,
@@ -94,8 +94,8 @@ export default defineComponent({
   },
   emits: [
     'update:modelValue',
-    'update:radioCheckNodeKey',
-    'update:checkboxCheckNodeKeys',
+    'update:checkNodeKey',
+    'update:checkNodeKeys',
     'node-click',
     'node-dblclick',
     'radio-change',
@@ -112,7 +112,8 @@ export default defineComponent({
 
     const reactData = reactive<TreeReactData>({
       currentNode: null,
-      selectRadioKey: props.radioCheckNodeKey,
+      nodeMaps: {},
+      selectRadioKey: props.checkNodeKey,
       treeList: [],
       treeExpandedMaps: {},
       selectCheckboxMaps: {},
@@ -120,7 +121,6 @@ export default defineComponent({
     })
 
     const internalData: TreeInternalData = {
-      nodeMaps: {}
     }
 
     const refMaps: TreePrivateRef = {
@@ -200,15 +200,15 @@ export default defineComponent({
       return isIndeterminateByCheckboxNodeid(getNodeid(node))
     }
 
-    const emitCheckboxMode = (value: VxeTreePropTypes.CheckboxCheckNodeKeys) => {
-      emit('update:checkboxCheckNodeKeys', value)
+    const emitCheckboxMode = (value: VxeTreePropTypes.CheckNodeKeys) => {
+      emit('update:checkNodeKeys', value)
     }
 
-    const emitRadioMode = (value: VxeTreePropTypes.RadioCheckNodeKey) => {
-      emit('update:radioCheckNodeKey', value)
+    const emitRadioMode = (value: VxeTreePropTypes.CheckNodeKey) => {
+      emit('update:checkNodeKey', value)
     }
 
-    const updateCheckboxChecked = (nodeKeys: VxeTreePropTypes.CheckboxCheckNodeKeys) => {
+    const updateCheckboxChecked = (nodeKeys: VxeTreePropTypes.CheckNodeKeys) => {
       const selectKeyMaps: Record<string, boolean> = {}
       if (nodeKeys) {
         nodeKeys.forEach((key) => {
@@ -315,27 +315,56 @@ export default defineComponent({
     const updateData = (list: any[]) => {
       const keyField = computeKeyField.value
       const childrenField = computeChildrenField.value
-      const keyMaps: Record<string, {
-        node: any
-        nodeIndex: number
-        parent: any
-        level: number
-      }> = {}
-      XEUtils.eachTree(list, (node, nodeIndex, items, path, parent, nodes) => {
-        let nodeid = getNodeid(node)
+      const keyMaps: Record<string, VxeTreeDefines.NodeCacheItem> = {}
+      XEUtils.eachTree(list, (item, itemIndex, items, path, parent, nodes) => {
+        let nodeid = getNodeid(item)
         if (!nodeid) {
           nodeid = getNodeUniqueId()
-          XEUtils.set(node, keyField, nodeid)
+          XEUtils.set(item, keyField, nodeid)
         }
         keyMaps[nodeid] = {
-          node,
-          nodeIndex,
+          item,
+          itemIndex,
           parent,
-          level: nodes.length
+          nodes,
+          level: nodes.length,
+          lineCount: 0
         }
       }, { children: childrenField })
-      internalData.nodeMaps = keyMaps
+      reactData.nodeMaps = keyMaps
       reactData.treeList = list ? list.slice(0) : []
+    }
+
+    const handleCountLine = (item: any, isRoot: boolean, nodeItem: VxeTreeDefines.NodeCacheItem) => {
+      const { treeExpandedMaps } = reactData
+      const childrenField = computeChildrenField.value
+      const nodeid = getNodeid(item)
+      nodeItem.lineCount++
+      if (treeExpandedMaps[nodeid]) {
+        XEUtils.arrayEach(item[childrenField], (childItem, childIndex, childList) => {
+          if (!isRoot || childIndex < childList.length - 1) {
+            handleCountLine(childItem, false, nodeItem)
+          }
+        })
+      }
+    }
+
+    const updateNodeLine = (node: any) => {
+      const { nodeMaps } = reactData
+      if (node) {
+        const nodeid = getNodeid(node)
+        const nodeItem = nodeMaps[nodeid]
+        if (nodeItem) {
+          XEUtils.lastArrayEach(nodeItem.nodes, childItem => {
+            const nodeid = getNodeid(childItem)
+            const nodeItem = nodeMaps[nodeid]
+            if (nodeItem) {
+              nodeItem.lineCount = 0
+              handleCountLine(childItem, true, nodeItem)
+            }
+          })
+        }
+      }
     }
 
     const handleNodeClickEvent = (evnt: MouseEvent, node: any) => {
@@ -379,6 +408,7 @@ export default defineComponent({
         expandedMaps[nodeid] = true
       }
       reactData.treeExpandedMaps = expandedMaps
+      updateNodeLine(node)
     }
 
     const handleNodeCheckboxStatus = (node: any, selectKeyMaps: Record<string, boolean>, indeterminateMaps: Record<string, boolean>) => {
@@ -495,9 +525,13 @@ export default defineComponent({
     const renderRadio = (node: any, nodeid: string, isChecked: boolean) => {
       const { showRadio } = props
       const radioOpts = computeRadioOpts.value
-      const { showIcon } = radioOpts
-      const isDisabled = false
-      if (showRadio && showIcon) {
+      const { showIcon, checkMethod, visibleMethod } = radioOpts
+      const isVisible = !visibleMethod || visibleMethod({ node })
+      let isDisabled = !!checkMethod
+      if (showRadio && showIcon && isVisible) {
+        if (checkMethod) {
+          isDisabled = !checkMethod({ node })
+        }
         return h('div', {
           class: ['vxe-tree--radio-option', {
             'is--checked': isChecked,
@@ -520,10 +554,14 @@ export default defineComponent({
     const renderCheckbox = (node: any, nodeid: string, isChecked: boolean) => {
       const { showCheckbox } = props
       const checkboxOpts = computeCheckboxOpts.value
-      const { showIcon } = checkboxOpts
+      const { showIcon, checkMethod, visibleMethod } = checkboxOpts
       const isIndeterminate = isIndeterminateByCheckboxNodeid(nodeid)
-      const isDisabled = false
-      if (showCheckbox && showIcon) {
+      const isVisible = !visibleMethod || visibleMethod({ node })
+      let isDisabled = !!checkMethod
+      if (showCheckbox && showIcon && isVisible) {
+        if (checkMethod) {
+          isDisabled = !checkMethod({ node })
+        }
         return h('div', {
           class: ['vxe-tree--checkbox-option', {
             'is--checked': isChecked,
@@ -546,8 +584,7 @@ export default defineComponent({
 
     const renderNode = (node: any): VNode => {
       const { showRadio, showCheckbox, showLine, indent, iconOpen, iconClose, showIcon } = props
-      const { treeExpandedMaps, currentNode, selectRadioKey } = reactData
-      const { nodeMaps } = internalData
+      const { nodeMaps, treeExpandedMaps, currentNode, selectRadioKey } = reactData
       const childrenField = computeChildrenField.value
       const titleField = computeTitleField.value
       const childList: any[] = XEUtils.get(node, childrenField)
@@ -565,7 +602,7 @@ export default defineComponent({
               key: 'line',
               class: 'vxe-tree--node-child-line',
               style: {
-                height: `calc(${childList.length} * var(--vxe-ui-tree-node-height) - var(--vxe-ui-tree-node-height) / 2)`,
+                height: `calc(${nodeItem.lineCount} * var(--vxe-ui-tree-node-height) - var(--vxe-ui-tree-node-height) / 2)`,
                 left: `${(nodeItem.level + 1) * (indent || 1)}px`
               }
             })
@@ -674,25 +711,25 @@ export default defineComponent({
       updateData(props.data || [])
     })
 
-    watch(() => props.radioCheckNodeKey, (val) => {
+    watch(() => props.checkNodeKey, (val) => {
       reactData.selectRadioKey = val
     })
 
     const checkboxFlag = ref(0)
-    watch(() => props.checkboxCheckNodeKeys ? props.checkboxCheckNodeKeys.length : 0, () => {
+    watch(() => props.checkNodeKeys ? props.checkNodeKeys.length : 0, () => {
       checkboxFlag.value++
     })
-    watch(() => props.checkboxCheckNodeKeys, () => {
+    watch(() => props.checkNodeKeys, () => {
       checkboxFlag.value++
     })
     watch(checkboxFlag, () => {
-      updateCheckboxChecked(props.checkboxCheckNodeKeys || [])
+      updateCheckboxChecked(props.checkNodeKeys || [])
     })
 
     onUnmounted(() => {
       reactData.treeList = []
       reactData.treeExpandedMaps = {}
-      internalData.nodeMaps = {}
+      reactData.nodeMaps = {}
     })
 
     updateData(props.data || [])
