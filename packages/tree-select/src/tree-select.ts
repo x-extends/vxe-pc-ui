@@ -40,6 +40,7 @@ export default defineComponent({
     size: { type: String as PropType<VxeTreeSelectPropTypes.Size>, default: () => getConfig().select.size || getConfig().size },
     remote: Boolean as PropType<VxeTreeSelectPropTypes.Remote>,
     remoteMethod: Function as PropType<VxeTreeSelectPropTypes.RemoteMethod>,
+    treeConfig: Object as PropType<VxeTreeSelectPropTypes.TreeConfig>,
     transfer: {
       type: Boolean as PropType<VxeTreeSelectPropTypes.Transfer>,
       default: null
@@ -121,6 +122,24 @@ export default defineComponent({
       return transfer
     })
 
+    const computeTreeOpts = computed(() => {
+      return Object.assign({}, getConfig().treeSelect.treeConfig, props.treeConfig)
+    })
+
+    const computeTreeCheckboxOpts = computed(() => {
+      const treeOpts = computeTreeOpts.value
+      return Object.assign({}, treeOpts.checkboxConfig, {
+        trigger: 'node'
+      })
+    })
+
+    const computeTreeRadioOpts = computed(() => {
+      const treeOpts = computeTreeOpts.value
+      return Object.assign({}, treeOpts.radioConfig, {
+        trigger: 'node'
+      })
+    })
+
     const computePropsOpts = computed(() => {
       return props.optionProps || {}
     })
@@ -133,6 +152,11 @@ export default defineComponent({
     const computeValueField = computed(() => {
       const propsOpts = computePropsOpts.value
       return propsOpts.value || 'value'
+    })
+
+    const computeChildrenField = computed(() => {
+      const propsOpts = computePropsOpts.value
+      return propsOpts.children || 'children'
     })
 
     const computeSelectLabel = computed(() => {
@@ -180,6 +204,7 @@ export default defineComponent({
     const cacheItemMap = () => {
       const { options } = props
       const valueField = computeValueField.value
+      const childrenField = computeChildrenField.value
       const nodeMaps: Record<string, {
         item: any
         index: number
@@ -194,7 +219,7 @@ export default defineComponent({
           item[valueField] = nodeid
         }
         nodeMaps[nodeid] = { item, index, items, parent, nodes }
-      })
+      }, { children: childrenField })
       reactData.fullOptionList = options || []
       reactData.fullNodeMaps = nodeMaps
       refreshOption()
@@ -411,6 +436,9 @@ export default defineComponent({
       const headerSlot = slots.header
       const footerSlot = slots.footer
       const prefixSlot = slots.prefix
+      const treeOpts = computeTreeOpts.value
+      const treeCheckboxOpts = computeTreeCheckboxOpts.value
+      const treeRadioOpts = computeTreeRadioOpts.value
       const labelField = computeLabelField.value
       const valueField = computeValueField.value
 
@@ -430,7 +458,7 @@ export default defineComponent({
       }
       return h('div', {
         ref: refElem,
-        class: ['vxe-tree-select', className ? (XEUtils.isFunction(className) ? className({ $select: $xeTreeSelect }) : className) : '', {
+        class: ['vxe-tree-select', className ? (XEUtils.isFunction(className) ? className({ $treeSelect: $xeTreeSelect }) : className) : '', {
           [`size--${vSize}`]: vSize,
           'is--visible': visiblePanel,
           'is--disabled': isDisabled,
@@ -464,7 +492,7 @@ export default defineComponent({
         }, [
           h('div', {
             ref: refOptionPanel,
-            class: ['vxe-table--ignore-clear vxe-tree-select--panel', popupClassName ? (XEUtils.isFunction(popupClassName) ? popupClassName({ $select: $xeTreeSelect }) : popupClassName) : '', {
+            class: ['vxe-table--ignore-clear vxe-tree-select--panel', popupClassName ? (XEUtils.isFunction(popupClassName) ? popupClassName({ $treeSelect: $xeTreeSelect }) : popupClassName) : '', {
               [`size--${vSize}`]: vSize,
               'is--transfer': transfer,
               'animat--leave': !loading && reactData.animatVisible,
@@ -490,14 +518,23 @@ export default defineComponent({
                       class: 'vxe-tree-select-option--wrapper'
                     }, [
                       h(VxeTreeComponent, {
-                        isHover: true,
+                        class: 'vxe-tree-select--tree',
+                        isHover: treeOpts.isHover,
                         data: options,
+                        indent: treeOpts.indent,
                         showRadio: !multiple,
+                        radioConfig: treeRadioOpts,
                         showCheckbox: !!multiple,
                         checkboxCheckNodeKeys: multiple ? modelValue : null,
+                        checkboxConfig: treeCheckboxOpts,
                         titleField: labelField,
                         keyField: valueField,
-                        trigger: 'node',
+                        trigger: treeOpts.trigger,
+                        showIcon: treeOpts.showIcon,
+                        showLine: treeOpts.showLine,
+                        iconOpen: treeOpts.iconOpen,
+                        iconLoaded: treeOpts.iconLoaded,
+                        iconClose: treeOpts.iconClose,
                         onNodeClick: nodeClickEvent,
                         onRadioChange: radioChangeEvent,
                         onCheckboxChange: checkboxChangeEvent

@@ -215,7 +215,17 @@ setConfig({
       strict: true
     }
   },
-  treeSelect: {},
+  treeSelect: {
+    treeConfig: {
+      isHover: true,
+      radioConfig: {
+        showIcon: false
+      },
+      checkboxConfig: {
+        showIcon: false
+      }
+    }
+  },
   upload: {
     mode: 'all',
     imageTypes: ['jpg', 'jpeg', 'png', 'gif'],

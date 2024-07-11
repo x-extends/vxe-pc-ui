@@ -140,11 +140,11 @@ export default defineComponent({
     })
 
     const computeRadioOpts = computed(() => {
-      return Object.assign({}, props.radioConfig)
+      return Object.assign({ showIcon: true }, props.radioConfig)
     })
 
     const computeCheckboxOpts = computed(() => {
-      return Object.assign({}, props.checkboxConfig)
+      return Object.assign({ showIcon: true }, props.checkboxConfig)
     })
 
     const computeMaps: VxeTreePrivateComputed = {
@@ -339,7 +339,7 @@ export default defineComponent({
     }
 
     const handleNodeClickEvent = (evnt: MouseEvent, node: any) => {
-      const { trigger, isCurrent } = props
+      const { showRadio, showCheckbox, trigger, isCurrent } = props
       const radioOpts = computeRadioOpts.value
       const checkboxOpts = computeCheckboxOpts.value
       let triggerRadio = false
@@ -354,11 +354,11 @@ export default defineComponent({
         triggerExpand = true
         toggleExpandEvent(evnt, node)
       }
-      if (radioOpts.trigger === 'node') {
+      if (showRadio && radioOpts.trigger === 'node') {
         triggerRadio = true
         changeRadioEvent(evnt, node)
       }
-      if (checkboxOpts.trigger === 'node') {
+      if (showCheckbox && checkboxOpts.trigger === 'node') {
         triggerCheckbox = true
         changeCheckboxEvent(evnt, node)
       }
@@ -492,12 +492,12 @@ export default defineComponent({
 
     Object.assign($xeTree, treeMethods, treePrivateMethods)
 
-    const renderRadio = (node: any, nodeid: string) => {
+    const renderRadio = (node: any, nodeid: string, isChecked: boolean) => {
       const { showRadio } = props
-      const { selectRadioKey } = reactData
-      const isChecked = nodeid === selectRadioKey
+      const radioOpts = computeRadioOpts.value
+      const { showIcon } = radioOpts
       const isDisabled = false
-      if (showRadio) {
+      if (showRadio && showIcon) {
         return h('div', {
           class: ['vxe-tree--radio-option', {
             'is--checked': isChecked,
@@ -517,12 +517,13 @@ export default defineComponent({
       return createCommentVNode()
     }
 
-    const renderCheckbox = (node: any, nodeid: string) => {
+    const renderCheckbox = (node: any, nodeid: string, isChecked: boolean) => {
       const { showCheckbox } = props
-      const isChecked = isCheckedByCheckboxNodeid(nodeid)
+      const checkboxOpts = computeCheckboxOpts.value
+      const { showIcon } = checkboxOpts
       const isIndeterminate = isIndeterminateByCheckboxNodeid(nodeid)
       const isDisabled = false
-      if (showCheckbox) {
+      if (showCheckbox && showIcon) {
         return h('div', {
           class: ['vxe-tree--checkbox-option', {
             'is--checked': isChecked,
@@ -544,8 +545,8 @@ export default defineComponent({
     }
 
     const renderNode = (node: any): VNode => {
-      const { showLine, indent, iconOpen, iconClose, showIcon } = props
-      const { treeExpandedMaps, currentNode } = reactData
+      const { showRadio, showCheckbox, showLine, indent, iconOpen, iconClose, showIcon } = props
+      const { treeExpandedMaps, currentNode, selectRadioKey } = reactData
       const { nodeMaps } = internalData
       const childrenField = computeChildrenField.value
       const titleField = computeTitleField.value
@@ -575,9 +576,21 @@ export default defineComponent({
         })
       }
 
+      let isRadioChecked = false
+      if (showRadio) {
+        isRadioChecked = nodeid === selectRadioKey
+      }
+
+      let isCheckboxChecked = false
+      if (showCheckbox) {
+        isCheckboxChecked = isCheckedByCheckboxNodeid(nodeid)
+      }
+
       return h('div', {
         class: ['vxe-tree--node-item-node', `node--level-${nodeItem.level}`, {
-          'is--current': currentNode && nodeid === getNodeid(currentNode)
+          'is--current': currentNode && nodeid === getNodeid(currentNode),
+          'is-radio--checked': isRadioChecked,
+          'is-checkbox--checked': isCheckboxChecked
         }],
         nodeid
       }, [
@@ -611,8 +624,8 @@ export default defineComponent({
                 ]
               : [])
             : createCommentVNode(),
-          renderRadio(node, nodeid),
-          renderCheckbox(node, nodeid),
+          renderRadio(node, nodeid, isRadioChecked),
+          renderCheckbox(node, nodeid, isCheckboxChecked),
           h('div', {
             class: 'vxe-tree--node-item-label'
           }, titleSlot ? getSlotVNs(titleSlot({ node })) : `${nodeValue}`)
