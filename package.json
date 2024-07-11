@@ -29,7 +29,7 @@
   },
   "devDependencies": {
     "@types/resize-observer-browser": "^0.1.11",
-    "@typescript-eslint/eslint-plugin": "^6.21.0",
+    "@typescript-eslint/eslint`-plugin": "^6.21.0",
     "@typescript-eslint/parser": "^6.21.0",
     "@vue/cli-plugin-babel": "~5.0.0",
     "@vue/cli-plugin-eslint": "~5.0.0",

@@ -441,6 +441,7 @@ export default defineComponent({
       const treeRadioOpts = computeTreeRadioOpts.value
       const labelField = computeLabelField.value
       const valueField = computeValueField.value
+      const childrenField = computeChildrenField.value
 
       if (formReadonly) {
         return h('div', {
@@ -529,6 +530,7 @@ export default defineComponent({
                         checkboxConfig: treeCheckboxOpts,
                         titleField: labelField,
                         keyField: valueField,
+                        childrenField: childrenField,
                         trigger: treeOpts.trigger,
                         showIcon: treeOpts.showIcon,
                         showLine: treeOpts.showLine,

@@ -615,7 +615,8 @@ export default defineComponent({
 
       let isRadioChecked = false
       if (showRadio) {
-        isRadioChecked = nodeid === selectRadioKey
+        // eslint-disable-next-line eqeqeq
+        isRadioChecked = nodeid == selectRadioKey
       }
 
       let isCheckboxChecked = false
@@ -733,6 +734,7 @@ export default defineComponent({
     })
 
     updateData(props.data || [])
+    updateCheckboxChecked(props.checkNodeKeys || [])
 
     return $xeTree
   },
