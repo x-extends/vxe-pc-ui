@@ -8,7 +8,7 @@ export type VxeTreeComponent = DefineComponent<VxeTreeProps, VxeTreeEmits>
 
 export type VxeTreeInstance = ComponentPublicInstance<VxeTreeProps, VxeTreeConstructor>
 
-export interface VxeTreeConstructor extends VxeComponentBaseOptions, VxeTreeMethods {
+export interface VxeTreeConstructor<D = any> extends VxeComponentBaseOptions, VxeTreeMethods<D> {
   props: VxeTreeProps
   context: SetupContext<VxeTreeEmits>
   internalData: TreeInternalData
@@ -146,7 +146,7 @@ export interface TreeReactData {
 export interface TreeInternalData {
 }
 
-export interface TreeMethods {
+export interface TreeMethods<D = any> {
   dispatchEvent(type: ValueOf<VxeTreeEmits>, params: Record<string, any>, evnt: Event | null): void
   clearExpand(): Promise<any>
   setExpandByNodeid(nodeids: any, expanded: boolean): Promise<any>
@@ -162,7 +162,7 @@ export interface TreeMethods {
   isIndeterminateByCheckboxNode(node: any): boolean
   isCheckedByCheckboxNode(node: any): boolean
 }
-export interface VxeTreeMethods extends TreeMethods { }
+export interface VxeTreeMethods<D = any> extends TreeMethods<D> { }
 
 export interface TreePrivateMethods { }
 export interface VxeTreePrivateMethods extends TreePrivateMethods { }
@@ -178,8 +178,8 @@ export type VxeTreeEmits = [
 ]
 
 export namespace VxeTreeDefines {
-  export interface TreeEventParams extends VxeComponentEventParams {
-    $tree: VxeTreeConstructor
+  export interface TreeEventParams<D = any> extends VxeComponentEventParams {
+    $tree: VxeTreeConstructor<D>
   }
 
   export interface NodeCacheItem {
@@ -196,7 +196,7 @@ export namespace VxeTreeDefines {
   export interface NodeClickParams<D = any> {
     node: D
   }
-  export interface NodeClickEventParams<D = any> extends TreeEventParams, NodeClickParams<D> { }
+  export interface NodeClickEventParams<D = any> extends TreeEventParams<D>, NodeClickParams<D> { }
 
   export interface NodeDblclickEventParams<D = any> extends NodeClickEventParams<D> { }
 
