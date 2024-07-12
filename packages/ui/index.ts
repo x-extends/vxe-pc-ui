@@ -211,6 +211,7 @@ setConfig({
   },
   tree: {
     indent: 20,
+    minHeight: 60,
     radioConfig: {
       strict: true
     }

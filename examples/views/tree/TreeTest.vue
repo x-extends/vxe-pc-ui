@@ -4,7 +4,7 @@
       <vxe-tree :data="treeList1" :checkbox-config="{checkStrictly: true}" show-checkbox show-radio></vxe-tree>
     </p>
     <p>
-      <vxe-tree :data="treeList2" trigger="node" v-model:checkbox-check-row-keys="checkboxCheckRowKeys" v-model:radio-check-row-key="checkboxCheckRowKey" checkStrictly is-hover is-current show-checkbox show-radio show-line></vxe-tree>
+      <vxe-tree :loading="loading" :data="treeList2" trigger="node" v-model:checkbox-check-row-keys="checkboxCheckRowKeys" v-model:radio-check-row-key="checkboxCheckRowKey" checkStrictly is-hover is-current show-checkbox show-radio show-line></vxe-tree>
     </p>
   </div>
 </template>
@@ -126,4 +126,9 @@ const treeList2 = ref([
 
 const checkboxCheckRowKey = ref()
 const checkboxCheckRowKeys = ref([])
+
+const loading = ref(true)
+setTimeout(() => {
+  loading.value = false
+}, 3000)
 </script>

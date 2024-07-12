@@ -1,7 +1,9 @@
 import { defineComponent, ref, h, reactive, PropType, computed, VNode, createCommentVNode, watch, onUnmounted, nextTick } from 'vue'
 import { createEvent, getIcon, getConfig, useSize } from '../../ui'
 import XEUtils from 'xe-utils'
-import { getSlotVNs } from '../..//ui/src/vn'
+import { getSlotVNs } from '../../ui/src/vn'
+import { toCssUnit } from '../../ui/src/dom'
+import VxeLoadingComponent from '../../loading/src/loading'
 
 import type { TreeReactData, VxeTreeEmits, VxeTreePropTypes, TreeInternalData, TreePrivateRef, VxeTreeDefines, VxeTreePrivateComputed, TreePrivateMethods, TreeMethods, ValueOf, VxeTreeConstructor, VxeTreePrivateMethods } from '../../../types'
 
@@ -16,6 +18,13 @@ export default defineComponent({
   name: 'VxeTree',
   props: {
     data: Array as PropType<VxeTreePropTypes.Data>,
+    height: [String, Number] as PropType<VxeTreePropTypes.Height>,
+    minHeight: {
+      type: [String, Number] as PropType<VxeTreePropTypes.MinHeight>,
+      default: () => getConfig().tree.minHeight
+    },
+    loading: Boolean as PropType<VxeTreePropTypes.Loading>,
+    loadingConfig: Object as PropType<VxeTreePropTypes.LoadingConfig>,
     childrenField: {
       type: String as PropType<VxeTreePropTypes.ChildrenField>,
       default: () => getConfig().tree.childrenField
@@ -32,6 +41,7 @@ export default defineComponent({
       type: String as PropType<VxeTreePropTypes.TitleField>,
       default: () => getConfig().tree.titleField
     },
+    transform: Boolean as PropType<VxeTreePropTypes.Transform>,
     isCurrent: {
       type: Boolean as PropType<VxeTreePropTypes.IsCurrent>,
       default: () => getConfig().tree.isCurrent
@@ -132,7 +142,11 @@ export default defineComponent({
     })
 
     const computeKeyField = computed(() => {
-      return props.keyField || '_X_NODE_KEY'
+      return props.keyField || 'id'
+    })
+
+    const computeParentField = computed(() => {
+      return props.parentField || 'parentId'
     })
 
     const computeChildrenField = computed(() => {
@@ -145,6 +159,22 @@ export default defineComponent({
 
     const computeCheckboxOpts = computed(() => {
       return Object.assign({ showIcon: true }, props.checkboxConfig)
+    })
+
+    const computeLoadingOpts = computed(() => {
+      return Object.assign({}, getConfig().tree.loadingConfig, props.loadingConfig)
+    })
+
+    const computeTreeStyle = computed(() => {
+      const { height, minHeight } = props
+      const stys: Record<string, string> = {}
+      if (height) {
+        stys.height = toCssUnit(height)
+      }
+      if (minHeight) {
+        stys.minHeight = toCssUnit(minHeight)
+      }
+      return stys
     })
 
     const computeMaps: VxeTreePrivateComputed = {
@@ -312,11 +342,12 @@ export default defineComponent({
       isCheckedByCheckboxNode
     }
 
-    const updateData = (list: any[]) => {
+    const cacheNodeMap = () => {
+      const { treeList } = reactData
       const keyField = computeKeyField.value
       const childrenField = computeChildrenField.value
       const keyMaps: Record<string, VxeTreeDefines.NodeCacheItem> = {}
-      XEUtils.eachTree(list, (item, itemIndex, items, path, parent, nodes) => {
+      XEUtils.eachTree(treeList, (item, itemIndex, items, path, parent, nodes) => {
         let nodeid = getNodeid(item)
         if (!nodeid) {
           nodeid = getNodeUniqueId()
@@ -332,7 +363,18 @@ export default defineComponent({
         }
       }, { children: childrenField })
       reactData.nodeMaps = keyMaps
-      reactData.treeList = list ? list.slice(0) : []
+    }
+
+    const updateData = (list: any[]) => {
+      const { transform } = props
+      const keyField = computeKeyField.value
+      const parentField = computeParentField.value
+      if (transform) {
+        reactData.treeList = XEUtils.toArrayTree(list, { key: keyField, parentKey: parentField })
+      } else {
+        reactData.treeList = list ? list.slice(0) : []
+      }
+      cacheNodeMap()
     }
 
     const handleCountLine = (item: any, isRoot: boolean, nodeItem: VxeTreeDefines.NodeCacheItem) => {
@@ -376,7 +418,7 @@ export default defineComponent({
       let triggerExpand = false
       if (isCurrent) {
         reactData.currentNode = node
-      } else {
+      } else if (reactData.currentNode) {
         reactData.currentNode = null
       }
       if (trigger === 'node') {
@@ -590,6 +632,7 @@ export default defineComponent({
       const childList: any[] = XEUtils.get(node, childrenField)
       const hasChild = childList && childList.length
       const titleSlot = slots.title
+      const extraSlot = slots.extra
       const nodeid = getNodeid(node)
       const isExpand = treeExpandedMaps[nodeid]
       const nodeItem = nodeMaps[nodeid]
@@ -625,15 +668,15 @@ export default defineComponent({
       }
 
       return h('div', {
-        class: ['vxe-tree--node-item-node', `node--level-${nodeItem.level}`, {
-          'is--current': currentNode && nodeid === getNodeid(currentNode),
-          'is-radio--checked': isRadioChecked,
-          'is-checkbox--checked': isCheckboxChecked
-        }],
+        class: ['vxe-tree--node-wrapper', `node--level-${nodeItem.level}`],
         nodeid
       }, [
         h('div', {
-          class: 'vxe-tree--node-item-wrapper',
+          class: ['vxe-tree--node-item', {
+            'is--current': currentNode && nodeid === getNodeid(currentNode),
+            'is-radio--checked': isRadioChecked,
+            'is-checkbox--checked': isCheckboxChecked
+          }],
           style: {
             paddingLeft: `${(nodeItem.level - 1) * (indent || 1)}px`
           },
@@ -665,8 +708,17 @@ export default defineComponent({
           renderRadio(node, nodeid, isRadioChecked),
           renderCheckbox(node, nodeid, isCheckboxChecked),
           h('div', {
-            class: 'vxe-tree--node-item-label'
-          }, titleSlot ? getSlotVNs(titleSlot({ node })) : `${nodeValue}`)
+            class: 'vxe-tree--node-item-inner'
+          }, [
+            h('div', {
+              class: 'vxe-tree--node-item-title'
+            }, titleSlot ? getSlotVNs(titleSlot({ node })) : `${nodeValue}`),
+            extraSlot
+              ? h('div', {
+                class: 'vxe-tree--node-item-extra'
+              }, getSlotVNs(extraSlot({ node })))
+              : createCommentVNode()
+          ])
         ]),
         hasChild && treeExpandedMaps[nodeid]
           ? h('div', {
@@ -684,18 +736,40 @@ export default defineComponent({
     }
 
     const renderVN = () => {
-      const { trigger, showLine, isHover } = props
+      const { loading, trigger, showLine, isHover } = props
       const vSize = computeSize.value
+      const radioOpts = computeRadioOpts.value
+      const checkboxOpts = computeCheckboxOpts.value
+      const treeStyle = computeTreeStyle.value
+      const loadingOpts = computeLoadingOpts.value
+      const loadingSlot = slots.loading
       return h('div', {
         ref: refElem,
         class: ['vxe-tree', {
           [`size--${vSize}`]: vSize,
           'show--line': showLine,
+          'checkbox--highlight': checkboxOpts.highlight,
+          'radio--highlight': radioOpts.highlight,
           'node--hover': isHover,
-          'node--trigger': trigger === 'node'
-        }]
+          'node--trigger': trigger === 'node',
+          'is--loading': loading
+        }],
+        style: treeStyle
       }, [
-        renderNodeList()
+        renderNodeList(),
+        /**
+         * 加载中
+         */
+        h(VxeLoadingComponent, {
+          class: 'vxe-tree--loading',
+          modelValue: loading,
+          icon: loadingOpts.icon,
+          text: loadingOpts.text
+        }, loadingSlot
+          ? {
+              default: () => loadingSlot({ $tree: $xeTree })
+            }
+          : {})
       ])
     }
 

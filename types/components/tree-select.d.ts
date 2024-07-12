@@ -37,8 +37,8 @@ export namespace VxeTreeSelectPropTypes {
   export type PrefixIcon = string
   export type Placement = 'top' | 'bottom'
   export interface Option {
-    value?: string
-    label?: string
+    value?: string | number
+    label?: string | number
     children?: Option[]
 
     [key: string]: any

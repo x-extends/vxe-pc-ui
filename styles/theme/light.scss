@@ -91,5 +91,14 @@
   --vxe-ui-switch-close-background-color: rgba(0,0,0,0.35);
 
   /*upload*/
-  --vxe-ui-upload-drag-over-background-color:rgba(255,255,200,0.8)
+  --vxe-ui-upload-drag-over-background-color:rgba(255,255,200,0.8);
+  
+  /*tree*/
+  --vxe-ui-tree-node-hover-background-color: #f5f7fa;
+  --vxe-ui-tree-node-radio-checked-background-color: #fff3e0;
+  --vxe-ui-tree-node-hover-radio-checked-background-color: #ffebbc;
+  --vxe-ui-tree-node-checkbox-checked-background-color: #fff3e0;
+  --vxe-ui-tree-node-hover-checkbox-checked-background-color: #ffebbc;
+  --vxe-ui-tree-node-current-background-color: #e6f7ff;
+  --vxe-ui-tree-node-hover-current-background-color: #d7effb;
 }
