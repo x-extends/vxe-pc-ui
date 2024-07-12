@@ -25,6 +25,10 @@ export default defineComponent({
     },
     loading: Boolean as PropType<VxeTreePropTypes.Loading>,
     loadingConfig: Object as PropType<VxeTreePropTypes.LoadingConfig>,
+    accordion: {
+      type: Boolean as PropType<VxeTreePropTypes.Accordion>,
+      default: () => getConfig().tree.accordion
+    },
     childrenField: {
       type: String as PropType<VxeTreePropTypes.ChildrenField>,
       default: () => getConfig().tree.childrenField
@@ -40,6 +44,14 @@ export default defineComponent({
     titleField: {
       type: String as PropType<VxeTreePropTypes.TitleField>,
       default: () => getConfig().tree.titleField
+    },
+    hasChildField: {
+      type: String as PropType<VxeTreePropTypes.HasChildField>,
+      default: () => getConfig().tree.hasChildField
+    },
+    mapChildrenField: {
+      type: String as PropType<VxeTreePropTypes.MapChildrenField>,
+      default: () => getConfig().tree.mapChildrenField
     },
     transform: Boolean as PropType<VxeTreePropTypes.Transform>,
     isCurrent: {
@@ -83,7 +95,9 @@ export default defineComponent({
       type: Object as PropType<VxeTreePropTypes.CheckboxConfig>,
       default: () => XEUtils.clone(getConfig().tree.checkboxConfig, true)
     },
+    lazy: Boolean as PropType<VxeTreePropTypes.Lazy>,
     toggleMethod: Function as PropType<VxeTreePropTypes.ToggleMethod>,
+    loadMethod: Function as PropType<VxeTreePropTypes.LoadMethod>,
     showIcon: {
       type: Boolean as PropType<VxeTreePropTypes.ShowIcon>,
       default: true
@@ -126,6 +140,7 @@ export default defineComponent({
       selectRadioKey: props.checkNodeKey,
       treeList: [],
       treeExpandedMaps: {},
+      treeExpandLazyLoadedMaps: {},
       selectCheckboxMaps: {},
       indeterminateCheckboxMaps: {}
     })
@@ -151,6 +166,14 @@ export default defineComponent({
 
     const computeChildrenField = computed(() => {
       return props.childrenField || 'children'
+    })
+
+    const computeHasChildField = computed(() => {
+      return props.hasChildField || 'hasChild'
+    })
+
+    const computeMapChildrenField = computed(() => {
+      return props.mapChildrenField || 'children'
     })
 
     const computeRadioOpts = computed(() => {
@@ -264,6 +287,21 @@ export default defineComponent({
       emit(type, createEvent(evnt, { $tree: $xeTree }, params))
     }
 
+    const createNode = (records: any[]) => {
+      const keyField = computeKeyField.value
+      return Promise.resolve(
+        records.map(obj => {
+          const item = { ...obj }
+          let nodeid = getNodeid(item)
+          if (!nodeid) {
+            nodeid = getNodeUniqueId()
+            XEUtils.set(item, keyField, nodeid)
+          }
+          return item
+        })
+      )
+    }
+
     const treeMethods: TreeMethods = {
       dispatchEvent,
       clearExpand () {
@@ -334,6 +372,39 @@ export default defineComponent({
         reactData.treeExpandedMaps = expandedMaps
         return nextTick()
       },
+      /**
+       * 用于树结构，给行数据加载子节点
+       */
+      loadChildren (node, childRecords) {
+        const { transform } = props
+        const { nodeMaps } = reactData
+        const childrenField = computeChildrenField.value
+        const mapChildrenField = computeMapChildrenField.value
+        const parentNodeItem = nodeMaps[getNodeid(node)]
+        const parentLevel = parentNodeItem ? parentNodeItem.level : 0
+        const parentNodes = parentNodeItem ? parentNodeItem.nodes : []
+        return createNode(childRecords).then((nodeList) => {
+          XEUtils.eachTree(nodeList, (childRow, index, items, path, parent, nodes) => {
+            const itemNodeId = getNodeid(childRow)
+            nodeMaps[itemNodeId] = {
+              item: node,
+              itemIndex: -1,
+              items,
+              parent: parent || parentNodeItem.item,
+              nodes: parentNodes.concat(nodes),
+              level: parentLevel + nodes.length,
+              lineCount: 0,
+              treeLoaded: false
+            }
+          }, { children: childrenField })
+          node[childrenField] = nodeList
+          if (transform) {
+            node[mapChildrenField] = nodeList
+          }
+          updateNodeLine(node)
+          return nodeList
+        })
+      },
       isExpandByNode,
       isCheckedByRadioNodeid,
       isCheckedByRadioNode,
@@ -356,10 +427,12 @@ export default defineComponent({
         keyMaps[nodeid] = {
           item,
           itemIndex,
+          items,
           parent,
           nodes,
           level: nodes.length,
-          lineCount: 0
+          lineCount: 0,
+          treeLoaded: false
         }
       }, { children: childrenField })
       reactData.nodeMaps = keyMaps
@@ -369,8 +442,9 @@ export default defineComponent({
       const { transform } = props
       const keyField = computeKeyField.value
       const parentField = computeParentField.value
+      const mapChildrenField = computeMapChildrenField.value
       if (transform) {
-        reactData.treeList = XEUtils.toArrayTree(list, { key: keyField, parentKey: parentField })
+        reactData.treeList = XEUtils.toArrayTree(list, { key: keyField, parentKey: parentField, mapChildren: mapChildrenField })
       } else {
         reactData.treeList = list ? list.slice(0) : []
       }
@@ -440,17 +514,121 @@ export default defineComponent({
       dispatchEvent('node-dblclick', { node }, evnt)
     }
 
-    const toggleExpandEvent = (evnt: MouseEvent, node: any) => {
-      evnt.stopPropagation()
-      const expandedMaps = Object.assign({}, reactData.treeExpandedMaps)
-      const nodeid = getNodeid(node)
-      if (expandedMaps[nodeid]) {
-        delete expandedMaps[nodeid]
-      } else {
-        expandedMaps[nodeid] = true
+    const handleAsyncTreeExpandChilds = (node: any): Promise<void> => {
+      const checkboxOpts = computeCheckboxOpts.value
+      const { loadMethod } = props
+      const { checkStrictly } = checkboxOpts
+      return new Promise(resolve => {
+        if (loadMethod) {
+          const { treeExpandLazyLoadedMaps } = reactData
+          const { nodeMaps } = reactData
+          const nodeid = getNodeid(node)
+          const nodeItem = nodeMaps[nodeid]
+          treeExpandLazyLoadedMaps[nodeid] = true
+          Promise.resolve(
+            loadMethod({ $tree: $xeTree, node })
+          ).then((childRecords: any) => {
+            nodeItem.treeLoaded = true
+            if (treeExpandLazyLoadedMaps[nodeid]) {
+              delete treeExpandLazyLoadedMaps[nodeid]
+            }
+            if (!XEUtils.isArray(childRecords)) {
+              childRecords = []
+            }
+            if (childRecords) {
+              return treeMethods.loadChildren(node, childRecords).then(childRows => {
+                const { treeExpandedMaps } = reactData
+                if (childRows.length && !treeExpandedMaps[nodeid]) {
+                  treeExpandedMaps[nodeid] = true
+                }
+                // 如果当前节点已选中，则展开后子节点也被选中
+                if (!checkStrictly && treeMethods.isCheckedByCheckboxNodeid(node)) {
+                  // handleCheckedCheckboxRow(childRows, true)
+                }
+                return nextTick()
+              })
+            }
+          }).catch(() => {
+            const { treeExpandLazyLoadedMaps } = reactData
+            nodeItem.treeLoaded = false
+            if (treeExpandLazyLoadedMaps[nodeid]) {
+              delete treeExpandLazyLoadedMaps[nodeid]
+            }
+          }).finally(() => {
+            return nextTick()
+          })
+        } else {
+          resolve()
+        }
+      })
+    }
+
+    /**
+     * 展开与收起树节点
+     * @param nodeList
+     * @param expanded
+     * @returns
+     */
+    const handleBaseTreeExpand = (nodeList: any[], expanded: boolean) => {
+      const { lazy, accordion, toggleMethod } = props
+      const { nodeMaps, treeExpandLazyLoadedMaps } = reactData
+      const tempExpandedMaps = Object.assign({}, reactData.treeExpandedMaps)
+      const childrenField = computeChildrenField.value
+      const hasChildField = computeHasChildField.value
+      const result: any[] = []
+      let validNodes = toggleMethod ? nodeList.filter((node: any) => toggleMethod({ $tree: $xeTree, expanded, node })) : nodeList
+      if (accordion) {
+        validNodes = validNodes.length ? [validNodes[validNodes.length - 1]] : []
+        // 同一级只能展开一个
+        const nodeid = getNodeid(validNodes[0])
+        const nodeItem = nodeMaps[nodeid]
+        if (nodeItem) {
+          nodeItem.items.forEach(item => {
+            const itemNodeId = getNodeid(item)
+            if (tempExpandedMaps[itemNodeId]) {
+              delete tempExpandedMaps[itemNodeId]
+            }
+          })
+        }
       }
-      reactData.treeExpandedMaps = expandedMaps
-      updateNodeLine(node)
+      if (expanded) {
+        validNodes.forEach((item) => {
+          const itemNodeId = getNodeid(item)
+          if (!tempExpandedMaps[itemNodeId]) {
+            const nodeItem = nodeMaps[itemNodeId]
+            const isLoad = lazy && item[hasChildField] && !nodeItem.treeLoaded && !treeExpandLazyLoadedMaps[itemNodeId]
+            // 是否使用懒加载
+            if (isLoad) {
+              result.push(handleAsyncTreeExpandChilds(item))
+            } else {
+              if (item[childrenField] && item[childrenField].length) {
+                tempExpandedMaps[itemNodeId] = true
+                updateNodeLine(item)
+              }
+            }
+          }
+        })
+      } else {
+        validNodes.forEach(item => {
+          const itemNodeId = getNodeid(item)
+          if (tempExpandedMaps[itemNodeId]) {
+            delete tempExpandedMaps[itemNodeId]
+          }
+        })
+      }
+      reactData.treeExpandedMaps = tempExpandedMaps
+      return Promise.all(result)
+    }
+
+    const toggleExpandEvent = (evnt: MouseEvent, node: any) => {
+      const { lazy } = props
+      const { treeExpandedMaps, treeExpandLazyLoadedMaps } = reactData
+      const nodeid = getNodeid(node)
+      const expanded = !treeExpandedMaps[nodeid]
+      evnt.stopPropagation()
+      if (!lazy || !treeExpandLazyLoadedMaps[nodeid]) {
+        handleBaseTreeExpand([node], expanded)
+      }
     }
 
     const handleNodeCheckboxStatus = (node: any, selectKeyMaps: Record<string, boolean>, indeterminateMaps: Record<string, boolean>) => {
@@ -625,10 +803,11 @@ export default defineComponent({
     }
 
     const renderNode = (node: any): VNode => {
-      const { showRadio, showCheckbox, showLine, indent, iconOpen, iconClose, showIcon } = props
-      const { nodeMaps, treeExpandedMaps, currentNode, selectRadioKey } = reactData
+      const { lazy, showRadio, showCheckbox, showLine, indent, iconOpen, iconClose, iconLoaded, showIcon } = props
+      const { nodeMaps, treeExpandedMaps, currentNode, selectRadioKey, treeExpandLazyLoadedMaps } = reactData
       const childrenField = computeChildrenField.value
       const titleField = computeTitleField.value
+      const hasChildField = computeHasChildField.value
       const childList: any[] = XEUtils.get(node, childrenField)
       const hasChild = childList && childList.length
       const titleSlot = slots.title
@@ -667,6 +846,15 @@ export default defineComponent({
         isCheckboxChecked = isCheckedByCheckboxNodeid(nodeid)
       }
 
+      let hasLazyChilds = false
+      let isLazyLoading = false
+      let isLazyLoaded = false
+      if (lazy) {
+        isLazyLoading = !!treeExpandLazyLoadedMaps[nodeid]
+        hasLazyChilds = node[hasChildField]
+        isLazyLoaded = !!nodeItem.treeLoaded
+      }
+
       return h('div', {
         class: ['vxe-tree--node-wrapper', `node--level-${nodeItem.level}`],
         nodeid
@@ -690,7 +878,7 @@ export default defineComponent({
           showIcon || showLine
             ? h('div', {
               class: 'vxe-tree--node-item-switcher'
-            }, showIcon && hasChild
+            }, showIcon && (lazy ? (isLazyLoaded ? hasChild : hasLazyChilds) : hasChild)
               ? [
                   h('div', {
                     class: 'vxe-tree--node-item-icon',
@@ -699,7 +887,7 @@ export default defineComponent({
                     }
                   }, [
                     h('i', {
-                      class: isExpand ? (iconOpen || getIcon().TREE_NODE_OPEN) : (iconClose || getIcon().TREE_NODE_CLOSE)
+                      class: isLazyLoading ? (iconLoaded || getIcon().TREE_NODE_LOADED) : (isExpand ? (iconOpen || getIcon().TREE_NODE_OPEN) : (iconClose || getIcon().TREE_NODE_CLOSE))
                     })
                   ])
                 ]

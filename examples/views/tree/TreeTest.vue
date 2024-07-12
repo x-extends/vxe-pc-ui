@@ -6,11 +6,20 @@
     <p>
       <vxe-tree :loading="loading" :data="treeList2" trigger="node" v-model:checkbox-check-row-keys="checkboxCheckRowKeys" v-model:radio-check-row-key="checkboxCheckRowKey" checkStrictly is-hover is-current show-checkbox show-radio show-line></vxe-tree>
     </p>
+    <p>
+      <vxe-tree
+      is-hover
+      lazy
+      :load-method="loadMethod"
+      :data="treeList">
+    </vxe-tree>
+    </p>
   </div>
 </template>
 
 <script lang="ts" setup>
 import { ref } from 'vue'
+import { VxeTreePropTypes } from '../../../types'
 
 const treeList1 = ref([
   { title: '22' },
@@ -123,6 +132,24 @@ const treeList2 = ref([
   { title: '10567' },
   { title: '8003425' }
 ])
+
+const treeList = ref<VxeTreePropTypes.Data>([
+  { title: '节点2', id: '2', hasChild: true },
+  { title: '节点3', id: '3', hasChild: true },
+  { title: '节点4', id: '4', hasChild: true },
+  { title: '节点5', id: '5' }
+])
+
+const loadMethod: VxeTreePropTypes.LoadMethod = () => {
+  return new Promise(resolve => {
+    setTimeout(() => {
+      resolve([
+        { title: '435435' },
+        { title: '56765' }
+      ])
+    }, 300)
+  })
+}
 
 const checkboxCheckRowKey = ref()
 const checkboxCheckRowKeys = ref([])

@@ -166,6 +166,7 @@ declare module '@vxe-ui/core' {
      // tree
     TREE_NODE_OPEN?: string
     TREE_NODE_CLOSE?: string
+    TREE_NODE_LOADED?: string
 
     // tree-select
     TREE_SELECT_LOADED?: string

@@ -36,12 +36,15 @@ export namespace VxeTreePropTypes {
      */
     text?: string
   }
+  export type Accordion = boolean
   export type Height = string | number
   export type MinHeight = string | number
   export type ParentField = string
   export type KeyField = string
   export type TitleField = string
   export type ChildrenField = string
+  export type HasChildField = string
+  export type MapChildrenField = string
   export type Transform = boolean
   export type Trigger = '' | 'default' | 'node'
   export type IsCurrent = boolean
@@ -70,9 +73,16 @@ export namespace VxeTreePropTypes {
     showIcon?: boolean
     trigger?: '' | 'default' | 'node'
   }
+  export type Lazy = boolean
   export type ToggleMethod<D = any> = (params: {
+    $tree: VxeTreeConstructor
+    expanded: boolean
     node: D
   }) => boolean
+  export type LoadMethod<D = any> = (params: {
+    $tree: VxeTreeConstructor
+    node: D
+  }) => Promise<any[]>
   export type ShowIcon = boolean
   export type IconOpen = string
   export type IconClose = string
@@ -86,10 +96,13 @@ export interface VxeTreeProps<D = any> {
   minHeight?: VxeTreePropTypes.MinHeight
   loading?: VxeTreePropTypes.Loading
   loadingConfig?: VxeTreePropTypes.LoadingConfig
+  accordion?: VxeTreePropTypes.Accordion
   parentField?: VxeTreePropTypes.ParentField
   keyField?: VxeTreePropTypes.KeyField
   titleField?: VxeTreePropTypes.TitleField
   childrenField?: VxeTreePropTypes.ChildrenField
+  hasChildField?: VxeTreePropTypes.HasChildField
+  mapChildrenField?: VxeTreePropTypes.MapChildrenField
   transform?: VxeTreePropTypes.Transform
   trigger?: VxeTreePropTypes.Trigger
   isCurrent?: VxeTreePropTypes.IsCurrent
@@ -102,7 +115,12 @@ export interface VxeTreeProps<D = any> {
   showCheckbox?: VxeTreePropTypes.ShowCheckbox
   checkNodeKeys?: VxeTreePropTypes.CheckNodeKeys
   checkboxConfig?: VxeTreePropTypes.CheckboxConfig<D>
+  lazy?: VxeTreePropTypes.Lazy
   toggleMethod?: VxeTreePropTypes.ToggleMethod<D>
+  /**
+     * 该方法用于异步加载子节点
+     */
+  loadMethod?: VxeTreePropTypes.LoadMethod<D>
   showIcon?: VxeTreePropTypes.ShowIcon
   iconOpen?: VxeTreePropTypes.IconOpen
   iconClose?: VxeTreePropTypes.IconClose
@@ -120,6 +138,7 @@ export interface TreeReactData {
   selectRadioKey: VxeTreePropTypes.CheckNodeKey
   treeList: any[]
   treeExpandedMaps: Record<string, boolean>
+  treeExpandLazyLoadedMaps: Record<string, boolean>
   selectCheckboxMaps: Record<string, boolean>
   indeterminateCheckboxMaps: Record<string, boolean>
 }
@@ -135,6 +154,7 @@ export interface TreeMethods {
   toggleExpandByNodeid(nodeids: any): Promise<any>
   toggleExpand(nodes: any): Promise<any>
   setAllExpand(expanded: boolean): Promise<any>
+  loadChildren(node: any, childRecords: any[]): Promise<any>
   isExpandByNode(node: any): boolean
   isCheckedByRadioNodeid(nodeid: any): boolean
   isCheckedByRadioNode(node: any): boolean
@@ -165,10 +185,12 @@ export namespace VxeTreeDefines {
   export interface NodeCacheItem {
     item: any
     itemIndex: number
+    items: any[]
     nodes: any[]
     parent: any
     level: number
     lineCount: number
+    treeLoaded: boolean
   }
 
   export interface NodeClickParams<D = any> {

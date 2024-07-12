@@ -366,6 +366,7 @@ setIcon({
   // tree
   TREE_NODE_OPEN: iconPrefix + 'caret-right rotate90',
   TREE_NODE_CLOSE: iconPrefix + 'caret-right',
+  TREE_NODE_LOADED: iconPrefix + 'spinner roll',
 
   // tree-select
   TREE_SELECT_LOADED: iconPrefix + 'spinner roll',

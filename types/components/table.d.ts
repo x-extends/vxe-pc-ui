@@ -2053,6 +2053,7 @@ export interface TablePrivateComputed<D = any> {
 export interface VxeTablePrivateComputed extends TablePrivateComputed { }
 
 export interface TableReactData<D = any> {
+  isCalcColumn: boolean
   // 低性能的静态列
   staticColumns: any[]
   // 渲染的列分组
@@ -2156,6 +2157,7 @@ export interface TableReactData<D = any> {
     scaleList: VxeTableDefines.ColumnInfo<D>[]
     scaleMinList: VxeTableDefines.ColumnInfo<D>[]
     autoList: VxeTableDefines.ColumnInfo<D>[]
+    remainList: VxeTableDefines.ColumnInfo<D>[]
   },
   // 存放快捷菜单的信息
   ctxMenuStore: {
@@ -3332,6 +3334,7 @@ export namespace VxeTableDefines {
 
     renderWidth: number
     renderHeight: number
+    renderAutoWidth: number
     renderResizeWidth: number
     resizeWidth: number
     model: {
