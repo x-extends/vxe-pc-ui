@@ -51,6 +51,14 @@ export namespace VxeColumnPropTypes {
     row: D
   }) => string | number) | any[] | string
 
+  export type FooterFormatter = ((params: {
+    itemValue: any
+    column: VxeTableDefines.ColumnInfo<D>
+    row: any
+    items: any[]
+    _columnIndex: number
+  }) => string | number) | any[] | string
+
   export type Sortable = boolean
   export type SortBy<D = any> = string | ((params: {
     row: D
@@ -398,6 +406,10 @@ export type VxeColumnProps<D = any> = {
    * 格式化显示内容
    */
   formatter?: VxeColumnPropTypes.Formatter<D>
+  /**
+   * 格式化表尾显示内容
+   */
+  FooterFormatter?: VxeColumnPropTypes.FooterFormatter
   /**
    * 是否允许排序
    */

@@ -3280,6 +3280,7 @@ export namespace VxeTableDefines {
     headerClassName: VxeColumnPropTypes.HeaderClassName
     footerClassName: VxeColumnPropTypes.FooterClassName
     formatter: VxeColumnPropTypes.Formatter<D>
+    footerFormatter: VxeColumnPropTypes.FooterFormatter
     sortable: VxeColumnPropTypes.Sortable
     sortBy: VxeColumnPropTypes.SortBy
     sortType: VxeColumnPropTypes.SortType

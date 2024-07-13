@@ -135,7 +135,7 @@ export interface VxeTreePrivateComputed extends TreePrivateComputed { }
 export interface TreeReactData {
   currentNode: any
   nodeMaps: Record<string, VxeTreeDefines.NodeCacheItem>
-  selectRadioKey: VxeTreePropTypes.CheckNodeKey
+  selectRadioKey: VxeTreePropTypes.CheckNodeKey | null
   treeList: any[]
   treeExpandedMaps: Record<string, boolean>
   treeExpandLazyLoadedMaps: Record<string, boolean>
@@ -148,17 +148,25 @@ export interface TreeInternalData {
 
 export interface TreeMethods<D = any> {
   dispatchEvent(type: ValueOf<VxeTreeEmits>, params: Record<string, any>, evnt: Event | null): void
-  clearExpand(): Promise<any>
-  setExpandByNodeid(nodeids: any, expanded: boolean): Promise<any>
-  setExpand(nodes: any, expanded: boolean): Promise<any>
-  toggleExpandByNodeid(nodeids: any): Promise<any>
-  toggleExpand(nodes: any): Promise<any>
-  setAllExpand(expanded: boolean): Promise<any>
-  loadChildren(node: any, childRecords: any[]): Promise<any>
+  clearRadioNode(): Promise<any>
+  setRadioNode(node: any, checked: boolean): Promise<any>
+  clearCheckboxNode(): Promise<any>
+  setAllCheckboxNode(checked: boolean): Promise<any>
+  setCheckboxNode(nodeList: any | any[], checked: boolean): Promise<any>
+  setCheckboxByNodeId(nodeKeys: any | any[], checked: boolean): Promise<any>
+  clearExpandNode(): Promise<any>
+  setExpandByNodeId(nodeKeys: any | any[], expanded: boolean): Promise<any>
+  setExpandNode(nodeList: any | any[], expanded: boolean): Promise<any>
+  toggleExpandByNodeId(nodeKeys: any | any[]): Promise<any>
+  toggleExpandNode(nodeList: any | any[]): Promise<any>
+  setAllExpandNode(expanded: boolean): Promise<any>
+  reloadExpandNode(node: any): Promise<any>
+  clearExpandLoaded(node: any): Promise<any>
+  loadChildrenNode(node: any, childRecords: any[]): Promise<any>
   isExpandByNode(node: any): boolean
-  isCheckedByRadioNodeid(nodeid: any): boolean
+  isCheckedByRadioNodeId(nodeKey: any): boolean
   isCheckedByRadioNode(node: any): boolean
-  isCheckedByCheckboxNodeid(nodeid: any): boolean
+  isCheckedByCheckboxNodeId(nodeKey: any): boolean
   isIndeterminateByCheckboxNode(node: any): boolean
   isCheckedByCheckboxNode(node: any): boolean
 }
@@ -174,7 +182,9 @@ export type VxeTreeEmits = [
   'node-click',
   'node-dblclick',
   'radio-change',
-  'checkbox-change'
+  'checkbox-change',
+  'load-success',
+  'load-error'
 ]
 
 export namespace VxeTreeDefines {
@@ -206,6 +216,14 @@ export namespace VxeTreeDefines {
   export interface CheckboxChangeEventParams<D = any> extends TreeEventParams<D> {
     value: VxeTreePropTypes.CheckNodeKeys
   }
+
+  export interface LoadSuccessEventParams<D = any> extends TreeEventParams<D> {
+    node: D
+  }
+
+  export interface LoadErrorEventParams<D = any> extends TreeEventParams<D> {
+    node: D
+  }
 }
 
 export type VxeTreeEventProps = {
@@ -213,6 +231,8 @@ export type VxeTreeEventProps = {
   onNodeDblclick?: VxeTreeEvents.NodeDblclick
   onRadioChange?: VxeTreeEvents.RadioChange
   onCheckboxChange?: VxeTreeEvents.CheckboxChange
+  onLoadSuccess?: VxeTreeEvents.LoadSuccess
+  onLoadError?: VxeTreeEvents.LoadError
 }
 
 export interface VxeTreeListeners<D = any> {
@@ -220,6 +240,8 @@ export interface VxeTreeListeners<D = any> {
   nodeDblclick?: VxeTreeEvents.NodeDblclick<D>
   radioChange?: VxeTreeEvents.RadioChange<D>
   checkboxChange?: VxeTreeEvents.CheckboxChange<D>
+  loadSuccess?: VxeTreeEvents.LoadSuccess<D>
+  loadError?: VxeTreeEvents.LoadError<D>
 }
 
 export namespace VxeTreeEvents {
@@ -227,6 +249,8 @@ export namespace VxeTreeEvents {
   export type NodeDblclick<D = any> = (params: VxeTreeDefines.NodeDblclickEventParams<D>) => void
   export type RadioChange<D = any> = (params: VxeTreeDefines.RadioChangeEventParams<D>) => void
   export type CheckboxChange<D = any> = (params: VxeTreeDefines.CheckboxChangeEventParams<D>) => void
+  export type LoadSuccess<D = any> = (params: VxeTreeDefines.LoadSuccessEventParams<D>) => void
+  export type LoadError<D = any> = (params: VxeTreeDefines.LoadErrorEventParams<D>) => void
 }
 
 export namespace VxeTreeSlotTypes {

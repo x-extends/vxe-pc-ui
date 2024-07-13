@@ -9,6 +9,10 @@ declare module '@vxe-ui/core' {
        * 表格 - 自定义单元格格式化方法
        */
       tableCellFormatMethod?: (params: TableCellFormatMethodParams, ...args: any[]) => string | number
+      /**
+       * 表格 - 自定义表尾单元格格式化方法
+       */
+      tableFooterCellFormatMethod?: (params: TableFooterCellFormatMethodParams, ...args: any[]) => string | number
 
       /**
        * 已废弃，请使用 tableCellFormatMethod
@@ -20,6 +24,13 @@ declare module '@vxe-ui/core' {
       cellValue: any
       row: any
       column: VxeTableDefines.ColumnInfo
+    }
+    export interface TableFooterCellFormatMethodParams {
+      itemValue: any
+      column: VxeTableDefines.ColumnInfo
+      row: any
+      items: any[]
+      _columnIndex: number
     }
   }
 }
