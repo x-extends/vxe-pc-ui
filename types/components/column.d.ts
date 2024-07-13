@@ -51,7 +51,7 @@ export namespace VxeColumnPropTypes {
     row: D
   }) => string | number) | any[] | string
 
-  export type FooterFormatter = ((params: {
+  export type FooterFormatter<D = any> = ((params: {
     itemValue: any
     column: VxeTableDefines.ColumnInfo<D>
     row: any
@@ -409,7 +409,7 @@ export type VxeColumnProps<D = any> = {
   /**
    * 格式化表尾显示内容
    */
-  FooterFormatter?: VxeColumnPropTypes.FooterFormatter
+  FooterFormatter?: VxeColumnPropTypes.FooterFormatter<D>
   /**
    * 是否允许排序
    */
