@@ -10,6 +10,9 @@
       <vxe-tree
       is-hover
       lazy
+      show-checkbox
+      show-line
+      has-child-field="hasChild"
       :load-method="loadMethod"
       :data="treeList">
     </vxe-tree>
@@ -133,22 +136,27 @@ const treeList2 = ref([
   { title: '8003425' }
 ])
 
-const treeList = ref<VxeTreePropTypes.Data>([
+const treeList = ref<any[]>([
   { title: '节点2', id: '2', hasChild: true },
   { title: '节点3', id: '3', hasChild: true },
   { title: '节点4', id: '4', hasChild: true },
-  { title: '节点5', id: '5' }
+  { title: '节点5', id: '5', hasChild: false }
 ])
 
-const loadMethod: VxeTreePropTypes.LoadMethod = () => {
-  return new Promise(resolve => {
+const getNodeListApi = (node: any) => {
+  return new Promise<any[]>(resolve => {
+    // 模拟后端接口
     setTimeout(() => {
       resolve([
-        { title: '435435' },
-        { title: '56765' }
+        { title: `${node.title}-1`, id: `${node.id}1`, hasChild: Math.random() * 10 < 6 },
+        { title: `${node.title}-2`, id: `${node.id}2`, hasChild: Math.random() * 10 < 6 }
       ])
-    }, 300)
+    }, 500)
   })
+}
+
+const loadMethod: VxeTreePropTypes.LoadMethod<any> = ({ node }) => {
+  return getNodeListApi(node)
 }
 
 const checkboxCheckRowKey = ref()

@@ -687,6 +687,7 @@ export default defineComponent({
           })
         }
       }
+      const expandNodes: any[] = []
       if (expanded) {
         validNodes.forEach((item) => {
           const itemNodeId = getNodeId(item)
@@ -699,7 +700,7 @@ export default defineComponent({
             } else {
               if (item[childrenField] && item[childrenField].length) {
                 tempExpandedMaps[itemNodeId] = true
-                updateNodeLine(item)
+                expandNodes.push(item)
               }
             }
           }
@@ -709,10 +710,12 @@ export default defineComponent({
           const itemNodeId = getNodeId(item)
           if (tempExpandedMaps[itemNodeId]) {
             delete tempExpandedMaps[itemNodeId]
+            expandNodes.push(item)
           }
         })
       }
       reactData.treeExpandedMaps = tempExpandedMaps
+      expandNodes.forEach(updateNodeLine)
       return Promise.all(result)
     }
 
