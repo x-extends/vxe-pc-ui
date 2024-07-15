@@ -409,7 +409,7 @@ export type VxeColumnProps<D = any> = {
   /**
    * 格式化表尾显示内容
    */
-  FooterFormatter?: VxeColumnPropTypes.FooterFormatter<D>
+  footerFormatter?: VxeColumnPropTypes.FooterFormatter<D>
   /**
    * 是否允许排序
    */
