@@ -159,6 +159,16 @@ export default defineComponent({
       return propsOpts.children || 'children'
     })
 
+    const computeParentField = computed(() => {
+      const propsOpts = computePropsOpts.value
+      return propsOpts.parent || 'parentField'
+    })
+
+    const computeHasChildField = computed(() => {
+      const propsOpts = computePropsOpts.value
+      return propsOpts.hasChild || 'hasChild'
+    })
+
     const computeSelectLabel = computed(() => {
       const { modelValue } = props
       const { fullNodeMaps } = reactData
@@ -442,6 +452,8 @@ export default defineComponent({
       const labelField = computeLabelField.value
       const valueField = computeValueField.value
       const childrenField = computeChildrenField.value
+      const parentField = computeParentField.value
+      const hasChildField = computeHasChildField.value
 
       if (formReadonly) {
         return h('div', {
@@ -531,6 +543,13 @@ export default defineComponent({
                         titleField: labelField,
                         keyField: valueField,
                         childrenField: childrenField,
+                        parentField: parentField,
+                        hasChildField: hasChildField,
+                        accordion: treeOpts.accordion,
+                        lazy: treeOpts.lazy,
+                        loadMethod: treeOpts.loadMethod,
+                        toggleMethod: treeOpts.toggleMethod,
+                        transform: treeOpts.transform,
                         trigger: treeOpts.trigger,
                         showIcon: treeOpts.showIcon,
                         showLine: treeOpts.showLine,

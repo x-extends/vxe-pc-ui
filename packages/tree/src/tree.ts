@@ -49,10 +49,10 @@ export default defineComponent({
       type: String as PropType<VxeTreePropTypes.HasChildField>,
       default: () => getConfig().tree.hasChildField
     },
-    mapChildrenField: {
-      type: String as PropType<VxeTreePropTypes.MapChildrenField>,
-      default: () => getConfig().tree.mapChildrenField
-    },
+    // mapChildrenField: {
+    //   type: String as PropType<VxeTreePropTypes.MapChildrenField>,
+    //   default: () => getConfig().tree.mapChildrenField
+    // },
     transform: Boolean as PropType<VxeTreePropTypes.Transform>,
     isCurrent: {
       type: Boolean as PropType<VxeTreePropTypes.IsCurrent>,
@@ -172,10 +172,6 @@ export default defineComponent({
 
     const computeHasChildField = computed(() => {
       return props.hasChildField || 'hasChild'
-    })
-
-    const computeMapChildrenField = computed(() => {
-      return props.mapChildrenField || 'children'
     })
 
     const computeRadioOpts = computed(() => {
@@ -468,7 +464,6 @@ export default defineComponent({
           return nextTick()
         }
         const childrenField = computeChildrenField.value
-        const mapChildrenField = computeMapChildrenField.value
         const parentNodeItem = nodeMaps[getNodeId(node)]
         const parentLevel = parentNodeItem ? parentNodeItem.level : 0
         const parentNodes = parentNodeItem ? parentNodeItem.nodes : []
@@ -488,7 +483,7 @@ export default defineComponent({
           }, { children: childrenField })
           node[childrenField] = nodeList
           if (transform) {
-            node[mapChildrenField] = nodeList
+            node[childrenField] = nodeList
           }
           updateNodeLine(node)
           return nodeList
@@ -531,9 +526,9 @@ export default defineComponent({
       const { transform } = props
       const keyField = computeKeyField.value
       const parentField = computeParentField.value
-      const mapChildrenField = computeMapChildrenField.value
+      const childrenField = computeChildrenField.value
       if (transform) {
-        reactData.treeList = XEUtils.toArrayTree(list, { key: keyField, parentKey: parentField, mapChildren: mapChildrenField })
+        reactData.treeList = XEUtils.toArrayTree(list, { key: keyField, parentKey: parentField, mapChildren: childrenField })
       } else {
         reactData.treeList = list ? list.slice(0) : []
       }
