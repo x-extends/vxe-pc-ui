@@ -147,12 +147,12 @@
   }
 }
 .vxe-tree--checkbox-option {
-  @include createCheckboxIcon();
   padding-right: 0.4em;
+  @include createCheckboxIcon();
 }
 .vxe-tree--radio-option {
-  @include createRadioIcon();
   padding-right: 0.4em;
+  @include createRadioIcon();
 }
 
 .vxe-tree {
