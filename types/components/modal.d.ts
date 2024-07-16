@@ -3,7 +3,7 @@ import { defineVxeComponent, VxeComponentSizeType, VxeComponentBaseOptions, VxeC
 
 /* eslint-disable no-use-before-define,@typescript-eslint/ban-types */
 
-export declare const VxeModal: defineVxeComponent<VxeModalProps, VxeModalEventProps>
+export declare const VxeModal: defineVxeComponent<VxeModalProps, VxeModalEventProps, VxeModalSlots>
 export type VxeModalComponent = DefineComponent<VxeModalProps, VxeModalEmits>
 
 export type VxeModalInstance = ComponentPublicInstance<VxeModalProps, VxeModalConstructor>
@@ -74,6 +74,26 @@ export namespace VxeModalPropTypes {
   export type ShowHeader = boolean
   export type ShowFooter = boolean
   export type ShowZoom = boolean
+  export interface ZoomConfig {
+    minimizeLayout?: null | '' | 'vertical' | 'horizontal'
+    minimizeMaxSize?: number
+    minimizeOffsetMethod?(params: {
+      $modal: VxeModalConstructor,
+      top: number
+      left: number
+    }): {
+      top: number
+      left: number
+    }
+    minimizeVerticalOffset?: {
+      top?: number
+      left?: number
+    }
+    minimizeHorizontalOffset?: {
+      top?: number
+      left?: number
+    }
+  }
   export type ShowMaximize = boolean
   export type ShowMinimize = boolean
   export type ShowClose = boolean
@@ -125,6 +145,7 @@ export type VxeModalProps = {
   showHeader?: VxeModalPropTypes.ShowHeader
   showFooter?: VxeModalPropTypes.ShowFooter
   showZoom?: VxeModalPropTypes.ShowZoom
+  zoomConfig?: VxeModalPropTypes.ZoomConfig
   showMaximize?: VxeModalPropTypes.ShowMaximize
   showMinimize?: VxeModalPropTypes.ShowMinimize
   showClose?: VxeModalPropTypes.ShowClose
@@ -158,13 +179,20 @@ export interface ModalPrivateComputed {
 export interface VxeModalPrivateComputed extends ModalPrivateComputed { }
 
 export interface ModalReactData {
-  inited: boolean
+  initialized: boolean
   visible: boolean
   contentVisible: boolean
   modalTop: number
   modalZindex: number
+  prevZoomStatus: '' | 'minimize' | 'maximize'
   zoomStatus: '' | 'minimize' | 'maximize'
-  zoomLocat: {
+  revertLocat: {
+    left: number
+    top: number
+    width: number
+    height: number
+  } | null
+  prevLocat: {
     left: number
     top: number
     width: number
@@ -263,7 +291,7 @@ export namespace VxeModalDefines {
   }
 
   interface ModalEventParams extends VxeComponentEventParams {
-    $modal: VxeModalConstructor & VxeModalMethods
+    $modal: VxeModalConstructor
   }
 
   interface ModalBaseParams extends ModalVisibleParams { }
@@ -381,7 +409,7 @@ export interface ModalController {
    * 获取动态的活动窗口
    * @param id 窗口唯一标识
    */
-  get(id: string): VxeModalConstructor & VxeModalMethods
+  get(id: string): VxeModalConstructor
   /**
    * 关闭动态的活动窗口，如果为空则关闭所有
    * @param id 窗口唯一标识
@@ -390,7 +418,7 @@ export interface ModalController {
 }
 
 export interface ModalDefaultSlotParams {
-  $modal: VxeModalConstructor & VxeModalMethods
+  $modal: VxeModalConstructor
 }
 
 export interface ModalHeaderSlotParams extends ModalDefaultSlotParams { }

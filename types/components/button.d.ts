@@ -3,7 +3,7 @@ import { defineVxeComponent, VxeComponentBaseOptions, VxeComponentEventParams, V
 
 /* eslint-disable no-use-before-define,@typescript-eslint/ban-types */
 
-export declare const VxeButton: defineVxeComponent<VxeButtonProps, VxeButtonEventProps>
+export declare const VxeButton: defineVxeComponent<VxeButtonProps, VxeButtonEventProps, VxeButtonSlots>
 export type VxeButtonComponent = DefineComponent<VxeButtonProps, VxeButtonEmits>
 
 export type VxeButtonInstance = ComponentPublicInstance<VxeButtonProps, VxeButtonConstructor>

@@ -5,7 +5,7 @@ import { VxeFormProps, VxeFormPropTypes } from './form'
 
 /* eslint-disable no-use-before-define,@typescript-eslint/ban-types */
 
-export declare const VxeFormView: defineVxeComponent<VxeFormViewProps, VxeFormViewEventProps>
+export declare const VxeFormView: defineVxeComponent<VxeFormViewProps, VxeFormViewEventProps, VxeFormViewSlots>
 export type VxeFormViewComponent = DefineComponent<VxeFormViewProps, VxeFormViewEmits>
 
 export type VxeFormViewInstance = ComponentPublicInstance<VxeFormViewProps, VxeFormViewConstructor>

@@ -155,6 +155,17 @@ setConfig({
     padding: true,
     draggable: true,
     showConfirmButton: null,
+    zoomConfig: {
+      minimizeMaxSize: 10,
+      minimizeVerticalOffset: {
+        top: -24,
+        left: 0
+      },
+      minimizeHorizontalOffset: {
+        top: 0,
+        left: 32
+      }
+    },
     // storage: false,
     storageKey: 'VXE_MODAL_POSITION'
   },

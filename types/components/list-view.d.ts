@@ -4,7 +4,7 @@ import { VxeListDesignDefines } from './list-design'
 
 /* eslint-disable no-use-before-define,@typescript-eslint/ban-types */
 
-export declare const VxeListView: defineVxeComponent<VxeListViewProps, VxeListViewEventProps>
+export declare const VxeListView: defineVxeComponent<VxeListViewProps, VxeListViewEventProps, VxeListViewSlots>
 export type VxeListViewComponent = DefineComponent<VxeListViewProps, VxeListViewEmits>
 
 export type VxeListViewInstance = ComponentPublicInstance<VxeListViewProps, VxeListViewConstructor>

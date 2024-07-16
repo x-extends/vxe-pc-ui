@@ -6,7 +6,7 @@ import { defineVxeComponent, VxeComponentBaseOptions, VxeComponentEventParams, V
 export declare const VxeSwitch: defineVxeComponent<VxeSwitchProps, VxeSwitchEventProps>
 export type VxeSwitchComponent = DefineComponent<VxeSwitchProps, VxeSwitchEmits>
 
-export type VxeSwitchInstance = ComponentPublicInstance<VxeSwitchProps, VxeSwitchConstructor>
+export type VxeSwitchInstance = ComponentPublicInstance<VxeSwitchProps, VxeSwitchConstructor, VxeSwitchSlots>
 
 export interface VxeSwitchConstructor extends VxeComponentBaseOptions, VxeSwitchMethods {
   props: VxeSwitchProps

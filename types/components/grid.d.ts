@@ -8,7 +8,7 @@ import { VxeFormItemProps } from './form-item'
 
 /* eslint-disable no-use-before-define,@typescript-eslint/ban-types */
 
-export declare const VxeGrid: defineVxeComponent<VxeGridProps, VxeGridEventProps>
+export declare const VxeGrid: defineVxeComponent<VxeGridProps, VxeGridEventProps, VxeGridSlots>
 export type VxeGridComponent = DefineComponent<VxeGridProps, VxeGridEmits>
 
 export type VxeGridInstance<D = any> = ComponentPublicInstance<VxeGridProps<D>, VxeGridConstructor<D>>

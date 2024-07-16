@@ -3,7 +3,7 @@ import { defineVxeComponent, VxeComponentBaseOptions, VxeComponentEventParams, V
 
 /* eslint-disable no-use-before-define,@typescript-eslint/ban-types */
 
-export declare const VxeLayoutAside: defineVxeComponent<VxeLayoutAsideProps, VxeLayoutAsideEventProps>
+export declare const VxeLayoutAside: defineVxeComponent<VxeLayoutAsideProps, VxeLayoutAsideEventProps, VxeLayoutAsideSlots>
 export type VxeLayoutAsideComponent = DefineComponent<VxeLayoutAsideProps, VxeLayoutAsideEmits>
 
 export type VxeLayoutAsideInstance = ComponentPublicInstance<VxeLayoutAsideProps, VxeLayoutAsideConstructor>

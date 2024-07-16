@@ -4,7 +4,7 @@ import { VxeImagePreviewProps, VxeImagePreviewPropTypes } from './image-preview'
 
 /* eslint-disable no-use-before-define,@typescript-eslint/ban-types */
 
-export declare const VxeImage: defineVxeComponent<VxeImageProps, VxeImageEventProps>
+export declare const VxeImage: defineVxeComponent<VxeImageProps, VxeImageEventProps, VxeImageSlots>
 export type VxeImageComponent = DefineComponent<VxeImageProps, VxeImageEmits>
 
 export type VxeImageInstance = ComponentPublicInstance<VxeImageProps, VxeImageConstructor>

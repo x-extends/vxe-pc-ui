@@ -4,7 +4,7 @@ import { VxeRadioPropTypes } from './radio'
 
 /* eslint-disable no-use-before-define,@typescript-eslint/ban-types */
 
-export declare const VxeRadioButton: defineVxeComponent<VxeRadioButtonProps, VxeRadioButtonEventProps>
+export declare const VxeRadioButton: defineVxeComponent<VxeRadioButtonProps, VxeRadioButtonEventProps, VxeRadioButtonSlots>
 export type VxeRadioButtonComponent = DefineComponent<VxeRadioButtonProps, VxeRadioButtonEmits>
 
 export type VxeRadioButtonInstance = ComponentPublicInstance<VxeRadioButtonProps, VxeRadioButtonConstructor>

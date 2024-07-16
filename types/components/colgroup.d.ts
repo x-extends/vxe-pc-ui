@@ -4,7 +4,7 @@ import { VxeColumnPropTypes, VxeColumnSlotTypes } from './column'
 
 /* eslint-disable no-use-before-define,@typescript-eslint/ban-types */
 
-export declare const VxeColgroup: defineVxeComponent<VxeColgroupProps, VxeColgroupEventProps>
+export declare const VxeColgroup: defineVxeComponent<VxeColgroupProps, VxeColgroupEventProps, VxeColgroupSlots>
 export type VxeColgroupComponent = DefineComponent<VxeColgroupProps, VxeColgroupEmits>
 
 export type VxeColgroupInstance = ComponentPublicInstance<VxeColgroupProps, VxeColgroupConstructor>

@@ -3,7 +3,7 @@ import { defineVxeComponent, VxeComponentBaseOptions, VxeComponentEventParams, V
 
 /* eslint-disable no-use-before-define,@typescript-eslint/ban-types */
 
-export declare const VxeAlert: defineVxeComponent<VxeAlertProps, VxeAlertEventProps>
+export declare const VxeAlert: defineVxeComponent<VxeAlertProps, VxeAlertEventProps, VxeAlertSlots>
 export type VxeAlertComponent = DefineComponent<VxeAlertProps, VxeAlertEmits>
 
 export type VxeAlertInstance = ComponentPublicInstance<VxeAlertProps, VxeAlertConstructor>

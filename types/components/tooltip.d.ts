@@ -3,7 +3,7 @@ import { defineVxeComponent, VxeComponentBaseOptions, VxeComponentEventParams, V
 
 /* eslint-disable no-use-before-define,@typescript-eslint/ban-types */
 
-export declare const VxeTooltip: defineVxeComponent<VxeTooltipProps, VxeTooltipEventProps>
+export declare const VxeTooltip: defineVxeComponent<VxeTooltipProps, VxeTooltipEventProps, VxeTooltipSlots>
 export type VxeTooltipComponent = DefineComponent<VxeTooltipProps, VxeTooltipEmits>
 
 export type VxeTooltipInstance = ComponentPublicInstance<VxeTooltipProps, VxeTooltipConstructor>

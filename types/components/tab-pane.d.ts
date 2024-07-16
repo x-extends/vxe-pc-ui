@@ -3,7 +3,7 @@ import { defineVxeComponent, VxeComponentBaseOptions, VxeComponentEventParams, V
 
 /* eslint-disable no-use-before-define,@typescript-eslint/ban-types */
 
-export declare const VxeTabPane: defineVxeComponent<VxeTabPaneProps, VxeTabPaneEventProps>
+export declare const VxeTabPane: defineVxeComponent<VxeTabPaneProps, VxeTabPaneEventProps, VxeTabPaneSlots>
 export type VxeTabPaneComponent = DefineComponent<VxeTabPaneProps, VxeTabPaneEmits>
 
 export type VxeTabPaneInstance = ComponentPublicInstance<VxeTabPaneProps, VxeTabPaneConstructor>

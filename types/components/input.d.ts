@@ -3,7 +3,7 @@ import { defineVxeComponent, VxeComponentBaseOptions, ValueOf, VxeComponentStyle
 
 /* eslint-disable no-use-before-define,@typescript-eslint/ban-types */
 
-export declare const VxeInput: defineVxeComponent<VxeInputProps, VxeInputEventProps>
+export declare const VxeInput: defineVxeComponent<VxeInputProps, VxeInputEventProps, VxeInputSlots>
 export type VxeInputComponent = DefineComponent<VxeInputProps, VxeInputEmits>
 
 export type VxeInputInstance = ComponentPublicInstance<VxeInputProps, VxeInputConstructor>

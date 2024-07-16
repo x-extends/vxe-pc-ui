@@ -3,7 +3,7 @@ import { defineVxeComponent, VxeComponentBaseOptions, VxeComponentEventParams, V
 
 /* eslint-disable no-use-before-define,@typescript-eslint/ban-types */
 
-export declare const VxeLayoutBody: defineVxeComponent<VxeLayoutBodyProps, VxeLayoutBodyEventProps>
+export declare const VxeLayoutBody: defineVxeComponent<VxeLayoutBodyProps, VxeLayoutBodyEventProps, VxeLayoutBodySlots>
 export type VxeLayoutBodyComponent = DefineComponent<VxeLayoutBodyProps, VxeLayoutBodyEmits>
 
 export type VxeLayoutBodyInstance = ComponentPublicInstance<VxeLayoutBodyProps, VxeLayoutBodyConstructor>
