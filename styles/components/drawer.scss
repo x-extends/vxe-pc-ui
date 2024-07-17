@@ -151,6 +151,10 @@
   opacity: 0;
   @include createAnimationTransition(all, 0.3s);
 }
+.vxe-drawer--aside {
+  flex-shrink: 0;
+  overflow: auto;
+}
 .vxe-drawer--container {
   display: flex;
   flex-direction: column;

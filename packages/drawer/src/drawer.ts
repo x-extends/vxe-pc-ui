@@ -374,8 +374,9 @@ export default defineComponent({
     }
 
     const renderVN = () => {
-      const { className, position, loading, lockScroll, padding, lockView, mask, destroyOnClose } = props
+      const { slots: propSlots = {}, className, position, loading, lockScroll, padding, lockView, mask, destroyOnClose } = props
       const { initialized, contentVisible, visible } = reactData
+      const asideSlot = slots.aside || propSlots.aside
       const vSize = computeSize.value
       return h(Teleport, {
         to: 'body',
@@ -403,6 +404,11 @@ export default defineComponent({
             class: 'vxe-drawer--box',
             onMousedown: boxMousedownEvent
           }, [
+            asideSlot
+              ? h('div', {
+                class: 'vxe-drawer--aside'
+              }, getSlotVNs(asideSlot({ $drawer: $xeDrawer })))
+              : createCommentVNode(),
             h('div', {
               class: 'vxe-drawer--container'
             }, !reactData.initialized || (destroyOnClose && !reactData.visible)

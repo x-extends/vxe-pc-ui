@@ -433,9 +433,7 @@ export default defineComponent({
       reactData.prevZoomStatus = prevZoomStatus
       reactData.zoomStatus = 'maximize'
       return nextTick().then(() => {
-        const marginSize = Math.max(2, XEUtils.toNumber(props.marginSize))
         const boxElem = getBox()
-        const { visibleHeight, visibleWidth } = getDomNode()
         // 如果当前处于复原状态
         if (!prevZoomStatus) {
           reactData.revertLocat = {
@@ -446,10 +444,10 @@ export default defineComponent({
           }
         }
         Object.assign(boxElem.style, {
-          top: `${marginSize}px`,
-          left: `${marginSize}px`,
-          width: `${visibleWidth - marginSize * 2}px`,
-          height: `${visibleHeight - marginSize * 2}px`
+          top: '0',
+          left: '0',
+          width: '100%',
+          height: '100%'
         })
         savePosStorage()
       })
@@ -1070,9 +1068,9 @@ export default defineComponent({
     }
 
     const renderVN = () => {
-      const { className, type, animat, draggable, iconStatus, position, loading, destroyOnClose, status, lockScroll, padding, lockView, mask, resize } = props
+      const { slots: propSlots = {}, className, type, animat, draggable, iconStatus, position, loading, destroyOnClose, status, lockScroll, padding, lockView, mask, resize } = props
       const { initialized, revertLocat, modalTop, contentVisible, visible, zoomStatus } = reactData
-      const asideSlot = slots.aside
+      const asideSlot = slots.aside || propSlots.aside
       const vSize = computeSize.value
       const isMsg = computeIsMsg.value
       const ons: Record<string, any> = {}
