@@ -141,6 +141,11 @@ declare module '@vxe-ui/core' {
      * 已废弃，请使用 showTableFilterFooter
      * @deprecated
      */
+    isFooter?: boolean
+    /**
+     * 已废弃，请使用 showTableFilterFooter
+     * @deprecated
+     */
     showFilterFooter?: boolean
     /**
      * 已废弃，请使用 tableCellClassName
