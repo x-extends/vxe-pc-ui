@@ -8,7 +8,7 @@ import VxeLoadingComponent from '../../loading/index'
 import { getSlotVNs } from '../../ui/src/vn'
 import { errLog } from '../../ui/src/log'
 
-import type { VxeModalConstructor, VxeModalPropTypes, ModalReactData, VxeModalEmits, ModalEventTypes, VxeButtonInstance, ModalMethods, ModalPrivateRef, VxeModalMethods } from '../../../types'
+import type { VxeModalConstructor, VxeModalPropTypes, ModalReactData, VxeModalEmits, VxeModalPrivateComputed, ModalEventTypes, VxeButtonInstance, ModalMethods, ModalPrivateRef, VxeModalMethods } from '../../../types'
 
 export const allActiveModals: VxeModalConstructor[] = []
 const msgQueue: VxeModalConstructor[] = []
@@ -120,16 +120,6 @@ export default defineComponent({
       refElem
     }
 
-    const $xeModal = {
-      xID,
-      props,
-      context,
-      reactData,
-      getRefMaps: () => refMaps
-    } as unknown as VxeModalConstructor & VxeModalMethods
-
-    let modalMethods = {} as ModalMethods
-
     const computeIsMsg = computed(() => {
       return props.type === 'message' || props.type === 'notification'
     })
@@ -137,6 +127,22 @@ export default defineComponent({
     const computeZoomOpts = computed(() => {
       return Object.assign({}, getConfig().modal.zoomConfig, props.zoomConfig)
     })
+
+    const computeMaps: VxeModalPrivateComputed = {
+      computeSize,
+      computeZoomOpts
+    }
+
+    const $xeModal = {
+      xID,
+      props,
+      context,
+      reactData,
+      getRefMaps: () => refMaps,
+      getComputeMaps: () => computeMaps
+    } as unknown as VxeModalConstructor & VxeModalMethods
+
+    let modalMethods = {} as ModalMethods
 
     const getBox = () => {
       const boxElem = refModalBox.value
@@ -338,7 +344,19 @@ export default defineComponent({
       const { minimizeLayout, minimizeMaxSize, minimizeHorizontalOffset, minimizeVerticalOffset, minimizeOffsetMethod } = zoomOpts
       const isHorizontalLayout = minimizeLayout === 'horizontal'
       const prevZoomStatus = reactData.zoomStatus
-      const mList = allActiveModals.filter(item => item.xID !== $xeModal.xID && item.props.type === 'modal' && item.reactData.zoomStatus === 'minimize')
+      const hlMList: VxeModalConstructor[] = []
+      const vlMList: VxeModalConstructor[] = []
+      allActiveModals.forEach(item => {
+        if (item.xID !== $xeModal.xID && item.props.type === 'modal' && item.reactData.zoomStatus === 'minimize') {
+          const itemZoomOpts = item.getComputeMaps().computeZoomOpts.value
+          if (itemZoomOpts.minimizeLayout === 'horizontal') {
+            hlMList.push(item)
+          } else {
+            vlMList.push(item)
+          }
+        }
+      })
+      const mList = isHorizontalLayout ? hlMList : vlMList
       // 如果配置最小化最大数量
       if (minimizeMaxSize && mList.length >= minimizeMaxSize) {
         if (VxeUI.modal) {
@@ -378,7 +396,15 @@ export default defineComponent({
           if (minBoxElem) {
             const boxLeft = XEUtils.toNumber(minBoxElem.style.left)
             const boxTop = XEUtils.toNumber(minBoxElem.style.top)
-            let offsetObj = Object.assign({}, isHorizontalLayout ? minimizeHorizontalOffset : minimizeVerticalOffset)
+            let offsetObj: {
+              top?: number
+              left?: number
+            } = {}
+            if (isHorizontalLayout) {
+              offsetObj = Object.assign({}, minimizeHorizontalOffset)
+            } else {
+              offsetObj = Object.assign({}, minimizeVerticalOffset)
+            }
             targetLeft = boxLeft + XEUtils.toNumber(offsetObj.left)
             targetTop = boxTop + XEUtils.toNumber(offsetObj.top)
             if (minimizeOffsetMethod) {
@@ -881,12 +907,12 @@ export default defineComponent({
           class: 'vxe-modal--header-right'
         }, [
           cornerSlot
-            ? h('span', {
+            ? h('div', {
               class: 'vxe-modal--corner-wrapper'
             }, getSlotVNs(cornerSlot({ $modal: $xeModal })))
             : createCommentVNode(),
           (XEUtils.isBoolean(showMinimize) ? showMinimize : showZoom)
-            ? h('span', {
+            ? h('div', {
               class: ['vxe-modal--zoom-btn', 'trigger--btn'],
               title: getI18n(`vxe.modal.zoom${zoomStatus === 'minimize' ? 'Out' : 'Min'}`),
               onClick: toggleZoomMinEvent
@@ -897,7 +923,7 @@ export default defineComponent({
             ])
             : createCommentVNode(),
           (XEUtils.isBoolean(showMaximize) ? showMaximize : showZoom) && zoomStatus !== 'minimize'
-            ? h('span', {
+            ? h('div', {
               class: ['vxe-modal--zoom-btn', 'trigger--btn'],
               title: getI18n(`vxe.modal.zoom${zoomStatus === 'maximize' ? 'Out' : 'In'}`),
               onClick: toggleZoomMaxEvent
@@ -908,7 +934,7 @@ export default defineComponent({
             ])
             : createCommentVNode(),
           showClose
-            ? h('span', {
+            ? h('div', {
               class: ['vxe-modal--close-btn', 'trigger--btn'],
               title: getI18n('vxe.modal.close'),
               onClick: closeEvent
@@ -922,11 +948,10 @@ export default defineComponent({
       ]
     }
 
-    const renderHeaders = () => {
+    const renderHeader = () => {
       const { slots: propSlots = {}, showZoom, showMaximize, draggable } = props
       const isMsg = computeIsMsg.value
       const headerSlot = slots.header || propSlots.header
-      const headVNs: VNode[] = []
       if (props.showHeader) {
         const headerOns: Record<string, any> = {}
         if (draggable) {
@@ -935,26 +960,24 @@ export default defineComponent({
         if ((XEUtils.isBoolean(showMaximize) ? showMaximize : showZoom) && props.dblclickZoom && props.type === 'modal') {
           headerOns.onDblclick = toggleZoomMaxEvent
         }
-        headVNs.push(
-          h('div', {
-            ref: refHeaderElem,
-            class: ['vxe-modal--header', {
-              'is--ellipsis': !isMsg && props.showTitleOverflow
-            }],
-            ...headerOns
-          }, headerSlot
-            ? (!reactData.initialized || (props.destroyOnClose && !reactData.visible) ? [] : getSlotVNs(headerSlot({ $modal: $xeModal })))
-            : renderTitles())
-        )
+        return h('div', {
+          ref: refHeaderElem,
+          class: ['vxe-modal--header', {
+            'is--ellipsis': !isMsg && props.showTitleOverflow
+          }],
+          ...headerOns
+        }, headerSlot ? getSlotVNs(headerSlot({ $modal: $xeModal })) : renderTitles())
       }
-      return headVNs
+      return createCommentVNode()
     }
 
-    const renderBodys = () => {
+    const renderBody = () => {
       const { slots: propSlots = {}, status, message, iconStatus } = props
       const content = props.content || message
       const isMsg = computeIsMsg.value
       const defaultSlot = slots.default || propSlots.default
+      const leftSlot = slots.left || propSlots.left
+      const rightSlot = slots.right || propSlots.right
       const contVNs: VNode[] = []
       if (!isMsg && (status || iconStatus)) {
         contVNs.push(
@@ -970,28 +993,37 @@ export default defineComponent({
       contVNs.push(
         h('div', {
           class: 'vxe-modal--content'
-        }, defaultSlot ? (!reactData.initialized || (props.destroyOnClose && !reactData.visible) ? [] : getSlotVNs(defaultSlot({ $modal: $xeModal }))) as VNode[] : getFuncText(content))
+        }, defaultSlot ? getSlotVNs(defaultSlot({ $modal: $xeModal })) : getFuncText(content))
       )
-      if (!isMsg) {
-        /**
-         * 加载中
-         */
-        contVNs.push(
-          h(VxeLoadingComponent, {
+      return h('div', {
+        class: 'vxe-modal--body'
+      }, [
+        leftSlot
+          ? h('div', {
+            class: 'vxe-modal--body-left'
+          }, getSlotVNs(leftSlot({ $modal: $xeModal })))
+          : createCommentVNode(),
+        h('div', {
+          class: 'vxe-modal--body-default'
+        }, contVNs),
+        rightSlot
+          ? h('div', {
+            class: 'vxe-modal--body-right'
+          }, getSlotVNs(rightSlot({ $modal: $xeModal })))
+          : createCommentVNode(),
+        isMsg
+          ? createCommentVNode()
+          : h(VxeLoadingComponent, {
             class: 'vxe-modal--loading',
             modelValue: props.loading
           })
-        )
-      }
-      return [
-        h('div', {
-          class: 'vxe-modal--body'
-        }, contVNs)
-      ]
+      ])
     }
 
-    const renderBtns = () => {
-      const { showCancelButton, showConfirmButton, type } = props
+    const renderDefaultFooter = () => {
+      const { slots: propSlots = {}, showCancelButton, showConfirmButton, type } = props
+      const lfSlot = slots.leftfoot || propSlots.leftfoot
+      const rfSlot = slots.rightfoot || propSlots.rightfoot
       const btnVNs = []
       if (XEUtils.isBoolean(showCancelButton) ? showCancelButton : type === 'confirm') {
         btnVNs.push(
@@ -1014,39 +1046,31 @@ export default defineComponent({
           })
         )
       }
-      return btnVNs
+      return h('div', {
+        class: 'vxe-modal--footer-wrapper'
+      }, [
+        h('div', {
+          class: 'vxe-modal--footer-left'
+        }, lfSlot ? getSlotVNs(lfSlot({ $modal: $xeModal })) : []),
+        h('div', {
+          class: 'vxe-modal--footer-right'
+        }, rfSlot ? getSlotVNs(rfSlot({ $modal: $xeModal })) : btnVNs)
+      ])
     }
 
-    const renderFooters = () => {
+    const renderFooter = () => {
       const { slots: propSlots = {} } = props
-      const isMsg = computeIsMsg.value
       const footerSlot = slots.footer || propSlots.footer
-      const footVNs: VNode[] = []
       if (props.showFooter) {
-        footVNs.push(
-          h('div', {
-            class: 'vxe-modal--footer'
-          }, footerSlot ? (!reactData.initialized || (props.destroyOnClose && !reactData.visible) ? [] : getSlotVNs(footerSlot({ $modal: $xeModal }))) as VNode[] : renderBtns())
-        )
+        return h('div', {
+          class: 'vxe-modal--footer'
+        }, footerSlot ? getSlotVNs(footerSlot({ $modal: $xeModal })) : [renderDefaultFooter()])
       }
-      if (!isMsg && props.resize) {
-        footVNs.push(
-          h('span', {
-            class: 'vxe-modal--resize'
-          }, ['wl', 'wr', 'swst', 'sest', 'st', 'swlb', 'selb', 'sb'].map(type => {
-            return h('span', {
-              class: `${type}-resize`,
-              type: type,
-              onMousedown: dragEvent
-            })
-          }))
-        )
-      }
-      return footVNs
+      return createCommentVNode()
     }
 
     const renderVN = () => {
-      const { className, type, animat, draggable, iconStatus, position, loading, status, lockScroll, padding, lockView, mask, resize } = props
+      const { className, type, animat, draggable, iconStatus, position, loading, destroyOnClose, status, lockScroll, padding, lockView, mask, resize } = props
       const { initialized, revertLocat, modalTop, contentVisible, visible, zoomStatus } = reactData
       const asideSlot = slots.aside
       const vSize = computeSize.value
@@ -1110,7 +1134,24 @@ export default defineComponent({
               : createCommentVNode(),
             h('div', {
               class: 'vxe-modal--container'
-            }, renderHeaders().concat(renderBodys(), renderFooters()))
+            }, !reactData.initialized || (destroyOnClose && !reactData.visible)
+              ? []
+              : [
+                  renderHeader(),
+                  renderBody(),
+                  renderFooter(),
+                  !isMsg && resize
+                    ? h('span', {
+                      class: 'vxe-modal--resize'
+                    }, ['wl', 'wr', 'swst', 'sest', 'st', 'swlb', 'selb', 'sb'].map(type => {
+                      return h('span', {
+                        class: `${type}-resize`,
+                        type: type,
+                        onMousedown: dragEvent
+                      })
+                    }))
+                    : createCommentVNode()
+                ])
           ])
         ])
       ])

@@ -57,7 +57,18 @@
 }
 .vxe-modal--body {
   display: flex;
+  flex-direction: row;
   flex-grow: 1;
+}
+.vxe-modal--body-left,
+.vxe-modal--body-right {
+  flex-shrink: 0;
+  overflow: auto;
+}
+.vxe-modal--body-default {
+  display: flex;
+  flex-grow: 1;
+  overflow: auto;
 }
 .vxe-modal--header {
   display: flex;
@@ -77,11 +88,24 @@
     }
   }
 }
+.vxe-modal--footer-wrapper {
+  display: flex;
+  flex-direction: row;
+  .vxe-modal--footer-left {
+    flex-grow: 1;
+    text-align: left
+  }
+  .vxe-modal--footer-right {
+    flex-shrink: 0;
+  }
+}
 .vxe-modal--header-title {
   flex-grow: 1;
   padding: 0.8em 0 0.8em 0.6em;
 }
 .vxe-modal--header-right {
+  display: flex;
+  flex-direction: row;
   flex-shrink: 0;
   padding: 0 0.6em 0 0;
 }
@@ -397,14 +421,14 @@
     .vxe-modal--aside {
       padding: 0.8em 0 0.8em 0.6em;
     }
-    .vxe-modal--body {
+    .vxe-modal--body-default {
       padding: 0.8em 0.6em;
       .vxe-modal--status-wrapper {
         padding-right: 0.6em;
       }
     }
     &.type--notification {
-      .vxe-modal--body {
+      .vxe-modal--body-default {
         padding-top: 0;
       }
     }

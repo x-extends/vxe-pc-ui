@@ -99,6 +99,9 @@ declare module '@vxe-ui/core' {
     MODAL_QUESTION?: string
     MODAL_LOADING?: string
 
+    // drawer
+    DRAWER_CLOSE?: string
+
     // form
     FORM_PREFIX?: string
     FORM_SUFFIX?: string

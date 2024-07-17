@@ -81,7 +81,7 @@
           <span style="color:red">自定义标题</span>
         </template>
         <template #corner>
-          <VxeIcon name="minus"></VxeIcon>
+          <VxeIcon name="bell-fill"></VxeIcon>
         </template>
         <template #default>
           <vxe-table
@@ -202,7 +202,8 @@
     </p>
 
     <p>
-    <vxe-button content="点击弹出" @click="openEvent"></vxe-button>
+      <vxe-button content="横向排列" @click="openHorizontalEvent"></vxe-button>
+      <vxe-button content="纵向排列" @click="openVerticalEvent"></vxe-button>
     </p>
   </div>
 </template>
@@ -312,7 +313,7 @@ const openAlert = (options: VxeModalDefines.ModalOptions) => {
 
 let num = 1
 
-const openEvent = () => {
+const openHorizontalEvent = () => {
   VxeUI.modal.open({
     title: `标题 ${num}`,
     content: `我是第 ${num} 个`,
@@ -321,7 +322,27 @@ const openEvent = () => {
     escClosable: true,
     width: 600,
     height: 400,
-    showZoom: true
+    showMinimize: true,
+    zoomConfig: {
+      minimizeLayout: 'horizontal'
+    }
+  })
+  num++
+}
+
+const openVerticalEvent = () => {
+  VxeUI.modal.open({
+    title: `标题 ${num}`,
+    content: `我是第 ${num} 个`,
+    mask: false,
+    lockView: false,
+    escClosable: true,
+    width: 600,
+    height: 400,
+    showMinimize: true,
+    zoomConfig: {
+      minimizeLayout: 'vertical'
+    }
   })
   num++
 }

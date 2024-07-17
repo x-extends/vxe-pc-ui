@@ -310,6 +310,9 @@ setIcon({
   MODAL_QUESTION: iconPrefix + 'question-circle-fill',
   MODAL_LOADING: iconPrefix + 'spinner roll',
 
+  // drawer
+  DRAWER_CLOSE: iconPrefix + 'close',
+
   // form
   FORM_PREFIX: iconPrefix + 'question-circle-fill',
   FORM_SUFFIX: iconPrefix + 'question-circle-fill',

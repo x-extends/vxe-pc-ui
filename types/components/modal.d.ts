@@ -1,4 +1,4 @@
-import { RenderFunction, SetupContext, Ref, ComponentPublicInstance, DefineComponent } from 'vue'
+import { RenderFunction, SetupContext, Ref, ComputedRef, ComponentPublicInstance, DefineComponent } from 'vue'
 import { defineVxeComponent, VxeComponentSizeType, VxeComponentBaseOptions, VxeComponentEventParams, ValueOf, VxeComponentSlotType } from '@vxe-ui/core'
 
 /* eslint-disable no-use-before-define,@typescript-eslint/ban-types */
@@ -114,7 +114,9 @@ export namespace VxeModalPropTypes {
   export type StorageKey = string
   export type Animat = boolean
   export type Padding = boolean
-  export type BeforeHideMethod = (params: ModalVisibleParams) => Promise<any>
+  export type BeforeHideMethod = (params: {
+    type: ModalEventTypes
+  }) => Promise<any>
   export type Slots = VxeModalSlots
 }
 
@@ -175,6 +177,8 @@ export type VxeModalProps = {
 }
 
 export interface ModalPrivateComputed {
+  computeSize: ComputedRef<VxeModalPropTypes.Size>
+  computeZoomOpts: ComputedRef<VxeModalPropTypes.ZoomConfig>
 }
 export interface VxeModalPrivateComputed extends ModalPrivateComputed { }
 
@@ -294,7 +298,9 @@ export namespace VxeModalDefines {
     $modal: VxeModalConstructor
   }
 
-  interface ModalBaseParams extends ModalVisibleParams { }
+  interface ModalBaseParams {
+    type: ModalEventTypes
+  }
 
   export interface ShowParams extends ModalBaseParams { }
   export interface ShowEventParams extends ModalEventParams, ShowParams { }
@@ -417,12 +423,23 @@ export interface ModalController {
   close(id?: VxeModalPropTypes.ID): Promise<any>
 }
 
+/**
+ * @deprecated
+ */
 export interface ModalDefaultSlotParams {
   $modal: VxeModalConstructor
 }
-
+/**
+ * @deprecated
+ */
 export interface ModalHeaderSlotParams extends ModalDefaultSlotParams { }
+/**
+ * @deprecated
+ */
 export interface ModalTitleSlotParams extends ModalDefaultSlotParams { }
+/**
+ * @deprecated
+ */
 export interface ModalFooterSlotParams extends ModalDefaultSlotParams { }
 
 interface ModalVisibleParams {
@@ -442,30 +459,57 @@ export namespace VxeModalEvents {
 }
 
 export namespace VxeModalSlotTypes {
-  export interface DefaultSlotParams {}
+  export interface DefaultSlotParams {
+    $modal: VxeModalConstructor
+  }
+
+  export interface LeftSlotParams extends DefaultSlotParams { }
+  export interface RightSlotParams extends DefaultSlotParams { }
+  export interface HeaderSlotParams extends DefaultSlotParams { }
+  export interface TitleSlotParams extends DefaultSlotParams { }
+  export interface CornerSlotParams extends DefaultSlotParams { }
+  export interface FooterSlotParams extends DefaultSlotParams { }
+  export interface LeftfootSlotParams extends DefaultSlotParams { }
+  export interface RightfootSlotParams extends DefaultSlotParams { }
 }
 
 export interface VxeModalSlots {
   /**
    * 自定义窗口内容模板
    */
-  default?(params: ModalDefaultSlotParams): VxeComponentSlotType[] | VxeComponentSlotType
+  default?(params: VxeModalSlotTypes.DefaultSlotParams): VxeComponentSlotType[] | VxeComponentSlotType
+  /**
+   * 自定义窗口左侧内容模板
+   */
+  left?(params: VxeModalSlotTypes.LeftSlotParams): VxeComponentSlotType[] | VxeComponentSlotType
+  /**
+   * 自定义窗口右侧内容模板
+   */
+  right?(params: VxeModalSlotTypes.RightSlotParams): VxeComponentSlotType[] | VxeComponentSlotType
   /**
    * 自定义窗口头部的模板
    */
-  header?(params: ModalHeaderSlotParams): VxeComponentSlotType[] | VxeComponentSlotType
+  header?(params: VxeModalSlotTypes.HeaderSlotParams): VxeComponentSlotType[] | VxeComponentSlotType
   /**
    * 自定义窗口标题的模板（如果使用了 header 插槽，则该插槽无效）
    */
-  title?(params: ModalTitleSlotParams): VxeComponentSlotType[] | VxeComponentSlotType
+  title?(params: VxeModalSlotTypes.TitleSlotParams): VxeComponentSlotType[] | VxeComponentSlotType
   /**
    * 自定义窗口右上角的模板
    */
-  corner?(params: ModalTitleSlotParams): VxeComponentSlotType[] | VxeComponentSlotType
+  corner?(params: VxeModalSlotTypes.CornerSlotParams): VxeComponentSlotType[] | VxeComponentSlotType
   /**
    * 自定义窗口底部的模板
    */
-  footer?(params: ModalFooterSlotParams): VxeComponentSlotType[] | VxeComponentSlotType
+  footer?(params: VxeModalSlotTypes.FooterSlotParams): VxeComponentSlotType[] | VxeComponentSlotType
+  /**
+   * 自定义窗口底部左侧的模板
+   */
+  leftfoot?(params: VxeModalSlotTypes.LeftfootSlotParams): VxeComponentSlotType[] | VxeComponentSlotType
+  /**
+   * 自定义窗口底部右侧的模板
+   */
+  rightfoot?(params: VxeModalSlotTypes.RightfootSlotParams): VxeComponentSlotType[] | VxeComponentSlotType
 }
 
 export const Modal: typeof VxeModal

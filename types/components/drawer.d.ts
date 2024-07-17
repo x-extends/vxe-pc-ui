@@ -101,7 +101,7 @@ export interface DrawerPrivateComputed {
 export interface VxeDrawerPrivateComputed extends DrawerPrivateComputed { }
 
 export interface DrawerReactData {
-  inited: boolean
+  initialized: boolean
   visible: boolean
   contentVisible: boolean
   drawerZIndex: number
@@ -232,11 +232,16 @@ export namespace VxeDrawerEvents {
 export namespace VxeDrawerSlotTypes {
 
   export interface DefaultSlotParams {
-    $drawer: VxeDrawerConstructor & VxeDrawerMethods
+    $drawer: VxeDrawerConstructor
   }
+  export interface LeftSlotParams extends DefaultSlotParams { }
+  export interface RightSlotParams extends DefaultSlotParams { }
   export interface HeaderSlotParams extends DefaultSlotParams { }
   export interface TitleSlotParams extends DefaultSlotParams { }
+  export interface CornerSlotParams extends DefaultSlotParams { }
   export interface FooterSlotParams extends DefaultSlotParams { }
+  export interface LeftfootSlotParams extends DefaultSlotParams { }
+  export interface RightfootSlotParams extends DefaultSlotParams { }
 }
 
 export interface VxeDrawerSlots {
@@ -244,6 +249,14 @@ export interface VxeDrawerSlots {
    * 自定义窗口内容模板
    */
   default?(params: VxeDrawerSlotTypes.DefaultSlotParams): VxeComponentSlotType[] | VxeComponentSlotType
+  /**
+   * 自定义窗口左侧内容模板
+   */
+  left?(params: VxeDrawerSlotTypes.LeftSlotParams): VxeComponentSlotType[] | VxeComponentSlotType
+  /**
+   * 自定义窗口右侧内容模板
+   */
+  right?(params: VxeDrawerSlotTypes.RightSlotParams): VxeComponentSlotType[] | VxeComponentSlotType
   /**
    * 自定义窗口头部的模板
    */
@@ -260,6 +273,14 @@ export interface VxeDrawerSlots {
    * 自定义窗口底部的模板
    */
   footer?(params: VxeDrawerSlotTypes.FooterSlotParams): VxeComponentSlotType[] | VxeComponentSlotType
+  /**
+   * 自定义窗口底部左侧的模板
+   */
+  leftfoot?(params: VxeDrawerSlotTypes.LeftfootSlotParams): VxeComponentSlotType[] | VxeComponentSlotType
+  /**
+   * 自定义窗口底部右侧的模板
+   */
+  rightfoot?(params: VxeDrawerSlotTypes.RightfootSlotParams): VxeComponentSlotType[] | VxeComponentSlotType
 }
 
 export const Drawer: typeof VxeDrawer
