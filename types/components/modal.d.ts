@@ -467,7 +467,10 @@ export namespace VxeModalSlotTypes {
   export interface RightSlotParams extends DefaultSlotParams { }
   export interface AsideSlotParams extends DefaultSlotParams { }
   export interface HeaderSlotParams extends DefaultSlotParams { }
-  export interface TitleSlotParams extends DefaultSlotParams { }
+  export interface TitleSlotParams extends DefaultSlotParams {
+    minimized: boolean
+    maximized: boolean
+  }
   export interface CornerSlotParams extends DefaultSlotParams { }
   export interface FooterSlotParams extends DefaultSlotParams { }
   export interface LeftfootSlotParams extends DefaultSlotParams { }

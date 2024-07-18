@@ -124,6 +124,14 @@ export default defineComponent({
       return props.type === 'message' || props.type === 'notification'
     })
 
+    const computeIsMinimizeStatus = computed(() => {
+      return reactData.zoomStatus === 'minimize'
+    })
+
+    const computeIsMaximizeStatus = computed(() => {
+      return reactData.zoomStatus === 'maximize'
+    })
+
     const computeZoomOpts = computed(() => {
       return Object.assign({}, getConfig().modal.zoomConfig, props.zoomConfig)
     })
@@ -897,14 +905,22 @@ export default defineComponent({
       const { zoomStatus } = reactData
       const titleSlot = slots.title || propSlots.title
       const cornerSlot = slots.corner || propSlots.corner
+      const isMinimizeStatus = computeIsMinimizeStatus.value
+      const isMaximizeStatus = computeIsMaximizeStatus.value
       return [
         h('div', {
           class: 'vxe-modal--header-title'
-        }, titleSlot ? getSlotVNs(titleSlot({ $modal: $xeModal })) : (title ? getFuncText(title) : getI18n('vxe.alert.title'))),
+        }, titleSlot
+          ? getSlotVNs(titleSlot({
+            $modal: $xeModal,
+            minimized: isMinimizeStatus,
+            maximized: isMaximizeStatus
+          }))
+          : (title ? getFuncText(title) : getI18n('vxe.alert.title'))),
         h('div', {
           class: 'vxe-modal--header-right'
         }, [
-          cornerSlot
+          cornerSlot && !isMinimizeStatus
             ? h('div', {
               class: 'vxe-modal--corner-wrapper'
             }, getSlotVNs(cornerSlot({ $modal: $xeModal })))
@@ -1069,10 +1085,11 @@ export default defineComponent({
 
     const renderVN = () => {
       const { slots: propSlots = {}, className, type, animat, draggable, iconStatus, position, loading, destroyOnClose, status, lockScroll, padding, lockView, mask, resize } = props
-      const { initialized, revertLocat, modalTop, contentVisible, visible, zoomStatus } = reactData
+      const { initialized, modalTop, contentVisible, visible, zoomStatus } = reactData
       const asideSlot = slots.aside || propSlots.aside
       const vSize = computeSize.value
       const isMsg = computeIsMsg.value
+      const isMinimizeStatus = computeIsMinimizeStatus.value
       const ons: Record<string, any> = {}
       if (isMsg) {
         ons.onMouseover = selfMouseoverEvent
@@ -1094,7 +1111,6 @@ export default defineComponent({
             'is--draggable': draggable,
             'is--resize': resize,
             'is--mask': mask,
-            'is--maximize': revertLocat,
             'is--visible': contentVisible,
             'is--active': visible,
             'is--loading': loading
@@ -1111,7 +1127,7 @@ export default defineComponent({
             class: 'vxe-modal--box',
             onMousedown: boxMousedownEvent
           }, [
-            isMsg || asideSlot
+            (isMsg || asideSlot) && !isMinimizeStatus
               ? h('div', {
                 class: 'vxe-modal--aside'
               },

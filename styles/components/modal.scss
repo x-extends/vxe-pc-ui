@@ -255,12 +255,32 @@
       }
     }
   }
+  &.zoom--minimize,
+  &.zoom--maximize {
+    & > .vxe-modal--box {
+      & > .vxe-modal--container {
+        & > .vxe-modal--resize {
+          .wl-resize,
+          .wr-resize,
+          .swst-resize,
+          .sest-resize,
+          .st-resize,
+          .swlb-resize,
+          .selb-resize,
+          .sb-resize {
+            display: none;
+          }
+        }
+      }
+    }
+  }
   &.zoom--maximize {
     & > .vxe-modal--box {
       border-radius: 0;
       & > .vxe-modal--container {
         & > .vxe-modal--header {
           border-radius: 0;
+          cursor: default;
         }
       }
     }
@@ -443,25 +463,6 @@
     &.type--notification {
       .vxe-modal--body-default {
         padding-top: 0;
-      }
-    }
-  }
-  &.is--maximize {
-    .vxe-modal--box {
-      .vxe-modal--header {
-        cursor: default;
-      }
-    }
-    .vxe-modal--resize {
-      .wl-resize,
-      .wr-resize,
-      .swst-resize,
-      .sest-resize,
-      .st-resize,
-      .swlb-resize,
-      .selb-resize,
-      .sb-resize {
-        display: none;
       }
     }
   }
