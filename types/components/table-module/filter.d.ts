@@ -51,6 +51,10 @@ export interface TableFilterMethods<D = any> {
    * 获取当前筛选的所有列信息
    */
   getCheckedFilters(): VxeTableDefines.FilterCheckedParams<D>[]
+  /**
+   * 更新筛选选项的状态
+   */
+  updateFilterOptionStatus(item: any, checked: boolean): Promise<void>
 }
 
 export interface TableFilterPrivateMethods<D = any> {
@@ -58,6 +62,11 @@ export interface TableFilterPrivateMethods<D = any> {
   handleClearFilter(column: any): void
   triggerFilterEvent(evnt: any, column: any, params: any): void
   confirmFilterEvent(evnt: Event): void
+  handleFilterChangeRadioOption (evnt: Event, checked: boolean, item: any): void
+  handleFilterChangeMultipleOption (evnt: Event, checked: boolean, item: any): void
+  handleFilterChangeOption (evnt: Event, checked: boolean, item: any): void
+  handleFilterConfirmFilter (evnt: Event): void
+  handleFilterResetFilter (evnt: Event): void
 }
 
 declare module '../grid' {
