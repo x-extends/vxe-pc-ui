@@ -38,7 +38,7 @@ import VxeLink from './link'
 import VxeListDesign from './list-design'
 import VxeListView from './list-view'
 import VxeList from './list'
-import VxeLoading from './loading'
+import VxeLoading, { LoadingController } from './loading'
 import VxeMenu from './menu'
 import VxeModal, { ModalController } from './modal'
 import VxeNumberInput from './number-input'
@@ -147,6 +147,7 @@ setLanguage(defaultLanguage)
 setTheme('light')
 
 // 兼容老版本
+export const loading = LoadingController
 export const modal = ModalController
 export const drawer = DrawerController
 export const print = printHtml

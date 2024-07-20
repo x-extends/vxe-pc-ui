@@ -1,5 +1,6 @@
 import { App } from 'vue'
 import { VxeUI, getI18n, setConfig } from '@vxe-ui/core'
+import { LoadingController } from '../components/loading'
 import { ModalController } from '../components/modal'
 import { DrawerController } from '../components/drawer'
 import { VxePrintDefines } from '../components/print'
@@ -36,6 +37,7 @@ export interface VxeGlobalStore {
 export const globalStore: VxeGlobalStore
 
 // 兼容老版本
+export const loading: LoadingController
 export const modal: ModalController
 export const drawer: DrawerController
 export const print: VxePrintDefines.PrintFunction
@@ -46,6 +48,7 @@ declare module '@vxe-ui/core' {
   export interface VxeUIExport {
     uiVersion: string
     tableVersion: string
+    loading: LoadingController
     modal: ModalController
     drawer: DrawerController
     dynamicApp: App<Element>

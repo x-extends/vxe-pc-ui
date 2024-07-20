@@ -1,12 +1,17 @@
 import { defineComponent, h, createApp, resolveComponent, reactive, createCommentVNode } from 'vue'
 
-import type { VxeModalDefines, VxeModalComponent, VxeDrawerDefines, VxeDrawerComponent } from '../../types'
+import type { VxeModalDefines, VxeModalComponent, VxeLoadingComponent, VxeDrawerDefines, VxeLoadingProps, VxeDrawerComponent } from '../../types'
 
 let dynamicContainerElem: HTMLElement
 
-export const dynamicStore = reactive({
-  modals: [] as VxeModalDefines.ModalOptions[],
-  drawers: [] as VxeDrawerDefines.DrawerOptions[]
+export const dynamicStore = reactive<{
+  modals: VxeModalDefines.ModalOptions[]
+  drawers: VxeDrawerDefines.DrawerOptions[]
+  globalLoading: null | VxeLoadingProps
+}>({
+  modals: [],
+  drawers: [],
+  globalLoading: null
 })
 
 /**
@@ -15,7 +20,7 @@ export const dynamicStore = reactive({
 const VxeDynamics = defineComponent({
   setup () {
     return () => {
-      const { modals, drawers } = dynamicStore
+      const { modals, drawers, globalLoading } = dynamicStore
       return [
         modals.length
           ? h('div', {
@@ -26,7 +31,8 @@ const VxeDynamics = defineComponent({
           ? h('div', {
             class: 'vxe-dynamics--drawer'
           }, drawers.map((item) => h(resolveComponent('vxe-drawer') as VxeDrawerComponent, item)))
-          : createCommentVNode()
+          : createCommentVNode(),
+        globalLoading ? h(resolveComponent('vxe-loading') as VxeLoadingComponent, globalLoading) : createCommentVNode()
       ]
     }
   }
