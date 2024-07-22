@@ -197,6 +197,11 @@
             </vxe-select>
           </template>
         </vxe-form-item>
+        <vxe-form-item title="地区选择" field="region" :item-render="{}">
+          <template #default="{ data }">
+            <vxe-tree-select v-model="data.region" :options="regionOptions" placeholder="请选择地区" clearable></vxe-tree-select>
+          </template>
+        </vxe-form-item>
         <vxe-form-item title="年龄" field="age" :item-render="{}" :title-suffix="{ message: '右边图标', icon: 'fa fa-info-circle' }">
           <template #default="{ data }">
             <vxe-input v-model="data.age" type="integer" placeholder="请输入年龄" clearable></vxe-input>
@@ -246,8 +251,8 @@
     <p class="tip">配置式表单</p>
 
     <vxe-form :data="demo4.formData4" :items="demo4.formItems4">
-      <template #myregion="{ data }">
-        <vxe-input v-model="data.region" placeholder="自定义插槽模板"></vxe-input>
+      <template #myaddress="{ data }">
+        <vxe-input v-model="data.address" placeholder="自定义插槽模板"></vxe-input>
       </template>
     </vxe-form>
 
@@ -313,6 +318,7 @@ const demo3 = reactive({
     status: '1',
     weight: null,
     date: null,
+    region: null,
     active: false,
     single: '1',
     flagList: [],
@@ -331,17 +337,44 @@ const demo3 = reactive({
   }
 })
 
+const regionOptions = ref([
+  {
+    label: '广东省',
+    value: 11,
+    children: [
+      {
+        label: '广州市',
+        value: 3333,
+        children: [
+          { label: '天河区', value: 555 },
+          { label: '荔湾区', value: 6666 }
+        ]
+      },
+      {
+        label: '深圳市',
+        value: 44444,
+        children: [
+          { label: '福田区', value: 7777 },
+          { label: '南山区', value: 8888 }
+        ]
+      }
+    ]
+  }
+])
+
 const demo4 = reactive({
   formData4: {
     name: '',
     nickname: '',
     sex: '0',
     role: '',
+    region: null,
     age: 22,
     val1: [],
     val2: false,
     val3: '',
-    flag: false
+    flag: false,
+    address: ''
   },
   formItems4: [
     {
@@ -352,11 +385,12 @@ const demo4 = reactive({
         { field: 'sex', title: '性别', span: 8, itemRender: { name: '$select', options: [{ value: '0', label: '女' }, { value: '1', label: '男' }], props: { placeholder: '请选择性别' } } },
         { field: 'role', title: '角色', span: 8, itemRender: { name: '$input', props: { placeholder: '请输入角色' } } },
         { field: 'age', title: '年龄', span: 24, itemRender: { name: '$input', props: { type: 'number', placeholder: '请输入年龄' } } },
+        { field: 'region', title: '地区选择', span: 24, itemRender: { name: 'VxeTreeSelect', options: regionOptions.value } },
         { field: 'val1', title: '复选框-组', span: 12, itemRender: { name: '$checkbox', options: [{ label: '爬山', value: '11' }, { label: '健身', value: '22' }] } },
         { field: 'val2', title: '复选框', span: 12, itemRender: { name: '$checkbox' } },
         { field: 'val3', title: '单选框', span: 12, itemRender: { name: '$radio', options: [{ label: '是', value: 'Y' }, { label: '否', value: 'N' }] } },
         { field: 'flag', title: '开关', span: 24, itemRender: { name: '$switch', props: { openLabel: '是', closeLabel: '否' } } },
-        { field: 'region', title: '地区', span: 24, slots: { default: 'myregion' } }
+        { field: 'address', title: '地区', span: 24, slots: { default: 'myaddress' } }
       ]
     },
     {

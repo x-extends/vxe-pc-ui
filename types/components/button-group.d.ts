@@ -4,7 +4,7 @@ import { VxeButtonProps, VxeButtonPropTypes } from './button'
 
 /* eslint-disable no-use-before-define,@typescript-eslint/ban-types */
 
-export declare const VxeButtonGroup: defineVxeComponent<VxeButtonGroupProps, VxeButtonGroupEventProps>
+export declare const VxeButtonGroup: defineVxeComponent<VxeButtonGroupProps, VxeButtonGroupEventProps, VxeButtonGroupSlots>
 export type VxeButtonGroupComponent = DefineComponent<VxeButtonGroupProps, VxeButtonGroupEmits>
 
 export type VxeButtonGroupInstance = ComponentPublicInstance<VxeButtonGroupProps, VxeButtonGroupConstructor>

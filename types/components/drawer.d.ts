@@ -3,7 +3,7 @@ import { defineVxeComponent, VxeComponentBaseOptions, VxeComponentEventParams, V
 
 /* eslint-disable no-use-before-define,@typescript-eslint/ban-types */
 
-export declare const VxeDrawer: defineVxeComponent<VxeDrawerProps, VxeDrawerEventProps>
+export declare const VxeDrawer: defineVxeComponent<VxeDrawerProps, VxeDrawerEventProps, VxeDrawerSlots>
 export type VxeDrawerComponent = DefineComponent<VxeDrawerProps, VxeDrawerEmits>
 
 export type VxeDrawerInstance = ComponentPublicInstance<VxeDrawerProps, VxeDrawerConstructor>
@@ -101,7 +101,7 @@ export interface DrawerPrivateComputed {
 export interface VxeDrawerPrivateComputed extends DrawerPrivateComputed { }
 
 export interface DrawerReactData {
-  inited: boolean
+  initialized: boolean
   visible: boolean
   contentVisible: boolean
   drawerZIndex: number
@@ -232,34 +232,60 @@ export namespace VxeDrawerEvents {
 export namespace VxeDrawerSlotTypes {
 
   export interface DefaultSlotParams {
-    $drawer: VxeDrawerConstructor & VxeDrawerMethods
+    $drawer: VxeDrawerConstructor
   }
+  export interface LeftSlotParams extends DefaultSlotParams { }
+  export interface RightSlotParams extends DefaultSlotParams { }
+  export interface AsideSlotParams extends DefaultSlotParams { }
   export interface HeaderSlotParams extends DefaultSlotParams { }
   export interface TitleSlotParams extends DefaultSlotParams { }
+  export interface CornerSlotParams extends DefaultSlotParams { }
   export interface FooterSlotParams extends DefaultSlotParams { }
+  export interface LeftfootSlotParams extends DefaultSlotParams { }
+  export interface RightfootSlotParams extends DefaultSlotParams { }
 }
 
 export interface VxeDrawerSlots {
   /**
-   * 自定义窗口内容模板
+   * 自定义内容模板
    */
   default?(params: VxeDrawerSlotTypes.DefaultSlotParams): VxeComponentSlotType[] | VxeComponentSlotType
   /**
-   * 自定义窗口头部的模板
+   * 自定义左侧内容模板
+   */
+  left?(params: VxeDrawerSlotTypes.LeftSlotParams): VxeComponentSlotType[] | VxeComponentSlotType
+  /**
+   * 自定义右侧内容模板
+   */
+  right?(params: VxeDrawerSlotTypes.RightSlotParams): VxeComponentSlotType[] | VxeComponentSlotType
+  /**
+   * 自定义侧边栏的模板
+   */
+  aside?(params: VxeDrawerSlotTypes.AsideSlotParams): VxeComponentSlotType[] | VxeComponentSlotType
+  /**
+   * 自定义头部的模板
    */
   header?(params: VxeDrawerSlotTypes.HeaderSlotParams): VxeComponentSlotType[] | VxeComponentSlotType
   /**
-   * 自定义窗口标题的模板（如果使用了 header 插槽，则该插槽无效）
+   * 自定义标题的模板（如果使用了 header 插槽，则该插槽无效）
    */
   title?(params: VxeDrawerSlotTypes.TitleSlotParams): VxeComponentSlotType[] | VxeComponentSlotType
   /**
-   * 自定义窗口右上角的模板
+   * 自定义右上角的模板
    */
   corner?(params: VxeDrawerSlotTypes.TitleSlotParams): VxeComponentSlotType[] | VxeComponentSlotType
   /**
-   * 自定义窗口底部的模板
+   * 自定义底部的模板
    */
   footer?(params: VxeDrawerSlotTypes.FooterSlotParams): VxeComponentSlotType[] | VxeComponentSlotType
+  /**
+   * 自定义底部左侧的模板
+   */
+  leftfoot?(params: VxeDrawerSlotTypes.LeftfootSlotParams): VxeComponentSlotType[] | VxeComponentSlotType
+  /**
+   * 自定义底部右侧的模板
+   */
+  rightfoot?(params: VxeDrawerSlotTypes.RightfootSlotParams): VxeComponentSlotType[] | VxeComponentSlotType
 }
 
 export const Drawer: typeof VxeDrawer

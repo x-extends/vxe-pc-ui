@@ -6,7 +6,7 @@ import { VxeGlobalRendererHandles } from '../ui'
 
 /* eslint-disable no-use-before-define,@typescript-eslint/ban-types */
 
-export declare const VxeColumn: defineVxeComponent<VxeColumnProps, VxeColumnEventProps>
+export declare const VxeColumn: defineVxeComponent<VxeColumnProps, VxeColumnEventProps, VxeColumnSlots>
 export type VxeColumnComponent = DefineComponent<VxeColumnProps, VxeColumnEmits>
 
 export type VxeColumnInstance = ComponentPublicInstance<VxeColumnProps, VxeColumnConstructor>
@@ -49,6 +49,14 @@ export namespace VxeColumnPropTypes {
     cellValue: any
     column: VxeTableDefines.ColumnInfo<D>
     row: D
+  }) => string | number) | any[] | string
+
+  export type FooterFormatter<D = any> = ((params: {
+    itemValue: any
+    column: VxeTableDefines.ColumnInfo<D>
+    row: any
+    items: any[]
+    _columnIndex: number
   }) => string | number) | any[] | string
 
   export type Sortable = boolean
@@ -398,6 +406,10 @@ export type VxeColumnProps<D = any> = {
    * 格式化显示内容
    */
   formatter?: VxeColumnPropTypes.Formatter<D>
+  /**
+   * 格式化表尾显示内容
+   */
+  footerFormatter?: VxeColumnPropTypes.FooterFormatter<D>
   /**
    * 是否允许排序
    */

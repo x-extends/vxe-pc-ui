@@ -99,6 +99,9 @@ declare module '@vxe-ui/core' {
     MODAL_QUESTION?: string
     MODAL_LOADING?: string
 
+    // drawer
+    DRAWER_CLOSE?: string
+
     // form
     FORM_PREFIX?: string
     FORM_SUFFIX?: string
@@ -123,10 +126,10 @@ declare module '@vxe-ui/core' {
     // upload
     UPLOAD_FILE_ERROR?: string
     UPLOAD_FILE_ADD?: string
-    UPLOAD_FILE_DELETE?: string
+    UPLOAD_FILE_REMOVE?: string
     UPLOAD_IMAGE_RE_UPLOAD?: string
     UPLOAD_IMAGE_ADD?: string
-    UPLOAD_IMAGE_DELETE?: string
+    UPLOAD_IMAGE_REMOVE?: string
     UPLOAD_LOADING?: string
     UPLOAD_FILE_TYPE_DEFAULT?: string
     UPLOAD_FILE_TYPE_XLSX?: string
@@ -166,6 +169,7 @@ declare module '@vxe-ui/core' {
      // tree
     TREE_NODE_OPEN?: string
     TREE_NODE_CLOSE?: string
+    TREE_NODE_LOADED?: string
 
     // tree-select
     TREE_SELECT_LOADED?: string

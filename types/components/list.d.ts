@@ -3,7 +3,7 @@ import { defineVxeComponent, VxeComponentBaseOptions, VxeComponentEventParams, V
 
 /* eslint-disable no-use-before-define,@typescript-eslint/ban-types */
 
-export declare const VxeList: defineVxeComponent<VxeListProps, VxeListEventProps>
+export declare const VxeList: defineVxeComponent<VxeListProps, VxeListEventProps, VxeListSlots>
 export type VxeListComponent = DefineComponent<VxeListProps, VxeListEmits>
 
 export type VxeListInstance = ComponentPublicInstance<VxeListProps, VxeListConstructor>

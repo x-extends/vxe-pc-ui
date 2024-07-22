@@ -3,7 +3,7 @@ import { defineVxeComponent, VxeComponentBaseOptions, VxeComponentEventParams, V
 
 /* eslint-disable no-use-before-define,@typescript-eslint/ban-types */
 
-export declare const VxeDatePicker: defineVxeComponent<VxeDatePickerProps, VxeDatePickerEventProps>
+export declare const VxeDatePicker: defineVxeComponent<VxeDatePickerProps, VxeDatePickerEventProps, VxeDatePickerSlots>
 export type VxeDatePickerComponent = DefineComponent<VxeDatePickerProps, VxeDatePickerEmits>
 
 export type VxeDatePickerInstance = ComponentPublicInstance<VxeDatePickerProps, VxeDatePickerConstructor>

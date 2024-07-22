@@ -4,7 +4,7 @@ import { VxeCheckboxPropTypes } from './checkbox'
 
 /* eslint-disable no-use-before-define,@typescript-eslint/ban-types */
 
-export declare const VxeCheckboxGroup: defineVxeComponent<VxeCheckboxGroupProps, VxeCheckboxGroupEventProps>
+export declare const VxeCheckboxGroup: defineVxeComponent<VxeCheckboxGroupProps, VxeCheckboxGroupEventProps, VxeCheckboxGroupSlots>
 export type VxeCheckboxGroupComponent = DefineComponent<VxeCheckboxGroupProps, VxeCheckboxGroupEmits>
 
 export type VxeCheckboxGroupInstance = ComponentPublicInstance<VxeCheckboxGroupProps, VxeCheckboxGroupConstructor>

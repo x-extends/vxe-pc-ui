@@ -7,7 +7,7 @@ import { VxeIconPropTypes } from './icon'
 
 /* eslint-disable no-use-before-define,@typescript-eslint/ban-types */
 
-export declare const VxeFormItem: defineVxeComponent<VxeFormItemProps, VxeFormItemEventProps>
+export declare const VxeFormItem: defineVxeComponent<VxeFormItemProps, VxeFormItemEventProps, VxeFormItemSlots>
 export type VxeFormItemComponent = DefineComponent<VxeFormItemProps, VxeFormItemEmits>
 
 export interface VxeFormItemConstructor extends VxeComponentBaseOptions, VxeFormItemMethods {

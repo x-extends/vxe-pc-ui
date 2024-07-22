@@ -16,8 +16,7 @@
     "sourceMap": true,
     "baseUrl": ".",
     "types": [
-      "webpack-env",
-      "resize-observer-browser"
+      "webpack-env"
     ],
     "paths": {
       "@/*": [

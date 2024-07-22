@@ -3,12 +3,12 @@ import { defineVxeComponent, VxeComponentBaseOptions, VxeComponentEventParams, V
 
 /* eslint-disable no-use-before-define,@typescript-eslint/ban-types */
 
-export declare const VxeTree: defineVxeComponent<VxeTreeProps, VxeTreeEventProps>
+export declare const VxeTree: defineVxeComponent<VxeTreeProps, VxeTreeEventProps, VxeTreeSlots>
 export type VxeTreeComponent = DefineComponent<VxeTreeProps, VxeTreeEmits>
 
 export type VxeTreeInstance = ComponentPublicInstance<VxeTreeProps, VxeTreeConstructor>
 
-export interface VxeTreeConstructor extends VxeComponentBaseOptions, VxeTreeMethods {
+export interface VxeTreeConstructor<D = any> extends VxeComponentBaseOptions, VxeTreeMethods<D> {
   props: VxeTreeProps
   context: SetupContext<VxeTreeEmits>
   internalData: TreeInternalData
@@ -24,38 +24,65 @@ export interface TreePrivateRef {
 export interface VxeTreePrivateRef extends TreePrivateRef { }
 
 export namespace VxeTreePropTypes {
-  export type Data = any[]
+  export type Data<D = any> = D[]
+  export type Loading = boolean
+  export interface LoadingConfig {
+    /**
+     * 显示图标
+     */
+    icon?: string
+    /**
+     * 显示文字
+     */
+    text?: string
+  }
+  export type Accordion = boolean
+  export type Height = string | number
+  export type MinHeight = string | number
   export type ParentField = string
   export type KeyField = string
   export type TitleField = string
   export type ChildrenField = string
+  export type HasChildField = string
+  export type MapChildrenField = string
+  export type Transform = boolean
   export type Trigger = '' | 'default' | 'node'
   export type IsCurrent = boolean
   export type IsHover = boolean
   export type ShowLine = boolean
   export type Indent = number
   export type ShowRadio = boolean
-  export type RadioCheckNodeKey = string | number
-  export interface RadioConfig {
+  export type CheckNodeKey = string | number
+  export interface RadioConfig<D = any> {
     checkNodeKey?: string
     strict?: boolean
-    visibleMethod?: (params: { node: any }) => boolean
-    checkMethod?: (params: { node: any }) => boolean
+    visibleMethod?: (params: { node: D }) => boolean
+    checkMethod?: (params: { node: D }) => boolean
     highlight?: boolean
+    showIcon?: boolean
     trigger?: '' | 'default' | 'node'
   }
-  export type CheckboxCheckNodeKeys = (string | number)[]
+  export type CheckNodeKeys = (string | number)[]
   export type ShowCheckbox = boolean
-  export interface CheckboxConfig {
+  export interface CheckboxConfig<D = any> {
     showHeader?: boolean
-    checkAll?: boolean
     checkStrictly?: boolean
     highlight?: boolean
-    visibleMethod?: (params: { node: any }) => boolean
-    checkMethod?: (params: { node: any }) => boolean
+    visibleMethod?: (params: { node: D }) => boolean
+    checkMethod?: (params: { node: D }) => boolean
+    showIcon?: boolean
     trigger?: '' | 'default' | 'node'
   }
-  export type ToggleMethod = (params: { node: any }) => boolean
+  export type Lazy = boolean
+  export type ToggleMethod<D = any> = (params: {
+    $tree: VxeTreeConstructor
+    expanded: boolean
+    node: D
+  }) => boolean
+  export type LoadMethod<D = any> = (params: {
+    $tree: VxeTreeConstructor
+    node: D
+  }) => Promise<any[]>
   export type ShowIcon = boolean
   export type IconOpen = string
   export type IconClose = string
@@ -63,24 +90,37 @@ export namespace VxeTreePropTypes {
   export type Size = VxeComponentSizeType
 }
 
-export type VxeTreeProps = {
-  data?: VxeTreePropTypes.Data
+export interface VxeTreeProps<D = any> {
+  data?: VxeTreePropTypes.Data<D>
+  height?: VxeTreePropTypes.Height
+  minHeight?: VxeTreePropTypes.MinHeight
+  loading?: VxeTreePropTypes.Loading
+  loadingConfig?: VxeTreePropTypes.LoadingConfig
+  accordion?: VxeTreePropTypes.Accordion
   parentField?: VxeTreePropTypes.ParentField
   keyField?: VxeTreePropTypes.KeyField
   titleField?: VxeTreePropTypes.TitleField
   childrenField?: VxeTreePropTypes.ChildrenField
+  hasChildField?: VxeTreePropTypes.HasChildField
+  mapChildrenField?: VxeTreePropTypes.MapChildrenField
+  transform?: VxeTreePropTypes.Transform
   trigger?: VxeTreePropTypes.Trigger
   isCurrent?: VxeTreePropTypes.IsCurrent
   isHover?: VxeTreePropTypes.IsHover
   showLine?: VxeTreePropTypes.ShowLine
   indent?: VxeTreePropTypes.Indent
   showRadio?: VxeTreePropTypes.ShowRadio
-  radioCheckNodeKey?: VxeTreePropTypes.RadioCheckNodeKey
-  radioConfig?: VxeTreePropTypes.RadioConfig
+  checkNodeKey?: VxeTreePropTypes.CheckNodeKey
+  radioConfig?: VxeTreePropTypes.RadioConfig<D>
   showCheckbox?: VxeTreePropTypes.ShowCheckbox
-  checkboxCheckNodeKeys?: VxeTreePropTypes.CheckboxCheckNodeKeys
-  checkboxConfig?: VxeTreePropTypes.CheckboxConfig
-  toggleMethod?: VxeTreePropTypes.ToggleMethod
+  checkNodeKeys?: VxeTreePropTypes.CheckNodeKeys
+  checkboxConfig?: VxeTreePropTypes.CheckboxConfig<D>
+  lazy?: VxeTreePropTypes.Lazy
+  toggleMethod?: VxeTreePropTypes.ToggleMethod<D>
+  /**
+     * 该方法用于异步加载子节点
+     */
+  loadMethod?: VxeTreePropTypes.LoadMethod<D>
   showIcon?: VxeTreePropTypes.ShowIcon
   iconOpen?: VxeTreePropTypes.IconOpen
   iconClose?: VxeTreePropTypes.IconClose
@@ -94,69 +134,95 @@ export interface VxeTreePrivateComputed extends TreePrivateComputed { }
 
 export interface TreeReactData {
   currentNode: any
-  selectRadioKey: VxeTreePropTypes.RadioCheckNodeKey
+  nodeMaps: Record<string, VxeTreeDefines.NodeCacheItem>
+  selectRadioKey: VxeTreePropTypes.CheckNodeKey | null
   treeList: any[]
   treeExpandedMaps: Record<string, boolean>
+  treeExpandLazyLoadedMaps: Record<string, boolean>
   selectCheckboxMaps: Record<string, boolean>
   indeterminateCheckboxMaps: Record<string, boolean>
 }
 
 export interface TreeInternalData {
-  nodeMaps: Record<string, {
-    node: any
-    nodeIndex: number
-    parent: any
-    level: number
-  }>
 }
 
-export interface TreeMethods {
+export interface TreeMethods<D = any> {
   dispatchEvent(type: ValueOf<VxeTreeEmits>, params: Record<string, any>, evnt: Event | null): void
-  clearExpand(): Promise<any>
-  setExpandByNodeid(nodeids: any, expanded: boolean): Promise<any>
-  setExpand(nodes: any, expanded: boolean): Promise<any>
-  toggleExpandByNodeid(nodeids: any): Promise<any>
-  toggleExpand(nodes: any): Promise<any>
-  setAllExpand(expanded: boolean): Promise<any>
+  clearRadioNode(): Promise<any>
+  setRadioNode(node: any, checked: boolean): Promise<any>
+  clearCheckboxNode(): Promise<any>
+  setAllCheckboxNode(checked: boolean): Promise<any>
+  setCheckboxNode(nodeList: any | any[], checked: boolean): Promise<any>
+  setCheckboxByNodeId(nodeKeys: any | any[], checked: boolean): Promise<any>
+  clearExpandNode(): Promise<any>
+  setExpandByNodeId(nodeKeys: any | any[], expanded: boolean): Promise<any>
+  setExpandNode(nodeList: any | any[], expanded: boolean): Promise<any>
+  toggleExpandByNodeId(nodeKeys: any | any[]): Promise<any>
+  toggleExpandNode(nodeList: any | any[]): Promise<any>
+  setAllExpandNode(expanded: boolean): Promise<any>
+  reloadExpandNode(node: any): Promise<any>
+  clearExpandLoaded(node: any): Promise<any>
+  loadChildrenNode(node: any, childRecords: any[]): Promise<any>
   isExpandByNode(node: any): boolean
-  isCheckedByRadioNodeid(nodeid: any): boolean
+  isCheckedByRadioNodeId(nodeKey: any): boolean
   isCheckedByRadioNode(node: any): boolean
-  isCheckedByCheckboxNodeid(nodeid: any): boolean
+  isCheckedByCheckboxNodeId(nodeKey: any): boolean
   isIndeterminateByCheckboxNode(node: any): boolean
   isCheckedByCheckboxNode(node: any): boolean
 }
-export interface VxeTreeMethods extends TreeMethods { }
+export interface VxeTreeMethods<D = any> extends TreeMethods<D> { }
 
 export interface TreePrivateMethods { }
 export interface VxeTreePrivateMethods extends TreePrivateMethods { }
 
 export type VxeTreeEmits = [
   'update:modelValue',
-  'update:radioCheckNodeKey',
-  'update:checkboxCheckNodeKeys',
+  'update:checkNodeKey',
+  'update:checkNodeKeys',
   'node-click',
   'node-dblclick',
   'radio-change',
-  'checkbox-change'
+  'checkbox-change',
+  'load-success',
+  'load-error'
 ]
 
 export namespace VxeTreeDefines {
-  export interface TreeEventParams extends VxeComponentEventParams {
-    $tree: VxeTreeConstructor
+  export interface TreeEventParams<D = any> extends VxeComponentEventParams {
+    $tree: VxeTreeConstructor<D>
+  }
+
+  export interface NodeCacheItem {
+    item: any
+    itemIndex: number
+    items: any[]
+    nodes: any[]
+    parent: any
+    level: number
+    lineCount: number
+    treeLoaded: boolean
   }
 
   export interface NodeClickParams<D = any> {
     node: D
   }
-  export interface NodeClickEventParams<D = any> extends TreeEventParams, NodeClickParams<D> { }
+  export interface NodeClickEventParams<D = any> extends TreeEventParams<D>, NodeClickParams<D> { }
 
   export interface NodeDblclickEventParams<D = any> extends NodeClickEventParams<D> { }
 
   export interface RadioChangeEventParams<D = any> extends TreeEventParams<D> {
-    value: VxeTreePropTypes.RadioCheckNodeKey
+    value: VxeTreePropTypes.CheckNodeKey
    }
   export interface CheckboxChangeEventParams<D = any> extends TreeEventParams<D> {
-    value: VxeTreePropTypes.CheckboxCheckNodeKeys
+    value: VxeTreePropTypes.CheckNodeKeys
+  }
+
+  export interface LoadSuccessEventParams<D = any> extends TreeEventParams<D> {
+    node: D
+  }
+
+  export interface LoadErrorEventParams<D = any> extends TreeEventParams<D> {
+    node: D
   }
 }
 
@@ -165,13 +231,17 @@ export type VxeTreeEventProps = {
   onNodeDblclick?: VxeTreeEvents.NodeDblclick
   onRadioChange?: VxeTreeEvents.RadioChange
   onCheckboxChange?: VxeTreeEvents.CheckboxChange
+  onLoadSuccess?: VxeTreeEvents.LoadSuccess
+  onLoadError?: VxeTreeEvents.LoadError
 }
 
-export interface VxeTreeListeners {
-  nodeClick?: VxeTreeEvents.NodeClick
-  nodeDblclick?: VxeTreeEvents.NodeDblclick
-  radioChange?: VxeTreeEvents.RadioChange
-  checkboxChange?: VxeTreeEvents.CheckboxChange
+export interface VxeTreeListeners<D = any> {
+  nodeClick?: VxeTreeEvents.NodeClick<D>
+  nodeDblclick?: VxeTreeEvents.NodeDblclick<D>
+  radioChange?: VxeTreeEvents.RadioChange<D>
+  checkboxChange?: VxeTreeEvents.CheckboxChange<D>
+  loadSuccess?: VxeTreeEvents.LoadSuccess<D>
+  loadError?: VxeTreeEvents.LoadError<D>
 }
 
 export namespace VxeTreeEvents {
@@ -179,14 +249,20 @@ export namespace VxeTreeEvents {
   export type NodeDblclick<D = any> = (params: VxeTreeDefines.NodeDblclickEventParams<D>) => void
   export type RadioChange<D = any> = (params: VxeTreeDefines.RadioChangeEventParams<D>) => void
   export type CheckboxChange<D = any> = (params: VxeTreeDefines.CheckboxChangeEventParams<D>) => void
+  export type LoadSuccess<D = any> = (params: VxeTreeDefines.LoadSuccessEventParams<D>) => void
+  export type LoadError<D = any> = (params: VxeTreeDefines.LoadErrorEventParams<D>) => void
 }
 
 export namespace VxeTreeSlotTypes {
-  export interface DefaultSlotParams {}
+  export interface DefaultSlotParams {
+    node: any
+  }
 }
 
 export interface VxeTreeSlots {
-  default: (params: VxeTreeSlotTypes.DefaultSlotParams) => any
+  title: (params: VxeTreeSlotTypes.DefaultSlotParams) => any
+  extra: (params: VxeTreeSlotTypes.DefaultSlotParams) => any
+  loading: (params: {}) => any
 }
 
 export const Tree: typeof VxeTree

@@ -1,12 +1,10 @@
 import { RenderFunction, SetupContext, Ref, ComponentPublicInstance, DefineComponent } from 'vue'
 import { defineVxeComponent, VxeComponentBaseOptions, VxeComponentEventParams, VxeComponentSizeType, ValueOf } from '@vxe-ui/core'
 import { VxeFormDesignDefines } from './form-design'
-import { VxeGridPropTypes } from './grid'
-import { VxeFormPropTypes } from './form'
 
 /* eslint-disable no-use-before-define,@typescript-eslint/ban-types */
 
-export declare const VxeListDesign: defineVxeComponent<VxeListDesignProps, VxeListDesignEventProps>
+export declare const VxeListDesign: defineVxeComponent<VxeListDesignProps, VxeListDesignEventProps, VxeListDesignSlots>
 export type VxeListDesignComponent = DefineComponent<VxeListDesignProps, VxeListDesignEmits>
 
 export type VxeListDesignInstance = ComponentPublicInstance<VxeListDesignProps, VxeListDesignConstructor>

@@ -1,4 +1,4 @@
-import { defineComponent, h, Teleport, ref, Ref, reactive, nextTick, watch, PropType, VNode, onMounted, onUnmounted } from 'vue'
+import { defineComponent, h, Teleport, ref, Ref, reactive, nextTick, watch, PropType, onMounted, onUnmounted, createCommentVNode } from 'vue'
 import XEUtils from 'xe-utils'
 import { useSize, getIcon, getConfig, getI18n, globalEvents, GLOBAL_EVENT_KEYS, createEvent } from '../../ui'
 import { getLastZIndex, nextZIndex, getFuncText } from '../../ui/src/utils'
@@ -44,7 +44,7 @@ export default defineComponent({
     padding: { type: Boolean as PropType<VxeDrawerPropTypes.Padding>, default: () => getConfig().drawer.padding },
     size: { type: String as PropType<VxeDrawerPropTypes.Size>, default: () => getConfig().drawer.size || getConfig().size },
     beforeHideMethod: { type: Function as PropType<VxeDrawerPropTypes.BeforeHideMethod>, default: () => getConfig().drawer.beforeHideMethod },
-    slots: Number as PropType<VxeDrawerPropTypes.Slots>
+    slots: Object as PropType<VxeDrawerPropTypes.Slots>
   },
   emits: [
     'update:modelValue',
@@ -68,7 +68,7 @@ export default defineComponent({
     const refCancelBtn = ref<VxeButtonInstance>()
 
     const reactData = reactive<DrawerReactData>({
-      inited: false,
+      initialized: false,
       visible: false,
       contentVisible: false,
       drawerZIndex: 0,
@@ -161,9 +161,9 @@ export default defineComponent({
 
     const openDrawer = () => {
       const { showFooter } = props
-      const { inited, visible } = reactData
-      if (!inited) {
-        reactData.inited = true
+      const { initialized, visible } = reactData
+      if (!initialized) {
+        reactData.initialized = true
       }
       if (!visible) {
         recalculate()
@@ -252,74 +252,82 @@ export default defineComponent({
       const { slots: propSlots = {}, showClose, title } = props
       const titleSlot = slots.title || propSlots.title
       const cornerSlot = slots.corner || propSlots.corner
-      const titVNs = [
+      return [
         h('div', {
           class: 'vxe-drawer--header-title'
-        }, titleSlot ? getSlotVNs(titleSlot({ $drawer: $xeDrawer })) : (title ? getFuncText(title) : getI18n('vxe.alert.title')))
-      ]
-      const rightVNs = []
-      if (cornerSlot) {
-        rightVNs.push(
-          h('span', {
-            class: 'vxe-drawer--corner-wrapper'
-          }, getSlotVNs(cornerSlot({ $drawer: $xeDrawer })))
-        )
-      }
-      if (showClose) {
-        rightVNs.push(
-          h('i', {
-            class: ['vxe-drawer--close-btn', 'trigger--btn', getIcon().MODAL_CLOSE],
-            title: getI18n('vxe.drawer.close'),
-            onClick: closeEvent
-          })
-        )
-      }
-      titVNs.push(
+        }, titleSlot ? getSlotVNs(titleSlot({ $drawer: $xeDrawer })) : (title ? getFuncText(title) : getI18n('vxe.alert.title'))),
         h('div', {
           class: 'vxe-drawer--header-right'
-        }, rightVNs)
-      )
-      return titVNs
+        }, [
+          cornerSlot
+            ? h('div', {
+              class: 'vxe-drawer--corner-wrapper'
+            }, getSlotVNs(cornerSlot({ $drawer: $xeDrawer })))
+            : createCommentVNode(),
+          showClose
+            ? h('div', {
+              class: ['vxe-drawer--close-btn', 'trigger--btn'],
+              title: getI18n('vxe.drawer.close'),
+              onClick: closeEvent
+            }, [
+              h('i', {
+                class: getIcon().DRAWER_CLOSE
+              })
+            ])
+            : createCommentVNode()
+        ])
+      ]
     }
 
     const renderHeader = () => {
       const { slots: propSlots = {}, showTitleOverflow } = props
       const headerSlot = slots.header || propSlots.header
-      const headVNs: VNode[] = []
       if (props.showHeader) {
-        headVNs.push(
-          h('div', {
-            class: ['vxe-drawer--header', {
-              'is--ellipsis': showTitleOverflow
-            }]
-          }, headerSlot
-            ? (!reactData.inited || (props.destroyOnClose && !reactData.visible) ? [] : getSlotVNs(headerSlot({ $drawer: $xeDrawer })))
-            : renderTitles())
-        )
+        return h('div', {
+          class: ['vxe-drawer--header', {
+            'is--ellipsis': showTitleOverflow
+          }]
+        }, headerSlot ? getSlotVNs(headerSlot({ $drawer: $xeDrawer })) : renderTitles())
       }
-      return headVNs
+      return createCommentVNode()
     }
 
     const renderBody = () => {
       const { slots: propSlots = {}, content } = props
       const defaultSlot = slots.default || propSlots.default
-      return [
+      const leftSlot = slots.left || propSlots.left
+      const rightSlot = slots.right || propSlots.right
+      return h('div', {
+        class: 'vxe-drawer--body'
+      }, [
+        leftSlot
+          ? h('div', {
+            class: 'vxe-drawer--body-left'
+          }, getSlotVNs(leftSlot({ $drawer: $xeDrawer })))
+          : createCommentVNode(),
         h('div', {
-          class: 'vxe-drawer--body'
+          class: 'vxe-drawer--body-default'
         }, [
           h('div', {
             class: 'vxe-drawer--content'
-          }, defaultSlot ? (!reactData.inited || (props.destroyOnClose && !reactData.visible) ? [] : getSlotVNs(defaultSlot({ $drawer: $xeDrawer }))) as VNode[] : getFuncText(content)),
-          h(VxeLoadingComponent, {
-            class: 'vxe-drawer--loading',
-            modelValue: props.loading
-          })
-        ])
-      ]
+          }, defaultSlot ? getSlotVNs(defaultSlot({ $drawer: $xeDrawer })) : getFuncText(content))
+        ]),
+        rightSlot
+          ? h('div', {
+            class: 'vxe-drawer--body-right'
+          }, getSlotVNs(rightSlot({ $drawer: $xeDrawer })))
+          : createCommentVNode(),
+        h(VxeLoadingComponent, {
+          class: 'vxe-drawer--loading',
+          modelValue: props.loading
+        })
+      ])
     }
 
-    const renderBtns = () => {
-      const { showCancelButton, showConfirmButton } = props
+    const renderDefaultFooter = () => {
+      const { slots: propSlots = {}, showCancelButton, showConfirmButton } = props
+      const lfSlot = slots.leftfoot || propSlots.leftfoot
+      const rfSlot = slots.rightfoot || propSlots.rightfoot
       const btnVNs = []
       if (showCancelButton) {
         btnVNs.push(
@@ -342,32 +350,37 @@ export default defineComponent({
           })
         )
       }
-      return btnVNs
+      return h('div', {
+        class: 'vxe-drawer--footer-wrapper'
+      }, [
+        h('div', {
+          class: 'vxe-drawer--footer-left'
+        }, lfSlot ? getSlotVNs(lfSlot({ $drawer: $xeDrawer })) : []),
+        h('div', {
+          class: 'vxe-drawer--footer-right'
+        }, rfSlot ? getSlotVNs(rfSlot({ $drawer: $xeDrawer })) : btnVNs)
+      ])
     }
 
     const renderFooter = () => {
       const { slots: propSlots = {} } = props
       const footerSlot = slots.footer || propSlots.footer
-      const footVNs: VNode[] = []
       if (props.showFooter) {
-        footVNs.push(
-          h('div', {
-            class: 'vxe-drawer--footer'
-          }, footerSlot
-            ? (!reactData.inited || (props.destroyOnClose && !reactData.visible) ? [] : getSlotVNs(footerSlot({ $drawer: $xeDrawer })))
-            : renderBtns())
-        )
+        return h('div', {
+          class: 'vxe-drawer--footer'
+        }, footerSlot ? getSlotVNs(footerSlot({ $drawer: $xeDrawer })) : [renderDefaultFooter()])
       }
-      return footVNs
+      return createCommentVNode()
     }
 
     const renderVN = () => {
-      const { className, position, loading, lockScroll, padding, lockView, mask } = props
-      const { inited, contentVisible, visible } = reactData
+      const { slots: propSlots = {}, className, position, loading, lockScroll, padding, lockView, mask, destroyOnClose } = props
+      const { initialized, contentVisible, visible } = reactData
+      const asideSlot = slots.aside || propSlots.aside
       const vSize = computeSize.value
       return h(Teleport, {
         to: 'body',
-        disabled: props.transfer ? !inited : true
+        disabled: props.transfer ? !initialized : true
       }, [
         h('div', {
           ref: refElem,
@@ -390,7 +403,22 @@ export default defineComponent({
             ref: refDrawerBox,
             class: 'vxe-drawer--box',
             onMousedown: boxMousedownEvent
-          }, renderHeader().concat(renderBody(), renderFooter()))
+          }, [
+            asideSlot
+              ? h('div', {
+                class: 'vxe-drawer--aside'
+              }, getSlotVNs(asideSlot({ $drawer: $xeDrawer })))
+              : createCommentVNode(),
+            h('div', {
+              class: 'vxe-drawer--container'
+            }, !reactData.initialized || (destroyOnClose && !reactData.visible)
+              ? []
+              : [
+                  renderHeader(),
+                  renderBody(),
+                  renderFooter()
+                ])
+          ])
         ])
       ])
     }

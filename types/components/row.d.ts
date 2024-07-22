@@ -3,7 +3,7 @@ import { defineVxeComponent, VxeComponentBaseOptions, VxeComponentEventParams, V
 
 /* eslint-disable no-use-before-define,@typescript-eslint/ban-types */
 
-export declare const VxeRow: defineVxeComponent<VxeRowProps, VxeRowEventProps>
+export declare const VxeRow: defineVxeComponent<VxeRowProps, VxeRowEventProps, VxeRowSlots>
 export type VxeRowComponent = DefineComponent<VxeRowProps, VxeRowEmits>
 
 export type VxeRowInstance = ComponentPublicInstance<VxeRowProps, VxeRowConstructor>

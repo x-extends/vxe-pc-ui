@@ -15,6 +15,7 @@ import { getWidgetVxeDatePickerConfig, WidgetVxeDatePickerViewComponent, WidgetV
 import { getWidgetVxeTextareaConfig, WidgetVxeTextareaViewComponent, WidgetVxeTextareaFormComponent } from '../widget-vxe-textarea'
 import { getWidgetVxeSwitchConfig, WidgetVxeSwitchViewComponent, WidgetVxeSwitchFormComponent } from '../widget-vxe-switch'
 import { getWidgetVxeSelectConfig, WidgetVxeSelectViewComponent, WidgetVxeSelectFormComponent } from '../widget-vxe-select'
+import { getWidgetVxeTreeSelectConfig, WidgetVxeTreeSelectViewComponent, WidgetVxeTreeSelectFormComponent } from '../widget-vxe-tree-select'
 import { getWidgetVxeRadioGroupConfig, WidgetVxeRadioGroupViewComponent, WidgetVxeRadioGroupFormComponent } from '../widget-vxe-radio-group'
 import { getWidgetVxeCheckboxGroupConfig, WidgetVxeCheckboxGroupViewComponent, WidgetVxeCheckboxGroupFormComponent } from '../widget-vxe-checkbox-group'
 import { getWidgetVxeUploadFileConfig, WidgetVxeUploadFileViewComponent, WidgetVxeUploadFileFormComponent } from '../widget-vxe-upload-file'
@@ -136,6 +137,15 @@ renderer.mixin({
     },
     renderFormDesignWidgetFormView (renderOpts, renderParams) {
       return h(WidgetVxeSelectFormComponent, { renderOpts, renderParams })
+    }
+  },
+  VxeTreeSelect: {
+    createFormDesignWidgetConfig: getWidgetVxeTreeSelectConfig,
+    renderFormDesignWidgetView (renderOpts, renderParams) {
+      return h(WidgetVxeTreeSelectViewComponent, { renderOpts, renderParams })
+    },
+    renderFormDesignWidgetFormView (renderOpts, renderParams) {
+      return h(WidgetVxeTreeSelectFormComponent, { renderOpts, renderParams })
     }
   },
   VxeRadioGroup: {

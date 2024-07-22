@@ -194,7 +194,8 @@ export default {
       zoomMin: '最小化',
       zoomIn: '最大化',
       zoomOut: '还原',
-      close: '关闭'
+      close: '关闭',
+      miniMaxSize: '最小化窗口的数量不能超过 {0} 个'
     },
     drawer: {
       close: '关闭'
@@ -341,7 +342,7 @@ export default {
         component: {
           input: '输入框',
           textarea: '文本域',
-          select: '下拉框',
+          select: '下拉选择',
           row: '一行多列',
           title: '文本',
           subtable: '子表',
@@ -350,7 +351,8 @@ export default {
           VxeNumberInput: '数字',
           VxeDatePicker: '日期',
           VxeTextarea: '文本域',
-          VxeSelect: '下拉框',
+          VxeSelect: '下拉选择',
+          VxeTreeSelect: '树形选择',
           VxeRadioGroup: '单选框',
           VxeCheckboxGroup: '复选框',
           VxeUploadFile: '文件',
@@ -361,6 +363,7 @@ export default {
         name: '控件名称',
         placeholder: '提示语',
         required: '必填校验',
+        multiple: '允许多选',
         displaySetting: {
           name: '显示设置',
           pc: '电脑端',

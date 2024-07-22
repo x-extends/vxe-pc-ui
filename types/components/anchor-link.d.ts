@@ -4,7 +4,7 @@ import { VxeAnchorPropTypes } from './anchor'
 
 /* eslint-disable no-use-before-define,@typescript-eslint/ban-types */
 
-export declare const VxeAnchorLink: defineVxeComponent<VxeAnchorLinkProps, VxeAnchorLinkEventProps>
+export declare const VxeAnchorLink: defineVxeComponent<VxeAnchorLinkProps, VxeAnchorLinkEventProps, VxeAnchorLinkSlots>
 export type VxeAnchorLinkComponent = DefineComponent<VxeAnchorLinkProps, VxeAnchorLinkEmits>
 
 export type VxeAnchorLinkInstance = ComponentPublicInstance<VxeAnchorLinkProps, VxeAnchorLinkConstructor>

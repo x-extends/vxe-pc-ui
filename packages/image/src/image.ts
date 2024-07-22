@@ -1,5 +1,5 @@
 import { defineComponent, ref, h, reactive, PropType, computed } from 'vue'
-import { createEvent } from '../../ui'
+import { getConfig, createEvent } from '../../ui'
 import XEUtils from 'xe-utils'
 import { toCssUnit } from '../..//ui/src/dom'
 import { openPreviewImage } from './util'
@@ -9,12 +9,16 @@ import type { VxeImagePropTypes, ImageReactData, VxeImageEmits, ImagePrivateRef,
 export default defineComponent({
   name: 'VxeImage',
   props: {
-    src: String as PropType<VxeImagePropTypes.Src>,
+    src: [String, Array] as PropType<VxeImagePropTypes.Src>,
     alt: [String, Number] as PropType<VxeImagePropTypes.Alt>,
     loading: String as PropType<VxeImagePropTypes.Loading>,
     title: [String, Number] as PropType<VxeImagePropTypes.Title>,
     width: [String, Number] as PropType<VxeImagePropTypes.Width>,
-    height: [String, Number] as PropType<VxeImagePropTypes.Height>
+    height: [String, Number] as PropType<VxeImagePropTypes.Height>,
+    showPreview: {
+      type: Boolean as PropType<VxeImagePropTypes.ShowPreview>,
+      default: () => getConfig().image.showPreview
+    }
   },
   emits: [
     'click'
@@ -45,6 +49,15 @@ export default defineComponent({
       return style
     })
 
+    const computeImgUrl = computed(() => {
+      const { src } = props
+      const item = XEUtils.isArray(src) ? src[0] : src
+      if (XEUtils.isString(item)) {
+        return item
+      }
+      return item ? (item as any).url : item
+    })
+
     const computeMaps: VxeImagePrivateComputed = {
     }
 
@@ -65,10 +78,10 @@ export default defineComponent({
     }
 
     const clickEvent = (evnt: MouseEvent) => {
-      const { src } = props
-      if (src) {
+      const { showPreview, src } = props
+      if (showPreview && src) {
         openPreviewImage({
-          urlList: [src]
+          urlList: XEUtils.isArray(src) ? src : [src]
         })
       }
       imageMethods.dispatchEvent('click', {}, evnt)
@@ -80,12 +93,13 @@ export default defineComponent({
     Object.assign($xeImage, imageMethods, imagePrivateMethods)
 
     const renderVN = () => {
-      const { src, alt, loading } = props
+      const { alt, loading } = props
       const imgStyle = computeImgStyle.value
+      const imgUrl = computeImgUrl.value
       return h('img', {
         ref: refElem,
         class: 'vxe-image',
-        src,
+        src: imgUrl,
         alt,
         loading,
         style: imgStyle,

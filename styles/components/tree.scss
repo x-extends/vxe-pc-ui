@@ -4,22 +4,56 @@
   position: relative;
   color: var(--vxe-ui-font-color);
   font-family: var(--vxe-ui-font-family);
-  &.row--trigger {
-    .vxe-tree--node-item-wrapper {
+  overflow: auto;
+  &.node--trigger {
+    .vxe-tree--node-item {
       cursor: pointer;
     }
   }
-  &.row--hover {
-    .vxe-tree--node-item-wrapper {
-      &:hover {
-        background-color: var(--vxe-ui-font-primary-hover-color);
+  .vxe-tree--node-item {
+    &.is--current {
+      background-color: var(--vxe-ui-tree-node-current-background-color);
+    }
+  }
+  &.checkbox--highlight {
+    .vxe-tree--node-item {
+      &.is-checkbox--checked {
+        background-color: var(--vxe-ui-tree-node-checkbox-checked-background-color);
       }
     }
   }
-  .vxe-tree--node-item-row {
-    &.is--current {
-      & > .vxe-tree--node-item-wrapper {
-        background-color: var(--vxe-ui-font-primary-tinge-color);
+  &.radio--highlight {
+    .vxe-tree--node-item {
+      &.is-radio--checked {
+        background-color: var(--vxe-ui-tree-node-radio-checked-background-color);
+      }
+    }
+  }
+  &.node--hover {
+    .vxe-tree--node-item {
+      &:hover {
+        background-color: var(--vxe-ui-tree-node-hover-background-color);
+        &.is--current {
+          background-color: var(--vxe-ui-tree-node-hover-current-background-color);
+        }
+      }
+    }
+    &.radio--highlight {
+      .vxe-tree--node-item {
+        &.is-radio--checked {
+          &:hover {
+            background-color: var(--vxe-ui-tree-node-hover-radio-checked-background-color);
+          }
+        }
+      }
+    }
+    &.checkbox--highlight {
+      .vxe-tree--node-item {
+        &.is-checkbox--checked {
+          &:hover {
+            background-color: var(--vxe-ui-tree-node-hover-checkbox-checked-background-color);
+          }
+        }
       }
     }
   }
@@ -71,7 +105,7 @@
 .vxe-tree--node-child-wrapper {
   position: relative;
 }
-.vxe-tree--node-item-wrapper {
+.vxe-tree--node-item {
   display: flex;
   flex-direction: row;
   height: var(--vxe-ui-tree-node-height);
@@ -97,19 +131,28 @@
     @include createAnimationTransition(all, 0.2s);
   }
 }
-.vxe-tree--node-item-label {
+.vxe-tree--node-item-inner {
+  display: flex;
+  flex-direction: row;
   flex-grow: 1;
   overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+  .vxe-tree--node-item-title {
+    flex-grow: 1;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .vxe-tree--node-item-extra {
+    flex-shrink: 0
+  }
 }
 .vxe-tree--checkbox-option {
-  @include createCheckboxIcon();
   padding-right: 0.4em;
+  @include createCheckboxIcon();
 }
 .vxe-tree--radio-option {
-  @include createRadioIcon();
   padding-right: 0.4em;
+  @include createRadioIcon();
 }
 
 .vxe-tree {

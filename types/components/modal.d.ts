@@ -1,9 +1,9 @@
-import { RenderFunction, SetupContext, Ref, ComponentPublicInstance, DefineComponent } from 'vue'
+import { RenderFunction, SetupContext, Ref, ComputedRef, ComponentPublicInstance, DefineComponent } from 'vue'
 import { defineVxeComponent, VxeComponentSizeType, VxeComponentBaseOptions, VxeComponentEventParams, ValueOf, VxeComponentSlotType } from '@vxe-ui/core'
 
 /* eslint-disable no-use-before-define,@typescript-eslint/ban-types */
 
-export declare const VxeModal: defineVxeComponent<VxeModalProps, VxeModalEventProps>
+export declare const VxeModal: defineVxeComponent<VxeModalProps, VxeModalEventProps, VxeModalSlots>
 export type VxeModalComponent = DefineComponent<VxeModalProps, VxeModalEmits>
 
 export type VxeModalInstance = ComponentPublicInstance<VxeModalProps, VxeModalConstructor>
@@ -74,6 +74,26 @@ export namespace VxeModalPropTypes {
   export type ShowHeader = boolean
   export type ShowFooter = boolean
   export type ShowZoom = boolean
+  export interface ZoomConfig {
+    minimizeLayout?: null | '' | 'vertical' | 'horizontal'
+    minimizeMaxSize?: number
+    minimizeOffsetMethod?(params: {
+      $modal: VxeModalConstructor,
+      top: number
+      left: number
+    }): {
+      top: number
+      left: number
+    }
+    minimizeVerticalOffset?: {
+      top?: number
+      left?: number
+    }
+    minimizeHorizontalOffset?: {
+      top?: number
+      left?: number
+    }
+  }
   export type ShowMaximize = boolean
   export type ShowMinimize = boolean
   export type ShowClose = boolean
@@ -94,7 +114,9 @@ export namespace VxeModalPropTypes {
   export type StorageKey = string
   export type Animat = boolean
   export type Padding = boolean
-  export type BeforeHideMethod = (params: ModalVisibleParams) => Promise<any>
+  export type BeforeHideMethod = (params: {
+    type: ModalEventTypes
+  }) => Promise<any>
   export type Slots = VxeModalSlots
 }
 
@@ -125,6 +147,7 @@ export type VxeModalProps = {
   showHeader?: VxeModalPropTypes.ShowHeader
   showFooter?: VxeModalPropTypes.ShowFooter
   showZoom?: VxeModalPropTypes.ShowZoom
+  zoomConfig?: VxeModalPropTypes.ZoomConfig
   showMaximize?: VxeModalPropTypes.ShowMaximize
   showMinimize?: VxeModalPropTypes.ShowMinimize
   showClose?: VxeModalPropTypes.ShowClose
@@ -154,17 +177,26 @@ export type VxeModalProps = {
 }
 
 export interface ModalPrivateComputed {
+  computeSize: ComputedRef<VxeModalPropTypes.Size>
+  computeZoomOpts: ComputedRef<VxeModalPropTypes.ZoomConfig>
 }
 export interface VxeModalPrivateComputed extends ModalPrivateComputed { }
 
 export interface ModalReactData {
-  inited: boolean
+  initialized: boolean
   visible: boolean
   contentVisible: boolean
   modalTop: number
   modalZindex: number
+  prevZoomStatus: '' | 'minimize' | 'maximize'
   zoomStatus: '' | 'minimize' | 'maximize'
-  zoomLocat: {
+  revertLocat: {
+    left: number
+    top: number
+    width: number
+    height: number
+  } | null
+  prevLocat: {
     left: number
     top: number
     width: number
@@ -199,15 +231,19 @@ export interface ModalMethods {
    */
   setPosition(top?: number, left?: number): Promise<any>
   /**
-   * 判断是否最大化显示
+   * 判断是否处于最小化
+   */
+  isMinimized(): boolean
+  /**
+   * 判断是否处于最大化
    */
   isMaximized(): boolean
   /**
-   * 切换窗口最大化/还原
+   * 在窗口最大化/还原/最小化之间切换状态
    */
   zoom(type?: '' | 'minimize' | 'maximize' | 'revert'): Promise<'minimize' | 'maximize' | 'revert'>
   /**
-   * 最小化窗口
+   * 如果窗口处于常规状态，则最小化窗口
    */
   minimize(): Promise<any>
   /**
@@ -259,10 +295,12 @@ export namespace VxeModalDefines {
   }
 
   interface ModalEventParams extends VxeComponentEventParams {
-    $modal: VxeModalConstructor & VxeModalMethods
+    $modal: VxeModalConstructor
   }
 
-  interface ModalBaseParams extends ModalVisibleParams { }
+  interface ModalBaseParams {
+    type: ModalEventTypes
+  }
 
   export interface ShowParams extends ModalBaseParams { }
   export interface ShowEventParams extends ModalEventParams, ShowParams { }
@@ -377,7 +415,7 @@ export interface ModalController {
    * 获取动态的活动窗口
    * @param id 窗口唯一标识
    */
-  get(id: string): VxeModalConstructor & VxeModalMethods
+  get(id: string): VxeModalConstructor
   /**
    * 关闭动态的活动窗口，如果为空则关闭所有
    * @param id 窗口唯一标识
@@ -385,12 +423,23 @@ export interface ModalController {
   close(id?: VxeModalPropTypes.ID): Promise<any>
 }
 
+/**
+ * @deprecated
+ */
 export interface ModalDefaultSlotParams {
-  $modal: VxeModalConstructor & VxeModalMethods
+  $modal: VxeModalConstructor
 }
-
+/**
+ * @deprecated
+ */
 export interface ModalHeaderSlotParams extends ModalDefaultSlotParams { }
+/**
+ * @deprecated
+ */
 export interface ModalTitleSlotParams extends ModalDefaultSlotParams { }
+/**
+ * @deprecated
+ */
 export interface ModalFooterSlotParams extends ModalDefaultSlotParams { }
 
 interface ModalVisibleParams {
@@ -410,30 +459,65 @@ export namespace VxeModalEvents {
 }
 
 export namespace VxeModalSlotTypes {
-  export interface DefaultSlotParams {}
+  export interface DefaultSlotParams {
+    $modal: VxeModalConstructor
+  }
+
+  export interface LeftSlotParams extends DefaultSlotParams { }
+  export interface RightSlotParams extends DefaultSlotParams { }
+  export interface AsideSlotParams extends DefaultSlotParams { }
+  export interface HeaderSlotParams extends DefaultSlotParams { }
+  export interface TitleSlotParams extends DefaultSlotParams {
+    minimized: boolean
+    maximized: boolean
+  }
+  export interface CornerSlotParams extends DefaultSlotParams { }
+  export interface FooterSlotParams extends DefaultSlotParams { }
+  export interface LeftfootSlotParams extends DefaultSlotParams { }
+  export interface RightfootSlotParams extends DefaultSlotParams { }
 }
 
 export interface VxeModalSlots {
   /**
-   * 自定义窗口内容模板
+   * 自定义内容模板
    */
-  default?(params: ModalDefaultSlotParams): VxeComponentSlotType[] | VxeComponentSlotType
+  default?(params: VxeModalSlotTypes.DefaultSlotParams): VxeComponentSlotType[] | VxeComponentSlotType
   /**
-   * 自定义窗口头部的模板
+   * 自定义左侧内容模板
    */
-  header?(params: ModalHeaderSlotParams): VxeComponentSlotType[] | VxeComponentSlotType
+  left?(params: VxeModalSlotTypes.LeftSlotParams): VxeComponentSlotType[] | VxeComponentSlotType
   /**
-   * 自定义窗口标题的模板（如果使用了 header 插槽，则该插槽无效）
+   * 自定义右侧内容模板
    */
-  title?(params: ModalTitleSlotParams): VxeComponentSlotType[] | VxeComponentSlotType
+  right?(params: VxeModalSlotTypes.RightSlotParams): VxeComponentSlotType[] | VxeComponentSlotType
   /**
-   * 自定义窗口右上角的模板
+   * 自定义侧边栏的模板
    */
-  corner?(params: ModalTitleSlotParams): VxeComponentSlotType[] | VxeComponentSlotType
+  aside?(params: VxeModalSlotTypes.AsideSlotParams): VxeComponentSlotType[] | VxeComponentSlotType
   /**
-   * 自定义窗口底部的模板
+   * 自定义头部的模板
    */
-  footer?(params: ModalFooterSlotParams): VxeComponentSlotType[] | VxeComponentSlotType
+  header?(params: VxeModalSlotTypes.HeaderSlotParams): VxeComponentSlotType[] | VxeComponentSlotType
+  /**
+   * 自定义标题的模板（如果使用了 header 插槽，则该插槽无效）
+   */
+  title?(params: VxeModalSlotTypes.TitleSlotParams): VxeComponentSlotType[] | VxeComponentSlotType
+  /**
+   * 自定义右上角的模板
+   */
+  corner?(params: VxeModalSlotTypes.CornerSlotParams): VxeComponentSlotType[] | VxeComponentSlotType
+  /**
+   * 自定义底部的模板
+   */
+  footer?(params: VxeModalSlotTypes.FooterSlotParams): VxeComponentSlotType[] | VxeComponentSlotType
+  /**
+   * 自定义底部左侧的模板
+   */
+  leftfoot?(params: VxeModalSlotTypes.LeftfootSlotParams): VxeComponentSlotType[] | VxeComponentSlotType
+  /**
+   * 自定义底部右侧的模板
+   */
+  rightfoot?(params: VxeModalSlotTypes.RightfootSlotParams): VxeComponentSlotType[] | VxeComponentSlotType
 }
 
 export const Modal: typeof VxeModal

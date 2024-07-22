@@ -10,7 +10,7 @@ import { VxeToolbarConstructor, VxeToolbarInstance } from './toolbar'
 
 /* eslint-disable no-use-before-define,@typescript-eslint/ban-types */
 
-export declare const VxeTable: defineVxeComponent<VxeTableProps, VxeTableEventProps>
+export declare const VxeTable: defineVxeComponent<VxeTableProps, VxeTableEventProps, VxeTableSlots>
 export type VxeTableComponent = DefineComponent<VxeTableProps, VxeTableEmits>
 
 export type VxeTableInstance<D = any> = ComponentPublicInstance<VxeTableProps<D>, VxeTableConstructor>
@@ -2053,6 +2053,7 @@ export interface TablePrivateComputed<D = any> {
 export interface VxeTablePrivateComputed extends TablePrivateComputed { }
 
 export interface TableReactData<D = any> {
+  isCalcColumn: boolean
   // 低性能的静态列
   staticColumns: any[]
   // 渲染的列分组
@@ -2156,6 +2157,7 @@ export interface TableReactData<D = any> {
     scaleList: VxeTableDefines.ColumnInfo<D>[]
     scaleMinList: VxeTableDefines.ColumnInfo<D>[]
     autoList: VxeTableDefines.ColumnInfo<D>[]
+    remainList: VxeTableDefines.ColumnInfo<D>[]
   },
   // 存放快捷菜单的信息
   ctxMenuStore: {
@@ -3278,6 +3280,7 @@ export namespace VxeTableDefines {
     headerClassName: VxeColumnPropTypes.HeaderClassName
     footerClassName: VxeColumnPropTypes.FooterClassName
     formatter: VxeColumnPropTypes.Formatter<D>
+    footerFormatter: VxeColumnPropTypes.FooterFormatter<D>
     sortable: VxeColumnPropTypes.Sortable
     sortBy: VxeColumnPropTypes.SortBy
     sortType: VxeColumnPropTypes.SortType
@@ -3332,6 +3335,7 @@ export namespace VxeTableDefines {
 
     renderWidth: number
     renderHeight: number
+    renderAutoWidth: number
     renderResizeWidth: number
     resizeWidth: number
     model: {

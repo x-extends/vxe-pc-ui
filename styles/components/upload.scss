@@ -2,7 +2,6 @@
   position: relative;
   color: var(--vxe-ui-font-color);
   font-family: var(--vxe-ui-font-family);
-  font-size: var(--vxe-ui-font-size-default);
   &.show--error {
     .vxe-upload--file-item {
       &.is--error {
@@ -74,7 +73,7 @@
   display: inline-block;
 }
 .vxe-upload--file-action-tip {
-  font-size: 0.95em;
+  font-size: 0.9em;
   padding: var(--vxe-ui-layout-padding-half);
   color: var(--vxe-ui-input-placeholder-color);
 }
@@ -129,14 +128,12 @@
   padding-bottom: 0.1em;
 }
 .vxe-upload--image-action-content {
-  font-size: 0.95em;
-  padding-bottom: 0.6em;
+  font-size: 0.9em;
+  padding: 0 0.15em 0.5em 0.15em;
 }
 .vxe-upload--image-item-box,
 .vxe-upload--image-action-box {
   position: relative;
-  width: var(--vxe-ui-upload-image-wh-default);
-  height: var(--vxe-ui-upload-image-wh-default);
   border-radius: var(--vxe-ui-base-border-radius);
   cursor: pointer;
 }
@@ -240,7 +237,7 @@
   width: 1.8em;
   height: 1.8em;
   line-height: 1.8em;
-  font-size: 0.95em;
+  font-size: 0.85em;
   text-align: center;
   border-radius: 50%;
   color: #fff;
@@ -264,5 +261,38 @@
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
+  }
+}
+
+.vxe-upload {
+  font-size: var(--vxe-ui-font-size-default);
+  .vxe-upload--image-item-box,
+  .vxe-upload--image-action-box {
+    width: var(--vxe-ui-upload-image-wh-default);
+    height: var(--vxe-ui-upload-image-wh-default);
+  }
+  &.size--medium {
+    font-size: var(--vxe-ui-font-size-medium);
+    .vxe-upload--image-item-box,
+    .vxe-upload--image-action-box {
+      width: var(--vxe-ui-upload-image-wh-medium);
+      height: var(--vxe-ui-upload-image-wh-medium);
+    }
+  }
+  &.size--small {
+    font-size: var(--vxe-ui-font-size-small);
+    .vxe-upload--image-item-box,
+    .vxe-upload--image-action-box {
+      width: var(--vxe-ui-upload-image-wh-small);
+      height: var(--vxe-ui-upload-image-wh-small);
+    }
+  }
+  &.size--mini {
+    font-size: var(--vxe-ui-font-size-mini);
+    .vxe-upload--image-item-box,
+    .vxe-upload--image-action-box {
+      width: var(--vxe-ui-upload-image-wh-mini);
+      height: var(--vxe-ui-upload-image-wh-mini);
+    }
   }
 }

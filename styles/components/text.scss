@@ -50,7 +50,6 @@ $btnThemeList: (
 );
 
 .vxe-text {
-  font-size: var(--vxe-ui-font-size-default);
   color: var(--vxe-ui-font-color);
   @for $index from 0 to length($btnThemeList) {
     $item: nth($btnThemeList, $index + 1);

@@ -81,12 +81,15 @@ export default defineComponent({
       }, { children: 'childList' })
     }
 
-    const updateActiveMenu = () => {
+    const updateActiveMenu = (isDefExpand?: boolean) => {
       const { activeName } = reactData
       XEUtils.eachTree(reactData.menuList, (item, index, items, path, parent, nodes) => {
         if (item.itemKey === activeName) {
           nodes.forEach(obj => {
             obj.isActive = true
+            if (isDefExpand) {
+              obj.isExpand = true
+            }
           })
           item.isExactActive = true
         } else {
@@ -241,7 +244,7 @@ export default defineComponent({
 
     watch(() => props.modelValue, (val) => {
       reactData.activeName = val
-      updateActiveMenu()
+      updateActiveMenu(true)
     })
 
     onMounted(() => {
@@ -249,7 +252,7 @@ export default defineComponent({
     })
 
     updateMenuConfig()
-    updateActiveMenu()
+    updateActiveMenu(true)
 
     return $xeMenu
   },

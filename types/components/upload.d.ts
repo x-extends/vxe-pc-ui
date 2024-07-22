@@ -3,7 +3,7 @@ import { defineVxeComponent, VxeComponentBaseOptions, VxeComponentEventParams, V
 
 /* eslint-disable no-use-before-define,@typescript-eslint/ban-types */
 
-export declare const VxeUpload: defineVxeComponent<VxeUploadProps, VxeUploadEventProps>
+export declare const VxeUpload: defineVxeComponent<VxeUploadProps, VxeUploadEventProps, VxeUploadSlots>
 export type VxeUploadComponent = DefineComponent<VxeUploadProps, VxeUploadEmits>
 
 export type VxeUploadInstance = ComponentPublicInstance<VxeUploadProps, VxeUploadConstructor>
@@ -23,13 +23,20 @@ export interface UploadPrivateRef {
 export interface VxeUploadPrivateRef extends UploadPrivateRef { }
 
 export namespace VxeUploadPropTypes {
-  export type ModelValue = VxeUploadDefines.FileObjItem[]
+  export type ModelValue = VxeUploadDefines.FileObjItem | VxeUploadDefines.FileObjItem[] | string | string[]
+  export type Size = VxeComponentSizeType
   export type ShowList = boolean
   export type Mode = null | '' | 'all' | 'image'
   export type Readonly = boolean
   export type Disabled = boolean
   export type ImageTypes = string[]
+  export interface ImageStyle {
+    width?: number | string
+    height?: number | string
+  }
   export type FileTypes = string[]
+  export type SingleMode = boolean
+  export type UrlMode = boolean
   export type Multiple = boolean
   export type LimitSize = number | string
   export type LimitCount = number | string
@@ -39,17 +46,27 @@ export namespace VxeUploadPropTypes {
   export type SizeField = string
   export type TipText = string
   export type ButtonText = string
+  export type ButtonIcon = string
+  export type ShowButtonText = boolean
+  export type ShowButtonIcon = boolean
+  export type ShowRemoveButton = boolean
   export type ShowErrorStatus = boolean
   export type ShowProgress = boolean
   export type AutoHiddenButton = boolean
   export type UploadMethod = undefined | ((params: {
+    $upload: VxeUploadConstructor
     file: File,
     option: VxeUploadDefines.FileObjItem
     updateProgress: (percentNum: number) => void
-  }) => any)
-  export type GetUrlMethod = undefined | ((params: {
+  }) => Promise<any>)
+  export type RemoveMethod = undefined | ((params: {
+    $upload: VxeUploadConstructor
     option: VxeUploadDefines.FileObjItem
-  }) => any)
+  }) => Promise<any>)
+  export type GetUrlMethod = undefined | ((params: {
+    $upload: VxeUploadConstructor
+    option: VxeUploadDefines.FileObjItem
+  }) => string)
 
   /**
    * 已废弃，请使用 TipText
@@ -60,13 +77,17 @@ export namespace VxeUploadPropTypes {
 
 export type VxeUploadProps = {
   modelValue?: VxeUploadPropTypes.ModelValue
+  size?: VxeUploadPropTypes.Size
   showList?: VxeUploadPropTypes.ShowList
   mode?: VxeUploadPropTypes.Mode
   readonly?: VxeUploadPropTypes.Readonly
   disabled?: VxeUploadPropTypes.Disabled
   imageTypes?: VxeUploadPropTypes.ImageTypes
+  imageStyle?: VxeUploadPropTypes.ImageStyle
   fileTypes?: VxeUploadPropTypes.FileTypes
   multiple?: VxeUploadPropTypes.Multiple
+  singleMode?: VxeUploadPropTypes.SingleMode
+  urlMode?: VxeUploadPropTypes.UrlMode
   /**
    * 限制文件大小，单位M
    */
@@ -77,11 +98,16 @@ export type VxeUploadProps = {
   urlField?: VxeUploadPropTypes.UrlField
   sizeField?: VxeUploadPropTypes.SizeField
   buttonText?: VxeUploadPropTypes.ButtonText
+  buttonIcon?: VxeUploadPropTypes.ButtonIcon
+  showButtonText?: VxeUploadPropTypes.ShowButtonText
+  showButtonIcon?: VxeUploadPropTypes.ShowButtonIcon
+  showRemoveButton?: VxeUploadPropTypes.ShowRemoveButton
   showErrorStatus?: VxeUploadPropTypes.ShowErrorStatus
   showProgress?: VxeUploadPropTypes.ShowProgress
   autoHiddenButton?: VxeUploadPropTypes.AutoHiddenButton
   tipText?: VxeUploadPropTypes.TipText
   uploadMethod?: VxeUploadPropTypes.UploadMethod
+  removeMethod?: VxeUploadPropTypes.RemoveMethod
   getUrlMethod?: VxeUploadPropTypes.GetUrlMethod
 
   /**

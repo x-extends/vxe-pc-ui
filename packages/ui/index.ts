@@ -36,6 +36,14 @@ export const globalStore = {}
 VxeUI.globalStore = globalStore
 
 setConfig({
+  table: {
+    importConfig: {
+      modes: ['insert', 'covering']
+    }
+  }
+})
+
+setConfig({
   alert: {},
   anchor: {},
   anchorLink: {},
@@ -102,7 +110,9 @@ setConfig({
   formView: {},
   grid: {},
   icon: {},
-  image: {},
+  image: {
+    showPreview: true
+  },
   imagePreview: {},
   input: {
     // size: null,
@@ -155,6 +165,17 @@ setConfig({
     padding: true,
     draggable: true,
     showConfirmButton: null,
+    zoomConfig: {
+      minimizeMaxSize: 10,
+      minimizeVerticalOffset: {
+        top: -24,
+        left: 0
+      },
+      minimizeHorizontalOffset: {
+        top: 0,
+        left: 32
+      }
+    },
     // storage: false,
     storageKey: 'VXE_MODAL_POSITION'
   },
@@ -211,15 +232,30 @@ setConfig({
   },
   tree: {
     indent: 20,
+    minHeight: 60,
     radioConfig: {
       strict: true
     }
   },
-  treeSelect: {},
+  treeSelect: {
+    treeConfig: {
+      isHover: true,
+      radioConfig: {
+        showIcon: false
+      },
+      checkboxConfig: {
+        showIcon: false
+      }
+    }
+  },
   upload: {
     mode: 'all',
     imageTypes: ['jpg', 'jpeg', 'png', 'gif'],
-    showList: true
+    showList: true,
+    showButtonText: true,
+    showRemoveButton: true,
+    showButtonIcon: true,
+    imageStyle: {}
   }
 })
 
@@ -288,6 +324,9 @@ setIcon({
   MODAL_QUESTION: iconPrefix + 'question-circle-fill',
   MODAL_LOADING: iconPrefix + 'spinner roll',
 
+  // drawer
+  DRAWER_CLOSE: iconPrefix + 'close',
+
   // form
   FORM_PREFIX: iconPrefix + 'question-circle-fill',
   FORM_SUFFIX: iconPrefix + 'question-circle-fill',
@@ -312,10 +351,10 @@ setIcon({
   // upload
   UPLOAD_FILE_ERROR: iconPrefix + 'warning-circle-fill',
   UPLOAD_FILE_ADD: iconPrefix + 'upload',
-  UPLOAD_FILE_DELETE: iconPrefix + 'delete',
+  UPLOAD_FILE_REMOVE: iconPrefix + 'delete',
   UPLOAD_IMAGE_RE_UPLOAD: iconPrefix + 'repeat',
   UPLOAD_IMAGE_ADD: iconPrefix + 'add',
-  UPLOAD_IMAGE_DELETE: iconPrefix + 'close',
+  UPLOAD_IMAGE_REMOVE: iconPrefix + 'close',
   UPLOAD_LOADING: iconPrefix + 'spinner roll vxe-loading--default-icon',
   UPLOAD_FILE_TYPE_DEFAULT: iconPrefix + 'file',
   UPLOAD_FILE_TYPE_XLSX: iconPrefix + 'file-excel',
@@ -355,6 +394,7 @@ setIcon({
   // tree
   TREE_NODE_OPEN: iconPrefix + 'caret-right rotate90',
   TREE_NODE_CLOSE: iconPrefix + 'caret-right',
+  TREE_NODE_LOADED: iconPrefix + 'spinner roll',
 
   // tree-select
   TREE_SELECT_LOADED: iconPrefix + 'spinner roll',

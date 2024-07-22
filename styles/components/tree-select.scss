@@ -113,8 +113,19 @@
   overflow-y: auto;
   padding: var(--vxe-ui-layout-padding-default);
   max-height: 18em;
-  & > .vxe-tree {
-    max-width: 30em;
+}
+.vxe-tree-select--tree {
+  max-width: 30em;
+  .is-radio--checked,
+  .is-checkbox--checked {
+    & > .vxe-tree--node-item {
+      .vxe-tree--node-item-title {
+        color: var(--vxe-ui-font-primary-color);
+      }
+    }
+  }
+  .vxe-tree--node-item-title {
+    cursor: pointer;
   }
 }
 

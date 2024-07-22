@@ -3,7 +3,7 @@ import { defineVxeComponent, VxeComponentBaseOptions, VxeComponentEventParams } 
 
 /* eslint-disable no-use-before-define,@typescript-eslint/ban-types */
 
-export declare const VxeCard: defineVxeComponent<VxeCardProps, VxeCardEventProps>
+export declare const VxeCard: defineVxeComponent<VxeCardProps, VxeCardEventProps, VxeCardSlots>
 export type VxeCardComponent = DefineComponent<VxeCardProps, VxeCardEmits>
 
 export type VxeCardInstance = ComponentPublicInstance<VxeCardProps, VxeCardConstructor>

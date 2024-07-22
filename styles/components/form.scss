@@ -189,7 +189,8 @@
     .vxe-password-input,
     .vxe-date-picker,
     .vxe-textarea,
-    .vxe-select {
+    .vxe-select,
+    .vxe-tree-select {
       width: 100%;
     }
   }
@@ -202,7 +203,7 @@
     .vxe-upload .vxe-upload--image-action-box,
     .vxe-upload .vxe-upload--file-action-btn > .vxe-button,
     .vxe-select,
-    .vxe-select.is--active > .vxe-input,
+    .vxe-tree-select,
     .vxe-default-input,
     .vxe-default-textarea,
     .vxe-default-select {

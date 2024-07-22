@@ -194,7 +194,8 @@ export default {
       zoomMin: 'Minimize',
       zoomIn: 'Maximize',
       zoomOut: 'Restaurar',
-      close: 'Fechar'
+      close: 'Fechar',
+      miniMaxSize: 'The number of minimized Windows cannot exceed {0}.'
     },
     drawer: {
       close: 'Fechar'
@@ -351,6 +352,7 @@ export default {
           VxeDatePicker: 'Date',
           VxeTextarea: 'Textarea',
           VxeSelect: 'Select',
+          VxeTreeSelect: 'Tree select',
           VxeRadioGroup: 'Radio',
           VxeCheckboxGroup: 'Checkbox',
           VxeUploadFile: 'File',
@@ -361,6 +363,7 @@ export default {
         name: 'Field name',
         placeholder: 'Field placeholder',
         required: 'Required',
+        multiple: 'Allow to select multiple',
         displaySetting: {
           name: 'Display setting',
           pc: 'PC',

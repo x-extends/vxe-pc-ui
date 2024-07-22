@@ -1,9 +1,11 @@
 import { defineComponent, ref, h, reactive, PropType, computed, VNode, createCommentVNode, watch, onUnmounted, nextTick } from 'vue'
 import { createEvent, getIcon, getConfig, useSize } from '../../ui'
 import XEUtils from 'xe-utils'
-import { getSlotVNs } from '../..//ui/src/vn'
+import { getSlotVNs } from '../../ui/src/vn'
+import { toCssUnit } from '../../ui/src/dom'
+import VxeLoadingComponent from '../../loading/src/loading'
 
-import type { TreeReactData, VxeTreeEmits, VxeTreePropTypes, TreeInternalData, TreePrivateRef, VxeTreePrivateComputed, TreePrivateMethods, TreeMethods, ValueOf, VxeTreeConstructor, VxeTreePrivateMethods } from '../../../types'
+import type { TreeReactData, VxeTreeEmits, VxeTreePropTypes, TreeInternalData, TreePrivateRef, VxeTreeDefines, VxeTreePrivateComputed, TreePrivateMethods, TreeMethods, ValueOf, VxeTreeConstructor, VxeTreePrivateMethods } from '../../../types'
 
 /**
  * 生成节点的唯一主键
@@ -16,6 +18,17 @@ export default defineComponent({
   name: 'VxeTree',
   props: {
     data: Array as PropType<VxeTreePropTypes.Data>,
+    height: [String, Number] as PropType<VxeTreePropTypes.Height>,
+    minHeight: {
+      type: [String, Number] as PropType<VxeTreePropTypes.MinHeight>,
+      default: () => getConfig().tree.minHeight
+    },
+    loading: Boolean as PropType<VxeTreePropTypes.Loading>,
+    loadingConfig: Object as PropType<VxeTreePropTypes.LoadingConfig>,
+    accordion: {
+      type: Boolean as PropType<VxeTreePropTypes.Accordion>,
+      default: () => getConfig().tree.accordion
+    },
     childrenField: {
       type: String as PropType<VxeTreePropTypes.ChildrenField>,
       default: () => getConfig().tree.childrenField
@@ -32,6 +45,15 @@ export default defineComponent({
       type: String as PropType<VxeTreePropTypes.TitleField>,
       default: () => getConfig().tree.titleField
     },
+    hasChildField: {
+      type: String as PropType<VxeTreePropTypes.HasChildField>,
+      default: () => getConfig().tree.hasChildField
+    },
+    // mapChildrenField: {
+    //   type: String as PropType<VxeTreePropTypes.MapChildrenField>,
+    //   default: () => getConfig().tree.mapChildrenField
+    // },
+    transform: Boolean as PropType<VxeTreePropTypes.Transform>,
     isCurrent: {
       type: Boolean as PropType<VxeTreePropTypes.IsCurrent>,
       default: () => getConfig().tree.isCurrent
@@ -53,9 +75,9 @@ export default defineComponent({
       type: Boolean as PropType<VxeTreePropTypes.ShowRadio>,
       default: () => getConfig().tree.showRadio
     },
-    radioCheckNodeKey: {
-      type: [String, Number] as PropType<VxeTreePropTypes.RadioCheckNodeKey>,
-      default: () => getConfig().tree.radioCheckNodeKey
+    checkNodeKey: {
+      type: [String, Number] as PropType<VxeTreePropTypes.CheckNodeKey>,
+      default: () => getConfig().tree.checkNodeKey
     },
     radioConfig: {
       type: Object as PropType<VxeTreePropTypes.RadioConfig>,
@@ -65,15 +87,17 @@ export default defineComponent({
       type: Boolean as PropType<VxeTreePropTypes.ShowCheckbox>,
       default: () => getConfig().tree.showCheckbox
     },
-    checkboxCheckNodeKeys: {
-      type: Array as PropType<VxeTreePropTypes.CheckboxCheckNodeKeys>,
-      default: () => getConfig().tree.checkboxCheckNodeKeys
+    checkNodeKeys: {
+      type: Array as PropType<VxeTreePropTypes.CheckNodeKeys>,
+      default: () => getConfig().tree.checkNodeKeys
     },
     checkboxConfig: {
       type: Object as PropType<VxeTreePropTypes.CheckboxConfig>,
       default: () => XEUtils.clone(getConfig().tree.checkboxConfig, true)
     },
+    lazy: Boolean as PropType<VxeTreePropTypes.Lazy>,
     toggleMethod: Function as PropType<VxeTreePropTypes.ToggleMethod>,
+    loadMethod: Function as PropType<VxeTreePropTypes.LoadMethod>,
     showIcon: {
       type: Boolean as PropType<VxeTreePropTypes.ShowIcon>,
       default: true
@@ -94,12 +118,14 @@ export default defineComponent({
   },
   emits: [
     'update:modelValue',
-    'update:radioCheckNodeKey',
-    'update:checkboxCheckNodeKeys',
+    'update:checkNodeKey',
+    'update:checkNodeKeys',
     'node-click',
     'node-dblclick',
     'radio-change',
-    'checkbox-change'
+    'checkbox-change',
+    'load-success',
+    'load-error'
   ] as VxeTreeEmits,
   setup (props, context) {
     const { emit, slots } = context
@@ -112,15 +138,16 @@ export default defineComponent({
 
     const reactData = reactive<TreeReactData>({
       currentNode: null,
-      selectRadioKey: props.radioCheckNodeKey,
+      nodeMaps: {},
+      selectRadioKey: props.checkNodeKey,
       treeList: [],
       treeExpandedMaps: {},
+      treeExpandLazyLoadedMaps: {},
       selectCheckboxMaps: {},
       indeterminateCheckboxMaps: {}
     })
 
     const internalData: TreeInternalData = {
-      nodeMaps: {}
     }
 
     const refMaps: TreePrivateRef = {
@@ -132,19 +159,43 @@ export default defineComponent({
     })
 
     const computeKeyField = computed(() => {
-      return props.keyField || '_X_NODE_KEY'
+      return props.keyField || 'id'
+    })
+
+    const computeParentField = computed(() => {
+      return props.parentField || 'parentId'
     })
 
     const computeChildrenField = computed(() => {
       return props.childrenField || 'children'
     })
 
+    const computeHasChildField = computed(() => {
+      return props.hasChildField || 'hasChild'
+    })
+
     const computeRadioOpts = computed(() => {
-      return Object.assign({}, props.radioConfig)
+      return Object.assign({ showIcon: true }, props.radioConfig)
     })
 
     const computeCheckboxOpts = computed(() => {
-      return Object.assign({}, props.checkboxConfig)
+      return Object.assign({ showIcon: true }, props.checkboxConfig)
+    })
+
+    const computeLoadingOpts = computed(() => {
+      return Object.assign({}, getConfig().tree.loadingConfig, props.loadingConfig)
+    })
+
+    const computeTreeStyle = computed(() => {
+      const { height, minHeight } = props
+      const stys: Record<string, string> = {}
+      if (height) {
+        stys.height = toCssUnit(height)
+      }
+      if (minHeight) {
+        stys.minHeight = toCssUnit(minHeight)
+      }
+      return stys
     })
 
     const computeMaps: VxeTreePrivateComputed = {
@@ -161,7 +212,7 @@ export default defineComponent({
       getComputeMaps: () => computeMaps
     } as unknown as VxeTreeConstructor & VxeTreePrivateMethods
 
-    const getNodeid = (node: any) => {
+    const getNodeId = (node: any) => {
       const keyField = computeKeyField.value
       const nodeid = XEUtils.get(node, keyField)
       return XEUtils.eqNull(nodeid) ? '' : encodeURIComponent(nodeid)
@@ -169,26 +220,26 @@ export default defineComponent({
 
     const isExpandByNode = (node: any) => {
       const { treeExpandedMaps } = reactData
-      const nodeid = getNodeid(node)
+      const nodeid = getNodeId(node)
       return !!treeExpandedMaps[nodeid]
     }
 
-    const isCheckedByRadioNodeid = (nodeid: any) => {
+    const isCheckedByRadioNodeId = (nodeid: any) => {
       const { selectRadioKey } = reactData
       return selectRadioKey === nodeid
     }
 
     const isCheckedByRadioNode = (node: any) => {
-      return isCheckedByRadioNodeid(getNodeid(node))
+      return isCheckedByRadioNodeId(getNodeId(node))
     }
 
-    const isCheckedByCheckboxNodeid = (nodeid: any) => {
+    const isCheckedByCheckboxNodeId = (nodeid: any) => {
       const { selectCheckboxMaps } = reactData
       return !!selectCheckboxMaps[nodeid]
     }
 
     const isCheckedByCheckboxNode = (node: any) => {
-      return isCheckedByCheckboxNodeid(getNodeid(node))
+      return isCheckedByCheckboxNodeId(getNodeId(node))
     }
 
     const isIndeterminateByCheckboxNodeid = (nodeid: any) => {
@@ -197,21 +248,60 @@ export default defineComponent({
     }
 
     const isIndeterminateByCheckboxNode = (node: any) => {
-      return isIndeterminateByCheckboxNodeid(getNodeid(node))
+      return isIndeterminateByCheckboxNodeid(getNodeId(node))
     }
 
-    const emitCheckboxMode = (value: VxeTreePropTypes.CheckboxCheckNodeKeys) => {
-      emit('update:checkboxCheckNodeKeys', value)
+    const emitCheckboxMode = (value: VxeTreePropTypes.CheckNodeKeys) => {
+      emit('update:checkNodeKeys', value)
     }
 
-    const emitRadioMode = (value: VxeTreePropTypes.RadioCheckNodeKey) => {
-      emit('update:radioCheckNodeKey', value)
+    const emitRadioMode = (value: VxeTreePropTypes.CheckNodeKey) => {
+      emit('update:checkNodeKey', value)
     }
 
-    const updateCheckboxChecked = (nodeKeys: VxeTreePropTypes.CheckboxCheckNodeKeys) => {
+    const setRadioNode = (node: any, checked: boolean) => {
+      if (node) {
+        reactData.selectRadioKey = checked ? getNodeId(node) : null
+      }
+      return nextTick()
+    }
+
+    const setCheckboxNode = (nodeList: any | any[], checked: boolean) => {
+      if (nodeList) {
+        if (!XEUtils.isArray(nodeList)) {
+          nodeList = [nodeList]
+        }
+        handleCheckedCheckboxNode(nodeList.map((item: any) => getNodeId(item)), checked)
+      }
+      return nextTick()
+    }
+
+    const setCheckboxByNodeId = (nodeIds: any | any[], checked: boolean) => {
+      if (nodeIds) {
+        if (!XEUtils.isArray(nodeIds)) {
+          nodeIds = [nodeIds]
+        }
+        handleCheckedCheckboxNode(nodeIds, checked)
+      }
+      return nextTick()
+    }
+
+    const handleCheckedCheckboxNode = (nodeIds: VxeTreePropTypes.CheckNodeKeys, checked: boolean) => {
+      const selectKeyMaps: Record<string, boolean> = Object.assign({}, reactData.selectCheckboxMaps)
+      nodeIds.forEach((key) => {
+        if (checked) {
+          selectKeyMaps[key] = true
+        } else if (selectKeyMaps[key]) {
+          delete selectKeyMaps[key]
+        }
+      })
+      reactData.selectCheckboxMaps = selectKeyMaps
+    }
+
+    const updateCheckboxChecked = (nodeIds: VxeTreePropTypes.CheckNodeKeys) => {
       const selectKeyMaps: Record<string, boolean> = {}
-      if (nodeKeys) {
-        nodeKeys.forEach((key) => {
+      if (nodeIds) {
+        nodeIds.forEach((key) => {
           selectKeyMaps[key] = true
         })
       }
@@ -234,13 +324,54 @@ export default defineComponent({
       emit(type, createEvent(evnt, { $tree: $xeTree }, params))
     }
 
+    const createNode = (records: any[]) => {
+      const keyField = computeKeyField.value
+      return Promise.resolve(
+        records.map(obj => {
+          const item = { ...obj }
+          let nodeid = getNodeId(item)
+          if (!nodeid) {
+            nodeid = getNodeUniqueId()
+            XEUtils.set(item, keyField, nodeid)
+          }
+          return item
+        })
+      )
+    }
+
     const treeMethods: TreeMethods = {
       dispatchEvent,
-      clearExpand () {
+      clearRadioNode () {
+        reactData.selectRadioKey = null
+        return nextTick()
+      },
+      setRadioNode,
+      setCheckboxNode,
+      setCheckboxByNodeId,
+      clearCheckboxNode () {
+        reactData.selectCheckboxMaps = {}
+        return nextTick()
+      },
+      setAllCheckboxNode (checked) {
+        const selectMaps: Record<string, boolean> = Object.assign(reactData.selectCheckboxMaps)
+        const childrenField = computeChildrenField.value
+        if (checked) {
+          XEUtils.eachTree(reactData.treeList, (node) => {
+            const nodeid = getNodeId(node)
+            selectMaps[nodeid] = true
+          }, { children: childrenField })
+        }
+        reactData.selectCheckboxMaps = selectMaps
+        return nextTick()
+      },
+      clearExpandNode () {
+        XEUtils.each(reactData.nodeMaps, (nodeItem: VxeTreeDefines.NodeCacheItem) => {
+          nodeItem.treeLoaded = false
+        })
         reactData.treeExpandedMaps = {}
         return nextTick()
       },
-      setExpandByNodeid (nodeids, expanded) {
+      setExpandByNodeId (nodeids, expanded) {
         const expandedMaps: Record<string, boolean> = Object.assign(reactData.treeExpandedMaps)
         if (nodeids) {
           if (!XEUtils.isArray(nodeids)) {
@@ -253,21 +384,21 @@ export default defineComponent({
         }
         return nextTick()
       },
-      setExpand (nodes, expanded) {
+      setExpandNode (nodes, expanded) {
         const expandedMaps: Record<string, boolean> = Object.assign(reactData.treeExpandedMaps)
         if (nodes) {
           if (!XEUtils.isArray(nodes)) {
             nodes = [nodes]
           }
           nodes.forEach((node: any) => {
-            const nodeid = getNodeid(node)
+            const nodeid = getNodeId(node)
             handleSetExpand(nodeid, expanded, expandedMaps)
           })
           reactData.treeExpandedMaps = expandedMaps
         }
         return nextTick()
       },
-      toggleExpandByNodeid (nodeids) {
+      toggleExpandByNodeId (nodeids) {
         const expandedMaps: Record<string, boolean> = Object.assign(reactData.treeExpandedMaps)
         if (nodeids) {
           if (!XEUtils.isArray(nodeids)) {
@@ -280,66 +411,164 @@ export default defineComponent({
         }
         return nextTick()
       },
-      toggleExpand (nodes) {
+      toggleExpandNode (nodes) {
         const expandedMaps: Record<string, boolean> = Object.assign(reactData.treeExpandedMaps)
         if (nodes) {
           if (!XEUtils.isArray(nodes)) {
             nodes = [nodes]
           }
           nodes.forEach((node: any) => {
-            const nodeid = getNodeid(node)
+            const nodeid = getNodeId(node)
             handleSetExpand(nodeid, !expandedMaps[nodeid], expandedMaps)
           })
           reactData.treeExpandedMaps = expandedMaps
         }
         return nextTick()
       },
-      setAllExpand () {
+      setAllExpandNode () {
         const expandedMaps: Record<string, boolean> = Object.assign(reactData.treeExpandedMaps)
         const childrenField = computeChildrenField.value
         XEUtils.eachTree(reactData.treeList, (node) => {
-          const nodeid = getNodeid(node)
+          const nodeid = getNodeId(node)
           expandedMaps[nodeid] = true
         }, { children: childrenField })
         reactData.treeExpandedMaps = expandedMaps
         return nextTick()
       },
+      reloadExpandNode (node) {
+        const { lazy } = props
+        if (lazy) {
+          treeMethods.clearExpandLoaded(node)
+          return handleAsyncTreeExpandChilds(node)
+        }
+        return nextTick()
+      },
+      clearExpandLoaded (node) {
+        const { lazy } = props
+        const { nodeMaps } = reactData
+        if (lazy) {
+          const nodeItem = nodeMaps[getNodeId(node)]
+          if (nodeItem) {
+            nodeItem.treeLoaded = false
+          }
+        }
+        return nextTick()
+      },
+      /**
+       * 用于树结构，给行数据加载子节点
+       */
+      loadChildrenNode (node, childRecords) {
+        const { lazy, transform } = props
+        const { nodeMaps } = reactData
+        if (!lazy) {
+          return nextTick()
+        }
+        const childrenField = computeChildrenField.value
+        const parentNodeItem = nodeMaps[getNodeId(node)]
+        const parentLevel = parentNodeItem ? parentNodeItem.level : 0
+        const parentNodes = parentNodeItem ? parentNodeItem.nodes : []
+        return createNode(childRecords).then((nodeList) => {
+          XEUtils.eachTree(nodeList, (childRow, index, items, path, parent, nodes) => {
+            const itemNodeId = getNodeId(childRow)
+            nodeMaps[itemNodeId] = {
+              item: node,
+              itemIndex: -1,
+              items,
+              parent: parent || parentNodeItem.item,
+              nodes: parentNodes.concat(nodes),
+              level: parentLevel + nodes.length,
+              lineCount: 0,
+              treeLoaded: false
+            }
+          }, { children: childrenField })
+          node[childrenField] = nodeList
+          if (transform) {
+            node[childrenField] = nodeList
+          }
+          updateNodeLine(node)
+          return nodeList
+        })
+      },
       isExpandByNode,
-      isCheckedByRadioNodeid,
+      isCheckedByRadioNodeId,
       isCheckedByRadioNode,
-      isCheckedByCheckboxNodeid,
+      isCheckedByCheckboxNodeId,
       isIndeterminateByCheckboxNode,
       isCheckedByCheckboxNode
     }
 
-    const updateData = (list: any[]) => {
+    const cacheNodeMap = () => {
+      const { treeList } = reactData
       const keyField = computeKeyField.value
       const childrenField = computeChildrenField.value
-      const keyMaps: Record<string, {
-        node: any
-        nodeIndex: number
-        parent: any
-        level: number
-      }> = {}
-      XEUtils.eachTree(list, (node, nodeIndex, items, path, parent, nodes) => {
-        let nodeid = getNodeid(node)
+      const keyMaps: Record<string, VxeTreeDefines.NodeCacheItem> = {}
+      XEUtils.eachTree(treeList, (item, itemIndex, items, path, parent, nodes) => {
+        let nodeid = getNodeId(item)
         if (!nodeid) {
           nodeid = getNodeUniqueId()
-          XEUtils.set(node, keyField, nodeid)
+          XEUtils.set(item, keyField, nodeid)
         }
         keyMaps[nodeid] = {
-          node,
-          nodeIndex,
+          item,
+          itemIndex,
+          items,
           parent,
-          level: nodes.length
+          nodes,
+          level: nodes.length,
+          lineCount: 0,
+          treeLoaded: false
         }
       }, { children: childrenField })
-      internalData.nodeMaps = keyMaps
-      reactData.treeList = list ? list.slice(0) : []
+      reactData.nodeMaps = keyMaps
+    }
+
+    const updateData = (list: any[]) => {
+      const { transform } = props
+      const keyField = computeKeyField.value
+      const parentField = computeParentField.value
+      const childrenField = computeChildrenField.value
+      if (transform) {
+        reactData.treeList = XEUtils.toArrayTree(list, { key: keyField, parentKey: parentField, mapChildren: childrenField })
+      } else {
+        reactData.treeList = list ? list.slice(0) : []
+      }
+      cacheNodeMap()
+    }
+
+    const handleCountLine = (item: any, isRoot: boolean, nodeItem: VxeTreeDefines.NodeCacheItem) => {
+      const { treeExpandedMaps } = reactData
+      const childrenField = computeChildrenField.value
+      const nodeid = getNodeId(item)
+      nodeItem.lineCount++
+      if (treeExpandedMaps[nodeid]) {
+        XEUtils.arrayEach(item[childrenField], (childItem, childIndex, childList) => {
+          if (!isRoot || childIndex < childList.length - 1) {
+            handleCountLine(childItem, false, nodeItem)
+          }
+        })
+      }
+    }
+
+    const updateNodeLine = (node: any) => {
+      const { nodeMaps } = reactData
+      if (node) {
+        const nodeid = getNodeId(node)
+        const nodeItem = nodeMaps[nodeid]
+        if (nodeItem) {
+          XEUtils.lastArrayEach(nodeItem.nodes, childItem => {
+            const nodeid = getNodeId(childItem)
+            const nodeItem = nodeMaps[nodeid]
+            if (nodeItem) {
+              nodeItem.lineCount = 0
+              handleCountLine(childItem, true, nodeItem)
+            }
+          })
+        }
+      }
     }
 
     const handleNodeClickEvent = (evnt: MouseEvent, node: any) => {
-      const { trigger, isCurrent } = props
+      const { showRadio, showCheckbox, trigger, isCurrent } = props
       const radioOpts = computeRadioOpts.value
       const checkboxOpts = computeCheckboxOpts.value
       let triggerRadio = false
@@ -347,18 +576,18 @@ export default defineComponent({
       let triggerExpand = false
       if (isCurrent) {
         reactData.currentNode = node
-      } else {
+      } else if (reactData.currentNode) {
         reactData.currentNode = null
       }
       if (trigger === 'node') {
         triggerExpand = true
         toggleExpandEvent(evnt, node)
       }
-      if (radioOpts.trigger === 'node') {
+      if (showRadio && radioOpts.trigger === 'node') {
         triggerRadio = true
         changeRadioEvent(evnt, node)
       }
-      if (checkboxOpts.trigger === 'node') {
+      if (showCheckbox && checkboxOpts.trigger === 'node') {
         triggerCheckbox = true
         changeCheckboxEvent(evnt, node)
       }
@@ -369,27 +598,142 @@ export default defineComponent({
       dispatchEvent('node-dblclick', { node }, evnt)
     }
 
-    const toggleExpandEvent = (evnt: MouseEvent, node: any) => {
-      evnt.stopPropagation()
-      const expandedMaps = Object.assign({}, reactData.treeExpandedMaps)
-      const nodeid = getNodeid(node)
-      if (expandedMaps[nodeid]) {
-        delete expandedMaps[nodeid]
-      } else {
-        expandedMaps[nodeid] = true
+    const handleAsyncTreeExpandChilds = (node: any): Promise<void> => {
+      const checkboxOpts = computeCheckboxOpts.value
+      const { loadMethod } = props
+      const { checkStrictly } = checkboxOpts
+      return new Promise(resolve => {
+        if (loadMethod) {
+          const { treeExpandLazyLoadedMaps } = reactData
+          const { nodeMaps } = reactData
+          const nodeid = getNodeId(node)
+          const nodeItem = nodeMaps[nodeid]
+          treeExpandLazyLoadedMaps[nodeid] = true
+          Promise.resolve(
+            loadMethod({ $tree: $xeTree, node })
+          ).then((childRecords: any) => {
+            nodeItem.treeLoaded = true
+            if (treeExpandLazyLoadedMaps[nodeid]) {
+              delete treeExpandLazyLoadedMaps[nodeid]
+            }
+            if (!XEUtils.isArray(childRecords)) {
+              childRecords = []
+            }
+            if (childRecords) {
+              return treeMethods.loadChildrenNode(node, childRecords).then(childRows => {
+                const { treeExpandedMaps } = reactData
+                if (childRows.length && !treeExpandedMaps[nodeid]) {
+                  treeExpandedMaps[nodeid] = true
+                }
+                // 如果当前节点已选中，则展开后子节点也被选中
+                if (!checkStrictly && treeMethods.isCheckedByCheckboxNodeId(nodeid)) {
+                  handleCheckedCheckboxNode(childRows.map((item: any) => getNodeId(item)), true)
+                }
+                updateNodeLine(node)
+                dispatchEvent('load-success', { node, data: childRecords }, new Event('load-success'))
+                return nextTick()
+              })
+            } else {
+              updateNodeLine(node)
+              dispatchEvent('load-success', { node, data: childRecords }, new Event('load-success'))
+            }
+          }).catch((e) => {
+            const { treeExpandLazyLoadedMaps } = reactData
+            nodeItem.treeLoaded = false
+            if (treeExpandLazyLoadedMaps[nodeid]) {
+              delete treeExpandLazyLoadedMaps[nodeid]
+            }
+            updateNodeLine(node)
+            dispatchEvent('load-error', { node, data: e }, new Event('load-error'))
+          }).finally(() => {
+            return nextTick()
+          })
+        } else {
+          resolve()
+        }
+      })
+    }
+
+    /**
+     * 展开与收起树节点
+     * @param nodeList
+     * @param expanded
+     * @returns
+     */
+    const handleBaseTreeExpand = (nodeList: any[], expanded: boolean) => {
+      const { lazy, accordion, toggleMethod } = props
+      const { nodeMaps, treeExpandLazyLoadedMaps } = reactData
+      const tempExpandedMaps = Object.assign({}, reactData.treeExpandedMaps)
+      const childrenField = computeChildrenField.value
+      const hasChildField = computeHasChildField.value
+      const result: any[] = []
+      let validNodes = toggleMethod ? nodeList.filter((node: any) => toggleMethod({ $tree: $xeTree, expanded, node })) : nodeList
+      if (accordion) {
+        validNodes = validNodes.length ? [validNodes[validNodes.length - 1]] : []
+        // 同一级只能展开一个
+        const nodeid = getNodeId(validNodes[0])
+        const nodeItem = nodeMaps[nodeid]
+        if (nodeItem) {
+          nodeItem.items.forEach(item => {
+            const itemNodeId = getNodeId(item)
+            if (tempExpandedMaps[itemNodeId]) {
+              delete tempExpandedMaps[itemNodeId]
+            }
+          })
+        }
       }
-      reactData.treeExpandedMaps = expandedMaps
+      const expandNodes: any[] = []
+      if (expanded) {
+        validNodes.forEach((item) => {
+          const itemNodeId = getNodeId(item)
+          if (!tempExpandedMaps[itemNodeId]) {
+            const nodeItem = nodeMaps[itemNodeId]
+            const isLoad = lazy && item[hasChildField] && !nodeItem.treeLoaded && !treeExpandLazyLoadedMaps[itemNodeId]
+            // 是否使用懒加载
+            if (isLoad) {
+              result.push(handleAsyncTreeExpandChilds(item))
+            } else {
+              if (item[childrenField] && item[childrenField].length) {
+                tempExpandedMaps[itemNodeId] = true
+                expandNodes.push(item)
+              }
+            }
+          }
+        })
+      } else {
+        validNodes.forEach(item => {
+          const itemNodeId = getNodeId(item)
+          if (tempExpandedMaps[itemNodeId]) {
+            delete tempExpandedMaps[itemNodeId]
+            expandNodes.push(item)
+          }
+        })
+      }
+      reactData.treeExpandedMaps = tempExpandedMaps
+      expandNodes.forEach(updateNodeLine)
+      return Promise.all(result)
+    }
+
+    const toggleExpandEvent = (evnt: MouseEvent, node: any) => {
+      const { lazy } = props
+      const { treeExpandedMaps, treeExpandLazyLoadedMaps } = reactData
+      const nodeid = getNodeId(node)
+      const expanded = !treeExpandedMaps[nodeid]
+      evnt.stopPropagation()
+      if (!lazy || !treeExpandLazyLoadedMaps[nodeid]) {
+        handleBaseTreeExpand([node], expanded)
+      }
     }
 
     const handleNodeCheckboxStatus = (node: any, selectKeyMaps: Record<string, boolean>, indeterminateMaps: Record<string, boolean>) => {
       const childrenField = computeChildrenField.value
       const childList: any[] = XEUtils.get(node, childrenField)
-      const nodeid = getNodeid(node)
+      const nodeid = getNodeId(node)
       if (childList && childList.length) {
         let checkSome = false
         let checkSize = 0
         childList.forEach(childNode => {
-          const childNodeid = getNodeid(childNode)
+          const childNodeid = getNodeId(childNode)
           const isChecked = selectKeyMaps[childNodeid]
           if (isChecked || indeterminateMaps[childNodeid]) {
             if (isChecked) {
@@ -450,7 +794,7 @@ export default defineComponent({
       const { checkStrictly } = checkboxOpts
       const selectKeyMaps = Object.assign({}, reactData.selectCheckboxMaps)
       const childrenField = computeChildrenField.value
-      const nodeid = getNodeid(node)
+      const nodeid = getNodeId(node)
       let isChecked = false
       if (selectKeyMaps[nodeid]) {
         delete selectKeyMaps[nodeid]
@@ -460,7 +804,7 @@ export default defineComponent({
       }
       if (!checkStrictly) {
         XEUtils.eachTree(XEUtils.get(node, childrenField), (childNode) => {
-          const childNodeid = getNodeid(childNode)
+          const childNodeid = getNodeId(childNode)
           if (isChecked) {
             if (!selectKeyMaps[childNodeid]) {
               selectKeyMaps[childNodeid] = true
@@ -481,7 +825,7 @@ export default defineComponent({
 
     const changeRadioEvent = (evnt: MouseEvent, node: any) => {
       evnt.stopPropagation()
-      const value = getNodeid(node)
+      const value = getNodeId(node)
       reactData.selectRadioKey = value
       emitRadioMode(value)
       dispatchEvent('radio-change', { value }, evnt)
@@ -492,12 +836,16 @@ export default defineComponent({
 
     Object.assign($xeTree, treeMethods, treePrivateMethods)
 
-    const renderRadio = (node: any, nodeid: string) => {
+    const renderRadio = (node: any, nodeid: string, isChecked: boolean) => {
       const { showRadio } = props
-      const { selectRadioKey } = reactData
-      const isChecked = nodeid === selectRadioKey
-      const isDisabled = false
-      if (showRadio) {
+      const radioOpts = computeRadioOpts.value
+      const { showIcon, checkMethod, visibleMethod } = radioOpts
+      const isVisible = !visibleMethod || visibleMethod({ node })
+      let isDisabled = !!checkMethod
+      if (showRadio && showIcon && isVisible) {
+        if (checkMethod) {
+          isDisabled = !checkMethod({ node })
+        }
         return h('div', {
           class: ['vxe-tree--radio-option', {
             'is--checked': isChecked,
@@ -517,12 +865,17 @@ export default defineComponent({
       return createCommentVNode()
     }
 
-    const renderCheckbox = (node: any, nodeid: string) => {
+    const renderCheckbox = (node: any, nodeid: string, isChecked: boolean) => {
       const { showCheckbox } = props
-      const isChecked = isCheckedByCheckboxNodeid(nodeid)
+      const checkboxOpts = computeCheckboxOpts.value
+      const { showIcon, checkMethod, visibleMethod } = checkboxOpts
       const isIndeterminate = isIndeterminateByCheckboxNodeid(nodeid)
-      const isDisabled = false
-      if (showCheckbox) {
+      const isVisible = !visibleMethod || visibleMethod({ node })
+      let isDisabled = !!checkMethod
+      if (showCheckbox && showIcon && isVisible) {
+        if (checkMethod) {
+          isDisabled = !checkMethod({ node })
+        }
         return h('div', {
           class: ['vxe-tree--checkbox-option', {
             'is--checked': isChecked,
@@ -544,15 +897,16 @@ export default defineComponent({
     }
 
     const renderNode = (node: any): VNode => {
-      const { showLine, indent, iconOpen, iconClose, showIcon } = props
-      const { treeExpandedMaps, currentNode } = reactData
-      const { nodeMaps } = internalData
+      const { lazy, showRadio, showCheckbox, showLine, indent, iconOpen, iconClose, iconLoaded, showIcon } = props
+      const { nodeMaps, treeExpandedMaps, currentNode, selectRadioKey, treeExpandLazyLoadedMaps } = reactData
       const childrenField = computeChildrenField.value
       const titleField = computeTitleField.value
+      const hasChildField = computeHasChildField.value
       const childList: any[] = XEUtils.get(node, childrenField)
       const hasChild = childList && childList.length
       const titleSlot = slots.title
-      const nodeid = getNodeid(node)
+      const extraSlot = slots.extra
+      const nodeid = getNodeId(node)
       const isExpand = treeExpandedMaps[nodeid]
       const nodeItem = nodeMaps[nodeid]
       const nodeValue = XEUtils.get(node, titleField)
@@ -564,7 +918,7 @@ export default defineComponent({
               key: 'line',
               class: 'vxe-tree--node-child-line',
               style: {
-                height: `calc(${childList.length} * var(--vxe-ui-tree-node-height) - var(--vxe-ui-tree-node-height) / 2)`,
+                height: `calc(${nodeItem.lineCount} * var(--vxe-ui-tree-node-height) - var(--vxe-ui-tree-node-height) / 2)`,
                 left: `${(nodeItem.level + 1) * (indent || 1)}px`
               }
             })
@@ -575,14 +929,36 @@ export default defineComponent({
         })
       }
 
+      let isRadioChecked = false
+      if (showRadio) {
+        // eslint-disable-next-line eqeqeq
+        isRadioChecked = nodeid == selectRadioKey
+      }
+
+      let isCheckboxChecked = false
+      if (showCheckbox) {
+        isCheckboxChecked = isCheckedByCheckboxNodeId(nodeid)
+      }
+
+      let hasLazyChilds = false
+      let isLazyLoading = false
+      let isLazyLoaded = false
+      if (lazy) {
+        isLazyLoading = !!treeExpandLazyLoadedMaps[nodeid]
+        hasLazyChilds = node[hasChildField]
+        isLazyLoaded = !!nodeItem.treeLoaded
+      }
+
       return h('div', {
-        class: ['vxe-tree--node-item-node', `node--level-${nodeItem.level}`, {
-          'is--current': currentNode && nodeid === getNodeid(currentNode)
-        }],
+        class: ['vxe-tree--node-wrapper', `node--level-${nodeItem.level}`],
         nodeid
       }, [
         h('div', {
-          class: 'vxe-tree--node-item-wrapper',
+          class: ['vxe-tree--node-item', {
+            'is--current': currentNode && nodeid === getNodeId(currentNode),
+            'is-radio--checked': isRadioChecked,
+            'is-checkbox--checked': isCheckboxChecked
+          }],
           style: {
             paddingLeft: `${(nodeItem.level - 1) * (indent || 1)}px`
           },
@@ -596,7 +972,7 @@ export default defineComponent({
           showIcon || showLine
             ? h('div', {
               class: 'vxe-tree--node-item-switcher'
-            }, showIcon && hasChild
+            }, showIcon && (lazy ? (isLazyLoaded ? hasChild : hasLazyChilds) : hasChild)
               ? [
                   h('div', {
                     class: 'vxe-tree--node-item-icon',
@@ -605,17 +981,26 @@ export default defineComponent({
                     }
                   }, [
                     h('i', {
-                      class: isExpand ? (iconOpen || getIcon().TREE_NODE_OPEN) : (iconClose || getIcon().TREE_NODE_CLOSE)
+                      class: isLazyLoading ? (iconLoaded || getIcon().TREE_NODE_LOADED) : (isExpand ? (iconOpen || getIcon().TREE_NODE_OPEN) : (iconClose || getIcon().TREE_NODE_CLOSE))
                     })
                   ])
                 ]
               : [])
             : createCommentVNode(),
-          renderRadio(node, nodeid),
-          renderCheckbox(node, nodeid),
+          renderRadio(node, nodeid, isRadioChecked),
+          renderCheckbox(node, nodeid, isCheckboxChecked),
           h('div', {
-            class: 'vxe-tree--node-item-label'
-          }, titleSlot ? getSlotVNs(titleSlot({ node })) : `${nodeValue}`)
+            class: 'vxe-tree--node-item-inner'
+          }, [
+            h('div', {
+              class: 'vxe-tree--node-item-title'
+            }, titleSlot ? getSlotVNs(titleSlot({ node })) : `${nodeValue}`),
+            extraSlot
+              ? h('div', {
+                class: 'vxe-tree--node-item-extra'
+              }, getSlotVNs(extraSlot({ node })))
+              : createCommentVNode()
+          ])
         ]),
         hasChild && treeExpandedMaps[nodeid]
           ? h('div', {
@@ -633,18 +1018,40 @@ export default defineComponent({
     }
 
     const renderVN = () => {
-      const { trigger, showLine, isHover } = props
+      const { loading, trigger, showLine, isHover } = props
       const vSize = computeSize.value
+      const radioOpts = computeRadioOpts.value
+      const checkboxOpts = computeCheckboxOpts.value
+      const treeStyle = computeTreeStyle.value
+      const loadingOpts = computeLoadingOpts.value
+      const loadingSlot = slots.loading
       return h('div', {
         ref: refElem,
         class: ['vxe-tree', {
           [`size--${vSize}`]: vSize,
           'show--line': showLine,
+          'checkbox--highlight': checkboxOpts.highlight,
+          'radio--highlight': radioOpts.highlight,
           'node--hover': isHover,
-          'node--trigger': trigger === 'node'
-        }]
+          'node--trigger': trigger === 'node',
+          'is--loading': loading
+        }],
+        style: treeStyle
       }, [
-        renderNodeList()
+        renderNodeList(),
+        /**
+         * 加载中
+         */
+        h(VxeLoadingComponent, {
+          class: 'vxe-tree--loading',
+          modelValue: loading,
+          icon: loadingOpts.icon,
+          text: loadingOpts.text
+        }, loadingSlot
+          ? {
+              default: () => loadingSlot({ $tree: $xeTree })
+            }
+          : {})
       ])
     }
 
@@ -661,28 +1068,29 @@ export default defineComponent({
       updateData(props.data || [])
     })
 
-    watch(() => props.radioCheckNodeKey, (val) => {
+    watch(() => props.checkNodeKey, (val) => {
       reactData.selectRadioKey = val
     })
 
     const checkboxFlag = ref(0)
-    watch(() => props.checkboxCheckNodeKeys ? props.checkboxCheckNodeKeys.length : 0, () => {
+    watch(() => props.checkNodeKeys ? props.checkNodeKeys.length : 0, () => {
       checkboxFlag.value++
     })
-    watch(() => props.checkboxCheckNodeKeys, () => {
+    watch(() => props.checkNodeKeys, () => {
       checkboxFlag.value++
     })
     watch(checkboxFlag, () => {
-      updateCheckboxChecked(props.checkboxCheckNodeKeys || [])
+      updateCheckboxChecked(props.checkNodeKeys || [])
     })
 
     onUnmounted(() => {
       reactData.treeList = []
       reactData.treeExpandedMaps = {}
-      internalData.nodeMaps = {}
+      reactData.nodeMaps = {}
     })
 
     updateData(props.data || [])
+    updateCheckboxChecked(props.checkNodeKeys || [])
 
     return $xeTree
   },

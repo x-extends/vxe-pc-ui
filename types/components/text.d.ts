@@ -3,7 +3,7 @@ import { defineVxeComponent, VxeComponentBaseOptions, VxeComponentEventParams, V
 
 /* eslint-disable no-use-before-define,@typescript-eslint/ban-types */
 
-export declare const VxeText: defineVxeComponent<VxeTextProps, VxeTextEventProps>
+export declare const VxeText: defineVxeComponent<VxeTextProps, VxeTextEventProps, VxeTextSlots>
 export type VxeTextComponent = DefineComponent<VxeTextProps, VxeTextEmits>
 
 export type VxeTextInstance = ComponentPublicInstance<VxeTextProps, VxeTextConstructor>
