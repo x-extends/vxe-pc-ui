@@ -81,9 +81,7 @@ export namespace VxeLinkDefines {
     $link: VxeLinkConstructor
   }
 
-  export interface ClickParams {
-  }
-  export interface ClickEventParams extends LinkEventParams, ClickParams { }
+  export interface ClickEventParams extends LinkEventParams { }
 }
 
 export type VxeLinkEventProps = {

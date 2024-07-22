@@ -23,6 +23,7 @@ import { VxeFormItemProps } from '../components/form-item'
 import { VxeFormViewProps } from '../components/form-view'
 import { VxeIconProps } from '../components/icon'
 import { VxeImageProps } from '../components/image'
+import { VxeImageGroupProps } from '../components/image-group'
 import { VxeImagePreviewProps } from '../components/image-preview'
 import { VxeInputProps } from '../components/input'
 import { VxeLayoutAsideProps } from '../components/layout-aside'
@@ -95,6 +96,7 @@ declare module '@vxe-ui/core' {
     formView?: VxeFormViewProps
     icon?: VxeIconProps
     image?: VxeImageProps
+    imageGroup?: VxeImageGroupProps
     imagePreview?: VxeImagePreviewProps
     input?: VxeInputProps
     layoutAside?: VxeLayoutAsideProps

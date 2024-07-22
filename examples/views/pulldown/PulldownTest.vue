@@ -243,12 +243,6 @@ const pageChangeEvent4: any = ({ currentPage, pageSize }: any) => {
   demo4.tablePage4.pageSize = pageSize
 }
 
-const demo5 = reactive({
-  visible: false,
-  value1: '',
-  list1: data1
-})
-
 const pullOptions = ref([
   { label: '选项1', value: '1' },
   { label: '选项2', value: '2' },

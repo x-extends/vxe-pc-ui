@@ -105,6 +105,9 @@ setConfig({
   image: {
     showPreview: true
   },
+  imageGroup: {
+    showPreview: true
+  },
   imagePreview: {},
   input: {
     // size: null,

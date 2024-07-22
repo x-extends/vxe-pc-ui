@@ -1,10 +1,10 @@
-import { defineComponent, ref, h, reactive, PropType, computed } from 'vue'
+import { defineComponent, ref, h, inject, reactive, PropType, computed } from 'vue'
 import { getConfig, createEvent } from '../../ui'
 import XEUtils from 'xe-utils'
 import { toCssUnit } from '../..//ui/src/dom'
 import { openPreviewImage } from './util'
 
-import type { VxeImagePropTypes, ImageReactData, VxeImageEmits, ImagePrivateRef, VxeImagePrivateComputed, VxeImageConstructor, VxeImagePrivateMethods, ImageMethods, ImagePrivateMethods } from '../../../types'
+import type { VxeImagePropTypes, ImageReactData, VxeImageEmits, ImagePrivateRef, VxeImagePrivateComputed, VxeImageConstructor, VxeImagePrivateMethods, ImageMethods, ImagePrivateMethods, VxeImageGroupConstructor, VxeImageGroupPrivateMethods } from '../../../types'
 
 export default defineComponent({
   name: 'VxeImage',
@@ -28,6 +28,8 @@ export default defineComponent({
 
     const xID = XEUtils.uniqueId()
 
+    const $xeImageGroup = inject<(VxeImageGroupConstructor & VxeImageGroupPrivateMethods) | null>('$xeImageGroup', null)
+
     const refElem = ref<HTMLDivElement>()
 
     const reactData = reactive<ImageReactData>({
@@ -40,22 +42,47 @@ export default defineComponent({
     const computeImgStyle = computed(() => {
       const { width, height } = props
       const style: Record<string, string> = {}
-      if (width) {
-        style.width = toCssUnit(width)
-      }
-      if (height) {
-        style.height = toCssUnit(height)
+      if (width && height) {
+        style.maxWidth = toCssUnit(width)
+        style.maxHeight = toCssUnit(height)
+      } else {
+        if (width) {
+          style.width = toCssUnit(width)
+        }
+        if (height) {
+          style.height = toCssUnit(height)
+        }
       }
       return style
     })
 
-    const computeImgUrl = computed(() => {
+    const computeImgList = computed(() => {
       const { src } = props
-      const item = XEUtils.isArray(src) ? src[0] : src
-      if (XEUtils.isString(item)) {
-        return item
+      if (src) {
+        return (XEUtils.isArray(src) ? src : [src]).map(item => {
+          if (XEUtils.isString(item)) {
+            return {
+              url: item,
+              alt: ''
+            }
+          }
+          return {
+            url: item.url,
+            alt: item.alt
+          }
+        })
       }
-      return item ? (item as any).url : item
+      return []
+    })
+
+    const computeImgItem = computed(() => {
+      const imgList = computeImgList.value
+      return imgList[0]
+    })
+
+    const computeImgUrl = computed(() => {
+      const imgItem = computeImgItem.value
+      return imgItem ? `${imgItem.url || ''}` : ''
     })
 
     const computeMaps: VxeImagePrivateComputed = {
@@ -78,13 +105,19 @@ export default defineComponent({
     }
 
     const clickEvent = (evnt: MouseEvent) => {
-      const { showPreview, src } = props
-      if (showPreview && src) {
-        openPreviewImage({
-          urlList: XEUtils.isArray(src) ? src : [src]
-        })
+      const { showPreview } = props
+      const imgList = computeImgList.value
+      const imgUrl = computeImgUrl.value
+      if ($xeImageGroup) {
+        $xeImageGroup.handleClickImgEvent(evnt, { url: imgUrl })
+      } else {
+        if (showPreview && imgUrl) {
+          openPreviewImage({
+            urlList: imgList
+          })
+        }
+        imageMethods.dispatchEvent('click', { url: imgUrl }, evnt)
       }
-      imageMethods.dispatchEvent('click', {}, evnt)
     }
 
     const imagePrivateMethods: ImagePrivateMethods = {

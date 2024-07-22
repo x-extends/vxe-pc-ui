@@ -24,7 +24,10 @@ export interface ImagePrivateRef {
 export interface VxeImagePrivateRef extends ImagePrivateRef { }
 
 export namespace VxeImagePropTypes {
-  export type Src = string | string[]
+  export type Src = string | string[] | {
+    url?: string
+    alt?: string | number
+  }[]
   export type Alt = number | string
   export type Loading = '' | 'lazy'
   export type Title = number | string
@@ -68,17 +71,27 @@ export namespace VxeImageDefines {
     $image: VxeImageConstructor
   }
 
+  export interface ClickEventParams extends LinkEventParams {
+    url: string
+  }
+
   export type PreviewImageFunction = (options: VxeImagePreviewProps & {
     activeIndex?: VxeImagePreviewPropTypes.ModelValue
     escClosable?: boolean
   }) => Promise<any>
 }
 
-export type VxeImageEventProps = {}
+export type VxeImageEventProps = {
+  onClick?: VxeImageEvents.Click
+}
 
-export interface VxeImageListeners { }
+export interface VxeImageListeners {
+  click?: VxeImageEvents.Click
+}
 
-export namespace VxeImageEvents { }
+export namespace VxeImageEvents {
+  export type Click = (params: VxeImageDefines.ClickEventParams) => void
+}
 
 export namespace VxeImageSlotTypes {
   export interface DefaultSlotParams {}
