@@ -1,5 +1,5 @@
 import { RenderFunction, SetupContext, Ref, ComponentPublicInstance, DefineComponent } from 'vue'
-import { defineVxeComponent, VxeComponentBaseOptions, VxeComponentEventParams } from '@vxe-ui/core'
+import { defineVxeComponent, VxeComponentBaseOptions, VxeComponentEventParams, VxeComponentStatusType } from '@vxe-ui/core'
 
 /* eslint-disable no-use-before-define,@typescript-eslint/ban-types */
 
@@ -26,12 +26,14 @@ export namespace VxeLoadingPropTypes {
   export type ModelValue = boolean
   export type Icon = string
   export type Text = string
+  export type Status = VxeComponentStatusType
 }
 
 export type VxeLoadingProps = {
   modelValue?: VxeLoadingPropTypes.ModelValue
   icon?: VxeLoadingPropTypes.Icon
   text?: VxeLoadingPropTypes.Text
+  status?: VxeLoadingPropTypes.Status
 }
 
 export interface LoadingPrivateComputed {
@@ -68,6 +70,8 @@ export namespace VxeLoadingSlotTypes {
 
 export interface VxeLoadingSlots {
   default: (params: VxeLoadingSlotTypes.DefaultSlotParams) => any
+  icon: (params: VxeLoadingSlotTypes.DefaultSlotParams) => any
+  text: (params: VxeLoadingSlotTypes.DefaultSlotParams) => any
 }
 
 /**

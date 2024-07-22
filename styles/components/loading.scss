@@ -1,3 +1,36 @@
+$loadingThemeList: (
+  (
+    name: "primary",
+    textColor: var(--vxe-ui-font-primary-color),
+    bgColor: var(--vxe-ui-font-primary-tinge-color)
+  ),
+  (
+    name: "success",
+    textColor: var(--vxe-ui-status-success-color),
+    bgColor: var(--vxe-ui-status-success-tinge-color)
+  ),
+  (
+    name: "info",
+    textColor: var(--vxe-ui-status-info-color),
+    bgColor: var(--vxe-ui-status-info-tinge-color)
+  ),
+  (
+    name: "warning",
+    textColor: var(--vxe-ui-status-warning-color),
+    bgColor: var(--vxe-ui-status-warning-tinge-color)
+  ),
+  (
+    name: "danger",
+    textColor: var(--vxe-ui-status-danger-color),
+    bgColor: var(--vxe-ui-status-danger-tinge-color)
+  ),
+  (
+    name: "error",
+    textColor: var(--vxe-ui-status-error-color),
+    bgColor: var(--vxe-ui-status-error-tinge-color)
+  )
+);
+
 .vxe-loading {
   display: none;
   position: absolute;
@@ -7,7 +40,27 @@
   left: 0;
   z-index: 99;
   user-select: none;
+  color: var(--vxe-ui-loading-color);
   background-color: var(--vxe-ui-loading-background-color);
+  .vxe-loading--spinner {
+    &:before,
+    &:after {
+      background-color: var(--vxe-ui-font-primary-color);
+    }
+  }
+  @for $index from 0 to length($loadingThemeList) {
+    $item: nth($loadingThemeList, $index + 1);
+    &.theme--#{map-get($item, name)} {
+      color: map-get($item, textColor);
+      background-color: map-get($item, bgColor);
+      .vxe-loading--spinner {
+        &:before,
+        &:after {
+          background-color: map-get($item, bgColor);
+        }
+      }
+    }
+  }
   &.is--visible {
     display: block;
   }
@@ -19,7 +72,6 @@
     left: 0;
     transform: translateY(-50%);
     text-align: center;
-    color: var(--vxe-ui-loading-color);
   }
   .vxe-loading--default-icon {
     font-size: 1.4em;
@@ -38,7 +90,6 @@
       width: 100%;
       height: 100%;
       border-radius: 50%;
-      background-color: var(--vxe-ui-font-primary-color);
       opacity: 0.6;
       position: absolute;
       top: 0;

@@ -24,21 +24,24 @@ export interface ImagePrivateRef {
 export interface VxeImagePrivateRef extends ImagePrivateRef { }
 
 export namespace VxeImagePropTypes {
-  export type Src = string
+  export type Src = string | string[]
   export type Alt = number | string
   export type Loading = '' | 'lazy'
   export type Title = number | string
   export type Width = number | string
   export type Height = number | string
+  export type ShowPreview = boolean
 }
 
 export type VxeImageProps = {
   src?: VxeImagePropTypes.Src
+  urlList?: VxeImagePropTypes.UrlList
   alt?: VxeImagePropTypes.Alt
   loading?: VxeImagePropTypes.Loading
   title?: VxeImagePropTypes.Title
   width?: VxeImagePropTypes.Width
   height?: VxeImagePropTypes.Height
+  showPreview?: VxeImagePropTypes.ShowPreview
 }
 
 export interface ImagePrivateComputed {

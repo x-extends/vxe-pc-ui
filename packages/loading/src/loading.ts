@@ -1,5 +1,6 @@
 import { defineComponent, h, computed, PropType } from 'vue'
 import { getConfig, getIcon, getI18n } from '../../ui'
+import { getSlotVNs } from '../../ui/src/vn'
 import XEUtils from 'xe-utils'
 
 import type { VxeLoadingPropTypes } from '../../../types'
@@ -12,7 +13,8 @@ export default defineComponent({
     text: {
       type: String as PropType<VxeLoadingPropTypes.Text>,
       default: () => getConfig().loading.text
-    }
+    },
+    status: String as PropType<VxeLoadingPropTypes.Status>
   },
   setup (props, { slots }) {
     const computeLoadingIcon = computed(() => {
@@ -25,33 +27,45 @@ export default defineComponent({
     })
 
     return () => {
+      const { status } = props
+      const defaultSlot = slots.default
+      const textSlot = slots.text
+      const iconSlot = slots.icon
       const loadingIcon = computeLoadingIcon.value
       const loadingText = computeLoadingText.value
+
       return h('div', {
         class: ['vxe-loading', {
+          [`theme--${status}`]: status,
           'is--visible': props.modelValue
         }]
-      }, slots.default
+      }, defaultSlot
         ? [
             h('div', {
               class: 'vxe-loading--wrapper'
-            }, slots.default({}))
+            }, getSlotVNs(defaultSlot({})))
           ]
         : [
             h('div', {
               class: 'vxe-loading--chunk'
             }, [
-              loadingIcon
-                ? h('i', {
-                  class: loadingIcon
-                })
+              iconSlot || loadingIcon
+                ? h('div', {
+                  class: 'vxe-loading--icon'
+                }, iconSlot
+                  ? getSlotVNs(iconSlot({}))
+                  : [
+                      h('i', {
+                        class: loadingIcon
+                      })
+                    ])
                 : h('div', {
                   class: 'vxe-loading--spinner'
                 }),
-              loadingText
+              textSlot || loadingText
                 ? h('div', {
                   class: 'vxe-loading--text'
-                }, `${loadingText}`)
+                }, textSlot ? getSlotVNs(textSlot({})) : `${loadingText}`)
                 : null
             ])
           ])

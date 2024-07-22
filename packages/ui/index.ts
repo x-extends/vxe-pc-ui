@@ -36,6 +36,14 @@ export const globalStore = {}
 VxeUI.globalStore = globalStore
 
 setConfig({
+  table: {
+    importConfig: {
+      modes: ['insert', 'covering']
+    }
+  }
+})
+
+setConfig({
   alert: {},
   anchor: {},
   anchorLink: {},
@@ -102,7 +110,9 @@ setConfig({
   formView: {},
   grid: {},
   icon: {},
-  image: {},
+  image: {
+    showPreview: true
+  },
   imagePreview: {},
   input: {
     // size: null,
@@ -241,7 +251,11 @@ setConfig({
   upload: {
     mode: 'all',
     imageTypes: ['jpg', 'jpeg', 'png', 'gif'],
-    showList: true
+    showList: true,
+    showButtonText: true,
+    showRemoveButton: true,
+    showButtonIcon: true,
+    imageStyle: {}
   }
 })
 
@@ -337,10 +351,10 @@ setIcon({
   // upload
   UPLOAD_FILE_ERROR: iconPrefix + 'warning-circle-fill',
   UPLOAD_FILE_ADD: iconPrefix + 'upload',
-  UPLOAD_FILE_DELETE: iconPrefix + 'delete',
+  UPLOAD_FILE_REMOVE: iconPrefix + 'delete',
   UPLOAD_IMAGE_RE_UPLOAD: iconPrefix + 'repeat',
   UPLOAD_IMAGE_ADD: iconPrefix + 'add',
-  UPLOAD_IMAGE_DELETE: iconPrefix + 'close',
+  UPLOAD_IMAGE_REMOVE: iconPrefix + 'close',
   UPLOAD_LOADING: iconPrefix + 'spinner roll vxe-loading--default-icon',
   UPLOAD_FILE_TYPE_DEFAULT: iconPrefix + 'file',
   UPLOAD_FILE_TYPE_XLSX: iconPrefix + 'file-excel',

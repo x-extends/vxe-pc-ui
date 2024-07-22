@@ -1,4 +1,4 @@
-$btnThemeList: (
+$tagsThemeList: (
   (
     name: "primary",
     textColor: var(--vxe-ui-font-primary-color),
@@ -35,8 +35,8 @@ $btnThemeList: (
   padding: var(--vxe-ui-layout-padding-half) var(--vxe-ui-layout-padding-default);
   color: var(--vxe-ui-font-color);
   border-radius: var(--vxe-ui-base-border-radius);
-  @for $index from 0 to length($btnThemeList) {
-    $item: nth($btnThemeList, $index + 1);
+  @for $index from 0 to length($tagsThemeList) {
+    $item: nth($tagsThemeList, $index + 1);
     &.theme--#{map-get($item, name)} {
       color: map-get($item, textColor);
       background-color: map-get($item, bgColor);

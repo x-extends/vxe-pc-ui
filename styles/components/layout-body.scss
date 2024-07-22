@@ -2,6 +2,7 @@
 
 .vxe-layout-body {
   flex-grow: 1;
+  overflow: auto;
   &.is--padding {
     padding: var(--vxe-ui-layout-padding-double);
   }

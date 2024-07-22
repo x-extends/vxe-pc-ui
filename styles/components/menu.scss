@@ -25,11 +25,8 @@
   }
 }
 .vxe-menu--item-link-icon {
-  display: flex;
-  align-items: center;
   flex-shrink: 0;
   width: var(--vxe-ui-menu-icon-width);
-  height: 100%;
 }
 .vxe-menu--item-link-title {
   flex-grow: 1;
@@ -55,7 +52,7 @@
   @for $i from 1 to 8 {
     &.vxe-menu--item-level#{$i} {
       & > .vxe-menu--item-link {
-        padding: 0 var(--vxe-ui-layout-padding-double) 0 calc(var(--vxe-ui-layout-padding-double) * $i + var(--vxe-ui-menu-icon-width));
+        padding: 0 var(--vxe-ui-layout-padding-double) 0 calc(var(--vxe-ui-layout-padding-double) * $i);
       }
     }
   }

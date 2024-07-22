@@ -522,7 +522,14 @@ export default defineComponent({
         }, [
           h('div', {
             class: 'vxe-image-preview--operation-active-count'
-          }, `${(activeIndex || 0) + 1}/${imgList.length}`),
+          }, [
+            h('span', {
+              class: 'vxe-image-preview--operation-active-current'
+            }, `${(activeIndex || 0) + 1}`),
+            h('span', {
+              class: 'vxe-image-preview--operation-active-total'
+            }, `/${imgList.length}`)
+          ]),
           renderOperationBtn('zoomOut', 'IMAGE_PREVIEW_ZOOM_OUT'),
           renderOperationBtn('zoomIn', 'IMAGE_PREVIEW_ZOOM_IN'),
           renderOperationBtn('pctFull', 'IMAGE_PREVIEW_PCT_FULL'),

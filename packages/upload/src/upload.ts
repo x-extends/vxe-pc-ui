@@ -1,8 +1,10 @@
-import { defineComponent, ref, h, reactive, watch, computed, PropType, inject, createCommentVNode, onUnmounted } from 'vue'
+import { defineComponent, ref, h, reactive, watch, computed, PropType, inject, createCommentVNode, onUnmounted, onMounted } from 'vue'
 import XEUtils from 'xe-utils'
-import { VxeUI, getConfig, getI18n, getIcon, createEvent } from '../../ui'
+import { VxeUI, getConfig, getI18n, getIcon, useSize, createEvent } from '../../ui'
 import VxeButtonComponent from '../../button/src/button'
 import { getSlotVNs } from '../..//ui/src/vn'
+import { errLog } from '../../ui/src/log'
+import { toCssUnit } from '../../ui/src/dom'
 import { readLocalFile } from './util'
 
 import type { VxeUploadDefines, VxeUploadPropTypes, UploadReactData, UploadPrivateMethods, UploadMethods, VxeUploadEmits, UploadPrivateRef, VxeUploadPrivateComputed, VxeUploadConstructor, VxeUploadPrivateMethods, VxeFormDefines, VxeFormConstructor, VxeFormPrivateMethods } from '../../../types'
@@ -10,7 +12,7 @@ import type { VxeUploadDefines, VxeUploadPropTypes, UploadReactData, UploadPriva
 export default defineComponent({
   name: 'VxeUpload',
   props: {
-    modelValue: Array as PropType<VxeUploadPropTypes.ModelValue>,
+    modelValue: [Array, String, Object] as PropType<VxeUploadPropTypes.ModelValue>,
     showList: {
       type: Boolean as PropType<VxeUploadPropTypes.ShowList>,
       default: () => getConfig().upload.showList
@@ -31,10 +33,16 @@ export default defineComponent({
       type: Array as PropType<VxeUploadPropTypes.ImageTypes>,
       default: () => XEUtils.clone(getConfig().upload.imageTypes, true)
     },
+    imageStyle: {
+      type: Object as PropType<VxeUploadPropTypes.ImageStyle>,
+      default: () => XEUtils.clone(getConfig().upload.imageStyle, true)
+    },
     fileTypes: {
       type: Array as PropType<VxeUploadPropTypes.FileTypes>,
       default: () => XEUtils.clone(getConfig().upload.fileTypes, true)
     },
+    singleMode: Boolean as PropType<VxeUploadPropTypes.SingleMode>,
+    urlMode: Boolean as PropType<VxeUploadPropTypes.UrlMode>,
     multiple: Boolean as PropType<VxeUploadPropTypes.Multiple>,
     limitSize: {
       type: [String, Number] as PropType<VxeUploadPropTypes.LimitSize>,
@@ -76,10 +84,28 @@ export default defineComponent({
       type: String as PropType<VxeUploadPropTypes.ButtonText>,
       default: () => getConfig().upload.buttonText
     },
+    buttonIcon: {
+      type: String as PropType<VxeUploadPropTypes.ButtonIcon>,
+      default: () => getConfig().upload.buttonIcon
+    },
+    showButtonText: {
+      type: Boolean as PropType<VxeUploadPropTypes.ShowButtonText>,
+      default: () => getConfig().upload.showButtonText
+    },
+    showButtonIcon: {
+      type: Boolean as PropType<VxeUploadPropTypes.ShowButtonIcon>,
+      default: () => getConfig().upload.showButtonIcon
+    },
+    showRemoveButton: {
+      type: Boolean as PropType<VxeUploadPropTypes.ShowRemoveButton>,
+      default: () => getConfig().upload.showRemoveButton
+    },
     tipText: String as PropType<VxeUploadPropTypes.TipText>,
     hintText: String as PropType<VxeUploadPropTypes.HintText>,
     uploadMethod: Function as PropType<VxeUploadPropTypes.UploadMethod>,
-    getUrlMethod: Function as PropType<VxeUploadPropTypes.GetUrlMethod>
+    removeMethod: Function as PropType<VxeUploadPropTypes.RemoveMethod>,
+    getUrlMethod: Function as PropType<VxeUploadPropTypes.GetUrlMethod>,
+    size: { type: String as PropType<VxeUploadPropTypes.Size>, default: () => getConfig().upload.size || getConfig().size }
   },
   emits: [
     'update:modelValue',
@@ -95,6 +121,8 @@ export default defineComponent({
     const formItemInfo = inject<VxeFormDefines.ProvideItemInfo | null>('xeFormItemInfo', null)
 
     const xID = XEUtils.uniqueId()
+
+    const { computeSize } = useSize(props)
 
     const refElem = ref<HTMLDivElement>()
 
@@ -214,6 +242,18 @@ export default defineComponent({
       return defHints.join(getI18n('vxe.base.comma'))
     })
 
+    const computeImgStyle = computed(() => {
+      const { width, height } = Object.assign({}, props.imageStyle)
+      const stys: Record<string, string> = {}
+      if (width) {
+        stys.width = toCssUnit(width)
+      }
+      if (height) {
+        stys.height = toCssUnit(height)
+      }
+      return stys
+    })
+
     const computeMaps: VxeUploadPrivateComputed = {
     }
 
@@ -235,19 +275,33 @@ export default defineComponent({
       const urlProp = computeUrlProp.value
       const sizeProp = computeSizeProp.value
       const fileList = modelValue
-        ? modelValue.map(item => {
-          const name = item[nameProp] || ''
-          item[nameProp] = name
-          item[typeProp] = item[typeProp] || getFileType(name)
-          item[urlProp] = item[urlProp] || ''
-          item[sizeProp] = item[sizeProp] || 0
-          return item
-        })
+        ? (modelValue ? (XEUtils.isArray(modelValue) ? modelValue : [modelValue]) : []).map(item => {
+            if (!item || XEUtils.isString(item)) {
+              const url = `${item || ''}`
+              const name = parseFileName(url)
+              return {
+                [nameProp]: name,
+                [typeProp]: parseFileType(name),
+                [urlProp]: url,
+                [sizeProp]: 0
+              }
+            }
+            const name = item[nameProp] || ''
+            item[nameProp] = name
+            item[typeProp] = item[typeProp] || parseFileType(name)
+            item[urlProp] = item[urlProp] || ''
+            item[sizeProp] = item[sizeProp] || 0
+            return item
+          })
         : []
       reactData.fileList = (formReadonly || multiple) ? fileList : (fileList.slice(0, 1))
     }
 
-    const getFileType = (name: string) => {
+    const parseFileName = (url: string) => {
+      return decodeURIComponent(`${url || ''}`).split('/').pop() || ''
+    }
+
+    const parseFileType = (name: string) => {
       const index = name ? name.indexOf('.') : -1
       if (index > -1) {
         return name.substring(index + 1, name.length).toLowerCase()
@@ -262,13 +316,24 @@ export default defineComponent({
     }
 
     const emitModel = (value: VxeUploadDefines.FileObjItem[]) => {
-      emit('update:modelValue', value ? value.slice(0) : [])
+      const { singleMode, urlMode } = props
+      const urlProp = computeUrlProp.value
+      let restList = value ? value.slice(0) : []
+      if (urlMode) {
+        restList = restList.map(item => item[urlProp])
+      }
+      emit('update:modelValue', singleMode ? (restList[0] || null) : restList)
     }
 
     const getFileUrl = (item: VxeUploadDefines.FileObjItem) => {
       const getUrlFn = props.getUrlMethod || getConfig().upload.getUrlMethod
       const urlProp = computeUrlProp.value
-      return getUrlFn ? getUrlFn({ option: item }) : item[urlProp]
+      return getUrlFn
+        ? getUrlFn({
+          $upload: $xeUpload,
+          option: item
+        })
+        : item[urlProp]
     }
 
     const handlePreviewImageEvent = (evnt: MouseEvent, item: VxeUploadDefines.FileObjItem, index: number) => {
@@ -285,13 +350,16 @@ export default defineComponent({
       const { showErrorStatus } = props
       const uploadFn = props.uploadMethod || getConfig().upload.uploadMethod
       if (uploadFn && item._X_DATA) {
-        Promise.resolve(uploadFn({
-          file,
-          option: item,
-          updateProgress (percentNum) {
-            Object.assign(item._X_DATA || {}, { p: Math.max(0, Math.min(99, XEUtils.toNumber(percentNum))) })
-          }
-        })).then(res => {
+        return Promise.resolve(
+          uploadFn({
+            $upload: $xeUpload,
+            file,
+            option: item,
+            updateProgress (percentNum) {
+              Object.assign(item._X_DATA || {}, { p: Math.max(0, Math.min(99, XEUtils.toNumber(percentNum))) })
+            }
+          })
+        ).then(res => {
           Object.assign(item._X_DATA || {}, { l: false, p: 100 })
           Object.assign(item, res)
           uploadMethods.dispatchEvent('upload-success', { option: item, data: res }, null)
@@ -305,10 +373,12 @@ export default defineComponent({
           uploadMethods.dispatchEvent('upload-error', { option: item, data: res }, null)
         })
       }
+      return Promise.resolve()
     }
 
     const handleReUpload = (item: VxeUploadDefines.FileObjItem) => {
-      const uploadFn = props.uploadMethod || getConfig().upload.uploadMethod
+      const { uploadMethod, urlMode } = props
+      const uploadFn = uploadMethod || getConfig().upload.uploadMethod
       if (uploadFn && item._X_DATA) {
         const file = item._X_DATA.f
         Object.assign(item._X_DATA, {
@@ -316,11 +386,15 @@ export default defineComponent({
           s: '',
           p: 0
         })
-        handleUploadResult(item, file)
+        handleUploadResult(item, file).then(() => {
+          if (urlMode) {
+            emitModel(reactData.fileList)
+          }
+        })
       }
     }
     const uploadFile = (files: File[], evnt: Event) => {
-      const { multiple } = props
+      const { multiple, urlMode } = props
       const { fileList } = reactData
       const uploadFn = props.uploadMethod || getConfig().upload.uploadMethod
       const nameProp = computeNameProp.value
@@ -332,7 +406,7 @@ export default defineComponent({
       const limitSizeUnit = computeLimitSizeUnit.value
       let selectFiles = files
 
-      if (limitMaxCount) {
+      if (multiple && limitMaxCount) {
         // 校验文件数量
         if (fileList.length >= limitMaxCount) {
           if (VxeUI.modal) {
@@ -392,11 +466,12 @@ export default defineComponent({
       }
 
       const newFileList = multiple ? fileList : []
+      const uploadPromiseRests: any[] = []
       selectFiles.forEach(file => {
         const { name } = file
         const fileObj: VxeUploadDefines.FileObjItem = {
           [nameProp]: name,
-          [typeProp]: getFileType(name),
+          [typeProp]: parseFileType(name),
           [sizeProp]: file.size,
           [urlProp]: ''
         }
@@ -411,17 +486,21 @@ export default defineComponent({
         }
         const item = reactive(fileObj)
         if (uploadFn) {
-          handleUploadResult(item, file)
+          uploadPromiseRests.push(
+            handleUploadResult(item, file)
+          )
         }
         newFileList.push(item)
         uploadMethods.dispatchEvent('add', { option: item }, evnt)
       })
       reactData.fileList = newFileList
-      emitModel(newFileList)
-      // 自动更新校验状态
-      if ($xeForm && formItemInfo) {
-        $xeForm.triggerItemEvent(evnt, formItemInfo.itemConfig.field, newFileList)
-      }
+      Promise.all(urlMode ? uploadPromiseRests : []).then(() => {
+        emitModel(newFileList)
+        // 自动更新校验状态
+        if ($xeForm && formItemInfo) {
+          $xeForm.triggerItemEvent(evnt, formItemInfo.itemConfig.field, newFileList)
+        }
+      })
     }
 
     const clickEvent = (evnt: MouseEvent) => {
@@ -445,10 +524,26 @@ export default defineComponent({
       const { fileList } = reactData
       fileList.splice(index, 1)
       emitModel(fileList)
-      uploadMethods.dispatchEvent('remove', { option: item }, evnt)
       // 自动更新校验状态
       if ($xeForm && formItemInfo) {
         $xeForm.triggerItemEvent(evnt, formItemInfo.itemConfig.field, fileList)
+      }
+      uploadMethods.dispatchEvent('remove', { option: item }, evnt)
+    }
+
+    const removeFileEvent = (evnt: MouseEvent, item: VxeUploadDefines.FileObjItem, index: number) => {
+      const removeFn = props.removeMethod || getConfig().upload.removeMethod
+      if (removeFn) {
+        Promise.resolve(
+          removeFn({
+            $upload: $xeUpload,
+            option: item
+          })
+        ).then(() => {
+          handleRemoveEvent(evnt, item, index)
+        }).catch(e => e)
+      } else {
+        handleRemoveEvent(evnt, item, index)
       }
     }
 
@@ -499,7 +594,7 @@ export default defineComponent({
     Object.assign($xeUpload, uploadMethods, uploadPrivateMethods)
 
     const renderAllMode = () => {
-      const { buttonText, showProgress, showErrorStatus, autoHiddenButton } = props
+      const { buttonText, buttonIcon, showButtonText, showButtonIcon, showRemoveButton, showProgress, showErrorStatus, autoHiddenButton } = props
       const { fileList } = reactData
       const defaultSlot = slots.default
       const tipSlot = slots.tip || slots.hint
@@ -528,8 +623,8 @@ export default defineComponent({
                 ? getSlotVNs(defaultSlot({ $upload: $xeUpload }))
                 : [
                     h(VxeButtonComponent, {
-                      content: buttonText ? `${buttonText}` : getI18n('vxe.upload.fileBtnText'),
-                      icon: getIcon().UPLOAD_FILE_ADD,
+                      content: showButtonText ? (buttonText ? `${buttonText}` : getI18n('vxe.upload.fileBtnText')) : '',
+                      icon: showButtonIcon ? (buttonIcon || getIcon().UPLOAD_FILE_ADD) : '',
                       disabled: isDisabled
                     })
                   ]),
@@ -591,15 +686,15 @@ export default defineComponent({
                   })
                 ])
                 : createCommentVNode(),
-              !formReadonly && !isDisabled && !isLoading
+              showRemoveButton && !formReadonly && !isDisabled && !isLoading
                 ? h('div', {
                   class: 'vxe-upload--file-item-remove-icon',
                   onClick (evnt: MouseEvent) {
-                    handleRemoveEvent(evnt, item, index)
+                    removeFileEvent(evnt, item, index)
                   }
                 }, [
                   h('i', {
-                    class: getIcon().UPLOAD_FILE_DELETE
+                    class: getIcon().UPLOAD_FILE_REMOVE
                   })
                 ])
                 : createCommentVNode()
@@ -610,12 +705,13 @@ export default defineComponent({
     }
 
     const renderImageMode = () => {
-      const { buttonText, showProgress, showErrorStatus, autoHiddenButton } = props
+      const { buttonText, buttonIcon, showButtonText, showButtonIcon, showRemoveButton, showProgress, showErrorStatus, autoHiddenButton } = props
       const { fileList } = reactData
       const isDisabled = computeIsDisabled.value
       const formReadonly = computeFormReadonly.value
       const defHintText = computedDefHintText.value
       const overCount = computeOverCount.value
+      const imgStyle = computeImgStyle.value
       const defaultSlot = slots.default
       const hintSlot = slots.hint
 
@@ -637,6 +733,7 @@ export default defineComponent({
           }, [
             h('div', {
               class: 'vxe-upload--image-item-box',
+              style: imgStyle,
               onClick (evnt) {
                 if (!isLoading && !isError) {
                   handlePreviewImageEvent(evnt, item, index)
@@ -683,16 +780,16 @@ export default defineComponent({
                       })
                   )
                 : createCommentVNode(),
-              !formReadonly && !isDisabled && !isLoading
+              showRemoveButton && !formReadonly && !isDisabled && !isLoading
                 ? h('div', {
                   class: 'vxe-upload--image-item-remove-icon',
                   onClick (evnt: MouseEvent) {
                     evnt.stopPropagation()
-                    handleRemoveEvent(evnt, item, index)
+                    removeFileEvent(evnt, item, index)
                   }
                 }, [
                   h('i', {
-                    class: getIcon().UPLOAD_IMAGE_DELETE
+                    class: getIcon().UPLOAD_IMAGE_REMOVE
                   })
                 ])
                 : createCommentVNode()
@@ -711,18 +808,23 @@ export default defineComponent({
                   ? defaultSlot({ $upload: $xeUpload })
                   : [
                       h('div', {
-                        class: 'vxe-upload--image-action-box'
+                        class: 'vxe-upload--image-action-box',
+                        style: imgStyle
                       }, [
-                        h('div', {
-                          class: 'vxe-upload--image-action-icon'
-                        }, [
-                          h('i', {
-                            class: getIcon().UPLOAD_IMAGE_ADD
-                          })
-                        ]),
-                        h('div', {
-                          class: 'vxe-upload--image-action-content'
-                        }, buttonText ? `${buttonText}` : getI18n('vxe.upload.imgBtnText')),
+                        showButtonIcon
+                          ? h('div', {
+                            class: 'vxe-upload--image-action-icon'
+                          }, [
+                            h('i', {
+                              class: buttonIcon || getIcon().UPLOAD_IMAGE_ADD
+                            })
+                          ])
+                          : createCommentVNode(),
+                        showButtonText
+                          ? h('div', {
+                            class: 'vxe-upload--image-action-content'
+                          }, buttonText ? `${buttonText}` : getI18n('vxe.upload.imgBtnText'))
+                          : createCommentVNode(),
                         defHintText || hintSlot
                           ? h('div', {
                             class: 'vxe-upload--image-action-hint'
@@ -738,12 +840,14 @@ export default defineComponent({
     const renderVN = () => {
       const { showErrorStatus } = props
       const { isDrag } = reactData
+      const vSize = computeSize.value
       const isDisabled = computeIsDisabled.value
       const formReadonly = computeFormReadonly.value
       const isImage = computeIsImage.value
       return h('div', {
         ref: refElem,
         class: ['vxe-upload', {
+          [`size--${vSize}`]: vSize,
           'is--readonly': formReadonly,
           'is--disabled': isDisabled,
           'show--error': showErrorStatus,
@@ -773,6 +877,14 @@ export default defineComponent({
     })
     watch(listFlag, () => {
       updateFileList()
+    })
+
+    onMounted(() => {
+      if (process.env.VUE_APP_VXE_ENV === 'development') {
+        if (props.multiple && props.singleMode) {
+          errLog('vxe.error.errConflicts', ['multiple', 'single-mode'])
+        }
+      }
     })
 
     onUnmounted(() => {

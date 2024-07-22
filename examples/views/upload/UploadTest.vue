@@ -1,16 +1,16 @@
 <template>
   <div>
     <p>
-      <vxe-upload v-model="fileList" multiple :limit-size="30" autoHiddenButton show-error-status :limit-count="10" :upload-method="uploadMethod"></vxe-upload>
+      <vxe-upload v-model="fileList" :limit-size="30" show-error-status :limit-count="10" :upload-method="uploadMethod"></vxe-upload>
     </p>
     <p>
       <vxe-upload v-model="imgList" mode="image" multiple show-error-status :upload-method="uploadMethod"></vxe-upload>
     </p>
     <p>
-      <vxe-upload v-model="fileList" multiple :limit-size="30" readonly autoHiddenButton show-error-status :limit-count="10" :upload-method="uploadMethod"></vxe-upload>
+      <vxe-upload v-model="fileList" multiple :limit-size="30" autoHiddenButton show-error-status :limit-count="10" :upload-method="uploadMethod"></vxe-upload>
     </p>
     <p>
-      <vxe-upload v-model="imgList" mode="image" multiple readonly show-error-status :upload-method="uploadMethod"></vxe-upload>
+      <vxe-upload v-model="imgList" mode="image" readonly show-error-status :upload-method="uploadMethod"></vxe-upload>
     </p>
     <p>
       <vxe-upload v-model="fileList" multiple :limit-size="30" disabled autoHiddenButton show-error-status :limit-count="10" :upload-method="uploadMethod"></vxe-upload>
