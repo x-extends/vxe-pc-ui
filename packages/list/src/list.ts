@@ -320,6 +320,7 @@ export default defineComponent({
     const renderVN = () => {
       const { className, loading } = props
       const { bodyHeight, topSpaceHeight, items } = reactData
+      const defaultSlot = slots.default
       const vSize = computeSize.value
       const styles = computeStyles.value
       return h('div', {
@@ -347,7 +348,7 @@ export default defineComponent({
             style: {
               marginTop: topSpaceHeight ? `${topSpaceHeight}px` : ''
             }
-          }, slots.default ? slots.default({ items, $list: $xeList }) : [])
+          }, defaultSlot ? defaultSlot({ items, $list: $xeList }) : [])
         ]),
         /**
          * 加载中

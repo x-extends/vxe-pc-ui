@@ -156,7 +156,10 @@ export namespace VxeListEvents {
 }
 
 export namespace VxeListSlotTypes {
-  export interface DefaultSlotParams {}
+  export interface DefaultSlotParams {
+    $list: VxeListConstructor
+    items: any[]
+  }
 }
 
 export interface VxeListSlots {

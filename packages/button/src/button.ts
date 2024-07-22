@@ -69,7 +69,10 @@ export default defineComponent({
     /**
      * 在下拉面板关闭时销毁内容
      */
-    destroyOnClose: Boolean as PropType<VxeButtonPropTypes.DestroyOnClose>,
+    destroyOnClose: {
+      type: Boolean as PropType<VxeButtonPropTypes.DestroyOnClose>,
+      default: () => getConfig().button.destroyOnClose
+    },
     /**
      * 是否将弹框容器插入于 body 内
      */

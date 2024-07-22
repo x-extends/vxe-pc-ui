@@ -101,7 +101,13 @@ export namespace VxeGridPropTypes {
   export interface ProxyConfig<D = any> {
     enabled?: boolean
     autoLoad?: boolean
+    /**
+     * 已废弃，请使用 showResponseMsg
+     * @deprecated
+     */
     message?: boolean
+    showResponseMsg: true,
+    showActiveMsg: true,
     seq?: boolean
     sort?: boolean
     filter?: boolean

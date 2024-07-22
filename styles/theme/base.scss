@@ -133,6 +133,12 @@
   --vxe-ui-select-empty-color: #C0C4CC;
   --vxe-ui-select-title-color: #909399;
 
+  /*pulldown*/
+  --vxe-ui-pulldown-option-height-default: var(--vxe-ui-select-option-height-default);
+  --vxe-ui-pulldown-option-height-medium: var(--vxe-ui-select-option-height-medium);
+  --vxe-ui-pulldown-option-height-small: var(--vxe-ui-select-option-height-small);
+  --vxe-ui-pulldown-option-height-mini: var(--vxe-ui-select-option-height-mini);
+
   /*switch*/
   --vxe-ui-switch-font-color: #fff;
   --vxe-ui-switch-icon-background-color: #fff;
@@ -140,6 +146,8 @@
   --vxe-ui-switch-disabled-background-color: rgba(0,0,0,0.15) ;
 
   /*upload*/
+  --vxe-ui-upload-file-button-border-style: dashed;
+  --vxe-ui-upload-image-button-border-style: dashed;
   --vxe-ui-upload-image-wh-default: 120px;
   --vxe-ui-upload-image-wh-medium: 104px;
   --vxe-ui-upload-image-wh-small: 88px;

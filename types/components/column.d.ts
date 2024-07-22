@@ -235,7 +235,7 @@ export namespace VxeColumnPropTypes {
      */
     children?: any[]
 
-    events?: { [key: string]: (cellParams: VxeColumnSlotTypes.EditSlotParams, ...args: any[]) => any }
+    events?: { [key: string]: (cellParams: VxeColumnSlotTypes.EditSlotParams<D>, ...args: any[]) => any }
     enabled?: boolean
     options?: any[]
     optionProps?: VxeGlobalRendererHandles.RenderOptionProps

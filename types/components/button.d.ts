@@ -32,7 +32,7 @@ export namespace VxeButtonPropTypes {
   export type Name = string | number
   export type PermissionCode = VxeComponentPermissionCodeType
   export type Content = string | number
-  export type Placement = string
+  export type Placement = '' | 'top' | 'bottom'
   export type Status = VxeComponentStatusType
   export type Title = string
   export type Icon = string

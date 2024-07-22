@@ -1,7 +1,7 @@
 <template>
   <div>
     <p>
-      <vxe-pulldown v-model="demo1.visible">
+      <vxe-pulldown v-model="demo1.visible" >
         <template #default>
           <vxe-input v-model="demo1.value1" placeholder="可搜索的下拉框" @focus="focusEvent1" @keyup="keyupEvent1"></vxe-input>
         </template>
@@ -70,6 +70,13 @@
         </template>
       </vxe-pulldown>
     </p>
+    <p>
+      <vxe-pulldown :options="pullOptions" trigger="click" showPopupShadow>
+        <template #default>
+          <img src="https://vxeui.com/resource/img/bq546.gif" style="width: 30px;height: 30px;" />
+        </template>
+      </vxe-pulldown>
+    </p>
   </div>
 </template>
 
@@ -79,27 +86,27 @@ import { VxePulldownInstance } from '../../../types'
 
 interface ItemVO1 {
   label: string;
-  vlue: string;
+  value: string;
 }
 
 interface ItemVO2 {
   label: string;
-  vlue: string;
+  value: string;
 }
 
 const data1: ItemVO1[] = [
-  { label: '选项1', vlue: '1' },
-  { label: '选项2', vlue: '2' },
-  { label: '选项3', vlue: '3' },
-  { label: '选项4', vlue: '4' },
-  { label: '选项5', vlue: '5' },
-  { label: '选项6', vlue: '6' },
-  { label: '选项7', vlue: '7' },
-  { label: '选项8', vlue: '8' },
-  { label: '选项9', vlue: '9' },
-  { label: '选项10', vlue: '10' },
-  { label: '选项11', vlue: '11' },
-  { label: '选项12', vlue: '12' }
+  { label: '选项1', value: '1' },
+  { label: '选项2', value: '2' },
+  { label: '选项3', value: '3' },
+  { label: '选项4', value: '4' },
+  { label: '选项5', value: '5' },
+  { label: '选项6', value: '6' },
+  { label: '选项7', value: '7' },
+  { label: '选项8', value: '8' },
+  { label: '选项9', value: '9' },
+  { label: '选项10', value: '10' },
+  { label: '选项11', value: '11' },
+  { label: '选项12', value: '12' }
 ]
 
 const demo1 = reactive({
@@ -123,18 +130,18 @@ const selectEvent1 = (item: ItemVO1) => {
 }
 
 const data2: ItemVO2[] = [
-  { label: '选项1', vlue: '1' },
-  { label: '选项2', vlue: '2' },
-  { label: '选项3', vlue: '3' },
-  { label: '选项4', vlue: '4' },
-  { label: '选项5', vlue: '5' },
-  { label: '选项6', vlue: '6' },
-  { label: '选项7', vlue: '7' },
-  { label: '选项8', vlue: '8' },
-  { label: '选项9', vlue: '9' },
-  { label: '选项10', vlue: '10' },
-  { label: '选项11', vlue: '11' },
-  { label: '选项12', vlue: '12' }
+  { label: '选项1', value: '1' },
+  { label: '选项2', value: '2' },
+  { label: '选项3', value: '3' },
+  { label: '选项4', value: '4' },
+  { label: '选项5', value: '5' },
+  { label: '选项6', value: '6' },
+  { label: '选项7', value: '7' },
+  { label: '选项8', value: '8' },
+  { label: '选项9', value: '9' },
+  { label: '选项10', value: '10' },
+  { label: '选项11', value: '11' },
+  { label: '选项12', value: '12' }
 ]
 const demo2 = reactive({
   value2: '',
@@ -235,6 +242,23 @@ const pageChangeEvent4: any = ({ currentPage, pageSize }: any) => {
   demo4.tablePage4.currentPage = currentPage
   demo4.tablePage4.pageSize = pageSize
 }
+
+const demo5 = reactive({
+  visible: false,
+  value1: '',
+  list1: data1
+})
+
+const pullOptions = ref([
+  { label: '选项1', value: '1' },
+  { label: '选项2', value: '2' },
+  { label: '选项3', value: '3' },
+  { label: '选项4', value: '4' },
+  { label: '选项5sdfdsfdsfsfsfsffsfsfsdffsffsf', value: '5' },
+  { label: '选项6', value: '6' },
+  { label: '选项7', value: '7' },
+  { label: '选项8', value: '8' }
+])
 
 onMounted(() => {
   keyupEvent4()

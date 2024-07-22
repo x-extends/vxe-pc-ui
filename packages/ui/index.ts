@@ -36,14 +36,6 @@ export const globalStore = {}
 VxeUI.globalStore = globalStore
 
 setConfig({
-  table: {
-    importConfig: {
-      modes: ['insert', 'covering']
-    }
-  }
-})
-
-setConfig({
   alert: {},
   anchor: {},
   anchorLink: {},
