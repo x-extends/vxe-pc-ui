@@ -414,8 +414,8 @@ renderer.mixin({
       const itemValue = XEUtils.get(data, field)
       return [
         h(getDefaultComponent(renderOpts), {
-          src: itemValue,
           ...props,
+          src: itemValue,
           ...getItemOns(renderOpts, params)
         })
       ]
@@ -428,8 +428,8 @@ renderer.mixin({
       const itemValue = XEUtils.get(data, field)
       return [
         h(getDefaultComponent(renderOpts), {
-          urlList: itemValue,
           ...props,
+          urlList: itemValue,
           ...getItemOns(renderOpts, params)
         })
       ]
