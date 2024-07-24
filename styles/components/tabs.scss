@@ -29,13 +29,15 @@
   position: relative;
   display: flex;
   flex-direction: row;
+  overflow-y: hidden;
+  overflow-x: auto;
 }
 .vxe-tabs-header--item {
   position: relative;
-  padding: 0 16px;
+  padding: 0 0.5em;
   cursor: pointer;
   &.is--active {
-    color: var(--vxe-ui-font-primary-color);;
+    color: var(--vxe-ui-font-primary-color);
   }
   &.align--left {
     text-align: left;
@@ -46,22 +48,42 @@
   &.align--right {
     text-align: right;
   }
-}
-.vxe-tabs-header--item-icon {
-  padding-right: 0.4em;
+  &:hover,
+  &.is--active {
+    .vxe-tabs-header--close-btn {
+      visibility: visible;
+    }
+  }
 }
 .vxe-tabs-header--item-inner {
-  display: block;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
 }
 .vxe-tabs-header--item-icon,
+.vxe-tabs-header--close-btn {
+  flex-shrink: 0;
+}
 .vxe-tabs-header--item-name {
-  display: inline-block;
-  vertical-align: middle;
+  flex-grow: 1;
+  padding: 0 0.8em;
+}
+.vxe-tabs-header--close-btn {
+  visibility: hidden;
+  color: var(--vxe-ui-input-placeholder-color);
+  &:hover {
+    color: var(--vxe-ui-font-color);
+  }
+  &:active {
+    color: var(--vxe-ui-font-primary-color);
+  }
+  & > i {
+    font-size: 1em;
+  }
 }
 .vxe-tabs-header--active-line-card,
 .vxe-tabs-header--item-inner {
   height: 40px;
-  line-height: 40px;
 }
 .vxe-tabs-header--active-line-border-card {
   height: 41px;

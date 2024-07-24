@@ -31,7 +31,16 @@ export namespace VxeTabsPropTypes {
   export type TitleWidth = VxeTabPanePropTypes.TitleWidth
   export type TitleAlign = VxeTabPanePropTypes.TitleAlign
   export type Type = null | '' | 'default' | 'card' | 'border-card' | 'round-card'
+  export type ShowClose = boolean
   export type Padding = boolean
+  export type BeforeChangeMethod = (params: {
+    $tabs: VxeTabsConstructor
+    name: VxeTabsPropTypes.ModelValue
+  }) => boolean
+  export type BeforeCloseMethod = (params: {
+    $tabs: VxeTabsConstructor
+    name: VxeTabsPropTypes.ModelValue
+  }) => boolean
 }
 
 export type VxeTabsProps = {
@@ -42,7 +51,10 @@ export type VxeTabsProps = {
   titleWidth?: VxeTabsPropTypes.TitleWidth
   titleAlign?: VxeTabsPropTypes.TitleAlign
   type?: VxeTabsPropTypes.Type
+  showClose?: VxeTabsPropTypes.ShowClose
   padding?: VxeTabsPropTypes.Padding
+  beforeChangeMethod?: VxeTabsPropTypes.BeforeChangeMethod
+  beforeCloseMethod?: VxeTabsPropTypes.BeforeCloseMethod
 }
 
 export interface TabsPrivateComputed {
@@ -68,6 +80,9 @@ export interface VxeTabsPrivateMethods extends TabsPrivateMethods { }
 export type VxeTabsEmits = [
   'update:modelValue',
   'change',
+  'tab-change-fail',
+  'tab-remove',
+  'tab-remove-fail',
   'tab-click',
   'tab-load'
 ]
@@ -77,11 +92,25 @@ export namespace VxeTabsDefines {
     $tabs: VxeTabsConstructor
   }
 
-  export interface ChangeParams {
+  export interface ChangeEventParams extends TabsEventParams, ChangeParams {
+    value: VxeTabsPropTypes.ModelValue
+    name: VxeTabsPropTypes.ModelValue
+    oldName: VxeTabsPropTypes.ModelValue
+    newName: VxeTabsPropTypes.ModelValue
+  }
+
+  export interface TabChangeFailEventParams extends TabsEventParams, ChangeParams {
     value: VxeTabsPropTypes.ModelValue
     name: VxeTabsPropTypes.ModelValue
   }
-  export interface ChangeEventParams extends TabsEventParams, ChangeParams { }
+
+  export interface TabRemoveEventParams extends TabsEventParams {
+    name: VxeTabsPropTypes.ModelValue
+  }
+
+  export interface TabRemoveFailEventParams extends TabsEventParams {
+    name: VxeTabsPropTypes.ModelValue
+  }
 
   export interface TabClickEventParams extends TabsEventParams {
     name: VxeTabsPropTypes.ModelValue
@@ -94,18 +123,27 @@ export namespace VxeTabsDefines {
 
 export type VxeTabsEventProps = {
   onChange?: VxeTabsEvents.Change
+  onTabChangeFail?: VxeTabsEvents.TabChangeFail
+  onTabRemove?: VxeTabsEvents.TabRemove
+  onTabRemoveFail?: VxeTabsEvents.TabRemoveFail
   onTabClick?: VxeTabsEvents.TabClick
   onTabLoad?: VxeTabsEvents.TabLoad
 }
 
 export interface VxeTabsListeners {
   change?: VxeTabsEvents.Change
+  tabChangeFail?: VxeTabsEvents.TabChangeFail
+  tabRemove?: VxeTabsEvents.TabRemove
+  tabRemoveFail?: VxeTabsEvents.TabRemoveFail
   tabClick?: VxeTabsEvents.TabClick
   tabLoad?: VxeTabsEvents.TabLoad
 }
 
 export namespace VxeTabsEvents {
   export type Change = (params: VxeTabsDefines.ChangeEventParams) => void
+  export type TabChangeFail = (params: VxeTabsDefines.TabChangeFailEventParams) => void
+  export type TabRemove = (params: VxeTabsDefines.TabRemoveEventParams) => void
+  export type TabRemoveFail = (params: VxeTabsDefines.TabRemoveFailEventParams) => void
   export type TabClick = (params: VxeTabsDefines.TabClickEventParams) => void
   export type TabLoad = (params: VxeTabsDefines.TabLoadEventParams) => void
 }

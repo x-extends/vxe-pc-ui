@@ -394,7 +394,10 @@ setIcon({
   // tree-select
   TREE_SELECT_LOADED: iconPrefix + 'spinner roll',
   TREE_SELECT_OPEN: iconPrefix + 'caret-down rotate180',
-  TREE_SELECT_CLOSE: iconPrefix + 'caret-down'
+  TREE_SELECT_CLOSE: iconPrefix + 'caret-down',
+
+  // tabs
+  TABS_TAB_CLOSE: iconPrefix + 'error-circle-fill'
 })
 
 export * from '@vxe-ui/core'

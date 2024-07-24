@@ -175,5 +175,8 @@ declare module '@vxe-ui/core' {
     TREE_SELECT_LOADED?: string
     TREE_SELECT_OPEN?: string
     TREE_SELECT_CLOSE?: string
+
+    // tabs
+    TABS_TAB_CLOSE?: string
   }
 }

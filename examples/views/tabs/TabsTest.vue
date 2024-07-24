@@ -31,7 +31,7 @@
     </p>
 
     <p>
-      <vxe-tabs modelValue="3" type="round-card" :height="300" padding>
+      <vxe-tabs modelValue="3" type="round-card" :height="300" show-close padding>
         <vxe-tab-pane title="xxx1" name="1">xxxx</vxe-tab-pane>
         <vxe-tab-pane title="xxx2" name="2" icon="vxe-icon-pc">cccc</vxe-tab-pane>
         <vxe-tab-pane title="xxx3" name="3" icon="vxe-icon-pc">vvvv</vxe-tab-pane>
