@@ -25,12 +25,14 @@
   --vxe-ui-font-primary-lighten-color: #73b8ff;
   --vxe-ui-font-primary-darken-color: #0d84ff;
   --vxe-ui-font-primary-disabled-color: #a6d2ff;
-
+  
+  --vxe-ui-status-primary-color: var(--vxe-ui-font-primary-color);
   --vxe-ui-status-success-color: #67c23a;
   --vxe-ui-status-info-color: #909399;
   --vxe-ui-status-warning-color: #e6a23c;
   --vxe-ui-status-danger-color: #f56c6c;
   --vxe-ui-status-error-color: #f56c6c;
+  --vxe-ui-status-perfect-color:#934db7;
 
   --vxe-ui-status-success-tinge-color: #eef8e9;
   --vxe-ui-status-info-tinge-color: #f5f5f6;
@@ -82,7 +84,7 @@
 
   /*loading*/
   --vxe-ui-loading-background-color: rgba(255, 255, 255, 0.5);
-   
+  
   /*form-design*/
   --vxe-ui-form-design-widget-hover-background-color: var(--vxe-ui-base-hover-background-color);
   --vxe-ui-form-design-sub-widget-hover-background-color: rgba(0, 0, 0, 0.05);

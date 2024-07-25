@@ -59,6 +59,7 @@ import VxeSwitch from './components/switch'
 import VxeTabPane from './components/tab-pane'
 import VxeTabs from './components/tabs'
 import VxeTag from './components/tag'
+import VxeTags from './components/tags'
 import VxeText from './components/text'
 import VxeTextarea from './components/textarea'
 import VxeTip from './components/tip'
@@ -135,6 +136,7 @@ interface AllComponents {
   VxeTabPane: typeof VxeTabPane
   VxeTabs: typeof VxeTabs
   VxeTag: typeof VxeTag
+  VxeTags: typeof VxeTags
   VxeText: typeof VxeText
   VxeTextarea: typeof VxeTextarea
   VxeTip: typeof VxeTip

@@ -1,75 +1,187 @@
-$tagsThemeList: (
-  (
-    name: "primary",
-    textColor: var(--vxe-ui-font-primary-color),
-    bgColor: var(--vxe-ui-font-primary-tinge-color)
-  ),
-  (
-    name: "success",
-    textColor: var(--vxe-ui-status-success-color),
-    bgColor: var(--vxe-ui-status-success-tinge-color)
-  ),
-  (
-    name: "info",
-    textColor: var(--vxe-ui-status-info-color),
-    bgColor: var(--vxe-ui-status-info-tinge-color)
-  ),
-  (
-    name: "warning",
-    textColor: var(--vxe-ui-status-warning-color),
-    bgColor: var(--vxe-ui-status-warning-tinge-color)
-  ),
-  (
-    name: "danger",
-    textColor: var(--vxe-ui-status-danger-color),
-    bgColor: var(--vxe-ui-status-danger-tinge-color)
-  ),
-  (
-    name: "error",
-    textColor: var(--vxe-ui-status-error-color),
-    bgColor: var(--vxe-ui-status-error-tinge-color)
-  )
-);
+@mixin TagToRight {
+  position: relative;
+  border-radius: 4px;
+  background-color: var(--tag-color);
+  color: #fff;
+  padding-left: 1.2em;
+  
+  &:before {
+    background: #fff;
+    border-radius: 50%;
+    box-shadow: inset 0 1px rgba(0, 0, 0, 0.25);
+    content: '';
+    height: 0.45em;
+    left: 0.5em;
+    position: absolute;
+    width: 0.45em;
+    top: calc(50% - 0.225em);
+  }
+}
 
 .vxe-tag {
-  padding: var(--vxe-ui-layout-padding-half) var(--vxe-ui-layout-padding-default);
-  color: var(--vxe-ui-font-color);
-  border-radius: var(--vxe-ui-base-border-radius);
-  @for $index from 0 to length($tagsThemeList) {
-    $item: nth($tagsThemeList, $index + 1);
-    &.theme--#{map-get($item, name)} {
-      color: map-get($item, textColor);
-      background-color: map-get($item, bgColor);
+  padding: var(--vxe-ui-tag-padding);
+  position: relative;
+  width: auto;
+  display: inline-block;
+  
+  &.vxe-tag-type--default {
+    color: #fff;
+    background-color: var(--tag-color);
+    border-radius: var(--vxe-ui-tag-border-radius);
+    
+    &.is--round {
+      border-radius: 1em;
     }
   }
-  &.size--medium {
-    font-size: var(--vxe-ui-font-size-medium);
+  
+  &.vxe-tag-type--outline {
+    color: var(--tag-color);
+    background-color: transparent;
+    border: 1px solid var(--tag-color);
+    border-radius: var(--vxe-ui-tag-border-radius);
+    
+    &.is--round {
+      border-radius: 1em;
+    }
   }
-  &.size--small {
-    font-size: var(--vxe-ui-font-size-small);
+  
+  &.vxe-tag-type--dashed {
+    color: var(--tag-color);
+    background-color: transparent;
+    border: 1px dashed var(--tag-color);
+    border-radius: var(--vxe-ui-tag-border-radius);
+    
+    &.is--round {
+      border-radius: 1em;
+    }
   }
+  
+  &.vxe-tag-type--mark {
+    @include TagToRight;
+    clip-path: polygon(100% 0%, 100% 100%, 0.5em 100%, 0% 50%, 0.5em 0%);
+    
+    &.is--round {
+      border-radius: 1em;
+    }
+  }
+  
+  &.vxe-tag-type--arrow {
+    @include TagToRight;
+    padding-right: 0.85em;
+    clip-path: polygon(0% 0%, calc(100% - 0.5em) 0%, 100% 50%, calc(100% - 0.5em) 100%, 0% 100%);
+    
+    &.is--round {
+      border-radius: 1em;
+    }
+  }
+  
+  &.vxe-tag-type--flag {
+    @include TagToRight;
+    padding-right: 1em;
+    clip-path: polygon(100% 0%, calc(100% - 0.5em) 50%, 100% 100%, 0.5em 100%, 0% 50%, 0.5em 0%);
+    
+    &.is--round {
+      border-radius: 1em;
+    }
+  }
+  
   &.size--mini {
-    font-size: var(--vxe-ui-font-size-mini);
+    font-size: var(--vxe-ui-tag-font-size-mini);
+    line-height: var(--vxe-ui-tag-line-height--mini);
   }
-  & + .vxe-tag {
-    margin-left: 8px;
+  
+  &.size--small {
+    font-size: var(--vxe-ui-tag-font-size-small);
+    line-height: var(--vxe-ui-tag-line-height--small);
   }
-}
-.vxe-tag--icon {
-  padding: 0 0.1em;
-}
-.vxe-tag--content {
-  padding: 0 0.1em;
+  
+  &.size--medium {
+    font-size: var(--vxe-ui-tag-font-size-medium);
+    line-height: var(--vxe-ui-tag-line-height--medium);
+  }
+  
+  &.size--large {
+    font-size: var(--vxe-ui-tag-font-size-large);
+    line-height: var(--vxe-ui-tag-line-height--large);
+  }
+  
+  &.vxe-tag--closable {
+    & > .vxe-tag-close-icon {
+      display: none;
+    }
+    
+    &:hover {
+      filter: brightness(1.1);
+      
+      & > .vxe-tag-close-icon {
+        display: inline-block;
+        position: absolute;
+        bottom: calc(50% - 0.5em);
+        left: calc(50% - 0.5em);
+        width: 1em;
+        height: 1em;
+        line-height: 1;
+        text-align: center;
+        border-radius: 50%;
+        background-color: #fff;
+        color: var(--tag-color);
+      }
+    }
+  }
+  
+  .vxe-tag--icon {
+    margin-left: 4px;
+    font-size: 11px;
+  }
+  
+  & > .vxe-tag-content {
+    outline: unset;
+    min-width: 1em;
+    min-height: 1em;
+    display: inline-block;
+    
+    &.tag-select-none {
+      user-select: none;
+    }
+  }
 }
 
-.vxe-tag {
-  &.size--medium {
-    font-size: var(--vxe-ui-font-size-medium);
-  }
-  &.size--small {
-    font-size: var(--vxe-ui-font-size-small);
-  }
-  &.size--mini {
-    font-size: var(--vxe-ui-font-size-mini);
-  }
+.vxe-tag-color--default, .vxe-tag-color--info {
+  --tag-color: var(--vxe-ui-tag-default-color)
+}
+
+.vxe-tag-color--primary {
+  --tag-color: var(--vxe-ui-status-primary-color)
+}
+
+.vxe-tag-color--success {
+  --tag-color: var(--vxe-ui-status-success-color)
+}
+
+.vxe-tag-color--warning {
+  --tag-color: var(--vxe-ui-status-warning-color)
+}
+
+.vxe-tag-color--danger, .vxe-tag-color--error {
+  --tag-color: var(--vxe-ui-status-danger-color)
+}
+
+.vxe-tag-color--perfect {
+  --tag-color: var(--vxe-ui-status-perfect-color)
+}
+
+.vxe-tag + .vxe-tag {
+  margin-left: 0.4em;
+}
+
+.vxe-tag-align--top {
+  vertical-align: top;
+}
+
+.vxe-tag-align--middle {
+  vertical-align: middle;
+}
+
+.vxe-tag-align--bottom {
+  vertical-align: bottom;
 }
