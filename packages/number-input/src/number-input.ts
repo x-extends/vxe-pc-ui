@@ -247,7 +247,6 @@ export default defineComponent({
     }
 
     const emitModel = (value: number | null, evnt: Event | { type: string }) => {
-      reactData.inputValue = value
       emit('update:modelValue', value ? Number(value) : null)
       inputMethods.dispatchEvent('input', { value }, evnt as any)
       if (XEUtils.toValueString(props.modelValue) !== XEUtils.toValueString(value)) {
@@ -299,6 +298,7 @@ export default defineComponent({
     const clearValueEvent = (evnt: Event, value: VxeNumberInputPropTypes.ModelValue) => {
       focus()
       emitModel(null, evnt)
+      reactData.inputValue = null
       inputMethods.dispatchEvent('clear', { value }, evnt)
     }
 
@@ -322,6 +322,7 @@ export default defineComponent({
           const validValue = inputValue ? Number(toFloatValueFixed(inputValue, digitsValue)) : null
           if (inputValue !== validValue) {
             emitModel(validValue, { type: 'init' })
+            reactData.inputValue = validValue
           }
         }
       }
@@ -353,7 +354,9 @@ export default defineComponent({
               inpNumVal = Number(inpStringVal)
             }
           }
-          emitModel(getNumberValue(inpNumVal), { type: 'check' })
+          const numValue = getNumberValue(inpNumVal)
+          emitModel(numValue, { type: 'check' })
+          reactData.inputValue = numValue
         }
       }
     }
@@ -364,6 +367,7 @@ export default defineComponent({
       const value = inputValue ? Number(inputValue) : null
       if (!inpImmediate) {
         emitModel(value, evnt)
+        reactData.inputValue = value
       }
       afterCheckValue()
       if (!reactData.visiblePanel) {
