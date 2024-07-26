@@ -246,8 +246,11 @@ export default defineComponent({
       inputMethods.dispatchEvent(evnt.type, { value: inputValue }, evnt)
     }
 
-    const emitModel = (value: number | null, evnt: Event | { type: string }) => {
+    const emitModel = (value: number | null, evnt: Event | { type: string }, writeToInput = true) => {
       emit('update:modelValue', value ? Number(value) : null)
+      if (writeToInput) {
+        reactData.inputValue = value
+      }
       inputMethods.dispatchEvent('input', { value }, evnt as any)
       if (XEUtils.toValueString(props.modelValue) !== XEUtils.toValueString(value)) {
         inputMethods.dispatchEvent('change', { value }, evnt as any)
@@ -263,7 +266,7 @@ export default defineComponent({
       const value = inputValue ? Number(inputValue) : null
       reactData.inputValue = inputValue
       if (inpImmediate) {
-        emitModel(value, evnt)
+        emitModel(value, evnt, false)
       } else {
         inputMethods.dispatchEvent('input', { value }, evnt)
       }
@@ -298,7 +301,6 @@ export default defineComponent({
     const clearValueEvent = (evnt: Event, value: VxeNumberInputPropTypes.ModelValue) => {
       focus()
       emitModel(null, evnt)
-      reactData.inputValue = null
       inputMethods.dispatchEvent('clear', { value }, evnt)
     }
 
@@ -322,7 +324,6 @@ export default defineComponent({
           const validValue = inputValue ? Number(toFloatValueFixed(inputValue, digitsValue)) : null
           if (inputValue !== validValue) {
             emitModel(validValue, { type: 'init' })
-            reactData.inputValue = validValue
           }
         }
       }
@@ -356,7 +357,6 @@ export default defineComponent({
           }
           const numValue = getNumberValue(inpNumVal)
           emitModel(numValue, { type: 'check' })
-          reactData.inputValue = numValue
         }
       }
     }
@@ -367,7 +367,6 @@ export default defineComponent({
       const value = inputValue ? Number(inputValue) : null
       if (!inpImmediate) {
         emitModel(value, evnt)
-        reactData.inputValue = value
       }
       afterCheckValue()
       if (!reactData.visiblePanel) {
