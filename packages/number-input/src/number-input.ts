@@ -246,9 +246,11 @@ export default defineComponent({
       inputMethods.dispatchEvent(evnt.type, { value: inputValue }, evnt)
     }
 
-    const emitModel = (value: number | null, evnt: Event | { type: string }) => {
-      reactData.inputValue = value
+    const emitModel = (value: number | null, evnt: Event | { type: string }, writeToInput = true) => {
       emit('update:modelValue', value ? Number(value) : null)
+      if (writeToInput) {
+        reactData.inputValue = value
+      }
       inputMethods.dispatchEvent('input', { value }, evnt as any)
       if (XEUtils.toValueString(props.modelValue) !== XEUtils.toValueString(value)) {
         inputMethods.dispatchEvent('change', { value }, evnt as any)
@@ -264,7 +266,7 @@ export default defineComponent({
       const value = inputValue ? Number(inputValue) : null
       reactData.inputValue = inputValue
       if (inpImmediate) {
-        emitModel(value, evnt)
+        emitModel(value, evnt, false)
       } else {
         inputMethods.dispatchEvent('input', { value }, evnt)
       }
@@ -353,7 +355,8 @@ export default defineComponent({
               inpNumVal = Number(inpStringVal)
             }
           }
-          emitModel(getNumberValue(inpNumVal), { type: 'check' })
+          const numValue = getNumberValue(inpNumVal)
+          emitModel(numValue, { type: 'check' })
         }
       }
     }

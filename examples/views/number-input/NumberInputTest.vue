@@ -7,6 +7,8 @@
       <vxe-number-input v-model="demo1.value103" placeholder="超小尺寸" size="mini"></vxe-number-input>
     </p>
 
+小数间隔: {{ demo1.value503 }}
+
     <p>
       <vxe-number-input v-model="demo1.value500" placeholder="数值类型" type="number"></vxe-number-input>
       <vxe-number-input v-model="demo1.value501" placeholder="数值间隔 1.4" type="number" step="1.4" clearable></vxe-number-input>
