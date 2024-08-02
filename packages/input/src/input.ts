@@ -883,11 +883,11 @@ export default defineComponent({
       }
     }
 
-    const vaildMaxNum = (num: number | string) => {
+    const validMaxNum = (num: number | string) => {
       return props.max === null || XEUtils.toNumber(num) <= XEUtils.toNumber(props.max)
     }
 
-    const vaildMinNum = (num: number | string) => {
+    const validMinNum = (num: number | string) => {
       return props.min === null || XEUtils.toNumber(num) >= XEUtils.toNumber(props.min)
     }
 
@@ -967,9 +967,9 @@ export default defineComponent({
         if (isNumType) {
           if (inputValue) {
             let inpNumVal: number | string = type === 'integer' ? XEUtils.toInteger(handleNumber(inputValue)) : XEUtils.toNumber(handleNumber(inputValue))
-            if (!vaildMinNum(inpNumVal)) {
+            if (!validMinNum(inpNumVal)) {
               inpNumVal = min
-            } else if (!vaildMaxNum(inpNumVal)) {
+            } else if (!validMaxNum(inpNumVal)) {
               inpNumVal = max
             }
             if (exponential) {
@@ -1058,9 +1058,9 @@ export default defineComponent({
       const numValue = type === 'integer' ? XEUtils.toInteger(handleNumber(inputValue)) : XEUtils.toNumber(handleNumber(inputValue))
       const newValue = isPlus ? XEUtils.add(numValue, stepValue) : XEUtils.subtract(numValue, stepValue)
       let restNum: number | string
-      if (!vaildMinNum(newValue)) {
+      if (!validMinNum(newValue)) {
         restNum = min
-      } else if (!vaildMaxNum(newValue)) {
+      } else if (!validMaxNum(newValue)) {
         restNum = max
       } else {
         restNum = newValue

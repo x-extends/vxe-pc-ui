@@ -67,6 +67,10 @@ export namespace VxeUploadPropTypes {
     $upload: VxeUploadConstructor
     option: VxeUploadDefines.FileObjItem
   }) => string)
+  export type GetThumbnailUrlMethod = undefined | ((params: {
+    $upload: VxeUploadConstructor
+    option: VxeUploadDefines.FileObjItem
+  }) => string)
 
   /**
    * 已废弃，请使用 TipText
@@ -109,6 +113,7 @@ export type VxeUploadProps = {
   uploadMethod?: VxeUploadPropTypes.UploadMethod
   removeMethod?: VxeUploadPropTypes.RemoveMethod
   getUrlMethod?: VxeUploadPropTypes.GetUrlMethod
+  getThumbnailUrlMethod?: VxeUploadPropTypes.GetThumbnailUrlMethod
 
   /**
    * 已废弃，请使用 tipText

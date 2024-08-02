@@ -105,6 +105,7 @@ export default defineComponent({
     uploadMethod: Function as PropType<VxeUploadPropTypes.UploadMethod>,
     removeMethod: Function as PropType<VxeUploadPropTypes.RemoveMethod>,
     getUrlMethod: Function as PropType<VxeUploadPropTypes.GetUrlMethod>,
+    getThumbnailUrlMethod: Function as PropType<VxeUploadPropTypes.GetThumbnailUrlMethod>,
     size: { type: String as PropType<VxeUploadPropTypes.Size>, default: () => getConfig().upload.size || getConfig().size }
   },
   emits: [
@@ -323,6 +324,17 @@ export default defineComponent({
         restList = restList.map(item => item[urlProp])
       }
       emit('update:modelValue', singleMode ? (restList[0] || null) : restList)
+    }
+
+    const getThumbnailFileUrl = (item: VxeUploadDefines.FileObjItem) => {
+      const getThumbnailUrlFn = props.getThumbnailUrlMethod || getConfig().upload.getThumbnailUrlMethod
+      if (getThumbnailUrlFn) {
+        return getThumbnailUrlFn({
+          $upload: $xeUpload,
+          option: item
+        })
+      }
+      return getFileUrl(item)
     }
 
     const getFileUrl = (item: VxeUploadDefines.FileObjItem) => {
@@ -776,7 +788,7 @@ export default defineComponent({
                       ])
                       : h('img', {
                         class: 'vxe-upload--image-item-img',
-                        src: getFileUrl(item)
+                        src: getThumbnailFileUrl(item)
                       })
                   )
                 : createCommentVNode(),

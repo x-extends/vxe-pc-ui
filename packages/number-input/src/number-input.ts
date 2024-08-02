@@ -235,10 +235,9 @@ export default defineComponent({
       const digitsValue = computeDigitsValue.value
       const restVal = (type === 'float' ? toFloatValueFixed(val, digitsValue) : XEUtils.toValueString(val))
       if (exponential && (val === restVal || XEUtils.toValueString(val).toLowerCase() === XEUtils.toNumber(restVal).toExponential())) {
-        return Number(val)
+        return val
       }
-      const rest = restVal.slice(0, inpMaxlength)
-      return rest ? Number(rest) : null
+      return restVal.slice(0, inpMaxlength)
     }
 
     const triggerEvent = (evnt: Event & { type: 'input' | 'change' | 'keydown' | 'keyup' | 'wheel' | 'click' | 'focus' | 'blur' }) => {
@@ -246,12 +245,15 @@ export default defineComponent({
       inputMethods.dispatchEvent(evnt.type, { value: inputValue }, evnt)
     }
 
-    const emitModel = (value: number | null, evnt: Event | { type: string }) => {
-      reactData.inputValue = value
-      emit('update:modelValue', value ? Number(value) : null)
-      inputMethods.dispatchEvent('input', { value }, evnt as any)
-      if (XEUtils.toValueString(props.modelValue) !== XEUtils.toValueString(value)) {
-        inputMethods.dispatchEvent('change', { value }, evnt as any)
+    const emitModel = (value: number | null, inputValue: string, evnt: Event | { type: string }) => {
+      const isChange = Number(value) !== props.modelValue
+      if (isChange) {
+        reactData.inputValue = inputValue || ''
+        emit('update:modelValue', value ? Number(value) : null)
+      }
+      inputMethods.dispatchEvent('input', { value }, evnt as Event)
+      if (isChange) {
+        inputMethods.dispatchEvent('change', { value }, evnt as Event)
         // 自动更新校验状态
         if ($xeForm && formItemInfo) {
           $xeForm.triggerItemEvent(evnt, formItemInfo.itemConfig.field, value)
@@ -261,10 +263,10 @@ export default defineComponent({
 
     const emitInputEvent = (inputValue: any, evnt: Event) => {
       const inpImmediate = computeInpImmediate.value
-      const value = inputValue ? Number(inputValue) : null
+      const value = inputValue ? XEUtils.toNumber(inputValue) : null
       reactData.inputValue = inputValue
       if (inpImmediate) {
-        emitModel(value, evnt)
+        emitModel(value, inputValue, evnt)
       } else {
         inputMethods.dispatchEvent('input', { value }, evnt)
       }
@@ -298,7 +300,7 @@ export default defineComponent({
 
     const clearValueEvent = (evnt: Event, value: VxeNumberInputPropTypes.ModelValue) => {
       focus()
-      emitModel(null, evnt)
+      emitModel(null, '', evnt)
       inputMethods.dispatchEvent('clear', { value }, evnt)
     }
 
@@ -319,19 +321,24 @@ export default defineComponent({
       const digitsValue = computeDigitsValue.value
       if (type === 'float') {
         if (inputValue) {
-          const validValue = inputValue ? Number(toFloatValueFixed(inputValue, digitsValue)) : null
+          let textValue = ''
+          let validValue: number | null = null
+          if (inputValue) {
+            textValue = toFloatValueFixed(inputValue, digitsValue)
+            validValue = Number(textValue)
+          }
           if (inputValue !== validValue) {
-            emitModel(validValue, { type: 'init' })
+            emitModel(validValue, textValue, { type: 'init' })
           }
         }
       }
     }
 
-    const vaildMaxNum = (num: number | string) => {
+    const validMaxNum = (num: number | string) => {
       return props.max === null || XEUtils.toNumber(num) <= XEUtils.toNumber(props.max)
     }
 
-    const vaildMinNum = (num: number | string) => {
+    const validMinNum = (num: number | string) => {
       return props.min === null || XEUtils.toNumber(num) >= XEUtils.toNumber(props.min)
     }
 
@@ -341,19 +348,20 @@ export default defineComponent({
       const inputReadonly = computeInputReadonly.value
       if (!inputReadonly) {
         if (inputValue) {
-          let inpNumVal = type === 'integer' ? XEUtils.toInteger(handleNumber(inputValue)) : XEUtils.toNumber(handleNumber(inputValue))
-          if (!vaildMinNum(inpNumVal)) {
-            inpNumVal = Number(min)
-          } else if (!vaildMaxNum(inpNumVal)) {
-            inpNumVal = Number(max)
+          let inpNumVal: number | string = type === 'integer' ? XEUtils.toInteger(handleNumber(inputValue)) : XEUtils.toNumber(handleNumber(inputValue))
+          if (!validMinNum(inpNumVal)) {
+            inpNumVal = min
+          } else if (!validMaxNum(inpNumVal)) {
+            inpNumVal = max
           }
           if (exponential) {
             const inpStringVal = XEUtils.toValueString(inputValue).toLowerCase()
             if (inpStringVal === XEUtils.toNumber(inpNumVal).toExponential()) {
-              inpNumVal = Number(inpStringVal)
+              inpNumVal = inpStringVal
             }
           }
-          emitModel(getNumberValue(inpNumVal), { type: 'check' })
+          const inpValue = getNumberValue(inpNumVal)
+          emitModel(inpValue === null ? null : Number(inpValue), inpValue, { type: 'check' })
         }
       }
     }
@@ -363,7 +371,7 @@ export default defineComponent({
       const inpImmediate = computeInpImmediate.value
       const value = inputValue ? Number(inputValue) : null
       if (!inpImmediate) {
-        emitModel(value, evnt)
+        emitModel(value, inputValue, evnt)
       }
       afterCheckValue()
       if (!reactData.visiblePanel) {
@@ -380,9 +388,9 @@ export default defineComponent({
       const numValue = type === 'integer' ? XEUtils.toInteger(handleNumber(inputValue)) : XEUtils.toNumber(handleNumber(inputValue))
       const newValue = isPlus ? XEUtils.add(numValue, stepValue) : XEUtils.subtract(numValue, stepValue)
       let restNum: number | string
-      if (!vaildMinNum(newValue)) {
+      if (!validMinNum(newValue)) {
         restNum = min
-      } else if (!vaildMaxNum(newValue)) {
+      } else if (!validMaxNum(newValue)) {
         restNum = max
       } else {
         restNum = newValue
