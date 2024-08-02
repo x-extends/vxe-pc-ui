@@ -1,6 +1,6 @@
 import { defineComponent, ref, h, reactive, PropType, provide, computed, createCommentVNode, watch, nextTick, onMounted } from 'vue'
 import XEUtils from 'xe-utils'
-import { createEvent, getConfig, permission } from '../../ui'
+import { createEvent, getConfig, getIcon, permission } from '../../ui'
 import VxeTabPaneComponent from './tab-pane'
 import { getSlotVNs } from '../../ui/src/vn'
 import { toCssUnit } from '../..//ui/src/dom'
@@ -17,14 +17,20 @@ export default defineComponent({
     titleWidth: [String, Number] as PropType<VxeTabsPropTypes.TitleWidth>,
     titleAlign: [String, Number] as PropType<VxeTabsPropTypes.TitleAlign>,
     type: String as PropType<VxeTabsPropTypes.Type>,
+    showClose: Boolean as PropType<VxeTabsPropTypes.ShowClose>,
     padding: {
       type: Boolean as PropType<VxeTabsPropTypes.Padding>,
       default: () => getConfig().tabs.padding
-    }
+    },
+    beforeChangeMethod: Function as PropType<VxeTabsPropTypes.BeforeChangeMethod>,
+    beforeCloseMethod: Function as PropType<VxeTabsPropTypes.BeforeCloseMethod>
   },
   emits: [
     'update:modelValue',
     'change',
+    'tab-change-fail',
+    'tab-remove',
+    'tab-remove-fail',
     'tab-click',
     'tab-load'
   ] as VxeTabsEmits,
@@ -143,6 +149,7 @@ export default defineComponent({
     }
 
     const clickEvent = (evnt: KeyboardEvent, item: VxeTabPaneProps | VxeTabPaneDefines.TabConfig) => {
+      const beforeMethod = props.beforeChangeMethod || getConfig().tabs.beforeChangeMethod
       const { initNames, activeName } = reactData
       const { name } = item
       let isInit = false
@@ -153,12 +160,28 @@ export default defineComponent({
       }
       reactData.activeName = name
       emit('update:modelValue', value)
-      if (name !== activeName) {
-        dispatchEvent('change', { value, name }, evnt)
-      }
       dispatchEvent('tab-click', { name }, evnt)
-      if (isInit) {
-        dispatchEvent('tab-load', { name }, evnt)
+      if (name !== activeName) {
+        if (!beforeMethod || beforeMethod({ $tabs: $xeTabs, name })) {
+          dispatchEvent('change', { value, name, oldName: activeName, newName: name }, evnt)
+        } else {
+          dispatchEvent('tab-change-fail', { value, name, oldName: activeName, newName: name }, evnt)
+        }
+        if (isInit) {
+          dispatchEvent('tab-load', { name }, evnt)
+        }
+      }
+    }
+
+    const handleCloseTabEvent = (evnt: KeyboardEvent, item: VxeTabPaneDefines.TabConfig | VxeTabPaneProps) => {
+      const beforeMethod = props.beforeCloseMethod || getConfig().tabs.beforeCloseMethod
+      const { name } = item
+      const value = name
+      evnt.stopPropagation()
+      if (!beforeMethod || beforeMethod({ $tabs: $xeTabs, name })) {
+        dispatchEvent('tab-remove', { value, name }, evnt)
+      } else {
+        dispatchEvent('tab-remove-fail', { value, name }, evnt)
       }
     }
 
@@ -172,7 +195,7 @@ export default defineComponent({
     Object.assign($xeTabs, tabsMethods, tabsPrivateMethods)
 
     const renderTabHeader = (list: VxeTabsPropTypes.Options | VxeTabPaneDefines.TabConfig[]) => {
-      const { type, titleWidth: allTitleWidth, titleAlign: allTitleAlign } = props
+      const { type, titleWidth: allTitleWidth, titleAlign: allTitleAlign, showClose } = props
       const { activeName, lintLeft, lintWidth } = reactData
       return h('div', {
         class: 'vxe-tabs-header'
@@ -213,7 +236,19 @@ export default defineComponent({
                 : createCommentVNode(),
               h('div', {
                 class: 'vxe-tabs-header--item-name'
-              }, tabSlot ? callSlot(tabSlot, { name, title }) : `${title}`)
+              }, tabSlot ? callSlot(tabSlot, { name, title }) : `${title}`),
+              showClose
+                ? h('div', {
+                  class: 'vxe-tabs-header--close-btn',
+                  onClick (evnt: KeyboardEvent) {
+                    handleCloseTabEvent(evnt, item)
+                  }
+                }, [
+                  h('i', {
+                    class: getIcon().TABS_TAB_CLOSE
+                  })
+                ])
+                : createCommentVNode()
             ])
           ])
         })),
