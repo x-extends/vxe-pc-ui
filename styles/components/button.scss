@@ -150,6 +150,8 @@ $btnThemeList: (
     }
     &.is--circle {
       padding: 0 0.5em;
+      text-align: center;
+      justify-content: center;
       min-width: var(--vxe-ui-button-height-default);
       border-radius: 50%;
     }
