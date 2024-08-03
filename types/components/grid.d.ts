@@ -98,6 +98,10 @@ export namespace VxeGridPropTypes {
     }
   }
 
+  interface ProxyAjaxResponseParams<T = any> {
+    response: T
+  }
+
   export interface ProxyConfig<D = any> {
     enabled?: boolean
     autoLoad?: boolean
@@ -132,9 +136,17 @@ export namespace VxeGridPropTypes {
     }
     ajax?: {
       query?(params: ProxyAjaxQueryParams<D>, ...args: any[]): Promise<any>
-      queryAll?(params: ProxyAjaxQueryAllParams<D>, ...args: any[]): Promise<any>
+      querySuccess?(params: ProxyAjaxQueryParams<D> & ProxyAjaxResponseParams): void
+      queryError?(params: ProxyAjaxQueryParams<D> & ProxyAjaxResponseParams): void
+      queryAll?(params: ProxyAjaxQueryAllParams<D>): Promise<any>
+      queryAllSuccess?(params: ProxyAjaxQueryAllParams<D> & ProxyAjaxResponseParams): void
+      queryAllError?(params: ProxyAjaxQueryAllParams<D> & ProxyAjaxResponseParams): void
       delete?(params: ProxyAjaxDeleteParams<D>, ...args: any[]): Promise<any>
+      deleteSuccess?(params: ProxyAjaxDeleteParams<D> & ProxyAjaxResponseParams): void
+      deleteError?(params: ProxyAjaxDeleteParams<D> & ProxyAjaxResponseParams): void
       save?(params: ProxyAjaxSaveParams<D>, ...args: any[]): Promise<any>
+      saveSuccess?(params: ProxyAjaxSaveParams<D> & ProxyAjaxResponseParams): void
+      saveError?(params: ProxyAjaxSaveParams<D> & ProxyAjaxResponseParams): void
     }
     [key: string]: any
 

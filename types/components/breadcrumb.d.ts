@@ -45,7 +45,7 @@ export interface BreadcrumbMethods {
 export interface VxeBreadcrumbMethods extends BreadcrumbMethods { }
 
 export interface BreadcrumbPrivateMethods {
-  handleClickLink(evnt: KeyboardEvent, item?: VxeBreadcrumbItemProps): void
+  handleClickLink(evnt: MouseEvent, item?: VxeBreadcrumbItemProps): void
  }
 export interface VxeBreadcrumbPrivateMethods extends BreadcrumbPrivateMethods { }
 
@@ -57,13 +57,23 @@ export namespace VxeBreadcrumbDefines {
   export interface BreadcrumbEventParams extends VxeComponentEventParams {
     $breadcrumb: VxeBreadcrumbConstructor
   }
+
+  export interface ClickEventParams extends BreadcrumbEventParams {
+    option: VxeBreadcrumbItemProps
+  }
 }
 
-export type VxeBreadcrumbEventProps = {}
+export type VxeBreadcrumbEventProps = {
+  onClick?: VxeBreadcrumbEvents.Click
+}
 
-export interface VxeBreadcrumbListeners { }
+export interface VxeBreadcrumbListeners {
+  click?: VxeBreadcrumbEvents.Click
+}
 
-export namespace VxeBreadcrumbEvents { }
+export namespace VxeBreadcrumbEvents {
+  export type Click = (params: VxeBreadcrumbDefines.ClickEventParams) => void
+}
 
 export namespace VxeBreadcrumbSlotTypes {
   export interface DefaultSlotParams {}

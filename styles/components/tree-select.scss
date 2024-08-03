@@ -116,15 +116,15 @@
 }
 .vxe-tree-select--tree {
   max-width: 30em;
-  .is-radio--checked,
-  .is-checkbox--checked {
-    & > .vxe-tree--node-item {
-      .vxe-tree--node-item-title {
+  .vxe-tree--node-item {
+    &.is-radio--checked,
+    &.is-checkbox--checked {
+      & > .vxe-tree--node-item-inner {
         color: var(--vxe-ui-font-primary-color);
       }
     }
   }
-  .vxe-tree--node-item-title {
+  .vxe-tree--node-item-inner {
     cursor: pointer;
   }
 }

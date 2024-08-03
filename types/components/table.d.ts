@@ -3578,9 +3578,13 @@ export namespace VxeTableDefines {
   export interface SortCheckedParams<D = any> {
     column: VxeTableDefines.ColumnInfo<D>
     field: VxeColumnPropTypes.Field
-    property: VxeColumnPropTypes.Field
     order: VxeTablePropTypes.SortOrder
     sortTime: number
+    /**
+     *已废弃， 请使用 field
+     * @deprecated
+     */
+    property: VxeColumnPropTypes.Field
   }
   export interface SortChangeParams<D = any> extends SortCheckedParams<D> {
     sortList: SortCheckedParams[]
@@ -3590,9 +3594,13 @@ export namespace VxeTableDefines {
   export interface FilterCheckedParams<D = any> {
     column: VxeTableDefines.ColumnInfo<D>
     field: VxeColumnPropTypes.Field
-    property: VxeColumnPropTypes.Field
     values: any[]
     datas: any[]
+    /**
+     *已废弃， 请使用 field
+     * @deprecated
+     */
+    property: VxeColumnPropTypes.Field
   }
   export interface FilterChangeParams<D = any> extends FilterCheckedParams<D> {
     filterList: FilterCheckedParams<D>[]
@@ -3602,9 +3610,13 @@ export namespace VxeTableDefines {
   export interface FilterVisibleParams<D = any> {
     column: VxeTableDefines.ColumnInfo<D>
     field: VxeColumnPropTypes.Field
-    property: VxeColumnPropTypes.Field
     filterList: FilterCheckedParams<D>[]
     visible: boolean
+    /**
+     *已废弃， 请使用 field
+     * @deprecated
+     */
+    property: VxeColumnPropTypes.Field
   }
   export interface FilterVisibleEventParams<D = any> extends TableEventParams<D>, FilterVisibleParams<D> { }
 

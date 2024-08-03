@@ -66,7 +66,8 @@ export default defineComponent({
     'change',
     'clear',
     'blur',
-    'focus'
+    'focus',
+    'click'
   ] as VxeSelectEmits,
   setup (props, context) {
     const { slots, emit } = context
@@ -92,6 +93,7 @@ export default defineComponent({
       panelPlacement: null,
       currentOption: null,
       currentValue: null,
+      triggerFocusPanel: false,
       visiblePanel: false,
       animatVisible: false,
       isActivated: false,
@@ -713,9 +715,20 @@ export default defineComponent({
     const focusEvent = (evnt: FocusEvent) => {
       const isDisabled = computeIsDisabled.value
       if (!isDisabled) {
-        reactData.isActivated = true
+        if (!reactData.visiblePanel) {
+          reactData.triggerFocusPanel = true
+          showOptionPanel()
+          setTimeout(() => {
+            reactData.triggerFocusPanel = false
+          }, 150)
+        }
       }
       selectMethods.dispatchEvent('focus', {}, evnt)
+    }
+
+    const clickEvent = (evnt: MouseEvent) => {
+      togglePanelEvent(evnt)
+      selectMethods.dispatchEvent('click', {}, evnt)
     }
 
     const blurEvent = (evnt: FocusEvent) => {
@@ -748,10 +761,14 @@ export default defineComponent({
     const togglePanelEvent = (params: any) => {
       const { $event } = params
       $event.preventDefault()
-      if (reactData.visiblePanel) {
-        hideOptionPanel()
+      if (reactData.triggerFocusPanel) {
+        reactData.triggerFocusPanel = false
       } else {
-        showOptionPanel()
+        if (reactData.visiblePanel) {
+          hideOptionPanel()
+        } else {
+          showOptionPanel()
+        }
       }
     }
 
@@ -980,7 +997,7 @@ export default defineComponent({
           suffixIcon: loading ? getIcon().SELECT_LOADED : (visiblePanel ? getIcon().SELECT_OPEN : getIcon().SELECT_CLOSE),
           modelValue: selectLabel,
           onClear: clearEvent,
-          onClick: togglePanelEvent,
+          onClick: clickEvent,
           onFocus: focusEvent,
           onBlur: blurEvent,
           onSuffixClick: togglePanelEvent

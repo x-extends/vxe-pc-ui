@@ -240,6 +240,7 @@ export default defineComponent({
     })
     watch(optFlag, () => {
       updateMenuConfig()
+      updateActiveMenu(true)
     })
 
     watch(() => props.modelValue, (val) => {

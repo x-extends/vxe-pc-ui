@@ -7,6 +7,7 @@ import { VxeToolbarPropTypes } from '../components/toolbar'
 import { VxeFormConstructor, VxeFormDefines, VxeFormProps } from '../components/form'
 import { VxeFormDesignDefines, VxeFormDesignConstructor } from '../components/form-design'
 import { VxeFormViewDefines, VxeFormViewConstructor } from '../components/form-view'
+import { VxeTreeSelectPropTypes } from '../components/tree-select'
 
 /* eslint-disable no-use-before-define */
 
@@ -459,7 +460,7 @@ declare module '@vxe-ui/core' {
     /**
      * 选项参数
      */
-    export interface RenderOptionProps {
+    export interface RenderOptionProps extends VxeTreeSelectPropTypes.OptionProps {
       value?: string
       label?: string
       disabled?: string

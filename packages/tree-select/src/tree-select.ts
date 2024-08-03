@@ -51,7 +51,8 @@ export default defineComponent({
     'change',
     'clear',
     'blur',
-    'focus'
+    'focus',
+    'click'
   ] as VxeTreeSelectEmits,
   setup (props, context) {
     const { emit, slots } = context
@@ -77,6 +78,7 @@ export default defineComponent({
       panelIndex: 0,
       panelStyle: {},
       panelPlacement: null,
+      triggerFocusPanel: false,
       visiblePanel: false,
       animatVisible: false,
       isActivated: false
@@ -395,9 +397,20 @@ export default defineComponent({
     const focusEvent = (evnt: FocusEvent) => {
       const isDisabled = computeIsDisabled.value
       if (!isDisabled) {
-        reactData.isActivated = true
+        if (!reactData.visiblePanel) {
+          reactData.triggerFocusPanel = true
+          showOptionPanel()
+          setTimeout(() => {
+            reactData.triggerFocusPanel = false
+          }, 150)
+        }
       }
       treeSelectMethods.dispatchEvent('focus', {}, evnt)
+    }
+
+    const clickEvent = (evnt: MouseEvent) => {
+      togglePanelEvent(evnt)
+      treeSelectMethods.dispatchEvent('click', {}, evnt)
     }
 
     const blurEvent = (evnt: FocusEvent) => {
@@ -408,10 +421,14 @@ export default defineComponent({
     const togglePanelEvent = (params: any) => {
       const { $event } = params
       $event.preventDefault()
-      if (reactData.visiblePanel) {
-        hideOptionPanel()
+      if (reactData.triggerFocusPanel) {
+        reactData.triggerFocusPanel = false
       } else {
-        showOptionPanel()
+        if (reactData.visiblePanel) {
+          hideOptionPanel()
+        } else {
+          showOptionPanel()
+        }
       }
     }
 
@@ -490,7 +507,7 @@ export default defineComponent({
           suffixIcon: loading ? getIcon().TREE_SELECT_LOADED : (visiblePanel ? getIcon().TREE_SELECT_OPEN : getIcon().TREE_SELECT_CLOSE),
           modelValue: selectLabel,
           onClear: clearEvent,
-          onClick: togglePanelEvent,
+          onClick: clickEvent,
           onFocus: focusEvent,
           onBlur: blurEvent,
           onSuffixClick: togglePanelEvent
@@ -537,8 +554,9 @@ export default defineComponent({
                         indent: treeOpts.indent,
                         showRadio: !multiple,
                         radioConfig: treeRadioOpts,
+                        checkNodeKey: multiple ? null : modelValue,
                         showCheckbox: !!multiple,
-                        checkboxCheckNodeKeys: multiple ? modelValue : null,
+                        checkNodeKeys: multiple ? modelValue : null,
                         checkboxConfig: treeCheckboxOpts,
                         titleField: labelField,
                         keyField: valueField,

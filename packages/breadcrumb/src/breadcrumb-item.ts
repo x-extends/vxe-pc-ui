@@ -1,4 +1,4 @@
-import { defineComponent, ref, h, reactive, computed, inject, createCommentVNode, PropType } from 'vue'
+import { defineComponent, ref, h, reactive, computed, resolveComponent, inject, createCommentVNode, PropType } from 'vue'
 import XEUtils from 'xe-utils'
 
 import type { VxeBreadcrumbItemPropTypes, BreadcrumbItemReactData, BreadcrumbItemPrivateRef, VxeBreadcrumbItemPrivateComputed, VxeBreadcrumbItemConstructor, VxeBreadcrumbItemPrivateMethods, VxeBreadcrumbConstructor, VxeBreadcrumbPrivateMethods } from '../../../types'
@@ -33,8 +33,14 @@ export default defineComponent({
       return ''
     })
 
-    const clickEvent = () => {
-
+    const clickEvent = (evnt: MouseEvent) => {
+      if ($xeBreadcrumb) {
+        const item = {
+          title: props.title,
+          routerLink: props.routerLink
+        }
+        $xeBreadcrumb.handleClickLink(evnt, item)
+      }
     }
 
     const computeMaps: VxeBreadcrumbItemPrivateComputed = {
@@ -51,7 +57,7 @@ export default defineComponent({
     } as unknown as VxeBreadcrumbItemConstructor & VxeBreadcrumbItemPrivateMethods
 
     const renderVN = () => {
-      const { title } = props
+      const { title, routerLink } = props
       const separator = computeSeparator.value
       const defaultSlot = slots.default
 
@@ -62,7 +68,23 @@ export default defineComponent({
       }, [
         h('span', {
           class: 'vxe-breadcrumb-item--content'
-        }, defaultSlot ? defaultSlot({}) : `${title || ''}`),
+        }, [
+          routerLink
+            ? h(resolveComponent('router-link'), {
+              class: 'vxe-breadcrumb-item--content-link',
+              title,
+              to: routerLink
+            }, {
+              default () {
+                return h('span', {
+                  class: 'vxe-breadcrumb-item--content-text'
+                }, defaultSlot ? defaultSlot({}) : `${title || ''}`)
+              }
+            })
+            : h('span', {
+              class: 'vxe-breadcrumb-item--content-text'
+            }, defaultSlot ? defaultSlot({}) : `${title || ''}`)
+        ]),
         separator
           ? h('span', {
             class: 'vxe-breadcrumb-item--separator'

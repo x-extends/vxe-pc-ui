@@ -96,6 +96,7 @@ export interface TreeSelectReactData {
   panelIndex: number
   panelStyle: any
   panelPlacement: any
+  triggerFocusPanel: boolean
   visiblePanel: boolean
   animatVisible: boolean
   isActivated: boolean
@@ -114,20 +115,51 @@ export type VxeTreeSelectEmits = [
   'change',
   'clear',
   'blur',
-  'focus'
+  'focus',
+  'click'
 ]
 
 export namespace VxeTreeSelectDefines {
   export interface TreeSelectEventParams extends VxeComponentEventParams {
     $treeSelect: VxeTreeSelectConstructor
   }
+
+  export interface ChangeEventParams extends TreeSelectEventParams {
+    value: any
+  }
+
+  export interface ClearEventParams extends TreeSelectEventParams {
+    value: any
+  }
+
+  export interface FocusEventParams extends TreeSelectEventParams { }
+  export interface BlurEventParams extends TreeSelectEventParams { }
+  export interface ClickEventParams extends TreeSelectEventParams { }
 }
 
-export type VxeTreeSelectEventProps = {}
+export type VxeTreeSelectEventProps = {
+  onChange?: VxeSelectEvents.Change
+  onClear?: VxeSelectEvents.Clear
+  onFocus?: VxeSelectEvents.Focus
+  onBlur?: VxeSelectEvents.Blur
+  onClick?: VxeSelectEvents.Click
+}
 
-export interface VxeTreeSelectListeners { }
+export interface VxeTreeSelectListeners {
+  change?: VxeSelectEvents.Change
+  clear?: VxeSelectEvents.Clear
+  focus?: VxeSelectEvents.Focus
+  blur?: VxeSelectEvents.Blur
+  click?: VxeSelectEvents.Click
+}
 
-export namespace VxeTreeSelectEvents { }
+export namespace VxeTreeSelectEvents {
+  export type Change = (params: VxeTreeSelectDefines.ChangeEventParams) => void
+  export type Clear = (params: VxeTreeSelectDefines.ClearEventParams) => void
+  export type Focus = (params: VxeTreeSelectDefines.FocusEventParams) => void
+  export type Blur = (params: VxeTreeSelectDefines.BlurEventParams) => void
+  export type Click = (params: VxeTreeSelectDefines.ClickEventParams) => void
+}
 
 export namespace VxeTreeSelectSlotTypes {
   export interface DefaultSlotParams {}

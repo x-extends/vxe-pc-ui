@@ -126,6 +126,7 @@ export interface SelectReactData {
   panelPlacement: any
   currentOption: any
   currentValue: any
+  triggerFocusPanel: boolean
   visiblePanel: boolean
   animatVisible: boolean
   isActivated: boolean
@@ -174,7 +175,8 @@ export type VxeSelectEmits = [
   'change',
   'clear',
   'blur',
-  'focus'
+  'focus',
+  'click'
 ]
 
 export namespace VxeSelectDefines {
@@ -203,18 +205,17 @@ export namespace VxeSelectDefines {
     $select: VxeSelectConstructor
   }
 
-  export interface ChangeParams {
+  export interface ChangeEventParams extends SelectEventParams {
     value: any
   }
-  export interface ChangeEventParams extends SelectEventParams, ChangeParams { }
 
-  export interface ClearParams {
+  export interface ClearEventParams extends SelectEventParams {
     value: any
   }
-  export interface ClearEventParams extends SelectEventParams, ClearParams { }
 
   export interface FocusEventParams extends SelectEventParams { }
   export interface BlurEventParams extends SelectEventParams { }
+  export interface ClickEventParams extends SelectEventParams { }
 }
 
 export type VxeSelectEventProps = {
@@ -222,6 +223,7 @@ export type VxeSelectEventProps = {
   onClear?: VxeSelectEvents.Clear
   onFocus?: VxeSelectEvents.Focus
   onBlur?: VxeSelectEvents.Blur
+  onClick?: VxeSelectEvents.Click
 }
 
 export interface VxeSelectListeners {
@@ -229,6 +231,7 @@ export interface VxeSelectListeners {
   clear?: VxeSelectEvents.Clear
   focus?: VxeSelectEvents.Focus
   blur?: VxeSelectEvents.Blur
+  click?: VxeSelectEvents.Click
 }
 
 export namespace VxeSelectEvents {
@@ -236,6 +239,7 @@ export namespace VxeSelectEvents {
   export type Clear = (params: VxeSelectDefines.ClearEventParams) => void
   export type Focus = (params: VxeSelectDefines.FocusEventParams) => void
   export type Blur = (params: VxeSelectDefines.BlurEventParams) => void
+  export type Click = (params: VxeSelectDefines.ClickEventParams) => void
 }
 
 export namespace VxeSelectSlotTypes {
