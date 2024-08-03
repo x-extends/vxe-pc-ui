@@ -1,7 +1,6 @@
 import { defineComponent, ref, h, reactive, PropType, provide, computed, createCommentVNode, watch, nextTick, onMounted } from 'vue'
 import XEUtils from 'xe-utils'
 import { createEvent, getConfig, getIcon, permission } from '../../ui'
-import VxeTabPaneComponent from './tab-pane'
 import { getSlotVNs } from '../../ui/src/vn'
 import { toCssUnit } from '../..//ui/src/dom'
 
@@ -29,8 +28,8 @@ export default defineComponent({
     'update:modelValue',
     'change',
     'tab-change-fail',
-    'tab-remove',
-    'tab-remove-fail',
+    'tab-close',
+    'tab-close-fail',
     'tab-click',
     'tab-load'
   ] as VxeTabsEmits,
@@ -72,18 +71,6 @@ export default defineComponent({
     const computeTabStaticOptions = computed(() => {
       const { staticTabs } = reactData
       return staticTabs.filter(handleFilterTab)
-    })
-
-    const computeActiveOptionTab = computed(() => {
-      const { activeName } = reactData
-      const tabOptions = computeTabOptions.value
-      return tabOptions.find(item => item.name === activeName)
-    })
-
-    const computeActiveDefaultTab = computed(() => {
-      const { activeName } = reactData
-      const tabStaticOptions = computeTabStaticOptions.value
-      return tabStaticOptions.find(item => item.name === activeName)
     })
 
     const computeMaps: VxeTabsPrivateComputed = {
@@ -162,7 +149,7 @@ export default defineComponent({
       emit('update:modelValue', value)
       dispatchEvent('tab-click', { name }, evnt)
       if (name !== activeName) {
-        if (!beforeMethod || beforeMethod({ $tabs: $xeTabs, name })) {
+        if (!beforeMethod || beforeMethod({ $tabs: $xeTabs, name, oldName: activeName, newName: name })) {
           dispatchEvent('change', { value, name, oldName: activeName, newName: name }, evnt)
         } else {
           dispatchEvent('tab-change-fail', { value, name, oldName: activeName, newName: name }, evnt)
@@ -173,15 +160,21 @@ export default defineComponent({
       }
     }
 
-    const handleCloseTabEvent = (evnt: KeyboardEvent, item: VxeTabPaneDefines.TabConfig | VxeTabPaneProps) => {
+    const handleCloseTabEvent = (evnt: KeyboardEvent, item: VxeTabPaneDefines.TabConfig | VxeTabPaneProps, index: number, list: VxeTabsPropTypes.Options | VxeTabPaneDefines.TabConfig[]) => {
+      evnt.stopPropagation()
+      const { activeName } = reactData
       const beforeMethod = props.beforeCloseMethod || getConfig().tabs.beforeCloseMethod
       const { name } = item
-      const value = name
-      evnt.stopPropagation()
-      if (!beforeMethod || beforeMethod({ $tabs: $xeTabs, name })) {
-        dispatchEvent('tab-remove', { value, name }, evnt)
+      const value = activeName
+      let nextName = value
+      if (activeName === name) {
+        const nextItem = index < list.length - 1 ? list[index + 1] : list[index - 1]
+        nextName = nextItem ? nextItem.name : null
+      }
+      if (!beforeMethod || beforeMethod({ $tabs: $xeTabs, value, name, nextName })) {
+        dispatchEvent('tab-close', { value, name, nextName }, evnt)
       } else {
-        dispatchEvent('tab-remove-fail', { value, name }, evnt)
+        dispatchEvent('tab-close-fail', { value, name, nextName }, evnt)
       }
     }
 
@@ -203,7 +196,7 @@ export default defineComponent({
         h('div', {
           ref: refHeaderElem,
           class: 'vxe-tabs-header--wrapper'
-        }, list.map((item) => {
+        }, list.map((item, index) => {
           const { title, titleWidth, titleAlign, icon, name, slots } = item
           const tabSlot = slots ? slots.tab : null
           const itemWidth = titleWidth || allTitleWidth
@@ -241,7 +234,7 @@ export default defineComponent({
                 ? h('div', {
                   class: 'vxe-tabs-header--close-btn',
                   onClick (evnt: KeyboardEvent) {
-                    handleCloseTabEvent(evnt, item)
+                    handleCloseTabEvent(evnt, item, index, list)
                   }
                 }, [
                   h('i', {
@@ -262,37 +255,7 @@ export default defineComponent({
       ])
     }
 
-    const renderOptionPane = (item: VxeTabPaneProps) => {
-      const { initNames, activeName } = reactData
-      const { name, slots } = item
-      const defaultSlot = slots ? slots.default : null
-      return h(VxeTabPaneComponent, {
-        key: name,
-        ...item
-      }, {
-        default () {
-          return name && initNames.includes(name)
-            ? h('div', {
-              key: name,
-              class: ['vxe-tabs-pane--item', {
-                'is--visible': activeName === name
-              }]
-            }, callSlot(defaultSlot, {}))
-            : createCommentVNode()
-        }
-      })
-    }
-
-    const renderOptionContent = (tabList: VxeTabsPropTypes.Options) => {
-      const { destroyOnClose } = props
-      const activeOptionTab = computeActiveOptionTab.value
-      if (destroyOnClose) {
-        return activeOptionTab ? [renderOptionPane(activeOptionTab)] : createCommentVNode()
-      }
-      return tabList.map(renderOptionPane)
-    }
-
-    const renderDefaultPane = (item: VxeTabPaneDefines.TabConfig) => {
+    const renderTabPane = (item: VxeTabPaneProps | VxeTabPaneDefines.TabConfig) => {
       const { initNames, activeName } = reactData
       const { name, slots } = item
       const defaultSlot = slots ? slots.default : null
@@ -302,17 +265,18 @@ export default defineComponent({
           class: ['vxe-tabs-pane--item', {
             'is--visible': activeName === name
           }]
-        }, callSlot(defaultSlot, {}))
+        }, callSlot(defaultSlot, { name }))
         : createCommentVNode()
     }
 
-    const renderDefaultContent = (staticTabList: VxeTabPaneDefines.TabConfig[]) => {
+    const renderTabContent = (list: VxeTabsPropTypes.Options | VxeTabPaneDefines.TabConfig[]) => {
       const { destroyOnClose } = props
-      const activeDefaultTab = computeActiveDefaultTab.value
+      const { activeName } = reactData
+      const activeDefaultTab = list.find(item => item.name === activeName)
       if (destroyOnClose) {
-        return activeDefaultTab ? [renderDefaultPane(activeDefaultTab)] : createCommentVNode()
+        return activeDefaultTab ? [renderTabPane(activeDefaultTab)] : createCommentVNode()
       }
-      return staticTabList.map(renderDefaultPane)
+      return list.map(renderTabPane)
     }
 
     const renderVN = () => {
@@ -338,15 +302,30 @@ export default defineComponent({
         renderTabHeader(defaultSlot ? tabStaticOptions : tabOptions),
         h('div', {
           class: 'vxe-tabs-pane'
-        }, defaultSlot ? renderDefaultContent(tabStaticOptions) : renderOptionContent(tabOptions))
+        }, renderTabContent(defaultSlot ? tabStaticOptions : tabOptions))
       ])
     }
 
     watch(() => props.modelValue, (val) => {
+      const { initNames } = reactData
+      if (!initNames.includes(val)) {
+        initNames.push(val)
+      }
       reactData.activeName = val
     })
 
     watch(() => reactData.activeName, () => {
+      updateLineStyle()
+    })
+
+    const optsFlag = ref(0)
+    watch(() => props.options ? props.options.length : -1, () => {
+      optsFlag.value++
+    })
+    watch(() => props.options, () => {
+      optsFlag.value++
+    })
+    watch(optsFlag, () => {
       updateLineStyle()
     })
 

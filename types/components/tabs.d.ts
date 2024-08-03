@@ -36,10 +36,14 @@ export namespace VxeTabsPropTypes {
   export type BeforeChangeMethod = (params: {
     $tabs: VxeTabsConstructor
     name: VxeTabsPropTypes.ModelValue
+    oldName: VxeTabsPropTypes.ModelValue
+    newName: VxeTabsPropTypes.ModelValue
   }) => boolean
   export type BeforeCloseMethod = (params: {
     $tabs: VxeTabsConstructor
+    value: VxeTabsPropTypes.ModelValue
     name: VxeTabsPropTypes.ModelValue
+    nextName: VxeTabsPropTypes.ModelValue | null
   }) => boolean
 }
 
@@ -81,8 +85,8 @@ export type VxeTabsEmits = [
   'update:modelValue',
   'change',
   'tab-change-fail',
-  'tab-remove',
-  'tab-remove-fail',
+  'tab-close',
+  'tab-close-fail',
   'tab-click',
   'tab-load'
 ]
@@ -101,15 +105,19 @@ export namespace VxeTabsDefines {
 
   export interface TabChangeFailEventParams extends TabsEventParams, ChangeParams {
     value: VxeTabsPropTypes.ModelValue
+    value: VxeTabsPropTypes.ModelValue
     name: VxeTabsPropTypes.ModelValue
   }
 
-  export interface TabRemoveEventParams extends TabsEventParams {
+  export interface TabCloseEventParams extends TabsEventParams {
+    value: VxeTabsPropTypes.ModelValue
     name: VxeTabsPropTypes.ModelValue
+    nextName: VxeTabsPropTypes.ModelValue | null
   }
 
-  export interface TabRemoveFailEventParams extends TabsEventParams {
+  export interface TabCloseFailEventParams extends TabsEventParams {
     name: VxeTabsPropTypes.ModelValue
+    nextName: VxeTabsPropTypes.ModelValue | null
   }
 
   export interface TabClickEventParams extends TabsEventParams {
@@ -124,8 +132,8 @@ export namespace VxeTabsDefines {
 export type VxeTabsEventProps = {
   onChange?: VxeTabsEvents.Change
   onTabChangeFail?: VxeTabsEvents.TabChangeFail
-  onTabRemove?: VxeTabsEvents.TabRemove
-  onTabRemoveFail?: VxeTabsEvents.TabRemoveFail
+  onTabClose?: VxeTabsEvents.TabClose
+  onTabCloseFail?: VxeTabsEvents.TabCloseFail
   onTabClick?: VxeTabsEvents.TabClick
   onTabLoad?: VxeTabsEvents.TabLoad
 }
@@ -133,8 +141,8 @@ export type VxeTabsEventProps = {
 export interface VxeTabsListeners {
   change?: VxeTabsEvents.Change
   tabChangeFail?: VxeTabsEvents.TabChangeFail
-  tabRemove?: VxeTabsEvents.TabRemove
-  tabRemoveFail?: VxeTabsEvents.TabRemoveFail
+  tabClose?: VxeTabsEvents.TabClose
+  tabCloseFail?: VxeTabsEvents.TabCloseFail
   tabClick?: VxeTabsEvents.TabClick
   tabLoad?: VxeTabsEvents.TabLoad
 }
@@ -142,18 +150,29 @@ export interface VxeTabsListeners {
 export namespace VxeTabsEvents {
   export type Change = (params: VxeTabsDefines.ChangeEventParams) => void
   export type TabChangeFail = (params: VxeTabsDefines.TabChangeFailEventParams) => void
-  export type TabRemove = (params: VxeTabsDefines.TabRemoveEventParams) => void
-  export type TabRemoveFail = (params: VxeTabsDefines.TabRemoveFailEventParams) => void
+  export type TabClose = (params: VxeTabsDefines.TabCloseEventParams) => void
+  export type TabCloseFail = (params: VxeTabsDefines.TabCloseFailEventParams) => void
   export type TabClick = (params: VxeTabsDefines.TabClickEventParams) => void
   export type TabLoad = (params: VxeTabsDefines.TabLoadEventParams) => void
 }
 
 export namespace VxeTabsSlotTypes {
-  export interface DefaultSlotParams {}
+  export interface DefaultSlotParams {
+    name: VxeTabsPropTypes.ModelValue
+  }
 }
 
 export interface VxeTabsSlots {
   default: (params: VxeTabsSlotTypes.DefaultSlotParams) => any
+
+  /**
+   * 自定义插槽模板
+   */
+  [key: string]: ((params: {
+    name: VxeTabsPropTypes.ModelValue
+
+    [key: string]: any
+  }) => any) | undefined
 }
 
 export const Tabs: typeof VxeTabs
