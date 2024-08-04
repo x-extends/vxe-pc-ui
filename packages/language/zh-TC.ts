@@ -420,6 +420,10 @@ export default {
       fieldSettingTab: '字段设置',
       listSettingTab: '列表设置'
     },
+    text: {
+      copySuccess: '已複製到剪貼板',
+      copyError: '當前環境不支持該操作'
+    },
 
     /**
      * 扩展插件

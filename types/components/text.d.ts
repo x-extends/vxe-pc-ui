@@ -27,6 +27,7 @@ export namespace VxeTextPropTypes {
   export type Title = string | number
   export type Icon = string
   export type Content = string | number
+  export type ClickToCopy = boolean
   export type Size = VxeComponentSizeType
 }
 
@@ -35,6 +36,7 @@ export type VxeTextProps = {
   title?: VxeTextPropTypes.Title
   icon?: VxeTextPropTypes.Icon
   content?: VxeTextPropTypes.Content
+  clickToCopy?: VxeTextPropTypes.ClickToCopy
   size?: VxeTextPropTypes.Size
 }
 

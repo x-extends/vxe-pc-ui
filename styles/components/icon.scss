@@ -76,6 +76,10 @@ $btnThemeList: (
 }
 
 .vxe-icon {
+  user-select: none;
+}
+
+.vxe-icon {
   &.size--medium {
     font-size: var(--vxe-ui-font-size-medium);
   }

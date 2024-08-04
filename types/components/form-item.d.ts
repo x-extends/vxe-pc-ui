@@ -102,6 +102,9 @@ export namespace VxeFormItemPropTypes {
       value?: string
       label?: string
       disabled?: string
+      children?: string
+      hasChild?: string
+      parent?: string
     }
     /**
      * 下拉分组选项列表（需要渲染器支持）

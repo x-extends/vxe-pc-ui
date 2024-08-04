@@ -178,5 +178,8 @@ declare module '@vxe-ui/core' {
 
     // tabs
     TABS_TAB_CLOSE?: string
+
+    // text
+    TEXT_COPY?: string
   }
 }

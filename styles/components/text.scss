@@ -57,6 +57,30 @@ $btnThemeList: (
       color: map-get($item, textColor);
     }
   }
+  &.is--copy {
+    & > .vxe-text--icon {
+      cursor: pointer;
+      &:focus {
+        color: var(--vxe-ui-font-darken-color);
+      }
+      &:hover {
+        color: var(--vxe-ui-font-primary-lighten-color);
+      }
+      &:active {
+        color: var(--vxe-ui-font-primary-darken-color);
+      }
+    }
+  }
+}
+.vxe-text--icon {
+  padding: 0 0.1em;
+  user-select: none;
+}
+.vxe-text--content {
+  padding: 0 0.1em;
+}
+
+.vxe-text {
   &.size--medium {
     font-size: var(--vxe-ui-font-size-medium);
   }
@@ -66,10 +90,4 @@ $btnThemeList: (
   &.size--mini {
     font-size: var(--vxe-ui-font-size-mini);
   }
-}
-.vxe-text--icon {
-  padding: 0 0.1em;
-}
-.vxe-text--content {
-  padding: 0 0.1em;
 }

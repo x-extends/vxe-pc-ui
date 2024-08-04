@@ -235,12 +235,8 @@ setConfig({
   treeSelect: {
     treeConfig: {
       isHover: true,
-      radioConfig: {
-        showIcon: false
-      },
-      checkboxConfig: {
-        showIcon: false
-      }
+      radioConfig: {},
+      checkboxConfig: {}
     }
   },
   upload: {
@@ -397,7 +393,10 @@ setIcon({
   TREE_SELECT_CLOSE: iconPrefix + 'caret-down',
 
   // tabs
-  TABS_TAB_CLOSE: iconPrefix + 'error-circle-fill'
+  TABS_TAB_CLOSE: iconPrefix + 'error-circle-fill',
+
+  // text
+  TEXT_COPY: iconPrefix + 'copy'
 })
 
 export * from '@vxe-ui/core'

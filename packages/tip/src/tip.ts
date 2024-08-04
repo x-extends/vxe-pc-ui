@@ -61,7 +61,8 @@ export default defineComponent({
         ref: refElem,
         class: ['vxe-tip', {
           [`size--${vSize}`]: vSize,
-          [`theme--${status}`]: status
+          [`theme--${status}`]: status,
+          'has--title': !!(titleSlot || title)
         }]
       }, [
         iconSlot || icon

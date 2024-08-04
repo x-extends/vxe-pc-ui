@@ -130,14 +130,18 @@ export default defineComponent({
 
     const computeTreeCheckboxOpts = computed(() => {
       const treeOpts = computeTreeOpts.value
-      return Object.assign({}, treeOpts.checkboxConfig, {
+      return Object.assign({
+        showIcon: !!treeOpts.showCheckbox
+      }, treeOpts.checkboxConfig, {
         trigger: 'node'
       })
     })
 
     const computeTreeRadioOpts = computed(() => {
       const treeOpts = computeTreeOpts.value
-      return Object.assign({}, treeOpts.radioConfig, {
+      return Object.assign({
+        showIcon: !!treeOpts.showRadio
+      }, treeOpts.radioConfig, {
         trigger: 'node'
       })
     })

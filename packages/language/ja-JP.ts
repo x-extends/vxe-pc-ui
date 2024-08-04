@@ -420,6 +420,10 @@ export default {
       fieldSettingTab: 'Field setting',
       listSettingTab: 'List setting'
     },
+    text: {
+      copySuccess: 'Successfully copied to clipboard.',
+      copyError: 'The current environment does not support this operation.'
+    },
 
     /**
      * 扩展插件

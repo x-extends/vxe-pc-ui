@@ -47,6 +47,7 @@ export namespace VxeTreeSelectPropTypes {
   export interface OptionProps {
     value?: string
     label?: string
+    disabled?: string
     children?: string
     hasChild?: string
     parent?: string
@@ -54,7 +55,7 @@ export namespace VxeTreeSelectPropTypes {
   export type Remote = boolean
   export type RemoteMethod = (params: { searchValue: string }) => Promise<void> | void
   export type Transfer = boolean
-  export type TreeConfig = Pick<VxeTreeProps, 'transform' | 'accordion' | 'isHover' | 'trigger' | 'showLine' | 'indent' | 'radioConfig' | 'checkboxConfig' | 'lazy' | 'loadMethod' | 'toggleMethod' | 'showIcon' | 'iconOpen' | 'iconClose' | 'iconLoaded'>
+  export type TreeConfig = Pick<VxeTreeProps, 'transform' | 'accordion' | 'isHover' | 'trigger' | 'showLine' | 'indent' | 'showRadio' |'radioConfig' | 'showCheckbox' | 'checkboxConfig' | 'lazy' | 'loadMethod' | 'toggleMethod' | 'showIcon' | 'iconOpen' | 'iconClose' | 'iconLoaded'>
 }
 
 export type VxeTreeSelectProps = {

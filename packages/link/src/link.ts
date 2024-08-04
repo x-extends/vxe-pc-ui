@@ -61,6 +61,7 @@ export default defineComponent({
       const { icon, content } = props
       const defaultSlot = slots.default
       const iconSlot = slots.icon
+      const textContent = XEUtils.toValueString(content)
       return [
         iconSlot || icon
           ? h('span', {
@@ -73,9 +74,11 @@ export default defineComponent({
                 })
               ])
           : createCommentVNode(),
-        h('span', {
-          class: 'vxe-link--content'
-        }, defaultSlot ? defaultSlot({}) : XEUtils.toValueString(content))
+        defaultSlot || textContent
+          ? h('span', {
+            class: 'vxe-link--content'
+          }, defaultSlot ? defaultSlot({}) : textContent)
+          : createCommentVNode()
       ]
     }
 

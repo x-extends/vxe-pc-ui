@@ -61,7 +61,9 @@ $btnThemeList: (
   &.is--underline {
     &:not(.is--disabled) {
       &:hover {
-        text-decoration: underline;
+        .vxe-link--content {
+          text-decoration: underline;
+        }
       }
     }
   }

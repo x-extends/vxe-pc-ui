@@ -37,7 +37,7 @@ $btnThemeList: (
   flex-direction: row;
   color: var(--vxe-ui-font-color);
   margin-bottom: var(--vxe-ui-layout-padding-default);
-  padding: var(--vxe-ui-layout-padding-default) var(--vxe-ui-layout-padding-double) var(--vxe-ui-layout-padding-double) var(--vxe-ui-layout-padding-double);
+  padding: var(--vxe-ui-layout-padding-default) var(--vxe-ui-layout-padding-double);
   &::after {
     content: "";
     position: absolute;
@@ -60,20 +60,16 @@ $btnThemeList: (
       }
     }
   }
-  &.size--medium {
-    font-size: var(--vxe-ui-font-size-medium);
-  }
-  &.size--small {
-    font-size: var(--vxe-ui-font-size-small);
-  }
-  &.size--mini {
-    font-size: var(--vxe-ui-font-size-mini);
+  &.has--title {
+    padding: var(--vxe-ui-layout-padding-default) var(--vxe-ui-layout-padding-double) var(--vxe-ui-layout-padding-double) var(--vxe-ui-layout-padding-double);
+    .vxe-tip--icon {
+      font-size: 1.2em;
+      line-height: 2em;
+    }
   }
 }
 .vxe-tip--icon {
   flex-shrink: 0;
-  font-size: 1.2em;
-  line-height: 2em;
   padding-right: var(--vxe-ui-layout-padding-half);
 }
 .vxe-tip--body {
