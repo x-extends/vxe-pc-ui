@@ -79,6 +79,27 @@ export namespace VxeFormPropTypes {
   export interface TooltipOpts extends TooltipConfig { }
 
   export type CustomLayout = boolean
+
+  export interface DynamicSpanConfig {
+    colProps: {
+      span?: TitleWidth
+      xs?: TitleWidth
+      sm?: TitleWidth
+      md?: TitleWidth
+      lg?: TitleWidth
+      xl?: TitleWidth
+    }
+    actionColProps: {
+      span?: TitleWidth
+      xs?: TitleWidth
+      sm?: TitleWidth
+      md?: TitleWidth
+      lg?: TitleWidth
+      xl?: TitleWidth
+    }
+    autoAction?: boolean
+    alwaysShowLines?: number
+  }
 }
 
 export type VxeFormProps<D = any> = {
@@ -104,6 +125,9 @@ export type VxeFormProps<D = any> = {
   validConfig?: VxeFormPropTypes.ValidConfig
   tooltipConfig?: VxeFormPropTypes.TooltipConfig
   customLayout?: VxeFormPropTypes.CustomLayout
+  isMicroApp?: VxeFormPropTypes.CollapseStatus
+  useDynamicSpan?: VxeFormPropTypes.CollapseStatus,
+  dynamicSpan?: VxeFormPropTypes.DynamicSpanConfig
 }
 
 export interface FormPrivateComputed {
@@ -236,6 +260,9 @@ export namespace VxeFormDefines {
     errRule: any
     slots: VxeFormItemPropTypes.Slots
     children: ItemInfo[]
+    isMicroApp?: VxeFormPropTypes.CollapseStatus
+    useDynamicSpan?: VxeFormPropTypes.CollapseStatus
+    dynamicSpan?: VxeFormPropTypes.DynamicSpanConfig
   }
 
   export interface FormRule<D = any> {

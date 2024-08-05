@@ -250,7 +250,7 @@
 
     <p class="tip">配置式表单</p>
 
-    <vxe-form :data="demo4.formData4" :items="demo4.formItems4">
+    <vxe-form :data="demo4.formData4" :items="demo4.formItems4" :useDynamicSpan="true" :dynamicSpan="demo4.dynamicSpan">
       <template #myaddress="{ data }">
         <vxe-input v-model="data.address" placeholder="自定义插槽模板"></vxe-input>
       </template>
@@ -376,31 +376,31 @@ const demo4 = reactive({
     flag: false,
     address: ''
   },
+  dynamicSpan: {
+    colProps: {
+      md: 8,
+      lg: 6,
+      xl: 6
+    },
+    actionColProps: {
+      span: 24
+    },
+    autoAction: true,
+    alwaysShowLines: 2
+  },
   formItems4: [
-    {
-      title: '左侧',
-      span: 12,
-      children: [
-        { field: 'name', title: '名称', span: 8, itemRender: { name: '$input', props: { placeholder: '请输入名称' } } },
-        { field: 'sex', title: '性别', span: 8, itemRender: { name: '$select', options: [{ value: '0', label: '女' }, { value: '1', label: '男' }], props: { placeholder: '请选择性别' } } },
-        { field: 'role', title: '角色', span: 8, itemRender: { name: '$input', props: { placeholder: '请输入角色' } } },
-        { field: 'age', title: '年龄', span: 24, itemRender: { name: '$input', props: { type: 'number', placeholder: '请输入年龄' } } },
-        { field: 'region', title: '地区选择', span: 24, itemRender: { name: 'VxeTreeSelect', options: regionOptions.value } },
-        { field: 'val1', title: '复选框-组', span: 12, itemRender: { name: '$checkbox', options: [{ label: '爬山', value: '11' }, { label: '健身', value: '22' }] } },
-        { field: 'val2', title: '复选框', span: 12, itemRender: { name: '$checkbox' } },
-        { field: 'val3', title: '单选框', span: 12, itemRender: { name: '$radio', options: [{ label: '是', value: 'Y' }, { label: '否', value: 'N' }] } },
-        { field: 'flag', title: '开关', span: 24, itemRender: { name: '$switch', props: { openLabel: '是', closeLabel: '否' } } },
-        { field: 'address', title: '地区', span: 24, slots: { default: 'myaddress' } }
-      ]
-    },
-    {
-      title: '右侧',
-      span: 12,
-      children: [
-        { field: 'nickname', title: '昵称', span: 24, itemRender: { name: '$input', props: { placeholder: '请输入昵称' } } }
-      ]
-    },
-    { align: 'center', span: 24, itemRender: { name: '$buttons', children: [{ props: { type: 'submit', content: '配置式表单', status: 'primary' } }, { props: { type: 'reset', content: '重置' } }] } }
+    { field: 'name', title: '名称', span: 8, itemRender: { name: '$input', props: { placeholder: '请输入名称' } } },
+    { field: 'sex', title: '性别', span: 8, itemRender: { name: '$select', options: [{ value: '0', label: '女' }, { value: '1', label: '男' }], props: { placeholder: '请选择性别' } } },
+    { field: 'role', title: '角色', span: 8, itemRender: { name: '$input', props: { placeholder: '请输入角色' } } },
+    { field: 'address', title: '地区', folding: true, span: 8, slots: { default: 'myaddress' }, visibleMethod: ({data}) => data.name === '1111' },
+    { field: 'age', title: '年龄', folding: true, span: 8, itemRender: { name: '$input', props: { type: 'number', placeholder: '请输入年龄' } } },
+    { field: 'region', title: '地区选择', folding: true, span: 8, itemRender: { name: 'VxeTreeSelect', options: regionOptions.value } },
+    { field: 'val1', title: '复选框-组', folding: true, span: 8, itemRender: { name: '$checkbox', options: [{ label: '爬山', value: '11' }, { label: '健身', value: '22' }] } },
+    { field: 'val2', title: '复选框', folding: true, span: 8, itemRender: { name: '$checkbox' } },
+    { field: 'val3', title: '单选框', folding: true, span: 8, itemRender: { name: '$radio', options: [{ label: '是', value: 'Y' }, { label: '否', value: 'N' }] } },
+    { field: 'flag', title: '开关', folding: true, span: 8, itemRender: { name: '$switch', props: { openLabel: '是', closeLabel: '否' } } },
+    { field: 'nickname', title: '昵称', folding: true, span: 8, itemRender: { name: '$input', props: { placeholder: '请输入昵称' } } },
+    { align: 'center', span: 8, collapseNode: true, itemRender: { name: '$buttons', children: [{ props: { type: 'submit', content: '配置式表单', status: 'primary' } }, { props: { type: 'reset', content: '重置' } }] } }
   ]
 })
 

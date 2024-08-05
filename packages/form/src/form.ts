@@ -1,4 +1,4 @@
-import { defineComponent, h, ref, Ref, provide, computed, inject, reactive, watch, nextTick, PropType, onMounted } from 'vue'
+import { defineComponent, h, ref, Ref, provide, computed, inject, reactive, watch, nextTick, PropType, onMounted, onBeforeUnmount } from 'vue'
 import XEUtils from 'xe-utils'
 import { getConfig, validators, renderer, createEvent, useSize } from '../../ui'
 import { getFuncText, isEnableConf, eqEmptyValue } from '../../ui/src/utils'
@@ -9,8 +9,9 @@ import VxeFormConfigItem from './form-config-item'
 import VxeLoadingComponent from '../../loading/src/loading'
 import { getSlotVNs } from '../../ui/src/vn'
 import { warnLog, errLog } from '../../ui/src/log'
-
-import type { VxeFormConstructor, VxeFormPropTypes, VxeFormEmits, FormReactData, FormMethods, FormPrivateRef, VxeFormPrivateMethods, VxeFormDefines, VxeFormItemPropTypes, VxeTooltipInstance, FormInternalData, VxeFormPrivateComputed } from '../../../types'
+import useAdvance from './form-calc-span'
+import type { VxeFormConstructor, VxeFormPropTypes, VxeFormEmits, FormReactData, FormMethods, FormPrivateRef, VxeFormPrivateMethods, VxeFormDefines, VxeFormItemPropTypes, VxeTooltipInstance, FormInternalData, VxeFormPrivateComputed, VxeFormItemProps } from '../../../types'
+import mitt from './mitt'
 
 class Rule {
   constructor (rule: any) {
@@ -128,6 +129,17 @@ export default defineComponent({
     customLayout: {
       type: Boolean as PropType<VxeFormPropTypes.CustomLayout>,
       default: () => getConfig().form.customLayout
+    },
+    isMicroApp: {
+      type: Boolean,
+      default: false
+    },
+    useDynamicSpan: {
+      type: Boolean,
+      default: false
+    },
+    dynamicSpan: {
+      type: Object as PropType<VxeFormPropTypes.DynamicSpanConfig>
     }
   },
   emits: [
@@ -197,6 +209,14 @@ export default defineComponent({
       getComputeMaps: () => computeMaps
     } as unknown as VxeFormConstructor & VxeFormPrivateMethods
 
+    const isCollapse = computed(() => reactData.collapseAll)
+    const getProps = computed(() => props)
+    const schemas = ref<VxeFormItemProps[]>([])
+    schemas.value = (props.items || [])
+    const updateSchemas = (formItems:VxeFormItemProps[] = []) => {
+      schemas.value = formItems
+    }
+
     const callSlot = (slotFunc: ((params: any) => any) | string | null, params: any) => {
       if (slotFunc) {
         if (XEUtils.isString(slotFunc)) {
@@ -236,6 +256,8 @@ export default defineComponent({
       }, { children: 'children' })
       return itemList
     }
+
+    const handlerAdvancedCallback = useAdvance({ isCollapse, getProps, schemas, $xeForm, updateSchemas })
 
     const getItemByField = (field: string) => {
       const rest = XEUtils.findTree(reactData.formItems, item => item.field === field, { children: 'children' })
@@ -714,6 +736,13 @@ export default defineComponent({
 
     $xeForm.renderVN = renderVN
 
+    mitt.on('updateAdvanced', () => {
+      if (XEUtils.isObject(handlerAdvancedCallback)) {
+        const { handlerAdvanced } = handlerAdvancedCallback
+        handlerAdvanced && handlerAdvanced()
+      }
+    })
+
     const staticItemFlag = ref(0)
     watch(() => reactData.staticItems.length, () => {
       staticItemFlag.value++
@@ -726,14 +755,16 @@ export default defineComponent({
     })
 
     const itemFlag = ref(0)
-    watch(() => props.items ? props.items.length : -1, () => {
+    watch(() => schemas.value ? schemas.value.length : -1, () => {
       itemFlag.value++
     })
-    watch(() => props.items, () => {
+    watch(() => schemas.value, () => {
       itemFlag.value++
+    }, {
+      deep: true
     })
     watch(itemFlag, () => {
-      loadItem(props.items || [])
+      loadItem(schemas.value || [])
     })
 
     watch(() => props.collapseStatus, (value) => {
@@ -748,18 +779,35 @@ export default defineComponent({
       clearValidate()
     })
 
+    watch(() => props.items, (value: VxeFormItemProps<VxeFormItemProps>[] | undefined) => {
+      const normalItem = (value || []).filter(el => !el.hasOwnProperty('collapseNode'))
+      const actionItem = (value || []).filter(el => el.hasOwnProperty('collapseNode'))
+      schemas.value = [...normalItem, ...actionItem]
+    }, {
+      deep: true
+    })
+
     onMounted(() => {
       nextTick(() => {
         if (process.env.VUE_APP_VXE_ENV === 'development') {
-          if (props.customLayout && props.items) {
+          if (props.customLayout && schemas.value) {
             errLog('vxe.error.errConflicts', ['custom-layout', 'items'])
           }
         }
       })
     })
 
-    if (props.items) {
-      loadItem(props.items)
+    onBeforeUnmount(() => {
+      mitt.off('updateAdvanced', () => {
+        if (XEUtils.isObject(handlerAdvancedCallback)) {
+          const { handlerAdvanced } = handlerAdvancedCallback
+          handlerAdvanced && handlerAdvanced()
+        }
+      })
+    })
+
+    if (schemas.value) {
+      loadItem(schemas.value)
     }
 
     provide('$xeForm', $xeForm)

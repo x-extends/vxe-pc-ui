@@ -3,7 +3,7 @@ import { renderer } from '../../ui'
 import XEUtils from 'xe-utils'
 import { ItemInfo } from './itemInfo'
 import { isEnableConf } from '../../ui/src/utils'
-
+import mitt from './mitt'
 import type { VxeFormConstructor, VxeFormDefines } from '../../../types'
 
 export interface XEFormItemProvide {
@@ -46,7 +46,9 @@ export function isActiveItem ($xeForm: VxeFormConstructor, formItem: VxeFormDefi
     return true
   }
   const { data } = $xeForm.props
-  return visibleMethod({ data, field, property: field, item: formItem, $form: $xeForm, $grid: $xeForm.xegrid })
+  const show = visibleMethod({ data, field, property: field, item: formItem, $form: $xeForm, $grid: $xeForm.xegrid })
+  mitt.emit('updateAdvanced', show)
+  return show
 }
 
 export function watchItem (props: any, formItem: ItemInfo) {

@@ -33,7 +33,10 @@ export class ItemInfo {
       showError: false,
       errRule: null,
       slots: item.slots,
-      children: []
+      children: [],
+      isMicroApp: false,
+      useDynamicSpan: false,
+      dynamicSpan: null
     })
   }
 
