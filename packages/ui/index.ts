@@ -393,7 +393,9 @@ setIcon({
   TREE_SELECT_CLOSE: iconPrefix + 'caret-down',
 
   // tabs
-  TABS_TAB_CLOSE: iconPrefix + 'error-circle-fill',
+  TABS_TAB_BUTTON_LEFT: iconPrefix + 'arrow-left',
+  TABS_TAB_BUTTON_RIGHT: iconPrefix + 'arrow-right',
+  TABS_TAB_CLOSE: iconPrefix + 'close',
 
   // text
   TEXT_COPY: iconPrefix + 'copy'

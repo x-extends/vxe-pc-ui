@@ -75,8 +75,8 @@ export default defineComponent({
       type: String as PropType<VxeInputPropTypes.Placeholder>,
       default: () => XEUtils.eqNull(getConfig().input.placeholder) ? getI18n('vxe.base.pleaseInput') : getConfig().input.placeholder
     },
-    maxlength: [String, Number] as PropType<VxeInputPropTypes.Maxlength>,
-    autocomplete: { type: String as PropType<VxeInputPropTypes.Autocomplete>, default: 'off' },
+    maxLength: [String, Number] as PropType<VxeInputPropTypes.MaxLength>,
+    autoComplete: { type: String as PropType<VxeInputPropTypes.AutoComplete>, default: 'off' },
     align: String as PropType<VxeInputPropTypes.Align>,
     form: String as PropType<VxeInputPropTypes.Form>,
     className: String as PropType<VxeInputPropTypes.ClassName>,
@@ -122,7 +122,12 @@ export default defineComponent({
     transfer: {
       type: Boolean as PropType<VxeInputPropTypes.Transfer>,
       default: null
-    }
+    },
+
+    // 已废弃
+    maxlength: [String, Number] as PropType<VxeInputPropTypes.Maxlength>,
+    // 已废弃
+    autocomplete: String as PropType<VxeInputPropTypes.Autocomplete>
   },
   emits: [
     'update:modelValue',
@@ -2453,7 +2458,7 @@ export default defineComponent({
     initValue()
 
     const renderVN = () => {
-      const { className, controls, type, align, showWordCount, countMethod, name, autocomplete } = props
+      const { className, controls, type, align, showWordCount, countMethod, name, autoComplete, autocomplete } = props
       const { inputValue, visiblePanel, isActivated } = reactData
       const vSize = computeSize.value
       const isDisabled = computeIsDisabled.value
@@ -2503,7 +2508,7 @@ export default defineComponent({
             maxlength: inpMaxlength,
             readonly: inputReadonly,
             disabled: isDisabled,
-            autocomplete,
+            autocomplete: autoComplete || autocomplete,
             onKeydown: keydownEvent,
             onKeyup: keyupEvent,
             onWheel: wheelEvent,

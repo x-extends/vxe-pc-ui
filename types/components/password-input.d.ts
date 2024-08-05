@@ -30,10 +30,16 @@ export namespace VxePasswordInputPropTypes {
   export type Clearable = boolean
   export type Readonly = boolean
   export type Disabled = boolean
+  export type MaxLength = string | number
   export type Placeholder = string
-  export type Autocomplete = string
+  export type AutoComplete = string
   export type PrefixIcon = string
   export type SuffixIcon = string
+  /**
+   * 请使用 AutoComplete
+   * @deprecated
+   */
+  export type Autocomplete = string
 }
 
 export type VxePasswordInputProps = {
@@ -44,10 +50,16 @@ export type VxePasswordInputProps = {
   clearable?: VxePasswordInputPropTypes.Clearable
   readonly?: VxePasswordInputPropTypes.Readonly
   disabled?: VxePasswordInputPropTypes.Disabled
+  maxLength?: VxePasswordInputPropTypes.MaxLength
+  autoComplete?: VxePasswordInputPropTypes.AutoComplete
   placeholder?: VxePasswordInputPropTypes.Placeholder
-  autocomplete?: VxePasswordInputPropTypes.Autocomplete
   prefixIcon?: VxePasswordInputPropTypes.PrefixIcon
   suffixIcon?: VxePasswordInputPropTypes.SuffixIcon
+  /**
+   * 请使用 AutoComplete
+   * @deprecated
+   */
+  autocomplete?: VxePasswordInputPropTypes.Autocomplete
 }
 
 export interface PasswordInputPrivateComputed {

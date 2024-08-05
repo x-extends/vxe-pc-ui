@@ -1,5 +1,5 @@
 import { RenderFunction, SetupContext, Ref, ComponentPublicInstance, DefineComponent } from 'vue'
-import { defineVxeComponent, VxeComponentBaseOptions, VxeComponentEventParams, VxeComponentSizeType, VxeComponentStatusType, ValueOf } from '@vxe-ui/core'
+import { defineVxeComponent, VxeComponentBaseOptions, VxeComponentEventParams, VxeComponentPermissionCodeType, VxeComponentSizeType, VxeComponentStatusType, ValueOf } from '@vxe-ui/core'
 
 /* eslint-disable no-use-before-define,@typescript-eslint/ban-types */
 
@@ -28,6 +28,7 @@ export namespace VxeTipPropTypes {
   export type Status = VxeComponentStatusType
   export type Icon = string
   export type Size = VxeComponentSizeType
+  export type PermissionCode = VxeComponentPermissionCodeType
 }
 
 export type VxeTipProps = {
@@ -36,6 +37,7 @@ export type VxeTipProps = {
   status?: VxeTipPropTypes.Status
   icon?: VxeTipPropTypes.Icon
   size?: VxeTipPropTypes.Size
+  permissionCode?: VxeTipPropTypes.PermissionCode
 }
 
 export interface TipPrivateComputed {

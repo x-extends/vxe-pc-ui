@@ -38,8 +38,11 @@ export default defineComponent({
       type: String as PropType<VxeNumberInputPropTypes.Placeholder>,
       default: () => XEUtils.eqNull(getConfig().numberInput.placeholder) ? getI18n('vxe.base.pleaseInput') : getConfig().numberInput.placeholder
     },
-    maxlength: [String, Number] as PropType<VxeNumberInputPropTypes.Maxlength>,
-    autocomplete: { type: String as PropType<VxeNumberInputPropTypes.Autocomplete>, default: 'off' },
+    maxLength: [String, Number] as PropType<VxeNumberInputPropTypes.MaxLength>,
+    autoComplete: {
+      type: String as PropType<VxeNumberInputPropTypes.AutoComplete>,
+      default: 'off'
+    },
     align: String as PropType<VxeNumberInputPropTypes.Align>,
     form: String as PropType<VxeNumberInputPropTypes.Form>,
     className: String as PropType<VxeNumberInputPropTypes.ClassName>,
@@ -59,7 +62,12 @@ export default defineComponent({
     digits: { type: [String, Number] as PropType<VxeNumberInputPropTypes.Digits>, default: () => getConfig().numberInput.digits },
 
     prefixIcon: String as PropType<VxeNumberInputPropTypes.PrefixIcon>,
-    suffixIcon: String as PropType<VxeNumberInputPropTypes.SuffixIcon>
+    suffixIcon: String as PropType<VxeNumberInputPropTypes.SuffixIcon>,
+
+    // 已废弃
+    maxlength: [String, Number] as PropType<VxeNumberInputPropTypes.Maxlength>,
+    // 已废弃
+    autocomplete: String as PropType<VxeNumberInputPropTypes.Autocomplete>
   },
   emits: [
     'update:modelValue',
@@ -185,9 +193,9 @@ export default defineComponent({
     })
 
     const computeInpMaxlength = computed(() => {
-      const { maxlength } = props
+      const { maxLength, maxlength } = props
       // 数值最大长度限制 16 位，包含小数
-      return !XEUtils.toNumber(maxlength) ? 16 : maxlength
+      return XEUtils.toNumber(maxLength || maxlength) || 16
     })
 
     const computeInpImmediate = computed(() => {
@@ -726,7 +734,7 @@ export default defineComponent({
     initValue()
 
     const renderVN = () => {
-      const { className, controls, type, align, name, autocomplete } = props
+      const { className, controls, type, align, name, autocomplete, autoComplete } = props
       const { inputValue, isActivated } = reactData
       const vSize = computeSize.value
       const isDisabled = computeIsDisabled.value
@@ -770,7 +778,7 @@ export default defineComponent({
             maxlength: inpMaxlength,
             readonly: inputReadonly,
             disabled: isDisabled,
-            autocomplete,
+            autocomplete: autoComplete || autocomplete,
             onKeydown: keydownEvent,
             onKeyup: keyupEvent,
             onWheel: wheelEvent,

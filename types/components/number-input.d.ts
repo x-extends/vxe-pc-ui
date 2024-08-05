@@ -33,9 +33,9 @@ export namespace VxeNumberInputPropTypes {
   export type Readonly = boolean
   export type Disabled = boolean
   export type Placeholder = string
-  export type Maxlength = string | number
+  export type MaxLength = string | number
   export type Multiple = boolean
-  export type Autocomplete = string
+  export type AutoComplete = string
   export type Align = string
   export type Form = string
   export type Min = string | number
@@ -46,6 +46,17 @@ export namespace VxeNumberInputPropTypes {
   export type Digits = string | number
   export type PrefixIcon = string
   export type SuffixIcon = string
+
+  /**
+   * 请使用 AutoComplete
+   * @deprecated
+   */
+  export type Autocomplete = string
+  /**
+   * 请使用 MaxLength
+   * @deprecated
+   */
+  export type Maxlength = string | number
 }
 
 export type VxeNumberInputProps = {
@@ -59,9 +70,9 @@ export type VxeNumberInputProps = {
   readonly?: VxeNumberInputPropTypes.Readonly
   disabled?: VxeNumberInputPropTypes.Disabled
   placeholder?: VxeNumberInputPropTypes.Placeholder
-  maxlength?: VxeNumberInputPropTypes.Maxlength
+  maxLength?: VxeNumberInputPropTypes.MaxLength
   multiple?: VxeNumberInputPropTypes.Multiple
-  autocomplete?: VxeNumberInputPropTypes.Autocomplete
+  autoComplete?: VxeNumberInputPropTypes.AutoComplete
   align?: VxeNumberInputPropTypes.Align
   form?: VxeNumberInputPropTypes.Form
 
@@ -79,6 +90,17 @@ export type VxeNumberInputProps = {
 
   prefixIcon?: VxeNumberInputPropTypes.PrefixIcon
   suffixIcon?: VxeNumberInputPropTypes.SuffixIcon
+
+  /**
+   * 请使用 autoComplete
+   * @deprecated
+   */
+  autocomplete?: VxeNumberInputPropTypes.Autocomplete
+  /**
+   * 请使用 autoComplete
+   * @deprecated
+   */
+  maxlength?: VxeNumberInputPropTypes.Maxlength
 }
 
 export interface NumberInputPrivateComputed {

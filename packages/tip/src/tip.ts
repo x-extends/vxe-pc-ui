@@ -1,6 +1,6 @@
 import { defineComponent, ref, h, reactive, PropType, createCommentVNode } from 'vue'
 import XEUtils from 'xe-utils'
-import { getConfig, useSize } from '../../ui'
+import { getConfig, useSize, usePermission } from '../../ui'
 import { getSlotVNs } from '../../ui/src/vn'
 
 import type { VxeTipPropTypes, TipReactData, VxeTipEmits, TipPrivateRef, VxeTipPrivateComputed, VxeTipConstructor, VxeTipPrivateMethods } from '../../../types'
@@ -18,6 +18,10 @@ export default defineComponent({
       type: String as PropType<VxeTipPropTypes.Icon>,
       default: () => getConfig().tip.icon
     },
+    /**
+     * 权限码
+     */
+    permissionCode: [String, Number] as PropType<VxeTipPropTypes.PermissionCode>,
     size: { type: String as PropType<VxeTipPropTypes.Size>, default: () => getConfig().tip.size || getConfig().size }
   },
   emits: [
@@ -28,6 +32,8 @@ export default defineComponent({
     const xID = XEUtils.uniqueId()
 
     const { computeSize } = useSize(props)
+
+    const { computePermissionInfo } = usePermission(props)
 
     const refElem = ref<HTMLDivElement>()
 
@@ -56,7 +62,11 @@ export default defineComponent({
       const defaultSlot = slots.default
       const titleSlot = slots.title
       const iconSlot = slots.icon
+      const permissionInfo = computePermissionInfo.value
       const vSize = computeSize.value
+      if (!permissionInfo.visible) {
+        return createCommentVNode()
+      }
       return h('div', {
         ref: refElem,
         class: ['vxe-tip', {

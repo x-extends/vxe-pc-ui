@@ -35,13 +35,13 @@ export namespace VxeInputPropTypes {
   export type Readonly = boolean
   export type Disabled = boolean
   export type Placeholder = string
-  export type Maxlength = string | number
+  export type MaxLength = string | number
   export type Multiple = boolean
   export type ShowWordCount = boolean
   export type CountMethod = (params: {
     value: string
   }) => number
-  export type Autocomplete = string
+  export type AutoComplete = string
   export type Align = string
   export type Form = string
   export type Min = string | number
@@ -64,6 +64,17 @@ export namespace VxeInputPropTypes {
   export type SuffixIcon = string
   export type Placement = 'top' | 'bottom' | '' | null
   export type Transfer = boolean
+
+  /**
+   * 请使用 AutoComplete
+   * @deprecated
+   */
+  export type Autocomplete = string
+  /**
+   * 请使用 MaxLength
+   * @deprecated
+   */
+  export type Maxlength = string | number
 }
 
 type DatePanelType = 'year' | 'quarter' | 'month' | 'week' | 'day'
@@ -79,7 +90,7 @@ export type VxeInputProps = {
   readonly?: VxeInputPropTypes.Readonly
   disabled?: VxeInputPropTypes.Disabled
   placeholder?: VxeInputPropTypes.Placeholder
-  maxlength?: VxeInputPropTypes.Maxlength
+  maxLength?: VxeInputPropTypes.MaxLength
   multiple?: VxeInputPropTypes.Multiple
   /**
    * 是否显示字数统计
@@ -89,7 +100,7 @@ export type VxeInputProps = {
    * 自定义字数统计方法
    */
   countMethod?: VxeInputPropTypes.CountMethod
-  autocomplete?: VxeInputPropTypes.Autocomplete
+  autoComplete?: VxeInputPropTypes.AutoComplete
   align?: VxeInputPropTypes.Align
   form?: VxeInputPropTypes.Form
 
@@ -128,6 +139,17 @@ export type VxeInputProps = {
   suffixIcon?: VxeInputPropTypes.SuffixIcon
   placement?: VxeInputPropTypes.Placement
   transfer?: VxeInputPropTypes.Transfer
+
+  /**
+   * 请使用 maxLength
+   * @deprecated
+   */
+  autocomplete?: VxeInputPropTypes.Autocomplete
+  /**
+   * 请使用 maxLength
+   * @deprecated
+   */
+  maxlength?: VxeInputPropTypes.Maxlength
 }
 
 export interface InputPrivateComputed {

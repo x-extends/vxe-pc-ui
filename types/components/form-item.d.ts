@@ -86,11 +86,11 @@ export namespace VxeFormItemPropTypes {
   export type VisibleMethod = (params: FormItemVisibleParams) => boolean
   export type Folding = boolean
   export type CollapseNode = boolean
-  export interface ItemRender {
+  export interface ItemRender<D = any, P = Record<string, any>> {
     name?: string
-    props?: any
-    attrs?: any
-    events?: any
+    props?: P
+    attrs?: Record<string, any>
+    events?: Record<string, (cellParams: VxeFormItemSlotTypes.DefaultSlotParams<D>, ...args: any[]) => any>
     /**
      * 下拉选项列表（需要渲染器支持）
      */
@@ -329,7 +329,7 @@ export interface VxeFormItemListeners { }
 export namespace VxeFormItemEvents { }
 
 export namespace VxeFormItemSlotTypes {
-  export interface DefaultSlotParams {
+  export interface DefaultSlotParams<D = any> {
     [key: string]: any
   }
 }

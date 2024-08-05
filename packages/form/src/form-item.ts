@@ -107,8 +107,8 @@ export default defineComponent({
       const titleWidth = XEUtils.eqNull(item.titleWidth) ? allTitleWidth : item.titleWidth
       const titleColon = XEUtils.eqNull(item.titleColon) ? allTitleColon : item.titleColon
       const titleAsterisk = XEUtils.eqNull(item.titleAsterisk) ? allTitleAsterisk : item.titleAsterisk
-      const itemOverflow = (XEUtils.isUndefined(titleOverflow) || XEUtils.isNull(titleOverflow)) ? allTitleOverflow : titleOverflow
-      const itemVertical = (XEUtils.isUndefined(vertical) || XEUtils.isNull(vertical)) ? allVertical : vertical
+      const itemOverflow = XEUtils.eqNull(titleOverflow) ? allTitleOverflow : titleOverflow
+      const itemVertical = XEUtils.eqNull(vertical) ? allVertical : vertical
       const ovEllipsis = itemOverflow === 'ellipsis'
       const ovTitle = itemOverflow === 'title'
       const ovTooltip = itemOverflow === true || itemOverflow === 'tooltip'

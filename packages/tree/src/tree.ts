@@ -791,7 +791,14 @@ export default defineComponent({
     const changeCheckboxEvent = (evnt: MouseEvent, node: any) => {
       evnt.stopPropagation()
       const checkboxOpts = computeCheckboxOpts.value
-      const { checkStrictly } = checkboxOpts
+      const { checkStrictly, checkMethod } = checkboxOpts
+      let isDisabled = !!checkMethod
+      if (checkMethod) {
+        isDisabled = !checkMethod({ node })
+      }
+      if (isDisabled) {
+        return
+      }
       const selectKeyMaps = Object.assign({}, reactData.selectCheckboxMaps)
       const childrenField = computeChildrenField.value
       const nodeid = getNodeId(node)
@@ -825,6 +832,15 @@ export default defineComponent({
 
     const changeRadioEvent = (evnt: MouseEvent, node: any) => {
       evnt.stopPropagation()
+      const radioOpts = computeRadioOpts.value
+      const { checkMethod } = radioOpts
+      let isDisabled = !!checkMethod
+      if (checkMethod) {
+        isDisabled = !checkMethod({ node })
+      }
+      if (isDisabled) {
+        return
+      }
       const value = getNodeId(node)
       reactData.selectRadioKey = value
       emitRadioMode(value)

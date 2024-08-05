@@ -188,7 +188,7 @@ export namespace VxeColumnPropTypes {
 
   export type CellType = 'auto' | 'number' | 'string' | '' | null
 
-  export interface CellRender<D = any> {
+  export interface CellRender<D = any, P = Record<string, any>> {
     /**
      * 渲染器名称
      */
@@ -196,17 +196,17 @@ export namespace VxeColumnPropTypes {
     /**
      * 目标组件渲染的参数
      */
-    props?: { [key: string]: any }
+    props?: P
     /**
      * 目标组件渲染的属性
      */
-    attrs?: { [key: string]: any }
+    attrs?: Record<string, any>
     /**
      * 多目标渲染
      */
     children?: any[]
 
-    events?: { [key: string]: (cellParams: VxeColumnSlotTypes.DefaultSlotParams<D>, ...args: any[]) => any }
+    events?: Record<string, (cellParams: VxeColumnSlotTypes.DefaultSlotParams<D>, ...args: any[]) => any>
     options?: any[]
     optionProps?: VxeGlobalRendererHandles.RenderOptionProps
     optionGroups?: any[]
@@ -217,7 +217,7 @@ export namespace VxeColumnPropTypes {
   /**
    * 编辑渲染配置项
    */
-  export interface EditRender<D = any> {
+  export interface EditRender<D = any, P = Record<string, any>> {
     /**
      * 渲染器名称
      */
@@ -225,17 +225,17 @@ export namespace VxeColumnPropTypes {
     /**
      * 目标组件渲染的参数
      */
-    props?: { [key: string]: any }
+    props?: P
     /**
      * 目标组件渲染的属性
      */
-    attrs?: { [key: string]: any }
+    attrs?: Record<string, any>
     /**
      * 多目标渲染
      */
     children?: any[]
 
-    events?: { [key: string]: (cellParams: VxeColumnSlotTypes.EditSlotParams<D>, ...args: any[]) => any }
+    events?: Record<string, (cellParams: VxeColumnSlotTypes.EditSlotParams<D>, ...args: any[]) => any>
     enabled?: boolean
     options?: any[]
     optionProps?: VxeGlobalRendererHandles.RenderOptionProps
@@ -252,7 +252,7 @@ export namespace VxeColumnPropTypes {
   /**
    * 内容渲染配置项
    */
-  export interface ContentRender {
+  export interface ContentRender<D = any, P = Record<string, any>> {
     /**
      * 渲染器名称
      */
@@ -260,15 +260,15 @@ export namespace VxeColumnPropTypes {
     /**
      * 目标组件渲染的参数
      */
-    props?: { [key: string]: any }
+    props?: P
     /**
      * 目标组件渲染的属性
      */
-    attrs?: { [key: string]: any }
+    attrs?: Record<string, any>
     /**
      * 目标组件渲染的事件
      */
-    events?: { [key: string]: (...args: any[]) => any }
+    events?: Record<string, (cellParams: VxeColumnSlotTypes.ContentSlotParams<D>, ...args: any[]) => any>
     /**
      * 多目标渲染
      */

@@ -343,6 +343,9 @@ renderer.mixin({
   VxeNumberInput: {
     renderItemContent: defaultItemRender
   },
+  VxePasswordInput: {
+    renderItemContent: defaultItemRender
+  },
   VxeTextarea: {
     renderItemContent: defaultItemRender
   },

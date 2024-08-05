@@ -55,10 +55,10 @@ export namespace VxeTreeSelectPropTypes {
   export type Remote = boolean
   export type RemoteMethod = (params: { searchValue: string }) => Promise<void> | void
   export type Transfer = boolean
-  export type TreeConfig = Pick<VxeTreeProps, 'transform' | 'accordion' | 'isHover' | 'trigger' | 'showLine' | 'indent' | 'showRadio' |'radioConfig' | 'showCheckbox' | 'checkboxConfig' | 'lazy' | 'loadMethod' | 'toggleMethod' | 'showIcon' | 'iconOpen' | 'iconClose' | 'iconLoaded'>
+  export type TreeConfig<D = any> = Pick<VxeTreeProps<D>, 'transform' | 'accordion' | 'isHover' | 'trigger' | 'showLine' | 'indent' | 'showRadio' |'radioConfig' | 'showCheckbox' | 'checkboxConfig' | 'lazy' | 'loadMethod' | 'toggleMethod' | 'showIcon' | 'iconOpen' | 'iconClose' | 'iconLoaded'>
 }
 
-export type VxeTreeSelectProps = {
+export interface VxeTreeSelectProps<D = any> {
   size?: VxeTreeSelectPropTypes.Size
   modelValue?: VxeTreeSelectPropTypes.ModelValue
   clearable?: VxeTreeSelectPropTypes.Clearable
@@ -76,7 +76,7 @@ export type VxeTreeSelectProps = {
   remote?: VxeTreeSelectPropTypes.Remote
   remoteMethod?: VxeTreeSelectPropTypes.RemoteMethod
   transfer?: VxeTreeSelectPropTypes.Transfer
-  treeConfig?: VxeTreeSelectPropTypes.TreeConfig
+  treeConfig?: VxeTreeSelectPropTypes.TreeConfig<D>
 }
 
 export interface TreeSelectPrivateComputed {

@@ -71,10 +71,12 @@ export interface TabsReactData {
   initNames: VxeTabsPropTypes.ModelValue[]
   lintLeft: number
   lintWidth: number
+  isTabOver: boolean
 }
 
 export interface TabsMethods {
   dispatchEvent(type: ValueOf<VxeTabsEmits>, params: Record<string, any>, evnt: Event | null): void
+  scrollToTab(name: VxeTabsPropTypes.ModelValue): Promise<any>
 }
 export interface VxeTabsMethods extends TabsMethods { }
 

@@ -1,6 +1,6 @@
-import { defineComponent, ref, h, reactive, PropType, provide, computed, createCommentVNode, watch, nextTick, onMounted } from 'vue'
+import { defineComponent, ref, h, reactive, PropType, provide, computed, onUnmounted, createCommentVNode, watch, nextTick, onMounted } from 'vue'
 import XEUtils from 'xe-utils'
-import { createEvent, getConfig, getIcon, permission } from '../../ui'
+import { createEvent, getConfig, getIcon, globalEvents, permission } from '../../ui'
 import { getSlotVNs } from '../../ui/src/vn'
 import { toCssUnit } from '../..//ui/src/dom'
 
@@ -39,14 +39,15 @@ export default defineComponent({
     const xID = XEUtils.uniqueId()
 
     const refElem = ref<HTMLDivElement>()
-    const refHeaderElem = ref<HTMLDivElement>()
+    const refHeadWrapperElem = ref<HTMLDivElement>()
 
     const reactData = reactive<TabsReactData>({
       staticTabs: [],
       activeName: props.modelValue,
       initNames: props.modelValue ? [props.modelValue] : [],
       lintLeft: 0,
-      lintWidth: 0
+      lintWidth: 0,
+      isTabOver: false
     })
 
     const refMaps: TabsPrivateRef = {
@@ -98,19 +99,22 @@ export default defineComponent({
       return []
     }
 
-    const updateLineStyle = () => {
+    const updateTabStyle = () => {
       nextTick(() => {
         const { type } = props
         const { activeName } = reactData
         const tabOptions = computeTabOptions.value
         const tabStaticOptions = computeTabStaticOptions.value
-        const headerWrapperEl = refHeaderElem.value
+        const headerWrapperEl = refHeadWrapperElem.value
         let lintWidth = 0
         let lintLeft = 0
+        let isOver = false
         if (headerWrapperEl) {
           const index = XEUtils.findIndexOf(tabStaticOptions.length ? tabStaticOptions : tabOptions, item => item.name === activeName)
+          const { children, scrollWidth, clientWidth } = headerWrapperEl
+          isOver = scrollWidth !== clientWidth
           if (index > -1) {
-            const tabEl = headerWrapperEl.children[index] as HTMLDivElement
+            const tabEl = children[index] as HTMLDivElement
             const tabWidth = tabEl.clientWidth
             if (type) {
               if (type === 'card') {
@@ -128,6 +132,7 @@ export default defineComponent({
         }
         reactData.lintLeft = lintLeft
         reactData.lintWidth = lintWidth
+        reactData.isTabOver = isOver
       })
     }
 
@@ -178,8 +183,86 @@ export default defineComponent({
       }
     }
 
+    let scrollTimeout: any = null
+
+    const startScrollAnimation = (offsetPos: number, offsetSize: number) => {
+      let offsetLeft = offsetSize
+      let scrollCount = 6
+      let delayNum = 35
+      clearTimeout(scrollTimeout)
+      const scrollAnimate = () => {
+        const headerWrapperEl = refHeadWrapperElem.value
+        if (scrollCount > 0) {
+          scrollCount--
+          if (headerWrapperEl) {
+            const { clientWidth, scrollWidth, scrollLeft } = headerWrapperEl
+            offsetLeft = Math.floor(offsetLeft / 2)
+            if (offsetPos > 0) {
+              if (clientWidth + scrollLeft < scrollWidth) {
+                headerWrapperEl.scrollLeft += offsetLeft
+                delayNum -= 4
+                scrollTimeout = setTimeout(scrollAnimate, delayNum)
+              }
+            } else {
+              if (scrollLeft > 0) {
+                headerWrapperEl.scrollLeft -= offsetLeft
+                delayNum -= 4
+                scrollTimeout = setTimeout(scrollAnimate, delayNum)
+              }
+            }
+          }
+        }
+      }
+      scrollAnimate()
+    }
+
+    const handleScrollToLeft = (offsetPos: number) => {
+      const headerWrapperEl = refHeadWrapperElem.value
+      if (headerWrapperEl) {
+        const offsetSize = Math.floor(headerWrapperEl.clientWidth * 0.75)
+        startScrollAnimation(offsetPos, offsetSize)
+      }
+    }
+
+    const scrollLeftEvent = () => {
+      handleScrollToLeft(-1)
+    }
+
+    const scrollRightEvent = () => {
+      handleScrollToLeft(1)
+    }
+
+    const scrollToTab = (name: VxeTabsPropTypes.ModelValue) => {
+      const tabOptions = computeTabOptions.value
+      const tabStaticOptions = computeTabStaticOptions.value
+      return nextTick().then(() => {
+        const headerWrapperEl = refHeadWrapperElem.value
+        if (headerWrapperEl) {
+          const index = XEUtils.findIndexOf(tabStaticOptions.length ? tabStaticOptions : tabOptions, item => item.name === name)
+          if (index > -1) {
+            const { scrollLeft, clientWidth, children } = headerWrapperEl
+            const tabEl = children[index] as HTMLDivElement
+            if (tabEl) {
+              const tabOffsetLeft = tabEl.offsetLeft
+              const tabClientWidth = tabEl.clientWidth
+              // 如果右侧被挡
+              const overSize = (tabOffsetLeft + tabClientWidth) - (scrollLeft + clientWidth)
+              if (overSize > 0) {
+                headerWrapperEl.scrollLeft += overSize
+              }
+              // 如果左侧被挡，优先
+              if (tabOffsetLeft < scrollLeft) {
+                headerWrapperEl.scrollLeft = tabOffsetLeft
+              }
+            }
+          }
+        }
+      })
+    }
+
     const tabsMethods: TabsMethods = {
-      dispatchEvent
+      dispatchEvent,
+      scrollToTab
     }
 
     const tabsPrivateMethods: TabsPrivateMethods = {
@@ -189,69 +272,93 @@ export default defineComponent({
 
     const renderTabHeader = (list: VxeTabsPropTypes.Options | VxeTabPaneDefines.TabConfig[]) => {
       const { type, titleWidth: allTitleWidth, titleAlign: allTitleAlign, showClose } = props
-      const { activeName, lintLeft, lintWidth } = reactData
+      const { activeName, lintLeft, lintWidth, isTabOver } = reactData
       return h('div', {
         class: 'vxe-tabs-header'
       }, [
-        h('div', {
-          ref: refHeaderElem,
-          class: 'vxe-tabs-header--wrapper'
-        }, list.map((item, index) => {
-          const { title, titleWidth, titleAlign, icon, name, slots } = item
-          const tabSlot = slots ? slots.tab : null
-          const itemWidth = titleWidth || allTitleWidth
-          const itemAlign = titleAlign || allTitleAlign
-          return h('div', {
-            key: `${name}`,
-            class: ['vxe-tabs-header--item', itemAlign ? `align--${itemAlign}` : '', {
-              'is--active': activeName === name
-            }],
-            style: itemWidth
-              ? {
-                  width: toCssUnit(itemWidth)
-                }
-              : null,
-            onClick (evnt: KeyboardEvent) {
-              clickEvent(evnt, item)
-            }
+        isTabOver
+          ? h('div', {
+            class: 'vxe-tabs-header--bar vxe-tabs-header--left-bar',
+            onClick: scrollLeftEvent
           }, [
-            h('div', {
-              class: 'vxe-tabs-header--item-inner'
-            }, [
-              icon
-                ? h('div', {
-                  class: 'vxe-tabs-header--item-icon'
-                }, [
-                  h('i', {
-                    class: icon
-                  })
-                ])
-                : createCommentVNode(),
-              h('div', {
-                class: 'vxe-tabs-header--item-name'
-              }, tabSlot ? callSlot(tabSlot, { name, title }) : `${title}`),
-              showClose
-                ? h('div', {
-                  class: 'vxe-tabs-header--close-btn',
-                  onClick (evnt: KeyboardEvent) {
-                    handleCloseTabEvent(evnt, item, index, list)
-                  }
-                }, [
-                  h('i', {
-                    class: getIcon().TABS_TAB_CLOSE
-                  })
-                ])
-                : createCommentVNode()
-            ])
+            h('span', {
+              class: getIcon().TABS_TAB_BUTTON_LEFT
+            })
           ])
-        })),
-        h('span', {
-          class: `vxe-tabs-header--active-line-${type || 'default'}`,
-          style: {
-            left: `${lintLeft}px`,
-            width: `${lintWidth}px`
-          }
-        })
+          : createCommentVNode(),
+        h('div', {
+          class: 'vxe-tabs-header--wrapper'
+        }, [
+          h('div', {
+            ref: refHeadWrapperElem,
+            class: 'vxe-tabs-header--item-wrapper'
+          }, list.map((item, index) => {
+            const { title, titleWidth, titleAlign, icon, name, slots } = item
+            const tabSlot = slots ? slots.tab : null
+            const itemWidth = titleWidth || allTitleWidth
+            const itemAlign = titleAlign || allTitleAlign
+            return h('div', {
+              key: `${name}`,
+              class: ['vxe-tabs-header--item', itemAlign ? `align--${itemAlign}` : '', {
+                'is--active': activeName === name
+              }],
+              style: itemWidth
+                ? {
+                    width: toCssUnit(itemWidth)
+                  }
+                : null,
+              onClick (evnt: KeyboardEvent) {
+                clickEvent(evnt, item)
+              }
+            }, [
+              h('div', {
+                class: 'vxe-tabs-header--item-inner'
+              }, [
+                icon
+                  ? h('div', {
+                    class: 'vxe-tabs-header--item-icon'
+                  }, [
+                    h('i', {
+                      class: icon
+                    })
+                  ])
+                  : createCommentVNode(),
+                h('div', {
+                  class: 'vxe-tabs-header--item-name'
+                }, tabSlot ? callSlot(tabSlot, { name, title }) : `${title}`),
+                showClose
+                  ? h('div', {
+                    class: 'vxe-tabs-header--close-btn',
+                    onClick (evnt: KeyboardEvent) {
+                      handleCloseTabEvent(evnt, item, index, list)
+                    }
+                  }, [
+                    h('i', {
+                      class: getIcon().TABS_TAB_CLOSE
+                    })
+                  ])
+                  : createCommentVNode()
+              ])
+            ])
+          })),
+          h('span', {
+            class: `vxe-tabs-header--active-line-${type || 'default'}`,
+            style: {
+              left: `${lintLeft}px`,
+              width: `${lintWidth}px`
+            }
+          })
+        ]),
+        isTabOver
+          ? h('div', {
+            class: 'vxe-tabs-header--bar vxe-tabs-header--right-bar',
+            onClick: scrollRightEvent
+          }, [
+            h('span', {
+              class: getIcon().TABS_TAB_BUTTON_RIGHT
+            })
+          ])
+          : createCommentVNode()
       ])
     }
 
@@ -263,9 +370,10 @@ export default defineComponent({
         ? h('div', {
           key: name,
           class: ['vxe-tabs-pane--item', {
-            'is--visible': activeName === name
+            'is--visible': activeName === name,
+            'has--content': !!defaultSlot
           }]
-        }, callSlot(defaultSlot, { name }))
+        }, defaultSlot ? callSlot(defaultSlot, { name }) : [])
         : createCommentVNode()
     }
 
@@ -288,7 +396,8 @@ export default defineComponent({
       return h('div', {
         ref: refElem,
         class: ['vxe-tabs', `vxe-tabs--${type || 'default'}`, {
-          'is--padding': padding
+          'is--padding': padding,
+          'is--height': height
         }],
         style: height
           ? {
@@ -314,8 +423,9 @@ export default defineComponent({
       reactData.activeName = val
     })
 
-    watch(() => reactData.activeName, () => {
-      updateLineStyle()
+    watch(() => reactData.activeName, (val) => {
+      updateTabStyle()
+      scrollToTab(val)
     })
 
     const optsFlag = ref(0)
@@ -326,11 +436,21 @@ export default defineComponent({
       optsFlag.value++
     })
     watch(optsFlag, () => {
-      updateLineStyle()
+      updateTabStyle()
+    })
+
+    nextTick(() => {
+      globalEvents.on($xeTabs, 'resize', () => {
+        updateTabStyle()
+      })
     })
 
     onMounted(() => {
-      updateLineStyle()
+      updateTabStyle()
+    })
+
+    onUnmounted(() => {
+      globalEvents.off($xeTabs, 'resize')
     })
 
     $xeTabs.renderVN = renderVN
