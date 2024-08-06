@@ -60,6 +60,14 @@
     left: -1px;
   }
 }
+.vxe-tabs-header--extra {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  border-bottom: 1px solid var(--vxe-ui-input-border-color);
+}
 
 .vxe-tabs-header--wrapper {
   position: relative;
@@ -110,13 +118,17 @@
   flex-direction: row;
   align-items: center;
 }
-.vxe-tabs-header--item-icon,
-.vxe-tabs-header--close-btn {
-  flex-shrink: 0;
+.vxe-tabs-header--item-content {
+  flex-grow: 1;
+}
+.vxe-tabs-header--item-icon {
+  padding: 0 0.6em;
+  &+.vxe-tabs-header--item-name {
+    padding-left: 0;
+  }
 }
 .vxe-tabs-header--item-name {
-  flex-grow: 1;
-  padding: 0 0.8em;
+  padding: 0 0.6em;
 }
 .vxe-tabs-header--close-btn {
   font-size: 0.8em;
@@ -152,19 +164,42 @@
     display: block;
   }
 }
-.vxe-tabs-header--active-line-card,
-.vxe-tabs-header--active-line-border-card {
-  transition: color,left 0.3s ease-in-out;
-}
-.vxe-tabs-header--active-line-default,
-.vxe-tabs-header--active-line-card,
-.vxe-tabs-header--active-line-border-card,
-.vxe-tabs-header--active-line-round-card {
+.vxe-tabs-header--active-line {
   display: none;
-}
-.vxe-tabs-header--active-line-border-card {
-  border-left: 1px solid var(--vxe-ui-input-border-color);
-  border-right: 1px solid var(--vxe-ui-input-border-color);
+  &.type--default {
+    display: block;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    height: 2px;
+    width: 4px;
+    background-color: var(--vxe-ui-font-primary-color);
+    z-index: 2;
+    @include createAnimationTransition(all, .3s);
+  }
+  &.type--card {
+    display: block;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 4px;
+    border: 1px solid var(--vxe-ui-font-primary-color);
+    pointer-events: none;
+    z-index: 1;
+    box-shadow: 0 0 8px rgba(0, 0, 0, 0.1);
+    transition: color,left 0.3s ease-in-out;
+  }
+  &.type--border-card {
+    display: block;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 4px;
+    border-left: 1px solid var(--vxe-ui-input-border-color);
+    border-right: 1px solid var(--vxe-ui-input-border-color);
+    pointer-events: none;
+    z-index: 1;
+  }
 }
 
 .vxe-tabs--default,
@@ -179,17 +214,6 @@
   .vxe-tabs-header--item-inner {
     border-bottom: 2px solid transparent;
   }
-  .vxe-tabs-header--active-line-default {
-    display: block;
-    position: absolute;
-    bottom: -1px;
-    left: 0;
-    height: 2px;
-    width: 4px;
-    background-color: var(--vxe-ui-font-primary-color);
-    z-index: 2;
-    @include createAnimationTransition(all, .3s);
-  }
 }
 
 .vxe-tabs--card {
@@ -201,17 +225,6 @@
   }
   .vxe-tabs-header--right-bar {
     border-right: 0;
-  }
-  .vxe-tabs-header--active-line-card {
-    display: block;
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 4px;
-    border: 1px solid var(--vxe-ui-font-primary-color);
-    pointer-events: none;
-    z-index: 1;
-    box-shadow: 0 0 8px rgba(0, 0, 0, 0.1);
   }
   .vxe-tabs-header {
     border-radius: var(--vxe-ui-base-border-radius) var(--vxe-ui-base-border-radius) 0 0;
@@ -245,16 +258,6 @@
   .vxe-tabs-header--right-bar {
     border-right: 0;
   }
-  .vxe-tabs-header--active-line-border-card {
-    display: block;
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 4px;
-    background-color: var(--vxe-ui-layout-background-color);
-    pointer-events: none;
-    z-index: 1;
-  }
   &.is--padding,
   &.is--height {
     .vxe-tabs-pane--item {
@@ -277,6 +280,11 @@
     background-color: var(--vxe-ui-tabs-card-header-background-color);
     .vxe-tabs-header--wrapper {
       border-radius: var(--vxe-ui-base-border-radius) var(--vxe-ui-base-border-radius) 0 0;
+    }
+  }
+  .vxe-tabs-header--item {
+    &.is--active {
+      background-color: var(--vxe-ui-layout-background-color);
     }
   }
 }
@@ -333,11 +341,13 @@
   .vxe-tabs-header--item-inner {
     height: var(--vxe-ui-tabs-header-height-default);
   }
-  .vxe-tabs-header--active-line-card {
-    height: calc(var(--vxe-ui-tabs-header-height-default) - 1px);
-  }
-  .vxe-tabs-header--active-line-border-card {
-    height: calc(var(--vxe-ui-tabs-header-height-default) + 1px);
-    line-height: calc(var(--vxe-ui-tabs-header-height-default) + 1px);
+  .vxe-tabs-header--active-line {
+    &.type--card {
+      height: calc(var(--vxe-ui-tabs-header-height-default) - 1px);
+    }
+    &.type--border-card {
+      height: calc(var(--vxe-ui-tabs-header-height-default) + 1px);
+      line-height: calc(var(--vxe-ui-tabs-header-height-default) + 1px);
+    }
   }
 }

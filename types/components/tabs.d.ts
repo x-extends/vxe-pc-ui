@@ -162,10 +162,16 @@ export namespace VxeTabsSlotTypes {
   export interface DefaultSlotParams {
     name: VxeTabsPropTypes.ModelValue
   }
+  export interface TabSlotParams {
+    name: VxeTabsPropTypes.ModelValue
+  }
+  export interface ExtraSlotParams {}
 }
 
 export interface VxeTabsSlots {
   default: (params: VxeTabsSlotTypes.DefaultSlotParams) => any
+  tab: (params: VxeTabsSlotTypes.TabSlotParams) => any
+  extra: (params: VxeTabsSlotTypes.ExtraSlotParams) => any
 
   /**
    * 自定义插槽模板

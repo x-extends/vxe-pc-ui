@@ -25,6 +25,18 @@ import { getWidgetVxeUploadImageConfig, WidgetVxeUploadImageViewComponent, Widge
  * 表单设计器 - 渲染器
  */
 renderer.mixin({
+  text: {
+    createFormDesignWidgetConfig: getWidgetTextConfig,
+    renderFormDesignWidgetView (renderOpts, renderParams) {
+      return h(WidgetTextViewComponent, { renderOpts, renderParams })
+    },
+    renderFormDesignWidgetFormView (renderOpts, renderParams) {
+      return h(WidgetTextFormComponent, { renderOpts, renderParams })
+    }
+  },
+  /**
+   * 已废弃
+   */
   title: {
     createFormDesignWidgetConfig: getWidgetTextConfig,
     renderFormDesignWidgetView (renderOpts, renderParams) {

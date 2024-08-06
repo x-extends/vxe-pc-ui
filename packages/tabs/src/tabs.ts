@@ -210,6 +210,7 @@ export default defineComponent({
                 scrollTimeout = setTimeout(scrollAnimate, delayNum)
               }
             }
+            updateTabStyle()
           }
         }
       }
@@ -256,6 +257,7 @@ export default defineComponent({
               }
             }
           }
+          updateTabStyle()
         }
       })
     }
@@ -273,6 +275,7 @@ export default defineComponent({
     const renderTabHeader = (list: VxeTabsPropTypes.Options | VxeTabPaneDefines.TabConfig[]) => {
       const { type, titleWidth: allTitleWidth, titleAlign: allTitleAlign, showClose } = props
       const { activeName, lintLeft, lintWidth, isTabOver } = reactData
+      const extraSlot = slots.extra
       return h('div', {
         class: 'vxe-tabs-header'
       }, [
@@ -314,18 +317,22 @@ export default defineComponent({
               h('div', {
                 class: 'vxe-tabs-header--item-inner'
               }, [
-                icon
-                  ? h('div', {
-                    class: 'vxe-tabs-header--item-icon'
-                  }, [
-                    h('i', {
-                      class: icon
-                    })
-                  ])
-                  : createCommentVNode(),
                 h('div', {
-                  class: 'vxe-tabs-header--item-name'
-                }, tabSlot ? callSlot(tabSlot, { name, title }) : `${title}`),
+                  class: 'vxe-tabs-header--item-content'
+                }, [
+                  icon
+                    ? h('span', {
+                      class: 'vxe-tabs-header--item-icon'
+                    }, [
+                      h('i', {
+                        class: icon
+                      })
+                    ])
+                    : createCommentVNode(),
+                  h('span', {
+                    class: 'vxe-tabs-header--item-name'
+                  }, tabSlot ? callSlot(tabSlot, { name, title }) : `${title}`)
+                ]),
                 showClose
                   ? h('div', {
                     class: 'vxe-tabs-header--close-btn',
@@ -340,14 +347,16 @@ export default defineComponent({
                   : createCommentVNode()
               ])
             ])
-          })),
-          h('span', {
-            class: `vxe-tabs-header--active-line-${type || 'default'}`,
-            style: {
-              left: `${lintLeft}px`,
-              width: `${lintWidth}px`
-            }
-          })
+          }).concat([
+            h('span', {
+              key: 'line',
+              class: `vxe-tabs-header--active-line type--${type || 'default'}`,
+              style: {
+                left: `${lintLeft}px`,
+                width: `${lintWidth}px`
+              }
+            })
+          ]))
         ]),
         isTabOver
           ? h('div', {
@@ -358,6 +367,11 @@ export default defineComponent({
               class: getIcon().TABS_TAB_BUTTON_RIGHT
             })
           ])
+          : createCommentVNode(),
+        extraSlot
+          ? h('div', {
+            class: 'vxe-tabs-header--extra'
+          }, getSlotVNs(extraSlot({})))
           : createCommentVNode()
       ])
     }

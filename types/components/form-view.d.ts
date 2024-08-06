@@ -111,6 +111,8 @@ export namespace VxeFormViewSlotTypes {
 
 export interface VxeFormViewSlots {
   default: (params: VxeFormViewSlotTypes.DefaultSlotParams) => any
+  header: (params: VxeFormViewSlotTypes.DefaultSlotParams) => any
+  footer: (params: VxeFormViewSlotTypes.DefaultSlotParams) => any
 }
 
 export const FormView: typeof VxeFormView

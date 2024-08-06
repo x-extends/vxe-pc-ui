@@ -12,7 +12,7 @@ export interface WidgetTextFormObjVO {
 export const getWidgetTextConfig = (): VxeGlobalRendererHandles.CreateFormDesignWidgetConfigObj<WidgetTextFormObjVO> => {
   return {
     title: handleGetFormDesignWidgetName,
-    icon: 'vxe-icon-title',
+    icon: 'vxe-icon-text',
     group: 'layout',
     options: {
       color: '',

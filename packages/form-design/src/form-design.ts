@@ -204,7 +204,10 @@ export default defineComponent({
                 advancedWidgets.push(widthItem)
                 break
               default:
-                baseWidgets.push(widthItem)
+                // 已废弃 title
+                if (!['title'].includes(widthItem.name)) {
+                  baseWidgets.push(widthItem)
+                }
                 break
             }
           }

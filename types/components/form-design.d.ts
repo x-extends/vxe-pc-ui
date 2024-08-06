@@ -205,6 +205,8 @@ export namespace VxeFormDesignEvents {
 
 export namespace VxeFormDesignSlotTypes {}
 export interface VxeFormDesignSlots {
+  default: (params: VxeFlowViewSlotTypes.DefaultSlotParams) => any
+  header: (params: VxeFlowViewSlotTypes.DefaultSlotParams) => any
 }
 
 export interface FormDesignExport {

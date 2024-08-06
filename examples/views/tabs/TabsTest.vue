@@ -7,6 +7,10 @@
         <vxe-tab-pane title="xxx3" name="3" icon="vxe-icon-pc">vvvv</vxe-tab-pane>
         <vxe-tab-pane title="xxx4" name="4">ggg</vxe-tab-pane>
         <vxe-tab-pane title="xxx5" name="5">ooo</vxe-tab-pane>
+
+        <template #extra>
+          <span>111</span>
+        </template>
       </vxe-tabs>
     </p>
 
@@ -17,6 +21,10 @@
         <vxe-tab-pane title="xxx3" name="3" icon="vxe-icon-pc">vvvv</vxe-tab-pane>
         <vxe-tab-pane title="xxx4" name="4">ggg</vxe-tab-pane>
         <vxe-tab-pane title="xxx5" name="5">ooo</vxe-tab-pane>
+
+        <template #extra>
+          <span>111</span>
+        </template>
       </vxe-tabs>
     </p>
 
@@ -27,6 +35,10 @@
         <vxe-tab-pane title="xxx3" name="3" icon="vxe-icon-pc">vvvv</vxe-tab-pane>
         <vxe-tab-pane title="xxx4" name="4">ggg</vxe-tab-pane>
         <vxe-tab-pane title="xxx5" name="5">ooo</vxe-tab-pane>
+
+        <template #extra>
+          <span>111</span>
+        </template>
       </vxe-tabs>
     </p>
 
@@ -45,6 +57,10 @@
         <vxe-tab-pane title="xxx3454567655765757但是风格9946465464646999999997" name="11">99999</vxe-tab-pane>
         <vxe-tab-pane title="xxx3455435455765757但是风格99765757但是风格99353454553453543535353534999997" name="12">99999</vxe-tab-pane>
         <vxe-tab-pane title="xxx34556765765765757但是风格995757但是风格99999997" name="13">99999</vxe-tab-pane> -->
+
+        <template #extra>
+          <span>111</span>
+        </template>
       </vxe-tabs>
     </p>
   </div>

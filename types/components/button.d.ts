@@ -30,6 +30,13 @@ export namespace VxeButtonPropTypes {
   export type ClassName = string | ((params: { $button: VxeButtonConstructor }) => string)
   export type PopupClassName = string | ((params: { $button: VxeButtonConstructor }) => string)
   export type Name = string | number
+  export type RouterLink = {
+    path?: string
+    name?: string | number | null
+    query?: any
+    params?: any
+    target?: null | '' | '_blank' | '_self' | '_parent' | '_top'
+  }
   export type PermissionCode = VxeComponentPermissionCodeType
   export type Content = string | number
   export type Placement = '' | 'top' | 'bottom'
@@ -61,6 +68,7 @@ export type VxeButtonProps = {
    * 用来标识这一项
    */
   name?: VxeButtonPropTypes.Name
+  routerLink?: VxeButtonPropTypes.RouterLink
   /**
    * 权限码
    */

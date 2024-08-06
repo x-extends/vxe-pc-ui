@@ -1,4 +1,4 @@
-import { defineComponent, h, ref, Ref, computed, Teleport, VNode, onUnmounted, reactive, nextTick, PropType, onMounted, inject, createCommentVNode } from 'vue'
+import { defineComponent, h, ref, Ref, computed, Teleport, resolveComponent, VNode, onUnmounted, reactive, nextTick, PropType, onMounted, inject, createCommentVNode } from 'vue'
 import XEUtils from 'xe-utils'
 import { getConfig, globalEvents, getIcon, createEvent, useSize, usePermission } from '../../ui'
 import { getAbsolutePos, getEventTargetNode } from '../../ui/src/dom'
@@ -25,6 +25,7 @@ export default defineComponent({
      * 用来标识这一项
      */
     name: [String, Number] as PropType<VxeButtonPropTypes.Name>,
+    routerLink: Object as PropType<VxeButtonPropTypes.RouterLink>,
     /**
      * 权限码
      */
@@ -487,7 +488,7 @@ export default defineComponent({
     Object.assign($xeButton, buttonMethods)
 
     const renderVN = () => {
-      const { className, popupClassName, trigger, title, type, destroyOnClose, name, loading } = props
+      const { className, popupClassName, trigger, title, routerLink, type, destroyOnClose, name, loading } = props
       const { inited, visiblePanel } = reactData
       const isFormBtn = computeIsFormBtn.value
       const btnMode = computeBtnMode.value
@@ -519,27 +520,54 @@ export default defineComponent({
             'is--active': visiblePanel
           }]
         }, [
-          h('button', {
-            ref: refButton,
-            class: ['vxe-button', `type--${btnMode}`, {
-              [`size--${vSize}`]: vSize,
-              [`theme--${btnStatus}`]: btnStatus,
-              'is--round': btnRound,
-              'is--circle': btnCircle,
-              'is--disabled': btnDisabled || loading,
-              'is--loading': loading
-            }],
-            title,
-            name,
-            type: isFormBtn ? type : 'button',
-            disabled: btnDisabled || loading,
-            onClick: clickTargetEvent,
-            ...btnOns
-          }, renderContent().concat([
-            h('i', {
-              class: `vxe-button--dropdown-arrow ${getIcon().BUTTON_DROPDOWN}`
+          routerLink
+            ? h(resolveComponent('router-link'), {
+              ref: refButton,
+              class: ['vxe-button', `type--${btnMode}`, className ? (XEUtils.isFunction(className) ? className({ $button: $xeButton }) : className) : '', {
+                [`size--${vSize}`]: vSize,
+                [`theme--${btnStatus}`]: btnStatus,
+                'is--round': btnRound,
+                'is--circle': btnCircle,
+                'is--disabled': btnDisabled || loading,
+                'is--loading': loading
+              }],
+              title,
+              name,
+              type: isFormBtn ? type : 'button',
+              disabled: btnDisabled || loading,
+              to: routerLink,
+              onClick: clickTargetEvent,
+              ...btnOns
+            }, {
+              default () {
+                return renderContent().concat([
+                  h('i', {
+                    class: `vxe-button--dropdown-arrow ${getIcon().BUTTON_DROPDOWN}`
+                  })
+                ])
+              }
             })
-          ])),
+            : h('button', {
+              ref: refButton,
+              class: ['vxe-button', 'vxe-button--link', `type--${btnMode}`, className ? (XEUtils.isFunction(className) ? className({ $button: $xeButton }) : className) : '', {
+                [`size--${vSize}`]: vSize,
+                [`theme--${btnStatus}`]: btnStatus,
+                'is--round': btnRound,
+                'is--circle': btnCircle,
+                'is--disabled': btnDisabled || loading,
+                'is--loading': loading
+              }],
+              title,
+              name,
+              type: isFormBtn ? type : 'button',
+              disabled: btnDisabled || loading,
+              onClick: clickTargetEvent,
+              ...btnOns
+            }, renderContent().concat([
+              h('i', {
+                class: `vxe-button--dropdown-arrow ${getIcon().BUTTON_DROPDOWN}`
+              })
+            ])),
           h(Teleport, {
             to: 'body',
             disabled: transfer ? !inited : true
@@ -566,9 +594,34 @@ export default defineComponent({
           ])
         ])
       }
+      if (routerLink) {
+        return h(resolveComponent('router-link'), {
+          ref: refButton,
+          class: ['vxe-button', `type--${btnMode}`, className ? (XEUtils.isFunction(className) ? className({ $button: $xeButton }) : className) : '', {
+            [`size--${vSize}`]: vSize,
+            [`theme--${btnStatus}`]: btnStatus,
+            'is--round': btnRound,
+            'is--circle': btnCircle,
+            'is--disabled': btnDisabled || loading,
+            'is--loading': loading
+          }],
+          title,
+          name,
+          type: isFormBtn ? type : 'button',
+          disabled: btnDisabled || loading,
+          to: routerLink,
+          onClick: clickEvent,
+          onMouseenter: mouseenterEvent,
+          onMouseleave: mouseleaveEvent
+        }, {
+          default () {
+            return renderContent()
+          }
+        })
+      }
       return h('button', {
         ref: refButton,
-        class: ['vxe-button', `type--${btnMode}`, className ? (XEUtils.isFunction(className) ? className({ $button: $xeButton }) : className) : '', {
+        class: ['vxe-button', 'vxe-button--link', `type--${btnMode}`, className ? (XEUtils.isFunction(className) ? className({ $button: $xeButton }) : className) : '', {
           [`size--${vSize}`]: vSize,
           [`theme--${btnStatus}`]: btnStatus,
           'is--round': btnRound,
