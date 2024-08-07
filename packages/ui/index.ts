@@ -134,6 +134,7 @@ setConfig({
     height: 400,
     showPc: true
   },
+  listView: {},
   list: {
     // size: null,
     scrollY: {
@@ -328,6 +329,7 @@ setIcon({
   FORM_DESIGN_STYLE_SETTING: iconPrefix + 'layout',
   FORM_DESIGN_PROPS_PC: iconPrefix + 'pc',
   FORM_DESIGN_PROPS_MOBILE: iconPrefix + 'mobile',
+  FORM_DESIGN_PROPS_ADD: iconPrefix + 'add',
   FORM_DESIGN_WIDGET_ADD: iconPrefix + 'square-plus-fill',
   FORM_DESIGN_WIDGET_COPY: iconPrefix + 'copy',
   FORM_DESIGN_WIDGET_DELETE: iconPrefix + 'delete',

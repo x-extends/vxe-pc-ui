@@ -43,7 +43,7 @@
     </p>
 
     <p>
-      <vxe-tabs modelValue="3" type="round-card" :height="300" show-close padding>
+      <vxe-tabs v-model="val4" type="round-card" :height="300" show-close padding @tab-load="tabToadEvent">
         <vxe-tab-pane title="xxxf地方799991" name="1">xxxx</vxe-tab-pane>
         <vxe-tab-pane title="xxxf地方79999f地方7999956756765657557562" name="2" icon="vxe-icon-pc">cccc</vxe-tab-pane>
         <vxe-tab-pane title="xxx45f地方7999965475673" name="3" icon="vxe-icon-pc">vvvv</vxe-tab-pane>
@@ -67,6 +67,12 @@
 </template>
 
 <script lang="ts" setup>
+import { ref } from 'vue'
+
+const val4 = ref('3')
+const tabToadEvent = (p: any) => {
+  console.log(p)
+}
 </script>
 
 <style lang="scss" scoped>

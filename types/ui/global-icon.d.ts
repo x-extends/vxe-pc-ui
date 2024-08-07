@@ -112,6 +112,7 @@ declare module '@vxe-ui/core' {
     FORM_DESIGN_STYLE_SETTING?: string
     FORM_DESIGN_PROPS_PC?: string
     FORM_DESIGN_PROPS_MOBILE?: string
+    FORM_DESIGN_PROPS_ADD?: string
     FORM_DESIGN_WIDGET_ADD?: string
     FORM_DESIGN_WIDGET_COPY?: string
     FORM_DESIGN_WIDGET_DELETE?: string

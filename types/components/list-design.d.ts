@@ -55,13 +55,37 @@ export interface ListDesignReactData<D = VxeListDesignDefines.DefaultSettingForm
 
 export interface ListDesignMethods {
   dispatchEvent(type: ValueOf<VxeListDesignEmits>, params: Record<string, any>, evnt: Event | null): void
+  /**
+   * 加载表单设计器配置
+   */
   loadFormDesignConfig(config: Partial<VxeFormDesignDefines.FormDesignConfig>): Promise<any>
+  /**
+   * 获取列表的搜索区配置
+   */
   getSearchItems(): VxeListDesignDefines.SearchItemObjItem[]
+  /**
+   * 加载列表的搜索区配置
+   */
   setSearchItems(searchItems: VxeListDesignDefines.SearchItemObjItem[]): Promise<any>
+  /**
+   * 获取列表的列配置
+   */
   getListColumns(): VxeListDesignDefines.ListColumnObjItem[]
+  /**
+   * 加载列表的列配置
+   */
   setListColumns(listColumns: VxeListDesignDefines.ListColumnObjItem[]): Promise<any>
+  /**
+   * 获取所有配置
+   */
   getConfig (): VxeListDesignDefines.ListDesignConfig
+  /**
+   * 清除所有配置
+   */
   clearConfig (): Promise<any>
+  /**
+   * 加载配置
+   */
   loadConfig(config: Partial<VxeListDesignDefines.ListDesignConfig>): Promise<any>
 }
 export interface VxeListDesignMethods extends ListDesignMethods { }
@@ -77,8 +101,8 @@ export namespace VxeListDesignDefines {
     $listDesign: VxeListDesignConstructor
   }
 
-  export interface ListDesignConfig {
-    formConfig: any
+  export interface ListDesignConfig<FC = DefaultSettingFormDataObjVO> {
+    formConfig: FC
     searchItems: SearchItemObjItem[]
     listColumns: ListColumnObjItem[]
   }
@@ -94,9 +118,22 @@ export namespace VxeListDesignDefines {
     visible: boolean
   }
 
-  export interface DefaultSettingFormActiveBtnItem {
+  export interface DefaultSettingFormToolbarButton {
     content?: string
     icon?: string
+    type: 'custom' | ''
+  }
+
+  export interface DefaultSettingFormToolbarTool {
+    content?: string
+    icon?: string
+    type: 'custom' | ''
+  }
+
+  export interface DefaultSettingFormActiveButton {
+    content?: string
+    icon?: string
+    type: 'custom' | ''
   }
 
   export interface DefaultSettingFormDataObjVO {
@@ -113,7 +150,9 @@ export namespace VxeListDesignDefines {
     showSeq: boolean
     mobileDefaultView: 'list' | 'gantt' | 'chart'
     pcDefaultView: 'list' | 'gantt' | 'chart'
-    activeBtnList: DefaultSettingFormActiveBtnItem[]
+    toolbarButtonList: DefaultSettingFormToolbarButton[]
+    toolbarToolList: DefaultSettingFormToolbarTool[]
+    activeButtonList: DefaultSettingFormActiveButton[]
   }
 }
 

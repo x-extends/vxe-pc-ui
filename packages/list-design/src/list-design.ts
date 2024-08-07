@@ -19,10 +19,7 @@ export default defineComponent({
       type: [String, Number] as PropType<VxeListDesignPropTypes.Height>,
       default: () => getConfig().listDesign.height
     },
-    config: {
-      type: Object as PropType<VxeListDesignPropTypes.Config>,
-      default: () => ({})
-    },
+    config: Object as PropType<VxeListDesignPropTypes.Config>,
     showPc: {
       type: Boolean as PropType<VxeListDesignPropTypes.ShowPc>,
       default: () => getConfig().listDesign.showPc
@@ -129,9 +126,13 @@ export default defineComponent({
         setSearchItems(searchItems)
       }
       if (listColumns) {
-        reactData.listTableColumns = configToListColumns(listColumns)
+        reactData.listTableColumns = parseTableColumn(listColumns)
       }
       return nextTick()
+    }
+
+    const parseTableColumn = (listColumns: VxeListDesignDefines.ListColumnObjItem[]) => {
+      return configToListColumns(listColumns)
     }
 
     const loadFormConfig = (data: any) => {
@@ -153,7 +154,7 @@ export default defineComponent({
     }
 
     const setListColumns = (listColumns: VxeListDesignDefines.ListColumnObjItem[]) => {
-      reactData.listTableColumns = configToListColumns(listColumns)
+      reactData.listTableColumns = parseTableColumn(listColumns)
       return nextTick()
     }
 
@@ -190,8 +191,10 @@ export default defineComponent({
       },
       loadConfig,
       clearConfig () {
-        reactData.searchFormItems = []
-        reactData.listTableColumns = []
+        loadConfig({
+          searchItems: [],
+          listColumns: []
+        })
         createSettingForm()
         return nextTick()
       }
@@ -236,6 +239,7 @@ export default defineComponent({
     })
 
     createSettingForm()
+
     if (props.config) {
       loadConfig(props.config)
     }

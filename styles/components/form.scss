@@ -78,6 +78,13 @@
   .vxe-form--item-title-label {
     vertical-align: middle;
   }
+  .vxe-form--item-title-extra {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: right;
+    flex-grow: 1;
+  }
 }
 
 .vxe-form--item-trigger-node {

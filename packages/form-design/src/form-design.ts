@@ -401,6 +401,7 @@ export default defineComponent({
 
     createSettingForm()
     updateWidgetConfigs()
+
     if (props.config) {
       loadConfig(props.config)
     }

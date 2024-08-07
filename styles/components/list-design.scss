@@ -1,10 +1,12 @@
 @import './list-item/all.scss';
 
 .vxe-list-design {
+  position: relative;
   display: flex;
   flex-direction: column;
   color: var(--vxe-ui-font-color);
   font-family: var(--vxe-ui-font-family);
+  overflow: auto;
 }
 
 .vxe-list-design {

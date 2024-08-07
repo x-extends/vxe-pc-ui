@@ -130,6 +130,7 @@ export namespace VxeFormItemPropTypes {
   export type Slots = {
     title?: string | ((params: FormItemTitleRenderParams) => VxeComponentSlotType | VxeComponentSlotType[]) | null
     default?: string | ((params: FormItemContentRenderParams) => VxeComponentSlotType | VxeComponentSlotType[]) | null
+    extra?: string | ((params: FormItemExtraRenderParams) => VxeComponentSlotType | VxeComponentSlotType[]) | null
   }
 }
 
@@ -275,6 +276,8 @@ export interface FormItemTitleRenderParams {
   property: string
 }
 
+export interface FormItemExtraRenderParams extends FormItemTitleRenderParams {}
+
 /**
  * 项内容渲染参数
  */
@@ -343,6 +346,7 @@ export interface VxeFormItemSlots {
    * 自定义标题模板
    */
   title: (params: VxeFormItemSlotTypes.DefaultSlotParams) => any
+  extra: (params: VxeFormItemSlotTypes.DefaultSlotParams) => any
 }
 
 export const FormItem: typeof VxeFormItem

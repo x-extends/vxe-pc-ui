@@ -45,7 +45,7 @@ export default defineComponent({
     const reactData = reactive<TabsReactData>({
       staticTabs: [],
       activeName: props.modelValue,
-      initNames: props.modelValue ? [props.modelValue] : [],
+      initNames: [],
       lintLeft: 0,
       lintWidth: 0,
       isTabOver: false
@@ -141,9 +141,10 @@ export default defineComponent({
       emit(type, createEvent(evnt, { $tabs: $xeTabs }, params))
     }
 
-    const addInitName = (name: VxeTabsPropTypes.ModelValue) => {
+    const addInitName = (name: VxeTabsPropTypes.ModelValue, evnt: Event | null) => {
       const { initNames } = reactData
       if (name && !initNames.includes(name)) {
+        dispatchEvent('tab-load', { name }, evnt)
         initNames.push(name)
         return true
       }
@@ -154,7 +155,7 @@ export default defineComponent({
       if (list) {
         list.forEach((item) => {
           if (item && item.preload) {
-            addInitName(item.name)
+            addInitName(item.name, null)
           }
         })
       }
@@ -169,19 +170,16 @@ export default defineComponent({
         dispatchEvent('tab-click', { name }, evnt)
         return
       }
-      const isInit = addInitName(name)
       const value = name
       reactData.activeName = name
       emit('update:modelValue', value)
       dispatchEvent('tab-click', { name }, evnt)
+      addInitName(name, evnt)
       if (name !== activeName) {
         if (!beforeMethod || beforeMethod({ $tabs: $xeTabs, name, oldName: activeName, newName: name })) {
           dispatchEvent('change', { value, name, oldName: activeName, newName: name }, evnt)
         } else {
           dispatchEvent('tab-change-fail', { value, name, oldName: activeName, newName: name }, evnt)
-        }
-        if (isInit) {
-          dispatchEvent('tab-load', { name }, evnt)
         }
       }
     }
@@ -283,9 +281,41 @@ export default defineComponent({
       })
     }
 
+    const createHandlePrevNextTab = (isNext: boolean) => {
+      return () => {
+        const { activeName } = reactData
+        const tabOptions = computeTabOptions.value
+        const tabStaticOptions = computeTabStaticOptions.value
+        const list = tabStaticOptions.length ? tabStaticOptions : tabOptions
+        const index = XEUtils.findIndexOf(list, item => item.name === activeName)
+        if (index > -1) {
+          let item: VxeTabPaneProps | null = null
+          if (isNext) {
+            if (index < list.length - 1) {
+              item = list[index + 1]
+            }
+          } else {
+            if (index > 0) {
+              item = list[index - 1]
+            }
+          }
+          if (item) {
+            const name = item.name
+            const value = name
+            reactData.activeName = name
+            emit('update:modelValue', value)
+            addInitName(name, null)
+          }
+        }
+        return nextTick()
+      }
+    }
+
     const tabsMethods: TabsMethods = {
       dispatchEvent,
-      scrollToTab
+      scrollToTab,
+      prevTab: createHandlePrevNextTab(false),
+      nextTab: createHandlePrevNextTab(true)
     }
 
     const tabsPrivateMethods: TabsPrivateMethods = {
@@ -451,7 +481,7 @@ export default defineComponent({
     }
 
     watch(() => props.modelValue, (val) => {
-      addInitName(val)
+      addInitName(val, null)
       reactData.activeName = val
     })
 
@@ -502,6 +532,7 @@ export default defineComponent({
 
     provide('$xeTabs', $xeTabs)
 
+    addInitName(props.modelValue, null)
     initDefaultName()
 
     return $xeTabs

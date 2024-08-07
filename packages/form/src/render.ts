@@ -1,4 +1,4 @@
-import { h } from 'vue'
+import { createCommentVNode, h, VNode } from 'vue'
 import { getIcon, renderer } from '../../ui'
 import { getFuncText, isEnableConf } from '../../ui/src/utils'
 import { getSlotVNs } from '../../ui/src/vn'
@@ -37,8 +37,8 @@ export function renderTitle ($xeForm: VxeFormConstructor & VxeFormPrivateMethods
   const compConf = isEnableConf(itemRender) ? renderer.get(itemRender.name) : null
   const params = { data, readonly, disabled, field, property: field, item, $form: $xeForm, $grid: $xeForm.xegrid }
   const titleSlot = slots ? slots.title : null
-  const contVNs = []
-  const titVNs = []
+  const extraSlot = slots ? slots.extra : null
+  const titVNs: VNode[] = []
   if (titlePrefix) {
     titVNs.push(
       (titlePrefix.content || titlePrefix.message)
@@ -58,11 +58,6 @@ export function renderTitle ($xeForm: VxeFormConstructor & VxeFormPrivateMethods
       class: 'vxe-form--item-title-label'
     }, titleSlot ? $xeForm.callSlot(titleSlot, params) : (rftTitle ? getSlotVNs(rftTitle(itemRender, params)) : getFuncText(item.title)))
   )
-  contVNs.push(
-    h('div', {
-      class: 'vxe-form--item-title-content'
-    }, titVNs)
-  )
   const fixVNs = []
   if (titleSuffix) {
     fixVNs.push(
@@ -77,10 +72,17 @@ export function renderTitle ($xeForm: VxeFormConstructor & VxeFormPrivateMethods
         : renderSuffixIcon(titleSuffix)
     )
   }
-  contVNs.push(
+  return [
+    h('div', {
+      class: 'vxe-form--item-title-content'
+    }, titVNs),
     h('div', {
       class: 'vxe-form--item-title-postfix'
-    }, fixVNs)
-  )
-  return contVNs
+    }, fixVNs),
+    extraSlot
+      ? h('div', {
+        class: 'vxe-form--item-title-extra'
+      }, $xeForm.callSlot(extraSlot, params))
+      : createCommentVNode()
+  ]
 }

@@ -41,7 +41,8 @@ export const WidgetVxeUploadFileViewComponent = defineComponent({
       return h(VxeFormItemComponent, {
         class: ['vxe-form-design--widget-render-form-item', `widget-${kebabCaseName}`],
         title: widget.title,
-        field: widget.field
+        field: widget.field,
+        itemRender: {}
       }, {
         default () {
           return h(VxeUploadComponent, {

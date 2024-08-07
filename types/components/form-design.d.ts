@@ -75,17 +75,53 @@ export interface FormDesignInternalData {
 
 export interface FormDesignMethods {
   dispatchEvent(type: ValueOf<VxeFormDesignEmits>, params: any, evnt: Event): void
+  /**
+   * 创建一个指定类型的控件
+   */
   createWidget (name: string): VxeFormDesignDefines.WidgetObjItem
+  /**
+   * 创建一个空的占位控件
+   */
   createEmptyWidget (): VxeFormDesignDefines.WidgetObjItem
+  /**
+   * 获取所有配置
+   */
   getConfig (): VxeFormDesignDefines.FormDesignConfig
+  /**
+   * 清除所有配置
+   */
   clearConfig (): Promise<any>
+  /**
+   * 加载配置
+   */
   loadConfig (config: Partial<VxeFormDesignDefines.FormDesignConfig>): Promise<any>
+  /**
+   * 获取表单配置
+   */
   getFormConfig(): VxeFormDesignPropTypes.FormData
+  /**
+   * 加载表单配置
+   */
   loadFormConfig (formData: VxeFormDesignPropTypes.FormData): Promise<any>
+  /**
+   * 获取表单配置绑定的数据
+   */
   getFormData(): Record<string, any>
+  /**
+   * 获取控件配置列表
+   */
   getWidgetData (): VxeFormDesignDefines.WidgetObjItem[]
+  /**
+   * 加载控件配置
+   */
   loadWidgetData (widgetData: VxeFormDesignDefines.WidgetObjItem[]): Promise<any>
+  /**
+   * 刷新控件预览视图
+   */
   refreshPreviewView(): Promise<any>
+  /**
+   * 弹出样式配置面板
+   */
   openStyleSetting(): Promise<any>
 }
 export interface VxeFormDesignMethods extends FormDesignMethods { }
@@ -124,8 +160,8 @@ export namespace VxeFormDesignDefines {
   }
 
   export interface FormDesignConfig {
-    formConfig: VxeFormDesignPropTypes.FormData
-    widgetData: WidgetObjItem[]
+    formConfig?: VxeFormDesignPropTypes.FormData
+    widgetData?: WidgetObjItem[]
   }
 
   export interface WidgetConfigGroup {

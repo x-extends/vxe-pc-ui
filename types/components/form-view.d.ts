@@ -52,11 +52,42 @@ export interface FormViewReactData {
 
 export interface FormViewMethods {
   dispatchEvent(type: ValueOf<VxeFormViewEmits>, params: any, evnt: Event): void
+  /**
+   * 清除所有配置
+   */
+  clearConfig (): Promise<any>
+  /**
+   * 加载配置
+   */
   loadConfig (config: VxeFormDesignDefines.FormDesignConfig): Promise<any>
-  loadFormConfig (formData: VxeFormProps): Promise<any>
+  /**
+   * 解析配置
+   */
+  parseConfig (config: VxeFormDesignDefines.FormDesignConfig): {
+    formConfig: VxeFormProps
+    formRules: VxeFormPropTypes.Rules
+    formData: VxeFormPropTypes.Data
+    widgetData: VxeFormDesignDefines.WidgetObjItem[]
+  }
+  /**
+   * 加载表单配置
+   */
+  loadFormConfig (formConfig: VxeFormProps): Promise<any>
+  /**
+   * 加载控件配置
+   */
   loadWidgetData (widgetData: VxeFormDesignDefines.WidgetObjItem[]): Promise<any>
+  /**
+   * 更新控件状态
+   */
   updateItemStatus(widget: VxeFormDesignDefines.WidgetObjItem, value: any): Promise<any>
+  /**
+   * 设置指定控件值
+   */
   setItemValue(widget: VxeFormDesignDefines.WidgetObjItem, value: any): Promise<any>
+  /**
+   * 获取指定控件值
+   */
   getItemValue(widget: VxeFormDesignDefines.WidgetObjItem): any
 }
 export interface VxeFormViewMethods extends FormViewMethods { }

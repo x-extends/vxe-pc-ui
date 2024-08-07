@@ -15,6 +15,8 @@ export const getDefaultSettingFormData = (): VxeListDesignDefines.DefaultSetting
     showSeq: true,
     mobileDefaultView: 'list',
     pcDefaultView: 'list',
-    activeBtnList: []
+    toolbarButtonList: [],
+    toolbarToolList: [],
+    activeButtonList: []
   }
 }

@@ -1,13 +1,17 @@
-import { defineComponent, h, resolveComponent, inject, ref, watch, onMounted } from 'vue'
+import { defineComponent, h, inject, ref, watch, onMounted, createCommentVNode, nextTick, computed } from 'vue'
+import { VxeUI } from '../../ui'
+import { errLog } from '../../ui/src/log'
 import VxeFormComponent from '../../form/src/form'
 
-import { VxeListDesignConstructor, VxeListDesignPrivateMethods, VxeGridComponent, VxeTablePropTypes, VxeGridInstance } from '../../../types'
+import { VxeListDesignConstructor, VxeListDesignPrivateMethods, VxeGridComponent, VxeTablePropTypes, VxeGridInstance, VxeGridPropTypes } from '../../../types'
 
 export default defineComponent({
   name: 'ListDesignLayoutView',
   props: {},
   emits: [],
   setup () {
+    const VxeTableGridComponent = VxeUI.getComponent<VxeGridComponent>('VxeGrid')
+
     const $xeListDesign = inject<(VxeListDesignConstructor & VxeListDesignPrivateMethods) | null>('$xeListDesign', null)
 
     if (!$xeListDesign) {
@@ -19,6 +23,19 @@ export default defineComponent({
     const refGrid = ref<VxeGridInstance>()
 
     const tableData = ref<VxeTablePropTypes.Data>([])
+
+    const tableColumn = computed(() => {
+      const { formData, listTableColumns } = listDesignReactData
+      const cols: VxeGridPropTypes.Columns = []
+      if (formData.showSeq) {
+        cols.push({
+          type: 'seq',
+          width: 70
+        })
+      }
+      cols.push(...listTableColumns)
+      return cols
+    })
 
     const updateTableData = () => {
       const { listTableColumns } = listDesignReactData
@@ -46,8 +63,16 @@ export default defineComponent({
       updateTableData()
     })
 
+    if (process.env.VUE_APP_VXE_ENV === 'development') {
+      nextTick(() => {
+        if (!VxeTableGridComponent) {
+          errLog('vxe.error.reqComp', ['vxe-grid'])
+        }
+      })
+    }
+
     return () => {
-      const { searchFormItems, listTableColumns } = listDesignReactData
+      const { searchFormItems } = listDesignReactData
 
       return h('div', {
         class: 'vxe-list-design--preview'
@@ -77,22 +102,27 @@ export default defineComponent({
             h('div', {
               class: 'vxe-list-design--preview-title'
             }, '列表字段'),
-            h(resolveComponent('vxe-grid') as VxeGridComponent, {
-              ref: refGrid,
-              columns: listTableColumns,
-              data: tableData.value,
-              showOverflow: true,
-              columnConfig: {
-                minWidth: 80,
-                isHover: true
-              },
-              scrollX: {
-                enabled: false
-              },
-              scrollY: {
-                enabled: false
-              }
-            })
+            VxeTableGridComponent
+              ? h(VxeTableGridComponent, {
+                ref: refGrid,
+                columns: tableColumn.value,
+                data: tableData.value,
+                showOverflow: true,
+                border: true,
+                columnConfig: {
+                  minWidth: 80
+                },
+                rowConfig: {
+                  isHover: true
+                },
+                scrollX: {
+                  enabled: false
+                },
+                scrollY: {
+                  enabled: false
+                }
+              })
+              : createCommentVNode()
           ])
         ])
       ])

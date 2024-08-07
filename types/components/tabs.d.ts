@@ -78,7 +78,18 @@ export interface TabsReactData {
 
 export interface TabsMethods {
   dispatchEvent(type: ValueOf<VxeTabsEmits>, params: Record<string, any>, evnt: Event | null): void
+  /**
+   * 定位到指定页签
+   */
   scrollToTab(name: VxeTabsPropTypes.ModelValue): Promise<any>
+  /**
+   * 切换到上一个页签
+   */
+  prevTab(): Promise<any>
+  /**
+   * 切换到下一个页签
+   */
+  nextTab(): Promise<any>
 }
 export interface VxeTabsMethods extends TabsMethods { }
 

@@ -40,7 +40,8 @@ export const WidgetVxeSwitchViewComponent = defineComponent({
       return h(VxeFormItemComponent, {
         class: ['vxe-form-design--widget-render-form-item', `widget-${kebabCaseName}`],
         field: widget.field,
-        title: widget.title
+        title: widget.title,
+        itemRender: {}
       }, {
         default () {
           return h(VxeSwitchComponent, {

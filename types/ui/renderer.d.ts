@@ -813,15 +813,33 @@ declare module '@vxe-ui/core' {
   }
 }
 
-// 表单设计器
+// 列表设计器
 declare module '@vxe-ui/core' {
   export interface VxeGlobalRendererOptions {
     /**
      * 列表设计器 - 创建设计器-表单属性数据
      */
     createListDesignSettingFormConfig?(params: VxeGlobalRendererHandles.CreateListDesignSettingFormConfigParams): Record<string, any>
+
+    // listDesignSettingActiveButtonName?: string
+    // listDesignSettingActiveButtonMethod?:(params: VxeGlobalRendererHandles.ListDesignSettingActiveButtonMethodParams) => void
+    // renderListDesignSettingActiveButtonFormView?(renderOpts: any, params: any): VxeComponentSlotType | VxeComponentSlotType[]
+
+    // listDesignSettingToolbarButtonName?: string
+    // listDesignSettingToolbarButtonMethod?:(params: VxeGlobalRendererHandles.ListDesignSettingToolbarButtonMethodParams) => void
+    // renderListDesignSettingToolbarButtonFormView?(renderOpts: any, params: any): VxeComponentSlotType | VxeComponentSlotType[]
+
+    // listDesignSettingToolbarToolName?: string
+    // listDesignSettingToolbarToolMethod?:(params: VxeGlobalRendererHandles.ListDesignSettingToolbarToolMethodParams) => void
+    // renderListDesignSettingToolbarToolFormView?(renderOpts: any, params: any): VxeComponentSlotType | VxeComponentSlotType[]
   }
   export namespace VxeGlobalRendererHandles {
     export interface CreateListDesignSettingFormConfigParams {}
+
+    // export interface ListDesignSettingActiveButtonMethodParams {}
+
+    // export interface ListDesignSettingToolbarButtonMethodParams {}
+
+    // export interface ListDesignSettingToolbarToolMethodParams {}
   }
 }

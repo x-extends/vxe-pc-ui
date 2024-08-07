@@ -58,7 +58,10 @@ export type VxeTableDataRow = VxeTablePropTypes.Row
 
 export namespace VxeTablePropTypes {
   export type Size = VxeComponentSizeType
-  export type ID = string
+  export type ID = string | ((params: {
+    $table: VxeTableConstructor<D> & VxeTablePrivateMethods<D>
+    $grid: VxeGridConstructor<D> | null | undefined
+  }) => string | number | null)
 
   export interface Row {
     [key: string]: any
@@ -2014,6 +2017,7 @@ export type VxeTableProps<D = any> = {
 
 export interface TablePrivateComputed<D = any> {
   computeSize: ComputedRef<VxeTablePropTypes.Size>
+  computeTableId: ComputedRef<string>
   computeValidOpts: ComputedRef<VxeTablePropTypes.ValidOpts<D>>
   computeSXOpts: ComputedRef<VxeTablePropTypes.SXOpts>
   computeSYOpts: ComputedRef<VxeTablePropTypes.SYOpts>

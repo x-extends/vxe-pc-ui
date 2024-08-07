@@ -14,10 +14,7 @@ export default defineComponent({
   name: 'VxeFormView',
   props: {
     modelValue: Object as PropType<VxeFormViewPropTypes.ModelValue>,
-    config: {
-      type: Object as PropType<VxeFormViewPropTypes.Config>,
-      default: () => ({})
-    },
+    config: Object as PropType<VxeFormViewPropTypes.Config>,
     viewRender: Object as PropType<VxeFormViewPropTypes.ViewRender>,
     createFormConfig: Function as PropType<VxeFormViewPropTypes.CreateFormConfig>
   },
@@ -59,6 +56,13 @@ export default defineComponent({
       getComputeMaps: () => computeMaps
     } as unknown as VxeFormViewConstructor & VxeFormViewPrivateMethods
 
+    const clearConfig = () => {
+      return loadConfig({
+        formConfig: {},
+        widgetData: []
+      })
+    }
+
     const loadConfig = (config: VxeFormDesignDefines.FormDesignConfig | null) => {
       if (config) {
         const { formConfig, widgetData } = config
@@ -68,24 +72,67 @@ export default defineComponent({
       return nextTick()
     }
 
-    const loadFormConfig = (formConfig: VxeFormProps) => {
-      const { viewRender } = props
-      const { createFormConfig } = props
+    const parseConfig = (config: VxeFormDesignDefines.FormDesignConfig | null) => {
+      const { formConfig, widgetData } = config || {}
+      const widgetObjList = parseWidgetData(widgetData || [])
+      return {
+        ...parseForm(widgetObjList),
+        formConfig: parseFormConfig(formConfig || {}),
+        widgetData: widgetObjList
+      }
+    }
+
+    const parseFormConfig = (formConfig: VxeFormProps) => {
+      const { viewRender, createFormConfig } = props
       const params: VxeFormViewDefines.CreateFormConfigParams = { viewRender, formConfig }
       if (createFormConfig) {
-        reactData.formConfig = createFormConfig(params)
-      } else {
-        const { name } = viewRender || {}
-        const compConf = renderer.get(name) || {}
-        const createPCFormConfig = compConf ? compConf.createFormViewFormConfig : null
-        reactData.formConfig = Object.assign({}, createPCFormConfig ? createPCFormConfig(params) : createDefaultFormViewPCFormConfig(params))
+        return createFormConfig(params)
       }
+      const { name } = viewRender || {}
+      const compConf = renderer.get(name) || {}
+      const createPCFormConfig = compConf ? compConf.createFormViewFormConfig : null
+      return Object.assign({}, createPCFormConfig ? createPCFormConfig(params) : createDefaultFormViewPCFormConfig(params))
+    }
+
+    const loadFormConfig = (formConfig: VxeFormProps) => {
+      reactData.formConfig = parseFormConfig(formConfig)
       return nextTick()
     }
 
+    const parseForm = (widgetObjList: VxeFormDesignDefines.WidgetObjItem[]) => {
+      const formData: VxeFormPropTypes.Data = {}
+      const formRules: VxeFormPropTypes.Rules = {}
+      XEUtils.eachTree(widgetObjList, widget => {
+        const { name, field, required } = widget
+        const compConf = renderer.get(name) || {}
+        const createWidgetFieldValue = compConf.createFormDesignWidgetFieldValue
+        const createWidgetFieldRules = compConf.createFormDesignWidgetFieldRules
+        formData[field] = createWidgetFieldValue ? createWidgetFieldValue({ widget, $formView: $xeFormView }) : getWidgetDefaultValue(widget)
+        if (createWidgetFieldRules) {
+          const rules = createWidgetFieldRules({ widget, $formView: $xeFormView })
+          if (rules && rules.length) {
+            formRules[field] = rules
+          }
+        } else if (required) {
+          formRules[field] = getWidgetDefaultRule()
+        }
+      }, { children: 'children' })
+      return {
+        formData,
+        formRules
+      }
+    }
+
+    const parseWidgetData = (widgetData: VxeFormDesignDefines.WidgetObjItem[]) => {
+      return (widgetData || []).map(item => configToWidget(item))
+    }
+
     const loadWidgetData = (widgetData: VxeFormDesignDefines.WidgetObjItem[]) => {
-      reactData.widgetObjList = (widgetData || []).map(item => configToWidget(item))
-      updateWidgetInfo()
+      const widgetObjList = parseWidgetData(widgetData)
+      reactData.widgetObjList = widgetObjList
+      const { formData, formRules } = parseForm(widgetObjList)
+      reactData.formRules = formRules
+      emit('update:modelValue', Object.assign(formData, props.modelValue))
       return nextTick()
     }
 
@@ -101,28 +148,6 @@ export default defineComponent({
       return [
         { required: true, content: '该填写该字段！' }
       ]
-    }
-
-    const updateWidgetInfo = () => {
-      const formData: VxeFormPropTypes.Data = {}
-      const formRules: VxeFormPropTypes.Rules = {}
-      XEUtils.eachTree(reactData.widgetObjList, widget => {
-        const { name, field, required } = widget
-        const compConf = renderer.get(name) || {}
-        const createWidgetFieldValue = compConf.createFormDesignWidgetFieldValue
-        const createWidgetFieldRules = compConf.createFormDesignWidgetFieldRules
-        formData[field] = createWidgetFieldValue ? createWidgetFieldValue({ widget, $formView: $xeFormView }) : getWidgetDefaultValue(widget)
-        if (createWidgetFieldRules) {
-          const rules = createWidgetFieldRules({ widget, $formView: $xeFormView })
-          if (rules && rules.length) {
-            formRules[field] = rules
-          }
-        } else if (required) {
-          formRules[field] = getWidgetDefaultRule()
-        }
-      }, { children: 'children' })
-      reactData.formRules = formRules
-      emit('update:modelValue', Object.assign(formData, props.modelValue))
     }
 
     const updateItemStatus = (widget: VxeFormDesignDefines.WidgetObjItem, value: any) => {
@@ -161,7 +186,9 @@ export default defineComponent({
 
     const formViewMethods: FormViewMethods = {
       dispatchEvent,
+      clearConfig,
       loadConfig,
+      parseConfig,
       loadFormConfig,
       loadWidgetData,
       updateItemStatus,
@@ -244,7 +271,9 @@ export default defineComponent({
                 })
               }),
               footerSlot
-                ? h(VxeFormItemComponent, {}, {
+                ? h(VxeFormGatherComponent, {
+                  span: 24
+                }, {
                   default () {
                     return footerSlot({})
                   }
@@ -258,11 +287,13 @@ export default defineComponent({
 
     $xeFormView.renderVN = renderVN
 
-    watch(() => props.config, () => {
-      loadConfig(props.config)
+    watch(() => props.config, (value) => {
+      loadConfig(value || {})
     })
 
-    loadConfig(props.config)
+    if (props.config) {
+      loadConfig(props.config)
+    }
 
     provide('$xeFormView', $xeFormView)
 
