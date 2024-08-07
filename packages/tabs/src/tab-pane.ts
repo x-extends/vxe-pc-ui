@@ -12,6 +12,7 @@ export default defineComponent({
     icon: String as PropType<VxeTabPanePropTypes.Icon>,
     titleWidth: [String, Number] as PropType<VxeTabPanePropTypes.TitleWidth>,
     titleAlign: [String, Number] as PropType<VxeTabPanePropTypes.TitleAlign>,
+    preload: Boolean as PropType<VxeTabPanePropTypes.Preload>,
     permissionCode: [String, Number] as PropType<VxeTabPanePropTypes.PermissionCode>
   },
   emits: [],
@@ -34,6 +35,7 @@ export default defineComponent({
       icon: props.icon,
       titleWidth: props.titleWidth,
       titleAlign: props.titleAlign,
+      preload: props.preload,
       permissionCode: props.permissionCode,
       slots: {
         default: slots.default

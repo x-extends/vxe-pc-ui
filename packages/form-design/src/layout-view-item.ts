@@ -72,6 +72,7 @@ export const ViewItemComponent = defineComponent({
               // 控件换位置
               currRest.items.splice(currRest.index, 1)
               targetRest.items.splice(targetRest.index, 0, currRest.item)
+              $xeFormDesign.dispatchEvent('drag-widget', { widget: currRest.item }, evnt)
               isDragAnimate = true
               setTimeout(() => {
                 isDragAnimate = false

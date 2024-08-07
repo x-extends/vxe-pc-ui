@@ -96,8 +96,6 @@ export const DefaultFieldSettingFormComponent = defineComponent({
     }
 
     return () => {
-      const { formData } = listDesignReactData
-
       return h(VxeFormComponent, {
         span: 24,
         vertical: true,
@@ -122,6 +120,7 @@ export const DefaultFieldSettingFormComponent = defineComponent({
               title: '通用字段'
             }, {
               default () {
+                const { formData } = listDesignReactData
                 return [
                   h('div', {
                     class: 'vxe-list-design--widget-form-item-prop-list'

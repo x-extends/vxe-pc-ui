@@ -28,6 +28,7 @@ export namespace VxeTabPanePropTypes {
   export type Icon = string
   export type TitleWidth = string | number
   export type TitleAlign = VxeComponentAlignType
+  export type Preload = boolean
   export type PermissionCode = VxeComponentPermissionCodeType
 }
 
@@ -37,6 +38,7 @@ export type VxeTabPaneProps = {
   icon?: VxeTabPanePropTypes.Icon
   titleWidth?: VxeTabPanePropTypes.TitleWidth
   titleAlign?: VxeTabPanePropTypes.TitleAlign
+  preload?: VxeTabPanePropTypes.Preload
   permissionCode?: VxeTabPanePropTypes.PermissionCode
 
   slots?: {

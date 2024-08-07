@@ -81,8 +81,16 @@ export default defineComponent({
               ref: refGrid,
               columns: listTableColumns,
               data: tableData.value,
+              showOverflow: true,
               columnConfig: {
-                minWidth: 80
+                minWidth: 80,
+                isHover: true
+              },
+              scrollX: {
+                enabled: false
+              },
+              scrollY: {
+                enabled: false
               }
             })
           ])

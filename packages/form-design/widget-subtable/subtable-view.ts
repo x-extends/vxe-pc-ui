@@ -80,6 +80,7 @@ const ViewSubItemComponent = defineComponent({
             subList[targetIndex] = sortSubWidget
             parentWidget.children = subList
             isDragAnimate = true
+            $xeFormDesign.dispatchEvent('drag-widget', { widget: sortSubWidget }, evnt)
             setTimeout(() => {
               isDragAnimate = false
             }, 150)

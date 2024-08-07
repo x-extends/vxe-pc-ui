@@ -121,8 +121,21 @@ export default defineComponent({
     }
 
     const loadConfig = (config: Partial<VxeListDesignDefines.ListDesignConfig>) => {
-      setSearchItems(config.searchItems || [])
-      reactData.listTableColumns = configToListColumns(config.listColumns || [])
+      const { formConfig, searchItems, listColumns } = config
+      if (formConfig) {
+        loadFormConfig(formConfig)
+      }
+      if (searchItems) {
+        setSearchItems(searchItems)
+      }
+      if (listColumns) {
+        reactData.listTableColumns = configToListColumns(listColumns)
+      }
+      return nextTick()
+    }
+
+    const loadFormConfig = (data: any) => {
+      reactData.formData = Object.assign({}, data)
       return nextTick()
     }
 
@@ -170,7 +183,7 @@ export default defineComponent({
       setListColumns,
       getConfig () {
         return {
-          formConfig: {},
+          formConfig: reactData.formData,
           searchItems: getSearchItems(),
           listColumns: getListColumns()
         }

@@ -101,7 +101,8 @@ export type VxeFormDesignEmits = [
   'click-widget',
   'add-widget',
   'copy-widget',
-  'remove-widget'
+  'remove-widget',
+  'drag-widget'
 ]
 
 export interface VxeFormDesignLayoutStyle {
@@ -180,6 +181,10 @@ export namespace VxeFormDesignDefines {
   export interface RemoveWidgetEventParams<D = any> extends FormDesignEventParams {
     widget: VxeFormDesignDefines.WidgetObjItem<D>
   }
+
+  export interface DragWidgetEventParams<D = any> extends FormDesignEventParams {
+    widget: VxeFormDesignDefines.WidgetObjItem<D>
+  }
 }
 
 export type VxeFormDesignEventProps = {
@@ -187,6 +192,7 @@ export type VxeFormDesignEventProps = {
   onAddWidget?: VxeFormDesignEvents.AddWidget
   onCopyWidget?: VxeFormDesignEvents.CopyWidget
   onRemoveWidget?: VxeFormDesignEvents.RemoveWidget
+  onDragWidget?: VxeFormDesignEvents.DragWidget
 }
 
 export interface VxeFormDesignListeners {
@@ -194,6 +200,7 @@ export interface VxeFormDesignListeners {
   addWidget?: VxeFormDesignEvents.AddWidget
   copyWidget?: VxeFormDesignEvents.CopyWidget
   removeWidget?: VxeFormDesignEvents.RemoveWidget
+  dragWidget?: VxeFormDesignEvents.DragWidget
 }
 
 export namespace VxeFormDesignEvents {
@@ -201,6 +208,7 @@ export namespace VxeFormDesignEvents {
   export type AddWidget<D = any> = (params: VxeFormDesignDefines.AddWidgetEventParams<D>) => void
   export type CopyWidget<D = any> = (params: VxeFormDesignDefines.CopyWidgetEventParams<D>) => void
   export type RemoveWidget<D = any> = (params: VxeFormDesignDefines.RemoveWidgetEventParams<D>) => void
+  export type DragWidget<D = any> = (params: VxeFormDesignDefines.DragWidgetEventParams<D>) => void
  }
 
 export namespace VxeFormDesignSlotTypes {}

@@ -42,7 +42,8 @@ export default defineComponent({
     'click-widget',
     'add-widget',
     'copy-widget',
-    'remove-widget'
+    'remove-widget',
+    'drag-widget'
   ] as VxeFormDesignEmits,
   setup (props, context) {
     const { emit, slots } = context
@@ -94,8 +95,12 @@ export default defineComponent({
     const loadConfig = (config: Partial<VxeFormDesignDefines.FormDesignConfig>) => {
       if (config) {
         const { formConfig, widgetData } = config
-        loadFormConfig(formConfig || {})
-        loadWidgetData(widgetData || [])
+        if (formConfig) {
+          loadFormConfig(formConfig)
+        }
+        if (widgetData) {
+          loadWidgetData(widgetData)
+        }
       }
       return nextTick()
     }

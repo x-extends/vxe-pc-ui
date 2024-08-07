@@ -10,6 +10,16 @@
       padding: var(--vxe-ui-layout-padding-default);
     }
   }
+  &.trigger--default {
+    .vxe-tabs-header--item {
+      cursor: pointer;
+      &:hover {
+        .vxe-tabs-header--item-name {
+          color: var(--vxe-ui-font-primary-color);
+        }
+      }
+    }
+  }
 }
 
 .vxe-tabs-header {
@@ -94,12 +104,6 @@
   position: relative;
   flex-shrink: 0;
   padding: 0 0.5em;
-  cursor: pointer;
-  &:hover {
-    .vxe-tabs-header--item-name {
-      color: var(--vxe-ui-font-primary-color);
-    }
-  }
   &.is--active {
     color: var(--vxe-ui-font-primary-color);
   }

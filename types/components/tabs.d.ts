@@ -33,6 +33,7 @@ export namespace VxeTabsPropTypes {
   export type Type = null | '' | 'default' | 'card' | 'border-card' | 'round-card'
   export type ShowClose = boolean
   export type Padding = boolean
+  export type Trigger = '' | 'default' | 'click' | 'manual'
   export type BeforeChangeMethod = (params: {
     $tabs: VxeTabsConstructor
     name: VxeTabsPropTypes.ModelValue
@@ -57,6 +58,7 @@ export type VxeTabsProps = {
   type?: VxeTabsPropTypes.Type
   showClose?: VxeTabsPropTypes.ShowClose
   padding?: VxeTabsPropTypes.Padding
+  trigger?: VxeTabsPropTypes.Trigger
   beforeChangeMethod?: VxeTabsPropTypes.BeforeChangeMethod
   beforeCloseMethod?: VxeTabsPropTypes.BeforeCloseMethod
 }

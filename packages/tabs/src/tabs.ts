@@ -21,6 +21,7 @@ export default defineComponent({
       type: Boolean as PropType<VxeTabsPropTypes.Padding>,
       default: () => getConfig().tabs.padding
     },
+    trigger: String as PropType<VxeTabsPropTypes.Trigger>,
     beforeChangeMethod: Function as PropType<VxeTabsPropTypes.BeforeChangeMethod>,
     beforeCloseMethod: Function as PropType<VxeTabsPropTypes.BeforeCloseMethod>
   },
@@ -140,16 +141,36 @@ export default defineComponent({
       emit(type, createEvent(evnt, { $tabs: $xeTabs }, params))
     }
 
-    const clickEvent = (evnt: KeyboardEvent, item: VxeTabPaneProps | VxeTabPaneDefines.TabConfig) => {
-      const beforeMethod = props.beforeChangeMethod || getConfig().tabs.beforeChangeMethod
-      const { initNames, activeName } = reactData
-      const { name } = item
-      let isInit = false
-      const value = name
-      if (!initNames.includes(name)) {
-        isInit = true
+    const addInitName = (name: VxeTabsPropTypes.ModelValue) => {
+      const { initNames } = reactData
+      if (name && !initNames.includes(name)) {
         initNames.push(name)
+        return true
       }
+      return false
+    }
+
+    const initDefaultName = (list?: VxeTabsPropTypes.Options | VxeTabPaneDefines.TabConfig[]) => {
+      if (list) {
+        list.forEach((item) => {
+          if (item && item.preload) {
+            addInitName(item.name)
+          }
+        })
+      }
+    }
+
+    const clickEvent = (evnt: KeyboardEvent, item: VxeTabPaneProps | VxeTabPaneDefines.TabConfig) => {
+      const { trigger } = props
+      const beforeMethod = props.beforeChangeMethod || getConfig().tabs.beforeChangeMethod
+      const { activeName } = reactData
+      const { name } = item
+      if (trigger === 'manual') {
+        dispatchEvent('tab-click', { name }, evnt)
+        return
+      }
+      const isInit = addInitName(name)
+      const value = name
       reactData.activeName = name
       emit('update:modelValue', value)
       dispatchEvent('tab-click', { name }, evnt)
@@ -402,14 +423,14 @@ export default defineComponent({
     }
 
     const renderVN = () => {
-      const { type, height, padding } = props
+      const { type, height, padding, trigger } = props
       const tabOptions = computeTabOptions.value
       const tabStaticOptions = computeTabStaticOptions.value
       const defaultSlot = slots.default
 
       return h('div', {
         ref: refElem,
-        class: ['vxe-tabs', `vxe-tabs--${type || 'default'}`, {
+        class: ['vxe-tabs', `vxe-tabs--${type || 'default'}`, `trigger--${trigger === 'manual' ? 'trigger' : 'default'}`, {
           'is--padding': padding,
           'is--height': height
         }],
@@ -430,10 +451,7 @@ export default defineComponent({
     }
 
     watch(() => props.modelValue, (val) => {
-      const { initNames } = reactData
-      if (!initNames.includes(val)) {
-        initNames.push(val)
-      }
+      addInitName(val)
       reactData.activeName = val
     })
 
@@ -450,6 +468,19 @@ export default defineComponent({
       optsFlag.value++
     })
     watch(optsFlag, () => {
+      initDefaultName(props.options)
+      updateTabStyle()
+    })
+
+    const stFlag = ref(0)
+    watch(() => reactData.staticTabs ? reactData.staticTabs.length : -1, () => {
+      stFlag.value++
+    })
+    watch(() => reactData.staticTabs, () => {
+      stFlag.value++
+    })
+    watch(stFlag, () => {
+      initDefaultName(reactData.staticTabs)
       updateTabStyle()
     })
 
@@ -470,6 +501,8 @@ export default defineComponent({
     $xeTabs.renderVN = renderVN
 
     provide('$xeTabs', $xeTabs)
+
+    initDefaultName()
 
     return $xeTabs
   },

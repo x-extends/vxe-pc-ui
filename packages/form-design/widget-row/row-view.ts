@@ -59,6 +59,7 @@ const ViewColItemComponent = defineComponent({
             }
             parentWidget.children[colItemIndex] = item
             items.splice(index, 1)
+            $xeFormDesign.dispatchEvent('drag-widget', { widget: item }, evnt)
           }
         }
       }

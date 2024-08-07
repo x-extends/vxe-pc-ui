@@ -84,6 +84,7 @@
   flex-direction: row;
   align-items: center;
   flex-shrink: 0;
+  background-color: var(--vxe-ui-layout-background-color);
 }
 .vxe-date-picker--prefix-icon {
   padding-left: 0.5em;

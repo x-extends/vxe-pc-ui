@@ -28,6 +28,7 @@ export default defineComponent({
         if (!rest) {
           formDesignReactData.sortWidget = dragWidget
           widgetObjList.push(dragWidget)
+          $xeFormDesign.dispatchEvent('drag-widget', { widget: dragWidget }, evnt)
         }
       }
     }
