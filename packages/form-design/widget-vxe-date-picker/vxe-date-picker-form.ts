@@ -23,6 +23,7 @@ export const WidgetVxeDatePickerFormComponent = defineComponent({
   emits: [],
   setup (props) {
     const { computeKebabCaseName } = useWidgetName(props)
+    // const { renderDefaultValueFormItem } = useWidgetPropDefaultValue(props)
 
     return () => {
       const { renderParams } = props
@@ -55,6 +56,7 @@ export const WidgetVxeDatePickerFormComponent = defineComponent({
               field: 'placeholder',
               itemRender: { name: 'VxeInput' }
             }),
+            // renderDefaultValueFormItem(),
             h(VxeFormItemComponent, {
               title: getI18n('vxe.formDesign.widgetProp.required')
             }, {

@@ -1,7 +1,7 @@
 import { VNode, createCommentVNode, defineComponent, h, inject, ref, reactive, provide } from 'vue'
 import { getIcon, getI18n, renderer } from '@vxe-ui/core'
 import { getSlotVNs } from '../../ui/src/vn'
-import VxeDrawerComponent from '../../drawer/src/drawer'
+import VxeModalComponent from '../../modal/src/modal'
 import VxeTabsComponent from '../../tabs/src/tabs'
 import VxeTabPaneComponent from '../../tabs/src/tab-pane'
 import VxeFormViewComponent from './form-view'
@@ -178,13 +178,15 @@ export default defineComponent({
 
     const renderVN = () => {
       const { showPc, showMobile } = formDesignProps
-      return h(VxeDrawerComponent, {
+      return h(VxeModalComponent, {
         modelValue: settingVisible.value,
         title: getI18n('vxe.formDesign.styleSetting.title'),
         height: '90vh',
+        width: '90vw',
+        escClosable: true,
         maskClosable: true,
         destroyOnClose: true,
-        position: 'bottom',
+        showMaximize: true,
         'onUpdate:modelValue' (val) {
           settingVisible.value = val
         }

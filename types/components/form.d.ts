@@ -140,14 +140,15 @@ export interface FormMethods<D = any> {
   validate(callback?: (errMap?: VxeFormDefines.ValidateErrorMapParams) => void): Promise<VxeFormDefines.ValidateErrorMapParams>
   /**
    * 对表单指定项进行校验，参数为一个回调函数。该回调函数会在校验结束后被调用 callback(errMap)。若不传入回调函数，则会返回一个 promise
+   * @param field 字段名
    * @param callback 回调函数
    */
-  validateField(field: VxeFormItemPropTypes.Field | VxeFormItemPropTypes.Field[] | VxeFormDefines.ItemInfo | VxeFormDefines.ItemInfo[], callback?: (errMap?: VxeFormDefines.ValidateErrorMapParams) => void): Promise<VxeFormDefines.ValidateErrorMapParams>
+  validateField(field: VxeFormItemPropTypes.Field | VxeFormItemPropTypes.Field[] | VxeFormDefines.ItemInfo | VxeFormDefines.ItemInfo[] | null, callback?: (errMap?: VxeFormDefines.ValidateErrorMapParams) => void): Promise<VxeFormDefines.ValidateErrorMapParams>
   /**
    * 手动清除校验状态，如果指定 field 则清除指定的项，否则清除整个表单
    * @param field 字段名
    */
-  clearValidate(field?: VxeFormItemPropTypes.Field | VxeFormItemPropTypes.Field[] | VxeFormDefines.ItemInfo | VxeFormDefines.ItemInfo[]): Promise<any>
+  clearValidate(field?: VxeFormItemPropTypes.Field | VxeFormItemPropTypes.Field[] | VxeFormDefines.ItemInfo | VxeFormDefines.ItemInfo[] | null): Promise<any>
   /**
    * 更新项状态
    * 当使用自定义渲染时可能会用到

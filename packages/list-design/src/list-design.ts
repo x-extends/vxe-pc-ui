@@ -136,7 +136,7 @@ export default defineComponent({
     }
 
     const loadFormConfig = (data: any) => {
-      reactData.formData = Object.assign({}, data)
+      reactData.formData = Object.assign({}, createSettingForm(), data)
       return nextTick()
     }
 
@@ -167,7 +167,11 @@ export default defineComponent({
         formData = (createFormConfig ? createFormConfig({}) : {}) || {}
       }
 
-      reactData.formData = formData as VxeListDesignDefines.DefaultSettingFormDataObjVO
+      return formData as VxeListDesignDefines.DefaultSettingFormDataObjVO
+    }
+
+    const initSettingForm = () => {
+      reactData.formData = createSettingForm()
     }
 
     const listDesignMethods: ListDesignMethods = {
@@ -195,7 +199,7 @@ export default defineComponent({
           searchItems: [],
           listColumns: []
         })
-        createSettingForm()
+        initSettingForm()
         return nextTick()
       }
     }
@@ -238,7 +242,7 @@ export default defineComponent({
       loadConfig(value || {})
     })
 
-    createSettingForm()
+    initSettingForm()
 
     if (props.config) {
       loadConfig(props.config)

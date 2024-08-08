@@ -19,10 +19,6 @@
     color: var(--vxe-ui-menu-item-hover-color);
     background-color: var(--vxe-ui-base-hover-background-color);
   }
-  &.router-link-exact-active {
-    color: var(--vxe-ui-font-primary-color);
-    background-color: var(--vxe-ui-base-active-background-color);
-  }
 }
 .vxe-menu--item-link-icon {
   flex-shrink: 0;
@@ -78,6 +74,7 @@
   &.is--exact-active {
     & > .vxe-menu--item-link {
       color: var(--vxe-ui-font-primary-color);
+      background-color: var(--vxe-ui-base-active-background-color);
     }
   }
   &.is--expand {

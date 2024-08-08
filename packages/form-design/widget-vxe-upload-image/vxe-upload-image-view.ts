@@ -28,7 +28,7 @@ export const WidgetVxeUploadImageViewComponent = defineComponent({
       const { widget } = renderParams
       if ($xeFormView) {
         const itemValue = $xeFormView ? $xeFormView.getItemValue(widget) : null
-        $xeFormView.updateItemStatus(widget, itemValue)
+        $xeFormView.updateWidgetStatus(widget, itemValue)
       }
     }
 

@@ -110,7 +110,7 @@ export default defineComponent({
     }
 
     const loadFormConfig = (data: VxeFormDesignPropTypes.FormData) => {
-      reactData.formData = Object.assign({}, data) as VxeFormDesignDefines.DefaultSettingFormDataObjVO
+      reactData.formData = Object.assign({}, createSettingForm(), data) as VxeFormDesignDefines.DefaultSettingFormDataObjVO
       return nextTick()
     }
 
@@ -149,7 +149,7 @@ export default defineComponent({
       },
       clearConfig () {
         reactData.widgetObjList = []
-        createSettingForm()
+        initSettingForm()
         return nextTick()
       },
       loadConfig,
@@ -323,8 +323,11 @@ export default defineComponent({
         const createFormConfig = compConf ? compConf.createFormDesignSettingFormConfig : null
         formData = (createFormConfig ? createFormConfig({}) : {}) || {}
       }
+      return formData as VxeFormDesignDefines.DefaultSettingFormDataObjVO
+    }
 
-      reactData.formData = formData as VxeFormDesignDefines.DefaultSettingFormDataObjVO
+    const initSettingForm = () => {
+      reactData.formData = createSettingForm()
     }
 
     const openStylePreviewEvent = () => {
@@ -399,7 +402,7 @@ export default defineComponent({
       loadConfig(value || {})
     })
 
-    createSettingForm()
+    initSettingForm()
     updateWidgetConfigs()
 
     if (props.config) {

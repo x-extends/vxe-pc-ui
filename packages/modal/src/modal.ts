@@ -160,8 +160,10 @@ export default defineComponent({
     const recalculate = () => {
       const { width, height } = props
       const boxElem = getBox()
-      boxElem.style.width = `${width ? (isNaN(width as number) ? width : `${width}px`) : ''}`
-      boxElem.style.height = `${height ? (isNaN(height as number) ? height : `${height}px`) : ''}`
+      if (boxElem) {
+        boxElem.style.width = `${width ? (isNaN(width as number) ? width : `${width}px`) : ''}`
+        boxElem.style.height = `${height ? (isNaN(height as number) ? height : `${height}px`) : ''}`
+      }
       return nextTick()
     }
 
@@ -180,6 +182,9 @@ export default defineComponent({
         const { position } = props
         const marginSize = XEUtils.toNumber(props.marginSize)
         const boxElem = getBox()
+        if (!boxElem) {
+          return
+        }
         const clientVisibleWidth = document.documentElement.clientWidth || document.body.clientWidth
         const clientVisibleHeight = document.documentElement.clientHeight || document.body.clientHeight
         const isPosCenter = position === 'center'
@@ -210,9 +215,11 @@ export default defineComponent({
         let offsetTop = 0
         queueList.forEach(comp => {
           const boxElem = comp.getBox()
-          offsetTop += XEUtils.toNumber(comp.props.top)
-          comp.reactData.modalTop = offsetTop
-          offsetTop += boxElem.clientHeight
+          if (boxElem) {
+            offsetTop += XEUtils.toNumber(comp.props.top)
+            comp.reactData.modalTop = offsetTop
+            offsetTop += boxElem.clientHeight
+          }
         })
       })
     }
@@ -291,17 +298,19 @@ export default defineComponent({
         if (posStorage) {
           const boxElem = getBox()
           const [left, top, width, height, zoomLeft, zoomTop, zoomWidth, zoomHeight] = posStorage.split(',')
-          if (left) {
-            boxElem.style.left = `${left}px`
-          }
-          if (top) {
-            boxElem.style.top = `${top}px`
-          }
-          if (width) {
-            boxElem.style.width = `${width}px`
-          }
-          if (height) {
-            boxElem.style.height = `${height}px`
+          if (boxElem) {
+            if (left) {
+              boxElem.style.left = `${left}px`
+            }
+            if (top) {
+              boxElem.style.top = `${top}px`
+            }
+            if (width) {
+              boxElem.style.width = `${width}px`
+            }
+            if (height) {
+              boxElem.style.height = `${height}px`
+            }
           }
           if (zoomLeft && zoomTop) {
             reactData.revertLocat = {
@@ -329,6 +338,9 @@ export default defineComponent({
       const { revertLocat } = reactData
       if (id && remember && storage) {
         const boxElem = getBox()
+        if (!boxElem) {
+          return
+        }
         const posStorageMap = getStorageMap(storageKey)
         posStorageMap[id] = ([
           boxElem.style.left,
@@ -379,6 +391,9 @@ export default defineComponent({
       reactData.zoomStatus = 'minimize'
       return nextTick().then(() => {
         const boxElem = getBox()
+        if (!boxElem) {
+          return
+        }
         const headerEl = refHeaderElem.value
         if (!headerEl) {
           return
@@ -442,21 +457,23 @@ export default defineComponent({
       reactData.zoomStatus = 'maximize'
       return nextTick().then(() => {
         const boxElem = getBox()
-        // 如果当前处于复原状态
-        if (!prevZoomStatus) {
-          reactData.revertLocat = {
-            top: boxElem.offsetTop,
-            left: boxElem.offsetLeft,
-            width: boxElem.offsetWidth + (boxElem.style.width ? 0 : 1),
-            height: boxElem.offsetHeight + (boxElem.style.height ? 0 : 1)
+        if (boxElem) {
+          // 如果当前处于复原状态
+          if (!prevZoomStatus) {
+            reactData.revertLocat = {
+              top: boxElem.offsetTop,
+              left: boxElem.offsetLeft,
+              width: boxElem.offsetWidth + (boxElem.style.width ? 0 : 1),
+              height: boxElem.offsetHeight + (boxElem.style.height ? 0 : 1)
+            }
           }
+          Object.assign(boxElem.style, {
+            top: '0',
+            left: '0',
+            width: '100%',
+            height: '100%'
+          })
         }
-        Object.assign(boxElem.style, {
-          top: '0',
-          left: '0',
-          width: '100%',
-          height: '100%'
-        })
         savePosStorage()
       })
     }
@@ -591,12 +608,14 @@ export default defineComponent({
         if (revertLocat) {
           const boxElem = getBox()
           reactData.revertLocat = null
-          Object.assign(boxElem.style, {
-            top: `${revertLocat.top}px`,
-            left: `${revertLocat.left}px`,
-            width: `${revertLocat.width}px`,
-            height: `${revertLocat.height}px`
-          })
+          if (boxElem) {
+            Object.assign(boxElem.style, {
+              top: `${revertLocat.top}px`,
+              left: `${revertLocat.left}px`,
+              width: `${revertLocat.width}px`,
+              height: `${revertLocat.height}px`
+            })
+          }
           savePosStorage()
           return nextTick()
         }
@@ -657,11 +676,13 @@ export default defineComponent({
       const isMsg = computeIsMsg.value
       if (!isMsg) {
         const boxElem = getBox()
-        if (XEUtils.isNumber(top)) {
-          boxElem.style.top = `${top}px`
-        }
-        if (XEUtils.isNumber(left)) {
-          boxElem.style.left = `${left}px`
+        if (boxElem) {
+          if (XEUtils.isNumber(top)) {
+            boxElem.style.top = `${top}px`
+          }
+          if (XEUtils.isNumber(left)) {
+            boxElem.style.left = `${left}px`
+          }
         }
       }
       return nextTick()
@@ -679,6 +700,9 @@ export default defineComponent({
       const { zoomStatus } = reactData
       const marginSize = XEUtils.toNumber(props.marginSize)
       const boxElem = getBox()
+      if (!boxElem) {
+        return
+      }
       if (zoomStatus !== 'maximize' && evnt.button === 0 && !getEventTargetNode(evnt, boxElem, 'trigger--btn').flag) {
         evnt.preventDefault()
         const domMousemove = document.onmousemove

@@ -1,7 +1,7 @@
 import { RenderFunction, SetupContext, Ref, ComponentPublicInstance, DefineComponent } from 'vue'
 import { defineVxeComponent, VxeComponentBaseOptions, VxeComponentEventParams, ValueOf } from '@vxe-ui/core'
 import { VxeFormDesignDefines } from './form-design'
-import { VxeFormProps, VxeFormPropTypes } from './form'
+import { VxeFormProps, VxeFormPropTypes, VxeFormDefines } from './form'
 
 /* eslint-disable no-use-before-define,@typescript-eslint/ban-types */
 
@@ -80,7 +80,7 @@ export interface FormViewMethods {
   /**
    * 更新控件状态
    */
-  updateItemStatus(widget: VxeFormDesignDefines.WidgetObjItem, value: any): Promise<any>
+  updateWidgetStatus(widget: VxeFormDesignDefines.WidgetObjItem, value: any): Promise<any>
   /**
    * 设置指定控件值
    */
@@ -89,6 +89,30 @@ export interface FormViewMethods {
    * 获取指定控件值
    */
   getItemValue(widget: VxeFormDesignDefines.WidgetObjItem): any
+  /**
+   * 对表单进行校验，返回一个包含校验不通过字段的 promise
+   */
+  validate(): Promise<VxeFormDefines.ValidateErrorMapParams>
+  /**
+   * 重置表单
+   */
+  reset(): Promise<any>
+  /**
+   * 对表单指定控件进行校验，返回一个包含校验不通过字段的 promise
+   * @param widget 单个或多个控件
+   */
+  validateWidget(widget: VxeFormDesignDefines.WidgetObjItem | VxeFormDesignDefines.WidgetObjItem[]): Promise<VxeFormDefines.ValidateErrorMapParams>
+  /**
+   * 手动清除校验状态，如果指定 field 则清除指定的项，否则清除整个表单
+   * @param widget 单个或多个控件
+   */
+  clearValidate(widget?: VxeFormDesignDefines.WidgetObjItem | VxeFormDesignDefines.WidgetObjItem[]): Promise<any>
+
+  /**
+   * 已废弃，请使用 updateWidgetStatus
+   * @deprecated
+   */
+  updateItemStatus(widget: VxeFormDesignDefines.WidgetObjItem, value: any): Promise<any>
 }
 export interface VxeFormViewMethods extends FormViewMethods { }
 

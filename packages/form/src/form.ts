@@ -528,10 +528,12 @@ export default defineComponent({
         return nextTick()
       }
       let fields: any[] = []
-      if (XEUtils.isArray(fieldOrItem)) {
-        fields = fieldOrItem
-      } else {
-        fields = [fieldOrItem]
+      if (fieldOrItem) {
+        if (XEUtils.isArray(fieldOrItem)) {
+          fields = fieldOrItem
+        } else {
+          fields = [fieldOrItem]
+        }
       }
       return beginValidate(fields.map(field => handleFieldOrItem($xeForm, field) as VxeFormDefines.ItemInfo), '', callback)
     }

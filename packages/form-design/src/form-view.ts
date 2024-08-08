@@ -150,7 +150,7 @@ export default defineComponent({
       ]
     }
 
-    const updateItemStatus = (widget: VxeFormDesignDefines.WidgetObjItem, value: any) => {
+    const updateWidgetStatus = (widget: VxeFormDesignDefines.WidgetObjItem, value: any) => {
       const { field } = widget
       const $form = formRef.value
       if ($form) {
@@ -184,6 +184,17 @@ export default defineComponent({
       emit(type, createEvent(evnt, { $formView: $xeFormView }, params))
     }
 
+    const toWidgetFields = (widget?: VxeFormDesignDefines.WidgetObjItem<any> | VxeFormDesignDefines.WidgetObjItem<any>[]) => {
+      if (widget) {
+        if (XEUtils.isArray(widget)) {
+          return widget.map(item => item.name)
+        } else {
+          return [widget.name]
+        }
+      }
+      return null
+    }
+
     const formViewMethods: FormViewMethods = {
       dispatchEvent,
       clearConfig,
@@ -191,9 +202,42 @@ export default defineComponent({
       parseConfig,
       loadFormConfig,
       loadWidgetData,
-      updateItemStatus,
+      updateWidgetStatus,
       setItemValue,
-      getItemValue
+      getItemValue,
+      validate () {
+        const $form = formRef.value
+        if ($form) {
+          return $form.validate()
+        }
+        return nextTick()
+      },
+      validateWidget (widget) {
+        const $form = formRef.value
+        if ($form) {
+          return $form.validateField(toWidgetFields(widget))
+        }
+        return nextTick()
+      },
+      clearValidate (widget) {
+        const $form = formRef.value
+        if ($form) {
+          return $form.clearValidate(toWidgetFields(widget))
+        }
+        return nextTick()
+      },
+      reset () {
+        const $form = formRef.value
+        if ($form) {
+          return $form.reset()
+        }
+        return nextTick()
+      },
+      /**
+       * 已废弃
+       * @deprecated
+       */
+      updateItemStatus: updateWidgetStatus
     }
 
     const handleSubmit: VxeFormEvents.Submit = (params) => {

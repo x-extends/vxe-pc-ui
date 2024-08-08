@@ -1,12 +1,11 @@
-import { VNode, h, onMounted, computed, ref, watch } from 'vue'
+import { VNode, h, onMounted, ref, watch } from 'vue'
 import { VxeUI, getIcon, getI18n } from '@vxe-ui/core'
-import VxeFormItemComponent from '../../form/src/form-item'
-import VxeButtonComponent from '../../button/src/button'
-import VxeTextareaComponent from '../../textarea/src/textarea'
-import VxeTipComponent from '../../tip/src/tip'
-import XEUtils from 'xe-utils'
+import VxeFormItemComponent from '../../../form/src/form-item'
+import VxeButtonComponent from '../../../button/src/button'
+import VxeTextareaComponent from '../../../textarea/src/textarea'
+import VxeTipComponent from '../../../tip/src/tip'
 
-import type { VxeGlobalRendererHandles, VxeFormDesignDefines } from '../../../types'
+import type { VxeGlobalRendererHandles } from '../../../../types'
 
 export interface WidgetDataSourceOptionSubObjVO {
   value: string,
@@ -61,6 +60,19 @@ export function useWidgetPropDataSource (props: {
       expandIndexList.value = expandIndexList.value.filter(num => num !== gIndex)
     } else {
       expandIndexList.value.push(gIndex)
+    }
+  }
+
+  const removeOptionEvent = (item: WidgetDataSourceOptionSubObjVO, group: WidgetDataSourceOptionObjVO | null) => {
+    const { renderParams } = props
+    const { widget } = renderParams
+    const { options } = widget
+    if (group) {
+      if (group.options) {
+        group.options = group.options.filter(obj => obj !== item)
+      }
+    } else {
+      options.options = options.options.filter(obj => obj !== item)
     }
   }
 
@@ -154,7 +166,8 @@ export function useWidgetPropDataSource (props: {
     })
   }
 
-  const renderOption = (item: WidgetDataSourceOptionSubObjVO, hasFirstLevel: boolean, isExpand: boolean, gIndex: number, hasSub: boolean, isFirst: boolean, isLast: boolean) => {
+  const renderOption = (item: WidgetDataSourceOptionSubObjVO, group: WidgetDataSourceOptionObjVO | null, isExpand: boolean, gIndex: number, hasSub: boolean, isFirst: boolean, isLast: boolean) => {
+    const hasFirstLevel = !group
     return h('div', {
       class: ['vxe-form-design--widget-form-item-data-source-option', {
         'is--first': isFirst,
@@ -183,7 +196,10 @@ export function useWidgetPropDataSource (props: {
       h(VxeButtonComponent, {
         status: 'danger',
         mode: 'text',
-        icon: getIcon().FORM_DESIGN_WIDGET_DELETE
+        icon: getIcon().FORM_DESIGN_WIDGET_DELETE,
+        onClick () {
+          removeOptionEvent(item, group)
+        }
       })
     ])
   }
@@ -199,16 +215,16 @@ export function useWidgetPropDataSource (props: {
         const { options } = group
         const isExpand = expandIndexList.value.includes(gIndex)
         if (options && options.length) {
-          optVNs.push(renderOption(group, true, isExpand, gIndex, true, gIndex === 0, gIndex === groups.length - 1))
+          optVNs.push(renderOption(group, null, isExpand, gIndex, true, gIndex === 0, gIndex === groups.length - 1))
           if (isExpand) {
             optVNs.push(
               h('div', {
                 class: 'vxe-form-design--widget-form-item-data-source-sub-option'
-              }, options.map(item => renderOption(item, false, isExpand, 0, false, false, false)))
+              }, options.map(item => renderOption(item, group, isExpand, 0, false, false, false)))
             )
           }
         } else {
-          optVNs.push(renderOption(group, true, isExpand, gIndex, false, gIndex === 0, gIndex === groups.length - 1))
+          optVNs.push(renderOption(group, null, isExpand, gIndex, false, gIndex === 0, gIndex === groups.length - 1))
         }
       })
     }
@@ -252,45 +268,5 @@ export function useWidgetPropDataSource (props: {
         }
       })
     }
-  }
-}
-
-export function useWidgetName (props: { renderOpts: VxeGlobalRendererHandles.RenderFormDesignWidgetFormViewOptions }) {
-  const computeKebabCaseName = computed(() => {
-    const { renderOpts } = props
-    return renderOpts ? XEUtils.kebabCase(renderOpts.name) : ''
-  })
-  return {
-    computeKebabCaseName
-  }
-}
-
-export function useWidgetView <T = any> (props: {
-  renderOpts: any
-  renderParams: any
-}) {
-  const currWidget = computed<VxeFormDesignDefines.WidgetObjItem<T>>(() => {
-    const { renderParams } = props
-    return renderParams.widget
-  })
-
-  const widgetModel = computed({
-    get () {
-      const { renderParams } = props
-      const { $formView, widget } = renderParams
-      return $formView ? $formView.getItemValue(widget) : null
-    },
-    set (value) {
-      const { renderParams } = props
-      const { $formView, widget } = renderParams
-      if ($formView) {
-        $formView.setItemValue(widget, value)
-      }
-    }
-  })
-
-  return {
-    currWidget,
-    widgetModel
   }
 }
