@@ -11,7 +11,7 @@ export default defineComponent({
   setup (props, { slots }) {
     const refElem = ref() as Ref<HTMLDivElement>
     const $xeForm = inject('$xeForm', {} as VxeFormConstructor & VxeFormPrivateMethods)
-    const parentFormGather = inject('$xeFormGather', null as XEFormItemProvide | null)
+    const parentFormGather = inject<XEFormItemProvide | null>('$xeFormGather', null)
     const formItem = reactive(createItem($xeForm, props))
     formItem.children = []
 

@@ -1,14 +1,18 @@
-import { defineComponent, ref, h, reactive, PropType, resolveComponent, createCommentVNode, nextTick, watch, VNode, onMounted } from 'vue'
+import { defineComponent, ref, h, reactive, PropType, inject, resolveComponent, createCommentVNode, nextTick, watch, VNode, onMounted, computed } from 'vue'
 import XEUtils from 'xe-utils'
 import { getIcon, createEvent, permission } from '../../ui'
 
-import type { VxeMenuDefines, VxeMenuPropTypes, MenuReactData, VxeMenuEmits, MenuPrivateRef, VxeMenuPrivateComputed, VxeMenuConstructor, VxeMenuPrivateMethods } from '../../../types'
+import type { VxeMenuDefines, VxeMenuPropTypes, MenuReactData, VxeMenuEmits, MenuPrivateRef, VxeMenuPrivateComputed, VxeMenuConstructor, VxeMenuPrivateMethods, VxeLayoutAsideConstructor, VxeLayoutAsidePrivateMethods } from '../../../types'
 
 export default defineComponent({
   name: 'VxeMenu',
   props: {
     modelValue: [String, Number] as PropType<VxeMenuPropTypes.ModelValue>,
     expandAll: Boolean as PropType<VxeMenuPropTypes.ExpandAll>,
+    collapsed: {
+      type: Boolean as PropType<VxeMenuPropTypes.Collapsed>,
+      default: null
+    },
     options: {
       type: Array as PropType<VxeMenuPropTypes.Options>,
       default: () => []
@@ -23,6 +27,8 @@ export default defineComponent({
 
     const xID = XEUtils.uniqueId()
 
+    const $xeLayoutAside = inject<(VxeLayoutAsideConstructor & VxeLayoutAsidePrivateMethods) | null>('$xeLayoutAside', null)
+
     const refElem = ref<HTMLDivElement>()
     const refWrapperElem = ref<HTMLDivElement>()
 
@@ -35,6 +41,17 @@ export default defineComponent({
     const refMaps: MenuPrivateRef = {
       refElem
     }
+
+    const computeIsCollapsed = computed(() => {
+      const { collapsed } = props
+      if (XEUtils.isBoolean(collapsed)) {
+        return collapsed
+      }
+      if ($xeLayoutAside) {
+        return $xeLayoutAside.props.collapsed
+      }
+      return false
+    })
 
     const computeMaps: VxeMenuPrivateComputed = {
     }
@@ -176,6 +193,7 @@ export default defineComponent({
 
     const renderChildren = (item: VxeMenuDefines.MenuItem): VNode => {
       const { itemKey, level, hasChild, isActive, isExactActive, isExpand, routerLink, childList } = item
+      const isCollapsed = computeIsCollapsed.value
       if (item.permissionCode) {
         if (!permission.checkVisible(item.permissionCode)) {
           return createCommentVNode()
@@ -186,7 +204,7 @@ export default defineComponent({
         class: ['vxe-menu--item-wrapper', `vxe-menu--item-level${level}`, {
           'is--exact-active': isExactActive,
           'is--active': isActive,
-          'is--expand': isExpand
+          'is--expand': !isCollapsed && isExpand
         }]
       }, [
         routerLink
@@ -218,9 +236,12 @@ export default defineComponent({
 
     const renderVN = () => {
       const { menuList } = reactData
+      const isCollapsed = computeIsCollapsed.value
       return h('div', {
         ref: refElem,
-        class: ['vxe-menu']
+        class: ['vxe-menu', {
+          'is--collapsed': isCollapsed
+        }]
       }, [
         h('div', {
           ref: refWrapperElem,

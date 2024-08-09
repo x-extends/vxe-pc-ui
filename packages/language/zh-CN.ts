@@ -49,6 +49,7 @@ export default {
       emptyText: '暂无数据',
       allTitle: '全选/取消',
       seqTitle: '序号',
+      actionTitle: '操作',
       confirmFilter: '筛选',
       resetFilter: '重置',
       allFilter: '全部',
@@ -419,7 +420,11 @@ export default {
     },
     listDesign: {
       fieldSettingTab: '字段设置',
-      listSettingTab: '列表设置'
+      listSettingTab: '列表设置',
+      activeBtn: {
+        ActionButtonUpdate: '编辑',
+        ActionButtonDelete: '删除'
+      }
     },
     text: {
       copySuccess: '已复制到剪贴板',

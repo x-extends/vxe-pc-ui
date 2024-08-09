@@ -123,6 +123,7 @@ declare module '@vxe-ui/core' {
     // list-design
     LIST_DESIGN_FIELD_SETTING?: string
     LIST_DESIGN_LIST_SETTING?: string
+    LIST_DESIGN_LIST_SETTING_ACTIVE_DELETE?: string
 
     // upload
     UPLOAD_FILE_ERROR?: string

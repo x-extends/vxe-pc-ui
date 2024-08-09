@@ -1,17 +1,16 @@
-import { h, defineComponent, ref, inject, createCommentVNode, computed } from 'vue'
-import { getIcon, getI18n } from '@vxe-ui/core'
+import { h, defineComponent, ref, inject, createCommentVNode, computed, reactive } from 'vue'
+import { VxeUI, getIcon, getI18n, renderer } from '@vxe-ui/core'
+import { createListDesignActionButton } from '../render/util'
 import VxeFormComponent from '../../form/src/form'
-// import VxeFormGatherComponent from '../../form/src/form-gather'
 import VxeFormItemComponent from '../../form/src/form-item'
-// import VxeTabsComponent from '../../tabs/src/tabs'
-// import VxeTabPaneComponent from '../../tabs/src/tab-pane'
 import VxeTextComponent from '../../text/src/text'
 import VxeSelectComponent from '../../select/src/select'
 import VxeSwitchComponent from '../../switch/src/switch'
 import VxeRadioGroupComponent from '../../radio/src/group'
-// import VxeButtonComponent from '../../button/src/button'
+import VxeButtonComponent from '../../button/src/button'
+import XEUtils from 'xe-utils'
 
-import type { VxeListDesignConstructor, VxeListDesignPrivateMethods, VxeTableDefines } from '../../../types'
+import type { VxeListDesignConstructor, VxeListDesignPrivateMethods, VxeTableDefines, VxeSelectPropTypes, VxeListDesignDefines, VxeGlobalRendererHandles } from '../../../types'
 
 export const DefaultFieldSettingFormComponent = defineComponent({
   name: 'DefaultFieldSettingForm',
@@ -96,28 +95,28 @@ export const DefaultFieldSettingFormComponent = defineComponent({
       }, {
         default () {
           return [
-            // h(VxeFormItemComponent, {
-            //   title: '查询条件'
-            // }, {
-            //   extra () {
-            //     return h(VxeButtonComponent, {
-            //       mode: 'text',
-            //       status: 'primary',
-            //       icon: getIcon().FORM_DESIGN_PROPS_ADD,
-            //       disabled: true,
-            //       content: '新增'
-            //     })
-            //   },
-            //   default () {
-            //     return [
-            //       h('div', {
-            //         class: 'vxe-list-design--widget-form-empty-data'
-            //       }, [
-            //         h('span', {}, '暂无查询条件')
-            //       ])
-            //     ]
-            //   }
-            // }),
+            h(VxeFormItemComponent, {
+              title: '查询条件'
+            }, {
+              extra () {
+                return h(VxeButtonComponent, {
+                  mode: 'text',
+                  status: 'primary',
+                  icon: getIcon().FORM_DESIGN_PROPS_ADD,
+                  disabled: true,
+                  content: '新增'
+                })
+              },
+              default () {
+                return [
+                  h('div', {
+                    class: 'vxe-list-design--field-configs-empty-data'
+                  }, [
+                    h('span', {}, '暂无查询条件')
+                  ])
+                ]
+              }
+            }),
             h(VxeFormItemComponent, {
               title: '列表字段'
             }, {
@@ -132,125 +131,6 @@ export const DefaultFieldSettingFormComponent = defineComponent({
   }
 })
 
-// const renderDefaultCellActiveButton = () => {
-//   return h(VxeFormItemComponent, {
-//     title: '功能按钮'
-//   }, {
-//     extra () {
-//       return h(VxeButtonComponent, {
-//         mode: 'text',
-//         status: 'primary',
-//         icon: getIcon().FORM_DESIGN_PROPS_ADD,
-//         disabled: true,
-//         content: '新增'
-//       })
-//     },
-//     default () {
-//       return h('div', {
-//         class: 'vxe-list-design--widget-form-empty-data'
-//       }, [
-//         h('span', {}, '无操作按钮')
-//       ])
-//     }
-//   })
-// }
-
-// const renderDefaultPcButtonConfigs = () => {
-//   return [
-//     renderDefaultCellActiveButton(),
-//     h(VxeFormItemComponent, {
-//       title: '工具栏左侧按钮'
-//     }, {
-//       extra () {
-//         return h(VxeButtonComponent, {
-//           mode: 'text',
-//           status: 'primary',
-//           icon: getIcon().FORM_DESIGN_PROPS_ADD,
-//           disabled: true,
-//           content: '新增'
-//         })
-//       },
-//       default () {
-//         return h('div', {
-//           class: 'vxe-list-design--widget-form-empty-data'
-//         }, [
-//           h('span', {}, '无操作按钮')
-//         ])
-//       }
-//     }),
-//     h(VxeFormItemComponent, {
-//       title: '工具栏右侧按钮'
-//     }, {
-//       extra () {
-//         return h(VxeButtonComponent, {
-//           mode: 'text',
-//           status: 'primary',
-//           icon: getIcon().FORM_DESIGN_PROPS_ADD,
-//           disabled: true,
-//           content: '新增'
-//         })
-//       },
-//       default () {
-//         return h('div', {
-//           class: 'vxe-list-design--widget-form-empty-data'
-//         }, [
-//           h('span', {}, '无操作按钮')
-//         ])
-//       }
-//     })
-//   ]
-// }
-
-// const renderDefaultPcButtonTabPane = () => {
-//   return h(VxeTabPaneComponent, {
-//     name: 'pc',
-//     icon: getIcon().FORM_DESIGN_PROPS_PC,
-//     title: '电脑端'
-//   }, {
-//     default () {
-//       return [
-//         h(VxeFormComponent, {
-//           span: 24,
-//           vertical: true,
-//           titleBold: true
-//         }, {
-//           default () {
-//             return renderDefaultPcButtonConfigs()
-//           }
-//         })
-//       ]
-//     }
-//   })
-// }
-
-// const renderDefaultMobileButtonConfigs = () => {
-//   return [
-//     renderDefaultCellActiveButton()
-//   ]
-// }
-
-// const renderDefaultMobileButtonTabPane = () => {
-//   return h(VxeTabPaneComponent, {
-//     name: 'mobile',
-//     icon: getIcon().FORM_DESIGN_PROPS_MOBILE,
-//     title: '移动端'
-//   }, {
-//     default () {
-//       return [
-//         h(VxeFormComponent, {
-//           span: 24,
-//           vertical: true,
-//           titleBold: true
-//         }, {
-//           default () {
-//             return renderDefaultMobileButtonConfigs()
-//           }
-//         })
-//       ]
-//     }
-//   })
-// }
-
 export const DefaultListSettingFormComponent = defineComponent({
   name: 'DefaultListSettingForm',
   props: {},
@@ -264,7 +144,20 @@ export const DefaultListSettingFormComponent = defineComponent({
 
     const { props: listDesignProps, reactData: listDesignReactData } = $xeListDesign
 
-    // const activeBtnTab = ref('pc')
+    const systemConfigList: VxeGlobalRendererHandles.CreateListDesignSettingActionButtonConfigResult[] = []
+    const customConfigList: VxeGlobalRendererHandles.CreateListDesignSettingActionButtonConfigResult[] = []
+    renderer.forEach((item, name) => {
+      const { createListDesignSettingActionButtonConfig } = item
+      if (createListDesignSettingActionButtonConfig) {
+        const params = { name }
+        const btnConfig = Object.assign(createListDesignActionButton({ code: name }), createListDesignSettingActionButtonConfig(params))
+        if (btnConfig.type === 'custom') {
+          customConfigList.push(btnConfig)
+        } else {
+          systemConfigList.push(btnConfig)
+        }
+      }
+    })
 
     const renderViewList = ref([
       { label: '列表视图', value: 'list', isExpand: false }
@@ -277,14 +170,212 @@ export const DefaultListSettingFormComponent = defineComponent({
 
     const refCheckboxOpts = ref([
       { label: '默认', value: 'auto' },
-      { label: '是', value: true },
-      { label: '否', value: false }
+      { label: '允许', value: true },
+      { label: '不允许', value: false }
     ])
 
     const disableView = computed(() => {
       const { formData } = listDesignReactData
       return [formData.listView.enabled, formData.ganttView.enabled, formData.chartView.enabled].filter(enabled => enabled).length <= 1
     })
+
+    const openActiveBtnPopup = (activeBtnObj?: VxeListDesignDefines.DefaultSettingFormActionButton) => {
+      const { formData } = listDesignReactData
+      const { actionCodes } = listDesignProps
+
+      let btnList = formData.actionButtonList
+      if (!btnList) {
+        btnList = []
+      }
+
+      const activeBtnItem = reactive(createListDesignActionButton(activeBtnObj))
+      const systemBtnList = systemConfigList.filter(item => {
+        if (actionCodes && actionCodes.length) {
+          if (!actionCodes.includes(item.code || '')) {
+            return false
+          }
+        }
+        return !btnList.some(obj => obj.code === item.code)
+      })
+      const customBtnList = customConfigList.filter(item => !btnList.some(obj => obj.code === item.code))
+
+      const btOptions: VxeSelectPropTypes.Options = []
+      if (systemBtnList.length) {
+        if (!activeBtnItem.type) {
+          activeBtnItem.type = ''
+        }
+        btOptions.push(
+          { value: '', label: '系统按钮' }
+        )
+      }
+      if (customBtnList.length) {
+        if (!activeBtnItem.type) {
+          activeBtnItem.type = 'custom'
+        }
+        btOptions.push(
+          { value: 'custom', label: '自定义按钮' }
+        )
+      }
+
+      const refSystemConfigOptions = computed(() => {
+        return systemBtnList.map(item => {
+          const nameConfig = item.name
+          return {
+            label: XEUtils.toValueString(XEUtils.isFunction(nameConfig) ? nameConfig({ name: item.code || '' }) : nameConfig),
+            value: item.code
+          }
+        })
+      })
+      const refBtnTypeOptions = ref(btOptions)
+
+      VxeUI.modal.open({
+        title: '添加按钮',
+        width: 600,
+        height: 400,
+        showFooter: true,
+        showCancelButton: true,
+        showConfirmButton: true,
+        confirmButtonText: '保存',
+        onConfirm () {
+          if (activeBtnItem.type === 'custom') {
+            btnList.push(activeBtnItem)
+          } else {
+            btnList.push(activeBtnItem)
+          }
+          formData.actionButtonList = [...btnList]
+        },
+        slots: {
+          default () {
+            return h(VxeFormComponent, {
+              vertical: true,
+              titleBold: true
+            }, {
+              default () {
+                return [
+                  h(VxeFormItemComponent, {
+                    title: '按钮类型',
+                    span: 24
+                  }, {
+                    default () {
+                      return h(VxeSelectComponent, {
+                        modelValue: activeBtnItem.type,
+                        options: refBtnTypeOptions.value,
+                        'onUpdate:modelValue' (val) {
+                          activeBtnItem.type = val
+                        }
+                      })
+                    }
+                  }),
+                  h(VxeFormItemComponent, {
+                    title: '选择系统按钮',
+                    span: 24
+                  }, {
+                    default () {
+                      return h(VxeSelectComponent, {
+                        modelValue: activeBtnItem.code,
+                        options: refSystemConfigOptions.value,
+                        'onUpdate:modelValue' (val) {
+                          activeBtnItem.code = val
+                        }
+                      })
+                    }
+                  })
+                  // h(VxeFormItemComponent, {
+                  //   title: '按钮位置',
+                  //   span: 24
+                  // }, {
+                  //   default () {
+                  //     return h(VxeSelectComponent, {
+                  //       modelValue: activeBtnItem.classify,
+                  //       options: refBtnClassifyOptions.value,
+                  //       'onUpdate:modelValue' (val) {
+                  //         activeBtnItem.classify = val
+                  //       }
+                  //     })
+                  //   }
+                  // })
+                ]
+              }
+            })
+          }
+        }
+      })
+    }
+
+    const renderDefaultCellActionButton = () => {
+      return h(VxeFormItemComponent, {
+        title: '功能按钮'
+      }, {
+        extra () {
+          return h(VxeButtonComponent, {
+            mode: 'text',
+            status: 'primary',
+            icon: getIcon().FORM_DESIGN_PROPS_ADD,
+            content: '新增',
+            onClick () {
+              openActiveBtnPopup()
+            }
+          })
+        },
+        default () {
+          const { formData } = listDesignReactData
+          const btnList = formData.actionButtonList
+
+          return btnList && btnList.length
+            ? h('div', {
+              class: 'vxe-list-design--field-configs-wrapper'
+            }, btnList.map(btnItem => {
+              let btnIcon = ''
+              let btnName = ''
+              if (btnItem.type === 'custom') {
+                btnIcon = btnItem.icon
+                btnName = btnItem.name
+              } else {
+                const btnConfig = systemConfigList.find(item => item.code === btnItem.code)
+                if (btnConfig) {
+                  const nameConfig = btnConfig.name
+                  btnIcon = btnConfig.icon || ''
+                  btnName = XEUtils.toValueString(XEUtils.isFunction(nameConfig) ? nameConfig({ name: btnConfig.code || '' }) : nameConfig)
+                }
+              }
+
+              return h('div', {
+                class: 'vxe-list-design--field-configs-item'
+              }, [
+                btnIcon
+                  ? h('div', {
+                    class: 'vxe-list-design--field-configs-item-icon'
+                  }, [
+                    h('i', {
+                      class: btnIcon
+                    })
+                  ])
+                  : createCommentVNode(),
+                h('div', {
+                  class: 'vxe-list-design--field-configs-item-title'
+                }, `${btnName || ''}`),
+                h('div', {
+                  class: 'vxe-list-design--field-configs-item-btn'
+                }, [
+                  h(VxeButtonComponent, {
+                    icon: getIcon().LIST_DESIGN_LIST_SETTING_ACTIVE_DELETE,
+                    mode: 'text',
+                    status: 'error',
+                    onClick () {
+                      formData.actionButtonList = btnList.filter(item => item !== btnItem)
+                    }
+                  })
+                ])
+              ])
+            }))
+            : h('div', {
+              class: 'vxe-list-design--field-configs-empty-data'
+            }, [
+              h('span', {}, '无操作按钮')
+            ])
+        }
+      })
+    }
 
     return () => {
       const { showPc, showMobile } = listDesignProps
@@ -400,45 +491,33 @@ export const DefaultListSettingFormComponent = defineComponent({
                   h('div', {
                     class: 'vxe-list-design--widget-form-item-prop-list'
                   }, [
-                    h('span', {}, '批量操作'),
+                    h('span', {}, '表尾汇总'),
                     h(VxeRadioGroupComponent, {
-                      modelValue: formData.showCheckbox,
-                      options: refCheckboxOpts.value,
+                      modelValue: formData.showSummary,
+                      options: refSeqOpts.value,
                       'onUpdate:modelValue' (val) {
-                        formData.showCheckbox = val
+                        formData.showSummary = val
                       }
                     })
                   ])
                 ]
               }
-            })
-            // showPc && showMobile
-            //   ? h(VxeFormItemComponent, {
-            //     title: '按钮配置'
-            //   }, {
-            //     default () {
-            //       return h(VxeTabsComponent, {
-            //         modelValue: activeBtnTab.value,
-            //         'onUpdate:modelValue' (val) {
-            //           activeBtnTab.value = val
-            //         }
-            //       }, {
-            //         default () {
-            //           return [
-            //             renderDefaultPcButtonTabPane(),
-            //             renderDefaultMobileButtonTabPane()
-            //           ]
-            //         }
-            //       })
-            //     }
-            //   })
-            //   : h(VxeFormGatherComponent, {
-            //     span: 24
-            //   }, {
-            //     default () {
-            //       return showMobile ? renderDefaultMobileButtonConfigs() : renderDefaultPcButtonConfigs()
-            //     }
-            //   })
+            }),
+            h(VxeFormItemComponent, {
+              title: '批量操作'
+            }, {
+              default () {
+                const { formData } = listDesignReactData
+                return h(VxeRadioGroupComponent, {
+                  modelValue: formData.showCheckbox,
+                  options: refCheckboxOpts.value,
+                  'onUpdate:modelValue' (val) {
+                    formData.showCheckbox = val
+                  }
+                })
+              }
+            }),
+            systemConfigList.length || customConfigList.length ? renderDefaultCellActionButton() : createCommentVNode()
           ]
         }
       })

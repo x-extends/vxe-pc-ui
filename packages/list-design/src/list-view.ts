@@ -1,12 +1,13 @@
-import { defineComponent, ref, PropType, h, reactive, provide, watch, nextTick, computed } from 'vue'
-import { VxeUI, getConfig, createEvent } from '../../ui'
+import { defineComponent, ref, PropType, h, reactive, provide, watch, nextTick, computed, createCommentVNode } from 'vue'
+import { VxeUI, getConfig, createEvent, getI18n, renderer } from '../../ui'
 import { errLog } from '../../ui/src/log'
 import { toCssUnit } from '../../ui/src/dom'
 import { getSlotVNs } from '../../ui/src/vn'
+import { createListDesignActionButton } from '../render/util'
 import VxeLoadingComponent from '../../loading/src/loading'
 import XEUtils from 'xe-utils'
 
-import type { ListViewReactData, ListViewPrivateRef, VxeListViewPropTypes, VxeGridComponent, VxeGridInstance, VxeGridPropTypes, VxeGridProps, VxeListViewEmits, VxeListViewPrivateComputed, VxeListViewConstructor, VxeListDesignDefines, ListViewMethods, ListViewPrivateMethods, VxeListViewPrivateMethods } from '../../../types'
+import type { ListViewReactData, ListViewPrivateRef, VxeListViewPropTypes, VxeGridComponent, VxeGridInstance, VxeGridPropTypes, VxeGridProps, VxeListViewEmits, VxeListViewPrivateComputed, VxeListViewConstructor, VxeListDesignDefines, ListViewMethods, ListViewPrivateMethods, VxeGlobalRendererHandles, VxeTableDefines, VxeListViewPrivateMethods, VxeButtonGroupDefines, VxeButtonGroupPropTypes, ValueOf } from '../../../types'
 
 export default defineComponent({
   name: 'VxeListView',
@@ -17,11 +18,14 @@ export default defineComponent({
       default: () => getConfig().listView.height
     },
     loading: Boolean as PropType<VxeListViewPropTypes.Loading>,
+    actionButtons: Array as PropType<VxeListViewPropTypes.ActionButtons>,
     gridOptions: Object as PropType<VxeListViewPropTypes.GridOptions>,
     gridEvents: Object as PropType<VxeListViewPropTypes.GridEvents>,
     viewRender: Object as PropType<VxeListViewPropTypes.ViewRender>
   },
   emits: [
+    'cell-action',
+    'update:actionButtons'
   ] as VxeListViewEmits,
   setup (props, context) {
     const VxeTableGridComponent = VxeUI.getComponent<VxeGridComponent>('VxeGrid')
@@ -83,6 +87,21 @@ export default defineComponent({
       getComputeMaps: () => computeMaps
     } as unknown as VxeListViewConstructor & VxeListViewPrivateMethods
 
+    const systemConfigList: VxeGlobalRendererHandles.CreateListDesignSettingActionButtonConfigResult[] = []
+    const customConfigList: VxeGlobalRendererHandles.CreateListDesignSettingActionButtonConfigResult[] = []
+    renderer.forEach((item, name) => {
+      const { createListDesignSettingActionButtonConfig } = item
+      if (createListDesignSettingActionButtonConfig) {
+        const params = { name }
+        const btnConfig = Object.assign(createListDesignActionButton({ code: name }), createListDesignSettingActionButtonConfig(params))
+        if (btnConfig.type === 'custom') {
+          customConfigList.push(btnConfig)
+        } else {
+          systemConfigList.push(btnConfig)
+        }
+      }
+    })
+
     const configToSearchItems = (searchItems: VxeListDesignDefines.SearchItemObjItem[]): VxeListDesignDefines.SearchItemObjItem[] => {
       if (searchItems) {
         return searchItems.map(item => {
@@ -130,21 +149,91 @@ export default defineComponent({
 
     const parseTableColumn = (listColumns: VxeListDesignDefines.ListColumnObjItem[], formConfig?: VxeListDesignDefines.DefaultSettingFormDataObjVO) => {
       const formOpts = Object.assign({}, formConfig)
+      const { showSeq, actionButtonList } = formOpts
       const columns: VxeGridPropTypes.Columns = configToListColumns(listColumns || [])
-      if (formOpts.showSeq) {
+      const cellActionSlot = slots.cellAction
+
+      if (showSeq) {
         columns.unshift({
           type: 'seq',
+          field: '_seq',
           width: 70
         })
       }
-      return columns
+      if (actionButtonList && actionButtonList.length) {
+        const actionColumn: VxeTableDefines.ColumnOptions = {
+          field: '_active',
+          title: getI18n('vxe.table.actionTitle'),
+          width: 'auto'
+        }
+
+        const btnOptions: VxeButtonGroupPropTypes.Options = []
+        actionButtonList.forEach(btnItem => {
+          if (btnItem.type === 'custom') {
+            return {
+              content: btnItem.name,
+              name: btnItem.code,
+              icon: btnItem.icon
+            }
+          }
+          const btnConfig = systemConfigList.find(item => item.code === btnItem.code)
+          let btnName = btnItem.name
+          let btnIcon = btnItem.icon
+          let btnStatus = btnItem.status
+          let btnPermissionCode = btnItem.permissionCode
+          let btnClassify = btnItem.classify
+          if (btnConfig) {
+            const nameConfig = btnConfig.name
+            btnIcon = btnConfig.icon || ''
+            btnStatus = btnConfig.status || ''
+            btnPermissionCode = btnConfig.permissionCode || ''
+            btnClassify = btnConfig.classify || ''
+            btnName = XEUtils.toValueString(XEUtils.isFunction(nameConfig) ? nameConfig({ name: btnConfig.code || '' }) : nameConfig)
+          }
+          if (!btnClassify || btnClassify === 'cellButton') {
+            btnOptions.push({
+              content: btnName,
+              name: btnItem.code,
+              icon: btnIcon,
+              status: btnStatus,
+              permissionCode: btnPermissionCode
+            })
+          }
+        })
+
+        if (cellActionSlot) {
+          actionColumn.slots = {
+            default (params) {
+              return cellActionSlot({ ...params, buttons: btnOptions })
+            }
+          }
+        } else {
+          actionColumn.cellRender = {
+            name: 'VxeButtonGroup',
+            props: {
+              mode: 'text'
+            },
+            options: btnOptions,
+            events: {
+              click (params, btnParams: VxeButtonGroupDefines.ClickEventParams) {
+                const { option } = btnParams
+                dispatchEvent('cell-action', { ...params, button: option }, btnParams.$event)
+              }
+            }
+          }
+        }
+        columns.push(actionColumn)
+      }
+      return { columns, actionButtons: actionButtonList }
     }
 
     const parseConfig = (config: Partial<VxeListDesignDefines.ListDesignConfig> | null) => {
       const { formConfig, searchItems, listColumns } = config || {}
+      const { columns, actionButtons } = parseTableColumn(listColumns || [], formConfig)
       return {
         formItems: parseFormItems(searchItems || []),
-        tableColumns: parseTableColumn(listColumns || [], formConfig)
+        tableColumns: columns,
+        actionButtons
       }
     }
 
@@ -157,7 +246,9 @@ export default defineComponent({
     }
 
     const loadListColumns = (listColumns: VxeListDesignDefines.ListColumnObjItem[], formConfig: any) => {
-      reactData.listTableColumns = parseTableColumn(listColumns || [], formConfig)
+      const { columns, actionButtons } = parseTableColumn(listColumns || [], formConfig)
+      reactData.listTableColumns = columns
+      emit('update:actionButtons', actionButtons)
       nextTick(() => {
         const gridOptions = computeGridOptions.value
         if (gridOptions.proxyConfig) {
@@ -171,10 +262,12 @@ export default defineComponent({
       return nextTick()
     }
 
+    const dispatchEvent = (type: ValueOf<VxeListViewEmits>, params: Record<string, any>, evnt: Event | null) => {
+      emit(type, createEvent(evnt, { $listView: $xeListView }, params))
+    }
+
     const listViewMethods: ListViewMethods = {
-      dispatchEvent (type, params, evnt) {
-        emit(type, createEvent(evnt, { $listView: $xeListView }, params))
-      },
+      dispatchEvent,
       clearConfig,
       loadConfig,
       parseConfig,
@@ -210,11 +303,13 @@ export default defineComponent({
             ? h('div', {
               class: 'vxe-list-view--grid-wrapper'
             }, getSlotVNs(gridSlot({ $listView: $xeListView })))
-            : h(VxeTableGridComponent, Object.assign({}, gridOptions, gridEvents, {
-              ref: refGrid
-            }), Object.assign({}, slots, {
-              default: undefined
-            }))
+            : (VxeTableGridComponent
+                ? h(VxeTableGridComponent, Object.assign({}, gridOptions, gridEvents, {
+                  ref: refGrid
+                }), Object.assign({}, slots, {
+                  default: undefined
+                }))
+                : createCommentVNode())
         ]),
         /**
          * 加载中

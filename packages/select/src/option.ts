@@ -14,19 +14,19 @@ export default defineComponent({
   },
   setup (props, { slots }) {
     const elem = ref() as Ref<HTMLDivElement>
-    const $xeselect = inject('$xeSelect', {} as VxeSelectConstructor)
-    const optgroup = inject('xeoptgroup', null as XEOptionProvide | null)
-    const option = createOption($xeselect, props)
+    const $xeSelect = inject('$xeSelect', {} as VxeSelectConstructor)
+    const optGroup = inject<XEOptionProvide | null>('xeoptgroup', null)
+    const option = createOption($xeSelect, props)
     option.slots = slots
 
     watchOption(props, option)
 
     onMounted(() => {
-      assembleOption($xeselect, elem.value, option, optgroup)
+      assembleOption($xeSelect, elem.value, option, optGroup)
     })
 
     onUnmounted(() => {
-      destroyOption($xeselect, option)
+      destroyOption($xeSelect, option)
     })
 
     return () => {

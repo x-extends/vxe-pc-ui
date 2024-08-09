@@ -13,10 +13,9 @@ export const getDefaultSettingFormData = (): VxeListDesignDefines.DefaultSetting
     },
     showCheckbox: 'auto',
     showSeq: true,
+    showSummary: true,
     mobileDefaultView: 'list',
     pcDefaultView: 'list',
-    toolbarButtonList: [],
-    toolbarToolList: [],
-    activeButtonList: []
+    actionButtonList: []
   }
 }

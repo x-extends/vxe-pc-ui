@@ -49,6 +49,7 @@ export default {
       emptyText: 'No hay datos',
       allTitle: 'Seleccionar todo / cancelar',
       seqTitle: 'N/S',
+      actionTitle: 'Action',
       confirmFilter: 'Confirmar',
       resetFilter: 'Restablecer',
       allFilter: 'Todo',
@@ -419,7 +420,11 @@ export default {
     },
     listDesign: {
       fieldSettingTab: 'Field setting',
-      listSettingTab: 'List setting'
+      listSettingTab: 'List setting',
+      activeBtn: {
+        ActionButtonUpdate: 'Edit',
+        ActionButtonDelete: 'Delete'
+      }
     },
     text: {
       copySuccess: 'Successfully copied to clipboard.',

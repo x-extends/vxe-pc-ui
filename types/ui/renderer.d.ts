@@ -1,4 +1,4 @@
-import { VxeComponentStyleType, VxeComponentClassNameType, VxeComponentSlotType } from '@vxe-ui/core'
+import { VxeComponentStyleType, VxeComponentClassNameType, VxeComponentSlotType, VxeComponentStatusType } from '@vxe-ui/core'
 import { VxeTableConstructor, VxeTablePropTypes, VxeTableDefines, VxeTablePrivateMethods } from '../components/table'
 import { VxeFormItemPropTypes, FormItemTitleRenderParams, FormItemContentRenderParams, FormItemVisibleParams, FormItemResetParams } from '../components/form-item'
 import { VxeGridConstructor } from '../components/grid'
@@ -7,6 +7,7 @@ import { VxeToolbarPropTypes } from '../components/toolbar'
 import { VxeFormConstructor, VxeFormDefines, VxeFormProps } from '../components/form'
 import { VxeFormDesignDefines, VxeFormDesignConstructor } from '../components/form-design'
 import { VxeFormViewDefines, VxeFormViewConstructor } from '../components/form-view'
+import { VxeListDesignDefines } from '../components/list-design'
 import { VxeTreeSelectPropTypes } from '../components/tree-select'
 
 /* eslint-disable no-use-before-define */
@@ -809,7 +810,7 @@ declare module '@vxe-ui/core' {
     export interface RenderFormDesignMobileStyleFormViewParams<D = any> extends RenderFormDesignStyleFormViewParams<D> {}
 
     export interface CreateFormViewFormConfigParams<D = any> extends VxeFormViewDefines.CreateFormConfigParams<D> {}
-    export interface CreateFormViewMobileFormConfigParams<D = any> extends CreateFormViewFormConfigParams {}
+    export interface CreateFormViewMobileFormConfigParams<D = any> extends CreateFormViewFormConfigParams<D> {}
   }
 }
 
@@ -821,25 +822,29 @@ declare module '@vxe-ui/core' {
      */
     createListDesignSettingFormConfig?(params: VxeGlobalRendererHandles.CreateListDesignSettingFormConfigParams): Record<string, any>
 
-    // listDesignSettingActiveButtonName?: string
-    // listDesignSettingActiveButtonMethod?:(params: VxeGlobalRendererHandles.ListDesignSettingActiveButtonMethodParams) => void
-    // renderListDesignSettingActiveButtonFormView?(renderOpts: any, params: any): VxeComponentSlotType | VxeComponentSlotType[]
-
-    // listDesignSettingToolbarButtonName?: string
-    // listDesignSettingToolbarButtonMethod?:(params: VxeGlobalRendererHandles.ListDesignSettingToolbarButtonMethodParams) => void
-    // renderListDesignSettingToolbarButtonFormView?(renderOpts: any, params: any): VxeComponentSlotType | VxeComponentSlotType[]
-
-    // listDesignSettingToolbarToolName?: string
-    // listDesignSettingToolbarToolMethod?:(params: VxeGlobalRendererHandles.ListDesignSettingToolbarToolMethodParams) => void
-    // renderListDesignSettingToolbarToolFormView?(renderOpts: any, params: any): VxeComponentSlotType | VxeComponentSlotType[]
+    createListDesignSettingActionButtonConfig?:(params: VxeGlobalRendererHandles.CreateListDesignSettingActionButtonConfigParams) => VxeGlobalRendererHandles.CreateListDesignSettingActionButtonConfigResult
+    listDesignSettingActionButtonMethod?:(params: VxeGlobalRendererHandles.ListDesignSettingActionButtonMethodParams) => void
+    renderListDesignSettingActionButtonFormView?(renderOpts: VxeGlobalRendererHandles.RenderListDesignSettingActionButtonFormViewOptions, params: VxeGlobalRendererHandles.RenderListDesignSettingActionButtonFormViewParams): VxeComponentSlotType | VxeComponentSlotType[]
   }
   export namespace VxeGlobalRendererHandles {
-    export interface CreateListDesignSettingFormConfigParams {}
+    export interface CreateListDesignSettingFormConfigParams {
+      name: string
+    }
 
-    // export interface ListDesignSettingActiveButtonMethodParams {}
+    export interface CreateListDesignSettingActionButtonConfigParams {
+      name: string
+    }
+    export interface CreateListDesignSettingActionButtonConfigResult extends Partial<Omit<VxeListDesignDefines.DefaultSettingFormActionButton, 'name'>> {
+      name: string | ((params: { name: string }) => string)
+    }
 
-    // export interface ListDesignSettingToolbarButtonMethodParams {}
+    export interface ListDesignSettingActionButtonMethodParams {
+      name: string
+    }
 
-    // export interface ListDesignSettingToolbarToolMethodParams {}
+    export interface RenderListDesignSettingActionButtonFormViewOptions {
+      name: string
+    }
+    export interface RenderListDesignSettingActionButtonFormViewParams {}
   }
 }

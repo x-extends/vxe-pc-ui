@@ -10,7 +10,7 @@ import VxeUI from '../packages'
 import enUS from '../packages/language/en-US'
 import '../styles/all.scss'
 
-// import VxeUITable from 'vxe-table'
+// import VxeTable from 'vxe-table'
 // import 'vxe-table/lib/style.css'
 
 declare global {
@@ -44,6 +44,6 @@ const app = createApp(App)
 app.use(router)
 app.use(i18n)
 app.use(VxeUI)
-// app.use(VxeUITable)
+// app.use(VxeTable)
 
 app.mount('#app')

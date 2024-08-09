@@ -1,5 +1,5 @@
 import { RenderFunction, SetupContext, Ref, ComponentPublicInstance, DefineComponent } from 'vue'
-import { defineVxeComponent, VxeComponentBaseOptions, VxeComponentEventParams, VxeComponentSizeType, ValueOf } from '@vxe-ui/core'
+import { defineVxeComponent, VxeComponentBaseOptions, VxeComponentEventParams, VxeComponentSizeType, ValueOf, VxeComponentPermissionCodeType, VxeComponentStatusType } from '@vxe-ui/core'
 import { VxeFormDesignDefines } from './form-design'
 
 /* eslint-disable no-use-before-define,@typescript-eslint/ban-types */
@@ -29,6 +29,7 @@ export namespace VxeListDesignPropTypes {
   export type Config = null | VxeListDesignDefines.ListDesignConfig
   export type ShowPc = boolean
   export type ShowMobile = boolean
+  export type ActionCodes = string[]
   export interface FormRender {
     name?: string
   }
@@ -40,6 +41,7 @@ export type VxeListDesignProps = {
   config?: VxeListDesignPropTypes.Config
   showPc?: VxeListDesignPropTypes.ShowPc
   showMobile?: VxeListDesignPropTypes.ShowMobile
+  actionCodes?: VxeListDesignPropTypes.ActionCodes
   formRender?: VxeListDesignPropTypes.FormRender
 }
 
@@ -118,22 +120,14 @@ export namespace VxeListDesignDefines {
     visible: boolean
   }
 
-  export interface DefaultSettingFormToolbarButton {
-    content?: string
-    icon?: string
+  export interface DefaultSettingFormActionButton {
+    name: string
+    icon: string
     type: 'custom' | ''
-  }
-
-  export interface DefaultSettingFormToolbarTool {
-    content?: string
-    icon?: string
-    type: 'custom' | ''
-  }
-
-  export interface DefaultSettingFormActiveButton {
-    content?: string
-    icon?: string
-    type: 'custom' | ''
+    classify: '' | 'cellButton' | 'toolbarButton' | 'toolbarTool'
+    status: VxeComponentStatusType
+    code: string
+    permissionCode: VxeComponentPermissionCodeType
   }
 
   export interface DefaultSettingFormDataObjVO {
@@ -148,11 +142,10 @@ export namespace VxeListDesignDefines {
     }
     showCheckbox: boolean | 'auto'
     showSeq: boolean
+    showSummary: boolean
     mobileDefaultView: 'list' | 'gantt' | 'chart'
     pcDefaultView: 'list' | 'gantt' | 'chart'
-    toolbarButtonList: DefaultSettingFormToolbarButton[]
-    toolbarToolList: DefaultSettingFormToolbarTool[]
-    activeButtonList: DefaultSettingFormActiveButton[]
+    actionButtonList: DefaultSettingFormActionButton[]
   }
 }
 

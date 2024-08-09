@@ -30,7 +30,7 @@ export default defineComponent({
 
     const $xeForm = inject<VxeFormConstructor & VxeFormPrivateMethods | null>('$xeForm', null)
     const formItemInfo = inject<VxeFormDefines.ProvideItemInfo | null>('xeFormItemInfo', null)
-    const $xeCheckboxGroup = inject('$xeCheckboxGroup', null as (VxeCheckboxGroupConstructor & VxeCheckboxGroupPrivateMethods) | null)
+    const $xeCheckboxGroup = inject<(VxeCheckboxGroupConstructor & VxeCheckboxGroupPrivateMethods) | null>('$xeCheckboxGroup', null)
 
     const xID = XEUtils.uniqueId()
 

@@ -28,6 +28,7 @@ export default defineComponent({
       type: Boolean as PropType<VxeListDesignPropTypes.ShowMobile>,
       default: () => getConfig().listDesign.showMobile
     },
+    actionCodes: Array as PropType<VxeListDesignPropTypes.ActionCodes>,
     formRender: Object as PropType<VxeListDesignPropTypes.FormRender>
   },
   emits: [],
@@ -161,10 +162,11 @@ export default defineComponent({
     const createSettingForm = () => {
       const { formRender } = props
       let formData: Record<string, any> = getDefaultSettingFormData()
-      if (formRender) {
+      if (formRender && formRender.name) {
         const compConf = renderer.get(formRender.name)
         const createFormConfig = compConf ? compConf.createListDesignSettingFormConfig : null
-        formData = (createFormConfig ? createFormConfig({}) : {}) || {}
+        const params = { name: formRender.name }
+        formData = (createFormConfig ? createFormConfig(params) : {}) || {}
       }
 
       return formData as VxeListDesignDefines.DefaultSettingFormDataObjVO

@@ -37,13 +37,13 @@ const VxeFormConfigItem = defineComponent({
       const titleSlot = slots ? slots.title : null
       const span = item.span || allSpan
       const align = item.align || allAlign
+      const itemVertical = XEUtils.eqNull(vertical) ? allVertical : vertical
       const titleBold = XEUtils.eqNull(item.titleBold) ? allTitleBold : item.titleBold
       const titleAlign = XEUtils.eqNull(item.titleAlign) ? allTitleAlign : item.titleAlign
-      const titleWidth = XEUtils.eqNull(item.titleWidth) ? allTitleWidth : item.titleWidth
+      const titleWidth = itemVertical ? null : (XEUtils.eqNull(item.titleWidth) ? allTitleWidth : item.titleWidth)
       const titleColon = XEUtils.eqNull(item.titleColon) ? allTitleColon : item.titleColon
       const titleAsterisk = XEUtils.eqNull(item.titleAsterisk) ? allTitleAsterisk : item.titleAsterisk
       const itemOverflow = XEUtils.eqNull(titleOverflow) ? allTitleOverflow : titleOverflow
-      const itemVertical = XEUtils.eqNull(vertical) ? allVertical : vertical
       const ovEllipsis = itemOverflow === 'ellipsis'
       const ovTitle = itemOverflow === 'title'
       const ovTooltip = itemOverflow === true || itemOverflow === 'tooltip'

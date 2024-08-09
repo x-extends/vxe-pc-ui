@@ -340,6 +340,7 @@ setIcon({
   // list-design
   LIST_DESIGN_FIELD_SETTING: iconPrefix + 'custom-column',
   LIST_DESIGN_LIST_SETTING: iconPrefix + 'menu',
+  LIST_DESIGN_LIST_SETTING_ACTIVE_DELETE: iconPrefix + 'delete',
 
   // upload
   UPLOAD_FILE_ERROR: iconPrefix + 'warning-circle-fill',

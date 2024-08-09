@@ -2,6 +2,8 @@ import { RenderFunction, SetupContext, Ref, ComponentPublicInstance, DefineCompo
 import { defineVxeComponent, VxeComponentBaseOptions, VxeComponentEventParams, ValueOf } from '@vxe-ui/core'
 import { VxeListDesignDefines } from './list-design'
 import { VxeGridInstance, VxeGridPropTypes, VxeGridProps, VxeGridListeners } from './grid'
+import { VxeColumnSlotTypes } from './column'
+import { VxeButtonProps } from './button'
 
 /* eslint-disable no-use-before-define,@typescript-eslint/ban-types */
 
@@ -29,6 +31,7 @@ export namespace VxeListViewPropTypes {
   export type Config = null | VxeListDesignDefines.ListDesignConfig
   export type Loading = boolean
   export type Height = string | number
+  export type ActionButtons = VxeListDesignDefines.DefaultSettingFormActionButton[]
   export type GridOptions<D = any> = Omit<VxeGridProps<D>, 'columns'>
   export type GridEvents<D = any> = VxeGridListeners<D>
   export type ViewRender = {
@@ -70,6 +73,7 @@ export interface ListViewMethods<D = any> {
   parseConfig(config: VxeListDesignDefines.ListDesignConfig): {
     formItems: VxeListDesignDefines.SearchItemObjItem[]
     tableColumns: VxeGridPropTypes.Columns
+    actionButtons: VxeListViewPropTypes.ActionButtons
   }
   /**
    * 给 Grid 数据代理提交指令
@@ -82,27 +86,44 @@ export interface VxeListViewMethods<D = any> extends ListViewMethods<D> { }
 export interface ListViewPrivateMethods { }
 export interface VxeListViewPrivateMethods extends ListViewPrivateMethods { }
 
-export type VxeListViewEmits = []
+export type VxeListViewEmits = [
+  'cell-action',
+  'update:actionButtons'
+]
 
 export namespace VxeListViewDefines {
   export interface ListViewEventParams extends VxeComponentEventParams {
     $listView: VxeListViewConstructor
   }
+
+  export interface CellActionEventParams<D = any> extends VxeColumnSlotTypes.DefaultSlotParams<D>, ListViewEventParams {
+    button: VxeButtonProps
+  }
 }
 
-export type VxeListViewEventProps = {}
+export interface VxeListViewEventProps<D = any> {
+  onCellAction?: VxeListViewEvents.CellAction<D>
+}
 
-export interface VxeListViewListeners { }
+export interface VxeListViewListeners<D = any> {
+  cellAction?: VxeListViewEvents.CellAction<D>
+}
 
-export namespace VxeListViewEvents { }
+export namespace VxeListViewEvents {
+  export type CellAction<D = any> = (params: VxeListViewDefines.CellActionEventParams<D>) => void
+}
 
 export namespace VxeListViewSlotTypes {
   export interface DefaultSlotParams {}
+  export interface CellActionSlotParams<D = any> extends VxeColumnSlotTypes.DefaultSlotParams<D>{
+    buttons: VxeButtonProps[]
+  }
 }
 
-export interface VxeListViewSlots {
+export interface VxeListViewSlots<D = any> {
   default: (params: VxeListViewSlotTypes.DefaultSlotParams) => any
   grid: (params: VxeListViewSlotTypes.DefaultSlotParams) => any
+  cellAction: (params: VxeListViewSlotTypes.CellActionSlotParams<D>) => any
 
   [key: string]: (params: Record<string, any>) => any
 }

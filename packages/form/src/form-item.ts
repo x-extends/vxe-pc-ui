@@ -67,7 +67,7 @@ export default defineComponent({
   setup (props, { slots }) {
     const refElem = ref() as Ref<HTMLDivElement>
     const $xeForm = inject('$xeForm', {} as VxeFormConstructor & VxeFormPrivateMethods)
-    const formGather = inject('$xeFormGather', null as XEFormItemProvide | null)
+    const formGather = inject<XEFormItemProvide | null>('$xeFormGather', null)
     const formItem = reactive(createItem($xeForm, props))
     formItem.slots = slots
 
@@ -102,13 +102,13 @@ export default defineComponent({
       const titleSlot = slots ? slots.title : null
       const span = item.span || props.span
       const align = item.align || props.align
+      const itemVertical = XEUtils.eqNull(vertical) ? allVertical : vertical
       const titleBold = XEUtils.eqNull(item.titleBold) ? allTitleBold : item.titleBold
       const titleAlign = XEUtils.eqNull(item.titleAlign) ? allTitleAlign : item.titleAlign
-      const titleWidth = XEUtils.eqNull(item.titleWidth) ? allTitleWidth : item.titleWidth
+      const titleWidth = itemVertical ? null : (XEUtils.eqNull(item.titleWidth) ? allTitleWidth : item.titleWidth)
       const titleColon = XEUtils.eqNull(item.titleColon) ? allTitleColon : item.titleColon
       const titleAsterisk = XEUtils.eqNull(item.titleAsterisk) ? allTitleAsterisk : item.titleAsterisk
       const itemOverflow = XEUtils.eqNull(titleOverflow) ? allTitleOverflow : titleOverflow
-      const itemVertical = XEUtils.eqNull(vertical) ? allVertical : vertical
       const ovEllipsis = itemOverflow === 'ellipsis'
       const ovTitle = itemOverflow === 'title'
       const ovTooltip = itemOverflow === true || itemOverflow === 'tooltip'

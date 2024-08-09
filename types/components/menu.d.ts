@@ -47,12 +47,14 @@ export namespace VxeMenuPropTypes {
     permissionCode?: VxeComponentPermissionCodeType
   }
 
+  export type Collapsed = boolean
   export type ExpandAll = boolean
   export type Options = MenuOneOption[]
 }
 
 export type VxeMenuProps = {
   modelValue?: VxeMenuPropTypes.ModelValue
+  collapsed?: VxeMenuPropTypes.Collapsed
   expandAll?: VxeMenuPropTypes.ExpandAll
   options?: VxeMenuPropTypes.Options
 }

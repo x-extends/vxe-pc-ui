@@ -58,7 +58,7 @@ export type VxeTableDataRow = VxeTablePropTypes.Row
 
 export namespace VxeTablePropTypes {
   export type Size = VxeComponentSizeType
-  export type ID = string | ((params: {
+  export type ID<D = any> = string | ((params: {
     $table: VxeTableConstructor<D> & VxeTablePrivateMethods<D>
     $grid: VxeGridConstructor<D> | null | undefined
   }) => string | number | null)
@@ -1678,7 +1678,7 @@ export type VxeTableProps<D = any> = {
    * 唯一标识
    * 当使用某个特定功能时，需要设置才能生效
    */
-  id?: VxeTablePropTypes.ID
+  id?: VxeTablePropTypes.ID<D>
   /**
    * 表格数据
    * 与 loadData 行为一致，更新数据是不会重置状态
@@ -2158,6 +2158,7 @@ export interface TableReactData<D = any> {
     resizeList: VxeTableDefines.ColumnInfo<D>[]
     pxList: VxeTableDefines.ColumnInfo<D>[]
     pxMinList: VxeTableDefines.ColumnInfo<D>[]
+    autoMinList: VxeTableDefines.ColumnInfo<D>[]
     scaleList: VxeTableDefines.ColumnInfo<D>[]
     scaleMinList: VxeTableDefines.ColumnInfo<D>[]
     autoList: VxeTableDefines.ColumnInfo<D>[]

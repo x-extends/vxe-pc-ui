@@ -1,5 +1,5 @@
 import { defineComponent, h, inject, ref, watch, onMounted, createCommentVNode, nextTick, computed } from 'vue'
-import { VxeUI } from '../../ui'
+import { VxeUI, getI18n } from '../../ui'
 import { errLog } from '../../ui/src/log'
 import VxeFormComponent from '../../form/src/form'
 
@@ -26,15 +26,28 @@ export default defineComponent({
 
     const tableColumn = computed(() => {
       const { formData, listTableColumns } = listDesignReactData
-      const cols: VxeGridPropTypes.Columns = []
-      if (formData.showSeq) {
-        cols.push({
+      const { showSeq, actionButtonList } = formData
+      const columns: VxeGridPropTypes.Columns = []
+      if (showSeq) {
+        columns.unshift({
           type: 'seq',
+          field: '_seq',
           width: 70
         })
       }
-      cols.push(...listTableColumns)
-      return cols
+      if (actionButtonList && actionButtonList.length) {
+        columns.push({
+          field: '_active',
+          title: getI18n('vxe.table.actionTitle'),
+          width: 'auto',
+          cellRender: {
+            name: 'VxeButtonGroup',
+            options: []
+          }
+        })
+      }
+      columns.push(...listTableColumns)
+      return columns
     })
 
     const updateTableData = () => {
@@ -91,7 +104,7 @@ export default defineComponent({
                 items: searchFormItems
               })
               : h('div', {
-                class: 'vxe-list-design--widget-form-empty-data'
+                class: 'vxe-list-design--field-configs-empty-data'
               }, [
                 h('span', {}, '暂无查询条件')
               ])
@@ -110,7 +123,8 @@ export default defineComponent({
                 showOverflow: true,
                 border: true,
                 columnConfig: {
-                  minWidth: 80
+                  minWidth: 'auto',
+                  resizable: true
                 },
                 rowConfig: {
                   isHover: true

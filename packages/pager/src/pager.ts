@@ -4,7 +4,7 @@ import { getIcon, getConfig, getI18n, globalEvents, GLOBAL_EVENT_KEYS, createEve
 import { errLog } from '../../ui/src/log'
 import VxeSelectComponent from '../../select'
 
-import type { VxePagerPropTypes, VxePagerConstructor, VxePagerEmits, VxeSelectEvents, PagerPrivateRef, PagerMethods, PagerPrivateMethods, VxePagerPrivateMethods, PagerReactData } from '../../../types'
+import type { VxePagerPropTypes, VxePagerConstructor, VxePagerEmits, VxeSelectEvents, PagerPrivateRef, PagerMethods, PagerPrivateMethods, VxePagerPrivateMethods, PagerReactData, VxeGridConstructor, VxeGridPrivateMethods } from '../../../types'
 
 export default defineComponent({
   name: 'VxePager',
@@ -58,7 +58,7 @@ export default defineComponent({
 
     const { computeSize } = useSize(props)
 
-    const $xeGrid = inject('$xeGrid', null as any)
+    const $xeGrid = inject<(VxeGridConstructor & VxeGridPrivateMethods) | null>('$xeGrid', null)
 
     const reactData = reactive<PagerReactData>({
       inpCurrPage: props.currentPage

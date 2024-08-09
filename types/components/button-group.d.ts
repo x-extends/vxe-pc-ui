@@ -78,7 +78,10 @@ export namespace VxeButtonGroupDefines {
     $buttonGroup: VxeButtonGroupConstructor
   }
 
-  export interface ClickEventParams extends ButtonGroupEventParams { }
+  export interface ClickEventParams extends ButtonGroupEventParams {
+    name: VxeButtonPropTypes.Name
+    option: VxeButtonProps
+  }
 }
 
 export type VxeButtonGroupEventProps = {

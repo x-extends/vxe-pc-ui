@@ -1,4 +1,4 @@
-import { RenderFunction, SetupContext, Ref, ComponentPublicInstance, DefineComponent } from 'vue'
+import { RenderFunction, SetupContext, Ref, ComponentPublicInstance, ComputedRef, DefineComponent } from 'vue'
 import { defineVxeComponent, VxeComponentBaseOptions, VxeComponentEventParams, VxeComponentSizeType, ValueOf } from '@vxe-ui/core'
 
 /* eslint-disable no-use-before-define,@typescript-eslint/ban-types */
@@ -47,7 +47,15 @@ export namespace VxeTreePropTypes {
   export type MapChildrenField = string
   export type Transform = boolean
   export type Trigger = '' | 'default' | 'node'
+  /**
+   * 已废弃，请使用 nodeConfig.isCurrent
+   * @deprecated
+   */
   export type IsCurrent = boolean
+  /**
+   * 已废弃，请使用 nodeConfig.isHover
+   * @deprecated
+   */
   export type IsHover = boolean
   export type ShowLine = boolean
   export type Indent = number
@@ -72,6 +80,12 @@ export namespace VxeTreePropTypes {
     checkMethod?: (params: { node: D }) => boolean
     showIcon?: boolean
     trigger?: '' | 'default' | 'node'
+  }
+  export interface NodeConfig<D = any> {
+    isHover?: boolean
+    isCurrent?: boolean
+    currentMethod?: (params: { node: D }) => boolean
+    trigger?: '' | 'default' | 'all' | 'parent' | 'child'
   }
   export type Lazy = boolean
   export type ToggleMethod<D = any> = (params: {
@@ -105,7 +119,15 @@ export interface VxeTreeProps<D = any> {
   mapChildrenField?: VxeTreePropTypes.MapChildrenField
   transform?: VxeTreePropTypes.Transform
   trigger?: VxeTreePropTypes.Trigger
+  /**
+   * 已废弃，请使用 nodeConfig.isCurrent
+   * @deprecated
+   */
   isCurrent?: VxeTreePropTypes.IsCurrent
+  /**
+   * 已废弃，请使用 nodeConfig.isHover
+   * @deprecated
+   */
   isHover?: VxeTreePropTypes.IsHover
   showLine?: VxeTreePropTypes.ShowLine
   indent?: VxeTreePropTypes.Indent
@@ -115,6 +137,7 @@ export interface VxeTreeProps<D = any> {
   showCheckbox?: VxeTreePropTypes.ShowCheckbox
   checkNodeKeys?: VxeTreePropTypes.CheckNodeKeys
   checkboxConfig?: VxeTreePropTypes.CheckboxConfig<D>
+  nodeConfig?: VxeTreePropTypes.NodeConfig<D>
   lazy?: VxeTreePropTypes.Lazy
   toggleMethod?: VxeTreePropTypes.ToggleMethod<D>
   /**
@@ -128,7 +151,10 @@ export interface VxeTreeProps<D = any> {
   size?: VxeTreePropTypes.Size
 }
 
-export interface TreePrivateComputed {
+export interface TreePrivateComputed<D = any> {
+  computeRadioOpts: ComputedRef<VxeTreePropTypes.RadioConfig<D>>
+  computeCheckboxOpts: ComputedRef<VxeTreePropTypes.CheckboxConfig<D>>
+  computeNodeOpts: ComputedRef<VxeTreePropTypes.NodeConfig<D>>
 }
 export interface VxeTreePrivateComputed extends TreePrivateComputed { }
 
@@ -181,6 +207,7 @@ export type VxeTreeEmits = [
   'update:checkNodeKeys',
   'node-click',
   'node-dblclick',
+  'current-change',
   'radio-change',
   'checkbox-change',
   'load-success',
@@ -210,10 +237,19 @@ export namespace VxeTreeDefines {
 
   export interface NodeDblclickEventParams<D = any> extends NodeClickEventParams<D> { }
 
+  export interface CurrentChangeEventParams<D = any> extends TreeEventParams<D> {
+    node: D
+    checked: boolean
+  }
+
   export interface RadioChangeEventParams<D = any> extends TreeEventParams<D> {
+    node: D
+    checked: boolean
     value: VxeTreePropTypes.CheckNodeKey
-   }
+  }
   export interface CheckboxChangeEventParams<D = any> extends TreeEventParams<D> {
+    node: D
+    checked: boolean
     value: VxeTreePropTypes.CheckNodeKeys
   }
 
@@ -229,6 +265,7 @@ export namespace VxeTreeDefines {
 export type VxeTreeEventProps = {
   onNodeClick?: VxeTreeEvents.NodeClick
   onNodeDblclick?: VxeTreeEvents.NodeDblclick
+  onCurrentChange?: VxeTreeEvents.CurrentChange
   onRadioChange?: VxeTreeEvents.RadioChange
   onCheckboxChange?: VxeTreeEvents.CheckboxChange
   onLoadSuccess?: VxeTreeEvents.LoadSuccess
@@ -238,6 +275,7 @@ export type VxeTreeEventProps = {
 export interface VxeTreeListeners<D = any> {
   nodeClick?: VxeTreeEvents.NodeClick<D>
   nodeDblclick?: VxeTreeEvents.NodeDblclick<D>
+  currentChange?: VxeTreeEvents.CurrentChange<D>
   radioChange?: VxeTreeEvents.RadioChange<D>
   checkboxChange?: VxeTreeEvents.CheckboxChange<D>
   loadSuccess?: VxeTreeEvents.LoadSuccess<D>
@@ -247,6 +285,7 @@ export interface VxeTreeListeners<D = any> {
 export namespace VxeTreeEvents {
   export type NodeClick<D = any> = (params: VxeTreeDefines.NodeClickEventParams<D>) => void
   export type NodeDblclick<D = any> = (params: VxeTreeDefines.NodeDblclickEventParams<D>) => void
+  export type CurrentChange<D = any> = (params: VxeTreeDefines.CurrentChangeEventParams<D>) => void
   export type RadioChange<D = any> = (params: VxeTreeDefines.RadioChangeEventParams<D>) => void
   export type CheckboxChange<D = any> = (params: VxeTreeDefines.CheckboxChangeEventParams<D>) => void
   export type LoadSuccess<D = any> = (params: VxeTreeDefines.LoadSuccessEventParams<D>) => void

@@ -49,6 +49,7 @@ export default {
       emptyText: 'データがありません',
       allTitle: '全て選択/取消',
       seqTitle: 'N/S',
+      actionTitle: 'Action',
       confirmFilter: 'OK',
       resetFilter: 'リセット',
       allFilter: '全て',
@@ -419,7 +420,11 @@ export default {
     },
     listDesign: {
       fieldSettingTab: 'Field setting',
-      listSettingTab: 'List setting'
+      listSettingTab: 'List setting',
+      activeBtn: {
+        ActionButtonUpdate: 'Edit',
+        ActionButtonDelete: 'Delete'
+      }
     },
     text: {
       copySuccess: 'Successfully copied to clipboard.',

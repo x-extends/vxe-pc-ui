@@ -54,14 +54,10 @@ export default defineComponent({
     //   default: () => getConfig().tree.mapChildrenField
     // },
     transform: Boolean as PropType<VxeTreePropTypes.Transform>,
-    isCurrent: {
-      type: Boolean as PropType<VxeTreePropTypes.IsCurrent>,
-      default: () => getConfig().tree.isCurrent
-    },
-    isHover: {
-      type: Boolean as PropType<VxeTreePropTypes.IsHover>,
-      default: () => getConfig().tree.isHover
-    },
+    // 已废弃
+    isCurrent: Boolean as PropType<VxeTreePropTypes.IsCurrent>,
+    // 已废弃
+    isHover: Boolean as PropType<VxeTreePropTypes.IsHover>,
     showLine: {
       type: Boolean as PropType<VxeTreePropTypes.ShowLine>,
       default: () => getConfig().tree.showLine
@@ -79,10 +75,7 @@ export default defineComponent({
       type: [String, Number] as PropType<VxeTreePropTypes.CheckNodeKey>,
       default: () => getConfig().tree.checkNodeKey
     },
-    radioConfig: {
-      type: Object as PropType<VxeTreePropTypes.RadioConfig>,
-      default: () => XEUtils.clone(getConfig().tree.radioConfig, true)
-    },
+    radioConfig: Object as PropType<VxeTreePropTypes.RadioConfig>,
     showCheckbox: {
       type: Boolean as PropType<VxeTreePropTypes.ShowCheckbox>,
       default: () => getConfig().tree.showCheckbox
@@ -91,10 +84,8 @@ export default defineComponent({
       type: Array as PropType<VxeTreePropTypes.CheckNodeKeys>,
       default: () => getConfig().tree.checkNodeKeys
     },
-    checkboxConfig: {
-      type: Object as PropType<VxeTreePropTypes.CheckboxConfig>,
-      default: () => XEUtils.clone(getConfig().tree.checkboxConfig, true)
-    },
+    checkboxConfig: Object as PropType<VxeTreePropTypes.CheckboxConfig>,
+    nodeConfig: Object as PropType<VxeTreePropTypes.NodeConfig>,
     lazy: Boolean as PropType<VxeTreePropTypes.Lazy>,
     toggleMethod: Function as PropType<VxeTreePropTypes.ToggleMethod>,
     loadMethod: Function as PropType<VxeTreePropTypes.LoadMethod>,
@@ -122,6 +113,7 @@ export default defineComponent({
     'update:checkNodeKeys',
     'node-click',
     'node-dblclick',
+    'current-change',
     'radio-change',
     'checkbox-change',
     'load-success',
@@ -174,12 +166,34 @@ export default defineComponent({
       return props.hasChildField || 'hasChild'
     })
 
+    const computeIsRowCurrent = computed(() => {
+      const nodeOpts = computeNodeOpts.value
+      const { isCurrent } = nodeOpts
+      if (XEUtils.isBoolean(isCurrent)) {
+        return isCurrent
+      }
+      return props.isCurrent
+    })
+
+    const computeIsRowHover = computed(() => {
+      const nodeOpts = computeNodeOpts.value
+      const { isHover } = nodeOpts
+      if (XEUtils.isBoolean(isHover)) {
+        return isHover
+      }
+      return props.isHover
+    })
+
     const computeRadioOpts = computed(() => {
-      return Object.assign({ showIcon: true }, props.radioConfig)
+      return Object.assign({ showIcon: true }, getConfig().tree.radioConfig, props.radioConfig)
     })
 
     const computeCheckboxOpts = computed(() => {
-      return Object.assign({ showIcon: true }, props.checkboxConfig)
+      return Object.assign({ showIcon: true }, getConfig().tree.checkboxConfig, props.checkboxConfig)
+    })
+
+    const computeNodeOpts = computed(() => {
+      return Object.assign({}, getConfig().tree.nodeConfig, props.nodeConfig)
     })
 
     const computeLoadingOpts = computed(() => {
@@ -199,6 +213,9 @@ export default defineComponent({
     })
 
     const computeMaps: VxeTreePrivateComputed = {
+      computeRadioOpts,
+      computeCheckboxOpts,
+      computeNodeOpts
     }
 
     const $xeTree = {
@@ -568,14 +585,17 @@ export default defineComponent({
     }
 
     const handleNodeClickEvent = (evnt: MouseEvent, node: any) => {
-      const { showRadio, showCheckbox, trigger, isCurrent } = props
+      const { showRadio, showCheckbox, trigger } = props
       const radioOpts = computeRadioOpts.value
       const checkboxOpts = computeCheckboxOpts.value
+      const isRowCurrent = computeIsRowCurrent.value
+      let triggerCurrent = false
       let triggerRadio = false
       let triggerCheckbox = false
       let triggerExpand = false
-      if (isCurrent) {
-        reactData.currentNode = node
+      if (isRowCurrent) {
+        triggerCurrent = true
+        changeCurrentEvent(evnt, node)
       } else if (reactData.currentNode) {
         reactData.currentNode = null
       }
@@ -591,7 +611,7 @@ export default defineComponent({
         triggerCheckbox = true
         changeCheckboxEvent(evnt, node)
       }
-      dispatchEvent('node-click', { node, triggerRadio, triggerCheckbox, triggerExpand }, evnt)
+      dispatchEvent('node-click', { node, triggerCurrent, triggerRadio, triggerCheckbox, triggerExpand }, evnt)
     }
 
     const handleNodeDblclickEvent = (evnt: MouseEvent, node: any) => {
@@ -789,6 +809,7 @@ export default defineComponent({
     }
 
     const changeCheckboxEvent = (evnt: MouseEvent, node: any) => {
+      evnt.preventDefault()
       evnt.stopPropagation()
       const checkboxOpts = computeCheckboxOpts.value
       const { checkStrictly, checkMethod } = checkboxOpts
@@ -827,10 +848,39 @@ export default defineComponent({
       updateCheckboxStatus()
       const value = Object.keys(reactData.selectCheckboxMaps)
       emitCheckboxMode(value)
-      dispatchEvent('checkbox-change', { value }, evnt)
+      dispatchEvent('checkbox-change', { node, value, checked: isChecked }, evnt)
+    }
+
+    const changeCurrentEvent = (evnt: MouseEvent, node: any) => {
+      evnt.preventDefault()
+      const nodeOpts = computeNodeOpts.value
+      const { currentMethod, trigger } = nodeOpts
+      const childrenField = computeChildrenField.value
+      const childList: any[] = XEUtils.get(node, childrenField)
+      const hasChild = childList && childList.length
+      let isDisabled = !!currentMethod
+      if (trigger === 'child') {
+        if (hasChild) {
+          return
+        }
+      } else if (trigger === 'parent') {
+        if (!hasChild) {
+          return
+        }
+      }
+      if (currentMethod) {
+        isDisabled = !currentMethod({ node })
+      }
+      if (isDisabled) {
+        return
+      }
+      const isChecked = true
+      reactData.currentNode = node
+      dispatchEvent('current-change', { node, checked: isChecked }, evnt)
     }
 
     const changeRadioEvent = (evnt: MouseEvent, node: any) => {
+      evnt.preventDefault()
       evnt.stopPropagation()
       const radioOpts = computeRadioOpts.value
       const { checkMethod } = radioOpts
@@ -841,10 +891,11 @@ export default defineComponent({
       if (isDisabled) {
         return
       }
+      const isChecked = true
       const value = getNodeId(node)
       reactData.selectRadioKey = value
       emitRadioMode(value)
-      dispatchEvent('radio-change', { value }, evnt)
+      dispatchEvent('radio-change', { node, value, checked: isChecked }, evnt)
     }
 
     const treePrivateMethods: TreePrivateMethods = {
@@ -1034,12 +1085,13 @@ export default defineComponent({
     }
 
     const renderVN = () => {
-      const { loading, trigger, showLine, isHover } = props
+      const { loading, trigger, showLine } = props
       const vSize = computeSize.value
       const radioOpts = computeRadioOpts.value
       const checkboxOpts = computeCheckboxOpts.value
       const treeStyle = computeTreeStyle.value
       const loadingOpts = computeLoadingOpts.value
+      const isRowHover = computeIsRowHover.value
       const loadingSlot = slots.loading
       return h('div', {
         ref: refElem,
@@ -1048,7 +1100,7 @@ export default defineComponent({
           'show--line': showLine,
           'checkbox--highlight': checkboxOpts.highlight,
           'radio--highlight': radioOpts.highlight,
-          'node--hover': isHover,
+          'node--hover': isRowHover,
           'node--trigger': trigger === 'node',
           'is--loading': loading
         }],

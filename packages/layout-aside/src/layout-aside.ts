@@ -1,4 +1,4 @@
-import { defineComponent, ref, h, reactive, onMounted, computed, PropType } from 'vue'
+import { defineComponent, ref, h, reactive, onMounted, computed, provide, PropType } from 'vue'
 import XEUtils from 'xe-utils'
 import { toCssUnit } from '../../ui/src/dom'
 
@@ -78,6 +78,8 @@ export default defineComponent({
     })
 
     $xeLayoutAside.renderVN = renderVN
+
+    provide('$xeLayoutAside', $xeLayoutAside)
 
     return $xeLayoutAside
   },

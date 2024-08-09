@@ -194,11 +194,15 @@ export namespace VxeSelectDefines {
 
   export interface SelectOptions extends VxeOptionProps {
     slots?: VxeOptionPropTypes.Slots
+
+    [key: string]: any
   }
 
   export interface SelectOptgroups extends VxeOptgroupProps {
     options?: VxeOptionProps[]
     slots?: VxeOptionPropTypes.Slots
+
+    [key: string]: any
   }
 
   interface SelectEventParams extends VxeComponentEventParams {

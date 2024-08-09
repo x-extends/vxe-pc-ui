@@ -323,7 +323,7 @@ export default defineComponent({
 
     Object.assign($xeTabs, tabsMethods, tabsPrivateMethods)
 
-    const renderTabHeader = (list: VxeTabsPropTypes.Options | VxeTabPaneDefines.TabConfig[]) => {
+    const renderTabHeader = (tabList: VxeTabsPropTypes.Options | VxeTabPaneDefines.TabConfig[]) => {
       const { type, titleWidth: allTitleWidth, titleAlign: allTitleAlign, showClose } = props
       const { activeName, lintLeft, lintWidth, isTabOver } = reactData
       const extraSlot = slots.extra
@@ -346,7 +346,7 @@ export default defineComponent({
           h('div', {
             ref: refHeadWrapperElem,
             class: 'vxe-tabs-header--item-wrapper'
-          }, list.map((item, index) => {
+          }, tabList.map((item, index) => {
             const { title, titleWidth, titleAlign, icon, name, slots } = item
             const tabSlot = slots ? slots.tab : null
             const itemWidth = titleWidth || allTitleWidth
@@ -388,7 +388,7 @@ export default defineComponent({
                   ? h('div', {
                     class: 'vxe-tabs-header--close-btn',
                     onClick (evnt: KeyboardEvent) {
-                      handleCloseTabEvent(evnt, item, index, list)
+                      handleCloseTabEvent(evnt, item, index, tabList)
                     }
                   }, [
                     h('i', {
@@ -442,14 +442,14 @@ export default defineComponent({
         : createCommentVNode()
     }
 
-    const renderTabContent = (list: VxeTabsPropTypes.Options | VxeTabPaneDefines.TabConfig[]) => {
+    const renderTabContent = (tabList: VxeTabsPropTypes.Options | VxeTabPaneDefines.TabConfig[]) => {
       const { destroyOnClose } = props
       const { activeName } = reactData
-      const activeDefaultTab = list.find(item => item.name === activeName)
+      const activeDefaultTab = tabList.find(item => item.name === activeName)
       if (destroyOnClose) {
         return activeDefaultTab ? [renderTabPane(activeDefaultTab)] : createCommentVNode()
       }
-      return list.map(renderTabPane)
+      return tabList.map(renderTabPane)
     }
 
     const renderVN = () => {
@@ -457,6 +457,7 @@ export default defineComponent({
       const tabOptions = computeTabOptions.value
       const tabStaticOptions = computeTabStaticOptions.value
       const defaultSlot = slots.default
+      const tabList = defaultSlot ? tabStaticOptions : tabOptions
 
       return h('div', {
         ref: refElem,
@@ -473,10 +474,10 @@ export default defineComponent({
         h('div', {
           class: 'vxe-tabs-slots'
         }, defaultSlot ? defaultSlot({}) : []),
-        renderTabHeader(defaultSlot ? tabStaticOptions : tabOptions),
+        renderTabHeader(tabList),
         h('div', {
           class: 'vxe-tabs-pane'
-        }, renderTabContent(defaultSlot ? tabStaticOptions : tabOptions))
+        }, renderTabContent(tabList))
       ])
     }
 
