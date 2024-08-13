@@ -33,7 +33,7 @@ export namespace VxeTextareaPropTypes {
   export type Editable = boolean
   export type Disabled = boolean
   export type Placeholder = string
-  export type Maxlength = string | number
+  export type MaxLength = string | number
   export type Rows = string | number
   export type Cols = string | number
   export type ShowWordCount = boolean
@@ -46,6 +46,12 @@ export namespace VxeTextareaPropTypes {
   }
   export type Form = string
   export type Resize = string
+
+  /**
+   * 已废弃，请使用 MaxLength
+   * @deprecated
+   */
+  export type Maxlength = string | number
 }
 
 export type VxeTextareaProps = {
@@ -76,7 +82,7 @@ export type VxeTextareaProps = {
   /**
    * 最大长度
    */
-  maxlength?: VxeTextareaPropTypes.Maxlength
+  maxLength?: VxeTextareaPropTypes.MaxLength
   /**
    * 原生 rows 属性
    */
@@ -105,6 +111,12 @@ export type VxeTextareaProps = {
    * 调整文本域大小的方式
    */
   resize?: VxeTextareaPropTypes.Resize
+
+  /**
+   * 已废弃，请使用 MaxLength
+   * @deprecated
+   */
+  maxlength?: VxeTextareaPropTypes.Maxlength
 }
 
 export interface TextareaPrivateComputed {

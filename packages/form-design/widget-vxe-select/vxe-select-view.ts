@@ -35,7 +35,7 @@ export const WidgetVxeSelectViewComponent = defineComponent({
 
     return () => {
       const { renderParams } = props
-      const { widget } = renderParams
+      const { widget, isViewMode } = renderParams
       const { options } = widget
       const kebabCaseName = computeKebabCaseName.value
 
@@ -49,7 +49,7 @@ export const WidgetVxeSelectViewComponent = defineComponent({
           return h(VxeSelectComponent, {
             modelValue: $xeFormView ? $xeFormView.getItemValue(widget) : null,
             placeholder: options.placeholder || getI18n('vxe.base.pleaseSelect'),
-            options: options.options,
+            options: isViewMode ? options.options : [],
             optionProps: { label: 'value', value: 'value' },
             onChange: changeEvent,
             'onUpdate:modelValue' (val) {

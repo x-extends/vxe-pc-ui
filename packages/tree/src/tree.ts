@@ -33,6 +33,10 @@ export default defineComponent({
       type: String as PropType<VxeTreePropTypes.ChildrenField>,
       default: () => getConfig().tree.childrenField
     },
+    valueField: {
+      type: String as PropType<VxeTreePropTypes.ValueField>,
+      default: () => getConfig().tree.valueField
+    },
     keyField: {
       type: String as PropType<VxeTreePropTypes.KeyField>,
       default: () => getConfig().tree.keyField
@@ -154,6 +158,11 @@ export default defineComponent({
       return props.keyField || 'id'
     })
 
+    const computeValueField = computed(() => {
+      const keyField = computeKeyField.value
+      return props.valueField || keyField
+    })
+
     const computeParentField = computed(() => {
       return props.parentField || 'parentId'
     })
@@ -230,8 +239,8 @@ export default defineComponent({
     } as unknown as VxeTreeConstructor & VxeTreePrivateMethods
 
     const getNodeId = (node: any) => {
-      const keyField = computeKeyField.value
-      const nodeid = XEUtils.get(node, keyField)
+      const valueField = computeValueField.value
+      const nodeid = XEUtils.get(node, valueField)
       return XEUtils.eqNull(nodeid) ? '' : encodeURIComponent(nodeid)
     }
 
@@ -342,14 +351,14 @@ export default defineComponent({
     }
 
     const createNode = (records: any[]) => {
-      const keyField = computeKeyField.value
+      const valueField = computeValueField.value
       return Promise.resolve(
         records.map(obj => {
           const item = { ...obj }
           let nodeid = getNodeId(item)
           if (!nodeid) {
             nodeid = getNodeUniqueId()
-            XEUtils.set(item, keyField, nodeid)
+            XEUtils.set(item, valueField, nodeid)
           }
           return item
         })
@@ -516,14 +525,14 @@ export default defineComponent({
 
     const cacheNodeMap = () => {
       const { treeList } = reactData
-      const keyField = computeKeyField.value
+      const valueField = computeValueField.value
       const childrenField = computeChildrenField.value
       const keyMaps: Record<string, VxeTreeDefines.NodeCacheItem> = {}
       XEUtils.eachTree(treeList, (item, itemIndex, items, path, parent, nodes) => {
         let nodeid = getNodeId(item)
         if (!nodeid) {
           nodeid = getNodeUniqueId()
-          XEUtils.set(item, keyField, nodeid)
+          XEUtils.set(item, valueField, nodeid)
         }
         keyMaps[nodeid] = {
           item,

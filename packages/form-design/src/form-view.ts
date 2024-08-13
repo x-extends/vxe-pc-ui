@@ -292,8 +292,9 @@ export default defineComponent({
                 const renderWidgetDesignView = compConf.renderFormDesignWidgetView
                 const renderWidgetDesignPreview = compConf.renderFormDesignWidgetPreview
                 const renderWidgetDesignMobilePreview = compConf.renderFormDesignWidgetMobilePreview
+                const isEditMode = !!$xeFormDesignLayoutStyle
                 const renderOpts: VxeGlobalRendererHandles.RenderFormDesignWidgetViewOptions = widget
-                const params: VxeGlobalRendererHandles.RenderFormDesignWidgetViewParams = { widget, isEditMode: false, isViewMode: true, $formDesign: null, $formView: $xeFormView }
+                const params: VxeGlobalRendererHandles.RenderFormDesignWidgetViewParams = { widget, isEditMode, isViewMode: !isEditMode, $formDesign: null, $formView: $xeFormView }
                 return h(VxeFormGatherComponent, {
                   key: widget.id
                 }, {

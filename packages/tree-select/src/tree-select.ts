@@ -52,7 +52,8 @@ export default defineComponent({
     'clear',
     'blur',
     'focus',
-    'click'
+    'click',
+    'node-click'
   ] as VxeTreeSelectEmits,
   setup (props, context) {
     const { emit, slots } = context
@@ -126,6 +127,11 @@ export default defineComponent({
 
     const computeTreeOpts = computed(() => {
       return Object.assign({}, getConfig().treeSelect.treeConfig, props.treeConfig)
+    })
+
+    const computeTreeNodeOpts = computed(() => {
+      const treeOpts = computeTreeOpts.value
+      return Object.assign({ isHover: true }, treeOpts.nodeConfig)
     })
 
     const computeTreeCheckboxOpts = computed(() => {
@@ -346,9 +352,11 @@ export default defineComponent({
     }
 
     const changeEvent = (evnt: Event, selectValue: any) => {
+      const { fullNodeMaps } = reactData
       if (selectValue !== props.modelValue) {
+        const cacheItem = fullNodeMaps[selectValue]
         emit('update:modelValue', selectValue)
-        treeSelectMethods.dispatchEvent('change', { value: selectValue }, evnt)
+        treeSelectMethods.dispatchEvent('change', { value: selectValue, option: cacheItem ? cacheItem.item : null }, evnt)
         // 自动更新校验状态
         if ($xeForm && formItemInfo) {
           $xeForm.triggerItemEvent(evnt, formItemInfo.itemConfig.field, selectValue)
@@ -436,7 +444,9 @@ export default defineComponent({
       }
     }
 
-    const nodeClickEvent = () => {
+    const nodeClickEvent = (params: any) => {
+      const { $event } = params
+      treeSelectMethods.dispatchEvent('node-click', params, $event)
     }
 
     const radioChangeEvent = (params: any) => {
@@ -468,6 +478,7 @@ export default defineComponent({
       const footerSlot = slots.footer
       const prefixSlot = slots.prefix
       const treeOpts = computeTreeOpts.value
+      const treeNodeOpts = computeTreeNodeOpts.value
       const treeCheckboxOpts = computeTreeCheckboxOpts.value
       const treeRadioOpts = computeTreeRadioOpts.value
       const labelField = computeLabelField.value
@@ -553,7 +564,6 @@ export default defineComponent({
                     }, [
                       h(VxeTreeComponent, {
                         class: 'vxe-tree-select--tree',
-                        isHover: treeOpts.isHover,
                         data: options,
                         indent: treeOpts.indent,
                         showRadio: !multiple,
@@ -563,11 +573,13 @@ export default defineComponent({
                         checkNodeKeys: multiple ? modelValue : null,
                         checkboxConfig: treeCheckboxOpts,
                         titleField: labelField,
-                        keyField: valueField,
-                        childrenField: childrenField,
-                        parentField: parentField,
-                        hasChildField: hasChildField,
+                        valueField: valueField,
+                        keyField: treeOpts.keyField,
+                        childrenField: treeOpts.childrenField || childrenField,
+                        parentField: treeOpts.parentField || parentField,
+                        hasChildField: treeOpts.hasChildField || hasChildField,
                         accordion: treeOpts.accordion,
+                        nodeConfig: treeNodeOpts,
                         lazy: treeOpts.lazy,
                         loadMethod: treeOpts.loadMethod,
                         toggleMethod: treeOpts.toggleMethod,

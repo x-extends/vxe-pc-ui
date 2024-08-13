@@ -35,6 +35,7 @@ export const WidgetVxeInputViewComponent = defineComponent({
     return () => {
       const { renderParams } = props
       const { widget } = renderParams
+      const { options } = widget
       const kebabCaseName = computeKebabCaseName.value
 
       return h(VxeFormItemComponent, {
@@ -46,6 +47,7 @@ export const WidgetVxeInputViewComponent = defineComponent({
         default () {
           return h(VxeInputComponent, {
             modelValue: $xeFormView ? $xeFormView.getItemValue(widget) : null,
+            placeholder: options.placeholder,
             onChange: changeEvent,
             'onUpdate:modelValue' (val) {
               if ($xeFormView) {

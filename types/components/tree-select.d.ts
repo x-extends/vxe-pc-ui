@@ -49,13 +49,20 @@ export namespace VxeTreeSelectPropTypes {
     label?: string
     disabled?: string
     children?: string
+
+    /**
+     * @deprecated
+     */
     hasChild?: string
+    /**
+     * @deprecated
+     */
     parent?: string
   }
   export type Remote = boolean
   export type RemoteMethod = (params: { searchValue: string }) => Promise<void> | void
   export type Transfer = boolean
-  export type TreeConfig<D = any> = Pick<VxeTreeProps<D>, 'transform' | 'accordion' | 'isHover' | 'trigger' | 'showLine' | 'indent' | 'showRadio' |'radioConfig' | 'showCheckbox' | 'checkboxConfig' | 'lazy' | 'loadMethod' | 'toggleMethod' | 'showIcon' | 'iconOpen' | 'iconClose' | 'iconLoaded'>
+  export type TreeConfig<D = any> = VxeTreeProps<D>
 }
 
 export interface VxeTreeSelectProps<D = any> {
@@ -117,7 +124,8 @@ export type VxeTreeSelectEmits = [
   'clear',
   'blur',
   'focus',
-  'click'
+  'click',
+  'node-click'
 ]
 
 export namespace VxeTreeSelectDefines {
@@ -125,8 +133,9 @@ export namespace VxeTreeSelectDefines {
     $treeSelect: VxeTreeSelectConstructor
   }
 
-  export interface ChangeEventParams extends TreeSelectEventParams {
+  export interface ChangeEventParams<D = any> extends TreeSelectEventParams {
     value: any
+    option: D
   }
 
   export interface ClearEventParams extends TreeSelectEventParams {
@@ -138,24 +147,24 @@ export namespace VxeTreeSelectDefines {
   export interface ClickEventParams extends TreeSelectEventParams { }
 }
 
-export type VxeTreeSelectEventProps = {
-  onChange?: VxeSelectEvents.Change
-  onClear?: VxeSelectEvents.Clear
-  onFocus?: VxeSelectEvents.Focus
-  onBlur?: VxeSelectEvents.Blur
-  onClick?: VxeSelectEvents.Click
+export interface VxeTreeSelectEventProps<D = any> {
+  onChange?: VxeTreeSelectEvents.Changes<D>
+  onClear?: VxeTreeSelectEvents.Clear
+  onFocus?: VxeTreeSelectEvents.Focus
+  onBlur?: VxeTreeSelectEvents.Blur
+  onClick?: VxeTreeSelectEvents.Click
 }
 
-export interface VxeTreeSelectListeners {
-  change?: VxeSelectEvents.Change
-  clear?: VxeSelectEvents.Clear
-  focus?: VxeSelectEvents.Focus
-  blur?: VxeSelectEvents.Blur
-  click?: VxeSelectEvents.Click
+export interface VxeTreeSelectListeners<D = any> {
+  change?: VxeTreeSelectEvents.Changes<D>
+  clear?: VxeTreeSelectEvents.Clear
+  focus?: VxeTreeSelectEvents.Focus
+  blur?: VxeTreeSelectEvents.Blur
+  click?: VxeTreeSelectEvents.Click
 }
 
 export namespace VxeTreeSelectEvents {
-  export type Change = (params: VxeTreeSelectDefines.ChangeEventParams) => void
+  export type Change<D = any> = (params: VxeTreeSelectDefines.ChangeEventParams<D>) => void
   export type Clear = (params: VxeTreeSelectDefines.ClearEventParams) => void
   export type Focus = (params: VxeTreeSelectDefines.FocusEventParams) => void
   export type Blur = (params: VxeTreeSelectDefines.BlurEventParams) => void

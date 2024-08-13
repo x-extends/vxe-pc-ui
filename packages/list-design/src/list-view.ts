@@ -39,12 +39,13 @@ export default defineComponent({
 
     const reactData = reactive<ListViewReactData>({
       searchFormItems: [],
-      listTableColumns: []
+      listTableColumns: [],
+      tableColumns: []
     })
 
     const computeGridOptions = computed<VxeGridProps>(() => {
       const { gridOptions } = props
-      const { listTableColumns } = reactData
+      const { tableColumns } = reactData
       const gridOpts = gridOptions || {}
       const columnOpts = Object.assign({
         minWidth: 80
@@ -54,7 +55,7 @@ export default defineComponent({
         proxyOpts = Object.assign({ autoLoad: false }, gridOpts.proxyConfig)
       }
       return Object.assign({}, gridOpts, {
-        columns: listTableColumns,
+        columns: tableColumns,
         columnConfig: columnOpts,
         proxyConfig: proxyOpts
       })
@@ -118,6 +119,7 @@ export default defineComponent({
       if (listColumns) {
         return listColumns.map(item => {
           return {
+            widgetName: item.widgetName,
             field: item.field,
             title: item.title,
             visible: !!item.visible
@@ -130,6 +132,7 @@ export default defineComponent({
     const clearConfig = () => {
       reactData.searchFormItems = []
       reactData.listTableColumns = []
+      reactData.tableColumns = []
       return nextTick()
     }
 
@@ -246,8 +249,10 @@ export default defineComponent({
     }
 
     const loadListColumns = (listColumns: VxeListDesignDefines.ListColumnObjItem[], formConfig: any) => {
-      const { columns, actionButtons } = parseTableColumn(listColumns || [], formConfig)
-      reactData.listTableColumns = columns
+      const listTableColumns = listColumns || []
+      const { columns, actionButtons } = parseTableColumn(listTableColumns, formConfig)
+      reactData.listTableColumns = listTableColumns
+      reactData.tableColumns = columns
       emit('update:actionButtons', actionButtons)
       nextTick(() => {
         const gridOptions = computeGridOptions.value

@@ -1,6 +1,7 @@
-import { RenderFunction, SetupContext, Ref, VNode, ComputedRef, WritableComputedRef, ComponentPublicInstance, DefineComponent, UnwrapNestedRefs } from 'vue'
+import { RenderFunction, SetupContext, Ref, VNode, PropType, ComputedRef, WritableComputedRef, ComponentPublicInstance, DefineComponent, UnwrapNestedRefs } from 'vue'
 import { defineVxeComponent, VxeComponentBaseOptions, VxeComponentEventParams, VxeComponentSizeType, ValueOf } from '@vxe-ui/core'
 import { VxeFormPropTypes } from '../components/form'
+import { VxeGlobalRendererHandles } from '../ui'
 
 /* eslint-disable no-use-before-define,@typescript-eslint/ban-types */
 
@@ -247,18 +248,41 @@ export namespace VxeFormDesignEvents {
   export type DragWidget<D = any> = (params: VxeFormDesignDefines.DragWidgetEventParams<D>) => void
  }
 
-export namespace VxeFormDesignSlotTypes {}
+export namespace VxeFormDesignSlotTypes {
+  export interface DefaultSlotParams {}
+}
 export interface VxeFormDesignSlots {
-  default: (params: VxeFlowViewSlotTypes.DefaultSlotParams) => any
-  header: (params: VxeFlowViewSlotTypes.DefaultSlotParams) => any
+  default: (params: VxeFormDesignSlotTypes.DefaultSlotParams) => any
+  header: (params: VxeFormDesignSlotTypes.DefaultSlotParams) => any
 }
 
 export interface FormDesignExport {
+  createWidgetConfigProps <D = any>(): {
+    renderOpts: {
+      type: PropType<VxeGlobalRendererHandles.RenderFormDesignWidgetFormViewOptions>
+      default: () => {}
+    }
+    renderParams: {
+      type: PropType<VxeGlobalRendererHandles.RenderFormDesignWidgetFormViewParams<D>>
+      default: () => {}
+    }
+  }
+  createWidgetViewProps <D = any>(): {
+    renderOpts: {
+      type: PropType<VxeGlobalRendererHandles.RenderFormDesignWidgetViewOptions>
+      default: () => {}
+    }
+    renderParams: {
+      type: PropType<VxeGlobalRendererHandles.RenderFormDesignWidgetViewParams<D>>
+      default: () => {}
+    }
+  }
   useWidgetView<T = any>(props: {
     renderOpts: any
     renderParams: any
   }): {
-    currWidget: ComputedRef<VxeFormDesignDefines.WidgetObjItem<T>>,
+    currWidget: ComputedRef<VxeFormDesignDefines.WidgetObjItem<T>>
+    widgetOptions: ComputedRef<T>
     widgetModel: WritableComputedRef<any>
   }
   useWidgetName(props: {
@@ -270,8 +294,11 @@ export interface FormDesignExport {
   useWidgetPropDataSource(props: {
     renderOpts: any
     renderParams: any
-  }, isSubOption?: boolean): {
+  }, renderConfig?: {
+    isSubOption?: boolean
+  }): {
     renderDataSourceFormItem(): VNode
+    renderDataSourceFormItemContent(): VNode[]
   }
 }
 

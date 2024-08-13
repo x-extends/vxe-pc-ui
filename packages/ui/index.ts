@@ -235,7 +235,6 @@ setConfig({
   },
   treeSelect: {
     treeConfig: {
-      isHover: true,
       radioConfig: {},
       checkboxConfig: {}
     }

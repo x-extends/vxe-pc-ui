@@ -111,15 +111,14 @@ export namespace VxeTabsDefines {
     $tabs: VxeTabsConstructor
   }
 
-  export interface ChangeEventParams extends TabsEventParams, ChangeParams {
+  export interface ChangeEventParams extends TabsEventParams {
     value: VxeTabsPropTypes.ModelValue
     name: VxeTabsPropTypes.ModelValue
     oldName: VxeTabsPropTypes.ModelValue
     newName: VxeTabsPropTypes.ModelValue
   }
 
-  export interface TabChangeFailEventParams extends TabsEventParams, ChangeParams {
-    value: VxeTabsPropTypes.ModelValue
+  export interface TabChangeFailEventParams extends TabsEventParams {
     value: VxeTabsPropTypes.ModelValue
     name: VxeTabsPropTypes.ModelValue
   }

@@ -122,11 +122,11 @@ export namespace VxePulldownDefines {
 
   export interface ClickEventParams extends PulldownEventParams {}
 
-  export interface OptionClickEventParams extends OptionClickParams, PulldownEventParams {
+  export interface OptionClickEventParams extends PulldownEventParams {
     option: VxePulldownPropTypes.Option
   }
 
-  export interface HidePanelEventParams extends HidePanelParams, PulldownEventParams {}
+  export interface HidePanelEventParams extends PulldownEventParams {}
 }
 
 export type VxePulldownEventProps = {
@@ -157,11 +157,11 @@ export namespace VxePulldownSlotTypes {
 }
 
 export interface VxePulldownSlots {
-  header: (params: VxePulldownSlotTypes.DefaultSlotParams) => any
-  default: (params: VxePulldownSlotTypes.DefaultSlotParams) => any
-  option: (params: VxePulldownSlotTypes.OptionSlotParams) => any
-  footer: (params: VxePulldownSlotTypes.DefaultSlotParams) => any
-  dropdown: (params: VxePulldownSlotTypes.DefaultSlotParams) => any
+  header?: (params: VxePulldownSlotTypes.DefaultSlotParams) => any
+  default?: (params: VxePulldownSlotTypes.DefaultSlotParams) => any
+  option?: (params: VxePulldownSlotTypes.OptionSlotParams) => any
+  footer?: (params: VxePulldownSlotTypes.DefaultSlotParams) => any
+  dropdown?: (params: VxePulldownSlotTypes.DefaultSlotParams) => any
 }
 
 export const Pulldown: typeof VxePulldown

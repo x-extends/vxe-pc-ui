@@ -35,6 +35,7 @@ export const WidgetVxeDatePickerViewComponent = defineComponent({
     return () => {
       const { renderParams } = props
       const { widget } = renderParams
+      const { options } = widget
       const kebabCaseName = computeKebabCaseName.value
 
       return h(VxeFormItemComponent, {
@@ -46,6 +47,7 @@ export const WidgetVxeDatePickerViewComponent = defineComponent({
         default () {
           return h(VxeDatePickerComponent, {
             modelValue: $xeFormView ? $xeFormView.getItemValue(widget) : null,
+            placeholder: options.placeholder,
             onChange: changeEvent,
             'onUpdate:modelValue' (val) {
               if ($xeFormView) {

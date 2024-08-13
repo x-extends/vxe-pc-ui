@@ -71,10 +71,7 @@ export default defineComponent({
       type: Boolean as PropType<VxeInputPropTypes.Disabled>,
       default: null
     },
-    placeholder: {
-      type: String as PropType<VxeInputPropTypes.Placeholder>,
-      default: () => XEUtils.eqNull(getConfig().input.placeholder) ? getI18n('vxe.base.pleaseInput') : getConfig().input.placeholder
-    },
+    placeholder: String as PropType<VxeInputPropTypes.Placeholder>,
     maxLength: [String, Number] as PropType<VxeInputPropTypes.MaxLength>,
     autoComplete: { type: String as PropType<VxeInputPropTypes.AutoComplete>, default: 'off' },
     align: String as PropType<VxeInputPropTypes.Align>,
@@ -245,6 +242,19 @@ export default defineComponent({
       return disabled
     })
 
+    const computeInpMaxLength = computed(() => {
+      const { maxLength, maxlength } = props
+      const maxLen = maxLength || maxlength
+      const isNumType = computeIsNumType.value
+      // 数值最大长度限制 16 位，包含小数
+      if (isNumType) {
+        if (!XEUtils.toNumber(maxLen)) {
+          return 16
+        }
+      }
+      return maxLen
+    })
+
     const computeIsDateTimeType = computed(() => {
       const { type } = props
       return type === 'time' || type === 'datetime'
@@ -260,7 +270,8 @@ export default defineComponent({
 
     const computeIsCountError = computed(() => {
       const inputCount = computeInputCount.value
-      return props.maxlength && inputCount > XEUtils.toNumber(props.maxlength)
+      const inpMaxLength = computeInpMaxLength.value
+      return inpMaxLength && inputCount > XEUtils.toNumber(inpMaxLength)
     })
 
     const computeIsDatePickerType = computed(() => {
@@ -669,14 +680,18 @@ export default defineComponent({
       if (placeholder) {
         return getFuncText(placeholder)
       }
-      return ''
+      const globalPlaceholder = getConfig().input.placeholder
+      if (globalPlaceholder) {
+        return getFuncText(globalPlaceholder)
+      }
+      return getI18n('vxe.base.pleaseInput')
     })
 
     const computeInpMaxlength = computed(() => {
-      const { maxlength } = props
       const isNumType = computeIsNumType.value
+      const inpMaxLength = computeInpMaxLength.value
       // 数值最大长度限制 16 位，包含小数
-      return isNumType && !XEUtils.toNumber(maxlength) ? 16 : maxlength
+      return isNumType && !XEUtils.toNumber(inpMaxLength) ? 16 : inpMaxLength
     })
 
     const computeInpImmediate = computed(() => {

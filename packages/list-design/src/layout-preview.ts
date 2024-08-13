@@ -46,7 +46,13 @@ export default defineComponent({
           }
         })
       }
-      columns.push(...listTableColumns)
+      listTableColumns.forEach(item => {
+        columns.push({
+          field: item.field,
+          title: item.title,
+          visible: item.visible
+        })
+      })
       return columns
     })
 

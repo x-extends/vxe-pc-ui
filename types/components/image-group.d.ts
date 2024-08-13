@@ -69,7 +69,7 @@ export namespace VxeImageGroupDefines {
     $imageGroup: VxeImageGroupConstructor
   }
 
-  export interface ClickEventParams extends LinkEventParams {
+  export interface ClickEventParams {
     url: string
   }
 }

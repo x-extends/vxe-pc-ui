@@ -163,7 +163,7 @@ export namespace VxeListSlotTypes {
 }
 
 export interface VxeListSlots {
-  default: (params: VxeListSlotTypes.DefaultSlotParams) => any
+  default?: (params: VxeListSlotTypes.DefaultSlotParams) => any
 }
 
 export const List: typeof VxeList

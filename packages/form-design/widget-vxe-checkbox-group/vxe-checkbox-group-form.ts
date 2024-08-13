@@ -22,7 +22,9 @@ export const WidgetVxeCheckboxGroupFormComponent = defineComponent({
   },
   emits: [],
   setup (props) {
-    const { renderDataSourceFormItem } = useWidgetPropDataSource(props, false)
+    const { renderDataSourceFormItem } = useWidgetPropDataSource(props, {
+      isSubOption: false
+    })
 
     const { computeKebabCaseName } = useWidgetName(props)
 

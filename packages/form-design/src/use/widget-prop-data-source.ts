@@ -21,7 +21,12 @@ export function useWidgetPropDataSource (props: {
   readonly renderParams: VxeGlobalRendererHandles.RenderFormDesignWidgetFormViewParams<{
     options: WidgetDataSourceOptionObjVO[]
   }>
-}, isSubOption: boolean) {
+}, renderConfig?: {
+  isSubOption?: boolean
+}) {
+  const renConf = Object.assign({}, renderConfig)
+  const isSubOption = renConf.isSubOption
+
   const optionsContent = ref('')
   const expandIndexList = ref<number[]>([])
 
@@ -239,6 +244,28 @@ export function useWidgetPropDataSource (props: {
     expandAllOption()
   })
 
+  const renderDataSourceFormItemContent = () => {
+    return [
+      h('div', {}, [
+        h(VxeButtonComponent, {
+          status: 'primary',
+          mode: 'text',
+          content: getI18n('vxe.formDesign.widgetProp.dataSource.addOption'),
+          onClick: addOptionEvent
+        }),
+        h(VxeButtonComponent, {
+          status: 'primary',
+          mode: 'text',
+          content: getI18n('vxe.formDesign.widgetProp.dataSource.batchEditOption'),
+          onClick: openPopupEditEvent
+        })
+      ]),
+      h('div', {
+        class: 'vxe-form-design--widget-form-item-data-source-wrapper'
+      }, renderOptions())
+    ]
+  }
+
   return {
     renderDataSourceFormItem () {
       return h(VxeFormItemComponent, {
@@ -246,27 +273,10 @@ export function useWidgetPropDataSource (props: {
         field: 'options'
       }, {
         default () {
-          return [
-            h('div', {}, [
-              h(VxeButtonComponent, {
-                status: 'primary',
-                mode: 'text',
-                content: getI18n('vxe.formDesign.widgetProp.dataSource.addOption'),
-                onClick: addOptionEvent
-              }),
-              h(VxeButtonComponent, {
-                status: 'primary',
-                mode: 'text',
-                content: getI18n('vxe.formDesign.widgetProp.dataSource.batchEditOption'),
-                onClick: openPopupEditEvent
-              })
-            ]),
-            h('div', {
-              class: 'vxe-form-design--widget-form-item-data-source'
-            }, renderOptions())
-          ]
+          return renderDataSourceFormItemContent()
         }
       })
-    }
+    },
+    renderDataSourceFormItemContent
   }
 }

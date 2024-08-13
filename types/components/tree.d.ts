@@ -40,6 +40,7 @@ export namespace VxeTreePropTypes {
   export type Height = string | number
   export type MinHeight = string | number
   export type ParentField = string
+  export type ValueField = string
   export type KeyField = string
   export type TitleField = string
   export type ChildrenField = string
@@ -112,6 +113,7 @@ export interface VxeTreeProps<D = any> {
   loadingConfig?: VxeTreePropTypes.LoadingConfig
   accordion?: VxeTreePropTypes.Accordion
   parentField?: VxeTreePropTypes.ParentField
+  valueField?: VxeTreePropTypes.ValueField
   keyField?: VxeTreePropTypes.KeyField
   titleField?: VxeTreePropTypes.TitleField
   childrenField?: VxeTreePropTypes.ChildrenField

@@ -54,7 +54,8 @@ export interface VxeListViewPrivateComputed extends ListViewPrivateComputed { }
 
 export interface ListViewReactData {
   searchFormItems: VxeListDesignDefines.SearchItemObjItem[]
-  listTableColumns: VxeGridPropTypes.Columns
+  listTableColumns: VxeListDesignDefines.ListColumnObjItem[]
+  tableColumns: VxeGridPropTypes.Columns
 }
 
 export interface ListViewMethods<D = any> {
@@ -115,17 +116,20 @@ export namespace VxeListViewEvents {
 
 export namespace VxeListViewSlotTypes {
   export interface DefaultSlotParams {}
-  export interface CellActionSlotParams<D = any> extends VxeColumnSlotTypes.DefaultSlotParams<D>{
-    buttons: VxeButtonProps[]
+  export interface GridSlotParams {}
+  export interface CellActionSlotParams {
+    // buttons: VxeButtonProps[]
   }
 }
 
 export interface VxeListViewSlots<D = any> {
-  default: (params: VxeListViewSlotTypes.DefaultSlotParams) => any
-  grid: (params: VxeListViewSlotTypes.DefaultSlotParams) => any
-  cellAction: (params: VxeListViewSlotTypes.CellActionSlotParams<D>) => any
+  default?: (params: VxeListViewSlotTypes.DefaultSlotParams) => any
+  grid?: (params: VxeListViewSlotTypes.GridSlotParams) => any
+  cellAction?: (params: VxeListViewSlotTypes.CellActionSlotParams) => any
 
-  [key: string]: (params: Record<string, any>) => any
+  [key: string]: ((params: {
+    [key: string]: any
+  }) => any) | undefined
 }
 
 export const ListView: typeof VxeListView

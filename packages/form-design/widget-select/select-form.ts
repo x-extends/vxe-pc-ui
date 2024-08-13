@@ -22,7 +22,9 @@ export const WidgetSelectFormComponent = defineComponent({
   },
   emits: [],
   setup (props) {
-    const { renderDataSourceFormItem } = useWidgetPropDataSource(props, true)
+    const { renderDataSourceFormItem } = useWidgetPropDataSource(props, {
+      isSubOption: true
+    })
 
     const { computeKebabCaseName } = useWidgetName(props)
 

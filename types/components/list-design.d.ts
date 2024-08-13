@@ -115,6 +115,7 @@ export namespace VxeListDesignDefines {
   }
 
   export interface ListColumnObjItem {
+    widgetName: string
     field: string
     title: string
     visible: boolean

@@ -64,6 +64,7 @@ export default defineComponent({
 
     const parseWidgetColumn = (widget: VxeFormDesignDefines.WidgetObjItem) => {
       return {
+        widgetName: widget.name,
         title: widget.title,
         field: widget.field,
         visible: true
@@ -109,6 +110,7 @@ export default defineComponent({
       if (listColumns) {
         return listColumns.map(item => {
           return {
+            widgetName: item.widgetName,
             field: item.field,
             title: item.title,
             visible: !!item.visible
@@ -127,12 +129,12 @@ export default defineComponent({
         setSearchItems(searchItems)
       }
       if (listColumns) {
-        reactData.listTableColumns = parseTableColumn(listColumns)
+        reactData.listTableColumns = parseColumnConfigs(listColumns)
       }
       return nextTick()
     }
 
-    const parseTableColumn = (listColumns: VxeListDesignDefines.ListColumnObjItem[]) => {
+    const parseColumnConfigs = (listColumns: VxeListDesignDefines.ListColumnObjItem[]) => {
       return configToListColumns(listColumns)
     }
 
@@ -155,7 +157,7 @@ export default defineComponent({
     }
 
     const setListColumns = (listColumns: VxeListDesignDefines.ListColumnObjItem[]) => {
-      reactData.listTableColumns = parseTableColumn(listColumns)
+      reactData.listTableColumns = parseColumnConfigs(listColumns)
       return nextTick()
     }
 

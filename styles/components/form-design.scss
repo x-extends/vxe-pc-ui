@@ -73,6 +73,17 @@
       margin: 0 auto;
     }
   }
+  .vxe-form--item-content {
+    &::after {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 1;
+    }
+  }
 }
 .vxe-form-design--layout-style-setting {
   flex-shrink: 0;

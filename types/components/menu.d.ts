@@ -123,7 +123,7 @@ export namespace VxeMenuSlotTypes {
 }
 
 export interface VxeMenuSlots {
-  default: (params: VxeMenuSlotTypes.DefaultSlotParams) => any
+  default?: (params: VxeMenuSlotTypes.DefaultSlotParams) => any
 }
 
 export const Menu: typeof VxeMenu

@@ -11,6 +11,12 @@ export function useWidgetView <T = any> (props: {
     return renderParams.widget
   })
 
+  const widgetOptions = computed<T>(() => {
+    const { renderParams } = props
+    const { widget } = renderParams
+    return widget ? widget.options : {}
+  })
+
   const widgetModel = computed({
     get () {
       const { renderParams } = props
@@ -28,6 +34,7 @@ export function useWidgetView <T = any> (props: {
 
   return {
     currWidget,
+    widgetOptions,
     widgetModel
   }
 }

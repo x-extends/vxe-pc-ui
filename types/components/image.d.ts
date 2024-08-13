@@ -38,7 +38,6 @@ export namespace VxeImagePropTypes {
 
 export type VxeImageProps = {
   src?: VxeImagePropTypes.Src
-  urlList?: VxeImagePropTypes.UrlList
   alt?: VxeImagePropTypes.Alt
   loading?: VxeImagePropTypes.Loading
   title?: VxeImagePropTypes.Title
@@ -71,7 +70,7 @@ export namespace VxeImageDefines {
     $image: VxeImageConstructor
   }
 
-  export interface ClickEventParams extends LinkEventParams {
+  export interface ClickEventParams {
     url: string
   }
 

@@ -101,8 +101,8 @@ export namespace VxeLinkSlotTypes {
 }
 
 export interface VxeLinkSlots {
-  default: (params: VxeLinkSlotTypes.DefaultSlotParams) => any
-  icon: (params: VxeLinkSlotTypes.DefaultSlotParams) => any
+  default?: (params: VxeLinkSlotTypes.DefaultSlotParams) => any
+  icon?: (params: VxeLinkSlotTypes.DefaultSlotParams) => any
 }
 
 export const Link: typeof VxeLink

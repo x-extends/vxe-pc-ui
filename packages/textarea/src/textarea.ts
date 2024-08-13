@@ -23,11 +23,8 @@ export default defineComponent({
       type: Boolean as PropType<VxeTextareaPropTypes.Disabled>,
       default: null
     },
-    placeholder: {
-      type: String as PropType<VxeTextareaPropTypes.Placeholder>,
-      default: () => XEUtils.eqNull(getConfig().textarea.placeholder) ? getI18n('vxe.base.pleaseInput') : getConfig().textarea.placeholder
-    },
-    maxlength: [String, Number] as PropType<VxeTextareaPropTypes.Maxlength>,
+    placeholder: String as PropType<VxeTextareaPropTypes.Placeholder>,
+    maxLength: [String, Number] as PropType<VxeTextareaPropTypes.MaxLength>,
     rows: { type: [String, Number] as PropType<VxeTextareaPropTypes.Rows>, default: 2 },
     cols: { type: [String, Number] as PropType<VxeTextareaPropTypes.Cols>, default: null },
     showWordCount: Boolean as PropType<VxeTextareaPropTypes.ShowWordCount>,
@@ -35,7 +32,9 @@ export default defineComponent({
     autosize: [Boolean, Object] as PropType<VxeTextareaPropTypes.Autosize>,
     form: String as PropType<VxeTextareaPropTypes.Form>,
     resize: { type: String as PropType<VxeTextareaPropTypes.Resize>, default: () => getConfig().textarea.resize },
-    size: { type: String as PropType<VxeTextareaPropTypes.Size>, default: () => getConfig().textarea.size || getConfig().size }
+    size: { type: String as PropType<VxeTextareaPropTypes.Size>, default: () => getConfig().textarea.size || getConfig().size },
+    // 已废弃
+    maxlength: [String, Number] as PropType<VxeTextareaPropTypes.Maxlength>
   },
   emits: [
     'update:modelValue',
@@ -106,13 +105,31 @@ export default defineComponent({
       return formReadonly || !editable
     })
 
+    const computeInpPlaceholder = computed(() => {
+      const { placeholder } = props
+      if (placeholder) {
+        return getFuncText(placeholder)
+      }
+      const globalPlaceholder = getConfig().textarea.placeholder
+      if (globalPlaceholder) {
+        return getFuncText(globalPlaceholder)
+      }
+      return getI18n('vxe.base.pleaseInput')
+    })
+
+    const computeInpMaxLength = computed(() => {
+      const { maxLength, maxlength } = props
+      return maxLength || maxlength
+    })
+
     const computeInputCount = computed(() => {
       return XEUtils.getSize(reactData.inputValue)
     })
 
     const computeIsCountError = computed(() => {
       const inputCount = computeInputCount.value
-      return props.maxlength && inputCount > XEUtils.toNumber(props.maxlength)
+      const inpMaxLength = computeInpMaxLength.value
+      return inpMaxLength && inputCount > XEUtils.toNumber(inpMaxLength)
     })
 
     const computeSizeOpts = computed(() => {
@@ -257,7 +274,7 @@ export default defineComponent({
     })
 
     const renderVN = () => {
-      const { className, resize, placeholder, maxlength, autosize, showWordCount, countMethod, rows, cols } = props
+      const { className, resize, autosize, showWordCount, countMethod, rows, cols } = props
       const { inputValue } = reactData
       const vSize = computeSize.value
       const isDisabled = computeIsDisabled.value
@@ -265,6 +282,8 @@ export default defineComponent({
       const inputCount = computeInputCount.value
       const inputReadonly = computeInputReadonly.value
       const formReadonly = computeFormReadonly.value
+      const inpPlaceholder = computeInpPlaceholder.value
+      const inpMaxLength = computeInpMaxLength.value
       if (formReadonly) {
         return h('div', {
           ref: refElem,
@@ -287,8 +306,8 @@ export default defineComponent({
           class: 'vxe-textarea--inner',
           value: inputValue,
           name: props.name,
-          placeholder: placeholder ? getFuncText(placeholder) : null,
-          maxlength,
+          placeholder: inpPlaceholder,
+          maxlength: inpMaxLength,
           readonly: inputReadonly,
           disabled: isDisabled,
           rows,
@@ -311,7 +330,7 @@ export default defineComponent({
             class: ['vxe-textarea--count', {
               'is--error': isCountError
             }]
-          }, countMethod ? `${countMethod({ value: inputValue })}` : `${inputCount}${maxlength ? `/${maxlength}` : ''}`)
+          }, countMethod ? `${countMethod({ value: inputValue })}` : `${inputCount}${inpMaxLength ? `/${inpMaxLength}` : ''}`)
           : null
       ])
     }

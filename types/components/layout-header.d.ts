@@ -62,7 +62,7 @@ export namespace VxeLayoutHeaderSlotTypes {
 }
 
 export interface VxeLayoutHeaderSlots {
-  default: (params: VxeLayoutHeaderSlotTypes.DefaultSlotParams) => any
+  default?: (params: VxeLayoutHeaderSlotTypes.DefaultSlotParams) => any
 }
 
 export const LayoutHeader: typeof VxeLayoutHeader
