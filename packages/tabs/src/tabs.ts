@@ -1,4 +1,4 @@
-import { defineComponent, ref, h, reactive, PropType, provide, computed, onUnmounted, createCommentVNode, watch, nextTick, onMounted } from 'vue'
+import { defineComponent, ref, h, reactive, inject, PropType, provide, computed, onUnmounted, createCommentVNode, watch, nextTick, onMounted } from 'vue'
 import XEUtils from 'xe-utils'
 import { createEvent, getConfig, getIcon, globalEvents, permission } from '../../ui'
 import { getSlotVNs } from '../../ui/src/vn'
@@ -38,6 +38,8 @@ export default defineComponent({
     const { slots, emit } = context
 
     const xID = XEUtils.uniqueId()
+
+    const $xeParentTabs = inject<(VxeTabsConstructor & VxeTabsPrivateMethods) | null>('$xeTabs', null)
 
     const refElem = ref<HTMLDivElement>()
     const refHeadWrapperElem = ref<HTMLDivElement>()
@@ -514,6 +516,14 @@ export default defineComponent({
       initDefaultName(reactData.staticTabs)
       updateTabStyle()
     })
+
+    if ($xeParentTabs) {
+      watch(() => $xeParentTabs.reactData.activeName, () => {
+        nextTick(() => {
+          updateTabStyle()
+        })
+      })
+    }
 
     nextTick(() => {
       globalEvents.on($xeTabs, 'resize', () => {

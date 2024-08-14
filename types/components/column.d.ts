@@ -280,6 +280,17 @@ export namespace VxeColumnPropTypes {
     optionGroupProps?: VxeGlobalRendererHandles.RenderOptionGroupProps
   }
 
+  export interface WidgetRender<D = any, P = Record<string, any>> {
+    /**
+     * 渲染器名称
+     */
+    name?: string
+    /**
+     * 目标组件渲染的参数
+     */
+    props?: P
+  }
+
   export type Params = any
 
   export type Slots<D = any> = {

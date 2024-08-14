@@ -191,7 +191,7 @@ export const DefaultListSettingFormComponent = defineComponent({
       const activeBtnItem = reactive(createListDesignActionButton(activeBtnObj))
       const systemBtnList = systemConfigList.filter(item => {
         if (actionCodes && actionCodes.length) {
-          if (!actionCodes.includes(item.code || '')) {
+          if (!actionCodes.some(conf => XEUtils.isString(conf) ? item.code === conf : conf.code === item.code)) {
             return false
           }
         }

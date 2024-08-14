@@ -61,6 +61,10 @@
     .vxe-input--control-icon {
       cursor: not-allowed;
     }
+    .vxe-input--prefix,
+    .vxe-input--suffix {
+      background-color: var(--vxe-ui-input-disabled-background-color);
+    }
   }
 }
 
@@ -181,9 +185,6 @@
   color: var(--vxe-ui-font-color);
   font-size: var(--vxe-ui-font-size-default);
   text-align: left;
-  &:not(.is--transfer) {
-    min-width: 100%;
-  }
   &.is--transfer {
     position: fixed;
   }
@@ -283,15 +284,15 @@
 }
 
 .vxe-input--time-picker-title {
-  display: inline-block;
+  flex-grow: 1;
   text-align: center;
   border: 1px solid var(--vxe-ui-input-border-color);
   border-radius: var(--vxe-ui-base-border-radius);
+  padding: 0 0.1em;
+  margin-right: 0.5em;
 }
-.vxe-input--time-picker-confirm {
-  position: absolute;
-  right: 0;
-  top: 0;
+.vxe-input--time-picker-btn {
+  flex-shrink: 0;
 }
 .vxe-input--time-picker-confirm,
 .vxe-input--date-picker-confirm {
@@ -302,6 +303,7 @@
   color: var(--vxe-ui-input-date-time-confirm-button-color);
   border-color: var(--vxe-ui-font-primary-color);
   background-color: var(--vxe-ui-font-primary-color);
+  padding: 0 0.5em;
   &:hover {
     background-color: var(--vxe-ui-font-primary-lighten-color);
     border-color: var(--vxe-ui-font-primary-lighten-color);
@@ -314,6 +316,7 @@
 
 .vxe-input--time-picker-header {
   display: flex;
+  flex-direction: row;
   position: relative;
   flex-shrink: 0;
 }
@@ -674,7 +677,6 @@
   &.type--time {
     .vxe-input--panel-wrapper {
       $widthList: 170px, 168px, 154px, 146px;
-      width: nth($widthList, $sizeIndex);
     }
   }
   &.type--datetime {
@@ -690,7 +692,6 @@
   .vxe-input--time-picker-title {
     height: 31px - $sizeIndex;
     line-height: 31px - $sizeIndex;
-    padding: 0 12px - $sizeIndex;
   }
   .vxe-input--date-picker-label,
   .vxe-input--date-picker-btn {
@@ -770,7 +771,6 @@
   .vxe-input--time-picker-confirm,
   .vxe-input--date-picker-confirm {
     height: 31px - $sizeIndex;
-    padding: 0 10px - $sizeIndex;
   }
   .vxe-input--date-label {
     line-height: calc(nth($fontSizeList, $sizeIndex) + 1px);

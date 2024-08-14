@@ -119,10 +119,10 @@ export default defineComponent({
       if (listColumns) {
         return listColumns.map(item => {
           return {
-            widgetName: item.widgetName,
             field: item.field,
             title: item.title,
-            visible: !!item.visible
+            visible: !!item.visible,
+            cellRender: XEUtils.clone(item.cellRender)
           }
         })
       }

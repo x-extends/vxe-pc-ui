@@ -49,11 +49,15 @@
 // 禁用
 .vxe-number-input {
   &.is--disabled {
+    background-color: var(--vxe-ui-input-disabled-background-color);
     .vxe-number-input--prefix,
-    .vxe-number-input--suffix-icon,
+    .vxe-number-input--suffix,
     .vxe-number-input--clear-icon,
     .vxe-number-input--control-icon {
       cursor: not-allowed;
+    }
+    .vxe-number-input--prefix,
+    .vxe-number-input--suffix {
       background-color: var(--vxe-ui-input-disabled-background-color);
     }
   }

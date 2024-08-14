@@ -15,6 +15,9 @@
       <vxe-date-picker v-model="demo1.value404" placeholder="年选择" type="year" clearable></vxe-date-picker>
       <vxe-date-picker v-model="demo1.value405" placeholder="时间选择" type="time" clearable></vxe-date-picker>
       <vxe-date-picker v-model="demo1.value406" placeholder="日期和时间选择" type="datetime" transfer></vxe-date-picker>
+      <vxe-date-picker v-model="demo1.value410" placeholder="yyyy-MM-dd HH:mm" type="datetime" valueFormat="yyyy-MM-dd HH:mm" transfer></vxe-date-picker>
+      <vxe-date-picker v-model="demo1.value411" placeholder="yyyy-MM-dd HH" type="datetime" valueFormat="yyyy-MM-dd HH" transfer></vxe-date-picker>
+      <vxe-date-picker v-model="demo1.value412" placeholder="yyyy-MM-dd" type="datetime" valueFormat="yyyy-MM-dd" transfer></vxe-date-picker>
       <vxe-date-picker v-model="demo1.value407" placeholder="禁用日期" type="date" :disabled-method="disabledDateMethod" transfer></vxe-date-picker>
       <vxe-date-picker v-model="demo1.value408" placeholder="小圆点" type="date" :festival-method="festivalNoticeMethod" transfer></vxe-date-picker>
       <vxe-date-picker v-model="demo1.value409" placeholder="农历节日" type="date" :festival-method="festivalCalendarMethod" transfer></vxe-date-picker>
@@ -95,6 +98,9 @@ const demo1 = reactive({
   value407: '',
   value408: '2020-10-01',
   value409: '2020-10-01',
+  value410: '',
+  value411: '',
+  value412: '',
   value500: '22',
   value501: '',
   value502: '',

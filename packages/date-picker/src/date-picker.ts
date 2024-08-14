@@ -108,10 +108,7 @@ export default defineComponent({
       type: Boolean as PropType<VxeDatePickerPropTypes.Disabled>,
       default: null
     },
-    placeholder: {
-      type: String as PropType<VxeDatePickerPropTypes.Placeholder>,
-      default: () => XEUtils.eqNull(getConfig().datePicker.placeholder) ? getI18n('vxe.base.pleaseSelect') : getConfig().datePicker.placeholder
-    },
+    placeholder: String as PropType<VxeDatePickerPropTypes.Placeholder>,
     maxlength: [String, Number] as PropType<VxeDatePickerPropTypes.Maxlength>,
     autocomplete: { type: String as PropType<VxeDatePickerPropTypes.Autocomplete>, default: 'off' },
     align: String as PropType<VxeDatePickerPropTypes.Align>,
@@ -128,8 +125,8 @@ export default defineComponent({
     // 已废弃 startWeek，被 startDay 替换
     startWeek: Number as PropType<VxeDatePickerPropTypes.StartDay>,
     startDay: { type: [String, Number] as PropType<VxeDatePickerPropTypes.StartDay>, default: () => getConfig().datePicker.startDay },
-    labelFormat: { type: String as PropType<VxeDatePickerPropTypes.LabelFormat>, default: () => getConfig().datePicker.labelFormat },
-    valueFormat: { type: String as PropType<VxeDatePickerPropTypes.ValueFormat>, default: () => getConfig().datePicker.valueFormat },
+    labelFormat: String as PropType<VxeDatePickerPropTypes.LabelFormat>,
+    valueFormat: String as PropType<VxeDatePickerPropTypes.ValueFormat>,
     editable: { type: Boolean as PropType<VxeDatePickerPropTypes.Editable>, default: true },
     festivalMethod: { type: Function as PropType<VxeDatePickerPropTypes.FestivalMethod>, default: () => getConfig().datePicker.festivalMethod },
     disabledMethod: { type: Function as PropType<VxeDatePickerPropTypes.DisabledMethod>, default: () => getConfig().datePicker.disabledMethod },
@@ -311,8 +308,11 @@ export default defineComponent({
     })
 
     const computeDateValueFormat = computed(() => {
-      const { type } = props
-      return type === 'time' ? 'HH:mm:ss' : (props.valueFormat || (type === 'datetime' ? 'yyyy-MM-dd HH:mm:ss' : 'yyyy-MM-dd'))
+      const { type, valueFormat } = props
+      if (valueFormat) {
+        return valueFormat
+      }
+      return type === 'time' ? 'HH:mm:ss' : (type === 'datetime' ? 'yyyy-MM-dd HH:mm:ss' : 'yyyy-MM-dd')
     })
 
     const computeDateValue = computed(() => {
@@ -349,8 +349,9 @@ export default defineComponent({
 
     const computeDateTimeLabel = computed(() => {
       const { datetimePanelValue } = reactData
+      const hasTimeSecond = computeHasTimeSecond.value
       if (datetimePanelValue) {
-        return XEUtils.toDateString(datetimePanelValue, 'HH:mm:ss')
+        return XEUtils.toDateString(datetimePanelValue, hasTimeSecond ? 'HH:mm:ss' : 'HH:mm')
       }
       return ''
     })
@@ -362,9 +363,11 @@ export default defineComponent({
     })
 
     const computeDateLabelFormat = computed(() => {
+      const { labelFormat } = props
       const isDatePickerType = computeIsDatePickerType.value
+      const dateValueFormat = computeDateValueFormat.value
       if (isDatePickerType) {
-        return props.labelFormat || getI18n(`vxe.input.date.labelFormat.${props.type}`)
+        return labelFormat || dateValueFormat || getI18n(`vxe.input.date.labelFormat.${props.type}`)
       }
       return null
     })
@@ -611,6 +614,16 @@ export default defineComponent({
       return list
     })
 
+    const computeHasTimeMinute = computed(() => {
+      const dateValueFormat = computeDateValueFormat.value
+      return !/HH/.test(dateValueFormat) || /mm/.test(dateValueFormat)
+    })
+
+    const computeHasTimeSecond = computed(() => {
+      const dateValueFormat = computeDateValueFormat.value
+      return !/HH/.test(dateValueFormat) || /ss/.test(dateValueFormat)
+    })
+
     const computeSecondList = computed(() => {
       const minuteList = computeMinuteList.value
       return minuteList
@@ -631,7 +644,11 @@ export default defineComponent({
       if (placeholder) {
         return getFuncText(placeholder)
       }
-      return ''
+      const globalPlaceholder = getConfig().datePicker.placeholder
+      if (globalPlaceholder) {
+        return getFuncText(globalPlaceholder)
+      }
+      return getI18n('vxe.base.pleaseSelect')
     })
 
     const computeInpImmediate = computed(() => {
@@ -731,13 +748,13 @@ export default defineComponent({
 
     const dateParseValue = (value?: VxeDatePickerPropTypes.ModelValue) => {
       const { type } = props
-      const { valueFormat } = props
       const dateLabelFormat = computeDateLabelFormat.value
+      const dateValueFormat = computeDateValueFormat.value
       const firstDayOfWeek = computeFirstDayOfWeek.value
       let dValue: Date | null = null
       let dLabel = ''
       if (value) {
-        dValue = parseDate(value, valueFormat)
+        dValue = parseDate(value, dateValueFormat)
       }
       if (XEUtils.isValidDate(dValue)) {
         dLabel = XEUtils.toDateString(dValue, dateLabelFormat, { firstDay: firstDayOfWeek })
@@ -1837,20 +1854,28 @@ export default defineComponent({
       const { datetimePanelValue } = reactData
       const dateTimeLabel = computeDateTimeLabel.value
       const hourList = computeHourList.value
+      const hasTimeMinute = computeHasTimeMinute.value
       const minuteList = computeMinuteList.value
+      const hasTimeSecond = computeHasTimeSecond.value
       const secondList = computeSecondList.value
       return [
         h('div', {
           class: 'vxe-date-picker--time-picker-header'
         }, [
-          h('span', {
-            class: 'vxe-date-picker--time-picker-title'
-          }, dateTimeLabel),
-          h('button', {
-            class: 'vxe-date-picker--time-picker-confirm',
-            type: 'button',
-            onClick: dateConfirmEvent
-          }, getI18n('vxe.button.confirm'))
+          hasTimeMinute
+            ? h('div', {
+              class: 'vxe-date-picker--time-picker-title'
+            }, dateTimeLabel)
+            : createCommentVNode(),
+          h('div', {
+            class: 'vxe-date-picker--time-picker-btn'
+          }, [
+            h('button', {
+              class: 'vxe-date-picker--time-picker-confirm',
+              type: 'button',
+              onClick: dateConfirmEvent
+            }, getI18n('vxe.button.confirm'))
+          ])
         ]),
         h('div', {
           ref: refInputTimeBody,
@@ -1867,28 +1892,32 @@ export default defineComponent({
               onClick: (evnt: MouseEvent) => dateHourEvent(evnt, item)
             }, item.label)
           })),
-          h('ul', {
-            class: 'vxe-date-picker--time-picker-minute-list'
-          }, minuteList.map((item, index) => {
-            return h('li', {
-              key: index,
-              class: {
-                'is--selected': datetimePanelValue && datetimePanelValue.getMinutes() === item.value
-              },
-              onClick: (evnt: MouseEvent) => dateMinuteEvent(evnt, item)
-            }, item.label)
-          })),
-          h('ul', {
-            class: 'vxe-date-picker--time-picker-second-list'
-          }, secondList.map((item, index) => {
-            return h('li', {
-              key: index,
-              class: {
-                'is--selected': datetimePanelValue && datetimePanelValue.getSeconds() === item.value
-              },
-              onClick: (evnt: MouseEvent) => dateSecondEvent(evnt, item)
-            }, item.label)
-          }))
+          hasTimeMinute
+            ? h('ul', {
+              class: 'vxe-date-picker--time-picker-minute-list'
+            }, minuteList.map((item, index) => {
+              return h('li', {
+                key: index,
+                class: {
+                  'is--selected': datetimePanelValue && datetimePanelValue.getMinutes() === item.value
+                },
+                onClick: (evnt: MouseEvent) => dateMinuteEvent(evnt, item)
+              }, item.label)
+            }))
+            : createCommentVNode(),
+          hasTimeMinute && hasTimeSecond
+            ? h('ul', {
+              class: 'vxe-date-picker--time-picker-second-list'
+            }, secondList.map((item, index) => {
+              return h('li', {
+                key: index,
+                class: {
+                  'is--selected': datetimePanelValue && datetimePanelValue.getSeconds() === item.value
+                },
+                onClick: (evnt: MouseEvent) => dateSecondEvent(evnt, item)
+              }, item.label)
+            }))
+            : createCommentVNode()
         ])
       ]
     }

@@ -2,11 +2,12 @@ import { defineComponent, ref, h, PropType, reactive, nextTick, provide, watch }
 import XEUtils from 'xe-utils'
 import { toCssUnit } from '../../ui/src/dom'
 import { getConfig, createEvent, renderer } from '../../ui'
+import { createListDesignActionButton } from '../render/util'
 import { getDefaultSettingFormData } from './default-setting-data'
 import LayoutPreviewComponent from './layout-preview'
 import LayoutSettingComponent from './layout-setting'
 
-import type { VxeListDesignDefines, VxeListDesignPropTypes, ListDesignReactData, ListDesignPrivateRef, VxeListDesignPrivateComputed, VxeListDesignConstructor, VxeListDesignPrivateMethods, ListDesignMethods, ListDesignPrivateMethods, VxeFormDesignDefines } from '../../../types'
+import type { VxeListDesignDefines, VxeListDesignPropTypes, ListDesignReactData, ListDesignPrivateRef, VxeListDesignPrivateComputed, VxeListDesignConstructor, VxeListDesignPrivateMethods, ListDesignMethods, ListDesignPrivateMethods, VxeFormDesignDefines, VxeGlobalRendererHandles } from '../../../types'
 
 export default defineComponent({
   name: 'VxeListDesign',
@@ -62,12 +63,30 @@ export default defineComponent({
       getComputeMaps: () => computeMaps
     } as unknown as VxeListDesignConstructor & VxeListDesignPrivateMethods
 
+    const systemConfigList: VxeGlobalRendererHandles.CreateListDesignSettingActionButtonConfigResult[] = []
+    const customConfigList: VxeGlobalRendererHandles.CreateListDesignSettingActionButtonConfigResult[] = []
+    renderer.forEach((item, name) => {
+      const { createListDesignSettingActionButtonConfig } = item
+      if (createListDesignSettingActionButtonConfig) {
+        const params = { name }
+        const btnConfig = Object.assign(createListDesignActionButton({ code: name }), createListDesignSettingActionButtonConfig(params))
+        if (btnConfig.type === 'custom') {
+          customConfigList.push(btnConfig)
+        } else {
+          systemConfigList.push(btnConfig)
+        }
+      }
+    })
+
     const parseWidgetColumn = (widget: VxeFormDesignDefines.WidgetObjItem) => {
       return {
-        widgetName: widget.name,
         title: widget.title,
         field: widget.field,
-        visible: true
+        visible: true,
+        cellRender: {
+          name: widget.name,
+          props: widget.options
+        }
       }
     }
 
@@ -110,10 +129,10 @@ export default defineComponent({
       if (listColumns) {
         return listColumns.map(item => {
           return {
-            widgetName: item.widgetName,
             field: item.field,
             title: item.title,
-            visible: !!item.visible
+            visible: !!item.visible,
+            cellRender: XEUtils.clone(item.cellRender)
           }
         })
       }
@@ -162,16 +181,35 @@ export default defineComponent({
     }
 
     const createSettingForm = () => {
-      const { formRender } = props
-      let formData: Record<string, any> = getDefaultSettingFormData()
+      const { actionCodes, formRender } = props
+      let conf = getDefaultSettingFormData()
+      // 处理默认按钮
+      if (actionCodes && actionCodes.length) {
+        if (!conf.actionButtonList || !conf.actionButtonList.length) {
+          const defActionBtnList: VxeListDesignDefines.DefaultSettingFormActionButton[] = []
+          actionCodes.forEach(item => {
+            if (XEUtils.isObject(item) && item.default) {
+              const sysItem = systemConfigList.find(obj => obj.code === item.code)
+              if (sysItem) {
+                defActionBtnList.push(createListDesignActionButton({
+                  type: sysItem.type,
+                  code: sysItem.code
+                }))
+              }
+            }
+          })
+          conf.actionButtonList = defActionBtnList
+        }
+      }
+      // 如果为自定义渲染
       if (formRender && formRender.name) {
         const compConf = renderer.get(formRender.name)
         const createFormConfig = compConf ? compConf.createListDesignSettingFormConfig : null
         const params = { name: formRender.name }
-        formData = (createFormConfig ? createFormConfig(params) : {}) || {}
+        conf = ((createFormConfig ? createFormConfig(params) : {}) || {}) as any
       }
 
-      return formData as VxeListDesignDefines.DefaultSettingFormDataObjVO
+      return conf
     }
 
     const initSettingForm = () => {

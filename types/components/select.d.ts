@@ -26,7 +26,7 @@ export interface VxeSelectPrivateRef extends SelectPrivateRef { }
 
 export namespace VxeSelectPropTypes {
   export type Size = VxeComponentSizeType
-  export type ModelValue = any
+  export type ModelValue = string | number | boolean | null | (string | number | boolean)[]
   export type Clearable = boolean
   export type Placeholder = string
   export type Readonly = boolean
@@ -37,7 +37,7 @@ export namespace VxeSelectPropTypes {
   export type Multiple = boolean
   export type MultiCharOverflow = number | string
   export type PrefixIcon = string
-  export type Placement = 'top' | 'bottom'
+  export type Placement = 'top' | 'bottom' | ''
   export type Options = VxeSelectDefines.SelectOptions[]
   export type OptionProps = {
     value?: string

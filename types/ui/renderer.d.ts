@@ -697,22 +697,22 @@ declare module '@vxe-ui/core' {
      */
     renderFormDesignWidgetFormView?(renderOpts: VxeGlobalRendererHandles.RenderFormDesignWidgetFormViewOptions, params: VxeGlobalRendererHandles.RenderFormDesignWidgetFormViewParams): VxeComponentSlotType | VxeComponentSlotType[]
     /**
-     * 表单设计器 - 控件渲染器（设计时）
+     * 表单设计器 - 控件渲染器（表单-设计时）
      * 如果不设置，则使用 renderFormDesignWidgetView 渲染
      */
     renderFormDesignWidgetEdit?(renderOpts: VxeGlobalRendererHandles.RenderFormDesignWidgetEditOptions, params: VxeGlobalRendererHandles.RenderFormDesignWidgetEditParams): VxeComponentSlotType | VxeComponentSlotType[]
     /**
-     * 表单设计器 - 控件渲染器（预览时 - 电脑端）
+     * 表单设计器 - 控件渲染器（表单-预览时 - 电脑端）
      * 如果不设置，则使用 renderFormDesignWidgetView 渲染
      */
     renderFormDesignWidgetPreview?(renderOpts: VxeGlobalRendererHandles.RenderFormDesignWidgetPreviewOptions, params: VxeGlobalRendererHandles.RenderFormDesignWidgetPreviewParams): VxeComponentSlotType | VxeComponentSlotType[]
     /**
-     * 表单设计器 - 控件渲染器（预览时 - 手机端）
+     * 表单设计器 - 控件渲染器（表单-预览时 - 手机端）
      * 如果不设置，则使用 renderFormDesignWidgetView 渲染
      */
     renderFormDesignWidgetMobilePreview?(renderOpts: VxeGlobalRendererHandles.RenderFormDesignWidgetMobilePreviewOptions, params: VxeGlobalRendererHandles.RenderFormDesignWidgetMobilePreviewParams): VxeComponentSlotType | VxeComponentSlotType[]
     /**
-     * 表单设计器 - 控件渲染器（运行时）
+     * 表单设计器 - 控件渲染器（表单-运行时）
      */
     renderFormDesignWidgetView?(renderOpts: VxeGlobalRendererHandles.RenderFormDesignWidgetViewOptions, params: VxeGlobalRendererHandles.RenderFormDesignWidgetViewParams): VxeComponentSlotType | VxeComponentSlotType[]
     /**

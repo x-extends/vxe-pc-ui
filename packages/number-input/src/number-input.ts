@@ -34,10 +34,7 @@ export default defineComponent({
       type: Boolean as PropType<VxeNumberInputPropTypes.Disabled>,
       default: null
     },
-    placeholder: {
-      type: String as PropType<VxeNumberInputPropTypes.Placeholder>,
-      default: () => XEUtils.eqNull(getConfig().numberInput.placeholder) ? getI18n('vxe.base.pleaseInput') : getConfig().numberInput.placeholder
-    },
+    placeholder: String as PropType<VxeNumberInputPropTypes.Placeholder>,
     maxLength: [String, Number] as PropType<VxeNumberInputPropTypes.MaxLength>,
     autoComplete: {
       type: String as PropType<VxeNumberInputPropTypes.AutoComplete>,
@@ -189,7 +186,11 @@ export default defineComponent({
       if (placeholder) {
         return getFuncText(placeholder)
       }
-      return ''
+      const globalPlaceholder = getConfig().numberInput.placeholder
+      if (globalPlaceholder) {
+        return getFuncText(globalPlaceholder)
+      }
+      return getI18n('vxe.base.pleaseInput')
     })
 
     const computeInpMaxlength = computed(() => {

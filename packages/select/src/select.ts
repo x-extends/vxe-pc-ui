@@ -19,12 +19,9 @@ function getOptUniqueId () {
 export default defineComponent({
   name: 'VxeSelect',
   props: {
-    modelValue: [String, Number, Array] as PropType<VxeSelectPropTypes.ModelValue>,
+    modelValue: [String, Number, Boolean, Array] as PropType<VxeSelectPropTypes.ModelValue>,
     clearable: Boolean as PropType<VxeSelectPropTypes.Clearable>,
-    placeholder: {
-      type: String as PropType<VxeSelectPropTypes.Placeholder>,
-      default: () => XEUtils.eqNull(getConfig().select.placeholder) ? getI18n('vxe.base.pleaseSelect') : getConfig().select.placeholder
-    },
+    placeholder: String as PropType<VxeSelectPropTypes.Placeholder>,
     readonly: {
       type: Boolean as PropType<VxeSelectPropTypes.Readonly>,
       default: null
@@ -157,6 +154,18 @@ export default defineComponent({
       return transfer
     })
 
+    const computeInpPlaceholder = computed(() => {
+      const { placeholder } = props
+      if (placeholder) {
+        return getFuncText(placeholder)
+      }
+      const globalPlaceholder = getConfig().select.placeholder
+      if (globalPlaceholder) {
+        return getFuncText(globalPlaceholder)
+      }
+      return getI18n('vxe.base.pleaseSelect')
+    })
+
     const computePropsOpts = computed(() => {
       return props.optionProps || {}
     })
@@ -188,7 +197,7 @@ export default defineComponent({
     const computeIsMaximize = computed(() => {
       const { modelValue, multiple, max } = props
       if (multiple && max) {
-        return (modelValue ? modelValue.length : 0) >= XEUtils.toNumber(max)
+        return (XEUtils.isArray(modelValue) ? modelValue.length : (XEUtils.eqNull(modelValue) ? 0 : 1)) >= XEUtils.toNumber(max)
       }
       return false
     })
@@ -478,8 +487,8 @@ export default defineComponent({
           refreshOption()
         }
         setTimeout(() => {
-          const { modelValue, multiple } = props
-          const currOption = findOption(multiple && modelValue ? modelValue[0] : modelValue)
+          const { modelValue } = props
+          const currOption = findOption(XEUtils.isArray(modelValue) ? modelValue[0] : modelValue)
           reactData.visiblePanel = true
           if (currOption) {
             setCurrentOption(currOption)
@@ -527,15 +536,13 @@ export default defineComponent({
       const { modelValue, multiple } = props
       const { remoteValueList } = reactData
       if (multiple) {
-        let multipleValue
-        if (modelValue) {
-          if (modelValue.indexOf(selectValue) === -1) {
-            multipleValue = modelValue.concat([selectValue])
-          } else {
-            multipleValue = (modelValue as any[]).filter((val) => val !== selectValue)
-          }
+        let multipleValue: any[] = []
+        const selectVals = XEUtils.eqNull(modelValue) ? [] : (XEUtils.isArray(modelValue) ? modelValue : [modelValue])
+        const index = XEUtils.findIndexOf(selectVals, val => val === selectValue)
+        if (index === -1) {
+          multipleValue = selectVals.concat([selectValue])
         } else {
-          multipleValue = [selectValue]
+          multipleValue = selectVals.filter((val) => val !== selectValue)
         }
         const remoteItem = remoteValueList.find(item => item.key === selectValue)
         if (remoteItem) {
@@ -787,7 +794,7 @@ export default defineComponent({
     }
 
     const renderOption = (list: VxeOptionProps[], group?: VxeOptgroupProps) => {
-      const { optionKey, modelValue, multiple } = props
+      const { optionKey, modelValue } = props
       const { currentValue } = reactData
       const optionOpts = computeOptionOpts.value
       const labelField = computeLabelField.value
@@ -798,7 +805,7 @@ export default defineComponent({
       return list.map((option, cIndex) => {
         const { slots, className } = option
         const optionValue = option[valueField as 'value']
-        const isSelected = multiple ? (modelValue && modelValue.indexOf(optionValue) > -1) : modelValue === optionValue
+        const isSelected = XEUtils.isArray(modelValue) ? modelValue.indexOf(optionValue) > -1 : modelValue === optionValue
         const isVisible = !isGroup || isOptionVisible(option)
         const isDisabled = checkOptionDisabled(isSelected, option, group)
         const optid = getOptid(option)
@@ -953,6 +960,7 @@ export default defineComponent({
       const selectLabel = computeSelectLabel.value
       const transfer = computeTransfer.value
       const formReadonly = computeFormReadonly.value
+      const inpPlaceholder = computeInpPlaceholder.value
       const defaultSlot = slots.default
       const headerSlot = slots.header
       const footerSlot = slots.footer
@@ -989,7 +997,7 @@ export default defineComponent({
         h(VxeInputComponent, {
           ref: refInput,
           clearable: props.clearable,
-          placeholder: props.placeholder,
+          placeholder: inpPlaceholder,
           readonly: true,
           disabled: isDisabled,
           type: 'text',

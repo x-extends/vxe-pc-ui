@@ -1,6 +1,7 @@
 import { RenderFunction, SetupContext, Ref, ComponentPublicInstance, DefineComponent } from 'vue'
 import { defineVxeComponent, VxeComponentBaseOptions, VxeComponentEventParams, VxeComponentSizeType, ValueOf, VxeComponentPermissionCodeType, VxeComponentStatusType } from '@vxe-ui/core'
 import { VxeFormDesignDefines } from './form-design'
+import { VxeColumnPropTypes } from './column'
 
 /* eslint-disable no-use-before-define,@typescript-eslint/ban-types */
 
@@ -29,7 +30,11 @@ export namespace VxeListDesignPropTypes {
   export type Config = null | VxeListDesignDefines.ListDesignConfig
   export type ShowPc = boolean
   export type ShowMobile = boolean
-  export type ActionCodes = string[]
+  export interface ActionCodeItem {
+    default?: boolean
+    code: string
+  }
+  export type ActionCodes = (ActionCodeItem | string)[]
   export interface FormRender {
     name?: string
   }
@@ -115,10 +120,10 @@ export namespace VxeListDesignDefines {
   }
 
   export interface ListColumnObjItem {
-    widgetName: string
     field: string
     title: string
     visible: boolean
+    cellRender: VxeColumnPropTypes.CellRender
   }
 
   export interface DefaultSettingFormActionButton {

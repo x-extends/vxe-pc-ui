@@ -15,10 +15,7 @@ export default defineComponent({
     readonly: Boolean as PropType<VxePasswordInputPropTypes.Readonly>,
     disabled: Boolean as PropType<VxePasswordInputPropTypes.Disabled>,
     maxLength: [String, Number] as PropType<VxePasswordInputPropTypes.MaxLength>,
-    placeholder: {
-      type: String as PropType<VxePasswordInputPropTypes.Placeholder>,
-      default: () => XEUtils.eqNull(getConfig().passwordInput.placeholder) ? getI18n('vxe.base.pleaseInput') : getConfig().passwordInput.placeholder
-    },
+    placeholder: String as PropType<VxePasswordInputPropTypes.Placeholder>,
     autoComplete: {
       type: String as PropType<VxePasswordInputPropTypes.AutoComplete>,
       default: 'off'
@@ -90,7 +87,11 @@ export default defineComponent({
       if (placeholder) {
         return getFuncText(placeholder)
       }
-      return ''
+      const globalPlaceholder = getConfig().passwordInput.placeholder
+      if (globalPlaceholder) {
+        return getFuncText(globalPlaceholder)
+      }
+      return getI18n('vxe.base.pleaseInput')
     })
 
     const computeInputType = computed(() => {

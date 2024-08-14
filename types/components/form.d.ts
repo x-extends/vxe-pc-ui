@@ -352,6 +352,15 @@ export namespace VxeFormSlotTypes {
 
 export interface VxeFormSlots {
   default: (params: VxeFormSlotTypes.DefaultSlotParams) => any
+
+  /**
+   * 自定义插槽模板
+   */
+  [key: string]: ((params: {
+    $form: VxeFormConstructor
+
+    [key: string]: any
+  }) => any) | undefined
 }
 
 export const Form: typeof VxeForm
