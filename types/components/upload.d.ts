@@ -26,6 +26,11 @@ export namespace VxeUploadPropTypes {
   export type ModelValue = VxeUploadDefines.FileObjItem | VxeUploadDefines.FileObjItem[] | string | string[]
   export type Size = VxeComponentSizeType
   export type ShowList = boolean
+  export interface MoreConfig {
+    maxCount?: number
+    showMoreButton?: boolean
+    layout?: '' | 'vertical' | 'horizontal'
+  }
   export type Mode = null | '' | 'all' | 'image'
   export type Readonly = boolean
   export type Disabled = boolean
@@ -50,9 +55,15 @@ export namespace VxeUploadPropTypes {
   export type ShowButtonText = boolean
   export type ShowButtonIcon = boolean
   export type ShowRemoveButton = boolean
+  export type ShowDownloadButton = boolean
+  export type ShowPreview = boolean
   export type ShowErrorStatus = boolean
   export type ShowProgress = boolean
   export type AutoHiddenButton = boolean
+  export type PreviewMethod = undefined | ((params: {
+    $upload: VxeUploadConstructor
+    option: VxeUploadDefines.FileObjItem
+  }) => Promise<any>)
   export type UploadMethod = undefined | ((params: {
     $upload: VxeUploadConstructor
     file: File,
@@ -60,6 +71,10 @@ export namespace VxeUploadPropTypes {
     updateProgress: (percentNum: number) => void
   }) => Promise<any>)
   export type RemoveMethod = undefined | ((params: {
+    $upload: VxeUploadConstructor
+    option: VxeUploadDefines.FileObjItem
+  }) => Promise<any>)
+  export type DownloadMethod = undefined | ((params: {
     $upload: VxeUploadConstructor
     option: VxeUploadDefines.FileObjItem
   }) => Promise<any>)
@@ -83,6 +98,7 @@ export type VxeUploadProps = {
   modelValue?: VxeUploadPropTypes.ModelValue
   size?: VxeUploadPropTypes.Size
   showList?: VxeUploadPropTypes.ShowList
+  moreConfig?: VxeUploadPropTypes.MoreConfig
   mode?: VxeUploadPropTypes.Mode
   readonly?: VxeUploadPropTypes.Readonly
   disabled?: VxeUploadPropTypes.Disabled
@@ -106,12 +122,16 @@ export type VxeUploadProps = {
   showButtonText?: VxeUploadPropTypes.ShowButtonText
   showButtonIcon?: VxeUploadPropTypes.ShowButtonIcon
   showRemoveButton?: VxeUploadPropTypes.ShowRemoveButton
+  showDownloadButton?: VxeUploadPropTypes.ShowDownloadButton
+  showPreview?: VxeUploadPropTypes.ShowPreview
   showErrorStatus?: VxeUploadPropTypes.ShowErrorStatus
   showProgress?: VxeUploadPropTypes.ShowProgress
   autoHiddenButton?: VxeUploadPropTypes.AutoHiddenButton
   tipText?: VxeUploadPropTypes.TipText
+  previewMethod?: VxeUploadPropTypes.PreviewMethod
   uploadMethod?: VxeUploadPropTypes.UploadMethod
   removeMethod?: VxeUploadPropTypes.RemoveMethod
+  downloadMethod?: VxeUploadPropTypes.DownloadMethod
   getUrlMethod?: VxeUploadPropTypes.GetUrlMethod
   getThumbnailUrlMethod?: VxeUploadPropTypes.GetThumbnailUrlMethod
 
@@ -143,6 +163,7 @@ export type VxeUploadEmits = [
   'update:modelValue',
   'add',
   'remove',
+  'download',
   'upload-success',
   'upload-error'
 ]
@@ -193,6 +214,10 @@ export namespace VxeUploadDefines {
     option: VxeUploadDefines.FileObjItem
   }
 
+  export interface DownloadEventParams extends UploadEventParams {
+    option: VxeUploadDefines.FileObjItem
+  }
+
   export interface UploadSuccessEventParams extends UploadEventParams {
     option: VxeUploadDefines.FileObjItem
     data: any
@@ -204,6 +229,7 @@ export namespace VxeUploadDefines {
 export type VxeUploadEventProps = {
   onAdd?: VxeUploadEvents.Add
   onRemove?: VxeUploadEvents.Remove
+  onDownload?: VxeUploadEvents.Download
   onUploadSuccess?: VxeUploadEvents.UploadSuccess
   onUploadError?: VxeUploadEvents.UploadError
 }
@@ -211,6 +237,7 @@ export type VxeUploadEventProps = {
 export interface VxeUploadListeners {
   add?: VxeUploadEvents.Add
   remove?: VxeUploadEvents.Remove
+  download?: VxeUploadEvents.Download
   uploadSuccess?: VxeUploadEvents.UploadSuccess
   uploadError?: VxeUploadEvents.UploadError
 }
@@ -218,6 +245,7 @@ export interface VxeUploadListeners {
 export namespace VxeUploadEvents {
   export type Add = (params: VxeUploadDefines.AddEventParams) => void
   export type Remove = (params: VxeUploadDefines.RemoveEventParams) => void
+  export type Download = (params: VxeUploadDefines.DownloadEventParams) => void
   export type UploadSuccess = (params: VxeUploadDefines.UploadSuccessEventParams) => void
   export type UploadError = (params: VxeUploadDefines.UploadErrorEventParams) => void
 }

@@ -21,6 +21,14 @@ export default defineComponent({
     marginSize: {
       type: String as PropType<VxeImagePreviewPropTypes.MarginSize>,
       default: () => getConfig().imagePreview.marginSize
+    },
+    showPrintButton: {
+      type: Boolean as PropType<VxeImagePreviewPropTypes.ShowPrintButton>,
+      default: () => getConfig().imagePreview.showPrintButton
+    },
+    showDownloadButton: {
+      type: Boolean as PropType<VxeImagePreviewPropTypes.ShowDownloadButton>,
+      default: () => getConfig().imagePreview.showDownloadButton
     }
   },
   emits: [
@@ -460,6 +468,7 @@ export default defineComponent({
     }
 
     const renderBtnWrapper = () => {
+      const { showPrintButton, showDownloadButton } = props
       const { activeIndex } = reactData
       const imgList = computeImgList.value
       const rotateText = computeRotateText.value
@@ -536,8 +545,8 @@ export default defineComponent({
           renderOperationBtn('pct11', 'IMAGE_PREVIEW_PCT_1_1'),
           renderOperationBtn('rotateLeft', 'IMAGE_PREVIEW_ROTATE_LEFT'),
           renderOperationBtn('rotateRight', 'IMAGE_PREVIEW_ROTATE_RIGHT'),
-          renderOperationBtn('print', 'IMAGE_PREVIEW_PRINT'),
-          renderOperationBtn('download', 'IMAGE_PREVIEW_DOWNLOAD')
+          showPrintButton ? renderOperationBtn('print', 'IMAGE_PREVIEW_PRINT') : createCommentVNode(),
+          showDownloadButton ? renderOperationBtn('download', 'IMAGE_PREVIEW_DOWNLOAD') : createCommentVNode()
         ])
       ])
     }

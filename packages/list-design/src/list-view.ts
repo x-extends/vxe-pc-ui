@@ -48,7 +48,7 @@ export default defineComponent({
       const { tableColumns } = reactData
       const gridOpts = gridOptions || {}
       const columnOpts = Object.assign({
-        minWidth: 80
+        minWidth: 120
       }, gridOpts.columnConfig)
       let proxyOpts: VxeGridPropTypes.ProxyConfig | undefined
       if (gridOpts.proxyConfig) {
@@ -153,16 +153,21 @@ export default defineComponent({
     const parseTableColumn = (listColumns: VxeListDesignDefines.ListColumnObjItem[], formConfig?: VxeListDesignDefines.DefaultSettingFormDataObjVO) => {
       const formOpts = Object.assign({}, formConfig)
       const { showSeq, actionButtonList } = formOpts
-      const columns: VxeGridPropTypes.Columns = configToListColumns(listColumns || [])
+      const columns: VxeGridPropTypes.Columns = []
       const cellActionSlot = slots.cellAction
 
       if (showSeq) {
-        columns.unshift({
+        columns.push({
           type: 'seq',
           field: '_seq',
           width: 70
         })
       }
+
+      configToListColumns(listColumns || []).forEach(conf => {
+        columns.push(conf)
+      })
+
       if (actionButtonList && actionButtonList.length) {
         const actionColumn: VxeTableDefines.ColumnOptions = {
           field: '_active',

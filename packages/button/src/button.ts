@@ -523,7 +523,7 @@ export default defineComponent({
           routerLink
             ? h(resolveComponent('router-link'), {
               ref: refButton,
-              class: ['vxe-button', `type--${btnMode}`, className ? (XEUtils.isFunction(className) ? className({ $button: $xeButton }) : className) : '', {
+              class: ['vxe-button', 'vxe-button--link', `type--${btnMode}`, className ? (XEUtils.isFunction(className) ? className({ $button: $xeButton }) : className) : '', {
                 [`size--${vSize}`]: vSize,
                 [`theme--${btnStatus}`]: btnStatus,
                 'is--round': btnRound,
@@ -549,7 +549,7 @@ export default defineComponent({
             })
             : h('button', {
               ref: refButton,
-              class: ['vxe-button', 'vxe-button--link', `type--${btnMode}`, className ? (XEUtils.isFunction(className) ? className({ $button: $xeButton }) : className) : '', {
+              class: ['vxe-button', `type--${btnMode}`, className ? (XEUtils.isFunction(className) ? className({ $button: $xeButton }) : className) : '', {
                 [`size--${vSize}`]: vSize,
                 [`theme--${btnStatus}`]: btnStatus,
                 'is--round': btnRound,
@@ -597,7 +597,7 @@ export default defineComponent({
       if (routerLink) {
         return h(resolveComponent('router-link'), {
           ref: refButton,
-          class: ['vxe-button', `type--${btnMode}`, className ? (XEUtils.isFunction(className) ? className({ $button: $xeButton }) : className) : '', {
+          class: ['vxe-button', 'vxe-button--link', `type--${btnMode}`, className ? (XEUtils.isFunction(className) ? className({ $button: $xeButton }) : className) : '', {
             [`size--${vSize}`]: vSize,
             [`theme--${btnStatus}`]: btnStatus,
             'is--round': btnRound,
@@ -621,7 +621,7 @@ export default defineComponent({
       }
       return h('button', {
         ref: refButton,
-        class: ['vxe-button', 'vxe-button--link', `type--${btnMode}`, className ? (XEUtils.isFunction(className) ? className({ $button: $xeButton }) : className) : '', {
+        class: ['vxe-button', `type--${btnMode}`, className ? (XEUtils.isFunction(className) ? className({ $button: $xeButton }) : className) : '', {
           [`size--${vSize}`]: vSize,
           [`theme--${btnStatus}`]: btnStatus,
           'is--round': btnRound,

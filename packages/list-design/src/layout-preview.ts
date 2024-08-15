@@ -29,12 +29,19 @@ export default defineComponent({
       const { showSeq, actionButtonList } = formData
       const columns: VxeGridPropTypes.Columns = []
       if (showSeq) {
-        columns.unshift({
+        columns.push({
           type: 'seq',
           field: '_seq',
           width: 70
         })
       }
+      listTableColumns.forEach(item => {
+        columns.push({
+          field: item.field,
+          title: item.title,
+          visible: item.visible
+        })
+      })
       if (actionButtonList && actionButtonList.length) {
         columns.push({
           field: '_active',
@@ -46,13 +53,6 @@ export default defineComponent({
           }
         })
       }
-      listTableColumns.forEach(item => {
-        columns.push({
-          field: item.field,
-          title: item.title,
-          visible: item.visible
-        })
-      })
       return columns
     })
 

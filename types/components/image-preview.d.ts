@@ -29,6 +29,8 @@ export namespace VxeImagePreviewPropTypes {
   export type UrlField = string
   export type MaskClosable = boolean
   export type MarginSize = string | number
+  export type ShowPrintButton = boolean
+  export type ShowDownloadButton = boolean
 }
 
 export type VxeImagePreviewProps = {
@@ -37,6 +39,8 @@ export type VxeImagePreviewProps = {
   urlField?: VxeImagePreviewPropTypes.UrlField
   maskClosable?: VxeImagePreviewPropTypes.MaskClosable
   marginSize?: VxeImagePreviewPropTypes.MarginSize
+  showPrintButton?: VxeImagePreviewPropTypes.ShowPrintButton
+  showDownloadButton?: VxeImagePreviewPropTypes.ShowDownloadButton
 }
 
 export interface ImagePreviewPrivateComputed {

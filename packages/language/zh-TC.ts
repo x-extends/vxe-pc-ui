@@ -304,7 +304,9 @@ export default {
       reUpload: '重新上传',
       uploadProgress: '上传中 {0}%',
       uploadErr: '上传失败',
-      uploadSuccess: '上传成功'
+      uploadSuccess: '上传成功',
+      moreBtnText: '全部（{0}）',
+      viewItemTitle: '點擊查看'
     },
     formDesign: {
       formName: '表單名稱',

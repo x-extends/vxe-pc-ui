@@ -108,7 +108,10 @@ setConfig({
   imageGroup: {
     showPreview: true
   },
-  imagePreview: {},
+  imagePreview: {
+    showPrintButton: true,
+    showDownloadButton: true
+  },
   input: {
     // size: null,
     // transfer: false
@@ -246,6 +249,7 @@ setConfig({
     showButtonText: true,
     showRemoveButton: true,
     showButtonIcon: true,
+    showPreview: true,
     imageStyle: {}
   }
 })
@@ -345,6 +349,7 @@ setIcon({
   UPLOAD_FILE_ERROR: iconPrefix + 'warning-circle-fill',
   UPLOAD_FILE_ADD: iconPrefix + 'upload',
   UPLOAD_FILE_REMOVE: iconPrefix + 'delete',
+  UPLOAD_FILE_DOWNLOAD: iconPrefix + 'download',
   UPLOAD_IMAGE_RE_UPLOAD: iconPrefix + 'repeat',
   UPLOAD_IMAGE_ADD: iconPrefix + 'add',
   UPLOAD_IMAGE_REMOVE: iconPrefix + 'close',

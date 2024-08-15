@@ -129,6 +129,7 @@ declare module '@vxe-ui/core' {
     UPLOAD_FILE_ERROR?: string
     UPLOAD_FILE_ADD?: string
     UPLOAD_FILE_REMOVE?: string
+    UPLOAD_FILE_DOWNLOAD?: string
     UPLOAD_IMAGE_RE_UPLOAD?: string
     UPLOAD_IMAGE_ADD?: string
     UPLOAD_IMAGE_REMOVE?: string

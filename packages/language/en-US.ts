@@ -306,7 +306,9 @@ export default {
       reUpload: 'Re upload',
       uploadProgress: 'Uploading {0}%',
       uploadErr: 'Fail to upload',
-      uploadSuccess: 'Successfully upload'
+      uploadSuccess: 'Successfully upload',
+      moreBtnText: 'All ({0})',
+      viewItemTitle: 'click to view'
     },
     formDesign: {
       formName: 'Form name',
