@@ -6,7 +6,7 @@ import { getLastZIndex, nextZIndex, getFuncText } from '../../ui/src/utils'
 import VxeInputComponent from '../../input/src/input'
 import { getSlotVNs } from '../../ui/src/vn'
 
-import type { VxeSelectPropTypes, VxeSelectConstructor, SelectReactData, VxeSelectEmits, VxeInputConstructor, SelectMethods, SelectPrivateRef, VxeSelectMethods, VxeOptgroupProps, VxeOptionProps, VxeTableConstructor, VxeTablePrivateMethods, VxeFormDefines, VxeFormConstructor, VxeFormPrivateMethods } from '../../../types'
+import type { VxeSelectPropTypes, VxeSelectConstructor, SelectReactData, VxeSelectEmits, VxeInputConstructor, SelectMethods, SelectPrivateRef, VxeSelectMethods, VxeOptgroupProps, VxeOptionProps, VxeTableConstructor, VxeTablePrivateMethods, VxeFormDefines, VxeFormConstructor, VxeFormPrivateMethods, VxeModalConstructor, VxeModalMethods } from '../../../types'
 
 function isOptionVisible (option: any) {
   return option.visible !== false
@@ -69,6 +69,7 @@ export default defineComponent({
   setup (props, context) {
     const { slots, emit } = context
 
+    const $xeModal = inject<VxeModalConstructor & VxeModalMethods | null>('$xeModal', null)
     const $xeTable = inject<VxeTableConstructor & VxeTablePrivateMethods | null>('$xeTable', null)
     const $xeForm = inject<VxeFormConstructor & VxeFormPrivateMethods | null>('$xeForm', null)
     const formItemInfo = inject<VxeFormDefines.ProvideItemInfo | null>('xeFormItemInfo', null)
@@ -92,7 +93,7 @@ export default defineComponent({
       currentValue: null,
       triggerFocusPanel: false,
       visiblePanel: false,
-      animatVisible: false,
+      isAniVisible: false,
       isActivated: false,
       searchValue: '',
       searchLoading: false
@@ -147,7 +148,7 @@ export default defineComponent({
         if (XEUtils.isBoolean(globalTransfer)) {
           return globalTransfer
         }
-        if ($xeTable || $xeForm) {
+        if ($xeTable || $xeModal || $xeForm) {
           return true
         }
       }
@@ -482,7 +483,7 @@ export default defineComponent({
           reactData.initialized = true
         }
         reactData.isActivated = true
-        reactData.animatVisible = true
+        reactData.isAniVisible = true
         if (filterable) {
           refreshOption()
         }
@@ -506,7 +507,7 @@ export default defineComponent({
       reactData.searchLoading = false
       reactData.visiblePanel = false
       hidePanelTimeout = window.setTimeout(() => {
-        reactData.animatVisible = false
+        reactData.isAniVisible = false
       }, 350)
     }
 
@@ -1023,8 +1024,8 @@ export default defineComponent({
             class: ['vxe-table--ignore-clear vxe-select--panel', popupClassName ? (XEUtils.isFunction(popupClassName) ? popupClassName({ $select: $xeSelect }) : popupClassName) : '', {
               [`size--${vSize}`]: vSize,
               'is--transfer': transfer,
-              'animat--leave': !loading && reactData.animatVisible,
-              'animat--enter': !loading && visiblePanel
+              'ani--leave': !loading && reactData.isAniVisible,
+              'ani--enter': !loading && visiblePanel
             }],
             placement: reactData.panelPlacement,
             style: reactData.panelStyle

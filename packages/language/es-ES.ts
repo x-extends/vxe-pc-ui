@@ -34,7 +34,8 @@ export default {
       noTree: 'La estructura de árbol no soporta "{0}".',
       notProp: 'Parámetros no compatibles "{0}"',
       checkProp: 'La casilla de verificación puede detenerse cuando la cantidad de datos es demasiado grande, se recomienda establecer el parámetro "{0}" para aumentar la velocidad de representación',
-      coverProp: 'The parameter "{1}" to "{0}" is repeatedly defined. This may cause an error',
+      coverProp: 'The parameter "{1}" to "{0}" is repeatedly defined. This may cause an error.',
+      uniField: 'The field "{0}" is repeatedly defined, which may cause an error.',
       delFunc: 'La función "{0}" está en desuso, por favor use "{1}".',
       delProp: 'La propiedad "{0}" está en desuso, por favor use "{1}".',
       delEvent: 'El evento "{0}" está en desuso, por favor use "{1}"',
@@ -307,7 +308,7 @@ export default {
       uploadProgress: 'Uploading {0}%',
       uploadErr: 'Fail to upload',
       uploadSuccess: 'Successfully upload',
-      moreBtnText: 'All ({0})',
+      moreBtnText: 'More ({0})',
       viewItemTitle: 'click to view'
     },
     formDesign: {
@@ -315,6 +316,10 @@ export default {
       defFormTitle: 'Unnamed form',
       widgetPropTab: 'Field property',
       widgetFormTab: 'Form property',
+      error: {
+        wdFormUni: '该类型的控件在表单中只允许添加一个',
+        wdSubUni: '该类型的控件在子表中只允许添加一个'
+      },
       styleSetting: {
         btn: 'Style setting',
         title: 'Form style setting',
@@ -339,6 +344,9 @@ export default {
         group: {
           base: 'Base control',
           layout: 'Layout control',
+          system: 'System control',
+          module: 'Module control',
+          chart: 'Chart control',
           advanced: 'Advanced control'
         },
         copyTitle: 'Copy_{0}',

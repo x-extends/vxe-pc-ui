@@ -4,7 +4,7 @@ import { defineVxeComponent, VxeComponentBaseOptions, VxeComponentEventParams, V
 /* eslint-disable no-use-before-define,@typescript-eslint/ban-types */
 
 export declare const VxeLayoutBody: defineVxeComponent<VxeLayoutBodyProps, VxeLayoutBodyEventProps, VxeLayoutBodySlots>
-export type VxeLayoutBodyComponent = DefineComponent<VxeLayoutBodyProps, VxeLayoutBodyEmits>
+export type VxeLayoutBodyComponent = DefineComponent<VxeLayoutBodyProps & VxeLayoutBodyEventProps>
 
 export type VxeLayoutBodyInstance = ComponentPublicInstance<VxeLayoutBodyProps, VxeLayoutBodyConstructor>
 
@@ -23,10 +23,12 @@ export interface LayoutBodyPrivateRef {
 export interface VxeLayoutBodyPrivateRef extends LayoutBodyPrivateRef { }
 
 export namespace VxeLayoutBodyPropTypes {
+  export type Loading = boolean
   export type Padding = boolean
 }
 
 export type VxeLayoutBodyProps = {
+  loading?: VxeLayoutBodyPropTypes.Loading
   padding?: VxeLayoutBodyPropTypes.Padding
 }
 

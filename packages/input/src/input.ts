@@ -7,7 +7,7 @@ import { toStringTimeDate, getDateQuarter } from './date'
 import { handleNumber, toFloatValueFixed } from './number'
 import { getSlotVNs } from '../..//ui/src/vn'
 
-import type { VxeInputConstructor, VxeInputEmits, InputReactData, InputMethods, VxeInputPropTypes, InputPrivateRef, VxeFormConstructor, VxeFormPrivateMethods, VxeFormDefines, VxeTableConstructor, VxeTablePrivateMethods } from '../../../types'
+import type { VxeInputConstructor, VxeInputEmits, InputReactData, InputMethods, VxeInputPropTypes, InputPrivateRef, VxeFormConstructor, VxeFormPrivateMethods, VxeFormDefines, VxeTableConstructor, VxeTablePrivateMethods, VxeModalConstructor, VxeModalMethods } from '../../../types'
 
 interface DateYearItem {
   date: Date;
@@ -150,6 +150,7 @@ export default defineComponent({
   setup (props, context) {
     const { slots, emit } = context
 
+    const $xeModal = inject<VxeModalConstructor & VxeModalMethods | null>('$xeModal', null)
     const $xeTable = inject<VxeTableConstructor & VxeTablePrivateMethods | null>('$xeTable', null)
     const $xeForm = inject<VxeFormConstructor & VxeFormPrivateMethods | null>('$xeForm', null)
     const formItemInfo = inject<VxeFormDefines.ProvideItemInfo | null>('xeFormItemInfo', null)
@@ -163,7 +164,7 @@ export default defineComponent({
       panelIndex: 0,
       showPwd: false,
       visiblePanel: false,
-      animatVisible: false,
+      isAniVisible: false,
       panelStyle: null,
       panelPlacement: '',
       isActivated: false,
@@ -212,7 +213,7 @@ export default defineComponent({
         if (XEUtils.isBoolean(globalTransfer)) {
           return globalTransfer
         }
-        if ($xeTable || $xeForm) {
+        if ($xeTable || $xeModal || $xeForm) {
           return true
         }
       }
@@ -827,7 +828,7 @@ export default defineComponent({
       return new Promise(resolve => {
         reactData.visiblePanel = false
         hidePanelTimeout = window.setTimeout(() => {
-          reactData.animatVisible = false
+          reactData.isAniVisible = false
           resolve()
         }, 350)
       })
@@ -1671,7 +1672,7 @@ export default defineComponent({
         }
         clearTimeout(hidePanelTimeout)
         reactData.isActivated = true
-        reactData.animatVisible = true
+        reactData.isAniVisible = true
         if (isDatePickerType) {
           dateOpenPanel()
         }
@@ -2209,7 +2210,7 @@ export default defineComponent({
 
     const renderPanel = () => {
       const { type } = props
-      const { inited, animatVisible, visiblePanel, panelPlacement, panelStyle } = reactData
+      const { inited, isAniVisible, visiblePanel, panelPlacement, panelStyle } = reactData
       const vSize = computeSize.value
       const transfer = computeTransfer.value
       const isDatePickerType = computeIsDatePickerType.value
@@ -2256,8 +2257,8 @@ export default defineComponent({
             class: ['vxe-table--ignore-clear vxe-input--panel', `type--${type}`, {
               [`size--${vSize}`]: vSize,
               'is--transfer': transfer,
-              'animat--leave': animatVisible,
-              'animat--enter': visiblePanel
+              'ani--leave': isAniVisible,
+              'ani--enter': visiblePanel
             }],
             placement: panelPlacement,
             style: panelStyle
@@ -2535,7 +2536,8 @@ export default defineComponent({
           'is--disabled': isDisabled,
           'is--active': isActivated,
           'show--clear': isClearable && !isDisabled && !(inputValue === '' || XEUtils.eqNull(inputValue))
-        }]
+        }],
+        spellcheck: false
       }, [
         prefix || createCommentVNode(),
         h('div', {

@@ -91,10 +91,12 @@ setConfig({
       enterable: true
     },
     titleAsterisk: true,
-    titleOverflow: false
+    titleOverflow: false,
+    padding: true
   },
   formDesign: {
     height: 400,
+    showHeader: true,
     showPc: true
   },
   formGather: {},
@@ -102,6 +104,9 @@ setConfig({
   formView: {},
   grid: {},
   icon: {},
+  iconPicker: {
+    icons: ['home', 'company', 'comment', 'setting', 'send', 'envelope', 'envelope-open', 'bell', 'search', 'print', 'pc', 'goods', 'chart-line', 'edit', 'delete', 'save', 'folder', 'microphone', 'flag', 'link', 'location', 'sunny', 'rmb', 'usd', 'user', 'add-user', 'add-users', 'star', 'unlock', 'time', 'text', 'feedback', 'calendar', 'association-form', 'cloud-download', 'cloud-upload', 'file', 'subtable', 'chart-bar-x', 'chart-bar-y', 'chart-line', 'chart-pie', 'chart-radar']
+  },
   image: {
     showPreview: true
   },
@@ -273,6 +278,10 @@ setIcon({
   SELECT_OPEN: iconPrefix + 'caret-down rotate180',
   SELECT_CLOSE: iconPrefix + 'caret-down',
 
+  // icon-picker
+  ICON_PICKER_OPEN: iconPrefix + 'caret-down rotate180',
+  ICON_PICKER_CLOSE: iconPrefix + 'caret-down',
+
   // pager
   PAGER_HOME: iconPrefix + 'home-page',
   PAGER_END: iconPrefix + 'end-page',
@@ -333,6 +342,7 @@ setIcon({
   FORM_DESIGN_PROPS_PC: iconPrefix + 'pc',
   FORM_DESIGN_PROPS_MOBILE: iconPrefix + 'mobile',
   FORM_DESIGN_PROPS_ADD: iconPrefix + 'add',
+  FORM_DESIGN_PROPS_EDIT: iconPrefix + 'edit',
   FORM_DESIGN_WIDGET_ADD: iconPrefix + 'square-plus-fill',
   FORM_DESIGN_WIDGET_COPY: iconPrefix + 'copy',
   FORM_DESIGN_WIDGET_DELETE: iconPrefix + 'delete',

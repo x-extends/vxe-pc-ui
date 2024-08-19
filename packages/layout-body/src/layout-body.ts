@@ -1,4 +1,5 @@
 import { defineComponent, ref, h, reactive, PropType } from 'vue'
+import VxeLoadingComponent from '../../loading/src/loading'
 import XEUtils from 'xe-utils'
 
 import type { VxeLayoutBodyPropTypes, LayoutBodyReactData, LayoutBodyPrivateRef, VxeLayoutBodyPrivateComputed, VxeLayoutBodyConstructor, VxeLayoutBodyPrivateMethods } from '../../../types'
@@ -6,6 +7,7 @@ import type { VxeLayoutBodyPropTypes, LayoutBodyReactData, LayoutBodyPrivateRef,
 export default defineComponent({
   name: 'VxeLayoutBody',
   props: {
+    loading: Boolean as PropType<VxeLayoutBodyPropTypes.Loading>,
     padding: Boolean as PropType<VxeLayoutBodyPropTypes.Padding>
   },
   emits: [],
@@ -37,14 +39,26 @@ export default defineComponent({
     } as unknown as VxeLayoutBodyConstructor & VxeLayoutBodyPrivateMethods
 
     const renderVN = () => {
-      const { padding } = props
+      const { loading, padding } = props
       const defaultSlot = slots.default
       return h('div', {
         ref: refElem,
         class: ['vxe-layout-body', {
+          'is--loading': loading,
           'is--padding': padding
         }]
-      }, defaultSlot ? defaultSlot({}) : [])
+      }, [
+        h('div', {
+          class: 'vxe-layout-body--inner'
+        }, defaultSlot ? defaultSlot({}) : []),
+        /**
+         * 加载中
+         */
+        h(VxeLoadingComponent, {
+          class: 'vxe-list-view--loading',
+          modelValue: loading
+        })
+      ])
     }
 
     $xeLayoutBody.renderVN = renderVN

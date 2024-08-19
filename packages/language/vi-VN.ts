@@ -35,6 +35,7 @@ export default {
       notProp: '不支持的参数 "{0}"',
       checkProp: '当数据量过大时可能会导致复选框卡顿，建议设置参数 "{0}" 提升渲染速度',
       coverProp: '"{0}" 的参数 "{1}" 重复定义，这可能会出现错误',
+      uniField: '字段名 "{0}" 重复定义，这可能会出现错误',
       delFunc: '方法 "{0}" 已废弃，请使用 "{1}"',
       delProp: '参数 "{0}" 已废弃，请使用 "{1}"',
       delEvent: '事件 "{0}" 已废弃，请使用 "{1}"',
@@ -307,7 +308,7 @@ export default {
       uploadProgress: '上传中 {0}%',
       uploadErr: '上传失败',
       uploadSuccess: '上传成功',
-      moreBtnText: '全部（{0}）',
+      moreBtnText: '更多（{0}）',
       viewItemTitle: '点击查看'
     },
     formDesign: {
@@ -315,6 +316,10 @@ export default {
       defFormTitle: '未命名的表单',
       widgetPropTab: '控件属性',
       widgetFormTab: '表单属性',
+      error: {
+        wdFormUni: '该类型的控件在表单中只允许添加一个',
+        wdSubUni: '该类型的控件在子表中只允许添加一个'
+      },
       styleSetting: {
         btn: '样式设置',
         title: '表单的样式设置',
@@ -339,6 +344,9 @@ export default {
         group: {
           base: '基础控件',
           layout: '布局控件',
+          system: '系统控件',
+          module: '模块控件',
+          chart: '图表控件',
           advanced: '高级控件'
         },
         copyTitle: '副本_{0}',

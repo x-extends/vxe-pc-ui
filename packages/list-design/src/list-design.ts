@@ -42,6 +42,7 @@ export default defineComponent({
 
     const reactData = reactive<ListDesignReactData>({
       formData: {} as VxeListDesignDefines.DefaultSettingFormDataObjVO,
+      searchFormData: {},
       searchFormItems: [],
       listTableColumns: []
     })
@@ -82,7 +83,8 @@ export default defineComponent({
       return {
         title: widget.title,
         field: widget.field,
-        visible: true,
+        visible: !widget.hidden,
+        width: '',
         cellRender: {
           name: widget.name,
           props: widget.options
@@ -101,7 +103,9 @@ export default defineComponent({
           widgetData.forEach(item => {
             // 如果是行列
             if (item.name === 'row') {
-              //
+              item.children.forEach(childItem => {
+                tableColumns.push(parseWidgetColumn(childItem))
+              })
             } else if (item.name === 'subTable') {
               // 如果是子表
             } else {
@@ -113,16 +117,27 @@ export default defineComponent({
       return tableColumns
     }
 
-    const configToSearchItems = (searchItems: VxeListDesignDefines.SearchItemObjItem[]): VxeListDesignDefines.SearchItemObjItem[] => {
+    const configToSearchItems = (searchItems: VxeListDesignDefines.SearchItemObjItem[]): {
+      data: Record<string, any>
+      items: VxeListDesignDefines.SearchItemObjItem[]
+    } => {
       if (searchItems) {
-        return searchItems.map(item => {
+        const data: Record<string, any> = {}
+        const items = searchItems.map(item => {
+          data[item.field] = null
           return {
             field: item.field,
-            title: item.title
+            title: item.title,
+            folding: item.folding,
+            itemRender: item.itemRender
           }
         })
+        return {
+          items,
+          data
+        }
       }
-      return []
+      return { items: [], data: {} }
     }
 
     const configToListColumns = (listColumns: VxeListDesignDefines.ListColumnObjItem[]): VxeListDesignDefines.ListColumnObjItem[] => {
@@ -132,6 +147,7 @@ export default defineComponent({
             field: item.field,
             title: item.title,
             visible: !!item.visible,
+            width: item.width,
             cellRender: XEUtils.clone(item.cellRender)
           }
         })
@@ -167,7 +183,9 @@ export default defineComponent({
     }
 
     const setSearchItems = (searchItems: VxeListDesignDefines.SearchItemObjItem[]) => {
-      reactData.searchFormItems = configToSearchItems(searchItems)
+      const { data, items } = configToSearchItems(searchItems)
+      reactData.searchFormData = data
+      reactData.searchFormItems = items
       return nextTick()
     }
 
@@ -216,11 +234,39 @@ export default defineComponent({
       reactData.formData = createSettingForm()
     }
 
+    const clearConfig = () => {
+      loadConfig({
+        searchItems: [],
+        listColumns: []
+      })
+      initSettingForm()
+      return nextTick()
+    }
+
     const listDesignMethods: ListDesignMethods = {
       dispatchEvent (type, params, evnt) {
         emit(type, createEvent(evnt, { $listDesign: $xeListDesign }, params))
       },
       loadFormDesignConfig (config) {
+        const { listTableColumns } = reactData
+        const oldMaps: Record<string, VxeListDesignDefines.ListColumnObjItem> = {}
+        XEUtils.eachTree(listTableColumns, item => {
+          oldMaps[item.field] = item
+        }, { children: 'children' })
+        const columns = parseFormDesignColumns(config)
+        XEUtils.eachTree(columns, item => {
+          const oldItem = oldMaps[item.field]
+          if (oldItem) {
+            if (oldItem.width) {
+              item.width = oldItem.width
+            }
+            item.visible = oldItem.visible
+          }
+        }, { children: 'children' })
+        reactData.listTableColumns = columns
+        return nextTick()
+      },
+      reloadFormDesignConfig (config) {
         reactData.listTableColumns = parseFormDesignColumns(config)
         return nextTick()
       },
@@ -236,14 +282,11 @@ export default defineComponent({
         }
       },
       loadConfig,
-      clearConfig () {
-        loadConfig({
-          searchItems: [],
-          listColumns: []
-        })
-        initSettingForm()
-        return nextTick()
-      }
+      reloadConfig (config) {
+        clearConfig()
+        return loadConfig(config)
+      },
+      clearConfig
     }
 
     const listDesignPrivateMethods: ListDesignPrivateMethods = {

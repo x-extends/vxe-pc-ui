@@ -4,7 +4,7 @@ import { defineVxeComponent, VxeComponentBaseOptions, VxeComponentEventParams, V
 /* eslint-disable no-use-before-define,@typescript-eslint/ban-types */
 
 export declare const VxeSwitch: defineVxeComponent<VxeSwitchProps, VxeSwitchEventProps>
-export type VxeSwitchComponent = DefineComponent<VxeSwitchProps, VxeSwitchEmits>
+export type VxeSwitchComponent = DefineComponent<VxeSwitchProps & VxeSwitchEventProps>
 
 export type VxeSwitchInstance = ComponentPublicInstance<VxeSwitchProps, VxeSwitchConstructor, VxeSwitchSlots>
 

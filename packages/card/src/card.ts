@@ -2,6 +2,7 @@ import { defineComponent, ref, h, reactive, PropType, createCommentVNode, comput
 import { getSlotVNs } from '../../ui/src/vn'
 import { getConfig } from '../../ui'
 import { toCssUnit } from '../..//ui/src/dom'
+import VxeLoadingComponent from '../../loading/src/loading'
 import XEUtils from 'xe-utils'
 
 import type { CardReactData, VxeCardEmits, VxeCardPropTypes, CardPrivateRef, VxeCardPrivateComputed, VxeCardConstructor, VxeCardPrivateMethods } from '../../../types'
@@ -20,6 +21,7 @@ export default defineComponent({
       type: Boolean as PropType<VxeCardPropTypes.Border>,
       default: () => getConfig().card.border
     },
+    loading: Boolean as PropType<VxeCardPropTypes.Loading>,
     shadow: {
       type: Boolean as PropType<VxeCardPropTypes.Shadow>,
       default: () => getConfig().card.shadow
@@ -71,7 +73,7 @@ export default defineComponent({
     } as unknown as VxeCardConstructor & VxeCardPrivateMethods
 
     const renderVN = () => {
-      const { title, border, shadow, padding, showTitleOverflow } = props
+      const { title, border, shadow, padding, loading, showTitleOverflow } = props
       const defaultSlot = slots.default
       const headerSlot = slots.header
       const titleSlot = slots.title
@@ -129,7 +131,14 @@ export default defineComponent({
           ? h('div', {
             class: 'vxe-card--footer'
           }, getSlotVNs(footerSlot({})))
-          : createCommentVNode()
+          : createCommentVNode(),
+        /**
+         * 加载中
+         */
+        h(VxeLoadingComponent, {
+          class: 'vxe-card--loading',
+          modelValue: loading
+        })
       ])
     }
 

@@ -4,7 +4,7 @@ import { defineVxeComponent, VxeComponentBaseOptions, VxeComponentEventParams, V
 /* eslint-disable no-use-before-define,@typescript-eslint/ban-types */
 
 export declare const VxeTag: defineVxeComponent<VxeTagProps, VxeTagEventProps, VxeTagSlots>
-export type VxeTagComponent = DefineComponent<VxeTagProps, VxeTagEmits>
+export type VxeTagComponent = DefineComponent<VxeTagProps & VxeTagEventProps>
 
 export type VxeTagInstance = ComponentPublicInstance<VxeTagProps, VxeTagConstructor>
 

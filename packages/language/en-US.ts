@@ -34,7 +34,8 @@ export default {
       noTree: 'The tree structure does not support "{0}".',
       notProp: 'Unsupported parameters "{0}"',
       checkProp: 'The checkbox may stall when the amount of data is too large, it is recommended to set the parameter "{0}" to increase the rendering speed ',
-      coverProp: 'The parameter "{1}" to "{0}" is repeatedly defined. This may cause an error',
+      coverProp: 'The parameter "{1}" to "{0}" is repeatedly defined. This may cause an error.',
+      uniField: 'The field "{0}" is repeatedly defined, which may cause an error.',
       delFunc: 'The function "{0}" is deprecated, please use "{1}".',
       delProp: 'The property "{0}" is deprecated, please use "{1}".',
       delEvent: 'The event "{0}" is deprecated, please use "{1}"',
@@ -307,7 +308,7 @@ export default {
       uploadProgress: 'Uploading {0}%',
       uploadErr: 'Fail to upload',
       uploadSuccess: 'Successfully upload',
-      moreBtnText: 'All ({0})',
+      moreBtnText: 'More ({0})',
       viewItemTitle: 'click to view'
     },
     formDesign: {
@@ -315,6 +316,10 @@ export default {
       defFormTitle: 'Unnamed form',
       widgetPropTab: 'Field property',
       widgetFormTab: 'Form property',
+      error: {
+        wdFormUni: 'Only one control of this type is allowed to be added to the form.',
+        wdSubUni: 'Only one control of this type is allowed to be added to a sub table.'
+      },
       styleSetting: {
         btn: 'Style setting',
         title: 'Form style setting',
@@ -339,6 +344,9 @@ export default {
         group: {
           base: 'Base control',
           layout: 'Layout control',
+          system: 'System control',
+          module: 'Module control',
+          chart: 'Chart control',
           advanced: 'Advanced control'
         },
         copyTitle: 'Copy_{0}',

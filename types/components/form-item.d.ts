@@ -8,7 +8,7 @@ import { VxeIconPropTypes } from './icon'
 /* eslint-disable no-use-before-define,@typescript-eslint/ban-types */
 
 export declare const VxeFormItem: defineVxeComponent<VxeFormItemProps, VxeFormItemEventProps, VxeFormItemSlots>
-export type VxeFormItemComponent = DefineComponent<VxeFormItemProps, VxeFormItemEmits>
+export type VxeFormItemComponent = DefineComponent<VxeFormItemProps & VxeFormItemEventProps>
 
 export interface VxeFormItemConstructor extends VxeComponentBaseOptions, VxeFormItemMethods {
   props: VxeFormItemProps
@@ -36,6 +36,7 @@ export namespace VxeFormItemPropTypes {
   export type TitleAsterisk = VxeFormPropTypes.TitleAsterisk
   export type ShowTitle = boolean
   export type Vertical = boolean
+  export type Padding = boolean
 
   interface ClassNameParams {
     $form: VxeFormConstructor
@@ -123,8 +124,14 @@ export namespace VxeFormItemPropTypes {
      * 渲染组件的内容（需要渲染器支持）
      */
     content?: string
-    autofocus?: string
+    autoFocus?: string
     defaultValue?: ((params: { item: VxeFormItemProps }) => any) | null | undefined | string | number | RegExp | object | any[] | Date
+
+    /**
+     * 已废弃，请使用 autoFocus
+     * @deprecated
+     */
+    autofocus?: string
   }
   export type Rules<D = any> = VxeFormDefines.FormRule<D>[]
   export type Slots = {
@@ -179,6 +186,7 @@ export interface VxeFormItemProps<D = any> {
    * 使用垂直布局
    */
   vertical?: VxeFormItemPropTypes.Vertical
+  padding?: VxeFormItemPropTypes.Padding
   /**
    * 给表单项附加 className
    */

@@ -1,26 +1,24 @@
 import { ref } from 'vue'
 import { renderer } from '@vxe-ui/core'
 import { getNewWidgetId } from './util'
+import { errLog } from '../../ui/src/log'
 import XEUtils from 'xe-utils'
 
-import type { VxeFormPropTypes, VxeFormDesignConstructor, VxeFormDesignDefines } from '../../../types'
+import type { VxeFormPropTypes, VxeFormDesignConstructor, VxeFormDesignDefines, VxeGlobalRendererHandles } from '../../../types'
 
 // 控件原始配置信息，带响应
-interface WidgetReactConfigItem {
-  title: undefined | string | number |((params: {
-    name: string
-    $formDesign: VxeFormDesignConstructor | null
-  }) => string)
-  icon: string | null | undefined
-  group: string | null | undefined
-  customGroup: undefined | string | number |((params: {
-    name: string
-    $formDesign: VxeFormDesignConstructor | null
-  }) => string)
-}
+type WidgetReactConfigItem = Required<Pick<VxeGlobalRendererHandles.CreateFormDesignWidgetConfigObj, 'field' | 'title' | 'icon' | 'customGroup' | 'group' | 'unique' | 'scope'>>
 
 // 控件原始配置信息，带响应
 export const refWidgetReactConfigMaps = ref<Record<string, WidgetReactConfigItem>>({})
+
+export const createHandleGetField = (key: keyof WidgetReactConfigItem) => {
+  return function (name: string) {
+    const widgetReactConfigMaps = refWidgetReactConfigMaps.value
+    const configMaps = widgetReactConfigMaps[name]
+    return configMaps ? configMaps[key] : null
+  }
+}
 
 export function getWidgetConfigTitle (name: string, $xeFormDesign: VxeFormDesignConstructor | null) {
   const widgetReactConfigMaps = refWidgetReactConfigMaps.value
@@ -31,18 +29,6 @@ export function getWidgetConfigTitle (name: string, $xeFormDesign: VxeFormDesign
     return XEUtils.toValueString(XEUtils.isFunction(configTitle) ? configTitle(params) : configTitle)
   }
   return name
-}
-
-export function getWidgetConfigIcon (name: string) {
-  const widgetReactConfigMaps = refWidgetReactConfigMaps.value
-  const configMaps = widgetReactConfigMaps[name]
-  return configMaps ? configMaps.icon : ''
-}
-
-export function getWidgetConfigGroup (name: string) {
-  const widgetReactConfigMaps = refWidgetReactConfigMaps.value
-  const configMaps = widgetReactConfigMaps[name]
-  return configMaps ? configMaps.group : ''
 }
 
 export function getWidgetConfigCustomGroup (name: string, $xeFormDesign: VxeFormDesignConstructor | null) {
@@ -56,12 +42,22 @@ export function getWidgetConfigCustomGroup (name: string, $xeFormDesign: VxeForm
   return name
 }
 
+export const getWidgetConfigIcon = createHandleGetField('icon')
+export const getWidgetConfigGroup = createHandleGetField('group')
+export const getWidgetConfigUnique = createHandleGetField('unique')
+export const getWidgetConfigScope = createHandleGetField('scope')
+
+const validWidgetUniqueField = (field: string, widgetObjList: VxeFormDesignDefines.WidgetObjItem<any>[]) => {
+  return !XEUtils.findTree(widgetObjList, item => item.field === field, { children: 'children' })
+}
+
 export class FormDesignWidgetInfo {
   id = 0
   field = ''
   title = ''
   name = ''
   required = false
+  hidden = false
   options: VxeFormPropTypes.Data = {}
   children: FormDesignWidgetInfo[] = []
   model = {
@@ -70,6 +66,7 @@ export class FormDesignWidgetInfo {
   }
 
   constructor ($xeFormDesign: VxeFormDesignConstructor | null, name: string, widgetObjList: VxeFormDesignDefines.WidgetObjItem<any>[]) {
+    let customField = ''
     if (name) {
       const compConf = renderer.get(name) || {}
       if (compConf) {
@@ -79,15 +76,26 @@ export class FormDesignWidgetInfo {
           const params = { name, $formDesign: $xeFormDesign }
           const widgetConfig = createWidgetFormConfig(params) || {}
           const titleConf = widgetConfig.title
+          const fieldConf = widgetConfig.field
           this.title = XEUtils.toValueString(XEUtils.isFunction(titleConf) ? titleConf(params) : titleConf)
           this.options = widgetConfig.options || {}
           this.children = widgetConfig.children || []
+          if (fieldConf) {
+            if (XEUtils.isFunction(fieldConf)) {
+              customField = fieldConf({ name, $formDesign: $xeFormDesign })
+            } else {
+              customField = fieldConf
+            }
+          }
           if (!widgetReactConfigMaps[name]) {
             widgetReactConfigMaps[name] = {
-              title: titleConf,
-              icon: widgetConfig.icon,
-              group: widgetConfig.group,
-              customGroup: widgetConfig.customGroup
+              title: titleConf || '',
+              field: fieldConf || '',
+              icon: widgetConfig.icon || '',
+              group: widgetConfig.group || '',
+              unique: widgetConfig.unique || false,
+              scope: widgetConfig.scope || '',
+              customGroup: widgetConfig.customGroup || ''
             }
             refWidgetReactConfigMaps.value = Object.assign({}, widgetReactConfigMaps)
           }
@@ -95,8 +103,14 @@ export class FormDesignWidgetInfo {
       }
     }
     const widgetId = getNewWidgetId(widgetObjList)
+    if (customField) {
+      // 如果使用了自定义字段，验证字段名是否唯一
+      if (!validWidgetUniqueField(customField, widgetObjList)) {
+        errLog('vxe.error.uniField', [customField])
+      }
+    }
     this.id = widgetId
-    this.field = `${name}${widgetId}`
+    this.field = customField || `${name}${widgetId}`
     this.name = name
   }
 }
@@ -107,6 +121,7 @@ export function configToWidget (conf: {
   field: string
   title: string
   required: boolean
+  hidden: boolean
   options?: any
   children?: VxeFormDesignDefines.WidgetObjItem[]
 }) {
@@ -115,6 +130,7 @@ export function configToWidget (conf: {
   widget.title = conf.title
   widget.field = conf.field
   widget.required = conf.required
+  widget.hidden = conf.hidden
   widget.options = Object.assign({}, widget.options, conf.options)
   widget.children = conf.children ? conf.children.map(item => configToWidget(item)) : []
   return widget

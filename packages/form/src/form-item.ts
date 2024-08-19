@@ -41,6 +41,10 @@ export const formItemProps = {
     type: Boolean as PropType<VxeFormItemPropTypes.Vertical>,
     default: null
   },
+  padding: {
+    type: Boolean as PropType<VxeFormItemPropTypes.Padding>,
+    default: null
+  },
   className: [String, Function] as PropType<VxeFormItemPropTypes.ClassName>,
   contentClassName: [String, Function] as PropType<VxeFormItemPropTypes.ContentClassName>,
   contentStyle: [Object, Function] as PropType<VxeFormItemPropTypes.ContentStyle>,
@@ -86,11 +90,11 @@ export default defineComponent({
 
     const renderItem = ($xeForm: VxeFormConstructor & VxeFormPrivateMethods, item: VxeFormDefines.ItemInfo) => {
       const { props, reactData } = $xeForm
-      const { data, rules, readonly, disabled, titleBold: allTitleBold, titleAlign: allTitleAlign, titleWidth: allTitleWidth, titleColon: allTitleColon, titleAsterisk: allTitleAsterisk, titleOverflow: allTitleOverflow, vertical: allVertical } = props
+      const { data, rules, readonly, disabled, titleBold: allTitleBold, titleAlign: allTitleAlign, titleWidth: allTitleWidth, titleColon: allTitleColon, titleAsterisk: allTitleAsterisk, titleOverflow: allTitleOverflow, vertical: allVertical, padding: allPadding } = props
       const { collapseAll } = reactData
       const { computeValidOpts } = $xeForm.getComputeMaps()
       const validOpts = computeValidOpts.value
-      const { slots, title, visible, folding, field, collapseNode, itemRender, showError, errRule, className, titleOverflow, vertical, showTitle, contentClassName, contentStyle, titleClassName, titleStyle } = item
+      const { slots, title, visible, folding, field, collapseNode, itemRender, showError, errRule, className, titleOverflow, vertical, padding, showTitle, contentClassName, contentStyle, titleClassName, titleStyle } = item
       const compConf = isEnableConf(itemRender) ? renderer.get(itemRender.name) : null
       const itemClassName = compConf ? (compConf.formItemClassName || compConf.itemClassName) : ''
       const itemStyle = compConf ? (compConf.formItemStyle || compConf.itemStyle) : null
@@ -102,6 +106,7 @@ export default defineComponent({
       const titleSlot = slots ? slots.title : null
       const span = item.span || props.span
       const align = item.align || props.align
+      const itemPadding = XEUtils.eqNull(padding) ? allPadding : padding
       const itemVertical = XEUtils.eqNull(vertical) ? allVertical : vertical
       const titleBold = XEUtils.eqNull(item.titleBold) ? allTitleBold : item.titleBold
       const titleAlign = XEUtils.eqNull(item.titleAlign) ? allTitleAlign : item.titleAlign
@@ -115,12 +120,14 @@ export default defineComponent({
       const hasEllipsis = ovTitle || ovTooltip || ovEllipsis
       const params = { data, disabled, readonly, field, property: field, item, $form: $xeForm, $grid: $xeForm.xegrid }
       let isRequired = false
+      let isValid = false
       if (visible === false) {
         return createCommentVNode()
       }
       if (!readonly && rules) {
         const itemRules = rules[field]
-        if (itemRules) {
+        if (itemRules && itemRules.length) {
+          isValid = true
           isRequired = itemRules.some((rule) => rule.required)
         }
       }
@@ -180,8 +187,10 @@ export default defineComponent({
             'is--title': title,
             'is--colon': titleColon,
             'is--bold': titleBold,
+            'is--padding': itemPadding,
             'is--vertical': itemVertical,
             'is--asterisk': titleAsterisk,
+            'is--valid': isValid,
             'is--required': isRequired,
             'is--hidden': folding && collapseAll,
             'is--active': isActiveItem($xeForm, item),

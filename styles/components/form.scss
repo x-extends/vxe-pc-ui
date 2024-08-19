@@ -129,10 +129,6 @@
   }
   .vxe-form--item {
     display: none;
-    padding: 0.5em 0.8em 0.5em 0;
-    &.is--vertical {
-      padding: 0.4em 0 0.4em 0;
-    }
     &.is--active {
       &:not(.is--hidden) {
         display: inline-flex;
@@ -142,6 +138,12 @@
 }
 
 .vxe-form--item {
+  &.is--padding {
+    padding: 0.6em;
+    &.is--vertical {
+      padding: 0.4em 0.6em;
+    }
+  }
   &.is--bold {
     & > .vxe-form--item-inner {
       & > .vxe-form--item-title {
@@ -197,7 +199,8 @@
     .vxe-date-picker,
     .vxe-textarea,
     .vxe-select,
-    .vxe-tree-select {
+    .vxe-tree-select,
+    .vxe-ico-picker {
       width: 100%;
     }
   }
@@ -213,7 +216,8 @@
     .vxe-tree-select,
     .vxe-default-input,
     .vxe-default-textarea,
-    .vxe-default-select {
+    .vxe-default-select,
+    .vxe-ico-picker {
       border-color: var(--vxe-ui-form-validate-error-color);
     }
     .vxe-input,

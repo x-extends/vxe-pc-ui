@@ -5,7 +5,7 @@ import { VxeSelectPropTypes } from './select'
 /* eslint-disable no-use-before-define,@typescript-eslint/ban-types */
 
 export declare const VxePager: defineVxeComponent<VxePagerProps, VxePagerEventProps, VxePagerSlots>
-export type VxePagerComponent = DefineComponent<VxePagerProps, VxePagerEmits>
+export type VxePagerComponent = DefineComponent<VxePagerProps & VxePagerEventProps>
 
 export type VxePagerInstance = ComponentPublicInstance<VxePagerProps, VxePagerConstructor>
 

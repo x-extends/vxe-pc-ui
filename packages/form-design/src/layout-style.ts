@@ -187,6 +187,7 @@ export default defineComponent({
         maskClosable: true,
         destroyOnClose: true,
         showMaximize: true,
+        transfer: true,
         'onUpdate:modelValue' (val) {
           settingVisible.value = val
         }

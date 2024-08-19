@@ -4,7 +4,7 @@ import { defineVxeComponent, VxeComponentBaseOptions, VxeComponentEventParams, V
 /* eslint-disable no-use-before-define,@typescript-eslint/ban-types */
 
 export declare const VxeNumberInput: defineVxeComponent<VxeNumberInputProps, VxeNumberInputEventProps, VxeNumberInputSlots>
-export type VxeNumberInputComponent = DefineComponent<VxeNumberInputProps, VxeNumberInputEmits>
+export type VxeNumberInputComponent = DefineComponent<VxeNumberInputProps & VxeNumberInputEventProps>
 
 export type VxeNumberInputInstance = ComponentPublicInstance<VxeNumberInputProps, VxeNumberInputConstructor>
 
@@ -108,6 +108,8 @@ export interface NumberInputPrivateComputed {
 export interface VxeNumberInputPrivateComputed extends NumberInputPrivateComputed { }
 
 export interface NumberInputReactData {
+  isActivated: boolean
+  inputValue: VxeNumberInputPropTypes.ModelValue | undefined
 }
 
 export interface NumberInputMethods {

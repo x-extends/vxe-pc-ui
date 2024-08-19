@@ -55,6 +55,7 @@ const componentList = [
   'form-item',
   'form-view',
   'icon',
+  'icon-picker',
   'image',
   'image-group',
   'image-preview',

@@ -1,11 +1,11 @@
 import { RenderFunction, SetupContext, Ref, ComponentPublicInstance, DefineComponent } from 'vue'
-import { defineVxeComponent, VxeComponentBaseOptions, VxeComponentSizeType, VxeComponentEventParams, VxeComponentPermissionCodeType, VxeComponentPermissionMethod, ValueOf } from '@vxe-ui/core'
+import { defineVxeComponent, VxeComponentBaseOptions, VxeComponentSizeType, VxeComponentEventParams, VxeComponentPermissionCodeType, ValueOf } from '@vxe-ui/core'
 import { VxeButtonProps, VxeButtonPropTypes } from './button'
 
 /* eslint-disable no-use-before-define,@typescript-eslint/ban-types */
 
 export declare const VxeButtonGroup: defineVxeComponent<VxeButtonGroupProps, VxeButtonGroupEventProps, VxeButtonGroupSlots>
-export type VxeButtonGroupComponent = DefineComponent<VxeButtonGroupProps, VxeButtonGroupEmits>
+export type VxeButtonGroupComponent = DefineComponent<VxeButtonGroupProps & VxeButtonGroupEventProps>
 
 export type VxeButtonGroupInstance = ComponentPublicInstance<VxeButtonGroupProps, VxeButtonGroupConstructor>
 

@@ -395,6 +395,9 @@ renderer.mixin({
       ]
     }
   },
+  VxeIconPicker: {
+    renderItemContent: defaultFormItemRender
+  },
   VxeRadio: {
     renderItemContent: defaultFormItemRender
   },

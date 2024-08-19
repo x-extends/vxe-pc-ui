@@ -1,10 +1,10 @@
 import { RenderFunction, SetupContext, Ref, ComponentPublicInstance, DefineComponent } from 'vue'
-import { defineVxeComponent, VxeComponentBaseOptions, VxeComponentEventParams, VxeComponentSizeType, VxeComponentPermissionCodeType, VxeComponentPermissionMethod, ValueOf, VxeComponentStatusType } from '@vxe-ui/core'
+import { defineVxeComponent, VxeComponentBaseOptions, VxeComponentEventParams, VxeComponentSizeType, VxeComponentPermissionCodeType, ValueOf, VxeComponentStatusType } from '@vxe-ui/core'
 
 /* eslint-disable no-use-before-define,@typescript-eslint/ban-types */
 
 export declare const VxeLink: defineVxeComponent<VxeLinkProps, VxeLinkEventProps, VxeLinkSlots>
-export type VxeLinkComponent = DefineComponent<VxeLinkProps, VxeLinkEmits>
+export type VxeLinkComponent = DefineComponent<VxeLinkProps & VxeLinkEventProps>
 
 export type VxeLinkInstance = ComponentPublicInstance<VxeLinkProps, VxeLinkConstructor>
 

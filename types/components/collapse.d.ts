@@ -4,7 +4,7 @@ import { defineVxeComponent, VxeComponentBaseOptions, VxeComponentEventParams } 
 /* eslint-disable no-use-before-define,@typescript-eslint/ban-types */
 
 export declare const VxeCollapse: defineVxeComponent<VxeCollapseProps, VxeCollapseEventProps, VxeCollapseSlots>
-export type VxeCollapseComponent = DefineComponent<VxeCollapseProps, VxeCollapseEmits>
+export type VxeCollapseComponent = DefineComponent<VxeCollapseProps & VxeCollapseEventProps>
 
 export type VxeCollapseInstance = ComponentPublicInstance<VxeCollapseProps, VxeCollapseConstructor>
 

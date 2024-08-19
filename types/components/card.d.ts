@@ -4,7 +4,7 @@ import { defineVxeComponent, VxeComponentBaseOptions, VxeComponentEventParams } 
 /* eslint-disable no-use-before-define,@typescript-eslint/ban-types */
 
 export declare const VxeCard: defineVxeComponent<VxeCardProps, VxeCardEventProps, VxeCardSlots>
-export type VxeCardComponent = DefineComponent<VxeCardProps, VxeCardEmits>
+export type VxeCardComponent = DefineComponent<VxeCardProps & VxeCardEventProps>
 
 export type VxeCardInstance = ComponentPublicInstance<VxeCardProps, VxeCardConstructor>
 
@@ -28,6 +28,7 @@ export namespace VxeCardPropTypes {
   export type Height = string | number
   export type Width = string | number
   export type Border = boolean
+  export type Loading = boolean
   export type Shadow = boolean
   export type Padding = boolean
 }
@@ -38,6 +39,7 @@ export type VxeCardProps = {
   height?: VxeCardPropTypes.Height
   width?: VxeCardPropTypes.Width
   border?: VxeCardPropTypes.Border
+  loading?: VxeCardPropTypes.Loading
   shadow?: VxeCardPropTypes.Shadow
   padding?: VxeCardPropTypes.Padding
 }

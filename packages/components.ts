@@ -26,6 +26,7 @@ import VxeFormGather from './form-gather'
 import VxeFormItem from './form-item'
 import VxeFormView from './form-view'
 import VxeIcon from './icon'
+import VxeIconPicker from './icon-picker'
 import VxeImage from './image'
 import VxeImageGroup from './image-group'
 import VxeImagePreview from './image-preview'
@@ -94,6 +95,7 @@ const components = [
   VxeFormItem,
   VxeFormView,
   VxeIcon,
+  VxeIconPicker,
   VxeImage,
   VxeImageGroup,
   VxeImagePreview,
@@ -182,6 +184,7 @@ export * from './form-gather'
 export * from './form-item'
 export * from './form-view'
 export * from './icon'
+export * from './icon-picker'
 export * from './image'
 export * from './image-group'
 export * from './image-preview'

@@ -32,10 +32,13 @@
 .vxe-card--body {
   display: flex;
   flex-direction: row;
-  flex-grow: 1;
+}
+.vxe-card--header {
+  flex-shrink: 0;
 }
 .vxe-card--body {
   overflow: hidden;
+  flex-grow: 1;
 }
 .vxe-card--body-left,
 .vxe-card--body-right,

@@ -371,13 +371,14 @@ export default defineComponent({
     const imagePreviewTypes = ['jpg', 'jpeg', 'png', 'gif']
 
     const handleDefaultFilePreview = (item: VxeUploadDefines.FileObjItem) => {
-      const { imageTypes } = props
+      const { imageTypes, showDownloadButton } = props
       const typeProp = computeTypeProp.value
       // 如果是预览图片
-      if (imagePreviewTypes.concat(imageTypes).some(type => `${type}`.toLowerCase() === `${item[typeProp]}`.toLowerCase())) {
+      if (imagePreviewTypes.concat(imageTypes || []).some(type => `${type}`.toLowerCase() === `${item[typeProp]}`.toLowerCase())) {
         if (VxeUI.previewImage) {
           VxeUI.previewImage({
-            urlList: [getFileUrl(item)]
+            urlList: [getFileUrl(item)],
+            showDownloadButton
           })
         }
       }
@@ -398,12 +399,14 @@ export default defineComponent({
     }
 
     const handlePreviewImageEvent = (evnt: MouseEvent, item: VxeUploadDefines.FileObjItem, index: number) => {
+      const { showDownloadButton } = props
       const { fileList } = reactData
       if (props.showPreview) {
         if (VxeUI.previewImage) {
           VxeUI.previewImage({
             urlList: fileList.map(item => getFileUrl(item)),
-            activeIndex: index
+            activeIndex: index,
+            showDownloadButton
           })
         }
       }

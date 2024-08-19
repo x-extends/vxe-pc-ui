@@ -26,6 +26,7 @@ import VxeFormGather from './components/form-gather'
 import VxeFormItem from './components/form-item'
 import VxeFormView from './components/form-view'
 import VxeIcon from './components/icon'
+import VxeIconPicker from './components/icon-picker'
 import VxeImage from './components/image'
 import VxeImageGroup from './components/image-group'
 import VxeImagePreview from './components/image-preview'
@@ -102,6 +103,7 @@ interface AllComponents {
   VxeFormItem: typeof VxeFormItem
   VxeFormView: typeof VxeFormView
   VxeIcon: typeof VxeIcon
+  VxeIconPicker: typeof VxeIconPicker
   VxeImage: typeof VxeImage
   VxeImageGroup: typeof VxeImageGroup
   VxeImagePreview: typeof VxeImagePreview
@@ -187,6 +189,7 @@ export * from './components/form-gather'
 export * from './components/form-item'
 export * from './components/form-view'
 export * from './components/icon'
+export * from './components/icon-picker'
 export * from './components/image'
 export * from './components/image-group'
 export * from './components/image-preview'

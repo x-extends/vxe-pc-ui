@@ -22,12 +22,16 @@ export default defineComponent({
       const divEl = evnt.currentTarget as HTMLDivElement
       const dataTransfer = evnt.dataTransfer
       const widgetName = divEl.getAttribute('data-widget-name') || ''
-      const dragWidget = $xeFormDesign.createWidget(widgetName)
-      if (dataTransfer) {
-        dataTransfer.setData('text/plain', widgetName)
+      if ($xeFormDesign.validWidgetUnique(widgetName)) {
+        const dragWidget = $xeFormDesign.createWidget(widgetName)
+        if (dataTransfer) {
+          dataTransfer.setData('text/plain', widgetName)
+        }
+        formDesignReactData.sortWidget = null
+        formDesignReactData.dragWidget = dragWidget
+      } else {
+        evnt.preventDefault()
       }
-      formDesignReactData.sortWidget = null
-      formDesignReactData.dragWidget = dragWidget
     }
 
     const dragendEvent = (evnt: DragEvent) => {
@@ -53,13 +57,15 @@ export default defineComponent({
     }
 
     const addNewWidget = (evnt: KeyboardEvent, widgetName: string) => {
-      const { widgetObjList } = formDesignReactData
-      const dragWidget = $xeFormDesign.createWidget(widgetName)
-      widgetObjList.push(dragWidget)
-      formDesignReactData.activeWidget = dragWidget
-      formDesignReactData.sortWidget = null
-      formDesignReactData.dragWidget = null
-      $xeFormDesign.dispatchEvent('add-widget', { newWidget: dragWidget }, evnt)
+      if ($xeFormDesign.validWidgetUnique(widgetName)) {
+        const { widgetObjList } = formDesignReactData
+        const dragWidget = $xeFormDesign.createWidget(widgetName)
+        widgetObjList.push(dragWidget)
+        formDesignReactData.activeWidget = dragWidget
+        formDesignReactData.sortWidget = null
+        formDesignReactData.dragWidget = null
+        $xeFormDesign.dispatchEvent('add-widget', { newWidget: dragWidget }, evnt)
+      }
     }
 
     const renderWidgetList = (group: VxeFormDesignDefines.WidgetConfigGroup) => {
@@ -80,10 +86,7 @@ export default defineComponent({
               title: configTitle,
               draggable: true,
               onDragstart: dragstartEvent,
-              onDragend: dragendEvent,
-              onDblclick (evnt: KeyboardEvent) {
-                addNewWidget(evnt, name)
-              }
+              onDragend: dragendEvent
             }, renderWidgetItem
               ? getSlotVNs(renderWidgetItem({}, { $formDesign: $xeFormDesign }))
               : [

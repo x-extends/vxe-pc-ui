@@ -4,7 +4,7 @@ import { defineVxeComponent, VxeComponentBaseOptions, VxeComponentEventParams, V
 /* eslint-disable no-use-before-define,@typescript-eslint/ban-types */
 
 export declare const VxeLayoutAside: defineVxeComponent<VxeLayoutAsideProps, VxeLayoutAsideEventProps, VxeLayoutAsideSlots>
-export type VxeLayoutAsideComponent = DefineComponent<VxeLayoutAsideProps, VxeLayoutAsideEmits>
+export type VxeLayoutAsideComponent = DefineComponent<VxeLayoutAsideProps & VxeLayoutAsideEventProps>
 
 export type VxeLayoutAsideInstance = ComponentPublicInstance<VxeLayoutAsideProps, VxeLayoutAsideConstructor>
 
@@ -26,6 +26,7 @@ export namespace VxeLayoutAsidePropTypes {
   export type Width = string | number
   export type Collapsed = boolean
   export type CollapseWidth = string | number
+  export type Loading = boolean
   export type Padding = boolean
 }
 
@@ -33,6 +34,7 @@ export type VxeLayoutAsideProps = {
   width?: VxeLayoutAsidePropTypes.Width
   collapsed?: VxeLayoutAsidePropTypes.Collapsed
   collapseWidth?: VxeLayoutAsidePropTypes.CollapseWidth
+  loading?: VxeLayoutAsidePropTypes.Loading
   padding?: VxeLayoutAsidePropTypes.Padding
 }
 

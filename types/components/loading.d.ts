@@ -4,7 +4,7 @@ import { defineVxeComponent, VxeComponentBaseOptions, VxeComponentEventParams, V
 /* eslint-disable no-use-before-define,@typescript-eslint/ban-types */
 
 export declare const VxeLoading: defineVxeComponent<VxeLoadingProps, VxeLoadingEventProps, VxeLoadingSlots>
-export type VxeLoadingComponent = DefineComponent<VxeLoadingProps, VxeLoadingEmits>
+export type VxeLoadingComponent = DefineComponent<VxeLoadingProps & VxeLoadingEventProps>
 
 export type VxeLoadingInstance = ComponentPublicInstance<VxeLoadingProps, VxeLoadingConstructor>
 

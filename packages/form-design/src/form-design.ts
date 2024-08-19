@@ -1,7 +1,7 @@
-import { defineComponent, ref, h, PropType, reactive, provide, watch, nextTick, ComponentOptions } from 'vue'
-import { getConfig, getIcon, getI18n, renderer, createEvent } from '../../ui'
+import { defineComponent, ref, h, PropType, reactive, provide, watch, nextTick, ComponentOptions, createCommentVNode } from 'vue'
+import { VxeUI, getConfig, getIcon, getI18n, renderer, createEvent } from '../../ui'
 import { toCssUnit } from '../../ui/src/dom'
-import { FormDesignWidgetInfo, getWidgetConfigGroup, getWidgetConfigCustomGroup, configToWidget } from './widget-info'
+import { FormDesignWidgetInfo, getWidgetConfigGroup, getWidgetConfigCustomGroup, configToWidget, getWidgetConfigUnique } from './widget-info'
 import XEUtils from 'xe-utils'
 import VxeButtonComponent from '../../button/src/button'
 import LayoutWidgetComponent from './layout-widget'
@@ -27,6 +27,10 @@ export default defineComponent({
     widgets: {
       type: Array as PropType<VxeFormDesignPropTypes.Widgets>,
       default: () => XEUtils.clone(getConfig().formDesign.widgets) || []
+    },
+    showHeader: {
+      type: Boolean as PropType<VxeFormDesignPropTypes.ShowHeader>,
+      default: () => getConfig().formDesign.showHeader
     },
     showPc: {
       type: Boolean as PropType<VxeFormDesignPropTypes.ShowPc>,
@@ -105,6 +109,11 @@ export default defineComponent({
       return nextTick()
     }
 
+    const reloadConfig = (config: Partial<VxeFormDesignDefines.FormDesignConfig>) => {
+      clearConfig()
+      return loadConfig(config)
+    }
+
     const getFormConfig = (): VxeFormDesignPropTypes.FormData => {
       return XEUtils.clone(reactData.formData, true)
     }
@@ -135,6 +144,12 @@ export default defineComponent({
       return nextTick()
     }
 
+    const clearConfig = () => {
+      reactData.widgetObjList = []
+      initSettingForm()
+      return nextTick()
+    }
+
     const formDesignMethods: FormDesignMethods = {
       dispatchEvent (type, params, evnt) {
         emit(type, createEvent(evnt, { $xeFormDesign }, params))
@@ -147,12 +162,9 @@ export default defineComponent({
           widgetData: getWidgetData()
         }
       },
-      clearConfig () {
-        reactData.widgetObjList = []
-        initSettingForm()
-        return nextTick()
-      },
+      clearConfig,
       loadConfig,
+      reloadConfig,
       getFormConfig,
       loadFormConfig,
       getFormData () {
@@ -259,7 +271,33 @@ export default defineComponent({
       }
     }
 
+    const validWidgetUnique = (widgetName: string) => {
+      const { widgetObjList } = reactData
+      const uniqueConf = getWidgetConfigUnique(widgetName)
+      if (uniqueConf) {
+        const existWidgetList: VxeFormDesignDefines.WidgetObjItem[] = []
+        XEUtils.eachTree(widgetObjList, obj => {
+          if (obj.name === widgetName) {
+            existWidgetList.push(obj)
+          }
+        }, { children: 'children' })
+        const status = existWidgetList.length < 1
+        if (!status) {
+          if (VxeUI.modal) {
+            VxeUI.modal.message({
+              content: getI18n('vxe.formDesign.error.wdFormUni'),
+              status: 'error',
+              id: 'wdFormUni'
+            })
+          }
+        }
+        return status
+      }
+      return true
+    }
+
     const formDesignPrivateMethods: FormDesignPrivateMethods = {
+      validWidgetUnique,
       handleClickWidget (evnt: KeyboardEvent, item: VxeFormDesignDefines.WidgetObjItem) {
         if (item && item.name) {
           evnt.stopPropagation()
@@ -272,21 +310,23 @@ export default defineComponent({
         const rest = XEUtils.findTree(widgetObjList, obj => obj.id === widget.id, { children: 'children' })
         if (rest) {
           evnt.stopPropagation()
-          const { path } = rest
-          const rootIndex = Number(path[0])
-          const newWidget = createWidget(widget.name)
-          // 标题副本
-          if (newWidget.title) {
-            newWidget.title = getI18n('vxe.formDesign.widget.copyTitle', [`${widget.title}`.replace(getI18n('vxe.formDesign.widget.copyTitle', ['']), '')])
+          if (validWidgetUnique(widget.name)) {
+            const { path } = rest
+            const rootIndex = Number(path[0])
+            const newWidget = createWidget(widget.name)
+            // 标题副本
+            if (newWidget.title) {
+              newWidget.title = getI18n('vxe.formDesign.widget.copyTitle', [`${widget.title}`.replace(getI18n('vxe.formDesign.widget.copyTitle', ['']), '')])
+            }
+            if (rootIndex >= widgetObjList.length - 1) {
+              widgetObjList.push(newWidget)
+            } else {
+              widgetObjList.splice(rootIndex + 1, 0, newWidget)
+            }
+            reactData.activeWidget = newWidget
+            reactData.widgetObjList = [...widgetObjList]
+            formDesignMethods.dispatchEvent('copy-widget', { widget, newWidget }, evnt)
           }
-          if (rootIndex >= widgetObjList.length - 1) {
-            widgetObjList.push(newWidget)
-          } else {
-            widgetObjList.splice(rootIndex + 1, 0, newWidget)
-          }
-          reactData.activeWidget = newWidget
-          reactData.widgetObjList = [...widgetObjList]
-          formDesignMethods.dispatchEvent('copy-widget', { widget, newWidget }, evnt)
         }
       },
       handleRemoveWidget (evnt: KeyboardEvent, widget: VxeFormDesignDefines.WidgetObjItem) {
@@ -362,8 +402,9 @@ export default defineComponent({
     }
 
     const renderVN = () => {
-      const { height } = props
+      const { height, showHeader } = props
       const headerSlot = slots.header
+      const footerSlot = slots.footer
       return h('div', {
         ref: refElem,
         class: 'vxe-form-design',
@@ -373,9 +414,11 @@ export default defineComponent({
             }
           : null
       }, [
-        h('div', {
-          class: 'vxe-form-design--header'
-        }, headerSlot ? headerSlot({}) : renderLayoutHeader()),
+        showHeader || headerSlot
+          ? h('div', {
+            class: 'vxe-form-design--header'
+          }, headerSlot ? headerSlot({}) : renderLayoutHeader())
+          : createCommentVNode(),
         h('div', {
           class: 'vxe-form-design--body'
         }, [
@@ -385,7 +428,12 @@ export default defineComponent({
           h(LayoutStyleComponent as ComponentOptions, {
             ref: refLayoutStyle
           })
-        ])
+        ]),
+        footerSlot
+          ? h('div', {
+            class: 'vxe-form-design--footer'
+          }, footerSlot ? footerSlot({}) : [])
+          : createCommentVNode()
       ])
     }
 

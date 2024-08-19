@@ -1,6 +1,7 @@
 import { defineComponent, ref, h, reactive, onMounted, computed, provide, PropType } from 'vue'
-import XEUtils from 'xe-utils'
 import { toCssUnit } from '../../ui/src/dom'
+import VxeLoadingComponent from '../../loading/src/loading'
+import XEUtils from 'xe-utils'
 
 import type { VxeLayoutAsidePropTypes, LayoutAsideReactData, LayoutAsidePrivateRef, VxeLayoutAsidePrivateComputed, VxeLayoutAsideConstructor, VxeLayoutAsidePrivateMethods } from '../../../types'
 
@@ -10,6 +11,7 @@ export default defineComponent({
     width: [String, Number] as PropType<VxeLayoutAsidePropTypes.Width>,
     collapsed: Boolean as PropType<VxeLayoutAsidePropTypes.Collapsed>,
     collapseWidth: [String, Number] as PropType<VxeLayoutAsidePropTypes.CollapseWidth>,
+    loading: Boolean as PropType<VxeLayoutAsidePropTypes.Loading>,
     padding: Boolean as PropType<VxeLayoutAsidePropTypes.Padding>
   },
   emits: [],
@@ -54,7 +56,7 @@ export default defineComponent({
     } as unknown as VxeLayoutAsideConstructor & VxeLayoutAsidePrivateMethods
 
     const renderVN = () => {
-      const { width, collapsed, padding } = props
+      const { width, collapsed, loading, padding } = props
       const wrapperWidth = computeWrapperWidth.value
       const defaultSlot = slots.default
 
@@ -63,14 +65,26 @@ export default defineComponent({
         class: ['vxe-layout-aside', {
           'is--padding': padding,
           'is--default-width': !width,
-          'is--collapse': collapsed
+          'is--collapse': collapsed,
+          'is--loading': loading
         }],
         style: wrapperWidth
           ? {
               width: wrapperWidth
             }
           : null
-      }, defaultSlot ? defaultSlot({}) : [])
+      }, [
+        h('div', {
+          class: 'vxe-layout-aside--inner'
+        }, defaultSlot ? defaultSlot({}) : []),
+        /**
+         * 加载中
+         */
+        h(VxeLoadingComponent, {
+          class: 'vxe-list-view--loading',
+          modelValue: loading
+        })
+      ])
     }
 
     onMounted(() => {

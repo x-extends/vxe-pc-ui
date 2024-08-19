@@ -2,11 +2,12 @@ import { RenderFunction, SetupContext, Ref, ComponentPublicInstance, DefineCompo
 import { defineVxeComponent, VxeComponentBaseOptions, VxeComponentEventParams, VxeComponentSizeType, ValueOf, VxeComponentPermissionCodeType, VxeComponentStatusType } from '@vxe-ui/core'
 import { VxeFormDesignDefines } from './form-design'
 import { VxeColumnPropTypes } from './column'
+import { VxeFormItemPropTypes } from './form-item'
 
 /* eslint-disable no-use-before-define,@typescript-eslint/ban-types */
 
 export declare const VxeListDesign: defineVxeComponent<VxeListDesignProps, VxeListDesignEventProps, VxeListDesignSlots>
-export type VxeListDesignComponent = DefineComponent<VxeListDesignProps, VxeListDesignEmits>
+export type VxeListDesignComponent = DefineComponent<VxeListDesignProps & VxeListDesignEventProps>
 
 export type VxeListDesignInstance = ComponentPublicInstance<VxeListDesignProps, VxeListDesignConstructor>
 
@@ -56,6 +57,7 @@ export interface VxeListDesignPrivateComputed extends ListDesignPrivateComputed 
 
 export interface ListDesignReactData<D = VxeListDesignDefines.DefaultSettingFormDataObjVO> {
   formData: D
+  searchFormData: any
   searchFormItems: VxeListDesignDefines.SearchItemObjItem[]
   listTableColumns: VxeListDesignDefines.ListColumnObjItem[]
 }
@@ -63,9 +65,13 @@ export interface ListDesignReactData<D = VxeListDesignDefines.DefaultSettingForm
 export interface ListDesignMethods {
   dispatchEvent(type: ValueOf<VxeListDesignEmits>, params: Record<string, any>, evnt: Event | null): void
   /**
-   * 加载表单设计器配置
+   * 加载表单设计器配置，会保留原先配置项与新的配置组合
    */
   loadFormDesignConfig(config: Partial<VxeFormDesignDefines.FormDesignConfig>): Promise<any>
+  /**
+   * 会清空并重新加载表单设计器配置
+   */
+  reloadFormDesignConfig(config: Partial<VxeFormDesignDefines.FormDesignConfig>): Promise<any>
   /**
    * 获取列表的搜索区配置
    */
@@ -94,6 +100,10 @@ export interface ListDesignMethods {
    * 加载配置
    */
   loadConfig(config: Partial<VxeListDesignDefines.ListDesignConfig>): Promise<any>
+  /**
+   * 会清空并重新加载配置
+   */
+  reloadConfig(config: Partial<VxeListDesignDefines.ListDesignConfig>): Promise<any>
 }
 export interface VxeListDesignMethods extends ListDesignMethods { }
 
@@ -117,13 +127,16 @@ export namespace VxeListDesignDefines {
   export interface SearchItemObjItem {
     field: string
     title: string
+    folding: boolean
+    itemRender: VxeFormItemPropTypes.ItemRender
   }
 
   export interface ListColumnObjItem {
-    field: string
-    title: string
-    visible: boolean
+    field: VxeColumnPropTypes.Field
+    title: VxeColumnPropTypes.Title
+    visible: VxeColumnPropTypes.Visible
     cellRender: VxeColumnPropTypes.CellRender
+    width: VxeColumnPropTypes.Width
   }
 
   export interface DefaultSettingFormActionButton {

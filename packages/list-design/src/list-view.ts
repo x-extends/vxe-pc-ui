@@ -18,6 +18,7 @@ export default defineComponent({
       default: () => getConfig().listView.height
     },
     loading: Boolean as PropType<VxeListViewPropTypes.Loading>,
+    searchData: Object as PropType<VxeListViewPropTypes.SearchData>,
     actionButtons: Array as PropType<VxeListViewPropTypes.ActionButtons>,
     gridOptions: Object as PropType<VxeListViewPropTypes.GridOptions>,
     gridEvents: Object as PropType<VxeListViewPropTypes.GridEvents>,
@@ -25,6 +26,7 @@ export default defineComponent({
   },
   emits: [
     'cell-action',
+    'update:searchData',
     'update:actionButtons'
   ] as VxeListViewEmits,
   setup (props, context) {
@@ -38,6 +40,7 @@ export default defineComponent({
     const refGrid = ref<VxeGridInstance>()
 
     const reactData = reactive<ListViewReactData>({
+      searchFormData: {},
       searchFormItems: [],
       listTableColumns: [],
       tableColumns: []
@@ -103,16 +106,27 @@ export default defineComponent({
       }
     })
 
-    const configToSearchItems = (searchItems: VxeListDesignDefines.SearchItemObjItem[]): VxeListDesignDefines.SearchItemObjItem[] => {
+    const configToSearchItems = (searchItems: VxeListDesignDefines.SearchItemObjItem[]): {
+      data: Record<string, any>
+      items: VxeListDesignDefines.SearchItemObjItem[]
+    } => {
       if (searchItems) {
-        return searchItems.map(item => {
+        const data: Record<string, any> = {}
+        const items = searchItems.map(item => {
+          data[item.field] = null
           return {
             field: item.field,
-            title: item.title
+            title: item.title,
+            folding: item.folding,
+            itemRender: item.itemRender
           }
         })
+        return {
+          items,
+          data
+        }
       }
-      return []
+      return { items: [], data: {} }
     }
 
     const configToListColumns = (listColumns: VxeListDesignDefines.ListColumnObjItem[]): VxeListDesignDefines.ListColumnObjItem[] => {
@@ -122,6 +136,7 @@ export default defineComponent({
             field: item.field,
             title: item.title,
             visible: !!item.visible,
+            width: item.width,
             cellRender: XEUtils.clone(item.cellRender)
           }
         })
@@ -130,6 +145,8 @@ export default defineComponent({
     }
 
     const clearConfig = () => {
+      emit('update:searchData', {})
+      reactData.searchFormData = {}
       reactData.searchFormItems = []
       reactData.listTableColumns = []
       reactData.tableColumns = []
@@ -145,9 +162,8 @@ export default defineComponent({
       return nextTick()
     }
 
-    const parseFormItems = (searchItems: VxeListDesignDefines.SearchItemObjItem[]) => {
-      const formItems = configToSearchItems(searchItems || [])
-      return formItems
+    const parseForm = (searchItems: VxeListDesignDefines.SearchItemObjItem[]) => {
+      return configToSearchItems(searchItems || [])
     }
 
     const parseTableColumn = (listColumns: VxeListDesignDefines.ListColumnObjItem[], formConfig?: VxeListDesignDefines.DefaultSettingFormDataObjVO) => {
@@ -172,6 +188,7 @@ export default defineComponent({
         const actionColumn: VxeTableDefines.ColumnOptions = {
           field: '_active',
           title: getI18n('vxe.table.actionTitle'),
+          fixed: 'right',
           width: 'auto'
         }
 
@@ -238,8 +255,10 @@ export default defineComponent({
     const parseConfig = (config: Partial<VxeListDesignDefines.ListDesignConfig> | null) => {
       const { formConfig, searchItems, listColumns } = config || {}
       const { columns, actionButtons } = parseTableColumn(listColumns || [], formConfig)
+      const { data, items } = parseForm(searchItems || [])
       return {
-        formItems: parseFormItems(searchItems || []),
+        formData: data,
+        formItems: items,
         tableColumns: columns,
         actionButtons
       }
@@ -268,7 +287,10 @@ export default defineComponent({
     }
 
     const setSearchItems = (searchItems: VxeListDesignDefines.SearchItemObjItem[]) => {
-      reactData.searchFormItems = configToSearchItems(searchItems)
+      const { data, items } = configToSearchItems(searchItems)
+      reactData.searchFormData = data
+      reactData.searchFormItems = items
+      emit('update:searchData', data)
       return nextTick()
     }
 

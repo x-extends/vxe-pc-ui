@@ -1,11 +1,10 @@
 import { RenderFunction, SetupContext, Ref, ComponentPublicInstance, DefineComponent } from 'vue'
 import { defineVxeComponent, VxeComponentBaseOptions, VxeComponentEventParams, ValueOf, VxeComponentSizeType } from '@vxe-ui/core'
-import { VxeImagePropTypes } from './image'
 
 /* eslint-disable no-use-before-define,@typescript-eslint/ban-types */
 
 export declare const VxeImageGroup: defineVxeComponent<VxeImageGroupProps, VxeImageGroupEventProps, VxeImageGroupSlots>
-export type VxeImageGroupComponent = DefineComponent<VxeImageGroupProps, VxeImageGroupEmits>
+export type VxeImageGroupComponent = DefineComponent<VxeImageGroupProps & VxeImageGroupEventProps>
 
 export type VxeImageGroupInstance = ComponentPublicInstance<VxeImageGroupProps, VxeImageGroupConstructor>
 

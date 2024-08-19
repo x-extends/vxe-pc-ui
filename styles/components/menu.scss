@@ -12,6 +12,9 @@
       display: none;
     }
   }
+  &.is--loading {
+    min-height: 4em;
+  }
 }
 .vxe-menu--item-link {
   display: flex;

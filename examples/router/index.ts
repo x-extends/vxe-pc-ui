@@ -46,6 +46,11 @@ const routes: Array<RouteRecordRaw> = [
     component: () => import('../views/icon/IconTest.vue')
   },
   {
+    path: '/component/icon-picker',
+    name: 'IconPickerTest',
+    component: () => import('../views/icon-picker/IconPickerTest.vue')
+  },
+  {
     path: '/component/text',
     name: 'TextTest',
     component: () => import('../views/text/TextTest.vue')

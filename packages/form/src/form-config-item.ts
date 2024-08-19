@@ -20,12 +20,12 @@ const VxeFormConfigItem = defineComponent({
 
     const renderVN = () => {
       const { reactData } = $xeForm
-      const { data, rules, readonly, disabled, span: allSpan, align: allAlign, titleBold: allTitleBold, titleAlign: allTitleAlign, titleWidth: allTitleWidth, titleColon: allTitleColon, titleAsterisk: allTitleAsterisk, titleOverflow: allTitleOverflow, vertical: allVertical } = $xeForm.props
+      const { data, rules, readonly, disabled, span: allSpan, align: allAlign, titleBold: allTitleBold, titleAlign: allTitleAlign, titleWidth: allTitleWidth, titleColon: allTitleColon, titleAsterisk: allTitleAsterisk, titleOverflow: allTitleOverflow, vertical: allVertical, padding: allPadding } = $xeForm.props
       const { computeValidOpts } = $xeForm.getComputeMaps()
       const item = props.itemConfig as VxeFormDefines.ItemInfo
       const { collapseAll } = reactData
       const validOpts = computeValidOpts.value
-      const { slots, title, visible, folding, field, collapseNode, itemRender, showError, errRule, className, titleOverflow, vertical, children, showTitle, contentClassName, contentStyle, titleClassName, titleStyle } = item
+      const { slots, title, visible, folding, field, collapseNode, itemRender, showError, errRule, className, titleOverflow, vertical, padding, children, showTitle, contentClassName, contentStyle, titleClassName, titleStyle } = item
       const compConf = isEnableConf(itemRender) ? renderer.get(itemRender.name) : null
       const itemClassName = compConf ? (compConf.formItemClassName || compConf.itemClassName) : ''
       const itemStyle = compConf ? (compConf.formItemStyle || compConf.itemStyle) : null
@@ -37,6 +37,7 @@ const VxeFormConfigItem = defineComponent({
       const titleSlot = slots ? slots.title : null
       const span = item.span || allSpan
       const align = item.align || allAlign
+      const itemPadding = XEUtils.eqNull(padding) ? allPadding : padding
       const itemVertical = XEUtils.eqNull(vertical) ? allVertical : vertical
       const titleBold = XEUtils.eqNull(item.titleBold) ? allTitleBold : item.titleBold
       const titleAlign = XEUtils.eqNull(item.titleAlign) ? allTitleAlign : item.titleAlign
@@ -53,9 +54,11 @@ const VxeFormConfigItem = defineComponent({
         return createCommentVNode()
       }
       let isRequired = false
+      let isValid = false
       if (!readonly && rules) {
         const itemRules = rules[field]
-        if (itemRules) {
+        if (itemRules && itemRules.length) {
+          isValid = true
           isRequired = itemRules.some((rule) => rule.required)
         }
       }
@@ -129,8 +132,10 @@ const VxeFormConfigItem = defineComponent({
             'is--title': title,
             'is--colon': titleColon,
             'is--bold': titleBold,
+            'is--padding': itemPadding,
             'is--vertical': itemVertical,
             'is--asterisk': titleAsterisk,
+            'is--valid': isValid,
             'is--required': isRequired,
             'is--hidden': folding && collapseAll,
             'is--active': isActiveItem($xeForm, item),

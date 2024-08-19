@@ -299,7 +299,8 @@ export default defineComponent({
           'is--disabled': isDisabled,
           'def--rows': !XEUtils.eqNull(rows),
           'def--cols': !XEUtils.eqNull(cols)
-        }]
+        }],
+        spellcheck: false
       }, [
         h('textarea', {
           ref: refTextarea,

@@ -35,6 +35,7 @@ export default {
       notProp: 'Parâmetros não suportados "{0}"',
       checkProp: 'A caixa de seleção pode travar quando a quantidade de dados é muito grande, é recomendado definir o parâmetro "{0}" para aumentar a velocidade de renderização ',
       coverProp: 'The parameter "{1}" to "{0}" is repeatedly defined. This may cause an error',
+      uniField: '字段名 "{0}" 重复定义，这可能会出现错误',
       delFunc: 'A função "{0}" está obsoleta, por favor, use "{1}".',
       delProp: 'A propriedade "{0}" está obsoleta, por favor, use "{1}".',
       delEvent: 'O evento "{0}" está obsoleto, por favor, use "{1}".',
@@ -307,7 +308,7 @@ export default {
       uploadProgress: 'Uploading {0}%',
       uploadErr: 'Fail to upload',
       uploadSuccess: 'Successfully upload',
-      moreBtnText: 'All ({0})',
+      moreBtnText: 'More ({0})',
       viewItemTitle: 'click to view'
     },
     formDesign: {
@@ -315,6 +316,10 @@ export default {
       defFormTitle: 'Unnamed form',
       widgetPropTab: 'Field property',
       widgetFormTab: 'Form property',
+      error: {
+        wdFormUni: '该类型的控件在表单中只允许添加一个',
+        wdSubUni: '该类型的控件在子表中只允许添加一个'
+      },
       styleSetting: {
         btn: 'Style setting',
         title: 'Form style setting',
@@ -339,6 +344,9 @@ export default {
         group: {
           base: 'Base control',
           layout: 'Layout control',
+          system: 'System control',
+          module: 'Module control',
+          chart: 'Chart control',
           advanced: 'Advanced control'
         },
         copyTitle: 'Copy_{0}',

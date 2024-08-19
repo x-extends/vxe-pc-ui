@@ -5,9 +5,9 @@ import { getFuncText } from '../../ui/src/utils'
 import { hasClass, getEventTargetNode } from '../../ui/src/dom'
 import { getSlotVNs } from '../..//ui/src/vn'
 
-import type { VxeInputConstructor, VxeNumberInputEmits, InputReactData, NumberInputMethods, VxeNumberInputPropTypes, InputPrivateRef, VxeFormConstructor, VxeFormPrivateMethods, VxeFormDefines } from '../../../types'
+import type { VxeNumberInputConstructor, VxeNumberInputEmits, NumberInputReactData, NumberInputMethods, VxeNumberInputPropTypes, InputPrivateRef, VxeFormConstructor, VxeFormPrivateMethods, VxeFormDefines } from '../../../types'
 
-export function handleNumber (val: string | number) {
+export function handleNumber (val: string | number | null | undefined) {
   return XEUtils.isString(val) ? val.replace(/,/g, '') : val
 }
 
@@ -92,22 +92,9 @@ export default defineComponent({
 
     const { computeSize } = useSize(props)
 
-    const reactData = reactive<InputReactData>({
-      inited: false,
-      panelIndex: 0,
-      showPwd: false,
-      visiblePanel: false,
-      animatVisible: false,
-      panelStyle: null,
-      panelPlacement: '',
+    const reactData = reactive<NumberInputReactData>({
       isActivated: false,
-      inputValue: props.modelValue,
-      datetimePanelValue: null,
-      datePanelValue: null,
-      datePanelLabel: '',
-      datePanelType: 'day',
-      selectMonth: null,
-      currentDate: null
+      inputValue: props.modelValue
     })
 
     const refElem = ref() as Ref<HTMLDivElement>
@@ -125,7 +112,7 @@ export default defineComponent({
       context,
       reactData,
       getRefMaps: () => refMaps
-    } as unknown as VxeInputConstructor
+    } as unknown as VxeNumberInputConstructor
 
     let inputMethods = {} as NumberInputMethods
 
@@ -212,6 +199,11 @@ export default defineComponent({
         return type === 'integer' ? XEUtils.toInteger(handleNumber(inputValue)) : XEUtils.toNumber(handleNumber(inputValue))
       }
       return 0
+    })
+
+    const computeNumLabel = computed(() => {
+      const { inputValue } = reactData
+      return XEUtils.toString(inputValue)
     })
 
     const computeIsDisabledSubtractNumber = computed(() => {
@@ -380,12 +372,10 @@ export default defineComponent({
       const inpImmediate = computeInpImmediate.value
       const value = inputValue ? Number(inputValue) : null
       if (!inpImmediate) {
-        emitModel(value, inputValue, evnt)
+        emitModel(value, `${inputValue || ''}`, evnt)
       }
       afterCheckValue()
-      if (!reactData.visiblePanel) {
-        reactData.isActivated = false
-      }
+      reactData.isActivated = false
       inputMethods.dispatchEvent('blur', { value }, evnt)
     }
 
@@ -708,13 +698,7 @@ export default defineComponent({
     watch(() => props.type, () => {
       // 切换类型是重置内置变量
       Object.assign(reactData, {
-        inputValue: props.modelValue,
-        datetimePanelValue: null,
-        datePanelValue: null,
-        datePanelLabel: '',
-        datePanelType: 'day',
-        selectMonth: null,
-        currentDate: null
+        inputValue: props.modelValue
       })
       initValue()
     })
@@ -740,11 +724,12 @@ export default defineComponent({
       const vSize = computeSize.value
       const isDisabled = computeIsDisabled.value
       const formReadonly = computeFormReadonly.value
+      const numLabel = computeNumLabel.value
       if (formReadonly) {
         return h('div', {
           ref: refElem,
           class: ['vxe-number-input--readonly', `type--${type}`, className]
-        }, inputValue)
+        }, numLabel)
       }
       const inputReadonly = computeInputReadonly.value
       const inpMaxlength = computeInpMaxlength.value
@@ -763,7 +748,8 @@ export default defineComponent({
           'is--disabled': isDisabled,
           'is--active': isActivated,
           'show--clear': isClearable && !isDisabled && !(inputValue === '' || XEUtils.eqNull(inputValue))
-        }]
+        }],
+        spellcheck: false
       }, [
         prefix || createCommentVNode(),
         h('div', {

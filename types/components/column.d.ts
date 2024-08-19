@@ -7,7 +7,7 @@ import { VxeGlobalRendererHandles } from '../ui'
 /* eslint-disable no-use-before-define,@typescript-eslint/ban-types */
 
 export declare const VxeColumn: defineVxeComponent<VxeColumnProps, VxeColumnEventProps, VxeColumnSlots>
-export type VxeColumnComponent = DefineComponent<VxeColumnProps, VxeColumnEmits>
+export type VxeColumnComponent = DefineComponent<VxeColumnProps & VxeColumnEventProps>
 
 export type VxeColumnInstance = ComponentPublicInstance<VxeColumnProps, VxeColumnConstructor>
 
@@ -241,12 +241,23 @@ export namespace VxeColumnPropTypes {
     optionProps?: VxeGlobalRendererHandles.RenderOptionProps
     optionGroups?: any[]
     optionGroupProps?: VxeGlobalRendererHandles.RenderOptionGroupProps
-    autofocus?: string
-    autoselect?: boolean
+    autoFocus?: string
+    autoSelect?: boolean
     defaultValue?: ((params: { column: VxeTableDefines.ColumnInfo<D> }) => any) | null | undefined | string | number | RegExp | object | any[] | Date
     immediate?: boolean
     content?: string
     placeholder?: string
+
+    /**
+     * 已废弃，请使用 autoFocus
+     * @deprecated
+     */
+    autofocus?: string
+    /**
+     * 已废弃，请使用 autoSelect
+     * @deprecated
+     */
+    autoselect?: boolean
   }
 
   /**

@@ -4,7 +4,7 @@ import { defineVxeComponent, VxeComponentBaseOptions, VxeComponentEventParams, V
 /* eslint-disable no-use-before-define,@typescript-eslint/ban-types */
 
 export declare const VxeIcon: defineVxeComponent<VxeIconProps, VxeIconEventProps, VxeIconSlots>
-export type VxeIconComponent = DefineComponent<VxeIconProps, VxeIconEmits>
+export type VxeIconComponent = DefineComponent<VxeIconProps & VxeIconEventProps>
 
 export type VxeIconInstance = ComponentPublicInstance<VxeIconProps, VxeIconConstructor>
 

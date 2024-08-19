@@ -4,7 +4,7 @@ import { defineVxeComponent, VxeComponentBaseOptions, VxeComponentEventParams, V
 /* eslint-disable no-use-before-define,@typescript-eslint/ban-types */
 
 export declare const VxePasswordInput: defineVxeComponent<VxePasswordInputProps, VxePasswordInputEventProps, VxePasswordInputSlots>
-export type VxePasswordInputComponent = DefineComponent<VxePasswordInputProps, VxePasswordInputEmits>
+export type VxePasswordInputComponent = DefineComponent<VxePasswordInputProps & VxePasswordInputEventProps>
 
 export type VxePasswordInputInstance = ComponentPublicInstance<VxePasswordInputProps, VxePasswordInputConstructor>
 

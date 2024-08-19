@@ -46,7 +46,8 @@ const navList = ref<VxeMenuPropTypes.Options>([
       { name: 'AnchorTest', icon: 'vxe-icon-user-fill', routerLink: { name: 'AnchorTest' } },
       { name: 'LoadingTest', icon: 'vxe-icon-user-fill', routerLink: { name: 'LoadingTest' } },
       { name: 'TooltipTest', icon: 'vxe-icon-user-fill', routerLink: { name: 'TooltipTest' } },
-      { name: 'IconTest', icon: 'vxe-icon-user-fill', routerLink: { name: 'IconTest' } }
+      { name: 'IconTest', icon: 'vxe-icon-user-fill', routerLink: { name: 'IconTest' } },
+      { name: 'IconPickerTest', icon: 'vxe-icon-user-fill', routerLink: { name: 'IconPickerTest' } }
     ]
   },
   { name: 'FormTest', icon: 'vxe-icon-user-fill', routerLink: { name: 'FormTest' } },

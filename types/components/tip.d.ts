@@ -4,7 +4,7 @@ import { defineVxeComponent, VxeComponentBaseOptions, VxeComponentEventParams, V
 /* eslint-disable no-use-before-define,@typescript-eslint/ban-types */
 
 export declare const VxeTip: defineVxeComponent<VxeTipProps, VxeTipEventProps, VxeTipSlots>
-export type VxeTipComponent = DefineComponent<VxeTipProps, VxeTipEmits>
+export type VxeTipComponent = DefineComponent<VxeTipProps & VxeTipEventProps>
 
 export type VxeTipInstance = ComponentPublicInstance<VxeTipProps, VxeTipConstructor>
 

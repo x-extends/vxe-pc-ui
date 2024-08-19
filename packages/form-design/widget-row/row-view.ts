@@ -10,7 +10,7 @@ import VxeRowComponent from '../../row/src/row'
 import VxeColComponent from '../../row/src/col'
 import VxeButtonComponent from '../../button/src/button'
 
-import type { VxeGlobalRendererHandles, VxeFormDesignDefines, VxeFormDesignConstructor, VxeFormDesignPrivateMethods } from '../../../types'
+import type { VxeGlobalRendererHandles, VxeFormDesignDefines, VxeFormDesignConstructor, VxeFormDesignPrivateMethods, VxeFormViewConstructor, VxeFormViewPrivateMethods } from '../../../types'
 
 const ViewColItemComponent = defineComponent({
   props: {
@@ -69,14 +69,15 @@ const ViewColItemComponent = defineComponent({
       const { widget, span } = props
       const { dragWidget, activeWidget, sortWidget } = formDesignReactData
       return h(VxeFormItemComponent, {
-        span
+        span,
+        padding: false
       }, {
         default () {
           const name = widget ? widget.name : ''
           const compConf = renderer.get(name) || {}
           const renderWidgetDesignView = compConf.renderFormDesignWidgetEdit || compConf.renderFormDesignWidgetView
           const renderOpts: VxeGlobalRendererHandles.RenderFormDesignWidgetViewOptions = widget || { name }
-          const params: VxeGlobalRendererHandles.RenderFormDesignWidgetViewParams = { widget, isEditMode: true, isViewMode: false, $formDesign: $xeFormDesign, $formView: null }
+          const params: VxeGlobalRendererHandles.RenderFormDesignWidgetViewParams = { widget, readonly: false, disabled: false, isEditMode: true, isViewMode: false, $formDesign: $xeFormDesign, $formView: null }
           const isActive = activeWidget && widget && activeWidget.id === widget.id
 
           return h('div', {
@@ -193,6 +194,7 @@ export const WidgetRowViewComponent = defineComponent({
   emits: [],
   setup (props) {
     const $xeFormDesign = inject<(VxeFormDesignConstructor & VxeFormDesignPrivateMethods) | null>('$xeFormDesign', null)
+    const $xeFormView = inject<(VxeFormViewConstructor & VxeFormViewPrivateMethods) | null>('$xeFormView', null)
 
     const computedColObjList = computed(() => {
       const { renderParams } = props
@@ -208,9 +210,7 @@ export const WidgetRowViewComponent = defineComponent({
       const { renderParams } = props
       const { widget } = renderParams
       const colObjList = computedColObjList.value
-      return h(VxeRowComponent, {
-        gutter: 16
-      }, {
+      return h(VxeRowComponent, {}, {
         default () {
           return colObjList.map((span, colItemIndex) => {
             return h(VxeColComponent, {
@@ -225,7 +225,8 @@ export const WidgetRowViewComponent = defineComponent({
                   const compConf = renderer.get(name) || {}
                   const renderWidgetDesignView = compConf.renderFormDesignWidgetView
                   const renderOpts: VxeGlobalRendererHandles.RenderFormDesignWidgetViewOptions = subWidget
-                  const params: VxeGlobalRendererHandles.RenderFormDesignWidgetViewParams = { widget: subWidget, isEditMode: false, isViewMode: true, $formDesign: $xeFormDesign, $formView: null }
+                  const isEditMode = !!$xeFormDesign
+                  const params: VxeGlobalRendererHandles.RenderFormDesignWidgetViewParams = { widget: subWidget, readonly: false, disabled: false, isEditMode, isViewMode: !isEditMode, $formDesign: $xeFormDesign, $formView: $xeFormView }
                   if (renderWidgetDesignView) {
                     return getSlotVNs(renderWidgetDesignView(renderOpts, params))
                   }

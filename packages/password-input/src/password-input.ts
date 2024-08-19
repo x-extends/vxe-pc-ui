@@ -311,7 +311,8 @@ export default defineComponent({
           'is--disabled': disabled,
           'is--active': isActivated,
           'show--clear': isClearable && !disabled && !(inputValue === '' || XEUtils.eqNull(inputValue))
-        }]
+        }],
+        spellcheck: false
       }, [
         prefix || createCommentVNode(),
         h('div', {

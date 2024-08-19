@@ -2,8 +2,9 @@ import { defineComponent, h, inject, ref, watch, onMounted, createCommentVNode, 
 import { VxeUI, getI18n } from '../../ui'
 import { errLog } from '../../ui/src/log'
 import VxeFormComponent from '../../form/src/form'
+import XEUtils from 'xe-utils'
 
-import { VxeListDesignConstructor, VxeListDesignPrivateMethods, VxeGridComponent, VxeTablePropTypes, VxeGridInstance, VxeGridPropTypes } from '../../../types'
+import { VxeListDesignConstructor, VxeListDesignPrivateMethods, VxeGridComponent, VxeTableEvents, VxeTablePropTypes, VxeGridInstance, VxeGridPropTypes } from '../../../types'
 
 export default defineComponent({
   name: 'ListDesignLayoutView',
@@ -39,13 +40,15 @@ export default defineComponent({
         columns.push({
           field: item.field,
           title: item.title,
-          visible: item.visible
+          visible: item.visible,
+          width: item.width
         })
       })
       if (actionButtonList && actionButtonList.length) {
         columns.push({
           field: '_active',
           title: getI18n('vxe.table.actionTitle'),
+          fixed: 'right',
           width: 'auto',
           cellRender: {
             name: 'VxeButtonGroup',
@@ -55,6 +58,15 @@ export default defineComponent({
       }
       return columns
     })
+
+    const updateColumnWidthEvent: VxeTableEvents.ResizableChange = ({ column, resizeWidth }) => {
+      const { listTableColumns } = listDesignReactData
+      const rest = XEUtils.findTree(listTableColumns, item => item.field === column.field, { children: 'children' })
+      if (rest) {
+        const { item } = rest
+        item.width = resizeWidth
+      }
+    }
 
     const updateTableData = () => {
       const { listTableColumns } = listDesignReactData
@@ -91,7 +103,7 @@ export default defineComponent({
     }
 
     return () => {
-      const { searchFormItems } = listDesignReactData
+      const { searchFormData, searchFormItems } = listDesignReactData
 
       return h('div', {
         class: 'vxe-list-design--preview'
@@ -107,6 +119,7 @@ export default defineComponent({
             }, '查询条件'),
             searchFormItems.length
               ? h(VxeFormComponent, {
+                data: searchFormData,
                 items: searchFormItems
               })
               : h('div', {
@@ -140,7 +153,8 @@ export default defineComponent({
                 },
                 scrollY: {
                   enabled: false
-                }
+                },
+                onResizableChange: updateColumnWidthEvent
               })
               : createCommentVNode()
           ])

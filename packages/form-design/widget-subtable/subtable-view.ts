@@ -25,6 +25,7 @@ const ViewSubItemComponent = defineComponent({
   emits: [],
   setup (props) {
     const $xeFormDesign = inject<(VxeFormDesignConstructor & VxeFormDesignPrivateMethods) | null>('$xeFormDesign', null)
+    const $xeFormView = inject<(VxeFormViewConstructor & VxeFormViewPrivateMethods) | null>('$xeFormView', null)
 
     if (!$xeFormDesign) {
       return () => []
@@ -111,7 +112,8 @@ const ViewSubItemComponent = defineComponent({
       const compConf = renderer.get(name) || {}
       const renderWidgetDesignView = compConf.renderFormDesignWidgetEdit || compConf.renderFormDesignWidgetView
       const renderOpts: VxeGlobalRendererHandles.RenderFormDesignWidgetViewOptions = widget || { name }
-      const params: VxeGlobalRendererHandles.RenderFormDesignWidgetViewParams = { widget, isEditMode: true, isViewMode: false, $formDesign: $xeFormDesign, $formView: null }
+      const isEditMode = !!$xeFormDesign
+      const params: VxeGlobalRendererHandles.RenderFormDesignWidgetViewParams = { widget, readonly: false, disabled: false, isEditMode, isViewMode: !isEditMode, $formDesign: $xeFormDesign, $formView: $xeFormView }
       const isActive = activeWidget && widget && activeWidget.id === widget.id
 
       return h('div', {
@@ -350,7 +352,8 @@ export const WidgetSubtableViewComponent = defineComponent({
         class: ['vxe-form-design--widget-render-form-item', `widget-${kebabCaseName}`],
         title: widget.title,
         field: widget.field,
-        span: 24
+        span: 24,
+        padding: false
       }, {
         default () {
           return VxeTableGridComponent

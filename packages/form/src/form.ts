@@ -114,6 +114,10 @@ export default defineComponent({
       type: Boolean as PropType<VxeFormPropTypes.Vertical>,
       default: () => getConfig().form.vertical
     },
+    padding: {
+      type: Boolean as PropType<VxeFormPropTypes.Padding>,
+      default: () => getConfig().form.padding
+    },
     className: [String, Function] as PropType<VxeFormPropTypes.ClassName>,
     readonly: Boolean as PropType<VxeFormPropTypes.Readonly>,
     disabled: Boolean as PropType<VxeFormPropTypes.Disabled>,
@@ -322,12 +326,12 @@ export default defineComponent({
               scrollToView(el.querySelector(`.${item.id}`))
             }
             let inputElem: HTMLElement | null = null
-            const autofocus = compConf ? compConf.formItemAutoFocus : null
+            const autoFocus = itemRender.autoFocus || itemRender.autofocus || (compConf ? compConf.formItemAutoFocus : null)
             // 如果指定了聚焦 class
-            if (XEUtils.isFunction(autofocus)) {
-              inputElem = autofocus({ $form: $xeForm, $grid: $xeGrid, item, data: props.data, field })
-            } else if (autofocus) {
-              inputElem = el.querySelector(`.${item.id} ${autofocus}`) as HTMLInputElement
+            if (XEUtils.isFunction(autoFocus)) {
+              inputElem = autoFocus({ $form: $xeForm, $grid: $xeGrid, item, data: props.data, field })
+            } else if (autoFocus) {
+              inputElem = el.querySelector(`.${item.id} ${autoFocus}`) as HTMLInputElement
             }
             if (inputElem) {
               inputElem.focus()
@@ -680,6 +684,7 @@ export default defineComponent({
           [`size--${vSize}`]: vSize,
           'is--loading': loading
         }],
+        spellcheck: false,
         onSubmit: submitEvent,
         onReset: resetEvent
       }, [

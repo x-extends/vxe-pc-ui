@@ -6,7 +6,7 @@ import { VxeFormProps, VxeFormPropTypes, VxeFormDefines } from './form'
 /* eslint-disable no-use-before-define,@typescript-eslint/ban-types */
 
 export declare const VxeFormView: defineVxeComponent<VxeFormViewProps, VxeFormViewEventProps, VxeFormViewSlots>
-export type VxeFormViewComponent = DefineComponent<VxeFormViewProps, VxeFormViewEmits>
+export type VxeFormViewComponent = DefineComponent<VxeFormViewProps & VxeFormViewEventProps>
 
 export type VxeFormViewInstance = ComponentPublicInstance<VxeFormViewProps, VxeFormViewConstructor>
 
@@ -27,6 +27,8 @@ export interface VxeFormViewPrivateRef extends FormViewPrivateRef { }
 export namespace VxeFormViewPropTypes {
   export type ModelValue = VxeFormPropTypes.Data
   export type Config = null | VxeFormDesignDefines.FormDesignConfig
+  export type Readonly = boolean
+  export type Disabled = boolean
   export type ViewRender = {
     name?: string
   }
@@ -36,6 +38,8 @@ export namespace VxeFormViewPropTypes {
 export type VxeFormViewProps = {
   modelValue?: VxeFormViewPropTypes.ModelValue
   config?: VxeFormViewPropTypes.Config
+  readonly?: VxeFormViewPropTypes.Readonly
+  disabled?: VxeFormViewPropTypes.Disabled
   viewRender?: VxeFormViewPropTypes.ViewRender
   createFormConfig?: VxeFormViewPropTypes.CreateFormConfig
 }

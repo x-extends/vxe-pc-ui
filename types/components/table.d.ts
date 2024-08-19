@@ -11,7 +11,7 @@ import { VxeToolbarConstructor, VxeToolbarInstance } from './toolbar'
 /* eslint-disable no-use-before-define,@typescript-eslint/ban-types */
 
 export declare const VxeTable: defineVxeComponent<VxeTableProps, VxeTableEventProps, VxeTableSlots>
-export type VxeTableComponent = DefineComponent<VxeTableProps, VxeTableEmits>
+export type VxeTableComponent = DefineComponent<VxeTableProps & VxeTableEventProps>
 
 export type VxeTableInstance<D = any> = ComponentPublicInstance<VxeTableProps<D>, VxeTableConstructor>
 
@@ -2609,6 +2609,11 @@ export interface TableMethods<DT = any> {
    * @param field 字段名
    */
   getColumnByField(field: VxeColumnPropTypes.Field | null): VxeTableDefines.ColumnInfo<DT> | null
+  /**
+   * 根据列获取列的唯一主键
+   * @param fieldOrColumn
+   */
+  getParentColumn(fieldOrColumn: VxeColumnPropTypes.Field | VxeTableDefines.ColumnInfo<any> | null): VxeTableDefines.ColumnInfo<DT> | null
   /**
    * 获取当前表格的列
    * 收集到的全量列、全量表头列、处理条件之后的全量表头列、当前渲染中的表头列

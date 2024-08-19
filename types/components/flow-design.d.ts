@@ -4,7 +4,7 @@ import { defineVxeComponent, VxeComponentBaseOptions, VxeComponentEventParams, V
 /* eslint-disable no-use-before-define,@typescript-eslint/ban-types */
 
 export declare const VxeFlowDesign: defineVxeComponent<VxeFlowDesignProps, VxeFlowDesignEventProps, VxeFlowDesignSlots>
-export type VxeFlowDesignComponent = DefineComponent<VxeFlowDesignProps, VxeFlowDesignEmits>
+export type VxeFlowDesignComponent = DefineComponent<VxeFlowDesignProps & VxeFlowDesignEventProps>
 
 export type VxeFlowDesignInstance = ComponentPublicInstance<VxeFlowDesignProps, VxeFlowDesignConstructor>
 

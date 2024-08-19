@@ -6,7 +6,7 @@ import { VxeOptionProps, VxeOptionPropTypes } from './option'
 /* eslint-disable no-use-before-define,@typescript-eslint/ban-types */
 
 export declare const VxeSelect: defineVxeComponent<VxeSelectProps, VxeSelectEventProps, VxeSelectSlots>
-export type VxeSelectComponent = DefineComponent<VxeSelectProps, VxeSelectEmits>
+export type VxeSelectComponent = DefineComponent<VxeSelectProps & VxeSelectEventProps>
 
 export type VxeSelectInstance = ComponentPublicInstance<VxeSelectProps, VxeSelectConstructor>
 
@@ -128,7 +128,7 @@ export interface SelectReactData {
   currentValue: any
   triggerFocusPanel: boolean
   visiblePanel: boolean
-  animatVisible: boolean
+  isAniVisible: boolean
   isActivated: boolean
   searchValue: string,
   searchLoading: boolean

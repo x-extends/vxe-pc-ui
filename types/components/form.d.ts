@@ -5,7 +5,7 @@ import { VxeFormItemPropTypes, VxeFormItemProps } from './form-item'
 /* eslint-disable no-use-before-define,@typescript-eslint/ban-types */
 
 export declare const VxeForm: defineVxeComponent<VxeFormProps, VxeFormEventProps, VxeFormSlots>
-export type VxeFormComponent<D = any> = DefineComponent<VxeFormProps<D>, VxeFormEmits>
+export type VxeFormComponent<D = any> = DefineComponent<VxeFormProps<D> & VxeFormEventProps>
 
 export type VxeFormInstance<D = any> = ComponentPublicInstance<VxeFormProps<D>, VxeFormConstructor<D>>
 
@@ -40,6 +40,7 @@ export namespace VxeFormPropTypes {
   export type TitleAsterisk = boolean
   export type TitleOverflow = boolean | 'ellipsis' | 'title' | 'tooltip' | '' | null
   export type Vertical = boolean
+  export type Padding = boolean
 
   interface ClassNameParams {
     $form: VxeFormConstructor
@@ -95,6 +96,7 @@ export type VxeFormProps<D = any> = {
   titleAsterisk?: VxeFormPropTypes.TitleAsterisk
   titleOverflow?: VxeFormPropTypes.TitleOverflow
   vertical?: VxeFormPropTypes.Vertical
+  padding?: VxeFormPropTypes.Padding
   className?: VxeFormPropTypes.ClassName
   readonly?: VxeFormPropTypes.Readonly
   disabled?: VxeFormPropTypes.Disabled
@@ -219,6 +221,7 @@ export namespace VxeFormDefines {
     titleOverflow: VxeFormItemPropTypes.TitleOverflow
     showTitle: VxeFormItemPropTypes.ShowTitle
     vertical: VxeFormItemPropTypes.Vertical
+    padding: VxeFormItemPropTypes.Padding
     resetValue: VxeFormItemPropTypes.ResetValue
     visibleMethod: VxeFormItemPropTypes.VisibleMethod
     visible: VxeFormItemPropTypes.Visible

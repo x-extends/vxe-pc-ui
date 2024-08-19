@@ -1,4 +1,4 @@
-import { defineComponent, h, Teleport, ref, Ref, computed, reactive, nextTick, watch, PropType, VNode, onMounted, onUnmounted, createCommentVNode } from 'vue'
+import { defineComponent, h, Teleport, ref, Ref, computed, reactive, provide, nextTick, watch, PropType, VNode, onMounted, onUnmounted, createCommentVNode } from 'vue'
 import XEUtils from 'xe-utils'
 import { getDomNode, getEventTargetNode } from '../../ui/src/dom'
 import { getLastZIndex, nextZIndex, getFuncText, handleBooleanDefaultValue } from '../../ui/src/utils'
@@ -1227,6 +1227,8 @@ export default defineComponent({
       globalEvents.off($xeModal, 'keydown')
       removeMsgQueue()
     })
+
+    provide('$xeModal', $xeModal)
 
     return $xeModal
   },

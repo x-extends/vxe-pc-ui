@@ -4,7 +4,7 @@ import { defineVxeComponent, VxeComponentBaseOptions, VxeComponentEventParams, V
 /* eslint-disable no-use-before-define,@typescript-eslint/ban-types */
 
 export declare const VxeUpload: defineVxeComponent<VxeUploadProps, VxeUploadEventProps, VxeUploadSlots>
-export type VxeUploadComponent = DefineComponent<VxeUploadProps, VxeUploadEmits>
+export type VxeUploadComponent = DefineComponent<VxeUploadProps & VxeUploadEventProps>
 
 export type VxeUploadInstance = ComponentPublicInstance<VxeUploadProps, VxeUploadConstructor>
 

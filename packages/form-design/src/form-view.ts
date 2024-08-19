@@ -7,6 +7,7 @@ import VxeFormComponent from '../../form/src/form'
 import VxeFormGatherComponent from '../../form/src/form-gather'
 import VxeFormItemComponent from '../../form/src/form-item'
 import { configToWidget } from './widget-info'
+import { warnLog } from '../../ui/src/log'
 
 import type { VxeGlobalRendererHandles, VxeFormViewPropTypes, FormViewReactData, ValueOf, FormViewPrivateRef, FormViewMethods, FormViewPrivateMethods, VxeFormViewEmits, VxeFormViewPrivateComputed, VxeFormProps, VxeFormDesignDefines, VxeFormViewConstructor, VxeFormViewPrivateMethods, VxeFormPropTypes, VxeFormInstance, VxeFormViewDefines, VxeFormDesignLayoutStyle, VxeFormEvents } from '../../../types'
 
@@ -15,6 +16,8 @@ export default defineComponent({
   props: {
     modelValue: Object as PropType<VxeFormViewPropTypes.ModelValue>,
     config: Object as PropType<VxeFormViewPropTypes.Config>,
+    readonly: Boolean as PropType<VxeFormViewPropTypes.Readonly>,
+    disabled: Boolean as PropType<VxeFormViewPropTypes.Disabled>,
     viewRender: Object as PropType<VxeFormViewPropTypes.ViewRender>,
     createFormConfig: Function as PropType<VxeFormViewPropTypes.CreateFormConfig>
   },
@@ -237,7 +240,10 @@ export default defineComponent({
        * 已废弃
        * @deprecated
        */
-      updateItemStatus: updateWidgetStatus
+      updateItemStatus (widget, value) {
+        warnLog('vxe.error.delFunc', ['updateItemStatus', 'updateWidgetStatus'])
+        return updateWidgetStatus(widget, value)
+      }
     }
 
     const handleSubmit: VxeFormEvents.Submit = (params) => {
@@ -254,8 +260,10 @@ export default defineComponent({
     Object.assign($xeFormView, formViewMethods, formViewPrivateMethods)
 
     const renderVN = () => {
-      const { modelValue } = props
+      const { readonly, disabled, modelValue } = props
       const { formConfig, formRules, widgetObjList } = reactData
+      const topSlot = slots.top
+      const bottomSlot = slots.bottom
       const headerSlot = slots.header
       const footerSlot = slots.footer
 
@@ -263,10 +271,17 @@ export default defineComponent({
         ref: refElem,
         class: 'vxe-form-view'
       }, [
+        topSlot
+          ? h('div', {
+            class: 'vxe-form-view--top'
+          }, getSlotVNs(topSlot({ $formView: $xeFormView })))
+          : createCommentVNode(),
         h(VxeFormComponent, {
           ref: formRef,
           data: modelValue,
           customLayout: true,
+          readonly,
+          disabled,
           span: 24,
           vertical: formConfig.vertical,
           titleBold: formConfig.titleBold,
@@ -278,6 +293,7 @@ export default defineComponent({
           onReset: handleReset
         }, {
           default () {
+            const { readonly, disabled } = props
             return [
               headerSlot
                 ? h(VxeFormItemComponent, {}, {
@@ -294,7 +310,7 @@ export default defineComponent({
                 const renderWidgetDesignMobilePreview = compConf.renderFormDesignWidgetMobilePreview
                 const isEditMode = !!$xeFormDesignLayoutStyle
                 const renderOpts: VxeGlobalRendererHandles.RenderFormDesignWidgetViewOptions = widget
-                const params: VxeGlobalRendererHandles.RenderFormDesignWidgetViewParams = { widget, isEditMode, isViewMode: !isEditMode, $formDesign: null, $formView: $xeFormView }
+                const params: VxeGlobalRendererHandles.RenderFormDesignWidgetViewParams = { widget, readonly: !!readonly, disabled: !!disabled, isEditMode, isViewMode: !isEditMode, $formDesign: null, $formView: $xeFormView }
                 return h(VxeFormGatherComponent, {
                   key: widget.id
                 }, {
@@ -326,7 +342,12 @@ export default defineComponent({
                 : createCommentVNode()
             ]
           }
-        })
+        }),
+        bottomSlot
+          ? h('div', {
+            class: 'vxe-form-view--bottom'
+          }, getSlotVNs(bottomSlot({ $formView: $xeFormView })))
+          : createCommentVNode()
       ])
     }
 

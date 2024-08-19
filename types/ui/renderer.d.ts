@@ -745,16 +745,46 @@ declare module '@vxe-ui/core' {
       $formDesign: null | VxeFormDesignConstructor
     }
     export interface CreateFormDesignWidgetConfigObj<D = any> {
+      /**
+       * 自定义控件字段名
+       */
+      field?: string | ((params: {
+        name: string
+        $formDesign: null | VxeFormDesignConstructor
+      }) => string)
+      /**
+       * 控件名称
+       */
       title?: string | number | ((params: {
         name: string
         $formDesign: null | VxeFormDesignConstructor
       }) => string)
+      /**
+       * 是否唯一
+       */
+      unique?: boolean
+      /**
+       * 允许拖动的范围
+       */
+      scope?: '' | 'all' | 'subtable'
+      /**
+       * 内置分组
+       */
       group?: VxeFormDesignDefines.WidgetGroup
+      /**
+       * 自定义分组名称
+       */
       customGroup?: string | number | ((params: {
         name: string
         $formDesign: null | VxeFormDesignConstructor
       }) => string)
+      /**
+       * 控件图标
+       */
       icon?: string
+      /**
+       * 控件参数
+       */
       options?: D
       children?: VxeFormDesignDefines.WidgetObjItem[]
     }
@@ -776,6 +806,8 @@ declare module '@vxe-ui/core' {
     export interface RenderFormDesignWidgetViewParams<D = any> {
       $formView: null | VxeFormViewConstructor
       $formDesign: null | VxeFormDesignConstructor
+      readonly: boolean
+      disabled: boolean
       widget: VxeFormDesignDefines.WidgetObjItem<D>
       isEditMode: boolean
       isViewMode: boolean

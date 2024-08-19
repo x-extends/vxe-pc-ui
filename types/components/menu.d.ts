@@ -5,7 +5,7 @@ import { VxeLinkPropTypes } from './link'
 /* eslint-disable no-use-before-define,@typescript-eslint/ban-types */
 
 export declare const VxeMenu: defineVxeComponent<VxeMenuProps, VxeMenuEventProps, VxeMenuSlots>
-export type VxeMenuComponent = DefineComponent<VxeMenuProps, VxeMenuEmits>
+export type VxeMenuComponent = DefineComponent<VxeMenuProps & VxeMenuEventProps>
 
 export type VxeMenuInstance = ComponentPublicInstance<VxeMenuProps, VxeMenuConstructor>
 
@@ -25,6 +25,7 @@ export interface VxeMenuPrivateRef extends MenuPrivateRef { }
 
 export namespace VxeMenuPropTypes {
   export type ModelValue = string | number | null
+  export type Loading = boolean
 
   export interface MenuOneOption extends MenuOption {
     children?: MenuTwoOption[]
@@ -54,6 +55,7 @@ export namespace VxeMenuPropTypes {
 
 export type VxeMenuProps = {
   modelValue?: VxeMenuPropTypes.ModelValue
+  loading?: VxeMenuPropTypes.Loading
   collapsed?: VxeMenuPropTypes.Collapsed
   expandAll?: VxeMenuPropTypes.ExpandAll
   options?: VxeMenuPropTypes.Options

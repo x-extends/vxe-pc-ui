@@ -4,7 +4,7 @@ import { defineVxeComponent, VxeComponentBaseOptions, VxeComponentEventParams, V
 /* eslint-disable no-use-before-define,@typescript-eslint/ban-types */
 
 export declare const VxePrint: defineVxeComponent<VxePrintProps, VxePrintEventProps, VxePrintSlots>
-export type VxePrintComponent = DefineComponent<VxePrintProps, VxePrintEmits>
+export type VxePrintComponent = DefineComponent<VxePrintProps & VxePrintEventProps>
 
 export type VxePrintInstance = ComponentPublicInstance<VxePrintProps, VxePrintConstructor>
 

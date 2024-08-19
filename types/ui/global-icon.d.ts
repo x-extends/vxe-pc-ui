@@ -53,6 +53,10 @@ declare module '@vxe-ui/core' {
     SELECT_OPEN?: string
     SELECT_CLOSE?: string
 
+    // icon-picker
+    ICON_PICKER_OPEN?: string
+    ICON_PICKER_CLOSE?: string
+
     // pager
     PAGER_HOME?: string
     PAGER_END?: string
@@ -111,6 +115,7 @@ declare module '@vxe-ui/core' {
     // form-design
     FORM_DESIGN_STYLE_SETTING?: string
     FORM_DESIGN_PROPS_PC?: string
+    FORM_DESIGN_PROPS_EDIT?: string
     FORM_DESIGN_PROPS_MOBILE?: string
     FORM_DESIGN_PROPS_ADD?: string
     FORM_DESIGN_WIDGET_ADD?: string

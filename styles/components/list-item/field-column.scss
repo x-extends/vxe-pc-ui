@@ -7,3 +7,9 @@
   flex-grow: 1;
   @include createCheckboxIcon();
 }
+.vxe-list-design--field-option-item {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  height: 1.8em;
+}

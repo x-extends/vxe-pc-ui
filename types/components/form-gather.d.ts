@@ -5,7 +5,7 @@ import { VxeFormItemPropTypes } from './form-item'
 /* eslint-disable no-use-before-define,@typescript-eslint/ban-types */
 
 export declare const VxeFormGather: defineVxeComponent<VxeFormGatherProps, VxeFormGatherEventProps, VxeFormGatherSlots>
-export type VxeFormGatherComponent = DefineComponent<VxeFormGatherProps, VxeFormGatherEmits>
+export type VxeFormGatherComponent = DefineComponent<VxeFormGatherProps & VxeFormGatherEventProps>
 
 export interface VxeFormGatherConstructor extends VxeComponentBaseOptions, VxeFormGatherMethods {
   props: VxeFormGatherProps

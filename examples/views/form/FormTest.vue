@@ -262,7 +262,7 @@
 <script lang="ts" setup>
 import { reactive, ref } from 'vue'
 import { VxeUI } from '../../../packages'
-import { VxeFormEvents, VxeFormPropTypes, VxeFormInstance } from '../../../types'
+import { VxeFormEvents, VxeFormPropTypes, VxeFormInstance, VxeButtonEvents } from '../../../types'
 
 const demo1 = reactive({
   formData1: {
@@ -401,7 +401,7 @@ const demo4 = reactive({
       ]
     },
     { align: 'center', span: 24, itemRender: { name: '$buttons', children: [{ props: { type: 'submit', content: '配置式表单', status: 'primary' } }, { props: { type: 'reset', content: '重置' } }] } }
-  ]
+  ] as VxeFormPropTypes.Items
 })
 
 const submitEvent2: VxeFormEvents.Submit = () => {
@@ -420,7 +420,7 @@ const resetEvent: VxeFormEvents.Reset = () => {
   VxeUI.modal.message({ content: '重置事件', status: 'info' })
 }
 
-const searchEvent3: VxeFormEvents.Submit = async () => {
+const searchEvent3: VxeButtonEvents.Click = async () => {
   const $form = xForm3.value
   const errMap = await $form.validate()
   if (errMap) {
@@ -429,7 +429,7 @@ const searchEvent3: VxeFormEvents.Submit = async () => {
   VxeUI.modal.message({ content: '查询事件', status: 'info' })
 }
 
-const resetEvent3: VxeFormEvents.Reset = () => {
+const resetEvent3: VxeButtonEvents.Click = () => {
   const $form = xForm3.value
   $form.reset()
   VxeUI.modal.message({ content: '重置事件', status: 'info' })

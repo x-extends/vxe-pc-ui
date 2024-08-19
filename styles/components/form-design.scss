@@ -243,3 +243,11 @@
 .vxe-form-design--setting-form-tabs {
   height: 100%;
 }
+
+.vxe-form-design {
+  .vxe-form--item {
+    &.vxe-form-design--widget-render-form-item {
+      padding: 0;
+    }
+  }
+}

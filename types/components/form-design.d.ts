@@ -6,7 +6,7 @@ import { VxeGlobalRendererHandles } from '../ui'
 /* eslint-disable no-use-before-define,@typescript-eslint/ban-types */
 
 export declare const VxeFormDesign: defineVxeComponent<VxeFormDesignProps, VxeFormDesignEventProps, VxeFormDesignSlots>
-export type VxeFormDesignComponent = DefineComponent<VxeFormDesignProps, VxeFormDesignEmits>
+export type VxeFormDesignComponent = DefineComponent<VxeFormDesignProps & VxeFormDesignEventProps>
 
 export type VxeFormDesignInstance = ComponentPublicInstance<VxeFormDesignProps, VxeFormDesignConstructor>
 
@@ -38,6 +38,7 @@ export namespace VxeFormDesignPropTypes {
   export type Widgets = WidgetItem[]
 
   export type FormData = Record<string, any>
+  export type ShowHeader = boolean
 
   export type ShowPc = boolean
   export type ShowMobile = boolean
@@ -51,6 +52,7 @@ export type VxeFormDesignProps = {
   config?: VxeFormDesignPropTypes.Config
   height?: VxeFormDesignPropTypes.Height
   widgets?: VxeFormDesignPropTypes.Widgets
+  showHeader?: VxeFormDesignPropTypes.ShowHeader
   showPc?: VxeFormDesignPropTypes.ShowPc
   showMobile?: VxeFormDesignPropTypes.ShowMobile
   formData?: VxeFormDesignPropTypes.FormData
@@ -97,6 +99,10 @@ export interface FormDesignMethods {
    */
   loadConfig (config: Partial<VxeFormDesignDefines.FormDesignConfig>): Promise<any>
   /**
+   * 清空并重新加载配置
+   */
+  reloadConfig (config: Partial<VxeFormDesignDefines.FormDesignConfig>): Promise<any>
+  /**
    * 获取表单配置
    */
   getFormConfig(): VxeFormDesignPropTypes.FormData
@@ -128,6 +134,7 @@ export interface FormDesignMethods {
 export interface VxeFormDesignMethods extends FormDesignMethods { }
 
 export interface FormDesignPrivateMethods {
+  validWidgetUnique(widgetName: string): boolean
   handleClickWidget (evnt: KeyboardEvent, item: VxeFormDesignDefines.WidgetObjItem): void
   handleCopyWidget (evnt: KeyboardEvent, item: VxeFormDesignDefines.WidgetObjItem): void
   handleRemoveWidget (evnt: KeyboardEvent, item: VxeFormDesignDefines.WidgetObjItem): void
@@ -155,7 +162,7 @@ export namespace VxeFormDesignDefines {
     $formDesign: VxeFormDesignConstructor
   }
 
-  export type WidgetGroup = null | '' | 'base' | 'layout' | 'advanced'
+  export type WidgetGroup = null | '' | 'base' | 'layout' | 'system' | 'module' | 'chart' | 'advanced'
 
   export interface FormDesignEventParams extends FormDesignDefaultParams, VxeComponentEventParams {
   }
@@ -177,6 +184,7 @@ export namespace VxeFormDesignDefines {
     title: string
     name: string
     required: boolean
+    hidden: boolean
     options: D
     model: {
       update: boolean
@@ -284,6 +292,8 @@ export interface FormDesignExport {
     currWidget: ComputedRef<VxeFormDesignDefines.WidgetObjItem<T>>
     widgetOptions: ComputedRef<T>
     widgetModel: WritableComputedRef<any>
+    isEditMode: ComputedRef<boolean>
+    isViewMode: ComputedRef<boolean>
   }
   useWidgetName(props: {
     renderOpts: any

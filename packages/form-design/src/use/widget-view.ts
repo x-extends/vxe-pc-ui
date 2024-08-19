@@ -11,6 +11,16 @@ export function useWidgetView <T = any> (props: {
     return renderParams.widget
   })
 
+  const isEditMode = computed(() => {
+    const { renderParams } = props
+    return renderParams.isEditMode || false
+  })
+
+  const isViewMode = computed(() => {
+    const { renderParams } = props
+    return renderParams.isViewMode || false
+  })
+
   const widgetOptions = computed<T>(() => {
     const { renderParams } = props
     const { widget } = renderParams
@@ -35,6 +45,8 @@ export function useWidgetView <T = any> (props: {
   return {
     currWidget,
     widgetOptions,
-    widgetModel
+    widgetModel,
+    isEditMode,
+    isViewMode
   }
 }

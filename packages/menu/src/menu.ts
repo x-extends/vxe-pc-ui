@@ -1,6 +1,7 @@
 import { defineComponent, ref, h, reactive, PropType, inject, resolveComponent, createCommentVNode, nextTick, watch, VNode, onMounted, computed } from 'vue'
 import XEUtils from 'xe-utils'
 import { getIcon, createEvent, permission } from '../../ui'
+import VxeLoadingComponent from '../../loading/index'
 
 import type { VxeMenuDefines, VxeMenuPropTypes, MenuReactData, VxeMenuEmits, MenuPrivateRef, VxeMenuPrivateComputed, VxeMenuConstructor, VxeMenuPrivateMethods, VxeLayoutAsideConstructor, VxeLayoutAsidePrivateMethods } from '../../../types'
 
@@ -13,6 +14,7 @@ export default defineComponent({
       type: Boolean as PropType<VxeMenuPropTypes.Collapsed>,
       default: null
     },
+    loading: Boolean as PropType<VxeMenuPropTypes.Loading>,
     options: {
       type: Array as PropType<VxeMenuPropTypes.Options>,
       default: () => []
@@ -149,7 +151,6 @@ export default defineComponent({
       const { routerLink, hasChild } = item
       if (routerLink) {
         reactData.activeName = item.itemKey
-        updateActiveMenu()
         emit('update:modelValue', item.itemKey)
       } else {
         if (hasChild) {
@@ -235,18 +236,27 @@ export default defineComponent({
     }
 
     const renderVN = () => {
+      const { loading } = props
       const { menuList } = reactData
       const isCollapsed = computeIsCollapsed.value
       return h('div', {
         ref: refElem,
         class: ['vxe-menu', {
-          'is--collapsed': isCollapsed
+          'is--collapsed': isCollapsed,
+          'is--loading': loading
         }]
       }, [
         h('div', {
           ref: refWrapperElem,
           class: 'vxe-menu--item-list'
-        }, menuList.map(child => renderChildren(child)))
+        }, menuList.map(child => renderChildren(child))),
+        /**
+         * 加载中
+         */
+        h(VxeLoadingComponent, {
+          class: 'vxe-list-view--loading',
+          modelValue: loading
+        })
       ])
     }
 
@@ -266,6 +276,9 @@ export default defineComponent({
 
     watch(() => props.modelValue, (val) => {
       reactData.activeName = val
+    })
+
+    watch(() => reactData.activeName, () => {
       updateActiveMenu(true)
     })
 

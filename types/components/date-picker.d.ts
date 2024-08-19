@@ -4,7 +4,7 @@ import { defineVxeComponent, VxeComponentBaseOptions, VxeComponentEventParams, V
 /* eslint-disable no-use-before-define,@typescript-eslint/ban-types */
 
 export declare const VxeDatePicker: defineVxeComponent<VxeDatePickerProps, VxeDatePickerEventProps, VxeDatePickerSlots>
-export type VxeDatePickerComponent = DefineComponent<VxeDatePickerProps, VxeDatePickerEmits>
+export type VxeDatePickerComponent = DefineComponent<VxeDatePickerProps & VxeDatePickerEventProps>
 
 export type VxeDatePickerInstance = ComponentPublicInstance<VxeDatePickerProps, VxeDatePickerConstructor>
 
@@ -131,7 +131,7 @@ export interface DatePickerReactData {
   panelIndex: number
   showPwd: boolean
   visiblePanel: boolean
-  animatVisible: boolean
+  isAniVisible: boolean
   panelStyle: VxeComponentStyleType | null
   panelPlacement: VxeDatePickerPropTypes.Placement
   isActivated: boolean

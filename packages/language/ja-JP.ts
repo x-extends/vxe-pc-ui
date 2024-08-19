@@ -35,6 +35,7 @@ export default {
       notProp: 'サポートされていないパラメータ "{0}"',
       checkProp: 'パフマンス低下になる可能性があります。パラメータ "{0}" の値を指定してください',
       coverProp: 'The parameter "{1}" to "{0}" is repeatedly defined. This may cause an error',
+      uniField: '字段名 "{0}" 重复定义，这可能会出现错误',
       delFunc: '"{0}" functionが非推奨です。"{1}"を使用してください',
       delProp: '"{0}" propertyが非推奨です。"{1}"を使用してください',
       delEvent: 'イベント "{0}" が廃止されました。 "{1}" を使用してください',
@@ -307,7 +308,7 @@ export default {
       uploadProgress: 'Uploading {0}%',
       uploadErr: 'Fail to upload',
       uploadSuccess: 'Successfully upload',
-      moreBtnText: 'All ({0})',
+      moreBtnText: 'More ({0})',
       viewItemTitle: 'click to view'
     },
     formDesign: {
@@ -315,6 +316,10 @@ export default {
       defFormTitle: 'Unnamed form',
       widgetPropTab: 'Field property',
       widgetFormTab: 'Form property',
+      error: {
+        wdFormUni: '该类型的控件在表单中只允许添加一个',
+        wdSubUni: '该类型的控件在子表中只允许添加一个'
+      },
       styleSetting: {
         btn: 'Style setting',
         title: 'Form style setting',
@@ -339,6 +344,9 @@ export default {
         group: {
           base: 'Base control',
           layout: 'Layout control',
+          system: 'System control',
+          module: 'Module control',
+          chart: 'Chart control',
           advanced: 'Advanced control'
         },
         copyTitle: 'Copy_{0}',

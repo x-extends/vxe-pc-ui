@@ -4,7 +4,7 @@ import { defineVxeComponent, VxeComponentBaseOptions, ValueOf, VxeComponentStyle
 /* eslint-disable no-use-before-define,@typescript-eslint/ban-types */
 
 export declare const VxeInput: defineVxeComponent<VxeInputProps, VxeInputEventProps, VxeInputSlots>
-export type VxeInputComponent = DefineComponent<VxeInputProps, VxeInputEmits>
+export type VxeInputComponent = DefineComponent<VxeInputProps & VxeInputEventProps>
 
 export type VxeInputInstance = ComponentPublicInstance<VxeInputProps, VxeInputConstructor>
 
@@ -161,7 +161,7 @@ export interface InputReactData {
   panelIndex: number
   showPwd: boolean
   visiblePanel: boolean
-  animatVisible: boolean
+  isAniVisible: boolean
   panelStyle: VxeComponentStyleType | null
   panelPlacement: VxeInputPropTypes.Placement
   isActivated: boolean

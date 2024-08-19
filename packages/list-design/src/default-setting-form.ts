@@ -10,7 +10,7 @@ import VxeRadioGroupComponent from '../../radio/src/group'
 import VxeButtonComponent from '../../button/src/button'
 import XEUtils from 'xe-utils'
 
-import type { VxeListDesignConstructor, VxeListDesignPrivateMethods, VxeTableDefines, VxeSelectPropTypes, VxeListDesignDefines, VxeGlobalRendererHandles } from '../../../types'
+import type { VxeListDesignConstructor, VxeListDesignPrivateMethods, VxeTableDefines, VxeSelectPropTypes, VxeListDesignDefines, VxeFormItemPropTypes, VxeGlobalRendererHandles } from '../../../types'
 
 export const DefaultFieldSettingFormComponent = defineComponent({
   name: 'DefaultFieldSettingForm',
@@ -30,32 +30,134 @@ export const DefaultFieldSettingFormComponent = defineComponent({
       listDesignReactData.listTableColumns = listDesignReactData.listTableColumns.slice(0)
     }
 
+    const addSearchEvent = () => {
+      const { listTableColumns, searchFormItems } = listDesignReactData
+      const refAllFormItemList = ref(listTableColumns.map(item => {
+        const conf = searchFormItems.find(conf => conf.field === item.field)
+        return {
+          ...item,
+          checked: !!conf,
+          folding: conf ? conf.folding : false
+        }
+      }))
+      // const foldOptions = ref([
+      //   { label: '展开', value: false },
+      //   { label: '折叠', value: true }
+      // ])
+
+      VxeUI.modal.open({
+        title: '编辑查询字段',
+        width: 680,
+        height: 500,
+        showFooter: true,
+        escClosable: true,
+        showCancelButton: true,
+        showConfirmButton: true,
+        confirmButtonText: '保存',
+        showZoom: true,
+        resize: true,
+        onConfirm () {
+          const allFormItemList = refAllFormItemList.value
+          const searchItems: VxeListDesignDefines.SearchItemObjItem[] = []
+          allFormItemList.forEach(item => {
+            if (item.checked) {
+              searchItems.push({
+                field: item.field,
+                title: item.title,
+                folding: item.folding,
+                itemRender: { ...item.cellRender } as VxeFormItemPropTypes.ItemRender
+              })
+            }
+          })
+          $xeListDesign.setSearchItems(searchItems)
+        },
+        slots: {
+          default () {
+            const allFormItemList = refAllFormItemList.value
+
+            return h('div', {
+              class: 'vxe-list-design--field-search-popup'
+            }, [
+              h('table', {}, [
+                h('colgroup', {}, [
+                  h('col', {
+                    style: {
+                      width: '80px'
+                    }
+                  }),
+                  h('col')
+                  // h('col', {
+                  //   style: {
+                  //     width: '140px'
+                  //   }
+                  // })
+                ]),
+                h('thead', {}, [
+                  h('th', {}, '启用'),
+                  h('th', {}, '标题')
+                  // h('th', {}, '展开/折叠')
+                ]),
+                h('tbody', {}, allFormItemList.map(item => {
+                  return h('tr', {}, [
+                    h('td', {}, [
+                      h(VxeSwitchComponent, {
+                        modelValue: item.checked,
+                        'onUpdate:modelValue' (val) {
+                          item.checked = val
+                        }
+                      })
+                    ]),
+                    h('td', {}, `${item.title || ''}`)
+                    // h('td', {}, [
+                    //   h(VxeRadioGroupComponent, {
+                    //     modelValue: item.folding,
+                    //     type: 'button',
+                    //     options: foldOptions.value,
+                    //     size: 'mini',
+                    //     'onUpdate:modelValue' (val) {
+                    //       item.folding = val
+                    //     }
+                    //   })
+                    // ])
+                  ])
+                }))
+              ])
+            ])
+          }
+        }
+      })
+    }
+
     const renderChildOptions = (item: VxeTableDefines.ColumnOptions) => {
       const { children } = item
       if (children && children.length) {
         return h('div', {
-          class: 'vxe-list-design--field-sub-option',
-          onClick () {
-            changeVisible(item)
-          }
-        }, children.map(child => {
-          const { title, visible: isChecked } = child
-          return h('div', {
-            class: ['vxe-list-design--field-checkbox-option', {
-              'is--checked': isChecked
-            }],
+          class: 'vxe-list-design--field-option-item'
+        }, [
+          h('div', {
+            class: 'vxe-list-design--field-sub-option',
             onClick () {
-              changeVisible(child)
+              changeVisible(item)
             }
-          }, [
-            h('span', {
-              class: ['vxe-checkbox--icon', isChecked ? getIcon().CHECKBOX_CHECKED : getIcon().CHECKBOX_UNCHECKED]
-            }),
-            h('span', {
-              class: 'vxe-checkbox--label'
-            }, `${title}`)
-          ])
-        }))
+          }, children.map(child => {
+            const { title, visible: isChecked } = child
+            return h('div', {
+              class: ['vxe-list-design--field-checkbox-option', {
+                'is--checked': isChecked
+              }],
+              onClick () {
+                changeVisible(child)
+              }
+            }, [
+              h('span', {
+                class: ['vxe-checkbox--icon', isChecked ? getIcon().CHECKBOX_CHECKED : getIcon().CHECKBOX_UNCHECKED]
+              }),
+              h('span', {
+                class: 'vxe-checkbox--label'
+              }, `${title}`)
+            ])
+          }))
+        ])
       }
       return createCommentVNode()
     }
@@ -68,19 +170,23 @@ export const DefaultFieldSettingFormComponent = defineComponent({
           class: 'vxe-list-design--field-options'
         }, [
           h('div', {
-            class: ['vxe-list-design--field-checkbox-option', {
-              'is--checked': isChecked
-            }],
-            onClick () {
-              changeVisible(item)
-            }
+            class: 'vxe-list-design--field-option-item'
           }, [
-            h('span', {
-              class: ['vxe-checkbox--icon', isChecked ? getIcon().CHECKBOX_CHECKED : getIcon().CHECKBOX_UNCHECKED]
-            }),
-            h('span', {
-              class: 'vxe-checkbox--label'
-            }, `${title}`)
+            h('div', {
+              class: ['vxe-list-design--field-checkbox-option', {
+                'is--checked': isChecked
+              }],
+              onClick () {
+                changeVisible(item)
+              }
+            }, [
+              h('span', {
+                class: ['vxe-checkbox--icon', isChecked ? getIcon().CHECKBOX_CHECKED : getIcon().CHECKBOX_UNCHECKED]
+              }),
+              h('span', {
+                class: 'vxe-checkbox--label'
+              }, `${title}`)
+            ])
           ]),
           renderChildOptions(item)
         ])
@@ -96,24 +202,35 @@ export const DefaultFieldSettingFormComponent = defineComponent({
         default () {
           return [
             h(VxeFormItemComponent, {
-              title: '查询条件'
+              title: '查询字段'
             }, {
               extra () {
                 return h(VxeButtonComponent, {
                   mode: 'text',
                   status: 'primary',
-                  icon: getIcon().FORM_DESIGN_PROPS_ADD,
-                  disabled: true,
-                  content: '新增'
+                  icon: getIcon().FORM_DESIGN_PROPS_EDIT,
+                  content: '编辑',
+                  onClick: addSearchEvent
                 })
               },
               default () {
+                const { searchFormItems } = listDesignReactData
                 return [
-                  h('div', {
-                    class: 'vxe-list-design--field-configs-empty-data'
-                  }, [
-                    h('span', {}, '暂无查询条件')
-                  ])
+                  searchFormItems.length
+                    ? h('div', {
+                      class: ''
+                    }, [
+                      h('div', {}, searchFormItems.map(item => {
+                        return h('div', {
+                          class: ''
+                        }, `${item.title || ''}`)
+                      }))
+                    ])
+                    : h('div', {
+                      class: 'vxe-list-design--field-configs-empty-data'
+                    }, [
+                      h('span', {}, '暂无查询条件')
+                    ])
                 ]
               }
             }),

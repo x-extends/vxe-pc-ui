@@ -8,7 +8,7 @@ import { VxeButtonProps } from './button'
 /* eslint-disable no-use-before-define,@typescript-eslint/ban-types */
 
 export declare const VxeListView: defineVxeComponent<VxeListViewProps, VxeListViewEventProps, VxeListViewSlots>
-export type VxeListViewComponent = DefineComponent<VxeListViewProps, VxeListViewEmits>
+export type VxeListViewComponent = DefineComponent<VxeListViewProps & VxeListViewEventProps>
 
 export type VxeListViewInstance = ComponentPublicInstance<VxeListViewProps, VxeListViewConstructor>
 
@@ -31,6 +31,7 @@ export namespace VxeListViewPropTypes {
   export type Config = null | VxeListDesignDefines.ListDesignConfig
   export type Loading = boolean
   export type Height = string | number
+  export type SearchData = Record<string, any>
   export type ActionButtons = VxeListDesignDefines.DefaultSettingFormActionButton[]
   export type GridOptions<D = any> = Omit<VxeGridProps<D>, 'columns'>
   export type GridEvents<D = any> = VxeGridListeners<D>
@@ -43,6 +44,7 @@ export type VxeListViewProps<D = any> = {
   config?: VxeListViewPropTypes.Config
   loading?: VxeListViewPropTypes.Loading
   height?: VxeListViewPropTypes.Height
+  searchData?: VxeListViewPropTypes.SearchData
   gridOptions?: VxeListViewPropTypes.GridOptions<D>
   gridEvents?: VxeListViewPropTypes.GridEvents<D>
   viewRender?: VxeListViewPropTypes.ViewRender
@@ -53,6 +55,7 @@ export interface ListViewPrivateComputed {
 export interface VxeListViewPrivateComputed extends ListViewPrivateComputed { }
 
 export interface ListViewReactData {
+  searchFormData: any
   searchFormItems: VxeListDesignDefines.SearchItemObjItem[]
   listTableColumns: VxeListDesignDefines.ListColumnObjItem[]
   tableColumns: VxeGridPropTypes.Columns
@@ -72,6 +75,7 @@ export interface ListViewMethods<D = any> {
    * 解析配置
    */
   parseConfig(config: VxeListDesignDefines.ListDesignConfig): {
+    formData: Record<string, any>
     formItems: VxeListDesignDefines.SearchItemObjItem[]
     tableColumns: VxeGridPropTypes.Columns
     actionButtons: VxeListViewPropTypes.ActionButtons
@@ -89,6 +93,7 @@ export interface VxeListViewPrivateMethods extends ListViewPrivateMethods { }
 
 export type VxeListViewEmits = [
   'cell-action',
+  'update:searchData',
   'update:actionButtons'
 ]
 
