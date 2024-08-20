@@ -315,14 +315,14 @@ export const DefaultFieldSettingFormComponent = defineComponent({
         default () {
           return [
             h(VxeFormItemComponent, {
-              title: '查询字段'
+              title: getI18n('vxe.listDesign.searchField')
             }, {
               extra () {
                 return h(VxeButtonComponent, {
                   mode: 'text',
                   status: 'primary',
                   icon: getIcon().FORM_DESIGN_PROPS_EDIT,
-                  content: '编辑',
+                  content: getI18n('vxe.listDesign.search.addBtn'),
                   onClick: addSearchEvent
                 })
               },
@@ -342,13 +342,13 @@ export const DefaultFieldSettingFormComponent = defineComponent({
                     : h('div', {
                       class: 'vxe-list-design--field-configs-empty-data'
                     }, [
-                      h('span', {}, '暂无查询条件')
+                      h('span', {}, getI18n('vxe.listDesign.search.emptyText'))
                     ])
                 ]
               }
             }),
             h(VxeFormItemComponent, {
-              title: '列表字段'
+              title: getI18n('vxe.listDesign.listField')
             }, {
               default () {
                 return renderFieldOptions()
@@ -393,10 +393,10 @@ export const DefaultParameterSettingFormComponent = defineComponent({
       { label: '列表视图', value: 'list', isExpand: false }
     ])
 
-    const refFoldOpts = ref([
-      { label: '显示', value: true },
-      { label: '隐藏', value: false }
-    ])
+    // const refFoldOpts = ref([
+    //   { label: '显示', value: true },
+    //   { label: '隐藏', value: false }
+    // ])
 
     const refSeqOpts = ref([
       { label: '显示', value: true },
@@ -705,27 +705,27 @@ export const DefaultParameterSettingFormComponent = defineComponent({
                 ]
               }
             }),
-            h(VxeFormItemComponent, {
-              title: '查询配置'
-            }, {
-              default () {
-                const { formData } = listDesignReactData
-                return [
-                  h('div', {
-                    class: 'vxe-list-design--widget-form-item-prop-list'
-                  }, [
-                    h('span', {}, '折叠字段'),
-                    h(VxeRadioGroupComponent, {
-                      modelValue: formData.autoFoldFilter,
-                      options: refFoldOpts.value,
-                      'onUpdate:modelValue' (val) {
-                        formData.autoFoldFilter = val
-                      }
-                    })
-                  ])
-                ]
-              }
-            }),
+            // h(VxeFormItemComponent, {
+            //   title: '查询配置'
+            // }, {
+            //   default () {
+            //     const { formData } = listDesignReactData
+            //     return [
+            //       h('div', {
+            //         class: 'vxe-list-design--widget-form-item-prop-list'
+            //       }, [
+            //         h('span', {}, '折叠字段'),
+            //         h(VxeRadioGroupComponent, {
+            //           modelValue: formData.autoFoldFilter,
+            //           options: refFoldOpts.value,
+            //           'onUpdate:modelValue' (val) {
+            //             formData.autoFoldFilter = val
+            //           }
+            //         })
+            //       ])
+            //     ]
+            //   }
+            // }),
             h(VxeFormItemComponent, {
               title: '列配置'
             }, {

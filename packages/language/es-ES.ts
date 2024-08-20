@@ -429,11 +429,19 @@ export default {
       }
     },
     listDesign: {
-      fieldSettingTab: 'Field setting',
-      listSettingTab: 'Parameter setting',
+      fieldSettingTab: 'Field',
+      listSettingTab: 'Parameter',
+      searchTitle: 'Search',
+      listTitle: 'List',
+      searchField: 'Search field',
+      listField: 'List field',
       activeBtn: {
         ActionButtonUpdate: 'Edit',
         ActionButtonDelete: 'Delete'
+      },
+      search: {
+        addBtn: 'Edit',
+        emptyText: 'No filter condition is configured.'
       }
     },
     text: {

@@ -140,7 +140,7 @@ export default defineComponent({
           }, [
             h('div', {
               class: 'vxe-list-design--preview-title'
-            }, '查询条件'),
+            }, getI18n('vxe.listDesign.searchTitle')),
             searchFormItems.length
               ? h(VxeFormComponent, {
                 data: searchFormData,
@@ -149,7 +149,7 @@ export default defineComponent({
               : h('div', {
                 class: 'vxe-list-design--field-configs-empty-data'
               }, [
-                h('span', {}, '暂无查询条件')
+                h('span', {}, getI18n('vxe.listDesign.search.emptyText'))
               ])
           ]),
           h('div', {
@@ -157,7 +157,7 @@ export default defineComponent({
           }, [
             h('div', {
               class: 'vxe-list-design--preview-title'
-            }, '列表字段'),
+            }, getI18n('vxe.listDesign.listTitle')),
             VxeTableGridComponent
               ? h(VxeTableGridComponent, {
                 ref: refGrid,

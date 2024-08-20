@@ -428,7 +428,19 @@ export default {
     },
     listDesign: {
       fieldSettingTab: '字段设置',
-      listSettingTab: '参数设置'
+      listSettingTab: '参数设置',
+      searchTitle: '查询条件',
+      listTitle: '列表字段',
+      searchField: '查询字段',
+      listField: '列表字段',
+      activeBtn: {
+        ActionButtonUpdate: '编辑',
+        ActionButtonDelete: '删除'
+      },
+      search: {
+        addBtn: '编辑',
+        emptyText: '未配置查询条件'
+      }
     },
 
     /**
