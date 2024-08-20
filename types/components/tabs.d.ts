@@ -74,6 +74,7 @@ export interface TabsReactData {
   lintLeft: number
   lintWidth: number
   isTabOver: boolean
+  resizeFlag: number
 }
 
 export interface TabsMethods {

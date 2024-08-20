@@ -11,6 +11,7 @@ export const getDefaultSettingFormData = (): VxeListDesignDefines.DefaultSetting
     chartView: {
       enabled: false
     },
+    autoFoldFilter: true,
     showCheckbox: 'auto',
     showSeq: true,
     showSummary: true,

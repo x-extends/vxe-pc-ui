@@ -9,6 +9,7 @@ export const getWidgetTextareaConfig = (): VxeGlobalRendererHandles.CreateFormDe
   return {
     title: handleGetFormDesignWidgetName,
     icon: 'vxe-icon-textarea',
+    query: true,
     options: {
       placeholder: ''
     }

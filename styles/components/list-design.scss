@@ -46,7 +46,6 @@
   flex-grow: 1;
   overflow: auto;
   padding: var(--vxe-ui-layout-padding-default) var(--vxe-ui-layout-padding-half);
-  user-select: none;
 }
 .vxe-list-design--preview-wrapper {
   width: 100%;
@@ -99,4 +98,18 @@
   padding: 0 var(--vxe-ui-layout-padding-default);
   border: 1px solid var(--vxe-ui-input-border-color);
   border-radius: var(--vxe-ui-base-border-radius);
+}
+
+.vxe-list-design--preview-search {
+  .vxe-form--item-content {
+    &::after {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 1;
+    }
+  }
 }

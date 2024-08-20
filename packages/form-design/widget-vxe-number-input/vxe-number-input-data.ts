@@ -9,6 +9,7 @@ export const getWidgetVxeNumberInputConfig = (): VxeGlobalRendererHandles.Create
   return {
     title: handleGetFormDesignWidgetName,
     icon: 'vxe-icon-number',
+    query: true,
     options: {
       placeholder: ''
     }

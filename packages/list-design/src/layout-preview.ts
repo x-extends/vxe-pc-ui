@@ -25,7 +25,29 @@ export default defineComponent({
 
     const tableData = ref<VxeTablePropTypes.Data>([])
 
-    const tableColumn = computed(() => {
+    const computeFormItems = computed(() => {
+      const { searchFormItems } = listDesignReactData
+      if (searchFormItems.length) {
+        return searchFormItems.concat([
+          {
+            field: 'active',
+            title: '',
+            folding: false,
+            collapseNode: searchFormItems.some(item => item.folding),
+            itemRender: {
+              name: 'VxeButtonGroup',
+              options: [
+                { content: '查询', icon: 'vxe-icon-search', status: 'primary', type: 'submit' },
+                { content: '重置', icon: 'vxe-icon-repeat', type: 'reset' }
+              ]
+            }
+          }
+        ])
+      }
+      return searchFormItems
+    })
+
+    const computeTableColumn = computed(() => {
       const { formData, listTableColumns } = listDesignReactData
       const { showSeq, actionButtonList } = formData
       const columns: VxeGridPropTypes.Columns = []
@@ -104,6 +126,8 @@ export default defineComponent({
 
     return () => {
       const { searchFormData, searchFormItems } = listDesignReactData
+      const formItems = computeFormItems.value
+      const tableColumn = computeTableColumn.value
 
       return h('div', {
         class: 'vxe-list-design--preview'
@@ -120,7 +144,7 @@ export default defineComponent({
             searchFormItems.length
               ? h(VxeFormComponent, {
                 data: searchFormData,
-                items: searchFormItems
+                items: formItems
               })
               : h('div', {
                 class: 'vxe-list-design--field-configs-empty-data'
@@ -137,7 +161,7 @@ export default defineComponent({
             VxeTableGridComponent
               ? h(VxeTableGridComponent, {
                 ref: refGrid,
-                columns: tableColumn.value,
+                columns: tableColumn,
                 data: tableData.value,
                 showOverflow: true,
                 border: true,

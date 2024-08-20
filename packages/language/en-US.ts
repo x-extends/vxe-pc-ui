@@ -430,7 +430,7 @@ export default {
     },
     listDesign: {
       fieldSettingTab: 'Field setting',
-      listSettingTab: 'List setting',
+      listSettingTab: 'Parameter setting',
       activeBtn: {
         ActionButtonUpdate: 'Edit',
         ActionButtonDelete: 'Delete'

@@ -7,7 +7,7 @@ import { createListDesignActionButton } from '../render/util'
 import VxeLoadingComponent from '../../loading/src/loading'
 import XEUtils from 'xe-utils'
 
-import type { ListViewReactData, ListViewPrivateRef, VxeListViewPropTypes, VxeGridComponent, VxeGridInstance, VxeGridPropTypes, VxeGridProps, VxeListViewEmits, VxeListViewPrivateComputed, VxeListViewConstructor, VxeListDesignDefines, ListViewMethods, ListViewPrivateMethods, VxeGlobalRendererHandles, VxeTableDefines, VxeListViewPrivateMethods, VxeButtonGroupDefines, VxeButtonGroupPropTypes, ValueOf } from '../../../types'
+import type { ListViewReactData, ListViewPrivateRef, VxeListViewPropTypes, VxeListViewDefines, VxeGridComponent, VxeGridInstance, VxeGridPropTypes, VxeGridProps, VxeListViewEmits, VxeListViewPrivateComputed, VxeListViewConstructor, VxeListDesignDefines, ListViewMethods, ListViewPrivateMethods, VxeGlobalRendererHandles, VxeTableDefines, VxeListViewPrivateMethods, VxeButtonGroupDefines, VxeButtonGroupPropTypes, ValueOf } from '../../../types'
 
 export default defineComponent({
   name: 'VxeListView',
@@ -18,7 +18,7 @@ export default defineComponent({
       default: () => getConfig().listView.height
     },
     loading: Boolean as PropType<VxeListViewPropTypes.Loading>,
-    searchData: Object as PropType<VxeListViewPropTypes.SearchData>,
+    formData: Object as PropType<VxeListViewPropTypes.FormData>,
     actionButtons: Array as PropType<VxeListViewPropTypes.ActionButtons>,
     gridOptions: Object as PropType<VxeListViewPropTypes.GridOptions>,
     gridEvents: Object as PropType<VxeListViewPropTypes.GridEvents>,
@@ -26,7 +26,7 @@ export default defineComponent({
   },
   emits: [
     'cell-action',
-    'update:searchData',
+    'update:formData',
     'update:actionButtons'
   ] as VxeListViewEmits,
   setup (props, context) {
@@ -48,7 +48,7 @@ export default defineComponent({
 
     const computeGridOptions = computed<VxeGridProps>(() => {
       const { gridOptions } = props
-      const { tableColumns } = reactData
+      const { tableColumns, searchFormData, searchFormItems } = reactData
       const gridOpts = gridOptions || {}
       const columnOpts = Object.assign({
         minWidth: 120
@@ -60,6 +60,10 @@ export default defineComponent({
       return Object.assign({}, gridOpts, {
         columns: tableColumns,
         columnConfig: columnOpts,
+        formConfig: {
+          data: searchFormData,
+          items: searchFormItems
+        },
         proxyConfig: proxyOpts
       })
     })
@@ -110,15 +114,28 @@ export default defineComponent({
       data: Record<string, any>
       items: VxeListDesignDefines.SearchItemObjItem[]
     } => {
-      if (searchItems) {
+      if (searchItems && searchItems.length) {
         const data: Record<string, any> = {}
-        const items = searchItems.map(item => {
+        const items: VxeListDesignDefines.SearchItemObjItem[] = searchItems.map(item => {
           data[item.field] = null
           return {
             field: item.field,
             title: item.title,
             folding: item.folding,
             itemRender: item.itemRender
+          }
+        })
+        items.push({
+          field: 'active',
+          title: '',
+          folding: false,
+          collapseNode: searchItems.some(item => item.folding),
+          itemRender: {
+            name: 'VxeButtonGroup',
+            options: [
+              { content: '查询', icon: 'vxe-icon-search', status: 'primary', type: 'submit' },
+              { content: '重置', icon: 'vxe-icon-repeat', type: 'reset' }
+            ]
           }
         })
         return {
@@ -145,7 +162,7 @@ export default defineComponent({
     }
 
     const clearConfig = () => {
-      emit('update:searchData', {})
+      emit('update:formData', {})
       reactData.searchFormData = {}
       reactData.searchFormItems = []
       reactData.listTableColumns = []
@@ -264,6 +281,37 @@ export default defineComponent({
       }
     }
 
+    const getQueryFilter = () => {
+      const { searchFormData, searchFormItems } = reactData
+      const items: VxeListViewDefines.QueryFilterItem[] = []
+      const rest: VxeListViewDefines.QueryFilterResult = {
+        items,
+        type: 'and'
+      }
+      const $grid = refGrid.value
+      if (!$grid) {
+        return rest
+      }
+      searchFormItems.forEach(item => {
+        const { field } = item
+        const itemValue = searchFormData[field]
+        if (itemValue) {
+          const condition: VxeListViewDefines.QueryFilterCondition[] = []
+          condition.push({
+            field,
+            value: itemValue,
+            match: '',
+            type: XEUtils.isArray(itemValue) ? 'array' : ''
+          })
+          items.push({
+            condition,
+            type: 'and'
+          })
+        }
+      })
+      return rest
+    }
+
     const commitProxy = (code: string, ...args: any[]) => {
       const $grid = refGrid.value
       if ($grid) {
@@ -290,7 +338,7 @@ export default defineComponent({
       const { data, items } = configToSearchItems(searchItems)
       reactData.searchFormData = data
       reactData.searchFormItems = items
-      emit('update:searchData', data)
+      emit('update:formData', data)
       return nextTick()
     }
 
@@ -303,6 +351,7 @@ export default defineComponent({
       clearConfig,
       loadConfig,
       parseConfig,
+      getQueryFilter,
       commitProxy
     }
 

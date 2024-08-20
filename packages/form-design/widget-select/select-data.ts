@@ -11,6 +11,7 @@ export const getWidgetSelectConfig = () => {
   return {
     title: handleGetFormDesignWidgetName,
     icon: 'vxe-icon-select',
+    query: true,
     options: {
       options: XEUtils.range(0, 3).map((v, i) => {
         return {

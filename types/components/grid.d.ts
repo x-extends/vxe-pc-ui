@@ -250,6 +250,10 @@ export interface GridMethods<D = any> {
    */
   commitProxy(code: string | VxeToolbarPropTypes.ButtonConfig, ...args: any[]): Promise<any>
   /**
+   * 获取表单数据
+   */
+  getFormData(): any
+  /**
    * 获取表单项列表
    */
   getFormItems(): VxeFormItemProps[]

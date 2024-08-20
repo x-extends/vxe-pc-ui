@@ -10,6 +10,7 @@ export const getWidgetInputConfig = (): VxeGlobalRendererHandles.CreateFormDesig
   return {
     title: handleGetFormDesignWidgetName,
     icon: 'vxe-icon-input',
+    query: true,
     options: {
       placeholder: ''
     }

@@ -15,6 +15,7 @@ export const getWidgetVxeSelectConfig = (): VxeGlobalRendererHandles.CreateFormD
   return {
     title: handleGetFormDesignWidgetName,
     icon: 'vxe-icon-select',
+    query: true,
     options: {
       placeholder: '',
       options: XEUtils.range(0, 3).map((v, i) => {

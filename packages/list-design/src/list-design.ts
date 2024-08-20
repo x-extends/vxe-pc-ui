@@ -101,15 +101,20 @@ export default defineComponent({
         const { widgetData } = config
         if (widgetData) {
           widgetData.forEach(item => {
-            // 如果是行列
-            if (item.name === 'row') {
-              item.children.forEach(childItem => {
-                tableColumns.push(parseWidgetColumn(childItem))
-              })
-            } else if (item.name === 'subTable') {
+            const { name } = item
+            if (name) {
+              // 如果是行列
+              if (name === 'row') {
+                item.children.forEach(childItem => {
+                  if (childItem.name) {
+                    tableColumns.push(parseWidgetColumn(childItem))
+                  }
+                })
+              } else if (name === 'subTable') {
               // 如果是子表
-            } else {
-              tableColumns.push(parseWidgetColumn(item))
+              } else {
+                tableColumns.push(parseWidgetColumn(item))
+              }
             }
           })
         }

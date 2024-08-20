@@ -2,7 +2,7 @@ import { defineComponent, h, ref } from 'vue'
 import { getI18n, getIcon } from '@vxe-ui/core'
 import VxeTabsComponent from '../../tabs/src/tabs'
 import VxeTabPaneComponent from '../../tabs/src/tab-pane'
-import { DefaultFieldSettingFormComponent, DefaultListSettingFormComponent } from './default-setting-form'
+import { DefaultFieldSettingFormComponent, DefaultParameterSettingFormComponent } from './default-setting-form'
 
 export default defineComponent({
   name: 'ListDesignLayoutSetting',
@@ -45,7 +45,7 @@ export default defineComponent({
                   name: 2
                 }, {
                   default () {
-                    return h(DefaultListSettingFormComponent)
+                    return h(DefaultParameterSettingFormComponent)
                   }
                 })
               ]

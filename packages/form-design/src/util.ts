@@ -1,8 +1,7 @@
 import XEUtils from 'xe-utils'
-import { PropType } from 'vue'
 import { getWidgetConfigGroup } from './widget-info'
 
-import type { VxeFormDesignDefines, VxeGlobalRendererHandles } from '../../../types'
+import type { VxeFormDesignDefines } from '../../../types'
 
 let maxWidgetId = 100000
 
@@ -20,30 +19,4 @@ export function getNewWidgetId (widgetObjList: VxeFormDesignDefines.WidgetObjIte
  */
 export const hasFormDesignLayoutType = (widget: VxeFormDesignDefines.WidgetObjItem) => {
   return widget && getWidgetConfigGroup(widget.name) === 'layout'
-}
-
-export function createWidgetConfigProps <D = any> () {
-  return {
-    renderOpts: {
-      type: Object as PropType<VxeGlobalRendererHandles.RenderFormDesignWidgetFormViewOptions>,
-      default: () => ({})
-    },
-    renderParams: {
-      type: Object as PropType<VxeGlobalRendererHandles.RenderFormDesignWidgetFormViewParams<D>>,
-      default: () => ({})
-    }
-  }
-}
-
-export function createWidgetViewProps <D = any> () {
-  return {
-    renderOpts: {
-      type: Object as PropType<VxeGlobalRendererHandles.RenderFormDesignWidgetViewOptions>,
-      default: () => ({})
-    },
-    renderParams: {
-      type: Object as PropType<VxeGlobalRendererHandles.RenderFormDesignWidgetViewParams<D>>,
-      default: () => ({})
-    }
-  }
 }

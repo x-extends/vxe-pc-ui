@@ -127,7 +127,8 @@ export namespace VxeListDesignDefines {
   export interface SearchItemObjItem {
     field: string
     title: string
-    folding: boolean
+    folding?: boolean
+    collapseNode?: boolean
     itemRender: VxeFormItemPropTypes.ItemRender
   }
 
@@ -159,6 +160,7 @@ export namespace VxeListDesignDefines {
     chartView: {
       enabled: boolean
     }
+    autoFoldFilter: boolean
     showCheckbox: boolean | 'auto'
     showSeq: boolean
     showSummary: boolean
@@ -176,6 +178,9 @@ export namespace VxeListDesignEvents { }
 
 export namespace VxeListDesignSlotTypes {}
 export interface VxeListDesignSlots {
+}
+
+export interface ListDesignExport {
 }
 
 export const ListDesign: typeof VxeListDesign

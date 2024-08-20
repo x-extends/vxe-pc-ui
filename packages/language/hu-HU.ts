@@ -428,7 +428,7 @@ export default {
     },
     listDesign: {
       fieldSettingTab: '字段设置',
-      listSettingTab: '列表设置'
+      listSettingTab: '参数设置'
     },
 
     /**

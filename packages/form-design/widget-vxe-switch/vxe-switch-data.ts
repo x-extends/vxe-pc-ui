@@ -9,6 +9,7 @@ export const getWidgetVxeSwitchConfig = (): VxeGlobalRendererHandles.CreateFormD
   return {
     title: handleGetFormDesignWidgetName,
     icon: 'vxe-icon-switch',
+    query: true,
     options: {
     }
   }

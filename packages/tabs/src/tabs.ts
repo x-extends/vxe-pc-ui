@@ -1,8 +1,8 @@
 import { defineComponent, ref, h, reactive, inject, PropType, provide, computed, onUnmounted, createCommentVNode, watch, nextTick, onMounted } from 'vue'
-import XEUtils from 'xe-utils'
 import { createEvent, getConfig, getIcon, globalEvents, permission } from '../../ui'
 import { getSlotVNs } from '../../ui/src/vn'
 import { toCssUnit } from '../..//ui/src/dom'
+import XEUtils from 'xe-utils'
 
 import type { VxeTabsPropTypes, VxeTabPaneProps, VxeTabsEmits, TabsReactData, TabsPrivateRef, VxeTabsPrivateComputed, VxeTabsConstructor, VxeTabsPrivateMethods, VxeTabPaneDefines, ValueOf, TabsMethods, TabsPrivateMethods } from '../../../types'
 
@@ -50,7 +50,8 @@ export default defineComponent({
       initNames: [],
       lintLeft: 0,
       lintWidth: 0,
-      isTabOver: false
+      isTabOver: false,
+      resizeFlag: 1
     })
 
     const refMaps: TabsPrivateRef = {
@@ -489,8 +490,10 @@ export default defineComponent({
     })
 
     watch(() => reactData.activeName, (val) => {
-      updateTabStyle()
       scrollToTab(val)
+      nextTick(() => {
+        reactData.resizeFlag++
+      })
     })
 
     const optsFlag = ref(0)
@@ -518,17 +521,17 @@ export default defineComponent({
     })
 
     if ($xeParentTabs) {
-      watch(() => $xeParentTabs.reactData.activeName, () => {
-        nextTick(() => {
-          updateTabStyle()
-        })
+      watch(() => $xeParentTabs ? $xeParentTabs.reactData.resizeFlag : null, () => {
+        reactData.resizeFlag++
       })
     }
 
+    watch(() => reactData.resizeFlag, () => {
+      nextTick(updateTabStyle)
+    })
+
     nextTick(() => {
-      globalEvents.on($xeTabs, 'resize', () => {
-        updateTabStyle()
-      })
+      globalEvents.on($xeTabs, 'resize', updateTabStyle)
     })
 
     onMounted(() => {

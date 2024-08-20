@@ -12,6 +12,16 @@ import XEUtils from 'xe-utils'
 
 import type { VxeListDesignConstructor, VxeListDesignPrivateMethods, VxeTableDefines, VxeSelectPropTypes, VxeListDesignDefines, VxeFormItemPropTypes, VxeGlobalRendererHandles } from '../../../types'
 
+interface SearchConfigObjItem extends VxeListDesignDefines.ListColumnObjItem {
+  checked: boolean
+  folding: boolean
+  isHalf: boolean
+  children?: SearchConfigObjItem[]
+}
+
+// 控件原始配置信息，带响应
+const refWidgetReactConfigMaps = ref<Record<string, VxeGlobalRendererHandles.CreateFormDesignWidgetConfigObj>>({})
+
 export const DefaultFieldSettingFormComponent = defineComponent({
   name: 'DefaultFieldSettingForm',
   props: {},
@@ -25,6 +35,9 @@ export const DefaultFieldSettingFormComponent = defineComponent({
 
     const { reactData: listDesignReactData } = $xeListDesign
 
+    const refIsAllChecked = ref(false)
+    const refIsAllIndeterminate = ref(false)
+
     const changeVisible = (item: VxeTableDefines.ColumnOptions) => {
       item.visible = !item.visible
       listDesignReactData.listTableColumns = listDesignReactData.listTableColumns.slice(0)
@@ -32,18 +45,100 @@ export const DefaultFieldSettingFormComponent = defineComponent({
 
     const addSearchEvent = () => {
       const { listTableColumns, searchFormItems } = listDesignReactData
-      const refAllFormItemList = ref(listTableColumns.map(item => {
-        const conf = searchFormItems.find(conf => conf.field === item.field)
-        return {
-          ...item,
-          checked: !!conf,
-          folding: conf ? conf.folding : false
+      const widgetReactConfigMaps = refWidgetReactConfigMaps.value
+      const allFormItemList: SearchConfigObjItem[] = []
+
+      listTableColumns.forEach(item => {
+        const { cellRender } = item
+        if (cellRender) {
+          const conf = searchFormItems.find(conf => conf.field === item.field)
+          const name = cellRender.name || ''
+          let widgetConfig: VxeGlobalRendererHandles.CreateFormDesignWidgetConfigObj = widgetReactConfigMaps[name]
+          if (!widgetConfig) {
+            const compConf = renderer.get(name)
+            if (compConf) {
+              const createWidgetFormConfig = compConf.createFormDesignWidgetConfig
+              if (createWidgetFormConfig) {
+                const params = { name, $formDesign: null }
+                widgetConfig = createWidgetFormConfig(params) || {}
+                widgetReactConfigMaps[name] = widgetConfig
+              }
+            }
+          }
+          if (widgetConfig.query) {
+            allFormItemList.push({
+              ...item,
+              checked: !!conf,
+              isHalf: false,
+              folding: conf ? !!conf.folding : false
+            })
+          }
         }
-      }))
+      })
+
+      refWidgetReactConfigMaps.value = Object.assign({}, widgetReactConfigMaps)
+
+      const refAllFormItemList = ref(allFormItemList)
       // const foldOptions = ref([
       //   { label: '展开', value: false },
       //   { label: '折叠', value: true }
       // ])
+
+      const checkOptionStatus = () => {
+        const allFormItemList = refAllFormItemList.value
+        refIsAllChecked.value = allFormItemList.every((item) => item.checked)
+        refIsAllIndeterminate.value = !refIsAllChecked.value && allFormItemList.some((item) => item.checked || item.isHalf)
+      }
+
+      const handleOptionCheck = (item: SearchConfigObjItem) => {
+        const allFormItemList = refAllFormItemList.value
+        const matchObj = XEUtils.findTree(allFormItemList, obj => obj === item)
+        if (matchObj && matchObj.parent) {
+          const { parent } = matchObj
+          if (parent.children && parent.children.length) {
+            parent.checked = parent.children.every((obj) => obj.checked)
+            parent.isHalf = !parent.checked && parent.children.some((obj) => obj.checked || obj.isHalf)
+            handleOptionCheck(parent)
+          }
+        }
+      }
+
+      const changeCheckboxOption = (item: SearchConfigObjItem) => {
+        const isChecked = !item.checked
+        XEUtils.eachTree([item], (obj) => {
+          obj.checked = isChecked
+          obj.isHalf = false
+        })
+        handleOptionCheck(item)
+        checkOptionStatus()
+      }
+
+      const allOptionEvent = () => {
+        const allFormItemList = refAllFormItemList.value
+        const isAll = !refIsAllChecked.value
+        XEUtils.eachTree(allFormItemList, (item) => {
+          item.checked = isAll
+          item.isHalf = false
+        })
+        refIsAllChecked.value = isAll
+        checkOptionStatus()
+      }
+
+      const confirmEvent = () => {
+        const allFormItemList = refAllFormItemList.value
+        const searchItems: VxeListDesignDefines.SearchItemObjItem[] = []
+        allFormItemList.forEach(item => {
+          if (item.checked) {
+            searchItems.push({
+              field: item.field,
+              title: item.title,
+              folding: item.folding,
+              itemRender: { ...item.cellRender } as VxeFormItemPropTypes.ItemRender
+            })
+          }
+        })
+        $xeListDesign.setSearchItems(searchItems)
+      }
 
       VxeUI.modal.open({
         title: '编辑查询字段',
@@ -56,23 +151,11 @@ export const DefaultFieldSettingFormComponent = defineComponent({
         confirmButtonText: '保存',
         showZoom: true,
         resize: true,
-        onConfirm () {
-          const allFormItemList = refAllFormItemList.value
-          const searchItems: VxeListDesignDefines.SearchItemObjItem[] = []
-          allFormItemList.forEach(item => {
-            if (item.checked) {
-              searchItems.push({
-                field: item.field,
-                title: item.title,
-                folding: item.folding,
-                itemRender: { ...item.cellRender } as VxeFormItemPropTypes.ItemRender
-              })
-            }
-          })
-          $xeListDesign.setSearchItems(searchItems)
-        },
+        onConfirm: confirmEvent,
         slots: {
           default () {
+            const isAllChecked = refIsAllChecked.value
+            const isAllIndeterminate = refIsAllIndeterminate.value
             const allFormItemList = refAllFormItemList.value
 
             return h('div', {
@@ -93,21 +176,51 @@ export const DefaultFieldSettingFormComponent = defineComponent({
                   // })
                 ]),
                 h('thead', {}, [
-                  h('th', {}, '启用'),
+                  h('th', {}, [
+                    h('div', {
+                      class: ['vxe-list-design--field-search-checkbox-option', {
+                        'is--checked': isAllChecked,
+                        'is--indeterminate': isAllIndeterminate
+                      }],
+                      title: getI18n('vxe.table.allTitle'),
+                      onClick: allOptionEvent
+                    }, [
+                      h('span', {
+                        class: ['vxe-checkbox--icon', isAllIndeterminate ? getIcon().CHECKBOX_INDETERMINATE : (isAllChecked ? getIcon().CHECKBOX_CHECKED : getIcon().CHECKBOX_UNCHECKED)]
+                      }),
+                      h('span', {
+                        class: 'vxe-checkbox--label'
+                      }, getI18n('vxe.toolbar.customAll'))
+                    ])
+                  ]),
                   h('th', {}, '标题')
                   // h('th', {}, '展开/折叠')
                 ]),
                 h('tbody', {}, allFormItemList.map(item => {
+                  const isChecked = item.checked
+                  const isIndeterminate = item.isHalf
                   return h('tr', {}, [
-                    h('td', {}, [
-                      h(VxeSwitchComponent, {
-                        modelValue: item.checked,
-                        'onUpdate:modelValue' (val) {
-                          item.checked = val
+                    h('td', {
+                      class: 'vxe-list-design--field-search-option-item col--visible'
+                    }, [
+                      h('div', {
+                        class: ['vxe-list-design--field-search-checkbox-option', {
+                          'is--checked': isChecked,
+                          'is--indeterminate': isIndeterminate
+                        }],
+                        title: getI18n('vxe.custom.setting.colVisible'),
+                        onClick: () => {
+                          changeCheckboxOption(item)
                         }
-                      })
+                      }, [
+                        h('span', {
+                          class: ['vxe-checkbox--icon', isIndeterminate ? getIcon().CHECKBOX_INDETERMINATE : (isChecked ? getIcon().CHECKBOX_CHECKED : getIcon().CHECKBOX_UNCHECKED)]
+                        })
+                      ])
                     ]),
-                    h('td', {}, `${item.title || ''}`)
+                    h('td', {
+                      class: 'vxe-list-design--field-search-option-item'
+                    }, `${item.title || ''}`)
                     // h('td', {}, [
                     //   h(VxeRadioGroupComponent, {
                     //     modelValue: item.folding,
@@ -248,8 +361,8 @@ export const DefaultFieldSettingFormComponent = defineComponent({
   }
 })
 
-export const DefaultListSettingFormComponent = defineComponent({
-  name: 'DefaultListSettingForm',
+export const DefaultParameterSettingFormComponent = defineComponent({
+  name: 'DefaultListSettingTabComponent',
   props: {},
   emits: [],
   setup () {
@@ -278,6 +391,11 @@ export const DefaultListSettingFormComponent = defineComponent({
 
     const renderViewList = ref([
       { label: '列表视图', value: 'list', isExpand: false }
+    ])
+
+    const refFoldOpts = ref([
+      { label: '显示', value: true },
+      { label: '隐藏', value: false }
     ])
 
     const refSeqOpts = ref([
@@ -583,6 +701,27 @@ export const DefaultListSettingFormComponent = defineComponent({
                         })
                       ])
                       : createCommentVNode()
+                  ])
+                ]
+              }
+            }),
+            h(VxeFormItemComponent, {
+              title: '查询配置'
+            }, {
+              default () {
+                const { formData } = listDesignReactData
+                return [
+                  h('div', {
+                    class: 'vxe-list-design--widget-form-item-prop-list'
+                  }, [
+                    h('span', {}, '折叠字段'),
+                    h(VxeRadioGroupComponent, {
+                      modelValue: formData.autoFoldFilter,
+                      options: refFoldOpts.value,
+                      'onUpdate:modelValue' (val) {
+                        formData.autoFoldFilter = val
+                      }
+                    })
                   ])
                 ]
               }

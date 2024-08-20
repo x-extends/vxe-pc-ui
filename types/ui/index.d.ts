@@ -7,6 +7,7 @@ import { VxePrintDefines } from '../components/print'
 import { VxeUploadDefines } from '../components/upload'
 import { VxeImageDefines } from '../components/image'
 import { FormDesignExport } from '../components/form-design'
+import { ListDesignExport } from '../components/list-design'
 
 /**
  * 已废弃，请使用 setConfig
@@ -54,6 +55,7 @@ declare module '@vxe-ui/core' {
     dynamicApp: App<Element>
 
     formDesign: FormDesignExport
+    listDesign: ListDesignExport
 
     print: VxePrintDefines.PrintFunction
     saveFile: VxeUploadDefines.SaveFileFunction

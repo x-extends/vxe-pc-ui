@@ -430,7 +430,7 @@ export default {
     },
     listDesign: {
       fieldSettingTab: '字段设置',
-      listSettingTab: '列表设置',
+      listSettingTab: '参数设置',
       activeBtn: {
         ActionButtonUpdate: '编辑',
         ActionButtonDelete: '删除'

@@ -768,6 +768,10 @@ declare module '@vxe-ui/core' {
        */
       scope?: '' | 'all' | 'subtable'
       /**
+       * 是否允许列表查询
+       */
+      query?: boolean
+      /**
        * 内置分组
        */
       group?: VxeFormDesignDefines.WidgetGroup

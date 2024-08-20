@@ -265,26 +265,6 @@ export interface VxeFormDesignSlots {
 }
 
 export interface FormDesignExport {
-  createWidgetConfigProps <D = any>(): {
-    renderOpts: {
-      type: PropType<VxeGlobalRendererHandles.RenderFormDesignWidgetFormViewOptions>
-      default: () => {}
-    }
-    renderParams: {
-      type: PropType<VxeGlobalRendererHandles.RenderFormDesignWidgetFormViewParams<D>>
-      default: () => {}
-    }
-  }
-  createWidgetViewProps <D = any>(): {
-    renderOpts: {
-      type: PropType<VxeGlobalRendererHandles.RenderFormDesignWidgetViewOptions>
-      default: () => {}
-    }
-    renderParams: {
-      type: PropType<VxeGlobalRendererHandles.RenderFormDesignWidgetViewParams<D>>
-      default: () => {}
-    }
-  }
   useWidgetView<T = any>(props: {
     renderOpts: any
     renderParams: any

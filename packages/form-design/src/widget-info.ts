@@ -10,7 +10,7 @@ import type { VxeFormPropTypes, VxeFormDesignConstructor, VxeFormDesignDefines, 
 type WidgetReactConfigItem = Required<Pick<VxeGlobalRendererHandles.CreateFormDesignWidgetConfigObj, 'field' | 'title' | 'icon' | 'customGroup' | 'group' | 'unique' | 'scope'>>
 
 // 控件原始配置信息，带响应
-export const refWidgetReactConfigMaps = ref<Record<string, WidgetReactConfigItem>>({})
+const refWidgetReactConfigMaps = ref<Record<string, WidgetReactConfigItem>>({})
 
 export const createHandleGetField = (key: keyof WidgetReactConfigItem) => {
   return function (name: string) {

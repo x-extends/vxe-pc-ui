@@ -31,7 +31,7 @@ export namespace VxeListViewPropTypes {
   export type Config = null | VxeListDesignDefines.ListDesignConfig
   export type Loading = boolean
   export type Height = string | number
-  export type SearchData = Record<string, any>
+  export type FormData = Record<string, any>
   export type ActionButtons = VxeListDesignDefines.DefaultSettingFormActionButton[]
   export type GridOptions<D = any> = Omit<VxeGridProps<D>, 'columns'>
   export type GridEvents<D = any> = VxeGridListeners<D>
@@ -44,7 +44,7 @@ export type VxeListViewProps<D = any> = {
   config?: VxeListViewPropTypes.Config
   loading?: VxeListViewPropTypes.Loading
   height?: VxeListViewPropTypes.Height
-  searchData?: VxeListViewPropTypes.SearchData
+  formData?: VxeListViewPropTypes.FormData
   gridOptions?: VxeListViewPropTypes.GridOptions<D>
   gridEvents?: VxeListViewPropTypes.GridEvents<D>
   viewRender?: VxeListViewPropTypes.ViewRender
@@ -81,6 +81,10 @@ export interface ListViewMethods<D = any> {
     actionButtons: VxeListViewPropTypes.ActionButtons
   }
   /**
+   * 获取表单查询条件
+   */
+  getQueryFilter(): VxeListDesignDefines.QueryFilterResult
+  /**
    * 给 Grid 数据代理提交指令
    * @param code 指令编码
    */
@@ -93,7 +97,7 @@ export interface VxeListViewPrivateMethods extends ListViewPrivateMethods { }
 
 export type VxeListViewEmits = [
   'cell-action',
-  'update:searchData',
+  'update:formData',
   'update:actionButtons'
 ]
 
@@ -104,6 +108,47 @@ export namespace VxeListViewDefines {
 
   export interface CellActionEventParams<D = any> extends VxeColumnSlotTypes.DefaultSlotParams<D>, ListViewEventParams {
     button: VxeButtonProps
+  }
+
+  export interface QueryFilterCondition {
+    /**
+     * 字段名
+     */
+    field: string
+    /**
+     * 值
+     */
+    value: any
+    /**
+     * 匹配方式
+     */
+    match: '' | 'fuzzy' | 'exact'
+    /**
+     * 值类型
+     */
+    type: 'array' | ''
+  }
+
+  export interface QueryFilterItem {
+    /**
+     * 字段多个查询条件
+     */
+    condition: QueryFilterCondition[]
+    /**
+     * 查询类型
+     */
+    type: 'and' | 'or' | ''
+  }
+
+  export interface QueryFilterResult {
+    /**
+     * 筛选字段列表
+     */
+    items: QueryFilterItem[]
+    /**
+     * 查询类型
+     */
+    type: 'and' | 'or' | ''
   }
 }
 
