@@ -83,7 +83,7 @@ export interface ListViewMethods<D = any> {
   /**
    * 获取表单查询条件
    */
-  getQueryFilter(): VxeListDesignDefines.QueryFilterResult
+  getQueryFilter(): VxeListViewDefines.QueryFilterResult
   /**
    * 给 Grid 数据代理提交指令
    * @param code 指令编码

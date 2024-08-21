@@ -127,10 +127,10 @@ export function configToWidget (conf: {
 }) {
   const widget = new FormDesignWidgetInfo(null, conf.name, [])
   widget.id = conf.id
-  widget.title = conf.title
-  widget.field = conf.field
-  widget.required = conf.required
-  widget.hidden = conf.hidden
+  widget.title = conf.title || ''
+  widget.field = conf.field || ''
+  widget.required = conf.required || false
+  widget.hidden = conf.hidden || false
   widget.options = Object.assign({}, widget.options, conf.options)
   widget.children = conf.children ? conf.children.map(item => configToWidget(item)) : []
   return widget

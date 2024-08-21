@@ -148,7 +148,7 @@ export namespace VxeTreeSelectDefines {
 }
 
 export interface VxeTreeSelectEventProps<D = any> {
-  onChange?: VxeTreeSelectEvents.Changes<D>
+  onChange?: VxeTreeSelectEvents.Change<D>
   onClear?: VxeTreeSelectEvents.Clear
   onFocus?: VxeTreeSelectEvents.Focus
   onBlur?: VxeTreeSelectEvents.Blur
@@ -156,7 +156,7 @@ export interface VxeTreeSelectEventProps<D = any> {
 }
 
 export interface VxeTreeSelectListeners<D = any> {
-  change?: VxeTreeSelectEvents.Changes<D>
+  change?: VxeTreeSelectEvents.Change<D>
   clear?: VxeTreeSelectEvents.Clear
   focus?: VxeTreeSelectEvents.Focus
   blur?: VxeTreeSelectEvents.Blur

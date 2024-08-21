@@ -1,5 +1,5 @@
 import { RenderFunction, SetupContext, Ref, ComponentPublicInstance, DefineComponent } from 'vue'
-import { defineVxeComponent, VxeComponentBaseOptions, VxeComponentEventParams, ValueOf, VxeComponentSizeType } from '@vxe-ui/core'
+import { defineVxeComponent, VxeComponentBaseOptions, VxeComponentEventParams, ValueOf, VxeComponentStyleType, VxeComponentSizeType } from '@vxe-ui/core'
 
 /* eslint-disable no-use-before-define,@typescript-eslint/ban-types */
 
@@ -44,10 +44,8 @@ export type VxeIconPickerProps = {
   modelValue?: VxeIconPickerPropTypes.ModelValue
   placeholder?: VxeIconPickerPropTypes.Placeholder
   size?: VxeIconPickerPropTypes.Size
-  className?: VxeSelectPropTypes.ClassName
-  popupClassName?: VxeSelectPropTypes.PopupClassName
-  options?: VxeIconPickerPropTypes.Options
-  pptionProps?: VxeIconPickerPropTypes.OptionProps
+  className?: VxeIconPickerPropTypes.ClassName
+  popupClassName?: VxeIconPickerPropTypes.PopupClassName
   readonly?: VxeIconPickerPropTypes.Readonly
   disabled?: VxeIconPickerPropTypes.Disabled
   icons?: VxeIconPickerPropTypes.Icons
