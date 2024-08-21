@@ -811,6 +811,14 @@ export namespace VxeTablePropTypes {
      */
     selectCellByHeader?: boolean
     /**
+     * 只对 mouse-config.area 启用后有效，选择单元格后显示列状态
+     */
+    showColumnStatus?: boolean
+    /**
+     * 只对 mouse-config.area 启用后有效，选择单元格后显示行状态
+     */
+    showRowStatus?: boolean
+    /**
      * 只对 mouse-config.extension 启用后有效，将被选取区域的值复制到扩展区域中
      */
     extendByCopy?: boolean
@@ -2405,6 +2413,10 @@ export interface TableInternalData<D = any> {
       parent: VxeTableDefines.ColumnInfo<D>
     }
   }
+  // 列选取状态
+  columnStatusMaps: Record<string, boolean>
+  // 行选取状态
+  rowStatusMaps: Record<string, boolean>
 
   // 特殊标识
   inited: boolean

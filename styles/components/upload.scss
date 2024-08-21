@@ -54,6 +54,7 @@
 .vxe-upload--file-list {
   max-height: 294px;
   overflow: auto;
+  outline: 0;
 }
 .vxe-upload--file-item {
   position: relative;
@@ -303,7 +304,8 @@
     max-height: 160px;
     overflow: auto;
     border: 1px solid var(--vxe-ui-input-border-color);
-    padding: var(--vxe-ui-layout-padding-half) var(--vxe-ui-layout-padding-default);;
+    padding: var(--vxe-ui-layout-padding-half) var(--vxe-ui-layout-padding-default);
+    outline: 0;
   }
   .vxe-upload--file-message-over-extra-item {
     overflow: hidden;

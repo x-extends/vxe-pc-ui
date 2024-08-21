@@ -481,43 +481,43 @@ export interface VxeModalSlots {
   /**
    * 自定义内容模板
    */
-  default?(params: VxeModalSlotTypes.DefaultSlotParams): VxeComponentSlotType[] | VxeComponentSlotType
+  default?: (params: VxeModalSlotTypes.DefaultSlotParams) => VxeComponentSlotType[] | VxeComponentSlotType
   /**
    * 自定义左侧内容模板
    */
-  left?(params: VxeModalSlotTypes.LeftSlotParams): VxeComponentSlotType[] | VxeComponentSlotType
+  left?: (params: VxeModalSlotTypes.LeftSlotParams) => VxeComponentSlotType[] | VxeComponentSlotType
   /**
    * 自定义右侧内容模板
    */
-  right?(params: VxeModalSlotTypes.RightSlotParams): VxeComponentSlotType[] | VxeComponentSlotType
+  right?: (params: VxeModalSlotTypes.RightSlotParams) => VxeComponentSlotType[] | VxeComponentSlotType
   /**
    * 自定义侧边栏的模板
    */
-  aside?(params: VxeModalSlotTypes.AsideSlotParams): VxeComponentSlotType[] | VxeComponentSlotType
+  aside?: (params: VxeModalSlotTypes.AsideSlotParams) => VxeComponentSlotType[] | VxeComponentSlotType
   /**
    * 自定义头部的模板
    */
-  header?(params: VxeModalSlotTypes.HeaderSlotParams): VxeComponentSlotType[] | VxeComponentSlotType
+  header?: (params: VxeModalSlotTypes.HeaderSlotParams) => VxeComponentSlotType[] | VxeComponentSlotType
   /**
    * 自定义标题的模板（如果使用了 header 插槽，则该插槽无效）
    */
-  title?(params: VxeModalSlotTypes.TitleSlotParams): VxeComponentSlotType[] | VxeComponentSlotType
+  title?: (params: VxeModalSlotTypes.TitleSlotParams) => VxeComponentSlotType[] | VxeComponentSlotType
   /**
    * 自定义右上角的模板
    */
-  corner?(params: VxeModalSlotTypes.CornerSlotParams): VxeComponentSlotType[] | VxeComponentSlotType
+  corner?: (params: VxeModalSlotTypes.CornerSlotParams) => VxeComponentSlotType[] | VxeComponentSlotType
   /**
    * 自定义底部的模板
    */
-  footer?(params: VxeModalSlotTypes.FooterSlotParams): VxeComponentSlotType[] | VxeComponentSlotType
+  footer?: (params: VxeModalSlotTypes.FooterSlotParams) => VxeComponentSlotType[] | VxeComponentSlotType
   /**
    * 自定义底部左侧的模板
    */
-  leftfoot?(params: VxeModalSlotTypes.LeftfootSlotParams): VxeComponentSlotType[] | VxeComponentSlotType
+  leftfoot?: (params: VxeModalSlotTypes.LeftfootSlotParams) => VxeComponentSlotType[] | VxeComponentSlotType
   /**
    * 自定义底部右侧的模板
    */
-  rightfoot?(params: VxeModalSlotTypes.RightfootSlotParams): VxeComponentSlotType[] | VxeComponentSlotType
+  rightfoot?: (params: VxeModalSlotTypes.RightfootSlotParams) => VxeComponentSlotType[] | VxeComponentSlotType
 }
 
 export const Modal: typeof VxeModal

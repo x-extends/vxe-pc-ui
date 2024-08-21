@@ -78,9 +78,9 @@ export namespace VxeAlertSlotTypes {
 }
 
 export interface VxeAlertSlots {
-  default: (params: VxeAlertSlotTypes.DefaultSlotParams) => any
-  title: (params: VxeAlertSlotTypes.DefaultSlotParams) => any
-  icon: (params: VxeAlertSlotTypes.DefaultSlotParams) => any
+  default?: (params: VxeAlertSlotTypes.DefaultSlotParams) => any
+  title?: (params: VxeAlertSlotTypes.DefaultSlotParams) => any
+  icon?: (params: VxeAlertSlotTypes.DefaultSlotParams) => any
 }
 
 export const Alert: typeof VxeAlert

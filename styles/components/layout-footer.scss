@@ -3,6 +3,7 @@
 .vxe-layout-footer {
   flex-shrink: 0;
   background-color: var(--vxe-ui-layout-background-color);
+  outline: 0;
   &.is--fixed {
     position: sticky;
     bottom: 0;

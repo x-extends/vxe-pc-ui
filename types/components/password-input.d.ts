@@ -122,7 +122,7 @@ export namespace VxePasswordInputSlotTypes {
 }
 
 export interface VxePasswordInputSlots {
-  default: (params: VxePasswordInputSlotTypes.DefaultSlotParams) => any
+  default?: (params: VxePasswordInputSlotTypes.DefaultSlotParams) => any
 }
 
 export const PasswordInput: typeof VxePasswordInput

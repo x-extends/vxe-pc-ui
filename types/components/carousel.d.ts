@@ -1,5 +1,6 @@
 import { RenderFunction, SetupContext, Ref, ComponentPublicInstance, DefineComponent } from 'vue'
 import { defineVxeComponent, VxeComponentBaseOptions, VxeComponentEventParams, ValueOf } from '@vxe-ui/core'
+import { VxeCarouselItemPropTypes, VxeCarouselItemProps, VxeCarouselItemSlots } from './carousel-item'
 
 /* eslint-disable no-use-before-define,@typescript-eslint/ban-types */
 
@@ -23,9 +24,30 @@ export interface CarouselPrivateRef {
 export interface VxeCarouselPrivateRef extends CarouselPrivateRef { }
 
 export namespace VxeCarouselPropTypes {
+  export type ModelValue = VxeCarouselItemPropTypes.Name
+  export interface Option extends VxeCarouselItemProps {
+    slots?: VxeCarouselItemSlots
+  }
+  export type Options = Option[]
+  export type Loading = boolean
+  export type Height = number | string
+  export type Width = number | string
+  export type AutoPlay = boolean
+  export type Loop = boolean
+  export type Vertical = boolean
+  export type ShowIndicators = boolean
 }
 
 export type VxeCarouselProps = {
+  modelValue?: VxeCarouselPropTypes.ModelValue
+  options?: VxeCarouselPropTypes.Options
+  loading?: VxeCarouselPropTypes.Loading
+  height?: VxeCarouselPropTypes.Height
+  width?: VxeCarouselPropTypes.Width
+  autoPlay?: VxeCarouselPropTypes.AutoPlay
+  loop?: VxeCarouselPropTypes.Loop
+  vertical?: VxeCarouselPropTypes.Vertical
+  showIndicators?: VxeCarouselPropTypes.ShowIndicators
 }
 
 export interface CarouselPrivateComputed {
@@ -33,21 +55,44 @@ export interface CarouselPrivateComputed {
 export interface VxeCarouselPrivateComputed extends CarouselPrivateComputed { }
 
 export interface CarouselReactData {
+  activeName: VxeCarouselPropTypes.ModelValue | undefined
+  staticItems: VxeCarouselDefines.ItemConfig[]
+  itemWidth: number
+  itemHeight: number
 }
 
 export interface CarouselMethods {
   dispatchEvent(type: ValueOf<VxeCarouselEmits>, params: Record<string, any>, evnt: Event | null): void
+  /**
+   * 切换到上一个
+   */
+  prev(): Promise<any>
+  /**
+   * 切换到下一个
+   */
+  next(): Promise<any>
 }
 export interface VxeCarouselMethods extends CarouselMethods { }
 
 export interface CarouselPrivateMethods { }
 export interface VxeCarouselPrivateMethods extends CarouselPrivateMethods { }
 
-export type VxeCarouselEmits = []
+export type VxeCarouselEmits = [
+  'update:modelValue',
+  'change'
+]
 
 export namespace VxeCarouselDefines {
   export interface CarouselEventParams extends VxeComponentEventParams {
     $carousel: VxeCarouselConstructor
+  }
+
+  export interface ItemConfig {
+    id: string
+    name: VxeCarouselItemPropTypes.Name | undefined
+    url: VxeCarouselItemPropTypes.Url | undefined
+    className: VxeCarouselItemPropTypes.ClassName | undefined
+    slots: VxeCarouselItemSlots
   }
 }
 
@@ -62,7 +107,7 @@ export namespace VxeCarouselSlotTypes {
 }
 
 export interface VxeCarouselSlots {
-  default: (params: VxeCarouselSlotTypes.DefaultSlotParams) => any
+  default?: (params: VxeCarouselSlotTypes.DefaultSlotParams) => any
 }
 
 export const Carousel: typeof VxeCarousel

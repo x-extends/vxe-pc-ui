@@ -62,7 +62,7 @@ export namespace VxePrintPageBreakSlotTypes {
 }
 
 export interface VxePrintPageBreakSlots {
-  default: (params: VxePrintPageBreakSlotTypes.DefaultSlotParams) => any
+  default?: (params: VxePrintPageBreakSlotTypes.DefaultSlotParams) => any
 }
 
 export const PrintPageBreak: typeof VxePrintPageBreak

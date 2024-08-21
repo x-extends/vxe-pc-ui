@@ -191,5 +191,11 @@ declare module '@vxe-ui/core' {
 
     // text
     TEXT_COPY?: string
+
+    // carousel
+    CAROUSEL_HORIZONTAL_PREVIOUS?: string
+    CAROUSEL_HORIZONTAL_NEXT?: string
+    CAROUSEL_VERTICAL_PREVIOUS?: string
+    CAROUSEL_VERTICAL_NEXT?: string
   }
 }

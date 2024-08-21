@@ -84,11 +84,21 @@ export interface TabsMethods {
    */
   scrollToTab(name: VxeTabsPropTypes.ModelValue): Promise<any>
   /**
-   * 切换到上一个页签
+   * 切换到上一个
+   */
+  prev(): Promise<any>
+  /**
+   * 请使用 prev
+   * @deprecated
    */
   prevTab(): Promise<any>
   /**
-   * 切换到下一个页签
+   * 切换到下一个
+   */
+  next(): Promise<any>
+  /**
+   * 请使用 next
+   * @deprecated
    */
   nextTab(): Promise<any>
 }
@@ -182,10 +192,6 @@ export namespace VxeTabsSlotTypes {
 }
 
 export interface VxeTabsSlots {
-  default: (params: VxeTabsSlotTypes.DefaultSlotParams) => any
-  tab: (params: VxeTabsSlotTypes.TabSlotParams) => any
-  extra: (params: VxeTabsSlotTypes.ExtraSlotParams) => any
-
   /**
    * 自定义插槽模板
    */
@@ -194,6 +200,10 @@ export interface VxeTabsSlots {
 
     [key: string]: any
   }) => any) | undefined
+
+  default?: (params: VxeTabsSlotTypes.DefaultSlotParams) => any
+  tab?: (params: VxeTabsSlotTypes.TabSlotParams) => any
+  extra?: (params: VxeTabsSlotTypes.ExtraSlotParams) => any
 }
 
 export const Tabs: typeof VxeTabs

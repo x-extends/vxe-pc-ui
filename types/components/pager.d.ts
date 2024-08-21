@@ -204,8 +204,8 @@ export namespace VxePagerSlotTypes {
 }
 
 export interface VxePagerSlots {
-  left: (params: VxePagerSlotTypes.DefaultSlotParams) => any
-  right: (params: VxePagerSlotTypes.DefaultSlotParams) => any
+  left?: (params: VxePagerSlotTypes.DefaultSlotParams) => any
+  right?: (params: VxePagerSlotTypes.DefaultSlotParams) => any
 }
 
 export const Pager: typeof VxePager

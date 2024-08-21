@@ -238,18 +238,6 @@
       }
     }
   }
-  .vxe-pager--jump .vxe-pager--goto {
-    border-radius: var(--vxe-ui-base-border-radius);
-    border: 1px solid var(--vxe-ui-input-border-color);
-    color: var(--vxe-ui-font-color);
-    transition: border .2s ease-in-out;
-    padding: 0 0.4em;
-    background-color: var(--vxe-ui-layout-background-color);
-    &:focus {
-      border: 1px solid var(--vxe-ui-font-primary-color);
-      outline: 0;
-    }
-  }
   .vxe-pager--jump {
     .vxe-pager--goto-text {
       margin-right: 0.25em;
@@ -258,7 +246,7 @@
       margin-left: 0.25em;
     }
     .vxe-pager--goto {
-      width: 3.2em;
+      width: 4em;
     }
   }
 }

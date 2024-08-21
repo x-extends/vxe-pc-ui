@@ -596,6 +596,29 @@ export namespace VxeGridSlotTypes {
 
 export interface VxeGridSlots<D = any> {
   /**
+   * 自定义插槽模板
+   */
+  [key: string]: ((params: {
+    $table: VxeTableConstructor<D>
+    $grid: VxeGridConstructor<D> | null | undefined
+    row: D
+    rowIndex: number
+    $rowIndex: number
+    _rowIndex: number
+    column: VxeTableDefines.ColumnInfo<D>
+    columnIndex: number
+    $columnIndex: number
+    _columnIndex: number
+
+    checked?: boolean
+    indeterminate?: boolean
+
+    items: D[]
+
+    [key: string]: any
+  }) => any) | undefined
+
+  /**
    * 自定义空数据时显示模板
    */
   empty?(params: {
@@ -658,29 +681,6 @@ export interface VxeGridSlots<D = any> {
     $table: VxeTableConstructor<D>
     $grid: VxeGridConstructor<D> | null | undefined
   }): any
-
-  /**
-   * 自定义插槽模板
-   */
-  [key: string]: ((params: {
-    $table: VxeTableConstructor<D>
-    $grid: VxeGridConstructor<D> | null | undefined
-    row: D
-    rowIndex: number
-    $rowIndex: number
-    _rowIndex: number
-    column: VxeTableDefines.ColumnInfo<D>
-    columnIndex: number
-    $columnIndex: number
-    _columnIndex: number
-
-    checked?: boolean
-    indeterminate?: boolean
-
-    items: D[]
-
-    [key: string]: any
-  }) => any) | undefined
 }
 
 export const Grid: typeof VxeGrid

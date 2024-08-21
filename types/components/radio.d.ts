@@ -113,7 +113,7 @@ export namespace VxeRadioSlotTypes {
 }
 
 export interface VxeRadioSlots {
-  default: (params: VxeRadioSlotTypes.DefaultSlotParams) => any
+  default?: (params: VxeRadioSlotTypes.DefaultSlotParams) => any
 }
 
 export const Radio: typeof VxeRadio

@@ -399,6 +399,7 @@ export default defineComponent({
 
     // Jump
     const renderJump = (isFull?: boolean) => {
+      const pageCount = computePageCount.value
       return h('span', {
         class: 'vxe-pager--jump'
       }, [
@@ -409,8 +410,13 @@ export default defineComponent({
           : null,
         h(VxeInputComponent, {
           class: 'vxe-pager--goto',
-          align: 'center',
           modelValue: reactData.inpCurrPage,
+          placeholder: getI18n('vxe.pager.gotoTitle'),
+          align: 'center',
+          type: 'integer',
+          max: pageCount,
+          min: 1,
+          controls: false,
           onKeydown: jumpKeydownEvent,
           onBlur: triggerJumpEvent,
           'onUpdate:modelValue' (val) {

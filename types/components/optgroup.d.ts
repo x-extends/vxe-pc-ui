@@ -75,7 +75,7 @@ export namespace VxeOptgroupSlotTypes {
 }
 
 export interface VxeOptgroupSlots {
-  default: (params: VxeOptgroupSlotTypes.DefaultSlotParams) => any
+  default?: (params: VxeOptgroupSlotTypes.DefaultSlotParams) => any
 }
 
 export const Optgroup: typeof VxeOptgroup

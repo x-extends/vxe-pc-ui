@@ -99,6 +99,7 @@
   flex-direction: row;
   overflow-y: hidden;
   overflow-x: auto;
+  outline: 0;
 }
 .vxe-tabs-header--item {
   position: relative;
@@ -164,6 +165,7 @@
   display: none;
   height: 100%;
   overflow: auto;
+  outline: 0;
   &.is--visible {
     display: block;
   }

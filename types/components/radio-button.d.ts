@@ -94,7 +94,7 @@ export namespace VxeRadioButtonSlotTypes {
 }
 
 export interface VxeRadioButtonSlots {
-  default: (params: VxeRadioButtonSlotTypes.DefaultSlotParams) => any
+  default?: (params: VxeRadioButtonSlotTypes.DefaultSlotParams) => any
 }
 
 export const RadioButton: typeof VxeRadioButton

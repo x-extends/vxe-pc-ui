@@ -61,7 +61,7 @@ export namespace VxeCollapseSlotTypes {
 }
 
 export interface VxeCollapseSlots {
-  default: (params: VxeCollapseSlotTypes.DefaultSlotParams) => any
+  default?: (params: VxeCollapseSlotTypes.DefaultSlotParams) => any
 }
 
 export const Collapse: typeof VxeCollapse

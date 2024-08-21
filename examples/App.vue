@@ -102,6 +102,8 @@ const changeLanguage = () => {
   display: block;
 }
 .page-layout-aside {
-  overflow-y: scroll;
+  ::v-deep(.vxe-layout-aside--inner) {
+    overflow-y: scroll;
+  }
 }
 </style>

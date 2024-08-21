@@ -80,11 +80,11 @@ export interface VxeAnchorLinkSlots {
   /**
    * 自定义显示内容模板
    */
-  default: (params: VxeAnchorLinkSlotTypes.DefaultSlotParams) => any
+  default?: (params: VxeAnchorLinkSlotTypes.DefaultSlotParams) => any
   /**
    * 自定义子项模板
    */
-  sub: (params: VxeAnchorLinkSlotTypes.SubSlotParams) => any
+  sub?: (params: VxeAnchorLinkSlotTypes.SubSlotParams) => any
 }
 
 export const AnchorLink: typeof VxeAnchorLink

@@ -126,11 +126,11 @@ export interface VxeColgroupSlots<D = any> {
   /**
    * 自定义表头内容的模板
    */
-  header: (params: VxeColumnSlotTypes.HeaderSlotParams<D>) => any
+  header?: (params: VxeColumnSlotTypes.HeaderSlotParams<D>) => any
   /**
    * 只对 type=checkbox,radio 有效，自定义标题模板
    */
-  title: (params: VxeColumnSlotTypes.HeaderSlotParams<D>) => any
+  title?: (params: VxeColumnSlotTypes.HeaderSlotParams<D>) => any
 }
 
 export const Colgroup: typeof VxeColgroup

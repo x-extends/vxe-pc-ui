@@ -23,15 +23,15 @@ export interface CarouselItemPrivateRef {
 export interface VxeCarouselItemPrivateRef extends CarouselItemPrivateRef { }
 
 export namespace VxeCarouselItemPropTypes {
-  export type Name = string
+  export type Name = string | number | null
   export type ClassName = string
   export type Url = string
 }
 
-export type VxeCarouselItemProps = {
-  name: VxeCarouselItemPropTypes.Name
-  className: VxeCarouselItemPropTypes.ClassName
-  url: VxeCarouselItemPropTypes.Url
+export interface VxeCarouselItemProps {
+  name?: VxeCarouselItemPropTypes.Name
+  className?: VxeCarouselItemPropTypes.ClassName
+  url?: VxeCarouselItemPropTypes.Url
 }
 
 export interface CarouselItemPrivateComputed {
@@ -68,7 +68,7 @@ export namespace VxeCarouselItemSlotTypes {
 }
 
 export interface VxeCarouselItemSlots {
-  default: (params: VxeCarouselItemSlotTypes.DefaultSlotParams) => any
+  default?: (params: VxeCarouselItemSlotTypes.DefaultSlotParams) => any
 }
 
 export const CarouselItem: typeof VxeCarouselItem

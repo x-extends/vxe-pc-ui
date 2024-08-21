@@ -101,7 +101,7 @@ export namespace VxeButtonGroupSlotTypes {
 }
 
 export interface VxeButtonGroupSlots {
-  default: (params: VxeButtonGroupSlotTypes.DefaultSlotParams) => any
+  default?: (params: VxeButtonGroupSlotTypes.DefaultSlotParams) => any
 }
 
 export const ButtonGroup: typeof VxeButtonGroup

@@ -276,13 +276,13 @@ export interface VxeToolbarSlots {
   /**
    * 自定义左侧按钮列表
    */
-  buttons: (params: {
+  buttons?: (params: {
     [key: string]: any
   }) => any
   /**
    * 自定义右侧工具列表
    */
-  tools: ((params: {
+  tools?: ((params: {
     [key: string]: any
   }) => any) | undefined
 }

@@ -61,7 +61,7 @@ export namespace VxeCalendarSlotTypes {
 }
 
 export interface VxeCalendarSlots {
-  default: (params: VxeCalendarSlotTypes.DefaultSlotParams) => any
+  default?: (params: VxeCalendarSlotTypes.DefaultSlotParams) => any
 }
 
 export const Calendar: typeof VxeCalendar

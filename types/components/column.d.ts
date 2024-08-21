@@ -611,49 +611,49 @@ export interface VxeColumnSlots<D = any> {
   /**
    * 自定义显示内容模板
    */
-  default: (params: VxeColumnSlotTypes.DefaultSlotParams<D>) => any
+  default?: (params: VxeColumnSlotTypes.DefaultSlotParams<D>) => any
   /**
    * 自定义表头内容的模板
    */
-  header: (params: VxeColumnSlotTypes.HeaderSlotParams<D>) => any
+  header?: (params: VxeColumnSlotTypes.HeaderSlotParams<D>) => any
   /**
    * 自定义表尾内容的模板
    */
-  footer: (params: VxeColumnSlotTypes.FooterSlotParams<D>) => any
+  footer?: (params: VxeColumnSlotTypes.FooterSlotParams<D>) => any
   /**
    * 只对 type=checkbox,radio 有效，自定义标题模板
    */
-  title: (params: VxeColumnSlotTypes.HeaderSlotParams<D>) => any
+  title?: (params: VxeColumnSlotTypes.HeaderSlotParams<D>) => any
   /**
    * 只对 type=checkbox 有效，自定义复选框模板
    */
-  checkbox: (params: VxeColumnSlotTypes.CheckboxSlotParams<D>) => any
+  checkbox?: (params: VxeColumnSlotTypes.CheckboxSlotParams<D>) => any
   /**
    * 只对 type=radio 有效，自定义单选框模板
    */
-  radio: (params: VxeColumnSlotTypes.RadioSlotParams<D>) => any
+  radio?: (params: VxeColumnSlotTypes.RadioSlotParams<D>) => any
   /**
    * 只对 type=expand 有效，自定义展开后的内容模板
    */
-  content: (params: VxeColumnSlotTypes.ContentSlotParams<D>) => any
+  content?: (params: VxeColumnSlotTypes.ContentSlotParams<D>) => any
   /**
    * 只对 filter-render 启用时有效，自定义筛选模板
    */
-  filter: (params: VxeColumnSlotTypes.FilterSlotParams<D>) => any
+  filter?: (params: VxeColumnSlotTypes.FilterSlotParams<D>) => any
   /**
    * 只对 edit-render 启用时有效，自定义可编辑组件模板
    */
-  edit: (params: VxeColumnSlotTypes.EditSlotParams<D>) => any
+  edit?: (params: VxeColumnSlotTypes.EditSlotParams<D>) => any
    /**
    * 只对 edit-render 启用时有效，自定义展示错误校验模板
    */
-  valid: (params: VxeColumnSlotTypes.ValidSlotParams<D>) => any
+  valid?: (params: VxeColumnSlotTypes.ValidSlotParams<D>) => any
 
   /**
    * 已废弃
    * @deprecated
    */
-  icon: (params: VxeColumnSlotTypes.IconSlotParams<D>) => any
+  icon?: (params: VxeColumnSlotTypes.IconSlotParams<D>) => any
 }
 
 export const Column: typeof VxeColumn

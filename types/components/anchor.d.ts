@@ -81,7 +81,7 @@ export namespace VxeAnchorSlotTypes {
 }
 
 export interface VxeAnchorSlots {
-  default: (params: VxeAnchorSlotTypes.DefaultSlotParams) => any
+  default?: (params: VxeAnchorSlotTypes.DefaultSlotParams) => any
 }
 
 export const Anchor: typeof VxeAnchor

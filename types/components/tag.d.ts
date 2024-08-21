@@ -84,8 +84,8 @@ export namespace VxeTagSlotTypes {
 }
 
 export interface VxeTagSlots {
-  default: (params: VxeTagSlotTypes.DefaultSlotParams) => any
-  icon: (params: VxeTagSlotTypes.DefaultSlotParams) => any
+  default?: (params: VxeTagSlotTypes.DefaultSlotParams) => any
+  icon?: (params: VxeTagSlotTypes.DefaultSlotParams) => any
 }
 
 export const Tag: typeof VxeTag

@@ -113,7 +113,7 @@ export namespace VxeCheckboxSlotTypes {
 }
 
 export interface VxeCheckboxSlots {
-  default: (params: VxeCheckboxSlotTypes.DefaultSlotParams) => any
+  default?: (params: VxeCheckboxSlotTypes.DefaultSlotParams) => any
 }
 
 export const Checkbox: typeof VxeCheckbox

@@ -207,15 +207,15 @@ export interface VxeButtonSlots {
   /**
    * 自定义按钮内容
    */
-  default: (params: Record<string, any>) => any
+  default?: (params: Record<string, any>) => any
   /**
    * 自定义自定义图标
    */
-  icon: (params: Record<string, any>) => any
+  icon?: (params: Record<string, any>) => any
   /**
    * 自定义下拉按钮
    */
-  dropdowns: (params: Record<string, any>) => any
+  dropdowns?: (params: Record<string, any>) => any
 }
 
 export const Button: typeof VxeButton

@@ -268,7 +268,7 @@ export namespace VxeDatePickerSlotTypes {
 }
 
 export interface VxeDatePickerSlots {
-  default: (params: VxeDatePickerSlotTypes.DefaultSlotParams) => any
+  default?: (params: VxeDatePickerSlotTypes.DefaultSlotParams) => any
 }
 
 export const DatePicker: typeof VxeDatePicker

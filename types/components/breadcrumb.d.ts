@@ -80,7 +80,7 @@ export namespace VxeBreadcrumbSlotTypes {
 }
 
 export interface VxeBreadcrumbSlots {
-  default: (params: VxeBreadcrumbSlotTypes.DefaultSlotParams) => any
+  default?: (params: VxeBreadcrumbSlotTypes.DefaultSlotParams) => any
 }
 
 export const Breadcrumb: typeof VxeBreadcrumb

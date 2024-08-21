@@ -15,6 +15,9 @@ export default defineComponent({
   setup (props, context) {
     const { slots } = context
 
+    const $xeAnchor = inject<(VxeAnchorConstructor & VxeAnchorPrivateMethods) | null>('$xeAnchor', null)
+    const $xeParentAnchorLink = inject<(VxeAnchorLinkConstructor & VxeAnchorLinkPrivateMethods) | null>('$xeAnchorLink', null)
+
     const xID = XEUtils.uniqueId()
 
     const refElem = ref<HTMLDivElement>()
@@ -27,9 +30,6 @@ export default defineComponent({
       href: props.href,
       children: []
     })
-
-    const $xeAnchor = inject<(VxeAnchorConstructor & VxeAnchorPrivateMethods) | null>('$xeAnchor', null)
-    const $xeParentAnchorLink = inject<(VxeAnchorLinkConstructor & VxeAnchorLinkPrivateMethods) | null>('$xeAnchorLink', null)
 
     const refMaps: AnchorLinkPrivateRef = {
       refElem

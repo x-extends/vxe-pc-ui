@@ -77,13 +77,13 @@ export namespace VxeCardSlotTypes {
 }
 
 export interface VxeCardSlots {
-  default: (params: VxeCardSlotTypes.DefaultSlotParams) => any
-  header: (params: VxeCardSlotTypes.DefaultSlotParams) => any
-  title: (params: VxeCardSlotTypes.DefaultSlotParams) => any
-  extra: (params: VxeCardSlotTypes.DefaultSlotParams) => any
-  footer: (params: VxeCardSlotTypes.DefaultSlotParams) => any
-  left: (params: VxeCardSlotTypes.DefaultSlotParams) => any
-  right: (params: VxeCardSlotTypes.DefaultSlotParams) => any
+  default?: (params: VxeCardSlotTypes.DefaultSlotParams) => any
+  header?: (params: VxeCardSlotTypes.DefaultSlotParams) => any
+  title?: (params: VxeCardSlotTypes.DefaultSlotParams) => any
+  extra?: (params: VxeCardSlotTypes.DefaultSlotParams) => any
+  footer?: (params: VxeCardSlotTypes.DefaultSlotParams) => any
+  left?: (params: VxeCardSlotTypes.DefaultSlotParams) => any
+  right?: (params: VxeCardSlotTypes.DefaultSlotParams) => any
 }
 
 export const Card: typeof VxeCard

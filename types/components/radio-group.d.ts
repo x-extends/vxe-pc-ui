@@ -107,7 +107,7 @@ export namespace VxeRadioGroupSlotTypes {
 }
 
 export interface VxeRadioGroupSlots {
-  default: (params: VxeRadioGroupSlotTypes.DefaultSlotParams) => any
+  default?: (params: VxeRadioGroupSlotTypes.DefaultSlotParams) => any
 }
 
 export const RadioGroup: typeof VxeRadioGroup

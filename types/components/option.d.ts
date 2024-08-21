@@ -94,7 +94,7 @@ export namespace VxeOptionSlotTypes {
 }
 
 export interface VxeOptionSlots {
-  default: (params: VxeOptionSlotTypes.DefaultSlotParams) => any
+  default?: (params: VxeOptionSlotTypes.DefaultSlotParams) => any
 }
 
 export const Option: typeof VxeOption

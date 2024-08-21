@@ -85,6 +85,7 @@ export default {
     },
     pager: {
       goto: 'Ir a',
+      gotoTitle: 'Number',
       pagesize: '{0}/página',
       total: 'Total {0} registro',
       pageClassifier: '',

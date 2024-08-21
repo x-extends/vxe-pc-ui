@@ -74,9 +74,9 @@ export namespace VxeTipSlotTypes {
 }
 
 export interface VxeTipSlots {
-  default: (params: VxeTipSlotTypes.DefaultSlotParams) => any
-  title: (params: VxeTipSlotTypes.DefaultSlotParams) => any
-  icon: (params: VxeTipSlotTypes.DefaultSlotParams) => any
+  default?: (params: VxeTipSlotTypes.DefaultSlotParams) => any
+  title?: (params: VxeTipSlotTypes.DefaultSlotParams) => any
+  icon?: (params: VxeTipSlotTypes.DefaultSlotParams) => any
 }
 
 export const Tip: typeof VxeTip

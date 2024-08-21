@@ -301,9 +301,9 @@ export namespace VxeTreeSlotTypes {
 }
 
 export interface VxeTreeSlots {
-  title: (params: VxeTreeSlotTypes.DefaultSlotParams) => any
-  extra: (params: VxeTreeSlotTypes.DefaultSlotParams) => any
-  loading: (params: {}) => any
+  title?: (params: VxeTreeSlotTypes.DefaultSlotParams) => any
+  extra?: (params: VxeTreeSlotTypes.DefaultSlotParams) => any
+  loading?: (params: {}) => any
 }
 
 export const Tree: typeof VxeTree

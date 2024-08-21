@@ -176,7 +176,7 @@ export namespace VxeTreeSelectSlotTypes {
 }
 
 export interface VxeTreeSelectSlots {
-  default: (params: VxeTreeSelectSlotTypes.DefaultSlotParams) => any
+  default?: (params: VxeTreeSelectSlotTypes.DefaultSlotParams) => any
 }
 
 export const TreeSelect: typeof VxeTreeSelect

@@ -73,7 +73,7 @@ export interface VxeBreadcrumbItemSlots {
   /**
    * 自定义显示内容模板
    */
-  default: (params: VxeBreadcrumbItemSlotTypes.DefaultSlotParams) => any
+  default?: (params: VxeBreadcrumbItemSlotTypes.DefaultSlotParams) => any
 }
 
 export const BreadcrumbItem: typeof VxeBreadcrumbItem

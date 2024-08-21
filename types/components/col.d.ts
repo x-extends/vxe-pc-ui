@@ -60,7 +60,7 @@ export namespace VxeColSlotTypes {
 }
 
 export interface VxeColSlots {
-  default: (params: VxeColSlotTypes.DefaultSlotParams) => any
+  default?: (params: VxeColSlotTypes.DefaultSlotParams) => any
 }
 
 export const Col: typeof VxeCol

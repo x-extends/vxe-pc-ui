@@ -10,6 +10,7 @@
   height: calc(100% + 18px);
   color: var(--vxe-ui-font-color);
   font-family: var(--vxe-ui-font-family);
+  outline: 0;
   &.is--active {
     display: block;
   }
@@ -154,6 +155,7 @@
 .vxe-drawer--aside {
   flex-shrink: 0;
   overflow: auto;
+  outline: 0;
 }
 .vxe-drawer--container {
   display: flex;
@@ -161,6 +163,7 @@
   width: 100%;
   height: 100%;
   overflow: auto;
+  outline: 0;
 }
 .vxe-drawer--content {
   flex-grow: 1;
@@ -175,6 +178,7 @@
   display: flex;
   flex-grow: 1;
   overflow: auto;
+  outline: 0;
   .vxe-drawer--content {
     overflow: auto;
   }
@@ -183,11 +187,13 @@
 .vxe-drawer--body-right {
   flex-shrink: 0;
   overflow: auto;
+  outline: 0;
 }
 .vxe-drawer--body-default {
   display: flex;
   flex-grow: 1;
   overflow: auto;
+  outline: 0;
 }
 .vxe-drawer--header {
   display: flex;

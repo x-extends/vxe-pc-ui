@@ -158,11 +158,11 @@ export namespace VxePrintSlotTypes {
 }
 
 export interface VxePrintSlots {
-  default: (params: VxePrintSlotTypes.DefaultSlotParams) => any
-  header: (params: VxePrintSlotTypes.HeaderSlotParams) => any
-  footer: (params: VxePrintSlotTypes.FooterSlotParams) => any
-  left: (params: VxePrintSlotTypes.LeftSlotParams) => any
-  right: (params: VxePrintSlotTypes.RightSlotParams) => any
+  default?: (params: VxePrintSlotTypes.DefaultSlotParams) => any
+  header?: (params: VxePrintSlotTypes.HeaderSlotParams) => any
+  footer?: (params: VxePrintSlotTypes.FooterSlotParams) => any
+  left?: (params: VxePrintSlotTypes.LeftSlotParams) => any
+  right?: (params: VxePrintSlotTypes.RightSlotParams) => any
 }
 
 export const Print: typeof VxePrint

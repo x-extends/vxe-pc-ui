@@ -255,8 +255,8 @@ export namespace VxeUploadSlotTypes {
 }
 
 export interface VxeUploadSlots {
-  default: (params: VxeUploadSlotTypes.DefaultSlotParams) => any
-  tip: (params: VxeUploadSlotTypes.DefaultSlotParams) => any
+  default?: (params: VxeUploadSlotTypes.DefaultSlotParams) => any
+  tip?: (params: VxeUploadSlotTypes.DefaultSlotParams) => any
 }
 
 export const Upload: typeof VxeUpload

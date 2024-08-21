@@ -68,7 +68,7 @@ export namespace VxeRowSlotTypes {
 }
 
 export interface VxeRowSlots {
-  default: (params: VxeRowSlotTypes.DefaultSlotParams) => any
+  default?: (params: VxeRowSlotTypes.DefaultSlotParams) => any
 }
 
 export const Row: typeof VxeRow

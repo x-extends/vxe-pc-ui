@@ -173,13 +173,13 @@ export namespace VxeListViewSlotTypes {
 }
 
 export interface VxeListViewSlots<D = any> {
-  default?: (params: VxeListViewSlotTypes.DefaultSlotParams) => any
-  grid?: (params: VxeListViewSlotTypes.GridSlotParams) => any
-  cellAction?: (params: VxeListViewSlotTypes.CellActionSlotParams) => any
-
   [key: string]: ((params: {
     [key: string]: any
   }) => any) | undefined
+
+  default?: (params: VxeListViewSlotTypes.DefaultSlotParams) => any
+  grid?: (params: VxeListViewSlotTypes.GridSlotParams) => any
+  cellAction?: (params: VxeListViewSlotTypes.CellActionSlotParams) => any
 }
 
 export const ListView: typeof VxeListView

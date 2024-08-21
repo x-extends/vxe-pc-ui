@@ -220,7 +220,7 @@ export namespace VxeTextareaSlotTypes {
 }
 
 export interface VxeTextareaSlots {
-  default: (params: VxeTextareaSlotTypes.DefaultSlotParams) => any
+  default?: (params: VxeTextareaSlotTypes.DefaultSlotParams) => any
 }
 
 export const Textarea: typeof VxeTextarea

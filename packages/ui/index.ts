@@ -51,6 +51,12 @@ setConfig({
     border: true,
     padding: true
   },
+  carousel: {
+    height: 200,
+    loop: true,
+    showIndicators: true
+  },
+  carouselItem: {},
   checkbox: {},
   checkboxGroup: {},
   col: {},
@@ -415,7 +421,14 @@ setIcon({
   TABS_TAB_CLOSE: iconPrefix + 'close',
 
   // text
-  TEXT_COPY: iconPrefix + 'copy'
+  TEXT_COPY: iconPrefix + 'copy',
+
+  // carousel
+  CAROUSEL_HORIZONTAL_PREVIOUS: iconPrefix + 'arrow-left',
+  CAROUSEL_HORIZONTAL_NEXT: iconPrefix + 'arrow-right',
+  CAROUSEL_VERTICAL_PREVIOUS: iconPrefix + 'arrow-up',
+  CAROUSEL_VERTICAL_NEXT: iconPrefix + 'arrow-down'
+
 })
 
 export * from '@vxe-ui/core'

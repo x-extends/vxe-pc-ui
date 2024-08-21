@@ -1,68 +1,22 @@
 <template>
   <div>
-    <p>
-      <vxe-checkbox v-model="demo1.value1" content="默认尺寸"></vxe-checkbox>
-      <vxe-checkbox v-model="demo1.value2" size="medium" content="中等尺寸"></vxe-checkbox>
-      <vxe-checkbox v-model="demo1.value3" size="small" content="小型尺寸"></vxe-checkbox>
-      <vxe-checkbox v-model="demo1.value4" size="mini" content="超小尺寸"></vxe-checkbox>
-      <vxe-checkbox v-model="demo1.value5" content="默认尺寸" indeterminate></vxe-checkbox>
-      <vxe-checkbox v-model="demo1.value6" size="medium" content="中等尺寸" indeterminate></vxe-checkbox>
-      <vxe-checkbox v-model="demo1.value7" size="small" content="小型尺寸" indeterminate></vxe-checkbox>
-      <vxe-checkbox v-model="demo1.value8" size="mini" content="超小尺寸" indeterminate></vxe-checkbox>
-    </p>
+    <vxe-carousel>
+      <vxe-carousel-item name="1" url="https://vxeui.com/resource/img/fj577.jpg"></vxe-carousel-item>
+      <vxe-carousel-item name="2" url="https://vxeui.com/resource/img/fj581.jpeg"></vxe-carousel-item>
+      <vxe-carousel-item name="3" url="https://vxeui.com/resource/img/fj573.jpeg"></vxe-carousel-item>
+    </vxe-carousel>
 
-    <p>
-      <vxe-checkbox v-model="demo1.value9" content="复选1"></vxe-checkbox>
-      <vxe-checkbox v-model="demo1.value10" content="复选2" disabled></vxe-checkbox>
-      <vxe-checkbox v-model="demo1.value11" content="自定义值" checked-value="1" unchecked-value="0"></vxe-checkbox>
-    </p>
+    <br>
+    <br>
+    <br>
 
-    <p>
-      <vxe-checkbox-group v-model="demo1.value12">
-        <vxe-checkbox label="1" content="HTML"></vxe-checkbox>
-        <vxe-checkbox label="2" content="CSS"></vxe-checkbox>
-        <vxe-checkbox label="3" content="Javascript"></vxe-checkbox>
-        <vxe-checkbox label="4" content="SASS"></vxe-checkbox>
-        <vxe-checkbox label="5" content="LESS"></vxe-checkbox>
-      </vxe-checkbox-group>
-      <vxe-checkbox-group v-model="demo1.value12" :options="demo1.opts1" ></vxe-checkbox-group>
-    </p>
-
-    <p>
-      <vxe-checkbox-group v-model="demo1.value20" :max="3">
-        <vxe-checkbox label="1" content="HTML"></vxe-checkbox>
-        <vxe-checkbox label="2" content="CSS"></vxe-checkbox>
-        <vxe-checkbox label="3" content="Javascript"></vxe-checkbox>
-        <vxe-checkbox label="4" content="SASS"></vxe-checkbox>
-        <vxe-checkbox label="5" content="LESS"></vxe-checkbox>
-      </vxe-checkbox-group>
-    </p>
+    <vxe-carousel vertical>
+      <vxe-carousel-item name="1" url="https://vxeui.com/resource/img/fj577.jpg"></vxe-carousel-item>
+      <vxe-carousel-item name="2" url="https://vxeui.com/resource/img/fj581.jpeg"></vxe-carousel-item>
+      <vxe-carousel-item name="3" url="https://vxeui.com/resource/img/fj573.jpeg"></vxe-carousel-item>
+    </vxe-carousel>
   </div>
 </template>
 
 <script lang="ts" setup>
-import { reactive } from 'vue'
-
-const demo1 = reactive({
-  value1: null,
-  value2: null,
-  value3: null,
-  value4: null,
-  value5: false,
-  value6: false,
-  value7: false,
-  value8: false,
-  value9: true,
-  value10: true,
-  value11: '1',
-  value12: ['3'],
-  value20: [],
-  opts1: [
-    { value: '1', label: 'HTML' },
-    { value: '2', label: 'CSS' },
-    { value: '3', label: 'Javascript' },
-    { value: '4', label: 'SASS' },
-    { value: '5', label: 'LESS' }
-  ]
-})
 </script>

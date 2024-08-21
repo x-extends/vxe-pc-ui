@@ -86,8 +86,8 @@ export namespace VxeTextSlotTypes {
 }
 
 export interface VxeTextSlots {
-  default: (params: VxeTextSlotTypes.DefaultSlotParams) => any
-  icon: (params: VxeTextSlotTypes.DefaultSlotParams) => any
+  default?: (params: VxeTextSlotTypes.DefaultSlotParams) => any
+  icon?: (params: VxeTextSlotTypes.DefaultSlotParams) => any
 }
 
 export const Text: typeof VxeText

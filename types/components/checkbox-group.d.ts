@@ -114,7 +114,7 @@ export namespace VxeCheckboxGroupSlotTypes {
 }
 
 export interface VxeCheckboxGroupSlots {
-  default: (params: VxeCheckboxGroupSlotTypes.DefaultSlotParams) => any
+  default?: (params: VxeCheckboxGroupSlotTypes.DefaultSlotParams) => any
 }
 
 export const CheckboxGroup: typeof VxeCheckboxGroup

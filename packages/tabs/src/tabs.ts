@@ -2,6 +2,7 @@ import { defineComponent, ref, h, reactive, inject, PropType, provide, computed,
 import { createEvent, getConfig, getIcon, globalEvents, permission } from '../../ui'
 import { getSlotVNs } from '../../ui/src/vn'
 import { toCssUnit } from '../..//ui/src/dom'
+import { warnLog } from '../../ui/src/log'
 import XEUtils from 'xe-utils'
 
 import type { VxeTabsPropTypes, VxeTabPaneProps, VxeTabsEmits, TabsReactData, TabsPrivateRef, VxeTabsPrivateComputed, VxeTabsConstructor, VxeTabsPrivateMethods, VxeTabPaneDefines, ValueOf, TabsMethods, TabsPrivateMethods } from '../../../types'
@@ -296,7 +297,7 @@ export default defineComponent({
       })
     }
 
-    const createHandlePrevNextTab = (isNext: boolean) => {
+    const createHandlePrevNext = (isNext: boolean) => {
       return () => {
         const { activeName } = reactData
         const tabOptions = computeTabOptions.value
@@ -329,8 +330,16 @@ export default defineComponent({
     const tabsMethods: TabsMethods = {
       dispatchEvent,
       scrollToTab,
-      prevTab: createHandlePrevNextTab(false),
-      nextTab: createHandlePrevNextTab(true)
+      prev: createHandlePrevNext(false),
+      next: createHandlePrevNext(true),
+      prevTab () {
+        warnLog('vxe.error.delFunc', ['prevTab', 'prev'])
+        return tabsMethods.prev()
+      },
+      nextTab () {
+        warnLog('vxe.error.delFunc', ['nextTab', 'next'])
+        return tabsMethods.next()
+      }
     }
 
     const tabsPrivateMethods: TabsPrivateMethods = {

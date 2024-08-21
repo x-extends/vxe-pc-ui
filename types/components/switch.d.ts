@@ -118,7 +118,7 @@ export namespace VxeSwitchSlotTypes {
 }
 
 export interface VxeSwitchSlots {
-  default: (params: VxeSwitchSlotTypes.DefaultSlotParams) => any
+  default?: (params: VxeSwitchSlotTypes.DefaultSlotParams) => any
 }
 
 export const Switch: typeof VxeSwitch
