@@ -151,11 +151,6 @@
     line-height: 2em;
     display: inline-block;
   }
-  .vxe-pager--jump .vxe-pager--goto,
-  .vxe-pager--sizes > .vxe-input {
-    height: 2.15em;
-    line-height: 2.15em;
-  }
   .vxe-pager--sizes > .vxe-select--panel .vxe-select-option {
     text-align: center;
   }
@@ -264,7 +259,6 @@
     }
     .vxe-pager--goto {
       width: 3.2em;
-      text-align: center;
     }
   }
 }

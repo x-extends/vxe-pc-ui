@@ -1,7 +1,7 @@
 <template>
   <div>
     <p>
-      <vxe-tabs modelValue="3" >
+      <vxe-tabs modelValue1="3" >
         <vxe-tab-pane title="xxx1" name="1">xxxx</vxe-tab-pane>
         <vxe-tab-pane title="xxx2" name="2" icon="vxe-icon-pc">cccc</vxe-tab-pane>
         <vxe-tab-pane title="xxx3" name="3" icon="vxe-icon-pc">vvvv</vxe-tab-pane>
@@ -15,7 +15,7 @@
     </p>
 
     <p>
-      <vxe-tabs  modelValue="3" type="card">
+      <vxe-tabs  modelValue1="3" type="card">
         <vxe-tab-pane title="xxx1" name="1">xxxx</vxe-tab-pane>
         <vxe-tab-pane title="xxx2" name="2" icon="vxe-icon-pc">cccc</vxe-tab-pane>
         <vxe-tab-pane title="xxx3" name="3" icon="vxe-icon-pc">vvvv</vxe-tab-pane>

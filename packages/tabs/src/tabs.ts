@@ -46,7 +46,7 @@ export default defineComponent({
 
     const reactData = reactive<TabsReactData>({
       staticTabs: [],
-      activeName: props.modelValue,
+      activeName: null,
       initNames: [],
       lintLeft: 0,
       lintWidth: 0,
@@ -155,13 +155,25 @@ export default defineComponent({
     }
 
     const initDefaultName = (list?: VxeTabsPropTypes.Options | VxeTabPaneDefines.TabConfig[]) => {
-      if (list) {
+      let activeName: VxeTabsPropTypes.ModelValue = null
+      if (list && list.length) {
+        let validVal = false
+        activeName = props.modelValue
         list.forEach((item) => {
+          if (activeName === item.name) {
+            validVal = true
+          }
           if (item && item.preload) {
             addInitName(item.name, null)
           }
         })
+        if (!validVal) {
+          activeName = list[0].name
+          addInitName(activeName, null)
+          emit('update:modelValue', activeName)
+        }
       }
+      reactData.activeName = activeName
     }
 
     const clickEvent = (evnt: KeyboardEvent, item: VxeTabPaneProps | VxeTabPaneDefines.TabConfig) => {
@@ -547,7 +559,7 @@ export default defineComponent({
     provide('$xeTabs', $xeTabs)
 
     addInitName(props.modelValue, null)
-    initDefaultName()
+    initDefaultName(reactData.staticTabs.length ? reactData.staticTabs : props.options)
 
     return $xeTabs
   },

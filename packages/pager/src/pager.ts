@@ -2,9 +2,10 @@ import { defineComponent, h, PropType, computed, inject, ref, Ref, reactive, nex
 import XEUtils from 'xe-utils'
 import { getIcon, getConfig, getI18n, globalEvents, GLOBAL_EVENT_KEYS, createEvent, useSize } from '../../ui'
 import { errLog } from '../../ui/src/log'
-import VxeSelectComponent from '../../select'
+import VxeSelectComponent from '../../select/src/select'
+import VxeInputComponent from '../../input/src/input'
 
-import type { VxePagerPropTypes, VxePagerConstructor, VxePagerEmits, VxeSelectEvents, PagerPrivateRef, PagerMethods, PagerPrivateMethods, VxePagerPrivateMethods, PagerReactData, VxeGridConstructor, VxeGridPrivateMethods } from '../../../types'
+import type { VxePagerPropTypes, VxePagerConstructor, VxePagerEmits, VxeSelectEvents, PagerPrivateRef, PagerMethods, PagerPrivateMethods, VxePagerPrivateMethods, PagerReactData, VxeGridConstructor, VxeGridPrivateMethods, VxeInputEvents } from '../../../types'
 
 export default defineComponent({
   name: 'VxePager',
@@ -102,15 +103,16 @@ export default defineComponent({
       }
     }
 
-    const triggerJumpEvent = (evnt: Event) => {
-      const inputElem: HTMLInputElement = evnt.target as HTMLInputElement
+    const triggerJumpEvent: VxeInputEvents.Blur = (params) => {
+      const { $event } = params
+      const inputElem: HTMLInputElement = $event.target as HTMLInputElement
       const inpValue = XEUtils.toInteger(inputElem.value)
       const pageCount = computePageCount.value
       const current = inpValue <= 0 ? 1 : inpValue >= pageCount ? pageCount : inpValue
       const currPage = XEUtils.toValueString(current)
       inputElem.value = currPage
       reactData.inpCurrPage = currPage
-      changeCurrentPage(current, evnt)
+      changeCurrentPage(current, $event)
     }
 
     const computeNumList = computed(() => {
@@ -195,20 +197,16 @@ export default defineComponent({
       pagerMethods.dispatchEvent('page-change', { type: 'size', pageSize, currentPage }, params.$event)
     }
 
-    const jumpInputEvent = (evnt: KeyboardEvent) => {
-      const inputElem: HTMLInputElement = evnt.target as HTMLInputElement
-      reactData.inpCurrPage = inputElem.value
-    }
-
-    const jumpKeydownEvent = (evnt: KeyboardEvent) => {
-      if (globalEvents.hasKey(evnt, GLOBAL_EVENT_KEYS.ENTER)) {
-        triggerJumpEvent(evnt)
-      } else if (globalEvents.hasKey(evnt, GLOBAL_EVENT_KEYS.ARROW_UP)) {
-        evnt.preventDefault()
-        handleNextPage(evnt)
-      } else if (globalEvents.hasKey(evnt, GLOBAL_EVENT_KEYS.ARROW_DOWN)) {
-        evnt.preventDefault()
-        handlePrevPage(evnt)
+    const jumpKeydownEvent: VxeInputEvents.Keydown = (params) => {
+      const { $event } = params
+      if (globalEvents.hasKey($event, GLOBAL_EVENT_KEYS.ENTER)) {
+        triggerJumpEvent(params)
+      } else if (globalEvents.hasKey($event, GLOBAL_EVENT_KEYS.ARROW_UP)) {
+        $event.preventDefault()
+        handleNextPage($event)
+      } else if (globalEvents.hasKey($event, GLOBAL_EVENT_KEYS.ARROW_DOWN)) {
+        $event.preventDefault()
+        handlePrevPage($event)
       }
     }
 
@@ -409,14 +407,15 @@ export default defineComponent({
             class: 'vxe-pager--goto-text'
           }, getI18n('vxe.pager.goto'))
           : null,
-        h('input', {
+        h(VxeInputComponent, {
           class: 'vxe-pager--goto',
-          value: reactData.inpCurrPage,
-          type: 'text',
-          autocomplete: 'off',
-          onInput: jumpInputEvent,
+          align: 'center',
+          modelValue: reactData.inpCurrPage,
           onKeydown: jumpKeydownEvent,
-          onBlur: triggerJumpEvent
+          onBlur: triggerJumpEvent,
+          'onUpdate:modelValue' (val) {
+            reactData.inpCurrPage = val
+          }
         }),
         isFull
           ? h('span', {

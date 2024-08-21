@@ -11,6 +11,7 @@ import VxeButtonGroup from './components/button-group'
 import VxeCalendar from './components/calendar'
 import VxeCard from './components/card'
 import VxeCarousel from './components/carousel'
+import VxeCarouselItem from './components/carousel-item'
 import VxeCheckbox from './components/checkbox'
 import VxeCheckboxGroup from './components/checkbox-group'
 import VxeCol from './components/col'
@@ -88,6 +89,7 @@ interface AllComponents {
   VxeCalendar: typeof VxeCalendar
   VxeCard: typeof VxeCard
   VxeCarousel: typeof VxeCarousel
+  VxeCarouselItem: typeof VxeCarouselItem
   VxeCheckbox: typeof VxeCheckbox
   VxeCheckboxGroup: typeof VxeCheckboxGroup
   VxeCol: typeof VxeCol
@@ -174,6 +176,7 @@ export * from './components/button-group'
 export * from './components/calendar'
 export * from './components/card'
 export * from './components/carousel'
+export * from './components/carousel-item'
 export * from './components/checkbox'
 export * from './components/checkbox-group'
 export * from './components/col'

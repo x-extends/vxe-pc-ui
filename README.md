@@ -49,6 +49,7 @@
 * [x] form-item 表单-项
 * [x] form-view 表单设计器-视图渲染
 * [x] icon 图标
+* [x] icon-picker 图标选择
 * [x] image 图片
 * [x] image-preview 图片预览
 * [x] input 输入框
@@ -70,6 +71,7 @@
 * [x] pager 分页
 * [x] password-input 密码输入框
 * [x] print 打印
+* [x] print-page-break 分页打印
 * [x] pulldown 下拉容器
 * [x] radio 单选框
 * [x] radio-button 单选框-按钮
@@ -80,10 +82,10 @@
 * [x] tab-pane 页签-容器
 * [x] tabs 页签
 * [x] textarea 文本域
-* [x] tips 段落提示
+* [x] tip 提示
 * [x] tooltip 文字提示
 * [x] tree 树形组件
-* [ ] tree-select 树形下拉框
+* [x] tree-select 树形下拉框
 * [x] upload 附件上传
 
 [👀 Vxe Table](https://vxetable.cn)  

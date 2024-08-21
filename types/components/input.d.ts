@@ -1,5 +1,5 @@
 import { RenderFunction, SetupContext, Ref, ComponentPublicInstance, DefineComponent } from 'vue'
-import { defineVxeComponent, VxeComponentBaseOptions, ValueOf, VxeComponentStyleType, VxeComponentSizeType } from '@vxe-ui/core'
+import { defineVxeComponent, VxeComponentBaseOptions, ValueOf, VxeComponentStyleType, VxeComponentAlignType, VxeComponentSizeType } from '@vxe-ui/core'
 
 /* eslint-disable no-use-before-define,@typescript-eslint/ban-types */
 
@@ -42,7 +42,7 @@ export namespace VxeInputPropTypes {
     value: string
   }) => number
   export type AutoComplete = string
-  export type Align = string
+  export type Align = VxeComponentAlignType
   export type Form = string
   export type Min = string | number
   export type Max = string | number
