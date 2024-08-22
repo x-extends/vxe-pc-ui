@@ -10,6 +10,7 @@ export default {
       text: 'Cargando...'
     },
     error: {
+      downErr: 'Download failed.',
       groupFixed: 'If you use group headers, the freeze columns must be set by group.',
       groupMouseRange: 'Los encabezados de agrupación y "{0}" no pueden ser utilizados al mismo tiempo, lo que puede causar errores.',
       groupTag: 'El encabezado de columna de agrupación debería utilizar "{0}" en lugar de "{1}", lo que puede causar errores.',

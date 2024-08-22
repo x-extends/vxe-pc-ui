@@ -471,6 +471,11 @@
       }
     }
   }
+  &.type--message {
+    .vxe-modal--body-default {
+      padding-right: 1.2em;
+    }
+  }
 }
 
 .vxe-modal--wrapper {

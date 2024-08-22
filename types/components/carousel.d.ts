@@ -33,6 +33,7 @@ export namespace VxeCarouselPropTypes {
   export type Height = number | string
   export type Width = number | string
   export type AutoPlay = boolean
+  export type Interval = number | string
   export type Loop = boolean
   export type Vertical = boolean
   export type ShowIndicators = boolean
@@ -46,6 +47,7 @@ export type VxeCarouselProps = {
   width?: VxeCarouselPropTypes.Width
   autoPlay?: VxeCarouselPropTypes.AutoPlay
   loop?: VxeCarouselPropTypes.Loop
+  interval?: VxeCarouselPropTypes.Interval
   vertical?: VxeCarouselPropTypes.Vertical
   showIndicators?: VxeCarouselPropTypes.ShowIndicators
 }

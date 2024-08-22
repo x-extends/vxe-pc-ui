@@ -287,12 +287,19 @@ export default defineComponent({
       const imgUrl = imgList[activeIndex || 0]
       if (VxeUI.saveFile) {
         fetch(imgUrl).then(res => {
-          res.blob().then(blob => {
+          return res.blob().then(blob => {
             VxeUI.saveFile({
               filename: imgUrl,
               content: blob
             })
           })
+        }).catch(() => {
+          if (VxeUI.modal) {
+            VxeUI.modal.message({
+              content: getI18n('vxe.error.downErr'),
+              status: 'error'
+            })
+          }
         })
       }
     }

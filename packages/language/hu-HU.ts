@@ -10,6 +10,7 @@ export default {
       text: '加载中...'
     },
     error: {
+      downErr: '下载失败',
       groupFixed: '如果使用分组表头，冻结列必须按组设置',
       groupMouseRange: '分组表头与 "{0}" 不能同时使用，这可能会出现错误',
       groupTag: '分组列头应该使用 "{0}" 而不是 "{1}"，这可能会出现错误',

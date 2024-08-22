@@ -7,7 +7,7 @@ import type { VxeCarouselItemPropTypes, CarouselItemReactData, CarouselItemPriva
 export default defineComponent({
   name: 'VxeCarouselItem',
   props: {
-    name: String as PropType<VxeCarouselItemPropTypes.Name>,
+    name: [String, Number] as PropType<VxeCarouselItemPropTypes.Name>,
     className: String as PropType<VxeCarouselItemPropTypes.ClassName>,
     url: String as PropType<VxeCarouselItemPropTypes.Url>
   },

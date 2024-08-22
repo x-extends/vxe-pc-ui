@@ -54,7 +54,7 @@ setConfig({
   carousel: {
     height: 200,
     loop: true,
-    showIndicators: true
+    interval: 3000
   },
   carouselItem: {},
   checkbox: {},

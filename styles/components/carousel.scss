@@ -144,7 +144,7 @@
   width: 0.8em;
   height: 0.8em;
   border-radius: 50%;
-  background-color: rgba(255, 255, 255, 0.6);
+  background-color: rgba(255, 255, 255, 0.8);
   cursor: pointer;
   @include createAnimationTransition(all, .2s);
   &.is--active {
@@ -172,7 +172,7 @@
   font-size: 1.4em;
   background-color: rgba(0, 0, 0, 0.8);
   opacity: 0;
-  color: rgba(255, 255, 255, 0.8);
+  color: rgba(255, 255, 255, 0.6);
   cursor: pointer;
   @include createAnimationTransition(all, .2s);
   &:hover {

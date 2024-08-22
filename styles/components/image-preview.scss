@@ -16,6 +16,35 @@
       @include createAnimationTransition(transform, 0.3s);
     }
   }
+  &:hover {
+    .vxe-image-preview--close-wrapper,
+    .vxe-image-preview--previous-btn,
+    .vxe-image-preview--next-btn,
+    .vxe-image-preview--operation-info,
+    .vxe-image-preview--operation-wrapper {
+      opacity: 1;
+    }
+    .vxe-image-preview--operation-info {
+      transform: translate(0, 0);
+    }
+    .vxe-image-preview--previous-btn,
+    .vxe-image-preview--next-btn {
+      transform: translate(0, -50%);
+      &:hover {
+        color: var(--vxe-ui-font-primary-color);
+        transform: translate(0, -50%) scale(1.2);
+      }
+      &:active {
+        transform: translate(0, -50%) scale(0.9);
+      }
+    }
+    .vxe-image-preview--operation-wrapper {
+      transform: translate(-50%, 0);
+      &:hover {
+        transform: translateX(-50%) scale(1.1);
+      }
+    }
+  }
 }
 .vxe-image-preview--img-list {
   display: flex;
@@ -50,7 +79,7 @@
   z-index: 99;
   width: 30em;
   height: 10em;
-  background-color: rgba(0, 0, 0, 0.8);
+  background-color: rgba(0, 0, 0, 0.7);
   color: var(--vxe-ui-status-error-color);
   transform: rotate(45deg);
   cursor: pointer;
@@ -58,6 +87,8 @@
   @include createAnimationTransition(all, 0.2s);
 }
 .vxe-image-preview--close-wrapper {
+  opacity: 0;
+  @include createAnimationTransition(all, 0.2s);
   &:hover {
     .vxe-image-preview--close-btn {
       top: 0.2em;
@@ -85,29 +116,24 @@
   flex-direction: row;
   align-items: center;
   justify-content: center;
+  opacity: 0;
   top: 50%;
   border-radius: 50%;
   font-size: 1.6em;
   width: 2.2em;
   height: 2.2em;
   line-height: 2.2em;
-  transform: translateY(-50%);
-  background-color: rgba(0, 0, 0, 0.8);
+  background-color: rgba(0, 0, 0, 0.7);
   cursor: pointer;
   @include createAnimationTransition(all, 0.1s);
-  &:hover {
-    color: var(--vxe-ui-font-primary-color);
-    transform: translateY(-50%) scale(1.2);
-  }
-  &:active {
-    transform: translateY(-50%) scale(1.1);
-  }
 }
 .vxe-image-preview--previous-btn {
   left: 1vw;
+  transform: translate(-2em, -50%);
 }
 .vxe-image-preview--next-btn {
   right: 1vw;
+  transform: translate(2em, -50%);
 }
 
 .vxe-image-preview--operation-info {
@@ -116,19 +142,24 @@
   font-size: 1em;
   padding: 0.3em 0;
   width: 4.6em;
+  opacity: 0;
   border-radius: var(--vxe-ui-base-border-radius);
   text-align: center;
-  background-color: rgba(0, 0, 0, 0.8);
+  transform: translate(2em, 2em);
+  background-color: rgba(0, 0, 0, 0.7);
+  @include createAnimationTransition(all, 0.2s);
 }
 .vxe-image-preview--operation-wrapper {
+  opacity: 0;
   display: flex;
   flex-direction: row;
   bottom: 3vh;
   left: 50%;
-  transform: translateX(-50%);
+  transform: translate(-50%, 3em);
   padding: 0 1.5em;
   border-radius: 3em;
-  background-color: rgba(0, 0, 0, 0.8);
+  background-color: rgba(0, 0, 0, 0.7);
+  @include createAnimationTransition(all, 0.2s);
 }
 .vxe-image-preview--operation-active-count {
   display: flex;
@@ -161,7 +192,7 @@
     transform: scale(1.2);
   }
   &:active {
-    transform: scale(1.1);
+    transform: scale(0.9);
   }
 }
 

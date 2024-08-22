@@ -10,6 +10,7 @@ export default {
       text: '加載中...'
     },
     error: {
+      downErr: '下载失败',
       groupFixed: '如果使用分組表頭，固冻结列必須按組設定',
       groupMouseRange: '分组表頭與 "{0}" 不能同時使用，這可能會出現錯誤',
       groupTag: '分組列頭應該使用 "{0}" 而不是 "{1}"，這可能會出現錯誤',

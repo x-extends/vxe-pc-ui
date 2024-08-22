@@ -1,4 +1,4 @@
-import { defineComponent, ref, h, reactive, provide, PropType, watch, nextTick, onMounted, computed } from 'vue'
+import { defineComponent, ref, h, reactive, provide, PropType, watch, nextTick, onMounted, computed, onUnmounted } from 'vue'
 import { getConfig, getIcon, createEvent } from '../../ui'
 import { getSlotVNs } from '../../ui/src/vn'
 import { toCssUnit } from '../..//ui/src/dom'
@@ -27,6 +27,10 @@ export default defineComponent({
     autoPlay: {
       type: Boolean as PropType<VxeCarouselPropTypes.AutoPlay>,
       default: () => getConfig().carousel.autoPlay
+    },
+    interval: {
+      type: [Number, String] as PropType<VxeCarouselPropTypes.Interval>,
+      default: () => getConfig().carousel.interval
     },
     loop: {
       type: Boolean as PropType<VxeCarouselPropTypes.Loop>,
@@ -193,7 +197,43 @@ export default defineComponent({
       }
     }
 
+    let apTimeout: any = null
+    let stopFlag = false
+
+    const stopAutoPlay = () => {
+      stopFlag = true
+      if (apTimeout !== null) {
+        clearTimeout(apTimeout)
+      }
+    }
+
+    const handleAutoPlay = () => {
+      const { autoPlay, interval } = props
+      stopAutoPlay()
+      if (autoPlay) {
+        stopFlag = false
+        apTimeout = setTimeout(() => {
+          if (!stopFlag) {
+            handlePrevNext(true)
+            handleAutoPlay()
+          }
+        }, XEUtils.toNumber(interval) || 300)
+      }
+    }
+
     const carouselPrivateMethods: CarouselPrivateMethods = {
+    }
+
+    const callSlot = (slotFunc: any, params: any) => {
+      if (slotFunc) {
+        if (XEUtils.isString(slotFunc)) {
+          slotFunc = slots[slotFunc] || null
+        }
+        if (XEUtils.isFunction(slotFunc)) {
+          return getSlotVNs(slotFunc(params))
+        }
+      }
+      return []
     }
 
     Object.assign($xeCarousel, carouselMethods, carouselPrivateMethods)
@@ -220,7 +260,7 @@ export default defineComponent({
               }
             : null
         }, defaultSlot
-          ? getSlotVNs(defaultSlot({}))
+          ? callSlot(defaultSlot, {})
           : [
               h('img', {
                 class: 'vxe-carousel--item-img',
@@ -330,10 +370,19 @@ export default defineComponent({
       initDefaultActive(reactData.staticItems)
     })
 
+    watch(() => props.autoPlay, () => {
+      handleAutoPlay()
+    })
+
     initDefaultActive(reactData.staticItems.length ? reactData.staticItems : props.options)
 
     onMounted(() => {
+      handleAutoPlay()
       updateStyle()
+    })
+
+    onUnmounted(() => {
+      stopAutoPlay()
     })
 
     provide('$xeCarousel', $xeCarousel)
