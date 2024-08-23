@@ -16,12 +16,16 @@ VxeUI._t = getFuncText
 VxeUI.dynamicApp = dynamicApp
 
 export function config (options?: VxeGlobalConfig) {
-  warnLog('vxe.error.delFunc', ['config', 'setConfig'])
+  if (process.env.VUE_APP_VXE_ENV === 'development') {
+    warnLog('vxe.error.delFunc', ['config', 'setConfig'])
+  }
   return setConfig(options)
 }
 
 export function setup (options?: VxeGlobalConfig) {
-  warnLog('vxe.error.delFunc', ['setup', 'setConfig'])
+  if (process.env.VUE_APP_VXE_ENV === 'development') {
+    warnLog('vxe.error.delFunc', ['setup', 'setConfig'])
+  }
   return setConfig(options)
 }
 
@@ -47,6 +51,12 @@ setConfig({
     trigger: 'hover'
   },
   buttonGroup: {},
+  calendar: {
+    minDate: new Date(1900, 0, 1),
+    maxDate: new Date(2100, 0, 1),
+    startDay: 1,
+    selectDay: 1
+  },
   card: {
     border: true,
     padding: true
@@ -54,7 +64,7 @@ setConfig({
   carousel: {
     height: 200,
     loop: true,
-    interval: 3000
+    interval: 5000
   },
   carouselItem: {},
   checkbox: {},
@@ -359,6 +369,7 @@ setIcon({
   // list-design
   LIST_DESIGN_FIELD_SETTING: iconPrefix + 'custom-column',
   LIST_DESIGN_LIST_SETTING: iconPrefix + 'menu',
+  LIST_DESIGN_LIST_SETTING_SEARCH_DELETE: iconPrefix + 'delete',
   LIST_DESIGN_LIST_SETTING_ACTIVE_DELETE: iconPrefix + 'delete',
 
   // upload

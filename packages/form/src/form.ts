@@ -684,7 +684,6 @@ export default defineComponent({
           [`size--${vSize}`]: vSize,
           'is--loading': loading
         }],
-        spellcheck: false,
         onSubmit: submitEvent,
         onReset: resetEvent
       }, [

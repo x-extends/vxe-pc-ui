@@ -1,29 +1,85 @@
-import { defineComponent, ref, h, reactive } from 'vue'
+import { defineComponent, h, ref, Ref, computed, reactive, watch, PropType, onMounted } from 'vue'
+import { getConfig, getI18n, createEvent, useSize } from '../../ui'
+import { getDateQuarter } from '../../date-picker/src/util'
+import { toCssUnit } from '../..//ui/src/dom'
+import VxeButtonComponent from '../../button/src/button'
 import XEUtils from 'xe-utils'
 
-import type { CalendarReactData, VxeCalendarEmits, CalendarPrivateRef, VxeCalendarPrivateComputed, VxeCalendarConstructor, VxeCalendarPrivateMethods } from '../../../types'
+import type { VxeCalendarConstructor, VxeCalendarEmits, CalendarReactData, CalendarMethods, VxeCalendarPropTypes, CalendarPrivateRef, VxeDatePickerDefines } from '../../../types'
 
 export default defineComponent({
   name: 'VxeCalendar',
   props: {
+    modelValue: [String, Number, Date] as PropType<VxeCalendarPropTypes.ModelValue>,
+    type: { type: String as PropType<VxeCalendarPropTypes.Type>, default: 'date' },
+    className: String as PropType<VxeCalendarPropTypes.ClassName>,
+    size: { type: String as PropType<VxeCalendarPropTypes.Size>, default: () => getConfig().calendar.size || getConfig().size },
+    multiple: Boolean as PropType<VxeCalendarPropTypes.Multiple>,
+
+    width: [String, Number] as PropType<VxeCalendarPropTypes.Width>,
+    height: [String, Number] as PropType<VxeCalendarPropTypes.Height>,
+
+    // date、week、month、quarter、year
+    minDate: { type: [String, Number, Date] as PropType<VxeCalendarPropTypes.MinDate>, default: () => getConfig().calendar.minDate },
+    maxDate: { type: [String, Number, Date] as PropType<VxeCalendarPropTypes.MaxDate>, default: () => getConfig().calendar.maxDate },
+    startDay: { type: [String, Number] as PropType<VxeCalendarPropTypes.StartDay>, default: () => getConfig().calendar.startDay },
+    labelFormat: String as PropType<VxeCalendarPropTypes.LabelFormat>,
+    valueFormat: String as PropType<VxeCalendarPropTypes.ValueFormat>,
+    festivalMethod: { type: Function as PropType<VxeCalendarPropTypes.FestivalMethod>, default: () => getConfig().calendar.festivalMethod },
+    disabledMethod: { type: Function as PropType<VxeCalendarPropTypes.DisabledMethod>, default: () => getConfig().calendar.disabledMethod },
+
+    // week
+    selectDay: { type: [String, Number] as PropType<VxeCalendarPropTypes.SelectDay>, default: () => getConfig().calendar.selectDay }
   },
   emits: [
+    'update:modelValue',
+    'change',
+    'click',
+    'date-prev',
+    'date-today',
+    'date-next'
   ] as VxeCalendarEmits,
   setup (props, context) {
-    const { slots } = context
+    const { emit } = context
 
     const xID = XEUtils.uniqueId()
 
-    const refElem = ref<HTMLDivElement>()
+    const { computeSize } = useSize(props)
+
+    const yearSize = 12
+    const monthSize = 20
+    const quarterSize = 8
 
     const reactData = reactive<CalendarReactData>({
+      panelIndex: 0,
+      panelStyle: null,
+      panelPlacement: '',
+      isActivated: false,
+      selectValue: props.modelValue,
+      inputValue: props.modelValue,
+      datePanelValue: null,
+      datePanelLabel: '',
+      datePanelType: 'day',
+      selectMonth: null,
+      currentDate: null
+    })
+
+    const refElem = ref() as Ref<HTMLDivElement>
+
+    const computeCalendarStyle = computed(() => {
+      const { height, width } = props
+      const stys: Record<string, string> = {}
+      if (width) {
+        stys.width = toCssUnit(width)
+      }
+      if (height) {
+        stys.height = toCssUnit(height)
+      }
+      return stys
     })
 
     const refMaps: CalendarPrivateRef = {
       refElem
-    }
-
-    const computeMaps: VxeCalendarPrivateComputed = {
     }
 
     const $xeCalendar = {
@@ -31,20 +87,995 @@ export default defineComponent({
       props,
       context,
       reactData,
+      getRefMaps: () => refMaps
+    } as unknown as VxeCalendarConstructor
 
-      getRefMaps: () => refMaps,
-      getComputeMaps: () => computeMaps
-    } as unknown as VxeCalendarConstructor & VxeCalendarPrivateMethods
+    let calendarMethods = {} as CalendarMethods
+
+    const parseDate = (value: VxeCalendarPropTypes.ModelValue, format: string) => {
+      return XEUtils.toStringDate(value, format)
+    }
+
+    const computeIsDisabled = computed(() => {
+      return false
+    })
+
+    const computeIsCalendarType = computed(() => {
+      return ['date', 'week', 'month', 'quarter', 'year'].indexOf(props.type) > -1
+    })
+
+    const computeDateStartTime = computed(() => {
+      return props.minDate ? XEUtils.toStringDate(props.minDate) : null
+    })
+
+    const computeDateEndTime = computed(() => {
+      return props.maxDate ? XEUtils.toStringDate(props.maxDate) : null
+    })
+
+    const computeSupportMultiples = computed(() => {
+      return ['date', 'week', 'month', 'quarter', 'year'].indexOf(props.type) > -1
+    })
+
+    const computeDateListValue = computed(() => {
+      const { multiple } = props
+      const { selectValue } = reactData
+      const isCalendarType = computeIsCalendarType.value
+      const dateValueFormat = computeDateValueFormat.value
+      if (multiple && selectValue && isCalendarType) {
+        return XEUtils.toValueString(selectValue).split(',').map(item => {
+          const date = parseDate(item, dateValueFormat)
+          if (XEUtils.isValidDate(date)) {
+            return date
+          }
+          return null
+        })
+      }
+      return []
+    })
+
+    const computeDateMultipleValue = computed(() => {
+      const dateListValue = computeDateListValue.value
+      const dateValueFormat = computeDateValueFormat.value
+      return dateListValue.map(date => XEUtils.toDateString(date, dateValueFormat))
+    })
+
+    const computeDateMultipleLabel = computed(() => {
+      const dateListValue = computeDateListValue.value
+      const dateLabelFormat = computeDateLabelFormat.value
+      return dateListValue.map(date => XEUtils.toDateString(date, dateLabelFormat)).join(', ')
+    })
+
+    const computeDateValueFormat = computed(() => {
+      const { valueFormat } = props
+      if (valueFormat) {
+        return valueFormat
+      }
+      return 'yyyy-MM-dd'
+    })
+
+    const computeDateValue = computed(() => {
+      const { selectValue } = reactData
+      const isCalendarType = computeIsCalendarType.value
+      const dateValueFormat = computeDateValueFormat.value
+      let val = null
+      if (selectValue && isCalendarType) {
+        const date = parseDate(selectValue, dateValueFormat)
+        if (XEUtils.isValidDate(date)) {
+          val = date
+        }
+      }
+      return val
+    })
+
+    const computeIsDisabledPrevDateBtn = computed(() => {
+      const dateStartTime = computeDateStartTime.value
+      const { selectMonth } = reactData
+      if (selectMonth && dateStartTime) {
+        return selectMonth <= dateStartTime
+      }
+      return false
+    })
+
+    const computeIsDisabledNextDateBtn = computed(() => {
+      const dateEndTime = computeDateEndTime.value
+      const { selectMonth } = reactData
+      if (selectMonth && dateEndTime) {
+        return selectMonth >= dateEndTime
+      }
+      return false
+    })
+
+    const computeDateHMSTime = computed(() => {
+      const dateValue = computeDateValue.value
+      return dateValue ? (dateValue.getHours() * 3600 + dateValue.getMinutes() * 60 + dateValue.getSeconds()) * 1000 : 0
+    })
+
+    const computeDateLabelFormat = computed(() => {
+      const { labelFormat } = props
+      const isCalendarType = computeIsCalendarType.value
+      const dateValueFormat = computeDateValueFormat.value
+      if (isCalendarType) {
+        return labelFormat || dateValueFormat || getI18n(`vxe.input.date.labelFormat.${props.type}`)
+      }
+      return null
+    })
+
+    const computeYearList = computed(() => {
+      const { selectMonth, currentDate } = reactData
+      const years: VxeDatePickerDefines.DateYearItem[] = []
+      if (selectMonth && currentDate) {
+        const currFullYear = currentDate.getFullYear()
+        const selectFullYear = selectMonth.getFullYear()
+        const startYearDate = new Date(selectFullYear - selectFullYear % yearSize, 0, 1)
+        for (let index = -4; index < yearSize + 4; index++) {
+          const date = XEUtils.getWhatYear(startYearDate, index, 'first')
+          const itemFullYear = date.getFullYear()
+          years.push({
+            date,
+            isCurrent: true,
+            isPrev: index < 0,
+            isNow: currFullYear === itemFullYear,
+            isNext: index >= yearSize,
+            year: itemFullYear
+          })
+        }
+      }
+      return years
+    })
+
+    const computeSelectDatePanelLabel = computed(() => {
+      const isCalendarType = computeIsCalendarType.value
+      if (isCalendarType) {
+        const { datePanelType, selectMonth } = reactData
+        const yearList = computeYearList.value
+        let year = ''
+        let month
+        if (selectMonth) {
+          year = selectMonth.getFullYear()
+          month = selectMonth.getMonth() + 1
+        }
+        if (datePanelType === 'quarter') {
+          return getI18n('vxe.input.date.quarterLabel', [year])
+        } else if (datePanelType === 'month') {
+          return getI18n('vxe.input.date.monthLabel', [year])
+        } else if (datePanelType === 'year') {
+          return yearList.length ? `${yearList[0].year} - ${yearList[yearList.length - 1].year}` : ''
+        }
+        return getI18n('vxe.input.date.dayLabel', [year, month ? getI18n(`vxe.input.date.m${month}`) : '-'])
+      }
+      return ''
+    })
+
+    const computeFirstDayOfWeek = computed(() => {
+      const { startDay } = props
+      return XEUtils.toNumber(startDay) as VxeCalendarPropTypes.StartDay
+    })
+
+    const computeWeekDatas = computed(() => {
+      const weeks = []
+      const isCalendarType = computeIsCalendarType.value
+      if (isCalendarType) {
+        let sWeek = computeFirstDayOfWeek.value
+        weeks.push(sWeek)
+        for (let index = 0; index < 6; index++) {
+          if (sWeek >= 6) {
+            sWeek = 0
+          } else {
+            sWeek++
+          }
+          weeks.push(sWeek)
+        }
+      }
+      return weeks
+    })
+
+    const computeDateHeaders = computed(() => {
+      const isCalendarType = computeIsCalendarType.value
+      if (isCalendarType) {
+        const weekDatas = computeWeekDatas.value
+        return weekDatas.map((day) => {
+          return {
+            value: day,
+            label: getI18n(`vxe.input.date.weeks.w${day}`)
+          }
+        })
+      }
+      return []
+    })
+
+    const computeWeekHeaders = computed(() => {
+      const isCalendarType = computeIsCalendarType.value
+      if (isCalendarType) {
+        const dateHeaders = computeDateHeaders.value
+        return [{ label: getI18n('vxe.input.date.weeks.w') }].concat(dateHeaders)
+      }
+      return []
+    })
+
+    const computeYearDatas = computed(() => {
+      const yearList = computeYearList.value
+      return XEUtils.chunk(yearList, 4)
+    })
+
+    const computeQuarterList = computed(() => {
+      const { selectMonth, currentDate } = reactData
+      const quarters: VxeDatePickerDefines.DateQuarterItem[] = []
+      if (selectMonth && currentDate) {
+        const currFullYear = currentDate.getFullYear()
+        const currQuarter = getDateQuarter(currentDate)
+        const firstYear = XEUtils.getWhatYear(selectMonth, 0, 'first')
+        const selFullYear = firstYear.getFullYear()
+        for (let index = -2; index < quarterSize - 2; index++) {
+          const date = XEUtils.getWhatQuarter(firstYear, index)
+          const itemFullYear = date.getFullYear()
+          const itemQuarter = getDateQuarter(date)
+          const isPrev = itemFullYear < selFullYear
+          quarters.push({
+            date,
+            isPrev,
+            isCurrent: itemFullYear === selFullYear,
+            isNow: itemFullYear === currFullYear && itemQuarter === currQuarter,
+            isNext: !isPrev && itemFullYear > selFullYear,
+            quarter: itemQuarter
+          })
+        }
+      }
+      return quarters
+    })
+
+    const computeQuarterDatas = computed(() => {
+      const quarterList = computeQuarterList.value
+      return XEUtils.chunk(quarterList, 2)
+    })
+
+    const computeMonthList = computed(() => {
+      const { selectMonth, currentDate } = reactData
+      const months: VxeDatePickerDefines.DateMonthItem[] = []
+      if (selectMonth && currentDate) {
+        const currFullYear = currentDate.getFullYear()
+        const currMonth = currentDate.getMonth()
+        const selFullYear = XEUtils.getWhatYear(selectMonth, 0, 'first').getFullYear()
+        for (let index = -4; index < monthSize - 4; index++) {
+          const date = XEUtils.getWhatYear(selectMonth, 0, index)
+          const itemFullYear = date.getFullYear()
+          const itemMonth = date.getMonth()
+          const isPrev = itemFullYear < selFullYear
+          months.push({
+            date,
+            isPrev,
+            isCurrent: itemFullYear === selFullYear,
+            isNow: itemFullYear === currFullYear && itemMonth === currMonth,
+            isNext: !isPrev && itemFullYear > selFullYear,
+            month: itemMonth
+          })
+        }
+      }
+      return months
+    })
+
+    const computeMonthDatas = computed(() => {
+      const monthList = computeMonthList.value
+      return XEUtils.chunk(monthList, 4)
+    })
+
+    const computeDayList = computed(() => {
+      const { selectMonth, currentDate } = reactData
+      const days: VxeDatePickerDefines.DateDayItem[] = []
+      if (selectMonth && currentDate) {
+        const dateHMSTime = computeDateHMSTime.value
+        const weekDatas = computeWeekDatas.value
+        const currFullYear = currentDate.getFullYear()
+        const currMonth = currentDate.getMonth()
+        const currDate = currentDate.getDate()
+        const selFullYear = selectMonth.getFullYear()
+        const selMonth = selectMonth.getMonth()
+        const selDay = selectMonth.getDay()
+        const prevOffsetDate = -weekDatas.indexOf(selDay)
+        const startDayDate = new Date(XEUtils.getWhatDay(selectMonth, prevOffsetDate).getTime() + dateHMSTime)
+        for (let index = 0; index < 42; index++) {
+          const date = XEUtils.getWhatDay(startDayDate, index)
+          const itemFullYear = date.getFullYear()
+          const itemMonth = date.getMonth()
+          const itemDate = date.getDate()
+          const isPrev = date < selectMonth
+          days.push({
+            date,
+            isPrev,
+            isCurrent: itemFullYear === selFullYear && itemMonth === selMonth,
+            isNow: itemFullYear === currFullYear && itemMonth === currMonth && itemDate === currDate,
+            isNext: !isPrev && selMonth !== itemMonth,
+            label: itemDate
+          })
+        }
+      }
+      return days
+    })
+
+    const computeDayDatas = computed(() => {
+      const dayList = computeDayList.value
+      return XEUtils.chunk(dayList, 7)
+    })
+
+    const computeWeekDates = computed(() => {
+      const dayDatas = computeDayDatas.value
+      const firstDayOfWeek = computeFirstDayOfWeek.value
+      return dayDatas.map((list) => {
+        const firstItem = list[0]
+        const item: VxeDatePickerDefines.DateDayItem = {
+          date: firstItem.date,
+          isWeekNumber: true,
+          isPrev: false,
+          isCurrent: false,
+          isNow: false,
+          isNext: false,
+          label: XEUtils.getYearWeek(firstItem.date, firstDayOfWeek)
+        }
+        return [item].concat(list)
+      })
+    })
+
+    const emitModel = (value: string, evnt: Event | { type: string }) => {
+      reactData.inputValue = value
+      emit('update:modelValue', value)
+      if (XEUtils.toValueString(props.modelValue) !== value) {
+        calendarMethods.dispatchEvent('change', { value }, evnt as any)
+      }
+    }
+
+    const dateParseValue = (value?: VxeCalendarPropTypes.ModelValue) => {
+      const { type } = props
+      const dateLabelFormat = computeDateLabelFormat.value
+      const dateValueFormat = computeDateValueFormat.value
+      const firstDayOfWeek = computeFirstDayOfWeek.value
+      let dValue: Date | null = null
+      let dLabel = ''
+      if (value) {
+        dValue = parseDate(value, dateValueFormat)
+      }
+      if (XEUtils.isValidDate(dValue)) {
+        dLabel = XEUtils.toDateString(dValue, dateLabelFormat, { firstDay: firstDayOfWeek })
+        // 由于年份和第几周是冲突的行为，所以需要特殊处理，判断是否跨年
+        if (dateLabelFormat && type === 'week') {
+          const firstWeekDate = XEUtils.getWhatWeek(dValue, 0, firstDayOfWeek, firstDayOfWeek)
+          if (firstWeekDate.getFullYear() < dValue.getFullYear()) {
+            const yyIndex = dateLabelFormat.indexOf('yyyy')
+            if (yyIndex > -1) {
+              const yyNum = Number(dLabel.substring(yyIndex, yyIndex + 4))
+              if (yyNum && !isNaN(yyNum)) {
+                dLabel = dLabel.replace(`${yyNum}`, `${yyNum - 1}`)
+              }
+            }
+          }
+        }
+      } else {
+        dValue = null
+      }
+      reactData.datePanelValue = dValue
+      reactData.datePanelLabel = dLabel
+    }
+
+    /**
+     * 值变化时处理
+     */
+    const changeValue = () => {
+      const isCalendarType = computeIsCalendarType.value
+      const { inputValue } = reactData
+      if (isCalendarType) {
+        dateParseValue(inputValue)
+        reactData.inputValue = props.multiple ? computeDateMultipleLabel.value : reactData.datePanelLabel
+      }
+    }
+
+    /**
+     * 检查初始值
+     */
+    const initValue = () => {
+      const isCalendarType = computeIsCalendarType.value
+      if (isCalendarType) {
+        changeValue()
+      }
+    }
+
+    const dateCheckMonth = (date: Date) => {
+      const month = XEUtils.getWhatMonth(date, 0, 'first')
+      if (!XEUtils.isEqual(month, reactData.selectMonth)) {
+        reactData.selectMonth = month
+      }
+    }
+
+    const dateChange = (date: Date) => {
+      const { modelValue, multiple } = props
+      const dateValueFormat = computeDateValueFormat.value
+      const firstDayOfWeek = computeFirstDayOfWeek.value
+      if (props.type === 'week') {
+        const sWeek = XEUtils.toNumber(props.selectDay) as VxeCalendarPropTypes.SelectDay
+        date = XEUtils.getWhatWeek(date, 0, sWeek, firstDayOfWeek)
+      }
+      const inpVal = XEUtils.toDateString(date, dateValueFormat, { firstDay: firstDayOfWeek })
+      dateCheckMonth(date)
+      reactData.selectValue = date
+      if (multiple) {
+        // 如果为多选
+        const dateMultipleValue = computeDateMultipleValue.value
+        // 如果是日期类型
+        if (dateMultipleValue.some(val => XEUtils.isEqual(val, inpVal))) {
+          emitModel(dateMultipleValue.filter(val => !XEUtils.isEqual(val, inpVal)).join(','), { type: 'update' })
+        } else {
+          emitModel(dateMultipleValue.concat([inpVal]).join(','), { type: 'update' })
+        }
+      } else {
+        // 如果为单选
+        if (!XEUtils.isEqual(modelValue, inpVal)) {
+          emitModel(inpVal, { type: 'update' })
+        }
+      }
+    }
+
+    const dateMonthHandle = (date: Date, offsetMonth: number) => {
+      reactData.selectMonth = XEUtils.getWhatMonth(date, offsetMonth, 'first')
+    }
+
+    const dateNowHandle = () => {
+      const currentDate = XEUtils.getWhatDay(Date.now(), 0, 'first')
+      reactData.currentDate = currentDate
+      dateMonthHandle(currentDate, 0)
+    }
+
+    const dateToggleTypeEvent = () => {
+      let { datePanelType } = reactData
+      if (datePanelType === 'month' || datePanelType === 'quarter') {
+        datePanelType = 'year'
+      } else {
+        datePanelType = 'month'
+      }
+      reactData.datePanelType = datePanelType
+    }
+
+    const datePrevEvent = (evnt: Event) => {
+      const { type } = props
+      const { datePanelType, selectMonth } = reactData
+      const isDisabledPrevDateBtn = computeIsDisabledPrevDateBtn.value
+      if (!isDisabledPrevDateBtn) {
+        if (type === 'year') {
+          reactData.selectMonth = XEUtils.getWhatYear(selectMonth, -yearSize, 'first')
+        } else if (type === 'month' || type === 'quarter') {
+          if (datePanelType === 'year') {
+            reactData.selectMonth = XEUtils.getWhatYear(selectMonth, -yearSize, 'first')
+          } else {
+            reactData.selectMonth = XEUtils.getWhatYear(selectMonth, -1, 'first')
+          }
+        } else {
+          if (datePanelType === 'year') {
+            reactData.selectMonth = XEUtils.getWhatYear(selectMonth, -yearSize, 'first')
+          } else if (datePanelType === 'month') {
+            reactData.selectMonth = XEUtils.getWhatYear(selectMonth, -1, 'first')
+          } else {
+            reactData.selectMonth = XEUtils.getWhatMonth(selectMonth, -1, 'first')
+          }
+        }
+        calendarMethods.dispatchEvent('date-prev', { type }, evnt)
+      }
+    }
+
+    const dateTodayMonthEvent = (evnt: Event) => {
+      dateNowHandle()
+      if (!props.multiple) {
+        dateChange(reactData.currentDate)
+      }
+      calendarMethods.dispatchEvent('date-today', { type: props.type }, evnt)
+    }
+
+    const dateNextEvent = (evnt: Event) => {
+      const { type } = props
+      const { datePanelType, selectMonth } = reactData
+      const isDisabledNextDateBtn = computeIsDisabledNextDateBtn.value
+      if (!isDisabledNextDateBtn) {
+        if (type === 'year') {
+          reactData.selectMonth = XEUtils.getWhatYear(selectMonth, yearSize, 'first')
+        } else if (type === 'month' || type === 'quarter') {
+          if (datePanelType === 'year') {
+            reactData.selectMonth = XEUtils.getWhatYear(selectMonth, yearSize, 'first')
+          } else {
+            reactData.selectMonth = XEUtils.getWhatYear(selectMonth, 1, 'first')
+          }
+        } else {
+          if (datePanelType === 'year') {
+            reactData.selectMonth = XEUtils.getWhatYear(selectMonth, yearSize, 'first')
+          } else if (datePanelType === 'month') {
+            reactData.selectMonth = XEUtils.getWhatYear(selectMonth, 1, 'first')
+          } else {
+            reactData.selectMonth = XEUtils.getWhatMonth(selectMonth, 1, 'first')
+          }
+        }
+        calendarMethods.dispatchEvent('date-next', { type }, evnt)
+      }
+    }
+
+    const isDateDisabled = (item: { date: Date }) => {
+      const { disabledMethod } = props
+      const { datePanelType } = reactData
+      return disabledMethod && disabledMethod({ type: datePanelType, viewType: datePanelType, date: item.date, $calendar: $xeCalendar })
+    }
+
+    const dateSelectItem = (date: Date) => {
+      const { type } = props
+      const { datePanelType } = reactData
+      if (type === 'month') {
+        if (datePanelType === 'year') {
+          reactData.datePanelType = 'month'
+          dateCheckMonth(date)
+        } else {
+          dateChange(date)
+        }
+      } else if (type === 'year') {
+        dateChange(date)
+      } else if (type === 'quarter') {
+        if (datePanelType === 'year') {
+          reactData.datePanelType = 'quarter'
+          dateCheckMonth(date)
+        } else {
+          dateChange(date)
+        }
+      } else {
+        if (datePanelType === 'month') {
+          reactData.datePanelType = type === 'week' ? type : 'day'
+          dateCheckMonth(date)
+        } else if (datePanelType === 'year') {
+          reactData.datePanelType = 'month'
+          dateCheckMonth(date)
+        } else {
+          dateChange(date)
+        }
+      }
+    }
+
+    const dateSelectEvent = (item: VxeDatePickerDefines.DateYearItem | VxeDatePickerDefines.DateQuarterItem | VxeDatePickerDefines.DateMonthItem | VxeDatePickerDefines.DateDayItem) => {
+      if (!isDateDisabled(item)) {
+        dateSelectItem(item.date)
+      }
+    }
+
+    const dateMoveDay = (offsetDay: Date) => {
+      if (!isDateDisabled({ date: offsetDay })) {
+        const dayList = computeDayList.value
+        if (!dayList.some((item) => XEUtils.isDateSame(item.date, offsetDay, 'yyyyMMdd'))) {
+          dateCheckMonth(offsetDay)
+        }
+        dateParseValue(offsetDay)
+      }
+    }
+
+    const dateMoveYear = (offsetYear: Date) => {
+      if (!isDateDisabled({ date: offsetYear })) {
+        const yearList = computeYearList.value
+        if (!yearList.some((item) => XEUtils.isDateSame(item.date, offsetYear, 'yyyy'))) {
+          dateCheckMonth(offsetYear)
+        }
+        dateParseValue(offsetYear)
+      }
+    }
+
+    const dateMoveQuarter = (offsetQuarter: Date) => {
+      if (!isDateDisabled({ date: offsetQuarter })) {
+        const quarterList = computeQuarterList.value
+        if (!quarterList.some((item) => XEUtils.isDateSame(item.date, offsetQuarter, 'yyyyq'))) {
+          dateCheckMonth(offsetQuarter)
+        }
+        dateParseValue(offsetQuarter)
+      }
+    }
+
+    const dateMoveMonth = (offsetMonth: Date) => {
+      if (!isDateDisabled({ date: offsetMonth })) {
+        const monthList = computeMonthList.value
+        if (!monthList.some((item) => XEUtils.isDateSame(item.date, offsetMonth, 'yyyyMM'))) {
+          dateCheckMonth(offsetMonth)
+        }
+        dateParseValue(offsetMonth)
+      }
+    }
+
+    const dateMouseenterEvent = (item: VxeDatePickerDefines.DateYearItem | VxeDatePickerDefines.DateQuarterItem | VxeDatePickerDefines.DateMonthItem | VxeDatePickerDefines.DateDayItem) => {
+      if (!isDateDisabled(item)) {
+        const { datePanelType } = reactData
+        if (datePanelType === 'month') {
+          dateMoveMonth(item.date)
+        } else if (datePanelType === 'quarter') {
+          dateMoveQuarter(item.date)
+        } else if (datePanelType === 'year') {
+          dateMoveYear(item.date)
+        } else {
+          dateMoveDay(item.date)
+        }
+      }
+    }
+
+    const dateConfirmEvent = () => {
+    }
+
+    const dateOpenPanel = () => {
+      const { type } = props
+      const dateValue = computeDateValue.value
+      if (['year', 'quarter', 'month', 'week'].indexOf(type) > -1) {
+        reactData.datePanelType = type as 'year' | 'quarter' | 'month' | 'week'
+      } else {
+        reactData.datePanelType = 'day'
+      }
+      reactData.currentDate = XEUtils.getWhatDay(Date.now(), 0, 'first')
+      if (dateValue) {
+        dateMonthHandle(dateValue, 0)
+        dateParseValue(dateValue)
+      } else {
+        dateNowHandle()
+      }
+    }
+
+    const renderDateLabel = (item: VxeDatePickerDefines.DateYearItem | VxeDatePickerDefines.DateQuarterItem | VxeDatePickerDefines.DateMonthItem | VxeDatePickerDefines.DateDayItem, label: string | number) => {
+      const { festivalMethod } = props
+      if (festivalMethod) {
+        const { datePanelType } = reactData
+        const festivalRest = festivalMethod({ type: datePanelType, viewType: datePanelType, date: item.date, $calendar: $xeCalendar })
+        const festivalItem = festivalRest ? (XEUtils.isString(festivalRest) ? { label: festivalRest } : festivalRest) : {}
+        const extraItem = festivalItem.extra ? (XEUtils.isString(festivalItem.extra) ? { label: festivalItem.extra } : festivalItem.extra) : null
+        const labels = [
+          h('span', {
+            class: ['vxe-calendar--date-label', {
+              'is-notice': festivalItem.notice
+            }]
+          }, extraItem && extraItem.label
+            ? [
+                h('span', label),
+                h('span', {
+                  class: ['vxe-calendar--date-label--extra', extraItem.important ? 'is-important' : '', extraItem.className],
+                  style: extraItem.style
+                }, XEUtils.toValueString(extraItem.label))
+              ]
+            : label)
+        ]
+        const festivalLabel = festivalItem.label
+        if (festivalLabel) {
+          // 默认最多支持3个节日重叠
+          const festivalLabels = XEUtils.toValueString(festivalLabel).split(',')
+          labels.push(
+            h('span', {
+              class: ['vxe-calendar--date-festival', festivalItem.important ? 'is-important' : '', festivalItem.className],
+              style: festivalItem.style
+            }, [
+              festivalLabels.length > 1
+                ? h('span', {
+                  class: ['vxe-calendar--date-festival--overlap', `overlap--${festivalLabels.length}`]
+                }, festivalLabels.map(label => h('span', label.substring(0, 3))))
+                : h('span', {
+                  class: 'vxe-calendar--date-festival--label'
+                }, festivalLabels[0].substring(0, 3))
+            ])
+          )
+        }
+        return labels
+      }
+      return label
+    }
+
+    const renderDateDayTable = () => {
+      const { multiple } = props
+      const { datePanelType, datePanelValue } = reactData
+      const dateValue = computeDateValue.value
+      const dateHeaders = computeDateHeaders.value
+      const dayDatas = computeDayDatas.value
+      const dateListValue = computeDateListValue.value
+      const matchFormat = 'yyyyMMdd'
+      return [
+        h('table', {
+          class: `vxe-calendar--date-${datePanelType}-view`,
+          cellspacing: 0,
+          cellpadding: 0,
+          border: 0
+        }, [
+          h('tr', dateHeaders.map((item) => {
+            return h('th', {
+              class: 'vxe-calendar--view-th'
+            }, item.label)
+          })),
+          ...dayDatas.map((rows) => {
+            return h('tr', rows.map((item) => {
+              return h('td', {
+                class: ['vxe-calendar--view-td', {
+                  'is--prev': item.isPrev,
+                  'is--current': item.isCurrent,
+                  'is--now': item.isNow,
+                  'is--next': item.isNext,
+                  'is--disabled': isDateDisabled(item),
+                  'is--selected': multiple ? dateListValue.some(val => XEUtils.isDateSame(val, item.date, matchFormat)) : XEUtils.isDateSame(dateValue, item.date, matchFormat),
+                  'is--hover': XEUtils.isDateSame(datePanelValue, item.date, matchFormat)
+                }],
+                onClick: () => dateSelectEvent(item),
+                onMouseenter: () => dateMouseenterEvent(item)
+              }, renderDateLabel(item, item.label))
+            }))
+          })
+        ])
+      ]
+    }
+
+    const renderDateWeekTable = () => {
+      const { multiple } = props
+      const { datePanelType, datePanelValue } = reactData
+      const dateValue = computeDateValue.value
+      const weekHeaders = computeWeekHeaders.value
+      const weekDates = computeWeekDates.value
+      const dateListValue = computeDateListValue.value
+      const matchFormat = 'yyyyMMdd'
+      return [
+        h('table', {
+          class: `vxe-calendar--date-${datePanelType}-view`,
+          cellspacing: 0,
+          cellpadding: 0,
+          border: 0
+        }, [
+          h('tr', weekHeaders.map((item) => {
+            return h('td', {
+              class: 'vxe-calendar--view-th'
+            }, item.label)
+          })),
+          ...weekDates.map((rows) => {
+            const isSelected = multiple ? rows.some((item) => dateListValue.some(val => XEUtils.isDateSame(val, item.date, matchFormat))) : rows.some((item) => XEUtils.isDateSame(dateValue, item.date, matchFormat))
+            const isHover = rows.some((item) => XEUtils.isDateSame(datePanelValue, item.date, matchFormat))
+            return h('tr', rows.map((item) => {
+              return h('td', {
+                class: ['vxe-calendar--view-td', {
+                  'is--prev': item.isPrev,
+                  'is--current': item.isCurrent,
+                  'is--now': item.isNow,
+                  'is--next': item.isNext,
+                  'is--disabled': isDateDisabled(item),
+                  'is--selected': isSelected,
+                  'is--hover': isHover
+                }],
+                // event
+                onClick: () => dateSelectEvent(item),
+                onMouseenter: () => dateMouseenterEvent(item)
+              }, renderDateLabel(item, item.label))
+            }))
+          })
+        ])
+      ]
+    }
+
+    const renderDateMonthTable = () => {
+      const { multiple } = props
+      const { datePanelType, datePanelValue } = reactData
+      const dateValue = computeDateValue.value
+      const monthDatas = computeMonthDatas.value
+      const dateListValue = computeDateListValue.value
+      const matchFormat = 'yyyyMM'
+      return [
+        h('table', {
+          class: `vxe-calendar--date-${datePanelType}-view`,
+          cellspacing: 0,
+          cellpadding: 0,
+          border: 0
+        }, [
+          h('tbody', monthDatas.map((rows) => {
+            return h('tr', rows.map((item) => {
+              return h('td', {
+                class: ['vxe-calendar--view-td', {
+                  'is--prev': item.isPrev,
+                  'is--current': item.isCurrent,
+                  'is--now': item.isNow,
+                  'is--next': item.isNext,
+                  'is--disabled': isDateDisabled(item),
+                  'is--selected': multiple ? dateListValue.some(val => XEUtils.isDateSame(val, item.date, matchFormat)) : XEUtils.isDateSame(dateValue, item.date, matchFormat),
+                  'is--hover': XEUtils.isDateSame(datePanelValue, item.date, matchFormat)
+                }],
+                onClick: () => dateSelectEvent(item),
+                onMouseenter: () => dateMouseenterEvent(item)
+              }, renderDateLabel(item, getI18n(`vxe.input.date.months.m${item.month}`)))
+            }))
+          }))
+        ])
+      ]
+    }
+
+    const renderDateQuarterTable = () => {
+      const { multiple } = props
+      const { datePanelType, datePanelValue } = reactData
+      const dateValue = computeDateValue.value
+      const quarterDatas = computeQuarterDatas.value
+      const dateListValue = computeDateListValue.value
+      const matchFormat = 'yyyyq'
+      return [
+        h('table', {
+          class: `vxe-calendar--date-${datePanelType}-view`,
+          cellspacing: 0,
+          cellpadding: 0,
+          border: 0
+        }, [
+          h('tbody', quarterDatas.map((rows) => {
+            return h('tr', rows.map((item) => {
+              return h('td', {
+                class: ['vxe-calendar--view-td', {
+                  'is--prev': item.isPrev,
+                  'is--current': item.isCurrent,
+                  'is--now': item.isNow,
+                  'is--next': item.isNext,
+                  'is--disabled': isDateDisabled(item),
+                  'is--selected': multiple ? dateListValue.some(val => XEUtils.isDateSame(val, item.date, matchFormat)) : XEUtils.isDateSame(dateValue, item.date, matchFormat),
+                  'is--hover': XEUtils.isDateSame(datePanelValue, item.date, matchFormat)
+                }],
+                onClick: () => dateSelectEvent(item),
+                onMouseenter: () => dateMouseenterEvent(item)
+              }, renderDateLabel(item, getI18n(`vxe.input.date.quarters.q${item.quarter}`)))
+            }))
+          }))
+        ])
+      ]
+    }
+
+    const renderDateYearTable = () => {
+      const { multiple } = props
+      const { datePanelType, datePanelValue } = reactData
+      const dateValue = computeDateValue.value
+      const yearDatas = computeYearDatas.value
+      const dateListValue = computeDateListValue.value
+      const matchFormat = 'yyyy'
+      return [
+        h('table', {
+          class: `vxe-calendar--date-${datePanelType}-view`,
+          cellspacing: 0,
+          cellpadding: 0,
+          border: 0
+        }, [
+          h('tbody', yearDatas.map((rows) => {
+            return h('tr', rows.map((item) => {
+              return h('td', {
+                class: ['vxe-calendar--view-td', {
+                  'is--prev': item.isPrev,
+                  'is--current': item.isCurrent,
+                  'is--now': item.isNow,
+                  'is--next': item.isNext,
+                  'is--disabled': isDateDisabled(item),
+                  'is--selected': multiple ? dateListValue.some(val => XEUtils.isDateSame(val, item.date, matchFormat)) : XEUtils.isDateSame(dateValue, item.date, matchFormat),
+                  'is--hover': XEUtils.isDateSame(datePanelValue, item.date, matchFormat)
+                }],
+                onClick: () => dateSelectEvent(item),
+                onMouseenter: () => dateMouseenterEvent(item)
+              }, renderDateLabel(item, item.year))
+            }))
+          }))
+        ])
+      ]
+    }
+
+    const renderDateTable = () => {
+      const { datePanelType } = reactData
+      switch (datePanelType) {
+        case 'week' :
+          return renderDateWeekTable()
+        case 'month' :
+          return renderDateMonthTable()
+        case 'quarter' :
+          return renderDateQuarterTable()
+        case 'year' :
+          return renderDateYearTable()
+      }
+      return renderDateDayTable()
+    }
+
+    const renderDatePanel = () => {
+      const { multiple } = props
+      const { datePanelType } = reactData
+      const isDisabledPrevDateBtn = computeIsDisabledPrevDateBtn.value
+      const isDisabledNextDateBtn = computeIsDisabledNextDateBtn.value
+      const selectDatePanelLabel = computeSelectDatePanelLabel.value
+      return [
+        h('div', {
+          class: 'vxe-calendar--header'
+        }, [
+          h('div', {
+            class: 'vxe-calendar--type-wrapper'
+          }, [
+            h(VxeButtonComponent, {
+              disabled: datePanelType === 'year',
+              content: selectDatePanelLabel,
+              onClick: dateToggleTypeEvent
+            })
+          ]),
+          h('div', {
+            class: 'vxe-calendar--btn-wrapper'
+          }, [
+            h(VxeButtonComponent, {
+              disabled: isDisabledPrevDateBtn,
+              icon: 'vxe-icon-caret-left',
+              onClick: datePrevEvent
+            }),
+            h(VxeButtonComponent, {
+              icon: 'vxe-icon-dot',
+              onClick: dateTodayMonthEvent
+            }),
+            h(VxeButtonComponent, {
+              disabled: isDisabledNextDateBtn,
+              icon: 'vxe-icon-caret-right',
+              onClick: dateNextEvent
+            }),
+            multiple && computeSupportMultiples.value
+              ? h('span', {
+                class: 'vxe-calendar--btn vxe-calendar--confirm-btn'
+              }, [
+                h('button', {
+                  class: 'vxe-calendar--confirm',
+                  type: 'button',
+                  onClick: dateConfirmEvent
+                }, getI18n('vxe.button.confirm'))
+              ])
+              : null
+          ])
+        ]),
+        h('div', {
+          class: 'vxe-calendar--body'
+        }, renderDateTable())
+      ]
+    }
+
+    calendarMethods = {
+      dispatchEvent (type, params, evnt) {
+        emit(type, createEvent(evnt, { $input: $xeCalendar }, params))
+      }
+    }
+
+    Object.assign($xeCalendar, calendarMethods)
 
     const renderVN = () => {
-      const defaultSlot = slots.default
+      const { className, type } = props
+      const vSize = computeSize.value
+      const isDisabled = computeIsDisabled.value
+      const calendarStyle = computeCalendarStyle.value
       return h('div', {
         ref: refElem,
-        class: ['vxe-calendar']
-      }, defaultSlot ? defaultSlot({}) : [])
+        class: ['vxe-calendar', `type--${type}`, className, {
+          [`size--${vSize}`]: vSize,
+          'is--disabled': isDisabled
+        }],
+        style: calendarStyle
+      }, [
+        renderDatePanel()
+      ])
     }
 
     $xeCalendar.renderVN = renderVN
+
+    watch(() => props.modelValue, (val) => {
+      reactData.inputValue = val
+      changeValue()
+    })
+
+    watch(() => props.type, () => {
+      // 切换类型是重置内置变量
+      Object.assign(reactData, {
+        selectValue: null,
+        inputValue: null,
+        datePanelValue: null,
+        datePanelLabel: '',
+        datePanelType: 'day',
+        selectMonth: null,
+        currentDate: null
+      })
+      initValue()
+      dateOpenPanel()
+    })
+
+    watch(computeDateLabelFormat, () => {
+      const isCalendarType = computeIsCalendarType.value
+      if (isCalendarType) {
+        dateParseValue(reactData.datePanelValue)
+        reactData.inputValue = props.multiple ? computeDateMultipleLabel.value : reactData.datePanelLabel
+      }
+    })
+
+    onMounted(() => {
+      dateOpenPanel()
+    })
+
+    initValue()
 
     return $xeCalendar
   },

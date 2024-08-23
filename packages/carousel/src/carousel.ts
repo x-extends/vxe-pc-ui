@@ -1,4 +1,4 @@
-import { defineComponent, ref, h, reactive, provide, PropType, watch, nextTick, onMounted, computed, onUnmounted } from 'vue'
+import { defineComponent, ref, h, reactive, provide, PropType, watch, nextTick, onMounted, computed, onUnmounted, createCommentVNode } from 'vue'
 import { getConfig, getIcon, createEvent } from '../../ui'
 import { getSlotVNs } from '../../ui/src/vn'
 import { toCssUnit } from '../..//ui/src/dom'
@@ -12,10 +12,7 @@ export default defineComponent({
   props: {
     modelValue: [String, Number] as PropType<VxeCarouselPropTypes.ModelValue>,
     options: Array as PropType<VxeCarouselPropTypes.Options>,
-    loading: {
-      type: Boolean as PropType<VxeCarouselPropTypes.Loading>,
-      default: () => getConfig().carousel.loading
-    },
+    loading: Boolean as PropType<VxeCarouselPropTypes.Loading>,
     height: {
       type: [Number, String] as PropType<VxeCarouselPropTypes.Height>,
       default: () => getConfig().carousel.height
@@ -174,11 +171,15 @@ export default defineComponent({
     const carouselMethods: CarouselMethods = {
       dispatchEvent,
       prev () {
-        handlePrevNext(false)
+        if (handlePrevNext(false)) {
+          handleAutoPlay()
+        }
         return nextTick()
       },
       next () {
-        handlePrevNext(true)
+        if (handlePrevNext(true)) {
+          handleAutoPlay()
+        }
         return nextTick()
       }
     }
@@ -215,10 +216,17 @@ export default defineComponent({
         apTimeout = setTimeout(() => {
           if (!stopFlag) {
             handlePrevNext(true)
-            handleAutoPlay()
           }
         }, XEUtils.toNumber(interval) || 300)
       }
+    }
+
+    const mouseenterEvent = () => {
+      stopAutoPlay()
+    }
+
+    const mouseleaveEvent = () => {
+      handleAutoPlay()
     }
 
     const carouselPrivateMethods: CarouselPrivateMethods = {
@@ -289,7 +297,7 @@ export default defineComponent({
     }
 
     const renderVN = () => {
-      const { loading, height, width, vertical, options } = props
+      const { loading, height, width, showIndicators, vertical, options } = props
       const { staticItems } = reactData
       const defaultSlot = slots.default
       const list = (staticItems && staticItems.length ? staticItems : options) || []
@@ -301,7 +309,9 @@ export default defineComponent({
           ? {
               width: toCssUnit(width)
             }
-          : null
+          : null,
+        onMouseenter: mouseenterEvent,
+        onMouseleave: mouseleaveEvent
       }, [
         h('div', {
           class: 'vxe-carousel--slots'
@@ -315,7 +325,7 @@ export default defineComponent({
               }
             : null
         }, renderItemWrapper(list)),
-        renderIndicators(list),
+        showIndicators ? renderIndicators(list) : createCommentVNode(),
         h('div', {
           class: 'vxe-carousel--btn-wrapper'
         }, [

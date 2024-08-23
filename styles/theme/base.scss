@@ -168,4 +168,10 @@
   --vxe-ui-tabs-header-height-medium: 38px;
   --vxe-ui-tabs-header-height-small: 36px;
   --vxe-ui-tabs-header-height-mini: 32px;
+
+  /*tabs*/
+  --vxe-ui-calendar-hover-background-color: #f2f6fc;
+  --vxe-ui-calendar-selected-color: #fff;
+  --vxe-ui-calendar-festival-selected-color: var(--vxe-ui-calendar-selected-color);
+  --vxe-ui-calendar-notice-selected-background-color: var(--vxe-ui-calendar-selected-color);
 }

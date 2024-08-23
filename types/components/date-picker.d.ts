@@ -129,7 +129,6 @@ export interface VxeDatePickerPrivateComputed extends DatePickerPrivateComputed 
 export interface DatePickerReactData {
   inited: boolean
   panelIndex: number
-  showPwd: boolean
   visiblePanel: boolean
   isAniVisible: boolean
   panelStyle: VxeComponentStyleType | null
@@ -196,6 +195,48 @@ type DatePanelType = 'year' | 'quarter' | 'month' | 'week' | 'day'
 export namespace VxeDatePickerDefines {
   export interface DatePickerEventParams extends VxeComponentEventParams {
     $datePicker: VxeDatePickerConstructor
+  }
+
+  export interface DateYearItem {
+    date: Date;
+    isPrev: boolean;
+    isCurrent: boolean;
+    isNow: boolean;
+    isNext: boolean;
+    year: number;
+  }
+
+  export interface DateMonthItem {
+    date: Date;
+    isPrev: boolean;
+    isCurrent: boolean;
+    isNow: boolean;
+    isNext: boolean;
+    month: number;
+  }
+
+  export interface DateQuarterItem {
+    date: Date;
+    isPrev: boolean;
+    isCurrent: boolean;
+    isNow: boolean;
+    isNext: boolean;
+    quarter: number;
+  }
+
+  export interface DateDayItem {
+    date: Date;
+    isWeekNumber?: boolean;
+    isPrev: boolean;
+    isCurrent: boolean;
+    isNow: boolean;
+    isNext: boolean;
+    label: number;
+  }
+
+  export interface DateHourMinuteSecondItem {
+    value: number;
+    label: string;
   }
 
   interface DateFestivalItem {

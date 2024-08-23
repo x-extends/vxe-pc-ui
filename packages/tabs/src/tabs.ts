@@ -333,11 +333,15 @@ export default defineComponent({
       prev: createHandlePrevNext(false),
       next: createHandlePrevNext(true),
       prevTab () {
-        warnLog('vxe.error.delFunc', ['prevTab', 'prev'])
+        if (process.env.VUE_APP_VXE_ENV === 'development') {
+          warnLog('vxe.error.delFunc', ['prevTab', 'prev'])
+        }
         return tabsMethods.prev()
       },
       nextTab () {
-        warnLog('vxe.error.delFunc', ['nextTab', 'next'])
+        if (process.env.VUE_APP_VXE_ENV === 'development') {
+          warnLog('vxe.error.delFunc', ['nextTab', 'next'])
+        }
         return tabsMethods.next()
       }
     }

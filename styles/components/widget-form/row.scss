@@ -28,7 +28,8 @@
 
 .vxe-form-design--widget-row-view {
   position: relative;
-  min-height: 100%;
+  height: 100%;
+  min-height: 78px;
   padding: var(--vxe-ui-layout-padding-default);
   border: 1px solid transparent;
   cursor: grabbing;
@@ -62,7 +63,8 @@
   flex-direction: row;
   align-items: center;
   justify-content: center;
-  height: 78px;
+  height: 100%;
+  width: 100%;
   padding: var(--vxe-ui-layout-padding-default);
   color: var(--vxe-ui-font-placeholder-color);
   border: 2px dashed var(--vxe-ui-input-border-color);

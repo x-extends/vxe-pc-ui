@@ -74,7 +74,8 @@ const navList = ref<VxeMenuPropTypes.Options>([
   { name: 'TreeTest', routerLink: { name: 'TreeTest' } },
   { name: 'CardTest', routerLink: { name: 'CardTest' } },
   { name: 'TreeSelectTest', routerLink: { name: 'TreeSelectTest' } },
-  { name: 'CarouselTest', routerLink: { name: 'CarouselTest' } }
+  { name: 'CarouselTest', routerLink: { name: 'CarouselTest' } },
+  { name: 'CalendarTest', routerLink: { name: 'CalendarTest' } }
 ])
 
 const theme = ref((localStorage.getItem('VXE_THEME') as 'default' | 'dark') || 'default')

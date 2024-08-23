@@ -1,5 +1,5 @@
 import { RenderFunction, SetupContext, Ref, ComponentPublicInstance, DefineComponent } from 'vue'
-import { defineVxeComponent, VxeComponentBaseOptions, VxeComponentEventParams } from '@vxe-ui/core'
+import { defineVxeComponent, VxeComponentBaseOptions, VxeComponentEventParams, ValueOf } from '@vxe-ui/core'
 
 /* eslint-disable no-use-before-define,@typescript-eslint/ban-types */
 
@@ -52,6 +52,7 @@ export interface CardReactData {
 }
 
 export interface CardMethods {
+  dispatchEvent(type: ValueOf<VxeCardEmits>, params: Record<string, any>, evnt: Event | null): void
 }
 export interface VxeCardMethods extends CardMethods { }
 

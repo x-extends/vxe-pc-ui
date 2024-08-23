@@ -3,94 +3,10 @@ import XEUtils from 'xe-utils'
 import { getConfig, getIcon, getI18n, globalEvents, GLOBAL_EVENT_KEYS, createEvent, useSize, VxeComponentStyleType } from '../../ui'
 import { getFuncText, getLastZIndex, nextZIndex } from '../../ui/src/utils'
 import { getAbsolutePos, getEventTargetNode } from '../../ui/src/dom'
+import { toStringTimeDate, getDateQuarter } from './util'
 import { getSlotVNs } from '../..//ui/src/vn'
 
-import type { VxeDatePickerConstructor, VxeDatePickerEmits, DatePickerReactData, DatePickerMethods, VxeDatePickerPropTypes, DatePickerPrivateRef, VxeFormConstructor, VxeFormPrivateMethods, VxeFormDefines, VxeTableConstructor, VxeTablePrivateMethods, VxeModalConstructor, VxeModalMethods } from '../../../types'
-
-interface DateYearItem {
-  date: Date;
-  isPrev: boolean;
-  isCurrent: boolean;
-  isNow: boolean;
-  isNext: boolean;
-  year: number;
-}
-
-interface DateMonthItem {
-  date: Date;
-  isPrev: boolean;
-  isCurrent: boolean;
-  isNow: boolean;
-  isNext: boolean;
-  month: number;
-}
-
-interface DateQuarterItem {
-  date: Date;
-  isPrev: boolean;
-  isCurrent: boolean;
-  isNow: boolean;
-  isNext: boolean;
-  quarter: number;
-}
-
-interface DateDayItem {
-  date: Date;
-  isWeekNumber?: boolean;
-  isPrev: boolean;
-  isCurrent: boolean;
-  isNow: boolean;
-  isNext: boolean;
-  label: number;
-}
-
-interface DateHourMinuteSecondItem {
-  value: number;
-  label: string;
-}
-
-const yearSize = 12
-const monthSize = 20
-const quarterSize = 8
-
-export function toStringTimeDate (str: VxeDatePickerPropTypes.ModelValue) {
-  if (str) {
-    const rest = new Date()
-    let h = 0
-    let m = 0
-    let s = 0
-    if (XEUtils.isDate(str)) {
-      h = str.getHours()
-      m = str.getMinutes()
-      s = str.getSeconds()
-    } else {
-      str = XEUtils.toValueString(str)
-      const parses = str.match(/^(\d{1,2})(:(\d{1,2}))?(:(\d{1,2}))?/)
-      if (parses) {
-        h = XEUtils.toNumber(parses[1])
-        m = XEUtils.toNumber(parses[3])
-        s = XEUtils.toNumber(parses[5])
-      }
-    }
-    rest.setHours(h)
-    rest.setMinutes(m)
-    rest.setSeconds(s)
-    return rest
-  }
-  return new Date('')
-}
-
-export function getDateQuarter (date: Date) {
-  const month = date.getMonth()
-  if (month < 3) {
-    return 1
-  } else if (month < 6) {
-    return 2
-  } else if (month < 9) {
-    return 3
-  }
-  return 4
-}
+import type { VxeDatePickerConstructor, VxeDatePickerEmits, DatePickerReactData, DatePickerMethods, VxeDatePickerPropTypes, DatePickerPrivateRef, VxeFormConstructor, VxeFormPrivateMethods, VxeFormDefines, VxeTableConstructor, VxeTablePrivateMethods, VxeModalConstructor, VxeModalMethods, VxeDatePickerDefines } from '../../../types'
 
 export default defineComponent({
   name: 'VxeDatePicker',
@@ -171,10 +87,13 @@ export default defineComponent({
 
     const { computeSize } = useSize(props)
 
+    const yearSize = 12
+    const monthSize = 20
+    const quarterSize = 8
+
     const reactData = reactive<DatePickerReactData>({
       inited: false,
       panelIndex: 0,
-      showPwd: false,
       visiblePanel: false,
       isAniVisible: false,
       panelStyle: null,
@@ -277,7 +196,7 @@ export default defineComponent({
     })
 
     const computeSupportMultiples = computed(() => {
-      return ['date', 'week', 'month', 'quarter', 'year'].includes(props.type)
+      return ['date', 'week', 'month', 'quarter', 'year'].indexOf(props.type) > -1
     })
 
     const computeDateListValue = computed(() => {
@@ -375,7 +294,7 @@ export default defineComponent({
 
     const computeYearList = computed(() => {
       const { selectMonth, currentDate } = reactData
-      const years: DateYearItem[] = []
+      const years: VxeDatePickerDefines.DateYearItem[] = []
       if (selectMonth && currentDate) {
         const currFullYear = currentDate.getFullYear()
         const selectFullYear = selectMonth.getFullYear()
@@ -472,7 +391,7 @@ export default defineComponent({
 
     const computeQuarterList = computed(() => {
       const { selectMonth, currentDate } = reactData
-      const quarters: DateQuarterItem[] = []
+      const quarters: VxeDatePickerDefines.DateQuarterItem[] = []
       if (selectMonth && currentDate) {
         const currFullYear = currentDate.getFullYear()
         const currQuarter = getDateQuarter(currentDate)
@@ -503,7 +422,7 @@ export default defineComponent({
 
     const computeMonthList = computed(() => {
       const { selectMonth, currentDate } = reactData
-      const months: DateMonthItem[] = []
+      const months: VxeDatePickerDefines.DateMonthItem[] = []
       if (selectMonth && currentDate) {
         const currFullYear = currentDate.getFullYear()
         const currMonth = currentDate.getMonth()
@@ -533,7 +452,7 @@ export default defineComponent({
 
     const computeDayList = computed(() => {
       const { selectMonth, currentDate } = reactData
-      const days: DateDayItem[] = []
+      const days: VxeDatePickerDefines.DateDayItem[] = []
       if (selectMonth && currentDate) {
         const dateHMSTime = computeDateHMSTime.value
         const weekDatas = computeWeekDatas.value
@@ -574,7 +493,7 @@ export default defineComponent({
       const firstDayOfWeek = computeFirstDayOfWeek.value
       return dayDatas.map((list) => {
         const firstItem = list[0]
-        const item: DateDayItem = {
+        const item: VxeDatePickerDefines.DateDayItem = {
           date: firstItem.date,
           isWeekNumber: true,
           isPrev: false,
@@ -588,7 +507,7 @@ export default defineComponent({
     })
 
     const computeHourList = computed(() => {
-      const list: DateHourMinuteSecondItem[] = []
+      const list: VxeDatePickerDefines.DateHourMinuteSecondItem[] = []
       const isDateTimeType = computeIsDateTimeType.value
       if (isDateTimeType) {
         for (let index = 0; index < 24; index++) {
@@ -602,7 +521,7 @@ export default defineComponent({
     })
 
     const computeMinuteList = computed(() => {
-      const list: DateHourMinuteSecondItem[] = []
+      const list: VxeDatePickerDefines.DateHourMinuteSecondItem[] = []
       const isDateTimeType = computeIsDateTimeType.value
       if (isDateTimeType) {
         for (let index = 0; index < 60; index++) {
@@ -665,7 +584,6 @@ export default defineComponent({
     const emitModel = (value: string, evnt: Event | { type: string }) => {
       reactData.inputValue = value
       emit('update:modelValue', value)
-      datePickerMethods.dispatchEvent('input', { value }, evnt as any)
       if (XEUtils.toValueString(props.modelValue) !== value) {
         datePickerMethods.dispatchEvent('change', { value }, evnt as any)
         // 自动更新校验状态
@@ -675,9 +593,11 @@ export default defineComponent({
       }
     }
 
-    const emitDatePickerEvent = (value: any, evnt: Event) => {
+    const inputEvent = (evnt: Event & { type: 'input' }) => {
       const isDatePickerType = computeIsDatePickerType.value
       const inpImmediate = computeInpImmediate.value
+      const inputElem = evnt.target as HTMLInputElement
+      const value = inputElem.value
       reactData.inputValue = value
       if (!isDatePickerType) {
         if (inpImmediate) {
@@ -686,12 +606,6 @@ export default defineComponent({
           datePickerMethods.dispatchEvent('input', { value }, evnt)
         }
       }
-    }
-
-    const inputEvent = (evnt: Event & { type: 'input' }) => {
-      const inputElem = evnt.target as HTMLInputElement
-      const value = inputElem.value
-      emitDatePickerEvent(value, evnt)
     }
 
     const changeEvent = (evnt: Event & { type: 'change' }) => {
@@ -1073,7 +987,7 @@ export default defineComponent({
       }
     }
 
-    const dateSelectEvent = (item: DateYearItem | DateQuarterItem | DateMonthItem | DateDayItem) => {
+    const dateSelectEvent = (item: VxeDatePickerDefines.DateYearItem | VxeDatePickerDefines.DateQuarterItem | VxeDatePickerDefines.DateMonthItem | VxeDatePickerDefines.DateDayItem) => {
       if (!isDateDisabled(item)) {
         dateSelectItem(item.date)
       }
@@ -1119,7 +1033,7 @@ export default defineComponent({
       }
     }
 
-    const dateMouseenterEvent = (item: DateYearItem | DateQuarterItem | DateMonthItem | DateDayItem) => {
+    const dateMouseenterEvent = (item: VxeDatePickerDefines.DateYearItem | VxeDatePickerDefines.DateQuarterItem | VxeDatePickerDefines.DateMonthItem | VxeDatePickerDefines.DateDayItem) => {
       if (!isDateDisabled(item)) {
         const { datePanelType } = reactData
         if (datePanelType === 'month') {
@@ -1147,7 +1061,7 @@ export default defineComponent({
       updateTimePos(evnt.currentTarget as HTMLLIElement)
     }
 
-    const dateHourEvent = (evnt: MouseEvent, item: DateHourMinuteSecondItem) => {
+    const dateHourEvent = (evnt: MouseEvent, item: VxeDatePickerDefines.DateHourMinuteSecondItem) => {
       reactData.datetimePanelValue.setHours(item.value)
       dateTimeChangeEvent(evnt)
     }
@@ -1186,12 +1100,12 @@ export default defineComponent({
       hidePanel()
     }
 
-    const dateMinuteEvent = (evnt: MouseEvent, item: DateHourMinuteSecondItem) => {
+    const dateMinuteEvent = (evnt: MouseEvent, item: VxeDatePickerDefines.DateHourMinuteSecondItem) => {
       reactData.datetimePanelValue.setMinutes(item.value)
       dateTimeChangeEvent(evnt)
     }
 
-    const dateSecondEvent = (evnt: MouseEvent, item: DateHourMinuteSecondItem) => {
+    const dateSecondEvent = (evnt: MouseEvent, item: VxeDatePickerDefines.DateHourMinuteSecondItem) => {
       reactData.datetimePanelValue.setSeconds(item.value)
       dateTimeChangeEvent(evnt)
     }
@@ -1528,7 +1442,7 @@ export default defineComponent({
       }
     }
 
-    const renderDateLabel = (item: DateYearItem | DateQuarterItem | DateMonthItem | DateDayItem, label: string | number) => {
+    const renderDateLabel = (item: VxeDatePickerDefines.DateYearItem | VxeDatePickerDefines.DateQuarterItem | VxeDatePickerDefines.DateMonthItem | VxeDatePickerDefines.DateDayItem, label: string | number) => {
       const { festivalMethod } = props
       if (festivalMethod) {
         const { datePanelType } = reactData
@@ -2175,7 +2089,7 @@ export default defineComponent({
             onKeyup: keyupEvent,
             onWheel: wheelEvent,
             onClick: clickEvent,
-            onDatePicker: inputEvent,
+            onInput: inputEvent,
             onChange: changeEvent,
             onFocus: focusEvent,
             onBlur: blurEvent

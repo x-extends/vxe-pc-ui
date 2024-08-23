@@ -1,6 +1,6 @@
 import XEUtils from 'xe-utils'
 
-export function handleNumber (val: string | number) {
+export function handleNumber (val: string | number | null | undefined) {
   return XEUtils.isString(val) ? val.replace(/,/g, '') : val
 }
 

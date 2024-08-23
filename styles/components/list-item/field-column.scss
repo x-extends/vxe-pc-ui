@@ -7,9 +7,13 @@
   flex-grow: 1;
   @include createCheckboxIcon();
 }
-.vxe-list-design--field-option-item {
+.vxe-list-design--field-option-inner {
   display: flex;
   flex-direction: row;
   align-items: center;
   height: 1.8em;
+  padding: 0 0.5em;
+  &:hover {
+    background-color: var(--vxe-ui-base-hover-background-color);
+  }
 }

@@ -56,3 +56,26 @@
     text-align: center;
   }
 }
+
+
+.vxe-list-design--search-item-list {
+  .vxe-list-design--search-item {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    height: 1.8em;
+    padding: 0 0.5em;
+    &:hover {
+      background-color: var(--vxe-ui-base-hover-background-color);
+    }
+  }
+  .vxe-list-design--search-item-title {
+    flex-grow: 1;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .vxe-list-design--search-item-btn {
+    flex-shrink: 0;
+  }
+}

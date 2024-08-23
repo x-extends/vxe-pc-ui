@@ -1,11 +1,11 @@
 import { defineComponent, ref, h, reactive, PropType, createCommentVNode, computed } from 'vue'
 import { getSlotVNs } from '../../ui/src/vn'
-import { getConfig } from '../../ui'
+import { getConfig, createEvent } from '../../ui'
 import { toCssUnit } from '../..//ui/src/dom'
 import VxeLoadingComponent from '../../loading/src/loading'
 import XEUtils from 'xe-utils'
 
-import type { CardReactData, VxeCardEmits, VxeCardPropTypes, CardPrivateRef, VxeCardPrivateComputed, VxeCardConstructor, VxeCardPrivateMethods } from '../../../types'
+import type { CardReactData, VxeCardEmits, VxeCardPropTypes, CardPrivateRef, CardMethods, CardPrivateMethods, VxeCardPrivateComputed, VxeCardConstructor, VxeCardPrivateMethods } from '../../../types'
 
 export default defineComponent({
   name: 'VxeCard',
@@ -34,7 +34,7 @@ export default defineComponent({
   emits: [
   ] as VxeCardEmits,
   setup (props, context) {
-    const { slots } = context
+    const { slots, emit } = context
 
     const xID = XEUtils.uniqueId()
 
@@ -71,6 +71,17 @@ export default defineComponent({
       getRefMaps: () => refMaps,
       getComputeMaps: () => computeMaps
     } as unknown as VxeCardConstructor & VxeCardPrivateMethods
+
+    const cardMethods: CardMethods = {
+      dispatchEvent (type, params, evnt) {
+        emit(type, createEvent(evnt, { $card: $xeCard }, params))
+      }
+    }
+
+    const cardPrivateMethods: CardPrivateMethods = {
+    }
+
+    Object.assign($xeCard, cardMethods, cardPrivateMethods)
 
     const renderVN = () => {
       const { title, border, shadow, padding, loading, showTitleOverflow } = props

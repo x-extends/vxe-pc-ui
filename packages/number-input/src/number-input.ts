@@ -4,19 +4,9 @@ import { getConfig, getIcon, getI18n, globalEvents, GLOBAL_EVENT_KEYS, createEve
 import { getFuncText } from '../../ui/src/utils'
 import { hasClass, getEventTargetNode } from '../../ui/src/dom'
 import { getSlotVNs } from '../..//ui/src/vn'
+import { handleNumber, toFloatValueFixed } from './util'
 
 import type { VxeNumberInputConstructor, VxeNumberInputEmits, NumberInputReactData, NumberInputMethods, VxeNumberInputPropTypes, InputPrivateRef, VxeFormConstructor, VxeFormPrivateMethods, VxeFormDefines } from '../../../types'
-
-export function handleNumber (val: string | number | null | undefined) {
-  return XEUtils.isString(val) ? val.replace(/,/g, '') : val
-}
-
-export function toFloatValueFixed (inputValue: string | number, digitsValue: number) {
-  if (/^-/.test('' + inputValue)) {
-    return XEUtils.toFixed(XEUtils.ceil(inputValue, digitsValue), digitsValue)
-  }
-  return XEUtils.toFixed(XEUtils.floor(inputValue, digitsValue), digitsValue)
-}
 
 export default defineComponent({
   name: 'VxeNumberInput',

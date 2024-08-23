@@ -1,0 +1,271 @@
+@import '../helpers/mixin.scss';
+
+.vxe-calendar {
+  display: inline-flex;
+  flex-direction: column;
+  width: 100%;
+  height: 38em;
+  border: 1px solid var(--vxe-ui-base-popup-border-color);
+  border-radius: var(--vxe-ui-base-border-radius);
+  &.type--date {
+    .vxe-calendar--body {
+      td {
+        width: 14.28571%;
+      }
+    }
+  }
+  &.type--week {
+    .vxe-calendar--body {
+      td {
+        width: 12%;
+        &:first-child {
+          width: 14%;
+        }
+      }
+    }
+  }
+  &.type--quarter {
+    .vxe-calendar--body {
+      td {
+        width: 50%;
+      }
+    }
+  }
+  &.type--month,
+  &.type--year {
+    .vxe-calendar--body {
+      td {
+        width: 25%;
+      }
+    }
+  }
+}
+
+.vxe-calendar--confirm {
+  outline: 0;
+  border: 1px solid var(--vxe-ui-input-border-color);
+  border-radius: var(--vxe-ui-base-border-radius);
+  cursor: pointer;
+  color: var(--vxe-ui-input-date-time-confirm-button-color);
+  border-color: var(--vxe-ui-font-primary-color);
+  background-color: var(--vxe-ui-font-primary-color);
+  padding: 0 0.5em;
+  &:hover {
+    background-color: var(--vxe-ui-font-primary-lighten-color);
+    border-color: var(--vxe-ui-font-primary-lighten-color);
+  }
+  &:active {
+    background-color: var(--vxe-ui-font-primary-darken-color);
+    border-color: var(--vxe-ui-font-primary-darken-color);
+  }
+}
+
+.vxe-calendar--header {
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: row;
+  padding: var(--vxe-ui-layout-padding-default);
+  user-select: none;
+  border-bottom: 1px solid var(--vxe-ui-input-border-color);
+  .vxe-calendar--type-wrapper {
+    flex-grow: 1;
+  }
+  .vxe-calendar--btn-wrapper {
+    flex-shrink: 0;
+    text-align: center;
+  }
+}
+.vxe-calendar--btn-wrapper {
+  display: flex;
+  flex-direction: row;
+}
+.vxe-calendar--btn {
+  &.is--disabled {
+    color: var(--vxe-ui-font-disabled-color);
+    cursor: no-drop;
+  }
+  &:not(.is--disabled) {
+    cursor: pointer;
+    &:hover {
+      background-color: #fff;
+    }
+    &:active {
+      background-color: #fff;
+    }
+  }
+}
+.vxe-calendar--body {
+  position: relative;
+  flex-grow: 1;
+  overflow: hidden;
+  table {
+    border: 0;
+    width: 100%;
+    height: 100%;
+    border-spacing: 0;
+    border-collapse: separate;
+    text-align: center;
+    table-layout: fixed
+  }
+}
+.vxe-calendar--view-th {
+  font-weight: 700;
+}
+.vxe-calendar--view-td {
+  font-weight: normal;
+  user-select: none;
+  @include createAnimationTransition(all, 0.1s);
+  &.is--prev,
+  &.is--next {
+    color: var(--vxe-ui-font-disabled-color);
+    .vxe-calendar--date-label,
+    .vxe-calendar--date-festival {
+      color: var(--vxe-ui-font-disabled-color);
+    }
+  }
+  &.is--now {
+    &:not(.is--selected) {
+      &.is--current {
+        color: var(--vxe-ui-font-primary-color);
+        .vxe-calendar--date-label,
+        .vxe-calendar--date-festival {
+          color: var(--vxe-ui-font-primary-color);
+        }
+      }
+    }
+  }
+  &.is--hover {
+    background-color: var(--vxe-ui-base-hover-background-color);
+  }
+  &.is--selected {
+    color: var(--vxe-ui-calendar-selected-color);
+    background-color: var(--vxe-ui-font-primary-color);
+    &.is--prev,
+    &.is--next {
+      background-color: var(--vxe-ui-font-primary-lighten-color);
+    }
+    .vxe-calendar--date-label,
+    .vxe-calendar--date-festival {
+      color: var(--vxe-ui-calendar-festival-selected-color);
+    }
+    .vxe-calendar--date-label {
+      &.is-notice {
+        &:before {
+          background-color: var(--vxe-ui-calendar-notice-selected-background-color);
+        }
+      }
+    }
+  }
+  &:not(.is--disabled) {
+    cursor: pointer;
+  }
+  &.is--disabled {
+    cursor: no-drop;
+    color: var(--vxe-ui-input-disabled-color);
+    background-color: var(--vxe-ui-input-disabled-background-color);
+    .vxe-calendar--date-label,
+    .vxe-calendar--date-festival {
+      color: var(--vxe-ui-input-disabled-color);
+    }
+  }
+}
+
+.vxe-calendar--date-label,
+.vxe-calendar--date-festival {
+  display: block;
+  overflow: hidden;
+}
+
+.vxe-calendar--date-label {
+  position: relative;
+  &.is-notice {
+    &:before {
+      content: "";
+      position: absolute;
+      width: 4px;
+      height: 4px;
+      left: 0.8em;
+      top: 0.1em;
+      transform: translateX(-50%);
+      border-radius: 100%;
+      background-color: var(--vxe-ui-input-date-notice-background-color);
+    }
+  }
+}
+.vxe-calendar--date-label--extra {
+  position: absolute;
+  right: 0.1em;
+  top: -0.2em;
+  font-size: 12px;
+  line-height: 12px;
+  transform: scale(0.7);
+  color: var(--vxe-ui-input-date-extra-color);
+  &.is-important {
+    color: var(--vxe-ui-input-date-extra-important-color);
+  }
+}
+
+.vxe-calendar--date-festival {
+  color: var(--vxe-ui-input-date-festival-color);
+  height: 14px;
+  line-height: 1;
+  overflow: hidden;
+  &.is-important {
+    color: var(--vxe-ui-input-date-festival-important-color);
+  }
+}
+.vxe-calendar--date-festival--label {
+  display: block;
+  font-size: 12px;
+  transform: scale(0.8);
+}
+
+@keyframes festivalOverlap2 {
+  0%, 45%, 100% {
+    transform: translateY(0);
+  }
+  50%, 95% {
+    transform: translateY(-14px);
+  }
+}
+
+@keyframes festivalOverlap3 {
+  0%, 20%, 100% {
+    transform: translateY(0);
+  }
+  25%, 45%, 75%, 95% {
+    transform: translateY(-14px);
+  }
+  50%, 70% {
+    transform: translateY(-28px);
+  }
+}
+
+.vxe-calendar--date-festival--overlap {
+  display: block;
+  font-size: 12px;
+  &.overlap--2 {
+    animation: festivalOverlap2 6s infinite ease-in-out;
+  }
+  &.overlap--3 {
+    animation: festivalOverlap3 9s infinite ease-in-out;
+  }
+  & > span {
+    height: 14px;
+    display: block;
+    transform: scale(0.8);
+  }
+}
+
+.vxe-calendar {
+  font-size: var(--vxe-ui-font-size-default);
+  &.size--medium {
+    font-size: var(--vxe-ui-font-size-medium);
+  }
+  &.size--small {
+    font-size: var(--vxe-ui-font-size-small);
+  }
+  &.size--mini {
+    font-size: var(--vxe-ui-font-size-mini);
+  }
+}

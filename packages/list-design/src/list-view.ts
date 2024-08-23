@@ -300,7 +300,7 @@ export default defineComponent({
           condition.push({
             field,
             value: itemValue,
-            match: '',
+            match: 'exact',
             type: XEUtils.isArray(itemValue) ? 'array' : ''
           })
           items.push({

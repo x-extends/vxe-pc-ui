@@ -43,6 +43,11 @@ export const DefaultFieldSettingFormComponent = defineComponent({
       listDesignReactData.listTableColumns = listDesignReactData.listTableColumns.slice(0)
     }
 
+    const removeSearchItem = (item: VxeListDesignDefines.SearchItemObjItem) => {
+      const { searchFormItems } = listDesignReactData
+      listDesignReactData.searchFormItems = searchFormItems.filter(obj => obj.field !== item.field)
+    }
+
     const addSearchEvent = () => {
       const { listTableColumns, searchFormItems } = listDesignReactData
       const widgetReactConfigMaps = refWidgetReactConfigMaps.value
@@ -245,7 +250,7 @@ export const DefaultFieldSettingFormComponent = defineComponent({
       const { children } = item
       if (children && children.length) {
         return h('div', {
-          class: 'vxe-list-design--field-option-item'
+          class: 'vxe-list-design--field-option-inner'
         }, [
           h('div', {
             class: 'vxe-list-design--field-sub-option',
@@ -280,10 +285,10 @@ export const DefaultFieldSettingFormComponent = defineComponent({
       return listTableColumns.map(item => {
         const { title, visible: isChecked } = item
         return h('div', {
-          class: 'vxe-list-design--field-options'
+          class: 'vxe-list-design--field-option'
         }, [
           h('div', {
-            class: 'vxe-list-design--field-option-item'
+            class: 'vxe-list-design--field-option-inner'
           }, [
             h('div', {
               class: ['vxe-list-design--field-checkbox-option', {
@@ -331,12 +336,31 @@ export const DefaultFieldSettingFormComponent = defineComponent({
                 return [
                   searchFormItems.length
                     ? h('div', {
-                      class: ''
+                      class: 'vxe-list-design--search-item-wrapper'
                     }, [
-                      h('div', {}, searchFormItems.map(item => {
+                      h('div', {
+                        class: 'vxe-list-design--search-item-list'
+                      }, searchFormItems.map((item) => {
                         return h('div', {
-                          class: ''
-                        }, `${item.title || ''}`)
+                          key: item.field,
+                          class: 'vxe-list-design--search-item'
+                        }, [
+                          h('div', {
+                            class: 'vxe-list-design--search-item-title'
+                          }, `${item.title || ''}`),
+                          h('div', {
+                            class: 'vxe-list-design--search-item-btn'
+                          }, [
+                            h(VxeButtonComponent, {
+                              icon: getIcon().LIST_DESIGN_LIST_SETTING_SEARCH_DELETE,
+                              mode: 'text',
+                              status: 'error',
+                              onClick () {
+                                removeSearchItem(item)
+                              }
+                            })
+                          ])
+                        ])
                       }))
                     ])
                     : h('div', {
