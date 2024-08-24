@@ -224,6 +224,11 @@ const routes: Array<RouteRecordRaw> = [
     path: '/component/calendar',
     name: 'CalendarTest',
     component: () => import('../views/calendar/CalendarTest.vue')
+  },
+  {
+    path: '/component/countdown',
+    name: 'CountdownTest',
+    component: () => import('../views/countdown/CountdownTest.vue')
   }
 ]
 

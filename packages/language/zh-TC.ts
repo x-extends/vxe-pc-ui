@@ -450,6 +450,16 @@ export default {
       copySuccess: '已複製到剪貼板',
       copyError: '當前環境不支持該操作'
     },
+    countdown: {
+      formats: {
+        yyyy: '年',
+        MM: '月',
+        dd: '天',
+        HH: '时',
+        mm: '分',
+        ss: '秒'
+      }
+    },
 
     /**
      * 扩展插件

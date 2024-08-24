@@ -70,10 +70,9 @@ setConfig({
   checkbox: {},
   checkboxGroup: {},
   col: {},
-  colgroup: {},
   collapse: {},
   collapsePane: {},
-  column: {},
+  countdown: {},
   datePicker: {
     // size: null,
     // transfer: false
@@ -118,7 +117,6 @@ setConfig({
   formGather: {},
   formItem: {},
   formView: {},
-  grid: {},
   icon: {},
   iconPicker: {
     icons: ['home', 'company', 'comment', 'setting', 'send', 'envelope', 'envelope-open', 'bell', 'search', 'print', 'pc', 'goods', 'chart-line', 'edit', 'delete', 'save', 'folder', 'microphone', 'flag', 'link', 'location', 'sunny', 'rmb', 'usd', 'user', 'add-user', 'add-users', 'star', 'unlock', 'time', 'text', 'feedback', 'calendar', 'association-form', 'cloud-download', 'cloud-upload', 'file', 'subtable', 'chart-bar-x', 'chart-bar-y', 'chart-line', 'chart-pie', 'chart-radar']
@@ -236,12 +234,10 @@ setConfig({
   },
   switch: {},
   tabPane: {},
-  table: {},
   tabs: {},
   tag: {},
   text: {},
   textarea: {},
-  toolbar: {},
   tip: {},
   tooltip: {
     // size: null,
@@ -272,7 +268,13 @@ setConfig({
     showButtonIcon: true,
     showPreview: true,
     imageStyle: {}
-  }
+  },
+
+  table: {},
+  colgroup: {},
+  column: {},
+  toolbar: {},
+  grid: {}
 })
 
 const iconPrefix = 'vxe-icon-'

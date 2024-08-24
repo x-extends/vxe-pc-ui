@@ -444,6 +444,20 @@ export default {
         emptyText: '未配置查询条件'
       }
     },
+    text: {
+      copySuccess: '已复制到剪贴板',
+      copyError: '当前环境不支持该操作'
+    },
+    countdown: {
+      formats: {
+        yyyy: '年',
+        MM: '月',
+        dd: '天',
+        HH: '时',
+        mm: '分',
+        ss: '秒'
+      }
+    },
 
     /**
      * 扩展插件

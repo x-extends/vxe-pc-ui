@@ -19,6 +19,7 @@ import VxeCheckboxGroup from './checkbox-group'
 import VxeCol from './col'
 import VxeCollapse from './collapse'
 import VxeCollapsePane from './collapse-pane'
+import VxeCountdown from './countdown'
 import VxeDatePicker from './date-picker'
 import VxeDrawer, { DrawerController } from './drawer'
 import VxeForm from './form'
@@ -89,6 +90,7 @@ const components = [
   VxeCol,
   VxeCollapse,
   VxeCollapsePane,
+  VxeCountdown,
   VxeDatePicker,
   VxeDrawer,
   VxeForm,
@@ -179,6 +181,7 @@ export * from './checkbox-group'
 export * from './col'
 export * from './collapse'
 export * from './collapse-pane'
+export * from './countdown'
 export * from './date-picker'
 export * from './drawer'
 export * from './form'

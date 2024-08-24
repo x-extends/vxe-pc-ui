@@ -450,6 +450,16 @@ export default {
       copySuccess: 'Successfully copied to clipboard.',
       copyError: 'The current environment does not support this operation.'
     },
+    countdown: {
+      formats: {
+        yyyy: 'Year',
+        MM: 'Moon',
+        dd: 'Day',
+        HH: 'Hour',
+        mm: 'Minute',
+        ss: 'Second'
+      }
+    },
 
     /**
      * 扩展插件
