@@ -165,7 +165,10 @@ setConfig({
       // oSize: 0
     }
   },
-  loading: {},
+  loading: {
+    showIcon: true,
+    showText: true
+  },
   modal: {
     // size: null,
     top: 16,
@@ -435,6 +438,7 @@ setIcon({
 
   // text
   TEXT_COPY: iconPrefix + 'copy',
+  TEXT_LOADING: iconPrefix + 'spinner roll',
 
   // carousel
   CAROUSEL_HORIZONTAL_PREVIOUS: iconPrefix + 'arrow-left',

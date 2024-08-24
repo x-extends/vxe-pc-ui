@@ -106,6 +106,17 @@ export default defineComponent({
           loadWidgetData(widgetData)
         }
       }
+      const { activeWidget, widgetObjList } = reactData
+      if (activeWidget) {
+        const rest = XEUtils.findTree(widgetObjList, item => item.id === activeWidget.id, { children: 'children' })
+        if (rest) {
+          reactData.activeWidget = rest.item
+        } else {
+          reactData.activeWidget = widgetObjList[0] || null
+        }
+      } else {
+        reactData.activeWidget = widgetObjList[0] || null
+      }
       return nextTick()
     }
 

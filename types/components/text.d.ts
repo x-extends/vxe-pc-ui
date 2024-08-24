@@ -26,6 +26,7 @@ export namespace VxeTextPropTypes {
   export type Status = VxeComponentStatusType
   export type Title = string | number
   export type Icon = string
+  export type Loading = boolean
   export type Content = string | number
   export type ClickToCopy = boolean
   export type Size = VxeComponentSizeType
@@ -35,6 +36,7 @@ export type VxeTextProps = {
   status?: VxeTextPropTypes.Status
   title?: VxeTextPropTypes.Title
   icon?: VxeTextPropTypes.Icon
+  loading?: VxeTextPropTypes.Loading
   content?: VxeTextPropTypes.Content
   clickToCopy?: VxeTextPropTypes.ClickToCopy
   size?: VxeTextPropTypes.Size

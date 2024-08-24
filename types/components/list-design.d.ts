@@ -163,7 +163,7 @@ export namespace VxeListDesignDefines {
     autoFoldFilter: boolean
     showCheckbox: boolean | 'auto'
     showSeq: boolean
-    showSummary: boolean
+    showStatistics: boolean
     mobileDefaultView: 'list' | 'gantt' | 'chart'
     pcDefaultView: 'list' | 'gantt' | 'chart'
     actionButtonList: DefaultSettingFormActionButton[]

@@ -14,7 +14,7 @@ export const getDefaultSettingFormData = (): VxeListDesignDefines.DefaultSetting
     autoFoldFilter: true,
     showCheckbox: 'auto',
     showSeq: true,
-    showSummary: true,
+    showStatistics: true,
     mobileDefaultView: 'list',
     pcDefaultView: 'list',
     actionButtonList: []

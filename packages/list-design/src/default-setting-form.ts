@@ -771,12 +771,12 @@ export const DefaultParameterSettingFormComponent = defineComponent({
                   h('div', {
                     class: 'vxe-list-design--widget-form-item-prop-list'
                   }, [
-                    h('span', {}, '表尾汇总'),
+                    h('span', {}, '表尾统计'),
                     h(VxeRadioGroupComponent, {
-                      modelValue: formData.showSummary,
+                      modelValue: formData.showStatistics,
                       options: refSeqOpts.value,
                       'onUpdate:modelValue' (val) {
-                        formData.showSummary = val
+                        formData.showStatistics = val
                       }
                     })
                   ])

@@ -2,6 +2,7 @@ import { RenderFunction, SetupContext, Ref, ComponentPublicInstance, DefineCompo
 import { defineVxeComponent, VxeComponentBaseOptions, VxeComponentEventParams, ValueOf } from '@vxe-ui/core'
 import { VxeListDesignDefines } from './list-design'
 import { VxeGridInstance, VxeGridPropTypes, VxeGridProps, VxeGridListeners } from './grid'
+import { VxeTablePropTypes } from './table'
 import { VxeColumnSlotTypes } from './column'
 import { VxeButtonProps } from './button'
 
@@ -54,11 +55,13 @@ export interface ListViewPrivateComputed {
 }
 export interface VxeListViewPrivateComputed extends ListViewPrivateComputed { }
 
-export interface ListViewReactData {
+export interface ListViewReactData<D = VxeListDesignDefines.DefaultSettingFormDataObjVO> {
+  formConfig: D
   searchFormData: any
   searchFormItems: VxeListDesignDefines.SearchItemObjItem[]
   listTableColumns: VxeListDesignDefines.ListColumnObjItem[]
   tableColumns: VxeGridPropTypes.Columns
+  footerData: VxeTablePropTypes.FooterData
 }
 
 export interface ListViewMethods<D = any> {
@@ -78,8 +81,15 @@ export interface ListViewMethods<D = any> {
     formData: Record<string, any>
     formItems: VxeListDesignDefines.SearchItemObjItem[]
     tableColumns: VxeGridPropTypes.Columns
+    tableRecord: Record<string, any>
     actionButtons: VxeListViewPropTypes.ActionButtons
   }
+  /**
+   * 获取表格行记录对象
+   * 根据 config 配置获取行记录对象
+   * 根据 listColumns 配置获取行记录对象
+   */
+  getTableRecord(configOrListColumns: Partial<VxeListDesignDefines.ListDesignConfig> | VxeListDesignDefines.ListColumnObjItem[] | null | undefined): Record<string, any>
   /**
    * 获取表单查询条件
    */

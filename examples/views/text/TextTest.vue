@@ -15,7 +15,7 @@
       <vxe-text content="成功图标颜色" icon="vxe-icon-info-circle"></vxe-text>
       <vxe-text content="信息图标颜色" icon="vxe-icon-info-circle"></vxe-text>
       <vxe-text content="警告图标颜色" icon="vxe-icon-info-circle"></vxe-text>
-      <vxe-text content="危险图标颜色" icon="vxe-icon-info-circle"></vxe-text>
+      <vxe-text content="危险图标颜色" icon="vxe-icon-info-circle" loading></vxe-text>
     </p>
 
     <p>

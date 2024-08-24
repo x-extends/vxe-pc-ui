@@ -1,9 +1,9 @@
 import { defineComponent, ref, h, reactive, PropType, createCommentVNode } from 'vue'
 import XEUtils from 'xe-utils'
-import { VxeUI, getConfig, getIcon, getI18n, useSize } from '../../ui'
+import { VxeUI, getConfig, getIcon, getI18n, useSize, createEvent } from '../../ui'
 import { getSlotVNs } from '../../ui/src/vn'
 
-import type { VxeTextPropTypes, TextReactData, TextPrivateRef, VxeTextPrivateComputed, VxeTextConstructor, VxeTextPrivateMethods } from '../../../types'
+import type { VxeTextPropTypes, TextReactData, TextPrivateRef, VxeTextPrivateComputed, TextMethods, TextPrivateMethods, VxeTextEmits, VxeTextConstructor, ValueOf, VxeTextPrivateMethods } from '../../../types'
 
 export default defineComponent({
   name: 'VxeText',
@@ -11,13 +11,16 @@ export default defineComponent({
     status: String as PropType<VxeTextPropTypes.Status>,
     title: [String, Number] as PropType<VxeTextPropTypes.Title>,
     icon: String as PropType<VxeTextPropTypes.Icon>,
+    loading: Boolean as PropType<VxeTextPropTypes.Loading>,
     content: [String, Number] as PropType<VxeTextPropTypes.Content>,
     clickToCopy: Boolean as PropType<VxeTextPropTypes.ClickToCopy>,
     size: { type: String as PropType<VxeTextPropTypes.Size>, default: () => getConfig().text.size || getConfig().size }
   },
-  emits: [],
+  emits: [
+    'click'
+  ] as VxeTextEmits,
   setup (props, context) {
-    const { slots } = context
+    const { emit, slots } = context
 
     const xID = XEUtils.uniqueId()
 
@@ -71,23 +74,53 @@ export default defineComponent({
       getComputeMaps: () => computeMaps
     } as unknown as VxeTextConstructor & VxeTextPrivateMethods
 
+    const dispatchEvent = (type: ValueOf<VxeTextEmits>, params: Record<string, any>, evnt: Event | null) => {
+      emit(type, createEvent(evnt, { $carousel: $xeText }, params))
+    }
+
+    const textMethods: TextMethods = {
+      dispatchEvent
+    }
+
+    const clickEvent = (evnt : MouseEvent) => {
+      const { loading } = props
+      if (!loading) {
+        dispatchEvent('click', {}, evnt)
+      }
+    }
+
+    const textPrivateMethods: TextPrivateMethods = {
+    }
+
+    Object.assign($xeText, textMethods, textPrivateMethods)
+
     const renderContent = () => {
-      const { icon, content, clickToCopy } = props
+      const { loading, icon, content, clickToCopy } = props
       const defaultSlot = slots.default
       const iconSlot = slots.icon
       return [
-        iconSlot || icon || clickToCopy
+        loading
           ? h('span', {
-            class: 'vxe-text--icon',
-            onClick: clickIconEvent
-          }, iconSlot
-            ? getSlotVNs(iconSlot({}))
-            : [
-                h('i', {
-                  class: icon || getIcon().TEXT_COPY
-                })
-              ])
-          : createCommentVNode(),
+            class: 'vxe-text--loading'
+          }, [
+            h('i', {
+              class: getIcon().TEXT_LOADING
+            })
+          ])
+          : (
+              iconSlot || icon || clickToCopy
+                ? h('span', {
+                  class: 'vxe-text--icon',
+                  onClick: clickIconEvent
+                }, iconSlot
+                  ? getSlotVNs(iconSlot({}))
+                  : [
+                      h('i', {
+                        class: icon || getIcon().TEXT_COPY
+                      })
+                    ])
+                : createCommentVNode()
+            ),
         h('span', {
           ref: refContentElem,
           class: 'vxe-text--content'
@@ -96,7 +129,7 @@ export default defineComponent({
     }
 
     const renderVN = () => {
-      const { status, title, clickToCopy } = props
+      const { loading, status, title, clickToCopy } = props
       const vSize = computeSize.value
       return h('span', {
         ref: refElem,
@@ -104,8 +137,10 @@ export default defineComponent({
         class: ['vxe-text', {
           [`size--${vSize}`]: vSize,
           [`theme--${status}`]: status,
-          'is--copy': clickToCopy
-        }]
+          'is--copy': clickToCopy,
+          'is--loading': loading
+        }],
+        onClick: clickEvent
       }, renderContent())
     }
 

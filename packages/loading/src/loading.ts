@@ -13,9 +13,17 @@ export default defineComponent({
       type: String as PropType<VxeLoadingPropTypes.Icon>,
       default: () => getConfig().loading.icon
     },
+    showIcon: {
+      type: Boolean as PropType<VxeLoadingPropTypes.ShowIcon>,
+      default: () => getConfig().loading.showIcon
+    },
     text: {
       type: String as PropType<VxeLoadingPropTypes.Text>,
       default: () => getConfig().loading.text
+    },
+    showText: {
+      type: Boolean as PropType<VxeLoadingPropTypes.ShowText>,
+      default: () => getConfig().loading.showText
     },
     status: String as PropType<VxeLoadingPropTypes.Status>
   },
@@ -44,7 +52,7 @@ export default defineComponent({
     handleInit()
 
     return () => {
-      const { modelValue, status } = props
+      const { modelValue, showIcon, status } = props
       const defaultSlot = slots.default
       const textSlot = slots.text
       const iconSlot = slots.icon
@@ -71,7 +79,7 @@ export default defineComponent({
             h('div', {
               class: 'vxe-loading--chunk'
             }, [
-              iconSlot || loadingIcon
+              showIcon && (iconSlot || loadingIcon)
                 ? h('div', {
                   class: 'vxe-loading--icon'
                 }, iconSlot

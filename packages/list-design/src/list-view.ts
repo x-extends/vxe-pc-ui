@@ -40,15 +40,20 @@ export default defineComponent({
     const refGrid = ref<VxeGridInstance>()
 
     const reactData = reactive<ListViewReactData>({
+      formConfig: {} as VxeListDesignDefines.DefaultSettingFormDataObjVO,
       searchFormData: {},
       searchFormItems: [],
       listTableColumns: [],
-      tableColumns: []
+      tableColumns: [],
+      footerData: [
+        {} // 默认一行合计
+      ]
     })
 
     const computeGridOptions = computed<VxeGridProps>(() => {
       const { gridOptions } = props
-      const { tableColumns, searchFormData, searchFormItems } = reactData
+      const { formConfig, tableColumns, searchFormData, searchFormItems, footerData } = reactData
+      const { showStatistics } = formConfig
       const gridOpts = gridOptions || {}
       const columnOpts = Object.assign({
         minWidth: 120
@@ -60,6 +65,8 @@ export default defineComponent({
       return Object.assign({}, gridOpts, {
         columns: tableColumns,
         columnConfig: columnOpts,
+        showFooter: showStatistics,
+        footerData: showStatistics ? footerData : null,
         formConfig: {
           data: searchFormData,
           items: searchFormItems
@@ -163,18 +170,25 @@ export default defineComponent({
 
     const clearConfig = () => {
       emit('update:formData', {})
-      reactData.searchFormData = {}
-      reactData.searchFormItems = []
-      reactData.listTableColumns = []
-      reactData.tableColumns = []
+      Object.assign(reactData, {
+        formConfig: {} as VxeListDesignDefines.DefaultSettingFormDataObjVO,
+        searchFormData: {},
+        searchFormItems: [],
+        listTableColumns: [],
+        tableColumns: [],
+        footerData: [
+          {} // 默认一行合计
+        ]
+      })
       return nextTick()
     }
 
     const loadConfig = (config: Partial<VxeListDesignDefines.ListDesignConfig> | null) => {
       if (config) {
         const { formConfig, searchItems, listColumns } = config
+        reactData.formConfig = formConfig || {} as VxeListDesignDefines.DefaultSettingFormDataObjVO
         setSearchItems(searchItems || [])
-        loadListColumns(listColumns || [], formConfig || {})
+        loadListColumns(listColumns || [])
       }
       return nextTick()
     }
@@ -183,22 +197,36 @@ export default defineComponent({
       return configToSearchItems(searchItems || [])
     }
 
-    const parseTableColumn = (listColumns: VxeListDesignDefines.ListColumnObjItem[], formConfig?: VxeListDesignDefines.DefaultSettingFormDataObjVO) => {
+    const parseTableColumn = (listColumns: VxeListDesignDefines.ListColumnObjItem[], formConfig: VxeListDesignDefines.DefaultSettingFormDataObjVO) => {
       const formOpts = Object.assign({}, formConfig)
       const { showSeq, actionButtonList } = formOpts
       const columns: VxeGridPropTypes.Columns = []
+      const rowRecord: Record<string, any> = {}
       const cellActionSlot = slots.cellAction
+      const footerCellSlot = slots.footerCell
 
       if (showSeq) {
         columns.push({
           type: 'seq',
           field: '_seq',
+          fixed: 'left',
           width: 70
         })
       }
 
       configToListColumns(listColumns || []).forEach(conf => {
-        columns.push(conf)
+        const columnConf: VxeTableDefines.ColumnOptions = { ...conf }
+        if (formOpts.showStatistics && footerCellSlot) {
+          columnConf.slots = {
+            footer: (params) => {
+              return footerCellSlot({ ...params })
+            }
+          }
+        }
+        if (columnConf.field) {
+          rowRecord[columnConf.field] = null
+        }
+        columns.push(columnConf)
       })
 
       if (actionButtonList && actionButtonList.length) {
@@ -266,19 +294,33 @@ export default defineComponent({
         }
         columns.push(actionColumn)
       }
-      return { columns, actionButtons: actionButtonList }
+      return { rowRecord, columns, actionButtons: actionButtonList }
     }
 
     const parseConfig = (config: Partial<VxeListDesignDefines.ListDesignConfig> | null) => {
       const { formConfig, searchItems, listColumns } = config || {}
-      const { columns, actionButtons } = parseTableColumn(listColumns || [], formConfig)
+      const { columns, rowRecord, actionButtons } = parseTableColumn(listColumns || [], formConfig || reactData.formConfig)
       const { data, items } = parseForm(searchItems || [])
       return {
         formData: data,
         formItems: items,
         tableColumns: columns,
+        tableRecord: rowRecord,
         actionButtons
       }
+    }
+
+    const getTableRecord = (configOrListColumns: Partial<VxeListDesignDefines.ListDesignConfig> | VxeListDesignDefines.ListColumnObjItem[] | null | undefined) => {
+      if (XEUtils.isArray(configOrListColumns)) {
+        const { rowRecord } = parseTableColumn(configOrListColumns, reactData.formConfig)
+        return rowRecord
+      }
+      if (configOrListColumns) {
+        const { formConfig, listColumns } = configOrListColumns
+        const { rowRecord } = parseTableColumn(listColumns || [], formConfig || reactData.formConfig)
+        return rowRecord
+      }
+      return {}
     }
 
     const getQueryFilter = () => {
@@ -320,7 +362,8 @@ export default defineComponent({
       return Promise.resolve()
     }
 
-    const loadListColumns = (listColumns: VxeListDesignDefines.ListColumnObjItem[], formConfig: any) => {
+    const loadListColumns = (listColumns: VxeListDesignDefines.ListColumnObjItem[]) => {
+      const { formConfig } = reactData
       const listTableColumns = listColumns || []
       const { columns, actionButtons } = parseTableColumn(listTableColumns, formConfig)
       reactData.listTableColumns = listTableColumns
@@ -351,6 +394,7 @@ export default defineComponent({
       clearConfig,
       loadConfig,
       parseConfig,
+      getTableRecord,
       getQueryFilter,
       commitProxy
     }
