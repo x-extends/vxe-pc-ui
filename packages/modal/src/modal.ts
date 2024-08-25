@@ -256,6 +256,7 @@ export default defineComponent({
               emit('update:modelValue', false)
               modalMethods.dispatchEvent('hide', params, null)
             }, 200)
+            removeBodyLockScroll()
           }
         }).catch(e => e)
       }
@@ -487,6 +488,39 @@ export default defineComponent({
       }
     }
 
+    const lockScrollAttrKey = 'data-vxe-lock-scroll'
+    const lockScrollCssWidthKey = '--vxe-ui-modal-lock-scroll-view-width'
+
+    const removeBodyLockScroll = () => {
+      const htmlElem = document.documentElement
+      const lockData = htmlElem.getAttribute(lockScrollAttrKey)
+      if (lockData) {
+        const lockList = lockData.split(',').filter(key => key !== xID)
+        if (lockList.length) {
+          htmlElem.setAttribute(lockScrollAttrKey, lockList.join(','))
+        } else {
+          htmlElem.removeAttribute(lockScrollAttrKey)
+          htmlElem.style.removeProperty(lockScrollCssWidthKey)
+        }
+      }
+    }
+
+    const addBodyLockScroll = () => {
+      const { lockScroll } = props
+      const isMsg = computeIsMsg.value
+      if (lockScroll && !isMsg) {
+        const htmlElem = document.documentElement
+        const clientWidth = document.body.clientWidth
+        const lockData = htmlElem.getAttribute(lockScrollAttrKey)
+        const lockList = lockData ? lockData.split(',') : []
+        if (!lockList.includes(xID)) {
+          lockList.push(xID)
+          htmlElem.setAttribute(lockScrollAttrKey, lockList.join(','))
+        }
+        htmlElem.style.setProperty(lockScrollCssWidthKey, `${clientWidth}px`)
+      }
+    }
+
     const openModal = () => {
       const { remember, showFooter } = props
       const { initialized, visible } = reactData
@@ -498,6 +532,7 @@ export default defineComponent({
         if (!remember) {
           recalculate()
         }
+        addBodyLockScroll()
         reactData.visible = true
         reactData.contentVisible = false
         updateZindex()
@@ -1226,6 +1261,7 @@ export default defineComponent({
     onUnmounted(() => {
       globalEvents.off($xeModal, 'keydown')
       removeMsgQueue()
+      removeBodyLockScroll()
     })
 
     provide('$xeModal', $xeModal)

@@ -1,5 +1,12 @@
 @import '../helpers/mixin.scss';
 
+html[data-vxe-lock-scroll] {
+  overflow: hidden;
+  body {
+    overflow: hidden;
+    width: var(--vxe-ui-modal-lock-scroll-view-width);
+  }
+}
 
 .vxe-modal--box {
   visibility: hidden;

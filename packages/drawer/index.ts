@@ -6,7 +6,7 @@ import { dynamicApp, dynamicStore, checkDynamic } from '../dynamics'
 
 import { VxeDrawerPropTypes, DrawerEventTypes, VxeDrawerDefines } from '../../types'
 
-function openDrawer (options: VxeDrawerDefines.DrawerOptions): Promise<DrawerEventTypes> {
+function handleDrawer (options: VxeDrawerDefines.DrawerOptions): Promise<DrawerEventTypes> {
   // 使用动态组件渲染动态弹框
   checkDynamic()
   return new Promise(resolve => {
@@ -49,6 +49,10 @@ function closeDrawer (id?: VxeDrawerPropTypes.ID) {
     }
   })
   return Promise.all(restPromises)
+}
+
+function openDrawer (options: VxeDrawerDefines.DrawerOptions) {
+  return handleDrawer(Object.assign({}, options))
 }
 
 export const DrawerController = {

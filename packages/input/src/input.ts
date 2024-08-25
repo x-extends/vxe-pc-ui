@@ -1,4 +1,4 @@
-import { defineComponent, h, Teleport, ref, Ref, computed, reactive, inject, nextTick, watch, onUnmounted, PropType, createCommentVNode } from 'vue'
+import { defineComponent, h, Teleport, ref, Ref, computed, reactive, onMounted, inject, nextTick, watch, onBeforeUnmount, PropType, createCommentVNode } from 'vue'
 import XEUtils from 'xe-utils'
 import { getConfig, getIcon, getI18n, globalEvents, GLOBAL_EVENT_KEYS, createEvent, useSize, VxeComponentStyleType } from '../../ui'
 import { getFuncText, getLastZIndex, nextZIndex } from '../../ui/src/utils'
@@ -1115,11 +1115,18 @@ export default defineComponent({
         const isShiftKey = evnt.shiftKey
         const isAltKey = evnt.altKey
         const keyCode = evnt.keyCode
+        const isEsc = globalEvents.hasKey(evnt, GLOBAL_EVENT_KEYS.ESCAPE)
+        const isUpArrow = globalEvents.hasKey(evnt, GLOBAL_EVENT_KEYS.ARROW_UP)
+        const isDwArrow = globalEvents.hasKey(evnt, GLOBAL_EVENT_KEYS.ARROW_DOWN)
         if (!isCtrlKey && !isShiftKey && !isAltKey && (globalEvents.hasKey(evnt, GLOBAL_EVENT_KEYS.SPACEBAR) || ((!exponential || keyCode !== 69) && (keyCode >= 65 && keyCode <= 90)) || (keyCode >= 186 && keyCode <= 188) || keyCode >= 191)) {
           evnt.preventDefault()
         }
-        if (controls) {
-          numberKeydownEvent(evnt)
+        if (isEsc) {
+          afterCheckValue()
+        } else if (isUpArrow || isDwArrow) {
+          if (controls) {
+            numberKeydownEvent(evnt)
+          }
         }
       }
       triggerEvent(evnt)
@@ -2415,50 +2422,6 @@ export default defineComponent({
 
     Object.assign($xeInput, inputMethods)
 
-    watch(() => props.modelValue, (val) => {
-      reactData.inputValue = val
-      changeValue()
-    })
-
-    watch(() => props.type, () => {
-      // 切换类型是重置内置变量
-      Object.assign(reactData, {
-        inputValue: props.modelValue,
-        datetimePanelValue: null,
-        datePanelValue: null,
-        datePanelLabel: '',
-        datePanelType: 'day',
-        selectMonth: null,
-        currentDate: null
-      })
-      initValue()
-    })
-
-    watch(computeDateLabelFormat, () => {
-      const isDatePickerType = computeIsDatePickerType.value
-      if (isDatePickerType) {
-        dateParseValue(reactData.datePanelValue)
-        reactData.inputValue = props.multiple ? computeDateMultipleLabel.value : reactData.datePanelLabel
-      }
-    })
-
-    nextTick(() => {
-      globalEvents.on($xeInput, 'mousewheel', handleGlobalMousewheelEvent)
-      globalEvents.on($xeInput, 'mousedown', handleGlobalMousedownEvent)
-      globalEvents.on($xeInput, 'keydown', handleGlobalKeydownEvent)
-      globalEvents.on($xeInput, 'blur', handleGlobalBlurEvent)
-    })
-
-    onUnmounted(() => {
-      numberStopDown()
-      globalEvents.off($xeInput, 'mousewheel')
-      globalEvents.off($xeInput, 'mousedown')
-      globalEvents.off($xeInput, 'keydown')
-      globalEvents.off($xeInput, 'blur')
-    })
-
-    initValue()
-
     const renderVN = () => {
       const { className, controls, type, align, showWordCount, countMethod, name, autoComplete, autocomplete } = props
       const { inputValue, visiblePanel, isActivated } = reactData
@@ -2537,6 +2500,51 @@ export default defineComponent({
     }
 
     $xeInput.renderVN = renderVN
+
+    watch(() => props.modelValue, (val) => {
+      reactData.inputValue = val
+      changeValue()
+    })
+
+    watch(() => props.type, () => {
+      // 切换类型是重置内置变量
+      Object.assign(reactData, {
+        inputValue: props.modelValue,
+        datetimePanelValue: null,
+        datePanelValue: null,
+        datePanelLabel: '',
+        datePanelType: 'day',
+        selectMonth: null,
+        currentDate: null
+      })
+      initValue()
+    })
+
+    watch(computeDateLabelFormat, () => {
+      const isDatePickerType = computeIsDatePickerType.value
+      if (isDatePickerType) {
+        dateParseValue(reactData.datePanelValue)
+        reactData.inputValue = props.multiple ? computeDateMultipleLabel.value : reactData.datePanelLabel
+      }
+    })
+
+    onMounted(() => {
+      globalEvents.on($xeInput, 'mousewheel', handleGlobalMousewheelEvent)
+      globalEvents.on($xeInput, 'mousedown', handleGlobalMousedownEvent)
+      globalEvents.on($xeInput, 'keydown', handleGlobalKeydownEvent)
+      globalEvents.on($xeInput, 'blur', handleGlobalBlurEvent)
+    })
+
+    onBeforeUnmount(() => {
+      numberStopDown()
+      afterCheckValue()
+      globalEvents.off($xeInput, 'mousewheel')
+      globalEvents.off($xeInput, 'mousedown')
+      globalEvents.off($xeInput, 'keydown')
+      globalEvents.off($xeInput, 'blur')
+    })
+
+    initValue()
 
     return $xeInput
   },

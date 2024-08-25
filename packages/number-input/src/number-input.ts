@@ -1,4 +1,4 @@
-import { defineComponent, h, ref, Ref, computed, reactive, inject, nextTick, watch, createCommentVNode, onUnmounted, PropType } from 'vue'
+import { defineComponent, h, ref, Ref, computed, reactive, inject, nextTick, watch, onMounted, createCommentVNode, onBeforeUnmount, PropType } from 'vue'
 import XEUtils from 'xe-utils'
 import { getConfig, getIcon, getI18n, globalEvents, GLOBAL_EVENT_KEYS, createEvent, useSize } from '../../ui'
 import { getFuncText } from '../../ui/src/utils'
@@ -96,7 +96,7 @@ export default defineComponent({
       refInput: refInputTarget
     }
 
-    const $xeInput = {
+    const $xeNumberInput = {
       xID,
       props,
       context,
@@ -439,11 +439,18 @@ export default defineComponent({
         const isShiftKey = evnt.shiftKey
         const isAltKey = evnt.altKey
         const keyCode = evnt.keyCode
+        const isEsc = globalEvents.hasKey(evnt, GLOBAL_EVENT_KEYS.ESCAPE)
+        const isUpArrow = globalEvents.hasKey(evnt, GLOBAL_EVENT_KEYS.ARROW_UP)
+        const isDwArrow = globalEvents.hasKey(evnt, GLOBAL_EVENT_KEYS.ARROW_DOWN)
         if (!isCtrlKey && !isShiftKey && !isAltKey && (globalEvents.hasKey(evnt, GLOBAL_EVENT_KEYS.SPACEBAR) || ((!exponential || keyCode !== 69) && (keyCode >= 65 && keyCode <= 90)) || (keyCode >= 186 && keyCode <= 188) || keyCode >= 191)) {
           evnt.preventDefault()
         }
-        if (controls) {
-          numberKeydownEvent(evnt)
+        if (isEsc) {
+          afterCheckValue()
+        } else if (isUpArrow || isDwArrow) {
+          if (controls) {
+            numberKeydownEvent(evnt)
+          }
         }
       }
       triggerEvent(evnt)
@@ -656,7 +663,7 @@ export default defineComponent({
 
     inputMethods = {
       dispatchEvent (type, params, evnt) {
-        emit(type, createEvent(evnt, { $input: $xeInput }, params))
+        emit(type, createEvent(evnt, { $input: $xeNumberInput }, params))
       },
 
       focus () {
@@ -679,34 +686,7 @@ export default defineComponent({
       }
     }
 
-    Object.assign($xeInput, inputMethods)
-
-    watch(() => props.modelValue, (val) => {
-      reactData.inputValue = val
-    })
-
-    watch(() => props.type, () => {
-      // 切换类型是重置内置变量
-      Object.assign(reactData, {
-        inputValue: props.modelValue
-      })
-      initValue()
-    })
-
-    nextTick(() => {
-      globalEvents.on($xeInput, 'mousedown', handleGlobalMousedownEvent)
-      globalEvents.on($xeInput, 'keydown', handleGlobalKeydownEvent)
-      globalEvents.on($xeInput, 'blur', handleGlobalBlurEvent)
-    })
-
-    onUnmounted(() => {
-      numberStopDown()
-      globalEvents.off($xeInput, 'mousedown')
-      globalEvents.off($xeInput, 'keydown')
-      globalEvents.off($xeInput, 'blur')
-    })
-
-    initValue()
+    Object.assign($xeNumberInput, inputMethods)
 
     const renderVN = () => {
       const { className, controls, type, align, name, autocomplete, autoComplete } = props
@@ -770,9 +750,37 @@ export default defineComponent({
       ])
     }
 
-    $xeInput.renderVN = renderVN
+    $xeNumberInput.renderVN = renderVN
 
-    return $xeInput
+    watch(() => props.modelValue, (val) => {
+      reactData.inputValue = val
+    })
+
+    watch(() => props.type, () => {
+      // 切换类型是重置内置变量
+      Object.assign(reactData, {
+        inputValue: props.modelValue
+      })
+      initValue()
+    })
+
+    onMounted(() => {
+      globalEvents.on($xeNumberInput, 'mousedown', handleGlobalMousedownEvent)
+      globalEvents.on($xeNumberInput, 'keydown', handleGlobalKeydownEvent)
+      globalEvents.on($xeNumberInput, 'blur', handleGlobalBlurEvent)
+    })
+
+    onBeforeUnmount(() => {
+      numberStopDown()
+      afterCheckValue()
+      globalEvents.off($xeNumberInput, 'mousedown')
+      globalEvents.off($xeNumberInput, 'keydown')
+      globalEvents.off($xeNumberInput, 'blur')
+    })
+
+    initValue()
+
+    return $xeNumberInput
   },
   render () {
     return this.renderVN()

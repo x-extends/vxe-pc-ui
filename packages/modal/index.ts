@@ -6,7 +6,7 @@ import { dynamicApp, dynamicStore, checkDynamic } from '../dynamics'
 
 import { VxeModalPropTypes, ModalEventTypes, VxeModalDefines } from '../../types'
 
-function openModal (options: VxeModalDefines.ModalOptions): Promise<ModalEventTypes> {
+function handleModal (options: VxeModalDefines.ModalOptions): Promise<ModalEventTypes> {
   // 使用动态组件渲染动态弹框
   checkDynamic()
   return new Promise(resolve => {
@@ -58,12 +58,19 @@ function handleOpen (defOpts: VxeModalDefines.ModalOptions, content: VxeModalPro
   } else {
     opts = { content: XEUtils.toValueString(content), title }
   }
-  return openModal({ ...defOpts, ...options, ...opts })
+  return handleModal({ ...defOpts, ...options, ...opts })
+}
+
+function openModal (options: VxeModalDefines.ModalOptions) {
+  return handleOpen({
+    type: 'modal'
+  }, options)
 }
 
 function openAlert (content: VxeModalPropTypes.Content | VxeModalDefines.ModalOptions, title?: VxeModalPropTypes.Title, options?: VxeModalDefines.ModalOptions) {
   return handleOpen({
     type: 'alert',
+    lockScroll: true,
     showHeader: true,
     showFooter: true
   }, content, title, options)
@@ -73,6 +80,7 @@ function openConfirm (content: VxeModalPropTypes.Content | VxeModalDefines.Modal
   return handleOpen({
     type: 'confirm',
     status: 'question',
+    lockScroll: true,
     showHeader: true,
     showFooter: true
   }, content, title, options)
@@ -83,6 +91,7 @@ function openMessage (content: VxeModalPropTypes.Content | VxeModalDefines.Modal
     type: 'message',
     mask: false,
     lockView: false,
+    lockScroll: false,
     showHeader: false
   }, content, '', options)
 }
@@ -92,6 +101,7 @@ function openNotification (content: VxeModalPropTypes.Content | VxeModalDefines.
     type: 'notification',
     mask: false,
     lockView: false,
+    lockScroll: false,
     showHeader: true,
     draggable: false,
     position: 'top-right',
