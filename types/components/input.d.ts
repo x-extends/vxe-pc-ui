@@ -77,8 +77,6 @@ export namespace VxeInputPropTypes {
   export type Maxlength = string | number
 }
 
-type DatePanelType = 'year' | 'quarter' | 'month' | 'week' | 'day'
-
 export type VxeInputProps = {
   size?: VxeInputPropTypes.Size
   modelValue?: VxeInputPropTypes.ModelValue
@@ -169,7 +167,7 @@ export interface InputReactData {
   datetimePanelValue: any
   datePanelValue: Date | null
   datePanelLabel: string
-  datePanelType: DatePanelType
+  datePanelType: VxeInputDefines.DatePanelType
   selectMonth: any
   currentDate: any
 }
@@ -252,6 +250,8 @@ export namespace VxeInputDefines {
      */
     extra?: string | DateFestivalItem
   }
+
+  export type DatePanelType = 'year' | 'quarter' | 'month' | 'week' | 'day'
 
   export interface DateFestivalParams {
     $input: VxeInputConstructor

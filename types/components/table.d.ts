@@ -3806,7 +3806,25 @@ export namespace VxeTableDefines {
   export interface MenuFirstOption {
     code?: string
     name?: string
+    prefixConfig?: {
+      icon?: string
+      content?: string
+      className?: string
+    }
+    /**
+     * 请使用 prefixConfig
+     * @deprecated
+     */
     prefixIcon?: string
+    suffixConfig?: {
+      icon?: string
+      content?: string
+      className?: string
+    }
+    /**
+     * 请使用 suffixConfig
+     * @deprecated
+     */
     suffixIcon?: string
     className?: string
     visible?: boolean
@@ -3818,7 +3836,24 @@ export namespace VxeTableDefines {
   export interface MenuChildOption {
     code?: string
     name?: string
+    prefixConfig?: {
+      icon?: string
+      content?: string
+    }
+    /**
+     * 请使用 prefixConfig
+     * @deprecated
+     */
     prefixIcon?: string
+    suffixConfig?: {
+      icon?: string
+      content?: string
+    }
+    /**
+     * 请使用 suffixConfig
+     * @deprecated
+     */
+    suffixIcon?: string
     className?: string
     visible?: boolean
     disabled?: boolean

@@ -51,10 +51,6 @@ export default defineComponent({
     const quarterSize = 8
 
     const reactData = reactive<CalendarReactData>({
-      panelIndex: 0,
-      panelStyle: null,
-      panelPlacement: '',
-      isActivated: false,
       selectValue: props.modelValue,
       inputValue: props.modelValue,
       datePanelValue: null,

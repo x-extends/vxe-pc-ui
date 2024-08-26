@@ -138,7 +138,7 @@ export interface DatePickerReactData {
   datetimePanelValue: any
   datePanelValue: Date | null
   datePanelLabel: string
-  datePanelType: DatePanelType
+  datePanelType: VxeDatePickerDefines.DatePanelType
   selectMonth: any
   currentDate: any
 }
@@ -190,8 +190,6 @@ export type VxeDatePickerEmits = [
   'date-next'
 ]
 
-type DatePanelType = 'year' | 'quarter' | 'month' | 'week' | 'day'
-
 export namespace VxeDatePickerDefines {
   export interface DatePickerEventParams extends VxeComponentEventParams {
     $datePicker: VxeDatePickerConstructor
@@ -238,6 +236,8 @@ export namespace VxeDatePickerDefines {
     value: number;
     label: string;
   }
+
+  export type DatePanelType = 'year' | 'quarter' | 'month' | 'week' | 'day'
 
   interface DateFestivalItem {
     /**

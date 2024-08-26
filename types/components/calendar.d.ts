@@ -1,5 +1,5 @@
 import { RenderFunction, SetupContext, Ref, ComponentPublicInstance, DefineComponent } from 'vue'
-import { defineVxeComponent, VxeComponentBaseOptions, VxeComponentEventParams, ValueOf } from '@vxe-ui/core'
+import { defineVxeComponent, VxeComponentBaseOptions, VxeComponentEventParams, ValueOf, VxeComponentStyleType, VxeComponentSizeType } from '@vxe-ui/core'
 
 /* eslint-disable no-use-before-define,@typescript-eslint/ban-types */
 
@@ -36,8 +36,8 @@ export namespace VxeCalendarPropTypes {
   export type SelectDay = 0 | 1 | 2 | 3 | 4 | 5 | 6
   export type LabelFormat = string
   export type ValueFormat = string
-  export type FestivalMethod = (params: VxeDatePickerDefines.DateFestivalParams) => VxeDatePickerDefines.DateFestivalInfo | null | void
-  export type DisabledMethod = (params: VxeDatePickerDefines.DateDisabledParams) => boolean
+  export type FestivalMethod = (params: VxeCalendarDefines.DateFestivalParams) => VxeCalendarDefines.DateFestivalInfo | null | void
+  export type DisabledMethod = (params: VxeCalendarDefines.DateDisabledParams) => boolean
 }
 
 export type VxeCalendarProps = {
@@ -63,15 +63,11 @@ export interface CalendarPrivateComputed {
 export interface VxeCalendarPrivateComputed extends CalendarPrivateComputed { }
 
 export interface CalendarReactData {
-  panelIndex: number
-  panelStyle: VxeComponentStyleType | null
-  panelPlacement: VxeDatePickerPropTypes.Placement
-  isActivated: boolean
   selectValue: VxeCalendarPropTypes.ModelValue | undefined
   inputValue: any
   datePanelValue: Date | null
   datePanelLabel: string
-  datePanelType: DatePanelType
+  datePanelType: VxeCalendarDefines.DatePanelType
   selectMonth: any
   currentDate: any
 }
@@ -96,6 +92,49 @@ export type VxeCalendarEmits = [
 export namespace VxeCalendarDefines {
   export interface CalendarEventParams extends VxeComponentEventParams {
     $calendar: VxeCalendarConstructor
+  }
+
+  export type DatePanelType = 'year' | 'quarter' | 'month' | 'week' | 'day'
+
+  interface DateFestivalItem {
+    /**
+     * 显示名称
+     */
+    label?: string
+    /**
+     * 标记为重要信息
+     */
+    important?: boolean
+    className?: string
+    style?: VxeComponentStyleType
+  }
+
+  /**
+   * 日期节日对象
+   */
+  export interface DateFestivalInfo extends DateFestivalItem {
+    /**
+     * 显示左上角小圆点通知
+     */
+    notice?: boolean
+    /**
+     * 显示右上角信息
+     */
+    extra?: string | DateFestivalItem
+  }
+
+  export interface DateFestivalParams {
+    $calendar: VxeCalendarConstructor
+    type: string
+    viewType: DatePanelType
+    date: Date
+  }
+
+  export interface DateDisabledParams {
+    $calendar: VxeCalendarConstructor
+    type: string
+    viewType: DatePanelType
+    date: Date
   }
 }
 

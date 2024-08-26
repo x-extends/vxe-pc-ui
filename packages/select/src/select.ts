@@ -322,19 +322,20 @@ export default defineComponent({
       const isGroup = computeIsGroup.value
       const groupLabelField = computeGroupLabelField.value
       const labelField = computeLabelField.value
+      const searchStr = `${searchValue || ''}`.toLowerCase()
       if (isGroup) {
         if (filterable && filterMethod) {
-          reactData.visibleGroupList = fullGroupList.filter(group => isOptionVisible(group) && filterMethod({ group, option: null, searchValue }))
+          reactData.visibleGroupList = fullGroupList.filter(group => isOptionVisible(group) && filterMethod({ group, option: null, searchValue: searchStr }))
         } else if (filterable) {
-          reactData.visibleGroupList = fullGroupList.filter(group => isOptionVisible(group) && (!searchValue || `${group[groupLabelField]}`.indexOf(searchValue) > -1))
+          reactData.visibleGroupList = fullGroupList.filter(group => isOptionVisible(group) && (!searchStr || `${group[groupLabelField]}`.toLowerCase().indexOf(searchStr) > -1))
         } else {
           reactData.visibleGroupList = fullGroupList.filter(isOptionVisible)
         }
       } else {
         if (filterable && filterMethod) {
-          reactData.visibleOptionList = fullOptionList.filter(option => isOptionVisible(option) && filterMethod({ group: null, option, searchValue }))
+          reactData.visibleOptionList = fullOptionList.filter(option => isOptionVisible(option) && filterMethod({ group: null, option, searchValue: searchStr }))
         } else if (filterable) {
-          reactData.visibleOptionList = fullOptionList.filter(option => isOptionVisible(option) && (!searchValue || `${option[labelField]}`.indexOf(searchValue) > -1))
+          reactData.visibleOptionList = fullOptionList.filter(option => isOptionVisible(option) && (!searchStr || `${option[labelField]}`.toLowerCase().indexOf(searchStr) > -1))
         } else {
           reactData.visibleOptionList = fullOptionList.filter(isOptionVisible)
         }
