@@ -391,6 +391,9 @@ export default defineComponent({
         return nextTick()
       },
       clearExpandNode () {
+        return treeMethods.clearAllExpandNode()
+      },
+      clearAllExpandNode () {
         XEUtils.each(reactData.nodeMaps, (nodeItem: VxeTreeDefines.NodeCacheItem) => {
           nodeItem.treeLoaded = false
         })

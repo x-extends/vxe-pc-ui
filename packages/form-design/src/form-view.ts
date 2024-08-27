@@ -230,10 +230,9 @@ export default defineComponent({
         return nextTick()
       },
       reset () {
-        const $form = formRef.value
-        if ($form) {
-          return $form.reset()
-        }
+        const { widgetObjList } = reactData
+        const { formData } = parseForm(widgetObjList)
+        emit('update:modelValue', Object.assign({}, formData))
         return nextTick()
       },
       /**
