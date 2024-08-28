@@ -38,27 +38,46 @@ const ViewColItemComponent = defineComponent({
 
     const { reactData: formDesignReactData } = $xeFormDesign
 
-    const handleDragoverColItem = (evnt: DragEvent) => {
+    const handleDragstartColItemEvent = (evnt: DragEvent) => {
+      evnt.stopPropagation()
+      const divEl = evnt.currentTarget as HTMLDivElement
+      const dataTransfer = evnt.dataTransfer
+      const widgetId = divEl.getAttribute('data-widget-id') || ''
+      const dragWidget = $xeFormDesign.getWidgetById(widgetId)
+      if (dataTransfer) {
+        dataTransfer.setData('text/plain', widgetId)
+      }
+      formDesignReactData.sortWidget = dragWidget
+      formDesignReactData.dragWidget = null
+    }
+
+    const sortDragenterColItemEvent = (evnt: DragEvent) => {
       const { parentWidget, colItemIndex } = props
       const { widgetObjList, sortWidget } = formDesignReactData
-      const currWidget = parentWidget.children[colItemIndex]
+      const targetWidget = parentWidget.children[colItemIndex]
       evnt.stopPropagation()
       if (sortWidget && parentWidget && sortWidget.id !== parentWidget.id) {
         if (hasFormDesignLayoutType(sortWidget)) {
           return
         }
-        if ((!currWidget || !currWidget.name) && !hasFormDesignLayoutType(currWidget)) {
-          const rest = XEUtils.findTree(widgetObjList, item => item.id === sortWidget.id, { children: 'children' })
-          if (rest) {
-            const { item, index, items } = rest
+        if (!hasFormDesignLayoutType(targetWidget)) {
+          const currRest = XEUtils.findTree(widgetObjList, item => item.id === sortWidget.id, { children: 'children' })
+          if (currRest) {
+            const { item, index, items, parent } = currRest
             // 如果数据异常，动态修复
-            if (!parentWidget.children.length) {
-              parentWidget.children = XEUtils.range(0, parentWidget.options.colSize).map(() => {
-                return $xeFormDesign.createEmptyWidget()
+            if (parentWidget.children.length !== parentWidget.options.colSize) {
+              parentWidget.children = XEUtils.range(0, parentWidget.options.colSize).map((index) => {
+                return parentWidget.children[index] || $xeFormDesign.createEmptyWidget()
               })
             }
-            parentWidget.children[colItemIndex] = item
-            items.splice(index, 1)
+            // 如果是 row 内移动
+            if (parent && parent.id === parentWidget.id) {
+              parentWidget.children[colItemIndex] = item
+              parentWidget.children[index] = targetWidget
+            } else {
+              parentWidget.children[colItemIndex] = item
+              items.splice(index, 1)
+            }
             $xeFormDesign.dispatchEvent('drag-widget', { widget: item }, evnt)
           }
         }
@@ -79,56 +98,64 @@ const ViewColItemComponent = defineComponent({
           const renderOpts: VxeGlobalRendererHandles.RenderFormDesignWidgetViewOptions = widget || { name }
           const params: VxeGlobalRendererHandles.RenderFormDesignWidgetViewParams = { widget, readonly: false, disabled: false, isEditMode: true, isViewMode: false, $formDesign: $xeFormDesign, $formView: null }
           const isActive = activeWidget && widget && activeWidget.id === widget.id
+          const isEmptyWidget = !renderWidgetDesignView
 
           return h('div', {
-            class: ['vxe-form-design--widget-row-view', {
-              'is--active': isActive,
-              'is--sort': sortWidget && widget && sortWidget.id === widget.id,
-              'is--drag': dragWidget && widget && dragWidget.id === widget.id
-            }],
+            class: 'vxe-form-design--widget-row-view',
             'data-widget-id': widget.id,
-            onDragover: handleDragoverColItem,
+            draggable: !isEmptyWidget,
+            onDragstart: handleDragstartColItemEvent,
+            onDragenter: sortDragenterColItemEvent,
             onClick (evnt: KeyboardEvent) {
               if (widget) {
                 $xeFormDesign.handleClickWidget(evnt, widget)
               }
             }
           }, [
-            renderWidgetDesignView
-              ? h('div', {
-                class: 'vxe-form-design--widget-row-view-item-wrapper'
-              }, [
-                h('div', {
-                  class: 'vxe-form-design--widget-row-view-item-box vxe-form--item-row'
-                }, getSlotVNs(renderWidgetDesignView(renderOpts, params))),
-                isActive
-                  ? h('div', {
-                    class: 'vxe-form-design--preview-item-operate'
-                  }, [
-                    h(VxeButtonComponent, {
-                      icon: getIcon().FORM_DESIGN_WIDGET_COPY,
-                      status: 'primary',
-                      size: 'mini',
-                      circle: true,
-                      onClick (params) {
-                        $xeFormDesign.handleCopyWidget(params.$event, widget)
-                      }
-                    }),
-                    h(VxeButtonComponent, {
-                      icon: getIcon().FORM_DESIGN_WIDGET_DELETE,
-                      status: 'danger',
-                      size: 'mini',
-                      circle: true,
-                      onClick (params) {
-                        $xeFormDesign.handleRemoveWidget(params.$event, widget)
-                      }
-                    })
-                  ])
-                  : createCommentVNode()
-              ])
-              : h('div', {
-                class: 'vxe-form-design--widget-row-view-empty'
-              }, '控件位置')
+            h('div', {
+              class: ['vxe-form-design--widget-row-view-item-inner', {
+                'is--empty': isEmptyWidget,
+                'is--active': isActive,
+                'is--sort': sortWidget && widget && sortWidget.id === widget.id,
+                'is--drag': dragWidget && widget && dragWidget.id === widget.id
+              }]
+            }, [
+              renderWidgetDesignView
+                ? h('div', {
+                  class: 'vxe-form-design--widget-row-view-item-wrapper'
+                }, [
+                  h('div', {
+                    class: 'vxe-form-design--widget-row-view-item-box vxe-form--item-row'
+                  }, getSlotVNs(renderWidgetDesignView(renderOpts, params))),
+                  isActive
+                    ? h('div', {
+                      class: 'vxe-form-design--preview-item-operate'
+                    }, [
+                      h(VxeButtonComponent, {
+                        icon: getIcon().FORM_DESIGN_WIDGET_COPY,
+                        status: 'primary',
+                        size: 'mini',
+                        circle: true,
+                        onClick (params) {
+                          $xeFormDesign.handleCopyWidget(params.$event, widget)
+                        }
+                      }),
+                      h(VxeButtonComponent, {
+                        icon: getIcon().FORM_DESIGN_WIDGET_DELETE,
+                        status: 'danger',
+                        size: 'mini',
+                        circle: true,
+                        onClick (params) {
+                          $xeFormDesign.handleRemoveWidget(params.$event, widget)
+                        }
+                      })
+                    ])
+                    : createCommentVNode()
+                ])
+                : h('div', {
+                  class: 'vxe-form-design--widget-row-view-empty'
+                }, '控件位置')
+            ])
           ])
         }
       })

@@ -63,8 +63,7 @@ export default defineComponent({
       widgetObjList: [],
       dragWidget: null,
       sortWidget: null,
-      activeWidget: null,
-      sortSubWidget: null
+      activeWidget: null
     })
 
     const internalData = reactive<FormDesignInternalData>({
@@ -134,6 +133,18 @@ export default defineComponent({
       return nextTick()
     }
 
+    const getWidgetById = (id: number | string | null | undefined) => {
+      const { widgetObjList } = reactData
+      if (id) {
+        const widgetId = XEUtils.toNumber(id)
+        const rest = XEUtils.findTree(widgetObjList, item => item && item.id === widgetId, { children: 'children' })
+        if (rest) {
+          return rest.item
+        }
+      }
+      return null
+    }
+
     const getWidgetData = (): VxeFormDesignDefines.WidgetObjItem[] => {
       const objList = XEUtils.clone(reactData.widgetObjList, true)
       XEUtils.eachTree(objList, item => {
@@ -178,6 +189,7 @@ export default defineComponent({
       reloadConfig,
       getFormConfig,
       loadFormConfig,
+      getWidgetById,
       getFormData () {
         const { widgetObjList } = reactData
         const formData: Record<string, any> = {}

@@ -367,6 +367,7 @@ setIcon({
   FORM_DESIGN_WIDGET_ADD: iconPrefix + 'square-plus-fill',
   FORM_DESIGN_WIDGET_COPY: iconPrefix + 'copy',
   FORM_DESIGN_WIDGET_DELETE: iconPrefix + 'delete',
+  FORM_DESIGN_WIDGET_SWAP_LR: iconPrefix + 'swap',
   FORM_DESIGN_WIDGET_OPTION_DELETE: iconPrefix + 'delete',
   FORM_DESIGN_WIDGET_OPTION_EXPAND_OPEN: iconPrefix + 'square-plus',
   FORM_DESIGN_WIDGET_OPTION_EXPAND_CLOSE: iconPrefix + 'square-minus',

@@ -416,7 +416,8 @@ export default {
           seqTitle: '序號',
           showSeq: '顯示序號',
           showCheckbox: '允許多選',
-          errSubDrag: '子表不支持該控件，請使用其他控件'
+          errSubDrag: '子表不支持該控件，請使用其他控件',
+          colPlace: '将控件拖拽进来'
         },
         uploadProp: {
           uploadProp: {

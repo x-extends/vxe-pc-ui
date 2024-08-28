@@ -70,7 +70,15 @@ export namespace VxeUploadPropTypes {
     option: VxeUploadDefines.FileObjItem
     updateProgress: (percentNum: number) => void
   }) => Promise<any>)
+  export type BeforeRemoveMethod = undefined | ((params: {
+    $upload: VxeUploadConstructor
+    option: VxeUploadDefines.FileObjItem
+  }) => Promise<any>)
   export type RemoveMethod = undefined | ((params: {
+    $upload: VxeUploadConstructor
+    option: VxeUploadDefines.FileObjItem
+  }) => Promise<any>)
+  export type BeforeDownloadMethod = undefined | ((params: {
     $upload: VxeUploadConstructor
     option: VxeUploadDefines.FileObjItem
   }) => Promise<any>)
@@ -130,7 +138,9 @@ export type VxeUploadProps = {
   tipText?: VxeUploadPropTypes.TipText
   previewMethod?: VxeUploadPropTypes.PreviewMethod
   uploadMethod?: VxeUploadPropTypes.UploadMethod
+  beforeRemoveMethod?: VxeUploadPropTypes.BeforeRemoveMethod
   removeMethod?: VxeUploadPropTypes.RemoveMethod
+  beforeDownloadMethod?: VxeUploadPropTypes.BeforeDownloadMethod
   downloadMethod?: VxeUploadPropTypes.DownloadMethod
   getUrlMethod?: VxeUploadPropTypes.GetUrlMethod
   getThumbnailUrlMethod?: VxeUploadPropTypes.GetThumbnailUrlMethod
@@ -163,7 +173,9 @@ export type VxeUploadEmits = [
   'update:modelValue',
   'add',
   'remove',
+  'remove-fail',
   'download',
+  'download-fail',
   'upload-success',
   'upload-error'
 ]
@@ -213,10 +225,12 @@ export namespace VxeUploadDefines {
   export interface RemoveEventParams extends UploadEventParams {
     option: VxeUploadDefines.FileObjItem
   }
+  export interface RemoveFailEventParams extends RemoveEventParams {}
 
   export interface DownloadEventParams extends UploadEventParams {
     option: VxeUploadDefines.FileObjItem
   }
+  export interface DownloadFailEventParams extends DownloadEventParams {}
 
   export interface UploadSuccessEventParams extends UploadEventParams {
     option: VxeUploadDefines.FileObjItem
@@ -229,7 +243,9 @@ export namespace VxeUploadDefines {
 export type VxeUploadEventProps = {
   onAdd?: VxeUploadEvents.Add
   onRemove?: VxeUploadEvents.Remove
+  onRemoveFail?: VxeUploadEvents.RemoveFail
   onDownload?: VxeUploadEvents.Download
+  onDownloadFail?: VxeUploadEvents.DownloadFail
   onUploadSuccess?: VxeUploadEvents.UploadSuccess
   onUploadError?: VxeUploadEvents.UploadError
 }
@@ -237,7 +253,9 @@ export type VxeUploadEventProps = {
 export interface VxeUploadListeners {
   add?: VxeUploadEvents.Add
   remove?: VxeUploadEvents.Remove
+  removeFail?: VxeUploadEvents.RemoveFail
   download?: VxeUploadEvents.Download
+  downloadFail?: VxeUploadEvents.DownloadFail
   uploadSuccess?: VxeUploadEvents.UploadSuccess
   uploadError?: VxeUploadEvents.UploadError
 }
@@ -245,7 +263,9 @@ export interface VxeUploadListeners {
 export namespace VxeUploadEvents {
   export type Add = (params: VxeUploadDefines.AddEventParams) => void
   export type Remove = (params: VxeUploadDefines.RemoveEventParams) => void
+  export type RemoveFail = (params: VxeUploadDefines.RemoveFailEventParams) => void
   export type Download = (params: VxeUploadDefines.DownloadEventParams) => void
+  export type DownloadFail = (params: VxeUploadDefines.DownloadFailEventParams) => void
   export type UploadSuccess = (params: VxeUploadDefines.UploadSuccessEventParams) => void
   export type UploadError = (params: VxeUploadDefines.UploadErrorEventParams) => void
 }

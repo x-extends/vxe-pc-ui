@@ -69,7 +69,6 @@ export interface FormDesignReactData<D = VxeFormDesignDefines.DefaultSettingForm
   dragWidget: VxeFormDesignDefines.WidgetObjItem | null
   sortWidget: VxeFormDesignDefines.WidgetObjItem | null
   activeWidget: VxeFormDesignDefines.WidgetObjItem | null
-  sortSubWidget: VxeFormDesignDefines.WidgetObjItem | null
 }
 
 export interface FormDesignInternalData {
@@ -109,6 +108,11 @@ export interface FormDesignMethods {
    * 加载表单配置
    */
   loadFormConfig (formData: VxeFormDesignPropTypes.FormData): Promise<any>
+  /**
+   * 根据控件 ID 获取控件对象
+   * @param widgetId
+   */
+  getWidgetById(widgetId: number | string | nul | undefined): VxeFormDesignDefines.WidgetObjItem | null
   /**
    * 获取表单配置绑定的数据
    */

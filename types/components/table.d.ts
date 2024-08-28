@@ -3839,6 +3839,7 @@ export namespace VxeTableDefines {
     prefixConfig?: {
       icon?: string
       content?: string
+      className?: string
     }
     /**
      * 请使用 prefixConfig
@@ -3848,6 +3849,7 @@ export namespace VxeTableDefines {
     suffixConfig?: {
       icon?: string
       content?: string
+      className?: string
     }
     /**
      * 请使用 suffixConfig

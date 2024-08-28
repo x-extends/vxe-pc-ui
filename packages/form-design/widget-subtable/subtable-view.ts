@@ -20,6 +20,10 @@ const ViewSubItemComponent = defineComponent({
     widget: {
       type: Object as PropType<VxeFormDesignDefines.WidgetObjItem<WidgetSubtableFormObjVO>>,
       default: () => ({})
+    },
+    childIndex: {
+      type: Number,
+      default: 0
     }
   },
   emits: [],
@@ -33,81 +37,62 @@ const ViewSubItemComponent = defineComponent({
 
     const { reactData: formDesignReactData } = $xeFormDesign
 
-    const sortDragstartEvent = (evnt: DragEvent) => {
+    const sortDragstartSubItemEvent = (evnt: DragEvent) => {
       evnt.stopPropagation()
-      const { widgetObjList } = formDesignReactData
       const divEl = evnt.currentTarget as HTMLDivElement
-      const widgetId = Number(divEl.getAttribute('data-widget-id'))
-      const currRest = XEUtils.findTree(widgetObjList, item => item && item.id === widgetId, { children: 'children' })
-      if (currRest) {
-        formDesignReactData.dragWidget = null
-        formDesignReactData.sortSubWidget = currRest.item
-        formDesignReactData.sortSubWidget = currRest.item
+      const dataTransfer = evnt.dataTransfer
+      const widgetId = divEl.getAttribute('data-widget-id') || ''
+      const dragWidget = $xeFormDesign.getWidgetById(widgetId)
+      if (dataTransfer) {
+        dataTransfer.setData('text/plain', widgetId)
       }
+      formDesignReactData.sortWidget = dragWidget
+      formDesignReactData.dragWidget = null
     }
 
-    const sortDragendEvent = (evnt: DragEvent) => {
+    let lastDragTime = Date.now()
+
+    const sortDragenterSubItemEvent = (evnt: DragEvent) => {
+      const { parentWidget, childIndex } = props
+      const { widgetObjList, sortWidget } = formDesignReactData
+      const targetWidget = parentWidget.children[childIndex]
       evnt.stopPropagation()
-      formDesignReactData.activeWidget = formDesignReactData.sortSubWidget
-      formDesignReactData.sortWidget = null
-    }
-
-    let isDragAnimate = false
-
-    const sortDragenterEvent = (evnt: DragEvent) => {
-      const { sortSubWidget } = formDesignReactData
-      if (sortSubWidget) {
-        evnt.stopPropagation()
-      }
-      if (isDragAnimate) {
+      if (lastDragTime > Date.now() - 300) {
         evnt.preventDefault()
         return
       }
-      const { widget, parentWidget } = props
-      if (parentWidget && widget && sortSubWidget && widget.id !== sortSubWidget.id) {
-        evnt.preventDefault()
-        const subList = parentWidget.children.map(item => item)
-        if (!subList.length) {
-          parentWidget.children.push(sortSubWidget)
-          isDragAnimate = false
+      if (sortWidget && targetWidget && parentWidget) {
+        if (sortWidget.id === parentWidget.id) {
           return
         }
-        const targetIndex = XEUtils.findIndexOf(subList, item => item.id === widget.id)
-        if (targetIndex > -1) {
-          const sortIndex = XEUtils.findIndexOf(subList, item => item.id === sortSubWidget.id)
-          if (sortIndex > -1) {
-            // 控件换位置
-            subList[sortIndex] = widget
-            subList[targetIndex] = sortSubWidget
-            parentWidget.children = subList
-            isDragAnimate = true
-            $xeFormDesign.dispatchEvent('drag-widget', { widget: sortSubWidget }, evnt)
-            setTimeout(() => {
-              isDragAnimate = false
-            }, 150)
+        if (sortWidget.id === targetWidget.id) {
+          return
+        }
+        if (hasFormDesignLayoutType(sortWidget)) {
+          return
+        }
+        if (targetWidget && !hasFormDesignLayoutType(targetWidget)) {
+          const currRest = XEUtils.findTree(widgetObjList, item => item.id === sortWidget.id, { children: 'children' })
+          if (currRest) {
+            const { item, index, items, parent } = currRest
+            // 如果是 subtable 内移动
+            if (parent && parent.id === parentWidget.id) {
+              parentWidget.children[childIndex] = item
+              parentWidget.children[index] = targetWidget
+            } else {
+              parentWidget.children.splice(childIndex, 0, item)
+              items.splice(index, 1)
+            }
+            lastDragTime = Date.now()
+            $xeFormDesign.dispatchEvent('drag-widget', { widget: item }, evnt)
           }
         }
       }
     }
 
-    const handleDragoverSubItem = (evnt: DragEvent) => {
-      const { sortSubWidget } = formDesignReactData
-      if (sortSubWidget) {
-        evnt.preventDefault()
-      }
-    }
-
-    const handleClickEvent = (evnt: KeyboardEvent) => {
-      const { widget } = props
-      if (widget) {
-        formDesignReactData.sortSubWidget = widget
-        $xeFormDesign.handleClickWidget(evnt, widget)
-      }
-    }
-
     return () => {
       const { widget } = props
-      const { dragWidget, activeWidget, sortSubWidget } = formDesignReactData
+      const { dragWidget, activeWidget, sortWidget } = formDesignReactData
       const name = widget ? widget.name : ''
       const compConf = renderer.get(name) || {}
       const renderWidgetDesignView = compConf.renderFormDesignWidgetEdit || compConf.renderFormDesignWidgetView
@@ -119,16 +104,18 @@ const ViewSubItemComponent = defineComponent({
       return h('div', {
         class: ['vxe-form-design--widget-subtable-view-item', {
           'is--active': isActive,
-          'is--sort': sortSubWidget && widget && sortSubWidget.id === widget.id,
+          'is--sort': sortWidget && widget && sortWidget.id === widget.id,
           'is--drag': dragWidget && widget && dragWidget.id === widget.id
         }],
         draggable: true,
         'data-widget-id': widget.id,
-        onDragstart: sortDragstartEvent,
-        onDragend: sortDragendEvent,
-        onDragenter: sortDragenterEvent,
-        onDragover: handleDragoverSubItem,
-        onClick: handleClickEvent
+        onDragstart: sortDragstartSubItemEvent,
+        onDragenter: sortDragenterSubItemEvent,
+        onClick  (evnt: KeyboardEvent) {
+          if (widget) {
+            $xeFormDesign.handleClickWidget(evnt, widget)
+          }
+        }
       }, [
         h('div', {
           class: 'vxe-form-design--widget-subtable-view-item-wrapper'
@@ -187,7 +174,7 @@ export const WidgetSubtableEditComponent = defineComponent({
 
     const { reactData: formDesignReactData } = $xeFormDesign
 
-    const onDragoverEmptyWrapper = (evnt: DragEvent) => {
+    const handleDragoverWrapperEvent = (evnt: DragEvent) => {
       const { sortWidget, widgetObjList } = formDesignReactData
       const { renderParams } = props
       const { widget } = renderParams
@@ -205,17 +192,22 @@ export const WidgetSubtableEditComponent = defineComponent({
         }
         return
       }
+      // 如果控件不在当前子表中，则拖进去
       if (widget.name && !widget.children.some(item => item.id === sortWidget.id)) {
         const rest = XEUtils.findTree(widgetObjList, item => item.id === sortWidget.id, { children: 'children' })
         if (rest) {
           const { item, index, items } = rest
           formDesignReactData.sortWidget = null
-          formDesignReactData.sortSubWidget = item
           formDesignReactData.activeWidget = item
           widget.children.push(item)
           items.splice(index, 1)
+          formDesignReactData.sortWidget = item
         }
       }
+    }
+
+    const handleDragenterWrapperEvent = (evnt: DragEvent) => {
+      evnt.stopPropagation()
     }
 
     return () => {
@@ -230,7 +222,9 @@ export const WidgetSubtableEditComponent = defineComponent({
       }, {
         default () {
           return h('div', {
-            class: 'vxe-form-design--widget-subtable-view'
+            class: 'vxe-form-design--widget-subtable-view',
+            onDragenter: handleDragenterWrapperEvent,
+            onDragover: handleDragoverWrapperEvent
           }, [
             h('div', {
               class: 'vxe-form-design--widget-subtable-view-left'
@@ -274,20 +268,20 @@ export const WidgetSubtableEditComponent = defineComponent({
                   name: 'vxe-form-design--widget-subtable-view-list'
                 }, {
                   default: () => {
-                    return children.map((childWidget) => {
+                    return children.map((childWidget, childIndex) => {
                       return h(ViewSubItemComponent, {
                         key: childWidget.id,
                         parentWidget: widget,
-                        widget: childWidget
+                        widget: childWidget,
+                        childIndex
                       })
                     })
                   }
                 }),
                 h('div', {
                   key: 'empty',
-                  class: 'vxe-form-design--widget-subtable-view-empty',
-                  onDragover: onDragoverEmptyWrapper
-                }, '将控件拖拽进来')
+                  class: 'vxe-form-design--widget-subtable-view-empty'
+                }, getI18n('vxe.formDesign.widgetProp.subtableProp.colPlace'))
               ])
             ])
           ])
@@ -352,8 +346,7 @@ export const WidgetSubtableViewComponent = defineComponent({
         class: ['vxe-form-design--widget-render-form-item', `widget-${kebabCaseName}`],
         title: widget.title,
         field: widget.field,
-        span: 24,
-        padding: false
+        span: 24
       }, {
         default () {
           return VxeTableGridComponent

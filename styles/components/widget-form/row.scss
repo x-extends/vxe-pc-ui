@@ -29,6 +29,10 @@
 .vxe-form-design--widget-row-view {
   position: relative;
   height: 100%;
+}
+.vxe-form-design--widget-row-view-item-inner {
+  position: relative;
+  height: 100%;
   min-height: 78px;
   padding: var(--vxe-ui-layout-padding-default);
   border: 1px solid transparent;
@@ -42,10 +46,12 @@
     height: 100%;
     z-index: 1;
   }
-  &:hover {
-    background-color: var(--vxe-ui-form-design-sub-widget-hover-background-color);
-    .vxe-form-design--widget-row-view-empty {
-      background-color: transparent;
+  &:not(.is--empty) {
+    &:hover {
+      background-color: var(--vxe-ui-form-design-sub-widget-hover-background-color);
+      .vxe-form-design--widget-row-view-empty {
+        background-color: transparent;
+      }
     }
   }
   &.is--active {
@@ -72,13 +78,10 @@
   background-color: var(--vxe-ui-layout-background-color);
 }
 .vxe-form-design--preview-item {
-  &.widget-row,
-  &.widget-subtable {
+  &.widget-row {
+    padding: 0 var(--vxe-ui-layout-padding-default);
     &::after {
       display: none;
     }
-  }
-  &.widget-row {
-    padding: var(--vxe-ui-layout-padding-default) 0;
   }
 }

@@ -7,7 +7,7 @@ import { toCssUnit } from '../../ui/src/dom'
 import { readLocalFile } from './util'
 import VxeButtonComponent from '../../button/src/button'
 
-import type { VxeUploadDefines, VxeUploadPropTypes, UploadReactData, UploadPrivateMethods, UploadMethods, VxeUploadEmits, UploadPrivateRef, VxeUploadPrivateComputed, VxeUploadConstructor, VxeUploadPrivateMethods, VxeFormDefines, VxeFormConstructor, VxeFormPrivateMethods } from '../../../types'
+import type { VxeUploadDefines, VxeUploadPropTypes, UploadReactData, UploadPrivateMethods, UploadMethods, VxeUploadEmits, UploadPrivateRef, VxeUploadPrivateComputed, VxeUploadConstructor, VxeUploadPrivateMethods, VxeFormDefines, VxeFormConstructor, VxeFormPrivateMethods, ValueOf } from '../../../types'
 
 export default defineComponent({
   name: 'VxeUpload',
@@ -113,7 +113,9 @@ export default defineComponent({
     hintText: String as PropType<VxeUploadPropTypes.HintText>,
     previewMethod: Function as PropType<VxeUploadPropTypes.PreviewMethod>,
     uploadMethod: Function as PropType<VxeUploadPropTypes.UploadMethod>,
+    beforeRemoveMethod: Function as PropType<VxeUploadPropTypes.BeforeRemoveMethod>,
     removeMethod: Function as PropType<VxeUploadPropTypes.RemoveMethod>,
+    beforeDownloadMethod: Function as PropType<VxeUploadPropTypes.BeforeDownloadMethod>,
     downloadMethod: Function as PropType<VxeUploadPropTypes.DownloadMethod>,
     getUrlMethod: Function as PropType<VxeUploadPropTypes.GetUrlMethod>,
     getThumbnailUrlMethod: Function as PropType<VxeUploadPropTypes.GetThumbnailUrlMethod>,
@@ -123,7 +125,9 @@ export default defineComponent({
     'update:modelValue',
     'add',
     'remove',
+    'remove-fail',
     'download',
+    'download-fail',
     'upload-success',
     'upload-error'
   ] as VxeUploadEmits,
@@ -330,10 +334,12 @@ export default defineComponent({
       return ''
     }
 
+    const dispatchEvent = (type: ValueOf<VxeUploadEmits>, params: Record<string, any>, evnt: Event | null) => {
+      emit(type, createEvent(evnt, { $upload: $xeUpload }, params))
+    }
+
     const uploadMethods: UploadMethods = {
-      dispatchEvent (type, params, evnt) {
-        emit(type, createEvent(evnt, { $upload: $xeUpload }, params))
-      }
+      dispatchEvent
     }
 
     const emitModel = (value: VxeUploadDefines.FileObjItem[]) => {
@@ -428,7 +434,7 @@ export default defineComponent({
         ).then(res => {
           Object.assign(item._X_DATA || {}, { l: false, p: 100 })
           Object.assign(item, res)
-          uploadMethods.dispatchEvent('upload-success', { option: item, data: res }, null)
+          dispatchEvent('upload-success', { option: item, data: res }, null)
         }).catch((res) => {
           Object.assign(item._X_DATA || {}, { l: false, s: 'error' })
           if (showErrorStatus) {
@@ -436,7 +442,7 @@ export default defineComponent({
           } else {
             reactData.fileList = reactData.fileList.filter(obj => obj._X_DATA !== item._X_DATA)
           }
-          uploadMethods.dispatchEvent('upload-error', { option: item, data: res }, null)
+          dispatchEvent('upload-error', { option: item, data: res }, null)
         })
       }
       return Promise.resolve()
@@ -557,7 +563,7 @@ export default defineComponent({
           )
         }
         newFileList.push(item)
-        uploadMethods.dispatchEvent('add', { option: item }, evnt)
+        dispatchEvent('add', { option: item }, evnt)
       })
       reactData.fileList = newFileList
       Promise.all(urlMode ? uploadPromiseRests : []).then(() => {
@@ -594,43 +600,71 @@ export default defineComponent({
       if ($xeForm && formItemInfo) {
         $xeForm.triggerItemEvent(evnt, formItemInfo.itemConfig.field, fileList)
       }
-      uploadMethods.dispatchEvent('remove', { option: item }, evnt)
+      dispatchEvent('remove', { option: item }, evnt)
     }
 
     const removeFileEvent = (evnt: MouseEvent, item: VxeUploadDefines.FileObjItem, index: number) => {
+      const beforeRemoveFn = props.beforeRemoveMethod || getConfig().upload.beforeRemoveMethod
       const removeFn = props.removeMethod || getConfig().upload.removeMethod
-      if (removeFn) {
-        Promise.resolve(
-          removeFn({
+      Promise.resolve(
+        beforeRemoveFn
+          ? beforeRemoveFn({
             $upload: $xeUpload,
             option: item
           })
-        ).then(() => {
-          handleRemoveEvent(evnt, item, index)
-        }).catch(e => e)
-      } else {
-        handleRemoveEvent(evnt, item, index)
-      }
+          : true
+      ).then(status => {
+        if (status) {
+          if (removeFn) {
+            Promise.resolve(
+              removeFn({
+                $upload: $xeUpload,
+                option: item
+              })
+            ).then(() => {
+              handleRemoveEvent(evnt, item, index)
+            }).catch(e => e)
+          } else {
+            handleRemoveEvent(evnt, item, index)
+          }
+        } else {
+          dispatchEvent('remove-fail', { option: item }, evnt)
+        }
+      })
     }
 
     const handleDownloadEvent = (evnt: MouseEvent, item: VxeUploadDefines.FileObjItem) => {
-      uploadMethods.dispatchEvent('download', { option: item }, evnt)
+      dispatchEvent('download', { option: item }, evnt)
     }
 
     const downloadFileEvent = (evnt: MouseEvent, item: VxeUploadDefines.FileObjItem) => {
+      const beforeDownloadFn = props.beforeDownloadMethod || getConfig().upload.beforeDownloadMethod
       const downloadFn = props.downloadMethod || getConfig().upload.downloadMethod
-      if (downloadFn) {
-        Promise.resolve(
-          downloadFn({
+      Promise.resolve(
+        beforeDownloadFn
+          ? beforeDownloadFn({
             $upload: $xeUpload,
             option: item
           })
-        ).then(() => {
-          handleDownloadEvent(evnt, item)
-        }).catch(e => e)
-      } else {
-        handleDownloadEvent(evnt, item)
-      }
+          : true
+      ).then(status => {
+        if (status) {
+          if (downloadFn) {
+            Promise.resolve(
+              downloadFn({
+                $upload: $xeUpload,
+                option: item
+              })
+            ).then(() => {
+              handleDownloadEvent(evnt, item)
+            }).catch(e => e)
+          } else {
+            handleDownloadEvent(evnt, item)
+          }
+        } else {
+          dispatchEvent('download-fail', { option: item }, evnt)
+        }
+      })
     }
 
     const handleDragleaveEvent = (evnt: DragEvent) => {

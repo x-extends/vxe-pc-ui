@@ -416,7 +416,8 @@ export default {
           seqTitle: '序号',
           showSeq: '显示序号',
           showCheckbox: '允许多选',
-          errSubDrag: '子表不支持该控件，请使用其他控件'
+          errSubDrag: '子表不支持该控件，请使用其他控件',
+          colPlace: '将控件拖拽进来'
         },
         uploadProp: {
           limitFileCount: '文件数量限制',

@@ -682,6 +682,7 @@ export default defineComponent({
         ref: refElem,
         class: ['vxe-form', className ? (XEUtils.isFunction(className) ? className({ items: formItems, data, $form: $xeForm }) : className) : '', {
           [`size--${vSize}`]: vSize,
+          'custom--layout': customLayout,
           'is--loading': loading
         }],
         onSubmit: submitEvent,

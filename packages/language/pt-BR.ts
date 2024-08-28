@@ -418,7 +418,8 @@ export default {
           seqTitle: 'S/N',
           showSeq: 'Display serial number',
           showCheckbox: 'Allow multiple selections',
-          errSubDrag: 'The sub table does not support this control. Please use another control.'
+          errSubDrag: 'The sub table does not support this control. Please use another control.',
+          colPlace: '将控件拖拽进来'
         },
         uploadProp: {
           limitFileCount: 'File quantity limitation',

@@ -32,18 +32,13 @@ export const ViewItemComponent = defineComponent({
     const { reactData: formDesignReactData } = $xeFormDesign
 
     const sortDragstartEvent = (evnt: DragEvent) => {
-      const { widgetObjList, sortSubWidget } = formDesignReactData
-      if (sortSubWidget) {
-        evnt.preventDefault()
-        return
-      }
+      const { widgetObjList } = formDesignReactData
       const divEl = evnt.currentTarget as HTMLDivElement
       const widgetId = Number(divEl.getAttribute('data-widget-id'))
       const currRest = XEUtils.findTree(widgetObjList, item => item && item.id === widgetId, { children: 'children' })
       if (currRest) {
         formDesignReactData.dragWidget = null
         formDesignReactData.sortWidget = currRest.item
-        formDesignReactData.sortSubWidget = null
       }
     }
 
@@ -52,11 +47,11 @@ export const ViewItemComponent = defineComponent({
       formDesignReactData.sortWidget = null
     }
 
-    let isDragAnimate = false
+    let lastDragTime = Date.now()
 
     const sortDragenterEvent = (evnt: DragEvent) => {
-      const { widgetObjList, sortWidget, sortSubWidget } = formDesignReactData
-      if (isDragAnimate || sortSubWidget) {
+      const { widgetObjList, sortWidget } = formDesignReactData
+      if (lastDragTime > Date.now() - 200) {
         evnt.preventDefault()
         return
       }
@@ -70,29 +65,31 @@ export const ViewItemComponent = defineComponent({
             const currRest = XEUtils.findTree(widgetObjList, item => item && item.id === sortWidget.id, { children: 'children' })
             if (currRest) {
               // 控件换位置
-              currRest.items.splice(currRest.index, 1)
+              if (currRest.parent && currRest.parent.name === 'row') {
+                // 如是是从 row 移出
+                currRest.items[currRest.index] = $xeFormDesign.createEmptyWidget()
+              } else {
+                currRest.items.splice(currRest.index, 1)
+              }
               targetRest.items.splice(targetRest.index, 0, currRest.item)
               $xeFormDesign.dispatchEvent('drag-widget', { widget: currRest.item }, evnt)
-              isDragAnimate = true
-              setTimeout(() => {
-                isDragAnimate = false
-              }, 150)
+
+              lastDragTime = Date.now()
             }
           }
         }
       }
     }
 
-    const dragoverItemEvent = (evnt: DragEvent) => {
-      const { sortWidget, dragWidget, sortSubWidget } = formDesignReactData
-      if (sortWidget || dragWidget || sortSubWidget) {
-        evnt.preventDefault()
-      }
-    }
+    // const dragoverItemEvent = (evnt: DragEvent) => {
+    //   // const { sortWidget, dragWidget } = formDesignReactData
+    //   // if (sortWidget || dragWidget) {
+    //   //   evnt.preventDefault()
+    //   // }
+    // }
 
     const handleClickEvent = (evnt: KeyboardEvent, item: VxeFormDesignDefines.WidgetObjItem) => {
       $xeFormDesign.handleClickWidget(evnt, item)
-      formDesignReactData.sortSubWidget = null
     }
 
     return () => {
@@ -114,7 +111,7 @@ export const ViewItemComponent = defineComponent({
         onDragstart: sortDragstartEvent,
         onDragend: sortDragendEvent,
         onDragenter: sortDragenterEvent,
-        onDragover: dragoverItemEvent,
+        // onDragover: dragoverItemEvent,
         onClick (evnt: KeyboardEvent) {
           handleClickEvent(evnt, item)
         }

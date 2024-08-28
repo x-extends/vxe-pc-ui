@@ -7,6 +7,7 @@
   border-radius: var(--vxe-ui-base-border-radius);
   overflow-y: hidden;
   overflow-x: auto;
+  padding-top: var(--vxe-ui-layout-padding-default);
 }
 .vxe-form-design--widget-subtable-view-box {
   border: 1px solid var(--vxe-ui-input-border-color);
@@ -21,14 +22,12 @@
   top: 0;
   display: flex;
   flex-shrink: 0;
-  padding-top: var(--vxe-ui-layout-padding-default);
   box-shadow: 8px 0px 10px -5px rgba(0,0,0,.12);
   border-radius: var(--vxe-ui-base-border-radius) 0 0 var(--vxe-ui-base-border-radius);
   z-index: 5;
 }
 .vxe-form-design--widget-subtable-view-right {
   flex-grow: 1;
-  padding-top: var(--vxe-ui-layout-padding-default);
 }
 .vxe-form-design--widget-subtable-col {
   position: relative;
@@ -84,12 +83,22 @@
 }
 
 .vxe-form-design--widget-subtable-view-wrapper {
+  position: relative;
   display: flex;
   flex-direction: row;
-  border: 1px solid var(--vxe-ui-input-border-color);
-  border-left: 0;
   background-color: var(--vxe-ui-layout-background-color);
   border-radius: 0 var(--vxe-ui-base-border-radius) var(--vxe-ui-base-border-radius) 0;
+  &::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border: 1px solid var(--vxe-ui-input-border-color);
+    z-index: 1;
+    pointer-events: none;
+  }
 }
 .vxe-form-design--widget-subtable-view-list {
   display: flex;
@@ -108,7 +117,7 @@
   min-width: 200px;
   cursor: grabbing;
   &:hover {
-    background: var(--vxe-ui-base-active-background-color);
+    background-color: var(--vxe-ui-form-design-sub-widget-hover-background-color);
   }
   &.is--active {
     background: var(--vxe-ui-base-active-background-color);
@@ -143,7 +152,7 @@
   color: var(--vxe-ui-font-placeholder-color);
   padding: 0 var(--vxe-ui-layout-padding-threefold);
   min-height: 78px;
-  min-width: 260px;
+  min-width: 200px;
   cursor: default;
 }
 
@@ -177,5 +186,19 @@
   }
   .vxe-form--item-title {
     border-bottom: 1px solid var(--vxe-ui-input-border-color);
+  }
+}
+
+.vxe-form-design--preview-item {
+  &.widget-subtable {
+    padding: 0 var(--vxe-ui-layout-padding-double);
+    &::after {
+      display: none;
+    }
+  }
+  .vxe-form-design--preview-item-view {
+    .vxe-form-design--widget-subtable-form-item {
+      padding: 0;
+    }
   }
 }

@@ -182,7 +182,12 @@ export interface TreeMethods<D = any> {
   setAllCheckboxNode(checked: boolean): Promise<any>
   setCheckboxNode(nodeList: any | any[], checked: boolean): Promise<any>
   setCheckboxByNodeId(nodeKeys: any | any[], checked: boolean): Promise<any>
+  /**
+   * 已废弃，请使用 clearAllExpandNode
+   * @deprecated
+   */
   clearExpandNode(): Promise<any>
+  clearAllExpandNode(): Promise<any>
   setExpandByNodeId(nodeKeys: any | any[], expanded: boolean): Promise<any>
   setExpandNode(nodeList: any | any[], expanded: boolean): Promise<any>
   toggleExpandByNodeId(nodeKeys: any | any[]): Promise<any>

@@ -128,6 +128,9 @@
   border-radius: var(--vxe-ui-base-border-radius);
   border: 1px solid var(--vxe-ui-input-border-color);
 }
+.vxe-form-design--preview-place-widget {
+  height: 5.6em;
+}
 
 .vxe-form-design--widget-list {
   display: flex;
@@ -201,7 +204,7 @@
 .vxe-form-design--preview-item {
   position: relative;
   display: block;
-  padding: var(--vxe-ui-layout-padding-default);
+  padding: var(--vxe-ui-layout-padding-default) var(--vxe-ui-layout-padding-double);
   border: 1px solid transparent;
   cursor: grabbing;
   &::after {

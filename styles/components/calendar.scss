@@ -196,9 +196,7 @@
   position: absolute;
   right: 0.1em;
   top: -0.2em;
-  font-size: 12px;
-  line-height: 12px;
-  transform: scale(0.7);
+  transform: scale(0.9);
   color: var(--vxe-ui-input-date-extra-color);
   &.is-important {
     color: var(--vxe-ui-input-date-extra-important-color);
@@ -216,7 +214,6 @@
 }
 .vxe-calendar--date-festival--label {
   display: block;
-  font-size: 12px;
   transform: scale(0.8);
 }
 
