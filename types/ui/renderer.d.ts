@@ -1,4 +1,4 @@
-import { VxeComponentStyleType, VxeComponentClassNameType, VxeComponentSlotType, VxeComponentStatusType } from '@vxe-ui/core'
+import { VxeComponentStyleType, VxeComponentClassNameType, VxeComponentSlotType } from '@vxe-ui/core'
 import { VxeTableConstructor, VxeTablePropTypes, VxeTableDefines, VxeTablePrivateMethods } from '../components/table'
 import { VxeFormItemPropTypes, FormItemTitleRenderParams, FormItemContentRenderParams, FormItemVisibleParams, FormItemResetParams } from '../components/form-item'
 import { VxeGridConstructor } from '../components/grid'

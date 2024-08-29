@@ -66,6 +66,7 @@ export default {
       customTitle: 'Configurações de coluna',
       customAll: 'Todos',
       customConfirm: 'Confirm',
+      customClose: '关闭',
       customCancel: 'Cancel',
       customRestore: 'Restore',
       maxFixedCol: 'The maximum number of Freeze columns cannot exceed {0}'
@@ -444,7 +445,12 @@ export default {
       },
       search: {
         addBtn: 'Edit',
-        emptyText: 'No filter condition is configured.'
+        emptyText: 'No filter condition is configured.',
+        editPopupTitle: '编辑查询字段'
+      },
+      searchPopup: {
+        colTitle: '标题',
+        saveBtn: '保存'
       }
     },
     text: {

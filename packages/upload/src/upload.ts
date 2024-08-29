@@ -379,12 +379,21 @@ export default defineComponent({
     const handleDefaultFilePreview = (item: VxeUploadDefines.FileObjItem) => {
       const { imageTypes, showDownloadButton } = props
       const typeProp = computeTypeProp.value
+      const beforeDownloadFn = props.beforeDownloadMethod || getConfig().upload.beforeDownloadMethod
       // 如果是预览图片
       if (imagePreviewTypes.concat(imageTypes || []).some(type => `${type}`.toLowerCase() === `${item[typeProp]}`.toLowerCase())) {
         if (VxeUI.previewImage) {
           VxeUI.previewImage({
             urlList: [getFileUrl(item)],
-            showDownloadButton
+            showDownloadButton,
+            beforeDownloadMethod: beforeDownloadFn
+              ? () => {
+                  return beforeDownloadFn({
+                    $upload: $xeUpload,
+                    option: item
+                  })
+                }
+              : undefined
           })
         }
       }
@@ -407,12 +416,21 @@ export default defineComponent({
     const handlePreviewImageEvent = (evnt: MouseEvent, item: VxeUploadDefines.FileObjItem, index: number) => {
       const { showDownloadButton } = props
       const { fileList } = reactData
+      const beforeDownloadFn = props.beforeDownloadMethod || getConfig().upload.beforeDownloadMethod
       if (props.showPreview) {
         if (VxeUI.previewImage) {
           VxeUI.previewImage({
             urlList: fileList.map(item => getFileUrl(item)),
             activeIndex: index,
-            showDownloadButton
+            showDownloadButton,
+            beforeDownloadMethod: beforeDownloadFn
+              ? ({ index }) => {
+                  return beforeDownloadFn({
+                    $upload: $xeUpload,
+                    option: fileList[index]
+                  })
+                }
+              : undefined
           })
         }
       }

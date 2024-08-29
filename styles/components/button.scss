@@ -63,8 +63,8 @@ $btnThemeList: (
   display: inline-flex;
   flex-direction: row;
   align-items: center;
+  justify-content: center;
   position: relative;
-  text-align: center;
   background-color: var(--vxe-ui-layout-background-color);
   outline: 0;
   font-size: var(--vxe-ui-font-size-default);
@@ -76,6 +76,15 @@ $btnThemeList: (
   user-select: none;
   appearance: none;
   @include createAnimationTransition(border, .2s);
+  &.align--left {
+    justify-content: left;
+  }
+  &.align--center {
+    justify-content: center;
+  }
+  &.align--right {
+    justify-content: right;
+  }
   &:not(.is--disabled) {
     color: var(--vxe-ui-font-color);
     cursor: pointer;

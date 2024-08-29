@@ -401,6 +401,8 @@ export namespace VxeTablePropTypes {
     showFooter?: boolean
     icon?: string
     resetButtonText?: string
+    closeButtonText?: string
+    cancelButtonText?: string
     confirmButtonText?: string
   }
   export interface CustomOpts<D = VxeTablePropTypes.Row> extends CustomConfig<D> { }

@@ -33,6 +33,8 @@ export namespace VxeImageGroupPropTypes {
     width?: number | string
     height?: number | string
   }
+  export type ShowPrintButton = boolean
+  export type ShowDownloadButton = boolean
 }
 
 export type VxeImageGroupProps = {
@@ -40,6 +42,8 @@ export type VxeImageGroupProps = {
   showPreview?: VxeImageGroupPropTypes.ShowPreview
   urlList?: VxeImageGroupPropTypes.UrlList
   imageStyle?: VxeImageGroupPropTypes.ImageStyle
+  showPrintButton?: VxeImageGroupPropTypes.ShowPrintButton
+  showDownloadButton?: VxeImageGroupPropTypes.ShowDownloadButton
 }
 
 export interface ImageGroupPrivateComputed {

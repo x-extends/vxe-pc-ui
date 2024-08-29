@@ -73,7 +73,7 @@ export namespace VxeUploadPropTypes {
   export type BeforeRemoveMethod = undefined | ((params: {
     $upload: VxeUploadConstructor
     option: VxeUploadDefines.FileObjItem
-  }) => Promise<any>)
+  }) => boolean | Promise<boolean>)
   export type RemoveMethod = undefined | ((params: {
     $upload: VxeUploadConstructor
     option: VxeUploadDefines.FileObjItem
@@ -81,7 +81,7 @@ export namespace VxeUploadPropTypes {
   export type BeforeDownloadMethod = undefined | ((params: {
     $upload: VxeUploadConstructor
     option: VxeUploadDefines.FileObjItem
-  }) => Promise<any>)
+  }) => boolean | Promise<boolean>)
   export type DownloadMethod = undefined | ((params: {
     $upload: VxeUploadConstructor
     option: VxeUploadDefines.FileObjItem

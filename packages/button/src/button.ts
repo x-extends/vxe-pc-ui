@@ -67,6 +67,7 @@ export default defineComponent({
      */
     loading: Boolean as PropType<VxeButtonPropTypes.Loading>,
     trigger: { type: String as PropType<VxeButtonPropTypes.Trigger>, default: () => getConfig().button.trigger },
+    align: String as PropType<VxeButtonPropTypes.Align>,
     /**
      * 在下拉面板关闭时销毁内容
      */
@@ -489,7 +490,7 @@ export default defineComponent({
     Object.assign($xeButton, buttonMethods)
 
     const renderVN = () => {
-      const { className, popupClassName, trigger, title, routerLink, type, destroyOnClose, name, loading } = props
+      const { className, popupClassName, align, trigger, title, routerLink, type, destroyOnClose, name, loading } = props
       const { inited, visiblePanel } = reactData
       const isFormBtn = computeIsFormBtn.value
       const btnMode = computeBtnMode.value
@@ -524,7 +525,7 @@ export default defineComponent({
           routerLink
             ? h(resolveComponent('router-link'), {
               ref: refButton,
-              class: ['vxe-button', 'vxe-button--link', `type--${btnMode}`, className ? (XEUtils.isFunction(className) ? className({ $button: $xeButton }) : className) : '', {
+              class: ['vxe-button', 'vxe-button--link', `type--${btnMode}`, align ? `align--${align}` : '', className ? (XEUtils.isFunction(className) ? className({ $button: $xeButton }) : className) : '', {
                 [`size--${vSize}`]: vSize,
                 [`theme--${btnStatus}`]: btnStatus,
                 'is--round': btnRound,
@@ -550,7 +551,7 @@ export default defineComponent({
             })
             : h('button', {
               ref: refButton,
-              class: ['vxe-button', `type--${btnMode}`, className ? (XEUtils.isFunction(className) ? className({ $button: $xeButton }) : className) : '', {
+              class: ['vxe-button', `type--${btnMode}`, align ? `align--${align}` : '', className ? (XEUtils.isFunction(className) ? className({ $button: $xeButton }) : className) : '', {
                 [`size--${vSize}`]: vSize,
                 [`theme--${btnStatus}`]: btnStatus,
                 'is--round': btnRound,
@@ -598,7 +599,7 @@ export default defineComponent({
       if (routerLink) {
         return h(resolveComponent('router-link'), {
           ref: refButton,
-          class: ['vxe-button', 'vxe-button--link', `type--${btnMode}`, className ? (XEUtils.isFunction(className) ? className({ $button: $xeButton }) : className) : '', {
+          class: ['vxe-button', 'vxe-button--link', `type--${btnMode}`, align ? `align--${align}` : '', className ? (XEUtils.isFunction(className) ? className({ $button: $xeButton }) : className) : '', {
             [`size--${vSize}`]: vSize,
             [`theme--${btnStatus}`]: btnStatus,
             'is--round': btnRound,
@@ -622,7 +623,7 @@ export default defineComponent({
       }
       return h('button', {
         ref: refButton,
-        class: ['vxe-button', `type--${btnMode}`, className ? (XEUtils.isFunction(className) ? className({ $button: $xeButton }) : className) : '', {
+        class: ['vxe-button', `type--${btnMode}`, align ? `align--${align}` : '', className ? (XEUtils.isFunction(className) ? className({ $button: $xeButton }) : className) : '', {
           [`size--${vSize}`]: vSize,
           [`theme--${btnStatus}`]: btnStatus,
           'is--round': btnRound,

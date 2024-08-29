@@ -66,6 +66,7 @@ export default {
       customTitle: 'Column settings',
       customAll: 'All',
       customConfirm: 'Confirm',
+      customClose: 'Close',
       customCancel: 'Cancel',
       customRestore: 'Restore',
       maxFixedCol: 'The maximum number of Freeze columns cannot exceed {0}'
@@ -444,7 +445,12 @@ export default {
       },
       search: {
         addBtn: 'Edit',
-        emptyText: 'No filter condition is configured.'
+        emptyText: 'No filter condition is configured.',
+        editPopupTitle: 'Edit search fields'
+      },
+      searchPopup: {
+        colTitle: 'Title',
+        saveBtn: 'Save'
       }
     },
     text: {

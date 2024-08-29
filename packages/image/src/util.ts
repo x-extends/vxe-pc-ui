@@ -30,6 +30,10 @@ export const openPreviewImage: VxeImageDefines.PreviewImageFunction = (options) 
             urlField: opts.urlField,
             marginSize: opts.marginSize,
             maskClosable: opts.maskClosable,
+            showPrintButton: opts.showPrintButton,
+            showDownloadButton: opts.showDownloadButton,
+            beforeDownloadMethod: opts.beforeDownloadMethod,
+            downloadMethod: opts.downloadMethod,
             onClose () {
               VxeUI.modal.close(modalId)
             }

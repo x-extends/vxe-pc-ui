@@ -48,6 +48,7 @@ export namespace VxeButtonPropTypes {
   export type Disabled = boolean
   export type Loading = boolean
   export type Trigger = 'manual' | 'hover' | 'click' | '' | null
+  export type Align = 'left' | 'center' | 'right' | '' | null
   export type DestroyOnClose = boolean
   export type Transfer = boolean
 }
@@ -107,6 +108,7 @@ export type VxeButtonProps = {
    */
   loading?: VxeButtonPropTypes.Loading
   trigger?: VxeButtonPropTypes.Trigger
+  align?: VxeButtonPropTypes.Align
   /**
    * 在下拉面板关闭时销毁内容
    */

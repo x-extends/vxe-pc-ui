@@ -3,7 +3,7 @@ import { VxeUI, getConfig, createEvent, getIcon, globalEvents, GLOBAL_EVENT_KEYS
 import XEUtils from 'xe-utils'
 import { getDomNode, addClass, removeClass } from '../..//ui/src/dom'
 
-import type { VxeImagePreviewConstructor, ImagePreviewReactData, ImagePreviewPrivateRef, VxeGlobalIcon, VxeImagePreviewEmits, VxeImagePreviewPrivateMethods, ImagePreviewPrivateMethods, ImagePreviewPrivateComputed, ImagePreviewMethods, VxeImagePreviewPropTypes } from '../../../types'
+import type { VxeImagePreviewConstructor, ImagePreviewReactData, ImagePreviewPrivateRef, VxeGlobalIcon, VxeImagePreviewEmits, VxeImagePreviewPrivateMethods, ImagePreviewPrivateMethods, ImagePreviewPrivateComputed, ImagePreviewMethods, VxeImagePreviewPropTypes, ValueOf } from '../../../types'
 
 export default defineComponent({
   name: 'VxeImagePreview',
@@ -29,11 +29,15 @@ export default defineComponent({
     showDownloadButton: {
       type: Boolean as PropType<VxeImagePreviewPropTypes.ShowDownloadButton>,
       default: () => getConfig().imagePreview.showDownloadButton
-    }
+    },
+    beforeDownloadMethod: Function as PropType<VxeImagePreviewPropTypes.BeforeDownloadMethod>,
+    downloadMethod: Function as PropType<VxeImagePreviewPropTypes.DownloadMethod>
   },
   emits: [
     'update:modelValue',
     'change',
+    'download',
+    'download-fail',
     'close'
   ] as VxeImagePreviewEmits,
   setup (props, context) {
@@ -153,10 +157,12 @@ export default defineComponent({
       getComputeMaps: () => computeMaps
     } as unknown as VxeImagePreviewConstructor & VxeImagePreviewPrivateMethods
 
+    const dispatchEvent = (type: ValueOf<VxeImagePreviewEmits>, params: Record<string, any>, evnt: Event | null) => {
+      emit(type, createEvent(evnt, { $imagePreview: $xeImagePreview }, params))
+    }
+
     const imagePreviewMethods: ImagePreviewMethods = {
-      dispatchEvent (type, params, evnt) {
-        emit(type, createEvent(evnt, { $imagePreview: $xeImagePreview }, params))
-      }
+      dispatchEvent
     }
 
     const emitModel = (value: VxeImagePreviewPropTypes.ModelValue) => {
@@ -165,7 +171,7 @@ export default defineComponent({
     }
 
     const handleCloseEvent = (evnt: MouseEvent) => {
-      imagePreviewMethods.dispatchEvent('close', {}, evnt)
+      dispatchEvent('close', {}, evnt)
     }
 
     const imagePreviewPrivateMethods: ImagePreviewPrivateMethods = {
@@ -281,10 +287,11 @@ export default defineComponent({
       }
     }
 
-    const handleDownloadImg = () => {
-      const { activeIndex } = reactData
-      const imgList = computeImgList.value
-      const imgUrl = imgList[activeIndex || 0]
+    const handleDownloadEvent = (evnt: MouseEvent, imgUrl: string) => {
+      dispatchEvent('download', { url: imgUrl }, evnt)
+    }
+
+    const handleDefaultDownload = (evnt: MouseEvent, imgUrl: string) => {
       if (VxeUI.saveFile) {
         fetch(imgUrl).then(res => {
           return res.blob().then(blob => {
@@ -292,6 +299,7 @@ export default defineComponent({
               filename: imgUrl,
               content: blob
             })
+            handleDownloadEvent(evnt, imgUrl)
           })
         }).catch(() => {
           if (VxeUI.modal) {
@@ -304,7 +312,40 @@ export default defineComponent({
       }
     }
 
-    const handleOperationBtn = (code: string) => {
+    const handleDownloadImg = (evnt: MouseEvent) => {
+      const { activeIndex } = reactData
+      const imgList = computeImgList.value
+      const imgUrl = imgList[activeIndex || 0]
+      const beforeDownloadFn = props.beforeDownloadMethod || getConfig().imagePreview.beforeDownloadMethod
+      const downloadFn = props.downloadMethod || getConfig().imagePreview.downloadMethod
+      Promise.resolve(
+        beforeDownloadFn
+          ? beforeDownloadFn({
+            $imagePreview: $xeImagePreview,
+            url: imgUrl,
+            index: activeIndex || 0
+          })
+          : true
+      ).then(status => {
+        if (status) {
+          if (downloadFn) {
+            Promise.resolve(
+              downloadFn({
+                $imagePreview: $xeImagePreview,
+                url: imgUrl,
+                index: activeIndex || 0
+              })
+            ).then(() => {
+              handleDownloadEvent(evnt, imgUrl)
+            }).catch(e => e)
+          } else {
+            handleDefaultDownload(evnt, imgUrl)
+          }
+        }
+      })
+    }
+
+    const handleOperationBtn = (evnt: MouseEvent, code: string) => {
       const { activeIndex } = reactData
       const imgList = computeImgList.value
       const imgUrl = imgList[activeIndex || 0]
@@ -332,7 +373,7 @@ export default defineComponent({
             handlePrintImg()
             break
           case 'download':
-            handleDownloadImg()
+            handleDownloadImg(evnt)
             break
         }
       }
@@ -427,7 +468,7 @@ export default defineComponent({
     const handleClickMaskEvent = (evnt: MouseEvent) => {
       if (props.maskClosable) {
         if (evnt.target === evnt.currentTarget) {
-          imagePreviewMethods.dispatchEvent('close', {}, evnt)
+          dispatchEvent('close', {}, evnt)
         }
       }
     }
@@ -464,8 +505,8 @@ export default defineComponent({
       return h('div', {
         class: 'vxe-image-preview--operation-btn',
         title: getI18n(`vxe.imagePreview.operBtn.${code}`),
-        onClick () {
-          handleOperationBtn(code)
+        onClick (evnt) {
+          handleOperationBtn(evnt, code)
         }
       }, [
         h('i', {

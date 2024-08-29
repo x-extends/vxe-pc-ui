@@ -34,6 +34,8 @@ export namespace VxeImagePropTypes {
   export type Width = number | string
   export type Height = number | string
   export type ShowPreview = boolean
+  export type ShowPrintButton = boolean
+  export type ShowDownloadButton = boolean
 }
 
 export type VxeImageProps = {
@@ -44,6 +46,8 @@ export type VxeImageProps = {
   width?: VxeImagePropTypes.Width
   height?: VxeImagePropTypes.Height
   showPreview?: VxeImagePropTypes.ShowPreview
+  showPrintButton?: VxeImagePropTypes.ShowPrintButton
+  showDownloadButton?: VxeImagePropTypes.ShowDownloadButton
 }
 
 export interface ImagePrivateComputed {

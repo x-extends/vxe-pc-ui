@@ -66,6 +66,7 @@ export default {
       customTitle: '列设置',
       customAll: '全部',
       customConfirm: '确认',
+      customClose: '关闭',
       customCancel: '取消',
       customRestore: '恢复默认',
       maxFixedCol: '最大冻结列的数量不能超过 {0} 个'
@@ -444,7 +445,12 @@ export default {
       },
       search: {
         addBtn: '编辑',
-        emptyText: '未配置查询条件'
+        emptyText: '未配置查询条件',
+        editPopupTitle: '编辑查询字段'
+      },
+      searchPopup: {
+        colTitle: '标题',
+        saveBtn: '保存'
       }
     },
     text: {

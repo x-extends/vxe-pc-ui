@@ -66,6 +66,7 @@ export default {
       customTitle: '列設定',
       customAll: '全部',
       customConfirm: 'OK',
+      customClose: '关闭',
       customCancel: 'Cancel',
       customRestore: 'リセット',
       maxFixedCol: '最大固定列数が {0} です。'
@@ -444,7 +445,12 @@ export default {
       },
       search: {
         addBtn: 'Edit',
-        emptyText: 'No filter condition is configured.'
+        emptyText: 'No filter condition is configured.',
+        editPopupTitle: '编辑查询字段'
+      },
+      searchPopup: {
+        colTitle: '标题',
+        saveBtn: '保存'
       }
     },
     text: {

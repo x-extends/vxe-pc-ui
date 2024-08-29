@@ -22,6 +22,7 @@ declare module '@vxe-ui/core' {
     TABLE_RADIO_CHECKED?: string
     TABLE_RADIO_UNCHECKED?: string
     TABLE_CUSTOM_SORT?: string
+    TABLE_MENU_OPTIONS?: string
 
     // toolbar
     TOOLBAR_TOOLS_REFRESH?: string

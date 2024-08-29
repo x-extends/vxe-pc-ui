@@ -31,6 +31,16 @@ export namespace VxeImagePreviewPropTypes {
   export type MarginSize = string | number
   export type ShowPrintButton = boolean
   export type ShowDownloadButton = boolean
+  export type BeforeDownloadMethod = undefined | ((params: {
+    $imagePreview: VxeImagePreviewConstructor
+    url: any
+    index: number
+  }) => boolean | Promise<boolean>)
+  export type DownloadMethod = undefined | ((params: {
+    $imagePreview: VxeImagePreviewConstructor
+    url: any
+    index: number
+  }) => Promise<any>)
 }
 
 export type VxeImagePreviewProps = {
@@ -41,6 +51,8 @@ export type VxeImagePreviewProps = {
   marginSize?: VxeImagePreviewPropTypes.MarginSize
   showPrintButton?: VxeImagePreviewPropTypes.ShowPrintButton
   showDownloadButton?: VxeImagePreviewPropTypes.ShowDownloadButton
+  downloadMethod?: VxeImagePreviewPropTypes.DownloadMethod
+  beforeDownloadMethod?: VxeImagePreviewPropTypes.BeforeDownloadMethod
 }
 
 export interface ImagePreviewPrivateComputed {
@@ -69,12 +81,14 @@ export interface VxeImagePreviewPrivateMethods extends ImagePreviewPrivateMethod
 export type VxeImagePreviewEmits = [
   'update:modelValue',
   'change',
+  'download',
+  'download-fail',
   'close'
 ]
 
 export namespace VxeImagePreviewDefines {
   export interface ImagePreviewEventParams extends VxeComponentEventParams {
-    $omagePreview: VxeImagePreviewConstructor
+    $imagePreview: VxeImagePreviewConstructor
   }
 
   export type ChangeParams = {

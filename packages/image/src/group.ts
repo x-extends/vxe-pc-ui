@@ -15,7 +15,15 @@ export default defineComponent({
       default: () => getConfig().imageGroup.showPreview
     },
     imageStyle: Object as PropType<VxeImageGroupPropTypes.ImageStyle>,
-    size: { type: String as PropType<VxeImageGroupPropTypes.Size>, default: () => getConfig().imageGroup.size || getConfig().size }
+    size: { type: String as PropType<VxeImageGroupPropTypes.Size>, default: () => getConfig().imageGroup.size || getConfig().size },
+    showPrintButton: {
+      type: Boolean as PropType<VxeImageGroupPropTypes.ShowPrintButton>,
+      default: () => getConfig().imageGroup.showPrintButton
+    },
+    showDownloadButton: {
+      type: Boolean as PropType<VxeImageGroupPropTypes.ShowDownloadButton>,
+      default: () => getConfig().imageGroup.showDownloadButton
+    }
   },
   emits: [
     'click'
@@ -68,13 +76,15 @@ export default defineComponent({
 
     const imageGroupPrivateMethods: ImageGroupPrivateMethods = {
       handleClickImgEvent (evnt, params) {
-        const { showPreview } = props
+        const { showPreview, showPrintButton, showDownloadButton } = props
         const { url } = params
         const imgList = computeImgList.value
         if (showPreview && url) {
           openPreviewImage({
             activeIndex: Math.max(0, XEUtils.findIndexOf(imgList, item => item.url === url)),
-            urlList: imgList
+            urlList: imgList,
+            showPrintButton,
+            showDownloadButton
           })
         }
         imageGroupMethods.dispatchEvent('click', { url, urlList: imgList }, evnt)

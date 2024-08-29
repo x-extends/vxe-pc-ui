@@ -146,14 +146,14 @@ export const DefaultFieldSettingFormComponent = defineComponent({
       }
 
       VxeUI.modal.open({
-        title: '编辑查询字段',
+        title: getI18n('vxe.listDesign.search.editPopupTitle'),
         width: 680,
         height: 500,
         showFooter: true,
         escClosable: true,
         showCancelButton: true,
         showConfirmButton: true,
-        confirmButtonText: '保存',
+        confirmButtonText: getI18n('vxe.listDesign.searchPopup.saveBtn'),
         showZoom: true,
         resize: true,
         onConfirm: confirmEvent,
@@ -198,7 +198,7 @@ export const DefaultFieldSettingFormComponent = defineComponent({
                       }, getI18n('vxe.toolbar.customAll'))
                     ])
                   ]),
-                  h('th', {}, '标题')
+                  h('th', {}, getI18n('vxe.listDesign.searchPopup.colTitle'))
                   // h('th', {}, '展开/折叠')
                 ]),
                 h('tbody', {}, allFormItemList.map(item => {

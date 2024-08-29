@@ -18,6 +18,14 @@ export default defineComponent({
     showPreview: {
       type: Boolean as PropType<VxeImagePropTypes.ShowPreview>,
       default: () => getConfig().image.showPreview
+    },
+    showPrintButton: {
+      type: Boolean as PropType<VxeImagePropTypes.ShowPrintButton>,
+      default: () => getConfig().image.showPrintButton
+    },
+    showDownloadButton: {
+      type: Boolean as PropType<VxeImagePropTypes.ShowDownloadButton>,
+      default: () => getConfig().image.showDownloadButton
     }
   },
   emits: [
@@ -105,7 +113,7 @@ export default defineComponent({
     }
 
     const clickEvent = (evnt: MouseEvent) => {
-      const { showPreview } = props
+      const { showPreview, showPrintButton, showDownloadButton } = props
       const imgList = computeImgList.value
       const imgUrl = computeImgUrl.value
       if ($xeImageGroup) {
@@ -113,7 +121,9 @@ export default defineComponent({
       } else {
         if (showPreview && imgUrl) {
           openPreviewImage({
-            urlList: imgList
+            urlList: imgList,
+            showPrintButton,
+            showDownloadButton
           })
         }
         imageMethods.dispatchEvent('click', { url: imgUrl }, evnt)
