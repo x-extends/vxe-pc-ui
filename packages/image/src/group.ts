@@ -33,6 +33,8 @@ export default defineComponent({
 
     const xID = XEUtils.uniqueId()
 
+    const { computeSize } = useSize(props)
+
     const computeImgList = computed(() => {
       const { urlList } = props
       if (urlList) {
@@ -56,7 +58,9 @@ export default defineComponent({
       return Object.assign({}, getConfig().imageGroup.imageStyle, props.imageStyle)
     })
 
-    const computeMaps: ButtonPrivateComputed = {}
+    const computeMaps: ButtonPrivateComputed = {
+      computeSize
+    }
 
     const $xeImageGroup = {
       xID,
@@ -65,8 +69,6 @@ export default defineComponent({
 
       getComputeMaps: () => computeMaps
     } as unknown as VxeImageGroupConstructor & VxeImageGroupPrivateMethods
-
-    useSize(props)
 
     const imageGroupMethods: ImageGroupMethods = {
       dispatchEvent (type, params, evnt) {
@@ -95,9 +97,12 @@ export default defineComponent({
 
     const renderVN = () => {
       const imgList = computeImgList.value
+      const vSize = computeSize.value
       const imgStyleOpts = computeImgStyleOpts.value
       return h('div', {
-        class: 'vxe-image-group'
+        class: ['vxe-image-group', {
+          [`size--${vSize}`]: vSize
+        }]
       }, imgList
         ? imgList.map((item, index) => {
           return h(VxeImageComponent, {

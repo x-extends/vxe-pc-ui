@@ -19,10 +19,10 @@
       <vxe-upload v-model="imgList" mode="image" multiple disabled show-error-status :upload-method="uploadMethod"></vxe-upload>
     </p>
     <p>
-      <vxe-upload v-model="fileList" multiple :limit-size="30" disabled autoHiddenButton showDownloadButton show-error-status :more-config="{maxCount: 2, layout: 'horizontal'}" readonly></vxe-upload>
+      <vxe-upload v-model="fileList" multiple :limit-size="30" showDownloadButton show-error-status :more-config="{maxCount: 2, layout: 'horizontal'}"></vxe-upload>
     </p>
     <p>
-      <vxe-upload v-model="imgList" mode="image" multiple disabled show-error-status showDownloadButton :more-config="{maxCount: 2}" readonly></vxe-upload>
+      <vxe-upload v-model="imgList" mode="image" multiple show-error-status showDownloadButton :more-config="{maxCount: 2}"></vxe-upload>
     </p>
   </div>
 </template>

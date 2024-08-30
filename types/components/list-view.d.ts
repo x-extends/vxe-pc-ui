@@ -1,5 +1,5 @@
-import { RenderFunction, SetupContext, Ref, ComponentPublicInstance, DefineComponent } from 'vue'
-import { defineVxeComponent, VxeComponentBaseOptions, VxeComponentEventParams, ValueOf } from '@vxe-ui/core'
+import { RenderFunction, SetupContext, Ref, ComputedRef, ComponentPublicInstance, DefineComponent } from 'vue'
+import { defineVxeComponent, VxeComponentBaseOptions, VxeComponentEventParams, ValueOf, VxeComponentSizeType } from '@vxe-ui/core'
 import { VxeListDesignDefines } from './list-design'
 import { VxeGridInstance, VxeGridPropTypes, VxeGridProps, VxeGridListeners } from './grid'
 import { VxeTablePropTypes } from './table'
@@ -30,6 +30,7 @@ export interface VxeListViewPrivateRef<D = any> extends ListViewPrivateRef<D> { 
 
 export namespace VxeListViewPropTypes {
   export type Config = null | VxeListDesignDefines.ListDesignConfig
+  export type Size = VxeComponentSizeType
   export type Loading = boolean
   export type Height = string | number
   export type FormData = Record<string, any>
@@ -43,6 +44,7 @@ export namespace VxeListViewPropTypes {
 
 export type VxeListViewProps<D = any> = {
   config?: VxeListViewPropTypes.Config
+  size?: VxeListViewPropTypes.Size
   loading?: VxeListViewPropTypes.Loading
   height?: VxeListViewPropTypes.Height
   formData?: VxeListViewPropTypes.FormData
@@ -52,6 +54,7 @@ export type VxeListViewProps<D = any> = {
 }
 
 export interface ListViewPrivateComputed {
+  computeSize: ComputedRef<VxeListViewPropTypes.Size>
 }
 export interface VxeListViewPrivateComputed extends ListViewPrivateComputed { }
 

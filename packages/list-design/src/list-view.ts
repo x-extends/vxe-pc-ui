@@ -1,5 +1,5 @@
 import { defineComponent, ref, PropType, h, reactive, provide, watch, nextTick, computed, createCommentVNode } from 'vue'
-import { VxeUI, getConfig, createEvent, getI18n, renderer } from '../../ui'
+import { VxeUI, getConfig, createEvent, getI18n, renderer, useSize } from '../../ui'
 import { errLog } from '../../ui/src/log'
 import { toCssUnit } from '../../ui/src/dom'
 import { getSlotVNs } from '../../ui/src/vn'
@@ -12,6 +12,10 @@ import type { ListViewReactData, ListViewPrivateRef, VxeListViewPropTypes, VxeLi
 export default defineComponent({
   name: 'VxeListView',
   props: {
+    size: {
+      type: String as PropType<VxeListViewPropTypes.Size>,
+      default: () => getConfig().listView.size || getConfig().size
+    },
     config: Object as PropType<VxeListViewPropTypes.Config>,
     height: {
       type: [String, Number] as PropType<VxeListViewPropTypes.Height>,
@@ -38,6 +42,8 @@ export default defineComponent({
 
     const refElem = ref<HTMLDivElement>()
     const refGrid = ref<VxeGridInstance>()
+
+    const { computeSize } = useSize(props)
 
     const reactData = reactive<ListViewReactData>({
       formConfig: {} as VxeListDesignDefines.DefaultSettingFormDataObjVO,
@@ -90,6 +96,7 @@ export default defineComponent({
     }
 
     const computeMaps: VxeListViewPrivateComputed = {
+      computeSize
     }
 
     const $xeListView = {
@@ -406,6 +413,7 @@ export default defineComponent({
 
     const renderVN = () => {
       const { height, loading } = props
+      const vSize = computeSize.value
       const gridSlot = slots.grid
       const gridOptions = computeGridOptions.value
       const gridEvents = computeGridEvents.value
@@ -413,6 +421,7 @@ export default defineComponent({
       return h('div', {
         ref: refElem,
         class: ['vxe-list-view', {
+          [`size--${vSize}`]: vSize,
           'is--loading': loading
         }],
         style: height

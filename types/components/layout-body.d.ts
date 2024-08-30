@@ -1,5 +1,5 @@
 import { RenderFunction, SetupContext, Ref, ComponentPublicInstance, DefineComponent } from 'vue'
-import { defineVxeComponent, VxeComponentBaseOptions, VxeComponentEventParams, ValueOf } from '@vxe-ui/core'
+import { defineVxeComponent, VxeComponentBaseOptions, VxeComponentEventParams, ValueOf, VxeComponentSizeType } from '@vxe-ui/core'
 
 /* eslint-disable no-use-before-define,@typescript-eslint/ban-types */
 
@@ -23,11 +23,13 @@ export interface LayoutBodyPrivateRef {
 export interface VxeLayoutBodyPrivateRef extends LayoutBodyPrivateRef { }
 
 export namespace VxeLayoutBodyPropTypes {
+  export type Size = VxeComponentSizeType
   export type Loading = boolean
   export type Padding = boolean
 }
 
 export type VxeLayoutBodyProps = {
+  size?: VxeLayoutBodyPropTypes.Size
   loading?: VxeLayoutBodyPropTypes.Loading
   padding?: VxeLayoutBodyPropTypes.Padding
 }

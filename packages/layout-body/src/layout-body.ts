@@ -1,4 +1,5 @@
 import { defineComponent, ref, h, reactive, PropType } from 'vue'
+import { getConfig, useSize } from '../../ui'
 import VxeLoadingComponent from '../../loading/src/loading'
 import XEUtils from 'xe-utils'
 
@@ -8,7 +9,8 @@ export default defineComponent({
   name: 'VxeLayoutBody',
   props: {
     loading: Boolean as PropType<VxeLayoutBodyPropTypes.Loading>,
-    padding: Boolean as PropType<VxeLayoutBodyPropTypes.Padding>
+    padding: Boolean as PropType<VxeLayoutBodyPropTypes.Padding>,
+    size: { type: String as PropType<VxeLayoutBodyPropTypes.Size>, default: () => getConfig().layoutBody.size || getConfig().size }
   },
   emits: [],
   setup (props, context) {
@@ -18,6 +20,8 @@ export default defineComponent({
 
     const refElem = ref<HTMLDivElement>()
 
+    const { computeSize } = useSize(props)
+
     const reactData = reactive<LayoutBodyReactData>({
     })
 
@@ -26,6 +30,7 @@ export default defineComponent({
     }
 
     const computeMaps: VxeLayoutBodyPrivateComputed = {
+      computeSize
     }
 
     const $xeLayoutBody = {
@@ -40,10 +45,12 @@ export default defineComponent({
 
     const renderVN = () => {
       const { loading, padding } = props
+      const vSize = computeSize.value
       const defaultSlot = slots.default
       return h('div', {
         ref: refElem,
         class: ['vxe-layout-body', {
+          [`size--${vSize}`]: vSize,
           'is--loading': loading,
           'is--padding': padding
         }]

@@ -1,4 +1,5 @@
 import { defineComponent, ref, h, reactive, PropType } from 'vue'
+import { getConfig, useSize } from '../../ui'
 import XEUtils from 'xe-utils'
 
 import type { VxeLayoutContainerPropTypes, LayoutContainerReactData, LayoutContainerPrivateRef, VxeLayoutContainerPrivateComputed, VxeLayoutContainerConstructor, VxeLayoutContainerPrivateMethods } from '../../../types'
@@ -6,7 +7,8 @@ import type { VxeLayoutContainerPropTypes, LayoutContainerReactData, LayoutConta
 export default defineComponent({
   name: 'VxeLayoutContainer',
   props: {
-    vertical: Boolean as PropType<VxeLayoutContainerPropTypes.Vertical>
+    vertical: Boolean as PropType<VxeLayoutContainerPropTypes.Vertical>,
+    size: { type: String as PropType<VxeLayoutContainerPropTypes.Size>, default: () => getConfig().layoutContainer.size || getConfig().size }
   },
   emits: [],
   setup (props, context) {
@@ -16,6 +18,8 @@ export default defineComponent({
 
     const refElem = ref<HTMLDivElement>()
 
+    const { computeSize } = useSize(props)
+
     const reactData = reactive<LayoutContainerReactData>({
     })
 
@@ -24,6 +28,7 @@ export default defineComponent({
     }
 
     const computeMaps: VxeLayoutContainerPrivateComputed = {
+      computeSize
     }
 
     const $xeLayoutContainer = {
@@ -38,10 +43,12 @@ export default defineComponent({
 
     const renderVN = () => {
       const { vertical } = props
+      const vSize = computeSize.value
       const defaultSlot = slots.default
       return h('div', {
         ref: refElem,
         class: ['vxe-layout-container', {
+          [`size--${vSize}`]: vSize,
           'is--vertical': vertical
         }]
       }, defaultSlot ? defaultSlot({}) : [])

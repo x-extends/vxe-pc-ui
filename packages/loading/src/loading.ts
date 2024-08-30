@@ -1,5 +1,5 @@
 import { ref, defineComponent, h, computed, PropType, watch, createCommentVNode } from 'vue'
-import { getConfig, getIcon, getI18n } from '../../ui'
+import { getConfig, getIcon, getI18n, useSize } from '../../ui'
 import { getSlotVNs } from '../../ui/src/vn'
 import XEUtils from 'xe-utils'
 
@@ -25,9 +25,15 @@ export default defineComponent({
       type: Boolean as PropType<VxeLoadingPropTypes.ShowText>,
       default: () => getConfig().loading.showText
     },
-    status: String as PropType<VxeLoadingPropTypes.Status>
+    status: String as PropType<VxeLoadingPropTypes.Status>,
+    size: {
+      type: String as PropType<VxeLoadingPropTypes.Size>,
+      default: () => getConfig().loading.size || getConfig().size
+    }
   },
   setup (props, { slots }) {
+    const { computeSize } = useSize(props)
+
     const refInitialized = ref(false)
 
     const computeLoadingIcon = computed(() => {
@@ -53,6 +59,7 @@ export default defineComponent({
 
     return () => {
       const { modelValue, showIcon, status } = props
+      const vSize = computeSize.value
       const defaultSlot = slots.default
       const textSlot = slots.text
       const iconSlot = slots.icon
@@ -66,6 +73,7 @@ export default defineComponent({
 
       return h('div', {
         class: ['vxe-loading', {
+          [`size--${vSize}`]: vSize,
           [`theme--${status}`]: status,
           'is--visible': modelValue
         }]

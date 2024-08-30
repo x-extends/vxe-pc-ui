@@ -60,6 +60,7 @@ export namespace VxeUploadPropTypes {
   export type ShowErrorStatus = boolean
   export type ShowProgress = boolean
   export type AutoHiddenButton = boolean
+  export type ShowUploadButton = boolean
   export type PreviewMethod = undefined | ((params: {
     $upload: VxeUploadConstructor
     option: VxeUploadDefines.FileObjItem
@@ -128,6 +129,7 @@ export type VxeUploadProps = {
   buttonText?: VxeUploadPropTypes.ButtonText
   buttonIcon?: VxeUploadPropTypes.ButtonIcon
   showButtonText?: VxeUploadPropTypes.ShowButtonText
+  showUploadButton?: VxeUploadPropTypes.ShowUploadButton
   showButtonIcon?: VxeUploadPropTypes.ShowButtonIcon
   showRemoveButton?: VxeUploadPropTypes.ShowRemoveButton
   showDownloadButton?: VxeUploadPropTypes.ShowDownloadButton
@@ -158,11 +160,20 @@ export interface VxeUploadPrivateComputed extends UploadPrivateComputed { }
 
 export interface UploadReactData {
   isDrag: boolean
+  showMorePopup: boolean,
   fileList: VxeUploadDefines.FileObjItem[]
 }
 
 export interface UploadMethods {
   dispatchEvent(type: ValueOf<VxeUploadEmits>, params: Record<string, any>, evnt: Event | null): void
+  /**
+   * 手动调用选择文件
+   */
+  choose(): Promise<{
+    status: boolean
+    files: File[]
+    file: File | null
+  }>
 }
 export interface VxeUploadMethods extends UploadMethods { }
 

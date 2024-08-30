@@ -1,7 +1,7 @@
 import { defineComponent, ref, h, PropType, reactive, nextTick, provide, watch } from 'vue'
 import XEUtils from 'xe-utils'
 import { toCssUnit } from '../../ui/src/dom'
-import { getConfig, createEvent, renderer } from '../../ui'
+import { getConfig, createEvent, renderer, useSize } from '../../ui'
 import { createListDesignActionButton } from '../render/util'
 import { getDefaultSettingFormData } from './default-setting-data'
 import LayoutPreviewComponent from './layout-preview'
@@ -14,7 +14,7 @@ export default defineComponent({
   props: {
     size: {
       type: String as PropType<VxeListDesignPropTypes.Size>,
-      default: () => getConfig().listDesign.size
+      default: () => getConfig().listDesign.size || getConfig().size
     },
     height: {
       type: [String, Number] as PropType<VxeListDesignPropTypes.Height>,
@@ -40,6 +40,8 @@ export default defineComponent({
 
     const refElem = ref<HTMLDivElement>()
 
+    const { computeSize } = useSize(props)
+
     const reactData = reactive<ListDesignReactData>({
       formData: {} as VxeListDesignDefines.DefaultSettingFormDataObjVO,
       searchFormData: {},
@@ -52,6 +54,7 @@ export default defineComponent({
     }
 
     const computeMaps: VxeListDesignPrivateComputed = {
+      computeSize
     }
 
     const $xeListDesign = {
@@ -301,11 +304,14 @@ export default defineComponent({
 
     const renderVN = () => {
       const { height } = props
+      const vSize = computeSize.value
       const headerSlot = slots.header
 
       return h('div', {
         ref: refElem,
-        class: 'vxe-list-design',
+        class: ['vxe-list-design', {
+          [`size--${vSize}`]: vSize
+        }],
         style: height
           ? {
               height: toCssUnit(height)

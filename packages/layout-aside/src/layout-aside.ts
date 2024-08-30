@@ -1,5 +1,6 @@
 import { defineComponent, ref, h, reactive, onMounted, computed, provide, PropType } from 'vue'
 import { toCssUnit } from '../../ui/src/dom'
+import { getConfig, useSize } from '../../ui'
 import VxeLoadingComponent from '../../loading/src/loading'
 import XEUtils from 'xe-utils'
 
@@ -12,7 +13,8 @@ export default defineComponent({
     collapsed: Boolean as PropType<VxeLayoutAsidePropTypes.Collapsed>,
     collapseWidth: [String, Number] as PropType<VxeLayoutAsidePropTypes.CollapseWidth>,
     loading: Boolean as PropType<VxeLayoutAsidePropTypes.Loading>,
-    padding: Boolean as PropType<VxeLayoutAsidePropTypes.Padding>
+    padding: Boolean as PropType<VxeLayoutAsidePropTypes.Padding>,
+    size: { type: String as PropType<VxeLayoutAsidePropTypes.Size>, default: () => getConfig().layoutAside.size || getConfig().size }
   },
   emits: [],
   setup (props, context) {
@@ -21,6 +23,8 @@ export default defineComponent({
     const xID = XEUtils.uniqueId()
 
     const refElem = ref<HTMLDivElement>()
+
+    const { computeSize } = useSize(props)
 
     const reactData = reactive<LayoutAsideReactData>({})
 
@@ -43,6 +47,7 @@ export default defineComponent({
     })
 
     const computeMaps: VxeLayoutAsidePrivateComputed = {
+      computeSize
     }
 
     const $xeLayoutAside = {
@@ -58,11 +63,13 @@ export default defineComponent({
     const renderVN = () => {
       const { width, collapsed, loading, padding } = props
       const wrapperWidth = computeWrapperWidth.value
+      const vSize = computeSize.value
       const defaultSlot = slots.default
 
       return h('aside', {
         ref: refElem,
         class: ['vxe-layout-aside', {
+          [`size--${vSize}`]: vSize,
           'is--padding': padding,
           'is--default-width': !width,
           'is--collapse': collapsed,

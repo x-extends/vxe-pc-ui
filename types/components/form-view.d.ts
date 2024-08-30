@@ -1,5 +1,5 @@
-import { RenderFunction, SetupContext, Ref, ComponentPublicInstance, DefineComponent } from 'vue'
-import { defineVxeComponent, VxeComponentBaseOptions, VxeComponentEventParams, ValueOf } from '@vxe-ui/core'
+import { RenderFunction, SetupContext, Ref, ComputedRef, ComponentPublicInstance, DefineComponent } from 'vue'
+import { defineVxeComponent, VxeComponentBaseOptions, VxeComponentEventParams, ValueOf, VxeComponentSizeType } from '@vxe-ui/core'
 import { VxeFormDesignDefines } from './form-design'
 import { VxeFormProps, VxeFormPropTypes, VxeFormDefines } from './form'
 
@@ -33,6 +33,7 @@ export namespace VxeFormViewPropTypes {
     name?: string
   }
   export type CreateFormConfig = (params: VxeFormViewDefines.CreateFormConfigParams) => VxeFormProps
+  export type Size = VxeComponentSizeType
 }
 
 export type VxeFormViewProps = {
@@ -42,9 +43,11 @@ export type VxeFormViewProps = {
   disabled?: VxeFormViewPropTypes.Disabled
   viewRender?: VxeFormViewPropTypes.ViewRender
   createFormConfig?: VxeFormViewPropTypes.CreateFormConfig
+  size?: VxeFormViewPropTypes.Size
 }
 
 export interface FormViewPrivateComputed {
+  computeSize: ComputedRef<VxeFormViewPropTypes.Size>
 }
 export interface VxeFormViewPrivateComputed extends FormViewPrivateComputed { }
 

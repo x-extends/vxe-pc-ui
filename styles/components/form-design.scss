@@ -123,13 +123,12 @@
   width: 100%;
   height: 100%;
   overflow: auto;
-  padding: var(--vxe-ui-layout-padding-default) 0;
   background-color: var(--vxe-ui-layout-background-color);
   border-radius: var(--vxe-ui-base-border-radius);
   border: 1px solid var(--vxe-ui-input-border-color);
 }
 .vxe-form-design--preview-place-widget {
-  height: 5.6em;
+  height: 1em;
 }
 
 .vxe-form-design--widget-list {

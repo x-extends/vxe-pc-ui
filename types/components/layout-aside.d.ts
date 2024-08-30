@@ -1,5 +1,5 @@
 import { RenderFunction, SetupContext, Ref, ComponentPublicInstance, DefineComponent } from 'vue'
-import { defineVxeComponent, VxeComponentBaseOptions, VxeComponentEventParams, ValueOf } from '@vxe-ui/core'
+import { defineVxeComponent, VxeComponentBaseOptions, VxeComponentEventParams, ValueOf, VxeComponentSizeType } from '@vxe-ui/core'
 
 /* eslint-disable no-use-before-define,@typescript-eslint/ban-types */
 
@@ -28,6 +28,7 @@ export namespace VxeLayoutAsidePropTypes {
   export type CollapseWidth = string | number
   export type Loading = boolean
   export type Padding = boolean
+  export type Size = VxeComponentSizeType
 }
 
 export type VxeLayoutAsideProps = {
@@ -36,6 +37,7 @@ export type VxeLayoutAsideProps = {
   collapseWidth?: VxeLayoutAsidePropTypes.CollapseWidth
   loading?: VxeLayoutAsidePropTypes.Loading
   padding?: VxeLayoutAsidePropTypes.Padding
+  size?: VxeLayoutAsidePropTypes.Size
 }
 
 export interface LayoutAsidePrivateComputed {

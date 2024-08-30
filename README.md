@@ -31,9 +31,10 @@
 * [x] breadcrumb-item 面包屑-项
 * [x] button 按钮
 * [x] button-group 按钮组
-* [ ] calendar 日历
+* [x] calendar 日历
 * [x] card 卡片
-* [ ] carousel 走马灯
+* [x] carousel 走马灯
+* [x] carousel-item 走马灯 - 项
 * [x] checkbox 复选框
 * [x] checkbox-group 复选框-组
 * [x] col 列
@@ -51,6 +52,7 @@
 * [x] icon 图标
 * [x] icon-picker 图标选择
 * [x] image 图片
+* [x] image-group 图片组
 * [x] image-preview 图片预览
 * [x] input 输入框
 * [x] layout-aside 页面布局-左侧

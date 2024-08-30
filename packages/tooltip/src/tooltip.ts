@@ -187,13 +187,14 @@ export default defineComponent({
         return nextTick()
       },
       toVisible (target: HTMLElement, content?: VxeTooltipPropTypes.Content) {
+        if (content === '' || XEUtils.eqNull(content)) {
+          return nextTick()
+        }
         if (target) {
           const { trigger, enterDelay } = props
           reactData.tipActive = true
           reactData.tipTarget = target
-          if (content) {
-            reactData.tipContent = content
-          }
+          reactData.tipContent = content
           if (enterDelay && trigger === 'hover') {
             showDelayTip()
           } else {

@@ -35,6 +35,7 @@ export default defineComponent({
     }
 
     const dragendEvent = (evnt: DragEvent) => {
+      evnt.preventDefault()
       if (formDesignReactData.dragWidget) {
         const newWidget = formDesignReactData.dragWidget
         formDesignReactData.activeWidget = newWidget

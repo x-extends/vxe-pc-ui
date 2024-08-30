@@ -1,6 +1,6 @@
 import { defineComponent, ref, h, reactive, nextTick, PropType, inject, provide, watch, createCommentVNode } from 'vue'
 import XEUtils from 'xe-utils'
-import { renderer, createEvent } from '../../ui'
+import { getConfig, renderer, useSize, createEvent } from '../../ui'
 import { getSlotVNs } from '../../ui/src/vn'
 import { createDefaultFormViewPCFormConfig } from './default-setting-data'
 import VxeFormComponent from '../../form/src/form'
@@ -19,7 +19,11 @@ export default defineComponent({
     readonly: Boolean as PropType<VxeFormViewPropTypes.Readonly>,
     disabled: Boolean as PropType<VxeFormViewPropTypes.Disabled>,
     viewRender: Object as PropType<VxeFormViewPropTypes.ViewRender>,
-    createFormConfig: Function as PropType<VxeFormViewPropTypes.CreateFormConfig>
+    createFormConfig: Function as PropType<VxeFormViewPropTypes.CreateFormConfig>,
+    size: {
+      type: String as PropType<VxeFormViewPropTypes.Size>,
+      default: () => getConfig().formView.size || getConfig().size
+    }
   },
   emits: [
     'update:modelValue',
@@ -34,6 +38,8 @@ export default defineComponent({
     const refElem = ref<HTMLDivElement>()
     const formRef = ref<VxeFormInstance>()
 
+    const { computeSize } = useSize(props)
+
     const $xeFormDesignLayoutStyle = inject<VxeFormDesignLayoutStyle | null>('$xeFormDesignLayoutStyle', null)
 
     const reactData = reactive<FormViewReactData>({
@@ -47,6 +53,7 @@ export default defineComponent({
     }
 
     const computeMaps: VxeFormViewPrivateComputed = {
+      computeSize
     }
 
     const $xeFormView = {
@@ -263,6 +270,7 @@ export default defineComponent({
     const renderVN = () => {
       const { readonly, disabled, modelValue } = props
       const { formConfig, formRules, widgetObjList } = reactData
+      const vSize = computeSize.value
       const topSlot = slots.top
       const bottomSlot = slots.bottom
       const headerSlot = slots.header
@@ -270,7 +278,9 @@ export default defineComponent({
 
       return h('div', {
         ref: refElem,
-        class: 'vxe-form-view'
+        class: ['vxe-form-view', {
+          [`size--${vSize}`]: vSize
+        }]
       }, [
         topSlot
           ? h('div', {

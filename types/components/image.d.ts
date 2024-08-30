@@ -1,5 +1,5 @@
 import { RenderFunction, SetupContext, Ref, ComponentPublicInstance, DefineComponent } from 'vue'
-import { defineVxeComponent, VxeComponentBaseOptions, VxeComponentEventParams, ValueOf } from '@vxe-ui/core'
+import { defineVxeComponent, VxeComponentBaseOptions, VxeComponentEventParams, ValueOf, VxeComponentSizeType } from '@vxe-ui/core'
 import { VxeImagePreviewProps, VxeImagePreviewPropTypes } from './image-preview'
 
 /* eslint-disable no-use-before-define,@typescript-eslint/ban-types */
@@ -36,6 +36,7 @@ export namespace VxeImagePropTypes {
   export type ShowPreview = boolean
   export type ShowPrintButton = boolean
   export type ShowDownloadButton = boolean
+  export type Size = VxeComponentSizeType
 }
 
 export type VxeImageProps = {
@@ -48,6 +49,7 @@ export type VxeImageProps = {
   showPreview?: VxeImagePropTypes.ShowPreview
   showPrintButton?: VxeImagePropTypes.ShowPrintButton
   showDownloadButton?: VxeImagePropTypes.ShowDownloadButton
+  size?: VxeImagePropTypes.Size
 }
 
 export interface ImagePrivateComputed {

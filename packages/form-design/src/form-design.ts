@@ -1,5 +1,5 @@
 import { defineComponent, ref, h, PropType, reactive, provide, watch, nextTick, ComponentOptions, createCommentVNode } from 'vue'
-import { VxeUI, getConfig, getIcon, getI18n, renderer, createEvent } from '../../ui'
+import { VxeUI, getConfig, getIcon, getI18n, renderer, useSize, createEvent } from '../../ui'
 import { toCssUnit } from '../../ui/src/dom'
 import { FormDesignWidgetInfo, getWidgetConfigGroup, getWidgetConfigCustomGroup, configToWidget, getWidgetConfigUnique } from './widget-info'
 import XEUtils from 'xe-utils'
@@ -17,7 +17,7 @@ export default defineComponent({
   props: {
     size: {
       type: String as PropType<VxeFormDesignPropTypes.Size>,
-      default: () => getConfig().formDesign.size
+      default: () => getConfig().formDesign.size || getConfig().size
     },
     config: Object as PropType<VxeFormDesignPropTypes.Config>,
     height: {
@@ -57,6 +57,8 @@ export default defineComponent({
     const refElem = ref<HTMLDivElement>()
     const refLayoutStyle = ref<any>()
 
+    const { computeSize } = useSize(props)
+
     const reactData = reactive<FormDesignReactData>({
       formData: {} as VxeFormDesignDefines.DefaultSettingFormDataObjVO,
       widgetConfigs: [],
@@ -74,6 +76,7 @@ export default defineComponent({
     }
 
     const computeMaps: VxeFormDesignPrivateComputed = {
+      computeSize
     }
 
     const $xeFormDesign = {
@@ -426,11 +429,14 @@ export default defineComponent({
 
     const renderVN = () => {
       const { height, showHeader } = props
+      const vSize = computeSize.value
       const headerSlot = slots.header
       const footerSlot = slots.footer
       return h('div', {
         ref: refElem,
-        class: 'vxe-form-design',
+        class: ['vxe-form-design', {
+          [`size--${vSize}`]: vSize
+        }],
         style: height
           ? {
               height: toCssUnit(height)

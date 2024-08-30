@@ -1,5 +1,5 @@
 import { defineComponent, ref, h, inject, reactive, PropType, computed } from 'vue'
-import { getConfig, createEvent } from '../../ui'
+import { getConfig, createEvent, useSize } from '../../ui'
 import XEUtils from 'xe-utils'
 import { toCssUnit } from '../..//ui/src/dom'
 import { openPreviewImage } from './util'
@@ -26,7 +26,8 @@ export default defineComponent({
     showDownloadButton: {
       type: Boolean as PropType<VxeImagePropTypes.ShowDownloadButton>,
       default: () => getConfig().image.showDownloadButton
-    }
+    },
+    size: { type: String as PropType<VxeImagePropTypes.Size>, default: () => getConfig().image.size || getConfig().size }
   },
   emits: [
     'click'
@@ -39,6 +40,8 @@ export default defineComponent({
     const $xeImageGroup = inject<(VxeImageGroupConstructor & VxeImageGroupPrivateMethods) | null>('$xeImageGroup', null)
 
     const refElem = ref<HTMLDivElement>()
+
+    const { computeSize } = useSize(props)
 
     const reactData = reactive<ImageReactData>({
     })
@@ -94,6 +97,7 @@ export default defineComponent({
     })
 
     const computeMaps: VxeImagePrivateComputed = {
+      computeSize
     }
 
     const $xeImage = {
@@ -139,9 +143,12 @@ export default defineComponent({
       const { alt, loading } = props
       const imgStyle = computeImgStyle.value
       const imgUrl = computeImgUrl.value
+      const vSize = computeSize.value
       return h('img', {
         ref: refElem,
-        class: 'vxe-image',
+        class: ['vxe-image', {
+          [`size--${vSize}`]: vSize
+        }],
         src: imgUrl,
         alt,
         loading,

@@ -1,5 +1,5 @@
 import { RenderFunction, SetupContext, Ref, ComponentPublicInstance, DefineComponent } from 'vue'
-import { defineVxeComponent, VxeComponentBaseOptions, VxeComponentEventParams, ValueOf } from '@vxe-ui/core'
+import { defineVxeComponent, VxeComponentBaseOptions, VxeComponentEventParams, ValueOf, VxeComponentSizeType } from '@vxe-ui/core'
 
 /* eslint-disable no-use-before-define,@typescript-eslint/ban-types */
 
@@ -23,10 +23,12 @@ export interface LayoutContainerPrivateRef {
 export interface VxeLayoutContainerPrivateRef extends LayoutContainerPrivateRef { }
 
 export namespace VxeLayoutContainerPropTypes {
+  export type Size = VxeComponentSizeType
   export type Vertical = boolean
 }
 
 export type VxeLayoutContainerProps = {
+  size?: VxeLayoutContainerPropTypes.Size
   vertical?: VxeLayoutContainerPropTypes.Vertical
 }
 

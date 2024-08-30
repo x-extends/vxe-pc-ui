@@ -1,4 +1,4 @@
-import { RenderFunction, SetupContext, Ref, ComponentPublicInstance, DefineComponent } from 'vue'
+import { RenderFunction, SetupContext, Ref, ComputedRef, ComponentPublicInstance, DefineComponent } from 'vue'
 import { defineVxeComponent, VxeComponentBaseOptions, VxeComponentEventParams, VxeComponentSizeType, ValueOf, VxeComponentPermissionCodeType, VxeComponentStatusType } from '@vxe-ui/core'
 import { VxeFormDesignDefines } from './form-design'
 import { VxeColumnPropTypes } from './column'
@@ -52,6 +52,7 @@ export type VxeListDesignProps = {
 }
 
 export interface ListDesignPrivateComputed {
+  computeSize: ComputedRef<VxeListDesignPropTypes.Size>
 }
 export interface VxeListDesignPrivateComputed extends ListDesignPrivateComputed { }
 

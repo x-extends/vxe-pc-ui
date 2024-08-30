@@ -1,5 +1,5 @@
 import { RenderFunction, SetupContext, Ref, ComponentPublicInstance, DefineComponent } from 'vue'
-import { defineVxeComponent, VxeComponentBaseOptions, VxeComponentEventParams, VxeComponentStatusType } from '@vxe-ui/core'
+import { defineVxeComponent, VxeComponentBaseOptions, VxeComponentEventParams, VxeComponentSizeType, VxeComponentStatusType } from '@vxe-ui/core'
 
 /* eslint-disable no-use-before-define,@typescript-eslint/ban-types */
 
@@ -29,6 +29,7 @@ export namespace VxeLoadingPropTypes {
   export type Text = string
   export type ShowText = boolean
   export type Status = VxeComponentStatusType
+  export type Size = VxeComponentSizeType
 }
 
 export type VxeLoadingProps = {
@@ -38,6 +39,7 @@ export type VxeLoadingProps = {
   text?: VxeLoadingPropTypes.Text
   showText?: VxeLoadingPropTypes.ShowText
   status?: VxeLoadingPropTypes.Status
+  size?: VxeLoadingPropTypes.Size
 }
 
 export interface LoadingPrivateComputed {

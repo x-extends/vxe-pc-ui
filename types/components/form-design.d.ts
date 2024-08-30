@@ -1,4 +1,4 @@
-import { RenderFunction, SetupContext, Ref, VNode, PropType, ComputedRef, WritableComputedRef, ComponentPublicInstance, DefineComponent, UnwrapNestedRefs } from 'vue'
+import { RenderFunction, SetupContext, Ref, VNode, ComputedRef, WritableComputedRef, ComponentPublicInstance, DefineComponent, UnwrapNestedRefs } from 'vue'
 import { defineVxeComponent, VxeComponentBaseOptions, VxeComponentEventParams, VxeComponentSizeType, ValueOf } from '@vxe-ui/core'
 import { VxeFormPropTypes } from '../components/form'
 
@@ -59,6 +59,7 @@ export type VxeFormDesignProps = {
 }
 
 export interface FormDesignPrivateComputed {
+  computeSize: ComputedRef<VxeFormDesignPropTypes.Size>
 }
 export interface VxeFormDesignPrivateComputed extends FormDesignPrivateComputed { }
 
@@ -112,7 +113,7 @@ export interface FormDesignMethods {
    * 根据控件 ID 获取控件对象
    * @param widgetId
    */
-  getWidgetById(widgetId: number | string | nul | undefined): VxeFormDesignDefines.WidgetObjItem | null
+  getWidgetById(widgetId: number | string | null | undefined): VxeFormDesignDefines.WidgetObjItem | null
   /**
    * 获取表单配置绑定的数据
    */

@@ -81,6 +81,10 @@ export default defineComponent({
       type: Boolean as PropType<VxeUploadPropTypes.AutoHiddenButton>,
       default: () => getConfig().upload.autoHiddenButton
     },
+    showUploadButton: {
+      type: Boolean as PropType<VxeUploadPropTypes.ShowUploadButton>,
+      default: () => getConfig().upload.showUploadButton
+    },
     buttonText: {
       type: String as PropType<VxeUploadPropTypes.ButtonText>,
       default: () => getConfig().upload.buttonText
@@ -145,6 +149,7 @@ export default defineComponent({
 
     const reactData = reactive<UploadReactData>({
       isDrag: false,
+      showMorePopup: false,
       fileList: []
     })
 
@@ -338,10 +343,6 @@ export default defineComponent({
       emit(type, createEvent(evnt, { $upload: $xeUpload }, params))
     }
 
-    const uploadMethods: UploadMethods = {
-      dispatchEvent
-    }
-
     const emitModel = (value: VxeUploadDefines.FileObjItem[]) => {
       const { singleMode, urlMode } = props
       const urlProp = computeUrlProp.value
@@ -483,7 +484,7 @@ export default defineComponent({
         })
       }
     }
-    const uploadFile = (files: File[], evnt: Event) => {
+    const uploadFile = (files: File[], evnt: Event | null) => {
       const { multiple, urlMode } = props
       const { fileList } = reactData
       const uploadFn = props.uploadMethod || getConfig().upload.uploadMethod
@@ -588,24 +589,33 @@ export default defineComponent({
         emitModel(newFileList)
         // 自动更新校验状态
         if ($xeForm && formItemInfo) {
-          $xeForm.triggerItemEvent(evnt, formItemInfo.itemConfig.field, newFileList)
+          $xeForm.triggerItemEvent(evnt as any, formItemInfo.itemConfig.field, newFileList)
         }
       })
     }
 
-    const clickEvent = (evnt: MouseEvent) => {
+    const handleChoose = (evnt: MouseEvent | null) => {
       const { multiple, imageTypes, fileTypes } = props
       const isDisabled = computeIsDisabled.value
       const isImage = computeIsImage.value
       if (isDisabled) {
-        return
+        return Promise.resolve({
+          status: false,
+          files: [],
+          file: null
+        })
       }
-      readLocalFile({
+      return readLocalFile({
         multiple,
         types: isImage ? imageTypes : fileTypes
-      }).then(({ files }) => {
-        uploadFile(files, evnt)
-      }).catch(() => {
+      }).then((params) => {
+        uploadFile(params.files, evnt)
+        return params
+      })
+    }
+
+    const clickEvent = (evnt: MouseEvent) => {
+      handleChoose(evnt).catch(() => {
         // 错误文件类型
       })
     }
@@ -686,10 +696,10 @@ export default defineComponent({
     }
 
     const handleDragleaveEvent = (evnt: DragEvent) => {
-      const elem = refElem.value
+      const targetElem = evnt.currentTarget as HTMLDivElement
       const { clientX, clientY } = evnt
-      if (elem) {
-        const { x: targetX, y: targetY, height: targetHeight, width: targetWidth } = elem.getBoundingClientRect()
+      if (targetElem) {
+        const { x: targetX, y: targetY, height: targetHeight, width: targetWidth } = targetElem.getBoundingClientRect()
         if (clientX < targetX || clientX > targetX + targetWidth || clientY < targetY || clientY > targetY + targetHeight) {
           reactData.isDrag = false
         }
@@ -727,10 +737,11 @@ export default defineComponent({
     }
 
     const handleMoreEvent = () => {
+      const formReadonly = computeFormReadonly.value
       const isImage = computeIsImage.value
 
       VxeUI.modal.open({
-        title: '查看列表',
+        title: formReadonly ? getI18n('vxe.upload.morePopup.readTitle') : getI18n(`vxe.upload.morePopup.${isImage ? 'imageTitle' : 'fileTitle'}`),
         width: 660,
         height: 500,
         escClosable: true,
@@ -739,18 +750,56 @@ export default defineComponent({
         maskClosable: true,
         slots: {
           default () {
+            const { showErrorStatus } = props
+            const { isDrag } = reactData
+            const isDisabled = computeIsDisabled.value
             const { fileList } = reactData
-            if (isImage) {
-              return h('div', {
-                class: 'vxe-upload--image-more-list'
-              }, renderImageItemList(fileList, true))
-            }
+
             return h('div', {
-              class: 'vxe-upload--file-more-list'
-            }, renderFileItemList(fileList))
+              class: ['vxe-upload--more-popup', {
+                'is--readonly': formReadonly,
+                'is--disabled': isDisabled,
+                'show--error': showErrorStatus,
+                'is--drag': isDrag
+              }],
+              onDragover: handleDragoverEvent,
+              onDragleave: handleDragleaveEvent,
+              onDrop: handleDropEvent
+            }, [
+              isImage
+                ? h('div', {
+                  class: 'vxe-upload--image-more-list'
+                }, renderImageItemList(fileList, true).concat(renderImageAction(true)))
+                : h('div', {
+                  class: 'vxe-upload--file-more-list'
+                }, [
+                  renderFileAction(true),
+                  h('div', {
+                    class: 'vxe-upload--file-list'
+                  }, renderFileItemList(fileList))
+                ]),
+              isDrag
+                ? h('div', {
+                  class: 'vxe-upload--drag-placeholder'
+                }, getI18n('vxe.upload.dragPlaceholder'))
+                : createCommentVNode()
+            ])
           }
+        },
+        onShow () {
+          reactData.showMorePopup = true
+        },
+        onHide () {
+          reactData.showMorePopup = false
         }
       })
+    }
+
+    const uploadMethods: UploadMethods = {
+      dispatchEvent,
+      choose () {
+        return handleChoose(null)
+      }
     }
 
     const uploadPrivateMethods: UploadPrivateMethods = {
@@ -848,21 +897,55 @@ export default defineComponent({
       })
     }
 
-    const renderAllMode = () => {
-      const { buttonText, buttonIcon, showButtonText, showButtonIcon, autoHiddenButton } = props
-      const { fileList } = reactData
+    const renderFileAction = (isMoreView: boolean) => {
+      const { showUploadButton, buttonText, buttonIcon, showButtonText, showButtonIcon, autoHiddenButton } = props
       const isDisabled = computeIsDisabled.value
       const formReadonly = computeFormReadonly.value
       const defHintText = computedDefHintText.value
       const overCount = computeOverCount.value
-      const moreOpts = computeMoreOpts.value
       const defaultSlot = slots.default
       const tipSlot = slots.tip || slots.hint
 
+      if (formReadonly || !showUploadButton) {
+        return createCommentVNode()
+      }
+      return h('div', {
+        class: 'vxe-upload--file-action'
+      }, [
+        autoHiddenButton && overCount
+          ? createCommentVNode()
+          : h('div', {
+            class: 'vxe-upload--file-action-btn',
+            onClick: clickEvent
+          }, defaultSlot
+            ? getSlotVNs(defaultSlot({ $upload: $xeUpload }))
+            : [
+                h(VxeButtonComponent, {
+                  class: 'vxe-upload--file-action-button',
+                  content: (isMoreView || showButtonText) ? (buttonText ? `${buttonText}` : getI18n('vxe.upload.fileBtnText')) : '',
+                  icon: showButtonIcon ? (buttonIcon || getIcon().UPLOAD_FILE_ADD) : '',
+                  disabled: isDisabled
+                })
+              ]),
+        isMoreView && (defHintText || tipSlot)
+          ? h('div', {
+            class: 'vxe-upload--file-action-tip'
+          }, tipSlot ? getSlotVNs(tipSlot({ $upload: $xeUpload })) : defHintText)
+          : createCommentVNode()
+      ])
+    }
+
+    const renderAllMode = () => {
+      const { moreConfig } = props
+      const { fileList } = reactData
+      const moreOpts = computeMoreOpts.value
+
       const { maxCount, showMoreButton, layout } = moreOpts
+      const isHorizontal = layout === 'horizontal'
+
       let currList = fileList
       let overMaxNum = 0
-      if (formReadonly && maxCount && fileList.length > maxCount) {
+      if (maxCount && fileList.length > maxCount) {
         overMaxNum = fileList.length - maxCount
         currList = fileList.slice(0, maxCount)
       }
@@ -871,41 +954,19 @@ export default defineComponent({
         key: 'all',
         class: 'vxe-upload--file-wrapper'
       }, [
-        formReadonly
+        showMoreButton && moreConfig && isHorizontal
           ? createCommentVNode()
-          : h('div', {
-            class: 'vxe-upload--file-action'
-          }, [
-            autoHiddenButton && overCount
-              ? createCommentVNode()
-              : h('div', {
-                class: 'vxe-upload--file-action-btn',
-                onClick: clickEvent
-              }, defaultSlot
-                ? getSlotVNs(defaultSlot({ $upload: $xeUpload }))
-                : [
-                    h(VxeButtonComponent, {
-                      content: showButtonText ? (buttonText ? `${buttonText}` : getI18n('vxe.upload.fileBtnText')) : '',
-                      icon: showButtonIcon ? (buttonIcon || getIcon().UPLOAD_FILE_ADD) : '',
-                      disabled: isDisabled
-                    })
-                  ]),
-            defHintText || tipSlot
-              ? h('div', {
-                class: 'vxe-upload--file-action-tip'
-              }, tipSlot ? getSlotVNs(tipSlot({ $upload: $xeUpload })) : defHintText)
-              : createCommentVNode()
-          ]),
+          : renderFileAction(true),
         currList.length
           ? h('div', {
             class: ['vxe-upload--file-list-wrapper', {
-              'is--horizontal': layout === 'horizontal'
+              'is--horizontal': isHorizontal
             }]
           }, [
             h('div', {
               class: 'vxe-upload--file-list'
             }, renderFileItemList(currList)),
-            formReadonly && showMoreButton && overMaxNum
+            showMoreButton && overMaxNum
               ? h('div', {
                 class: 'vxe-upload--file-over-more'
               }, [
@@ -916,13 +977,16 @@ export default defineComponent({
                   onClick: handleMoreEvent
                 })
               ])
+              : createCommentVNode(),
+            showMoreButton && moreConfig && isHorizontal
+              ? renderFileAction(false)
               : createCommentVNode()
           ])
           : createCommentVNode()
       ])
     }
 
-    const renderImageItemList = (currList: VxeUploadDefines.FileObjItem[], isPreview: boolean) => {
+    const renderImageItemList = (currList: VxeUploadDefines.FileObjItem[], isMoreView: boolean) => {
       const { showRemoveButton, showProgress, showPreview, showErrorStatus } = props
       const isDisabled = computeIsDisabled.value
       const formReadonly = computeFormReadonly.value
@@ -941,7 +1005,7 @@ export default defineComponent({
         }, [
           h('div', {
             class: 'vxe-upload--image-item-box',
-            style: isPreview ? null : imgStyle,
+            style: isMoreView ? null : imgStyle,
             title: getI18n('vxe.upload.viewItemTitle'),
             onClick (evnt) {
               if (!isLoading && !isError) {
@@ -1007,21 +1071,64 @@ export default defineComponent({
       })
     }
 
-    const renderImageMode = () => {
-      const { buttonText, buttonIcon, showButtonText, showButtonIcon, autoHiddenButton } = props
-      const { fileList } = reactData
+    const renderImageAction = (isMoreView: boolean) => {
+      const { showUploadButton, buttonText, buttonIcon, showButtonText, showButtonIcon, autoHiddenButton } = props
       const formReadonly = computeFormReadonly.value
       const defHintText = computedDefHintText.value
       const overCount = computeOverCount.value
       const imgStyle = computeImgStyle.value
-      const moreOpts = computeMoreOpts.value
       const defaultSlot = slots.default
       const hintSlot = slots.hint
+
+      if (formReadonly || !showUploadButton || (autoHiddenButton && overCount)) {
+        return createCommentVNode()
+      }
+      return h('div', {
+        key: 'action',
+        class: 'vxe-upload--image-action'
+      }, [
+        h('div', {
+          class: 'vxe-upload--image-action-btn',
+          onClick: clickEvent
+        }, defaultSlot
+          ? defaultSlot({ $upload: $xeUpload })
+          : [
+              h('div', {
+                class: 'vxe-upload--image-action-box',
+                style: isMoreView ? null : imgStyle
+              }, [
+                showButtonIcon
+                  ? h('div', {
+                    class: 'vxe-upload--image-action-icon'
+                  }, [
+                    h('i', {
+                      class: buttonIcon || getIcon().UPLOAD_IMAGE_ADD
+                    })
+                  ])
+                  : createCommentVNode(),
+                isMoreView || showButtonText
+                  ? h('div', {
+                    class: 'vxe-upload--image-action-content'
+                  }, buttonText ? `${buttonText}` : getI18n('vxe.upload.imgBtnText'))
+                  : createCommentVNode(),
+                isMoreView && (defHintText || hintSlot)
+                  ? h('div', {
+                    class: 'vxe-upload--image-action-hint'
+                  }, hintSlot ? getSlotVNs(hintSlot({ $upload: $xeUpload })) : defHintText)
+                  : createCommentVNode()
+              ])
+            ])
+      ])
+    }
+
+    const renderImageMode = () => {
+      const { fileList } = reactData
+      const moreOpts = computeMoreOpts.value
 
       const { maxCount, showMoreButton } = moreOpts
       let currList = fileList
       let overMaxNum = 0
-      if (formReadonly && maxCount && fileList.length > maxCount) {
+      if (maxCount && fileList.length > maxCount) {
         overMaxNum = fileList.length - maxCount
         currList = fileList.slice(0, maxCount)
       }
@@ -1033,7 +1140,7 @@ export default defineComponent({
         h('div', {
           class: 'vxe-upload--image-list'
         }, renderImageItemList(currList, false).concat([
-          formReadonly && showMoreButton && overMaxNum
+          showMoreButton && overMaxNum
             ? h('div', {
               class: 'vxe-upload--image-over-more'
             }, [
@@ -1045,50 +1152,14 @@ export default defineComponent({
               })
             ])
             : createCommentVNode(),
-          formReadonly || (autoHiddenButton && overCount)
-            ? createCommentVNode()
-            : h('div', {
-              class: 'vxe-upload--image-action'
-            }, [
-              h('div', {
-                class: 'vxe-upload--image-action-btn',
-                onClick: clickEvent
-              }, defaultSlot
-                ? defaultSlot({ $upload: $xeUpload })
-                : [
-                    h('div', {
-                      class: 'vxe-upload--image-action-box',
-                      style: imgStyle
-                    }, [
-                      showButtonIcon
-                        ? h('div', {
-                          class: 'vxe-upload--image-action-icon'
-                        }, [
-                          h('i', {
-                            class: buttonIcon || getIcon().UPLOAD_IMAGE_ADD
-                          })
-                        ])
-                        : createCommentVNode(),
-                      showButtonText
-                        ? h('div', {
-                          class: 'vxe-upload--image-action-content'
-                        }, buttonText ? `${buttonText}` : getI18n('vxe.upload.imgBtnText'))
-                        : createCommentVNode(),
-                      defHintText || hintSlot
-                        ? h('div', {
-                          class: 'vxe-upload--image-action-hint'
-                        }, hintSlot ? getSlotVNs(hintSlot({ $upload: $xeUpload })) : defHintText)
-                        : createCommentVNode()
-                    ])
-                  ])
-            ])
+          renderImageAction(false)
         ]))
       ])
     }
 
     const renderVN = () => {
       const { showErrorStatus } = props
-      const { isDrag } = reactData
+      const { isDrag, showMorePopup } = reactData
       const vSize = computeSize.value
       const isDisabled = computeIsDisabled.value
       const formReadonly = computeFormReadonly.value
@@ -1107,7 +1178,7 @@ export default defineComponent({
         onDrop: handleDropEvent
       }, [
         isImage ? renderImageMode() : renderAllMode(),
-        isDrag
+        isDrag && !showMorePopup
           ? h('div', {
             class: 'vxe-upload--drag-placeholder'
           }, getI18n('vxe.upload.dragPlaceholder'))

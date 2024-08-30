@@ -1,5 +1,5 @@
 import { RenderFunction, SetupContext, Ref, ComponentPublicInstance, DefineComponent } from 'vue'
-import { defineVxeComponent, VxeComponentBaseOptions, VxeComponentEventParams, ValueOf, VxeComponentPermissionCodeType } from '@vxe-ui/core'
+import { defineVxeComponent, VxeComponentBaseOptions, VxeComponentEventParams, ValueOf, VxeComponentSizeType, VxeComponentPermissionCodeType } from '@vxe-ui/core'
 import { VxeLinkPropTypes } from './link'
 
 /* eslint-disable no-use-before-define,@typescript-eslint/ban-types */
@@ -25,6 +25,7 @@ export interface VxeMenuPrivateRef extends MenuPrivateRef { }
 
 export namespace VxeMenuPropTypes {
   export type ModelValue = string | number | null
+  export type Size = VxeComponentSizeType
   export type Loading = boolean
 
   export interface MenuOneOption extends MenuOption {
@@ -55,6 +56,7 @@ export namespace VxeMenuPropTypes {
 
 export type VxeMenuProps = {
   modelValue?: VxeMenuPropTypes.ModelValue
+  size?: VxeMenuPropTypes.Size
   loading?: VxeMenuPropTypes.Loading
   collapsed?: VxeMenuPropTypes.Collapsed
   expandAll?: VxeMenuPropTypes.ExpandAll

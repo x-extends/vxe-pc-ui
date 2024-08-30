@@ -267,6 +267,7 @@ setConfig({
     mode: 'all',
     imageTypes: ['jpg', 'jpeg', 'png', 'gif'],
     showList: true,
+    showUploadButton: true,
     showButtonText: true,
     showRemoveButton: true,
     showButtonIcon: true,

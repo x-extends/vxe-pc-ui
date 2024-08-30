@@ -1,6 +1,6 @@
 import { defineComponent, ref, h, reactive, PropType, inject, resolveComponent, createCommentVNode, nextTick, watch, VNode, onMounted, computed } from 'vue'
 import XEUtils from 'xe-utils'
-import { getIcon, createEvent, permission } from '../../ui'
+import { getConfig, getIcon, createEvent, permission, useSize } from '../../ui'
 import VxeLoadingComponent from '../../loading/index'
 
 import type { VxeMenuDefines, VxeMenuPropTypes, MenuReactData, VxeMenuEmits, MenuPrivateRef, VxeMenuPrivateComputed, VxeMenuConstructor, VxeMenuPrivateMethods, VxeLayoutAsideConstructor, VxeLayoutAsidePrivateMethods } from '../../../types'
@@ -18,7 +18,8 @@ export default defineComponent({
     options: {
       type: Array as PropType<VxeMenuPropTypes.Options>,
       default: () => []
-    }
+    },
+    size: { type: String as PropType<VxeMenuPropTypes.Size>, default: () => getConfig().image.size || getConfig().size }
   },
   emits: [
     'update:modelValue',
@@ -33,6 +34,8 @@ export default defineComponent({
 
     const refElem = ref<HTMLDivElement>()
     const refWrapperElem = ref<HTMLDivElement>()
+
+    const { computeSize } = useSize(props)
 
     const reactData = reactive<MenuReactData>({
       activeName: props.modelValue,
@@ -56,6 +59,7 @@ export default defineComponent({
     })
 
     const computeMaps: VxeMenuPrivateComputed = {
+      computeSize
     }
 
     const $xeMenu = {
@@ -238,10 +242,12 @@ export default defineComponent({
     const renderVN = () => {
       const { loading } = props
       const { menuList } = reactData
+      const vSize = computeSize.value
       const isCollapsed = computeIsCollapsed.value
       return h('div', {
         ref: refElem,
         class: ['vxe-menu', {
+          [`size--${vSize}`]: vSize,
           'is--collapsed': isCollapsed,
           'is--loading': loading
         }]

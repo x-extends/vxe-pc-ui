@@ -34,9 +34,41 @@ export default defineComponent({
       }
     }
 
+    const dragoverEvent = (evnt: DragEvent) => {
+      evnt.preventDefault()
+    }
+
     let lastDragTime = Date.now()
 
-    const handleDragenterPlaceEvent = (evnt: DragEvent) => {
+    const handleDragenterTopPlaceEvent = (evnt: DragEvent) => {
+      const { widgetObjList, sortWidget } = formDesignReactData
+      evnt.stopPropagation()
+      if (lastDragTime > Date.now() - 300) {
+        evnt.preventDefault()
+        return
+      }
+      if (sortWidget) {
+        if (hasFormDesignLayoutType(sortWidget)) {
+          return
+        }
+        // const targetRest = XEUtils.findTree(widgetObjList, item => item && item.id === widgetId, { children: 'children' })
+        const currRest = XEUtils.findTree(widgetObjList, item => item.id === sortWidget.id, { children: 'children' })
+        if (currRest) {
+          const { item, index, items, parent } = currRest
+          if (parent && parent.name === 'row') {
+            // 如是是从 row 移出
+            currRest.items[currRest.index] = $xeFormDesign.createEmptyWidget()
+          } else {
+            items.splice(index, 1)
+          }
+          widgetObjList.unshift(item)
+          lastDragTime = Date.now()
+          $xeFormDesign.dispatchEvent('drag-widget', { widget: item }, evnt)
+        }
+      }
+    }
+
+    const handleDragenterBottomPlaceEvent = (evnt: DragEvent) => {
       const { widgetObjList, sortWidget } = formDesignReactData
       evnt.stopPropagation()
       if (lastDragTime > Date.now() - 300) {
@@ -68,11 +100,16 @@ export default defineComponent({
       const { widgetObjList } = formDesignReactData
       return h('div', {
         class: 'vxe-form-design--preview',
-        onDragenter: dragenterEvent
+        onDragenter: dragenterEvent,
+        onDragover: dragoverEvent
       }, [
         h('div', {
           class: 'vxe-form-design--preview-wrapper'
         }, [
+          h('div', {
+            class: 'vxe-form-design--preview-place-widget',
+            onDragenter: handleDragenterTopPlaceEvent
+          }),
           h(VxeFormComponent, {
             customLayout: true,
             span: 24,
@@ -109,7 +146,7 @@ export default defineComponent({
           }),
           h('div', {
             class: 'vxe-form-design--preview-place-widget',
-            onDragenter: handleDragenterPlaceEvent
+            onDragenter: handleDragenterBottomPlaceEvent
           })
         ])
       ])
