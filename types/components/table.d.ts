@@ -3334,34 +3334,100 @@ export namespace VxeTableDefines {
      * 以下内部属性
      * 内部属性随时都会调整，不应该被使用
      */
+    /**
+     * @private
+     */
     id: string
+    /**
+     * @private
+     */
     parentId: string
+    /**
+     * @private
+     */
     level: number
+    /**
+     * @private
+     */
     rowSpan: number
+    /**
+     * @private
+     */
     colSpan: number
+    /**
+     * @private
+     */
     halfVisible: boolean
+    /**
+     * @private
+     */
     defaultVisible: any
+    /**
+     * @private
+     */
     defaultFixed: any
+    /**
+     * @private
+     */
     checked: boolean
+    /**
+     * @private
+     */
     halfChecked: boolean
+    /**
+     * @private
+     */
     disabled: boolean
 
     // 数据排序
+    /**
+     * @private
+     */
     order: VxeTablePropTypes.SortOrder
+    /**
+     * @private
+     */
     sortTime: number
 
     // 列排序
     sortNumber: number
+    /**
+     * @private
+     */
     renderSortNumber: number
 
+    /**
+     * @private
+     */
     renderFixed: VxeColumnPropTypes.Fixed
+    /**
+     * @private
+     */
     renderVisible: VxeColumnPropTypes.Visible
 
+    /**
+     * @private
+     */
     renderWidth: number
+    /**
+     * @private
+     */
     renderHeight: number
+    /**
+     * @private
+     */
     renderAutoWidth: number
+    /**
+     * @private
+     */
     renderResizeWidth: number
+    /**
+     * @private
+     */
     resizeWidth: number
+    /**
+     * @private
+     */
     model: {
       update: boolean
       value: any
@@ -3369,12 +3435,30 @@ export namespace VxeTableDefines {
 
     children: ColumnInfo<D>[]
 
+    /**
+     * @private
+     */
     renderHeader(params: CellRenderHeaderParams<D>): VNode[]
+    /**
+     * @private
+     */
     renderCell(params: CellRenderCellParams<D>): VNode[]
+    /**
+     * @private
+     */
     renderData(params: CellRenderDataParams<D>): VNode[]
+    /**
+     * @private
+     */
     renderFooter(params: CellRenderFooterParams<D>): VNode[]
 
+    /**
+     * 获取列标题
+     */
     getTitle(): string
+    /**
+     * 获取列主键
+     */
     getKey(): string
   }
 

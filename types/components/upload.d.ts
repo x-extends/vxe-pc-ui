@@ -283,11 +283,17 @@ export namespace VxeUploadEvents {
 
 export namespace VxeUploadSlotTypes {
   export interface DefaultSlotParams {}
+
+  export interface CornerSlotParams {
+    option: VxeUploadDefines.FileObjItem
+    isMoreView: boolean
+  }
 }
 
 export interface VxeUploadSlots {
   default?: (params: VxeUploadSlotTypes.DefaultSlotParams) => any
   tip?: (params: VxeUploadSlotTypes.DefaultSlotParams) => any
+  corner?: (params: VxeUploadSlotTypes.CornerSlotParams) => any
 }
 
 export const Upload: typeof VxeUpload

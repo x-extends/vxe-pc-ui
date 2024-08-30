@@ -81,6 +81,10 @@ export interface TooltipMethods {
    * @param content 自定义内容
    */
   open(target?: any, content?: VxeTooltipPropTypes.Content): Promise<void>
+  /**
+   * 已废弃，请使用 open
+   * @deprecated
+   */
   toVisible(target?: HTMLElement, content?: VxeTooltipPropTypes.Content): Promise<void>
   /**
    * 隐藏

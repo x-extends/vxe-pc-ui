@@ -107,12 +107,12 @@ export default defineComponent({
       if (reactData.visible) {
         tooltipMethods.close()
       } else {
-        tooltipMethods.open()
+        handleVisible(reactData.target, props.content)
       }
     }
 
     const targetMouseenterEvent = () => {
-      tooltipMethods.open()
+      handleVisible(reactData.target, props.content)
     }
 
     const targetMouseleaveEvent = () => {
@@ -168,12 +168,31 @@ export default defineComponent({
       }
     }, props.enterDelay, { leading: false, trailing: true })
 
+    const handleVisible = (target: HTMLElement | null, content?: VxeTooltipPropTypes.Content) => {
+      const contentSlot = slots.content
+      if (!contentSlot && (content === '' || XEUtils.eqNull(content))) {
+        return nextTick()
+      }
+      if (target) {
+        const { trigger, enterDelay } = props
+        reactData.tipActive = true
+        reactData.tipTarget = target
+        reactData.tipContent = content
+        if (enterDelay && trigger === 'hover') {
+          showDelayTip()
+        } else {
+          return showTip()
+        }
+      }
+      return nextTick()
+    }
+
     tooltipMethods = {
       dispatchEvent (type, params, evnt) {
         emit(type, createEvent(evnt, { $tooltip: $xeTooltip }, params))
       },
-      open (target?: HTMLElement, content?: VxeTooltipPropTypes.Content) {
-        return tooltipMethods.toVisible(target || reactData.target as HTMLElement, content)
+      open (target?: HTMLElement | null, content?: VxeTooltipPropTypes.Content) {
+        return handleVisible(target || reactData.target as HTMLElement, content)
       },
       close () {
         reactData.tipTarget = null
@@ -187,21 +206,7 @@ export default defineComponent({
         return nextTick()
       },
       toVisible (target: HTMLElement, content?: VxeTooltipPropTypes.Content) {
-        if (content === '' || XEUtils.eqNull(content)) {
-          return nextTick()
-        }
-        if (target) {
-          const { trigger, enterDelay } = props
-          reactData.tipActive = true
-          reactData.tipTarget = target
-          reactData.tipContent = content
-          if (enterDelay && trigger === 'hover') {
-            showDelayTip()
-          } else {
-            return showTip()
-          }
-        }
-        return nextTick()
+        return handleVisible(target, content)
       },
       updatePlacement () {
         return nextTick().then(() => {
@@ -227,10 +232,10 @@ export default defineComponent({
       reactData.tipContent = props.content
     })
 
-    watch(() => props.modelValue, () => {
+    watch(() => props.modelValue, (val) => {
       if (!reactData.isUpdate) {
-        if (props.modelValue) {
-          tooltipMethods.open()
+        if (val) {
+          handleVisible(reactData.target, props.content)
         } else {
           tooltipMethods.close()
         }
@@ -266,7 +271,7 @@ export default defineComponent({
               }
             }
             if (modelValue) {
-              tooltipMethods.open()
+              handleVisible(target, content)
             }
           }
         }

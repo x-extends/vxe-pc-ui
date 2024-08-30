@@ -150,10 +150,28 @@ export interface TableEditMethods<D = any> {
 }
 
 export interface TableEditPrivateMethods<D = any> {
-  handleActived(params: any, evnt?: any): Promise<any>
+  /**
+   * @private
+   */
+  handleEdit(params: any, evnt?: any): Promise<any>
+  /**
+   * @private
+   */
   handleFocus(params: any, evnt?: any): void
+  /**
+   * @private
+   */
   handleSelected(params: any, evnt: any): Promise<any>
+  /**
+   * @private
+   */
   addCellSelectedClass(): void
+
+  /**
+   * @private
+   * @deprecated
+   */
+  handleActived(params: any, evnt?: any): Promise<any>
 }
 
 declare module '../grid' {

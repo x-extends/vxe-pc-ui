@@ -776,7 +776,7 @@ export default defineComponent({
                   renderFileAction(true),
                   h('div', {
                     class: 'vxe-upload--file-list'
-                  }, renderFileItemList(fileList))
+                  }, renderFileItemList(fileList, true))
                 ]),
               isDrag
                 ? h('div', {
@@ -807,12 +807,13 @@ export default defineComponent({
 
     Object.assign($xeUpload, uploadMethods, uploadPrivateMethods)
 
-    const renderFileItemList = (currList: VxeUploadDefines.FileObjItem[]) => {
+    const renderFileItemList = (currList: VxeUploadDefines.FileObjItem[], isMoreView: boolean) => {
       const { showRemoveButton, showDownloadButton, showProgress, showPreview, showErrorStatus } = props
       const isDisabled = computeIsDisabled.value
       const formReadonly = computeFormReadonly.value
       const nameProp = computeNameProp.value
       const typeProp = computeTypeProp.value
+      const cornerSlot = slots.corner
 
       return currList.map((item, index) => {
         const isLoading = item._X_DATA && item._X_DATA.l
@@ -869,30 +870,39 @@ export default defineComponent({
               })
             ])
             : createCommentVNode(),
-          showDownloadButton && !isLoading
-            ? h('div', {
-              class: 'vxe-upload--file-item-download-icon',
-              onClick (evnt: MouseEvent) {
-                downloadFileEvent(evnt, item)
-              }
-            }, [
-              h('i', {
-                class: getIcon().UPLOAD_FILE_DOWNLOAD
-              })
-            ])
-            : createCommentVNode(),
-          showRemoveButton && !formReadonly && !isDisabled && !isLoading
-            ? h('div', {
-              class: 'vxe-upload--file-item-remove-icon',
-              onClick (evnt: MouseEvent) {
-                removeFileEvent(evnt, item, index)
-              }
-            }, [
-              h('i', {
-                class: getIcon().UPLOAD_FILE_REMOVE
-              })
-            ])
-            : createCommentVNode()
+          h('div', {
+            class: 'vxe-upload--file-item-btn-wrapper'
+          }, [
+            cornerSlot
+              ? h('div', {
+                class: 'vxe-upload--file-item-corner'
+              }, getSlotVNs(cornerSlot({ option: item, isMoreView, readonly: formReadonly })))
+              : createCommentVNode(),
+            showDownloadButton && !isLoading
+              ? h('div', {
+                class: 'vxe-upload--file-item-download-btn',
+                onClick (evnt: MouseEvent) {
+                  downloadFileEvent(evnt, item)
+                }
+              }, [
+                h('i', {
+                  class: getIcon().UPLOAD_FILE_DOWNLOAD
+                })
+              ])
+              : createCommentVNode(),
+            showRemoveButton && !formReadonly && !isDisabled && !isLoading
+              ? h('div', {
+                class: 'vxe-upload--file-item-remove-btn',
+                onClick (evnt: MouseEvent) {
+                  removeFileEvent(evnt, item, index)
+                }
+              }, [
+                h('i', {
+                  class: getIcon().UPLOAD_FILE_REMOVE
+                })
+              ])
+              : createCommentVNode()
+          ])
         ])
       })
     }
@@ -957,15 +967,17 @@ export default defineComponent({
         showMoreButton && moreConfig && isHorizontal
           ? createCommentVNode()
           : renderFileAction(true),
-        currList.length
+        currList.length || (showMoreButton && isHorizontal)
           ? h('div', {
             class: ['vxe-upload--file-list-wrapper', {
               'is--horizontal': isHorizontal
             }]
           }, [
-            h('div', {
-              class: 'vxe-upload--file-list'
-            }, renderFileItemList(currList)),
+            currList.length
+              ? h('div', {
+                class: 'vxe-upload--file-list'
+              }, renderFileItemList(currList, false))
+              : createCommentVNode(),
             showMoreButton && overMaxNum
               ? h('div', {
                 class: 'vxe-upload--file-over-more'
@@ -991,6 +1003,7 @@ export default defineComponent({
       const isDisabled = computeIsDisabled.value
       const formReadonly = computeFormReadonly.value
       const imgStyle = computeImgStyle.value
+      const cornerSlot = slots.corner
 
       return currList.map((item, index) => {
         const isLoading = item._X_DATA && item._X_DATA.l
@@ -1053,19 +1066,31 @@ export default defineComponent({
                     })
                 )
               : createCommentVNode(),
-            showRemoveButton && !formReadonly && !isDisabled && !isLoading
-              ? h('div', {
-                class: 'vxe-upload--image-item-remove-icon',
-                onClick (evnt: MouseEvent) {
-                  evnt.stopPropagation()
-                  removeFileEvent(evnt, item, index)
-                }
-              }, [
-                h('i', {
-                  class: getIcon().UPLOAD_IMAGE_REMOVE
-                })
-              ])
-              : createCommentVNode()
+            h('div', {
+              class: 'vxe-upload--image-item-btn-wrapper',
+              onClick (evnt) {
+                evnt.stopPropagation()
+              }
+            }, [
+              cornerSlot
+                ? h('div', {
+                  class: 'vxe-upload--file-item-corner'
+                }, getSlotVNs(cornerSlot({ option: item, isMoreView, readonly: formReadonly })))
+                : createCommentVNode(),
+              showRemoveButton && !formReadonly && !isDisabled && !isLoading
+                ? h('div', {
+                  class: 'vxe-upload--image-item-remove-btn',
+                  onClick (evnt: MouseEvent) {
+                    evnt.stopPropagation()
+                    removeFileEvent(evnt, item, index)
+                  }
+                }, [
+                  h('i', {
+                    class: getIcon().UPLOAD_IMAGE_REMOVE
+                  })
+                ])
+                : createCommentVNode()
+            ])
           ])
         ])
       })

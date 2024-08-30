@@ -137,6 +137,11 @@
   white-space: nowrap;
   padding: 0 0.2em;
 }
+.vxe-upload--file-item-btn-wrapper {
+  display: inline-flex;
+  flex-direction: row;
+  justify-content: center;
+}
 .vxe-upload--file-item-loading-icon {
   padding-right: 0.2em;
 }
@@ -145,19 +150,23 @@
   color: var(--vxe-ui-loading-color);
   flex-shrink: 0;
 }
-.vxe-upload--file-item-download-icon,
-.vxe-upload--file-item-remove-icon {
+.vxe-upload--file-item-corner,
+.vxe-upload--file-item-download-btn,
+.vxe-upload--file-item-remove-btn  {
   flex-shrink: 0;
+}
+.vxe-upload--file-item-download-btn,
+.vxe-upload--file-item-remove-btn {
   padding-left: 0.5em;
   cursor: pointer;
 }
-.vxe-upload--file-item-download-icon {
+.vxe-upload--file-item-download-btn {
   color: var(--vxe-ui-font-primary-color);
   &:hover {
     color: var(--vxe-ui-font-primary-lighten-color);
   }
 }
-.vxe-upload--file-item-remove-icon {
+.vxe-upload--file-item-remove-btn {
   color: var(--vxe-ui-status-error-color);
   &:hover {
     color: var(--vxe-ui-status-error-lighten-color);
@@ -294,15 +303,26 @@
   word-break: break-all;
   color: var(--vxe-ui-input-placeholder-color);
 }
-.vxe-upload--image-item-remove-icon {
+.vxe-upload--image-item-btn-wrapper {
+  display: inline-flex;
+  flex-direction: row;
+  justify-content: center;
   position: absolute;
   top: calc(var(--vxe-ui-layout-padding-half) * -1);
   right: calc(var(--vxe-ui-layout-padding-half) * -1);
+}
+.vxe-upload--file-item-,
+.vxe-upload--image-item-remove-btn {
+  flex-shrink: 0;
+}
+.vxe-upload--image-item-remove-btn {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
   width: 1.8em;
   height: 1.8em;
-  line-height: 1.8em;
-  font-size: 0.85em;
-  text-align: center;
+  font-size: 0.8em;
   border-radius: 50%;
   color: #fff;
   background-color: var(--vxe-ui-status-error-color);
