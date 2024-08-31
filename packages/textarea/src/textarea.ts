@@ -25,7 +25,7 @@ export default defineComponent({
     },
     placeholder: String as PropType<VxeTextareaPropTypes.Placeholder>,
     maxLength: [String, Number] as PropType<VxeTextareaPropTypes.MaxLength>,
-    rows: { type: [String, Number] as PropType<VxeTextareaPropTypes.Rows>, default: 2 },
+    rows: { type: [String, Number] as PropType<VxeTextareaPropTypes.Rows>, default: null },
     cols: { type: [String, Number] as PropType<VxeTextareaPropTypes.Cols>, default: null },
     showWordCount: Boolean as PropType<VxeTextareaPropTypes.ShowWordCount>,
     countMethod: Function as PropType<VxeTextareaPropTypes.CountMethod>,
@@ -297,8 +297,8 @@ export default defineComponent({
           'is--autosize': autosize,
           'is--count': showWordCount,
           'is--disabled': isDisabled,
-          'def--rows': !XEUtils.eqNull(rows),
-          'def--cols': !XEUtils.eqNull(cols)
+          'is--rows': !XEUtils.eqNull(rows),
+          'is--cols': !XEUtils.eqNull(cols)
         }],
         spellcheck: false
       }, [

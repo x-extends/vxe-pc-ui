@@ -135,9 +135,9 @@ export namespace VxeFormItemPropTypes {
   }
   export type Rules<D = any> = VxeFormDefines.FormRule<D>[]
   export type Slots = {
-    title?: string | ((params: FormItemTitleRenderParams) => VxeComponentSlotType | VxeComponentSlotType[]) | null
-    default?: string | ((params: FormItemContentRenderParams) => VxeComponentSlotType | VxeComponentSlotType[]) | null
-    extra?: string | ((params: FormItemExtraRenderParams) => VxeComponentSlotType | VxeComponentSlotType[]) | null
+    title?: string | ((params: VxeFormItemSlotTypes.TitleSlotParams) => VxeComponentSlotType | VxeComponentSlotType[]) | null
+    default?: string | ((params: VxeFormItemSlotTypes.DefaultSlotParams) => VxeComponentSlotType | VxeComponentSlotType[]) | null
+    extra?: string | ((params: VxeFormItemSlotTypes.ExtraSlotParams) => VxeComponentSlotType | VxeComponentSlotType[]) | null
   }
 }
 
@@ -268,25 +268,6 @@ export namespace VxeFormItemDefines {
 }
 
 /**
- * 项标题渲染参数
- */
-export interface FormItemTitleRenderParams {
-  $form: VxeFormConstructor
-  $grid: VxeGridConstructor | null
-  data: any
-  disabled: boolean | undefined
-  readonly: boolean | undefined
-  item: VxeFormDefines.ItemInfo
-  field: string
-  /**
-   * @deprecated
-   */
-  property: string
-}
-
-export interface FormItemExtraRenderParams extends FormItemTitleRenderParams {}
-
-/**
  * 项内容渲染参数
  */
 export interface FormItemContentRenderParams {
@@ -341,8 +322,20 @@ export namespace VxeFormItemEvents { }
 
 export namespace VxeFormItemSlotTypes {
   export interface DefaultSlotParams<D = any> {
-    [key: string]: any
+    $form: VxeFormConstructor
+    $grid: VxeGridConstructor | null
+    data: any
+    item: VxeFormDefines.ItemInfo
+    disabled: boolean | undefined
+    readonly: boolean | undefined
+    field: string
+    /**
+     * @deprecated
+     */
+    property: string
   }
+  export interface TitleSlotParams<D = any> extends DefaultSlotParams<D> {}
+  export interface ExtraSlotParams<D = any> extends DefaultSlotParams<D> {}
 }
 
 export interface VxeFormItemSlots {
@@ -353,8 +346,8 @@ export interface VxeFormItemSlots {
   /**
    * 自定义标题模板
    */
-  title: (params: VxeFormItemSlotTypes.DefaultSlotParams) => any
-  extra: (params: VxeFormItemSlotTypes.DefaultSlotParams) => any
+  title: (params: VxeFormItemSlotTypes.TitleSlotParams) => any
+  extra: (params: VxeFormItemSlotTypes.ExtraSlotParams) => any
 }
 
 export const FormItem: typeof VxeFormItem

@@ -113,7 +113,7 @@ export default defineComponent({
                     tableColumns.push(parseWidgetColumn(childItem))
                   }
                 })
-              } else if (name === 'subTable') {
+              } else if (name === 'subtable') {
               // 如果是子表
               } else {
                 tableColumns.push(parseWidgetColumn(item))

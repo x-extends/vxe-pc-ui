@@ -1,11 +1,11 @@
 import { App } from 'vue'
 import { VxeUI } from '@vxe-ui/core'
 import VxeFormDesignComponent from './src/form-design'
-import { useWidgetView, useWidgetName, useWidgetPropDataSource } from './src/use'
+import { useWidgetView, useWidgetName, useSubtableView, useWidgetPropDataSource } from './src/use'
 import { dynamicApp } from '../dynamics'
 import './render'
 
-import { FormDesignExport } from '../../types'
+import { FormDesignHandleExport } from '../../types'
 
 export const VxeFormDesign = Object.assign({}, VxeFormDesignComponent, {
   install (app: App) {
@@ -13,15 +13,22 @@ export const VxeFormDesign = Object.assign({}, VxeFormDesignComponent, {
   }
 })
 
-const formDesign: FormDesignExport = {
+const formDesignHandle: FormDesignHandleExport = {
   useWidgetName,
   useWidgetView,
+  useSubtableView,
   useWidgetPropDataSource
 }
 
 dynamicApp.component(VxeFormDesignComponent.name as string, VxeFormDesignComponent)
 VxeUI.component(VxeFormDesignComponent)
-VxeUI.formDesign = formDesign
+VxeUI.formDesignHandle = formDesignHandle
+
+/**
+ * 已废弃，请使用 formDesignHandle
+ * @deprecated
+ */
+VxeUI.formDesign = formDesignHandle
 
 export const FormDesign = VxeFormDesign
 export default VxeFormDesign

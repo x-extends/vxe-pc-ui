@@ -77,6 +77,10 @@ export default defineComponent({
       type: Boolean as PropType<VxeUploadPropTypes.ShowProgress>,
       default: () => getConfig().upload.showProgress
     },
+    progressText: {
+      type: String as PropType<VxeUploadPropTypes.ProgressText>,
+      default: () => getConfig().upload.progressText
+    },
     autoHiddenButton: {
       type: Boolean as PropType<VxeUploadPropTypes.AutoHiddenButton>,
       default: () => getConfig().upload.autoHiddenButton
@@ -808,7 +812,7 @@ export default defineComponent({
     Object.assign($xeUpload, uploadMethods, uploadPrivateMethods)
 
     const renderFileItemList = (currList: VxeUploadDefines.FileObjItem[], isMoreView: boolean) => {
-      const { showRemoveButton, showDownloadButton, showProgress, showPreview, showErrorStatus } = props
+      const { showRemoveButton, showDownloadButton, showProgress, progressText, showPreview, showErrorStatus } = props
       const isDisabled = computeIsDisabled.value
       const formReadonly = computeFormReadonly.value
       const nameProp = computeNameProp.value
@@ -853,7 +857,7 @@ export default defineComponent({
           showProgress && isLoading && item._X_DATA
             ? h('div', {
               class: 'vxe-upload--file-item-loading-text'
-            }, getI18n('vxe.upload.uploadProgress', [item._X_DATA.p]))
+            }, progressText ? XEUtils.toFormatString(progressText, { percent: item._X_DATA.p }) : getI18n('vxe.upload.uploadProgress', [item._X_DATA.p]))
             : createCommentVNode(),
           showErrorStatus && isError
             ? h('div', {
@@ -999,7 +1003,7 @@ export default defineComponent({
     }
 
     const renderImageItemList = (currList: VxeUploadDefines.FileObjItem[], isMoreView: boolean) => {
-      const { showRemoveButton, showProgress, showPreview, showErrorStatus } = props
+      const { showRemoveButton, showProgress, progressText, showPreview, showErrorStatus } = props
       const isDisabled = computeIsDisabled.value
       const formReadonly = computeFormReadonly.value
       const imgStyle = computeImgStyle.value
@@ -1040,7 +1044,7 @@ export default defineComponent({
                 showProgress
                   ? h('div', {
                     class: 'vxe-upload--image-item-loading-text'
-                  }, getI18n('vxe.upload.uploadProgress', [item._X_DATA.p]))
+                  }, progressText ? XEUtils.toFormatString(progressText, { percent: item._X_DATA.p }) : getI18n('vxe.upload.uploadProgress', [item._X_DATA.p]))
                   : createCommentVNode()
               ])
               : createCommentVNode(),

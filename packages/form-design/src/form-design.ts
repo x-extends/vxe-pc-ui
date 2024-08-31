@@ -1,7 +1,7 @@
 import { defineComponent, ref, h, PropType, reactive, provide, watch, nextTick, ComponentOptions, createCommentVNode } from 'vue'
 import { VxeUI, getConfig, getIcon, getI18n, renderer, useSize, createEvent } from '../../ui'
 import { toCssUnit } from '../../ui/src/dom'
-import { FormDesignWidgetInfo, getWidgetConfigGroup, getWidgetConfigCustomGroup, configToWidget, getWidgetConfigUnique } from './widget-info'
+import { FormDesignWidgetInfo, getWidgetConfig, getWidgetConfigCustomGroup, configToWidget } from './widget-info'
 import XEUtils from 'xe-utils'
 import VxeButtonComponent from '../../button/src/button'
 import LayoutWidgetComponent from './layout-widget'
@@ -225,7 +225,7 @@ export default defineComponent({
         const { createFormDesignWidgetConfig } = item
         if (createFormDesignWidgetConfig) {
           const widthItem = createWidget(name)
-          const widgetGroup = getWidgetConfigGroup(name)
+          const widgetConf = getWidgetConfig(name)
           const widgetCustomGroup = getWidgetConfigCustomGroup(name, $xeFormDesign)
           // 如果自定义组
           if (widgetCustomGroup) {
@@ -239,7 +239,7 @@ export default defineComponent({
               })
             }
           } else {
-            switch (widgetGroup) {
+            switch (widgetConf.group) {
               case 'layout':
                 layoutWidgets.push(widthItem)
                 break
@@ -299,8 +299,8 @@ export default defineComponent({
 
     const validWidgetUnique = (widgetName: string) => {
       const { widgetObjList } = reactData
-      const uniqueConf = getWidgetConfigUnique(widgetName)
-      if (uniqueConf) {
+      const widgetConf = getWidgetConfig(widgetName)
+      if (widgetConf.unique) {
         const existWidgetList: VxeFormDesignDefines.WidgetObjItem[] = []
         XEUtils.eachTree(widgetObjList, obj => {
           if (obj.name === widgetName) {

@@ -59,6 +59,7 @@ export namespace VxeUploadPropTypes {
   export type ShowPreview = boolean
   export type ShowErrorStatus = boolean
   export type ShowProgress = boolean
+  export type ProgressText = string
   export type AutoHiddenButton = boolean
   export type ShowUploadButton = boolean
   export type PreviewMethod = undefined | ((params: {
@@ -136,6 +137,7 @@ export type VxeUploadProps = {
   showPreview?: VxeUploadPropTypes.ShowPreview
   showErrorStatus?: VxeUploadPropTypes.ShowErrorStatus
   showProgress?: VxeUploadPropTypes.ShowProgress
+  progressText?: VxeUploadPropTypes.ProgressText
   autoHiddenButton?: VxeUploadPropTypes.AutoHiddenButton
   tipText?: VxeUploadPropTypes.TipText
   previewMethod?: VxeUploadPropTypes.PreviewMethod

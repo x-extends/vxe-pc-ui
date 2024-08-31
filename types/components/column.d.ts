@@ -555,14 +555,7 @@ export namespace VxeColumnSlotTypes {
     $rowIndex: number
   }
 
-  export interface EditSlotParams<D = any> {
-    column: VxeTableDefines.ColumnInfo<D>
-    columnIndex: number
-    $columnIndex: number
-    row: D
-    rowIndex: number
-    $rowIndex: number
-  }
+  export interface EditSlotParams<D = any> extends VxeTableDefines.CellRenderBodyParams<D> { }
 
   export interface FooterSlotParams<D = any> {
     row: D
@@ -578,17 +571,7 @@ export namespace VxeColumnSlotTypes {
 
   export interface HeaderSlotParams<D = any> extends VxeTableDefines.CellRenderHeaderParams<D> { }
 
-  export interface ContentSlotParams<D = any> {
-    column: VxeTableDefines.ColumnInfo<D>
-    columnIndex: number
-    $columnIndex: number
-    row: D
-    rowIndex: number
-    $rowIndex: number
-    isHidden: boolean
-    fixed: VxeColumnPropTypes.Fixed
-    type: string
-  }
+  export interface ContentSlotParams<D = any> extends VxeTableDefines.CellRenderBodyParams<D> { }
 
   export interface DefaultSlotParams<D = any> extends VxeTableDefines.CellRenderBodyParams<D> { }
 

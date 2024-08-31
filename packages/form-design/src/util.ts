@@ -1,5 +1,5 @@
 import XEUtils from 'xe-utils'
-import { getWidgetConfigGroup } from './widget-info'
+import { getWidgetConfig } from './widget-info'
 
 import type { VxeFormDesignDefines } from '../../../types'
 
@@ -18,5 +18,9 @@ export function getNewWidgetId (widgetObjList: VxeFormDesignDefines.WidgetObjIte
  * 判断是否布局控件
  */
 export const hasFormDesignLayoutType = (widget: VxeFormDesignDefines.WidgetObjItem) => {
-  return widget && getWidgetConfigGroup(widget.name) === 'layout'
+  if (widget) {
+    const widgetConf = getWidgetConfig(widget.name)
+    return widgetConf.group === 'layout'
+  }
+  return false
 }

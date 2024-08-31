@@ -3495,6 +3495,7 @@ export namespace VxeTableDefines {
     fixed: VxeColumnPropTypes.Fixed
     type: string
     isHidden: boolean
+    isEdit: boolean
     level: number
     visibleData: D[]
     data: D[]

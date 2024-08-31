@@ -2,6 +2,7 @@ import { RenderFunction, SetupContext, Ref, ComputedRef, ComponentPublicInstance
 import { defineVxeComponent, VxeComponentBaseOptions, VxeComponentEventParams, ValueOf, VxeComponentSizeType } from '@vxe-ui/core'
 import { VxeFormDesignDefines } from './form-design'
 import { VxeFormProps, VxeFormPropTypes, VxeFormDefines } from './form'
+import { VxeGridPropTypes } from './grid'
 
 /* eslint-disable no-use-before-define,@typescript-eslint/ban-types */
 

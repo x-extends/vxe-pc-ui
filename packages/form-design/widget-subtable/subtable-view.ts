@@ -1,4 +1,4 @@
-import { PropType, defineComponent, inject, h, createCommentVNode, TransitionGroup, computed } from 'vue'
+import { ref, PropType, defineComponent, inject, h, createCommentVNode, TransitionGroup, computed, nextTick } from 'vue'
 import { VxeUI, renderer, getIcon, getI18n } from '@vxe-ui/core'
 import XEUtils from 'xe-utils'
 import { hasFormDesignLayoutType } from '../src/util'
@@ -9,7 +9,7 @@ import VxeFormItemComponent from '../../form/src/form-item'
 import VxeButtonComponent from '../../button/src/button'
 import VxeCheckboxComponent from '../../checkbox/src/checkbox'
 
-import type { VxeGlobalRendererHandles, VxeFormDesignConstructor, VxeFormDesignDefines, VxeFormDesignPrivateMethods, VxeFormViewConstructor, VxeFormViewPrivateMethods, VxeGridComponent, VxeGridPropTypes } from '../../../types'
+import type { VxeGlobalRendererHandles, VxeFormDesignConstructor, VxeFormDesignDefines, VxeFormDesignPrivateMethods, VxeFormViewConstructor, VxeColumnPropTypes, VxeFormViewPrivateMethods, VxeGridComponent, VxeGridPropTypes, VxeGridProps, VxeTableDefines, VxeGridInstance } from '../../../types'
 
 const ViewSubItemComponent = defineComponent({
   props: {
@@ -95,11 +95,31 @@ const ViewSubItemComponent = defineComponent({
       const { dragWidget, activeWidget, sortWidget } = formDesignReactData
       const name = widget ? widget.name : ''
       const compConf = renderer.get(name) || {}
+      const renderSubtableView = compConf.renderFormDesignWidgetSubtableEditView || compConf.renderFormDesignWidgetSubtableCellView || compConf.renderFormDesignWidgetSubtableDefaultView
       const renderWidgetDesignView = compConf.renderFormDesignWidgetEdit || compConf.renderFormDesignWidgetView
       const renderOpts: VxeGlobalRendererHandles.RenderFormDesignWidgetViewOptions = widget || { name }
       const isEditMode = !!$xeFormDesign
-      const params: VxeGlobalRendererHandles.RenderFormDesignWidgetViewParams = { widget, readonly: false, disabled: false, isEditMode, isViewMode: !isEditMode, $formDesign: $xeFormDesign, $formView: $xeFormView }
+      const defParams: VxeGlobalRendererHandles.RenderFormDesignWidgetViewParams = { widget, readonly: false, disabled: false, isEditMode, isViewMode: !isEditMode, $formDesign: $xeFormDesign, $formView: $xeFormView }
       const isActive = activeWidget && widget && activeWidget.id === widget.id
+      const subOpts = { name }
+      const subParams = {
+        $table: null,
+        $grid: null,
+        column: {
+          field: widget.field,
+          title: widget.title
+        } as VxeTableDefines.ColumnInfo,
+        columnIndex: 0,
+        $columnIndex: 0,
+        rowid: '',
+        row: {},
+        rowIndex: 0,
+        $rowIndex: 0,
+        isHidden: false,
+        fixed: null,
+        type: '',
+        widget
+      }
 
       return h('div', {
         class: ['vxe-form-design--widget-subtable-view-item', {
@@ -122,7 +142,20 @@ const ViewSubItemComponent = defineComponent({
         }, [
           h('div', {
             class: 'vxe-form-design--widget-subtable-view-item-box vxe-form--item-row'
-          }, renderWidgetDesignView ? getSlotVNs(renderWidgetDesignView(renderOpts, params)) : []),
+          }, renderSubtableView
+            ? h(VxeFormItemComponent, {
+              class: ['vxe-form-design--widget-render-form-item'],
+              title: widget.title,
+              field: widget.field,
+              itemRender: {}
+            }, {
+              default () {
+                return getSlotVNs(renderSubtableView(subOpts, subParams))
+              }
+            })
+            : (renderWidgetDesignView
+                ? getSlotVNs(renderWidgetDesignView(renderOpts, defParams))
+                : [])),
           isActive
             ? h('div', {
               class: 'vxe-form-design--preview-item-operate'
@@ -268,14 +301,16 @@ export const WidgetSubtableEditComponent = defineComponent({
                   name: 'vxe-form-design--widget-subtable-view-list'
                 }, {
                   default: () => {
-                    return children.map((childWidget, childIndex) => {
-                      return h(ViewSubItemComponent, {
-                        key: childWidget.id,
-                        parentWidget: widget,
-                        widget: childWidget,
-                        childIndex
+                    return children
+                      ? children.map((childWidget, childIndex) => {
+                        return h(ViewSubItemComponent, {
+                          key: childWidget.id,
+                          parentWidget: widget,
+                          widget: childWidget,
+                          childIndex
+                        })
                       })
-                    })
+                      : []
                   }
                 }),
                 h('div', {
@@ -310,37 +345,207 @@ export const WidgetSubtableViewComponent = defineComponent({
 
     const { computeKebabCaseName } = useWidgetName(props)
 
+    const refGrid = ref<VxeGridInstance>()
+
+    const defaultDataList = ref([
+      {}
+    ])
+
+    const computeFormReadonly = computed(() => {
+      if ($xeFormView) {
+        return $xeFormView.props.readonly
+      }
+      return false
+    })
+
     const computeSubtableColumns = computed(() => {
       const { renderParams } = props
       const { widget } = renderParams
       const { children, options } = widget
+      const formReadonly = computeFormReadonly.value
       const columns: VxeGridPropTypes.Columns = []
       if (options.showCheckbox) {
         columns.push({
           type: 'checkbox',
-          width: 60
+          width: 60,
+          fixed: 'left'
         })
       }
       columns.push({
         type: 'seq',
-        width: 60
+        width: 60,
+        fixed: 'left'
       })
       if (children) {
         children.forEach(childWidget => {
-          columns.push({
+          const { name } = childWidget
+          const compConf = renderer.get(name) || {}
+          const parseSubtableColumn = compConf.parseFormDesignWidgetSubtableColumn
+          let colConf: VxeGridPropTypes.Column = {
             field: childWidget.field,
             title: childWidget.title
-          })
+          }
+          if (parseSubtableColumn) {
+            colConf = Object.assign(colConf, parseSubtableColumn({
+              $formView: $xeFormView,
+              name: childWidget.name,
+              widget: childWidget,
+              readonly: !!formReadonly
+            }))
+          } else {
+            if (formReadonly) {
+              colConf.cellRender = {
+                name: childWidget.name,
+                props: childWidget.options
+              }
+            } else {
+              colConf.editRender = {
+                name: childWidget.name,
+                props: childWidget.options
+              }
+            }
+          }
+          const renderSubtableDefaultView = compConf.renderFormDesignWidgetSubtableDefaultView
+          const renderSubtableCellView = compConf.renderFormDesignWidgetSubtableCellView || renderSubtableDefaultView
+          const renderSubtableEditView = compConf.renderFormDesignWidgetSubtableEditView
+          const colSlots: VxeColumnPropTypes.Slots = {}
+          if (renderSubtableDefaultView || renderSubtableCellView) {
+            colSlots.default = (slotParams) => {
+              const { isEdit, column } = slotParams
+              const { editRender, cellRender } = column
+              const params = Object.assign({ widget: childWidget }, slotParams)
+              if (isEdit && editRender) {
+                if (renderSubtableCellView) {
+                  return getSlotVNs(renderSubtableCellView(editRender, params))
+                }
+              }
+              if (renderSubtableDefaultView) {
+                return getSlotVNs(renderSubtableDefaultView(cellRender || {}, params))
+              }
+              return []
+            }
+          }
+          if (renderSubtableEditView) {
+            colSlots.edit = (slotParams) => {
+              const { column } = slotParams
+              const { editRender } = column
+              const params = Object.assign({ widget: childWidget }, slotParams)
+              return getSlotVNs(renderSubtableEditView(editRender, params))
+            }
+          }
+          colConf.slots = colSlots
+          columns.push(colConf)
+        })
+      }
+      if (!formReadonly) {
+        columns.push({
+          field: 'action',
+          title: '操作',
+          fixed: 'right',
+          width: 80,
+          slots: {
+            default ({ row }) {
+              return h(VxeButtonComponent, {
+                mode: 'text',
+                icon: 'vxe-icon-delete',
+                status: 'error',
+                onClick () {
+                  removeSubRow(row)
+                }
+              })
+            }
+          }
         })
       }
       return columns
     })
 
+    const computeGridOptions = computed(() => {
+      const { renderParams } = props
+      const { widget, isEditMode } = renderParams
+      const subtableColumns = computeSubtableColumns.value
+      const formReadonly = computeFormReadonly.value
+
+      const gridConf: VxeGridProps & Required<Pick<VxeGridProps, 'toolbarConfig'>> = {
+        border: true,
+        showOverflow: true,
+        height: 300,
+        columnConfig: {
+          resizable: true,
+          minWidth: 140
+        },
+        rowConfig: {
+          keyField: '_id'
+        },
+        data: isEditMode ? defaultDataList.value : $xeFormView ? $xeFormView.getItemValue(widget) : null,
+        columns: subtableColumns,
+        toolbarConfig: {
+          zoom: true,
+          custom: false,
+          slots: {
+            buttons: 'toolbarButtons'
+          }
+        }
+      }
+      if (!formReadonly) {
+        gridConf.keepSource = true
+        gridConf.editConfig = {
+          mode: 'row',
+          trigger: 'click',
+          showStatus: true
+        }
+      }
+      return gridConf
+    })
+
+    const getSubRecord = () => {
+      const { renderParams } = props
+      const { widget } = renderParams
+      const record: Record<string, any> = {
+        _id: Date.now()
+      }
+      XEUtils.each(widget.children, childWidget => {
+        record[childWidget.field] = null
+      })
+      return record
+    }
+
+    const addSubRowEvent = async () => {
+      const { renderParams } = props
+      const { widget } = renderParams
+      if ($xeFormView) {
+        let list: any[] = $xeFormView.getItemValue(widget)
+        if (!XEUtils.isArray(list)) {
+          list = []
+        }
+        const newRow = getSubRecord()
+        list.unshift(newRow)
+        await $xeFormView.setItemValue(widget, list.slice(0))
+        await nextTick()
+        const $grid = refGrid.value
+        if ($grid) {
+          $grid.setEditRow(newRow)
+        }
+      }
+    }
+
+    const removeSubRow = (row: any) => {
+      const { renderParams } = props
+      const { widget } = renderParams
+      if ($xeFormView) {
+        const list: any[] = $xeFormView.getItemValue(widget)
+        if (list) {
+          $xeFormView.setItemValue(widget, list.filter(item => item._id !== row._id))
+        }
+      }
+    }
+
     return () => {
       const { renderParams } = props
       const { widget } = renderParams
       const kebabCaseName = computeKebabCaseName.value
-      const subtableColumns = computeSubtableColumns.value
+      const gridOptions = computeGridOptions.value
+      const formReadonly = computeFormReadonly.value
 
       return h(VxeFormItemComponent, {
         class: ['vxe-form-design--widget-render-form-item', `widget-${kebabCaseName}`],
@@ -351,12 +556,21 @@ export const WidgetSubtableViewComponent = defineComponent({
         default () {
           return VxeTableGridComponent
             ? h(VxeTableGridComponent, {
-              border: true,
-              columnConfig: {
-                resizable: true
-              },
-              data: $xeFormView ? $xeFormView.getItemValue(widget) : null,
-              columns: subtableColumns
+              ...gridOptions,
+              ref: refGrid
+            }, {
+              toolbarButtons () {
+                return formReadonly
+                  ? []
+                  : [
+                      h(VxeButtonComponent, {
+                        content: '新增',
+                        icon: 'vxe-icon-add',
+                        status: 'primary',
+                        onClick: addSubRowEvent
+                      })
+                    ]
+              }
             })
             : createCommentVNode()
         }

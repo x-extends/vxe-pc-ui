@@ -1,7 +1,7 @@
 import { VxeComponentStyleType, VxeComponentClassNameType, VxeComponentSlotType } from '@vxe-ui/core'
 import { VxeTableConstructor, VxeTablePropTypes, VxeTableDefines, VxeTablePrivateMethods } from '../components/table'
-import { VxeFormItemPropTypes, FormItemTitleRenderParams, FormItemContentRenderParams, FormItemVisibleParams, FormItemResetParams } from '../components/form-item'
-import { VxeGridConstructor } from '../components/grid'
+import { VxeFormItemPropTypes, VxeFormItemSlotTypes, FormItemContentRenderParams, FormItemVisibleParams, FormItemResetParams } from '../components/form-item'
+import { VxeGridConstructor, VxeGridPropTypes } from '../components/grid'
 import { VxeColumnPropTypes } from '../components/column'
 import { VxeToolbarPropTypes } from '../components/toolbar'
 import { VxeFormConstructor, VxeFormDefines, VxeFormProps } from '../components/form'
@@ -312,7 +312,7 @@ declare module '@vxe-ui/core' {
     }
 
     export interface RenderDefaultOptions<D = any> extends RenderTableDefaultOptions<D> {}
-    export interface RenderTableDefaultOptions<D = any> extends VxeColumnPropTypes.EditRender<D> {}
+    export interface RenderTableDefaultOptions<D = any> extends VxeColumnPropTypes.CellRender<D> {}
 
     /**
      * @deprecated
@@ -360,7 +360,7 @@ declare module '@vxe-ui/core' {
      * @deprecated
      */
     export interface RenderEditOptions<D = any> extends RenderTableEditOptions<D> {}
-    export interface RenderTableEditOptions<D = any> extends VxeColumnPropTypes.EditRender<D> {}
+    export interface RenderTableEditOptions<D = any, P = any> extends VxeColumnPropTypes.EditRender<D, P> {}
 
     /**
      * @deprecated
@@ -385,7 +385,7 @@ declare module '@vxe-ui/core' {
      * @deprecated
      */
     export interface RenderCellOptions<D = any> extends RenderTableCellOptions<D> {}
-    export interface RenderTableCellOptions<D = any> extends VxeColumnPropTypes.EditRender<D> {}
+    export interface RenderTableCellOptions<D = any, P = any> extends VxeColumnPropTypes.CellRender<D, P> {}
 
     /**
      * @deprecated
@@ -637,7 +637,7 @@ declare module '@vxe-ui/core' {
      * @deprecated
      */
     export type RenderItemTitleParams = RenderFormItemTitleParams
-    export interface RenderFormItemTitleParams extends FormItemTitleRenderParams {}
+    export interface RenderFormItemTitleParams extends VxeFormItemSlotTypes.TitleSlotParams {}
 
     /**
      * @deprecated
@@ -693,7 +693,7 @@ declare module '@vxe-ui/core' {
      */
     createFormDesignWidgetConfig?(params: VxeGlobalRendererHandles.CreateFormDesignWidgetConfigParams): VxeGlobalRendererHandles.CreateFormDesignWidgetConfigObj
     /**
-     * 表单设计器 - 渲染右侧-控件表单
+     * 表单设计器 - 渲染右侧-控件属性表单
      */
     renderFormDesignWidgetFormView?(renderOpts: VxeGlobalRendererHandles.RenderFormDesignWidgetFormViewOptions, params: VxeGlobalRendererHandles.RenderFormDesignWidgetFormViewParams): VxeComponentSlotType | VxeComponentSlotType[]
     /**
@@ -712,9 +712,26 @@ declare module '@vxe-ui/core' {
      */
     renderFormDesignWidgetMobilePreview?(renderOpts: VxeGlobalRendererHandles.RenderFormDesignWidgetMobilePreviewOptions, params: VxeGlobalRendererHandles.RenderFormDesignWidgetMobilePreviewParams): VxeComponentSlotType | VxeComponentSlotType[]
     /**
-     * 表单设计器 - 控件渲染器（表单-运行时）
+     * 表单设计器 - 控件渲染器（表单-默认）
      */
     renderFormDesignWidgetView?(renderOpts: VxeGlobalRendererHandles.RenderFormDesignWidgetViewOptions, params: VxeGlobalRendererHandles.RenderFormDesignWidgetViewParams): VxeComponentSlotType | VxeComponentSlotType[]
+    /**
+     * 表单设计器 - 子表渲染器（表格-默认）
+     */
+    renderFormDesignWidgetSubtableDefaultView?(renderOpts: VxeGlobalRendererHandles.RenderFormDesignWidgetSubtableDefaultViewOptions, params: VxeGlobalRendererHandles.RenderFormDesignWidgetSubtableDefaultViewParams): VxeComponentSlotType | VxeComponentSlotType[]
+    /**
+     * 表单设计器 - 子表渲染器（表格-查看）
+     * 如果不设置，则使用 renderFormDesignWidgetSubtableDefaultView 渲染
+     */
+    renderFormDesignWidgetSubtableCellView?(renderOpts: VxeGlobalRendererHandles.RenderFormDesignWidgetSubtableCellViewOptions, params: VxeGlobalRendererHandles.RenderFormDesignWidgetSubtableCellViewParams): VxeComponentSlotType | VxeComponentSlotType[]
+    /**
+     * 表单设计器 - 子表渲染器（表格-编辑）
+     */
+    renderFormDesignWidgetSubtableEditView?(renderOpts: VxeGlobalRendererHandles.RenderFormDesignWidgetSubtableEditViewOptions, params: VxeGlobalRendererHandles.RenderFormDesignWidgetSubtableEditViewParams): VxeComponentSlotType | VxeComponentSlotType[]
+    /**
+     * 表单设计器 - 自定义子表列的解析
+     */
+    parseFormDesignWidgetSubtableColumn?(params: VxeGlobalRendererHandles.ParseFormDesignWidgetSubtableColumnParams): VxeGridPropTypes.Column
     /**
      * 表单设计器 - 创建控件字段的默认值
      */
@@ -803,6 +820,31 @@ declare module '@vxe-ui/core' {
 
     export interface RenderFormDesignWidgetMobilePreviewOptions extends RenderFormDesignWidgetPreviewOptions {}
     export interface RenderFormDesignWidgetMobilePreviewParams<D = any> extends RenderFormDesignWidgetPreviewParams<D> {}
+
+    export interface RenderFormDesignWidgetSubtableDefaultViewOptions<D = any> extends VxeGlobalRendererHandles.RenderTableDefaultOptions<D> {}
+    export interface RenderFormDesignWidgetSubtableDefaultViewParams<D = any> extends Omit<VxeGlobalRendererHandles.RenderTableDefaultParams<D>, '$table'> {
+      $table: (VxeTableConstructor<D> & VxeTablePrivateMethods<D>) | null
+      widget: VxeFormDesignDefines.WidgetObjItem
+    }
+
+    export interface RenderFormDesignWidgetSubtableCellViewOptions<D = any> extends VxeGlobalRendererHandles.RenderTableCellOptions<D> {}
+    export interface RenderFormDesignWidgetSubtableCellViewParams<D = any> extends Omit<VxeGlobalRendererHandles.RenderTableCellParams<D>, '$table'> {
+      $table: (VxeTableConstructor<D> & VxeTablePrivateMethods<D>) | null
+      widget: VxeFormDesignDefines.WidgetObjItem
+    }
+
+    export interface RenderFormDesignWidgetSubtableEditViewOptions<D = any> extends VxeGlobalRendererHandles.RenderTableEditOptions<D> {}
+    export interface RenderFormDesignWidgetSubtableEditViewParams<D = any> extends Omit<VxeGlobalRendererHandles.RenderTableEditParams<D>, '$table'> {
+      $table: (VxeTableConstructor<D> & VxeTablePrivateMethods<D>) | null
+      widget: VxeFormDesignDefines.WidgetObjItem
+    }
+
+    export interface ParseFormDesignWidgetSubtableColumnParams {
+      $formView: null | VxeFormViewConstructor
+      name: string
+      widget: VxeFormDesignDefines.WidgetObjItem
+      readonly: boolean
+    }
 
     export interface RenderFormDesignWidgetViewOptions {
       name: string

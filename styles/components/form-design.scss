@@ -73,15 +73,41 @@
       margin: 0 auto;
     }
   }
-  .vxe-form--item-content {
-    &::after {
-      content: "";
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      z-index: 1;
+  .vxe-form-design--widget-render-form-item {
+    &.widget-subtable {
+      & > .vxe-form--item-inner {
+        & > .vxe-form--item-content {
+          &::after {
+            display: none;
+          }
+        }
+      }
+      .vxe-body--column {
+        .vxe-cell {
+          &::after {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 3;
+          }
+        }
+      }
+    }
+    & > .vxe-form--item-inner {
+      & > .vxe-form--item-content {
+        &::after {
+          content: "";
+          position: absolute;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100%;
+          z-index: 1;
+        }
+      }
     }
   }
 }

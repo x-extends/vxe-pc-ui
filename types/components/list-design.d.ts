@@ -181,8 +181,5 @@ export namespace VxeListDesignSlotTypes {}
 export interface VxeListDesignSlots {
 }
 
-export interface ListDesignExport {
-}
-
 export const ListDesign: typeof VxeListDesign
 export default VxeListDesign

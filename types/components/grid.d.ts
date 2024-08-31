@@ -36,7 +36,8 @@ export namespace VxeGridPropTypes {
 
   export type Layouts = ('Form' | 'Toolbar' | 'Top' | 'Table' | 'Bottom' | 'Pager')[]
 
-  export type Columns<D = any> = VxeTableDefines.ColumnOptions<D>[]
+  export type Column<D = any> = VxeTableDefines.ColumnOptions<D>
+  export type Columns<D = any> = Column<D>[]
 
   export interface PagerConfig extends VxePagerProps {
     enabled?: boolean

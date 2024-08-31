@@ -2,7 +2,7 @@ import { defineComponent, h, inject, VNode } from 'vue'
 import XEUtils from 'xe-utils'
 import { getIcon, getI18n, renderer } from '@vxe-ui/core'
 import { getSlotVNs } from '../../ui/src/vn'
-import { getWidgetConfigIcon, getWidgetConfigTitle } from './widget-info'
+import { getWidgetConfig, getWidgetConfigTitle } from './widget-info'
 
 import type { VxeFormDesignConstructor, VxeFormDesignPrivateMethods, VxeFormDesignDefines } from '../../../types'
 
@@ -76,6 +76,7 @@ export default defineComponent({
           const { name } = widget
           const configTitle = getWidgetConfigTitle(name, $xeFormDesign)
           const compConf = renderer.get(name) || {}
+          const widgetConf = getWidgetConfig(name)
           const renderWidgetItem = compConf.renderFormDesignWidgetItem
           widgetVNs.push(
             h('div', {
@@ -92,7 +93,7 @@ export default defineComponent({
               ? getSlotVNs(renderWidgetItem({}, { $formDesign: $xeFormDesign }))
               : [
                   h('i', {
-                    class: ['vxe-form-design--widget-item-icon', getWidgetConfigIcon(name)]
+                    class: ['vxe-form-design--widget-item-icon', widgetConf ? (widgetConf.icon || '') : '']
                   }),
                   h('span', {
                     class: 'vxe-form-design--widget-item-name'

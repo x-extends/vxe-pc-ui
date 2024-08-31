@@ -6,8 +6,7 @@ import { DrawerController } from '../components/drawer'
 import { VxePrintDefines } from '../components/print'
 import { VxeUploadDefines } from '../components/upload'
 import { VxeImageDefines } from '../components/image'
-import { FormDesignExport } from '../components/form-design'
-import { ListDesignExport } from '../components/list-design'
+import { FormDesignHandleExport, ListDesignHandleExport, TableHandleExport } from '../handles'
 
 /**
  * 已废弃，请使用 setConfig
@@ -54,14 +53,20 @@ declare module '@vxe-ui/core' {
     drawer: DrawerController
     dynamicApp: App<Element>
 
-    formDesign: FormDesignExport
-    listDesign: ListDesignExport
+    formDesignHandle: FormDesignHandleExport
+    listDesignHandle: ListDesignHandleExport
+    tableHandle: TableHandleExport
 
     print: VxePrintDefines.PrintFunction
     saveFile: VxeUploadDefines.SaveFileFunction
     readFile: VxeUploadDefines.ReadFileFunction
     previewImage: VxeImageDefines.PreviewImageFunction
 
+    /**
+     * 请使用 formDesignHandle
+     * @deprecated
+     */
+    formDesign: FormDesignHandleExport
     /**
      * 已废弃，请使用 setConfig
      * @deprecated
@@ -102,6 +107,8 @@ export * from './formats'
 export * from './menus'
 export * from './validators'
 export * from './hooks'
+
+export * from '../handles'
 
 export * from '@vxe-ui/core'
 export default VxeUI
