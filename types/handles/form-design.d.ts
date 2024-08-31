@@ -5,8 +5,8 @@ import { VxeTableDefines } from '../components/table'
 
 export interface FormDesignHandleExport {
   useWidgetView<P = any>(props: {
-    renderOpts: VxeGlobalRendererHandles.RenderFormDesignWidgetViewOptions
-    renderParams: VxeGlobalRendererHandles.RenderFormDesignWidgetViewParams
+    renderOpts: VxeGlobalRendererHandles.RenderFormDesignWidgetViewOptions | VxeGlobalRendererHandles.RenderFormDesignWidgetFormViewOptions
+  renderParams: VxeGlobalRendererHandles.RenderFormDesignWidgetViewParams | VxeGlobalRendererHandles.RenderFormDesignWidgetFormViewParams
   }): {
     currWidget: ComputedRef<VxeFormDesignDefines.WidgetObjItem<P>>
     widgetOptions: ComputedRef<P>

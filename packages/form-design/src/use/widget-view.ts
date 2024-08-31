@@ -3,8 +3,8 @@ import { computed } from 'vue'
 import type { VxeGlobalRendererHandles, VxeFormDesignDefines } from '../../../../types'
 
 export function useWidgetView <P = any> (props: {
-  renderOpts: VxeGlobalRendererHandles.RenderFormDesignWidgetViewOptions
-  renderParams: VxeGlobalRendererHandles.RenderFormDesignWidgetViewParams
+  renderOpts: VxeGlobalRendererHandles.RenderFormDesignWidgetViewOptions | VxeGlobalRendererHandles.RenderFormDesignWidgetFormViewOptions
+  renderParams: VxeGlobalRendererHandles.RenderFormDesignWidgetViewParams | VxeGlobalRendererHandles.RenderFormDesignWidgetFormViewParams
 }) {
   const currWidget = computed<VxeFormDesignDefines.WidgetObjItem<P>>(() => {
     const { renderParams } = props

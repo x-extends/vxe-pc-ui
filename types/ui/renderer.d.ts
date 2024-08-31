@@ -869,8 +869,11 @@ declare module '@vxe-ui/core' {
       name: string
     }
     export interface RenderFormDesignWidgetFormViewParams<D = any> {
+      $formView: null | VxeFormViewConstructor
       $formDesign: VxeFormDesignConstructor
       widget: VxeFormDesignDefines.WidgetObjItem<D>
+      isEditMode: boolean
+      isViewMode: boolean
     }
     export interface RenderFormDesignWidgetEditParams<D = any> extends RenderFormDesignWidgetViewParams<D> {}
     export interface RenderFormDesignSettingFormViewOptions {}

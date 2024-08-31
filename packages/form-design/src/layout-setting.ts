@@ -28,9 +28,10 @@ export default defineComponent({
         const compConf = renderer.get(activeWidget.name)
         const renderWidgetFormView = compConf ? compConf.renderFormDesignWidgetFormView : null
         if (renderWidgetFormView) {
+          const isEditMode = true
           return h('div', {
             class: 'vxe-form-design--custom-widget-form-view'
-          }, getSlotVNs(renderWidgetFormView(activeWidget, { widget: activeWidget, $formDesign: $xeFormDesign })))
+          }, getSlotVNs(renderWidgetFormView(activeWidget, { isEditMode, isViewMode: !isEditMode, widget: activeWidget, $formDesign: $xeFormDesign, $formView: null })))
         }
       }
       return createCommentVNode()
