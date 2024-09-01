@@ -42,6 +42,7 @@ export default defineComponent({
       type: Array as PropType<VxeUploadPropTypes.FileTypes>,
       default: () => XEUtils.clone(getConfig().upload.fileTypes, true)
     },
+    keyField: String as PropType<VxeUploadPropTypes.KeyField>,
     singleMode: Boolean as PropType<VxeUploadPropTypes.SingleMode>,
     urlMode: Boolean as PropType<VxeUploadPropTypes.UrlMode>,
     multiple: Boolean as PropType<VxeUploadPropTypes.Multiple>,
@@ -154,7 +155,8 @@ export default defineComponent({
     const reactData = reactive<UploadReactData>({
       isDrag: false,
       showMorePopup: false,
-      fileList: []
+      fileList: [],
+      fileCacheMaps: {}
     })
 
     const refMaps: UploadPrivateRef = {
@@ -181,6 +183,10 @@ export default defineComponent({
         return false
       }
       return disabled
+    })
+
+    const computeKeyField = computed(() => {
+      return props.keyField || '_X_KEY'
     })
 
     const computeIsImage = computed(() => {
@@ -301,9 +307,19 @@ export default defineComponent({
       getComputeMaps: () => computeMaps
     } as unknown as VxeUploadConstructor & VxeUploadPrivateMethods
 
+    const getUniqueKey = () => {
+      return XEUtils.uniqueId()
+    }
+
+    const getFieldKey = (item: VxeUploadDefines.FileObjItem) => {
+      const keyField = computeKeyField.value
+      return item[keyField]
+    }
+
     const updateFileList = () => {
       const { modelValue, multiple } = props
       const formReadonly = computeFormReadonly.value
+      const keyField = computeKeyField.value
       const nameProp = computeNameProp.value
       const typeProp = computeTypeProp.value
       const urlProp = computeUrlProp.value
@@ -317,7 +333,8 @@ export default defineComponent({
                 [nameProp]: name,
                 [typeProp]: parseFileType(name),
                 [urlProp]: url,
-                [sizeProp]: 0
+                [sizeProp]: 0,
+                [keyField]: getUniqueKey()
               }
             }
             const name = item[nameProp] || ''
@@ -325,6 +342,7 @@ export default defineComponent({
             item[typeProp] = item[typeProp] || parseFileType(name)
             item[urlProp] = item[urlProp] || ''
             item[sizeProp] = item[sizeProp] || 0
+            item[keyField] = item[keyField] || getUniqueKey()
             return item
           })
         : []
@@ -443,44 +461,70 @@ export default defineComponent({
 
     const handleUploadResult = (item: VxeUploadDefines.FileObjItem, file: File) => {
       const { showErrorStatus } = props
+      const fileKey = getFieldKey(item)
       const uploadFn = props.uploadMethod || getConfig().upload.uploadMethod
-      if (uploadFn && item._X_DATA) {
+      if (uploadFn) {
         return Promise.resolve(
           uploadFn({
             $upload: $xeUpload,
             file,
             option: item,
             updateProgress (percentNum) {
-              Object.assign(item._X_DATA || {}, { p: Math.max(0, Math.min(99, XEUtils.toNumber(percentNum))) })
+              const { fileCacheMaps } = reactData
+              const cacheItem = fileCacheMaps[getFieldKey(item)]
+              if (cacheItem) {
+                cacheItem.percent = Math.max(0, Math.min(99, XEUtils.toNumber(percentNum)))
+              }
             }
           })
         ).then(res => {
-          Object.assign(item._X_DATA || {}, { l: false, p: 100 })
+          const { fileCacheMaps } = reactData
+          const cacheItem = fileCacheMaps[fileKey]
+          if (cacheItem) {
+            cacheItem.percent = 100
+          }
           Object.assign(item, res)
           dispatchEvent('upload-success', { option: item, data: res }, null)
         }).catch((res) => {
-          Object.assign(item._X_DATA || {}, { l: false, s: 'error' })
+          const { fileCacheMaps } = reactData
+          const cacheItem = fileCacheMaps[fileKey]
+          if (cacheItem) {
+            cacheItem.status = 'error'
+          }
           if (showErrorStatus) {
             Object.assign(item, res)
           } else {
-            reactData.fileList = reactData.fileList.filter(obj => obj._X_DATA !== item._X_DATA)
+            reactData.fileList = reactData.fileList.filter(obj => getFieldKey(obj) !== fileKey)
           }
           dispatchEvent('upload-error', { option: item, data: res }, null)
+        }).finally(() => {
+          const { fileCacheMaps } = reactData
+          const cacheItem = fileCacheMaps[fileKey]
+          if (cacheItem) {
+            cacheItem.loading = false
+          }
         })
+      } else {
+        const { fileCacheMaps } = reactData
+        const cacheItem = fileCacheMaps[fileKey]
+        if (cacheItem) {
+          cacheItem.loading = false
+        }
       }
       return Promise.resolve()
     }
 
     const handleReUpload = (item: VxeUploadDefines.FileObjItem) => {
       const { uploadMethod, urlMode } = props
+      const { fileCacheMaps } = reactData
+      const fileKey = getFieldKey(item)
+      const cacheItem = fileCacheMaps[fileKey]
       const uploadFn = uploadMethod || getConfig().upload.uploadMethod
-      if (uploadFn && item._X_DATA) {
-        const file = item._X_DATA.f
-        Object.assign(item._X_DATA, {
-          l: true,
-          s: '',
-          p: 0
-        })
+      if (uploadFn && cacheItem) {
+        const file = cacheItem.file
+        cacheItem.loading = true
+        cacheItem.status = ''
+        cacheItem.percent = 0
         handleUploadResult(item, file).then(() => {
           if (urlMode) {
             emitModel(reactData.fileList)
@@ -492,6 +536,7 @@ export default defineComponent({
       const { multiple, urlMode } = props
       const { fileList } = reactData
       const uploadFn = props.uploadMethod || getConfig().upload.uploadMethod
+      const keyField = computeKeyField.value
       const nameProp = computeNameProp.value
       const typeProp = computeTypeProp.value
       const urlProp = computeUrlProp.value
@@ -560,23 +605,25 @@ export default defineComponent({
         }
       }
 
+      const cacheMaps = Object.assign({}, reactData.fileCacheMaps)
       const newFileList = multiple ? fileList : []
       const uploadPromiseRests: any[] = []
       selectFiles.forEach(file => {
         const { name } = file
+        const fileKey = getUniqueKey()
         const fileObj: VxeUploadDefines.FileObjItem = {
           [nameProp]: name,
           [typeProp]: parseFileType(name),
           [sizeProp]: file.size,
-          [urlProp]: ''
+          [urlProp]: '',
+          [keyField]: fileKey
         }
         if (uploadFn) {
-          fileObj._X_DATA = {
-            k: XEUtils.uniqueId(),
-            f: file,
-            l: true,
-            s: '',
-            p: 0
+          cacheMaps[fileKey] = {
+            file: file,
+            loading: true,
+            status: '',
+            percent: 0
           }
         }
         const item = reactive(fileObj)
@@ -589,6 +636,7 @@ export default defineComponent({
         dispatchEvent('add', { option: item }, evnt)
       })
       reactData.fileList = newFileList
+      reactData.fileCacheMaps = cacheMaps
       Promise.all(urlMode ? uploadPromiseRests : []).then(() => {
         emitModel(newFileList)
         // 自动更新校验状态
@@ -813,6 +861,7 @@ export default defineComponent({
 
     const renderFileItemList = (currList: VxeUploadDefines.FileObjItem[], isMoreView: boolean) => {
       const { showRemoveButton, showDownloadButton, showProgress, progressText, showPreview, showErrorStatus } = props
+      const { fileCacheMaps } = reactData
       const isDisabled = computeIsDisabled.value
       const formReadonly = computeFormReadonly.value
       const nameProp = computeNameProp.value
@@ -820,8 +869,10 @@ export default defineComponent({
       const cornerSlot = slots.corner
 
       return currList.map((item, index) => {
-        const isLoading = item._X_DATA && item._X_DATA.l
-        const isError = item._X_DATA && item._X_DATA.s === 'error'
+        const fileKey = getFieldKey(item)
+        const cacheItem = fileCacheMaps[fileKey]
+        const isLoading = cacheItem && cacheItem.loading
+        const isError = cacheItem && cacheItem.status === 'error'
         return h('div', {
           key: index,
           class: ['vxe-upload--file-item', {
@@ -854,10 +905,10 @@ export default defineComponent({
               })
             ])
             : createCommentVNode(),
-          showProgress && isLoading && item._X_DATA
+          showProgress && isLoading && cacheItem
             ? h('div', {
               class: 'vxe-upload--file-item-loading-text'
-            }, progressText ? XEUtils.toFormatString(progressText, { percent: item._X_DATA.p }) : getI18n('vxe.upload.uploadProgress', [item._X_DATA.p]))
+            }, progressText ? XEUtils.toFormatString(progressText, { percent: cacheItem.percent }) : getI18n('vxe.upload.uploadProgress', [cacheItem.percent]))
             : createCommentVNode(),
           showErrorStatus && isError
             ? h('div', {
@@ -1004,14 +1055,17 @@ export default defineComponent({
 
     const renderImageItemList = (currList: VxeUploadDefines.FileObjItem[], isMoreView: boolean) => {
       const { showRemoveButton, showProgress, progressText, showPreview, showErrorStatus } = props
+      const { fileCacheMaps } = reactData
       const isDisabled = computeIsDisabled.value
       const formReadonly = computeFormReadonly.value
       const imgStyle = computeImgStyle.value
       const cornerSlot = slots.corner
 
       return currList.map((item, index) => {
-        const isLoading = item._X_DATA && item._X_DATA.l
-        const isError = item._X_DATA && item._X_DATA.s === 'error'
+        const fileKey = getFieldKey(item)
+        const cacheItem = fileCacheMaps[fileKey]
+        const isLoading = cacheItem && cacheItem.loading
+        const isError = cacheItem && cacheItem.status === 'error'
         return h('div', {
           key: index,
           class: ['vxe-upload--image-item', {
@@ -1030,7 +1084,7 @@ export default defineComponent({
               }
             }
           }, [
-            isLoading && item._X_DATA
+            isLoading && cacheItem
               ? h('div', {
                 class: 'vxe-upload--image-item-loading'
               }, [
@@ -1044,7 +1098,7 @@ export default defineComponent({
                 showProgress
                   ? h('div', {
                     class: 'vxe-upload--image-item-loading-text'
-                  }, progressText ? XEUtils.toFormatString(progressText, { percent: item._X_DATA.p }) : getI18n('vxe.upload.uploadProgress', [item._X_DATA.p]))
+                  }, progressText ? XEUtils.toFormatString(progressText, { percent: cacheItem.percent }) : getI18n('vxe.upload.uploadProgress', [cacheItem.percent]))
                   : createCommentVNode()
               ])
               : createCommentVNode(),

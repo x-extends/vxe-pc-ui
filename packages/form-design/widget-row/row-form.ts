@@ -33,7 +33,7 @@ export const WidgetRowFormComponent = defineComponent({
 
     const spanOptions = ref([
       {
-        label: getI18n('vxe.formDesign.widgetProp.rowProp.col3'),
+        label: getI18n('vxe.formDesign.widgetProp.rowProp.col2'),
         value: 2,
         list: [
           { value: '12,12', spans: [12, 12] },
@@ -92,9 +92,25 @@ export const WidgetRowFormComponent = defineComponent({
       const { renderParams } = props
       const { widget } = renderParams
       const { options } = widget
+      const { reactData: formDesignReactData } = $xeFormDesign
+      const { widgetObjList } = formDesignReactData
+      const oldChildList = widget.children.filter(item => item.name)
+      const overList = oldChildList.slice(options.colSize)
+      console.log(overList)
+      if (overList.length) {
+        const rest = XEUtils.findTree(widgetObjList, obj => obj.id === widget.id, { children: 'children' })
+        if (rest) {
+          const { items, index } = rest
+          if (index >= items.length - 1) {
+            items.push(...overList)
+          } else {
+            items.splice(index + 1, 0, ...overList)
+          }
+        }
+      }
       options.colSpan = item.value
-      widget.children = XEUtils.range(0, options.colSize).map(() => {
-        return $xeFormDesign.createEmptyWidget()
+      widget.children = XEUtils.range(0, options.colSize).map((num, index) => {
+        return oldChildList[index] || $xeFormDesign.createEmptyWidget()
       })
     }
     return () => {

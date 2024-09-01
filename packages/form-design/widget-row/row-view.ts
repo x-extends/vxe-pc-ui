@@ -61,7 +61,7 @@ const ViewColItemComponent = defineComponent({
           return
         }
         if (!hasFormDesignLayoutType(targetWidget)) {
-          const currRest = XEUtils.findTree(widgetObjList, item => item.id === sortWidget.id, { children: 'children' })
+          const currRest = XEUtils.findTree(widgetObjList, item => item && item.id === sortWidget.id, { children: 'children' })
           if (currRest) {
             const { item, index, items, parent } = currRest
             // 如果数据异常，动态修复
@@ -76,7 +76,11 @@ const ViewColItemComponent = defineComponent({
               parentWidget.children[index] = targetWidget
             } else {
               parentWidget.children[colItemIndex] = item
-              items.splice(index, 1)
+              if (targetWidget.name) {
+                items.splice(index, 1, targetWidget)
+              } else {
+                items.splice(index, 1)
+              }
             }
             $xeFormDesign.dispatchEvent('drag-widget', { widget: item }, evnt)
           }

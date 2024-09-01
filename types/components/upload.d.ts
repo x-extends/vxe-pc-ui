@@ -41,6 +41,7 @@ export namespace VxeUploadPropTypes {
   }
   export type FileTypes = string[]
   export type SingleMode = boolean
+  export type KeyField = string
   export type UrlMode = boolean
   export type Multiple = boolean
   export type LimitSize = number | string
@@ -117,6 +118,7 @@ export type VxeUploadProps = {
   fileTypes?: VxeUploadPropTypes.FileTypes
   multiple?: VxeUploadPropTypes.Multiple
   singleMode?: VxeUploadPropTypes.SingleMode
+  keyField?: VxeUploadPropTypes.KeyField
   urlMode?: VxeUploadPropTypes.UrlMode
   /**
    * 限制文件大小，单位M
@@ -164,6 +166,7 @@ export interface UploadReactData {
   isDrag: boolean
   showMorePopup: boolean,
   fileList: VxeUploadDefines.FileObjItem[]
+  fileCacheMaps: Record<string, VxeUploadDefines.FileCacheItem>
 }
 
 export interface UploadMethods {
@@ -218,15 +221,14 @@ export namespace VxeUploadDefines {
     file: File
   }>
 
-  export interface FileObjItem {
-    _X_DATA?: {
-      k?: string | number
-      f: File,
-      l?: boolean
-      s?: string
-      p?: number
-    }
+  export interface FileCacheItem {
+    file: File
+    loading: boolean
+    status: string
+    percent: number
+  }
 
+  export interface FileObjItem {
     [key: string]: any
   }
 
