@@ -510,7 +510,7 @@ export const WidgetSubtableViewComponent = defineComponent({
       return record
     }
 
-    const addSubRowEvent = async () => {
+    const addSubRowEvent = () => {
       const { renderParams } = props
       const { widget } = renderParams
       if ($xeFormView) {
@@ -520,12 +520,14 @@ export const WidgetSubtableViewComponent = defineComponent({
         }
         const newRow = getSubRecord()
         list.unshift(newRow)
-        await $xeFormView.setItemValue(widget, list.slice(0))
-        await nextTick()
-        const $grid = refGrid.value
-        if ($grid) {
-          $grid.setEditRow(newRow)
-        }
+        $xeFormView.setItemValue(widget, list.slice(0)).then(() => {
+          return nextTick().then(() => {
+            const $grid = refGrid.value
+            if ($grid) {
+              $grid.setEditRow(newRow)
+            }
+          })
+        })
       }
     }
 
