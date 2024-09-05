@@ -219,139 +219,146 @@
   </div>
 </template>
 
-<script lang="ts" setup>
-import { reactive } from 'vue'
+<script lang="ts">
+import Vue from 'vue'
 
-const demo1 = reactive({
-  value10: 12,
-  value11: null,
-  value12: null,
-  value13: null,
-  value20: null,
-  value21: null,
-  value22: null,
-  value23: null,
-  value24: null,
-  list24: [
-    { value: 11, label: '111' },
-    { value: 22, label: '131' },
-    { value: 33, label: '561' },
-    { value: 44, label: '467' }
-  ],
-  value30: null,
-  value31: null,
-  value32: null,
-  value33: null,
-  value34: ['9', '11'],
-  value35: null,
-  value36: null,
-  value40: null,
-  list40: [],
-  value41: null,
-  list41: [
-    {
-      label: '组1',
-      options: [
-        { label: '1-1', value: '11' },
-        { label: '1-2', value: '10' }
-      ]
-    },
-    {
-      label: '组2',
-      options: [
-        { label: '2-1', value: '21' },
-        { label: '2-2', value: '22' }
-      ]
+export default Vue.extend({
+  data () {
+    return {
+      demo1: {
+        value10: 12,
+        value11: null,
+        value12: null,
+        value13: null,
+        value20: null,
+        value21: null,
+        value22: null,
+        value23: null,
+        value24: null,
+        list24: [
+          { value: 11, label: '111' },
+          { value: 22, label: '131' },
+          { value: 33, label: '561' },
+          { value: 44, label: '467' }
+        ],
+        value30: null,
+        value31: null,
+        value32: null,
+        value33: null,
+        value34: ['9', '11'],
+        value35: null,
+        value36: null,
+        value40: null,
+        list40: [],
+        value41: null,
+        list41: [
+          {
+            label: '组1',
+            options: [
+              { label: '1-1', value: '11' },
+              { label: '1-2', value: '10' }
+            ]
+          },
+          {
+            label: '组2',
+            options: [
+              { label: '2-1', value: '21' },
+              { label: '2-2', value: '22' }
+            ]
+          }
+        ],
+        value42: null,
+        list42: [
+          { label: '1111', value: '1', disabled: true },
+          { label: '2222', value: '2', disabled: false },
+          { label: '3333', value: '3', disabled: false },
+          { label: '4444', value: '4', disabled: false },
+          { label: '5555', value: '5', disabled: true },
+          { label: '6666', value: '6', disabled: true },
+          { label: '7777', value: '7', disabled: false },
+          { label: '8888', value: '8', disabled: false },
+          { label: '9999', value: '9', disabled: false },
+          { label: '1010', value: '10', disabled: false },
+          { label: '1111', value: '11', disabled: false }
+        ],
+        value43: null,
+        list43: [
+          {
+            label: '组1',
+            disabled: true,
+            options: [
+              { label: '1-1', value: '11', disabled: false },
+              { label: '1-2', value: '10', disabled: false }
+            ]
+          },
+          {
+            label: '组2',
+            disabled: false,
+            options: [
+              { label: '2-1', value: '21', disabled: true },
+              { label: '2-2', value: '22', disabled: false }
+            ]
+          },
+          {
+            label: '组3',
+            disabled: false,
+            options: [
+              { label: '3-1', value: '31', disabled: false },
+              { label: '3-2', value: '32', disabled: false }
+            ]
+          }
+        ],
+        value44: ['9', '10'],
+        list44: [
+          { label: '1111', value: '1', disabled: true },
+          { label: '2222', value: '2', disabled: false },
+          { label: '3333', value: '3', disabled: false },
+          { label: '4444', value: '4', disabled: false },
+          { label: '5555', value: '5', disabled: true },
+          { label: '6666', value: '6', disabled: true },
+          { label: '7777', value: '7', disabled: false },
+          { label: '8888', value: '8', disabled: false },
+          { label: '9999', value: '9', disabled: false },
+          { label: '1010', value: '10', disabled: false },
+          { label: '1111', value: '11', disabled: false }
+        ],
+        value45: null,
+        list45: [],
+        value46: [],
+        list46: [
+          { label: '1111', value: '1' },
+          { label: '2222', value: '2' },
+          { label: '3333', value: '3', slots: { default: 'opt3' } },
+          { label: '4444', value: '4', slots: { default: 'opt4' } },
+          { label: '5555', value: '5', slots: { default: 'opt5' } },
+          { label: '6666', value: '6' }
+        ]
+      }
     }
-  ],
-  value42: null,
-  list42: [
-    { label: '1111', value: '1', disabled: true },
-    { label: '2222', value: '2', disabled: false },
-    { label: '3333', value: '3', disabled: false },
-    { label: '4444', value: '4', disabled: false },
-    { label: '5555', value: '5', disabled: true },
-    { label: '6666', value: '6', disabled: true },
-    { label: '7777', value: '7', disabled: false },
-    { label: '8888', value: '8', disabled: false },
-    { label: '9999', value: '9', disabled: false },
-    { label: '1010', value: '10', disabled: false },
-    { label: '1111', value: '11', disabled: false }
-  ],
-  value43: null,
-  list43: [
-    {
-      label: '组1',
-      disabled: true,
-      options: [
-        { label: '1-1', value: '11', disabled: false },
-        { label: '1-2', value: '10', disabled: false }
-      ]
-    },
-    {
-      label: '组2',
-      disabled: false,
-      options: [
-        { label: '2-1', value: '21', disabled: true },
-        { label: '2-2', value: '22', disabled: false }
-      ]
-    },
-    {
-      label: '组3',
-      disabled: false,
-      options: [
-        { label: '3-1', value: '31', disabled: false },
-        { label: '3-2', value: '32', disabled: false }
-      ]
+  },
+  methods: {
+    remoteMethod24  ({ searchValue }: any): Promise<void> {
+      return new Promise(resolve => {
+        const list = [
+          { value: 1001, label: 'table' },
+          { value: 1002, label: 'grid' },
+          { value: 1003, label: 'button' },
+          { value: 1004, label: 'toolbar' },
+          { value: 1005, label: 'tooltip' },
+          { value: 1006, label: 'pager' },
+          { value: 1007, label: 'print' },
+          { value: 1008, label: 'export' },
+          { value: 1009, label: 'import' },
+          { value: 1010, label: 'select' },
+          { value: 1012, label: 'checkbox' },
+          { value: 1013, label: 'group' }
+        ]
+        setTimeout(() => {
+          this.demo1.list24 = list.filter(item => item.label.indexOf(searchValue) > -1)
+          resolve()
+        }, 500)
+      })
     }
-  ],
-  value44: ['9', '10'],
-  list44: [
-    { label: '1111', value: '1', disabled: true },
-    { label: '2222', value: '2', disabled: false },
-    { label: '3333', value: '3', disabled: false },
-    { label: '4444', value: '4', disabled: false },
-    { label: '5555', value: '5', disabled: true },
-    { label: '6666', value: '6', disabled: true },
-    { label: '7777', value: '7', disabled: false },
-    { label: '8888', value: '8', disabled: false },
-    { label: '9999', value: '9', disabled: false },
-    { label: '1010', value: '10', disabled: false },
-    { label: '1111', value: '11', disabled: false }
-  ],
-  value45: null,
-  list45: [],
-  value46: [],
-  list46: [
-    { label: '1111', value: '1' },
-    { label: '2222', value: '2' },
-    { label: '3333', value: '3', slots: { default: 'opt3' } },
-    { label: '4444', value: '4', slots: { default: 'opt4' } },
-    { label: '5555', value: '5', slots: { default: 'opt5' } },
-    { label: '6666', value: '6' }
-  ]
+  }
 })
-
-const remoteMethod24 = ({ searchValue }: any): Promise<void> => {
-  return new Promise(resolve => {
-    const list = [
-      { value: 1001, label: 'table' },
-      { value: 1002, label: 'grid' },
-      { value: 1003, label: 'button' },
-      { value: 1004, label: 'toolbar' },
-      { value: 1005, label: 'tooltip' },
-      { value: 1006, label: 'pager' },
-      { value: 1007, label: 'print' },
-      { value: 1008, label: 'export' },
-      { value: 1009, label: 'import' },
-      { value: 1010, label: 'select' },
-      { value: 1012, label: 'checkbox' },
-      { value: 1013, label: 'group' }
-    ]
-    setTimeout(() => {
-      demo1.list24 = list.filter(item => item.label.indexOf(searchValue) > -1)
-      resolve()
-    }, 500)
-  })
-}
 </script>

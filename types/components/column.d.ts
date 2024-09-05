@@ -1,27 +1,20 @@
-import { RenderFunction, SetupContext, Ref, ComponentPublicInstance, DefineComponent } from 'vue'
-import { defineVxeComponent, VxeComponentBaseOptions, VxeComponentEventParams, VxeComponentSlotType, ValueOf } from '@vxe-ui/core'
+import { DefineVxeComponentApp, DefineVxeComponentOptions, DefineVxeComponentInstance, VxeComponentBaseOptions, VxeComponentEventParams, VxeComponentSlotType, ValueOf } from '@vxe-ui/core'
 import { VxeTableDefines, VxeTablePropTypes, VxeTableConstructor } from './table'
 import { VxeTooltipPropTypes } from './tooltip'
 import { VxeGlobalRendererHandles } from '../ui'
 
-/* eslint-disable no-use-before-define,@typescript-eslint/ban-types */
+/* eslint-disable @typescript-eslint/no-empty-interface,no-use-before-define,@typescript-eslint/ban-types,@typescript-eslint/no-unused-vars */
 
-export declare const VxeColumn: defineVxeComponent<VxeColumnProps, VxeColumnEventProps, VxeColumnSlots>
-export type VxeColumnComponent = DefineComponent<VxeColumnProps & VxeColumnEventProps>
+export declare const VxeColumn: DefineVxeComponentApp<VxeColumnProps, VxeColumnEventProps, VxeColumnSlots>
+export type VxeColumnComponent = DefineVxeComponentOptions<VxeColumnProps, VxeColumnEventProps>
 
-export type VxeColumnInstance = ComponentPublicInstance<VxeColumnProps, VxeColumnConstructor>
+export type VxeColumnInstance = DefineVxeComponentInstance<VxeColumnProps, VxeColumnConstructor>
 
-export interface VxeColumnConstructor extends VxeComponentBaseOptions, VxeColumnMethods {
-  props: VxeColumnProps
-  context: SetupContext<VxeColumnEmits>
+export interface VxeColumnConstructor extends VxeComponentBaseOptions, VxeColumnProps, VxeColumnMethods {
   reactData: ColumnReactData
-  getRefMaps(): ColumnPrivateRef
-  getComputeMaps(): ColumnPrivateComputed
-  renderVN: RenderFunction
 }
 
 export interface ColumnPrivateRef {
-  refElem: Ref<HTMLDivElement | undefined>
 }
 export interface VxeColumnPrivateRef extends ColumnPrivateRef { }
 
@@ -354,7 +347,7 @@ export namespace VxeColumnPropTypes {
   }
 }
 
-export type VxeColumnProps<D = any> = {
+export interface VxeColumnProps<D = any> {
   colId?: VxeColumnPropTypes.ColId
   /**
    * 渲染类型

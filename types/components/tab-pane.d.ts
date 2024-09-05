@@ -1,24 +1,17 @@
-import { RenderFunction, SetupContext, Ref, ComponentPublicInstance, DefineComponent } from 'vue'
-import { defineVxeComponent, VxeComponentBaseOptions, VxeComponentEventParams, VxeComponentPermissionCodeType, VxeComponentAlignType, VxeComponentSlotType } from '@vxe-ui/core'
+import { DefineVxeComponentApp, DefineVxeComponentOptions, DefineVxeComponentInstance, VxeComponentBaseOptions, VxeComponentEventParams, VxeComponentPermissionCodeType, VxeComponentAlignType, VxeComponentSlotType } from '@vxe-ui/core'
 
-/* eslint-disable no-use-before-define,@typescript-eslint/ban-types */
+/* eslint-disable @typescript-eslint/no-empty-interface,no-use-before-define,@typescript-eslint/ban-types */
 
-export declare const VxeTabPane: defineVxeComponent<VxeTabPaneProps, VxeTabPaneEventProps, VxeTabPaneSlots>
-export type VxeTabPaneComponent = DefineComponent<VxeTabPaneProps & VxeTabPaneEventProps>
+export declare const VxeTabPane: DefineVxeComponentApp<VxeTabPaneProps, VxeTabPaneEventProps, VxeTabPaneSlots>
+export type VxeTabPaneComponent = DefineVxeComponentOptions<VxeTabPaneProps, VxeTabPaneEventProps>
 
-export type VxeTabPaneInstance = ComponentPublicInstance<VxeTabPaneProps, VxeTabPaneConstructor>
+export type VxeTabPaneInstance = DefineVxeComponentInstance<VxeTabPaneProps, VxeTabPaneConstructor>
 
 export interface VxeTabPaneConstructor extends VxeComponentBaseOptions, VxeTabPaneMethods {
-  props: VxeTabPaneProps
-  context: SetupContext<VxeTabPaneEmits>
   reactData: TabPaneReactData
-  getRefMaps(): TabPanePrivateRef
-  getComputeMaps(): TabPanePrivateComputed
-  renderVN: RenderFunction
 }
 
 export interface TabPanePrivateRef {
-  refElem: Ref<HTMLDivElement | undefined>
 }
 export interface VxeTabPanePrivateRef extends TabPanePrivateRef { }
 

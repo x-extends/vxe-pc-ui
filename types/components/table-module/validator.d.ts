@@ -1,8 +1,7 @@
-import { VxeTableDefines, VxeTableConstructor } from '../table'
-import { VxeGridConstructor } from '../grid'
+import { VxeTableDefines } from '../table'
 import { VxeColumnPropTypes } from '../column'
 
-/* eslint-disable no-use-before-define */
+/* eslint-disable @typescript-eslint/no-unused-vars,no-use-before-define */
 
 export interface TableValidatorMethods<D = any> {
   /**
@@ -30,10 +29,10 @@ export interface TableValidatorPrivateMethods<D = any> {
 }
 
 declare module '../grid' {
-  export interface VxeGridMethods<D = any> extends TableValidatorMethods<D> { }
+  export type VxeGridMethods<D = any> = TableValidatorMethods<D>
 }
 
 declare module '../table' {
-  export interface VxeTableMethods<D = any> extends TableValidatorMethods<D> { }
-  export interface VxeTablePrivateMethods<D = any> extends TableValidatorPrivateMethods<D> { }
+  export type VxeTableMethods<D = any> = TableValidatorMethods<D>
+  export type VxeTablePrivateMethods<D = any> = TableValidatorPrivateMethods<D>
 }

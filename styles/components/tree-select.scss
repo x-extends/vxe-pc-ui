@@ -62,7 +62,7 @@
   &.is--transfer {
     position: fixed;
   }
-  &.animat--leave {
+  &.ani--leave {
     display: block;
     opacity: 0;
     transform: scaleY(0.5);
@@ -73,7 +73,7 @@
       transform-origin: center bottom;
     }
   }
-  &.animat--enter {
+  &.ani--enter {
     opacity: 1;
     transform: scaleY(1);
   }

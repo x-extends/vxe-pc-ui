@@ -166,7 +166,7 @@
     <vxe-form
     readonly
       ref="xForm3"
-      v-model:collapseStatus="demo3.collapseStatus3"
+      :collapseStatus.sync="demo3.collapseStatus3"
       :data="demo3.formData3"
       :rules="demo3.formRules3"
       title-align="right"
@@ -259,179 +259,207 @@
   </div>
 </template>
 
-<script lang="ts" setup>
-import { reactive, ref } from 'vue'
+<script lang="ts">
+import Vue from 'vue'
 import { VxeUI } from '../../../packages'
-import { VxeFormEvents, VxeFormPropTypes, VxeFormInstance, VxeButtonEvents } from '../../../types'
 
-const demo1 = reactive({
-  formData1: {
-    name: '',
-    nickname: '',
-    sex: '1'
-  }
-})
-
-const demo2 = reactive({
-  loading2: false,
-  formData2: {
-    name: 'test1',
-    nickname: 'Testing',
-    sex: '',
-    age: 26,
-    date: null,
-    address: '左右布局'
-  },
-  formRules2: {
-    name: [
-      { required: true, message: '请输入名称' },
-      { min: 3, max: 5, message: '长度在 3 到 5 个字符' }
-    ],
-    sex: [
-      { required: true, message: '请选择性别' }
-    ],
-    age: [
-      { required: true, message: '请输入年龄' },
-      {
-        validator ({ itemValue }) {
-          // 自定义校验
-          if (Number(itemValue) > 35 || Number(itemValue) < 18) {
-            return new Error('年龄在 18 ~ 35 之间')
-          }
+export default Vue.extend({
+  data () {
+    return {
+      demo1: {
+        formData1: {
+          name: '',
+          nickname: '',
+          sex: '1'
         }
-      }
-    ],
-    date: [
-      { required: true, message: '必填校验' }
-    ]
-  } as VxeFormPropTypes.Rules
-})
-
-const xForm3 = ref({} as VxeFormInstance)
-const demo3 = reactive({
-  collapseStatus3: true,
-  formData3: {
-    name: '',
-    nickname: '',
-    sex: '2',
-    age: 30,
-    status: '1',
-    weight: null,
-    date: null,
-    region: null,
-    active: false,
-    single: '1',
-    flagList: [],
-    exercise: '1'
-  },
-  formRules3: {
-    name: [
-      { required: true, message: '请输入' }
-    ],
-    nickname: [
-      { required: true, message: '请输入' }
-    ],
-    date: [
-      { required: true, message: '请输入' }
-    ]
-  }
-})
-
-const regionOptions = ref([
-  {
-    label: '广东省',
-    value: 11,
-    children: [
-      {
-        label: '广州市',
-        value: 3333,
-        children: [
-          { label: '天河区', value: 555 },
-          { label: '荔湾区', value: 6666 }
-        ]
       },
-      {
-        label: '深圳市',
-        value: 44444,
-        children: [
-          { label: '福田区', value: 7777 },
-          { label: '南山区', value: 8888 }
+      demo2: {
+        loading2: false,
+        formData2: {
+          name: 'test1',
+          nickname: 'Testing',
+          sex: '',
+          age: 26,
+          date: null,
+          address: '左右布局'
+        },
+        formRules2: {
+          name: [
+            { required: true, message: '请输入名称' },
+            { min: 3, max: 5, message: '长度在 3 到 5 个字符' }
+          ],
+          sex: [
+            { required: true, message: '请选择性别' }
+          ],
+          age: [
+            { required: true, message: '请输入年龄' },
+            {
+              validator ({ itemValue }: any) {
+                // 自定义校验
+                if (Number(itemValue) > 35 || Number(itemValue) < 18) {
+                  return new Error('年龄在 18 ~ 35 之间')
+                }
+              }
+            }
+          ],
+          date: [
+            { required: true, message: '必填校验' }
+          ]
+        }
+      },
+      demo3: {
+        collapseStatus3: true,
+        formData3: {
+          name: '',
+          nickname: '',
+          sex: '2',
+          age: 30,
+          status: '1',
+          weight: null,
+          date: null,
+          region: null,
+          active: false,
+          single: '1',
+          flagList: [],
+          exercise: '1'
+        },
+        formRules3: {
+          name: [
+            { required: true, message: '请输入' }
+          ],
+          nickname: [
+            { required: true, message: '请输入' }
+          ],
+          date: [
+            { required: true, message: '请输入' }
+          ]
+        }
+      },
+      regionOptions: [
+        {
+          label: '广东省',
+          value: 11,
+          children: [
+            {
+              label: '广州市',
+              value: 3333,
+              children: [
+                { label: '天河区', value: 555 },
+                { label: '荔湾区', value: 6666 }
+              ]
+            },
+            {
+              label: '深圳市',
+              value: 44444,
+              children: [
+                { label: '福田区', value: 7777 },
+                { label: '南山区', value: 8888 }
+              ]
+            }
+          ]
+        }
+      ],
+      demo4: {
+        formData4: {
+          name: '',
+          nickname: '',
+          sex: '0',
+          role: '',
+          region: null,
+          age: 22,
+          val1: [],
+          val2: false,
+          val3: '',
+          flag: false,
+          address: ''
+        },
+        formItems4: [
+          {
+            title: '左侧',
+            span: 12,
+            children: [
+              { field: 'name', title: '名称', span: 8, itemRender: { name: '$input', props: { placeholder: '请输入名称' } } },
+              { field: 'sex', title: '性别', span: 8, itemRender: { name: '$select', options: [{ value: '0', label: '女' }, { value: '1', label: '男' }], props: { placeholder: '请选择性别' } } },
+              { field: 'role', title: '角色', span: 8, itemRender: { name: '$input', props: { placeholder: '请输入角色' } } },
+              { field: 'age', title: '年龄', span: 24, itemRender: { name: '$input', props: { type: 'number', placeholder: '请输入年龄' } } },
+              {
+                field: 'region',
+                title: '地区选择',
+                span: 24,
+                itemRender: {
+                  name: 'VxeTreeSelect',
+                  options: [
+                    {
+                      label: '广东省',
+                      value: 11,
+                      children: [
+                        {
+                          label: '广州市',
+                          value: 3333,
+                          children: [
+                            { label: '天河区', value: 555 },
+                            { label: '荔湾区', value: 6666 }
+                          ]
+                        },
+                        {
+                          label: '深圳市',
+                          value: 44444,
+                          children: [
+                            { label: '福田区', value: 7777 },
+                            { label: '南山区', value: 8888 }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                }
+              },
+              { field: 'val1', title: '复选框-组', span: 12, itemRender: { name: '$checkbox', options: [{ label: '爬山', value: '11' }, { label: '健身', value: '22' }] } },
+              { field: 'val2', title: '复选框', span: 12, itemRender: { name: '$checkbox' } },
+              { field: 'val3', title: '单选框', span: 12, itemRender: { name: '$radio', options: [{ label: '是', value: 'Y' }, { label: '否', value: 'N' }] } },
+              { field: 'flag', title: '开关', span: 24, itemRender: { name: '$switch', props: { openLabel: '是', closeLabel: '否' } } },
+              { field: 'address', title: '地区', span: 24, slots: { default: 'myaddress' } }
+            ]
+          },
+          {
+            title: '右侧',
+            span: 12,
+            children: [
+              { field: 'nickname', title: '昵称', span: 24, itemRender: { name: '$input', props: { placeholder: '请输入昵称' } } }
+            ]
+          },
+          { align: 'center', span: 24, itemRender: { name: '$buttons', children: [{ props: { type: 'submit', content: '配置式表单', status: 'primary' } }, { props: { type: 'reset', content: '重置' } }] } }
         ]
       }
-    ]
-  }
-])
-
-const demo4 = reactive({
-  formData4: {
-    name: '',
-    nickname: '',
-    sex: '0',
-    role: '',
-    region: null,
-    age: 22,
-    val1: [],
-    val2: false,
-    val3: '',
-    flag: false,
-    address: ''
+    }
   },
-  formItems4: [
-    {
-      title: '左侧',
-      span: 12,
-      children: [
-        { field: 'name', title: '名称', span: 8, itemRender: { name: '$input', props: { placeholder: '请输入名称' } } },
-        { field: 'sex', title: '性别', span: 8, itemRender: { name: '$select', options: [{ value: '0', label: '女' }, { value: '1', label: '男' }], props: { placeholder: '请选择性别' } } },
-        { field: 'role', title: '角色', span: 8, itemRender: { name: '$input', props: { placeholder: '请输入角色' } } },
-        { field: 'age', title: '年龄', span: 24, itemRender: { name: '$input', props: { type: 'number', placeholder: '请输入年龄' } } },
-        { field: 'region', title: '地区选择', span: 24, itemRender: { name: 'VxeTreeSelect', options: regionOptions.value } },
-        { field: 'val1', title: '复选框-组', span: 12, itemRender: { name: '$checkbox', options: [{ label: '爬山', value: '11' }, { label: '健身', value: '22' }] } },
-        { field: 'val2', title: '复选框', span: 12, itemRender: { name: '$checkbox' } },
-        { field: 'val3', title: '单选框', span: 12, itemRender: { name: '$radio', options: [{ label: '是', value: 'Y' }, { label: '否', value: 'N' }] } },
-        { field: 'flag', title: '开关', span: 24, itemRender: { name: '$switch', props: { openLabel: '是', closeLabel: '否' } } },
-        { field: 'address', title: '地区', span: 24, slots: { default: 'myaddress' } }
-      ]
+  methods: {
+    submitEvent2 () {
+      this.demo2.loading2 = true
+      setTimeout(() => {
+        this.demo2.loading2 = false
+        VxeUI.modal.message({ content: '保存成功', status: 'success' })
+      }, 1000)
     },
-    {
-      title: '右侧',
-      span: 12,
-      children: [
-        { field: 'nickname', title: '昵称', span: 24, itemRender: { name: '$input', props: { placeholder: '请输入昵称' } } }
-      ]
+    async searchEvent  () {
+      VxeUI.modal.message({ content: '查询事件', status: 'info' })
     },
-    { align: 'center', span: 24, itemRender: { name: '$buttons', children: [{ props: { type: 'submit', content: '配置式表单', status: 'primary' } }, { props: { type: 'reset', content: '重置' } }] } }
-  ] as VxeFormPropTypes.Items
-})
-
-const submitEvent2: VxeFormEvents.Submit = () => {
-  demo2.loading2 = true
-  setTimeout(() => {
-    demo2.loading2 = false
-    VxeUI.modal.message({ content: '保存成功', status: 'success' })
-  }, 1000)
-}
-
-const searchEvent: VxeFormEvents.Submit = async () => {
-  VxeUI.modal.message({ content: '查询事件', status: 'info' })
-}
-
-const resetEvent: VxeFormEvents.Reset = () => {
-  VxeUI.modal.message({ content: '重置事件', status: 'info' })
-}
-
-const searchEvent3: VxeButtonEvents.Click = async () => {
-  const $form = xForm3.value
-  const errMap = await $form.validate()
-  if (errMap) {
-    return
+    resetEvent () {
+      VxeUI.modal.message({ content: '重置事件', status: 'info' })
+    },
+    async searchEvent3 () {
+      const $form = this.$refs.xForm3 as any
+      const errMap = await $form.validate()
+      if (errMap) {
+        return
+      }
+      VxeUI.modal.message({ content: '查询事件', status: 'info' })
+    },
+    resetEvent3 () {
+      const $form = this.$refs.xForm3 as any
+      $form.reset()
+      VxeUI.modal.message({ content: '重置事件', status: 'info' })
+    }
   }
-  VxeUI.modal.message({ content: '查询事件', status: 'info' })
-}
-
-const resetEvent3: VxeButtonEvents.Click = () => {
-  const $form = xForm3.value
-  $form.reset()
-  VxeUI.modal.message({ content: '重置事件', status: 'info' })
-}
+})
 </script>

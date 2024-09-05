@@ -1,25 +1,18 @@
-import { RenderFunction, SetupContext, Ref, DefineComponent, ComponentPublicInstance } from 'vue'
-import { defineVxeComponent, VxeComponentBaseOptions, VxeComponentEventParams, VxeComponentPermissionCodeType, VxeComponentStatusType, VxeComponentSizeType, VxeComponentStyleType, ValueOf } from '@vxe-ui/core'
+import { DefineVxeComponentApp, DefineVxeComponentOptions, VxeComponentBaseOptions, DefineVxeComponentInstance, VxeComponentEventParams, VxeComponentPermissionCodeType, VxeComponentStatusType, VxeComponentSizeType, VxeComponentStyleType, ValueOf } from '@vxe-ui/core'
 
-/* eslint-disable no-use-before-define,@typescript-eslint/ban-types */
+/* eslint-disable @typescript-eslint/no-empty-interface,no-use-before-define,@typescript-eslint/ban-types */
 
-export declare const VxeButton: defineVxeComponent<VxeButtonProps, VxeButtonEventProps, VxeButtonSlots>
-export type VxeButtonComponent = DefineComponent<VxeButtonProps & VxeButtonEventProps>
+export declare const VxeButton: DefineVxeComponentApp<VxeButtonProps, VxeButtonEventProps, VxeButtonSlots>
+export type VxeButtonComponent = DefineVxeComponentOptions<VxeButtonProps, VxeButtonEventProps>
 
-export type VxeButtonInstance = ComponentPublicInstance<VxeButtonProps, VxeButtonConstructor>
+export type VxeButtonInstance = DefineVxeComponentInstance<VxeButtonProps, VxeButtonConstructor>
 
-export interface VxeButtonConstructor extends VxeComponentBaseOptions, VxeButtonMethods {
-  props: VxeButtonProps
-  context: SetupContext<VxeButtonEmits>
+export interface VxeButtonConstructor extends VxeComponentBaseOptions, VxeButtonProps, VxeButtonMethods {
   reactData: ButtonReactData
   internalData: ButtonInternalData
-  getRefMaps(): ButtonPrivateRef
-  getComputeMaps(): ButtonPrivateComputed
-  renderVN: RenderFunction
 }
 
 export interface ButtonPrivateRef {
-  refElem: Ref<HTMLDivElement | undefined>
 }
 export interface VxeButtonPrivateRef extends ButtonPrivateRef { }
 
@@ -53,7 +46,7 @@ export namespace VxeButtonPropTypes {
   export type Transfer = boolean
 }
 
-export type VxeButtonProps = {
+export interface VxeButtonProps {
   size?: VxeButtonPropTypes.Size
   /**
    * 按钮类型
@@ -124,9 +117,9 @@ export interface ButtonPrivateComputed {
 export interface VxeButtonPrivateComputed extends ButtonPrivateComputed { }
 
 export interface ButtonReactData {
-  inited: boolean
+  initialized: boolean
   visiblePanel: boolean
-  animatVisible: boolean
+  visibleAnimate: boolean
   isActivated: boolean
   panelIndex: number
   panelStyle: VxeComponentStyleType
@@ -134,7 +127,7 @@ export interface ButtonReactData {
 }
 
 export interface ButtonInternalData {
-  showTime: any
+  showTime: number | undefined
 }
 
 export interface ButtonMethods {

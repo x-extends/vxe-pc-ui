@@ -1,24 +1,17 @@
-import { RenderFunction, SetupContext, Ref, ComponentPublicInstance, DefineComponent } from 'vue'
-import { defineVxeComponent, VxeComponentBaseOptions, VxeComponentEventParams, ValueOf, VxeComponentSizeType } from '@vxe-ui/core'
+import { DefineVxeComponentApp, DefineVxeComponentOptions, DefineVxeComponentInstance, VxeComponentBaseOptions, VxeComponentEventParams, ValueOf, VxeComponentSizeType } from '@vxe-ui/core'
 
-/* eslint-disable no-use-before-define,@typescript-eslint/ban-types */
+/* eslint-disable @typescript-eslint/no-empty-interface,no-use-before-define,@typescript-eslint/ban-types */
 
-export declare const VxePasswordInput: defineVxeComponent<VxePasswordInputProps, VxePasswordInputEventProps, VxePasswordInputSlots>
-export type VxePasswordInputComponent = DefineComponent<VxePasswordInputProps & VxePasswordInputEventProps>
+export declare const VxePasswordInput: DefineVxeComponentApp<VxePasswordInputProps, VxePasswordInputEventProps, VxePasswordInputSlots>
+export type VxePasswordInputComponent = DefineVxeComponentOptions<VxePasswordInputProps, VxePasswordInputEventProps>
 
-export type VxePasswordInputInstance = ComponentPublicInstance<VxePasswordInputProps, VxePasswordInputConstructor>
+export type VxePasswordInputInstance = DefineVxeComponentInstance<VxePasswordInputProps, VxePasswordInputConstructor>
 
 export interface VxePasswordInputConstructor extends VxeComponentBaseOptions, VxePasswordInputMethods {
-  props: VxePasswordInputProps
-  context: SetupContext<VxePasswordInputEmits>
   reactData: PasswordInputReactData
-  getRefMaps(): PasswordInputPrivateRef
-  getComputeMaps(): PasswordInputPrivateComputed
-  renderVN: RenderFunction
 }
 
 export interface PasswordInputPrivateRef {
-  refElem: Ref<HTMLDivElement | undefined>
 }
 export interface VxePasswordInputPrivateRef extends PasswordInputPrivateRef { }
 

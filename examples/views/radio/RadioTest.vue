@@ -59,24 +59,30 @@
   </div>
 </template>
 
-<script lang="ts" setup>
-import { reactive } from 'vue'
+<script lang="ts">
+import Vue from 'vue'
 
-const demo1 = reactive({
-  value1: null,
-  value2: '2',
-  value3: '3',
-  value4: null,
-  value5: null,
-  value6: '1',
-  value7: '1',
-  value9: '',
-  opts1: [
-    { value: '1', label: 'HTML' },
-    { value: '2', label: 'CSS' },
-    { value: '3', label: 'Javascript' },
-    { value: '4', label: 'SASS' },
-    { value: '5', label: 'LESS' }
-  ]
+export default Vue.extend({
+  data () {
+    return {
+      demo1: {
+        value1: null,
+        value2: '2',
+        value3: '3',
+        value4: null,
+        value5: null,
+        value6: '1',
+        value7: '1',
+        value9: '',
+        opts1: [
+          { value: '1', label: 'HTML' },
+          { value: '2', label: 'CSS' },
+          { value: '3', label: 'Javascript' },
+          { value: '4', label: 'SASS' },
+          { value: '5', label: 'LESS' }
+        ]
+      }
+    }
+  }
 })
 </script>

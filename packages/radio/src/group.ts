@@ -1,15 +1,20 @@
-import { defineComponent, h, provide, PropType, inject, computed } from 'vue'
+import { PropType, CreateElement, VNode } from 'vue'
+import { defineVxeComponent } from '../../ui/src/comp'
 import XEUtils from 'xe-utils'
-import { getConfig, createEvent, useSize } from '../../ui'
+import { getConfig, createEvent, globalMixins } from '../../ui'
 import VxeRadioComponent from './radio'
 import VxeRadioButtonComponent from './button'
 
-import type { VxeRadioGroupPropTypes, VxeRadioGroupConstructor, VxeRadioGroupEmits, VxeRadioGroupPrivateMethods, RadioGroupPrivateMethods, RadioGroupPrivateComputed, RadioGroupMethods, VxeFormConstructor, VxeFormPrivateMethods, VxeFormDefines } from '../../../types'
+import type { VxeRadioGroupPropTypes, VxeRadioGroupEmits, VxeFormDefines, VxeFormConstructor, VxeFormPrivateMethods, VxeComponentPermissionInfo, VxeComponentSizeType, RadioGroupReactData, ValueOf } from '../../../types'
 
-export default defineComponent({
+export default defineVxeComponent({
   name: 'VxeRadioGroup',
+  mixins: [
+    globalMixins.sizeMixin,
+    globalMixins.permissionMixin
+  ],
   props: {
-    modelValue: [String, Number, Boolean] as PropType<VxeRadioGroupPropTypes.ModelValue>,
+    value: [String, Number, Boolean] as PropType<VxeRadioGroupPropTypes.ModelValue>,
     disabled: {
       type: Boolean as PropType<VxeRadioGroupPropTypes.Disabled>,
       default: null
@@ -17,91 +22,124 @@ export default defineComponent({
     type: String as PropType<VxeRadioGroupPropTypes.Type>,
     options: Array as PropType<VxeRadioGroupPropTypes.Options>,
     optionProps: Object as PropType<VxeRadioGroupPropTypes.OptionProps>,
-    strict: { type: Boolean as PropType<VxeRadioGroupPropTypes.Strict>, default: () => getConfig().radioGroup.strict },
-    size: { type: String as PropType<VxeRadioGroupPropTypes.Size>, default: () => getConfig().radioGroup.size || getConfig().size }
+    strict: {
+      type: Boolean as PropType<VxeRadioGroupPropTypes.Strict>,
+      default: () => getConfig().radioGroup.strict
+    },
+    size: {
+      type: String as PropType<VxeRadioGroupPropTypes.Size>,
+      default: () => getConfig().radioGroup.size || getConfig().size
+    }
   },
-  emits: [
-    'update:modelValue',
-    'change'
-  ] as VxeRadioGroupEmits,
-  setup (props, context) {
-    const { slots, emit } = context
-    const $xeForm = inject<VxeFormConstructor & VxeFormPrivateMethods | null>('$xeForm', null)
-    const formItemInfo = inject<VxeFormDefines.ProvideItemInfo | null>('xeFormItemInfo', null)
+  inject: {
+    $xeForm: {
+      default: null
+    },
+    formItemInfo: {
+      from: 'xeFormItemInfo',
+      default: null
+    }
+  },
+  provide () {
+    const $xeRadioGroup = this
+    return {
+      $xeRadioGroup
+    }
+  },
+  data () {
+    const reactData: RadioGroupReactData = {
+    }
+    return {
+      xID: XEUtils.uniqueId(),
+      name: XEUtils.uniqueId('xe_group_'),
+      reactData
+    }
+  },
+  computed: {
+    ...({} as {
+      computePermissionInfo(): VxeComponentPermissionInfo
+      computeSize(): VxeComponentSizeType
+      $xeForm(): (VxeFormConstructor & VxeFormPrivateMethods) | null
+      formItemInfo(): VxeFormDefines.ProvideItemInfo | null
+    }),
+    computeIsDisabled () {
+      const $xeRadioGroup = this
+      const props = $xeRadioGroup
+      const $xeForm = $xeRadioGroup.$xeForm
 
-    const xID = XEUtils.uniqueId()
-
-    const computeIsDisabled = computed(() => {
       const { disabled } = props
       if (disabled === null) {
         if ($xeForm) {
-          return $xeForm.props.readonly || $xeForm.props.disabled
+          return $xeForm.readonly || $xeForm.disabled
         }
         return false
       }
       return disabled
-    })
+    },
+    computePropsOpts () {
+      const $xeRadioGroup = this
+      const props = $xeRadioGroup
 
-    const computeMaps: RadioGroupPrivateComputed = {
-      computeIsDisabled
-    }
+      return Object.assign({}, props.optionProps)
+    },
+    computeLabelField  () {
+      const $xeRadioGroup = this
 
-    const $xeradiogroup = {
-      xID,
-      props,
-      context,
-      name: XEUtils.uniqueId('xegroup_'),
-
-      getComputeMaps: () => computeMaps
-    } as unknown as VxeRadioGroupConstructor & VxeRadioGroupPrivateMethods
-
-    const computePropsOpts = computed(() => {
-      return props.optionProps || {}
-    })
-
-    const computeLabelField = computed(() => {
-      const propsOpts = computePropsOpts.value
+      const propsOpts: VxeRadioGroupPropTypes.OptionProps = $xeRadioGroup.computePropsOpts
       return propsOpts.label || 'label'
-    })
+    },
+    computeValueField  () {
+      const $xeRadioGroup = this
 
-    const computeValueField = computed(() => {
-      const propsOpts = computePropsOpts.value
+      const propsOpts: VxeRadioGroupPropTypes.OptionProps = $xeRadioGroup.computePropsOpts
       return propsOpts.value || 'value'
-    })
+    },
+    computeDisabledField  () {
+      const $xeRadioGroup = this
 
-    const computeDisabledField = computed(() => {
-      const propsOpts = computePropsOpts.value
+      const propsOpts: VxeRadioGroupPropTypes.OptionProps = $xeRadioGroup.computePropsOpts
       return propsOpts.disabled || 'disabled'
-    })
-
-    let radioGroupMethods = {} as RadioGroupMethods
-
-    useSize(props)
-
-    const radioGroupPrivateMethods: RadioGroupPrivateMethods = {
-      handleChecked (params, evnt) {
-        emit('update:modelValue', params.label)
-        radioGroupMethods.dispatchEvent('change', params, evnt)
-        // 自动更新校验状态
-        if ($xeForm && formItemInfo) {
-          $xeForm.triggerItemEvent(evnt, formItemInfo.itemConfig.field, params.label)
-        }
-      }
     }
+  },
+  methods: {
+    //
+    // Method
+    //
+    dispatchEvent (type: ValueOf<VxeRadioGroupEmits>, params: Record<string, any>, evnt: Event | null) {
+      const $xeRadioGroup = this
 
-    radioGroupMethods = {
-      dispatchEvent (type, params, evnt) {
-        emit(type, createEvent(evnt, { $radioGroup: $xeradiogroup }, params))
+      $xeRadioGroup.$emit(type, createEvent(evnt, { $radioGroup: $xeRadioGroup }, params))
+    },
+    handleChecked (params: {
+      label: any
+    }, evnt: Event) {
+      const $xeRadioGroup = this
+      const $xeForm = $xeRadioGroup.$xeForm
+      const formItemInfo = $xeRadioGroup.formItemInfo
+
+      $xeRadioGroup.$emit('input', params.label)
+      $xeRadioGroup.dispatchEvent('change', params, evnt)
+      // 自动更新校验状态
+      if ($xeForm && formItemInfo) {
+        $xeForm.triggerItemEvent(evnt, formItemInfo.itemConfig.field, params.label)
       }
-    }
+    },
 
-    const renderVN = () => {
+    //
+    // Render
+    //
+    renderVN (h: CreateElement): VNode {
+      const $xeRadioGroup = this
+      const props = $xeRadioGroup
+      const slots = $xeRadioGroup.$scopedSlots
+
       const { options, type } = props
       const defaultSlot = slots.default
-      const valueField = computeValueField.value as 'value'
-      const labelField = computeLabelField.value as 'label'
-      const disabledField = computeDisabledField.value as 'disabled'
+      const valueField = $xeRadioGroup.computeValueField as 'value'
+      const labelField = $xeRadioGroup.computeLabelField as 'label'
+      const disabledField = $xeRadioGroup.computeDisabledField as 'disabled'
       const btnComp = type === 'button' ? VxeRadioButtonComponent : VxeRadioComponent
+
       return h('div', {
         class: 'vxe-radio-group'
       }, defaultSlot
@@ -109,21 +147,17 @@ export default defineComponent({
         : (options
             ? options.map(item => {
               return h(btnComp, {
-                label: item[valueField],
-                content: item[labelField],
-                disabled: item[disabledField]
+                props: {
+                  label: item[valueField],
+                  content: item[labelField],
+                  disabled: item[disabledField]
+                }
               })
             })
             : []))
     }
-
-    Object.assign($xeradiogroup, radioGroupPrivateMethods, {
-      renderVN,
-      dispatchEvent
-    })
-
-    provide('$xeRadioGroup', $xeradiogroup)
-
-    return renderVN
+  },
+  render (this: any, h) {
+    return this.renderVN(h)
   }
 })

@@ -1,25 +1,18 @@
-import { RenderFunction, SetupContext, Ref, ComponentPublicInstance, DefineComponent } from 'vue'
-import { defineVxeComponent, VxeComponentBaseOptions, VxeComponentEventParams, VxeComponentSlotType } from '@vxe-ui/core'
+import { DefineVxeComponentApp, DefineVxeComponentOptions, DefineVxeComponentInstance, VxeComponentBaseOptions, VxeComponentEventParams, VxeComponentSlotType } from '@vxe-ui/core'
 import { VxeSelectConstructor } from './select'
 
-/* eslint-disable no-use-before-define,@typescript-eslint/ban-types */
+/* eslint-disable @typescript-eslint/no-empty-interface,no-use-before-define,@typescript-eslint/ban-types */
 
-export declare const VxeOption: defineVxeComponent<VxeOptionProps, VxeOptionEventProps, VxeOptionSlots>
-export type VxeOptionComponent = DefineComponent<VxeOptionProps & VxeOptionEventProps>
+export declare const VxeOption: DefineVxeComponentApp<VxeOptionProps, VxeOptionEventProps, VxeOptionSlots>
+export type VxeOptionComponent = DefineVxeComponentOptions<VxeOptionProps, VxeOptionEventProps>
 
-export type VxeOptionInstance = ComponentPublicInstance<VxeOptionProps, VxeOptionConstructor>
+export type VxeOptionInstance = DefineVxeComponentInstance<VxeOptionProps, VxeOptionConstructor>
 
 export interface VxeOptionConstructor extends VxeComponentBaseOptions, VxeOptionMethods {
-  props: VxeOptionProps
-  context: SetupContext<VxeOptionEmits>
   reactData: OptionReactData
-  getRefMaps(): OptionPrivateRef
-  getComputeMaps(): OptionPrivateComputed
-  renderVN: RenderFunction
 }
 
 export interface OptionPrivateRef {
-  refElem: Ref<HTMLDivElement | undefined>
 }
 export interface VxeOptionPrivateRef extends OptionPrivateRef { }
 

@@ -1,26 +1,19 @@
-import { RenderFunction, SetupContext, Ref, ComputedRef, ComponentPublicInstance, DefineComponent, UnwrapNestedRefs } from 'vue'
-import { defineVxeComponent, VxeComponentBaseOptions, VxeComponentEventParams, VxeComponentSizeType, ValueOf } from '@vxe-ui/core'
+import { DefineVxeComponentApp, DefineVxeComponentOptions, DefineVxeComponentInstance, VxeComponentBaseOptions, VxeComponentEventParams, VxeComponentSizeType, ValueOf } from '@vxe-ui/core'
 import { VxeFormPropTypes } from '../components/form'
 
-/* eslint-disable no-use-before-define,@typescript-eslint/ban-types */
+/* eslint-disable @typescript-eslint/no-empty-interface,no-use-before-define,@typescript-eslint/ban-types */
 
-export declare const VxeFormDesign: defineVxeComponent<VxeFormDesignProps, VxeFormDesignEventProps, VxeFormDesignSlots>
-export type VxeFormDesignComponent = DefineComponent<VxeFormDesignProps & VxeFormDesignEventProps>
+export declare const VxeFormDesign: DefineVxeComponentApp<VxeFormDesignProps, VxeFormDesignEventProps, VxeFormDesignSlots>
+export type VxeFormDesignComponent = DefineVxeComponentOptions<VxeFormDesignProps, VxeFormDesignEventProps>
 
-export type VxeFormDesignInstance = ComponentPublicInstance<VxeFormDesignProps, VxeFormDesignConstructor>
+export type VxeFormDesignInstance = DefineVxeComponentInstance<VxeFormDesignProps, VxeFormDesignConstructor>
 
 export interface VxeFormDesignConstructor extends VxeComponentBaseOptions, VxeFormDesignMethods {
-  props: VxeFormDesignProps
-  context: SetupContext<VxeFormDesignEmits>
   reactData: FormDesignReactData
   internalData: FormDesignInternalData
-  getRefMaps(): FormDesignPrivateRef
-  getComputeMaps(): FormDesignPrivateComputed
-  renderVN: RenderFunction
 }
 
 export interface FormDesignPrivateRef {
-  refElem: Ref<HTMLDivElement | undefined>
 }
 export interface VxeFormDesignPrivateRef extends FormDesignPrivateRef { }
 
@@ -59,7 +52,7 @@ export type VxeFormDesignProps = {
 }
 
 export interface FormDesignPrivateComputed {
-  computeSize: ComputedRef<VxeFormDesignPropTypes.Size>
+  computeSize: VxeFormDesignPropTypes.Size
 }
 export interface VxeFormDesignPrivateComputed extends FormDesignPrivateComputed { }
 
@@ -154,10 +147,6 @@ export type VxeFormDesignEmits = [
 ]
 
 export interface VxeFormDesignLayoutStyle {
-  reactData: UnwrapNestedRefs<{
-    activeTab: number
-  }>
-  renderVN: RenderFunction
 }
 
 export namespace VxeFormDesignDefines {

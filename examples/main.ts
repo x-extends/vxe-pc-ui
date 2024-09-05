@@ -1,4 +1,4 @@
-import { createApp } from 'vue'
+import Vue from 'vue'
 import App from './App.vue'
 import router from './router'
 import i18n from './i18n'
@@ -39,11 +39,13 @@ VxeUI.setLanguage((localStorage.getItem('VXE_LANGUAGE') as 'zh-CN' | 'en-US') ||
 
 window.axios.defaults.baseURL = 'https://api.vxetable.cn/demo'
 
-const app = createApp(App)
+Vue.use(VxeUI)
+// Vue.use(VxeTable)
 
-app.use(router)
-app.use(i18n)
-app.use(VxeUI)
-// app.use(VxeTable)
+Vue.config.productionTip = false
 
-app.mount('#app')
+new Vue({
+  router,
+  i18n,
+  render: h => h(App)
+}).$mount('#app')

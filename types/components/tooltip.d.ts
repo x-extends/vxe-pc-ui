@@ -1,24 +1,17 @@
-import { RenderFunction, SetupContext, Ref, ComponentPublicInstance, DefineComponent } from 'vue'
-import { defineVxeComponent, VxeComponentBaseOptions, VxeComponentEventParams, VxeComponentSizeType, VxeComponentStyleType, ValueOf } from '@vxe-ui/core'
+import { DefineVxeComponentApp, DefineVxeComponentOptions, DefineVxeComponentInstance, VxeComponentBaseOptions, VxeComponentEventParams, VxeComponentSizeType, VxeComponentStyleType, ValueOf } from '@vxe-ui/core'
 
-/* eslint-disable no-use-before-define,@typescript-eslint/ban-types */
+/* eslint-disable @typescript-eslint/no-empty-interface,no-use-before-define,@typescript-eslint/ban-types */
 
-export declare const VxeTooltip: defineVxeComponent<VxeTooltipProps, VxeTooltipEventProps, VxeTooltipSlots>
-export type VxeTooltipComponent = DefineComponent<VxeTooltipProps & VxeTooltipEventProps>
+export declare const VxeTooltip: DefineVxeComponentApp<VxeTooltipProps, VxeTooltipEventProps, VxeTooltipSlots>
+export type VxeTooltipComponent = DefineVxeComponentOptions<VxeTooltipProps, VxeTooltipEventProps>
 
-export type VxeTooltipInstance = ComponentPublicInstance<VxeTooltipProps, VxeTooltipConstructor>
+export type VxeTooltipInstance = DefineVxeComponentInstance<VxeTooltipProps, VxeTooltipConstructor>
 
 export interface VxeTooltipConstructor extends VxeComponentBaseOptions, VxeTooltipMethods {
-  props: VxeTooltipProps
-  context: SetupContext<VxeTooltipEmits>
   reactData: TooltipReactData
-  getRefMaps(): TooltipPrivateRef
-  getComputeMaps(): TooltipPrivateComputed
-  renderVN: RenderFunction
 }
 
 export interface TooltipPrivateRef {
-  refElem: Ref<HTMLDivElement | undefined>
 }
 export interface VxeTooltipPrivateRef extends TooltipPrivateRef { }
 

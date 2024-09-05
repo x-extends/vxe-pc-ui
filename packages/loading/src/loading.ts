@@ -1,14 +1,18 @@
-import { ref, defineComponent, h, computed, PropType, watch, createCommentVNode } from 'vue'
-import { getConfig, getIcon, getI18n, useSize } from '../../ui'
+import { PropType, CreateElement, VNode } from 'vue'
+import { defineVxeComponent } from '../../ui/src/comp'
+import { getConfig, getIcon, getI18n, globalMixins, createEvent, renderEmptyElement } from '../../ui'
 import { getSlotVNs } from '../../ui/src/vn'
 import XEUtils from 'xe-utils'
 
-import type { VxeLoadingPropTypes } from '../../../types'
+import type { VxeLoadingPropTypes, LoadingReactData, VxeLoadingEmits, VxeComponentSizeType, ValueOf } from '../../../types'
 
-export default defineComponent({
+export default defineVxeComponent({
   name: 'VxeLoading',
+  mixins: [
+    globalMixins.sizeMixin
+  ],
   props: {
-    modelValue: Boolean as PropType<VxeLoadingPropTypes.ModelValue>,
+    value: Boolean as PropType<VxeLoadingPropTypes.ModelValue>,
     icon: {
       type: String as PropType<VxeLoadingPropTypes.Icon>,
       default: () => getConfig().loading.icon
@@ -31,51 +35,82 @@ export default defineComponent({
       default: () => getConfig().loading.size || getConfig().size
     }
   },
-  setup (props, { slots }) {
-    const { computeSize } = useSize(props)
+  data () {
+    const reactData: LoadingReactData = {
+      initialized: false
+    }
+    return {
+      xID: XEUtils.uniqueId(),
+      reactData
+    }
+  },
+  computed: {
+    ...({} as {
+      computeSize(): VxeComponentSizeType
+    }),
+    computeLoadingIcon () {
+      const $xeLoading = this
+      const props = $xeLoading
 
-    const refInitialized = ref(false)
-
-    const computeLoadingIcon = computed(() => {
       return props.icon || getIcon().LOADING
-    })
+    },
+    computeLoadingText () {
+      const $xeLoading = this
+      const props = $xeLoading
 
-    const computeLoadingText = computed(() => {
       const { text } = props
       return XEUtils.isString(text) ? text : getI18n('vxe.loading.text')
-    })
-
-    const handleInit = () => {
-      if (!refInitialized.value) {
-        refInitialized.value = !!props.modelValue
-      }
     }
+  },
+  watch: {
+    value () {
+      this.handleInit()
+    }
+  },
+  methods: {
+    //
+    // Method
+    //
+    dispatchEvent (type: ValueOf<VxeLoadingEmits>, params: Record<string, any>, evnt: Event | null) {
+      const $xeLoading = this
+      this.$emit(type, createEvent(evnt, { $loading: $xeLoading }, params))
+    },
+    handleInit () {
+      const $xeLoading = this
+      const reactData = $xeLoading.reactData
 
-    watch(() => props.modelValue, () => {
-      handleInit()
-    })
+      if (!reactData.initialized) {
+        reactData.initialized = !!reactData.initialized
+      }
+    },
+    //
+    //
+    // Render
+    //
+    renderVN (h: CreateElement): VNode {
+      const $xeLoading = this
+      const props = $xeLoading
+      const slots = $xeLoading.$scopedSlots
+      const reactData = $xeLoading.reactData
 
-    handleInit()
-
-    return () => {
-      const { modelValue, showIcon, status } = props
-      const vSize = computeSize.value
+      const { value, showIcon, status } = props
+      const { initialized } = reactData
+      const vSize = $xeLoading.computeSize
       const defaultSlot = slots.default
       const textSlot = slots.text
       const iconSlot = slots.icon
-      const initialized = refInitialized.value
-      const loadingIcon = computeLoadingIcon.value
-      const loadingText = computeLoadingText.value
+      const loadingIcon = $xeLoading.computeLoadingIcon
+      const loadingText = $xeLoading.computeLoadingText
 
-      if (!initialized && !modelValue) {
-        return createCommentVNode()
+      if (!initialized && !value) {
+        return renderEmptyElement($xeLoading)
       }
 
       return h('div', {
         class: ['vxe-loading', {
           [`size--${vSize}`]: vSize,
           [`theme--${status}`]: status,
-          'is--visible': modelValue
+          'is--visible': value
         }]
       }, defaultSlot
         ? [
@@ -108,5 +143,8 @@ export default defineComponent({
             ])
           ])
     }
+  },
+  render (this: any, h) {
+    return this.renderVN(h)
   }
 })

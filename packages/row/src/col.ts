@@ -1,53 +1,70 @@
-import { defineComponent, ref, h, reactive, computed, inject } from 'vue'
+import { PropType, CreateElement, VNode } from 'vue'
+import { defineVxeComponent } from '../../ui/src/comp'
 import XEUtils from 'xe-utils'
+import { getConfig, createEvent, globalMixins } from '../../ui'
 import { toCssUnit } from '../../ui/src/dom'
 
-import type { ColReactData, ColPrivateRef, VxeColPrivateComputed, VxeColConstructor, VxeColPrivateMethods, VxeRowConstructor, VxeRowPrivateMethods } from '../../../types'
+import type { ColReactData, VxeColPropTypes, VxeColEmits, VxeRowConstructor, VxeRowPrivateMethods, VxeComponentSizeType, ValueOf } from '../../../types'
 
-export default defineComponent({
+export default defineVxeComponent({
   name: 'VxeCol',
+  mixins: [
+    globalMixins.sizeMixin
+  ],
   props: {
     span: [Number, String],
     align: String,
     width: [Number, String],
     fill: Boolean,
-    ellipsis: Boolean
-  },
-  emits: [],
-  setup (props, context) {
-    const { slots } = context
-
-    const xID = XEUtils.uniqueId()
-
-    const refElem = ref<HTMLDivElement>()
-
-    const reactData = reactive<ColReactData>({
-    })
-
-    const refMaps: ColPrivateRef = {
-      refElem
+    ellipsis: Boolean,
+    size: {
+      type: String as PropType<VxeColPropTypes.Size>,
+      default: () => getConfig().col.size || getConfig().size
     }
+  },
+  inject: {
+    $xeRow: {
+      default: null
+    }
+  },
+  data () {
+    const reactData: ColReactData = {
+    }
+    return {
+      xID: XEUtils.uniqueId(),
+      reactData
+    }
+  },
+  computed: {
+    ...({} as {
+      computeSize(): VxeComponentSizeType
+      $xeRow(): VxeRowConstructor & VxeRowPrivateMethods
+    }),
+    computeRowGutter () {
+      const $xeCol = this
+      const $xeRow = $xeCol.$xeRow
 
-    const $xeRow = inject<(VxeRowConstructor & VxeRowPrivateMethods) | null>('$xeRow', null)
-
-    const computeRowGutter = computed(() => {
       if ($xeRow) {
-        return $xeRow.props.gutter
+        return $xeRow.gutter
       }
       return null
-    })
+    },
+    computeRowVertical () {
+      const $xeCol = this
+      const $xeRow = $xeCol.$xeRow
 
-    const computeRowVertical = computed(() => {
       if ($xeRow) {
-        return $xeRow.props.vertical
+        return $xeRow.vertical
       }
       return null
-    })
+    },
+    computeColStyle () {
+      const $xeCol = this
+      const props = $xeCol
 
-    const computeColStyle = computed(() => {
       const { width } = props
-      const rowGutter = computeRowGutter.value
-      const rowVertical = computeRowVertical.value
+      const rowGutter = $xeCol.computeRowGutter
+      const rowVertical = $xeCol.computeRowVertical
       const style: Record<string, string | number> = {}
       if (rowGutter) {
         let [lrGutter, tbGutter] = XEUtils.isArray(rowGutter) ? rowGutter : [rowGutter]
@@ -70,27 +87,29 @@ export default defineComponent({
         style.width = toCssUnit(width)
       }
       return style
-    })
-
-    const computeMaps: VxeColPrivateComputed = {
     }
+  },
+  methods: {
+    //
+    // Method
+    //
+    dispatchEvent (type: ValueOf<VxeColEmits>, params: Record<string, any>, evnt: Event | null) {
+      const $xeCol = this
+      this.$emit(type, createEvent(evnt, { $col: $xeCol }, params))
+    },
+    //
+    // Render
+    //
+    renderVN (h: CreateElement): VNode {
+      const $xeCol = this
+      const props = $xeCol
+      const slots = $xeCol.$scopedSlots
 
-    const $xeCol = {
-      xID,
-      props,
-      context,
-      reactData,
-
-      getRefMaps: () => refMaps,
-      getComputeMaps: () => computeMaps
-    } as unknown as VxeColConstructor & VxeColPrivateMethods
-
-    const renderVN = () => {
       const { span, fill, align, ellipsis } = props
-      const colStyle = computeColStyle.value
+      const colStyle = $xeCol.computeColStyle
       const defaultSlot = slots.default
       return h('div', {
-        ref: refElem,
+        ref: 'refElem',
         class: ['vxe-col', span ? `span${span}` : '', align ? `align--${align}` : '', {
           'is--span': span,
           'is--fill': fill,
@@ -99,12 +118,8 @@ export default defineComponent({
         style: colStyle
       }, defaultSlot ? defaultSlot({}) : [])
     }
-
-    $xeCol.renderVN = renderVN
-
-    return $xeCol
   },
-  render () {
-    return this.renderVN()
+  render (this: any, h) {
+    return this.renderVN(h)
   }
 })

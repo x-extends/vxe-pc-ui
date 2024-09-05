@@ -1,4 +1,4 @@
-/* eslint-disable no-use-before-define */
+/* eslint-disable @typescript-eslint/no-empty-interface,@typescript-eslint/no-unused-vars,no-use-before-define */
 
 export interface VxeCustomPanel {
 }
@@ -23,10 +23,10 @@ export interface TableCustomPrivateMethods<D = any> {
 }
 
 declare module '../grid' {
-  export interface VxeGridMethods<D = any> extends TableCustomMethods<D> { }
+  export type VxeGridMethods<D = any> = TableCustomMethods<D>
 }
 
 declare module '../table' {
-  export interface VxeTableMethods<D = any> extends TableCustomMethods<D> { }
-  export interface VxeTablePrivateMethods<D = any> extends TableCustomPrivateMethods<D> { }
+  export type VxeTableMethods<D = any> = TableCustomMethods<D>
+  export type VxeTablePrivateMethods<D = any> = TableCustomPrivateMethods<D>
 }

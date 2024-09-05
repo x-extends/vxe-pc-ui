@@ -1,140 +1,193 @@
-import { defineComponent, h, ref, Ref, computed, reactive, nextTick, createCommentVNode, PropType, inject } from 'vue'
+import { PropType, CreateElement, VNode } from 'vue'
+import { defineVxeComponent } from '../../ui/src/comp'
 import XEUtils from 'xe-utils'
-import { getConfig, createEvent, useSize } from '../../ui'
+import { getConfig, createEvent, globalMixins, renderEmptyElement } from '../../ui'
 import { getFuncText } from '../../ui/src/utils'
 
-import type { VxeSwitchPropTypes, VxeSwitchConstructor, VxeSwitchEmits, SwitchReactData, SwitchMethods, VxeFormConstructor, VxeFormPrivateMethods, VxeFormDefines } from '../../../types'
+import type { VxeSwitchPropTypes, VxeSwitchEmits, VxeFormConstructor, VxeFormPrivateMethods, VxeFormDefines, SwitchReactData, SwitchInternalData, VxeComponentPermissionInfo, VxeComponentSizeType, ValueOf } from '../../../types'
 
-export default defineComponent({
+export default defineVxeComponent({
   name: 'VxeSwitch',
+  mixins: [
+    globalMixins.sizeMixin,
+    globalMixins.permissionMixin
+  ],
   props: {
-    modelValue: [String, Number, Boolean] as PropType<VxeSwitchPropTypes.ModelValue>,
+    value: [String, Number, Boolean] as PropType<VxeSwitchPropTypes.ModelValue>,
     disabled: {
       type: Boolean as PropType<VxeSwitchPropTypes.Disabled>,
       default: null
     },
-    size: { type: String as PropType<VxeSwitchPropTypes.Size>, default: () => getConfig().switch.size || getConfig().size },
+    size: {
+      type: String as PropType<VxeSwitchPropTypes.Size>,
+      default: () => getConfig().switch.size || getConfig().size
+    },
     openLabel: String as PropType<VxeSwitchPropTypes.OpenLabel>,
     closeLabel: String as PropType<VxeSwitchPropTypes.CloseLabel>,
-    openValue: { type: [String, Number, Boolean] as PropType<VxeSwitchPropTypes.OpenValue>, default: true },
-    closeValue: { type: [String, Number, Boolean] as PropType<VxeSwitchPropTypes.CloseValue>, default: false },
+    openValue: {
+      type: [String, Number, Boolean] as PropType<VxeSwitchPropTypes.OpenValue>,
+      default: true
+    },
+    closeValue: {
+      type: [String, Number, Boolean] as PropType<VxeSwitchPropTypes.CloseValue>,
+      default: false
+    },
     openIcon: String as PropType<VxeSwitchPropTypes.OpenIcon>,
     closeIcon: String as PropType<VxeSwitchPropTypes.CloseIcon>,
     openActiveIcon: String as PropType<VxeSwitchPropTypes.OpenActiveIcon>,
     closeActiveIcon: String as PropType<VxeSwitchPropTypes.CloseActiveIcon>
   },
-  emits: [
-    'update:modelValue',
-    'change',
-    'focus',
-    'blur'
-  ] as VxeSwitchEmits,
-  setup (props, context) {
-    const { emit } = context
-    const $xeForm = inject<VxeFormConstructor & VxeFormPrivateMethods | null>('$xeForm', null)
-    const formItemInfo = inject<VxeFormDefines.ProvideItemInfo | null>('xeFormItemInfo', null)
-
-    const xID = XEUtils.uniqueId()
-
-    const { computeSize } = useSize(props)
-
-    const reactData = reactive<SwitchReactData>({
+  inject: {
+    $xeForm: {
+      default: null
+    },
+    formItemInfo: {
+      from: 'xeFormItemInfo',
+      default: null
+    }
+  },
+  data () {
+    const reactData: SwitchReactData = {
       isActivated: false,
       hasAnimat: false,
       offsetLeft: 0
-    })
+    }
+    const internalData: SwitchInternalData = {
+    }
+    return {
+      xID: XEUtils.uniqueId(),
+      reactData,
+      internalData
+    }
+  },
+  computed: {
+    ...({} as {
+      computePermissionInfo(): VxeComponentPermissionInfo
+      computeSize(): VxeComponentSizeType
+      $xeForm(): (VxeFormConstructor & VxeFormPrivateMethods) | null
+      formItemInfo(): VxeFormDefines.ProvideItemInfo | null
+    }),
+    computeIsDisabled  () {
+      const $xeSwitch = this
+      const props = $xeSwitch
+      const $xeForm = $xeSwitch.$xeForm
 
-    const $xeSwitch = {
-      xID,
-      props,
-      context,
-      reactData
-    } as unknown as VxeSwitchConstructor
-
-    const refButton = ref() as Ref<HTMLButtonElement>
-
-    let switchMethods = {} as SwitchMethods
-
-    const computeIsDisabled = computed(() => {
       const { disabled } = props
       if (disabled === null) {
         if ($xeForm) {
-          return $xeForm.props.readonly || $xeForm.props.disabled
+          return $xeForm.readonly || $xeForm.disabled
         }
         return false
       }
       return disabled
-    })
+    },
+    computeOnShowLabel  () {
+      const $xeSwitch = this
+      const props = $xeSwitch
 
-    const computeOnShowLabel = computed(() => {
       return getFuncText(props.openLabel)
-    })
+    },
+    computeOffShowLabel  () {
+      const $xeSwitch = this
+      const props = $xeSwitch
 
-    const computeOffShowLabel = computed(() => {
       return getFuncText(props.closeLabel)
-    })
+    },
+    computeIsChecked  () {
+      const $xeSwitch = this
+      const props = $xeSwitch
 
-    const computeIsChecked = computed(() => {
-      return props.modelValue === props.openValue
-    })
+      return props.value === props.openValue
+    }
+  },
+  methods: {
+    //
+    // Method
+    //
+    dispatchEvent (type: ValueOf<VxeSwitchEmits>, params: Record<string, any>, evnt: Event | null) {
+      const $xeSwitch = this
+      this.$emit(type, createEvent(evnt, { $switch: $xeSwitch }, params))
+    },
+    focus () {
+      const $xeSwitch = this
+      const reactData = $xeSwitch.reactData
 
-    let _atimeout: any
-    const clickEvent = (evnt: Event) => {
-      const isDisabled = computeIsDisabled.value
+      const btnElem = $xeSwitch.$refs.refButton as HTMLButtonElement
+      reactData.isActivated = true
+      if (btnElem) {
+        btnElem.focus()
+      }
+      return $xeSwitch.$nextTick()
+    },
+    blur () {
+      const $xeSwitch = this
+      const reactData = $xeSwitch.reactData
+
+      const btnElem = $xeSwitch.$refs.refButton as HTMLButtonElement
+      if (btnElem) {
+        btnElem.blur()
+      }
+      reactData.isActivated = false
+      return $xeSwitch.$nextTick()
+    },
+    clickEvent  (evnt: Event) {
+      const $xeSwitch = this
+      const props = $xeSwitch
+      const reactData = $xeSwitch.reactData
+      const internalData = $xeSwitch.internalData
+      const $xeForm = $xeSwitch.$xeForm
+      const formItemInfo = $xeSwitch.formItemInfo
+
+      const isDisabled = $xeSwitch.computeIsDisabled
       if (!isDisabled) {
-        const isChecked = computeIsChecked.value
-        clearTimeout(_atimeout)
+        const isChecked = $xeSwitch.computeIsChecked
+        clearTimeout(internalData.atTimeout)
         const value = isChecked ? props.closeValue : props.openValue
         reactData.hasAnimat = true
-        emit('update:modelValue', value)
-        switchMethods.dispatchEvent('change', { value }, evnt)
+        $xeSwitch.$emit('input', value)
+        $xeSwitch.dispatchEvent('change', { value }, evnt)
         // 自动更新校验状态
         if ($xeForm && formItemInfo) {
           $xeForm.triggerItemEvent(evnt, formItemInfo.itemConfig.field, value)
         }
-        _atimeout = setTimeout(() => {
+        internalData.atTimeout = setTimeout(() => {
           reactData.hasAnimat = false
+          internalData.atTimeout = undefined
         }, 400)
       }
-    }
+    },
+    focusEvent  (evnt: Event) {
+      const $xeSwitch = this
+      const props = $xeSwitch
+      const reactData = $xeSwitch.reactData
 
-    const focusEvent = (evnt: Event) => {
       reactData.isActivated = true
-      switchMethods.dispatchEvent('focus', { value: props.modelValue }, evnt)
-    }
+      $xeSwitch.dispatchEvent('focus', { value: props.value }, evnt)
+    },
+    blurEvent  (evnt: Event) {
+      const $xeSwitch = this
+      const props = $xeSwitch
+      const reactData = $xeSwitch.reactData
 
-    const blurEvent = (evnt: Event) => {
       reactData.isActivated = false
-      switchMethods.dispatchEvent('blur', { value: props.modelValue }, evnt)
-    }
+      $xeSwitch.dispatchEvent('blur', { value: props.value }, evnt)
+    },
 
-    switchMethods = {
-      dispatchEvent (type, params, evnt) {
-        emit(type, createEvent(evnt, { $switch: $xeSwitch }, params))
-      },
-      focus () {
-        const btnElem = refButton.value
-        reactData.isActivated = true
-        btnElem.focus()
-        return nextTick()
-      },
-      blur () {
-        const btnElem = refButton.value
-        btnElem.blur()
-        reactData.isActivated = false
-        return nextTick()
-      }
-    }
+    //
+    // Render
+    //
+    renderVN (h: CreateElement): VNode {
+      const $xeSwitch = this
+      const props = $xeSwitch
+      const reactData = $xeSwitch.reactData
 
-    Object.assign($xeSwitch, switchMethods)
-
-    const renderVN = () => {
       const { openIcon, closeIcon, openActiveIcon, closeActiveIcon } = props
-      const vSize = computeSize.value
-      const isChecked = computeIsChecked.value
-      const onShowLabel = computeOnShowLabel.value
-      const offShowLabel = computeOffShowLabel.value
-      const isDisabled = computeIsDisabled.value
+      const vSize = $xeSwitch.computeSize
+      const isChecked = $xeSwitch.computeIsChecked
+      const onShowLabel = $xeSwitch.computeOnShowLabel
+      const offShowLabel = $xeSwitch.computeOffShowLabel
+      const isDisabled = $xeSwitch.computeIsDisabled
+
       return h('div', {
         class: ['vxe-switch', isChecked ? 'is--on' : 'is--off', {
           [`size--${vSize}`]: vSize,
@@ -143,13 +196,17 @@ export default defineComponent({
         }]
       }, [
         h('button', {
-          ref: refButton,
+          ref: 'refButton',
           class: 'vxe-switch--button',
-          type: 'button',
-          disabled: isDisabled,
-          onClick: clickEvent,
-          onFocus: focusEvent,
-          onBlur: blurEvent
+          attrs: {
+            type: 'button',
+            disabled: isDisabled
+          },
+          on: {
+            click: $xeSwitch.clickEvent,
+            focus: $xeSwitch.focusEvent,
+            blur: $xeSwitch.blurEvent
+          }
         }, [
           h('span', {
             class: 'vxe-switch--label vxe-switch--label-on'
@@ -158,7 +215,7 @@ export default defineComponent({
               ? h('i', {
                 class: ['vxe-switch--label-icon', openIcon]
               })
-              : createCommentVNode(),
+              : renderEmptyElement($xeSwitch),
             onShowLabel
           ]),
           h('span', {
@@ -168,7 +225,7 @@ export default defineComponent({
               ? h('i', {
                 class: ['vxe-switch--label-icon', closeIcon]
               })
-              : createCommentVNode(),
+              : renderEmptyElement($xeSwitch),
             offShowLabel
           ]),
           h('span', {
@@ -183,12 +240,8 @@ export default defineComponent({
         ])
       ])
     }
-
-    $xeSwitch.renderVN = renderVN
-
-    return $xeSwitch
   },
-  render () {
-    return this.renderVN()
+  render (this: any, h) {
+    return this.renderVN(h)
   }
 })

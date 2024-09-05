@@ -26,10 +26,16 @@
   </div>
 </template>
 
-<script lang="ts" setup>
-import { reactive } from 'vue'
+<script lang="ts">
+import Vue from 'vue'
 
-const demo1 = reactive({
-  value1: false
+export default Vue.extend({
+  data () {
+    return {
+      demo1: {
+        value1: false
+      }
+    }
+  }
 })
 </script>

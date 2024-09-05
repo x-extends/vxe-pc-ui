@@ -1,25 +1,18 @@
-import { RenderFunction, SetupContext, Ref, ComponentPublicInstance, DefineComponent } from 'vue'
-import { defineVxeComponent, VxeComponentBaseOptions, VxeComponentEventParams } from '@vxe-ui/core'
+import { DefineVxeComponentApp, DefineVxeComponentOptions, DefineVxeComponentInstance, VxeComponentBaseOptions, VxeComponentEventParams } from '@vxe-ui/core'
 import { VxeOptionPropTypes } from './option'
 
-/* eslint-disable no-use-before-define,@typescript-eslint/ban-types */
+/* eslint-disable @typescript-eslint/no-empty-interface,no-use-before-define,@typescript-eslint/ban-types */
 
-export declare const VxeOptgroup: defineVxeComponent<VxeOptgroupProps, VxeOptgroupEventProps, VxeOptgroupSlots>
-export type VxeOptgroupComponent = DefineComponent<VxeOptgroupProps & VxeOptgroupEventProps>
+export declare const VxeOptgroup: DefineVxeComponentApp<VxeOptgroupProps, VxeOptgroupEventProps, VxeOptgroupSlots>
+export type VxeOptgroupComponent = DefineVxeComponentOptions<VxeOptgroupProps, VxeOptgroupEventProps>
 
-export type VxeOptgroupInstance = ComponentPublicInstance<VxeOptgroupProps, VxeOptgroupConstructor>
+export type VxeOptgroupInstance = DefineVxeComponentInstance<VxeOptgroupProps, VxeOptgroupConstructor>
 
 export interface VxeOptgroupConstructor extends VxeComponentBaseOptions, VxeOptgroupMethods {
-  props: VxeOptgroupProps
-  context: SetupContext<VxeOptgroupEmits>
   reactData: OptgroupReactData
-  getRefMaps(): OptgroupPrivateRef
-  getComputeMaps(): OptgroupPrivateComputed
-  renderVN: RenderFunction
 }
 
 export interface OptgroupPrivateRef {
-  refElem: Ref<HTMLDivElement | undefined>
 }
 export interface VxeOptgroupPrivateRef extends OptgroupPrivateRef { }
 

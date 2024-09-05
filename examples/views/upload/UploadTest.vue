@@ -37,33 +37,39 @@
   </div>
 </template>
 
-<script lang="ts" setup>
-import { ref } from 'vue'
-import { VxeUploadPropTypes } from '../../../types'
+<script lang="ts">
+import Vue from 'vue'
 
-const fileList = ref<VxeUploadPropTypes.ModelValue>([
-  { name: '673.gif', type: 'gif', url: 'https://vxeui.com/resource/img/bq673.gif' },
-  { name: 'fj573.gif', type: 'gif', url: 'https://vxeui.com/resource/img/img/fj573.jpeg' },
-  { name: 'fj562.png', url: 'https://vxeui.com/resource/img/fj562.png' }
-])
-const imgList = ref([
-  { name: 'fj577.jpg', url: 'https://vxeui.com/resource/img/fj577.jpg' },
-  { name: 'fj581.jpeg', url: 'https://vxeui.com/resource/img/fj581.jpeg' },
-  { name: 'fj573.jpeg', url: 'https://vxeui.com/resource/img/fj573.jpeg' },
-  { name: 'fj562.png', url: 'https://vxeui.com/resource/img/fj562.png' },
-  { name: 'fj187.jpg', url: 'https://vxeui.com/resource/img/fj187.jpg' }
-])
-
-const uploadMethod: VxeUploadPropTypes.UploadMethod = ({ file, updateProgress }) => {
-  const formData = new FormData()
-  formData.append('file', file)
-  return window.axios.post('/api/pub/upload/single', formData, {
-    onUploadProgress (progressEvent: any) {
-      const percentCompleted = Math.round((progressEvent.loaded * 100) / progressEvent.total)
-      updateProgress(percentCompleted)
+export default Vue.extend({
+  data () {
+    return {
+      fileList: [
+        { name: '673.gif', type: 'gif', url: 'https://vxeui.com/resource/img/bq673.gif' },
+        { name: 'fj573.gif', type: 'gif', url: 'https://vxeui.com/resource/img/img/fj573.jpeg' },
+        { name: 'fj562.png', url: 'https://vxeui.com/resource/img/fj562.png' }
+      ],
+      imgList: [
+        { name: 'fj577.jpg', url: 'https://vxeui.com/resource/img/fj577.jpg' },
+        { name: 'fj581.jpeg', url: 'https://vxeui.com/resource/img/fj581.jpeg' },
+        { name: 'fj573.jpeg', url: 'https://vxeui.com/resource/img/fj573.jpeg' },
+        { name: 'fj562.png', url: 'https://vxeui.com/resource/img/fj562.png' },
+        { name: 'fj187.jpg', url: 'https://vxeui.com/resource/img/fj187.jpg' }
+      ]
     }
-  }).then((res: any) => {
-    return res.data
-  })
-}
+  },
+  methods: {
+    uploadMethod  ({ file, updateProgress }: any) {
+      const formData = new FormData()
+      formData.append('file', file)
+      return window.axios.post('/api/pub/upload/single', formData, {
+        onUploadProgress (progressEvent: any) {
+          const percentCompleted = Math.round((progressEvent.loaded * 100) / progressEvent.total)
+          updateProgress(percentCompleted)
+        }
+      }).then((res: any) => {
+        return res.data
+      })
+    }
+  }
+})
 </script>

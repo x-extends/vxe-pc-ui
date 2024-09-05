@@ -1,22 +1,15 @@
-import { RenderFunction, SetupContext, Ref, DefineComponent } from 'vue'
-import { defineVxeComponent, VxeComponentBaseOptions, VxeComponentEventParams, ValueOf } from '@vxe-ui/core'
+import { DefineVxeComponentApp, DefineVxeComponentOptions, VxeComponentBaseOptions, VxeComponentEventParams, ValueOf } from '@vxe-ui/core'
 
-/* eslint-disable no-use-before-define,@typescript-eslint/ban-types */
+/* eslint-disable @typescript-eslint/no-empty-interface,no-use-before-define,@typescript-eslint/ban-types */
 
-export declare const VxeLayoutHeader: defineVxeComponent<VxeLayoutHeaderProps, VxeLayoutHeaderEventProps, VxeLayoutHeaderSlots>
-export type VxeLayoutHeaderComponent = DefineComponent<VxeLayoutHeaderProps & VxeLayoutHeaderEventProps>
+export declare const VxeLayoutHeader: DefineVxeComponentApp<VxeLayoutHeaderProps, VxeLayoutHeaderEventProps, VxeLayoutHeaderSlots>
+export type VxeLayoutHeaderComponent = DefineVxeComponentOptions<VxeLayoutHeaderProps, VxeLayoutHeaderEventProps>
 
-export interface VxeLayoutHeaderConstructor extends VxeComponentBaseOptions, VxeLayoutHeaderMethods {
-  props: VxeLayoutHeaderProps
-  context: SetupContext<VxeLayoutHeaderEmits>
+export interface VxeLayoutHeaderConstructor extends VxeComponentBaseOptions, VxeLayoutHeaderProps, VxeLayoutHeaderMethods {
   reactData: LayoutHeaderReactData
-  getRefMaps(): LayoutHeaderPrivateRef
-  getComputeMaps(): LayoutHeaderPrivateComputed
-  renderVN: RenderFunction
 }
 
 export interface LayoutHeaderPrivateRef {
-  refElem: Ref<HTMLDivElement | undefined>
 }
 export interface VxeLayoutHeaderPrivateRef extends LayoutHeaderPrivateRef { }
 
@@ -24,7 +17,7 @@ export namespace VxeLayoutHeaderPropTypes {
   export type Fixed = boolean
 }
 
-export type VxeLayoutHeaderProps = {
+export interface VxeLayoutHeaderProps {
   fixed?: VxeLayoutHeaderPropTypes.Fixed
 }
 

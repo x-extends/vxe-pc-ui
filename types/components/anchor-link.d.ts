@@ -1,28 +1,21 @@
-import { RenderFunction, SetupContext, Ref, ComponentPublicInstance, DefineComponent } from 'vue'
-import { defineVxeComponent, VxeComponentBaseOptions, VxeComponentEventParams } from '@vxe-ui/core'
+import { DefineVxeComponentApp, DefineVxeComponentOptions, DefineVxeComponentInstance, VxeComponentBaseOptions, VxeComponentEventParams } from '@vxe-ui/core'
 import { VxeAnchorPropTypes } from './anchor'
 
-/* eslint-disable no-use-before-define,@typescript-eslint/ban-types */
+/* eslint-disable @typescript-eslint/no-empty-interface,no-use-before-define,@typescript-eslint/ban-types */
 
-export declare const VxeAnchorLink: defineVxeComponent<VxeAnchorLinkProps, VxeAnchorLinkEventProps, VxeAnchorLinkSlots>
-export type VxeAnchorLinkComponent = DefineComponent<VxeAnchorLinkProps & VxeAnchorLinkEventProps>
+export declare const VxeAnchorLink: DefineVxeComponentApp<VxeAnchorLinkProps, VxeAnchorLinkEventProps, VxeAnchorLinkSlots>
+export type VxeAnchorLinkComponent = DefineVxeComponentOptions<VxeAnchorLinkProps, VxeAnchorLinkEventProps>
 
-export type VxeAnchorLinkInstance = ComponentPublicInstance<VxeAnchorLinkProps, VxeAnchorLinkConstructor>
+export type VxeAnchorLinkInstance = DefineVxeComponentInstance<VxeAnchorLinkProps, VxeAnchorLinkConstructor>
 
 export interface VxeAnchorLinkConstructor extends VxeComponentBaseOptions, VxeAnchorLinkMethods {
-  props: VxeAnchorLinkProps
-  context: SetupContext<VxeAnchorLinkEmits>
   reactData: AnchorLinkReactData
   linkConfig: VxeAnchorLinkDefines.LinkConfig
-  getRefMaps(): AnchorLinkPrivateRef
-  getComputeMaps(): AnchorLinkPrivateComputed
-  renderVN: RenderFunction
 }
 
 export interface AnchorLinkPrivateRef {
-  refElem: Ref<HTMLDivElement | undefined>
 }
-export interface VxeAnchorLinkPrivateRef extends AnchorLinkPrivateRef { }
+export type VxeAnchorLinkPrivateRef = AnchorLinkPrivateRef
 
 export namespace VxeAnchorLinkPropTypes {
   export type Content = string | number
@@ -40,17 +33,17 @@ export type VxeAnchorLinkProps = {
 
 export interface AnchorLinkPrivateComputed {
 }
-export interface VxeAnchorLinkPrivateComputed extends AnchorLinkPrivateComputed { }
+export type VxeAnchorLinkPrivateComputed = AnchorLinkPrivateComputed
 
 export interface AnchorLinkReactData {
 }
 
 export interface AnchorLinkMethods {
 }
-export interface VxeAnchorLinkMethods extends AnchorLinkMethods { }
+export type VxeAnchorLinkMethods = AnchorLinkMethods
 
 export interface AnchorLinkPrivateMethods { }
-export interface VxeAnchorLinkPrivateMethods extends AnchorLinkPrivateMethods { }
+export type VxeAnchorLinkPrivateMethods = AnchorLinkPrivateMethods
 
 export type VxeAnchorLinkEmits = []
 

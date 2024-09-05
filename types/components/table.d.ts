@@ -1,51 +1,26 @@
-import { RenderFunction, SetupContext, Ref, ComponentPublicInstance, ComputedRef, DefineComponent, VNode } from 'vue'
-import { defineVxeComponent, VxeComponentBaseOptions, VxeComponentEventParams, VxeComponentSizeType, ValueOf, VxeGlobalConfig, VxeComponentStyleType, VxeComponentSlotType } from '@vxe-ui/core'
+import { VNode } from 'vue'
+import { DefineVxeComponentApp, DefineVxeComponentOptions, DefineVxeComponentInstance, VxeComponentBaseOptions, VxeComponentEventParams, VxeComponentSizeType, ValueOf, VxeGlobalConfig, VxeComponentStyleType, VxeComponentSlotType } from '@vxe-ui/core'
 import { VxeColumnPropTypes, VxeColumnProps, VxeColumnSlotTypes } from './column'
 import { VxeTableProDefines, VxeTableProEmits } from './table-plugins'
 import { VxeGridConstructor } from './grid'
-import { VxeTooltipInstance, VxeTooltipPropTypes } from './tooltip'
+import { VxeTooltipPropTypes } from './tooltip'
 import { VxeModalPropTypes } from './modal'
 import { VxeDrawerPropTypes } from './drawer'
 import { VxeToolbarConstructor, VxeToolbarInstance } from './toolbar'
 
-/* eslint-disable no-use-before-define,@typescript-eslint/ban-types */
+/* eslint-disable @typescript-eslint/no-empty-interface,no-use-before-define,@typescript-eslint/ban-types,@typescript-eslint/no-unused-vars */
 
-export declare const VxeTable: defineVxeComponent<VxeTableProps, VxeTableEventProps, VxeTableSlots>
-export type VxeTableComponent = DefineComponent<VxeTableProps & VxeTableEventProps>
+export declare const VxeTable: DefineVxeComponentApp<VxeTableProps, VxeTableEventProps, VxeTableSlots>
+export type VxeTableComponent = DefineVxeComponentOptions<VxeTableProps, VxeTableEventProps>
 
-export type VxeTableInstance<D = any> = ComponentPublicInstance<VxeTableProps<D>, VxeTableConstructor>
+export type VxeTableInstance<D = any> = DefineVxeComponentInstance<VxeTableProps<D>, VxeTableConstructor>
 
-export interface VxeTableConstructor<D = any> extends VxeComponentBaseOptions, VxeTableMethods {
-  props: VxeTableProps
-  context: SetupContext<VxeTableEmits>
+export interface VxeTableConstructor<D = any> extends VxeComponentBaseOptions, VxeTableProps, VxeTableMethods {
   reactData: TableReactData
   internalData: TableInternalData<D>
-  getRefMaps(): TablePrivateRef
-  getComputeMaps(): TablePrivateComputed
-  renderVN: RenderFunction
-
-  xegrid: VxeGridConstructor<D> | null
 }
 
 export interface TablePrivateRef {
-  refElem: Ref<HTMLDivElement>
-  refTooltip: Ref<VxeTooltipInstance>
-  refValidTooltip: Ref<VxeTooltipInstance>
-  refTableFilter: Ref<ComponentPublicInstance>
-  refTableCustom: Ref<ComponentPublicInstance>
-  refTableMenu: Ref<any>
-  refTableHeader: Ref<ComponentPublicInstance>
-  refTableBody: Ref<ComponentPublicInstance>
-  refTableFooter: Ref<ComponentPublicInstance>
-  refTableLeftHeader: Ref<ComponentPublicInstance>
-  refTableLeftBody: Ref<ComponentPublicInstance>
-  refTableLeftFooter: Ref<ComponentPublicInstance>
-  refTableRightHeader: Ref<ComponentPublicInstance>
-  refTableRightBody: Ref<ComponentPublicInstance>
-  refTableRightFooter: Ref<ComponentPublicInstance>
-  refLeftContainer: Ref<HTMLDivElement>
-  refRightContainer: Ref<HTMLDivElement>
-  refCellResizeBar: Ref<HTMLDivElement>
 }
 
 export interface VxeTablePrivateRef extends TablePrivateRef { }
@@ -1682,7 +1657,7 @@ export namespace VxeTablePropTypes {
   export interface PrintHandleOptions extends PrintConfig { }
 }
 
-export type VxeTableProps<D = any> = {
+export interface VxeTableProps<D = any> {
   size?: VxeTablePropTypes.Size
   /**
    * 唯一标识
@@ -2026,43 +2001,6 @@ export type VxeTableProps<D = any> = {
 }
 
 export interface TablePrivateComputed<D = any> {
-  computeSize: ComputedRef<VxeTablePropTypes.Size>
-  computeTableId: ComputedRef<string>
-  computeValidOpts: ComputedRef<VxeTablePropTypes.ValidOpts<D>>
-  computeSXOpts: ComputedRef<VxeTablePropTypes.SXOpts>
-  computeSYOpts: ComputedRef<VxeTablePropTypes.SYOpts>
-  computeColumnOpts: ComputedRef<VxeTablePropTypes.ColumnOpts>
-  computeRowOpts: ComputedRef<VxeTablePropTypes.RowOpts>
-  computeResizeleOpts: ComputedRef<VxeTablePropTypes.ResizeOpts>
-  computeResizableOpts: ComputedRef<VxeTablePropTypes.ResizableOpts<D>>
-  computeSeqOpts: ComputedRef<VxeTablePropTypes.SeqOpts<D>>
-  computeRadioOpts: ComputedRef<VxeTablePropTypes.RadioOpts<D>>
-  computeCheckboxOpts: ComputedRef<VxeTablePropTypes.CheckboxOpts<D>>
-  computeTooltipOpts: ComputedRef<VxeTablePropTypes.TooltipOpts<D>>
-  computeEditOpts: ComputedRef<VxeTablePropTypes.EditOpts<D>>
-  computeSortOpts: ComputedRef<VxeTablePropTypes.SortConfig<D>>
-  computeFilterOpts: ComputedRef<VxeTablePropTypes.FilterOpts<D>>
-  computeMouseOpts: ComputedRef<VxeTablePropTypes.MouseOpts>
-  computeAreaOpts: ComputedRef<VxeTablePropTypes.AreaOpts>
-  computeKeyboardOpts: ComputedRef<VxeTablePropTypes.KeyboardOpts>
-  computeClipOpts: ComputedRef<VxeTablePropTypes.ClipOpts<D>>
-  computeFNROpts: ComputedRef<VxeTablePropTypes.FNROpts<D>>
-  computeHeaderMenu: ComputedRef<VxeTableDefines.MenuFirstOption>
-  computeBodyMenu: ComputedRef<VxeTableDefines.MenuFirstOption>
-  computeFooterMenu: ComputedRef<VxeTableDefines.MenuFirstOption>
-  computeIsMenu: ComputedRef<boolean>
-  computeMenuOpts: ComputedRef<VxeTablePropTypes.MenuOpts<D>>
-  computeExportOpts: ComputedRef<VxeTablePropTypes.ExportOpts>
-  computeImportOpts: ComputedRef<VxeTablePropTypes.ImportOpts>
-  computePrintOpts: ComputedRef<VxeTablePropTypes.PrintOpts>
-  computeExpandOpts: ComputedRef<VxeTablePropTypes.ExpandOpts<D>>
-  computeTreeOpts: ComputedRef<VxeTablePropTypes.TreeOpts<D>>
-  computeEmptyOpts: ComputedRef<VxeTablePropTypes.EmptyOpts>
-  computeLoadingOpts: ComputedRef<VxeTablePropTypes.LoadingOpts>
-  computeCustomOpts: ComputedRef<VxeTablePropTypes.CustomOpts<D>>
-  computeFixedColumnSize: ComputedRef<number>
-  computeIsMaxFixedColumn: ComputedRef<boolean>
-  computeIsAllCheckboxDisabled: ComputedRef<boolean>
 }
 export interface VxeTablePrivateComputed extends TablePrivateComputed { }
 
@@ -2299,7 +2237,7 @@ export interface TableReactData<D = any> {
 export interface TableInternalData<D = any> {
   tZindex: number
   elemStore: {
-    [key: string]: Ref<HTMLElement> | null
+    [key: string]: any
   }
   // 存放横向 X 虚拟滚动相关的信息
   scrollXStore: {

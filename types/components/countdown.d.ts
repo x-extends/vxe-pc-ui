@@ -1,25 +1,18 @@
-import { RenderFunction, SetupContext, Ref, ComputedRef, ComponentPublicInstance, DefineComponent } from 'vue'
-import { defineVxeComponent, VxeComponentBaseOptions, VxeComponentEventParams, ValueOf, VxeComponentStatusType, VxeComponentSizeType } from '@vxe-ui/core'
+import { DefineVxeComponentApp, DefineVxeComponentOptions, DefineVxeComponentInstance, VxeComponentBaseOptions, VxeComponentEventParams, ValueOf, VxeComponentStatusType, VxeComponentSizeType } from '@vxe-ui/core'
 import { DateDiffResult } from 'xe-utils'
 
-/* eslint-disable no-use-before-define,@typescript-eslint/ban-types */
+/* eslint-disable @typescript-eslint/no-empty-interface,no-use-before-define,@typescript-eslint/ban-types */
 
-export declare const VxeCountdown: defineVxeComponent<VxeCountdownProps, VxeCountdownEventProps, VxeCountdownSlots>
-export type VxeCountdownComponent = DefineComponent<VxeCountdownProps & VxeCountdownEventProps>
+export declare const VxeCountdown: DefineVxeComponentApp<VxeCountdownProps, VxeCountdownEventProps, VxeCountdownSlots>
+export type VxeCountdownComponent = DefineVxeComponentOptions<VxeCountdownProps, VxeCountdownEventProps>
 
-export type VxeCountdownInstance = ComponentPublicInstance<VxeCountdownProps, VxeCountdownConstructor>
+export type VxeCountdownInstance = DefineVxeComponentInstance<VxeCountdownProps, VxeCountdownConstructor>
 
 export interface VxeCountdownConstructor extends VxeComponentBaseOptions, VxeCountdownMethods {
-  props: VxeCountdownProps
-  context: SetupContext<VxeCountdownEmits>
   reactData: CountdownReactData
-  getRefMaps(): CountdownPrivateRef
-  getComputeMaps(): CountdownPrivateComputed
-  renderVN: RenderFunction
 }
 
 export interface CountdownPrivateRef {
-  refElem: Ref<HTMLDivElement | undefined>
 }
 export interface VxeCountdownPrivateRef extends CountdownPrivateRef { }
 
@@ -44,7 +37,7 @@ export type VxeCountdownProps = {
 }
 
 export interface CountdownPrivateComputed {
-  computeSize: ComputedRef<VxeCountdownPropTypes.Size>
+  computeSize: VxeCountdownPropTypes.Size
 }
 export interface VxeCountdownPrivateComputed extends CountdownPrivateComputed { }
 

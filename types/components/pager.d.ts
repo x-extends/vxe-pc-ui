@@ -1,25 +1,18 @@
-import { RenderFunction, SetupContext, Ref, ComponentPublicInstance, DefineComponent } from 'vue'
-import { defineVxeComponent, VxeComponentBaseOptions, VxeComponentEventParams, VxeComponentSizeType, ValueOf } from '@vxe-ui/core'
+import { DefineVxeComponentApp, DefineVxeComponentOptions, DefineVxeComponentInstance, VxeComponentBaseOptions, VxeComponentEventParams, VxeComponentSizeType, ValueOf } from '@vxe-ui/core'
 import { VxeSelectPropTypes } from './select'
 
-/* eslint-disable no-use-before-define,@typescript-eslint/ban-types */
+/* eslint-disable @typescript-eslint/no-empty-interface,no-use-before-define,@typescript-eslint/ban-types */
 
-export declare const VxePager: defineVxeComponent<VxePagerProps, VxePagerEventProps, VxePagerSlots>
-export type VxePagerComponent = DefineComponent<VxePagerProps & VxePagerEventProps>
+export declare const VxePager: DefineVxeComponentApp<VxePagerProps, VxePagerEventProps, VxePagerSlots>
+export type VxePagerComponent = DefineVxeComponentOptions<VxePagerProps, VxePagerEventProps>
 
-export type VxePagerInstance = ComponentPublicInstance<VxePagerProps, VxePagerConstructor>
+export type VxePagerInstance = DefineVxeComponentInstance<VxePagerProps, VxePagerConstructor>
 
 export interface VxePagerConstructor extends VxeComponentBaseOptions, VxePagerMethods {
-  props: VxePagerProps
-  context: SetupContext<VxePagerEmits>
   reactData: PagerReactData
-  getRefMaps(): PagerPrivateRef
-  getComputeMaps(): PagerPrivateComputed
-  renderVN: RenderFunction
 }
 
 export interface PagerPrivateRef {
-  refElem: Ref<HTMLDivElement | undefined>
 }
 export interface VxePagerPrivateRef extends PagerPrivateRef { }
 

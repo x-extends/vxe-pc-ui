@@ -1,25 +1,18 @@
-import { RenderFunction, SetupContext, Ref, ComponentPublicInstance, DefineComponent } from 'vue'
-import { defineVxeComponent, VxeComponentBaseOptions, VxeComponentEventParams, ValueOf, VxeComponentSizeType, VxeComponentPermissionCodeType } from '@vxe-ui/core'
+import { DefineVxeComponentApp, DefineVxeComponentOptions, DefineVxeComponentInstance, VxeComponentBaseOptions, VxeComponentEventParams, ValueOf, VxeComponentSizeType, VxeComponentPermissionCodeType } from '@vxe-ui/core'
 import { VxeLinkPropTypes } from './link'
 
-/* eslint-disable no-use-before-define,@typescript-eslint/ban-types */
+/* eslint-disable @typescript-eslint/no-empty-interface,no-use-before-define,@typescript-eslint/ban-types */
 
-export declare const VxeMenu: defineVxeComponent<VxeMenuProps, VxeMenuEventProps, VxeMenuSlots>
-export type VxeMenuComponent = DefineComponent<VxeMenuProps & VxeMenuEventProps>
+export declare const VxeMenu: DefineVxeComponentApp<VxeMenuProps, VxeMenuEventProps, VxeMenuSlots>
+export type VxeMenuComponent = DefineVxeComponentOptions<VxeMenuProps, VxeMenuEventProps>
 
-export type VxeMenuInstance = ComponentPublicInstance<VxeMenuProps, VxeMenuConstructor>
+export type VxeMenuInstance = DefineVxeComponentInstance<VxeMenuProps, VxeMenuConstructor>
 
-export interface VxeMenuConstructor extends VxeComponentBaseOptions, VxeMenuMethods {
-  props: VxeMenuProps
-  context: SetupContext<VxeMenuEmits>
+export interface VxeMenuConstructor extends VxeComponentBaseOptions, VxeMenuProps, VxeMenuMethods {
   reactData: MenuReactData
-  getRefMaps(): MenuPrivateRef
-  getComputeMaps(): MenuPrivateComputed
-  renderVN: RenderFunction
 }
 
 export interface MenuPrivateRef {
-  refElem: Ref<HTMLDivElement | undefined>
 }
 export interface VxeMenuPrivateRef extends MenuPrivateRef { }
 

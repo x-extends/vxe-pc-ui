@@ -2,7 +2,7 @@ import { VxeComponentEventParams } from '@vxe-ui/core'
 import { VxeTableDefines, VxeTableConstructor, VxeTablePrivateMethods } from '../table'
 import { VxeGridConstructor } from '../grid'
 
-/* eslint-disable no-use-before-define */
+/* eslint-disable @typescript-eslint/no-empty-interface,no-use-before-define,@typescript-eslint/no-unused-vars */
 
 export interface VxeTableProMethods<D = any> {
   /**
@@ -95,13 +95,13 @@ export interface VxeTableProPrivateMethods<D = any> {
 export type VxeProPluginPrivateMethods<D = any> = VxeTableProPrivateMethods<D>
 
 declare module '../table' {
-  export interface VxeTableMethods<D = any> extends VxeTableProMethods<D> { }
-  export interface VxeTablePrivateMethods<D = any> extends VxeTableProPrivateMethods<D> { }
+  export type VxeTableMethods<D = any> = VxeTableProMethods<D>
+  export type VxeTablePrivateMethods<D = any> = VxeTableProPrivateMethods<D>
 }
 
 declare module '../grid' {
-  export interface VxeGridMethods<D = any> extends VxeTableProMethods<D> { }
-  export interface VxeGridPrivateMethods<D = any> extends VxeTableProPrivateMethods<D> { }
+  export type VxeGridMethods<D = any> = VxeTableProMethods<D>
+  export type VxeGridPrivateMethods<D = any> = VxeTableProPrivateMethods<D>
 }
 
 export namespace VxeTableProDefines {

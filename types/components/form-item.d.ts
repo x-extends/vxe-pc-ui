@@ -1,26 +1,19 @@
-import { RenderFunction, SetupContext, Ref, DefineComponent } from 'vue'
-import { defineVxeComponent, VxeComponentBaseOptions, VxeComponentEventParams, VxeComponentStyleType, VxeComponentSlotType } from '@vxe-ui/core'
+import { DefineVxeComponentApp, DefineVxeComponentOptions, VxeComponentBaseOptions, VxeComponentEventParams, VxeComponentStyleType, VxeComponentSlotType } from '@vxe-ui/core'
 import { VxeFormDefines, VxeFormConstructor, VxeFormPropTypes } from './form'
 import { VxeGridConstructor } from './grid'
 import { VxeTooltipPropTypes } from './tooltip'
 import { VxeIconPropTypes } from './icon'
 
-/* eslint-disable no-use-before-define,@typescript-eslint/ban-types */
+/* eslint-disable @typescript-eslint/no-empty-interface,no-use-before-define,@typescript-eslint/ban-types */
 
-export declare const VxeFormItem: defineVxeComponent<VxeFormItemProps, VxeFormItemEventProps, VxeFormItemSlots>
-export type VxeFormItemComponent = DefineComponent<VxeFormItemProps & VxeFormItemEventProps>
+export declare const VxeFormItem: DefineVxeComponentApp<VxeFormItemProps, VxeFormItemEventProps, VxeFormItemSlots>
+export type VxeFormItemComponent = DefineVxeComponentOptions<VxeFormItemProps, VxeFormItemEventProps>
 
-export interface VxeFormItemConstructor extends VxeComponentBaseOptions, VxeFormItemMethods {
-  props: VxeFormItemProps
-  context: SetupContext<VxeFormItemEmits>
+export interface VxeFormItemConstructor extends VxeComponentBaseOptions, VxeFormItemProps, VxeFormItemMethods {
   reactData: FormItemReactData
-  getRefMaps(): FormItemPrivateRef
-  getComputeMaps(): FormItemPrivateComputed
-  renderVN: RenderFunction
 }
 
 export interface FormItemPrivateRef {
-  refElem: Ref<HTMLDivElement | undefined>
 }
 export interface VxeFormItemPrivateRef extends FormItemPrivateRef { }
 
@@ -322,7 +315,7 @@ export namespace VxeFormItemEvents { }
 
 export namespace VxeFormItemSlotTypes {
   export interface DefaultSlotParams<D = any> {
-    $form: VxeFormConstructor
+    $form: VxeFormConstructor<D>
     $grid: VxeGridConstructor | null
     data: any
     item: VxeFormDefines.ItemInfo

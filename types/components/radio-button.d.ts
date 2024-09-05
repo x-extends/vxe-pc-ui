@@ -1,25 +1,18 @@
-import { RenderFunction, SetupContext, Ref, ComponentPublicInstance, DefineComponent } from 'vue'
-import { defineVxeComponent, VxeComponentBaseOptions, VxeComponentEventParams, ValueOf } from '@vxe-ui/core'
+import { DefineVxeComponentApp, DefineVxeComponentOptions, DefineVxeComponentInstance, VxeComponentBaseOptions, VxeComponentEventParams, ValueOf } from '@vxe-ui/core'
 import { VxeRadioPropTypes } from './radio'
 
-/* eslint-disable no-use-before-define,@typescript-eslint/ban-types */
+/* eslint-disable @typescript-eslint/no-empty-interface,no-use-before-define,@typescript-eslint/ban-types */
 
-export declare const VxeRadioButton: defineVxeComponent<VxeRadioButtonProps, VxeRadioButtonEventProps, VxeRadioButtonSlots>
-export type VxeRadioButtonComponent = DefineComponent<VxeRadioButtonProps & VxeRadioButtonEventProps>
+export declare const VxeRadioButton: DefineVxeComponentApp<VxeRadioButtonProps, VxeRadioButtonEventProps, VxeRadioButtonSlots>
+export type VxeRadioButtonComponent = DefineVxeComponentOptions<VxeRadioButtonProps, VxeRadioButtonEventProps>
 
-export type VxeRadioButtonInstance = ComponentPublicInstance<VxeRadioButtonProps, VxeRadioButtonConstructor>
+export type VxeRadioButtonInstance = DefineVxeComponentInstance<VxeRadioButtonProps, VxeRadioButtonConstructor>
 
-export interface VxeRadioButtonConstructor extends VxeComponentBaseOptions, VxeRadioButtonMethods {
-  props: VxeRadioButtonProps
-  context: SetupContext<VxeRadioButtonEmits>
+export interface VxeRadioButtonConstructor extends VxeComponentBaseOptions, VxeRadioButtonProps, VxeRadioButtonMethods {
   reactData: RadioButtonReactData
-  getRefMaps(): RadioButtonPrivateRef
-  getComputeMaps(): RadioButtonPrivateComputed
-  renderVN: RenderFunction
 }
 
 export interface RadioButtonPrivateRef {
-  refElem: Ref<HTMLDivElement | undefined>
 }
 export interface VxeRadioButtonPrivateRef extends RadioButtonPrivateRef { }
 
@@ -33,9 +26,9 @@ export namespace VxeRadioButtonPropTypes {
   export type Disabled = boolean
 }
 
-export type VxeRadioButtonProps = {
+export interface VxeRadioButtonProps {
   size?: VxeRadioButtonPropTypes.Size
-  modelValue?: VxeRadioButtonPropTypes.ModelValue
+  value?: VxeRadioButtonPropTypes.ModelValue
   /**
    * 严格模式，不允许取消
    */

@@ -1,12 +1,17 @@
-import { defineComponent, ref, h, reactive, PropType, createCommentVNode } from 'vue'
+import { PropType, CreateElement, VNode } from 'vue'
+import { defineVxeComponent } from '../../ui/src/comp'
 import XEUtils from 'xe-utils'
-import { VxeUI, getConfig, getIcon, getI18n, useSize, createEvent } from '../../ui'
+import { VxeUI, getConfig, getIcon, getI18n, renderEmptyElement, createEvent, globalMixins } from '../../ui'
 import { getSlotVNs } from '../../ui/src/vn'
 
-import type { VxeTextPropTypes, TextReactData, TextPrivateRef, VxeTextPrivateComputed, TextMethods, TextPrivateMethods, VxeTextEmits, VxeTextConstructor, ValueOf, VxeTextPrivateMethods } from '../../../types'
+import type { VxeTextPropTypes, TextReactData, VxeTextEmits, VxeComponentSizeType, ValueOf } from '../../../types'
 
-export default defineComponent({
+export default defineVxeComponent({
   name: 'VxeText',
+  mixins: [
+    globalMixins.sizeMixin,
+    globalMixins.permissionMixin
+  ],
   props: {
     status: String as PropType<VxeTextPropTypes.Status>,
     title: [String, Number] as PropType<VxeTextPropTypes.Title>,
@@ -14,35 +19,39 @@ export default defineComponent({
     loading: Boolean as PropType<VxeTextPropTypes.Loading>,
     content: [String, Number] as PropType<VxeTextPropTypes.Content>,
     clickToCopy: Boolean as PropType<VxeTextPropTypes.ClickToCopy>,
-    size: { type: String as PropType<VxeTextPropTypes.Size>, default: () => getConfig().text.size || getConfig().size }
+    size: {
+      type: String as PropType<VxeTextPropTypes.Size>,
+      default: () => getConfig().text.size || getConfig().size
+    }
   },
-  emits: [
-    'click'
-  ] as VxeTextEmits,
-  setup (props, context) {
-    const { emit, slots } = context
-
-    const xID = XEUtils.uniqueId()
-
-    const { computeSize } = useSize(props)
-
-    const refElem = ref<HTMLDivElement>()
-    const refContentElem = ref<HTMLSpanElement>()
-
-    const reactData = reactive<TextReactData>({
+  data () {
+    const reactData: TextReactData = {
+    }
+    return {
+      xID: XEUtils.uniqueId(),
+      reactData
+    }
+  },
+  computed: {
+    ...({} as {
+      computeSize(): VxeComponentSizeType
     })
+  },
+  methods: {
+    //
+    // Method
+    //
+    dispatchEvent (type: ValueOf<VxeTextEmits>, params: Record<string, any>, evnt: Event | null) {
+      const $xeText = this
+      this.$emit(type, createEvent(evnt, { $text: $xeText }, params))
+    },
+    clickIconEvent () {
+      const $xeText = this
+      const props = $xeText
 
-    const refMaps: TextPrivateRef = {
-      refElem
-    }
-
-    const computeMaps: VxeTextPrivateComputed = {
-    }
-
-    const clickIconEvent = () => {
       const { content, clickToCopy } = props
       if (clickToCopy) {
-        const contentEl = refContentElem.value
+        const contentEl = $xeText.$refs.refContentElem as HTMLSpanElement
         const copyVal = (contentEl ? contentEl.textContent : '') || content
         if (copyVal) {
           if (VxeUI.clipboard.copy(copyVal)) {
@@ -62,39 +71,25 @@ export default defineComponent({
           }
         }
       }
-    }
+    },
+    clickEvent  (evnt : MouseEvent) {
+      const $xeText = this
+      const props = $xeText
 
-    const $xeText = {
-      xID,
-      props,
-      context,
-      reactData,
-
-      getRefMaps: () => refMaps,
-      getComputeMaps: () => computeMaps
-    } as unknown as VxeTextConstructor & VxeTextPrivateMethods
-
-    const dispatchEvent = (type: ValueOf<VxeTextEmits>, params: Record<string, any>, evnt: Event | null) => {
-      emit(type, createEvent(evnt, { $carousel: $xeText }, params))
-    }
-
-    const textMethods: TextMethods = {
-      dispatchEvent
-    }
-
-    const clickEvent = (evnt : MouseEvent) => {
       const { loading } = props
       if (!loading) {
-        dispatchEvent('click', {}, evnt)
+        $xeText.dispatchEvent('click', {}, evnt)
       }
-    }
+    },
 
-    const textPrivateMethods: TextPrivateMethods = {
-    }
+    //
+    // Render
+    //
+    renderContent  (h: CreateElement): VNode[] {
+      const $xeText = this
+      const props = $xeText
+      const slots = $xeText.$scopedSlots
 
-    Object.assign($xeText, textMethods, textPrivateMethods)
-
-    const renderContent = () => {
       const { loading, icon, content, clickToCopy } = props
       const defaultSlot = slots.default
       const iconSlot = slots.icon
@@ -111,7 +106,9 @@ export default defineComponent({
               iconSlot || icon || clickToCopy
                 ? h('span', {
                   class: 'vxe-text--icon',
-                  onClick: clickIconEvent
+                  on: {
+                    click: $xeText.clickIconEvent
+                  }
                 }, iconSlot
                   ? getSlotVNs(iconSlot({}))
                   : [
@@ -119,36 +116,38 @@ export default defineComponent({
                         class: icon || getIcon().TEXT_COPY
                       })
                     ])
-                : createCommentVNode()
+                : renderEmptyElement($xeText)
             ),
         h('span', {
-          ref: refContentElem,
+          ref: 'refContentElem',
           class: 'vxe-text--content'
         }, defaultSlot ? defaultSlot({}) : XEUtils.toValueString(content))
       ]
-    }
+    },
+    renderVN (h: CreateElement): VNode {
+      const $xeText = this
+      const props = $xeText
 
-    const renderVN = () => {
       const { loading, status, title, clickToCopy } = props
-      const vSize = computeSize.value
+      const vSize = $xeText.computeSize
       return h('span', {
-        ref: refElem,
-        title,
+        ref: 'refElem',
         class: ['vxe-text', {
           [`size--${vSize}`]: vSize,
           [`theme--${status}`]: status,
           'is--copy': clickToCopy,
           'is--loading': loading
         }],
-        onClick: clickEvent
-      }, renderContent())
+        attrs: {
+          title
+        },
+        on: {
+          click: $xeText.clickEvent
+        }
+      }, $xeText.renderContent(h))
     }
-
-    $xeText.renderVN = renderVN
-
-    return $xeText
   },
-  render () {
-    return this.renderVN()
+  render (this: any, h) {
+    return this.renderVN(h)
   }
 })

@@ -1,24 +1,17 @@
-import { RenderFunction, SetupContext, Ref, ComputedRef, ComponentPublicInstance, DefineComponent } from 'vue'
-import { defineVxeComponent, VxeComponentSizeType, VxeComponentBaseOptions, VxeComponentEventParams, ValueOf, VxeComponentSlotType } from '@vxe-ui/core'
+import { DefineVxeComponentApp, DefineVxeComponentOptions, DefineVxeComponentInstance, VxeComponentSizeType, VxeComponentBaseOptions, VxeComponentEventParams, ValueOf, VxeComponentSlotType } from '@vxe-ui/core'
 
-/* eslint-disable no-use-before-define,@typescript-eslint/ban-types */
+/* eslint-disable @typescript-eslint/no-empty-interface,no-use-before-define,@typescript-eslint/ban-types */
 
-export declare const VxeModal: defineVxeComponent<VxeModalProps, VxeModalEventProps, VxeModalSlots>
-export type VxeModalComponent = DefineComponent<VxeModalProps & VxeModalEventProps>
+export declare const VxeModal: DefineVxeComponentApp<VxeModalProps, VxeModalEventProps, VxeModalSlots>
+export type VxeModalComponent = DefineVxeComponentOptions<VxeModalProps, VxeModalEventProps>
 
-export type VxeModalInstance = ComponentPublicInstance<VxeModalProps, VxeModalConstructor>
+export type VxeModalInstance = DefineVxeComponentInstance<VxeModalProps, VxeModalConstructor>
 
-export interface VxeModalConstructor extends VxeComponentBaseOptions, VxeModalMethods {
-  props: VxeModalProps
-  context: SetupContext<VxeModalEmits>
+export interface VxeModalConstructor extends VxeComponentBaseOptions, VxeModalProps, VxeModalMethods {
   reactData: ModalReactData
-  getRefMaps(): ModalPrivateRef
-  getComputeMaps(): ModalPrivateComputed
-  renderVN: RenderFunction
 }
 
 export interface ModalPrivateRef {
-  refElem: Ref<HTMLDivElement | undefined>
 }
 export interface VxeModalPrivateRef extends ModalPrivateRef { }
 
@@ -120,7 +113,7 @@ export namespace VxeModalPropTypes {
   export type Slots = VxeModalSlots
 }
 
-export type VxeModalProps = {
+export interface VxeModalProps {
   size?: VxeModalPropTypes.Size
   modelValue?: VxeModalPropTypes.ModelValue
   id?: VxeModalPropTypes.ID
@@ -177,8 +170,6 @@ export type VxeModalProps = {
 }
 
 export interface ModalPrivateComputed {
-  computeSize: ComputedRef<VxeModalPropTypes.Size>
-  computeZoomOpts: ComputedRef<VxeModalPropTypes.ZoomConfig>
 }
 export interface VxeModalPrivateComputed extends ModalPrivateComputed { }
 

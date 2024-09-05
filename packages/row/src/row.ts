@@ -1,38 +1,47 @@
-import { defineComponent, ref, h, reactive, provide, PropType, computed } from 'vue'
+import { PropType, CreateElement, VNode } from 'vue'
+import { defineVxeComponent } from '../../ui/src/comp'
 import XEUtils from 'xe-utils'
-import { createEvent, getConfig } from '../../ui'
+import { getConfig, createEvent, globalMixins } from '../../ui'
 import { toCssUnit } from '../../ui/src/dom'
 
-import type { VxeRowPropTypes, RowReactData, RowPrivateRef, VxeRowPrivateComputed, VxeRowConstructor, VxeRowPrivateMethods } from '../../../types'
+import type { VxeRowPropTypes, RowReactData, VxeRowEmits, ValueOf } from '../../../types'
 
-export default defineComponent({
+export default defineVxeComponent({
   name: 'VxeRow',
+  mixins: [
+    globalMixins.sizeMixin
+  ],
   props: {
     gutter: [Number, String, Array] as PropType<VxeRowPropTypes.Gutter>,
     wrap: {
       type: Boolean as PropType<VxeRowPropTypes.Wrap>,
       default: () => getConfig().row.wrap
     },
-    vertical: Boolean as PropType<VxeRowPropTypes.Vertical>
-  },
-  emits: [
-    'click'
-  ],
-  setup (props, context) {
-    const { slots, emit } = context
-
-    const xID = XEUtils.uniqueId()
-
-    const refElem = ref<HTMLDivElement>()
-
-    const reactData = reactive<RowReactData>({
-    })
-
-    const refMaps: RowPrivateRef = {
-      refElem
+    vertical: Boolean as PropType<VxeRowPropTypes.Vertical>,
+    size: {
+      type: String as PropType<VxeRowPropTypes.Size>,
+      default: () => getConfig().row.size || getConfig().size
     }
+  },
+  provide () {
+    const $xeRow = this
+    return {
+      $xeRow
+    }
+  },
+  data () {
+    const reactData: RowReactData = {
+    }
+    return {
+      xID: XEUtils.uniqueId(),
+      reactData
+    }
+  },
+  computed: {
+    computeRowStyle () {
+      const $xeRow = this
+      const props = $xeRow
 
-    const computeRowStyle = computed(() => {
       const { gutter, vertical } = props
       const style: Record<string, string | number> = {}
       if (gutter) {
@@ -53,47 +62,45 @@ export default defineComponent({
         }
       }
       return style
-    })
-
-    const computeMaps: VxeRowPrivateComputed = {
     }
+  },
+  methods: {
+    //
+    // Method
+    //
+    dispatchEvent (type: ValueOf<VxeRowEmits>, params: Record<string, any>, evnt: Event | null) {
+      const $xeRow = this
+      $xeRow.$emit(type, createEvent(evnt, { $row: $xeRow }, params))
+    },
+    clickEvent (evnt: Event) {
+      const $xeRow = this
+      $xeRow.dispatchEvent('click', {}, evnt)
+    },
+    //
+    // Render
+    //
+    renderVN (h: CreateElement): VNode {
+      const $xeRow = this
+      const props = $xeRow
+      const slots = $xeRow.$scopedSlots
 
-    const $xeRow = {
-      xID,
-      props,
-      context,
-      reactData,
-
-      getRefMaps: () => refMaps,
-      getComputeMaps: () => computeMaps
-    } as unknown as VxeRowConstructor & VxeRowPrivateMethods
-
-    const handleDefaultEvent = (evnt: Event & { type: 'click' }) => {
-      emit(evnt.type, createEvent(evnt, { $row: $xeRow }))
-    }
-
-    const renderVN = () => {
       const { vertical, wrap } = props
-      const rowStyle = computeRowStyle.value
+      const rowStyle = $xeRow.computeRowStyle
       const defaultSlot = slots.default
       return h('div', {
-        ref: refElem,
+        ref: 'refElem',
         class: ['vxe-row', {
           'is--vertical': vertical,
           'is--wrap': wrap
         }],
         style: rowStyle,
-        onClick: handleDefaultEvent
+        on: {
+          click: $xeRow.clickEvent
+        }
       }, defaultSlot ? defaultSlot({}) : [])
     }
-
-    $xeRow.renderVN = renderVN
-
-    provide('$xeRow', $xeRow)
-
-    return $xeRow
   },
-  render () {
-    return this.renderVN()
+  render (this: any, h) {
+    return this.renderVN(h)
   }
 })

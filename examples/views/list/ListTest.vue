@@ -66,58 +66,63 @@
   </div>
 </template>
 
-<script lang="ts" setup>
-import { reactive, onMounted, nextTick } from 'vue'
+<script lang="ts">
+import Vue from 'vue'
 import { VxeUI } from '../../../packages'
 
 interface ItemVO {
   [key: string]: any;
 }
 
-const mockList: ItemVO[] = []
-
-const demo1 = reactive({
-  loading: false,
-  list1: [] as ItemVO[],
-  list2: [] as ItemVO[],
-  list3: [] as ItemVO[],
-  list4: [] as ItemVO[],
-  list5: [] as ItemVO[]
-})
-
-// 模拟后台
-const getList = (size: number): Promise<ItemVO[]> => {
-  return new Promise(resolve => {
-    setTimeout(() => {
-      if (size > mockList.length) {
-        for (let index = mockList.length; index < size; index++) {
-          mockList.push({
-            id: index,
-            label: `row_${index}`
-          })
-        }
+export default Vue.extend({
+  data () {
+    return {
+      mockList: [] as ItemVO[],
+      demo1: {
+        loading: false,
+        list1: [] as ItemVO[],
+        list2: [] as ItemVO[],
+        list3: [] as ItemVO[],
+        list4: [] as ItemVO[],
+        list5: [] as ItemVO[]
       }
-      resolve(mockList.slice(0, size))
-    }, 100)
-  })
-}
-
-const loadData = async (size: number) => {
-  demo1.loading = true
-  demo1.list1 = await getList(size)
-  demo1.loading = false
-  const startTime = Date.now()
-  await nextTick()
-  await VxeUI.modal.message({ content: `渲染 ${size} 行，用时 ${Date.now() - startTime}毫秒`, status: 'info' })
-}
-
-// 初始化
-onMounted(async () => {
-  demo1.list1 = await getList(200)
-  demo1.list2 = await getList(200)
-  demo1.list3 = await getList(500)
-  demo1.list4 = await getList(2000)
-  demo1.list5 = await getList(4000)
+    }
+  },
+  async mounted () {
+    // 初始化
+    this.demo1.list1 = await this.getList(200)
+    this.demo1.list2 = await this.getList(200)
+    this.demo1.list3 = await this.getList(500)
+    this.demo1.list4 = await this.getList(2000)
+    this.demo1.list5 = await this.getList(4000)
+  },
+  methods: {
+    // 模拟后台
+    getList (size: number): Promise<ItemVO[]> {
+      return new Promise(resolve => {
+        setTimeout(() => {
+          const { mockList } = this
+          if (size > mockList.length) {
+            for (let index = mockList.length; index < size; index++) {
+              mockList.push({
+                id: index,
+                label: `row_${index}`
+              })
+            }
+          }
+          resolve(mockList.slice(0, size))
+        }, 100)
+      })
+    },
+    async loadData  (size: number) {
+      this.demo1.loading = true
+      this.demo1.list1 = await this.getList(size)
+      this.demo1.loading = false
+      const startTime = Date.now()
+      await this.$nextTick()
+      await VxeUI.modal.message({ content: `渲染 ${size} 行，用时 ${Date.now() - startTime}毫秒`, status: 'info' })
+    }
+  }
 })
 </script>
 

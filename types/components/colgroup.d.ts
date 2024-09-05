@@ -1,25 +1,18 @@
-import { RenderFunction, SetupContext, Ref, ComponentPublicInstance, DefineComponent } from 'vue'
-import { defineVxeComponent, VxeComponentBaseOptions, VxeComponentEventParams, ValueOf } from '@vxe-ui/core'
+import { DefineVxeComponentApp, DefineVxeComponentOptions, DefineVxeComponentInstance, VxeComponentBaseOptions, VxeComponentEventParams, ValueOf } from '@vxe-ui/core'
 import { VxeColumnPropTypes, VxeColumnSlotTypes } from './column'
 
-/* eslint-disable no-use-before-define,@typescript-eslint/ban-types */
+/* eslint-disable @typescript-eslint/no-empty-interface,no-use-before-define,@typescript-eslint/ban-types */
 
-export declare const VxeColgroup: defineVxeComponent<VxeColgroupProps, VxeColgroupEventProps, VxeColgroupSlots>
-export type VxeColgroupComponent = DefineComponent<VxeColgroupProps & VxeColgroupEventProps>
+export declare const VxeColgroup: DefineVxeComponentApp<VxeColgroupProps, VxeColgroupEventProps, VxeColgroupSlots>
+export type VxeColgroupComponent = DefineVxeComponentOptions<VxeColgroupProps, VxeColgroupEventProps>
 
-export type VxeColgroupInstance = ComponentPublicInstance<VxeColgroupProps, VxeColgroupConstructor>
+export type VxeColgroupInstance = DefineVxeComponentInstance<VxeColgroupProps, VxeColgroupConstructor>
 
 export interface VxeColgroupConstructor extends VxeComponentBaseOptions, VxeColgroupMethods {
-  props: VxeColgroupProps
-  context: SetupContext<VxeColgroupEmits>
   reactData: ColgroupReactData
-  getRefMaps(): ColgroupPrivateRef
-  getComputeMaps(): ColgroupPrivateComputed
-  renderVN: RenderFunction
 }
 
 export interface ColgroupPrivateRef {
-  refElem: Ref<HTMLDivElement | undefined>
 }
 export interface VxeColgroupPrivateRef extends ColgroupPrivateRef { }
 

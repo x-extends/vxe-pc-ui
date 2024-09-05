@@ -1,7 +1,7 @@
 import { VxeTableDefines } from '../table'
 import { VxeColumnPropTypes } from '../column'
 
-/* eslint-disable no-use-before-define */
+/* eslint-disable @typescript-eslint/no-unused-vars,no-use-before-define */
 
 export interface VxeFilterPanel {
   /**
@@ -70,10 +70,10 @@ export interface TableFilterPrivateMethods<D = any> {
 }
 
 declare module '../grid' {
-  export interface VxeGridMethods<D = any> extends TableFilterMethods<D> { }
+  export type VxeGridMethods<D = any> = TableFilterMethods<D>
 }
 
 declare module '../table' {
-  export interface VxeTableMethods<D = any> extends TableFilterMethods<D> { }
-  export interface VxeTablePrivateMethods<D = any> extends TableFilterPrivateMethods<D> { }
+  export type VxeTableMethods<D = any> = TableFilterMethods<D>
+  export type VxeTablePrivateMethods<D = any> = TableFilterPrivateMethods<D>
 }

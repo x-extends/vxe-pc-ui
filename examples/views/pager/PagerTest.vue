@@ -3,45 +3,45 @@
     <p>
       <vxe-pager
         align="left"
-        v-model:current-page="page1.currentPage"
-        v-model:page-size="page1.pageSize"
+        :current-page.sync="page1.currentPage"
+        :page-size.sync="page1.pageSize"
         :total="page1.totalResult">
       </vxe-pager>
       <vxe-pager
         align="left"
         size="medium"
-        v-model:current-page="page2.currentPage"
-        v-model:page-size="page2.pageSize"
+        :current-page.sync="page2.currentPage"
+        :page-size.sync="page2.pageSize"
         :total="page2.totalResult">
       </vxe-pager>
       <vxe-pager
         align="left"
         size="small"
-        v-model:current-page="page2.currentPage"
-        v-model:page-size="page2.pageSize"
+        :current-page.sync="page2.currentPage"
+        :page-size.sync="page2.pageSize"
         :total="page2.totalResult">
       </vxe-pager>
       <vxe-pager
         align="left"
         size="mini"
-        v-model:current-page="page2.currentPage"
-        v-model:page-size="page2.pageSize"
+        :current-page.sync="page2.currentPage"
+        :page-size.sync="page2.pageSize"
         :total="page2.totalResult">
       </vxe-pager>
     </p>
 
     <p>
       <vxe-pager
-        v-model:current-page="page4.currentPage"
-        v-model:page-size="page4.pageSize"
+        :current-page.sync="page4.currentPage"
+        :page-size.sync="page4.pageSize"
         :total="page4.totalResult"
         :layouts="['PrevJump', 'PrevPage', 'Number', 'NextPage', 'NextJump', 'Sizes', 'FullJump', 'Total']">
       </vxe-pager>
 
       <vxe-pager
         background
-        v-model:current-page="page5.currentPage"
-        v-model:page-size="page5.pageSize"
+        :current-page.sync="page5.currentPage"
+        :page-size.sync="page5.pageSize"
         :total="page5.totalResult"
         :layouts="['PrevJump', 'PrevPage', 'JumpNumber', 'NextPage', 'NextJump', 'Sizes', 'FullJump', 'Total']">
       </vxe-pager>
@@ -60,8 +60,8 @@
       </vxe-table>
       <vxe-pager
         perfect
-        v-model:current-page="page6.currentPage"
-        v-model:page-size="page6.pageSize"
+        :current-page.sync="page6.currentPage"
+        :page-size.sync="page6.pageSize"
         :total="page6.totalResult"
         :page-sizes="[10, 20, 100, {label: '大量数据', value: 1000}, {label: '全量数据', value: -1}]"
         :layouts="['Home', 'PrevJump', 'PrevPage', 'Number', 'NextPage', 'NextJump', 'End', 'Sizes', 'FullJump', 'Total']">
@@ -84,51 +84,51 @@
   </div>
 </template>
 
-<script lang="ts" setup>
-import { reactive } from 'vue'
+<script lang="ts">
+import Vue from 'vue'
 
-const page1 = reactive({
-  currentPage: 1,
-  pageSize: 10,
-  totalResult: 200
-})
-
-const page2 = reactive({
-  currentPage: 1,
-  pageSize: 10,
-  totalResult: 200
-})
-
-// const page3 = reactive({
-//   currentPage: 1,
-//   pageSize: 10,
-//   totalResult: 200
-// })
-
-const page4 = reactive({
-  currentPage: 1,
-  pageSize: 10,
-  totalResult: 300
-})
-
-const page5 = reactive({
-  currentPage: 1,
-  pageSize: 10,
-  totalResult: 300
-})
-
-const page6 = reactive({
-  currentPage: 1,
-  pageSize: 10,
-  totalResult: 300
-})
-
-const demo6 = reactive({
-  tableData: [
-    { id: 10001, name: 'Test1', role: 'Develop', sex: 'Man', age: 28, address: 'test abc' },
-    { id: 10002, name: 'Test2', role: 'Test', sex: 'Women', age: 22, address: 'Guangzhou' },
-    { id: 10003, name: 'Test3', role: 'PM', sex: 'Man', age: 32, address: 'Shanghai' },
-    { id: 10004, name: 'Test4', role: 'Designer', sex: 'Women', age: 24, address: 'Shanghai' }
-  ]
+export default Vue.extend({
+  data () {
+    return {
+      page1: {
+        currentPage: 1,
+        pageSize: 10,
+        totalResult: 200
+      },
+      page2: {
+        currentPage: 1,
+        pageSize: 10,
+        totalResult: 200
+      },
+      // page3: {
+      //   currentPage: 1,
+      //   pageSize: 10,
+      //   totalResult: 200
+      // },
+      page4: {
+        currentPage: 1,
+        pageSize: 10,
+        totalResult: 300
+      },
+      page5: {
+        currentPage: 1,
+        pageSize: 10,
+        totalResult: 300
+      },
+      page6: {
+        currentPage: 1,
+        pageSize: 10,
+        totalResult: 300
+      },
+      demo6: {
+        tableData: [
+          { id: 10001, name: 'Test1', role: 'Develop', sex: 'Man', age: 28, address: 'test abc' },
+          { id: 10002, name: 'Test2', role: 'Test', sex: 'Women', age: 22, address: 'Guangzhou' },
+          { id: 10003, name: 'Test3', role: 'PM', sex: 'Man', age: 32, address: 'Shanghai' },
+          { id: 10004, name: 'Test4', role: 'Designer', sex: 'Women', age: 24, address: 'Shanghai' }
+        ]
+      }
+    }
+  }
 })
 </script>

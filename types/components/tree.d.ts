@@ -1,25 +1,18 @@
-import { RenderFunction, SetupContext, Ref, ComponentPublicInstance, ComputedRef, DefineComponent } from 'vue'
-import { defineVxeComponent, VxeComponentBaseOptions, VxeComponentEventParams, VxeComponentSizeType, ValueOf } from '@vxe-ui/core'
+import { DefineVxeComponentApp, DefineVxeComponentOptions, DefineVxeComponentInstance, VxeComponentBaseOptions, VxeComponentEventParams, VxeComponentSizeType, ValueOf } from '@vxe-ui/core'
 
-/* eslint-disable no-use-before-define,@typescript-eslint/ban-types */
+/* eslint-disable no-use-before-define,@typescript-eslint/ban-types,@typescript-eslint/no-unused-vars */
 
-export declare const VxeTree: defineVxeComponent<VxeTreeProps, VxeTreeEventProps, VxeTreeSlots>
-export type VxeTreeComponent = DefineComponent<VxeTreeProps & VxeTreeEventProps>
+export declare const VxeTree: DefineVxeComponentApp<VxeTreeProps, VxeTreeEventProps, VxeTreeSlots>
+export type VxeTreeComponent = DefineVxeComponentOptions<VxeTreeProps, VxeTreeEventProps>
 
-export type VxeTreeInstance = ComponentPublicInstance<VxeTreeProps, VxeTreeConstructor>
+export type VxeTreeInstance = DefineVxeComponentInstance<VxeTreeProps, VxeTreeConstructor>
 
 export interface VxeTreeConstructor<D = any> extends VxeComponentBaseOptions, VxeTreeMethods<D> {
-  props: VxeTreeProps
-  context: SetupContext<VxeTreeEmits>
   internalData: TreeInternalData
   reactData: TreeReactData
-  getRefMaps(): TreePrivateRef
-  getComputeMaps(): TreePrivateComputed
-  renderVN: RenderFunction
 }
 
 export interface TreePrivateRef {
-  refElem: Ref<HTMLDivElement | undefined>
 }
 export interface VxeTreePrivateRef extends TreePrivateRef { }
 
@@ -154,9 +147,6 @@ export interface VxeTreeProps<D = any> {
 }
 
 export interface TreePrivateComputed<D = any> {
-  computeRadioOpts: ComputedRef<VxeTreePropTypes.RadioConfig<D>>
-  computeCheckboxOpts: ComputedRef<VxeTreePropTypes.CheckboxConfig<D>>
-  computeNodeOpts: ComputedRef<VxeTreePropTypes.NodeConfig<D>>
 }
 export interface VxeTreePrivateComputed extends TreePrivateComputed { }
 

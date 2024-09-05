@@ -33,26 +33,32 @@
   </div>
 </template>
 
-<script lang="ts" setup>
-import { reactive } from 'vue'
+<script lang="ts">
+import Vue from 'vue'
 
-const demo1 = reactive({
-  value1: null,
-  value2: null,
-  value3: null,
-  value4: null,
-  value5: true,
-  value6: null,
-  value7: null,
-  value8: null,
-  value9: 'Y',
-  value10: 1,
-  value11: false,
-  value12: true,
-  value13: false,
-  value14: false,
-  value15: true,
-  value16: false,
-  value17: false
+export default Vue.extend({
+  data () {
+    return {
+      demo1: {
+        value1: null,
+        value2: null,
+        value3: null,
+        value4: null,
+        value5: true,
+        value6: null,
+        value7: null,
+        value8: null,
+        value9: 'Y',
+        value10: 1,
+        value11: false,
+        value12: true,
+        value13: false,
+        value14: false,
+        value15: true,
+        value16: false,
+        value17: false
+      }
+    }
+  }
 })
 </script>

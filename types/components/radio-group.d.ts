@@ -1,26 +1,19 @@
-import { RenderFunction, SetupContext, Ref, ComputedRef, ComponentPublicInstance, DefineComponent } from 'vue'
-import { defineVxeComponent, VxeComponentBaseOptions, VxeComponentEventParams, VxeComponentSizeType, ValueOf } from '@vxe-ui/core'
+import { DefineVxeComponentApp, DefineVxeComponentOptions, DefineVxeComponentInstance, VxeComponentBaseOptions, VxeComponentEventParams, VxeComponentSizeType, ValueOf } from '@vxe-ui/core'
 import { VxeRadioPropTypes } from './radio'
 
-/* eslint-disable no-use-before-define,@typescript-eslint/ban-types */
+/* eslint-disable @typescript-eslint/no-empty-interface,no-use-before-define,@typescript-eslint/ban-types */
 
-export declare const VxeRadioGroup: defineVxeComponent<VxeRadioGroupProps, VxeRadioGroupEventProps, VxeRadioGroupSlots>
-export type VxeRadioGroupComponent = DefineComponent<VxeRadioGroupProps & VxeRadioGroupEventProps>
+export declare const VxeRadioGroup: DefineVxeComponentApp<VxeRadioGroupProps, VxeRadioGroupEventProps, VxeRadioGroupSlots>
+export type VxeRadioGroupComponent = DefineVxeComponentOptions<VxeRadioGroupProps, VxeRadioGroupEventProps>
 
-export type VxeRadioGroupInstance = ComponentPublicInstance<VxeRadioGroupProps, VxeRadioGroupConstructor>
+export type VxeRadioGroupInstance = DefineVxeComponentInstance<VxeRadioGroupProps, VxeRadioGroupConstructor>
 
-export interface VxeRadioGroupConstructor extends VxeComponentBaseOptions, VxeRadioGroupMethods {
+export interface VxeRadioGroupConstructor extends VxeComponentBaseOptions, VxeRadioGroupProps, VxeRadioGroupMethods {
   name: string
-  props: VxeRadioGroupProps
-  context: SetupContext<VxeRadioGroupEmits>
   reactData: RadioGroupReactData
-  getRefMaps(): RadioGroupPrivateRef
-  getComputeMaps(): RadioGroupPrivateComputed
-  renderVN: RenderFunction
 }
 
 export interface RadioGroupPrivateRef {
-  refElem: Ref<HTMLDivElement | undefined>
 }
 export interface VxeRadioGroupPrivateRef extends RadioGroupPrivateRef { }
 
@@ -43,7 +36,7 @@ export namespace VxeRadioGroupPropTypes {
   export type Disabled = boolean
 }
 
-export type VxeRadioGroupProps = {
+export interface VxeRadioGroupProps {
   size?: VxeRadioGroupPropTypes.Size
   type?: VxeRadioGroupPropTypes.Type
   options?: VxeRadioGroupPropTypes.Options
@@ -52,12 +45,12 @@ export type VxeRadioGroupProps = {
    * 严格模式，不允许取消
    */
   strict?: VxeRadioGroupPropTypes.Strict
-  modelValue?: VxeRadioGroupPropTypes.ModelValue
+  value?: VxeRadioGroupPropTypes.ModelValue
   disabled?: VxeRadioGroupPropTypes.Disabled
 }
 
 export interface RadioGroupPrivateComputed {
-  computeIsDisabled: ComputedRef<boolean | undefined>
+  computeIsDisabled: boolean | undefined
 }
 export interface VxeRadioGroupPrivateComputed extends RadioGroupPrivateComputed { }
 

@@ -1,24 +1,17 @@
-import { RenderFunction, SetupContext, Ref, ComponentPublicInstance, DefineComponent } from 'vue'
-import { defineVxeComponent, VxeComponentBaseOptions, VxeComponentEventParams, VxeComponentPermissionCodeType, VxeComponentSizeType, VxeComponentStatusType, ValueOf } from '@vxe-ui/core'
+import { DefineVxeComponentApp, DefineVxeComponentOptions, DefineVxeComponentInstance, VxeComponentBaseOptions, VxeComponentEventParams, VxeComponentPermissionCodeType, VxeComponentSizeType, VxeComponentStatusType, ValueOf } from '@vxe-ui/core'
 
-/* eslint-disable no-use-before-define,@typescript-eslint/ban-types */
+/* eslint-disable @typescript-eslint/no-empty-interface,no-use-before-define,@typescript-eslint/ban-types */
 
-export declare const VxeTip: defineVxeComponent<VxeTipProps, VxeTipEventProps, VxeTipSlots>
-export type VxeTipComponent = DefineComponent<VxeTipProps & VxeTipEventProps>
+export declare const VxeTip: DefineVxeComponentApp<VxeTipProps, VxeTipEventProps, VxeTipSlots>
+export type VxeTipComponent = DefineVxeComponentOptions<VxeTipProps, VxeTipEventProps>
 
-export type VxeTipInstance = ComponentPublicInstance<VxeTipProps, VxeTipConstructor>
+export type VxeTipInstance = DefineVxeComponentInstance<VxeTipProps, VxeTipConstructor>
 
-export interface VxeTipConstructor extends VxeComponentBaseOptions, VxeTipMethods {
-  props: VxeTipProps
-  context: SetupContext<VxeTipEmits>
+export interface VxeTipConstructor extends VxeComponentBaseOptions, VxeTipProps, VxeTipMethods {
   reactData: TipReactData
-  getRefMaps(): TipPrivateRef
-  getComputeMaps(): TipPrivateComputed
-  renderVN: RenderFunction
 }
 
 export interface TipPrivateRef {
-  refElem: Ref<HTMLDivElement | undefined>
 }
 export interface VxeTipPrivateRef extends TipPrivateRef { }
 

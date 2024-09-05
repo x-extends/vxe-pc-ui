@@ -1,50 +1,57 @@
-import { defineComponent, ref, h, reactive, PropType, createCommentVNode } from 'vue'
+import { PropType, CreateElement, VNode } from 'vue'
+import { defineVxeComponent } from '../../ui/src/comp'
 import XEUtils from 'xe-utils'
-import { getConfig, useSize } from '../../ui'
+import { getConfig, createEvent, globalMixins, renderEmptyElement } from '../../ui'
 import { getSlotVNs } from '../../ui/src/vn'
 
-import type { VxeTagPropTypes, TagReactData, TagPrivateRef, VxeTagPrivateComputed, VxeTagConstructor, VxeTagPrivateMethods } from '../../../types'
+import type { VxeTagPropTypes, TagReactData, VxeTagEmits, VxeComponentPermissionInfo, VxeComponentSizeType, ValueOf } from '../../../types'
 
-export default defineComponent({
+export default defineVxeComponent({
   name: 'VxeTag',
+  mixins: [
+    globalMixins.sizeMixin,
+    globalMixins.permissionMixin
+  ],
   props: {
     status: String as PropType<VxeTagPropTypes.Status>,
     title: [String, Number] as PropType<VxeTagPropTypes.Title>,
     icon: String as PropType<VxeTagPropTypes.Icon>,
     content: [String, Number] as PropType<VxeTagPropTypes.Content>,
-    size: { type: String as PropType<VxeTagPropTypes.Size>, default: () => getConfig().tag.size || getConfig().size }
+    size: {
+      type: String as PropType<VxeTagPropTypes.Size>,
+      default: () => getConfig().tag.size || getConfig().size
+    }
   },
-  emits: [],
-  setup (props, context) {
-    const { slots } = context
-
-    const xID = XEUtils.uniqueId()
-
-    const { computeSize } = useSize(props)
-
-    const refElem = ref<HTMLDivElement>()
-
-    const reactData = reactive<TagReactData>({
+  data () {
+    const reactData: TagReactData = {
+    }
+    return {
+      xID: XEUtils.uniqueId(),
+      reactData
+    }
+  },
+  computed: {
+    ...({} as {
+      computePermissionInfo(): VxeComponentPermissionInfo
+      computeSize(): VxeComponentSizeType
     })
+  },
+  methods: {
+    //
+    // Method
+    //
+    dispatchEvent (type: ValueOf<VxeTagEmits>, params: Record<string, any>, evnt: Event | null) {
+      const $xeTag = this
+      this.$emit(type, createEvent(evnt, { $tag: $xeTag }, params))
+    },
+    //
+    // Render
+    //
+    renderContent  (h: CreateElement): VNode[] {
+      const $xeTag = this
+      const props = $xeTag
+      const slots = $xeTag.$scopedSlots
 
-    const refMaps: TagPrivateRef = {
-      refElem
-    }
-
-    const computeMaps: VxeTagPrivateComputed = {
-    }
-
-    const $xeTag = {
-      xID,
-      props,
-      context,
-      reactData,
-
-      getRefMaps: () => refMaps,
-      getComputeMaps: () => computeMaps
-    } as unknown as VxeTagConstructor & VxeTagPrivateMethods
-
-    const renderContent = () => {
       const { icon, content } = props
       const defaultSlot = slots.default
       const iconSlot = slots.icon
@@ -59,31 +66,31 @@ export default defineComponent({
                   class: icon
                 })
               ])
-          : createCommentVNode(),
+          : renderEmptyElement($xeTag),
         h('span', {
           class: 'vxe-tag--content'
         }, defaultSlot ? defaultSlot({}) : XEUtils.toValueString(content))
       ]
-    }
+    },
+    renderVN  (h: CreateElement): VNode {
+      const $xeTag = this
+      const props = $xeTag
 
-    const renderVN = () => {
       const { status, title } = props
-      const vSize = computeSize.value
+      const vSize = $xeTag.computeSize
       return h('span', {
-        ref: refElem,
-        title,
+        ref: 'refElem',
         class: ['vxe-tag', {
           [`size--${vSize}`]: vSize,
           [`theme--${status}`]: status
-        }]
-      }, renderContent())
+        }],
+        attrs: {
+          title
+        }
+      }, $xeTag.renderContent(h))
     }
-
-    $xeTag.renderVN = renderVN
-
-    return $xeTag
   },
-  render () {
-    return this.renderVN()
+  render (this: any, h) {
+    return this.renderVN(h)
   }
 })

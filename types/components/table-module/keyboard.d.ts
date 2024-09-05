@@ -1,4 +1,4 @@
-/* eslint-disable no-use-before-define */
+/* eslint-disable @typescript-eslint/no-empty-interface,@typescript-eslint/no-unused-vars,no-use-before-define */
 
 export interface TableKeyboardMethods<D = any> {}
 
@@ -11,10 +11,10 @@ export interface TableKeyboardPrivateMethods<D = any> {
  }
 
 declare module '../grid' {
-  export interface VxeGridMethods<D = any> extends TableKeyboardMethods<D> { }
+  export type VxeGridMethods<D = any> = TableKeyboardMethods<D>
 }
 
 declare module '../table' {
-  export interface VxeTableMethods<D = any> extends TableKeyboardMethods<D> { }
-  export interface VxeTablePrivateMethods<D = any> extends TableKeyboardPrivateMethods<D> { }
+  export type VxeTableMethods<D = any> = TableKeyboardMethods<D>
+  export type VxeTablePrivateMethods<D = any> = TableKeyboardPrivateMethods<D>
 }

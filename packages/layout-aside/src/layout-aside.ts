@@ -1,38 +1,50 @@
-import { defineComponent, ref, h, reactive, onMounted, computed, provide, PropType } from 'vue'
+import { PropType, CreateElement, VNode } from 'vue'
+import { defineVxeComponent } from '../../ui/src/comp'
 import { toCssUnit } from '../../ui/src/dom'
-import { getConfig, useSize } from '../../ui'
+import { getConfig, createEvent, globalMixins } from '../../ui'
 import VxeLoadingComponent from '../../loading/src/loading'
 import XEUtils from 'xe-utils'
 
-import type { VxeLayoutAsidePropTypes, LayoutAsideReactData, LayoutAsidePrivateRef, VxeLayoutAsidePrivateComputed, VxeLayoutAsideConstructor, VxeLayoutAsidePrivateMethods } from '../../../types'
+import type { VxeLayoutAsidePropTypes, LayoutAsideReactData, VxeComponentSizeType, VxeLayoutAsideEmits, ValueOf } from '../../../types'
 
-export default defineComponent({
+export default defineVxeComponent({
   name: 'VxeLayoutAside',
+  mixins: [
+    globalMixins.sizeMixin
+  ],
   props: {
     width: [String, Number] as PropType<VxeLayoutAsidePropTypes.Width>,
     collapsed: Boolean as PropType<VxeLayoutAsidePropTypes.Collapsed>,
     collapseWidth: [String, Number] as PropType<VxeLayoutAsidePropTypes.CollapseWidth>,
     loading: Boolean as PropType<VxeLayoutAsidePropTypes.Loading>,
     padding: Boolean as PropType<VxeLayoutAsidePropTypes.Padding>,
-    size: { type: String as PropType<VxeLayoutAsidePropTypes.Size>, default: () => getConfig().layoutAside.size || getConfig().size }
-  },
-  emits: [],
-  setup (props, context) {
-    const { slots } = context
-
-    const xID = XEUtils.uniqueId()
-
-    const refElem = ref<HTMLDivElement>()
-
-    const { computeSize } = useSize(props)
-
-    const reactData = reactive<LayoutAsideReactData>({})
-
-    const refMaps: LayoutAsidePrivateRef = {
-      refElem
+    size: {
+      type: String as PropType<VxeLayoutAsidePropTypes.Size>,
+      default: () => getConfig().layoutAside.size || getConfig().size
     }
+  },
+  provide () {
+    const $xeLayoutAside = this
+    return {
+      $xeLayoutAside
+    }
+  },
+  data () {
+    const reactData: LayoutAsideReactData = {
+    }
+    return {
+      xID: XEUtils.uniqueId(),
+      reactData
+    }
+  },
+  computed: {
+    ...({} as {
+      computeSize(): VxeComponentSizeType
+    }),
+    computeWrapperWidth () {
+      const $xeLayoutAside = this
+      const props = $xeLayoutAside
 
-    const computeWrapperWidth = computed(() => {
       const { width, collapsed, collapseWidth } = props
       if (collapsed) {
         if (collapseWidth) {
@@ -44,30 +56,30 @@ export default defineComponent({
         }
       }
       return ''
-    })
-
-    const computeMaps: VxeLayoutAsidePrivateComputed = {
-      computeSize
     }
+  },
+  methods: {
+    //
+    // Method
+    //
+    dispatchEvent (type: ValueOf<VxeLayoutAsideEmits>, params: Record<string, any>, evnt: Event | null) {
+      const $xeLayoutAside = this
+      this.$emit(type, createEvent(evnt, { $layoutAside: $xeLayoutAside }, params))
+    },
+    //
+    // Render
+    //
+    renderVN (h: CreateElement): VNode {
+      const $xeLayoutAside = this
+      const props = $xeLayoutAside
+      const slots = $xeLayoutAside.$scopedSlots
 
-    const $xeLayoutAside = {
-      xID,
-      props,
-      context,
-      reactData,
-
-      getRefMaps: () => refMaps,
-      getComputeMaps: () => computeMaps
-    } as unknown as VxeLayoutAsideConstructor & VxeLayoutAsidePrivateMethods
-
-    const renderVN = () => {
       const { width, collapsed, loading, padding } = props
-      const wrapperWidth = computeWrapperWidth.value
-      const vSize = computeSize.value
+      const wrapperWidth = $xeLayoutAside.computeWrapperWidth
+      const vSize = $xeLayoutAside.computeSize
       const defaultSlot = slots.default
 
       return h('aside', {
-        ref: refElem,
         class: ['vxe-layout-aside', {
           [`size--${vSize}`]: vSize,
           'is--padding': padding,
@@ -79,7 +91,7 @@ export default defineComponent({
           ? {
               width: wrapperWidth
             }
-          : null
+          : {}
       }, [
         h('div', {
           class: 'vxe-layout-aside--inner'
@@ -89,22 +101,14 @@ export default defineComponent({
          */
         h(VxeLoadingComponent, {
           class: 'vxe-list-view--loading',
-          modelValue: loading
+          props: {
+            value: loading
+          }
         })
       ])
     }
-
-    onMounted(() => {
-
-    })
-
-    $xeLayoutAside.renderVN = renderVN
-
-    provide('$xeLayoutAside', $xeLayoutAside)
-
-    return $xeLayoutAside
   },
-  render () {
-    return this.renderVN()
+  render (this: any, h) {
+    return this.renderVN(h)
   }
 })

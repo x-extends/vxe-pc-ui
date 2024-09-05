@@ -66,13 +66,21 @@
   </div>
 </template>
 
-<script lang="ts" setup>
-import { ref } from 'vue'
+<script lang="ts">
+import Vue from 'vue'
 
-const val4 = ref('3')
-const tabToadEvent = (p: any) => {
-  console.log(p)
-}
+export default Vue.extend({
+  data () {
+    return {
+      val4: '3'
+    }
+  },
+  methods: {
+    tabToadEvent (params: any) {
+      console.log(params)
+    }
+  }
+})
 </script>
 
 <style lang="scss" scoped>

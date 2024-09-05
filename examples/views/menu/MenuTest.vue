@@ -6,33 +6,39 @@
   </div>
 </template>
 
-<script lang="ts" setup>
-import { ref } from 'vue'
-import { VxeMenuPropTypes, VxeMenuEvents } from 'vxe-pc-ui'
+<script lang="ts">
+import Vue from 'vue'
 
-const selectNav = ref('user')
-const navList = ref<VxeMenuPropTypes.Options>([
-  { name: 'home', title: '首页', icon: 'vxe-icon-home' },
-  {
-    name: 'user',
-    title: '个人中心',
-    icon: 'vxe-icon-user',
-    children: [
-      { name: 'changePassword', icon: 'vxe-icon-lock', title: '修改密码' }
-    ]
+export default Vue.extend({
+  data () {
+    return {
+      selectNav: 'user',
+      navList: [
+        { name: 'home', title: '首页', icon: 'vxe-icon-home' },
+        {
+          name: 'user',
+          title: '个人中心',
+          icon: 'vxe-icon-user',
+          children: [
+            { name: 'changePassword', icon: 'vxe-icon-lock', title: '修改密码' }
+          ]
+        },
+        {
+          name: 'system',
+          title: '系统设置',
+          icon: 'vxe-icon-setting',
+          children: [
+            { name: 'menu', icon: 'vxe-icon-menu', title: '菜单配置' },
+            { name: 'permission', icon: 'vxe-icon-user', title: '权限配置' }
+          ]
+        }
+      ]
+    }
   },
-  {
-    name: 'system',
-    title: '系统设置',
-    icon: 'vxe-icon-setting',
-    children: [
-      { name: 'menu', icon: 'vxe-icon-menu', title: '菜单配置' },
-      { name: 'permission', icon: 'vxe-icon-user', title: '权限配置' }
-    ]
+  methods: {
+    clickEvent ({ menu }: any) {
+      console.log(menu.name)
+    }
   }
-])
-
-const clickEvent: VxeMenuEvents.Click = ({ menu }) => {
-  console.log(menu.name)
-}
+})
 </script>

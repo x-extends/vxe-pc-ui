@@ -1,6 +1,6 @@
 import { VxeTableDefines } from '../table'
 
-/* eslint-disable no-use-before-define */
+/* eslint-disable @typescript-eslint/no-unused-vars,no-use-before-define */
 
 export interface TableEditMethods<D = any> {
   /**
@@ -175,10 +175,10 @@ export interface TableEditPrivateMethods<D = any> {
 }
 
 declare module '../grid' {
-  export interface VxeGridMethods<D = any> extends TableEditMethods<D> { }
+  export type VxeGridMethods<D = any> = TableEditMethods<D>
 }
 
 declare module '../table' {
-  export interface VxeTableMethods<D = any> extends TableEditMethods<D> { }
-  export interface VxeTablePrivateMethods<D = any> extends TableEditPrivateMethods<D> { }
+  export type VxeTableMethods<D = any> = TableEditMethods<D>
+  export type VxeTablePrivateMethods<D = any> = TableEditPrivateMethods<D>
 }

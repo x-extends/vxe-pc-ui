@@ -1,25 +1,18 @@
-import { RenderFunction, SetupContext, Ref, ComponentPublicInstance, ComputedRef, DefineComponent } from 'vue'
-import { defineVxeComponent, VxeComponentBaseOptions, VxeComponentEventParams, VxeComponentSizeType, ValueOf } from '@vxe-ui/core'
+import { DefineVxeComponentApp, DefineVxeComponentOptions, DefineVxeComponentInstance, VxeComponentBaseOptions, VxeComponentEventParams, VxeComponentSizeType, ValueOf } from '@vxe-ui/core'
 import { VxeCheckboxPropTypes } from './checkbox'
 
-/* eslint-disable no-use-before-define,@typescript-eslint/ban-types */
+/* eslint-disable @typescript-eslint/no-empty-interface,no-use-before-define,@typescript-eslint/ban-types */
 
-export declare const VxeCheckboxGroup: defineVxeComponent<VxeCheckboxGroupProps, VxeCheckboxGroupEventProps, VxeCheckboxGroupSlots>
-export type VxeCheckboxGroupComponent = DefineComponent<VxeCheckboxGroupProps & VxeCheckboxGroupEventProps>
+export declare const VxeCheckboxGroup: DefineVxeComponentApp<VxeCheckboxGroupProps, VxeCheckboxGroupEventProps, VxeCheckboxGroupSlots>
+export type VxeCheckboxGroupComponent = DefineVxeComponentOptions<VxeCheckboxGroupProps, VxeCheckboxGroupEventProps>
 
-export type VxeCheckboxGroupInstance = ComponentPublicInstance<VxeCheckboxGroupProps, VxeCheckboxGroupConstructor>
+export type VxeCheckboxGroupInstance = DefineVxeComponentInstance<VxeCheckboxGroupProps, VxeCheckboxGroupConstructor>
 
 export interface VxeCheckboxGroupConstructor extends VxeComponentBaseOptions, VxeCheckboxGroupMethods {
-  props: VxeCheckboxGroupProps
-  context: SetupContext<VxeCheckboxGroupEmits>
   reactData: CheckboxGroupReactData
-  getRefMaps(): CheckboxGroupPrivateRef
-  getComputeMaps(): CheckboxGroupPrivateComputed
-  renderVN: RenderFunction
 }
 
 export interface CheckboxGroupPrivateRef {
-  refElem: Ref<HTMLDivElement | undefined>
 }
 export interface VxeCheckboxGroupPrivateRef extends CheckboxGroupPrivateRef { }
 
@@ -57,8 +50,8 @@ export type VxeCheckboxGroupProps = {
 }
 
 export interface CheckboxGroupPrivateComputed {
-  computeIsMaximize: ComputedRef<boolean>
-  computeIsDisabled: ComputedRef<boolean | undefined>
+  computeIsMaximize: boolean
+  computeIsDisabled: boolean | undefined
 }
 export interface VxeCheckboxGroupPrivateComputed extends CheckboxGroupPrivateComputed { }
 

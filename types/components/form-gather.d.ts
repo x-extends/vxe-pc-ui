@@ -1,30 +1,23 @@
-import { RenderFunction, SetupContext, Ref, DefineComponent } from 'vue'
-import { defineVxeComponent, VxeComponentBaseOptions, VxeComponentEventParams } from '@vxe-ui/core'
+import { DefineVxeComponentApp, DefineVxeComponentOptions, VxeComponentBaseOptions, VxeComponentEventParams } from '@vxe-ui/core'
 import { VxeFormItemPropTypes } from './form-item'
 
-/* eslint-disable no-use-before-define,@typescript-eslint/ban-types */
+/* eslint-disable @typescript-eslint/no-empty-interface,no-use-before-define,@typescript-eslint/ban-types */
 
-export declare const VxeFormGather: defineVxeComponent<VxeFormGatherProps, VxeFormGatherEventProps, VxeFormGatherSlots>
-export type VxeFormGatherComponent = DefineComponent<VxeFormGatherProps & VxeFormGatherEventProps>
+export declare const VxeFormGather: DefineVxeComponentApp<VxeFormGatherProps, VxeFormGatherEventProps, VxeFormGatherSlots>
+export type VxeFormGatherComponent = DefineVxeComponentOptions<VxeFormGatherProps, VxeFormGatherEventProps>
 
-export interface VxeFormGatherConstructor extends VxeComponentBaseOptions, VxeFormGatherMethods {
-  props: VxeFormGatherProps
-  context: SetupContext<VxeFormGatherEmits>
+export interface VxeFormGatherConstructor extends VxeComponentBaseOptions, VxeFormGatherProps, VxeFormGatherMethods {
   reactData: FormGatherReactData
-  getRefMaps(): FormGatherPrivateRef
-  getComputeMaps(): FormGatherPrivateComputed
-  renderVN: RenderFunction
 }
 
 export interface FormGatherPrivateRef {
-  refElem: Ref<HTMLDivElement | undefined>
 }
 export interface VxeFormGatherPrivateRef extends FormGatherPrivateRef { }
 
 export namespace VxeFormGatherPropTypes {
 }
 
-export type VxeFormGatherProps = {
+export interface VxeFormGatherProps {
   /**
    * 栅格占据的列数（共 24 分栏）
    */

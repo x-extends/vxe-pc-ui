@@ -1,25 +1,18 @@
-import { RenderFunction, SetupContext, Ref, ComponentPublicInstance, DefineComponent } from 'vue'
-import { defineVxeComponent, VxeComponentBaseOptions, VxeComponentEventParams, ValueOf } from '@vxe-ui/core'
+import { DefineVxeComponentApp, DefineVxeComponentOptions, DefineVxeComponentInstance, VxeComponentBaseOptions, VxeComponentEventParams, ValueOf } from '@vxe-ui/core'
 import { VxeAnchorLinkProps, VxeAnchorLinkPropTypes, VxeAnchorLinkDefines } from './anchor-link'
 
-/* eslint-disable no-use-before-define,@typescript-eslint/ban-types */
+/* eslint-disable @typescript-eslint/no-empty-interface,no-use-before-define,@typescript-eslint/ban-types */
 
-export declare const VxeAnchor: defineVxeComponent<VxeAnchorProps, VxeAnchorEventProps, VxeAnchorSlots>
-export type VxeAnchorComponent = DefineComponent<VxeAnchorProps & VxeAnchorEventProps>
+export declare const VxeAnchor: DefineVxeComponentApp<VxeAnchorProps, VxeAnchorEventProps, VxeAnchorSlots>
+export type VxeAnchorComponent = DefineVxeComponentOptions<VxeAnchorProps, VxeAnchorEventProps>
 
-export type VxeAnchorInstance = ComponentPublicInstance<VxeAnchorProps, VxeAnchorConstructor>
+export type VxeAnchorInstance = DefineVxeComponentInstance<VxeAnchorProps, VxeAnchorConstructor>
 
 export interface VxeAnchorConstructor extends VxeComponentBaseOptions, VxeAnchorMethods {
-  props: VxeAnchorProps
-  context: SetupContext<VxeAnchorEmits>
   reactData: AnchorReactData
-  getRefMaps(): AnchorPrivateRef
-  getComputeMaps(): AnchorPrivateComputed
-  renderVN: RenderFunction
 }
 
 export interface AnchorPrivateRef {
-  refElem: Ref<HTMLDivElement | undefined>
 }
 export interface VxeAnchorPrivateRef extends AnchorPrivateRef { }
 

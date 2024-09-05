@@ -80,9 +80,8 @@
   </div>
 </template>
 
-<script lang="ts" setup>
-import { onMounted, reactive, ref } from 'vue'
-import { VxePulldownInstance } from '../../../types'
+<script lang="ts">
+import Vue from 'vue'
 
 interface ItemVO1 {
   label: string;
@@ -109,26 +108,6 @@ const data1: ItemVO1[] = [
   { label: '选项12', value: '12' }
 ]
 
-const demo1 = reactive({
-  visible: false,
-  value1: '',
-  list1: data1
-})
-
-const focusEvent1 = () => {
-  demo1.visible = true
-}
-
-const keyupEvent1 = () => {
-  demo1.list1 = demo1.value1 ? data1.filter((item) => item.label.indexOf(demo1.value1) > -1) : data1
-}
-
-const selectEvent1 = (item: ItemVO1) => {
-  demo1.value1 = item.label
-  demo1.visible = false
-  demo1.list1 = data1
-}
-
 const data2: ItemVO2[] = [
   { label: '选项1', value: '1' },
   { label: '选项2', value: '2' },
@@ -143,118 +122,124 @@ const data2: ItemVO2[] = [
   { label: '选项11', value: '11' },
   { label: '选项12', value: '12' }
 ]
-const demo2 = reactive({
-  value2: '',
-  list2: data2
-})
 
-const xDown2 = ref({} as VxePulldownInstance)
-
-const focusEvent2 = () => {
-  const $pulldown2 = xDown2.value
-  $pulldown2.showPanel()
-}
-
-const keyupEvent2 = () => {
-  demo2.list2 = demo2.value2 ? data2.filter((item) => item.label.indexOf(demo2.value2) > -1) : data2
-}
-
-const selectEvent2 = (item: ItemVO2) => {
-  const $pulldown2 = xDown2.value
-  demo2.value2 = item.label
-  $pulldown2.hidePanel().then(() => {
-    demo2.list2 = data2
-  })
-}
-
-const demo3 = reactive({
-  tableData3: [
-    { name: 'Test1', role: '前端', sex: '男' },
-    { name: 'Test2', role: '后端', sex: '男' },
-    { name: 'Test3', role: '测试', sex: '男' },
-    { name: 'Test4', role: '设计师', sex: '女' }
-  ]
-})
-
-const xDown3 = ref({} as VxePulldownInstance)
-
-const clickEvent3 = () => {
-  const $pulldown3 = xDown3.value
-  $pulldown3.togglePanel()
-}
-
-const demo4 = reactive({
-  value4: '',
-  tableColumn4: [
-    { field: 'name', title: 'Name' },
-    { field: 'role', title: 'Role' },
-    { field: 'sex', title: 'Sex' }
-  ],
-  loading4: false,
-  tableData4: [] as any[],
-  tableList4: [
-    { name: 'Test1', role: '前端', sex: '男' },
-    { name: 'Test2', role: '后端', sex: '男' },
-    { name: 'Test3', role: '测试', sex: '男' },
-    { name: 'Test4', role: '设计师', sex: '女' },
-    { name: 'Test5', role: '前端', sex: '男' },
-    { name: 'Test6', role: '前端', sex: '男' },
-    { name: 'Test7', role: '前端', sex: '男' }
-  ],
-  tablePage4: {
-    total: 0,
-    currentPage: 1,
-    pageSize: 10
-  }
-})
-
-const xDown4 = ref({} as VxePulldownInstance)
-
-const focusEvent4 = () => {
-  const $pulldown4 = xDown4.value
-  $pulldown4.showPanel()
-}
-
-const keyupEvent4 = () => {
-  demo4.loading4 = true
-  setTimeout(() => {
-    demo4.loading4 = false
-    if (demo4.value4) {
-      demo4.tableData4 = demo4.tableList4.filter((row) => row.name.indexOf(demo4.value4) > -1)
-    } else {
-      demo4.tableData4 = demo4.tableList4.slice(0)
+export default Vue.extend({
+  data () {
+    return {
+      demo1: {
+        visible: false,
+        value1: '',
+        list1: data1
+      },
+      demo2: {
+        value2: '',
+        list2: data2
+      },
+      demo3: {
+        tableData3: [
+          { name: 'Test1', role: '前端', sex: '男' },
+          { name: 'Test2', role: '后端', sex: '男' },
+          { name: 'Test3', role: '测试', sex: '男' },
+          { name: 'Test4', role: '设计师', sex: '女' }
+        ]
+      },
+      demo4: {
+        value4: '',
+        tableColumn4: [
+          { field: 'name', title: 'Name' },
+          { field: 'role', title: 'Role' },
+          { field: 'sex', title: 'Sex' }
+        ],
+        loading4: false,
+        tableData4: [] as any[],
+        tableList4: [
+          { name: 'Test1', role: '前端', sex: '男' },
+          { name: 'Test2', role: '后端', sex: '男' },
+          { name: 'Test3', role: '测试', sex: '男' },
+          { name: 'Test4', role: '设计师', sex: '女' },
+          { name: 'Test5', role: '前端', sex: '男' },
+          { name: 'Test6', role: '前端', sex: '男' },
+          { name: 'Test7', role: '前端', sex: '男' }
+        ],
+        tablePage4: {
+          total: 0,
+          currentPage: 1,
+          pageSize: 10
+        }
+      },
+      pullOptions: [
+        { label: '选项1', value: '1' },
+        { label: '选项2', value: '2' },
+        { label: '选项3', value: '3' },
+        { label: '选项4', value: '4' },
+        { label: '选项5sdfdsfdsfsfsfsffsfsfsdffsffsf', value: '5' },
+        { label: '选项6', value: '6' },
+        { label: '选项7', value: '7' },
+        { label: '选项8', value: '8' }
+      ]
     }
-  }, 100)
-}
-
-const suffixClick4 = () => {
-  const $pulldown4 = xDown4.value
-  $pulldown4.togglePanel()
-}
-
-const cellClickEvent4: any = ({ row }: any) => {
-  const $pulldown4 = xDown4.value
-  demo4.value4 = row.name
-  $pulldown4.hidePanel()
-}
-
-const pageChangeEvent4: any = ({ currentPage, pageSize }: any) => {
-  demo4.tablePage4.currentPage = currentPage
-  demo4.tablePage4.pageSize = pageSize
-}
-
-const pullOptions = ref([
-  { label: '选项1', value: '1' },
-  { label: '选项2', value: '2' },
-  { label: '选项3', value: '3' },
-  { label: '选项4', value: '4' },
-  { label: '选项5sdfdsfdsfsfsfsffsfsfsdffsffsf', value: '5' },
-  { label: '选项6', value: '6' },
-  { label: '选项7', value: '7' },
-  { label: '选项8', value: '8' }
-])
-
-onMounted(() => {
-  keyupEvent4()
+  },
+  methods: {
+    focusEvent1 () {
+      this.demo1.visible = true
+    },
+    keyupEvent1 () {
+      this.demo1.list1 = this.demo1.value1 ? data1.filter((item) => item.label.indexOf(this.demo1.value1) > -1) : data1
+    },
+    selectEvent1  (item: ItemVO1) {
+      this.demo1.value1 = item.label
+      this.demo1.visible = false
+      this.demo1.list1 = data1
+    },
+    focusEvent2 () {
+      const $pulldown2 = this.$refs.xDown2 as any
+      $pulldown2.showPanel()
+    },
+    keyupEvent2  () {
+      this.demo2.list2 = this.demo2.value2 ? data2.filter((item) => item.label.indexOf(this.demo2.value2) > -1) : data2
+    },
+    selectEvent2 (item: ItemVO2) {
+      const $pulldown2 = this.$refs.xDown2 as any
+      this.demo2.value2 = item.label
+      $pulldown2.hidePanel().then(() => {
+        this.demo2.list2 = data2
+      })
+    },
+    clickEvent3 () {
+      const $pulldown3 = this.$refs.xDown3 as any
+      $pulldown3.togglePanel()
+    },
+    focusEvent4  () {
+      const $pulldown4 = this.$refs.xDown4 as any
+      $pulldown4.showPanel()
+    },
+    keyupEvent4  () {
+      this.demo4.loading4 = true
+      setTimeout(() => {
+        this.demo4.loading4 = false
+        if (this.demo4.value4) {
+          this.demo4.tableData4 = this.demo4.tableList4.filter((row) => row.name.indexOf(this.demo4.value4) > -1)
+        } else {
+          this.demo4.tableData4 = this.demo4.tableList4.slice(0)
+        }
+      }, 100)
+    },
+    suffixClick4  () {
+      const $pulldown4 = this.$refs.xDown4 as any
+      $pulldown4.togglePanel()
+    },
+    cellClickEvent4 ({ row }: any) {
+      const $pulldown4 = this.$refs.xDown4 as any
+      this.demo4.value4 = row.name
+      $pulldown4.hidePanel()
+    },
+    pageChangeEvent4 ({ currentPage, pageSize }: any) {
+      this.demo4.tablePage4.currentPage = currentPage
+      this.demo4.tablePage4.pageSize = pageSize
+    }
+  },
+  mounted () {
+    this.keyupEvent4()
+  }
 })
 </script>

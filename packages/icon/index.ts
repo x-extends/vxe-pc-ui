@@ -1,15 +1,13 @@
-import { App } from 'vue'
+import { VueConstructor } from 'vue'
 import { VxeUI } from '@vxe-ui/core'
 import VxeIconComponent from './src/icon'
-import { dynamicApp } from '../dynamics'
 
 export const VxeIcon = Object.assign({}, VxeIconComponent, {
-  install (app: App) {
+  install (app: VueConstructor) {
     app.component(VxeIconComponent.name as string, VxeIconComponent)
   }
 })
 
-dynamicApp.component(VxeIconComponent.name as string, VxeIconComponent)
 VxeUI.component(VxeIconComponent)
 
 export const Icon = VxeIcon

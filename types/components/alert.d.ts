@@ -1,26 +1,19 @@
-import { RenderFunction, SetupContext, Ref, ComponentPublicInstance, DefineComponent } from 'vue'
-import { defineVxeComponent, VxeComponentBaseOptions, VxeComponentEventParams, VxeComponentSizeType, VxeComponentStatusType, ValueOf } from '@vxe-ui/core'
+import { DefineVxeComponentApp, DefineVxeComponentOptions, VxeComponentBaseOptions, DefineVxeComponentInstance, VxeComponentBaseOptions, VxeComponentEventParams, VxeComponentSizeType, VxeComponentStatusType, ValueOf } from '@vxe-ui/core'
 
-/* eslint-disable no-use-before-define,@typescript-eslint/ban-types */
+/* eslint-disable @typescript-eslint/no-empty-interface,no-use-before-define,@typescript-eslint/ban-types */
 
-export declare const VxeAlert: defineVxeComponent<VxeAlertProps, VxeAlertEventProps, VxeAlertSlots>
-export type VxeAlertComponent = DefineComponent<VxeAlertProps & VxeAlertEventProps>
+export declare const VxeAlert: DefineVxeComponentApp<VxeAlertProps, VxeAlertEventProps, VxeAlertSlots>
+export type VxeAlertComponent = DefineVxeComponentOptions<VxeAlertProps, VxeAlertEventProps>
 
-export type VxeAlertInstance = ComponentPublicInstance<VxeAlertProps, VxeAlertConstructor>
+export type VxeAlertInstance = DefineVxeComponentInstance<VxeAlertProps, VxeAlertConstructor>
 
 export interface VxeAlertConstructor extends VxeComponentBaseOptions, VxeAlertMethods {
-  props: VxeAlertProps
-  context: SetupContext<VxeAlertEmits>
   reactData: AlertReactData
-  getRefMaps(): AlertPrivateRef
-  getComputeMaps(): AlertPrivateComputed
-  renderVN: RenderFunction
 }
 
 export interface AlertPrivateRef {
-  refElem: Ref<HTMLDivElement | undefined>
 }
-export interface VxeAlertPrivateRef extends AlertPrivateRef { }
+export type VxeAlertPrivateRef = AlertPrivateRef
 
 export namespace VxeAlertPropTypes {
   export type Title = string | number
@@ -44,7 +37,7 @@ export type VxeAlertProps = {
 
 export interface AlertPrivateComputed {
 }
-export interface VxeAlertPrivateComputed extends AlertPrivateComputed { }
+export type VxeAlertPrivateComputed = AlertPrivateComputed
 
 export interface AlertReactData {
 }
@@ -52,10 +45,10 @@ export interface AlertReactData {
 export interface AlertMethods {
   dispatchEvent(type: ValueOf<VxeAlertEmits>, params: Record<string, any>, evnt: Event | null): void
 }
-export interface VxeAlertMethods extends AlertMethods { }
+export type VxeAlertMethods = AlertMethods
 
 export interface AlertPrivateMethods { }
-export interface VxeAlertPrivateMethods extends AlertPrivateMethods { }
+export type VxeAlertPrivateMethods = AlertPrivateMethods
 
 export type VxeAlertEmits = [
   'close'

@@ -1,24 +1,17 @@
-import { RenderFunction, SetupContext, Ref, ComponentPublicInstance, DefineComponent } from 'vue'
-import { defineVxeComponent, VxeComponentBaseOptions, VxeComponentEventParams, VxeComponentSizeType, VxeComponentSlotType, ValueOf } from '@vxe-ui/core'
+import { DefineVxeComponentApp, DefineVxeComponentOptions, DefineVxeComponentInstance, VxeComponentBaseOptions, VxeComponentEventParams, VxeComponentSizeType, VxeComponentSlotType, ValueOf } from '@vxe-ui/core'
 
-/* eslint-disable no-use-before-define,@typescript-eslint/ban-types */
+/* eslint-disable @typescript-eslint/no-empty-interface,no-use-before-define,@typescript-eslint/ban-types */
 
-export declare const VxeDrawer: defineVxeComponent<VxeDrawerProps, VxeDrawerEventProps, VxeDrawerSlots>
-export type VxeDrawerComponent = DefineComponent<VxeDrawerProps & VxeDrawerEventProps>
+export declare const VxeDrawer: DefineVxeComponentApp<VxeDrawerProps, VxeDrawerEventProps, VxeDrawerSlots>
+export type VxeDrawerComponent = DefineVxeComponentOptions<VxeDrawerProps, VxeDrawerEventProps>
 
-export type VxeDrawerInstance = ComponentPublicInstance<VxeDrawerProps, VxeDrawerConstructor>
+export type VxeDrawerInstance = DefineVxeComponentInstance<VxeDrawerProps, VxeDrawerConstructor>
 
-export interface VxeDrawerConstructor extends VxeComponentBaseOptions, VxeDrawerMethods {
-  props: VxeDrawerProps
-  context: SetupContext<VxeDrawerEmits>
+export interface VxeDrawerConstructor extends VxeComponentBaseOptions, VxeDrawerProps, VxeDrawerMethods {
   reactData: DrawerReactData
-  getRefMaps(): DrawerPrivateRef
-  getComputeMaps(): DrawerPrivateComputed
-  renderVN: RenderFunction
 }
 
 export interface DrawerPrivateRef {
-  refElem: Ref<HTMLDivElement | undefined>
 }
 export interface VxeDrawerPrivateRef extends DrawerPrivateRef { }
 
@@ -64,7 +57,7 @@ export namespace VxeDrawerPropTypes {
   export type Slots = VxeDrawerSlots
 }
 
-export type VxeDrawerProps = {
+export interface VxeDrawerProps {
   size?: VxeDrawerPropTypes.Size
   modelValue?: VxeDrawerPropTypes.ModelValue
   id?: VxeDrawerPropTypes.ID

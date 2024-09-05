@@ -1,24 +1,17 @@
-import { RenderFunction, SetupContext, Ref, ComponentPublicInstance, DefineComponent } from 'vue'
-import { defineVxeComponent, VxeComponentBaseOptions, VxeComponentEventParams, ValueOf, VxeComponentSizeType } from '@vxe-ui/core'
+import { DefineVxeComponentApp, DefineVxeComponentOptions, DefineVxeComponentInstance, VxeComponentBaseOptions, VxeComponentEventParams, ValueOf, VxeComponentSizeType } from '@vxe-ui/core'
 
-/* eslint-disable no-use-before-define,@typescript-eslint/ban-types */
+/* eslint-disable @typescript-eslint/no-empty-interface,no-use-before-define,@typescript-eslint/ban-types */
 
-export declare const VxeLayoutContainer: defineVxeComponent<VxeLayoutContainerProps, VxeLayoutContainerEventProps, VxeLayoutContainerSlots>
-export type VxeLayoutContainerComponent = DefineComponent<VxeLayoutContainerProps & VxeLayoutContainerEventProps>
+export declare const VxeLayoutContainer: DefineVxeComponentApp<VxeLayoutContainerProps, VxeLayoutContainerEventProps, VxeLayoutContainerSlots>
+export type VxeLayoutContainerComponent = DefineVxeComponentOptions<VxeLayoutContainerProps, VxeLayoutContainerEventProps>
 
-export type VxeLayoutContainerInstance = ComponentPublicInstance<VxeLayoutContainerProps, VxeLayoutContainerConstructor>
+export type VxeLayoutContainerInstance = DefineVxeComponentInstance<VxeLayoutContainerProps, VxeLayoutContainerConstructor>
 
-export interface VxeLayoutContainerConstructor extends VxeComponentBaseOptions, VxeLayoutContainerMethods {
-  props: VxeLayoutContainerProps
-  context: SetupContext<VxeLayoutContainerEmits>
+export interface VxeLayoutContainerConstructor extends VxeComponentBaseOptions, VxeLayoutContainerProps, VxeLayoutContainerMethods {
   reactData: LayoutContainerReactData
-  getRefMaps(): LayoutContainerPrivateRef
-  getComputeMaps(): LayoutContainerPrivateComputed
-  renderVN: RenderFunction
 }
 
 export interface LayoutContainerPrivateRef {
-  refElem: Ref<HTMLDivElement | undefined>
 }
 export interface VxeLayoutContainerPrivateRef extends LayoutContainerPrivateRef { }
 
@@ -27,7 +20,7 @@ export namespace VxeLayoutContainerPropTypes {
   export type Vertical = boolean
 }
 
-export type VxeLayoutContainerProps = {
+export interface VxeLayoutContainerProps {
   size?: VxeLayoutContainerPropTypes.Size
   vertical?: VxeLayoutContainerPropTypes.Vertical
 }

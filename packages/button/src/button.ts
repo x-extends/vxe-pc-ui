@@ -1,14 +1,19 @@
-import { defineComponent, h, ref, Ref, computed, Teleport, resolveComponent, VNode, onUnmounted, reactive, nextTick, PropType, onMounted, inject, createCommentVNode } from 'vue'
+import { CreateElement, VNode, PropType } from 'vue'
 import XEUtils from 'xe-utils'
-import { getConfig, globalEvents, getIcon, createEvent, useSize, usePermission } from '../../ui'
+import { getConfig, globalEvents, getIcon, createEvent, globalMixins, renderEmptyElement } from '../../ui'
+import { defineVxeComponent } from '../../ui/src/comp'
 import { getAbsolutePos, getEventTargetNode } from '../../ui/src/dom'
 import { getFuncText, getLastZIndex, nextZIndex } from '../../ui/src/utils'
 import { warnLog } from '../../ui/src/log'
 
-import type { VxeButtonConstructor, VxeButtonPropTypes, VxeButtonEmits, ButtonReactData, ButtonMethods, ButtonPrivateRef, ButtonInternalData, VxeButtonGroupConstructor, VxeButtonGroupPrivateMethods, VxeTableConstructor, VxeTablePrivateMethods, VxeFormConstructor, VxeFormPrivateMethods, VxeModalConstructor, VxeModalMethods } from '../../../types'
+import type { VxeButtonPropTypes, VxeButtonEmits, ButtonReactData, VxeButtonGroupConstructor, ButtonInternalData, VxeButtonGroupPrivateMethods, VxeTableConstructor, VxeTablePrivateMethods, VxeFormConstructor, VxeFormPrivateMethods, VxeModalConstructor, VxeModalMethods, VxeComponentPermissionInfo, VxeComponentSizeType, ValueOf } from '../../../types'
 
-export default defineComponent({
+export default defineVxeComponent({
   name: 'VxeButton',
+  mixins: [
+    globalMixins.sizeMixin,
+    globalMixins.permissionMixin
+  ],
   props: {
     /**
      * 按钮类型
@@ -20,7 +25,10 @@ export default defineComponent({
     /**
      * 按钮尺寸
      */
-    size: { type: String as PropType<VxeButtonPropTypes.Size>, default: () => getConfig().button.size || getConfig().size },
+    size: {
+      type: String as PropType<VxeButtonPropTypes.Size>,
+      default: () => getConfig().button.size || getConfig().size
+    },
     /**
      * 用来标识这一项
      */
@@ -66,7 +74,10 @@ export default defineComponent({
      * 是否加载中
      */
     loading: Boolean as PropType<VxeButtonPropTypes.Loading>,
-    trigger: { type: String as PropType<VxeButtonPropTypes.Trigger>, default: () => getConfig().button.trigger },
+    trigger: {
+      type: String as PropType<VxeButtonPropTypes.Trigger>,
+      default: () => getConfig().button.trigger
+    },
     align: String as PropType<VxeButtonPropTypes.Align>,
     /**
      * 在下拉面板关闭时销毁内容
@@ -83,61 +94,56 @@ export default defineComponent({
       default: null
     }
   },
-  emits: [
-    'click',
-    'mouseenter',
-    'mouseleave',
-    'dropdown-click'
-  ] as VxeButtonEmits,
-  setup (props, context) {
-    const { slots, emit } = context
-
-    const $xeModal = inject<VxeModalConstructor & VxeModalMethods | null>('$xeModal', null)
-    const $xeTable = inject<VxeTableConstructor & VxeTablePrivateMethods | null>('$xeTable', null)
-    const $xeForm = inject<VxeFormConstructor & VxeFormPrivateMethods | null>('$xeForm', null)
-    const $xeButtonGroup = inject<(VxeButtonGroupConstructor & VxeButtonGroupPrivateMethods) | null>('$xeButtonGroup', null)
-
-    const xID = XEUtils.uniqueId()
-
-    const { computeSize } = useSize(props)
-
-    const { computePermissionInfo } = usePermission(props)
-
-    const reactData = reactive<ButtonReactData>({
-      inited: false,
+  inject: {
+    $xeModal: {
+      default: null
+    },
+    $xeTable: {
+      default: null
+    },
+    $xeForm: {
+      default: null
+    },
+    $xeButtonGroup: {
+      default: null
+    }
+  },
+  data () {
+    const reactData: ButtonReactData = {
+      initialized: false,
       visiblePanel: false,
-      animatVisible: false,
+      visibleAnimate: false,
       isActivated: false,
       panelIndex: 0,
       panelStyle: {},
       panelPlacement: ''
-    })
-
+    }
     const internalData: ButtonInternalData = {
-      showTime: null
+      showTime: undefined
     }
-
-    const refElem = ref() as Ref<HTMLDivElement>
-    const refButton = ref() as Ref<HTMLButtonElement>
-    const refBtnPanel = ref() as Ref<HTMLDivElement>
-
-    const refMaps: ButtonPrivateRef = {
-      refElem
-    }
-
-    const $xeButton = {
-      xID,
-      props,
-      context,
+    return {
+      xID: XEUtils.uniqueId(),
       reactData,
-      internalData,
-      getRefMaps: () => refMaps
-    } as unknown as VxeButtonConstructor
+      internalData
+    }
+  },
+  computed: {
+    ...({} as {
+      computePermissionInfo(): VxeComponentPermissionInfo
+      computeSize(): VxeComponentSizeType
+      $xeModal(): (VxeModalConstructor & VxeModalMethods) | null
+      $xeForm(): (VxeFormConstructor & VxeFormPrivateMethods) | null
+      $xeTable(): (VxeTableConstructor & VxeTablePrivateMethods) | null
+      $xeButtonGroup(): (VxeButtonGroupConstructor & VxeButtonGroupPrivateMethods)| null
+    }),
+    computeBtnTransfer () {
+      const $xeButton = this
+      const props = $xeButton
 
-    let buttonMethods = {} as ButtonMethods
-
-    const computeTransfer = computed(() => {
       const { transfer } = props
+      const $xeTable = $xeButton.$xeTable
+      const $xeModal = $xeButton.$xeModal
+      const $xeForm = $xeButton.$xeForm
       if (transfer === null) {
         const globalTransfer = getConfig().button.transfer
         if (XEUtils.isBoolean(globalTransfer)) {
@@ -148,76 +154,176 @@ export default defineComponent({
         }
       }
       return transfer
-    })
+    },
+    computeBtnDisabled () {
+      const $xeButton = this
+      const props = $xeButton
 
-    const computeBtnDisabled = computed(() => {
       const { disabled } = props
-      const permissionInfo = computePermissionInfo.value
+      const permissionInfo = $xeButton.computePermissionInfo
       return disabled || permissionInfo.disabled
-    })
+    },
+    computeIsFormBtn () {
+      const $xeButton = this
+      const props = $xeButton
 
-    const computeIsFormBtn = computed(() => {
       const { type } = props
       if (type) {
         return ['submit', 'reset', 'button'].indexOf(type) > -1
       }
       return false
-    })
+    },
+    computeBtnMode () {
+      const $xeButton = this
+      const props = $xeButton
 
-    const computeBtnMode = computed(() => {
       const { type, mode } = props
-      if (mode === 'text' || type === 'text' || ($xeButtonGroup && $xeButtonGroup.props.mode === 'text')) {
+      const $xeButtonGroup = $xeButton.$xeButtonGroup
+      if (mode === 'text' || type === 'text' || ($xeButtonGroup && $xeButtonGroup.mode === 'text')) {
         return 'text'
       }
       return 'button'
-    })
+    },
+    computeBtnStatus () {
+      const $xeButton = this
+      const props = $xeButton
 
-    const computeBtnStatus = computed(() => {
       const { status } = props
+      const $xeButtonGroup = $xeButton.$xeButtonGroup
       if (status) {
         return status
       }
       if ($xeButtonGroup) {
-        return $xeButtonGroup.props.status
+        return $xeButtonGroup.status
       }
       return ''
-    })
+    },
+    computeBtnRound () {
+      const $xeButton = this
+      const props = $xeButton
 
-    const computeBtnRound = computed(() => {
       const { round } = props
+      const $xeButtonGroup = $xeButton.$xeButtonGroup
       if (round) {
         return round
       }
       if ($xeButtonGroup) {
-        return $xeButtonGroup.props.round
+        return $xeButtonGroup.round
       }
       return false
-    })
+    },
+    computeBtnCircle () {
+      const $xeButton = this
+      const props = $xeButton
 
-    const computeBtnCircle = computed(() => {
       const { circle } = props
+      const $xeButtonGroup = $xeButton.$xeButtonGroup
       if (circle) {
         return circle
       }
       if ($xeButtonGroup) {
-        return $xeButtonGroup.props.circle
+        return $xeButtonGroup.circle
       }
       return false
-    })
+    }
+  },
+  methods: {
+    //
+    // methods
+    //
+    dispatchEvent (type: ValueOf<VxeButtonEmits>, params: Record<string, any>, evnt: Event | null) {
+      const $xeButton = this
+      this.$emit(type, createEvent(evnt, { $button: $xeButton }, params))
+    },
+    openPanel () {
+      const $xeButton = this
+      const props = $xeButton
+      const reactData = $xeButton.reactData
+      const internalData = $xeButton.internalData
 
-    const updateZindex = () => {
+      const { trigger } = props
+      const btnTransfer = this.computeBtnTransfer
+      const panelElem = this.$refs.refBtnPanel as HTMLElement | undefined
+      if (panelElem) {
+        panelElem.dataset.active = 'Y'
+        if (!reactData.initialized) {
+          reactData.initialized = true
+          if (btnTransfer) {
+            document.body.appendChild(panelElem)
+          }
+        }
+        internalData.showTime = setTimeout(() => {
+          if (panelElem.dataset.active === 'Y') {
+            this.mouseenterDropdownEvent()
+          } else {
+            reactData.visibleAnimate = false
+          }
+        }, trigger === 'click' ? 50 : 250)
+      }
+      return this.$nextTick()
+    },
+    closePanel () {
+      const $xeButton = this
+      const reactData = $xeButton.reactData
+      const internalData = $xeButton.internalData
+
+      const panelElem = this.$refs.refBtnPanel as HTMLElement | undefined
+      clearTimeout(internalData.showTime)
+      if (panelElem) {
+        panelElem.dataset.active = 'N'
+        setTimeout(() => {
+          if (panelElem.dataset.active !== 'Y') {
+            reactData.visiblePanel = false
+            setTimeout(() => {
+              if (panelElem.dataset.active !== 'Y') {
+                reactData.visibleAnimate = false
+              }
+            }, 350)
+          }
+        }, 100)
+      } else {
+        reactData.visibleAnimate = false
+        reactData.visiblePanel = false
+      }
+      return this.$nextTick()
+    },
+    focus () {
+      const btnElem = this.$refs.refButton as HTMLElement | undefined
+      if (btnElem) {
+        btnElem.focus()
+      }
+      return this.$nextTick()
+    },
+    blur () {
+      const btnElem = this.$refs.refButton as HTMLElement | undefined
+      if (btnElem) {
+        btnElem.blur()
+      }
+      return this.$nextTick()
+    },
+
+    //
+    // privateMethods
+    //
+    updateZindex () {
+      const $xeButton = this
+      const reactData = $xeButton.reactData
+
       if (reactData.panelIndex < getLastZIndex()) {
         reactData.panelIndex = nextZIndex()
       }
-    }
+    },
+    updatePlacement  () {
+      return this.$nextTick().then(() => {
+        const $xeButton = this
+        const props = $xeButton
+        const reactData = $xeButton.reactData
 
-    const updatePlacement = () => {
-      return nextTick().then(() => {
         const { placement } = props
         const { panelIndex } = reactData
-        const targetElem = refButton.value
-        const panelElem = refBtnPanel.value
-        const transfer = computeTransfer.value
+        const targetElem = this.$refs.refButton as HTMLElement | undefined
+        const panelElem = this.$refs.refBtnPanel as HTMLElement | undefined
+        const btnTransfer = this.computeBtnTransfer
         if (panelElem && targetElem) {
           const targetHeight = targetElem.offsetHeight
           const targetWidth = targetElem.offsetWidth
@@ -229,7 +335,7 @@ export default defineComponent({
           }
           const { top, left, boundingTop, visibleHeight, visibleWidth } = getAbsolutePos(targetElem)
           let panelPlacement = 'bottom'
-          if (transfer) {
+          if (btnTransfer) {
             let btnLeft = left + targetWidth - panelWidth
             let btnTop = top + targetHeight
             if (placement === 'top') {
@@ -278,29 +384,32 @@ export default defineComponent({
           }
           reactData.panelStyle = panelStyle
           reactData.panelPlacement = panelPlacement
-          return nextTick()
+          return this.$nextTick()
         }
       })
-    }
+    },
+    clickEvent (evnt: Event) {
+      const $xeButton = this
+      const $xeButtonGroup = $xeButton.$xeButtonGroup
 
-    const clickEvent = (evnt: Event) => {
       if ($xeButtonGroup) {
-        $xeButtonGroup.handleClick({ name: props.name as string }, evnt)
+        $xeButtonGroup.handleClick({ name: this.name }, evnt)
       } else {
-        buttonMethods.dispatchEvent('click', { $event: evnt }, evnt)
+        this.dispatchEvent('click', { $event: evnt }, evnt)
       }
-    }
-
-    const mousedownDropdownEvent = (evnt: MouseEvent) => {
+    },
+    mousedownDropdownEvent (evnt: MouseEvent) {
       const isLeftBtn = evnt.button === 0
       if (isLeftBtn) {
         evnt.stopPropagation()
       }
-    }
+    },
+    clickDropdownEvent (evnt: Event) {
+      const $xeButton = this
+      const reactData = $xeButton.reactData
 
-    const clickDropdownEvent = (evnt: Event) => {
       const dropdownElem = evnt.currentTarget
-      const panelElem = refBtnPanel.value
+      const panelElem = this.$refs.refBtnPanel as HTMLElement | undefined
       const { flag, targetElem } = getEventTargetNode(evnt, dropdownElem, 'vxe-button')
       if (flag) {
         if (panelElem) {
@@ -309,122 +418,115 @@ export default defineComponent({
         reactData.visiblePanel = false
         setTimeout(() => {
           if (!panelElem || panelElem.dataset.active !== 'Y') {
-            reactData.animatVisible = false
+            reactData.visibleAnimate = false
           }
         }, 350)
-        buttonMethods.dispatchEvent('dropdown-click', { name: targetElem.getAttribute('name'), $event: evnt }, evnt)
+        this.dispatchEvent('dropdown-click', { name: targetElem.getAttribute('name'), $event: evnt }, evnt)
       }
-    }
+    },
+    mouseenterDropdownEvent () {
+      const $xeButton = this
+      const reactData = $xeButton.reactData
 
-    const mouseenterDropdownEvent = () => {
-      const panelElem = refBtnPanel.value
+      const panelElem = this.$refs.refBtnPanel as HTMLElement | undefined
       if (panelElem) {
         panelElem.dataset.active = 'Y'
-        reactData.animatVisible = true
+        reactData.visibleAnimate = true
         setTimeout(() => {
           if (panelElem.dataset.active === 'Y') {
             reactData.visiblePanel = true
-            updateZindex()
-            updatePlacement()
+            this.updateZindex()
+            this.updatePlacement()
             setTimeout(() => {
               if (reactData.visiblePanel) {
-                updatePlacement()
+                this.updatePlacement()
               }
             }, 50)
           }
         }, 20)
       }
-    }
+    },
+    mouseenterTargetEvent  (evnt: MouseEvent) {
+      this.openPanel()
+      this.mouseenterEvent(evnt)
+    },
+    mouseleaveTargetEvent  (evnt: MouseEvent) {
+      this.closePanel()
+      this.mouseleaveEvent(evnt)
+    },
+    mouseenterEvent  (evnt: MouseEvent) {
+      this.dispatchEvent('mouseenter', {}, evnt)
+    },
+    mouseleaveEvent (evnt: MouseEvent) {
+      this.dispatchEvent('mouseleave', {}, evnt)
+    },
+    clickTargetEvent (evnt: MouseEvent) {
+      const $xeButton = this
+      const props = $xeButton
+      const reactData = $xeButton.reactData
 
-    const mouseenterTargetEvent = (evnt: MouseEvent) => {
-      openPanel()
-      mouseenterEvent(evnt)
-    }
-
-    const mouseleaveTargetEvent = (evnt: MouseEvent) => {
-      closePanel()
-      mouseleaveEvent(evnt)
-    }
-
-    const mouseenterEvent = (evnt: MouseEvent) => {
-      emit('mouseenter', createEvent(evnt, {}))
-    }
-
-    const mouseleaveEvent = (evnt: MouseEvent) => {
-      emit('mouseleave', createEvent(evnt, {}))
-    }
-
-    const clickTargetEvent = (evnt: MouseEvent) => {
       const { trigger } = props
       if (trigger === 'click') {
         if (reactData.visiblePanel) {
-          closePanel()
+          this.closePanel()
         } else {
-          openPanel()
+          this.openPanel()
         }
       }
-      clickEvent(evnt)
-    }
+      this.clickEvent(evnt)
+    },
+    mouseleaveDropdownEvent  () {
+      this.closePanel()
+    },
+    handleGlobalMousewheelEvent  (evnt: Event) {
+      const $xeButton = this
+      const reactData = $xeButton.reactData
 
-    const openPanel = () => {
-      const { trigger } = props
-      const panelElem = refBtnPanel.value
-      if (panelElem) {
-        panelElem.dataset.active = 'Y'
-        if (!reactData.inited) {
-          reactData.inited = true
+      const panelElem = this.$refs.refBtnPanel as HTMLElement | undefined
+      if (reactData.visiblePanel && !getEventTargetNode(evnt, panelElem).flag) {
+        this.closePanel()
+      }
+    },
+    handleGlobalMousedownEvent  (evnt: MouseEvent) {
+      const $xeButton = this
+      const reactData = $xeButton.reactData
+
+      const btnDisabled = this.computeBtnDisabled
+      const { visiblePanel } = reactData
+      if (!btnDisabled) {
+        const el = this.$refs.refElem
+        const panelElem = this.$refs.refBtnPanel as HTMLElement | undefined
+        reactData.isActivated = getEventTargetNode(evnt, el).flag || getEventTargetNode(evnt, panelElem).flag
+        if (visiblePanel && !reactData.isActivated) {
+          this.closePanel()
         }
-        internalData.showTime = setTimeout(() => {
-          if (panelElem.dataset.active === 'Y') {
-            mouseenterDropdownEvent()
-          } else {
-            reactData.animatVisible = false
-          }
-        }, trigger === 'click' ? 50 : 250)
       }
-      return nextTick()
-    }
+    },
 
-    const closePanel = () => {
-      const panelElem = refBtnPanel.value
-      clearTimeout(internalData.showTime)
-      if (panelElem) {
-        panelElem.dataset.active = 'N'
-        setTimeout(() => {
-          if (panelElem.dataset.active !== 'Y') {
-            reactData.visiblePanel = false
-            setTimeout(() => {
-              if (panelElem.dataset.active !== 'Y') {
-                reactData.animatVisible = false
-              }
-            }, 350)
-          }
-        }, 100)
-      } else {
-        reactData.animatVisible = false
-        reactData.visiblePanel = false
-      }
-      return nextTick()
-    }
+    //
+    // Render
+    //
+    renderContent  (h: CreateElement) {
+      const $xeButton = this
+      const props = $xeButton
+      const slots = $xeButton.$scopedSlots
 
-    const mouseleaveDropdownEvent = () => {
-      closePanel()
-    }
-
-    const renderContent = () => {
       const { content, icon, loading } = props
+      const iconSlot = slots.icon
+      const defaultSlot = slots.default
       const contVNs: VNode[] = []
+
       if (loading) {
         contVNs.push(
           h('i', {
             class: ['vxe-button--loading-icon', getIcon().BUTTON_LOADING]
           })
         )
-      } else if (slots.icon) {
+      } else if (iconSlot) {
         contVNs.push(
           h('span', {
             class: 'vxe-button--custom-icon'
-          }, slots.icon({}))
+          }, iconSlot.call(this, {}))
         )
       } else if (icon) {
         contVNs.push(
@@ -433,11 +535,11 @@ export default defineComponent({
           })
         )
       }
-      if (slots.default) {
+      if (defaultSlot) {
         contVNs.push(
           h('span', {
             class: 'vxe-button--content'
-          }, slots.default({}))
+          }, defaultSlot.call(this, {}))
         )
       } else if (content) {
         contVNs.push(
@@ -447,84 +549,49 @@ export default defineComponent({
         )
       }
       return contVNs
-    }
+    },
+    renderVN (h: CreateElement): VNode {
+      const $xeButton = this
+      const props = $xeButton
+      const slots = $xeButton.$scopedSlots
+      const reactData = $xeButton.reactData
 
-    buttonMethods = {
-      dispatchEvent (type, params, evnt) {
-        emit(type, createEvent(evnt, { $button: $xeButton }, params))
-      },
-      openPanel,
-      closePanel,
-      focus () {
-        const btnElem = refButton.value
-        btnElem.focus()
-        return nextTick()
-      },
-      blur () {
-        const btnElem = refButton.value
-        btnElem.blur()
-        return nextTick()
-      }
-    }
-
-    const handleGlobalMousewheelEvent = (evnt: Event) => {
-      const panelElem = refBtnPanel.value
-      if (reactData.visiblePanel && !getEventTargetNode(evnt, panelElem).flag) {
-        closePanel()
-      }
-    }
-
-    const handleGlobalMousedownEvent = (evnt: MouseEvent) => {
-      const btnDisabled = computeBtnDisabled.value
-      const { visiblePanel } = reactData
-      if (!btnDisabled) {
-        const el = refElem.value
-        const panelElem = refBtnPanel.value
-        reactData.isActivated = getEventTargetNode(evnt, el).flag || getEventTargetNode(evnt, panelElem).flag
-        if (visiblePanel && !reactData.isActivated) {
-          closePanel()
-        }
-      }
-    }
-
-    Object.assign($xeButton, buttonMethods)
-
-    const renderVN = () => {
       const { className, popupClassName, align, trigger, title, routerLink, type, destroyOnClose, name, loading } = props
-      const { inited, visiblePanel } = reactData
-      const isFormBtn = computeIsFormBtn.value
-      const btnMode = computeBtnMode.value
-      const btnStatus = computeBtnStatus.value
-      const btnRound = computeBtnRound.value
-      const btnCircle = computeBtnCircle.value
-      const transfer = computeTransfer.value
-      const btnDisabled = computeBtnDisabled.value
-      const permissionInfo = computePermissionInfo.value
-      const vSize = computeSize.value
+      const { initialized, visiblePanel } = reactData
+      const isFormBtn = $xeButton.computeIsFormBtn
+      const btnMode = $xeButton.computeBtnMode
+      const btnStatus = $xeButton.computeBtnStatus
+      const btnRound = $xeButton.computeBtnRound
+      const btnCircle = $xeButton.computeBtnCircle
+      const btnDisabled = $xeButton.computeBtnDisabled
+      const permissionInfo = $xeButton.computePermissionInfo
+      const vSize = $xeButton.computeSize
+      const dropdownsSlot = slots.dropdowns
+
       if (!permissionInfo.visible) {
-        return createCommentVNode()
+        return renderEmptyElement($xeButton)
       }
-      if (slots.dropdowns) {
+      if (dropdownsSlot) {
         const btnOns: Record<string, any> = {}
         const panelOns: Record<string, any> = {}
         if (trigger === 'hover') {
-          // hover 触发
-          btnOns.onMouseenter = mouseenterTargetEvent
-          btnOns.onMouseleave = mouseleaveTargetEvent
+        // hover 触发
+          btnOns.mouseenter = $xeButton.mouseenterTargetEvent
+          btnOns.mouseleave = $xeButton.mouseleaveTargetEvent
 
-          panelOns.onMouseenter = mouseenterDropdownEvent
-          panelOns.onMouseleave = mouseleaveDropdownEvent
+          panelOns.mouseenter = $xeButton.mouseenterDropdownEvent
+          panelOns.mouseleave = $xeButton.mouseleaveDropdownEvent
         }
         return h('div', {
-          ref: refElem,
+          ref: 'refElem',
           class: ['vxe-button--dropdown', className ? (XEUtils.isFunction(className) ? className({ $button: $xeButton }) : className) : '', {
             [`size--${vSize}`]: vSize,
             'is--active': visiblePanel
           }]
         }, [
           routerLink
-            ? h(resolveComponent('router-link'), {
-              ref: refButton,
+            ? h('router-link', {
+              ref: 'refButton',
               class: ['vxe-button', 'vxe-button--link', `type--${btnMode}`, align ? `align--${align}` : '', className ? (XEUtils.isFunction(className) ? className({ $button: $xeButton }) : className) : '', {
                 [`size--${vSize}`]: vSize,
                 [`theme--${btnStatus}`]: btnStatus,
@@ -533,24 +600,29 @@ export default defineComponent({
                 'is--disabled': btnDisabled || loading,
                 'is--loading': loading
               }],
-              title,
-              name,
-              type: isFormBtn ? type : 'button',
-              disabled: btnDisabled || loading,
-              to: routerLink,
-              onClick: clickTargetEvent,
-              ...btnOns
-            }, {
-              default () {
-                return renderContent().concat([
-                  h('i', {
-                    class: `vxe-button--dropdown-arrow ${getIcon().BUTTON_DROPDOWN}`
-                  })
-                ])
+              attrs: {
+                title,
+                name,
+                type: isFormBtn ? type : 'button',
+                disabled: btnDisabled || loading,
+                to: routerLink
+              },
+              on: {
+                click: $xeButton.clickTargetEvent,
+                ...btnOns
+              },
+              scopedSlots: {
+                default () {
+                  return $xeButton.renderContent(h).concat([
+                    h('i', {
+                      class: `vxe-button--dropdown-arrow ${getIcon().BUTTON_DROPDOWN}`
+                    })
+                  ])
+                }
               }
             })
             : h('button', {
-              ref: refButton,
+              ref: 'refButton',
               class: ['vxe-button', `type--${btnMode}`, align ? `align--${align}` : '', className ? (XEUtils.isFunction(className) ? className({ $button: $xeButton }) : className) : '', {
                 [`size--${vSize}`]: vSize,
                 [`theme--${btnStatus}`]: btnStatus,
@@ -559,46 +631,49 @@ export default defineComponent({
                 'is--disabled': btnDisabled || loading,
                 'is--loading': loading
               }],
-              title,
-              name,
-              type: isFormBtn ? type : 'button',
-              disabled: btnDisabled || loading,
-              onClick: clickTargetEvent,
-              ...btnOns
-            }, renderContent().concat([
+              attrs: {
+                title,
+                name,
+                type: isFormBtn ? type : 'button',
+                disabled: btnDisabled || loading
+              },
+              on: {
+                click: $xeButton.clickTargetEvent,
+                ...btnOns
+              }
+            }, $xeButton.renderContent(h).concat([
               h('i', {
                 class: `vxe-button--dropdown-arrow ${getIcon().BUTTON_DROPDOWN}`
               })
             ])),
-          h(Teleport, {
-            to: 'body',
-            disabled: transfer ? !inited : true
-          }, [
-            h('div', {
-              ref: refBtnPanel,
-              class: ['vxe-button--dropdown-panel', popupClassName ? (XEUtils.isFunction(popupClassName) ? popupClassName({ $button: $xeButton }) : popupClassName) : '', {
-                [`size--${vSize}`]: vSize,
-                'animat--leave': reactData.animatVisible,
-                'animat--enter': visiblePanel
-              }],
-              placement: reactData.panelPlacement,
-              style: reactData.panelStyle,
-              ...panelOns
-            }, inited
-              ? [
-                  h('div', {
-                    class: 'vxe-button--dropdown-wrapper',
-                    onMousedown: mousedownDropdownEvent,
-                    onClick: clickDropdownEvent
-                  }, destroyOnClose && !visiblePanel ? [] : slots.dropdowns({}))
-                ]
-              : [])
-          ])
+          h('div', {
+            ref: 'refBtnPanel',
+            class: ['vxe-button--dropdown-panel', popupClassName ? (XEUtils.isFunction(popupClassName) ? popupClassName({ $button: $xeButton }) : popupClassName) : '', {
+              [`size--${vSize}`]: vSize,
+              'ani--leave': reactData.visibleAnimate,
+              'ani--enter': visiblePanel
+            }],
+            attrs: {
+              placement: reactData.panelPlacement
+            },
+            style: reactData.panelStyle,
+            ...panelOns
+          }, initialized
+            ? [
+                h('div', {
+                  class: 'vxe-button--dropdown-wrapper',
+                  on: {
+                    mousedown: $xeButton.mousedownDropdownEvent,
+                    click: $xeButton.clickDropdownEvent
+                  }
+                }, destroyOnClose && !visiblePanel ? [] : dropdownsSlot.call($xeButton, {}))
+              ]
+            : [])
         ])
       }
       if (routerLink) {
-        return h(resolveComponent('router-link'), {
-          ref: refButton,
+        return h('router-link', {
+          ref: 'refButton',
           class: ['vxe-button', 'vxe-button--link', `type--${btnMode}`, align ? `align--${align}` : '', className ? (XEUtils.isFunction(className) ? className({ $button: $xeButton }) : className) : '', {
             [`size--${vSize}`]: vSize,
             [`theme--${btnStatus}`]: btnStatus,
@@ -607,22 +682,27 @@ export default defineComponent({
             'is--disabled': btnDisabled || loading,
             'is--loading': loading
           }],
-          title,
-          name,
-          type: isFormBtn ? type : 'button',
-          disabled: btnDisabled || loading,
-          to: routerLink,
-          onClick: clickEvent,
-          onMouseenter: mouseenterEvent,
-          onMouseleave: mouseleaveEvent
-        }, {
-          default () {
-            return renderContent()
+          props: {
+            title,
+            name,
+            type: isFormBtn ? type : 'button',
+            disabled: btnDisabled || loading,
+            to: routerLink
+          },
+          on: {
+            click: $xeButton.clickEvent,
+            mouseenter: $xeButton.mouseenterEvent,
+            mouseleave: $xeButton.mouseleaveEvent
+          },
+          scopedSlots: {
+            default () {
+              return $xeButton.renderContent(h)
+            }
           }
         })
       }
       return h('button', {
-        ref: refButton,
+        ref: 'refButton',
         class: ['vxe-button', `type--${btnMode}`, align ? `align--${align}` : '', className ? (XEUtils.isFunction(className) ? className({ $button: $xeButton }) : className) : '', {
           [`size--${vSize}`]: vSize,
           [`theme--${btnStatus}`]: btnStatus,
@@ -631,37 +711,48 @@ export default defineComponent({
           'is--disabled': btnDisabled || loading,
           'is--loading': loading
         }],
-        title,
-        name,
-        type: isFormBtn ? type : 'button',
-        disabled: btnDisabled || loading,
-        onClick: clickEvent,
-        onMouseenter: mouseenterEvent,
-        onMouseleave: mouseleaveEvent
-      }, renderContent())
+        attrs: {
+          title,
+          name,
+          type: isFormBtn ? type : 'button',
+          disabled: btnDisabled || loading
+        },
+        on: {
+          click: $xeButton.clickEvent,
+          mouseenter: $xeButton.mouseenterEvent,
+          mouseleave: $xeButton.mouseleaveEvent
+        }
+      }, $xeButton.renderContent(h))
+    }
+  },
+  mounted () {
+    const $xeButton = this
+    const props = $xeButton
+
+    if (process.env.VUE_APP_VXE_ENV === 'development') {
+      if (props.type === 'text') {
+        warnLog('vxe.error.delProp', ['type=text', 'mode=text'])
+      }
     }
 
-    $xeButton.renderVN = renderVN
-
-    onMounted(() => {
-      if (process.env.VUE_APP_VXE_ENV === 'development') {
-        if (props.type === 'text') {
-          warnLog('vxe.error.delProp', ['type=text', 'mode=text'])
-        }
-      }
-
-      globalEvents.on($xeButton, 'mousewheel', handleGlobalMousewheelEvent)
-      globalEvents.on($xeButton, 'mousedown', handleGlobalMousedownEvent)
-    })
-
-    onUnmounted(() => {
-      globalEvents.off($xeButton, 'mousewheel')
-      globalEvents.off($xeButton, 'mousedown')
-    })
-
-    return $xeButton
+    globalEvents.on($xeButton, 'mousewheel', $xeButton.handleGlobalMousewheelEvent)
+    globalEvents.on($xeButton, 'mousedown', $xeButton.handleGlobalMousedownEvent)
   },
-  render () {
-    return this.renderVN()
+  beforeDestroy () {
+    const $xeButton = this
+
+    const panelElem = $xeButton.$refs.refBtnPanel as HTMLElement | undefined
+    if (panelElem && panelElem.parentNode) {
+      panelElem.parentNode.removeChild(panelElem)
+    }
+  },
+  destroyed () {
+    const $xeButton = this
+
+    globalEvents.off($xeButton, 'mousewheel')
+    globalEvents.off($xeButton, 'mousedown')
+  },
+  render (this: any, h) {
+    return this.renderVN(h)
   }
 })

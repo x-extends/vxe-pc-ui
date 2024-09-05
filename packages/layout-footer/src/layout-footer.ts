@@ -1,58 +1,51 @@
-import { defineComponent, ref, h, reactive, PropType } from 'vue'
+import { PropType, CreateElement, VNode } from 'vue'
+import { defineVxeComponent } from '../../ui/src/comp'
+import { createEvent } from '../../ui'
 import XEUtils from 'xe-utils'
 
-import type { VxeLayoutFooterPropTypes, LayoutFooterReactData, LayoutFooterPrivateRef, VxeLayoutFooterPrivateComputed, VxeLayoutFooterConstructor, VxeLayoutFooterPrivateMethods } from '../../../types'
+import type { VxeLayoutFooterPropTypes, LayoutFooterReactData, VxeLayoutFooterConstructor, VxeLayoutFooterEmits, ValueOf } from '../../../types'
 
-export default defineComponent({
+export default defineVxeComponent({
   name: 'VxeLayoutFooter',
   props: {
     fixed: Boolean as PropType<VxeLayoutFooterPropTypes.Fixed>,
     align: String as PropType<VxeLayoutFooterPropTypes.Align>
   },
-  emits: [],
-  setup (props, context) {
-    const { slots } = context
-
-    const xID = XEUtils.uniqueId()
-
-    const refElem = ref<HTMLDivElement>()
-
-    const reactData = reactive<LayoutFooterReactData>({
-    })
-
-    const refMaps: LayoutFooterPrivateRef = {
-      refElem
+  data () {
+    const reactData: LayoutFooterReactData = {
     }
+    return {
+      xID: XEUtils.uniqueId(),
+      reactData
+    } as VxeLayoutFooterConstructor
+  },
+  methods: {
+    //
+    // Method
+    //
+    dispatchEvent (type: ValueOf<VxeLayoutFooterEmits>, params: Record<string, any>, evnt: Event | null) {
+      const $xeLayoutFooter = this
+      this.$emit(type, createEvent(evnt, { $layoutFooter: $xeLayoutFooter }, params))
+    },
+    //
+    // Render
+    //
+    renderVN (h: CreateElement): VNode {
+      const $xeLayoutFooter = this
+      const props = $xeLayoutFooter
+      const slots = $xeLayoutFooter.$scopedSlots
 
-    const computeMaps: VxeLayoutFooterPrivateComputed = {
-    }
-
-    const $xeLayoutFooter = {
-      xID,
-      props,
-      context,
-      reactData,
-
-      getRefMaps: () => refMaps,
-      getComputeMaps: () => computeMaps
-    } as unknown as VxeLayoutFooterConstructor & VxeLayoutFooterPrivateMethods
-
-    const renderVN = () => {
       const { fixed, align } = props
       const defaultSlot = slots.default
+
       return h('footer', {
-        ref: refElem,
         class: ['vxe-layout-footer', align ? `align--${align}` : '', {
           'is--fixed': fixed
         }]
       }, defaultSlot ? defaultSlot({}) : [])
     }
-
-    $xeLayoutFooter.renderVN = renderVN
-
-    return $xeLayoutFooter
   },
-  render () {
-    return this.renderVN()
+  render (this: any, h) {
+    return this.renderVN(h)
   }
 })

@@ -1,24 +1,17 @@
-import { RenderFunction, SetupContext, Ref, ComponentPublicInstance, DefineComponent } from 'vue'
-import { defineVxeComponent, VxeComponentBaseOptions, VxeComponentEventParams, VxeComponentSizeType, ValueOf, VxeComponentStatusType } from '@vxe-ui/core'
+import { DefineVxeComponentApp, DefineVxeComponentOptions, DefineVxeComponentInstance, VxeComponentBaseOptions, VxeComponentEventParams, VxeComponentSizeType, ValueOf, VxeComponentStatusType } from '@vxe-ui/core'
 
-/* eslint-disable no-use-before-define,@typescript-eslint/ban-types */
+/* eslint-disable @typescript-eslint/no-empty-interface,no-use-before-define,@typescript-eslint/ban-types */
 
-export declare const VxeTag: defineVxeComponent<VxeTagProps, VxeTagEventProps, VxeTagSlots>
-export type VxeTagComponent = DefineComponent<VxeTagProps & VxeTagEventProps>
+export declare const VxeTag: DefineVxeComponentApp<VxeTagProps, VxeTagEventProps, VxeTagSlots>
+export type VxeTagComponent = DefineVxeComponentOptions<VxeTagProps, VxeTagEventProps>
 
-export type VxeTagInstance = ComponentPublicInstance<VxeTagProps, VxeTagConstructor>
+export type VxeTagInstance = DefineVxeComponentInstance<VxeTagProps, VxeTagConstructor>
 
-export interface VxeTagConstructor extends VxeComponentBaseOptions, VxeTagMethods {
-  props: VxeTagProps
-  context: SetupContext<VxeTagEmits>
+export interface VxeTagConstructor extends VxeComponentBaseOptions, VxeTagProps, VxeTagMethods {
   reactData: TagReactData
-  getRefMaps(): TagPrivateRef
-  getComputeMaps(): TagPrivateComputed
-  renderVN: RenderFunction
 }
 
 export interface TagPrivateRef {
-  refElem: Ref<HTMLDivElement | undefined>
 }
 export interface VxeTagPrivateRef extends TagPrivateRef { }
 
@@ -30,7 +23,7 @@ export namespace VxeTagPropTypes {
   export type Size = VxeComponentSizeType
 }
 
-export type VxeTagProps = {
+export interface VxeTagProps {
   status?: VxeTagPropTypes.Status
   title?: VxeTagPropTypes.Title
   icon?: VxeTagPropTypes.Icon

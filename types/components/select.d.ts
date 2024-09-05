@@ -1,26 +1,19 @@
-import { RenderFunction, SetupContext, Ref, ComponentPublicInstance, DefineComponent } from 'vue'
-import { defineVxeComponent, VxeComponentBaseOptions, VxeComponentEventParams, VxeComponentSizeType, VxeComponentStyleType, ValueOf } from '@vxe-ui/core'
+import { DefineVxeComponentApp, DefineVxeComponentOptions, DefineVxeComponentInstance, VxeComponentBaseOptions, VxeComponentEventParams, VxeComponentSizeType, VxeComponentStyleType, ValueOf } from '@vxe-ui/core'
 import { VxeOptgroupProps } from './optgroup'
 import { VxeOptionProps, VxeOptionPropTypes } from './option'
 
-/* eslint-disable no-use-before-define,@typescript-eslint/ban-types */
+/* eslint-disable @typescript-eslint/no-empty-interface,no-use-before-define,@typescript-eslint/ban-types */
 
-export declare const VxeSelect: defineVxeComponent<VxeSelectProps, VxeSelectEventProps, VxeSelectSlots>
-export type VxeSelectComponent = DefineComponent<VxeSelectProps & VxeSelectEventProps>
+export declare const VxeSelect: DefineVxeComponentApp<VxeSelectProps, VxeSelectEventProps, VxeSelectSlots>
+export type VxeSelectComponent = DefineVxeComponentOptions<VxeSelectProps, VxeSelectEventProps>
 
-export type VxeSelectInstance = ComponentPublicInstance<VxeSelectProps, VxeSelectConstructor>
+export type VxeSelectInstance = DefineVxeComponentInstance<VxeSelectProps, VxeSelectConstructor>
 
 export interface VxeSelectConstructor extends VxeComponentBaseOptions, VxeSelectMethods {
-  props: VxeSelectProps
-  context: SetupContext<VxeSelectEmits>
   reactData: SelectReactData
-  getRefMaps(): SelectPrivateRef
-  getComputeMaps(): SelectPrivateComputed
-  renderVN: RenderFunction
 }
 
 export interface SelectPrivateRef {
-  refElem: Ref<HTMLDivElement | undefined>
 }
 export interface VxeSelectPrivateRef extends SelectPrivateRef { }
 

@@ -10,7 +10,7 @@ import { VxeFormViewDefines, VxeFormViewConstructor } from '../components/form-v
 import { VxeListDesignDefines } from '../components/list-design'
 import { VxeTreeSelectPropTypes } from '../components/tree-select'
 
-/* eslint-disable no-use-before-define */
+/* eslint-disable @typescript-eslint/no-empty-interface,no-use-before-define */
 
 // 表格
 declare module '@vxe-ui/core' {

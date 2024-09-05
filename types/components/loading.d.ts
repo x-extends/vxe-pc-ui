@@ -1,24 +1,17 @@
-import { RenderFunction, SetupContext, Ref, ComponentPublicInstance, DefineComponent } from 'vue'
-import { defineVxeComponent, VxeComponentBaseOptions, VxeComponentEventParams, VxeComponentSizeType, VxeComponentStatusType } from '@vxe-ui/core'
+import { DefineVxeComponentApp, DefineVxeComponentOptions, DefineVxeComponentInstance, VxeComponentBaseOptions, VxeComponentEventParams, VxeComponentSizeType, VxeComponentStatusType } from '@vxe-ui/core'
 
-/* eslint-disable no-use-before-define,@typescript-eslint/ban-types */
+/* eslint-disable @typescript-eslint/no-empty-interface,no-use-before-define,@typescript-eslint/ban-types */
 
-export declare const VxeLoading: defineVxeComponent<VxeLoadingProps, VxeLoadingEventProps, VxeLoadingSlots>
-export type VxeLoadingComponent = DefineComponent<VxeLoadingProps & VxeLoadingEventProps>
+export declare const VxeLoading: DefineVxeComponentApp<VxeLoadingProps, VxeLoadingEventProps, VxeLoadingSlots>
+export type VxeLoadingComponent = DefineVxeComponentOptions<VxeLoadingProps, VxeLoadingEventProps>
 
-export type VxeLoadingInstance = ComponentPublicInstance<VxeLoadingProps, VxeLoadingConstructor>
+export type VxeLoadingInstance = DefineVxeComponentInstance<VxeLoadingProps, VxeLoadingConstructor>
 
-export interface VxeLoadingConstructor extends VxeComponentBaseOptions, VxeLoadingMethods {
-  props: VxeLoadingProps
-  context: SetupContext<VxeLoadingEmits>
+export interface VxeLoadingConstructor extends VxeComponentBaseOptions, VxeLoadingProps, VxeLoadingMethods {
   reactData: LoadingReactData
-  getRefMaps(): LoadingPrivateRef
-  getComputeMaps(): LoadingPrivateComputed
-  renderVN: RenderFunction
 }
 
 export interface LoadingPrivateRef {
-  refElem: Ref<HTMLDivElement | undefined>
 }
 export interface VxeLoadingPrivateRef extends LoadingPrivateRef { }
 
@@ -32,8 +25,8 @@ export namespace VxeLoadingPropTypes {
   export type Size = VxeComponentSizeType
 }
 
-export type VxeLoadingProps = {
-  modelValue?: VxeLoadingPropTypes.ModelValue
+export interface VxeLoadingProps {
+  value?: VxeLoadingPropTypes.ModelValue
   icon?: VxeLoadingPropTypes.Icon
   showIcon?: VxeLoadingPropTypes.ShowIcon
   text?: VxeLoadingPropTypes.Text
@@ -47,6 +40,7 @@ export interface LoadingPrivateComputed {
 export interface VxeLoadingPrivateComputed extends LoadingPrivateComputed { }
 
 export interface LoadingReactData {
+  initialized: boolean
 }
 
 export interface LoadingMethods {

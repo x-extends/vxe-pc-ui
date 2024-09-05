@@ -1,24 +1,17 @@
-import { RenderFunction, SetupContext, Ref, ComponentPublicInstance, DefineComponent } from 'vue'
-import { defineVxeComponent, VxeComponentBaseOptions, VxeComponentEventParams, VxeComponentSizeType, ValueOf } from '@vxe-ui/core'
+import { DefineVxeComponentApp, DefineVxeComponentOptions, DefineVxeComponentInstance, VxeComponentBaseOptions, VxeComponentEventParams, VxeComponentSizeType, ValueOf } from '@vxe-ui/core'
 
-/* eslint-disable no-use-before-define,@typescript-eslint/ban-types */
+/* eslint-disable @typescript-eslint/no-empty-interface,no-use-before-define,@typescript-eslint/ban-types */
 
-export declare const VxeCheckbox: defineVxeComponent<VxeCheckboxProps, VxeCheckboxEventProps, VxeCheckboxSlots>
-export type VxeCheckboxComponent = DefineComponent<VxeCheckboxProps & VxeCheckboxEventProps>
+export declare const VxeCheckbox: DefineVxeComponentApp<VxeCheckboxProps, VxeCheckboxEventProps, VxeCheckboxSlots>
+export type VxeCheckboxComponent = DefineVxeComponentOptions<VxeCheckboxProps, VxeCheckboxEventProps>
 
-export type VxeCheckboxInstance = ComponentPublicInstance<VxeCheckboxProps, VxeCheckboxConstructor>
+export type VxeCheckboxInstance = DefineVxeComponentInstance<VxeCheckboxProps, VxeCheckboxConstructor>
 
 export interface VxeCheckboxConstructor extends VxeComponentBaseOptions, VxeCheckboxMethods {
-  props: VxeCheckboxProps
-  context: SetupContext<VxeCheckboxEmits>
   reactData: CheckboxReactData
-  getRefMaps(): CheckboxPrivateRef
-  getComputeMaps(): CheckboxPrivateComputed
-  renderVN: RenderFunction
 }
 
 export interface CheckboxPrivateRef {
-  refElem: Ref<HTMLDivElement | undefined>
 }
 export interface VxeCheckboxPrivateRef extends CheckboxPrivateRef { }
 

@@ -1,25 +1,17 @@
-import { RenderFunction, SetupContext, Ref, ComponentPublicInstance, DefineComponent } from 'vue'
-import { defineVxeComponent, VxeComponentBaseOptions, VxeComponentEventParams, VxeComponentSizeType, ValueOf } from '@vxe-ui/core'
+import { DefineVxeComponentApp, DefineVxeComponentOptions, DefineVxeComponentInstance, VxeComponentBaseOptions, VxeComponentEventParams, VxeComponentSizeType, ValueOf } from '@vxe-ui/core'
 
-/* eslint-disable no-use-before-define,@typescript-eslint/ban-types */
+/* eslint-disable @typescript-eslint/no-empty-interface,no-use-before-define,@typescript-eslint/ban-types */
 
-export declare const VxeTextarea: defineVxeComponent<VxeTextareaProps, VxeTextareaEventProps, VxeTextareaSlots>
-export type VxeTextareaComponent = DefineComponent<VxeTextareaProps & VxeTextareaEventProps>
+export declare const VxeTextarea: DefineVxeComponentApp<VxeTextareaProps, VxeTextareaEventProps, VxeTextareaSlots>
+export type VxeTextareaComponent = DefineVxeComponentOptions<VxeTextareaProps, VxeTextareaEventProps>
 
-export type VxeTextareaInstance = ComponentPublicInstance<VxeTextareaProps, VxeTextareaConstructor>
+export type VxeTextareaInstance = DefineVxeComponentInstance<VxeTextareaProps, VxeTextareaConstructor>
 
 export interface VxeTextareaConstructor extends VxeComponentBaseOptions, VxeTextareaMethods {
-  props: VxeTextareaProps
-  context: SetupContext<VxeTextareaEmits>
   reactData: TextareaReactData
-  getRefMaps(): TextareaPrivateRef
-  getComputeMaps(): TextareaPrivateComputed
-  renderVN: RenderFunction
 }
 
 export interface TextareaPrivateRef {
-  refElem: Ref<HTMLDivElement | undefined>
-  refTextarea: Ref<HTMLTextAreaElement>
 }
 export interface VxeTextareaPrivateRef extends TextareaPrivateRef { }
 

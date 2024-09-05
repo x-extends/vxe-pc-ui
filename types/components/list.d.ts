@@ -1,25 +1,18 @@
-import { RenderFunction, SetupContext, Ref, ComponentPublicInstance, DefineComponent } from 'vue'
-import { defineVxeComponent, VxeComponentBaseOptions, VxeComponentEventParams, VxeComponentSizeType, ValueOf } from '@vxe-ui/core'
+import { DefineVxeComponentApp, DefineVxeComponentOptions, DefineVxeComponentInstance, VxeComponentBaseOptions, VxeComponentEventParams, VxeComponentSizeType, ValueOf } from '@vxe-ui/core'
 
-/* eslint-disable no-use-before-define,@typescript-eslint/ban-types */
+/* eslint-disable @typescript-eslint/no-empty-interface,no-use-before-define,@typescript-eslint/ban-types */
 
-export declare const VxeList: defineVxeComponent<VxeListProps, VxeListEventProps, VxeListSlots>
-export type VxeListComponent = DefineComponent<VxeListProps & VxeListEventProps>
+export declare const VxeList: DefineVxeComponentApp<VxeListProps, VxeListEventProps, VxeListSlots>
+export type VxeListComponent = DefineVxeComponentOptions<VxeListProps, VxeListEventProps>
 
-export type VxeListInstance = ComponentPublicInstance<VxeListProps, VxeListConstructor>
+export type VxeListInstance = DefineVxeComponentInstance<VxeListProps, VxeListConstructor>
 
 export interface VxeListConstructor extends VxeComponentBaseOptions, VxeListMethods {
-  props: VxeListProps
-  context: SetupContext<VxeListEmits>
   reactData: ListReactData
   internalData: ListInternalData
-  getRefMaps(): ListPrivateRef
-  getComputeMaps(): ListPrivateComputed
-  renderVN: RenderFunction
 }
 
 export interface ListPrivateRef {
-  refElem: Ref<HTMLDivElement | undefined>
 }
 export interface VxeListPrivateRef extends ListPrivateRef { }
 

@@ -1,27 +1,20 @@
-import { RenderFunction, SetupContext, Ref, ComputedRef, ComponentPublicInstance, DefineComponent } from 'vue'
-import { defineVxeComponent, VxeComponentBaseOptions, VxeComponentEventParams, VxeComponentSizeType, ValueOf, VxeComponentPermissionCodeType, VxeComponentStatusType } from '@vxe-ui/core'
+import { DefineVxeComponentApp, DefineVxeComponentOptions, DefineVxeComponentInstance, VxeComponentBaseOptions, VxeComponentEventParams, VxeComponentSizeType, ValueOf, VxeComponentPermissionCodeType, VxeComponentStatusType } from '@vxe-ui/core'
 import { VxeFormDesignDefines } from './form-design'
 import { VxeColumnPropTypes } from './column'
 import { VxeFormItemPropTypes } from './form-item'
 
-/* eslint-disable no-use-before-define,@typescript-eslint/ban-types */
+/* eslint-disable @typescript-eslint/no-empty-interface,no-use-before-define,@typescript-eslint/ban-types */
 
-export declare const VxeListDesign: defineVxeComponent<VxeListDesignProps, VxeListDesignEventProps, VxeListDesignSlots>
-export type VxeListDesignComponent = DefineComponent<VxeListDesignProps & VxeListDesignEventProps>
+export declare const VxeListDesign: DefineVxeComponentApp<VxeListDesignProps, VxeListDesignEventProps, VxeListDesignSlots>
+export type VxeListDesignComponent = DefineVxeComponentOptions<VxeListDesignProps, VxeListDesignEventProps>
 
-export type VxeListDesignInstance = ComponentPublicInstance<VxeListDesignProps, VxeListDesignConstructor>
+export type VxeListDesignInstance = DefineVxeComponentInstance<VxeListDesignProps, VxeListDesignConstructor>
 
 export interface VxeListDesignConstructor extends VxeComponentBaseOptions, VxeListDesignMethods {
-  props: VxeListDesignProps
-  context: SetupContext<VxeListDesignEmits>
   reactData: ListDesignReactData
-  getRefMaps(): ListDesignPrivateRef
-  getComputeMaps(): ListDesignPrivateComputed
-  renderVN: RenderFunction
 }
 
 export interface ListDesignPrivateRef {
-  refElem: Ref<HTMLDivElement | undefined>
 }
 export interface VxeListDesignPrivateRef extends ListDesignPrivateRef { }
 
@@ -52,7 +45,6 @@ export type VxeListDesignProps = {
 }
 
 export interface ListDesignPrivateComputed {
-  computeSize: ComputedRef<VxeListDesignPropTypes.Size>
 }
 export interface VxeListDesignPrivateComputed extends ListDesignPrivateComputed { }
 

@@ -1,12 +1,17 @@
-import { defineComponent, h, provide, PropType, createCommentVNode } from 'vue'
-import { getConfig, createEvent, useSize, usePermission } from '@vxe-ui/core'
+import { CreateElement, PropType } from 'vue'
+import { getConfig, createEvent, globalMixins, renderEmptyElement } from '@vxe-ui/core'
+import { defineVxeComponent } from '../../ui/src/comp'
 import XEUtils from 'xe-utils'
-import VxeButtonComponent from '../../button/src/button'
+import VxeButtonComponent from './button'
 
-import type { VxeButtonGroupPropTypes, VxeButtonGroupEmits, VxeButtonGroupConstructor, VxeButtonGroupPrivateMethods, ButtonGroupMethods, ButtonPrivateComputed, ButtonGroupPrivateMethods } from '../../../types'
+import type { VxeButtonGroupPropTypes, VxeButtonGroupEmits, VxeComponentPermissionInfo, ButtonGroupReactData, VxeComponentSizeType, ValueOf } from '../../../types'
 
-export default defineComponent({
+export default defineVxeComponent({
   name: 'VxeButtonGroup',
+  mixins: [
+    globalMixins.sizeMixin,
+    globalMixins.permissionMixin
+  ],
   props: {
     options: Array as PropType<VxeButtonGroupPropTypes.Options>,
     mode: String as PropType<VxeButtonGroupPropTypes.Mode>,
@@ -16,54 +21,66 @@ export default defineComponent({
     className: [String, Function] as PropType<VxeButtonGroupPropTypes.ClassName>,
     disabled: Boolean as PropType<VxeButtonGroupPropTypes.Disabled>,
     permissionCode: [String, Number] as PropType<VxeButtonGroupPropTypes.PermissionCode>,
-    size: { type: String as PropType<VxeButtonGroupPropTypes.Size>, default: () => getConfig().buttonGroup.size || getConfig().size }
+    size: {
+      type: String as PropType<VxeButtonGroupPropTypes.Size>,
+      default: () => getConfig().buttonGroup.size || getConfig().size
+    }
   },
-  emits: [
-    'click'
-  ] as VxeButtonGroupEmits,
-  setup (props, context) {
-    const { slots, emit } = context
-
-    const xID = XEUtils.uniqueId()
-
-    const computeMaps: ButtonPrivateComputed = {}
-
-    const $xeButtonGroup = {
-      xID,
-      props,
-      context,
-
-      getComputeMaps: () => computeMaps
-    } as unknown as VxeButtonGroupConstructor & VxeButtonGroupPrivateMethods
-
-    useSize(props)
-
-    const { computePermissionInfo } = usePermission(props)
-
-    const buttonGroupMethods: ButtonGroupMethods = {
-      dispatchEvent (type, params, evnt) {
-        emit(type, createEvent(evnt, { $buttonGroup: $xeButtonGroup }, params))
-      }
+  provide () {
+    const $xeButtonGroup = this
+    return {
+      $xeButtonGroup
     }
-
-    const buttonGroupPrivateMethods: ButtonGroupPrivateMethods = {
-      handleClick (params, evnt) {
-        const { options } = props
-        const { name } = params
-        const option = options ? options.find(item => item.name === name) : null
-        buttonGroupMethods.dispatchEvent('click', { ...params, option }, evnt)
-      }
+  },
+  data () {
+    const reactData: ButtonGroupReactData = {
     }
+    return {
+      xID: XEUtils.uniqueId(),
+      reactData
+    }
+  },
+  computed: {
+    ...({} as {
+    computePermissionInfo(): VxeComponentPermissionInfo
+    computeSize(): VxeComponentSizeType
+  })
+  },
+  methods: {
+    // Method
+    dispatchEvent (type: ValueOf<VxeButtonGroupEmits>, params: Record<string, any>, evnt: Event | null) {
+      const $xeButtonGroup = this
+      $xeButtonGroup.$emit(type, createEvent(evnt, { $buttonGroup: $xeButtonGroup }, params))
+    },
 
-    Object.assign($xeButtonGroup, buttonGroupMethods, buttonGroupPrivateMethods)
+    //
+    // Private
+    //
+    handleClick (params: any, evnt: any) {
+      const $xeButtonGroup = this
+      const props = $xeButtonGroup
 
-    const renderVN = () => {
+      const { options } = props
+      const { name } = params
+      const option = options ? options.find(item => item.name === name) : null
+      $xeButtonGroup.dispatchEvent('click', { ...params, option }, evnt)
+    },
+
+    //
+    // Render
+    //
+    renderVN (h: CreateElement) {
+      const $xeButtonGroup = this
+      const props = $xeButtonGroup
+      const slots = $xeButtonGroup.$scopedSlots
+
       const { className, options } = props
-      const permissionInfo = computePermissionInfo.value
+      const permissionInfo = $xeButtonGroup.computePermissionInfo
       const defaultSlot = slots.default
       if (!permissionInfo.visible) {
-        return createCommentVNode()
+        return renderEmptyElement($xeButtonGroup)
       }
+
       return h('div', {
         class: ['vxe-button-group', className ? (XEUtils.isFunction(className) ? className({ $buttonGroup: $xeButtonGroup }) : className) : '']
       }, defaultSlot
@@ -77,11 +94,8 @@ export default defineComponent({
             })
             : []))
     }
-
-    $xeButtonGroup.renderVN = renderVN
-
-    provide('$xeButtonGroup', $xeButtonGroup)
-
-    return renderVN
+  },
+  render (this: any, h) {
+    return this.renderVN(h)
   }
 })

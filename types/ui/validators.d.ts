@@ -1,7 +1,7 @@
 import { VxeFormDefines } from '../components/form'
 import { VxeTableDefines } from '../components/table'
 
-/* eslint-disable no-use-before-define */
+/* eslint-disable @typescript-eslint/no-empty-interface,no-use-before-define */
 
 declare module '@vxe-ui/core' {
   export namespace VxeGlobalValidatorsHandles {

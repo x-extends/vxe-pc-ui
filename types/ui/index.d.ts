@@ -1,4 +1,3 @@
-import { App } from 'vue'
 import { VxeUI, getI18n, setConfig } from '@vxe-ui/core'
 import { LoadingController } from '../components/loading'
 import { ModalController } from '../components/modal'
@@ -51,7 +50,7 @@ declare module '@vxe-ui/core' {
     loading: LoadingController
     modal: ModalController
     drawer: DrawerController
-    dynamicApp: App<Element>
+    dynamicApp: any
 
     formDesignHandle: FormDesignHandleExport
     listDesignHandle: ListDesignHandleExport

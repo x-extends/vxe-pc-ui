@@ -1,25 +1,18 @@
-import { RenderFunction, SetupContext, Ref, ComponentPublicInstance, DefineComponent } from 'vue'
-import { defineVxeComponent, VxeComponentBaseOptions, VxeComponentEventParams, ValueOf, VxeComponentSizeType } from '@vxe-ui/core'
+import { DefineVxeComponentApp, DefineVxeComponentOptions, DefineVxeComponentInstance, VxeComponentBaseOptions, VxeComponentEventParams, ValueOf, VxeComponentSizeType } from '@vxe-ui/core'
 import { VxeImagePreviewProps, VxeImagePreviewPropTypes } from './image-preview'
 
-/* eslint-disable no-use-before-define,@typescript-eslint/ban-types */
+/* eslint-disable @typescript-eslint/no-empty-interface,no-use-before-define,@typescript-eslint/ban-types */
 
-export declare const VxeImage: defineVxeComponent<VxeImageProps, VxeImageEventProps, VxeImageSlots>
-export type VxeImageComponent = DefineComponent<VxeImageProps & VxeImageEventProps>
+export declare const VxeImage: DefineVxeComponentApp<VxeImageProps, VxeImageEventProps, VxeImageSlots>
+export type VxeImageComponent = DefineVxeComponentOptions<VxeImageProps, VxeImageEventProps>
 
-export type VxeImageInstance = ComponentPublicInstance<VxeImageProps, VxeImageConstructor>
+export type VxeImageInstance = DefineVxeComponentInstance<VxeImageProps, VxeImageConstructor>
 
 export interface VxeImageConstructor extends VxeComponentBaseOptions, VxeImageMethods {
-  props: VxeImageProps
-  context: SetupContext<VxeImageEmits>
   reactData: ImageReactData
-  getRefMaps(): ImagePrivateRef
-  getComputeMaps(): ImagePrivateComputed
-  renderVN: RenderFunction
 }
 
 export interface ImagePrivateRef {
-  refElem: Ref<HTMLDivElement | undefined>
 }
 export interface VxeImagePrivateRef extends ImagePrivateRef { }
 

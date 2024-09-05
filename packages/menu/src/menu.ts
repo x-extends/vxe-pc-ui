@@ -1,14 +1,19 @@
-import { defineComponent, ref, h, reactive, PropType, inject, resolveComponent, createCommentVNode, nextTick, watch, VNode, onMounted, computed } from 'vue'
+import { PropType, CreateElement, VNode } from 'vue'
+import { defineVxeComponent } from '../../ui/src/comp'
 import XEUtils from 'xe-utils'
-import { getConfig, getIcon, createEvent, permission, useSize } from '../../ui'
+import { getConfig, getIcon, createEvent, permission, globalMixins, renderEmptyElement } from '../../ui'
 import VxeLoadingComponent from '../../loading/index'
 
-import type { VxeMenuDefines, VxeMenuPropTypes, MenuReactData, VxeMenuEmits, MenuPrivateRef, VxeMenuPrivateComputed, VxeMenuConstructor, VxeMenuPrivateMethods, VxeLayoutAsideConstructor, VxeLayoutAsidePrivateMethods } from '../../../types'
+import type { VxeMenuDefines, MenuReactData, VxeMenuPropTypes, VxeLayoutAsideConstructor, VxeMenuEmits, VxeComponentPermissionInfo, VxeComponentSizeType, ValueOf } from '../../../types'
 
-export default defineComponent({
+export default defineVxeComponent({
   name: 'VxeMenu',
+  mixins: [
+    globalMixins.sizeMixin,
+    globalMixins.permissionMixin
+  ],
   props: {
-    modelValue: [String, Number] as PropType<VxeMenuPropTypes.ModelValue>,
+    value: [String, Number] as PropType<VxeMenuPropTypes.ModelValue>,
     expandAll: Boolean as PropType<VxeMenuPropTypes.ExpandAll>,
     collapsed: {
       type: Boolean as PropType<VxeMenuPropTypes.Collapsed>,
@@ -19,92 +24,109 @@ export default defineComponent({
       type: Array as PropType<VxeMenuPropTypes.Options>,
       default: () => []
     },
-    size: { type: String as PropType<VxeMenuPropTypes.Size>, default: () => getConfig().image.size || getConfig().size }
+    size: {
+      type: String as PropType<VxeMenuPropTypes.Size>,
+      default: () => getConfig().image.size || getConfig().size
+    }
   },
-  emits: [
-    'update:modelValue',
-    'click'
-  ] as VxeMenuEmits,
-  setup (props, context) {
-    const { emit } = context
-
-    const xID = XEUtils.uniqueId()
-
-    const $xeLayoutAside = inject<(VxeLayoutAsideConstructor & VxeLayoutAsidePrivateMethods) | null>('$xeLayoutAside', null)
-
-    const refElem = ref<HTMLDivElement>()
-    const refWrapperElem = ref<HTMLDivElement>()
-
-    const { computeSize } = useSize(props)
-
-    const reactData = reactive<MenuReactData>({
-      activeName: props.modelValue,
+  inject: {
+    $xeLayoutAside: {
+      default: null
+    }
+  },
+  data () {
+    const reactData: MenuReactData = {
+      activeName: null,
       menuList: [],
       itemHeight: 1
-    })
-
-    const refMaps: MenuPrivateRef = {
-      refElem
     }
-
-    const computeIsCollapsed = computed(() => {
-      const { collapsed } = props
+    return {
+      xID: XEUtils.uniqueId(),
+      reactData
+    }
+  },
+  computed: {
+    ...({} as {
+      computePermissionInfo(): VxeComponentPermissionInfo
+      computeSize(): VxeComponentSizeType
+      $xeLayoutAside(): VxeLayoutAsideConstructor | null
+    }),
+    computeIsCollapsed  () {
+      const $xeMenu = this
+      const $xeLayoutAside = $xeMenu.$xeLayoutAside
+      const { collapsed } = $xeMenu
       if (XEUtils.isBoolean(collapsed)) {
         return collapsed
       }
       if ($xeLayoutAside) {
-        return $xeLayoutAside.props.collapsed
+        return $xeLayoutAside.collapsed
       }
       return false
-    })
-
-    const computeMaps: VxeMenuPrivateComputed = {
-      computeSize
     }
-
-    const $xeMenu = {
-      xID,
-      props,
-      context,
-      reactData,
-
-      getRefMaps: () => refMaps,
-      getComputeMaps: () => computeMaps
-    } as unknown as VxeMenuConstructor & VxeMenuPrivateMethods
-
-    const getMenuTitle = (item: VxeMenuPropTypes.MenuOption) => {
+  },
+  watch: {
+    value (val) {
+      const $xeMenu = this
+      const reactData = $xeMenu.reactData
+      reactData.activeName = val
+    },
+    options () {
+      const $xeMenu = this
+      $xeMenu.updateMenuConfig()
+      $xeMenu.updateActiveMenu(true)
+    },
+    'reactData.activeName' () {
+      const $xeMenu = this
+      $xeMenu.updateActiveMenu(true)
+    }
+  },
+  methods: {
+    //
+    // Method
+    //
+    dispatchEvent (type: ValueOf<VxeMenuEmits>, params: Record<string, any>, evnt: Event | null) {
+      const $xeMenu = this
+      this.$emit(type, createEvent(evnt, { $menu: $xeMenu }, params))
+    },
+    getMenuTitle  (item: VxeMenuPropTypes.MenuOption) {
       return `${item.title || item.name}`
-    }
+    },
+    updateItemHeight () {
+      const $xeMenu = this
 
-    const updateItemHeight = () => {
-      const wrapperElem = refWrapperElem.value
+      const reactData = $xeMenu.reactData
+      const wrapperElem = $xeMenu.$refs.refWrapperElem as HTMLDivElement
       const childEls = wrapperElem ? wrapperElem.children : []
       if (childEls.length) {
         reactData.itemHeight = (childEls[0] as HTMLDivElement).offsetHeight
       }
-    }
-
-    const getExpandChildSize = (item: VxeMenuDefines.MenuItem) => {
+    },
+    getExpandChildSize  (item: VxeMenuDefines.MenuItem) {
+      const $xeMenu = this
       let size = 0
       if (item.isExpand) {
         item.childList.forEach(child => {
-          size += getExpandChildSize(child) + 1
+          size += $xeMenu.getExpandChildSize(child) + 1
         })
       }
       return size
-    }
+    },
+    updateStyle () {
+      const $xeMenu = this
 
-    const updateStyle = () => {
+      const reactData = $xeMenu.reactData
       XEUtils.eachTree(reactData.menuList, (item) => {
         if (item.hasChild && item.isExpand) {
-          item.childHeight = getExpandChildSize(item) * reactData.itemHeight
+          item.childHeight = $xeMenu.getExpandChildSize(item) * reactData.itemHeight
         } else {
           item.childHeight = 0
         }
       }, { children: 'childList' })
-    }
+    },
+    updateActiveMenu  (isDefExpand?: boolean) {
+      const $xeMenu = this
+      const reactData = $xeMenu.reactData
 
-    const updateActiveMenu = (isDefExpand?: boolean) => {
       const { activeName } = reactData
       XEUtils.eachTree(reactData.menuList, (item, index, items, path, parent, nodes) => {
         if (item.itemKey === activeName) {
@@ -120,11 +142,14 @@ export default defineComponent({
           item.isActive = false
         }
       }, { children: 'childList' })
-    }
+    },
+    updateMenuConfig  () {
+      const $xeMenu = this
+      const props = $xeMenu
+      const reactData = $xeMenu.reactData
 
-    const updateMenuConfig = () => {
-      const { expandAll } = props
-      reactData.menuList = XEUtils.mapTree(props.options, (item, index, items, path, parent) => {
+      const { options, expandAll } = props
+      reactData.menuList = XEUtils.mapTree(options, (item, index, items, path, parent) => {
         const objItem = {
           ...item,
           parentKey: parent ? (parent.name || path.slice(0, path.length - 1).join(',')) : '',
@@ -138,35 +163,44 @@ export default defineComponent({
         } as VxeMenuDefines.MenuItem
         return objItem
       }, { children: 'children', mapChildren: 'childList' })
-    }
+    },
+    handleClickIconCollapse  (evnt: KeyboardEvent, item: VxeMenuDefines.MenuItem) {
+      const $xeMenu = this
 
-    const handleClickIconCollapse = (evnt: KeyboardEvent, item: VxeMenuDefines.MenuItem) => {
       const { hasChild, isExpand } = item
       if (hasChild) {
         evnt.stopPropagation()
         evnt.preventDefault()
         item.isExpand = !isExpand
-        updateItemHeight()
-        updateStyle()
+        $xeMenu.updateItemHeight()
+        $xeMenu.updateStyle()
       }
-    }
+    },
+    handleClickMenu (evnt: KeyboardEvent, item: VxeMenuDefines.MenuItem) {
+      const $xeMenu = this
+      const reactData = $xeMenu.reactData
 
-    const handleClickMenu = (evnt: KeyboardEvent, item: VxeMenuDefines.MenuItem) => {
       const { routerLink, hasChild } = item
       if (routerLink) {
         reactData.activeName = item.itemKey
-        emit('update:modelValue', item.itemKey)
+        $xeMenu.$emit('input', item.itemKey)
       } else {
         if (hasChild) {
-          handleClickIconCollapse(evnt, item)
+          $xeMenu.handleClickIconCollapse(evnt, item)
         }
       }
-      emit('click', createEvent(evnt, { $menu: $xeMenu, menu: item }))
-    }
+      $xeMenu.dispatchEvent('click', { menu: item }, evnt)
+    },
 
-    const renderMenuTitle = (item: VxeMenuDefines.MenuItem) => {
+    //
+    //
+    // Render
+    //
+    renderMenuTitle (h:CreateElement, item: VxeMenuDefines.MenuItem) {
+      const $xeMenu = this
+
       const { icon, isExpand, hasChild } = item
-      const title = getMenuTitle(item)
+      const title = $xeMenu.getMenuTitle(item)
       return [
         h('span', {
           class: 'vxe-menu--item-link-icon'
@@ -179,29 +213,35 @@ export default defineComponent({
           : []),
         h('span', {
           class: 'vxe-menu--item-link-title',
-          title
+          attrs: {
+            title
+          }
         }, title),
         hasChild
           ? h('span', {
             class: 'vxe-menu--item-link-collapse',
-            onClick (evnt: KeyboardEvent) {
-              handleClickIconCollapse(evnt, item)
+            on: {
+              click (evnt: KeyboardEvent) {
+                $xeMenu.handleClickIconCollapse(evnt, item)
+              }
             }
           }, [
             h('i', {
               class: isExpand ? getIcon().MENU_ITEM_EXPAND_OPEN : getIcon().MENU_ITEM_EXPAND_CLOSE
             })
           ])
-          : createCommentVNode()
+          : renderEmptyElement($xeMenu)
       ]
-    }
+    },
+    renderChildren (h: CreateElement, item: VxeMenuDefines.MenuItem): VNode {
+      const $xeMenu = this
 
-    const renderChildren = (item: VxeMenuDefines.MenuItem): VNode => {
       const { itemKey, level, hasChild, isActive, isExactActive, isExpand, routerLink, childList } = item
-      const isCollapsed = computeIsCollapsed.value
+      const isCollapsed = $xeMenu.computeIsCollapsed
+
       if (item.permissionCode) {
         if (!permission.checkVisible(item.permissionCode)) {
-          return createCommentVNode()
+          return renderEmptyElement($xeMenu)
         }
       }
       return h('div', {
@@ -213,39 +253,47 @@ export default defineComponent({
         }]
       }, [
         routerLink
-          ? h(resolveComponent('router-link'), {
+          ? h('router-link', {
             class: 'vxe-menu--item-link',
-            to: routerLink,
-            onClick (evnt: KeyboardEvent) {
-              handleClickMenu(evnt, item)
+            props: {
+              to: routerLink
+            },
+            on: {
+              click (evnt: KeyboardEvent) {
+                $xeMenu.handleClickMenu(evnt, item)
+              }
             }
-          }, {
-            default: () => renderMenuTitle(item)
-          })
+          }, $xeMenu.renderMenuTitle(h, item))
           : h('div', {
             class: 'vxe-menu--item-link',
-            onClick (evnt: KeyboardEvent) {
-              handleClickMenu(evnt, item)
+            on: {
+              click (evnt: KeyboardEvent) {
+                $xeMenu.handleClickMenu(evnt, item)
+              }
             }
-          }, renderMenuTitle(item)),
+          }, $xeMenu.renderMenuTitle(h, item)),
         hasChild
           ? h('div', {
             class: 'vxe-menu--item-group',
             style: {
               // height: `${childHeight}px`
             }
-          }, childList.map(child => renderChildren(child)))
-          : createCommentVNode()
+          }, childList.map(child => $xeMenu.renderChildren(h, child)))
+          : renderEmptyElement($xeMenu)
       ])
-    }
+    },
+    renderVN (h: CreateElement): VNode {
+      const $xeMenu = this
+      const props = $xeMenu
+      const reactData = $xeMenu.reactData
 
-    const renderVN = () => {
       const { loading } = props
       const { menuList } = reactData
-      const vSize = computeSize.value
-      const isCollapsed = computeIsCollapsed.value
+      const vSize = $xeMenu.computeSize
+      const isCollapsed = $xeMenu.computeIsCollapsed
+
       return h('div', {
-        ref: refElem,
+        ref: 'refElem',
         class: ['vxe-menu', {
           [`size--${vSize}`]: vSize,
           'is--collapsed': isCollapsed,
@@ -253,51 +301,37 @@ export default defineComponent({
         }]
       }, [
         h('div', {
-          ref: refWrapperElem,
+          ref: 'refWrapperElem',
           class: 'vxe-menu--item-list'
-        }, menuList.map(child => renderChildren(child))),
+        }, menuList.map(child => $xeMenu.renderChildren(h, child))),
         /**
          * 加载中
          */
         h(VxeLoadingComponent, {
           class: 'vxe-list-view--loading',
-          modelValue: loading
+          props: {
+            value: loading
+          }
         })
       ])
     }
-
-    $xeMenu.renderVN = renderVN
-
-    const optFlag = ref(0)
-    watch(() => props.options ? props.options.length : -1, () => {
-      optFlag.value++
-    })
-    watch(() => props.options, () => {
-      optFlag.value++
-    })
-    watch(optFlag, () => {
-      updateMenuConfig()
-      updateActiveMenu(true)
-    })
-
-    watch(() => props.modelValue, (val) => {
-      reactData.activeName = val
-    })
-
-    watch(() => reactData.activeName, () => {
-      updateActiveMenu(true)
-    })
-
-    onMounted(() => {
-      nextTick(updateItemHeight)
-    })
-
-    updateMenuConfig()
-    updateActiveMenu(true)
-
-    return $xeMenu
   },
-  render () {
-    return this.renderVN()
+  mounted () {
+    const $xeMenu = this
+    this.$nextTick(() => {
+      $xeMenu.updateItemHeight()
+    })
+  },
+  created () {
+    const $xeMenu = this
+    const props = $xeMenu
+
+    const reactData = $xeMenu.reactData
+    reactData.activeName = props.value
+    $xeMenu.updateMenuConfig()
+    $xeMenu.updateActiveMenu(true)
+  },
+  render (this: any, h) {
+    return this.renderVN(h)
   }
 })

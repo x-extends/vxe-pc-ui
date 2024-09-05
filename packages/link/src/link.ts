@@ -1,12 +1,17 @@
-import { defineComponent, ref, h, reactive, PropType, createCommentVNode, resolveComponent } from 'vue'
+import { PropType, CreateElement, VNode } from 'vue'
+import { defineVxeComponent } from '../../ui/src/comp'
 import XEUtils from 'xe-utils'
-import { getConfig, usePermission, useSize } from '../../ui'
+import { getConfig, globalMixins, createEvent, renderEmptyElement } from '../../ui'
 import { getSlotVNs } from '../../ui/src/vn'
 
-import type { VxeLinkPropTypes, LinkReactData, LinkPrivateRef, VxeLinkPrivateComputed, VxeLinkConstructor, VxeLinkPrivateMethods } from '../../../types'
+import type { VxeLinkPropTypes, LinkReactData, VxeLinkEmits, VxeComponentPermissionInfo, VxeComponentSizeType, ValueOf } from '../../../types'
 
-export default defineComponent({
+export default defineVxeComponent({
   name: 'VxeLink',
+  mixins: [
+    globalMixins.sizeMixin,
+    globalMixins.permissionMixin
+  ],
   props: {
     href: String as PropType<VxeLinkPropTypes.Href>,
     target: String as PropType<VxeLinkPropTypes.Target>,
@@ -23,41 +28,41 @@ export default defineComponent({
      */
     permissionCode: [String, Number] as PropType<VxeLinkPropTypes.PermissionCode>,
     content: [String, Number] as PropType<VxeLinkPropTypes.Content>,
-    size: { type: String as PropType<VxeLinkPropTypes.Size>, default: () => getConfig().link.size || getConfig().size }
+    size: {
+      type: String as PropType<VxeLinkPropTypes.Size>,
+      default: () => getConfig().link.size || getConfig().size
+    }
   },
-  emits: [],
-  setup (props, context) {
-    const { slots } = context
-
-    const xID = XEUtils.uniqueId()
-
-    const { computeSize } = useSize(props)
-
-    const { computePermissionInfo } = usePermission(props)
-
-    const refElem = ref<HTMLDivElement>()
-
-    const reactData = reactive<LinkReactData>({
+  data () {
+    const reactData: LinkReactData = {
+    }
+    return {
+      xID: XEUtils.uniqueId(),
+      reactData
+    }
+  },
+  computed: {
+    ...({} as {
+      computePermissionInfo(): VxeComponentPermissionInfo
+      computeSize(): VxeComponentSizeType
     })
+  },
+  methods: {
+    //
+    // Method
+    //
+    dispatchEvent (type: ValueOf<VxeLinkEmits>, params: Record<string, any>, evnt: Event | null) {
+      const $xeLink = this
+      this.$emit(type, createEvent(evnt, { $link: $xeLink }, params))
+    },
+    //
+    // Render
+    //
+    renderContent  (h: CreateElement): VNode[] {
+      const $xeLink = this
+      const props = $xeLink
+      const slots = $xeLink.$scopedSlots
 
-    const refMaps: LinkPrivateRef = {
-      refElem
-    }
-
-    const computeMaps: VxeLinkPrivateComputed = {
-    }
-
-    const $xeLink = {
-      xID,
-      props,
-      context,
-      reactData,
-
-      getRefMaps: () => refMaps,
-      getComputeMaps: () => computeMaps
-    } as unknown as VxeLinkConstructor & VxeLinkPrivateMethods
-
-    const renderContent = () => {
       const { icon, content } = props
       const defaultSlot = slots.default
       const iconSlot = slots.icon
@@ -73,56 +78,54 @@ export default defineComponent({
                   class: icon
                 })
               ])
-          : createCommentVNode(),
+          : renderEmptyElement($xeLink),
         defaultSlot || textContent
           ? h('span', {
             class: 'vxe-link--content'
           }, defaultSlot ? defaultSlot({}) : textContent)
-          : createCommentVNode()
+          : renderEmptyElement($xeLink)
       ]
-    }
+    },
+    renderVN (h: CreateElement): VNode {
+      const $xeLink = this
+      const props = $xeLink
 
-    const renderVN = () => {
       const { status, target, href, title, underline, routerLink } = props
-      const permissionInfo = computePermissionInfo.value
-      const vSize = computeSize.value
+      const permissionInfo = $xeLink.computePermissionInfo
+      const vSize = $xeLink.computeSize
       if (!permissionInfo.visible) {
-        return createCommentVNode()
+        return renderEmptyElement($xeLink)
       }
       if (routerLink) {
-        return h(resolveComponent('router-link'), {
+        return h('router-link', {
           class: ['vxe-link', {
             [`size--${vSize}`]: vSize,
             [`theme--${status}`]: status,
             'is--underline': underline
           }],
-          title,
-          target,
-          to: routerLink
-        }, {
-          default () {
-            return renderContent()
+          props: {
+            title,
+            target,
+            to: routerLink
           }
-        })
+        }, $xeLink.renderContent(h))
       }
       return h('a', {
-        ref: refElem,
-        href,
-        target,
-        title,
+        ref: 'refElem',
         class: ['vxe-link', {
           [`size--${vSize}`]: vSize,
           [`theme--${status}`]: status,
           'is--underline': underline
-        }]
-      }, renderContent())
+        }],
+        attrs: {
+          href,
+          target,
+          title
+        }
+      }, $xeLink.renderContent(h))
     }
-
-    $xeLink.renderVN = renderVN
-
-    return $xeLink
   },
-  render () {
-    return this.renderVN()
+  render (this: any, h) {
+    return this.renderVN(h)
   }
 })

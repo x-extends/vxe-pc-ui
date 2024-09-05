@@ -1,24 +1,17 @@
-import { RenderFunction, SetupContext, Ref, ComponentPublicInstance, DefineComponent } from 'vue'
-import { defineVxeComponent, VxeComponentBaseOptions, VxeComponentEventParams, ValueOf, VxeComponentSizeType } from '@vxe-ui/core'
+import { DefineVxeComponentApp, DefineVxeComponentOptions, DefineVxeComponentInstance, VxeComponentBaseOptions, VxeComponentEventParams, ValueOf, VxeComponentSizeType } from '@vxe-ui/core'
 
-/* eslint-disable no-use-before-define,@typescript-eslint/ban-types */
+/* eslint-disable @typescript-eslint/no-empty-interface,no-use-before-define,@typescript-eslint/ban-types */
 
-export declare const VxeImageGroup: defineVxeComponent<VxeImageGroupProps, VxeImageGroupEventProps, VxeImageGroupSlots>
-export type VxeImageGroupComponent = DefineComponent<VxeImageGroupProps & VxeImageGroupEventProps>
+export declare const VxeImageGroup: DefineVxeComponentApp<VxeImageGroupProps, VxeImageGroupEventProps, VxeImageGroupSlots>
+export type VxeImageGroupComponent = DefineVxeComponentOptions<VxeImageGroupProps, VxeImageGroupEventProps>
 
-export type VxeImageGroupInstance = ComponentPublicInstance<VxeImageGroupProps, VxeImageGroupConstructor>
+export type VxeImageGroupInstance = DefineVxeComponentInstance<VxeImageGroupProps, VxeImageGroupConstructor>
 
 export interface VxeImageGroupConstructor extends VxeComponentBaseOptions, VxeImageGroupMethods {
-  props: VxeImageGroupProps
-  context: SetupContext<VxeImageGroupEmits>
   reactData: ImageGroupReactData
-  getRefMaps(): ImageGroupPrivateRef
-  getComputeMaps(): ImageGroupPrivateComputed
-  renderVN: RenderFunction
 }
 
 export interface ImageGroupPrivateRef {
-  refElem: Ref<HTMLDivElement | undefined>
 }
 export interface VxeImageGroupPrivateRef extends ImageGroupPrivateRef { }
 

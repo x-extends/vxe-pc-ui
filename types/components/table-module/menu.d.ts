@@ -1,4 +1,4 @@
-/* eslint-disable no-use-before-define */
+/* eslint-disable @typescript-eslint/no-unused-vars,no-use-before-define */
 
 export interface TableMenuMethods<D = any> {
   /**
@@ -17,10 +17,10 @@ export interface TableMenuPrivateMethods<D = any> {
 }
 
 declare module '../grid' {
-  export interface VxeGridMethods<D = any> extends TableMenuMethods<D> { }
+  export type VxeGridMethods<D = any> = TableMenuMethods<D>
 }
 
 declare module '../table' {
-  export interface VxeTableMethods<D = any> extends TableMenuMethods<D> { }
-  export interface VxeTablePrivateMethods<D = any> extends TableMenuPrivateMethods<D> { }
+  export type VxeTableMethods<D = any> = TableMenuMethods<D>
+  export type VxeTablePrivateMethods<D = any> = TableMenuPrivateMethods<D>
 }

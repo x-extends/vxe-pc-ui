@@ -1,25 +1,18 @@
-import { RenderFunction, SetupContext, Ref, ComponentPublicInstance, DefineComponent } from 'vue'
-import { defineVxeComponent, VxeComponentBaseOptions, VxeComponentEventParams, ValueOf } from '@vxe-ui/core'
+import { DefineVxeComponentApp, DefineVxeComponentOptions, DefineVxeComponentInstance, VxeComponentBaseOptions, VxeComponentEventParams, ValueOf } from '@vxe-ui/core'
 import { VxeBreadcrumbItemProps } from './breadcrumb-item'
 
-/* eslint-disable no-use-before-define,@typescript-eslint/ban-types */
+/* eslint-disable @typescript-eslint/no-empty-interface,no-use-before-define,@typescript-eslint/ban-types */
 
-export declare const VxeBreadcrumb: defineVxeComponent<VxeBreadcrumbProps, VxeBreadcrumbEventProps, VxeBreadcrumbSlots>
-export type VxeBreadcrumbComponent = DefineComponent<VxeBreadcrumbProps & VxeBreadcrumbEventProps>
+export declare const VxeBreadcrumb: DefineVxeComponentApp<VxeBreadcrumbProps, VxeBreadcrumbEventProps, VxeBreadcrumbSlots>
+export type VxeBreadcrumbComponent = DefineVxeComponentOptions<VxeBreadcrumbProps, VxeBreadcrumbEventProps>
 
-export type VxeBreadcrumbInstance = ComponentPublicInstance<VxeBreadcrumbProps, VxeBreadcrumbConstructor>
+export type VxeBreadcrumbInstance = DefineVxeComponentInstance<VxeBreadcrumbProps, VxeBreadcrumbConstructor>
 
 export interface VxeBreadcrumbConstructor extends VxeComponentBaseOptions, VxeBreadcrumbMethods {
-  props: VxeBreadcrumbProps
-  context: SetupContext<VxeBreadcrumbEmits>
   reactData: BreadcrumbReactData
-  getRefMaps(): BreadcrumbPrivateRef
-  getComputeMaps(): BreadcrumbPrivateComputed
-  renderVN: RenderFunction
 }
 
 export interface BreadcrumbPrivateRef {
-  refElem: Ref<HTMLDivElement | undefined>
 }
 export interface VxeBreadcrumbPrivateRef extends BreadcrumbPrivateRef { }
 

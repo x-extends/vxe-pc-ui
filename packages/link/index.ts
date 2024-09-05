@@ -1,15 +1,13 @@
-import { App } from 'vue'
+import { VueConstructor } from 'vue'
 import { VxeUI } from '@vxe-ui/core'
 import VxeLinkComponent from './src/link'
-import { dynamicApp } from '../dynamics'
 
 export const VxeLink = Object.assign({}, VxeLinkComponent, {
-  install (app: App) {
+  install (app: VueConstructor) {
     app.component(VxeLinkComponent.name as string, VxeLinkComponent)
   }
 })
 
-dynamicApp.component(VxeLinkComponent.name as string, VxeLinkComponent)
 VxeUI.component(VxeLinkComponent)
 
 export const Link = VxeLink

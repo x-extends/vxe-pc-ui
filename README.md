@@ -113,13 +113,6 @@ import 'vxe-pc-ui/lib/style.css'
 createApp(App).use(VxeUI).mount('#app')
 ```
 
-## QQ 交流群
-
-该群供大家交流問題，如果群人数已满，将会不定期剔除不活跃的。  
-
-![qq](https://vxeui.com/static/donation/qq1.png)
-![qq](https://vxeui.com/static/donation/qq2.png)
-
 ## 运行项目
 
 安装依赖

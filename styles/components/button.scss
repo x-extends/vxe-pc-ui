@@ -343,7 +343,7 @@ $btnThemeList: (
   position: absolute;
   right: 0;
   padding: 4px 0;
-  &.animat--leave {
+  &.ani--leave {
     display: block;
     opacity: 0;
     transform: scaleY(0.5);
@@ -355,7 +355,7 @@ $btnThemeList: (
       transform-origin: center bottom;
     }
   }
-  &.animat--enter {
+  &.ani--enter {
     opacity: 1;
     transform: scaleY(1);
   }

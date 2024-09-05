@@ -1,28 +1,19 @@
-import { RenderFunction, SetupContext, Ref, ComponentPublicInstance, ComputedRef, DefineComponent } from 'vue'
-import { defineVxeComponent, VxeComponentBaseOptions, VxeComponentEventParams, VxeComponentSizeType, ValueOf, VxeComponentSlotType } from '@vxe-ui/core'
+import { DefineVxeComponentApp, DefineVxeComponentOptions, DefineVxeComponentInstance, VxeComponentBaseOptions, VxeComponentEventParams, VxeComponentSizeType, ValueOf, VxeComponentSlotType } from '@vxe-ui/core'
 import { VxeFormItemPropTypes, VxeFormItemProps } from './form-item'
 
-/* eslint-disable no-use-before-define,@typescript-eslint/ban-types */
+/* eslint-disable @typescript-eslint/no-empty-interface,no-use-before-define,@typescript-eslint/ban-types,@typescript-eslint/no-unused-vars */
 
-export declare const VxeForm: defineVxeComponent<VxeFormProps, VxeFormEventProps, VxeFormSlots>
-export type VxeFormComponent<D = any> = DefineComponent<VxeFormProps<D> & VxeFormEventProps>
+export declare const VxeForm: DefineVxeComponentApp<VxeFormProps, VxeFormEventProps, VxeFormSlots>
+export type VxeFormComponent<D = any> = DefineVxeComponentOptions<VxeFormProps<D>, VxeFormEventProps>
 
-export type VxeFormInstance<D = any> = ComponentPublicInstance<VxeFormProps<D>, VxeFormConstructor<D>>
+export type VxeFormInstance<D = any> = DefineVxeComponentInstance<VxeFormProps<D>, VxeFormConstructor<D>>
 
-export interface VxeFormConstructor<D = any> extends VxeComponentBaseOptions, VxeFormMethods<D> {
-  props: VxeFormProps<D>
-  context: SetupContext<VxeFormEmits>
+export interface VxeFormConstructor<D = any> extends VxeComponentBaseOptions, VxeFormProps, VxeFormMethods<D> {
   reactData: FormReactData
   internalData: FormInternalData
-  getRefMaps(): FormPrivateRef
-  getComputeMaps(): FormPrivateComputed
-  renderVN: RenderFunction
-
-  xegrid: any
 }
 
 export interface FormPrivateRef {
-  refElem: Ref<HTMLFormElement | undefined>
 }
 export interface VxeFormPrivateRef extends FormPrivateRef { }
 
@@ -82,7 +73,7 @@ export namespace VxeFormPropTypes {
   export type CustomLayout = boolean
 }
 
-export type VxeFormProps<D = any> = {
+export interface VxeFormProps<D = any> {
   size?: VxeFormPropTypes.Size
   collapseStatus?: VxeFormPropTypes.CollapseStatus
   loading?: VxeFormPropTypes.Loading
@@ -109,9 +100,6 @@ export type VxeFormProps<D = any> = {
 }
 
 export interface FormPrivateComputed {
-  computeSize: ComputedRef<VxeFormPropTypes.Size>
-  computeValidOpts: ComputedRef<VxeFormPropTypes.ValidOpts>
-  computeTooltipOpts: ComputedRef<VxeFormPropTypes.TooltipOpts>
 }
 export interface VxeFormPrivateComputed extends FormPrivateComputed { }
 
@@ -308,7 +296,7 @@ export namespace VxeFormDefines {
   }
 
   interface FormEventParams<D = any> extends VxeComponentEventParams {
-    $form: VxeFormConstructor
+    $form: VxeFormConstructor<D>
   }
 
   interface FormBaseParams<D = any> {

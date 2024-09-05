@@ -1,25 +1,18 @@
-import { RenderFunction, SetupContext, Ref, ComponentPublicInstance, DefineComponent } from 'vue'
-import { defineVxeComponent, VxeComponentBaseOptions, VxeComponentSizeType, VxeComponentEventParams, VxeComponentPermissionCodeType, ValueOf } from '@vxe-ui/core'
+import { DefineVxeComponentApp, DefineVxeComponentOptions, DefineVxeComponentInstance, VxeComponentBaseOptions, VxeComponentSizeType, VxeComponentEventParams, VxeComponentPermissionCodeType, ValueOf } from '@vxe-ui/core'
 import { VxeButtonProps, VxeButtonPropTypes } from './button'
 
-/* eslint-disable no-use-before-define,@typescript-eslint/ban-types */
+/* eslint-disable @typescript-eslint/no-empty-interface,no-use-before-define,@typescript-eslint/ban-types */
 
-export declare const VxeButtonGroup: defineVxeComponent<VxeButtonGroupProps, VxeButtonGroupEventProps, VxeButtonGroupSlots>
-export type VxeButtonGroupComponent = DefineComponent<VxeButtonGroupProps & VxeButtonGroupEventProps>
+export declare const VxeButtonGroup: DefineVxeComponentApp<VxeButtonGroupProps, VxeButtonGroupEventProps, VxeButtonGroupSlots>
+export type VxeButtonGroupComponent = DefineVxeComponentOptions<VxeButtonGroupProps, VxeButtonGroupEventProps>
 
-export type VxeButtonGroupInstance = ComponentPublicInstance<VxeButtonGroupProps, VxeButtonGroupConstructor>
+export type VxeButtonGroupInstance = DefineVxeComponentInstance<VxeButtonGroupProps, VxeButtonGroupConstructor>
 
-export interface VxeButtonGroupConstructor extends VxeComponentBaseOptions, VxeButtonGroupMethods {
-  props: VxeButtonGroupProps
-  context: SetupContext<VxeButtonGroupEmits>
+export interface VxeButtonGroupConstructor extends VxeComponentBaseOptions, VxeButtonGroupProps, VxeButtonGroupMethods {
   reactData: ButtonGroupReactData
-  getRefMaps(): ButtonGroupPrivateRef
-  getComputeMaps(): ButtonGroupPrivateComputed
-  renderVN: RenderFunction
 }
 
 export interface ButtonGroupPrivateRef {
-  refElem: Ref<HTMLDivElement | undefined>
 }
 export interface VxeButtonGroupPrivateRef extends ButtonGroupPrivateRef { }
 
@@ -35,7 +28,7 @@ export namespace VxeButtonGroupPropTypes {
   export type ClassName = string | ((params: { $buttonGroup: VxeButtonGroupConstructor }) => string)
 }
 
-export type VxeButtonGroupProps = {
+export interface VxeButtonGroupProps {
   size?: VxeButtonGroupPropTypes.Size
   permissionCode?: VxeButtonGroupPropTypes.PermissionCode
   options?: VxeButtonGroupPropTypes.Options
@@ -64,7 +57,7 @@ export interface VxeButtonGroupMethods extends ButtonGroupMethods { }
 
 export interface ButtonGroupPrivateMethods {
   handleClick(params: {
-    name: VxeButtonPropTypes.Name
+    name: VxeButtonPropTypes.Name | undefined
   }, evnt: Event): void
 }
 export interface VxeButtonGroupPrivateMethods extends ButtonGroupPrivateMethods { }

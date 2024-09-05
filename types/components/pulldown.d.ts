@@ -1,24 +1,17 @@
-import { RenderFunction, SetupContext, Ref, ComponentPublicInstance, DefineComponent } from 'vue'
-import { defineVxeComponent, VxeComponentBaseOptions, VxeComponentEventParams, VxeComponentSizeType, VxeComponentStyleType, ValueOf } from '@vxe-ui/core'
+import { DefineVxeComponentApp, DefineVxeComponentOptions, DefineVxeComponentInstance, VxeComponentBaseOptions, VxeComponentEventParams, VxeComponentSizeType, VxeComponentStyleType, ValueOf } from '@vxe-ui/core'
 
-/* eslint-disable no-use-before-define,@typescript-eslint/ban-types */
+/* eslint-disable @typescript-eslint/no-empty-interface,no-use-before-define,@typescript-eslint/ban-types */
 
-export declare const VxePulldown: defineVxeComponent<VxePulldownProps, VxePulldownEventProps, VxePulldownSlots>
-export type VxePulldownComponent = DefineComponent<VxePulldownProps & VxePulldownEventProps>
+export declare const VxePulldown: DefineVxeComponentApp<VxePulldownProps, VxePulldownEventProps, VxePulldownSlots>
+export type VxePulldownComponent = DefineVxeComponentOptions<VxePulldownProps, VxePulldownEventProps>
 
-export type VxePulldownInstance = ComponentPublicInstance<VxePulldownProps, VxePulldownConstructor>
+export type VxePulldownInstance = DefineVxeComponentInstance<VxePulldownProps, VxePulldownConstructor>
 
 export interface VxePulldownConstructor extends VxeComponentBaseOptions, VxePulldownMethods {
-  props: VxePulldownProps
-  context: SetupContext<VxePulldownEmits>
   reactData: PulldownReactData
-  getRefMaps(): PulldownPrivateRef
-  getComputeMaps(): PulldownPrivateComputed
-  renderVN: RenderFunction
 }
 
 export interface PulldownPrivateRef {
-  refElem: Ref<HTMLDivElement | undefined>
 }
 export interface VxePulldownPrivateRef extends PulldownPrivateRef { }
 
@@ -77,7 +70,7 @@ export interface PulldownReactData {
   panelStyle: VxeComponentStyleType | null
   panelPlacement: string | null
   visiblePanel: boolean
-  animatVisible: boolean
+  visibleAnimate: boolean
   isActivated: boolean
 }
 

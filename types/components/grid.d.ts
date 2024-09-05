@@ -1,33 +1,22 @@
-import { RenderFunction, SetupContext, Ref, ComponentPublicInstance, DefineComponent, ComputedRef } from 'vue'
-import { defineVxeComponent, VxeComponentBaseOptions, VxeComponentEventParams, VxeComponentSizeType, VxeComponentSlotType, ValueOf } from '@vxe-ui/core'
-import { VxeToolbarInstance, VxeToolbarProps, VxeToolbarPropTypes } from './toolbar'
-import { VxeTableDefines, VxeTableEmits, VxeTableConstructor, VxeTableProps, TableMethods, VxeTableMethods, VxeTablePrivateMethods } from './table'
-import { VxePagerInstance, VxePagerProps, VxePagerDefines } from './pager'
-import { VxeFormInstance, VxeFormProps, VxeFormDefines } from './form'
+import { DefineVxeComponentApp, DefineVxeComponentOptions, DefineVxeComponentInstance, VxeComponentBaseOptions, VxeComponentEventParams, VxeComponentSizeType, VxeComponentSlotType, ValueOf } from '@vxe-ui/core'
+import { VxeToolbarProps, VxeToolbarPropTypes } from './toolbar'
+import { VxeTableDefines, VxeTableEmits, VxeTableConstructor, VxeTableProps, TableMethods } from './table'
+import { VxePagerProps, VxePagerDefines } from './pager'
+import { VxeFormProps, VxeFormDefines } from './form'
 import { VxeFormItemProps } from './form-item'
 
-/* eslint-disable no-use-before-define,@typescript-eslint/ban-types */
+/* eslint-disable no-use-before-define,@typescript-eslint/ban-types,@typescript-eslint/no-unused-vars */
 
-export declare const VxeGrid: defineVxeComponent<VxeGridProps, VxeGridEventProps, VxeGridSlots>
-export type VxeGridComponent = DefineComponent<VxeGridProps & VxeGridEventProps>
+export declare const VxeGrid: DefineVxeComponentApp<VxeGridProps, VxeGridEventProps, VxeGridSlots>
+export type VxeGridComponent = DefineVxeComponentOptions<VxeGridProps, VxeGridEventProps>
 
-export type VxeGridInstance<D = any> = ComponentPublicInstance<VxeGridProps<D>, VxeGridConstructor<D>>
+export type VxeGridInstance<D = any> = DefineVxeComponentInstance<VxeGridProps<D>, VxeGridConstructor<D>>
 
 export interface VxeGridConstructor<D = any> extends VxeComponentBaseOptions, VxeGridMethods<D> {
-  props: VxeGridProps
-  context: SetupContext<VxeGridEmits>
   reactData: GridReactData
-  getRefMaps(): GridPrivateRef
-  getComputeMaps(): GridPrivateComputed
-  renderVN: RenderFunction
 }
 
 export interface GridPrivateRef<D = any> {
-  refElem: Ref<HTMLDivElement | undefined>
-  refTable: Ref<ComponentPublicInstance<VxeTableProps<D>, VxeTableConstructor<D> & VxeTableMethods<D> & VxeTablePrivateMethods<D>>>
-  refForm: Ref<VxeFormInstance>
-  refToolbar: Ref<VxeToolbarInstance>
-  refPager: Ref<VxePagerInstance>
 }
 export interface VxeGridPrivateRef<D = any> extends GridPrivateRef<D> { }
 
@@ -219,11 +208,6 @@ export type VxeGridProps<D = any> = VxeTableProps<D> & {
 }
 
 export interface GridPrivateComputed {
-  computeProxyOpts: ComputedRef<VxeGridPropTypes.ProxyOpts>
-  computePagerOpts: ComputedRef<VxeGridPropTypes.PagerOpts>
-  computeFormOpts: ComputedRef<VxeGridPropTypes.FormOpts>
-  computeToolbarOpts: ComputedRef<VxeGridPropTypes.ToolbarOpts>
-  computeZoomOpts: ComputedRef<VxeGridPropTypes.ZoomOpts>
 }
 export interface VxeGridPrivateComputed extends GridPrivateComputed { }
 

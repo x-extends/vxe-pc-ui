@@ -1,24 +1,17 @@
-import { RenderFunction, SetupContext, Ref, ComponentPublicInstance, DefineComponent } from 'vue'
-import { defineVxeComponent, VxeComponentBaseOptions, VxeComponentEventParams, ValueOf, VxeComponentSizeType } from '@vxe-ui/core'
+import { DefineVxeComponentApp, DefineVxeComponentOptions, DefineVxeComponentInstance, VxeComponentBaseOptions, VxeComponentEventParams, ValueOf, VxeComponentSizeType } from '@vxe-ui/core'
 
-/* eslint-disable no-use-before-define,@typescript-eslint/ban-types */
+/* eslint-disable @typescript-eslint/no-empty-interface,no-use-before-define,@typescript-eslint/ban-types */
 
-export declare const VxeUpload: defineVxeComponent<VxeUploadProps, VxeUploadEventProps, VxeUploadSlots>
-export type VxeUploadComponent = DefineComponent<VxeUploadProps & VxeUploadEventProps>
+export declare const VxeUpload: DefineVxeComponentApp<VxeUploadProps, VxeUploadEventProps, VxeUploadSlots>
+export type VxeUploadComponent = DefineVxeComponentOptions<VxeUploadProps, VxeUploadEventProps>
 
-export type VxeUploadInstance = ComponentPublicInstance<VxeUploadProps, VxeUploadConstructor>
+export type VxeUploadInstance = DefineVxeComponentInstance<VxeUploadProps, VxeUploadConstructor>
 
 export interface VxeUploadConstructor extends VxeComponentBaseOptions, VxeUploadMethods {
-  props: VxeUploadProps
-  context: SetupContext<VxeUploadEmits>
   reactData: UploadReactData
-  getRefMaps(): UploadPrivateRef
-  getComputeMaps(): UploadPrivateComputed
-  renderVN: RenderFunction
 }
 
 export interface UploadPrivateRef {
-  refElem: Ref<HTMLDivElement | undefined>
 }
 export interface VxeUploadPrivateRef extends UploadPrivateRef { }
 

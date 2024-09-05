@@ -60,37 +60,36 @@
   </div>
 </template>
 
-<script lang="ts" setup>
-import { ref } from 'vue'
+<script lang="ts">
+import Vue from 'vue'
 import { VxeUI } from '../../../packages'
-import { VxePrintInstance } from '../../../types'
 
-const printRef = ref<VxePrintInstance>()
-
-const printEvent1 = () => {
-  const $print = printRef.value
-  if ($print) {
-    $print.print()
-  }
-}
-
-const printEvent2 = () => {
-  VxeUI.print({
-    title: 'fgh',
-    content: '<div style="height:200px">sdfsdf</div><div style="height:200px">sdfsdf</div><div style="height:200px">sdfsdf</div><div style="height:200px">sdfsdf</div><div style="height:200px">sdfsdf</div>'
-  })
-}
-
-const printEvent3 = () => {
-  VxeUI.print({
-    title: 'sdfg',
-    pageBreaks: [
-      {
-        bodyHtml () {
-          return 'sdfsdff'
-        }
+export default Vue.extend({
+  methods: {
+    printEvent1 () {
+      const $print = this.$refs.printRef as any
+      if ($print) {
+        $print.print()
       }
-    ]
-  })
-}
+    },
+    printEvent2  () {
+      VxeUI.print({
+        title: 'fgh',
+        content: '<div style="height:200px">sdfsdf</div><div style="height:200px">sdfsdf</div><div style="height:200px">sdfsdf</div><div style="height:200px">sdfsdf</div><div style="height:200px">sdfsdf</div>'
+      })
+    },
+    printEvent3 () {
+      VxeUI.print({
+        title: 'sdfg',
+        pageBreaks: [
+          {
+            bodyHtml () {
+              return 'sdfsdff'
+            }
+          }
+        ]
+      })
+    }
+  }
+})
 </script>

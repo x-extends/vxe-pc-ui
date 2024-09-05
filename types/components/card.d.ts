@@ -1,24 +1,17 @@
-import { RenderFunction, SetupContext, Ref, ComponentPublicInstance, DefineComponent } from 'vue'
-import { defineVxeComponent, VxeComponentBaseOptions, VxeComponentEventParams, ValueOf } from '@vxe-ui/core'
+import { DefineVxeComponentApp, DefineVxeComponentOptions, DefineVxeComponentInstance, VxeComponentBaseOptions, VxeComponentEventParams, ValueOf } from '@vxe-ui/core'
 
-/* eslint-disable no-use-before-define,@typescript-eslint/ban-types */
+/* eslint-disable @typescript-eslint/no-empty-interface,no-use-before-define,@typescript-eslint/ban-types */
 
-export declare const VxeCard: defineVxeComponent<VxeCardProps, VxeCardEventProps, VxeCardSlots>
-export type VxeCardComponent = DefineComponent<VxeCardProps & VxeCardEventProps>
+export declare const VxeCard: DefineVxeComponentApp<VxeCardProps, VxeCardEventProps, VxeCardSlots>
+export type VxeCardComponent = DefineVxeComponentOptions<VxeCardProps, VxeCardEventProps>
 
-export type VxeCardInstance = ComponentPublicInstance<VxeCardProps, VxeCardConstructor>
+export type VxeCardInstance = DefineVxeComponentInstance<VxeCardProps, VxeCardConstructor>
 
 export interface VxeCardConstructor extends VxeComponentBaseOptions, VxeCardMethods {
-  props: VxeCardProps
-  context: SetupContext<VxeCardEmits>
   reactData: CardReactData
-  getRefMaps(): CardPrivateRef
-  getComputeMaps(): CardPrivateComputed
-  renderVN: RenderFunction
 }
 
 export interface CardPrivateRef {
-  refElem: Ref<HTMLDivElement | undefined>
 }
 export interface VxeCardPrivateRef extends CardPrivateRef { }
 

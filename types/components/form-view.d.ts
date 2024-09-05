@@ -1,27 +1,19 @@
-import { RenderFunction, SetupContext, Ref, ComputedRef, ComponentPublicInstance, DefineComponent } from 'vue'
-import { defineVxeComponent, VxeComponentBaseOptions, VxeComponentEventParams, ValueOf, VxeComponentSizeType } from '@vxe-ui/core'
+import { DefineVxeComponentApp, DefineVxeComponentOptions, DefineVxeComponentInstance, VxeComponentBaseOptions, VxeComponentEventParams, ValueOf, VxeComponentSizeType } from '@vxe-ui/core'
 import { VxeFormDesignDefines } from './form-design'
 import { VxeFormProps, VxeFormPropTypes, VxeFormDefines } from './form'
-import { VxeGridPropTypes } from './grid'
 
-/* eslint-disable no-use-before-define,@typescript-eslint/ban-types */
+/* eslint-disable @typescript-eslint/no-empty-interface,no-use-before-define,@typescript-eslint/ban-types */
 
-export declare const VxeFormView: defineVxeComponent<VxeFormViewProps, VxeFormViewEventProps, VxeFormViewSlots>
-export type VxeFormViewComponent = DefineComponent<VxeFormViewProps & VxeFormViewEventProps>
+export declare const VxeFormView: DefineVxeComponentApp<VxeFormViewProps, VxeFormViewEventProps, VxeFormViewSlots>
+export type VxeFormViewComponent = DefineVxeComponentOptions<VxeFormViewProps, VxeFormViewEventProps>
 
-export type VxeFormViewInstance = ComponentPublicInstance<VxeFormViewProps, VxeFormViewConstructor>
+export type VxeFormViewInstance = DefineVxeComponentInstance<VxeFormViewProps, VxeFormViewConstructor>
 
-export interface VxeFormViewConstructor extends VxeComponentBaseOptions, VxeFormViewMethods {
-  props: VxeFormViewProps
-  context: SetupContext<VxeFormViewEmits>
+export interface VxeFormViewConstructor extends VxeComponentBaseOptions, VxeFormViewProps, VxeFormViewMethods {
   reactData: FormViewReactData
-  getRefMaps(): FormViewPrivateRef
-  getComputeMaps(): FormViewPrivateComputed
-  renderVN: RenderFunction
 }
 
 export interface FormViewPrivateRef {
-  refElem: Ref<HTMLDivElement | undefined>
 }
 export interface VxeFormViewPrivateRef extends FormViewPrivateRef { }
 
@@ -37,7 +29,7 @@ export namespace VxeFormViewPropTypes {
   export type Size = VxeComponentSizeType
 }
 
-export type VxeFormViewProps = {
+export interface VxeFormViewProps {
   modelValue?: VxeFormViewPropTypes.ModelValue
   config?: VxeFormViewPropTypes.Config
   readonly?: VxeFormViewPropTypes.Readonly
@@ -48,7 +40,6 @@ export type VxeFormViewProps = {
 }
 
 export interface FormViewPrivateComputed {
-  computeSize: ComputedRef<VxeFormViewPropTypes.Size>
 }
 export interface VxeFormViewPrivateComputed extends FormViewPrivateComputed { }
 

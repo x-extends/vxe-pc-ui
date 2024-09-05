@@ -1,15 +1,13 @@
-import { App } from 'vue'
+import { VueConstructor } from 'vue'
 import { VxeUI } from '@vxe-ui/core'
 import VxeRadioComponent from './src/radio'
-import { dynamicApp } from '../dynamics'
 
 export const VxeRadio = Object.assign(VxeRadioComponent, {
-  install: function (app: App) {
+  install: function (app: VueConstructor) {
     app.component(VxeRadioComponent.name as string, VxeRadioComponent)
   }
 })
 
-dynamicApp.component(VxeRadioComponent.name as string, VxeRadioComponent)
 VxeUI.component(VxeRadioComponent)
 
 export const Radio = VxeRadio

@@ -1,24 +1,17 @@
-import { RenderFunction, SetupContext, Ref, ComponentPublicInstance, DefineComponent } from 'vue'
-import { defineVxeComponent, VxeComponentBaseOptions, VxeComponentEventParams, ValueOf, VxeComponentSizeType } from '@vxe-ui/core'
+import { DefineVxeComponentApp, DefineVxeComponentOptions, DefineVxeComponentInstance, VxeComponentBaseOptions, VxeComponentEventParams, ValueOf, VxeComponentSizeType } from '@vxe-ui/core'
 
-/* eslint-disable no-use-before-define,@typescript-eslint/ban-types */
+/* eslint-disable @typescript-eslint/no-empty-interface,no-use-before-define,@typescript-eslint/ban-types */
 
-export declare const VxeLayoutBody: defineVxeComponent<VxeLayoutBodyProps, VxeLayoutBodyEventProps, VxeLayoutBodySlots>
-export type VxeLayoutBodyComponent = DefineComponent<VxeLayoutBodyProps & VxeLayoutBodyEventProps>
+export declare const VxeLayoutBody: DefineVxeComponentApp<VxeLayoutBodyProps, VxeLayoutBodyEventProps, VxeLayoutBodySlots>
+export type VxeLayoutBodyComponent = DefineVxeComponentOptions<VxeLayoutBodyProps, VxeLayoutBodyEventProps>
 
-export type VxeLayoutBodyInstance = ComponentPublicInstance<VxeLayoutBodyProps, VxeLayoutBodyConstructor>
+export type VxeLayoutBodyInstance = DefineVxeComponentInstance<VxeLayoutBodyProps, VxeLayoutBodyConstructor>
 
-export interface VxeLayoutBodyConstructor extends VxeComponentBaseOptions, VxeLayoutBodyMethods {
-  props: VxeLayoutBodyProps
-  context: SetupContext<VxeLayoutBodyEmits>
+export interface VxeLayoutBodyConstructor extends VxeComponentBaseOptions, VxeLayoutBodyProps, VxeLayoutBodyMethods {
   reactData: LayoutBodyReactData
-  getRefMaps(): LayoutBodyPrivateRef
-  getComputeMaps(): LayoutBodyPrivateComputed
-  renderVN: RenderFunction
 }
 
 export interface LayoutBodyPrivateRef {
-  refElem: Ref<HTMLDivElement | undefined>
 }
 export interface VxeLayoutBodyPrivateRef extends LayoutBodyPrivateRef { }
 
@@ -28,7 +21,7 @@ export namespace VxeLayoutBodyPropTypes {
   export type Padding = boolean
 }
 
-export type VxeLayoutBodyProps = {
+export interface VxeLayoutBodyProps {
   size?: VxeLayoutBodyPropTypes.Size
   loading?: VxeLayoutBodyPropTypes.Loading
   padding?: VxeLayoutBodyPropTypes.Padding

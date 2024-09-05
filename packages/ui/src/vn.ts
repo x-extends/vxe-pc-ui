@@ -7,11 +7,11 @@ export function getOnName (type: string) {
 
 export function getModelEvent (name: string) {
   switch (name) {
-    case 'input':
-    case 'textarea':
-      return 'input'
+    case 'VxeInput':
+    case 'VxeTextarea':
+      return 'modelValue'
   }
-  return 'update:modelValue'
+  return 'input'
 }
 
 export function getChangeEvent (name: string) {
@@ -27,9 +27,9 @@ export function getChangeEvent (name: string) {
   return 'change'
 }
 
-export function getSlotVNs (vns: VxeComponentSlotType | VxeComponentSlotType[]) {
+export function getSlotVNs (vns: VxeComponentSlotType | VxeComponentSlotType[] | undefined) {
   if (XEUtils.isArray(vns)) {
     return vns
   }
-  return [vns]
+  return vns ? [vns] : []
 }

@@ -1,141 +1,190 @@
-import { defineComponent, h, computed, inject, PropType } from 'vue'
+import { PropType, CreateElement, VNode } from 'vue'
+import { defineVxeComponent } from '../../ui/src/comp'
 import XEUtils from 'xe-utils'
 import { getFuncText } from '../../ui/src/utils'
-import { getConfig, createEvent, useSize } from '../../ui'
+import { getConfig, createEvent, globalMixins } from '../../ui'
 
-import type { VxeRadioButtonPropTypes, VxeRadioGroupConstructor, VxeRadioButtonConstructor, VxeRadioButtonEmits, VxeRadioGroupPrivateMethods, RadioButtonMethods, VxeFormConstructor, VxeFormPrivateMethods, VxeFormDefines } from '../../../types'
+import type { VxeRadioButtonPropTypes, RadioButtonReactData, RadioGroupPrivateComputed, VxeRadioGroupConstructor, ValueOf, VxeRadioButtonEmits, VxeRadioGroupPrivateMethods, VxeFormConstructor, VxeComponentPermissionInfo, VxeComponentSizeType, VxeFormPrivateMethods, VxeFormDefines } from '../../../types'
 
-export default defineComponent({
+export default defineVxeComponent({
   name: 'VxeRadioButton',
+  mixins: [
+    globalMixins.sizeMixin,
+    globalMixins.permissionMixin
+  ],
   props: {
-    modelValue: [String, Number, Boolean] as PropType<VxeRadioButtonPropTypes.ModelValue>,
-    label: { type: [String, Number, Boolean] as PropType<VxeRadioButtonPropTypes.Label>, default: null },
+    value: [String, Number, Boolean] as PropType<VxeRadioButtonPropTypes.ModelValue>,
+    label: {
+      type: [String, Number, Boolean] as PropType<VxeRadioButtonPropTypes.Label>,
+      default: null
+    },
     title: [String, Number] as PropType<VxeRadioButtonPropTypes.Title>,
     content: [String, Number] as PropType<VxeRadioButtonPropTypes.Content>,
     disabled: {
       type: Boolean as PropType<VxeRadioButtonPropTypes.Disabled>,
       default: null
     },
-    strict: { type: Boolean as PropType<VxeRadioButtonPropTypes.Strict>, default: () => getConfig().radioButton.strict },
-    size: { type: String as PropType<VxeRadioButtonPropTypes.Size>, default: () => getConfig().radioButton.size || getConfig().size }
+    strict: {
+      type: Boolean as PropType<VxeRadioButtonPropTypes.Strict>,
+      default: () => getConfig().radioButton.strict
+    },
+    size: {
+      type: String as PropType<VxeRadioButtonPropTypes.Size>,
+      default: () => getConfig().radioButton.size || getConfig().size
+    }
   },
-  emits: [
-    'update:modelValue',
-    'change'
-  ] as VxeRadioButtonEmits,
-  setup (props, context) {
-    const { slots, emit } = context
-
-    const $xeForm = inject<VxeFormConstructor & VxeFormPrivateMethods | null>('$xeForm', null)
-    const xeFormItemInfo = inject<VxeFormDefines.ProvideItemInfo | null>('xeFormItemInfo', null)
-    const $xeRadioGroup = inject<(VxeRadioGroupConstructor & VxeRadioGroupPrivateMethods) | null>('$xeRadioGroup', null)
-
-    const xID = XEUtils.uniqueId()
-
-    const { computeSize } = useSize(props)
-
-    const $xeRadioButton = {
-      xID,
-      props,
-      context
-    } as unknown as VxeRadioButtonConstructor
-
-    let radioButtonMethods = {} as RadioButtonMethods
-
-    const computeIsDisabled = computed(() => {
-      const { disabled } = props
+  inject: {
+    $xeForm: {
+      default: null
+    },
+    formItemInfo: {
+      from: 'xeFormItemInfo',
+      default: null
+    },
+    $xeRadioGroup: {
+      default: null
+    }
+  },
+  data () {
+    const reactData: RadioButtonReactData = {
+    }
+    return {
+      xID: XEUtils.uniqueId(),
+      reactData
+    }
+  },
+  computed: {
+    ...({} as {
+      computePermissionInfo(): VxeComponentPermissionInfo
+      computeSize(): VxeComponentSizeType
+      $xeForm(): (VxeFormConstructor & VxeFormPrivateMethods) | null
+      formItemInfo(): VxeFormDefines.ProvideItemInfo | null
+      $xeRadioGroup(): (VxeRadioGroupConstructor & RadioGroupPrivateComputed & VxeRadioGroupPrivateMethods) | null
+    }),
+    computeIsDisabled () {
+      const $xeRadioButton = this
+      const $xeRadioGroup = $xeRadioButton.$xeRadioGroup
+      const { disabled } = $xeRadioButton
       if (disabled === null) {
         if ($xeRadioGroup) {
-          const { computeIsDisabled } = $xeRadioGroup.getComputeMaps()
-          return computeIsDisabled.value
+          const isDisabled = $xeRadioGroup.computeIsDisabled
+          return isDisabled
         }
       }
       return disabled
-    })
+    },
+    computeName  () {
+      const $xeRadioButton = this
+      const $xeRadioGroup = $xeRadioButton.$xeRadioGroup
 
-    const computeName = computed(() => {
       return $xeRadioGroup ? $xeRadioGroup.name : null
-    })
+    },
+    computeStrict () {
+      const $xeRadioButton = this
+      const props = $xeRadioButton
+      const $xeRadioGroup = $xeRadioButton.$xeRadioGroup
 
-    const computeStrict = computed(() => {
-      return $xeRadioGroup ? $xeRadioGroup.props.strict : props.strict
-    })
+      return $xeRadioGroup ? $xeRadioGroup.strict : props.strict
+    },
+    computeChecked  () {
+      const $xeRadioButton = this
+      const props = $xeRadioButton
+      const $xeRadioGroup = $xeRadioButton.$xeRadioGroup
 
-    const computeChecked = computed(() => {
-      const { modelValue, label } = props
-      return $xeRadioGroup ? $xeRadioGroup.props.modelValue === label : modelValue === label
-    })
-
-    radioButtonMethods = {
-      dispatchEvent (type, params, evnt) {
-        emit(type, createEvent(evnt, { $radioButton: $xeRadioButton }, params))
-      }
+      const { label } = props
+      return $xeRadioGroup ? $xeRadioGroup.value === label : props.value === label
     }
+  },
+  methods: {
+    //
+    // Method
+    //
+    dispatchEvent (type: ValueOf<VxeRadioButtonEmits>, params: Record<string, any>, evnt: Event | null) {
+      const $xeRadioButton = this
+      this.$emit(type, createEvent(evnt, { $radioButton: $xeRadioButton }, params))
+    },
+    handleValue (label: VxeRadioButtonPropTypes.Label, evnt: Event) {
+      const $xeRadioButton = this
+      const $xeForm = $xeRadioButton.$xeForm
+      const $xeRadioGroup = $xeRadioButton.$xeRadioGroup
+      const formItemInfo = $xeRadioButton.formItemInfo
 
-    Object.assign($xeRadioButton, radioButtonMethods)
-
-    const handleValue = (label: VxeRadioButtonPropTypes.Label, evnt: Event) => {
       if ($xeRadioGroup) {
         $xeRadioGroup.handleChecked({ label }, evnt)
       } else {
-        emit('update:modelValue', label)
-        radioButtonMethods.dispatchEvent('change', { label }, evnt)
+        $xeRadioButton.$emit('input', label)
+        $xeRadioButton.dispatchEvent('change', { label }, evnt)
         // 自动更新校验状态
-        if ($xeForm && xeFormItemInfo) {
-          $xeForm.triggerItemEvent(evnt, xeFormItemInfo.itemConfig.field, label)
+        if ($xeForm && formItemInfo) {
+          $xeForm.triggerItemEvent(evnt, formItemInfo.itemConfig.field, label)
         }
       }
-    }
+    },
+    changeEvent (evnt: Event) {
+      const $xeRadioButton = this
+      const props = $xeRadioButton
 
-    const changeEvent = (evnt: Event) => {
-      const isDisabled = computeIsDisabled.value
+      const isDisabled = $xeRadioButton.computeIsDisabled
       if (!isDisabled) {
-        handleValue(props.label, evnt)
+        $xeRadioButton.handleValue(props.label, evnt)
       }
-    }
+    },
+    clickEvent  (evnt: Event) {
+      const $xeRadioButton = this
+      const props = $xeRadioButton
+      const $xeRadioGroup = $xeRadioButton.$xeRadioGroup
 
-    const clickEvent = (evnt: Event) => {
-      const isDisabled = computeIsDisabled.value
-      const isStrict = computeStrict.value
+      const isDisabled = $xeRadioButton.computeIsDisabled
+      const isStrict = $xeRadioButton.computeStrict
       if (!isDisabled && !isStrict) {
-        if (props.label === ($xeRadioGroup ? $xeRadioGroup.props.modelValue : props.modelValue)) {
-          handleValue(null, evnt)
+        if (props.label === ($xeRadioGroup ? $xeRadioGroup.value : props.value)) {
+          $xeRadioButton.handleValue(null, evnt)
         }
       }
-    }
+    },
 
-    const renderVN = () => {
-      const vSize = computeSize.value
-      const isDisabled = computeIsDisabled.value
-      const name = computeName.value
-      const checked = computeChecked.value
+    //
+    // Render
+    //
+    renderVN (h: CreateElement): VNode {
+      const $xeRadioButton = this
+      const props = $xeRadioButton
+      const slots = $xeRadioButton.$scopedSlots
+
+      const vSize = $xeRadioButton.computeSize
+      const isDisabled = $xeRadioButton.computeIsDisabled
+      const name = $xeRadioButton.computeName
+      const checked = $xeRadioButton.computeChecked
+
       return h('label', {
         class: ['vxe-radio', 'vxe-radio-button', {
           [`size--${vSize}`]: vSize,
           'is--disabled': isDisabled
         }],
-        title: props.title
+        attrs: {
+          title: props.title
+        }
       }, [
         h('input', {
           class: 'vxe-radio--input',
-          type: 'radio',
-          name,
-          checked,
-          disabled: isDisabled,
-          onChange: changeEvent,
-          onClick: clickEvent
+          attrs: {
+            type: 'radio',
+            name,
+            checked,
+            disabled: isDisabled
+          },
+          on: {
+            change: $xeRadioButton.changeEvent,
+            click: $xeRadioButton.clickEvent
+          }
         }),
         h('span', {
           class: 'vxe-radio--label'
         }, slots.default ? slots.default({}) : getFuncText(props.content))
       ])
     }
-
-    Object.assign($xeRadioButton, {
-      renderVN,
-      dispatchEvent
-    })
-
-    return renderVN
+  },
+  render (this: any, h) {
+    return this.renderVN(h)
   }
 })

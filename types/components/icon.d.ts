@@ -1,24 +1,17 @@
-import { RenderFunction, SetupContext, Ref, ComponentPublicInstance, DefineComponent } from 'vue'
-import { defineVxeComponent, VxeComponentBaseOptions, VxeComponentEventParams, VxeComponentSizeType, ValueOf } from '@vxe-ui/core'
+import { DefineVxeComponentApp, DefineVxeComponentOptions, DefineVxeComponentInstance, VxeComponentBaseOptions, VxeComponentEventParams, VxeComponentSizeType, ValueOf } from '@vxe-ui/core'
 
-/* eslint-disable no-use-before-define,@typescript-eslint/ban-types */
+/* eslint-disable @typescript-eslint/no-empty-interface,no-use-before-define,@typescript-eslint/ban-types */
 
-export declare const VxeIcon: defineVxeComponent<VxeIconProps, VxeIconEventProps, VxeIconSlots>
-export type VxeIconComponent = DefineComponent<VxeIconProps & VxeIconEventProps>
+export declare const VxeIcon: DefineVxeComponentApp<VxeIconProps, VxeIconEventProps, VxeIconSlots>
+export type VxeIconComponent = DefineVxeComponentOptions<VxeIconProps, VxeIconEventProps>
 
-export type VxeIconInstance = ComponentPublicInstance<VxeIconProps, VxeIconConstructor>
+export type VxeIconInstance = DefineVxeComponentInstance<VxeIconProps, VxeIconConstructor>
 
-export interface VxeIconConstructor extends VxeComponentBaseOptions, VxeIconMethods {
-  props: VxeIconProps
-  context: SetupContext<VxeIconEmits>
+export interface VxeIconConstructor extends VxeComponentBaseOptions, VxeIconProps, VxeIconMethods {
   reactData: IconReactData
-  getRefMaps(): IconPrivateRef
-  getComputeMaps(): IconPrivateComputed
-  renderVN: RenderFunction
 }
 
 export interface IconPrivateRef {
-  refElem: Ref<HTMLDivElement | undefined>
 }
 export interface VxeIconPrivateRef extends IconPrivateRef { }
 
@@ -30,7 +23,7 @@ export namespace VxeIconPropTypes {
   export type Size = VxeComponentSizeType
 }
 
-export type VxeIconProps = {
+export interface VxeIconProps {
   name?: VxeIconPropTypes.Name
   className?: VxeIconPropTypes.Name
   roll?: VxeIconPropTypes.Roll

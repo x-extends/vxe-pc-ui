@@ -1,25 +1,18 @@
-import { RenderFunction, SetupContext, Ref, ComponentPublicInstance, DefineComponent } from 'vue'
-import { defineVxeComponent, VxeComponentBaseOptions, VxeComponentEventParams, ValueOf } from '@vxe-ui/core'
+import { DefineVxeComponentApp, DefineVxeComponentOptions, DefineVxeComponentInstance, VxeComponentBaseOptions, VxeComponentEventParams, ValueOf } from '@vxe-ui/core'
 import { VxeCarouselItemPropTypes, VxeCarouselItemProps, VxeCarouselItemSlots } from './carousel-item'
 
-/* eslint-disable no-use-before-define,@typescript-eslint/ban-types */
+/* eslint-disable @typescript-eslint/no-empty-interface,no-use-before-define,@typescript-eslint/ban-types */
 
-export declare const VxeCarousel: defineVxeComponent<VxeCarouselProps, VxeCarouselEventProps, VxeCarouselSlots>
-export type VxeCarouselComponent = DefineComponent<VxeCarouselProps & VxeCarouselEventProps>
+export declare const VxeCarousel: DefineVxeComponentApp<VxeCarouselProps, VxeCarouselEventProps, VxeCarouselSlots>
+export type VxeCarouselComponent = DefineVxeComponentOptions<VxeCarouselProps, VxeCarouselEventProps>
 
-export type VxeCarouselInstance = ComponentPublicInstance<VxeCarouselProps, VxeCarouselConstructor>
+export type VxeCarouselInstance = DefineVxeComponentInstance<VxeCarouselProps, VxeCarouselConstructor>
 
 export interface VxeCarouselConstructor extends VxeComponentBaseOptions, VxeCarouselMethods {
-  props: VxeCarouselProps
-  context: SetupContext<VxeCarouselEmits>
   reactData: CarouselReactData
-  getRefMaps(): CarouselPrivateRef
-  getComputeMaps(): CarouselPrivateComputed
-  renderVN: RenderFunction
 }
 
 export interface CarouselPrivateRef {
-  refElem: Ref<HTMLDivElement | undefined>
 }
 export interface VxeCarouselPrivateRef extends CarouselPrivateRef { }
 
