@@ -29,7 +29,7 @@ export namespace VxeCountdownPropTypes {
 }
 
 export interface VxeCountdownProps {
-  modelValue?: VxeCountdownPropTypes.ModelValue
+  value?: VxeCountdownPropTypes.ModelValue
   format?: VxeCountdownPropTypes.Format
   size?: VxeCountdownPropTypes.Size
   prefixConfig?: VxeCountdownPropTypes.PrefixConfig
@@ -46,6 +46,10 @@ export interface CountdownReactData {
   secondNum: number
 }
 
+export interface CountdownInternalData {
+  dnTimeout: number | undefined
+}
+
 export interface CountdownMethods {
   dispatchEvent(type: ValueOf<VxeCountdownEmits>, params: Record<string, any>, evnt: Event | null): void
 }
@@ -55,7 +59,7 @@ export interface CountdownPrivateMethods { }
 export interface VxeCountdownPrivateMethods extends CountdownPrivateMethods { }
 
 export type VxeCountdownEmits = [
-  'update:modelValue',
+  'input',
   'start',
   'end'
 ]

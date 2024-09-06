@@ -6,7 +6,7 @@ import { getAbsolutePos, getEventTargetNode } from '../../ui/src/dom'
 import { getFuncText, getLastZIndex, nextZIndex } from '../../ui/src/utils'
 import { warnLog } from '../../ui/src/log'
 
-import type { VxeButtonPropTypes, VxeButtonEmits, ButtonReactData, VxeButtonGroupConstructor, ButtonInternalData, VxeButtonGroupPrivateMethods, VxeTableConstructor, VxeTablePrivateMethods, VxeFormConstructor, VxeFormPrivateMethods, VxeModalConstructor, VxeModalMethods, VxeComponentPermissionInfo, VxeComponentSizeType, ValueOf } from '../../../types'
+import type { VxeButtonPropTypes, VxeButtonEmits, ButtonReactData, VxeButtonGroupConstructor, ButtonInternalData, VxeButtonGroupPrivateMethods, VxeTableConstructor, VxeTablePrivateMethods, VxeFormConstructor, VxeDrawerConstructor, VxeDrawerMethods, VxeFormPrivateMethods, VxeModalConstructor, VxeModalMethods, VxeComponentPermissionInfo, VxeComponentSizeType, ValueOf } from '../../../types'
 
 export default defineVxeComponent({
   name: 'VxeButton',
@@ -132,6 +132,7 @@ export default defineVxeComponent({
       computePermissionInfo(): VxeComponentPermissionInfo
       computeSize(): VxeComponentSizeType
       $xeModal(): (VxeModalConstructor & VxeModalMethods) | null
+      $xeDrawer(): (VxeDrawerConstructor & VxeDrawerMethods) | null
       $xeForm(): (VxeFormConstructor & VxeFormPrivateMethods) | null
       $xeTable(): (VxeTableConstructor & VxeTablePrivateMethods) | null
       $xeButtonGroup(): (VxeButtonGroupConstructor & VxeButtonGroupPrivateMethods)| null
@@ -143,13 +144,14 @@ export default defineVxeComponent({
       const { transfer } = props
       const $xeTable = $xeButton.$xeTable
       const $xeModal = $xeButton.$xeModal
+      const $xeDrawer = $xeButton.$xeDrawer
       const $xeForm = $xeButton.$xeForm
       if (transfer === null) {
         const globalTransfer = getConfig().button.transfer
         if (XEUtils.isBoolean(globalTransfer)) {
           return globalTransfer
         }
-        if ($xeTable || $xeModal || $xeForm) {
+        if ($xeTable || $xeModal || $xeDrawer || $xeForm) {
           return true
         }
       }
@@ -242,8 +244,8 @@ export default defineVxeComponent({
       const internalData = $xeButton.internalData
 
       const { trigger } = props
-      const btnTransfer = this.computeBtnTransfer
-      const panelElem = this.$refs.refBtnPanel as HTMLElement | undefined
+      const btnTransfer = $xeButton.computeBtnTransfer
+      const panelElem = $xeButton.$refs.refBtnPanel as HTMLElement | undefined
       if (panelElem) {
         panelElem.dataset.active = 'Y'
         if (!reactData.initialized) {
@@ -260,14 +262,14 @@ export default defineVxeComponent({
           }
         }, trigger === 'click' ? 50 : 250)
       }
-      return this.$nextTick()
+      return $xeButton.$nextTick()
     },
     closePanel () {
       const $xeButton = this
       const reactData = $xeButton.reactData
       const internalData = $xeButton.internalData
 
-      const panelElem = this.$refs.refBtnPanel as HTMLElement | undefined
+      const panelElem = $xeButton.$refs.refBtnPanel as HTMLElement | undefined
       clearTimeout(internalData.showTime)
       if (panelElem) {
         panelElem.dataset.active = 'N'
@@ -288,14 +290,18 @@ export default defineVxeComponent({
       return this.$nextTick()
     },
     focus () {
-      const btnElem = this.$refs.refButton as HTMLElement | undefined
+      const $xeButton = this
+
+      const btnElem = $xeButton.$refs.refButton as HTMLElement | undefined
       if (btnElem) {
         btnElem.focus()
       }
-      return this.$nextTick()
+      return $xeButton.$nextTick()
     },
     blur () {
-      const btnElem = this.$refs.refButton as HTMLElement | undefined
+      const $xeButton = this
+
+      const btnElem = $xeButton.$refs.refButton as HTMLElement | undefined
       if (btnElem) {
         btnElem.blur()
       }

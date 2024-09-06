@@ -11,7 +11,7 @@ import VxeBreadcrumbItem from './breadcrumb-item'
 import VxeButton from './button'
 import VxeButtonGroup from './button-group'
 // import VxeCalendar from './calendar'
-// import VxeCard from './card'
+import VxeCard from './card'
 // import VxeCarousel from './carousel'
 // import VxeCarouselItem from './carousel-item'
 // import VxeCheckbox from './checkbox'
@@ -19,9 +19,9 @@ import VxeButtonGroup from './button-group'
 import VxeCol from './col'
 // import VxeCollapse from './collapse'
 // import VxeCollapsePane from './collapse-pane'
-// import VxeCountdown from './countdown'
-// import VxeDatePicker from './date-picker'
-// import VxeDrawer, { DrawerController } from './drawer'
+import VxeCountdown from './countdown'
+import VxeDatePicker from './date-picker'
+import VxeDrawer, { DrawerController } from './drawer'
 // import VxeForm from './form'
 // import VxeFormDesign from './form-design'
 // import VxeFormGather from './form-gather'
@@ -45,14 +45,14 @@ import VxeLink from './link'
 import VxeLoading, { LoadingController } from './loading'
 import VxeMenu from './menu'
 import VxeModal, { ModalController } from './modal'
-// import VxeNumberInput from './number-input'
+import VxeNumberInput from './number-input'
 // import VxeOptgroup from './optgroup'
 // import VxeOption from './option'
 // import VxePager from './pager'
 // import VxePasswordInput from './password-input'
 import VxePrintPageBreak from './print-page-break'
 import VxePrint from './print'
-// import VxePulldown from './pulldown'
+import VxePulldown from './pulldown'
 import VxeRadio from './radio'
 import VxeRadioButton from './radio-button'
 import VxeRadioGroup from './radio-group'
@@ -63,9 +63,9 @@ import VxeSwitch from './switch'
 // import VxeTabs from './tabs'
 import VxeTag from './tag'
 import VxeText from './text'
-// import VxeTextarea from './textarea'
+import VxeTextarea from './textarea'
 import VxeTip from './tip'
-// import VxeTooltip from './tooltip'
+import VxeTooltip from './tooltip'
 // import VxeTree from './tree'
 // import VxeTreeSelect from './tree-select'
 import VxeUpload from './upload'
@@ -82,7 +82,7 @@ const components = [
   VxeButton,
   VxeButtonGroup,
   // VxeCalendar,
-  // VxeCard,
+  VxeCard,
   // VxeCarousel,
   // VxeCarouselItem,
   // VxeCheckbox,
@@ -90,9 +90,9 @@ const components = [
   VxeCol,
   // VxeCollapse,
   // VxeCollapsePane,
-  // VxeCountdown,
-  // VxeDatePicker,
-  // VxeDrawer,
+  VxeCountdown,
+  VxeDatePicker,
+  VxeDrawer,
   // VxeForm,
   // VxeFormDesign,
   // VxeFormGather,
@@ -116,14 +116,14 @@ const components = [
   VxeLoading,
   VxeMenu,
   VxeModal,
-  // VxeNumberInput,
+  VxeNumberInput,
   // VxeOptgroup,
   // VxeOption,
   // VxePager,
   // VxePasswordInput,
   VxePrintPageBreak,
   VxePrint,
-  // VxePulldown,
+  VxePulldown,
   VxeRadio,
   VxeRadioButton,
   VxeRadioGroup,
@@ -134,9 +134,9 @@ const components = [
   // VxeTabs,
   VxeTag,
   VxeText,
-  // VxeTextarea,
+  VxeTextarea,
   VxeTip,
-  // VxeTooltip,
+  VxeTooltip,
   // VxeTree,
   // VxeTreeSelect,
   VxeUpload
@@ -157,7 +157,7 @@ setTheme('light')
 // 兼容老版本
 export const loading = LoadingController
 export const modal = ModalController
-// export const drawer = DrawerController
+export const drawer = DrawerController
 export const print = printHtml
 export const saveFile = saveLocalFile
 export const readFile = readLocalFile
@@ -171,9 +171,9 @@ export * from './anchor-link'
 export * from './breadcrumb'
 export * from './breadcrumb-item'
 export * from './button'
-// export * from './button-group'
+export * from './button-group'
 // export * from './calendar'
-// export * from './card'
+export * from './card'
 // export * from './carousel'
 // export * from './carousel-item'
 // export * from './checkbox'
@@ -181,9 +181,9 @@ export * from './button'
 export * from './col'
 // export * from './collapse'
 // export * from './collapse-pane'
-// export * from './countdown'
-// export * from './date-picker'
-// export * from './drawer'
+export * from './countdown'
+export * from './date-picker'
+export * from './drawer'
 // export * from './form'
 // export * from './form-design'
 // export * from './form-gather'
@@ -207,14 +207,14 @@ export * from './link'
 export * from './loading'
 export * from './menu'
 export * from './modal'
-// export * from './number-input'
+export * from './number-input'
 // export * from './optgroup'
 // export * from './option'
 // export * from './pager'
 // export * from './password-input'
 export * from './print-page-break'
 export * from './print'
-// export * from './pulldown'
+export * from './pulldown'
 export * from './radio'
 export * from './radio-button'
 export * from './radio-group'
@@ -225,9 +225,9 @@ export * from './switch'
 // export * from './tabs'
 export * from './tag'
 export * from './text'
-// export * from './textarea'
+export * from './textarea'
 export * from './tip'
-// export * from './tooltip'
+export * from './tooltip'
 // export * from './tree'
 // export * from './tree-select'
 export * from './upload'

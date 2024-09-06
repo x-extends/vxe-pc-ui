@@ -35,7 +35,7 @@ export namespace VxeCalendarPropTypes {
 
 export type VxeCalendarProps = {
   size?: VxeCalendarPropTypes.Size
-  modelValue?: VxeCalendarPropTypes.ModelValue
+  value?: VxeCalendarPropTypes.ModelValue
   className?: VxeCalendarPropTypes.ClassName
   type?: VxeCalendarPropTypes.Type
   width?: VxeCalendarPropTypes.Width
@@ -74,7 +74,7 @@ export interface CalendarPrivateMethods { }
 export interface VxeCalendarPrivateMethods extends CalendarPrivateMethods { }
 
 export type VxeCalendarEmits = [
-  'update:modelValue',
+  'input',
   'change',
   'click',
   'date-prev',

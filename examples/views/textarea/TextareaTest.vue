@@ -11,7 +11,7 @@
       <vxe-textarea v-model="demo1.value5" placeholder="多行文本域"></vxe-textarea>
       <vxe-textarea v-model="demo1.value6" placeholder="只读的" readonly></vxe-textarea>
       <vxe-textarea v-model="demo1.value7" placeholder="禁用的" disabled></vxe-textarea>
-      <vxe-textarea v-model="demo1.value8" placeholder="显示字数统计" maxlength="100" show-word-count></vxe-textarea>
+      <vxe-textarea v-model="demo1.value8" placeholder="显示字数统计" max-length="100" show-word-count></vxe-textarea>
       <vxe-textarea v-model="demo1.value9" placeholder="自适应文本高度" :autosize="{ minRows: 2, maxRows: 4 }"></vxe-textarea>
       <vxe-textarea v-model="demo1.value10" placeholder="默认3行与40列" rows="3" cols="40"></vxe-textarea>
       <vxe-textarea v-model="demo1.value11" placeholder="关闭调节元素" resize="none"></vxe-textarea>

@@ -455,6 +455,7 @@ export default defineVxeComponent({
             setTimeout(() => {
               reactData.visible = false
               $xeModal.$emit('input', false)
+              $xeModal.$emit('modelValue', false)
               $xeModal.dispatchEvent('hide', params, null)
             }, 200)
             $xeModal.removeBodyLockScroll()
@@ -780,6 +781,7 @@ export default defineVxeComponent({
             const type = ''
             const params = { type }
             $xeModal.$emit('input', true)
+            $xeModal.$emit('modelValue', true)
             $xeModal.dispatchEvent('show', params, null)
           })
         }, 10)

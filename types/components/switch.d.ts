@@ -32,7 +32,7 @@ export namespace VxeSwitchPropTypes {
 
 export interface VxeSwitchProps {
   size?: VxeSwitchPropTypes.Size
-  modelValue?: VxeSwitchPropTypes.ModelValue
+  value?: VxeSwitchPropTypes.ModelValue
   disabled?: VxeSwitchPropTypes.Disabled
   readonly?: VxeSwitchPropTypes.Readonly
   openLabel?: VxeSwitchPropTypes.OpenLabel
@@ -76,7 +76,7 @@ export interface SwitchPrivateMethods { }
 export interface VxeSwitchPrivateMethods extends SwitchPrivateMethods { }
 
 export type VxeSwitchEmits = [
-  'update:modelValue',
+  'input',
   'change',
   'focus',
   'blur'

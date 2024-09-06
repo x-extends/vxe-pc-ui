@@ -145,6 +145,7 @@ export default defineVxeComponent({
         const value = isChecked ? props.closeValue : props.openValue
         reactData.hasAnimat = true
         $xeSwitch.$emit('input', value)
+        $xeSwitch.$emit('modelValue', value)
         $xeSwitch.dispatchEvent('change', { value }, evnt)
         // 自动更新校验状态
         if ($xeForm && formItemInfo) {

@@ -36,7 +36,7 @@ export namespace VxePulldownPropTypes {
 
 export interface VxePulldownProps {
   size?: VxePulldownPropTypes.Size
-  modelValue?: VxePulldownPropTypes.ModelValue
+  value?: VxePulldownPropTypes.ModelValue
   /**
    * 是否禁用
    */
@@ -67,11 +67,15 @@ export interface VxePulldownPrivateComputed extends PulldownPrivateComputed { }
 export interface PulldownReactData {
   initialized: boolean
   panelIndex: number
-  panelStyle: VxeComponentStyleType | null
+  panelStyle: VxeComponentStyleType
   panelPlacement: string | null
   visiblePanel: boolean
   visibleAnimate: boolean
   isActivated: boolean
+}
+
+export interface PulldownInternalData {
+  hpTimeout?: undefined | number
 }
 
 export interface PulldownMethods {
@@ -102,7 +106,7 @@ export interface PulldownPrivateMethods { }
 export interface VxePulldownPrivateMethods extends PulldownPrivateMethods { }
 
 export type VxePulldownEmits = [
-  'update:modelValue',
+  'input',
   'click',
   'option-click',
   'hide-panel'

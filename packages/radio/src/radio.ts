@@ -114,7 +114,8 @@ export default defineVxeComponent({
       if ($xeRadioGroup) {
         $xeRadioGroup.handleChecked({ label }, evnt)
       } else {
-        this.$emit('input', label)
+        $xeRadio.$emit('input', label)
+        $xeRadio.$emit('modelValue', label)
         $xeRadio.dispatchEvent('change', { label }, evnt)
         // 自动更新校验状态
         if ($xeForm && formItemInfo) {
@@ -171,10 +172,12 @@ export default defineVxeComponent({
       }, [
         h('input', {
           class: 'vxe-radio--input',
+          domProps: {
+            checked: isChecked
+          },
           attrs: {
             type: 'radio',
             name,
-            checked: isChecked,
             disabled: isDisabled
           },
           on: {

@@ -1,7 +1,7 @@
 <template>
   <div>
     <p>
-      <vxe-countdown model-value="10000">
+      <vxe-countdown v-model="val1">
         <template #default="{ diffConf }">
           <span>{{ diffConf.HH }}</span>
           <span>：</span>
@@ -12,10 +12,10 @@
       </vxe-countdown>
     </p>
     <p>
-      <vxe-countdown model-value="300000"></vxe-countdown>
+      <vxe-countdown v-model="val2"></vxe-countdown>
     </p>
     <p>
-      <vxe-countdown model-value="3000000" format="HH:mm:ss"></vxe-countdown>
+      <vxe-countdown v-model="val3" format="HH:mm:ss"></vxe-countdown>
     </p>
   </div>
 </template>
@@ -26,6 +26,9 @@ import Vue from 'vue'
 export default Vue.extend({
   data () {
     return {
+      val1: 100000,
+      val2: 300000,
+      val3: 3000000
     }
   }
 })

@@ -182,8 +182,10 @@ export default defineVxeComponent({
 
       const { routerLink, hasChild } = item
       if (routerLink) {
-        reactData.activeName = item.itemKey
-        $xeMenu.$emit('input', item.itemKey)
+        const value = item.itemKey
+        reactData.activeName = value
+        $xeMenu.$emit('input', value)
+        $xeMenu.$emit('modelValue', value)
       } else {
         if (hasChild) {
           $xeMenu.handleClickIconCollapse(evnt, item)

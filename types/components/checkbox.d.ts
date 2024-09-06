@@ -32,7 +32,7 @@ export interface VxeCheckboxProps {
   /**
    * 绑定值
    */
-  modelValue?: VxeCheckboxPropTypes.ModelValue
+  value?: VxeCheckboxPropTypes.ModelValue
   /**
    * 只对 checkbox-group 有效，值
    */
@@ -73,7 +73,7 @@ export interface CheckboxPrivateMethods { }
 export interface VxeCheckboxPrivateMethods extends CheckboxPrivateMethods { }
 
 export type VxeCheckboxEmits = [
-  'update:modelValue',
+  'input',
   'change'
 ]
 

@@ -30,7 +30,7 @@ export namespace VxeFormViewPropTypes {
 }
 
 export interface VxeFormViewProps {
-  modelValue?: VxeFormViewPropTypes.ModelValue
+  value?: VxeFormViewPropTypes.ModelValue
   config?: VxeFormViewPropTypes.Config
   readonly?: VxeFormViewPropTypes.Readonly
   disabled?: VxeFormViewPropTypes.Disabled
@@ -119,7 +119,7 @@ export interface FormViewPrivateMethods { }
 export interface VxeFormViewPrivateMethods extends FormViewPrivateMethods { }
 
 export type VxeFormViewEmits = [
-  'update:modelValue',
+  'input',
   'submit',
   'reset'
 ]

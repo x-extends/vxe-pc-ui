@@ -37,7 +37,7 @@ export namespace VxeImagePreviewPropTypes {
 }
 
 export interface VxeImagePreviewProps {
-  modelValue?: VxeImagePreviewPropTypes.ModelValue
+  value?: VxeImagePreviewPropTypes.ModelValue
   urlList?: VxeImagePreviewPropTypes.UrlList
   urlField?: VxeImagePreviewPropTypes.UrlField
   maskClosable?: VxeImagePreviewPropTypes.MaskClosable
@@ -71,7 +71,7 @@ export interface ImagePreviewPrivateMethods {
 export interface VxeImagePreviewPrivateMethods extends ImagePreviewPrivateMethods { }
 
 export type VxeImagePreviewEmits = [
-  'update:modelValue',
+  'input',
   'change',
   'download',
   'download-fail',

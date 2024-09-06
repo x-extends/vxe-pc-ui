@@ -183,7 +183,7 @@ export interface UploadPrivateMethods { }
 export interface VxeUploadPrivateMethods extends UploadPrivateMethods { }
 
 export type VxeUploadEmits = [
-  'update:modelValue',
+  'input',
   'add',
   'remove',
   'remove-fail',

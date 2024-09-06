@@ -48,7 +48,7 @@ export namespace VxeMenuPropTypes {
 }
 
 export interface VxeMenuProps {
-  modelValue?: VxeMenuPropTypes.ModelValue
+  value?: VxeMenuPropTypes.ModelValue
   size?: VxeMenuPropTypes.Size
   loading?: VxeMenuPropTypes.Loading
   collapsed?: VxeMenuPropTypes.Collapsed
@@ -75,7 +75,7 @@ export interface MenuPrivateMethods { }
 export interface VxeMenuPrivateMethods extends MenuPrivateMethods { }
 
 export type VxeMenuEmits = [
-  'update:modelValue',
+  'input',
   'click'
 ]
 

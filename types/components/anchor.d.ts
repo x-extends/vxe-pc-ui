@@ -26,7 +26,7 @@ export namespace VxeAnchorPropTypes {
 }
 
 export interface VxeAnchorProps {
-  modelValue?: VxeAnchorPropTypes.ModelValue
+  value?: VxeAnchorPropTypes.ModelValue
   options?: VxeAnchorPropTypes.Options
   container?: VxeAnchorPropTypes.Container
   showMarker?: VxeAnchorPropTypes.ShowMarker
@@ -53,7 +53,7 @@ export interface AnchorPrivateMethods {
 export interface VxeAnchorPrivateMethods extends AnchorPrivateMethods { }
 
 export type VxeAnchorEmits = [
-  'update:modelValue',
+  'input',
   'change',
   'click'
 ]

@@ -16,6 +16,10 @@ const getUniqueKey = () => {
 
 export default defineVxeComponent({
   name: 'VxeUpload',
+  model: {
+    prop: 'value',
+    event: 'modelValue'
+  },
   mixins: [
     globalMixins.sizeMixin
   ],
@@ -419,7 +423,7 @@ export default defineVxeComponent({
       if (urlMode) {
         restList = restList.map(item => item[urlProp])
       }
-      $xeUpload.$emit('input', singleMode ? (restList[0] || null) : restList)
+      $xeUpload.$emit('modelValue', singleMode ? (restList[0] || null) : restList)
     },
     getThumbnailFileUrl (item: VxeUploadDefines.FileObjItem) {
       const $xeUpload = this

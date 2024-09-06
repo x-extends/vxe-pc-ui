@@ -59,7 +59,7 @@ export namespace VxeDrawerPropTypes {
 
 export interface VxeDrawerProps {
   size?: VxeDrawerPropTypes.Size
-  modelValue?: VxeDrawerPropTypes.ModelValue
+  value?: VxeDrawerPropTypes.ModelValue
   id?: VxeDrawerPropTypes.ID
   loading?: VxeDrawerPropTypes.Loading
   className?: VxeDrawerPropTypes.ClassName
@@ -98,7 +98,6 @@ export interface DrawerReactData {
   visible: boolean
   contentVisible: boolean
   drawerZIndex: number
-  firstOpen: boolean
 }
 
 export interface DrawerMethods {
@@ -122,7 +121,7 @@ export interface DrawerPrivateMethods { }
 export interface VxeDrawerPrivateMethods extends DrawerPrivateMethods { }
 
 export type VxeDrawerEmits = [
-  'update:modelValue',
+  'input',
   'show',
   'hide',
   'before-hide',
@@ -159,6 +158,7 @@ export namespace VxeDrawerDefines {
 
   export interface DrawerOptions extends VxeDrawerProps, VxeDrawerEventProps {
     key?: string | number
+    events?: VxeDrawerListeners
   }
 
   export interface DrawerVisibleParams {

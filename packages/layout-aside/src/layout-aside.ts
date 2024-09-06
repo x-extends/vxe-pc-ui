@@ -30,10 +30,11 @@ export default defineVxeComponent({
     }
   },
   data () {
+    const xID = XEUtils.uniqueId()
     const reactData: LayoutAsideReactData = {
     }
     return {
-      xID: XEUtils.uniqueId(),
+      xID,
       reactData
     }
   },

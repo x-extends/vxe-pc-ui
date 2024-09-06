@@ -41,7 +41,7 @@ export interface VxeCheckboxGroupProps {
   /**
    * 绑定值
    */
-  modelValue?: VxeCheckboxGroupPropTypes.ModelValue
+  value?: VxeCheckboxGroupPropTypes.ModelValue
   max?: VxeCheckboxGroupPropTypes.Max
   /**
    * 是否禁用
@@ -73,7 +73,7 @@ export interface CheckboxGroupPrivateMethods {
 export interface VxeCheckboxGroupPrivateMethods extends CheckboxGroupPrivateMethods { }
 
 export type VxeCheckboxGroupEmits = [
-  'update:modelValue',
+  'input',
   'change'
 ]
 

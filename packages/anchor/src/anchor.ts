@@ -99,6 +99,7 @@ export default defineVxeComponent({
 
       reactData.activeHref = value
       $xeAnchor.$emit('input', value)
+      $xeAnchor.$emit('modelValue', value)
     },
     handleContainerScrollEvent  () {
       const $xeAnchor = this

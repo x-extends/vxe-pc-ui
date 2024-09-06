@@ -26,13 +26,13 @@ export namespace VxeDatePickerPropTypes {
   export type Readonly = boolean
   export type Disabled = boolean
   export type Placeholder = string
-  export type Maxlength = string | number
+  export type MaxLength = string | number
   export type Multiple = boolean
   export type ShowWordCount = boolean
   export type CountMethod = (params: {
     value: string
   }) => number
-  export type Autocomplete = string
+  export type AutoComplete = string
   export type Align = string
   export type Form = string
   export type Min = string | number
@@ -56,11 +56,22 @@ export namespace VxeDatePickerPropTypes {
   export type SuffixIcon = string
   export type Placement = 'top' | 'bottom' | '' | null
   export type Transfer = boolean
+
+  /**
+   * 请使用 AutoComplete
+   * @deprecated
+   */
+  export type Autocomplete = string
+  /**
+   * 请使用 MaxLength
+   * @deprecated
+   */
+  export type Maxlength = string | number
 }
 
 export interface VxeDatePickerProps {
   size?: VxeDatePickerPropTypes.Size
-  modelValue?: VxeDatePickerPropTypes.ModelValue
+  value?: VxeDatePickerPropTypes.ModelValue
   className?: VxeDatePickerPropTypes.ClassName
   immediate?: VxeDatePickerPropTypes.Immediate
   name?: VxeDatePickerPropTypes.Name
@@ -69,7 +80,7 @@ export interface VxeDatePickerProps {
   readonly?: VxeDatePickerPropTypes.Readonly
   disabled?: VxeDatePickerPropTypes.Disabled
   placeholder?: VxeDatePickerPropTypes.Placeholder
-  maxlength?: VxeDatePickerPropTypes.Maxlength
+  maxLength?: VxeDatePickerPropTypes.MaxLength
   multiple?: VxeDatePickerPropTypes.Multiple
   /**
    * 是否显示字数统计
@@ -79,7 +90,7 @@ export interface VxeDatePickerProps {
    * 自定义字数统计方法
    */
   countMethod?: VxeDatePickerPropTypes.CountMethod
-  autocomplete?: VxeDatePickerPropTypes.Autocomplete
+  autoComplete?: VxeDatePickerPropTypes.AutoComplete
   align?: VxeDatePickerPropTypes.Align
   form?: VxeDatePickerPropTypes.Form
 
@@ -112,6 +123,17 @@ export interface VxeDatePickerProps {
   suffixIcon?: VxeDatePickerPropTypes.SuffixIcon
   placement?: VxeDatePickerPropTypes.Placement
   transfer?: VxeDatePickerPropTypes.Transfer
+
+  /**
+   * 请使用 autoComplete
+   * @deprecated
+   */
+  autocomplete?: VxeDatePickerPropTypes.AutoComplete
+  /**
+   * 请使用 autoComplete
+   * @deprecated
+   */
+  maxlength?: VxeDatePickerPropTypes.MaxLength
 }
 
 export interface DatePickerPrivateComputed {
@@ -123,16 +145,23 @@ export interface DatePickerReactData {
   panelIndex: number
   visiblePanel: boolean
   isAniVisible: boolean
-  panelStyle: VxeComponentStyleType | null
+  panelStyle: VxeComponentStyleType
   panelPlacement: VxeDatePickerPropTypes.Placement
   isActivated: boolean
   inputValue: any
-  datetimePanelValue: any
+  datetimePanelValue: Date | null
   datePanelValue: Date | null
   datePanelLabel: string
   datePanelType: VxeDatePickerDefines.DatePanelType
   selectMonth: any
   currentDate: any
+}
+
+export interface DatePickerInternalData {
+  yearSize: number
+  monthSize: number
+  quarterSize: number
+  hpTimeout?: undefined | number
 }
 
 export interface DatePickerMethods {
@@ -165,7 +194,7 @@ export interface DatePickerPrivateMethods { }
 export interface VxeDatePickerPrivateMethods extends DatePickerPrivateMethods { }
 
 export type VxeDatePickerEmits = [
-  'update:modelValue',
+  'modelValue',
   'input',
   'change',
   'keydown',
@@ -287,7 +316,7 @@ export type VxeDatePickerEventProps = {
 }
 
 export interface VxeDatePickerListeners {
-  input?: VxeDatePickerEvents.Input
+  value?: VxeDatePickerEvents.Input
   change?: VxeDatePickerEvents.Change
 }
 

@@ -71,7 +71,7 @@ export namespace VxeInputPropTypes {
 
 export interface VxeInputProps {
   size?: VxeInputPropTypes.Size
-  modelValue?: VxeInputPropTypes.ModelValue
+  value?: VxeInputPropTypes.ModelValue
   className?: VxeInputPropTypes.ClassName
   immediate?: VxeInputPropTypes.Immediate
   name?: VxeInputPropTypes.Name
@@ -194,7 +194,7 @@ export interface InputPrivateMethods { }
 export interface VxeInputPrivateMethods extends InputPrivateMethods { }
 
 export type VxeInputEmits = [
-  'update:modelValue',
+  'modelValue',
   'input',
   'change',
   'keydown',

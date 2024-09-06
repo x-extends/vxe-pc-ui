@@ -42,7 +42,7 @@ export namespace VxeTabsPropTypes {
 }
 
 export interface VxeTabsProps {
-  modelValue?: VxeTabsPropTypes.ModelValue
+  value?: VxeTabsPropTypes.ModelValue
   options?: VxeTabsPropTypes.Options
   destroyOnClose?: VxeTabsPropTypes.DestroyOnClose
   height?: VxeTabsPropTypes.Height
@@ -101,7 +101,7 @@ export interface TabsPrivateMethods { }
 export interface VxeTabsPrivateMethods extends TabsPrivateMethods { }
 
 export type VxeTabsEmits = [
-  'update:modelValue',
+  'input',
   'change',
   'tab-change-fail',
   'tab-close',

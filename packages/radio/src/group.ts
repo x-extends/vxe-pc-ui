@@ -117,11 +117,13 @@ export default defineVxeComponent({
       const $xeForm = $xeRadioGroup.$xeForm
       const formItemInfo = $xeRadioGroup.formItemInfo
 
-      $xeRadioGroup.$emit('input', params.label)
+      const value = params.label
+      $xeRadioGroup.$emit('input', value)
+      $xeRadioGroup.$emit('modelValue', value)
       $xeRadioGroup.dispatchEvent('change', params, evnt)
       // 自动更新校验状态
       if ($xeForm && formItemInfo) {
-        $xeForm.triggerItemEvent(evnt, formItemInfo.itemConfig.field, params.label)
+        $xeForm.triggerItemEvent(evnt, formItemInfo.itemConfig.field, value)
       }
     },
 

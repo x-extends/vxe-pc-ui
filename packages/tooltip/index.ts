@@ -1,0 +1,16 @@
+import { VueConstructor } from 'vue'
+import { VxeUI } from '@vxe-ui/core'
+import VxeTooltipComponent from './src/tooltip'
+import { dynamicApp } from '../dynamics'
+
+export const VxeTooltip = Object.assign({}, VxeTooltipComponent, {
+  install (app: VueConstructor) {
+    app.component(VxeTooltipComponent.name as string, VxeTooltipComponent)
+  }
+})
+
+dynamicApp.use(VxeTooltip)
+VxeUI.component(VxeTooltipComponent)
+
+export const Tooltip = VxeTooltip
+export default VxeTooltip

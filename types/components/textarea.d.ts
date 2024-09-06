@@ -51,7 +51,7 @@ export interface VxeTextareaProps {
   /**
    * 绑定值
    */
-  modelValue?: VxeTextareaPropTypes.ModelValue
+  value?: VxeTextareaPropTypes.ModelValue
   className?: VxeTextareaPropTypes.ClassName
   immediate?: VxeTextareaPropTypes.Immediate
   /**
@@ -136,7 +136,7 @@ export interface TextareaPrivateMethods { }
 export interface VxeTextareaPrivateMethods extends TextareaPrivateMethods { }
 
 export type VxeTextareaEmits = [
-  'update:modelValue',
+  'modelValue',
   'input',
   'keydown',
   'keyup',

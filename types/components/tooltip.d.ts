@@ -33,7 +33,7 @@ export namespace VxeTooltipPropTypes {
 
 export interface VxeTooltipProps {
   size?: VxeTooltipPropTypes.Size
-  modelValue?: VxeTooltipPropTypes.ModelValue
+  value?: VxeTooltipPropTypes.ModelValue
   trigger?: VxeTooltipPropTypes.Trigger
   theme?: VxeTooltipPropTypes.Theme
   content?: VxeTooltipPropTypes.Content
@@ -66,6 +66,10 @@ export interface TooltipReactData {
   }
 }
 
+export interface TooltipInternalData {
+  showDelayTip?(): any
+}
+
 export interface TooltipMethods {
   dispatchEvent(type: ValueOf<VxeTooltipEmits>, params: Record<string, any>, evnt: Event | null): void
   /**
@@ -93,7 +97,7 @@ export interface TooltipPrivateMethods { }
 export interface VxeTooltipPrivateMethods extends TooltipPrivateMethods { }
 
 export type VxeTooltipEmits = [
-  'update:modelValue'
+  'input'
 ]
 
 export namespace VxeTooltipDefines {

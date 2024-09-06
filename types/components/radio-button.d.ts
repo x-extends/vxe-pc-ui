@@ -55,7 +55,7 @@ export interface RadioButtonPrivateMethods { }
 export interface VxeRadioButtonPrivateMethods extends RadioButtonPrivateMethods { }
 
 export type VxeRadioButtonEmits = [
-  'update:modelValue',
+  'input',
   'change'
 ]
 

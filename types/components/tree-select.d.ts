@@ -60,7 +60,7 @@ export namespace VxeTreeSelectPropTypes {
 
 export interface VxeTreeSelectProps<D = any> {
   size?: VxeTreeSelectPropTypes.Size
-  modelValue?: VxeTreeSelectPropTypes.ModelValue
+  value?: VxeTreeSelectPropTypes.ModelValue
   clearable?: VxeTreeSelectPropTypes.Clearable
   placeholder?: VxeTreeSelectPropTypes.Placeholder
   readonly?: VxeTreeSelectPropTypes.Readonly
@@ -112,7 +112,7 @@ export interface TreeSelectPrivateMethods { }
 export interface VxeTreeSelectPrivateMethods extends TreeSelectPrivateMethods { }
 
 export type VxeTreeSelectEmits = [
-  'update:modelValue',
+  'input',
   'change',
   'clear',
   'blur',

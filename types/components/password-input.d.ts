@@ -37,7 +37,7 @@ export namespace VxePasswordInputPropTypes {
 
 export interface VxePasswordInputProps {
   size?: VxePasswordInputPropTypes.Size
-  modelValue?: VxePasswordInputPropTypes.ModelValue
+  value?: VxePasswordInputPropTypes.ModelValue
   className?: VxePasswordInputPropTypes.ClassName
   name?: VxePasswordInputPropTypes.Name
   clearable?: VxePasswordInputPropTypes.Clearable
@@ -86,7 +86,7 @@ export interface PasswordInputPrivateMethods { }
 export interface VxePasswordInputPrivateMethods extends PasswordInputPrivateMethods { }
 
 export type VxePasswordInputEmits = [
-  'update:modelValue',
+  'modelValue',
   'input',
   'change',
   'click',

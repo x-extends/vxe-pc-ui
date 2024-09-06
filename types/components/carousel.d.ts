@@ -33,7 +33,7 @@ export namespace VxeCarouselPropTypes {
 }
 
 export interface VxeCarouselProps {
-  modelValue?: VxeCarouselPropTypes.ModelValue
+  value?: VxeCarouselPropTypes.ModelValue
   options?: VxeCarouselPropTypes.Options
   loading?: VxeCarouselPropTypes.Loading
   height?: VxeCarouselPropTypes.Height
@@ -73,7 +73,7 @@ export interface CarouselPrivateMethods { }
 export interface VxeCarouselPrivateMethods extends CarouselPrivateMethods { }
 
 export type VxeCarouselEmits = [
-  'update:modelValue',
+  'input',
   'change'
 ]
 

@@ -63,7 +63,7 @@ export namespace VxeSelectPropTypes {
 
 export interface VxeSelectProps {
   size?: VxeSelectPropTypes.Size
-  modelValue?: VxeSelectPropTypes.ModelValue
+  value?: VxeSelectPropTypes.ModelValue
   clearable?: VxeSelectPropTypes.Clearable
   placeholder?: VxeSelectPropTypes.Placeholder
   readonly?: VxeSelectPropTypes.Readonly
@@ -127,6 +127,10 @@ export interface SelectReactData {
   searchLoading: boolean
 }
 
+export interface SelectInternalData {
+  hpTimeout?: undefined | number
+}
+
 export interface SelectMethods {
   dispatchEvent(type: ValueOf<VxeSelectEmits>, params: Record<string, any>, evnt: Event | null): void
   /**
@@ -164,7 +168,7 @@ export interface SelectPrivateMethods { }
 export interface VxeSelectPrivateMethods extends SelectPrivateMethods { }
 
 export type VxeSelectEmits = [
-  'update:modelValue',
+  'input',
   'change',
   'clear',
   'blur',

@@ -198,7 +198,7 @@ export interface TreePrivateMethods { }
 export interface VxeTreePrivateMethods extends TreePrivateMethods { }
 
 export type VxeTreeEmits = [
-  'update:modelValue',
+  'input',
   'update:checkNodeKey',
   'update:checkNodeKeys',
   'node-click',

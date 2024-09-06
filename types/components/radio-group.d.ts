@@ -68,7 +68,7 @@ export interface RadioGroupPrivateMethods {
 export interface VxeRadioGroupPrivateMethods extends RadioGroupPrivateMethods { }
 
 export type VxeRadioGroupEmits = [
-  'update:modelValue',
+  'input',
   'change'
 ]
 

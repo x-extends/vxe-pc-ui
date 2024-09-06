@@ -34,7 +34,7 @@ export interface VxeIconPickerProps {
   /**
    * 绑定值
    */
-  modelValue?: VxeIconPickerPropTypes.ModelValue
+  value?: VxeIconPickerPropTypes.ModelValue
   placeholder?: VxeIconPickerPropTypes.Placeholder
   size?: VxeIconPickerPropTypes.Size
   className?: VxeIconPickerPropTypes.ClassName
@@ -96,7 +96,7 @@ export interface IconPickerPrivateMethods { }
 export interface VxeIconPickerPrivateMethods extends IconPickerPrivateMethods { }
 
 export type VxeIconPickerEmits = [
-  'update:modelValue',
+  'input',
   'change',
   'clear',
   'click'

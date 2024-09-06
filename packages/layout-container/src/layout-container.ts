@@ -18,10 +18,11 @@ export default defineVxeComponent({
     }
   },
   data () {
+    const xID = XEUtils.uniqueId()
     const reactData: LayoutContainerReactData = {
     }
     return {
-      xID: XEUtils.uniqueId(),
+      xID,
       reactData
     }
   },

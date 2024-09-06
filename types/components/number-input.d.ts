@@ -54,7 +54,7 @@ export namespace VxeNumberInputPropTypes {
 
 export interface VxeNumberInputProps {
   size?: VxeNumberInputPropTypes.Size
-  modelValue?: VxeNumberInputPropTypes.ModelValue
+  value?: VxeNumberInputPropTypes.ModelValue
   className?: VxeNumberInputPropTypes.ClassName
   immediate?: VxeNumberInputPropTypes.Immediate
   name?: VxeNumberInputPropTypes.Name
@@ -105,6 +105,10 @@ export interface NumberInputReactData {
   inputValue: VxeNumberInputPropTypes.ModelValue | undefined
 }
 
+export interface NumberInputInternalData {
+  dnTimeout?: undefined | number
+}
+
 export interface NumberInputMethods {
   dispatchEvent(type: ValueOf<VxeNumberInputEmits>, params: Record<string, any>, evnt: Event | null): void
   /**
@@ -126,7 +130,7 @@ export interface NumberInputPrivateMethods { }
 export interface VxeNumberInputPrivateMethods extends NumberInputPrivateMethods { }
 
 export type VxeNumberInputEmits = [
-  'update:modelValue',
+  'modelValue',
   'input',
   'change',
   'keydown',
