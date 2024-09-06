@@ -30,11 +30,11 @@ const commOutDir = 'lib'
 const coreName = 'ui'
 
 const componentList = [
-  // 'alert',
-  // 'anchor',
-  // 'anchor-link',
-  // 'breadcrumb',
-  // 'breadcrumb-item',
+  'alert',
+  'anchor',
+  'anchor-link',
+  'breadcrumb',
+  'breadcrumb-item',
   'button',
   'button-group',
   // 'calendar',
@@ -97,7 +97,7 @@ const componentList = [
   // 'tooltip',
   // 'tree',
   // 'tree-select',
-  // 'upload'
+  'upload'
 ]
 
 const languages = [

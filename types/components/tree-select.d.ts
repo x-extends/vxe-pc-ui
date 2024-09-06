@@ -1,16 +1,16 @@
-import { DefineVxeComponentApp, DefineVxeComponentOptions, DefineVxeComponentInstance, VxeComponentBaseOptions, VxeComponentEventParams, VxeComponentSizeType, ValueOf } from '@vxe-ui/core'
+import { DefineVxeComponentApp, DefineVxeComponentOptions, DefineVxeComponentInstance, VxeComponentEventParams, VxeComponentSizeType, ValueOf } from '@vxe-ui/core'
 import { VxeTreeProps } from './tree'
 
 /* eslint-disable @typescript-eslint/no-empty-interface,no-use-before-define,@typescript-eslint/ban-types */
 
 export declare const VxeTreeSelect: DefineVxeComponentApp<VxeTreeSelectProps, VxeTreeSelectEventProps, VxeTreeSelectSlots>
-export type VxeTreeSelectComponent = DefineVxeComponentOptions<VxeTreeSelectProps, VxeTreeSelectEventProps>
+export type VxeTreeSelectComponent = DefineVxeComponentOptions<VxeTreeSelectProps>
 
-export type VxeTreeSelectInstance = DefineVxeComponentInstance<VxeTreeSelectProps, VxeTreeSelectConstructor>
-
-export interface VxeTreeSelectConstructor extends VxeComponentBaseOptions, VxeTreeSelectMethods {
+export type VxeTreeSelectInstance = DefineVxeComponentInstance<{
   reactData: TreeSelectReactData
-}
+}, VxeTreeSelectProps, TreeSelectPrivateComputed, TreeSelectMethods>
+
+export type VxeTreeSelectConstructor = VxeTreeSelectInstance
 
 export interface TreeSelectPrivateRef {
 }

@@ -1,15 +1,15 @@
-import { DefineVxeComponentApp, DefineVxeComponentOptions, DefineVxeComponentInstance, VxeComponentBaseOptions, VxeComponentEventParams, VxeComponentSizeType, ValueOf } from '@vxe-ui/core'
+import { DefineVxeComponentApp, DefineVxeComponentOptions, DefineVxeComponentInstance, VxeComponentEventParams, VxeComponentSizeType, ValueOf } from '@vxe-ui/core'
 
 /* eslint-disable @typescript-eslint/no-empty-interface,no-use-before-define,@typescript-eslint/ban-types */
 
 export declare const VxeRow: DefineVxeComponentApp<VxeRowProps, VxeRowEventProps, VxeRowSlots>
-export type VxeRowComponent = DefineVxeComponentOptions<VxeRowProps, VxeRowEventProps>
+export type VxeRowComponent = DefineVxeComponentOptions<VxeRowProps>
 
-export type VxeRowInstance = DefineVxeComponentInstance<VxeRowProps, VxeRowConstructor>
-
-export interface VxeRowConstructor extends VxeComponentBaseOptions, VxeRowProps, VxeRowMethods {
+export type VxeRowInstance = DefineVxeComponentInstance<{
   reactData: RowReactData
-}
+}, VxeRowProps, RowPrivateComputed, RowMethods>
+
+export type VxeRowConstructor = VxeRowInstance
 
 export interface RowPrivateRef {
 }

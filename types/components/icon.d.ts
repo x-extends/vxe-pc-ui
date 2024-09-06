@@ -1,15 +1,15 @@
-import { DefineVxeComponentApp, DefineVxeComponentOptions, DefineVxeComponentInstance, VxeComponentBaseOptions, VxeComponentEventParams, VxeComponentSizeType, ValueOf } from '@vxe-ui/core'
+import { DefineVxeComponentApp, DefineVxeComponentOptions, DefineVxeComponentInstance, VxeComponentEventParams, VxeComponentSizeType, ValueOf } from '@vxe-ui/core'
 
 /* eslint-disable @typescript-eslint/no-empty-interface,no-use-before-define,@typescript-eslint/ban-types */
 
 export declare const VxeIcon: DefineVxeComponentApp<VxeIconProps, VxeIconEventProps, VxeIconSlots>
-export type VxeIconComponent = DefineVxeComponentOptions<VxeIconProps, VxeIconEventProps>
+export type VxeIconComponent = DefineVxeComponentOptions<VxeIconProps>
 
-export type VxeIconInstance = DefineVxeComponentInstance<VxeIconProps, VxeIconConstructor>
-
-export interface VxeIconConstructor extends VxeComponentBaseOptions, VxeIconProps, VxeIconMethods {
+export type VxeIconInstance = DefineVxeComponentInstance<{
   reactData: IconReactData
-}
+}, VxeIconProps, IconPrivateComputed, IconMethods>
+
+export type VxeIconConstructor = VxeIconInstance
 
 export interface IconPrivateRef {
 }

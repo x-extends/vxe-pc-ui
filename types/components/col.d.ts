@@ -1,15 +1,15 @@
-import { DefineVxeComponentApp, DefineVxeComponentOptions, DefineVxeComponentInstance, VxeComponentBaseOptions, VxeComponentEventParams, VxeComponentSizeType } from '@vxe-ui/core'
+import { DefineVxeComponentApp, DefineVxeComponentOptions, DefineVxeComponentInstance, VxeComponentEventParams, VxeComponentSizeType } from '@vxe-ui/core'
 
 /* eslint-disable @typescript-eslint/no-empty-interface,no-use-before-define,@typescript-eslint/ban-types */
 
 export declare const VxeCol: DefineVxeComponentApp<VxeColProps, VxeColEventProps, VxeColSlots>
-export type VxeColComponent = DefineVxeComponentOptions<VxeColProps, VxeColEventProps>
+export type VxeColComponent = DefineVxeComponentOptions<VxeColProps>
 
-export type VxeColInstance = DefineVxeComponentInstance<VxeColProps, VxeColConstructor>
-
-export interface VxeColConstructor extends VxeComponentBaseOptions, VxeColProps, VxeColMethods {
+export type VxeColInstance = DefineVxeComponentInstance<{
   reactData: ColReactData
-}
+}, VxeColProps, ColPrivateComputed, ColMethods>
+
+export type VxeColConstructor = VxeColInstance
 
 export interface ColPrivateRef {
 }

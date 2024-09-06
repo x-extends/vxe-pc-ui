@@ -1,15 +1,15 @@
-import { DefineVxeComponentApp, DefineVxeComponentOptions, DefineVxeComponentInstance, VxeComponentBaseOptions, VxeComponentEventParams, ValueOf, VxeComponentStyleType, VxeComponentSizeType } from '@vxe-ui/core'
+import { DefineVxeComponentApp, DefineVxeComponentOptions, DefineVxeComponentInstance, VxeComponentEventParams, ValueOf, VxeComponentStyleType, VxeComponentSizeType } from '@vxe-ui/core'
 
 /* eslint-disable @typescript-eslint/no-empty-interface,no-use-before-define,@typescript-eslint/ban-types */
 
 export declare const VxeIconPicker: DefineVxeComponentApp<VxeIconPickerProps, VxeIconPickerEventProps, VxeIconPickerSlots>
-export type VxeIconPickerComponent = DefineVxeComponentOptions<VxeIconPickerProps, VxeIconPickerEventProps>
+export type VxeIconPickerComponent = DefineVxeComponentOptions<VxeIconPickerProps>
 
-export type VxeIconPickerInstance = DefineVxeComponentInstance<VxeIconPickerProps, VxeIconPickerConstructor>
-
-export interface VxeIconPickerConstructor extends VxeComponentBaseOptions, VxeIconPickerMethods {
+export type VxeIconPickerInstance = DefineVxeComponentInstance<{
   reactData: IconPickerReactData
-}
+}, VxeIconPickerProps, IconPickerPrivateComputed, IconPickerMethods>
+
+export type VxeIconPickerConstructor = VxeIconPickerInstance
 
 export interface IconPickerPrivateRef {
 }
@@ -30,7 +30,7 @@ export namespace VxeIconPickerPropTypes {
   export type Transfer = boolean
 }
 
-export type VxeIconPickerProps = {
+export interface VxeIconPickerProps {
   /**
    * 绑定值
    */

@@ -1,15 +1,15 @@
-import { DefineVxeComponentApp, DefineVxeComponentOptions, DefineVxeComponentInstance, VxeComponentBaseOptions, VxeComponentEventParams, VxeComponentPermissionCodeType, VxeComponentAlignType, VxeComponentSlotType } from '@vxe-ui/core'
+import { DefineVxeComponentApp, DefineVxeComponentOptions, DefineVxeComponentInstance, VxeComponentEventParams, VxeComponentPermissionCodeType, VxeComponentAlignType, VxeComponentSlotType } from '@vxe-ui/core'
 
 /* eslint-disable @typescript-eslint/no-empty-interface,no-use-before-define,@typescript-eslint/ban-types */
 
 export declare const VxeTabPane: DefineVxeComponentApp<VxeTabPaneProps, VxeTabPaneEventProps, VxeTabPaneSlots>
-export type VxeTabPaneComponent = DefineVxeComponentOptions<VxeTabPaneProps, VxeTabPaneEventProps>
+export type VxeTabPaneComponent = DefineVxeComponentOptions<VxeTabPaneProps>
 
-export type VxeTabPaneInstance = DefineVxeComponentInstance<VxeTabPaneProps, VxeTabPaneConstructor>
-
-export interface VxeTabPaneConstructor extends VxeComponentBaseOptions, VxeTabPaneMethods {
+export type VxeTabPaneInstance = DefineVxeComponentInstance<{
   reactData: TabPaneReactData
-}
+}, VxeTabPaneProps, TabPanePrivateComputed, TabPaneMethods>
+
+export type VxeTabPaneConstructor = VxeTabPaneInstance
 
 export interface TabPanePrivateRef {
 }
@@ -25,7 +25,7 @@ export namespace VxeTabPanePropTypes {
   export type PermissionCode = VxeComponentPermissionCodeType
 }
 
-export type VxeTabPaneProps = {
+export interface VxeTabPaneProps {
   title?: VxeTabPanePropTypes.Title
   name?: VxeTabPanePropTypes.Name
   icon?: VxeTabPanePropTypes.Icon

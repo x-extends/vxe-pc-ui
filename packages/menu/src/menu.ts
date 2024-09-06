@@ -86,7 +86,7 @@ export default defineVxeComponent({
     //
     dispatchEvent (type: ValueOf<VxeMenuEmits>, params: Record<string, any>, evnt: Event | null) {
       const $xeMenu = this
-      this.$emit(type, createEvent(evnt, { $menu: $xeMenu }, params))
+      $xeMenu.$emit(type, createEvent(evnt, { $menu: $xeMenu }, params))
     },
     getMenuTitle  (item: VxeMenuPropTypes.MenuOption) {
       return `${item.title || item.name}`

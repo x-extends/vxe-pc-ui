@@ -25,7 +25,7 @@ export default defineVxeComponent({
     //
     dispatchEvent (type: ValueOf<VxeLayoutFooterEmits>, params: Record<string, any>, evnt: Event | null) {
       const $xeLayoutFooter = this
-      this.$emit(type, createEvent(evnt, { $layoutFooter: $xeLayoutFooter }, params))
+      $xeLayoutFooter.$emit(type, createEvent(evnt, { $layoutFooter: $xeLayoutFooter }, params))
     },
     //
     // Render

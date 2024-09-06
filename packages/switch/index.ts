@@ -1,5 +1,6 @@
 import { VueConstructor } from 'vue'
 import { VxeUI } from '@vxe-ui/core'
+import { dynamicApp } from '../dynamics'
 import VxeSwitchComponent from './src/switch'
 
 export const VxeSwitch = Object.assign(VxeSwitchComponent, {
@@ -8,6 +9,7 @@ export const VxeSwitch = Object.assign(VxeSwitchComponent, {
   }
 })
 
+dynamicApp.use(VxeSwitch)
 VxeUI.component(VxeSwitchComponent)
 
 export const Switch = VxeSwitch

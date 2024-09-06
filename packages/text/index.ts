@@ -1,5 +1,6 @@
 import { VueConstructor } from 'vue'
 import { VxeUI } from '@vxe-ui/core'
+import { dynamicApp } from '../dynamics'
 import VxeTextComponent from './src/text'
 
 export const VxeText = Object.assign({}, VxeTextComponent, {
@@ -8,6 +9,7 @@ export const VxeText = Object.assign({}, VxeTextComponent, {
   }
 })
 
+dynamicApp.use(VxeText)
 VxeUI.component(VxeTextComponent)
 
 export const Text = VxeText

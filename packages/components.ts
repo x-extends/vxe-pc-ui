@@ -3,11 +3,11 @@ import { setI18n, setLanguage, setTheme, setConfig, VxeGlobalConfig } from '@vxe
 
 import zhCN from './language/zh-CN'
 
-// import VxeAlert from './alert'
-// import VxeAnchor from './anchor'
-// import VxeAnchorLink from './anchor-link'
-// import VxeBreadcrumb from './breadcrumb'
-// import VxeBreadcrumbItem from './breadcrumb-item'
+import VxeAlert from './alert'
+import VxeAnchor from './anchor'
+import VxeAnchorLink from './anchor-link'
+import VxeBreadcrumb from './breadcrumb'
+import VxeBreadcrumbItem from './breadcrumb-item'
 import VxeButton from './button'
 import VxeButtonGroup from './button-group'
 // import VxeCalendar from './calendar'
@@ -29,9 +29,9 @@ import VxeCol from './col'
 // import VxeFormView from './form-view'
 import VxeIcon from './icon'
 // import VxeIconPicker from './icon-picker'
-// import VxeImage from './image'
-// import VxeImageGroup from './image-group'
-// import VxeImagePreview from './image-preview'
+import VxeImage from './image'
+import VxeImageGroup from './image-group'
+import VxeImagePreview from './image-preview'
 // import VxeInput from './input'
 import VxeLayoutAside from './layout-aside'
 import VxeLayoutBody from './layout-body'
@@ -44,14 +44,14 @@ import VxeLink from './link'
 // import VxeList from './list'
 import VxeLoading, { LoadingController } from './loading'
 import VxeMenu from './menu'
-// import VxeModal, { ModalController } from './modal'
+import VxeModal, { ModalController } from './modal'
 // import VxeNumberInput from './number-input'
 // import VxeOptgroup from './optgroup'
 // import VxeOption from './option'
 // import VxePager from './pager'
 // import VxePasswordInput from './password-input'
-// import VxePrintPageBreak from './print-page-break'
-// import VxePrint from './print'
+import VxePrintPageBreak from './print-page-break'
+import VxePrint from './print'
 // import VxePulldown from './pulldown'
 import VxeRadio from './radio'
 import VxeRadioButton from './radio-button'
@@ -68,17 +68,17 @@ import VxeTip from './tip'
 // import VxeTooltip from './tooltip'
 // import VxeTree from './tree'
 // import VxeTreeSelect from './tree-select'
-// import VxeUpload from './upload'
+import VxeUpload from './upload'
 
-// import { saveLocalFile, readLocalFile } from './upload/src/util'
-// import { printHtml } from './print/src/util'
+import { saveLocalFile, readLocalFile } from './upload/src/util'
+import { printHtml } from './print/src/util'
 
 const components = [
-  // VxeAlert,
-  // VxeAnchor,
-  // VxeAnchorLink,
-  // VxeBreadcrumb,
-  // VxeBreadcrumbItem,
+  VxeAlert,
+  VxeAnchor,
+  VxeAnchorLink,
+  VxeBreadcrumb,
+  VxeBreadcrumbItem,
   VxeButton,
   VxeButtonGroup,
   // VxeCalendar,
@@ -100,9 +100,9 @@ const components = [
   // VxeFormView,
   VxeIcon,
   // VxeIconPicker,
-  // VxeImage,
-  // VxeImageGroup,
-  // VxeImagePreview,
+  VxeImage,
+  VxeImageGroup,
+  VxeImagePreview,
   // VxeInput,
   VxeLayoutAside,
   VxeLayoutBody,
@@ -115,14 +115,14 @@ const components = [
   // VxeList,
   VxeLoading,
   VxeMenu,
-  // VxeModal,
+  VxeModal,
   // VxeNumberInput,
   // VxeOptgroup,
   // VxeOption,
   // VxePager,
   // VxePasswordInput,
-  // VxePrintPageBreak,
-  // VxePrint,
+  VxePrintPageBreak,
+  VxePrint,
   // VxePulldown,
   VxeRadio,
   VxeRadioButton,
@@ -135,11 +135,11 @@ const components = [
   VxeTag,
   VxeText,
   // VxeTextarea,
-  VxeTip
+  VxeTip,
   // VxeTooltip,
   // VxeTree,
   // VxeTreeSelect,
-  // VxeUpload
+  VxeUpload
 ]
 
 export function install (app: VueConstructor, options?: VxeGlobalConfig) {
@@ -156,20 +156,20 @@ setTheme('light')
 
 // 兼容老版本
 export const loading = LoadingController
-// export const modal = ModalController
+export const modal = ModalController
 // export const drawer = DrawerController
-// export const print = printHtml
-// export const saveFile = saveLocalFile
-// export const readFile = readLocalFile
+export const print = printHtml
+export const saveFile = saveLocalFile
+export const readFile = readLocalFile
 
 export * from './ui'
 
 // Components
-// export * from './alert'
-// export * from './anchor'
-// export * from './anchor-link'
-// export * from './breadcrumb'
-// export * from './breadcrumb-item'
+export * from './alert'
+export * from './anchor'
+export * from './anchor-link'
+export * from './breadcrumb'
+export * from './breadcrumb-item'
 export * from './button'
 // export * from './button-group'
 // export * from './calendar'
@@ -191,9 +191,9 @@ export * from './col'
 // export * from './form-view'
 export * from './icon'
 // export * from './icon-picker'
-// export * from './image'
-// export * from './image-group'
-// export * from './image-preview'
+export * from './image'
+export * from './image-group'
+export * from './image-preview'
 // export * from './input'
 export * from './layout-aside'
 export * from './layout-body'
@@ -206,14 +206,14 @@ export * from './link'
 // export * from './list'
 export * from './loading'
 export * from './menu'
-// export * from './modal'
+export * from './modal'
 // export * from './number-input'
 // export * from './optgroup'
 // export * from './option'
 // export * from './pager'
 // export * from './password-input'
-// export * from './print-page-break'
-// export * from './print'
+export * from './print-page-break'
+export * from './print'
 // export * from './pulldown'
 export * from './radio'
 export * from './radio-button'
@@ -230,4 +230,4 @@ export * from './tip'
 // export * from './tooltip'
 // export * from './tree'
 // export * from './tree-select'
-// export * from './upload'
+export * from './upload'

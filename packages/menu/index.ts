@@ -1,5 +1,6 @@
 import { VueConstructor } from 'vue'
 import { VxeUI } from '@vxe-ui/core'
+import { dynamicApp } from '../dynamics'
 import VxeMenuComponent from './src/menu'
 
 export const VxeMenu = Object.assign({}, VxeMenuComponent, {
@@ -8,6 +9,7 @@ export const VxeMenu = Object.assign({}, VxeMenuComponent, {
   }
 })
 
+dynamicApp.use(VxeMenu)
 VxeUI.component(VxeMenuComponent)
 
 export const Menu = VxeMenu

@@ -1,15 +1,15 @@
-import { DefineVxeComponentApp, DefineVxeComponentOptions, DefineVxeComponentInstance, VxeComponentBaseOptions, VxeComponentEventParams, VxeComponentAlignType, ValueOf } from '@vxe-ui/core'
+import { DefineVxeComponentApp, DefineVxeComponentOptions, DefineVxeComponentInstance, VxeComponentEventParams, VxeComponentAlignType, ValueOf } from '@vxe-ui/core'
 
 /* eslint-disable @typescript-eslint/no-empty-interface,no-use-before-define,@typescript-eslint/ban-types */
 
 export declare const VxeLayoutFooter: DefineVxeComponentApp<VxeLayoutFooterProps, VxeLayoutFooterEventProps, VxeLayoutFooterSlots>
-export type VxeLayoutFooterComponent = DefineVxeComponentOptions<VxeLayoutFooterProps, VxeLayoutFooterEventProps>
+export type VxeLayoutFooterComponent = DefineVxeComponentOptions<VxeLayoutFooterProps>
 
-export type VxeLayoutFooterInstance = DefineVxeComponentInstance<VxeLayoutFooterProps, VxeLayoutFooterConstructor>
-
-export interface VxeLayoutFooterConstructor extends VxeComponentBaseOptions, VxeLayoutFooterProps, VxeLayoutFooterMethods {
+export type VxeLayoutFooterInstance = DefineVxeComponentInstance<{
   reactData: LayoutFooterReactData
-}
+}, VxeLayoutFooterProps, LayoutFooterPrivateComputed, LayoutFooterMethods>
+
+export type VxeLayoutFooterConstructor = VxeLayoutFooterInstance
 
 export interface LayoutFooterPrivateRef {
 }

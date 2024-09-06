@@ -1,7 +1,7 @@
 import { CreateElement, PropType } from 'vue'
-import { getConfig, createEvent, globalMixins, renderEmptyElement } from '@vxe-ui/core'
 import { defineVxeComponent } from '../../ui/src/comp'
 import XEUtils from 'xe-utils'
+import { getConfig, createEvent, globalMixins, renderEmptyElement } from '@vxe-ui/core'
 import VxeButtonComponent from './button'
 
 import type { VxeButtonGroupPropTypes, VxeButtonGroupEmits, VxeComponentPermissionInfo, ButtonGroupReactData, VxeComponentSizeType, ValueOf } from '../../../types'

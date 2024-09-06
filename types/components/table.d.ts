@@ -1,5 +1,5 @@
 import { VNode } from 'vue'
-import { DefineVxeComponentApp, DefineVxeComponentOptions, DefineVxeComponentInstance, VxeComponentBaseOptions, VxeComponentEventParams, VxeComponentSizeType, ValueOf, VxeGlobalConfig, VxeComponentStyleType, VxeComponentSlotType } from '@vxe-ui/core'
+import { DefineVxeComponentApp, DefineVxeComponentOptions, DefineVxeComponentInstance, VxeComponentEventParams, VxeComponentSizeType, ValueOf, VxeGlobalConfig, VxeComponentStyleType, VxeComponentSlotType } from '@vxe-ui/core'
 import { VxeColumnPropTypes, VxeColumnProps, VxeColumnSlotTypes } from './column'
 import { VxeTableProDefines, VxeTableProEmits } from './table-plugins'
 import { VxeGridConstructor } from './grid'
@@ -11,14 +11,13 @@ import { VxeToolbarConstructor, VxeToolbarInstance } from './toolbar'
 /* eslint-disable @typescript-eslint/no-empty-interface,no-use-before-define,@typescript-eslint/ban-types,@typescript-eslint/no-unused-vars */
 
 export declare const VxeTable: DefineVxeComponentApp<VxeTableProps, VxeTableEventProps, VxeTableSlots>
-export type VxeTableComponent = DefineVxeComponentOptions<VxeTableProps, VxeTableEventProps>
+export type VxeTableComponent = DefineVxeComponentOptions<VxeTableProps>
 
-export type VxeTableInstance<D = any> = DefineVxeComponentInstance<VxeTableProps<D>, VxeTableConstructor>
-
-export interface VxeTableConstructor<D = any> extends VxeComponentBaseOptions, VxeTableProps, VxeTableMethods {
+export type VxeTableInstance = DefineVxeComponentInstance<{
   reactData: TableReactData
-  internalData: TableInternalData<D>
-}
+}, VxeTableProps, TablePrivateComputed, TableMethods>
+
+export type VxeTableConstructor = VxeTableInstance
 
 export interface TablePrivateRef {
 }

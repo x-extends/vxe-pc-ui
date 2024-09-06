@@ -52,7 +52,7 @@ export default defineVxeComponent({
     //
     dispatchEvent (type: ValueOf<VxeTipEmits>, params: Record<string, any>, evnt: Event | null) {
       const $xeTip = this
-      this.$emit(type, createEvent(evnt, { $tip: $xeTip }, params))
+      $xeTip.$emit(type, createEvent(evnt, { $tip: $xeTip }, params))
     },
     //
     // Render

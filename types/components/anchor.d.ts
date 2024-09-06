@@ -1,16 +1,16 @@
-import { DefineVxeComponentApp, DefineVxeComponentOptions, DefineVxeComponentInstance, VxeComponentBaseOptions, VxeComponentEventParams, ValueOf } from '@vxe-ui/core'
+import { DefineVxeComponentApp, DefineVxeComponentOptions, DefineVxeComponentInstance, VxeComponentEventParams, ValueOf } from '@vxe-ui/core'
 import { VxeAnchorLinkProps, VxeAnchorLinkPropTypes, VxeAnchorLinkDefines } from './anchor-link'
 
 /* eslint-disable @typescript-eslint/no-empty-interface,no-use-before-define,@typescript-eslint/ban-types */
 
 export declare const VxeAnchor: DefineVxeComponentApp<VxeAnchorProps, VxeAnchorEventProps, VxeAnchorSlots>
-export type VxeAnchorComponent = DefineVxeComponentOptions<VxeAnchorProps, VxeAnchorEventProps>
+export type VxeAnchorComponent = DefineVxeComponentOptions<VxeAnchorProps>
 
-export type VxeAnchorInstance = DefineVxeComponentInstance<VxeAnchorProps, VxeAnchorConstructor>
-
-export interface VxeAnchorConstructor extends VxeComponentBaseOptions, VxeAnchorMethods {
+export type VxeAnchorInstance = DefineVxeComponentInstance<{
   reactData: AnchorReactData
-}
+}, VxeAnchorProps, AnchorPrivateComputed, AnchorMethods>
+
+export type VxeAnchorConstructor = VxeAnchorInstance
 
 export interface AnchorPrivateRef {
 }
@@ -25,7 +25,7 @@ export namespace VxeAnchorPropTypes {
   export type ShowMarker = boolean
 }
 
-export type VxeAnchorProps = {
+export interface VxeAnchorProps {
   modelValue?: VxeAnchorPropTypes.ModelValue
   options?: VxeAnchorPropTypes.Options
   container?: VxeAnchorPropTypes.Container
@@ -39,6 +39,7 @@ export interface VxeAnchorPrivateComputed extends AnchorPrivateComputed { }
 export interface AnchorReactData {
   activeHref: VxeAnchorPropTypes.ModelValue | undefined
   staticLinks: VxeAnchorLinkDefines.LinkConfig[]
+  containerElem: HTMLElement | null
 }
 
 export interface AnchorMethods {

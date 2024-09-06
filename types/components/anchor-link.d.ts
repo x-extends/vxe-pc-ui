@@ -1,17 +1,17 @@
-import { DefineVxeComponentApp, DefineVxeComponentOptions, DefineVxeComponentInstance, VxeComponentBaseOptions, VxeComponentEventParams } from '@vxe-ui/core'
+import { DefineVxeComponentApp, DefineVxeComponentOptions, DefineVxeComponentInstance, VxeComponentEventParams } from '@vxe-ui/core'
 import { VxeAnchorPropTypes } from './anchor'
 
 /* eslint-disable @typescript-eslint/no-empty-interface,no-use-before-define,@typescript-eslint/ban-types */
 
 export declare const VxeAnchorLink: DefineVxeComponentApp<VxeAnchorLinkProps, VxeAnchorLinkEventProps, VxeAnchorLinkSlots>
-export type VxeAnchorLinkComponent = DefineVxeComponentOptions<VxeAnchorLinkProps, VxeAnchorLinkEventProps>
+export type VxeAnchorLinkComponent = DefineVxeComponentOptions<VxeAnchorLinkProps>
 
-export type VxeAnchorLinkInstance = DefineVxeComponentInstance<VxeAnchorLinkProps, VxeAnchorLinkConstructor>
-
-export interface VxeAnchorLinkConstructor extends VxeComponentBaseOptions, VxeAnchorLinkMethods {
-  reactData: AnchorLinkReactData
+export type VxeAnchorLinkInstance = DefineVxeComponentInstance<{
   linkConfig: VxeAnchorLinkDefines.LinkConfig
-}
+  reactData: AnchorLinkReactData
+}, VxeAnchorLinkProps, AnchorLinkPrivateComputed, AnchorLinkMethods>
+
+export type VxeAnchorLinkConstructor = VxeAnchorLinkInstance
 
 export interface AnchorLinkPrivateRef {
 }
@@ -23,7 +23,7 @@ export namespace VxeAnchorLinkPropTypes {
   export type Href = string
 }
 
-export type VxeAnchorLinkProps = {
+export interface VxeAnchorLinkProps {
   content?: VxeAnchorLinkPropTypes.Content
   title?: VxeAnchorLinkPropTypes.Title
   href?: VxeAnchorLinkPropTypes.Href

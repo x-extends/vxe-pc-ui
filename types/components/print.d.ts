@@ -1,15 +1,15 @@
-import { DefineVxeComponentApp, DefineVxeComponentOptions, DefineVxeComponentInstance, VxeComponentBaseOptions, VxeComponentEventParams, ValueOf, VxeComponentSlotType, VxeComponentAlignType } from '@vxe-ui/core'
+import { DefineVxeComponentApp, DefineVxeComponentOptions, DefineVxeComponentInstance, VxeComponentEventParams, ValueOf, VxeComponentSlotType, VxeComponentAlignType } from '@vxe-ui/core'
 
 /* eslint-disable @typescript-eslint/no-empty-interface,no-use-before-define,@typescript-eslint/ban-types */
 
 export declare const VxePrint: DefineVxeComponentApp<VxePrintProps, VxePrintEventProps, VxePrintSlots>
-export type VxePrintComponent = DefineVxeComponentOptions<VxePrintProps, VxePrintEventProps>
+export type VxePrintComponent = DefineVxeComponentOptions<VxePrintProps>
 
-export type VxePrintInstance = DefineVxeComponentInstance<VxePrintProps, VxePrintConstructor>
-
-export interface VxePrintConstructor extends VxeComponentBaseOptions, VxePrintMethods {
+export type VxePrintInstance = DefineVxeComponentInstance<{
   reactData: PrintReactData
-}
+}, VxePrintProps, PrintPrivateComputed, PrintMethods>
+
+export type VxePrintConstructor = VxePrintInstance
 
 export interface PrintPrivateRef {
 }
@@ -43,7 +43,7 @@ export namespace VxePrintPropTypes {
   }) => string
 }
 
-export type VxePrintProps = {
+export interface VxePrintProps {
   align?: VxePrintPropTypes.Align
   title?: VxePrintPropTypes.Title
   headerAlign?: VxePrintPropTypes.HeaderAlign

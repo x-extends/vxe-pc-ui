@@ -1,16 +1,15 @@
-import { DefineVxeComponentApp, DefineVxeComponentOptions, VxeComponentBaseOptions, DefineVxeComponentInstance, VxeComponentEventParams, VxeComponentPermissionCodeType, VxeComponentStatusType, VxeComponentSizeType, VxeComponentStyleType, ValueOf } from '@vxe-ui/core'
+import { DefineVxeComponentApp, DefineVxeComponentOptions, DefineVxeComponentInstance, VxeComponentEventParams, VxeComponentPermissionCodeType, VxeComponentStatusType, VxeComponentSizeType, VxeComponentStyleType, ValueOf } from '@vxe-ui/core'
 
 /* eslint-disable @typescript-eslint/no-empty-interface,no-use-before-define,@typescript-eslint/ban-types */
 
 export declare const VxeButton: DefineVxeComponentApp<VxeButtonProps, VxeButtonEventProps, VxeButtonSlots>
-export type VxeButtonComponent = DefineVxeComponentOptions<VxeButtonProps, VxeButtonEventProps>
+export type VxeButtonComponent = DefineVxeComponentOptions<VxeButtonProps>
 
-export type VxeButtonInstance = DefineVxeComponentInstance<VxeButtonProps, VxeButtonConstructor>
-
-export interface VxeButtonConstructor extends VxeComponentBaseOptions, VxeButtonProps, VxeButtonMethods {
+export type VxeButtonInstance = DefineVxeComponentInstance<{
   reactData: ButtonReactData
-  internalData: ButtonInternalData
-}
+}, VxeButtonProps, ButtonPrivateComputed, ButtonMethods>
+
+export type VxeButtonConstructor = VxeButtonInstance
 
 export interface ButtonPrivateRef {
 }

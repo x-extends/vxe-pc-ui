@@ -1,16 +1,16 @@
-import { DefineVxeComponentApp, DefineVxeComponentOptions, DefineVxeComponentInstance, VxeComponentBaseOptions, VxeComponentEventParams, VxeComponentSizeType, ValueOf } from '@vxe-ui/core'
+import { DefineVxeComponentApp, DefineVxeComponentOptions, DefineVxeComponentInstance, VxeComponentEventParams, VxeComponentSizeType, ValueOf } from '@vxe-ui/core'
 import { VxeSelectPropTypes } from './select'
 
 /* eslint-disable @typescript-eslint/no-empty-interface,no-use-before-define,@typescript-eslint/ban-types */
 
 export declare const VxePager: DefineVxeComponentApp<VxePagerProps, VxePagerEventProps, VxePagerSlots>
-export type VxePagerComponent = DefineVxeComponentOptions<VxePagerProps, VxePagerEventProps>
+export type VxePagerComponent = DefineVxeComponentOptions<VxePagerProps>
 
-export type VxePagerInstance = DefineVxeComponentInstance<VxePagerProps, VxePagerConstructor>
-
-export interface VxePagerConstructor extends VxeComponentBaseOptions, VxePagerMethods {
+export type VxePagerInstance = DefineVxeComponentInstance<{
   reactData: PagerReactData
-}
+}, VxePagerProps, PagerPrivateComputed, PagerMethods>
+
+export type VxePagerConstructor = VxePagerInstance
 
 export interface PagerPrivateRef {
 }
@@ -49,7 +49,7 @@ export namespace VxePagerPropTypes {
   export type IconEndPage = string
 }
 
-export type VxePagerProps = {
+export interface VxePagerProps {
   size?: VxePagerPropTypes.Size
   /**
    * 自定义布局

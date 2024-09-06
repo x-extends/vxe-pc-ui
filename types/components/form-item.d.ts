@@ -1,4 +1,4 @@
-import { DefineVxeComponentApp, DefineVxeComponentOptions, VxeComponentBaseOptions, VxeComponentEventParams, VxeComponentStyleType, VxeComponentSlotType } from '@vxe-ui/core'
+import { DefineVxeComponentApp, DefineVxeComponentOptions, VxeComponentEventParams, VxeComponentStyleType, VxeComponentSlotType } from '@vxe-ui/core'
 import { VxeFormDefines, VxeFormConstructor, VxeFormPropTypes } from './form'
 import { VxeGridConstructor } from './grid'
 import { VxeTooltipPropTypes } from './tooltip'
@@ -7,11 +7,13 @@ import { VxeIconPropTypes } from './icon'
 /* eslint-disable @typescript-eslint/no-empty-interface,no-use-before-define,@typescript-eslint/ban-types */
 
 export declare const VxeFormItem: DefineVxeComponentApp<VxeFormItemProps, VxeFormItemEventProps, VxeFormItemSlots>
-export type VxeFormItemComponent = DefineVxeComponentOptions<VxeFormItemProps, VxeFormItemEventProps>
+export type VxeFormItemComponent = DefineVxeComponentOptions<VxeFormItemProps>
 
-export interface VxeFormItemConstructor extends VxeComponentBaseOptions, VxeFormItemProps, VxeFormItemMethods {
+export type VxeFormItemInstance = DefineVxeComponentInstance<{
   reactData: FormItemReactData
-}
+}, VxeFormItemProps, FormItemPrivateComputed, FormItemMethods>
+
+export type VxeFormItemConstructor = VxeFormItemInstance
 
 export interface FormItemPrivateRef {
 }

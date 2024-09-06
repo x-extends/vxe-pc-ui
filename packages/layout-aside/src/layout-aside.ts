@@ -64,7 +64,7 @@ export default defineVxeComponent({
     //
     dispatchEvent (type: ValueOf<VxeLayoutAsideEmits>, params: Record<string, any>, evnt: Event | null) {
       const $xeLayoutAside = this
-      this.$emit(type, createEvent(evnt, { $layoutAside: $xeLayoutAside }, params))
+      $xeLayoutAside.$emit(type, createEvent(evnt, { $layoutAside: $xeLayoutAside }, params))
     },
     //
     // Render

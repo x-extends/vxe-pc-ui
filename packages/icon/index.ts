@@ -1,5 +1,6 @@
 import { VueConstructor } from 'vue'
 import { VxeUI } from '@vxe-ui/core'
+import { dynamicApp } from '../dynamics'
 import VxeIconComponent from './src/icon'
 
 export const VxeIcon = Object.assign({}, VxeIconComponent, {
@@ -8,6 +9,7 @@ export const VxeIcon = Object.assign({}, VxeIconComponent, {
   }
 })
 
+dynamicApp.use(VxeIcon)
 VxeUI.component(VxeIconComponent)
 
 export const Icon = VxeIcon

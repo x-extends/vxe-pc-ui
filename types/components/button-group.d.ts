@@ -1,16 +1,16 @@
-import { DefineVxeComponentApp, DefineVxeComponentOptions, DefineVxeComponentInstance, VxeComponentBaseOptions, VxeComponentSizeType, VxeComponentEventParams, VxeComponentPermissionCodeType, ValueOf } from '@vxe-ui/core'
+import { DefineVxeComponentApp, DefineVxeComponentOptions, DefineVxeComponentInstance, VxeComponentSizeType, VxeComponentEventParams, VxeComponentPermissionCodeType, ValueOf } from '@vxe-ui/core'
 import { VxeButtonProps, VxeButtonPropTypes } from './button'
 
 /* eslint-disable @typescript-eslint/no-empty-interface,no-use-before-define,@typescript-eslint/ban-types */
 
 export declare const VxeButtonGroup: DefineVxeComponentApp<VxeButtonGroupProps, VxeButtonGroupEventProps, VxeButtonGroupSlots>
-export type VxeButtonGroupComponent = DefineVxeComponentOptions<VxeButtonGroupProps, VxeButtonGroupEventProps>
+export type VxeButtonGroupComponent = DefineVxeComponentOptions<VxeButtonGroupProps>
 
-export type VxeButtonGroupInstance = DefineVxeComponentInstance<VxeButtonGroupProps, VxeButtonGroupConstructor>
-
-export interface VxeButtonGroupConstructor extends VxeComponentBaseOptions, VxeButtonGroupProps, VxeButtonGroupMethods {
+export type VxeButtonGroupInstance = DefineVxeComponentInstance<{
   reactData: ButtonGroupReactData
-}
+}, VxeButtonGroupProps, ButtonGroupPrivateComputed, ButtonGroupMethods>
+
+export type VxeButtonGroupConstructor = VxeButtonGroupInstance
 
 export interface ButtonGroupPrivateRef {
 }

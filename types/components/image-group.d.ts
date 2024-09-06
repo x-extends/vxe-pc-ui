@@ -1,15 +1,15 @@
-import { DefineVxeComponentApp, DefineVxeComponentOptions, DefineVxeComponentInstance, VxeComponentBaseOptions, VxeComponentEventParams, ValueOf, VxeComponentSizeType } from '@vxe-ui/core'
+import { DefineVxeComponentApp, DefineVxeComponentOptions, DefineVxeComponentInstance, VxeComponentEventParams, ValueOf, VxeComponentSizeType } from '@vxe-ui/core'
 
 /* eslint-disable @typescript-eslint/no-empty-interface,no-use-before-define,@typescript-eslint/ban-types */
 
 export declare const VxeImageGroup: DefineVxeComponentApp<VxeImageGroupProps, VxeImageGroupEventProps, VxeImageGroupSlots>
-export type VxeImageGroupComponent = DefineVxeComponentOptions<VxeImageGroupProps, VxeImageGroupEventProps>
+export type VxeImageGroupComponent = DefineVxeComponentOptions<VxeImageGroupProps>
 
-export type VxeImageGroupInstance = DefineVxeComponentInstance<VxeImageGroupProps, VxeImageGroupConstructor>
-
-export interface VxeImageGroupConstructor extends VxeComponentBaseOptions, VxeImageGroupMethods {
+export type VxeImageGroupInstance = DefineVxeComponentInstance<{
   reactData: ImageGroupReactData
-}
+}, VxeImageGroupProps, ImageGroupPrivateComputed, ImageGroupMethods>
+
+export type VxeImageGroupConstructor = VxeImageGroupInstance
 
 export interface ImageGroupPrivateRef {
 }
@@ -30,7 +30,7 @@ export namespace VxeImageGroupPropTypes {
   export type ShowDownloadButton = boolean
 }
 
-export type VxeImageGroupProps = {
+export interface VxeImageGroupProps {
   size?: VxeImageGroupPropTypes.Size
   showPreview?: VxeImageGroupPropTypes.ShowPreview
   urlList?: VxeImageGroupPropTypes.UrlList

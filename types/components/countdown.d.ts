@@ -1,16 +1,16 @@
-import { DefineVxeComponentApp, DefineVxeComponentOptions, DefineVxeComponentInstance, VxeComponentBaseOptions, VxeComponentEventParams, ValueOf, VxeComponentStatusType, VxeComponentSizeType } from '@vxe-ui/core'
+import { DefineVxeComponentApp, DefineVxeComponentOptions, DefineVxeComponentInstance, VxeComponentEventParams, ValueOf, VxeComponentStatusType, VxeComponentSizeType } from '@vxe-ui/core'
 import { DateDiffResult } from 'xe-utils'
 
 /* eslint-disable @typescript-eslint/no-empty-interface,no-use-before-define,@typescript-eslint/ban-types */
 
 export declare const VxeCountdown: DefineVxeComponentApp<VxeCountdownProps, VxeCountdownEventProps, VxeCountdownSlots>
-export type VxeCountdownComponent = DefineVxeComponentOptions<VxeCountdownProps, VxeCountdownEventProps>
+export type VxeCountdownComponent = DefineVxeComponentOptions<VxeCountdownProps>
 
-export type VxeCountdownInstance = DefineVxeComponentInstance<VxeCountdownProps, VxeCountdownConstructor>
-
-export interface VxeCountdownConstructor extends VxeComponentBaseOptions, VxeCountdownMethods {
+export type VxeCountdownInstance = DefineVxeComponentInstance<{
   reactData: CountdownReactData
-}
+}, VxeCountdownProps, CountdownPrivateComputed, CountdownMethods>
+
+export type VxeCountdownConstructor = VxeCountdownInstance
 
 export interface CountdownPrivateRef {
 }
@@ -28,7 +28,7 @@ export namespace VxeCountdownPropTypes {
   export interface SuffixConfig extends PrefixConfig {}
 }
 
-export type VxeCountdownProps = {
+export interface VxeCountdownProps {
   modelValue?: VxeCountdownPropTypes.ModelValue
   format?: VxeCountdownPropTypes.Format
   size?: VxeCountdownPropTypes.Size

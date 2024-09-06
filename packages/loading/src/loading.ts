@@ -36,11 +36,12 @@ export default defineVxeComponent({
     }
   },
   data () {
+    const xID = XEUtils.uniqueId()
     const reactData: LoadingReactData = {
       initialized: false
     }
     return {
-      xID: XEUtils.uniqueId(),
+      xID,
       reactData
     }
   },
@@ -73,7 +74,7 @@ export default defineVxeComponent({
     //
     dispatchEvent (type: ValueOf<VxeLoadingEmits>, params: Record<string, any>, evnt: Event | null) {
       const $xeLoading = this
-      this.$emit(type, createEvent(evnt, { $loading: $xeLoading }, params))
+      $xeLoading.$emit(type, createEvent(evnt, { $loading: $xeLoading }, params))
     },
     handleInit () {
       const $xeLoading = this

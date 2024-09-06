@@ -1,15 +1,15 @@
-import { DefineVxeComponentApp, DefineVxeComponentOptions, DefineVxeComponentInstance, VxeComponentBaseOptions, VxeComponentEventParams, ValueOf } from '@vxe-ui/core'
+import { DefineVxeComponentApp, DefineVxeComponentOptions, DefineVxeComponentInstance, VxeComponentEventParams, ValueOf } from '@vxe-ui/core'
 
 /* eslint-disable @typescript-eslint/no-empty-interface,no-use-before-define,@typescript-eslint/ban-types */
 
 export declare const VxeCarouselItem: DefineVxeComponentApp<VxeCarouselItemProps, VxeCarouselItemEventProps, VxeCarouselItemSlots>
-export type VxeCarouselItemComponent = DefineVxeComponentOptions<VxeCarouselItemProps, VxeCarouselItemEventProps>
+export type VxeCarouselItemComponent = DefineVxeComponentOptions<VxeCarouselItemProps>
 
-export type VxeCarouselItemInstance = DefineVxeComponentInstance<VxeCarouselItemProps, VxeCarouselItemConstructor>
-
-export interface VxeCarouselItemConstructor extends VxeComponentBaseOptions, VxeCarouselItemMethods {
+export type VxeCarouselItemInstance = DefineVxeComponentInstance<{
   reactData: CarouselItemReactData
-}
+}, VxeCarouselItemProps, CarouselItemPrivateComputed, CarouselItemMethods>
+
+export type VxeCarouselItemConstructor = VxeCarouselItemInstance
 
 export interface CarouselItemPrivateRef {
 }

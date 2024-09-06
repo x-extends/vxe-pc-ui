@@ -1,15 +1,15 @@
-import { DefineVxeComponentApp, DefineVxeComponentOptions, DefineVxeComponentInstance, VxeComponentBaseOptions, VxeComponentEventParams, VxeComponentSizeType, VxeComponentSlotType, ValueOf } from '@vxe-ui/core'
+import { DefineVxeComponentApp, DefineVxeComponentOptions, DefineVxeComponentInstance, VxeComponentEventParams, VxeComponentSizeType, VxeComponentSlotType, ValueOf } from '@vxe-ui/core'
 
 /* eslint-disable @typescript-eslint/no-empty-interface,no-use-before-define,@typescript-eslint/ban-types */
 
 export declare const VxeDrawer: DefineVxeComponentApp<VxeDrawerProps, VxeDrawerEventProps, VxeDrawerSlots>
-export type VxeDrawerComponent = DefineVxeComponentOptions<VxeDrawerProps, VxeDrawerEventProps>
+export type VxeDrawerComponent = DefineVxeComponentOptions<VxeDrawerProps>
 
-export type VxeDrawerInstance = DefineVxeComponentInstance<VxeDrawerProps, VxeDrawerConstructor>
-
-export interface VxeDrawerConstructor extends VxeComponentBaseOptions, VxeDrawerProps, VxeDrawerMethods {
+export type VxeDrawerInstance = DefineVxeComponentInstance<{
   reactData: DrawerReactData
-}
+}, VxeDrawerProps, DrawerPrivateComputed, DrawerMethods>
+
+export type VxeDrawerConstructor = VxeDrawerInstance
 
 export interface DrawerPrivateRef {
 }

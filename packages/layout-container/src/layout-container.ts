@@ -36,7 +36,7 @@ export default defineVxeComponent({
     //
     dispatchEvent (type: ValueOf<VxeLayoutContainerEmits>, params: Record<string, any>, evnt: Event | null) {
       const $xeLayoutContainer = this
-      this.$emit(type, createEvent(evnt, { $layoutContainer: $xeLayoutContainer }, params))
+      $xeLayoutContainer.$emit(type, createEvent(evnt, { $layoutContainer: $xeLayoutContainer }, params))
     },
     //
     // Render

@@ -1,5 +1,6 @@
 import { VueConstructor } from 'vue'
 import { VxeUI } from '@vxe-ui/core'
+import { dynamicApp } from '../dynamics'
 import VxeRadioComponent from './src/radio'
 
 export const VxeRadio = Object.assign(VxeRadioComponent, {
@@ -8,6 +9,7 @@ export const VxeRadio = Object.assign(VxeRadioComponent, {
   }
 })
 
+dynamicApp.use(VxeRadio)
 VxeUI.component(VxeRadioComponent)
 
 export const Radio = VxeRadio

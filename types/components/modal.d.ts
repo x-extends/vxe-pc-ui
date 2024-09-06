@@ -1,15 +1,16 @@
-import { DefineVxeComponentApp, DefineVxeComponentOptions, DefineVxeComponentInstance, VxeComponentSizeType, VxeComponentBaseOptions, VxeComponentEventParams, ValueOf, VxeComponentSlotType } from '@vxe-ui/core'
+import { CreateElement } from 'vue'
+import { DefineVxeComponentApp, DefineVxeComponentOptions, DefineVxeComponentInstance, VxeComponentSizeType, VxeComponentEventParams, ValueOf, VxeComponentSlotType } from '@vxe-ui/core'
 
 /* eslint-disable @typescript-eslint/no-empty-interface,no-use-before-define,@typescript-eslint/ban-types */
 
 export declare const VxeModal: DefineVxeComponentApp<VxeModalProps, VxeModalEventProps, VxeModalSlots>
-export type VxeModalComponent = DefineVxeComponentOptions<VxeModalProps, VxeModalEventProps>
+export type VxeModalComponent = DefineVxeComponentOptions<VxeModalProps>
 
-export type VxeModalInstance = DefineVxeComponentInstance<VxeModalProps, VxeModalConstructor>
-
-export interface VxeModalConstructor extends VxeComponentBaseOptions, VxeModalProps, VxeModalMethods {
+export type VxeModalInstance = DefineVxeComponentInstance<{
   reactData: ModalReactData
-}
+}, VxeModalProps, ModalPrivateComputed, VxeModalMethods>
+
+export type VxeModalConstructor = VxeModalInstance
 
 export interface ModalPrivateRef {
 }
@@ -115,7 +116,7 @@ export namespace VxeModalPropTypes {
 
 export interface VxeModalProps {
   size?: VxeModalPropTypes.Size
-  modelValue?: VxeModalPropTypes.ModelValue
+  value?: VxeModalPropTypes.ModelValue
   id?: VxeModalPropTypes.ID
   type?: VxeModalPropTypes.Type
   loading?: VxeModalPropTypes.Loading
@@ -170,6 +171,7 @@ export interface VxeModalProps {
 }
 
 export interface ModalPrivateComputed {
+  computeZoomOpts: VxeModalPropTypes.ZoomConfig
 }
 export interface VxeModalPrivateComputed extends ModalPrivateComputed { }
 
@@ -196,6 +198,9 @@ export interface ModalReactData {
   firstOpen: boolean
 }
 
+export interface ModalInternalData {
+  msgTimeout: undefined | number
+}
 export interface ModalMethods {
   dispatchEvent(type: ValueOf<VxeModalEmits>, params: Record<string, any>, evnt: Event | null): void
   /**
@@ -267,22 +272,27 @@ export type VxeModalEmits = [
 export namespace VxeModalDefines {
   export interface ModalOptions extends VxeModalProps, VxeModalEventProps {
     key?: string | number
+    events?: VxeModalListeners
   }
 
   export interface MessageOptions extends Omit<VxeModalProps, 'type'>, VxeModalEventProps {
     key?: string | number
+    events?: VxeModalListeners
   }
 
   export interface NotificationOptions extends Omit<VxeModalProps, 'type'>, VxeModalEventProps {
     key?: string | number
+    events?: VxeModalListeners
   }
 
   export interface AlertOptions extends Omit<VxeModalProps, 'top' | 'duration'>, VxeModalEventProps {
     key?: string | number
+    events?: VxeModalListeners
   }
 
   export interface ConfirmOptions extends Omit<VxeModalProps, 'top' | 'duration'>, VxeModalEventProps {
     key?: string | number
+    events?: VxeModalListeners
   }
 
   interface ModalEventParams extends VxeComponentEventParams {
@@ -472,43 +482,43 @@ export interface VxeModalSlots {
   /**
    * 自定义内容模板
    */
-  default?: (params: VxeModalSlotTypes.DefaultSlotParams) => VxeComponentSlotType[] | VxeComponentSlotType
+  default?: (params: VxeModalSlotTypes.DefaultSlotParams, h: CreateElement) => VxeComponentSlotType[] | VxeComponentSlotType
   /**
    * 自定义左侧内容模板
    */
-  left?: (params: VxeModalSlotTypes.LeftSlotParams) => VxeComponentSlotType[] | VxeComponentSlotType
+  left?: (params: VxeModalSlotTypes.LeftSlotParams, h: CreateElement) => VxeComponentSlotType[] | VxeComponentSlotType
   /**
    * 自定义右侧内容模板
    */
-  right?: (params: VxeModalSlotTypes.RightSlotParams) => VxeComponentSlotType[] | VxeComponentSlotType
+  right?: (params: VxeModalSlotTypes.RightSlotParams, h: CreateElement) => VxeComponentSlotType[] | VxeComponentSlotType
   /**
    * 自定义侧边栏的模板
    */
-  aside?: (params: VxeModalSlotTypes.AsideSlotParams) => VxeComponentSlotType[] | VxeComponentSlotType
+  aside?: (params: VxeModalSlotTypes.AsideSlotParams, h: CreateElement) => VxeComponentSlotType[] | VxeComponentSlotType
   /**
    * 自定义头部的模板
    */
-  header?: (params: VxeModalSlotTypes.HeaderSlotParams) => VxeComponentSlotType[] | VxeComponentSlotType
+  header?: (params: VxeModalSlotTypes.HeaderSlotParams, h: CreateElement) => VxeComponentSlotType[] | VxeComponentSlotType
   /**
    * 自定义标题的模板（如果使用了 header 插槽，则该插槽无效）
    */
-  title?: (params: VxeModalSlotTypes.TitleSlotParams) => VxeComponentSlotType[] | VxeComponentSlotType
+  title?: (params: VxeModalSlotTypes.TitleSlotParams, h: CreateElement) => VxeComponentSlotType[] | VxeComponentSlotType
   /**
    * 自定义右上角的模板
    */
-  corner?: (params: VxeModalSlotTypes.CornerSlotParams) => VxeComponentSlotType[] | VxeComponentSlotType
+  corner?: (params: VxeModalSlotTypes.CornerSlotParams, h: CreateElement) => VxeComponentSlotType[] | VxeComponentSlotType
   /**
    * 自定义底部的模板
    */
-  footer?: (params: VxeModalSlotTypes.FooterSlotParams) => VxeComponentSlotType[] | VxeComponentSlotType
+  footer?: (params: VxeModalSlotTypes.FooterSlotParams, h: CreateElement) => VxeComponentSlotType[] | VxeComponentSlotType
   /**
    * 自定义底部左侧的模板
    */
-  leftfoot?: (params: VxeModalSlotTypes.LeftfootSlotParams) => VxeComponentSlotType[] | VxeComponentSlotType
+  leftfoot?: (params: VxeModalSlotTypes.LeftfootSlotParams, h: CreateElement) => VxeComponentSlotType[] | VxeComponentSlotType
   /**
    * 自定义底部右侧的模板
    */
-  rightfoot?: (params: VxeModalSlotTypes.RightfootSlotParams) => VxeComponentSlotType[] | VxeComponentSlotType
+  rightfoot?: (params: VxeModalSlotTypes.RightfootSlotParams, h: CreateElement) => VxeComponentSlotType[] | VxeComponentSlotType
 }
 
 export const Modal: typeof VxeModal

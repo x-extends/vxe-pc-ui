@@ -1,4 +1,4 @@
-import { DefineVxeComponentApp, DefineVxeComponentOptions, DefineVxeComponentInstance, VxeComponentBaseOptions, VxeComponentEventParams, ValueOf, VxeComponentSizeType } from '@vxe-ui/core'
+import { DefineVxeComponentApp, DefineVxeComponentOptions, DefineVxeComponentInstance, VxeComponentEventParams, ValueOf, VxeComponentSizeType } from '@vxe-ui/core'
 import { VxeListDesignDefines } from './list-design'
 import { VxeGridPropTypes, VxeGridProps, VxeGridListeners } from './grid'
 import { VxeTablePropTypes } from './table'
@@ -8,13 +8,13 @@ import { VxeButtonProps } from './button'
 /* eslint-disable no-use-before-define,@typescript-eslint/ban-types,@typescript-eslint/no-unused-vars */
 
 export declare const VxeListView: DefineVxeComponentApp<VxeListViewProps, VxeListViewEventProps, VxeListViewSlots>
-export type VxeListViewComponent = DefineVxeComponentOptions<VxeListViewProps, VxeListViewEventProps>
+export type VxeListViewComponent = DefineVxeComponentOptions<VxeListViewProps>
 
-export type VxeListViewInstance = DefineVxeComponentInstance<VxeListViewProps, VxeListViewConstructor>
-
-export interface VxeListViewConstructor<D = any> extends VxeComponentBaseOptions, VxeListViewMethods<D> {
+export type VxeListViewInstance = DefineVxeComponentInstance<{
   reactData: ListViewReactData
-}
+}, VxeListViewProps, ListViewPrivateComputed, ListViewMethods>
+
+export type VxeListViewConstructor = VxeListViewInstance
 
 export interface ListViewPrivateRef<D = any> {
 }
@@ -34,7 +34,7 @@ export namespace VxeListViewPropTypes {
   }
 }
 
-export type VxeListViewProps<D = any> = {
+export interface VxeListViewProps<D = any> {
   config?: VxeListViewPropTypes.Config
   size?: VxeListViewPropTypes.Size
   loading?: VxeListViewPropTypes.Loading

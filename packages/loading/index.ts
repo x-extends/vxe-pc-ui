@@ -1,7 +1,7 @@
 import { VueConstructor } from 'vue'
 import { VxeUI } from '@vxe-ui/core'
 import VxeLoadingComponent from './src/loading'
-import { dynamicApp, checkDynamic } from '../dynamics'
+import { dynamicApp, dynamicStore, checkDynamic } from '../dynamics'
 
 import type { VxeLoadingProps } from '../../types'
 
@@ -14,7 +14,7 @@ export const VxeLoading = Object.assign({}, VxeLoadingComponent, {
 export const LoadingController = {
   open (options?: VxeLoadingProps) {
     const opts = Object.assign({}, options)
-    dynamicApp.globalLoading = {
+    dynamicStore.globalLoading = {
       value: true,
       text: opts.text,
       icon: opts.icon
@@ -22,10 +22,11 @@ export const LoadingController = {
     checkDynamic()
   },
   close () {
-    dynamicApp.globalLoading = null
+    dynamicStore.globalLoading = null
   }
 }
 
+dynamicApp.use(VxeLoading)
 VxeUI.component(VxeLoadingComponent)
 VxeUI.loading = LoadingController
 

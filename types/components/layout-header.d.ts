@@ -1,13 +1,15 @@
-import { DefineVxeComponentApp, DefineVxeComponentOptions, VxeComponentBaseOptions, VxeComponentEventParams, ValueOf } from '@vxe-ui/core'
+import { DefineVxeComponentApp, DefineVxeComponentOptions, VxeComponentEventParams, ValueOf } from '@vxe-ui/core'
 
 /* eslint-disable @typescript-eslint/no-empty-interface,no-use-before-define,@typescript-eslint/ban-types */
 
 export declare const VxeLayoutHeader: DefineVxeComponentApp<VxeLayoutHeaderProps, VxeLayoutHeaderEventProps, VxeLayoutHeaderSlots>
-export type VxeLayoutHeaderComponent = DefineVxeComponentOptions<VxeLayoutHeaderProps, VxeLayoutHeaderEventProps>
+export type VxeLayoutHeaderComponent = DefineVxeComponentOptions<VxeLayoutHeaderProps>
 
-export interface VxeLayoutHeaderConstructor extends VxeComponentBaseOptions, VxeLayoutHeaderProps, VxeLayoutHeaderMethods {
+export type VxeLayoutHeaderInstance = DefineVxeComponentInstance<{
   reactData: LayoutHeaderReactData
-}
+}, VxeLayoutHeaderProps, LayoutHeaderPrivateComputed, LayoutHeaderMethods>
+
+export type VxeLayoutHeaderConstructor = VxeLayoutHeaderInstance
 
 export interface LayoutHeaderPrivateRef {
 }

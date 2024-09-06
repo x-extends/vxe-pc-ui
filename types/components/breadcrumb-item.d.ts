@@ -1,15 +1,15 @@
-import { DefineVxeComponentApp, DefineVxeComponentOptions, DefineVxeComponentInstance, VxeComponentBaseOptions, VxeComponentEventParams } from '@vxe-ui/core'
+import { DefineVxeComponentApp, DefineVxeComponentOptions, DefineVxeComponentInstance, VxeComponentEventParams } from '@vxe-ui/core'
 
 /* eslint-disable @typescript-eslint/no-empty-interface,no-use-before-define,@typescript-eslint/ban-types */
 
 export declare const VxeBreadcrumbItem: DefineVxeComponentApp<VxeBreadcrumbItemProps, VxeBreadcrumbItemEventProps, VxeBreadcrumbItemSlots>
-export type VxeBreadcrumbItemComponent = DefineVxeComponentOptions<VxeBreadcrumbItemProps, VxeBreadcrumbItemEventProps>
+export type VxeBreadcrumbItemComponent = DefineVxeComponentOptions<VxeBreadcrumbItemProps>
 
-export type VxeBreadcrumbItemInstance = DefineVxeComponentInstance<VxeBreadcrumbItemProps, VxeBreadcrumbItemConstructor>
-
-export interface VxeBreadcrumbItemConstructor extends VxeComponentBaseOptions, VxeBreadcrumbItemMethods {
+export type VxeBreadcrumbItemInstance = DefineVxeComponentInstance<{
   reactData: BreadcrumbItemReactData
-}
+}, VxeBreadcrumbItemProps, BreadcrumbItemPrivateComputed, BreadcrumbItemMethods>
+
+export type VxeBreadcrumbItemConstructor = VxeBreadcrumbItemInstance
 
 export interface BreadcrumbItemPrivateRef {
 }
@@ -25,7 +25,7 @@ export namespace VxeBreadcrumbItemPropTypes {
   }
 }
 
-export type VxeBreadcrumbItemProps = {
+export interface VxeBreadcrumbItemProps {
   title?: VxeBreadcrumbItemPropTypes.Title
   routerLink?: VxeBreadcrumbItemPropTypes.RouterLink
 }

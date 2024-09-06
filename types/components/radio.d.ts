@@ -1,15 +1,15 @@
-import { DefineVxeComponentApp, DefineVxeComponentOptions, DefineVxeComponentInstance, VxeComponentBaseOptions, VxeComponentEventParams, VxeComponentSizeType, ValueOf } from '@vxe-ui/core'
+import { DefineVxeComponentApp, DefineVxeComponentOptions, DefineVxeComponentInstance, VxeComponentEventParams, VxeComponentSizeType, ValueOf } from '@vxe-ui/core'
 
 /* eslint-disable @typescript-eslint/no-empty-interface,no-use-before-define,@typescript-eslint/ban-types */
 
 export declare const VxeRadio: DefineVxeComponentApp<VxeRadioProps, VxeRadioEventProps, VxeRadioSlots>
-export type VxeRadioComponent = DefineVxeComponentOptions<VxeRadioProps, VxeRadioEventProps>
+export type VxeRadioComponent = DefineVxeComponentOptions<VxeRadioProps>
 
-export type VxeRadioInstance = DefineVxeComponentInstance<VxeRadioProps, VxeRadioConstructor>
-
-export interface VxeRadioConstructor extends VxeComponentBaseOptions, VxeRadioProps, VxeRadioMethods {
+export type VxeRadioInstance = DefineVxeComponentInstance<{
   reactData: RadioReactData
-}
+}, VxeRadioProps, RadioPrivateComputed, RadioMethods>
+
+export type VxeRadioConstructor = VxeRadioInstance
 
 export interface RadioPrivateRef {
 }

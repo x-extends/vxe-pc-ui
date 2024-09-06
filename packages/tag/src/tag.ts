@@ -42,7 +42,7 @@ export default defineVxeComponent({
     //
     dispatchEvent (type: ValueOf<VxeTagEmits>, params: Record<string, any>, evnt: Event | null) {
       const $xeTag = this
-      this.$emit(type, createEvent(evnt, { $tag: $xeTag }, params))
+      $xeTag.$emit(type, createEvent(evnt, { $tag: $xeTag }, params))
     },
     //
     // Render

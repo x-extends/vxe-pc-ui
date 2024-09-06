@@ -1,15 +1,15 @@
-import { DefineVxeComponentApp, DefineVxeComponentOptions, DefineVxeComponentInstance, VxeComponentBaseOptions, VxeComponentEventParams, ValueOf } from '@vxe-ui/core'
+import { DefineVxeComponentApp, DefineVxeComponentOptions, DefineVxeComponentInstance, VxeComponentEventParams, ValueOf } from '@vxe-ui/core'
 
 /* eslint-disable @typescript-eslint/no-empty-interface,no-use-before-define,@typescript-eslint/ban-types */
 
 export declare const VxeFlowDesign: DefineVxeComponentApp<VxeFlowDesignProps, VxeFlowDesignEventProps, VxeFlowDesignSlots>
-export type VxeFlowDesignComponent = DefineVxeComponentOptions<VxeFlowDesignProps, VxeFlowDesignEventProps>
+export type VxeFlowDesignComponent = DefineVxeComponentOptions<VxeFlowDesignProps>
 
-export type VxeFlowDesignInstance = DefineVxeComponentInstance<VxeFlowDesignProps, VxeFlowDesignConstructor>
-
-export interface VxeFlowDesignConstructor extends VxeComponentBaseOptions, VxeFlowDesignMethods {
+export type VxeFlowDesignInstance = DefineVxeComponentInstance<{
   reactData: FlowDesignReactData
-}
+}, VxeFlowDesignProps, FlowDesignPrivateComputed, FlowDesignMethods>
+
+export type VxeFlowDesignConstructor = VxeFlowDesignInstance
 
 export interface FlowDesignPrivateRef {
 }
@@ -18,7 +18,7 @@ export interface VxeFlowDesignPrivateRef extends FlowDesignPrivateRef { }
 export namespace VxeFlowDesignPropTypes {
 }
 
-export type VxeFlowDesignProps = {
+export interface VxeFlowDesignProps {
 }
 
 export interface FlowDesignPrivateComputed {

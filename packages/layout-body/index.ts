@@ -1,5 +1,6 @@
 import { VueConstructor } from 'vue'
 import { VxeUI } from '@vxe-ui/core'
+import { dynamicApp } from '../dynamics'
 import VxeLayoutBodyComponent from './src/layout-body'
 
 export const VxeLayoutBody = Object.assign({}, VxeLayoutBodyComponent, {
@@ -8,6 +9,7 @@ export const VxeLayoutBody = Object.assign({}, VxeLayoutBodyComponent, {
   }
 })
 
+dynamicApp.use(VxeLayoutBody)
 VxeUI.component(VxeLayoutBodyComponent)
 
 export const LayoutBody = VxeLayoutBody

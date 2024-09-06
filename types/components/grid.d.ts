@@ -1,4 +1,4 @@
-import { DefineVxeComponentApp, DefineVxeComponentOptions, DefineVxeComponentInstance, VxeComponentBaseOptions, VxeComponentEventParams, VxeComponentSizeType, VxeComponentSlotType, ValueOf } from '@vxe-ui/core'
+import { DefineVxeComponentApp, DefineVxeComponentOptions, DefineVxeComponentInstance, VxeComponentEventParams, VxeComponentSizeType, VxeComponentSlotType, ValueOf } from '@vxe-ui/core'
 import { VxeToolbarProps, VxeToolbarPropTypes } from './toolbar'
 import { VxeTableDefines, VxeTableEmits, VxeTableConstructor, VxeTableProps, TableMethods } from './table'
 import { VxePagerProps, VxePagerDefines } from './pager'
@@ -8,13 +8,13 @@ import { VxeFormItemProps } from './form-item'
 /* eslint-disable no-use-before-define,@typescript-eslint/ban-types,@typescript-eslint/no-unused-vars */
 
 export declare const VxeGrid: DefineVxeComponentApp<VxeGridProps, VxeGridEventProps, VxeGridSlots>
-export type VxeGridComponent = DefineVxeComponentOptions<VxeGridProps, VxeGridEventProps>
+export type VxeGridComponent = DefineVxeComponentOptions<VxeGridProps>
 
-export type VxeGridInstance<D = any> = DefineVxeComponentInstance<VxeGridProps<D>, VxeGridConstructor<D>>
-
-export interface VxeGridConstructor<D = any> extends VxeComponentBaseOptions, VxeGridMethods<D> {
+export type VxeGridInstance = DefineVxeComponentInstance<{
   reactData: GridReactData
-}
+}, VxeGridProps, GridPrivateComputed, GridMethods>
+
+export type VxeGridConstructor = VxeGridInstance
 
 export interface GridPrivateRef<D = any> {
 }
@@ -197,7 +197,7 @@ export namespace VxeGridPropTypes {
   export interface ZoomOpts extends ZoomConfig { }
 }
 
-export type VxeGridProps<D = any> = VxeTableProps<D> & {
+export interface VxeGridProps<D = any> extends VxeTableProps<D> {
   layouts?: VxeGridPropTypes.Layouts
   columns?: VxeGridPropTypes.Columns<D>
   pagerConfig?: VxeGridPropTypes.PagerConfig

@@ -1,69 +1,49 @@
-import XEUtils from 'xe-utils'
-import Vue, { PropType, CreateElement } from 'vue'
+import Vue, { CreateElement } from 'vue'
 import { renderEmptyElement } from '@vxe-ui/core'
 
-import type { VxeModalDefines, VxeDrawerListeners, VxeModalListeners, VxeDrawerDefines, VxeLoadingProps } from '../../types'
+import type { VxeModalDefines, VxeDrawerDefines, VxeLoadingProps } from '../../types'
 
 let dynamicContainerElem: HTMLElement
 
-function parseCompConf (item: any) {
-  const props: Record<string, any> = {}
-  const events: Record<string, any> = {}
-  XEUtils.each(item, (val, key) => {
-    if (/^on/.test(key)) {
-      events[XEUtils.kebabCase(key).replace('on-', '')] = val
-    } else {
-      props[key] = val
-    }
-  })
-  return {
-    key: item.key,
-    props,
-    events
-  }
-}
-
-export const dynamicApp = new Vue({
-  props: {
-    modals: Array as PropType<{
+export const DynamicApp = Vue.extend({
+  data () {
+    const modals: {
+      key: number | string
       props: VxeModalDefines.ModalOptions
-      events: VxeModalListeners
-    }[]>,
-    drawers: Array as PropType<{
+      on: Record<string, any>
+    }[] = []
+    const drawers: {
+      key: number | string
       props: VxeDrawerDefines.DrawerOptions
-      events: VxeDrawerListeners
-    }[]>,
-    globalLoading: Object as PropType<null | VxeLoadingProps>
-  },
-  computed: {
-    computeModelList () {
-      const { modals } = this
-      if (modals) {
-        return modals.map(parseCompConf)
-      }
-      return []
-    },
-    computeDrawerList () {
-      const { drawers } = this
-      if (drawers) {
-        return drawers.map(parseCompConf)
-      }
-      return []
+      on: Record<string, any>
+    }[] = []
+    return {
+      modals,
+      drawers,
+      globalLoading: null as null | VxeLoadingProps
     }
   },
   methods: {
     renderVN (h: CreateElement) {
-      const { computeModelList, computeDrawerList, globalLoading } = this
+      const { modals, drawers, globalLoading } = this
       return h('div', {}, [
-        computeModelList.length
+        modals.length
           ? h('div', {
             class: 'vxe-dynamics--modal'
-          }, computeModelList.map((item) => h('vxe-modal', item)))
+          }, modals.map((item) => h('vxe-modal', {
+            key: item.key,
+            props: item.props,
+            on: item.on
+          })))
           : renderEmptyElement(this),
-        computeDrawerList.length
+        drawers.length
           ? h('div', {
             class: 'vxe-dynamics--drawer'
-          }, computeDrawerList.map((item) => h('vxe-drawer', item)))
+          }, drawers.map((item) => h('vxe-drawer', {
+            key: item.key,
+            props: item.props,
+            on: item.on
+          })))
           : renderEmptyElement(this),
         globalLoading
           ? h('vxe-loading', {
@@ -79,11 +59,14 @@ export const dynamicApp = new Vue({
   }
 })
 
+export const dynamicApp = DynamicApp
+export const dynamicStore = new DynamicApp()
+
 export function checkDynamic () {
   if (!dynamicContainerElem) {
     dynamicContainerElem = document.createElement('div')
     dynamicContainerElem.className = 'vxe-dynamics'
     document.body.appendChild(dynamicContainerElem)
-    dynamicApp.$mount(dynamicContainerElem)
+    dynamicStore.$mount(dynamicContainerElem)
   }
 }

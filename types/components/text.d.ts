@@ -1,15 +1,15 @@
-import { DefineVxeComponentApp, DefineVxeComponentOptions, DefineVxeComponentInstance, VxeComponentBaseOptions, VxeComponentEventParams, VxeComponentSizeType, ValueOf, VxeComponentStatusType } from '@vxe-ui/core'
+import { DefineVxeComponentApp, DefineVxeComponentOptions, DefineVxeComponentInstance, VxeComponentEventParams, VxeComponentSizeType, ValueOf, VxeComponentStatusType } from '@vxe-ui/core'
 
 /* eslint-disable @typescript-eslint/no-empty-interface,no-use-before-define,@typescript-eslint/ban-types */
 
 export declare const VxeText: DefineVxeComponentApp<VxeTextProps, VxeTextEventProps, VxeTextSlots>
-export type VxeTextComponent = DefineVxeComponentOptions<VxeTextProps, VxeTextEventProps>
+export type VxeTextComponent = DefineVxeComponentOptions<VxeTextProps>
 
-export type VxeTextInstance = DefineVxeComponentInstance<VxeTextProps, VxeTextConstructor>
-
-export interface VxeTextConstructor extends VxeComponentBaseOptions, VxeTextProps, VxeTextMethods {
+export type VxeTextInstance = DefineVxeComponentInstance<{
   reactData: TextReactData
-}
+}, VxeTextProps, TextPrivateComputed, TextMethods>
+
+export type VxeTextConstructor = VxeTextInstance
 
 export interface TextPrivateRef {
 }

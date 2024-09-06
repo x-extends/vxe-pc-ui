@@ -1,5 +1,6 @@
 import { VueConstructor } from 'vue'
 import { VxeUI } from '@vxe-ui/core'
+import { dynamicApp } from '../dynamics'
 import VxeLayoutFooterComponent from './src/layout-footer'
 
 export const VxeLayoutFooter = Object.assign({}, VxeLayoutFooterComponent, {
@@ -8,6 +9,7 @@ export const VxeLayoutFooter = Object.assign({}, VxeLayoutFooterComponent, {
   }
 })
 
+dynamicApp.use(VxeLayoutFooter)
 VxeUI.component(VxeLayoutFooterComponent)
 
 export const LayoutFooter = VxeLayoutFooter

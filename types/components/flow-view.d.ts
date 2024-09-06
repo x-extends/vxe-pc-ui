@@ -1,15 +1,15 @@
-import { DefineVxeComponentApp, DefineVxeComponentOptions, DefineVxeComponentInstance, VxeComponentBaseOptions, VxeComponentEventParams, ValueOf } from '@vxe-ui/core'
+import { DefineVxeComponentApp, DefineVxeComponentOptions, DefineVxeComponentInstance, VxeComponentEventParams, ValueOf } from '@vxe-ui/core'
 
 /* eslint-disable @typescript-eslint/no-empty-interface,no-use-before-define,@typescript-eslint/ban-types */
 
 export declare const VxeFlowView: DefineVxeComponentApp<VxeFlowViewProps, VxeFlowViewEventProps, VxeFlowViewSlots>
-export type VxeFlowViewComponent = DefineVxeComponentOptions<VxeFlowViewProps, VxeFlowViewEventProps>
+export type VxeFlowViewComponent = DefineVxeComponentOptions<VxeFlowViewProps>
 
-export type VxeFlowViewInstance = DefineVxeComponentInstance<VxeFlowViewProps, VxeFlowViewConstructor>
-
-export interface VxeFlowViewConstructor extends VxeComponentBaseOptions, VxeFlowViewMethods {
+export type VxeFlowViewInstance = DefineVxeComponentInstance<{
   reactData: FlowViewReactData
-}
+}, VxeFlowViewProps, FlowViewPrivateComputed, FlowViewMethods>
+
+export type VxeFlowViewConstructor = VxeFlowViewInstance
 
 export interface FlowViewPrivateRef {
 }
@@ -18,7 +18,7 @@ export interface VxeFlowViewPrivateRef extends FlowViewPrivateRef { }
 export namespace VxeFlowViewPropTypes {
 }
 
-export type VxeFlowViewProps = {
+export interface VxeFlowViewProps {
 }
 
 export interface FlowViewPrivateComputed {

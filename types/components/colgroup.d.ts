@@ -1,16 +1,16 @@
-import { DefineVxeComponentApp, DefineVxeComponentOptions, DefineVxeComponentInstance, VxeComponentBaseOptions, VxeComponentEventParams, ValueOf } from '@vxe-ui/core'
+import { DefineVxeComponentApp, DefineVxeComponentOptions, DefineVxeComponentInstance, VxeComponentEventParams, ValueOf } from '@vxe-ui/core'
 import { VxeColumnPropTypes, VxeColumnSlotTypes } from './column'
 
 /* eslint-disable @typescript-eslint/no-empty-interface,no-use-before-define,@typescript-eslint/ban-types */
 
 export declare const VxeColgroup: DefineVxeComponentApp<VxeColgroupProps, VxeColgroupEventProps, VxeColgroupSlots>
-export type VxeColgroupComponent = DefineVxeComponentOptions<VxeColgroupProps, VxeColgroupEventProps>
+export type VxeColgroupComponent = DefineVxeComponentOptions<VxeColgroupProps>
 
-export type VxeColgroupInstance = DefineVxeComponentInstance<VxeColgroupProps, VxeColgroupConstructor>
-
-export interface VxeColgroupConstructor extends VxeComponentBaseOptions, VxeColgroupMethods {
+export type VxeColgroupInstance = DefineVxeComponentInstance<{
   reactData: ColgroupReactData
-}
+}, VxeColgroupProps, ColgroupPrivateComputed, ColgroupMethods>
+
+export type VxeColgroupConstructor = VxeColgroupInstance
 
 export interface ColgroupPrivateRef {
 }
@@ -19,7 +19,7 @@ export interface VxeColgroupPrivateRef extends ColgroupPrivateRef { }
 export namespace VxeColgroupPropTypes {
 }
 
-export type VxeColgroupProps = {
+export interface VxeColgroupProps {
   /**
    * 渲染类型
    */

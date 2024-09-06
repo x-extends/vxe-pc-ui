@@ -43,7 +43,7 @@ export default defineVxeComponent({
     //
     dispatchEvent (type: ValueOf<VxeTextEmits>, params: Record<string, any>, evnt: Event | null) {
       const $xeText = this
-      this.$emit(type, createEvent(evnt, { $text: $xeText }, params))
+      $xeText.$emit(type, createEvent(evnt, { $text: $xeText }, params))
     },
     clickIconEvent () {
       const $xeText = this

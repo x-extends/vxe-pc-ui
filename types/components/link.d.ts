@@ -1,15 +1,15 @@
-import { DefineVxeComponentApp, DefineVxeComponentOptions, DefineVxeComponentInstance, VxeComponentBaseOptions, VxeComponentEventParams, VxeComponentSizeType, VxeComponentPermissionCodeType, ValueOf, VxeComponentStatusType } from '@vxe-ui/core'
+import { DefineVxeComponentApp, DefineVxeComponentOptions, DefineVxeComponentInstance, VxeComponentEventParams, VxeComponentSizeType, VxeComponentPermissionCodeType, ValueOf, VxeComponentStatusType } from '@vxe-ui/core'
 
 /* eslint-disable @typescript-eslint/no-empty-interface,no-use-before-define,@typescript-eslint/ban-types */
 
 export declare const VxeLink: DefineVxeComponentApp<VxeLinkProps, VxeLinkEventProps, VxeLinkSlots>
-export type VxeLinkComponent = DefineVxeComponentOptions<VxeLinkProps, VxeLinkEventProps>
+export type VxeLinkComponent = DefineVxeComponentOptions<VxeLinkProps>
 
-export type VxeLinkInstance = DefineVxeComponentInstance<VxeLinkProps, VxeLinkConstructor>
-
-export interface VxeLinkConstructor extends VxeComponentBaseOptions, VxeLinkProps, VxeLinkMethods {
+export type VxeLinkInstance = DefineVxeComponentInstance<{
   reactData: LinkReactData
-}
+}, VxeLinkProps, LinkPrivateComputed, LinkMethods>
+
+export type VxeLinkConstructor = VxeLinkInstance
 
 export interface LinkPrivateRef {
 }

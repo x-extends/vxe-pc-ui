@@ -1,15 +1,15 @@
-import { DefineVxeComponentApp, DefineVxeComponentOptions, DefineVxeComponentInstance, VxeComponentBaseOptions, VxeComponentEventParams, ValueOf } from '@vxe-ui/core'
+import { DefineVxeComponentApp, DefineVxeComponentOptions, DefineVxeComponentInstance, VxeComponentEventParams, ValueOf } from '@vxe-ui/core'
 
 /* eslint-disable @typescript-eslint/no-empty-interface,no-use-before-define,@typescript-eslint/ban-types */
 
 export declare const VxeCard: DefineVxeComponentApp<VxeCardProps, VxeCardEventProps, VxeCardSlots>
-export type VxeCardComponent = DefineVxeComponentOptions<VxeCardProps, VxeCardEventProps>
+export type VxeCardComponent = DefineVxeComponentOptions<VxeCardProps>
 
-export type VxeCardInstance = DefineVxeComponentInstance<VxeCardProps, VxeCardConstructor>
-
-export interface VxeCardConstructor extends VxeComponentBaseOptions, VxeCardMethods {
+export type VxeCardInstance = DefineVxeComponentInstance<{
   reactData: CardReactData
-}
+}, VxeCardProps, CardPrivateComputed, CardMethods>
+
+export type VxeCardConstructor = VxeCardInstance
 
 export interface CardPrivateRef {
 }

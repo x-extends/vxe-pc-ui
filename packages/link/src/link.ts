@@ -53,7 +53,7 @@ export default defineVxeComponent({
     //
     dispatchEvent (type: ValueOf<VxeLinkEmits>, params: Record<string, any>, evnt: Event | null) {
       const $xeLink = this
-      this.$emit(type, createEvent(evnt, { $link: $xeLink }, params))
+      $xeLink.$emit(type, createEvent(evnt, { $link: $xeLink }, params))
     },
     //
     // Render

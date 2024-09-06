@@ -1,15 +1,15 @@
-import { DefineVxeComponentApp, DefineVxeComponentOptions, DefineVxeComponentInstance, VxeComponentBaseOptions, VxeComponentEventParams } from '@vxe-ui/core'
+import { DefineVxeComponentApp, DefineVxeComponentOptions, DefineVxeComponentInstance, VxeComponentEventParams } from '@vxe-ui/core'
 
 /* eslint-disable @typescript-eslint/no-empty-interface,no-use-before-define,@typescript-eslint/ban-types */
 
 export declare const VxeCollapsePane: DefineVxeComponentApp<VxeCollapsePaneProps, VxeCollapsePaneEventProps, VxeCollapsePaneSlots>
-export type VxeCollapsePaneComponent = DefineVxeComponentOptions<VxeCollapsePaneProps, VxeCollapsePaneEventProps>
+export type VxeCollapsePaneComponent = DefineVxeComponentOptions<VxeCollapsePaneProps>
 
-export type VxeCollapsePaneInstance = DefineVxeComponentInstance<VxeCollapsePaneProps, VxeCollapsePaneConstructor>
-
-export interface VxeCollapsePaneConstructor extends VxeComponentBaseOptions, VxeCollapsePaneMethods {
+export type VxeCollapsePaneInstance = DefineVxeComponentInstance<{
   reactData: CollapsePaneReactData
-}
+}, VxeCollapsePaneProps, CollapsePanePrivateComputed, CollapsePaneMethods>
+
+export type VxeCollapsePaneConstructor = VxeCollapsePaneInstance
 
 export interface CollapsePanePrivateRef {
 }
@@ -18,7 +18,7 @@ export interface VxeCollapsePanePrivateRef extends CollapsePanePrivateRef { }
 export namespace VxeCollapsePanePropTypes {
 }
 
-export type VxeCollapsePaneProps = {
+export interface VxeCollapsePaneProps {
 }
 
 export interface CollapsePanePrivateComputed {

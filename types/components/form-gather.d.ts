@@ -1,14 +1,16 @@
-import { DefineVxeComponentApp, DefineVxeComponentOptions, VxeComponentBaseOptions, VxeComponentEventParams } from '@vxe-ui/core'
+import { DefineVxeComponentApp, DefineVxeComponentOptions, DefineVxeComponentInstance, VxeComponentEventParams } from '@vxe-ui/core'
 import { VxeFormItemPropTypes } from './form-item'
 
 /* eslint-disable @typescript-eslint/no-empty-interface,no-use-before-define,@typescript-eslint/ban-types */
 
 export declare const VxeFormGather: DefineVxeComponentApp<VxeFormGatherProps, VxeFormGatherEventProps, VxeFormGatherSlots>
-export type VxeFormGatherComponent = DefineVxeComponentOptions<VxeFormGatherProps, VxeFormGatherEventProps>
+export type VxeFormGatherComponent = DefineVxeComponentOptions<VxeFormGatherProps>
 
-export interface VxeFormGatherConstructor extends VxeComponentBaseOptions, VxeFormGatherProps, VxeFormGatherMethods {
+export type VxeFormGatherInstance = DefineVxeComponentInstance<{
   reactData: FormGatherReactData
-}
+}, VxeFormGatherProps, FormGatherPrivateComputed, FormGatherMethods>
+
+export type VxeFormGatherConstructor = VxeFormGatherInstance
 
 export interface FormGatherPrivateRef {
 }

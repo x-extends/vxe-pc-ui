@@ -1,15 +1,15 @@
-import { DefineVxeComponentApp, DefineVxeComponentOptions, DefineVxeComponentInstance, VxeComponentBaseOptions, VxeComponentEventParams, ValueOf } from '@vxe-ui/core'
+import { DefineVxeComponentApp, DefineVxeComponentOptions, DefineVxeComponentInstance, VxeComponentEventParams, ValueOf } from '@vxe-ui/core'
 
 /* eslint-disable @typescript-eslint/no-empty-interface,no-use-before-define,@typescript-eslint/ban-types */
 
 export declare const VxeImagePreview: DefineVxeComponentApp<VxeImagePreviewProps, VxeImagePreviewEventProps, VxeImagePreviewSlots>
-export type VxeImagePreviewComponent = DefineVxeComponentOptions<VxeImagePreviewProps, VxeImagePreviewEventProps>
+export type VxeImagePreviewComponent = DefineVxeComponentOptions<VxeImagePreviewProps>
 
-export type VxeImagePreviewInstance = DefineVxeComponentInstance<VxeImagePreviewProps, VxeImagePreviewConstructor>
-
-export interface VxeImagePreviewConstructor extends VxeComponentBaseOptions, VxeImagePreviewMethods {
+export type VxeImagePreviewInstance = DefineVxeComponentInstance<{
   reactData: ImagePreviewReactData
-}
+}, VxeImagePreviewProps, ImagePreviewPrivateComputed, ImagePreviewMethods>
+
+export type VxeImagePreviewConstructor = VxeImagePreviewInstance
 
 export interface ImagePreviewPrivateRef {
 }
@@ -36,7 +36,7 @@ export namespace VxeImagePreviewPropTypes {
   }) => Promise<any>)
 }
 
-export type VxeImagePreviewProps = {
+export interface VxeImagePreviewProps {
   modelValue?: VxeImagePreviewPropTypes.ModelValue
   urlList?: VxeImagePreviewPropTypes.UrlList
   urlField?: VxeImagePreviewPropTypes.UrlField

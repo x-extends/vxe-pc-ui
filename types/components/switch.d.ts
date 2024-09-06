@@ -1,16 +1,15 @@
-import { DefineVxeComponentApp, DefineVxeComponentOptions, DefineVxeComponentInstance, VxeComponentBaseOptions, VxeComponentEventParams, VxeComponentSizeType, ValueOf } from '@vxe-ui/core'
+import { DefineVxeComponentApp, DefineVxeComponentOptions, DefineVxeComponentInstance, VxeComponentEventParams, VxeComponentSizeType, ValueOf } from '@vxe-ui/core'
 
 /* eslint-disable @typescript-eslint/no-empty-interface,no-use-before-define,@typescript-eslint/ban-types */
 
 export declare const VxeSwitch: DefineVxeComponentApp<VxeSwitchProps, VxeSwitchEventProps, VxeSwitchSlots>
-export type VxeSwitchComponent = DefineVxeComponentOptions<VxeSwitchProps, VxeSwitchEventProps>
+export type VxeSwitchComponent = DefineVxeComponentOptions<VxeSwitchProps>
 
-export type VxeSwitchInstance = DefineVxeComponentInstance<VxeSwitchProps, VxeSwitchConstructor>
-
-export interface VxeSwitchConstructor extends VxeComponentBaseOptions, VxeSwitchProps, VxeSwitchMethods {
+export type VxeSwitchInstance = DefineVxeComponentInstance<{
   reactData: SwitchReactData
-  internalData: SwitchInternalData
-}
+}, VxeSwitchProps, SwitchPrivateComputed, SwitchMethods>
+
+export type VxeSwitchConstructor = VxeSwitchInstance
 
 export interface SwitchPrivateRef {
 }

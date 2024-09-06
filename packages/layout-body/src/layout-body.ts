@@ -38,7 +38,7 @@ export default defineVxeComponent({
     //
     dispatchEvent (type: ValueOf<VxeLayoutBodyEmits>, params: Record<string, any>, evnt: Event | null) {
       const $xeLayoutBody = this
-      this.$emit(type, createEvent(evnt, { $layoutBody: $xeLayoutBody }, params))
+      $xeLayoutBody.$emit(type, createEvent(evnt, { $layoutBody: $xeLayoutBody }, params))
     },
     //
     // Render

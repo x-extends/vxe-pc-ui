@@ -1,16 +1,15 @@
-import { DefineVxeComponentApp, DefineVxeComponentOptions, DefineVxeComponentInstance, VxeComponentBaseOptions, VxeComponentEventParams, VxeComponentSizeType, ValueOf } from '@vxe-ui/core'
+import { DefineVxeComponentApp, DefineVxeComponentOptions, DefineVxeComponentInstance, VxeComponentEventParams, VxeComponentSizeType, ValueOf } from '@vxe-ui/core'
 
 /* eslint-disable @typescript-eslint/no-empty-interface,no-use-before-define,@typescript-eslint/ban-types */
 
 export declare const VxeList: DefineVxeComponentApp<VxeListProps, VxeListEventProps, VxeListSlots>
-export type VxeListComponent = DefineVxeComponentOptions<VxeListProps, VxeListEventProps>
+export type VxeListComponent = DefineVxeComponentOptions<VxeListProps>
 
-export type VxeListInstance = DefineVxeComponentInstance<VxeListProps, VxeListConstructor>
-
-export interface VxeListConstructor extends VxeComponentBaseOptions, VxeListMethods {
+export type VxeListInstance = DefineVxeComponentInstance<{
   reactData: ListReactData
-  internalData: ListInternalData
-}
+}, VxeListProps, ListPrivateComputed, ListMethods>
+
+export type VxeListConstructor = VxeListInstance
 
 export interface ListPrivateRef {
 }
@@ -45,7 +44,7 @@ export namespace VxeListPropTypes {
   }
 }
 
-export type VxeListProps<D = any> = {
+export interface VxeListProps<D = any> {
   size?: VxeListPropTypes.Size
   data?: D[]
   height?: VxeListPropTypes.Height

@@ -24,7 +24,7 @@ export default defineVxeComponent({
     //
     dispatchEvent (type: ValueOf<VxeLayoutHeaderEmits>, params: Record<string, any>, evnt: Event | null) {
       const $xeLayoutHeader = this
-      this.$emit(type, createEvent(evnt, { $layoutHeader: $xeLayoutHeader }, params))
+      $xeLayoutHeader.$emit(type, createEvent(evnt, { $layoutHeader: $xeLayoutHeader }, params))
     },
     //
     // Render

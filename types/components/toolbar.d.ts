@@ -1,17 +1,17 @@
-import { DefineVxeComponentApp, DefineVxeComponentOptions, DefineVxeComponentInstance, VxeComponentBaseOptions, VxeComponentEventParams, VxeComponentSizeType, ValueOf } from '@vxe-ui/core'
+import { DefineVxeComponentApp, DefineVxeComponentOptions, DefineVxeComponentInstance, VxeComponentEventParams, VxeComponentSizeType, ValueOf } from '@vxe-ui/core'
 import { VxeButtonProps } from './button'
 import { VxeTableDefines, VxeTableConstructor, VxeTablePrivateMethods } from './table'
 
 /* eslint-disable @typescript-eslint/no-empty-interface,no-use-before-define,@typescript-eslint/ban-types */
 
 export declare const VxeToolbar: DefineVxeComponentApp<VxeToolbarProps, VxeToolbarEventProps, VxeToolbarSlots>
-export type VxeToolbarComponent = DefineVxeComponentOptions<VxeToolbarProps, VxeToolbarEventProps>
+export type VxeToolbarComponent = DefineVxeComponentOptions<VxeToolbarProps>
 
-export type VxeToolbarInstance = DefineVxeComponentInstance<VxeToolbarProps, VxeToolbarConstructor>
-
-export interface VxeToolbarConstructor extends VxeComponentBaseOptions, VxeToolbarMethods {
+export type VxeToolbarInstance = DefineVxeComponentInstance<{
   reactData: ToolbarReactData
-}
+}, VxeToolbarProps, ToolbarPrivateComputed, ToolbarMethods>
+
+export type VxeToolbarConstructor = VxeToolbarInstance
 
 export interface ToolbarPrivateRef {
 }
@@ -179,7 +179,7 @@ export namespace VxeToolbarPropTypes {
   }) => string)
 }
 
-export type VxeToolbarProps = {
+export interface VxeToolbarProps {
   size?: VxeToolbarPropTypes.Size
   /**
    * 唯一 ID 标识

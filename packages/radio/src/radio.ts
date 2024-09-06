@@ -103,7 +103,7 @@ export default defineVxeComponent({
     //
     dispatchEvent (type: ValueOf<VxeRadioEmits>, params: Record<string, any>, evnt: Event | null) {
       const $xeRadio = this
-      this.$emit(type, createEvent(evnt, { $radio: $xeRadio }, params))
+      $xeRadio.$emit(type, createEvent(evnt, { $radio: $xeRadio }, params))
     },
     handleValue  (label: VxeRadioPropTypes.Label, evnt: Event) {
       const $xeRadio = this

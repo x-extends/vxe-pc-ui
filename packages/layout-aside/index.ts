@@ -1,5 +1,6 @@
 import { VueConstructor } from 'vue'
 import { VxeUI } from '@vxe-ui/core'
+import { dynamicApp } from '../dynamics'
 import VxeLayoutAsideComponent from './src/layout-aside'
 
 export const VxeLayoutAside = Object.assign({}, VxeLayoutAsideComponent, {
@@ -8,6 +9,7 @@ export const VxeLayoutAside = Object.assign({}, VxeLayoutAsideComponent, {
   }
 })
 
+dynamicApp.use(VxeLayoutAside)
 VxeUI.component(VxeLayoutAsideComponent)
 
 export const LayoutAside = VxeLayoutAside

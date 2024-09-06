@@ -1,16 +1,16 @@
-import { DefineVxeComponentApp, DefineVxeComponentOptions, DefineVxeComponentInstance, VxeComponentBaseOptions, VxeComponentEventParams, VxeComponentSlotType } from '@vxe-ui/core'
+import { DefineVxeComponentApp, DefineVxeComponentOptions, DefineVxeComponentInstance, VxeComponentEventParams, VxeComponentSlotType } from '@vxe-ui/core'
 import { VxeSelectConstructor } from './select'
 
 /* eslint-disable @typescript-eslint/no-empty-interface,no-use-before-define,@typescript-eslint/ban-types */
 
 export declare const VxeOption: DefineVxeComponentApp<VxeOptionProps, VxeOptionEventProps, VxeOptionSlots>
-export type VxeOptionComponent = DefineVxeComponentOptions<VxeOptionProps, VxeOptionEventProps>
+export type VxeOptionComponent = DefineVxeComponentOptions<VxeOptionProps>
 
-export type VxeOptionInstance = DefineVxeComponentInstance<VxeOptionProps, VxeOptionConstructor>
-
-export interface VxeOptionConstructor extends VxeComponentBaseOptions, VxeOptionMethods {
+export type VxeOptionInstance = DefineVxeComponentInstance<{
   reactData: OptionReactData
-}
+}, VxeOptionProps, OptionPrivateComputed, OptionMethods>
+
+export type VxeOptionConstructor = VxeOptionInstance
 
 export interface OptionPrivateRef {
 }
@@ -33,7 +33,7 @@ export namespace VxeOptionPropTypes {
   }
 }
 
-export type VxeOptionProps = {
+export interface VxeOptionProps {
   /**
   * 绑定值
   */

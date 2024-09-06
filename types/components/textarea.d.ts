@@ -1,15 +1,15 @@
-import { DefineVxeComponentApp, DefineVxeComponentOptions, DefineVxeComponentInstance, VxeComponentBaseOptions, VxeComponentEventParams, VxeComponentSizeType, ValueOf } from '@vxe-ui/core'
+import { DefineVxeComponentApp, DefineVxeComponentOptions, DefineVxeComponentInstance, VxeComponentEventParams, VxeComponentSizeType, ValueOf } from '@vxe-ui/core'
 
 /* eslint-disable @typescript-eslint/no-empty-interface,no-use-before-define,@typescript-eslint/ban-types */
 
 export declare const VxeTextarea: DefineVxeComponentApp<VxeTextareaProps, VxeTextareaEventProps, VxeTextareaSlots>
-export type VxeTextareaComponent = DefineVxeComponentOptions<VxeTextareaProps, VxeTextareaEventProps>
+export type VxeTextareaComponent = DefineVxeComponentOptions<VxeTextareaProps>
 
-export type VxeTextareaInstance = DefineVxeComponentInstance<VxeTextareaProps, VxeTextareaConstructor>
-
-export interface VxeTextareaConstructor extends VxeComponentBaseOptions, VxeTextareaMethods {
+export type VxeTextareaInstance = DefineVxeComponentInstance<{
   reactData: TextareaReactData
-}
+}, VxeTextareaProps, TextareaPrivateComputed, TextareaMethods>
+
+export type VxeTextareaConstructor = VxeTextareaInstance
 
 export interface TextareaPrivateRef {
 }
@@ -46,7 +46,7 @@ export namespace VxeTextareaPropTypes {
   export type Maxlength = string | number
 }
 
-export type VxeTextareaProps = {
+export interface VxeTextareaProps {
   size?: VxeTextareaPropTypes.Size
   /**
    * 绑定值

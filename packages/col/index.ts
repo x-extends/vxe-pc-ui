@@ -1,5 +1,6 @@
 import { VueConstructor } from 'vue'
 import { VxeUI } from '@vxe-ui/core'
+import { dynamicApp } from '../dynamics'
 import VxeColComponent from '../row/src/col'
 
 export const VxeCol = Object.assign({}, VxeColComponent, {
@@ -8,6 +9,7 @@ export const VxeCol = Object.assign({}, VxeColComponent, {
   }
 })
 
+dynamicApp.use(VxeCol)
 VxeUI.component(VxeColComponent)
 
 export const Col = VxeCol

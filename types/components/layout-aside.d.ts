@@ -1,15 +1,15 @@
-import { DefineVxeComponentApp, DefineVxeComponentOptions, DefineVxeComponentInstance, VxeComponentBaseOptions, VxeComponentEventParams, ValueOf, VxeComponentSizeType } from '@vxe-ui/core'
+import { DefineVxeComponentApp, DefineVxeComponentOptions, DefineVxeComponentInstance, VxeComponentEventParams, ValueOf, VxeComponentSizeType } from '@vxe-ui/core'
 
 /* eslint-disable @typescript-eslint/no-empty-interface,no-use-before-define,@typescript-eslint/ban-types */
 
 export declare const VxeLayoutAside: DefineVxeComponentApp<VxeLayoutAsideProps, VxeLayoutAsideEventProps, VxeLayoutAsideSlots>
-export type VxeLayoutAsideComponent = DefineVxeComponentOptions<VxeLayoutAsideProps, VxeLayoutAsideEventProps>
+export type VxeLayoutAsideComponent = DefineVxeComponentOptions<VxeLayoutAsideProps>
 
-export type VxeLayoutAsideInstance = DefineVxeComponentInstance<VxeLayoutAsideProps, VxeLayoutAsideConstructor>
-
-export interface VxeLayoutAsideConstructor extends VxeComponentBaseOptions, VxeLayoutAsideProps, VxeLayoutAsideMethods {
+export type VxeLayoutAsideInstance = DefineVxeComponentInstance<{
   reactData: LayoutAsideReactData
-}
+}, VxeLayoutAsideProps, LayoutAsidePrivateComputed, LayoutAsideMethods>
+
+export type VxeLayoutAsideConstructor = VxeLayoutAsideInstance
 
 export interface LayoutAsidePrivateRef {
 }

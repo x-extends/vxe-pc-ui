@@ -1,15 +1,15 @@
-import { DefineVxeComponentApp, DefineVxeComponentOptions, DefineVxeComponentInstance, VxeComponentBaseOptions, VxeComponentEventParams, VxeComponentSizeType, VxeComponentStatusType } from '@vxe-ui/core'
+import { DefineVxeComponentApp, DefineVxeComponentOptions, DefineVxeComponentInstance, VxeComponentEventParams, VxeComponentSizeType, VxeComponentStatusType } from '@vxe-ui/core'
 
 /* eslint-disable @typescript-eslint/no-empty-interface,no-use-before-define,@typescript-eslint/ban-types */
 
 export declare const VxeLoading: DefineVxeComponentApp<VxeLoadingProps, VxeLoadingEventProps, VxeLoadingSlots>
-export type VxeLoadingComponent = DefineVxeComponentOptions<VxeLoadingProps, VxeLoadingEventProps>
+export type VxeLoadingComponent = DefineVxeComponentOptions<VxeLoadingProps>
 
-export type VxeLoadingInstance = DefineVxeComponentInstance<VxeLoadingProps, VxeLoadingConstructor>
-
-export interface VxeLoadingConstructor extends VxeComponentBaseOptions, VxeLoadingProps, VxeLoadingMethods {
+export type VxeLoadingInstance = DefineVxeComponentInstance<{
   reactData: LoadingReactData
-}
+}, VxeLoadingProps, LoadingPrivateComputed, LoadingMethods>
+
+export type VxeLoadingConstructor = VxeLoadingInstance
 
 export interface LoadingPrivateRef {
 }

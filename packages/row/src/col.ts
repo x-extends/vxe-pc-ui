@@ -95,7 +95,7 @@ export default defineVxeComponent({
     //
     dispatchEvent (type: ValueOf<VxeColEmits>, params: Record<string, any>, evnt: Event | null) {
       const $xeCol = this
-      this.$emit(type, createEvent(evnt, { $col: $xeCol }, params))
+      $xeCol.$emit(type, createEvent(evnt, { $col: $xeCol }, params))
     },
     //
     // Render

@@ -1,5 +1,6 @@
 import { VueConstructor } from 'vue'
 import { VxeUI } from '@vxe-ui/core'
+import { dynamicApp } from '../dynamics'
 import VxeRowComponent from './src/row'
 
 export const VxeRow = Object.assign({}, VxeRowComponent, {
@@ -8,6 +9,7 @@ export const VxeRow = Object.assign({}, VxeRowComponent, {
   }
 })
 
+dynamicApp.use(VxeRow)
 VxeUI.component(VxeRowComponent)
 
 export const Row = VxeRow

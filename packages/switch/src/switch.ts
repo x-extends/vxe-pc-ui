@@ -106,7 +106,7 @@ export default defineVxeComponent({
     //
     dispatchEvent (type: ValueOf<VxeSwitchEmits>, params: Record<string, any>, evnt: Event | null) {
       const $xeSwitch = this
-      this.$emit(type, createEvent(evnt, { $switch: $xeSwitch }, params))
+      $xeSwitch.$emit(type, createEvent(evnt, { $switch: $xeSwitch }, params))
     },
     focus () {
       const $xeSwitch = this

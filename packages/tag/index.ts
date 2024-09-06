@@ -1,5 +1,6 @@
 import { VueConstructor } from 'vue'
 import { VxeUI } from '@vxe-ui/core'
+import { dynamicApp } from '../dynamics'
 import VxeTagComponent from './src/tag'
 
 export const VxeTag = Object.assign({}, VxeTagComponent, {
@@ -8,6 +9,7 @@ export const VxeTag = Object.assign({}, VxeTagComponent, {
   }
 })
 
+dynamicApp.use(VxeTag)
 VxeUI.component(VxeTagComponent)
 
 export const Tag = VxeTag

@@ -1,15 +1,15 @@
-import { DefineVxeComponentApp, DefineVxeComponentOptions, DefineVxeComponentInstance, VxeComponentBaseOptions, VxeComponentEventParams, ValueOf, VxeComponentSizeType } from '@vxe-ui/core'
+import { DefineVxeComponentApp, DefineVxeComponentOptions, DefineVxeComponentInstance, VxeComponentEventParams, ValueOf, VxeComponentSizeType } from '@vxe-ui/core'
 
 /* eslint-disable @typescript-eslint/no-empty-interface,no-use-before-define,@typescript-eslint/ban-types */
 
 export declare const VxeNumberInput: DefineVxeComponentApp<VxeNumberInputProps, VxeNumberInputEventProps, VxeNumberInputSlots>
-export type VxeNumberInputComponent = DefineVxeComponentOptions<VxeNumberInputProps, VxeNumberInputEventProps>
+export type VxeNumberInputComponent = DefineVxeComponentOptions<VxeNumberInputProps>
 
-export type VxeNumberInputInstance = DefineVxeComponentInstance<VxeNumberInputProps, VxeNumberInputConstructor>
-
-export interface VxeNumberInputConstructor extends VxeComponentBaseOptions, VxeNumberInputMethods {
+export type VxeNumberInputInstance = DefineVxeComponentInstance<{
   reactData: NumberInputReactData
-}
+}, VxeNumberInputProps, NumberInputPrivateComputed, NumberInputMethods>
+
+export type VxeNumberInputConstructor = VxeNumberInputInstance
 
 export interface NumberInputPrivateRef {
 }
@@ -52,7 +52,7 @@ export namespace VxeNumberInputPropTypes {
   export type Maxlength = string | number
 }
 
-export type VxeNumberInputProps = {
+export interface VxeNumberInputProps {
   size?: VxeNumberInputPropTypes.Size
   modelValue?: VxeNumberInputPropTypes.ModelValue
   className?: VxeNumberInputPropTypes.ClassName

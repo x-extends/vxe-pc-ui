@@ -1,15 +1,15 @@
-import { DefineVxeComponentApp, DefineVxeComponentOptions, DefineVxeComponentInstance, VxeComponentBaseOptions, VxeComponentEventParams, ValueOf, VxeComponentSizeType } from '@vxe-ui/core'
+import { DefineVxeComponentApp, DefineVxeComponentOptions, DefineVxeComponentInstance, VxeComponentEventParams, ValueOf, VxeComponentSizeType } from '@vxe-ui/core'
 
 /* eslint-disable @typescript-eslint/no-empty-interface,no-use-before-define,@typescript-eslint/ban-types */
 
 export declare const VxeLayoutContainer: DefineVxeComponentApp<VxeLayoutContainerProps, VxeLayoutContainerEventProps, VxeLayoutContainerSlots>
-export type VxeLayoutContainerComponent = DefineVxeComponentOptions<VxeLayoutContainerProps, VxeLayoutContainerEventProps>
+export type VxeLayoutContainerComponent = DefineVxeComponentOptions<VxeLayoutContainerProps>
 
-export type VxeLayoutContainerInstance = DefineVxeComponentInstance<VxeLayoutContainerProps, VxeLayoutContainerConstructor>
-
-export interface VxeLayoutContainerConstructor extends VxeComponentBaseOptions, VxeLayoutContainerProps, VxeLayoutContainerMethods {
+export type VxeLayoutContainerInstance = DefineVxeComponentInstance<{
   reactData: LayoutContainerReactData
-}
+}, VxeLayoutContainerProps, LayoutContainerPrivateComputed, LayoutContainerMethods>
+
+export type VxeLayoutContainerConstructor = VxeLayoutContainerInstance
 
 export interface LayoutContainerPrivateRef {
 }

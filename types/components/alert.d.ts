@@ -1,15 +1,15 @@
-import { DefineVxeComponentApp, DefineVxeComponentOptions, VxeComponentBaseOptions, DefineVxeComponentInstance, VxeComponentBaseOptions, VxeComponentEventParams, VxeComponentSizeType, VxeComponentStatusType, ValueOf } from '@vxe-ui/core'
+import { DefineVxeComponentApp, DefineVxeComponentOptions, DefineVxeComponentInstance, VxeComponentEventParams, VxeComponentSizeType, VxeComponentStatusType, ValueOf } from '@vxe-ui/core'
 
 /* eslint-disable @typescript-eslint/no-empty-interface,no-use-before-define,@typescript-eslint/ban-types */
 
 export declare const VxeAlert: DefineVxeComponentApp<VxeAlertProps, VxeAlertEventProps, VxeAlertSlots>
-export type VxeAlertComponent = DefineVxeComponentOptions<VxeAlertProps, VxeAlertEventProps>
+export type VxeAlertComponent = DefineVxeComponentOptions<VxeAlertProps>
 
-export type VxeAlertInstance = DefineVxeComponentInstance<VxeAlertProps, VxeAlertConstructor>
-
-export interface VxeAlertConstructor extends VxeComponentBaseOptions, VxeAlertMethods {
+export type VxeAlertInstance = DefineVxeComponentInstance<{
   reactData: AlertReactData
-}
+}, VxeAlertProps, AlertPrivateComputed, AlertMethods>
+
+export type VxeAlertConstructor = VxeAlertInstance
 
 export interface AlertPrivateRef {
 }
@@ -25,7 +25,7 @@ export namespace VxeAlertPropTypes {
   export type Size = VxeComponentSizeType
 }
 
-export type VxeAlertProps = {
+export interface VxeAlertProps {
   title?: VxeAlertPropTypes.Title
   content?: VxeAlertPropTypes.Content
   status?: VxeAlertPropTypes.Status

@@ -1,15 +1,15 @@
-import { DefineVxeComponentApp, DefineVxeComponentOptions, DefineVxeComponentInstance, VxeComponentBaseOptions, VxeComponentEventParams, VxeComponentSizeType, VxeComponentStyleType, ValueOf } from '@vxe-ui/core'
+import { DefineVxeComponentApp, DefineVxeComponentOptions, DefineVxeComponentInstance, VxeComponentEventParams, VxeComponentSizeType, VxeComponentStyleType, ValueOf } from '@vxe-ui/core'
 
 /* eslint-disable @typescript-eslint/no-empty-interface,no-use-before-define,@typescript-eslint/ban-types */
 
 export declare const VxePulldown: DefineVxeComponentApp<VxePulldownProps, VxePulldownEventProps, VxePulldownSlots>
-export type VxePulldownComponent = DefineVxeComponentOptions<VxePulldownProps, VxePulldownEventProps>
+export type VxePulldownComponent = DefineVxeComponentOptions<VxePulldownProps>
 
-export type VxePulldownInstance = DefineVxeComponentInstance<VxePulldownProps, VxePulldownConstructor>
-
-export interface VxePulldownConstructor extends VxeComponentBaseOptions, VxePulldownMethods {
+export type VxePulldownInstance = DefineVxeComponentInstance<{
   reactData: PulldownReactData
-}
+}, VxePulldownProps, PulldownPrivateComputed, PulldownMethods>
+
+export type VxePulldownConstructor = VxePulldownInstance
 
 export interface PulldownPrivateRef {
 }
@@ -34,7 +34,7 @@ export namespace VxePulldownPropTypes {
   export type Transfer = boolean
 }
 
-export type VxePulldownProps = {
+export interface VxePulldownProps {
   size?: VxePulldownPropTypes.Size
   modelValue?: VxePulldownPropTypes.ModelValue
   /**

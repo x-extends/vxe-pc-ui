@@ -1,4 +1,4 @@
-import { DefineVxeComponentApp, DefineVxeComponentOptions, DefineVxeComponentInstance, VxeComponentBaseOptions, VxeComponentEventParams, VxeComponentSlotType, ValueOf } from '@vxe-ui/core'
+import { DefineVxeComponentApp, DefineVxeComponentOptions, DefineVxeComponentInstance, VxeComponentEventParams, VxeComponentSlotType, ValueOf } from '@vxe-ui/core'
 import { VxeTableDefines, VxeTablePropTypes, VxeTableConstructor } from './table'
 import { VxeTooltipPropTypes } from './tooltip'
 import { VxeGlobalRendererHandles } from '../ui'
@@ -6,13 +6,13 @@ import { VxeGlobalRendererHandles } from '../ui'
 /* eslint-disable @typescript-eslint/no-empty-interface,no-use-before-define,@typescript-eslint/ban-types,@typescript-eslint/no-unused-vars */
 
 export declare const VxeColumn: DefineVxeComponentApp<VxeColumnProps, VxeColumnEventProps, VxeColumnSlots>
-export type VxeColumnComponent = DefineVxeComponentOptions<VxeColumnProps, VxeColumnEventProps>
+export type VxeColumnComponent = DefineVxeComponentOptions<VxeColumnProps>
 
-export type VxeColumnInstance = DefineVxeComponentInstance<VxeColumnProps, VxeColumnConstructor>
-
-export interface VxeColumnConstructor extends VxeComponentBaseOptions, VxeColumnProps, VxeColumnMethods {
+export type VxeColumnInstance = DefineVxeComponentInstance<{
   reactData: ColumnReactData
-}
+}, VxeColumnProps, ColumnPrivateComputed, ColumnMethods>
+
+export type VxeColumnConstructor = VxeColumnInstance
 
 export interface ColumnPrivateRef {
 }

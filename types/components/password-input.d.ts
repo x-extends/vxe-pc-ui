@@ -1,15 +1,15 @@
-import { DefineVxeComponentApp, DefineVxeComponentOptions, DefineVxeComponentInstance, VxeComponentBaseOptions, VxeComponentEventParams, ValueOf, VxeComponentSizeType } from '@vxe-ui/core'
+import { DefineVxeComponentApp, DefineVxeComponentOptions, DefineVxeComponentInstance, VxeComponentEventParams, ValueOf, VxeComponentSizeType } from '@vxe-ui/core'
 
 /* eslint-disable @typescript-eslint/no-empty-interface,no-use-before-define,@typescript-eslint/ban-types */
 
 export declare const VxePasswordInput: DefineVxeComponentApp<VxePasswordInputProps, VxePasswordInputEventProps, VxePasswordInputSlots>
-export type VxePasswordInputComponent = DefineVxeComponentOptions<VxePasswordInputProps, VxePasswordInputEventProps>
+export type VxePasswordInputComponent = DefineVxeComponentOptions<VxePasswordInputProps>
 
-export type VxePasswordInputInstance = DefineVxeComponentInstance<VxePasswordInputProps, VxePasswordInputConstructor>
-
-export interface VxePasswordInputConstructor extends VxeComponentBaseOptions, VxePasswordInputMethods {
+export type VxePasswordInputInstance = DefineVxeComponentInstance<{
   reactData: PasswordInputReactData
-}
+}, VxePasswordInputProps, PasswordInputPrivateComputed, PasswordInputMethods>
+
+export type VxePasswordInputConstructor = VxePasswordInputInstance
 
 export interface PasswordInputPrivateRef {
 }
@@ -35,7 +35,7 @@ export namespace VxePasswordInputPropTypes {
   export type Autocomplete = string
 }
 
-export type VxePasswordInputProps = {
+export interface VxePasswordInputProps {
   size?: VxePasswordInputPropTypes.Size
   modelValue?: VxePasswordInputPropTypes.ModelValue
   className?: VxePasswordInputPropTypes.ClassName

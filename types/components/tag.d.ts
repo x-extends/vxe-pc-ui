@@ -1,15 +1,15 @@
-import { DefineVxeComponentApp, DefineVxeComponentOptions, DefineVxeComponentInstance, VxeComponentBaseOptions, VxeComponentEventParams, VxeComponentSizeType, ValueOf, VxeComponentStatusType } from '@vxe-ui/core'
+import { DefineVxeComponentApp, DefineVxeComponentOptions, DefineVxeComponentInstance, VxeComponentEventParams, VxeComponentSizeType, ValueOf, VxeComponentStatusType } from '@vxe-ui/core'
 
 /* eslint-disable @typescript-eslint/no-empty-interface,no-use-before-define,@typescript-eslint/ban-types */
 
 export declare const VxeTag: DefineVxeComponentApp<VxeTagProps, VxeTagEventProps, VxeTagSlots>
-export type VxeTagComponent = DefineVxeComponentOptions<VxeTagProps, VxeTagEventProps>
+export type VxeTagComponent = DefineVxeComponentOptions<VxeTagProps>
 
-export type VxeTagInstance = DefineVxeComponentInstance<VxeTagProps, VxeTagConstructor>
-
-export interface VxeTagConstructor extends VxeComponentBaseOptions, VxeTagProps, VxeTagMethods {
+export type VxeTagInstance = DefineVxeComponentInstance<{
   reactData: TagReactData
-}
+}, VxeTagProps, TagPrivateComputed, TagMethods>
+
+export type VxeTagConstructor = VxeTagInstance
 
 export interface TagPrivateRef {
 }

@@ -1,15 +1,15 @@
-import { DefineVxeComponentApp, DefineVxeComponentOptions, DefineVxeComponentInstance, VxeComponentBaseOptions, VxeComponentEventParams, VxeComponentSizeType, ValueOf } from '@vxe-ui/core'
+import { DefineVxeComponentApp, DefineVxeComponentOptions, DefineVxeComponentInstance, VxeComponentEventParams, VxeComponentSizeType, ValueOf } from '@vxe-ui/core'
 
 /* eslint-disable @typescript-eslint/no-empty-interface,no-use-before-define,@typescript-eslint/ban-types */
 
 export declare const VxeCheckbox: DefineVxeComponentApp<VxeCheckboxProps, VxeCheckboxEventProps, VxeCheckboxSlots>
-export type VxeCheckboxComponent = DefineVxeComponentOptions<VxeCheckboxProps, VxeCheckboxEventProps>
+export type VxeCheckboxComponent = DefineVxeComponentOptions<VxeCheckboxProps>
 
-export type VxeCheckboxInstance = DefineVxeComponentInstance<VxeCheckboxProps, VxeCheckboxConstructor>
-
-export interface VxeCheckboxConstructor extends VxeComponentBaseOptions, VxeCheckboxMethods {
+export type VxeCheckboxInstance = DefineVxeComponentInstance<{
   reactData: CheckboxReactData
-}
+}, VxeCheckboxProps, CheckboxPrivateComputed, CheckboxMethods>
+
+export type VxeCheckboxConstructor = VxeCheckboxInstance
 
 export interface CheckboxPrivateRef {
 }
@@ -27,7 +27,7 @@ export namespace VxeCheckboxPropTypes {
   export type Disabled = boolean
 }
 
-export type VxeCheckboxProps = {
+export interface VxeCheckboxProps {
   size?: VxeCheckboxPropTypes.Size
   /**
    * 绑定值

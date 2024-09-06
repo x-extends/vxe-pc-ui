@@ -1,16 +1,16 @@
-import { DefineVxeComponentApp, DefineVxeComponentOptions, DefineVxeComponentInstance, VxeComponentBaseOptions, VxeComponentEventParams, ValueOf } from '@vxe-ui/core'
+import { DefineVxeComponentApp, DefineVxeComponentOptions, DefineVxeComponentInstance, VxeComponentEventParams, ValueOf } from '@vxe-ui/core'
 import { VxeTabPaneProps, VxeTabPaneDefines, VxeTabPanePropTypes } from './tab-pane'
 
 /* eslint-disable @typescript-eslint/no-empty-interface,no-use-before-define,@typescript-eslint/ban-types */
 
 export declare const VxeTabs: DefineVxeComponentApp<VxeTabsProps, VxeTabsEventProps, VxeTabsSlots>
-export type VxeTabsComponent = DefineVxeComponentOptions<VxeTabsProps, VxeTabsEventProps>
+export type VxeTabsComponent = DefineVxeComponentOptions<VxeTabsProps>
 
-export type VxeTabsInstance = DefineVxeComponentInstance<VxeTabsProps, VxeTabsConstructor>
-
-export interface VxeTabsConstructor extends VxeComponentBaseOptions, VxeTabsMethods {
+export type VxeTabsInstance = DefineVxeComponentInstance<{
   reactData: TabsReactData
-}
+}, VxeTabsProps, TabsPrivateComputed, TabsMethods>
+
+export type VxeTabsConstructor = VxeTabsInstance
 
 export interface TabsPrivateRef {
 }
@@ -41,7 +41,7 @@ export namespace VxeTabsPropTypes {
   }) => boolean
 }
 
-export type VxeTabsProps = {
+export interface VxeTabsProps {
   modelValue?: VxeTabsPropTypes.ModelValue
   options?: VxeTabsPropTypes.Options
   destroyOnClose?: VxeTabsPropTypes.DestroyOnClose

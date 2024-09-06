@@ -1,15 +1,15 @@
-import { DefineVxeComponentApp, DefineVxeComponentOptions, DefineVxeComponentInstance, VxeComponentBaseOptions, ValueOf, VxeComponentStyleType, VxeComponentAlignType, VxeComponentSizeType } from '@vxe-ui/core'
+import { DefineVxeComponentApp, DefineVxeComponentOptions, DefineVxeComponentInstance, ValueOf, VxeComponentStyleType, VxeComponentAlignType, VxeComponentSizeType } from '@vxe-ui/core'
 
 /* eslint-disable @typescript-eslint/no-empty-interface,no-use-before-define,@typescript-eslint/ban-types */
 
 export declare const VxeInput: DefineVxeComponentApp<VxeInputProps, VxeInputEventProps, VxeInputSlots>
-export type VxeInputComponent = DefineVxeComponentOptions<VxeInputProps, VxeInputEventProps>
+export type VxeInputComponent = DefineVxeComponentOptions<VxeInputProps>
 
-export type VxeInputInstance = DefineVxeComponentInstance<VxeInputProps, VxeInputConstructor>
-
-export interface VxeInputConstructor extends VxeComponentBaseOptions, VxeInputMethods {
+export type VxeInputInstance = DefineVxeComponentInstance<{
   reactData: InputReactData
-}
+}, VxeInputProps, InputPrivateComputed, InputMethods>
+
+export type VxeInputConstructor = VxeInputInstance
 
 export interface InputPrivateRef {
 }
@@ -69,7 +69,7 @@ export namespace VxeInputPropTypes {
   export type Maxlength = string | number
 }
 
-export type VxeInputProps = {
+export interface VxeInputProps {
   size?: VxeInputPropTypes.Size
   modelValue?: VxeInputPropTypes.ModelValue
   className?: VxeInputPropTypes.ClassName

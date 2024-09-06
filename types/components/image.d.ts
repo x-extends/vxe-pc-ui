@@ -1,16 +1,16 @@
-import { DefineVxeComponentApp, DefineVxeComponentOptions, DefineVxeComponentInstance, VxeComponentBaseOptions, VxeComponentEventParams, ValueOf, VxeComponentSizeType } from '@vxe-ui/core'
+import { DefineVxeComponentApp, DefineVxeComponentOptions, DefineVxeComponentInstance, VxeComponentEventParams, ValueOf, VxeComponentSizeType } from '@vxe-ui/core'
 import { VxeImagePreviewProps, VxeImagePreviewPropTypes } from './image-preview'
 
 /* eslint-disable @typescript-eslint/no-empty-interface,no-use-before-define,@typescript-eslint/ban-types */
 
 export declare const VxeImage: DefineVxeComponentApp<VxeImageProps, VxeImageEventProps, VxeImageSlots>
-export type VxeImageComponent = DefineVxeComponentOptions<VxeImageProps, VxeImageEventProps>
+export type VxeImageComponent = DefineVxeComponentOptions<VxeImageProps>
 
-export type VxeImageInstance = DefineVxeComponentInstance<VxeImageProps, VxeImageConstructor>
-
-export interface VxeImageConstructor extends VxeComponentBaseOptions, VxeImageMethods {
+export type VxeImageInstance = DefineVxeComponentInstance<{
   reactData: ImageReactData
-}
+}, VxeImageProps, ImagePrivateComputed, ImageMethods>
+
+export type VxeImageConstructor = VxeImageInstance
 
 export interface ImagePrivateRef {
 }
@@ -32,7 +32,7 @@ export namespace VxeImagePropTypes {
   export type Size = VxeComponentSizeType
 }
 
-export type VxeImageProps = {
+export interface VxeImageProps {
   src?: VxeImagePropTypes.Src
   alt?: VxeImagePropTypes.Alt
   loading?: VxeImagePropTypes.Loading

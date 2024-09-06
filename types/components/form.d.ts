@@ -1,17 +1,16 @@
-import { DefineVxeComponentApp, DefineVxeComponentOptions, DefineVxeComponentInstance, VxeComponentBaseOptions, VxeComponentEventParams, VxeComponentSizeType, ValueOf, VxeComponentSlotType } from '@vxe-ui/core'
+import { DefineVxeComponentApp, DefineVxeComponentOptions, DefineVxeComponentInstance, VxeComponentEventParams, VxeComponentSizeType, ValueOf, VxeComponentSlotType } from '@vxe-ui/core'
 import { VxeFormItemPropTypes, VxeFormItemProps } from './form-item'
 
 /* eslint-disable @typescript-eslint/no-empty-interface,no-use-before-define,@typescript-eslint/ban-types,@typescript-eslint/no-unused-vars */
 
 export declare const VxeForm: DefineVxeComponentApp<VxeFormProps, VxeFormEventProps, VxeFormSlots>
-export type VxeFormComponent<D = any> = DefineVxeComponentOptions<VxeFormProps<D>, VxeFormEventProps>
+export type VxeFormComponent = DefineVxeComponentOptions<VxeFormProps>
 
-export type VxeFormInstance<D = any> = DefineVxeComponentInstance<VxeFormProps<D>, VxeFormConstructor<D>>
-
-export interface VxeFormConstructor<D = any> extends VxeComponentBaseOptions, VxeFormProps, VxeFormMethods<D> {
+export type VxeFormInstance = DefineVxeComponentInstance<{
   reactData: FormReactData
-  internalData: FormInternalData
-}
+}, VxeFormProps, FormPrivateComputed, FormMethods>
+
+export type VxeFormConstructor = VxeFormInstance
 
 export interface FormPrivateRef {
 }

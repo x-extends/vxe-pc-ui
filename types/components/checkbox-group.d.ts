@@ -1,16 +1,16 @@
-import { DefineVxeComponentApp, DefineVxeComponentOptions, DefineVxeComponentInstance, VxeComponentBaseOptions, VxeComponentEventParams, VxeComponentSizeType, ValueOf } from '@vxe-ui/core'
+import { DefineVxeComponentApp, DefineVxeComponentOptions, DefineVxeComponentInstance, VxeComponentEventParams, VxeComponentSizeType, ValueOf } from '@vxe-ui/core'
 import { VxeCheckboxPropTypes } from './checkbox'
 
 /* eslint-disable @typescript-eslint/no-empty-interface,no-use-before-define,@typescript-eslint/ban-types */
 
 export declare const VxeCheckboxGroup: DefineVxeComponentApp<VxeCheckboxGroupProps, VxeCheckboxGroupEventProps, VxeCheckboxGroupSlots>
-export type VxeCheckboxGroupComponent = DefineVxeComponentOptions<VxeCheckboxGroupProps, VxeCheckboxGroupEventProps>
+export type VxeCheckboxGroupComponent = DefineVxeComponentOptions<VxeCheckboxGroupProps>
 
-export type VxeCheckboxGroupInstance = DefineVxeComponentInstance<VxeCheckboxGroupProps, VxeCheckboxGroupConstructor>
-
-export interface VxeCheckboxGroupConstructor extends VxeComponentBaseOptions, VxeCheckboxGroupMethods {
+export type VxeCheckboxGroupInstance = DefineVxeComponentInstance<{
   reactData: CheckboxGroupReactData
-}
+}, VxeCheckboxGroupProps, CheckboxGroupPrivateComputed, CheckboxGroupMethods>
+
+export type VxeCheckboxGroupConstructor = VxeCheckboxGroupInstance
 
 export interface CheckboxGroupPrivateRef {
 }
@@ -34,7 +34,7 @@ export namespace VxeCheckboxGroupPropTypes {
   export type Disabled = boolean
 }
 
-export type VxeCheckboxGroupProps = {
+export interface VxeCheckboxGroupProps {
   size?: VxeCheckboxGroupPropTypes.Size
   options?: VxeCheckboxGroupPropTypes.Options
   optionProps?: VxeCheckboxGroupPropTypes.OptionProps

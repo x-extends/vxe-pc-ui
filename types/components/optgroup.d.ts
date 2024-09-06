@@ -1,16 +1,16 @@
-import { DefineVxeComponentApp, DefineVxeComponentOptions, DefineVxeComponentInstance, VxeComponentBaseOptions, VxeComponentEventParams } from '@vxe-ui/core'
+import { DefineVxeComponentApp, DefineVxeComponentOptions, DefineVxeComponentInstance, VxeComponentEventParams } from '@vxe-ui/core'
 import { VxeOptionPropTypes } from './option'
 
 /* eslint-disable @typescript-eslint/no-empty-interface,no-use-before-define,@typescript-eslint/ban-types */
 
 export declare const VxeOptgroup: DefineVxeComponentApp<VxeOptgroupProps, VxeOptgroupEventProps, VxeOptgroupSlots>
-export type VxeOptgroupComponent = DefineVxeComponentOptions<VxeOptgroupProps, VxeOptgroupEventProps>
+export type VxeOptgroupComponent = DefineVxeComponentOptions<VxeOptgroupProps>
 
-export type VxeOptgroupInstance = DefineVxeComponentInstance<VxeOptgroupProps, VxeOptgroupConstructor>
-
-export interface VxeOptgroupConstructor extends VxeComponentBaseOptions, VxeOptgroupMethods {
+export type VxeOptgroupInstance = DefineVxeComponentInstance<{
   reactData: OptgroupReactData
-}
+}, VxeOptgroupProps, OptgroupPrivateComputed, OptgroupMethods>
+
+export type VxeOptgroupConstructor = VxeOptgroupInstance
 
 export interface OptgroupPrivateRef {
 }
@@ -19,7 +19,7 @@ export interface VxeOptgroupPrivateRef extends OptgroupPrivateRef { }
 export namespace VxeOptgroupPropTypes {
 }
 
-export type VxeOptgroupProps = {
+export interface VxeOptgroupProps {
   /**
    * 显示内容
    */
