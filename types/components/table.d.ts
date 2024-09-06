@@ -3134,6 +3134,7 @@ export interface TablePrivateMethods<D = any> {
   saveCustomStore(type: 'confirm' | 'reset' | 'update:width' | 'update:fixed' | 'update:sort' | 'update:visible'): Promise<any>
   analyColumnWidth(): void
   checkSelectionStatus(): void
+  handleBatchSelectRows(rows: any[], value: any, isForce?: boolean): void
   handleSelectRow(params: any, value: any, isForce?: boolean): void
   handleCustom(): Promise<void>
   handleUpdateDataQueue(): void
