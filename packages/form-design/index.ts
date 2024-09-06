@@ -20,7 +20,7 @@ const formDesignHandle: FormDesignHandleExport = {
   useWidgetPropDataSource
 }
 
-dynamicApp.component(VxeFormDesignComponent.name as string, VxeFormDesignComponent)
+dynamicApp.use(VxeFormDesign)
 VxeUI.component(VxeFormDesignComponent)
 VxeUI.formDesignHandle = formDesignHandle
 

@@ -10,7 +10,7 @@ export const VxePrint = Object.assign({}, VxePrintComponent, {
   }
 })
 
-dynamicApp.component(VxePrintComponent.name as string, VxePrintComponent)
+dynamicApp.use(VxePrint)
 VxeUI.component(VxePrintComponent)
 VxeUI.print = printHtml
 

@@ -1,7 +1,7 @@
 import { defineComponent, ref, h, reactive, computed, resolveComponent, inject, createCommentVNode, PropType } from 'vue'
 import XEUtils from 'xe-utils'
 
-import type { VxeBreadcrumbItemPropTypes, BreadcrumbItemReactData, BreadcrumbItemPrivateRef, VxeBreadcrumbItemPrivateComputed, VxeBreadcrumbItemConstructor, VxeBreadcrumbItemPrivateMethods, VxeBreadcrumbConstructor, VxeBreadcrumbPrivateMethods } from '../../../types'
+import type { VxeBreadcrumbItemPropTypes, VxeBreadcrumbItemEmits, BreadcrumbItemReactData, BreadcrumbItemPrivateRef, VxeBreadcrumbItemPrivateComputed, VxeBreadcrumbItemConstructor, VxeBreadcrumbItemPrivateMethods, VxeBreadcrumbConstructor, VxeBreadcrumbPrivateMethods } from '../../../types'
 
 export default defineComponent({
   name: 'VxeBreadcrumbItem',
@@ -9,7 +9,8 @@ export default defineComponent({
     title: String as PropType<VxeBreadcrumbItemPropTypes.Title>,
     routerLink: Object as PropType<VxeBreadcrumbItemPropTypes.RouterLink>
   },
-  emits: [],
+  emits: [
+  ] as VxeBreadcrumbItemEmits,
   setup (props, context) {
     const { slots } = context
 

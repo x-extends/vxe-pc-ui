@@ -1,12 +1,12 @@
-import { RenderFunction, SetupContext, Ref, DefineComponent, ComponentPublicInstance } from 'vue'
-import { defineVxeComponent, VxeComponentBaseOptions, VxeComponentEventParams } from '@vxe-ui/core'
+import { RenderFunction, SetupContext, Ref } from 'vue'
+import { DefineVxeComponentApp, DefineVxeComponentOptions, DefineVxeComponentInstance, VxeComponentBaseOptions, VxeComponentEventParams } from '@vxe-ui/core'
 
 /* eslint-disable no-use-before-define,@typescript-eslint/ban-types */
 
-export declare const VxeBreadcrumbItem: defineVxeComponent<VxeBreadcrumbItemProps, VxeBreadcrumbItemEventProps, VxeBreadcrumbItemSlots>
-export type VxeBreadcrumbItemComponent = DefineComponent<VxeBreadcrumbItemProps & VxeBreadcrumbItemEventProps>
+export declare const VxeBreadcrumbItem: DefineVxeComponentApp<VxeBreadcrumbItemProps, VxeBreadcrumbItemEventProps, VxeBreadcrumbItemSlots>
+export type VxeBreadcrumbItemComponent = DefineVxeComponentOptions<VxeBreadcrumbItemProps, VxeBreadcrumbItemEventProps>
 
-export type VxeBreadcrumbItemInstance = ComponentPublicInstance<VxeBreadcrumbItemProps, VxeBreadcrumbItemConstructor>
+export type VxeBreadcrumbItemInstance = DefineVxeComponentInstance<VxeBreadcrumbItemProps, VxeBreadcrumbItemConstructor>
 
 export interface VxeBreadcrumbItemConstructor extends VxeComponentBaseOptions, VxeBreadcrumbItemMethods {
   props: VxeBreadcrumbItemProps

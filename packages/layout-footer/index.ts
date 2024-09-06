@@ -9,7 +9,7 @@ export const VxeLayoutFooter = Object.assign({}, VxeLayoutFooterComponent, {
   }
 })
 
-dynamicApp.component(VxeLayoutFooterComponent.name as string, VxeLayoutFooterComponent)
+dynamicApp.use(VxeLayoutFooter)
 VxeUI.component(VxeLayoutFooterComponent)
 
 export const LayoutFooter = VxeLayoutFooter

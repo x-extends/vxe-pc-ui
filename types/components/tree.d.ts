@@ -1,12 +1,12 @@
-import { RenderFunction, SetupContext, Ref, ComponentPublicInstance, ComputedRef, DefineComponent } from 'vue'
-import { defineVxeComponent, VxeComponentBaseOptions, VxeComponentEventParams, VxeComponentSizeType, ValueOf } from '@vxe-ui/core'
+import { RenderFunction, SetupContext, Ref, ComputedRef } from 'vue'
+import { DefineVxeComponentApp, DefineVxeComponentOptions, DefineVxeComponentInstance, VxeComponentBaseOptions, VxeComponentEventParams, VxeComponentSizeType, ValueOf } from '@vxe-ui/core'
 
 /* eslint-disable no-use-before-define,@typescript-eslint/ban-types */
 
-export declare const VxeTree: defineVxeComponent<VxeTreeProps, VxeTreeEventProps, VxeTreeSlots>
-export type VxeTreeComponent = DefineComponent<VxeTreeProps & VxeTreeEventProps>
+export declare const VxeTree: DefineVxeComponentApp<VxeTreeProps, VxeTreeEventProps, VxeTreeSlots>
+export type VxeTreeComponent = DefineVxeComponentOptions<VxeTreeProps, VxeTreeEventProps>
 
-export type VxeTreeInstance = ComponentPublicInstance<VxeTreeProps, VxeTreeConstructor>
+export type VxeTreeInstance = DefineVxeComponentInstance<VxeTreeProps, VxeTreeConstructor>
 
 export interface VxeTreeConstructor<D = any> extends VxeComponentBaseOptions, VxeTreeMethods<D> {
   props: VxeTreeProps

@@ -1,12 +1,12 @@
-import { RenderFunction, SetupContext, Ref, ComponentPublicInstance, DefineComponent } from 'vue'
-import { defineVxeComponent, VxeComponentBaseOptions, VxeComponentEventParams, VxeComponentSizeType, VxeComponentStatusType, ValueOf } from '@vxe-ui/core'
+import { RenderFunction, SetupContext, Ref } from 'vue'
+import { DefineVxeComponentApp, DefineVxeComponentOptions, VxeComponentBaseOptions, DefineVxeComponentInstance, VxeComponentEventParams, VxeComponentSizeType, VxeComponentStatusType, ValueOf } from '@vxe-ui/core'
 
 /* eslint-disable no-use-before-define,@typescript-eslint/ban-types */
 
-export declare const VxeAlert: defineVxeComponent<VxeAlertProps, VxeAlertEventProps, VxeAlertSlots>
-export type VxeAlertComponent = DefineComponent<VxeAlertProps & VxeAlertEventProps>
+export declare const VxeAlert: DefineVxeComponentApp<VxeAlertProps, VxeAlertEventProps, VxeAlertSlots>
+export type VxeAlertComponent = DefineVxeComponentOptions<VxeAlertProps, VxeAlertEventProps>
 
-export type VxeAlertInstance = ComponentPublicInstance<VxeAlertProps, VxeAlertConstructor>
+export type VxeAlertInstance = DefineVxeComponentInstance<VxeAlertProps, VxeAlertConstructor>
 
 export interface VxeAlertConstructor extends VxeComponentBaseOptions, VxeAlertMethods {
   props: VxeAlertProps

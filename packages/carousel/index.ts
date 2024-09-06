@@ -9,7 +9,7 @@ export const VxeCarousel = Object.assign({}, VxeCarouselComponent, {
   }
 })
 
-dynamicApp.component(VxeCarouselComponent.name as string, VxeCarouselComponent)
+dynamicApp.use(VxeCarousel)
 VxeUI.component(VxeCarouselComponent)
 
 export const Carousel = VxeCarousel

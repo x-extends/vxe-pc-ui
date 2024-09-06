@@ -626,7 +626,9 @@ export default defineComponent({
 
     onBeforeUnmount(() => {
       const elem = refElem.value
-      removeClass(elem, 'is--move')
+      if (elem) {
+        removeClass(elem, 'is--move')
+      }
     })
 
     onUnmounted(() => {

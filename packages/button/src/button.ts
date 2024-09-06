@@ -1,11 +1,11 @@
-import { defineComponent, h, ref, Ref, computed, Teleport, resolveComponent, VNode, onUnmounted, reactive, nextTick, PropType, onMounted, inject, createCommentVNode } from 'vue'
+import { defineComponent, h, ref, computed, Teleport, resolveComponent, VNode, onUnmounted, reactive, nextTick, PropType, onMounted, inject, createCommentVNode } from 'vue'
 import XEUtils from 'xe-utils'
 import { getConfig, globalEvents, getIcon, createEvent, useSize, usePermission } from '../../ui'
 import { getAbsolutePos, getEventTargetNode } from '../../ui/src/dom'
 import { getFuncText, getLastZIndex, nextZIndex } from '../../ui/src/utils'
 import { warnLog } from '../../ui/src/log'
 
-import type { VxeButtonConstructor, VxeButtonPropTypes, VxeButtonEmits, ButtonReactData, ButtonMethods, ButtonPrivateRef, ButtonInternalData, VxeButtonGroupConstructor, VxeButtonGroupPrivateMethods, VxeTableConstructor, VxeTablePrivateMethods, VxeFormConstructor, VxeFormPrivateMethods, VxeModalConstructor, VxeModalMethods } from '../../../types'
+import type { VxeButtonConstructor, VxeButtonPropTypes, VxeButtonEmits, ButtonReactData, ButtonMethods, ButtonPrivateRef, ButtonInternalData, VxeButtonGroupConstructor, VxeButtonGroupPrivateMethods, VxeTableConstructor, VxeTablePrivateMethods, VxeFormConstructor, VxeFormPrivateMethods, VxeModalConstructor, VxeModalMethods, ValueOf } from '../../../types'
 
 export default defineComponent({
   name: 'VxeButton',
@@ -20,7 +20,10 @@ export default defineComponent({
     /**
      * 按钮尺寸
      */
-    size: { type: String as PropType<VxeButtonPropTypes.Size>, default: () => getConfig().button.size || getConfig().size },
+    size: {
+      type: String as PropType<VxeButtonPropTypes.Size>,
+      default: () => getConfig().button.size || getConfig().size
+    },
     /**
      * 用来标识这一项
      */
@@ -66,7 +69,10 @@ export default defineComponent({
      * 是否加载中
      */
     loading: Boolean as PropType<VxeButtonPropTypes.Loading>,
-    trigger: { type: String as PropType<VxeButtonPropTypes.Trigger>, default: () => getConfig().button.trigger },
+    trigger: {
+      type: String as PropType<VxeButtonPropTypes.Trigger>,
+      default: () => getConfig().button.trigger
+    },
     align: String as PropType<VxeButtonPropTypes.Align>,
     /**
      * 在下拉面板关闭时销毁内容
@@ -104,9 +110,9 @@ export default defineComponent({
     const { computePermissionInfo } = usePermission(props)
 
     const reactData = reactive<ButtonReactData>({
-      inited: false,
+      initialized: false,
       visiblePanel: false,
-      animatVisible: false,
+      visibleAnimate: false,
       isActivated: false,
       panelIndex: 0,
       panelStyle: {},
@@ -117,9 +123,9 @@ export default defineComponent({
       showTime: null
     }
 
-    const refElem = ref() as Ref<HTMLDivElement>
-    const refButton = ref() as Ref<HTMLButtonElement>
-    const refBtnPanel = ref() as Ref<HTMLDivElement>
+    const refElem = ref<HTMLDivElement>()
+    const refButton = ref<HTMLButtonElement>()
+    const refBtnPanel = ref<HTMLDivElement>()
 
     const refMaps: ButtonPrivateRef = {
       refElem
@@ -136,7 +142,7 @@ export default defineComponent({
 
     let buttonMethods = {} as ButtonMethods
 
-    const computeTransfer = computed(() => {
+    const computeBtnTransfer = computed(() => {
       const { transfer } = props
       if (transfer === null) {
         const globalTransfer = getConfig().button.transfer
@@ -217,7 +223,7 @@ export default defineComponent({
         const { panelIndex } = reactData
         const targetElem = refButton.value
         const panelElem = refBtnPanel.value
-        const transfer = computeTransfer.value
+        const btnTransfer = computeBtnTransfer.value
         if (panelElem && targetElem) {
           const targetHeight = targetElem.offsetHeight
           const targetWidth = targetElem.offsetWidth
@@ -229,7 +235,7 @@ export default defineComponent({
           }
           const { top, left, boundingTop, visibleHeight, visibleWidth } = getAbsolutePos(targetElem)
           let panelPlacement = 'bottom'
-          if (transfer) {
+          if (btnTransfer) {
             let btnLeft = left + targetWidth - panelWidth
             let btnTop = top + targetHeight
             if (placement === 'top') {
@@ -285,9 +291,9 @@ export default defineComponent({
 
     const clickEvent = (evnt: Event) => {
       if ($xeButtonGroup) {
-        $xeButtonGroup.handleClick({ name: props.name as string }, evnt)
+        $xeButtonGroup.handleClick({ name: props.name }, evnt)
       } else {
-        buttonMethods.dispatchEvent('click', { $event: evnt }, evnt)
+        dispatchEvent('click', { $event: evnt }, evnt)
       }
     }
 
@@ -309,10 +315,10 @@ export default defineComponent({
         reactData.visiblePanel = false
         setTimeout(() => {
           if (!panelElem || panelElem.dataset.active !== 'Y') {
-            reactData.animatVisible = false
+            reactData.visibleAnimate = false
           }
         }, 350)
-        buttonMethods.dispatchEvent('dropdown-click', { name: targetElem.getAttribute('name'), $event: evnt }, evnt)
+        dispatchEvent('dropdown-click', { name: targetElem.getAttribute('name'), $event: evnt }, evnt)
       }
     }
 
@@ -320,7 +326,7 @@ export default defineComponent({
       const panelElem = refBtnPanel.value
       if (panelElem) {
         panelElem.dataset.active = 'Y'
-        reactData.animatVisible = true
+        reactData.visibleAnimate = true
         setTimeout(() => {
           if (panelElem.dataset.active === 'Y') {
             reactData.visiblePanel = true
@@ -347,11 +353,11 @@ export default defineComponent({
     }
 
     const mouseenterEvent = (evnt: MouseEvent) => {
-      emit('mouseenter', createEvent(evnt, {}))
+      dispatchEvent('mouseenter', {}, evnt)
     }
 
     const mouseleaveEvent = (evnt: MouseEvent) => {
-      emit('mouseleave', createEvent(evnt, {}))
+      dispatchEvent('mouseleave', {}, evnt)
     }
 
     const clickTargetEvent = (evnt: MouseEvent) => {
@@ -371,14 +377,14 @@ export default defineComponent({
       const panelElem = refBtnPanel.value
       if (panelElem) {
         panelElem.dataset.active = 'Y'
-        if (!reactData.inited) {
-          reactData.inited = true
+        if (!reactData.initialized) {
+          reactData.initialized = true
         }
         internalData.showTime = setTimeout(() => {
           if (panelElem.dataset.active === 'Y') {
             mouseenterDropdownEvent()
           } else {
-            reactData.animatVisible = false
+            reactData.visibleAnimate = false
           }
         }, trigger === 'click' ? 50 : 250)
       }
@@ -395,13 +401,13 @@ export default defineComponent({
             reactData.visiblePanel = false
             setTimeout(() => {
               if (panelElem.dataset.active !== 'Y') {
-                reactData.animatVisible = false
+                reactData.visibleAnimate = false
               }
             }, 350)
           }
         }, 100)
       } else {
-        reactData.animatVisible = false
+        reactData.visibleAnimate = false
         reactData.visiblePanel = false
       }
       return nextTick()
@@ -413,6 +419,8 @@ export default defineComponent({
 
     const renderContent = () => {
       const { content, icon, loading } = props
+      const iconSlot = slots.icon
+      const defaultSlot = slots.default
       const contVNs: VNode[] = []
       if (loading) {
         contVNs.push(
@@ -420,11 +428,11 @@ export default defineComponent({
             class: ['vxe-button--loading-icon', getIcon().BUTTON_LOADING]
           })
         )
-      } else if (slots.icon) {
+      } else if (iconSlot) {
         contVNs.push(
           h('span', {
             class: 'vxe-button--custom-icon'
-          }, slots.icon({}))
+          }, iconSlot({}))
         )
       } else if (icon) {
         contVNs.push(
@@ -433,11 +441,11 @@ export default defineComponent({
           })
         )
       }
-      if (slots.default) {
+      if (defaultSlot) {
         contVNs.push(
           h('span', {
             class: 'vxe-button--content'
-          }, slots.default({}))
+          }, defaultSlot({}))
         )
       } else if (content) {
         contVNs.push(
@@ -449,20 +457,26 @@ export default defineComponent({
       return contVNs
     }
 
+    const dispatchEvent = (type: ValueOf<VxeButtonEmits>, params: Record<string, any>, evnt: Event | null) => {
+      emit(type, createEvent(evnt, { $button: $xeButton }, params))
+    }
+
     buttonMethods = {
-      dispatchEvent (type, params, evnt) {
-        emit(type, createEvent(evnt, { $button: $xeButton }, params))
-      },
+      dispatchEvent,
       openPanel,
       closePanel,
       focus () {
         const btnElem = refButton.value
-        btnElem.focus()
+        if (btnElem) {
+          btnElem.focus()
+        }
         return nextTick()
       },
       blur () {
         const btnElem = refButton.value
-        btnElem.blur()
+        if (btnElem) {
+          btnElem.blur()
+        }
         return nextTick()
       }
     }
@@ -491,20 +505,22 @@ export default defineComponent({
 
     const renderVN = () => {
       const { className, popupClassName, align, trigger, title, routerLink, type, destroyOnClose, name, loading } = props
-      const { inited, visiblePanel } = reactData
+      const { initialized, visiblePanel } = reactData
       const isFormBtn = computeIsFormBtn.value
       const btnMode = computeBtnMode.value
       const btnStatus = computeBtnStatus.value
       const btnRound = computeBtnRound.value
       const btnCircle = computeBtnCircle.value
-      const transfer = computeTransfer.value
+      const btnTransfer = computeBtnTransfer.value
       const btnDisabled = computeBtnDisabled.value
       const permissionInfo = computePermissionInfo.value
       const vSize = computeSize.value
+      const downsSlot = slots.dropdowns
+
       if (!permissionInfo.visible) {
         return createCommentVNode()
       }
-      if (slots.dropdowns) {
+      if (downsSlot) {
         const btnOns: Record<string, any> = {}
         const panelOns: Record<string, any> = {}
         if (trigger === 'hover') {
@@ -572,25 +588,25 @@ export default defineComponent({
             ])),
           h(Teleport, {
             to: 'body',
-            disabled: transfer ? !inited : true
+            disabled: btnTransfer ? !initialized : true
           }, [
             h('div', {
               ref: refBtnPanel,
               class: ['vxe-button--dropdown-panel', popupClassName ? (XEUtils.isFunction(popupClassName) ? popupClassName({ $button: $xeButton }) : popupClassName) : '', {
                 [`size--${vSize}`]: vSize,
-                'animat--leave': reactData.animatVisible,
-                'animat--enter': visiblePanel
+                'ani--leave': reactData.visibleAnimate,
+                'ani--enter': visiblePanel
               }],
               placement: reactData.panelPlacement,
               style: reactData.panelStyle,
               ...panelOns
-            }, inited
+            }, initialized
               ? [
                   h('div', {
                     class: 'vxe-button--dropdown-wrapper',
                     onMousedown: mousedownDropdownEvent,
                     onClick: clickDropdownEvent
-                  }, destroyOnClose && !visiblePanel ? [] : slots.dropdowns({}))
+                  }, destroyOnClose && !visiblePanel ? [] : downsSlot({}))
                 ]
               : [])
           ])

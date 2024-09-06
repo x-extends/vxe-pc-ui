@@ -9,7 +9,7 @@ export const VxeCollapsePane = Object.assign({}, VxeCollapsePaneComponent, {
   }
 })
 
-dynamicApp.component(VxeCollapsePaneComponent.name as string, VxeCollapsePaneComponent)
+dynamicApp.use(VxeCollapsePane)
 VxeUI.component(VxeCollapsePaneComponent)
 
 export const CollapsePane = VxeCollapsePane

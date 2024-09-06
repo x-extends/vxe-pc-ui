@@ -9,7 +9,7 @@ export const VxeText = Object.assign({}, VxeTextComponent, {
   }
 })
 
-dynamicApp.component(VxeTextComponent.name as string, VxeTextComponent)
+dynamicApp.use(VxeText)
 VxeUI.component(VxeTextComponent)
 
 export const Text = VxeText

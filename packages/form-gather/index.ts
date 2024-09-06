@@ -9,7 +9,7 @@ export const VxeFormGather = Object.assign(VxeFormGatherComponent, {
   }
 })
 
-dynamicApp.component(VxeFormGatherComponent.name as string, VxeFormGatherComponent)
+dynamicApp.use(VxeFormGather)
 VxeUI.component(VxeFormGatherComponent)
 
 export const FormGather = VxeFormGather

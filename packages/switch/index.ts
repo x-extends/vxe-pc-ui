@@ -9,7 +9,7 @@ export const VxeSwitch = Object.assign(VxeSwitchComponent, {
   }
 })
 
-dynamicApp.component(VxeSwitchComponent.name as string, VxeSwitchComponent)
+dynamicApp.use(VxeSwitch)
 VxeUI.component(VxeSwitchComponent)
 
 export const Switch = VxeSwitch

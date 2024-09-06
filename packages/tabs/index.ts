@@ -9,7 +9,7 @@ export const VxeTabs = Object.assign({}, VxeTabsComponent, {
   }
 })
 
-dynamicApp.component(VxeTabsComponent.name as string, VxeTabsComponent)
+dynamicApp.use(VxeTabs)
 VxeUI.component(VxeTabsComponent)
 
 export const Tabs = VxeTabs

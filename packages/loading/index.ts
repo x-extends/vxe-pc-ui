@@ -26,7 +26,7 @@ export const LoadingController = {
   }
 }
 
-dynamicApp.component(VxeLoadingComponent.name as string, VxeLoadingComponent)
+dynamicApp.use(VxeLoading)
 VxeUI.component(VxeLoadingComponent)
 VxeUI.loading = LoadingController
 

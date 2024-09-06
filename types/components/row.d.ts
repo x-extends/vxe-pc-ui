@@ -1,12 +1,12 @@
-import { RenderFunction, SetupContext, Ref, ComponentPublicInstance, DefineComponent } from 'vue'
-import { defineVxeComponent, VxeComponentBaseOptions, VxeComponentEventParams, ValueOf } from '@vxe-ui/core'
+import { RenderFunction, SetupContext, Ref } from 'vue'
+import { DefineVxeComponentApp, DefineVxeComponentOptions, DefineVxeComponentInstance, VxeComponentBaseOptions, VxeComponentEventParams, VxeComponentSizeType, ValueOf } from '@vxe-ui/core'
 
 /* eslint-disable no-use-before-define,@typescript-eslint/ban-types */
 
-export declare const VxeRow: defineVxeComponent<VxeRowProps, VxeRowEventProps, VxeRowSlots>
-export type VxeRowComponent = DefineComponent<VxeRowProps & VxeRowEventProps>
+export declare const VxeRow: DefineVxeComponentApp<VxeRowProps, VxeRowEventProps, VxeRowSlots>
+export type VxeRowComponent = DefineVxeComponentOptions<VxeRowProps, VxeRowEventProps>
 
-export type VxeRowInstance = ComponentPublicInstance<VxeRowProps, VxeRowConstructor>
+export type VxeRowInstance = DefineVxeComponentInstance<VxeRowProps, VxeRowConstructor>
 
 export interface VxeRowConstructor extends VxeComponentBaseOptions, VxeRowMethods {
   props: VxeRowProps
@@ -26,12 +26,14 @@ export namespace VxeRowPropTypes {
   export type Gutter = string | number | (string | number)[]
   export type Wrap = boolean
   export type Vertical = boolean
+  export type Size = VxeComponentSizeType
 }
 
 export type VxeRowProps = {
   gutter?: VxeRowPropTypes.Gutter
   wrap?: VxeRowPropTypes.Wrap
   vertical?: VxeRowPropTypes.Vertical
+  size?: VxeRowPropTypes.Size
 }
 
 export interface RowPrivateComputed {
@@ -49,7 +51,9 @@ export interface VxeRowMethods extends RowMethods { }
 export interface RowPrivateMethods { }
 export interface VxeRowPrivateMethods extends RowPrivateMethods { }
 
-export type VxeRowEmits = []
+export type VxeRowEmits = [
+  'click'
+]
 
 export namespace VxeRowDefines {
   export interface RowEventParams extends VxeComponentEventParams {

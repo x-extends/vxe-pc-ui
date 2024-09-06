@@ -9,7 +9,7 @@ export const VxeTextarea = Object.assign(VxeTextareaComponent, {
   }
 })
 
-dynamicApp.component(VxeTextareaComponent.name as string, VxeTextareaComponent)
+dynamicApp.use(VxeTextarea)
 VxeUI.component(VxeTextareaComponent)
 
 export const Textarea = VxeTextarea

@@ -3,7 +3,7 @@ import XEUtils from 'xe-utils'
 import { getConfig, createEvent, useSize } from '../../ui'
 import { getFuncText } from '../../ui/src/utils'
 
-import type { VxeSwitchPropTypes, VxeSwitchConstructor, VxeSwitchEmits, SwitchReactData, SwitchMethods, VxeFormConstructor, VxeFormPrivateMethods, VxeFormDefines } from '../../../types'
+import type { VxeSwitchPropTypes, VxeSwitchConstructor, VxeSwitchEmits, SwitchInternalData, SwitchReactData, SwitchMethods, VxeFormConstructor, VxeFormPrivateMethods, VxeFormDefines } from '../../../types'
 
 export default defineComponent({
   name: 'VxeSwitch',
@@ -13,11 +13,20 @@ export default defineComponent({
       type: Boolean as PropType<VxeSwitchPropTypes.Disabled>,
       default: null
     },
-    size: { type: String as PropType<VxeSwitchPropTypes.Size>, default: () => getConfig().switch.size || getConfig().size },
+    size: {
+      type: String as PropType<VxeSwitchPropTypes.Size>,
+      default: () => getConfig().switch.size || getConfig().size
+    },
     openLabel: String as PropType<VxeSwitchPropTypes.OpenLabel>,
     closeLabel: String as PropType<VxeSwitchPropTypes.CloseLabel>,
-    openValue: { type: [String, Number, Boolean] as PropType<VxeSwitchPropTypes.OpenValue>, default: true },
-    closeValue: { type: [String, Number, Boolean] as PropType<VxeSwitchPropTypes.CloseValue>, default: false },
+    openValue: {
+      type: [String, Number, Boolean] as PropType<VxeSwitchPropTypes.OpenValue>,
+      default: true
+    },
+    closeValue: {
+      type: [String, Number, Boolean] as PropType<VxeSwitchPropTypes.CloseValue>,
+      default: false
+    },
     openIcon: String as PropType<VxeSwitchPropTypes.OpenIcon>,
     closeIcon: String as PropType<VxeSwitchPropTypes.CloseIcon>,
     openActiveIcon: String as PropType<VxeSwitchPropTypes.OpenActiveIcon>,
@@ -44,11 +53,15 @@ export default defineComponent({
       offsetLeft: 0
     })
 
+    const internalData: SwitchInternalData = {
+    }
+
     const $xeSwitch = {
       xID,
       props,
       context,
-      reactData
+      reactData,
+      internalData
     } as unknown as VxeSwitchConstructor
 
     const refButton = ref() as Ref<HTMLButtonElement>
@@ -78,12 +91,11 @@ export default defineComponent({
       return props.modelValue === props.openValue
     })
 
-    let _atimeout: any
     const clickEvent = (evnt: Event) => {
       const isDisabled = computeIsDisabled.value
       if (!isDisabled) {
         const isChecked = computeIsChecked.value
-        clearTimeout(_atimeout)
+        clearTimeout(internalData.atTimeout)
         const value = isChecked ? props.closeValue : props.openValue
         reactData.hasAnimat = true
         emit('update:modelValue', value)
@@ -92,8 +104,9 @@ export default defineComponent({
         if ($xeForm && formItemInfo) {
           $xeForm.triggerItemEvent(evnt, formItemInfo.itemConfig.field, value)
         }
-        _atimeout = setTimeout(() => {
+        internalData.atTimeout = setTimeout(() => {
           reactData.hasAnimat = false
+          internalData.atTimeout = undefined
         }, 400)
       }
     }
@@ -115,12 +128,16 @@ export default defineComponent({
       focus () {
         const btnElem = refButton.value
         reactData.isActivated = true
-        btnElem.focus()
+        if (btnElem) {
+          btnElem.focus()
+        }
         return nextTick()
       },
       blur () {
         const btnElem = refButton.value
-        btnElem.blur()
+        if (btnElem) {
+          btnElem.blur()
+        }
         reactData.isActivated = false
         return nextTick()
       }
@@ -135,6 +152,7 @@ export default defineComponent({
       const onShowLabel = computeOnShowLabel.value
       const offShowLabel = computeOffShowLabel.value
       const isDisabled = computeIsDisabled.value
+
       return h('div', {
         class: ['vxe-switch', isChecked ? 'is--on' : 'is--off', {
           [`size--${vSize}`]: vSize,

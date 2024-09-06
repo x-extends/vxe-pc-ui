@@ -7,7 +7,7 @@ import { toCssUnit } from '../../ui/src/dom'
 import { readLocalFile } from './util'
 import VxeButtonComponent from '../../button/src/button'
 
-import type { VxeUploadDefines, VxeUploadPropTypes, UploadReactData, UploadPrivateMethods, UploadMethods, VxeUploadEmits, UploadPrivateRef, VxeUploadPrivateComputed, VxeUploadConstructor, VxeUploadPrivateMethods, VxeFormDefines, VxeFormConstructor, VxeFormPrivateMethods, ValueOf } from '../../../types'
+import type { VxeUploadDefines, VxeUploadPropTypes, UploadReactData, UploadInternalData, UploadPrivateMethods, UploadMethods, VxeUploadEmits, UploadPrivateRef, VxeUploadPrivateComputed, VxeUploadConstructor, VxeUploadPrivateMethods, VxeFormDefines, VxeFormConstructor, VxeFormPrivateMethods, ValueOf } from '../../../types'
 
 export default defineComponent({
   name: 'VxeUpload',
@@ -128,7 +128,10 @@ export default defineComponent({
     downloadMethod: Function as PropType<VxeUploadPropTypes.DownloadMethod>,
     getUrlMethod: Function as PropType<VxeUploadPropTypes.GetUrlMethod>,
     getThumbnailUrlMethod: Function as PropType<VxeUploadPropTypes.GetThumbnailUrlMethod>,
-    size: { type: String as PropType<VxeUploadPropTypes.Size>, default: () => getConfig().upload.size || getConfig().size }
+    size: {
+      type: String as PropType<VxeUploadPropTypes.Size>,
+      default: () => getConfig().upload.size || getConfig().size
+    }
   },
   emits: [
     'update:modelValue',
@@ -158,6 +161,10 @@ export default defineComponent({
       fileList: [],
       fileCacheMaps: {}
     })
+
+    const internalData: UploadInternalData = {
+      imagePreviewTypes: ['jpg', 'jpeg', 'png', 'gif']
+    }
 
     const refMaps: UploadPrivateRef = {
       refElem
@@ -302,6 +309,7 @@ export default defineComponent({
       props,
       context,
       reactData,
+      internalData,
 
       getRefMaps: () => refMaps,
       getComputeMaps: () => computeMaps
@@ -397,12 +405,11 @@ export default defineComponent({
         : item[urlProp]
     }
 
-    const imagePreviewTypes = ['jpg', 'jpeg', 'png', 'gif']
-
     const handleDefaultFilePreview = (item: VxeUploadDefines.FileObjItem) => {
       const { imageTypes, showDownloadButton } = props
       const typeProp = computeTypeProp.value
       const beforeDownloadFn = props.beforeDownloadMethod || getConfig().upload.beforeDownloadMethod
+      const { imagePreviewTypes } = internalData
       // 如果是预览图片
       if (imagePreviewTypes.concat(imageTypes || []).some(type => `${type}`.toLowerCase() === `${item[typeProp]}`.toLowerCase())) {
         if (VxeUI.previewImage) {
@@ -792,59 +799,61 @@ export default defineComponent({
       const formReadonly = computeFormReadonly.value
       const isImage = computeIsImage.value
 
-      VxeUI.modal.open({
-        title: formReadonly ? getI18n('vxe.upload.morePopup.readTitle') : getI18n(`vxe.upload.morePopup.${isImage ? 'imageTitle' : 'fileTitle'}`),
-        width: 660,
-        height: 500,
-        escClosable: true,
-        showMaximize: true,
-        resize: true,
-        maskClosable: true,
-        slots: {
-          default () {
-            const { showErrorStatus } = props
-            const { isDrag } = reactData
-            const isDisabled = computeIsDisabled.value
-            const { fileList } = reactData
+      if (VxeUI.modal) {
+        VxeUI.modal.open({
+          title: formReadonly ? getI18n('vxe.upload.morePopup.readTitle') : getI18n(`vxe.upload.morePopup.${isImage ? 'imageTitle' : 'fileTitle'}`),
+          width: 660,
+          height: 500,
+          escClosable: true,
+          showMaximize: true,
+          resize: true,
+          maskClosable: true,
+          slots: {
+            default () {
+              const { showErrorStatus } = props
+              const { isDrag } = reactData
+              const isDisabled = computeIsDisabled.value
+              const { fileList } = reactData
 
-            return h('div', {
-              class: ['vxe-upload--more-popup', {
-                'is--readonly': formReadonly,
-                'is--disabled': isDisabled,
-                'show--error': showErrorStatus,
-                'is--drag': isDrag
-              }],
-              onDragover: handleDragoverEvent,
-              onDragleave: handleDragleaveEvent,
-              onDrop: handleDropEvent
-            }, [
-              isImage
-                ? h('div', {
-                  class: 'vxe-upload--image-more-list'
-                }, renderImageItemList(fileList, true).concat(renderImageAction(true)))
-                : h('div', {
-                  class: 'vxe-upload--file-more-list'
-                }, [
-                  renderFileAction(true),
-                  h('div', {
-                    class: 'vxe-upload--file-list'
-                  }, renderFileItemList(fileList, true))
-                ]),
-              isDrag
-                ? h('div', {
-                  class: 'vxe-upload--drag-placeholder'
-                }, getI18n('vxe.upload.dragPlaceholder'))
-                : createCommentVNode()
-            ])
+              return h('div', {
+                class: ['vxe-upload--more-popup', {
+                  'is--readonly': formReadonly,
+                  'is--disabled': isDisabled,
+                  'show--error': showErrorStatus,
+                  'is--drag': isDrag
+                }],
+                onDragover: handleDragoverEvent,
+                onDragleave: handleDragleaveEvent,
+                onDrop: handleDropEvent
+              }, [
+                isImage
+                  ? h('div', {
+                    class: 'vxe-upload--image-more-list'
+                  }, renderImageItemList(fileList, true).concat(renderImageAction(true)))
+                  : h('div', {
+                    class: 'vxe-upload--file-more-list'
+                  }, [
+                    renderFileAction(true),
+                    h('div', {
+                      class: 'vxe-upload--file-list'
+                    }, renderFileItemList(fileList, true))
+                  ]),
+                isDrag
+                  ? h('div', {
+                    class: 'vxe-upload--drag-placeholder'
+                  }, getI18n('vxe.upload.dragPlaceholder'))
+                  : createCommentVNode()
+              ])
+            }
+          },
+          onShow () {
+            reactData.showMorePopup = true
+          },
+          onHide () {
+            reactData.showMorePopup = false
           }
-        },
-        onShow () {
-          reactData.showMorePopup = true
-        },
-        onHide () {
-          reactData.showMorePopup = false
-        }
-      })
+        })
+      }
     }
 
     const uploadMethods: UploadMethods = {

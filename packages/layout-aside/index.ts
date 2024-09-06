@@ -9,7 +9,7 @@ export const VxeLayoutAside = Object.assign({}, VxeLayoutAsideComponent, {
   }
 })
 
-dynamicApp.component(VxeLayoutAsideComponent.name as string, VxeLayoutAsideComponent)
+dynamicApp.use(VxeLayoutAside)
 VxeUI.component(VxeLayoutAsideComponent)
 
 export const LayoutAside = VxeLayoutAside

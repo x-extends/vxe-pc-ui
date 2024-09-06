@@ -9,7 +9,7 @@ export const VxeFormItem = Object.assign(VxeFormItemComponent, {
   }
 })
 
-dynamicApp.component(VxeFormItemComponent.name as string, VxeFormItemComponent)
+dynamicApp.use(VxeFormItem)
 VxeUI.component(VxeFormItemComponent)
 
 export const FormItem = VxeFormItem

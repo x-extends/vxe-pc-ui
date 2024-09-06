@@ -1,13 +1,13 @@
-import { RenderFunction, SetupContext, Ref, ComponentPublicInstance, DefineComponent } from 'vue'
-import { defineVxeComponent, VxeComponentBaseOptions, VxeComponentEventParams, VxeComponentSizeType, ValueOf } from '@vxe-ui/core'
+import { RenderFunction, SetupContext, Ref } from 'vue'
+import { DefineVxeComponentApp, DefineVxeComponentOptions, DefineVxeComponentInstance, VxeComponentBaseOptions, VxeComponentEventParams, VxeComponentSizeType, ValueOf } from '@vxe-ui/core'
 import { VxeTreeProps } from './tree'
 
 /* eslint-disable no-use-before-define,@typescript-eslint/ban-types */
 
-export declare const VxeTreeSelect: defineVxeComponent<VxeTreeSelectProps, VxeTreeSelectEventProps, VxeTreeSelectSlots>
-export type VxeTreeSelectComponent = DefineComponent<VxeTreeSelectProps & VxeTreeSelectEventProps>
+export declare const VxeTreeSelect: DefineVxeComponentApp<VxeTreeSelectProps, VxeTreeSelectEventProps, VxeTreeSelectSlots>
+export type VxeTreeSelectComponent = DefineVxeComponentOptions<VxeTreeSelectProps, VxeTreeSelectEventProps>
 
-export type VxeTreeSelectInstance = ComponentPublicInstance<VxeTreeSelectProps, VxeTreeSelectConstructor>
+export type VxeTreeSelectInstance = DefineVxeComponentInstance<VxeTreeSelectProps, VxeTreeSelectConstructor>
 
 export interface VxeTreeSelectConstructor extends VxeComponentBaseOptions, VxeTreeSelectMethods {
   props: VxeTreeSelectProps
@@ -106,7 +106,7 @@ export interface TreeSelectReactData {
   panelPlacement: any
   triggerFocusPanel: boolean
   visiblePanel: boolean
-  animatVisible: boolean
+  visibleAnimate: boolean
   isActivated: boolean
 }
 

@@ -10,7 +10,7 @@ export const VxeDatePicker = Object.assign({}, VxeDatePickerComponent, {
   }
 })
 
-dynamicApp.component(VxeDatePickerComponent.name as string, VxeDatePickerComponent)
+dynamicApp.use(VxeDatePicker)
 VxeUI.component(VxeDatePickerComponent)
 
 export const DatePicker = VxeDatePicker

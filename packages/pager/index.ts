@@ -9,7 +9,7 @@ export const VxePager = Object.assign(VxePagerComponent, {
   }
 })
 
-dynamicApp.component(VxePagerComponent.name as string, VxePagerComponent)
+dynamicApp.use(VxePager)
 VxeUI.component(VxePagerComponent)
 
 export const Pager = VxePager

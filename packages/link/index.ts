@@ -9,7 +9,7 @@ export const VxeLink = Object.assign({}, VxeLinkComponent, {
   }
 })
 
-dynamicApp.component(VxeLinkComponent.name as string, VxeLinkComponent)
+dynamicApp.use(VxeLink)
 VxeUI.component(VxeLinkComponent)
 
 export const Link = VxeLink

@@ -4,7 +4,7 @@ import { getConfig, createEvent } from '../../ui'
 import { printHtml } from './util'
 import { getSlotVNs } from '../..//ui/src/vn'
 
-import type { VxePrintPropTypes, PrintReactData, PrintPrivateRef, VxePrintPrivateComputed, VxePrintConstructor, VxePrintPrivateMethods, PrintMethods } from '../../../types'
+import type { VxePrintPropTypes, PrintReactData, PrintPrivateRef, VxePrintEmits, VxePrintPrivateComputed, VxePrintConstructor, VxePrintPrivateMethods, PrintMethods } from '../../../types'
 
 export default defineComponent({
   name: 'VxePrint',
@@ -35,7 +35,7 @@ export default defineComponent({
     leftHtml: String as PropType<VxePrintPropTypes.LeftHtml>,
     rightHtml: String as PropType<VxePrintPropTypes.RightHtml>,
     showAllPageTitle: {
-      Boolean: Boolean as PropType<VxePrintPropTypes.ShowAllPageTitle>,
+      type: Boolean as PropType<VxePrintPropTypes.ShowAllPageTitle>,
       default: () => getConfig().print.showAllPageTitle
     },
     customStyle: {
@@ -44,7 +44,7 @@ export default defineComponent({
     },
     beforeMethod: Function as PropType<VxePrintPropTypes.BeforeMethod>
   },
-  emits: [],
+  emits: [] as VxePrintEmits,
   setup (props, context) {
     const { slots, emit } = context
 

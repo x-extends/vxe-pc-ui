@@ -1,15 +1,15 @@
-import { RenderFunction, SetupContext, Ref, ComputedRef, ComponentPublicInstance, DefineComponent } from 'vue'
-import { defineVxeComponent, VxeComponentBaseOptions, VxeComponentEventParams, VxeComponentSizeType, ValueOf, VxeComponentPermissionCodeType, VxeComponentStatusType } from '@vxe-ui/core'
+import { RenderFunction, SetupContext, Ref, ComputedRef } from 'vue'
+import { DefineVxeComponentApp, DefineVxeComponentOptions, DefineVxeComponentInstance, VxeComponentBaseOptions, VxeComponentEventParams, VxeComponentSizeType, ValueOf, VxeComponentPermissionCodeType, VxeComponentStatusType } from '@vxe-ui/core'
 import { VxeFormDesignDefines } from './form-design'
 import { VxeColumnPropTypes } from './column'
 import { VxeFormItemPropTypes } from './form-item'
 
 /* eslint-disable no-use-before-define,@typescript-eslint/ban-types */
 
-export declare const VxeListDesign: defineVxeComponent<VxeListDesignProps, VxeListDesignEventProps, VxeListDesignSlots>
-export type VxeListDesignComponent = DefineComponent<VxeListDesignProps & VxeListDesignEventProps>
+export declare const VxeListDesign: DefineVxeComponentApp<VxeListDesignProps, VxeListDesignEventProps, VxeListDesignSlots>
+export type VxeListDesignComponent = DefineVxeComponentOptions<VxeListDesignProps, VxeListDesignEventProps>
 
-export type VxeListDesignInstance = ComponentPublicInstance<VxeListDesignProps, VxeListDesignConstructor>
+export type VxeListDesignInstance = DefineVxeComponentInstance<VxeListDesignProps, VxeListDesignConstructor>
 
 export interface VxeListDesignConstructor extends VxeComponentBaseOptions, VxeListDesignMethods {
   props: VxeListDesignProps
@@ -41,7 +41,7 @@ export namespace VxeListDesignPropTypes {
   }
 }
 
-export type VxeListDesignProps = {
+export interface VxeListDesignProps {
   size?: VxeListDesignPropTypes.Size
   height?: VxeListDesignPropTypes.Height
   config?: VxeListDesignPropTypes.Config

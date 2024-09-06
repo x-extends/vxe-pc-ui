@@ -1,12 +1,12 @@
-import { RenderFunction, SetupContext, Ref, ComponentPublicInstance, DefineComponent } from 'vue'
-import { defineVxeComponent, VxeComponentBaseOptions, VxeComponentEventParams, ValueOf } from '@vxe-ui/core'
+import { RenderFunction, SetupContext, Ref } from 'vue'
+import { DefineVxeComponentApp, DefineVxeComponentOptions, DefineVxeComponentInstance, VxeComponentBaseOptions, VxeComponentEventParams, ValueOf } from '@vxe-ui/core'
 
 /* eslint-disable no-use-before-define,@typescript-eslint/ban-types */
 
-export declare const VxeCarouselItem: defineVxeComponent<VxeCarouselItemProps, VxeCarouselItemEventProps, VxeCarouselItemSlots>
-export type VxeCarouselItemComponent = DefineComponent<VxeCarouselItemProps & VxeCarouselItemEventProps>
+export declare const VxeCarouselItem: DefineVxeComponentApp<VxeCarouselItemProps, VxeCarouselItemEventProps, VxeCarouselItemSlots>
+export type VxeCarouselItemComponent = DefineVxeComponentOptions<VxeCarouselItemProps, VxeCarouselItemEventProps>
 
-export type VxeCarouselItemInstance = ComponentPublicInstance<VxeCarouselItemProps, VxeCarouselItemConstructor>
+export type VxeCarouselItemInstance = DefineVxeComponentInstance<VxeCarouselItemProps, VxeCarouselItemConstructor>
 
 export interface VxeCarouselItemConstructor extends VxeComponentBaseOptions, VxeCarouselItemMethods {
   props: VxeCarouselItemProps

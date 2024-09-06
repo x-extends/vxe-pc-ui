@@ -1,13 +1,13 @@
-import { RenderFunction, SetupContext, Ref, ComponentPublicInstance, ComputedRef, DefineComponent } from 'vue'
-import { defineVxeComponent, VxeComponentBaseOptions, VxeComponentEventParams, VxeComponentSizeType, ValueOf, VxeComponentSlotType } from '@vxe-ui/core'
+import { RenderFunction, SetupContext, Ref, ComputedRef } from 'vue'
+import { DefineVxeComponentApp, DefineVxeComponentOptions, DefineVxeComponentInstance, VxeComponentBaseOptions, VxeComponentEventParams, VxeComponentSizeType, ValueOf, VxeComponentSlotType } from '@vxe-ui/core'
 import { VxeFormItemPropTypes, VxeFormItemProps } from './form-item'
 
 /* eslint-disable no-use-before-define,@typescript-eslint/ban-types */
 
-export declare const VxeForm: defineVxeComponent<VxeFormProps, VxeFormEventProps, VxeFormSlots>
-export type VxeFormComponent<D = any> = DefineComponent<VxeFormProps<D> & VxeFormEventProps>
+export declare const VxeForm: DefineVxeComponentApp<VxeFormProps, VxeFormEventProps, VxeFormSlots>
+export type VxeFormComponent<D = any> = DefineVxeComponentOptions<VxeFormProps<D>, VxeFormEventProps>
 
-export type VxeFormInstance<D = any> = ComponentPublicInstance<VxeFormProps<D>, VxeFormConstructor<D>>
+export type VxeFormInstance<D = any> = DefineVxeComponentInstance<VxeFormProps<D>, VxeFormConstructor<D>>
 
 export interface VxeFormConstructor<D = any> extends VxeComponentBaseOptions, VxeFormMethods<D> {
   props: VxeFormProps<D>
@@ -82,7 +82,7 @@ export namespace VxeFormPropTypes {
   export type CustomLayout = boolean
 }
 
-export type VxeFormProps<D = any> = {
+export interface VxeFormProps<D = any> {
   size?: VxeFormPropTypes.Size
   collapseStatus?: VxeFormPropTypes.CollapseStatus
   loading?: VxeFormPropTypes.Loading

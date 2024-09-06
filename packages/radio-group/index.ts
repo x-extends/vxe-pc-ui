@@ -9,7 +9,7 @@ export const VxeRadioGroup = Object.assign(VxeRadioGroupComponent, {
   }
 })
 
-dynamicApp.component(VxeRadioGroupComponent.name as string, VxeRadioGroupComponent)
+dynamicApp.use(VxeRadioGroup)
 VxeUI.component(VxeRadioGroupComponent)
 
 export const RadioGroup = VxeRadioGroup

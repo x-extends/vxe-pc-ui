@@ -1,12 +1,12 @@
-import { RenderFunction, SetupContext, Ref, ComponentPublicInstance, DefineComponent } from 'vue'
-import { defineVxeComponent, VxeComponentBaseOptions, VxeComponentEventParams } from '@vxe-ui/core'
+import { RenderFunction, SetupContext, Ref } from 'vue'
+import { DefineVxeComponentApp, DefineVxeComponentOptions, DefineVxeComponentInstance, VxeComponentBaseOptions, VxeComponentEventParams } from '@vxe-ui/core'
 
 /* eslint-disable no-use-before-define,@typescript-eslint/ban-types */
 
-export declare const VxeCollapse: defineVxeComponent<VxeCollapseProps, VxeCollapseEventProps, VxeCollapseSlots>
-export type VxeCollapseComponent = DefineComponent<VxeCollapseProps & VxeCollapseEventProps>
+export declare const VxeCollapse: DefineVxeComponentApp<VxeCollapseProps, VxeCollapseEventProps, VxeCollapseSlots>
+export type VxeCollapseComponent = DefineVxeComponentOptions<VxeCollapseProps, VxeCollapseEventProps>
 
-export type VxeCollapseInstance = ComponentPublicInstance<VxeCollapseProps, VxeCollapseConstructor>
+export type VxeCollapseInstance = DefineVxeComponentInstance<VxeCollapseProps, VxeCollapseConstructor>
 
 export interface VxeCollapseConstructor extends VxeComponentBaseOptions, VxeCollapseMethods {
   props: VxeCollapseProps

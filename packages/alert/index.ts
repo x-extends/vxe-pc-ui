@@ -9,7 +9,7 @@ export const VxeAlert = Object.assign({}, VxeAlertComponent, {
   }
 })
 
-dynamicApp.component(VxeAlertComponent.name as string, VxeAlertComponent)
+dynamicApp.use(VxeAlert)
 VxeUI.component(VxeAlertComponent)
 
 export const Alert = VxeAlert

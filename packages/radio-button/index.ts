@@ -9,7 +9,7 @@ export const VxeRadioButton = Object.assign(VxeRadioButtonComponent, {
   }
 })
 
-dynamicApp.component(VxeRadioButtonComponent.name as string, VxeRadioButtonComponent)
+dynamicApp.use(VxeRadioButton)
 VxeUI.component(VxeRadioButtonComponent)
 
 export const RadioButton = VxeRadioButton

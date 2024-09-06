@@ -1,11 +1,11 @@
-import { RenderFunction, SetupContext, Ref, DefineComponent } from 'vue'
-import { defineVxeComponent, VxeComponentBaseOptions, VxeComponentEventParams } from '@vxe-ui/core'
+import { RenderFunction, SetupContext, Ref } from 'vue'
+import { DefineVxeComponentApp, DefineVxeComponentOptions, VxeComponentBaseOptions, VxeComponentEventParams } from '@vxe-ui/core'
 import { VxeFormItemPropTypes } from './form-item'
 
 /* eslint-disable no-use-before-define,@typescript-eslint/ban-types */
 
-export declare const VxeFormGather: defineVxeComponent<VxeFormGatherProps, VxeFormGatherEventProps, VxeFormGatherSlots>
-export type VxeFormGatherComponent = DefineComponent<VxeFormGatherProps & VxeFormGatherEventProps>
+export declare const VxeFormGather: DefineVxeComponentApp<VxeFormGatherProps, VxeFormGatherEventProps, VxeFormGatherSlots>
+export type VxeFormGatherComponent = DefineVxeComponentOptions<VxeFormGatherProps, VxeFormGatherEventProps>
 
 export interface VxeFormGatherConstructor extends VxeComponentBaseOptions, VxeFormGatherMethods {
   props: VxeFormGatherProps

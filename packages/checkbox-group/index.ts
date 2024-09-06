@@ -9,7 +9,7 @@ export const VxeCheckboxGroup = Object.assign(VxeCheckboxGroupComponent, {
   }
 })
 
-dynamicApp.component(VxeCheckboxGroupComponent.name as string, VxeCheckboxGroupComponent)
+dynamicApp.use(VxeCheckboxGroup)
 VxeUI.component(VxeCheckboxGroupComponent)
 
 export const CheckboxGroup = VxeCheckboxGroup

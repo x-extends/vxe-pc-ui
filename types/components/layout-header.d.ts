@@ -1,10 +1,10 @@
-import { RenderFunction, SetupContext, Ref, DefineComponent } from 'vue'
-import { defineVxeComponent, VxeComponentBaseOptions, VxeComponentEventParams, ValueOf } from '@vxe-ui/core'
+import { RenderFunction, SetupContext, Ref } from 'vue'
+import { DefineVxeComponentApp, DefineVxeComponentOptions, VxeComponentBaseOptions, VxeComponentEventParams, ValueOf } from '@vxe-ui/core'
 
 /* eslint-disable no-use-before-define,@typescript-eslint/ban-types */
 
-export declare const VxeLayoutHeader: defineVxeComponent<VxeLayoutHeaderProps, VxeLayoutHeaderEventProps, VxeLayoutHeaderSlots>
-export type VxeLayoutHeaderComponent = DefineComponent<VxeLayoutHeaderProps & VxeLayoutHeaderEventProps>
+export declare const VxeLayoutHeader: DefineVxeComponentApp<VxeLayoutHeaderProps, VxeLayoutHeaderEventProps, VxeLayoutHeaderSlots>
+export type VxeLayoutHeaderComponent = DefineVxeComponentOptions<VxeLayoutHeaderProps, VxeLayoutHeaderEventProps>
 
 export interface VxeLayoutHeaderConstructor extends VxeComponentBaseOptions, VxeLayoutHeaderMethods {
   props: VxeLayoutHeaderProps
@@ -24,7 +24,7 @@ export namespace VxeLayoutHeaderPropTypes {
   export type Fixed = boolean
 }
 
-export type VxeLayoutHeaderProps = {
+export interface VxeLayoutHeaderProps {
   fixed?: VxeLayoutHeaderPropTypes.Fixed
 }
 

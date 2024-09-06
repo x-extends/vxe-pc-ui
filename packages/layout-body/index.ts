@@ -9,7 +9,7 @@ export const VxeLayoutBody = Object.assign({}, VxeLayoutBodyComponent, {
   }
 })
 
-dynamicApp.component(VxeLayoutBodyComponent.name as string, VxeLayoutBodyComponent)
+dynamicApp.use(VxeLayoutBody)
 VxeUI.component(VxeLayoutBodyComponent)
 
 export const LayoutBody = VxeLayoutBody

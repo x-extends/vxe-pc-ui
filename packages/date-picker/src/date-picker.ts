@@ -92,7 +92,7 @@ export default defineComponent({
     const quarterSize = 8
 
     const reactData = reactive<DatePickerReactData>({
-      inited: false,
+      initialized: false,
       panelIndex: 0,
       visiblePanel: false,
       isAniVisible: false,
@@ -137,7 +137,7 @@ export default defineComponent({
       return XEUtils.toStringDate(value, format)
     }
 
-    const computeTransfer = computed(() => {
+    const computeBtnTransfer = computed(() => {
       const { transfer } = props
       if (transfer === null) {
         const globalTransfer = getConfig().datePicker.transfer
@@ -1224,7 +1224,7 @@ export default defineComponent({
         const { panelIndex } = reactData
         const targetElem = refInputTarget.value
         const panelElem = refInputPanel.value
-        const transfer = computeTransfer.value
+        const btnTransfer = computeBtnTransfer.value
         if (targetElem && panelElem) {
           const targetHeight = targetElem.offsetHeight
           const targetWidth = targetElem.offsetWidth
@@ -1236,7 +1236,7 @@ export default defineComponent({
           }
           const { boundingTop, boundingLeft, visibleHeight, visibleWidth } = getAbsolutePos(targetElem)
           let panelPlacement: VxeDatePickerPropTypes.Placement = 'bottom'
-          if (transfer) {
+          if (btnTransfer) {
             let left = boundingLeft
             let top = boundingTop + targetHeight
             if (placement === 'top') {
@@ -1296,8 +1296,8 @@ export default defineComponent({
       const isDisabled = computeIsDisabled.value
       const isDatePickerType = computeIsDatePickerType.value
       if (!isDisabled && !visiblePanel) {
-        if (!reactData.inited) {
-          reactData.inited = true
+        if (!reactData.initialized) {
+          reactData.initialized = true
         }
         clearTimeout(hidePanelTimeout)
         reactData.isActivated = true
@@ -1839,10 +1839,10 @@ export default defineComponent({
 
     const renderPanel = () => {
       const { type } = props
-      const { inited, isAniVisible, visiblePanel, panelPlacement, panelStyle } = reactData
+      const { initialized, isAniVisible, visiblePanel, panelPlacement, panelStyle } = reactData
       const vSize = computeSize.value
       const isDatePickerType = computeIsDatePickerType.value
-      const transfer = computeTransfer.value
+      const btnTransfer = computeBtnTransfer.value
       const renders = []
       if (isDatePickerType) {
         if (type === 'datetime') {
@@ -1879,13 +1879,13 @@ export default defineComponent({
         }
         return h(Teleport, {
           to: 'body',
-          disabled: transfer ? !inited : true
+          disabled: btnTransfer ? !initialized : true
         }, [
           h('div', {
             ref: refInputPanel,
             class: ['vxe-table--ignore-clear vxe-date-picker--panel', `type--${type}`, {
               [`size--${vSize}`]: vSize,
-              'is--transfer': transfer,
+              'is--transfer': btnTransfer,
               'ani--leave': isAniVisible,
               'ani--enter': visiblePanel
             }],

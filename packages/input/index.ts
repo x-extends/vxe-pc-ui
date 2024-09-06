@@ -9,7 +9,7 @@ export const VxeInput = Object.assign(VxeInputConstructor, {
   }
 })
 
-dynamicApp.component(VxeInputConstructor.name as string, VxeInputConstructor)
+dynamicApp.use(VxeInput)
 VxeUI.component(VxeInputConstructor)
 
 export const Input = VxeInput

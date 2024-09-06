@@ -1,12 +1,12 @@
-import { RenderFunction, SetupContext, Ref, ComputedRef, ComponentPublicInstance, DefineComponent } from 'vue'
-import { defineVxeComponent, VxeComponentSizeType, VxeComponentBaseOptions, VxeComponentEventParams, ValueOf, VxeComponentSlotType } from '@vxe-ui/core'
+import { RenderFunction, SetupContext, Ref, ComputedRef } from 'vue'
+import { DefineVxeComponentApp, DefineVxeComponentOptions, DefineVxeComponentInstance, VxeComponentSizeType, VxeComponentBaseOptions, VxeComponentEventParams, ValueOf, VxeComponentSlotType } from '@vxe-ui/core'
 
 /* eslint-disable no-use-before-define,@typescript-eslint/ban-types */
 
-export declare const VxeModal: defineVxeComponent<VxeModalProps, VxeModalEventProps, VxeModalSlots>
-export type VxeModalComponent = DefineComponent<VxeModalProps & VxeModalEventProps>
+export declare const VxeModal: DefineVxeComponentApp<VxeModalProps, VxeModalEventProps, VxeModalSlots>
+export type VxeModalComponent = DefineVxeComponentOptions<VxeModalProps, VxeModalEventProps>
 
-export type VxeModalInstance = ComponentPublicInstance<VxeModalProps, VxeModalConstructor>
+export type VxeModalInstance = DefineVxeComponentInstance<VxeModalProps, VxeModalConstructor>
 
 export interface VxeModalConstructor extends VxeComponentBaseOptions, VxeModalMethods {
   props: VxeModalProps
@@ -120,7 +120,7 @@ export namespace VxeModalPropTypes {
   export type Slots = VxeModalSlots
 }
 
-export type VxeModalProps = {
+export interface VxeModalProps {
   size?: VxeModalPropTypes.Size
   modelValue?: VxeModalPropTypes.ModelValue
   id?: VxeModalPropTypes.ID
@@ -203,6 +203,10 @@ export interface ModalReactData {
     height: number
   } | null
   firstOpen: boolean
+}
+
+export interface ModalInternalData {
+  msgTimeout: undefined | number
 }
 
 export interface ModalMethods {

@@ -9,7 +9,7 @@ export const VxeButtonGroup = Object.assign({}, VxeButtonGroupComponent, {
   }
 })
 
-dynamicApp.component(VxeButtonGroupComponent.name as string, VxeButtonGroupComponent)
+dynamicApp.use(VxeButtonGroup)
 VxeUI.component(VxeButtonGroupComponent)
 
 export const ButtonGroup = VxeButtonGroup

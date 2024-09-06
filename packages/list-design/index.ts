@@ -11,9 +11,11 @@ export const VxeListDesign = Object.assign({}, VxeListDesignComponent, {
     app.component(VxeListDesignComponent.name as string, VxeListDesignComponent)
   }
 })
+
 const listDesignHandle: ListDesignHandleExport = {
 }
-dynamicApp.component(VxeListDesignComponent.name as string, VxeListDesignComponent)
+
+dynamicApp.use(VxeListDesign)
 VxeUI.component(VxeListDesignComponent)
 VxeUI.listDesignHandle = listDesignHandle
 

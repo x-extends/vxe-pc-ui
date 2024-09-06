@@ -9,7 +9,7 @@ export const VxeListView = Object.assign(VxeListViewComponent, {
   }
 })
 
-dynamicApp.component(VxeListViewComponent.name as string, VxeListViewComponent)
+dynamicApp.use(VxeListView)
 VxeUI.component(VxeListViewComponent)
 
 export const ListView = VxeListView

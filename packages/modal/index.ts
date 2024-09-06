@@ -10,11 +10,12 @@ function handleModal (options: VxeModalDefines.ModalOptions): Promise<ModalEvent
   // 使用动态组件渲染动态弹框
   checkDynamic()
   return new Promise(resolve => {
-    if (options && options.id && allActiveModals.some(comp => comp.props.id === options.id)) {
+    const opts = Object.assign({}, options)
+    if (opts.id && allActiveModals.some(comp => comp.props.id === opts.id)) {
       resolve('exist')
     } else {
-      const _onHide = options.onHide
-      const modalOpts = Object.assign(options, {
+      const _onHide = opts.onHide
+      const modalOpts = Object.assign(opts, {
         key: XEUtils.uniqueId(),
         modelValue: true,
         onHide (params) {
@@ -125,7 +126,7 @@ export const VxeModal = Object.assign(VxeModalComponent, {
   }
 })
 
-dynamicApp.component(VxeModalComponent.name as string, VxeModalComponent)
+dynamicApp.use(VxeModal)
 VxeUI.component(VxeModalComponent)
 VxeUI.modal = ModalController
 

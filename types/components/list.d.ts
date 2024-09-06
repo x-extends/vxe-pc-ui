@@ -1,12 +1,12 @@
-import { RenderFunction, SetupContext, Ref, ComponentPublicInstance, DefineComponent } from 'vue'
-import { defineVxeComponent, VxeComponentBaseOptions, VxeComponentEventParams, VxeComponentSizeType, ValueOf } from '@vxe-ui/core'
+import { RenderFunction, SetupContext, Ref } from 'vue'
+import { DefineVxeComponentApp, DefineVxeComponentOptions, DefineVxeComponentInstance, VxeComponentBaseOptions, VxeComponentEventParams, VxeComponentSizeType, ValueOf } from '@vxe-ui/core'
 
 /* eslint-disable no-use-before-define,@typescript-eslint/ban-types */
 
-export declare const VxeList: defineVxeComponent<VxeListProps, VxeListEventProps, VxeListSlots>
-export type VxeListComponent = DefineComponent<VxeListProps & VxeListEventProps>
+export declare const VxeList: DefineVxeComponentApp<VxeListProps, VxeListEventProps, VxeListSlots>
+export type VxeListComponent = DefineVxeComponentOptions<VxeListProps, VxeListEventProps>
 
-export type VxeListInstance = ComponentPublicInstance<VxeListProps, VxeListConstructor>
+export type VxeListInstance = DefineVxeComponentInstance<VxeListProps, VxeListConstructor>
 
 export interface VxeListConstructor extends VxeComponentBaseOptions, VxeListMethods {
   props: VxeListProps
@@ -52,7 +52,7 @@ export namespace VxeListPropTypes {
   }
 }
 
-export type VxeListProps<D = any> = {
+export interface VxeListProps<D = any> {
   size?: VxeListPropTypes.Size
   data?: D[]
   height?: VxeListPropTypes.Height

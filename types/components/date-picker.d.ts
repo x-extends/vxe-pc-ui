@@ -1,12 +1,12 @@
-import { RenderFunction, SetupContext, Ref, ComponentPublicInstance, DefineComponent } from 'vue'
-import { defineVxeComponent, VxeComponentBaseOptions, VxeComponentEventParams, ValueOf, VxeComponentStyleType, VxeComponentSizeType } from '@vxe-ui/core'
+import { RenderFunction, SetupContext, Ref } from 'vue'
+import { DefineVxeComponentApp, DefineVxeComponentOptions, DefineVxeComponentInstance, VxeComponentBaseOptions, VxeComponentEventParams, ValueOf, VxeComponentStyleType, VxeComponentSizeType } from '@vxe-ui/core'
 
 /* eslint-disable no-use-before-define,@typescript-eslint/ban-types */
 
-export declare const VxeDatePicker: defineVxeComponent<VxeDatePickerProps, VxeDatePickerEventProps, VxeDatePickerSlots>
-export type VxeDatePickerComponent = DefineComponent<VxeDatePickerProps & VxeDatePickerEventProps>
+export declare const VxeDatePicker: DefineVxeComponentApp<VxeDatePickerProps, VxeDatePickerEventProps, VxeDatePickerSlots>
+export type VxeDatePickerComponent = DefineVxeComponentOptions<VxeDatePickerProps, VxeDatePickerEventProps>
 
-export type VxeDatePickerInstance = ComponentPublicInstance<VxeDatePickerProps, VxeDatePickerConstructor>
+export type VxeDatePickerInstance = DefineVxeComponentInstance<VxeDatePickerProps, VxeDatePickerConstructor>
 
 export interface VxeDatePickerConstructor extends VxeComponentBaseOptions, VxeDatePickerMethods {
   props: VxeDatePickerProps
@@ -66,7 +66,7 @@ export namespace VxeDatePickerPropTypes {
   export type Transfer = boolean
 }
 
-export type VxeDatePickerProps = {
+export interface VxeDatePickerProps {
   size?: VxeDatePickerPropTypes.Size
   modelValue?: VxeDatePickerPropTypes.ModelValue
   className?: VxeDatePickerPropTypes.ClassName
@@ -127,7 +127,7 @@ export interface DatePickerPrivateComputed {
 export interface VxeDatePickerPrivateComputed extends DatePickerPrivateComputed { }
 
 export interface DatePickerReactData {
-  inited: boolean
+  initialized: boolean
   panelIndex: number
   visiblePanel: boolean
   isAniVisible: boolean

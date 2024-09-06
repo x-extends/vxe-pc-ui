@@ -9,7 +9,7 @@ export const VxeImageGroup = Object.assign({}, VxeImageGroupComponent, {
   }
 })
 
-dynamicApp.component(VxeImageGroupComponent.name as string, VxeImageGroupComponent)
+dynamicApp.use(VxeImageGroup)
 VxeUI.component(VxeImageGroupComponent)
 
 export const ImageGroup = VxeImageGroup

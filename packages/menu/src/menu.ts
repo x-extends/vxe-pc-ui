@@ -3,7 +3,7 @@ import XEUtils from 'xe-utils'
 import { getConfig, getIcon, createEvent, permission, useSize } from '../../ui'
 import VxeLoadingComponent from '../../loading/index'
 
-import type { VxeMenuDefines, VxeMenuPropTypes, MenuReactData, VxeMenuEmits, MenuPrivateRef, VxeMenuPrivateComputed, VxeMenuConstructor, VxeMenuPrivateMethods, VxeLayoutAsideConstructor, VxeLayoutAsidePrivateMethods } from '../../../types'
+import type { VxeMenuDefines, VxeMenuPropTypes, MenuReactData, VxeMenuEmits, MenuMethods, MenuPrivateMethods, MenuPrivateRef, VxeMenuPrivateComputed, VxeMenuConstructor, VxeMenuPrivateMethods, ValueOf, VxeLayoutAsideConstructor, VxeLayoutAsidePrivateMethods } from '../../../types'
 
 export default defineComponent({
   name: 'VxeMenu',
@@ -19,7 +19,10 @@ export default defineComponent({
       type: Array as PropType<VxeMenuPropTypes.Options>,
       default: () => []
     },
-    size: { type: String as PropType<VxeMenuPropTypes.Size>, default: () => getConfig().image.size || getConfig().size }
+    size: {
+      type: String as PropType<VxeMenuPropTypes.Size>,
+      default: () => getConfig().image.size || getConfig().size
+    }
   },
   emits: [
     'update:modelValue',
@@ -123,8 +126,8 @@ export default defineComponent({
     }
 
     const updateMenuConfig = () => {
-      const { expandAll } = props
-      reactData.menuList = XEUtils.mapTree(props.options, (item, index, items, path, parent) => {
+      const { options, expandAll } = props
+      reactData.menuList = XEUtils.mapTree(options, (item, index, items, path, parent) => {
         const objItem = {
           ...item,
           parentKey: parent ? (parent.name || path.slice(0, path.length - 1).join(',')) : '',
@@ -161,8 +164,21 @@ export default defineComponent({
           handleClickIconCollapse(evnt, item)
         }
       }
-      emit('click', createEvent(evnt, { $menu: $xeMenu, menu: item }))
+      dispatchEvent('click', { menu: item }, evnt)
     }
+
+    const dispatchEvent = (type: ValueOf<VxeMenuEmits>, params: Record<string, any>, evnt: Event | null) => {
+      emit(type, createEvent(evnt, { $menu: $xeMenu }, params))
+    }
+
+    const menuMethods: MenuMethods = {
+      dispatchEvent
+    }
+
+    const menuPrivateMethods: MenuPrivateMethods = {
+    }
+
+    Object.assign($xeMenu, menuMethods, menuPrivateMethods)
 
     const renderMenuTitle = (item: VxeMenuDefines.MenuItem) => {
       const { icon, isExpand, hasChild } = item
@@ -289,7 +305,9 @@ export default defineComponent({
     })
 
     onMounted(() => {
-      nextTick(updateItemHeight)
+      nextTick(() => {
+        updateItemHeight()
+      })
     })
 
     updateMenuConfig()

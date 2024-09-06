@@ -1,13 +1,13 @@
-import { RenderFunction, SetupContext, Ref, ComputedRef, ComponentPublicInstance, DefineComponent, UnwrapNestedRefs } from 'vue'
-import { defineVxeComponent, VxeComponentBaseOptions, VxeComponentEventParams, VxeComponentSizeType, ValueOf } from '@vxe-ui/core'
+import { RenderFunction, SetupContext, Ref, ComputedRef } from 'vue'
+import { DefineVxeComponentApp, DefineVxeComponentOptions, DefineVxeComponentInstance, VxeComponentBaseOptions, VxeComponentEventParams, VxeComponentSizeType, ValueOf } from '@vxe-ui/core'
 import { VxeFormPropTypes } from '../components/form'
 
 /* eslint-disable no-use-before-define,@typescript-eslint/ban-types */
 
-export declare const VxeFormDesign: defineVxeComponent<VxeFormDesignProps, VxeFormDesignEventProps, VxeFormDesignSlots>
-export type VxeFormDesignComponent = DefineComponent<VxeFormDesignProps & VxeFormDesignEventProps>
+export declare const VxeFormDesign: DefineVxeComponentApp<VxeFormDesignProps, VxeFormDesignEventProps, VxeFormDesignSlots>
+export type VxeFormDesignComponent = DefineVxeComponentOptions<VxeFormDesignProps, VxeFormDesignEventProps>
 
-export type VxeFormDesignInstance = ComponentPublicInstance<VxeFormDesignProps, VxeFormDesignConstructor>
+export type VxeFormDesignInstance = DefineVxeComponentInstance<VxeFormDesignProps, VxeFormDesignConstructor>
 
 export interface VxeFormDesignConstructor extends VxeComponentBaseOptions, VxeFormDesignMethods {
   props: VxeFormDesignProps
@@ -46,7 +46,7 @@ export namespace VxeFormDesignPropTypes {
   }
 }
 
-export type VxeFormDesignProps = {
+export interface VxeFormDesignProps {
   size?: VxeFormDesignPropTypes.Size
   config?: VxeFormDesignPropTypes.Config
   height?: VxeFormDesignPropTypes.Height
@@ -154,9 +154,9 @@ export type VxeFormDesignEmits = [
 ]
 
 export interface VxeFormDesignLayoutStyle {
-  reactData: UnwrapNestedRefs<{
+  reactData: {
     activeTab: number
-  }>
+  }
   renderVN: RenderFunction
 }
 

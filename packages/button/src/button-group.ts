@@ -1,7 +1,7 @@
 import { defineComponent, h, provide, PropType, createCommentVNode } from 'vue'
 import { getConfig, createEvent, useSize, usePermission } from '@vxe-ui/core'
 import XEUtils from 'xe-utils'
-import VxeButtonComponent from '../../button/src/button'
+import VxeButtonComponent from './button'
 
 import type { VxeButtonGroupPropTypes, VxeButtonGroupEmits, VxeButtonGroupConstructor, VxeButtonGroupPrivateMethods, ButtonGroupMethods, ButtonPrivateComputed, ButtonGroupPrivateMethods } from '../../../types'
 
@@ -16,7 +16,10 @@ export default defineComponent({
     className: [String, Function] as PropType<VxeButtonGroupPropTypes.ClassName>,
     disabled: Boolean as PropType<VxeButtonGroupPropTypes.Disabled>,
     permissionCode: [String, Number] as PropType<VxeButtonGroupPropTypes.PermissionCode>,
-    size: { type: String as PropType<VxeButtonGroupPropTypes.Size>, default: () => getConfig().buttonGroup.size || getConfig().size }
+    size: {
+      type: String as PropType<VxeButtonGroupPropTypes.Size>,
+      default: () => getConfig().buttonGroup.size || getConfig().size
+    }
   },
   emits: [
     'click'

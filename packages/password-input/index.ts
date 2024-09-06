@@ -9,7 +9,7 @@ export const VxePasswordInput = Object.assign({}, VxePasswordInputComponent, {
   }
 })
 
-dynamicApp.component(VxePasswordInputComponent.name as string, VxePasswordInputComponent)
+dynamicApp.use(VxePasswordInput)
 VxeUI.component(VxePasswordInputComponent)
 
 export const PasswordInput = VxePasswordInput

@@ -2,7 +2,7 @@ import { defineComponent, ref, h, computed, reactive, PropType, inject, createCo
 import XEUtils from 'xe-utils'
 import { assembleAnchorLink, destroyAnchorLink } from './util'
 
-import type { VxeAnchorLinkDefines, VxeAnchorLinkPropTypes, AnchorLinkReactData, AnchorLinkPrivateRef, VxeAnchorLinkPrivateComputed, VxeAnchorLinkConstructor, VxeAnchorLinkPrivateMethods, VxeAnchorConstructor, VxeAnchorPrivateMethods } from '../../../types'
+import type { VxeAnchorLinkDefines, VxeAnchorLinkPropTypes, VxeAnchorLinkEmits, AnchorLinkReactData, AnchorLinkPrivateRef, VxeAnchorLinkPrivateComputed, VxeAnchorLinkConstructor, VxeAnchorLinkPrivateMethods, VxeAnchorConstructor, VxeAnchorPrivateMethods } from '../../../types'
 
 export default defineComponent({
   name: 'VxeAnchorLink',
@@ -11,7 +11,7 @@ export default defineComponent({
     title: [String, Number] as PropType<VxeAnchorLinkPropTypes.Title>,
     href: String as PropType<VxeAnchorLinkPropTypes.Href>
   },
-  emits: [],
+  emits: [] as VxeAnchorLinkEmits,
   setup (props, context) {
     const { slots } = context
 
@@ -69,8 +69,9 @@ export default defineComponent({
     })
 
     onMounted(() => {
-      if ($xeAnchor && refElem.value) {
-        assembleAnchorLink($xeAnchor, refElem.value, linkConfig, $xeParentAnchorLink)
+      const elem = refElem.value
+      if ($xeAnchor && elem) {
+        assembleAnchorLink($xeAnchor, elem, linkConfig, $xeParentAnchorLink)
       }
     })
 

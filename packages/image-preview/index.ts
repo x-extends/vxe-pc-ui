@@ -11,7 +11,7 @@ export const VxeImagePreview = Object.assign(VxeImagePreviewComponent, {
   }
 })
 
-dynamicApp.component(VxeImagePreviewComponent.name as string, VxeImagePreviewComponent)
+dynamicApp.use(VxeImagePreview)
 VxeUI.component(VxeImagePreviewComponent)
 
 export const ImagePreview = VxeImagePreview

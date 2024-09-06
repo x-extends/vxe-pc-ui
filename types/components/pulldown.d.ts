@@ -1,12 +1,12 @@
-import { RenderFunction, SetupContext, Ref, ComponentPublicInstance, DefineComponent } from 'vue'
-import { defineVxeComponent, VxeComponentBaseOptions, VxeComponentEventParams, VxeComponentSizeType, VxeComponentStyleType, ValueOf } from '@vxe-ui/core'
+import { RenderFunction, SetupContext, Ref } from 'vue'
+import { DefineVxeComponentApp, DefineVxeComponentOptions, DefineVxeComponentInstance, VxeComponentBaseOptions, VxeComponentEventParams, VxeComponentSizeType, VxeComponentStyleType, ValueOf } from '@vxe-ui/core'
 
 /* eslint-disable no-use-before-define,@typescript-eslint/ban-types */
 
-export declare const VxePulldown: defineVxeComponent<VxePulldownProps, VxePulldownEventProps, VxePulldownSlots>
-export type VxePulldownComponent = DefineComponent<VxePulldownProps & VxePulldownEventProps>
+export declare const VxePulldown: DefineVxeComponentApp<VxePulldownProps, VxePulldownEventProps, VxePulldownSlots>
+export type VxePulldownComponent = DefineVxeComponentOptions<VxePulldownProps, VxePulldownEventProps>
 
-export type VxePulldownInstance = ComponentPublicInstance<VxePulldownProps, VxePulldownConstructor>
+export type VxePulldownInstance = DefineVxeComponentInstance<VxePulldownProps, VxePulldownConstructor>
 
 export interface VxePulldownConstructor extends VxeComponentBaseOptions, VxePulldownMethods {
   props: VxePulldownProps
@@ -41,7 +41,7 @@ export namespace VxePulldownPropTypes {
   export type Transfer = boolean
 }
 
-export type VxePulldownProps = {
+export interface VxePulldownProps {
   size?: VxePulldownPropTypes.Size
   modelValue?: VxePulldownPropTypes.ModelValue
   /**
@@ -77,7 +77,7 @@ export interface PulldownReactData {
   panelStyle: VxeComponentStyleType | null
   panelPlacement: string | null
   visiblePanel: boolean
-  animatVisible: boolean
+  visibleAnimate: boolean
   isActivated: boolean
 }
 

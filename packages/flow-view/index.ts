@@ -9,7 +9,7 @@ export const VxeFlowView = Object.assign({}, VxeFlowViewComponent, {
   }
 })
 
-dynamicApp.component(VxeFlowViewComponent.name as string, VxeFlowViewComponent)
+dynamicApp.use(VxeFlowView)
 VxeUI.component(VxeFlowViewComponent)
 
 export const FlowView = VxeFlowView

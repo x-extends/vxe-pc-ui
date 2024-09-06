@@ -1,12 +1,12 @@
-import { RenderFunction, SetupContext, Ref, ComponentPublicInstance, ComputedRef, DefineComponent } from 'vue'
-import { defineVxeComponent, VxeComponentBaseOptions, VxeComponentEventParams, ValueOf } from '@vxe-ui/core'
+import { RenderFunction, SetupContext, Ref, ComputedRef } from 'vue'
+import { DefineVxeComponentApp, DefineVxeComponentOptions, DefineVxeComponentInstance, VxeComponentBaseOptions, VxeComponentEventParams, ValueOf } from '@vxe-ui/core'
 
 /* eslint-disable no-use-before-define,@typescript-eslint/ban-types */
 
-export declare const VxeImagePreview: defineVxeComponent<VxeImagePreviewProps, VxeImagePreviewEventProps, VxeImagePreviewSlots>
-export type VxeImagePreviewComponent = DefineComponent<VxeImagePreviewProps & VxeImagePreviewEventProps>
+export declare const VxeImagePreview: DefineVxeComponentApp<VxeImagePreviewProps, VxeImagePreviewEventProps, VxeImagePreviewSlots>
+export type VxeImagePreviewComponent = DefineVxeComponentOptions<VxeImagePreviewProps, VxeImagePreviewEventProps>
 
-export type VxeImagePreviewInstance = ComponentPublicInstance<VxeImagePreviewProps, VxeImagePreviewConstructor>
+export type VxeImagePreviewInstance = DefineVxeComponentInstance<VxeImagePreviewProps, VxeImagePreviewConstructor>
 
 export interface VxeImagePreviewConstructor extends VxeComponentBaseOptions, VxeImagePreviewMethods {
   props: VxeImagePreviewProps

@@ -1,5 +1,5 @@
-import { RenderFunction, SetupContext, Ref, ComponentPublicInstance, ComputedRef, DefineComponent, VNode } from 'vue'
-import { defineVxeComponent, VxeComponentBaseOptions, VxeComponentEventParams, VxeComponentSizeType, ValueOf, VxeGlobalConfig, VxeComponentStyleType, VxeComponentSlotType } from '@vxe-ui/core'
+import { RenderFunction, SetupContext, Ref, ComputedRef, ComponentPublicInstance, VNode } from 'vue'
+import { DefineVxeComponentApp, DefineVxeComponentOptions, DefineVxeComponentInstance, VxeComponentBaseOptions, VxeComponentEventParams, VxeComponentSizeType, ValueOf, VxeGlobalConfig, VxeComponentStyleType, VxeComponentSlotType } from '@vxe-ui/core'
 import { VxeColumnPropTypes, VxeColumnProps, VxeColumnSlotTypes } from './column'
 import { VxeTableProDefines, VxeTableProEmits } from './table-plugins'
 import { VxeGridConstructor } from './grid'
@@ -10,10 +10,10 @@ import { VxeToolbarConstructor, VxeToolbarInstance } from './toolbar'
 
 /* eslint-disable no-use-before-define,@typescript-eslint/ban-types */
 
-export declare const VxeTable: defineVxeComponent<VxeTableProps, VxeTableEventProps, VxeTableSlots>
-export type VxeTableComponent = DefineComponent<VxeTableProps & VxeTableEventProps>
+export declare const VxeTable: DefineVxeComponentApp<VxeTableProps, VxeTableEventProps, VxeTableSlots>
+export type VxeTableComponent = DefineVxeComponentOptions<VxeTableProps, VxeTableEventProps>
 
-export type VxeTableInstance<D = any> = ComponentPublicInstance<VxeTableProps<D>, VxeTableConstructor>
+export type VxeTableInstance<D = any> = DefineVxeComponentInstance<VxeTableProps<D>, VxeTableConstructor>
 
 export interface VxeTableConstructor<D = any> extends VxeComponentBaseOptions, VxeTableMethods {
   props: VxeTableProps
@@ -1682,7 +1682,7 @@ export namespace VxeTablePropTypes {
   export interface PrintHandleOptions extends PrintConfig { }
 }
 
-export type VxeTableProps<D = any> = {
+export interface VxeTableProps<D = any> {
   size?: VxeTablePropTypes.Size
   /**
    * 唯一标识

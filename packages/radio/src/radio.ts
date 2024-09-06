@@ -1,15 +1,18 @@
-import { defineComponent, h, computed, inject, PropType } from 'vue'
+import { defineComponent, h, computed, inject, PropType, reactive } from 'vue'
 import XEUtils from 'xe-utils'
 import { getFuncText } from '../../ui/src/utils'
 import { getConfig, createEvent, useSize, getIcon } from '../../ui'
 
-import type { VxeRadioPropTypes, VxeRadioConstructor, VxeRadioEmits, VxeRadioGroupConstructor, VxeRadioGroupPrivateMethods, RadioMethods, VxeFormConstructor, VxeFormPrivateMethods, VxeFormDefines } from '../../../types'
+import type { VxeRadioPropTypes, VxeRadioConstructor, VxeRadioEmits, RadioReactData, RadioPrivateMethods, VxeRadioGroupConstructor, VxeRadioGroupPrivateMethods, RadioMethods, VxeFormConstructor, ValueOf, VxeFormPrivateMethods, VxeFormDefines } from '../../../types'
 
 export default defineComponent({
   name: 'VxeRadio',
   props: {
     modelValue: [String, Number, Boolean] as PropType<VxeRadioPropTypes.ModelValue>,
-    label: { type: [String, Number, Boolean] as PropType<VxeRadioPropTypes.Label>, default: null },
+    label: {
+      type: [String, Number, Boolean] as PropType<VxeRadioPropTypes.Label>,
+      default: null
+    },
     title: [String, Number] as PropType<VxeRadioPropTypes.Title>,
     content: [String, Number] as PropType<VxeRadioPropTypes.Content>,
     disabled: {
@@ -17,8 +20,14 @@ export default defineComponent({
       default: null
     },
     name: String as PropType<VxeRadioPropTypes.Name>,
-    strict: { type: Boolean as PropType<VxeRadioPropTypes.Strict>, default: () => getConfig().radio.strict },
-    size: { type: String as PropType<VxeRadioPropTypes.Size>, default: () => getConfig().radio.size || getConfig().size }
+    strict: {
+      type: Boolean as PropType<VxeRadioPropTypes.Strict>,
+      default: () => getConfig().radio.strict
+    },
+    size: {
+      type: String as PropType<VxeRadioPropTypes.Size>,
+      default: () => getConfig().radio.size || getConfig().size
+    }
   },
   emits: [
     'update:modelValue',
@@ -33,15 +42,17 @@ export default defineComponent({
 
     const xID = XEUtils.uniqueId()
 
+    const reactData = reactive<RadioReactData>({
+    })
+
     const $xeRadio = {
       xID,
       props,
-      context
+      context,
+      reactData
     } as unknown as VxeRadioConstructor
 
     const { computeSize } = useSize(props)
-
-    let radioMethods = {} as RadioMethods
 
     const computeIsDisabled = computed(() => {
       const { disabled } = props
@@ -63,8 +74,8 @@ export default defineComponent({
     })
 
     const computeChecked = computed(() => {
-      const { modelValue, label } = props
-      return $xeRadioGroup ? $xeRadioGroup.props.modelValue === label : modelValue === label
+      const { label } = props
+      return $xeRadioGroup ? $xeRadioGroup.props.modelValue === label : props.modelValue === label
     })
 
     const handleValue = (label: VxeRadioPropTypes.Label, evnt: Event) => {
@@ -72,7 +83,7 @@ export default defineComponent({
         $xeRadioGroup.handleChecked({ label }, evnt)
       } else {
         emit('update:modelValue', label)
-        radioMethods.dispatchEvent('change', { label }, evnt)
+        dispatchEvent('change', { label }, evnt)
         // 自动更新校验状态
         if ($xeForm && formItemInfo) {
           $xeForm.triggerItemEvent(evnt, formItemInfo.itemConfig.field, label)
@@ -97,13 +108,18 @@ export default defineComponent({
       }
     }
 
-    radioMethods = {
-      dispatchEvent (type, params, evnt) {
-        emit(type, createEvent(evnt, { $radio: $xeRadio }, params))
-      }
+    const dispatchEvent = (type: ValueOf<VxeRadioEmits>, params: Record<string, any>, evnt: Event | null) => {
+      emit(type, createEvent(evnt, { $radio: $xeRadio }, params))
     }
 
-    Object.assign($xeRadio, radioMethods)
+    const radioMethods: RadioMethods = {
+      dispatchEvent
+    }
+
+    const radioPrivateMethods: RadioPrivateMethods = {
+    }
+
+    Object.assign($xeRadio, radioMethods, radioPrivateMethods)
 
     const renderVN = () => {
       const vSize = computeSize.value

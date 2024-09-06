@@ -1,10 +1,10 @@
-import { defineComponent, ref, h, reactive, onMounted, computed, provide, PropType } from 'vue'
+import { defineComponent, ref, h, reactive, computed, provide, PropType } from 'vue'
 import { toCssUnit } from '../../ui/src/dom'
-import { getConfig, useSize } from '../../ui'
+import { getConfig, useSize, createEvent } from '../../ui'
 import VxeLoadingComponent from '../../loading/src/loading'
 import XEUtils from 'xe-utils'
 
-import type { VxeLayoutAsidePropTypes, LayoutAsideReactData, LayoutAsidePrivateRef, VxeLayoutAsidePrivateComputed, VxeLayoutAsideConstructor, VxeLayoutAsidePrivateMethods } from '../../../types'
+import type { VxeLayoutAsidePropTypes, LayoutAsideReactData, VxeLayoutAsideEmits, LayoutAsidePrivateRef, LayoutAsideMethods, LayoutAsidePrivateMethods, VxeLayoutAsidePrivateComputed, VxeLayoutAsideConstructor, VxeLayoutAsidePrivateMethods, ValueOf } from '../../../types'
 
 export default defineComponent({
   name: 'VxeLayoutAside',
@@ -14,11 +14,14 @@ export default defineComponent({
     collapseWidth: [String, Number] as PropType<VxeLayoutAsidePropTypes.CollapseWidth>,
     loading: Boolean as PropType<VxeLayoutAsidePropTypes.Loading>,
     padding: Boolean as PropType<VxeLayoutAsidePropTypes.Padding>,
-    size: { type: String as PropType<VxeLayoutAsidePropTypes.Size>, default: () => getConfig().layoutAside.size || getConfig().size }
+    size: {
+      type: String as PropType<VxeLayoutAsidePropTypes.Size>,
+      default: () => getConfig().layoutAside.size || getConfig().size
+    }
   },
-  emits: [],
+  emits: [] as VxeLayoutAsideEmits,
   setup (props, context) {
-    const { slots } = context
+    const { slots, emit } = context
 
     const xID = XEUtils.uniqueId()
 
@@ -60,6 +63,19 @@ export default defineComponent({
       getComputeMaps: () => computeMaps
     } as unknown as VxeLayoutAsideConstructor & VxeLayoutAsidePrivateMethods
 
+    const dispatchEvent = (type: ValueOf<VxeLayoutAsideEmits>, params: Record<string, any>, evnt: Event | null) => {
+      emit(type, createEvent(evnt, { $layoutAside: $xeLayoutAside }, params))
+    }
+
+    const layoutAsideMethods: LayoutAsideMethods = {
+      dispatchEvent
+    }
+
+    const layoutAsidePrivateMethods: LayoutAsidePrivateMethods = {
+    }
+
+    Object.assign($xeLayoutAside, layoutAsideMethods, layoutAsidePrivateMethods)
+
     const renderVN = () => {
       const { width, collapsed, loading, padding } = props
       const wrapperWidth = computeWrapperWidth.value
@@ -93,10 +109,6 @@ export default defineComponent({
         })
       ])
     }
-
-    onMounted(() => {
-
-    })
 
     $xeLayoutAside.renderVN = renderVN
 

@@ -1,7 +1,8 @@
 import { defineComponent, ref, h, reactive, PropType } from 'vue'
+import { createEvent } from '../../ui'
 import XEUtils from 'xe-utils'
 
-import type { VxeLayoutFooterPropTypes, LayoutFooterReactData, LayoutFooterPrivateRef, VxeLayoutFooterPrivateComputed, VxeLayoutFooterConstructor, VxeLayoutFooterPrivateMethods } from '../../../types'
+import type { VxeLayoutFooterPropTypes, LayoutFooterReactData, LayoutFooterPrivateMethods, LayoutFooterMethods, VxeLayoutFooterEmits, LayoutFooterPrivateRef, VxeLayoutFooterPrivateComputed, VxeLayoutFooterConstructor, ValueOf, VxeLayoutFooterPrivateMethods } from '../../../types'
 
 export default defineComponent({
   name: 'VxeLayoutFooter',
@@ -9,9 +10,9 @@ export default defineComponent({
     fixed: Boolean as PropType<VxeLayoutFooterPropTypes.Fixed>,
     align: String as PropType<VxeLayoutFooterPropTypes.Align>
   },
-  emits: [],
+  emits: [] as VxeLayoutFooterEmits,
   setup (props, context) {
-    const { slots } = context
+    const { slots, emit } = context
 
     const xID = XEUtils.uniqueId()
 
@@ -37,9 +38,23 @@ export default defineComponent({
       getComputeMaps: () => computeMaps
     } as unknown as VxeLayoutFooterConstructor & VxeLayoutFooterPrivateMethods
 
+    const dispatchEvent = (type: ValueOf<VxeLayoutFooterEmits>, params: Record<string, any>, evnt: Event | null) => {
+      emit(type, createEvent(evnt, { $layoutFooter: $xeLayoutFooter }, params))
+    }
+
+    const layoutFooterMethods: LayoutFooterMethods = {
+      dispatchEvent
+    }
+
+    const layoutFooterPrivateMethods: LayoutFooterPrivateMethods = {
+    }
+
+    Object.assign($xeLayoutFooter, layoutFooterMethods, layoutFooterPrivateMethods)
+
     const renderVN = () => {
       const { fixed, align } = props
       const defaultSlot = slots.default
+
       return h('footer', {
         ref: refElem,
         class: ['vxe-layout-footer', align ? `align--${align}` : '', {

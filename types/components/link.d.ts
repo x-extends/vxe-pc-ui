@@ -1,12 +1,12 @@
-import { RenderFunction, SetupContext, Ref, ComponentPublicInstance, DefineComponent } from 'vue'
-import { defineVxeComponent, VxeComponentBaseOptions, VxeComponentEventParams, VxeComponentSizeType, VxeComponentPermissionCodeType, ValueOf, VxeComponentStatusType } from '@vxe-ui/core'
+import { RenderFunction, SetupContext, Ref } from 'vue'
+import { DefineVxeComponentApp, DefineVxeComponentOptions, DefineVxeComponentInstance, VxeComponentBaseOptions, VxeComponentEventParams, VxeComponentSizeType, VxeComponentPermissionCodeType, ValueOf, VxeComponentStatusType } from '@vxe-ui/core'
 
 /* eslint-disable no-use-before-define,@typescript-eslint/ban-types */
 
-export declare const VxeLink: defineVxeComponent<VxeLinkProps, VxeLinkEventProps, VxeLinkSlots>
-export type VxeLinkComponent = DefineComponent<VxeLinkProps & VxeLinkEventProps>
+export declare const VxeLink: DefineVxeComponentApp<VxeLinkProps, VxeLinkEventProps, VxeLinkSlots>
+export type VxeLinkComponent = DefineVxeComponentOptions<VxeLinkProps, VxeLinkEventProps>
 
-export type VxeLinkInstance = ComponentPublicInstance<VxeLinkProps, VxeLinkConstructor>
+export type VxeLinkInstance = DefineVxeComponentInstance<VxeLinkProps, VxeLinkConstructor>
 
 export interface VxeLinkConstructor extends VxeComponentBaseOptions, VxeLinkMethods {
   props: VxeLinkProps
@@ -41,7 +41,7 @@ export namespace VxeLinkPropTypes {
   export type Size = VxeComponentSizeType
 }
 
-export type VxeLinkProps = {
+export interface VxeLinkProps {
   href?: VxeLinkPropTypes.Href
   target?: VxeLinkPropTypes.Target
   status?: VxeLinkPropTypes.Status

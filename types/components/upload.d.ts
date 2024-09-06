@@ -1,12 +1,12 @@
-import { RenderFunction, SetupContext, Ref, ComponentPublicInstance, DefineComponent } from 'vue'
-import { defineVxeComponent, VxeComponentBaseOptions, VxeComponentEventParams, ValueOf, VxeComponentSizeType } from '@vxe-ui/core'
+import { RenderFunction, SetupContext, Ref } from 'vue'
+import { DefineVxeComponentApp, DefineVxeComponentOptions, DefineVxeComponentInstance, VxeComponentBaseOptions, VxeComponentEventParams, ValueOf, VxeComponentSizeType } from '@vxe-ui/core'
 
 /* eslint-disable no-use-before-define,@typescript-eslint/ban-types */
 
-export declare const VxeUpload: defineVxeComponent<VxeUploadProps, VxeUploadEventProps, VxeUploadSlots>
-export type VxeUploadComponent = DefineComponent<VxeUploadProps & VxeUploadEventProps>
+export declare const VxeUpload: DefineVxeComponentApp<VxeUploadProps, VxeUploadEventProps, VxeUploadSlots>
+export type VxeUploadComponent = DefineVxeComponentOptions<VxeUploadProps, VxeUploadEventProps>
 
-export type VxeUploadInstance = ComponentPublicInstance<VxeUploadProps, VxeUploadConstructor>
+export type VxeUploadInstance = DefineVxeComponentInstance<VxeUploadProps, VxeUploadConstructor>
 
 export interface VxeUploadConstructor extends VxeComponentBaseOptions, VxeUploadMethods {
   props: VxeUploadProps
@@ -105,7 +105,7 @@ export namespace VxeUploadPropTypes {
   export type HintText = string
 }
 
-export type VxeUploadProps = {
+export interface VxeUploadProps {
   modelValue?: VxeUploadPropTypes.ModelValue
   size?: VxeUploadPropTypes.Size
   showList?: VxeUploadPropTypes.ShowList
@@ -167,6 +167,10 @@ export interface UploadReactData {
   showMorePopup: boolean,
   fileList: VxeUploadDefines.FileObjItem[]
   fileCacheMaps: Record<string, VxeUploadDefines.FileCacheItem>
+}
+
+export interface UploadInternalData {
+  imagePreviewTypes: string[]
 }
 
 export interface UploadMethods {

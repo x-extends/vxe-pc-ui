@@ -1,8 +1,9 @@
-import { defineComponent, ref, h, reactive, computed, inject } from 'vue'
+import { defineComponent, ref, h, reactive, computed, PropType, inject } from 'vue'
 import XEUtils from 'xe-utils'
+import { getConfig, createEvent, useSize } from '../../ui'
 import { toCssUnit } from '../../ui/src/dom'
 
-import type { ColReactData, ColPrivateRef, VxeColPrivateComputed, VxeColConstructor, VxeColPrivateMethods, VxeRowConstructor, VxeRowPrivateMethods } from '../../../types'
+import type { ColReactData, VxeColPropTypes, ColPrivateRef, VxeColEmits, ColMethods, ColPrivateMethods, VxeColPrivateComputed, VxeColConstructor, VxeColPrivateMethods, ValueOf, VxeRowConstructor, VxeRowPrivateMethods } from '../../../types'
 
 export default defineComponent({
   name: 'VxeCol',
@@ -11,13 +12,19 @@ export default defineComponent({
     align: String,
     width: [Number, String],
     fill: Boolean,
-    ellipsis: Boolean
+    ellipsis: Boolean,
+    size: {
+      type: String as PropType<VxeColPropTypes.Size>,
+      default: () => getConfig().col.size || getConfig().size
+    }
   },
   emits: [],
   setup (props, context) {
-    const { slots } = context
+    const { slots, emit } = context
 
     const xID = XEUtils.uniqueId()
+
+    useSize(props)
 
     const refElem = ref<HTMLDivElement>()
 
@@ -84,6 +91,19 @@ export default defineComponent({
       getRefMaps: () => refMaps,
       getComputeMaps: () => computeMaps
     } as unknown as VxeColConstructor & VxeColPrivateMethods
+
+    const dispatchEvent = (type: ValueOf<VxeColEmits>, params: Record<string, any>, evnt: Event | null) => {
+      emit(type, createEvent(evnt, { $col: $xeCol }, params))
+    }
+
+    const colMethods: ColMethods = {
+      dispatchEvent
+    }
+
+    const colPrivateMethods: ColPrivateMethods = {
+    }
+
+    Object.assign($xeCol, colMethods, colPrivateMethods)
 
     const renderVN = () => {
       const { span, fill, align, ellipsis } = props

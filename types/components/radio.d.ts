@@ -1,12 +1,12 @@
-import { RenderFunction, SetupContext, Ref, ComponentPublicInstance, DefineComponent } from 'vue'
-import { defineVxeComponent, VxeComponentBaseOptions, VxeComponentEventParams, VxeComponentSizeType, ValueOf } from '@vxe-ui/core'
+import { RenderFunction, SetupContext, Ref } from 'vue'
+import { DefineVxeComponentApp, DefineVxeComponentOptions, DefineVxeComponentInstance, VxeComponentBaseOptions, VxeComponentEventParams, VxeComponentSizeType, ValueOf } from '@vxe-ui/core'
 
 /* eslint-disable no-use-before-define,@typescript-eslint/ban-types */
 
-export declare const VxeRadio: defineVxeComponent<VxeRadioProps, VxeRadioEventProps, VxeRadioSlots>
-export type VxeRadioComponent = DefineComponent<VxeRadioProps & VxeRadioEventProps>
+export declare const VxeRadio: DefineVxeComponentApp<VxeRadioProps, VxeRadioEventProps, VxeRadioSlots>
+export type VxeRadioComponent = DefineVxeComponentOptions<VxeRadioProps, VxeRadioEventProps>
 
-export type VxeRadioInstance = ComponentPublicInstance<VxeRadioProps, VxeRadioConstructor>
+export type VxeRadioInstance = DefineVxeComponentInstance<VxeRadioProps, VxeRadioConstructor>
 
 export interface VxeRadioConstructor extends VxeComponentBaseOptions, VxeRadioMethods {
   props: VxeRadioProps
@@ -33,7 +33,7 @@ export namespace VxeRadioPropTypes {
   export type Name = string
 }
 
-export type VxeRadioProps = {
+export interface VxeRadioProps {
   size?: VxeRadioPropTypes.Size
   /**
    * 严格模式，不允许取消

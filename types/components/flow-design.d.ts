@@ -1,12 +1,12 @@
-import { RenderFunction, SetupContext, Ref, ComponentPublicInstance, DefineComponent } from 'vue'
-import { defineVxeComponent, VxeComponentBaseOptions, VxeComponentEventParams, ValueOf } from '@vxe-ui/core'
+import { RenderFunction, SetupContext, Ref } from 'vue'
+import { DefineVxeComponentApp, DefineVxeComponentOptions, DefineVxeComponentInstance, VxeComponentBaseOptions, VxeComponentEventParams, ValueOf } from '@vxe-ui/core'
 
 /* eslint-disable no-use-before-define,@typescript-eslint/ban-types */
 
-export declare const VxeFlowDesign: defineVxeComponent<VxeFlowDesignProps, VxeFlowDesignEventProps, VxeFlowDesignSlots>
-export type VxeFlowDesignComponent = DefineComponent<VxeFlowDesignProps & VxeFlowDesignEventProps>
+export declare const VxeFlowDesign: DefineVxeComponentApp<VxeFlowDesignProps, VxeFlowDesignEventProps, VxeFlowDesignSlots>
+export type VxeFlowDesignComponent = DefineVxeComponentOptions<VxeFlowDesignProps, VxeFlowDesignEventProps>
 
-export type VxeFlowDesignInstance = ComponentPublicInstance<VxeFlowDesignProps, VxeFlowDesignConstructor>
+export type VxeFlowDesignInstance = DefineVxeComponentInstance<VxeFlowDesignProps, VxeFlowDesignConstructor>
 
 export interface VxeFlowDesignConstructor extends VxeComponentBaseOptions, VxeFlowDesignMethods {
   props: VxeFlowDesignProps

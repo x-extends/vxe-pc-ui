@@ -1,12 +1,12 @@
-import { RenderFunction, SetupContext, Ref, DefineComponent, ComponentPublicInstance } from 'vue'
-import { defineVxeComponent, VxeComponentBaseOptions, VxeComponentEventParams } from '@vxe-ui/core'
+import { RenderFunction, SetupContext, Ref } from 'vue'
+import { DefineVxeComponentApp, DefineVxeComponentOptions, DefineVxeComponentInstance, VxeComponentBaseOptions, VxeComponentEventParams, VxeComponentSizeType } from '@vxe-ui/core'
 
 /* eslint-disable no-use-before-define,@typescript-eslint/ban-types */
 
-export declare const VxeCol: defineVxeComponent<VxeColProps, VxeColEventProps, VxeColSlots>
-export type VxeColComponent = DefineComponent<VxeColProps & VxeColEventProps>
+export declare const VxeCol: DefineVxeComponentApp<VxeColProps, VxeColEventProps, VxeColSlots>
+export type VxeColComponent = DefineVxeComponentOptions<VxeColProps, VxeColEventProps>
 
-export type VxeColInstance = ComponentPublicInstance<VxeColProps, VxeColConstructor>
+export type VxeColInstance = DefineVxeComponentInstance<VxeColProps, VxeColConstructor>
 
 export interface VxeColConstructor extends VxeComponentBaseOptions, VxeColMethods {
   props: VxeColProps
@@ -23,9 +23,12 @@ export interface ColPrivateRef {
 export interface VxeColPrivateRef extends ColPrivateRef { }
 
 export namespace VxeColPropTypes {
+  export type Size = VxeComponentSizeType
 }
 
-export type VxeColProps = {}
+export interface VxeColProps {
+  size?: VxeColPropTypes.Size
+}
 
 export interface ColPrivateComputed {
 }

@@ -9,7 +9,7 @@ export const VxeTooltip = Object.assign({}, VxeTooltipComponent, {
   }
 })
 
-dynamicApp.component(VxeTooltipComponent.name as string, VxeTooltipComponent)
+dynamicApp.use(VxeTooltip)
 VxeUI.component(VxeTooltipComponent)
 
 export const Tooltip = VxeTooltip

@@ -9,7 +9,7 @@ export const VxeNumberInput = Object.assign({}, VxeNumberInputComponent, {
   }
 })
 
-dynamicApp.component(VxeNumberInputComponent.name as string, VxeNumberInputComponent)
+dynamicApp.use(VxeNumberInput)
 VxeUI.component(VxeNumberInputComponent)
 
 export const NumberInput = VxeNumberInput

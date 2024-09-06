@@ -1,12 +1,12 @@
-import { RenderFunction, SetupContext, Ref, ComponentPublicInstance, DefineComponent } from 'vue'
-import { defineVxeComponent, VxeComponentBaseOptions, VxeComponentEventParams, VxeComponentPermissionCodeType, VxeComponentSizeType, VxeComponentStatusType, ValueOf } from '@vxe-ui/core'
+import { RenderFunction, SetupContext, Ref } from 'vue'
+import { DefineVxeComponentApp, DefineVxeComponentOptions, DefineVxeComponentInstance, VxeComponentBaseOptions, VxeComponentEventParams, VxeComponentPermissionCodeType, VxeComponentSizeType, VxeComponentStatusType, ValueOf } from '@vxe-ui/core'
 
 /* eslint-disable no-use-before-define,@typescript-eslint/ban-types */
 
-export declare const VxeTip: defineVxeComponent<VxeTipProps, VxeTipEventProps, VxeTipSlots>
-export type VxeTipComponent = DefineComponent<VxeTipProps & VxeTipEventProps>
+export declare const VxeTip: DefineVxeComponentApp<VxeTipProps, VxeTipEventProps, VxeTipSlots>
+export type VxeTipComponent = DefineVxeComponentOptions<VxeTipProps, VxeTipEventProps>
 
-export type VxeTipInstance = ComponentPublicInstance<VxeTipProps, VxeTipConstructor>
+export type VxeTipInstance = DefineVxeComponentInstance<VxeTipProps, VxeTipConstructor>
 
 export interface VxeTipConstructor extends VxeComponentBaseOptions, VxeTipMethods {
   props: VxeTipProps
@@ -31,7 +31,7 @@ export namespace VxeTipPropTypes {
   export type PermissionCode = VxeComponentPermissionCodeType
 }
 
-export type VxeTipProps = {
+export interface VxeTipProps {
   title?: VxeTipPropTypes.Title
   content?: VxeTipPropTypes.Content
   status?: VxeTipPropTypes.Status

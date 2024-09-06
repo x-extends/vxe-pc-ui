@@ -1,12 +1,12 @@
-import { RenderFunction, SetupContext, Ref, ComponentPublicInstance, DefineComponent } from 'vue'
-import { defineVxeComponent, VxeComponentBaseOptions, VxeComponentEventParams, ValueOf, VxeComponentSizeType } from '@vxe-ui/core'
+import { RenderFunction, SetupContext, Ref } from 'vue'
+import { DefineVxeComponentApp, DefineVxeComponentOptions, DefineVxeComponentInstance, VxeComponentBaseOptions, VxeComponentEventParams, ValueOf, VxeComponentSizeType } from '@vxe-ui/core'
 
 /* eslint-disable no-use-before-define,@typescript-eslint/ban-types */
 
-export declare const VxeLayoutAside: defineVxeComponent<VxeLayoutAsideProps, VxeLayoutAsideEventProps, VxeLayoutAsideSlots>
-export type VxeLayoutAsideComponent = DefineComponent<VxeLayoutAsideProps & VxeLayoutAsideEventProps>
+export declare const VxeLayoutAside: DefineVxeComponentApp<VxeLayoutAsideProps, VxeLayoutAsideEventProps, VxeLayoutAsideSlots>
+export type VxeLayoutAsideComponent = DefineVxeComponentOptions<VxeLayoutAsideProps, VxeLayoutAsideEventProps>
 
-export type VxeLayoutAsideInstance = ComponentPublicInstance<VxeLayoutAsideProps, VxeLayoutAsideConstructor>
+export type VxeLayoutAsideInstance = DefineVxeComponentInstance<VxeLayoutAsideProps, VxeLayoutAsideConstructor>
 
 export interface VxeLayoutAsideConstructor extends VxeComponentBaseOptions, VxeLayoutAsideMethods {
   props: VxeLayoutAsideProps
@@ -31,7 +31,7 @@ export namespace VxeLayoutAsidePropTypes {
   export type Size = VxeComponentSizeType
 }
 
-export type VxeLayoutAsideProps = {
+export interface VxeLayoutAsideProps {
   width?: VxeLayoutAsidePropTypes.Width
   collapsed?: VxeLayoutAsidePropTypes.Collapsed
   collapseWidth?: VxeLayoutAsidePropTypes.CollapseWidth

@@ -1,13 +1,13 @@
-import { RenderFunction, SetupContext, Ref, ComponentPublicInstance, DefineComponent } from 'vue'
-import { defineVxeComponent, VxeComponentBaseOptions, VxeComponentEventParams, ValueOf } from '@vxe-ui/core'
+import { RenderFunction, SetupContext, Ref } from 'vue'
+import { DefineVxeComponentApp, DefineVxeComponentOptions, DefineVxeComponentInstance, VxeComponentBaseOptions, VxeComponentEventParams, ValueOf } from '@vxe-ui/core'
 import { VxeAnchorLinkProps, VxeAnchorLinkPropTypes, VxeAnchorLinkDefines } from './anchor-link'
 
 /* eslint-disable no-use-before-define,@typescript-eslint/ban-types */
 
-export declare const VxeAnchor: defineVxeComponent<VxeAnchorProps, VxeAnchorEventProps, VxeAnchorSlots>
-export type VxeAnchorComponent = DefineComponent<VxeAnchorProps & VxeAnchorEventProps>
+export declare const VxeAnchor: DefineVxeComponentApp<VxeAnchorProps, VxeAnchorEventProps, VxeAnchorSlots>
+export type VxeAnchorComponent = DefineVxeComponentOptions<VxeAnchorProps, VxeAnchorEventProps>
 
-export type VxeAnchorInstance = ComponentPublicInstance<VxeAnchorProps, VxeAnchorConstructor>
+export type VxeAnchorInstance = DefineVxeComponentInstance<VxeAnchorProps, VxeAnchorConstructor>
 
 export interface VxeAnchorConstructor extends VxeComponentBaseOptions, VxeAnchorMethods {
   props: VxeAnchorProps
@@ -46,6 +46,7 @@ export interface VxeAnchorPrivateComputed extends AnchorPrivateComputed { }
 export interface AnchorReactData {
   activeHref: VxeAnchorPropTypes.ModelValue | undefined
   staticLinks: VxeAnchorLinkDefines.LinkConfig[]
+  containerElem: HTMLElement | null
 }
 
 export interface AnchorMethods {

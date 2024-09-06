@@ -138,7 +138,7 @@ const disabledDateMethod: VxeInputPropTypes.DisabledMethod = (params) => {
 }
 
 // 渲染日期小圆点
-const noticeMaps: { [key: string]: VxeInputDefines.DateFestivalInfo } = {
+const noticeMaps: Record<string, VxeInputDefines.DateFestivalInfo> = {
   20200910: {
     notice: true, // 显示小圆点事件通知
     important: true, // 是否标记为重要节日
@@ -167,7 +167,7 @@ const festivalNoticeMethod: VxeInputPropTypes.FestivalMethod = (params) => {
 }
 
 // 显示日期农历节假日
-const calendarMaps: { [key: string]: VxeInputDefines.DateFestivalInfo } = {
+const calendarMaps: Record<string, VxeInputDefines.DateFestivalInfo> = {
   20200930: {
     label: '十四' // 显示节日名称
   },

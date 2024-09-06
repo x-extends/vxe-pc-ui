@@ -1,12 +1,12 @@
-import { RenderFunction, SetupContext, Ref, ComponentPublicInstance, DefineComponent } from 'vue'
-import { defineVxeComponent, VxeComponentBaseOptions, VxeComponentEventParams, VxeComponentSizeType, VxeComponentStatusType } from '@vxe-ui/core'
+import { RenderFunction, SetupContext, Ref } from 'vue'
+import { DefineVxeComponentApp, DefineVxeComponentOptions, DefineVxeComponentInstance, VxeComponentBaseOptions, VxeComponentEventParams, VxeComponentSizeType, VxeComponentStatusType } from '@vxe-ui/core'
 
 /* eslint-disable no-use-before-define,@typescript-eslint/ban-types */
 
-export declare const VxeLoading: defineVxeComponent<VxeLoadingProps, VxeLoadingEventProps, VxeLoadingSlots>
-export type VxeLoadingComponent = DefineComponent<VxeLoadingProps & VxeLoadingEventProps>
+export declare const VxeLoading: DefineVxeComponentApp<VxeLoadingProps, VxeLoadingEventProps, VxeLoadingSlots>
+export type VxeLoadingComponent = DefineVxeComponentOptions<VxeLoadingProps, VxeLoadingEventProps>
 
-export type VxeLoadingInstance = ComponentPublicInstance<VxeLoadingProps, VxeLoadingConstructor>
+export type VxeLoadingInstance = DefineVxeComponentInstance<VxeLoadingProps, VxeLoadingConstructor>
 
 export interface VxeLoadingConstructor extends VxeComponentBaseOptions, VxeLoadingMethods {
   props: VxeLoadingProps
@@ -32,7 +32,7 @@ export namespace VxeLoadingPropTypes {
   export type Size = VxeComponentSizeType
 }
 
-export type VxeLoadingProps = {
+export interface VxeLoadingProps {
   modelValue?: VxeLoadingPropTypes.ModelValue
   icon?: VxeLoadingPropTypes.Icon
   showIcon?: VxeLoadingPropTypes.ShowIcon
@@ -47,6 +47,7 @@ export interface LoadingPrivateComputed {
 export interface VxeLoadingPrivateComputed extends LoadingPrivateComputed { }
 
 export interface LoadingReactData {
+  initialized: boolean
 }
 
 export interface LoadingMethods {

@@ -1,14 +1,14 @@
-import { RenderFunction, SetupContext, Ref, ComponentPublicInstance, DefineComponent } from 'vue'
-import { defineVxeComponent, VxeComponentBaseOptions, VxeComponentEventParams, VxeComponentSizeType, VxeComponentStyleType, ValueOf } from '@vxe-ui/core'
+import { RenderFunction, SetupContext, Ref } from 'vue'
+import { DefineVxeComponentApp, DefineVxeComponentOptions, DefineVxeComponentInstance, VxeComponentBaseOptions, VxeComponentEventParams, VxeComponentSizeType, VxeComponentStyleType, ValueOf } from '@vxe-ui/core'
 import { VxeOptgroupProps } from './optgroup'
 import { VxeOptionProps, VxeOptionPropTypes } from './option'
 
 /* eslint-disable no-use-before-define,@typescript-eslint/ban-types */
 
-export declare const VxeSelect: defineVxeComponent<VxeSelectProps, VxeSelectEventProps, VxeSelectSlots>
-export type VxeSelectComponent = DefineComponent<VxeSelectProps & VxeSelectEventProps>
+export declare const VxeSelect: DefineVxeComponentApp<VxeSelectProps, VxeSelectEventProps, VxeSelectSlots>
+export type VxeSelectComponent = DefineVxeComponentOptions<VxeSelectProps, VxeSelectEventProps>
 
-export type VxeSelectInstance = ComponentPublicInstance<VxeSelectProps, VxeSelectConstructor>
+export type VxeSelectInstance = DefineVxeComponentInstance<VxeSelectProps, VxeSelectConstructor>
 
 export interface VxeSelectConstructor extends VxeComponentBaseOptions, VxeSelectMethods {
   props: VxeSelectProps
@@ -68,7 +68,7 @@ export namespace VxeSelectPropTypes {
   export type Transfer = boolean
 }
 
-export type VxeSelectProps = {
+export interface VxeSelectProps {
   size?: VxeSelectPropTypes.Size
   modelValue?: VxeSelectPropTypes.ModelValue
   clearable?: VxeSelectPropTypes.Clearable

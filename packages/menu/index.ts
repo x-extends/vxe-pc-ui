@@ -9,7 +9,7 @@ export const VxeMenu = Object.assign({}, VxeMenuComponent, {
   }
 })
 
-dynamicApp.component(VxeMenuComponent.name as string, VxeMenuComponent)
+dynamicApp.use(VxeMenu)
 VxeUI.component(VxeMenuComponent)
 
 export const Menu = VxeMenu

@@ -1,12 +1,12 @@
-import { RenderFunction, SetupContext, Ref, ComponentPublicInstance, DefineComponent } from 'vue'
-import { defineVxeComponent, VxeComponentBaseOptions, VxeComponentEventParams, VxeComponentSizeType, ValueOf, VxeComponentStatusType } from '@vxe-ui/core'
+import { RenderFunction, SetupContext, Ref } from 'vue'
+import { DefineVxeComponentApp, DefineVxeComponentOptions, DefineVxeComponentInstance, VxeComponentBaseOptions, VxeComponentEventParams, VxeComponentSizeType, ValueOf, VxeComponentStatusType } from '@vxe-ui/core'
 
 /* eslint-disable no-use-before-define,@typescript-eslint/ban-types */
 
-export declare const VxeTag: defineVxeComponent<VxeTagProps, VxeTagEventProps, VxeTagSlots>
-export type VxeTagComponent = DefineComponent<VxeTagProps & VxeTagEventProps>
+export declare const VxeTag: DefineVxeComponentApp<VxeTagProps, VxeTagEventProps, VxeTagSlots>
+export type VxeTagComponent = DefineVxeComponentOptions<VxeTagProps, VxeTagEventProps>
 
-export type VxeTagInstance = ComponentPublicInstance<VxeTagProps, VxeTagConstructor>
+export type VxeTagInstance = DefineVxeComponentInstance<VxeTagProps, VxeTagConstructor>
 
 export interface VxeTagConstructor extends VxeComponentBaseOptions, VxeTagMethods {
   props: VxeTagProps

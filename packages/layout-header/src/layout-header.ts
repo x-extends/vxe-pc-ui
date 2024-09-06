@@ -1,16 +1,17 @@
 import { defineComponent, ref, h, reactive, PropType } from 'vue'
+import { createEvent } from '../../ui'
 import XEUtils from 'xe-utils'
 
-import type { VxeLayoutHeaderPropTypes, LayoutHeaderReactData, LayoutHeaderPrivateRef, VxeLayoutHeaderPrivateComputed, VxeLayoutHeaderConstructor, VxeLayoutHeaderPrivateMethods } from '../../../types'
+import type { VxeLayoutHeaderPropTypes, LayoutHeaderReactData, LayoutHeaderMethods, LayoutHeaderPrivateMethods, VxeLayoutHeaderEmits, LayoutHeaderPrivateRef, VxeLayoutHeaderPrivateComputed, VxeLayoutHeaderConstructor, VxeLayoutHeaderPrivateMethods, ValueOf } from '../../../types'
 
 export default defineComponent({
   name: 'VxeLayoutHeader',
   props: {
     fixed: Boolean as PropType<VxeLayoutHeaderPropTypes.Fixed>
   },
-  emits: [],
+  emits: [] as VxeLayoutHeaderEmits,
   setup (props, context) {
-    const { slots } = context
+    const { slots, emit } = context
 
     const xID = XEUtils.uniqueId()
 
@@ -36,12 +37,27 @@ export default defineComponent({
       getComputeMaps: () => computeMaps
     } as unknown as VxeLayoutHeaderConstructor & VxeLayoutHeaderPrivateMethods
 
+    const dispatchEvent = (type: ValueOf<VxeLayoutHeaderEmits>, params: Record<string, any>, evnt: Event | null) => {
+      emit(type, createEvent(evnt, { $layoutHeader: $xeLayoutHeader }, params))
+    }
+
+    const layoutHeaderMethods: LayoutHeaderMethods = {
+      dispatchEvent
+    }
+
+    const layoutHeaderPrivateMethods: LayoutHeaderPrivateMethods = {
+    }
+
+    Object.assign($xeLayoutHeader, layoutHeaderMethods, layoutHeaderPrivateMethods)
+
     const renderVN = () => {
+      const { fixed } = props
       const defaultSlot = slots.default
+
       return h('header', {
         ref: refElem,
         class: ['vxe-layout-header', {
-          'is--fixed': props.fixed
+          'is--fixed': fixed
         }]
       }, defaultSlot ? defaultSlot({}) : [])
     }

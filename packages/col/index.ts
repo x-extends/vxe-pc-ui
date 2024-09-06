@@ -9,7 +9,7 @@ export const VxeCol = Object.assign({}, VxeColComponent, {
   }
 })
 
-dynamicApp.component(VxeColComponent.name as string, VxeColComponent)
+dynamicApp.use(VxeCol)
 VxeUI.component(VxeColComponent)
 
 export const Col = VxeCol

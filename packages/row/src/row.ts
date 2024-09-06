@@ -1,9 +1,9 @@
 import { defineComponent, ref, h, reactive, provide, PropType, computed } from 'vue'
 import XEUtils from 'xe-utils'
-import { createEvent, getConfig } from '../../ui'
+import { getConfig, createEvent, useSize } from '../../ui'
 import { toCssUnit } from '../../ui/src/dom'
 
-import type { VxeRowPropTypes, RowReactData, RowPrivateRef, VxeRowPrivateComputed, VxeRowConstructor, VxeRowPrivateMethods } from '../../../types'
+import type { VxeRowPropTypes, RowReactData, RowPrivateRef, VxeRowEmits, RowMethods, RowPrivateMethods, VxeRowPrivateComputed, VxeRowConstructor, VxeRowPrivateMethods, ValueOf } from '../../../types'
 
 export default defineComponent({
   name: 'VxeRow',
@@ -13,15 +13,21 @@ export default defineComponent({
       type: Boolean as PropType<VxeRowPropTypes.Wrap>,
       default: () => getConfig().row.wrap
     },
-    vertical: Boolean as PropType<VxeRowPropTypes.Vertical>
+    vertical: Boolean as PropType<VxeRowPropTypes.Vertical>,
+    size: {
+      type: String as PropType<VxeRowPropTypes.Size>,
+      default: () => getConfig().row.size || getConfig().size
+    }
   },
   emits: [
     'click'
-  ],
+  ] as VxeRowEmits,
   setup (props, context) {
     const { slots, emit } = context
 
     const xID = XEUtils.uniqueId()
+
+    useSize(props)
 
     const refElem = ref<HTMLDivElement>()
 
@@ -68,9 +74,22 @@ export default defineComponent({
       getComputeMaps: () => computeMaps
     } as unknown as VxeRowConstructor & VxeRowPrivateMethods
 
-    const handleDefaultEvent = (evnt: Event & { type: 'click' }) => {
-      emit(evnt.type, createEvent(evnt, { $row: $xeRow }))
+    const clickEvent = (evnt: Event) => {
+      dispatchEvent('click', {}, evnt)
     }
+
+    const dispatchEvent = (type: ValueOf<VxeRowEmits>, params: Record<string, any>, evnt: Event | null) => {
+      emit(type, createEvent(evnt, { $row: $xeRow }, params))
+    }
+
+    const rowMethods: RowMethods = {
+      dispatchEvent
+    }
+
+    const rowPrivateMethods: RowPrivateMethods = {
+    }
+
+    Object.assign($xeRow, rowMethods, rowPrivateMethods)
 
     const renderVN = () => {
       const { vertical, wrap } = props
@@ -83,7 +102,7 @@ export default defineComponent({
           'is--wrap': wrap
         }],
         style: rowStyle,
-        onClick: handleDefaultEvent
+        onClick: clickEvent
       }, defaultSlot ? defaultSlot({}) : [])
     }
 

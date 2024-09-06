@@ -1,6 +1,6 @@
 import { defineComponent, h, Teleport, ref, Ref, computed, reactive, provide, nextTick, watch, PropType, VNode, onMounted, onUnmounted, createCommentVNode } from 'vue'
 import XEUtils from 'xe-utils'
-import { getDomNode, getEventTargetNode } from '../../ui/src/dom'
+import { getDomNode, getEventTargetNode, toCssUnit } from '../../ui/src/dom'
 import { getLastZIndex, nextZIndex, getFuncText, handleBooleanDefaultValue } from '../../ui/src/utils'
 import { VxeUI, getConfig, getIcon, getI18n, globalEvents, GLOBAL_EVENT_KEYS, createEvent, useSize } from '../../ui'
 import VxeButtonComponent from '../../button/src/button'
@@ -8,40 +8,84 @@ import VxeLoadingComponent from '../../loading/index'
 import { getSlotVNs } from '../../ui/src/vn'
 import { errLog } from '../../ui/src/log'
 
-import type { VxeModalConstructor, VxeModalPropTypes, ModalReactData, VxeModalEmits, VxeModalPrivateComputed, ModalEventTypes, VxeButtonInstance, ModalMethods, ModalPrivateRef, VxeModalMethods } from '../../../types'
+import type { VxeModalConstructor, VxeModalPropTypes, ModalReactData, ModalInternalData, VxeModalEmits, VxeModalPrivateComputed, ModalEventTypes, VxeButtonInstance, ModalMethods, ModalPrivateRef, VxeModalMethods, ValueOf } from '../../../types'
 
 export const allActiveModals: VxeModalConstructor[] = []
 const msgQueue: VxeModalConstructor[] = []
 const notifyQueue: VxeModalConstructor[] = []
+
+const lockScrollAttrKey = 'data-vxe-lock-scroll'
+const lockScrollCssWidthKey = '--vxe-ui-modal-lock-scroll-view-width'
 
 export default defineComponent({
   name: 'VxeModal',
   props: {
     modelValue: Boolean as PropType<VxeModalPropTypes.ModelValue>,
     id: String as PropType<VxeModalPropTypes.ID>,
-    type: { type: String as PropType<VxeModalPropTypes.Type>, default: 'modal' },
-    loading: { type: Boolean as PropType<VxeModalPropTypes.Loading>, default: null },
+    type: {
+      type: String as PropType<VxeModalPropTypes.Type>,
+      default: 'modal'
+    },
+    loading: {
+      type: Boolean as PropType<VxeModalPropTypes.Loading>,
+      default: null
+    },
     status: String as PropType<VxeModalPropTypes.Status>,
     iconStatus: String as PropType<VxeModalPropTypes.IconStatus>,
     className: String as PropType<VxeModalPropTypes.ClassName>,
-    top: { type: [Number, String] as PropType<VxeModalPropTypes.Top>, default: () => getConfig().modal.top },
+    top: {
+      type: [Number, String] as PropType<VxeModalPropTypes.Top>,
+      default: () => getConfig().modal.top
+    },
     position: [String, Object] as PropType<VxeModalPropTypes.Position>,
     title: String as PropType<VxeModalPropTypes.Title>,
-    duration: { type: [Number, String] as PropType<VxeModalPropTypes.Duration>, default: () => getConfig().modal.duration },
-    message: [Number, String] as PropType<VxeModalPropTypes.Message>,
+    duration: {
+      type: [Number, String] as PropType<VxeModalPropTypes.Duration>,
+      default: () => getConfig().modal.duration
+    },
     content: [Number, String] as PropType<VxeModalPropTypes.Content>,
-    showCancelButton: { type: Boolean as PropType<VxeModalPropTypes.ShowCancelButton>, default: null },
-    cancelButtonText: { type: String as PropType<VxeModalPropTypes.CancelButtonText>, default: () => getConfig().modal.cancelButtonText },
-    showConfirmButton: { type: Boolean as PropType<VxeModalPropTypes.ShowConfirmButton>, default: () => getConfig().modal.showConfirmButton },
-    confirmButtonText: { type: String as PropType<VxeModalPropTypes.ConfirmButtonText>, default: () => getConfig().modal.confirmButtonText },
-    lockView: { type: Boolean as PropType<VxeModalPropTypes.LockView>, default: () => getConfig().modal.lockView },
+    showCancelButton: {
+      type: Boolean as PropType<VxeModalPropTypes.ShowCancelButton>,
+      default: null
+    },
+    cancelButtonText: {
+      type: String as PropType<VxeModalPropTypes.CancelButtonText>,
+      default: () => getConfig().modal.cancelButtonText
+    },
+    showConfirmButton: {
+      type: Boolean as PropType<VxeModalPropTypes.ShowConfirmButton>,
+      default: () => getConfig().modal.showConfirmButton
+    },
+    confirmButtonText: {
+      type: String as PropType<VxeModalPropTypes.ConfirmButtonText>,
+      default: () => getConfig().modal.confirmButtonText
+    },
+    lockView: {
+      type: Boolean as PropType<VxeModalPropTypes.LockView>,
+      default: () => getConfig().modal.lockView
+    },
     lockScroll: Boolean as PropType<VxeModalPropTypes.LockScroll>,
-    mask: { type: Boolean as PropType<VxeModalPropTypes.Mask>, default: () => getConfig().modal.mask },
-    maskClosable: { type: Boolean as PropType<VxeModalPropTypes.MaskClosable>, default: () => getConfig().modal.maskClosable },
-    escClosable: { type: Boolean as PropType<VxeModalPropTypes.EscClosable>, default: () => getConfig().modal.escClosable },
+    mask: {
+      type: Boolean as PropType<VxeModalPropTypes.Mask>,
+      default: () => getConfig().modal.mask
+    },
+    maskClosable: {
+      type: Boolean as PropType<VxeModalPropTypes.MaskClosable>,
+      default: () => getConfig().modal.maskClosable
+    },
+    escClosable: {
+      type: Boolean as PropType<VxeModalPropTypes.EscClosable>,
+      default: () => getConfig().modal.escClosable
+    },
     resize: Boolean as PropType<VxeModalPropTypes.Resize>,
-    showHeader: { type: Boolean as PropType<VxeModalPropTypes.ShowHeader>, default: () => getConfig().modal.showHeader },
-    showFooter: { type: Boolean as PropType<VxeModalPropTypes.ShowFooter>, default: () => getConfig().modal.showFooter },
+    showHeader: {
+      type: Boolean as PropType<VxeModalPropTypes.ShowHeader>,
+      default: () => getConfig().modal.showHeader
+    },
+    showFooter: {
+      type: Boolean as PropType<VxeModalPropTypes.ShowFooter>,
+      default: () => getConfig().modal.showFooter
+    },
     showZoom: Boolean as PropType<VxeModalPropTypes.ShowZoom>,
     zoomConfig: Object as PropType<VxeModalPropTypes.ZoomConfig>,
     showMaximize: {
@@ -52,31 +96,79 @@ export default defineComponent({
       type: Boolean as PropType<VxeModalPropTypes.ShowMinimize>,
       default: () => handleBooleanDefaultValue(getConfig().modal.showMinimize)
     },
-    showClose: { type: Boolean as PropType<VxeModalPropTypes.ShowClose>, default: () => getConfig().modal.showClose },
-    dblclickZoom: { type: Boolean as PropType<VxeModalPropTypes.DblclickZoom>, default: () => getConfig().modal.dblclickZoom },
+    showClose: {
+      type: Boolean as PropType<VxeModalPropTypes.ShowClose>,
+      default: () => getConfig().modal.showClose
+    },
+    dblclickZoom: {
+      type: Boolean as PropType<VxeModalPropTypes.DblclickZoom>,
+      default: () => getConfig().modal.dblclickZoom
+    },
     width: [Number, String] as PropType<VxeModalPropTypes.Width>,
     height: [Number, String] as PropType<VxeModalPropTypes.Height>,
-    minWidth: { type: [Number, String] as PropType<VxeModalPropTypes.MinWidth>, default: () => getConfig().modal.minWidth },
-    minHeight: { type: [Number, String] as PropType<VxeModalPropTypes.MinHeight>, default: () => getConfig().modal.minHeight },
+    minWidth: {
+      type: [Number, String] as PropType<VxeModalPropTypes.MinWidth>,
+      default: () => getConfig().modal.minWidth
+    },
+    minHeight: {
+      type: [Number, String] as PropType<VxeModalPropTypes.MinHeight>,
+      default: () => getConfig().modal.minHeight
+    },
     zIndex: Number as PropType<VxeModalPropTypes.ZIndex>,
-    marginSize: { type: [Number, String] as PropType<VxeModalPropTypes.MarginSize>, default: () => getConfig().modal.marginSize },
+    marginSize: {
+      type: [Number, String] as PropType<VxeModalPropTypes.MarginSize>,
+      default: () => getConfig().modal.marginSize
+    },
     fullscreen: Boolean as PropType<VxeModalPropTypes.Fullscreen>,
-    draggable: { type: Boolean as PropType<VxeModalPropTypes.Draggable>, default: () => getConfig().modal.draggable },
+    draggable: {
+      type: Boolean as PropType<VxeModalPropTypes.Draggable>,
+      default: () => getConfig().modal.draggable
+    },
     remember: { type: Boolean, default: () => getConfig().modal.remember },
-    destroyOnClose: { type: Boolean as PropType<VxeModalPropTypes.DestroyOnClose>, default: () => getConfig().modal.destroyOnClose },
-    showTitleOverflow: { type: Boolean as PropType<VxeModalPropTypes.ShowTitleOverflow>, default: () => getConfig().modal.showTitleOverflow },
-    transfer: { type: Boolean as PropType<VxeModalPropTypes.Transfer>, default: () => getConfig().modal.transfer },
-    storage: { type: Boolean as PropType<VxeModalPropTypes.Storage>, default: () => getConfig().modal.storage },
-    storageKey: { type: String as PropType<VxeModalPropTypes.StorageKey>, default: () => getConfig().modal.storageKey },
-    padding: { type: Boolean as PropType<VxeModalPropTypes.Padding>, default: () => getConfig().modal.padding },
-    size: { type: String as PropType<VxeModalPropTypes.Size>, default: () => getConfig().modal.size || getConfig().size },
+    destroyOnClose: {
+      type: Boolean as PropType<VxeModalPropTypes.DestroyOnClose>,
+      default: () => getConfig().modal.destroyOnClose
+    },
+    showTitleOverflow: {
+      type: Boolean as PropType<VxeModalPropTypes.ShowTitleOverflow>,
+      default: () => getConfig().modal.showTitleOverflow
+    },
+    transfer: {
+      type: Boolean as PropType<VxeModalPropTypes.Transfer>,
+      default: () => getConfig().modal.transfer
+    },
+    storage: {
+      type: Boolean as PropType<VxeModalPropTypes.Storage>,
+      default: () => getConfig().modal.storage
+    },
+    storageKey: {
+      type: String as PropType<VxeModalPropTypes.StorageKey>,
+      default: () => getConfig().modal.storageKey
+    },
+    padding: {
+      type: Boolean as PropType<VxeModalPropTypes.Padding>,
+      default: () => getConfig().modal.padding
+    },
+    size: {
+      type: String as PropType<VxeModalPropTypes.Size>,
+      default: () => getConfig().modal.size || getConfig().size
+    },
     beforeHideMethod: Function as PropType<VxeModalPropTypes.BeforeHideMethod>,
     slots: Object as PropType<VxeModalPropTypes.Slots>,
 
     /**
      * 已废弃
+     * @deprecated
      */
-    animat: { type: Boolean as PropType<VxeModalPropTypes.Animat>, default: () => getConfig().modal.animat }
+    message: [Number, String] as PropType<VxeModalPropTypes.Message>,
+    /**
+     * 已废弃
+     * @deprecated
+     */
+    animat: {
+      type: Boolean as PropType<VxeModalPropTypes.Animat>,
+      default: () => getConfig().modal.animat
+    }
   },
   emits: [
     'update:modelValue',
@@ -109,6 +201,10 @@ export default defineComponent({
       prevLocat: null,
       firstOpen: true
     })
+
+    const internalData: ModalInternalData = {
+      msgTimeout: undefined
+    }
 
     const refElem = ref<HTMLDivElement>()
     const refModalBox = ref() as Ref<HTMLDivElement>
@@ -146,6 +242,7 @@ export default defineComponent({
       props,
       context,
       reactData,
+      internalData,
       getRefMaps: () => refMaps,
       getComputeMaps: () => computeMaps
     } as unknown as VxeModalConstructor & VxeModalMethods
@@ -161,8 +258,8 @@ export default defineComponent({
       const { width, height } = props
       const boxElem = getBox()
       if (boxElem) {
-        boxElem.style.width = `${width ? (isNaN(width as number) ? width : `${width}px`) : ''}`
-        boxElem.style.height = `${height ? (isNaN(height as number) ? height : `${height}px`) : ''}`
+        boxElem.style.width = toCssUnit(width)
+        boxElem.style.height = toCssUnit(height)
       }
       return nextTick()
     }
@@ -250,11 +347,11 @@ export default defineComponent({
               handleRevert()
             }
             XEUtils.remove(allActiveModals, item => item === $xeModal)
-            modalMethods.dispatchEvent('before-hide', params, null)
+            dispatchEvent('before-hide', params, null)
             setTimeout(() => {
               reactData.visible = false
               emit('update:modelValue', false)
-              modalMethods.dispatchEvent('hide', params, null)
+              dispatchEvent('hide', params, null)
             }, 200)
             removeBodyLockScroll()
           }
@@ -265,19 +362,19 @@ export default defineComponent({
 
     const closeEvent = (evnt: Event) => {
       const type = 'close'
-      modalMethods.dispatchEvent(type, { type }, evnt)
+      dispatchEvent(type, { type }, evnt)
       closeModal(type)
     }
 
     const confirmEvent = (evnt: Event) => {
       const type = 'confirm'
-      modalMethods.dispatchEvent(type, { type }, evnt)
+      dispatchEvent(type, { type }, evnt)
       closeModal(type)
     }
 
     const cancelEvent = (evnt: Event) => {
       const type = 'cancel'
-      modalMethods.dispatchEvent(type, { type }, evnt)
+      dispatchEvent(type, { type }, evnt)
       closeModal(type)
     }
 
@@ -479,17 +576,12 @@ export default defineComponent({
       })
     }
 
-    let msgTimeout: any = null
-
     const handleMsgAutoClose = () => {
       const { duration } = props
       if (duration !== -1) {
-        msgTimeout = setTimeout(() => closeModal('close'), XEUtils.toNumber(duration))
+        internalData.msgTimeout = setTimeout(() => closeModal('close'), XEUtils.toNumber(duration))
       }
     }
-
-    const lockScrollAttrKey = 'data-vxe-lock-scroll'
-    const lockScrollCssWidthKey = '--vxe-ui-modal-lock-scroll-view-width'
 
     const removeBodyLockScroll = () => {
       const htmlElem = document.documentElement
@@ -529,14 +621,16 @@ export default defineComponent({
         reactData.initialized = true
       }
       if (!visible) {
-        if (!remember) {
-          recalculate()
-        }
         addBodyLockScroll()
         reactData.visible = true
         reactData.contentVisible = false
         updateZindex()
         allActiveModals.push($xeModal)
+        if (!remember) {
+          nextTick(() => {
+            recalculate()
+          })
+        }
         setTimeout(() => {
           reactData.contentVisible = true
           nextTick(() => {
@@ -551,7 +645,7 @@ export default defineComponent({
             const type = ''
             const params = { type }
             emit('update:modelValue', true)
-            modalMethods.dispatchEvent('show', params, null)
+            dispatchEvent('show', params, null)
           })
         }, 10)
         if (isMsg) {
@@ -593,18 +687,20 @@ export default defineComponent({
     }
 
     const selfMouseoverEvent = () => {
-      if (msgTimeout === null) {
+      const { msgTimeout } = internalData
+      if (!msgTimeout) {
         return
       }
       const isMsg = computeIsMsg.value
       if (isMsg) {
         clearTimeout(msgTimeout)
-        msgTimeout = null
+        internalData.msgTimeout = undefined
       }
     }
 
     const selfMouseoutEvent = () => {
-      if (msgTimeout === null) {
+      const { msgTimeout } = internalData
+      if (!msgTimeout) {
         const isMsg = computeIsMsg.value
         if (isMsg) {
           handleMsgAutoClose()
@@ -619,7 +715,7 @@ export default defineComponent({
         // 多个时，只关掉最上层的窗口
         if (lastModal) {
           setTimeout(() => {
-            if (lastModal === $xeModal && (lastModal as VxeModalConstructor).props.escClosable) {
+            if (lastModal === $xeModal && lastModal.props.escClosable) {
               closeModal('exit')
             }
           }, 10)
@@ -682,14 +778,14 @@ export default defineComponent({
       const { zoomStatus, prevZoomStatus } = reactData
       return handleZoom(zoomStatus === 'minimize' ? (prevZoomStatus || 'revert') : 'minimize').then((type) => {
         const params = { type }
-        modalMethods.dispatchEvent('zoom', params, evnt)
+        dispatchEvent('zoom', params, evnt)
       })
     }
 
     const toggleZoomMaxEvent = (evnt: Event) => {
       return handleZoom().then((type) => {
         const params = { type }
-        modalMethods.dispatchEvent('zoom', params, evnt)
+        dispatchEvent('zoom', params, evnt)
       })
     }
 
@@ -770,7 +866,7 @@ export default defineComponent({
           boxElem.style.left = `${left}px`
           boxElem.style.top = `${top}px`
           boxElem.className = boxElem.className.replace(/\s?is--drag/, '') + ' is--drag'
-          emit('move', createEvent(evnt, { type: 'move' }))
+          dispatchEvent('move', { type: 'move' }, evnt)
         }
         document.onmouseup = () => {
           document.onmousemove = domMousemove
@@ -926,7 +1022,7 @@ export default defineComponent({
         if (remember && storage) {
           savePosStorage()
         }
-        modalMethods.dispatchEvent('resize', params, evnt)
+        dispatchEvent('resize', params, evnt)
       }
       document.onmouseup = () => {
         reactData.revertLocat = null
@@ -938,10 +1034,12 @@ export default defineComponent({
       }
     }
 
+    const dispatchEvent = (type: ValueOf<VxeModalEmits>, params: Record<string, any>, evnt: Event | null) => {
+      emit(type, createEvent(evnt, { $modal: $xeModal }, params))
+    }
+
     modalMethods = {
-      dispatchEvent (type, params, evnt) {
-        emit(type, createEvent(evnt, { $modal: $xeModal }, params))
-      },
+      dispatchEvent,
       open: openModal,
       close () {
         return closeModal('close')

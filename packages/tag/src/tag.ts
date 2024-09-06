@@ -1,9 +1,9 @@
 import { defineComponent, ref, h, reactive, PropType, createCommentVNode } from 'vue'
 import XEUtils from 'xe-utils'
-import { getConfig, useSize } from '../../ui'
+import { getConfig, createEvent, useSize } from '../../ui'
 import { getSlotVNs } from '../../ui/src/vn'
 
-import type { VxeTagPropTypes, TagReactData, TagPrivateRef, VxeTagPrivateComputed, VxeTagConstructor, VxeTagPrivateMethods } from '../../../types'
+import type { VxeTagPropTypes, TagReactData, TagPrivateRef, VxeTagEmits, VxeTagPrivateComputed, TagMethods, TagPrivateMethods, VxeTagConstructor, VxeTagPrivateMethods, ValueOf } from '../../../types'
 
 export default defineComponent({
   name: 'VxeTag',
@@ -12,11 +12,16 @@ export default defineComponent({
     title: [String, Number] as PropType<VxeTagPropTypes.Title>,
     icon: String as PropType<VxeTagPropTypes.Icon>,
     content: [String, Number] as PropType<VxeTagPropTypes.Content>,
-    size: { type: String as PropType<VxeTagPropTypes.Size>, default: () => getConfig().tag.size || getConfig().size }
+    size: {
+      type: String as PropType<VxeTagPropTypes.Size>,
+      default: () => getConfig().tag.size || getConfig().size
+    }
   },
-  emits: [],
+  emits: [
+    'click'
+  ] as VxeTagEmits,
   setup (props, context) {
-    const { slots } = context
+    const { slots, emit } = context
 
     const xID = XEUtils.uniqueId()
 
@@ -43,6 +48,19 @@ export default defineComponent({
       getRefMaps: () => refMaps,
       getComputeMaps: () => computeMaps
     } as unknown as VxeTagConstructor & VxeTagPrivateMethods
+
+    const dispatchEvent = (type: ValueOf<VxeTagEmits>, params: Record<string, any>, evnt: Event | null) => {
+      emit(type, createEvent(evnt, { $tag: $xeTag }, params))
+    }
+
+    const tagMethods: TagMethods = {
+      dispatchEvent
+    }
+
+    const tagPrivateMethods: TagPrivateMethods = {
+    }
+
+    Object.assign($xeTag, tagMethods, tagPrivateMethods)
 
     const renderContent = () => {
       const { icon, content } = props

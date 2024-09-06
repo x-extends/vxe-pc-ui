@@ -1,12 +1,12 @@
-import { RenderFunction, SetupContext, Ref, ComponentPublicInstance, DefineComponent } from 'vue'
-import { defineVxeComponent, VxeComponentBaseOptions, VxeComponentEventParams, ValueOf, VxeComponentSlotType, VxeComponentAlignType } from '@vxe-ui/core'
+import { RenderFunction, SetupContext, Ref } from 'vue'
+import { DefineVxeComponentApp, DefineVxeComponentOptions, DefineVxeComponentInstance, VxeComponentBaseOptions, VxeComponentEventParams, ValueOf, VxeComponentSlotType, VxeComponentAlignType } from '@vxe-ui/core'
 
 /* eslint-disable no-use-before-define,@typescript-eslint/ban-types */
 
-export declare const VxePrint: defineVxeComponent<VxePrintProps, VxePrintEventProps, VxePrintSlots>
-export type VxePrintComponent = DefineComponent<VxePrintProps & VxePrintEventProps>
+export declare const VxePrint: DefineVxeComponentApp<VxePrintProps, VxePrintEventProps, VxePrintSlots>
+export type VxePrintComponent = DefineVxeComponentOptions<VxePrintProps, VxePrintEventProps>
 
-export type VxePrintInstance = ComponentPublicInstance<VxePrintProps, VxePrintConstructor>
+export type VxePrintInstance = DefineVxeComponentInstance<VxePrintProps, VxePrintConstructor>
 
 export interface VxePrintConstructor extends VxeComponentBaseOptions, VxePrintMethods {
   props: VxePrintProps
@@ -50,7 +50,7 @@ export namespace VxePrintPropTypes {
   }) => string
 }
 
-export type VxePrintProps = {
+export interface VxePrintProps {
   align?: VxePrintPropTypes.Align
   title?: VxePrintPropTypes.Title
   headerAlign?: VxePrintPropTypes.HeaderAlign

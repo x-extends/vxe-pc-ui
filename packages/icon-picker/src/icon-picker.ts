@@ -103,7 +103,7 @@ export default defineComponent({
       return disabled
     })
 
-    const computeTransfer = computed(() => {
+    const computeBtnTransfer = computed(() => {
       const { transfer } = props
       if (transfer === null) {
         const globalTransfer = getConfig().iconPicker.transfer
@@ -159,7 +159,7 @@ export default defineComponent({
         const { panelIndex } = reactData
         const el = refElem.value
         const panelElem = refOptionPanel.value
-        const transfer = computeTransfer.value
+        const btnTransfer = computeBtnTransfer.value
         if (panelElem && el) {
           const targetHeight = el.offsetHeight
           const targetWidth = el.offsetWidth
@@ -171,7 +171,7 @@ export default defineComponent({
           }
           const { boundingTop, boundingLeft, visibleHeight, visibleWidth } = getAbsolutePos(el)
           let panelPlacement = 'bottom'
-          if (transfer) {
+          if (btnTransfer) {
             let left = boundingLeft
             let top = boundingTop + targetHeight
             if (placement === 'top') {
@@ -466,7 +466,7 @@ export default defineComponent({
       const { initialized, isActivated, visiblePanel, selectIcon } = reactData
       const vSize = computeSize.value
       const isDisabled = computeIsDisabled.value
-      const transfer = computeTransfer.value
+      const btnTransfer = computeBtnTransfer.value
       const formReadonly = computeFormReadonly.value
       const inpPlaceholder = computeInpPlaceholder.value
 
@@ -533,13 +533,13 @@ export default defineComponent({
         ]),
         h(Teleport, {
           to: 'body',
-          disabled: transfer ? !initialized : true
+          disabled: btnTransfer ? !initialized : true
         }, [
           h('div', {
             ref: refOptionPanel,
             class: ['vxe-table--ignore-clear vxe-ico-picker--panel', popupClassName ? (XEUtils.isFunction(popupClassName) ? popupClassName({ $iconPicker: $xeIconPicker }) : popupClassName) : '', {
               [`size--${vSize}`]: vSize,
-              'is--transfer': transfer,
+              'is--transfer': btnTransfer,
               'ani--leave': reactData.isAniVisible,
               'ani--enter': visiblePanel
             }],

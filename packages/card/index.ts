@@ -9,7 +9,7 @@ export const VxeCard = Object.assign({}, VxeCardComponent, {
   }
 })
 
-dynamicApp.component(VxeCardComponent.name as string, VxeCardComponent)
+dynamicApp.use(VxeCard)
 VxeUI.component(VxeCardComponent)
 
 export const Card = VxeCard

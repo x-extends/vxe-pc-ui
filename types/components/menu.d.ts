@@ -1,13 +1,13 @@
-import { RenderFunction, SetupContext, Ref, ComponentPublicInstance, DefineComponent } from 'vue'
-import { defineVxeComponent, VxeComponentBaseOptions, VxeComponentEventParams, ValueOf, VxeComponentSizeType, VxeComponentPermissionCodeType } from '@vxe-ui/core'
+import { RenderFunction, SetupContext, Ref } from 'vue'
+import { DefineVxeComponentApp, DefineVxeComponentOptions, DefineVxeComponentInstance, VxeComponentBaseOptions, VxeComponentEventParams, ValueOf, VxeComponentSizeType, VxeComponentPermissionCodeType } from '@vxe-ui/core'
 import { VxeLinkPropTypes } from './link'
 
 /* eslint-disable no-use-before-define,@typescript-eslint/ban-types */
 
-export declare const VxeMenu: defineVxeComponent<VxeMenuProps, VxeMenuEventProps, VxeMenuSlots>
-export type VxeMenuComponent = DefineComponent<VxeMenuProps & VxeMenuEventProps>
+export declare const VxeMenu: DefineVxeComponentApp<VxeMenuProps, VxeMenuEventProps, VxeMenuSlots>
+export type VxeMenuComponent = DefineVxeComponentOptions<VxeMenuProps, VxeMenuEventProps>
 
-export type VxeMenuInstance = ComponentPublicInstance<VxeMenuProps, VxeMenuConstructor>
+export type VxeMenuInstance = DefineVxeComponentInstance<VxeMenuProps, VxeMenuConstructor>
 
 export interface VxeMenuConstructor extends VxeComponentBaseOptions, VxeMenuMethods {
   props: VxeMenuProps
@@ -54,7 +54,7 @@ export namespace VxeMenuPropTypes {
   export type Options = MenuOneOption[]
 }
 
-export type VxeMenuProps = {
+export interface VxeMenuProps {
   modelValue?: VxeMenuPropTypes.ModelValue
   size?: VxeMenuPropTypes.Size
   loading?: VxeMenuPropTypes.Loading

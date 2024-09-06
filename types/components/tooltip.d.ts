@@ -1,12 +1,12 @@
-import { RenderFunction, SetupContext, Ref, ComponentPublicInstance, DefineComponent } from 'vue'
-import { defineVxeComponent, VxeComponentBaseOptions, VxeComponentEventParams, VxeComponentSizeType, VxeComponentStyleType, ValueOf } from '@vxe-ui/core'
+import { RenderFunction, SetupContext, Ref } from 'vue'
+import { DefineVxeComponentApp, DefineVxeComponentOptions, DefineVxeComponentInstance, VxeComponentBaseOptions, VxeComponentEventParams, VxeComponentSizeType, VxeComponentStyleType, ValueOf } from '@vxe-ui/core'
 
 /* eslint-disable no-use-before-define,@typescript-eslint/ban-types */
 
-export declare const VxeTooltip: defineVxeComponent<VxeTooltipProps, VxeTooltipEventProps, VxeTooltipSlots>
-export type VxeTooltipComponent = DefineComponent<VxeTooltipProps & VxeTooltipEventProps>
+export declare const VxeTooltip: DefineVxeComponentApp<VxeTooltipProps, VxeTooltipEventProps, VxeTooltipSlots>
+export type VxeTooltipComponent = DefineVxeComponentOptions<VxeTooltipProps, VxeTooltipEventProps>
 
-export type VxeTooltipInstance = ComponentPublicInstance<VxeTooltipProps, VxeTooltipConstructor>
+export type VxeTooltipInstance = DefineVxeComponentInstance<VxeTooltipProps, VxeTooltipConstructor>
 
 export interface VxeTooltipConstructor extends VxeComponentBaseOptions, VxeTooltipMethods {
   props: VxeTooltipProps
@@ -38,7 +38,7 @@ export namespace VxeTooltipPropTypes {
   export type LeaveMethod = (params: { $event: MouseEvent }) => boolean
 }
 
-export type VxeTooltipProps = {
+export interface VxeTooltipProps {
   size?: VxeTooltipPropTypes.Size
   modelValue?: VxeTooltipPropTypes.ModelValue
   trigger?: VxeTooltipPropTypes.Trigger

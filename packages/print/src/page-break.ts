@@ -1,13 +1,13 @@
-import { defineComponent, ref, h, reactive, inject, onMounted, onUnmounted } from 'vue'
+import { defineComponent, ref, h, reactive, inject, onMounted, onUnmounted, createCommentVNode } from 'vue'
 import XEUtils from 'xe-utils'
 import { assemblePageBreak, destroyPageBreak } from './util'
 
-import type { PrintPageBreakReactData, PrintPageBreakPrivateRef, VxePrintDefines, VxePrintPageBreakPrivateComputed, VxePrintConstructor, VxePrintPrivateMethods, VxePrintPageBreakConstructor, VxePrintPageBreakPrivateMethods } from '../../../types'
+import type { PrintPageBreakReactData, PrintPageBreakPrivateRef, VxePrintPageBreakEmits, VxePrintDefines, VxePrintPageBreakPrivateComputed, VxePrintConstructor, VxePrintPrivateMethods, VxePrintPageBreakConstructor, VxePrintPageBreakPrivateMethods } from '../../../types'
 
 export default defineComponent({
   name: 'VxePrintPageBreak',
   props: {},
-  emits: [],
+  emits: [] as VxePrintPageBreakEmits,
   setup (props, context) {
     const { slots } = context
 
@@ -42,7 +42,9 @@ export default defineComponent({
     } as unknown as VxePrintPageBreakConstructor & VxePrintPageBreakPrivateMethods
 
     if (!$xePrint) {
-      $xePrintPageBreak.renderVN = () => []
+      $xePrintPageBreak.renderVN = () => {
+        return createCommentVNode()
+      }
       return $xePrintPageBreak
     }
 
@@ -55,8 +57,9 @@ export default defineComponent({
     $xePrintPageBreak.renderVN = renderVN
 
     onMounted(() => {
-      if ($xePrint && refElem.value) {
-        assemblePageBreak($xePrint, refElem.value, pageBreakConfig)
+      const elem = refElem.value
+      if ($xePrint && elem) {
+        assemblePageBreak($xePrint, elem, pageBreakConfig)
       }
     })
 

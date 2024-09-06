@@ -1,9 +1,9 @@
-import { ref, defineComponent, h, computed, PropType, watch, createCommentVNode } from 'vue'
-import { getConfig, getIcon, getI18n, useSize } from '../../ui'
+import { reactive, defineComponent, h, computed, PropType, watch, createCommentVNode } from 'vue'
+import { getConfig, getIcon, getI18n, createEvent, useSize } from '../../ui'
 import { getSlotVNs } from '../../ui/src/vn'
 import XEUtils from 'xe-utils'
 
-import type { VxeLoadingPropTypes } from '../../../types'
+import type { VxeLoadingPropTypes, LoadingReactData, VxeLoadingPrivateComputed, LoadingMethods, LoadingPrivateMethods, VxeLoadingEmits, VxeLoadingConstructor, VxeLoadingPrivateMethods, ValueOf } from '../../../types'
 
 export default defineComponent({
   name: 'VxeLoading',
@@ -31,10 +31,29 @@ export default defineComponent({
       default: () => getConfig().loading.size || getConfig().size
     }
   },
-  setup (props, { slots }) {
+  setup (props, context) {
+    const { slots, emit } = context
+
+    const xID = XEUtils.uniqueId()
+
     const { computeSize } = useSize(props)
 
-    const refInitialized = ref(false)
+    const reactData = reactive<LoadingReactData>({
+      initialized: false
+    })
+
+    const computeMaps: VxeLoadingPrivateComputed = {
+      computeSize
+    }
+
+    const $xeLoading = {
+      xID,
+      props,
+      context,
+      reactData,
+
+      getComputeMaps: () => computeMaps
+    } as unknown as VxeLoadingConstructor & VxeLoadingPrivateMethods
 
     const computeLoadingIcon = computed(() => {
       return props.icon || getIcon().LOADING
@@ -46,24 +65,31 @@ export default defineComponent({
     })
 
     const handleInit = () => {
-      if (!refInitialized.value) {
-        refInitialized.value = !!props.modelValue
+      if (!reactData.initialized) {
+        reactData.initialized = !!reactData.initialized
       }
     }
 
-    watch(() => props.modelValue, () => {
-      handleInit()
-    })
+    const dispatchEvent = (type: ValueOf<VxeLoadingEmits>, params: Record<string, any>, evnt: Event | null) => {
+      emit(type, createEvent(evnt, { $loading: $xeLoading }, params))
+    }
 
-    handleInit()
+    const loadingMethods: LoadingMethods = {
+      dispatchEvent
+    }
 
-    return () => {
+    const loadingPrivateMethods: LoadingPrivateMethods = {
+    }
+
+    Object.assign($xeLoading, loadingMethods, loadingPrivateMethods)
+
+    const renderVN = () => {
       const { modelValue, showIcon, status } = props
+      const { initialized } = reactData
       const vSize = computeSize.value
       const defaultSlot = slots.default
       const textSlot = slots.text
       const iconSlot = slots.icon
-      const initialized = refInitialized.value
       const loadingIcon = computeLoadingIcon.value
       const loadingText = computeLoadingText.value
 
@@ -108,5 +134,15 @@ export default defineComponent({
             ])
           ])
     }
+
+    $xeLoading.renderVN = renderVN
+
+    watch(() => props.modelValue, () => {
+      handleInit()
+    })
+
+    handleInit()
+
+    return $xeLoading
   }
 })

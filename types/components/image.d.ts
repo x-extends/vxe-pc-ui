@@ -1,13 +1,13 @@
-import { RenderFunction, SetupContext, Ref, ComponentPublicInstance, DefineComponent } from 'vue'
-import { defineVxeComponent, VxeComponentBaseOptions, VxeComponentEventParams, ValueOf, VxeComponentSizeType } from '@vxe-ui/core'
+import { RenderFunction, SetupContext, Ref } from 'vue'
+import { DefineVxeComponentApp, DefineVxeComponentOptions, DefineVxeComponentInstance, VxeComponentBaseOptions, VxeComponentEventParams, ValueOf, VxeComponentSizeType } from '@vxe-ui/core'
 import { VxeImagePreviewProps, VxeImagePreviewPropTypes } from './image-preview'
 
 /* eslint-disable no-use-before-define,@typescript-eslint/ban-types */
 
-export declare const VxeImage: defineVxeComponent<VxeImageProps, VxeImageEventProps, VxeImageSlots>
-export type VxeImageComponent = DefineComponent<VxeImageProps & VxeImageEventProps>
+export declare const VxeImage: DefineVxeComponentApp<VxeImageProps, VxeImageEventProps, VxeImageSlots>
+export type VxeImageComponent = DefineVxeComponentOptions<VxeImageProps, VxeImageEventProps>
 
-export type VxeImageInstance = ComponentPublicInstance<VxeImageProps, VxeImageConstructor>
+export type VxeImageInstance = DefineVxeComponentInstance<VxeImageProps, VxeImageConstructor>
 
 export interface VxeImageConstructor extends VxeComponentBaseOptions, VxeImageMethods {
   props: VxeImageProps
@@ -39,7 +39,7 @@ export namespace VxeImagePropTypes {
   export type Size = VxeComponentSizeType
 }
 
-export type VxeImageProps = {
+export interface VxeImageProps {
   src?: VxeImagePropTypes.Src
   alt?: VxeImagePropTypes.Alt
   loading?: VxeImagePropTypes.Loading

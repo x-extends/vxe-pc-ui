@@ -9,7 +9,7 @@ export const VxePrintPageBreak = Object.assign({}, VxePrintPageBreakComponent, {
   }
 })
 
-dynamicApp.component(VxePrintPageBreakComponent.name as string, VxePrintPageBreakComponent)
+dynamicApp.use(VxePrintPageBreak)
 VxeUI.component(VxePrintPageBreakComponent)
 
 export const PrintPageBreak = VxePrintPageBreak

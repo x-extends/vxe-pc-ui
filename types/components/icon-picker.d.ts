@@ -1,12 +1,12 @@
-import { RenderFunction, SetupContext, Ref, ComponentPublicInstance, DefineComponent } from 'vue'
-import { defineVxeComponent, VxeComponentBaseOptions, VxeComponentEventParams, ValueOf, VxeComponentStyleType, VxeComponentSizeType } from '@vxe-ui/core'
+import { RenderFunction, SetupContext, Ref } from 'vue'
+import { DefineVxeComponentApp, DefineVxeComponentOptions, DefineVxeComponentInstance, VxeComponentBaseOptions, VxeComponentEventParams, ValueOf, VxeComponentStyleType, VxeComponentSizeType } from '@vxe-ui/core'
 
 /* eslint-disable no-use-before-define,@typescript-eslint/ban-types */
 
-export declare const VxeIconPicker: defineVxeComponent<VxeIconPickerProps, VxeIconPickerEventProps, VxeIconPickerSlots>
-export type VxeIconPickerComponent = DefineComponent<VxeIconPickerProps & VxeIconPickerEventProps>
+export declare const VxeIconPicker: DefineVxeComponentApp<VxeIconPickerProps, VxeIconPickerEventProps, VxeIconPickerSlots>
+export type VxeIconPickerComponent = DefineVxeComponentOptions<VxeIconPickerProps, VxeIconPickerEventProps>
 
-export type VxeIconPickerInstance = ComponentPublicInstance<VxeIconPickerProps, VxeIconPickerConstructor>
+export type VxeIconPickerInstance = DefineVxeComponentInstance<VxeIconPickerProps, VxeIconPickerConstructor>
 
 export interface VxeIconPickerConstructor extends VxeComponentBaseOptions, VxeIconPickerMethods {
   props: VxeIconPickerProps

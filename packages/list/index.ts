@@ -9,7 +9,7 @@ export const VxeList = Object.assign(VxeListComponent, {
   }
 })
 
-dynamicApp.component(VxeListComponent.name as string, VxeListComponent)
+dynamicApp.use(VxeList)
 VxeUI.component(VxeListComponent)
 
 export const List = VxeList

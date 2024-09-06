@@ -1,18 +1,21 @@
 import { defineComponent, ref, h, reactive, PropType } from 'vue'
-import { getConfig, useSize } from '../../ui'
+import { getConfig, useSize, createEvent } from '../../ui'
 import XEUtils from 'xe-utils'
 
-import type { VxeLayoutContainerPropTypes, LayoutContainerReactData, LayoutContainerPrivateRef, VxeLayoutContainerPrivateComputed, VxeLayoutContainerConstructor, VxeLayoutContainerPrivateMethods } from '../../../types'
+import type { VxeLayoutContainerPropTypes, LayoutContainerReactData, LayoutContainerPrivateMethods, VxeLayoutContainerEmits, LayoutContainerMethods, LayoutContainerPrivateRef, VxeLayoutContainerPrivateComputed, VxeLayoutContainerConstructor, VxeLayoutContainerPrivateMethods, ValueOf } from '../../../types'
 
 export default defineComponent({
   name: 'VxeLayoutContainer',
   props: {
     vertical: Boolean as PropType<VxeLayoutContainerPropTypes.Vertical>,
-    size: { type: String as PropType<VxeLayoutContainerPropTypes.Size>, default: () => getConfig().layoutContainer.size || getConfig().size }
+    size: {
+      type: String as PropType<VxeLayoutContainerPropTypes.Size>,
+      default: () => getConfig().layoutContainer.size || getConfig().size
+    }
   },
-  emits: [],
+  emits: [] as VxeLayoutContainerEmits,
   setup (props, context) {
-    const { slots } = context
+    const { slots, emit } = context
 
     const xID = XEUtils.uniqueId()
 
@@ -41,10 +44,24 @@ export default defineComponent({
       getComputeMaps: () => computeMaps
     } as unknown as VxeLayoutContainerConstructor & VxeLayoutContainerPrivateMethods
 
+    const dispatchEvent = (type: ValueOf<VxeLayoutContainerEmits>, params: Record<string, any>, evnt: Event | null) => {
+      emit(type, createEvent(evnt, { $layoutContainer: $xeLayoutContainer }, params))
+    }
+
+    const layoutContainerMethods: LayoutContainerMethods = {
+      dispatchEvent
+    }
+
+    const layoutContainerPrivateMethods: LayoutContainerPrivateMethods = {
+    }
+
+    Object.assign($xeLayoutContainer, layoutContainerMethods, layoutContainerPrivateMethods)
+
     const renderVN = () => {
       const { vertical } = props
       const vSize = computeSize.value
       const defaultSlot = slots.default
+
       return h('div', {
         ref: refElem,
         class: ['vxe-layout-container', {

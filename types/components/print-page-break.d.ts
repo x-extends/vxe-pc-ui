@@ -1,12 +1,12 @@
-import { RenderFunction, SetupContext, Ref, ComponentPublicInstance, DefineComponent } from 'vue'
-import { defineVxeComponent, VxeComponentBaseOptions, VxeComponentEventParams, ValueOf } from '@vxe-ui/core'
+import { RenderFunction, SetupContext, Ref } from 'vue'
+import { DefineVxeComponentApp, DefineVxeComponentOptions, DefineVxeComponentInstance, VxeComponentBaseOptions, VxeComponentEventParams, ValueOf } from '@vxe-ui/core'
 
 /* eslint-disable no-use-before-define,@typescript-eslint/ban-types */
 
-export declare const VxePrintPageBreak: defineVxeComponent<VxePrintPageBreakProps, VxePrintPageBreakEventProps, VxePrintPageBreakSlots>
-export type VxePrintPageBreakComponent = DefineComponent<VxePrintPageBreakProps & VxePrintPageBreakEventProps>
+export declare const VxePrintPageBreak: DefineVxeComponentApp<VxePrintPageBreakProps, VxePrintPageBreakEventProps, VxePrintPageBreakSlots>
+export type VxePrintPageBreakComponent = DefineVxeComponentOptions<VxePrintPageBreakProps, VxePrintPageBreakEventProps>
 
-export type VxePrintPageBreakInstance = ComponentPublicInstance<VxePrintPageBreakProps, VxePrintPageBreakConstructor>
+export type VxePrintPageBreakInstance = DefineVxeComponentInstance<VxePrintPageBreakProps, VxePrintPageBreakConstructor>
 
 export interface VxePrintPageBreakConstructor extends VxeComponentBaseOptions, VxePrintPageBreakMethods {
   props: VxePrintPageBreakProps
@@ -25,7 +25,7 @@ export interface VxePrintPageBreakPrivateRef extends PrintPageBreakPrivateRef { 
 export namespace VxePrintPageBreakPropTypes {
 }
 
-export type VxePrintPageBreakProps = {
+export interface VxePrintPageBreakProps {
 }
 
 export interface PrintPageBreakPrivateComputed {

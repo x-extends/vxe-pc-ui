@@ -9,7 +9,7 @@ export const VxeIcon = Object.assign({}, VxeIconComponent, {
   }
 })
 
-dynamicApp.component(VxeIconComponent.name as string, VxeIconComponent)
+dynamicApp.use(VxeIcon)
 VxeUI.component(VxeIconComponent)
 
 export const Icon = VxeIcon

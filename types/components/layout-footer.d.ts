@@ -1,12 +1,12 @@
-import { RenderFunction, SetupContext, Ref, ComponentPublicInstance, DefineComponent } from 'vue'
-import { defineVxeComponent, VxeComponentBaseOptions, VxeComponentEventParams, VxeComponentAlignType, ValueOf } from '@vxe-ui/core'
+import { RenderFunction, SetupContext, Ref } from 'vue'
+import { DefineVxeComponentApp, DefineVxeComponentOptions, DefineVxeComponentInstance, VxeComponentBaseOptions, VxeComponentEventParams, VxeComponentAlignType, ValueOf } from '@vxe-ui/core'
 
 /* eslint-disable no-use-before-define,@typescript-eslint/ban-types */
 
-export declare const VxeLayoutFooter: defineVxeComponent<VxeLayoutFooterProps, VxeLayoutFooterEventProps, VxeLayoutFooterSlots>
-export type VxeLayoutFooterComponent = DefineComponent<VxeLayoutFooterProps & VxeLayoutFooterEventProps>
+export declare const VxeLayoutFooter: DefineVxeComponentApp<VxeLayoutFooterProps, VxeLayoutFooterEventProps, VxeLayoutFooterSlots>
+export type VxeLayoutFooterComponent = DefineVxeComponentOptions<VxeLayoutFooterProps, VxeLayoutFooterEventProps>
 
-export type VxeLayoutFooterInstance = ComponentPublicInstance<VxeLayoutFooterProps, VxeLayoutFooterConstructor>
+export type VxeLayoutFooterInstance = DefineVxeComponentInstance<VxeLayoutFooterProps, VxeLayoutFooterConstructor>
 
 export interface VxeLayoutFooterConstructor extends VxeComponentBaseOptions, VxeLayoutFooterMethods {
   props: VxeLayoutFooterProps
@@ -27,7 +27,7 @@ export namespace VxeLayoutFooterPropTypes {
   export type Align = VxeComponentAlignType
 }
 
-export type VxeLayoutFooterProps = {
+export interface VxeLayoutFooterProps {
   fixed?: VxeLayoutFooterPropTypes.Fixed
   align?: VxeLayoutFooterPropTypes.Align
 }

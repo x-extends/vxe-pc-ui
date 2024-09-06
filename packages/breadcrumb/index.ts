@@ -9,7 +9,7 @@ export const VxeBreadcrumb = Object.assign({}, VxeBreadcrumbComponent, {
   }
 })
 
-dynamicApp.component(VxeBreadcrumbComponent.name as string, VxeBreadcrumbComponent)
+dynamicApp.use(VxeBreadcrumb)
 VxeUI.component(VxeBreadcrumbComponent)
 
 export const Breadcrumb = VxeBreadcrumb

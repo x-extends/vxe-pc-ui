@@ -2,7 +2,7 @@
   <vxe-layout-container vertical>
     <vxe-layout-header>
       <vxe-button @click="collapsed = !collapsed">折叠</vxe-button>
-      <vxe-switch v-model="theme" close-value="default" open-value="dark" @click="changeTheme">主题切换</vxe-switch>
+      <vxe-switch v-model="theme" close-value="light" open-value="dark" @change="changeTheme">主题切换</vxe-switch>
       <vxe-radio-group v-model="language" :options="langOptions" @change="changeLanguage"></vxe-radio-group>
     </vxe-layout-header>
     <vxe-layout-container>
@@ -79,10 +79,10 @@ const navList = ref<VxeMenuPropTypes.Options>([
   { name: 'CountdownTest', routerLink: { name: 'CountdownTest' } }
 ])
 
-const theme = ref((localStorage.getItem('VXE_THEME') as 'default' | 'dark') || 'default')
+const theme = ref((localStorage.getItem('VXE_THEME') as 'light' | 'dark') || 'light')
 VxeUI.setTheme(theme.value)
 const changeTheme = () => {
-  const themeName = VxeUI.getTheme() === 'dark' ? 'default' : 'dark'
+  const themeName = VxeUI.getTheme() === 'dark' ? 'light' : 'dark'
   theme.value = themeName
   VxeUI.setTheme(themeName)
   localStorage.setItem('VXE_THEME', themeName)

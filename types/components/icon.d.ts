@@ -1,12 +1,12 @@
-import { RenderFunction, SetupContext, Ref, ComponentPublicInstance, DefineComponent } from 'vue'
-import { defineVxeComponent, VxeComponentBaseOptions, VxeComponentEventParams, VxeComponentSizeType, ValueOf } from '@vxe-ui/core'
+import { RenderFunction, SetupContext, Ref } from 'vue'
+import { DefineVxeComponentApp, DefineVxeComponentOptions, DefineVxeComponentInstance, VxeComponentBaseOptions, VxeComponentEventParams, VxeComponentSizeType, ValueOf } from '@vxe-ui/core'
 
 /* eslint-disable no-use-before-define,@typescript-eslint/ban-types */
 
-export declare const VxeIcon: defineVxeComponent<VxeIconProps, VxeIconEventProps, VxeIconSlots>
-export type VxeIconComponent = DefineComponent<VxeIconProps & VxeIconEventProps>
+export declare const VxeIcon: DefineVxeComponentApp<VxeIconProps, VxeIconEventProps, VxeIconSlots>
+export type VxeIconComponent = DefineVxeComponentOptions<VxeIconProps, VxeIconEventProps>
 
-export type VxeIconInstance = ComponentPublicInstance<VxeIconProps, VxeIconConstructor>
+export type VxeIconInstance = DefineVxeComponentInstance<VxeIconProps, VxeIconConstructor>
 
 export interface VxeIconConstructor extends VxeComponentBaseOptions, VxeIconMethods {
   props: VxeIconProps

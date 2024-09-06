@@ -9,7 +9,7 @@ export const VxeCountdown = Object.assign({}, VxeCountdownComponent, {
   }
 })
 
-dynamicApp.component(VxeCountdownComponent.name as string, VxeCountdownComponent)
+dynamicApp.use(VxeCountdown)
 VxeUI.component(VxeCountdownComponent)
 
 export const Countdown = VxeCountdown

@@ -9,7 +9,7 @@ export const VxeRadio = Object.assign(VxeRadioComponent, {
   }
 })
 
-dynamicApp.component(VxeRadioComponent.name as string, VxeRadioComponent)
+dynamicApp.use(VxeRadio)
 VxeUI.component(VxeRadioComponent)
 
 export const Radio = VxeRadio

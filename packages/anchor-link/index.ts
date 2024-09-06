@@ -9,7 +9,7 @@ export const VxeAnchorLink = Object.assign({}, VxeAnchorLinkComponent, {
   }
 })
 
-dynamicApp.component(VxeAnchorLinkComponent.name as string, VxeAnchorLinkComponent)
+dynamicApp.use(VxeAnchorLink)
 VxeUI.component(VxeAnchorLinkComponent)
 
 export const AnchorLink = VxeAnchorLink

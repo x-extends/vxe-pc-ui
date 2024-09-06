@@ -2,6 +2,7 @@ import { defineComponent, h, Teleport, ref, Ref, reactive, nextTick, watch, Prop
 import XEUtils from 'xe-utils'
 import { useSize, getIcon, getConfig, getI18n, globalEvents, GLOBAL_EVENT_KEYS, createEvent } from '../../ui'
 import { getLastZIndex, nextZIndex, getFuncText } from '../../ui/src/utils'
+import { toCssUnit } from '../../ui/src/dom'
 import { getSlotVNs } from '../../ui/src/vn'
 import VxeButtonComponent from '../../button/src/button'
 import VxeLoadingComponent from '../../loading/index'
@@ -100,8 +101,10 @@ export default defineComponent({
     const recalculate = () => {
       const { width, height } = props
       const boxElem = getBox()
-      boxElem.style.width = `${width ? (isNaN(width as number) ? width : `${width}px`) : ''}`
-      boxElem.style.height = `${height ? (isNaN(height as number) ? height : `${height}px`) : ''}`
+      if (boxElem) {
+        boxElem.style.width = toCssUnit(width)
+        boxElem.style.height = toCssUnit(height)
+      }
       return nextTick()
     }
 

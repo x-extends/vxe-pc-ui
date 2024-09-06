@@ -9,7 +9,7 @@ export const VxeOptgroup = Object.assign(VxeOptgroupComponent, {
   }
 })
 
-dynamicApp.component(VxeOptgroupComponent.name as string, VxeOptgroupComponent)
+dynamicApp.use(VxeOptgroup)
 VxeUI.component(VxeOptgroupComponent)
 
 export const Optgroup = VxeOptgroup

@@ -1,17 +1,18 @@
-import { RenderFunction, SetupContext, Ref, ComponentPublicInstance, DefineComponent } from 'vue'
-import { defineVxeComponent, VxeComponentBaseOptions, VxeComponentEventParams, VxeComponentSizeType, ValueOf } from '@vxe-ui/core'
+import { RenderFunction, SetupContext, Ref } from 'vue'
+import { DefineVxeComponentApp, DefineVxeComponentOptions, DefineVxeComponentInstance, VxeComponentBaseOptions, VxeComponentEventParams, VxeComponentSizeType, ValueOf } from '@vxe-ui/core'
 
 /* eslint-disable no-use-before-define,@typescript-eslint/ban-types */
 
-export declare const VxeSwitch: defineVxeComponent<VxeSwitchProps, VxeSwitchEventProps>
-export type VxeSwitchComponent = DefineComponent<VxeSwitchProps & VxeSwitchEventProps>
+export declare const VxeSwitch: DefineVxeComponentApp<VxeSwitchProps, VxeSwitchEventProps, VxeSwitchSlots>
+export type VxeSwitchComponent = DefineVxeComponentOptions<VxeSwitchProps, VxeSwitchEventProps>
 
-export type VxeSwitchInstance = ComponentPublicInstance<VxeSwitchProps, VxeSwitchConstructor, VxeSwitchSlots>
+export type VxeSwitchInstance = DefineVxeComponentInstance<VxeSwitchProps, VxeSwitchConstructor>
 
 export interface VxeSwitchConstructor extends VxeComponentBaseOptions, VxeSwitchMethods {
   props: VxeSwitchProps
   context: SetupContext<VxeSwitchEmits>
   reactData: SwitchReactData
+  internalData: SwitchInternalData
   getRefMaps(): SwitchPrivateRef
   getComputeMaps(): SwitchPrivateComputed
   renderVN: RenderFunction
@@ -37,7 +38,7 @@ export namespace VxeSwitchPropTypes {
   export type CloseActiveIcon = string
 }
 
-export type VxeSwitchProps = {
+export interface VxeSwitchProps {
   size?: VxeSwitchPropTypes.Size
   modelValue?: VxeSwitchPropTypes.ModelValue
   disabled?: VxeSwitchPropTypes.Disabled
@@ -60,6 +61,10 @@ export interface SwitchReactData {
   isActivated: boolean
   hasAnimat: boolean
   offsetLeft: number
+}
+
+export interface SwitchInternalData {
+  atTimeout?: number
 }
 
 export interface SwitchMethods {

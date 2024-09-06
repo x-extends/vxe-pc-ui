@@ -9,7 +9,7 @@ export const VxeOption = Object.assign(VxeOptionComponent, {
   }
 })
 
-dynamicApp.component(VxeOptionComponent.name as string, VxeOptionComponent)
+dynamicApp.use(VxeOption)
 VxeUI.component(VxeOptionComponent)
 
 export const Option = VxeOption

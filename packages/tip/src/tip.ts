@@ -1,9 +1,9 @@
 import { defineComponent, ref, h, reactive, PropType, createCommentVNode } from 'vue'
 import XEUtils from 'xe-utils'
-import { getConfig, useSize, usePermission } from '../../ui'
+import { getConfig, useSize, usePermission, createEvent } from '../../ui'
 import { getSlotVNs } from '../../ui/src/vn'
 
-import type { VxeTipPropTypes, TipReactData, VxeTipEmits, TipPrivateRef, VxeTipPrivateComputed, VxeTipConstructor, VxeTipPrivateMethods } from '../../../types'
+import type { VxeTipPropTypes, TipReactData, VxeTipEmits, TipMethods, TipPrivateMethods, TipPrivateRef, VxeTipPrivateComputed, VxeTipConstructor, VxeTipPrivateMethods, ValueOf } from '../../../types'
 
 export default defineComponent({
   name: 'VxeTip',
@@ -22,12 +22,15 @@ export default defineComponent({
      * 权限码
      */
     permissionCode: [String, Number] as PropType<VxeTipPropTypes.PermissionCode>,
-    size: { type: String as PropType<VxeTipPropTypes.Size>, default: () => getConfig().tip.size || getConfig().size }
+    size: {
+      type: String as PropType<VxeTipPropTypes.Size>,
+      default: () => getConfig().tip.size || getConfig().size
+    }
   },
   emits: [
   ] as VxeTipEmits,
   setup (props, context) {
-    const { slots } = context
+    const { slots, emit } = context
 
     const xID = XEUtils.uniqueId()
 
@@ -57,6 +60,19 @@ export default defineComponent({
       getComputeMaps: () => computeMaps
     } as unknown as VxeTipConstructor & VxeTipPrivateMethods
 
+    const dispatchEvent = (type: ValueOf<VxeTipEmits>, params: Record<string, any>, evnt: Event | null) => {
+      emit(type, createEvent(evnt, { $tip: $xeTip }, params))
+    }
+
+    const tipMethods: TipMethods = {
+      dispatchEvent
+    }
+
+    const tipPrivateMethods: TipPrivateMethods = {
+    }
+
+    Object.assign($xeTip, tipMethods, tipPrivateMethods)
+
     const renderVN = () => {
       const { status, content, icon, title } = props
       const defaultSlot = slots.default
@@ -64,6 +80,7 @@ export default defineComponent({
       const iconSlot = slots.icon
       const permissionInfo = computePermissionInfo.value
       const vSize = computeSize.value
+
       if (!permissionInfo.visible) {
         return createCommentVNode()
       }

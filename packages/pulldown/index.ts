@@ -9,7 +9,7 @@ export const VxePulldown = Object.assign(VxePulldownComponent, {
   }
 })
 
-dynamicApp.component(VxePulldownComponent.name as string, VxePulldownComponent)
+dynamicApp.use(VxePulldown)
 VxeUI.component(VxePulldownComponent)
 
 export const Pulldown = VxePulldown

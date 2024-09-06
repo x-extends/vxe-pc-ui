@@ -9,7 +9,7 @@ export const VxeIconPicker = Object.assign(VxeIconPickerComponent, {
   }
 })
 
-dynamicApp.component(VxeIconPickerComponent.name as string, VxeIconPickerComponent)
+dynamicApp.use(VxeIconPicker)
 VxeUI.component(VxeIconPickerComponent)
 
 export const IconPicker = VxeIconPicker

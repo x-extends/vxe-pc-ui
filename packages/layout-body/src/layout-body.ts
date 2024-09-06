@@ -1,20 +1,23 @@
 import { defineComponent, ref, h, reactive, PropType } from 'vue'
-import { getConfig, useSize } from '../../ui'
+import { getConfig, useSize, createEvent } from '../../ui'
 import VxeLoadingComponent from '../../loading/src/loading'
 import XEUtils from 'xe-utils'
 
-import type { VxeLayoutBodyPropTypes, LayoutBodyReactData, LayoutBodyPrivateRef, VxeLayoutBodyPrivateComputed, VxeLayoutBodyConstructor, VxeLayoutBodyPrivateMethods } from '../../../types'
+import type { VxeLayoutBodyPropTypes, LayoutBodyReactData, LayoutBodyPrivateRef, VxeLayoutBodyEmits, LayoutBodyMethods, LayoutBodyPrivateMethods, VxeLayoutBodyPrivateComputed, VxeLayoutBodyConstructor, VxeLayoutBodyPrivateMethods, ValueOf } from '../../../types'
 
 export default defineComponent({
   name: 'VxeLayoutBody',
   props: {
     loading: Boolean as PropType<VxeLayoutBodyPropTypes.Loading>,
     padding: Boolean as PropType<VxeLayoutBodyPropTypes.Padding>,
-    size: { type: String as PropType<VxeLayoutBodyPropTypes.Size>, default: () => getConfig().layoutBody.size || getConfig().size }
+    size: {
+      type: String as PropType<VxeLayoutBodyPropTypes.Size>,
+      default: () => getConfig().layoutBody.size || getConfig().size
+    }
   },
   emits: [],
   setup (props, context) {
-    const { slots } = context
+    const { slots, emit } = context
 
     const xID = XEUtils.uniqueId()
 
@@ -43,10 +46,24 @@ export default defineComponent({
       getComputeMaps: () => computeMaps
     } as unknown as VxeLayoutBodyConstructor & VxeLayoutBodyPrivateMethods
 
+    const dispatchEvent = (type: ValueOf<VxeLayoutBodyEmits>, params: Record<string, any>, evnt: Event | null) => {
+      emit(type, createEvent(evnt, { $layoutBody: $xeLayoutBody }, params))
+    }
+
+    const layoutBodyMethods: LayoutBodyMethods = {
+      dispatchEvent
+    }
+
+    const layoutBodyPrivateMethods: LayoutBodyPrivateMethods = {
+    }
+
+    Object.assign($xeLayoutBody, layoutBodyMethods, layoutBodyPrivateMethods)
+
     const renderVN = () => {
       const { loading, padding } = props
       const vSize = computeSize.value
       const defaultSlot = slots.default
+
       return h('div', {
         ref: refElem,
         class: ['vxe-layout-body', {

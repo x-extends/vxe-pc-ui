@@ -56,7 +56,7 @@ export default defineComponent({
       panelStyle: null,
       panelPlacement: null,
       visiblePanel: false,
-      animatVisible: false,
+      visibleAnimate: false,
       isActivated: false
     })
 
@@ -64,7 +64,7 @@ export default defineComponent({
     const refPulldowContent = ref() as Ref<HTMLDivElement>
     const refPulldowPnanel = ref() as Ref<HTMLDivElement>
 
-    const computeTransfer = computed(() => {
+    const computeBtnTransfer = computed(() => {
       const { transfer } = props
       if (transfer === null) {
         const globalTransfer = getConfig().pulldown.transfer
@@ -109,7 +109,7 @@ export default defineComponent({
       return nextTick().then(() => {
         const { placement } = props
         const { panelIndex, visiblePanel } = reactData
-        const transfer = computeTransfer.value
+        const btnTransfer = computeBtnTransfer.value
         if (visiblePanel) {
           const targetElem = refPulldowContent.value
           const panelElem = refPulldowPnanel.value
@@ -124,7 +124,7 @@ export default defineComponent({
             }
             const { boundingTop, boundingLeft, visibleHeight, visibleWidth } = getAbsolutePos(targetElem)
             let panelPlacement = 'bottom'
-            if (transfer) {
+            if (btnTransfer) {
               let left = boundingLeft
               let top = boundingTop + targetHeight
               if (placement === 'top') {
@@ -191,7 +191,7 @@ export default defineComponent({
         if (!props.disabled) {
           clearTimeout(hidePanelTimeout)
           reactData.isActivated = true
-          reactData.animatVisible = true
+          reactData.visibleAnimate = true
           setTimeout(() => {
             reactData.visiblePanel = true
             emit('update:modelValue', true)
@@ -216,9 +216,9 @@ export default defineComponent({
       reactData.visiblePanel = false
       emit('update:modelValue', false)
       return new Promise(resolve => {
-        if (reactData.animatVisible) {
+        if (reactData.visibleAnimate) {
           hidePanelTimeout = window.setTimeout(() => {
-            reactData.animatVisible = false
+            reactData.visibleAnimate = false
             nextTick(() => {
               resolve()
             })
@@ -351,8 +351,8 @@ export default defineComponent({
 
     const renderVN = () => {
       const { className, options, popupClassName, showPopupShadow, destroyOnClose, disabled } = props
-      const { initialized, isActivated, animatVisible, visiblePanel, panelStyle, panelPlacement } = reactData
-      const transfer = computeTransfer.value
+      const { initialized, isActivated, visibleAnimate, visiblePanel, panelStyle, panelPlacement } = reactData
+      const btnTransfer = computeBtnTransfer.value
       const vSize = computeSize.value
       const defaultSlot = slots.default
       const headerSlot = slots.header
@@ -375,23 +375,23 @@ export default defineComponent({
         }, defaultSlot ? defaultSlot({ $pulldown: $xePulldown }) : []),
         h(Teleport, {
           to: 'body',
-          disabled: transfer ? !initialized : true
+          disabled: btnTransfer ? !initialized : true
         }, [
           h('div', {
             ref: refPulldowPnanel,
             class: ['vxe-table--ignore-clear vxe-pulldown--panel', popupClassName ? (XEUtils.isFunction(popupClassName) ? popupClassName({ $pulldown: $xePulldown }) : popupClassName) : '', {
               [`size--${vSize}`]: vSize,
               'is--shadow': showPopupShadow,
-              'is--transfer': transfer,
-              'animat--leave': animatVisible,
-              'animat--enter': visiblePanel
+              'is--transfer': btnTransfer,
+              'ani--leave': visibleAnimate,
+              'ani--enter': visiblePanel
             }],
             placement: panelPlacement,
             style: panelStyle
           }, [
             h('div', {
               class: 'vxe-pulldown--panel-wrapper'
-            }, !initialized || (destroyOnClose && !visiblePanel && !animatVisible)
+            }, !initialized || (destroyOnClose && !visiblePanel && !visibleAnimate)
               ? []
               : [
                   headerSlot

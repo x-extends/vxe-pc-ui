@@ -1,12 +1,12 @@
-import { RenderFunction, SetupContext, Ref, ComponentPublicInstance, DefineComponent } from 'vue'
-import { defineVxeComponent, VxeComponentBaseOptions, VxeComponentEventParams, ValueOf, VxeComponentStyleType, VxeComponentSizeType } from '@vxe-ui/core'
+import { RenderFunction, SetupContext, Ref } from 'vue'
+import { DefineVxeComponentApp, DefineVxeComponentOptions, DefineVxeComponentInstance, VxeComponentBaseOptions, VxeComponentEventParams, ValueOf, VxeComponentStyleType, VxeComponentSizeType } from '@vxe-ui/core'
 
 /* eslint-disable no-use-before-define,@typescript-eslint/ban-types */
 
-export declare const VxeCalendar: defineVxeComponent<VxeCalendarProps, VxeCalendarEventProps, VxeCalendarSlots>
-export type VxeCalendarComponent = DefineComponent<VxeCalendarProps & VxeCalendarEventProps>
+export declare const VxeCalendar: DefineVxeComponentApp<VxeCalendarProps, VxeCalendarEventProps, VxeCalendarSlots>
+export type VxeCalendarComponent = DefineVxeComponentOptions<VxeCalendarProps, VxeCalendarEventProps>
 
-export type VxeCalendarInstance = ComponentPublicInstance<VxeCalendarProps, VxeCalendarConstructor>
+export type VxeCalendarInstance = DefineVxeComponentInstance<VxeCalendarProps, VxeCalendarConstructor>
 
 export interface VxeCalendarConstructor extends VxeComponentBaseOptions, VxeCalendarMethods {
   props: VxeCalendarProps

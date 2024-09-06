@@ -1,12 +1,12 @@
-import { RenderFunction, SetupContext, Ref, ComponentPublicInstance, DefineComponent } from 'vue'
-import { defineVxeComponent, VxeComponentBaseOptions, VxeComponentEventParams, VxeComponentSizeType, ValueOf, VxeComponentStatusType } from '@vxe-ui/core'
+import { RenderFunction, SetupContext, Ref } from 'vue'
+import { DefineVxeComponentApp, DefineVxeComponentOptions, DefineVxeComponentInstance, VxeComponentBaseOptions, VxeComponentEventParams, VxeComponentSizeType, ValueOf, VxeComponentStatusType } from '@vxe-ui/core'
 
 /* eslint-disable no-use-before-define,@typescript-eslint/ban-types */
 
-export declare const VxeText: defineVxeComponent<VxeTextProps, VxeTextEventProps, VxeTextSlots>
-export type VxeTextComponent = DefineComponent<VxeTextProps & VxeTextEventProps>
+export declare const VxeText: DefineVxeComponentApp<VxeTextProps, VxeTextEventProps, VxeTextSlots>
+export type VxeTextComponent = DefineVxeComponentOptions<VxeTextProps, VxeTextEventProps>
 
-export type VxeTextInstance = ComponentPublicInstance<VxeTextProps, VxeTextConstructor>
+export type VxeTextInstance = DefineVxeComponentInstance<VxeTextProps, VxeTextConstructor>
 
 export interface VxeTextConstructor extends VxeComponentBaseOptions, VxeTextMethods {
   props: VxeTextProps

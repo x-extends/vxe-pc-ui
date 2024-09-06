@@ -10,7 +10,7 @@ export const VxeTip = Object.assign({}, VxeTipComponent, {
   }
 })
 
-dynamicApp.component(VxeTipComponent.name as string, VxeTipComponent)
+dynamicApp.use(VxeTip)
 VxeUI.component(VxeTipComponent)
 
 export const Tips = VxeTip

@@ -9,7 +9,7 @@ export const VxeButton = Object.assign({}, VxeButtonComponent, {
   }
 })
 
-dynamicApp.component(VxeButtonComponent.name as string, VxeButtonComponent)
+dynamicApp.use(VxeButton)
 VxeUI.component(VxeButtonComponent)
 
 export const Button = VxeButton

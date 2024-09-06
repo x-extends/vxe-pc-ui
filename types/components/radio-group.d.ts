@@ -1,13 +1,13 @@
-import { RenderFunction, SetupContext, Ref, ComputedRef, ComponentPublicInstance, DefineComponent } from 'vue'
-import { defineVxeComponent, VxeComponentBaseOptions, VxeComponentEventParams, VxeComponentSizeType, ValueOf } from '@vxe-ui/core'
+import { RenderFunction, SetupContext, Ref, ComputedRef } from 'vue'
+import { DefineVxeComponentApp, DefineVxeComponentOptions, DefineVxeComponentInstance, VxeComponentBaseOptions, VxeComponentEventParams, VxeComponentSizeType, ValueOf } from '@vxe-ui/core'
 import { VxeRadioPropTypes } from './radio'
 
 /* eslint-disable no-use-before-define,@typescript-eslint/ban-types */
 
-export declare const VxeRadioGroup: defineVxeComponent<VxeRadioGroupProps, VxeRadioGroupEventProps, VxeRadioGroupSlots>
-export type VxeRadioGroupComponent = DefineComponent<VxeRadioGroupProps & VxeRadioGroupEventProps>
+export declare const VxeRadioGroup: DefineVxeComponentApp<VxeRadioGroupProps, VxeRadioGroupEventProps, VxeRadioGroupSlots>
+export type VxeRadioGroupComponent = DefineVxeComponentOptions<VxeRadioGroupProps, VxeRadioGroupEventProps>
 
-export type VxeRadioGroupInstance = ComponentPublicInstance<VxeRadioGroupProps, VxeRadioGroupConstructor>
+export type VxeRadioGroupInstance = DefineVxeComponentInstance<VxeRadioGroupProps, VxeRadioGroupConstructor>
 
 export interface VxeRadioGroupConstructor extends VxeComponentBaseOptions, VxeRadioGroupMethods {
   name: string
@@ -43,7 +43,7 @@ export namespace VxeRadioGroupPropTypes {
   export type Disabled = boolean
 }
 
-export type VxeRadioGroupProps = {
+export interface VxeRadioGroupProps {
   size?: VxeRadioGroupPropTypes.Size
   type?: VxeRadioGroupPropTypes.Type
   options?: VxeRadioGroupPropTypes.Options

@@ -9,9 +9,8 @@ export const VxeCheckbox = Object.assign(VxeCheckboxComponent, {
   }
 })
 
-export const Checkbox = VxeCheckbox
-
-dynamicApp.component(VxeCheckboxComponent.name as string, VxeCheckboxComponent)
+dynamicApp.use(VxeCheckbox)
 VxeUI.component(VxeCheckboxComponent)
 
+export const Checkbox = VxeCheckbox
 export default VxeCheckbox

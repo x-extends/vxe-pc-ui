@@ -9,7 +9,7 @@ export const VxeCalendar = Object.assign({}, VxeCalendarComponent, {
   }
 })
 
-dynamicApp.component(VxeCalendarComponent.name as string, VxeCalendarComponent)
+dynamicApp.use(VxeCalendar)
 VxeUI.component(VxeCalendarComponent)
 
 export const Calendar = VxeCalendar

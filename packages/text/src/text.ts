@@ -14,7 +14,10 @@ export default defineComponent({
     loading: Boolean as PropType<VxeTextPropTypes.Loading>,
     content: [String, Number] as PropType<VxeTextPropTypes.Content>,
     clickToCopy: Boolean as PropType<VxeTextPropTypes.ClickToCopy>,
-    size: { type: String as PropType<VxeTextPropTypes.Size>, default: () => getConfig().text.size || getConfig().size }
+    size: {
+      type: String as PropType<VxeTextPropTypes.Size>,
+      default: () => getConfig().text.size || getConfig().size
+    }
   },
   emits: [
     'click'
@@ -75,7 +78,7 @@ export default defineComponent({
     } as unknown as VxeTextConstructor & VxeTextPrivateMethods
 
     const dispatchEvent = (type: ValueOf<VxeTextEmits>, params: Record<string, any>, evnt: Event | null) => {
-      emit(type, createEvent(evnt, { $carousel: $xeText }, params))
+      emit(type, createEvent(evnt, { $text: $xeText }, params))
     }
 
     const textMethods: TextMethods = {

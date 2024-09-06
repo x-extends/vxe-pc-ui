@@ -1,15 +1,14 @@
-import { RenderFunction, SetupContext, Ref, ComputedRef, ComponentPublicInstance, DefineComponent } from 'vue'
-import { defineVxeComponent, VxeComponentBaseOptions, VxeComponentEventParams, ValueOf, VxeComponentSizeType } from '@vxe-ui/core'
+import { RenderFunction, SetupContext, Ref, ComputedRef } from 'vue'
+import { DefineVxeComponentApp, DefineVxeComponentOptions, DefineVxeComponentInstance, VxeComponentBaseOptions, VxeComponentEventParams, ValueOf, VxeComponentSizeType } from '@vxe-ui/core'
 import { VxeFormDesignDefines } from './form-design'
 import { VxeFormProps, VxeFormPropTypes, VxeFormDefines } from './form'
-import { VxeGridPropTypes } from './grid'
 
 /* eslint-disable no-use-before-define,@typescript-eslint/ban-types */
 
-export declare const VxeFormView: defineVxeComponent<VxeFormViewProps, VxeFormViewEventProps, VxeFormViewSlots>
-export type VxeFormViewComponent = DefineComponent<VxeFormViewProps & VxeFormViewEventProps>
+export declare const VxeFormView: DefineVxeComponentApp<VxeFormViewProps, VxeFormViewEventProps, VxeFormViewSlots>
+export type VxeFormViewComponent = DefineVxeComponentOptions<VxeFormViewProps, VxeFormViewEventProps>
 
-export type VxeFormViewInstance = ComponentPublicInstance<VxeFormViewProps, VxeFormViewConstructor>
+export type VxeFormViewInstance = DefineVxeComponentInstance<VxeFormViewProps, VxeFormViewConstructor>
 
 export interface VxeFormViewConstructor extends VxeComponentBaseOptions, VxeFormViewMethods {
   props: VxeFormViewProps

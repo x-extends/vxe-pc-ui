@@ -1,10 +1,10 @@
 import { defineComponent, ref, h, reactive, PropType, VNode, provide, nextTick, onBeforeUnmount, onMounted, watch, createCommentVNode, computed } from 'vue'
 import XEUtils from 'xe-utils'
-import { createEvent } from '../../ui'
+import { createEvent } from '@vxe-ui/core'
 import { getOffsetPos } from '../../ui/src/dom'
 import VxeAnchorLinkComponent from './anchor-link'
 
-import type { VxeAnchorPropTypes, AnchorReactData, AnchorPrivateRef, VxeAnchorPrivateComputed, VxeAnchorConstructor, VxeAnchorPrivateMethods, AnchorMethods, AnchorPrivateMethods } from '../../../types'
+import type { VxeAnchorPropTypes, AnchorReactData, VxeAnchorEmits, AnchorPrivateRef, VxeAnchorPrivateComputed, VxeAnchorConstructor, VxeAnchorPrivateMethods, AnchorMethods, AnchorPrivateMethods } from '../../../types'
 
 export default defineComponent({
   name: 'VxeAnchor',
@@ -21,7 +21,7 @@ export default defineComponent({
     'update:modelValue',
     'change',
     'click'
-  ],
+  ] as VxeAnchorEmits,
   setup (props, context) {
     const { slots, emit } = context
 
@@ -32,7 +32,8 @@ export default defineComponent({
 
     const reactData = reactive<AnchorReactData>({
       activeHref: null,
-      staticLinks: []
+      staticLinks: [],
+      containerElem: null
     })
 
     const refMaps: AnchorPrivateRef = {
@@ -49,8 +50,6 @@ export default defineComponent({
 
     const computeMaps: VxeAnchorPrivateComputed = {
     }
-
-    let containerElem: HTMLElement | null = null
 
     const $xeAnchor = {
       xID,
@@ -91,6 +90,7 @@ export default defineComponent({
 
     const handleContainerScrollEvent = () => {
       const allHrefList = computeAllHrefList.value
+      const { containerElem } = reactData
       if (containerElem) {
         const wrapperElList = containerElem.querySelectorAll(allHrefList.map(href => `${href}`).join(','))
         for (let i = 0; i < wrapperElList.length; i++) {
@@ -106,13 +106,15 @@ export default defineComponent({
     }
 
     const removeContainerElemScroll = () => {
+      const { containerElem } = reactData
       if (containerElem) {
         containerElem.removeEventListener('scroll', handleContainerScrollEvent)
       }
     }
 
     const updateContainerElem = () => {
-      containerElem = getContainerElem()
+      const containerElem = getContainerElem()
+      reactData.containerElem = containerElem
       if (containerElem) {
         containerElem.addEventListener('scroll', handleContainerScrollEvent, {
           passive: false

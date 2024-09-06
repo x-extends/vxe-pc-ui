@@ -82,7 +82,7 @@ export default defineComponent({
       panelPlacement: null,
       triggerFocusPanel: false,
       visiblePanel: false,
-      animatVisible: false,
+      visibleAnimate: false,
       isActivated: false
     })
 
@@ -112,7 +112,7 @@ export default defineComponent({
       return disabled
     })
 
-    const computeTransfer = computed(() => {
+    const computeBtnTransfer = computed(() => {
       const { transfer } = props
       if (transfer === null) {
         const globalTransfer = getConfig().select.transfer
@@ -260,7 +260,7 @@ export default defineComponent({
         const { panelIndex } = reactData
         const el = refElem.value
         const panelElem = refOptionPanel.value
-        const transfer = computeTransfer.value
+        const btnTransfer = computeBtnTransfer.value
         if (panelElem && el) {
           const targetHeight = el.offsetHeight
           const targetWidth = el.offsetWidth
@@ -272,7 +272,7 @@ export default defineComponent({
           }
           const { boundingTop, boundingLeft, visibleHeight, visibleWidth } = getAbsolutePos(el)
           let panelPlacement = 'bottom'
-          if (transfer) {
+          if (btnTransfer) {
             let left = boundingLeft
             let top = boundingTop + targetHeight
             if (placement === 'top') {
@@ -336,7 +336,7 @@ export default defineComponent({
           reactData.initialized = true
         }
         reactData.isActivated = true
-        reactData.animatVisible = true
+        reactData.visibleAnimate = true
         setTimeout(() => {
           reactData.visiblePanel = true
         }, 10)
@@ -348,7 +348,7 @@ export default defineComponent({
     const hideOptionPanel = () => {
       reactData.visiblePanel = false
       hidePanelTimeout = window.setTimeout(() => {
-        reactData.animatVisible = false
+        reactData.visibleAnimate = false
       }, 350)
     }
 
@@ -472,7 +472,7 @@ export default defineComponent({
       const vSize = computeSize.value
       const isDisabled = computeIsDisabled.value
       const selectLabel = computeSelectLabel.value
-      const transfer = computeTransfer.value
+      const btnTransfer = computeBtnTransfer.value
       const formReadonly = computeFormReadonly.value
       const defaultSlot = slots.default
       const headerSlot = slots.header
@@ -534,15 +534,15 @@ export default defineComponent({
           : {}),
         h(Teleport, {
           to: 'body',
-          disabled: transfer ? !initialized : true
+          disabled: btnTransfer ? !initialized : true
         }, [
           h('div', {
             ref: refOptionPanel,
             class: ['vxe-table--ignore-clear vxe-tree-select--panel', popupClassName ? (XEUtils.isFunction(popupClassName) ? popupClassName({ $treeSelect: $xeTreeSelect }) : popupClassName) : '', {
               [`size--${vSize}`]: vSize,
-              'is--transfer': transfer,
-              'animat--leave': !loading && reactData.animatVisible,
-              'animat--enter': !loading && visiblePanel
+              'is--transfer': btnTransfer,
+              'ani--leave': !loading && reactData.visibleAnimate,
+              'ani--enter': !loading && visiblePanel
             }],
             placement: reactData.panelPlacement,
             style: reactData.panelStyle

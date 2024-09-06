@@ -1,13 +1,13 @@
-import { RenderFunction, SetupContext, Ref, ComponentPublicInstance, DefineComponent } from 'vue'
-import { defineVxeComponent, VxeComponentBaseOptions, VxeComponentEventParams, ValueOf } from '@vxe-ui/core'
+import { RenderFunction, SetupContext, Ref } from 'vue'
+import { DefineVxeComponentApp, DefineVxeComponentOptions, DefineVxeComponentInstance, VxeComponentBaseOptions, VxeComponentEventParams, ValueOf } from '@vxe-ui/core'
 import { VxeColumnPropTypes, VxeColumnSlotTypes } from './column'
 
 /* eslint-disable no-use-before-define,@typescript-eslint/ban-types */
 
-export declare const VxeColgroup: defineVxeComponent<VxeColgroupProps, VxeColgroupEventProps, VxeColgroupSlots>
-export type VxeColgroupComponent = DefineComponent<VxeColgroupProps & VxeColgroupEventProps>
+export declare const VxeColgroup: DefineVxeComponentApp<VxeColgroupProps, VxeColgroupEventProps, VxeColgroupSlots>
+export type VxeColgroupComponent = DefineVxeComponentOptions<VxeColgroupProps, VxeColgroupEventProps>
 
-export type VxeColgroupInstance = ComponentPublicInstance<VxeColgroupProps, VxeColgroupConstructor>
+export type VxeColgroupInstance = DefineVxeComponentInstance<VxeColgroupProps, VxeColgroupConstructor>
 
 export interface VxeColgroupConstructor extends VxeComponentBaseOptions, VxeColgroupMethods {
   props: VxeColgroupProps

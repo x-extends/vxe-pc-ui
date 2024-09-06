@@ -1,14 +1,14 @@
-import { RenderFunction, SetupContext, Ref, ComponentPublicInstance, DefineComponent } from 'vue'
-import { defineVxeComponent, VxeComponentBaseOptions, VxeComponentEventParams, VxeComponentSizeType, ValueOf } from '@vxe-ui/core'
+import { RenderFunction, SetupContext, Ref } from 'vue'
+import { DefineVxeComponentApp, DefineVxeComponentOptions, DefineVxeComponentInstance, VxeComponentBaseOptions, VxeComponentEventParams, VxeComponentSizeType, ValueOf } from '@vxe-ui/core'
 import { VxeButtonProps } from './button'
 import { VxeTableDefines, VxeTableConstructor, VxeTablePrivateMethods } from './table'
 
 /* eslint-disable no-use-before-define,@typescript-eslint/ban-types */
 
-export declare const VxeToolbar: defineVxeComponent<VxeToolbarProps, VxeToolbarEventProps, VxeToolbarSlots>
-export type VxeToolbarComponent = DefineComponent<VxeToolbarProps & VxeToolbarEventProps>
+export declare const VxeToolbar: DefineVxeComponentApp<VxeToolbarProps, VxeToolbarEventProps, VxeToolbarSlots>
+export type VxeToolbarComponent = DefineVxeComponentOptions<VxeToolbarProps, VxeToolbarEventProps>
 
-export type VxeToolbarInstance = ComponentPublicInstance<VxeToolbarProps, VxeToolbarConstructor>
+export type VxeToolbarInstance = DefineVxeComponentInstance<VxeToolbarProps, VxeToolbarConstructor>
 
 export interface VxeToolbarConstructor extends VxeComponentBaseOptions, VxeToolbarMethods {
   props: VxeToolbarProps

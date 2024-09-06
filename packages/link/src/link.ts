@@ -1,9 +1,9 @@
 import { defineComponent, ref, h, reactive, PropType, createCommentVNode, resolveComponent } from 'vue'
 import XEUtils from 'xe-utils'
-import { getConfig, usePermission, useSize } from '../../ui'
+import { getConfig, usePermission, useSize, createEvent } from '../../ui'
 import { getSlotVNs } from '../../ui/src/vn'
 
-import type { VxeLinkPropTypes, LinkReactData, LinkPrivateRef, VxeLinkPrivateComputed, VxeLinkConstructor, VxeLinkPrivateMethods } from '../../../types'
+import type { VxeLinkPropTypes, LinkReactData, LinkPrivateRef, LinkMethods, LinkPrivateMethods, VxeLinkEmits, VxeLinkPrivateComputed, VxeLinkConstructor, VxeLinkPrivateMethods, ValueOf } from '../../../types'
 
 export default defineComponent({
   name: 'VxeLink',
@@ -23,11 +23,16 @@ export default defineComponent({
      */
     permissionCode: [String, Number] as PropType<VxeLinkPropTypes.PermissionCode>,
     content: [String, Number] as PropType<VxeLinkPropTypes.Content>,
-    size: { type: String as PropType<VxeLinkPropTypes.Size>, default: () => getConfig().link.size || getConfig().size }
+    size: {
+      type: String as PropType<VxeLinkPropTypes.Size>,
+      default: () => getConfig().link.size || getConfig().size
+    }
   },
-  emits: [],
+  emits: [
+    'click'
+  ] as VxeLinkEmits,
   setup (props, context) {
-    const { slots } = context
+    const { slots, emit } = context
 
     const xID = XEUtils.uniqueId()
 
@@ -56,6 +61,19 @@ export default defineComponent({
       getRefMaps: () => refMaps,
       getComputeMaps: () => computeMaps
     } as unknown as VxeLinkConstructor & VxeLinkPrivateMethods
+
+    const dispatchEvent = (type: ValueOf<VxeLinkEmits>, params: Record<string, any>, evnt: Event | null) => {
+      emit(type, createEvent(evnt, { $link: $xeLink }, params))
+    }
+
+    const linkMethods: LinkMethods = {
+      dispatchEvent
+    }
+
+    const linkPrivateMethods: LinkPrivateMethods = {
+    }
+
+    Object.assign($xeLink, linkMethods, linkPrivateMethods)
 
     const renderContent = () => {
       const { icon, content } = props

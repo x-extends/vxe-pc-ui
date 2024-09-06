@@ -3,7 +3,7 @@ import { getConfig, createEvent } from '../../ui'
 import XEUtils from 'xe-utils'
 import VxeBreadcrumbItemComponent from './breadcrumb-item'
 
-import type { VxeBreadcrumbPropTypes, BreadcrumbReactData, BreadcrumbPrivateRef, VxeBreadcrumbPrivateComputed, VxeBreadcrumbConstructor, BreadcrumbPrivateMethods, VxeBreadcrumbPrivateMethods, BreadcrumbMethods } from '../../../types'
+import type { VxeBreadcrumbPropTypes, VxeBreadcrumbEmits, BreadcrumbReactData, BreadcrumbPrivateRef, VxeBreadcrumbPrivateComputed, VxeBreadcrumbConstructor, BreadcrumbPrivateMethods, VxeBreadcrumbPrivateMethods, BreadcrumbMethods } from '../../../types'
 
 export default defineComponent({
   name: 'VxeBreadcrumb',
@@ -16,7 +16,7 @@ export default defineComponent({
   },
   emits: [
     'click'
-  ],
+  ] as VxeBreadcrumbEmits,
   setup (props, context) {
     const { emit, slots } = context
 

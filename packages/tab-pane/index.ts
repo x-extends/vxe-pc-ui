@@ -9,7 +9,7 @@ export const VxeTabPane = Object.assign({}, VxeTabPaneComponent, {
   }
 })
 
-dynamicApp.component(VxeTabPaneComponent.name as string, VxeTabPaneComponent)
+dynamicApp.use(VxeTabPane)
 VxeUI.component(VxeTabPaneComponent)
 
 export const TabPane = VxeTabPane

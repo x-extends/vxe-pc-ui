@@ -9,7 +9,7 @@ export const VxeRow = Object.assign({}, VxeRowComponent, {
   }
 })
 
-dynamicApp.component(VxeRowComponent.name as string, VxeRowComponent)
+dynamicApp.use(VxeRow)
 VxeUI.component(VxeRowComponent)
 
 export const Row = VxeRow

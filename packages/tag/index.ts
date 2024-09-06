@@ -9,7 +9,7 @@ export const VxeTag = Object.assign({}, VxeTagComponent, {
   }
 })
 
-dynamicApp.component(VxeTagComponent.name as string, VxeTagComponent)
+dynamicApp.use(VxeTag)
 VxeUI.component(VxeTagComponent)
 
 export const Tag = VxeTag
