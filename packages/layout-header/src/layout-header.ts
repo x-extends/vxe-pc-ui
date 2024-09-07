@@ -11,10 +11,11 @@ export default defineVxeComponent({
     fixed: Boolean as PropType<VxeLayoutHeaderPropTypes.Fixed>
   },
   data () {
+    const xID = XEUtils.uniqueId()
     const reactData: LayoutHeaderReactData = {
     }
     return {
-      xID: XEUtils.uniqueId(),
+      xID,
       reactData
     }
   },

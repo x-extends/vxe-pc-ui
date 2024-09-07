@@ -46,6 +46,9 @@ export default defineVxeComponent({
     $xeModal: {
       default: null
     },
+    $xeDrawer: {
+      default: null
+    },
     $xeTable: {
       default: null
     },
@@ -54,6 +57,7 @@ export default defineVxeComponent({
     }
   },
   data () {
+    const xID = XEUtils.uniqueId()
     const reactData: PulldownReactData = {
       initialized: false,
       panelIndex: 0,
@@ -67,7 +71,7 @@ export default defineVxeComponent({
       hpTimeout: undefined
     }
     return {
-      xID: XEUtils.uniqueId(),
+      xID,
       reactData,
       internalData
     }

@@ -152,7 +152,7 @@ export interface InputReactData {
   showPwd: boolean
   visiblePanel: boolean
   isAniVisible: boolean
-  panelStyle: VxeComponentStyleType | null
+  panelStyle: VxeComponentStyleType
   panelPlacement: VxeInputPropTypes.Placement
   isActivated: boolean
   inputValue: any
@@ -162,6 +162,14 @@ export interface InputReactData {
   datePanelType: VxeInputDefines.DatePanelType
   selectMonth: any
   currentDate: any
+}
+
+export interface InputInternalData {
+  yearSize: number
+  monthSize: number
+  quarterSize: number
+  hpTimeout?: undefined | number
+  dnTimeout?: undefined | number
 }
 
 export interface InputMethods {

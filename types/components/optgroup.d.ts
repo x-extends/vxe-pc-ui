@@ -17,22 +17,28 @@ export interface OptgroupPrivateRef {
 export interface VxeOptgroupPrivateRef extends OptgroupPrivateRef { }
 
 export namespace VxeOptgroupPropTypes {
+  export type Value = VxeOptionPropTypes.Value
+  export type Label = VxeOptionPropTypes.Label
+  export type Visible = VxeOptionPropTypes.Visible
+  export type ClassName = VxeOptionPropTypes.ClassName
+  export type Disabled = VxeOptionPropTypes.Disabled
+  export type Slots = VxeOptionPropTypes.Slots
 }
 
 export interface VxeOptgroupProps {
   /**
    * 显示内容
    */
-  label?: VxeOptionPropTypes.Label
+  label?: VxeOptgroupPropTypes.Label
   /**
    * 是否禁用
    */
-  visible?: VxeOptionPropTypes.Visible
-  className?: VxeOptionPropTypes.ClassName
+  visible?: VxeOptgroupPropTypes.Visible
+  className?: VxeOptgroupPropTypes.ClassName
   /**
    * 是否禁用
    */
-  disabled?: VxeOptionPropTypes.Disabled
+  disabled?: VxeOptgroupPropTypes.Disabled
 }
 
 export interface OptgroupPrivateComputed {

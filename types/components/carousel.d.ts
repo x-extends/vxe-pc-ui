@@ -56,6 +56,11 @@ export interface CarouselReactData {
   itemHeight: number
 }
 
+export interface CarouselInternalData {
+  apTimeout: undefined | number
+  stopFlag: boolean
+}
+
 export interface CarouselMethods {
   dispatchEvent(type: ValueOf<VxeCarouselEmits>, params: Record<string, any>, evnt: Event | null): void
   /**

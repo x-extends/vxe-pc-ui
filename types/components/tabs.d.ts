@@ -70,6 +70,10 @@ export interface TabsReactData {
   resizeFlag: number
 }
 
+export interface TabsInternalData {
+  slTimeout?: undefined | number
+}
+
 export interface TabsMethods {
   dispatchEvent(type: ValueOf<VxeTabsEmits>, params: Record<string, any>, evnt: Event | null): void
   /**

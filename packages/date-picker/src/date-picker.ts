@@ -111,6 +111,9 @@ export default defineVxeComponent({
     $xeModal: {
       default: null
     },
+    $xeDrawer: {
+      default: null
+    },
     $xeTable: {
       default: null
     },

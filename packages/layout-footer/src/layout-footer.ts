@@ -3,7 +3,7 @@ import { defineVxeComponent } from '../../ui/src/comp'
 import { createEvent } from '../../ui'
 import XEUtils from 'xe-utils'
 
-import type { VxeLayoutFooterPropTypes, LayoutFooterReactData, VxeLayoutFooterConstructor, VxeLayoutFooterEmits, ValueOf } from '../../../types'
+import type { VxeLayoutFooterPropTypes, LayoutFooterReactData, VxeLayoutFooterEmits, ValueOf } from '../../../types'
 
 export default defineVxeComponent({
   name: 'VxeLayoutFooter',
@@ -12,12 +12,13 @@ export default defineVxeComponent({
     align: String as PropType<VxeLayoutFooterPropTypes.Align>
   },
   data () {
+    const xID = XEUtils.uniqueId()
     const reactData: LayoutFooterReactData = {
     }
     return {
-      xID: XEUtils.uniqueId(),
+      xID,
       reactData
-    } as VxeLayoutFooterConstructor
+    }
   },
   methods: {
     //
