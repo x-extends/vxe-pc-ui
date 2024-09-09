@@ -11,9 +11,6 @@ module.exports = {
   parserOptions: {
     ecmaVersion: 2020
   },
-  globals: {
-    axios: true
-  },
   rules: {
     'no-console': 'off',
     'no-debugger': process.env.NODE_ENV === 'production' ? 'error' : 'off',

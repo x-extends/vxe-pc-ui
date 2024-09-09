@@ -1,3 +1,4 @@
+import { CreateElement } from 'vue'
 import { DefineVxeComponentApp, DefineVxeComponentOptions, DefineVxeComponentInstance, VxeComponentEventParams, VxeComponentSizeType, VxeComponentSlotType, ValueOf } from '@vxe-ui/core'
 
 /* eslint-disable @typescript-eslint/no-empty-interface,no-use-before-define,@typescript-eslint/ban-types */
@@ -242,43 +243,43 @@ export interface VxeDrawerSlots {
   /**
    * 自定义内容模板
    */
-  default?: (params: VxeDrawerSlotTypes.DefaultSlotParams) => VxeComponentSlotType[] | VxeComponentSlotType
+  default?: (params: VxeDrawerSlotTypes.DefaultSlotParams, h: CreateElement) => VxeComponentSlotType[] | VxeComponentSlotType
   /**
    * 自定义左侧内容模板
    */
-  left?: (params: VxeDrawerSlotTypes.LeftSlotParams) => VxeComponentSlotType[] | VxeComponentSlotType
+  left?: (params: VxeDrawerSlotTypes.LeftSlotParams, h: CreateElement) => VxeComponentSlotType[] | VxeComponentSlotType
   /**
    * 自定义右侧内容模板
    */
-  right?: (params: VxeDrawerSlotTypes.RightSlotParams) => VxeComponentSlotType[] | VxeComponentSlotType
+  right?: (params: VxeDrawerSlotTypes.RightSlotParams, h: CreateElement) => VxeComponentSlotType[] | VxeComponentSlotType
   /**
    * 自定义侧边栏的模板
    */
-  aside?: (params: VxeDrawerSlotTypes.AsideSlotParams) => VxeComponentSlotType[] | VxeComponentSlotType
+  aside?: (params: VxeDrawerSlotTypes.AsideSlotParams, h: CreateElement) => VxeComponentSlotType[] | VxeComponentSlotType
   /**
    * 自定义头部的模板
    */
-  header?: (params: VxeDrawerSlotTypes.HeaderSlotParams) => VxeComponentSlotType[] | VxeComponentSlotType
+  header?: (params: VxeDrawerSlotTypes.HeaderSlotParams, h: CreateElement) => VxeComponentSlotType[] | VxeComponentSlotType
   /**
    * 自定义标题的模板（如果使用了 header 插槽，则该插槽无效）
    */
-  title?: (params: VxeDrawerSlotTypes.TitleSlotParams) => VxeComponentSlotType[] | VxeComponentSlotType
+  title?: (params: VxeDrawerSlotTypes.TitleSlotParams, h: CreateElement) => VxeComponentSlotType[] | VxeComponentSlotType
   /**
    * 自定义右上角的模板
    */
-  corner?: (params: VxeDrawerSlotTypes.TitleSlotParams) => VxeComponentSlotType[] | VxeComponentSlotType
+  corner?: (params: VxeDrawerSlotTypes.TitleSlotParams, h: CreateElement) => VxeComponentSlotType[] | VxeComponentSlotType
   /**
    * 自定义底部的模板
    */
-  footer?: (params: VxeDrawerSlotTypes.FooterSlotParams) => VxeComponentSlotType[] | VxeComponentSlotType
+  footer?: (params: VxeDrawerSlotTypes.FooterSlotParams, h: CreateElement) => VxeComponentSlotType[] | VxeComponentSlotType
   /**
    * 自定义底部左侧的模板
    */
-  leftfoot?: (params: VxeDrawerSlotTypes.LeftfootSlotParams) => VxeComponentSlotType[] | VxeComponentSlotType
+  leftfoot?: (params: VxeDrawerSlotTypes.LeftfootSlotParams, h: CreateElement) => VxeComponentSlotType[] | VxeComponentSlotType
   /**
    * 自定义底部右侧的模板
    */
-  rightfoot?: (params: VxeDrawerSlotTypes.RightfootSlotParams) => VxeComponentSlotType[] | VxeComponentSlotType
+  rightfoot?: (params: VxeDrawerSlotTypes.RightfootSlotParams, h: CreateElement) => VxeComponentSlotType[] | VxeComponentSlotType
 }
 
 export const Drawer: typeof VxeDrawer

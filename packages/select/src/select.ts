@@ -302,6 +302,11 @@ export default defineVxeComponent({
       const $xeSelect = this
       $xeSelect.$emit(type, createEvent(evnt, { $select: $xeSelect }, params))
     },
+    emitModel  (value: any) {
+      const $xeSelect = this
+
+      $xeSelect.$emit('modelValue', value)
+    },
     isPanelVisible () {
       const $xeSelect = this
       const reactData = $xeSelect.reactData
@@ -632,6 +637,13 @@ export default defineVxeComponent({
         }
         if (!reactData.initialized) {
           reactData.initialized = true
+          const btnTransfer = $xeSelect.computeBtnTransfer
+          const panelElem = $xeSelect.$refs.refOptionPanel as HTMLElement
+          if (btnTransfer) {
+            if (panelElem) {
+              document.body.appendChild(panelElem)
+            }
+          }
         }
         reactData.isActivated = true
         reactData.isAniVisible = true
@@ -670,8 +682,8 @@ export default defineVxeComponent({
       const $xeForm = $xeSelect.$xeForm
       const formItemInfo = $xeSelect.formItemInfo
 
+      $xeSelect.emitModel(selectValue)
       if (selectValue !== props.value) {
-        $xeSelect.$emit('modelValue', selectValue)
         $xeSelect.dispatchEvent('change', { value: selectValue }, evnt)
         // 自动更新校验状态
         if ($xeForm && formItemInfo) {
@@ -1314,6 +1326,10 @@ export default defineVxeComponent({
   beforeDestroy () {
     const $xeSelect = this
 
+    const panelElem = $xeSelect.$refs.refOptionPanel as HTMLElement | undefined
+    if (panelElem && panelElem.parentNode) {
+      panelElem.parentNode.removeChild(panelElem)
+    }
     globalEvents.off($xeSelect, 'mousewheel')
     globalEvents.off($xeSelect, 'mousedown')
     globalEvents.off($xeSelect, 'keydown')

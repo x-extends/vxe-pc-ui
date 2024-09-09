@@ -265,6 +265,11 @@ export default defineVxeComponent({
       const $xeNumberInput = this
       $xeNumberInput.$emit(type, createEvent(evnt, { $numberInput: $xeNumberInput }, params))
     },
+    emitModel  (value: any) {
+      const $xeModal = this
+
+      $xeModal.$emit('modelValue', value)
+    },
     focus () {
       const $xeNumberInput = this
       const reactData = $xeNumberInput.reactData
@@ -312,7 +317,7 @@ export default defineVxeComponent({
       const { inputValue } = reactData
       $xeNumberInput.dispatchEvent(evnt.type, { value: inputValue }, evnt)
     },
-    emitModel (val: number | null, inputValue: string, evnt: Event | { type: string }) {
+    handleChange (val: number | null, inputValue: string, evnt: Event | { type: string }) {
       const $xeNumberInput = this
       const props = $xeNumberInput
       const reactData = $xeNumberInput.reactData
@@ -323,7 +328,7 @@ export default defineVxeComponent({
       const isChange = value !== props.value
       if (isChange) {
         reactData.inputValue = inputValue || ''
-        $xeNumberInput.$emit('modelValue', value)
+        $xeNumberInput.emitModel(value)
       }
       $xeNumberInput.dispatchEvent('input', { value }, evnt as Event)
       if (isChange) {
@@ -342,7 +347,7 @@ export default defineVxeComponent({
       const value = inputValue ? XEUtils.toNumber(inputValue) : null
       reactData.inputValue = inputValue
       if (inpImmediate) {
-        $xeNumberInput.emitModel(value, inputValue, evnt)
+        $xeNumberInput.handleChange(value, inputValue, evnt)
       } else {
         $xeNumberInput.dispatchEvent('input', { value }, evnt)
       }
@@ -383,7 +388,7 @@ export default defineVxeComponent({
       const $xeNumberInput = this
 
       $xeNumberInput.focus()
-      $xeNumberInput.emitModel(null, '', evnt)
+      $xeNumberInput.handleChange(null, '', evnt)
       $xeNumberInput.dispatchEvent('clear', { value }, evnt)
     },
     clickSuffixEvent (evnt: Event) {
@@ -416,7 +421,7 @@ export default defineVxeComponent({
             validValue = Number(textValue)
           }
           if (inputValue !== validValue) {
-            $xeNumberInput.emitModel(validValue, textValue, { type: 'init' })
+            $xeNumberInput.handleChange(validValue, textValue, { type: 'init' })
           }
         }
       }
@@ -456,7 +461,7 @@ export default defineVxeComponent({
             }
           }
           const inpValue = $xeNumberInput.getNumberValue(inpNumVal)
-          $xeNumberInput.emitModel(inpValue === null ? null : Number(inpValue), inpValue, { type: 'check' })
+          $xeNumberInput.handleChange(inpValue === null ? null : Number(inpValue), inpValue, { type: 'check' })
         }
       }
     },
@@ -468,7 +473,7 @@ export default defineVxeComponent({
       const inpImmediate = $xeNumberInput.computeInpImmediate
       const value = inputValue ? Number(inputValue) : null
       if (!inpImmediate) {
-        $xeNumberInput.emitModel(value, `${inputValue || ''}`, evnt)
+        $xeNumberInput.handleChange(value, `${inputValue || ''}`, evnt)
       }
       $xeNumberInput.afterCheckValue()
       reactData.isActivated = false

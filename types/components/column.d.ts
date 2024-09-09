@@ -10,6 +10,7 @@ export type VxeColumnComponent = DefineVxeComponentOptions<VxeColumnProps>
 
 export type VxeColumnInstance = DefineVxeComponentInstance<{
   reactData: ColumnReactData
+  columnConfig: any
 }, VxeColumnProps, ColumnPrivateComputed, ColumnMethods>
 
 export type VxeColumnConstructor = VxeColumnInstance

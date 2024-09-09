@@ -698,6 +698,11 @@ export default defineVxeComponent({
       const $xeDatePicker = this
       $xeDatePicker.$emit(type, createEvent(evnt, { $datePicker: $xeDatePicker }, params))
     },
+    emitModel (value: any) {
+      const $xeDatePicker = this
+
+      $xeDatePicker.$emit('modelValue', value)
+    },
     focus () {
       const $xeDatePicker = this
       const reactData = $xeDatePicker.reactData
@@ -742,7 +747,7 @@ export default defineVxeComponent({
       const { inputValue } = reactData
       $xeDatePicker.dispatchEvent(evnt.type, { value: inputValue }, evnt)
     },
-    emitModel (value: string, evnt: Event | { type: string }) {
+    handleChange (value: string, evnt: Event | { type: string }) {
       const $xeDatePicker = this
       const props = $xeDatePicker
       const reactData = $xeDatePicker.reactData
@@ -750,7 +755,7 @@ export default defineVxeComponent({
       const formItemInfo = $xeDatePicker.formItemInfo
 
       reactData.inputValue = value
-      $xeDatePicker.$emit('modelValue', value)
+      $xeDatePicker.emitModel(value)
       if (XEUtils.toValueString(props.value) !== value) {
         $xeDatePicker.dispatchEvent('change', { value }, evnt as any)
         // 自动更新校验状态
@@ -770,7 +775,7 @@ export default defineVxeComponent({
       reactData.inputValue = value
       if (!isDatePickerType) {
         if (inpImmediate) {
-          $xeDatePicker.emitModel(value, evnt)
+          $xeDatePicker.handleChange(value, evnt)
         } else {
           $xeDatePicker.dispatchEvent('input', { value }, evnt)
         }
@@ -825,7 +830,7 @@ export default defineVxeComponent({
       if (isDatePickerType) {
         $xeDatePicker.hidePanel()
       }
-      $xeDatePicker.emitModel('', evnt)
+      $xeDatePicker.handleChange('', evnt)
       $xeDatePicker.dispatchEvent('clear', { value }, evnt)
     },
     clickSuffixEvent  (evnt: Event) {
@@ -960,19 +965,19 @@ export default defineVxeComponent({
               datetimeRest.push(item)
             }
           })
-          $xeDatePicker.emitModel(datetimeRest.map(date => XEUtils.toDateString(date, dateValueFormat)).join(','), { type: 'update' })
+          $xeDatePicker.handleChange(datetimeRest.map(date => XEUtils.toDateString(date, dateValueFormat)).join(','), { type: 'update' })
         } else {
           // 如果是日期类型
           if (dateMultipleValue.some(val => XEUtils.isEqual(val, inpVal))) {
-            $xeDatePicker.emitModel(dateMultipleValue.filter(val => !XEUtils.isEqual(val, inpVal)).join(','), { type: 'update' })
+            $xeDatePicker.handleChange(dateMultipleValue.filter(val => !XEUtils.isEqual(val, inpVal)).join(','), { type: 'update' })
           } else {
-            $xeDatePicker.emitModel(dateMultipleValue.concat([inpVal]).join(','), { type: 'update' })
+            $xeDatePicker.handleChange(dateMultipleValue.concat([inpVal]).join(','), { type: 'update' })
           }
         }
       } else {
         // 如果为单选
         if (!XEUtils.isEqual(props.value, inpVal)) {
-          $xeDatePicker.emitModel(inpVal, { type: 'update' })
+          $xeDatePicker.handleChange(inpVal, { type: 'update' })
         }
       }
     },
@@ -992,7 +997,7 @@ export default defineVxeComponent({
             if (type === 'time') {
               inpDateVal = XEUtils.toDateString(inpDateVal, dateLabelFormat)
               if (inputValue !== inpDateVal) {
-                $xeDatePicker.emitModel(inpDateVal, { type: 'check' })
+                $xeDatePicker.handleChange(inpDateVal, { type: 'check' })
               }
               reactData.inputValue = inpDateVal
             } else {
@@ -1020,7 +1025,7 @@ export default defineVxeComponent({
             $xeDatePicker.dateRevert()
           }
         } else {
-          $xeDatePicker.emitModel('', { type: 'check' })
+          $xeDatePicker.handleChange('', { type: 'check' })
         }
       }
     },
@@ -1031,7 +1036,7 @@ export default defineVxeComponent({
       const { inputValue } = reactData
       const inpImmediate = $xeDatePicker.computeInpImmediate
       if (!inpImmediate) {
-        $xeDatePicker.emitModel(inputValue, evnt)
+        $xeDatePicker.handleChange(inputValue, evnt)
       }
       $xeDatePicker.afterCheckValue()
       if (!reactData.visiblePanel) {
@@ -1339,10 +1344,10 @@ export default defineVxeComponent({
                 datetimeRest.push(item)
               }
             })
-            $xeDatePicker.emitModel(datetimeRest.map(date => XEUtils.toDateString(date, dateValueFormat)).join(','), { type: 'update' })
+            $xeDatePicker.handleChange(datetimeRest.map(date => XEUtils.toDateString(date, dateValueFormat)).join(','), { type: 'update' })
           } else {
             // 如果是日期类型
-            $xeDatePicker.emitModel(dateMultipleValue.join(','), { type: 'update' })
+            $xeDatePicker.handleChange(dateMultipleValue.join(','), { type: 'update' })
           }
         } else {
           $xeDatePicker.dateChange(dateValue || reactData.currentDate)

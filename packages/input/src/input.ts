@@ -865,6 +865,11 @@ export default defineVxeComponent({
       const $xeInput = this
       $xeInput.$emit(type, createEvent(evnt, { $input: $xeInput }, params))
     },
+    emitModel (value: any) {
+      const $xeInput = this
+
+      $xeInput.$emit('modelValue', value)
+    },
     focus () {
       const $xeInput = this
       const reactData = $xeInput.reactData
@@ -922,7 +927,7 @@ export default defineVxeComponent({
       const { inputValue } = reactData
       $xeInput.dispatchEvent(evnt.type, { value: inputValue }, evnt)
     },
-    emitModel  (value: string, evnt: Event | { type: string }) {
+    handleChange  (value: string, evnt: Event | { type: string }) {
       const $xeInput = this
       const props = $xeInput
       const reactData = $xeInput.reactData
@@ -930,7 +935,7 @@ export default defineVxeComponent({
       const formItemInfo = $xeInput.formItemInfo
 
       reactData.inputValue = value
-      $xeInput.$emit('modelValue', value)
+      $xeInput.emitModel(value)
       $xeInput.dispatchEvent('input', { value }, evnt as any)
       if (XEUtils.toValueString(props.value) !== value) {
         $xeInput.dispatchEvent('change', { value }, evnt as any)
@@ -949,7 +954,7 @@ export default defineVxeComponent({
       reactData.inputValue = value
       if (!isDatePickerType) {
         if (inpImmediate) {
-          $xeInput.emitModel(value, evnt)
+          $xeInput.handleChange(value, evnt)
         } else {
           $xeInput.dispatchEvent('input', { value }, evnt)
         }
@@ -1017,7 +1022,7 @@ export default defineVxeComponent({
       if (isNumType || ['text', 'search', 'password'].indexOf(type) > -1) {
         $xeInput.focus()
       }
-      $xeInput.emitModel('', evnt)
+      $xeInput.handleChange('', evnt)
       $xeInput.dispatchEvent('clear', { value }, evnt)
     },
     clickSuffixEvent  (evnt: Event) {
@@ -1098,7 +1103,7 @@ export default defineVxeComponent({
         if (inputValue) {
           const validValue = toFloatValueFixed(inputValue, digitsValue)
           if (inputValue !== validValue) {
-            $xeInput.emitModel(validValue, { type: 'init' })
+            $xeInput.handleChange(validValue, { type: 'init' })
           }
         }
       }
@@ -1172,19 +1177,19 @@ export default defineVxeComponent({
               datetimeRest.push(item)
             }
           })
-          $xeInput.emitModel(datetimeRest.map(date => XEUtils.toDateString(date, dateValueFormat)).join(','), { type: 'update' })
+          $xeInput.handleChange(datetimeRest.map(date => XEUtils.toDateString(date, dateValueFormat)).join(','), { type: 'update' })
         } else {
           // 如果是日期类型
           if (dateMultipleValue.some(val => XEUtils.isEqual(val, inpVal))) {
-            $xeInput.emitModel(dateMultipleValue.filter(val => !XEUtils.isEqual(val, inpVal)).join(','), { type: 'update' })
+            $xeInput.handleChange(dateMultipleValue.filter(val => !XEUtils.isEqual(val, inpVal)).join(','), { type: 'update' })
           } else {
-            $xeInput.emitModel(dateMultipleValue.concat([inpVal]).join(','), { type: 'update' })
+            $xeInput.handleChange(dateMultipleValue.concat([inpVal]).join(','), { type: 'update' })
           }
         }
       } else {
         // 如果为单选
         if (!XEUtils.isEqual(props.value, inpVal)) {
-          $xeInput.emitModel(inpVal, { type: 'update' })
+          $xeInput.handleChange(inpVal, { type: 'update' })
         }
       }
     },
@@ -1214,7 +1219,7 @@ export default defineVxeComponent({
                 inpNumVal = inpStringVal
               }
             }
-            $xeInput.emitModel($xeInput.getNumberValue(inpNumVal), { type: 'check' })
+            $xeInput.handleChange($xeInput.getNumberValue(inpNumVal), { type: 'check' })
           }
         } else if (isDatePickerType) {
           if (inputValue) {
@@ -1223,7 +1228,7 @@ export default defineVxeComponent({
               if (type === 'time') {
                 inpDateVal = XEUtils.toDateString(inpDateVal, dateLabelFormat)
                 if (inputValue !== inpDateVal) {
-                  $xeInput.emitModel(inpDateVal, { type: 'check' })
+                  $xeInput.handleChange(inpDateVal, { type: 'check' })
                 }
                 reactData.inputValue = inpDateVal
               } else {
@@ -1249,7 +1254,7 @@ export default defineVxeComponent({
               $xeInput.dateRevert()
             }
           } else {
-            $xeInput.emitModel('', { type: 'check' })
+            $xeInput.handleChange('', { type: 'check' })
           }
         }
       }
@@ -1261,7 +1266,7 @@ export default defineVxeComponent({
       const { inputValue } = reactData
       const inpImmediate = $xeInput.computeInpImmediate
       if (!inpImmediate) {
-        $xeInput.emitModel(inputValue, evnt)
+        $xeInput.handleChange(inputValue, evnt)
       }
       $xeInput.afterCheckValue()
       if (!reactData.visiblePanel) {
@@ -1727,10 +1732,10 @@ export default defineVxeComponent({
                 datetimeRest.push(item)
               }
             })
-            $xeInput.emitModel(datetimeRest.map(date => XEUtils.toDateString(date, dateValueFormat)).join(','), { type: 'update' })
+            $xeInput.handleChange(datetimeRest.map(date => XEUtils.toDateString(date, dateValueFormat)).join(','), { type: 'update' })
           } else {
             // 如果是日期类型
-            $xeInput.emitModel(dateMultipleValue.join(','), { type: 'update' })
+            $xeInput.handleChange(dateMultipleValue.join(','), { type: 'update' })
           }
         } else {
           $xeInput.dateChange(dateValue || reactData.currentDate)

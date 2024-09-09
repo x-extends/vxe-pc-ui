@@ -99,6 +99,12 @@ export default defineVxeComponent({
       const $xeCheckbox = this
       $xeCheckbox.$emit(type, createEvent(evnt, { $checkbox: $xeCheckbox }, params))
     },
+    emitModel (value: any) {
+      const $xeCheckbox = this
+
+      $xeCheckbox.$emit('modelValue', value)
+      $xeCheckbox.$emit('input', value)
+    },
     changeEvent  (evnt: Event & { target: { checked: boolean } }) {
       const $xeCheckbox = this
       const props = $xeCheckbox
@@ -115,7 +121,7 @@ export default defineVxeComponent({
         if ($xeCheckboxGroup) {
           $xeCheckboxGroup.handleChecked(params, evnt)
         } else {
-          $xeCheckbox.$emit('input', value)
+          $xeCheckbox.emitModel(value)
           $xeCheckbox.dispatchEvent('change', params, evnt)
           // 自动更新校验状态
           if ($xeForm && formItemInfo) {

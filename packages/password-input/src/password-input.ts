@@ -109,6 +109,11 @@ export default defineVxeComponent({
       const $xePasswordInput = this
       $xePasswordInput.$emit(type, createEvent(evnt, { $passwordInput: $xePasswordInput }, params))
     },
+    emitModel  (value: any) {
+      const $xeModal = this
+
+      $xeModal.$emit('modelValue', value)
+    },
     focus () {
       const $xePasswordInput = this
       const reactData = $xePasswordInput.reactData
@@ -157,7 +162,7 @@ export default defineVxeComponent({
       const value = inputElem.value
       $xePasswordInput.emitInputEvent(value, evnt)
     },
-    emitModel (value: string, evnt: Event | { type: string }) {
+    handleChange (value: string, evnt: Event | { type: string }) {
       const $xePasswordInput = this
       const props = $xePasswordInput
       const reactData = $xePasswordInput.reactData
@@ -165,7 +170,7 @@ export default defineVxeComponent({
       const formItemInfo = $xePasswordInput.formItemInfo
 
       reactData.inputValue = value
-      $xePasswordInput.$emit('modelValue', value)
+      $xePasswordInput.emitModel(value)
       $xePasswordInput.dispatchEvent('input', { value }, evnt as any)
       if (XEUtils.toValueString(props.value) !== value) {
         $xePasswordInput.dispatchEvent('change', { value }, evnt as any)
@@ -223,7 +228,7 @@ export default defineVxeComponent({
       const $xePasswordInput = this
 
       $xePasswordInput.focus()
-      $xePasswordInput.emitModel('', evnt)
+      $xePasswordInput.handleChange('', evnt)
       $xePasswordInput.dispatchEvent('clear', { value }, evnt)
     },
     clickSuffixEvent  (evnt: Event) {

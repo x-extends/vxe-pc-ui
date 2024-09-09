@@ -166,10 +166,9 @@ export default defineVxeComponent({
     },
     emitModel  (value: VxeImagePreviewPropTypes.ModelValue) {
       const $xeImagePreview = this
-      const reactData = $xeImagePreview.reactData
 
-      reactData.activeIndex = value
       $xeImagePreview.$emit('input', value)
+      $xeImagePreview.$emit('modelValue', value)
     },
     handleCloseEvent  (evnt: MouseEvent) {
       const $xeImagePreview = this

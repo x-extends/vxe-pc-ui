@@ -88,6 +88,12 @@ export default defineVxeComponent({
       const $xeMenu = this
       $xeMenu.$emit(type, createEvent(evnt, { $menu: $xeMenu }, params))
     },
+    emitModel  (value: any) {
+      const $xeMenu = this
+
+      $xeMenu.$emit('input', value)
+      $xeMenu.$emit('modelValue', value)
+    },
     getMenuTitle  (item: VxeMenuPropTypes.MenuOption) {
       return `${item.title || item.name}`
     },
@@ -184,8 +190,7 @@ export default defineVxeComponent({
       if (routerLink) {
         const value = item.itemKey
         reactData.activeName = value
-        $xeMenu.$emit('input', value)
-        $xeMenu.$emit('modelValue', value)
+        $xeMenu.emitModel(value)
       } else {
         if (hasChild) {
           $xeMenu.handleClickIconCollapse(evnt, item)

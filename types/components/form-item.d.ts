@@ -1,4 +1,4 @@
-import { DefineVxeComponentApp, DefineVxeComponentOptions, VxeComponentEventParams, VxeComponentStyleType, VxeComponentSlotType } from '@vxe-ui/core'
+import { DefineVxeComponentApp, DefineVxeComponentOptions, VxeComponentEventParams, DefineVxeComponentInstance, VxeComponentStyleType, VxeComponentSlotType } from '@vxe-ui/core'
 import { VxeFormDefines, VxeFormConstructor, VxeFormPropTypes } from './form'
 import { VxeGridConstructor } from './grid'
 import { VxeTooltipPropTypes } from './tooltip'

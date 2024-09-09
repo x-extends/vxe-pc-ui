@@ -101,42 +101,40 @@
 ## 安装
 
 ```shell
-npm install vxe-pc-ui
+npm install vxe-table@3 vxe-pc-ui@3
 ```
 
 ```javascript
+import Vue from 'vue'
 // ...
+import VxeTable from 'vxe-table'
+import 'vxe-table/lib/style.css'
+// ...
+
 import VxeUI from 'vxe-pc-ui'
 import 'vxe-pc-ui/lib/style.css'
 // ...
 
-createApp(App).use(VxeUI).mount('#app')
+Vue.use(VxeUI)
+Vue.use(VxeTable)
 ```
 
-## 运行项目
+### CDN
 
-安装依赖
+使用第三方 CDN 方式记得锁定版本号，避免受到非兼容性更新的影响  
+***不建议将第三方的 CDN 地址用于正式环境，因为该连接随时都可能会失效***  
 
-```shell
-npm run update
+```HTML
+<!-- style -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/vxe-pc-ui@3/lib/style.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/vxe-table@3/lib/style.css">
+<!-- vue -->
+<script src="https://cdn.jsdelivr.net/npm/vue@2"></script>
+<!-- table -->
+<script src="https://cdn.jsdelivr.net/npm/xe-utils"></script>
+<script src="https://cdn.jsdelivr.net/npm/vxe-pc-ui@3"></script>
+<script src="https://cdn.jsdelivr.net/npm/vxe-table@3"></script>
 ```
-
-启动本地调试
-
-```shell
-npm run serve
-```
-
-编译打包，生成编译后的目录：es,lib
-
-```shell
-npm run lib
-```
-
-## PR
-
-1. 如果是修复 bug，必须有示例的复现链接
-2. 如果新功能，涉及代码风格、质量、还需有对应的示例页面
 
 ## Contributors
 

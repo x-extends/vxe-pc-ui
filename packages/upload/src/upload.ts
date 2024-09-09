@@ -357,6 +357,11 @@ export default defineVxeComponent({
       const $xeUpload = this
       $xeUpload.$emit(type, createEvent(evnt, { $upload: $xeUpload }, params))
     },
+    emitModel  (value: any) {
+      const $xeUpload = this
+
+      $xeUpload.$emit('modelValue', value)
+    },
     choose () {
       const $xeUpload = this
       return $xeUpload.handleChoose(null)
@@ -413,7 +418,7 @@ export default defineVxeComponent({
       }
       return ''
     },
-    emitModel (value: VxeUploadDefines.FileObjItem[]) {
+    handleChange (value: VxeUploadDefines.FileObjItem[]) {
       const $xeUpload = this
       const props = $xeUpload
 
@@ -423,7 +428,7 @@ export default defineVxeComponent({
       if (urlMode) {
         restList = restList.map(item => item[urlProp])
       }
-      $xeUpload.$emit('modelValue', singleMode ? (restList[0] || null) : restList)
+      $xeUpload.emitModel(singleMode ? (restList[0] || null) : restList)
     },
     getThumbnailFileUrl (item: VxeUploadDefines.FileObjItem) {
       const $xeUpload = this
@@ -595,7 +600,7 @@ export default defineVxeComponent({
         cacheItem.percent = 0
         $xeUpload.handleUploadResult(item, file).then(() => {
           if (urlMode) {
-            $xeUpload.emitModel(reactData.fileList)
+            $xeUpload.handleChange(reactData.fileList)
           }
         })
       }
@@ -712,7 +717,7 @@ export default defineVxeComponent({
       reactData.fileList = newFileList
       reactData.fileCacheMaps = cacheMaps
       Promise.all(urlMode ? uploadPromiseRests : []).then(() => {
-        $xeUpload.emitModel(newFileList)
+        $xeUpload.handleChange(newFileList)
         // 自动更新校验状态
         if ($xeForm && formItemInfo) {
           $xeForm.triggerItemEvent(evnt as any, formItemInfo.itemConfig.field, newFileList)
@@ -756,7 +761,7 @@ export default defineVxeComponent({
 
       const { fileList } = reactData
       fileList.splice(index, 1)
-      $xeUpload.emitModel(fileList)
+      $xeUpload.handleChange(fileList)
       // 自动更新校验状态
       if ($xeForm && formItemInfo) {
         $xeForm.triggerItemEvent(evnt, formItemInfo.itemConfig.field, fileList)

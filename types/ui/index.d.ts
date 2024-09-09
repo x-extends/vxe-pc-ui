@@ -5,7 +5,6 @@ import { DrawerController } from '../components/drawer'
 import { VxePrintDefines } from '../components/print'
 import { VxeUploadDefines } from '../components/upload'
 import { VxeImageDefines } from '../components/image'
-import { FormDesignHandleExport, ListDesignHandleExport, TableHandleExport } from '../handles'
 
 /**
  * 已废弃，请使用 setConfig
@@ -51,10 +50,6 @@ declare module '@vxe-ui/core' {
     modal: ModalController
     drawer: DrawerController
     dynamicApp: any
-
-    formDesignHandle: FormDesignHandleExport
-    listDesignHandle: ListDesignHandleExport
-    tableHandle: TableHandleExport
 
     print: VxePrintDefines.PrintFunction
     saveFile: VxeUploadDefines.SaveFileFunction

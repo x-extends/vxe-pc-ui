@@ -108,6 +108,12 @@ export default defineVxeComponent({
       const $xeSwitch = this
       $xeSwitch.$emit(type, createEvent(evnt, { $switch: $xeSwitch }, params))
     },
+    emitModel  (value: any) {
+      const $xeSwitch = this
+
+      $xeSwitch.$emit('input', value)
+      $xeSwitch.$emit('modelValue', value)
+    },
     focus () {
       const $xeSwitch = this
       const reactData = $xeSwitch.reactData
@@ -144,8 +150,7 @@ export default defineVxeComponent({
         clearTimeout(internalData.atTimeout)
         const value = isChecked ? props.closeValue : props.openValue
         reactData.hasAnimat = true
-        $xeSwitch.$emit('input', value)
-        $xeSwitch.$emit('modelValue', value)
+        $xeSwitch.emitModel(value)
         $xeSwitch.dispatchEvent('change', { value }, evnt)
         // 自动更新校验状态
         if ($xeForm && formItemInfo) {

@@ -28,6 +28,7 @@ export default defineVxeComponent({
       const $xeLayoutFooter = this
       $xeLayoutFooter.$emit(type, createEvent(evnt, { $layoutFooter: $xeLayoutFooter }, params))
     },
+
     //
     // Render
     //

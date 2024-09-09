@@ -13,11 +13,13 @@ import { VxeToolbarConstructor, VxeToolbarInstance } from './toolbar'
 export declare const VxeTable: DefineVxeComponentApp<VxeTableProps, VxeTableEventProps, VxeTableSlots>
 export type VxeTableComponent = DefineVxeComponentOptions<VxeTableProps>
 
-export type VxeTableInstance = DefineVxeComponentInstance<{
-  reactData: TableReactData
-}, VxeTableProps, TablePrivateComputed, TableMethods>
+export type VxeTableInstance<D = any> = DefineVxeComponentInstance<{
+  reactData: TableReactData<D>
+  internalData: TableInternalData<D>
+  xegrid: VxeGridConstructor | null
+}, VxeTableProps<D>, TablePrivateComputed<D>, TableMethods<D>>
 
-export type VxeTableConstructor = VxeTableInstance
+export type VxeTableConstructor<D = any> = VxeTableInstance<D>
 
 export interface TablePrivateRef {
 }
@@ -2000,6 +2002,43 @@ export interface VxeTableProps<D = any> {
 }
 
 export interface TablePrivateComputed<D = any> {
+  computeSize: VxeTablePropTypes.Size
+  computeTableId: string
+  computeValidOpts: VxeTablePropTypes.ValidOpts<D>
+  computeSXOpts: VxeTablePropTypes.SXOpts
+  computeSYOpts: VxeTablePropTypes.SYOpts
+  computeColumnOpts: VxeTablePropTypes.ColumnOpts
+  computeRowOpts: VxeTablePropTypes.RowOpts
+  computeResizeleOpts: VxeTablePropTypes.ResizeOpts
+  computeResizableOpts: VxeTablePropTypes.ResizableOpts<D>
+  computeSeqOpts: VxeTablePropTypes.SeqOpts<D>
+  computeRadioOpts: VxeTablePropTypes.RadioOpts<D>
+  computeCheckboxOpts: VxeTablePropTypes.CheckboxOpts<D>
+  computeTooltipOpts: VxeTablePropTypes.TooltipOpts<D>
+  computeEditOpts: VxeTablePropTypes.EditOpts<D>
+  computeSortOpts: VxeTablePropTypes.SortConfig<D>
+  computeFilterOpts: VxeTablePropTypes.FilterOpts<D>
+  computeMouseOpts: VxeTablePropTypes.MouseOpts
+  computeAreaOpts: VxeTablePropTypes.AreaOpts
+  computeKeyboardOpts: VxeTablePropTypes.KeyboardOpts
+  computeClipOpts: VxeTablePropTypes.ClipOpts<D>
+  computeFNROpts: VxeTablePropTypes.FNROpts<D>
+  computeHeaderMenu: VxeTableDefines.MenuFirstOption
+  computeBodyMenu: VxeTableDefines.MenuFirstOption
+  computeFooterMenu: VxeTableDefines.MenuFirstOption
+  computeIsMenu: boolean
+  computeMenuOpts: VxeTablePropTypes.MenuOpts<D>
+  computeExportOpts: VxeTablePropTypes.ExportOpts
+  computeImportOpts: VxeTablePropTypes.ImportOpts
+  computePrintOpts: VxeTablePropTypes.PrintOpts
+  computeExpandOpts: VxeTablePropTypes.ExpandOpts<D>
+  computeTreeOpts: VxeTablePropTypes.TreeOpts<D>
+  computeEmptyOpts: VxeTablePropTypes.EmptyOpts
+  computeLoadingOpts: VxeTablePropTypes.LoadingOpts
+  computeCustomOpts: VxeTablePropTypes.CustomOpts<D>
+  computeFixedColumnSize: number
+  computeIsMaxFixedColumn: boolean
+  computeIsAllCheckboxDisabled: boolean
 }
 export interface VxeTablePrivateComputed extends TablePrivateComputed { }
 

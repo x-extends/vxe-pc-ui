@@ -171,6 +171,11 @@ export default defineVxeComponent({
       const $xeTextarea = this
       $xeTextarea.$emit(type, createEvent(evnt, { $textarea: $xeTextarea }, params))
     },
+    emitModel  (value: any) {
+      const $xeTextarea = this
+
+      $xeTextarea.$emit('modelValue', value)
+    },
     focus () {
       const $xeTextarea = this
 
@@ -249,7 +254,7 @@ export default defineVxeComponent({
       const value = reactData.inputValue
       $xeTextarea.dispatchEvent(evnt.type, { value }, evnt)
     },
-    emitUpdate (value: string, evnt: Event) {
+    handleChange (value: string, evnt: Event) {
       const $xeTextarea = this
       const props = $xeTextarea
       const reactData = $xeTextarea.reactData
@@ -257,7 +262,7 @@ export default defineVxeComponent({
       const formItemInfo = $xeTextarea.formItemInfo
 
       reactData.inputValue = value
-      $xeTextarea.$emit('modelValue', value)
+      $xeTextarea.emitModel(value)
       if (XEUtils.toValueString(props.value) !== value) {
         $xeTextarea.dispatchEvent('change', { value }, evnt)
         // 自动更新校验状态
@@ -276,7 +281,7 @@ export default defineVxeComponent({
       const value = textElem.value
       reactData.inputValue = value
       if (immediate) {
-        $xeTextarea.emitUpdate(value, evnt)
+        $xeTextarea.handleChange(value, evnt)
       }
       $xeTextarea.dispatchEvent('input', { value }, evnt)
       $xeTextarea.handleResize()
@@ -290,7 +295,7 @@ export default defineVxeComponent({
       if (immediate) {
         $xeTextarea.triggerEvent(evnt)
       } else {
-        $xeTextarea.emitUpdate(reactData.inputValue, evnt)
+        $xeTextarea.handleChange(reactData.inputValue, evnt)
       }
     },
     blurEvent (evnt: Event & { type: 'blur' }) {
@@ -301,7 +306,7 @@ export default defineVxeComponent({
       const { immediate } = props
       const { inputValue } = reactData
       if (!immediate) {
-        $xeTextarea.emitUpdate(inputValue, evnt)
+        $xeTextarea.handleChange(inputValue, evnt)
       }
       $xeTextarea.dispatchEvent('blur', { value: inputValue }, evnt)
     },

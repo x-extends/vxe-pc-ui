@@ -103,6 +103,12 @@ export default defineVxeComponent({
       const $xeRadioButton = this
       $xeRadioButton.$emit(type, createEvent(evnt, { $radioButton: $xeRadioButton }, params))
     },
+    emitModel  (value: any) {
+      const $xeRadioButton = this
+
+      $xeRadioButton.$emit('input', value)
+      $xeRadioButton.$emit('modelValue', value)
+    },
     handleValue (label: VxeRadioButtonPropTypes.Label, evnt: Event) {
       const $xeRadioButton = this
       const $xeForm = $xeRadioButton.$xeForm
@@ -112,8 +118,7 @@ export default defineVxeComponent({
       if ($xeRadioGroup) {
         $xeRadioGroup.handleChecked({ label }, evnt)
       } else {
-        $xeRadioButton.$emit('input', label)
-        $xeRadioButton.$emit('modelValue', label)
+        $xeRadioButton.emitModel(label)
         $xeRadioButton.dispatchEvent('change', { label }, evnt)
         // 自动更新校验状态
         if ($xeForm && formItemInfo) {

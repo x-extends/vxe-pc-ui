@@ -10,22 +10,22 @@ import VxeBreadcrumb from './breadcrumb'
 import VxeBreadcrumbItem from './breadcrumb-item'
 import VxeButton from './button'
 import VxeButtonGroup from './button-group'
-// import VxeCalendar from './calendar'
+import VxeCalendar from './calendar'
 import VxeCard from './card'
 import VxeCarousel from './carousel'
 import VxeCarouselItem from './carousel-item'
 import VxeCheckbox from './checkbox'
 import VxeCheckboxGroup from './checkbox-group'
 import VxeCol from './col'
-// import VxeCollapse from './collapse'
-// import VxeCollapsePane from './collapse-pane'
+import VxeCollapse from './collapse'
+import VxeCollapsePane from './collapse-pane'
 import VxeCountdown from './countdown'
 import VxeDatePicker from './date-picker'
 import VxeDrawer, { DrawerController } from './drawer'
-// import VxeForm from './form'
+import VxeForm from './form'
 // import VxeFormDesign from './form-design'
-// import VxeFormGather from './form-gather'
-// import VxeFormItem from './form-item'
+import VxeFormGather from './form-gather'
+import VxeFormItem from './form-item'
 // import VxeFormView from './form-view'
 import VxeIcon from './icon'
 import VxeIconPicker from './icon-picker'
@@ -41,7 +41,7 @@ import VxeLayoutHeader from './layout-header'
 import VxeLink from './link'
 // import VxeListDesign from './list-design'
 // import VxeListView from './list-view'
-// import VxeList from './list'
+import VxeList from './list'
 import VxeLoading, { LoadingController } from './loading'
 import VxeMenu from './menu'
 import VxeModal, { ModalController } from './modal'
@@ -66,8 +66,8 @@ import VxeText from './text'
 import VxeTextarea from './textarea'
 import VxeTip from './tip'
 import VxeTooltip from './tooltip'
-// import VxeTree from './tree'
-// import VxeTreeSelect from './tree-select'
+import VxeTree from './tree'
+import VxeTreeSelect from './tree-select'
 import VxeUpload from './upload'
 
 import { saveLocalFile, readLocalFile } from './upload/src/util'
@@ -81,22 +81,22 @@ const components = [
   VxeBreadcrumbItem,
   VxeButton,
   VxeButtonGroup,
-  // VxeCalendar,
+  VxeCalendar,
   VxeCard,
   VxeCarousel,
   VxeCarouselItem,
   VxeCheckbox,
   VxeCheckboxGroup,
   VxeCol,
-  // VxeCollapse,
-  // VxeCollapsePane,
+  VxeCollapse,
+  VxeCollapsePane,
   VxeCountdown,
   VxeDatePicker,
   VxeDrawer,
-  // VxeForm,
+  VxeForm,
   // VxeFormDesign,
-  // VxeFormGather,
-  // VxeFormItem,
+  VxeFormGather,
+  VxeFormItem,
   // VxeFormView,
   VxeIcon,
   VxeIconPicker,
@@ -112,7 +112,7 @@ const components = [
   VxeLink,
   // VxeListDesign,
   // VxeListView,
-  // VxeList,
+  VxeList,
   VxeLoading,
   VxeMenu,
   VxeModal,
@@ -137,8 +137,8 @@ const components = [
   VxeTextarea,
   VxeTip,
   VxeTooltip,
-  // VxeTree,
-  // VxeTreeSelect,
+  VxeTree,
+  VxeTreeSelect,
   VxeUpload
 ]
 
@@ -172,22 +172,22 @@ export * from './breadcrumb'
 export * from './breadcrumb-item'
 export * from './button'
 export * from './button-group'
-// export * from './calendar'
+export * from './calendar'
 export * from './card'
 export * from './carousel'
 export * from './carousel-item'
 export * from './checkbox'
 export * from './checkbox-group'
 export * from './col'
-// export * from './collapse'
-// export * from './collapse-pane'
+export * from './collapse'
+export * from './collapse-pane'
 export * from './countdown'
 export * from './date-picker'
 export * from './drawer'
-// export * from './form'
+export * from './form'
 // export * from './form-design'
-// export * from './form-gather'
-// export * from './form-item'
+export * from './form-gather'
+export * from './form-item'
 // export * from './form-view'
 export * from './icon'
 export * from './icon-picker'
@@ -203,7 +203,7 @@ export * from './layout-header'
 export * from './link'
 // export * from './list-design'
 // export * from './list-view'
-// export * from './list'
+export * from './list'
 export * from './loading'
 export * from './menu'
 export * from './modal'
@@ -228,6 +228,6 @@ export * from './text'
 export * from './textarea'
 export * from './tip'
 export * from './tooltip'
-// export * from './tree'
-// export * from './tree-select'
+export * from './tree'
+export * from './tree-select'
 export * from './upload'

@@ -113,6 +113,11 @@ export default defineVxeComponent({
       const $xePulldown = this
       $xePulldown.$emit(type, createEvent(evnt, { $pulldown: $xePulldown }, params))
     },
+    emitModel  (value: any) {
+      const $xePulldown = this
+
+      $xePulldown.$emit('modelValue', value)
+    },
     updateZindex () {
       const $xePulldown = this
       const reactData = $xePulldown.reactData
@@ -234,7 +239,7 @@ export default defineVxeComponent({
           reactData.visibleAnimate = true
           setTimeout(() => {
             reactData.visiblePanel = true
-            $xePulldown.$emit('modelValue', true)
+            $xePulldown.emitModel(true)
             $xePulldown.updatePlacement()
             setTimeout(() => {
               resolve($xePulldown.updatePlacement())
@@ -257,7 +262,7 @@ export default defineVxeComponent({
       const internalData = $xePulldown.internalData
 
       reactData.visiblePanel = false
-      $xePulldown.$emit('modelValue', false)
+      $xePulldown.emitModel(false)
       return new Promise<void>(resolve => {
         if (reactData.visibleAnimate) {
           internalData.hpTimeout = window.setTimeout(() => {

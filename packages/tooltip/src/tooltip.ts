@@ -84,6 +84,12 @@ export default defineVxeComponent({
       const $xeTooltip = this
       $xeTooltip.$emit(type, createEvent(evnt, { $tooltip: $xeTooltip }, params))
     },
+    emitModel  (value: any) {
+      const $xeTooltip = this
+
+      $xeTooltip.$emit('input', value)
+      $xeTooltip.$emit('modelValue', value)
+    },
     open (target?: HTMLElement | null, content?: VxeTooltipPropTypes.Content) {
       const $xeTooltip = this
       const reactData = $xeTooltip.reactData
@@ -170,7 +176,7 @@ export default defineVxeComponent({
       if (value !== reactData.visible) {
         reactData.visible = value
         reactData.isUpdate = true
-        $xeTooltip.$emit('input', value)
+        $xeTooltip.emitModel(value)
       }
     },
     updateZindex () {

@@ -193,6 +193,11 @@ export default defineVxeComponent({
       const $xeIconPicker = this
       $xeIconPicker.$emit(type, createEvent(evnt, { $iconPicker: $xeIconPicker }, params))
     },
+    emitModel (value: any) {
+      const $xeDrawer = this
+
+      $xeDrawer.$emit('modelValue', value)
+    },
     isPanelVisible () {
       const $xeIconPicker = this
       const reactData = $xeIconPicker.reactData
@@ -378,7 +383,7 @@ export default defineVxeComponent({
 
       reactData.selectIcon = selectValue
       if (selectValue !== props.value) {
-        $xeIconPicker.$emit('modelValue', selectValue)
+        $xeIconPicker.emitModel(selectValue)
         $xeIconPicker.dispatchEvent('change', { value: selectValue }, evnt)
         // 自动更新校验状态
         if ($xeForm && formItemInfo) {

@@ -229,7 +229,12 @@ export interface VxeToolbarPrivateComputed extends ToolbarPrivateComputed { }
 
 export interface ToolbarReactData {
   isRefresh: boolean
+  connectFlag: 0
   columns: VxeTableDefines.ColumnInfo[]
+}
+
+export interface ToolbarInternalData {
+  connectTable: (VxeTableConstructor<any> & VxeTablePrivateMethods<any>) | null
 }
 
 export interface ToolbarMethods {

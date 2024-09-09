@@ -93,6 +93,12 @@ export default defineVxeComponent({
       const $xeTabs = this
       $xeTabs.$emit(type, createEvent(evnt, { $tabs: $xeTabs }, params))
     },
+    emitModel  (value: any) {
+      const $xeTabs = this
+
+      $xeTabs.$emit('input', value)
+      $xeTabs.$emit('modelValue', value)
+    },
     prev () {
       const $xeTabs = this
 
@@ -214,7 +220,7 @@ export default defineVxeComponent({
         if (!validVal) {
           activeName = list[0].name
           $xeTabs.addInitName(activeName, null)
-          $xeTabs.$emit('input', activeName)
+          $xeTabs.emitModel(activeName)
         }
       }
       reactData.activeName = activeName
@@ -234,7 +240,7 @@ export default defineVxeComponent({
       }
       const value = name
       reactData.activeName = name
-      $xeTabs.$emit('input', value)
+      $xeTabs.emitModel(value)
       $xeTabs.dispatchEvent('tab-click', { name }, evnt)
       $xeTabs.addInitName(name, evnt)
       if (name !== activeName) {
@@ -377,7 +383,7 @@ export default defineVxeComponent({
           const name = item.name
           const value = name
           reactData.activeName = name
-          $xeTabs.$emit('input', value)
+          $xeTabs.emitModel(value)
           $xeTabs.addInitName(name, null)
         }
       }

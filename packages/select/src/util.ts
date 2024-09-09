@@ -1,7 +1,7 @@
 import XEUtils from 'xe-utils'
 import { OptionInfo } from './option-info'
 
-import type { VxeOptionInstance, VxeOptgroupInstance, VxeSelectConstructor } from '../../../types'
+import type { VxeOptionConstructor, VxeOptgroupConstructor, VxeSelectConstructor } from '../../../types'
 
 export interface XEOptionProvide {
   optionConfig: OptionInfo;
@@ -15,8 +15,9 @@ export function createOption ($xeSelect: VxeSelectConstructor, _vm: any) {
   return isOption(_vm) ? _vm : new OptionInfo($xeSelect, _vm)
 }
 
-export function watchOption (_vm: VxeOptionInstance | VxeOptgroupInstance, option: OptionInfo) {
-  ['value', 'label', 'visible', 'className', 'disabled'].forEach(name => {
+export function watchOption (_vm: VxeOptionConstructor | VxeOptgroupConstructor, option: OptionInfo) {
+  const optionPropKeys = ['value', 'label', 'visible', 'className', 'disabled']
+  optionPropKeys.forEach(name => {
     _vm.$watch(name, (val) => {
       option.update(name, val)
     })

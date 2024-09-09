@@ -137,6 +137,12 @@ export default defineVxeComponent({
       const $xeDrawer = this
       $xeDrawer.$emit(type, createEvent(evnt, { $drawer: $xeDrawer }, params))
     },
+    emitModel (value: any) {
+      const $xeDrawer = this
+
+      $xeDrawer.$emit('modelValue', value)
+      $xeDrawer.$emit('input', value)
+    },
     open () {
       const $xeDrawer = this
 
@@ -194,7 +200,7 @@ export default defineVxeComponent({
             $xeDrawer.dispatchEvent('before-hide', params, null)
             setTimeout(() => {
               reactData.visible = false
-              $xeDrawer.$emit('input', false)
+              $xeDrawer.emitModel(false)
               $xeDrawer.dispatchEvent('hide', params, null)
             }, 200)
           }
@@ -252,7 +258,7 @@ export default defineVxeComponent({
             }
             const type = ''
             const params = { type }
-            $xeDrawer.$emit('input', true)
+            $xeDrawer.emitModel(true)
             $xeDrawer.dispatchEvent('show', params, null)
           })
         }, 10)
@@ -309,14 +315,14 @@ export default defineVxeComponent({
       return [
         h('div', {
           class: 'vxe-drawer--header-title'
-        }, titleSlot ? getSlotVNs(titleSlot({ $drawer: $xeDrawer })) : (title ? getFuncText(title) : getI18n('vxe.alert.title'))),
+        }, titleSlot ? getSlotVNs(titleSlot({ $drawer: $xeDrawer }, h)) : (title ? getFuncText(title) : getI18n('vxe.alert.title'))),
         h('div', {
           class: 'vxe-drawer--header-right'
         }, [
           cornerSlot
             ? h('div', {
               class: 'vxe-drawer--corner-wrapper'
-            }, getSlotVNs(cornerSlot({ $drawer: $xeDrawer })))
+            }, getSlotVNs(cornerSlot({ $drawer: $xeDrawer }, h)))
             : renderEmptyElement($xeDrawer),
           showClose
             ? h('div', {
@@ -348,7 +354,7 @@ export default defineVxeComponent({
           class: ['vxe-drawer--header', {
             'is--ellipsis': showTitleOverflow
           }]
-        }, headerSlot ? getSlotVNs(headerSlot({ $drawer: $xeDrawer })) : $xeDrawer.renderTitles(h))
+        }, headerSlot ? getSlotVNs(headerSlot({ $drawer: $xeDrawer }, h)) : $xeDrawer.renderTitles(h))
       }
       return renderEmptyElement($xeDrawer)
     },
@@ -367,19 +373,19 @@ export default defineVxeComponent({
         leftSlot
           ? h('div', {
             class: 'vxe-drawer--body-left'
-          }, getSlotVNs(leftSlot({ $drawer: $xeDrawer })))
+          }, getSlotVNs(leftSlot({ $drawer: $xeDrawer }, h)))
           : renderEmptyElement($xeDrawer),
         h('div', {
           class: 'vxe-drawer--body-default'
         }, [
           h('div', {
             class: 'vxe-drawer--content'
-          }, defaultSlot ? getSlotVNs(defaultSlot({ $drawer: $xeDrawer })) : getFuncText(content))
+          }, defaultSlot ? getSlotVNs(defaultSlot({ $drawer: $xeDrawer }, h)) : getFuncText(content))
         ]),
         rightSlot
           ? h('div', {
             class: 'vxe-drawer--body-right'
-          }, getSlotVNs(rightSlot({ $drawer: $xeDrawer })))
+          }, getSlotVNs(rightSlot({ $drawer: $xeDrawer }, h)))
           : renderEmptyElement($xeDrawer),
         h(VxeLoadingComponent, {
           class: 'vxe-drawer--loading',
@@ -432,10 +438,10 @@ export default defineVxeComponent({
       }, [
         h('div', {
           class: 'vxe-drawer--footer-left'
-        }, lfSlot ? getSlotVNs(lfSlot({ $drawer: $xeDrawer })) : []),
+        }, lfSlot ? getSlotVNs(lfSlot({ $drawer: $xeDrawer }, h)) : []),
         h('div', {
           class: 'vxe-drawer--footer-right'
-        }, rfSlot ? getSlotVNs(rfSlot({ $drawer: $xeDrawer })) : btnVNs)
+        }, rfSlot ? getSlotVNs(rfSlot({ $drawer: $xeDrawer }, h)) : btnVNs)
       ])
     },
     renderFooter  (h: CreateElement): VNode {
@@ -448,7 +454,7 @@ export default defineVxeComponent({
       if (props.showFooter) {
         return h('div', {
           class: 'vxe-drawer--footer'
-        }, footerSlot ? getSlotVNs(footerSlot({ $drawer: $xeDrawer })) : [$xeDrawer.renderDefaultFooter(h)])
+        }, footerSlot ? getSlotVNs(footerSlot({ $drawer: $xeDrawer }, h)) : [$xeDrawer.renderDefaultFooter(h)])
       }
       return renderEmptyElement($xeDrawer)
     },
@@ -492,7 +498,7 @@ export default defineVxeComponent({
               asideSlot
                 ? h('div', {
                   class: 'vxe-drawer--aside'
-                }, getSlotVNs(asideSlot({ $drawer: $xeDrawer })))
+                }, getSlotVNs(asideSlot({ $drawer: $xeDrawer }, h)))
                 : renderEmptyElement($xeDrawer),
               h('div', {
                 class: 'vxe-drawer--container'

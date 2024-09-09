@@ -263,6 +263,12 @@ export default defineVxeComponent({
       const $xeModal = this
       $xeModal.$emit(type, createEvent(evnt, { $modal: $xeModal }, params))
     },
+    emitModel  (value: any) {
+      const $xeModal = this
+
+      $xeModal.$emit('input', value)
+      $xeModal.$emit('modelValue', value)
+    },
     open () {
       const $xeModal = this
 
@@ -454,8 +460,7 @@ export default defineVxeComponent({
             $xeModal.dispatchEvent('before-hide', params, null)
             setTimeout(() => {
               reactData.visible = false
-              $xeModal.$emit('input', false)
-              $xeModal.$emit('modelValue', false)
+              $xeModal.emitModel(false)
               $xeModal.dispatchEvent('hide', params, null)
             }, 200)
             $xeModal.removeBodyLockScroll()
@@ -780,8 +785,7 @@ export default defineVxeComponent({
             }
             const type = ''
             const params = { type }
-            $xeModal.$emit('input', true)
-            $xeModal.$emit('modelValue', true)
+            $xeModal.emitModel(true)
             $xeModal.dispatchEvent('show', params, null)
           })
         }, 10)

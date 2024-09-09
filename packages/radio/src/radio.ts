@@ -105,6 +105,12 @@ export default defineVxeComponent({
       const $xeRadio = this
       $xeRadio.$emit(type, createEvent(evnt, { $radio: $xeRadio }, params))
     },
+    emitModel  (value: any) {
+      const $xeRadio = this
+
+      $xeRadio.$emit('input', value)
+      $xeRadio.$emit('modelValue', value)
+    },
     handleValue  (label: VxeRadioPropTypes.Label, evnt: Event) {
       const $xeRadio = this
       const formItemInfo = $xeRadio.formItemInfo
@@ -114,8 +120,7 @@ export default defineVxeComponent({
       if ($xeRadioGroup) {
         $xeRadioGroup.handleChecked({ label }, evnt)
       } else {
-        $xeRadio.$emit('input', label)
-        $xeRadio.$emit('modelValue', label)
+        $xeRadio.emitModel(label)
         $xeRadio.dispatchEvent('change', { label }, evnt)
         // 自动更新校验状态
         if ($xeForm && formItemInfo) {

@@ -1,5 +1,6 @@
 import { DefineVxeComponentApp, DefineVxeComponentOptions, DefineVxeComponentInstance, VxeComponentEventParams, VxeComponentSizeType, ValueOf, VxeComponentSlotType } from '@vxe-ui/core'
 import { VxeFormItemPropTypes, VxeFormItemProps } from './form-item'
+import { VxeGridConstructor } from './grid'
 
 /* eslint-disable @typescript-eslint/no-empty-interface,no-use-before-define,@typescript-eslint/ban-types,@typescript-eslint/no-unused-vars */
 
@@ -8,6 +9,8 @@ export type VxeFormComponent = DefineVxeComponentOptions<VxeFormProps>
 
 export type VxeFormInstance = DefineVxeComponentInstance<{
   reactData: FormReactData
+  internalData: FormInternalData
+  xegrid: VxeGridConstructor | null
 }, VxeFormProps, FormPrivateComputed, FormMethods>
 
 export type VxeFormConstructor = VxeFormInstance
@@ -99,6 +102,9 @@ export interface VxeFormProps<D = any> {
 }
 
 export interface FormPrivateComputed {
+  computeSize: VxeFormPropTypes.Size
+  computeValidOpts: VxeFormPropTypes.ValidOpts
+  computeTooltipOpts: VxeFormPropTypes.TooltipOpts
 }
 export interface VxeFormPrivateComputed extends FormPrivateComputed { }
 
@@ -109,7 +115,8 @@ export interface FormReactData {
 }
 
 export interface FormInternalData {
-  tooltipTimeout: any
+  meTimeout: undefined | number
+  stTimeout: undefined | number
   tooltipStore: {
     item: VxeFormDefines.ItemInfo | null
     visible: boolean

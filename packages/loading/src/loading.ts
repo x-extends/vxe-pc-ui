@@ -76,6 +76,12 @@ export default defineVxeComponent({
       const $xeLoading = this
       $xeLoading.$emit(type, createEvent(evnt, { $loading: $xeLoading }, params))
     },
+    emitModel  (value: any) {
+      const $xeLoading = this
+
+      $xeLoading.$emit('input', value)
+      $xeLoading.$emit('modelValue', value)
+    },
     handleInit () {
       const $xeLoading = this
       const reactData = $xeLoading.reactData
