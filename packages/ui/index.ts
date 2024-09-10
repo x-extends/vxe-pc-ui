@@ -32,13 +32,6 @@ export function setup (options?: VxeGlobalConfig) {
 VxeUI.config = config
 VxeUI.setup = setup
 
-/**
- * 已废弃
- * @deprecated
- */
-export const globalStore = {}
-VxeUI.globalStore = globalStore
-
 setConfig({
   alert: {},
   anchor: {},

@@ -28,11 +28,6 @@ export interface VxeGlobalStore {
     html: string
   }
 }
-/**
- * 已废弃
- * @deprecated
- */
-export const globalStore: VxeGlobalStore
 
 // 兼容老版本
 export const loading: LoadingController
@@ -80,11 +75,6 @@ declare module '@vxe-ui/core' {
      * @deprecated
      */
     _t(key: string, args?: any): string
-    /**
-     * 已废弃
-     * @deprecated
-     */
-    globalStore: VxeGlobalStore
     /**
      * @deprecated
      */
