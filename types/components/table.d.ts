@@ -126,7 +126,9 @@ export namespace VxeTablePropTypes {
     $table: VxeTableConstructor<D> & VxeTablePrivateMethods<D>
     $rowIndex: number
     column: VxeTableDefines.ColumnInfo<D>
-    columnIndex:number
+    columnIndex: number
+    $columnIndex: number
+    _columnIndex: number
     fixed: VxeColumnPropTypes.Fixed
     type: string
   }) => void | null | string | { [key: string]: boolean | null | undefined })
