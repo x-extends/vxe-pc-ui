@@ -953,7 +953,7 @@ export namespace VxeTablePropTypes {
       columnIndex: number
       $table: VxeTableConstructor<D> & VxeTablePrivateMethods<D>
       $grid: VxeGridConstructor<D> | null | undefined
-    }): boolean
+    }): void
   }
   export interface KeyboardOpts<D = any> extends KeyboardConfig<D> { }
 

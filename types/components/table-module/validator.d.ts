@@ -1,8 +1,7 @@
-import { VxeTableDefines, VxeTableConstructor } from '../table'
-import { VxeGridConstructor } from '../grid'
+import { VxeTableDefines } from '../table'
 import { VxeColumnPropTypes } from '../column'
 
-/* eslint-disable no-use-before-define */
+/* eslint-disable @typescript-eslint/no-unused-vars,no-use-before-define */
 
 export interface TableValidatorMethods<D = any> {
   /**
