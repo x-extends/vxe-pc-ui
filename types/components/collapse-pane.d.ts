@@ -7,7 +7,7 @@ export type VxeCollapsePaneComponent = DefineVxeComponentOptions<VxeCollapsePane
 
 export type VxeCollapsePaneInstance = DefineVxeComponentInstance<{
   reactData: CollapsePaneReactData
-}, VxeCollapsePaneProps, CollapsePanePrivateComputed, CollapsePaneMethods>
+}, VxeCollapsePaneProps, VxeCollapsePanePrivateComputed, VxeCollapsePaneMethods>
 
 export type VxeCollapsePaneConstructor = VxeCollapsePaneInstance
 

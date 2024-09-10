@@ -10,7 +10,7 @@ export type VxeToolbarComponent = DefineVxeComponentOptions<VxeToolbarProps>
 export type VxeToolbarInstance = DefineVxeComponentInstance<{
   reactData: ToolbarReactData
   internalData: ToolbarInternalData
-}, VxeToolbarProps, ToolbarPrivateComputed, ToolbarMethods>
+}, VxeToolbarProps, VxeToolbarPrivateComputed, VxeToolbarMethods>
 
 export type VxeToolbarConstructor = VxeToolbarInstance
 

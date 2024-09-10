@@ -7,7 +7,7 @@ export type VxeCarouselItemComponent = DefineVxeComponentOptions<VxeCarouselItem
 
 export type VxeCarouselItemInstance = DefineVxeComponentInstance<{
   reactData: CarouselItemReactData
-}, VxeCarouselItemProps, CarouselItemPrivateComputed, CarouselItemMethods>
+}, VxeCarouselItemProps, VxeCarouselItemPrivateComputed, VxeCarouselItemMethods>
 
 export type VxeCarouselItemConstructor = VxeCarouselItemInstance
 

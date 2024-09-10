@@ -8,7 +8,7 @@ export type VxeModalComponent = DefineVxeComponentOptions<VxeModalProps>
 
 export type VxeModalInstance = DefineVxeComponentInstance<{
   reactData: ModalReactData
-}, VxeModalProps, ModalPrivateComputed, VxeModalMethods>
+}, VxeModalProps, VxeModalPrivateComputed, VxeModalMethods>
 
 export type VxeModalConstructor = VxeModalInstance
 

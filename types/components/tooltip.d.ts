@@ -7,7 +7,7 @@ export type VxeTooltipComponent = DefineVxeComponentOptions<VxeTooltipProps>
 
 export type VxeTooltipInstance = DefineVxeComponentInstance<{
   reactData: TooltipReactData
-}, VxeTooltipProps, TooltipPrivateComputed, TooltipMethods>
+}, VxeTooltipProps, VxeTooltipPrivateComputed, VxeTooltipMethods>
 
 export type VxeTooltipConstructor = VxeTooltipInstance
 

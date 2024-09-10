@@ -7,7 +7,7 @@ export type VxeLayoutBodyComponent = DefineVxeComponentOptions<VxeLayoutBodyProp
 
 export type VxeLayoutBodyInstance = DefineVxeComponentInstance<{
   reactData: LayoutBodyReactData
-}, VxeLayoutBodyProps, LayoutBodyPrivateComputed, LayoutBodyMethods>
+}, VxeLayoutBodyProps, VxeLayoutBodyPrivateComputed, VxeLayoutBodyMethods>
 
 export type VxeLayoutBodyConstructor = VxeLayoutBodyInstance
 

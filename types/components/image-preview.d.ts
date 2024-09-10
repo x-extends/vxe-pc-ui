@@ -7,7 +7,7 @@ export type VxeImagePreviewComponent = DefineVxeComponentOptions<VxeImagePreview
 
 export type VxeImagePreviewInstance = DefineVxeComponentInstance<{
   reactData: ImagePreviewReactData
-}, VxeImagePreviewProps, ImagePreviewPrivateComputed, ImagePreviewMethods>
+}, VxeImagePreviewProps, VxeImagePreviewPrivateComputed, VxeImagePreviewMethods>
 
 export type VxeImagePreviewConstructor = VxeImagePreviewInstance
 

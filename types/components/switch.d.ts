@@ -7,7 +7,7 @@ export type VxeSwitchComponent = DefineVxeComponentOptions<VxeSwitchProps>
 
 export type VxeSwitchInstance = DefineVxeComponentInstance<{
   reactData: SwitchReactData
-}, VxeSwitchProps, SwitchPrivateComputed, SwitchMethods>
+}, VxeSwitchProps, VxeSwitchPrivateComputed, VxeSwitchMethods>
 
 export type VxeSwitchConstructor = VxeSwitchInstance
 

@@ -7,7 +7,7 @@ export type VxeCheckboxComponent = DefineVxeComponentOptions<VxeCheckboxProps>
 
 export type VxeCheckboxInstance = DefineVxeComponentInstance<{
   reactData: CheckboxReactData
-}, VxeCheckboxProps, CheckboxPrivateComputed, CheckboxMethods>
+}, VxeCheckboxProps, VxeCheckboxPrivateComputed, VxeCheckboxMethods>
 
 export type VxeCheckboxConstructor = VxeCheckboxInstance
 

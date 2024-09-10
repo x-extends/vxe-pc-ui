@@ -7,7 +7,7 @@ export type VxeAlertComponent = DefineVxeComponentOptions<VxeAlertProps>
 
 export type VxeAlertInstance = DefineVxeComponentInstance<{
   reactData: AlertReactData
-}, VxeAlertProps, AlertPrivateComputed, AlertMethods>
+}, VxeAlertProps, VxeAlertPrivateComputed, VxeAlertMethods>
 
 export type VxeAlertConstructor = VxeAlertInstance
 

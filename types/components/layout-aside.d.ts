@@ -7,7 +7,7 @@ export type VxeLayoutAsideComponent = DefineVxeComponentOptions<VxeLayoutAsidePr
 
 export type VxeLayoutAsideInstance = DefineVxeComponentInstance<{
   reactData: LayoutAsideReactData
-}, VxeLayoutAsideProps, LayoutAsidePrivateComputed, LayoutAsideMethods>
+}, VxeLayoutAsideProps, VxeLayoutAsidePrivateComputed, VxeLayoutAsideMethods>
 
 export type VxeLayoutAsideConstructor = VxeLayoutAsideInstance
 

@@ -8,7 +8,7 @@ export type VxeCountdownComponent = DefineVxeComponentOptions<VxeCountdownProps>
 
 export type VxeCountdownInstance = DefineVxeComponentInstance<{
   reactData: CountdownReactData
-}, VxeCountdownProps, CountdownPrivateComputed, CountdownMethods>
+}, VxeCountdownProps, VxeCountdownPrivateComputed, VxeCountdownMethods>
 
 export type VxeCountdownConstructor = VxeCountdownInstance
 

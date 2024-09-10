@@ -7,7 +7,7 @@ export type VxeIconPickerComponent = DefineVxeComponentOptions<VxeIconPickerProp
 
 export type VxeIconPickerInstance = DefineVxeComponentInstance<{
   reactData: IconPickerReactData
-}, VxeIconPickerProps, IconPickerPrivateComputed, IconPickerMethods>
+}, VxeIconPickerProps, VxeIconPickerPrivateComputed, VxeIconPickerMethods>
 
 export type VxeIconPickerConstructor = VxeIconPickerInstance
 

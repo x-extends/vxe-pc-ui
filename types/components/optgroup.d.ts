@@ -8,7 +8,7 @@ export type VxeOptgroupComponent = DefineVxeComponentOptions<VxeOptgroupProps>
 
 export type VxeOptgroupInstance = DefineVxeComponentInstance<{
   reactData: OptgroupReactData
-}, VxeOptgroupProps, OptgroupPrivateComputed, OptgroupMethods>
+}, VxeOptgroupProps, VxeOptgroupPrivateComputed, VxeOptgroupMethods>
 
 export type VxeOptgroupConstructor = VxeOptgroupInstance
 

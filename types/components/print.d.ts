@@ -7,7 +7,7 @@ export type VxePrintComponent = DefineVxeComponentOptions<VxePrintProps>
 
 export type VxePrintInstance = DefineVxeComponentInstance<{
   reactData: PrintReactData
-}, VxePrintProps, PrintPrivateComputed, PrintMethods>
+}, VxePrintProps, VxePrintPrivateComputed, VxePrintMethods>
 
 export type VxePrintConstructor = VxePrintInstance
 

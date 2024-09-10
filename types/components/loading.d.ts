@@ -7,7 +7,7 @@ export type VxeLoadingComponent = DefineVxeComponentOptions<VxeLoadingProps>
 
 export type VxeLoadingInstance = DefineVxeComponentInstance<{
   reactData: LoadingReactData
-}, VxeLoadingProps, LoadingPrivateComputed, LoadingMethods>
+}, VxeLoadingProps, VxeLoadingPrivateComputed, VxeLoadingMethods>
 
 export type VxeLoadingConstructor = VxeLoadingInstance
 

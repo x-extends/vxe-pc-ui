@@ -9,7 +9,7 @@ export type VxeColgroupComponent = DefineVxeComponentOptions<VxeColgroupProps>
 export type VxeColgroupInstance = DefineVxeComponentInstance<{
   reactData: ColgroupReactData
   columnConfig: any
-}, VxeColgroupProps, ColgroupPrivateComputed, ColgroupMethods>
+}, VxeColgroupProps, VxeColgroupPrivateComputed, VxeColgroupMethods>
 
 export type VxeColgroupConstructor = VxeColgroupInstance
 

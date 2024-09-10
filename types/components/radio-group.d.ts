@@ -9,7 +9,7 @@ export type VxeRadioGroupComponent = DefineVxeComponentOptions<VxeRadioGroupProp
 export type VxeRadioGroupInstance = DefineVxeComponentInstance<{
   name: string
   reactData: RadioGroupReactData
-}, VxeRadioGroupProps, RadioGroupPrivateComputed, RadioGroupMethods>
+}, VxeRadioGroupProps, VxeRadioGroupPrivateComputed, VxeRadioGroupMethods>
 
 export type VxeRadioGroupConstructor = VxeRadioGroupInstance
 

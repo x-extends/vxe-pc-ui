@@ -10,7 +10,7 @@ export type VxeListDesignComponent = DefineVxeComponentOptions<VxeListDesignProp
 
 export type VxeListDesignInstance = DefineVxeComponentInstance<{
   reactData: ListDesignReactData
-}, VxeListDesignProps, ListDesignPrivateComputed, ListDesignMethods>
+}, VxeListDesignProps, VxeListDesignPrivateComputed, VxeListDesignMethods>
 
 export type VxeListDesignConstructor = VxeListDesignInstance
 

@@ -11,7 +11,7 @@ export type VxeFormItemComponent = DefineVxeComponentOptions<VxeFormItemProps>
 
 export type VxeFormItemInstance = DefineVxeComponentInstance<{
   reactData: FormItemReactData
-}, VxeFormItemProps, FormItemPrivateComputed, FormItemMethods>
+}, VxeFormItemProps, VxeFormItemPrivateComputed, VxeFormItemMethods>
 
 export type VxeFormItemConstructor = VxeFormItemInstance
 

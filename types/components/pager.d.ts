@@ -8,7 +8,7 @@ export type VxePagerComponent = DefineVxeComponentOptions<VxePagerProps>
 
 export type VxePagerInstance = DefineVxeComponentInstance<{
   reactData: PagerReactData
-}, VxePagerProps, PagerPrivateComputed, PagerMethods>
+}, VxePagerProps, VxePagerPrivateComputed, VxePagerMethods>
 
 export type VxePagerConstructor = VxePagerInstance
 

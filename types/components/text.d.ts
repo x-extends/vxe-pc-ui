@@ -7,7 +7,7 @@ export type VxeTextComponent = DefineVxeComponentOptions<VxeTextProps>
 
 export type VxeTextInstance = DefineVxeComponentInstance<{
   reactData: TextReactData
-}, VxeTextProps, TextPrivateComputed, TextMethods>
+}, VxeTextProps, VxeTextPrivateComputed, VxeTextMethods>
 
 export type VxeTextConstructor = VxeTextInstance
 

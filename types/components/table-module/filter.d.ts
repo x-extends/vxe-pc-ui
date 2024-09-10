@@ -70,10 +70,10 @@ export interface TableFilterPrivateMethods<D = any> {
 }
 
 declare module '../grid' {
-  export type VxeGridMethods<D = any> = TableFilterMethods<D>
+  export interface VxeGridMethods<D = any> extends TableFilterMethods<D> { }
 }
 
 declare module '../table' {
-  export type VxeTableMethods<D = any> = TableFilterMethods<D>
-  export type VxeTablePrivateMethods<D = any> = TableFilterPrivateMethods<D>
+  export interface VxeTableMethods<D = any> extends TableFilterMethods<D> { }
+  export interface VxeTablePrivateMethods<D = any> extends TableFilterPrivateMethods<D> { }
 }

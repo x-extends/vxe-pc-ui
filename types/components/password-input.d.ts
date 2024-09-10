@@ -7,7 +7,7 @@ export type VxePasswordInputComponent = DefineVxeComponentOptions<VxePasswordInp
 
 export type VxePasswordInputInstance = DefineVxeComponentInstance<{
   reactData: PasswordInputReactData
-}, VxePasswordInputProps, PasswordInputPrivateComputed, PasswordInputMethods>
+}, VxePasswordInputProps, VxePasswordInputPrivateComputed, VxePasswordInputMethods>
 
 export type VxePasswordInputConstructor = VxePasswordInputInstance
 

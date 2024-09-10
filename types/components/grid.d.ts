@@ -10,11 +10,11 @@ import { VxeFormItemProps } from './form-item'
 export declare const VxeGrid: DefineVxeComponentApp<VxeGridProps, VxeGridEventProps, VxeGridSlots>
 export type VxeGridComponent = DefineVxeComponentOptions<VxeGridProps>
 
-export type VxeGridInstance = DefineVxeComponentInstance<{
-  reactData: GridReactData
-}, VxeGridProps, GridPrivateComputed, GridMethods>
+export type VxeGridInstance<D = any> = DefineVxeComponentInstance<{
+  reactData: GridReactData<D>
+}, VxeGridProps<D>, VxeGridPrivateComputed<D>, VxeGridMethods<D>>
 
-export type VxeGridConstructor = VxeGridInstance
+export type VxeGridConstructor<D = any> = VxeGridInstance<D>
 
 export interface GridPrivateRef<D = any> {
 }
@@ -207,9 +207,9 @@ export interface VxeGridProps<D = any> extends VxeTableProps<D> {
   zoomConfig?: VxeGridPropTypes.ZoomConfig
 }
 
-export interface GridPrivateComputed {
+export interface GridPrivateComputed<D = any> {
 }
-export interface VxeGridPrivateComputed extends GridPrivateComputed { }
+export interface VxeGridPrivateComputed<D = any> extends GridPrivateComputed<D> { }
 
 export interface GridReactData<D = any> {
   tableLoading: boolean

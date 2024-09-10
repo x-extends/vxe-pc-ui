@@ -8,7 +8,7 @@ export type VxeCarouselComponent = DefineVxeComponentOptions<VxeCarouselProps>
 
 export type VxeCarouselInstance = DefineVxeComponentInstance<{
   reactData: CarouselReactData
-}, VxeCarouselProps, CarouselPrivateComputed, CarouselMethods>
+}, VxeCarouselProps, VxeCarouselPrivateComputed, VxeCarouselMethods>
 
 export type VxeCarouselConstructor = VxeCarouselInstance
 

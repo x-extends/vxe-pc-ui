@@ -175,10 +175,10 @@ export interface TableEditPrivateMethods<D = any> {
 }
 
 declare module '../grid' {
-  export type VxeGridMethods<D = any> = TableEditMethods<D>
+  export interface VxeGridMethods<D = any> extends TableEditMethods<D> { }
 }
 
 declare module '../table' {
-  export type VxeTableMethods<D = any> = TableEditMethods<D>
-  export type VxeTablePrivateMethods<D = any> = TableEditPrivateMethods<D>
+  export interface VxeTableMethods<D = any> extends TableEditMethods<D> { }
+  export interface VxeTablePrivateMethods<D = any> extends TableEditPrivateMethods<D> { }
 }

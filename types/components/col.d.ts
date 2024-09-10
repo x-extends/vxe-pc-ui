@@ -7,7 +7,7 @@ export type VxeColComponent = DefineVxeComponentOptions<VxeColProps>
 
 export type VxeColInstance = DefineVxeComponentInstance<{
   reactData: ColReactData
-}, VxeColProps, ColPrivateComputed, ColMethods>
+}, VxeColProps, VxeColPrivateComputed, VxeColMethods>
 
 export type VxeColConstructor = VxeColInstance
 

@@ -7,7 +7,7 @@ export type VxeLayoutFooterComponent = DefineVxeComponentOptions<VxeLayoutFooter
 
 export type VxeLayoutFooterInstance = DefineVxeComponentInstance<{
   reactData: LayoutFooterReactData
-}, VxeLayoutFooterProps, LayoutFooterPrivateComputed, LayoutFooterMethods>
+}, VxeLayoutFooterProps, VxeLayoutFooterPrivateComputed, VxeLayoutFooterMethods>
 
 export type VxeLayoutFooterConstructor = VxeLayoutFooterInstance
 

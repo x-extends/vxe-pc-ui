@@ -57,12 +57,12 @@ export interface TableExportMethods<D = any> {
 export interface TableExportPrivateMethods<D = any> { }
 
 declare module '../grid' {
-  export type VxeGridMethods<D = any> = TableExportMethods<D>
+  export interface VxeGridMethods<D = any> extends TableExportMethods<D> { }
 }
 
 declare module '../table' {
-  export type VxeTableMethods<D = any> = TableExportMethods<D>
-  export type VxeTablePrivateMethods<D = any> = TableExportPrivateMethods<D>
+  export interface VxeTableMethods<D = any> extends TableExportMethods<D> { }
+  export interface VxeTablePrivateMethods<D = any> extends TableExportPrivateMethods<D> { }
 }
 
 export type SaveFileFunction = (options: {

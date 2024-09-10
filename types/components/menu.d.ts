@@ -8,7 +8,7 @@ export type VxeMenuComponent = DefineVxeComponentOptions<VxeMenuProps>
 
 export type VxeMenuInstance = DefineVxeComponentInstance<{
   reactData: MenuReactData
-}, VxeMenuProps, MenuPrivateComputed, MenuMethods>
+}, VxeMenuProps, VxeMenuPrivateComputed, VxeMenuMethods>
 
 export type VxeMenuConstructor = VxeMenuInstance
 

@@ -8,7 +8,7 @@ export type VxeCheckboxGroupComponent = DefineVxeComponentOptions<VxeCheckboxGro
 
 export type VxeCheckboxGroupInstance = DefineVxeComponentInstance<{
   reactData: CheckboxGroupReactData
-}, VxeCheckboxGroupProps, CheckboxGroupPrivateComputed, CheckboxGroupMethods>
+}, VxeCheckboxGroupProps, VxeCheckboxGroupPrivateComputed, VxeCheckboxGroupMethods>
 
 export type VxeCheckboxGroupConstructor = VxeCheckboxGroupInstance
 

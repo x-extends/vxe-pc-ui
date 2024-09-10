@@ -8,7 +8,7 @@ export type VxeOptionComponent = DefineVxeComponentOptions<VxeOptionProps>
 
 export type VxeOptionInstance = DefineVxeComponentInstance<{
   reactData: OptionReactData
-}, VxeOptionProps, OptionPrivateComputed, OptionMethods>
+}, VxeOptionProps, VxeOptionPrivateComputed, VxeOptionMethods>
 
 export type VxeOptionConstructor = VxeOptionInstance
 

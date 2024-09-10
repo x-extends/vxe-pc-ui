@@ -7,7 +7,7 @@ export type VxeLinkComponent = DefineVxeComponentOptions<VxeLinkProps>
 
 export type VxeLinkInstance = DefineVxeComponentInstance<{
   reactData: LinkReactData
-}, VxeLinkProps, LinkPrivateComputed, LinkMethods>
+}, VxeLinkProps, VxeLinkPrivateComputed, VxeLinkMethods>
 
 export type VxeLinkConstructor = VxeLinkInstance
 

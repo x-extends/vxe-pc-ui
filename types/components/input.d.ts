@@ -7,7 +7,7 @@ export type VxeInputComponent = DefineVxeComponentOptions<VxeInputProps>
 
 export type VxeInputInstance = DefineVxeComponentInstance<{
   reactData: InputReactData
-}, VxeInputProps, InputPrivateComputed, InputMethods>
+}, VxeInputProps, VxeInputPrivateComputed, VxeInputMethods>
 
 export type VxeInputConstructor = VxeInputInstance
 

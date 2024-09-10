@@ -7,7 +7,7 @@ export type VxeTextareaComponent = DefineVxeComponentOptions<VxeTextareaProps>
 
 export type VxeTextareaInstance = DefineVxeComponentInstance<{
   reactData: TextareaReactData
-}, VxeTextareaProps, TextareaPrivateComputed, TextareaMethods>
+}, VxeTextareaProps, VxeTextareaPrivateComputed, VxeTextareaMethods>
 
 export type VxeTextareaConstructor = VxeTextareaInstance
 

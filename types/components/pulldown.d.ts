@@ -7,7 +7,7 @@ export type VxePulldownComponent = DefineVxeComponentOptions<VxePulldownProps>
 
 export type VxePulldownInstance = DefineVxeComponentInstance<{
   reactData: PulldownReactData
-}, VxePulldownProps, PulldownPrivateComputed, PulldownMethods>
+}, VxePulldownProps, VxePulldownPrivateComputed, VxePulldownMethods>
 
 export type VxePulldownConstructor = VxePulldownInstance
 

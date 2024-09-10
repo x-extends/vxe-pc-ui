@@ -23,10 +23,10 @@ export interface TableCustomPrivateMethods<D = any> {
 }
 
 declare module '../grid' {
-  export type VxeGridMethods<D = any> = TableCustomMethods<D>
+  export interface VxeGridMethods<D = any> extends TableCustomMethods<D> { }
 }
 
 declare module '../table' {
-  export type VxeTableMethods<D = any> = TableCustomMethods<D>
-  export type VxeTablePrivateMethods<D = any> = TableCustomPrivateMethods<D>
+  export interface VxeTableMethods<D = any> extends TableCustomMethods<D> { }
+  export interface VxeTablePrivateMethods<D = any> extends TableCustomPrivateMethods<D> { }
 }

@@ -7,7 +7,7 @@ export type VxeBreadcrumbItemComponent = DefineVxeComponentOptions<VxeBreadcrumb
 
 export type VxeBreadcrumbItemInstance = DefineVxeComponentInstance<{
   reactData: BreadcrumbItemReactData
-}, VxeBreadcrumbItemProps, BreadcrumbItemPrivateComputed, BreadcrumbItemMethods>
+}, VxeBreadcrumbItemProps, VxeBreadcrumbItemPrivateComputed, VxeBreadcrumbItemMethods>
 
 export type VxeBreadcrumbItemConstructor = VxeBreadcrumbItemInstance
 

@@ -29,10 +29,10 @@ export interface TableValidatorPrivateMethods<D = any> {
 }
 
 declare module '../grid' {
-  export type VxeGridMethods<D = any> = TableValidatorMethods<D>
+  export interface VxeGridMethods<D = any> extends TableValidatorMethods<D> { }
 }
 
 declare module '../table' {
-  export type VxeTableMethods<D = any> = TableValidatorMethods<D>
-  export type VxeTablePrivateMethods<D = any> = TableValidatorPrivateMethods<D>
+  export interface VxeTableMethods<D = any> extends TableValidatorMethods<D> { }
+  export interface VxeTablePrivateMethods<D = any> extends TableValidatorPrivateMethods<D> { }
 }

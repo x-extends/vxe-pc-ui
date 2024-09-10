@@ -7,7 +7,7 @@ export type VxeFlowViewComponent = DefineVxeComponentOptions<VxeFlowViewProps>
 
 export type VxeFlowViewInstance = DefineVxeComponentInstance<{
   reactData: FlowViewReactData
-}, VxeFlowViewProps, FlowViewPrivateComputed, FlowViewMethods>
+}, VxeFlowViewProps, VxeFlowViewPrivateComputed, VxeFlowViewMethods>
 
 export type VxeFlowViewConstructor = VxeFlowViewInstance
 

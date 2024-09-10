@@ -7,7 +7,7 @@ export type VxeIconComponent = DefineVxeComponentOptions<VxeIconProps>
 
 export type VxeIconInstance = DefineVxeComponentInstance<{
   reactData: IconReactData
-}, VxeIconProps, IconPrivateComputed, IconMethods>
+}, VxeIconProps, VxeIconPrivateComputed, VxeIconMethods>
 
 export type VxeIconConstructor = VxeIconInstance
 

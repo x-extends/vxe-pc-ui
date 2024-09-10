@@ -17,7 +17,7 @@ export type VxeTableInstance<D = any> = DefineVxeComponentInstance<{
   reactData: TableReactData<D>
   internalData: TableInternalData<D>
   xegrid: VxeGridConstructor | null
-}, VxeTableProps<D>, TablePrivateComputed<D>, TableMethods<D>>
+}, VxeTableProps<D>, VxeTablePrivateComputed<D>, VxeTableMethods<D>>
 
 export type VxeTableConstructor<D = any> = VxeTableInstance<D>
 
@@ -2040,7 +2040,7 @@ export interface TablePrivateComputed<D = any> {
   computeIsMaxFixedColumn: boolean
   computeIsAllCheckboxDisabled: boolean
 }
-export interface VxeTablePrivateComputed extends TablePrivateComputed { }
+export interface VxeTablePrivateComputed<D = any> extends TablePrivateComputed<D> { }
 
 export interface TableReactData<D = any> {
   isCalcColumn: boolean

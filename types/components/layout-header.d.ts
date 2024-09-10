@@ -7,7 +7,7 @@ export type VxeLayoutHeaderComponent = DefineVxeComponentOptions<VxeLayoutHeader
 
 export type VxeLayoutHeaderInstance = DefineVxeComponentInstance<{
   reactData: LayoutHeaderReactData
-}, VxeLayoutHeaderProps, LayoutHeaderPrivateComputed, LayoutHeaderMethods>
+}, VxeLayoutHeaderProps, VxeLayoutHeaderPrivateComputed, VxeLayoutHeaderMethods>
 
 export type VxeLayoutHeaderConstructor = VxeLayoutHeaderInstance
 

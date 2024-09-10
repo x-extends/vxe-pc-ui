@@ -7,7 +7,7 @@ export type VxeImageGroupComponent = DefineVxeComponentOptions<VxeImageGroupProp
 
 export type VxeImageGroupInstance = DefineVxeComponentInstance<{
   reactData: ImageGroupReactData
-}, VxeImageGroupProps, ImageGroupPrivateComputed, ImageGroupMethods>
+}, VxeImageGroupProps, VxeImageGroupPrivateComputed, VxeImageGroupMethods>
 
 export type VxeImageGroupConstructor = VxeImageGroupInstance
 

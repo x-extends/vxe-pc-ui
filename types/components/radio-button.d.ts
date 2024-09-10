@@ -8,7 +8,7 @@ export type VxeRadioButtonComponent = DefineVxeComponentOptions<VxeRadioButtonPr
 
 export type VxeRadioButtonInstance = DefineVxeComponentInstance<{
   reactData: RadioButtonReactData
-}, VxeRadioButtonProps, RadioButtonPrivateComputed, RadioButtonMethods>
+}, VxeRadioButtonProps, VxeRadioButtonPrivateComputed, VxeRadioButtonMethods>
 
 export type VxeRadioButtonConstructor = VxeRadioButtonInstance
 

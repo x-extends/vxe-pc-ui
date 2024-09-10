@@ -7,7 +7,7 @@ export type VxeListComponent = DefineVxeComponentOptions<VxeListProps>
 
 export type VxeListInstance = DefineVxeComponentInstance<{
   reactData: ListReactData
-}, VxeListProps, ListPrivateComputed, ListMethods>
+}, VxeListProps, VxeListPrivateComputed, VxeListMethods>
 
 export type VxeListConstructor = VxeListInstance
 

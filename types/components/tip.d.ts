@@ -7,7 +7,7 @@ export type VxeTipComponent = DefineVxeComponentOptions<VxeTipProps>
 
 export type VxeTipInstance = DefineVxeComponentInstance<{
   reactData: TipReactData
-}, VxeTipProps, TipPrivateComputed, TipMethods>
+}, VxeTipProps, VxeTipPrivateComputed, VxeTipMethods>
 
 export type VxeTipConstructor = VxeTipInstance
 

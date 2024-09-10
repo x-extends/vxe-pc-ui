@@ -7,7 +7,7 @@ export type VxeDatePickerComponent = DefineVxeComponentOptions<VxeDatePickerProp
 
 export type VxeDatePickerInstance = DefineVxeComponentInstance<{
   reactData: DatePickerReactData
-}, VxeDatePickerProps, DatePickerPrivateComputed, DatePickerMethods>
+}, VxeDatePickerProps, VxeDatePickerPrivateComputed, VxeDatePickerMethods>
 
 export type VxeDatePickerConstructor = VxeDatePickerInstance
 

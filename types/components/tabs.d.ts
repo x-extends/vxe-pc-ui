@@ -8,7 +8,7 @@ export type VxeTabsComponent = DefineVxeComponentOptions<VxeTabsProps>
 
 export type VxeTabsInstance = DefineVxeComponentInstance<{
   reactData: TabsReactData
-}, VxeTabsProps, TabsPrivateComputed, TabsMethods>
+}, VxeTabsProps, VxeTabsPrivateComputed, VxeTabsMethods>
 
 export type VxeTabsConstructor = VxeTabsInstance
 

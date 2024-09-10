@@ -7,7 +7,7 @@ export type VxeRadioComponent = DefineVxeComponentOptions<VxeRadioProps>
 
 export type VxeRadioInstance = DefineVxeComponentInstance<{
   reactData: RadioReactData
-}, VxeRadioProps, RadioPrivateComputed, RadioMethods>
+}, VxeRadioProps, VxeRadioPrivateComputed, VxeRadioMethods>
 
 export type VxeRadioConstructor = VxeRadioInstance
 

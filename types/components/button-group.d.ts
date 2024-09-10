@@ -8,7 +8,7 @@ export type VxeButtonGroupComponent = DefineVxeComponentOptions<VxeButtonGroupPr
 
 export type VxeButtonGroupInstance = DefineVxeComponentInstance<{
   reactData: ButtonGroupReactData
-}, VxeButtonGroupProps, ButtonGroupPrivateComputed, ButtonGroupMethods>
+}, VxeButtonGroupProps, VxeButtonGroupPrivateComputed, VxeButtonGroupMethods>
 
 export type VxeButtonGroupConstructor = VxeButtonGroupInstance
 

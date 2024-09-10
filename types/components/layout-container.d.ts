@@ -7,7 +7,7 @@ export type VxeLayoutContainerComponent = DefineVxeComponentOptions<VxeLayoutCon
 
 export type VxeLayoutContainerInstance = DefineVxeComponentInstance<{
   reactData: LayoutContainerReactData
-}, VxeLayoutContainerProps, LayoutContainerPrivateComputed, LayoutContainerMethods>
+}, VxeLayoutContainerProps, VxeLayoutContainerPrivateComputed, VxeLayoutContainerMethods>
 
 export type VxeLayoutContainerConstructor = VxeLayoutContainerInstance
 

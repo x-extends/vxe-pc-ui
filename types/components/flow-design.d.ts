@@ -7,7 +7,7 @@ export type VxeFlowDesignComponent = DefineVxeComponentOptions<VxeFlowDesignProp
 
 export type VxeFlowDesignInstance = DefineVxeComponentInstance<{
   reactData: FlowDesignReactData
-}, VxeFlowDesignProps, FlowDesignPrivateComputed, FlowDesignMethods>
+}, VxeFlowDesignProps, VxeFlowDesignPrivateComputed, VxeFlowDesignMethods>
 
 export type VxeFlowDesignConstructor = VxeFlowDesignInstance
 

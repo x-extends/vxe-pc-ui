@@ -11,10 +11,10 @@ export interface TableKeyboardPrivateMethods<D = any> {
  }
 
 declare module '../grid' {
-  export type VxeGridMethods<D = any> = TableKeyboardMethods<D>
+  export interface VxeGridMethods<D = any> extends TableKeyboardMethods<D> { }
 }
 
 declare module '../table' {
-  export type VxeTableMethods<D = any> = TableKeyboardMethods<D>
-  export type VxeTablePrivateMethods<D = any> = TableKeyboardPrivateMethods<D>
+  export interface VxeTableMethods<D = any> extends TableKeyboardMethods<D> { }
+  export interface VxeTablePrivateMethods<D = any> extends TableKeyboardPrivateMethods<D> { }
 }

@@ -9,7 +9,7 @@ export type VxeFormViewComponent = DefineVxeComponentOptions<VxeFormViewProps>
 
 export type VxeFormViewInstance = DefineVxeComponentInstance<{
   reactData: FormViewReactData
-}, VxeFormViewProps, FormViewPrivateComputed, FormViewMethods>
+}, VxeFormViewProps, VxeFormViewPrivateComputed, VxeFormViewMethods>
 
 export type VxeFormViewConstructor = VxeFormViewInstance
 

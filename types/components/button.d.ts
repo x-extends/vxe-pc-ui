@@ -7,7 +7,7 @@ export type VxeButtonComponent = DefineVxeComponentOptions<VxeButtonProps>
 
 export type VxeButtonInstance = DefineVxeComponentInstance<{
   reactData: ButtonReactData
-}, VxeButtonProps, ButtonPrivateComputed, ButtonMethods>
+}, VxeButtonProps, VxeButtonPrivateComputed, VxeButtonMethods>
 
 export type VxeButtonConstructor = VxeButtonInstance
 

@@ -7,7 +7,7 @@ export type VxeRowComponent = DefineVxeComponentOptions<VxeRowProps>
 
 export type VxeRowInstance = DefineVxeComponentInstance<{
   reactData: RowReactData
-}, VxeRowProps, RowPrivateComputed, RowMethods>
+}, VxeRowProps, VxeRowPrivateComputed, VxeRowMethods>
 
 export type VxeRowConstructor = VxeRowInstance
 

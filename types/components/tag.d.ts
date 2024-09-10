@@ -7,7 +7,7 @@ export type VxeTagComponent = DefineVxeComponentOptions<VxeTagProps>
 
 export type VxeTagInstance = DefineVxeComponentInstance<{
   reactData: TagReactData
-}, VxeTagProps, TagPrivateComputed, TagMethods>
+}, VxeTagProps, VxeTagPrivateComputed, VxeTagMethods>
 
 export type VxeTagConstructor = VxeTagInstance
 

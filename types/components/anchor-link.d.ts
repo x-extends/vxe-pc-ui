@@ -9,7 +9,7 @@ export type VxeAnchorLinkComponent = DefineVxeComponentOptions<VxeAnchorLinkProp
 export type VxeAnchorLinkInstance = DefineVxeComponentInstance<{
   linkConfig: VxeAnchorLinkDefines.LinkConfig
   reactData: AnchorLinkReactData
-}, VxeAnchorLinkProps, AnchorLinkPrivateComputed, AnchorLinkMethods>
+}, VxeAnchorLinkProps, VxeAnchorLinkPrivateComputed, VxeAnchorLinkMethods>
 
 export type VxeAnchorLinkConstructor = VxeAnchorLinkInstance
 

@@ -7,7 +7,7 @@ export type VxeUploadComponent = DefineVxeComponentOptions<VxeUploadProps>
 
 export type VxeUploadInstance = DefineVxeComponentInstance<{
   reactData: UploadReactData
-}, VxeUploadProps, UploadPrivateComputed, UploadMethods>
+}, VxeUploadProps, VxeUploadPrivateComputed, VxeUploadMethods>
 
 export type VxeUploadConstructor = VxeUploadInstance
 

@@ -7,7 +7,7 @@ export type VxeCalendarComponent = DefineVxeComponentOptions<VxeCalendarProps>
 
 export type VxeCalendarInstance = DefineVxeComponentInstance<{
   reactData: CalendarReactData
-}, VxeCalendarProps, CalendarPrivateComputed, CalendarMethods>
+}, VxeCalendarProps, VxeCalendarPrivateComputed, VxeCalendarMethods>
 
 export type VxeCalendarConstructor = VxeCalendarInstance
 

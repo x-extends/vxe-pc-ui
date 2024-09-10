@@ -8,7 +8,7 @@ export type VxeFormDesignComponent = DefineVxeComponentOptions<VxeFormDesignProp
 
 export type VxeFormDesignInstance = DefineVxeComponentInstance<{
   reactData: FormDesignReactData
-}, VxeFormDesignProps, FormDesignPrivateComputed, FormDesignMethods>
+}, VxeFormDesignProps, VxeFormDesignPrivateComputed, VxeFormDesignMethods>
 
 export type VxeFormDesignConstructor = VxeFormDesignInstance
 

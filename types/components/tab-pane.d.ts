@@ -7,7 +7,7 @@ export type VxeTabPaneComponent = DefineVxeComponentOptions<VxeTabPaneProps>
 
 export type VxeTabPaneInstance = DefineVxeComponentInstance<{
   reactData: TabPaneReactData
-}, VxeTabPaneProps, TabPanePrivateComputed, TabPaneMethods>
+}, VxeTabPaneProps, VxeTabPanePrivateComputed, VxeTabPaneMethods>
 
 export type VxeTabPaneConstructor = VxeTabPaneInstance
 

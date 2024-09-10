@@ -7,7 +7,7 @@ export type VxeCardComponent = DefineVxeComponentOptions<VxeCardProps>
 
 export type VxeCardInstance = DefineVxeComponentInstance<{
   reactData: CardReactData
-}, VxeCardProps, CardPrivateComputed, CardMethods>
+}, VxeCardProps, VxeCardPrivateComputed, VxeCardMethods>
 
 export type VxeCardConstructor = VxeCardInstance
 

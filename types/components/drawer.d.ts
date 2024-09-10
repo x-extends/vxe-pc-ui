@@ -8,7 +8,7 @@ export type VxeDrawerComponent = DefineVxeComponentOptions<VxeDrawerProps>
 
 export type VxeDrawerInstance = DefineVxeComponentInstance<{
   reactData: DrawerReactData
-}, VxeDrawerProps, DrawerPrivateComputed, DrawerMethods>
+}, VxeDrawerProps, VxeDrawerPrivateComputed, VxeDrawerMethods>
 
 export type VxeDrawerConstructor = VxeDrawerInstance
 

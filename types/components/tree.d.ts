@@ -7,7 +7,7 @@ export type VxeTreeComponent = DefineVxeComponentOptions<VxeTreeProps>
 
 export type VxeTreeInstance = DefineVxeComponentInstance<{
   reactData: TreeReactData
-}, VxeTreeProps, TreePrivateComputed, TreeMethods>
+}, VxeTreeProps, VxeTreePrivateComputed, VxeTreeMethods>
 
 export type VxeTreeConstructor = VxeTreeInstance
 

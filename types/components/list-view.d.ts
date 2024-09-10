@@ -12,7 +12,7 @@ export type VxeListViewComponent = DefineVxeComponentOptions<VxeListViewProps>
 
 export type VxeListViewInstance = DefineVxeComponentInstance<{
   reactData: ListViewReactData
-}, VxeListViewProps, ListViewPrivateComputed, ListViewMethods>
+}, VxeListViewProps, VxeListViewPrivateComputed, VxeListViewMethods>
 
 export type VxeListViewConstructor = VxeListViewInstance
 

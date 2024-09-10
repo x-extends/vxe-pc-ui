@@ -8,7 +8,7 @@ export type VxeAnchorComponent = DefineVxeComponentOptions<VxeAnchorProps>
 
 export type VxeAnchorInstance = DefineVxeComponentInstance<{
   reactData: AnchorReactData
-}, VxeAnchorProps, AnchorPrivateComputed, AnchorMethods>
+}, VxeAnchorProps, VxeAnchorPrivateComputed, VxeAnchorMethods>
 
 export type VxeAnchorConstructor = VxeAnchorInstance
 

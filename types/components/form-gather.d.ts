@@ -8,7 +8,7 @@ export type VxeFormGatherComponent = DefineVxeComponentOptions<VxeFormGatherProp
 
 export type VxeFormGatherInstance = DefineVxeComponentInstance<{
   reactData: FormGatherReactData
-}, VxeFormGatherProps, FormGatherPrivateComputed, FormGatherMethods>
+}, VxeFormGatherProps, VxeFormGatherPrivateComputed, VxeFormGatherMethods>
 
 export type VxeFormGatherConstructor = VxeFormGatherInstance
 

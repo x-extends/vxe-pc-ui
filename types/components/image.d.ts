@@ -8,7 +8,7 @@ export type VxeImageComponent = DefineVxeComponentOptions<VxeImageProps>
 
 export type VxeImageInstance = DefineVxeComponentInstance<{
   reactData: ImageReactData
-}, VxeImageProps, ImagePrivateComputed, ImageMethods>
+}, VxeImageProps, VxeImagePrivateComputed, VxeImageMethods>
 
 export type VxeImageConstructor = VxeImageInstance
 

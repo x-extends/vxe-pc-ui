@@ -7,7 +7,7 @@ export type VxeNumberInputComponent = DefineVxeComponentOptions<VxeNumberInputPr
 
 export type VxeNumberInputInstance = DefineVxeComponentInstance<{
   reactData: NumberInputReactData
-}, VxeNumberInputProps, NumberInputPrivateComputed, NumberInputMethods>
+}, VxeNumberInputProps, VxeNumberInputPrivateComputed, VxeNumberInputMethods>
 
 export type VxeNumberInputConstructor = VxeNumberInputInstance
 

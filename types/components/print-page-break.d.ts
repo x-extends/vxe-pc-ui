@@ -7,7 +7,7 @@ export type VxePrintPageBreakComponent = DefineVxeComponentOptions<VxePrintPageB
 
 export type VxePrintPageBreakInstance = DefineVxeComponentInstance<{
   reactData: PrintPageBreakReactData
-}, VxePrintPageBreakProps, PrintPageBreakPrivateComputed, PrintPageBreakMethods>
+}, VxePrintPageBreakProps, VxePrintPageBreakPrivateComputed, VxePrintPageBreakMethods>
 
 export type VxePrintPageBreakConstructor = VxePrintPageBreakInstance
 

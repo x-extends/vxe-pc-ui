@@ -11,7 +11,7 @@ export type VxeColumnComponent = DefineVxeComponentOptions<VxeColumnProps>
 export type VxeColumnInstance = DefineVxeComponentInstance<{
   reactData: ColumnReactData
   columnConfig: any
-}, VxeColumnProps, ColumnPrivateComputed, ColumnMethods>
+}, VxeColumnProps, VxeColumnPrivateComputed, VxeColumnMethods>
 
 export type VxeColumnConstructor = VxeColumnInstance
 

@@ -9,7 +9,7 @@ export type VxeSelectComponent = DefineVxeComponentOptions<VxeSelectProps>
 
 export type VxeSelectInstance = DefineVxeComponentInstance<{
   reactData: SelectReactData
-}, VxeSelectProps, SelectPrivateComputed, SelectMethods>
+}, VxeSelectProps, VxeSelectPrivateComputed, VxeSelectMethods>
 
 export type VxeSelectConstructor = VxeSelectInstance
 
