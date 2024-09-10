@@ -71,7 +71,10 @@ function getResetValue (value: any, resetValue: any) {
 export default defineComponent({
   name: 'VxeForm',
   props: {
-    collapseStatus: { type: Boolean as PropType<VxeFormPropTypes.CollapseStatus>, default: true },
+    collapseStatus: {
+      type: Boolean as PropType<VxeFormPropTypes.CollapseStatus>,
+      default: true
+    },
     loading: Boolean as PropType<VxeFormPropTypes.Loading>,
     data: Object as PropType<VxeFormPropTypes.Data>,
     size: {
@@ -156,7 +159,8 @@ export default defineComponent({
     })
 
     const internalData = reactive<FormInternalData>({
-      tooltipTimeout: null,
+      meTimeout: undefined,
+      stTimeout: undefined,
       tooltipStore: {
         item: null,
         visible: false
@@ -455,15 +459,13 @@ export default defineComponent({
       })
     }
 
-    let showErrTime: number
-
     const beginValidate = (itemList: VxeFormDefines.ItemInfo[], type?: string, callback?: any): Promise<any> => {
       const { data, rules: formRules } = props
       const validOpts = computeValidOpts.value
       const validRest: any = {}
       const validFields: string[] = []
       const itemValids: any[] = []
-      clearTimeout(showErrTime)
+      clearTimeout(internalData.meTimeout)
       if (data && formRules) {
         itemList.forEach((item) => {
           const { field } = item
@@ -490,7 +492,7 @@ export default defineComponent({
           }
         }).catch(() => {
           return new Promise<void>((resolve) => {
-            showErrTime = window.setTimeout(() => {
+            internalData.meTimeout = window.setTimeout(() => {
               itemList.forEach((item) => {
                 if (item.errRule) {
                   item.showError = true
@@ -585,7 +587,7 @@ export default defineComponent({
       const overflowElem = (evnt.currentTarget as HTMLDivElement).children[0]
       const content = (overflowElem.textContent || '').trim()
       const isCellOverflow = overflowElem.scrollWidth > overflowElem.clientWidth
-      clearTimeout(internalData.tooltipTimeout)
+      clearTimeout(internalData.stTimeout)
       if (tooltipStore.item !== item) {
         closeTooltip()
       }
@@ -607,7 +609,7 @@ export default defineComponent({
         $tooltip.setActived(false)
       }
       if (tooltipOpts.enterable) {
-        internalData.tooltipTimeout = setTimeout(() => {
+        internalData.stTimeout = setTimeout(() => {
           $tooltip = refTooltip.value
           if ($tooltip && !$tooltip.isActived()) {
             closeTooltip()
@@ -719,8 +721,6 @@ export default defineComponent({
       ])
     }
 
-    $xeForm.renderVN = renderVN
-
     const staticItemFlag = ref(0)
     watch(() => reactData.staticItems.length, () => {
       staticItemFlag.value++
@@ -772,6 +772,8 @@ export default defineComponent({
     provide('$xeForm', $xeForm)
     provide('$xeFormGather', null)
     provide('$xeFormItem', null)
+
+    $xeForm.renderVN = renderVN
 
     return $xeForm
   },

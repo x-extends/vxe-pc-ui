@@ -135,14 +135,17 @@ export default defineComponent({
           ])
     }
 
-    $xeLoading.renderVN = renderVN
-
     watch(() => props.modelValue, () => {
       handleInit()
     })
 
     handleInit()
 
+    $xeLoading.renderVN = renderVN
+
     return $xeLoading
+  },
+  render () {
+    return this.renderVN()
   }
 })

@@ -110,6 +110,10 @@ export interface TreeSelectReactData {
   isActivated: boolean
 }
 
+export interface TreeSelectInternalData {
+  hpTimeout?: undefined | number
+}
+
 export interface TreeSelectMethods {
   dispatchEvent(type: ValueOf<VxeTreeSelectEmits>, params: Record<string, any>, evnt: Event | null): void
 }

@@ -122,7 +122,7 @@ export default defineComponent({
       const vSize = computeSize.value
       const isDisabled = computeIsDisabled.value
       const name = computeName.value
-      const checked = computeChecked.value
+      const isChecked = computeChecked.value
 
       return h('label', {
         class: ['vxe-radio', 'vxe-radio-button', {
@@ -135,7 +135,7 @@ export default defineComponent({
           class: 'vxe-radio--input',
           type: 'radio',
           name,
-          checked,
+          checked: isChecked,
           disabled: isDisabled,
           onChange: changeEvent,
           onClick: clickEvent

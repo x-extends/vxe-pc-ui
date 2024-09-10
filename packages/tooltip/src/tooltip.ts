@@ -5,23 +5,44 @@ import { getLastZIndex, nextZIndex } from '../../ui/src/utils'
 import { getAbsolutePos, getDomNode } from '../../ui/src/dom'
 import { getSlotVNs } from '../../ui/src/vn'
 
-import type { VxeTooltipPropTypes, VxeTooltipConstructor, VxeTooltipEmits, TooltipReactData, TooltipMethods, TooltipPrivateRef } from '../../../types'
+import type { VxeTooltipPropTypes, VxeTooltipConstructor, VxeTooltipEmits, TooltipInternalData, TooltipReactData, TooltipMethods, TooltipPrivateRef } from '../../../types'
 
 export default defineComponent({
   name: 'VxeTooltip',
   props: {
     modelValue: Boolean,
-    size: { type: String as PropType<VxeTooltipPropTypes.Size>, default: () => getConfig().tooltip.size || getConfig().size },
-    trigger: { type: String as PropType<VxeTooltipPropTypes.Trigger>, default: () => getConfig().tooltip.trigger || 'hover' },
-    theme: { type: String as PropType<VxeTooltipPropTypes.Theme>, default: () => getConfig().tooltip.theme || 'dark' },
-    content: { type: [String, Number] as PropType<VxeTooltipPropTypes.Content>, default: null },
+    size: {
+      type: String as PropType<VxeTooltipPropTypes.Size>,
+      default: () => getConfig().tooltip.size || getConfig().size
+    },
+    trigger: {
+      type: String as PropType<VxeTooltipPropTypes.Trigger>,
+      default: () => getConfig().tooltip.trigger || 'hover'
+    },
+    theme: {
+      type: String as PropType<VxeTooltipPropTypes.Theme>,
+      default: () => getConfig().tooltip.theme || 'dark'
+    },
+    content: {
+      type: [String, Number] as PropType<VxeTooltipPropTypes.Content>,
+      default: null
+    },
     useHTML: Boolean as PropType<VxeTooltipPropTypes.UseHTML>,
     zIndex: [String, Number] as PropType<VxeTooltipPropTypes.ZIndex>,
     popupClassName: [String, Function] as PropType<VxeTooltipPropTypes.PopupClassName>,
-    isArrow: { type: Boolean as PropType<VxeTooltipPropTypes.IsArrow>, default: true },
+    isArrow: {
+      type: Boolean as PropType<VxeTooltipPropTypes.IsArrow>,
+      default: true
+    },
     enterable: Boolean as PropType<VxeTooltipPropTypes.Enterable>,
-    enterDelay: { type: Number as PropType<VxeTooltipPropTypes.EnterDelay>, default: () => getConfig().tooltip.enterDelay },
-    leaveDelay: { type: Number as PropType<VxeTooltipPropTypes.LeaveDelay>, default: () => getConfig().tooltip.leaveDelay }
+    enterDelay: {
+      type: Number as PropType<VxeTooltipPropTypes.EnterDelay>,
+      default: () => getConfig().tooltip.enterDelay
+    },
+    leaveDelay: {
+      type: Number as PropType<VxeTooltipPropTypes.LeaveDelay>,
+      default: () => getConfig().tooltip.leaveDelay
+    }
   },
   emits: [
     'update:modelValue'
@@ -48,6 +69,9 @@ export default defineComponent({
       }
     })
 
+    const internalData: TooltipInternalData = {
+    }
+
     const refElem = ref() as Ref<HTMLDivElement>
 
     const refMaps: TooltipPrivateRef = {
@@ -59,6 +83,7 @@ export default defineComponent({
       props,
       context,
       reactData,
+      internalData,
       getRefMaps: () => refMaps
     } as unknown as VxeTooltipConstructor
 
@@ -162,11 +187,13 @@ export default defineComponent({
       return tooltipMethods.updatePlacement()
     }
 
-    const showDelayTip = XEUtils.debounce(() => {
-      if (reactData.tipActive) {
-        showTip()
-      }
-    }, props.enterDelay, { leading: false, trailing: true })
+    const handleDelayFn = () => {
+      internalData.showDelayTip = XEUtils.debounce(() => {
+        if (reactData.tipActive) {
+          showTip()
+        }
+      }, props.enterDelay, { leading: false, trailing: true })
+    }
 
     const handleVisible = (target: HTMLElement | null, content?: VxeTooltipPropTypes.Content) => {
       const contentSlot = slots.content
@@ -174,12 +201,15 @@ export default defineComponent({
         return nextTick()
       }
       if (target) {
+        const { showDelayTip } = internalData
         const { trigger, enterDelay } = props
         reactData.tipActive = true
         reactData.tipTarget = target
         reactData.tipContent = content
         if (enterDelay && trigger === 'hover') {
-          showDelayTip()
+          if (showDelayTip) {
+            showDelayTip()
+          }
         } else {
           return showTip()
         }
@@ -214,89 +244,21 @@ export default defineComponent({
           const el = refElem.value
           if (tipTarget && el) {
             updateTipStyle()
-            return nextTick().then(updateTipStyle)
+            return nextTick().then(() => {
+              updateTipStyle()
+            })
           }
         })
       },
       isActived () {
         return reactData.tipActive
       },
-      setActived (actived) {
-        reactData.tipActive = !!actived
+      setActived (active) {
+        reactData.tipActive = !!active
       }
     }
 
     Object.assign($xeTooltip, tooltipMethods)
-
-    watch(() => props.content, () => {
-      reactData.tipContent = props.content
-    })
-
-    watch(() => props.modelValue, (val) => {
-      if (!reactData.isUpdate) {
-        if (val) {
-          handleVisible(reactData.target, props.content)
-        } else {
-          tooltipMethods.close()
-        }
-      }
-      reactData.isUpdate = false
-    })
-
-    onMounted(() => {
-      nextTick(() => {
-        const { trigger, content, modelValue } = props
-        const wrapperElem = refElem.value
-        if (wrapperElem) {
-          const parentNode = wrapperElem.parentNode
-          if (parentNode) {
-            reactData.tipContent = content
-            reactData.tipZindex = nextZIndex()
-            XEUtils.arrayEach(wrapperElem.children, (elem, index) => {
-              if (index > 1) {
-                parentNode.insertBefore(elem, wrapperElem)
-                if (!reactData.target) {
-                  reactData.target = elem as HTMLElement
-                }
-              }
-            })
-            parentNode.removeChild(wrapperElem)
-            const { target } = reactData
-            if (target) {
-              if (trigger === 'hover') {
-                target.onmouseenter = targetMouseenterEvent
-                target.onmouseleave = targetMouseleaveEvent
-              } else if (trigger === 'click') {
-                target.onclick = clickEvent
-              }
-            }
-            if (modelValue) {
-              handleVisible(target, content)
-            }
-          }
-        }
-      })
-    })
-
-    onBeforeUnmount(() => {
-      const { trigger } = props
-      const { target } = reactData
-      const wrapperElem = refElem.value
-      if (target) {
-        if (trigger === 'hover') {
-          target.onmouseenter = null
-          target.onmouseleave = null
-        } else if (trigger === 'click') {
-          target.onclick = null
-        }
-      }
-      if (wrapperElem) {
-        const parentNode = wrapperElem.parentNode
-        if (parentNode) {
-          parentNode.removeChild(wrapperElem)
-        }
-      }
-    })
 
     const renderContent = () => {
       const { useHTML } = props
@@ -354,6 +316,78 @@ export default defineComponent({
         ...(defaultSlot ? getSlotVNs(defaultSlot({})) : [])
       ])
     }
+
+    watch(() => props.enterDelay, () => {
+      handleDelayFn()
+    })
+
+    watch(() => props.content, (val) => {
+      reactData.tipContent = val
+    })
+
+    watch(() => props.modelValue, (val) => {
+      if (!reactData.isUpdate) {
+        if (val) {
+          handleVisible(reactData.target, props.content)
+        } else {
+          tooltipMethods.close()
+        }
+      }
+      reactData.isUpdate = false
+    })
+
+    onMounted(() => {
+      nextTick(() => {
+        const { trigger, content } = props
+        const wrapperElem = refElem.value
+        if (wrapperElem) {
+          const parentNode = wrapperElem.parentNode
+          if (parentNode) {
+            reactData.tipContent = content
+            reactData.tipZindex = nextZIndex()
+            XEUtils.arrayEach(wrapperElem.children, (elem, index) => {
+              if (index > 1) {
+                parentNode.insertBefore(elem, wrapperElem)
+                if (!reactData.target) {
+                  reactData.target = elem as HTMLElement
+                }
+              }
+            })
+            parentNode.removeChild(wrapperElem)
+            const { target } = reactData
+            if (target) {
+              if (trigger === 'hover') {
+                target.onmouseenter = targetMouseenterEvent
+                target.onmouseleave = targetMouseleaveEvent
+              } else if (trigger === 'click') {
+                target.onclick = clickEvent
+              }
+            }
+            if (props.modelValue) {
+              handleVisible(target, content)
+            }
+          }
+        }
+      })
+    })
+
+    onBeforeUnmount(() => {
+      const { target } = reactData
+      const wrapperElem = refElem.value
+      if (target) {
+        target.onmouseenter = null
+        target.onmouseleave = null
+        target.onclick = null
+      }
+      if (wrapperElem) {
+        const parentNode = wrapperElem.parentNode
+        if (parentNode) {
+          parentNode.removeChild(wrapperElem)
+        }
+      }
+    })
+
+    handleDelayFn()
 
     $xeTooltip.renderVN = renderVN
 

@@ -92,7 +92,7 @@
 
 [👀 Vxe Table](https://vxetable.cn)  
 
-* [x] table 表格
+* [x] table 表格-基础表格
 * [x] column 表格-列
 * [x] colgroup 表格-分组列
 * [x] toolbar 表格-工具栏
@@ -109,8 +109,89 @@ npm install vxe-pc-ui
 import VxeUI from 'vxe-pc-ui'
 import 'vxe-pc-ui/lib/style.css'
 // ...
+// ...
+import VxeTable from 'vxe-table'
+import 'vxe-table/lib/style.css'
+// ...
 
-createApp(App).use(VxeUI).mount('#app')
+createApp(App).use(VxeUI).use(VxeTable).mount('#app')
+```
+
+### CDN
+
+使用第三方 CDN 方式记得锁定版本号，避免受到非兼容性更新的影响  
+***不建议将第三方的 CDN 地址用于正式环境，因为该连接随时都可能会失效***  
+
+```HTML
+<!-- style -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/vxe-pc-ui/lib/style.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/vxe-table@next/lib/style.css">
+<!-- vue -->
+<script src="https://cdn.jsdelivr.net/npm/vue"></script>
+<!-- table -->
+<script src="https://cdn.jsdelivr.net/npm/xe-utils"></script>
+<script src="https://cdn.jsdelivr.net/npm/vxe-pc-ui"></script>
+<script src="https://cdn.jsdelivr.net/npm/vxe-table@next"></script>
+```
+
+## 示例
+
+```html
+<template>
+  <div>
+    <vxe-form
+      ref="formRef"
+      :data="formData"
+      @submit="submitEvent">
+      <vxe-form-item title="名称" field="name" span="12" :item-render="{}">
+        <template #default="params">
+          <vxe-input v-model="formData.name""></vxe-input>
+        </template>
+      </vxe-form-item>
+      <vxe-form-item title="角色" field="role" span="12" :item-render="{}">
+        <template #default="params">
+          <vxe-input v-model="formData.role"></vxe-input>
+        </template>
+      </vxe-form-item>
+      <vxe-form-item title="年龄" field="age" span="12" :item-render="{}">
+        <template #default="params">
+          <vxe-input v-model="formData.age"></vxe-input>
+        </template>
+      </vxe-form-item>
+      <vxe-form-item align="center" span="24" :item-render="{}">
+        <template #default>
+          <vxe-button type="submit" status="primary">提交</vxe-button>
+          <vxe-button type="reset">重置</vxe-button>
+        </template>
+      </vxe-form-item>
+    </vxe-form>
+  </div>
+</template>
+
+<script lang="ts" setup>
+import { ref } from 'vue'
+import { VxeUI, VxeFormInstance, VxeFormEvents } from 'vxe-pc-ui'
+
+interface FormDataVO {
+  name: string
+  nickname: string
+  sex: string
+  role: string
+}
+
+const formRef = ref<VxeFormInstance<FormDataVO>>()
+
+const formData = ref<FormDataVO>({
+  name: '',
+  nickname: '',
+  sex: '',
+  role: ''
+})
+
+const submitEvent: VxeFormEvents.Submit = () => {
+  VxeUI.modal.message({ content: '保存成功', status: 'success' })
+}
+</script>
 ```
 
 ## QQ 交流群

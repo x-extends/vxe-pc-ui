@@ -107,9 +107,9 @@ export default defineComponent({
       ])
     }
 
-    $xeAnchorLink.renderVN = renderVN
-
     provide('$xeAnchorLink', $xeAnchorLink)
+
+    $xeAnchorLink.renderVN = renderVN
 
     return $xeAnchorLink
   },

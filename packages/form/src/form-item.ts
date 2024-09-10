@@ -58,7 +58,10 @@ export const formItemProps = {
   titleSuffix: Object as PropType<VxeFormItemPropTypes.TitleSuffix>,
   resetValue: { default: null },
   visibleMethod: Function as PropType<VxeFormItemPropTypes.VisibleMethod>,
-  visible: { type: Boolean as PropType<VxeFormItemPropTypes.Visible>, default: null },
+  visible: {
+    type: Boolean as PropType<VxeFormItemPropTypes.Visible>,
+    default: null
+  },
   folding: Boolean as PropType<VxeFormItemPropTypes.Folding>,
   collapseNode: Boolean as PropType<VxeFormItemPropTypes.CollapseNode>,
   itemRender: Object as PropType<VxeFormItemPropTypes.ItemRender>,
@@ -71,7 +74,7 @@ export default defineComponent({
   setup (props, { slots }) {
     const refElem = ref() as Ref<HTMLDivElement>
     const $xeForm = inject('$xeForm', {} as VxeFormConstructor & VxeFormPrivateMethods)
-    const formGather = inject<XEFormItemProvide | null>('$xeFormGather', null)
+    const $xeFormGather = inject<XEFormItemProvide | null>('$xeFormGather', null)
     const formItem = reactive(createItem($xeForm, props))
     formItem.slots = slots
 
@@ -81,7 +84,8 @@ export default defineComponent({
     watchItem(props, formItem)
 
     onMounted(() => {
-      assembleItem($xeForm, refElem.value, formItem, formGather)
+      const elem = refElem.value
+      assembleItem($xeForm, elem, formItem, $xeFormGather)
     })
 
     onUnmounted(() => {
@@ -89,9 +93,10 @@ export default defineComponent({
     })
 
     const renderItem = ($xeForm: VxeFormConstructor & VxeFormPrivateMethods, item: VxeFormDefines.ItemInfo) => {
-      const { props, reactData } = $xeForm
-      const { data, rules, readonly, disabled, titleBold: allTitleBold, titleAlign: allTitleAlign, titleWidth: allTitleWidth, titleColon: allTitleColon, titleAsterisk: allTitleAsterisk, titleOverflow: allTitleOverflow, vertical: allVertical, padding: allPadding } = props
-      const { collapseAll } = reactData
+      const formProps = $xeForm.props
+      const formReactData = $xeForm.reactData
+      const { data, rules, readonly, disabled, titleBold: allTitleBold, titleAlign: allTitleAlign, titleWidth: allTitleWidth, titleColon: allTitleColon, titleAsterisk: allTitleAsterisk, titleOverflow: allTitleOverflow, vertical: allVertical, padding: allPadding } = formProps
+      const { collapseAll } = formReactData
       const { computeValidOpts } = $xeForm.getComputeMaps()
       const validOpts = computeValidOpts.value
       const { slots, title, visible, folding, field, collapseNode, itemRender, showError, errRule, className, titleOverflow, vertical, padding, showTitle, contentClassName, contentStyle, titleClassName, titleStyle } = item
@@ -104,8 +109,8 @@ export default defineComponent({
       const itemTitleStyle = compConf ? (compConf.formItemTitleStyle || compConf.itemTitleStyle) : null
       const defaultSlot = slots ? slots.default : null
       const titleSlot = slots ? slots.title : null
-      const span = item.span || props.span
-      const align = item.align || props.align
+      const span = item.span || formProps.span
+      const align = item.align || formProps.align
       const itemPadding = XEUtils.eqNull(padding) ? allPadding : padding
       const itemVertical = XEUtils.eqNull(vertical) ? allVertical : vertical
       const titleBold = XEUtils.eqNull(item.titleBold) ? allTitleBold : item.titleBold
@@ -243,8 +248,8 @@ export default defineComponent({
     }
 
     const renderVN = () => {
-      const formProps = $xeForm ? $xeForm.props : null
-      return formProps && formProps.customLayout
+      const customLayout = $xeForm ? $xeForm.props.customLayout : false
+      return customLayout
         ? renderItem($xeForm, formItem as unknown as VxeFormDefines.ItemInfo)
         : h('div', {
           ref: refElem

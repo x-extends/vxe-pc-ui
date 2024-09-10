@@ -45,7 +45,8 @@ export function isActiveItem ($xeForm: VxeFormConstructor, formItem: VxeFormDefi
   if (!visibleMethod) {
     return true
   }
-  const { data } = $xeForm.props
+  const formProps = $xeForm.props
+  const { data } = formProps
   return visibleMethod({ data, field, property: field, item: formItem, $form: $xeForm, $grid: $xeForm.xegrid })
 }
 

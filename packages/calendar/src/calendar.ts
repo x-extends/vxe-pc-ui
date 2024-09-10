@@ -5,31 +5,55 @@ import { toCssUnit } from '../..//ui/src/dom'
 import VxeButtonComponent from '../../button/src/button'
 import XEUtils from 'xe-utils'
 
-import type { VxeCalendarConstructor, VxeCalendarEmits, CalendarReactData, CalendarMethods, VxeCalendarPropTypes, CalendarPrivateRef, VxeDatePickerDefines } from '../../../types'
+import type { VxeCalendarConstructor, VxeCalendarEmits, CalendarInternalData, CalendarReactData, CalendarMethods, VxeCalendarPropTypes, CalendarPrivateRef, VxeDatePickerDefines } from '../../../types'
 
 export default defineComponent({
   name: 'VxeCalendar',
   props: {
     modelValue: [String, Number, Date] as PropType<VxeCalendarPropTypes.ModelValue>,
-    type: { type: String as PropType<VxeCalendarPropTypes.Type>, default: 'date' },
+    type: {
+      type: String as PropType<VxeCalendarPropTypes.Type>,
+      default: 'date'
+    },
     className: String as PropType<VxeCalendarPropTypes.ClassName>,
-    size: { type: String as PropType<VxeCalendarPropTypes.Size>, default: () => getConfig().calendar.size || getConfig().size },
+    size: {
+      type: String as PropType<VxeCalendarPropTypes.Size>,
+      default: () => getConfig().calendar.size || getConfig().size
+    },
     multiple: Boolean as PropType<VxeCalendarPropTypes.Multiple>,
 
     width: [String, Number] as PropType<VxeCalendarPropTypes.Width>,
     height: [String, Number] as PropType<VxeCalendarPropTypes.Height>,
 
     // date、week、month、quarter、year
-    minDate: { type: [String, Number, Date] as PropType<VxeCalendarPropTypes.MinDate>, default: () => getConfig().calendar.minDate },
-    maxDate: { type: [String, Number, Date] as PropType<VxeCalendarPropTypes.MaxDate>, default: () => getConfig().calendar.maxDate },
-    startDay: { type: [String, Number] as PropType<VxeCalendarPropTypes.StartDay>, default: () => getConfig().calendar.startDay },
+    minDate: {
+      type: [String, Number, Date] as PropType<VxeCalendarPropTypes.MinDate>,
+      default: () => getConfig().calendar.minDate
+    },
+    maxDate: {
+      type: [String, Number, Date] as PropType<VxeCalendarPropTypes.MaxDate>,
+      default: () => getConfig().calendar.maxDate
+    },
+    startDay: {
+      type: [String, Number] as PropType<VxeCalendarPropTypes.StartDay>,
+      default: () => getConfig().calendar.startDay
+    },
     labelFormat: String as PropType<VxeCalendarPropTypes.LabelFormat>,
     valueFormat: String as PropType<VxeCalendarPropTypes.ValueFormat>,
-    festivalMethod: { type: Function as PropType<VxeCalendarPropTypes.FestivalMethod>, default: () => getConfig().calendar.festivalMethod },
-    disabledMethod: { type: Function as PropType<VxeCalendarPropTypes.DisabledMethod>, default: () => getConfig().calendar.disabledMethod },
+    festivalMethod: {
+      type: Function as PropType<VxeCalendarPropTypes.FestivalMethod>,
+      default: () => getConfig().calendar.festivalMethod
+    },
+    disabledMethod: {
+      type: Function as PropType<VxeCalendarPropTypes.DisabledMethod>,
+      default: () => getConfig().calendar.disabledMethod
+    },
 
     // week
-    selectDay: { type: [String, Number] as PropType<VxeCalendarPropTypes.SelectDay>, default: () => getConfig().calendar.selectDay }
+    selectDay: {
+      type: [String, Number] as PropType<VxeCalendarPropTypes.SelectDay>,
+      default: () => getConfig().calendar.selectDay
+    }
   },
   emits: [
     'update:modelValue',
@@ -46,10 +70,6 @@ export default defineComponent({
 
     const { computeSize } = useSize(props)
 
-    const yearSize = 12
-    const monthSize = 20
-    const quarterSize = 8
-
     const reactData = reactive<CalendarReactData>({
       selectValue: props.modelValue,
       inputValue: props.modelValue,
@@ -60,7 +80,28 @@ export default defineComponent({
       currentDate: null
     })
 
+    const internalData: CalendarInternalData = {
+      yearSize: 12,
+      monthSize: 20,
+      quarterSize: 8
+    }
+
     const refElem = ref() as Ref<HTMLDivElement>
+
+    const refMaps: CalendarPrivateRef = {
+      refElem
+    }
+
+    const $xeCalendar = {
+      xID,
+      props,
+      context,
+      reactData,
+      internalData,
+      getRefMaps: () => refMaps
+    } as unknown as VxeCalendarConstructor
+
+    let calendarMethods = {} as CalendarMethods
 
     const computeCalendarStyle = computed(() => {
       const { height, width } = props
@@ -73,24 +114,6 @@ export default defineComponent({
       }
       return stys
     })
-
-    const refMaps: CalendarPrivateRef = {
-      refElem
-    }
-
-    const $xeCalendar = {
-      xID,
-      props,
-      context,
-      reactData,
-      getRefMaps: () => refMaps
-    } as unknown as VxeCalendarConstructor
-
-    let calendarMethods = {} as CalendarMethods
-
-    const parseDate = (value: VxeCalendarPropTypes.ModelValue, format: string) => {
-      return XEUtils.toStringDate(value, format)
-    }
 
     const computeIsDisabled = computed(() => {
       return false
@@ -198,6 +221,7 @@ export default defineComponent({
 
     const computeYearList = computed(() => {
       const { selectMonth, currentDate } = reactData
+      const { yearSize } = internalData
       const years: VxeDatePickerDefines.DateYearItem[] = []
       if (selectMonth && currentDate) {
         const currFullYear = currentDate.getFullYear()
@@ -295,6 +319,7 @@ export default defineComponent({
 
     const computeQuarterList = computed(() => {
       const { selectMonth, currentDate } = reactData
+      const { quarterSize } = internalData
       const quarters: VxeDatePickerDefines.DateQuarterItem[] = []
       if (selectMonth && currentDate) {
         const currFullYear = currentDate.getFullYear()
@@ -326,6 +351,7 @@ export default defineComponent({
 
     const computeMonthList = computed(() => {
       const { selectMonth, currentDate } = reactData
+      const { monthSize } = internalData
       const months: VxeDatePickerDefines.DateMonthItem[] = []
       if (selectMonth && currentDate) {
         const currFullYear = currentDate.getFullYear()
@@ -410,7 +436,11 @@ export default defineComponent({
       })
     })
 
-    const emitModel = (value: string, evnt: Event | { type: string }) => {
+    const parseDate = (value: VxeCalendarPropTypes.ModelValue, format: string) => {
+      return XEUtils.toStringDate(value, format)
+    }
+
+    const handleChange = (value: string, evnt: Event | { type: string }) => {
       reactData.inputValue = value
       emit('update:modelValue', value)
       if (XEUtils.toValueString(props.modelValue) !== value) {
@@ -495,14 +525,14 @@ export default defineComponent({
         const dateMultipleValue = computeDateMultipleValue.value
         // 如果是日期类型
         if (dateMultipleValue.some(val => XEUtils.isEqual(val, inpVal))) {
-          emitModel(dateMultipleValue.filter(val => !XEUtils.isEqual(val, inpVal)).join(','), { type: 'update' })
+          handleChange(dateMultipleValue.filter(val => !XEUtils.isEqual(val, inpVal)).join(','), { type: 'update' })
         } else {
-          emitModel(dateMultipleValue.concat([inpVal]).join(','), { type: 'update' })
+          handleChange(dateMultipleValue.concat([inpVal]).join(','), { type: 'update' })
         }
       } else {
         // 如果为单选
         if (!XEUtils.isEqual(modelValue, inpVal)) {
-          emitModel(inpVal, { type: 'update' })
+          handleChange(inpVal, { type: 'update' })
         }
       }
     }
@@ -530,6 +560,7 @@ export default defineComponent({
     const datePrevEvent = (evnt: Event) => {
       const { type } = props
       const { datePanelType, selectMonth } = reactData
+      const { yearSize } = internalData
       const isDisabledPrevDateBtn = computeIsDisabledPrevDateBtn.value
       if (!isDisabledPrevDateBtn) {
         if (type === 'year') {
@@ -564,6 +595,7 @@ export default defineComponent({
     const dateNextEvent = (evnt: Event) => {
       const { type } = props
       const { datePanelType, selectMonth } = reactData
+      const { yearSize } = internalData
       const isDisabledNextDateBtn = computeIsDisabledNextDateBtn.value
       if (!isDisabledNextDateBtn) {
         if (type === 'year') {
@@ -720,13 +752,13 @@ export default defineComponent({
             }]
           }, extraItem && extraItem.label
             ? [
-                h('span', label),
+                h('span', `${label || ''}`),
                 h('span', {
                   class: ['vxe-calendar--date-label--extra', extraItem.important ? 'is-important' : '', extraItem.className],
                   style: extraItem.style
                 }, XEUtils.toValueString(extraItem.label))
               ]
-            : label)
+            : [`${label || ''}`])
         ]
         const festivalLabel = festivalItem.label
         if (festivalLabel) {
@@ -749,7 +781,7 @@ export default defineComponent({
         }
         return labels
       }
-      return label
+      return `${label || ''}`
     }
 
     const renderDateDayTable = () => {

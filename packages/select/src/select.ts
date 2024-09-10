@@ -1,12 +1,12 @@
 import { defineComponent, h, Teleport, PropType, ref, Ref, inject, computed, provide, onUnmounted, reactive, nextTick, watch, onMounted, createCommentVNode } from 'vue'
 import XEUtils from 'xe-utils'
-import { getConfig, getIcon, getI18n, globalEvents, GLOBAL_EVENT_KEYS, createEvent, useSize, VxeComponentSlotType } from '../../ui'
+import { getConfig, getIcon, getI18n, globalEvents, GLOBAL_EVENT_KEYS, createEvent, useSize } from '../../ui'
 import { getEventTargetNode, getAbsolutePos } from '../../ui/src/dom'
 import { getLastZIndex, nextZIndex, getFuncText } from '../../ui/src/utils'
 import VxeInputComponent from '../../input/src/input'
 import { getSlotVNs } from '../../ui/src/vn'
 
-import type { VxeSelectPropTypes, VxeSelectConstructor, SelectReactData, VxeSelectEmits, VxeInputConstructor, SelectMethods, SelectPrivateRef, VxeSelectMethods, VxeOptgroupProps, VxeOptionProps, VxeTableConstructor, VxeTablePrivateMethods, VxeFormDefines, VxeFormConstructor, VxeFormPrivateMethods, VxeModalConstructor, VxeModalMethods } from '../../../types'
+import type { VxeSelectPropTypes, VxeSelectConstructor, SelectInternalData, SelectReactData, VxeSelectEmits, VxeComponentSlotType, VxeInputConstructor, SelectMethods, SelectPrivateRef, VxeSelectMethods, VxeOptgroupProps, VxeOptionProps, VxeTableConstructor, VxeDrawerConstructor, VxeDrawerMethods, VxeTablePrivateMethods, VxeFormDefines, VxeFormConstructor, VxeFormPrivateMethods, VxeModalConstructor, VxeModalMethods } from '../../../types'
 
 function isOptionVisible (option: any) {
   return option.visible !== false
@@ -32,7 +32,10 @@ export default defineComponent({
       default: null
     },
     multiple: Boolean as PropType<VxeSelectPropTypes.Multiple>,
-    multiCharOverflow: { type: [Number, String] as PropType<VxeSelectPropTypes.MultiCharOverflow>, default: () => getConfig().select.multiCharOverflow },
+    multiCharOverflow: {
+      type: [Number, String] as PropType<VxeSelectPropTypes.MultiCharOverflow>,
+      default: () => getConfig().select.multiCharOverflow
+    },
     prefixIcon: String as PropType<VxeSelectPropTypes.PrefixIcon>,
     placement: String as PropType<VxeSelectPropTypes.Placement>,
     options: Array as PropType<VxeSelectPropTypes.Options>,
@@ -42,21 +45,31 @@ export default defineComponent({
     optionConfig: Object as PropType<VxeSelectPropTypes.OptionConfig>,
     className: [String, Function] as PropType<VxeSelectPropTypes.ClassName>,
     popupClassName: [String, Function] as PropType<VxeSelectPropTypes.PopupClassName>,
-    max: { type: [String, Number] as PropType<VxeSelectPropTypes.Max>, default: null },
-    size: { type: String as PropType<VxeSelectPropTypes.Size>, default: () => getConfig().select.size || getConfig().size },
+    max: {
+      type: [String, Number] as PropType<VxeSelectPropTypes.Max>,
+      default: null
+    },
+    size: {
+      type: String as PropType<VxeSelectPropTypes.Size>,
+      default: () => getConfig().select.size || getConfig().size
+    },
     filterable: Boolean as PropType<VxeSelectPropTypes.Filterable>,
     filterMethod: Function as PropType<VxeSelectPropTypes.FilterMethod>,
     remote: Boolean as PropType<VxeSelectPropTypes.Remote>,
     remoteMethod: Function as PropType<VxeSelectPropTypes.RemoteMethod>,
     emptyText: String as PropType<VxeSelectPropTypes.EmptyText>,
-    // 已废弃，被 option-config.keyField 替换
-    optionId: { type: String as PropType<VxeSelectPropTypes.OptionId>, default: () => getConfig().select.optionId },
-    // 已废弃，被 option-config.useKey 替换
-    optionKey: Boolean as PropType<VxeSelectPropTypes.OptionKey>,
     transfer: {
       type: Boolean as PropType<VxeSelectPropTypes.Transfer>,
       default: null
-    }
+    },
+
+    // 已废弃，被 option-config.keyField 替换
+    optionId: {
+      type: String as PropType<VxeSelectPropTypes.OptionId>,
+      default: () => getConfig().select.optionId
+    },
+    // 已废弃，被 option-config.useKey 替换
+    optionKey: Boolean as PropType<VxeSelectPropTypes.OptionKey>
   },
   emits: [
     'update:modelValue',
@@ -69,9 +82,10 @@ export default defineComponent({
   setup (props, context) {
     const { slots, emit } = context
 
-    const $xeModal = inject<VxeModalConstructor & VxeModalMethods | null>('$xeModal', null)
-    const $xeTable = inject<VxeTableConstructor & VxeTablePrivateMethods | null>('$xeTable', null)
-    const $xeForm = inject<VxeFormConstructor & VxeFormPrivateMethods | null>('$xeForm', null)
+    const $xeModal = inject<(VxeModalConstructor & VxeModalMethods)| null>('$xeModal', null)
+    const $xeDrawer = inject<(VxeDrawerConstructor & VxeDrawerMethods) | null>('$xeDrawer', null)
+    const $xeTable = inject<(VxeTableConstructor & VxeTablePrivateMethods) | null>('$xeTable', null)
+    const $xeForm = inject<(VxeFormConstructor & VxeFormPrivateMethods)| null>('$xeForm', null)
     const formItemInfo = inject<VxeFormDefines.ProvideItemInfo | null>('xeFormItemInfo', null)
 
     const xID = XEUtils.uniqueId()
@@ -99,6 +113,10 @@ export default defineComponent({
       searchLoading: false
     })
 
+    const internalData: SelectInternalData = {
+      hpTimeout: undefined
+    }
+
     const refElem = ref() as Ref<HTMLDivElement>
     const refInput = ref() as Ref<VxeInputConstructor>
     const refInpSearch = ref() as Ref<VxeInputConstructor>
@@ -114,6 +132,7 @@ export default defineComponent({
       props,
       context,
       reactData,
+      internalData,
       getRefMaps: () => refMaps
     } as unknown as VxeSelectConstructor & VxeSelectMethods
 
@@ -148,7 +167,7 @@ export default defineComponent({
         if (XEUtils.isBoolean(globalTransfer)) {
           return globalTransfer
         }
-        if ($xeTable || $xeModal || $xeForm) {
+        if ($xeTable || $xeModal || $xeDrawer || $xeForm) {
           return true
         }
       }
@@ -168,11 +187,11 @@ export default defineComponent({
     })
 
     const computePropsOpts = computed(() => {
-      return props.optionProps || {}
+      return Object.assign({}, props.optionProps)
     })
 
     const computeGroupPropsOpts = computed(() => {
-      return props.optionGroupProps || {}
+      return Object.assign({}, props.optionGroupProps)
     })
 
     const computeLabelField = computed(() => {
@@ -213,6 +232,28 @@ export default defineComponent({
 
     const computeMultiMaxCharNum = computed(() => {
       return XEUtils.toNumber(props.multiCharOverflow)
+    })
+
+    const computeSelectLabel = computed(() => {
+      const { modelValue, multiple, remote } = props
+      const multiMaxCharNum = computeMultiMaxCharNum.value
+      if (modelValue && multiple) {
+        const vals = XEUtils.isArray(modelValue) ? modelValue : [modelValue]
+        if (remote) {
+          return vals.map(val => getRemoteSelectLabel(val)).join(', ')
+        }
+        return vals.map((val) => {
+          const label = getSelectLabel(val)
+          if (multiMaxCharNum > 0 && label.length > multiMaxCharNum) {
+            return `${label.substring(0, multiMaxCharNum)}...`
+          }
+          return label
+        }).join(', ')
+      }
+      if (remote) {
+        return getRemoteSelectLabel(modelValue)
+      }
+      return getSelectLabel(modelValue)
     })
 
     const callSlot = <T>(slotFunc: ((params: T) => VxeComponentSlotType | VxeComponentSlotType[]) | string | null, params: T) => {
@@ -280,28 +321,6 @@ export default defineComponent({
       const item = findOption(value)
       return XEUtils.toValueString(item ? item[labelField as 'label'] : value)
     }
-
-    const computeSelectLabel = computed(() => {
-      const { modelValue, multiple, remote } = props
-      const multiMaxCharNum = computeMultiMaxCharNum.value
-      if (modelValue && multiple) {
-        const vals = XEUtils.isArray(modelValue) ? modelValue : [modelValue]
-        if (remote) {
-          return vals.map(val => getRemoteSelectLabel(val)).join(', ')
-        }
-        return vals.map((val) => {
-          const label = getSelectLabel(val)
-          if (multiMaxCharNum > 0 && label.length > multiMaxCharNum) {
-            return `${label.substring(0, multiMaxCharNum)}...`
-          }
-          return label
-        }).join(', ')
-      }
-      if (remote) {
-        return getRemoteSelectLabel(modelValue)
-      }
-      return getSelectLabel(modelValue)
-    })
 
     const getOptkey = () => {
       const optionOpts = computeOptionOpts.value
@@ -473,13 +492,15 @@ export default defineComponent({
       })
     }
 
-    let hidePanelTimeout: number
-
     const showOptionPanel = () => {
       const { loading, filterable } = props
+      const { hpTimeout } = internalData
       const isDisabled = computeIsDisabled.value
       if (!loading && !isDisabled) {
-        clearTimeout(hidePanelTimeout)
+        if (hpTimeout) {
+          clearTimeout(hpTimeout)
+          internalData.hpTimeout = undefined
+        }
         if (!reactData.initialized) {
           reactData.initialized = true
         }
@@ -507,14 +528,14 @@ export default defineComponent({
       reactData.searchValue = ''
       reactData.searchLoading = false
       reactData.visiblePanel = false
-      hidePanelTimeout = window.setTimeout(() => {
+      internalData.hpTimeout = window.setTimeout(() => {
         reactData.isAniVisible = false
       }, 350)
     }
 
     const changeEvent = (evnt: Event, selectValue: any) => {
+      emit('update:modelValue', selectValue)
       if (selectValue !== props.modelValue) {
-        emit('update:modelValue', selectValue)
         selectMethods.dispatchEvent('change', { value: selectValue }, evnt)
         // 自动更新校验状态
         if ($xeForm && formItemInfo) {
@@ -753,19 +774,25 @@ export default defineComponent({
       reactData.isActivated = true
     }
 
-    const triggerSearchEvent = XEUtils.debounce(function () {
+    const handleSearchEvent = () => {
       const { remote, remoteMethod } = props
       const { searchValue } = reactData
       if (remote && remoteMethod) {
         reactData.searchLoading = true
-        Promise.resolve(remoteMethod({ searchValue })).then(() => nextTick()).catch(() => nextTick()).finally(() => {
-          reactData.searchLoading = false
-          refreshOption()
-        })
+        Promise.resolve(
+          remoteMethod({ searchValue })
+        ).then(() => nextTick())
+          .catch(() => nextTick())
+          .finally(() => {
+            reactData.searchLoading = false
+            refreshOption()
+          })
       } else {
         refreshOption()
       }
-    }, 350, { trailing: true })
+    }
+
+    const triggerSearchEvent = XEUtils.debounce(handleSearchEvent, 350, { trailing: true })
 
     const togglePanelEvent = (params: any) => {
       const { $event } = params
@@ -978,7 +1005,7 @@ export default defineComponent({
           }, defaultSlot ? defaultSlot({}) : []),
           h('span', {
             class: 'vxe-select-label'
-          }, selectLabel)
+          }, [selectLabel])
         ])
       }
       return h('div', {
@@ -1078,8 +1105,6 @@ export default defineComponent({
       ])
     }
 
-    $xeSelect.renderVN = renderVN
-
     watch(() => reactData.staticOptions, (value) => {
       if (value.some((item) => item.options && item.options.length)) {
         reactData.fullOptionList = []
@@ -1127,6 +1152,8 @@ export default defineComponent({
     })
 
     provide('$xeSelect', $xeSelect)
+
+    $xeSelect.renderVN = renderVN
 
     return $xeSelect
   },

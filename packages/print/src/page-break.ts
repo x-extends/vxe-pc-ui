@@ -1,15 +1,16 @@
 import { defineComponent, ref, h, reactive, inject, onMounted, onUnmounted, createCommentVNode } from 'vue'
 import XEUtils from 'xe-utils'
+import { createEvent } from '../../ui'
 import { assemblePageBreak, destroyPageBreak } from './util'
 
-import type { PrintPageBreakReactData, PrintPageBreakPrivateRef, VxePrintPageBreakEmits, VxePrintDefines, VxePrintPageBreakPrivateComputed, VxePrintConstructor, VxePrintPrivateMethods, VxePrintPageBreakConstructor, VxePrintPageBreakPrivateMethods } from '../../../types'
+import type { PrintPageBreakReactData, PrintPageBreakPrivateRef, ValueOf, PrintPageBreakPrivateMethods, PrintPageBreakMethods, VxePrintPageBreakEmits, VxePrintDefines, VxePrintPageBreakPrivateComputed, VxePrintConstructor, VxePrintPrivateMethods, VxePrintPageBreakConstructor, VxePrintPageBreakPrivateMethods } from '../../../types'
 
 export default defineComponent({
   name: 'VxePrintPageBreak',
   props: {},
   emits: [] as VxePrintPageBreakEmits,
   setup (props, context) {
-    const { slots } = context
+    const { slots, emit } = context
 
     const xID = XEUtils.uniqueId()
     const $xePrint = inject<(VxePrintConstructor & VxePrintPrivateMethods) | null>('$xePrint', null)
@@ -41,6 +42,19 @@ export default defineComponent({
       getComputeMaps: () => computeMaps
     } as unknown as VxePrintPageBreakConstructor & VxePrintPageBreakPrivateMethods
 
+    const dispatchEvent = (type: ValueOf<VxePrintPageBreakEmits>, params: Record<string, any>, evnt: Event | null) => {
+      emit(type, createEvent(evnt, { $print: $xePrint }, params))
+    }
+
+    const printPageBreakMethods: PrintPageBreakMethods = {
+      dispatchEvent
+    }
+
+    const printPageBreakPrivateMethods: PrintPageBreakPrivateMethods = {
+    }
+
+    Object.assign($xePrintPageBreak, printPageBreakMethods, printPageBreakPrivateMethods)
+
     if (!$xePrint) {
       $xePrintPageBreak.renderVN = () => {
         return createCommentVNode()
@@ -54,8 +68,6 @@ export default defineComponent({
       })
     }
 
-    $xePrintPageBreak.renderVN = renderVN
-
     onMounted(() => {
       const elem = refElem.value
       if ($xePrint && elem) {
@@ -68,6 +80,8 @@ export default defineComponent({
         destroyPageBreak($xePrint, pageBreakConfig)
       }
     })
+
+    $xePrintPageBreak.renderVN = renderVN
 
     return $xePrintPageBreak
   },

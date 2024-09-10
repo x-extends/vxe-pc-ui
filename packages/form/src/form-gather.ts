@@ -11,7 +11,7 @@ export default defineComponent({
   setup (props, { slots }) {
     const refElem = ref() as Ref<HTMLDivElement>
     const $xeForm = inject('$xeForm', {} as VxeFormConstructor & VxeFormPrivateMethods)
-    const parentFormGather = inject<XEFormItemProvide | null>('$xeFormGather', null)
+    const $xeParentFormGather = inject<XEFormItemProvide | null>('$xeFormGather', null)
     const formItem = reactive(createItem($xeForm, props))
     formItem.children = []
 
@@ -21,7 +21,8 @@ export default defineComponent({
     watchItem(props, formItem)
 
     onMounted(() => {
-      assembleItem($xeForm, refElem.value, formItem, parentFormGather)
+      const elem = refElem.value
+      assembleItem($xeForm, elem, formItem, $xeParentFormGather)
     })
 
     onUnmounted(() => {
@@ -32,9 +33,10 @@ export default defineComponent({
       const { className, field } = props
       const span = props.span || ($xeForm ? $xeForm.props.span : null)
       const defaultSlot = slots.default
+      const params = { $form: $xeForm, data: $xeForm ? $xeForm.props.data : {}, item: formItem as any, field: field as string, property: field as string }
       return h('div', {
         ref: refElem,
-        class: ['vxe-form--gather vxe-form--item-row', formItem.id, span ? `vxe-form--item-col_${span} is--span` : '', className ? (XEUtils.isFunction(className) ? className({ $form: $xeForm, data: $xeForm ? $xeForm.props.data : {}, item: formItem as any, field: field as string, property: field as string }) : className) : '']
+        class: ['vxe-form--gather vxe-form--item-row', formItem.id, span ? `vxe-form--item-col_${span} is--span` : '', className ? (XEUtils.isFunction(className) ? className(params) : className) : '']
       }, defaultSlot ? defaultSlot({}) : [])
     }
 

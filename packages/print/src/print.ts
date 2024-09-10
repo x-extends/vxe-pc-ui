@@ -4,7 +4,7 @@ import { getConfig, createEvent } from '../../ui'
 import { printHtml } from './util'
 import { getSlotVNs } from '../..//ui/src/vn'
 
-import type { VxePrintPropTypes, PrintReactData, PrintPrivateRef, VxePrintEmits, VxePrintPrivateComputed, VxePrintConstructor, VxePrintPrivateMethods, PrintMethods } from '../../../types'
+import type { VxePrintPropTypes, PrintReactData, PrintPrivateRef, VxePrintEmits, PrintPrivateMethods, ValueOf, VxePrintPrivateComputed, VxePrintConstructor, VxePrintPrivateMethods, PrintMethods } from '../../../types'
 
 export default defineComponent({
   name: 'VxePrint',
@@ -73,10 +73,12 @@ export default defineComponent({
       getComputeMaps: () => computeMaps
     } as unknown as VxePrintConstructor & VxePrintPrivateMethods
 
+    const dispatchEvent = (type: ValueOf<VxePrintEmits>, params: Record<string, any>, evnt: Event | null) => {
+      emit(type, createEvent(evnt, { $print: $xePrint }, params))
+    }
+
     const printMethods: PrintMethods = {
-      dispatchEvent (type, params, evnt) {
-        emit(type, createEvent(evnt, { $print: $xePrint }, params))
-      },
+      dispatchEvent,
       print () {
         const elem = refElem.value
         return printHtml(Object.assign({}, props, {
@@ -86,7 +88,10 @@ export default defineComponent({
       }
     }
 
-    Object.assign($xePrint, printMethods)
+    const printPrivateMethods: PrintPrivateMethods = {
+    }
+
+    Object.assign($xePrint, printMethods, printPrivateMethods)
 
     const renderPageConfigLayouts = () => {
       const { title, showPageNumber, showAllPageTitle, align, headerAlign, footerAlign } = props

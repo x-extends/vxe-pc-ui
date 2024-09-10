@@ -106,9 +106,9 @@ export default defineComponent({
       }, defaultSlot ? defaultSlot({}) : [])
     }
 
-    $xeRow.renderVN = renderVN
-
     provide('$xeRow', $xeRow)
+
+    $xeRow.renderVN = renderVN
 
     return $xeRow
   },

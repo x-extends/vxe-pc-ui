@@ -4,7 +4,7 @@ import { getConfig, globalEvents, createEvent, useSize, VxeComponentStyleType, V
 import { getAbsolutePos, getEventTargetNode } from '../../ui/src/dom'
 import { getLastZIndex, nextZIndex } from '../../ui/src/utils'
 
-import type { VxePulldownConstructor, VxePulldownPropTypes, VxePulldownEmits, PulldownReactData, PulldownMethods, PulldownPrivateRef, VxePulldownMethods, VxeTableConstructor, VxeTablePrivateMethods, VxeFormConstructor, VxeFormPrivateMethods, VxeModalConstructor, VxeModalMethods } from '../../../types'
+import type { VxePulldownConstructor, VxePulldownPropTypes, PulldownInternalData, VxePulldownEmits, PulldownReactData, PulldownMethods, PulldownPrivateRef, VxePulldownMethods, VxeTableConstructor, VxeTablePrivateMethods, VxeDrawerConstructor, VxeDrawerMethods, VxeFormConstructor, VxeFormPrivateMethods, VxeModalConstructor, VxeModalMethods } from '../../../types'
 
 export default defineComponent({
   name: 'VxePulldown',
@@ -42,9 +42,10 @@ export default defineComponent({
   setup (props, context) {
     const { slots, emit } = context
 
-    const $xeModal = inject<VxeModalConstructor & VxeModalMethods | null>('$xeModal', null)
-    const $xeTable = inject<VxeTableConstructor & VxeTablePrivateMethods | null>('$xeTable', null)
-    const $xeForm = inject<VxeFormConstructor & VxeFormPrivateMethods | null>('$xeForm', null)
+    const $xeModal = inject<(VxeModalConstructor & VxeModalMethods) | null>('$xeModal', null)
+    const $xeDrawer = inject<(VxeDrawerConstructor & VxeDrawerMethods) | null>('$xeDrawer', null)
+    const $xeTable = inject<(VxeTableConstructor & VxeTablePrivateMethods) | null>('$xeTable', null)
+    const $xeForm = inject<(VxeFormConstructor & VxeFormPrivateMethods) | null>('$xeForm', null)
 
     const xID = XEUtils.uniqueId()
 
@@ -53,16 +54,20 @@ export default defineComponent({
     const reactData = reactive<PulldownReactData>({
       initialized: false,
       panelIndex: 0,
-      panelStyle: null,
+      panelStyle: {},
       panelPlacement: null,
       visiblePanel: false,
       visibleAnimate: false,
       isActivated: false
     })
 
+    const internalData: PulldownInternalData = {
+      hpTimeout: undefined
+    }
+
     const refElem = ref() as Ref<HTMLDivElement>
-    const refPulldowContent = ref() as Ref<HTMLDivElement>
-    const refPulldowPnanel = ref() as Ref<HTMLDivElement>
+    const refPulldownContent = ref() as Ref<HTMLDivElement>
+    const refPulldownPanel = ref() as Ref<HTMLDivElement>
 
     const computeBtnTransfer = computed(() => {
       const { transfer } = props
@@ -71,7 +76,7 @@ export default defineComponent({
         if (XEUtils.isBoolean(globalTransfer)) {
           return globalTransfer
         }
-        if ($xeTable || $xeModal || $xeForm) {
+        if ($xeTable || $xeModal || $xeDrawer || $xeForm) {
           return true
         }
       }
@@ -87,6 +92,7 @@ export default defineComponent({
       props,
       context,
       reactData,
+      internalData,
       getRefMaps: () => refMaps
     } as unknown as VxePulldownConstructor & VxePulldownMethods
 
@@ -111,8 +117,8 @@ export default defineComponent({
         const { panelIndex, visiblePanel } = reactData
         const btnTransfer = computeBtnTransfer.value
         if (visiblePanel) {
-          const targetElem = refPulldowContent.value
-          const panelElem = refPulldowPnanel.value
+          const targetElem = refPulldownContent.value
+          const panelElem = refPulldownPanel.value
           if (panelElem && targetElem) {
             const targetHeight = targetElem.offsetHeight
             const targetWidth = targetElem.offsetWidth
@@ -178,18 +184,18 @@ export default defineComponent({
       })
     }
 
-    let hidePanelTimeout: number
-
     /**
      * 显示下拉面板
      */
-    const showPanel = (): Promise<void> => {
+    const showPanel = () => {
       if (!reactData.initialized) {
         reactData.initialized = true
       }
-      return new Promise(resolve => {
+      return new Promise<void>(resolve => {
         if (!props.disabled) {
-          clearTimeout(hidePanelTimeout)
+          if (internalData.hpTimeout) {
+            clearTimeout(internalData.hpTimeout)
+          }
           reactData.isActivated = true
           reactData.visibleAnimate = true
           setTimeout(() => {
@@ -212,12 +218,12 @@ export default defineComponent({
     /**
      * 隐藏下拉面板
      */
-    const hidePanel = (): Promise<void> => {
+    const hidePanel = () => {
       reactData.visiblePanel = false
       emit('update:modelValue', false)
-      return new Promise(resolve => {
+      return new Promise<void>(resolve => {
         if (reactData.visibleAnimate) {
-          hidePanelTimeout = window.setTimeout(() => {
+          internalData.hpTimeout = window.setTimeout(() => {
             reactData.visibleAnimate = false
             nextTick(() => {
               resolve()
@@ -263,7 +269,7 @@ export default defineComponent({
     const handleGlobalMousewheelEvent = (evnt: Event) => {
       const { disabled } = props
       const { visiblePanel } = reactData
-      const panelElem = refPulldowPnanel.value
+      const panelElem = refPulldownPanel.value
       if (!disabled) {
         if (visiblePanel) {
           if (getEventTargetNode(evnt, panelElem).flag) {
@@ -280,7 +286,7 @@ export default defineComponent({
       const { disabled } = props
       const { visiblePanel } = reactData
       const el = refElem.value
-      const panelElem = refPulldowPnanel.value
+      const panelElem = refPulldownPanel.value
       if (!disabled) {
         reactData.isActivated = getEventTargetNode(evnt, el).flag || getEventTargetNode(evnt, panelElem).flag
         if (visiblePanel && !reactData.isActivated) {
@@ -369,7 +375,7 @@ export default defineComponent({
         }]
       }, [
         h('div', {
-          ref: refPulldowContent,
+          ref: refPulldownContent,
           class: 'vxe-pulldown--content',
           onClick: clickTargetEvent
         }, defaultSlot ? defaultSlot({ $pulldown: $xePulldown }) : []),
@@ -378,7 +384,7 @@ export default defineComponent({
           disabled: btnTransfer ? !initialized : true
         }, [
           h('div', {
-            ref: refPulldowPnanel,
+            ref: refPulldownPanel,
             class: ['vxe-table--ignore-clear vxe-pulldown--panel', popupClassName ? (XEUtils.isFunction(popupClassName) ? popupClassName({ $pulldown: $xePulldown }) : popupClassName) : '', {
               [`size--${vSize}`]: vSize,
               'is--shadow': showPopupShadow,

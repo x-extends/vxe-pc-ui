@@ -19,11 +19,12 @@ const VxeFormConfigItem = defineComponent({
     provide('xeFormItemInfo', xeformiteminfo)
 
     const renderVN = () => {
-      const { reactData } = $xeForm
-      const { data, rules, readonly, disabled, span: allSpan, align: allAlign, titleBold: allTitleBold, titleAlign: allTitleAlign, titleWidth: allTitleWidth, titleColon: allTitleColon, titleAsterisk: allTitleAsterisk, titleOverflow: allTitleOverflow, vertical: allVertical, padding: allPadding } = $xeForm.props
+      const formProps = $xeForm.props
+      const formReactData = $xeForm.reactData
+      const { data, rules, readonly, disabled, span: allSpan, align: allAlign, titleBold: allTitleBold, titleAlign: allTitleAlign, titleWidth: allTitleWidth, titleColon: allTitleColon, titleAsterisk: allTitleAsterisk, titleOverflow: allTitleOverflow, vertical: allVertical, padding: allPadding } = formProps
       const { computeValidOpts } = $xeForm.getComputeMaps()
       const item = props.itemConfig as VxeFormDefines.ItemInfo
-      const { collapseAll } = reactData
+      const { collapseAll } = formReactData
       const validOpts = computeValidOpts.value
       const { slots, title, visible, folding, field, collapseNode, itemRender, showError, errRule, className, titleOverflow, vertical, padding, children, showTitle, contentClassName, contentStyle, titleClassName, titleStyle } = item
       const compConf = isEnableConf(itemRender) ? renderer.get(itemRender.name) : null

@@ -613,8 +613,6 @@ export default defineComponent({
       ])
     }
 
-    $xeImagePreview.renderVN = renderVN
-
     watch(() => props.modelValue, val => {
       reactData.activeIndex = val
       resetStyle()
@@ -636,6 +634,8 @@ export default defineComponent({
     })
 
     provide('$xeImagePreview', $xeImagePreview)
+
+    $xeImagePreview.renderVN = renderVN
 
     return renderVN
   }

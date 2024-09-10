@@ -134,6 +134,10 @@ export interface SelectReactData {
   searchLoading: boolean
 }
 
+export interface SelectInternalData {
+  hpTimeout?: undefined | number
+}
+
 export interface SelectMethods {
   dispatchEvent(type: ValueOf<VxeSelectEmits>, params: Record<string, any>, evnt: Event | null): void
   /**

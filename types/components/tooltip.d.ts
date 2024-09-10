@@ -73,6 +73,10 @@ export interface TooltipReactData {
   }
 }
 
+export interface TooltipInternalData {
+  showDelayTip?(): any
+}
+
 export interface TooltipMethods {
   dispatchEvent(type: ValueOf<VxeTooltipEmits>, params: Record<string, any>, evnt: Event | null): void
   /**

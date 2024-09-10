@@ -4,7 +4,7 @@ import { getSlotVNs } from '../../ui/src/vn'
 import VxeTextComponent from '../../text/src/text'
 import XEUtils from 'xe-utils'
 
-import type { VxeCountdownPropTypes, CountdownReactData, CountdownPrivateRef, VxeCountdownEmits, VxeCountdownPrivateComputed, VxeCountdownConstructor, VxeCountdownPrivateMethods, ValueOf, CountdownMethods, CountdownPrivateMethods } from '../../../types'
+import type { VxeCountdownPropTypes, CountdownReactData, CountdownInternalData, CountdownPrivateRef, VxeCountdownEmits, VxeCountdownPrivateComputed, VxeCountdownConstructor, VxeCountdownPrivateMethods, ValueOf, CountdownMethods, CountdownPrivateMethods } from '../../../types'
 
 export default defineComponent({
   name: 'VxeCountdown',
@@ -13,7 +13,10 @@ export default defineComponent({
     format: String as PropType<VxeCountdownPropTypes.Format>,
     prefixConfig: Object as PropType<VxeCountdownPropTypes.PrefixConfig>,
     suffixConfig: Object as PropType<VxeCountdownPropTypes.SuffixConfig>,
-    size: { type: String as PropType<VxeCountdownPropTypes.Size>, default: () => getConfig().countdown.size || getConfig().size }
+    size: {
+      type: String as PropType<VxeCountdownPropTypes.Size>,
+      default: () => getConfig().countdown.size || getConfig().size
+    }
   },
   emits: [
     'update:modelValue',
@@ -33,6 +36,10 @@ export default defineComponent({
       currNum: 0,
       secondNum: 0
     })
+
+    const internalData: CountdownInternalData = {
+      dnTimeout: undefined
+    }
 
     const refMaps: CountdownPrivateRef = {
       refElem
@@ -94,12 +101,11 @@ export default defineComponent({
       props,
       context,
       reactData,
+      internalData,
 
       getRefMaps: () => refMaps,
       getComputeMaps: () => computeMaps
     } as unknown as VxeCountdownConstructor & VxeCountdownPrivateMethods
-
-    let htime: any = null
 
     const dispatchEvent = (type: ValueOf<VxeCountdownEmits>, params: Record<string, any>, evnt: Event | null) => {
       emit(type, createEvent(evnt, { $carousel: $xeCountdown }, params))
@@ -115,10 +121,12 @@ export default defineComponent({
       const { currNum } = reactData
       if (currNum > 1000) {
         reactData.currNum -= 1000
-        htime = setTimeout(handleTime, 1000)
+        internalData.dnTimeout = setTimeout(() => {
+          handleTime()
+        }, 1000)
       } else {
         reactData.currNum = 0
-        stop()
+        handleStop()
       }
     }
 
@@ -132,9 +140,10 @@ export default defineComponent({
     }
 
     const handleStop = () => {
-      if (htime != null) {
-        clearTimeout(htime)
-        htime = null
+      const { dnTimeout } = internalData
+      if (dnTimeout) {
+        clearTimeout(dnTimeout)
+        internalData.dnTimeout = undefined
         dispatchEvent('end', {}, null)
       }
     }
@@ -225,8 +234,6 @@ export default defineComponent({
       ])
     }
 
-    $xeCountdown.renderVN = renderVN
-
     watch(() => props.modelValue, () => {
       updateCount()
       handleStop()
@@ -242,6 +249,8 @@ export default defineComponent({
     })
 
     updateCount()
+
+    $xeCountdown.renderVN = renderVN
 
     return $xeCountdown
   },

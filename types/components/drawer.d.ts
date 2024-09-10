@@ -105,7 +105,6 @@ export interface DrawerReactData {
   visible: boolean
   contentVisible: boolean
   drawerZIndex: number
-  firstOpen: boolean
 }
 
 export interface DrawerMethods {

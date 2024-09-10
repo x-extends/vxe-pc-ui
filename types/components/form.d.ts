@@ -1,6 +1,7 @@
 import { RenderFunction, SetupContext, Ref, ComputedRef } from 'vue'
 import { DefineVxeComponentApp, DefineVxeComponentOptions, DefineVxeComponentInstance, VxeComponentBaseOptions, VxeComponentEventParams, VxeComponentSizeType, ValueOf, VxeComponentSlotType } from '@vxe-ui/core'
 import { VxeFormItemPropTypes, VxeFormItemProps } from './form-item'
+import { VxeGridConstructor } from './grid'
 
 /* eslint-disable no-use-before-define,@typescript-eslint/ban-types */
 
@@ -18,7 +19,7 @@ export interface VxeFormConstructor<D = any> extends VxeComponentBaseOptions, Vx
   getComputeMaps(): FormPrivateComputed
   renderVN: RenderFunction
 
-  xegrid: any
+  xegrid: VxeGridConstructor | null
 }
 
 export interface FormPrivateRef {
@@ -122,7 +123,8 @@ export interface FormReactData {
 }
 
 export interface FormInternalData {
-  tooltipTimeout: any
+  meTimeout: undefined | number
+  stTimeout: undefined | number
   tooltipStore: {
     item: VxeFormDefines.ItemInfo | null
     visible: boolean

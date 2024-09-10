@@ -330,8 +330,6 @@ export default defineComponent({
       ])
     }
 
-    $xeListDesign.renderVN = renderVN
-
     provide('$xeListDesign', $xeListDesign)
 
     watch(() => props.config, (value) => {
@@ -343,6 +341,8 @@ export default defineComponent({
     if (props.config) {
       loadConfig(props.config)
     }
+
+    $xeListDesign.renderVN = renderVN
 
     return $xeListDesign
   },

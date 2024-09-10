@@ -1,32 +1,40 @@
 import { defineComponent, h, onUnmounted, inject, ref, Ref, onMounted, PropType } from 'vue'
 import { XEOptionProvide, createOption, watchOption, destroyOption, assembleOption } from './util'
 
-import type { VxeSelectConstructor, VxeOptionPropTypes } from '../../../types'
+import type { VxeSelectConstructor, VxeOptionEmits, VxeOptionPropTypes } from '../../../types'
 
 export default defineComponent({
   name: 'VxeOption',
   props: {
-    value: null,
-    label: { type: [String, Number, Boolean] as PropType<VxeOptionPropTypes.Label>, default: '' },
-    visible: { type: Boolean as PropType<VxeOptionPropTypes.Visible>, default: null },
+    value: [String, Number, Boolean] as PropType<VxeOptionPropTypes.Value>,
+    label: {
+      type: [String, Number, Boolean] as PropType<VxeOptionPropTypes.Label>,
+      default: ''
+    },
+    visible: {
+      type: Boolean as PropType<VxeOptionPropTypes.Visible>,
+      default: null
+    },
     className: [String, Function] as PropType<VxeOptionPropTypes.ClassName>,
     disabled: Boolean as PropType<VxeOptionPropTypes.Disabled>
   },
+  emits: [] as VxeOptionEmits,
   setup (props, { slots }) {
     const elem = ref() as Ref<HTMLDivElement>
     const $xeSelect = inject('$xeSelect', {} as VxeSelectConstructor)
-    const optGroup = inject<XEOptionProvide | null>('xeoptgroup', null)
-    const option = createOption($xeSelect, props)
-    option.slots = slots
+    const $xeOptgroup = inject<XEOptionProvide | null>('$xeOptgroup', null)
+    const optionConfig = createOption($xeSelect, props)
+    optionConfig.slots = slots
 
-    watchOption(props, option)
+    watchOption(props, optionConfig)
 
     onMounted(() => {
-      assembleOption($xeSelect, elem.value, option, optGroup)
+      const el = elem.value
+      assembleOption($xeSelect, el, optionConfig, $xeOptgroup)
     })
 
     onUnmounted(() => {
-      destroyOption($xeSelect, option)
+      destroyOption($xeSelect, optionConfig)
     })
 
     return () => {

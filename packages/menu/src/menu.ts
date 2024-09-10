@@ -157,8 +157,9 @@ export default defineComponent({
     const handleClickMenu = (evnt: KeyboardEvent, item: VxeMenuDefines.MenuItem) => {
       const { routerLink, hasChild } = item
       if (routerLink) {
-        reactData.activeName = item.itemKey
-        emit('update:modelValue', item.itemKey)
+        const value = item.itemKey
+        reactData.activeName = value
+        emit('update:modelValue', value)
       } else {
         if (hasChild) {
           handleClickIconCollapse(evnt, item)
@@ -282,8 +283,6 @@ export default defineComponent({
       ])
     }
 
-    $xeMenu.renderVN = renderVN
-
     const optFlag = ref(0)
     watch(() => props.options ? props.options.length : -1, () => {
       optFlag.value++
@@ -312,6 +311,8 @@ export default defineComponent({
 
     updateMenuConfig()
     updateActiveMenu(true)
+
+    $xeMenu.renderVN = renderVN
 
     return $xeMenu
   },

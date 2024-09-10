@@ -5,7 +5,7 @@ import { toCssUnit } from '../..//ui/src/dom'
 import VxeLoadingComponent from '../../loading/src/loading'
 import XEUtils from 'xe-utils'
 
-import type { CardReactData, VxeCardEmits, VxeCardPropTypes, CardPrivateRef, CardMethods, CardPrivateMethods, VxeCardPrivateComputed, VxeCardConstructor, VxeCardPrivateMethods } from '../../../types'
+import type { CardReactData, VxeCardEmits, VxeCardPropTypes, CardPrivateRef, ValueOf, CardMethods, CardPrivateMethods, VxeCardPrivateComputed, VxeCardConstructor, VxeCardPrivateMethods } from '../../../types'
 
 export default defineComponent({
   name: 'VxeCard',
@@ -72,10 +72,12 @@ export default defineComponent({
       getComputeMaps: () => computeMaps
     } as unknown as VxeCardConstructor & VxeCardPrivateMethods
 
+    const dispatchEvent = (type: ValueOf<VxeCardEmits>, params: Record<string, any>, evnt: Event | null) => {
+      emit(type, createEvent(evnt, { $card: $xeCard }, params))
+    }
+
     const cardMethods: CardMethods = {
-      dispatchEvent (type, params, evnt) {
-        emit(type, createEvent(evnt, { $card: $xeCard }, params))
-      }
+      dispatchEvent
     }
 
     const cardPrivateMethods: CardPrivateMethods = {

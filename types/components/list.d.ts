@@ -77,6 +77,7 @@ export interface ListReactData {
 }
 
 export interface ListInternalData {
+  resizeObserver: ResizeObserver | undefined
   fullData: any[]
   lastScrollLeft: number
   lastScrollTop: number

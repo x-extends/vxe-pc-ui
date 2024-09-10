@@ -1,6 +1,6 @@
 import { App } from 'vue'
 import { VxeUI } from '@vxe-ui/core'
-import VxeCollapsePaneComponent from './src/collapse-pane'
+import VxeCollapsePaneComponent from '../collapse/src/collapse-pane'
 import { dynamicApp } from '../dynamics'
 
 export const VxeCollapsePane = Object.assign({}, VxeCollapsePaneComponent, {

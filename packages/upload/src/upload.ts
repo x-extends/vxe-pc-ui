@@ -373,7 +373,7 @@ export default defineComponent({
       emit(type, createEvent(evnt, { $upload: $xeUpload }, params))
     }
 
-    const emitModel = (value: VxeUploadDefines.FileObjItem[]) => {
+    const handleChange = (value: VxeUploadDefines.FileObjItem[]) => {
       const { singleMode, urlMode } = props
       const urlProp = computeUrlProp.value
       let restList = value ? value.slice(0) : []
@@ -534,7 +534,7 @@ export default defineComponent({
         cacheItem.percent = 0
         handleUploadResult(item, file).then(() => {
           if (urlMode) {
-            emitModel(reactData.fileList)
+            handleChange(reactData.fileList)
           }
         })
       }
@@ -645,7 +645,7 @@ export default defineComponent({
       reactData.fileList = newFileList
       reactData.fileCacheMaps = cacheMaps
       Promise.all(urlMode ? uploadPromiseRests : []).then(() => {
-        emitModel(newFileList)
+        handleChange(newFileList)
         // 自动更新校验状态
         if ($xeForm && formItemInfo) {
           $xeForm.triggerItemEvent(evnt as any, formItemInfo.itemConfig.field, newFileList)
@@ -682,7 +682,7 @@ export default defineComponent({
     const handleRemoveEvent = (evnt: MouseEvent, item: VxeUploadDefines.FileObjItem, index: number) => {
       const { fileList } = reactData
       fileList.splice(index, 1)
-      emitModel(fileList)
+      handleChange(fileList)
       // 自动更新校验状态
       if ($xeForm && formItemInfo) {
         $xeForm.triggerItemEvent(evnt, formItemInfo.itemConfig.field, fileList)
@@ -1278,8 +1278,6 @@ export default defineComponent({
       ])
     }
 
-    $xeUpload.renderVN = renderVN
-
     const listFlag = ref(0)
     watch(() => props.modelValue ? props.modelValue.length : 0, () => {
       listFlag.value++
@@ -1304,6 +1302,8 @@ export default defineComponent({
     })
 
     updateFileList()
+
+    $xeUpload.renderVN = renderVN
 
     return $xeUpload
   },

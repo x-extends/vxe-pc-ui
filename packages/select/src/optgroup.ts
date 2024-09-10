@@ -1,39 +1,48 @@
 import { defineComponent, h, onUnmounted, provide, inject, ref, Ref, onMounted, PropType } from 'vue'
 import { XEOptionProvide, createOption, watchOption, destroyOption, assembleOption } from './util'
 
-import type { VxeSelectConstructor, VxeOptionPropTypes } from '../../../types'
+import type { VxeSelectConstructor, VxeOptgroupEmits, VxeOptgroupPropTypes } from '../../../types'
 
 export default defineComponent({
   name: 'VxeOptgroup',
   props: {
-    label: { type: [String, Number, Boolean] as PropType<VxeOptionPropTypes.Label>, default: '' },
-    visible: { type: Boolean as PropType<VxeOptionPropTypes.Visible>, default: null },
-    className: [String, Function] as PropType<VxeOptionPropTypes.ClassName>,
-    disabled: Boolean as PropType<VxeOptionPropTypes.Disabled>
+    label: {
+      type: [String, Number, Boolean] as PropType<VxeOptgroupPropTypes.Label>,
+      default: ''
+    },
+    visible: {
+      type: Boolean as PropType<VxeOptgroupPropTypes.Visible>,
+      default: null
+    },
+    className: [String, Function] as PropType<VxeOptgroupPropTypes.ClassName>,
+    disabled: Boolean as PropType<VxeOptgroupPropTypes.Disabled>
   },
+  emits: [] as VxeOptgroupEmits,
   setup (props, { slots }) {
     const elem = ref() as Ref<HTMLDivElement>
     const $xeSelect = inject('$xeSelect', {} as VxeSelectConstructor)
-    const option = createOption($xeSelect, props)
-    const xeOption: XEOptionProvide = { option }
-    option.options = []
+    const optionConfig = createOption($xeSelect, props)
+    const $xeOptgroup: XEOptionProvide = { optionConfig }
+    optionConfig.options = []
 
-    provide('xeoptgroup', xeOption)
+    provide('$xeOptgroup', $xeOptgroup)
 
-    watchOption(props, option)
+    watchOption(props, optionConfig)
 
     onMounted(() => {
-      assembleOption($xeSelect, elem.value, option)
+      const el = elem.value
+      assembleOption($xeSelect, el, optionConfig)
     })
 
     onUnmounted(() => {
-      destroyOption($xeSelect, option)
+      destroyOption($xeSelect, optionConfig)
     })
 
     return () => {
+      const defaultSlot = slots.default
       return h('div', {
         ref: elem
-      }, slots.default ? slots.default() : [])
+      }, defaultSlot ? defaultSlot({}) : [])
     }
   }
 })

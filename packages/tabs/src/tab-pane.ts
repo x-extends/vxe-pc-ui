@@ -1,8 +1,9 @@
 import { defineComponent, ref, h, reactive, PropType, watch, inject, onMounted, onUnmounted } from 'vue'
 import XEUtils from 'xe-utils'
+import { createEvent } from '../../ui'
 import { assembleAnchorTab, destroyAnchorTab } from './util'
 
-import type { VxeTabPanePropTypes, TabPaneReactData, TabPanePrivateRef, VxeTabPanePrivateComputed, VxeTabPaneConstructor, VxeTabPanePrivateMethods, VxeTabPaneDefines, VxeTabsConstructor, VxeTabsPrivateMethods } from '../../../types'
+import type { VxeTabPanePropTypes, TabPaneReactData, TabPaneMethods, TabPanePrivateMethods, VxeTabPaneEmits, ValueOf, TabPanePrivateRef, VxeTabPanePrivateComputed, VxeTabPaneConstructor, VxeTabPanePrivateMethods, VxeTabPaneDefines, VxeTabsConstructor, VxeTabsPrivateMethods } from '../../../types'
 
 export default defineComponent({
   name: 'VxeTabPane',
@@ -15,9 +16,9 @@ export default defineComponent({
     preload: Boolean as PropType<VxeTabPanePropTypes.Preload>,
     permissionCode: [String, Number] as PropType<VxeTabPanePropTypes.PermissionCode>
   },
-  emits: [],
+  emits: [] as VxeTabPaneEmits,
   setup (props, context) {
-    const { slots } = context
+    const { slots, emit } = context
 
     const xID = XEUtils.uniqueId()
 
@@ -59,6 +60,19 @@ export default defineComponent({
       getComputeMaps: () => computeMaps
     } as unknown as VxeTabPaneConstructor & VxeTabPanePrivateMethods
 
+    const dispatchEvent = (type: ValueOf<VxeTabPaneEmits>, params: Record<string, any>, evnt: Event | null) => {
+      emit(type, createEvent(evnt, { $tabPane: $xeTabPane }, params))
+    }
+
+    const tabPaneMethods: TabPaneMethods = {
+      dispatchEvent
+    }
+
+    const tabPanePrivateMethods: TabPanePrivateMethods = {
+    }
+
+    Object.assign($xeTabPane, tabPaneMethods, tabPanePrivateMethods)
+
     watch(() => props.title, (val) => {
       tabConfig.title = val
     })
@@ -76,8 +90,9 @@ export default defineComponent({
     })
 
     onMounted(() => {
-      if ($xeTabs && refElem.value) {
-        assembleAnchorTab($xeTabs, refElem.value, tabConfig)
+      const elem = refElem.value
+      if ($xeTabs && elem) {
+        assembleAnchorTab($xeTabs, elem, tabConfig)
       }
     })
 

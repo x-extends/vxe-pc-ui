@@ -120,6 +120,9 @@ export default defineComponent({
 
     provide('$xeImageGroup', $xeImageGroup)
 
-    return renderVN
+    return $xeImageGroup
+  },
+  render () {
+    return this.renderVN()
   }
 })

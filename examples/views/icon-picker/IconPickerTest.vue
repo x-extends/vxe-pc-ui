@@ -2,10 +2,10 @@
   <div>
     <p>
       <vxe-icon-picker v-model="demo1.val1"></vxe-icon-picker>
-      <vxe-icon-picker v-model="demo1.val1" clearable></vxe-icon-picker>
+      <vxe-icon-picker v-model="demo1.val2" clearable transfer></vxe-icon-picker>
     </p>
     <p>
-      <vxe-icon-picker v-model="demo1.val1" readonly></vxe-icon-picker>
+      <vxe-icon-picker v-model="demo1.val2" readonly></vxe-icon-picker>
     </p>
   </div>
 </template>
@@ -14,6 +14,8 @@
 import { reactive } from 'vue'
 
 const demo1 = reactive({
-  val1: ''
+  val1: '',
+  val2: '',
+  val3: 'vxe-icon-print'
 })
 </script>

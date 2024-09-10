@@ -224,9 +224,9 @@ export default defineComponent({
       removeContainerElemScroll()
     })
 
-    $xeAnchor.renderVN = renderVN
-
     provide('$xeAnchor', $xeAnchor)
+
+    $xeAnchor.renderVN = renderVN
 
     return $xeAnchor
   },

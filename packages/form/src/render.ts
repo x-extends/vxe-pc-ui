@@ -30,7 +30,8 @@ function renderSuffixIcon (titleSuffix: VxeFormItemPropTypes.TitleSuffix) {
 }
 
 export function renderTitle ($xeForm: VxeFormConstructor & VxeFormPrivateMethods, item: VxeFormDefines.ItemInfo) {
-  const { data, readonly, disabled } = $xeForm.props
+  const formProps = $xeForm.props
+  const { data, readonly, disabled } = formProps
   const { computeTooltipOpts } = $xeForm.getComputeMaps()
   const { slots, field, itemRender, titlePrefix, titleSuffix } = item
   const tooltipOpts = computeTooltipOpts.value

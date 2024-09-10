@@ -68,9 +68,9 @@
         <template #left>
           <vxe-button content="更多操作" size="small">
             <template #dropdowns>
-              <vxe-button content="批量修改" type="text"></vxe-button>
-              <vxe-button content="批量管理" type="text"></vxe-button>
-              <vxe-button content="批量删除" type="text"></vxe-button>
+              <vxe-button content="批量修改" mode="text"></vxe-button>
+              <vxe-button content="批量管理" mode="text"></vxe-button>
+              <vxe-button content="批量删除" mode="text"></vxe-button>
             </template>
           </vxe-button>
         </template>

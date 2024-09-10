@@ -97,11 +97,12 @@ export default defineComponent({
 
     const radioGroupPrivateMethods: RadioGroupPrivateMethods = {
       handleChecked (params, evnt) {
-        emit('update:modelValue', params.label)
+        const value = params.label
+        emit('update:modelValue', value)
         dispatchEvent('change', params, evnt)
         // 自动更新校验状态
         if ($xeForm && formItemInfo) {
-          $xeForm.triggerItemEvent(evnt, formItemInfo.itemConfig.field, params.label)
+          $xeForm.triggerItemEvent(evnt, formItemInfo.itemConfig.field, value)
         }
       }
     }
@@ -131,10 +132,13 @@ export default defineComponent({
             : []))
     }
 
-    $xeRadioGroup.renderVN = renderVN
-
     provide('$xeRadioGroup', $xeRadioGroup)
 
-    return renderVN
+    $xeRadioGroup.renderVN = renderVN
+
+    return $xeRadioGroup
+  },
+  render () {
+    return this.renderVN()
   }
 })

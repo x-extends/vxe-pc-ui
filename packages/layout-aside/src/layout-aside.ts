@@ -110,9 +110,9 @@ export default defineComponent({
       ])
     }
 
-    $xeLayoutAside.renderVN = renderVN
-
     provide('$xeLayoutAside', $xeLayoutAside)
+
+    $xeLayoutAside.renderVN = renderVN
 
     return $xeLayoutAside
   },

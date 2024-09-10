@@ -5,7 +5,7 @@ import { OptionInfo } from './option-info'
 import type { VxeSelectConstructor } from '../../../types'
 
 export interface XEOptionProvide {
-  option: OptionInfo;
+  optionConfig: OptionInfo;
 }
 
 export function isOption (option: any) {
@@ -24,11 +24,11 @@ export function watchOption (props: any, option: OptionInfo) {
   })
 }
 
-export function assembleOption ($xeSelect: VxeSelectConstructor, el: HTMLDivElement, option: OptionInfo, optGroup?: XEOptionProvide | null) {
+export function assembleOption ($xeSelect: VxeSelectConstructor, el: HTMLDivElement, option: OptionInfo, $xeOptgroup?: XEOptionProvide | null) {
   const { reactData } = $xeSelect
   const { staticOptions } = reactData
   const parentElem = el.parentNode
-  const parentOption = optGroup ? optGroup.option : null
+  const parentOption = $xeOptgroup ? $xeOptgroup.optionConfig : null
   const parentCols = parentOption ? parentOption.options : staticOptions
   if (parentElem && parentCols) {
     parentCols.splice(XEUtils.arrayIndexOf(parentElem.children, el), 0, option)

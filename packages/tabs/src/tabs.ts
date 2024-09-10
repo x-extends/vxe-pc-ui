@@ -5,7 +5,7 @@ import { toCssUnit } from '../..//ui/src/dom'
 import { warnLog } from '../../ui/src/log'
 import XEUtils from 'xe-utils'
 
-import type { VxeTabsPropTypes, VxeTabPaneProps, VxeTabsEmits, TabsReactData, TabsPrivateRef, VxeTabsPrivateComputed, VxeTabsConstructor, VxeTabsPrivateMethods, VxeTabPaneDefines, ValueOf, TabsMethods, TabsPrivateMethods } from '../../../types'
+import type { VxeTabsPropTypes, VxeTabPaneProps, VxeTabsEmits, TabsInternalData, TabsReactData, TabsPrivateRef, VxeTabsPrivateComputed, VxeTabsConstructor, VxeTabsPrivateMethods, VxeTabPaneDefines, ValueOf, TabsMethods, TabsPrivateMethods } from '../../../types'
 
 export default defineComponent({
   name: 'VxeTabs',
@@ -55,28 +55,22 @@ export default defineComponent({
       resizeFlag: 1
     })
 
+    const internalData: TabsInternalData = {
+      slTimeout: undefined
+    }
+
     const refMaps: TabsPrivateRef = {
       refElem
     }
 
-    const handleFilterTab = (item: VxeTabPaneProps | VxeTabPaneDefines.TabConfig) => {
-      const { permissionCode } = item
-      if (permissionCode) {
-        if (!permission.checkVisible(permissionCode)) {
-          return false
-        }
-      }
-      return true
-    }
-
     const computeTabOptions = computed(() => {
       const { options } = props
-      return (options || []).filter(handleFilterTab)
+      return (options || []).filter((item) => handleFilterTab(item))
     })
 
     const computeTabStaticOptions = computed(() => {
       const { staticTabs } = reactData
-      return staticTabs.filter(handleFilterTab)
+      return staticTabs.filter((item) => handleFilterTab(item))
     })
 
     const computeMaps: VxeTabsPrivateComputed = {
@@ -91,6 +85,16 @@ export default defineComponent({
       getRefMaps: () => refMaps,
       getComputeMaps: () => computeMaps
     } as unknown as VxeTabsConstructor & VxeTabsPrivateMethods
+
+    const handleFilterTab = (item: VxeTabPaneProps | VxeTabPaneDefines.TabConfig) => {
+      const { permissionCode } = item
+      if (permissionCode) {
+        if (!permission.checkVisible(permissionCode)) {
+          return false
+        }
+      }
+      return true
+    }
 
     const callSlot = (slotFunc: any, params: any) => {
       if (slotFunc) {
@@ -218,13 +222,15 @@ export default defineComponent({
       }
     }
 
-    let scrollTimeout: any = null
-
     const startScrollAnimation = (offsetPos: number, offsetSize: number) => {
+      const { slTimeout } = internalData
       let offsetLeft = offsetSize
       let scrollCount = 6
       let delayNum = 35
-      clearTimeout(scrollTimeout)
+      if (slTimeout) {
+        clearTimeout(slTimeout)
+        internalData.slTimeout = undefined
+      }
       const scrollAnimate = () => {
         const headerWrapperEl = refHeadWrapperElem.value
         if (scrollCount > 0) {
@@ -236,13 +242,13 @@ export default defineComponent({
               if (clientWidth + scrollLeft < scrollWidth) {
                 headerWrapperEl.scrollLeft += offsetLeft
                 delayNum -= 4
-                scrollTimeout = setTimeout(scrollAnimate, delayNum)
+                internalData.slTimeout = setTimeout(scrollAnimate, delayNum)
               }
             } else {
               if (scrollLeft > 0) {
                 headerWrapperEl.scrollLeft -= offsetLeft
                 delayNum -= 4
-                scrollTimeout = setTimeout(scrollAnimate, delayNum)
+                internalData.slTimeout = setTimeout(scrollAnimate, delayNum)
               }
             }
             updateTabStyle()
@@ -297,41 +303,43 @@ export default defineComponent({
       })
     }
 
-    const createHandlePrevNext = (isNext: boolean) => {
-      return () => {
-        const { activeName } = reactData
-        const tabOptions = computeTabOptions.value
-        const tabStaticOptions = computeTabStaticOptions.value
-        const list = tabStaticOptions.length ? tabStaticOptions : tabOptions
-        const index = XEUtils.findIndexOf(list, item => item.name === activeName)
-        if (index > -1) {
-          let item: VxeTabPaneProps | null = null
-          if (isNext) {
-            if (index < list.length - 1) {
-              item = list[index + 1]
-            }
-          } else {
-            if (index > 0) {
-              item = list[index - 1]
-            }
+    const handlePrevNext = (isNext: boolean) => {
+      const { activeName } = reactData
+      const tabOptions = computeTabOptions.value
+      const tabStaticOptions = computeTabStaticOptions.value
+      const list = tabStaticOptions.length ? tabStaticOptions : tabOptions
+      const index = XEUtils.findIndexOf(list, item => item.name === activeName)
+      if (index > -1) {
+        let item: VxeTabPaneProps | null = null
+        if (isNext) {
+          if (index < list.length - 1) {
+            item = list[index + 1]
           }
-          if (item) {
-            const name = item.name
-            const value = name
-            reactData.activeName = name
-            emit('update:modelValue', value)
-            addInitName(name, null)
+        } else {
+          if (index > 0) {
+            item = list[index - 1]
           }
         }
-        return nextTick()
+        if (item) {
+          const name = item.name
+          const value = name
+          reactData.activeName = name
+          emit('update:modelValue', value)
+          addInitName(name, null)
+        }
       }
+      return nextTick()
     }
 
     const tabsMethods: TabsMethods = {
       dispatchEvent,
       scrollToTab,
-      prev: createHandlePrevNext(false),
-      next: createHandlePrevNext(true),
+      prev () {
+        return handlePrevNext(false)
+      },
+      next () {
+        return handlePrevNext(true)
+      },
       prevTab () {
         if (process.env.VUE_APP_VXE_ENV === 'development') {
           warnLog('vxe.error.delFunc', ['prevTab', 'prev'])
@@ -475,9 +483,9 @@ export default defineComponent({
       const { activeName } = reactData
       const activeDefaultTab = tabList.find(item => item.name === activeName)
       if (destroyOnClose) {
-        return activeDefaultTab ? [renderTabPane(activeDefaultTab)] : createCommentVNode()
+        return [activeDefaultTab ? renderTabPane(activeDefaultTab) : createCommentVNode()]
       }
-      return tabList.map(renderTabPane)
+      return tabList.map((item) => renderTabPane(item))
     }
 
     const renderVN = () => {
@@ -552,7 +560,9 @@ export default defineComponent({
     }
 
     watch(() => reactData.resizeFlag, () => {
-      nextTick(updateTabStyle)
+      nextTick(() => {
+        updateTabStyle()
+      })
     })
 
     nextTick(() => {
@@ -567,12 +577,12 @@ export default defineComponent({
       globalEvents.off($xeTabs, 'resize')
     })
 
-    $xeTabs.renderVN = renderVN
-
     provide('$xeTabs', $xeTabs)
 
     addInitName(props.modelValue, null)
     initDefaultName(reactData.staticTabs.length ? reactData.staticTabs : props.options)
+
+    $xeTabs.renderVN = renderVN
 
     return $xeTabs
   },

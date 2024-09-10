@@ -74,11 +74,15 @@ export interface VxePulldownPrivateComputed extends PulldownPrivateComputed { }
 export interface PulldownReactData {
   initialized: boolean
   panelIndex: number
-  panelStyle: VxeComponentStyleType | null
+  panelStyle: VxeComponentStyleType
   panelPlacement: string | null
   visiblePanel: boolean
   visibleAnimate: boolean
   isActivated: boolean
+}
+
+export interface PulldownInternalData {
+  hpTimeout?: undefined | number
 }
 
 export interface PulldownMethods {

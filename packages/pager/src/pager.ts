@@ -5,39 +5,78 @@ import { errLog } from '../../ui/src/log'
 import VxeSelectComponent from '../../select/src/select'
 import VxeInputComponent from '../../input/src/input'
 
-import type { VxePagerPropTypes, VxePagerConstructor, VxePagerEmits, VxeSelectEvents, PagerPrivateRef, PagerMethods, PagerPrivateMethods, VxePagerPrivateMethods, PagerReactData, VxeGridConstructor, VxeGridPrivateMethods, VxeInputEvents } from '../../../types'
+import type { VxePagerPropTypes, VxePagerConstructor, VxePagerEmits, VxeSelectEvents, ValueOf, PagerPrivateRef, PagerMethods, PagerPrivateMethods, VxePagerPrivateMethods, PagerReactData, VxeGridConstructor, VxeGridPrivateMethods, VxeInputEvents } from '../../../types'
 
 export default defineComponent({
   name: 'VxePager',
   props: {
-    size: { type: String as PropType<VxePagerPropTypes.Size>, default: () => getConfig().pager.size || getConfig().size },
+    size: {
+      type: String as PropType<VxePagerPropTypes.Size>,
+      default: () => getConfig().pager.size || getConfig().size
+    },
     // 自定义布局
-    layouts: { type: Array as PropType<VxePagerPropTypes.Layouts>, default: () => getConfig().pager.layouts || ['PrevJump', 'PrevPage', 'Jump', 'PageCount', 'NextPage', 'NextJump', 'Sizes', 'Total'] },
+    layouts: {
+      type: Array as PropType<VxePagerPropTypes.Layouts>,
+      default: () => getConfig().pager.layouts || ['PrevJump', 'PrevPage', 'Jump', 'PageCount', 'NextPage', 'NextJump', 'Sizes', 'Total']
+    },
     // 当前页
-    currentPage: { type: Number as PropType<VxePagerPropTypes.CurrentPage>, default: 1 },
+    currentPage: {
+      type: Number as PropType<VxePagerPropTypes.CurrentPage>,
+      default: 1
+    },
     // 加载中
     loading: Boolean as PropType<VxePagerPropTypes.Loading>,
     // 每页大小
-    pageSize: { type: Number as PropType<VxePagerPropTypes.PageSize>, default: () => getConfig().pager.pageSize || 10 },
+    pageSize: {
+      type: Number as PropType<VxePagerPropTypes.PageSize>,
+      default: () => getConfig().pager.pageSize || 10
+    },
     // 总条数
     total: { type: Number as PropType<VxePagerPropTypes.Total>, default: 0 },
     // 显示页码按钮的数量
-    pagerCount: { type: Number as PropType<VxePagerPropTypes.PagerCount>, default: () => getConfig().pager.pagerCount || 7 },
+    pagerCount: {
+      type: Number as PropType<VxePagerPropTypes.PagerCount>,
+      default: () => getConfig().pager.pagerCount || 7
+    },
     // 每页大小选项列表
-    pageSizes: { type: Array as PropType<VxePagerPropTypes.PageSizes>, default: () => getConfig().pager.pageSizes || [10, 15, 20, 50, 100] },
+    pageSizes: {
+      type: Array as PropType<VxePagerPropTypes.PageSizes>,
+      default: () => getConfig().pager.pageSizes || [10, 15, 20, 50, 100]
+    },
     // 列对其方式
-    align: { type: String as PropType<VxePagerPropTypes.Align>, default: () => getConfig().pager.align },
+    align: {
+      type: String as PropType<VxePagerPropTypes.Align>,
+      default: () => getConfig().pager.align
+    },
     // 带边框
-    border: { type: Boolean as PropType<VxePagerPropTypes.Border>, default: () => getConfig().pager.border },
+    border: {
+      type: Boolean as PropType<VxePagerPropTypes.Border>,
+      default: () => getConfig().pager.border
+    },
     // 带背景颜色
-    background: { type: Boolean as PropType<VxePagerPropTypes.Background>, default: () => getConfig().pager.background },
+    background: {
+      type: Boolean as PropType<VxePagerPropTypes.Background>,
+      default: () => getConfig().pager.background
+    },
     // 配套的样式
-    perfect: { type: Boolean as PropType<VxePagerPropTypes.Perfect>, default: () => getConfig().pager.perfect },
+    perfect: {
+      type: Boolean as PropType<VxePagerPropTypes.Perfect>,
+      default: () => getConfig().pager.perfect
+    },
     // 当只有一页时隐藏
-    autoHidden: { type: Boolean as PropType<VxePagerPropTypes.AutoHidden>, default: () => getConfig().pager.autoHidden },
-    transfer: { type: Boolean as PropType<VxePagerPropTypes.Transfer>, default: () => getConfig().pager.transfer },
+    autoHidden: {
+      type: Boolean as PropType<VxePagerPropTypes.AutoHidden>,
+      default: () => getConfig().pager.autoHidden
+    },
+    transfer: {
+      type: Boolean as PropType<VxePagerPropTypes.Transfer>,
+      default: () => getConfig().pager.transfer
+    },
     className: [String, Function] as PropType<VxePagerPropTypes.ClassName>,
-    pageSizePlacement: { type: String as PropType<VxePagerPropTypes.PageSizePlacement>, default: () => getConfig().pager.pageSizePlacement },
+    pageSizePlacement: {
+      type: String as PropType<VxePagerPropTypes.PageSizePlacement>,
+      default: () => getConfig().pager.pageSizePlacement
+    },
     // 自定义图标
     iconPrevPage: String as PropType<VxePagerPropTypes.IconPrevPage>,
     iconJumpPrev: String as PropType<VxePagerPropTypes.IconJumpPrev>,
@@ -71,49 +110,9 @@ export default defineComponent({
       refElem
     }
 
-    const $xePager = {
-      xID,
-      props,
-      context,
-      getRefMaps: () => refMaps
-    } as unknown as VxePagerConstructor & VxePagerPrivateMethods
-
-    let pagerMethods = {} as PagerMethods
-    let pagerPrivateMethods = {} as PagerPrivateMethods
-
-    const getPageCount = (total: number, size: number) => {
-      return Math.max(Math.ceil(total / size), 1)
-    }
-
     const computePageCount = computed(() => {
       return getPageCount(props.total, props.pageSize)
     })
-
-    const jumpPageEvent = (evnt: Event, currentPage: number) => {
-      emit('update:currentPage', currentPage)
-      if (evnt && currentPage !== props.currentPage) {
-        pagerMethods.dispatchEvent('page-change', { type: 'current', pageSize: props.pageSize, currentPage }, evnt)
-      }
-    }
-
-    const changeCurrentPage = (currentPage: number, evnt?: Event) => {
-      emit('update:currentPage', currentPage)
-      if (evnt && currentPage !== props.currentPage) {
-        pagerMethods.dispatchEvent('page-change', { type: 'current', pageSize: props.pageSize, currentPage }, evnt)
-      }
-    }
-
-    const triggerJumpEvent: VxeInputEvents.Blur = (params) => {
-      const { $event } = params
-      const inputElem: HTMLInputElement = $event.target as HTMLInputElement
-      const inpValue = XEUtils.toInteger(inputElem.value)
-      const pageCount = computePageCount.value
-      const current = inpValue <= 0 ? 1 : inpValue >= pageCount ? pageCount : inpValue
-      const currPage = XEUtils.toValueString(current)
-      inputElem.value = currPage
-      reactData.inpCurrPage = currPage
-      changeCurrentPage(current, $event)
-    }
 
     const computeNumList = computed(() => {
       const { pagerCount } = props
@@ -141,6 +140,46 @@ export default defineComponent({
         return { value: '', label: '', ...item }
       })
     })
+
+    const $xePager = {
+      xID,
+      props,
+      context,
+      getRefMaps: () => refMaps
+    } as unknown as VxePagerConstructor & VxePagerPrivateMethods
+
+    let pagerMethods = {} as PagerMethods
+    let pagerPrivateMethods = {} as PagerPrivateMethods
+
+    const getPageCount = (total: number, size: number) => {
+      return Math.max(Math.ceil(total / size), 1)
+    }
+
+    const jumpPageEvent = (evnt: Event, currentPage: number) => {
+      emit('update:currentPage', currentPage)
+      if (evnt && currentPage !== props.currentPage) {
+        pagerMethods.dispatchEvent('page-change', { type: 'current', pageSize: props.pageSize, currentPage }, evnt)
+      }
+    }
+
+    const changeCurrentPage = (currentPage: number, evnt?: Event) => {
+      emit('update:currentPage', currentPage)
+      if (evnt && currentPage !== props.currentPage) {
+        pagerMethods.dispatchEvent('page-change', { type: 'current', pageSize: props.pageSize, currentPage }, evnt)
+      }
+    }
+
+    const triggerJumpEvent: VxeInputEvents.Blur = (params) => {
+      const { $event } = params
+      const inputElem: HTMLInputElement = $event.target as HTMLInputElement
+      const inpValue = XEUtils.toInteger(inputElem.value)
+      const pageCount = computePageCount.value
+      const current = inpValue <= 0 ? 1 : inpValue >= pageCount ? pageCount : inpValue
+      const currPage = XEUtils.toValueString(current)
+      inputElem.value = currPage
+      reactData.inpCurrPage = currPage
+      changeCurrentPage(current, $event)
+    }
 
     const handleHomePage = (evnt?: Event) => {
       const { currentPage } = props
@@ -345,7 +384,7 @@ export default defineComponent({
             class: 'vxe-pager--num-btn',
             type: 'button',
             onClick: (evnt: Event) => jumpPageEvent(evnt, 1)
-          }, 1),
+          }, '1'),
           renderPrevJump('span')
         )
       }
@@ -360,7 +399,7 @@ export default defineComponent({
               }],
               type: 'button',
               onClick: (evnt: Event) => jumpPageEvent(evnt, number)
-            }, number)
+            }, `${number}`)
           )
         }
       })
@@ -456,10 +495,12 @@ export default defineComponent({
       }, getI18n('vxe.pager.total', [props.total]))
     }
 
+    const dispatchEvent = (type: ValueOf<VxePagerEmits>, params: Record<string, any>, evnt: Event | null) => {
+      emit(type, createEvent(evnt, { $pager: $xePager }, params))
+    }
+
     pagerMethods = {
-      dispatchEvent (type, params, evnt) {
-        emit(type, createEvent(evnt, { $pager: $xePager }, params))
-      },
+      dispatchEvent,
       homePage () {
         handleHomePage()
         return nextTick()

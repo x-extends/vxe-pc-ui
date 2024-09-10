@@ -95,12 +95,12 @@ export interface VxeNumberInputProps {
    * 请使用 autoComplete
    * @deprecated
    */
-  autocomplete?: VxeNumberInputPropTypes.Autocomplete
+  autocomplete?: VxeNumberInputPropTypes.AutoComplete
   /**
    * 请使用 autoComplete
    * @deprecated
    */
-  maxlength?: VxeNumberInputPropTypes.Maxlength
+  maxlength?: VxeNumberInputPropTypes.MaxLength
 }
 
 export interface NumberInputPrivateComputed {
@@ -110,6 +110,10 @@ export interface VxeNumberInputPrivateComputed extends NumberInputPrivateCompute
 export interface NumberInputReactData {
   isActivated: boolean
   inputValue: VxeNumberInputPropTypes.ModelValue | undefined
+}
+
+export interface NumberInputInternalData {
+  dnTimeout?: undefined | number
 }
 
 export interface NumberInputMethods {

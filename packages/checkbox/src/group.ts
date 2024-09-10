@@ -1,9 +1,9 @@
-import { defineComponent, h, provide, PropType, computed, inject } from 'vue'
+import { defineComponent, h, provide, PropType, computed, inject, reactive } from 'vue'
 import { getConfig, createEvent, useSize } from '../../ui'
 import XEUtils from 'xe-utils'
 import VxeCheckboxComponent from './checkbox'
 
-import type { VxeCheckboxGroupConstructor, VxeCheckboxGroupEmits, VxeCheckboxGroupPrivateMethods, CheckboxGroupPrivateMethods, CheckboxGroupPrivateComputed, CheckboxGroupMethods, VxeCheckboxGroupPropTypes, VxeFormConstructor, VxeFormPrivateMethods, VxeFormDefines } from '../../../types'
+import type { VxeCheckboxGroupConstructor, VxeCheckboxGroupEmits, ValueOf, CheckboxGroupReactData, VxeCheckboxGroupPrivateMethods, CheckboxGroupPrivateMethods, CheckboxGroupPrivateComputed, CheckboxGroupMethods, VxeCheckboxGroupPropTypes, VxeFormConstructor, VxeFormPrivateMethods, VxeFormDefines } from '../../../types'
 
 export default defineComponent({
   name: 'VxeCheckboxGroup',
@@ -15,8 +15,14 @@ export default defineComponent({
       type: Boolean as PropType<VxeCheckboxGroupPropTypes.Disabled>,
       default: null
     },
-    max: { type: [String, Number] as PropType<VxeCheckboxGroupPropTypes.Max>, default: null },
-    size: { type: String as PropType<VxeCheckboxGroupPropTypes.Size>, default: () => getConfig().checkboxGroup.size || getConfig().size }
+    max: {
+      type: [String, Number] as PropType<VxeCheckboxGroupPropTypes.Max>,
+      default: null
+    },
+    size: {
+      type: String as PropType<VxeCheckboxGroupPropTypes.Size>,
+      default: () => getConfig().checkboxGroup.size || getConfig().size
+    }
   },
   emits: [
     'update:modelValue',
@@ -28,6 +34,9 @@ export default defineComponent({
     const formItemInfo = inject<VxeFormDefines.ProvideItemInfo | null>('xeFormItemInfo', null)
 
     const xID = XEUtils.uniqueId()
+
+    const reactData: CheckboxGroupReactData = reactive({
+    })
 
     const computeIsDisabled = computed(() => {
       const { disabled } = props
@@ -49,7 +58,7 @@ export default defineComponent({
     })
 
     const computePropsOpts = computed(() => {
-      return props.optionProps || {}
+      return Object.assign({}, props.optionProps)
     })
 
     const computeLabelField = computed(() => {
@@ -76,16 +85,19 @@ export default defineComponent({
       xID,
       props,
       context,
+      reactData,
 
       getComputeMaps: () => computeMaps
     } as unknown as VxeCheckboxGroupConstructor & VxeCheckboxGroupPrivateMethods
 
     useSize(props)
 
+    const dispatchEvent = (type: ValueOf<VxeCheckboxGroupEmits>, params: Record<string, any>, evnt: Event | null) => {
+      emit(type, createEvent(evnt, { $checkboxGroup: $xeCheckboxGroup }, params))
+    }
+
     const checkboxGroupMethods: CheckboxGroupMethods = {
-      dispatchEvent (type, params, evnt) {
-        emit(type, createEvent(evnt, { $checkboxGroup: $xeCheckboxGroup }, params))
-      }
+      dispatchEvent
     }
 
     const checkboxGroupPrivateMethods: CheckboxGroupPrivateMethods = {
@@ -132,9 +144,9 @@ export default defineComponent({
             : []))
     }
 
-    $xeCheckboxGroup.renderVN = renderVN
-
     provide('$xeCheckboxGroup', $xeCheckboxGroup)
+
+    $xeCheckboxGroup.renderVN = renderVN
 
     return renderVN
   }

@@ -71,7 +71,7 @@
       </vxe-pulldown>
     </p>
     <p>
-      <vxe-pulldown :options="pullOptions" trigger="click" showPopupShadow>
+      <vxe-pulldown :options="pullOptions" trigger="click" showPopupShadow transfer>
         <template #default>
           <img src="https://vxeui.com/resource/img/bq546.gif" style="width: 30px;height: 30px;" />
         </template>

@@ -1,4 +1,4 @@
-import { defineComponent, ref, computed, h, PropType, Ref, nextTick, inject, reactive, Teleport, createCommentVNode, onMounted, onUnmounted, watch } from 'vue'
+import { defineComponent, ref, computed, h, PropType, Ref, nextTick, inject, provide, reactive, Teleport, createCommentVNode, onMounted, onUnmounted, watch } from 'vue'
 import { getConfig, getI18n, getIcon, globalEvents, createEvent, useSize } from '../../ui'
 import { getEventTargetNode, getAbsolutePos } from '../../ui/src/dom'
 import { getLastZIndex, nextZIndex } from '../../ui/src/utils'
@@ -6,7 +6,7 @@ import XEUtils from 'xe-utils'
 import VxeInputComponent from '../../input/src/input'
 import VxeTreeComponent from '../../tree/src/tree'
 
-import type { TreeSelectReactData, VxeTreeSelectEmits, TreeSelectPrivateRef, TreeSelectPrivateMethods, TreeSelectMethods, VxeTreeSelectPrivateComputed, VxeTreeSelectPropTypes, VxeTreeSelectConstructor, VxeFormDefines, VxeTreeSelectPrivateMethods, VxeTableConstructor, VxeTablePrivateMethods, VxeFormConstructor, VxeFormPrivateMethods, VxeInputConstructor, VxeModalConstructor, VxeModalMethods } from '../../../types'
+import type { TreeSelectReactData, VxeTreeSelectEmits, TreeSelectInternalData, TreeSelectPrivateRef, TreeSelectPrivateMethods, TreeSelectMethods, VxeTreeSelectPrivateComputed, VxeTreeSelectPropTypes, VxeTreeSelectConstructor, VxeFormDefines, VxeDrawerConstructor, VxeDrawerMethods, VxeTreeSelectPrivateMethods, VxeTableConstructor, VxeTablePrivateMethods, VxeFormConstructor, VxeFormPrivateMethods, VxeInputConstructor, VxeModalConstructor, VxeModalMethods } from '../../../types'
 
 function getOptUniqueId () {
   return XEUtils.uniqueId('node_')
@@ -37,7 +37,10 @@ export default defineComponent({
     placement: String as PropType<VxeTreeSelectPropTypes.Placement>,
     options: Array as PropType<VxeTreeSelectPropTypes.Options>,
     optionProps: Object as PropType<VxeTreeSelectPropTypes.OptionProps>,
-    size: { type: String as PropType<VxeTreeSelectPropTypes.Size>, default: () => getConfig().select.size || getConfig().size },
+    size: {
+      type: String as PropType<VxeTreeSelectPropTypes.Size>,
+      default: () => getConfig().select.size || getConfig().size
+    },
     remote: Boolean as PropType<VxeTreeSelectPropTypes.Remote>,
     remoteMethod: Function as PropType<VxeTreeSelectPropTypes.RemoteMethod>,
     treeConfig: Object as PropType<VxeTreeSelectPropTypes.TreeConfig>,
@@ -58,9 +61,10 @@ export default defineComponent({
   setup (props, context) {
     const { emit, slots } = context
 
-    const $xeModal = inject<VxeModalConstructor & VxeModalMethods | null>('$xeModal', null)
-    const $xeTable = inject<VxeTableConstructor & VxeTablePrivateMethods | null>('$xeTable', null)
-    const $xeForm = inject<VxeFormConstructor & VxeFormPrivateMethods | null>('$xeForm', null)
+    const $xeModal = inject<(VxeModalConstructor & VxeModalMethods)| null>('$xeModal', null)
+    const $xeDrawer = inject<(VxeDrawerConstructor & VxeDrawerMethods) | null>('$xeDrawer', null)
+    const $xeTable = inject<(VxeTableConstructor & VxeTablePrivateMethods) | null>('$xeTable', null)
+    const $xeForm = inject<(VxeFormConstructor & VxeFormPrivateMethods) | null>('$xeForm', null)
     const formItemInfo = inject<VxeFormDefines.ProvideItemInfo | null>('xeFormItemInfo', null)
 
     const xID = XEUtils.uniqueId()
@@ -85,6 +89,10 @@ export default defineComponent({
       visibleAnimate: false,
       isActivated: false
     })
+
+    const internalData: TreeSelectInternalData = {
+      hpTimeout: undefined
+    }
 
     const refMaps: TreeSelectPrivateRef = {
       refElem
@@ -119,7 +127,7 @@ export default defineComponent({
         if (XEUtils.isBoolean(globalTransfer)) {
           return globalTransfer
         }
-        if ($xeTable || $xeModal || $xeForm) {
+        if ($xeTable || $xeModal || $xeDrawer || $xeForm) {
           return true
         }
       }
@@ -185,9 +193,9 @@ export default defineComponent({
     const computeSelectLabel = computed(() => {
       const { modelValue } = props
       const { fullNodeMaps } = reactData
+      const labelField = computeLabelField.value
       return (XEUtils.isArray(modelValue) ? modelValue : [modelValue]).map(value => {
         const cacheItem = fullNodeMaps[value]
-        const labelField = computeLabelField.value
         return cacheItem ? cacheItem.item[labelField] : value
       }).join(', ')
     })
@@ -200,6 +208,7 @@ export default defineComponent({
       props,
       context,
       reactData,
+      internalData,
 
       getRefMaps: () => refMaps,
       getComputeMaps: () => computeMaps
@@ -235,7 +244,7 @@ export default defineComponent({
         parent: any
         nodes: any[]
       }> = {}
-      XEUtils.eachTree(options, (item, index, items, parent, nodes) => {
+      XEUtils.eachTree(options, (item, index, items, path, parent, nodes) => {
         let nodeid = getOptid(item)
         if (!nodeid) {
           nodeid = getOptUniqueId()
@@ -325,13 +334,11 @@ export default defineComponent({
       })
     }
 
-    let hidePanelTimeout: number
-
     const showOptionPanel = () => {
       const { loading } = props
       const isDisabled = computeIsDisabled.value
       if (!loading && !isDisabled) {
-        clearTimeout(hidePanelTimeout)
+        clearTimeout(internalData.hpTimeout)
         if (!reactData.initialized) {
           reactData.initialized = true
         }
@@ -347,16 +354,16 @@ export default defineComponent({
 
     const hideOptionPanel = () => {
       reactData.visiblePanel = false
-      hidePanelTimeout = window.setTimeout(() => {
+      internalData.hpTimeout = window.setTimeout(() => {
         reactData.visibleAnimate = false
       }, 350)
     }
 
     const changeEvent = (evnt: Event, selectValue: any) => {
       const { fullNodeMaps } = reactData
+      emit('update:modelValue', selectValue)
       if (selectValue !== props.modelValue) {
         const cacheItem = fullNodeMaps[selectValue]
-        emit('update:modelValue', selectValue)
         treeSelectMethods.dispatchEvent('change', { value: selectValue, option: cacheItem ? cacheItem.item : null }, evnt)
         // 自动更新校验状态
         if ($xeForm && formItemInfo) {
@@ -609,8 +616,6 @@ export default defineComponent({
       ])
     }
 
-    $xeTreeSelect.renderVN = renderVN
-
     watch(() => props.options, () => {
       cacheItemMap()
     })
@@ -628,6 +633,10 @@ export default defineComponent({
       globalEvents.off($xeTreeSelect, 'mousedown')
       globalEvents.off($xeTreeSelect, 'blur')
     })
+
+    provide('$xeTreeSelect', $xeTreeSelect)
+
+    $xeTreeSelect.renderVN = renderVN
 
     return $xeTreeSelect
   },

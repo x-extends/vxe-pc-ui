@@ -1,25 +1,37 @@
-import { defineComponent, h, computed, inject, PropType } from 'vue'
+import { defineComponent, h, computed, inject, PropType, reactive } from 'vue'
 import XEUtils from 'xe-utils'
 import { getFuncText } from '../../ui/src/utils'
 import { getConfig, createEvent, useSize, getIcon } from '../../ui'
 
-import type { VxeCheckboxConstructor, VxeCheckboxGroupConstructor, VxeCheckboxEmits, VxeCheckboxGroupPrivateMethods, CheckboxMethods, VxeCheckboxPropTypes, VxeFormConstructor, VxeFormPrivateMethods, VxeFormDefines } from '../../../types'
+import type { VxeCheckboxConstructor, VxeCheckboxGroupConstructor, CheckboxReactData, VxeCheckboxEmits, ValueOf, VxeCheckboxGroupPrivateMethods, CheckboxMethods, VxeCheckboxPropTypes, VxeFormConstructor, VxeFormPrivateMethods, VxeFormDefines } from '../../../types'
 
 export default defineComponent({
   name: 'VxeCheckbox',
   props: {
     modelValue: [String, Number, Boolean] as PropType<VxeCheckboxPropTypes.ModelValue>,
-    label: { type: [String, Number] as PropType<VxeCheckboxPropTypes.Label>, default: null },
+    label: {
+      type: [String, Number] as PropType<VxeCheckboxPropTypes.Label>,
+      default: null
+    },
     indeterminate: Boolean as PropType<VxeCheckboxPropTypes.Indeterminate>,
     title: [String, Number] as PropType<VxeCheckboxPropTypes.Title>,
-    checkedValue: { type: [String, Number, Boolean] as PropType<VxeCheckboxPropTypes.CheckedValue>, default: true },
-    uncheckedValue: { type: [String, Number, Boolean] as PropType<VxeCheckboxPropTypes.UncheckedValue>, default: false },
+    checkedValue: {
+      type: [String, Number, Boolean] as PropType<VxeCheckboxPropTypes.CheckedValue>,
+      default: true
+    },
+    uncheckedValue: {
+      type: [String, Number, Boolean] as PropType<VxeCheckboxPropTypes.UncheckedValue>,
+      default: false
+    },
     content: [String, Number] as PropType<VxeCheckboxPropTypes.Content>,
     disabled: {
       type: Boolean as PropType<VxeCheckboxPropTypes.Disabled>,
       default: null
     },
-    size: { type: String as PropType<VxeCheckboxPropTypes.Size>, default: () => getConfig().checkbox.size || getConfig().size }
+    size: {
+      type: String as PropType<VxeCheckboxPropTypes.Size>,
+      default: () => getConfig().checkbox.size || getConfig().size
+    }
   },
   emits: [
     'update:modelValue',
@@ -34,10 +46,14 @@ export default defineComponent({
 
     const xID = XEUtils.uniqueId()
 
+    const reactData: CheckboxReactData = reactive({
+    })
+
     const $xeCheckbox = {
       xID,
       props,
-      context
+      context,
+      reactData
     } as unknown as VxeCheckboxConstructor
 
     let checkboxMethods = {} as CheckboxMethods
@@ -53,12 +69,13 @@ export default defineComponent({
 
     const computeIsDisabled = computed(() => {
       const { disabled } = props
+      const isChecked = computeIsChecked.value
       if (disabled === null) {
         if ($xeCheckboxGroup) {
-          const { computeIsDisabled, computeIsMaximize } = $xeCheckboxGroup.getComputeMaps()
-          const isMaximize = computeIsMaximize.value
-          const isChecked = computeIsChecked.value
-          return computeIsDisabled.value || (isMaximize && !isChecked)
+          const { computeIsDisabled: computeIsGroupDisabled, computeIsMaximize: computeIsGroupMaximize } = $xeCheckboxGroup.getComputeMaps()
+          const isGroupDisabled = computeIsGroupDisabled.value
+          const isGroupMaximize = computeIsGroupMaximize.value
+          return isGroupDisabled || (isGroupMaximize && !isChecked)
         }
       }
       return disabled
@@ -84,10 +101,12 @@ export default defineComponent({
       }
     }
 
+    const dispatchEvent = (type: ValueOf<VxeCheckboxEmits>, params: Record<string, any>, evnt: Event | null) => {
+      emit(type, createEvent(evnt, { $checkbox: $xeCheckbox }, params))
+    }
+
     checkboxMethods = {
-      dispatchEvent (type, params, evnt) {
-        emit(type, createEvent(evnt, { $checkbox: $xeCheckbox }, params))
-      }
+      dispatchEvent
     }
 
     Object.assign($xeCheckbox, checkboxMethods)
@@ -96,7 +115,7 @@ export default defineComponent({
       const vSize = computeSize.value
       const isDisabled = computeIsDisabled.value
       const isChecked = computeIsChecked.value
-      const indeterminate = props.indeterminate
+      const indeterminate = !isChecked && props.indeterminate
       return h('label', {
         class: ['vxe-checkbox', {
           [`size--${vSize}`]: vSize,

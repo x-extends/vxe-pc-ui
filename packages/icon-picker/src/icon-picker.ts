@@ -4,7 +4,7 @@ import { getConfig, getIcon, getI18n, globalEvents, createEvent, useSize, GLOBAL
 import { getEventTargetNode, getAbsolutePos } from '../../ui/src/dom'
 import { getLastZIndex, nextZIndex, getFuncText } from '../../ui/src/utils'
 
-import type { VxeIconPickerPropTypes, VxeIconPickerConstructor, IconPickerReactData, VxeIconPickerEmits, IconPickerMethods, IconPickerPrivateRef, VxeIconPickerMethods, VxeTableConstructor, VxeTablePrivateMethods, VxeIconPickerDefines, VxeFormDefines, VxeFormConstructor, VxeFormPrivateMethods, VxeModalConstructor, VxeModalMethods } from '../../../types'
+import type { VxeIconPickerPropTypes, VxeIconPickerConstructor, IconPickerInternalData, ValueOf, IconPickerReactData, VxeIconPickerEmits, IconPickerMethods, IconPickerPrivateRef, VxeIconPickerMethods, VxeTableConstructor, VxeTablePrivateMethods, VxeIconPickerDefines, VxeDrawerConstructor, VxeDrawerMethods, VxeFormDefines, VxeFormConstructor, VxeFormPrivateMethods, VxeModalConstructor, VxeModalMethods } from '../../../types'
 
 export default defineComponent({
   name: 'VxeIconPicker',
@@ -12,7 +12,10 @@ export default defineComponent({
     modelValue: String as PropType<VxeIconPickerPropTypes.ModelValue>,
     placeholder: String as PropType<VxeIconPickerPropTypes.Placeholder>,
     clearable: Boolean as PropType<VxeIconPickerPropTypes.Clearable>,
-    size: { type: String as PropType<VxeIconPickerPropTypes.Size>, default: () => getConfig().iconPicker.size || getConfig().size },
+    size: {
+      type: String as PropType<VxeIconPickerPropTypes.Size>,
+      default: () => getConfig().iconPicker.size || getConfig().size
+    },
     className: [String, Function] as PropType<VxeIconPickerPropTypes.ClassName>,
     popupClassName: [String, Function] as PropType<VxeIconPickerPropTypes.PopupClassName>,
     showIconTitle: {
@@ -43,9 +46,10 @@ export default defineComponent({
   setup (props, context) {
     const { emit } = context
 
-    const $xeModal = inject<VxeModalConstructor & VxeModalMethods | null>('$xeModal', null)
-    const $xeTable = inject<VxeTableConstructor & VxeTablePrivateMethods | null>('$xeTable', null)
-    const $xeForm = inject<VxeFormConstructor & VxeFormPrivateMethods | null>('$xeForm', null)
+    const $xeModal = inject<(VxeModalConstructor & VxeModalMethods) | null>('$xeModal', null)
+    const $xeDrawer = inject<(VxeDrawerConstructor & VxeDrawerMethods) | null>('$xeDrawer', null)
+    const $xeTable = inject<(VxeTableConstructor & VxeTablePrivateMethods) | null>('$xeTable', null)
+    const $xeForm = inject<(VxeFormConstructor & VxeFormPrivateMethods) | null>('$xeForm', null)
     const formItemInfo = inject<VxeFormDefines.ProvideItemInfo | null>('xeFormItemInfo', null)
 
     const xID = XEUtils.uniqueId()
@@ -54,7 +58,7 @@ export default defineComponent({
 
     const reactData = reactive<IconPickerReactData>({
       initialized: false,
-      selectIcon: '',
+      selectIcon: `${props.modelValue || ''}`,
       panelIndex: 0,
       panelStyle: {},
       panelPlacement: null,
@@ -62,6 +66,10 @@ export default defineComponent({
       isAniVisible: false,
       isActivated: false
     })
+
+    const internalData: IconPickerInternalData = {
+      hpTimeout: undefined
+    }
 
     const refElem = ref() as Ref<HTMLDivElement>
     const refInput = ref() as Ref<HTMLInputElement>
@@ -110,7 +118,7 @@ export default defineComponent({
         if (XEUtils.isBoolean(globalTransfer)) {
           return globalTransfer
         }
-        if ($xeTable || $xeModal || $xeForm) {
+        if ($xeTable || $xeModal || $xeDrawer || $xeForm) {
           return true
         }
       }
@@ -224,12 +232,14 @@ export default defineComponent({
       })
     }
 
-    let hidePanelTimeout: number
-
     const showOptionPanel = () => {
+      const { hpTimeout } = internalData
       const isDisabled = computeIsDisabled.value
       if (!isDisabled) {
-        clearTimeout(hidePanelTimeout)
+        if (hpTimeout) {
+          clearTimeout(hpTimeout)
+          internalData.hpTimeout = undefined
+        }
         if (!reactData.initialized) {
           reactData.initialized = true
         }
@@ -245,7 +255,7 @@ export default defineComponent({
 
     const hideOptionPanel = () => {
       reactData.visiblePanel = false
-      hidePanelTimeout = window.setTimeout(() => {
+      internalData.hpTimeout = window.setTimeout(() => {
         reactData.isAniVisible = false
       }, 350)
     }
@@ -376,10 +386,12 @@ export default defineComponent({
       hideOptionPanel()
     }
 
+    const dispatchEvent = (type: ValueOf<VxeIconPickerEmits>, params: Record<string, any>, evnt: Event | null) => {
+      emit(type, createEvent(evnt, { $iconPicker: $xeIconPicker }, params))
+    }
+
     iconPickerMethods = {
-      dispatchEvent (type, params, evnt) {
-        emit(type, createEvent(evnt, { $iconPicker: $xeIconPicker }, params))
-      },
+      dispatchEvent,
       isPanelVisible () {
         return reactData.visiblePanel
       },
@@ -549,14 +561,14 @@ export default defineComponent({
             initialized
               ? h('div', {
                 class: 'vxe-ico-picker--panel-wrapper'
-              }, renderIconWrapper())
+              }, [
+                renderIconWrapper()
+              ])
               : createCommentVNode()
           ])
         ])
       ])
     }
-
-    $xeIconPicker.renderVN = renderVN
 
     watch(() => props.modelValue, (val) => {
       reactData.selectIcon = `${val || ''}`
@@ -577,6 +589,8 @@ export default defineComponent({
     })
 
     provide('$xeIconPicker', $xeIconPicker)
+
+    $xeIconPicker.renderVN = renderVN
 
     return $xeIconPicker
   },

@@ -455,8 +455,6 @@ export default defineComponent({
       ])
     }
 
-    $xeListView.renderVN = renderVN
-
     watch(() => props.config, (value) => {
       loadConfig(value || {})
     })
@@ -474,6 +472,8 @@ export default defineComponent({
         }
       })
     }
+
+    $xeListView.renderVN = renderVN
 
     return $xeListView
   },

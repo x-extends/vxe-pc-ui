@@ -118,7 +118,7 @@ export default defineComponent({
       emitInputEvent(value, evnt)
     }
 
-    const emitModel = (value: string, evnt: Event | { type: string }) => {
+    const handleChange = (value: string, evnt: Event | { type: string }) => {
       reactData.inputValue = value
       emit('update:modelValue', value)
       passwordInputMethods.dispatchEvent('input', { value }, evnt as any)
@@ -165,7 +165,7 @@ export default defineComponent({
 
     const clearValueEvent = (evnt: Event, value: VxePasswordInputPropTypes.ModelValue) => {
       focus()
-      emitModel('', evnt)
+      handleChange('', evnt)
       passwordInputMethods.dispatchEvent('clear', { value }, evnt)
     }
 

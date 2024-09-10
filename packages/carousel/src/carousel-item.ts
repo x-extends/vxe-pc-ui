@@ -1,8 +1,9 @@
 import { defineComponent, ref, h, reactive, PropType, inject, watch, onMounted, onUnmounted } from 'vue'
+import { createEvent } from '../../ui'
 import { assembleCarouselItem, destroyCarouselItem } from './util'
 import XEUtils from 'xe-utils'
 
-import type { VxeCarouselItemPropTypes, CarouselItemReactData, CarouselItemPrivateRef, VxeCarouselItemEmits, VxeCarouselDefines, VxeCarouselItemPrivateComputed, VxeCarouselItemConstructor, VxeCarouselItemPrivateMethods, VxeCarouselConstructor, VxeCarouselPrivateMethods } from '../../../types'
+import type { VxeCarouselItemPropTypes, CarouselItemReactData, CarouselItemPrivateRef, CarouselItemMethods, CarouselItemPrivateMethods, ValueOf, VxeCarouselItemEmits, VxeCarouselDefines, VxeCarouselItemPrivateComputed, VxeCarouselItemConstructor, VxeCarouselItemPrivateMethods, VxeCarouselConstructor, VxeCarouselPrivateMethods } from '../../../types'
 
 export default defineComponent({
   name: 'VxeCarouselItem',
@@ -14,7 +15,7 @@ export default defineComponent({
   emits: [
   ] as VxeCarouselItemEmits,
   setup (props, context) {
-    const { slots } = context
+    const { slots, emit } = context
 
     const $xeCarousel = inject<(VxeCarouselConstructor & VxeCarouselPrivateMethods) | null>('$xeCarousel', null)
 
@@ -50,6 +51,19 @@ export default defineComponent({
       getComputeMaps: () => computeMaps
     } as unknown as VxeCarouselItemConstructor & VxeCarouselItemPrivateMethods
 
+    const dispatchEvent = (type: ValueOf<VxeCarouselItemEmits>, params: Record<string, any>, evnt: Event | null) => {
+      emit(type, createEvent(evnt, { $carouselItem: $xeCarouselItem }, params))
+    }
+
+    const carouselItemMethods: CarouselItemMethods = {
+      dispatchEvent
+    }
+
+    const carouselItemPrivateMethods: CarouselItemPrivateMethods = {
+    }
+
+    Object.assign($xeCarouselItem, carouselItemMethods, carouselItemPrivateMethods)
+
     const renderVN = () => {
       return h('div', {
         ref: refElem
@@ -65,8 +79,9 @@ export default defineComponent({
     })
 
     onMounted(() => {
-      if ($xeCarousel && refElem.value) {
-        assembleCarouselItem($xeCarousel, refElem.value, itemConfig)
+      const elem = refElem.value
+      if ($xeCarousel && elem) {
+        assembleCarouselItem($xeCarousel, elem, itemConfig)
       }
     })
 

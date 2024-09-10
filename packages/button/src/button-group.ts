@@ -85,6 +85,9 @@ export default defineComponent({
 
     provide('$xeButtonGroup', $xeButtonGroup)
 
-    return renderVN
+    return $xeButtonGroup
+  },
+  render () {
+    return this.renderVN()
   }
 })

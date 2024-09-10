@@ -6,16 +6,25 @@ import { hasClass, getEventTargetNode } from '../../ui/src/dom'
 import { getSlotVNs } from '../..//ui/src/vn'
 import { handleNumber, toFloatValueFixed } from './util'
 
-import type { VxeNumberInputConstructor, VxeNumberInputEmits, NumberInputReactData, NumberInputMethods, VxeNumberInputPropTypes, InputPrivateRef, VxeFormConstructor, VxeFormPrivateMethods, VxeFormDefines } from '../../../types'
+import type { VxeNumberInputConstructor, NumberInputInternalData, VxeNumberInputEmits, NumberInputReactData, NumberInputMethods, VxeNumberInputPropTypes, InputPrivateRef, VxeFormConstructor, VxeFormPrivateMethods, VxeFormDefines, ValueOf } from '../../../types'
 
 export default defineComponent({
   name: 'VxeNumberInput',
   props: {
     modelValue: [String, Number] as PropType<VxeNumberInputPropTypes.ModelValue>,
-    immediate: { type: Boolean as PropType<VxeNumberInputPropTypes.Immediate>, default: true },
+    immediate: {
+      type: Boolean as PropType<VxeNumberInputPropTypes.Immediate>,
+      default: true
+    },
     name: String as PropType<VxeNumberInputPropTypes.Name>,
-    type: { type: String as PropType<VxeNumberInputPropTypes.Type>, default: 'number' },
-    clearable: { type: Boolean as PropType<VxeNumberInputPropTypes.Clearable>, default: () => getConfig().numberInput.clearable },
+    type: {
+      type: String as PropType<VxeNumberInputPropTypes.Type>,
+      default: 'number'
+    },
+    clearable: {
+      type: Boolean as PropType<VxeNumberInputPropTypes.Clearable>,
+      default: () => getConfig().numberInput.clearable
+    },
     readonly: {
       type: Boolean as PropType<VxeNumberInputPropTypes.Readonly>,
       default: null
@@ -33,20 +42,38 @@ export default defineComponent({
     align: String as PropType<VxeNumberInputPropTypes.Align>,
     form: String as PropType<VxeNumberInputPropTypes.Form>,
     className: String as PropType<VxeNumberInputPropTypes.ClassName>,
-    size: { type: String as PropType<VxeNumberInputPropTypes.Size>, default: () => getConfig().numberInput.size || getConfig().size },
+    size: {
+      type: String as PropType<VxeNumberInputPropTypes.Size>,
+      default: () => getConfig().numberInput.size || getConfig().size
+    },
     multiple: Boolean as PropType<VxeNumberInputPropTypes.Multiple>,
 
     // number、integer、float
-    min: { type: [String, Number] as PropType<VxeNumberInputPropTypes.Min>, default: null },
-    max: { type: [String, Number] as PropType<VxeNumberInputPropTypes.Max>, default: null },
+    min: {
+      type: [String, Number] as PropType<VxeNumberInputPropTypes.Min>,
+      default: null
+    },
+    max: {
+      type: [String, Number] as PropType<VxeNumberInputPropTypes.Max>,
+      default: null
+    },
     step: [String, Number] as PropType<VxeNumberInputPropTypes.Step>,
-    exponential: { type: Boolean as PropType<VxeNumberInputPropTypes.Exponential>, default: () => getConfig().numberInput.exponential },
+    exponential: {
+      type: Boolean as PropType<VxeNumberInputPropTypes.Exponential>,
+      default: () => getConfig().numberInput.exponential
+    },
 
     // number、integer、float
-    controls: { type: Boolean as PropType<VxeNumberInputPropTypes.Controls>, default: () => getConfig().numberInput.controls },
+    controls: {
+      type: Boolean as PropType<VxeNumberInputPropTypes.Controls>,
+      default: () => getConfig().numberInput.controls
+    },
 
     // float
-    digits: { type: [String, Number] as PropType<VxeNumberInputPropTypes.Digits>, default: () => getConfig().numberInput.digits },
+    digits: {
+      type: [String, Number] as PropType<VxeNumberInputPropTypes.Digits>,
+      default: () => getConfig().numberInput.digits
+    },
 
     prefixIcon: String as PropType<VxeNumberInputPropTypes.PrefixIcon>,
     suffixIcon: String as PropType<VxeNumberInputPropTypes.SuffixIcon>,
@@ -87,6 +114,10 @@ export default defineComponent({
       inputValue: props.modelValue
     })
 
+    const internalData: NumberInputInternalData = {
+      dnTimeout: undefined
+    }
+
     const refElem = ref() as Ref<HTMLDivElement>
     const refInputTarget = ref() as Ref<HTMLInputElement>
     const refInputPanel = ref() as Ref<HTMLDivElement>
@@ -101,10 +132,11 @@ export default defineComponent({
       props,
       context,
       reactData,
+      internalData,
       getRefMaps: () => refMaps
     } as unknown as VxeNumberInputConstructor
 
-    let inputMethods = {} as NumberInputMethods
+    let numberInputMethods = {} as NumberInputMethods
 
     const computeFormReadonly = computed(() => {
       const { readonly } = props
@@ -126,10 +158,6 @@ export default defineComponent({
         return false
       }
       return disabled
-    })
-
-    const computeIsNumType = computed(() => {
-      return true
     })
 
     const computeDigitsValue = computed(() => {
@@ -170,7 +198,7 @@ export default defineComponent({
       return getI18n('vxe.base.pleaseInput')
     })
 
-    const computeInpMaxlength = computed(() => {
+    const computeInpMaxLength = computed(() => {
       const { maxLength, maxlength } = props
       // 数值最大长度限制 16 位，包含小数
       return XEUtils.toNumber(maxLength || maxlength) || 16
@@ -184,11 +212,7 @@ export default defineComponent({
     const computeNumValue = computed(() => {
       const { type } = props
       const { inputValue } = reactData
-      const isNumType = computeIsNumType.value
-      if (isNumType) {
-        return type === 'integer' ? XEUtils.toInteger(handleNumber(inputValue)) : XEUtils.toNumber(handleNumber(inputValue))
-      }
-      return 0
+      return type === 'integer' ? XEUtils.toInteger(handleNumber(inputValue)) : XEUtils.toNumber(handleNumber(inputValue))
     })
 
     const computeNumLabel = computed(() => {
@@ -199,10 +223,9 @@ export default defineComponent({
     const computeIsDisabledSubtractNumber = computed(() => {
       const { min } = props
       const { inputValue } = reactData
-      const isNumType = computeIsNumType.value
       const numValue = computeNumValue.value
       // 当有值时再进行判断
-      if ((inputValue || inputValue === 0) && isNumType && min !== null) {
+      if ((inputValue || inputValue === 0) && min !== null) {
         return numValue <= XEUtils.toNumber(min)
       }
       return false
@@ -211,10 +234,9 @@ export default defineComponent({
     const computeIsDisabledAddNumber = computed(() => {
       const { max } = props
       const { inputValue } = reactData
-      const isNumType = computeIsNumType.value
       const numValue = computeNumValue.value
       // 当有值时再进行判断
-      if ((inputValue || inputValue === 0) && isNumType && max !== null) {
+      if ((inputValue || inputValue === 0) && max !== null) {
         return numValue >= XEUtils.toNumber(max)
       }
       return false
@@ -222,29 +244,30 @@ export default defineComponent({
 
     const getNumberValue = (val: any) => {
       const { type, exponential } = props
-      const inpMaxlength = computeInpMaxlength.value
+      const inpMaxLength = computeInpMaxLength.value
       const digitsValue = computeDigitsValue.value
       const restVal = (type === 'float' ? toFloatValueFixed(val, digitsValue) : XEUtils.toValueString(val))
       if (exponential && (val === restVal || XEUtils.toValueString(val).toLowerCase() === XEUtils.toNumber(restVal).toExponential())) {
         return val
       }
-      return restVal.slice(0, inpMaxlength)
+      return restVal.slice(0, inpMaxLength)
     }
 
     const triggerEvent = (evnt: Event & { type: 'input' | 'change' | 'keydown' | 'keyup' | 'wheel' | 'click' | 'focus' | 'blur' }) => {
       const { inputValue } = reactData
-      inputMethods.dispatchEvent(evnt.type, { value: inputValue }, evnt)
+      numberInputMethods.dispatchEvent(evnt.type, { value: inputValue }, evnt)
     }
 
-    const emitModel = (value: number | null, inputValue: string, evnt: Event | { type: string }) => {
+    const handleChange = (val: number | null, inputValue: string, evnt: Event | { type: string }) => {
+      const value = val ? Number(val) : null
       const isChange = Number(value) !== props.modelValue
       if (isChange) {
         reactData.inputValue = inputValue || ''
-        emit('update:modelValue', value ? Number(value) : null)
+        emit('update:modelValue', value)
       }
-      inputMethods.dispatchEvent('input', { value }, evnt as Event)
+      numberInputMethods.dispatchEvent('input', { value }, evnt as Event)
       if (isChange) {
-        inputMethods.dispatchEvent('change', { value }, evnt as Event)
+        numberInputMethods.dispatchEvent('change', { value }, evnt as Event)
         // 自动更新校验状态
         if ($xeForm && formItemInfo) {
           $xeForm.triggerItemEvent(evnt, formItemInfo.itemConfig.field, value)
@@ -257,9 +280,9 @@ export default defineComponent({
       const value = inputValue ? XEUtils.toNumber(inputValue) : null
       reactData.inputValue = inputValue
       if (inpImmediate) {
-        emitModel(value, inputValue, evnt)
+        handleChange(value, inputValue, evnt)
       } else {
-        inputMethods.dispatchEvent('input', { value }, evnt)
+        numberInputMethods.dispatchEvent('input', { value }, evnt)
       }
     }
 
@@ -285,21 +308,21 @@ export default defineComponent({
       const isDisabled = computeIsDisabled.value
       if (!isDisabled) {
         const { inputValue } = reactData
-        inputMethods.dispatchEvent('prefix-click', { value: inputValue }, evnt)
+        numberInputMethods.dispatchEvent('prefix-click', { value: inputValue }, evnt)
       }
     }
 
     const clearValueEvent = (evnt: Event, value: VxeNumberInputPropTypes.ModelValue) => {
       focus()
-      emitModel(null, '', evnt)
-      inputMethods.dispatchEvent('clear', { value }, evnt)
+      handleChange(null, '', evnt)
+      numberInputMethods.dispatchEvent('clear', { value }, evnt)
     }
 
     const clickSuffixEvent = (evnt: Event) => {
       const isDisabled = computeIsDisabled.value
       if (!isDisabled) {
         const { inputValue } = reactData
-        inputMethods.dispatchEvent('suffix-click', { value: inputValue }, evnt)
+        numberInputMethods.dispatchEvent('suffix-click', { value: inputValue }, evnt)
       }
     }
 
@@ -319,7 +342,7 @@ export default defineComponent({
             validValue = Number(textValue)
           }
           if (inputValue !== validValue) {
-            emitModel(validValue, textValue, { type: 'init' })
+            handleChange(validValue, textValue, { type: 'init' })
           }
         }
       }
@@ -352,7 +375,7 @@ export default defineComponent({
             }
           }
           const inpValue = getNumberValue(inpNumVal)
-          emitModel(inpValue === null ? null : Number(inpValue), inpValue, { type: 'check' })
+          handleChange(inpValue === null ? null : Number(inpValue), inpValue, { type: 'check' })
         }
       }
     }
@@ -362,11 +385,11 @@ export default defineComponent({
       const inpImmediate = computeInpImmediate.value
       const value = inputValue ? Number(inputValue) : null
       if (!inpImmediate) {
-        emitModel(value, `${inputValue || ''}`, evnt)
+        handleChange(value, `${inputValue || ''}`, evnt)
       }
       afterCheckValue()
       reactData.isActivated = false
-      inputMethods.dispatchEvent('blur', { value }, evnt)
+      numberInputMethods.dispatchEvent('blur', { value }, evnt)
     }
 
     // 数值
@@ -387,21 +410,19 @@ export default defineComponent({
       emitInputEvent(getNumberValue(restNum), evnt as (Event & { type: 'input' }))
     }
 
-    let downbumTimeout: number
-
     const numberNextEvent = (evnt: Event) => {
       const isDisabled = computeIsDisabled.value
       const formReadonly = computeFormReadonly.value
       const isDisabledSubtractNumber = computeIsDisabledSubtractNumber.value
-      clearTimeout(downbumTimeout)
+      numberStopDown()
       if (!isDisabled && !formReadonly && !isDisabledSubtractNumber) {
         numberChange(false, evnt)
       }
-      inputMethods.dispatchEvent('next-number', {}, evnt)
+      numberInputMethods.dispatchEvent('next-number', {}, evnt)
     }
 
     const numberDownNextEvent = (evnt: Event) => {
-      downbumTimeout = window.setTimeout(() => {
+      internalData.dnTimeout = window.setTimeout(() => {
         numberNextEvent(evnt)
         numberDownNextEvent(evnt)
       }, 60)
@@ -411,11 +432,11 @@ export default defineComponent({
       const isDisabled = computeIsDisabled.value
       const formReadonly = computeFormReadonly.value
       const isDisabledAddNumber = computeIsDisabledAddNumber.value
-      clearTimeout(downbumTimeout)
+      numberStopDown()
       if (!isDisabled && !formReadonly && !isDisabledAddNumber) {
         numberChange(true, evnt)
       }
-      inputMethods.dispatchEvent('prev-number', {}, evnt)
+      numberInputMethods.dispatchEvent('prev-number', {}, evnt)
     }
 
     const numberKeydownEvent = (evnt: KeyboardEvent) => {
@@ -433,24 +454,21 @@ export default defineComponent({
 
     const keydownEvent = (evnt: KeyboardEvent & { type: 'keydown' }) => {
       const { exponential, controls } = props
-      const isNumType = computeIsNumType.value
-      if (isNumType) {
-        const isCtrlKey = evnt.ctrlKey
-        const isShiftKey = evnt.shiftKey
-        const isAltKey = evnt.altKey
-        const keyCode = evnt.keyCode
-        const isEsc = globalEvents.hasKey(evnt, GLOBAL_EVENT_KEYS.ESCAPE)
-        const isUpArrow = globalEvents.hasKey(evnt, GLOBAL_EVENT_KEYS.ARROW_UP)
-        const isDwArrow = globalEvents.hasKey(evnt, GLOBAL_EVENT_KEYS.ARROW_DOWN)
-        if (!isCtrlKey && !isShiftKey && !isAltKey && (globalEvents.hasKey(evnt, GLOBAL_EVENT_KEYS.SPACEBAR) || ((!exponential || keyCode !== 69) && (keyCode >= 65 && keyCode <= 90)) || (keyCode >= 186 && keyCode <= 188) || keyCode >= 191)) {
-          evnt.preventDefault()
-        }
-        if (isEsc) {
-          afterCheckValue()
-        } else if (isUpArrow || isDwArrow) {
-          if (controls) {
-            numberKeydownEvent(evnt)
-          }
+      const isCtrlKey = evnt.ctrlKey
+      const isShiftKey = evnt.shiftKey
+      const isAltKey = evnt.altKey
+      const keyCode = evnt.keyCode
+      const isEsc = globalEvents.hasKey(evnt, GLOBAL_EVENT_KEYS.ESCAPE)
+      const isUpArrow = globalEvents.hasKey(evnt, GLOBAL_EVENT_KEYS.ARROW_UP)
+      const isDwArrow = globalEvents.hasKey(evnt, GLOBAL_EVENT_KEYS.ARROW_DOWN)
+      if (!isCtrlKey && !isShiftKey && !isAltKey && (globalEvents.hasKey(evnt, GLOBAL_EVENT_KEYS.SPACEBAR) || ((!exponential || keyCode !== 69) && (keyCode >= 65 && keyCode <= 90)) || (keyCode >= 186 && keyCode <= 188) || keyCode >= 191)) {
+        evnt.preventDefault()
+      }
+      if (isEsc) {
+        afterCheckValue()
+      } else if (isUpArrow || isDwArrow) {
+        if (controls) {
+          numberKeydownEvent(evnt)
         }
       }
       triggerEvent(evnt)
@@ -463,11 +481,15 @@ export default defineComponent({
     // 数值
 
     const numberStopDown = () => {
-      clearTimeout(downbumTimeout)
+      const { dnTimeout } = internalData
+      if (dnTimeout) {
+        clearTimeout(dnTimeout)
+        internalData.dnTimeout = undefined
+      }
     }
 
     const numberDownPrevEvent = (evnt: Event) => {
-      downbumTimeout = window.setTimeout(() => {
+      internalData.dnTimeout = window.setTimeout(() => {
         numberPrevEvent(evnt)
         numberDownPrevEvent(evnt)
       }, 60)
@@ -482,7 +504,7 @@ export default defineComponent({
         } else {
           numberNextEvent(evnt)
         }
-        downbumTimeout = window.setTimeout(() => {
+        internalData.dnTimeout = window.setTimeout(() => {
           if (isPrevNumber) {
             numberDownPrevEvent(evnt)
           } else {
@@ -496,8 +518,7 @@ export default defineComponent({
       type: 'wheel';
       wheelDelta: number;
     }) => {
-      const isNumType = computeIsNumType.value
-      if (isNumType && props.controls) {
+      if (props.controls) {
         if (reactData.isActivated) {
           const delta = evnt.deltaY
           if (delta > 0) {
@@ -661,10 +682,12 @@ export default defineComponent({
       return createCommentVNode()
     }
 
-    inputMethods = {
-      dispatchEvent (type, params, evnt) {
-        emit(type, createEvent(evnt, { $input: $xeNumberInput }, params))
-      },
+    const dispatchEvent = (type: ValueOf<VxeNumberInputEmits>, params: Record<string, any>, evnt: Event | null) => {
+      emit(type, createEvent(evnt, { $numberInput: $xeNumberInput }, params))
+    }
+
+    numberInputMethods = {
+      dispatchEvent,
 
       focus () {
         const inputElem = refInputTarget.value
@@ -686,7 +709,7 @@ export default defineComponent({
       }
     }
 
-    Object.assign($xeNumberInput, inputMethods)
+    Object.assign($xeNumberInput, numberInputMethods)
 
     const renderVN = () => {
       const { className, controls, type, align, name, autocomplete, autoComplete } = props
@@ -702,7 +725,7 @@ export default defineComponent({
         }, numLabel)
       }
       const inputReadonly = computeInputReadonly.value
-      const inpMaxlength = computeInpMaxlength.value
+      const inpMaxLength = computeInpMaxLength.value
       const inpPlaceholder = computeInpPlaceholder.value
       const isClearable = computeIsClearable.value
       const prefix = renderPrefixIcon()
@@ -732,7 +755,7 @@ export default defineComponent({
             name,
             type: 'text',
             placeholder: inpPlaceholder,
-            maxlength: inpMaxlength,
+            maxlength: inpMaxLength,
             readonly: inputReadonly,
             disabled: isDisabled,
             autocomplete: autoComplete || autocomplete,

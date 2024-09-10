@@ -8,8 +8,6 @@ import type { VxeButtonComponent } from '../../../types/all'
 
 const componentDefaultModelProp = 'modelValue'
 
-const defaultCompProps = { transfer: true }
-
 /**
  * 已废弃
  * @deprecated
@@ -39,7 +37,7 @@ function getNativeAttrs (renderOpts: any) {
 }
 
 function getComponentFormItemProps (renderOpts: any, params: any, value: any, defaultProps?: any) {
-  return XEUtils.assign({}, defaultCompProps, defaultProps, renderOpts.props, { [componentDefaultModelProp]: value })
+  return XEUtils.assign({}, defaultProps, renderOpts.props, { [componentDefaultModelProp]: value })
 }
 
 /**

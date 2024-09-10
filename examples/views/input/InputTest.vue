@@ -9,7 +9,7 @@
 
     <p>
       <vxe-input v-model="demo1.value200" placeholder="可清除" showWordCount></vxe-input>
-      <vxe-input v-model="demo1.value200" placeholder="可清除" showWordCount maxlength="20"></vxe-input>
+      <vxe-input v-model="demo1.value200" placeholder="可清除" showWordCount max-length="20"></vxe-input>
       <vxe-input v-model="demo1.value200" placeholder="可清除" showWordCount clearable></vxe-input>
       <vxe-input v-model="demo1.value201" placeholder="带图标" prefix-icon="vxe-icon-time" suffix-icon="vxe-icon-time" clearable></vxe-input>
       <vxe-input v-model="demo1.value202" placeholder="只读的" suffix-icon="vxe-icon-time" readonly></vxe-input>

@@ -67,5 +67,8 @@ export default defineComponent({
     $xeIcon.renderVN = renderVN
 
     return $xeIcon
+  },
+  render () {
+    return this.renderVN()
   }
 })

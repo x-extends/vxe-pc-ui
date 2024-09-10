@@ -109,7 +109,10 @@ export default defineComponent({
       type: String as PropType<VxeTreePropTypes.IconLoaded>,
       default: () => getConfig().tree.iconLoaded
     },
-    size: { type: String as PropType<VxeTreePropTypes.Size>, default: () => getConfig().tree.size || getConfig().size }
+    size: {
+      type: String as PropType<VxeTreePropTypes.Size>,
+      default: () => getConfig().tree.size || getConfig().size
+    }
   },
   emits: [
     'update:modelValue',
@@ -490,7 +493,7 @@ export default defineComponent({
         const { lazy, transform } = props
         const { nodeMaps } = reactData
         if (!lazy) {
-          return nextTick()
+          return Promise.resolve([])
         }
         const childrenField = computeChildrenField.value
         const parentNodeItem = nodeMaps[getNodeId(node)]
@@ -1135,8 +1138,6 @@ export default defineComponent({
       ])
     }
 
-    $xeTree.renderVN = renderVN
-
     const dataFlag = ref(0)
     watch(() => props.data ? props.data.length : 0, () => {
       dataFlag.value++
@@ -1171,6 +1172,8 @@ export default defineComponent({
 
     updateData(props.data || [])
     updateCheckboxChecked(props.checkNodeKeys || [])
+
+    $xeTree.renderVN = renderVN
 
     return $xeTree
   },

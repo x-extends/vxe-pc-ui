@@ -72,6 +72,12 @@ export interface CalendarReactData {
   currentDate: any
 }
 
+export interface CalendarInternalData {
+  yearSize: number
+  monthSize: number
+  quarterSize: number
+}
+
 export interface CalendarMethods {
   dispatchEvent(type: ValueOf<VxeCalendarEmits>, params: Record<string, any>, evnt: Event | null): void
 }

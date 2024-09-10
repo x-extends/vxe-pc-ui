@@ -79,9 +79,9 @@ export default defineComponent({
       }, defaultSlot ? defaultSlot({}) : renderItems())
     }
 
-    $xeBreadcrumb.renderVN = renderVN
-
     provide('$xeBreadcrumb', $xeBreadcrumb)
+
+    $xeBreadcrumb.renderVN = renderVN
 
     return $xeBreadcrumb
   },

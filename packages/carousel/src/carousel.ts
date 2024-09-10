@@ -5,7 +5,7 @@ import { toCssUnit } from '../..//ui/src/dom'
 import VxeLoadingComponent from '../../loading/src/loading'
 import XEUtils from 'xe-utils'
 
-import type { CarouselReactData, CarouselPrivateRef, VxeCarouselPropTypes, CarouselMethods, CarouselPrivateMethods, VxeCarouselEmits, VxeCarouselDefines, VxeCarouselPrivateComputed, VxeCarouselConstructor, ValueOf, VxeCarouselPrivateMethods } from '../../../types'
+import type { CarouselReactData, CarouselPrivateRef, VxeCarouselPropTypes, CarouselInternalData, CarouselMethods, CarouselPrivateMethods, VxeCarouselEmits, VxeCarouselDefines, VxeCarouselPrivateComputed, VxeCarouselConstructor, ValueOf, VxeCarouselPrivateMethods } from '../../../types'
 
 export default defineComponent({
   name: 'VxeCarousel',
@@ -61,6 +61,11 @@ export default defineComponent({
       itemHeight: 0
     })
 
+    const internalData: CarouselInternalData = {
+      apTimeout: undefined,
+      stopFlag: false
+    }
+
     const refMaps: CarouselPrivateRef = {
       refElem
     }
@@ -88,6 +93,7 @@ export default defineComponent({
       props,
       context,
       reactData,
+      internalData,
 
       getRefMaps: () => refMaps,
       getComputeMaps: () => computeMaps
@@ -198,22 +204,22 @@ export default defineComponent({
       }
     }
 
-    let apTimeout: any = null
-    let stopFlag = false
-
     const stopAutoPlay = () => {
-      stopFlag = true
-      if (apTimeout !== null) {
+      const { apTimeout } = internalData
+      internalData.stopFlag = true
+      if (apTimeout) {
         clearTimeout(apTimeout)
+        internalData.apTimeout = undefined
       }
     }
 
     const handleAutoPlay = () => {
       const { autoPlay, interval } = props
+      const { stopFlag } = internalData
       stopAutoPlay()
       if (autoPlay) {
-        stopFlag = false
-        apTimeout = setTimeout(() => {
+        internalData.stopFlag = false
+        internalData.apTimeout = setTimeout(() => {
           if (!stopFlag) {
             handlePrevNext(true)
           }
@@ -324,7 +330,9 @@ export default defineComponent({
                 height: toCssUnit(height)
               }
             : null
-        }, renderItemWrapper(list)),
+        }, [
+          renderItemWrapper(list)
+        ]),
         showIndicators ? renderIndicators(list) : createCommentVNode(),
         h('div', {
           class: 'vxe-carousel--btn-wrapper'
@@ -355,8 +363,6 @@ export default defineComponent({
         })
       ])
     }
-
-    $xeCarousel.renderVN = renderVN
 
     const optsFlag = ref(0)
     watch(() => props.options ? props.options.length : -1, () => {
@@ -396,6 +402,8 @@ export default defineComponent({
     })
 
     provide('$xeCarousel', $xeCarousel)
+
+    $xeCarousel.renderVN = renderVN
 
     return $xeCarousel
   },

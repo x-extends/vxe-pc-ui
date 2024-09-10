@@ -53,6 +53,10 @@ export interface CountdownReactData {
   secondNum: number
 }
 
+export interface CountdownInternalData {
+  dnTimeout: number | undefined
+}
+
 export interface CountdownMethods {
   dispatchEvent(type: ValueOf<VxeCountdownEmits>, params: Record<string, any>, evnt: Event | null): void
 }

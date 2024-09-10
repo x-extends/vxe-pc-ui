@@ -29,19 +29,16 @@ export default defineComponent({
 
     const { computeSize } = useSize(props)
 
-    const reactData = reactive({
+    const reactData = reactive<ListReactData>({
       scrollYLoad: false,
       bodyHeight: 0,
       rowHeight: 0,
       topSpaceHeight: 0,
       items: []
-    } as ListReactData)
-
-    const refElem = ref() as Ref<HTMLDivElement>
-    const refVirtualWrapper = ref() as Ref<HTMLDivElement>
-    const refVirtualBody = ref() as Ref<HTMLDivElement>
+    })
 
     const internalData: ListInternalData = {
+      resizeObserver: undefined,
       fullData: [],
       lastScrollLeft: 0,
       lastScrollTop: 0,
@@ -53,6 +50,10 @@ export default defineComponent({
         rowHeight: 0
       }
     }
+
+    const refElem = ref() as Ref<HTMLDivElement>
+    const refVirtualWrapper = ref() as Ref<HTMLDivElement>
+    const refVirtualBody = ref() as Ref<HTMLDivElement>
 
     const refMaps: ListPrivateRef = {
       refElem
@@ -157,7 +158,7 @@ export default defineComponent({
      * @param {Number} scrollLeft 左距离
      * @param {Number} scrollTop 上距离
      */
-    const scrollTo = (scrollLeft: number | null, scrollTop?: number | null): Promise<void> => {
+    const scrollTo = (scrollLeft: number | null, scrollTop?: number | null) => {
       const scrollBodyElem = refVirtualWrapper.value
       if (XEUtils.isNumber(scrollLeft)) {
         scrollBodyElem.scrollLeft = scrollLeft
@@ -166,7 +167,7 @@ export default defineComponent({
         scrollBodyElem.scrollTop = scrollTop
       }
       if (reactData.scrollYLoad) {
-        return new Promise(resolve => {
+        return new Promise<void>(resolve => {
           setTimeout(() => {
             nextTick(() => {
               resolve()
@@ -296,21 +297,21 @@ export default defineComponent({
       recalculate().then(() => refreshScroll())
     })
 
-    let resizeObserver: ResizeObserver
-
     nextTick(() => {
       globalEvents.on($xeList, 'resize', () => {
         recalculate()
       })
       if (props.autoResize) {
         const el = refElem.value
-        resizeObserver = globalResize.create(() => recalculate())
+        const resizeObserver = globalResize.create(() => recalculate())
         resizeObserver.observe(el)
+        internalData.resizeObserver = resizeObserver
       }
       listMethods.loadData(props.data || [])
     })
 
     onUnmounted(() => {
+      const { resizeObserver } = internalData
       if (resizeObserver) {
         resizeObserver.disconnect()
       }

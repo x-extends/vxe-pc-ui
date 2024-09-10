@@ -70,6 +70,10 @@ export interface IconPickerReactData {
   isActivated: boolean
 }
 
+export interface IconPickerInternalData {
+  hpTimeout?: undefined | number
+}
+
 export interface IconPickerMethods {
   dispatchEvent(type: ValueOf<VxeIconPickerEmits>, params: Record<string, any>, evnt: Event | null): void
   /**

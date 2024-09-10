@@ -12,27 +12,45 @@ export default defineComponent({
   props: {
     modelValue: [String, Number] as PropType<VxeTextareaPropTypes.ModelValue>,
     className: String as PropType<VxeTextareaPropTypes.ClassName>,
-    immediate: { type: Boolean as PropType<VxeTextareaPropTypes.Immediate>, default: true },
+    immediate: {
+      type: Boolean as PropType<VxeTextareaPropTypes.Immediate>,
+      default: true
+    },
     name: String as PropType<VxeTextareaPropTypes.Name>,
     readonly: {
       type: Boolean as PropType<VxeTextareaPropTypes.Readonly>,
       default: null
     },
-    editable: { type: Boolean as PropType<VxeTextareaPropTypes.Readonly>, default: true },
+    editable: {
+      type: Boolean as PropType<VxeTextareaPropTypes.Readonly>,
+      default: true
+    },
     disabled: {
       type: Boolean as PropType<VxeTextareaPropTypes.Disabled>,
       default: null
     },
     placeholder: String as PropType<VxeTextareaPropTypes.Placeholder>,
     maxLength: [String, Number] as PropType<VxeTextareaPropTypes.MaxLength>,
-    rows: { type: [String, Number] as PropType<VxeTextareaPropTypes.Rows>, default: null },
-    cols: { type: [String, Number] as PropType<VxeTextareaPropTypes.Cols>, default: null },
+    rows: {
+      type: [String, Number] as PropType<VxeTextareaPropTypes.Rows>,
+      default: null
+    },
+    cols: {
+      type: [String, Number] as PropType<VxeTextareaPropTypes.Cols>,
+      default: null
+    },
     showWordCount: Boolean as PropType<VxeTextareaPropTypes.ShowWordCount>,
     countMethod: Function as PropType<VxeTextareaPropTypes.CountMethod>,
     autosize: [Boolean, Object] as PropType<VxeTextareaPropTypes.Autosize>,
     form: String as PropType<VxeTextareaPropTypes.Form>,
-    resize: { type: String as PropType<VxeTextareaPropTypes.Resize>, default: () => getConfig().textarea.resize },
-    size: { type: String as PropType<VxeTextareaPropTypes.Size>, default: () => getConfig().textarea.size || getConfig().size },
+    resize: {
+      type: String as PropType<VxeTextareaPropTypes.Resize>,
+      default: () => getConfig().textarea.resize
+    },
+    size: {
+      type: String as PropType<VxeTextareaPropTypes.Size>,
+      default: () => getConfig().textarea.size || getConfig().size
+    },
     // 已废弃
     maxlength: [String, Number] as PropType<VxeTextareaPropTypes.Maxlength>
   },
@@ -193,7 +211,7 @@ export default defineComponent({
       $xeTextarea.dispatchEvent(evnt.type, { value }, evnt)
     }
 
-    const emitUpdate = (value: string, evnt: Event) => {
+    const handleChange = (value: string, evnt: Event) => {
       reactData.inputValue = value
       emit('update:modelValue', value)
       if (XEUtils.toValueString(props.modelValue) !== value) {
@@ -211,7 +229,7 @@ export default defineComponent({
       const value = textElem.value
       reactData.inputValue = value
       if (immediate) {
-        emitUpdate(value, evnt)
+        handleChange(value, evnt)
       }
       $xeTextarea.dispatchEvent('input', { value }, evnt)
       handleResize()
@@ -222,7 +240,7 @@ export default defineComponent({
       if (immediate) {
         triggerEvent(evnt)
       } else {
-        emitUpdate(reactData.inputValue, evnt)
+        handleChange(reactData.inputValue, evnt)
       }
     }
 
@@ -230,7 +248,7 @@ export default defineComponent({
       const { immediate } = props
       const { inputValue } = reactData
       if (!immediate) {
-        emitUpdate(inputValue, evnt)
+        handleChange(inputValue, evnt)
       }
       $xeTextarea.dispatchEvent('blur', { value: inputValue }, evnt)
     }
