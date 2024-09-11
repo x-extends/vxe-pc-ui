@@ -431,6 +431,8 @@ setIcon({
   TABS_TAB_BUTTON_LEFT: iconPrefix + 'arrow-left',
   TABS_TAB_BUTTON_RIGHT: iconPrefix + 'arrow-right',
   TABS_TAB_CLOSE: iconPrefix + 'close',
+  TABS_TAB_REFRESH: iconPrefix + 'refresh',
+  TABS_TAB_REFRESH_LOADING: iconPrefix + 'refresh roll',
 
   // text
   TEXT_COPY: iconPrefix + 'copy',
