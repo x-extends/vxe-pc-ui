@@ -73,6 +73,10 @@ export default defineComponent({
     const linkPrivateMethods: LinkPrivateMethods = {
     }
 
+    const clickEvent = (evnt: MouseEvent) => {
+      dispatchEvent('click', {}, evnt)
+    }
+
     Object.assign($xeLink, linkMethods, linkPrivateMethods)
 
     const renderContent = () => {
@@ -116,7 +120,8 @@ export default defineComponent({
           }],
           title,
           target,
-          to: routerLink
+          to: routerLink,
+          onClick: clickEvent
         }, {
           default () {
             return renderContent()
@@ -125,14 +130,15 @@ export default defineComponent({
       }
       return h('a', {
         ref: refElem,
-        href,
-        target,
-        title,
         class: ['vxe-link', {
           [`size--${vSize}`]: vSize,
           [`theme--${status}`]: status,
           'is--underline': underline
-        }]
+        }],
+        href,
+        target,
+        title,
+        onClick: clickEvent
       }, renderContent())
     }
 

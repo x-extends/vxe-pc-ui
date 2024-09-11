@@ -58,7 +58,7 @@ export namespace VxeTabsPropTypes {
      */
     enabled?: boolean
     /**
-     * 页签关闭方法，该方法的返回值用来决定当前页签是否允许关闭
+     * 页签关闭之前方法，该方法的返回值用来决定当前页签是否允许关闭
      * @returns boolean
      */
     beforeMethod?: (params: {

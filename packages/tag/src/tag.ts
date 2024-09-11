@@ -60,6 +60,10 @@ export default defineComponent({
     const tagPrivateMethods: TagPrivateMethods = {
     }
 
+    const clickEvent = (evnt: MouseEvent) => {
+      dispatchEvent('click', {}, evnt)
+    }
+
     Object.assign($xeTag, tagMethods, tagPrivateMethods)
 
     const renderContent = () => {
@@ -89,11 +93,12 @@ export default defineComponent({
       const vSize = computeSize.value
       return h('span', {
         ref: refElem,
-        title,
         class: ['vxe-tag', {
           [`size--${vSize}`]: vSize,
           [`theme--${status}`]: status
-        }]
+        }],
+        title,
+        onClick: clickEvent
       }, renderContent())
     }
 

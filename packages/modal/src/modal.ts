@@ -716,7 +716,9 @@ export default defineComponent({
         if (lastModal) {
           setTimeout(() => {
             if (lastModal === $xeModal && lastModal.props.escClosable) {
-              closeModal('exit')
+              const type = 'exit'
+              dispatchEvent('close', { type }, evnt)
+              closeModal(type)
             }
           }, 10)
         }
@@ -1192,7 +1194,7 @@ export default defineComponent({
     }
 
     const renderDefaultFooter = () => {
-      const { slots: propSlots = {}, showCancelButton, showConfirmButton, type } = props
+      const { slots: propSlots = {}, showCancelButton, showConfirmButton, type, loading } = props
       const lfSlot = slots.leftfoot || propSlots.leftfoot
       const rfSlot = slots.rightfoot || propSlots.rightfoot
       const btnVNs = []
@@ -1211,6 +1213,7 @@ export default defineComponent({
           h(VxeButtonComponent, {
             key: 2,
             ref: refConfirmBtn,
+            loading: loading,
             status: 'primary',
             content: props.confirmButtonText || getI18n('vxe.button.confirm'),
             onClick: confirmEvent
