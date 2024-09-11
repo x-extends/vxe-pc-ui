@@ -55,6 +55,12 @@ export default defineVxeComponent({
       const $xeLink = this
       $xeLink.$emit(type, createEvent(evnt, { $link: $xeLink }, params))
     },
+    clickEvent  (evnt: MouseEvent) {
+      const $xeLink = this
+
+      $xeLink.dispatchEvent('click', {}, evnt)
+    },
+
     //
     // Render
     //
@@ -107,6 +113,9 @@ export default defineVxeComponent({
             title,
             target,
             to: routerLink
+          },
+          on: {
+            click: $xeLink.clickEvent
           }
         }, $xeLink.renderContent(h))
       }
@@ -121,6 +130,9 @@ export default defineVxeComponent({
           href,
           target,
           title
+        },
+        on: {
+          click: $xeLink.clickEvent
         }
       }, $xeLink.renderContent(h))
     }

@@ -285,7 +285,9 @@ export default defineVxeComponent({
         if (lastDrawer) {
           setTimeout(() => {
             if (lastDrawer === $xeDrawer && lastDrawer.escClosable) {
-              $xeDrawer.closeDrawer('exit')
+              const type = 'exit'
+              $xeDrawer.dispatchEvent('close', { type }, evnt)
+              $xeDrawer.closeDrawer(type)
             }
           }, 10)
         }
@@ -400,7 +402,7 @@ export default defineVxeComponent({
       const props = $xeDrawer
       const slots = $xeDrawer.$scopedSlots
 
-      const { slots: propSlots = {}, showCancelButton, showConfirmButton } = props
+      const { slots: propSlots = {}, showCancelButton, showConfirmButton, loading } = props
       const lfSlot = slots.leftfoot || propSlots.leftfoot
       const rfSlot = slots.rightfoot || propSlots.rightfoot
       const btnVNs = []
@@ -425,6 +427,7 @@ export default defineVxeComponent({
             ref: 'refConfirmBtn',
             props: {
               status: 'primary',
+              loading: loading,
               content: props.confirmButtonText || getI18n('vxe.button.confirm')
             },
             on: {

@@ -44,6 +44,12 @@ export default defineVxeComponent({
       const $xeTag = this
       $xeTag.$emit(type, createEvent(evnt, { $tag: $xeTag }, params))
     },
+    clickEvent  (evnt: MouseEvent) {
+      const $xeTag = this
+
+      $xeTag.dispatchEvent('click', {}, evnt)
+    },
+
     //
     // Render
     //
@@ -86,6 +92,9 @@ export default defineVxeComponent({
         }],
         attrs: {
           title
+        },
+        on: {
+          click: $xeTag.clickEvent
         }
       }, $xeTag.renderContent(h))
     }
