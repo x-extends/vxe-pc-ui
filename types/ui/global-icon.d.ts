@@ -191,6 +191,8 @@ declare module '@vxe-ui/core' {
     TABS_TAB_BUTTON_LEFT?: string
     TABS_TAB_BUTTON_RIGHT?: string
     TABS_TAB_CLOSE?: string
+    TABS_TAB_REFRESH?: string
+    TABS_TAB_REFRESH_LOADING?: string
 
     // text
     TEXT_COPY?: string

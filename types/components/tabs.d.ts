@@ -39,13 +39,71 @@ export namespace VxeTabsPropTypes {
     name: VxeTabsPropTypes.ModelValue
     oldName: VxeTabsPropTypes.ModelValue
     newName: VxeTabsPropTypes.ModelValue
+    option: Omit<VxeTabPaneProps, 'slots'>
   }) => boolean
+  /**
+   * 请使用 closeConfig.beforeMethod
+   * @deprecated
+   */
   export type BeforeCloseMethod = (params: {
     $tabs: VxeTabsConstructor
     value: VxeTabsPropTypes.ModelValue
     name: VxeTabsPropTypes.ModelValue
     nextName: VxeTabsPropTypes.ModelValue | null
+    option: Omit<VxeTabPaneProps, 'slots'>
   }) => boolean
+  export interface CloseConfig {
+    /**
+     * 是否启用
+     */
+    enabled?: boolean
+    /**
+     * 页签关闭方法，该方法的返回值用来决定当前页签是否允许关闭
+     * @returns boolean
+     */
+    beforeMethod?: (params: {
+      $tabs: VxeTabsConstructor
+      value: VxeTabsPropTypes.ModelValue
+      name: VxeTabsPropTypes.ModelValue
+      nextName: VxeTabsPropTypes.ModelValue | null
+      option: Omit<VxeTabPaneProps, 'slots'>
+    }) => boolean
+    /**
+     * 显示关闭按钮方法，该方法的返回值用来决定当前页签的关闭按钮是否显示
+     * @returns boolean
+     */
+    visibleMethod?: (params: {
+      $tabs: VxeTabsConstructor
+      value: VxeTabsPropTypes.ModelValue
+      name: VxeTabsPropTypes.ModelValue
+      option: Omit<VxeTabPaneProps, 'slots'>
+    }) => boolean
+  }
+  export interface RefreshConfig {
+    /**
+     * 是否启用
+     */
+    enabled?: boolean
+    /**
+     * 查询方法
+     */
+    queryMethod?: (params: {
+      $tabs: VxeTabsConstructor
+      value: VxeTabsPropTypes.ModelValue
+      name: VxeTabsPropTypes.ModelValue
+      option: Omit<VxeTabPaneProps, 'slots'>
+    }) => Promise<any> | void
+    /**
+     * 显示刷新按钮方法，该方法的返回值用来决定当前页签的刷新按钮是否显示
+     * @returns boolean
+     */
+    visibleMethod?: (params: {
+      $tabs: VxeTabsConstructor
+      value: VxeTabsPropTypes.ModelValue
+      name: VxeTabsPropTypes.ModelValue
+      option: Omit<VxeTabPaneProps, 'slots'>
+    }) => boolean
+  }
 }
 
 export type VxeTabsProps = {
@@ -60,6 +118,19 @@ export type VxeTabsProps = {
   padding?: VxeTabsPropTypes.Padding
   trigger?: VxeTabsPropTypes.Trigger
   beforeChangeMethod?: VxeTabsPropTypes.BeforeChangeMethod
+  /**
+   * 关闭配置项
+   */
+  closeConfig?: VxeTabsPropTypes.CloseConfig
+  /**
+   * 刷新配置项
+   */
+  refreshConfig?: VxeTabsPropTypes.RefreshConfig
+
+  /**
+   * 请使用 closeConfig.beforeMethod
+   * @deprecated
+   */
   beforeCloseMethod?: VxeTabsPropTypes.BeforeCloseMethod
 }
 
@@ -75,6 +146,9 @@ export interface TabsReactData {
   lintWidth: number
   isTabOver: boolean
   resizeFlag: number
+  cacheTabMaps: Record<string, {
+    loading: boolean
+  }>
 }
 
 export interface TabsInternalData {

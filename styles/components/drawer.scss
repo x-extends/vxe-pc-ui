@@ -44,24 +44,6 @@
       opacity: 1;
     }
   }
-  &.is--loading {
-    .vxe-drawer--header,
-    .vxe-drawer--footer {
-      position: relative;
-      border-bottom-color: var(--vxe-ui-loading-background-color);
-      &:before {
-        content: "";
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        z-index: 1;
-        user-select: none;
-        background-color: var(--vxe-ui-loading-background-color);
-      }
-    }
-  }
   &:not(.lock--view) {
     pointer-events: none;
   }

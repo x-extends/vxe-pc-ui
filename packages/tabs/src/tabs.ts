@@ -2,7 +2,8 @@ import { defineComponent, ref, h, reactive, inject, PropType, provide, computed,
 import { createEvent, getConfig, getIcon, globalEvents, permission } from '../../ui'
 import { getSlotVNs } from '../../ui/src/vn'
 import { toCssUnit } from '../..//ui/src/dom'
-import { warnLog } from '../../ui/src/log'
+import { isEnableConf } from '../..//ui/src/utils'
+import { warnLog, errLog } from '../../ui/src/log'
 import XEUtils from 'xe-utils'
 
 import type { VxeTabsPropTypes, VxeTabPaneProps, VxeTabsEmits, TabsInternalData, TabsReactData, TabsPrivateRef, VxeTabsPrivateComputed, VxeTabsConstructor, VxeTabsPrivateMethods, VxeTabPaneDefines, ValueOf, TabsMethods, TabsPrivateMethods } from '../../../types'
@@ -24,6 +25,9 @@ export default defineComponent({
     },
     trigger: String as PropType<VxeTabsPropTypes.Trigger>,
     beforeChangeMethod: Function as PropType<VxeTabsPropTypes.BeforeChangeMethod>,
+    closeConfig: Object as PropType<VxeTabsPropTypes.CloseConfig>,
+    refreshConfig: Object as PropType<VxeTabsPropTypes.RefreshConfig>,
+    // 已废弃
     beforeCloseMethod: Function as PropType<VxeTabsPropTypes.BeforeCloseMethod>
   },
   emits: [
@@ -52,7 +56,8 @@ export default defineComponent({
       lintLeft: 0,
       lintWidth: 0,
       isTabOver: false,
-      resizeFlag: 1
+      resizeFlag: 1,
+      cacheTabMaps: {}
     })
 
     const internalData: TabsInternalData = {
@@ -62,6 +67,14 @@ export default defineComponent({
     const refMaps: TabsPrivateRef = {
       refElem
     }
+
+    const computeCloseOpts = computed(() => {
+      return Object.assign({}, getConfig().tabs.closeConfig, props.closeConfig)
+    })
+
+    const computeRefreshOpts = computed(() => {
+      return Object.assign({}, getConfig().tabs.refreshConfig, props.refreshConfig)
+    })
 
     const computeTabOptions = computed(() => {
       const { options } = props
@@ -161,15 +174,24 @@ export default defineComponent({
 
     const initDefaultName = (list?: VxeTabsPropTypes.Options | VxeTabPaneDefines.TabConfig[]) => {
       let activeName: VxeTabsPropTypes.ModelValue = null
+      const nameMaps: Record<string, {
+        loading: boolean
+      }> = {}
       if (list && list.length) {
         let validVal = false
         activeName = props.modelValue
         list.forEach((item) => {
-          if (activeName === item.name) {
-            validVal = true
-          }
-          if (item && item.preload) {
-            addInitName(item.name, null)
+          const { name, preload } = item || {}
+          if (name) {
+            nameMaps[name] = {
+              loading: false
+            }
+            if (activeName === name) {
+              validVal = true
+            }
+            if (preload) {
+              addInitName(name, null)
+            }
           }
         })
         if (!validVal) {
@@ -179,6 +201,7 @@ export default defineComponent({
         }
       }
       reactData.activeName = activeName
+      reactData.cacheTabMaps = nameMaps
     }
 
     const clickEvent = (evnt: KeyboardEvent, item: VxeTabPaneProps | VxeTabPaneDefines.TabConfig) => {
@@ -196,10 +219,31 @@ export default defineComponent({
       dispatchEvent('tab-click', { name }, evnt)
       addInitName(name, evnt)
       if (name !== activeName) {
-        if (!beforeMethod || beforeMethod({ $tabs: $xeTabs, name, oldName: activeName, newName: name })) {
-          dispatchEvent('change', { value, name, oldName: activeName, newName: name }, evnt)
+        if (!beforeMethod || beforeMethod({ $tabs: $xeTabs, name, oldName: activeName, newName: name, option: item })) {
+          dispatchEvent('change', { value, name, oldName: activeName, newName: name, option: item }, evnt)
         } else {
-          dispatchEvent('tab-change-fail', { value, name, oldName: activeName, newName: name }, evnt)
+          dispatchEvent('tab-change-fail', { value, name, oldName: activeName, newName: name, option: item }, evnt)
+        }
+      }
+    }
+
+    const handleRefreshTabEvent = (evnt: KeyboardEvent, item: VxeTabPaneDefines.TabConfig | VxeTabPaneProps) => {
+      evnt.stopPropagation()
+      const { activeName, cacheTabMaps } = reactData
+      const { name } = item
+      const refreshOpts = computeRefreshOpts.value
+      const { queryMethod } = refreshOpts
+      const cacheItem = name ? cacheTabMaps[name] : null
+      if (cacheItem) {
+        if (queryMethod) {
+          cacheItem.loading = true
+          Promise.resolve(
+            queryMethod({ $tabs: $xeTabs, value: activeName, name, option: item })
+          ).finally(() => {
+            cacheItem.loading = false
+          })
+        } else {
+          errLog('vxe.error.notFunc', ['refresh-config.queryMethod'])
         }
       }
     }
@@ -207,7 +251,8 @@ export default defineComponent({
     const handleCloseTabEvent = (evnt: KeyboardEvent, item: VxeTabPaneDefines.TabConfig | VxeTabPaneProps, index: number, list: VxeTabsPropTypes.Options | VxeTabPaneDefines.TabConfig[]) => {
       evnt.stopPropagation()
       const { activeName } = reactData
-      const beforeMethod = props.beforeCloseMethod || getConfig().tabs.beforeCloseMethod
+      const closeOpts = computeCloseOpts.value
+      const beforeMethod = closeOpts.beforeMethod || props.beforeCloseMethod || getConfig().tabs.beforeCloseMethod
       const { name } = item
       const value = activeName
       let nextName = value
@@ -215,7 +260,7 @@ export default defineComponent({
         const nextItem = index < list.length - 1 ? list[index + 1] : list[index - 1]
         nextName = nextItem ? nextItem.name : null
       }
-      if (!beforeMethod || beforeMethod({ $tabs: $xeTabs, value, name, nextName })) {
+      if (!beforeMethod || beforeMethod({ $tabs: $xeTabs, value, name, nextName, option: item })) {
         dispatchEvent('tab-close', { value, name, nextName }, evnt)
       } else {
         dispatchEvent('tab-close-fail', { value, name, nextName }, evnt)
@@ -360,9 +405,14 @@ export default defineComponent({
     Object.assign($xeTabs, tabsMethods, tabsPrivateMethods)
 
     const renderTabHeader = (tabList: VxeTabsPropTypes.Options | VxeTabPaneDefines.TabConfig[]) => {
-      const { type, titleWidth: allTitleWidth, titleAlign: allTitleAlign, showClose } = props
-      const { activeName, lintLeft, lintWidth, isTabOver } = reactData
+      const { type, titleWidth: allTitleWidth, titleAlign: allTitleAlign, showClose, closeConfig, refreshConfig } = props
+      const { activeName, lintLeft, lintWidth, isTabOver, cacheTabMaps } = reactData
       const extraSlot = slots.extra
+      const closeOpts = computeCloseOpts.value
+      const closeVisibleMethod = closeOpts.visibleMethod
+      const refreshOpts = computeRefreshOpts.value
+      const refreshVisibleMethod = refreshOpts.visibleMethod
+
       return h('div', {
         class: 'vxe-tabs-header'
       }, [
@@ -387,10 +437,14 @@ export default defineComponent({
             const tabSlot = slots ? slots.tab : null
             const itemWidth = titleWidth || allTitleWidth
             const itemAlign = titleAlign || allTitleAlign
+            const params = { $tabs: $xeTabs, value: activeName, name, option: item }
+            const isActive = activeName === name
+            const cacheItem = name ? cacheTabMaps[name] : null
+            const isLoading = cacheItem ? cacheItem.loading : false
             return h('div', {
               key: `${name}`,
               class: ['vxe-tabs-header--item', itemAlign ? `align--${itemAlign}` : '', {
-                'is--active': activeName === name
+                'is--active': isActive
               }],
               style: itemWidth
                 ? {
@@ -420,7 +474,19 @@ export default defineComponent({
                     class: 'vxe-tabs-header--item-name'
                   }, tabSlot ? callSlot(tabSlot, { name, title }) : `${title}`)
                 ]),
-                showClose
+                (isEnableConf(refreshConfig) || refreshOpts.enabled) && (refreshVisibleMethod ? refreshVisibleMethod(params) : isActive)
+                  ? h('div', {
+                    class: 'vxe-tabs-header--refresh-btn',
+                    onClick (evnt: KeyboardEvent) {
+                      handleRefreshTabEvent(evnt, item)
+                    }
+                  }, [
+                    h('i', {
+                      class: isLoading ? getIcon().TABS_TAB_REFRESH_LOADING : getIcon().TABS_TAB_REFRESH
+                    })
+                  ])
+                  : createCommentVNode(),
+                (showClose || (isEnableConf(closeConfig) || closeOpts.enabled)) && (!closeVisibleMethod || closeVisibleMethod(params))
                   ? h('div', {
                     class: 'vxe-tabs-header--close-btn',
                     onClick (evnt: KeyboardEvent) {

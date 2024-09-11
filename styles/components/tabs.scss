@@ -106,7 +106,9 @@
   flex-shrink: 0;
   padding: 0 0.5em;
   &.is--active {
-    color: var(--vxe-ui-font-primary-color);
+    .vxe-tabs-header--item-content {
+      color: var(--vxe-ui-font-primary-color);
+    }
   }
   &.align--left {
     text-align: left;
@@ -135,11 +137,13 @@
 .vxe-tabs-header--item-name {
   padding: 0 0.6em;
 }
+.vxe-tabs-header--refresh-btn,
 .vxe-tabs-header--close-btn {
   font-size: 0.8em;
   border-radius: 50%;
   width: 1.5em;
   height: 1.5em;
+  margin: 0 0.2em;
   line-height: 1.5em;
   text-align: center;
   &:hover {
