@@ -89,7 +89,7 @@ export default defineVxeComponent({
             ? options.map((item, index) => {
               return h(VxeButtonComponent, {
                 key: index,
-                ...item
+                props: item
               })
             })
             : []))

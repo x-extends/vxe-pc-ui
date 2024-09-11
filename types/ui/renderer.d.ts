@@ -593,8 +593,13 @@ declare module '@vxe-ui/core' {
      * 已废弃，请使用 renderFormItemContent
      * @deprecated
      */
+    renderItem?(h: CreateElement, renderOpts: VxeGlobalRendererHandles.RenderFormItemContentOptions, params: VxeGlobalRendererHandles.RenderFormItemContentParams): VxeComponentSlotType | VxeComponentSlotType[]
+     /**
+     * 已废弃，请使用 renderFormItemContent
+     * @deprecated
+     */
     renderItemContent?(h: CreateElement, renderOpts: VxeGlobalRendererHandles.RenderFormItemContentOptions, params: VxeGlobalRendererHandles.RenderFormItemContentParams): VxeComponentSlotType | VxeComponentSlotType[]
-    /**
+     /**
      * 已废弃，请使用 formItemVisibleMethod
      * @deprecated
      */
