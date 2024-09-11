@@ -366,20 +366,7 @@ declare module '@vxe-ui/core' {
      * @deprecated
      */
     export interface RenderEditParams<D = any> extends RenderTableEditParams<D> {}
-    export interface RenderTableEditParams<D = any> {
-      $table: VxeTableConstructor<D> & VxeTablePrivateMethods<D>
-      $grid: VxeGridConstructor<D> | null
-      column: VxeTableDefines.ColumnInfo<D>
-      columnIndex: number
-      $columnIndex: number
-      rowid: string
-      row: D
-      rowIndex: number
-      $rowIndex: number
-      isHidden: boolean
-      fixed: VxeColumnPropTypes.Fixed
-      type: string
-    }
+    export interface RenderTableEditParams<D = any> extends VxeTableDefines.CellRenderBodyParams<D> {}
 
     /**
      * @deprecated
@@ -601,6 +588,11 @@ declare module '@vxe-ui/core' {
      * @deprecated
      */
     renderItemTitle?(renderOpts: VxeGlobalRendererHandles.RenderFormItemTitleOptions, params: VxeGlobalRendererHandles.RenderFormItemTitleParams): VxeComponentSlotType | VxeComponentSlotType[]
+    /**
+     * 已废弃，请使用 renderFormItemContent
+     * @deprecated
+     */
+    renderItem?(renderOpts: VxeGlobalRendererHandles.RenderFormItemContentOptions, params: VxeGlobalRendererHandles.RenderFormItemContentParams): VxeComponentSlotType | VxeComponentSlotType[]
     /**
      * 已废弃，请使用 renderFormItemContent
      * @deprecated

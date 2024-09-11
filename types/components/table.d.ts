@@ -3501,8 +3501,20 @@ export namespace VxeTableDefines {
     isHidden: boolean
     isEdit: boolean
     level: number
+
+    /**
+     * @deprecated
+     */
     visibleData: D[]
+    /**
+     * @deprecated
+     */
+     visible
     data: D[]
+    /**
+     * @deprecated
+     */
+     visible
     items: any[]
   }
 
@@ -3522,10 +3534,18 @@ export namespace VxeTableDefines {
     _columnIndex: number
     fixed: VxeColumnPropTypes.Fixed
     type: string
-    data: any[][]
 
+     /**
+     * @deprecated
+     */
+     visible
+    data: any[][]
     // 兼容旧
     itemIndex: number
+     /**
+     * @deprecated
+     */
+     visible
     items: any[]
   }
 

@@ -105,20 +105,29 @@ const ViewSubItemComponent = defineComponent({
       const subParams = {
         $table: null,
         $grid: null,
+        seq: '',
         column: {
           field: widget.field,
           title: widget.title
         } as VxeTableDefines.ColumnInfo,
         columnIndex: 0,
         $columnIndex: 0,
+        _columnIndex: 0,
         rowid: '',
         row: {},
         rowIndex: 0,
         $rowIndex: 0,
+        _rowIndex: 0,
+        isEdit: false,
         isHidden: false,
         fixed: null,
         type: '',
-        widget
+        level: 1,
+        visibleData: [],
+        items: [],
+        data: [],
+        visible: true,
+        widget: widget
       }
 
       return h('div', {
