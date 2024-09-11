@@ -3509,12 +3509,10 @@ export namespace VxeTableDefines {
     /**
      * @deprecated
      */
-     visible
     data: D[]
     /**
      * @deprecated
      */
-     visible
     items: any[]
   }
 
@@ -3538,14 +3536,9 @@ export namespace VxeTableDefines {
      /**
      * @deprecated
      */
-     visible
     data: any[][]
     // 兼容旧
     itemIndex: number
-     /**
-     * @deprecated
-     */
-     visible
     items: any[]
   }
 

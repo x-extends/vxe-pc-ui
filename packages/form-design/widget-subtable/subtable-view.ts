@@ -126,7 +126,6 @@ const ViewSubItemComponent = defineComponent({
         visibleData: [],
         items: [],
         data: [],
-        visible: true,
         widget: widget
       }
 
