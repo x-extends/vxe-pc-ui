@@ -7,13 +7,13 @@ import { VxeGridConstructor } from './grid'
 export declare const VxeForm: DefineVxeComponentApp<VxeFormProps, VxeFormEventProps, VxeFormSlots>
 export type VxeFormComponent = DefineVxeComponentOptions<VxeFormProps>
 
-export type VxeFormInstance = DefineVxeComponentInstance<{
+export type VxeFormInstance<D = any> = DefineVxeComponentInstance<{
   reactData: FormReactData
   internalData: FormInternalData
   xegrid: VxeGridConstructor | null
-}, VxeFormProps, VxeFormPrivateComputed, VxeFormMethods>
+}, VxeFormProps<D>, VxeFormPrivateComputed, VxeFormMethods<D>>
 
-export type VxeFormConstructor = VxeFormInstance
+export type VxeFormConstructor<D = any> = VxeFormInstance<D>
 
 export interface FormPrivateRef {
 }

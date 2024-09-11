@@ -5,11 +5,11 @@ import { DefineVxeComponentApp, DefineVxeComponentOptions, DefineVxeComponentIns
 export declare const VxeTree: DefineVxeComponentApp<VxeTreeProps, VxeTreeEventProps, VxeTreeSlots>
 export type VxeTreeComponent = DefineVxeComponentOptions<VxeTreeProps>
 
-export type VxeTreeInstance = DefineVxeComponentInstance<{
+export type VxeTreeInstance<D = any> = DefineVxeComponentInstance<{
   reactData: TreeReactData
-}, VxeTreeProps, VxeTreePrivateComputed, VxeTreeMethods>
+}, VxeTreeProps<D>, VxeTreePrivateComputed, VxeTreeMethods<D>>
 
-export type VxeTreeConstructor = VxeTreeInstance
+export type VxeTreeConstructor<D = any> = VxeTreeInstance<D>
 
 export interface TreePrivateRef {
 }

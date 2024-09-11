@@ -52,11 +52,6 @@ declare module '@vxe-ui/core' {
     previewImage: VxeImageDefines.PreviewImageFunction
 
     /**
-     * 请使用 formDesignHandle
-     * @deprecated
-     */
-    formDesign: FormDesignHandleExport
-    /**
      * 已废弃，请使用 setConfig
      * @deprecated
      */
@@ -91,8 +86,6 @@ export * from './formats'
 export * from './menus'
 export * from './validators'
 export * from './hooks'
-
-export * from '../handles'
 
 export * from '@vxe-ui/core'
 export default VxeUI

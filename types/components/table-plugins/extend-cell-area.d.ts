@@ -95,13 +95,13 @@ export interface VxeTableProPrivateMethods<D = any> {
 export type VxeProPluginPrivateMethods<D = any> = VxeTableProPrivateMethods<D>
 
 declare module '../table' {
-  export type VxeTableMethods<D = any> = VxeTableProMethods<D>
-  export type VxeTablePrivateMethods<D = any> = VxeTableProPrivateMethods<D>
+  export interface VxeTableMethods<D = any> extends VxeTableProMethods<D> {}
+  export interface VxeTablePrivateMethods<D = any> extends VxeTableProPrivateMethods<D> {}
 }
 
 declare module '../grid' {
-  export type VxeGridMethods<D = any> = VxeTableProMethods<D>
-  export type VxeGridPrivateMethods<D = any> = VxeTableProPrivateMethods<D>
+  export interface VxeGridMethods<D = any> extends VxeTableProMethods<D> {}
+  export interface VxeGridPrivateMethods<D = any> extends VxeTableProPrivateMethods<D> {}
 }
 
 export namespace VxeTableProDefines {
