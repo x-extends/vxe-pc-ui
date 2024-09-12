@@ -154,11 +154,6 @@ declare module '@vxe-ui/core' {
      */
     export?: Record<string, any>
     /**
-     * 无效，已废弃
-     * @deprecated
-     */
-    i18n?(key: string, args?: any): string
-    /**
      * @deprecated
      */
     emptyCell?: string

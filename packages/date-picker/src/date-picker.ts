@@ -360,9 +360,8 @@ export default defineVxeComponent({
 
       const { labelFormat } = props
       const isDatePickerType = $xeDatePicker.computeIsDatePickerType
-      const dateValueFormat = $xeDatePicker.computeDateValueFormat as string
       if (isDatePickerType) {
-        return labelFormat || dateValueFormat || getI18n(`vxe.input.date.labelFormat.${props.type}`)
+        return labelFormat || getI18n(`vxe.input.date.labelFormat.${props.type}`)
       }
       return ''
     },

@@ -10,6 +10,8 @@ export function getModelEvent (name: string) {
     case 'VxeInput':
     case 'VxeTextarea':
       return 'modelValue'
+    case 'select':
+      return 'change'
   }
   return 'input'
 }
