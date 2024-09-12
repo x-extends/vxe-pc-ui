@@ -4031,6 +4031,7 @@ export interface VxeTableListeners<D = any> {
    * 当表格被激活且键盘被按下开始时会触发的事件
    */
   keydownStart?: VxeTableEvents.KeydownStart<D>
+  keydownStart?: VxeTableEvents.KeydownStart<D>
   /**
    * 当表格被激活且键盘被按下时会触发的事件
    */
