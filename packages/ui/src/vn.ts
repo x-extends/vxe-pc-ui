@@ -10,6 +10,8 @@ export function getModelEvent (name: string) {
     case 'input':
     case 'textarea':
       return 'input'
+    case 'select':
+      return 'change'
   }
   return 'update:modelValue'
 }

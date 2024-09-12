@@ -372,7 +372,13 @@ export default defineComponent({
       if (valueFormat) {
         return valueFormat
       }
-      return type === 'time' ? 'HH:mm:ss' : (type === 'datetime' ? 'yyyy-MM-dd HH:mm:ss' : 'yyyy-MM-dd')
+      if (type === 'time') {
+        return 'HH:mm:ss'
+      }
+      if (type === 'datetime') {
+        return 'yyyy-MM-dd HH:mm:ss'
+      }
+      return 'yyyy-MM-dd'
     })
 
     const computeDateValue = computed(() => {
@@ -425,9 +431,8 @@ export default defineComponent({
     const computeDateLabelFormat = computed(() => {
       const { labelFormat } = props
       const isDatePickerType = computeIsDatePickerType.value
-      const dateValueFormat = computeDateValueFormat.value
       if (isDatePickerType) {
-        return labelFormat || dateValueFormat || getI18n(`vxe.input.date.labelFormat.${props.type}`)
+        return labelFormat || getI18n(`vxe.input.date.labelFormat.${props.type}`)
       }
       return ''
     })

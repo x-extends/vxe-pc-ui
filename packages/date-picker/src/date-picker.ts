@@ -329,9 +329,8 @@ export default defineComponent({
     const computeDateLabelFormat = computed(() => {
       const { labelFormat } = props
       const isDatePickerType = computeIsDatePickerType.value
-      const dateValueFormat = computeDateValueFormat.value
       if (isDatePickerType) {
-        return labelFormat || dateValueFormat || getI18n(`vxe.input.date.labelFormat.${props.type}`)
+        return labelFormat || getI18n(`vxe.input.date.labelFormat.${props.type}`)
       }
       return null
     })
@@ -1520,6 +1519,38 @@ export default defineComponent({
       }
     }
 
+    const dispatchEvent = (type: ValueOf<VxeDatePickerEmits>, params: Record<string, any>, evnt: Event | null) => {
+      emit(type, createEvent(evnt, { $datePicker: $xeDatePicker }, params))
+    }
+
+    datePickerMethods = {
+      dispatchEvent,
+
+      focus () {
+        const inputElem = refInputTarget.value
+        reactData.isActivated = true
+        inputElem.focus()
+        return nextTick()
+      },
+      blur () {
+        const inputElem = refInputTarget.value
+        inputElem.blur()
+        reactData.isActivated = false
+        return nextTick()
+      },
+      select () {
+        const inputElem = refInputTarget.value
+        inputElem.select()
+        reactData.isActivated = false
+        return nextTick()
+      },
+      showPanel,
+      hidePanel,
+      updatePlacement
+    }
+
+    Object.assign($xeDatePicker, datePickerMethods)
+
     const renderDateLabel = (item: VxeDatePickerDefines.DateYearItem | VxeDatePickerDefines.DateQuarterItem | VxeDatePickerDefines.DateMonthItem | VxeDatePickerDefines.DateDayItem, label: string | number) => {
       const { festivalMethod } = props
       if (festivalMethod) {
@@ -2044,81 +2075,6 @@ export default defineComponent({
       ])
     }
 
-    const dispatchEvent = (type: ValueOf<VxeDatePickerEmits>, params: Record<string, any>, evnt: Event | null) => {
-      emit(type, createEvent(evnt, { $datePicker: $xeDatePicker }, params))
-    }
-
-    datePickerMethods = {
-      dispatchEvent,
-
-      focus () {
-        const inputElem = refInputTarget.value
-        reactData.isActivated = true
-        inputElem.focus()
-        return nextTick()
-      },
-      blur () {
-        const inputElem = refInputTarget.value
-        inputElem.blur()
-        reactData.isActivated = false
-        return nextTick()
-      },
-      select () {
-        const inputElem = refInputTarget.value
-        inputElem.select()
-        reactData.isActivated = false
-        return nextTick()
-      },
-      showPanel,
-      hidePanel,
-      updatePlacement
-    }
-
-    Object.assign($xeDatePicker, datePickerMethods)
-
-    watch(() => props.modelValue, (val) => {
-      reactData.inputValue = val
-      changeValue()
-    })
-
-    watch(() => props.type, () => {
-      // 切换类型是重置内置变量
-      Object.assign(reactData, {
-        inputValue: props.modelValue,
-        datetimePanelValue: null,
-        datePanelValue: null,
-        datePanelLabel: '',
-        datePanelType: 'day',
-        selectMonth: null,
-        currentDate: null
-      })
-      initValue()
-    })
-
-    watch(computeDateLabelFormat, () => {
-      const isDatePickerType = computeIsDatePickerType.value
-      if (isDatePickerType) {
-        dateParseValue(reactData.datePanelValue)
-        reactData.inputValue = props.multiple ? computeDateMultipleLabel.value : reactData.datePanelLabel
-      }
-    })
-
-    nextTick(() => {
-      globalEvents.on($xeDatePicker, 'mousewheel', handleGlobalMousewheelEvent)
-      globalEvents.on($xeDatePicker, 'mousedown', handleGlobalMousedownEvent)
-      globalEvents.on($xeDatePicker, 'keydown', handleGlobalKeydownEvent)
-      globalEvents.on($xeDatePicker, 'blur', handleGlobalBlurEvent)
-    })
-
-    onUnmounted(() => {
-      globalEvents.off($xeDatePicker, 'mousewheel')
-      globalEvents.off($xeDatePicker, 'mousedown')
-      globalEvents.off($xeDatePicker, 'keydown')
-      globalEvents.off($xeDatePicker, 'blur')
-    })
-
-    initValue()
-
     const renderVN = () => {
       const { className, type, align, name, autocomplete, autoComplete } = props
       const { inputValue, visiblePanel, isActivated } = reactData
@@ -2180,6 +2136,49 @@ export default defineComponent({
         renderPanel()
       ])
     }
+
+    watch(() => props.modelValue, (val) => {
+      reactData.inputValue = val
+      changeValue()
+    })
+
+    watch(() => props.type, () => {
+      // 切换类型是重置内置变量
+      Object.assign(reactData, {
+        inputValue: props.modelValue,
+        datetimePanelValue: null,
+        datePanelValue: null,
+        datePanelLabel: '',
+        datePanelType: 'day',
+        selectMonth: null,
+        currentDate: null
+      })
+      initValue()
+    })
+
+    watch(computeDateLabelFormat, () => {
+      const isDatePickerType = computeIsDatePickerType.value
+      if (isDatePickerType) {
+        dateParseValue(reactData.datePanelValue)
+        reactData.inputValue = props.multiple ? computeDateMultipleLabel.value : reactData.datePanelLabel
+      }
+    })
+
+    nextTick(() => {
+      globalEvents.on($xeDatePicker, 'mousewheel', handleGlobalMousewheelEvent)
+      globalEvents.on($xeDatePicker, 'mousedown', handleGlobalMousedownEvent)
+      globalEvents.on($xeDatePicker, 'keydown', handleGlobalKeydownEvent)
+      globalEvents.on($xeDatePicker, 'blur', handleGlobalBlurEvent)
+    })
+
+    onUnmounted(() => {
+      globalEvents.off($xeDatePicker, 'mousewheel')
+      globalEvents.off($xeDatePicker, 'mousedown')
+      globalEvents.off($xeDatePicker, 'keydown')
+      globalEvents.off($xeDatePicker, 'blur')
+    })
+
+    initValue()
 
     $xeDatePicker.renderVN = renderVN
 

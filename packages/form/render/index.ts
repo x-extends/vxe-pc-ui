@@ -47,7 +47,7 @@ function getComponentFormItemProps (renderOpts: any, params: any, value: any, de
  * @param modelFunc
  * @param changeFunc
  */
-function getElementOns (renderOpts: any, params: any, modelFunc?: any, changeFunc?: any) {
+function getNativeElementOns (renderOpts: any, params: any, modelFunc?: any, changeFunc?: any) {
   const { events } = renderOpts
   const modelEvent = getModelEvent(renderOpts.name)
   const changeEvent = getChangeEvent(renderOpts.name)
@@ -136,7 +136,7 @@ function getItemOns (renderOpts: any, params: any) {
 
 function getNativeItemOns (renderOpts: any, params: any) {
   const { $form, data, field } = params
-  return getElementOns(renderOpts, params, (evnt: any) => {
+  return getNativeElementOns(renderOpts, params, (evnt: any) => {
     // 处理 model 值双向绑定
     const itemValue = evnt.target.value
     XEUtils.set(data, field, itemValue)
