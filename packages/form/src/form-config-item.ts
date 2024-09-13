@@ -104,9 +104,9 @@ const VxeFormConfigItem = defineVxeComponent({
       let contentVNs: VxeComponentSlotType[] = []
       const rftContent = compConf ? (compConf.renderFormItemContent || compConf.renderItemContent) : null
       if (defaultSlot) {
-        contentVNs = $xeForm.callSlot(defaultSlot, params)
+        contentVNs = $xeForm.callSlot(defaultSlot, params, h)
       } else if (rftContent) {
-        contentVNs = getSlotVNs(rftContent(h, itemRender, params))
+        contentVNs = getSlotVNs(rftContent.call($xeForm, h, itemRender, params))
       } else if (field) {
         contentVNs = [XEUtils.toValueString(XEUtils.get(data, field))]
       }

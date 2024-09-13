@@ -269,6 +269,20 @@ export default defineVxeComponent({
       $xeModal.$emit('input', value)
       $xeModal.$emit('modelValue', value)
     },
+    callSlot  (slotFunc: ((params: any, h: CreateElement) => any) | string | null, params: any, h: CreateElement) {
+      const $xeModal = this
+      const slots = $xeModal.$scopedSlots
+
+      if (slotFunc) {
+        if (XEUtils.isString(slotFunc)) {
+          slotFunc = slots[slotFunc] || null
+        }
+        if (XEUtils.isFunction(slotFunc)) {
+          return getSlotVNs(slotFunc.call($xeModal, params, h))
+        }
+      }
+      return []
+    },
     open () {
       const $xeModal = this
 
@@ -1180,11 +1194,11 @@ export default defineVxeComponent({
         h('div', {
           class: 'vxe-modal--header-title'
         }, titleSlot
-          ? getSlotVNs(titleSlot({
-            $modal: $xeModal as VxeModalConstructor,
+          ? $xeModal.callSlot(titleSlot, {
+            $modal: $xeModal,
             minimized: isMinimizeStatus,
             maximized: isMaximizeStatus
-          }, h))
+          }, h)
           : (title ? getFuncText(title) : getI18n('vxe.alert.title'))),
         h('div', {
           class: 'vxe-modal--header-right'
@@ -1192,7 +1206,7 @@ export default defineVxeComponent({
           cornerSlot && !isMinimizeStatus
             ? h('div', {
               class: 'vxe-modal--corner-wrapper'
-            }, getSlotVNs(cornerSlot({ $modal: $xeModal as VxeModalConstructor }, h)))
+            }, $xeModal.callSlot(cornerSlot, { $modal: $xeModal }, h))
             : renderEmptyElement($xeModal),
           (XEUtils.isBoolean(showMinimize) ? showMinimize : showZoom)
             ? h('div', {
@@ -1264,7 +1278,7 @@ export default defineVxeComponent({
             'is--ellipsis': !isMsg && props.showTitleOverflow
           }],
           on: headerOns
-        }, headerSlot ? getSlotVNs(headerSlot({ $modal: $xeModal as VxeModalConstructor }, h)) : $xeModal.renderTitles(h))
+        }, headerSlot ? $xeModal.callSlot(headerSlot, { $modal: $xeModal }, h) : $xeModal.renderTitles(h))
       }
       return renderEmptyElement($xeModal)
     },
@@ -1294,7 +1308,7 @@ export default defineVxeComponent({
       contVNs.push(
         h('div', {
           class: 'vxe-modal--content'
-        }, defaultSlot ? getSlotVNs(defaultSlot({ $modal: $xeModal as VxeModalConstructor }, h)) : getFuncText(content))
+        }, defaultSlot ? $xeModal.callSlot(defaultSlot, { $modal: $xeModal }, h) : getFuncText(content))
       )
       return h('div', {
         class: 'vxe-modal--body'
@@ -1302,7 +1316,7 @@ export default defineVxeComponent({
         leftSlot
           ? h('div', {
             class: 'vxe-modal--body-left'
-          }, getSlotVNs(leftSlot({ $modal: $xeModal as VxeModalConstructor }, h)))
+          }, $xeModal.callSlot(leftSlot, { $modal: $xeModal }, h))
           : renderEmptyElement($xeModal),
         h('div', {
           class: 'vxe-modal--body-default'
@@ -1310,7 +1324,7 @@ export default defineVxeComponent({
         rightSlot
           ? h('div', {
             class: 'vxe-modal--body-right'
-          }, getSlotVNs(rightSlot({ $modal: $xeModal as VxeModalConstructor }, h)))
+          }, $xeModal.callSlot(rightSlot, { $modal: $xeModal }, h))
           : renderEmptyElement($xeModal),
         isMsg
           ? renderEmptyElement($xeModal)
@@ -1366,10 +1380,10 @@ export default defineVxeComponent({
       }, [
         h('div', {
           class: 'vxe-modal--footer-left'
-        }, lfSlot ? getSlotVNs(lfSlot({ $modal: $xeModal as VxeModalConstructor }, h)) : []),
+        }, lfSlot ? $xeModal.callSlot(lfSlot, { $modal: $xeModal }, h) : []),
         h('div', {
           class: 'vxe-modal--footer-right'
-        }, rfSlot ? getSlotVNs(rfSlot({ $modal: $xeModal as VxeModalConstructor }, h)) : btnVNs)
+        }, rfSlot ? $xeModal.callSlot(rfSlot, { $modal: $xeModal }, h) : btnVNs)
       ])
     },
     renderFooter  (h: CreateElement) {
@@ -1382,7 +1396,7 @@ export default defineVxeComponent({
       if (props.showFooter) {
         return h('div', {
           class: 'vxe-modal--footer'
-        }, footerSlot ? getSlotVNs(footerSlot({ $modal: $xeModal as VxeModalConstructor }, h)) : [$xeModal.renderDefaultFooter(h)])
+        }, footerSlot ? $xeModal.callSlot(footerSlot, { $modal: $xeModal }, h) : [$xeModal.renderDefaultFooter(h)])
       }
       return renderEmptyElement($xeModal)
     },
@@ -1441,7 +1455,7 @@ export default defineVxeComponent({
                   class: 'vxe-modal--aside'
                 },
                 asideSlot
-                  ? getSlotVNs(asideSlot({ $modal: $xeModal as VxeModalConstructor }, h))
+                  ? $xeModal.callSlot(asideSlot, { $modal: $xeModal }, h)
                   : [
                       status || iconStatus
                         ? h('div', {

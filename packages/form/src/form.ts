@@ -203,7 +203,7 @@ export default defineVxeComponent({
       const $xeForm = this
       $xeForm.$emit(type, createEvent(evnt, { $form: $xeForm }, params))
     },
-    callSlot  (slotFunc: ((params: any) => any) | string | null, params: any) {
+    callSlot  (slotFunc: ((params: any, h: CreateElement) => any) | string | null, params: any, h: CreateElement) {
       const $xeForm = this
       const slots = $xeForm.$scopedSlots
 
@@ -212,7 +212,7 @@ export default defineVxeComponent({
           slotFunc = slots[slotFunc] || null
         }
         if (XEUtils.isFunction(slotFunc)) {
-          return getSlotVNs(slotFunc(params))
+          return getSlotVNs(slotFunc.call($xeForm, params, h))
         }
       }
       return []

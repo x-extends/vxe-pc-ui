@@ -151,7 +151,7 @@ export default defineVxeComponent({
       }
       return true
     },
-    callSlot  (slotFunc: any, params: any) {
+    callSlot  (slotFunc: any, params: any, h: CreateElement) {
       const $xeTabs = this
       const slots = $xeTabs.$scopedSlots
 
@@ -160,7 +160,7 @@ export default defineVxeComponent({
           slotFunc = slots[slotFunc] || null
         }
         if (XEUtils.isFunction(slotFunc)) {
-          return getSlotVNs(slotFunc(params))
+          return getSlotVNs(slotFunc.call($xeTabs, params, h))
         }
       }
       return []
@@ -521,7 +521,7 @@ export default defineVxeComponent({
                     : renderEmptyElement($xeTabs),
                   h('span', {
                     class: 'vxe-tabs-header--item-name'
-                  }, tabSlot ? $xeTabs.callSlot(tabSlot, { name, title }) : `${title}`)
+                  }, tabSlot ? $xeTabs.callSlot(tabSlot, { name, title }, h) : `${title}`)
                 ]),
                 (isEnableConf(refreshConfig) || refreshOpts.enabled) && (refreshVisibleMethod ? refreshVisibleMethod(params) : isActive)
                   ? h('div', {
@@ -579,7 +579,7 @@ export default defineVxeComponent({
         extraSlot
           ? h('div', {
             class: 'vxe-tabs-header--extra'
-          }, getSlotVNs(extraSlot({})))
+          }, $xeTabs.callSlot(extraSlot, {}, h))
           : renderEmptyElement($xeTabs)
       ])
     },
@@ -597,7 +597,7 @@ export default defineVxeComponent({
             'is--visible': activeName === name,
             'has--content': !!defaultSlot
           }]
-        }, defaultSlot ? $xeTabs.callSlot(defaultSlot, { name }) : [])
+        }, defaultSlot ? $xeTabs.callSlot(defaultSlot, { name }, h) : [])
         : renderEmptyElement($xeTabs)
     },
     renderTabContent  (h: CreateElement, tabList: VxeTabsPropTypes.Options | VxeTabPaneDefines.TabConfig[]) {
@@ -638,7 +638,7 @@ export default defineVxeComponent({
       }, [
         h('div', {
           class: 'vxe-tabs-slots'
-        }, defaultSlot ? defaultSlot({}) : []),
+        }, defaultSlot ? $xeTabs.callSlot(defaultSlot, {}, h) : []),
         $xeTabs.renderTabHeader(h, tabList),
         h('div', {
           class: 'vxe-tabs-pane'

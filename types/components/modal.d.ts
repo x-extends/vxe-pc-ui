@@ -254,7 +254,9 @@ export interface ModalMethods {
 export interface VxeModalMethods extends ModalMethods { }
 
 export interface ModalPrivateMethods { }
-export interface VxeModalPrivateMethods extends ModalPrivateMethods { }
+export interface VxeModalPrivateMethods extends ModalPrivateMethods {
+  callSlot<T>(slotFunc: ((params: T) => VxeComponentSlotType | VxeComponentSlotType[]) | string | null, params: T, h: CreateElement): VxeComponentSlotType[]
+}
 
 export type VxeModalEmits = [
   'input',

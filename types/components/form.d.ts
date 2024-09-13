@@ -1,3 +1,4 @@
+import { CreateElement } from 'vue'
 import { DefineVxeComponentApp, DefineVxeComponentOptions, DefineVxeComponentInstance, VxeComponentEventParams, VxeComponentSizeType, ValueOf, VxeComponentSlotType } from '@vxe-ui/core'
 import { VxeFormItemPropTypes, VxeFormItemProps } from './form-item'
 import { VxeGridConstructor } from './grid'
@@ -178,7 +179,7 @@ export interface FormMethods<D = any> {
 export interface VxeFormMethods<D = any> extends FormMethods<D> { }
 
 export interface FormPrivateMethods {
-  callSlot<T>(slotFunc: ((params: T) => VxeComponentSlotType | VxeComponentSlotType[]) | string | null, params: T): VxeComponentSlotType[]
+  callSlot<T>(slotFunc: ((params: T) => VxeComponentSlotType | VxeComponentSlotType[]) | string | null, params: T, h: CreateElement): VxeComponentSlotType[]
   triggerItemEvent(evnt: Event | { type: string }, field: string, itemValue?: any): Promise<any>
   toggleCollapseEvent(evnt: Event): void
   triggerTitleTipEvent(evnt: MouseEvent, params: {

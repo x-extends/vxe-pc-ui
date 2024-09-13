@@ -119,7 +119,9 @@ export interface DrawerMethods {
 export interface VxeDrawerMethods extends DrawerMethods { }
 
 export interface DrawerPrivateMethods { }
-export interface VxeDrawerPrivateMethods extends DrawerPrivateMethods { }
+export interface VxeDrawerPrivateMethods extends DrawerPrivateMethods {
+  callSlot<T>(slotFunc: ((params: T) => VxeComponentSlotType | VxeComponentSlotType[]) | string | null, params: T, h: CreateElement): VxeComponentSlotType[]
+}
 
 export type VxeDrawerEmits = [
   'input',

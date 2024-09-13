@@ -360,7 +360,7 @@ export default defineVxeComponent({
       reactData.isActivated = false
       return $xeSelect.$nextTick()
     },
-    callSlot (slotFunc: any, params: any) {
+    callSlot (slotFunc: any, params: any, h: CreateElement) {
       const $xeSelect = this
       const slots = $xeSelect.$scopedSlots
 
@@ -369,7 +369,7 @@ export default defineVxeComponent({
           slotFunc = slots[slotFunc] || null
         }
         if (XEUtils.isFunction(slotFunc)) {
-          return getSlotVNs(slotFunc(params))
+          return getSlotVNs(slotFunc.call($xeSelect, params, h))
         }
       }
       return []
@@ -1061,7 +1061,7 @@ export default defineVxeComponent({
                 }
               }
             }
-          }, optionSlot ? $xeSelect.callSlot(optionSlot, optParams) : (defaultSlot ? $xeSelect.callSlot(defaultSlot, optParams) : getFuncText(option[labelField as 'label'])))
+          }, optionSlot ? $xeSelect.callSlot(optionSlot, optParams, h) : (defaultSlot ? $xeSelect.callSlot(defaultSlot, optParams, h) : getFuncText(option[labelField as 'label'])))
           : renderEmptyElement($xeSelect)
       })
     },
@@ -1095,7 +1095,7 @@ export default defineVxeComponent({
         }, [
           h('div', {
             class: 'vxe-optgroup--title'
-          }, optionSlot ? $xeSelect.callSlot(optionSlot, optParams) : (defaultSlot ? $xeSelect.callSlot(defaultSlot, optParams) : getFuncText(group[groupLabelField as 'label']))),
+          }, optionSlot ? $xeSelect.callSlot(optionSlot, optParams, h) : (defaultSlot ? $xeSelect.callSlot(defaultSlot, optParams, h) : getFuncText(group[groupLabelField as 'label']))),
           h('div', {
             class: 'vxe-optgroup--wrapper'
           }, $xeSelect.renderOption(h, group[groupOptionsField as 'options'] || [], group))
@@ -1164,7 +1164,7 @@ export default defineVxeComponent({
           h('div', {
             class: 'vxe-select-slots',
             ref: 'hideOption'
-          }, defaultSlot ? defaultSlot({}) : []),
+          }, defaultSlot ? $xeSelect.callSlot(defaultSlot, {}, h) : []),
           h('span', {
             class: 'vxe-select-label'
           }, [selectLabel])
@@ -1184,7 +1184,7 @@ export default defineVxeComponent({
         h('div', {
           class: 'vxe-select-slots',
           ref: 'hideOption'
-        }, defaultSlot ? defaultSlot({}) : []),
+        }, defaultSlot ? defaultSlot.call($xeSelect, {}) : []),
         h(VxeInputComponent, {
           ref: 'refInput',
           props: {
@@ -1252,7 +1252,7 @@ export default defineVxeComponent({
                 headerSlot
                   ? h('div', {
                     class: 'vxe-select--panel-header'
-                  }, headerSlot({}))
+                  }, $xeSelect.callSlot(headerSlot, {}, h))
                   : renderEmptyElement($xeSelect),
                 h('div', {
                   class: 'vxe-select--panel-body'
@@ -1265,7 +1265,7 @@ export default defineVxeComponent({
                 footerSlot
                   ? h('div', {
                     class: 'vxe-select--panel-footer'
-                  }, footerSlot({}))
+                  }, $xeSelect.callSlot(footerSlot, {}, h))
                   : renderEmptyElement($xeSelect)
               ])
             ]
