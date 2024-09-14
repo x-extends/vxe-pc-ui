@@ -1,6 +1,6 @@
 # vxe-pc-ui
 
-简体中文 | [繁體中文](README.zh-TW.md) | [English](README.en.md)  
+简体中文 | [繁體中文](README.zh-TW.md) | [English](README.en.md) | [日本語](README.ja-JP.md)  
 
 [![star](https://gitee.com/xuliangzhan_admin/vxe-pc-ui/badge/star.svg?theme=gvp)](https://gitee.com/xuliangzhan_admin/vxe-pc-ui/stargazers)
 [![npm version](https://img.shields.io/npm/v/vxe-pc-ui.svg?style=flat-square)](https://www.npmjs.com/package/vxe-pc-ui)
@@ -97,6 +97,11 @@
 * [x] colgroup 表格-分组列
 * [x] toolbar 表格-工具栏
 * [x] grid 表格-配置式
+
+## 在线文档
+
+👉 [组件文档](https://vxeui.com)  
+👉 [表格文档](https://vxetable.cn)  
 
 ## 安装
 
@@ -221,17 +226,17 @@ npm run serve
 npm run lib
 ```
 
-## PR
+## 贡献源码步骤
 
 1. 如果是修复 bug，必须有示例的复现链接
 2. 如果新功能，涉及代码风格、质量、还需有对应的示例页面
 
-## Contributors
+## 贡献者
 
 Thank you to everyone who contributed to this project.
 
 [![vxe-pc-ui](https://contrib.rocks/image?repo=x-extends/vxe-pc-ui)](https://github.com/x-extends/vxe-pc-ui/graphs/contributors)
 
-## License
+## 许可证
 
 [MIT](LICENSE) © 2019-present, Xu Liangzhan

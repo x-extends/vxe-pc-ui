@@ -3503,14 +3503,19 @@ export namespace VxeTableDefines {
     level: number
 
     /**
+     * 已废弃
      * @deprecated
+     * @private
      */
     visibleData: D[]
     /**
+     * 已废弃
      * @deprecated
+     * @private
      */
     data: D[]
     /**
+     * 已废弃
      * @deprecated
      */
     items: any[]
@@ -3533,10 +3538,13 @@ export namespace VxeTableDefines {
     fixed: VxeColumnPropTypes.Fixed
     type: string
 
-     /**
+    /**
+     * 已废弃
      * @deprecated
+     * @private
      */
     data: any[][]
+
     // 兼容旧
     itemIndex: number
     items: any[]
@@ -3603,17 +3611,17 @@ export namespace VxeTableDefines {
   export interface CheckboxChangeParams<D = any> extends TableBaseCellParams<D> {
     checked: boolean
     /**
-     * 请调用方法 getCheckboxRecords() 获取
+     * 已废弃，请调用方法 getCheckboxRecords() 获取
      * @deprecated
      */
     records: D[]
     /**
-     * 请调用方法 getCheckboxReserveRecords() 获取
+     * 已废弃，请调用方法 getCheckboxReserveRecords() 获取
      * @deprecated
      */
     reserves: D[]
     /**
-     * 请调用方法 getCheckboxIndeterminateRecords() 获取
+     * 已废弃，请调用方法 getCheckboxIndeterminateRecords() 获取
      * @deprecated
      */
     indeterminates: D[]
@@ -3625,12 +3633,12 @@ export namespace VxeTableDefines {
 
   export interface CheckboxRangeStartParams<D = any> {
     /**
-     * 请调用方法 getCheckboxRecords() 获取
+     * 已废弃，请调用方法 getCheckboxRecords() 获取
      * @deprecated
      */
     records: D[]
     /**
-     * 请调用方法 getCheckboxReserveRecords() 获取
+     * 已废弃，请调用方法 getCheckboxReserveRecords() 获取
      * @deprecated
      */
     reserves: D[]

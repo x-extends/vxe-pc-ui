@@ -1,6 +1,6 @@
 # vxe-pc-ui
 
-[简体中文](README.md) | 繁體中文 | [English](README.en.md)  
+[简体中文](README.md) | 繁體中文 | [English](README.en.md) | [日本語](README.ja-JP.md)  
 
 [![star](https://gitee.com/xuliangzhan_admin/vxe-pc-ui/badge/star.svg?theme=gvp)](https://gitee.com/xuliangzhan_admin/vxe-pc-ui/stargazers)
 [![npm version](https://img.shields.io/npm/v/vxe-pc-ui.svg?style=flat-square)](https://www.npmjs.com/package/vxe-pc-ui)
@@ -19,6 +19,11 @@
 ![Edge](https://raw.github.com/alrra/browser-logos/master/src/edge/edge_48x48.png) | ![Chrome](https://raw.github.com/alrra/browser-logos/master/src/chrome/chrome_48x48.png) | ![Firefox](https://raw.github.com/alrra/browser-logos/master/src/firefox/firefox_48x48.png) | ![Opera](https://raw.github.com/alrra/browser-logos/master/src/opera/opera_48x48.png) | ![Safari](https://raw.github.com/alrra/browser-logos/master/src/safari/safari_48x48.png)
 --- | --- | --- | --- | --- |
 80+ ✔ | 80+ ✔ | 90+ ✔ | 75+ ✔ | 10+ ✔ |
+
+## 線上檔案
+
+👉 [組件文檔](https://vxeui.com)  
+👉 [表格文檔](https://vxetable.cn)  
 
 ## 使用
 
@@ -55,12 +60,12 @@ npm run serve
 npm run lib
 ```
 
-## Contributors
+## 貢獻者
 
 Thank you to everyone who contributed to this project.
 
 [![vxe-pc-ui](https://contrib.rocks/image?repo=x-extends/vxe-pc-ui)](https://github.com/x-extends/vxe-pc-ui/graphs/contributors)
 
-## License
+## 許可證
 
 [MIT](LICENSE) © 2019-present, Xu Liangzhan

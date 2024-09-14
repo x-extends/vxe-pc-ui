@@ -1,6 +1,6 @@
 # vxe-pc-ui
 
-[简体中文](README.md) | [繁體中文](README.zh-TW.md) | English  
+[简体中文](README.md) | [繁體中文](README.zh-TW.md) | English | [日本語](README.ja-JP.md)  
 
 [![star](https://gitee.com/xuliangzhan_admin/vxe-pc-ui/badge/star.svg?theme=gvp)](https://gitee.com/xuliangzhan_admin/vxe-pc-ui/stargazers)
 [![npm version](https://img.shields.io/npm/v/vxe-pc-ui.svg?style=flat-square)](https://www.npmjs.com/package/vxe-pc-ui)
@@ -19,6 +19,11 @@ A [vue](https://www.npmjs.com/package/vue) based PC component library.
 ![Edge](https://raw.github.com/alrra/browser-logos/master/src/edge/edge_48x48.png) | ![Chrome](https://raw.github.com/alrra/browser-logos/master/src/chrome/chrome_48x48.png) | ![Firefox](https://raw.github.com/alrra/browser-logos/master/src/firefox/firefox_48x48.png) | ![Opera](https://raw.github.com/alrra/browser-logos/master/src/opera/opera_48x48.png) | ![Safari](https://raw.github.com/alrra/browser-logos/master/src/safari/safari_48x48.png)
 --- | --- | --- | --- | --- |
 80+ ✔ | 80+ ✔ | 90+ ✔ | 75+ ✔ | 10+ ✔ |
+
+## Online Documents
+
+👉 [UI Document](https://vxeui.com)  
+👉 [Table Document](https://vxetable.cn)  
 
 ## Use
 
