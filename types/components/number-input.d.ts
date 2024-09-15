@@ -188,6 +188,8 @@ export namespace VxeNumberInputSlotTypes {
 
 export interface VxeNumberInputSlots {
   default?: (params: VxeNumberInputSlotTypes.DefaultSlotParams) => any
+  prefix: (params: VxeNumberInputSlotTypes.DefaultSlotParams) => any
+  suffix: (params: VxeNumberInputSlotTypes.DefaultSlotParams) => any
 }
 
 export const NumberInput: typeof VxeNumberInput

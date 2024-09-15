@@ -61,7 +61,7 @@ export namespace VxeTreePropTypes {
   export type ShowLine = boolean
   export type Indent = number
   export type ShowRadio = boolean
-  export type CheckNodeKey = string | number
+  export type CheckNodeKey = string | number | null
   export interface RadioConfig<D = any> {
     checkNodeKey?: string
     strict?: boolean

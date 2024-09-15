@@ -400,6 +400,8 @@ export namespace VxeInputSlotTypes {
 
 export interface VxeInputSlots {
   default: (params: VxeInputSlotTypes.DefaultSlotParams) => any
+  prefix: (params: VxeInputSlotTypes.DefaultSlotParams) => any
+  suffix: (params: VxeInputSlotTypes.DefaultSlotParams) => any
 }
 
 export const Input: typeof VxeInput

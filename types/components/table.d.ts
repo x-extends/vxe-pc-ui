@@ -1033,6 +1033,10 @@ export namespace VxeTablePropTypes {
       row: DT,
       column: VxeTableDefines.ColumnInfo<DT>
       cellValue: any
+      clipData: {
+        text?: string
+        html?: string
+      }
       $table: VxeTableConstructor<DT> & VxeTablePrivateMethods<DT>
       $grid: VxeGridConstructor<DT> | null | undefined
     }) => void
@@ -1043,6 +1047,10 @@ export namespace VxeTablePropTypes {
       activeArea: VxeTableProDefines.MouseActiveCellArea
       cutAreas: VxeTableProDefines.CellAreaParams<DT>[]
       currentAreas: VxeTableProDefines.CellAreaParams<DT>[]
+      clipData: {
+        text?: string
+        html?: string
+      }
       $table: VxeTableConstructor<DT> & VxeTablePrivateMethods<DT>
       $grid: VxeGridConstructor<DT> | null | undefined
     }) => boolean
@@ -1063,6 +1071,10 @@ export namespace VxeTablePropTypes {
       row: DT,
       column: VxeTableDefines.ColumnInfo<DT>
       cellValue: any
+      clipData: {
+        text?: string
+        html?: string
+      }
       $table: VxeTableConstructor<DT> & VxeTablePrivateMethods<DT>
       $grid: VxeGridConstructor<DT> | null | undefined
     }): void
@@ -1077,6 +1089,10 @@ export namespace VxeTablePropTypes {
       targetAreas: VxeTableProDefines.CellAreaParams<DT>[]
       cellValues: string[][]
       pasteCells: string[][]
+      clipData: {
+        text?: string
+        html?: string
+      }
       $table: VxeTableConstructor<DT> & VxeTablePrivateMethods<DT>
       $grid: VxeGridConstructor<DT> | null | undefined
     }): boolean
