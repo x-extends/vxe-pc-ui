@@ -468,6 +468,8 @@ export default defineVxeComponent({
     blurEvent  (evnt: Event & { type: 'blur' }) {
       const $xeNumberInput = this
       const reactData = $xeNumberInput.reactData
+      const $xeForm = $xeNumberInput.$xeForm
+      const formItemInfo = $xeNumberInput.formItemInfo
 
       const { inputValue } = reactData
       const inpImmediate = $xeNumberInput.computeInpImmediate
@@ -478,6 +480,10 @@ export default defineVxeComponent({
       $xeNumberInput.afterCheckValue()
       reactData.isActivated = false
       $xeNumberInput.dispatchEvent('blur', { value }, evnt)
+      // 自动更新校验状态
+      if ($xeForm && formItemInfo) {
+        $xeForm.triggerItemEvent(evnt, formItemInfo.itemConfig.field, value)
+      }
     },
     // 数值
     numberChange  (isPlus: boolean, evnt: Event) {

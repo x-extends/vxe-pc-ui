@@ -19,7 +19,10 @@ export default defineVxeComponent({
   props: {
     value: String as PropType<VxePasswordInputPropTypes.ModelValue>,
     name: String as PropType<VxePasswordInputPropTypes.Name>,
-    clearable: { type: Boolean as PropType<VxePasswordInputPropTypes.Clearable>, default: () => getConfig().passwordInput.clearable },
+    clearable: {
+      type: Boolean as PropType<VxePasswordInputPropTypes.Clearable>,
+      default: () => getConfig().passwordInput.clearable
+    },
     readonly: Boolean as PropType<VxePasswordInputPropTypes.Readonly>,
     disabled: Boolean as PropType<VxePasswordInputPropTypes.Disabled>,
     maxLength: [String, Number] as PropType<VxePasswordInputPropTypes.MaxLength>,
@@ -29,9 +32,16 @@ export default defineVxeComponent({
       default: 'off'
     },
     className: String as PropType<VxePasswordInputPropTypes.ClassName>,
-    size: { type: String as PropType<VxePasswordInputPropTypes.Size>, default: () => getConfig().passwordInput.size || getConfig().size },
+    size: {
+      type: String as PropType<VxePasswordInputPropTypes.Size>,
+      default: () => getConfig().passwordInput.size || getConfig().size
+    },
     prefixIcon: String as PropType<VxePasswordInputPropTypes.PrefixIcon>,
     suffixIcon: String as PropType<VxePasswordInputPropTypes.SuffixIcon>,
+    controls: {
+      type: Boolean as PropType<VxePasswordInputPropTypes.Controls>,
+      default: () => getConfig().passwordInput.controls
+    },
 
     // 已废弃
     autocomplete: String as PropType<VxePasswordInputPropTypes.Autocomplete>
@@ -203,9 +213,16 @@ export default defineVxeComponent({
     blurEvent (evnt: Event & { type: 'blur' }) {
       const $xePasswordInput = this
       const reactData = $xePasswordInput.reactData
+      const $xeForm = $xePasswordInput.$xeForm
+      const formItemInfo = $xePasswordInput.formItemInfo
 
       const { inputValue } = reactData
-      $xePasswordInput.dispatchEvent('blur', { value: inputValue }, evnt)
+      const value = inputValue
+      $xePasswordInput.dispatchEvent('blur', { value }, evnt)
+      // 自动更新校验状态
+      if ($xeForm && formItemInfo) {
+        $xeForm.triggerItemEvent(evnt, formItemInfo.itemConfig.field, value)
+      }
     },
     passwordToggleEvent  (evnt: Event) {
       const $xePasswordInput = this
@@ -305,11 +322,11 @@ export default defineVxeComponent({
       const slots = $xePasswordInput.$scopedSlots
       const reactData = $xePasswordInput.reactData
 
-      const { disabled, suffixIcon } = props
+      const { disabled, suffixIcon, controls } = props
       const { inputValue } = reactData
       const suffixSlot = slots.suffix
       const isClearable = $xePasswordInput.computeIsClearable
-      return isClearable || suffixSlot || suffixIcon
+      return isClearable || controls || suffixSlot || suffixIcon
         ? h('div', {
           class: ['password-input--suffix', {
             'is--clear': isClearable && !disabled && !(inputValue === '' || XEUtils.eqNull(inputValue))
@@ -327,7 +344,7 @@ export default defineVxeComponent({
               })
             ])
             : renderEmptyElement($xePasswordInput),
-          $xePasswordInput.renderExtraSuffixIcon(h),
+          controls ? $xePasswordInput.renderPasswordIcon(h) : renderEmptyElement($xePasswordInput),
           suffixSlot || suffixIcon
             ? h('div', {
               class: 'password-input--suffix-icon',
@@ -344,11 +361,6 @@ export default defineVxeComponent({
             : renderEmptyElement($xePasswordInput)
         ])
         : null
-    },
-    renderExtraSuffixIcon (h: CreateElement) {
-      const $xePasswordInput = this
-
-      return $xePasswordInput.renderPasswordIcon(h)
     },
     renderVN (h: CreateElement): VNode {
       const $xePasswordInput = this

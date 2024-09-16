@@ -1031,17 +1031,24 @@ export default defineVxeComponent({
     blurEvent (evnt: Event & { type: 'blur' }) {
       const $xeDatePicker = this
       const reactData = $xeDatePicker.reactData
+      const $xeForm = $xeDatePicker.$xeForm
+      const formItemInfo = $xeDatePicker.formItemInfo
 
       const { inputValue } = reactData
       const inpImmediate = $xeDatePicker.computeInpImmediate
+      const value = inputValue
       if (!inpImmediate) {
-        $xeDatePicker.handleChange(inputValue, evnt)
+        $xeDatePicker.handleChange(value, evnt)
       }
       $xeDatePicker.afterCheckValue()
       if (!reactData.visiblePanel) {
         reactData.isActivated = false
       }
-      $xeDatePicker.dispatchEvent('blur', { value: inputValue }, evnt)
+      $xeDatePicker.dispatchEvent('blur', { value }, evnt)
+      // 自动更新校验状态
+      if ($xeForm && formItemInfo) {
+        $xeForm.triggerItemEvent(evnt, formItemInfo.itemConfig.field, value)
+      }
     },
     keydownEvent (evnt: KeyboardEvent & { type: 'keydown' }) {
       const $xeDatePicker = this

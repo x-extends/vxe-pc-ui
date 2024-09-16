@@ -974,6 +974,28 @@ export default defineVxeComponent({
         $xeInput.triggerEvent(evnt)
       }
     },
+    blurEvent  (evnt: Event & { type: 'blur' }) {
+      const $xeInput = this
+      const reactData = $xeInput.reactData
+      const $xeForm = $xeInput.$xeForm
+      const formItemInfo = $xeInput.formItemInfo
+
+      const { inputValue } = reactData
+      const value = inputValue
+      const inpImmediate = $xeInput.computeInpImmediate
+      if (!inpImmediate) {
+        $xeInput.handleChange(value, evnt)
+      }
+      $xeInput.afterCheckValue()
+      if (!reactData.visiblePanel) {
+        reactData.isActivated = false
+      }
+      $xeInput.dispatchEvent('blur', { value }, evnt)
+      // 自动更新校验状态
+      if ($xeForm && formItemInfo) {
+        $xeForm.triggerItemEvent(evnt, formItemInfo.itemConfig.field, value)
+      }
+    },
     focusEvent  (evnt: Event & { type: 'focus' }) {
       const $xeInput = this
       const reactData = $xeInput.reactData
@@ -1257,21 +1279,6 @@ export default defineVxeComponent({
           }
         }
       }
-    },
-    blurEvent  (evnt: Event & { type: 'blur' }) {
-      const $xeInput = this
-      const reactData = $xeInput.reactData
-
-      const { inputValue } = reactData
-      const inpImmediate = $xeInput.computeInpImmediate
-      if (!inpImmediate) {
-        $xeInput.handleChange(inputValue, evnt)
-      }
-      $xeInput.afterCheckValue()
-      if (!reactData.visiblePanel) {
-        reactData.isActivated = false
-      }
-      $xeInput.dispatchEvent('blur', { value: inputValue }, evnt)
     },
     // 密码
     passwordToggleEvent  (evnt: Event) {

@@ -2028,7 +2028,7 @@ export interface TablePrivateComputed<D = any> {
   computeSYOpts: VxeTablePropTypes.SYOpts
   computeColumnOpts: VxeTablePropTypes.ColumnOpts
   computeRowOpts: VxeTablePropTypes.RowOpts
-  computeResizeleOpts: VxeTablePropTypes.ResizeOpts
+  computeResizeOpts: VxeTablePropTypes.ResizeOpts
   computeResizableOpts: VxeTablePropTypes.ResizableOpts<D>
   computeSeqOpts: VxeTablePropTypes.SeqOpts<D>
   computeRadioOpts: VxeTablePropTypes.RadioOpts<D>
@@ -2058,6 +2058,43 @@ export interface TablePrivateComputed<D = any> {
   computeFixedColumnSize: number
   computeIsMaxFixedColumn: boolean
   computeIsAllCheckboxDisabled: boolean
+
+  tableId: string
+  validOpts: VxeTablePropTypes.ValidOpts<D>
+  sXOpts: VxeTablePropTypes.SXOpts
+  sYOpts: VxeTablePropTypes.SYOpts
+  columnOpts: VxeTablePropTypes.ColumnOpts
+  rowOpts: VxeTablePropTypes.RowOpts
+  resizeOpts: VxeTablePropTypes.ResizeOpts
+  resizableOpts: VxeTablePropTypes.ResizableOpts<D>
+  seqOpts: VxeTablePropTypes.SeqOpts<D>
+  radioOpts: VxeTablePropTypes.RadioOpts<D>
+  checkboxOpts: VxeTablePropTypes.CheckboxOpts<D>
+  tooltipOpts: VxeTablePropTypes.TooltipOpts<D>
+  editOpts: VxeTablePropTypes.EditOpts<D>
+  sortOpts: VxeTablePropTypes.SortConfig<D>
+  filterOpts: VxeTablePropTypes.FilterOpts<D>
+  mouseOpts: VxeTablePropTypes.MouseOpts
+  areaOpts: VxeTablePropTypes.AreaOpts
+  keyboardOpts: VxeTablePropTypes.KeyboardOpts
+  clipOpts: VxeTablePropTypes.ClipOpts<D>
+  fnrOpts: VxeTablePropTypes.FNROpts<D>
+  headerMenu: VxeTableDefines.MenuFirstOption
+  bodyMenu: VxeTableDefines.MenuFirstOption
+  footerMenu: VxeTableDefines.MenuFirstOption
+  isMenu: boolean
+  menuOpts: VxeTablePropTypes.MenuOpts<D>
+  exportOpts: VxeTablePropTypes.ExportOpts
+  importOpts: VxeTablePropTypes.ImportOpts
+  printOpts: VxeTablePropTypes.PrintOpts
+  expandOpts: VxeTablePropTypes.ExpandOpts<D>
+  treeOpts: VxeTablePropTypes.TreeOpts<D>
+  emptyOpts: VxeTablePropTypes.EmptyOpts
+  loadingOpts: VxeTablePropTypes.LoadingOpts
+  customOpts: VxeTablePropTypes.CustomOpts<D>
+  fixedColumnSize: number
+  isMaxFixedColumn: boolean
+  isAllCheckboxDisabled: boolean
 }
 export interface VxeTablePrivateComputed<D = any> extends TablePrivateComputed<D> { }
 

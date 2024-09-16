@@ -213,7 +213,9 @@ setConfig({
     // layouts: ['PrevJump', 'PrevPage', 'Jump', 'PageCount', 'NextPage', 'NextJump', 'Sizes', 'Total']
   },
   print: {},
-  passwordInput: {},
+  passwordInput: {
+    controls: true
+  },
   printPageBreak: {},
   pulldown: {},
   radio: {
