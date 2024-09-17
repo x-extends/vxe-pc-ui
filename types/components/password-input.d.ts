@@ -35,6 +35,7 @@ export namespace VxePasswordInputPropTypes {
   export type AutoComplete = string
   export type PrefixIcon = string
   export type SuffixIcon = string
+  export type Controls = boolean
   /**
    * 请使用 AutoComplete
    * @deprecated
@@ -55,6 +56,7 @@ export interface VxePasswordInputProps {
   placeholder?: VxePasswordInputPropTypes.Placeholder
   prefixIcon?: VxePasswordInputPropTypes.PrefixIcon
   suffixIcon?: VxePasswordInputPropTypes.SuffixIcon
+  controls?: VxePasswordInputPropTypes.Controls
   /**
    * 请使用 AutoComplete
    * @deprecated

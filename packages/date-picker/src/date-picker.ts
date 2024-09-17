@@ -884,14 +884,19 @@ export default defineComponent({
     const blurEvent = (evnt: Event & { type: 'blur' }) => {
       const { inputValue } = reactData
       const inpImmediate = computeInpImmediate.value
+      const value = inputValue
       if (!inpImmediate) {
-        handleChange(inputValue, evnt)
+        handleChange(value, evnt)
       }
       afterCheckValue()
       if (!reactData.visiblePanel) {
         reactData.isActivated = false
       }
-      datePickerMethods.dispatchEvent('blur', { value: inputValue }, evnt)
+      datePickerMethods.dispatchEvent('blur', { value }, evnt)
+      // 自动更新校验状态
+      if ($xeForm && formItemInfo) {
+        $xeForm.triggerItemEvent(evnt, formItemInfo.itemConfig.field, value)
+      }
     }
 
     const keydownEvent = (evnt: KeyboardEvent & { type: 'keydown' }) => {

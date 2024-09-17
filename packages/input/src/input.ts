@@ -821,6 +821,24 @@ export default defineComponent({
       }
     }
 
+    const blurEvent = (evnt: Event & { type: 'blur' }) => {
+      const { inputValue } = reactData
+      const inpImmediate = computeInpImmediate.value
+      const value = inputValue
+      if (!inpImmediate) {
+        handleChange(value, evnt)
+      }
+      afterCheckValue()
+      if (!reactData.visiblePanel) {
+        reactData.isActivated = false
+      }
+      inputMethods.dispatchEvent('blur', { value }, evnt)
+      // 自动更新校验状态
+      if ($xeForm && formItemInfo) {
+        $xeForm.triggerItemEvent(evnt, formItemInfo.itemConfig.field, value)
+      }
+    }
+
     const focusEvent = (evnt: Event & { type: 'focus' }) => {
       reactData.isActivated = true
       const isDatePickerType = computeIsDatePickerType.value
@@ -1068,19 +1086,6 @@ export default defineComponent({
           }
         }
       }
-    }
-
-    const blurEvent = (evnt: Event & { type: 'blur' }) => {
-      const { inputValue } = reactData
-      const inpImmediate = computeInpImmediate.value
-      if (!inpImmediate) {
-        handleChange(inputValue, evnt)
-      }
-      afterCheckValue()
-      if (!reactData.visiblePanel) {
-        reactData.isActivated = false
-      }
-      inputMethods.dispatchEvent('blur', { value: inputValue }, evnt)
     }
 
     // 密码

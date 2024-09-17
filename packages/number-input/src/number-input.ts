@@ -390,6 +390,10 @@ export default defineComponent({
       afterCheckValue()
       reactData.isActivated = false
       numberInputMethods.dispatchEvent('blur', { value }, evnt)
+      // 自动更新校验状态
+      if ($xeForm && formItemInfo) {
+        $xeForm.triggerItemEvent(evnt, formItemInfo.itemConfig.field, value)
+      }
     }
 
     // 数值

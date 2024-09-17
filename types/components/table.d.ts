@@ -2052,7 +2052,7 @@ export interface TablePrivateComputed<D = any> {
   computeSYOpts: ComputedRef<VxeTablePropTypes.SYOpts>
   computeColumnOpts: ComputedRef<VxeTablePropTypes.ColumnOpts>
   computeRowOpts: ComputedRef<VxeTablePropTypes.RowOpts>
-  computeResizeleOpts: ComputedRef<VxeTablePropTypes.ResizeOpts>
+  computeResizeOpts: ComputedRef<VxeTablePropTypes.ResizeOpts>
   computeResizableOpts: ComputedRef<VxeTablePropTypes.ResizableOpts<D>>
   computeSeqOpts: ComputedRef<VxeTablePropTypes.SeqOpts<D>>
   computeRadioOpts: ComputedRef<VxeTablePropTypes.RadioOpts<D>>
