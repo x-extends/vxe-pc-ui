@@ -99,6 +99,7 @@ export default Vue.extend({
       localStorage.setItem('VXE_THEME', themeName)
     },
     changeLanguage () {
+      debugger
       VxeUI.setLanguage(this.language)
       localStorage.setItem('VXE_LANGUAGE', this.language)
     }
