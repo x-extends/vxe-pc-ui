@@ -11,13 +11,11 @@
 
   color-scheme: dark;
 
-  $vxe-ui-font-color: #a0a3a7;
-
   /*font color*/
-  --vxe-ui-font-color: #{$vxe-ui-font-color};
-  --vxe-ui-font-tinge-color: #33353b; // 浅色字体颜色
-  --vxe-ui-font-lighten-color: #{lighten($vxe-ui-font-color, 10%)};
-  --vxe-ui-font-darken-color: #{darken($vxe-ui-font-color, 10%)};
+  --vxe-ui-font-color: #a0a3a7;
+  --vxe-ui-font-tinge-color: #33353b;
+  --vxe-ui-font-lighten-color: #797b80;
+  --vxe-ui-font-darken-color: #47494c;
   --vxe-ui-font-disabled-color: #BFBFBF;
   
   /*font status color*/
