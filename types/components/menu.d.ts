@@ -1,5 +1,5 @@
 import { RenderFunction, SetupContext, Ref } from 'vue'
-import { DefineVxeComponentApp, DefineVxeComponentOptions, DefineVxeComponentInstance, VxeComponentBaseOptions, VxeComponentEventParams, ValueOf, VxeComponentSizeType, VxeComponentPermissionCodeType } from '@vxe-ui/core'
+import { DefineVxeComponentApp, DefineVxeComponentOptions, DefineVxeComponentInstance, VxeComponentStyleType, VxeComponentBaseOptions, VxeComponentEventParams, ValueOf, VxeComponentSizeType, VxeComponentPermissionCodeType } from '@vxe-ui/core'
 import { VxeLinkPropTypes } from './link'
 
 /* eslint-disable no-use-before-define,@typescript-eslint/ban-types */
@@ -68,6 +68,10 @@ export interface MenuPrivateComputed {
 export interface VxeMenuPrivateComputed extends MenuPrivateComputed { }
 
 export interface MenuReactData {
+  initialized: boolean
+  collapseStyle: VxeComponentStyleType
+  isEnterCollapse: boolean
+  collapseZindex: number
   activeName: undefined | null | VxeMenuPropTypes.ModelValue
   menuList: VxeMenuDefines.MenuItem[]
   itemHeight: number

@@ -1,7 +1,8 @@
 <template>
   <div>
-    <div style="width: 260px">
-      <vxe-menu v-model="selectNav" :options="navList" @click="clickEvent"></vxe-menu>
+    <vxe-button @click="isCollapsed = !isCollapsed">切换</vxe-button>
+    <div style="display: inline-flex;">
+      <vxe-menu v-model="selectNav" :collapsed="isCollapsed" :options="navList" @click="clickEvent"></vxe-menu>
     </div>
   </div>
 </template>
@@ -11,6 +12,7 @@ import { ref } from 'vue'
 import { VxeMenuPropTypes, VxeMenuEvents } from 'vxe-pc-ui'
 
 const selectNav = ref('user')
+const isCollapsed = ref(false)
 const navList = ref<VxeMenuPropTypes.Options>([
   { name: 'home', title: '首页', icon: 'vxe-icon-home' },
   {

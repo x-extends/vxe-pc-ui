@@ -631,11 +631,8 @@ export default defineComponent({
       })
     })
 
-    nextTick(() => {
-      globalEvents.on($xeTabs, 'resize', updateTabStyle)
-    })
-
     onMounted(() => {
+      globalEvents.on($xeTabs, 'resize', updateTabStyle)
       updateTabStyle()
     })
 

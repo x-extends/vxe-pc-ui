@@ -1,9 +1,11 @@
-import { defineComponent, ref, h, reactive, PropType, inject, resolveComponent, createCommentVNode, nextTick, watch, VNode, onMounted, computed } from 'vue'
+import { defineComponent, ref, h, reactive, PropType, inject, resolveComponent, createCommentVNode, watch, VNode, computed, nextTick, onBeforeUnmount, onMounted } from 'vue'
 import XEUtils from 'xe-utils'
-import { getConfig, getIcon, createEvent, permission, useSize } from '../../ui'
-import VxeLoadingComponent from '../../loading/index'
+import { getConfig, getIcon, createEvent, permission, useSize, globalEvents } from '../../ui'
+import { toCssUnit } from '../../ui/src/dom'
+import { getLastZIndex, nextZIndex } from '../../ui/src/utils'
+import VxeLoadingComponent from '../../loading/src/loading'
 
-import type { VxeMenuDefines, VxeMenuPropTypes, MenuReactData, VxeMenuEmits, MenuMethods, MenuPrivateMethods, MenuPrivateRef, VxeMenuPrivateComputed, VxeMenuConstructor, VxeMenuPrivateMethods, ValueOf, VxeLayoutAsideConstructor, VxeLayoutAsidePrivateMethods } from '../../../types'
+import type { VxeMenuDefines, VxeMenuPropTypes, MenuReactData, VxeMenuEmits, MenuMethods, VxeLayoutAsidePropTypes, MenuPrivateMethods, MenuPrivateRef, VxeMenuPrivateComputed, VxeMenuConstructor, VxeMenuPrivateMethods, ValueOf, VxeLayoutAsideConstructor, VxeLayoutAsidePrivateMethods } from '../../../types'
 
 export default defineComponent({
   name: 'VxeMenu',
@@ -36,11 +38,15 @@ export default defineComponent({
     const $xeLayoutAside = inject<(VxeLayoutAsideConstructor & VxeLayoutAsidePrivateMethods) | null>('$xeLayoutAside', null)
 
     const refElem = ref<HTMLDivElement>()
-    const refWrapperElem = ref<HTMLDivElement>()
+    const refCollapseElem = ref<HTMLDivElement>()
 
     const { computeSize } = useSize(props)
 
     const reactData = reactive<MenuReactData>({
+      initialized: !!props.collapsed,
+      isEnterCollapse: false,
+      collapseStyle: {},
+      collapseZindex: 0,
       activeName: props.modelValue,
       menuList: [],
       itemHeight: 1
@@ -61,6 +67,22 @@ export default defineComponent({
       return false
     })
 
+    const computeCollapseWidth = computed(() => {
+      let collapseWidth: VxeLayoutAsidePropTypes.CollapseWidth = ''
+      if ($xeLayoutAside) {
+        collapseWidth = $xeLayoutAside.props.collapseWidth || ''
+      }
+      return collapseWidth
+    })
+
+    const computeCollapseEnterWidth = computed(() => {
+      let width: VxeLayoutAsidePropTypes.Width = ''
+      if ($xeLayoutAside) {
+        width = $xeLayoutAside.props.width || ''
+      }
+      return width
+    })
+
     const computeMaps: VxeMenuPrivateComputed = {
       computeSize
     }
@@ -79,32 +101,10 @@ export default defineComponent({
       return `${item.title || item.name}`
     }
 
-    const updateItemHeight = () => {
-      const wrapperElem = refWrapperElem.value
-      const childEls = wrapperElem ? wrapperElem.children : []
-      if (childEls.length) {
-        reactData.itemHeight = (childEls[0] as HTMLDivElement).offsetHeight
+    const updateZindex = () => {
+      if (reactData.collapseZindex < getLastZIndex()) {
+        reactData.collapseZindex = nextZIndex()
       }
-    }
-
-    const getExpandChildSize = (item: VxeMenuDefines.MenuItem) => {
-      let size = 0
-      if (item.isExpand) {
-        item.childList.forEach(child => {
-          size += getExpandChildSize(child) + 1
-        })
-      }
-      return size
-    }
-
-    const updateStyle = () => {
-      XEUtils.eachTree(reactData.menuList, (item) => {
-        if (item.hasChild && item.isExpand) {
-          item.childHeight = getExpandChildSize(item) * reactData.itemHeight
-        } else {
-          item.childHeight = 0
-        }
-      }, { children: 'childList' })
     }
 
     const updateActiveMenu = (isDefExpand?: boolean) => {
@@ -136,11 +136,52 @@ export default defineComponent({
           isExactActive: false,
           isActive: false,
           isExpand: XEUtils.isBoolean(item.expanded) ? item.expanded : !!expandAll,
-          hasChild: item.children && item.children.length > 0,
-          childHeight: 0
+          hasChild: item.children && item.children.length > 0
         } as VxeMenuDefines.MenuItem
         return objItem
       }, { children: 'children', mapChildren: 'childList' })
+    }
+
+    const updateCollapseStyle = () => {
+      nextTick(() => {
+        const { isEnterCollapse } = reactData
+        const isCollapsed = computeIsCollapsed.value
+        const collapseEnterWidth = computeCollapseEnterWidth.value
+        const collapseWidth = computeCollapseWidth.value
+        const el = refElem.value
+        if (el) {
+          const clientRect = el.getBoundingClientRect()
+          const parentNode = el.parentNode as HTMLElement
+          reactData.collapseStyle = isCollapsed
+            ? {
+                top: toCssUnit(clientRect.top),
+                left: toCssUnit(clientRect.left),
+                height: toCssUnit(parentNode.clientHeight),
+                width: isEnterCollapse ? (collapseEnterWidth ? toCssUnit(collapseEnterWidth) : '') : (collapseWidth ? toCssUnit(collapseWidth) : ''),
+                zIndex: reactData.collapseZindex
+              }
+            : {}
+        }
+      })
+    }
+
+    const handleCollapseMenu = () => {
+      const { initialized } = reactData
+      const isCollapsed = computeIsCollapsed.value
+      if (isCollapsed) {
+        if (!initialized) {
+          reactData.initialized = true
+          nextTick(() => {
+            const collapseEl = refCollapseElem.value
+            if (collapseEl) {
+              document.body.appendChild(collapseEl)
+            }
+          })
+        }
+      }
+      reactData.isEnterCollapse = false
+      updateZindex()
+      updateCollapseStyle()
     }
 
     const handleClickIconCollapse = (evnt: KeyboardEvent, item: VxeMenuDefines.MenuItem) => {
@@ -149,23 +190,46 @@ export default defineComponent({
         evnt.stopPropagation()
         evnt.preventDefault()
         item.isExpand = !isExpand
-        updateItemHeight()
-        updateStyle()
       }
     }
 
+    const emitModel = (value: any) => {
+      reactData.activeName = value
+      emit('update:modelValue', value)
+    }
+
     const handleClickMenu = (evnt: KeyboardEvent, item: VxeMenuDefines.MenuItem) => {
-      const { routerLink, hasChild } = item
+      const { itemKey, routerLink, hasChild } = item
       if (routerLink) {
-        const value = item.itemKey
-        reactData.activeName = value
-        emit('update:modelValue', value)
+        emitModel(itemKey)
+        reactData.isEnterCollapse = false
       } else {
         if (hasChild) {
           handleClickIconCollapse(evnt, item)
+        } else {
+          emitModel(itemKey)
+          reactData.isEnterCollapse = false
         }
       }
       dispatchEvent('click', { menu: item }, evnt)
+    }
+
+    const handleMenuMouseenter = () => {
+      const { collapseStyle } = reactData
+      const collapseEnterWidth = computeCollapseEnterWidth.value
+      reactData.collapseStyle = Object.assign({}, collapseStyle, {
+        width: collapseEnterWidth ? toCssUnit(collapseEnterWidth) : ''
+      })
+      reactData.isEnterCollapse = true
+    }
+
+    const handleMenuMouseleave = () => {
+      const { collapseStyle } = reactData
+      const el = refElem.value
+      reactData.collapseStyle = Object.assign({}, collapseStyle, {
+        width: el ? toCssUnit(el.offsetWidth) : ''
+      })
+      reactData.isEnterCollapse = false
     }
 
     const dispatchEvent = (type: ValueOf<VxeMenuEmits>, params: Record<string, any>, evnt: Event | null) => {
@@ -213,8 +277,9 @@ export default defineComponent({
       ]
     }
 
-    const renderChildren = (item: VxeMenuDefines.MenuItem): VNode => {
+    const renderDefaultChildren = (item: VxeMenuDefines.MenuItem): VNode => {
       const { itemKey, level, hasChild, isActive, isExactActive, isExpand, routerLink, childList } = item
+      const { isEnterCollapse } = reactData
       const isCollapsed = computeIsCollapsed.value
       if (item.permissionCode) {
         if (!permission.checkVisible(item.permissionCode)) {
@@ -226,7 +291,7 @@ export default defineComponent({
         class: ['vxe-menu--item-wrapper', `vxe-menu--item-level${level}`, {
           'is--exact-active': isExactActive,
           'is--active': isActive,
-          'is--expand': !isCollapsed && isExpand
+          'is--expand': (!isCollapsed || isEnterCollapse) && isExpand
         }]
       }, [
         routerLink
@@ -247,18 +312,53 @@ export default defineComponent({
           }, renderMenuTitle(item)),
         hasChild
           ? h('div', {
-            class: 'vxe-menu--item-group',
-            style: {
-              // height: `${childHeight}px`
+            class: 'vxe-menu--item-group'
+          }, childList.map(child => renderDefaultChildren(child)))
+          : createCommentVNode()
+      ])
+    }
+
+    const renderCollapseChildren = (item: VxeMenuDefines.MenuItem): VNode => {
+      const { itemKey, level, hasChild, isActive, isExactActive, routerLink, childList } = item
+      if (item.permissionCode) {
+        if (!permission.checkVisible(item.permissionCode)) {
+          return createCommentVNode()
+        }
+      }
+      return h('div', {
+        key: itemKey,
+        class: ['vxe-menu--item-wrapper', `vxe-menu--item-level${level}`, {
+          'is--exact-active': isExactActive,
+          'is--active': isActive
+        }]
+      }, [
+        routerLink
+          ? h(resolveComponent('router-link'), {
+            class: 'vxe-menu--item-link',
+            to: routerLink,
+            onClick (evnt: KeyboardEvent) {
+              handleClickMenu(evnt, item)
             }
-          }, childList.map(child => renderChildren(child)))
+          }, {
+            default: () => renderMenuTitle(item)
+          })
+          : h('div', {
+            class: 'vxe-menu--item-link',
+            onClick (evnt: KeyboardEvent) {
+              handleClickMenu(evnt, item)
+            }
+          }, renderMenuTitle(item)),
+        hasChild
+          ? h('div', {
+            class: 'vxe-menu--item-group'
+          }, childList.map(child => renderDefaultChildren(child)))
           : createCommentVNode()
       ])
     }
 
     const renderVN = () => {
       const { loading } = props
-      const { menuList } = reactData
+      const { initialized, menuList, collapseStyle, isEnterCollapse } = reactData
       const vSize = computeSize.value
       const isCollapsed = computeIsCollapsed.value
       return h('div', {
@@ -270,9 +370,28 @@ export default defineComponent({
         }]
       }, [
         h('div', {
-          ref: refWrapperElem,
           class: 'vxe-menu--item-list'
-        }, menuList.map(child => renderChildren(child))),
+        }, menuList.map(child => isCollapsed ? renderCollapseChildren(child) : renderDefaultChildren(child))),
+        initialized
+          ? h('div', {
+            ref: refCollapseElem,
+            class: ['vxe-menu--collapse-wrapper', {
+              [`size--${vSize}`]: vSize,
+              'is--collapsed': isCollapsed,
+              'is--enter': isEnterCollapse,
+              'is--loading': loading
+            }],
+            style: collapseStyle,
+            onMouseenter: handleMenuMouseenter,
+            onMouseleave: handleMenuMouseleave
+          }, [
+            isCollapsed
+              ? h('div', {
+                class: 'vxe-menu--item-list'
+              }, menuList.map(child => renderDefaultChildren(child)))
+              : createCommentVNode()
+          ])
+          : createCommentVNode(),
         /**
          * 加载中
          */
@@ -303,10 +422,24 @@ export default defineComponent({
       updateActiveMenu(true)
     })
 
+    watch(computeIsCollapsed, () => {
+      handleCollapseMenu()
+    })
+
     onMounted(() => {
-      nextTick(() => {
-        updateItemHeight()
-      })
+      globalEvents.on($xeMenu, 'resize', updateCollapseStyle)
+      updateCollapseStyle()
+    })
+
+    onBeforeUnmount(() => {
+      globalEvents.off($xeMenu, 'resize')
+      const collapseEl = refCollapseElem.value
+      if (collapseEl) {
+        const parentNode = collapseEl.parentNode
+        if (parentNode) {
+          parentNode.removeChild(collapseEl)
+        }
+      }
     })
 
     updateMenuConfig()
