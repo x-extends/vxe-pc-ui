@@ -3,7 +3,7 @@ import XEUtils from 'xe-utils'
 import { ItemInfo } from './itemInfo'
 import { isEnableConf } from '../../ui/src/utils'
 
-import type { VxeFormItemConstructor, VxeFormGatherConstructor, VxeFormConstructor, VxeFormDefines } from '../../../types'
+import type { VxeFormItemConstructor, VxeFormGroupConstructor, VxeFormConstructor, VxeFormDefines } from '../../../types'
 
 export interface XEFormItemProvide {
   formItem: ItemInfo;
@@ -49,7 +49,7 @@ export function isActiveItem ($xeForm: VxeFormConstructor, formItem: VxeFormDefi
   return visibleMethod({ data, field, property: field, item: formItem, $form: $xeForm, $grid: $xeForm.xegrid })
 }
 
-export function watchItem (_vm: VxeFormItemConstructor | VxeFormGatherConstructor, formItemPropKeys: string[], formItem: ItemInfo) {
+export function watchItem (_vm: VxeFormItemConstructor | VxeFormGroupConstructor, formItemPropKeys: string[], formItem: ItemInfo) {
   formItemPropKeys.forEach(name => {
     _vm.$watch(name, (val) => {
       formItem.update(name, val)
@@ -57,11 +57,11 @@ export function watchItem (_vm: VxeFormItemConstructor | VxeFormGatherConstructo
   })
 }
 
-export function assembleItem ($xeForm: VxeFormConstructor, el: HTMLDivElement, formItem: ItemInfo, formGather: XEFormItemProvide | null) {
+export function assembleItem ($xeForm: VxeFormConstructor, el: HTMLDivElement, formItem: ItemInfo, formGroup: XEFormItemProvide | null) {
   const { reactData } = $xeForm
   const { staticItems } = reactData
   const parentElem = el.parentNode
-  const parentItem = formGather ? formGather.formItem : null
+  const parentItem = formGroup ? formGroup.formItem : null
   const parentItems = parentItem ? parentItem.children : staticItems
   if (parentElem) {
     parentItems.splice(XEUtils.arrayIndexOf(parentElem.children, el), 0, formItem)

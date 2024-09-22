@@ -93,6 +93,18 @@ export default defineVxeComponent({
       type: String as PropType<VxeFormPropTypes.Align>,
       default: () => getConfig().form.align
     },
+    verticalAlign: {
+      type: String as PropType<VxeFormPropTypes.VerticalAlign>,
+      default: () => getConfig().form.verticalAlign
+    },
+    border: {
+      type: Boolean as PropType<VxeFormPropTypes.Border>,
+      default: () => getConfig().form.border
+    },
+    titleBackground: {
+      type: Boolean as PropType<VxeFormPropTypes.TitleBackground>,
+      default: () => getConfig().form.titleBackground
+    },
     titleBold: {
       type: Boolean as PropType<VxeFormPropTypes.TitleBold>,
       default: () => getConfig().form.titleBold
@@ -151,7 +163,7 @@ export default defineVxeComponent({
     return {
       $xeForm,
       xeFormItemInfo: null,
-      $xeFormGather: null,
+      $xeFormGroup: null,
       $xeFormItem: null
     }
   },
@@ -698,7 +710,7 @@ export default defineVxeComponent({
       const slots = $xeForm.$scopedSlots
       const reactData = $xeForm.reactData
 
-      const { loading, className, data, customLayout } = props
+      const { loading, border, className, data, customLayout } = props
       const { formItems } = reactData
       // const formItems: any[] = []
       const vSize = $xeForm.computeSize
@@ -708,6 +720,7 @@ export default defineVxeComponent({
         ref: 'refElem',
         class: ['vxe-form', className ? (XEUtils.isFunction(className) ? className({ items: formItems, data, $form: $xeForm }) : className) : '', {
           [`size--${vSize}`]: vSize,
+          'is--border': border,
           'custom--layout': customLayout,
           'is--loading': loading
         }],

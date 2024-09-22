@@ -53,7 +53,7 @@ export function addClass (elem: any, cls: string) {
 }
 
 export function toCssUnit (val?: number | string) {
-  if (/^\d+$/.test(`${val}`)) {
+  if (XEUtils.isNumber(val) || /^\d+$/.test(`${val}`)) {
     return `${val}px`
   }
   return `${val || ''}`

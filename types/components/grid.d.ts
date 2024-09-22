@@ -208,6 +208,17 @@ export interface VxeGridProps<D = any> extends VxeTableProps<D> {
 }
 
 export interface GridPrivateComputed<D = any> {
+  proxyOpts: VxeGridPropTypes.ProxyOpts
+  pagerOpts: VxeGridPropTypes.PagerOpts
+  formOpts: VxeGridPropTypes.FormOpts
+  toolbarOpts: VxeGridPropTypes.ToolbarOpts
+  zoomOpts:VxeGridPropTypes.ZoomOpts
+
+  computeProxyOpts: VxeGridPropTypes.ProxyOpts
+  computePagerOpts: VxeGridPropTypes.PagerOpts
+  computeFormOpts: VxeGridPropTypes.FormOpts
+  computeToolbarOpts: VxeGridPropTypes.ToolbarOpts
+  computeZoomOpts:VxeGridPropTypes.ZoomOpts
 }
 export interface VxeGridPrivateComputed<D = any> extends GridPrivateComputed<D> { }
 

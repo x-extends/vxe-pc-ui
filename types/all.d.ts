@@ -25,6 +25,7 @@ import VxeFlowView from './components/flow-view'
 import VxeForm from './components/form'
 import VxeFormDesign from './components/form-design'
 import VxeFormGather from './components/form-gather'
+import VxeFormGroup from './components/form-group'
 import VxeFormItem from './components/form-item'
 import VxeFormView from './components/form-view'
 import VxeIcon from './components/icon'
@@ -110,6 +111,7 @@ interface AllComponents {
   VxeForm: typeof VxeForm
   VxeFormDesign: typeof VxeFormDesign
   VxeFormGather: typeof VxeFormGather
+  VxeFormGroup: typeof VxeFormGroup
   VxeFormItem: typeof VxeFormItem
   VxeFormView: typeof VxeFormView
   VxeIcon: typeof VxeIcon
@@ -194,6 +196,7 @@ export * from './components/flow-view'
 export * from './components/form'
 export * from './components/form-design'
 export * from './components/form-gather'
+export * from './components/form-group'
 export * from './components/form-item'
 export * from './components/form-view'
 export * from './components/icon'

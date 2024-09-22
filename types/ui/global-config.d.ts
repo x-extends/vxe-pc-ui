@@ -21,6 +21,7 @@ import { VxeDrawerProps } from '../components/drawer'
 import { VxeFormProps } from '../components/form'
 import { VxeFormDesignProps } from '../components/form-design'
 import { VxeFormGatherProps } from '../components/form-gather'
+import { VxeFormGroupProps } from '../components/form-group'
 import { VxeFormItemProps } from '../components/form-item'
 import { VxeFormViewProps } from '../components/form-view'
 import { VxeIconProps } from '../components/icon'
@@ -97,6 +98,7 @@ declare module '@vxe-ui/core' {
     form?: VxeFormProps
     formDesign?: VxeFormDesignProps
     formGather?: VxeFormGatherProps
+    formGroup?: VxeFormGroupProps
     formItem?: VxeFormItemProps
     formView?: VxeFormViewProps
     icon?: VxeIconProps

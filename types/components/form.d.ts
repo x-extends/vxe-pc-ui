@@ -27,6 +27,9 @@ export namespace VxeFormPropTypes {
   export type Data = any
   export type Span = string | number
   export type Align = 'left' | 'center' | 'right' | '' | null
+  export type VerticalAlign = 'center' | '' | null
+  export type Border = boolean
+  export type TitleBackground = boolean
   export type TitleBold = boolean
   export type TitleAlign = Align
   export type TitleWidth = string | number
@@ -83,6 +86,9 @@ export interface VxeFormProps<D = any> {
   data?: D
   span?: VxeFormPropTypes.Span
   align?: VxeFormPropTypes.Align
+  verticalAlign?: VxeFormPropTypes.VerticalAlign
+  border?: VxeFormPropTypes.Border
+  titleBackground?: VxeFormPropTypes.TitleBackground
   titleBold?: VxeFormPropTypes.TitleBold
   titleAlign?: VxeFormPropTypes.TitleAlign
   titleWidth?: VxeFormPropTypes.TitleWidth
@@ -206,6 +212,8 @@ export namespace VxeFormDefines {
     field: VxeFormItemPropTypes.Field
     span: VxeFormItemPropTypes.Span
     align: VxeFormItemPropTypes.Align
+    verticalAlign: VxeFormItemPropTypes.VerticalAlign
+    titleBackground: VxeFormItemPropTypes.TitleBold
     titleBold: VxeFormItemPropTypes.TitleBold
     titleAlign: VxeFormItemPropTypes.TitleAlign
     titleWidth: VxeFormItemPropTypes.TitleWidth
@@ -220,6 +228,7 @@ export namespace VxeFormDefines {
     resetValue: VxeFormItemPropTypes.ResetValue
     visibleMethod: VxeFormItemPropTypes.VisibleMethod
     visible: VxeFormItemPropTypes.Visible
+    showContent: VxeFormItemPropTypes.ShowContent
     folding: VxeFormItemPropTypes.Folding
     collapseNode: VxeFormItemPropTypes.CollapseNode
     className: VxeFormItemPropTypes.ClassName

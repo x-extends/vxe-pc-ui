@@ -1,6 +1,6 @@
 <template>
   <div>
-    <vxe-form vertical title-colon :data="demo1.formData1" @submit="searchEvent" @reset="resetEvent">
+    <vxe-form vertical border title-colon :data="demo1.formData1" @submit="searchEvent" @reset="resetEvent">
       <vxe-form-item title="名称" field="name" :item-render="{}" titleBold>
         <template #default="{ data }">
           <vxe-input v-model="data.name" placeholder="请输入名称" clearable></vxe-input>
@@ -26,7 +26,7 @@
       </vxe-form-item>
     </vxe-form>
 
-    <vxe-form :data="demo1.formData1" @submit="searchEvent" @reset="resetEvent" size="medium">
+    <vxe-form border :data="demo1.formData1" @submit="searchEvent" @reset="resetEvent" size="medium">
       <vxe-form-item title="名称" field="name" :item-render="{}">
         <template #default="{ data }">
           <vxe-input v-model="data.name" placeholder="请输入名称" clearable></vxe-input>
@@ -117,7 +117,7 @@
       :loading="demo2.loading2"
       @submit="submitEvent2"
       @reset="resetEvent">
-      <vxe-form-gather span="12">
+      <vxe-form-group span="12">
         <vxe-form-item title="名称" field="name" span="24"></vxe-form-item>
         <vxe-form-item title="昵称" span="24">
           <template #title>
@@ -145,14 +145,14 @@
             <vxe-input v-model="data.date" type="date" placeholder="请选择日期" clearable></vxe-input>
           </template>
         </vxe-form-item>
-      </vxe-form-gather>
-      <vxe-form-gather span="12">
+      </vxe-form-group>
+      <vxe-form-group span="12">
         <vxe-form-item title="标题貌似有点长呢标题貌似有点长呢" field="address" span="24" :item-render="{}">
           <template #default="{ data }">
             <vxe-textarea v-model="data.address" placeholder="请输入地址" :autosize="{minRows: 6, maxRows: 10}" clearable></vxe-textarea>
           </template>
         </vxe-form-item>
-      </vxe-form-gather>
+      </vxe-form-group>
       <vxe-form-item align="center" span="24">
         <template #default>
           <vxe-button type="submit" status="primary" content="基本表单"></vxe-button>

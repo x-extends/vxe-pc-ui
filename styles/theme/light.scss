@@ -12,7 +12,6 @@
   /*font color*/
   --vxe-ui-font-color: #606266;
   --vxe-ui-font-tinge-color: #d4d5d7;
-
   --vxe-ui-font-lighten-color: #797b80;
   --vxe-ui-font-darken-color: #47494c;
   --vxe-ui-font-disabled-color: #BFBFBF;
@@ -80,10 +79,15 @@
 
   /*menu*/
   --vxe-ui-menu-item-hover-color: var(--vxe-ui-font-primary-color);
+  --vxe-ui-menu-collapse-wrapper-box-shadow: var(--vxe-ui-base-popup-box-shadow);
 
   /*loading*/
   --vxe-ui-loading-background-color: rgba(255, 255, 255, 0.5);
    
+  /*form*/
+  --vxe-ui-form-title-background-color: #f8f8f9;
+  --vxe-ui-form-border-color: #e8eaec;
+
   /*form-design*/
   --vxe-ui-form-design-widget-hover-background-color: var(--vxe-ui-base-hover-background-color);
   --vxe-ui-form-design-sub-widget-hover-background-color: rgba(0, 0, 0, 0.05);
