@@ -44,6 +44,8 @@ export namespace VxeDrawerPropTypes {
   export type Mask = boolean
   export type MaskClosable = boolean
   export type EscClosable = boolean
+  export type CancelClosable = boolean
+  export type ConfirmClosable = boolean
   export type ShowHeader = boolean
   export type ShowFooter = boolean
   export type ShowClose = boolean
@@ -76,6 +78,8 @@ export interface VxeDrawerProps {
   mask?: VxeDrawerPropTypes.Mask
   maskClosable?: VxeDrawerPropTypes.MaskClosable
   escClosable?: VxeDrawerPropTypes.EscClosable
+  cancelClosable?: VxeDrawerPropTypes.CancelClosable
+  confirmClosable?: VxeDrawerPropTypes.ConfirmClosable
   showHeader?: VxeDrawerPropTypes.ShowHeader
   showFooter?: VxeDrawerPropTypes.ShowFooter
   showClose?: VxeDrawerPropTypes.ShowClose
