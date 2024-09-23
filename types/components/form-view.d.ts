@@ -32,6 +32,7 @@ export namespace VxeFormViewPropTypes {
   export type ViewRender = {
     name?: string
   }
+  export type FormOptions = Omit<VxeFormProps<D>, 'data' | 'items'>
   export type CreateFormConfig = (params: VxeFormViewDefines.CreateFormConfigParams) => VxeFormProps
   export type Size = VxeComponentSizeType
 }
@@ -42,6 +43,7 @@ export type VxeFormViewProps = {
   readonly?: VxeFormViewPropTypes.Readonly
   disabled?: VxeFormViewPropTypes.Disabled
   viewRender?: VxeFormViewPropTypes.ViewRender
+  formOptions?: VxeFormViewPropTypes.FormOptions
   createFormConfig?: VxeFormViewPropTypes.CreateFormConfig
   size?: VxeFormViewPropTypes.Size
 }

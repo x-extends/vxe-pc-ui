@@ -54,6 +54,7 @@ const componentList = [
   'form',
   'form-design',
   'form-gather',
+  'form-group',
   'form-item',
   'form-view',
   'icon',

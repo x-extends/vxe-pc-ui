@@ -1,18 +1,31 @@
-import { defineComponent, h, onUnmounted, inject, ref, Ref, provide, onMounted, PropType, createCommentVNode, reactive } from 'vue'
+import { defineComponent, h, onUnmounted, inject, ref, provide, onMounted, PropType, reactive, createCommentVNode } from 'vue'
+import { createItem, watchItem, destroyItem, assembleItem, XEFormItemProvide } from './util'
+import { renderer } from '../../ui'
+import { isEnableConf } from '../../ui/src/utils'
+import { renderTitle, renderItemContent, getItemClass, getItemContentClass } from './render'
 import XEUtils from 'xe-utils'
-import { getIcon, getI18n, renderer, VxeComponentSlotType } from '../../ui'
-import { getFuncText, isEnableConf } from '../../ui/src/utils'
-import { getSlotVNs } from '../../ui/src/vn'
-import { createItem, watchItem, destroyItem, assembleItem, XEFormItemProvide, isActiveItem } from './util'
-import { renderTitle } from './render'
 
 import type { VxeFormConstructor, VxeFormDefines, VxeFormItemPropTypes, VxeFormPrivateMethods } from '../../../types'
 
 export const formItemProps = {
   title: String as PropType<VxeFormItemPropTypes.Title>,
   field: String as PropType<VxeFormItemPropTypes.Field>,
-  span: [String, Number] as PropType<VxeFormItemPropTypes.Span>,
-  align: String as PropType<VxeFormItemPropTypes.Align>,
+  span: {
+    type: [String, Number] as PropType<VxeFormItemPropTypes.Span>,
+    default: null
+  },
+  align: {
+    type: String as PropType<VxeFormItemPropTypes.Align>,
+    default: null
+  },
+  verticalAlign: {
+    type: String as PropType<VxeFormItemPropTypes.VerticalAlign>,
+    default: null
+  },
+  titleBackground: {
+    type: Boolean as PropType<VxeFormItemPropTypes.TitleBackground>,
+    default: null
+  },
   titleBold: {
     type: Boolean as PropType<VxeFormItemPropTypes.TitleBold>,
     default: null
@@ -62,6 +75,10 @@ export const formItemProps = {
     type: Boolean as PropType<VxeFormItemPropTypes.Visible>,
     default: null
   },
+  showContent: {
+    type: Boolean as PropType<VxeFormItemPropTypes.ShowContent>,
+    default: null
+  },
   folding: Boolean as PropType<VxeFormItemPropTypes.Folding>,
   collapseNode: Boolean as PropType<VxeFormItemPropTypes.CollapseNode>,
   itemRender: Object as PropType<VxeFormItemPropTypes.ItemRender>,
@@ -72,9 +89,9 @@ export default defineComponent({
   name: 'VxeFormItem',
   props: formItemProps,
   setup (props, { slots }) {
-    const refElem = ref() as Ref<HTMLDivElement>
+    const refElem = ref<HTMLDivElement>()
     const $xeForm = inject('$xeForm', {} as VxeFormConstructor & VxeFormPrivateMethods)
-    const $xeFormGather = inject<XEFormItemProvide | null>('$xeFormGather', null)
+    const $xeFormGroup = inject<XEFormItemProvide | null>('$xeFormGroup', null)
     const formItem = reactive(createItem($xeForm, props))
     formItem.slots = slots
 
@@ -85,7 +102,9 @@ export default defineComponent({
 
     onMounted(() => {
       const elem = refElem.value
-      assembleItem($xeForm, elem, formItem, $xeFormGather)
+      if (elem) {
+        assembleItem($xeForm, elem, formItem, $xeFormGroup)
+      }
     })
 
     onUnmounted(() => {
@@ -94,163 +113,37 @@ export default defineComponent({
 
     const renderItem = ($xeForm: VxeFormConstructor & VxeFormPrivateMethods, item: VxeFormDefines.ItemInfo) => {
       const formProps = $xeForm.props
-      const formReactData = $xeForm.reactData
-      const { data, rules, readonly, disabled, titleBold: allTitleBold, titleAlign: allTitleAlign, titleWidth: allTitleWidth, titleColon: allTitleColon, titleAsterisk: allTitleAsterisk, titleOverflow: allTitleOverflow, vertical: allVertical, padding: allPadding } = formProps
-      const { collapseAll } = formReactData
-      const { computeValidOpts } = $xeForm.getComputeMaps()
-      const validOpts = computeValidOpts.value
-      const { slots, title, visible, folding, field, collapseNode, itemRender, showError, errRule, className, titleOverflow, vertical, padding, showTitle, contentClassName, contentStyle, titleClassName, titleStyle } = item
+      const { data, readonly, disabled } = formProps
+      const { visible, field, itemRender, contentStyle, showContent } = item
       const compConf = isEnableConf(itemRender) ? renderer.get(itemRender.name) : null
-      const itemClassName = compConf ? (compConf.formItemClassName || compConf.itemClassName) : ''
       const itemStyle = compConf ? (compConf.formItemStyle || compConf.itemStyle) : null
-      const itemContentClassName = compConf ? (compConf.formItemContentClassName || compConf.itemContentClassName) : ''
       const itemContentStyle = compConf ? (compConf.formItemContentStyle || compConf.itemContentStyle) : null
-      const itemTitleClassName = compConf ? (compConf.formItemTitleClassName || compConf.itemTitleClassName) : ''
-      const itemTitleStyle = compConf ? (compConf.formItemTitleStyle || compConf.itemTitleStyle) : null
-      const defaultSlot = slots ? slots.default : null
-      const titleSlot = slots ? slots.title : null
-      const span = item.span || formProps.span
-      const align = item.align || formProps.align
-      const itemPadding = XEUtils.eqNull(padding) ? allPadding : padding
-      const itemVertical = XEUtils.eqNull(vertical) ? allVertical : vertical
-      const titleBold = XEUtils.eqNull(item.titleBold) ? allTitleBold : item.titleBold
-      const titleAlign = XEUtils.eqNull(item.titleAlign) ? allTitleAlign : item.titleAlign
-      const titleWidth = itemVertical ? null : (XEUtils.eqNull(item.titleWidth) ? allTitleWidth : item.titleWidth)
-      const titleColon = XEUtils.eqNull(item.titleColon) ? allTitleColon : item.titleColon
-      const titleAsterisk = XEUtils.eqNull(item.titleAsterisk) ? allTitleAsterisk : item.titleAsterisk
-      const itemOverflow = XEUtils.eqNull(titleOverflow) ? allTitleOverflow : titleOverflow
-      const ovEllipsis = itemOverflow === 'ellipsis'
-      const ovTitle = itemOverflow === 'title'
-      const ovTooltip = itemOverflow === true || itemOverflow === 'tooltip'
-      const hasEllipsis = ovTitle || ovTooltip || ovEllipsis
       const params = { data, disabled, readonly, field, property: field, item, $form: $xeForm, $grid: $xeForm.xegrid }
-      let isRequired = false
-      let isValid = false
       if (visible === false) {
         return createCommentVNode()
       }
-      if (!readonly && rules) {
-        const itemRules = rules[field]
-        if (itemRules && itemRules.length) {
-          isValid = true
-          isRequired = itemRules.some((rule) => rule.required)
-        }
-      }
-      let contentVNs: VxeComponentSlotType[] = []
-      const rftContent = compConf ? (compConf.renderFormItemContent || compConf.renderItemContent) : null
-      if (defaultSlot) {
-        contentVNs = $xeForm.callSlot(defaultSlot, params)
-      } else if (rftContent) {
-        contentVNs = getSlotVNs(rftContent(itemRender, params))
-      } else if (field) {
-        contentVNs = [`${XEUtils.get(data, field)}`]
-      }
-      if (collapseNode) {
-        contentVNs.push(
-          h('div', {
-            class: 'vxe-form--item-trigger-node',
-            onClick: $xeForm.toggleCollapseEvent
-          }, [
-            h('span', {
-              class: 'vxe-form--item-trigger-text'
-            }, collapseAll ? getI18n('vxe.form.unfolding') : getI18n('vxe.form.folding')),
-            h('i', {
-              class: ['vxe-form--item-trigger-icon', collapseAll ? getIcon().FORM_FOLDING : getIcon().FORM_UNFOLDING]
-            })
-          ])
-        )
-      }
-      if (errRule && validOpts.showMessage) {
-        contentVNs.push(
-          h('div', {
-            class: 'vxe-form--item-valid',
-            style: errRule.maxWidth
-              ? {
-                  width: `${errRule.maxWidth}px`
-                }
-              : null
-          }, errRule.message)
-        )
-      }
-      const ons = ovTooltip
-        ? {
-            onMouseenter (evnt: MouseEvent) {
-              $xeForm.triggerTitleTipEvent(evnt, params)
-            },
-            onMouseleave: $xeForm.handleTitleTipLeaveEvent
-          }
-        : {}
       return h('div', {
         ref: refElem,
-        class: [
-          'vxe-form--item',
-          item.id,
-          span ? `vxe-form--item-col_${span} is--span` : '',
-          className ? (XEUtils.isFunction(className) ? className(params) : className) : '',
-          itemClassName ? (XEUtils.isFunction(itemClassName) ? itemClassName(params) : itemClassName) : '',
-          {
-            'is--title': title,
-            'is--colon': titleColon,
-            'is--bold': titleBold,
-            'is--padding': itemPadding,
-            'is--vertical': itemVertical,
-            'is--asterisk': titleAsterisk,
-            'is--valid': isValid,
-            'is--required': isRequired,
-            'is--hidden': folding && collapseAll,
-            'is--active': isActiveItem($xeForm, item),
-            'is--error': showError
-          }
-        ],
+        key: item.id,
+        class: getItemClass($xeForm, item),
         style: XEUtils.isFunction(itemStyle) ? itemStyle(params) : itemStyle
       }, [
-        h('div', {
-          class: 'vxe-form--item-inner'
-        }, [
-          (showTitle !== false) && (title || titleSlot)
-            ? h('div', {
-              class: [
-                'vxe-form--item-title',
-                titleAlign ? `align--${titleAlign}` : '',
-                hasEllipsis ? 'is--ellipsis' : '',
-                itemTitleClassName ? (XEUtils.isFunction(itemTitleClassName) ? itemTitleClassName(params) : itemTitleClassName) : '',
-                titleClassName ? (XEUtils.isFunction(titleClassName) ? titleClassName(params) : titleClassName) : ''
-              ],
-              style: Object.assign(
-                {},
-                XEUtils.isFunction(itemTitleStyle) ? itemTitleStyle(params) : itemTitleStyle,
-                XEUtils.isFunction(titleStyle) ? titleStyle(params) : titleStyle,
-                titleWidth
-                  ? {
-                      width: isNaN(titleWidth as number) ? titleWidth : `${titleWidth}px`
-                    }
-                  : null
-              ),
-              title: ovTitle ? getFuncText(title) : null,
-              ...ons
-            }, renderTitle($xeForm, item))
-            : null,
-          h('div', {
-            class: [
-              'vxe-form--item-content',
-              align ? `align--${align}` : '',
-              itemContentClassName ? (XEUtils.isFunction(itemContentClassName) ? itemContentClassName(params) : itemContentClassName) : '',
-              contentClassName ? (XEUtils.isFunction(contentClassName) ? contentClassName(params) : contentClassName) : ''
-            ],
-            style: Object.assign(
-              {},
-              XEUtils.isFunction(itemContentStyle) ? itemContentStyle(params) : itemContentStyle,
-              XEUtils.isFunction(contentStyle) ? contentStyle(params) : contentStyle
-            )
-          }, contentVNs)
-        ])
+        renderTitle($xeForm, item),
+        showContent === false
+          ? createCommentVNode()
+          : h('div', {
+            class: getItemContentClass($xeForm, item),
+            style: Object.assign({}, XEUtils.isFunction(itemContentStyle) ? itemContentStyle(params) : itemContentStyle, XEUtils.isFunction(contentStyle) ? contentStyle(params) : contentStyle)
+          }, [
+            renderItemContent($xeForm, item)
+          ])
       ])
     }
-
     const renderVN = () => {
       const customLayout = $xeForm ? $xeForm.props.customLayout : false
+      const item = formItem as unknown as VxeFormDefines.ItemInfo
       return customLayout
-        ? renderItem($xeForm, formItem as unknown as VxeFormDefines.ItemInfo)
+        ? renderItem($xeForm, item)
         : h('div', {
           ref: refElem
         })
@@ -263,7 +156,7 @@ export default defineComponent({
     }
 
     provide('$xeFormItem', $xeFormitem)
-    provide('$xeFormGather', null)
+    provide('$xeFormGroup', null)
 
     return $xeFormitem
   },

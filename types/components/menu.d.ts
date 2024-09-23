@@ -50,6 +50,7 @@ export namespace VxeMenuPropTypes {
   }
 
   export type Collapsed = boolean
+  export type CollapseFixed = boolean
   export type ExpandAll = boolean
   export type Options = MenuOneOption[]
 }
@@ -59,6 +60,7 @@ export interface VxeMenuProps {
   size?: VxeMenuPropTypes.Size
   loading?: VxeMenuPropTypes.Loading
   collapsed?: VxeMenuPropTypes.Collapsed
+  CollapseFixed?: VxeMenuPropTypes.CollapseFixed
   expandAll?: VxeMenuPropTypes.ExpandAll
   options?: VxeMenuPropTypes.Options
 }

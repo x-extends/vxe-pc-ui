@@ -96,7 +96,6 @@ export const WidgetRowFormComponent = defineComponent({
       const { widgetObjList } = formDesignReactData
       const oldChildList = widget.children.filter(item => item.name)
       const overList = oldChildList.slice(options.colSize)
-      console.log(overList)
       if (overList.length) {
         const rest = XEUtils.findTree(widgetObjList, obj => obj.id === widget.id, { children: 'children' })
         if (rest) {

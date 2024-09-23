@@ -1,6 +1,6 @@
 {
   "name": "vxe-pc-ui",
-  "version": "4.1.30",
+  "version": "4.2.0",
   "description": "A vue based PC component library",
   "scripts": {
     "update": "npm install --legacy-peer-deps",
@@ -57,7 +57,7 @@
     "gulp-typescript": "^5.0.1",
     "gulp-uglify": "^3.0.2",
     "postcss": "^8.4.38",
-    "sass": "^1.77.8",
+    "sass": "^1.79.3",
     "sass-loader": "^14.2.1",
     "typescript": "~4.9.5",
     "vue": "3.5.5",

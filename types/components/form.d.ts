@@ -1,5 +1,5 @@
 import { RenderFunction, SetupContext, Ref, ComputedRef } from 'vue'
-import { DefineVxeComponentApp, DefineVxeComponentOptions, DefineVxeComponentInstance, VxeComponentBaseOptions, VxeComponentEventParams, VxeComponentSizeType, ValueOf, VxeComponentSlotType } from '@vxe-ui/core'
+import { DefineVxeComponentApp, DefineVxeComponentOptions, DefineVxeComponentInstance, VxeComponentBaseOptions, VxeComponentEventParams, VxeComponentSizeType, ValueOf, VxeComponentSlotType, VxeComponentAlignType } from '@vxe-ui/core'
 import { VxeFormItemPropTypes, VxeFormItemProps } from './form-item'
 import { VxeGridConstructor } from './grid'
 
@@ -33,9 +33,12 @@ export namespace VxeFormPropTypes {
   export type Loading = boolean
   export type Data = any
   export type Span = string | number
-  export type Align = 'left' | 'center' | 'right' | '' | null
+  export type Align = VxeComponentAlignType
+  export type VerticalAlign = 'center' | '' | null
+  export type Border = boolean
+  export type TitleBackground = boolean
   export type TitleBold = boolean
-  export type TitleAlign = Align
+  export type TitleAlign = VxeComponentAlignType
   export type TitleWidth = string | number
   export type TitleColon = boolean
   export type TitleAsterisk = boolean
@@ -90,6 +93,9 @@ export interface VxeFormProps<D = any> {
   data?: D
   span?: VxeFormPropTypes.Span
   align?: VxeFormPropTypes.Align
+  verticalAlign?: VxeFormPropTypes.VerticalAlign
+  border?: VxeFormPropTypes.Border
+  titleBackground?: VxeFormPropTypes.TitleBackground
   titleBold?: VxeFormPropTypes.TitleBold
   titleAlign?: VxeFormPropTypes.TitleAlign
   titleWidth?: VxeFormPropTypes.TitleWidth
@@ -186,7 +192,7 @@ export interface FormMethods<D = any> {
 export interface VxeFormMethods<D = any> extends FormMethods<D> { }
 
 export interface FormPrivateMethods {
-  callSlot<T>(slotFunc: ((params: T) => VxeComponentSlotType | VxeComponentSlotType[]) | string | null, params: T): VxeComponentSlotType[]
+  callSlot<T = any>(slotFunc: ((params: T) => VxeComponentSlotType | VxeComponentSlotType[]) | string | null, params: T): VxeComponentSlotType[]
   triggerItemEvent(evnt: Event | { type: string }, field: string, itemValue?: any): Promise<any>
   toggleCollapseEvent(evnt: Event): void
   triggerTitleTipEvent(evnt: MouseEvent, params: {
@@ -213,6 +219,8 @@ export namespace VxeFormDefines {
     field: VxeFormItemPropTypes.Field
     span: VxeFormItemPropTypes.Span
     align: VxeFormItemPropTypes.Align
+    verticalAlign: VxeFormItemPropTypes.VerticalAlign
+    titleBackground: VxeFormItemPropTypes.TitleBold
     titleBold: VxeFormItemPropTypes.TitleBold
     titleAlign: VxeFormItemPropTypes.TitleAlign
     titleWidth: VxeFormItemPropTypes.TitleWidth
@@ -227,6 +235,7 @@ export namespace VxeFormDefines {
     resetValue: VxeFormItemPropTypes.ResetValue
     visibleMethod: VxeFormItemPropTypes.VisibleMethod
     visible: VxeFormItemPropTypes.Visible
+    showContent: VxeFormItemPropTypes.ShowContent
     folding: VxeFormItemPropTypes.Folding
     collapseNode: VxeFormItemPropTypes.CollapseNode
     className: VxeFormItemPropTypes.ClassName

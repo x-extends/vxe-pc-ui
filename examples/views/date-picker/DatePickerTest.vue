@@ -72,12 +72,12 @@
 
 <script lang="ts" setup>
 import { reactive } from 'vue'
-import { VxeInputPropTypes, VxeInputDefines } from '../../../types'
+import { VxeDatePickerPropTypes, VxeInputDefines } from '../../../types'
 import XEUtils from 'xe-utils'
 
 const demo1 = reactive({
   value100: '',
-  value101: '',
+  value101: 1726885614375,
   value102: '',
   value103: '',
   value200: '',
@@ -131,7 +131,7 @@ const demo1 = reactive({
   value900: '2017-12-18'
 })
 
-const disabledDateMethod: VxeInputPropTypes.DisabledMethod = (params) => {
+const disabledDateMethod: VxeDatePickerPropTypes.DisabledMethod = (params) => {
   const { date } = params
   const dd = date.getDate()
   return dd > 15
@@ -158,7 +158,7 @@ const noticeMaps: Record<string, VxeInputDefines.DateFestivalInfo> = {
     label: '游泳'
   }
 }
-const festivalNoticeMethod: VxeInputPropTypes.FestivalMethod = (params) => {
+const festivalNoticeMethod: VxeDatePickerPropTypes.FestivalMethod = (params) => {
   const { date, viewType } = params
   if (viewType === 'day') {
     const ymd = XEUtils.toDateString(date, 'yyyyMMdd')
@@ -216,7 +216,7 @@ const calendarMaps: Record<string, VxeInputDefines.DateFestivalInfo> = {
     }
   }
 }
-const festivalCalendarMethod: VxeInputPropTypes.FestivalMethod = (params) => {
+const festivalCalendarMethod: VxeDatePickerPropTypes.FestivalMethod = (params) => {
   const { date, viewType } = params
   if (viewType === 'day') {
     const ymd = XEUtils.toDateString(date, 'yyyyMMdd')

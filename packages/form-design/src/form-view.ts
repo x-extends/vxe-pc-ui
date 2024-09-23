@@ -4,7 +4,7 @@ import { getConfig, renderer, useSize, createEvent } from '../../ui'
 import { getSlotVNs } from '../../ui/src/vn'
 import { createDefaultFormViewPCFormConfig } from './default-setting-data'
 import VxeFormComponent from '../../form/src/form'
-import VxeFormGatherComponent from '../../form/src/form-gather'
+import VxeFormGroupComponent from '../../form/src/form-group'
 import VxeFormItemComponent from '../../form/src/form-item'
 import { configToWidget } from './widget-info'
 import { warnLog } from '../../ui/src/log'
@@ -19,6 +19,7 @@ export default defineComponent({
     readonly: Boolean as PropType<VxeFormViewPropTypes.Readonly>,
     disabled: Boolean as PropType<VxeFormViewPropTypes.Disabled>,
     viewRender: Object as PropType<VxeFormViewPropTypes.ViewRender>,
+    formOptions: Object as PropType<VxeFormViewPropTypes.FormOptions>,
     createFormConfig: Function as PropType<VxeFormViewPropTypes.CreateFormConfig>,
     size: {
       type: String as PropType<VxeFormViewPropTypes.Size>,
@@ -93,7 +94,7 @@ export default defineComponent({
     }
 
     const parseFormConfig = (formConfig: VxeFormProps) => {
-      const { viewRender, createFormConfig } = props
+      const { viewRender, createFormConfig, formOptions } = props
       const params: VxeFormViewDefines.CreateFormConfigParams = { viewRender, formConfig }
       if (createFormConfig) {
         return createFormConfig(params)
@@ -101,7 +102,7 @@ export default defineComponent({
       const { name } = viewRender || {}
       const compConf = renderer.get(name) || {}
       const createPCFormConfig = compConf ? compConf.createFormViewFormConfig : null
-      return Object.assign({}, createPCFormConfig ? createPCFormConfig(params) : createDefaultFormViewPCFormConfig(params))
+      return Object.assign({}, createPCFormConfig ? createPCFormConfig(params) : createDefaultFormViewPCFormConfig(params), formOptions)
     }
 
     const loadFormConfig = (formConfig: VxeFormProps) => {
@@ -289,16 +290,12 @@ export default defineComponent({
           : createCommentVNode(),
         h(VxeFormComponent, {
           ref: formRef,
+          ...formConfig,
           data: modelValue,
           customLayout: true,
           readonly,
           disabled,
           span: 24,
-          vertical: formConfig.vertical,
-          titleBold: formConfig.titleBold,
-          titleColon: formConfig.titleColon,
-          titleAlign: formConfig.titleAlign,
-          titleWidth: formConfig.titleWidth,
           rules: formRules,
           onSubmit: handleSubmit,
           onReset: handleReset
@@ -322,7 +319,7 @@ export default defineComponent({
                 const isEditMode = !!$xeFormDesignLayoutStyle
                 const renderOpts: VxeGlobalRendererHandles.RenderFormDesignWidgetViewOptions = widget
                 const params: VxeGlobalRendererHandles.RenderFormDesignWidgetViewParams = { widget, readonly: !!readonly, disabled: !!disabled, isEditMode, isViewMode: !isEditMode, $formDesign: null, $formView: $xeFormView }
-                return h(VxeFormGatherComponent, {
+                return h(VxeFormGroupComponent, {
                   key: widget.id
                 }, {
                   default () {
@@ -343,7 +340,7 @@ export default defineComponent({
                 })
               }),
               footerSlot
-                ? h(VxeFormGatherComponent, {
+                ? h(VxeFormGroupComponent, {
                   span: 24
                 }, {
                   default () {

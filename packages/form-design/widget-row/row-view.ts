@@ -4,7 +4,7 @@ import { renderer, getIcon } from '@vxe-ui/core'
 import { getSlotVNs } from '../../ui/src/vn'
 import XEUtils from 'xe-utils'
 import { WidgetRowFormObjVO } from './row-data'
-import VxeFormGatherComponent from '../../form/src/form-gather'
+import VxeFormGroupComponent from '../../form/src/form-group'
 import VxeFormItemComponent from '../../form/src/form-item'
 import VxeRowComponent from '../../row/src/row'
 import VxeColComponent from '../../row/src/col'
@@ -13,6 +13,7 @@ import VxeButtonComponent from '../../button/src/button'
 import type { VxeGlobalRendererHandles, VxeFormDesignDefines, VxeFormDesignConstructor, VxeFormDesignPrivateMethods, VxeFormViewConstructor, VxeFormViewPrivateMethods } from '../../../types'
 
 const ViewColItemComponent = defineComponent({
+  name: 'ViewColItem',
   props: {
     parentWidget: {
       type: Object as PropType<VxeFormDesignDefines.WidgetObjItem<WidgetRowFormObjVO>>,
@@ -103,7 +104,6 @@ const ViewColItemComponent = defineComponent({
           const params: VxeGlobalRendererHandles.RenderFormDesignWidgetViewParams = { widget, readonly: false, disabled: false, isEditMode: true, isViewMode: false, $formDesign: $xeFormDesign, $formView: null }
           const isActive = activeWidget && widget && activeWidget.id === widget.id
           const isEmptyWidget = !renderWidgetDesignView
-
           return h('div', {
             class: 'vxe-form-design--widget-row-view',
             'data-widget-id': widget.id,
@@ -168,6 +168,7 @@ const ViewColItemComponent = defineComponent({
 })
 
 export const WidgetRowEditComponent = defineComponent({
+  name: 'WidgetRowEdit',
   props: {
     renderOpts: {
       type: Object as PropType<VxeGlobalRendererHandles.RenderFormDesignWidgetEditOptions>,
@@ -193,7 +194,9 @@ export const WidgetRowEditComponent = defineComponent({
     return () => {
       const { renderParams } = props
       const { widget } = renderParams
-      return h(VxeFormGatherComponent, {}, {
+      return h(VxeFormGroupComponent, {
+        field: widget.field
+      }, {
         default () {
           const colObjList = computedColObjList.value
           return colObjList.map((span, colItemIndex) => {
@@ -212,6 +215,7 @@ export const WidgetRowEditComponent = defineComponent({
 })
 
 export const WidgetRowViewComponent = defineComponent({
+  name: 'WidgetRowView',
   props: {
     renderOpts: {
       type: Object as PropType<VxeGlobalRendererHandles.RenderFormDesignWidgetViewOptions>,

@@ -108,6 +108,7 @@ setConfig({
     showPc: true
   },
   formGather: {},
+  formGroup: {},
   formItem: {},
   formView: {},
   icon: {},
@@ -236,7 +237,9 @@ setConfig({
   tabs: {},
   tag: {},
   text: {},
-  textarea: {},
+  textarea: {
+    resize: 'none'
+  },
   tip: {},
   tooltip: {
     // size: null,

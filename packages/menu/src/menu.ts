@@ -16,6 +16,7 @@ export default defineComponent({
       type: Boolean as PropType<VxeMenuPropTypes.Collapsed>,
       default: null
     },
+    collapseFixed: Boolean as PropType<VxeMenuPropTypes.CollapseFixed>,
     loading: Boolean as PropType<VxeMenuPropTypes.Loading>,
     options: {
       type: Array as PropType<VxeMenuPropTypes.Options>,
@@ -143,45 +144,51 @@ export default defineComponent({
     }
 
     const updateCollapseStyle = () => {
-      nextTick(() => {
-        const { isEnterCollapse } = reactData
-        const isCollapsed = computeIsCollapsed.value
-        const collapseEnterWidth = computeCollapseEnterWidth.value
-        const collapseWidth = computeCollapseWidth.value
-        const el = refElem.value
-        if (el) {
-          const clientRect = el.getBoundingClientRect()
-          const parentNode = el.parentNode as HTMLElement
-          reactData.collapseStyle = isCollapsed
-            ? {
-                top: toCssUnit(clientRect.top),
-                left: toCssUnit(clientRect.left),
-                height: toCssUnit(parentNode.clientHeight),
-                width: isEnterCollapse ? (collapseEnterWidth ? toCssUnit(collapseEnterWidth) : '') : (collapseWidth ? toCssUnit(collapseWidth) : ''),
-                zIndex: reactData.collapseZindex
-              }
-            : {}
-        }
-      })
+      const { collapseFixed } = props
+      if (collapseFixed) {
+        nextTick(() => {
+          const { isEnterCollapse } = reactData
+          const isCollapsed = computeIsCollapsed.value
+          const collapseEnterWidth = computeCollapseEnterWidth.value
+          const collapseWidth = computeCollapseWidth.value
+          const el = refElem.value
+          if (el) {
+            const clientRect = el.getBoundingClientRect()
+            const parentNode = el.parentNode as HTMLElement
+            reactData.collapseStyle = isCollapsed
+              ? {
+                  top: toCssUnit(clientRect.top),
+                  left: toCssUnit(clientRect.left),
+                  height: toCssUnit(parentNode.clientHeight),
+                  width: isEnterCollapse ? (collapseEnterWidth ? toCssUnit(collapseEnterWidth) : '') : (collapseWidth ? toCssUnit(collapseWidth) : ''),
+                  zIndex: reactData.collapseZindex
+                }
+              : {}
+          }
+        })
+      }
     }
 
     const handleCollapseMenu = () => {
-      const { initialized } = reactData
-      const isCollapsed = computeIsCollapsed.value
-      if (isCollapsed) {
-        if (!initialized) {
-          reactData.initialized = true
-          nextTick(() => {
-            const collapseEl = refCollapseElem.value
-            if (collapseEl) {
-              document.body.appendChild(collapseEl)
-            }
-          })
+      const { collapseFixed } = props
+      if (collapseFixed) {
+        const { initialized } = reactData
+        const isCollapsed = computeIsCollapsed.value
+        if (isCollapsed) {
+          if (!initialized) {
+            reactData.initialized = true
+            nextTick(() => {
+              const collapseEl = refCollapseElem.value
+              if (collapseEl) {
+                document.body.appendChild(collapseEl)
+              }
+            })
+          }
         }
+        reactData.isEnterCollapse = false
+        updateZindex()
+        updateCollapseStyle()
       }
-      reactData.isEnterCollapse = false
-      updateZindex()
-      updateCollapseStyle()
     }
 
     const handleClickIconCollapse = (evnt: KeyboardEvent, item: VxeMenuDefines.MenuItem) => {
@@ -202,13 +209,13 @@ export default defineComponent({
       const { itemKey, routerLink, hasChild } = item
       if (routerLink) {
         emitModel(itemKey)
-        reactData.isEnterCollapse = false
+        handleMenuMouseleave()
       } else {
         if (hasChild) {
           handleClickIconCollapse(evnt, item)
         } else {
           emitModel(itemKey)
-          reactData.isEnterCollapse = false
+          handleMenuMouseleave()
         }
       }
       dispatchEvent('click', { menu: item }, evnt)

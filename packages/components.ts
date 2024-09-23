@@ -25,6 +25,7 @@ import VxeDrawer, { DrawerController } from './drawer'
 import VxeForm from './form'
 import VxeFormDesign from './form-design'
 import VxeFormGather from './form-gather'
+import VxeFormGroup from './form-group'
 import VxeFormItem from './form-item'
 import VxeFormView from './form-view'
 import VxeIcon from './icon'
@@ -96,6 +97,7 @@ const components = [
   VxeForm,
   VxeFormDesign,
   VxeFormGather,
+  VxeFormGroup,
   VxeFormItem,
   VxeFormView,
   VxeIcon,
@@ -187,6 +189,7 @@ export * from './drawer'
 export * from './form'
 export * from './form-design'
 export * from './form-gather'
+export * from './form-group'
 export * from './form-item'
 export * from './form-view'
 export * from './icon'

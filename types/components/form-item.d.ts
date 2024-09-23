@@ -29,6 +29,8 @@ export namespace VxeFormItemPropTypes {
   export type Field = string
   export type Span = VxeFormPropTypes.Span
   export type Align = VxeFormPropTypes.Align
+  export type VerticalAlign = VxeFormPropTypes.VerticalAlign
+  export type TitleBackground = boolean
   export type TitleBold = VxeFormPropTypes.TitleBold
   export type TitleAlign = VxeFormPropTypes.TitleAlign
   export type TitleWidth = VxeFormPropTypes.TitleWidth
@@ -85,6 +87,7 @@ export namespace VxeFormItemPropTypes {
   export type ResetValue = any
   export type Visible = boolean
   export type VisibleMethod = (params: FormItemVisibleParams) => boolean
+  export type ShowContent = boolean
   export type Folding = boolean
   export type CollapseNode = boolean
   export interface ItemRender<D = any, P = Record<string, any>> {
@@ -158,6 +161,11 @@ export interface VxeFormItemProps<D = any> {
    * 内容对齐方式
    */
   align?: VxeFormItemPropTypes.Align
+  verticalAlign?: VxeFormItemPropTypes.VerticalAlign
+  /**
+   * 标题加背景
+   */
+  titleBackground?: VxeFormItemPropTypes.TitleBackground
   /**
    * 标题加粗
    */
@@ -228,6 +236,10 @@ export interface VxeFormItemProps<D = any> {
    * 该方法的返回值用来决定该项是否显示
    */
   visibleMethod?: VxeFormItemPropTypes.VisibleMethod
+  /**
+   * 是否显示内容
+   */
+  showContent?: VxeFormItemPropTypes.ShowContent
   /**
    * 默认收起
    */

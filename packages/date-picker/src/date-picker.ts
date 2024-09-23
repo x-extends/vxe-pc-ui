@@ -137,7 +137,7 @@ export default defineComponent({
       panelStyle: {},
       panelPlacement: '',
       isActivated: false,
-      inputValue: props.modelValue,
+      inputValue: '',
       datetimePanelValue: null,
       datePanelValue: null,
       datePanelLabel: '',
@@ -622,6 +622,18 @@ export default defineComponent({
       return immediate
     })
 
+    const updateModelValue = (modelValue: VxeDatePickerPropTypes.ModelValue | undefined) => {
+      let val: any = ''
+      if (modelValue) {
+        if (XEUtils.isNumber(modelValue) && /^[0-9]{11,15}$/.test(`${modelValue}`)) {
+          val = new Date(modelValue)
+        } else {
+          val = modelValue
+        }
+      }
+      reactData.inputValue = val
+    }
+
     const parseDate = (value: VxeDatePickerPropTypes.ModelValue, format: string) => {
       const { type } = props
       if (type === 'time') {
@@ -762,6 +774,7 @@ export default defineComponent({
      */
     const initValue = () => {
       const isDatePickerType = computeIsDatePickerType.value
+      updateModelValue(props.modelValue)
       if (isDatePickerType) {
         changeValue()
       }
@@ -2143,14 +2156,14 @@ export default defineComponent({
     }
 
     watch(() => props.modelValue, (val) => {
-      reactData.inputValue = val
+      updateModelValue(val)
       changeValue()
     })
 
     watch(() => props.type, () => {
       // 切换类型是重置内置变量
       Object.assign(reactData, {
-        inputValue: props.modelValue,
+        inputValue: '',
         datetimePanelValue: null,
         datePanelValue: null,
         datePanelLabel: '',

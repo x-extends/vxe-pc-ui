@@ -203,11 +203,11 @@ export default defineComponent({
     const renderPasswordIcon = () => {
       const { showPwd } = reactData
       return h('div', {
-        class: 'password-input--control-icon',
+        class: 'vxe-password-input--control-icon',
         onClick: passwordToggleEvent
       }, [
         h('i', {
-          class: ['password-input--password-icon', showPwd ? getIcon().PASSWORD_INPUT_SHOW_PWD : getIcon().PASSWORD_INPUT_HIDE_PWD]
+          class: ['vxe-password-input--password-icon', showPwd ? getIcon().PASSWORD_INPUT_SHOW_PWD : getIcon().PASSWORD_INPUT_HIDE_PWD]
         })
       ])
     }
@@ -217,11 +217,11 @@ export default defineComponent({
       const prefixSlot = slots.prefix
       return prefixSlot || prefixIcon
         ? h('div', {
-          class: 'password-input--prefix',
+          class: 'vxe-password-input--prefix',
           onClick: clickPrefixEvent
         }, [
           h('div', {
-            class: 'password-input--prefix-icon'
+            class: 'vxe-password-input--prefix-icon'
           }, prefixSlot
             ? getSlotVNs(prefixSlot({}))
             : [
@@ -240,13 +240,13 @@ export default defineComponent({
       const isClearable = computeIsClearable.value
       return isClearable || controls || suffixSlot || suffixIcon
         ? h('div', {
-          class: ['password-input--suffix', {
+          class: ['vxe-password-input--suffix', {
             'is--clear': isClearable && !disabled && !(inputValue === '' || XEUtils.eqNull(inputValue))
           }]
         }, [
           isClearable
             ? h('div', {
-              class: 'password-input--clear-icon',
+              class: 'vxe-password-input--clear-icon',
               onClick: clearValueEvent
             }, [
               h('i', {
@@ -257,7 +257,7 @@ export default defineComponent({
           controls ? renderPasswordIcon() : createCommentVNode(),
           suffixSlot || suffixIcon
             ? h('div', {
-              class: 'password-input--suffix-icon',
+              class: 'vxe-password-input--suffix-icon',
               onClick: clickSuffixEvent
             }, suffixSlot
               ? getSlotVNs(suffixSlot({}))
@@ -314,7 +314,7 @@ export default defineComponent({
       const suffix = renderSuffixIcon()
       return h('div', {
         ref: refElem,
-        class: ['password-input', className, {
+        class: ['vxe-password-input', className, {
           [`size--${vSize}`]: vSize,
           'is--prefix': !!prefix,
           'is--suffix': !!suffix,
@@ -327,11 +327,11 @@ export default defineComponent({
       }, [
         prefix || createCommentVNode(),
         h('div', {
-          class: 'password-input--wrapper'
+          class: 'vxe-password-input--wrapper'
         }, [
           h('input', {
             ref: refInputTarget,
-            class: 'password-input--inner',
+            class: 'vxe-password-input--inner',
             value: inputValue,
             name,
             type: inputType,

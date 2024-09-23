@@ -58,11 +58,11 @@ export function watchItem (props: any, formItem: ItemInfo) {
   })
 }
 
-export function assembleItem ($xeForm: VxeFormConstructor, el: HTMLDivElement, formItem: ItemInfo, formGather: XEFormItemProvide | null) {
+export function assembleItem ($xeForm: VxeFormConstructor, el: HTMLDivElement, formItem: ItemInfo, formGroup: XEFormItemProvide | null) {
   const { reactData } = $xeForm
   const { staticItems } = reactData
   const parentElem = el.parentNode
-  const parentItem = formGather ? formGather.formItem : null
+  const parentItem = formGroup ? formGroup.formItem : null
   const parentItems = parentItem ? parentItem.children : staticItems
   if (parentElem) {
     parentItems.splice(XEUtils.arrayIndexOf(parentElem.children, el), 0, formItem)

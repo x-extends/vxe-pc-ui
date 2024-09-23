@@ -46,7 +46,7 @@
 * [ ] flow-view 流程设计器-视图渲染
 * [x] form 表单
 * [x] form-design 表单设计器
-* [x] form-gather 表单-容器
+* [x] form-group 表单-分组
 * [x] form-item 表单-项
 * [x] form-view 表单设计器-视图渲染
 * [x] icon 图标
