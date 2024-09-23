@@ -116,7 +116,11 @@ export default defineVxeComponent({
           'is--ellipsis': ellipsis
         }],
         style: colStyle
-      }, defaultSlot ? defaultSlot({}) : [])
+      }, [
+        h('div', {
+          class: 'vxe-col--inner'
+        }, defaultSlot ? defaultSlot({}) : [])
+      ])
     }
   },
   render (this: any, h) {

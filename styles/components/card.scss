@@ -1,4 +1,5 @@
 .vxe-card {
+  position: relative;
   display: inline-flex;
   flex-direction: column;
   font-size: var(--vxe-ui-font-size-default);
@@ -10,8 +11,6 @@
     box-shadow: var(--vxe-ui-base-popup-box-shadow);
   }
   &.is--padding {
-    .vxe-card--header,
-    .vxe-card--footer,
     .vxe-card--body-content,
     .vxe-card--body-left,
     .vxe-card--body-right {
@@ -35,6 +34,10 @@
 }
 .vxe-card--header {
   flex-shrink: 0;
+}
+.vxe-card--header,
+.vxe-card--footer {
+  padding: var(--vxe-ui-card-padding);
 }
 .vxe-card--body {
   overflow: hidden;
