@@ -77,6 +77,14 @@ export default defineComponent({
       type: Boolean as PropType<VxeModalPropTypes.EscClosable>,
       default: () => getConfig().modal.escClosable
     },
+    cancelClosable: {
+      type: Boolean as PropType<VxeModalPropTypes.CancelClosable>,
+      default: () => getConfig().modal.cancelClosable
+    },
+    confirmClosable: {
+      type: Boolean as PropType<VxeModalPropTypes.ConfirmClosable>,
+      default: () => getConfig().modal.confirmClosable
+    },
     resize: Boolean as PropType<VxeModalPropTypes.Resize>,
     showHeader: {
       type: Boolean as PropType<VxeModalPropTypes.ShowHeader>,
@@ -367,15 +375,21 @@ export default defineComponent({
     }
 
     const confirmEvent = (evnt: Event) => {
+      const { confirmClosable } = props
       const type = 'confirm'
       dispatchEvent(type, { type }, evnt)
-      closeModal(type)
+      if (confirmClosable) {
+        closeModal(type)
+      }
     }
 
     const cancelEvent = (evnt: Event) => {
+      const { cancelClosable } = props
       const type = 'cancel'
       dispatchEvent(type, { type }, evnt)
-      closeModal(type)
+      if (cancelClosable) {
+        closeModal(type)
+      }
     }
 
     const getStorageMap = (key: string) => {

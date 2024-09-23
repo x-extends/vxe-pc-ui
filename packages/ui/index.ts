@@ -85,7 +85,9 @@ setConfig({
     mask: true,
     showTitleOverflow: true,
     showClose: true,
-    padding: true
+    padding: true,
+    cancelClosable: true,
+    confirmClosable: true
   },
   form: {
     // preventSubmit: false,
@@ -181,6 +183,8 @@ setConfig({
     padding: true,
     draggable: true,
     showConfirmButton: null,
+    cancelClosable: true,
+    confirmClosable: true,
     zoomConfig: {
       minimizeMaxSize: 10,
       minimizeVerticalOffset: {

@@ -26,7 +26,7 @@
       </vxe-form-item>
     </vxe-form>
 
-    <vxe-form border title-background :data="demo1.formData1" @submit="searchEvent" @reset="resetEvent" size="medium">
+    <vxe-form title-background :data="demo1.formData1" @submit="searchEvent" @reset="resetEvent" size="medium">
       <vxe-form-item title="名称" field="name" :item-render="{}">
         <template #default="{ data }">
           <vxe-input v-model="data.name" placeholder="请输入名称" clearable></vxe-input>

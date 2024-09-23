@@ -43,6 +43,14 @@ export default defineComponent({
       type: Boolean as PropType<VxeDrawerPropTypes.EscClosable>,
       default: () => getConfig().drawer.escClosable
     },
+    cancelClosable: {
+      type: Boolean as PropType<VxeDrawerPropTypes.CancelClosable>,
+      default: () => getConfig().drawer.cancelClosable
+    },
+    confirmClosable: {
+      type: Boolean as PropType<VxeDrawerPropTypes.ConfirmClosable>,
+      default: () => getConfig().drawer.confirmClosable
+    },
     showHeader: {
       type: Boolean as PropType<VxeDrawerPropTypes.ShowHeader>,
       default: () => getConfig().drawer.showHeader
@@ -199,15 +207,21 @@ export default defineComponent({
     }
 
     const confirmEvent = (evnt: Event) => {
+      const { confirmClosable } = props
       const type = 'confirm'
       dispatchEvent(type, { type }, evnt)
-      closeDrawer(type)
+      if (confirmClosable) {
+        closeDrawer(type)
+      }
     }
 
     const cancelEvent = (evnt: Event) => {
+      const { cancelClosable } = props
       const type = 'cancel'
       dispatchEvent(type, { type }, evnt)
-      closeDrawer(type)
+      if (cancelClosable) {
+        closeDrawer(type)
+      }
     }
 
     const openDrawer = () => {

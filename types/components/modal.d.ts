@@ -70,6 +70,8 @@ export namespace VxeModalPropTypes {
   export type Mask = boolean
   export type MaskClosable = boolean
   export type EscClosable = boolean
+  export type CancelClosable = boolean
+  export type ConfirmClosable = boolean
   export type Resize = boolean
   export type ShowHeader = boolean
   export type ShowFooter = boolean
@@ -143,6 +145,8 @@ export interface VxeModalProps {
   mask?: VxeModalPropTypes.Mask
   maskClosable?: VxeModalPropTypes.MaskClosable
   escClosable?: VxeModalPropTypes.EscClosable
+  cancelClosable?: VxeModalPropTypes.CancelClosable
+  confirmClosable?: VxeModalPropTypes.ConfirmClosable
   resize?: VxeModalPropTypes.Resize
   showHeader?: VxeModalPropTypes.ShowHeader
   showFooter?: VxeModalPropTypes.ShowFooter
