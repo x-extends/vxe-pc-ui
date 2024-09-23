@@ -117,7 +117,11 @@ export default defineComponent({
           'is--ellipsis': ellipsis
         }],
         style: colStyle
-      }, defaultSlot ? defaultSlot({}) : [])
+      }, [
+        h('div', {
+          class: 'vxe-col--inner'
+        }, defaultSlot ? defaultSlot({}) : [])
+      ])
     }
 
     $xeCol.renderVN = renderVN
