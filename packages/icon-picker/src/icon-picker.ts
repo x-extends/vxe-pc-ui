@@ -475,7 +475,7 @@ export default defineComponent({
 
     const renderVN = () => {
       const { className, popupClassName, clearable } = props
-      const { initialized, isActivated, visiblePanel, selectIcon } = reactData
+      const { initialized, isActivated, isAniVisible, visiblePanel, selectIcon } = reactData
       const vSize = computeSize.value
       const isDisabled = computeIsDisabled.value
       const btnTransfer = computeBtnTransfer.value
@@ -552,13 +552,13 @@ export default defineComponent({
             class: ['vxe-table--ignore-clear vxe-ico-picker--panel', popupClassName ? (XEUtils.isFunction(popupClassName) ? popupClassName({ $iconPicker: $xeIconPicker }) : popupClassName) : '', {
               [`size--${vSize}`]: vSize,
               'is--transfer': btnTransfer,
-              'ani--leave': reactData.isAniVisible,
+              'ani--leave': isAniVisible,
               'ani--enter': visiblePanel
             }],
             placement: reactData.panelPlacement,
             style: reactData.panelStyle
           }, [
-            initialized
+            initialized && (visiblePanel || isAniVisible)
               ? h('div', {
                 class: 'vxe-ico-picker--panel-wrapper'
               }, [

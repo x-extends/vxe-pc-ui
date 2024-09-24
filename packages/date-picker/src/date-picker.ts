@@ -2018,7 +2018,7 @@ export default defineComponent({
             }],
             placement: panelPlacement,
             style: panelStyle
-          }, renders)
+          }, initialized && (visiblePanel || isAniVisible) ? renders : [])
         ])
       }
       return createCommentVNode()

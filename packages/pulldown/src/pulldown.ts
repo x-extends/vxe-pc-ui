@@ -57,7 +57,7 @@ export default defineComponent({
       panelStyle: {},
       panelPlacement: null,
       visiblePanel: false,
-      visibleAnimate: false,
+      isAniVisible: false,
       isActivated: false
     })
 
@@ -197,7 +197,7 @@ export default defineComponent({
             clearTimeout(internalData.hpTimeout)
           }
           reactData.isActivated = true
-          reactData.visibleAnimate = true
+          reactData.isAniVisible = true
           setTimeout(() => {
             reactData.visiblePanel = true
             emit('update:modelValue', true)
@@ -222,9 +222,9 @@ export default defineComponent({
       reactData.visiblePanel = false
       emit('update:modelValue', false)
       return new Promise<void>(resolve => {
-        if (reactData.visibleAnimate) {
+        if (reactData.isAniVisible) {
           internalData.hpTimeout = window.setTimeout(() => {
-            reactData.visibleAnimate = false
+            reactData.isAniVisible = false
             nextTick(() => {
               resolve()
             })
@@ -357,7 +357,7 @@ export default defineComponent({
 
     const renderVN = () => {
       const { className, options, popupClassName, showPopupShadow, destroyOnClose, disabled } = props
-      const { initialized, isActivated, visibleAnimate, visiblePanel, panelStyle, panelPlacement } = reactData
+      const { initialized, isActivated, isAniVisible, visiblePanel, panelStyle, panelPlacement } = reactData
       const btnTransfer = computeBtnTransfer.value
       const vSize = computeSize.value
       const defaultSlot = slots.default
@@ -389,7 +389,7 @@ export default defineComponent({
               [`size--${vSize}`]: vSize,
               'is--shadow': showPopupShadow,
               'is--transfer': btnTransfer,
-              'ani--leave': visibleAnimate,
+              'ani--leave': isAniVisible,
               'ani--enter': visiblePanel
             }],
             placement: panelPlacement,
@@ -397,9 +397,8 @@ export default defineComponent({
           }, [
             h('div', {
               class: 'vxe-pulldown--panel-wrapper'
-            }, !initialized || (destroyOnClose && !visiblePanel && !visibleAnimate)
-              ? []
-              : [
+            }, initialized && (destroyOnClose ? (visiblePanel || isAniVisible) : true)
+              ? [
                   headerSlot
                     ? h('div', {
                       class: 'vxe-pulldown--panel-header'
@@ -417,7 +416,8 @@ export default defineComponent({
                       class: 'vxe-pulldown--panel-footer'
                     }, footerSlot({ $pulldown: $xePulldown }))
                     : createCommentVNode()
-                ])
+                ]
+              : [])
           ])
         ])
       ])

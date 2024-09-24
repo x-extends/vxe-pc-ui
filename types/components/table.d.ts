@@ -74,6 +74,7 @@ export namespace VxeTablePropTypes {
   export type Resizable = boolean
   export type Stripe = boolean
   export type Round = boolean
+  export type Padding = boolean
   export type Border = boolean | 'default' | 'full' | 'outer' | 'inner' | 'none' | ''
   export type Loading = boolean
   export type Align = 'left' | 'center' | 'right' | '' | null
@@ -1729,6 +1730,10 @@ export interface VxeTableProps<D = any> {
    * 是否带有斑马纹（需要注意的是，在可编辑表格场景下，临时插入的数据不会有斑马纹样式）
    */
   stripe?: VxeTablePropTypes.Stripe
+  /**
+   * 单元格是否有边距
+   */
+  padding?: VxeTablePropTypes.Padding
   /**
    * 是否为圆角边框
    */
@@ -4054,7 +4059,6 @@ export interface VxeTableListeners<D = any> {
   /**
    * 当表格被激活且键盘被按下开始时会触发的事件
    */
-  keydownStart?: VxeTableEvents.KeydownStart<D>
   keydownStart?: VxeTableEvents.KeydownStart<D>
   /**
    * 当表格被激活且键盘被按下时会触发的事件

@@ -983,7 +983,7 @@ export default defineComponent({
 
     const renderVN = () => {
       const { className, popupClassName, loading, filterable } = props
-      const { initialized, isActivated, visiblePanel } = reactData
+      const { initialized, isActivated, isAniVisible, visiblePanel } = reactData
       const vSize = computeSize.value
       const isDisabled = computeIsDisabled.value
       const selectLabel = computeSelectLabel.value
@@ -1052,12 +1052,12 @@ export default defineComponent({
             class: ['vxe-table--ignore-clear vxe-select--panel', popupClassName ? (XEUtils.isFunction(popupClassName) ? popupClassName({ $select: $xeSelect }) : popupClassName) : '', {
               [`size--${vSize}`]: vSize,
               'is--transfer': btnTransfer,
-              'ani--leave': !loading && reactData.isAniVisible,
+              'ani--leave': !loading && isAniVisible,
               'ani--enter': !loading && visiblePanel
             }],
             placement: reactData.panelPlacement,
             style: reactData.panelStyle
-          }, initialized
+          }, initialized && (visiblePanel || isAniVisible)
             ? [
                 filterable
                   ? h('div', {

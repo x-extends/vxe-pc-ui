@@ -2298,7 +2298,7 @@ export default defineComponent({
             }],
             placement: panelPlacement,
             style: panelStyle
-          }, renders)
+          }, visiblePanel || isAniVisible ? renders : [])
         ])
       }
       return createCommentVNode()

@@ -113,7 +113,7 @@ export default defineComponent({
     const reactData = reactive<ButtonReactData>({
       initialized: false,
       visiblePanel: false,
-      visibleAnimate: false,
+      isAniVisible: false,
       isActivated: false,
       panelIndex: 0,
       panelStyle: {},
@@ -316,7 +316,7 @@ export default defineComponent({
         reactData.visiblePanel = false
         setTimeout(() => {
           if (!panelElem || panelElem.dataset.active !== 'Y') {
-            reactData.visibleAnimate = false
+            reactData.isAniVisible = false
           }
         }, 350)
         dispatchEvent('dropdown-click', { name: targetElem.getAttribute('name'), $event: evnt }, evnt)
@@ -327,7 +327,7 @@ export default defineComponent({
       const panelElem = refBtnPanel.value
       if (panelElem) {
         panelElem.dataset.active = 'Y'
-        reactData.visibleAnimate = true
+        reactData.isAniVisible = true
         setTimeout(() => {
           if (panelElem.dataset.active === 'Y') {
             reactData.visiblePanel = true
@@ -385,7 +385,7 @@ export default defineComponent({
           if (panelElem.dataset.active === 'Y') {
             mouseenterDropdownEvent()
           } else {
-            reactData.visibleAnimate = false
+            reactData.isAniVisible = false
           }
         }, trigger === 'click' ? 50 : 250)
       }
@@ -402,13 +402,13 @@ export default defineComponent({
             reactData.visiblePanel = false
             setTimeout(() => {
               if (panelElem.dataset.active !== 'Y') {
-                reactData.visibleAnimate = false
+                reactData.isAniVisible = false
               }
             }, 350)
           }
         }, 100)
       } else {
-        reactData.visibleAnimate = false
+        reactData.isAniVisible = false
         reactData.visiblePanel = false
       }
       return nextTick()
@@ -506,7 +506,7 @@ export default defineComponent({
 
     const renderVN = () => {
       const { className, popupClassName, align, trigger, title, routerLink, type, destroyOnClose, name, loading } = props
-      const { initialized, visiblePanel } = reactData
+      const { initialized, isAniVisible, visiblePanel } = reactData
       const isFormBtn = computeIsFormBtn.value
       const btnMode = computeBtnMode.value
       const btnStatus = computeBtnStatus.value
@@ -595,13 +595,13 @@ export default defineComponent({
               ref: refBtnPanel,
               class: ['vxe-button--dropdown-panel', popupClassName ? (XEUtils.isFunction(popupClassName) ? popupClassName({ $button: $xeButton }) : popupClassName) : '', {
                 [`size--${vSize}`]: vSize,
-                'ani--leave': reactData.visibleAnimate,
+                'ani--leave': isAniVisible,
                 'ani--enter': visiblePanel
               }],
               placement: reactData.panelPlacement,
               style: reactData.panelStyle,
               ...panelOns
-            }, initialized
+            }, initialized && (visiblePanel || isAniVisible)
               ? [
                   h('div', {
                     class: 'vxe-button--dropdown-wrapper',

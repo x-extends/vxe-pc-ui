@@ -15,7 +15,7 @@
         </template>
       </vxe-pulldown>
 
-      <vxe-pulldown ref="xDown2">
+      <vxe-pulldown ref="xDown2" destroyOnClose>
         <template #default>
           <vxe-input v-model="demo2.value2" placeholder="可搜索的大数据下拉框" @focus="focusEvent2" @keyup="keyupEvent2"></vxe-input>
         </template>

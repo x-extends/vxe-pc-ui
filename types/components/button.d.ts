@@ -126,7 +126,7 @@ export interface VxeButtonPrivateComputed extends ButtonPrivateComputed { }
 export interface ButtonReactData {
   initialized: boolean
   visiblePanel: boolean
-  visibleAnimate: boolean
+  isAniVisible: boolean
   isActivated: boolean
   panelIndex: number
   panelStyle: VxeComponentStyleType

@@ -32,7 +32,7 @@ export namespace VxeFormViewPropTypes {
   export type ViewRender = {
     name?: string
   }
-  export type FormOptions = Omit<VxeFormProps<D>, 'data' | 'items'>
+  export type FormOptions<D = any> = Omit<VxeFormProps<D>, 'data' | 'items'>
   export type CreateFormConfig = (params: VxeFormViewDefines.CreateFormConfigParams) => VxeFormProps
   export type Size = VxeComponentSizeType
 }

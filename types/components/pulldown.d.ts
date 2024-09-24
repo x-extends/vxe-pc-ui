@@ -77,7 +77,7 @@ export interface PulldownReactData {
   panelStyle: VxeComponentStyleType
   panelPlacement: string | null
   visiblePanel: boolean
-  visibleAnimate: boolean
+  isAniVisible: boolean
   isActivated: boolean
 }
 
