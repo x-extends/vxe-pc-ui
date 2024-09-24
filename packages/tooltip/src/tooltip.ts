@@ -15,6 +15,7 @@ export default defineComponent({
       type: String as PropType<VxeTooltipPropTypes.Size>,
       default: () => getConfig().tooltip.size || getConfig().size
     },
+    selector: String as PropType<VxeTooltipPropTypes.Selector>,
     trigger: {
       type: String as PropType<VxeTooltipPropTypes.Trigger>,
       default: () => getConfig().tooltip.trigger || 'hover'
@@ -132,12 +133,12 @@ export default defineComponent({
       if (reactData.visible) {
         tooltipMethods.close()
       } else {
-        handleVisible(reactData.target, props.content)
+        handleVisible(reactData.target || getSelectorEl(), props.content)
       }
     }
 
     const targetMouseenterEvent = () => {
-      handleVisible(reactData.target, props.content)
+      handleVisible(reactData.target || getSelectorEl(), props.content)
     }
 
     const targetMouseleaveEvent = () => {
@@ -217,12 +218,25 @@ export default defineComponent({
       return nextTick()
     }
 
+    const getSelectorEl = () => {
+      const { selector } = props
+      if (selector) {
+        if (XEUtils.isElement(selector)) {
+          return selector as HTMLElement
+        }
+        if (XEUtils.isString(selector)) {
+          return document.querySelector(selector) as HTMLElement
+        }
+      }
+      return null
+    }
+
     tooltipMethods = {
       dispatchEvent (type, params, evnt) {
         emit(type, createEvent(evnt, { $tooltip: $xeTooltip }, params))
       },
       open (target?: HTMLElement | null, content?: VxeTooltipPropTypes.Content) {
-        return handleVisible(target || reactData.target as HTMLElement, content)
+        return handleVisible(target || reactData.target as HTMLElement || getSelectorEl(), content)
       },
       close () {
         reactData.tipTarget = null
@@ -328,7 +342,7 @@ export default defineComponent({
     watch(() => props.modelValue, (val) => {
       if (!reactData.isUpdate) {
         if (val) {
-          handleVisible(reactData.target, props.content)
+          handleVisible(reactData.target || getSelectorEl(), props.content)
         } else {
           tooltipMethods.close()
         }
@@ -364,7 +378,7 @@ export default defineComponent({
               }
             }
             if (props.modelValue) {
-              handleVisible(target, content)
+              handleVisible(target || getSelectorEl(), content)
             }
           }
         }

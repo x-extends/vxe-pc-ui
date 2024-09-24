@@ -950,8 +950,9 @@ export default defineComponent({
 
     const datePrevEvent = (evnt: Event) => {
       const { type } = props
-      const { datePanelType, selectMonth } = reactData
+      const { datePanelType, selectMonth, inputValue } = reactData
       const { yearSize } = internalData
+      const value = inputValue
       const isDisabledPrevDateBtn = computeIsDisabledPrevDateBtn.value
       if (!isDisabledPrevDateBtn) {
         if (type === 'year') {
@@ -971,7 +972,7 @@ export default defineComponent({
             reactData.selectMonth = XEUtils.getWhatMonth(selectMonth, -1, 'first')
           }
         }
-        datePickerMethods.dispatchEvent('date-prev', { type }, evnt)
+        datePickerMethods.dispatchEvent('date-prev', { value, type }, evnt)
       }
     }
 
@@ -986,8 +987,9 @@ export default defineComponent({
 
     const dateNextEvent = (evnt: Event) => {
       const { type } = props
-      const { datePanelType, selectMonth } = reactData
+      const { datePanelType, selectMonth, inputValue } = reactData
       const { yearSize } = internalData
+      const value = inputValue
       const isDisabledNextDateBtn = computeIsDisabledNextDateBtn.value
       if (!isDisabledNextDateBtn) {
         if (type === 'year') {
@@ -1007,7 +1009,7 @@ export default defineComponent({
             reactData.selectMonth = XEUtils.getWhatMonth(selectMonth, 1, 'first')
           }
         }
-        datePickerMethods.dispatchEvent('date-next', { type }, evnt)
+        datePickerMethods.dispatchEvent('date-next', { value, type }, evnt)
       }
     }
 

@@ -1,7 +1,7 @@
 import { RenderFunction, SetupContext, Ref } from 'vue'
 import { DefineVxeComponentApp, DefineVxeComponentOptions, DefineVxeComponentInstance, VxeComponentBaseOptions, VxeComponentEventParams, VxeComponentSlotType, ValueOf } from '@vxe-ui/core'
 import { VxeTableDefines, VxeTablePropTypes, VxeTableConstructor } from './table'
-import { VxeTooltipPropTypes } from './tooltip'
+import { VxeTooltipDefines } from './tooltip'
 import { VxeGlobalRendererHandles } from '../ui'
 
 /* eslint-disable no-use-before-define,@typescript-eslint/ban-types */
@@ -164,27 +164,14 @@ export namespace VxeColumnPropTypes {
   }
   export type FooterExportMethod<D = any> = (params: FooterExportParams<D>) => string | number
 
-  export interface TitlePrefix {
-    useHTML?: VxeTooltipPropTypes.UseHTML
-    content?: VxeTooltipPropTypes.Content
-    enterable?: VxeTooltipPropTypes.Enterable
-    theme?: VxeTooltipPropTypes.Theme
-    icon?: string
-    /**
-     * @deprecated 已废弃，请使用 content
-     */
-    message?: string
-  }
+  /**
+   * 已废弃，被 TitlePrefix 替换
+   * @deprecated
+   */
+  export type TitleHelp = VxeTooltipDefines.TooltipHelperOption
 
-  export interface TitleHelp extends TitlePrefix { }
-
-  export interface TitleSuffix {
-    useHTML?: VxeTooltipPropTypes.UseHTML
-    content?: VxeTooltipPropTypes.Content
-    enterable?: VxeTooltipPropTypes.Enterable
-    theme?: VxeTooltipPropTypes.Theme
-    icon?: string
-  }
+  export type TitlePrefix = VxeTooltipDefines.TooltipHelperOption
+  export type TitleSuffix = VxeTooltipDefines.TooltipHelperOption
 
   export type CellType = 'auto' | 'number' | 'string' | '' | null
 

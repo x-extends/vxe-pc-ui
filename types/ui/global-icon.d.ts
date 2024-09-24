@@ -44,6 +44,7 @@ declare module '@vxe-ui/core' {
     // button
     BUTTON_DROPDOWN?: string
     BUTTON_LOADING?: string
+    BUTTON_TOOLTIP_ICON?: string
 
     // menu
     MENU_ITEM_EXPAND_OPEN?: string

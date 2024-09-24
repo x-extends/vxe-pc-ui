@@ -422,7 +422,7 @@ export default defineComponent({
       if (!isDisabled && !formReadonly && !isDisabledSubtractNumber) {
         numberChange(false, evnt)
       }
-      numberInputMethods.dispatchEvent('next-number', {}, evnt)
+      numberInputMethods.dispatchEvent('next-number', { value: reactData.inputValue }, evnt)
     }
 
     const numberDownNextEvent = (evnt: Event) => {
@@ -440,7 +440,7 @@ export default defineComponent({
       if (!isDisabled && !formReadonly && !isDisabledAddNumber) {
         numberChange(true, evnt)
       }
-      numberInputMethods.dispatchEvent('prev-number', {}, evnt)
+      numberInputMethods.dispatchEvent('prev-number', { value: reactData.inputValue }, evnt)
     }
 
     const numberKeydownEvent = (evnt: KeyboardEvent) => {

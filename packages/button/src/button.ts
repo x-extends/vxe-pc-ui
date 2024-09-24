@@ -4,6 +4,7 @@ import { getConfig, globalEvents, getIcon, createEvent, useSize, usePermission }
 import { getAbsolutePos, getEventTargetNode } from '../../ui/src/dom'
 import { getFuncText, getLastZIndex, nextZIndex } from '../../ui/src/utils'
 import { warnLog } from '../../ui/src/log'
+import VxeTooltipComponent from '../../tooltip/src/tooltip'
 
 import type { VxeButtonConstructor, VxeButtonPropTypes, VxeButtonEmits, ButtonReactData, ButtonMethods, ButtonPrivateRef, ButtonInternalData, VxeButtonGroupConstructor, VxeButtonGroupPrivateMethods, VxeTableConstructor, VxeDrawerConstructor, VxeDrawerMethods, VxeTablePrivateMethods, VxeFormConstructor, VxeFormPrivateMethods, VxeModalConstructor, VxeModalMethods, ValueOf } from '../../../types'
 
@@ -74,6 +75,8 @@ export default defineComponent({
       default: () => getConfig().button.trigger
     },
     align: String as PropType<VxeButtonPropTypes.Align>,
+    prefixTooltip: Object as PropType<VxeButtonPropTypes.PrefixTooltip>,
+    suffixTooltip: Object as PropType<VxeButtonPropTypes.SuffixTooltip>,
     /**
      * 在下拉面板关闭时销毁内容
      */
@@ -121,7 +124,8 @@ export default defineComponent({
     })
 
     const internalData: ButtonInternalData = {
-      showTime: null
+      showTime: undefined,
+      tooltipTimeout: undefined
     }
 
     const refElem = ref<HTMLDivElement>()
@@ -210,6 +214,14 @@ export default defineComponent({
         return $xeButtonGroup.props.circle
       }
       return false
+    })
+
+    const computePrefixTipOpts = computed(() => {
+      return Object.assign({}, props.prefixTooltip)
+    })
+
+    const computeSuffixTipOpts = computed(() => {
+      return Object.assign({}, props.suffixTooltip)
     })
 
     const updateZindex = () => {
@@ -418,11 +430,33 @@ export default defineComponent({
       closePanel()
     }
 
+    const renderTooltipIcon = (tipOpts: VxeButtonPropTypes.PrefixTooltip | VxeButtonPropTypes.SuffixTooltip, type: 'prefix' | 'suffix') => {
+      return h(VxeTooltipComponent, {
+        useHTML: tipOpts.useHTML,
+        content: tipOpts.content,
+        enterable: tipOpts.enterable,
+        theme: tipOpts.theme
+      }, {
+        default () {
+          return h('i', {
+            class: [`vxe-button--tooltip-${type}-icon`, tipOpts.icon || getIcon().BUTTON_TOOLTIP_ICON]
+          })
+        }
+      })
+    }
+
     const renderContent = () => {
-      const { content, icon, loading } = props
+      const { content, icon, loading, prefixTooltip, suffixTooltip } = props
+      const prefixTipOpts = computePrefixTipOpts.value
+      const suffixTipOpts = computeSuffixTipOpts.value
       const iconSlot = slots.icon
       const defaultSlot = slots.default
       const contVNs: VNode[] = []
+      if (prefixTooltip) {
+        contVNs.push(
+          renderTooltipIcon(prefixTipOpts, 'prefix')
+        )
+      }
       if (loading) {
         contVNs.push(
           h('i', {
@@ -453,6 +487,11 @@ export default defineComponent({
           h('span', {
             class: 'vxe-button--content'
           }, getFuncText(content))
+        )
+      }
+      if (suffixTooltip) {
+        contVNs.push(
+          renderTooltipIcon(suffixTipOpts, 'suffix')
         )
       }
       return contVNs

@@ -1,5 +1,6 @@
 import { RenderFunction, SetupContext, Ref } from 'vue'
 import { DefineVxeComponentApp, DefineVxeComponentOptions, VxeComponentBaseOptions, DefineVxeComponentInstance, VxeComponentEventParams, VxeComponentPermissionCodeType, VxeComponentStatusType, VxeComponentSizeType, VxeComponentStyleType, ValueOf } from '@vxe-ui/core'
+import { VxeTooltipDefines } from './tooltip'
 
 /* eslint-disable no-use-before-define,@typescript-eslint/ban-types */
 
@@ -49,6 +50,10 @@ export namespace VxeButtonPropTypes {
   export type Loading = boolean
   export type Trigger = 'manual' | 'hover' | 'click' | '' | null
   export type Align = 'left' | 'center' | 'right' | '' | null
+
+  export type PrefixTooltip = VxeTooltipDefines.TooltipHelperOption
+  export type SuffixTooltip = VxeTooltipDefines.TooltipHelperOption
+
   export type DestroyOnClose = boolean
   export type Transfer = boolean
 }
@@ -109,6 +114,9 @@ export interface VxeButtonProps {
   loading?: VxeButtonPropTypes.Loading
   trigger?: VxeButtonPropTypes.Trigger
   align?: VxeButtonPropTypes.Align
+
+  prefixTooltip?: VxeButtonPropTypes.PrefixTooltip
+  suffixTooltip?: VxeButtonPropTypes.SuffixTooltip
   /**
    * 在下拉面板关闭时销毁内容
    */
@@ -134,7 +142,8 @@ export interface ButtonReactData {
 }
 
 export interface ButtonInternalData {
-  showTime: any
+  showTime: number | undefined
+  tooltipTimeout: number | undefined
 }
 
 export interface ButtonMethods {

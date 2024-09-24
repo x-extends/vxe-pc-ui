@@ -295,6 +295,7 @@ setIcon({
   // button
   BUTTON_DROPDOWN: iconPrefix + 'arrow-down',
   BUTTON_LOADING: iconPrefix + 'spinner roll',
+  BUTTON_TOOLTIP_ICON: iconPrefix + 'question-circle-fill',
 
   // menu
   MENU_ITEM_EXPAND_OPEN: iconPrefix + 'arrow-down rotate180',
