@@ -19,6 +19,7 @@ export default defineVxeComponent({
       type: String as PropType<VxeTooltipPropTypes.Size>,
       default: () => getConfig().tooltip.size || getConfig().size
     },
+    selector: String as PropType<VxeTooltipPropTypes.Selector>,
     trigger: {
       type: String as PropType<VxeTooltipPropTypes.Trigger>,
       default: () => getConfig().tooltip.trigger || 'hover'
@@ -90,11 +91,26 @@ export default defineVxeComponent({
       $xeTooltip.$emit('input', value)
       $xeTooltip.$emit('modelValue', value)
     },
+    getSelectorEl  () {
+      const $xeTooltip = this
+      const props = $xeTooltip
+
+      const { selector } = props
+      if (selector) {
+        if (XEUtils.isElement(selector)) {
+          return selector as HTMLElement
+        }
+        if (XEUtils.isString(selector)) {
+          return document.querySelector(selector) as HTMLElement
+        }
+      }
+      return null
+    },
     open (target?: HTMLElement | null, content?: VxeTooltipPropTypes.Content) {
       const $xeTooltip = this
       const reactData = $xeTooltip.reactData
 
-      return $xeTooltip.handleVisible(target || reactData.target as HTMLElement, content)
+      return $xeTooltip.handleVisible(target || reactData.target as HTMLElement || $xeTooltip.getSelectorEl(), content)
     },
     close () {
       const $xeTooltip = this
@@ -195,7 +211,7 @@ export default defineVxeComponent({
       if (reactData.visible) {
         $xeTooltip.close()
       } else {
-        $xeTooltip.handleVisible(reactData.target, props.content)
+        $xeTooltip.handleVisible(reactData.target || $xeTooltip.getSelectorEl(), props.content)
       }
     },
     targetMouseenterEvent  () {
@@ -203,7 +219,7 @@ export default defineVxeComponent({
       const props = $xeTooltip
       const reactData = $xeTooltip.reactData
 
-      $xeTooltip.handleVisible(reactData.target, props.content)
+      $xeTooltip.handleVisible(reactData.target || $xeTooltip.getSelectorEl(), props.content)
     },
     targetMouseleaveEvent () {
       const $xeTooltip = this
@@ -388,7 +404,7 @@ export default defineVxeComponent({
 
       if (!reactData.isUpdate) {
         if (val) {
-          $xeTooltip.handleVisible(reactData.target, props.content)
+          $xeTooltip.handleVisible(reactData.target || $xeTooltip.getSelectorEl(), props.content)
         } else {
           $xeTooltip.close()
         }
@@ -438,7 +454,7 @@ export default defineVxeComponent({
             }
           }
           if (props.value) {
-            $xeTooltip.handleVisible(target, content)
+            $xeTooltip.handleVisible(target || $xeTooltip.getSelectorEl(), content)
           }
         }
       }

@@ -1,4 +1,5 @@
 import { DefineVxeComponentApp, DefineVxeComponentOptions, DefineVxeComponentInstance, VxeComponentEventParams, VxeComponentSizeType, VxeComponentStyleType, ValueOf } from '@vxe-ui/core'
+import { VxeIconPropTypes } from './icon'
 
 /* eslint-disable @typescript-eslint/no-empty-interface,no-use-before-define,@typescript-eslint/ban-types */
 
@@ -18,6 +19,7 @@ export interface VxeTooltipPrivateRef extends TooltipPrivateRef { }
 export namespace VxeTooltipPropTypes {
   export type Size = VxeComponentSizeType
   export type ModelValue = boolean
+  export type Selector = string | HTMLElement
   export type Trigger = 'hover' | 'click' | 'manual' | '' | null
   export type Theme = '' | 'light' | 'dark'
   export type Content = string | number
@@ -34,6 +36,7 @@ export namespace VxeTooltipPropTypes {
 export interface VxeTooltipProps {
   size?: VxeTooltipPropTypes.Size
   value?: VxeTooltipPropTypes.ModelValue
+  selector?: VxeTooltipPropTypes.Selector
   trigger?: VxeTooltipPropTypes.Trigger
   theme?: VxeTooltipPropTypes.Theme
   content?: VxeTooltipPropTypes.Content
@@ -103,6 +106,21 @@ export type VxeTooltipEmits = [
 export namespace VxeTooltipDefines {
   export interface TooltipEventParams extends VxeComponentEventParams {
     $tooltip: VxeTooltipConstructor
+  }
+
+  export interface TooltipHelperOption {
+    useHTML?: VxeTooltipPropTypes.UseHTML
+    content?: VxeTooltipPropTypes.Content
+    enterable?: VxeTooltipPropTypes.Enterable
+    theme?: VxeTooltipPropTypes.Theme
+    icon?: VxeIconPropTypes.ClassName
+    iconStatus?: VxeIconPropTypes.Status
+
+    /**
+     * 已废弃，请使用 content
+     * @deprecated
+     */
+    message?: string
   }
 }
 

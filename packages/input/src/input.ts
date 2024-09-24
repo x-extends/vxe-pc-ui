@@ -1322,6 +1322,7 @@ export default defineVxeComponent({
     },
     numberNextEvent  (evnt: Event) {
       const $xeInput = this
+      const reactData = $xeInput.reactData
 
       const isDisabled = $xeInput.computeIsDisabled
       const isReadonly = $xeInput.computeIsReadonly
@@ -1330,7 +1331,7 @@ export default defineVxeComponent({
       if (!isDisabled && !isReadonly && !isDisabledSubtractNumber) {
         $xeInput.numberChange(false, evnt)
       }
-      $xeInput.dispatchEvent('next-number', {}, evnt)
+      $xeInput.dispatchEvent('next-number', { value: reactData.inputValue }, evnt)
     },
     numberDownNextEvent (evnt: Event) {
       const $xeInput = this
@@ -1343,6 +1344,7 @@ export default defineVxeComponent({
     },
     numberPrevEvent  (evnt: Event) {
       const $xeInput = this
+      const reactData = $xeInput.reactData
 
       const isDisabled = $xeInput.computeIsDisabled
       const isReadonly = $xeInput.computeIsReadonly
@@ -1351,7 +1353,7 @@ export default defineVxeComponent({
       if (!isDisabled && !isReadonly && !isDisabledAddNumber) {
         $xeInput.numberChange(true, evnt)
       }
-      $xeInput.dispatchEvent('prev-number', {}, evnt)
+      $xeInput.dispatchEvent('prev-number', { value: reactData.inputValue }, evnt)
     },
     numberKeydownEvent (evnt: KeyboardEvent) {
       const $xeInput = this
@@ -1496,8 +1498,9 @@ export default defineVxeComponent({
       const internalData = $xeInput.internalData
 
       const { type } = props
-      const { datePanelType, selectMonth } = reactData
+      const { datePanelType, selectMonth, inputValue } = reactData
       const { yearSize } = internalData
+      const value = inputValue
       const isDisabledPrevDateBtn = $xeInput.computeIsDisabledPrevDateBtn
       if (!isDisabledPrevDateBtn) {
         if (type === 'year') {
@@ -1517,7 +1520,7 @@ export default defineVxeComponent({
             reactData.selectMonth = XEUtils.getWhatMonth(selectMonth, -1, 'first')
           }
         }
-        $xeInput.dispatchEvent('date-prev', { type }, evnt)
+        $xeInput.dispatchEvent('date-prev', { value, type }, evnt)
       }
     },
     dateTodayMonthEvent  (evnt: Event) {
@@ -1539,8 +1542,9 @@ export default defineVxeComponent({
       const internalData = $xeInput.internalData
 
       const { type } = props
-      const { datePanelType, selectMonth } = reactData
+      const { datePanelType, selectMonth, inputValue } = reactData
       const { yearSize } = internalData
+      const value = inputValue
       const isDisabledNextDateBtn = $xeInput.computeIsDisabledNextDateBtn
       if (!isDisabledNextDateBtn) {
         if (type === 'year') {
@@ -1560,7 +1564,7 @@ export default defineVxeComponent({
             reactData.selectMonth = XEUtils.getWhatMonth(selectMonth, 1, 'first')
           }
         }
-        $xeInput.dispatchEvent('date-next', { type }, evnt)
+        $xeInput.dispatchEvent('date-next', { value, type }, evnt)
       }
     },
     isDateDisabled (item: { date: Date }) {

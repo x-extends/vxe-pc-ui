@@ -1118,8 +1118,9 @@ export default defineVxeComponent({
       const internalData = $xeDatePicker.internalData
 
       const { type } = props
-      const { datePanelType, selectMonth } = reactData
+      const { datePanelType, selectMonth, inputValue } = reactData
       const { yearSize } = internalData
+      const value = inputValue
       const isDisabledPrevDateBtn = $xeDatePicker.computeIsDisabledPrevDateBtn
       if (!isDisabledPrevDateBtn) {
         if (type === 'year') {
@@ -1139,7 +1140,7 @@ export default defineVxeComponent({
             reactData.selectMonth = XEUtils.getWhatMonth(selectMonth, -1, 'first')
           }
         }
-        $xeDatePicker.dispatchEvent('date-prev', { type }, evnt)
+        $xeDatePicker.dispatchEvent('date-prev', { value, type }, evnt)
       }
     },
     dateTodayMonthEvent  (evnt: Event) {
@@ -1161,8 +1162,9 @@ export default defineVxeComponent({
       const internalData = $xeDatePicker.internalData
 
       const { type } = props
-      const { datePanelType, selectMonth } = reactData
+      const { datePanelType, selectMonth, inputValue } = reactData
       const { yearSize } = internalData
+      const value = inputValue
       const isDisabledNextDateBtn = $xeDatePicker.computeIsDisabledNextDateBtn
       if (!isDisabledNextDateBtn) {
         if (type === 'year') {
@@ -1182,7 +1184,7 @@ export default defineVxeComponent({
             reactData.selectMonth = XEUtils.getWhatMonth(selectMonth, 1, 'first')
           }
         }
-        $xeDatePicker.dispatchEvent('date-next', { type }, evnt)
+        $xeDatePicker.dispatchEvent('date-next', { value, type }, evnt)
       }
     },
     isDateDisabled  (item: { date: Date }) {

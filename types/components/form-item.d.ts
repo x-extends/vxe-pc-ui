@@ -1,8 +1,7 @@
 import { DefineVxeComponentApp, DefineVxeComponentOptions, VxeComponentEventParams, DefineVxeComponentInstance, VxeComponentStyleType, VxeComponentSlotType } from '@vxe-ui/core'
 import { VxeFormDefines, VxeFormConstructor, VxeFormPropTypes } from './form'
 import { VxeGridConstructor } from './grid'
-import { VxeTooltipPropTypes } from './tooltip'
-import { VxeIconPropTypes } from './icon'
+import { VxeTooltipDefines } from './tooltip'
 
 /* eslint-disable @typescript-eslint/no-empty-interface,no-use-before-define,@typescript-eslint/ban-types */
 
@@ -61,22 +60,9 @@ export namespace VxeFormItemPropTypes {
 
   export type Readonly = boolean
 
-  interface PrefixOption {
-    useHTML?: VxeTooltipPropTypes.UseHTML
-    content?: VxeTooltipPropTypes.Content
-    enterable?: VxeTooltipPropTypes.Enterable
-    theme?: VxeTooltipPropTypes.Theme
-    icon?: VxeIconPropTypes.ClassName
-    iconStatus?: VxeIconPropTypes.Status
+  export type TitlePrefix = VxeTooltipDefines.TooltipHelperOption
+  export type TitleSuffix = VxeTooltipDefines.TooltipHelperOption
 
-    /**
-     * 已废弃，请使用 content
-     * @deprecated
-     */
-    message?: string
-  }
-  export type TitlePrefix = PrefixOption
-  export type TitleSuffix = PrefixOption
   export type TitleOverflow = VxeFormPropTypes.TitleOverflow
 
   export type ResetValue = any

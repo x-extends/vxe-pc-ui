@@ -275,7 +275,19 @@ $btnThemeList: (
 .vxe-button--icon {
   min-width: var(--vxe-ui-font-size-default);
   &+.vxe-button--content {
-    margin-left: 4px;
+    margin-left: 0.25em;
+  }
+}
+.vxe-button--tooltip-prefix-icon {
+  &+.vxe-button--loading-icon,
+  &+.vxe-button--icon,
+  &+.vxe-button--content {
+    padding-left: 0.25em;
+  }
+}
+.vxe-button--content {
+  &+.vxe-button--tooltip-suffix-icon {
+    margin-left: 0.25em;
   }
 }
 .vxe-button--wrapper,

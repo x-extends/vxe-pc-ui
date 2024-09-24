@@ -29,6 +29,7 @@ export const DynamicApp = Vue.extend({
       return h('div', {}, [
         modals.length
           ? h('div', {
+            key: 1,
             class: 'vxe-dynamics--modal'
           }, modals.map((item) => h('vxe-modal', {
             key: item.key,
@@ -38,6 +39,7 @@ export const DynamicApp = Vue.extend({
           : renderEmptyElement(this),
         drawers.length
           ? h('div', {
+            key: 2,
             class: 'vxe-dynamics--drawer'
           }, drawers.map((item) => h('vxe-drawer', {
             key: item.key,

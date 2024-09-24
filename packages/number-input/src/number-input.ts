@@ -508,6 +508,7 @@ export default defineVxeComponent({
     },
     numberNextEvent (evnt: Event) {
       const $xeNumberInput = this
+      const reactData = $xeNumberInput.reactData
 
       const isDisabled = $xeNumberInput.computeIsDisabled
       const formReadonly = $xeNumberInput.computeFormReadonly
@@ -516,7 +517,7 @@ export default defineVxeComponent({
       if (!isDisabled && !formReadonly && !isDisabledSubtractNumber) {
         $xeNumberInput.numberChange(false, evnt)
       }
-      $xeNumberInput.dispatchEvent('next-number', {}, evnt)
+      $xeNumberInput.dispatchEvent('next-number', { value: reactData.inputValue }, evnt)
     },
     numberDownNextEvent (evnt: Event) {
       const $xeNumberInput = this
@@ -529,6 +530,7 @@ export default defineVxeComponent({
     },
     numberPrevEvent (evnt: Event) {
       const $xeNumberInput = this
+      const reactData = $xeNumberInput.reactData
 
       const isDisabled = $xeNumberInput.computeIsDisabled
       const formReadonly = $xeNumberInput.computeFormReadonly
@@ -537,7 +539,7 @@ export default defineVxeComponent({
       if (!isDisabled && !formReadonly && !isDisabledAddNumber) {
         $xeNumberInput.numberChange(true, evnt)
       }
-      $xeNumberInput.dispatchEvent('prev-number', {}, evnt)
+      $xeNumberInput.dispatchEvent('prev-number', { value: reactData.inputValue }, evnt)
     },
     numberKeydownEvent  (evnt: KeyboardEvent) {
       const $xeNumberInput = this
