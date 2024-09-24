@@ -49,6 +49,7 @@ export namespace VxeTablePropTypes {
   export type MaxHeight = number | string
   export type Resizable = boolean
   export type Stripe = boolean
+  export type Padding = boolean
   export type Round = boolean
   export type Border = boolean | 'default' | 'full' | 'outer' | 'inner' | 'none' | ''
   export type Loading = boolean
@@ -1705,6 +1706,10 @@ export interface VxeTableProps<D = any> {
    * 是否带有斑马纹（需要注意的是，在可编辑表格场景下，临时插入的数据不会有斑马纹样式）
    */
   stripe?: VxeTablePropTypes.Stripe
+  /**
+   * 单元格是否有边距
+   */
+  padding?: VxeTablePropTypes.Padding
   /**
    * 是否为圆角边框
    */

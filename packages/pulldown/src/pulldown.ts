@@ -64,7 +64,7 @@ export default defineVxeComponent({
       panelStyle: {},
       panelPlacement: null,
       visiblePanel: false,
-      visibleAnimate: false,
+      isAniVisible: false,
       isActivated: false
     }
     const internalData: PulldownInternalData = {
@@ -236,7 +236,7 @@ export default defineVxeComponent({
             clearTimeout(internalData.hpTimeout)
           }
           reactData.isActivated = true
-          reactData.visibleAnimate = true
+          reactData.isAniVisible = true
           setTimeout(() => {
             reactData.visiblePanel = true
             $xePulldown.emitModel(true)
@@ -264,9 +264,9 @@ export default defineVxeComponent({
       reactData.visiblePanel = false
       $xePulldown.emitModel(false)
       return new Promise<void>(resolve => {
-        if (reactData.visibleAnimate) {
+        if (reactData.isAniVisible) {
           internalData.hpTimeout = window.setTimeout(() => {
-            reactData.visibleAnimate = false
+            reactData.isAniVisible = false
             $xePulldown.$nextTick(() => {
               resolve()
             })
@@ -391,7 +391,7 @@ export default defineVxeComponent({
       const reactData = $xePulldown.reactData
 
       const { className, options, popupClassName, showPopupShadow, destroyOnClose, disabled } = props
-      const { initialized, isActivated, visibleAnimate, visiblePanel, panelStyle, panelPlacement } = reactData
+      const { initialized, isActivated, isAniVisible, visiblePanel, panelStyle, panelPlacement } = reactData
       const btnTransfer = $xePulldown.computeBtnTransfer
       const vSize = $xePulldown.computeSize
       const defaultSlot = slots.default
@@ -421,7 +421,7 @@ export default defineVxeComponent({
             [`size--${vSize}`]: vSize,
             'is--shadow': showPopupShadow,
             'is--transfer': btnTransfer,
-            'ani--leave': visibleAnimate,
+            'ani--leave': isAniVisible,
             'ani--enter': visiblePanel
           }],
           attrs: {
@@ -432,9 +432,8 @@ export default defineVxeComponent({
           ? [
               h('div', {
                 class: 'vxe-pulldown--panel-wrapper'
-              }, !initialized || (destroyOnClose && !visiblePanel && !visibleAnimate)
-                ? []
-                : [
+              }, initialized && (destroyOnClose ? (visiblePanel || isAniVisible) : true)
+                ? [
                     headerSlot
                       ? h('div', {
                         class: 'vxe-pulldown--panel-header'
@@ -452,7 +451,8 @@ export default defineVxeComponent({
                         class: 'vxe-pulldown--panel-footer'
                       }, footerSlot({ $pulldown: $xePulldown }))
                       : renderEmptyElement($xePulldown)
-                  ])
+                  ]
+                : [])
             ]
           : [])
       ])

@@ -90,7 +90,7 @@ export default defineVxeComponent({
       panelPlacement: null,
       triggerFocusPanel: false,
       visiblePanel: false,
-      visibleAnimate: false,
+      isAniVisible: false,
       isActivated: false
     }
     const internalData: TreeSelectInternalData = {
@@ -400,7 +400,7 @@ export default defineVxeComponent({
           }
         }
         reactData.isActivated = true
-        reactData.visibleAnimate = true
+        reactData.isAniVisible = true
         setTimeout(() => {
           reactData.visiblePanel = true
         }, 10)
@@ -415,7 +415,7 @@ export default defineVxeComponent({
 
       reactData.visiblePanel = false
       internalData.hpTimeout = window.setTimeout(() => {
-        reactData.visibleAnimate = false
+        reactData.isAniVisible = false
       }, 350)
     },
     changeEvent (evnt: Event, selectValue: any) {
@@ -560,7 +560,7 @@ export default defineVxeComponent({
       const reactData = $xeTreeSelect.reactData
 
       const { className, value, multiple, options, popupClassName, loading } = props
-      const { initialized, isActivated, visiblePanel } = reactData
+      const { initialized, isActivated, isAniVisible, visiblePanel } = reactData
       const vSize = $xeTreeSelect.computeSize
       const isDisabled = $xeTreeSelect.computeIsDisabled
       const selectLabel = $xeTreeSelect.computeSelectLabel
@@ -634,14 +634,14 @@ export default defineVxeComponent({
           class: ['vxe-table--ignore-clear vxe-tree-select--panel', popupClassName ? (XEUtils.isFunction(popupClassName) ? popupClassName({ $treeSelect: $xeTreeSelect }) : popupClassName) : '', {
             [`size--${vSize}`]: vSize,
             'is--transfer': btnTransfer,
-            'ani--leave': !loading && reactData.visibleAnimate,
+            'ani--leave': !loading && isAniVisible,
             'ani--enter': !loading && visiblePanel
           }],
           attrs: {
             placement: reactData.panelPlacement
           },
           style: reactData.panelStyle
-        }, initialized
+        }, initialized && (visiblePanel || isAniVisible)
           ? [
               h('div', {
                 class: 'vxe-tree-select--panel-wrapper'

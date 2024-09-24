@@ -222,7 +222,9 @@ setConfig({
     controls: true
   },
   printPageBreak: {},
-  pulldown: {},
+  pulldown: {
+    destroyOnClose: true
+  },
   radio: {
     strict: true
   },

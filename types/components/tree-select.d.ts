@@ -99,7 +99,7 @@ export interface TreeSelectReactData {
   panelPlacement: any
   triggerFocusPanel: boolean
   visiblePanel: boolean
-  visibleAnimate: boolean
+  isAniVisible: boolean
   isActivated: boolean
 }
 

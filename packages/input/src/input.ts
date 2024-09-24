@@ -2650,7 +2650,7 @@ export default defineVxeComponent({
             placement: panelPlacement
           },
           style: panelStyle
-        }, initialized ? renders : [])
+        }, initialized && (visiblePanel || isAniVisible) ? renders : [])
       }
       return renderEmptyElement($xeInput)
     },

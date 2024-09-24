@@ -579,7 +579,7 @@ export default defineVxeComponent({
       const reactData = $xeIconPicker.reactData
 
       const { className, popupClassName, clearable } = props
-      const { initialized, isActivated, visiblePanel, selectIcon } = reactData
+      const { initialized, isActivated, isAniVisible, visiblePanel, selectIcon } = reactData
       const vSize = $xeIconPicker.computeSize
       const isDisabled = $xeIconPicker.computeIsDisabled
       const btnTransfer = $xeIconPicker.computeBtnTransfer
@@ -658,24 +658,22 @@ export default defineVxeComponent({
           class: ['vxe-table--ignore-clear vxe-ico-picker--panel', popupClassName ? (XEUtils.isFunction(popupClassName) ? popupClassName({ $iconPicker: $xeIconPicker }) : popupClassName) : '', {
             [`size--${vSize}`]: vSize,
             'is--transfer': btnTransfer,
-            'ani--leave': reactData.isAniVisible,
+            'ani--leave': isAniVisible,
             'ani--enter': visiblePanel
           }],
           attrs: {
             placement: reactData.panelPlacement
           },
           style: reactData.panelStyle
-        }, initialized
-          ? [
-              initialized
-                ? h('div', {
-                  class: 'vxe-ico-picker--panel-wrapper'
-                }, [
-                  $xeIconPicker.renderIconWrapper(h)
-                ])
-                : renderEmptyElement($xeIconPicker)
-            ]
-          : [])
+        }, [
+          initialized && (visiblePanel || isAniVisible)
+            ? h('div', {
+              class: 'vxe-ico-picker--panel-wrapper'
+            }, [
+              $xeIconPicker.renderIconWrapper(h)
+            ])
+            : renderEmptyElement($xeIconPicker)
+        ])
       ])
     }
   },

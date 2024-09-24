@@ -115,7 +115,7 @@ export default defineVxeComponent({
     const reactData: ButtonReactData = {
       initialized: false,
       visiblePanel: false,
-      visibleAnimate: false,
+      isAniVisible: false,
       isActivated: false,
       panelIndex: 0,
       panelStyle: {},
@@ -261,7 +261,7 @@ export default defineVxeComponent({
           if (panelElem.dataset.active === 'Y') {
             this.mouseenterDropdownEvent()
           } else {
-            reactData.visibleAnimate = false
+            reactData.isAniVisible = false
           }
         }, trigger === 'click' ? 50 : 250)
       }
@@ -281,13 +281,13 @@ export default defineVxeComponent({
             reactData.visiblePanel = false
             setTimeout(() => {
               if (panelElem.dataset.active !== 'Y') {
-                reactData.visibleAnimate = false
+                reactData.isAniVisible = false
               }
             }, 350)
           }
         }, 100)
       } else {
-        reactData.visibleAnimate = false
+        reactData.isAniVisible = false
         reactData.visiblePanel = false
       }
       return this.$nextTick()
@@ -427,7 +427,7 @@ export default defineVxeComponent({
         reactData.visiblePanel = false
         setTimeout(() => {
           if (!panelElem || panelElem.dataset.active !== 'Y') {
-            reactData.visibleAnimate = false
+            reactData.isAniVisible = false
           }
         }, 350)
         this.dispatchEvent('dropdown-click', { name: targetElem.getAttribute('name'), $event: evnt }, evnt)
@@ -440,7 +440,7 @@ export default defineVxeComponent({
       const panelElem = this.$refs.refBtnPanel as HTMLElement | undefined
       if (panelElem) {
         panelElem.dataset.active = 'Y'
-        reactData.visibleAnimate = true
+        reactData.isAniVisible = true
         setTimeout(() => {
           if (panelElem.dataset.active === 'Y') {
             reactData.visiblePanel = true
@@ -566,7 +566,7 @@ export default defineVxeComponent({
       const reactData = $xeButton.reactData
 
       const { className, popupClassName, align, trigger, title, routerLink, type, destroyOnClose, name, loading } = props
-      const { initialized, visiblePanel } = reactData
+      const { initialized, isAniVisible, visiblePanel } = reactData
       const isFormBtn = $xeButton.computeIsFormBtn
       const btnMode = $xeButton.computeBtnMode
       const btnStatus = $xeButton.computeBtnStatus
@@ -659,7 +659,7 @@ export default defineVxeComponent({
             ref: 'refBtnPanel',
             class: ['vxe-button--dropdown-panel', popupClassName ? (XEUtils.isFunction(popupClassName) ? popupClassName({ $button: $xeButton }) : popupClassName) : '', {
               [`size--${vSize}`]: vSize,
-              'ani--leave': reactData.visibleAnimate,
+              'ani--leave': isAniVisible,
               'ani--enter': visiblePanel
             }],
             attrs: {
@@ -667,7 +667,7 @@ export default defineVxeComponent({
             },
             style: reactData.panelStyle,
             ...panelOns
-          }, initialized
+          }, initialized && (visiblePanel || isAniVisible)
             ? [
                 h('div', {
                   class: 'vxe-button--dropdown-wrapper',
