@@ -41,7 +41,13 @@ setConfig({
   },
   breadcrumbItem: {},
   button: {
-    trigger: 'hover'
+    trigger: 'hover',
+    prefixTooltip: {
+      enterable: true
+    },
+    suffixTooltip: {
+      enterable: true
+    }
   },
   buttonGroup: {},
   calendar: {

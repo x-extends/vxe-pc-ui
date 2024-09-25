@@ -809,6 +809,14 @@ export namespace VxeTablePropTypes {
      */
     extendByCalc?: boolean
     /**
+     * 当单元格被激活为编辑状态时，是否自动聚焦，默认 input，可以通过 item-render.autoFocus 指定
+     */
+    autoFocus?: boolean
+    /**
+     * 当单元格被激活为编辑状态时，是否自动定位
+     */
+    autoPos?: boolean
+    /**
      * 当点击表格之外，是否自动清除单元格的选取状态
      */
     autoClear?: boolean
