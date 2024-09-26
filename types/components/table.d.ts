@@ -809,14 +809,6 @@ export namespace VxeTablePropTypes {
      */
     extendByCalc?: boolean
     /**
-     * 当单元格被激活为编辑状态时，是否自动聚焦，默认 input，可以通过 item-render.autoFocus 指定
-     */
-    autoFocus?: boolean
-    /**
-     * 当单元格被激活为编辑状态时，是否自动定位
-     */
-    autoPos?: boolean
-    /**
      * 当点击表格之外，是否自动清除单元格的选取状态
      */
     autoClear?: boolean
@@ -1242,6 +1234,14 @@ export namespace VxeTablePropTypes {
      * 是否显示必填字段的红色星号
      */
     showAsterisk?: boolean
+    /**
+     * 当单元格被激活为编辑状态时，是否自动聚焦，默认 input，可以通过 item-render.autoFocus 指定
+     */
+    autoFocus?: boolean
+    /**
+     * 当单元格被激活为编辑状态时，是否自动定位
+     */
+    autoPos?: boolean
     /**
      * 当点击表格之外或者非编辑列之后，是否自动清除单元格的激活状态
      */

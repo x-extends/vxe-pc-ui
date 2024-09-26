@@ -232,7 +232,7 @@ export default defineVxeComponent({
         list.forEach((item) => {
           const { name, preload } = item || {}
           if (name) {
-            nameMaps[name] = {
+            nameMaps[`${name}`] = {
               loading: false
             }
             if (activeName === name) {
@@ -287,7 +287,7 @@ export default defineVxeComponent({
       const { name } = item
       const refreshOpts = $xeTabs.computeRefreshOpts
       const { queryMethod } = refreshOpts
-      const cacheItem = name ? cacheTabMaps[name] : null
+      const cacheItem = name ? cacheTabMaps[`${name}`] : null
       if (cacheItem) {
         if (queryMethod) {
           cacheItem.loading = true
@@ -481,12 +481,12 @@ export default defineVxeComponent({
             class: 'vxe-tabs-header--item-wrapper'
           }, tabList.map((item, index) => {
             const { title, titleWidth, titleAlign, icon, name, slots } = item
-            const tabSlot = slots ? slots.tab : null
+            const titleSlot = slots ? (slots.title || slots.tab) : null
             const itemWidth = titleWidth || allTitleWidth
             const itemAlign = titleAlign || allTitleAlign
             const params = { $tabs: $xeTabs, value: activeName, name, option: item }
             const isActive = activeName === name
-            const cacheItem = name ? cacheTabMaps[name] : null
+            const cacheItem = name ? cacheTabMaps[`${name}`] : null
             const isLoading = cacheItem ? cacheItem.loading : false
             return h('div', {
               key: `${name}`,
@@ -521,7 +521,7 @@ export default defineVxeComponent({
                     : renderEmptyElement($xeTabs),
                   h('span', {
                     class: 'vxe-tabs-header--item-name'
-                  }, tabSlot ? $xeTabs.callSlot(tabSlot, { name, title }, h) : `${title}`)
+                  }, titleSlot ? $xeTabs.callSlot(titleSlot, { name, title }, h) : `${title}`)
                 ]),
                 (isEnableConf(refreshConfig) || refreshOpts.enabled) && (refreshVisibleMethod ? refreshVisibleMethod(params) : isActive)
                   ? h('div', {
@@ -592,7 +592,7 @@ export default defineVxeComponent({
       const defaultSlot = slots ? slots.default : null
       return name && initNames.includes(name)
         ? h('div', {
-          key: name,
+          key: `${name}`,
           class: ['vxe-tabs-pane--item', {
             'is--visible': activeName === name,
             'has--content': !!defaultSlot

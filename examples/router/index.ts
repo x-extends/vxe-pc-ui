@@ -226,6 +226,16 @@ const routes: Array<RouteConfig> = [
     path: '/component/countdown',
     name: 'CountdownTest',
     component: () => import('../views/countdown/CountdownTest.vue')
+  },
+  {
+    path: '/component/notice-bar',
+    name: 'NoticeBarTest',
+    component: () => import('../views/notice-bar/NoticeBarTest.vue')
+  },
+  {
+    path: '/component/collapse',
+    name: 'CollapseTest',
+    component: () => import('../views/collapse/CollapseTest.vue')
   }
 ]
 

@@ -87,7 +87,9 @@ export default Vue.extend({
         { name: 'TreeSelectTest', routerLink: { name: 'TreeSelectTest' } },
         { name: 'CarouselTest', routerLink: { name: 'CarouselTest' } },
         { name: 'CalendarTest', routerLink: { name: 'CalendarTest' } },
-        { name: 'CountdownTest', routerLink: { name: 'CountdownTest' } }
+        { name: 'CountdownTest', routerLink: { name: 'CountdownTest' } },
+        { name: 'NoticeBarTest', routerLink: { name: 'NoticeBarTest' } },
+        { name: 'CollapseTest', routerLink: { name: 'CollapseTest' } }
       ]
     }
   },

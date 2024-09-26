@@ -2,7 +2,7 @@ import { PropType, CreateElement, VNode } from 'vue'
 import { defineVxeComponent } from '../../ui/src/comp'
 import XEUtils from 'xe-utils'
 import { createEvent } from '../../ui'
-import { assembleAnchorTab, destroyAnchorTab } from './util'
+import { assembleTabItem, destroyTabItem } from './util'
 
 import type { VxeTabPanePropTypes, TabPaneReactData, VxeComponentSizeType, VxeTabPaneEmits, ValueOf, VxeTabPaneDefines, VxeTabsConstructor, VxeTabsPrivateMethods } from '../../../types'
 
@@ -106,19 +106,20 @@ export default defineVxeComponent({
       titleAlign: props.titleAlign,
       preload: props.preload,
       permissionCode: props.permissionCode,
-      slots: {
-        default: slots.default
-      }
+      slots
     })
   },
   mounted () {
     const $xeTabPane = this
+    const slots = $xeTabPane.$scopedSlots
     const $xeTabs = $xeTabPane.$xeTabs
     const tabConfig = $xeTabPane.tabConfig
 
+    tabConfig.slots = slots
+
     const elem = $xeTabPane.$refs.refElem as HTMLDivElement
     if ($xeTabs && elem) {
-      assembleAnchorTab($xeTabs, elem, tabConfig)
+      assembleTabItem($xeTabs, elem, tabConfig)
     }
   },
   beforeDestroy () {
@@ -127,7 +128,7 @@ export default defineVxeComponent({
     const $xeTabs = $xeTabPane.$xeTabs
 
     if ($xeTabs) {
-      destroyAnchorTab($xeTabs, tabConfig)
+      destroyTabItem($xeTabs, tabConfig)
     }
   },
   render (this: any, h) {

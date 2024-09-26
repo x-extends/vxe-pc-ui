@@ -75,6 +75,7 @@ const componentList = [
   'loading',
   'menu',
   'modal',
+  'notice-bar',
   'number-input',
   'optgroup',
   'option',

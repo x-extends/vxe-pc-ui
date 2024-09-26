@@ -1,4 +1,5 @@
-import { DefineVxeComponentApp, DefineVxeComponentOptions, DefineVxeComponentInstance, VxeComponentEventParams } from '@vxe-ui/core'
+import { DefineVxeComponentApp, DefineVxeComponentOptions, DefineVxeComponentInstance, VxeComponentEventParams, VxeComponentSizeType } from '@vxe-ui/core'
+import { VxeCollapsePaneProps, VxeCollapsePaneDefines, VxeCollapsePanePropTypes } from './collapse-pane'
 
 /* eslint-disable @typescript-eslint/no-empty-interface,no-use-before-define,@typescript-eslint/ban-types */
 
@@ -16,9 +17,25 @@ export interface CollapsePrivateRef {
 export interface VxeCollapsePrivateRef extends CollapsePrivateRef { }
 
 export namespace VxeCollapsePropTypes {
+  export type Size = VxeComponentSizeType
+  export type ModelValue = VxeCollapsePanePropTypes.Name[]
+  export type Options = VxeCollapsePaneProps[]
+  export type Padding = boolean
+  export interface ExpandConfig {
+    accordion?: boolean
+    padding?: boolean
+    showIcon?: boolean
+    iconOpen?: string
+    iconClose?: string
+  }
 }
 
-export interface VxeCollapseProps {
+export type VxeCollapseProps = {
+  size?: VxeCollapsePropTypes.Size
+  modelValue?: VxeCollapsePropTypes.ModelValue
+  options?: VxeCollapsePropTypes.Options
+  padding?: VxeCollapsePropTypes.Padding
+  expandConfig?: VxeCollapsePropTypes.ExpandConfig
 }
 
 export interface CollapsePrivateComputed {
@@ -26,6 +43,12 @@ export interface CollapsePrivateComputed {
 export interface VxeCollapsePrivateComputed extends CollapsePrivateComputed { }
 
 export interface CollapseReactData {
+  staticPanes: VxeCollapsePaneDefines.CollapseConfig[]
+  activeNames: VxeCollapsePanePropTypes.Name[]
+  initNames: VxeCollapsePanePropTypes.Name[]
+  cachePaneMaps: Record<string, {
+    loading: boolean
+  }>
 }
 
 export interface CollapseMethods {
@@ -54,6 +77,15 @@ export namespace VxeCollapseSlotTypes {
 }
 
 export interface VxeCollapseSlots {
+  /**
+   * 自定义插槽模板
+   */
+  [key: string]: ((params: {
+    name: VxeTabsPropTypes.ModelValue
+
+    [key: string]: any
+  }) => any) | undefined
+
   default?: (params: VxeCollapseSlotTypes.DefaultSlotParams) => any
 }
 

@@ -69,7 +69,12 @@ setConfig({
   checkbox: {},
   checkboxGroup: {},
   col: {},
-  collapse: {},
+  collapse: {
+    padding: true,
+    expandConfig: {
+      showIcon: true
+    }
+  },
   collapsePane: {},
   countdown: {},
   datePicker: {
@@ -205,6 +210,7 @@ setConfig({
     // storage: false,
     storageKey: 'VXE_MODAL_POSITION'
   },
+  noticeBar: {},
   numberInput: {
     // size: null,
     // transfer: false
@@ -460,7 +466,11 @@ setIcon({
   CAROUSEL_HORIZONTAL_PREVIOUS: iconPrefix + 'arrow-left',
   CAROUSEL_HORIZONTAL_NEXT: iconPrefix + 'arrow-right',
   CAROUSEL_VERTICAL_PREVIOUS: iconPrefix + 'arrow-up',
-  CAROUSEL_VERTICAL_NEXT: iconPrefix + 'arrow-down'
+  CAROUSEL_VERTICAL_NEXT: iconPrefix + 'arrow-down',
+
+  // collapse
+  COLLAPSE_OPEN: iconPrefix + 'arrow-right rotate90',
+  COLLAPSE_CLOSE: iconPrefix + 'arrow-right'
 
 })
 
