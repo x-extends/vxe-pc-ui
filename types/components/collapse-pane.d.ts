@@ -1,5 +1,5 @@
 import { RenderFunction, SetupContext, Ref } from 'vue'
-import { DefineVxeComponentApp, DefineVxeComponentOptions, DefineVxeComponentInstance, VxeComponentBaseOptions, VxeComponentEventParams } from '@vxe-ui/core'
+import { DefineVxeComponentApp, DefineVxeComponentOptions, DefineVxeComponentInstance, VxeComponentPermissionCodeType, VxeComponentBaseOptions, VxeComponentEventParams, VxeComponentSlotType } from '@vxe-ui/core'
 
 /* eslint-disable no-use-before-define,@typescript-eslint/ban-types */
 
@@ -23,9 +23,24 @@ export interface CollapsePanePrivateRef {
 export interface VxeCollapsePanePrivateRef extends CollapsePanePrivateRef { }
 
 export namespace VxeCollapsePanePropTypes {
+  export type Title = string | number
+  export type Name = string | number | boolean
+  export type Icon = string
+  export type Preload = boolean
+  export type PermissionCode = VxeComponentPermissionCodeType
 }
 
-export type VxeCollapsePaneProps = {
+export interface VxeCollapsePaneProps {
+  title?: VxeCollapsePanePropTypes.Title
+  name?: VxeCollapsePanePropTypes.Name
+  icon?: VxeCollapsePanePropTypes.Icon
+  preload?: VxeCollapsePanePropTypes.Preload
+  permissionCode?: VxeCollapsePanePropTypes.PermissionCode
+
+  slots?: {
+    title?: string | ((params: VxeCollapsePaneSlotTypes.TitleSlotParams) => VxeComponentSlotType | VxeComponentSlotType[])
+    default?: string | ((params: VxeCollapsePaneSlotTypes.DefaultSlotParams) => VxeComponentSlotType | VxeComponentSlotType[])
+  }
 }
 
 export interface CollapsePanePrivateComputed {
@@ -48,6 +63,10 @@ export namespace VxeCollapsePaneDefines {
   export interface CollapsePaneEventParams extends VxeComponentEventParams {
     $collapsePane: VxeCollapsePaneConstructor
   }
+
+  export interface CollapseConfig extends VxeCollapsePaneProps {
+    id: string
+  }
 }
 
 export type VxeCollapsePaneEventProps = {}
@@ -58,9 +77,11 @@ export namespace VxeCollapsePaneEvents { }
 
 export namespace VxeCollapsePaneSlotTypes {
   export interface DefaultSlotParams {}
+  export interface TitleSlotParams {}
 }
 
 export interface VxeCollapsePaneSlots {
+  title?: (params: VxeCollapsePaneSlotTypes.TitleSlotParams) => any
   default?: (params: VxeCollapsePaneSlotTypes.DefaultSlotParams) => any
 }
 

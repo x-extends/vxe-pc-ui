@@ -46,6 +46,7 @@ import VxeList from './components/list'
 import VxeLoading from './components/loading'
 import VxeMenu from './components/menu'
 import VxeModal from './components/modal'
+import VxeNoticeBar from './components/notice-bar'
 import VxeNumberInput from './components/number-input'
 import VxeOptgroup from './components/optgroup'
 import VxeOption from './components/option'
@@ -126,6 +127,7 @@ interface AllComponents {
   VxeLoading: typeof VxeLoading
   VxeMenu: typeof VxeMenu
   VxeModal: typeof VxeModal
+  VxeNoticeBar: typeof VxeNoticeBar
   VxeNumberInput: typeof VxeNumberInput
   VxeOptgroup: typeof VxeOptgroup
   VxeOption: typeof VxeOption
@@ -215,6 +217,7 @@ export * from './components/list'
 export * from './components/loading'
 export * from './components/menu'
 export * from './components/modal'
+export * from './components/notice-bar'
 export * from './components/number-input'
 export * from './components/optgroup'
 export * from './components/option'

@@ -204,5 +204,9 @@ declare module '@vxe-ui/core' {
     CAROUSEL_HORIZONTAL_NEXT?: string
     CAROUSEL_VERTICAL_PREVIOUS?: string
     CAROUSEL_VERTICAL_NEXT?: string
+
+    // collapse
+    COLLAPSE_OPEN?: string
+    COLLAPSE_CLOSE?: string
   }
 }

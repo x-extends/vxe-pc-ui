@@ -1,7 +1,7 @@
 import { defineComponent, ref, h, reactive, PropType, watch, inject, onMounted, onUnmounted } from 'vue'
 import XEUtils from 'xe-utils'
 import { createEvent } from '../../ui'
-import { assembleAnchorTab, destroyAnchorTab } from './util'
+import { assembleTabItem, destroyTabItem } from './util'
 
 import type { VxeTabPanePropTypes, TabPaneReactData, TabPaneMethods, TabPanePrivateMethods, VxeTabPaneEmits, ValueOf, TabPanePrivateRef, VxeTabPanePrivateComputed, VxeTabPaneConstructor, VxeTabPanePrivateMethods, VxeTabPaneDefines, VxeTabsConstructor, VxeTabsPrivateMethods } from '../../../types'
 
@@ -38,9 +38,7 @@ export default defineComponent({
       titleAlign: props.titleAlign,
       preload: props.preload,
       permissionCode: props.permissionCode,
-      slots: {
-        default: slots.default
-      }
+      slots: slots
     })
 
     const refMaps: TabPanePrivateRef = {
@@ -92,13 +90,13 @@ export default defineComponent({
     onMounted(() => {
       const elem = refElem.value
       if ($xeTabs && elem) {
-        assembleAnchorTab($xeTabs, elem, tabConfig)
+        assembleTabItem($xeTabs, elem, tabConfig)
       }
     })
 
     onUnmounted(() => {
       if ($xeTabs) {
-        destroyAnchorTab($xeTabs, tabConfig)
+        destroyTabItem($xeTabs, tabConfig)
       }
     })
 

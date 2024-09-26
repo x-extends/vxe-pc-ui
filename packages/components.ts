@@ -46,6 +46,7 @@ import VxeList from './list'
 import VxeLoading, { LoadingController } from './loading'
 import VxeMenu from './menu'
 import VxeModal, { ModalController } from './modal'
+import VxeNoticeBar from './notice-bar'
 import VxeNumberInput from './number-input'
 import VxeOptgroup from './optgroup'
 import VxeOption from './option'
@@ -118,6 +119,7 @@ const components = [
   VxeLoading,
   VxeMenu,
   VxeModal,
+  VxeNoticeBar,
   VxeNumberInput,
   VxeOptgroup,
   VxeOption,
@@ -210,6 +212,7 @@ export * from './list'
 export * from './loading'
 export * from './menu'
 export * from './modal'
+export * from './notice-bar'
 export * from './number-input'
 export * from './optgroup'
 export * from './option'

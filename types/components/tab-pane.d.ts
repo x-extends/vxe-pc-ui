@@ -24,7 +24,7 @@ export interface VxeTabPanePrivateRef extends TabPanePrivateRef { }
 
 export namespace VxeTabPanePropTypes {
   export type Title = string | number
-  export type Name = string | number
+  export type Name = string | number | boolean
   export type Icon = string
   export type TitleWidth = string | number
   export type TitleAlign = VxeComponentAlignType
@@ -42,8 +42,14 @@ export type VxeTabPaneProps = {
   permissionCode?: VxeTabPanePropTypes.PermissionCode
 
   slots?: {
-    tab?: string | ((params: { [key: string]: any }) => VxeComponentSlotType | VxeComponentSlotType[])
+    title?: string | ((params: { [key: string]: any }) => VxeComponentSlotType | VxeComponentSlotType[])
     default?: string | ((params: { [key: string]: any }) => VxeComponentSlotType | VxeComponentSlotType[])
+
+    /**
+     * 已废弃，被 title 替换
+     * @deprecated
+     */
+    tab?: string | ((params: { [key: string]: any }) => VxeComponentSlotType | VxeComponentSlotType[])
   }
 }
 
@@ -84,8 +90,13 @@ export namespace VxeTabPaneSlotTypes {
 }
 
 export interface VxeTabPaneSlots {
-  tab?: (params: VxeTabPaneSlotTypes.DefaultSlotParams) => any
+  title?: (params: VxeTabPaneSlotTypes.DefaultSlotParams) => any
   default?: (params: VxeTabPaneSlotTypes.DefaultSlotParams) => any
+  /**
+   * 已废弃，被 title 替换
+   * @deprecated
+   */
+  tab?: (params: VxeTabPaneSlotTypes.DefaultSlotParams) => any
 }
 
 export const TabPane: typeof VxeTabPane

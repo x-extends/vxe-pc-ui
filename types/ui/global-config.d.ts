@@ -42,6 +42,7 @@ import { VxeListProps } from '../components/list'
 import { VxeLoadingProps } from '../components/loading'
 import { VxeMenuProps } from '../components/menu'
 import { VxeModalProps } from '../components/modal'
+import { VxeNoticeBarProps } from '../components/notice-bar'
 import { VxeNumberInputProps } from '../components/number-input'
 import { VxeOptgroupProps } from '../components/optgroup'
 import { VxeOptionProps } from '../components/option'
@@ -119,6 +120,7 @@ declare module '@vxe-ui/core' {
     loading?: VxeLoadingProps
     menu?: VxeMenuProps
     modal?: VxeModalProps
+    noticeBar?: VxeNoticeBarProps
     numberInput?: VxeNumberInputProps
     optgroup?: VxeOptgroupProps
     option?: VxeOptionProps

@@ -280,7 +280,6 @@ export interface VxeTabsSlots {
   }) => any) | undefined
 
   default?: (params: VxeTabsSlotTypes.DefaultSlotParams) => any
-  tab?: (params: VxeTabsSlotTypes.TabSlotParams) => any
   extra?: (params: VxeTabsSlotTypes.ExtraSlotParams) => any
 }
 
