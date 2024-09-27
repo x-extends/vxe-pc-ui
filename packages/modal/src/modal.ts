@@ -6,7 +6,7 @@ import { VxeUI, getConfig, getIcon, getI18n, globalEvents, GLOBAL_EVENT_KEYS, cr
 import VxeButtonComponent from '../../button/src/button'
 import VxeLoadingComponent from '../../loading/index'
 import { getSlotVNs } from '../../ui/src/vn'
-import { errLog } from '../../ui/src/log'
+import { warnLog, errLog } from '../../ui/src/log'
 
 import type { VxeModalConstructor, VxeModalPropTypes, ModalReactData, ModalInternalData, VxeModalEmits, VxeModalPrivateComputed, ModalEventTypes, VxeButtonInstance, ModalMethods, ModalPrivateRef, VxeModalMethods, ValueOf } from '../../../types'
 
@@ -1359,6 +1359,11 @@ export default defineComponent({
     })
 
     onMounted(() => {
+      if (process.env.VUE_APP_VXE_ENV === 'development') {
+        if (props.type === 'modal' && props.showFooter && !(props.showConfirmButton || props.showCancelButton || slots.footer)) {
+          warnLog('vxe.modal.footPropErr')
+        }
+      }
       nextTick(() => {
         if (props.storage && !props.id) {
           errLog('vxe.error.reqProp', ['modal.id'])
