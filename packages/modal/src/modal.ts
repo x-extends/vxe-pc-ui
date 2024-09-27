@@ -7,7 +7,7 @@ import { getLastZIndex, nextZIndex, getFuncText, handleBooleanDefaultValue } fro
 import VxeButtonComponent from '../../button/src/button'
 import VxeLoadingComponent from '../../loading/index'
 import { getSlotVNs } from '../../ui/src/vn'
-import { errLog } from '../../ui/src/log'
+import { warnLog, errLog } from '../../ui/src/log'
 
 import type { VxeModalConstructor, VxeModalPropTypes, ModalReactData, ModalInternalData, ModalEventTypes, VxeModalEmits, VxeComponentSizeType, VxeComponentPermissionInfo, ValueOf, VxeButtonConstructor } from '../../../types'
 
@@ -1516,8 +1516,14 @@ export default defineVxeComponent({
   },
   mounted () {
     const $xeModal = this
+    const slots = $xeModal.$scopedSlots
     const props = $xeModal
 
+    if (process.env.VUE_APP_VXE_ENV === 'development') {
+      if (props.type === 'modal' && props.showFooter && !(props.showConfirmButton || props.showCancelButton || slots.footer)) {
+        warnLog('vxe.modal.footPropErr')
+      }
+    }
     $xeModal.$nextTick(() => {
       if (props.storage && !props.id) {
         errLog('vxe.error.reqProp', ['modal.id'])

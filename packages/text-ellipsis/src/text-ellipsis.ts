@@ -87,13 +87,13 @@ export default defineVxeComponent({
       const el = $xeTextEllipsis.$refs.refElem as HTMLDivElement
       const ryEl = $xeTextEllipsis.$refs.realityElem as HTMLDivElement
       if (el && ryEl) {
-        let fontSize = 10
+        let fontSize = 12
         try {
           fontSize = Math.max(10, XEUtils.toNumber(getComputedStyle(ryEl).fontSize))
         } catch (e) {}
-        const ctextContent = $xeTextEllipsis.computeTextContent
+        const textContent = $xeTextEllipsis.computeTextContent
         let currIndex = Math.floor((targetWidth) / fontSize)
-        let currStr = ctextContent.slice(0, currIndex)
+        let currStr = textContent.slice(0, currIndex)
         ryEl.textContent = currStr
         reactData.visibleLen = currStr.length
         let maxCount = 0
@@ -102,20 +102,18 @@ export default defineVxeComponent({
           const offsetIndex = Math.floor((targetWidth - ryEl.clientWidth) / fontSize)
           if (offsetIndex) {
             currIndex += offsetIndex
-            currStr = ctextContent.slice(0, currIndex)
+            currStr = textContent.slice(0, currIndex)
             ryEl.textContent = currStr
             reactData.visibleLen = currStr.length
           } else {
             break
           }
         }
-        Object.assign(ryEl.style, {
-          display: '',
-          position: '',
-          top: '',
-          left: ''
-        })
         ryEl.textContent = ''
+        ryEl.style.display = ''
+        ryEl.style.position = ''
+        ryEl.style.top = ''
+        ryEl.style.left = ''
       }
     },
     updateStyle  () {
@@ -159,9 +157,9 @@ export default defineVxeComponent({
         const el = $xeTextEllipsis.$refs.refElem as HTMLDivElement
         if (el && textLineClamp > 1) {
           if (window.ResizeObserver) {
-            const observerObj = new window.ResizeObserver(() => {
+            const observerObj = new window.ResizeObserver(XEUtils.throttle(() => {
               $xeTextEllipsis.updateStyle()
-            })
+            }, 300, { leading: true, trailing: true }))
             observerObj.observe(el)
             reactData.resizeObserver = observerObj
           }
@@ -229,7 +227,15 @@ export default defineVxeComponent({
     const reactData = $xeTextEllipsis.reactData
 
     const { resizeObserver } = reactData
+    const el = $xeTextEllipsis.$refs.refElem as HTMLDivElement
+    const ryEl = $xeTextEllipsis.$refs.realityElem as HTMLDivElement
+    if (ryEl) {
+      ryEl.textContent = ''
+    }
     if (resizeObserver) {
+      if (el) {
+        resizeObserver.unobserve(el)
+      }
       resizeObserver.disconnect()
       reactData.resizeObserver = null
     }
