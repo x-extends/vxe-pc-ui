@@ -89,7 +89,8 @@ export default Vue.extend({
         { name: 'CalendarTest', routerLink: { name: 'CalendarTest' } },
         { name: 'CountdownTest', routerLink: { name: 'CountdownTest' } },
         { name: 'NoticeBarTest', routerLink: { name: 'NoticeBarTest' } },
-        { name: 'CollapseTest', routerLink: { name: 'CollapseTest' } }
+        { name: 'CollapseTest', routerLink: { name: 'CollapseTest' } },
+        { name: 'TextEllipsisTest', routerLink: { name: 'TextEllipsisTest' } }
       ]
     }
   },

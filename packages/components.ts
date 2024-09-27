@@ -64,6 +64,7 @@ import VxeSwitch from './switch'
 import VxeTabPane from './tab-pane'
 import VxeTabs from './tabs'
 import VxeTag from './tag'
+import VxeTextEllipsis from './text-ellipsis'
 import VxeText from './text'
 import VxeTextarea from './textarea'
 import VxeTip from './tip'
@@ -137,6 +138,7 @@ const components = [
   VxeTabPane,
   VxeTabs,
   VxeTag,
+  VxeTextEllipsis,
   VxeText,
   VxeTextarea,
   VxeTip,
@@ -230,6 +232,7 @@ export * from './switch'
 export * from './tab-pane'
 export * from './tabs'
 export * from './tag'
+export * from './text-ellipsis'
 export * from './text'
 export * from './textarea'
 export * from './tip'

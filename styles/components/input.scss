@@ -87,6 +87,12 @@
     }
   }
 }
+.vxe-input--prefix {
+  border-radius: var(--vxe-ui-base-border-radius) 0 0 var(--vxe-ui-base-border-radius);
+}
+.vxe-input--suffix {
+  border-radius: 0 var(--vxe-ui-base-border-radius) var(--vxe-ui-base-border-radius) 0;
+}
 .vxe-input--prefix,
 .vxe-input--suffix {
   display: flex;

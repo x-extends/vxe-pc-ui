@@ -81,6 +81,7 @@
 
 .vxe-select--panel-search {
   display: block;
+  padding: var(--vxe-ui-layout-padding-default);
   .vxe-select-search--input {
     width: 100%;
   }

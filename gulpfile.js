@@ -93,6 +93,7 @@ const componentList = [
   'tab-pane',
   'tabs',
   'tag',
+  'text-ellipsis',
   'text',
   'textarea',
   'tip',

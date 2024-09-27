@@ -1224,31 +1224,31 @@ export default defineVxeComponent({
           style: reactData.panelStyle
         }, initialized && (visiblePanel || isAniVisible)
           ? [
-              filterable
-                ? h('div', {
-                  class: 'vxe-select--panel-search'
-                }, [
-                  h(VxeInputComponent, {
-                    ref: 'refInpSearch',
-                    class: 'vxe-select-search--input',
-                    props: {
-                      value: reactData.searchValue,
-                      clearable: true,
-                      placeholder: getI18n('vxe.select.search'),
-                      prefixIcon: getIcon().INPUT_SEARCH
-                    },
-                    on: {
-                      modelValue: $xeSelect.modelSearchEvent,
-                      focus: $xeSelect.focusSearchEvent,
-                      change: $xeSelect.triggerSearchEvent,
-                      search: $xeSelect.triggerSearchEvent
-                    }
-                  })
-                ])
-                : renderEmptyElement($xeSelect),
               h('div', {
                 class: 'vxe-select--panel-wrapper'
               }, [
+                filterable
+                  ? h('div', {
+                    class: 'vxe-select--panel-search'
+                  }, [
+                    h(VxeInputComponent, {
+                      ref: 'refInpSearch',
+                      class: 'vxe-select-search--input',
+                      props: {
+                        value: reactData.searchValue,
+                        clearable: true,
+                        placeholder: getI18n('vxe.select.search'),
+                        prefixIcon: getIcon().INPUT_SEARCH
+                      },
+                      on: {
+                        modelValue: $xeSelect.modelSearchEvent,
+                        focus: $xeSelect.focusSearchEvent,
+                        change: $xeSelect.triggerSearchEvent,
+                        search: $xeSelect.triggerSearchEvent
+                      }
+                    })
+                  ])
+                  : renderEmptyElement($xeSelect),
                 headerSlot
                   ? h('div', {
                     class: 'vxe-select--panel-header'

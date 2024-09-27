@@ -69,11 +69,11 @@ export default defineVxeComponent({
       const { speed } = props
       const contEl = this.$refs.refContentElem as HTMLDivElement
       if (contEl) {
-        let sRate = 42
+        let sRate = 46
         if (speed === 'fast') {
-          sRate = 72
+          sRate = 118
         } else if (speed === 'slow') {
-          sRate = 16
+          sRate = 18
         }
         reactData.animationDuration = Math.ceil(contEl.scrollWidth / sRate)
       }

@@ -254,6 +254,7 @@ setConfig({
   tabPane: {},
   tabs: {},
   tag: {},
+  textEllipsis: {},
   text: {},
   textarea: {
     resize: 'none'
