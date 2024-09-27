@@ -68,6 +68,12 @@ export default defineComponent({
 
     Object.assign($xeCollapsePane, collapsePaneMethods, collapsePanePrivateMethods)
 
+    const renderVN = () => {
+      return h('div', {
+        ref: refElem
+      }, [])
+    }
+
     watch(() => props.title, (val) => {
       collapseConfig.title = val
     })
@@ -96,12 +102,6 @@ export default defineComponent({
         destroyCollapseItem($xeCollapse, collapseConfig)
       }
     })
-
-    const renderVN = () => {
-      return h('div', {
-        ref: refElem
-      }, [])
-    }
 
     $xeCollapsePane.renderVN = renderVN
 

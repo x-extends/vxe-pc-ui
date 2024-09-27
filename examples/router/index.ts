@@ -239,6 +239,11 @@ const routes: Array<RouteRecordRaw> = [
     path: '/component/collapse',
     name: 'CollapseTest',
     component: () => import('../views/collapse/CollapseTest.vue')
+  },
+  {
+    path: '/component/text-ellipsis',
+    name: 'TextEllipsisTest',
+    component: () => import('../views/text-ellipsis/TextEllipsisTest.vue')
   }
 ]
 

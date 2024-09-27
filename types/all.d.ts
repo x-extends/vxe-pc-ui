@@ -64,6 +64,7 @@ import VxeSwitch from './components/switch'
 import VxeTabPane from './components/tab-pane'
 import VxeTabs from './components/tabs'
 import VxeTag from './components/tag'
+import VxeTextEllipsis from './components/text-ellipsis'
 import VxeText from './components/text'
 import VxeTextarea from './components/textarea'
 import VxeTip from './components/tip'
@@ -145,6 +146,7 @@ interface AllComponents {
   VxeTabPane: typeof VxeTabPane
   VxeTabs: typeof VxeTabs
   VxeTag: typeof VxeTag
+  VxeTextEllipsis: typeof VxeTextEllipsis
   VxeText: typeof VxeText
   VxeTextarea: typeof VxeTextarea
   VxeTip: typeof VxeTip
@@ -235,6 +237,7 @@ export * from './components/switch'
 export * from './components/tab-pane'
 export * from './components/tabs'
 export * from './components/tag'
+export * from './components/text-ellipsis'
 export * from './components/text'
 export * from './components/textarea'
 export * from './components/tip'

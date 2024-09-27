@@ -1059,27 +1059,27 @@ export default defineComponent({
             style: reactData.panelStyle
           }, initialized && (visiblePanel || isAniVisible)
             ? [
-                filterable
-                  ? h('div', {
-                    class: 'vxe-select--panel-search'
-                  }, [
-                    h(VxeInputComponent, {
-                      ref: refInpSearch,
-                      class: 'vxe-select-search--input',
-                      modelValue: reactData.searchValue,
-                      clearable: true,
-                      placeholder: getI18n('vxe.select.search'),
-                      prefixIcon: getIcon().INPUT_SEARCH,
-                      'onUpdate:modelValue': modelSearchEvent,
-                      onFocus: focusSearchEvent,
-                      onChange: triggerSearchEvent,
-                      onSearch: triggerSearchEvent
-                    })
-                  ])
-                  : createCommentVNode(),
                 h('div', {
                   class: 'vxe-select--panel-wrapper'
                 }, [
+                  filterable
+                    ? h('div', {
+                      class: 'vxe-select--panel-search'
+                    }, [
+                      h(VxeInputComponent, {
+                        ref: refInpSearch,
+                        class: 'vxe-select-search--input',
+                        modelValue: reactData.searchValue,
+                        clearable: true,
+                        placeholder: getI18n('vxe.select.search'),
+                        prefixIcon: getIcon().INPUT_SEARCH,
+                        'onUpdate:modelValue': modelSearchEvent,
+                        onFocus: focusSearchEvent,
+                        onChange: triggerSearchEvent,
+                        onSearch: triggerSearchEvent
+                      })
+                    ])
+                    : createCommentVNode(),
                   headerSlot
                     ? h('div', {
                       class: 'vxe-select--panel-header'
