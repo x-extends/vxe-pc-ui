@@ -1278,24 +1278,26 @@ export default defineComponent({
       const value = inputValue
       const isDisabledPrevDateBtn = computeIsDisabledPrevDateBtn.value
       if (!isDisabledPrevDateBtn) {
+        let viewDate
         if (type === 'year') {
-          reactData.selectMonth = XEUtils.getWhatYear(selectMonth, -yearSize, 'first')
+          viewDate = XEUtils.getWhatYear(selectMonth, -yearSize, 'first')
         } else if (type === 'month' || type === 'quarter') {
           if (datePanelType === 'year') {
-            reactData.selectMonth = XEUtils.getWhatYear(selectMonth, -yearSize, 'first')
+            viewDate = XEUtils.getWhatYear(selectMonth, -yearSize, 'first')
           } else {
-            reactData.selectMonth = XEUtils.getWhatYear(selectMonth, -1, 'first')
+            viewDate = XEUtils.getWhatYear(selectMonth, -1, 'first')
           }
         } else {
           if (datePanelType === 'year') {
-            reactData.selectMonth = XEUtils.getWhatYear(selectMonth, -yearSize, 'first')
+            viewDate = XEUtils.getWhatYear(selectMonth, -yearSize, 'first')
           } else if (datePanelType === 'month') {
-            reactData.selectMonth = XEUtils.getWhatYear(selectMonth, -1, 'first')
+            viewDate = XEUtils.getWhatYear(selectMonth, -1, 'first')
           } else {
-            reactData.selectMonth = XEUtils.getWhatMonth(selectMonth, -1, 'first')
+            viewDate = XEUtils.getWhatMonth(selectMonth, -1, 'first')
           }
         }
-        inputMethods.dispatchEvent('date-prev', { value, type }, evnt)
+        reactData.selectMonth = viewDate
+        inputMethods.dispatchEvent('date-prev', { viewType: datePanelType, viewDate, value, type }, evnt)
       }
     }
 
@@ -1315,24 +1317,26 @@ export default defineComponent({
       const value = inputValue
       const isDisabledNextDateBtn = computeIsDisabledNextDateBtn.value
       if (!isDisabledNextDateBtn) {
+        let viewDate
         if (type === 'year') {
-          reactData.selectMonth = XEUtils.getWhatYear(selectMonth, yearSize, 'first')
+          viewDate = XEUtils.getWhatYear(selectMonth, yearSize, 'first')
         } else if (type === 'month' || type === 'quarter') {
           if (datePanelType === 'year') {
-            reactData.selectMonth = XEUtils.getWhatYear(selectMonth, yearSize, 'first')
+            viewDate = XEUtils.getWhatYear(selectMonth, yearSize, 'first')
           } else {
-            reactData.selectMonth = XEUtils.getWhatYear(selectMonth, 1, 'first')
+            viewDate = XEUtils.getWhatYear(selectMonth, 1, 'first')
           }
         } else {
           if (datePanelType === 'year') {
-            reactData.selectMonth = XEUtils.getWhatYear(selectMonth, yearSize, 'first')
+            viewDate = XEUtils.getWhatYear(selectMonth, yearSize, 'first')
           } else if (datePanelType === 'month') {
-            reactData.selectMonth = XEUtils.getWhatYear(selectMonth, 1, 'first')
+            viewDate = XEUtils.getWhatYear(selectMonth, 1, 'first')
           } else {
-            reactData.selectMonth = XEUtils.getWhatMonth(selectMonth, 1, 'first')
+            viewDate = XEUtils.getWhatMonth(selectMonth, 1, 'first')
           }
         }
-        inputMethods.dispatchEvent('date-next', { value, type }, evnt)
+        reactData.selectMonth = viewDate
+        inputMethods.dispatchEvent('date-next', { viewType: datePanelType, viewDate, value, type }, evnt)
       }
     }
 
