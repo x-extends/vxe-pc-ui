@@ -149,7 +149,7 @@ export function renderTitle (h: CreateElement, $xeForm: VxeFormConstructor & Vxe
   titVNs.push(
     h('span', {
       class: 'vxe-form--item-title-label'
-    }, titleSlot ? $xeForm.callSlot(titleSlot, params, h) : (rftTitle ? getSlotVNs(rftTitle(h, itemRender, params)) : getFuncText(item.title)))
+    }, titleSlot ? $xeForm.callSlot(titleSlot, params, h) : (rftTitle ? getSlotVNs(rftTitle.call($xeForm, h, itemRender, params)) : getFuncText(item.title)))
   )
   const fixVNs = []
   if (titleSuffix) {
@@ -234,7 +234,7 @@ export const renderItemContent = (h: CreateElement, $xeForm: VxeFormConstructor 
   if (defaultSlot) {
     contentVNs = $xeForm.callSlot(defaultSlot, params, h)
   } else if (rftContent) {
-    contentVNs = getSlotVNs(rftContent(h, itemRender, params))
+    contentVNs = getSlotVNs(rftContent.call($xeForm, h, itemRender, params))
   } else if (field) {
     contentVNs = [`${XEUtils.get(data, field)}`]
   }
