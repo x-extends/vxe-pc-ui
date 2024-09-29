@@ -92,6 +92,7 @@ export default defineVxeComponent({
               class: 'vxe-breadcrumb-item--content-link',
               props: {
                 title,
+                custom: true,
                 to: routerLink
               }
             }, [

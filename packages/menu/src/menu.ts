@@ -323,6 +323,7 @@ export default defineVxeComponent({
           ? h('router-link', {
             class: 'vxe-menu--item-link',
             props: {
+              custom: true,
               to: routerLink
             },
             on: {
@@ -366,6 +367,7 @@ export default defineVxeComponent({
           ? h('router-link', {
             class: 'vxe-menu--item-link',
             props: {
+              custom: true,
               to: routerLink
             },
             on: {

@@ -112,6 +112,7 @@ export default defineVxeComponent({
           props: {
             title,
             target,
+            custom: true,
             to: routerLink
           },
           on: {

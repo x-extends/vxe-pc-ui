@@ -658,22 +658,20 @@ export default defineVxeComponent({
                 name,
                 type: isFormBtn ? type : 'button',
                 disabled: btnDisabled || loading,
+                custom: true,
                 to: routerLink
               },
               on: {
                 click: $xeButton.clickTargetEvent,
                 ...btnOns
-              },
-              scopedSlots: {
-                default () {
-                  return $xeButton.renderContent(h).concat([
-                    h('i', {
-                      class: `vxe-button--dropdown-arrow ${getIcon().BUTTON_DROPDOWN}`
-                    })
-                  ])
-                }
               }
-            })
+            },
+            $xeButton.renderContent(h).concat([
+              h('i', {
+                class: `vxe-button--dropdown-arrow ${getIcon().BUTTON_DROPDOWN}`
+              })
+            ])
+            )
             : h('button', {
               ref: 'refButton',
               class: ['vxe-button', `type--${btnMode}`, align ? `align--${align}` : '', className ? (XEUtils.isFunction(className) ? className({ $button: $xeButton }) : className) : '', {
@@ -740,19 +738,15 @@ export default defineVxeComponent({
             name,
             type: isFormBtn ? type : 'button',
             disabled: btnDisabled || loading,
+            custom: true,
             to: routerLink
           },
           on: {
             click: $xeButton.clickEvent,
             mouseenter: $xeButton.mouseenterEvent,
             mouseleave: $xeButton.mouseleaveEvent
-          },
-          scopedSlots: {
-            default () {
-              return $xeButton.renderContent(h)
-            }
           }
-        })
+        }, $xeButton.renderContent(h))
       }
       return h('button', {
         ref: 'refButton',
