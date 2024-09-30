@@ -241,6 +241,16 @@ const routes: Array<RouteConfig> = [
     path: '/component/text-ellipsis',
     name: 'TextEllipsisTest',
     component: () => import('../views/text-ellipsis/TextEllipsisTest.vue')
+  },
+  {
+    path: '/component/empty',
+    name: 'EmptyTest',
+    component: () => import('../views/empty/EmptyTest.vue')
+  },
+  {
+    path: '/component/result',
+    name: 'ResultTest',
+    component: () => import('../views/result/ResultTest.vue')
   }
 ]
 

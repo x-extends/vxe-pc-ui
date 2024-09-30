@@ -208,5 +208,16 @@ declare module '@vxe-ui/core' {
     // collapse
     COLLAPSE_OPEN?: string
     COLLAPSE_CLOSE?: string
+
+    // empty
+    EMPTY_DEFAULT?: string
+
+    // result
+    RESULT_INFO?: string
+    RESULT_SUCCESS?: string
+    RESULT_WARNING?: string
+    RESULT_ERROR?: string
+    RESULT_QUESTION?: string
+    RESULT_LOADING?: string
   }
 }

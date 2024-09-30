@@ -63,8 +63,7 @@ export default defineVxeComponent({
 
       const defaultSlot = slots.default
       return h('div', {
-        ref: 'refElem',
-        class: ['vxe-collapse-pane']
+        ref: 'refElem'
       }, defaultSlot ? defaultSlot({}) : [])
     }
   },

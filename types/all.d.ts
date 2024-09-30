@@ -4,6 +4,8 @@ import { VxeUIExport, VxeGlobalConfig } from './ui'
 import VxeAlert from './components/alert'
 import VxeAnchor from './components/anchor'
 import VxeAnchorLink from './components/anchor-link'
+import VxeAvatar from './components/avatar'
+import VxeBadge from './components/badge'
 import VxeBreadcrumb from './components/breadcrumb'
 import VxeBreadcrumbItem from './components/breadcrumb-item'
 import VxeButton from './components/button'
@@ -20,6 +22,7 @@ import VxeCollapsePane from './components/collapse-pane'
 import VxeCountdown from './components/countdown'
 import VxeDatePicker from './components/date-picker'
 import VxeDrawer from './components/drawer'
+import VxeEmpty from './components/empty'
 import VxeFlowDesign from './components/flow-design'
 import VxeFlowView from './components/flow-view'
 import VxeForm from './components/form'
@@ -58,8 +61,11 @@ import VxePulldown from './components/pulldown'
 import VxeRadio from './components/radio'
 import VxeRadioButton from './components/radio-button'
 import VxeRadioGroup from './components/radio-group'
+import VxeResult from './components/result'
 import VxeRow from './components/row'
 import VxeSelect from './components/select'
+import VxeSlider from './components/slider'
+import VxeSteps from './components/steps'
 import VxeSwitch from './components/switch'
 import VxeTabPane from './components/tab-pane'
 import VxeTabs from './components/tabs'
@@ -72,6 +78,7 @@ import VxeTooltip from './components/tooltip'
 import VxeTree from './components/tree'
 import VxeTreeSelect from './components/tree-select'
 import VxeUpload from './components/upload'
+import VxeWatermark from './components/watermark'
 
 // Vxe Table
 import VxeColumn from './components/column'
@@ -92,6 +99,8 @@ interface AllComponents {
   VxeAlert: typeof VxeAlert
   VxeAnchor: typeof VxeAnchor
   VxeAnchorLink: typeof VxeAnchorLink
+  VxeAvatar: typeof VxeAvatar
+  VxeBadge: typeof VxeBadge
   VxeBreadcrumb: typeof VxeBreadcrumb
   VxeBreadcrumbItem: typeof VxeBreadcrumbItem
   VxeButton: typeof VxeButton
@@ -108,6 +117,7 @@ interface AllComponents {
   VxeCountdown: typeof VxeCountdown
   VxeDatePicker: typeof VxeDatePicker
   VxeDrawer: typeof VxeDrawer
+  VxeEmpty: typeof VxeEmpty
   VxeFlowDesign: typeof VxeFlowDesign
   VxeFlowView: typeof VxeFlowView
   VxeForm: typeof VxeForm
@@ -146,8 +156,11 @@ interface AllComponents {
   VxeRadio: typeof VxeRadio
   VxeRadioButton: typeof VxeRadioButton
   VxeRadioGroup: typeof VxeRadioGroup
+  VxeResult: typeof VxeResult
   VxeRow: typeof VxeRow
   VxeSelect: typeof VxeSelect
+  VxeSlider: typeof VxeSlider
+  VxeSteps: typeof VxeSteps
   VxeSwitch: typeof VxeSwitch
   VxeTabPane: typeof VxeTabPane
   VxeTabs: typeof VxeTabs
@@ -160,6 +173,7 @@ interface AllComponents {
   VxeTree: typeof VxeTree
   VxeTreeSelect: typeof VxeTreeSelect
   VxeUpload: typeof VxeUpload
+  VxeWatermark: typeof VxeWatermark
 
   // Vxe Table
   VxeColumn: typeof VxeColumn
@@ -179,6 +193,8 @@ export * from './ui'
 export * from './components/alert'
 export * from './components/anchor'
 export * from './components/anchor-link'
+export * from './components/avatar'
+export * from './components/badge'
 export * from './components/breadcrumb'
 export * from './components/breadcrumb-item'
 export * from './components/button'
@@ -195,6 +211,7 @@ export * from './components/collapse-pane'
 export * from './components/countdown'
 export * from './components/date-picker'
 export * from './components/drawer'
+export * from './components/empty'
 export * from './components/flow-design'
 export * from './components/flow-view'
 export * from './components/form'
@@ -233,8 +250,11 @@ export * from './components/pulldown'
 export * from './components/radio'
 export * from './components/radio-button'
 export * from './components/radio-group'
+export * from './components/result'
 export * from './components/row'
 export * from './components/select'
+export * from './components/slider'
+export * from './components/steps'
 export * from './components/switch'
 export * from './components/tab-pane'
 export * from './components/tabs'
@@ -247,6 +267,7 @@ export * from './components/tooltip'
 export * from './components/tree'
 export * from './components/tree-select'
 export * from './components/upload'
+export * from './components/watermark'
 
 // 兼容老版本
 export * from './components/column'

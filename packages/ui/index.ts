@@ -36,6 +36,8 @@ setConfig({
   alert: {},
   anchor: {},
   anchorLink: {},
+  avatar: {},
+  badge: {},
   breadcrumb: {
     separator: '/'
   },
@@ -100,6 +102,7 @@ setConfig({
     cancelClosable: true,
     confirmClosable: true
   },
+  empty: {},
   form: {
     // preventSubmit: false,
     // size: null,
@@ -246,10 +249,13 @@ setConfig({
   radioGroup: {
     strict: true
   },
+  result: {},
   row: {},
   select: {
     multiCharOverflow: 8
   },
+  slider: {},
+  steps: {},
   switch: {},
   tabPane: {},
   tabs: {},
@@ -471,7 +477,18 @@ setIcon({
 
   // collapse
   COLLAPSE_OPEN: iconPrefix + 'arrow-right rotate90',
-  COLLAPSE_CLOSE: iconPrefix + 'arrow-right'
+  COLLAPSE_CLOSE: iconPrefix + 'arrow-right',
+
+  // empty
+  EMPTY_DEFAULT: iconPrefix + 'empty',
+
+  // result
+  RESULT_INFO: iconPrefix + 'info-circle-fill',
+  RESULT_SUCCESS: iconPrefix + 'success-circle-fill',
+  RESULT_WARNING: iconPrefix + 'warning-circle-fill',
+  RESULT_ERROR: iconPrefix + 'error-circle-fill',
+  RESULT_QUESTION: iconPrefix + 'question-circle-fill',
+  RESULT_LOADING: iconPrefix + 'spinner roll'
 
 })
 
