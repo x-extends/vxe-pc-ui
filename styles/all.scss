@@ -3,6 +3,8 @@
 @import './components/alert.scss';
 @import './components/anchor.scss';
 @import './components/anchor-link.scss';
+@import './components/avatar.scss';
+@import './components/badge.scss';
 @import './components/breadcrumb.scss';
 @import './components/breadcrumb-item.scss';
 @import './components/button.scss';
@@ -19,6 +21,7 @@
 @import './components/countdown.scss';
 @import './components/date-picker.scss';
 @import './components/drawer.scss';
+@import './components/empty.scss';
 @import './components/flow-design.scss';
 @import './components/flow-view.scss';
 @import './components/form.scss';
@@ -57,8 +60,11 @@
 @import './components/radio.scss';
 @import './components/radio-button.scss';
 @import './components/radio-group.scss';
+@import './components/result.scss';
 @import './components/row.scss';
 @import './components/select.scss';
+@import './components/slider.scss';
+@import './components/steps.scss';
 @import './components/switch.scss';
 @import './components/tab-pane.scss';
 @import './components/tabs.scss';
@@ -71,3 +77,4 @@
 @import './components/tree.scss';
 @import './components/tree-select.scss';
 @import './components/upload.scss';
+@import './components/watermark.scss';

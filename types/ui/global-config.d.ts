@@ -2,6 +2,8 @@
 import { VxeAlertProps } from '../components/alert'
 import { VxeAnchorProps } from '../components/anchor'
 import { VxeAnchorLinkProps } from '../components/anchor-link'
+import { VxeAvatarProps } from '../components/avatar'
+import { VxeBadgeProps } from '../components/badge'
 import { VxeBreadcrumbProps } from '../components/breadcrumb'
 import { VxeBreadcrumbItemProps } from '../components/breadcrumb-item'
 import { VxeButtonProps } from '../components/button'
@@ -18,6 +20,7 @@ import { VxeCollapsePaneProps } from '../components/collapse-pane'
 import { VxeCountdownProps } from '../components/countdown'
 import { VxeDatePickerProps } from '../components/date-picker'
 import { VxeDrawerProps } from '../components/drawer'
+import { VxeEmptyProps } from '../components/empty'
 import { VxeFormProps } from '../components/form'
 import { VxeFormDesignProps } from '../components/form-design'
 import { VxeFormGatherProps } from '../components/form-gather'
@@ -54,8 +57,11 @@ import { VxePulldownProps } from '../components/pulldown'
 import { VxeRadioProps } from '../components/radio'
 import { VxeRadioButtonProps } from '../components/radio-button'
 import { VxeRadioGroupProps } from '../components/radio-group'
+import { VxeResultProps } from '../components/result'
 import { VxeRowProps } from '../components/row'
 import { VxeSelectProps } from '../components/select'
+import { VxeSliderProps } from '../components/slider'
+import { VxeStepsProps } from '../components/steps'
 import { VxeSwitchProps } from '../components/switch'
 import { VxeTabPaneProps } from '../components/tab-pane'
 import { VxeTabsProps } from '../components/tabs'
@@ -68,6 +74,7 @@ import { VxeTooltipProps } from '../components/tooltip'
 import { VxeTreeProps } from '../components/tree'
 import { VxeTreeSelectProps } from '../components/tree-select'
 import { VxeUploadProps } from '../components/upload'
+import { VxeWatermarkProps } from '../components/watermark'
 
 // Vxe Table
 import { VxeTableProps } from '../components/table'
@@ -81,6 +88,8 @@ declare module '@vxe-ui/core' {
     alert?: VxeAlertProps
     anchor?: VxeAnchorProps
     anchorLink?: VxeAnchorLinkProps
+    avatar?: VxeAvatarProps
+    badge?: VxeBadgeProps
     breadcrumb?: VxeBreadcrumbProps
     breadcrumbItem?: VxeBreadcrumbItemProps
     button?: VxeButtonProps
@@ -97,6 +106,7 @@ declare module '@vxe-ui/core' {
     countdown?: VxeCountdownProps
     datePicker?: VxeDatePickerProps
     drawer?: VxeDrawerProps
+    empty?: VxeEmptyProps
     form?: VxeFormProps
     formDesign?: VxeFormDesignProps
     formGather?: VxeFormGatherProps
@@ -133,8 +143,11 @@ declare module '@vxe-ui/core' {
     radio?: VxeRadioProps
     radioButton?: VxeRadioButtonProps
     radioGroup?: VxeRadioGroupProps
+    result?: VxeResultProps
     row?: VxeRowProps
     select?: VxeSelectProps
+    slider?: VxeSliderProps
+    steps?: VxeStepsProps
     switch?: VxeSwitchProps
     tabPane?: VxeTabPaneProps
     tabs?: VxeTabsProps
@@ -147,6 +160,7 @@ declare module '@vxe-ui/core' {
     tree?: VxeTreeProps
     treeSelect?: VxeTreeSelectProps
     upload?: VxeUploadProps
+    watermark?: VxeWatermarkProps
 
     table?: VxeTableProps
     column?: VxeColumnProps

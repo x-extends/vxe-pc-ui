@@ -6,6 +6,8 @@ import zhCN from './language/zh-CN'
 import VxeAlert from './alert'
 import VxeAnchor from './anchor'
 import VxeAnchorLink from './anchor-link'
+import VxeAvatar from './avatar'
+import VxeBadge from './badge'
 import VxeBreadcrumb from './breadcrumb'
 import VxeBreadcrumbItem from './breadcrumb-item'
 import VxeButton from './button'
@@ -22,6 +24,7 @@ import VxeCollapsePane from './collapse-pane'
 import VxeCountdown from './countdown'
 import VxeDatePicker from './date-picker'
 import VxeDrawer, { DrawerController } from './drawer'
+import VxeEmpty from './empty'
 import VxeForm from './form'
 import VxeFormDesign from './form-design'
 import VxeFormGather from './form-gather'
@@ -58,8 +61,11 @@ import VxePulldown from './pulldown'
 import VxeRadio from './radio'
 import VxeRadioButton from './radio-button'
 import VxeRadioGroup from './radio-group'
+import VxeResult from './result'
 import VxeRow from './row'
 import VxeSelect from './select'
+import VxeSlider from './slider'
+import VxeSteps from './steps'
 import VxeSwitch from './switch'
 import VxeTabPane from './tab-pane'
 import VxeTabs from './tabs'
@@ -72,6 +78,7 @@ import VxeTooltip from './tooltip'
 import VxeTree from './tree'
 import VxeTreeSelect from './tree-select'
 import VxeUpload from './upload'
+import VxeWatermark from './watermark'
 
 import { saveLocalFile, readLocalFile } from './upload/src/util'
 import { printHtml } from './print/src/util'
@@ -80,6 +87,8 @@ const components = [
   VxeAlert,
   VxeAnchor,
   VxeAnchorLink,
+  VxeAvatar,
+  VxeBadge,
   VxeBreadcrumb,
   VxeBreadcrumbItem,
   VxeButton,
@@ -96,6 +105,7 @@ const components = [
   VxeCountdown,
   VxeDatePicker,
   VxeDrawer,
+  VxeEmpty,
   VxeForm,
   VxeFormDesign,
   VxeFormGather,
@@ -132,8 +142,11 @@ const components = [
   VxeRadio,
   VxeRadioButton,
   VxeRadioGroup,
+  VxeResult,
   VxeRow,
   VxeSelect,
+  VxeSlider,
+  VxeSteps,
   VxeSwitch,
   VxeTabPane,
   VxeTabs,
@@ -145,7 +158,8 @@ const components = [
   VxeTooltip,
   VxeTree,
   VxeTreeSelect,
-  VxeUpload
+  VxeUpload,
+  VxeWatermark
 ]
 
 export function install (app: App, options?: VxeGlobalConfig) {
@@ -174,6 +188,8 @@ export * from './ui'
 export * from './alert'
 export * from './anchor'
 export * from './anchor-link'
+export * from './avatar'
+export * from './badge'
 export * from './breadcrumb'
 export * from './breadcrumb-item'
 export * from './button'
@@ -190,6 +206,7 @@ export * from './collapse-pane'
 export * from './countdown'
 export * from './date-picker'
 export * from './drawer'
+export * from './empty'
 export * from './form'
 export * from './form-design'
 export * from './form-gather'
@@ -226,8 +243,11 @@ export * from './pulldown'
 export * from './radio'
 export * from './radio-button'
 export * from './radio-group'
+export * from './result'
 export * from './row'
 export * from './select'
+export * from './slider'
+export * from './steps'
 export * from './switch'
 export * from './tab-pane'
 export * from './tabs'
@@ -240,3 +260,4 @@ export * from './tooltip'
 export * from './tree'
 export * from './tree-select'
 export * from './upload'
+export * from './watermark'

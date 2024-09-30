@@ -33,6 +33,8 @@ const componentList = [
   'alert',
   'anchor',
   'anchor-link',
+  'avatar',
+  'badge',
   'breadcrumb',
   'breadcrumb-item',
   'button',
@@ -49,6 +51,7 @@ const componentList = [
   'countdown',
   'date-picker',
   'drawer',
+  'empty',
   'flow-design',
   'flow-view',
   'form',
@@ -87,8 +90,11 @@ const componentList = [
   'radio',
   'radio-button',
   'radio-group',
+  'result',
   'row',
   'select',
+  'slider',
+  'steps',
   'switch',
   'tab-pane',
   'tabs',
@@ -100,7 +106,8 @@ const componentList = [
   'tooltip',
   'tree',
   'tree-select',
-  'upload'
+  'upload',
+  'watermark'
 ]
 
 const languages = [
