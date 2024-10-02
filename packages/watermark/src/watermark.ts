@@ -12,6 +12,7 @@ export default defineVxeComponent({
   data () {
     const xID = XEUtils.uniqueId()
     const reactData: WatermarkReactData = {
+      markUrl: ''
     }
     return {
       xID,

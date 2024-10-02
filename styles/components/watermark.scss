@@ -1,0 +1,10 @@
+.vxe-watermark {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  user-select: none;
+  pointer-events: none;
+  background-position: 0px 0px;
+  z-index: 999999;
+}

@@ -16,9 +16,31 @@ export interface WatermarkPrivateRef {
 export interface VxeWatermarkPrivateRef extends WatermarkPrivateRef { }
 
 export namespace VxeWatermarkPropTypes {
+  export type Width = number | string
+  export type Height = number | string
+  export type ImageUrl = string
+  export type Rotate = number
+  export type Gap = (number | string)[]
+  export type Content = number | string | VxeWatermarkDefines.ContentConf | (number | string | VxeWatermarkDefines.ContentConf)[]
+  export type Font = {
+    fontSize?: number | string
+    color?: string
+    fontWeight?: number | 'normal' | 'bolder' | 'lighter'
+    fontFamily?: string
+    fontStyle?: 'none' | 'normal' | 'italic' | 'oblique'
+  }
+  export type ZIndex = number | string
 }
 
 export interface VxeWatermarkProps {
+  width?: VxeWatermarkPropTypes.Width
+  height?: VxeWatermarkPropTypes.Height
+  imageUrl?: VxeWatermarkPropTypes.ImageUrl
+  rotate?: VxeWatermarkPropTypes.Rotate
+  gap?: VxeWatermarkPropTypes.Gap
+  content?: VxeWatermarkPropTypes.Content
+  font?: VxeWatermarkPropTypes.Font
+  zIndex?: VxeWatermarkPropTypes.ZIndex
 }
 
 export interface WatermarkPrivateComputed {
@@ -26,6 +48,7 @@ export interface WatermarkPrivateComputed {
 export interface VxeWatermarkPrivateComputed extends WatermarkPrivateComputed { }
 
 export interface WatermarkReactData {
+  markUrl: string
 }
 
 export interface WatermarkMethods {
@@ -41,6 +64,12 @@ export namespace VxeWatermarkDefines {
   export interface WatermarkEventParams extends VxeComponentEventParams {
     $watermark: VxeWatermarkConstructor
   }
+
+  export interface ContentConf {
+    Font?: VxeWatermarkPropTypes.Font
+    width?: number
+    textContent: string
+  }
 }
 
 export type VxeWatermarkEventProps = {}
@@ -50,11 +79,9 @@ export interface VxeWatermarkListeners { }
 export namespace VxeWatermarkEvents { }
 
 export namespace VxeWatermarkSlotTypes {
-  export interface DefaultSlotParams {}
 }
 
 export interface VxeWatermarkSlots {
-  default?: (params: VxeWatermarkSlotTypes.DefaultSlotParams) => any
 }
 
 export const Watermark: typeof VxeWatermark
