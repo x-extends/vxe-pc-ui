@@ -251,6 +251,11 @@ const routes: Array<RouteConfig> = [
     path: '/component/result',
     name: 'ResultTest',
     component: () => import('../views/result/ResultTest.vue')
+  },
+  {
+    path: '/component/watermark',
+    name: 'WatermarkTest',
+    component: () => import('../views/watermark/WatermarkTest.vue')
   }
 ]
 

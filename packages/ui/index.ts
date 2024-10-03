@@ -297,6 +297,10 @@ setConfig({
     showPreview: true,
     imageStyle: {}
   },
+  watermark: {
+    rotate: -30,
+    gap: [100, 100]
+  },
 
   table: {},
   colgroup: {},

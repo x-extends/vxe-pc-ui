@@ -461,7 +461,9 @@ export default defineVxeComponent({
   watch: {
     value (val) {
       const $xePulldown = this
+      const reactData = $xePulldown.reactData
 
+      reactData.isActivated = !!val
       if (val) {
         $xePulldown.showPanel()
       } else {
@@ -471,7 +473,11 @@ export default defineVxeComponent({
   },
   created () {
     const $xePulldown = this
+    const props = $xePulldown
 
+    if (props.value) {
+      $xePulldown.showPanel()
+    }
     globalEvents.on($xePulldown, 'mousewheel', $xePulldown.handleGlobalMousewheelEvent)
     globalEvents.on($xePulldown, 'mousedown', $xePulldown.handleGlobalMousedownEvent)
     globalEvents.on($xePulldown, 'blur', $xePulldown.handleGlobalBlurEvent)

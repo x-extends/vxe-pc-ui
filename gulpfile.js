@@ -106,7 +106,8 @@ const componentList = [
   'tooltip',
   'tree',
   'tree-select',
-  'upload'
+  'upload',
+  'watermark'
 ]
 
 const languages = [

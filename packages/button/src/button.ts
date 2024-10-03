@@ -471,8 +471,15 @@ export default defineVxeComponent({
       }
     },
     mouseenterTargetEvent  (evnt: MouseEvent) {
-      this.openPanel()
-      this.mouseenterEvent(evnt)
+      const $xeButton = this
+      const props = $xeButton
+
+      const { loading } = props
+      const btnDisabled = $xeButton.computeBtnDisabled
+      if (!(btnDisabled || loading)) {
+        this.openPanel()
+        this.mouseenterEvent(evnt)
+      }
     },
     mouseleaveTargetEvent  (evnt: MouseEvent) {
       this.closePanel()
@@ -489,15 +496,19 @@ export default defineVxeComponent({
       const props = $xeButton
       const reactData = $xeButton.reactData
 
-      const { trigger } = props
-      if (trigger === 'click') {
-        if (reactData.visiblePanel) {
-          this.closePanel()
-        } else {
-          this.openPanel()
+      const { loading } = props
+      const btnDisabled = $xeButton.computeBtnDisabled
+      if (!(btnDisabled || loading)) {
+        const { trigger } = props
+        if (trigger === 'click') {
+          if (reactData.visiblePanel) {
+            this.closePanel()
+          } else {
+            this.openPanel()
+          }
         }
+        this.clickEvent(evnt)
       }
-      this.clickEvent(evnt)
     },
     mouseleaveDropdownEvent  () {
       this.closePanel()

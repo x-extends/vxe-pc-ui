@@ -1,7 +1,7 @@
 import Vue, { CreateElement } from 'vue'
 import { renderEmptyElement } from '@vxe-ui/core'
 
-import type { VxeModalDefines, VxeDrawerDefines, VxeLoadingProps } from '../../types'
+import type { VxeModalDefines, VxeDrawerDefines, VxeLoadingProps, VxeWatermarkProps } from '../../types'
 
 let dynamicContainerElem: HTMLElement
 
@@ -20,12 +20,13 @@ export const DynamicApp = Vue.extend({
     return {
       modals,
       drawers,
-      globalLoading: null as null | VxeLoadingProps
+      globalLoading: null as null | VxeLoadingProps,
+      globalWatermark: null as null | VxeWatermarkProps
     }
   },
   methods: {
     renderVN (h: CreateElement) {
-      const { modals, drawers, globalLoading } = this
+      const { modals, drawers, globalLoading, globalWatermark } = this
       return h('div', {}, [
         modals.length
           ? h('div', {
@@ -46,6 +47,12 @@ export const DynamicApp = Vue.extend({
             props: item.props,
             on: item.on
           })))
+          : renderEmptyElement(this),
+        globalWatermark
+          ? h('vxe-watermark', {
+            key: 'gw',
+            props: globalWatermark
+          })
           : renderEmptyElement(this),
         globalLoading
           ? h('vxe-loading', {

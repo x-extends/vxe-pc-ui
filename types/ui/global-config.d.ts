@@ -74,6 +74,7 @@ import { VxeTooltipProps } from '../components/tooltip'
 import { VxeTreeProps } from '../components/tree'
 import { VxeTreeSelectProps } from '../components/tree-select'
 import { VxeUploadProps } from '../components/upload'
+import { VxeWatermarkProps } from '../components/watermark'
 
 // Vxe Table
 import { VxeTableProps } from '../components/table'
@@ -159,6 +160,7 @@ declare module '@vxe-ui/core' {
     tree?: VxeTreeProps
     treeSelect?: VxeTreeSelectProps
     upload?: VxeUploadProps
+    watermark?: VxeWatermarkProps
 
     table?: VxeTableProps
     column?: VxeColumnProps

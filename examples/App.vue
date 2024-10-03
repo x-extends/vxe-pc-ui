@@ -92,7 +92,8 @@ export default Vue.extend({
         { name: 'CollapseTest', routerLink: { name: 'CollapseTest' } },
         { name: 'TextEllipsisTest', routerLink: { name: 'TextEllipsisTest' } },
         { name: 'EmptyTest', routerLink: { name: 'EmptyTest' } },
-        { name: 'ResultTest', routerLink: { name: 'ResultTest' } }
+        { name: 'ResultTest', routerLink: { name: 'ResultTest' } },
+        { name: 'WatermarkTest', routerLink: { name: 'WatermarkTest' } }
       ]
     }
   },
