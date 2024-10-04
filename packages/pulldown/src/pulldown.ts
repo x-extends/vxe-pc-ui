@@ -319,6 +319,7 @@ export default defineComponent({
     Object.assign($xePulldown, pulldownMethods)
 
     watch(() => props.modelValue, (value) => {
+      reactData.isActivated = !!value
       if (value) {
         showPanel()
       } else {
@@ -327,6 +328,9 @@ export default defineComponent({
     })
 
     nextTick(() => {
+      if (props.modelValue) {
+        showPanel()
+      }
       globalEvents.on($xePulldown, 'mousewheel', handleGlobalMousewheelEvent)
       globalEvents.on($xePulldown, 'mousedown', handleGlobalMousedownEvent)
       globalEvents.on($xePulldown, 'blur', handleGlobalBlurEvent)

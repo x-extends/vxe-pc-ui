@@ -1,5 +1,5 @@
 import { RenderFunction, SetupContext, Ref } from 'vue'
-import { DefineVxeComponentApp, DefineVxeComponentOptions, DefineVxeComponentInstance, VxeComponentBaseOptions, VxeComponentEventParams } from '@vxe-ui/core'
+import { DefineVxeComponentApp, DefineVxeComponentOptions, DefineVxeComponentInstance, VxeComponentSizeType, VxeComponentBaseOptions, VxeComponentEventParams } from '@vxe-ui/core'
 
 /* eslint-disable no-use-before-define,@typescript-eslint/ban-types */
 
@@ -23,9 +23,17 @@ export interface BadgePrivateRef {
 export interface VxeBadgePrivateRef extends BadgePrivateRef { }
 
 export namespace VxeBadgePropTypes {
+  export type Count = string | number
+  export type Dot = boolean
+  export type Content = string | number
+  export type Size = VxeComponentSizeType
 }
 
 export interface VxeBadgeProps {
+  count?: VxeBadgePropTypes.Count
+  dot?: VxeBadgePropTypes.Dot
+  content?: VxeBadgePropTypes.Content
+  size?: VxeBadgePropTypes.Size
 }
 
 export interface BadgePrivateComputed {

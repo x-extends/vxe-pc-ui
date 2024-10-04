@@ -126,9 +126,10 @@ export const VxeModal = Object.assign(VxeModalComponent, {
   }
 })
 
+VxeUI.modal = ModalController
+
 dynamicApp.use(VxeModal)
 VxeUI.component(VxeModalComponent)
-VxeUI.modal = ModalController
 
 export const Modal = VxeModal
 

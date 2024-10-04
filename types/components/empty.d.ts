@@ -1,5 +1,5 @@
 import { RenderFunction, SetupContext, Ref } from 'vue'
-import { DefineVxeComponentApp, DefineVxeComponentOptions, DefineVxeComponentInstance, VxeComponentBaseOptions, VxeComponentEventParams, VxeComponentStyleType } from '@vxe-ui/core'
+import { DefineVxeComponentApp, DefineVxeComponentOptions, DefineVxeComponentInstance, VxeComponentStatusType, VxeComponentBaseOptions, VxeComponentEventParams, VxeComponentStyleType } from '@vxe-ui/core'
 
 /* eslint-disable no-use-before-define,@typescript-eslint/ban-types */
 
@@ -26,6 +26,7 @@ export namespace VxeEmptyPropTypes {
   export type ImageUrl = string
   export type ImageStyle = VxeComponentStyleType
   export type Icon = string
+  export type Status = VxeComponentStatusType
   export type Content = number | string
 }
 
@@ -33,6 +34,7 @@ export interface VxeEmptyProps {
   imageUrl?: VxeEmptyPropTypes.ImageUrl
   imageStyle?: VxeEmptyPropTypes.ImageStyle
   icon?: VxeEmptyPropTypes.Icon
+  status?: VxeEmptyPropTypes.Status
   content?: VxeEmptyPropTypes.Content
 }
 

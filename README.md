@@ -27,6 +27,8 @@
 * [x] alert 警告提示
 * [x] anchor 锚点
 * [x] anchor-link 锚点-链接
+* [x] avatar 头像
+* [x] badge 徽标
 * [x] breadcrumb 面包屑
 * [x] breadcrumb-item 面包屑-项
 * [x] button 按钮
@@ -38,10 +40,11 @@
 * [x] checkbox 复选框
 * [x] checkbox-group 复选框-组
 * [x] col 列
-* [ ] collapse 展开面板
-* [ ] collapse-pane 展开面板-容器
+* [x] collapse 展开面板
+* [x] collapse-pane 展开面板-容器
 * [x] date-picker 日期选择器
 * [x] drawer 抽屉
+* [x] empty 空数据
 * [ ] flow-design 流程设计器
 * [ ] flow-view 流程设计器-视图渲染
 * [x] form 表单
@@ -80,6 +83,8 @@
 * [x] radio-group 单选框-组
 * [x] row 行
 * [x] select 下拉框
+* [x] slider 滑块
+* [x] steps 步骤条
 * [x] switch 开关
 * [x] tab-pane 页签-容器
 * [x] tabs 页签
@@ -89,6 +94,7 @@
 * [x] tree 树形组件
 * [x] tree-select 树形下拉框
 * [x] upload 附件上传
+* [x] watermark 水印
 
 [👀 Vxe Table](https://vxetable.cn)  
 

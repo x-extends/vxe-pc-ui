@@ -356,8 +356,12 @@ export default defineComponent({
     }
 
     const mouseenterTargetEvent = (evnt: MouseEvent) => {
-      openPanel()
-      mouseenterEvent(evnt)
+      const { loading } = props
+      const btnDisabled = computeBtnDisabled.value
+      if (!(btnDisabled || loading)) {
+        openPanel()
+        mouseenterEvent(evnt)
+      }
     }
 
     const mouseleaveTargetEvent = (evnt: MouseEvent) => {
@@ -374,15 +378,18 @@ export default defineComponent({
     }
 
     const clickTargetEvent = (evnt: MouseEvent) => {
-      const { trigger } = props
-      if (trigger === 'click') {
-        if (reactData.visiblePanel) {
-          closePanel()
-        } else {
-          openPanel()
+      const { loading, trigger } = props
+      const btnDisabled = computeBtnDisabled.value
+      if (!(btnDisabled || loading)) {
+        if (trigger === 'click') {
+          if (reactData.visiblePanel) {
+            closePanel()
+          } else {
+            openPanel()
+          }
         }
+        clickEvent(evnt)
       }
-      clickEvent(evnt)
     }
 
     const openPanel = () => {

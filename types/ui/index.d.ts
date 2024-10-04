@@ -3,6 +3,7 @@ import { VxeUI, getI18n, setConfig } from '@vxe-ui/core'
 import { LoadingController } from '../components/loading'
 import { ModalController } from '../components/modal'
 import { DrawerController } from '../components/drawer'
+import { WatermarkController } from '../components/watermark'
 import { VxePrintDefines } from '../components/print'
 import { VxeUploadDefines } from '../components/upload'
 import { VxeImageDefines } from '../components/image'
@@ -23,6 +24,7 @@ export const setup: typeof setConfig
 export const loading: LoadingController
 export const modal: ModalController
 export const drawer: DrawerController
+export const watermark: WatermarkController
 export const print: VxePrintDefines.PrintFunction
 export const saveFile: VxeUploadDefines.SaveFileFunction
 export const readFile: VxeUploadDefines.ReadFileFunction
@@ -34,6 +36,7 @@ declare module '@vxe-ui/core' {
     loading: LoadingController
     modal: ModalController
     drawer: DrawerController
+    watermark: WatermarkController
     dynamicApp: App<Element>
 
     formDesignHandle: FormDesignHandleExport

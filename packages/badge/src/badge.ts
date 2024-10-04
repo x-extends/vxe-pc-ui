@@ -1,21 +1,30 @@
-import { defineComponent, ref, h, reactive } from 'vue'
+import { defineComponent, ref, h, computed, reactive, PropType } from 'vue'
 import XEUtils from 'xe-utils'
-import { createEvent } from '../../ui'
+import { getConfig, createEvent, useSize, renderEmptyElement } from '../../ui'
 
-import type { BadgeReactData, VxeBadgeEmits, BadgeMethods, BadgePrivateMethods, ValueOf, BadgePrivateRef, VxeBadgePrivateComputed, VxeBadgeConstructor, VxeBadgePrivateMethods } from '../../../types'
+import type { BadgeReactData, VxeBadgeEmits, VxeBadgePropTypes, BadgeMethods, BadgePrivateMethods, ValueOf, BadgePrivateRef, VxeBadgePrivateComputed, VxeBadgeConstructor, VxeBadgePrivateMethods } from '../../../types'
 
 export default defineComponent({
   name: 'VxeBadge',
   props: {
+    count: [String, Number] as PropType<VxeBadgePropTypes.Count>,
+    dot: Boolean as PropType<VxeBadgePropTypes.Dot>,
+    content: [String, Number] as PropType<VxeBadgePropTypes.Content>,
+    size: {
+      type: String as PropType<VxeBadgePropTypes.Size>,
+      default: () => getConfig().badge.size || getConfig().size
+    }
   },
   emits: [
   ] as VxeBadgeEmits,
   setup (props, context) {
-    const { emit } = context
+    const { emit, slots } = context
 
     const xID = XEUtils.uniqueId()
 
     const refElem = ref<HTMLDivElement>()
+
+    const { computeSize } = useSize(props)
 
     const reactData = reactive<BadgeReactData>({
     })
@@ -23,6 +32,11 @@ export default defineComponent({
     const refMaps: BadgePrivateRef = {
       refElem
     }
+
+    const computeCountNum = computed(() => {
+      const { count } = props
+      return count ? XEUtils.toNumber(count) : 0
+    })
 
     const computeMaps: VxeBadgePrivateComputed = {
     }
@@ -51,10 +65,28 @@ export default defineComponent({
     Object.assign($xeBadge, collapsePaneMethods, collapsePanePrivateMethods)
 
     const renderVN = () => {
+      const { dot, content } = props
+      const vSize = computeSize.value
+      const countNum = computeCountNum.value
+      const defaultSlot = slots.default
       return h('div', {
         ref: refElem,
-        class: 'vxe-badge'
-      }, [])
+        class: ['vxe-badge', {
+          [`size--${vSize}`]: vSize,
+          'is--dot': dot
+        }]
+      }, [
+        defaultSlot || content
+          ? h('div', {
+            class: 'vxe-badge--content'
+          }, defaultSlot ? defaultSlot({}) : `${content || ''}`)
+          : [],
+        countNum
+          ? h('span', {
+            class: 'vxe-badge--count'
+          }, countNum > 99 ? '99+' : `${countNum}`)
+          : renderEmptyElement($xeBadge)
+      ])
     }
 
     $xeBadge.renderVN = renderVN

@@ -10,6 +10,7 @@ export default defineComponent({
     imageUrl: String as PropType<VxeEmptyPropTypes.ImageUrl>,
     imageStyle: Object as PropType<VxeEmptyPropTypes.ImageStyle>,
     icon: String as PropType<VxeEmptyPropTypes.Icon>,
+    status: String as PropType<VxeEmptyPropTypes.Status>,
     content: [String, Number] as PropType<VxeEmptyPropTypes.Content>
   },
   emits: [
@@ -55,10 +56,12 @@ export default defineComponent({
     Object.assign($xeEmpty, collapsePaneMethods, collapsePanePrivateMethods)
 
     const renderVN = () => {
-      const { imageUrl, imageStyle, icon, content } = props
+      const { imageUrl, imageStyle, icon, status, content } = props
       return h('div', {
         ref: refElem,
-        class: 'vxe-empty'
+        class: ['vxe-empty', {
+          [`theme--${status}`]: status
+        }]
       }, [
         h('div', {
           class: 'vxe-empty--inner'

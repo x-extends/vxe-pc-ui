@@ -67,9 +67,10 @@ export const VxeDrawer = Object.assign(VxeDrawerComponent, {
   }
 })
 
+VxeUI.drawer = DrawerController
+
 dynamicApp.use(VxeDrawer)
 VxeUI.component(VxeDrawerComponent)
-VxeUI.drawer = DrawerController
 
 export const Drawer = VxeDrawer
 

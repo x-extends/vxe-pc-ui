@@ -78,7 +78,7 @@ import VxeTooltip from './tooltip'
 import VxeTree from './tree'
 import VxeTreeSelect from './tree-select'
 import VxeUpload from './upload'
-import VxeWatermark from './watermark'
+import VxeWatermark, { WatermarkController } from './watermark'
 
 import { saveLocalFile, readLocalFile } from './upload/src/util'
 import { printHtml } from './print/src/util'
@@ -178,6 +178,7 @@ setTheme('light')
 export const loading = LoadingController
 export const modal = ModalController
 export const drawer = DrawerController
+export const watermark = WatermarkController
 export const print = printHtml
 export const saveFile = saveLocalFile
 export const readFile = readLocalFile

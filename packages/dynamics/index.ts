@@ -1,7 +1,7 @@
 import { defineComponent, h, createApp, reactive, createCommentVNode } from 'vue'
 import { VxeUI } from '@vxe-ui/core'
 
-import type { VxeModalDefines, VxeModalComponent, VxeLoadingComponent, VxeDrawerDefines, VxeLoadingProps, VxeDrawerComponent } from '../../types'
+import type { VxeModalDefines, VxeModalComponent, VxeLoadingComponent, VxeDrawerDefines, VxeLoadingProps, VxeDrawerComponent, VxeWatermarkComponent, VxeWatermarkProps } from '../../types'
 
 let dynamicContainerElem: HTMLElement
 
@@ -9,10 +9,12 @@ export const dynamicStore = reactive<{
   modals: VxeModalDefines.ModalOptions[]
   drawers: VxeDrawerDefines.DrawerOptions[]
   globalLoading: null | VxeLoadingProps
+  globalWatermark: null | VxeWatermarkProps
 }>({
   modals: [],
   drawers: [],
-  globalLoading: null
+  globalLoading: null,
+  globalWatermark: null
 })
 
 /**
@@ -23,9 +25,10 @@ const VxeDynamics = defineComponent({
     const VxeUIModalComponent = VxeUI.getComponent<VxeModalComponent>('VxeModal')
     const VxeUIDrawerComponent = VxeUI.getComponent<VxeDrawerComponent>('VxeDrawer')
     const VxeUILoadingComponent = VxeUI.getComponent<VxeLoadingComponent>('VxeTooltip')
+    const VxeUIWatermarkComponent = VxeUI.getComponent<VxeWatermarkComponent>('VxeWatermark')
 
     return () => {
-      const { modals, drawers, globalLoading } = dynamicStore
+      const { modals, drawers, globalWatermark, globalLoading } = dynamicStore
       return [
         modals.length
           ? h('div', {
@@ -39,6 +42,7 @@ const VxeDynamics = defineComponent({
             class: 'vxe-dynamics--drawer'
           }, drawers.map((item) => h(VxeUIDrawerComponent, item)))
           : createCommentVNode(),
+        globalWatermark ? h(VxeUIWatermarkComponent, globalWatermark) : createCommentVNode(),
         globalLoading ? h(VxeUILoadingComponent, globalLoading) : createCommentVNode()
       ]
     }
