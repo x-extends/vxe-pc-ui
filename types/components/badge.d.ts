@@ -1,4 +1,4 @@
-import { DefineVxeComponentApp, DefineVxeComponentOptions, DefineVxeComponentInstance, VxeComponentEventParams } from '@vxe-ui/core'
+import { DefineVxeComponentApp, DefineVxeComponentOptions, DefineVxeComponentInstance, VxeComponentSizeType, VxeComponentEventParams } from '@vxe-ui/core'
 
 /* eslint-disable @typescript-eslint/no-empty-interface,no-use-before-define,@typescript-eslint/ban-types */
 
@@ -16,9 +16,17 @@ export interface BadgePrivateRef {
 export interface VxeBadgePrivateRef extends BadgePrivateRef { }
 
 export namespace VxeBadgePropTypes {
+  export type Count = string | number
+  export type Dot = boolean
+  export type Content = string | number
+  export type Size = VxeComponentSizeType
 }
 
 export interface VxeBadgeProps {
+  count?: VxeBadgePropTypes.Count
+  dot?: VxeBadgePropTypes.Dot
+  content?: VxeBadgePropTypes.Content
+  size?: VxeBadgePropTypes.Size
 }
 
 export interface BadgePrivateComputed {

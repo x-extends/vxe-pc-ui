@@ -1,4 +1,4 @@
-import { DefineVxeComponentApp, DefineVxeComponentOptions, DefineVxeComponentInstance, VxeComponentEventParams } from '@vxe-ui/core'
+import { DefineVxeComponentApp, DefineVxeComponentOptions, DefineVxeComponentInstance, VxeComponentEventParams, VxeComponentStatusType, VxeComponentSizeType } from '@vxe-ui/core'
 
 /* eslint-disable @typescript-eslint/no-empty-interface,no-use-before-define,@typescript-eslint/ban-types */
 
@@ -16,9 +16,29 @@ export interface AvatarPrivateRef {
 export interface VxeAvatarPrivateRef extends AvatarPrivateRef { }
 
 export namespace VxeAvatarPropTypes {
+  export type Count = string | number
+  export type Dot = boolean
+  export type Content = string | number
+  export type Icon = string
+  export type Src = string
+  export type Width = string | number
+  export type Height = string | number
+  export type Circle = boolean
+  export type Status = VxeComponentStatusType
+  export type Size = VxeComponentSizeType
 }
 
 export interface VxeAvatarProps {
+  count?: VxeAvatarPropTypes.Count
+  dot?: VxeAvatarPropTypes.Dot
+  content?: VxeAvatarPropTypes.Content
+  icon?: VxeAvatarPropTypes.Icon
+  src?: VxeAvatarPropTypes.Src
+  width?: VxeAvatarPropTypes.Width
+  height?: VxeAvatarPropTypes.Height
+  circle?: VxeAvatarPropTypes.Circle
+  status?: VxeAvatarPropTypes.Status
+  size?: VxeAvatarPropTypes.Size
 }
 
 export interface AvatarPrivateComputed {
