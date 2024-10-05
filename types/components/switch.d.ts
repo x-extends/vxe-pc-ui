@@ -25,7 +25,7 @@ export interface VxeSwitchPrivateRef extends SwitchPrivateRef { }
 
 export namespace VxeSwitchPropTypes {
   export type Size = VxeComponentSizeType
-  export type ModelValue = string | number | boolean
+  export type ModelValue = string | number | boolean | null
   export type Disabled = boolean
   export type Readonly = boolean
   export type OpenLabel = string

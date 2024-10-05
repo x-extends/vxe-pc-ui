@@ -254,7 +254,10 @@ setConfig({
   select: {
     multiCharOverflow: 8
   },
-  slider: {},
+  slider: {
+    max: 100,
+    min: 0
+  },
   steps: {},
   switch: {},
   tabPane: {},
