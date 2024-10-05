@@ -266,6 +266,11 @@ const routes: Array<RouteConfig> = [
     path: '/component/avatar',
     name: 'AvatarTest',
     component: () => import('../views/avatar/AvatarTest.vue')
+  },
+  {
+    path: '/component/slider',
+    name: 'SliderTest',
+    component: () => import('../views/slider/SliderTest.vue')
   }
 ]
 

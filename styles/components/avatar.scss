@@ -1,4 +1,4 @@
-$btnThemeList: (
+$avatarThemeList: (
   (
     name: "primary",
     textColor: var(--vxe-ui-font-primary-color),
@@ -28,11 +28,6 @@ $btnThemeList: (
     name: "error",
     textColor: var(--vxe-ui-status-error-color),
     btnColor: #fff,
-  ),
-  (
-    name: "perfect",
-    textColor: var(--vxe-ui-table-header-background-color),
-    btnColor: var(--vxe-ui-font-color),
   )
 );
 
@@ -64,8 +59,8 @@ $btnThemeList: (
       z-index: 1;
     }
   }
-  @for $index from 0 to length($btnThemeList) {
-    $item: nth($btnThemeList, $index + 1);
+  @for $index from 0 to length($avatarThemeList) {
+    $item: nth($avatarThemeList, $index + 1);
     $textColor: map-get($item, textColor);
     $btnColor: map-get($item, btnColor);
     &.theme--#{map-get($item, name)} {

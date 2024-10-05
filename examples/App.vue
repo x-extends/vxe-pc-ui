@@ -95,7 +95,8 @@ export default Vue.extend({
         { name: 'ResultTest', routerLink: { name: 'ResultTest' } },
         { name: 'WatermarkTest', routerLink: { name: 'WatermarkTest' } },
         { name: 'BadgeTest', routerLink: { name: 'BadgeTest' } },
-        { name: 'AvatarTest', routerLink: { name: 'AvatarTest' } }
+        { name: 'AvatarTest', routerLink: { name: 'AvatarTest' } },
+        { name: 'SliderTest', routerLink: { name: 'SliderTest' } }
       ]
     }
   },
