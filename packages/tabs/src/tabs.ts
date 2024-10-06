@@ -261,21 +261,27 @@ export default defineVxeComponent({
       const beforeMethod = props.beforeChangeMethod || getConfig().tabs.beforeChangeMethod
       const { activeName } = reactData
       const { name } = item
+      const value = name
+      $xeTabs.dispatchEvent('tab-click', { name }, evnt)
       if (trigger === 'manual') {
-        $xeTabs.dispatchEvent('tab-click', { name }, evnt)
         return
       }
-      const value = name
-      reactData.activeName = name
-      $xeTabs.emitModel(value)
-      $xeTabs.dispatchEvent('tab-click', { name }, evnt)
-      $xeTabs.addInitName(name, evnt)
       if (name !== activeName) {
-        if (!beforeMethod || beforeMethod({ $tabs: $xeTabs, name, oldName: activeName, newName: name, option: item })) {
-          $xeTabs.dispatchEvent('change', { value, name, oldName: activeName, newName: name, option: item }, evnt)
-        } else {
+        Promise.resolve(
+          !beforeMethod || beforeMethod({ $tabs: $xeTabs, name, oldName: activeName, newName: name, option: item })
+        ).then((status) => {
+          if (status) {
+            reactData.activeName = name
+            $xeTabs.emitModel(value)
+            $xeTabs.addInitName(name, evnt)
+            $xeTabs.dispatchEvent('change', { value, name, oldName: activeName, newName: name, option: item }, evnt)
+            $xeTabs.dispatchEvent('tab-change', { value, name, oldName: activeName, newName: name, option: item }, evnt)
+          } else {
+            $xeTabs.dispatchEvent('tab-change-fail', { value, name, oldName: activeName, newName: name, option: item }, evnt)
+          }
+        }).catch(() => {
           $xeTabs.dispatchEvent('tab-change-fail', { value, name, oldName: activeName, newName: name, option: item }, evnt)
-        }
+        })
       }
     },
     handleRefreshTabEvent (evnt: KeyboardEvent, item: VxeTabPaneDefines.TabConfig | VxeTabPaneProps) {
@@ -317,11 +323,17 @@ export default defineVxeComponent({
         const nextItem = index < list.length - 1 ? list[index + 1] : list[index - 1]
         nextName = nextItem ? nextItem.name : null
       }
-      if (!beforeMethod || beforeMethod({ $tabs: $xeTabs, value, name, nextName, option: item })) {
-        $xeTabs.dispatchEvent('tab-close', { value, name, nextName }, evnt)
-      } else {
+      Promise.resolve(
+        !beforeMethod || beforeMethod({ $tabs: $xeTabs, value, name, nextName, option: item })
+      ).then(status => {
+        if (status) {
+          $xeTabs.dispatchEvent('tab-close', { value, name, nextName }, evnt)
+        } else {
+          $xeTabs.dispatchEvent('tab-close-fail', { value, name, nextName }, evnt)
+        }
+      }).catch(() => {
         $xeTabs.dispatchEvent('tab-close-fail', { value, name, nextName }, evnt)
-      }
+      })
     },
     startScrollAnimation  (offsetPos: number, offsetSize: number) {
       const $xeTabs = this
