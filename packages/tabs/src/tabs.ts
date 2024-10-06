@@ -33,6 +33,7 @@ export default defineComponent({
   emits: [
     'update:modelValue',
     'change',
+    'tab-change',
     'tab-change-fail',
     'tab-close',
     'tab-close-fail',
@@ -209,21 +210,27 @@ export default defineComponent({
       const beforeMethod = props.beforeChangeMethod || getConfig().tabs.beforeChangeMethod
       const { activeName } = reactData
       const { name } = item
+      const value = name
+      dispatchEvent('tab-click', { name }, evnt)
       if (trigger === 'manual') {
-        dispatchEvent('tab-click', { name }, evnt)
         return
       }
-      const value = name
-      reactData.activeName = name
-      emit('update:modelValue', value)
-      dispatchEvent('tab-click', { name }, evnt)
-      addInitName(name, evnt)
       if (name !== activeName) {
-        if (!beforeMethod || beforeMethod({ $tabs: $xeTabs, name, oldName: activeName, newName: name, option: item })) {
-          dispatchEvent('change', { value, name, oldName: activeName, newName: name, option: item }, evnt)
-        } else {
+        Promise.resolve(
+          !beforeMethod || beforeMethod({ $tabs: $xeTabs, name, oldName: activeName, newName: name, option: item })
+        ).then((status) => {
+          if (status) {
+            reactData.activeName = name
+            emit('update:modelValue', value)
+            addInitName(name, evnt)
+            dispatchEvent('change', { value, name, oldName: activeName, newName: name, option: item }, evnt)
+            dispatchEvent('tab-change', { value, name, oldName: activeName, newName: name, option: item }, evnt)
+          } else {
+            dispatchEvent('tab-change-fail', { value, name, oldName: activeName, newName: name, option: item }, evnt)
+          }
+        }).catch(() => {
           dispatchEvent('tab-change-fail', { value, name, oldName: activeName, newName: name, option: item }, evnt)
-        }
+        })
       }
     }
 
@@ -260,11 +267,17 @@ export default defineComponent({
         const nextItem = index < list.length - 1 ? list[index + 1] : list[index - 1]
         nextName = nextItem ? nextItem.name : null
       }
-      if (!beforeMethod || beforeMethod({ $tabs: $xeTabs, value, name, nextName, option: item })) {
-        dispatchEvent('tab-close', { value, name, nextName }, evnt)
-      } else {
+      Promise.resolve(
+        !beforeMethod || beforeMethod({ $tabs: $xeTabs, value, name, nextName, option: item })
+      ).then(status => {
+        if (status) {
+          dispatchEvent('tab-close', { value, name, nextName }, evnt)
+        } else {
+          dispatchEvent('tab-close-fail', { value, name, nextName }, evnt)
+        }
+      }).catch(() => {
         dispatchEvent('tab-close-fail', { value, name, nextName }, evnt)
-      }
+      })
     }
 
     const startScrollAnimation = (offsetPos: number, offsetSize: number) => {

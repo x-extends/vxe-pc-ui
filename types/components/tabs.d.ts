@@ -40,7 +40,7 @@ export namespace VxeTabsPropTypes {
     oldName: VxeTabsPropTypes.ModelValue
     newName: VxeTabsPropTypes.ModelValue
     option: Omit<VxeTabPaneProps, 'slots'>
-  }) => boolean
+  }) => boolean | Promise<boolean>
   /**
    * 请使用 closeConfig.beforeMethod
    * @deprecated
@@ -67,7 +67,7 @@ export namespace VxeTabsPropTypes {
       name: VxeTabsPropTypes.ModelValue
       nextName: VxeTabsPropTypes.ModelValue | null
       option: Omit<VxeTabPaneProps, 'slots'>
-    }) => boolean
+    }) => boolean | Promise<boolean>
     /**
      * 显示关闭按钮方法，该方法的返回值用来决定当前页签的关闭按钮是否显示
      * @returns boolean
@@ -188,6 +188,7 @@ export interface VxeTabsPrivateMethods extends TabsPrivateMethods { }
 export type VxeTabsEmits = [
   'update:modelValue',
   'change',
+  'tab-change',
   'tab-change-fail',
   'tab-close',
   'tab-close-fail',
@@ -206,6 +207,8 @@ export namespace VxeTabsDefines {
     oldName: VxeTabsPropTypes.ModelValue
     newName: VxeTabsPropTypes.ModelValue
   }
+
+  export interface TabChangeEventParams extends ChangeEventParams {}
 
   export interface TabChangeFailEventParams extends TabsEventParams {
     value: VxeTabsPropTypes.ModelValue
@@ -234,6 +237,7 @@ export namespace VxeTabsDefines {
 
 export type VxeTabsEventProps = {
   onChange?: VxeTabsEvents.Change
+  onTabChange?: VxeTabsEvents.TabChange
   onTabChangeFail?: VxeTabsEvents.TabChangeFail
   onTabClose?: VxeTabsEvents.TabClose
   onTabCloseFail?: VxeTabsEvents.TabCloseFail
@@ -243,6 +247,7 @@ export type VxeTabsEventProps = {
 
 export interface VxeTabsListeners {
   change?: VxeTabsEvents.Change
+  tabChange?: VxeTabsEvents.TabChange
   tabChangeFail?: VxeTabsEvents.TabChangeFail
   tabClose?: VxeTabsEvents.TabClose
   tabCloseFail?: VxeTabsEvents.TabCloseFail
@@ -252,6 +257,7 @@ export interface VxeTabsListeners {
 
 export namespace VxeTabsEvents {
   export type Change = (params: VxeTabsDefines.ChangeEventParams) => void
+  export type TabChange = (params: VxeTabsDefines.TabChangeEventParams) => void
   export type TabChangeFail = (params: VxeTabsDefines.TabChangeFailEventParams) => void
   export type TabClose = (params: VxeTabsDefines.TabCloseEventParams) => void
   export type TabCloseFail = (params: VxeTabsDefines.TabCloseFailEventParams) => void
