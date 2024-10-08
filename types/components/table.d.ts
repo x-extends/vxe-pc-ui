@@ -2392,9 +2392,9 @@ export interface TableInternalData<D = any> {
   // 渲染所有列
   visibleColumn: VxeTableDefines.ColumnInfo<D>[]
   // 缓存数据集
-  fullAllDataRowIdData: Record<string, VxeTableDefines.RowCacheItem>
+  fullAllDataRowIdData: Record<string, VxeTableDefines.RowCacheItem<D>>
   sourceDataRowIdData: Record<string, D>
-  fullDataRowIdData: Record<string, VxeTableDefines.RowCacheItem>
+  fullDataRowIdData: Record<string, VxeTableDefines.RowCacheItem<D>>
   fullColumnIdData: Record<string, VxeTableDefines.ColumnCacheItem<D>>
   fullColumnFieldData: Record<string, VxeTableDefines.ColumnCacheItem<D>>
   // 列选取状态
@@ -3256,7 +3256,7 @@ export namespace VxeTableDefines {
     slots?: VxeColumnPropTypes.Slots<D>
   }
 
-  export interface RowCacheItem {
+  export interface RowCacheItem<D = any> {
     row: D
     rowid: string
     seq: string | number

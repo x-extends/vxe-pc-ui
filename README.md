@@ -145,15 +145,76 @@ createApp(App).use(VxeUI).use(VxeTable).mount('#app')
 ***不建议将第三方的 CDN 地址用于正式环境，因为该连接随时都可能会失效***  
 
 ```HTML
-<!-- style -->
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/vxe-pc-ui/lib/style.css">
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/vxe-table@next/lib/style.css">
-<!-- vue -->
-<script src="https://cdn.jsdelivr.net/npm/vue"></script>
-<!-- table -->
-<script src="https://cdn.jsdelivr.net/npm/xe-utils"></script>
-<script src="https://cdn.jsdelivr.net/npm/vxe-pc-ui"></script>
-<script src="https://cdn.jsdelivr.net/npm/vxe-table@next"></script>
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <!-- style -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/vxe-pc-ui@4/lib/style.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/vxe-table@4/lib/style.css">
+  <!-- vue -->
+  <script src="https://cdn.jsdelivr.net/npm/vue@3"></script>
+  <!-- table -->
+  <script src="https://cdn.jsdelivr.net/npm/xe-utils"></script>
+  <script src="https://cdn.jsdelivr.net/npm/vxe-pc-ui@4"></script>
+  <script src="https://cdn.jsdelivr.net/npm/vxe-table@4"></script>
+</head>
+<body>
+  <div id="app">
+    <div>
+      <vxe-form
+        :data="formData"
+        @submit="submitEvent">
+        <vxe-form-item title="名称" field="name" span="12" :item-render="{}">
+          <template #default="params">
+            <vxe-input v-model="formData.name"></vxe-input>
+          </template>
+        </vxe-form-item>
+        <vxe-form-item title="角色" field="role" span="12" :item-render="{}">
+          <template #default="params">
+            <vxe-input v-model="formData.role"></vxe-input>
+          </template>
+        </vxe-form-item>
+        <vxe-form-item title="年龄" field="age" span="12" :item-render="{}">
+          <template #default="params">
+            <vxe-input v-model="formData.age"></vxe-input>
+          </template>
+        </vxe-form-item>
+        <vxe-form-item align="center" span="24" :item-render="{}">
+          <template #default>
+            <vxe-button type="submit" status="primary">提交</vxe-button>
+            <vxe-button type="reset">重置</vxe-button>
+          </template>
+        </vxe-form-item>
+      </vxe-form>
+    </div>
+  </div>
+  <script>
+    (function () {
+      var App = {
+        data() {
+          return {
+            formData: {
+              name: '',
+              nickname: '',
+              sex: '',
+              role: ''
+            }
+          }
+        },
+        methods: {
+          submitEvent () {
+            VxeUI.modal.message({ content: '保存成功', status: 'success' })
+          }
+        }
+      }
+      Vue.createApp(App).use(VxeUI).use(VXETable).mount('#app')
+    })()
+  </script>
+</body>
+</html>
 ```
 
 ## 示例
@@ -162,12 +223,11 @@ createApp(App).use(VxeUI).use(VxeTable).mount('#app')
 <template>
   <div>
     <vxe-form
-      ref="formRef"
       :data="formData"
       @submit="submitEvent">
       <vxe-form-item title="名称" field="name" span="12" :item-render="{}">
         <template #default="params">
-          <vxe-input v-model="formData.name""></vxe-input>
+          <vxe-input v-model="formData.name"></vxe-input>
         </template>
       </vxe-form-item>
       <vxe-form-item title="角色" field="role" span="12" :item-render="{}">
@@ -190,28 +250,23 @@ createApp(App).use(VxeUI).use(VxeTable).mount('#app')
   </div>
 </template>
 
-<script lang="ts" setup>
-import { ref } from 'vue'
-import { VxeUI, VxeFormInstance, VxeFormEvents } from 'vxe-pc-ui'
-
-interface FormDataVO {
-  name: string
-  nickname: string
-  sex: string
-  role: string
-}
-
-const formRef = ref<VxeFormInstance<FormDataVO>>()
-
-const formData = ref<FormDataVO>({
-  name: '',
-  nickname: '',
-  sex: '',
-  role: ''
-})
-
-const submitEvent: VxeFormEvents.Submit = () => {
-  VxeUI.modal.message({ content: '保存成功', status: 'success' })
+<script>
+export default {
+  data() {
+    return {
+      formData: {
+        name: '',
+        nickname: '',
+        sex: '',
+        role: ''
+      }
+    }
+  },
+  methods: {
+    submitEvent () {
+      VxeUI.modal.message({ content: '保存成功', status: 'success' })
+    }
+  }
 }
 </script>
 ```
