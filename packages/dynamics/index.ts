@@ -24,7 +24,7 @@ const VxeDynamics = defineComponent({
   setup () {
     const VxeUIModalComponent = VxeUI.getComponent<VxeModalComponent>('VxeModal')
     const VxeUIDrawerComponent = VxeUI.getComponent<VxeDrawerComponent>('VxeDrawer')
-    const VxeUILoadingComponent = VxeUI.getComponent<VxeLoadingComponent>('VxeTooltip')
+    const VxeUILoadingComponent = VxeUI.getComponent<VxeLoadingComponent>('VxeLoading')
     const VxeUIWatermarkComponent = VxeUI.getComponent<VxeWatermarkComponent>('VxeWatermark')
 
     return () => {
