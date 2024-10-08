@@ -145,20 +145,5 @@ export interface VxeTooltipSlots {
   default?: (params: VxeTooltipSlotTypes.DefaultSlotParams) => any
 }
 
-/**
- * 全局工具提示
- */
-export interface LoadingController {
-  /**
-   * 打开
-   * @param options 参数
-   */
-  open(options?: VxeTooltipProps): void
-  /**
-   * 关闭
-   */
-  close(): void
-}
-
 export const Tooltip: typeof VxeTooltip
 export default VxeTooltip

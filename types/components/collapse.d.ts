@@ -91,8 +91,6 @@ export interface VxeCollapseSlots {
    * 自定义插槽模板
    */
   [key: string]: ((params: {
-    name: VxeTabsPropTypes.ModelValue
-
     [key: string]: any
   }) => any) | undefined
 
