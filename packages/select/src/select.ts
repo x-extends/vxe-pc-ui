@@ -3,10 +3,10 @@ import XEUtils from 'xe-utils'
 import { getConfig, getIcon, getI18n, globalEvents, GLOBAL_EVENT_KEYS, createEvent, useSize } from '../../ui'
 import { getEventTargetNode, getAbsolutePos } from '../../ui/src/dom'
 import { getLastZIndex, nextZIndex, getFuncText } from '../../ui/src/utils'
-import VxeInputComponent from '../../input/src/input'
 import { getSlotVNs } from '../../ui/src/vn'
+import VxeInputComponent from '../../input/src/input'
 
-import type { VxeSelectPropTypes, VxeSelectConstructor, SelectInternalData, SelectReactData, VxeSelectEmits, VxeComponentSlotType, VxeInputConstructor, SelectMethods, SelectPrivateRef, VxeSelectMethods, VxeOptgroupProps, VxeOptionProps, VxeTableConstructor, VxeDrawerConstructor, VxeDrawerMethods, VxeTablePrivateMethods, VxeFormDefines, VxeFormConstructor, VxeFormPrivateMethods, VxeModalConstructor, VxeModalMethods } from '../../../types'
+import type { VxeSelectPropTypes, VxeSelectConstructor, SelectInternalData, SelectReactData, VxeSelectDefines, ValueOf, VxeSelectEmits, VxeComponentSlotType, VxeInputConstructor, SelectMethods, SelectPrivateRef, VxeSelectMethods, VxeOptgroupProps, VxeOptionProps, VxeTableConstructor, VxeDrawerConstructor, VxeDrawerMethods, VxeTablePrivateMethods, VxeFormDefines, VxeFormConstructor, VxeFormPrivateMethods, VxeModalConstructor, VxeModalMethods } from '../../../types'
 
 function isOptionVisible (option: any) {
   return option.visible !== false
@@ -62,6 +62,7 @@ export default defineComponent({
       type: Boolean as PropType<VxeSelectPropTypes.Transfer>,
       default: null
     },
+    scrollY: Object as PropType<VxeSelectPropTypes.ScrollY>,
 
     // 已废弃，被 option-config.keyField 替换
     optionId: {
@@ -77,7 +78,8 @@ export default defineComponent({
     'clear',
     'blur',
     'focus',
-    'click'
+    'click',
+    'scroll'
   ] as VxeSelectEmits,
   setup (props, context) {
     const { slots, emit } = context
@@ -90,38 +92,58 @@ export default defineComponent({
 
     const xID = XEUtils.uniqueId()
 
+    const refElem = ref() as Ref<HTMLDivElement>
+    const refInput = ref() as Ref<VxeInputConstructor>
+    const refInpSearch = ref() as Ref<VxeInputConstructor>
+    const refVirtualWrapper = ref() as Ref<HTMLDivElement>
+    const refOptionPanel = ref() as Ref<HTMLDivElement>
+    const refVirtualBody = ref() as Ref<HTMLDivElement>
+
     const { computeSize } = useSize(props)
 
     const reactData = reactive<SelectReactData>({
       initialized: false,
+      scrollYLoad: false,
+      bodyHeight: 0,
+      topSpaceHeight: 0,
+      optList: [],
+      afterVisibleList: [],
       staticOptions: [],
-      fullGroupList: [],
-      fullOptionList: [],
-      visibleGroupList: [],
-      visibleOptionList: [],
-      remoteValueList: [],
+      reactFlag: 0,
+
+      currentOption: null,
+      searchValue: '',
+      searchLoading: false,
+
       panelIndex: 0,
       panelStyle: {},
       panelPlacement: null,
-      currentOption: null,
-      currentValue: null,
       triggerFocusPanel: false,
       visiblePanel: false,
       isAniVisible: false,
-      isActivated: false,
-      searchValue: '',
-      searchLoading: false
+      isActivated: false
     })
 
     const internalData: SelectInternalData = {
+      synchData: [],
+      fullData: [],
+      optGroupKeyMaps: {},
+      optFullValMaps: {},
+      remoteValMaps: {},
+
+      lastScrollLeft: 0,
+      lastScrollTop: 0,
+      scrollYStore: {
+        startIndex: 0,
+        endIndex: 0,
+        visibleSize: 0,
+        offsetSize: 0,
+        rowHeight: 0
+      },
+
+      lastScrollTime: 0,
       hpTimeout: undefined
     }
-
-    const refElem = ref() as Ref<HTMLDivElement>
-    const refInput = ref() as Ref<VxeInputConstructor>
-    const refInpSearch = ref() as Ref<VxeInputConstructor>
-    const refOptionWrapper = ref() as Ref<HTMLDivElement>
-    const refOptionPanel = ref() as Ref<HTMLDivElement>
 
     const refMaps: SelectPrivateRef = {
       refElem
@@ -135,8 +157,6 @@ export default defineComponent({
       internalData,
       getRefMaps: () => refMaps
     } as unknown as VxeSelectConstructor & VxeSelectMethods
-
-    let selectMethods = {} as SelectMethods
 
     const computeFormReadonly = computed(() => {
       const { readonly } = props
@@ -222,12 +242,12 @@ export default defineComponent({
       return false
     })
 
-    const computeOptionOpts = computed(() => {
-      return Object.assign({}, getConfig().select.optionConfig, props.optionConfig)
+    const computeSYOpts = computed(() => {
+      return Object.assign({} as { gt: number }, getConfig().select.scrollY, props.scrollY)
     })
 
-    const computeIsGroup = computed(() => {
-      return reactData.fullGroupList.some((item) => item.options && item.options.length)
+    const computeOptionOpts = computed(() => {
+      return Object.assign({}, getConfig().select.optionConfig, props.optionConfig)
     })
 
     const computeMultiMaxCharNum = computed(() => {
@@ -235,25 +255,22 @@ export default defineComponent({
     })
 
     const computeSelectLabel = computed(() => {
-      const { modelValue, multiple, remote } = props
+      const { modelValue, remote, multiple } = props
       const multiMaxCharNum = computeMultiMaxCharNum.value
-      if (modelValue && multiple) {
-        const vals = XEUtils.isArray(modelValue) ? modelValue : [modelValue]
-        if (remote) {
-          return vals.map(val => getRemoteSelectLabel(val)).join(', ')
-        }
-        return vals.map((val) => {
-          const label = getSelectLabel(val)
-          if (multiMaxCharNum > 0 && label.length > multiMaxCharNum) {
-            return `${label.substring(0, multiMaxCharNum)}...`
-          }
-          return label
-        }).join(', ')
+      if (XEUtils.eqNull(modelValue)) {
+        return ''
       }
+      const vals = XEUtils.isArray(modelValue) ? modelValue : [modelValue]
       if (remote) {
-        return getRemoteSelectLabel(modelValue)
+        return vals.map(val => getRemoteSelectLabel(val)).join(', ')
       }
-      return getSelectLabel(modelValue)
+      return vals.map((val) => {
+        const label = getSelectLabel(val)
+        if (multiple && multiMaxCharNum > 0 && label.length > multiMaxCharNum) {
+          return `${label.substring(0, multiMaxCharNum)}...`
+        }
+        return label
+      }).join(', ')
     })
 
     const callSlot = <T>(slotFunc: ((params: T) => VxeComponentSlotType | VxeComponentSlotType[]) | string | null, params: T) => {
@@ -268,68 +285,71 @@ export default defineComponent({
       return []
     }
 
-    const findOption = (optionValue: any) => {
-      const { fullOptionList, fullGroupList } = reactData
-      const isGroup = computeIsGroup.value
-      const valueField = computeValueField.value as 'value'
-      if (isGroup) {
-        for (let gIndex = 0; gIndex < fullGroupList.length; gIndex++) {
-          const group = fullGroupList[gIndex]
-          if (group.options) {
-            for (let index = 0; index < group.options.length; index++) {
-              const option = group.options[index]
-              if (optionValue === option[valueField]) {
-                return option
-              }
-            }
-          }
-        }
-      }
-      return fullOptionList.find((item) => optionValue === item[valueField])
+    const dispatchEvent = (type: ValueOf<VxeSelectEmits>, params: Record<string, any>, evnt: Event | null) => {
+      emit(type, createEvent(evnt, { $select: $xeSelect }, params))
     }
 
-    const findVisibleOption = (optionValue: any) => {
-      const { visibleOptionList, visibleGroupList } = reactData
-      const isGroup = computeIsGroup.value
-      const valueField = computeValueField.value as 'value'
-      if (isGroup) {
-        for (let gIndex = 0; gIndex < visibleGroupList.length; gIndex++) {
-          const group = visibleGroupList[gIndex]
-          if (group.options) {
-            for (let index = 0; index < group.options.length; index++) {
-              const option = group.options[index]
-              if (optionValue === option[valueField]) {
-                return option
-              }
-            }
-          }
-        }
-      }
-      return visibleOptionList.find((item) => optionValue === item[valueField])
+    const emitModel = (value: any) => {
+      emit('update:modelValue', value)
     }
 
-    const getRemoteSelectLabel = (value: any) => {
-      const { remoteValueList } = reactData
-      const labelField = computeLabelField.value
-      const remoteItem = remoteValueList.find(item => value === item.key)
-      const item = remoteItem ? remoteItem.result : null
-      return XEUtils.toValueString(item ? item[labelField] : value)
-    }
-
-    const getSelectLabel = (value: any) => {
-      const labelField = computeLabelField.value
-      const item = findOption(value)
-      return XEUtils.toValueString(item ? item[labelField as 'label'] : value)
-    }
-
-    const getOptkey = () => {
+    const getOptKey = () => {
       const optionOpts = computeOptionOpts.value
       return optionOpts.keyField || props.optionId || '_X_OPTION_KEY'
     }
 
-    const getOptid = (option: any) => {
-      const optid = option[getOptkey()]
+    const getOptId = (option: any) => {
+      const optid = option[getOptKey()]
       return optid ? encodeURIComponent(optid) : ''
+    }
+
+    const getRemoteSelectLabel = (value: any) => {
+      const { remoteValMaps } = internalData
+      const labelField = computeLabelField.value
+      const remoteItem = remoteValMaps[value]
+      const item = remoteItem ? remoteItem.item : null
+      return XEUtils.toValueString(item ? item[labelField] : value)
+    }
+
+    const getSelectLabel = (value: any) => {
+      const { optFullValMaps } = internalData
+      const labelField = computeLabelField.value
+      const cacheItem = reactData.reactFlag ? optFullValMaps[value] : null
+      return cacheItem ? cacheItem.item[labelField as 'label'] : XEUtils.toValueString(value)
+    }
+
+    const cacheItemMap = (datas: any[]) => {
+      const groupOptionsField = computeGroupOptionsField.value
+      const valueField = computeValueField.value
+      const key = getOptKey()
+      const groupKeyMaps: Record<string, any> = {}
+      const fullKeyMaps: Record<string, VxeSelectDefines.OptCacheItem> = {}
+      const list: any[] = []
+      const handleOptItem = (item: any) => {
+        list.push(item)
+        let optid = getOptId(item)
+        if (!optid) {
+          optid = getOptUniqueId()
+          item[key] = optid
+        }
+        fullKeyMaps[item[valueField]] = {
+          key: optid,
+          item,
+          _index: -1
+        }
+      }
+      datas.forEach((group: any) => {
+        handleOptItem(group)
+        if (group[groupOptionsField]) {
+          groupKeyMaps[group[key]] = group
+          group[groupOptionsField].forEach(handleOptItem)
+        }
+      })
+      internalData.fullData = list
+      internalData.optGroupKeyMaps = groupKeyMaps
+      internalData.optFullValMaps = fullKeyMaps
+      reactData.reactFlag++
+      refreshOption()
     }
 
     /**
@@ -337,85 +357,36 @@ export default defineComponent({
      */
     const refreshOption = () => {
       const { filterable, filterMethod } = props
-      const { fullOptionList, fullGroupList, searchValue } = reactData
-      const isGroup = computeIsGroup.value
-      const groupLabelField = computeGroupLabelField.value
+      const { searchValue } = reactData
+      const { fullData, optFullValMaps } = internalData
       const labelField = computeLabelField.value
+      const valueField = computeValueField.value
       const searchStr = `${searchValue || ''}`.toLowerCase()
-      if (isGroup) {
-        if (filterable && filterMethod) {
-          reactData.visibleGroupList = fullGroupList.filter(group => isOptionVisible(group) && filterMethod({ group, option: null, searchValue: searchStr }))
-        } else if (filterable) {
-          reactData.visibleGroupList = fullGroupList.filter(group => isOptionVisible(group) && (!searchStr || `${group[groupLabelField]}`.toLowerCase().indexOf(searchStr) > -1))
-        } else {
-          reactData.visibleGroupList = fullGroupList.filter(isOptionVisible)
-        }
+      let avList: any[] = []
+      if (filterable && filterMethod) {
+        avList = fullData.filter(option => isOptionVisible(option) && filterMethod({ group: null, option, searchValue: searchStr }))
+      } else if (filterable) {
+        avList = fullData.filter(option => isOptionVisible(option) && (!searchStr || `${option[labelField]}`.toLowerCase().indexOf(searchStr) > -1))
       } else {
-        if (filterable && filterMethod) {
-          reactData.visibleOptionList = fullOptionList.filter(option => isOptionVisible(option) && filterMethod({ group: null, option, searchValue: searchStr }))
-        } else if (filterable) {
-          reactData.visibleOptionList = fullOptionList.filter(option => isOptionVisible(option) && (!searchStr || `${option[labelField]}`.toLowerCase().indexOf(searchStr) > -1))
-        } else {
-          reactData.visibleOptionList = fullOptionList.filter(isOptionVisible)
-        }
+        avList = fullData.filter(isOptionVisible)
       }
+      avList.forEach((item, index) => {
+        const cacheItem = optFullValMaps[item[valueField]]
+        if (cacheItem) {
+          cacheItem._index = index
+        }
+      })
+      reactData.afterVisibleList = avList
       return nextTick()
     }
 
-    const cacheItemMap = () => {
-      const { fullOptionList, fullGroupList } = reactData
-      const groupOptionsField = computeGroupOptionsField.value
-      const key = getOptkey()
-      const handleOptis = (item: any) => {
-        if (!getOptid(item)) {
-          item[key] = getOptUniqueId()
-        }
-      }
-      if (fullGroupList.length) {
-        fullGroupList.forEach((group: any) => {
-          handleOptis(group)
-          if (group[groupOptionsField]) {
-            group[groupOptionsField].forEach(handleOptis)
-          }
-        })
-      } else if (fullOptionList.length) {
-        fullOptionList.forEach(handleOptis)
-      }
-      refreshOption()
-    }
-
     const setCurrentOption = (option: any) => {
-      const valueField = computeValueField.value
       if (option) {
         reactData.currentOption = option
-        reactData.currentValue = option[valueField]
       }
     }
 
-    const scrollToOption = (option: any, isAlignBottom?: boolean) => {
-      return nextTick().then(() => {
-        if (option) {
-          const optWrapperElem = refOptionWrapper.value
-          const panelElem = refOptionPanel.value
-          const optElem = panelElem.querySelector(`[optid='${getOptid(option)}']`) as HTMLElement
-          if (optWrapperElem && optElem) {
-            const wrapperHeight = optWrapperElem.offsetHeight
-            const offsetPadding = 5
-            if (isAlignBottom) {
-              if (optElem.offsetTop + optElem.offsetHeight - optWrapperElem.scrollTop > wrapperHeight) {
-                optWrapperElem.scrollTop = optElem.offsetTop + optElem.offsetHeight - wrapperHeight
-              }
-            } else {
-              if (optElem.offsetTop + offsetPadding < optWrapperElem.scrollTop || optElem.offsetTop + offsetPadding > optWrapperElem.scrollTop + optWrapperElem.clientHeight) {
-                optWrapperElem.scrollTop = optElem.offsetTop - offsetPadding
-              }
-            }
-          }
-        }
-      })
-    }
-
-    const updateZindex = () => {
+    const updateZIndex = () => {
       if (reactData.panelIndex < getLastZIndex()) {
         reactData.panelIndex = nextZIndex()
       }
@@ -510,16 +481,14 @@ export default defineComponent({
           refreshOption()
         }
         setTimeout(() => {
-          const { modelValue } = props
-          const currOption = findOption(XEUtils.isArray(modelValue) ? modelValue[0] : modelValue)
           reactData.visiblePanel = true
-          if (currOption) {
-            setCurrentOption(currOption)
-            scrollToOption(currOption)
-          }
           handleFocusSearch()
+          recalculate().then(() => refreshScroll())
         }, 10)
-        updateZindex()
+        setTimeout(() => {
+          recalculate().then(() => refreshScroll())
+        }, 100)
+        updateZIndex()
         updatePlacement()
       }
     }
@@ -534,9 +503,9 @@ export default defineComponent({
     }
 
     const changeEvent = (evnt: Event, selectValue: any) => {
-      emit('update:modelValue', selectValue)
+      emitModel(selectValue)
       if (selectValue !== props.modelValue) {
-        selectMethods.dispatchEvent('change', { value: selectValue }, evnt)
+        dispatchEvent('change', { value: selectValue }, evnt)
         // 自动更新校验状态
         if ($xeForm && formItemInfo) {
           $xeForm.triggerItemEvent(evnt, formItemInfo.itemConfig.field, selectValue)
@@ -545,9 +514,9 @@ export default defineComponent({
     }
 
     const clearValueEvent = (evnt: Event, selectValue: any) => {
-      reactData.remoteValueList = []
+      internalData.remoteValMaps = {}
       changeEvent(evnt, selectValue)
-      selectMethods.dispatchEvent('clear', { value: selectValue }, evnt)
+      dispatchEvent('clear', { value: selectValue }, evnt)
     }
 
     const clearEvent = (params: any, evnt: Event) => {
@@ -555,9 +524,21 @@ export default defineComponent({
       hideOptionPanel()
     }
 
-    const changeOptionEvent = (evnt: Event, selectValue: any, option: any) => {
+    const changeOptionEvent = (evnt: Event, option: any) => {
       const { modelValue, multiple } = props
-      const { remoteValueList } = reactData
+      const { remoteValMaps } = internalData
+      const valueField = computeValueField.value
+      const selectValue = option[valueField]
+      const remoteItem = remoteValMaps[selectValue]
+      if (remoteItem) {
+        remoteItem.item = option
+      } else {
+        remoteValMaps[selectValue] = {
+          key: getOptId(option),
+          item: option,
+          _index: -1
+        }
+      }
       if (multiple) {
         let multipleValue: any[] = []
         const selectVals = XEUtils.eqNull(modelValue) ? [] : (XEUtils.isArray(modelValue) ? modelValue : [modelValue])
@@ -567,18 +548,12 @@ export default defineComponent({
         } else {
           multipleValue = selectVals.filter((val) => val !== selectValue)
         }
-        const remoteItem = remoteValueList.find(item => item.key === selectValue)
-        if (remoteItem) {
-          remoteItem.result = option
-        } else {
-          remoteValueList.push({ key: selectValue, result: option })
-        }
         changeEvent(evnt, multipleValue)
       } else {
-        reactData.remoteValueList = [{ key: selectValue, result: option }]
         changeEvent(evnt, selectValue)
         hideOptionPanel()
       }
+      reactData.reactFlag++
     }
 
     const handleGlobalMousewheelEvent = (evnt: MouseEvent) => {
@@ -609,82 +584,56 @@ export default defineComponent({
       }
     }
 
-    const findOffsetOption = (optionValue: any, isUpArrow: boolean) => {
-      const { visibleOptionList, visibleGroupList } = reactData
-      const isGroup = computeIsGroup.value
-      const valueField = computeValueField.value as 'value'
-      const groupOptionsField = computeGroupOptionsField.value as 'options'
-      let firstOption
-      let prevOption
-      let nextOption
-      let currOption
-      if (isGroup) {
-        for (let gIndex = 0; gIndex < visibleGroupList.length; gIndex++) {
-          const group = visibleGroupList[gIndex]
-          const groupOptionList = group[groupOptionsField]
-          const isGroupDisabled = group.disabled
-          if (groupOptionList) {
-            for (let index = 0; index < groupOptionList.length; index++) {
-              const option = groupOptionList[index]
-              const isVisible = isOptionVisible(option)
-              const isDisabled = isGroupDisabled || option.disabled
-              if (!firstOption && !isDisabled) {
-                firstOption = option
-              }
-              if (currOption) {
-                if (isVisible && !isDisabled) {
-                  nextOption = option
-                  if (!isUpArrow) {
-                    return { offsetOption: nextOption }
-                  }
-                }
-              }
-              if (optionValue === option[valueField]) {
-                currOption = option
-                if (isUpArrow) {
-                  return { offsetOption: prevOption }
-                }
-              } else {
-                if (isVisible && !isDisabled) {
-                  prevOption = option
-                }
-              }
-            }
+    const validOffsetOption = (option: any) => {
+      const isDisabled = option.disabled
+      const optid = getOptId(option)
+      if (!isDisabled && !hasOptGroupById(optid)) {
+        return true
+      }
+      return false
+    }
+
+    const findOffsetOption = (option: any, isDwArrow: boolean) => {
+      const { afterVisibleList } = reactData
+      const { optFullValMaps } = internalData
+      const valueField = computeValueField.value
+      if (!option) {
+        for (let i = 0; i < afterVisibleList.length - 1; i++) {
+          const item = afterVisibleList[i]
+          if (validOffsetOption(item)) {
+            return item
           }
         }
-      } else {
-        for (let index = 0; index < visibleOptionList.length; index++) {
-          const option = visibleOptionList[index]
-          const isDisabled = option.disabled
-          if (!firstOption && !isDisabled) {
-            firstOption = option
-          }
-          if (currOption) {
-            if (!isDisabled) {
-              nextOption = option
-              if (!isUpArrow) {
-                return { offsetOption: nextOption }
+      }
+      const cacheItem = optFullValMaps[option[valueField]]
+      if (cacheItem) {
+        const avIndex = cacheItem._index
+        if (avIndex > -1) {
+          if (isDwArrow) {
+            for (let i = avIndex + 1; i <= afterVisibleList.length - 1; i++) {
+              const item = afterVisibleList[i]
+              if (validOffsetOption(item)) {
+                return item
               }
             }
-          }
-          if (optionValue === option[valueField]) {
-            currOption = option
-            if (isUpArrow) {
-              return { offsetOption: prevOption }
-            }
           } else {
-            if (!isDisabled) {
-              prevOption = option
+            if (avIndex > 0) {
+              for (let len = avIndex - 1; len >= 0; len--) {
+                const item = afterVisibleList[len]
+                if (validOffsetOption(item)) {
+                  return item
+                }
+              }
             }
           }
         }
       }
-      return { firstOption }
+      return null
     }
 
     const handleGlobalKeydownEvent = (evnt: KeyboardEvent) => {
       const { clearable } = props
-      const { visiblePanel, currentValue, currentOption } = reactData
+      const { visiblePanel, currentOption } = reactData
       const isDisabled = computeIsDisabled.value
       if (!isDisabled) {
         const isTab = globalEvents.hasKey(evnt, GLOBAL_EVENT_KEYS.TAB)
@@ -703,15 +652,14 @@ export default defineComponent({
           } else if (isEnter) {
             evnt.preventDefault()
             evnt.stopPropagation()
-            changeOptionEvent(evnt, currentValue, currentOption)
+            changeOptionEvent(evnt, currentOption)
           } else if (isUpArrow || isDwArrow) {
             evnt.preventDefault()
-            let { firstOption, offsetOption } = findOffsetOption(currentValue, isUpArrow)
-            if (!offsetOption && !findVisibleOption(currentValue)) {
-              offsetOption = firstOption
+            const offsetOption = findOffsetOption(currentOption, isDwArrow)
+            if (offsetOption) {
+              setCurrentOption(offsetOption)
+              handleScrollToOption(offsetOption, isDwArrow)
             }
-            setCurrentOption(offsetOption)
-            scrollToOption(offsetOption, isDwArrow)
           } else if (isSpacebar) {
             evnt.preventDefault()
           }
@@ -753,17 +701,17 @@ export default defineComponent({
           }, 150)
         }
       }
-      selectMethods.dispatchEvent('focus', {}, evnt)
+      dispatchEvent('focus', {}, evnt)
     }
 
     const clickEvent = (evnt: MouseEvent) => {
       togglePanelEvent(evnt)
-      selectMethods.dispatchEvent('click', {}, evnt)
+      dispatchEvent('click', {}, evnt)
     }
 
     const blurEvent = (evnt: FocusEvent) => {
       reactData.isActivated = false
-      selectMethods.dispatchEvent('blur', {}, evnt)
+      dispatchEvent('blur', {}, evnt)
     }
 
     const modelSearchEvent = (value: string) => {
@@ -786,9 +734,11 @@ export default defineComponent({
           .finally(() => {
             reactData.searchLoading = false
             refreshOption()
+            updateYData()
           })
       } else {
         refreshOption()
+        updateYData()
       }
     }
 
@@ -822,124 +772,233 @@ export default defineComponent({
       return false
     }
 
-    const renderOption = (list: VxeOptionProps[], group?: VxeOptgroupProps) => {
-      const { optionKey, modelValue } = props
-      const { currentValue } = reactData
-      const optionOpts = computeOptionOpts.value
-      const labelField = computeLabelField.value
+    const updateYSpace = () => {
+      const { scrollYLoad, afterVisibleList } = reactData
+      const { scrollYStore } = internalData
+      reactData.bodyHeight = scrollYLoad ? afterVisibleList.length * scrollYStore.rowHeight : 0
+      reactData.topSpaceHeight = scrollYLoad ? Math.max(scrollYStore.startIndex * scrollYStore.rowHeight, 0) : 0
+    }
+
+    const handleData = () => {
+      const { scrollYLoad, afterVisibleList } = reactData
+      const { scrollYStore } = internalData
+      reactData.optList = scrollYLoad ? afterVisibleList.slice(scrollYStore.startIndex, scrollYStore.endIndex) : afterVisibleList.slice(0)
+      return nextTick()
+    }
+
+    const updateYData = () => {
+      handleData()
+      updateYSpace()
+    }
+
+    const computeScrollLoad = () => {
+      return nextTick().then(() => {
+        const { scrollYLoad } = reactData
+        const { scrollYStore } = internalData
+        const virtualBodyElem = refVirtualBody.value
+        const sYOpts = computeSYOpts.value
+        let rowHeight = 0
+        let firstItemElem: HTMLElement | undefined
+        if (virtualBodyElem) {
+          if (sYOpts.sItem) {
+            firstItemElem = virtualBodyElem.querySelector(sYOpts.sItem) as HTMLElement
+          }
+          if (!firstItemElem) {
+            firstItemElem = virtualBodyElem.children[0] as HTMLElement
+          }
+        }
+        if (firstItemElem) {
+          rowHeight = firstItemElem.offsetHeight
+        }
+        rowHeight = Math.max(20, rowHeight)
+        scrollYStore.rowHeight = rowHeight
+        // 计算 Y 逻辑
+        if (scrollYLoad) {
+          const scrollBodyElem = refVirtualWrapper.value
+          const visibleYSize = Math.max(8, scrollBodyElem ? Math.ceil(scrollBodyElem.clientHeight / rowHeight) : 0)
+          const offsetYSize = Math.max(0, Math.min(2, XEUtils.toNumber(sYOpts.oSize)))
+          scrollYStore.offsetSize = offsetYSize
+          scrollYStore.visibleSize = visibleYSize
+          scrollYStore.endIndex = Math.max(scrollYStore.startIndex, visibleYSize + offsetYSize, scrollYStore.endIndex)
+          updateYData()
+        } else {
+          updateYSpace()
+        }
+      })
+    }
+
+    const handleScrollToOption = (option: any, isDwArrow?: boolean) => {
+      const { scrollYLoad } = reactData
+      const { optFullValMaps, scrollYStore } = internalData
       const valueField = computeValueField.value
-      const isGroup = computeIsGroup.value
-      const { useKey } = optionOpts
-      const optionSlot = slots.option
-      return list.map((option, cIndex) => {
-        const { slots, className } = option
-        const optionValue = option[valueField as 'value']
-        const isSelected = XEUtils.isArray(modelValue) ? modelValue.indexOf(optionValue) > -1 : modelValue === optionValue
-        const isVisible = !isGroup || isOptionVisible(option)
-        const isDisabled = checkOptionDisabled(isSelected, option, group)
-        const optid = getOptid(option)
-        const defaultSlot = slots ? slots.default : null
-        const optParams = { option, group: null, $select: $xeSelect }
-        return isVisible
-          ? h('div', {
-            key: useKey || optionKey ? optid : cIndex,
-            class: ['vxe-select-option', className ? (XEUtils.isFunction(className) ? className(optParams) : className) : '', {
-              'is--disabled': isDisabled,
-              'is--selected': isSelected,
-              'is--hover': currentValue === optionValue
-            }],
-            // attrs
-            optid: optid,
-            // event
-            onMousedown: (evnt: MouseEvent) => {
-              const isLeftBtn = evnt.button === 0
-              if (isLeftBtn) {
-                evnt.stopPropagation()
+      const cacheItem = optFullValMaps[option[valueField]]
+      if (cacheItem) {
+        const optid = cacheItem.key
+        const avIndex = cacheItem._index
+        if (avIndex > -1) {
+          const optWrapperElem = refVirtualWrapper.value
+          const panelElem = refOptionPanel.value
+          const optElem = panelElem.querySelector(`[optid='${optid}']`) as HTMLElement
+          if (optWrapperElem) {
+            if (optElem) {
+              const wrapperHeight = optWrapperElem.offsetHeight
+              const offsetPadding = 1
+              if (isDwArrow) {
+                if (optElem.offsetTop + optElem.offsetHeight - optWrapperElem.scrollTop > wrapperHeight) {
+                  optWrapperElem.scrollTop = optElem.offsetTop + optElem.offsetHeight - wrapperHeight
+                }
+              } else {
+                if (optElem.offsetTop + offsetPadding < optWrapperElem.scrollTop || optElem.offsetTop + offsetPadding > optWrapperElem.scrollTop + optWrapperElem.clientHeight) {
+                  optWrapperElem.scrollTop = optElem.offsetTop - offsetPadding
+                }
               }
-            },
-            onClick: (evnt: MouseEvent) => {
-              if (!isDisabled) {
-                changeOptionEvent(evnt, optionValue, option)
-              }
-            },
-            onMouseenter: () => {
-              if (!isDisabled) {
-                setCurrentOption(option)
+            } else if (scrollYLoad) {
+              if (isDwArrow) {
+                optWrapperElem.scrollTop = avIndex * scrollYStore.rowHeight - optWrapperElem.clientHeight + scrollYStore.rowHeight
+              } else {
+                optWrapperElem.scrollTop = avIndex * scrollYStore.rowHeight
               }
             }
-          }, optionSlot ? callSlot(optionSlot, optParams) : (defaultSlot ? callSlot(defaultSlot, optParams) : getFuncText(option[labelField as 'label'])))
-          : createCommentVNode()
+          }
+        }
+      }
+    }
+
+    /**
+     * 如果有滚动条，则滚动到对应的位置
+     * @param {Number} scrollLeft 左距离
+     * @param {Number} scrollTop 上距离
+     */
+    const scrollTo = (scrollLeft: number | null, scrollTop?: number | null) => {
+      const scrollBodyElem = refVirtualWrapper.value
+      if (scrollBodyElem) {
+        if (XEUtils.isNumber(scrollLeft)) {
+          scrollBodyElem.scrollLeft = scrollLeft
+        }
+        if (XEUtils.isNumber(scrollTop)) {
+          scrollBodyElem.scrollTop = scrollTop
+        }
+      }
+      if (reactData.scrollYLoad) {
+        return new Promise<void>(resolve => {
+          setTimeout(() => {
+            nextTick(() => {
+              resolve()
+            })
+          }, 50)
+        })
+      }
+      return nextTick()
+    }
+
+    /**
+     * 刷新滚动条
+     */
+    const refreshScroll = () => {
+      const { lastScrollLeft, lastScrollTop } = internalData
+      return clearScroll().then(() => {
+        if (lastScrollLeft || lastScrollTop) {
+          internalData.lastScrollLeft = 0
+          internalData.lastScrollTop = 0
+          return scrollTo(lastScrollLeft, lastScrollTop)
+        }
       })
     }
 
-    const renderOptgroup = () => {
-      const { optionKey } = props
-      const { visibleGroupList } = reactData
-      const optionOpts = computeOptionOpts.value
-      const groupLabelField = computeGroupLabelField.value
-      const groupOptionsField = computeGroupOptionsField.value
-      const { useKey } = optionOpts
-      const optionSlot = slots.option
-      return visibleGroupList.map((group, gIndex) => {
-        const { slots, className } = group
-        const optid = getOptid(group)
-        const isGroupDisabled = group.disabled
-        const defaultSlot = slots ? slots.default : null
-        const optParams = { option: group, group, $select: $xeSelect }
-        return h('div', {
-          key: useKey || optionKey ? optid : gIndex,
-          class: ['vxe-optgroup', className ? (XEUtils.isFunction(className) ? className(optParams) : className) : '', {
-            'is--disabled': isGroupDisabled
-          }],
-          // attrs
-          optid: optid
-        }, [
-          h('div', {
-            class: 'vxe-optgroup--title'
-          }, optionSlot ? callSlot(optionSlot, optParams) : (defaultSlot ? callSlot(defaultSlot, optParams) : getFuncText(group[groupLabelField as 'label']))),
-          h('div', {
-            class: 'vxe-optgroup--wrapper'
-          }, renderOption(group[groupOptionsField as 'options'] || [], group))
-        ])
+    /**
+     * 重新计算列表
+     */
+    const recalculate = () => {
+      const el = refElem.value
+      if (el && el.clientWidth && el.clientHeight) {
+        return computeScrollLoad()
+      }
+      return Promise.resolve()
+    }
+
+    const loadYData = (evnt: Event) => {
+      const { scrollYStore } = internalData
+      const { startIndex, endIndex, visibleSize, offsetSize, rowHeight } = scrollYStore
+      const scrollBodyElem = evnt.target as HTMLDivElement
+      const scrollTop = scrollBodyElem.scrollTop
+      const toVisibleIndex = Math.floor(scrollTop / rowHeight)
+      const offsetStartIndex = Math.max(0, toVisibleIndex - 1 - offsetSize)
+      const offsetEndIndex = toVisibleIndex + visibleSize + offsetSize
+      if (toVisibleIndex <= startIndex || toVisibleIndex >= endIndex - visibleSize - 1) {
+        if (startIndex !== offsetStartIndex || endIndex !== offsetEndIndex) {
+          scrollYStore.startIndex = offsetStartIndex
+          scrollYStore.endIndex = offsetEndIndex
+          updateYData()
+        }
+      }
+    }
+
+    // 滚动、拖动过程中不需要触发
+    const isVMScrollProcess = () => {
+      const delayHover = 250
+      const { lastScrollTime } = internalData
+      return !!(lastScrollTime && Date.now() < lastScrollTime + delayHover)
+    }
+
+    const scrollEvent = (evnt: Event) => {
+      const scrollBodyElem = evnt.target as HTMLDivElement
+      const scrollTop = scrollBodyElem.scrollTop
+      const scrollLeft = scrollBodyElem.scrollLeft
+      const isX = scrollLeft !== internalData.lastScrollLeft
+      const isY = scrollTop !== internalData.lastScrollTop
+      internalData.lastScrollTop = scrollTop
+      internalData.lastScrollLeft = scrollLeft
+      if (reactData.scrollYLoad) {
+        loadYData(evnt)
+      }
+      internalData.lastScrollTime = Date.now()
+      dispatchEvent('scroll', { scrollLeft, scrollTop, isX, isY }, evnt)
+    }
+
+    /**
+     * 加载数据
+     * @param {Array} datas 数据
+     */
+    const loadData = (datas: any[]) => {
+      cacheItemMap(datas || [])
+      const { fullData, scrollYStore } = internalData
+      const sYOpts = computeSYOpts.value
+      Object.assign(scrollYStore, {
+        startIndex: 0,
+        endIndex: 1,
+        visibleSize: 0
+      })
+      internalData.synchData = datas || []
+      // 如果gt为0，则总是启用
+      reactData.scrollYLoad = !!sYOpts.enabled && sYOpts.gt > -1 && (sYOpts.gt === 0 || sYOpts.gt <= fullData.length)
+      handleData()
+      return computeScrollLoad().then(() => {
+        refreshScroll()
       })
     }
 
-    const renderOpts = () => {
-      const { visibleGroupList, visibleOptionList, searchLoading } = reactData
-      const isGroup = computeIsGroup.value
-      if (searchLoading) {
-        return [
-          h('div', {
-            class: 'vxe-select--search-loading'
-          }, [
-            h('i', {
-              class: ['vxe-select--search-icon', getIcon().SELECT_LOADED]
-            }),
-            h('span', {
-              class: 'vxe-select--search-text'
-            }, getI18n('vxe.select.loadingText'))
-          ])
-        ]
+    const clearScroll = () => {
+      const scrollBodyElem = refVirtualWrapper.value
+      if (scrollBodyElem) {
+        scrollBodyElem.scrollTop = 0
+        scrollBodyElem.scrollLeft = 0
       }
-      if (isGroup) {
-        if (visibleGroupList.length) {
-          return renderOptgroup()
-        }
-      } else {
-        if (visibleOptionList.length) {
-          return renderOption(visibleOptionList)
-        }
-      }
-      return [
-        h('div', {
-          class: 'vxe-select--empty-placeholder'
-        }, props.emptyText || getI18n('vxe.select.emptyText'))
-      ]
+      internalData.lastScrollTop = 0
+      internalData.lastScrollLeft = 0
+      return nextTick()
     }
 
-    selectMethods = {
-      dispatchEvent (type, params, evnt) {
-        emit(type, createEvent(evnt, { $select: $xeSelect }, params))
+    const hasOptGroupById = (optid: any) => {
+      const { optGroupKeyMaps } = internalData
+      return !!optGroupKeyMaps[optid]
+    }
+
+    const selectMethods: SelectMethods = {
+      dispatchEvent,
+      loadData,
+      reloadData (datas) {
+        clearScroll()
+        return loadData(datas)
       },
       isPanelVisible () {
         return reactData.visiblePanel
@@ -976,14 +1035,94 @@ export default defineComponent({
         $input.blur()
         reactData.isActivated = false
         return nextTick()
-      }
+      },
+      recalculate,
+      clearScroll
     }
 
     Object.assign($xeSelect, selectMethods)
 
+    const renderOption = (list: VxeOptionProps[], group?: VxeOptgroupProps) => {
+      const { optionKey, modelValue } = props
+      const { currentOption } = reactData
+      const optionOpts = computeOptionOpts.value
+      const labelField = computeLabelField.value
+      const valueField = computeValueField.value
+      const groupLabelField = computeGroupLabelField.value
+      const { useKey } = optionOpts
+      const optionSlot = slots.option
+      return list.map((option, cIndex) => {
+        const { slots, className } = option
+        const optid = getOptId(option)
+        const optionValue = option[valueField as 'value']
+        const isOptGroup = hasOptGroupById(optid)
+        const isSelected = XEUtils.isArray(modelValue) ? modelValue.indexOf(optionValue) > -1 : modelValue === optionValue
+        const isVisible = !isOptGroup || isOptionVisible(option)
+        const isDisabled = checkOptionDisabled(isSelected, option, group)
+        const defaultSlot = slots ? slots.default : null
+        const optParams = { option, group: null, $select: $xeSelect }
+        return isVisible
+          ? h('div', {
+            key: useKey || optionKey ? optid : cIndex,
+            class: ['vxe-select-option', className ? (XEUtils.isFunction(className) ? className(optParams) : className) : '', {
+              'vxe-select-optgroup': isOptGroup,
+              'is--disabled': isDisabled,
+              'is--selected': isSelected,
+              'is--hover': currentOption && getOptId(currentOption) === optid
+            }],
+            // attrs
+            optid: optid,
+            // event
+            onMousedown: (evnt: MouseEvent) => {
+              const isLeftBtn = evnt.button === 0
+              if (isLeftBtn) {
+                evnt.stopPropagation()
+              }
+            },
+            onClick: (evnt: MouseEvent) => {
+              if (!isDisabled && !isOptGroup) {
+                changeOptionEvent(evnt, option)
+              }
+            },
+            onMouseenter: () => {
+              if (!isDisabled && !isOptGroup && !isVMScrollProcess()) {
+                setCurrentOption(option)
+              }
+            }
+          }, optionSlot ? callSlot(optionSlot, optParams) : (defaultSlot ? callSlot(defaultSlot, optParams) : getFuncText(option[(isOptGroup ? groupLabelField : labelField) as 'label'])))
+          : createCommentVNode()
+      })
+    }
+
+    const renderOpts = () => {
+      const { optList, searchLoading } = reactData
+      if (searchLoading) {
+        return [
+          h('div', {
+            class: 'vxe-select--search-loading'
+          }, [
+            h('i', {
+              class: ['vxe-select--search-icon', getIcon().SELECT_LOADED]
+            }),
+            h('span', {
+              class: 'vxe-select--search-text'
+            }, getI18n('vxe.select.loadingText'))
+          ])
+        ]
+      }
+      if (optList.length) {
+        return renderOption(optList)
+      }
+      return [
+        h('div', {
+          class: 'vxe-select--empty-placeholder'
+        }, props.emptyText || getI18n('vxe.select.emptyText'))
+      ]
+    }
+
     const renderVN = () => {
       const { className, popupClassName, loading, filterable } = props
-      const { initialized, isActivated, isAniVisible, visiblePanel } = reactData
+      const { initialized, isActivated, isAniVisible, visiblePanel, bodyHeight, topSpaceHeight } = reactData
       const vSize = computeSize.value
       const isDisabled = computeIsDisabled.value
       const selectLabel = computeSelectLabel.value
@@ -1005,7 +1144,7 @@ export default defineComponent({
           }, defaultSlot ? defaultSlot({}) : []),
           h('span', {
             class: 'vxe-select-label'
-          }, [selectLabel])
+          }, selectLabel)
         ])
       }
       return h('div', {
@@ -1089,9 +1228,24 @@ export default defineComponent({
                     class: 'vxe-select--panel-body'
                   }, [
                     h('div', {
-                      ref: refOptionWrapper,
-                      class: 'vxe-select-option--wrapper'
-                    }, renderOpts())
+                      ref: refVirtualWrapper,
+                      class: 'vxe-select-option--wrapper',
+                      onScroll: scrollEvent
+                    }, [
+                      h('div', {
+                        class: 'vxe-select--y-space',
+                        style: {
+                          height: bodyHeight ? `${bodyHeight}px` : ''
+                        }
+                      }),
+                      h('div', {
+                        ref: refVirtualBody,
+                        class: 'vxe-select--body',
+                        style: {
+                          marginTop: topSpaceHeight ? `${topSpaceHeight}px` : ''
+                        }
+                      }, renderOpts())
+                    ])
                   ]),
                   footerSlot
                     ? h('div', {
@@ -1105,38 +1259,26 @@ export default defineComponent({
       ])
     }
 
-    watch(() => reactData.staticOptions, (value) => {
-      if (value.some((item) => item.options && item.options.length)) {
-        reactData.fullOptionList = []
-        reactData.fullGroupList = value
-      } else {
-        reactData.fullGroupList = []
-        reactData.fullOptionList = value || []
-      }
-      cacheItemMap()
+    watch(() => reactData.staticOptions, (val) => {
+      loadData(val)
     })
 
-    watch(() => props.options, (value) => {
-      reactData.fullGroupList = []
-      reactData.fullOptionList = value || []
-      cacheItemMap()
+    watch(() => props.options, (val) => {
+      loadData(val || [])
     })
 
-    watch(() => props.optionGroups, (value) => {
-      reactData.fullOptionList = []
-      reactData.fullGroupList = value || []
-      cacheItemMap()
+    watch(() => props.optionGroups, (val) => {
+      loadData(val || [])
     })
 
     onMounted(() => {
       nextTick(() => {
         const { options, optionGroups } = props
         if (optionGroups) {
-          reactData.fullGroupList = optionGroups
+          loadData(optionGroups)
         } else if (options) {
-          reactData.fullOptionList = options
+          loadData(options)
         }
-        cacheItemMap()
       })
       globalEvents.on($xeSelect, 'mousewheel', handleGlobalMousewheelEvent)
       globalEvents.on($xeSelect, 'mousedown', handleGlobalMousedownEvent)

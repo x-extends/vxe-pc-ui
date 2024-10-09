@@ -4,7 +4,7 @@ import { getConfig, globalEvents, globalResize, createEvent, useSize } from '../
 import { browse } from '../../ui/src/dom'
 import VxeLoadingComponent from '../../loading/src/loading'
 
-import type { VxeListConstructor, VxeListPropTypes, VxeListEmits, ListReactData, ListInternalData, ListMethods, ListPrivateRef, VxeListMethods } from '../../../types'
+import type { VxeListConstructor, VxeListPropTypes, VxeListEmits, ListReactData, ListInternalData, ValueOf, ListMethods, ListPrivateRef, VxeListMethods } from '../../../types'
 
 export default defineComponent({
   name: 'VxeList',
@@ -32,7 +32,6 @@ export default defineComponent({
     const reactData = reactive<ListReactData>({
       scrollYLoad: false,
       bodyHeight: 0,
-      rowHeight: 0,
       topSpaceHeight: 0,
       items: []
     })
@@ -68,8 +67,6 @@ export default defineComponent({
       getRefMaps: () => refMaps
     } as unknown as VxeListConstructor & VxeListMethods
 
-    let listMethods = {} as ListMethods
-
     const computeSYOpts = computed(() => {
       return Object.assign({} as { gt: number }, getConfig().list.scrollY, props.scrollY)
     })
@@ -85,6 +82,10 @@ export default defineComponent({
       }
       return style
     })
+
+    const dispatchEvent = (type: ValueOf<VxeListEmits>, params: Record<string, any>, evnt: Event | null) => {
+      emit(type, createEvent(evnt, { $list: $xeList }, params))
+    }
 
     const updateYSpace = () => {
       const { scrollYLoad } = reactData
@@ -138,7 +139,6 @@ export default defineComponent({
         } else {
           updateYSpace()
         }
-        reactData.rowHeight = rowHeight
       })
     }
 
@@ -231,41 +231,41 @@ export default defineComponent({
       if (reactData.scrollYLoad) {
         loadYData(evnt)
       }
-      listMethods.dispatchEvent('scroll', { scrollLeft, scrollTop, isX, isY }, evnt)
+      dispatchEvent('scroll', { scrollLeft, scrollTop, isX, isY }, evnt)
     }
 
-    listMethods = {
-      dispatchEvent (type, params, evnt) {
-        emit(type, createEvent(evnt, { $list: $xeList }, params))
-      },
-      /**
-       * 加载数据
-       * @param {Array} datas 数据
-       */
-      loadData (datas) {
-        const { scrollYStore } = internalData
-        const sYOpts = computeSYOpts.value
-        const fullData = datas || []
-        Object.assign(scrollYStore, {
-          startIndex: 0,
-          endIndex: 1,
-          visibleSize: 0
-        })
-        internalData.fullData = fullData
-        // 如果gt为0，则总是启用
-        reactData.scrollYLoad = !!sYOpts.enabled && sYOpts.gt > -1 && (sYOpts.gt === 0 || sYOpts.gt <= fullData.length)
-        handleData()
-        return computeScrollLoad().then(() => {
-          refreshScroll()
-        })
-      },
+    /**
+     * 加载数据
+     * @param {Array} datas 数据
+     */
+    const loadData = (datas: any[]) => {
+      const { scrollYStore } = internalData
+      const sYOpts = computeSYOpts.value
+      const fullData = datas || []
+      Object.assign(scrollYStore, {
+        startIndex: 0,
+        endIndex: 1,
+        visibleSize: 0
+      })
+      internalData.fullData = fullData
+      // 如果gt为0，则总是启用
+      reactData.scrollYLoad = !!sYOpts.enabled && sYOpts.gt > -1 && (sYOpts.gt === 0 || sYOpts.gt <= fullData.length)
+      handleData()
+      return computeScrollLoad().then(() => {
+        refreshScroll()
+      })
+    }
+
+    const listMethods: ListMethods = {
+      dispatchEvent,
+      loadData,
       /**
        * 重新加载数据
        * @param {Array} datas 数据
        */
       reloadData (datas) {
         clearScroll()
-        return listMethods.loadData(datas)
+        return loadData(datas)
       },
       recalculate,
       scrollTo,
@@ -283,7 +283,7 @@ export default defineComponent({
       dataFlag.value++
     })
     watch(dataFlag, () => {
-      listMethods.loadData(props.data || [])
+      loadData(props.data || [])
     })
 
     watch(() => props.syncResize, (value) => {
@@ -307,7 +307,7 @@ export default defineComponent({
         resizeObserver.observe(el)
         internalData.resizeObserver = resizeObserver
       }
-      listMethods.loadData(props.data || [])
+      loadData(props.data || [])
     })
 
     onUnmounted(() => {

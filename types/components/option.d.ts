@@ -90,7 +90,9 @@ export interface VxeOptionListeners { }
 export namespace VxeOptionEvents { }
 
 export namespace VxeOptionSlotTypes {
-  export interface DefaultSlotParams {}
+  export interface DefaultSlotParams {
+    option: any
+  }
 }
 
 export interface VxeOptionSlots {

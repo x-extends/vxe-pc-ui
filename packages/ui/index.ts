@@ -252,7 +252,12 @@ setConfig({
   result: {},
   row: {},
   select: {
-    multiCharOverflow: 8
+    multiCharOverflow: 8,
+    scrollY: {
+      enabled: true,
+      gt: 100,
+      oSize: 2
+    }
   },
   slider: {
     max: 100,

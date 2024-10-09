@@ -71,7 +71,6 @@ export interface VxeListPrivateComputed extends ListPrivateComputed { }
 export interface ListReactData {
   scrollYLoad: boolean
   bodyHeight: number
-  rowHeight: number
   topSpaceHeight: number
   items: any[]
 }

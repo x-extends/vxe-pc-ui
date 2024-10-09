@@ -112,23 +112,20 @@
   position: relative;
   overflow-x: hidden;
   overflow-y: auto;
+}
+.vxe-select--y-space {
+  width: 0;
+  float: left;
+}
+.vxe-select-option--wrapper,
+.vxe-select--body {
+  padding: 0;
+  margin: 0;
+  border: 0;
   outline: 0;
-  padding: 4px 0;
+}
+.vxe-select-option--wrapper {
   max-height: 18em;
-}
-
-.vxe-optgroup {
-  .vxe-optgroup--title {
-    padding: 0 6px;
-    color: var(--vxe-ui-select-title-color);
-    font-size: 12px;
-  }
-}
-
-.vxe-optgroup--wrapper {
-  .vxe-select-option {
-    padding: 0 20px;
-  }
 }
 
 .vxe-select-option {
@@ -139,11 +136,11 @@
   text-overflow: ellipsis;
   white-space: nowrap;
   user-select: none;
+  cursor: pointer;
   &.is--selected {
     color: var(--vxe-ui-font-primary-color);
   }
   &:not(.is--disabled) {
-    cursor: pointer;
     &.is--hover {
       background-color: var(--vxe-ui-base-hover-background-color);
     }
@@ -152,6 +149,11 @@
     color: var(--vxe-ui-font-disabled-color);
     cursor: no-drop;
   }
+}
+.vxe-select-optgroup {
+  color: var(--vxe-ui-select-title-color);
+  font-size: 12px;
+  cursor: default;
 }
 
 .vxe-select--search-icon {
@@ -180,22 +182,18 @@
 }
 
 .vxe-select--panel {
-  .vxe-optgroup--title,
   .vxe-select-option {
     height: var(--vxe-ui-select-option-height-default);
   }
-  .vxe-optgroup--title,
   .vxe-select-option,
   .vxe-select--search-loading,
   .vxe-select--empty-placeholder {
     line-height: var(--vxe-ui-select-option-height-default);
   }
   &.size--medium {
-    .vxe-optgroup--title,
     .vxe-select-option {
       height: var(--vxe-ui-select-option-height-medium);
     }
-    .vxe-optgroup--title,
     .vxe-select-option,
     .vxe-select--search-loading,
     .vxe-select--empty-placeholder {
@@ -203,11 +201,9 @@
     }
   }
   &.size--small {
-    .vxe-optgroup--title,
     .vxe-select-option {
       height: var(--vxe-ui-select-option-height-small);
     }
-    .vxe-optgroup--title,
     .vxe-select-option,
     .vxe-select--search-loading,
     .vxe-select--empty-placeholder {
@@ -215,11 +211,9 @@
     }
   }
   &.size--mini {
-    .vxe-optgroup--title,
     .vxe-select-option {
       height: var(--vxe-ui-select-option-height-mini);
     }
-    .vxe-optgroup--title,
     .vxe-select-option,
     .vxe-select--search-loading,
     .vxe-select--empty-placeholder {
