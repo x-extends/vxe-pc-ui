@@ -28,7 +28,7 @@
         <vxe-option v-for="num in 10" :key="num" :value="num" :label="`选项${num}`"></vxe-option>
       </vxe-select>
       <vxe-select v-model="demo1.value13" placeholder="超小尺寸" size="mini">
-        <vxe-option v-for="num in 10" :key="num" :value="num" :label="`选项${num}`"></vxe-option>
+        <vxe-option v-for="num in 100" :key="num" :value="num" :label="`选项${num}`"></vxe-option>
       </vxe-select>
     </p>
 

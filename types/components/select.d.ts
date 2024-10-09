@@ -59,6 +59,25 @@ export namespace VxeSelectPropTypes {
   export type OptionId = string
   export type OptionKey = boolean
   export type Transfer = boolean
+
+  export interface ScrollY {
+    /**
+     * 指定大于指定行时自动启动纵向虚拟滚动，如果为 0 则总是启用，如果为 -1 则关闭
+     */
+    gt?: number
+    /**
+     * 指定每次渲染的数据偏移量，偏移量越大渲染次数就越少，但每次渲染耗时就越久
+     */
+    oSize?: number
+    /**
+     * 指定列表项的 className
+     */
+    sItem?: string
+    /**
+     * 是否启用
+     */
+    enabled?: boolean
+  }
 }
 
 export interface VxeSelectProps {
@@ -97,6 +116,7 @@ export interface VxeSelectProps {
    */
   optionKey?: VxeSelectPropTypes.OptionKey
   transfer?: VxeSelectPropTypes.Transfer
+  scrollY?: VxeSelectPropTypes.ScrollY
 }
 
 export interface SelectPrivateComputed {
@@ -105,34 +125,62 @@ export interface VxeSelectPrivateComputed extends SelectPrivateComputed { }
 
 export interface SelectReactData {
   initialized: boolean
-  staticOptions: VxeSelectDefines.OptionInfo[]
-  fullGroupList: any[]
-  fullOptionList: any[]
-  visibleGroupList: any[]
-  visibleOptionList: any[]
-  remoteValueList: {
-    key: string
-    result: any
-  }[]
+  scrollYLoad: boolean
+  bodyHeight: number
+  topSpaceHeight: number
+  optList: any[]
+  afterVisibleList: any[]
+  staticOptions: any[]
+  reactFlag: number
+
+  currentOption: any
+  searchValue: string
+  searchLoading: boolean
+
   panelIndex: number
   panelStyle: VxeComponentStyleType
   panelPlacement: any
-  currentOption: any
-  currentValue: any
   triggerFocusPanel: boolean
   visiblePanel: boolean
   isAniVisible: boolean
   isActivated: boolean
-  searchValue: string,
-  searchLoading: boolean
 }
 
 export interface SelectInternalData {
+  synchData: any[]
+  fullData: any[]
+  optGroupKeyMaps: Record<string, any>
+  optFullValMaps: Record<string, VxeSelectDefines.OptCacheItem>
+  remoteValMaps: Record<string, VxeSelectDefines.OptCacheItem>
+  lastScrollLeft: number
+  lastScrollTop: number
+  scrollYStore: {
+    startIndex: number
+    endIndex: number
+    visibleSize: number
+    offsetSize: number
+    rowHeight: number
+  }
+  lastScrollTime: number
   hpTimeout?: undefined | number
 }
 
 export interface SelectMethods {
   dispatchEvent(type: ValueOf<VxeSelectEmits>, params: Record<string, any>, evnt: Event | null): void
+  /**
+   * 加载数据
+   * @param data 列表数据
+   */
+  loadData(data: any[]): Promise<any>
+  /**
+   * 加载数据
+   * @param data 列表数据
+   */
+  reloadData(data: any[]): Promise<any>
+  /**
+   * 重新计算列表
+   */
+  recalculate(): Promise<void>
   /**
    * 判断下拉面板是否可视
    */
@@ -154,6 +202,10 @@ export interface SelectMethods {
    */
   refreshOption(): Promise<any>
   /**
+   * 手动清除滚动相关信息，还原到初始状态
+   */
+  clearScroll(): Promise<void>
+  /**
    * 获取焦点
    */
   focus(): Promise<any>
@@ -173,7 +225,8 @@ export type VxeSelectEmits = [
   'clear',
   'blur',
   'focus',
-  'click'
+  'click',
+  'scroll'
 ]
 
 export namespace VxeSelectDefines {
@@ -187,6 +240,12 @@ export namespace VxeSelectDefines {
     disabled: VxeOptionPropTypes.Disabled
 
     options: OptionInfo[]
+  }
+
+  export interface OptCacheItem<D = any> {
+    key: string
+    _index: number
+    item: D
   }
 
   export interface SelectOptions extends VxeOptionProps {
@@ -217,6 +276,7 @@ export namespace VxeSelectDefines {
   export interface FocusEventParams extends SelectEventParams { }
   export interface BlurEventParams extends SelectEventParams { }
   export interface ClickEventParams extends SelectEventParams { }
+  export interface ScrollEventParams extends SelectEventParams { }
 }
 
 export type VxeSelectEventProps = {
@@ -225,6 +285,7 @@ export type VxeSelectEventProps = {
   onFocus?: VxeSelectEvents.Focus
   onBlur?: VxeSelectEvents.Blur
   onClick?: VxeSelectEvents.Click
+  onScroll?: VxeSelectEvents.Scroll
 }
 
 export interface VxeSelectListeners {
@@ -233,6 +294,7 @@ export interface VxeSelectListeners {
   focus?: VxeSelectEvents.Focus
   blur?: VxeSelectEvents.Blur
   click?: VxeSelectEvents.Click
+  scroll?: VxeSelectEvents.Scroll
 }
 
 export namespace VxeSelectEvents {
@@ -241,6 +303,7 @@ export namespace VxeSelectEvents {
   export type Focus = (params: VxeSelectDefines.FocusEventParams) => void
   export type Blur = (params: VxeSelectDefines.BlurEventParams) => void
   export type Click = (params: VxeSelectDefines.ClickEventParams) => void
+  export type Scroll = (params: VxeSelectDefines.ScrollEventParams) => void
 }
 
 export namespace VxeSelectSlotTypes {

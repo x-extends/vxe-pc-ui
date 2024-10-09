@@ -125,15 +125,130 @@ Vue.use(VxeTable)
 ***不建议将第三方的 CDN 地址用于正式环境，因为该连接随时都可能会失效***  
 
 ```HTML
-<!-- style -->
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/vxe-pc-ui@3/lib/style.css">
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/vxe-table@3/lib/style.css">
-<!-- vue -->
-<script src="https://cdn.jsdelivr.net/npm/vue@2.6.14"></script>
-<!-- table -->
-<script src="https://cdn.jsdelivr.net/npm/xe-utils"></script>
-<script src="https://cdn.jsdelivr.net/npm/vxe-pc-ui@3"></script>
-<script src="https://cdn.jsdelivr.net/npm/vxe-table@3"></script>
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <!-- style -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/vxe-pc-ui@3/lib/style.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/vxe-table@3/lib/style.css">
+  <!-- vue -->
+  <script src="https://cdn.jsdelivr.net/npm/vue@2.6.14"></script>
+  <!-- table -->
+  <script src="https://cdn.jsdelivr.net/npm/xe-utils"></script>
+  <script src="https://cdn.jsdelivr.net/npm/vxe-pc-ui@3"></script>
+  <script src="https://cdn.jsdelivr.net/npm/vxe-table@3"></script>
+</head>
+<body>
+  <div id="app">
+    <div>
+      <vxe-form
+        :data="formData"
+        @submit="submitEvent">
+        <vxe-form-item title="名称" field="name" span="12" :item-render="{}">
+          <template #default="params">
+            <vxe-input v-model="formData.name"></vxe-input>
+          </template>
+        </vxe-form-item>
+        <vxe-form-item title="角色" field="role" span="12" :item-render="{}">
+          <template #default="params">
+            <vxe-input v-model="formData.role"></vxe-input>
+          </template>
+        </vxe-form-item>
+        <vxe-form-item title="年龄" field="age" span="12" :item-render="{}">
+          <template #default="params">
+            <vxe-input v-model="formData.age"></vxe-input>
+          </template>
+        </vxe-form-item>
+        <vxe-form-item align="center" span="24" :item-render="{}">
+          <template #default>
+            <vxe-button type="submit" status="primary">提交</vxe-button>
+            <vxe-button type="reset">重置</vxe-button>
+          </template>
+        </vxe-form-item>
+      </vxe-form>
+    </div>
+  </div>
+  <script>
+    (function () {
+      var App = {
+        data() {
+          return {
+            formData: {
+              name: '',
+              nickname: '',
+              sex: '',
+              role: ''
+            }
+          }
+        },
+        methods: {
+          submitEvent () {
+            VxeUI.modal.message({ content: '保存成功', status: 'success' })
+          }
+        }
+      }
+      Vue.createApp(App).use(VxeUI).use(VXETable).mount('#app')
+    })()
+  </script>
+</body>
+</html>
+```
+
+## 示例
+
+```html
+<template>
+  <div>
+    <vxe-form
+      :data="formData"
+      @submit="submitEvent">
+      <vxe-form-item title="名称" field="name" span="12" :item-render="{}">
+        <template #default="params">
+          <vxe-input v-model="formData.name"></vxe-input>
+        </template>
+      </vxe-form-item>
+      <vxe-form-item title="角色" field="role" span="12" :item-render="{}">
+        <template #default="params">
+          <vxe-input v-model="formData.role"></vxe-input>
+        </template>
+      </vxe-form-item>
+      <vxe-form-item title="年龄" field="age" span="12" :item-render="{}">
+        <template #default="params">
+          <vxe-input v-model="formData.age"></vxe-input>
+        </template>
+      </vxe-form-item>
+      <vxe-form-item align="center" span="24" :item-render="{}">
+        <template #default>
+          <vxe-button type="submit" status="primary">提交</vxe-button>
+          <vxe-button type="reset">重置</vxe-button>
+        </template>
+      </vxe-form-item>
+    </vxe-form>
+  </div>
+</template>
+
+<script>
+export default {
+  data() {
+    return {
+      formData: {
+        name: '',
+        nickname: '',
+        sex: '',
+        role: ''
+      }
+    }
+  },
+  methods: {
+    submitEvent () {
+      VxeUI.modal.message({ content: '保存成功', status: 'success' })
+    }
+  }
+}
+</script>
 ```
 
 ## Contributors
