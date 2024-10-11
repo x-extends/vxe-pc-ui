@@ -1,4 +1,4 @@
-import { VueConstructor } from 'vue'
+import Vue, { VueConstructor } from 'vue'
 import { VxeUI } from '@vxe-ui/core'
 import XEUtils from 'xe-utils'
 import VxeModalComponent, { allActiveModals } from './src/modal'
@@ -132,6 +132,12 @@ export const ModalController = {
 export const VxeModal = Object.assign(VxeModalComponent, {
   install: function (app: VueConstructor) {
     app.component(VxeModalComponent.name as string, VxeModalComponent)
+    // 兼容老版本
+    if (!Vue.prototype.$vxe) {
+      Vue.prototype.$vxe = { modal: ModalController }
+    } else {
+      Vue.prototype.$vxe.modal = ModalController
+    }
   }
 })
 

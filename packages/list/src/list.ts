@@ -3,6 +3,7 @@ import { defineVxeComponent } from '../../ui/src/comp'
 import XEUtils from 'xe-utils'
 import { getConfig, globalEvents, globalResize, createEvent, globalMixins } from '../../ui'
 import { browse } from '../../ui/src/dom'
+import { getSlotVNs } from '../../ui/src/vn'
 import VxeLoadingComponent from '../../loading/src/loading'
 
 import type { VxeListPropTypes, VxeListEmits, VxeComponentSizeType, ListReactData, ValueOf, ListInternalData } from '../../../types'
@@ -84,6 +85,20 @@ export default defineVxeComponent({
     dispatchEvent (type: ValueOf<VxeListEmits>, params: Record<string, any>, evnt: Event | null) {
       const $xeList = this
       $xeList.$emit(type, createEvent(evnt, { $list: $xeList }, params))
+    },
+    callSlot  (slotFunc: ((params: any, h: CreateElement) => any) | string | null, params: any, h: CreateElement) {
+      const $xeList = this
+      const slots = $xeList.$scopedSlots
+
+      if (slotFunc) {
+        if (XEUtils.isString(slotFunc)) {
+          slotFunc = slots[slotFunc] || null
+        }
+        if (XEUtils.isFunction(slotFunc)) {
+          return getSlotVNs(slotFunc.call($xeList, params, h))
+        }
+      }
+      return []
     },
     /**
        * 加载数据
@@ -331,7 +346,7 @@ export default defineVxeComponent({
             style: {
               marginTop: topSpaceHeight ? `${topSpaceHeight}px` : ''
             }
-          }, defaultSlot ? defaultSlot({ items, $list: $xeList }) : [])
+          }, defaultSlot ? $xeList.callSlot(defaultSlot, { items }, h) : [])
         ]),
         /**
          * 加载中

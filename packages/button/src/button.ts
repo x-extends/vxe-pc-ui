@@ -719,7 +719,7 @@ export default defineVxeComponent({
               placement: reactData.panelPlacement
             },
             style: reactData.panelStyle,
-            ...panelOns
+            on: panelOns
           }, initialized && (visiblePanel || isAniVisible)
             ? [
                 h('div', {
