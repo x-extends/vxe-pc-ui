@@ -37,9 +37,12 @@ export default defineVxeComponent({
     popupClassName: [String, Function] as PropType<VxeTooltipPropTypes.PopupClassName>,
     isArrow: {
       type: Boolean as PropType<VxeTooltipPropTypes.IsArrow>,
-      default: true
+      default: () => getConfig().tooltip.isArrow
     },
-    enterable: Boolean as PropType<VxeTooltipPropTypes.Enterable>,
+    enterable: {
+      type: Boolean as PropType<VxeTooltipPropTypes.Enterable>,
+      default: () => getConfig().tooltip.enterable
+    },
     enterDelay: {
       type: Number as PropType<VxeTooltipPropTypes.EnterDelay>,
       default: () => getConfig().tooltip.enterDelay

@@ -57,15 +57,25 @@ export function watchItem (_vm: VxeFormItemConstructor | VxeFormGroupConstructor
   })
 }
 
-export function assembleItem ($xeForm: VxeFormConstructor, el: HTMLDivElement, formItem: ItemInfo, formGroup: XEFormItemProvide | null) {
+export function assembleItem ($xeForm: VxeFormConstructor, el: HTMLDivElement | undefined, formItem: ItemInfo, formGroup: XEFormItemProvide | null) {
   const { reactData } = $xeForm
+  const formProps = $xeForm
+  const { customLayout } = formProps
   const { staticItems } = reactData
-  const parentElem = el.parentNode
-  const parentItem = formGroup ? formGroup.formItem : null
-  const parentItems = parentItem ? parentItem.children : staticItems
-  if (parentElem) {
-    parentItems.splice(XEUtils.arrayIndexOf(parentElem.children, el), 0, formItem)
-    reactData.staticItems = staticItems.slice(0)
+  if (customLayout) {
+    if (!staticItems.some(item => item.id === formItem.id)) {
+      staticItems.push(formItem)
+    }
+  } else {
+    if (el) {
+      const parentElem = el.parentNode
+      const parentItem = formGroup ? formGroup.formItem : null
+      const parentItems = parentItem ? parentItem.children : staticItems
+      if (parentElem) {
+        parentItems.splice(XEUtils.arrayIndexOf(parentElem.children, el), 0, formItem)
+        reactData.staticItems = staticItems.slice(0)
+      }
+    }
   }
 }
 

@@ -276,10 +276,12 @@ setConfig({
   tip: {},
   tooltip: {
     // size: null,
+    // enterable: false,
     trigger: 'hover',
     theme: 'dark',
     enterDelay: 500,
-    leaveDelay: 300
+    leaveDelay: 300,
+    isArrow: true
   },
   tree: {
     indent: 20,

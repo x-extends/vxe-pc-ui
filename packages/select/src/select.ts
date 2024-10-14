@@ -1449,6 +1449,8 @@ export default defineVxeComponent({
                       props: {
                         value: reactData.searchValue,
                         clearable: true,
+                        disabled: false,
+                        readonly: false,
                         placeholder: getI18n('vxe.select.search'),
                         prefixIcon: getIcon().INPUT_SEARCH
                       },
