@@ -1210,6 +1210,8 @@ export default defineComponent({
                         class: 'vxe-select-search--input',
                         modelValue: reactData.searchValue,
                         clearable: true,
+                        disabled: false,
+                        readonly: false,
                         placeholder: getI18n('vxe.select.search'),
                         prefixIcon: getIcon().INPUT_SEARCH,
                         'onUpdate:modelValue': modelSearchEvent,

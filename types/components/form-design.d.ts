@@ -262,10 +262,13 @@ export namespace VxeFormDesignEvents {
 
 export namespace VxeFormDesignSlotTypes {
   export interface DefaultSlotParams {}
+  export interface HeaderSlotParams {}
+  export interface ExtraSlotParams {}
 }
 export interface VxeFormDesignSlots {
   default: (params: VxeFormDesignSlotTypes.DefaultSlotParams) => any
-  header: (params: VxeFormDesignSlotTypes.DefaultSlotParams) => any
+  header: (params: VxeFormDesignSlotTypes.HeaderSlotParams) => any
+  extra: (params: VxeFormDesignSlotTypes.ExtraSlotParams) => any
 }
 
 export const FormDesign: typeof VxeFormDesign

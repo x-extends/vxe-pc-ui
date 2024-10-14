@@ -1,5 +1,5 @@
 import { defineComponent, ref, h, PropType, reactive, provide, watch, nextTick, ComponentOptions, createCommentVNode } from 'vue'
-import { VxeUI, getConfig, getIcon, getI18n, renderer, useSize, createEvent } from '../../ui'
+import { VxeUI, getConfig, getIcon, getI18n, renderer, useSize, createEvent, renderEmptyElement } from '../../ui'
 import { toCssUnit } from '../../ui/src/dom'
 import { FormDesignWidgetInfo, getWidgetConfig, getWidgetConfigCustomGroup, configToWidget } from './widget-info'
 import XEUtils from 'xe-utils'
@@ -404,6 +404,7 @@ export default defineComponent({
     Object.assign($xeFormDesign, formDesignMethods, formDesignPrivateMethods)
 
     const renderLayoutHeader = () => {
+      const extraSlot = slots.extra
       return h('div', {
         class: 'vxe-form-design--header-wrapper'
       }, [
@@ -416,13 +417,22 @@ export default defineComponent({
         h('div', {
           class: 'vxe-form-design--header-right'
         }, [
-          h(VxeButtonComponent, {
-            mode: 'text',
-            status: 'primary',
-            icon: getIcon().FORM_DESIGN_STYLE_SETTING,
-            content: getI18n('vxe.formDesign.styleSetting.btn'),
-            onClick: openStylePreviewEvent
-          })
+          extraSlot
+            ? h('div', {
+              class: 'vxe-form-design--header-extra'
+            }, extraSlot({}))
+            : renderEmptyElement($xeFormDesign),
+          h('div', {
+            class: 'vxe-form-design--header-setting'
+          }, [
+            h(VxeButtonComponent, {
+              mode: 'text',
+              status: 'primary',
+              icon: getIcon().FORM_DESIGN_STYLE_SETTING,
+              content: getI18n('vxe.formDesign.styleSetting.btn'),
+              onClick: openStylePreviewEvent
+            })
+          ])
         ])
       ])
     }

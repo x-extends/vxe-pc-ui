@@ -49,6 +49,15 @@
 .vxe-form-design--header-middle {
   flex-grow: 1;
 }
+.vxe-form-design--header-right {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  .vxe-form-design--header-extra,
+  .vxe-form-design--header-setting {
+    flex-shrink: 0;
+  }
+}
 
 .vxe-form-design--layout-style {
   display: flex;

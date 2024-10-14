@@ -23,19 +23,6 @@ export default defineComponent({
     const formItemInfo = { itemConfig: formItem }
     provide('xeFormItemInfo', formItemInfo)
 
-    watchItem(props, formItem)
-
-    onMounted(() => {
-      const elem = refElem.value
-      if (elem) {
-        assembleItem($xeForm, elem, formItem, $xeParentFormGroup)
-      }
-    })
-
-    onUnmounted(() => {
-      destroyItem($xeForm, formItem)
-    })
-
     const renderVN = () => {
       const formProps = $xeForm.props
       const item = formItem as unknown as VxeFormDefines.ItemInfo
@@ -68,6 +55,17 @@ export default defineComponent({
 
       renderVN
     }
+
+    watchItem(props, formItem)
+
+    onMounted(() => {
+      const elem = refElem.value
+      assembleItem($xeForm, elem, formItem, $xeParentFormGroup)
+    })
+
+    onUnmounted(() => {
+      destroyItem($xeForm, formItem)
+    })
 
     provide('$xeFormGroup', $xeFormGroup)
     provide('$xeFormItem', null)

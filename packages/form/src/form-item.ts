@@ -98,19 +98,6 @@ export default defineComponent({
     const formItemInfo = { itemConfig: formItem }
     provide('xeFormItemInfo', formItemInfo)
 
-    watchItem(props, formItem)
-
-    onMounted(() => {
-      const elem = refElem.value
-      if (elem) {
-        assembleItem($xeForm, elem, formItem, $xeFormGroup)
-      }
-    })
-
-    onUnmounted(() => {
-      destroyItem($xeForm, formItem)
-    })
-
     const renderItem = ($xeForm: VxeFormConstructor & VxeFormPrivateMethods, item: VxeFormDefines.ItemInfo) => {
       const formProps = $xeForm.props
       const { data, readonly, disabled } = formProps
@@ -154,6 +141,17 @@ export default defineComponent({
 
       renderVN
     }
+
+    watchItem(props, formItem)
+
+    onMounted(() => {
+      const elem = refElem.value
+      assembleItem($xeForm, elem, formItem, $xeFormGroup)
+    })
+
+    onUnmounted(() => {
+      destroyItem($xeForm, formItem)
+    })
 
     provide('$xeFormItem', $xeFormitem)
     provide('$xeFormGroup', null)
