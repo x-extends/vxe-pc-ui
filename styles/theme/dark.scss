@@ -1,14 +1,6 @@
 @import './base.scss';
 
 [data-vxe-ui-theme="dark"] {
-  $vxe-ui-font-primary-color: #409eff;
-
-  $vxe-ui-status-success-color: #67c23a;
-  $vxe-ui-status-info-color: #909399;
-  $vxe-ui-status-warning-color: #e6a23c;
-  $vxe-ui-status-danger-color: #f56c6c;
-  $vxe-ui-status-error-color: #f56c6c;
-
   color-scheme: dark;
 
   /*font color*/
@@ -112,4 +104,7 @@
   --vxe-ui-tree-node-hover-checkbox-checked-background-color: #6e5326;
   --vxe-ui-tree-node-current-background-color: #18222c;
   --vxe-ui-tree-node-hover-current-background-color: #262727;
+
+  /*rate*/
+  --vxe-ui-rate-item-color: #bd9537;
 }

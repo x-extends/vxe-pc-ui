@@ -90,6 +90,7 @@ const componentList = [
   'radio',
   'radio-button',
   'radio-group',
+  'rate',
   'result',
   'row',
   'select',

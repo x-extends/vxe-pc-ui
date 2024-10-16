@@ -28,7 +28,7 @@ export const readLocalFile: VxeUploadDefines.ReadFileFunction = (options) => {
     }
     if (!fileForm) {
       fileForm = document.createElement('form')
-      fileForm.className = 'vxe-table--file-form'
+      fileForm.style.display = 'none'
       fileForm.appendChild(fileInput)
       document.body.appendChild(fileForm)
     }

@@ -61,6 +61,7 @@ import VxePulldown from './components/pulldown'
 import VxeRadio from './components/radio'
 import VxeRadioButton from './components/radio-button'
 import VxeRadioGroup from './components/radio-group'
+import VxeRate from './components/rate'
 import VxeResult from './components/result'
 import VxeRow from './components/row'
 import VxeSelect from './components/select'
@@ -156,6 +157,7 @@ interface AllComponents {
   VxeRadio: typeof VxeRadio
   VxeRadioButton: typeof VxeRadioButton
   VxeRadioGroup: typeof VxeRadioGroup
+  VxeRate: typeof VxeRate
   VxeResult: typeof VxeResult
   VxeRow: typeof VxeRow
   VxeSelect: typeof VxeSelect
@@ -250,6 +252,7 @@ export * from './components/pulldown'
 export * from './components/radio'
 export * from './components/radio-button'
 export * from './components/radio-group'
+export * from './components/rate'
 export * from './components/result'
 export * from './components/row'
 export * from './components/select'

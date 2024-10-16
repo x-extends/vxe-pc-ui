@@ -24,7 +24,7 @@ export default defineVxeComponent({
     //
     dispatchEvent (type: ValueOf<VxeStepsEmits>, params: Record<string, any>, evnt: Event | null) {
       const $xeSteps = this
-      $xeSteps.$emit(type, createEvent(evnt, { $watermark: $xeSteps }, params))
+      $xeSteps.$emit(type, createEvent(evnt, { $steps: $xeSteps }, params))
     },
 
     //
