@@ -61,6 +61,7 @@ import VxePulldown from './pulldown'
 import VxeRadio from './radio'
 import VxeRadioButton from './radio-button'
 import VxeRadioGroup from './radio-group'
+import VxeRate from './rate'
 import VxeResult from './result'
 import VxeRow from './row'
 import VxeSelect from './select'
@@ -142,6 +143,7 @@ const components = [
   VxeRadio,
   VxeRadioButton,
   VxeRadioGroup,
+  VxeRate,
   VxeResult,
   VxeRow,
   VxeSelect,
@@ -244,6 +246,7 @@ export * from './pulldown'
 export * from './radio'
 export * from './radio-button'
 export * from './radio-group'
+export * from './rate'
 export * from './result'
 export * from './row'
 export * from './select'

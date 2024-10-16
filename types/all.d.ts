@@ -65,6 +65,7 @@ import VxeResult from './components/result'
 import VxeRow from './components/row'
 import VxeSelect from './components/select'
 import VxeSlider from './components/slider'
+import VxeRate from './components/rate'
 import VxeSteps from './components/steps'
 import VxeSwitch from './components/switch'
 import VxeTabPane from './components/tab-pane'
@@ -150,6 +151,7 @@ interface AllComponents {
   VxeRadio: typeof VxeRadio
   VxeRadioButton: typeof VxeRadioButton
   VxeRadioGroup: typeof VxeRadioGroup
+  VxeRate: typeof VxeRate
   VxeResult: typeof VxeResult
   VxeRow: typeof VxeRow
   VxeSelect: typeof VxeSelect
@@ -248,6 +250,7 @@ export * from './components/pulldown'
 export * from './components/radio'
 export * from './components/radio-button'
 export * from './components/radio-group'
+export * from './components/rate'
 export * from './components/result'
 export * from './components/row'
 export * from './components/select'

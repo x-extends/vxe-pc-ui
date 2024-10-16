@@ -249,6 +249,7 @@ setConfig({
   radioGroup: {
     strict: true
   },
+  rate: {},
   result: {},
   row: {},
   select: {
@@ -502,7 +503,11 @@ setIcon({
   RESULT_WARNING: iconPrefix + 'warning-circle-fill',
   RESULT_ERROR: iconPrefix + 'error-circle-fill',
   RESULT_QUESTION: iconPrefix + 'question-circle-fill',
-  RESULT_LOADING: iconPrefix + 'spinner roll'
+  RESULT_LOADING: iconPrefix + 'spinner roll',
+
+  // rate
+  RATE_CHECKED: iconPrefix + 'star-fill',
+  RATE_UNCHECKED: iconPrefix + 'star'
 })
 
 export * from '@vxe-ui/core'

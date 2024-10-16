@@ -274,6 +274,11 @@ const routes: Array<RouteRecordRaw> = [
     path: '/component/slider',
     name: 'SliderTest',
     component: () => import('../views/slider/SliderTest.vue')
+  },
+  {
+    path: '/component/rate',
+    name: 'RateTest',
+    component: () => import('../views/rate/RateTest.vue')
   }
 ]
 

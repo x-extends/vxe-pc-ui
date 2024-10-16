@@ -3,7 +3,7 @@ import XEUtils from 'xe-utils'
 import { getConfig, createEvent, useSize } from '../../ui'
 import { getFuncText } from '../../ui/src/utils'
 
-import type { VxeSwitchPropTypes, VxeSwitchConstructor, VxeSwitchEmits, SwitchInternalData, SwitchReactData, SwitchMethods, VxeFormConstructor, VxeFormPrivateMethods, VxeFormDefines } from '../../../types'
+import type { VxeSwitchPropTypes, VxeSwitchConstructor, VxeSwitchEmits, SwitchInternalData, ValueOf, SwitchReactData, SwitchMethods, VxeFormConstructor, VxeFormPrivateMethods, VxeFormDefines } from '../../../types'
 
 export default defineComponent({
   name: 'VxeSwitch',
@@ -91,6 +91,10 @@ export default defineComponent({
       return props.modelValue === props.openValue
     })
 
+    const emitModel = (value: any) => {
+      emit('update:modelValue', value)
+    }
+
     const clickEvent = (evnt: Event) => {
       const isDisabled = computeIsDisabled.value
       if (!isDisabled) {
@@ -98,7 +102,7 @@ export default defineComponent({
         clearTimeout(internalData.atTimeout)
         const value = isChecked ? props.closeValue : props.openValue
         reactData.hasAnimat = true
-        emit('update:modelValue', value)
+        emitModel(value)
         switchMethods.dispatchEvent('change', { value }, evnt)
         // 自动更新校验状态
         if ($xeForm && formItemInfo) {
@@ -109,6 +113,10 @@ export default defineComponent({
           internalData.atTimeout = undefined
         }, 400)
       }
+    }
+
+    const dispatchEvent = (type: ValueOf<VxeSwitchEmits>, params: Record<string, any>, evnt: Event | null) => {
+      emit(type, createEvent(evnt, { $switch: $xeSwitch }, params))
     }
 
     const focusEvent = (evnt: Event) => {
@@ -122,9 +130,7 @@ export default defineComponent({
     }
 
     switchMethods = {
-      dispatchEvent (type, params, evnt) {
-        emit(type, createEvent(evnt, { $switch: $xeSwitch }, params))
-      },
+      dispatchEvent,
       focus () {
         const btnElem = refButton.value
         reactData.isActivated = true

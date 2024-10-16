@@ -318,13 +318,13 @@ function oldFormItemRadioAndCheckboxRender (renderOpts: any, params: any) {
  */
 renderer.mixin({
   input: {
-    renderItemContent: nativeItemRender
+    renderFormItemContent: nativeItemRender
   },
   textarea: {
-    renderItemContent: nativeItemRender
+    renderFormItemContent: nativeItemRender
   },
   select: {
-    renderItemContent (renderOpts: any, params: any) {
+    renderFormItemContent (renderOpts: any, params: any) {
       return [
         h('select', {
           class: 'vxe-default-select',
@@ -336,25 +336,25 @@ renderer.mixin({
     }
   },
   VxeInput: {
-    renderItemContent: defaultItemRender
+    renderFormItemContent: defaultItemRender
   },
   VxeNumberInput: {
-    renderItemContent: defaultItemRender
+    renderFormItemContent: defaultItemRender
   },
   VxePasswordInput: {
-    renderItemContent: defaultItemRender
+    renderFormItemContent: defaultItemRender
   },
   VxeTextarea: {
-    renderItemContent: defaultItemRender
+    renderFormItemContent: defaultItemRender
   },
   VxeDatePicker: {
-    renderItemContent: defaultItemRender
+    renderFormItemContent: defaultItemRender
   },
   VxeButton: {
-    renderItemContent: defaultFormItemRender
+    renderFormItemContent: defaultFormItemRender
   },
   VxeButtonGroup: {
-    renderItemContent (renderOpts, params) {
+    renderFormItemContent (renderOpts, params) {
       const { options } = renderOpts
       const { data, field } = params
       const itemValue = XEUtils.get(data, field)
@@ -368,7 +368,7 @@ renderer.mixin({
     }
   },
   VxeSelect: {
-    renderItemContent (renderOpts, params) {
+    renderFormItemContent (renderOpts, params) {
       const { data, field } = params
       const { options, optionProps, optionGroups, optionGroupProps } = renderOpts
       const itemValue = XEUtils.get(data, field)
@@ -381,7 +381,7 @@ renderer.mixin({
     }
   },
   VxeTreeSelect: {
-    renderItemContent (renderOpts: any, params: any) {
+    renderFormItemContent (renderOpts: any, params: any) {
       const { data, field } = params
       const { options, optionProps } = renderOpts
       const itemValue = XEUtils.get(data, field)
@@ -394,25 +394,31 @@ renderer.mixin({
     }
   },
   VxeIconPicker: {
-    renderItemContent: defaultFormItemRender
+    renderFormItemContent: defaultFormItemRender
   },
   VxeRadio: {
-    renderItemContent: defaultFormItemRender
+    renderFormItemContent: defaultFormItemRender
   },
   VxeRadioGroup: {
-    renderItemContent: formItemRadioAndCheckboxRender
+    renderFormItemContent: formItemRadioAndCheckboxRender
   },
   VxeCheckbox: {
-    renderItemContent: defaultFormItemRender
+    renderFormItemContent: defaultFormItemRender
   },
   VxeCheckboxGroup: {
-    renderItemContent: formItemRadioAndCheckboxRender
+    renderFormItemContent: formItemRadioAndCheckboxRender
   },
   VxeSwitch: {
-    renderItemContent: defaultItemRender
+    renderFormItemContent: defaultItemRender
+  },
+  VxeRate: {
+    renderFormItemContent: defaultItemRender
+  },
+  VxeSlider: {
+    renderFormItemContent: defaultItemRender
   },
   VxeImage: {
-    renderItemContent (renderOpts, params) {
+    renderFormItemContent (renderOpts, params) {
       const { data, field } = params
       const { props } = renderOpts
       const itemValue = XEUtils.get(data, field)
@@ -426,7 +432,7 @@ renderer.mixin({
     }
   },
   VxeImageGroup: {
-    renderItemContent (renderOpts, params) {
+    renderFormItemContent (renderOpts, params) {
       const { data, field } = params
       const { props } = renderOpts
       const itemValue = XEUtils.get(data, field)
@@ -440,24 +446,24 @@ renderer.mixin({
     }
   },
   VxeUpload: {
-    renderItemContent: defaultItemRender
+    renderFormItemContent: defaultItemRender
   },
 
   // 以下已废弃
   $input: {
-    renderItemContent: oldItemRender
+    renderFormItemContent: oldItemRender
   },
   $textarea: {
-    renderItemContent: oldItemRender
+    renderFormItemContent: oldItemRender
   },
   $button: {
-    renderItemContent: oldButtonItemRender
+    renderFormItemContent: oldButtonItemRender
   },
   $buttons: {
-    renderItemContent: oldButtonsItemRender
+    renderFormItemContent: oldButtonsItemRender
   },
   $select: {
-    renderItemContent (renderOpts, params) {
+    renderFormItemContent (renderOpts, params) {
       const { data, field } = params
       const { options, optionProps, optionGroups, optionGroupProps } = renderOpts
       const itemValue = XEUtils.get(data, field)
@@ -470,13 +476,13 @@ renderer.mixin({
     }
   },
   $radio: {
-    renderItemContent: oldFormItemRadioAndCheckboxRender
+    renderFormItemContent: oldFormItemRadioAndCheckboxRender
   },
   $checkbox: {
-    renderItemContent: oldFormItemRadioAndCheckboxRender
+    renderFormItemContent: oldFormItemRadioAndCheckboxRender
   },
   $switch: {
-    renderItemContent: oldItemRender
+    renderFormItemContent: oldItemRender
   }
   // 以上已废弃
 })

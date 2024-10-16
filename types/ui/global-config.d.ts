@@ -57,6 +57,7 @@ import { VxePulldownProps } from '../components/pulldown'
 import { VxeRadioProps } from '../components/radio'
 import { VxeRadioButtonProps } from '../components/radio-button'
 import { VxeRadioGroupProps } from '../components/radio-group'
+import { VxeRateProps } from '../components/rate'
 import { VxeResultProps } from '../components/result'
 import { VxeRowProps } from '../components/row'
 import { VxeSelectProps } from '../components/select'
@@ -143,6 +144,7 @@ declare module '@vxe-ui/core' {
     radio?: VxeRadioProps
     radioButton?: VxeRadioButtonProps
     radioGroup?: VxeRadioGroupProps
+    rate?: VxeRateProps
     result?: VxeResultProps
     row?: VxeRowProps
     select?: VxeSelectProps

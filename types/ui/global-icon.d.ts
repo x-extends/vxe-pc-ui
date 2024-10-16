@@ -219,5 +219,9 @@ declare module '@vxe-ui/core' {
     RESULT_ERROR?: string
     RESULT_QUESTION?: string
     RESULT_LOADING?: string
+
+    // rate
+    RATE_CHECKED?: string
+    RATE_UNCHECKED?: string
   }
 }
