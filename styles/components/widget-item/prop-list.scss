@@ -17,11 +17,16 @@
     display: inline-flex;
     vertical-align: middle;
   }
-  .vxe-form-design--widget-form-item-prop-width {
-    width: 90px;
-  }
-  .vxe-form-design--widget-form-item-prop-unit {
-    width: 90px;
+}
+
+.vxe-form {
+  .vxe-form-design--widget-form-item-prop-list {
+    & > .vxe-form-design--widget-form-item-prop-width {
+      width: 90px;
+    }
+    & > .vxe-form-design--widget-form-item-prop-unit {
+      width: 90px;
+    }
   }
 }
 

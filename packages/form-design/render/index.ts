@@ -20,6 +20,8 @@ import { getWidgetVxeRadioGroupConfig, WidgetVxeRadioGroupViewComponent, WidgetV
 import { getWidgetVxeCheckboxGroupConfig, WidgetVxeCheckboxGroupViewComponent, WidgetVxeCheckboxGroupFormComponent } from '../widget-vxe-checkbox-group'
 import { getWidgetVxeUploadFileConfig, WidgetVxeUploadFileViewComponent, WidgetVxeUploadFileFormComponent } from '../widget-vxe-upload-file'
 import { getWidgetVxeUploadImageConfig, WidgetVxeUploadImageViewComponent, WidgetVxeUploadImageFormComponent } from '../widget-vxe-upload-image'
+import { getWidgetVxeRateConfig, WidgetVxeRateViewComponent, WidgetVxeRateFormComponent } from '../widget-vxe-rate'
+import { getWidgetVxeSliderConfig, WidgetVxeSliderViewComponent, WidgetVxeSliderFormComponent } from '../widget-vxe-slider'
 
 /**
  * 表单设计器 - 渲染器
@@ -194,6 +196,24 @@ renderer.mixin({
     },
     renderFormDesignWidgetFormView (renderOpts, renderParams) {
       return h(WidgetVxeUploadImageFormComponent, { renderOpts, renderParams })
+    }
+  },
+  VxeRate: {
+    createFormDesignWidgetConfig: getWidgetVxeRateConfig,
+    renderFormDesignWidgetView (renderOpts, renderParams) {
+      return h(WidgetVxeRateViewComponent, { renderOpts, renderParams })
+    },
+    renderFormDesignWidgetFormView (renderOpts, renderParams) {
+      return h(WidgetVxeRateFormComponent, { renderOpts, renderParams })
+    }
+  },
+  VxeSlider: {
+    createFormDesignWidgetConfig: getWidgetVxeSliderConfig,
+    renderFormDesignWidgetView (renderOpts, renderParams) {
+      return h(WidgetVxeSliderViewComponent, { renderOpts, renderParams })
+    },
+    renderFormDesignWidgetFormView (renderOpts, renderParams) {
+      return h(WidgetVxeSliderFormComponent, { renderOpts, renderParams })
     }
   }
 })
