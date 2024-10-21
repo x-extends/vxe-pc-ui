@@ -4,6 +4,7 @@ import XEUtils from 'xe-utils'
 import { getConfig, getI18n, getIcon, globalEvents, createEvent, globalMixins, renderEmptyElement } from '../../ui'
 import { getEventTargetNode, getAbsolutePos } from '../../ui/src/dom'
 import { getLastZIndex, nextZIndex } from '../../ui/src/utils'
+import { errLog } from '../../ui/src/log'
 
 import VxeInputComponent from '../../input/src/input'
 import VxeTreeComponent from '../../tree/src/tree'
@@ -197,6 +198,12 @@ export default defineVxeComponent({
 
       return Object.assign({}, props.optionProps)
     },
+    computeTreeKeyField () {
+      const $xeTreeSelect = this
+
+      const treeOpts = $xeTreeSelect.computeTreeOpts as VxeTreeSelectPropTypes.TreeConfig
+      return treeOpts.keyField || 'id'
+    },
     computeLabelField () {
       const $xeTreeSelect = this
 
@@ -255,12 +262,12 @@ export default defineVxeComponent({
       $xeTreeSelect.$emit('input', value)
       $xeTreeSelect.$emit('modelValue', value)
     },
-    getOptid (option: any) {
+    getNodeid (option: any) {
       const $xeTreeSelect = this
 
-      const valueField = $xeTreeSelect.computeValueField
-      const optid = option[valueField]
-      return optid ? encodeURIComponent(optid) : ''
+      const keyField = $xeTreeSelect.computeTreeKeyField
+      const nodeid = option[keyField]
+      return nodeid ? encodeURIComponent(nodeid) : ''
     },
     /**
      * 刷新选项，当选项被动态显示/隐藏时可能会用到
@@ -276,8 +283,9 @@ export default defineVxeComponent({
       const reactData = $xeTreeSelect.reactData
 
       const { options } = props
-      const valueField = $xeTreeSelect.computeValueField
+      const keyField = $xeTreeSelect.computeTreeKeyField
       const childrenField = $xeTreeSelect.computeChildrenField
+      const valueField = $xeTreeSelect.computeValueField
       const nodeMaps: Record<string, {
         item: any
         index: number
@@ -285,13 +293,21 @@ export default defineVxeComponent({
         parent: any
         nodes: any[]
       }> = {}
+      const keyMaps: Record<string, boolean> = {}
       XEUtils.eachTree(options, (item, index, items, path, parent, nodes) => {
-        let nodeid = $xeTreeSelect.getOptid(item)
+        let nodeid = $xeTreeSelect.getNodeid(item)
         if (!nodeid) {
           nodeid = getOptUniqueId()
-          item[valueField] = nodeid
         }
-        nodeMaps[nodeid] = { item, index, items, parent, nodes }
+        if (keyMaps[nodeid]) {
+          errLog('vxe.error.repeatKey', [keyField, nodeid])
+        }
+        keyMaps[nodeid] = true
+        const value = item[valueField]
+        if (nodeMaps[value]) {
+          errLog('vxe.error.repeatKey', [valueField, value])
+        }
+        nodeMaps[value] = { item, index, items, parent, nodes }
       }, { children: childrenField })
       reactData.fullOptionList = options || []
       reactData.fullNodeMaps = nodeMaps
@@ -549,6 +565,11 @@ export default defineVxeComponent({
       const { value, $event } = params
       $xeTreeSelect.changeEvent($event, value)
     },
+    loadSuccessEvent () {
+      const $xeTreeSelect = this
+
+      $xeTreeSelect.cacheItemMap()
+    },
 
     //
     // Render
@@ -574,6 +595,7 @@ export default defineVxeComponent({
       const treeNodeOpts = $xeTreeSelect.computeTreeNodeOpts
       const treeCheckboxOpts = $xeTreeSelect.computeTreeCheckboxOpts
       const treeRadioOpts = $xeTreeSelect.computeTreeRadioOpts
+      const treeKeyField = $xeTreeSelect.computeTreeKeyField
       const labelField = $xeTreeSelect.computeLabelField
       const valueField = $xeTreeSelect.computeValueField
       const childrenField = $xeTreeSelect.computeChildrenField
@@ -641,7 +663,7 @@ export default defineVxeComponent({
             placement: reactData.panelPlacement
           },
           style: reactData.panelStyle
-        }, initialized && (visiblePanel || isAniVisible)
+        }, initialized
           ? [
               h('div', {
                 class: 'vxe-tree-select--panel-wrapper'
@@ -671,7 +693,7 @@ export default defineVxeComponent({
                         checkboxConfig: treeCheckboxOpts,
                         titleField: labelField,
                         valueField: valueField,
-                        keyField: treeOpts.keyField,
+                        keyField: treeKeyField,
                         childrenField: treeOpts.childrenField || childrenField,
                         parentField: treeOpts.parentField || parentField,
                         hasChildField: treeOpts.hasChildField || hasChildField,
@@ -691,7 +713,8 @@ export default defineVxeComponent({
                       on: {
                         'node-click': $xeTreeSelect.nodeClickEvent,
                         'radio-change': $xeTreeSelect.radioChangeEvent,
-                        'checkbox-change': $xeTreeSelect.checkboxChangeEvent
+                        'checkbox-change': $xeTreeSelect.checkboxChangeEvent,
+                        'load-success': $xeTreeSelect.loadSuccessEvent
                       }
                     })
                   ])
