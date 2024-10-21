@@ -302,20 +302,28 @@ export default defineComponent({
       return nextTick()
     }
 
+    const resetItem = (item:VxeFormDefines.ItemInfo) => {
+      const { data } = props
+      const { field, resetValue } = item
+      XEUtils.set(data, field, resetValue === null ? getResetValue(XEUtils.get(data, field), undefined) : XEUtils.clone(resetValue, true))
+    }
+
     const reset = () => {
       const { data } = props
       const itemList = getItems()
       if (data) {
         itemList.forEach((item) => {
-          const { field, resetValue, itemRender } = item
+          const { field, itemRender } = item
           if (isEnableConf(itemRender)) {
             const compConf = renderer.get(itemRender.name)
             const fiResetMethod = compConf ? (compConf.formItemResetMethod || compConf.itemResetMethod) : null
             if (compConf && fiResetMethod) {
               fiResetMethod({ data, field, property: field, item, $form: $xeForm, $grid: $xeForm.xegrid })
             } else if (field) {
-              XEUtils.set(data, field, resetValue === null ? getResetValue(XEUtils.get(data, field), undefined) : XEUtils.clone(resetValue, true))
+              resetItem(item)
             }
+          } else if (field) {
+            resetItem(item)
           }
         })
       }
