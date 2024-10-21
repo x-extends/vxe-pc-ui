@@ -70,7 +70,6 @@ export namespace VxeFormPropTypes {
     autoPos?: boolean
     showMessage?: boolean
   }
-  export interface ValidOpts extends ValidConfig { }
 
   /**
    * 提示信息配置项
@@ -81,7 +80,13 @@ export namespace VxeFormPropTypes {
     leaveDelay?: number
     leaveMethod?: (params: { $event: Event }) => boolean
   }
-  export interface TooltipOpts extends TooltipConfig { }
+
+  export interface CollapseConfig {
+    foldIcon?: string
+    unfoldIcon?: string
+    foldButtonText?: string
+    unfoldButtonText?: string
+  }
 
   export type CustomLayout = boolean
 }
@@ -112,13 +117,15 @@ export interface VxeFormProps<D = any> {
   preventSubmit?: VxeFormPropTypes.PreventSubmit
   validConfig?: VxeFormPropTypes.ValidConfig
   tooltipConfig?: VxeFormPropTypes.TooltipConfig
+  collapseConfig?: VxeFormPropTypes.CollapseConfig
   customLayout?: VxeFormPropTypes.CustomLayout
 }
 
 export interface FormPrivateComputed {
   computeSize: ComputedRef<VxeFormPropTypes.Size>
-  computeValidOpts: ComputedRef<VxeFormPropTypes.ValidOpts>
-  computeTooltipOpts: ComputedRef<VxeFormPropTypes.TooltipOpts>
+  computeValidOpts: ComputedRef<VxeFormPropTypes.ValidConfig>
+  computeTooltipOpts: ComputedRef<VxeFormPropTypes.TooltipConfig>
+  computeCollapseOpts: ComputedRef<VxeFormPropTypes.CollapseConfig>
 }
 export interface VxeFormPrivateComputed extends FormPrivateComputed { }
 

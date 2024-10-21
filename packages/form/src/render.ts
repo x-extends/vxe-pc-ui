@@ -209,11 +209,12 @@ export function renderTitle ($xeForm: VxeFormConstructor & VxeFormPrivateMethods
 export const renderItemContent = ($xeForm: VxeFormConstructor & VxeFormPrivateMethods, item: VxeFormDefines.ItemInfo) => {
   const formProps = $xeForm.props
   const formReactData = $xeForm.reactData
-  const { computeValidOpts } = $xeForm.getComputeMaps()
+  const { computeCollapseOpts, computeValidOpts } = $xeForm.getComputeMaps()
   const { data, readonly, disabled } = formProps
   const { collapseAll } = formReactData
   const { slots, field, itemRender, collapseNode, errRule } = item
   const defaultSlot = slots ? slots.default : null
+  const collapseOpts = computeCollapseOpts.value
   const validOpts = computeValidOpts.value
   const compConf = isEnableConf(itemRender) ? renderer.get(itemRender.name) : null
 
@@ -236,9 +237,9 @@ export const renderItemContent = ($xeForm: VxeFormConstructor & VxeFormPrivateMe
       }, [
         h('span', {
           class: 'vxe-form--item-trigger-text'
-        }, collapseAll ? getI18n('vxe.form.unfolding') : getI18n('vxe.form.folding')),
+        }, collapseAll ? (collapseOpts.unfoldButtonText || getI18n('vxe.form.unfolding')) : (collapseOpts.foldButtonText || getI18n('vxe.form.folding'))),
         h('i', {
-          class: ['vxe-form--item-trigger-icon', collapseAll ? getIcon().FORM_FOLDING : getIcon().FORM_UNFOLDING]
+          class: ['vxe-form--item-trigger-icon', collapseAll ? (collapseOpts.foldIcon || getIcon().FORM_FOLDING) : (collapseOpts.unfoldIcon || getIcon().FORM_UNFOLDING)]
         })
       ])
     )
