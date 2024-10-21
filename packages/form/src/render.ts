@@ -225,6 +225,7 @@ export const renderItemContent = (h: CreateElement, $xeForm: VxeFormConstructor 
   const { slots, field, itemRender, collapseNode, errRule } = item
   const defaultSlot = slots ? slots.default : null
   const validOpts = $xeForm.computeValidOpts
+  const collapseOpts = $xeForm.computeCollapseOpts
   const compConf = isEnableConf(itemRender) ? renderer.get(itemRender.name) : null
 
   const params = { data, disabled, readonly, field, property: field, item, $form: $xeForm, $grid: $xeForm.xegrid }
@@ -248,9 +249,9 @@ export const renderItemContent = (h: CreateElement, $xeForm: VxeFormConstructor 
       }, [
         h('span', {
           class: 'vxe-form--item-trigger-text'
-        }, collapseAll ? getI18n('vxe.form.unfolding') : getI18n('vxe.form.folding')),
+        }, collapseAll ? (collapseOpts.unfoldButtonText || getI18n('vxe.form.unfolding')) : (collapseOpts.foldButtonText || getI18n('vxe.form.folding'))),
         h('i', {
-          class: ['vxe-form--item-trigger-icon', collapseAll ? getIcon().FORM_FOLDING : getIcon().FORM_UNFOLDING]
+          class: ['vxe-form--item-trigger-icon', collapseAll ? (collapseOpts.foldIcon || getIcon().FORM_FOLDING) : (collapseOpts.unfoldIcon || getIcon().FORM_UNFOLDING)]
         })
       ])
     )

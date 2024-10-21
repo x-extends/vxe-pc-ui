@@ -148,6 +148,7 @@ export default defineVxeComponent({
     },
     validConfig: Object as PropType<VxeFormPropTypes.ValidConfig>,
     tooltipConfig: Object as PropType<VxeFormPropTypes.TooltipConfig>,
+    collapseConfig: Object as PropType<VxeFormPropTypes.CollapseConfig>,
     customLayout: {
       type: Boolean as PropType<VxeFormPropTypes.CustomLayout>,
       default: () => getConfig().form.customLayout
@@ -205,6 +206,12 @@ export default defineVxeComponent({
       const props = $xeForm
 
       return Object.assign({}, getConfig().tooltip, getConfig().form.tooltipConfig, props.tooltipConfig)
+    },
+    computeCollapseOpts () {
+      const $xeForm = this
+      const props = $xeForm
+
+      return Object.assign({}, getConfig().form.collapseConfig, props.collapseConfig)
     }
   },
   methods: {

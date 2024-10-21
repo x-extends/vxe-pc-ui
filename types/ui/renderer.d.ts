@@ -1,5 +1,5 @@
 import { CreateElement } from 'vue'
-import { VxeComponentStyleType, VxeComponentClassNameType, VxeComponentSlotType } from '@vxe-ui/core'
+import { VxeComponentStyleType, VxeComponentClassNameType, VxeComponentSlotType, VxeComponentAlignType } from '@vxe-ui/core'
 import { VxeTableConstructor, VxeTablePropTypes, VxeTableDefines, VxeTablePrivateMethods } from '../components/table'
 import { VxeFormItemPropTypes, VxeFormItemSlotTypes, FormItemContentRenderParams, FormItemVisibleParams, FormItemResetParams } from '../components/form-item'
 import { VxeGridConstructor, VxeGridPropTypes } from '../components/grid'
@@ -49,6 +49,18 @@ declare module '@vxe-ui/core' {
      */
     tableFilterDefaultMethod?(params: VxeGlobalRendererHandles.TableFilterMethodParams<any>): boolean
 
+    /**
+     * 表格 - 单元格对齐方式
+     */
+    tableCellAlign?: VxeComponentAlignType
+    /**
+     * 表格 - 表头单元格对齐方式
+     */
+    tableHeaderCellAlign?: VxeComponentAlignType
+    /**
+     * 表格 - 列尾单元格对齐方式
+     */
+    tableFooterCellAlign?: VxeComponentAlignType
     /**
      * 表格 - 单元格设置 class
      */
