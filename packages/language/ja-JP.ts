@@ -26,6 +26,7 @@ export default {
       emptyProp: '"{0}" プロパティは空白が許可されていません',
       errProp: 'サポートされていないパラメーター "{0}"、"{1}" の可能性があります',
       colRepet: 'column.{0}="{0}" が重複しているため、機能が使えなくなる可能性があります。',
+      repeatKey: '字段重复 {0}="{1}"，这将会出现错误',
       notFunc: 'メソッド "{0}" がありません',
       errFunc: 'The argument "{0}" is not a method',
       notValidators: 'Global validators "{0}" no existe.',

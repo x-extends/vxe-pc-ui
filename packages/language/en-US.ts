@@ -26,6 +26,7 @@ export default {
       emptyProp: 'The property "{0}" is not allowed to be empty.',
       errProp: 'Unsupported parameter "{0}", possibly "{1}".',
       colRepet: 'column.{0}="{0}" is duplicated, which may make some features unusable',
+      repeatKey: 'Repeat {0}="{1}" for the field, which will result in an error.',
       notFunc: 'method "{0}" not exist.',
       errFunc: 'The argument "{0}" is not a method',
       notValidators: 'Global validators "{0}" no existe.',

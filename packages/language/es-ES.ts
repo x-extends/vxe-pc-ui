@@ -26,6 +26,7 @@ export default {
       emptyProp: 'La propiedad "{0}" no se permite estar vacía.',
       errProp: 'Parámetro no compatible "{0}", posiblemente "{1}".',
       colRepet: 'columna.{0}="{0}" está duplicado, lo que puede hacer que algunas funciones sean inutilizables',
+      repeatKey: 'Repeat {0}="{1}" for the field, which will result in an error.',
       notFunc: 'El método "{0}" no existe.',
       errFunc: 'The argument "{0}" is not a method',
       notValidators: 'Global validators "{0}" no existe.',

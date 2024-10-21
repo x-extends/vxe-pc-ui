@@ -26,6 +26,7 @@ export default {
       emptyProp: '参数 "{0}" 不允许为空',
       errProp: '不支持的参数 "{0}"，可能为 "{1}"',
       colRepet: 'column.{0}="{1}" 重复了，这可能会导致某些功能无法使用',
+      repeatKey: '字段重复 {0}="{1}"，这将会出现错误',
       notFunc: '方法 "{0}" 不存在',
       errFunc: '参数 "{0}" 不是一个方法',
       notValidators: '全局校验 "{0}" 不存在',

@@ -2,6 +2,7 @@ import { defineComponent, ref, computed, h, PropType, Ref, nextTick, inject, pro
 import { getConfig, getI18n, getIcon, globalEvents, createEvent, useSize } from '../../ui'
 import { getEventTargetNode, getAbsolutePos } from '../../ui/src/dom'
 import { getLastZIndex, nextZIndex } from '../../ui/src/utils'
+import { errLog } from '../../ui/src/log'
 import XEUtils from 'xe-utils'
 import VxeInputComponent from '../../input/src/input'
 import VxeTreeComponent from '../../tree/src/tree'
@@ -165,6 +166,11 @@ export default defineComponent({
       return props.optionProps || {}
     })
 
+    const computeTreeKeyField = computed(() => {
+      const treeOpts = computeTreeOpts.value
+      return treeOpts.keyField || 'id'
+    })
+
     const computeLabelField = computed(() => {
       const propsOpts = computePropsOpts.value
       return propsOpts.label || 'label'
@@ -220,10 +226,10 @@ export default defineComponent({
       }
     }
 
-    const getOptid = (option: any) => {
-      const valueField = computeValueField.value
-      const optid = option[valueField]
-      return optid ? encodeURIComponent(optid) : ''
+    const getNodeid = (option: any) => {
+      const keyField = computeTreeKeyField.value
+      const nodeid = option[keyField]
+      return nodeid ? encodeURIComponent(nodeid) : ''
     }
 
     /**
@@ -235,8 +241,9 @@ export default defineComponent({
 
     const cacheItemMap = () => {
       const { options } = props
-      const valueField = computeValueField.value
+      const keyField = computeTreeKeyField.value
       const childrenField = computeChildrenField.value
+      const valueField = computeValueField.value
       const nodeMaps: Record<string, {
         item: any
         index: number
@@ -244,13 +251,21 @@ export default defineComponent({
         parent: any
         nodes: any[]
       }> = {}
+      const keyMaps: Record<string, boolean> = {}
       XEUtils.eachTree(options, (item, index, items, path, parent, nodes) => {
-        let nodeid = getOptid(item)
+        let nodeid = getNodeid(item)
         if (!nodeid) {
           nodeid = getOptUniqueId()
-          item[valueField] = nodeid
         }
-        nodeMaps[nodeid] = { item, index, items, parent, nodes }
+        if (keyMaps[nodeid]) {
+          errLog('vxe.error.repeatKey', [keyField, nodeid])
+        }
+        keyMaps[nodeid] = true
+        const value = item[valueField]
+        if (nodeMaps[value]) {
+          errLog('vxe.error.repeatKey', [valueField, value])
+        }
+        nodeMaps[value] = { item, index, items, parent, nodes }
       }, { children: childrenField })
       reactData.fullOptionList = options || []
       reactData.fullNodeMaps = nodeMaps
@@ -468,6 +483,10 @@ export default defineComponent({
       changeEvent($event, value)
     }
 
+    const loadSuccessEvent = () => {
+      cacheItemMap()
+    }
+
     const treeSelectPrivateMethods: TreeSelectPrivateMethods = {
     }
 
@@ -489,6 +508,7 @@ export default defineComponent({
       const treeNodeOpts = computeTreeNodeOpts.value
       const treeCheckboxOpts = computeTreeCheckboxOpts.value
       const treeRadioOpts = computeTreeRadioOpts.value
+      const treeKeyField = computeTreeKeyField.value
       const labelField = computeLabelField.value
       const valueField = computeValueField.value
       const childrenField = computeChildrenField.value
@@ -553,7 +573,7 @@ export default defineComponent({
             }],
             placement: reactData.panelPlacement,
             style: reactData.panelStyle
-          }, initialized && (visiblePanel || isAniVisible)
+          }, initialized
             ? [
                 h('div', {
                   class: 'vxe-tree-select--panel-wrapper'
@@ -582,7 +602,7 @@ export default defineComponent({
                         checkboxConfig: treeCheckboxOpts,
                         titleField: labelField,
                         valueField: valueField,
-                        keyField: treeOpts.keyField,
+                        keyField: treeKeyField,
                         childrenField: treeOpts.childrenField || childrenField,
                         parentField: treeOpts.parentField || parentField,
                         hasChildField: treeOpts.hasChildField || hasChildField,
@@ -600,7 +620,8 @@ export default defineComponent({
                         iconClose: treeOpts.iconClose,
                         onNodeClick: nodeClickEvent,
                         onRadioChange: radioChangeEvent,
-                        onCheckboxChange: checkboxChangeEvent
+                        onCheckboxChange: checkboxChangeEvent,
+                        onLoadSuccess: loadSuccessEvent
                       })
                     ])
                   ]),
