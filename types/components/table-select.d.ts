@@ -151,6 +151,10 @@ export namespace VxeTableSelectEvents {
   export type Click = (params: VxeTableSelectDefines.ClickEventParams) => void
 }
 
+export namespace VxeTableSelectSlotTypes {
+  export interface DefaultSlotParams {}
+}
+
 export interface VxeTableSelectSlots {
   default?: (params: VxeTableSelectSlotTypes.DefaultSlotParams) => any
 }

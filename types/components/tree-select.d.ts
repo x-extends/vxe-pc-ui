@@ -25,48 +25,6 @@ export namespace VxeTreeSelectPropTypes {
   export type Loading = boolean
   export type Disabled = boolean
   export type ClassName = string | ((params: { $treeSelect: VxeTreeSelectConstructor }) => string)
-  export type PopupClassName = string | ((params: { $treeSelect: VxeTreeSelectConstructor }) => string)
-  export type Multiple = boolean
-  export type PrefixIcon = string
-  export type Placement = 'top' | 'bottom'
-  export interface Option {
-    value?: string | number
-    label?: string | number
-    children?: Option[]
-
-    [key: string]: any
-  }
-  export type Options = Option[]
-  export interface OptionProps {
-    value?: string
-    label?: string
-    disabled?: string
-    children?: string
-
-    /**
-     * @deprecated
-     */
-    hasChild?: string
-    /**
-     * @deprecated
-     */
-    parent?: string
-  }
-  export type Remote = boolean
-  export type RemoteMethod = (params: { searchValue: string }) => Promise<void> | void
-  export type Transfer = boolean
-  export type TreeConfig<D = any> = Partial<VxeTreeProps<D>, 'data' | 'size'>
-}
-
-export namespace VxeTreeSelectPropTypes {
-  export type Size = VxeComponentSizeType
-  export type ModelValue = any
-  export type Clearable = boolean
-  export type Placeholder = string
-  export type Readonly = boolean
-  export type Loading = boolean
-  export type Disabled = boolean
-  export type ClassName = string | ((params: { $treeSelect: VxeTreeSelectConstructor }) => string)
   /**
    * 已废弃，请使用 VxeTreeSelectPropTypes.PopupConfig
    * @deprecated
