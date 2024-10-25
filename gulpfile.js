@@ -98,6 +98,7 @@ const componentList = [
   'steps',
   'switch',
   'tab-pane',
+  'table-select',
   'tabs',
   'tag',
   'text-ellipsis',
@@ -313,7 +314,7 @@ gulp.task('build_icon', () => {
       .pipe(gulp.dest('lib'))
       .pipe(gulp.dest('lib/icon/style'))
       .pipe(gulp.dest('es'))
-      .pipe(gulp.dest('es/icon/style'))
+      .pipe(gulp.dest('es/icon'))
   )
 })
 

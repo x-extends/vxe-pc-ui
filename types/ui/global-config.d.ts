@@ -65,6 +65,7 @@ import { VxeSliderProps } from '../components/slider'
 import { VxeStepsProps } from '../components/steps'
 import { VxeSwitchProps } from '../components/switch'
 import { VxeTabPaneProps } from '../components/tab-pane'
+import { VxeTableSelectProps } from '../components/table-select'
 import { VxeTabsProps } from '../components/tabs'
 import { VxeTagProps } from '../components/tag'
 import { VxeTextEllipsisProps } from '../components/text-ellipsis'
@@ -152,6 +153,7 @@ declare module '@vxe-ui/core' {
     steps?: VxeStepsProps
     switch?: VxeSwitchProps
     tabPane?: VxeTabPaneProps
+    tableSelect?: VxeTableSelectProps
     tabs?: VxeTabsProps
     tag?: VxeTagProps
     textEllipsis?: VxeTextEllipsisProps

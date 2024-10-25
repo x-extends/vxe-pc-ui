@@ -393,6 +393,19 @@ renderer.mixin({
       ]
     }
   },
+  VxeTableSelect: {
+    renderFormItemContent (renderOpts: any, params: any) {
+      const { data, field } = params
+      const { options, optionProps } = renderOpts
+      const itemValue = XEUtils.get(data, field)
+      return [
+        h(getDefaultComponent(renderOpts), {
+          ...getComponentFormItemProps(renderOpts, params, itemValue, { options, optionProps }),
+          ...getItemOns(renderOpts, params)
+        })
+      ]
+    }
+  },
   VxeIconPicker: {
     renderFormItemContent: defaultFormItemRender
   },

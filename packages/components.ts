@@ -69,6 +69,7 @@ import VxeSlider from './slider'
 import VxeSteps from './steps'
 import VxeSwitch from './switch'
 import VxeTabPane from './tab-pane'
+import VxeTableSelect from './table-select'
 import VxeTabs from './tabs'
 import VxeTag from './tag'
 import VxeTextEllipsis from './text-ellipsis'
@@ -151,6 +152,7 @@ const components = [
   VxeSteps,
   VxeSwitch,
   VxeTabPane,
+  VxeTableSelect,
   VxeTabs,
   VxeTag,
   VxeTextEllipsis,
@@ -254,6 +256,7 @@ export * from './slider'
 export * from './steps'
 export * from './switch'
 export * from './tab-pane'
+export * from './table-select'
 export * from './tabs'
 export * from './tag'
 export * from './/text-ellipsis'

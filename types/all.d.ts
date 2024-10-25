@@ -69,6 +69,7 @@ import VxeRate from './components/rate'
 import VxeSteps from './components/steps'
 import VxeSwitch from './components/switch'
 import VxeTabPane from './components/tab-pane'
+import VxeTableSelect from './components/table-select'
 import VxeTabs from './components/tabs'
 import VxeTag from './components/tag'
 import VxeTextEllipsis from './components/text-ellipsis'
@@ -159,6 +160,7 @@ interface AllComponents {
   VxeSteps: typeof VxeSteps
   VxeSwitch: typeof VxeSwitch
   VxeTabPane: typeof VxeTabPane
+  VxeTableSelect: typeof VxeTableSelect
   VxeTabs: typeof VxeTabs
   VxeTag: typeof VxeTag
   VxeTextEllipsis: typeof VxeTextEllipsis
@@ -258,6 +260,7 @@ export * from './components/slider'
 export * from './components/steps'
 export * from './components/switch'
 export * from './components/tab-pane'
+export * from './components/table-select'
 export * from './components/tabs'
 export * from './components/tag'
 export * from './components/text-ellipsis'

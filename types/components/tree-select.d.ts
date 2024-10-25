@@ -32,6 +32,10 @@ export namespace VxeTreeSelectPropTypes {
   export type Loading = boolean
   export type Disabled = boolean
   export type ClassName = string | ((params: { $treeSelect: VxeTreeSelectConstructor }) => string)
+  /**
+   * 已废弃，请使用 VxeTreeSelectPropTypes.PopupConfig
+   * @deprecated
+   */
   export type PopupClassName = string | ((params: { $treeSelect: VxeTreeSelectConstructor }) => string)
   export type Multiple = boolean
   export type PrefixIcon = string
@@ -62,7 +66,12 @@ export namespace VxeTreeSelectPropTypes {
   export type Remote = boolean
   export type RemoteMethod = (params: { searchValue: string }) => Promise<void> | void
   export type Transfer = boolean
-  export type TreeConfig<D = any> = VxeTreeProps<D>
+  export interface PopupConfig {
+    width?: number | string
+    height?: number | string
+    className?: string | ((params: { $treeSelect: VxeTreeSelectConstructor }) => string)
+  }
+  export type TreeConfig<D = any> = Omit<VxeTreeProps<D>, 'data' | 'size'>
 }
 
 export interface VxeTreeSelectProps<D = any> {
@@ -74,7 +83,6 @@ export interface VxeTreeSelectProps<D = any> {
   loading?: VxeTreeSelectPropTypes.Loading
   disabled?: VxeTreeSelectPropTypes.Disabled
   className?: VxeTreeSelectPropTypes.ClassName
-  popupClassName?: VxeTreeSelectPropTypes.PopupClassName
   multiple?: VxeTreeSelectPropTypes.Multiple
   prefixIcon?: VxeTreeSelectPropTypes.PrefixIcon
   placement?: VxeTreeSelectPropTypes.Placement
@@ -83,7 +91,14 @@ export interface VxeTreeSelectProps<D = any> {
   remote?: VxeTreeSelectPropTypes.Remote
   remoteMethod?: VxeTreeSelectPropTypes.RemoteMethod
   transfer?: VxeTreeSelectPropTypes.Transfer
+  popupConfig?: VxeTreeSelectPropTypes.PopupConfig
   treeConfig?: VxeTreeSelectPropTypes.TreeConfig<D>
+
+  /**
+   * 已废弃，请使用 popup-config.className
+   * @deprecated
+   */
+  popupClassName?: VxeTreeSelectPropTypes.PopupClassName
 }
 
 export interface TreeSelectPrivateComputed {
@@ -100,7 +115,6 @@ export interface TreeSelectReactData {
     parent: any
     nodes: any[]
   }>
-  visibleOptionList: any[]
   panelIndex: number
   panelStyle: any
   panelPlacement: any

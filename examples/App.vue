@@ -86,7 +86,8 @@ const navList = ref<VxeMenuPropTypes.Options>([
   { name: 'BadgeTest', routerLink: { name: 'BadgeTest' } },
   { name: 'AvatarTest', routerLink: { name: 'AvatarTest' } },
   { name: 'SliderTest', routerLink: { name: 'SliderTest' } },
-  { name: 'RateTest', routerLink: { name: 'RateTest' } }
+  { name: 'RateTest', routerLink: { name: 'RateTest' } },
+  { name: 'TableSelect', routerLink: { name: 'TableSelect' } }
 ])
 
 const theme = ref((localStorage.getItem('VXE_THEME') as 'light' | 'dark') || 'light')

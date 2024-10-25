@@ -1,53 +1,50 @@
-import { defineComponent, ref, computed, h, PropType, nextTick, inject, provide, reactive, Teleport, onMounted, onUnmounted, watch } from 'vue'
-import { getConfig, getI18n, getIcon, globalEvents, createEvent, useSize, renderEmptyElement } from '../../ui'
-import { getEventTargetNode, getAbsolutePos } from '../../ui/src/dom'
+import { defineComponent, ref, h, PropType, computed, inject, watch, provide, nextTick, Teleport, onMounted, onUnmounted, reactive } from 'vue'
+import XEUtils from 'xe-utils'
+import { VxeUI, getConfig, getIcon, globalEvents, getI18n, createEvent, useSize, renderEmptyElement } from '../../ui'
+import { getEventTargetNode, getAbsolutePos, toCssUnit } from '../../ui/src/dom'
 import { getLastZIndex, nextZIndex } from '../../ui/src/utils'
 import { errLog } from '../../ui/src/log'
-import XEUtils from 'xe-utils'
 import VxeInputComponent from '../../input/src/input'
-import VxeTreeComponent from '../../tree/src/tree'
 
-import type { TreeSelectReactData, VxeTreeSelectEmits, TreeSelectInternalData, ValueOf, TreeSelectPrivateRef, TreeSelectPrivateMethods, TreeSelectMethods, VxeTreeSelectPrivateComputed, VxeTreeSelectPropTypes, VxeTreeSelectConstructor, VxeFormDefines, VxeDrawerConstructor, VxeDrawerMethods, VxeTreeSelectPrivateMethods, VxeTableConstructor, VxeTablePrivateMethods, VxeFormConstructor, VxeFormPrivateMethods, VxeInputConstructor, VxeModalConstructor, VxeModalMethods } from '../../../types'
+import type { TableSelectReactData, VxeTableSelectEmits, VxeInputConstructor, VxeGridEvents, TableSelectInternalData, VxeGridComponent, VxeTableSelectPropTypes, VxeFormDefines, VxeModalConstructor, VxeModalMethods, VxeDrawerConstructor, VxeTableConstructor, VxeTablePrivateMethods, VxeDrawerMethods, TableSelectMethods, TableSelectPrivateMethods, ValueOf, TableSelectPrivateRef, VxeTableSelectPrivateComputed, VxeTableSelectConstructor, VxeTableSelectPrivateMethods, VxeFormConstructor, VxeFormPrivateMethods, VxeComponentStyleType } from '../../../types'
 
-function getOptUniqueId () {
-  return XEUtils.uniqueId('node_')
+export function getRowUniqueId () {
+  return XEUtils.uniqueId('row_')
 }
 
 export default defineComponent({
-  name: 'VxeTreeSelect',
+  name: 'VxeTableSelect',
   props: {
-    modelValue: [String, Number, Array] as PropType<VxeTreeSelectPropTypes.ModelValue>,
-    clearable: Boolean as PropType<VxeTreeSelectPropTypes.Clearable>,
+    modelValue: [String, Number, Array] as PropType<VxeTableSelectPropTypes.ModelValue>,
+    clearable: Boolean as PropType<VxeTableSelectPropTypes.Clearable>,
     placeholder: {
-      type: String as PropType<VxeTreeSelectPropTypes.Placeholder>,
-      default: () => XEUtils.eqNull(getConfig().treeSelect.placeholder) ? getI18n('vxe.base.pleaseSelect') : getConfig().treeSelect.placeholder
+      type: String as PropType<VxeTableSelectPropTypes.Placeholder>,
+      default: () => XEUtils.eqNull(getConfig().tableSelect.placeholder) ? getI18n('vxe.base.pleaseSelect') : getConfig().tableSelect.placeholder
     },
     readonly: {
-      type: Boolean as PropType<VxeTreeSelectPropTypes.Readonly>,
+      type: Boolean as PropType<VxeTableSelectPropTypes.Readonly>,
       default: null
     },
-    loading: Boolean as PropType<VxeTreeSelectPropTypes.Loading>,
+    loading: Boolean as PropType<VxeTableSelectPropTypes.Loading>,
     disabled: {
-      type: Boolean as PropType<VxeTreeSelectPropTypes.Disabled>,
+      type: Boolean as PropType<VxeTableSelectPropTypes.Disabled>,
       default: null
     },
-    multiple: Boolean as PropType<VxeTreeSelectPropTypes.Multiple>,
-    className: [String, Function] as PropType<VxeTreeSelectPropTypes.ClassName>,
-    popupClassName: [String, Function] as PropType<VxeTreeSelectPropTypes.PopupClassName>,
-    prefixIcon: String as PropType<VxeTreeSelectPropTypes.PrefixIcon>,
-    placement: String as PropType<VxeTreeSelectPropTypes.Placement>,
-    options: Array as PropType<VxeTreeSelectPropTypes.Options>,
-    optionProps: Object as PropType<VxeTreeSelectPropTypes.OptionProps>,
+    multiple: Boolean as PropType<VxeTableSelectPropTypes.Multiple>,
+    className: [String, Function] as PropType<VxeTableSelectPropTypes.ClassName>,
+    prefixIcon: String as PropType<VxeTableSelectPropTypes.PrefixIcon>,
+    placement: String as PropType<VxeTableSelectPropTypes.Placement>,
+    columns: Array as PropType<VxeTableSelectPropTypes.Columns>,
+    options: Array as PropType<VxeTableSelectPropTypes.Options>,
+    optionProps: Object as PropType<VxeTableSelectPropTypes.OptionProps>,
     size: {
-      type: String as PropType<VxeTreeSelectPropTypes.Size>,
+      type: String as PropType<VxeTableSelectPropTypes.Size>,
       default: () => getConfig().select.size || getConfig().size
     },
-    remote: Boolean as PropType<VxeTreeSelectPropTypes.Remote>,
-    remoteMethod: Function as PropType<VxeTreeSelectPropTypes.RemoteMethod>,
-    popupConfig: Object as PropType<VxeTreeSelectPropTypes.PopupConfig>,
-    treeConfig: Object as PropType<VxeTreeSelectPropTypes.TreeConfig>,
+    popupConfig: Object as PropType<VxeTableSelectPropTypes.PopupConfig>,
+    gridConfig: Object as PropType<VxeTableSelectPropTypes.GridConfig>,
     transfer: {
-      type: Boolean as PropType<VxeTreeSelectPropTypes.Transfer>,
+      type: Boolean as PropType<VxeTableSelectPropTypes.Transfer>,
       default: null
     }
   },
@@ -57,11 +54,12 @@ export default defineComponent({
     'clear',
     'blur',
     'focus',
-    'click',
-    'node-click'
-  ] as VxeTreeSelectEmits,
+    'click'
+  ] as VxeTableSelectEmits,
   setup (props, context) {
     const { emit, slots } = context
+
+    const VxeTableGridComponent = VxeUI.getComponent<VxeGridComponent>('VxeGrid')
 
     const $xeModal = inject<(VxeModalConstructor & VxeModalMethods)| null>('$xeModal', null)
     const $xeDrawer = inject<(VxeDrawerConstructor & VxeDrawerMethods) | null>('$xeDrawer', null)
@@ -75,13 +73,13 @@ export default defineComponent({
 
     const refElem = ref<HTMLDivElement>()
     const refInput = ref<VxeInputConstructor>()
-    const refTreeWrapper = ref<HTMLDivElement>()
+    const refGridWrapper = ref<HTMLDivElement>()
     const refOptionPanel = ref<HTMLDivElement>()
 
-    const reactData = reactive<TreeSelectReactData>({
+    const reactData = reactive<TableSelectReactData>({
       initialized: false,
       fullOptionList: [],
-      fullNodeMaps: {},
+      fullRowMaps: {},
       panelIndex: 0,
       panelStyle: {},
       panelPlacement: null,
@@ -91,11 +89,11 @@ export default defineComponent({
       isActivated: false
     })
 
-    const internalData: TreeSelectInternalData = {
+    const internalData: TableSelectInternalData = {
       hpTimeout: undefined
     }
 
-    const refMaps: TreeSelectPrivateRef = {
+    const refMaps: TableSelectPrivateRef = {
       refElem
     }
 
@@ -135,44 +133,20 @@ export default defineComponent({
       return transfer
     })
 
-    const computePopupOpts = computed(() => {
-      return Object.assign({}, getConfig().treeSelect.popupConfig)
-    })
-
-    const computeTreeOpts = computed(() => {
-      return Object.assign({}, getConfig().treeSelect.treeConfig, props.treeConfig, { data: undefined })
-    })
-
-    const computeTreeNodeOpts = computed(() => {
-      const treeOpts = computeTreeOpts.value
-      return Object.assign({ isHover: true }, treeOpts.nodeConfig)
-    })
-
-    const computeTreeCheckboxOpts = computed(() => {
-      const treeOpts = computeTreeOpts.value
-      return Object.assign({
-        showIcon: !!treeOpts.showCheckbox
-      }, treeOpts.checkboxConfig, {
-        trigger: 'node'
-      })
-    })
-
-    const computeTreeRadioOpts = computed(() => {
-      const treeOpts = computeTreeOpts.value
-      return Object.assign({
-        showIcon: !!treeOpts.showRadio
-      }, treeOpts.radioConfig, {
-        trigger: 'node'
-      })
-    })
-
     const computePropsOpts = computed(() => {
       return props.optionProps || {}
     })
 
-    const computeNodeKeyField = computed(() => {
-      const treeOpts = computeTreeOpts.value
-      return treeOpts.keyField || 'id'
+    const computeRowOpts = computed(() => {
+      const gridOpts = computeGridOpts.value
+      return Object.assign({}, gridOpts.rowConfig, {
+        isCurrent: true
+      })
+    })
+
+    const computeRowKeyField = computed(() => {
+      const rowOpts = computeRowOpts.value
+      return rowOpts.keyField || '_X_ROW_KEY'
     })
 
     const computeLabelField = computed(() => {
@@ -185,69 +159,78 @@ export default defineComponent({
       return propsOpts.value || 'value'
     })
 
-    const computeChildrenField = computed(() => {
-      const propsOpts = computePropsOpts.value
-      return propsOpts.children || 'children'
+    const computePopupOpts = computed(() => {
+      return Object.assign({}, getConfig().tableSelect.popupConfig, props.popupConfig)
     })
 
-    const computeParentField = computed(() => {
-      const propsOpts = computePropsOpts.value
-      return propsOpts.parent || 'parentField'
-    })
-
-    const computeHasChildField = computed(() => {
-      const propsOpts = computePropsOpts.value
-      return propsOpts.hasChild || 'hasChild'
+    const computeGridOpts = computed(() => {
+      return Object.assign({}, getConfig().tableSelect.gridConfig, props.gridConfig, { data: undefined, columns: undefined })
     })
 
     const computeSelectLabel = computed(() => {
       const { modelValue } = props
-      const { fullNodeMaps } = reactData
+      const { fullRowMaps } = reactData
       const labelField = computeLabelField.value
       return (XEUtils.isArray(modelValue) ? modelValue : [modelValue]).map(value => {
-        const cacheItem = fullNodeMaps[value]
+        const cacheItem = fullRowMaps[value]
         return cacheItem ? cacheItem.item[labelField] : value
       }).join(', ')
     })
 
-    const computeMaps: VxeTreeSelectPrivateComputed = {
+    const computePopupWrapperStyle = computed(() => {
+      const popupOpts = computePopupOpts.value
+      const { height, width } = popupOpts
+      const stys: VxeComponentStyleType = {}
+      if (width) {
+        stys.width = toCssUnit(width)
+      }
+      if (height) {
+        stys.height = toCssUnit(height)
+      }
+      return stys
+    })
+
+    const computeMaps: VxeTableSelectPrivateComputed = {
     }
 
-    const $xeTreeSelect = {
+    const $xeTableSelect = {
       xID,
       props,
       context,
       reactData,
-      internalData,
 
       getRefMaps: () => refMaps,
       getComputeMaps: () => computeMaps
-    } as unknown as VxeTreeSelectConstructor & VxeTreeSelectPrivateMethods
+    } as unknown as VxeTableSelectConstructor & VxeTableSelectPrivateMethods
 
-    const dispatchEvent = (type: ValueOf<VxeTreeSelectEmits>, params: Record<string, any>, evnt: Event | null) => {
-      emit(type, createEvent(evnt, { $treeSelect: $xeTreeSelect }, params))
+    const dispatchEvent = (type: ValueOf<VxeTableSelectEmits>, params: Record<string, any>, evnt: Event | null) => {
+      emit(type, createEvent(evnt, { $tableSelect: $xeTableSelect }, params))
     }
 
     const emitModel = (value: any) => {
       emit('update:modelValue', value)
     }
 
-    const treeSelectMethods: TreeSelectMethods = {
+    const tableSelectMethods: TableSelectMethods = {
       dispatchEvent
     }
 
-    const getNodeid = (option: any) => {
-      const nodeKeyField = computeNodeKeyField.value
-      const nodeid = option[nodeKeyField]
-      return nodeid ? encodeURIComponent(nodeid) : ''
+    const tableSelectPrivateMethods: TableSelectPrivateMethods = {
+    }
+
+    const getRowid = (option: any) => {
+      const nodeKeyField = computeRowKeyField.value
+      const rowid = option[nodeKeyField]
+      return rowid ? encodeURIComponent(rowid) : ''
     }
 
     const cacheDataMap = () => {
       const { options } = props
-      const nodeKeyField = computeNodeKeyField.value
-      const childrenField = computeChildrenField.value
+      const rowKeyField = computeRowKeyField.value
       const valueField = computeValueField.value
-      const nodeMaps: Record<string, {
+      const gridOpts = computeGridOpts.value
+      const { treeConfig } = gridOpts
+      const rowMaps: Record<string, {
         item: any
         index: number
         items: any[]
@@ -255,23 +238,27 @@ export default defineComponent({
         nodes: any[]
       }> = {}
       const keyMaps: Record<string, boolean> = {}
-      XEUtils.eachTree(options, (item, index, items, path, parent, nodes) => {
-        let nodeid = getNodeid(item)
-        if (!nodeid) {
-          nodeid = getOptUniqueId()
-        }
-        if (keyMaps[nodeid]) {
-          errLog('vxe.error.repeatKey', [nodeKeyField, nodeid])
-        }
-        keyMaps[nodeid] = true
-        const value = item[valueField]
-        if (nodeMaps[value]) {
-          errLog('vxe.error.repeatKey', [valueField, value])
-        }
-        nodeMaps[value] = { item, index, items, parent, nodes }
-      }, { children: childrenField })
+      if (treeConfig) {
+        // x
+      } else {
+        XEUtils.arrayEach(options || [], (item, index, items) => {
+          let rowid = getRowid(item)
+          if (!rowid) {
+            rowid = getRowUniqueId()
+          }
+          if (keyMaps[rowid]) {
+            errLog('vxe.error.repeatKey', [rowKeyField, rowid])
+          }
+          keyMaps[rowid] = true
+          const value = item[valueField]
+          if (rowMaps[value]) {
+            errLog('vxe.error.repeatKey', [valueField, value])
+          }
+          rowMaps[value] = { item, index, items, parent: null, nodes: [] }
+        })
+      }
       reactData.fullOptionList = options || []
-      reactData.fullNodeMaps = nodeMaps
+      reactData.fullRowMaps = rowMaps
     }
 
     const updateZindex = () => {
@@ -377,10 +364,10 @@ export default defineComponent({
     }
 
     const changeEvent = (evnt: Event, selectValue: any) => {
-      const { fullNodeMaps } = reactData
+      const { fullRowMaps } = reactData
       emitModel(selectValue)
       if (selectValue !== props.modelValue) {
-        const cacheItem = fullNodeMaps[selectValue]
+        const cacheItem = fullRowMaps[selectValue]
         dispatchEvent('change', { value: selectValue, option: cacheItem ? cacheItem.item : null }, evnt)
         // 自动更新校验状态
         if ($xeForm && formItemInfo) {
@@ -469,68 +456,45 @@ export default defineComponent({
       }
     }
 
-    const nodeClickEvent = (params: any) => {
-      const { $event } = params
-      dispatchEvent('node-click', params, $event)
-    }
-
-    const radioChangeEvent = (params: any) => {
-      const { value, $event } = params
+    const handleCurrentChangeEvent: VxeGridEvents.CurrentChange = ({ $event, row }) => {
+      const valueField = computeValueField.value
+      const value = row[valueField]
       changeEvent($event, value)
       hideOptionPanel()
     }
 
-    const checkboxChangeEvent = (params: any) => {
-      const { value, $event } = params
-      changeEvent($event, value)
-    }
-
-    const loadSuccessEvent = () => {
-      cacheDataMap()
-    }
-
-    const treeSelectPrivateMethods: TreeSelectPrivateMethods = {
-    }
-
-    Object.assign($xeTreeSelect, treeSelectMethods, treeSelectPrivateMethods)
+    Object.assign($xeTableSelect, tableSelectMethods, tableSelectPrivateMethods)
 
     const renderVN = () => {
-      const { className, modelValue, multiple, options, loading } = props
+      const { className, columns, options, loading } = props
       const { initialized, isActivated, isAniVisible, visiblePanel } = reactData
       const vSize = computeSize.value
       const isDisabled = computeIsDisabled.value
       const selectLabel = computeSelectLabel.value
       const btnTransfer = computeBtnTransfer.value
       const formReadonly = computeFormReadonly.value
+      const popupOpts = computePopupOpts.value
+      const { className: popupClassName } = popupOpts
+      const gridOpts = computeGridOpts.value
+      const rowOpts = computeRowOpts.value
+      const popupWrapperStyle = computePopupWrapperStyle.value
       const headerSlot = slots.header
       const footerSlot = slots.footer
       const prefixSlot = slots.prefix
-      const popupOpts = computePopupOpts.value
-      const popupClassName = popupOpts.className || props.popupClassName
-      const treeOpts = computeTreeOpts.value
-      const treeNodeOpts = computeTreeNodeOpts.value
-      const treeCheckboxOpts = computeTreeCheckboxOpts.value
-      const treeRadioOpts = computeTreeRadioOpts.value
-      const nodeKeyField = computeNodeKeyField.value
-      const labelField = computeLabelField.value
-      const valueField = computeValueField.value
-      const childrenField = computeChildrenField.value
-      const parentField = computeParentField.value
-      const hasChildField = computeHasChildField.value
 
       if (formReadonly) {
         return h('div', {
           ref: refElem,
-          class: ['vxe-tree-select--readonly', className]
+          class: ['vxe-table-select--readonly', className]
         }, [
           h('span', {
-            class: 'vxe-tree-select-label'
+            class: 'vxe-table-select-label'
           }, selectLabel)
         ])
       }
       return h('div', {
         ref: refElem,
-        class: ['vxe-tree-select', className ? (XEUtils.isFunction(className) ? className({ $treeSelect: $xeTreeSelect }) : className) : '', {
+        class: ['vxe-table-select', className ? (XEUtils.isFunction(className) ? className({ $tableSelect: $xeTableSelect }) : className) : '', {
           [`size--${vSize}`]: vSize,
           'is--visible': visiblePanel,
           'is--disabled': isDisabled,
@@ -546,7 +510,7 @@ export default defineComponent({
           disabled: isDisabled,
           type: 'text',
           prefixIcon: props.prefixIcon,
-          suffixIcon: loading ? getIcon().TREE_SELECT_LOADED : (visiblePanel ? getIcon().TREE_SELECT_OPEN : getIcon().TREE_SELECT_CLOSE),
+          suffixIcon: loading ? getIcon().TABLE_SELECT_LOADED : (visiblePanel ? getIcon().TABLE_SELECT_OPEN : getIcon().TABLE_SELECT_CLOSE),
           modelValue: loading ? getI18n('vxe.select.loadingText') : selectLabel,
           onClear: clearEvent,
           onClick: clickEvent,
@@ -564,7 +528,7 @@ export default defineComponent({
         }, [
           h('div', {
             ref: refOptionPanel,
-            class: ['vxe-table--ignore-clear vxe-tree-select--panel', popupClassName ? (XEUtils.isFunction(popupClassName) ? popupClassName({ $treeSelect: $xeTreeSelect }) : popupClassName) : '', {
+            class: ['vxe-table--ignore-clear vxe-table-select--panel', popupClassName ? (XEUtils.isFunction(popupClassName) ? popupClassName({ $tableSelect: $xeTableSelect }) : popupClassName) : '', {
               [`size--${vSize}`]: vSize,
               'is--transfer': btnTransfer,
               'ani--leave': !loading && isAniVisible,
@@ -575,60 +539,44 @@ export default defineComponent({
           }, initialized
             ? [
                 h('div', {
-                  class: 'vxe-tree-select--panel-wrapper'
+                  class: 'vxe-table-select--panel-wrapper'
                 }, [
                   headerSlot
                     ? h('div', {
-                      class: 'vxe-tree-select--panel-header'
+                      class: 'vxe-table-select--panel-header'
                     }, headerSlot({}))
-                    : renderEmptyElement($xeTreeSelect),
+                    : renderEmptyElement($xeTableSelect),
                   h('div', {
-                    class: 'vxe-tree-select--panel-body'
+                    class: 'vxe-table-select--panel-body'
                   }, [
                     h('div', {
-                      ref: refTreeWrapper,
-                      class: 'vxe-tree-select-tree--wrapper'
+                      ref: refGridWrapper,
+                      class: 'vxe-table-select-grid--wrapper',
+                      style: popupWrapperStyle
                     }, [
-                      h(VxeTreeComponent, {
-                        class: 'vxe-tree-select--tree',
-                        data: options,
-                        indent: treeOpts.indent,
-                        showRadio: !multiple,
-                        radioConfig: treeRadioOpts,
-                        checkNodeKey: multiple ? null : modelValue,
-                        showCheckbox: !!multiple,
-                        checkNodeKeys: multiple ? modelValue : null,
-                        checkboxConfig: treeCheckboxOpts,
-                        titleField: labelField,
-                        valueField: valueField,
-                        keyField: nodeKeyField,
-                        childrenField: treeOpts.childrenField || childrenField,
-                        parentField: treeOpts.parentField || parentField,
-                        hasChildField: treeOpts.hasChildField || hasChildField,
-                        accordion: treeOpts.accordion,
-                        nodeConfig: treeNodeOpts,
-                        lazy: treeOpts.lazy,
-                        loadMethod: treeOpts.loadMethod,
-                        toggleMethod: treeOpts.toggleMethod,
-                        transform: treeOpts.transform,
-                        trigger: treeOpts.trigger,
-                        showIcon: treeOpts.showIcon,
-                        showLine: treeOpts.showLine,
-                        iconOpen: treeOpts.iconOpen,
-                        iconLoaded: treeOpts.iconLoaded,
-                        iconClose: treeOpts.iconClose,
-                        onNodeClick: nodeClickEvent,
-                        onRadioChange: radioChangeEvent,
-                        onCheckboxChange: checkboxChangeEvent,
-                        onLoadSuccess: loadSuccessEvent
-                      })
+                      VxeTableGridComponent
+                        ? h(VxeTableGridComponent, {
+                          class: 'vxe-table-select--grid',
+                          ...gridOpts,
+                          rowConfig: rowOpts,
+                          data: options,
+                          columns: columns,
+                          height: '100%',
+                          autoResize: true,
+                          onCurrentChange: handleCurrentChangeEvent
+                        }, Object.assign({}, slots, {
+                          header: undefined,
+                          footer: undefined,
+                          prefixSlot: undefined
+                        }))
+                        : renderEmptyElement($xeTableSelect)
                     ])
                   ]),
                   footerSlot
                     ? h('div', {
-                      class: 'vxe-tree-select--panel-footer'
+                      class: 'vxe-table-select--panel-footer'
                     }, footerSlot({}))
-                    : renderEmptyElement($xeTreeSelect)
+                    : renderEmptyElement($xeTableSelect)
                 ])
               ]
             : [])
@@ -643,22 +591,30 @@ export default defineComponent({
     cacheDataMap()
 
     onMounted(() => {
-      globalEvents.on($xeTreeSelect, 'mousewheel', handleGlobalMousewheelEvent)
-      globalEvents.on($xeTreeSelect, 'mousedown', handleGlobalMousedownEvent)
-      globalEvents.on($xeTreeSelect, 'blur', handleGlobalBlurEvent)
+      globalEvents.on($xeTableSelect, 'mousewheel', handleGlobalMousewheelEvent)
+      globalEvents.on($xeTableSelect, 'mousedown', handleGlobalMousedownEvent)
+      globalEvents.on($xeTableSelect, 'blur', handleGlobalBlurEvent)
     })
 
     onUnmounted(() => {
-      globalEvents.off($xeTreeSelect, 'mousewheel')
-      globalEvents.off($xeTreeSelect, 'mousedown')
-      globalEvents.off($xeTreeSelect, 'blur')
+      globalEvents.off($xeTableSelect, 'mousewheel')
+      globalEvents.off($xeTableSelect, 'mousedown')
+      globalEvents.off($xeTableSelect, 'blur')
     })
 
-    provide('$xeTreeSelect', $xeTreeSelect)
+    if (process.env.VUE_APP_VXE_ENV === 'development') {
+      nextTick(() => {
+        if (!VxeTableGridComponent) {
+          errLog('vxe.error.reqComp', ['vxe-grid'])
+        }
+      })
+    }
 
-    $xeTreeSelect.renderVN = renderVN
+    provide('$xeTableSelect', $xeTableSelect)
 
-    return $xeTreeSelect
+    $xeTableSelect.renderVN = renderVN
+
+    return $xeTableSelect
   },
   render () {
     return this.renderVN()
