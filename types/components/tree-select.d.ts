@@ -55,19 +55,69 @@ export namespace VxeTreeSelectPropTypes {
   export type Remote = boolean
   export type RemoteMethod = (params: { searchValue: string }) => Promise<void> | void
   export type Transfer = boolean
-  export type TreeConfig<D = any> = VxeTreeProps<D>
+  export type TreeConfig<D = any> = Partial<VxeTreeProps<D>, 'data' | 'size'>
+}
+
+export namespace VxeTreeSelectPropTypes {
+  export type Size = VxeComponentSizeType
+  export type ModelValue = any
+  export type Clearable = boolean
+  export type Placeholder = string
+  export type Readonly = boolean
+  export type Loading = boolean
+  export type Disabled = boolean
+  export type ClassName = string | ((params: { $treeSelect: VxeTreeSelectConstructor }) => string)
+  /**
+   * 已废弃，请使用 VxeTreeSelectPropTypes.PopupConfig
+   * @deprecated
+   */
+  export type PopupClassName = string | ((params: { $treeSelect: VxeTreeSelectConstructor }) => string)
+  export type Multiple = boolean
+  export type PrefixIcon = string
+  export type Placement = 'top' | 'bottom'
+  export interface Option {
+    value?: string | number
+    label?: string | number
+    children?: Option[]
+
+    [key: string]: any
+  }
+  export type Options = Option[]
+  export interface OptionProps {
+    value?: string
+    label?: string
+    disabled?: string
+    children?: string
+
+    /**
+     * @deprecated
+     */
+    hasChild?: string
+    /**
+     * @deprecated
+     */
+    parent?: string
+  }
+  export type Remote = boolean
+  export type RemoteMethod = (params: { searchValue: string }) => Promise<void> | void
+  export type Transfer = boolean
+  export interface PopupConfig {
+    width?: number | string
+    height?: number | string
+    className?: string | ((params: { $treeSelect: VxeTreeSelectConstructor }) => string)
+  }
+  export type TreeConfig<D = any> = Omit<VxeTreeProps<D>, 'data' | 'size'>
 }
 
 export interface VxeTreeSelectProps<D = any> {
   size?: VxeTreeSelectPropTypes.Size
-  value?: VxeTreeSelectPropTypes.ModelValue
+  modelValue?: VxeTreeSelectPropTypes.ModelValue
   clearable?: VxeTreeSelectPropTypes.Clearable
   placeholder?: VxeTreeSelectPropTypes.Placeholder
   readonly?: VxeTreeSelectPropTypes.Readonly
   loading?: VxeTreeSelectPropTypes.Loading
   disabled?: VxeTreeSelectPropTypes.Disabled
   className?: VxeTreeSelectPropTypes.ClassName
-  popupClassName?: VxeTreeSelectPropTypes.PopupClassName
   multiple?: VxeTreeSelectPropTypes.Multiple
   prefixIcon?: VxeTreeSelectPropTypes.PrefixIcon
   placement?: VxeTreeSelectPropTypes.Placement
@@ -76,7 +126,14 @@ export interface VxeTreeSelectProps<D = any> {
   remote?: VxeTreeSelectPropTypes.Remote
   remoteMethod?: VxeTreeSelectPropTypes.RemoteMethod
   transfer?: VxeTreeSelectPropTypes.Transfer
+  popupConfig?: VxeTreeSelectPropTypes.PopupConfig
   treeConfig?: VxeTreeSelectPropTypes.TreeConfig<D>
+
+  /**
+   * 已废弃，请使用 popup-config.className
+   * @deprecated
+   */
+  popupClassName?: VxeTreeSelectPropTypes.PopupClassName
 }
 
 export interface TreeSelectPrivateComputed {
@@ -93,7 +150,6 @@ export interface TreeSelectReactData {
     parent: any
     nodes: any[]
   }>
-  visibleOptionList: any[]
   panelIndex: number
   panelStyle: any
   panelPlacement: any

@@ -276,6 +276,11 @@ const routes: Array<RouteConfig> = [
     path: '/component/rate',
     name: 'RateTest',
     component: () => import('../views/rate/RateTest.vue')
+  },
+  {
+    path: '/component/table-select',
+    name: 'TableSelect',
+    component: () => import('../views/table-select/TableSelect.vue')
   }
 ]
 

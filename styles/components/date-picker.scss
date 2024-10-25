@@ -631,6 +631,8 @@
   }
   &.type--time {
     .vxe-date-picker--panel-wrapper {
+      display: inline-flex;
+      flex-direction: column;
       $widthList: 170px, 168px, 154px, 146px;
     }
   }

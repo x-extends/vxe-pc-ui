@@ -21,6 +21,7 @@ import VxeCheckboxGroup from './checkbox-group'
 import VxeCol from './col'
 import VxeCollapse from './collapse'
 import VxeCollapsePane from './collapse-pane'
+import VxeColorPicker from './color-picker'
 import VxeCountdown from './countdown'
 import VxeDatePicker from './date-picker'
 import VxeDrawer, { DrawerController } from './drawer'
@@ -69,6 +70,7 @@ import VxeSlider from './slider'
 import VxeSteps from './steps'
 import VxeSwitch from './switch'
 import VxeTabPane from './tab-pane'
+import VxeTableSelect from './table-select'
 import VxeTabs from './tabs'
 import VxeTag from './tag'
 import VxeTextEllipsis from './text-ellipsis'
@@ -103,6 +105,7 @@ const components = [
   VxeCol,
   VxeCollapse,
   VxeCollapsePane,
+  VxeColorPicker,
   VxeCountdown,
   VxeDatePicker,
   VxeDrawer,
@@ -151,6 +154,7 @@ const components = [
   VxeSteps,
   VxeSwitch,
   VxeTabPane,
+  VxeTableSelect,
   VxeTabs,
   VxeTag,
   VxeTextEllipsis,
@@ -206,6 +210,7 @@ export * from './checkbox-group'
 export * from './col'
 export * from './collapse'
 export * from './collapse-pane'
+export * from './color-picker'
 export * from './countdown'
 export * from './date-picker'
 export * from './drawer'
@@ -254,6 +259,7 @@ export * from './slider'
 export * from './steps'
 export * from './switch'
 export * from './tab-pane'
+export * from './table-select'
 export * from './tabs'
 export * from './tag'
 export * from './text-ellipsis'

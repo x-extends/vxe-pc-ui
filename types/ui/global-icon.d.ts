@@ -188,6 +188,11 @@ declare module '@vxe-ui/core' {
     TREE_SELECT_OPEN?: string
     TREE_SELECT_CLOSE?: string
 
+    // table-select
+    TABLE_SELECT_LOADED?: string
+    TABLE_SELECT_OPEN?: string
+    TABLE_SELECT_CLOSE?: string
+
     // tabs
     TABS_TAB_BUTTON_LEFT?: string
     TABS_TAB_BUTTON_RIGHT?: string

@@ -2,7 +2,7 @@ import XEUtils from 'xe-utils'
 import { VxeComponentSlotType } from '@vxe-ui/core'
 
 export function getOnName (type: string) {
-  return type
+  return XEUtils.kebabCase(type)
 }
 
 export function getModelEvent (name: string) {

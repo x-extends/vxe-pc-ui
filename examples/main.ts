@@ -10,7 +10,7 @@ import VxeUI from '../packages'
 import enUS from '../packages/language/en-US'
 import '../styles/all.scss'
 
-// import VxeTable from 'vxe-table'
+// import VxeUITable from 'vxe-table'
 // import 'vxe-table/lib/style.css'
 
 declare global {
@@ -40,7 +40,7 @@ VxeUI.setLanguage((localStorage.getItem('VXE_LANGUAGE') as 'zh-CN' | 'en-US') ||
 window.axios.defaults.baseURL = 'https://api.vxetable.cn/demo'
 
 Vue.use(VxeUI)
-// Vue.use(VxeTable)
+// Vue.use(VxeUITable)
 
 Vue.config.productionTip = false
 

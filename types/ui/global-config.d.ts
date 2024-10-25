@@ -17,6 +17,7 @@ import { VxeCheckboxGroupProps } from '../components/checkbox-group'
 import { VxeColProps } from '../components/col'
 import { VxeCollapseProps } from '../components/collapse'
 import { VxeCollapsePaneProps } from '../components/collapse-pane'
+import { VxeColorPickerProps } from '../components/color-picker'
 import { VxeCountdownProps } from '../components/countdown'
 import { VxeDatePickerProps } from '../components/date-picker'
 import { VxeDrawerProps } from '../components/drawer'
@@ -65,6 +66,7 @@ import { VxeSliderProps } from '../components/slider'
 import { VxeStepsProps } from '../components/steps'
 import { VxeSwitchProps } from '../components/switch'
 import { VxeTabPaneProps } from '../components/tab-pane'
+import { VxeTableSelectProps } from '../components/table-select'
 import { VxeTabsProps } from '../components/tabs'
 import { VxeTagProps } from '../components/tag'
 import { VxeTextEllipsisProps } from '../components/text-ellipsis'
@@ -104,6 +106,7 @@ declare module '@vxe-ui/core' {
     col?: VxeColProps
     collapse?: VxeCollapseProps
     collapsePane?: VxeCollapsePaneProps
+    colorPicker?: VxeColorPickerProps
     countdown?: VxeCountdownProps
     datePicker?: VxeDatePickerProps
     drawer?: VxeDrawerProps
@@ -152,6 +155,7 @@ declare module '@vxe-ui/core' {
     steps?: VxeStepsProps
     switch?: VxeSwitchProps
     tabPane?: VxeTabPaneProps
+    tableSelect?: VxeTableSelectProps
     tabs?: VxeTabsProps
     tag?: VxeTagProps
     textEllipsis?: VxeTextEllipsisProps

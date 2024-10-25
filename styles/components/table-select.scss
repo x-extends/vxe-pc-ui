@@ -1,6 +1,6 @@
 @import '../helpers/mixin.scss';
 
-.vxe-tree-select {
+.vxe-table-select {
   position: relative;
   display: inline-block;
   width: 180px;
@@ -40,12 +40,12 @@
     }
   }
 }
-.vxe-tree-select--readonly {
+.vxe-table-select--readonly {
   color: var(--vxe-ui-font-color);
   display: inline-flex;
 }
 
-.vxe-tree-select--panel {
+.vxe-table-select--panel {
   display: none;
   position: absolute;
   left: 0;
@@ -76,14 +76,14 @@
   }
 }
 
-.vxe-tree-select--panel-search {
+.vxe-table-select--panel-search {
   display: block;
-  .vxe-tree-select-search--input {
+  .vxe-table-select-search--input {
     width: 100%;
   }
 }
 
-.vxe-tree-select--panel-wrapper {
+.vxe-table-select--panel-wrapper {
   display: inline-flex;
   position: relative;
   border-radius: var(--vxe-ui-base-border-radius);
@@ -93,44 +93,30 @@
   pointer-events: auto;
 }
 
-.vxe-tree-select--panel-header {
+.vxe-table-select--panel-header {
   border-bottom: 1px solid var(--vxe-ui-base-popup-border-color);
 }
 
-.vxe-tree-select--panel-footer {
+.vxe-table-select--panel-footer {
   border-top: 1px solid var(--vxe-ui-base-popup-border-color);
 }
 
-.vxe-tree-select--panel-header,
-.vxe-tree-select--panel-footer {
+.vxe-table-select--panel-header,
+.vxe-table-select--panel-footer {
   padding: 4px 0;
 }
 
-.vxe-tree-select-tree--wrapper {
+.vxe-table-select-grid--wrapper {
   position: relative;
   overflow: auto;
   padding: var(--vxe-ui-layout-padding-default);
-  max-height: 21em;
-  width: 30em;
+  height: 21em;
+  width: 36em;
   outline: 0;
 }
-.vxe-tree-select--tree {
-  width: 100%;
-  .vxe-tree--node-item {
-    &.is-radio--checked,
-    &.is-checkbox--checked {
-      & > .vxe-tree--node-item-inner {
-        color: var(--vxe-ui-font-primary-color);
-      }
-    }
-  }
-  .vxe-tree--node-item-inner {
-    cursor: pointer;
-  }
-}
 
-.vxe-tree-select,
-.vxe-tree-select--panel {
+.vxe-table-select,
+.vxe-table-select--panel {
   font-size: var(--vxe-ui-font-size-default);
   &.size--medium {
     font-size: var(--vxe-ui-font-size-medium);

@@ -2,14 +2,14 @@ import { PropType, CreateElement, VNode } from 'vue'
 import { defineVxeComponent } from '../../ui/src/comp'
 import XEUtils from 'xe-utils'
 import { getConfig, getI18n, getIcon, globalEvents, createEvent, globalMixins, renderEmptyElement } from '../../ui'
-import { getEventTargetNode, getAbsolutePos } from '../../ui/src/dom'
+import { getEventTargetNode, getAbsolutePos, toCssUnit } from '../../ui/src/dom'
 import { getLastZIndex, nextZIndex } from '../../ui/src/utils'
 import { errLog } from '../../ui/src/log'
 
 import VxeInputComponent from '../../input/src/input'
 import VxeTreeComponent from '../../tree/src/tree'
 
-import type { TreeSelectReactData, VxeTreeSelectEmits, TreeSelectInternalData, VxeComponentSizeType, ValueOf, VxeTreeSelectPropTypes, VxeFormDefines, VxeDrawerConstructor, VxeDrawerMethods, VxeTableConstructor, VxeTablePrivateMethods, VxeFormConstructor, VxeFormPrivateMethods, VxeModalConstructor, VxeModalMethods } from '../../../types'
+import type { TreeSelectReactData, VxeTreeSelectEmits, TreeSelectInternalData, VxeComponentSizeType, ValueOf, VxeComponentStyleType, VxeTreeSelectPropTypes, VxeFormDefines, VxeDrawerConstructor, VxeDrawerMethods, VxeTableConstructor, VxeTablePrivateMethods, VxeFormConstructor, VxeFormPrivateMethods, VxeModalConstructor, VxeModalMethods } from '../../../types'
 
 function getOptUniqueId () {
   return XEUtils.uniqueId('node_')
@@ -20,12 +20,16 @@ export default defineVxeComponent({
   mixins: [
     globalMixins.sizeMixin
   ],
+  model: {
+    prop: 'value',
+    event: 'modelValue'
+  },
   props: {
     value: [String, Number, Array] as PropType<VxeTreeSelectPropTypes.ModelValue>,
     clearable: Boolean as PropType<VxeTreeSelectPropTypes.Clearable>,
     placeholder: {
       type: String as PropType<VxeTreeSelectPropTypes.Placeholder>,
-      default: () => XEUtils.eqNull(getConfig().select.placeholder) ? getI18n('vxe.base.pleaseSelect') : getConfig().select.placeholder
+      default: () => XEUtils.eqNull(getConfig().treeSelect.placeholder) ? getI18n('vxe.base.pleaseSelect') : getConfig().treeSelect.placeholder
     },
     readonly: {
       type: Boolean as PropType<VxeTreeSelectPropTypes.Readonly>,
@@ -49,6 +53,7 @@ export default defineVxeComponent({
     },
     remote: Boolean as PropType<VxeTreeSelectPropTypes.Remote>,
     remoteMethod: Function as PropType<VxeTreeSelectPropTypes.RemoteMethod>,
+    popupConfig: Object as PropType<VxeTreeSelectPropTypes.PopupConfig>,
     treeConfig: Object as PropType<VxeTreeSelectPropTypes.TreeConfig>,
     transfer: {
       type: Boolean as PropType<VxeTreeSelectPropTypes.Transfer>,
@@ -85,7 +90,6 @@ export default defineVxeComponent({
       initialized: false,
       fullOptionList: [],
       fullNodeMaps: {},
-      visibleOptionList: [],
       panelIndex: 0,
       panelStyle: {},
       panelPlacement: null,
@@ -160,6 +164,12 @@ export default defineVxeComponent({
       }
       return transfer
     },
+    computePopupOpts () {
+      const $xeTreeSelect = this
+      const props = $xeTreeSelect
+
+      return Object.assign({}, getConfig().treeSelect.popupConfig, props.popupConfig)
+    },
     computeTreeOpts () {
       const $xeTreeSelect = this
       const props = $xeTreeSelect
@@ -198,7 +208,7 @@ export default defineVxeComponent({
 
       return Object.assign({}, props.optionProps)
     },
-    computeTreeKeyField () {
+    computeNodeKeyField () {
       const $xeTreeSelect = this
 
       const treeOpts = $xeTreeSelect.computeTreeOpts as VxeTreeSelectPropTypes.TreeConfig
@@ -234,18 +244,33 @@ export default defineVxeComponent({
       const propsOpts = $xeTreeSelect.computePropsOpts as VxeTreeSelectPropTypes.OptionProps
       return propsOpts.hasChild || 'hasChild'
     },
-    computeSelectLabel (this: any) {
+    computeSelectLabel () {
       const $xeTreeSelect = this
       const props = $xeTreeSelect
-      const reactData = $xeTreeSelect.reactData
+      const reactData = ($xeTreeSelect as any).reactData as TreeSelectReactData
 
       const { value } = props
       const { fullNodeMaps } = reactData
-      const labelField = $xeTreeSelect.computeLabelField
-      return (XEUtils.isArray(value) ? value : [value]).map(value => {
-        const cacheItem = fullNodeMaps[value]
-        return cacheItem ? cacheItem.item[labelField] : value
+      const labelField = $xeTreeSelect.computeLabelField as string
+      return (XEUtils.isArray(value) ? value : [value]).map(val => {
+        const cacheItem = fullNodeMaps[val]
+        return cacheItem ? cacheItem.item[labelField] : val
       }).join(', ')
+    },
+    computePopupWrapperStyle () {
+      const $xeTreeSelect = this
+
+      const popupOpts = $xeTreeSelect.computePopupOpts
+      const { height, width } = popupOpts
+      const stys: VxeComponentStyleType = {}
+      if (width) {
+        stys.width = toCssUnit(width)
+      }
+      if (height) {
+        stys.height = toCssUnit(height)
+        stys.maxHeight = toCssUnit(height)
+      }
+      return stys
     }
   },
   methods: {
@@ -259,31 +284,22 @@ export default defineVxeComponent({
     emitModel  (value: any) {
       const $xeTreeSelect = this
 
-      $xeTreeSelect.$emit('input', value)
       $xeTreeSelect.$emit('modelValue', value)
     },
     getNodeid (option: any) {
       const $xeTreeSelect = this
 
-      const keyField = $xeTreeSelect.computeTreeKeyField
-      const nodeid = option[keyField]
+      const nodeKeyField = $xeTreeSelect.computeNodeKeyField
+      const nodeid = option[nodeKeyField]
       return nodeid ? encodeURIComponent(nodeid) : ''
     },
-    /**
-     * 刷新选项，当选项被动态显示/隐藏时可能会用到
-     */
-    refreshOption  () {
-      const $xeTreeSelect = this
-
-      return $xeTreeSelect.$nextTick()
-    },
-    cacheItemMap  () {
+    cacheDataMap  () {
       const $xeTreeSelect = this
       const props = $xeTreeSelect
       const reactData = $xeTreeSelect.reactData
 
       const { options } = props
-      const keyField = $xeTreeSelect.computeTreeKeyField
+      const nodeKeyField = $xeTreeSelect.computeNodeKeyField
       const childrenField = $xeTreeSelect.computeChildrenField
       const valueField = $xeTreeSelect.computeValueField
       const nodeMaps: Record<string, {
@@ -300,7 +316,7 @@ export default defineVxeComponent({
           nodeid = getOptUniqueId()
         }
         if (keyMaps[nodeid]) {
-          errLog('vxe.error.repeatKey', [keyField, nodeid])
+          errLog('vxe.error.repeatKey', [nodeKeyField, nodeid])
         }
         keyMaps[nodeid] = true
         const value = item[valueField]
@@ -311,7 +327,6 @@ export default defineVxeComponent({
       }, { children: childrenField })
       reactData.fullOptionList = options || []
       reactData.fullNodeMaps = nodeMaps
-      $xeTreeSelect.refreshOption()
     },
     updateZindex () {
       const $xeTreeSelect = this
@@ -568,7 +583,7 @@ export default defineVxeComponent({
     loadSuccessEvent () {
       const $xeTreeSelect = this
 
-      $xeTreeSelect.cacheItemMap()
+      $xeTreeSelect.cacheDataMap()
     },
 
     //
@@ -580,22 +595,24 @@ export default defineVxeComponent({
       const slots = $xeTreeSelect.$scopedSlots
       const reactData = $xeTreeSelect.reactData
 
-      const { className, value, multiple, options, popupClassName, loading } = props
+      const { className, value, multiple, options, loading } = props
       const { initialized, isActivated, isAniVisible, visiblePanel } = reactData
       const vSize = $xeTreeSelect.computeSize
       const isDisabled = $xeTreeSelect.computeIsDisabled
       const selectLabel = $xeTreeSelect.computeSelectLabel
       const btnTransfer = $xeTreeSelect.computeBtnTransfer
       const formReadonly = $xeTreeSelect.computeFormReadonly
-      const defaultSlot = slots.default
+      const popupWrapperStyle = $xeTreeSelect.computePopupWrapperStyle
       const headerSlot = slots.header
       const footerSlot = slots.footer
       const prefixSlot = slots.prefix
+      const popupOpts = $xeTreeSelect.computePopupOpts
+      const popupClassName = popupOpts.className || props.popupClassName
       const treeOpts = $xeTreeSelect.computeTreeOpts
       const treeNodeOpts = $xeTreeSelect.computeTreeNodeOpts
       const treeCheckboxOpts = $xeTreeSelect.computeTreeCheckboxOpts
       const treeRadioOpts = $xeTreeSelect.computeTreeRadioOpts
-      const treeKeyField = $xeTreeSelect.computeTreeKeyField
+      const nodeKeyField = $xeTreeSelect.computeNodeKeyField
       const labelField = $xeTreeSelect.computeLabelField
       const valueField = $xeTreeSelect.computeValueField
       const childrenField = $xeTreeSelect.computeChildrenField
@@ -607,10 +624,6 @@ export default defineVxeComponent({
           ref: 'refElem',
           class: ['vxe-tree-select--readonly', className]
         }, [
-          h('div', {
-            class: 'vxe-tree-select-slots',
-            ref: 'hideOption'
-          }, defaultSlot ? defaultSlot({}) : []),
           h('span', {
             class: 'vxe-tree-select-label'
           }, selectLabel)
@@ -636,14 +649,14 @@ export default defineVxeComponent({
             type: 'text',
             prefixIcon: props.prefixIcon,
             suffixIcon: loading ? getIcon().TREE_SELECT_LOADED : (visiblePanel ? getIcon().TREE_SELECT_OPEN : getIcon().TREE_SELECT_CLOSE),
-            value: selectLabel
+            value: loading ? getI18n('vxe.select.loadingText') : selectLabel
           },
           on: {
             clear: $xeTreeSelect.clearEvent,
             click: $xeTreeSelect.clickEvent,
             focus: $xeTreeSelect.focusEvent,
             blur: $xeTreeSelect.blurEvent,
-            suffixClick: $xeTreeSelect.togglePanelEvent
+            'suffix-click': $xeTreeSelect.togglePanelEvent
           },
           scopedSlots: prefixSlot
             ? {
@@ -677,8 +690,9 @@ export default defineVxeComponent({
                   class: 'vxe-tree-select--panel-body'
                 }, [
                   h('div', {
-                    ref: 'refOptionWrapper',
-                    class: 'vxe-tree-select-option--wrapper'
+                    ref: 'refTreeWrapper',
+                    class: 'vxe-tree-select-tree--wrapper',
+                    style: popupWrapperStyle
                   }, [
                     h(VxeTreeComponent, {
                       class: 'vxe-tree-select--tree',
@@ -693,7 +707,7 @@ export default defineVxeComponent({
                         checkboxConfig: treeCheckboxOpts,
                         titleField: labelField,
                         valueField: valueField,
-                        keyField: treeKeyField,
+                        keyField: nodeKeyField,
                         childrenField: treeOpts.childrenField || childrenField,
                         parentField: treeOpts.parentField || parentField,
                         hasChildField: treeOpts.hasChildField || hasChildField,
@@ -734,13 +748,13 @@ export default defineVxeComponent({
     options () {
       const $xeTreeSelect = this
 
-      $xeTreeSelect.cacheItemMap()
+      $xeTreeSelect.cacheDataMap()
     }
   },
   created () {
     const $xeTreeSelect = this
 
-    $xeTreeSelect.cacheItemMap()
+    $xeTreeSelect.cacheDataMap()
   },
   mounted () {
     const $xeTreeSelect = this

@@ -267,6 +267,25 @@ setConfig({
   steps: {},
   switch: {},
   tabPane: {},
+  tableSelect: {
+    gridConfig: {
+      showOverflow: true,
+      showHeaderOverflow: true,
+      showFooterOverflow: true,
+      rowConfig: {
+        isHover: true
+      },
+      scrollX: {
+        enabled: true,
+        gt: 0
+      },
+      scrollY: {
+        mode: 'wheel',
+        enabled: true,
+        gt: 0
+      }
+    }
+  },
   tabs: {},
   tag: {},
   textEllipsis: {},
@@ -472,6 +491,11 @@ setIcon({
   TREE_SELECT_LOADED: iconPrefix + 'spinner roll',
   TREE_SELECT_OPEN: iconPrefix + 'caret-down rotate180',
   TREE_SELECT_CLOSE: iconPrefix + 'caret-down',
+
+  // table-select
+  TABLE_SELECT_LOADED: iconPrefix + 'spinner roll',
+  TABLE_SELECT_OPEN: iconPrefix + 'caret-down rotate180',
+  TABLE_SELECT_CLOSE: iconPrefix + 'caret-down',
 
   // tabs
   TABS_TAB_BUTTON_LEFT: iconPrefix + 'arrow-left',
