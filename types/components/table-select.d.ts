@@ -64,6 +64,7 @@ export interface VxeTableSelectProps<D = any> {
   multiple?: VxeTableSelectPropTypes.Multiple
   prefixIcon?: VxeTableSelectPropTypes.PrefixIcon
   placement?: VxeTableSelectPropTypes.Placement
+  columns?: VxeTableSelectPropTypes.Columns
   options?: VxeTableSelectPropTypes.Options
   optionProps?: VxeTableSelectPropTypes.OptionProps
   transfer?: VxeTableSelectPropTypes.Transfer
@@ -77,6 +78,7 @@ export interface VxeTableSelectPrivateComputed extends TableSelectPrivateCompute
 
 export interface TableSelectReactData {
   initialized: boolean
+  tableColumns: VxeGridPropTypes.Columns
   fullOptionList: any[]
   fullRowMaps: Record<string, {
     item: any
@@ -117,13 +119,44 @@ export namespace VxeTableSelectDefines {
   export interface TableSelectEventParams extends VxeComponentEventParams {
     $tableSelect: VxeTableSelectConstructor
   }
+
+  export interface ChangeEventParams<D = any> extends TableSelectEventParams {
+    value: any
+    row: D
+  }
+
+  export interface ClearEventParams extends TableSelectEventParams {
+    value: any
+  }
+
+  export interface FocusEventParams extends TableSelectEventParams { }
+  export interface BlurEventParams extends TableSelectEventParams { }
+  export interface ClickEventParams extends TableSelectEventParams { }
 }
 
-export type VxeTableSelectEventProps = {}
+export type VxeTableSelectEventProps<D = any> = {
+  onChange?: VxeTableSelectEvents.Change<D>
+  onClear?: VxeTableSelectEvents.Clear
+  onFocus?: VxeTableSelectEvents.Focus
+  onBlur?: VxeTableSelectEvents.Blur
+  onClick?: VxeTableSelectEvents.Click
+}
 
-export interface VxeTableSelectListeners { }
+export interface VxeTableSelectListeners<D = any> {
+  change?: VxeTableSelectEvents.Change<D>
+  clear?: VxeTableSelectEvents.Clear
+  focus?: VxeTableSelectEvents.Focus
+  blur?: VxeTableSelectEvents.Blur
+  click?: VxeTableSelectEvents.Click
+}
 
-export namespace VxeTableSelectEvents { }
+export namespace VxeTableSelectEvents {
+  export type Change<D = any> = (params: VxeTableSelectDefines.ChangeEventParams<D>) => void
+  export type Clear = (params: VxeTableSelectDefines.ClearEventParams) => void
+  export type Focus = (params: VxeTableSelectDefines.FocusEventParams) => void
+  export type Blur = (params: VxeTableSelectDefines.BlurEventParams) => void
+  export type Click = (params: VxeTableSelectDefines.ClickEventParams) => void
+}
 
 export namespace VxeTableSelectSlotTypes {
   export interface DefaultSlotParams {}

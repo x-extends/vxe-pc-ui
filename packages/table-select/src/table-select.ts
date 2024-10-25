@@ -78,6 +78,7 @@ export default defineComponent({
 
     const reactData = reactive<TableSelectReactData>({
       initialized: false,
+      tableColumns: [],
       fullOptionList: [],
       fullRowMaps: {},
       panelIndex: 0,
@@ -171,9 +172,9 @@ export default defineComponent({
       const { modelValue } = props
       const { fullRowMaps } = reactData
       const labelField = computeLabelField.value
-      return (XEUtils.isArray(modelValue) ? modelValue : [modelValue]).map(value => {
-        const cacheItem = fullRowMaps[value]
-        return cacheItem ? cacheItem.item[labelField] : value
+      return (XEUtils.isArray(modelValue) ? modelValue : [modelValue]).map(val => {
+        const cacheItem = fullRowMaps[val]
+        return cacheItem ? cacheItem.item[labelField] : val
       }).join(', ')
     })
 
@@ -222,6 +223,23 @@ export default defineComponent({
       const nodeKeyField = computeRowKeyField.value
       const rowid = option[nodeKeyField]
       return rowid ? encodeURIComponent(rowid) : ''
+    }
+
+    const loadTableColumn = (columns: VxeTableSelectPropTypes.Columns) => {
+      const { multiple } = props
+      const tableCols: VxeTableSelectPropTypes.Columns = []
+      if (multiple) {
+        tableCols.push({
+          type: 'checkbox',
+          width: 70
+        })
+      } else {
+        tableCols.push({
+          type: 'radio',
+          width: 70
+        })
+      }
+      reactData.tableColumns = tableCols.concat(columns || [])
     }
 
     const cacheDataMap = () => {
@@ -368,7 +386,7 @@ export default defineComponent({
       emitModel(selectValue)
       if (selectValue !== props.modelValue) {
         const cacheItem = fullRowMaps[selectValue]
-        dispatchEvent('change', { value: selectValue, option: cacheItem ? cacheItem.item : null }, evnt)
+        dispatchEvent('change', { value: selectValue, row: cacheItem ? cacheItem.item : null }, evnt)
         // 自动更新校验状态
         if ($xeForm && formItemInfo) {
           $xeForm.triggerItemEvent(evnt, formItemInfo.itemConfig.field, selectValue)
@@ -456,18 +474,33 @@ export default defineComponent({
       }
     }
 
-    const handleCurrentChangeEvent: VxeGridEvents.CurrentChange = ({ $event, row }) => {
+    const radioChangeEvent: VxeGridEvents.RadioChange = (params) => {
+      const { $event, row } = params
       const valueField = computeValueField.value
       const value = row[valueField]
       changeEvent($event, value)
       hideOptionPanel()
     }
 
+    const checkboxChangeEvent: VxeGridEvents.CheckboxChange = (params) => {
+      const { $grid, $event } = params
+      const valueField = computeValueField.value
+      const checkboxRecords = $grid.getCheckboxRecords()
+      const value = checkboxRecords.map(row => {
+        return row[valueField]
+      })
+      changeEvent($event, value)
+    }
+
+    const checkboxAllEvent: VxeGridEvents.CheckboxAll = (params) => {
+      checkboxChangeEvent(params)
+    }
+
     Object.assign($xeTableSelect, tableSelectMethods, tableSelectPrivateMethods)
 
     const renderVN = () => {
-      const { className, columns, options, loading } = props
-      const { initialized, isActivated, isAniVisible, visiblePanel } = reactData
+      const { className, options, loading } = props
+      const { initialized, isActivated, isAniVisible, visiblePanel, tableColumns } = reactData
       const vSize = computeSize.value
       const isDisabled = computeIsDisabled.value
       const selectLabel = computeSelectLabel.value
@@ -505,13 +538,13 @@ export default defineComponent({
         h(VxeInputComponent, {
           ref: refInput,
           clearable: props.clearable,
-          placeholder: props.placeholder,
+          placeholder: loading ? getI18n('vxe.select.loadingText') : props.placeholder,
           readonly: true,
           disabled: isDisabled,
           type: 'text',
           prefixIcon: props.prefixIcon,
           suffixIcon: loading ? getIcon().TABLE_SELECT_LOADED : (visiblePanel ? getIcon().TABLE_SELECT_OPEN : getIcon().TABLE_SELECT_CLOSE),
-          modelValue: loading ? getI18n('vxe.select.loadingText') : selectLabel,
+          modelValue: loading ? '' : selectLabel,
           onClear: clearEvent,
           onClick: clickEvent,
           onFocus: focusEvent,
@@ -560,10 +593,12 @@ export default defineComponent({
                           ...gridOpts,
                           rowConfig: rowOpts,
                           data: options,
-                          columns: columns,
+                          columns: tableColumns,
                           height: '100%',
                           autoResize: true,
-                          onCurrentChange: handleCurrentChangeEvent
+                          onRadioChange: radioChangeEvent,
+                          onCheckboxChange: checkboxChangeEvent,
+                          onCheckboxAll: checkboxAllEvent
                         }, Object.assign({}, slots, {
                           header: undefined,
                           footer: undefined,
@@ -588,6 +623,11 @@ export default defineComponent({
       cacheDataMap()
     })
 
+    watch(() => props.columns, (val) => {
+      loadTableColumn(val || [])
+    })
+
+    loadTableColumn(props.columns || [])
     cacheDataMap()
 
     onMounted(() => {

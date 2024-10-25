@@ -41,14 +41,14 @@ export default defineComponent({
       emit(type, createEvent(evnt, { $steps: $xeSteps }, params))
     }
 
-    const collapsePaneMethods: StepsMethods = {
+    const stepsMethods: StepsMethods = {
       dispatchEvent
     }
 
-    const collapsePanePrivateMethods: StepsPrivateMethods = {
+    const stepsPrivateMethods: StepsPrivateMethods = {
     }
 
-    Object.assign($xeSteps, collapsePaneMethods, collapsePanePrivateMethods)
+    Object.assign($xeSteps, stepsMethods, stepsPrivateMethods)
 
     const renderVN = () => {
       return h('div', {

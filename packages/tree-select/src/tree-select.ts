@@ -1,13 +1,13 @@
 import { defineComponent, ref, computed, h, PropType, nextTick, inject, provide, reactive, Teleport, onMounted, onUnmounted, watch } from 'vue'
 import { getConfig, getI18n, getIcon, globalEvents, createEvent, useSize, renderEmptyElement } from '../../ui'
-import { getEventTargetNode, getAbsolutePos } from '../../ui/src/dom'
+import { getEventTargetNode, getAbsolutePos, toCssUnit } from '../../ui/src/dom'
 import { getLastZIndex, nextZIndex } from '../../ui/src/utils'
 import { errLog } from '../../ui/src/log'
 import XEUtils from 'xe-utils'
 import VxeInputComponent from '../../input/src/input'
 import VxeTreeComponent from '../../tree/src/tree'
 
-import type { TreeSelectReactData, VxeTreeSelectEmits, TreeSelectInternalData, ValueOf, TreeSelectPrivateRef, TreeSelectPrivateMethods, TreeSelectMethods, VxeTreeSelectPrivateComputed, VxeTreeSelectPropTypes, VxeTreeSelectConstructor, VxeFormDefines, VxeDrawerConstructor, VxeDrawerMethods, VxeTreeSelectPrivateMethods, VxeTableConstructor, VxeTablePrivateMethods, VxeFormConstructor, VxeFormPrivateMethods, VxeInputConstructor, VxeModalConstructor, VxeModalMethods } from '../../../types'
+import type { TreeSelectReactData, VxeTreeSelectEmits, TreeSelectInternalData, ValueOf, VxeComponentStyleType, TreeSelectPrivateRef, TreeSelectPrivateMethods, TreeSelectMethods, VxeTreeSelectPrivateComputed, VxeTreeSelectPropTypes, VxeTreeSelectConstructor, VxeFormDefines, VxeDrawerConstructor, VxeDrawerMethods, VxeTreeSelectPrivateMethods, VxeTableConstructor, VxeTablePrivateMethods, VxeFormConstructor, VxeFormPrivateMethods, VxeInputConstructor, VxeModalConstructor, VxeModalMethods } from '../../../types'
 
 function getOptUniqueId () {
   return XEUtils.uniqueId('node_')
@@ -136,7 +136,7 @@ export default defineComponent({
     })
 
     const computePopupOpts = computed(() => {
-      return Object.assign({}, getConfig().treeSelect.popupConfig)
+      return Object.assign({}, getConfig().treeSelect.popupConfig, props.popupConfig)
     })
 
     const computeTreeOpts = computed(() => {
@@ -204,10 +204,24 @@ export default defineComponent({
       const { modelValue } = props
       const { fullNodeMaps } = reactData
       const labelField = computeLabelField.value
-      return (XEUtils.isArray(modelValue) ? modelValue : [modelValue]).map(value => {
-        const cacheItem = fullNodeMaps[value]
-        return cacheItem ? cacheItem.item[labelField] : value
+      return (XEUtils.isArray(modelValue) ? modelValue : [modelValue]).map(val => {
+        const cacheItem = fullNodeMaps[val]
+        return cacheItem ? cacheItem.item[labelField] : val
       }).join(', ')
+    })
+
+    const computePopupWrapperStyle = computed(() => {
+      const popupOpts = computePopupOpts.value
+      const { height, width } = popupOpts
+      const stys: VxeComponentStyleType = {}
+      if (width) {
+        stys.width = toCssUnit(width)
+      }
+      if (height) {
+        stys.height = toCssUnit(height)
+        stys.maxHeight = toCssUnit(height)
+      }
+      return stys
     })
 
     const computeMaps: VxeTreeSelectPrivateComputed = {
@@ -502,6 +516,7 @@ export default defineComponent({
       const selectLabel = computeSelectLabel.value
       const btnTransfer = computeBtnTransfer.value
       const formReadonly = computeFormReadonly.value
+      const popupWrapperStyle = computePopupWrapperStyle.value
       const headerSlot = slots.header
       const footerSlot = slots.footer
       const prefixSlot = slots.prefix
@@ -541,13 +556,13 @@ export default defineComponent({
         h(VxeInputComponent, {
           ref: refInput,
           clearable: props.clearable,
-          placeholder: props.placeholder,
+          placeholder: loading ? getI18n('vxe.select.loadingText') : props.placeholder,
           readonly: true,
           disabled: isDisabled,
           type: 'text',
           prefixIcon: props.prefixIcon,
           suffixIcon: loading ? getIcon().TREE_SELECT_LOADED : (visiblePanel ? getIcon().TREE_SELECT_OPEN : getIcon().TREE_SELECT_CLOSE),
-          modelValue: loading ? getI18n('vxe.select.loadingText') : selectLabel,
+          modelValue: loading ? '' : selectLabel,
           onClear: clearEvent,
           onClick: clickEvent,
           onFocus: focusEvent,
@@ -587,7 +602,8 @@ export default defineComponent({
                   }, [
                     h('div', {
                       ref: refTreeWrapper,
-                      class: 'vxe-tree-select-tree--wrapper'
+                      class: 'vxe-tree-select-tree--wrapper',
+                      style: popupWrapperStyle
                     }, [
                       h(VxeTreeComponent, {
                         class: 'vxe-tree-select--tree',

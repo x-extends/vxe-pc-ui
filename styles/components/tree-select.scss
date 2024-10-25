@@ -52,6 +52,7 @@
   padding: 4px 0;
   color: var(--vxe-ui-font-color);
   text-align: left;
+  pointer-events: none;
   &:not(.is--transfer) {
     min-width: 100%;
   }
@@ -83,11 +84,13 @@
 }
 
 .vxe-tree-select--panel-wrapper {
+  display: inline-flex;
   position: relative;
   border-radius: var(--vxe-ui-base-border-radius);
   border: 1px solid var(--vxe-ui-base-popup-border-color);
   box-shadow: var(--vxe-ui-base-popup-box-shadow);
   background-color: var(--vxe-ui-layout-background-color);
+  pointer-events: auto;
 }
 
 .vxe-tree-select--panel-header {
@@ -108,7 +111,7 @@
   overflow: auto;
   padding: var(--vxe-ui-layout-padding-default);
   max-height: 21em;
-  max-width: 30em;
+  width: 30em;
   outline: 0;
 }
 .vxe-tree-select--tree {

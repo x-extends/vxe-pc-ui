@@ -48,6 +48,7 @@ const componentList = [
   'col',
   'collapse',
   'collapse-pane',
+  'color-picker',
   'countdown',
   'date-picker',
   'drawer',

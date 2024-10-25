@@ -19,6 +19,7 @@ import VxeCheckboxGroup from './components/checkbox-group'
 import VxeCol from './components/col'
 import VxeCollapse from './components/collapse'
 import VxeCollapsePane from './components/collapse-pane'
+import VxeColorPicker from './components/color-picker'
 import VxeCountdown from './components/countdown'
 import VxeDatePicker from './components/date-picker'
 import VxeDrawer from './components/drawer'
@@ -110,6 +111,7 @@ interface AllComponents {
   VxeCol: typeof VxeCol
   VxeCollapse: typeof VxeCollapse
   VxeCollapsePane: typeof VxeCollapsePane
+  VxeColorPicker: typeof VxeColorPicker
   VxeCountdown: typeof VxeCountdown
   VxeDatePicker: typeof VxeDatePicker
   VxeDrawer: typeof VxeDrawer
@@ -210,6 +212,7 @@ export * from './components/checkbox-group'
 export * from './components/col'
 export * from './components/collapse'
 export * from './components/collapse-pane'
+export * from './components/color-picker'
 export * from './components/countdown'
 export * from './components/date-picker'
 export * from './components/drawer'
