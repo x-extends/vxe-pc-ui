@@ -350,6 +350,7 @@ declare module '@vxe-ui/core' {
       $columnIndex: number
       $rowIndex: number
       items: any[]
+      row: any
       data: D[][]
     }
 
