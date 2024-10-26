@@ -90,6 +90,7 @@ export interface TableSelectReactData {
 }
 export interface TableSelectInternalData {
   hpTimeout?: undefined | number
+  vpTimeout?: undefined | number
 }
 
 export interface TableSelectMethods {

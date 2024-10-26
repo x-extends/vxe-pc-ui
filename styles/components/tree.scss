@@ -1,4 +1,4 @@
-@import '../helpers/mixin.scss';
+@use '../helpers/baseMixin.scss';
 
 .vxe-tree {
   position: relative;
@@ -128,7 +128,7 @@
   z-index: 7;
   & > i {
     display: inline-flex;
-    @include createAnimationTransition(all, 0.2s);
+    @include baseMixin.createAnimationTransition(all, 0.2s);
   }
 }
 .vxe-tree--node-item-inner {
@@ -148,11 +148,11 @@
 }
 .vxe-tree--checkbox-option {
   padding-right: 0.4em;
-  @include createCheckboxIcon();
+  @include baseMixin.createCheckboxIcon();
 }
 .vxe-tree--radio-option {
   padding-right: 0.4em;
-  @include createRadioIcon();
+  @include baseMixin.createRadioIcon();
 }
 
 .vxe-tree {

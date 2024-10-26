@@ -1,4 +1,4 @@
-@import '../helpers/mixin.scss';
+@use '../helpers/baseMixin.scss';
 
 .vxe-tree-select {
   position: relative;
@@ -29,7 +29,7 @@
     width: 100%;
     .vxe-input--suffix-icon > i {
       display: inline-block;
-      @include createAnimationTransition(transform, .2s);
+      @include baseMixin.createAnimationTransition(transform, .2s);
     }
   }
   &.is--active {

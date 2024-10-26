@@ -1,4 +1,4 @@
-@import '../helpers/mixin.scss';
+@use '../helpers/baseMixin.scss';
 
 .vxe-menu {
   position: relative;
@@ -26,7 +26,7 @@
   overflow: auto;
   &.is--collapsed {
     display: block;
-    @include createAnimationTransition(all, 0.25s);
+    @include baseMixin.createAnimationTransition(all, 0.25s);
   }
   &:not(.is--enter) {
     .vxe-menu--item-link-title,
@@ -72,7 +72,7 @@
   padding: 0.5em;
   i {
     display: inline-block;
-    @include createAnimationTransition(transform, 0.25s);
+    @include baseMixin.createAnimationTransition(transform, 0.25s);
   }
 }
 

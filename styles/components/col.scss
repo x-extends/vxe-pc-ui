@@ -1,3 +1,5 @@
+@use "sass:list";
+
 // 24 栅格布局
 $colSpanList: 4.16667%, 8.33333%, 12.5%, 16.66667%, 20.83333%, 25%, 29.16667%, 33.33333%,
               37.5%, 41.66667%, 45.83333%, 50%, 54.16667%, 58.33333%, 62.5%, 66.66667%,
@@ -24,9 +26,9 @@ $colSpanList: 4.16667%, 8.33333%, 12.5%, 16.66667%, 20.83333%, 25%, 29.16667%, 3
   &.align--right {
     text-align: right;
   }
-  @for $i from 0 to length($colSpanList) {
+  @for $i from 0 to list.length($colSpanList) {
     &.span#{$i + 1} {
-      width: nth($colSpanList, $i + 1);
+      width: list.nth($colSpanList, $i + 1);
     }
   }
 }

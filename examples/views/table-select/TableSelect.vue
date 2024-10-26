@@ -40,10 +40,10 @@ export default Vue.extend({
     ]
 
     return {
-      val1: '',
+      val1: 2,
       columns1,
       opts1,
-      val2: '',
+      val2: [3, 4],
       columns2,
       opts2
     }

@@ -1,3 +1,6 @@
+@use "sass:map";
+@use "sass:list";
+
 $rateThemeList: (
   (
     name: "primary",
@@ -29,11 +32,11 @@ $rateThemeList: (
   display: inline-flex;
   flex-direction: row;
   color: var(--vxe-ui-font-color);
-  @for $index from 0 to length($rateThemeList) {
-    $item: nth($rateThemeList, $index + 1);
-    &.theme--#{map-get($item, name)} {
+  @for $index from 0 to list.length($rateThemeList) {
+    $item: list.nth($rateThemeList, $index + 1);
+    &.theme--#{map.get($item, name)} {
       .vxe-rte--item {
-        color: map-get($item, color);
+        color: map.get($item, color);
       }
     }
   }

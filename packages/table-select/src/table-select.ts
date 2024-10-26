@@ -7,7 +7,7 @@ import { getLastZIndex, nextZIndex } from '../../ui/src/utils'
 import { errLog } from '../../ui/src/log'
 import VxeInputComponent from '../../input/src/input'
 
-import type { TableSelectReactData, VxeTableSelectPropTypes, TableSelectInternalData, VxeTableSelectEmits, VxeFormDefines, VxeGridDefines, VxeTablePropTypes, VxeGridComponent, ValueOf, VxeComponentStyleType, VxeComponentSizeType, VxeModalConstructor, VxeModalMethods, VxeDrawerConstructor, VxeDrawerMethods, VxeTableConstructor, VxeTablePrivateMethods, VxeFormConstructor, VxeFormPrivateMethods } from '../../../types'
+import type { TableSelectReactData, VxeTableSelectPropTypes, TableSelectInternalData, VxeTableSelectEmits, VxeGridInstance, VxeFormDefines, VxeGridDefines, VxeTablePropTypes, VxeGridComponent, ValueOf, VxeComponentStyleType, VxeComponentSizeType, VxeModalConstructor, VxeModalMethods, VxeDrawerConstructor, VxeDrawerMethods, VxeTableConstructor, VxeTablePrivateMethods, VxeFormConstructor, VxeFormPrivateMethods } from '../../../types'
 
 export function getRowUniqueId () {
   return XEUtils.uniqueId('row_')
@@ -97,7 +97,8 @@ export default defineVxeComponent({
     }
 
     const internalData: TableSelectInternalData = {
-      hpTimeout: undefined
+      // hpTimeout: undefined,
+      // vpTimeout: undefined
     }
     return {
       xID,
@@ -254,6 +255,40 @@ export default defineVxeComponent({
       const rowid = option[nodeKeyField]
       return rowid ? encodeURIComponent(rowid) : ''
     },
+    getRowsByValue (modelValue: VxeTableSelectPropTypes.ModelValue) {
+      const $xeTableSelect = this
+      const reactData = $xeTableSelect.reactData
+
+      const { fullRowMaps } = reactData
+      const rows: any[] = []
+      const vals = XEUtils.eqNull(modelValue) ? [] : (XEUtils.isArray(modelValue) ? modelValue : [modelValue])
+      vals.forEach(val => {
+        const cacheItem = fullRowMaps[val]
+        if (cacheItem) {
+          rows.push(cacheItem.item)
+        }
+      })
+      return rows
+    },
+    updateModel (modelValue: VxeTableSelectPropTypes.ModelValue) {
+      const $xeTableSelect = this
+      const props = $xeTableSelect
+
+      const { multiple } = props
+      $xeTableSelect.$nextTick(() => {
+        const $grid = $xeTableSelect.$refs.refGrid as VxeGridInstance
+        if ($grid) {
+          const selectList = $xeTableSelect.getRowsByValue(modelValue)
+          if (selectList.length) {
+            if (multiple) {
+              $grid.setCheckboxRow(selectList, true)
+            } else {
+              $grid.setRadioRow(selectList[0])
+            }
+          }
+        }
+      })
+    },
     loadTableColumn (columns: VxeTableSelectPropTypes.Columns) {
       const $xeTableSelect = this
       const props = $xeTableSelect
@@ -313,6 +348,7 @@ export default defineVxeComponent({
       }
       reactData.fullOptionList = options || []
       reactData.fullRowMaps = rowMaps
+      $xeTableSelect.updateModel(props.value)
     },
     updateZindex () {
       const $xeTableSelect = this
@@ -405,14 +441,21 @@ export default defineVxeComponent({
       const { loading } = props
       const isDisabled = $xeTableSelect.computeIsDisabled
       if (!loading && !isDisabled) {
-        clearTimeout(internalData.hpTimeout)
+        if (internalData.vpTimeout) {
+          clearTimeout(internalData.vpTimeout)
+        }
+        if (internalData.hpTimeout) {
+          clearTimeout(internalData.hpTimeout)
+        }
         if (!reactData.initialized) {
           reactData.initialized = true
         }
         reactData.isActivated = true
         reactData.isAniVisible = true
-        setTimeout(() => {
+        internalData.vpTimeout = setTimeout(() => {
           reactData.visiblePanel = true
+          $xeTableSelect.updateModel(props.value)
+          internalData.vpTimeout = undefined
         }, 10)
         $xeTableSelect.updateZindex()
         $xeTableSelect.updatePlacement()
@@ -670,6 +713,7 @@ export default defineVxeComponent({
                   }, [
                     VxeTableGridComponent
                       ? h(VxeTableGridComponent, {
+                        ref: 'refGrid',
                         class: 'vxe-table-select--grid',
                         props: {
                           ...gridOpts,
@@ -714,6 +758,11 @@ export default defineVxeComponent({
       const $xeTableSelect = this
 
       $xeTableSelect.loadTableColumn(val || [])
+    },
+    value (val) {
+      const $xeTableSelect = this
+
+      $xeTableSelect.updateModel(val)
     }
   },
   created () {

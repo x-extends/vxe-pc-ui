@@ -1,3 +1,6 @@
+@use "sass:map";
+@use "sass:list";
+
 $loadingThemeList: (
   (
     name: "primary",
@@ -48,15 +51,15 @@ $loadingThemeList: (
       background-color: var(--vxe-ui-font-primary-color);
     }
   }
-  @for $index from 0 to length($loadingThemeList) {
-    $item: nth($loadingThemeList, $index + 1);
-    &.theme--#{map-get($item, name)} {
-      color: map-get($item, textColor);
-      background-color: map-get($item, bgColor);
+  @for $index from 0 to list.length($loadingThemeList) {
+    $item: list.nth($loadingThemeList, $index + 1);
+    &.theme--#{map.get($item, name)} {
+      color: map.get($item, textColor);
+      background-color: map.get($item, bgColor);
       .vxe-loading--spinner {
         &:before,
         &:after {
-          background-color: map-get($item, bgColor);
+          background-color: map.get($item, bgColor);
         }
       }
     }

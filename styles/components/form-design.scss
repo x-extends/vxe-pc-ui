@@ -1,6 +1,6 @@
-@import '../helpers/mixin.scss';
-@import './widget-form/all.scss';
-@import './widget-item/all.scss';
+@use '../helpers/baseMixin.scss';
+@use './widget-form/widget-form-all.scss';
+@use './widget-item/widget-item-all.scss';
 
 .vxe-form-design {
   display: flex;
@@ -49,6 +49,15 @@
 .vxe-form-design--header-middle {
   flex-grow: 1;
 }
+.vxe-form-design--header-right {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  .vxe-form-design--header-extra,
+  .vxe-form-design--header-setting {
+    flex-shrink: 0;
+  }
+}
 
 .vxe-form-design--layout-style {
   display: flex;
@@ -75,11 +84,9 @@
   }
   .vxe-form-design--widget-render-form-item {
     &.widget-subtable {
-      & > .vxe-form--item-inner {
-        & > .vxe-form--item-content {
-          &::after {
-            display: none;
-          }
+      & > .vxe-form--item-content {
+        &::after {
+          display: none;
         }
       }
       .vxe-body--column {
@@ -96,17 +103,15 @@
         }
       }
     }
-    & > .vxe-form--item-inner {
-      & > .vxe-form--item-content {
-        &::after {
-          content: "";
-          position: absolute;
-          top: 0;
-          left: 0;
-          width: 100%;
-          height: 100%;
-          z-index: 1;
-        }
+    & > .vxe-form--item-content {
+      &::after {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: 1;
       }
     }
   }
@@ -223,7 +228,7 @@
 }
 
 .vxe-form-design--preview-list-move {
-  @include createAnimationTransition(transform, 0.35s);
+  @include baseMixin.createAnimationTransition(transform, 0.35s);
 }
 
 .vxe-form-design--preview-item {

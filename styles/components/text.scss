@@ -1,3 +1,6 @@
+@use "sass:map";
+@use "sass:list";
+
 $btnThemeList: (
   (
     name: "primary",
@@ -52,10 +55,10 @@ $btnThemeList: (
 .vxe-text {
   position: relative;
   color: var(--vxe-ui-font-color);
-  @for $index from 0 to length($btnThemeList) {
-    $item: nth($btnThemeList, $index + 1);
-    &.theme--#{map-get($item, name)} {
-      color: map-get($item, textColor);
+  @for $index from 0 to list.length($btnThemeList) {
+    $item: list.nth($btnThemeList, $index + 1);
+    &.theme--#{map.get($item, name)} {
+      color: map.get($item, textColor);
     }
   }
   &.is--copy {

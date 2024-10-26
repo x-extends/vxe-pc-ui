@@ -1,4 +1,4 @@
-@import '../helpers/mixin.scss';
+@use '../helpers/baseMixin.scss';
 
 /*checkbox-group*/
 .vxe-checkbox-group {
@@ -21,7 +21,7 @@
   vertical-align: middle;
   white-space: nowrap;
   line-height: 1;
-  @include createCheckboxIcon();
+  @include baseMixin.createCheckboxIcon();
   &+.vxe-checkbox {
     margin-left: 10px;
   }

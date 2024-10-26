@@ -1,4 +1,4 @@
-@import '../../helpers/mixin.scss';
+@use '../../helpers/baseMixin.scss';
 
 .vxe-form-design--widget-subtable-view {
   display: flex;
@@ -109,7 +109,7 @@
   }
 }
 .vxe-form-design--widget-subtable-view-list-move {
-  @include createAnimationTransition(transform, 0.35s);
+  @include baseMixin.createAnimationTransition(transform, 0.35s);
 }
 
 .vxe-form-design--widget-subtable-view-item {
@@ -158,12 +158,6 @@
 
 .vxe-form-design--widget-subtable-form-item {
   overflow: hidden;
-  & > .vxe-form--item-inner {
-    overflow: hidden;
-    & > .vxe-form--item-content {
-      overflow: hidden;
-    }
-  }
 }
 .vxe-form-design--widget-subtable-view-item-wrapper {
   height: 100%;
@@ -198,14 +192,6 @@
   .vxe-form-design--preview-item-view {
     .vxe-form-design--widget-subtable-form-item {
       padding: 0;
-    }
-  }
-}
-
-.vxe-form-design--widget-render-form-item{
-  &.widget-subtable {
-    & > .vxe-form--item-inner {
-      overflow: hidden;
     }
   }
 }

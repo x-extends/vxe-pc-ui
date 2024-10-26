@@ -1,4 +1,4 @@
-@import '../helpers/mixin.scss';
+@use '../helpers/baseMixin.scss';
 
 // 避免 class 跟 icon 冲突，取名 ico
 .vxe-ico-picker {
@@ -58,7 +58,7 @@
   cursor: pointer;
   .vxe-ico-picker--suffix-icon > i {
     display: inline-block;
-    @include createAnimationTransition(transform, .2s);
+    @include baseMixin.createAnimationTransition(transform, .2s);
   }
 }
 

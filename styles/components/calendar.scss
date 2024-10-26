@@ -1,4 +1,4 @@
-@import '../helpers/mixin.scss';
+@use '../helpers/baseMixin.scss';
 
 .vxe-calendar {
   display: inline-flex;
@@ -114,7 +114,7 @@
 .vxe-calendar--view-td {
   font-weight: normal;
   user-select: none;
-  @include createAnimationTransition(all, 0.1s);
+  @include baseMixin.createAnimationTransition(all, 0.1s);
   &.is--prev,
   &.is--next {
     color: var(--vxe-ui-font-disabled-color);
