@@ -1,3 +1,6 @@
+@use "sass:map";
+@use "sass:list";
+
 $tagsThemeList: (
   (
     name: "primary",
@@ -35,11 +38,11 @@ $tagsThemeList: (
   padding: var(--vxe-ui-layout-padding-half) var(--vxe-ui-layout-padding-default);
   color: var(--vxe-ui-font-color);
   border-radius: var(--vxe-ui-base-border-radius);
-  @for $index from 0 to length($tagsThemeList) {
-    $item: nth($tagsThemeList, $index + 1);
-    &.theme--#{map-get($item, name)} {
-      color: map-get($item, textColor);
-      background-color: map-get($item, bgColor);
+  @for $index from 0 to list.length($tagsThemeList) {
+    $item: list.nth($tagsThemeList, $index + 1);
+    &.theme--#{map.get($item, name)} {
+      color: map.get($item, textColor);
+      background-color: map.get($item, bgColor);
     }
   }
   &.size--medium {

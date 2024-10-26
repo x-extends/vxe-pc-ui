@@ -1,3 +1,6 @@
+@use "sass:map";
+@use "sass:list";
+
 $btnThemeList: (
   (
     name: "primary",
@@ -38,11 +41,11 @@ $btnThemeList: (
   text-align: center;
   font-size: var(--vxe-ui-font-size-default);
   padding: 3em 2em;
-  @for $index from 0 to length($btnThemeList) {
-    $item: nth($btnThemeList, $index + 1);
-    &.theme--#{map-get($item, name)} {
+  @for $index from 0 to list.length($btnThemeList) {
+    $item: list.nth($btnThemeList, $index + 1);
+    &.theme--#{map.get($item, name)} {
       .vxe-result--icon-wrapper {
-        color: map-get($item, textColor);
+        color: map.get($item, textColor);
       }
     }
   }

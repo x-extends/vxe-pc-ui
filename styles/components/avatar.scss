@@ -1,3 +1,6 @@
+@use 'sass:map';
+@use "sass:list";
+
 $avatarThemeList: (
   (
     name: "primary",
@@ -59,11 +62,11 @@ $avatarThemeList: (
       z-index: 1;
     }
   }
-  @for $index from 0 to length($avatarThemeList) {
-    $item: nth($avatarThemeList, $index + 1);
-    $textColor: map-get($item, textColor);
-    $btnColor: map-get($item, btnColor);
-    &.theme--#{map-get($item, name)} {
+  @for $index from 0 to list.length($avatarThemeList) {
+    $item: list.nth($avatarThemeList, $index + 1);
+    $textColor: map.get($item, textColor);
+    $btnColor: map.get($item, btnColor);
+    &.theme--#{map.get($item, name)} {
       color: $btnColor;
       border-color: $textColor;
       background-color: $textColor;

@@ -1,4 +1,4 @@
-@import '../../helpers/mixin.scss';
+@use '../../helpers/baseMixin.scss';
 
 .vxe-form-design--widget-subtable-view {
   display: flex;
@@ -109,7 +109,7 @@
   }
 }
 .vxe-form-design--widget-subtable-view-list-move {
-  @include createAnimationTransition(transform, 0.35s);
+  @include baseMixin.createAnimationTransition(transform, 0.35s);
 }
 
 .vxe-form-design--widget-subtable-view-item {

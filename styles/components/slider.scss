@@ -1,4 +1,6 @@
-@import '../helpers/mixin.scss';
+@use "sass:map";
+@use "sass:list";
+@use '../helpers/baseMixin.scss';
 
 $sliderThemeList: (
   (
@@ -49,20 +51,20 @@ $sliderThemeList: (
   position: relative;
   display: block;
   padding: 0.5em 1em;
-  @for $index from 0 to length($sliderThemeList) {
-    $item: nth($sliderThemeList, $index + 1);
-    &.theme--#{map-get($item, name)} {
+  @for $index from 0 to list.length($sliderThemeList) {
+    $item: list.nth($sliderThemeList, $index + 1);
+    &.theme--#{map.get($item, name)} {
       .vxe-slider--bar-track {
-        background-color: map-get($item, textColor);
+        background-color: map.get($item, textColor);
         &:hover {
-          background-color: map-get($item, hoverColor);
+          background-color: map.get($item, hoverColor);
         }
         &:hover {
-          background-color: map-get($item, activeColor);
+          background-color: map.get($item, activeColor);
         }
       }
       .vxe-slider--bar-btn {
-        background-color: map-get($item, textColor);
+        background-color: map.get($item, textColor);
       }
     }
   }
@@ -128,7 +130,7 @@ $sliderThemeList: (
   background-color: #fff;
   cursor: pointer;
   z-index: 1;
-  @include createAnimationTransition(transform, 0.1s);
+  @include baseMixin.createAnimationTransition(transform, 0.1s);
 }
 .vxe-slider--start-btn {
   left: -0.45em;

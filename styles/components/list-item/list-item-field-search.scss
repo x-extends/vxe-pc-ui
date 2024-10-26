@@ -1,4 +1,4 @@
-@import '../../helpers/mixin.scss';
+@use '../../helpers/baseMixin.scss';
 
 .vxe-list-design--field-search-popup {
   border-bottom: 1px solid var(--vxe-ui-list-design-table-border-color);
@@ -44,7 +44,7 @@
   }
 }
 .vxe-list-design--field-search-checkbox-option {
-  @include createCheckboxIcon();
+  @include baseMixin.createCheckboxIcon();
 }
 .vxe-list-design--field-search-checkbox-option {
   padding-right: 0.4em;

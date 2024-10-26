@@ -1,4 +1,4 @@
-@import '../helpers/mixin.scss';
+@use '../helpers/baseMixin.scss';
 
 html[data-vxe-lock-scroll] {
   overflow: hidden;
@@ -320,7 +320,7 @@ html[data-vxe-lock-scroll] {
   &.is--animat {
     &.is--mask {
       &:before {
-        @include createAnimationTransition(background-color, .2s);
+        @include baseMixin.createAnimationTransition(background-color, .2s);
       }
     }
   }
@@ -378,7 +378,7 @@ html[data-vxe-lock-scroll] {
       margin-top: 0;
       width: auto;
       box-shadow: 0 0 8px 0 rgba(0, 0, 0, 0.1);
-      @include createAnimationTransition(all, .3s, ease-out);
+      @include baseMixin.createAnimationTransition(all, .3s, ease-out);
       .vxe-modal--body {
         &:after {
           content: '';

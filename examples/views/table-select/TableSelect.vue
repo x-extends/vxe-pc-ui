@@ -9,7 +9,7 @@
 import { ref } from 'vue'
 import { VxeTableSelectPropTypes } from '../../../types'
 
-const val1 = ref('')
+const val1 = ref(2)
 const columns1 = ref<VxeTableSelectPropTypes.Columns>([
   { field: 'name', title: 'Name' },
   { field: 'role', title: 'Role' },
@@ -24,7 +24,7 @@ const opts1 = ref([
   { name: 'Test6', role: 'Test', sex: 'man', label: 'Test6', value: 6 }
 ])
 
-const val2 = ref([])
+const val2 = ref([3, 4])
 const columns2 = ref<VxeTableSelectPropTypes.Columns>([
   { field: 'name', title: 'Name' },
   { field: 'role', title: 'Role' },

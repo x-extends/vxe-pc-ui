@@ -1,4 +1,4 @@
-@import '../helpers/mixin.scss';
+@use '../helpers/baseMixin.scss';
 
 .vxe-drawer--wrapper {
   display: none;
@@ -69,7 +69,7 @@
   &.is--mask {
     &:before {
       background-color: rgba(0, 0, 0, 0);
-      @include createAnimationTransition(background-color, 0.2s);
+      @include baseMixin.createAnimationTransition(background-color, 0.2s);
     }
   }
   &.pos--left {
@@ -132,7 +132,7 @@
   text-align: left;
   pointer-events: auto;
   opacity: 0;
-  @include createAnimationTransition(all, 0.3s);
+  @include baseMixin.createAnimationTransition(all, 0.3s);
 }
 .vxe-drawer--aside {
   flex-shrink: 0;

@@ -1,3 +1,5 @@
+@use '../../helpers/baseMixin.scss';
+
 .vxe-form-design--widget-form-item-data-source-wrapper {
   max-height: 30vh;
   min-height: 140px;
@@ -52,7 +54,7 @@
     i {
       cursor: pointer;
       background-color: var(--vxe-ui-layout-background-color);
-      @include createAnimationTransition(transform, 0.1s);
+      @include baseMixin.createAnimationTransition(transform, 0.1s);
       z-index: 2;
     }
   }

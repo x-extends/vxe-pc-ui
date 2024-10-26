@@ -6,7 +6,7 @@ import { getLastZIndex, nextZIndex } from '../../ui/src/utils'
 import { errLog } from '../../ui/src/log'
 import VxeInputComponent from '../../input/src/input'
 
-import type { TableSelectReactData, VxeTableSelectEmits, VxeInputConstructor, VxeGridEvents, TableSelectInternalData, VxeGridComponent, VxeTableSelectPropTypes, VxeFormDefines, VxeModalConstructor, VxeModalMethods, VxeDrawerConstructor, VxeTableConstructor, VxeTablePrivateMethods, VxeDrawerMethods, TableSelectMethods, TableSelectPrivateMethods, ValueOf, TableSelectPrivateRef, VxeTableSelectPrivateComputed, VxeTableSelectConstructor, VxeTableSelectPrivateMethods, VxeFormConstructor, VxeFormPrivateMethods, VxeComponentStyleType } from '../../../types'
+import type { TableSelectReactData, VxeTableSelectEmits, VxeInputConstructor, VxeGridInstance, VxeGridEvents, TableSelectInternalData, VxeGridComponent, VxeTableSelectPropTypes, VxeFormDefines, VxeModalConstructor, VxeModalMethods, VxeDrawerConstructor, VxeTableConstructor, VxeTablePrivateMethods, VxeDrawerMethods, TableSelectMethods, TableSelectPrivateMethods, ValueOf, TableSelectPrivateRef, VxeTableSelectPrivateComputed, VxeTableSelectConstructor, VxeTableSelectPrivateMethods, VxeFormConstructor, VxeFormPrivateMethods, VxeComponentStyleType } from '../../../types'
 
 export function getRowUniqueId () {
   return XEUtils.uniqueId('row_')
@@ -75,6 +75,7 @@ export default defineComponent({
     const refInput = ref<VxeInputConstructor>()
     const refGridWrapper = ref<HTMLDivElement>()
     const refOptionPanel = ref<HTMLDivElement>()
+    const refGrid = ref<VxeGridInstance>()
 
     const reactData = reactive<TableSelectReactData>({
       initialized: false,
@@ -91,7 +92,8 @@ export default defineComponent({
     })
 
     const internalData: TableSelectInternalData = {
-      hpTimeout: undefined
+      // hpTimeout: undefined,
+      // vpTimeout: undefined
     }
 
     const refMaps: TableSelectPrivateRef = {
@@ -225,6 +227,36 @@ export default defineComponent({
       return rowid ? encodeURIComponent(rowid) : ''
     }
 
+    const getRowsByValue = (modelValue: VxeTableSelectPropTypes.ModelValue) => {
+      const { fullRowMaps } = reactData
+      const rows: any[] = []
+      const vals = XEUtils.eqNull(modelValue) ? [] : (XEUtils.isArray(modelValue) ? modelValue : [modelValue])
+      vals.forEach(val => {
+        const cacheItem = fullRowMaps[val]
+        if (cacheItem) {
+          rows.push(cacheItem.item)
+        }
+      })
+      return rows
+    }
+
+    const updateModel = (modelValue: VxeTableSelectPropTypes.ModelValue) => {
+      const { multiple } = props
+      nextTick(() => {
+        const $grid = refGrid.value
+        if ($grid) {
+          const selectList = getRowsByValue(modelValue)
+          if (selectList.length) {
+            if (multiple) {
+              $grid.setCheckboxRow(selectList, true)
+            } else {
+              $grid.setRadioRow(selectList[0])
+            }
+          }
+        }
+      })
+    }
+
     const loadTableColumn = (columns: VxeTableSelectPropTypes.Columns) => {
       const { multiple } = props
       const tableCols: VxeTableSelectPropTypes.Columns = []
@@ -277,6 +309,7 @@ export default defineComponent({
       }
       reactData.fullOptionList = options || []
       reactData.fullRowMaps = rowMaps
+      updateModel(props.modelValue)
     }
 
     const updateZindex = () => {
@@ -360,14 +393,21 @@ export default defineComponent({
       const { loading } = props
       const isDisabled = computeIsDisabled.value
       if (!loading && !isDisabled) {
-        clearTimeout(internalData.hpTimeout)
+        if (internalData.vpTimeout) {
+          clearTimeout(internalData.vpTimeout)
+        }
+        if (internalData.hpTimeout) {
+          clearTimeout(internalData.hpTimeout)
+        }
         if (!reactData.initialized) {
           reactData.initialized = true
         }
         reactData.isActivated = true
         reactData.isAniVisible = true
-        setTimeout(() => {
+        internalData.vpTimeout = setTimeout(() => {
           reactData.visiblePanel = true
+          updateModel(props.modelValue)
+          internalData.vpTimeout = undefined
         }, 10)
         updateZindex()
         updatePlacement()
@@ -376,8 +416,15 @@ export default defineComponent({
 
     const hideOptionPanel = () => {
       reactData.visiblePanel = false
+      if (internalData.vpTimeout) {
+        clearTimeout(internalData.vpTimeout)
+      }
+      if (internalData.hpTimeout) {
+        clearTimeout(internalData.hpTimeout)
+      }
       internalData.hpTimeout = window.setTimeout(() => {
         reactData.isAniVisible = false
+        internalData.hpTimeout = undefined
       }, 350)
     }
 
@@ -589,8 +636,9 @@ export default defineComponent({
                     }, [
                       VxeTableGridComponent
                         ? h(VxeTableGridComponent, {
-                          class: 'vxe-table-select--grid',
                           ...gridOpts,
+                          class: 'vxe-table-select--grid',
+                          ref: refGrid,
                           rowConfig: rowOpts,
                           data: options,
                           columns: tableColumns,
@@ -625,6 +673,10 @@ export default defineComponent({
 
     watch(() => props.columns, (val) => {
       loadTableColumn(val || [])
+    })
+
+    watch(() => props.modelValue, (val) => {
+      updateModel(val)
     })
 
     loadTableColumn(props.columns || [])

@@ -1,4 +1,4 @@
-@import '../helpers/mixin.scss';
+@use '../helpers/baseMixin.scss';
 
 .vxe-collapse {
   font-size: var(--vxe-ui-font-size-default);
@@ -40,7 +40,7 @@
   cursor: pointer;
   & > i {
     display: inline-block;
-    @include createAnimationTransition(transform, .2s);
+    @include baseMixin.createAnimationTransition(transform, .2s);
   }
 }
 

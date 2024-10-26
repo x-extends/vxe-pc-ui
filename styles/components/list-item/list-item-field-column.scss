@@ -1,11 +1,11 @@
-@import '../../helpers/mixin.scss';
+@use '../../helpers/baseMixin.scss';
 
 .vxe-list-design--field-checkbox-option {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
   flex-grow: 1;
-  @include createCheckboxIcon();
+  @include baseMixin.createCheckboxIcon();
 }
 .vxe-list-design--field-option-inner {
   display: flex;

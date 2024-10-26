@@ -1,6 +1,6 @@
-@import '../helpers/mixin.scss';
-@import './widget-form/all.scss';
-@import './widget-item/all.scss';
+@use '../helpers/baseMixin.scss';
+@use './widget-form/widget-form-all.scss';
+@use './widget-item/widget-item-all.scss';
 
 .vxe-form-design {
   display: flex;
@@ -228,7 +228,7 @@
 }
 
 .vxe-form-design--preview-list-move {
-  @include createAnimationTransition(transform, 0.35s);
+  @include baseMixin.createAnimationTransition(transform, 0.35s);
 }
 
 .vxe-form-design--preview-item {

@@ -1,4 +1,4 @@
-@import '../helpers/mixin.scss';
+@use '../helpers/baseMixin.scss';
 
 .vxe-tabs {
   display: flex;
@@ -158,7 +158,7 @@
   }
 }
 .vxe-tabs-header--item-inner {
-  @include createAnimationTransition(color, .1s);
+  @include baseMixin.createAnimationTransition(color, .1s);
 }
 
 .vxe-tabs-pane {
@@ -185,7 +185,7 @@
     width: 4px;
     background-color: var(--vxe-ui-font-primary-color);
     z-index: 2;
-    @include createAnimationTransition(all, .3s);
+    @include baseMixin.createAnimationTransition(all, .3s);
   }
   &.type--card {
     display: block;
@@ -312,7 +312,7 @@
     border-right: 1px solid var(--vxe-ui-input-border-color);
     border-radius: var(--vxe-ui-base-border-radius) var(--vxe-ui-base-border-radius) 0 0;
     background-color: rgba(0, 0, 0, 0.02);
-    @include createAnimationTransition(color, .3s);
+    @include baseMixin.createAnimationTransition(color, .3s);
     &.is--active {
       background-color: var(--vxe-ui-layout-background-color);
     }

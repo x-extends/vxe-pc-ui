@@ -1,4 +1,4 @@
-@import '../helpers/mixin.scss';
+@use '../helpers/baseMixin.scss';
 
 .vxe-anchor {
   position: relative;
@@ -12,7 +12,7 @@
   width: 0.2em;
   height: 1.5em;
   padding: 0.25em 0;
-  @include createAnimationTransition(all, 0.35s);
+  @include baseMixin.createAnimationTransition(all, 0.35s);
   &::before {
     display: block;
     content: "";

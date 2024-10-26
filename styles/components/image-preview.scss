@@ -1,4 +1,4 @@
-@import '../helpers/mixin.scss';
+@use '../helpers/baseMixin.scss';
 
 .vxe-image-preview {
   position: relative;
@@ -13,7 +13,7 @@
   }
   &:not(.is--move) {
     .vxe-image-preview--img-item {
-      @include createAnimationTransition(transform, 0.3s);
+      @include baseMixin.createAnimationTransition(transform, 0.3s);
     }
   }
   &:hover {
@@ -70,7 +70,7 @@
   transform: scale(1);
   border-radius: 50%;
   cursor: pointer;
-  @include createAnimationTransition(all, 0.2s);
+  @include baseMixin.createAnimationTransition(all, 0.2s);
 }
 .vxe-image-preview--close-bg {
   position: absolute;
@@ -84,11 +84,11 @@
   transform: rotate(45deg);
   cursor: pointer;
   z-index: 88;
-  @include createAnimationTransition(all, 0.2s);
+  @include baseMixin.createAnimationTransition(all, 0.2s);
 }
 .vxe-image-preview--close-wrapper {
   opacity: 0;
-  @include createAnimationTransition(all, 0.2s);
+  @include baseMixin.createAnimationTransition(all, 0.2s);
   &:hover {
     .vxe-image-preview--close-btn {
       top: 0.2em;
@@ -125,7 +125,7 @@
   line-height: 2.2em;
   background-color: rgba(0, 0, 0, 0.7);
   cursor: pointer;
-  @include createAnimationTransition(all, 0.1s);
+  @include baseMixin.createAnimationTransition(all, 0.1s);
 }
 .vxe-image-preview--previous-btn {
   left: 1vw;
@@ -147,7 +147,7 @@
   text-align: center;
   transform: translate(2em, 2em);
   background-color: rgba(0, 0, 0, 0.7);
-  @include createAnimationTransition(all, 0.2s);
+  @include baseMixin.createAnimationTransition(all, 0.2s);
 }
 .vxe-image-preview--operation-wrapper {
   opacity: 0;
@@ -159,7 +159,7 @@
   padding: 0 1.5em;
   border-radius: 3em;
   background-color: rgba(0, 0, 0, 0.7);
-  @include createAnimationTransition(all, 0.2s);
+  @include baseMixin.createAnimationTransition(all, 0.2s);
 }
 .vxe-image-preview--operation-active-count {
   display: flex;
@@ -186,7 +186,7 @@
   font-size: 1.6em;
   padding: 0.5em;
   cursor: pointer;
-  @include createAnimationTransition(all, 0.1s);
+  @include baseMixin.createAnimationTransition(all, 0.1s);
   &:hover {
     color: var(--vxe-ui-font-primary-color);
     transform: scale(1.2);
