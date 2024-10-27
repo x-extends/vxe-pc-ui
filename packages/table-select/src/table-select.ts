@@ -153,7 +153,7 @@ export default defineVxeComponent({
 
       const { transfer } = props
       if (transfer === null) {
-        const globalTransfer = getConfig().select.transfer
+        const globalTransfer = getConfig().tableSelect.transfer
         if (XEUtils.isBoolean(globalTransfer)) {
           return globalTransfer
         }
@@ -368,7 +368,7 @@ export default defineVxeComponent({
         const { panelIndex } = reactData
         const el = $xeTableSelect.$refs.refElem as HTMLDivElement
         const panelElem = $xeTableSelect.$refs.refOptionPanel as HTMLDivElement
-        const btnTransfer = $xeTableSelect.$refs.computeBtnTransfer as HTMLDivElement
+        const btnTransfer = $xeTableSelect.computeBtnTransfer
         if (panelElem && el) {
           const targetHeight = el.offsetHeight
           const targetWidth = el.offsetWidth
@@ -449,6 +449,13 @@ export default defineVxeComponent({
         }
         if (!reactData.initialized) {
           reactData.initialized = true
+          const btnTransfer = $xeTableSelect.computeBtnTransfer
+          const panelElem = $xeTableSelect.$refs.refOptionPanel as HTMLElement
+          if (btnTransfer) {
+            if (panelElem) {
+              document.body.appendChild(panelElem)
+            }
+          }
         }
         reactData.isActivated = true
         reactData.isAniVisible = true
@@ -791,6 +798,10 @@ export default defineVxeComponent({
   beforeDestroy () {
     const $xeTableSelect = this
 
+    const panelElem = $xeTableSelect.$refs.refOptionPanel as HTMLElement | undefined
+    if (panelElem && panelElem.parentNode) {
+      panelElem.parentNode.removeChild(panelElem)
+    }
     globalEvents.off($xeTableSelect, 'mousewheel')
     globalEvents.off($xeTableSelect, 'mousedown')
     globalEvents.off($xeTableSelect, 'blur')

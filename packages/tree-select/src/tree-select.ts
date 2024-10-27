@@ -154,7 +154,7 @@ export default defineVxeComponent({
 
       const { transfer } = props
       if (transfer === null) {
-        const globalTransfer = getConfig().select.transfer
+        const globalTransfer = getConfig().treeSelect.transfer
         if (XEUtils.isBoolean(globalTransfer)) {
           return globalTransfer
         }
@@ -419,7 +419,9 @@ export default defineVxeComponent({
       const { loading } = props
       const isDisabled = $xeTreeSelect.computeIsDisabled
       if (!loading && !isDisabled) {
-        clearTimeout(internalData.hpTimeout)
+        if (internalData.hpTimeout) {
+          clearTimeout(internalData.hpTimeout)
+        }
         if (!reactData.initialized) {
           reactData.initialized = true
           const btnTransfer = $xeTreeSelect.computeBtnTransfer
