@@ -79,8 +79,13 @@ export default defineVxeComponent({
     emitModel  (value: any) {
       const $xeLoading = this
 
+      const { _events } = $xeLoading as any
       $xeLoading.$emit('input', value)
-      $xeLoading.$emit('modelValue', value)
+      if (_events && _events.modelValue) {
+        $xeLoading.$emit('modelValue', value)
+      } else {
+        $xeLoading.$emit('model-value', value)
+      }
     },
     handleInit () {
       const $xeLoading = this

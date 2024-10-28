@@ -26,6 +26,16 @@ export default defineVxeComponent({
       const $xeColorPicker = this
       $xeColorPicker.$emit(type, createEvent(evnt, { $colorPicker: $xeColorPicker }, params))
     },
+    emitModel  (value: any) {
+      const $xeColorPicker = this
+
+      const { _events } = $xeColorPicker as any
+      if (_events && _events.modelValue) {
+        $xeColorPicker.$emit('modelValue', value)
+      } else {
+        $xeColorPicker.$emit('model-value', value)
+      }
+    },
 
     //
     // Render

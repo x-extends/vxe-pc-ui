@@ -481,8 +481,13 @@ export default defineVxeComponent({
     emitModel (value: any) {
       const $xeCalendar = this
 
-      $xeCalendar.$emit('modelValue', value)
+      const { _events } = $xeCalendar as any
       $xeCalendar.$emit('input', value)
+      if (_events && _events.modelValue) {
+        $xeCalendar.$emit('modelValue', value)
+      } else {
+        $xeCalendar.$emit('model-value', value)
+      }
     },
     parseDate  (value: VxeCalendarPropTypes.ModelValue, format: string) {
       return XEUtils.toStringDate(value, format)

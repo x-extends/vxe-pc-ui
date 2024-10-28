@@ -106,8 +106,13 @@ export default defineVxeComponent({
     emitModel  (value: any) {
       const $xeRadioButton = this
 
+      const { _events } = $xeRadioButton as any
       $xeRadioButton.$emit('input', value)
-      $xeRadioButton.$emit('modelValue', value)
+      if (_events && _events.modelValue) {
+        $xeRadioButton.$emit('modelValue', value)
+      } else {
+        $xeRadioButton.$emit('model-value', value)
+      }
     },
     handleValue (label: VxeRadioButtonPropTypes.Label, evnt: Event) {
       const $xeRadioButton = this

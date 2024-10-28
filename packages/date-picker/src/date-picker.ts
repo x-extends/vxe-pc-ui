@@ -700,7 +700,12 @@ export default defineVxeComponent({
     emitModel (value: any) {
       const $xeDatePicker = this
 
-      $xeDatePicker.$emit('modelValue', value)
+      const { _events } = $xeDatePicker as any
+      if (_events && _events.modelValue) {
+        $xeDatePicker.$emit('modelValue', value)
+      } else {
+        $xeDatePicker.$emit('model-value', value)
+      }
     },
     focus () {
       const $xeDatePicker = this

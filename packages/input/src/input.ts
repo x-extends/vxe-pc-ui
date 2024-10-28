@@ -867,7 +867,12 @@ export default defineVxeComponent({
     emitModel (value: any) {
       const $xeInput = this
 
-      $xeInput.$emit('modelValue', value)
+      const { _events } = $xeInput as any
+      if (_events && _events.modelValue) {
+        $xeInput.$emit('modelValue', value)
+      } else {
+        $xeInput.$emit('model-value', value)
+      }
     },
     focus () {
       const $xeInput = this

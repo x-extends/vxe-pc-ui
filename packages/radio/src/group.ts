@@ -113,8 +113,13 @@ export default defineVxeComponent({
     emitModel  (value: any) {
       const $xeRadioGroup = this
 
+      const { _events } = $xeRadioGroup as any
       $xeRadioGroup.$emit('input', value)
-      $xeRadioGroup.$emit('modelValue', value)
+      if (_events && _events.modelValue) {
+        $xeRadioGroup.$emit('modelValue', value)
+      } else {
+        $xeRadioGroup.$emit('model-value', value)
+      }
     },
     handleChecked (params: {
       label: any

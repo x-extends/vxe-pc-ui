@@ -116,7 +116,12 @@ export default defineVxeComponent({
     emitModel  (value: any) {
       const $xePulldown = this
 
-      $xePulldown.$emit('modelValue', value)
+      const { _events } = $xePulldown as any
+      if (_events && _events.modelValue) {
+        $xePulldown.$emit('modelValue', value)
+      } else {
+        $xePulldown.$emit('model-value', value)
+      }
     },
     updateZindex () {
       const $xePulldown = this

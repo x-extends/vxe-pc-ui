@@ -120,9 +120,14 @@ export default defineVxeComponent({
       $xePasswordInput.$emit(type, createEvent(evnt, { $passwordInput: $xePasswordInput }, params))
     },
     emitModel  (value: any) {
-      const $xeModal = this
+      const $xePasswordInput = this
 
-      $xeModal.$emit('modelValue', value)
+      const { _events } = $xePasswordInput as any
+      if (_events && _events.modelValue) {
+        $xePasswordInput.$emit('modelValue', value)
+      } else {
+        $xePasswordInput.$emit('model-value', value)
+      }
     },
     focus () {
       const $xePasswordInput = this

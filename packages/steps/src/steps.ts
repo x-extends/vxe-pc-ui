@@ -26,6 +26,16 @@ export default defineVxeComponent({
       const $xeSteps = this
       $xeSteps.$emit(type, createEvent(evnt, { $steps: $xeSteps }, params))
     },
+    emitModel  (value: any) {
+      const $xeSteps = this
+
+      const { _events } = $xeSteps as any
+      if (_events && _events.modelValue) {
+        $xeSteps.$emit('modelValue', value)
+      } else {
+        $xeSteps.$emit('model-value', value)
+      }
+    },
 
     //
     // Render

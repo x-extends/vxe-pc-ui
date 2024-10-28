@@ -167,8 +167,13 @@ export default defineVxeComponent({
     emitModel  (value: VxeImagePreviewPropTypes.ModelValue) {
       const $xeImagePreview = this
 
+      const { _events } = $xeImagePreview as any
       $xeImagePreview.$emit('input', value)
-      $xeImagePreview.$emit('modelValue', value)
+      if (_events && _events.modelValue) {
+        $xeImagePreview.$emit('modelValue', value)
+      } else {
+        $xeImagePreview.$emit('model-value', value)
+      }
     },
     handleCloseEvent  (evnt: MouseEvent) {
       const $xeImagePreview = this

@@ -91,8 +91,13 @@ export default defineVxeComponent({
     emitModel  (value: any) {
       const $xeTooltip = this
 
+      const { _events } = $xeTooltip as any
       $xeTooltip.$emit('input', value)
-      $xeTooltip.$emit('modelValue', value)
+      if (_events && _events.modelValue) {
+        $xeTooltip.$emit('modelValue', value)
+      } else {
+        $xeTooltip.$emit('model-value', value)
+      }
     },
     getSelectorEl  () {
       const $xeTooltip = this

@@ -194,9 +194,14 @@ export default defineVxeComponent({
       $xeIconPicker.$emit(type, createEvent(evnt, { $iconPicker: $xeIconPicker }, params))
     },
     emitModel (value: any) {
-      const $xeDrawer = this
+      const $xeIconPicker = this
 
-      $xeDrawer.$emit('modelValue', value)
+      const { _events } = $xeIconPicker as any
+      if (_events && _events.modelValue) {
+        $xeIconPicker.$emit('modelValue', value)
+      } else {
+        $xeIconPicker.$emit('model-value', value)
+      }
     },
     isPanelVisible () {
       const $xeIconPicker = this

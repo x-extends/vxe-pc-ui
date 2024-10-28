@@ -266,9 +266,14 @@ export default defineVxeComponent({
       $xeNumberInput.$emit(type, createEvent(evnt, { $numberInput: $xeNumberInput }, params))
     },
     emitModel  (value: any) {
-      const $xeModal = this
+      const $xeNumberInput = this
 
-      $xeModal.$emit('modelValue', value)
+      const { _events } = $xeNumberInput as any
+      if (_events && _events.modelValue) {
+        $xeNumberInput.$emit('modelValue', value)
+      } else {
+        $xeNumberInput.$emit('model-value', value)
+      }
     },
     focus () {
       const $xeNumberInput = this

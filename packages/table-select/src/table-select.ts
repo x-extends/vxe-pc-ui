@@ -246,7 +246,12 @@ export default defineVxeComponent({
     emitModel  (value: any) {
       const $xeTableSelect = this
 
-      $xeTableSelect.$emit('modelValue', value)
+      const { _events } = $xeTableSelect as any
+      if (_events && _events.modelValue) {
+        $xeTableSelect.$emit('modelValue', value)
+      } else {
+        $xeTableSelect.$emit('model-value', value)
+      }
     },
     getRowid (option: any) {
       const $xeTableSelect = this

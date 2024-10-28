@@ -103,9 +103,14 @@ export default defineVxeComponent({
       const $xeMenu = this
       const reactData = $xeMenu.reactData
 
+      const { _events } = $xeMenu as any
       reactData.activeName = value
       $xeMenu.$emit('input', value)
-      $xeMenu.$emit('modelValue', value)
+      if (_events && _events.modelValue) {
+        $xeMenu.$emit('modelValue', value)
+      } else {
+        $xeMenu.$emit('model-value', value)
+      }
     },
     getMenuTitle  (item: VxeMenuPropTypes.MenuOption) {
       return `${item.title || item.name}`

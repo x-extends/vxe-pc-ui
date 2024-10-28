@@ -108,8 +108,13 @@ export default defineVxeComponent({
     emitModel  (value: any) {
       const $xeRadio = this
 
+      const { _events } = $xeRadio as any
       $xeRadio.$emit('input', value)
-      $xeRadio.$emit('modelValue', value)
+      if (_events && _events.modelValue) {
+        $xeRadio.$emit('modelValue', value)
+      } else {
+        $xeRadio.$emit('model-value', value)
+      }
     },
     handleValue  (label: VxeRadioPropTypes.Label, evnt: Event) {
       const $xeRadio = this

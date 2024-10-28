@@ -121,7 +121,12 @@ export default defineVxeComponent({
     emitModel (value: any) {
       const $xeSlider = this
 
-      $xeSlider.$emit('modelValue', value)
+      const { _events } = $xeSlider as any
+      if (_events && _events.modelValue) {
+        $xeSlider.$emit('modelValue', value)
+      } else {
+        $xeSlider.$emit('model-value', value)
+      }
     },
     getStartPercent (startValue: number) {
       const $xeSlider = this

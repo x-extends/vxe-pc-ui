@@ -328,7 +328,12 @@ export default defineVxeComponent({
     emitModel  (value: any) {
       const $xeSelect = this
 
-      $xeSelect.$emit('modelValue', value)
+      const { _events } = $xeSelect as any
+      if (_events && _events.modelValue) {
+        $xeSelect.$emit('modelValue', value)
+      } else {
+        $xeSelect.$emit('model-value', value)
+      }
     },
     isPanelVisible () {
       const $xeSelect = this

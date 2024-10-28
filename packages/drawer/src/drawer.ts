@@ -148,8 +148,13 @@ export default defineVxeComponent({
     emitModel (value: any) {
       const $xeDrawer = this
 
-      $xeDrawer.$emit('modelValue', value)
+      const { _events } = $xeDrawer as any
       $xeDrawer.$emit('input', value)
+      if (_events && _events.modelValue) {
+        $xeDrawer.$emit('modelValue', value)
+      } else {
+        $xeDrawer.$emit('model-value', value)
+      }
     },
     callSlot  (slotFunc: ((params: any, h: CreateElement) => any) | string | null, params: any, h: CreateElement) {
       const $xeDrawer = this

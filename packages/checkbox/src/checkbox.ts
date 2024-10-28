@@ -102,8 +102,13 @@ export default defineVxeComponent({
     emitModel (value: any) {
       const $xeCheckbox = this
 
-      $xeCheckbox.$emit('modelValue', value)
+      const { _events } = $xeCheckbox as any
       $xeCheckbox.$emit('input', value)
+      if (_events && _events.modelValue) {
+        $xeCheckbox.$emit('modelValue', value)
+      } else {
+        $xeCheckbox.$emit('model-value', value)
+      }
     },
     changeEvent  (evnt: Event & { target: { checked: boolean } }) {
       const $xeCheckbox = this

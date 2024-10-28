@@ -113,8 +113,13 @@ export default defineVxeComponent({
     emitModel  (value: any) {
       const $xeTabs = this
 
+      const { _events } = $xeTabs as any
       $xeTabs.$emit('input', value)
-      $xeTabs.$emit('modelValue', value)
+      if (_events && _events.modelValue) {
+        $xeTabs.$emit('modelValue', value)
+      } else {
+        $xeTabs.$emit('model-value', value)
+      }
     },
     prev () {
       const $xeTabs = this

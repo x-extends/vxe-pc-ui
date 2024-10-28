@@ -274,8 +274,13 @@ export default defineVxeComponent({
     emitModel  (value: any) {
       const $xeModal = this
 
+      const { _events } = $xeModal as any
       $xeModal.$emit('input', value)
-      $xeModal.$emit('modelValue', value)
+      if (_events && _events.modelValue) {
+        $xeModal.$emit('modelValue', value)
+      } else {
+        $xeModal.$emit('model-value', value)
+      }
     },
     callSlot  (slotFunc: ((params: any, h: CreateElement) => any) | string | null, params: any, h: CreateElement) {
       const $xeModal = this

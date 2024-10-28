@@ -174,7 +174,12 @@ export default defineVxeComponent({
     emitModel  (value: any) {
       const $xeTextarea = this
 
-      $xeTextarea.$emit('modelValue', value)
+      const { _events } = $xeTextarea as any
+      if (_events && _events.modelValue) {
+        $xeTextarea.$emit('modelValue', value)
+      } else {
+        $xeTextarea.$emit('model-value', value)
+      }
     },
     focus () {
       const $xeTextarea = this

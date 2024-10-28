@@ -284,7 +284,12 @@ export default defineVxeComponent({
     emitModel  (value: any) {
       const $xeTreeSelect = this
 
-      $xeTreeSelect.$emit('modelValue', value)
+      const { _events } = $xeTreeSelect as any
+      if (_events && _events.modelValue) {
+        $xeTreeSelect.$emit('modelValue', value)
+      } else {
+        $xeTreeSelect.$emit('model-value', value)
+      }
     },
     getNodeid (option: any) {
       const $xeTreeSelect = this
