@@ -26,7 +26,6 @@ export default {
       emptyProp: 'A propriedade "{0}" não pode estar vazia.',
       errProp: 'Parâmetro não suportado "{0}", possivelmente "{1}".',
       colRepet: 'column.{0}="{0}" está duplicado, o que pode tornar algumas funcionalidades inutilizáveis.',
-      repeatKey: '字段重复 {0}="{1}"，这将会出现错误',
       notFunc: 'método "{0}" não existe.',
       errFunc: 'The argument "{0}" is not a method',
       notValidators: 'Validadores globais "{0}" não existem.',

@@ -46,6 +46,12 @@ export interface TablePrivateRef {
   refLeftContainer: Ref<HTMLDivElement>
   refRightContainer: Ref<HTMLDivElement>
   refCellResizeBar: Ref<HTMLDivElement>
+  refScrollXVirtualElem: Ref<HTMLDivElement | undefined>
+  refScrollYVirtualElem: Ref<HTMLDivElement | undefined>
+  refScrollXHandleElem: Ref<HTMLDivElement | undefined>
+  refScrollYHandleElem: Ref<HTMLDivElement | undefined>
+  refScrollXSpaceElem: Ref<HTMLDivElement | undefined>
+  refScrollYSpaceElem: Ref<HTMLDivElement | undefined>
 }
 
 export interface VxeTablePrivateRef extends TablePrivateRef { }
@@ -393,11 +399,11 @@ export namespace VxeTablePropTypes {
     /**
      * 自定义列是否允许列选中的方法，该方法的返回值用来决定这一列的 checkbox 是否可以选中
      */
-    checkMethod?(params: { column: VxeTableDefines.ColumnInfo }): boolean
+    checkMethod?(params: { column: VxeTableDefines.ColumnInfo<D> }): boolean
     /**
      * 自定义列是否的方法，该方法的返回值用来决定这一列是否显示
      */
-    visibleMethod?(params: { column: VxeTableDefines.ColumnInfo }): boolean
+    visibleMethod?(params: { column: VxeTableDefines.ColumnInfo<D> }): boolean
     allowVisible?: boolean
     allowFixed?: boolean
     allowSort?: boolean
@@ -2095,6 +2101,10 @@ export interface TablePrivateComputed<D = any> {
   computeFixedColumnSize: ComputedRef<number>
   computeIsMaxFixedColumn: ComputedRef<boolean>
   computeIsAllCheckboxDisabled: ComputedRef<boolean>
+  computeVirtualScrollBars: ComputedRef<{
+    x: boolean
+    y: boolean
+  }>
 }
 export interface VxeTablePrivateComputed extends TablePrivateComputed { }
 
@@ -2500,7 +2510,7 @@ export interface TableMethods<DT = any> {
     item: VxeTableDefines.ColumnInfo<DT>
     items: VxeTableDefines.ColumnInfo<DT>[]
     index: number
-    parent?: VxeTableDefines.ColumnInfo<DT>
+    parent: VxeTableDefines.ColumnInfo<DT> | null
   } | null
   /**
    * 根据 row 获取行的序号
@@ -3147,6 +3157,12 @@ export interface TablePrivateMethods<D = any> {
   triggerRowExpandEvent(evnt: Event, params: VxeTableDefines.CellRenderBodyParams<any>): void
   triggerTreeExpandEvent(evnt: Event, params: VxeTableDefines.CellRenderBodyParams<any>): void
   triggerSortEvent(evnt: Event, column: VxeTableDefines.ColumnInfo<any>, order: VxeTablePropTypes.SortOrder): void
+  handleScrollEvent(evnt: Event, isRollY: boolean, isRollX: boolean, params: {
+    type: string
+    fixed: VxeColumnPropTypes.Fixed
+    scrollTop: number
+    scrollLeft: number
+  }): void
   triggerScrollXEvent(evnt: Event): void
   triggerScrollYEvent(evnt: Event): void
   scrollToTreeRow(row: any): Promise<any>
@@ -3266,6 +3282,7 @@ export namespace VxeTableDefines {
     items: any[]
     parent: any
     level: number
+    height: number
     treeLoaded?: boolean
     expandLoaded?: boolean
     formatData?: {
@@ -3283,7 +3300,8 @@ export namespace VxeTableDefines {
     $index: number
     _index: number
     items: VxeTableDefines.ColumnInfo<D>[]
-    parent: VxeTableDefines.ColumnInfo<D>
+    parent: VxeTableDefines.ColumnInfo<D> | null
+    width: number
   }
 
   /**

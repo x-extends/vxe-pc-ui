@@ -26,7 +26,6 @@ export default {
       emptyProp: 'A(z) "{0}" paraméter nem lehet üres',
       errProp: 'Nem támogatott "{0}" paraméter, lehetséges "{1}"',
       colRepet: 'oszlopban.{0}="{1}" ismétlődik, ami miatt egyes funkciók használhatatlanná válhatnak',
-      repeatKey: '字段重复 {0}="{1}"，这将会出现错误',
       notFunc: 'A(z) "{0}" módszer nem létezik',
       errFunc: 'A "{0}" paraméter nem metódus',
       notValidators: '"{0}" globális ellenőrzés nem létezik',
