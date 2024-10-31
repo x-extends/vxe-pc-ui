@@ -2108,6 +2108,10 @@ export interface TablePrivateComputed<D = any> {
   fixedColumnSize: number
   isMaxFixedColumn: boolean
   isAllCheckboxDisabled: boolean
+  computeVirtualScrollBars: {
+    x: boolean
+    y: boolean
+  }
 }
 export interface VxeTablePrivateComputed<D = any> extends TablePrivateComputed<D> { }
 
@@ -2513,7 +2517,7 @@ export interface TableMethods<DT = any> {
     item: VxeTableDefines.ColumnInfo<DT>
     items: VxeTableDefines.ColumnInfo<DT>[]
     index: number
-    parent?: VxeTableDefines.ColumnInfo<DT>
+    parent?: VxeTableDefines.ColumnInfo<DT> | null
   } | null
   /**
    * 根据 row 获取行的序号
@@ -3159,6 +3163,12 @@ export interface TablePrivateMethods<D = any> {
   triggerRowExpandEvent(evnt: Event, params: VxeTableDefines.CellRenderBodyParams<any>): void
   triggerTreeExpandEvent(evnt: Event, params: VxeTableDefines.CellRenderBodyParams<any>): void
   triggerSortEvent(evnt: Event, column: VxeTableDefines.ColumnInfo<any>, order: VxeTablePropTypes.SortOrder): void
+  handleScrollEvent(evnt: Event, isRollY: boolean, isRollX: boolean, params: {
+    type: string
+    fixed: VxeColumnPropTypes.Fixed
+    scrollTop: number
+    scrollLeft: number
+  }): void
   triggerScrollXEvent(evnt: Event): void
   triggerScrollYEvent(evnt: Event): void
   scrollToTreeRow(row: any): Promise<any>
@@ -3278,6 +3288,7 @@ export namespace VxeTableDefines {
     items: any[]
     parent: any
     level: number
+    height: number
     treeLoaded?: boolean
     expandLoaded?: boolean
     formatData?: {
@@ -3295,7 +3306,8 @@ export namespace VxeTableDefines {
     $index: number
     _index: number
     items: VxeTableDefines.ColumnInfo<D>[]
-    parent: VxeTableDefines.ColumnInfo<D>
+    parent: VxeTableDefines.ColumnInfo<D> | null
+    width: number
   }
 
   /**

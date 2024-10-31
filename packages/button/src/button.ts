@@ -253,7 +253,7 @@ export default defineVxeComponent({
     //
     dispatchEvent (type: ValueOf<VxeButtonEmits>, params: Record<string, any>, evnt: Event | null) {
       const $xeButton = this
-      this.$emit(type, createEvent(evnt, { $button: $xeButton }, params))
+      $xeButton.$emit(type, createEvent(evnt, { $button: $xeButton }, params))
     },
     openPanel () {
       const $xeButton = this
