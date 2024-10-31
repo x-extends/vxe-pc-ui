@@ -353,6 +353,16 @@ export namespace VxeTablePropTypes {
   export interface RowOpts<D = any> extends RowConfig<D> { }
 
   /**
+   * 单元格配置项
+   */
+  export interface CellConfig<D = any>{
+    /**
+     * 垂直对齐方式
+     */
+    verticalAlign?: '' | 'top' | 'center'
+  }
+
+  /**
    * 自定义列配置项
    */
   export interface CustomConfig<D = VxeTablePropTypes.Row> {
@@ -1885,6 +1895,10 @@ export interface VxeTableProps<D = any> {
    */
   rowConfig?: VxeTablePropTypes.RowConfig<D>
   /**
+   * 单元格配置信息
+   */
+  cellConfig?: VxeTablePropTypes.CellConfig<D>
+  /**
    * 个性化信息配置项
    */
   customConfig?: VxeTablePropTypes.CustomConfig<D>
@@ -2070,6 +2084,7 @@ export interface TablePrivateComputed<D = any> {
   computeSXOpts: ComputedRef<VxeTablePropTypes.SXOpts>
   computeSYOpts: ComputedRef<VxeTablePropTypes.SYOpts>
   computeColumnOpts: ComputedRef<VxeTablePropTypes.ColumnOpts>
+  computeCellOpts: ComputedRef<VxeTablePropTypes.CellConfig>
   computeRowOpts: ComputedRef<VxeTablePropTypes.RowOpts>
   computeResizeOpts: ComputedRef<VxeTablePropTypes.ResizeOpts>
   computeResizableOpts: ComputedRef<VxeTablePropTypes.ResizableOpts<D>>
