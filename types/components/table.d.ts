@@ -1504,6 +1504,10 @@ export namespace VxeTablePropTypes {
     remote?: boolean
     encoding?: string
     /**
+     * 自定义参数
+     */
+    params?: Record<string, any>
+    /**
      * 只对 remote=true 有效，用于自定义导入逻辑
      */
     importMethod?(params: {
@@ -1521,6 +1525,16 @@ export namespace VxeTablePropTypes {
       options: any
       status: boolean
     }): void
+
+    /**
+     * 自定义高级导入窗口的插槽模板
+     */
+    slots?: {
+      top?: string | ((params: VxeTableDefines.ImportSlotParams) => VxeComponentSlotType | VxeComponentSlotType[])
+      bottom?: string | ((params: VxeTableDefines.ImportSlotParams) => VxeComponentSlotType | VxeComponentSlotType[])
+      default?: string | ((params: VxeTableDefines.ImportSlotParams) => VxeComponentSlotType | VxeComponentSlotType[])
+      footer?: string | ((params: VxeTableDefines.ImportSlotParams) => VxeComponentSlotType | VxeComponentSlotType[])
+    }
   }
   export interface ImportOpts extends ImportConfig {}
   export interface ImportHandleOptions extends ImportConfig {
@@ -1621,6 +1635,10 @@ export namespace VxeTablePropTypes {
     useStyle?: boolean
     sheetMethod?(params: VxeTableDefines.ExtortSheetMethodParams): void
     /**
+     * 自定义参数
+     */
+    params?: Record<string, any>
+    /**
      * 只对 remote=true 有效，用于自定义导出逻辑
      */
     exportMethod?(params: {
@@ -1634,6 +1652,17 @@ export namespace VxeTablePropTypes {
     afterExportMethod?(params: {
       options: ExportHandleOptions
     }): void
+
+    /**
+     * 自定义高级导出窗口的插槽模板
+     */
+    slots?: {
+      top?: string | ((params: VxeTableDefines.ExtortSlotParams) => VxeComponentSlotType | VxeComponentSlotType[])
+      bottom?: string | ((params: VxeTableDefines.ExtortSlotParams) => VxeComponentSlotType | VxeComponentSlotType[])
+      default?: string | ((params: VxeTableDefines.ExtortSlotParams) => VxeComponentSlotType | VxeComponentSlotType[])
+      footer?: string | ((params: VxeTableDefines.ExtortSlotParams) => VxeComponentSlotType | VxeComponentSlotType[])
+      parameter?: string | ((params: VxeTableDefines.ExtortSlotParams) => VxeComponentSlotType | VxeComponentSlotType[])
+    }
   }
   export interface ExportOpts extends ExportConfig { }
   export interface ExportHandleOptions extends ExportConfig {
@@ -3887,6 +3916,21 @@ export namespace VxeTableDefines {
     datas: any[]
     columns: VxeTableDefines.ColumnInfo[]
     colgroups: VxeTableDefines.ColumnInfo[][]
+  }
+
+  export interface ImportSlotParams {
+    $table: VxeTableConstructor
+    $grid: VxeGridConstructor | bull | undefined
+    options: VxeTablePropTypes.ImportConfig
+    params: Record<string, any>
+  }
+
+  export interface ExtortSlotParams {
+    $table: VxeTableConstructor
+    $grid: VxeGridConstructor | bull | undefined
+    options: VxeTablePropTypes.ExportConfig
+    columns: VxeTableDefines.ColumnInfo[]
+    params: Record<string, any>
   }
 
   export interface ValidatorRule<D = any> {

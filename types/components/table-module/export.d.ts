@@ -9,6 +9,10 @@ export interface TableExportMethods<D = any> {
    */
   openExport(options?: VxeTablePropTypes.ExportConfig): void
   /**
+   * 关闭高级导入
+   */
+  closeExport(): Promise<any>
+  /**
    * 将表格数据导出
    * @param options 参数
    */
@@ -18,6 +22,10 @@ export interface TableExportMethods<D = any> {
    * @param options 参数
    */
   openImport(options?: VxeTablePropTypes.ImportConfig): void
+  /**
+   * 关闭高级导入
+   */
+  closeImport(): Promise<any>
   /**
    * 将数据导入表格
    * @param options 参数
@@ -52,6 +60,10 @@ export interface TableExportMethods<D = any> {
    * @param options 参数
    */
   openPrint(options?: VxeTablePropTypes.PrintConfig): void
+  /**
+   * 关闭高级打印
+   */
+  closePrint(): Promise<any>
 }
 
 export interface TableExportPrivateMethods<D = any> { }
