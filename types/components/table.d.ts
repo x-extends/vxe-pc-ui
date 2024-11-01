@@ -1719,6 +1719,10 @@ export namespace VxeTablePropTypes {
      */
     html?: string
     /**
+     * 自定义参数
+     */
+    params?: Record<string, any>
+    /**
      * 列过滤方法
      */
     columnFilterMethod?(params: { column: VxeTableDefines.ColumnInfo, $columnIndex: number }): boolean
@@ -1744,6 +1748,17 @@ export namespace VxeTablePropTypes {
        */
       content: string
     }): string
+
+    /**
+     * 自定义高级导出窗口的插槽模板
+     */
+    slots?: {
+      top?: string | ((params: VxeTableDefines.PrintSlotParams) => VxeComponentSlotType | VxeComponentSlotType[])
+      bottom?: string | ((params: VxeTableDefines.PrintSlotParams) => VxeComponentSlotType | VxeComponentSlotType[])
+      default?: string | ((params: VxeTableDefines.PrintSlotParams) => VxeComponentSlotType | VxeComponentSlotType[])
+      footer?: string | ((params: VxeTableDefines.PrintSlotParams) => VxeComponentSlotType | VxeComponentSlotType[])
+      parameter?: string | ((params: VxeTableDefines.PrintSlotParams) => VxeComponentSlotType | VxeComponentSlotType[])
+    }
 
     /**
      * 已被 html 替换
@@ -3929,6 +3944,14 @@ export namespace VxeTableDefines {
     $table: VxeTableConstructor
     $grid: VxeGridConstructor | bull | undefined
     options: VxeTablePropTypes.ExportConfig
+    columns: VxeTableDefines.ColumnInfo[]
+    params: Record<string, any>
+  }
+
+  export interface PrintSlotParams {
+    $table: VxeTableConstructor
+    $grid: VxeGridConstructor | bull | undefined
+    options: VxeTablePropTypes.PrintConfig
     columns: VxeTableDefines.ColumnInfo[]
     params: Record<string, any>
   }
