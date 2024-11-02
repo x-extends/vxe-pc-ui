@@ -1713,22 +1713,22 @@ export namespace VxeTablePropTypes {
       options: PrintHandleOptions
 
       /**
-       * 自定义高级导出窗口的插槽模板
-       */
-      slots?: {
-        top?: string | ((params: VxeTableDefines.PrintSlotParams) => VxeComponentSlotType | VxeComponentSlotType[])
-        bottom?: string | ((params: VxeTableDefines.PrintSlotParams) => VxeComponentSlotType | VxeComponentSlotType[])
-        default?: string | ((params: VxeTableDefines.PrintSlotParams) => VxeComponentSlotType | VxeComponentSlotType[])
-        footer?: string | ((params: VxeTableDefines.PrintSlotParams) => VxeComponentSlotType | VxeComponentSlotType[])
-        parameter?: string | ((params: VxeTableDefines.PrintSlotParams) => VxeComponentSlotType | VxeComponentSlotType[])
-      }
-
-      /**
        * 已被 html 替换
        * @deprecated
        */
       content: string
     }): string
+
+    /**
+     * 自定义高级导出窗口的插槽模板
+     */
+    slots?: {
+      top?: string | ((params: VxeTableDefines.PrintSlotParams) => VxeComponentSlotType | VxeComponentSlotType[])
+      bottom?: string | ((params: VxeTableDefines.PrintSlotParams) => VxeComponentSlotType | VxeComponentSlotType[])
+      default?: string | ((params: VxeTableDefines.PrintSlotParams) => VxeComponentSlotType | VxeComponentSlotType[])
+      footer?: string | ((params: VxeTableDefines.PrintSlotParams) => VxeComponentSlotType | VxeComponentSlotType[])
+      parameter?: string | ((params: VxeTableDefines.PrintSlotParams) => VxeComponentSlotType | VxeComponentSlotType[])
+    }
 
     /**
      * 已被 html 替换
