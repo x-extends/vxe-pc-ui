@@ -9,6 +9,11 @@ export function getModelEvent (name: string) {
   switch (name) {
     case 'VxeInput':
     case 'VxeTextarea':
+    case 'VxeNumberInput':
+    case 'VxeSelect':
+    case 'VxeTreeSelect':
+    case 'VxeTableSelect':
+    case 'VxeDatePicker':
       return 'modelValue'
     case 'select':
       return 'change'
