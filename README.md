@@ -53,6 +53,8 @@
 * [x] col 列
 * [x] collapse 展开面板
 * [x] collapse-pane 展开面板-容器
+* [ ] color-picker 颜色选择器
+* [x] countdown 倒计时
 * [x] date-picker 日期选择器
 * [x] drawer 抽屉
 * [x] empty 空数据
@@ -92,13 +94,17 @@
 * [x] radio 单选框
 * [x] radio-button 单选框-按钮
 * [x] radio-group 单选框-组
+* [x] rate 评分
+* [x] result 结果
 * [x] row 行
 * [x] select 下拉框
 * [x] slider 滑块
-* [x] steps 步骤条
+* [ ] steps 步骤条
 * [x] switch 开关
 * [x] tab-pane 页签-容器
 * [x] tabs 页签
+* [x] text-ellipsis 多行文本溢出
+* [x] table-select 表格下拉框
 * [x] textarea 文本域
 * [x] tip 提示
 * [x] tooltip 文字提示
@@ -275,8 +281,8 @@ export default {
 
 该群供大家交流問題，如果群人数已满，将会不定期剔除不活跃的。  
 
-![qq](https://vxeui.com/static/donation/qq1.png)
-![qq](https://vxeui.com/static/donation/qq2.png)
+![qq](https://vxeui.com/resource/donation/qq1.png)
+![qq](https://vxeui.com/resource/donation/qq2.png)
 
 ## 运行项目
 

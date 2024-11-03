@@ -32,6 +32,7 @@
   }
   &[disabled] {
     cursor: not-allowed;
+    color: var(--vxe-ui-font-disabled-color);
     background-color: var(--vxe-ui-input-disabled-background-color);
   }
 }

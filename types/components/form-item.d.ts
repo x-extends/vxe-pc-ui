@@ -80,7 +80,7 @@ export namespace VxeFormItemPropTypes {
     name?: string
     props?: P
     attrs?: Record<string, any>
-    events?: Record<string, (cellParams: VxeFormItemSlotTypes.DefaultSlotParams<D>, ...args: any[]) => any>
+    events?: Record<string, (itemParams: VxeFormItemSlotTypes.DefaultSlotParams<D>, ...args: any[]) => any>
     /**
      * 下拉选项列表（需要渲染器支持）
      */
@@ -320,9 +320,9 @@ export namespace VxeFormItemEvents { }
 
 export namespace VxeFormItemSlotTypes {
   export interface DefaultSlotParams<D = any> {
-    $form: VxeFormConstructor
+    $form: VxeFormConstructor<D>
     $grid: VxeGridConstructor | null
-    data: any
+    data: D
     item: VxeFormDefines.ItemInfo
     disabled: boolean | undefined
     readonly: boolean | undefined
