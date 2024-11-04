@@ -3937,18 +3937,20 @@ export namespace VxeTableDefines {
     datas: any[]
     columns: VxeTableDefines.ColumnInfo[]
     colgroups: VxeTableDefines.ColumnInfo[][]
+
+    [key: string]: any
   }
 
   export interface ImportSlotParams {
     $table: VxeTableConstructor
-    $grid: VxeGridConstructor | bull | undefined
+    $grid: VxeGridConstructor | null | undefined
     options: VxeTablePropTypes.ImportConfig
     params: Record<string, any>
   }
 
   export interface ExtortSlotParams {
     $table: VxeTableConstructor
-    $grid: VxeGridConstructor | bull | undefined
+    $grid: VxeGridConstructor | null | undefined
     options: VxeTablePropTypes.ExportConfig
     columns: VxeTableDefines.ColumnInfo[]
     params: Record<string, any>
@@ -3956,10 +3958,14 @@ export namespace VxeTableDefines {
 
   export interface PrintSlotParams {
     $table: VxeTableConstructor
-    $grid: VxeGridConstructor | bull | undefined
+    $grid: VxeGridConstructor | null | undefined
     options: VxeTablePropTypes.PrintConfig
     columns: VxeTableDefines.ColumnInfo[]
     params: Record<string, any>
+  }
+
+  export interface MenuSlotParams {
+
   }
 
   export interface ValidatorRule<D = any> {
@@ -4058,6 +4064,9 @@ export namespace VxeTableDefines {
     disabled?: boolean
     children?: MenuChildOption[]
     params?: any
+    slots?: {
+      content?: string | ((params: VxeTableDefines.MenuSlotParams) => VxeComponentSlotType | VxeComponentSlotType[])
+    }
     [key: string]: any
   }
   export interface MenuChildOption {
@@ -4087,6 +4096,9 @@ export namespace VxeTableDefines {
     visible?: boolean
     disabled?: boolean
     params?: any
+    slots?: {
+      content?: string | ((params: VxeTableDefines.MenuSlotParams) => VxeComponentSlotType | VxeComponentSlotType[])
+    }
     [key: string]: any
   }
 
