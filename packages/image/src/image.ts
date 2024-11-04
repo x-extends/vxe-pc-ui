@@ -15,6 +15,10 @@ export default defineComponent({
     title: [String, Number] as PropType<VxeImagePropTypes.Title>,
     width: [String, Number] as PropType<VxeImagePropTypes.Width>,
     height: [String, Number] as PropType<VxeImagePropTypes.Height>,
+    maskClosable: {
+      type: Boolean as PropType<VxeImagePropTypes.MaskClosable>,
+      default: () => getConfig().image.maskClosable
+    },
     showPreview: {
       type: Boolean as PropType<VxeImagePropTypes.ShowPreview>,
       default: () => getConfig().image.showPreview
@@ -117,7 +121,7 @@ export default defineComponent({
     }
 
     const clickEvent = (evnt: MouseEvent) => {
-      const { showPreview, showPrintButton, showDownloadButton } = props
+      const { showPreview, showPrintButton, showDownloadButton, maskClosable } = props
       const imgList = computeImgList.value
       const imgUrl = computeImgUrl.value
       if ($xeImageGroup) {
@@ -127,7 +131,8 @@ export default defineComponent({
           openPreviewImage({
             urlList: imgList,
             showPrintButton,
-            showDownloadButton
+            showDownloadButton,
+            maskClosable
           })
         }
         imageMethods.dispatchEvent('click', { url: imgUrl }, evnt)

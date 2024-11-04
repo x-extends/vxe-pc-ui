@@ -833,6 +833,12 @@ export namespace VxeTablePropTypes {
      */
     selectCellByHeader?: boolean
     /**
+     * 只对 mouse-config.area 启用后有效，
+     * 如果为 true，则选中第一列单元格自动选取一整行，
+     * 如果为指定字段，则选中指定单元格自动选取一整行
+     */
+    selectCellToRow?: boolean | string
+    /**
      * 只对 mouse-config.area 启用后有效，选择单元格后显示列状态
      */
     showColumnStatus?: boolean
