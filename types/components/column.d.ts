@@ -138,7 +138,14 @@ export namespace VxeColumnPropTypes {
     cellType?: VxeColumnPropTypes.CellType
   }
 
+  /**
+   * 设置为树节点
+   */
   export type TreeNode = boolean
+  /**
+   * 设置为拖拽排序
+   */
+  export type DragSort = boolean
   export type Visible = boolean
 
   interface ExportMethodParams<D = any> {
@@ -448,9 +455,13 @@ export interface VxeColumnProps<D = any> {
    */
   filterRender?: VxeColumnPropTypes.FilterRender
   /**
-   * 指定为树节点
+   * 设置为树节点
    */
   treeNode?: VxeColumnPropTypes.TreeNode
+  /**
+   * 设置为拖拽排序
+   */
+  dragSort?: VxeColumnPropTypes.DragSort
   /**
    * 是否可视
    */

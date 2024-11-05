@@ -349,8 +349,18 @@ export namespace VxeTablePropTypes {
      * 只对 show-overflow 有效，每一行的高度
      */
     height?: number
+    /**
+     * 是否启用行拖拽排序
+     */
+    drag?: boolean
   }
   export interface RowOpts<D = any> extends RowConfig<D> { }
+
+  /**
+   * 当前行配置项
+   */
+  export interface CurrentConfig<D = any>{
+  }
 
   /**
    * 单元格配置项
@@ -360,6 +370,12 @@ export namespace VxeTablePropTypes {
      * 垂直对齐方式
      */
     verticalAlign?: '' | 'top' | 'center'
+  }
+
+  /**
+   * 可拖拽配置项
+   */
+  export interface DragConfig<D = any>{
   }
 
   /**
@@ -1949,6 +1965,14 @@ export interface VxeTableProps<D = any> {
    */
   cellConfig?: VxeTablePropTypes.CellConfig<D>
   /**
+   * 当前行配置项
+   */
+  currentConfig?: VxeTablePropTypes.CurrentConfig<D>
+  /**
+   * 当前行配置项
+   */
+  dragConfig?: VxeTablePropTypes.DragConfig<D>
+  /**
    * 个性化信息配置项
    */
   customConfig?: VxeTablePropTypes.CustomConfig<D>
@@ -2399,6 +2423,10 @@ export interface TableReactData<D = any> {
     isFooter: boolean
   },
   scrollVMLoading: boolean
+
+  dragRow: any
+  dragTipText: string
+
   _isResize: boolean
   _isLoading: boolean
 }
@@ -2476,6 +2504,9 @@ export interface TableInternalData<D = any> {
   columnStatusMaps: Record<string, boolean>
   // 行选取状态
   rowStatusMaps: Record<string, boolean>
+  // 上一个拖动的行
+  prevDragRow?: any
+  prevDragPos?: 'top' | 'bottom' | ''
 
   // 特殊标识
   inited: boolean
@@ -3222,6 +3253,14 @@ export interface TablePrivateMethods<D = any> {
   triggerRowExpandEvent(evnt: Event, params: VxeTableDefines.CellRenderBodyParams<any>): void
   triggerTreeExpandEvent(evnt: Event, params: VxeTableDefines.CellRenderBodyParams<any>): void
   triggerSortEvent(evnt: Event, column: VxeTableDefines.ColumnInfo<any>, order: VxeTablePropTypes.SortOrder): void
+  handleRowDragDragstartEvent (evnt: DragEvent): void
+  handleRowDragDragendEvent(evnt: DragEvent): void
+  handleRowDragDragoverEvent(evnt: DragEvent,): void
+  handleCellDragMousedownEvent (evnt: MouseEvent, params: {
+    row: any
+    column
+  }): void
+  handleCellDragMouseupEvent (evnt: MouseEvent): void
   handleScrollEvent(evnt: Event, isRollY: boolean, isRollX: boolean, params: {
     type: string
     fixed: VxeColumnPropTypes.Fixed
@@ -3234,8 +3273,8 @@ export interface TablePrivateMethods<D = any> {
   updateScrollYStatus(fullData?: any[]): boolean
   updateScrollXSpace(): void
   updateScrollYSpace(): void
-  updateScrollXData(): void
-  updateScrollYData(): void
+  updateScrollXData(): Promise<any>
+  updateScrollYData(): Promise<any>
   checkScrolling(): void
   updateZindex(): void
   handleCheckedCheckboxRow(rows: any, value: boolean, isForce?: boolean): Promise<any>
@@ -3293,6 +3332,9 @@ export type VxeTableEmits = [
   'toggle-tree-expand',
   'menu-click',
   'edit-closed',
+  'row-dragstart',
+  'row-dragover',
+  'row-dragend',
 
   'edit-actived', // 已废弃
 
@@ -3409,6 +3451,7 @@ export namespace VxeTableDefines {
     filterMethod: VxeColumnPropTypes.FilterMethod<D>
     filterRender: VxeColumnPropTypes.FilterRender
     treeNode: VxeColumnPropTypes.TreeNode
+    dragSort: VxeColumnPropTypes.DragSort
     visible: VxeColumnPropTypes.Visible
     exportMethod: VxeColumnPropTypes.ExportMethod<D>
     footerExportMethod: VxeColumnPropTypes.FooterExportMethod
@@ -3903,6 +3946,20 @@ export namespace VxeTableDefines {
   }
   export interface CustomEventParams<D = any> extends TableEventParams<D>, CustomParams { }
 
+  export interface RowDragstartEventParams<D = any> {
+    row: D
+    column: VxeTableDefines.ColumnInfo<D>
+  }
+
+  export interface RowDragoverEventParams<D = any> {
+    targetRow: D
+  }
+
+  export interface RowDragendEventParams<D = any> {
+    newRow: D
+    oldRow: D
+  }
+
   export interface VxeTableCustomStoreObj {
     btnEl: HTMLDivElement | null
     isAll: boolean
@@ -4153,6 +4210,9 @@ export interface VxeTableEventProps<D = any> {
   onValidError?: VxeTableEvents.ValidError<D>
   onScroll?: VxeTableEvents.Scroll<D>
   onCustom?: VxeTableEvents.Custom<D>
+  onRowDragstart?: VxeTableEvents.RowDragstart<D>
+  onRowDragover?: VxeTableEvents.RowDragover<D>
+  onRowDragend?: VxeTableEvents.RowDragend<D>
 
   /**
    * 已废弃，请使用 onEditActivated
@@ -4218,6 +4278,9 @@ export interface VxeTableListeners<D = any> {
    * 如果与工具栏关联，在自定义列按钮被手动点击后会触发该事件
    */
   custom?: VxeTableEvents.Custom<D>
+  rowDragstart?: VxeTableEvents.RowDragstart<D>
+  rowDragover?: VxeTableEvents.RowDragover<D>
+  rowDragend?: VxeTableEvents.RowDragend<D>
 
   /**
    * 已废弃，请使用 editActivated
@@ -4266,6 +4329,9 @@ export namespace VxeTableEvents {
   export type ValidError<D = VxeTablePropTypes.Row> = (params: VxeTableDefines.ValidErrorEventParams<D>) => void
   export type Scroll<D = VxeTablePropTypes.Row> = (params: VxeTableDefines.ScrollEventParams<D>) => void
   export type Custom<D = VxeTablePropTypes.Row> = (params: VxeTableDefines.CustomEventParams<D>) => void
+  export type RowDragstart<D = VxeTablePropTypes.Row> = (params: VxeTableDefines.RowDragstartEventParams<D>) => void
+  export type RowDragover<D = VxeTablePropTypes.Row> = (params: VxeTableDefines.RowDragoverEventParams<D>) => void
+  export type RowDragend<D = VxeTablePropTypes.Row> = (params: VxeTableDefines.RowDragendEventParams<D>) => void
 
   /**
    * 已废弃，请使用 EditActivated
