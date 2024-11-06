@@ -356,14 +356,6 @@ export namespace VxeTablePropTypes {
      * 是否启用行拖拽排序
      */
     drag?: boolean
-    /**
-     * 拖拽开始时是否允许行拖拽调整顺序的方法，该方法的返回值用来决定是否允许被拖拽
-     */
-    dragStartMethod?(params: VxeTableDefines.RowDragstartEventParams<D>): boolean
-    /**
-     * 拖拽结束时是否允许行拖拽调整顺序的方法，该方法的返回值用来决定是否允许被拖拽调整顺序
-     */
-    dragEndMethod?(params: Omit<VxeTableDefines.RowDragendEventParams<D>, '_index'>): Promise<boolean> | boolean
   }
   export interface RowOpts<D = any> extends RowConfig<D> { }
 
@@ -387,7 +379,32 @@ export namespace VxeTablePropTypes {
    * 可拖拽配置项
    */
   export interface DragConfig<D = any>{
-    showIcon?: boolean
+    /**
+     * 是否显示拖拽按钮图标
+     */
+    showRowIcon?: boolean
+    /**
+     * 是否禁用拖拽按钮
+     */
+    rowDisabledMethod?(params: {
+      row: D
+      column: VxeTableDefines.ColumnInfo<D>
+    }): boolean
+    /**
+     * 是否显示拖拽按钮
+     */
+    rowVisibleMethod?(params: {
+      row: D
+      column: VxeTableDefines.ColumnInfo<D>
+    }): boolean
+    /**
+     * 拖拽开始时是否允许行拖拽调整顺序的方法，该方法的返回值用来决定是否允许被拖拽
+     */
+    dragStartMethod?(params: VxeTableDefines.RowDragstartEventParams<D>): boolean
+    /**
+     * 拖拽结束时是否允许行拖拽调整顺序的方法，该方法的返回值用来决定是否允许被拖拽调整顺序
+     */
+    dragEndMethod?(params: Omit<VxeTableDefines.RowDragendEventParams<D>, '_index'>): Promise<boolean> | boolean
   }
 
   /**
