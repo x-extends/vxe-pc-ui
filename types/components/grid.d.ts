@@ -385,6 +385,9 @@ export namespace VxeGridDefines {
   export interface ValidErrorEventParams<D = any> extends GridEventParams<D>, VxeTableDefines.ValidErrorEventParams<D> { }
   export interface ScrollEventParams<D = any> extends GridEventParams<D>, VxeTableDefines.ScrollEventParams<D> { }
   export interface CustomEventParams<D = any> extends GridEventParams<D>, VxeTableDefines.CustomEventParams<D> { }
+  export interface RowDragstartEventParams<D = any> extends GridEventParams<D>, VxeTableDefines.RowDragstartEventParams<D> { }
+  export interface RowDragoverEventParams<D = any> extends GridEventParams<D>, VxeTableDefines.RowDragoverEventParams<D> { }
+  export interface RowDragendEventParams<D = any> extends GridEventParams<D>, VxeTableDefines.RowDragendEventParams<D> { }
 
   export interface ProxyQueryEventParams<D = any> extends GridEventParams<D> {
     status: boolean
@@ -457,6 +460,9 @@ export interface VxeGridEventProps<D = any> {
   onValidError?: VxeGridEvents.ValidError<D>
   onScroll?: VxeGridEvents.Scroll<D>
   onCustom?: VxeGridEvents.Custom<D>
+  onRowDragstart?: VxeGridEvents.RowDragstart<D>
+  onRowDragover?: VxeGridEvents.RowDragover<D>
+  onRowDragend?: VxeGridEvents.RowDragend<D>
 
   // grid
   onProxyQuery?: VxeGridEvents.ProxyQuery<D>
@@ -514,6 +520,9 @@ export interface VxeGridListeners<D = any> {
   validError?: VxeGridEvents.ValidError<D>
   scroll?: VxeGridEvents.Scroll<D>
   custom?: VxeGridEvents.Custom<D>
+  rowDragstart?: VxeGridEvents.RowDragstart<D>
+  rowDragover?: VxeGridEvents.RowDragover<D>
+  rowDragend?: VxeGridEvents.RowDragend<D>
 
   // grid
   proxyQuery?: VxeGridEvents.ProxyQuery<D>
@@ -571,6 +580,9 @@ export namespace VxeGridEvents {
   export type ValidError<D = any> = (params: VxeGridDefines.ValidErrorEventParams<D>) => void
   export type Scroll<D = any> = (params: VxeGridDefines.ScrollEventParams<D>) => void
   export type Custom<D = any> = (params: VxeGridDefines.CustomEventParams<D>) => void
+  export type RowDragstart<D = any> = (params: VxeGridDefines.RowDragstartEventParams<D>) => void
+  export type RowDragover<D = any> = (params: VxeGridDefines.RowDragoverEventParams<D>) => void
+  export type RowDragend<D = any> = (params: VxeGridDefines.RowDragendEventParams<D>) => void
 
   export type ProxyQuery<D = any> = (params: VxeGridDefines.ProxyQueryEventParams<D>) => void
   export type ProxyDelete<D = any> = (params: VxeGridDefines.ProxyDeleteEventParams<D>) => void
