@@ -304,6 +304,9 @@ export namespace VxeTablePropTypes {
      * 当鼠标点击行时，是否要高亮当前行
      */
     isCurrent?: boolean
+    /**
+     * 是否允许高亮当前行的方法，该方法的返回值用来决定这一行是否可以高亮当前行
+     */
     currentMethod?(params: {
       row: D
     }): boolean
@@ -323,6 +326,14 @@ export namespace VxeTablePropTypes {
      * 是否启用行拖拽排序
      */
     drag?: boolean
+    /**
+     * 拖拽开始时是否允许行拖拽调整顺序的方法，该方法的返回值用来决定是否允许被拖拽
+     */
+    dragStartMethod?(params: VxeTableDefines.RowDragstartEventParams<D>): boolean
+    /**
+     * 拖拽结束时是否允许行拖拽调整顺序的方法，该方法的返回值用来决定是否允许被拖拽调整顺序
+     */
+    dragEndMethod?(params: Omit<VxeTableDefines.RowDragendEventParams<D>, '_index'>): Promise<boolean> | boolean
   }
   export interface RowOpts<D = any> extends RowConfig<D> { }
 
@@ -346,6 +357,7 @@ export namespace VxeTablePropTypes {
    * 可拖拽配置项
    */
   export interface DragConfig<D = any>{
+    showIcon?: boolean
   }
 
   /**
@@ -2130,6 +2142,7 @@ export interface TablePrivateComputed<D = any> {
   computeColumnOpts: VxeTablePropTypes.ColumnOpts
   computeCellOpts: VxeTablePropTypes.CellConfig
   computeRowOpts: VxeTablePropTypes.RowOpts
+  computeDragOpts: VxeTablePropTypes.DragConfig
   computeResizeOpts: VxeTablePropTypes.ResizeOpts
   computeResizableOpts: VxeTablePropTypes.ResizableOpts<D>
   computeSeqOpts: VxeTablePropTypes.SeqOpts<D>
@@ -2431,6 +2444,7 @@ export interface TableReactData<D = any> {
   },
   scrollVMLoading: boolean
 
+  isDragRowMove: boolean
   dragRow: any
   dragTipText: string
 
@@ -3953,12 +3967,18 @@ export namespace VxeTableDefines {
   }
 
   export interface RowDragoverEventParams<D = any> {
+    oldRow: D
     targetRow: D
+    dragPos: 'top' | 'bottom'
   }
 
   export interface RowDragendEventParams<D = any> {
     newRow: D
     oldRow: D
+    _index: {
+      newIndex: number
+      oldIndex: number
+    }
   }
 
   export interface VxeTableCustomStoreObj {
