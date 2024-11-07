@@ -23,6 +23,7 @@ declare module '@vxe-ui/core' {
     TABLE_RADIO_UNCHECKED?: string
     TABLE_CUSTOM_SORT?: string
     TABLE_MENU_OPTIONS?: string
+    TABLE_DRAG_ROW?: string
 
     // toolbar
     TOOLBAR_TOOLS_REFRESH?: string

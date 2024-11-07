@@ -380,6 +380,10 @@ export namespace VxeTablePropTypes {
    */
   export interface DragConfig<D = any>{
     /**
+     * 自定义图标
+     */
+    rowIcon?: string
+    /**
      * 是否显示拖拽按钮图标
      */
     showRowIcon?: boolean
