@@ -473,6 +473,17 @@ export namespace VxeTablePropTypes {
     closeButtonText?: string
     cancelButtonText?: string
     confirmButtonText?: string
+
+    /**
+     * 自定义列的插槽模板
+     */
+    slots?: {
+      header?: string | ((params: VxeTableDefines.CustomSlotParams) => VxeComponentSlotType | VxeComponentSlotType[])
+      top?: string | ((params: VxeTableDefines.CustomSlotParams) => VxeComponentSlotType | VxeComponentSlotType[])
+      bottom?: string | ((params: VxeTableDefines.CustomSlotParams) => VxeComponentSlotType | VxeComponentSlotType[])
+      default?: string | ((params: VxeTableDefines.CustomSlotParams) => VxeComponentSlotType | VxeComponentSlotType[])
+      footer?: string | ((params: VxeTableDefines.CustomSlotParams) => VxeComponentSlotType | VxeComponentSlotType[])
+    }
   }
   export interface CustomOpts<D = VxeTablePropTypes.Row> extends CustomConfig<D> { }
 
@@ -2826,9 +2837,8 @@ export interface TableMethods<DT = any> {
    */
   getColumnWidth(fieldOrColumn: VxeColumnPropTypes.Field | VxeTableDefines.ColumnInfo<any>): number;
   /**
-   * 手动重置列的显示隐藏、列宽拖动的状态；如果为 true 则重置所有状态
-   * 如果已关联工具栏，则会同步更新
-   * @param options 可选参数
+   * 已废弃，被 resetCustom 替换
+   * @deprecated
    */
   resetColumn(options?: boolean | {
     visible?: boolean
@@ -3293,7 +3303,7 @@ export interface TablePrivateMethods<D = any> {
   handleRowDragDragoverEvent(evnt: DragEvent,): void
   handleCellDragMousedownEvent (evnt: MouseEvent, params: {
     row: any
-    column
+    column: VxeTableDefines.ColumnInfo
   }): void
   handleCellDragMouseupEvent (evnt: MouseEvent): void
   handleScrollEvent(evnt: Event, isRollY: boolean, isRollX: boolean, params: {
@@ -4060,6 +4070,14 @@ export namespace VxeTableDefines {
     options: VxeTablePropTypes.PrintConfig
     columns: VxeTableDefines.ColumnInfo[]
     params: Record<string, any>
+  }
+
+  export interface CustomSlotParams {
+    $table: VxeTableConstructor
+    $grid: VxeGridConstructor | null | undefined
+    columns: VxeTableDefines.ColumnInfo[]
+    isAllChecked: boolean
+    isAllIndeterminate: boolean
   }
 
   export interface MenuSlotParams {
