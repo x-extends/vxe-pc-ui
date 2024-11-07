@@ -25,6 +25,18 @@
   * [x] v4.0 基于 vue3.2+，只支持现代浏览器，不支持 IE
   * [ ] 下一阶段：高阶组件、数据图表可视化、全功能可视化设计器
 
+## 在线文档
+
+👉 [组件文档](https://vxeui.com)  
+👉 [表格文档](https://vxetable.cn)  
+
+## QQ 交流群
+
+该群供大家交流問題，如果群人数已满，将会不定期剔除不活跃的。  
+
+![qq](https://vxeui.com/resource/donation/qq1.png)
+![qq](https://vxeui.com/resource/donation/qq2.png)
+
 ## 浏览器支持
 
 ![Edge](https://raw.github.com/alrra/browser-logos/master/src/edge/edge_48x48.png) | ![Chrome](https://raw.github.com/alrra/browser-logos/master/src/chrome/chrome_48x48.png) | ![Firefox](https://raw.github.com/alrra/browser-logos/master/src/firefox/firefox_48x48.png) | ![Opera](https://raw.github.com/alrra/browser-logos/master/src/opera/opera_48x48.png) | ![Safari](https://raw.github.com/alrra/browser-logos/master/src/safari/safari_48x48.png)
@@ -120,11 +132,6 @@
 * [x] colgroup 表格-分组列
 * [x] toolbar 表格-工具栏
 * [x] grid 表格-配置式
-
-## 在线文档
-
-👉 [组件文档](https://vxeui.com)  
-👉 [表格文档](https://vxetable.cn)  
 
 ## 安装
 
@@ -276,13 +283,6 @@ export default {
 }
 </script>
 ```
-
-## QQ 交流群
-
-该群供大家交流問題，如果群人数已满，将会不定期剔除不活跃的。  
-
-![qq](https://vxeui.com/resource/donation/qq1.png)
-![qq](https://vxeui.com/resource/donation/qq2.png)
 
 ## 运行项目
 
