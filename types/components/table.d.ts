@@ -402,6 +402,12 @@ export namespace VxeTablePropTypes {
       column: VxeTableDefines.ColumnInfo<D>
     }): boolean
     /**
+     * 自定义提示内容
+     */
+    rowTooltipMethod?(params: {
+      row: D
+    }): string | number | null
+    /**
      * 拖拽开始时是否允许行拖拽调整顺序的方法，该方法的返回值用来决定是否允许被拖拽
      */
     dragStartMethod?(params: VxeTableDefines.RowDragstartEventParams<D>): boolean
@@ -409,6 +415,12 @@ export namespace VxeTablePropTypes {
      * 拖拽结束时是否允许行拖拽调整顺序的方法，该方法的返回值用来决定是否允许被拖拽调整顺序
      */
     dragEndMethod?(params: Omit<VxeTableDefines.RowDragendEventParams<D>, '_index'>): Promise<boolean> | boolean
+    /**
+     * 自定义插槽模板
+     */
+    slots?: {
+      rowTip?: string | ((params: VxeTableDefines.DragSlotParams) => VxeComponentSlotType | VxeComponentSlotType[])
+    }
   }
 
   /**
@@ -500,7 +512,7 @@ export namespace VxeTablePropTypes {
       columnIndex: number
       $columnIndex: number
       $rowIndex: number
-      cell: HTMLElement
+      cell?: HTMLElement
     }) => number | string)
     /**
      * 列宽拖动的最大宽度
@@ -511,7 +523,7 @@ export namespace VxeTablePropTypes {
       columnIndex: number
       $columnIndex: number
       $rowIndex: number
-      cell: HTMLElement
+      cell?: HTMLElement
     }) => number | string)
   }
   export interface ResizableOpts<D = VxeTablePropTypes.Row> extends ResizableConfig<D> { }
@@ -1408,6 +1420,10 @@ export namespace VxeTablePropTypes {
      * - full - 全量提示
      */
     msgMode?: 'single' | 'full' | null | ''
+    /**
+     * 提示消息主题样式
+     */
+    theme?: 'normal' | 'beautify' | ''
     /**
      * 当点击表格之外或者其他列之后，是否自动清除单元格的校验消息
      */
@@ -4078,6 +4094,10 @@ export namespace VxeTableDefines {
     columns: VxeTableDefines.ColumnInfo[]
     isAllChecked: boolean
     isAllIndeterminate: boolean
+  }
+
+  export interface DragSlotParams<D = any> {
+    row: D
   }
 
   export interface MenuSlotParams {

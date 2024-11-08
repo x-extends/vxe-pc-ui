@@ -361,7 +361,7 @@ export default defineComponent({
       const { inputValue } = reactData
       const inputReadonly = computeInputReadonly.value
       if (!inputReadonly) {
-        if (inputValue) {
+        if (inputValue || (min || max)) {
           let inpNumVal: number | string = type === 'integer' ? XEUtils.toInteger(handleNumber(inputValue)) : XEUtils.toNumber(handleNumber(inputValue))
           if (!validMinNum(inpNumVal)) {
             inpNumVal = min
