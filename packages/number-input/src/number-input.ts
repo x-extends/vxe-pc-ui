@@ -452,7 +452,7 @@ export default defineVxeComponent({
       const { inputValue } = reactData
       const inputReadonly = $xeNumberInput.computeInputReadonly
       if (!inputReadonly) {
-        if (inputValue) {
+        if (inputValue || (min || max)) {
           let inpNumVal: number | string = type === 'integer' ? XEUtils.toInteger(handleNumber(inputValue)) : XEUtils.toNumber(handleNumber(inputValue))
           if (!$xeNumberInput.validMinNum(inpNumVal)) {
             inpNumVal = min
