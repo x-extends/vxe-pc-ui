@@ -2823,30 +2823,30 @@ export interface TableMethods<DT = any> {
   }
   /**
    * 设置指定列为固定列
-   * @param columnOrField 列对象或字段名
+   * @param fieldOrColumns 列对象或字段名,支持传多个
    */
-  setColumnFixed(fieldOrColumn: VxeColumnPropTypes.Field | VxeTableDefines.ColumnInfo<any>, fixed: VxeColumnPropTypes.Fixed): Promise<void>
+  setColumnFixed(fieldOrColumns: VxeColumnPropTypes.Field | VxeTableDefines.ColumnInfo<any> | VxeColumnPropTypes.Field[] | VxeTableDefines.ColumnInfo<any>[], fixed: VxeColumnPropTypes.Fixed): Promise<void>
   /**
    * 取消指定的固定列
-   * @param columnOrField 列对象或字段名
+   * @param fieldOrColumns 列对象或字段名,支持传多个
    */
-  clearColumnFixed(fieldOrColumn: VxeColumnPropTypes.Field | VxeTableDefines.ColumnInfo<any>): Promise<void>
+  clearColumnFixed(fieldOrColumns: VxeColumnPropTypes.Field | VxeTableDefines.ColumnInfo<any> | VxeColumnPropTypes.Field[] | VxeTableDefines.ColumnInfo<any>[]): Promise<void>
   /**
    * 隐藏指定列
-   * @param columnOrField 列对象或字段名
+   * @param fieldOrColumns 列对象或字段名,支持传多个
    */
-  hideColumn(fieldOrColumn: VxeColumnPropTypes.Field | VxeTableDefines.ColumnInfo<any>): Promise<void>
+  hideColumn(fieldOrColumns: VxeColumnPropTypes.Field | VxeTableDefines.ColumnInfo<any> | VxeColumnPropTypes.Field[] | VxeTableDefines.ColumnInfo<any>[]): Promise<void>
   /**
    * 显示指定列
-   * @param columnOrField 列对象或字段名
+   * @param fieldOrColumns 列对象或字段名,支持传多个
    */
-  showColumn(fieldOrColumn: VxeColumnPropTypes.Field | VxeTableDefines.ColumnInfo<any>): Promise<void>
+  showColumn(fieldOrColumn: VxeColumnPropTypes.Field | VxeTableDefines.ColumnInfo<any> | VxeColumnPropTypes.Field[] | VxeTableDefines.ColumnInfo<any>[]): Promise<void>
   /**
    * 设置列宽
-   * @param fieldOrColumn 列对象或字段名
+   * @param fieldOrColumns 列对象或字段名,支持传多个
    * @param width 宽度 %，px
    */
-  setColumnWidth(fieldOrColumn: VxeColumnPropTypes.Field | VxeTableDefines.ColumnInfo<any>, width: number | string): Promise<void>
+  setColumnWidth(fieldOrColumns: VxeColumnPropTypes.Field | VxeTableDefines.ColumnInfo<any> | VxeColumnPropTypes.Field[] | VxeTableDefines.ColumnInfo<any>[], width: number | string): Promise<void>
   /**
    * 获取列宽
    * @param fieldOrColumn 列对象或字段名
