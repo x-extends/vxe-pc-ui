@@ -3325,8 +3325,6 @@ export interface TablePrivateMethods<D = any> {
   handleScrollEvent(evnt: Event, isRollY: boolean, isRollX: boolean, scrollTop: number, scrollLeft: number, params: {
     type: string
     fixed: VxeColumnPropTypes.Fixed
-    scrollTop: number
-    scrollLeft: number
   }): void
   triggerScrollXEvent(evnt: Event): void
   triggerScrollYEvent(evnt: Event): void
