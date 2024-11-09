@@ -256,19 +256,36 @@ export type VxeToolbarEmits = [
 ]
 
 export namespace VxeToolbarDefines {
-  export interface ToolbarEventParams extends VxeComponentEventParams {
+  export interface ToolbarEventParams<D = any> extends VxeComponentEventParams {
     $toolbar: VxeToolbarConstructor
+    $table: VxeTableConstructor<D>
+    $grid: VxeGridConstructor<D>
+  }
+
+  export interface ButtonClickEventParams<D = any> extends ToolbarEventParams<D> {
+    code: string
+    button: VxeToolbarPropTypes.ButtonConfig
+  }
+
+  export interface ToolClickEndEventParams<D = any> extends ToolbarEventParams<D> {
+    code: string
+    tool: VxeToolbarPropTypes.ToolConfig
   }
 }
 
-export type VxeToolbarEventProps = {}
+export type VxeToolbarEventProps<D = any> = {
+  onButtonClick?: VxeToolbarEvents.ButtonClick<D>
+  onToolClick?: VxeToolbarEvents.ToolClick<D>
+}
 
-export interface VxeToolbarListeners { }
+export interface VxeToolbarListeners<D = any> {
+  buttonClick?: VxeToolbarEvents.ButtonClick<D>
+  toolClick?: VxeToolbarEvents.ToolClick<D>
+}
 
-export namespace VxeToolbarEvents { }
-
-export namespace VxeToolbarSlotTypes {
-  export interface DefaultSlotParams {}
+export namespace VxeToolbarEvents {
+  export type ButtonClick<D = any> = (params: VxeToolbarDefines.ButtonClickEventParams<D>) => void
+  export type ToolClick<D = any> = (params: VxeToolbarDefines.ToolClickEndEventParams<D>) => void
 }
 
 export interface VxeToolbarSlots {
