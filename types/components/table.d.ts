@@ -3322,7 +3322,7 @@ export interface TablePrivateMethods<D = any> {
     column: VxeTableDefines.ColumnInfo
   }): void
   handleCellDragMouseupEvent (evnt: MouseEvent): void
-  handleScrollEvent(evnt: Event, isRollY: boolean, isRollX: boolean, params: {
+  handleScrollEvent(evnt: Event, isRollY: boolean, isRollX: boolean, scrollTop: number, scrollLeft: number, params: {
     type: string
     fixed: VxeColumnPropTypes.Fixed
     scrollTop: number
@@ -3995,6 +3995,10 @@ export namespace VxeTableDefines {
     bodyHeight: number
     isX: boolean
     isY: boolean
+    isTop: boolean
+    isBottom: boolean
+    isLeft: boolean
+    isRight: boolean
   }
   export interface ScrollEventParams<D = any> extends TableEventParams<D>, ScrollParams {
     target: HTMLDivElement
