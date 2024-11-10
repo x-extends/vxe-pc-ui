@@ -379,6 +379,7 @@ export namespace VxeGridDefines {
   export interface EditDisabledEventParams<D = any> extends GridEventParams<D>, VxeTableDefines.EditDisabledEventParams<D> { }
   export interface ValidErrorEventParams<D = any> extends GridEventParams<D>, VxeTableDefines.ValidErrorEventParams<D> { }
   export interface ScrollEventParams<D = any> extends GridEventParams<D>, VxeTableDefines.ScrollEventParams<D> { }
+  export interface ScrollBoundaryEventParams<D = any> extends GridEventParams<D>, VxeTableDefines.ScrollBoundaryEventParams<D> { }
   export interface CustomEventParams<D = any> extends GridEventParams<D>, VxeTableDefines.CustomEventParams<D> { }
   export interface RowDragstartEventParams<D = any> extends GridEventParams<D>, VxeTableDefines.RowDragstartEventParams<D> { }
   export interface RowDragoverEventParams<D = any> extends GridEventParams<D>, VxeTableDefines.RowDragoverEventParams<D> { }
@@ -454,6 +455,7 @@ export interface VxeGridEventProps<D = any> {
   onEditDisabled?: VxeGridEvents.EditDisabled<D>
   onValidError?: VxeGridEvents.ValidError<D>
   onScroll?: VxeGridEvents.Scroll<D>
+  onScrollBoundary?: VxeGridEvents.ScrollBoundary<D>
   onCustom?: VxeGridEvents.Custom<D>
   onRowDragstart?: VxeGridEvents.RowDragstart<D>
   onRowDragover?: VxeGridEvents.RowDragover<D>
@@ -514,6 +516,7 @@ export interface VxeGridListeners<D = any> {
   editDisabled?: VxeGridEvents.EditDisabled<D>
   validError?: VxeGridEvents.ValidError<D>
   scroll?: VxeGridEvents.Scroll<D>
+  scrollBoundary?: VxeGridEvents.ScrollBoundary<D>
   custom?: VxeGridEvents.Custom<D>
   rowDragstart?: VxeGridEvents.RowDragstart<D>
   rowDragover?: VxeGridEvents.RowDragover<D>
@@ -574,6 +577,7 @@ export namespace VxeGridEvents {
   export type EditDisabled<D = any> = (params: VxeGridDefines.EditDisabledEventParams<D>) => void
   export type ValidError<D = any> = (params: VxeGridDefines.ValidErrorEventParams<D>) => void
   export type Scroll<D = any> = (params: VxeGridDefines.ScrollEventParams<D>) => void
+  export type ScrollBoundary<D = any> = (params: VxeGridDefines.ScrollBoundaryEventParams<D>) => void
   export type Custom<D = any> = (params: VxeGridDefines.CustomEventParams<D>) => void
   export type RowDragstart<D = any> = (params: VxeGridDefines.RowDragstartEventParams<D>) => void
   export type RowDragover<D = any> = (params: VxeGridDefines.RowDragoverEventParams<D>) => void
