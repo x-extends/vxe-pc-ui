@@ -1508,6 +1508,10 @@ export namespace VxeTablePropTypes {
      * 当数据源被更改时，自动将横向滚动条滚动到左侧
      */
     scrollToLeftOnChange?: boolean
+    /**
+     * 滚动到边界触发的阈值，当设置该值后，可以通过 scroll 事件中的参数 triggerBoundary 判断是否触发边界值
+     */
+    threshold?: string | number
   }
   export interface SXOpts extends ScrollX {
     gt: number
@@ -1516,7 +1520,9 @@ export namespace VxeTablePropTypes {
 
   export interface ScrollY {
     /**
-     * 滚动模式
+     * 滚动模式，
+     * default 原生滚动模式
+     * wheel 优化模式可以降低渲染期的白屏
      */
     mode?: 'default' | 'wheel'
     /**
@@ -1528,21 +1534,25 @@ export namespace VxeTablePropTypes {
      */
     oSize?: number
     /**
-     * 是否启用
+     * 是否启用纵向虚拟滚动
      */
     enabled?: boolean
     /**
-     * 当数据源被更改时，自动将纵向滚动条滚动到顶部
+     * 当数据源被更改时，自动将纵向滚动条复原到顶部
      */
     scrollToTopOnChange?: boolean
+    /**
+     * 滚动到边界触发的阈值，当设置该值后，可以通过 scroll 事件中的参数 triggerBoundary 判断是否触发边界值
+     */
+    threshold?: string | number
 
     /**
-     * 请使用 row-config.height
+     * 已废弃，请使用 row-config.height
      * @deprecated
      */
     rHeight?: number
     /**
-     * 不建议使用
+     * 已废弃，不建议使用
      * @deprecated
      */
     adaptive?: boolean
@@ -3401,6 +3411,7 @@ export type VxeTableEmits = [
   'edit-disabled',
   'valid-error',
   'scroll',
+  'scroll-boundary',
   'custom',
 
   ...VxeTableProEmits
@@ -3997,10 +4008,12 @@ export namespace VxeTableDefines {
     isBottom: boolean
     isLeft: boolean
     isRight: boolean
+    direction: 'top' | 'bottom' | 'left' | 'right'
   }
   export interface ScrollEventParams<D = any> extends TableEventParams<D>, ScrollParams {
     target: HTMLDivElement
   }
+  export interface ScrollBoundaryEventParams<D = any> extends ScrollEventParams<D> {}
 
   export type CustomType = '' | 'confirm' | 'reset' | 'cancel' | 'close' | 'open'
 
@@ -4290,6 +4303,7 @@ export interface VxeTableEventProps<D = any> {
   onEditDisabled?: VxeTableEvents.EditDisabled<D>
   onValidError?: VxeTableEvents.ValidError<D>
   onScroll?: VxeTableEvents.Scroll<D>
+  onScrollBoundary?: VxeTableEvents.ScrollBoundary<D>
   onCustom?: VxeTableEvents.Custom<D>
   onRowDragstart?: VxeTableEvents.RowDragstart<D>
   onRowDragover?: VxeTableEvents.RowDragover<D>
@@ -4355,6 +4369,7 @@ export interface VxeTableListeners<D = any> {
    * 表格滚动时会触发该事件
    */
   scroll?: VxeTableEvents.Scroll<D>
+  scrollBoundary?: VxeTableEvents.ScrollBoundary<D>
   /**
    * 如果与工具栏关联，在自定义列按钮被手动点击后会触发该事件
    */
@@ -4409,6 +4424,7 @@ export namespace VxeTableEvents {
   export type EditDisabled<D = VxeTablePropTypes.Row> = (params: VxeTableDefines.EditDisabledEventParams<D>) => void
   export type ValidError<D = VxeTablePropTypes.Row> = (params: VxeTableDefines.ValidErrorEventParams<D>) => void
   export type Scroll<D = VxeTablePropTypes.Row> = (params: VxeTableDefines.ScrollEventParams<D>) => void
+  export type ScrollBoundary<D = VxeTablePropTypes.Row> = (params: VxeTableDefines.ScrollBoundaryEventParams<D>) => void
   export type Custom<D = VxeTablePropTypes.Row> = (params: VxeTableDefines.CustomEventParams<D>) => void
   export type RowDragstart<D = VxeTablePropTypes.Row> = (params: VxeTableDefines.RowDragstartEventParams<D>) => void
   export type RowDragover<D = VxeTablePropTypes.Row> = (params: VxeTableDefines.RowDragoverEventParams<D>) => void
