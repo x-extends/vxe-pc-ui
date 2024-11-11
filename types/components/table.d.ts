@@ -901,6 +901,15 @@ export namespace VxeTablePropTypes {
      */
     excludeFields?: string[]
     /**
+     * 单元格选取的方法，返回是否允许被选取
+     */
+    selectedMethod?(params: {
+      row: D
+      column: VxeTableDefines.ColumnInfo<D>
+      $table: VxeTableConstructor<D> & VxeTablePrivateMethods<D>
+      $grid: VxeGridConstructor<D> | null | undefined
+    }): boolean
+    /**
      * 只对 mouse-config.area 启用后有效，点击列头是否选取当前列的所有单元格
      */
     selectCellByHeader?: boolean
@@ -1509,7 +1518,7 @@ export namespace VxeTablePropTypes {
      */
     scrollToLeftOnChange?: boolean
     /**
-     * 滚动到边界触发的阈值，当设置该值后，可以通过 scroll 事件中的参数 triggerBoundary 判断是否触发边界值
+     * 滚动到边界触发的阈值会触发 scroll-boundary 事件
      */
     threshold?: string | number
   }
@@ -1542,7 +1551,7 @@ export namespace VxeTablePropTypes {
      */
     scrollToTopOnChange?: boolean
     /**
-     * 滚动到边界触发的阈值，当设置该值后，可以通过 scroll 事件中的参数 triggerBoundary 判断是否触发边界值
+     * 滚动到边界触发的阈值会触发 scroll-boundary 事件
      */
     threshold?: string | number
 
