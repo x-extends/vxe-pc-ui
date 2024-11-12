@@ -94,7 +94,7 @@ export default defineVxeComponent({
 
       const $xeRadioGroup = $xeRadio.$xeRadioGroup
       const { label } = props
-      return $xeRadioGroup ? $xeRadioGroup.value === label : props === label
+      return $xeRadioGroup ? $xeRadioGroup.value === label : props.value === label
     }
   },
   methods: {
