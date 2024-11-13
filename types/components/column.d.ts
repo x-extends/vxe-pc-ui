@@ -229,7 +229,7 @@ export namespace VxeColumnPropTypes {
     optionProps?: VxeGlobalRendererHandles.RenderOptionProps
     optionGroups?: any[]
     optionGroupProps?: VxeGlobalRendererHandles.RenderOptionGroupProps
-    autoFocus?: string
+    autoFocus?: boolean | string
     autoSelect?: boolean
     defaultValue?: ((params: { column: VxeTableDefines.ColumnInfo<D> }) => any) | null | undefined | string | number | RegExp | object | any[] | Date
     immediate?: boolean

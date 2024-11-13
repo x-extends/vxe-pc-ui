@@ -2743,6 +2743,12 @@ export interface TableMethods<DT = any> {
    * @param records 数据
    */
   createRow(records: any | any[]): Promise<any | any[]>
+  // /**
+  //  * 将表格数据转成原始数据
+  //  * 会自动去掉主键等内部属性
+  //  * @param rows
+  //  */
+  // toOriginalRecords(rows: any[]): DT[]
   /**
    * 只对 keep-source 开启有效，还原指定行 row 或者整个表格的数据
    * @param rows 指定行
