@@ -50,14 +50,14 @@ const ViewSubItemComponent = defineComponent({
       formDesignReactData.dragWidget = null
     }
 
-    let lastDragTime = Date.now()
-
     const sortDragenterSubItemEvent = (evnt: DragEvent) => {
       const { parentWidget, childIndex } = props
       const { widgetObjList, sortWidget } = formDesignReactData
       const targetWidget = parentWidget.children[childIndex]
+      const formDesignInternalData = $xeFormDesign.internalData
+      const { lastDragTime } = formDesignInternalData
       evnt.stopPropagation()
-      if (lastDragTime > Date.now() - 300) {
+      if (lastDragTime && lastDragTime > Date.now() - 300) {
         evnt.preventDefault()
         return
       }
@@ -83,7 +83,7 @@ const ViewSubItemComponent = defineComponent({
               parentWidget.children.splice(childIndex, 0, item)
               items.splice(index, 1)
             }
-            lastDragTime = Date.now()
+            formDesignInternalData.lastDragTime = Date.now()
             $xeFormDesign.dispatchEvent('drag-widget', { widget: item }, evnt)
           }
         }

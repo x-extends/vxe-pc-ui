@@ -283,4 +283,12 @@
       padding: 0;
     }
   }
+  .vxe-form--item-inner {
+    height: 100%;
+  }
+  .vxe-form--item-title-content {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
 }

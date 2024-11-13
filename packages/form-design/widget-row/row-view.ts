@@ -56,6 +56,7 @@ const ViewColItemComponent = defineComponent({
       const { parentWidget, colItemIndex } = props
       const { widgetObjList, sortWidget } = formDesignReactData
       const targetWidget = parentWidget.children[colItemIndex]
+      const formDesignInternalData = $xeFormDesign.internalData
       evnt.stopPropagation()
       if (sortWidget && parentWidget && sortWidget.id !== parentWidget.id) {
         if (hasFormDesignLayoutType(sortWidget)) {
@@ -76,13 +77,15 @@ const ViewColItemComponent = defineComponent({
               parentWidget.children[colItemIndex] = item
               parentWidget.children[index] = targetWidget
             } else {
-              parentWidget.children[colItemIndex] = item
-              if (targetWidget.name) {
-                items.splice(index, 1, targetWidget)
-              } else {
-                items.splice(index, 1)
+              // 如果已存在控件
+              if (targetWidget && targetWidget.name) {
+                return
               }
+              parentWidget.children[colItemIndex] = item
+              items.splice(index, 1)
             }
+            evnt.preventDefault()
+            formDesignInternalData.lastDragTime = Date.now()
             $xeFormDesign.dispatchEvent('drag-widget', { widget: item }, evnt)
           }
         }

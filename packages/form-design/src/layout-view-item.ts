@@ -47,11 +47,11 @@ export const ViewItemComponent = defineComponent({
       formDesignReactData.sortWidget = null
     }
 
-    let lastDragTime = Date.now()
-
     const sortDragenterEvent = (evnt: DragEvent) => {
       const { widgetObjList, sortWidget } = formDesignReactData
-      if (lastDragTime > Date.now() - 200) {
+      const formDesignInternalData = $xeFormDesign.internalData
+      const { lastDragTime } = formDesignInternalData
+      if (lastDragTime && lastDragTime > Date.now() - 300) {
         evnt.preventDefault()
         return
       }
@@ -72,9 +72,8 @@ export const ViewItemComponent = defineComponent({
                 currRest.items.splice(currRest.index, 1)
               }
               targetRest.items.splice(targetRest.index, 0, currRest.item)
+              formDesignInternalData.lastDragTime = Date.now()
               $xeFormDesign.dispatchEvent('drag-widget', { widget: currRest.item }, evnt)
-
-              lastDragTime = Date.now()
             }
           }
         }
