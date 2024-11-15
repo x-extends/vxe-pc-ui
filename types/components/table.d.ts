@@ -3303,7 +3303,7 @@ export interface TablePrivateMethods<D = any> {
   getExcludeHeight(): number
   defineField(records: any[]): any[]
   handleTableData(force?: boolean): Promise<any>
-  cacheRowMap(isSource?: boolean): void
+  cacheRowMap(isSource?: boolean, force?: boolean): void
   cacheSourceMap(fullData: any[]): void
   saveCustomStore(type: 'confirm' | 'reset' | 'update:width' | 'update:fixed' | 'update:sort' | 'update:visible'): Promise<any>
   analyColumnWidth(): void

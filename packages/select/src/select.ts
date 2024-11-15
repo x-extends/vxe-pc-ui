@@ -349,13 +349,13 @@ export default defineComponent({
       internalData.optGroupKeyMaps = groupKeyMaps
       internalData.optFullValMaps = fullKeyMaps
       reactData.reactFlag++
-      refreshOption()
+      handleOption()
     }
 
     /**
-     * 刷新选项，当选项被动态显示/隐藏时可能会用到
+     * 处理选项，当选项被动态显示/隐藏时可能会用到
      */
-    const refreshOption = () => {
+    const handleOption = () => {
       const { filterable, filterMethod } = props
       const { searchValue } = reactData
       const { fullData, optFullValMaps } = internalData
@@ -478,7 +478,8 @@ export default defineComponent({
         reactData.isActivated = true
         reactData.isAniVisible = true
         if (filterable) {
-          refreshOption()
+          handleOption()
+          updateYData()
         }
         setTimeout(() => {
           reactData.visiblePanel = true
@@ -733,11 +734,11 @@ export default defineComponent({
           .catch(() => nextTick())
           .finally(() => {
             reactData.searchLoading = false
-            refreshOption()
+            handleOption()
             updateYData()
           })
       } else {
-        refreshOption()
+        handleOption()
         updateYData()
       }
     }
@@ -1023,7 +1024,11 @@ export default defineComponent({
         }
         return nextTick()
       },
-      refreshOption,
+      refreshOption () {
+        handleOption()
+        updateYData()
+        return nextTick()
+      },
       focus () {
         const $input = refInput.value
         reactData.isActivated = true
