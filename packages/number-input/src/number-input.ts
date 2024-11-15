@@ -329,7 +329,7 @@ export default defineVxeComponent({
       const $xeForm = $xeNumberInput.$xeForm
       const formItemInfo = $xeNumberInput.formItemInfo
 
-      const value = val ? Number(val) : null
+      const value = XEUtils.eqNull(val) ? null : Number(val)
       const isChange = value !== props.value
       if (isChange) {
         reactData.inputValue = inputValue || ''
