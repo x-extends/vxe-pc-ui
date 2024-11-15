@@ -101,11 +101,11 @@ export interface TableEditMethods<D = any> {
    * 请使用 clearEdit()
    * @deprecated
    */
-  clearActived(evnt?: Event): Promise<any>
+  clearActived(row?: any): Promise<any>
   /**
    * 手动清除单元格激活状态
    */
-  clearEdit(evnt?: Event): Promise<any>
+  clearEdit(row?: any): Promise<any>
   /**
    * 手动清除单元格选中状态
    */
@@ -154,6 +154,10 @@ export interface TableEditPrivateMethods<D = any> {
    * @private
    */
   handleEdit(params: any, evnt?: any): Promise<any>
+  /**
+   * @private
+   */
+  handleClearEdit(evnt: Event | null, row?: any): Promise<any>
   /**
    * @private
    */

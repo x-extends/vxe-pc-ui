@@ -259,7 +259,7 @@ export default defineComponent({
     }
 
     const handleChange = (val: number | null, inputValue: string, evnt: Event | { type: string }) => {
-      const value = val ? Number(val) : null
+      const value = XEUtils.eqNull(val) ? null : Number(val)
       const isChange = Number(value) !== props.modelValue
       if (isChange) {
         reactData.inputValue = inputValue || ''
