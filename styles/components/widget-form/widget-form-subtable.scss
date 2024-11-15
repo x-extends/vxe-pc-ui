@@ -7,7 +7,6 @@
   border-radius: var(--vxe-ui-base-border-radius);
   overflow-y: hidden;
   overflow-x: auto;
-  padding-top: var(--vxe-ui-layout-padding-default);
 }
 .vxe-form-design--widget-subtable-view-box {
   border: 1px solid var(--vxe-ui-input-border-color);
@@ -106,6 +105,9 @@
   flex-wrap: nowrap;
   & > .vxe-form-design--widget-subtable-view-item {
     border-right: 1px solid var(--vxe-ui-input-border-color);
+    .vxe-form-design--preview-item-operate {
+      top: 0.4em;
+    }
   }
 }
 .vxe-form-design--widget-subtable-view-list-move {
@@ -191,7 +193,12 @@
   }
   .vxe-form-design--preview-item-view {
     .vxe-form-design--widget-subtable-form-item {
-      padding: 0;
+      & > .vxe-form--item-content {
+        padding: 0;
+      }
+    }
+    .vxe-form--group-content {
+      align-items: unset;
     }
   }
 }

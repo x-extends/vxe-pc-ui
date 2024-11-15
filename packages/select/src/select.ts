@@ -449,9 +449,9 @@ export default defineVxeComponent({
       return optid ? encodeURIComponent(optid) : ''
     },
     /**
-     * 刷新选项，当选项被动态显示/隐藏时可能会用到
+     * 处理选项，当选项被动态显示/隐藏时可能会用到
      */
-    refreshOption  () {
+    handleOption  () {
       const $xeSelect = this
       const props = $xeSelect
       const reactData = $xeSelect.reactData
@@ -478,6 +478,13 @@ export default defineVxeComponent({
         }
       })
       reactData.afterVisibleList = avList
+      return $xeSelect.$nextTick()
+    },
+    refreshOption () {
+      const $xeSelect = this
+
+      $xeSelect.handleOption()
+      $xeSelect.updateYData()
       return $xeSelect.$nextTick()
     },
     cacheItemMap (datas: any[]) {
@@ -515,7 +522,7 @@ export default defineVxeComponent({
       internalData.optGroupKeyMaps = groupKeyMaps
       internalData.optFullValMaps = fullKeyMaps
       reactData.reactFlag++
-      $xeSelect.refreshOption()
+      $xeSelect.handleOption()
     },
     setCurrentOption  (option: any) {
       const $xeSelect = this
@@ -666,7 +673,8 @@ export default defineVxeComponent({
         reactData.isActivated = true
         reactData.isAniVisible = true
         if (filterable) {
-          $xeSelect.refreshOption()
+          $xeSelect.handleOption()
+          $xeSelect.updateYData()
         }
         setTimeout(() => {
           reactData.visiblePanel = true
@@ -961,11 +969,11 @@ export default defineVxeComponent({
           .catch(() => $xeSelect.$nextTick())
           .finally(() => {
             reactData.searchLoading = false
-            $xeSelect.refreshOption()
+            $xeSelect.handleOption()
             $xeSelect.updateYData()
           })
       } else {
-        $xeSelect.refreshOption()
+        $xeSelect.handleOption()
         $xeSelect.updateYData()
       }
     },

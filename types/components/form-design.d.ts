@@ -65,6 +65,7 @@ export interface FormDesignReactData<D = VxeFormDesignDefines.DefaultSettingForm
 }
 
 export interface FormDesignInternalData {
+  lastDragTime?: number
 }
 
 export interface FormDesignMethods {
