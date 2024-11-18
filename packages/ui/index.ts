@@ -326,6 +326,7 @@ setConfig({
     showRemoveButton: true,
     showButtonIcon: true,
     showPreview: true,
+    dragToUpload: true,
     imageStyle: {}
   },
   watermark: {

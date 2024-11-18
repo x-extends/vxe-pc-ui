@@ -1,9 +1,9 @@
 import { defineComponent, ref, h, reactive, watch, computed, PropType, inject, createCommentVNode, onUnmounted, onMounted } from 'vue'
 import XEUtils from 'xe-utils'
-import { VxeUI, getConfig, getI18n, getIcon, useSize, createEvent } from '../../ui'
+import { VxeUI, getConfig, getI18n, getIcon, useSize, createEvent, globalEvents } from '../../ui'
 import { getSlotVNs } from '../..//ui/src/vn'
 import { errLog } from '../../ui/src/log'
-import { toCssUnit } from '../../ui/src/dom'
+import { getEventTargetNode, toCssUnit } from '../../ui/src/dom'
 import { readLocalFile } from './util'
 import VxeButtonComponent from '../../button/src/button'
 
@@ -41,6 +41,14 @@ export default defineComponent({
     fileTypes: {
       type: Array as PropType<VxeUploadPropTypes.FileTypes>,
       default: () => XEUtils.clone(getConfig().upload.fileTypes, true)
+    },
+    dragToUpload: {
+      type: Boolean as PropType<VxeUploadPropTypes.DragToUpload>,
+      default: () => XEUtils.clone(getConfig().upload.dragToUpload, true)
+    },
+    pasteToUpload: {
+      type: Boolean as PropType<VxeUploadPropTypes.PasteToUpload>,
+      default: () => XEUtils.clone(getConfig().upload.pasteToUpload, true)
     },
     keyField: String as PropType<VxeUploadPropTypes.KeyField>,
     singleMode: Boolean as PropType<VxeUploadPropTypes.SingleMode>,
@@ -158,6 +166,7 @@ export default defineComponent({
     const reactData = reactive<UploadReactData>({
       isDrag: false,
       showMorePopup: false,
+      isActivated: false,
       fileList: [],
       fileCacheMaps: {}
     })
@@ -776,23 +785,58 @@ export default defineComponent({
       }
     }
 
+    const uploadTransferFileEvent = (evnt: Event, files: File[]) => {
+      const { imageTypes } = props
+      const { imagePreviewTypes } = internalData
+      const isImage = computeIsImage.value
+      if (isImage) {
+        const pasteImgTypes = imagePreviewTypes.concat(imageTypes && imageTypes.length ? imageTypes : [])
+        files = files.filter(file => {
+          const fileType = `${file.type.split('/')[1] || ''}`.toLowerCase()
+          if (pasteImgTypes.some(type => `${type}`.toLowerCase() === fileType)) {
+            return true
+          }
+          return false
+        })
+      }
+      // 如果全部不满足条件
+      if (!files.length) {
+        if (VxeUI.modal) {
+          VxeUI.modal.notification({
+            title: getI18n('vxe.modal.errTitle'),
+            status: 'error',
+            content: getI18n('vxe.upload.uploadTypeErr')
+          })
+        }
+        return
+      }
+      uploadFile(files, evnt)
+    }
+
     const handleDropEvent = (evnt: DragEvent) => {
       const dataTransfer = evnt.dataTransfer
       if (dataTransfer) {
         const { items } = dataTransfer
         if (items && items.length) {
-          const files: File[] = []
-          Array.from(items).forEach(item => {
-            const file = item.getAsFile()
-            if (file) {
-              files.push(file)
-            }
-          })
-          uploadFile(files, evnt)
           evnt.preventDefault()
+          const files = handleTransferFiles(items)
+          if (files.length) {
+            uploadTransferFileEvent(evnt, files)
+          }
         }
       }
       reactData.isDrag = false
+    }
+
+    const handleTransferFiles = (items: DataTransferItemList) => {
+      const files: File[] = []
+      XEUtils.arrayEach(items, item => {
+        const file = item.getAsFile()
+        if (file) {
+          files.push(file)
+        }
+      })
+      return files
     }
 
     const handleMoreEvent = () => {
@@ -810,10 +854,17 @@ export default defineComponent({
           maskClosable: true,
           slots: {
             default () {
-              const { showErrorStatus } = props
+              const { showErrorStatus, dragToUpload } = props
               const { isDrag } = reactData
               const isDisabled = computeIsDisabled.value
               const { fileList } = reactData
+
+              const ons: Record<string, any> = {}
+              if (dragToUpload) {
+                ons.onDragover = handleDragoverEvent
+                ons.onDragleave = handleDragleaveEvent
+                ons.onDrop = handleDropEvent
+              }
 
               return h('div', {
                 class: ['vxe-upload--more-popup', {
@@ -822,9 +873,7 @@ export default defineComponent({
                   'show--error': showErrorStatus,
                   'is--drag': isDrag
                 }],
-                onDragover: handleDragoverEvent,
-                onDragleave: handleDragleaveEvent,
-                onDrop: handleDropEvent
+                ...ons
               }, [
                 isImage
                   ? h('div', {
@@ -854,6 +903,37 @@ export default defineComponent({
           }
         })
       }
+    }
+
+    const handleGlobalPasteEvent = (evnt: ClipboardEvent) => {
+      const { pasteToUpload } = props
+      const { isActivated } = reactData
+      if (!isActivated || !pasteToUpload) {
+        return
+      }
+      const clipboardData: DataTransfer = evnt.clipboardData || (evnt as any).originalEvent.clipboardData
+      if (!clipboardData) {
+        return
+      }
+      const { items } = clipboardData
+      if (!items) {
+        return
+      }
+      const files = handleTransferFiles(items)
+      if (files.length) {
+        evnt.preventDefault()
+        uploadTransferFileEvent(evnt, files)
+      }
+    }
+
+    const handleGlobalMousedownEvent = (evnt: MouseEvent) => {
+      const el = refElem.value
+      const isActivated = getEventTargetNode(evnt, el).flag
+      reactData.isActivated = isActivated
+    }
+
+    const handleGlobalBlurEvent = () => {
+      reactData.isActivated = false
     }
 
     const uploadMethods: UploadMethods = {
@@ -1250,24 +1330,32 @@ export default defineComponent({
     }
 
     const renderVN = () => {
-      const { showErrorStatus } = props
-      const { isDrag, showMorePopup } = reactData
+      const { showErrorStatus, dragToUpload, pasteToUpload } = props
+      const { isDrag, showMorePopup, isActivated } = reactData
       const vSize = computeSize.value
       const isDisabled = computeIsDisabled.value
       const formReadonly = computeFormReadonly.value
       const isImage = computeIsImage.value
+
+      const ons: Record<string, any> = {}
+      if (dragToUpload) {
+        ons.onDragover = handleDragoverEvent
+        ons.onDragleave = handleDragleaveEvent
+        ons.onDrop = handleDropEvent
+      }
+
       return h('div', {
         ref: refElem,
         class: ['vxe-upload', {
           [`size--${vSize}`]: vSize,
+          'is--active': isActivated,
           'is--readonly': formReadonly,
           'is--disabled': isDisabled,
+          'is--paste': pasteToUpload,
           'show--error': showErrorStatus,
           'is--drag': isDrag
         }],
-        onDragover: handleDragoverEvent,
-        onDragleave: handleDragleaveEvent,
-        onDrop: handleDropEvent
+        ...ons
       }, [
         isImage ? renderImageMode() : renderAllMode(),
         isDrag && !showMorePopup
@@ -1295,10 +1383,16 @@ export default defineComponent({
           errLog('vxe.error.errConflicts', ['multiple', 'single-mode'])
         }
       }
+      globalEvents.on($xeUpload, 'paste', handleGlobalPasteEvent)
+      globalEvents.on($xeUpload, 'mousedown', handleGlobalMousedownEvent)
+      globalEvents.on($xeUpload, 'blur', handleGlobalBlurEvent)
     })
 
     onUnmounted(() => {
       reactData.isDrag = false
+      globalEvents.off($xeUpload, 'paste')
+      globalEvents.off($xeUpload, 'mousedown')
+      globalEvents.off($xeUpload, 'blur')
     })
 
     updateFileList()
