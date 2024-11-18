@@ -77,12 +77,12 @@ export interface VxeTableProMethods<D = any> {
 export type VxeProPluginMethods<D = any> = VxeTableProMethods<D>
 
 export interface VxeTableProPrivateMethods<D = any> {
-  handleKeyboardEvent(evnt: KeyboardEvent): void
-  handleHeaderCellAreaEvent(evnt: KeyboardEvent, params: VxeTableDefines.HeaderCellClickEventParams<D>): void
+  handleKeyboardCellAreaEvent(evnt: KeyboardEvent): void
+  handleHeaderCellAreaEvent(evnt: MouseEvent, params: VxeTableDefines.HeaderCellClickEventParams<D>): void
   handleCellAreaEvent(evnt: MouseEvent, params: VxeTableDefines.CellClickEventParams<D>): void
   handleFilterEvent(evnt: Event, params: VxeTableDefines.FilterChangeEventParams<D>): any
   handleSortEvent(evnt: Event, params: VxeTableDefines.SortChangeEventParams<D>): any
-  handleUpdateCellAreas(): any
+  handleRecalculateCellAreas(): any
   handleCopyCellAreaEvent(evnt: ClipboardEvent): void
   handlePasteCellAreaEvent(evnt: ClipboardEvent): void
   handleCutCellAreaEvent(evnt: ClipboardEvent): void

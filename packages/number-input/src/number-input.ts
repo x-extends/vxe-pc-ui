@@ -329,7 +329,7 @@ export default defineVxeComponent({
       const $xeForm = $xeNumberInput.$xeForm
       const formItemInfo = $xeNumberInput.formItemInfo
 
-      const value = XEUtils.eqNull(val) ? null : Number(val)
+      const value = (val as any) === '' || XEUtils.eqNull(val) ? null : Number(val)
       const isChange = value !== props.value
       if (isChange) {
         reactData.inputValue = inputValue || ''
@@ -349,7 +349,7 @@ export default defineVxeComponent({
       const reactData = $xeNumberInput.reactData
 
       const inpImmediate = $xeNumberInput.computeInpImmediate
-      const value = inputValue ? XEUtils.toNumber(inputValue) : null
+      const value = inputValue === '' || XEUtils.eqNull(inputValue) ? null : XEUtils.toNumber(inputValue)
       reactData.inputValue = inputValue
       if (inpImmediate) {
         $xeNumberInput.handleChange(value, inputValue, evnt)

@@ -1,6 +1,7 @@
 import { DefineVxeComponentApp, DefineVxeComponentOptions, DefineVxeComponentInstance, VxeComponentEventParams, VxeComponentSizeType, ValueOf } from '@vxe-ui/core'
 import { VxeButtonProps } from './button'
 import { VxeTableDefines, VxeTableConstructor, VxeTablePrivateMethods } from './table'
+import { VxeGridConstructor } from './grid'
 
 /* eslint-disable @typescript-eslint/no-empty-interface,no-use-before-define,@typescript-eslint/ban-types */
 

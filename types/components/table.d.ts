@@ -274,6 +274,10 @@ export namespace VxeTablePropTypes {
      */
     maxFixedSize?: number
     /**
+     * 是否启用列拖拽排序
+     */
+    drag?: boolean
+    /**
      * 每一列的自定义表头单元格数据导出方法，返回自定义的标题
      */
     headerExportMethod?: VxeColumnPropTypes.HeaderExportMethod<any>
@@ -346,19 +350,23 @@ export namespace VxeTablePropTypes {
   }
 
   /**
-   * 可拖拽配置项
+   * 已废弃，被 RowDragConfig 替换
+   * @deprecated
    */
   export interface DragConfig<D = any>{
     /**
      * 自定义图标
+     * @deprecated
      */
     rowIcon?: string
     /**
      * 是否显示拖拽按钮图标
+     * @deprecated
      */
     showRowIcon?: boolean
     /**
      * 是否禁用拖拽按钮
+     * @deprecated
      */
     rowDisabledMethod?(params: {
       row: D
@@ -366,6 +374,7 @@ export namespace VxeTablePropTypes {
     }): boolean
     /**
      * 是否显示拖拽按钮
+     * @deprecated
      */
     rowVisibleMethod?(params: {
       row: D
@@ -373,8 +382,60 @@ export namespace VxeTablePropTypes {
     }): boolean
     /**
      * 自定义提示内容
+     * @deprecated
      */
     rowTooltipMethod?(params: {
+      row: D
+    }): string | number | null
+    /**
+     * 拖拽开始时是否允许行拖拽调整顺序的方法，该方法的返回值用来决定是否允许被拖拽
+     * @deprecated
+     */
+    dragStartMethod?(params: VxeTableDefines.RowDragstartEventParams<D>): boolean
+    /**
+     * 拖拽结束时是否允许行拖拽调整顺序的方法，该方法的返回值用来决定是否允许被拖拽调整顺序
+     * @deprecated
+     */
+    dragEndMethod?(params: Omit<VxeTableDefines.RowDragendEventParams<D>, '_index'>): Promise<boolean> | boolean
+    /**
+     * 自定义插槽模板
+     * @deprecated
+     */
+    slots?: {
+      rowTip?: string | ((params: VxeTableDefines.RowDragSlotParams) => VxeComponentSlotType | VxeComponentSlotType[])
+    }
+  }
+
+  /**
+   * 行拖拽排序配置项
+   */
+  export interface RowDragConfig<D = any>{
+    /**
+     * 自定义图标
+     */
+    icon?: string
+    /**
+     * 是否显示拖拽按钮图标
+     */
+    showIcon?: boolean
+    /**
+     * 是否禁用拖拽按钮
+     */
+    disabledMethod?(params: {
+      row: D
+      column: VxeTableDefines.ColumnInfo<D>
+    }): boolean
+    /**
+     * 是否显示拖拽按钮
+     */
+    visibleMethod?(params: {
+      row: D
+      column: VxeTableDefines.ColumnInfo<D>
+    }): boolean
+    /**
+     * 自定义提示内容
+     */
+    tooltipMethod?(params: {
       row: D
     }): string | number | null
     /**
@@ -389,7 +450,53 @@ export namespace VxeTablePropTypes {
      * 自定义插槽模板
      */
     slots?: {
-      rowTip?: string | ((params: VxeTableDefines.DragSlotParams) => VxeComponentSlotType | VxeComponentSlotType[])
+      tip?: string | ((params: VxeTableDefines.RowDragSlotParams) => VxeComponentSlotType | VxeComponentSlotType[])
+    }
+  }
+
+  /**
+   * 列拖拽排序配置项
+   */
+  export interface ColumnDragConfig<D = any>{
+    /**
+     * 自定义图标
+     */
+    icon?: string
+    /**
+     * 是否显示拖拽按钮图标
+     */
+    showIcon?: boolean
+    /**
+     * 是否禁用拖拽按钮
+     */
+    disabledMethod?(params: {
+      column: VxeTableDefines.ColumnInfo<D>
+    }): boolean
+    /**
+     * 是否显示拖拽按钮
+     */
+    visibleMethod?(params: {
+      column: VxeTableDefines.ColumnInfo<D>
+    }): boolean
+    /**
+     * 自定义提示内容
+     */
+    tooltipMethod?(params: {
+      column: VxeTableDefines.ColumnInfo<D>
+    }): string | number | null
+    /**
+     * 拖拽开始时是否允许行拖拽调整顺序的方法，该方法的返回值用来决定是否允许被拖拽
+     */
+    dragStartMethod?(params: VxeTableDefines.ColumnDragstartEventParams<D>): boolean
+    /**
+     * 拖拽结束时是否允许行拖拽调整顺序的方法，该方法的返回值用来决定是否允许被拖拽调整顺序
+     */
+    dragEndMethod?(params: Omit<VxeTableDefines.ColumnDragendEventParams<D>, '_index'>): Promise<boolean> | boolean
+    /**
+     * 自定义插槽模板
+     */
+    slots?: {
+      tip?: string | ((params: VxeTableDefines.ColumnDragSlotParams) => VxeComponentSlotType | VxeComponentSlotType[])
     }
   }
 
@@ -880,9 +987,13 @@ export namespace VxeTablePropTypes {
       $grid: VxeGridConstructor<D> | null | undefined
     }): boolean
     /**
-     * 只对 mouse-config.area 启用后有效，点击列头是否选取当前列的所有单元格
+     * 只对 mouse-config.area 启用后有效，表格头部选取功能
      */
     selectCellByHeader?: boolean
+    /**
+     * 只对 mouse-config.area 启用后有效，表格单元格选取功能
+     */
+    selectCellByBody?: boolean
     /**
      * 只对 mouse-config.area 启用后有效，
      * 如果为 true，则选中第一列单元格自动选取一整行，
@@ -2018,9 +2129,18 @@ export interface VxeTableProps<D = any> {
    */
   currentConfig?: VxeTablePropTypes.CurrentConfig<D>
   /**
-   * 当前行配置项
+   * 已废弃，被 rowDragConfig 替换
+   * @deprecated
    */
   dragConfig?: VxeTablePropTypes.DragConfig<D>
+  /**
+   * 行拖拽排序配置项
+   */
+  rowDragConfig?: VxeTablePropTypes.RowDragConfig<D>
+  /**
+   * 列拖拽排序配置项
+   */
+  columnDragConfig?: VxeTablePropTypes.ColumnDragConfig<D>
   /**
    * 个性化信息配置项
    */
@@ -2209,8 +2329,9 @@ export interface TablePrivateComputed<D = any> {
   computeColumnOpts: VxeTablePropTypes.ColumnOpts
   computeCellOpts: VxeTablePropTypes.CellConfig
   computeRowOpts: VxeTablePropTypes.RowOpts
-  computeDragOpts: VxeTablePropTypes.DragConfig
-  computeResizeOpts: VxeTablePropTypes.ResizeOpts
+  computeRowDragOpts: VxeTablePropTypes.RowDragConfig
+  computeColumnDragOpts: VxeTablePropTypes.ColumnDragConfig
+  computeResizeOpts: VxeTablePropTypes.ResizeOpts,
   computeResizableOpts: VxeTablePropTypes.ResizableOpts<D>
   computeSeqOpts: VxeTablePropTypes.SeqOpts<D>
   computeRadioOpts: VxeTablePropTypes.RadioOpts<D>
@@ -2511,8 +2632,10 @@ export interface TableReactData<D = any> {
   },
   scrollVMLoading: boolean
 
-  isDragRowMove: boolean
+  isDragRowMove: Boolean
   dragRow: any
+  isDragColMove: boolean
+  dragCol: any
   dragTipText: string
 
   _isResize: boolean
@@ -2592,9 +2715,12 @@ export interface TableInternalData<D = any> {
   columnStatusMaps: Record<string, boolean>
   // 行选取状态
   rowStatusMaps: Record<string, boolean>
+
   // 上一个拖动的行
-  prevDragRow: any
-  prevDragPos?: 'top' | 'bottom' | ''
+  prevDragRow?: any
+  // 上一个拖动的列
+  prevDragCol?: any
+  prevDragPos?: 'top' | 'bottom' | 'left' | 'right' | ''
 
   // 特殊标识
   inited: boolean
@@ -3350,9 +3476,16 @@ export interface TablePrivateMethods<D = any> {
   handleRowDragDragoverEvent(evnt: DragEvent,): void
   handleCellDragMousedownEvent (evnt: MouseEvent, params: {
     row: any
-    column
+    column: VxeTableDefines.ColumnInfo
   }): void
   handleCellDragMouseupEvent (evnt: MouseEvent): void
+  handleHeaderCellDragDragstartEvent (evnt: DragEvent): void
+  handleHeaderCellDragDragendEvent(evnt: DragEvent): void
+  handleHeaderCellDragDragoverEvent(evnt: DragEvent,): void
+  handleHeaderCellDragMousedownEvent (evnt: MouseEvent, params: {
+    column: VxeTableDefines.ColumnInfo
+  }): void
+  handleHeaderCellDragMouseupEvent (evnt: MouseEvent): void
   handleScrollEvent(evnt: Event, isRollY: boolean, isRollX: boolean, scrollTop: number, scrollLeft: number, params: {
     type: string
     fixed: VxeColumnPropTypes.Fixed
@@ -3425,6 +3558,9 @@ export type VxeTableEmits = [
   'row-dragstart',
   'row-dragover',
   'row-dragend',
+  'column-dragstart',
+  'column-dragover',
+  'column-dragend',
 
   'edit-actived', // 已废弃
 
@@ -4049,11 +4185,36 @@ export namespace VxeTableDefines {
     oldRow: D
     targetRow: D
     dragPos: 'top' | 'bottom'
+    offsetIndex: 0 | 1
   }
 
   export interface RowDragendEventParams<D = any> {
     newRow: D
     oldRow: D
+    dragPos: 'top' | 'bottom'
+    offsetIndex: 0 | 1
+    _index: {
+      newIndex: number
+      oldIndex: number
+    }
+  }
+
+  export interface ColumnDragstartEventParams<D = any> {
+    column: VxeTableDefines.ColumnInfo<D>
+  }
+
+  export interface ColumnDragoverEventParams<D = any> {
+    oldColumn: VxeTableDefines.ColumnInfo<D>
+    targetColumn: VxeTableDefines.ColumnInfo<D>
+    dragPos: 'left' | 'right'
+    offsetIndex: 0 | 1
+  }
+
+  export interface ColumnDragendEventParams<D = any> {
+    newColumn: VxeTableDefines.ColumnInfo<D>
+    oldColumn: VxeTableDefines.ColumnInfo<D>
+    dragPos: 'left' | 'right'
+    offsetIndex: 0 | 1
     _index: {
       newIndex: number
       oldIndex: number
@@ -4129,8 +4290,12 @@ export namespace VxeTableDefines {
     isAllIndeterminate: boolean
   }
 
-  export interface DragSlotParams<D = any> {
+  export interface RowDragSlotParams<D = any> {
     row: D
+  }
+
+  export interface ColumnDragSlotParams<D = any> {
+    column: VxeTableDefines.ColumnInfo<D>
   }
 
   export interface MenuSlotParams {
@@ -4326,6 +4491,9 @@ export interface VxeTableEventProps<D = any> {
   onRowDragstart?: VxeTableEvents.RowDragstart<D>
   onRowDragover?: VxeTableEvents.RowDragover<D>
   onRowDragend?: VxeTableEvents.RowDragend<D>
+  onColumnDragstart?: VxeTableEvents.ColumnDragstart<D>
+  onColumnDragover?: VxeTableEvents.ColumnDragover<D>
+  onColumnDragend?: VxeTableEvents.ColumnDragend<D>
 
   /**
    * 已废弃，请使用 onEditActivated
@@ -4395,6 +4563,9 @@ export interface VxeTableListeners<D = any> {
   rowDragstart?: VxeTableEvents.RowDragstart<D>
   rowDragover?: VxeTableEvents.RowDragover<D>
   rowDragend?: VxeTableEvents.RowDragend<D>
+  columnDragstart?: VxeTableEvents.ColumnDragstart<D>
+  columnDragover?: VxeTableEvents.ColumnDragover<D>
+  columnDragend?: VxeTableEvents.ColumnDragend<D>
 
   /**
    * 已废弃，请使用 editActivated
@@ -4447,6 +4618,9 @@ export namespace VxeTableEvents {
   export type RowDragstart<D = VxeTablePropTypes.Row> = (params: VxeTableDefines.RowDragstartEventParams<D>) => void
   export type RowDragover<D = VxeTablePropTypes.Row> = (params: VxeTableDefines.RowDragoverEventParams<D>) => void
   export type RowDragend<D = VxeTablePropTypes.Row> = (params: VxeTableDefines.RowDragendEventParams<D>) => void
+  export type ColumnDragstart<D = VxeTablePropTypes.Row> = (params: VxeTableDefines.ColumnDragstartEventParams<D>) => void
+  export type ColumnDragover<D = VxeTablePropTypes.Row> = (params: VxeTableDefines.ColumnDragoverEventParams<D>) => void
+  export type ColumnDragend<D = VxeTablePropTypes.Row> = (params: VxeTableDefines.ColumnDragendEventParams<D>) => void
 
   /**
    * 已废弃，请使用 EditActivated

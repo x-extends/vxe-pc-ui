@@ -62,6 +62,10 @@ export namespace VxeFormPropTypes {
   export type ValidConfig = {
     autoPos?: boolean
     showMessage?: boolean
+    /**
+     * 提示消息主题样式
+     */
+    theme?: 'normal' | 'beautify' | ''
   }
 
   /**
