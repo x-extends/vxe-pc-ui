@@ -37,7 +37,7 @@ VxeUI.setConfig({
 VxeUI.setI18n('en-US', enUS)
 VxeUI.setLanguage((localStorage.getItem('VXE_LANGUAGE') as 'zh-CN' | 'en-US') || 'zh-CN')
 
-window.axios.defaults.baseURL = 'https://api.vxetable.cn/demo'
+window.axios.defaults.baseURL = process.env.VUE_APP_SERVE_API_URL
 
 Vue.use(VxeUI)
 Vue.use(VxeUITable)

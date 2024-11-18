@@ -2,6 +2,17 @@
   position: relative;
   color: var(--vxe-ui-font-color);
   font-family: var(--vxe-ui-font-family);
+  &.is--active {
+    .vxe-upload--image-action-box {
+      border-color: var(--vxe-ui-font-primary-color);
+    }
+    .vxe-upload--file-action-btn {
+      & > .vxe-button {
+        border-color: var(--vxe-ui-font-primary-color);
+        border-style: var(--vxe-ui-upload-file-button-border-style);
+      }
+    }
+  }
   &.show--error {
     .vxe-upload--file-item {
       &.is--error {
