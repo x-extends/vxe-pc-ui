@@ -259,7 +259,7 @@ export default defineComponent({
     }
 
     const handleChange = (val: number | null, inputValue: string, evnt: Event | { type: string }) => {
-      const value = XEUtils.eqNull(val) ? null : Number(val)
+      const value = (val as any) === '' || XEUtils.eqNull(val) ? null : Number(val)
       const isChange = Number(value) !== props.modelValue
       if (isChange) {
         reactData.inputValue = inputValue || ''
@@ -277,7 +277,7 @@ export default defineComponent({
 
     const emitInputEvent = (inputValue: any, evnt: Event) => {
       const inpImmediate = computeInpImmediate.value
-      const value = inputValue ? XEUtils.toNumber(inputValue) : null
+      const value = inputValue === '' || XEUtils.eqNull(inputValue) ? null : XEUtils.toNumber(inputValue)
       reactData.inputValue = inputValue
       if (inpImmediate) {
         handleChange(value, inputValue, evnt)

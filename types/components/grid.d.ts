@@ -465,6 +465,9 @@ export interface VxeGridEventProps<D = any> {
   onRowDragstart?: VxeGridEvents.RowDragstart<D>
   onRowDragover?: VxeGridEvents.RowDragover<D>
   onRowDragend?: VxeGridEvents.RowDragend<D>
+  onColumnDragstart?: VxeGridEvents.ColumnDragstart<D>
+  onColumnDragover?: VxeGridEvents.ColumnDragover<D>
+  onColumnDragend?: VxeGridEvents.ColumnDragend<D>
 
   // grid
   onProxyQuery?: VxeGridEvents.ProxyQuery<D>
@@ -526,6 +529,9 @@ export interface VxeGridListeners<D = any> {
   rowDragstart?: VxeGridEvents.RowDragstart<D>
   rowDragover?: VxeGridEvents.RowDragover<D>
   rowDragend?: VxeGridEvents.RowDragend<D>
+  columnDragstart?: VxeGridEvents.ColumnDragstart<D>
+  columnDragover?: VxeGridEvents.ColumnDragover<D>
+  columnDragend?: VxeGridEvents.ColumnDragend<D>
 
   // grid
   proxyQuery?: VxeGridEvents.ProxyQuery<D>
@@ -587,6 +593,9 @@ export namespace VxeGridEvents {
   export type RowDragstart<D = any> = (params: VxeGridDefines.RowDragstartEventParams<D>) => void
   export type RowDragover<D = any> = (params: VxeGridDefines.RowDragoverEventParams<D>) => void
   export type RowDragend<D = any> = (params: VxeGridDefines.RowDragendEventParams<D>) => void
+  export type ColumnDragstart<D = any> = (params: VxeGridDefines.ColumnDragstartEventParams<D>) => void
+  export type ColumnDragover<D = any> = (params: VxeGridDefines.ColumnDragoverEventParams<D>) => void
+  export type ColumnDragend<D = any> = (params: VxeGridDefines.ColumnDragendEventParams<D>) => void
 
   export type ProxyQuery<D = any> = (params: VxeGridDefines.ProxyQueryEventParams<D>) => void
   export type ProxyDelete<D = any> = (params: VxeGridDefines.ProxyDeleteEventParams<D>) => void
