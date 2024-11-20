@@ -1427,7 +1427,7 @@ export default defineVxeComponent({
             click: $xeSelect.clickEvent,
             focus: $xeSelect.focusEvent,
             blur: $xeSelect.blurEvent,
-            suffixClick: $xeSelect.togglePanelEvent
+            'suffix-click': $xeSelect.togglePanelEvent
           },
           scopedSlots: prefixSlot
             ? {
@@ -1468,7 +1468,7 @@ export default defineVxeComponent({
                         prefixIcon: getIcon().INPUT_SEARCH
                       },
                       on: {
-                        modelValue: $xeSelect.modelSearchEvent,
+                        'model-value': $xeSelect.modelSearchEvent,
                         focus: $xeSelect.focusSearchEvent,
                         change: $xeSelect.triggerSearchEvent,
                         search: $xeSelect.triggerSearchEvent
