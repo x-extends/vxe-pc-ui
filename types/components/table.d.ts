@@ -2719,7 +2719,7 @@ export interface TableInternalData<D = any> {
   // 上一个拖动的行
   prevDragRow?: any
   // 上一个拖动的列
-  prevDragCol?: any
+  prevDragCol?: VxeTableDefines.ColumnInfo
   prevDragPos?: 'top' | 'bottom' | 'left' | 'right' | ''
 
   // 特殊标识
