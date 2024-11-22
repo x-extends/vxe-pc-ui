@@ -223,7 +223,7 @@ export default defineVxeComponent({
           const barElem = $xeSlider.$refs.refBarElem as HTMLDivElement
           if (barElem) {
             const barRect = barElem.getBoundingClientRect()
-            const trackWidth = (evnt.clientX - barRect.left) / 914
+            const trackWidth = (evnt.clientX - barRect.left) / barRect.width
             if (isEnd) {
               reactData.endValue = XEUtils.floor(Math.max(minNum, Math.min(maxNum, trackWidth * (maxNum - minNum) + minNum)))
             } else {
