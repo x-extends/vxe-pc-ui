@@ -389,6 +389,9 @@ export namespace VxeGridDefines {
   export interface RowDragstartEventParams<D = any> extends GridEventParams<D>, VxeTableDefines.RowDragstartEventParams<D> { }
   export interface RowDragoverEventParams<D = any> extends GridEventParams<D>, VxeTableDefines.RowDragoverEventParams<D> { }
   export interface RowDragendEventParams<D = any> extends GridEventParams<D>, VxeTableDefines.RowDragendEventParams<D> { }
+  export interface ColumnDragstartEventParams<D = any> extends GridEventParams<D>, VxeTableDefines.ColumnDragstartEventParams<D> { }
+  export interface ColumnDragoverEventParams<D = any> extends GridEventParams<D>, VxeTableDefines.ColumnDragoverEventParams<D> { }
+  export interface ColumnDragendEventParams<D = any> extends GridEventParams<D>, VxeTableDefines.ColumnDragendEventParams<D> { }
 
   export interface ProxyQueryEventParams<D = any> extends GridEventParams<D> {
     status: boolean

@@ -197,16 +197,18 @@ export default defineComponent({
         const domMouseup = document.onmouseup
         document.onmousemove = evnt => {
           evnt.preventDefault()
+          const el = refElem.value
           const barElem = refBarElem.value
-          if (barElem) {
+          if (el && barElem) {
             const barRect = barElem.getBoundingClientRect()
-            const trackWidth = (evnt.clientX - barRect.left) / 914
+            const trackWidth = (evnt.clientX - barRect.left) / barRect.width
             if (isEnd) {
               reactData.endValue = XEUtils.floor(Math.max(minNum, Math.min(maxNum, trackWidth * (maxNum - minNum) + minNum)))
             } else {
               reactData.startValue = XEUtils.floor(Math.max(minNum, Math.min(maxNum, trackWidth * (maxNum - minNum))))
             }
           }
+          console.log(reactData.endValue, reactData.startValue)
           updateBarStyle()
         }
         document.onmouseup = (evnt: MouseEvent) => {
