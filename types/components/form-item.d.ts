@@ -121,6 +121,7 @@ export namespace VxeFormItemPropTypes {
   export type Slots = {
     title?: string | ((params: VxeFormItemSlotTypes.TitleSlotParams) => VxeComponentSlotType | VxeComponentSlotType[]) | null
     default?: string | ((params: VxeFormItemSlotTypes.DefaultSlotParams) => VxeComponentSlotType | VxeComponentSlotType[]) | null
+    valid?: string | ((params: VxeFormItemSlotTypes.ValidSlotParams) => VxeComponentSlotType | VxeComponentSlotType[]) | null
     extra?: string | ((params: VxeFormItemSlotTypes.ExtraSlotParams) => VxeComponentSlotType | VxeComponentSlotType[]) | null
   }
 }
@@ -327,6 +328,12 @@ export namespace VxeFormItemSlotTypes {
      */
     property: string
   }
+  export interface ValidSlotParams<D = any> {
+    $form: VxeFormConstructor<D>
+    $grid: VxeGridConstructor | null
+    field: string
+    rule: VxeFormDefines.FormRule<D>
+  }
   export interface TitleSlotParams<D = any> extends DefaultSlotParams<D> {}
   export interface ExtraSlotParams<D = any> extends DefaultSlotParams<D> {}
 }
@@ -340,6 +347,7 @@ export interface VxeFormItemSlots {
    * 自定义标题模板
    */
   title: (params: VxeFormItemSlotTypes.TitleSlotParams) => any
+  valid: (params: VxeFormItemSlotTypes.ValidSlotParams) => any
   extra: (params: VxeFormItemSlotTypes.ExtraSlotParams) => any
 }
 

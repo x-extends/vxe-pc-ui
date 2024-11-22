@@ -164,7 +164,6 @@
     <p class="tip">默认渲染方式为配置式，不支持自定义的布局，可以通过设置 custom-layout 切换为自定义布局</p>
 
     <vxe-form
-    readonly
       ref="xForm3"
       :collapseStatus.sync="demo3.collapseStatus3"
       :data="demo3.formData3"
@@ -250,7 +249,7 @@
 
     <p class="tip">配置式表单</p>
 
-    <vxe-form :data="demo4.formData4" :items="demo4.formItems4">
+    <vxe-form :data="demo4.formData4" :items="demo4.formItems4" :rules="demo4.rules" :valid-config="{theme: 'beautify'}">
       <template #myaddress="{ data }">
         <vxe-input v-model="data.address" placeholder="自定义插槽模板"></vxe-input>
       </template>
@@ -372,6 +371,14 @@ export default Vue.extend({
           val3: '',
           flag: false,
           address: ''
+        },
+        rules: {
+          name: [
+            { required: true, message: '请输入名称' }
+          ],
+          role: [
+            { required: true, message: '请输入名称' }
+          ]
         },
         formItems4: [
           {

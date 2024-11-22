@@ -224,6 +224,7 @@ export const renderItemContent = (h: CreateElement, $xeForm: VxeFormConstructor 
   const { collapseAll } = formReactData
   const { slots, field, itemRender, collapseNode, errRule } = item
   const defaultSlot = slots ? slots.default : null
+  const validSlot = slots ? slots.valid : null
   const validOpts = $xeForm.computeValidOpts
   const collapseOpts = $xeForm.computeCollapseOpts
   const compConf = isEnableConf(itemRender) ? renderer.get(itemRender.name) : null
@@ -257,18 +258,27 @@ export const renderItemContent = (h: CreateElement, $xeForm: VxeFormConstructor 
     )
   }
   if (errRule && validOpts.showMessage) {
+    const validParams = { ...params, rule: errRule }
     contentVNs.push(
       h('div', {
-        class: 'vxe-form--item-valid',
+        class: 'vxe-form-item--valid-error-tip',
         style: errRule.maxWidth
           ? {
               width: toCssUnit(errRule.maxWidth)
             }
           : {}
       }, [
-        h('span', {
-          class: 'vxe-form--item-valid-msg'
-        }, errRule.message)
+        h('div', {
+          class: `vxe-form-item--valid-error-wrapper vxe-form-item--valid-error-theme-${validOpts.theme || 'normal'}`
+        }, [
+          validSlot
+            ? $xeForm.callSlot(validSlot, validParams, h)
+            : [
+                h('span', {
+                  class: 'vxe-form--item--valid-error-msg'
+                }, errRule.content || errRule.message)
+              ]
+        ])
       ])
     )
   }
