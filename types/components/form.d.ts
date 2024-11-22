@@ -289,7 +289,7 @@ export namespace VxeFormDefines {
      * 使用自定义校验函数，接收一个 Promise
      * @param params 参数
      */
-    validator?: string | ((params: RuleValidatorParams<D>) => void | Error | Promise<any>)
+    validator?: string | ((params: RuleValidatorParams<D>) => void | Error | Promise<void>)
     /**
      * 提示消息
      */

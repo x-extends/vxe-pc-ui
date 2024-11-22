@@ -248,7 +248,7 @@
 
     <p class="tip">配置式表单</p>
 
-    <vxe-form :data="demo4.formData4" :items="demo4.formItems4" :rules="demo4.rules">
+    <vxe-form :data="demo4.formData4" :items="demo4.formItems4" :rules="demo4.rules" :valid-config="{theme: 'beautify'}">
       <template #myaddress="{ data }">
         <vxe-input v-model="data.address" placeholder="自定义插槽模板"></vxe-input>
       </template>

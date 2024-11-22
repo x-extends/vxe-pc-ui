@@ -118,7 +118,7 @@
   }
 }
 
-.vxe-form--item-valid {
+.vxe-form-item--valid-error-tip {
   position: absolute;
   width: 100%;
   font-size: 12px;
@@ -129,10 +129,22 @@
   transform-origin: center top;
   transform: scaleY(0);
   transition: all 0.2s ease-in-out;
-  .vxe-form--item-valid-msg {
-    display: block;
-    line-height: 1.2em;
-    background-color: var(--vxe-ui-layout-background-color);
+  .vxe-form-item--valid-error-wrapper {
+    display: inline-block;
+    border-radius: var(--vxe-ui-base-border-radius);
+    pointer-events: auto;
+  }
+  .vxe-form-item--valid-error-theme-beautify {
+    padding: 0.2em 0.6em 0.3em 0.6em;
+    color: #fff;
+    background-color: var(--vxe-ui-status-error-color);
+    .vxe-form-item--valid-error-msg {
+      background: transparent;
+    }
+  }
+  .vxe-form-item--valid-error-theme-normal {
+    color: var(--vxe-ui-table-validate-error-color);
+    background-color: var(--vxe-ui-table-validate-error-background-color);
   }
 }
 
@@ -273,7 +285,7 @@
         border-color: var(--vxe-ui-form-validate-error-color);
       }
     }
-    .vxe-form--item-valid {
+    .vxe-form-item--valid-error-tip {
       opacity: 1;
       transform: scaleY(1);
     }
