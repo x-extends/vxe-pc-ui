@@ -208,7 +208,6 @@ export default defineComponent({
               reactData.startValue = XEUtils.floor(Math.max(minNum, Math.min(maxNum, trackWidth * (maxNum - minNum))))
             }
           }
-          console.log(reactData.endValue, reactData.startValue)
           updateBarStyle()
         }
         document.onmouseup = (evnt: MouseEvent) => {
