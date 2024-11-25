@@ -2729,6 +2729,21 @@ export interface TableInternalData<D = any> {
   initStatus: boolean
   isActivated: boolean
 
+  // 刷新属性
+  rceTimeout?: undefined | number
+
+  // 滚动属性
+  inVirtualScroll?: boolean
+  inBodyScroll?: boolean
+  bodyScrollType?: '' | 'left' | 'right'
+  inFooterScroll?: boolean
+  lcsTimeout?: undefined | number
+
+  lxRunTime?: undefined | number
+  lxTimeout?: undefined | number
+  lyRunTime?: undefined | number
+  lyTimeout?: undefined | number
+
   // 内部属性
   _lastResizeTime?: any
   _keyCtx?: any
