@@ -15,6 +15,18 @@ function getNodeUniqueId () {
   return XEUtils.uniqueId('node_')
 }
 
+function handleSetExpand (nodeid: string, expanded: boolean, expandedMaps: Record<string, boolean>) {
+  if (expanded) {
+    if (expandedMaps[nodeid]) {
+      expandedMaps[nodeid] = true
+    }
+  } else {
+    if (expandedMaps[nodeid]) {
+      delete expandedMaps[nodeid]
+    }
+  }
+}
+
 export default defineVxeComponent({
   name: 'VxeTree',
   mixins: [
@@ -266,7 +278,7 @@ export default defineVxeComponent({
       const $xeTree = this
       const reactData = $xeTree.reactData
 
-      const selectMaps: Record<string, boolean> = Object.assign(reactData.selectCheckboxMaps)
+      const selectMaps: Record<string, boolean> = Object.assign({}, reactData.selectCheckboxMaps)
       const childrenField = $xeTree.computeChildrenField
       if (checked) {
         XEUtils.eachTree(reactData.treeList, (node) => {
@@ -296,13 +308,13 @@ export default defineVxeComponent({
       const $xeTree = this
       const reactData = $xeTree.reactData
 
-      const expandedMaps: Record<string, boolean> = Object.assign(reactData.treeExpandedMaps)
+      const expandedMaps: Record<string, boolean> = Object.assign({}, reactData.treeExpandedMaps)
       if (nodeids) {
         if (!XEUtils.isArray(nodeids)) {
           nodeids = [nodeids]
         }
         nodeids.forEach((nodeid: string) => {
-          $xeTree.handleSetExpand(nodeid, expanded, expandedMaps)
+          handleSetExpand(nodeid, expanded, expandedMaps)
         })
         reactData.treeExpandedMaps = expandedMaps
       }
@@ -312,14 +324,14 @@ export default defineVxeComponent({
       const $xeTree = this
       const reactData = $xeTree.reactData
 
-      const expandedMaps: Record<string, boolean> = Object.assign(reactData.treeExpandedMaps)
+      const expandedMaps: Record<string, boolean> = Object.assign({}, reactData.treeExpandedMaps)
       if (nodes) {
         if (!XEUtils.isArray(nodes)) {
           nodes = [nodes]
         }
         nodes.forEach((node: any) => {
           const nodeid = $xeTree.getNodeId(node)
-          $xeTree.handleSetExpand(nodeid, expanded, expandedMaps)
+          handleSetExpand(nodeid, expanded, expandedMaps)
         })
         reactData.treeExpandedMaps = expandedMaps
       }
@@ -329,13 +341,13 @@ export default defineVxeComponent({
       const $xeTree = this
       const reactData = $xeTree.reactData
 
-      const expandedMaps: Record<string, boolean> = Object.assign(reactData.treeExpandedMaps)
+      const expandedMaps: Record<string, boolean> = Object.assign({}, reactData.treeExpandedMaps)
       if (nodeids) {
         if (!XEUtils.isArray(nodeids)) {
           nodeids = [nodeids]
         }
         nodeids.forEach((nodeid: string) => {
-          $xeTree.handleSetExpand(nodeid, !expandedMaps[nodeid], expandedMaps)
+          handleSetExpand(nodeid, !expandedMaps[nodeid], expandedMaps)
         })
         reactData.treeExpandedMaps = expandedMaps
       }
@@ -345,14 +357,14 @@ export default defineVxeComponent({
       const $xeTree = this
       const reactData = $xeTree.reactData
 
-      const expandedMaps: Record<string, boolean> = Object.assign(reactData.treeExpandedMaps)
+      const expandedMaps: Record<string, boolean> = Object.assign({}, reactData.treeExpandedMaps)
       if (nodes) {
         if (!XEUtils.isArray(nodes)) {
           nodes = [nodes]
         }
         nodes.forEach((node: any) => {
           const nodeid = $xeTree.getNodeId(node)
-          $xeTree.handleSetExpand(nodeid, !expandedMaps[nodeid], expandedMaps)
+          handleSetExpand(nodeid, !expandedMaps[nodeid], expandedMaps)
         })
         reactData.treeExpandedMaps = expandedMaps
       }
@@ -362,7 +374,7 @@ export default defineVxeComponent({
       const $xeTree = this
       const reactData = $xeTree.reactData
 
-      const expandedMaps: Record<string, boolean> = Object.assign(reactData.treeExpandedMaps)
+      const expandedMaps: Record<string, boolean> = Object.assign({}, reactData.treeExpandedMaps)
       const childrenField = $xeTree.computeChildrenField
       XEUtils.eachTree(reactData.treeList, (node) => {
         const nodeid = $xeTree.getNodeId(node)
@@ -554,17 +566,6 @@ export default defineVxeComponent({
       }
       reactData.selectCheckboxMaps = selectKeyMaps
     },
-    handleSetExpand  (nodeid: string, expanded: boolean, expandedMaps: Record<string, boolean>) {
-      if (expanded) {
-        if (expandedMaps[nodeid]) {
-          expandedMaps[nodeid] = true
-        }
-      } else {
-        if (expandedMaps[nodeid]) {
-          delete expandedMaps[nodeid]
-        }
-      }
-    },
     createNode (records: any[]) {
       const $xeTree = this
 
@@ -708,27 +709,30 @@ export default defineVxeComponent({
       const { checkStrictly } = checkboxOpts
       return new Promise(resolve => {
         if (loadMethod) {
-          const { treeExpandLazyLoadedMaps } = reactData
+          const tempExpandLazyLoadedMaps = Object.assign({}, reactData.treeExpandLazyLoadedMaps)
           const { nodeMaps } = reactData
           const nodeid = $xeTree.getNodeId(node)
           const nodeItem = nodeMaps[nodeid]
-          treeExpandLazyLoadedMaps[nodeid] = true
+          tempExpandLazyLoadedMaps[nodeid] = true
+          reactData.treeExpandLazyLoadedMaps = tempExpandLazyLoadedMaps
           Promise.resolve(
             loadMethod({ $tree: $xeTree, node })
           ).then((childRecords: any) => {
+            const { treeExpandLazyLoadedMaps } = reactData
             nodeItem.treeLoaded = true
             if (treeExpandLazyLoadedMaps[nodeid]) {
-              delete treeExpandLazyLoadedMaps[nodeid]
+              treeExpandLazyLoadedMaps[nodeid] = false
             }
             if (!XEUtils.isArray(childRecords)) {
               childRecords = []
             }
             if (childRecords) {
               return $xeTree.loadChildrenNode(node, childRecords).then(childRows => {
-                const { treeExpandedMaps } = reactData
-                if (childRows.length && !treeExpandedMaps[nodeid]) {
-                  treeExpandedMaps[nodeid] = true
+                const tempExpandedMaps = Object.assign({}, reactData.treeExpandedMaps)
+                if (childRows.length && !tempExpandedMaps[nodeid]) {
+                  tempExpandedMaps[nodeid] = true
                 }
+                reactData.treeExpandedMaps = tempExpandedMaps
                 // 如果当前节点已选中，则展开后子节点也被选中
                 if (!checkStrictly && $xeTree.isCheckedByCheckboxNodeId(nodeid)) {
                   $xeTree.handleCheckedCheckboxNode(childRows.map((item: any) => $xeTree.getNodeId(item)), true)
@@ -743,9 +747,9 @@ export default defineVxeComponent({
             }
           }).catch((e) => {
             const { treeExpandLazyLoadedMaps } = reactData
-            nodeItem.treeLoaded = false
+            nodeItem.treeLoaded = true
             if (treeExpandLazyLoadedMaps[nodeid]) {
-              delete treeExpandLazyLoadedMaps[nodeid]
+              treeExpandLazyLoadedMaps[nodeid] = false
             }
             $xeTree.updateNodeLine(node)
             $xeTree.dispatchEvent('load-error', { node, data: e }, new Event('load-error'))
@@ -1089,24 +1093,6 @@ export default defineVxeComponent({
       const isExpand = treeExpandedMaps[nodeid]
       const nodeItem = nodeMaps[nodeid]
       const nodeValue = XEUtils.get(node, titleField)
-      const childVns: VNode[] = []
-      if (hasChild && treeExpandedMaps[nodeid]) {
-        if (showLine) {
-          childVns.push(
-            h('div', {
-              key: 'line',
-              class: 'vxe-tree--node-child-line',
-              style: {
-                height: `calc(${nodeItem.lineCount} * var(--vxe-ui-tree-node-height) - var(--vxe-ui-tree-node-height) / 2)`,
-                left: `${(nodeItem.level + 1) * (indent || 1)}px`
-              }
-            })
-          )
-        }
-        childList.forEach(childItem => {
-          childVns.push($xeTree.renderNode(h, childItem))
-        })
-      }
 
       let isRadioChecked = false
       if (showRadio) {
@@ -1126,6 +1112,25 @@ export default defineVxeComponent({
         isLazyLoading = !!treeExpandLazyLoadedMaps[nodeid]
         hasLazyChilds = node[hasChildField]
         isLazyLoaded = !!nodeItem.treeLoaded
+      }
+
+      const childVns: VNode[] = []
+      if (hasChild && treeExpandedMaps[nodeid]) {
+        if (showLine) {
+          childVns.push(
+            h('div', {
+              key: 'line',
+              class: 'vxe-tree--node-child-line',
+              style: {
+                height: `calc(${nodeItem.lineCount} * var(--vxe-ui-tree-node-height) - var(--vxe-ui-tree-node-height) / 2)`,
+                left: `${(nodeItem.level + 1) * (indent || 1)}px`
+              }
+            })
+          )
+        }
+        childList.forEach(childItem => {
+          childVns.push($xeTree.renderNode(h, childItem))
+        })
       }
 
       return h('div', {
