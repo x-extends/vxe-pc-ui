@@ -18,6 +18,10 @@ export default defineVxeComponent({
   },
   props: {
     value: String as PropType<VxePasswordInputPropTypes.ModelValue>,
+    immediate: {
+      type: Boolean as PropType<VxePasswordInputPropTypes.Immediate>,
+      default: true
+    },
     name: String as PropType<VxePasswordInputPropTypes.Name>,
     clearable: {
       type: Boolean as PropType<VxePasswordInputPropTypes.Clearable>,
@@ -109,6 +113,13 @@ export default defineVxeComponent({
         return 'text'
       }
       return 'password'
+    },
+    computeInpImmediate () {
+      const $xePasswordInput = this
+      const props = $xePasswordInput
+
+      const { immediate } = props
+      return immediate
     }
   },
   methods: {
@@ -167,8 +178,13 @@ export default defineVxeComponent({
       const $xePasswordInput = this
       const reactData = $xePasswordInput.reactData
 
+      const inpImmediate = $xePasswordInput.computeInpImmediate
       reactData.inputValue = value
-      $xePasswordInput.dispatchEvent('input', { value }, evnt)
+      if (inpImmediate) {
+        $xePasswordInput.handleChange(value, evnt)
+      } else {
+        $xePasswordInput.dispatchEvent('input', { value }, evnt)
+      }
     },
     inputEvent (evnt: Event & { type: 'input' }) {
       const $xePasswordInput = this
