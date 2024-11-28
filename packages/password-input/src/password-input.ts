@@ -10,6 +10,10 @@ export default defineComponent({
   name: 'VxePasswordInput',
   props: {
     modelValue: String as PropType<VxePasswordInputPropTypes.ModelValue>,
+    immediate: {
+      type: Boolean as PropType<VxePasswordInputPropTypes.Immediate>,
+      default: true
+    },
     name: String as PropType<VxePasswordInputPropTypes.Name>,
     clearable: {
       type: Boolean as PropType<VxePasswordInputPropTypes.Clearable>,
@@ -112,14 +116,24 @@ export default defineComponent({
       return 'password'
     })
 
+    const computeInpImmediate = computed(() => {
+      const { immediate } = props
+      return immediate
+    })
+
     const triggerEvent = (evnt: Event & { type: 'input' | 'change' | 'click' | 'focus' | 'blur' }) => {
       const { inputValue } = reactData
       passwordInputMethods.dispatchEvent(evnt.type, { value: inputValue }, evnt)
     }
 
     const emitInputEvent = (value: any, evnt: Event) => {
+      const inpImmediate = computeInpImmediate.value
       reactData.inputValue = value
-      passwordInputMethods.dispatchEvent('input', { value }, evnt)
+      if (inpImmediate) {
+        handleChange(value, evnt)
+      } else {
+        passwordInputMethods.dispatchEvent('input', { value }, evnt)
+      }
     }
 
     const inputEvent = (evnt: Event & { type: 'input' }) => {

@@ -25,6 +25,7 @@ export interface VxePasswordInputPrivateRef extends PasswordInputPrivateRef { }
 export namespace VxePasswordInputPropTypes {
   export type Size = VxeComponentSizeType
   export type ModelValue = string | null
+  export type Immediate = boolean
   export type ClassName = string
   export type Name = string
   export type Clearable = boolean
@@ -46,6 +47,7 @@ export namespace VxePasswordInputPropTypes {
 export interface VxePasswordInputProps {
   size?: VxePasswordInputPropTypes.Size
   modelValue?: VxePasswordInputPropTypes.ModelValue
+  immediate?: VxePasswordInputPropTypes.Immediate
   className?: VxePasswordInputPropTypes.ClassName
   name?: VxePasswordInputPropTypes.Name
   clearable?: VxePasswordInputPropTypes.Clearable

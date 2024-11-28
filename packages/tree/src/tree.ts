@@ -382,7 +382,7 @@ export default defineComponent({
         return nextTick()
       },
       setAllCheckboxNode (checked) {
-        const selectMaps: Record<string, boolean> = Object.assign(reactData.selectCheckboxMaps)
+        const selectMaps: Record<string, boolean> = Object.assign({}, reactData.selectCheckboxMaps)
         const childrenField = computeChildrenField.value
         if (checked) {
           XEUtils.eachTree(reactData.treeList, (node) => {
@@ -404,7 +404,7 @@ export default defineComponent({
         return nextTick()
       },
       setExpandByNodeId (nodeids, expanded) {
-        const expandedMaps: Record<string, boolean> = Object.assign(reactData.treeExpandedMaps)
+        const expandedMaps: Record<string, boolean> = Object.assign({}, reactData.treeExpandedMaps)
         if (nodeids) {
           if (!XEUtils.isArray(nodeids)) {
             nodeids = [nodeids]
@@ -417,7 +417,7 @@ export default defineComponent({
         return nextTick()
       },
       setExpandNode (nodes, expanded) {
-        const expandedMaps: Record<string, boolean> = Object.assign(reactData.treeExpandedMaps)
+        const expandedMaps: Record<string, boolean> = Object.assign({}, reactData.treeExpandedMaps)
         if (nodes) {
           if (!XEUtils.isArray(nodes)) {
             nodes = [nodes]
@@ -431,7 +431,7 @@ export default defineComponent({
         return nextTick()
       },
       toggleExpandByNodeId (nodeids) {
-        const expandedMaps: Record<string, boolean> = Object.assign(reactData.treeExpandedMaps)
+        const expandedMaps: Record<string, boolean> = Object.assign({}, reactData.treeExpandedMaps)
         if (nodeids) {
           if (!XEUtils.isArray(nodeids)) {
             nodeids = [nodeids]
@@ -444,7 +444,7 @@ export default defineComponent({
         return nextTick()
       },
       toggleExpandNode (nodes) {
-        const expandedMaps: Record<string, boolean> = Object.assign(reactData.treeExpandedMaps)
+        const expandedMaps: Record<string, boolean> = Object.assign({}, reactData.treeExpandedMaps)
         if (nodes) {
           if (!XEUtils.isArray(nodes)) {
             nodes = [nodes]
@@ -458,7 +458,7 @@ export default defineComponent({
         return nextTick()
       },
       setAllExpandNode () {
-        const expandedMaps: Record<string, boolean> = Object.assign(reactData.treeExpandedMaps)
+        const expandedMaps: Record<string, boolean> = Object.assign({}, reactData.treeExpandedMaps)
         const childrenField = computeChildrenField.value
         XEUtils.eachTree(reactData.treeList, (node) => {
           const nodeid = getNodeId(node)
@@ -639,27 +639,30 @@ export default defineComponent({
       const { checkStrictly } = checkboxOpts
       return new Promise(resolve => {
         if (loadMethod) {
-          const { treeExpandLazyLoadedMaps } = reactData
+          const tempExpandLazyLoadedMaps = Object.assign({}, reactData.treeExpandLazyLoadedMaps)
           const { nodeMaps } = reactData
           const nodeid = getNodeId(node)
           const nodeItem = nodeMaps[nodeid]
-          treeExpandLazyLoadedMaps[nodeid] = true
+          tempExpandLazyLoadedMaps[nodeid] = true
+          reactData.treeExpandLazyLoadedMaps = tempExpandLazyLoadedMaps
           Promise.resolve(
             loadMethod({ $tree: $xeTree, node })
           ).then((childRecords: any) => {
+            const { treeExpandLazyLoadedMaps } = reactData
             nodeItem.treeLoaded = true
             if (treeExpandLazyLoadedMaps[nodeid]) {
-              delete treeExpandLazyLoadedMaps[nodeid]
+              treeExpandLazyLoadedMaps[nodeid] = false
             }
             if (!XEUtils.isArray(childRecords)) {
               childRecords = []
             }
             if (childRecords) {
               return treeMethods.loadChildrenNode(node, childRecords).then(childRows => {
-                const { treeExpandedMaps } = reactData
-                if (childRows.length && !treeExpandedMaps[nodeid]) {
-                  treeExpandedMaps[nodeid] = true
+                const tempExpandedMaps = Object.assign({}, reactData.treeExpandedMaps)
+                if (childRows.length && !tempExpandedMaps[nodeid]) {
+                  tempExpandedMaps[nodeid] = true
                 }
+                reactData.treeExpandedMaps = tempExpandedMaps
                 // 如果当前节点已选中，则展开后子节点也被选中
                 if (!checkStrictly && treeMethods.isCheckedByCheckboxNodeId(nodeid)) {
                   handleCheckedCheckboxNode(childRows.map((item: any) => getNodeId(item)), true)
@@ -676,7 +679,7 @@ export default defineComponent({
             const { treeExpandLazyLoadedMaps } = reactData
             nodeItem.treeLoaded = false
             if (treeExpandLazyLoadedMaps[nodeid]) {
-              delete treeExpandLazyLoadedMaps[nodeid]
+              treeExpandLazyLoadedMaps[nodeid] = false
             }
             updateNodeLine(node)
             dispatchEvent('load-error', { node, data: e }, new Event('load-error'))
