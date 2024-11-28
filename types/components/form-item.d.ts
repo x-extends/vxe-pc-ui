@@ -70,7 +70,13 @@ export namespace VxeFormItemPropTypes {
 
   export type TitleOverflow = VxeFormPropTypes.TitleOverflow
 
-  export type ResetValue = any
+  export type ResetValue = string | number | any[] | object | RegExp | null | undefined | ((params: {
+    $grid: VxeGridConstructor | null
+    $form: VxeFormConstructor
+    data: any
+    item: VxeFormDefines.ItemInfo
+    field: string
+  }) => any)
   export type Visible = boolean
   export type VisibleMethod = (params: FormItemVisibleParams) => boolean
   export type ShowContent = boolean

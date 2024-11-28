@@ -61,13 +61,6 @@ const validErrorRuleValue = (rule: VxeFormDefines.FormRule, val: any) => {
   return false
 }
 
-function getResetValue (value: any, resetValue: any) {
-  if (XEUtils.isArray(value)) {
-    resetValue = []
-  }
-  return resetValue
-}
-
 export default defineComponent({
   name: 'VxeForm',
   props: {
@@ -308,19 +301,32 @@ export default defineComponent({
       return nextTick()
     }
 
+    const getResetValue = (item: VxeFormDefines.ItemInfo, data: any) => {
+      const { field, resetValue } = item
+      const itemValue = XEUtils.get(data, field)
+      if (XEUtils.isFunction(resetValue)) {
+        return resetValue({ field, item, data, $form: $xeForm, $grid: $xeForm.xegrid })
+      } else if (resetValue === null) {
+        // 默认
+        if (XEUtils.isArray(itemValue)) {
+          return []
+        }
+      }
+    }
+
     const reset = () => {
       const { data } = props
       const itemList = getItems()
       if (data) {
         itemList.forEach((item) => {
-          const { field, resetValue, itemRender } = item
+          const { field, itemRender } = item
           if (isEnableConf(itemRender)) {
             const compConf = renderer.get(itemRender.name)
             const fiResetMethod = compConf ? (compConf.formItemResetMethod || compConf.itemResetMethod) : null
             if (compConf && fiResetMethod) {
               fiResetMethod({ data, field, property: field, item, $form: $xeForm, $grid: $xeForm.xegrid })
             } else if (field) {
-              XEUtils.set(data, field, resetValue === null ? getResetValue(XEUtils.get(data, field), undefined) : XEUtils.clone(resetValue, true))
+              XEUtils.set(data, field, getResetValue(item, data))
             }
           }
         })
