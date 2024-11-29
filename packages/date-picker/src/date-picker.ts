@@ -1020,7 +1020,19 @@ export default defineComponent({
     const isDateDisabled = (item: { date: Date }) => {
       const { disabledMethod } = props
       const { datePanelType } = reactData
-      return disabledMethod && disabledMethod({ type: datePanelType, viewType: datePanelType, date: item.date, $datePicker: $xeDatePicker })
+      const dateStartTime = computeDateStartTime.value
+      const dateEndTime = computeDateEndTime.value
+      const { date } = item
+      if (dateStartTime && dateStartTime.getTime() > date.getTime()) {
+        return true
+      }
+      if (dateEndTime && dateEndTime.getTime() < date.getTime()) {
+        return true
+      }
+      if (disabledMethod) {
+        return disabledMethod({ type: datePanelType, viewType: datePanelType, date, $datePicker: $xeDatePicker })
+      }
+      return false
     }
 
     const dateSelectItem = (date: Date) => {

@@ -524,7 +524,7 @@ declare module '@vxe-ui/core' {
     /**
      * 表单项 - 设置自动聚焦元素 class
      */
-    formItemAutoFocus?: string | ((params: VxeGlobalRendererHandles.RenderFormItemAutoFocusParams) => HTMLElement | null)
+    formItemAutoFocus?: boolean | string | ((params: VxeGlobalRendererHandles.RenderFormItemAutoFocusParams) => HTMLElement | null)
     /**
      * 表单项 - 设置表单项的 class
      */

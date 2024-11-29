@@ -1,5 +1,5 @@
 import { defineComponent, ref, h, reactive, inject, PropType, provide, computed, onUnmounted, createCommentVNode, watch, nextTick, onMounted } from 'vue'
-import { createEvent, getConfig, getIcon, globalEvents, permission } from '../../ui'
+import { createEvent, getConfig, getIcon, globalEvents, permission, renderEmptyElement } from '../../ui'
 import { getSlotVNs } from '../../ui/src/vn'
 import { toCssUnit } from '../..//ui/src/dom'
 import { isEnableConf } from '../..//ui/src/utils'
@@ -572,6 +572,7 @@ export default defineComponent({
       const tabOptions = computeTabOptions.value
       const tabStaticOptions = computeTabStaticOptions.value
       const defaultSlot = slots.default
+      const footerSlot = slots.footer
       const tabList = defaultSlot ? tabStaticOptions : tabOptions
 
       return h('div', {
@@ -592,7 +593,12 @@ export default defineComponent({
         renderTabHeader(tabList),
         h('div', {
           class: 'vxe-tabs-pane'
-        }, renderTabContent(tabList))
+        }, renderTabContent(tabList)),
+        footerSlot
+          ? h('div', {
+            class: 'vxe-tabs-footer'
+          }, callSlot(footerSlot, {}))
+          : renderEmptyElement($xeTabs)
       ])
     }
 

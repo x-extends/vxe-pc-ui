@@ -273,6 +273,7 @@ export namespace VxeTabsSlotTypes {
     name: VxeTabsPropTypes.ModelValue
   }
   export interface ExtraSlotParams {}
+  export interface FooterSlotParams {}
 }
 
 export interface VxeTabsSlots {
@@ -287,6 +288,10 @@ export interface VxeTabsSlots {
 
   default?: (params: VxeTabsSlotTypes.DefaultSlotParams) => any
   extra?: (params: VxeTabsSlotTypes.ExtraSlotParams) => any
+  /**
+   * 自定义页签底部模板
+   */
+  footer?(params: VxeTabsSlotTypes.FooterSlotParams): any
 }
 
 export const Tabs: typeof VxeTabs
