@@ -639,6 +639,7 @@ export default defineVxeComponent({
       const tabOptions = $xeTabs.computeTabOptions
       const tabStaticOptions = $xeTabs.computeTabStaticOptions
       const defaultSlot = slots.default
+      const footerSlot = slots.footer
       const tabList = defaultSlot ? tabStaticOptions : tabOptions
 
       return h('div', {
@@ -659,7 +660,12 @@ export default defineVxeComponent({
         $xeTabs.renderTabHeader(h, tabList),
         h('div', {
           class: 'vxe-tabs-pane'
-        }, $xeTabs.renderTabContent(h, tabList))
+        }, $xeTabs.renderTabContent(h, tabList)),
+        footerSlot
+          ? h('div', {
+            class: 'vxe-tabs-footer'
+          }, $xeTabs.callSlot(footerSlot, {}, h))
+          : renderEmptyElement($xeTabs)
       ])
     }
   },

@@ -382,8 +382,13 @@ export default defineVxeComponent({
             // 如果指定了聚焦 class
             if (XEUtils.isFunction(autoFocus)) {
               inputElem = autoFocus({ $form: $xeForm, $grid: $xeGrid, item, data: props.data, field })
-            } else if (autoFocus) {
-              inputElem = el.querySelector(`.${item.id} ${autoFocus}`) as HTMLInputElement
+            } else {
+              if (autoFocus === true) {
+                // 自动匹配模式，会自动匹配第一个可输入元素
+                inputElem = el.querySelector(`.${item.id} input,textarea`)
+              } else if (autoFocus) {
+                inputElem = el.querySelector(`.${item.id} ${autoFocus}`) as HTMLInputElement
+              }
             }
             if (inputElem) {
               inputElem.focus()

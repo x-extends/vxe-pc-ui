@@ -327,12 +327,15 @@ function oldFormItemRadioAndCheckboxRender (h: CreateElement, renderOpts: any, p
  */
 renderer.mixin({
   input: {
+    formItemAutoFocus: 'input',
     renderFormItemContent: nativeItemRender
   },
   textarea: {
+    formItemAutoFocus: 'textarea',
     renderFormItemContent: nativeItemRender
   },
   select: {
+    formItemAutoFocus: 'input',
     renderFormItemContent (h: CreateElement, renderOpts: any, params: any) {
       return [
         h('select', {
@@ -347,18 +350,23 @@ renderer.mixin({
     }
   },
   VxeInput: {
+    formItemAutoFocus: 'input',
     renderFormItemContent: defaultItemRender
   },
   VxeNumberInput: {
+    formItemAutoFocus: 'input',
     renderFormItemContent: defaultItemRender
   },
   VxePasswordInput: {
+    formItemAutoFocus: 'input',
     renderFormItemContent: defaultItemRender
   },
   VxeTextarea: {
+    formItemAutoFocus: 'textarea',
     renderFormItemContent: defaultItemRender
   },
   VxeDatePicker: {
+    formItemAutoFocus: 'input',
     renderFormItemContent: defaultItemRender
   },
   VxeButton: {
@@ -381,6 +389,7 @@ renderer.mixin({
     }
   },
   VxeSelect: {
+    formItemAutoFocus: 'input',
     renderFormItemContent (h: CreateElement, renderOpts, params) {
       const { data, field } = params
       const { options, optionProps, optionGroups, optionGroupProps } = renderOpts
@@ -394,6 +403,7 @@ renderer.mixin({
     }
   },
   VxeTreeSelect: {
+    formItemAutoFocus: 'input',
     renderFormItemContent (h: CreateElement, renderOpts: any, params: any) {
       const { data, field } = params
       const { options, optionProps } = renderOpts
@@ -407,6 +417,7 @@ renderer.mixin({
     }
   },
   VxeTableSelect: {
+    formItemAutoFocus: 'input',
     renderFormItemContent (h: CreateElement, renderOpts: any, params: any) {
       const { data, field } = params
       const { options, optionProps } = renderOpts
@@ -481,9 +492,11 @@ renderer.mixin({
 
   // 以下已废弃
   $input: {
+    formItemAutoFocus: 'input',
     renderFormItemContent: oldItemRender
   },
   $textarea: {
+    formItemAutoFocus: 'textarea',
     renderFormItemContent: oldItemRender
   },
   $button: {
@@ -493,6 +506,7 @@ renderer.mixin({
     renderFormItemContent: oldButtonsItemRender
   },
   $select: {
+    formItemAutoFocus: 'input',
     renderFormItemContent (h: CreateElement, renderOpts, params) {
       const { data, field } = params
       const { options, optionProps, optionGroups, optionGroupProps } = renderOpts

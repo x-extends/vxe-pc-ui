@@ -1203,7 +1203,19 @@ export default defineVxeComponent({
 
       const { disabledMethod } = props
       const { datePanelType } = reactData
-      return disabledMethod && disabledMethod({ type: datePanelType, viewType: datePanelType, date: item.date, $datePicker: $xeDatePicker as VxeDatePickerConstructor })
+      const dateStartTime = $xeDatePicker.computeDateStartTime
+      const dateEndTime = $xeDatePicker.computeDateEndTime
+      const { date } = item
+      if (dateStartTime && dateStartTime.getTime() > date.getTime()) {
+        return true
+      }
+      if (dateEndTime && dateEndTime.getTime() < date.getTime()) {
+        return true
+      }
+      if (disabledMethod) {
+        return disabledMethod({ type: datePanelType, viewType: datePanelType, date, $datePicker: $xeDatePicker as VxeDatePickerConstructor })
+      }
+      return false
     },
     dateSelectItem  (date: Date) {
       const $xeDatePicker = this
