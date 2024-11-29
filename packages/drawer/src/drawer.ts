@@ -186,7 +186,7 @@ export default defineVxeComponent({
       const boxElem = $xeDrawer.$refs.refDrawerBox as HTMLDialogElement
       return boxElem
     },
-    recalculate  () {
+    recalculate () {
       const $xeDrawer = this
       const props = $xeDrawer
 
@@ -275,12 +275,12 @@ export default defineVxeComponent({
         reactData.initialized = true
       }
       if (!visible) {
-        $xeDrawer.recalculate()
         reactData.visible = true
         reactData.contentVisible = false
         $xeDrawer.updateZindex()
         allActiveDrawers.push($xeDrawer)
         setTimeout(() => {
+          $xeDrawer.recalculate()
           reactData.contentVisible = true
           $xeDrawer.$nextTick(() => {
             if (showFooter) {
@@ -581,7 +581,6 @@ export default defineVxeComponent({
       if (props.value) {
         $xeDrawer.openDrawer()
       }
-      $xeDrawer.recalculate()
     })
     if (props.escClosable) {
       globalEvents.on($xeDrawer, 'keydown', $xeDrawer.handleGlobalKeydownEvent)
