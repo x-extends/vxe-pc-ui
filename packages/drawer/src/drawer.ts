@@ -231,12 +231,12 @@ export default defineComponent({
         reactData.initialized = true
       }
       if (!visible) {
-        recalculate()
         reactData.visible = true
         reactData.contentVisible = false
         updateZindex()
         allActiveDrawers.push($xeDrawer)
         setTimeout(() => {
+          recalculate()
           reactData.contentVisible = true
           nextTick(() => {
             if (showFooter) {
