@@ -1192,6 +1192,10 @@ export namespace VxeTablePropTypes {
      */
     isPaste?: boolean
     /**
+     * 只对 tree-config 启用有效，是否深层粘贴，用于树结构，启用后粘贴时会覆盖到子级数据进行粘贴
+     */
+    isDeepPaste?: boolean
+    /**
      * 是否填充粘贴，如果启用了，当被选取的粘贴单元格与粘贴单元格的行与列数量不匹配时，会将内容强制粘贴所选的单元格
      */
     isFillPaste?: boolean
@@ -2972,9 +2976,18 @@ export interface TableMethods<DT = any> {
    */
   getCheckboxRecords(isFull?: boolean): DT[]
   /**
-   * 只对 tree-config 有效，获取行的父级
+   * 只对 tree-config 有效，用于树形结构，获取指定行的子级
    */
-  getParentRow(rowOrRowid: any): DT | null
+  getTreeRowChildren(rowOrRowid: any): DT[]
+  /**
+   * 只对 tree-config 有效，用于树形结构，获取指定行的父级
+   */
+  getTreeParentRow(rowOrRowid: any): DT | null
+   /**
+    * 已废弃，请使用 getTreeParentRow
+    * @deprecated
+    */
+   getParentRow(rowOrRowid: any): DT | null
   /**
    * 根据行的唯一主键获取行
    * @param rowid 行主键
