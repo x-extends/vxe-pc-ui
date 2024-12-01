@@ -31,8 +31,6 @@ export const readFile: VxeUploadDefines.ReadFileFunction
 
 declare module '@vxe-ui/core' {
   export interface VxeUIExport {
-    uiVersion: string
-    tableVersion: string
     loading: LoadingController
     modal: ModalController
     drawer: DrawerController

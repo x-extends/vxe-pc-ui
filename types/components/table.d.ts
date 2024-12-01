@@ -848,6 +848,10 @@ export namespace VxeTablePropTypes {
      */
     showLine?: boolean
     /**
+     * 树结构序号显示模式，支持层级序号和自增序号（仅支持 transform）
+     */
+    seqMode?: 'default' | 'increasing' | ''
+    /**
      * 默认展开所有子孙树节点（只会在初始化时被触发一次）
      */
     expandAll?: boolean
