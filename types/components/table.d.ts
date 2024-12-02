@@ -581,6 +581,14 @@ export namespace VxeTablePropTypes {
    */
   export interface ResizableConfig<D = VxeTablePropTypes.Row> {
     /**
+     * 列宽拖拽模式，支持自适应和固定模式
+     */
+    dragMode?: 'auto' | 'fixed' | ''
+    /**
+     * 显示列宽拖拽过程的提示
+     */
+    showDragTip?: boolean
+    /**
      * 列宽拖动的最小宽度
      */
     minWidth?: number | string | ((params: {
