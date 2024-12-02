@@ -110,7 +110,7 @@ setConfig({
     validConfig: {
       showMessage: true,
       autoPos: true,
-      theme: 'normal'
+      theme: 'beautify'
     },
     tooltipConfig: {
       enterable: true

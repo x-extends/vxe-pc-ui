@@ -46,6 +46,7 @@ export interface TablePrivateRef {
   refLeftContainer: Ref<HTMLDivElement>
   refRightContainer: Ref<HTMLDivElement>
   refCellResizeBar: Ref<HTMLDivElement>
+  refCellResizeTip: Ref<HTMLDivElement>
   refScrollXVirtualElem: Ref<HTMLDivElement | undefined>
   refScrollYVirtualElem: Ref<HTMLDivElement | undefined>
   refScrollXHandleElem: Ref<HTMLDivElement | undefined>
@@ -610,6 +611,14 @@ export namespace VxeTablePropTypes {
    * 列调整配置项
    */
   export interface ResizableConfig<D = VxeTablePropTypes.Row> {
+    /**
+     * 列宽拖拽模式，支持自适应和固定模式
+     */
+    dragMode?: 'auto' | 'fixed' | ''
+    /**
+     * 显示列宽拖拽提示，拖拽过程中实时显示列宽
+     */
+    showDragTip?: boolean
     /**
      * 列宽拖动的最小宽度
      */
