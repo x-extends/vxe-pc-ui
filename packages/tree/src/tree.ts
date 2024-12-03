@@ -17,7 +17,7 @@ function getNodeUniqueId () {
 
 function handleSetExpand (nodeid: string, expanded: boolean, expandedMaps: Record<string, boolean>) {
   if (expanded) {
-    if (expandedMaps[nodeid]) {
+    if (!expandedMaps[nodeid]) {
       expandedMaps[nodeid] = true
     }
   } else {
