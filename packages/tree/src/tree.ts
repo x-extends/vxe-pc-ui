@@ -288,9 +288,9 @@ export default defineComponent({
       emit('update:checkNodeKey', value)
     }
 
-    const setRadioNode = (node: any, checked: boolean) => {
+    const setRadioNode = (node: any) => {
       if (node) {
-        reactData.selectRadioKey = checked ? getNodeId(node) : null
+        reactData.selectRadioKey = getNodeId(node)
       }
       return nextTick()
     }
@@ -370,19 +370,82 @@ export default defineComponent({
 
     const treeMethods: TreeMethods = {
       dispatchEvent,
+      clearCurrentNode () {
+        reactData.currentNode = null
+        return nextTick()
+      },
+      getCurrentNodeId () {
+        const { currentNode } = reactData
+        if (currentNode) {
+          return getNodeId(currentNode)
+        }
+        return null
+      },
+      getCurrentNode () {
+        const { currentNode, nodeMaps } = reactData
+        if (currentNode) {
+          const nodeItem = nodeMaps[currentNode]
+          if (nodeItem) {
+            return nodeItem.item
+          }
+        }
+        return null
+      },
+      setCurrentNodeId (nodeKey) {
+        const { nodeMaps } = reactData
+        const nodeItem = nodeMaps[nodeKey]
+        reactData.currentNode = nodeItem ? nodeItem.item : null
+        return nextTick()
+      },
+      setCurrentNode (node) {
+        reactData.currentNode = node
+        return nextTick()
+      },
       clearRadioNode () {
         reactData.selectRadioKey = null
+        return nextTick()
+      },
+      getRadioNodeId () {
+        return reactData.selectRadioKey || null
+      },
+      getRadioNode () {
+        const { selectRadioKey, nodeMaps } = reactData
+        if (selectRadioKey) {
+          const nodeItem = nodeMaps[selectRadioKey]
+          if (nodeItem) {
+            return nodeItem.item
+          }
+        }
+        return null
+      },
+      setRadioNodeId (nodeKey) {
+        reactData.selectRadioKey = nodeKey
         return nextTick()
       },
       setRadioNode,
       setCheckboxNode,
       setCheckboxByNodeId,
+      getCheckboxNodeIds () {
+        const { selectCheckboxMaps } = reactData
+        return Object.keys(selectCheckboxMaps)
+      },
+      getCheckboxNodes () {
+        const { nodeMaps, selectCheckboxMaps } = reactData
+        const list: any[] = []
+        XEUtils.each(selectCheckboxMaps, (item, nodeid) => {
+          const nodeItem = nodeMaps[nodeid]
+          if (nodeItem) {
+            list.push(nodeItem.item)
+          }
+        })
+        return list
+      },
       clearCheckboxNode () {
         reactData.selectCheckboxMaps = {}
         return nextTick()
       },
       setAllCheckboxNode (checked) {
-        const selectMaps: Record<string, boolean> = Object.assign({}, reactData.selectCheckboxMaps)
+        const selectMaps: Record<string, boolean> = {}
         const childrenField = computeChildrenField.value
         if (checked) {
           XEUtils.eachTree(reactData.treeList, (node) => {
@@ -415,6 +478,21 @@ export default defineComponent({
           reactData.treeExpandedMaps = expandedMaps
         }
         return nextTick()
+      },
+      getExpandNodeIds () {
+        const { treeExpandedMaps } = reactData
+        return Object.keys(treeExpandedMaps)
+      },
+      getExpandNodes () {
+        const { nodeMaps, treeExpandedMaps } = reactData
+        const list: any[] = []
+        XEUtils.each(treeExpandedMaps, (item, nodeid) => {
+          const nodeItem = nodeMaps[nodeid]
+          if (nodeItem) {
+            list.push(nodeItem.item)
+          }
+        })
+        return list
       },
       setExpandNode (nodes, expanded) {
         const expandedMaps: Record<string, boolean> = Object.assign({}, reactData.treeExpandedMaps)
@@ -457,13 +535,19 @@ export default defineComponent({
         }
         return nextTick()
       },
-      setAllExpandNode () {
-        const expandedMaps: Record<string, boolean> = Object.assign({}, reactData.treeExpandedMaps)
+      setAllExpandNode (expanded) {
+        const expandedMaps: Record<string, boolean> = {}
         const childrenField = computeChildrenField.value
-        XEUtils.eachTree(reactData.treeList, (node) => {
-          const nodeid = getNodeId(node)
-          expandedMaps[nodeid] = true
-        }, { children: childrenField })
+        if (expanded) {
+          XEUtils.eachTree(reactData.treeList, (node) => {
+            const childList: any[] = XEUtils.get(node, childrenField)
+            const hasChild = childList && childList.length
+            if (hasChild) {
+              const nodeid = getNodeId(node)
+              expandedMaps[nodeid] = true
+            }
+          }, { children: childrenField })
+        }
         reactData.treeExpandedMaps = expandedMaps
         return nextTick()
       },
