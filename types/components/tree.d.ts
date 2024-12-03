@@ -165,8 +165,18 @@ export interface TreeInternalData {
 
 export interface TreeMethods<D = any> {
   dispatchEvent(type: ValueOf<VxeTreeEmits>, params: Record<string, any>, evnt: Event | null): void
+  getCurrentNodeId(): string | number | null
+  getCurrentNode(): any | null
+  clearCurrentNode(): Promise<any>
+  setCurrentNodeId(nodeKey: string | number): Promise<any>
+  setCurrentNode(node: any): Promise<any>
+  getRadioNodeId(): string | number | null
+  getRadioNode(): any | null
   clearRadioNode(): Promise<any>
-  setRadioNode(node: any, checked: boolean): Promise<any>
+  setRadioNodeId(nodeKey: string | number): Promise<any>
+  setRadioNode(node: any): Promise<any>
+  getCheckboxNodeIds(): (string | number)[]
+  getCheckboxNodes(): D[]
   clearCheckboxNode(): Promise<any>
   setAllCheckboxNode(checked: boolean): Promise<any>
   setCheckboxNode(nodeList: any | any[], checked: boolean): Promise<any>
@@ -182,6 +192,8 @@ export interface TreeMethods<D = any> {
   toggleExpandByNodeId(nodeKeys: any | any[]): Promise<any>
   toggleExpandNode(nodeList: any | any[]): Promise<any>
   setAllExpandNode(expanded: boolean): Promise<any>
+  getExpandNodeIds(): (string | number)[]
+  getExpandNodes(): D[]
   reloadExpandNode(node: any): Promise<any>
   clearExpandLoaded(node: any): Promise<any>
   loadChildrenNode(node: any, childRecords: any[]): Promise<any>
