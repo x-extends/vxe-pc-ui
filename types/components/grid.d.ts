@@ -345,7 +345,9 @@ export namespace VxeGridDefines {
     $grid: VxeGridConstructor<D>
   }
 
+  export interface KeydownStartEventParams<D = any> extends GridEventParams<D>, VxeTableDefines.KeydownStartEventParams<D> { }
   export interface KeydownEventParams<D = any> extends GridEventParams<D>, VxeTableDefines.KeydownEventParams<D> { }
+  export interface KeydownEndEventParams<D = any> extends GridEventParams<D>, VxeTableDefines.KeydownEndEventParams<D> { }
   export interface PasteEventParams<D = any> extends GridEventParams<D>, VxeTableDefines.PasteEventParams<D> { }
   export interface CopyEventParams<D = any> extends GridEventParams<D>, VxeTableDefines.CopyEventParams<D> { }
   export interface CutEventParams<D = any> extends GridEventParams<D>, VxeTableDefines.CutEventParams<D> { }
@@ -387,6 +389,7 @@ export namespace VxeGridDefines {
   export interface ColumnDragstartEventParams<D = any> extends GridEventParams<D>, VxeTableDefines.ColumnDragstartEventParams<D> { }
   export interface ColumnDragoverEventParams<D = any> extends GridEventParams<D>, VxeTableDefines.ColumnDragoverEventParams<D> { }
   export interface ColumnDragendEventParams<D = any> extends GridEventParams<D>, VxeTableDefines.ColumnDragendEventParams<D> { }
+  export interface EnterAppendRowEventParams<D = any> extends GridEventParams<D>, VxeTableDefines.EnterAppendRowEventParams<D> { }
 
   export interface ProxyQueryEventParams<D = any> extends GridEventParams<D> {
     status: boolean
@@ -424,7 +427,9 @@ export namespace VxeGridDefines {
 }
 
 export interface VxeGridEventProps<D = any> {
+  onKeydownStart?: VxeGridEvents.KeydownStart<D>
   onKeydown?: VxeGridEvents.Keydown<D>
+  onKeydownEnd?: VxeGridEvents.KeydownEnd<D>
   onPaste?: VxeGridEvents.Paste<D>
   onCopy?: VxeGridEvents.Copy<D>
   onCut?: VxeGridEvents.Cut<D>
@@ -466,6 +471,7 @@ export interface VxeGridEventProps<D = any> {
   onColumnDragstart?: VxeGridEvents.ColumnDragstart<D>
   onColumnDragover?: VxeGridEvents.ColumnDragover<D>
   onColumnDragend?: VxeGridEvents.ColumnDragend<D>
+  onEnterAppendRow?: VxeGridEvents.EnterAppendRow<D>
 
   // grid
   onProxyQuery?: VxeGridEvents.ProxyQuery<D>
@@ -488,7 +494,9 @@ export interface VxeGridEventProps<D = any> {
 }
 
 export interface VxeGridListeners<D = any> {
+  keydownStart?: VxeGridEvents.KeydownStart<D>
   keydown?: VxeGridEvents.Keydown<D>
+  keydownEnd?: VxeGridEvents.KeydownEnd<D>
   paste?: VxeGridEvents.Paste<D>
   copy?: VxeGridEvents.Copy<D>
   cut?: VxeGridEvents.Cut<D>
@@ -530,6 +538,7 @@ export interface VxeGridListeners<D = any> {
   columnDragstart?: VxeGridEvents.ColumnDragstart<D>
   columnDragover?: VxeGridEvents.ColumnDragover<D>
   columnDragend?: VxeGridEvents.ColumnDragend<D>
+  enterAppendRow?: VxeGridEvents.EnterAppendRow<D>
 
   // grid
   proxyQuery?: VxeGridEvents.ProxyQuery<D>
@@ -552,7 +561,9 @@ export interface VxeGridListeners<D = any> {
 }
 
 export namespace VxeGridEvents {
+  export type KeydownStart<D = any> = (params: VxeGridDefines.KeydownStartEventParams<D>) => void
   export type Keydown<D = any> = (params: VxeGridDefines.KeydownEventParams<D>) => void
+  export type KeydownEnd<D = any> = (params: VxeGridDefines.KeydownEndEventParams<D>) => void
   export type Paste<D = any> = (params: VxeGridDefines.PasteEventParams<D>) => void
   export type Copy<D = any> = (params: VxeGridDefines.CopyEventParams<D>) => void
   export type Cut<D = any> = (params: VxeGridDefines.CutEventParams<D>) => void
@@ -594,6 +605,7 @@ export namespace VxeGridEvents {
   export type ColumnDragstart<D = any> = (params: VxeGridDefines.ColumnDragstartEventParams<D>) => void
   export type ColumnDragover<D = any> = (params: VxeGridDefines.ColumnDragoverEventParams<D>) => void
   export type ColumnDragend<D = any> = (params: VxeGridDefines.ColumnDragendEventParams<D>) => void
+  export type EnterAppendRow<D = any> = (params: VxeGridDefines.EnterAppendRowEventParams<D>) => void
 
   export type ProxyQuery<D = any> = (params: VxeGridDefines.ProxyQueryEventParams<D>) => void
   export type ProxyDelete<D = any> = (params: VxeGridDefines.ProxyDeleteEventParams<D>) => void
