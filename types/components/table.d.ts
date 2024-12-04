@@ -1155,7 +1155,43 @@ export namespace VxeTablePropTypes {
      */
     enterToTab?: boolean
     /**
-     * 只对 isDel=true 有效，用于删除键清空单元格内容方法
+     * 只有 isEdit 有效，编辑模式，支持覆盖式和末端插入式编辑
+     */
+    editMode?: 'coverage' | 'insert' | '' | null
+    /**
+     * 当在最后一行按下回车键时，自动插入新行
+     */
+    isLastEnterAppendRow?: boolean
+    /**
+     * 只对 isEnter=true 有效，用于回车键执行之前的方法，返回 false 可以阻止默认行为
+     */
+    beforeEnterMethod?(params: {
+      row: D
+      rowIndex: number
+      $rowIndex: number
+      _rowIndex: number
+      column: VxeTableDefines.ColumnInfo<D>
+      columnIndex: number
+      $columnIndex: number
+      _columnIndex: number
+      $table: VxeTableConstructor<D> & VxeTablePrivateMethods<D>
+    }): boolean
+    /**
+     * 只对 isEnter=true 有效，用于重写回车键的方法
+     */
+    enterMethod?(params: {
+      row: D
+      rowIndex: number
+      $rowIndex: number
+      _rowIndex: number
+      column: VxeTableDefines.ColumnInfo<D>
+      columnIndex: number
+      $columnIndex: number
+      _columnIndex: number
+      $table: VxeTableConstructor<D> & VxeTablePrivateMethods<D>
+    }): void
+    /**
+     * 只对 isDel=true 有效，用于重写删除键的方法
      */
     delMethod?(params: {
       row: D
@@ -3604,6 +3640,7 @@ export type VxeTableEmits = [
   'column-dragstart',
   'column-dragover',
   'column-dragend',
+  'enter-append-row',
 
   'edit-actived', // 已废弃
 
@@ -4267,6 +4304,17 @@ export namespace VxeTableDefines {
     }
   }
 
+  export interface EnterAppendRowEventParams {
+    row: D
+    rowIndex: number
+    $rowIndex: number
+    _rowIndex: number
+    column: VxeTableDefines.ColumnInfo<D>
+    columnIndex: number
+    $columnIndex: number
+    _columnIndex: number
+  }
+
   export interface VxeTableCustomStoreObj {
     btnEl: HTMLDivElement | null
     isAll: boolean
@@ -4540,6 +4588,7 @@ export interface VxeTableEventProps<D = any> {
   onColumnDragstart?: VxeTableEvents.ColumnDragstart<D>
   onColumnDragover?: VxeTableEvents.ColumnDragover<D>
   onColumnDragend?: VxeTableEvents.ColumnDragend<D>
+  onEnterAppendRow?: VxeTableEvents.EnterAppendRow<D>
 
   /**
    * 已废弃，请使用 onEditActivated
@@ -4612,6 +4661,7 @@ export interface VxeTableListeners<D = any> {
   columnDragstart?: VxeTableEvents.ColumnDragstart<D>
   columnDragover?: VxeTableEvents.ColumnDragover<D>
   columnDragend?: VxeTableEvents.ColumnDragend<D>
+  enterAppendRow?: VxeTableEvents.EnterAppendRow<D>
 
   /**
    * 已废弃，请使用 editActivated
@@ -4667,6 +4717,7 @@ export namespace VxeTableEvents {
   export type ColumnDragstart<D = VxeTablePropTypes.Row> = (params: VxeTableDefines.ColumnDragstartEventParams<D>) => void
   export type ColumnDragover<D = VxeTablePropTypes.Row> = (params: VxeTableDefines.ColumnDragoverEventParams<D>) => void
   export type ColumnDragend<D = VxeTablePropTypes.Row> = (params: VxeTableDefines.ColumnDragendEventParams<D>) => void
+  export type EnterAppendRow<D = VxeTablePropTypes.Row> = (params: VxeTableDefines.EnterAppendRowEventParams<D>) => void
 
   /**
    * 已废弃，请使用 EditActivated
