@@ -9,6 +9,13 @@ import { handleNumber, toFloatValueFixed } from './util'
 
 import type { NumberInputInternalData, VxeNumberInputEmits, NumberInputReactData, VxeNumberInputPropTypes, VxeComponentSizeType, VxeFormConstructor, ValueOf, VxeFormPrivateMethods, VxeFormDefines } from '../../../types'
 
+const handleNumberString = (val: any) => {
+  if (XEUtils.eqNull(val)) {
+    return ''
+  }
+  return `${val}`
+}
+
 export default defineVxeComponent({
   name: 'VxeNumberInput',
   mixins: [
@@ -309,8 +316,8 @@ export default defineVxeComponent({
       const { type, exponential } = props
       const inpMaxLength = $xeNumberInput.computeInpMaxLength
       const digitsValue = $xeNumberInput.computeDigitsValue
-      const restVal = (type === 'float' ? toFloatValueFixed(val, digitsValue) : XEUtils.toValueString(val))
-      if (exponential && (val === restVal || XEUtils.toValueString(val).toLowerCase() === XEUtils.toNumber(restVal).toExponential())) {
+      const restVal = (type === 'float' ? toFloatValueFixed(val, digitsValue) : handleNumberString(val))
+      if (exponential && (val === restVal || handleNumberString(val).toLowerCase() === XEUtils.toNumber(restVal).toExponential())) {
         return val
       }
       return restVal.slice(0, inpMaxLength)
@@ -331,9 +338,14 @@ export default defineVxeComponent({
 
       const value = (val as any) === '' || XEUtils.eqNull(val) ? null : Number(val)
       const isChange = value !== props.value
+      reactData.inputValue = inputValue || ''
       if (isChange) {
-        reactData.inputValue = inputValue || ''
         $xeNumberInput.emitModel(value)
+      }
+      if (reactData.inputValue !== inputValue) {
+        $xeNumberInput.$nextTick(() => {
+          reactData.inputValue = inputValue || ''
+        })
       }
       $xeNumberInput.dispatchEvent('input', { value }, evnt as Event)
       if (isChange) {
@@ -452,6 +464,16 @@ export default defineVxeComponent({
       const { inputValue } = reactData
       const inputReadonly = $xeNumberInput.computeInputReadonly
       if (!inputReadonly) {
+        if (inputValue === '') {
+          let inpNumVal = null
+          let inpValue = inputValue
+          if (min || min === 0) {
+            inpNumVal = XEUtils.toNumber(min)
+            inpValue = `${inpNumVal}`
+          }
+          $xeNumberInput.handleChange(inpNumVal, inpValue, { type: 'check' })
+          return
+        }
         if (inputValue || (min || max)) {
           let inpNumVal: number | string = type === 'integer' ? XEUtils.toInteger(handleNumber(inputValue)) : XEUtils.toNumber(handleNumber(inputValue))
           if (!$xeNumberInput.validMinNum(inpNumVal)) {
@@ -460,7 +482,7 @@ export default defineVxeComponent({
             inpNumVal = max
           }
           if (exponential) {
-            const inpStringVal = XEUtils.toValueString(inputValue).toLowerCase()
+            const inpStringVal = handleNumberString(inputValue).toLowerCase()
             if (inpStringVal === XEUtils.toNumber(inpNumVal).toExponential()) {
               inpNumVal = inpStringVal
             }
@@ -480,7 +502,7 @@ export default defineVxeComponent({
       const inpImmediate = $xeNumberInput.computeInpImmediate
       const value = inputValue ? Number(inputValue) : null
       if (!inpImmediate) {
-        $xeNumberInput.handleChange(value, `${inputValue || ''}`, evnt)
+        $xeNumberInput.handleChange(value, handleNumberString(inputValue), evnt)
       }
       $xeNumberInput.afterCheckValue()
       reactData.isActivated = false

@@ -505,6 +505,10 @@ export namespace VxeTablePropTypes {
    */
   export interface CustomConfig<D = VxeTablePropTypes.Row> {
     /**
+     * 是否启用，支持局部/全局启用
+     */
+    enabled?: boolean
+    /**
      * 是否启用 localStorage 本地保存，会将列操作状态保留在本地（需要有 id）
      */
     storage?: boolean | VxeTableDefines.VxeTableCustomStorageObj
@@ -1643,7 +1647,7 @@ export namespace VxeTablePropTypes {
      */
     oSize?: number
     /**
-     * 是否启用
+     * 是否启用，支持局部/全局启用
      */
     enabled?: boolean
     /**
@@ -1676,7 +1680,7 @@ export namespace VxeTablePropTypes {
      */
     oSize?: number
     /**
-     * 是否启用横向虚拟滚动
+     * 是否启用，支持局部/全局启用
      */
     enabled?: boolean
     /**
