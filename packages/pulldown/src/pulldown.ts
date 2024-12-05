@@ -37,6 +37,7 @@ export default defineComponent({
     'update:modelValue',
     'click',
     'option-click',
+    'show-panel',
     'hide-panel'
   ] as VxePulldownEmits,
   setup (props, context) {
@@ -249,7 +250,10 @@ export default defineComponent({
 
     const handleOptionEvent = (evnt: Event, option: VxePulldownPropTypes.Option) => {
       if (!option.disabled) {
-        hidePanel()
+        if (reactData.visiblePanel) {
+          hidePanel()
+          dispatchEvent('hide-panel', {}, evnt)
+        }
         dispatchEvent('option-click', { option }, evnt)
       }
     }
@@ -259,8 +263,10 @@ export default defineComponent({
       if (trigger === 'click') {
         if (reactData.visiblePanel) {
           hidePanel()
+          dispatchEvent('hide-panel', {}, evnt)
         } else {
           showPanel()
+          dispatchEvent('show-panel', {}, evnt)
         }
       }
       dispatchEvent('click', { $pulldown: $xePulldown }, evnt)
