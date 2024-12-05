@@ -109,6 +109,7 @@ export type VxePulldownEmits = [
   'input',
   'click',
   'option-click',
+  'show-panel',
   'hide-panel'
 ]
 
@@ -123,26 +124,30 @@ export namespace VxePulldownDefines {
     option: VxePulldownPropTypes.Option
   }
 
+  export interface ShowPanelEventParams extends PulldownEventParams {}
   export interface HidePanelEventParams extends PulldownEventParams {}
 }
 
 export type VxePulldownEventProps = {
   onClick?: VxePulldownEvents.Click
   onOptionClick?: VxePulldownEvents.OptionClick
+  onShowPanel?: VxePulldownEvents.ShowPanel
   onHidePanel?: VxePulldownEvents.HidePanel
 }
 
 export interface VxePulldownListeners {
   click?: VxePulldownEvents.Click
   optionClick?: VxePulldownEvents.OptionClick
+  showPanel?: VxePulldownEvents.ShowPanel
   hidePanel?: VxePulldownEvents.HidePanel
 }
 
 export namespace VxePulldownEvents {
   export type Click = (params: VxePulldownDefines.ClickEventParams) => void
   export type OptionClick = (params: VxePulldownDefines.OptionClickEventParams) => void
+  export type ShowPanel = (params: VxePulldownDefines.ShowPanelEventParams) => void
   export type HidePanel = (params: VxePulldownDefines.HidePanelEventParams) => void
- }
+}
 
 export namespace VxePulldownSlotTypes {
   export interface DefaultSlotParams {

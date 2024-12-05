@@ -297,9 +297,13 @@ export default defineVxeComponent({
     },
     handleOptionEvent (evnt: Event, option: VxePulldownPropTypes.Option) {
       const $xePulldown = this
+      const reactData = $xePulldown.reactData
 
       if (!option.disabled) {
-        $xePulldown.hidePanel()
+        if (reactData.visiblePanel) {
+          $xePulldown.hidePanel()
+          $xePulldown.dispatchEvent('hide-panel', {}, evnt)
+        }
         $xePulldown.dispatchEvent('option-click', { option }, evnt)
       }
     },
@@ -312,8 +316,10 @@ export default defineVxeComponent({
       if (trigger === 'click') {
         if (reactData.visiblePanel) {
           $xePulldown.hidePanel()
+          $xePulldown.dispatchEvent('hide-panel', {}, evnt)
         } else {
           $xePulldown.showPanel()
+          $xePulldown.dispatchEvent('show-panel', {}, evnt)
         }
       }
       $xePulldown.dispatchEvent('click', { $pulldown: $xePulldown }, evnt)

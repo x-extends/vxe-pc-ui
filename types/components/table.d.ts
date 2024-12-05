@@ -1136,7 +1136,13 @@ export namespace VxeTablePropTypes {
      */
     beforeEnterMethod?(params: {
       row: D
+      rowIndex: number
+      $rowIndex: number
+      _rowIndex: number
       column: VxeTableDefines.ColumnInfo<D>
+      columnIndex: number
+      $columnIndex: number
+      _columnIndex: number
       $table: VxeTableConstructor<D> & VxeTablePrivateMethods<D>
     }): boolean
     /**
@@ -1144,7 +1150,13 @@ export namespace VxeTablePropTypes {
      */
     enterMethod?(params: {
       row: D
+      rowIndex: number
+      $rowIndex: number
+      _rowIndex: number
       column: VxeTableDefines.ColumnInfo<D>
+      columnIndex: number
+      $columnIndex: number
+      _columnIndex: number
       $table: VxeTableConstructor<D> & VxeTablePrivateMethods<D>
     }): void
     /**
