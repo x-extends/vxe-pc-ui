@@ -3,7 +3,7 @@ import { defineVxeComponent } from '../../ui/src/comp'
 import XEUtils from 'xe-utils'
 import { globalMixins, getIcon, getConfig, getI18n, globalEvents, GLOBAL_EVENT_KEYS, createEvent, renderEmptyElement } from '../../ui'
 import { getLastZIndex, nextZIndex, getFuncText } from '../../ui/src/utils'
-import { toCssUnit } from '../../ui/src/dom'
+import { getDomNode, toCssUnit } from '../../ui/src/dom'
 import { getSlotVNs } from '../../ui/src/vn'
 import VxeButtonComponent from '../../button/src/button'
 import VxeLoadingComponent from '../../loading/index'
@@ -95,6 +95,10 @@ export default defineVxeComponent({
     },
     width: [Number, String] as PropType<VxeDrawerPropTypes.Width>,
     height: [Number, String] as PropType<VxeDrawerPropTypes.Height>,
+    resize: {
+      type: Boolean as PropType<VxeDrawerPropTypes.Resize>,
+      default: () => getConfig().drawer.resize
+    },
     zIndex: Number as PropType<VxeDrawerPropTypes.ZIndex>,
     transfer: {
       type: Boolean as PropType<VxeDrawerPropTypes.Transfer>,
@@ -135,7 +139,21 @@ export default defineVxeComponent({
   computed: {
     ...({} as {
       computeSize(): DrawerReactData
-    })
+    }),
+    computeDragType () {
+      const $xeDrawer = this
+      const props = $xeDrawer
+
+      switch (props.position) {
+        case 'top':
+          return 'sb'
+        case 'bottom':
+          return 'st'
+        case 'left':
+          return 'wr'
+      }
+      return 'wl'
+    }
   },
   methods: {
     //
@@ -338,6 +356,84 @@ export default defineVxeComponent({
       }
     },
 
+    dragEvent (evnt: MouseEvent) {
+      const $xeModal = this
+
+      evnt.preventDefault()
+      const { visibleHeight, visibleWidth } = getDomNode()
+      const marginSize = 0
+      const targetElem = evnt.target as HTMLSpanElement
+      const type = targetElem.getAttribute('type')
+      const minWidth = 0
+      const minHeight = 0
+      const maxWidth = visibleWidth
+      const maxHeight = visibleHeight
+      const boxElem = $xeModal.getBox()
+      const domMousemove = document.onmousemove
+      const domMouseup = document.onmouseup
+      const clientWidth = boxElem.clientWidth
+      const clientHeight = boxElem.clientHeight
+      const disX = evnt.clientX
+      const disY = evnt.clientY
+      const offsetTop = boxElem.offsetTop
+      const offsetLeft = boxElem.offsetLeft
+      const params = { type: 'resize' }
+      document.onmousemove = evnt => {
+        evnt.preventDefault()
+        let dragLeft
+        let dragTop
+        let width
+        let height
+        switch (type) {
+          case 'wl':
+            dragLeft = disX - evnt.clientX
+            width = dragLeft + clientWidth
+            if (offsetLeft - dragLeft > marginSize) {
+              if (width > minWidth) {
+                boxElem.style.width = `${width < maxWidth ? width : maxWidth}px`
+              }
+            }
+            break
+          case 'st':
+            dragTop = disY - evnt.clientY
+            height = clientHeight + dragTop
+            if (offsetTop - dragTop > marginSize) {
+              if (height > minHeight) {
+                boxElem.style.height = `${height < maxHeight ? height : maxHeight}px`
+              }
+            }
+            break
+          case 'wr':
+            dragLeft = evnt.clientX - disX
+            width = dragLeft + clientWidth
+            if (offsetLeft + width + marginSize < visibleWidth) {
+              if (width > minWidth) {
+                boxElem.style.width = `${width < maxWidth ? width : maxWidth}px`
+              }
+            }
+            break
+          case 'sb':
+            dragTop = evnt.clientY - disY
+            height = dragTop + clientHeight
+            if (offsetTop + height + marginSize < visibleHeight) {
+              if (height > minHeight) {
+                boxElem.style.height = `${height < maxHeight ? height : maxHeight}px`
+              }
+            }
+            break
+        }
+        boxElem.className = boxElem.className.replace(/\s?is--drag/, '') + ' is--drag'
+        $xeModal.dispatchEvent('resize', params, evnt)
+      }
+      document.onmouseup = () => {
+        document.onmousemove = domMousemove
+        document.onmouseup = domMouseup
+        setTimeout(() => {
+          boxElem.className = boxElem.className.replace(/\s?is--drag/, '')
+        }, 50)
+      }
+    },
+
     //
     // Render
     //
@@ -502,10 +598,11 @@ export default defineVxeComponent({
       const slots = $xeDrawer.$scopedSlots
       const reactData = $xeDrawer.reactData
 
-      const { slots: propSlots = {}, className, position, loading, lockScroll, padding, lockView, mask, destroyOnClose } = props
+      const { slots: propSlots = {}, className, position, loading, lockScroll, padding, lockView, mask, resize, destroyOnClose } = props
       const { initialized, contentVisible, visible } = reactData
       const asideSlot = slots.aside || propSlots.aside
       const vSize = $xeDrawer.computeSize
+      const dragType = $xeDrawer.computeDragType
       return h('div', {
         ref: 'refElem',
         class: ['vxe-drawer--wrapper', `pos--${position}`, className || '', {
@@ -545,7 +642,22 @@ export default defineVxeComponent({
                 : [
                     $xeDrawer.renderHeader(h),
                     $xeDrawer.renderBody(h),
-                    $xeDrawer.renderFooter(h)
+                    $xeDrawer.renderFooter(h),
+                    resize
+                      ? h('span', {
+                        class: 'vxe-drawer--resize'
+                      }, [
+                        h('span', {
+                          class: `${dragType}-resize`,
+                          attrs: {
+                            type: dragType
+                          },
+                          on: {
+                            mousedown: $xeDrawer.dragEvent
+                          }
+                        })
+                      ])
+                      : renderEmptyElement($xeDrawer)
                   ])
             ])
           ]

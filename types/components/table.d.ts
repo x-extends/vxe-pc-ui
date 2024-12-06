@@ -537,13 +537,18 @@ export namespace VxeTablePropTypes {
       lockView?: VxeModalPropTypes.LockView
       resize?: VxeModalPropTypes.Resize
       escClosable?: VxeModalPropTypes.EscClosable
+      maskClosable?: VxeModalPropTypes.MaskClosable
     }
     drawerOptions?: {
       title?: VxeDrawerPropTypes.Title
       width?: VxeDrawerPropTypes.Width
       className?: VxeDrawerPropTypes.ClassName
       position?: VxeDrawerPropTypes.Position
+      mask?: VxeDrawerPropTypes.Mask
+      lockView?: VxeDrawerPropTypes.LockView
+      resize?: VxeDrawerPropTypes.Resize
       escClosable?: VxeDrawerPropTypes.EscClosable
+      maskClosable?: VxeDrawerPropTypes.MaskClosable
     }
     trigger?: 'manual' | 'hover' | 'click' | '' | null
     immediate?: boolean

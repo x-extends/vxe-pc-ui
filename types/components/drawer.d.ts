@@ -51,6 +51,7 @@ export namespace VxeDrawerPropTypes {
   export type ShowClose = boolean
   export type Width = number | string
   export type Height = number | string
+  export type Resize = boolean
   export type ZIndex = number
   export type DestroyOnClose = boolean
   export type ShowTitleOverflow = boolean
@@ -85,6 +86,7 @@ export interface VxeDrawerProps {
   showClose?: VxeDrawerPropTypes.ShowClose
   width?: VxeDrawerPropTypes.Width
   height?: VxeDrawerPropTypes.Height
+  resize?: VxeDrawerPropTypes.Resize
   zIndex?: VxeDrawerPropTypes.ZIndex
   destroyOnClose?: VxeDrawerPropTypes.DestroyOnClose
   showTitleOverflow?: VxeDrawerPropTypes.ShowTitleOverflow
@@ -134,7 +136,8 @@ export type VxeDrawerEmits = [
   'before-hide',
   'close',
   'confirm',
-  'cancel'
+  'cancel',
+  'resize'
 ]
 
 /**
@@ -192,14 +195,8 @@ export namespace VxeDrawerDefines {
   export interface CloseParams extends DrawerBaseParams { }
   export interface CloseEventParams extends DrawerEventParams, CloseParams { }
 
-  export interface ZoomParams extends DrawerBaseParams { }
-  export interface ZoomEventParams extends DrawerEventParams, ZoomParams { }
-
   export interface ResizeParams extends DrawerBaseParams { }
   export interface ResizeEventParams extends DrawerEventParams, ResizeParams { }
-
-  export interface MoveParams extends DrawerBaseParams { }
-  export interface MoveEventParams extends DrawerEventParams, MoveParams { }
 }
 
 export type VxeDrawerEventProps = {
@@ -209,6 +206,7 @@ export type VxeDrawerEventProps = {
   onConfirm?: VxeDrawerEvents.Confirm
   onCancel?: VxeDrawerEvents.Cancel
   onClose?: VxeDrawerEvents.Close
+  onResize?: VxeDrawerEvents.Resize
 }
 
 export interface VxeDrawerListeners {
@@ -218,6 +216,7 @@ export interface VxeDrawerListeners {
   confirm?: VxeDrawerEvents.Confirm
   cancel?: VxeDrawerEvents.Cancel
   close?: VxeDrawerEvents.Close
+  resize?: VxeDrawerEvents.Resize
 }
 
 export namespace VxeDrawerEvents {
@@ -227,6 +226,7 @@ export namespace VxeDrawerEvents {
   export type Confirm = (params: VxeDrawerDefines.ConfirmEventParams) => void
   export type Cancel = (params: VxeDrawerDefines.CancelEventParams) => void
   export type Close = (params: VxeDrawerDefines.CloseEventParams) => void
+  export type Resize = (params: VxeDrawerDefines.ResizeEventParams) => void
 }
 
 export namespace VxeDrawerSlotTypes {
