@@ -7,7 +7,7 @@ import { toStringTimeDate, getDateQuarter } from '../../date-picker/src/util'
 import { handleNumber, toFloatValueFixed } from '../../number-input/src/util'
 import { getSlotVNs } from '../..//ui/src/vn'
 
-import type { VxeInputConstructor, VxeInputEmits, InputReactData, InputMethods, ValueOf, InputInternalData, VxeInputPropTypes, InputPrivateRef, VxeFormConstructor, VxeFormPrivateMethods, VxeFormDefines, VxeTableConstructor, VxeTablePrivateMethods, VxeDrawerConstructor, VxeDrawerMethods, VxeModalConstructor, VxeModalMethods, VxeDatePickerDefines } from '../../../types'
+import type { VxeInputConstructor, VxeInputEmits, InputReactData, InputMethods, ValueOf, InputInternalData, VxeInputPropTypes, InputPrivateRef, VxeFormConstructor, VxeFormPrivateMethods, VxeFormDefines, VxeTableConstructor, VxeTablePrivateMethods, VxeDrawerConstructor, VxeDrawerMethods, VxeModalConstructor, VxeModalMethods, VxeDatePickerDefines, VxeSelectConstructor, VxeSelectMethods, VxeTreeSelectConstructor, VxeTreeSelectMethods } from '../../../types'
 
 export default defineComponent({
   name: 'VxeInput',
@@ -154,6 +154,9 @@ export default defineComponent({
   ] as VxeInputEmits,
   setup (props, context) {
     const { slots, emit } = context
+
+    const $xeSelect = inject<(VxeSelectConstructor & VxeSelectMethods) | null>('$xeSelect', null)
+    const $xeTreeSelect = inject<(VxeTreeSelectConstructor & VxeTreeSelectMethods) | null>('$xeTreeSelect', null)
 
     const $xeModal = inject<(VxeModalConstructor & VxeModalMethods) | null>('$xeModal', null)
     const $xeDrawer = inject<(VxeDrawerConstructor & VxeDrawerMethods) | null>('$xeDrawer', null)
@@ -788,9 +791,11 @@ export default defineComponent({
       inputMethods.dispatchEvent('input', { value }, evnt as any)
       if (XEUtils.toValueString(props.modelValue) !== value) {
         inputMethods.dispatchEvent('change', { value }, evnt as any)
-        // 自动更新校验状态
-        if ($xeForm && formItemInfo) {
-          $xeForm.triggerItemEvent(evnt, formItemInfo.itemConfig.field, value)
+        if (!$xeSelect && !$xeTreeSelect) {
+          // 自动更新校验状态
+          if ($xeForm && formItemInfo) {
+            $xeForm.triggerItemEvent(evnt, formItemInfo.itemConfig.field, value)
+          }
         }
       }
     }
@@ -833,9 +838,11 @@ export default defineComponent({
         reactData.isActivated = false
       }
       inputMethods.dispatchEvent('blur', { value }, evnt)
-      // 自动更新校验状态
-      if ($xeForm && formItemInfo) {
-        $xeForm.triggerItemEvent(evnt, formItemInfo.itemConfig.field, value)
+      if (!$xeSelect && !$xeTreeSelect) {
+        // 自动更新校验状态
+        if ($xeForm && formItemInfo) {
+          $xeForm.triggerItemEvent(evnt, formItemInfo.itemConfig.field, value)
+        }
       }
     }
 

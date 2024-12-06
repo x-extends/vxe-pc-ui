@@ -242,12 +242,19 @@ export default defineComponent({
       return false
     })
 
+    const handleNumberString = (val: any) => {
+      if (XEUtils.eqNull(val)) {
+        return ''
+      }
+      return `${val}`
+    }
+
     const getNumberValue = (val: any) => {
       const { type, exponential } = props
       const inpMaxLength = computeInpMaxLength.value
       const digitsValue = computeDigitsValue.value
-      const restVal = (type === 'float' ? toFloatValueFixed(val, digitsValue) : XEUtils.toValueString(val))
-      if (exponential && (val === restVal || XEUtils.toValueString(val).toLowerCase() === XEUtils.toNumber(restVal).toExponential())) {
+      const restVal = (type === 'float' ? toFloatValueFixed(val, digitsValue) : handleNumberString(val))
+      if (exponential && (val === restVal || handleNumberString(val).toLowerCase() === XEUtils.toNumber(restVal).toExponential())) {
         return val
       }
       return restVal.slice(0, inpMaxLength)
@@ -262,8 +269,12 @@ export default defineComponent({
       const value = (val as any) === '' || XEUtils.eqNull(val) ? null : Number(val)
       const isChange = Number(value) !== props.modelValue
       if (isChange) {
-        reactData.inputValue = inputValue || ''
         emit('update:modelValue', value)
+      }
+      if (reactData.inputValue !== inputValue) {
+        nextTick(() => {
+          reactData.inputValue = inputValue || ''
+        })
       }
       numberInputMethods.dispatchEvent('input', { value }, evnt as Event)
       if (isChange) {
@@ -361,6 +372,16 @@ export default defineComponent({
       const { inputValue } = reactData
       const inputReadonly = computeInputReadonly.value
       if (!inputReadonly) {
+        if (inputValue === '') {
+          let inpNumVal = null
+          let inpValue = inputValue
+          if (min || min === 0) {
+            inpNumVal = XEUtils.toNumber(min)
+            inpValue = `${inpNumVal}`
+          }
+          handleChange(inpNumVal, inpValue, { type: 'check' })
+          return
+        }
         if (inputValue || (min || max)) {
           let inpNumVal: number | string = type === 'integer' ? XEUtils.toInteger(handleNumber(inputValue)) : XEUtils.toNumber(handleNumber(inputValue))
           if (!validMinNum(inpNumVal)) {
@@ -369,7 +390,7 @@ export default defineComponent({
             inpNumVal = max
           }
           if (exponential) {
-            const inpStringVal = XEUtils.toValueString(inputValue).toLowerCase()
+            const inpStringVal = handleNumberString(inputValue).toLowerCase()
             if (inpStringVal === XEUtils.toNumber(inpNumVal).toExponential()) {
               inpNumVal = inpStringVal
             }
@@ -385,7 +406,7 @@ export default defineComponent({
       const inpImmediate = computeInpImmediate.value
       const value = inputValue ? Number(inputValue) : null
       if (!inpImmediate) {
-        handleChange(value, `${inputValue || ''}`, evnt)
+        handleChange(value, handleNumberString(inputValue), evnt)
       }
       afterCheckValue()
       reactData.isActivated = false
