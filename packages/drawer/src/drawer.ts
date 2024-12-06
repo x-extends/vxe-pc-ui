@@ -1,8 +1,8 @@
-import { defineComponent, h, Teleport, ref, Ref, reactive, nextTick, provide, watch, PropType, onMounted, onUnmounted, createCommentVNode } from 'vue'
+import { defineComponent, h, Teleport, ref, Ref, reactive, nextTick, provide, watch, PropType, onMounted, onUnmounted, computed } from 'vue'
 import XEUtils from 'xe-utils'
-import { useSize, getIcon, getConfig, getI18n, globalEvents, GLOBAL_EVENT_KEYS, createEvent } from '../../ui'
+import { useSize, getIcon, getConfig, getI18n, globalEvents, GLOBAL_EVENT_KEYS, createEvent, renderEmptyElement } from '../../ui'
 import { getLastZIndex, nextZIndex, getFuncText } from '../../ui/src/utils'
-import { toCssUnit } from '../../ui/src/dom'
+import { getDomNode, toCssUnit } from '../../ui/src/dom'
 import { getSlotVNs } from '../../ui/src/vn'
 import VxeButtonComponent from '../../button/src/button'
 import VxeLoadingComponent from '../../loading/index'
@@ -90,6 +90,10 @@ export default defineComponent({
     },
     width: [Number, String] as PropType<VxeDrawerPropTypes.Width>,
     height: [Number, String] as PropType<VxeDrawerPropTypes.Height>,
+    resize: {
+      type: Boolean as PropType<VxeDrawerPropTypes.Resize>,
+      default: () => getConfig().drawer.resize
+    },
     zIndex: Number as PropType<VxeDrawerPropTypes.ZIndex>,
     transfer: {
       type: Boolean as PropType<VxeDrawerPropTypes.Transfer>,
@@ -116,7 +120,8 @@ export default defineComponent({
     'before-hide',
     'close',
     'confirm',
-    'cancel'
+    'cancel',
+    'resize'
   ] as VxeDrawerEmits,
   setup (props, context) {
     const { slots, emit } = context
@@ -140,6 +145,18 @@ export default defineComponent({
     const refMaps: DrawerPrivateRef = {
       refElem
     }
+
+    const computeDragType = computed(() => {
+      switch (props.position) {
+        case 'top':
+          return 'sb'
+        case 'bottom':
+          return 'st'
+        case 'left':
+          return 'wr'
+      }
+      return 'wl'
+    })
 
     const computeMaps: VxeDrawerPrivateComputed = {
     }
@@ -302,6 +319,82 @@ export default defineComponent({
       }
     }
 
+    const dragEvent = (evnt: MouseEvent) => {
+      evnt.preventDefault()
+      const { visibleHeight, visibleWidth } = getDomNode()
+      const marginSize = 0
+      const targetElem = evnt.target as HTMLSpanElement
+      const type = targetElem.getAttribute('type')
+      const minWidth = 0
+      const minHeight = 0
+      const maxWidth = visibleWidth
+      const maxHeight = visibleHeight
+      const boxElem = getBox()
+      const domMousemove = document.onmousemove
+      const domMouseup = document.onmouseup
+      const clientWidth = boxElem.clientWidth
+      const clientHeight = boxElem.clientHeight
+      const disX = evnt.clientX
+      const disY = evnt.clientY
+      const offsetTop = boxElem.offsetTop
+      const offsetLeft = boxElem.offsetLeft
+      const params = { type: 'resize' }
+      document.onmousemove = evnt => {
+        evnt.preventDefault()
+        let dragLeft
+        let dragTop
+        let width
+        let height
+        switch (type) {
+          case 'wl':
+            dragLeft = disX - evnt.clientX
+            width = dragLeft + clientWidth
+            if (offsetLeft - dragLeft > marginSize) {
+              if (width > minWidth) {
+                boxElem.style.width = `${width < maxWidth ? width : maxWidth}px`
+              }
+            }
+            break
+          case 'st':
+            dragTop = disY - evnt.clientY
+            height = clientHeight + dragTop
+            if (offsetTop - dragTop > marginSize) {
+              if (height > minHeight) {
+                boxElem.style.height = `${height < maxHeight ? height : maxHeight}px`
+              }
+            }
+            break
+          case 'wr':
+            dragLeft = evnt.clientX - disX
+            width = dragLeft + clientWidth
+            if (offsetLeft + width + marginSize < visibleWidth) {
+              if (width > minWidth) {
+                boxElem.style.width = `${width < maxWidth ? width : maxWidth}px`
+              }
+            }
+            break
+          case 'sb':
+            dragTop = evnt.clientY - disY
+            height = dragTop + clientHeight
+            if (offsetTop + height + marginSize < visibleHeight) {
+              if (height > minHeight) {
+                boxElem.style.height = `${height < maxHeight ? height : maxHeight}px`
+              }
+            }
+            break
+        }
+        boxElem.className = boxElem.className.replace(/\s?is--drag/, '') + ' is--drag'
+        dispatchEvent('resize', params, evnt)
+      }
+      document.onmouseup = () => {
+        document.onmousemove = domMousemove
+        document.onmouseup = domMouseup
+        setTimeout(() => {
+          boxElem.className = boxElem.className.replace(/\s?is--drag/, '')
+        }, 50)
+      }
+    }
+
     const formDesignPrivateMethods: DrawerPrivateMethods = {}
 
     Object.assign($xeDrawer, drawerMethods, formDesignPrivateMethods)
@@ -321,7 +414,7 @@ export default defineComponent({
             ? h('div', {
               class: 'vxe-drawer--corner-wrapper'
             }, getSlotVNs(cornerSlot({ $drawer: $xeDrawer })))
-            : createCommentVNode(),
+            : renderEmptyElement($xeDrawer),
           showClose
             ? h('div', {
               class: ['vxe-drawer--close-btn', 'trigger--btn'],
@@ -332,7 +425,7 @@ export default defineComponent({
                 class: getIcon().DRAWER_CLOSE
               })
             ])
-            : createCommentVNode()
+            : renderEmptyElement($xeDrawer)
         ])
       ]
     }
@@ -347,7 +440,7 @@ export default defineComponent({
           }]
         }, headerSlot ? getSlotVNs(headerSlot({ $drawer: $xeDrawer })) : renderTitles())
       }
-      return createCommentVNode()
+      return renderEmptyElement($xeDrawer)
     }
 
     const renderBody = () => {
@@ -362,7 +455,7 @@ export default defineComponent({
           ? h('div', {
             class: 'vxe-drawer--body-left'
           }, getSlotVNs(leftSlot({ $drawer: $xeDrawer })))
-          : createCommentVNode(),
+          : renderEmptyElement($xeDrawer),
         h('div', {
           class: 'vxe-drawer--body-default'
         }, [
@@ -374,7 +467,7 @@ export default defineComponent({
           ? h('div', {
             class: 'vxe-drawer--body-right'
           }, getSlotVNs(rightSlot({ $drawer: $xeDrawer })))
-          : createCommentVNode(),
+          : renderEmptyElement($xeDrawer),
         h(VxeLoadingComponent, {
           class: 'vxe-drawer--loading',
           modelValue: props.loading
@@ -429,14 +522,15 @@ export default defineComponent({
           class: 'vxe-drawer--footer'
         }, footerSlot ? getSlotVNs(footerSlot({ $drawer: $xeDrawer })) : [renderDefaultFooter()])
       }
-      return createCommentVNode()
+      return renderEmptyElement($xeDrawer)
     }
 
     const renderVN = () => {
-      const { slots: propSlots = {}, className, position, loading, lockScroll, padding, lockView, mask, destroyOnClose } = props
+      const { slots: propSlots = {}, className, position, loading, lockScroll, padding, lockView, mask, resize, destroyOnClose } = props
       const { initialized, contentVisible, visible } = reactData
       const asideSlot = slots.aside || propSlots.aside
       const vSize = computeSize.value
+      const dragType = computeDragType.value
       return h(Teleport, {
         to: 'body',
         disabled: props.transfer ? !initialized : true
@@ -448,6 +542,7 @@ export default defineComponent({
             'is--padding': padding,
             'lock--scroll': lockScroll,
             'lock--view': lockView,
+            'is--resize': resize,
             'is--mask': mask,
             'is--visible': contentVisible,
             'is--active': visible,
@@ -467,7 +562,7 @@ export default defineComponent({
               ? h('div', {
                 class: 'vxe-drawer--aside'
               }, getSlotVNs(asideSlot({ $drawer: $xeDrawer })))
-              : createCommentVNode(),
+              : renderEmptyElement($xeDrawer),
             h('div', {
               class: 'vxe-drawer--container'
             }, !reactData.initialized || (destroyOnClose && !reactData.visible)
@@ -475,7 +570,18 @@ export default defineComponent({
               : [
                   renderHeader(),
                   renderBody(),
-                  renderFooter()
+                  renderFooter(),
+                  resize
+                    ? h('span', {
+                      class: 'vxe-drawer--resize'
+                    }, [
+                      h('span', {
+                        class: `${dragType}-resize`,
+                        type: dragType,
+                        onMousedown: dragEvent
+                      })
+                    ])
+                    : renderEmptyElement($xeDrawer)
                 ])
           ])
         ])
