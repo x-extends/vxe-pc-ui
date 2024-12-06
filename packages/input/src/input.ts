@@ -8,7 +8,7 @@ import { toStringTimeDate, getDateQuarter } from '../../date-picker/src/util'
 import { handleNumber, toFloatValueFixed } from '../../number-input/src/util'
 import { getSlotVNs } from '../..//ui/src/vn'
 
-import type { VxeInputConstructor, VxeInputEmits, InputInternalData, InputReactData, ValueOf, VxeInputPropTypes, VxeComponentStyleType, VxeFormConstructor, VxeFormPrivateMethods, VxeFormDefines, VxeComponentSizeType, VxeTableConstructor, VxeTablePrivateMethods, VxeDrawerConstructor, VxeDrawerMethods, VxeModalConstructor, VxeModalMethods, VxeDatePickerDefines } from '../../../types'
+import type { VxeInputConstructor, VxeInputEmits, InputInternalData, InputReactData, ValueOf, VxeInputPropTypes, VxeComponentStyleType, VxeFormConstructor, VxeFormPrivateMethods, VxeFormDefines, VxeComponentSizeType, VxeTableConstructor, VxeTablePrivateMethods, VxeDrawerConstructor, VxeDrawerMethods, VxeModalConstructor, VxeModalMethods, VxeDatePickerDefines, VxeSelectConstructor, VxeSelectMethods, VxeTreeSelectConstructor, VxeTreeSelectMethods } from '../../../types'
 
 export default defineVxeComponent({
   name: 'VxeInput',
@@ -140,6 +140,13 @@ export default defineVxeComponent({
     autocomplete: String as PropType<VxeInputPropTypes.Autocomplete>
   },
   inject: {
+    $xeSelect: {
+      default: null
+    },
+    $xeTreeSelect: {
+      default: null
+    },
+
     $xeModal: {
       default: null
     },
@@ -155,12 +162,6 @@ export default defineVxeComponent({
     formItemInfo: {
       from: 'xeFormItemInfo',
       default: null
-    }
-  },
-  provide () {
-    const $xeSelect = this
-    return {
-      $xeSelect
     }
   },
   data () {
@@ -198,6 +199,8 @@ export default defineVxeComponent({
   computed: {
     ...({} as {
       computeSize(): VxeComponentSizeType
+      $xeSelect(): (VxeSelectConstructor & VxeSelectMethods) | null
+      $xeTreeSelect(): (VxeTreeSelectConstructor & VxeTreeSelectMethods) | null
       $xeModal(): (VxeModalConstructor & VxeModalMethods) | null
       $xeDrawer(): (VxeDrawerConstructor & VxeDrawerMethods) | null
       $xeTable(): (VxeTableConstructor & VxeTablePrivateMethods) | null
@@ -937,15 +940,19 @@ export default defineVxeComponent({
       const reactData = $xeInput.reactData
       const $xeForm = $xeInput.$xeForm
       const formItemInfo = $xeInput.formItemInfo
+      const $xeSelect = $xeInput.$xeSelect
+      const $xeTreeSelect = $xeInput.$xeTreeSelect
 
       reactData.inputValue = value
       $xeInput.emitModel(value)
       $xeInput.dispatchEvent('input', { value }, evnt as any)
       if (XEUtils.toValueString(props.value) !== value) {
         $xeInput.dispatchEvent('change', { value }, evnt as any)
-        // 自动更新校验状态
-        if ($xeForm && formItemInfo) {
-          $xeForm.triggerItemEvent(evnt, formItemInfo.itemConfig.field, value)
+        if (!$xeSelect && !$xeTreeSelect) {
+          // 自动更新校验状态
+          if ($xeForm && formItemInfo) {
+            $xeForm.triggerItemEvent(evnt, formItemInfo.itemConfig.field, value)
+          }
         }
       }
     },
@@ -984,6 +991,8 @@ export default defineVxeComponent({
       const reactData = $xeInput.reactData
       const $xeForm = $xeInput.$xeForm
       const formItemInfo = $xeInput.formItemInfo
+      const $xeSelect = $xeInput.$xeSelect
+      const $xeTreeSelect = $xeInput.$xeTreeSelect
 
       const { inputValue } = reactData
       const value = inputValue
@@ -996,9 +1005,11 @@ export default defineVxeComponent({
         reactData.isActivated = false
       }
       $xeInput.dispatchEvent('blur', { value }, evnt)
-      // 自动更新校验状态
-      if ($xeForm && formItemInfo) {
-        $xeForm.triggerItemEvent(evnt, formItemInfo.itemConfig.field, value)
+      if (!$xeSelect && !$xeTreeSelect) {
+        // 自动更新校验状态
+        if ($xeForm && formItemInfo) {
+          $xeForm.triggerItemEvent(evnt, formItemInfo.itemConfig.field, value)
+        }
       }
     },
     focusEvent  (evnt: Event & { type: 'focus' }) {
