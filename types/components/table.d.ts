@@ -450,6 +450,18 @@ export namespace VxeTablePropTypes {
      */
     showIcon?: boolean
     /**
+     * 只对 tree-config 启用有效，是否跨节点拖拽，用于树结构，启用后允许拖拽到其他的子节点，除自身节点之外
+     */
+    isCrossDrag?: boolean
+    /**
+     * 只对 tree-config 启用有效，是否允许将自己拖拽到子孙节点中
+     */
+    isSelfToChildDrag?: boolean
+    /**
+     * 是否显示拖拽辅助状态显示
+     */
+    showGuidesStatus?: boolean
+    /**
      * 是否禁用拖拽按钮
      */
     disabledMethod?(params: {
@@ -497,6 +509,10 @@ export namespace VxeTablePropTypes {
      * 是否显示拖拽按钮图标
      */
     showIcon?: boolean
+    /**
+     * 是否显示拖拽辅助状态显示
+     */
+    showGuidesStatus?: boolean
     /**
      * 是否禁用拖拽按钮
      */
