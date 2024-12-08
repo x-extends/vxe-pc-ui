@@ -1,7 +1,7 @@
 import { defineComponent, h, ref, Ref, computed, reactive, inject, nextTick, watch, onMounted, createCommentVNode, onBeforeUnmount, PropType } from 'vue'
 import XEUtils from 'xe-utils'
 import { getConfig, getIcon, getI18n, globalEvents, GLOBAL_EVENT_KEYS, createEvent, useSize } from '../../ui'
-import { getFuncText } from '../../ui/src/utils'
+import { getFuncText, eqEmptyValue } from '../../ui/src/utils'
 import { hasClass, getEventTargetNode } from '../../ui/src/dom'
 import { getSlotVNs } from '../..//ui/src/vn'
 import { handleNumber, toFloatValueFixed } from './util'
@@ -266,8 +266,8 @@ export default defineComponent({
     }
 
     const handleChange = (val: number | null, inputValue: string, evnt: Event | { type: string }) => {
-      const value = (val as any) === '' || XEUtils.eqNull(val) ? null : Number(val)
-      const isChange = Number(value) !== props.modelValue
+      const value = eqEmptyValue(val) ? null : Number(val)
+      const isChange = value !== props.modelValue
       if (isChange) {
         emit('update:modelValue', value)
       }
@@ -372,14 +372,14 @@ export default defineComponent({
       const { inputValue } = reactData
       const inputReadonly = computeInputReadonly.value
       if (!inputReadonly) {
-        if (inputValue === '') {
+        if (eqEmptyValue(inputValue)) {
           let inpNumVal = null
           let inpValue = inputValue
           if (min || min === 0) {
             inpNumVal = XEUtils.toNumber(min)
             inpValue = `${inpNumVal}`
           }
-          handleChange(inpNumVal, inpValue, { type: 'check' })
+          handleChange(inpNumVal, `${inpValue || ''}`, { type: 'check' })
           return
         }
         if (inputValue || (min || max)) {
@@ -396,7 +396,7 @@ export default defineComponent({
             }
           }
           const inpValue = getNumberValue(inpNumVal)
-          handleChange(inpValue === null ? null : Number(inpValue), inpValue, { type: 'check' })
+          handleChange(eqEmptyValue(inpValue) ? null : Number(inpValue), inpValue, { type: 'check' })
         }
       }
     }
