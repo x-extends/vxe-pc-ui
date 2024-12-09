@@ -72,7 +72,7 @@ export default defineComponent({
     // float
     digits: {
       type: [String, Number] as PropType<VxeNumberInputPropTypes.Digits>,
-      default: () => getConfig().numberInput.digits
+      default: null
     },
 
     prefixIcon: String as PropType<VxeNumberInputPropTypes.PrefixIcon>,
@@ -110,6 +110,7 @@ export default defineComponent({
     const { computeSize } = useSize(props)
 
     const reactData = reactive<NumberInputReactData>({
+      isFocus: false,
       isActivated: false,
       inputValue: props.modelValue
     })
@@ -161,16 +162,32 @@ export default defineComponent({
     })
 
     const computeDigitsValue = computed(() => {
-      return XEUtils.toInteger(props.digits) || 1
+      const { type, digits } = props
+      let defDigits: any = digits
+      if (defDigits === null) {
+        defDigits = getConfig().numberInput.digits
+        if (defDigits === null) {
+          if (type === 'amount') {
+            defDigits = 2
+          }
+        }
+      }
+      return XEUtils.toInteger(defDigits) || 1
+    })
+
+    const computeDecimalsType = computed(() => {
+      const { type } = props
+      return type === 'float' || type === 'amount'
     })
 
     const computeStepValue = computed(() => {
       const { type } = props
       const digitsValue = computeDigitsValue.value
+      const decimalsType = computeDecimalsType.value
       const step = props.step
       if (type === 'integer') {
         return XEUtils.toInteger(step) || 1
-      } else if (type === 'float') {
+      } else if (decimalsType) {
         return XEUtils.toNumber(step) || (1 / Math.pow(10, digitsValue))
       }
       return XEUtils.toNumber(step) || 1
@@ -205,8 +222,8 @@ export default defineComponent({
     })
 
     const computeInpImmediate = computed(() => {
-      const { type, immediate } = props
-      return immediate || !(type === 'number' || type === 'integer' || type === 'float')
+      const { immediate } = props
+      return immediate
     })
 
     const computeNumValue = computed(() => {
@@ -216,7 +233,12 @@ export default defineComponent({
     })
 
     const computeNumLabel = computed(() => {
+      const { type } = props
       const { inputValue } = reactData
+      const digitsValue = computeDigitsValue.value
+      if (type === 'amount') {
+        return XEUtils.commafy(XEUtils.toNumber(inputValue), { digits: digitsValue })
+      }
       return XEUtils.toString(inputValue)
     })
 
@@ -250,10 +272,11 @@ export default defineComponent({
     }
 
     const getNumberValue = (val: any) => {
-      const { type, exponential } = props
+      const { exponential } = props
       const inpMaxLength = computeInpMaxLength.value
       const digitsValue = computeDigitsValue.value
-      const restVal = (type === 'float' ? toFloatValueFixed(val, digitsValue) : handleNumberString(val))
+      const decimalsType = computeDecimalsType.value
+      const restVal = (decimalsType ? toFloatValueFixed(val, digitsValue) : handleNumberString(val))
       if (exponential && (val === restVal || handleNumberString(val).toLowerCase() === XEUtils.toNumber(restVal).toExponential())) {
         return val
       }
@@ -311,6 +334,7 @@ export default defineComponent({
     }
 
     const focusEvent = (evnt: Event & { type: 'focus' }) => {
+      reactData.isFocus = true
       reactData.isActivated = true
       triggerEvent(evnt)
     }
@@ -341,10 +365,10 @@ export default defineComponent({
      * 检查初始值
      */
     const initValue = () => {
-      const { type } = props
       const { inputValue } = reactData
       const digitsValue = computeDigitsValue.value
-      if (type === 'float') {
+      const decimalsType = computeDecimalsType.value
+      if (decimalsType) {
         if (inputValue) {
           let textValue = ''
           let validValue: number | null = null
@@ -409,6 +433,7 @@ export default defineComponent({
         handleChange(value, handleNumberString(inputValue), evnt)
       }
       afterCheckValue()
+      reactData.isFocus = false
       reactData.isActivated = false
       numberInputMethods.dispatchEvent('blur', { value }, evnt)
       // 自动更新校验状态
@@ -738,7 +763,7 @@ export default defineComponent({
 
     const renderVN = () => {
       const { className, controls, type, align, name, autocomplete, autoComplete } = props
-      const { inputValue, isActivated } = reactData
+      const { inputValue, isFocus, isActivated } = reactData
       const vSize = computeSize.value
       const isDisabled = computeIsDisabled.value
       const formReadonly = computeFormReadonly.value
@@ -776,7 +801,7 @@ export default defineComponent({
           h('input', {
             ref: refInputTarget,
             class: 'vxe-number-input--inner',
-            value: inputValue,
+            value: !isFocus && type === 'amount' ? numLabel : inputValue,
             name,
             type: 'text',
             placeholder: inpPlaceholder,
@@ -819,6 +844,7 @@ export default defineComponent({
     })
 
     onBeforeUnmount(() => {
+      reactData.isFocus = false
       numberStopDown()
       afterCheckValue()
       globalEvents.off($xeNumberInput, 'mousedown')

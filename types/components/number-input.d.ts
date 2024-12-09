@@ -28,7 +28,7 @@ export namespace VxeNumberInputPropTypes {
   export type ClassName = string
   export type Immediate = boolean
   export type Name = string
-  export type Type = 'number' | 'integer' | 'float'
+  export type Type = 'number' | 'integer' | 'float' | 'amount'
   export type Clearable = boolean
   export type Readonly = boolean
   export type Disabled = boolean
@@ -108,6 +108,7 @@ export interface NumberInputPrivateComputed {
 export interface VxeNumberInputPrivateComputed extends NumberInputPrivateComputed { }
 
 export interface NumberInputReactData {
+  isFocus: boolean
   isActivated: boolean
   inputValue: VxeNumberInputPropTypes.ModelValue | undefined
 }
