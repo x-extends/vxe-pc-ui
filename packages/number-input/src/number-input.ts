@@ -87,7 +87,7 @@ export default defineVxeComponent({
     // float
     digits: {
       type: [String, Number] as PropType<VxeNumberInputPropTypes.Digits>,
-      default: () => getConfig().numberInput.digits
+      default: null
     },
 
     prefixIcon: String as PropType<VxeNumberInputPropTypes.PrefixIcon>,
@@ -110,6 +110,7 @@ export default defineVxeComponent({
   data () {
     const xID = XEUtils.uniqueId()
     const reactData: NumberInputReactData = {
+      isFocus: false,
       isActivated: false,
       inputValue: ''
     }
@@ -160,7 +161,24 @@ export default defineVxeComponent({
       const $xeNumberInput = this
       const props = $xeNumberInput
 
-      return XEUtils.toInteger(props.digits) || 1
+      const { type, digits } = props
+      let defDigits: any = digits
+      if (defDigits === null) {
+        defDigits = getConfig().numberInput.digits
+        if (defDigits === null) {
+          if (type === 'amount') {
+            defDigits = 2
+          }
+        }
+      }
+      return XEUtils.toInteger(defDigits) || 1
+    },
+    computeDecimalsType () {
+      const $xeNumberInput = this
+      const props = $xeNumberInput
+
+      const { type } = props
+      return type === 'float' || type === 'amount'
     },
     computeStepValue () {
       const $xeNumberInput = this
@@ -168,10 +186,11 @@ export default defineVxeComponent({
 
       const { type } = props
       const digitsValue = $xeNumberInput.computeDigitsValue as number
+      const decimalsType = $xeNumberInput.computeDecimalsType
       const step = props.step
       if (type === 'integer') {
         return XEUtils.toInteger(step) || 1
-      } else if (type === 'float') {
+      } else if (decimalsType) {
         return XEUtils.toNumber(step) || (1 / Math.pow(10, digitsValue))
       }
       return XEUtils.toNumber(step) || 1
@@ -216,8 +235,8 @@ export default defineVxeComponent({
       const $xeNumberInput = this
       const props = $xeNumberInput
 
-      const { type, immediate } = props
-      return immediate || !(type === 'number' || type === 'integer' || type === 'float')
+      const { immediate } = props
+      return immediate
     },
     computeNumValue () {
       const $xeNumberInput = (this as any)
@@ -230,9 +249,15 @@ export default defineVxeComponent({
     },
     computeNumLabel () {
       const $xeNumberInput = (this as any)
+      const props = $xeNumberInput
       const reactData = $xeNumberInput.reactData
 
+      const { type } = props
       const { inputValue } = reactData
+      const digitsValue = $xeNumberInput.computeDigitsValue
+      if (type === 'amount') {
+        return XEUtils.commafy(XEUtils.toNumber(inputValue), { digits: digitsValue })
+      }
       return XEUtils.toString(inputValue)
     },
     computeIsDisabledSubtractNumber () {
@@ -313,10 +338,11 @@ export default defineVxeComponent({
       const $xeNumberInput = this
       const props = $xeNumberInput
 
-      const { type, exponential } = props
+      const { exponential } = props
       const inpMaxLength = $xeNumberInput.computeInpMaxLength
       const digitsValue = $xeNumberInput.computeDigitsValue
-      const restVal = (type === 'float' ? toFloatValueFixed(val, digitsValue) : handleNumberString(val))
+      const decimalsType = $xeNumberInput.computeDecimalsType
+      const restVal = (decimalsType ? toFloatValueFixed(val, digitsValue) : handleNumberString(val))
       if (exponential && (val === restVal || handleNumberString(val).toLowerCase() === XEUtils.toNumber(restVal).toExponential())) {
         return val
       }
@@ -388,6 +414,7 @@ export default defineVxeComponent({
       const $xeNumberInput = this
       const reactData = $xeNumberInput.reactData
 
+      reactData.isFocus = true
       reactData.isActivated = true
       $xeNumberInput.triggerEvent(evnt)
     },
@@ -423,13 +450,12 @@ export default defineVxeComponent({
      */
     initValue  () {
       const $xeNumberInput = this
-      const props = $xeNumberInput
       const reactData = $xeNumberInput.reactData
 
-      const { type } = props
       const { inputValue } = reactData
       const digitsValue = $xeNumberInput.computeDigitsValue
-      if (type === 'float') {
+      const decimalsType = $xeNumberInput.computeDecimalsType
+      if (decimalsType) {
         if (inputValue) {
           let textValue = ''
           let validValue: number | null = null
@@ -505,6 +531,7 @@ export default defineVxeComponent({
         $xeNumberInput.handleChange(value, handleNumberString(inputValue), evnt)
       }
       $xeNumberInput.afterCheckValue()
+      reactData.isFocus = false
       reactData.isActivated = false
       $xeNumberInput.dispatchEvent('blur', { value }, evnt)
       // 自动更新校验状态
@@ -861,7 +888,7 @@ export default defineVxeComponent({
       const reactData = $xeNumberInput.reactData
 
       const { className, controls, type, align, name, autocomplete, autoComplete } = props
-      const { inputValue, isActivated } = reactData
+      const { inputValue, isFocus, isActivated } = reactData
       const vSize = $xeNumberInput.computeSize
       const isDisabled = $xeNumberInput.computeIsDisabled
       const formReadonly = $xeNumberInput.computeFormReadonly
@@ -902,7 +929,7 @@ export default defineVxeComponent({
             ref: 'refInputTarget',
             class: 'vxe-number-input--inner',
             domProps: {
-              value: inputValue
+              value: !isFocus && type === 'amount' ? numLabel : inputValue
             },
             attrs: {
               name,
@@ -965,7 +992,9 @@ export default defineVxeComponent({
   },
   beforeDestroy () {
     const $xeNumberInput = this
+    const reactData = $xeNumberInput.reactData
 
+    reactData.isFocus = false
     $xeNumberInput.numberStopDown()
     $xeNumberInput.afterCheckValue()
     globalEvents.off($xeNumberInput, 'mousedown')
