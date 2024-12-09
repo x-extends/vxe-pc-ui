@@ -2709,6 +2709,8 @@ export interface TableReactData<D = any> {
   },
   scrollVMLoading: boolean
 
+  isCustomStatus: boolean
+
   isDragRowMove: Boolean
   dragRow: any
   isDragColMove: boolean
@@ -3039,6 +3041,10 @@ export interface TableMethods<DT = any> {
     tableColumn: VxeTableDefines.ColumnInfo<DT>[]
   }
   /**
+   * 获取表格的全量列
+   */
+  getFullColumns(): VxeTableDefines.ColumnInfo[]
+  /**
    * 获取数据，和 data 的行为一致，也可以指定索引获取数据
    */
   getData(): DT[]
@@ -3080,6 +3086,10 @@ export interface TableMethods<DT = any> {
     tableData: DT[]
     footerData: DT[][]
   }
+  /**
+   * 获取表格的全量数据，如果是 tree-config 则返回带层级的树结构
+   */
+  getFullData(): DT[]
   /**
    * 设置指定列为固定列
    * @param fieldOrColumns 列对象或字段名,支持传多个
