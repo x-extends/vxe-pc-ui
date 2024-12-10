@@ -3308,13 +3308,20 @@ export interface TableMethods<DT = any> {
    */
   clearCurrentColumn(): Promise<void>
   /**
-   * 手动对表格进行排序
+   * 手动对表格进行排序，建议使用 setSort 方法
    * @param sortConfs 字段名、多列排序
    * @param order 排序方式
    */
   sort(field: string, order?: VxeTablePropTypes.SortOrder): Promise<void>
   sort(sortConfs: VxeTableDefines.SortConfs, order?: VxeTablePropTypes.SortOrder): Promise<void>
   sort(sortConfs: VxeTableDefines.SortConfs[], order?: VxeTablePropTypes.SortOrder): Promise<void>
+
+  /**
+   * 手动对表格进行排序
+   * @param sortConfs
+   * @param update 是否同时更新数据，如果不传，则可以手动调用 updateData() 更新数据
+   */
+  setSort(sortConfs: VxeTableDefines.SortConfs | VxeTableDefines.SortConfs[], update?: boolean)
   /**
    * 手动清空排序条件，数据会恢复成未排序的状态
    * @param columnOrField 列对象或字段名
@@ -3584,6 +3591,7 @@ export interface TablePrivateMethods<D = any> {
   }): void
   triggerRowExpandEvent(evnt: Event, params: VxeTableDefines.CellRenderBodyParams<any>): void
   triggerTreeExpandEvent(evnt: Event, params: VxeTableDefines.CellRenderBodyParams<any>): void
+  handleColumnSortEvent(evnt: Event, column: VxeTableDefines.ColumnInfo): void
   triggerSortEvent(evnt: Event, column: VxeTableDefines.ColumnInfo<any>, order: VxeTablePropTypes.SortOrder): void
   handleRowDragDragstartEvent (evnt: DragEvent): void
   handleRowDragDragendEvent(evnt: DragEvent): void
