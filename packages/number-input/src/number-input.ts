@@ -115,7 +115,8 @@ export default defineVxeComponent({
       inputValue: ''
     }
     const internalData: NumberInputInternalData = {
-      dnTimeout: undefined
+      // dnTimeout: undefined,
+      // isUM: undefined
     }
     return {
       xID,
@@ -359,12 +360,13 @@ export default defineVxeComponent({
       const $xeNumberInput = this
       const props = $xeNumberInput
       const reactData = $xeNumberInput.reactData
+      const internalData = $xeNumberInput.internalData
       const $xeForm = $xeNumberInput.$xeForm
       const formItemInfo = $xeNumberInput.formItemInfo
 
       const value = eqEmptyValue(val) ? null : Number(val)
       const isChange = value !== props.value
-      reactData.inputValue = inputValue || ''
+      internalData.isUM = true
       if (isChange) {
         $xeNumberInput.emitModel(value)
       }
@@ -443,6 +445,25 @@ export default defineVxeComponent({
       if (!isDisabled) {
         const { inputValue } = reactData
         $xeNumberInput.dispatchEvent('suffix-click', { value: inputValue }, evnt)
+      }
+    },
+    updateModel (val: any) {
+      const $xeNumberInput = this
+      const reactData = $xeNumberInput.reactData
+
+      const { inputValue } = reactData
+      const digitsValue = $xeNumberInput.computeDigitsValue
+      const decimalsType = $xeNumberInput.computeDecimalsType
+      if (decimalsType) {
+        if (val) {
+          let textValue = ''
+          if (val) {
+            textValue = toFloatValueFixed(val, digitsValue)
+          }
+          if (textValue !== inputValue) {
+            reactData.inputValue = textValue
+          }
+        }
       }
     },
     /**
@@ -959,9 +980,12 @@ export default defineVxeComponent({
   watch: {
     value (val) {
       const $xeNumberInput = this
-      const reactData = $xeNumberInput.reactData
+      const internalData = $xeNumberInput.internalData
 
-      reactData.inputValue = val
+      if (!internalData.isUM) {
+        this.updateModel(val)
+      }
+      internalData.isUM = false
     },
     type () {
       const $xeNumberInput = this

@@ -108,6 +108,7 @@ export interface NumberInputReactData {
 
 export interface NumberInputInternalData {
   dnTimeout?: undefined | number
+  isUM?: boolean
 }
 
 export interface NumberInputMethods {
