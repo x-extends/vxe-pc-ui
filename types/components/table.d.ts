@@ -3314,6 +3314,12 @@ export interface TableMethods<DT = any> {
   sort(sortConfs: VxeTableDefines.SortConfs, order?: VxeTablePropTypes.SortOrder): Promise<void>
   sort(sortConfs: VxeTableDefines.SortConfs[], order?: VxeTablePropTypes.SortOrder): Promise<void>
   /**
+   * 手动对表格进行排序
+   * @param sortConfs
+   * @param update 是否同时更新数据，如果不传，则可以手动调用 updateData() 更新数据
+   */
+  setSort(sortConfs: VxeTableDefines.SortConfs | VxeTableDefines.SortConfs[], update?: boolean)
+  /**
    * 手动清空排序条件，数据会恢复成未排序的状态
    * @param columnOrField 列对象或字段名
    */

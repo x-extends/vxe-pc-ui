@@ -35,10 +35,9 @@ export interface TableFilterMethods<D = any> {
   openFilter(fieldOrColumn: VxeColumnPropTypes.Field | VxeTableDefines.ColumnInfo<any>):Promise<void>
   /**
    * 用于 filters，修改筛选列表
-   * 在筛选条件更新之后可以调用 updateData 函数处理表格数据
    * @param columnOrField 列对象或字段名
    * @param options 选项列表
-   * @param update 是否同时更新数据
+   * @param update 是否同时更新数据，如果不传，则可以手动调用 updateData() 更新数据
    */
   setFilter(fieldOrColumn: VxeColumnPropTypes.Field | VxeTableDefines.ColumnInfo<any>, options: VxeColumnPropTypes.FilterItem[], update?: boolean): Promise<void>
   /**
@@ -69,6 +68,7 @@ export interface TableFilterPrivateMethods<D = any> {
   checkFilterOptions(): void
   handleClearFilter(column: any): void
   triggerFilterEvent(evnt: any, column: any, params: any): void
+  handleColumnConfirmFilter(column: VxeTableDefines.ColumnInfo, evnt: Event | null): Promise<any>
   confirmFilterEvent(evnt: Event | null): void
   handleFilterChangeRadioOption (evnt: Event, checked: boolean, item: any): void
   handleFilterChangeMultipleOption (evnt: Event, checked: boolean, item: any): void
