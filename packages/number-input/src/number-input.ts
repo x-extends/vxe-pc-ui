@@ -116,7 +116,8 @@ export default defineComponent({
     })
 
     const internalData: NumberInputInternalData = {
-      dnTimeout: undefined
+      // dnTimeout: undefined,
+      // isUM: undefined
     }
 
     const refElem = ref() as Ref<HTMLDivElement>
@@ -291,6 +292,7 @@ export default defineComponent({
     const handleChange = (val: number | null, inputValue: string, evnt: Event | { type: string }) => {
       const value = eqEmptyValue(val) ? null : Number(val)
       const isChange = value !== props.modelValue
+      internalData.isUM = true
       if (isChange) {
         emit('update:modelValue', value)
       }
@@ -358,6 +360,23 @@ export default defineComponent({
       if (!isDisabled) {
         const { inputValue } = reactData
         numberInputMethods.dispatchEvent('suffix-click', { value: inputValue }, evnt)
+      }
+    }
+
+    const updateModel = (val: any) => {
+      const { inputValue } = reactData
+      const digitsValue = computeDigitsValue.value
+      const decimalsType = computeDecimalsType.value
+      if (decimalsType) {
+        if (val) {
+          let textValue = ''
+          if (val) {
+            textValue = toFloatValueFixed(val, digitsValue)
+          }
+          if (textValue !== inputValue) {
+            reactData.inputValue = textValue
+          }
+        }
       }
     }
 
@@ -826,7 +845,10 @@ export default defineComponent({
     $xeNumberInput.renderVN = renderVN
 
     watch(() => props.modelValue, (val) => {
-      reactData.inputValue = val
+      if (!internalData.isUM) {
+        updateModel(val)
+      }
+      internalData.isUM = false
     })
 
     watch(() => props.type, () => {
