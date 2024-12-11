@@ -26,6 +26,7 @@ declare module '@vxe-ui/core' {
     TABLE_DRAG_ROW?: string
     TABLE_DRAG_COLUMN?: string
     TABLE_DRAG_STATUS_ROW?: string
+    TABLE_DRAG_STATUS_SUB_ROW?: string
     TABLE_DRAG_STATUS_COLUMN?: string
     TABLE_DRAG_DISABLED?: string
 
