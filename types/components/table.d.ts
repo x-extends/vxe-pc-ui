@@ -423,6 +423,10 @@ export namespace VxeTablePropTypes {
      */
     isCrossDrag?: boolean
     /**
+     * 只对 tree-config 启用有效，是否允许拖拽成目标节点的子级
+     */
+    isToChildDrag?: boolean
+    /**
      * 只对 tree-config 启用有效，是否允许将自己拖拽到子孙节点中
      */
     isSelfToChildDrag?: boolean
@@ -2799,6 +2803,7 @@ export interface TableInternalData<D = any> {
   prevDragRow?: any
   // 上一个拖动的列
   prevDragCol?: VxeTableDefines.ColumnInfo
+  prevDragToChild?: boolean
   prevDragPos?: 'top' | 'bottom' | 'left' | 'right' | ''
 
   // 特殊标识
