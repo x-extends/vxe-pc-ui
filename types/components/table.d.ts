@@ -483,6 +483,18 @@ export namespace VxeTablePropTypes {
      */
     showIcon?: boolean
     /**
+     * 用于分组表头，是否跨列拖拽，启用后允许拖拽到其他的列，除自身列之外
+     */
+    isCrossDrag?: boolean
+    /**
+     * 是否允许拖拽成目标列的子级
+     */
+    isToChildDrag?: boolean
+    /**
+     * 用于分组表头，是否允许将自己拖拽到子孙列中
+     */
+    isSelfToChildDrag?: boolean
+    /**
      * 是否显示拖拽辅助状态显示
      */
     showGuidesStatus?: boolean

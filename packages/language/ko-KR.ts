@@ -47,8 +47,8 @@ export default {
       notExp: '该浏览器不支持导入/导出功能',
       impFields: '导入失败，请检查字段名和数据格式是否正确',
       treeNotImp: '树表格不支持导入',
-      treeCrossDrag: '只能拖拽第一层级的数据',
-      treeDragChild: '父级数据不能拖拽到自己的子级中',
+      treeCrossDrag: '只能拖拽第一层级',
+      treeDragChild: '父级不能拖拽到自己的子级中',
       reqPlugin: '可选扩展插件 "{1}" https://vxeui.com/other{0}/#/{1}/install'
     },
     table: {
