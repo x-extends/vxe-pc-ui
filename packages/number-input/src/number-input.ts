@@ -592,6 +592,7 @@ export default defineVxeComponent({
       if (!isDisabled && !formReadonly && !isDisabledSubtractNumber) {
         $xeNumberInput.numberChange(false, evnt)
       }
+      reactData.isActivated = true
       $xeNumberInput.dispatchEvent('next-number', { value: reactData.inputValue }, evnt)
     },
     numberDownNextEvent (evnt: Event) {
@@ -614,6 +615,7 @@ export default defineVxeComponent({
       if (!isDisabled && !formReadonly && !isDisabledAddNumber) {
         $xeNumberInput.numberChange(true, evnt)
       }
+      reactData.isActivated = true
       $xeNumberInput.dispatchEvent('prev-number', { value: reactData.inputValue }, evnt)
     },
     numberKeydownEvent  (evnt: KeyboardEvent) {
@@ -735,9 +737,15 @@ export default defineVxeComponent({
       const el = $xeNumberInput.$refs.refElem as HTMLElement
       const panelElem = $xeNumberInput.$refs.refInputPanel as HTMLDivElement
       const isDisabled = $xeNumberInput.computeIsDisabled
+      const inpImmediate = $xeNumberInput.computeInpImmediate
       if (!isDisabled && isActivated) {
         reactData.isActivated = getEventTargetNode(evnt, el).flag || getEventTargetNode(evnt, panelElem).flag
         if (!reactData.isActivated) {
+          if (!inpImmediate) {
+            const { inputValue } = reactData
+            const value = inputValue ? Number(inputValue) : null
+            $xeNumberInput.handleChange(value, handleNumberString(inputValue), evnt)
+          }
           $xeNumberInput.afterCheckValue()
         }
       }

@@ -130,7 +130,7 @@ export default {
       setting: {
         colSort: 'ソート',
         sortHelpTip: 'ドラッグして列を並べ替えます',
-        colTitle: 'タイトル',
+        colTitle: '列标题',
         colResizable: '列の幅 (px)',
         colVisible: '表示する',
         colFixed: '列固定',

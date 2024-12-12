@@ -3614,6 +3614,7 @@ export interface TablePrivateMethods<D = any> {
   }): void
   handleCellDragMouseupEvent (evnt: MouseEvent): void
   handleHeaderCellDragDragstartEvent (evnt: DragEvent): void
+  handleColDragSwapEvent (evnt: DragEvent, isSyncColumn: boolean | undefined, dragCol: VxeTableDefines.ColumnInfo | null | undefined, prevDragCol: VxeTableDefines.ColumnInfo | undefined, prevDragPos: '' | 'top' | 'bottom' | 'left' | 'right' | undefined, prevDragToChild: boolean | undefined): Promise<void>
   handleHeaderCellDragDragendEvent(evnt: DragEvent): void
   handleHeaderCellDragDragoverEvent(evnt: DragEvent,): void
   handleHeaderCellDragMousedownEvent (evnt: MouseEvent, params: {
