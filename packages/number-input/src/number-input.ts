@@ -487,6 +487,7 @@ export default defineComponent({
       if (!isDisabled && !formReadonly && !isDisabledSubtractNumber) {
         numberChange(false, evnt)
       }
+      reactData.isActivated = true
       numberInputMethods.dispatchEvent('next-number', { value: reactData.inputValue }, evnt)
     }
 
@@ -505,6 +506,7 @@ export default defineComponent({
       if (!isDisabled && !formReadonly && !isDisabledAddNumber) {
         numberChange(true, evnt)
       }
+      reactData.isActivated = true
       numberInputMethods.dispatchEvent('prev-number', { value: reactData.inputValue }, evnt)
     }
 
@@ -611,9 +613,15 @@ export default defineComponent({
       const el = refElem.value
       const panelElem = refInputPanel.value
       const isDisabled = computeIsDisabled.value
+      const inpImmediate = computeInpImmediate.value
       if (!isDisabled && isActivated) {
         reactData.isActivated = getEventTargetNode(evnt, el).flag || getEventTargetNode(evnt, panelElem).flag
         if (!reactData.isActivated) {
+          if (!inpImmediate) {
+            const { inputValue } = reactData
+            const value = inputValue ? Number(inputValue) : null
+            handleChange(value, handleNumberString(inputValue), evnt)
+          }
           afterCheckValue()
         }
       }

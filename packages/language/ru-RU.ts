@@ -130,7 +130,7 @@ export default {
       setting: {
         colSort: 'сортировать',
         sortHelpTip: 'Нажмите и перетащите значок, чтобы изменить порядок столбцов.',
-        colTitle: 'заголовок',
+        colTitle: '列标题',
         colResizable: 'Ширина столбца (пикселей)',
         colVisible: 'Отображать ли',
         colFixed: 'заморозить столбец',

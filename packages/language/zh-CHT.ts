@@ -130,7 +130,7 @@ export default {
       setting: {
         colSort: '排序',
         sortHelpTip: '點擊並拖曳圖示可以調整列的排序',
-        colTitle: '標題',
+        colTitle: '列標題',
         colResizable: '列寬（像素）',
         colVisible: '是否顯示',
         colFixed: '凍結列',

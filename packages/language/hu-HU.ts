@@ -130,7 +130,7 @@ export default {
       setting: {
         colSort: 'fajta',
         sortHelpTip: 'Kattintson és húzza az ikont az oszlopok sorrendjének módosításához',
-        colTitle: 'cím',
+        colTitle: '列标题',
         colResizable: 'Oszlopszélesség (pixel)',
         colVisible: 'Megjelenik-e',
         colFixed: 'fagyasztóoszlop',

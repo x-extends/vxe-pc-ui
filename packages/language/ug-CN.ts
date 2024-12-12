@@ -130,7 +130,7 @@ export default {
       setting: {
         colSort: 'تەرتىپلەش',
         sortHelpTip: 'بىسىپ ياكى سىنبەلگىنى تارتسىڭىز قۇرنى تەرتىپلىيەلەيسىز ',
-        colTitle: 'تېما',
+        colTitle: '列标题',
         colResizable: 'قۇر كەڭلىڭى(پېكسىل)',
         colVisible: 'كۆرۈنەمدۇ-كۆرۈنمەمدۇ',
         colFixed: 'قۇرنى توڭلىتىش',

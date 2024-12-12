@@ -130,7 +130,7 @@ export default {
       setting: {
         colSort: 'Sort',
         sortHelpTip: 'Click and drag the icon to adjust the order of the columns.',
-        colTitle: 'Title',
+        colTitle: '列标题',
         colResizable: 'Column width (px)',
         colVisible: 'Display',
         colFixed: 'Freeze columns',
