@@ -3335,7 +3335,7 @@ export interface TableMethods<DT = any> {
    * @param sortConfs
    * @param update 是否同时更新数据，如果不传，则可以手动调用 updateData() 更新数据
    */
-  setSort(sortConfs: VxeTableDefines.SortConfs | VxeTableDefines.SortConfs[], update?: boolean)
+  setSort(sortConfs: VxeTableDefines.SortConfs | VxeTableDefines.SortConfs[], update?: boolean): Promise<void>
   /**
    * 手动清空排序条件，数据会恢复成未排序的状态
    * @param columnOrField 列对象或字段名
@@ -3574,7 +3574,14 @@ export interface TablePrivateMethods<D = any> {
   cacheSourceMap(fullData: any[]): void
   saveCustomStore(type: 'confirm' | 'reset' | 'update:width' | 'update:fixed' | 'update:sort' | 'update:visible'): Promise<any>
   analyColumnWidth(): void
+  updateCheckboxStatus(): void
+  updateAllCheckboxStatus(): void
   checkSelectionStatus(): void
+  handleBatchSelectRows(rows: any[], value: any, isForce?: boolean): void
+  /**
+   * use handleBatchSelectRows
+   * @deprecated
+   */
   handleSelectRow(params: any, value: any, isForce?: boolean): void
   handleCustom(): Promise<void>
   handleUpdateDataQueue(): void
@@ -4356,7 +4363,7 @@ export namespace VxeTableDefines {
     }
   }
 
-  export interface EnterAppendRowEventParams {
+  export interface EnterAppendRowEventParams<D = any> {
     row: D
     rowIndex: number
     $rowIndex: number
