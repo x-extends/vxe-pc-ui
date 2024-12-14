@@ -15,6 +15,7 @@ export default defineComponent({
     title: [String, Number] as PropType<VxeImagePropTypes.Title>,
     width: [String, Number] as PropType<VxeImagePropTypes.Width>,
     height: [String, Number] as PropType<VxeImagePropTypes.Height>,
+    circle: Boolean as PropType<VxeImagePropTypes.Circle>,
     maskClosable: {
       type: Boolean as PropType<VxeImagePropTypes.MaskClosable>,
       default: () => getConfig().image.maskClosable
@@ -145,14 +146,15 @@ export default defineComponent({
     Object.assign($xeImage, imageMethods, imagePrivateMethods)
 
     const renderVN = () => {
-      const { alt, loading } = props
+      const { alt, loading, circle } = props
       const imgStyle = computeImgStyle.value
       const imgUrl = computeImgUrl.value
       const vSize = computeSize.value
       return h('img', {
         ref: refElem,
         class: ['vxe-image', {
-          [`size--${vSize}`]: vSize
+          [`size--${vSize}`]: vSize,
+          'is--circle': circle
         }],
         src: imgUrl,
         alt,

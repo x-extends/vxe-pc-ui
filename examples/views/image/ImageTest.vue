@@ -1,7 +1,7 @@
 <template>
   <div>
     <p>
-      <vxe-image src="https://vxeui.com/resource/img/fj577.jpg" :width="200"></vxe-image>
+      <vxe-image src="https://vxeui.com/resource/img/fj577.jpg" :width="200" circle></vxe-image>
     </p>
     <p>
       <vxe-image :src="img1List" :width="200"></vxe-image>

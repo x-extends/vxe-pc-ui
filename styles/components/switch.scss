@@ -76,6 +76,11 @@
       }
     }
   }
+  &.is--readonly {
+    .vxe-switch--button {
+      cursor: default;
+    }
+  }
   .vxe-switch--button {
     display: block;
     position: relative;

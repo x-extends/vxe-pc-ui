@@ -13,6 +13,10 @@ export default defineComponent({
       type: Boolean as PropType<VxeSwitchPropTypes.Disabled>,
       default: null
     },
+    readonly: {
+      type: Boolean as PropType<VxeSwitchPropTypes.Readonly>,
+      default: null
+    },
     size: {
       type: String as PropType<VxeSwitchPropTypes.Size>,
       default: () => getConfig().switch.size || getConfig().size
@@ -79,6 +83,17 @@ export default defineComponent({
       return disabled
     })
 
+    const computeIsReadonly = computed(() => {
+      const { readonly } = props
+      if (readonly === null) {
+        if ($xeForm) {
+          return $xeForm.props.readonly || $xeForm.props.disabled
+        }
+        return false
+      }
+      return readonly
+    })
+
     const computeOnShowLabel = computed(() => {
       return getFuncText(props.openLabel)
     })
@@ -97,7 +112,8 @@ export default defineComponent({
 
     const clickEvent = (evnt: Event) => {
       const isDisabled = computeIsDisabled.value
-      if (!isDisabled) {
+      const isReadonly = computeIsReadonly.value
+      if (!(isDisabled || isReadonly)) {
         const isChecked = computeIsChecked.value
         clearTimeout(internalData.atTimeout)
         const value = isChecked ? props.closeValue : props.openValue
@@ -158,11 +174,13 @@ export default defineComponent({
       const onShowLabel = computeOnShowLabel.value
       const offShowLabel = computeOffShowLabel.value
       const isDisabled = computeIsDisabled.value
+      const isReadonly = computeIsReadonly.value
 
       return h('div', {
         class: ['vxe-switch', isChecked ? 'is--on' : 'is--off', {
           [`size--${vSize}`]: vSize,
           'is--disabled': isDisabled,
+          'is--readonly': isReadonly,
           'is--animat': reactData.hasAnimat
         }]
       }, [
@@ -170,7 +188,7 @@ export default defineComponent({
           ref: refButton,
           class: 'vxe-switch--button',
           type: 'button',
-          disabled: isDisabled,
+          disabled: isDisabled || isReadonly,
           onClick: clickEvent,
           onFocus: focusEvent,
           onBlur: blurEvent

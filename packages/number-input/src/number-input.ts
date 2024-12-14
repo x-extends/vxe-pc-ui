@@ -591,13 +591,14 @@ export default defineComponent({
     }) => {
       if (props.controls) {
         if (reactData.isActivated) {
+          evnt.stopPropagation()
+          evnt.preventDefault()
           const delta = evnt.deltaY
           if (delta > 0) {
             numberNextEvent(evnt)
           } else if (delta < 0) {
             numberPrevEvent(evnt)
           }
-          evnt.preventDefault()
         }
       }
       triggerEvent(evnt)

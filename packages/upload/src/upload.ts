@@ -34,6 +34,14 @@ export default defineComponent({
       type: Array as PropType<VxeUploadPropTypes.ImageTypes>,
       default: () => XEUtils.clone(getConfig().upload.imageTypes, true)
     },
+    imageConfig: {
+      type: Object as PropType<VxeUploadPropTypes.ImageConfig>,
+      default: () => XEUtils.clone(getConfig().upload.imageConfig, true)
+    },
+    /**
+     * 已废弃，被 image-config 替换
+     * @deprecated
+     */
     imageStyle: {
       type: Object as PropType<VxeUploadPropTypes.ImageStyle>,
       default: () => XEUtils.clone(getConfig().upload.imageStyle, true)
@@ -290,12 +298,13 @@ export default defineComponent({
       return defHints.join(getI18n('vxe.base.comma'))
     })
 
-    const computeImageStyleOpts = computed(() => {
-      return Object.assign({}, props.imageStyle)
+    const computeImageOpts = computed(() => {
+      return Object.assign({}, props.imageConfig || props.imageStyle)
     })
 
     const computeImgStyle = computed(() => {
-      const { width, height } = computeImageStyleOpts.value
+      const imageOpts = computeImageOpts.value
+      const { width, height } = imageOpts
       const stys: Record<string, string> = {}
       if (width) {
         stys.width = toCssUnit(width)
@@ -1147,6 +1156,7 @@ export default defineComponent({
       const { fileCacheMaps } = reactData
       const isDisabled = computeIsDisabled.value
       const formReadonly = computeFormReadonly.value
+      const imageOpts = computeImageOpts.value
       const imgStyle = computeImgStyle.value
       const cornerSlot = slots.corner
 
@@ -1159,6 +1169,7 @@ export default defineComponent({
           key: index,
           class: ['vxe-upload--image-item', {
             'is--preview': showPreview,
+            'is--circle': imageOpts.circle,
             'is--loading': isLoading,
             'is--error': isError
           }]
@@ -1207,10 +1218,14 @@ export default defineComponent({
                         }
                       })
                     ])
-                    : h('img', {
-                      class: 'vxe-upload--image-item-img',
-                      src: getThumbnailFileUrl(item)
-                    })
+                    : h('div', {
+                      class: 'vxe-upload--image-item-img-wrapper'
+                    }, [
+                      h('img', {
+                        class: 'vxe-upload--image-item-img',
+                        src: getThumbnailFileUrl(item)
+                      })
+                    ])
                 )
               : createCommentVNode(),
             h('div', {

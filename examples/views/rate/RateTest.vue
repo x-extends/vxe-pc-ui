@@ -2,6 +2,7 @@
   <div>
     <vxe-rate v-model="val1"></vxe-rate>
     <vxe-rate v-model="val2"></vxe-rate>
+    <vxe-rate v-model="val3" readonly></vxe-rate>
   </div>
 </template>
 
@@ -10,4 +11,5 @@ import { ref } from 'vue'
 
 const val1 = ref(0)
 const val2 = ref(3)
+const val3 = ref(3)
 </script>

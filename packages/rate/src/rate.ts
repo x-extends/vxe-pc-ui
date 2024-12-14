@@ -57,6 +57,17 @@ export default defineComponent({
       return disabled
     })
 
+    const computeIsReadonly = computed(() => {
+      const { readonly } = props
+      if (readonly === null) {
+        if ($xeForm) {
+          return $xeForm.props.readonly || $xeForm.props.disabled
+        }
+        return false
+      }
+      return readonly
+    })
+
     const computeNumVal = computed(() => {
       const { modelValue } = props
       const { activeValue } = reactData
@@ -102,7 +113,8 @@ export default defineComponent({
 
     const mouseenterEvent = (evnt: MouseEvent, item: any) => {
       const isDisabled = computeIsDisabled.value
-      if (!isDisabled) {
+      const isReadonly = computeIsReadonly.value
+      if (!(isDisabled || isReadonly)) {
         const value = item.value
         reactData.activeValue = value
       }
@@ -114,7 +126,8 @@ export default defineComponent({
 
     const clickEvent = (evnt: MouseEvent, item: any) => {
       const isDisabled = computeIsDisabled.value
-      if (!isDisabled) {
+      const isReadonly = computeIsReadonly.value
+      if (!(isDisabled || isReadonly)) {
         const value = item.value
         emitModel(value)
         dispatchEvent('change', { value }, evnt)
@@ -130,6 +143,7 @@ export default defineComponent({
     const renderVN = () => {
       const { status } = props
       const isDisabled = computeIsDisabled.value
+      const isReadonly = computeIsReadonly.value
       const itemList = computeItemList.value
       const vSize = computeSize.value
       const numVal = computeNumVal.value
@@ -139,7 +153,8 @@ export default defineComponent({
         class: ['vxe-rate', {
           [`size--${vSize}`]: vSize,
           [`theme--${status}`]: status,
-          'is--disabled': isDisabled
+          'is--disabled': isDisabled,
+          'is--readonly': isReadonly
         }]
       }, itemList.map(item => {
         const isChecked = numVal >= item.value
@@ -148,13 +163,13 @@ export default defineComponent({
             'is--checked': isChecked
           }],
           onMouseenter (evnt) {
-            if (!isDisabled) {
+            if (!(isDisabled || isReadonly)) {
               mouseenterEvent(evnt, item)
             }
           },
           onMouseleave: mouseleaveEvent,
           onClick (evnt) {
-            if (!isDisabled) {
+            if (!(isDisabled || isReadonly)) {
               clickEvent(evnt, item)
             }
           }

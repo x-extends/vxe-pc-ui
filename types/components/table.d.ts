@@ -2570,8 +2570,6 @@ export interface TableReactData<D = any> {
   reColumnFlag: number
   // 已标记的对象集
   pendingRowMaps: Record<string, D | null>
-  // 已标记的行
-  pendingRowList: any[],
   // 初始化标识
   initStore: {
     filter: boolean

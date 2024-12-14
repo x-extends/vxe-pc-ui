@@ -10,7 +10,7 @@
       <vxe-upload v-model="fileList" multiple :limit-size="30" autoHiddenButton show-error-status :limit-count="10" showDownloadButton :upload-method="uploadMethod"></vxe-upload>
     </p>
     <p>
-      <vxe-upload v-model="imgList" mode="image" readonly show-error-status :upload-method="uploadMethod" showDownloadButton></vxe-upload>
+      <vxe-upload v-model="imgList" mode="image" :image-config="{circle: true}" readonly show-error-status :upload-method="uploadMethod" showDownloadButton></vxe-upload>
     </p>
     <p>
       <vxe-upload v-model="fileList" multiple :limit-size="30" disabled autoHiddenButton show-error-status showDownloadButton :limit-count="10" :upload-method="uploadMethod"></vxe-upload>

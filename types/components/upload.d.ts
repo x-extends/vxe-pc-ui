@@ -1,5 +1,6 @@
 import { RenderFunction, SetupContext, Ref } from 'vue'
 import { DefineVxeComponentApp, DefineVxeComponentOptions, DefineVxeComponentInstance, VxeComponentBaseOptions, VxeComponentEventParams, ValueOf, VxeComponentSizeType } from '@vxe-ui/core'
+import { VxeImagePropTypes } from './image'
 
 /* eslint-disable no-use-before-define,@typescript-eslint/ban-types */
 
@@ -35,9 +36,18 @@ export namespace VxeUploadPropTypes {
   export type Readonly = boolean
   export type Disabled = boolean
   export type ImageTypes = string[]
+  export interface ImageConfig {
+    width?: VxeImagePropTypes.Width
+    height?: VxeImagePropTypes.Height
+    circle?: VxeImagePropTypes.Circle
+  }
+  /**
+   * 已废弃，被 imageConfig 替换
+   * @deprecated
+   */
   export interface ImageStyle {
-    width?: number | string
-    height?: number | string
+    width?: VxeImagePropTypes.Width
+    height?: VxeImagePropTypes.Height
   }
   export type FileTypes = string[]
   export type SingleMode = boolean
@@ -116,6 +126,11 @@ export interface VxeUploadProps {
   readonly?: VxeUploadPropTypes.Readonly
   disabled?: VxeUploadPropTypes.Disabled
   imageTypes?: VxeUploadPropTypes.ImageTypes
+  imageConfig?: VxeUploadPropTypes.ImageConfig
+  /**
+   * 已废弃，被 imageConfig 替换
+   * @deprecated
+   */
   imageStyle?: VxeUploadPropTypes.ImageStyle
   fileTypes?: VxeUploadPropTypes.FileTypes
   multiple?: VxeUploadPropTypes.Multiple
