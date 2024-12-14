@@ -712,13 +712,14 @@ export default defineVxeComponent({
 
       if (props.controls) {
         if (reactData.isActivated) {
+          evnt.stopPropagation()
+          evnt.preventDefault()
           const delta = evnt.deltaY
           if (delta > 0) {
             $xeNumberInput.numberNextEvent(evnt)
           } else if (delta < 0) {
             $xeNumberInput.numberPrevEvent(evnt)
           }
-          evnt.preventDefault()
         }
       }
       $xeNumberInput.triggerEvent(evnt)

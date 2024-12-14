@@ -28,6 +28,15 @@ export namespace VxeUploadPropTypes {
   export type Readonly = boolean
   export type Disabled = boolean
   export type ImageTypes = string[]
+  export interface ImageConfig {
+    width?: VxeImagePropTypes.Width
+    height?: VxeImagePropTypes.Height
+    circle?: VxeImagePropTypes.Circle
+  }
+  /**
+   * 已废弃，被 imageConfig 替换
+   * @deprecated
+   */
   export interface ImageStyle {
     width?: number | string
     height?: number | string
@@ -109,6 +118,11 @@ export interface VxeUploadProps {
   readonly?: VxeUploadPropTypes.Readonly
   disabled?: VxeUploadPropTypes.Disabled
   imageTypes?: VxeUploadPropTypes.ImageTypes
+  imageConfig?: VxeUploadPropTypes.ImageConfig
+  /**
+   * 已废弃，被 imageConfig 替换
+   * @deprecated
+   */
   imageStyle?: VxeUploadPropTypes.ImageStyle
   fileTypes?: VxeUploadPropTypes.FileTypes
   multiple?: VxeUploadPropTypes.Multiple

@@ -57,6 +57,14 @@ export default defineVxeComponent({
       type: Array as PropType<VxeUploadPropTypes.ImageTypes>,
       default: () => XEUtils.clone(getConfig().upload.imageTypes, true)
     },
+    imageConfig: {
+      type: Object as PropType<VxeUploadPropTypes.ImageConfig>,
+      default: () => XEUtils.clone(getConfig().upload.imageConfig, true)
+    },
+    /**
+     * 已废弃，被 image-config 替换
+     * @deprecated
+     */
     imageStyle: {
       type: Object as PropType<VxeUploadPropTypes.ImageStyle>,
       default: () => XEUtils.clone(getConfig().upload.imageStyle, true)
@@ -337,16 +345,17 @@ export default defineVxeComponent({
       }
       return defHints.join(getI18n('vxe.base.comma'))
     },
-    computeImageStyleOpts () {
+    computeImageOpts () {
       const $xeUpload = this
       const props = $xeUpload
 
-      return Object.assign({}, props.imageStyle)
+      return Object.assign({}, props.imageConfig || props.imageStyle)
     },
     computeImgStyle () {
       const $xeUpload = this
 
-      const { width, height } = $xeUpload.computeImageStyleOpts
+      const imageOpts = $xeUpload.computeImageOpts
+      const { width, height } = imageOpts
       const stys: Record<string, string> = {}
       if (width) {
         stys.width = toCssUnit(width)
@@ -1274,6 +1283,7 @@ export default defineVxeComponent({
       const { fileCacheMaps } = reactData
       const isDisabled = $xeUpload.computeIsDisabled
       const formReadonly = $xeUpload.computeFormReadonly
+      const imageOpts = $xeUpload.computeImageOpts
       const imgStyle = $xeUpload.computeImgStyle
       const cornerSlot = slots.corner
 
@@ -1286,6 +1296,7 @@ export default defineVxeComponent({
           key: index,
           class: ['vxe-upload--image-item', {
             'is--preview': showPreview,
+            'is--circle': imageOpts.circle,
             'is--loading': isLoading,
             'is--error': isError
           }]
@@ -1342,12 +1353,16 @@ export default defineVxeComponent({
                         }
                       })
                     ])
-                    : h('img', {
-                      class: 'vxe-upload--image-item-img',
-                      attrs: {
-                        src: $xeUpload.getThumbnailFileUrl(item)
-                      }
-                    })
+                    : h('div', {
+                      class: 'vxe-upload--image-item-img-wrapper'
+                    }, [
+                      h('img', {
+                        class: 'vxe-upload--image-item-img',
+                        attrs: {
+                          src: $xeUpload.getThumbnailFileUrl(item)
+                        }
+                      })
+                    ])
                 )
               : renderEmptyElement($xeUpload),
             h('div', {

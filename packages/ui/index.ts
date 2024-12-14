@@ -134,7 +134,8 @@ setConfig({
   },
   image: {
     showPreview: true,
-    showPrintButton: true
+    showPrintButton: true,
+    maskClosable: true
   },
   imageGroup: {
     showPreview: true,
@@ -326,8 +327,8 @@ setConfig({
     showRemoveButton: true,
     showButtonIcon: true,
     showPreview: true,
-    dragToUpload: true,
-    imageStyle: {}
+    dragToUpload: true
+    // imageConfig: {}
   },
   watermark: {
     rotate: -30,

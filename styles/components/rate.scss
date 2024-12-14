@@ -40,6 +40,16 @@ $rateThemeList: (
       }
     }
   }
+  &.is--disabled {
+    .vxe-rte--item {
+      cursor: no-drop;
+    }
+  }
+  &.is--readonly {
+    .vxe-rte--item {
+      cursor: default;
+    }
+  }
 }
 .vxe-rte--item {
   margin-right: 0.25em;
@@ -50,9 +60,6 @@ $rateThemeList: (
   }
   &.is--checked {
     color: var(--vxe-ui-rate-item-color);
-  }
-  &.is--disabled {
-    cursor: no-drop;
   }
 }
 

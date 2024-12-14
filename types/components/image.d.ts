@@ -26,6 +26,7 @@ export namespace VxeImagePropTypes {
   export type Title = number | string
   export type Width = number | string
   export type Height = number | string
+  export type Circle = boolean
   export type MaskClosable = boolean
   export type ShowPreview = boolean
   export type ShowPrintButton = boolean
@@ -40,6 +41,7 @@ export interface VxeImageProps {
   title?: VxeImagePropTypes.Title
   width?: VxeImagePropTypes.Width
   height?: VxeImagePropTypes.Height
+  circle?: VxeImagePropTypes.Circle
   maskClosable?: VxeImagePropTypes.MaskClosable
   showPreview?: VxeImagePropTypes.ShowPreview
   showPrintButton?: VxeImagePropTypes.ShowPrintButton

@@ -18,6 +18,10 @@ export default defineVxeComponent({
       type: Boolean as PropType<VxeSwitchPropTypes.Disabled>,
       default: null
     },
+    readonly: {
+      type: Boolean as PropType<VxeSwitchPropTypes.Readonly>,
+      default: null
+    },
     size: {
       type: String as PropType<VxeSwitchPropTypes.Size>,
       default: () => getConfig().switch.size || getConfig().size
@@ -67,7 +71,7 @@ export default defineVxeComponent({
       $xeForm(): (VxeFormConstructor & VxeFormPrivateMethods) | null
       formItemInfo(): VxeFormDefines.ProvideItemInfo | null
     }),
-    computeIsDisabled  () {
+    computeIsDisabled () {
       const $xeSwitch = this
       const props = $xeSwitch
       const $xeForm = $xeSwitch.$xeForm
@@ -81,7 +85,21 @@ export default defineVxeComponent({
       }
       return disabled
     },
-    computeOnShowLabel  () {
+    computeIsReadonly () {
+      const $xeSwitch = this
+      const props = $xeSwitch
+      const $xeForm = $xeSwitch.$xeForm
+
+      const { readonly } = props
+      if (readonly === null) {
+        if ($xeForm) {
+          return $xeForm.readonly || $xeForm.disabled
+        }
+        return false
+      }
+      return readonly
+    },
+    computeOnShowLabel () {
       const $xeSwitch = this
       const props = $xeSwitch
 
@@ -150,7 +168,8 @@ export default defineVxeComponent({
       const formItemInfo = $xeSwitch.formItemInfo
 
       const isDisabled = $xeSwitch.computeIsDisabled
-      if (!isDisabled) {
+      const isReadonly = $xeSwitch.computeIsReadonly
+      if (!(isDisabled || isReadonly)) {
         const isChecked = $xeSwitch.computeIsChecked
         clearTimeout(internalData.atTimeout)
         const value = isChecked ? props.closeValue : props.openValue
@@ -198,11 +217,13 @@ export default defineVxeComponent({
       const onShowLabel = $xeSwitch.computeOnShowLabel
       const offShowLabel = $xeSwitch.computeOffShowLabel
       const isDisabled = $xeSwitch.computeIsDisabled
+      const isReadonly = $xeSwitch.computeIsReadonly
 
       return h('div', {
         class: ['vxe-switch', isChecked ? 'is--on' : 'is--off', {
           [`size--${vSize}`]: vSize,
           'is--disabled': isDisabled,
+          'is--readonly': isReadonly,
           'is--animat': reactData.hasAnimat
         }]
       }, [
@@ -211,7 +232,7 @@ export default defineVxeComponent({
           class: 'vxe-switch--button',
           attrs: {
             type: 'button',
-            disabled: isDisabled
+            disabled: isDisabled || isReadonly
           },
           on: {
             click: $xeSwitch.clickEvent,

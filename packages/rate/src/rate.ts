@@ -58,6 +58,20 @@ export default defineVxeComponent({
       }
       return disabled
     },
+    computeIsReadonly () {
+      const $xeRate = this
+      const props = $xeRate
+      const $xeForm = $xeRate.$xeForm
+
+      const { readonly } = props
+      if (readonly === null) {
+        if ($xeForm) {
+          return $xeForm.readonly || $xeForm.disabled
+        }
+        return false
+      }
+      return readonly
+    },
     computeNumVal () {
       const $xeRate = this
       const props = $xeRate
@@ -94,7 +108,8 @@ export default defineVxeComponent({
       const reactData = $xeRate.reactData
 
       const isDisabled = $xeRate.computeIsDisabled
-      if (!isDisabled) {
+      const isReadonly = $xeRate.computeIsReadonly
+      if (!(isDisabled || isReadonly)) {
         const value = item.value
         reactData.activeValue = value
       }
@@ -111,7 +126,8 @@ export default defineVxeComponent({
       const formItemInfo = $xeRate.formItemInfo
 
       const isDisabled = $xeRate.computeIsDisabled
-      if (!isDisabled) {
+      const isReadonly = $xeRate.computeIsReadonly
+      if (!(isDisabled || isReadonly)) {
         const value = item.value
         $xeRate.emitModel(value)
         $xeRate.dispatchEvent('change', { value }, evnt)
@@ -131,6 +147,7 @@ export default defineVxeComponent({
 
       const { status } = props
       const isDisabled = $xeRate.computeIsDisabled
+      const isReadonly = $xeRate.computeIsReadonly
       const itemList = $xeRate.computeItemList
       const vSize = $xeRate.computeSize
       const numVal = $xeRate.computeNumVal
@@ -140,7 +157,8 @@ export default defineVxeComponent({
         class: ['vxe-rate', {
           [`size--${vSize}`]: vSize,
           [`theme--${status}`]: status,
-          'is--disabled': isDisabled
+          'is--disabled': isDisabled,
+          'is--readonly': isReadonly
         }]
       }, itemList.map(item => {
         const isChecked = numVal >= item.value
@@ -150,13 +168,13 @@ export default defineVxeComponent({
           }],
           on: {
             mouseenter (evnt: MouseEvent) {
-              if (!isDisabled) {
+              if (!(isDisabled || isReadonly)) {
                 $xeRate.mouseenterEvent(evnt, item)
               }
             },
             mouseleave: $xeRate.mouseleaveEvent,
             click (evnt: MouseEvent) {
-              if (!isDisabled) {
+              if (!(isDisabled || isReadonly)) {
                 $xeRate.clickEvent(evnt, item)
               }
             }
