@@ -3183,6 +3183,12 @@ export interface TableMethods<DT = any> {
    */
   setCheckboxRow(rows: any | any[], checked: boolean): Promise<any>
   /**
+   * 用于 type=checkbox，设置行为选中状态，第二个参数为选中与否
+   * @param keys 指定主键
+   * @param checked 是否选中
+   */
+  setCheckboxRowKey(keys: string | number | (string | number)[] | null | undefined, checked: boolean): Promise<any>
+  /**
    * 用于 type=checkbox，判断列头复选框是否被选中
    */
   isAllCheckboxChecked(): boolean
@@ -3196,10 +3202,20 @@ export interface TableMethods<DT = any> {
    */
   isCheckedByCheckboxRow(row: any): boolean
   /**
+   * 用于 type=checkbox，判断复选行数据是否勾选
+   * @param key 指定主键
+   */
+  isCheckedByCheckboxRowKey(key: string | number | null | undefined): boolean
+  /**
    * 用于 type=checkbox，判断复选行数据是否半选
    * @param row 指定行
    */
   isIndeterminateByCheckboxRow(row: any): boolean
+  /**
+   * 用于 type=checkbox，判断复选行数据是否半选
+   * @param key 指定主键
+   */
+  isIndeterminateByCheckboxRowKey(key: string | number | null | undefined): boolean
   /**
    * 用于 type=checkbox，切换某一行的选中状态
    * @param row 指定行
@@ -3249,10 +3265,20 @@ export interface TableMethods<DT = any> {
    */
   isCheckedByRadioRow(row: any | null): boolean
   /**
+   * 用于 type=radio，判断单选行数据是否勾选
+   * @param key 指定主键
+   */
+  isCheckedByRadioRowKey(key: string | number | null | undefined): boolean
+  /**
    * 用于 type=radio，设置某一行为选中状态
    * @param row 指定行
    */
   setRadioRow(row: any): Promise<any>
+  /**
+   * 用于 type=radio，设置某一行为选中状态
+   * @param key 指定主键
+   */
+  setRadioRowKey(key: string | number | null | undefined): Promise<any>
   /**
    * 将指定行设置为取消/标记待删除状态
    */
