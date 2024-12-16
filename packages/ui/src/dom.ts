@@ -2,6 +2,8 @@ import XEUtils from 'xe-utils'
 
 export const browse = XEUtils.browse()
 
+export const tpImg = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII='
+
 const reClsMap: { [key: string]: any } = {}
 
 function getClsRE (cls: any) {

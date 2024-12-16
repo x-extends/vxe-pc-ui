@@ -15,7 +15,7 @@
         </template>
       </vxe-pulldown>
 
-      <vxe-pulldown ref="xDown2" destroyOnClose>
+      <vxe-pulldown ref="xDown2" destroyOnClose @visible-change="visibleChangEvent2">
         <template #default>
           <vxe-input v-model="demo2.value2" placeholder="可搜索的大数据下拉框" @focus="focusEvent2" @keyup="keyupEvent2"></vxe-input>
         </template>
@@ -165,6 +165,10 @@ const selectEvent2 = (item: ItemVO2) => {
   $pulldown2.hidePanel().then(() => {
     demo2.list2 = data2
   })
+}
+
+const visibleChangEvent2 = ({ visible }: any) => {
+  console.log('22', visible)
 }
 
 const demo3 = reactive({

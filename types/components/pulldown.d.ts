@@ -117,7 +117,8 @@ export type VxePulldownEmits = [
   'click',
   'option-click',
   'show-panel',
-  'hide-panel'
+  'hide-panel',
+  'visible-change'
 ]
 
 export namespace VxePulldownDefines {
@@ -133,6 +134,10 @@ export namespace VxePulldownDefines {
 
   export interface ShowPanelEventParams extends PulldownEventParams {}
   export interface HidePanelEventParams extends PulldownEventParams {}
+
+  export interface VisibleChangeEventParams extends PulldownEventParams {
+    visible: boolean
+  }
 }
 
 export type VxePulldownEventProps = {
@@ -140,6 +145,7 @@ export type VxePulldownEventProps = {
   onOptionClick?: VxePulldownEvents.OptionClick
   onShowPanel?: VxePulldownEvents.ShowPanel
   onHidePanel?: VxePulldownEvents.HidePanel
+  onVisibleChange?: VxePulldownEvents.VisibleChange
 }
 
 export interface VxePulldownListeners {
@@ -147,6 +153,7 @@ export interface VxePulldownListeners {
   optionClick?: VxePulldownEvents.OptionClick
   showPanel?: VxePulldownEvents.ShowPanel
   hidePanel?: VxePulldownEvents.HidePanel
+  visibleChange?: VxePulldownEvents.VisibleChange
 }
 
 export namespace VxePulldownEvents {
@@ -154,6 +161,7 @@ export namespace VxePulldownEvents {
   export type OptionClick = (params: VxePulldownDefines.OptionClickEventParams) => void
   export type ShowPanel = (params: VxePulldownDefines.ShowPanelEventParams) => void
   export type HidePanel = (params: VxePulldownDefines.HidePanelEventParams) => void
+  export type VisibleChange = (params: VxePulldownDefines.VisibleChangeEventParams) => void
 }
 
 export namespace VxePulldownSlotTypes {

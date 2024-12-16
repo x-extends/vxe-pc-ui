@@ -1,9 +1,9 @@
-import { defineComponent, ref, h, reactive, watch, computed, PropType, inject, createCommentVNode, onUnmounted, onMounted } from 'vue'
+import { defineComponent, ref, h, reactive, watch, computed, TransitionGroup, PropType, inject, createCommentVNode, onUnmounted, onMounted } from 'vue'
 import XEUtils from 'xe-utils'
-import { VxeUI, getConfig, getI18n, getIcon, useSize, createEvent, globalEvents } from '../../ui'
+import { VxeUI, getConfig, getI18n, getIcon, useSize, createEvent, globalEvents, renderEmptyElement } from '../../ui'
 import { getSlotVNs } from '../..//ui/src/vn'
 import { errLog } from '../../ui/src/log'
-import { getEventTargetNode, toCssUnit } from '../../ui/src/dom'
+import { tpImg, getEventTargetNode, toCssUnit } from '../../ui/src/dom'
 import { readLocalFile } from './util'
 import VxeButtonComponent from '../../button/src/button'
 
@@ -50,6 +50,7 @@ export default defineComponent({
       type: Array as PropType<VxeUploadPropTypes.FileTypes>,
       default: () => XEUtils.clone(getConfig().upload.fileTypes, true)
     },
+    dragSort: Boolean as PropType<VxeUploadPropTypes.DragSort>,
     dragToUpload: {
       type: Boolean as PropType<VxeUploadPropTypes.DragToUpload>,
       default: () => XEUtils.clone(getConfig().upload.dragToUpload, true)
@@ -157,7 +158,8 @@ export default defineComponent({
     'download',
     'download-fail',
     'upload-success',
-    'upload-error'
+    'upload-error',
+    'sort-dragend'
   ] as VxeUploadEmits,
   setup (props, context) {
     const { emit, slots } = context
@@ -170,17 +172,24 @@ export default defineComponent({
     const { computeSize } = useSize(props)
 
     const refElem = ref<HTMLDivElement>()
+    const refDragLineElem = ref<HTMLDivElement>()
+    const refModalDragLineElem = ref<HTMLDivElement>()
 
     const reactData = reactive<UploadReactData>({
-      isDrag: false,
+      isDragUploadStatus: false,
       showMorePopup: false,
       isActivated: false,
       fileList: [],
-      fileCacheMaps: {}
+      fileCacheMaps: {},
+      isDragMove: false,
+      dragIndex: -1,
+      dragTipText: ''
     })
 
     const internalData: UploadInternalData = {
-      imagePreviewTypes: ['jpg', 'jpeg', 'png', 'gif']
+      imagePreviewTypes: ['jpg', 'jpeg', 'png', 'gif'],
+      prevDragIndex: -1
+      // prevDragPos: ''
     }
 
     const refMaps: UploadPrivateRef = {
@@ -772,24 +781,24 @@ export default defineComponent({
       })
     }
 
-    const handleDragleaveEvent = (evnt: DragEvent) => {
+    const handleUploadDragleaveEvent = (evnt: DragEvent) => {
       const targetElem = evnt.currentTarget as HTMLDivElement
       const { clientX, clientY } = evnt
       if (targetElem) {
         const { x: targetX, y: targetY, height: targetHeight, width: targetWidth } = targetElem.getBoundingClientRect()
         if (clientX < targetX || clientX > targetX + targetWidth || clientY < targetY || clientY > targetY + targetHeight) {
-          reactData.isDrag = false
+          reactData.isDragUploadStatus = false
         }
       }
     }
 
-    const handleDragoverEvent = (evnt: DragEvent) => {
+    const handleUploadDragoverEvent = (evnt: DragEvent) => {
       const dataTransfer = evnt.dataTransfer
       if (dataTransfer) {
         const { items } = dataTransfer
         if (items && items.length) {
           evnt.preventDefault()
-          reactData.isDrag = true
+          reactData.isDragUploadStatus = true
         }
       }
     }
@@ -822,7 +831,7 @@ export default defineComponent({
       uploadFile(files, evnt)
     }
 
-    const handleDropEvent = (evnt: DragEvent) => {
+    const handleUploadDropEvent = (evnt: DragEvent) => {
       const dataTransfer = evnt.dataTransfer
       if (dataTransfer) {
         const { items } = dataTransfer
@@ -834,7 +843,7 @@ export default defineComponent({
           }
         }
       }
-      reactData.isDrag = false
+      reactData.isDragUploadStatus = false
     }
 
     const handleTransferFiles = (items: DataTransferItemList) => {
@@ -863,16 +872,16 @@ export default defineComponent({
           maskClosable: true,
           slots: {
             default () {
-              const { showErrorStatus, dragToUpload } = props
-              const { isDrag } = reactData
-              const isDisabled = computeIsDisabled.value
+              const { showErrorStatus, dragToUpload, dragSort } = props
+              const { isDragMove, isDragUploadStatus, dragIndex } = reactData
               const { fileList } = reactData
+              const isDisabled = computeIsDisabled.value
 
               const ons: Record<string, any> = {}
-              if (dragToUpload) {
-                ons.onDragover = handleDragoverEvent
-                ons.onDragleave = handleDragleaveEvent
-                ons.onDrop = handleDropEvent
+              if (dragToUpload && dragIndex === -1) {
+                ons.onDragover = handleUploadDragoverEvent
+                ons.onDragleave = handleUploadDragleaveEvent
+                ons.onDrop = handleUploadDropEvent
               }
 
               return h('div', {
@@ -880,27 +889,51 @@ export default defineComponent({
                   'is--readonly': formReadonly,
                   'is--disabled': isDisabled,
                   'show--error': showErrorStatus,
-                  'is--drag': isDrag
+                  'is--drag': isDragUploadStatus
                 }],
                 ...ons
               }, [
                 isImage
-                  ? h('div', {
-                    class: 'vxe-upload--image-more-list'
-                  }, renderImageItemList(fileList, true).concat(renderImageAction(true)))
+                  ? (
+                      dragSort
+                        ? h(TransitionGroup, {
+                          name: `vxe-upload--drag-list${isDragMove ? '' : '-disabled'}`,
+                          tag: 'div',
+                          class: 'vxe-upload--image-more-list'
+                        }, {
+                          default: () => renderImageItemList(fileList, true).concat(renderImageAction(true))
+                        })
+                        : h('div', {
+                          class: 'vxe-upload--image-more-list'
+                        }, renderImageItemList(fileList, true).concat(renderImageAction(true)))
+                    )
                   : h('div', {
                     class: 'vxe-upload--file-more-list'
                   }, [
                     renderFileAction(true),
-                    h('div', {
-                      class: 'vxe-upload--file-list'
-                    }, renderFileItemList(fileList, true))
+                    dragSort
+                      ? h(TransitionGroup, {
+                        name: `vxe-upload--drag-list${isDragMove ? '' : '-disabled'}`,
+                        tag: 'div',
+                        class: 'vxe-upload--file-list'
+                      }, {
+                        default: () => renderFileItemList(fileList, false)
+                      })
+                      : h('div', {
+                        class: 'vxe-upload--file-list'
+                      }, renderFileItemList(fileList, true))
                   ]),
-                isDrag
+                dragSort
+                  ? h('div', {
+                    ref: refModalDragLineElem,
+                    class: 'vxe-upload--drag-line'
+                  })
+                  : renderEmptyElement($xeUpload),
+                isDragUploadStatus
                   ? h('div', {
                     class: 'vxe-upload--drag-placeholder'
                   }, getI18n('vxe.upload.dragPlaceholder'))
-                  : createCommentVNode()
+                  : renderEmptyElement($xeUpload)
               ])
             }
           },
@@ -912,6 +945,111 @@ export default defineComponent({
           }
         })
       }
+    }
+
+    const showDropTip = (evnt: DragEvent, dragEl: HTMLElement, dragPos: string) => {
+      const el = refElem.value
+      if (!el) {
+        return
+      }
+      const { showMorePopup } = reactData
+      const wrapperRect = el.getBoundingClientRect()
+      const ddLineEl = refDragLineElem.value
+      const mdLineEl = refModalDragLineElem.value
+      const currDLineEl = showMorePopup ? mdLineEl : ddLineEl
+      if (currDLineEl) {
+        const dragRect = dragEl.getBoundingClientRect()
+        currDLineEl.style.display = 'block'
+        currDLineEl.style.top = `${Math.max(1, dragRect.y - wrapperRect.y)}px`
+        currDLineEl.style.left = `${Math.max(1, dragRect.x - wrapperRect.x)}px`
+        currDLineEl.style.height = `${dragRect.height}px`
+        currDLineEl.style.width = `${dragRect.width - 1}px`
+        currDLineEl.setAttribute('drag-pos', dragPos)
+      }
+    }
+
+    const hideDropTip = () => {
+      const ddLineEl = refDragLineElem.value
+      const mdLineEl = refModalDragLineElem.value
+      if (ddLineEl) {
+        ddLineEl.style.display = ''
+      }
+      if (mdLineEl) {
+        mdLineEl.style.display = ''
+      }
+    }
+
+    // 拖拽
+    const handleDragSortDragstartEvent = (evnt: DragEvent) => {
+      if (evnt.dataTransfer) {
+        const img = new Image()
+        img.src = tpImg
+        evnt.dataTransfer.setDragImage(img, 0, 0)
+      }
+      const dragEl = evnt.currentTarget as HTMLElement
+      const parentEl = dragEl.parentElement as HTMLDivElement
+      const dragIndex = XEUtils.findIndexOf(Array.from(parentEl.children), item => dragEl === item)
+      reactData.isDragMove = true
+      reactData.dragIndex = dragIndex
+      setTimeout(() => {
+        reactData.isDragMove = false
+      }, 500)
+    }
+
+    const handleDragSortDragoverEvent = (evnt: DragEvent) => {
+      evnt.preventDefault()
+
+      const { dragIndex } = reactData
+      if (dragIndex === -1) {
+        return
+      }
+      const isImage = computeIsImage.value
+      const dragEl = evnt.currentTarget as HTMLElement
+      const parentEl = dragEl.parentElement as HTMLDivElement
+      const currIndex = XEUtils.findIndexOf(Array.from(parentEl.children), item => dragEl === item)
+      let dragPos: 'top' | 'bottom' | 'left' | 'right' | '' = ''
+      if (isImage) {
+        const offsetX = evnt.clientX - dragEl.getBoundingClientRect().x
+        dragPos = offsetX < dragEl.clientWidth / 2 ? 'left' : 'right'
+      } else {
+        const offsetY = evnt.clientY - dragEl.getBoundingClientRect().y
+        dragPos = offsetY < dragEl.clientHeight / 2 ? 'top' : 'bottom'
+      }
+      if (dragIndex === currIndex) {
+        showDropTip(evnt, dragEl, dragPos)
+        return
+      }
+      showDropTip(evnt, dragEl, dragPos)
+      internalData.prevDragIndex = currIndex
+      internalData.prevDragPos = dragPos
+    }
+
+    const handleDragSortDragendEvent = (evnt: DragEvent) => {
+      const { fileList, dragIndex } = reactData
+      const { prevDragIndex, prevDragPos } = internalData
+      const oldIndex = dragIndex
+      const targetIndex = prevDragIndex
+      const dragOffsetIndex = prevDragPos === 'bottom' || prevDragPos === 'right' ? 1 : 0
+      const oldItem = fileList[oldIndex]
+      const newItem = fileList[targetIndex]
+      if (oldItem && newItem) {
+        fileList.splice(oldIndex, 1)
+        const ptfIndex = XEUtils.findIndexOf(fileList, item => newItem === item)
+        const nIndex = ptfIndex + dragOffsetIndex
+        fileList.splice(nIndex, 0, oldItem)
+        dispatchEvent('sort-dragend', {
+          oldItem: oldItem,
+          newItem: newItem,
+          dragPos: prevDragPos as any,
+          offsetIndex: dragOffsetIndex,
+          _index: {
+            newIndex: nIndex,
+            oldIndex: oldIndex
+          }
+        }, evnt)
+      }
+      hideDropTip()
+      reactData.dragIndex = -1
     }
 
     const handleGlobalPasteEvent = (evnt: ClipboardEvent) => {
@@ -958,7 +1096,7 @@ export default defineComponent({
     Object.assign($xeUpload, uploadMethods, uploadPrivateMethods)
 
     const renderFileItemList = (currList: VxeUploadDefines.FileObjItem[], isMoreView: boolean) => {
-      const { showRemoveButton, showDownloadButton, showProgress, progressText, showPreview, showErrorStatus } = props
+      const { showRemoveButton, showDownloadButton, showProgress, progressText, showPreview, showErrorStatus, dragSort } = props
       const { fileCacheMaps } = reactData
       const isDisabled = computeIsDisabled.value
       const formReadonly = computeFormReadonly.value
@@ -966,18 +1104,28 @@ export default defineComponent({
       const typeProp = computeTypeProp.value
       const cornerSlot = slots.corner
 
+      const ons: Record<string, any> = {}
+      if (dragSort) {
+        ons.onDragstart = handleDragSortDragstartEvent
+        ons.onDragover = handleDragSortDragoverEvent
+        ons.onDragend = handleDragSortDragendEvent
+      }
+
       return currList.map((item, index) => {
         const fileKey = getFieldKey(item)
         const cacheItem = fileCacheMaps[fileKey]
         const isLoading = cacheItem && cacheItem.loading
         const isError = cacheItem && cacheItem.status === 'error'
         return h('div', {
-          key: index,
+          key: dragSort ? fileKey : index,
           class: ['vxe-upload--file-item', {
             'is--preview': showPreview,
             'is--loading': isLoading,
             'is--error': isError
-          }]
+          }],
+          fileid: fileKey,
+          draggable: dragSort ? true : null,
+          ...ons
         }, [
           h('div', {
             class: 'vxe-upload--file-item-icon'
@@ -1099,8 +1247,8 @@ export default defineComponent({
     }
 
     const renderAllMode = () => {
-      const { moreConfig } = props
-      const { fileList } = reactData
+      const { moreConfig, dragSort } = props
+      const { fileList, isDragMove } = reactData
       const moreOpts = computeMoreOpts.value
 
       const { maxCount, showMoreButton, layout } = moreOpts
@@ -1127,9 +1275,19 @@ export default defineComponent({
             }]
           }, [
             currList.length
-              ? h('div', {
-                class: 'vxe-upload--file-list'
-              }, renderFileItemList(currList, false))
+              ? (
+                  dragSort
+                    ? h(TransitionGroup, {
+                      name: `vxe-upload--drag-list${isDragMove ? '' : '-disabled'}`,
+                      tag: 'div',
+                      class: 'vxe-upload--file-list'
+                    }, {
+                      default: () => renderFileItemList(currList, false)
+                    })
+                    : h('div', {
+                      class: 'vxe-upload--file-list'
+                    }, renderFileItemList(currList, false))
+                )
               : createCommentVNode(),
             showMoreButton && overMaxNum
               ? h('div', {
@@ -1152,7 +1310,7 @@ export default defineComponent({
     }
 
     const renderImageItemList = (currList: VxeUploadDefines.FileObjItem[], isMoreView: boolean) => {
-      const { showRemoveButton, showProgress, progressText, showPreview, showErrorStatus } = props
+      const { showRemoveButton, showProgress, progressText, showPreview, showErrorStatus, dragSort } = props
       const { fileCacheMaps } = reactData
       const isDisabled = computeIsDisabled.value
       const formReadonly = computeFormReadonly.value
@@ -1160,19 +1318,29 @@ export default defineComponent({
       const imgStyle = computeImgStyle.value
       const cornerSlot = slots.corner
 
+      const ons: Record<string, any> = {}
+      if (dragSort) {
+        ons.onDragstart = handleDragSortDragstartEvent
+        ons.onDragover = handleDragSortDragoverEvent
+        ons.onDragend = handleDragSortDragendEvent
+      }
+
       return currList.map((item, index) => {
         const fileKey = getFieldKey(item)
         const cacheItem = fileCacheMaps[fileKey]
         const isLoading = cacheItem && cacheItem.loading
         const isError = cacheItem && cacheItem.status === 'error'
         return h('div', {
-          key: index,
+          key: dragSort ? fileKey : index,
           class: ['vxe-upload--image-item', {
             'is--preview': showPreview,
             'is--circle': imageOpts.circle,
             'is--loading': isLoading,
             'is--error': isError
-          }]
+          }],
+          fileid: fileKey,
+          draggable: dragSort ? true : null,
+          ...ons
         }, [
           h('div', {
             class: 'vxe-upload--image-item-box',
@@ -1309,7 +1477,8 @@ export default defineComponent({
     }
 
     const renderImageMode = () => {
-      const { fileList } = reactData
+      const { dragSort } = props
+      const { fileList, isDragMove } = reactData
       const moreOpts = computeMoreOpts.value
 
       const { maxCount, showMoreButton } = moreOpts
@@ -1324,39 +1493,62 @@ export default defineComponent({
         key: 'image',
         class: 'vxe-upload--image-wrapper'
       }, [
-        h('div', {
-          class: 'vxe-upload--image-list'
-        }, renderImageItemList(currList, false).concat([
-          showMoreButton && overMaxNum
-            ? h('div', {
-              class: 'vxe-upload--image-over-more'
-            }, [
-              h(VxeButtonComponent, {
-                mode: 'text',
-                content: getI18n('vxe.upload.moreBtnText', [fileList.length]),
-                status: 'primary',
-                onClick: handleMoreEvent
-              })
+        dragSort
+          ? h(TransitionGroup, {
+            name: `vxe-upload--drag-list${isDragMove ? '' : '-disabled'}`,
+            tag: 'div',
+            class: 'vxe-upload--image-list'
+          }, {
+            default: () => renderImageItemList(currList, false).concat([
+              showMoreButton && overMaxNum
+                ? h('div', {
+                  key: 'om',
+                  class: 'vxe-upload--image-over-more'
+                }, [
+                  h(VxeButtonComponent, {
+                    mode: 'text',
+                    content: getI18n('vxe.upload.moreBtnText', [fileList.length]),
+                    status: 'primary',
+                    onClick: handleMoreEvent
+                  })
+                ])
+                : createCommentVNode(),
+              renderImageAction(false)
             ])
-            : createCommentVNode(),
-          renderImageAction(false)
-        ]))
+          })
+          : h('div', {
+            class: 'vxe-upload--image-list'
+          }, renderImageItemList(currList, false).concat([
+            showMoreButton && overMaxNum
+              ? h('div', {
+                class: 'vxe-upload--image-over-more'
+              }, [
+                h(VxeButtonComponent, {
+                  mode: 'text',
+                  content: getI18n('vxe.upload.moreBtnText', [fileList.length]),
+                  status: 'primary',
+                  onClick: handleMoreEvent
+                })
+              ])
+              : createCommentVNode(),
+            renderImageAction(false)
+          ]))
       ])
     }
 
     const renderVN = () => {
-      const { showErrorStatus, dragToUpload, pasteToUpload } = props
-      const { isDrag, showMorePopup, isActivated } = reactData
+      const { showErrorStatus, dragToUpload, pasteToUpload, dragSort } = props
+      const { isDragUploadStatus, showMorePopup, isActivated, dragIndex } = reactData
       const vSize = computeSize.value
       const isDisabled = computeIsDisabled.value
       const formReadonly = computeFormReadonly.value
       const isImage = computeIsImage.value
 
       const ons: Record<string, any> = {}
-      if (dragToUpload) {
-        ons.onDragover = handleDragoverEvent
-        ons.onDragleave = handleDragleaveEvent
-        ons.onDrop = handleDropEvent
+      if (dragToUpload && dragIndex === -1) {
+        ons.onDragover = handleUploadDragoverEvent
+        ons.onDragleave = handleUploadDragleaveEvent
+        ons.onDrop = handleUploadDropEvent
       }
 
       return h('div', {
@@ -1368,16 +1560,22 @@ export default defineComponent({
           'is--disabled': isDisabled,
           'is--paste': pasteToUpload,
           'show--error': showErrorStatus,
-          'is--drag': isDrag
+          'is--drag': isDragUploadStatus
         }],
         ...ons
       }, [
         isImage ? renderImageMode() : renderAllMode(),
-        isDrag && !showMorePopup
+        dragSort
+          ? h('div', {
+            ref: refDragLineElem,
+            class: 'vxe-upload--drag-line'
+          })
+          : renderEmptyElement($xeUpload),
+        isDragUploadStatus && !showMorePopup
           ? h('div', {
             class: 'vxe-upload--drag-placeholder'
           }, getI18n('vxe.upload.dragPlaceholder'))
-          : createCommentVNode()
+          : renderEmptyElement($xeUpload)
       ])
     }
 
@@ -1407,7 +1605,7 @@ export default defineComponent({
     })
 
     onUnmounted(() => {
-      reactData.isDrag = false
+      reactData.isDragUploadStatus = false
       globalEvents.off($xeUpload, 'paste')
       globalEvents.off($xeUpload, 'mousedown')
       globalEvents.off($xeUpload, 'blur')

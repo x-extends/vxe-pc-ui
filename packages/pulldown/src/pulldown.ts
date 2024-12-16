@@ -38,7 +38,8 @@ export default defineComponent({
     'click',
     'option-click',
     'show-panel',
-    'hide-panel'
+    'hide-panel',
+    'visible-change'
   ] as VxePulldownEmits,
   setup (props, context) {
     const { slots, emit } = context
@@ -208,6 +209,7 @@ export default defineComponent({
             }, 40)
           }, 10)
           updateZindex()
+          dispatchEvent('visible-change', { visible: true }, null)
         } else {
           nextTick(() => {
             resolve()
@@ -221,6 +223,7 @@ export default defineComponent({
      */
     const hidePanel = () => {
       reactData.visiblePanel = false
+      dispatchEvent('visible-change', { visible: false }, null)
       emit('update:modelValue', false)
       return new Promise<void>(resolve => {
         if (reactData.isAniVisible) {
@@ -310,7 +313,7 @@ export default defineComponent({
       }
     }
 
-    const dispatchEvent = (type: ValueOf<VxePulldownEmits>, params: Record<string, any>, evnt: Event) => {
+    const dispatchEvent = (type: ValueOf<VxePulldownEmits>, params: Record<string, any>, evnt: Event | null) => {
       emit(type, createEvent(evnt, { $pulldown: $xePulldown }, params))
     }
 
