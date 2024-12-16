@@ -515,6 +515,10 @@ export namespace VxeTablePropTypes {
      */
     showGuidesStatus?: boolean
     /**
+     * 是否显示拖拽动画，启用后由数据量的大小来影响渲染性能
+     */
+    animation?: boolean
+    /**
      * 是否禁用拖拽按钮
      */
     disabledMethod?(params: {

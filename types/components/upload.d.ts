@@ -43,6 +43,7 @@ export namespace VxeUploadPropTypes {
   }
   export type FileTypes = string[]
   export type SingleMode = boolean
+  export type DragSort = boolean
   export type DragToUpload = boolean
   export type PasteToUpload = boolean
   export type KeyField = string
@@ -127,6 +128,7 @@ export interface VxeUploadProps {
   fileTypes?: VxeUploadPropTypes.FileTypes
   multiple?: VxeUploadPropTypes.Multiple
   singleMode?: VxeUploadPropTypes.SingleMode
+  dragSort?: VxeUploadPropTypes.DragSort
   dragToUpload?: VxeUploadPropTypes.DragToUpload
   pasteToUpload?: VxeUploadPropTypes.PasteToUpload
   keyField?: VxeUploadPropTypes.KeyField
@@ -174,15 +176,20 @@ export interface UploadPrivateComputed {
 export interface VxeUploadPrivateComputed extends UploadPrivateComputed { }
 
 export interface UploadReactData {
-  isDrag: boolean
+  isDragUploadStatus: boolean
   showMorePopup: boolean
   isActivated: boolean
   fileList: VxeUploadDefines.FileObjItem[]
   fileCacheMaps: Record<string, VxeUploadDefines.FileCacheItem>
+  isDragMove: boolean
+  dragIndex: number
+  dragTipText: string
 }
 
 export interface UploadInternalData {
   imagePreviewTypes: string[]
+  prevDragIndex: number
+  prevDragPos?: 'top' | 'bottom' | 'left' | 'right' | ''
 }
 
 export interface UploadMethods {
@@ -209,7 +216,8 @@ export type VxeUploadEmits = [
   'download',
   'download-fail',
   'upload-success',
-  'upload-error'
+  'upload-error',
+  'sort-dragend'
 ]
 
 export namespace VxeUploadDefines {

@@ -371,6 +371,39 @@
   }
 }
 
+/*拖拽排序*/
+.vxe-upload--drag-line {
+  display: none;
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 3;
+  pointer-events: none;
+}
+.vxe-upload--drag-line {
+  width: 1px;
+  height: 1px;
+  border: 2px solid transparent;
+  &[drag-pos="top"] {
+    border-top-color: var(--vxe-ui-font-primary-color);
+  }
+  &[drag-pos="bottom"] {
+    border-bottom-color: var(--vxe-ui-font-primary-color);
+  }
+  &[drag-pos="left"] {
+    border-left-color: var(--vxe-ui-font-primary-color);
+  }
+  &[drag-pos="right"] {
+    border-right-color: var(--vxe-ui-font-primary-color);
+  }
+}
+.vxe-upload--drag-list-move {
+  transition: transform 0.2s;
+}
+
+.vxe-upload--more-popup {
+  position: relative;
+}
 .vxe-upload,
 .vxe-upload--more-popup {
   font-size: var(--vxe-ui-font-size-default);

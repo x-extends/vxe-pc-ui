@@ -109,7 +109,7 @@ export default defineVxeComponent({
     //
     // Method
     //
-    dispatchEvent (type: ValueOf<VxePulldownEmits>, params: Record<string, any>, evnt: Event) {
+    dispatchEvent (type: ValueOf<VxePulldownEmits>, params: Record<string, any>, evnt: Event | null) {
       const $xePulldown = this
       $xePulldown.$emit(type, createEvent(evnt, { $pulldown: $xePulldown }, params))
     },
@@ -251,6 +251,7 @@ export default defineVxeComponent({
             }, 40)
           }, 10)
           $xePulldown.updateZindex()
+          $xePulldown.dispatchEvent('visible-change', { visible: true }, null)
         } else {
           $xePulldown.$nextTick(() => {
             resolve()
@@ -267,6 +268,7 @@ export default defineVxeComponent({
       const internalData = $xePulldown.internalData
 
       reactData.visiblePanel = false
+      $xePulldown.dispatchEvent('visible-change', { visible: false }, null)
       $xePulldown.emitModel(false)
       return new Promise<void>(resolve => {
         if (reactData.isAniVisible) {

@@ -4,11 +4,11 @@ import XEUtils from 'xe-utils'
 import { VxeUI, getConfig, getI18n, getIcon, globalMixins, createEvent, globalEvents, renderEmptyElement } from '../../ui'
 import { getSlotVNs } from '../..//ui/src/vn'
 import { errLog } from '../../ui/src/log'
-import { getEventTargetNode, toCssUnit } from '../../ui/src/dom'
+import { tpImg, getEventTargetNode, toCssUnit } from '../../ui/src/dom'
 import { readLocalFile } from './util'
 import VxeButtonComponent from '../../button/src/button'
 
-import type { VxeUploadDefines, VxeUploadPropTypes, UploadReactData, UploadInternalData, VxeUploadEmits, VxeComponentSizeType, VxeFormDefines, VxeFormConstructor, VxeFormPrivateMethods, ValueOf } from '../../../types'
+import type { VxeUploadDefines, VxeUploadConstructor, VxeUploadPropTypes, UploadReactData, UploadInternalData, VxeUploadEmits, VxeComponentSizeType, VxeFormDefines, VxeFormConstructor, VxeFormPrivateMethods, ValueOf } from '../../../types'
 
 function getUniqueKey () {
   return XEUtils.uniqueId()
@@ -23,6 +23,44 @@ function handleTransferFiles (items: DataTransferItemList) {
     }
   })
   return files
+}
+
+function showDropTip ($xeUpload: VxeUploadConstructor, evnt: DragEvent, dragEl: HTMLElement, dragPos: string) {
+  const { xID } = $xeUpload
+
+  const reactData = $xeUpload.reactData
+
+  const el = $xeUpload.$refs.refElem as HTMLDivElement
+  if (!el) {
+    return
+  }
+  const { showMorePopup } = reactData
+  const wrapperRect = el.getBoundingClientRect()
+  const ddLineEl = $xeUpload.$refs.refDragLineElem as HTMLDivElement
+  const mdLineEl = document.getElementById(`refModalDragLineElem${xID}`) as HTMLDivElement
+  const currDLineEl = showMorePopup ? mdLineEl : ddLineEl
+  if (currDLineEl) {
+    const dragRect = dragEl.getBoundingClientRect()
+    currDLineEl.style.display = 'block'
+    currDLineEl.style.top = `${Math.max(1, dragRect.y - wrapperRect.y)}px`
+    currDLineEl.style.left = `${Math.max(1, dragRect.x - wrapperRect.x)}px`
+    currDLineEl.style.height = `${dragRect.height}px`
+    currDLineEl.style.width = `${dragRect.width - 1}px`
+    currDLineEl.setAttribute('drag-pos', dragPos)
+  }
+}
+
+function hideDropTip ($xeUpload: VxeUploadConstructor) {
+  const { xID } = $xeUpload
+
+  const ddLineEl = $xeUpload.$refs.refDragLineElem as HTMLDivElement
+  const mdLineEl = document.getElementById(`refModalDragLineElem${xID}`) as HTMLDivElement
+  if (ddLineEl) {
+    ddLineEl.style.display = ''
+  }
+  if (mdLineEl) {
+    mdLineEl.style.display = ''
+  }
 }
 
 export default defineVxeComponent({
@@ -73,6 +111,7 @@ export default defineVxeComponent({
       type: Array as PropType<VxeUploadPropTypes.FileTypes>,
       default: () => XEUtils.clone(getConfig().upload.fileTypes, true)
     },
+    dragSort: Boolean as PropType<VxeUploadPropTypes.DragSort>,
     dragToUpload: {
       type: Boolean as PropType<VxeUploadPropTypes.DragToUpload>,
       default: () => XEUtils.clone(getConfig().upload.dragToUpload, true)
@@ -184,14 +223,19 @@ export default defineVxeComponent({
   data () {
     const xID = XEUtils.uniqueId()
     const reactData: UploadReactData = {
-      isDrag: false,
+      isDragUploadStatus: false,
       showMorePopup: false,
       isActivated: false,
       fileList: [],
-      fileCacheMaps: {}
+      fileCacheMaps: {},
+      isDragMove: false,
+      dragIndex: -1,
+      dragTipText: ''
     }
     const internalData: UploadInternalData = {
-      imagePreviewTypes: ['jpg', 'jpeg', 'png', 'gif']
+      imagePreviewTypes: ['jpg', 'jpeg', 'png', 'gif'],
+      prevDragIndex: -1
+      // prevDragPos: ''
     }
     return {
       xID,
@@ -866,7 +910,7 @@ export default defineVxeComponent({
         }
       })
     },
-    handleDragleaveEvent  (evnt: DragEvent) {
+    handleUploadDragleaveEvent  (evnt: DragEvent) {
       const $xeUpload = this
       const reactData = $xeUpload.reactData
 
@@ -875,11 +919,11 @@ export default defineVxeComponent({
       if (targetElem) {
         const { x: targetX, y: targetY, height: targetHeight, width: targetWidth } = targetElem.getBoundingClientRect()
         if (clientX < targetX || clientX > targetX + targetWidth || clientY < targetY || clientY > targetY + targetHeight) {
-          reactData.isDrag = false
+          reactData.isDragUploadStatus = false
         }
       }
     },
-    handleDragoverEvent  (evnt: DragEvent) {
+    handleUploadDragoverEvent  (evnt: DragEvent) {
       const $xeUpload = this
       const reactData = $xeUpload.reactData
 
@@ -888,7 +932,7 @@ export default defineVxeComponent({
         const { items } = dataTransfer
         if (items && items.length) {
           evnt.preventDefault()
-          reactData.isDrag = true
+          reactData.isDragUploadStatus = true
         }
       }
     },
@@ -923,7 +967,7 @@ export default defineVxeComponent({
       }
       $xeUpload.uploadFile(files, evnt)
     },
-    handleDropEvent  (evnt: DragEvent) {
+    handleUploadDropEvent  (evnt: DragEvent) {
       const $xeUpload = this
       const reactData = $xeUpload.reactData
 
@@ -938,12 +982,14 @@ export default defineVxeComponent({
           }
         }
       }
-      reactData.isDrag = false
+      reactData.isDragUploadStatus = false
     },
     handleMoreEvent  () {
       const $xeUpload = this
       const props = $xeUpload
       const reactData = $xeUpload.reactData
+
+      const { xID } = $xeUpload
 
       const formReadonly = $xeUpload.computeFormReadonly
       const isImage = $xeUpload.computeIsImage
@@ -959,16 +1005,16 @@ export default defineVxeComponent({
           maskClosable: true,
           slots: {
             default (params, h) {
-              const { showErrorStatus, dragToUpload } = props
-              const { isDrag } = reactData
-              const isDisabled = $xeUpload.computeIsDisabled
+              const { showErrorStatus, dragToUpload, dragSort } = props
+              const { isDragMove, isDragUploadStatus, dragIndex } = reactData
               const { fileList } = reactData
+              const isDisabled = $xeUpload.computeIsDisabled
 
               const ons: Record<string, any> = {}
-              if (dragToUpload) {
-                ons.dragover = $xeUpload.handleDragoverEvent
-                ons.dragleave = $xeUpload.handleDragleaveEvent
-                ons.drop = $xeUpload.handleDropEvent
+              if (dragToUpload && dragIndex === -1) {
+                ons.dragover = $xeUpload.handleUploadDragoverEvent
+                ons.dragleave = $xeUpload.handleUploadDragleaveEvent
+                ons.drop = $xeUpload.handleUploadDropEvent
               }
 
               return h('div', {
@@ -976,23 +1022,51 @@ export default defineVxeComponent({
                   'is--readonly': formReadonly,
                   'is--disabled': isDisabled,
                   'show--error': showErrorStatus,
-                  'is--drag': isDrag
+                  'is--drag': isDragUploadStatus
                 }],
                 on: ons
               }, [
                 isImage
-                  ? h('div', {
-                    class: 'vxe-upload--image-more-list'
-                  }, $xeUpload.renderImageItemList(h, fileList, true).concat($xeUpload.renderImageAction(h, true)))
+                  ? (
+                      dragSort
+                        ? h('transition-group', {
+                          props: {
+                            name: `vxe-upload--drag-list${isDragMove ? '' : '-disabled'}`,
+                            tag: 'div'
+                          },
+                          class: 'vxe-upload--image-more-list'
+                        }, $xeUpload.renderImageItemList(h, fileList, true).concat($xeUpload.renderImageAction(h, true)))
+                        : h('div', {
+                          class: 'vxe-upload--image-more-list'
+                        }, $xeUpload.renderImageItemList(h, fileList, true).concat($xeUpload.renderImageAction(h, true)))
+                    )
                   : h('div', {
                     class: 'vxe-upload--file-more-list'
                   }, [
                     $xeUpload.renderFileAction(h, true),
-                    h('div', {
-                      class: 'vxe-upload--file-list'
-                    }, $xeUpload.renderFileItemList(h, fileList, true))
+                    (
+                      dragSort
+                        ? h('transition-group', {
+                          props: {
+                            name: `vxe-upload--drag-list${isDragMove ? '' : '-disabled'}`,
+                            tag: 'div'
+                          },
+                          class: 'vxe-upload--file-list'
+                        }, $xeUpload.renderFileItemList(h, fileList, true))
+                        : h('div', {
+                          class: 'vxe-upload--file-list'
+                        }, $xeUpload.renderFileItemList(h, fileList, true))
+                    )
                   ]),
-                isDrag
+                dragSort
+                  ? h('div', {
+                    attrs: {
+                      id: `refModalDragLineElem${xID}`
+                    },
+                    class: 'vxe-upload--drag-line'
+                  })
+                  : renderEmptyElement($xeUpload),
+                isDragUploadStatus
                   ? h('div', {
                     class: 'vxe-upload--drag-placeholder'
                   }, getI18n('vxe.upload.dragPlaceholder'))
@@ -1000,14 +1074,97 @@ export default defineVxeComponent({
               ])
             }
           },
-          onShow () {
-            reactData.showMorePopup = true
-          },
-          onHide () {
-            reactData.showMorePopup = false
+          events: {
+            show () {
+              reactData.showMorePopup = true
+            },
+            hide () {
+              reactData.showMorePopup = false
+            }
           }
         })
       }
+    },
+    // 拖拽
+    handleDragSortDragstartEvent (evnt: DragEvent) {
+      const $xeUpload = this
+      const reactData = $xeUpload.reactData
+
+      if (evnt.dataTransfer) {
+        const img = new Image()
+        img.src = tpImg
+        evnt.dataTransfer.setDragImage(img, 0, 0)
+      }
+      const dragEl = evnt.currentTarget as HTMLElement
+      const parentEl = dragEl.parentElement as HTMLDivElement
+      const dragIndex = XEUtils.findIndexOf(Array.from(parentEl.children), item => dragEl === item)
+      reactData.isDragMove = true
+      reactData.dragIndex = dragIndex
+      setTimeout(() => {
+        reactData.isDragMove = false
+      }, 500)
+    },
+    handleDragSortDragoverEvent (evnt: DragEvent) {
+      const $xeUpload = this
+      const reactData = $xeUpload.reactData
+      const internalData = $xeUpload.internalData
+
+      evnt.preventDefault()
+
+      const { dragIndex } = reactData
+      if (dragIndex === -1) {
+        return
+      }
+      const isImage = $xeUpload.computeIsImage
+      const dragEl = evnt.currentTarget as HTMLElement
+      const parentEl = dragEl.parentElement as HTMLDivElement
+      const currIndex = XEUtils.findIndexOf(Array.from(parentEl.children), item => dragEl === item)
+      let dragPos: 'top' | 'bottom' | 'left' | 'right' | '' = ''
+      if (isImage) {
+        const offsetX = evnt.clientX - dragEl.getBoundingClientRect().x
+        dragPos = offsetX < dragEl.clientWidth / 2 ? 'left' : 'right'
+      } else {
+        const offsetY = evnt.clientY - dragEl.getBoundingClientRect().y
+        dragPos = offsetY < dragEl.clientHeight / 2 ? 'top' : 'bottom'
+      }
+      if (dragIndex === currIndex) {
+        showDropTip($xeUpload, evnt, dragEl, dragPos)
+        return
+      }
+      showDropTip($xeUpload, evnt, dragEl, dragPos)
+      internalData.prevDragIndex = currIndex
+      internalData.prevDragPos = dragPos
+    },
+    handleDragSortDragendEvent (evnt: DragEvent) {
+      const $xeUpload = this
+      const reactData = $xeUpload.reactData
+      const internalData = $xeUpload.internalData
+
+      const { fileList, dragIndex } = reactData
+      const { prevDragIndex, prevDragPos } = internalData
+      const oldIndex = dragIndex
+      const targetIndex = prevDragIndex
+      const dragOffsetIndex = prevDragPos === 'bottom' || prevDragPos === 'right' ? 1 : 0
+      const oldItem = fileList[oldIndex]
+      const newItem = fileList[targetIndex]
+      if (oldItem && newItem) {
+        fileList.splice(oldIndex, 1)
+        const ptfIndex = XEUtils.findIndexOf(fileList, item => newItem === item)
+        const nIndex = ptfIndex + dragOffsetIndex
+        fileList.splice(nIndex, 0, oldItem)
+        $xeUpload.dispatchEvent('sort-dragend', {
+          oldItem: oldItem,
+          newItem: newItem,
+          dragPos: prevDragPos as any,
+          offsetIndex: dragOffsetIndex,
+          _index: {
+            newIndex: nIndex,
+            oldIndex: oldIndex
+          }
+        }, evnt)
+      }
+      hideDropTip($xeUpload)
+      reactData.dragIndex = -1
     },
     handleGlobalPasteEvent (evnt: ClipboardEvent) {
       const $xeUpload = this
@@ -1057,7 +1214,7 @@ export default defineVxeComponent({
       const slots = $xeUpload.$scopedSlots
       const reactData = $xeUpload.reactData
 
-      const { showRemoveButton, showDownloadButton, showProgress, progressText, showPreview, showErrorStatus } = props
+      const { showRemoveButton, showDownloadButton, showProgress, progressText, showPreview, showErrorStatus, dragSort } = props
       const { fileCacheMaps } = reactData
       const isDisabled = $xeUpload.computeIsDisabled
       const formReadonly = $xeUpload.computeFormReadonly
@@ -1065,18 +1222,30 @@ export default defineVxeComponent({
       const typeProp = $xeUpload.computeTypeProp
       const cornerSlot = slots.corner
 
+      const ons: Record<string, any> = {}
+      if (dragSort) {
+        ons.dragstart = $xeUpload.handleDragSortDragstartEvent
+        ons.dragover = $xeUpload.handleDragSortDragoverEvent
+        ons.dragend = $xeUpload.handleDragSortDragendEvent
+      }
+
       return currList.map((item, index) => {
         const fileKey = $xeUpload.getFieldKey(item)
         const cacheItem = fileCacheMaps[fileKey]
         const isLoading = cacheItem && cacheItem.loading
         const isError = cacheItem && cacheItem.status === 'error'
         return h('div', {
-          key: index,
+          key: dragSort ? fileKey : index,
           class: ['vxe-upload--file-item', {
             'is--preview': showPreview,
             'is--loading': isLoading,
             'is--error': isError
-          }]
+          }],
+          attrs: {
+            fileid: fileKey,
+            draggable: dragSort ? true : null
+          },
+          on: ons
         }, [
           h('div', {
             class: 'vxe-upload--file-item-icon'
@@ -1218,8 +1387,8 @@ export default defineVxeComponent({
       const props = $xeUpload
       const reactData = $xeUpload.reactData
 
-      const { moreConfig } = props
-      const { fileList } = reactData
+      const { moreConfig, dragSort } = props
+      const { fileList, isDragMove } = reactData
       const moreOpts = $xeUpload.computeMoreOpts
 
       const { maxCount, showMoreButton, layout } = moreOpts
@@ -1246,9 +1415,19 @@ export default defineVxeComponent({
             }]
           }, [
             currList.length
-              ? h('div', {
-                class: 'vxe-upload--file-list'
-              }, $xeUpload.renderFileItemList(h, currList, false))
+              ? (
+                  dragSort
+                    ? h('transition-group', {
+                      attrs: {
+                        name: `vxe-upload--drag-list${isDragMove ? '' : '-disabled'}`,
+                        tag: 'div'
+                      },
+                      class: 'vxe-upload--file-list'
+                    }, $xeUpload.renderFileItemList(h, currList, false))
+                    : h('div', {
+                      class: 'vxe-upload--file-list'
+                    }, $xeUpload.renderFileItemList(h, currList, false))
+                )
               : renderEmptyElement($xeUpload),
             showMoreButton && overMaxNum
               ? h('div', {
@@ -1279,7 +1458,7 @@ export default defineVxeComponent({
       const slots = $xeUpload.$scopedSlots
       const reactData = $xeUpload.reactData
 
-      const { showRemoveButton, showProgress, progressText, showPreview, showErrorStatus } = props
+      const { showRemoveButton, showProgress, progressText, showPreview, showErrorStatus, dragSort } = props
       const { fileCacheMaps } = reactData
       const isDisabled = $xeUpload.computeIsDisabled
       const formReadonly = $xeUpload.computeFormReadonly
@@ -1287,19 +1466,31 @@ export default defineVxeComponent({
       const imgStyle = $xeUpload.computeImgStyle
       const cornerSlot = slots.corner
 
+      const ons: Record<string, any> = {}
+      if (dragSort) {
+        ons.dragstart = $xeUpload.handleDragSortDragstartEvent
+        ons.dragover = $xeUpload.handleDragSortDragoverEvent
+        ons.dragend = $xeUpload.handleDragSortDragendEvent
+      }
+
       return currList.map((item, index) => {
         const fileKey = $xeUpload.getFieldKey(item)
         const cacheItem = fileCacheMaps[fileKey]
         const isLoading = cacheItem && cacheItem.loading
         const isError = cacheItem && cacheItem.status === 'error'
         return h('div', {
-          key: index,
+          key: dragSort ? fileKey : index,
           class: ['vxe-upload--image-item', {
             'is--preview': showPreview,
             'is--circle': imageOpts.circle,
             'is--loading': isLoading,
             'is--error': isError
-          }]
+          }],
+          attrs: {
+            fileid: fileKey,
+            draggable: dragSort ? true : null
+          },
+          on: ons
         }, [
           h('div', {
             class: 'vxe-upload--image-item-box',
@@ -1455,9 +1646,11 @@ export default defineVxeComponent({
     },
     renderImageMode  (h: CreateElement) {
       const $xeUpload = this
+      const props = $xeUpload
       const reactData = $xeUpload.reactData
 
-      const { fileList } = reactData
+      const { dragSort } = props
+      const { fileList, isDragMove } = reactData
       const moreOpts = $xeUpload.computeMoreOpts
 
       const { maxCount, showMoreButton } = moreOpts
@@ -1472,27 +1665,54 @@ export default defineVxeComponent({
         key: 'image',
         class: 'vxe-upload--image-wrapper'
       }, [
-        h('div', {
-          class: 'vxe-upload--image-list'
-        }, $xeUpload.renderImageItemList(h, currList, false).concat([
-          showMoreButton && overMaxNum
-            ? h('div', {
-              class: 'vxe-upload--image-over-more'
-            }, [
-              h(VxeButtonComponent, {
-                props: {
-                  mode: 'text',
-                  content: getI18n('vxe.upload.moreBtnText', [fileList.length]),
-                  status: 'primary'
-                },
-                on: {
-                  click: $xeUpload.handleMoreEvent
-                }
-              })
-            ])
-            : renderEmptyElement($xeUpload),
-          $xeUpload.renderImageAction(h, false)
-        ]))
+        dragSort
+          ? h('transition-group', {
+            attrs: {
+              name: `vxe-upload--drag-list${isDragMove ? '' : '-disabled'}`,
+              tag: 'div'
+            },
+            class: 'vxe-upload--image-list'
+          }, $xeUpload.renderImageItemList(h, currList, false).concat([
+            showMoreButton && overMaxNum
+              ? h('div', {
+                key: 'om',
+                class: 'vxe-upload--image-over-more'
+              }, [
+                h(VxeButtonComponent, {
+                  props: {
+                    mode: 'text',
+                    content: getI18n('vxe.upload.moreBtnText', [fileList.length]),
+                    status: 'primary'
+                  },
+                  on: {
+                    click: $xeUpload.handleMoreEvent
+                  }
+                })
+              ])
+              : renderEmptyElement($xeUpload),
+            $xeUpload.renderImageAction(h, false)
+          ]))
+          : h('div', {
+            class: 'vxe-upload--image-list'
+          }, $xeUpload.renderImageItemList(h, currList, false).concat([
+            showMoreButton && overMaxNum
+              ? h('div', {
+                class: 'vxe-upload--image-over-more'
+              }, [
+                h(VxeButtonComponent, {
+                  props: {
+                    mode: 'text',
+                    content: getI18n('vxe.upload.moreBtnText', [fileList.length]),
+                    status: 'primary'
+                  },
+                  on: {
+                    click: $xeUpload.handleMoreEvent
+                  }
+                })
+              ])
+              : renderEmptyElement($xeUpload),
+            $xeUpload.renderImageAction(h, false)
+          ]))
       ])
     },
     renderVN (h: CreateElement): VNode {
@@ -1500,18 +1720,18 @@ export default defineVxeComponent({
       const props = $xeUpload
       const reactData = $xeUpload.reactData
 
-      const { showErrorStatus, dragToUpload, pasteToUpload } = props
-      const { isDrag, showMorePopup, isActivated } = reactData
+      const { showErrorStatus, dragToUpload, pasteToUpload, dragSort } = props
+      const { isDragUploadStatus, showMorePopup, isActivated, dragIndex } = reactData
       const vSize = $xeUpload.computeSize
       const isDisabled = $xeUpload.computeIsDisabled
       const formReadonly = $xeUpload.computeFormReadonly
       const isImage = $xeUpload.computeIsImage
 
       const ons: Record<string, any> = {}
-      if (dragToUpload) {
-        ons.dragover = $xeUpload.handleDragoverEvent
-        ons.dragleave = $xeUpload.handleDragleaveEvent
-        ons.drop = $xeUpload.handleDropEvent
+      if (dragToUpload && dragIndex === -1) {
+        ons.dragover = $xeUpload.handleUploadDragoverEvent
+        ons.dragleave = $xeUpload.handleUploadDragleaveEvent
+        ons.drop = $xeUpload.handleUploadDropEvent
       }
 
       return h('div', {
@@ -1523,12 +1743,18 @@ export default defineVxeComponent({
           'is--disabled': isDisabled,
           'is--paste': pasteToUpload,
           'show--error': showErrorStatus,
-          'is--drag': isDrag
+          'is--drag': isDragUploadStatus
         }],
         on: ons
       }, [
         isImage ? $xeUpload.renderImageMode(h) : $xeUpload.renderAllMode(h),
-        isDrag && !showMorePopup
+        dragSort
+          ? h('div', {
+            ref: 'refDragLineElem',
+            class: 'vxe-upload--drag-line'
+          })
+          : renderEmptyElement($xeUpload),
+        isDragUploadStatus && !showMorePopup
           ? h('div', {
             class: 'vxe-upload--drag-placeholder'
           }, getI18n('vxe.upload.dragPlaceholder'))
@@ -1561,7 +1787,7 @@ export default defineVxeComponent({
     const $xeUpload = this
     const reactData = $xeUpload.reactData
 
-    reactData.isDrag = false
+    reactData.isDragUploadStatus = false
     globalEvents.off($xeUpload, 'paste')
     globalEvents.off($xeUpload, 'mousedown')
     globalEvents.off($xeUpload, 'blur')

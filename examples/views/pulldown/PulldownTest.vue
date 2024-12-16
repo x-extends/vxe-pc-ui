@@ -15,7 +15,7 @@
         </template>
       </vxe-pulldown>
 
-      <vxe-pulldown ref="xDown2">
+      <vxe-pulldown ref="xDown2" @visible-change="visibleChangEvent2">
         <template #default>
           <vxe-input v-model="demo2.value2" placeholder="可搜索的大数据下拉框" @focus="focusEvent2" @keyup="keyupEvent2"></vxe-input>
         </template>
@@ -204,6 +204,9 @@ export default Vue.extend({
       $pulldown2.hidePanel().then(() => {
         this.demo2.list2 = data2
       })
+    },
+    visibleChangEvent2 ({ visible }: any) {
+      console.log('22', visible)
     },
     clickEvent3 () {
       const $pulldown3 = this.$refs.xDown3 as any
