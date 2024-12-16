@@ -1549,6 +1549,9 @@ export default defineVxeComponent({
       if (props.multiple && props.singleMode) {
         errLog('vxe.error.errConflicts', ['multiple', 'single-mode'])
       }
+      if (props.imageStyle) {
+        errLog('vxe.error.delProp', ['image-style', 'image-config'])
+      }
     }
     globalEvents.on($xeUpload, 'paste', $xeUpload.handleGlobalPasteEvent)
     globalEvents.on($xeUpload, 'mousedown', $xeUpload.handleGlobalMousedownEvent)

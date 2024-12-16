@@ -365,6 +365,10 @@ export namespace VxeTablePropTypes {
      */
     showRowIcon?: boolean
     /**
+     * 是否显示拖拽动画，启用后由数据量的大小来影响渲染性能
+     */
+    animation?: boolean
+    /**
      * 是否禁用拖拽按钮
      * @deprecated
      */
@@ -419,6 +423,10 @@ export namespace VxeTablePropTypes {
      */
     showIcon?: boolean
     /**
+     * 触发拖拽方式
+     */
+    trigger?: 'default' | 'cell' | 'row' | '' | null
+    /**
      * 只对 tree-config 启用有效，是否跨节点拖拽，用于树结构，启用后允许拖拽到其他的子节点，除自身节点之外
      */
     isCrossDrag?: boolean
@@ -434,6 +442,10 @@ export namespace VxeTablePropTypes {
      * 是否显示拖拽辅助状态显示
      */
     showGuidesStatus?: boolean
+    /**
+     * 是否显示拖拽动画，启用后由数据量的大小来影响渲染性能
+     */
+    animation?: boolean
     /**
      * 是否禁用拖拽按钮
      */
@@ -482,6 +494,10 @@ export namespace VxeTablePropTypes {
      * 是否显示拖拽按钮图标
      */
     showIcon?: boolean
+    /**
+     * 触发拖拽方式
+     */
+    trigger?: 'default' | 'cell' | '' | null
     /**
      * 用于分组表头，是否跨列拖拽，启用后允许拖拽到其他的列，除自身列之外
      */
@@ -3636,6 +3652,8 @@ export interface TablePrivateMethods<D = any> {
   triggerRowExpandEvent(evnt: Event, params: VxeTableDefines.CellRenderBodyParams<any>): void
   triggerTreeExpandEvent(evnt: Event, params: VxeTableDefines.CellRenderBodyParams<any>): void
   triggerSortEvent(evnt: Event, column: VxeTableDefines.ColumnInfo<any>, order: VxeTablePropTypes.SortOrder): void
+  triggerHeaderCellMousedownEvent(evnt: any, params: any): void
+  triggerCellMousedownEvent(evnt: any, params: any): void
   handleRowDragDragstartEvent (evnt: DragEvent): void
   handleRowDragDragendEvent(evnt: DragEvent): void
   handleRowDragDragoverEvent(evnt: DragEvent,): void

@@ -6,8 +6,7 @@ export interface TableKeyboardPrivateMethods<D = any> {
   moveTabSelected(args: any, isLeft: any, evnt: any): void
   moveCurrentRow(isUpArrow: any, isDwArrow: any, evnt: any): void
   moveSelected(args: any, isLeftArrow: any, isUpArrow: any, isRightArrow: any, isDwArrow: any, evnt: any): void
-  triggerHeaderCellMousedownEvent(evnt: any, params: any): void
-  triggerCellMousedownEvent(evnt: any, params: any): void
+  handleCellMousedownEvent(evnt: any, params: any): void
  }
 
 declare module '../grid' {
