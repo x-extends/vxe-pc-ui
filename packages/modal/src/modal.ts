@@ -461,11 +461,11 @@ export default defineComponent({
           boxElem.style.height
         ] as (string | number)[]).concat(revertLocat
           ? [
-              revertLocat.left,
-              revertLocat.top,
-              revertLocat.width,
-              revertLocat.height
-            ]
+            revertLocat.left,
+            revertLocat.top,
+            revertLocat.width,
+            revertLocat.height
+          ]
           : []).map(val => val ? XEUtils.toNumber(val) : '').join(',')
         localStorage.setItem(storageKey, XEUtils.toJSONString(posStorageMap))
       }
@@ -899,8 +899,16 @@ export default defineComponent({
       }
     }
 
+    function clearSelectedText() {
+      if (window.getSelection) {
+        const selection = window.getSelection();
+        selection && selection.removeAllRanges();
+      }
+    }
+
     const dragEvent = (evnt: MouseEvent) => {
       evnt.preventDefault()
+      clearSelectedText()
       const { remember, storage } = props
       const { visibleHeight, visibleWidth } = getDomNode()
       const marginSize = XEUtils.toNumber(props.marginSize)
@@ -911,6 +919,7 @@ export default defineComponent({
       const maxWidth = visibleWidth
       const maxHeight = visibleHeight
       const boxElem = getBox()
+      const domContextmenu = document.oncontextmenu
       const domMousemove = document.onmousemove
       const domMouseup = document.onmouseup
       const clientWidth = boxElem.clientWidth
@@ -920,8 +929,14 @@ export default defineComponent({
       const offsetTop = boxElem.offsetTop
       const offsetLeft = boxElem.offsetLeft
       const params = { type: 'resize' }
+
+      document.oncontextmenu = evnt => {
+        evnt.preventDefault()
+      }
+
       document.onmousemove = evnt => {
         evnt.preventDefault()
+        clearSelectedText()
         let dragLeft
         let dragTop
         let width
@@ -1042,6 +1057,7 @@ export default defineComponent({
       }
       document.onmouseup = () => {
         reactData.revertLocat = null
+        document.oncontextmenu = domContextmenu
         document.onmousemove = domMousemove
         document.onmouseup = domMouseup
         setTimeout(() => {
@@ -1305,9 +1321,9 @@ export default defineComponent({
               ? h('div', {
                 class: 'vxe-modal--aside'
               },
-              asideSlot
-                ? getSlotVNs(asideSlot({ $modal: $xeModal }))
-                : [
+                asideSlot
+                  ? getSlotVNs(asideSlot({ $modal: $xeModal }))
+                  : [
                     status || iconStatus
                       ? h('div', {
                         class: 'vxe-modal--status-wrapper'
@@ -1325,21 +1341,21 @@ export default defineComponent({
             }, !reactData.initialized || (destroyOnClose && !reactData.visible)
               ? []
               : [
-                  renderHeader(),
-                  renderBody(),
-                  renderFooter(),
-                  !isMsg && resize
-                    ? h('span', {
-                      class: 'vxe-modal--resize'
-                    }, ['wl', 'wr', 'swst', 'sest', 'st', 'swlb', 'selb', 'sb'].map(type => {
-                      return h('span', {
-                        class: `${type}-resize`,
-                        type: type,
-                        onMousedown: dragEvent
-                      })
-                    }))
-                    : createCommentVNode()
-                ])
+                renderHeader(),
+                renderBody(),
+                renderFooter(),
+                !isMsg && resize
+                  ? h('span', {
+                    class: 'vxe-modal--resize'
+                  }, ['wl', 'wr', 'swst', 'sest', 'st', 'swlb', 'selb', 'sb'].map(type => {
+                    return h('span', {
+                      class: `${type}-resize`,
+                      type: type,
+                      onMousedown: dragEvent
+                    })
+                  }))
+                  : createCommentVNode()
+              ])
           ])
         ])
       ])
