@@ -2,7 +2,7 @@ import { defineComponent, ref, h, reactive, watch, computed, TransitionGroup, Pr
 import XEUtils from 'xe-utils'
 import { VxeUI, getConfig, getI18n, getIcon, useSize, createEvent, globalEvents, renderEmptyElement } from '../../ui'
 import { getSlotVNs } from '../..//ui/src/vn'
-import { errLog } from '../../ui/src/log'
+import { errLog, warnLog } from '../../ui/src/log'
 import { tpImg, getEventTargetNode, toCssUnit } from '../../ui/src/dom'
 import { readLocalFile } from './util'
 import VxeButtonComponent from '../../button/src/button'
@@ -172,6 +172,7 @@ export default defineComponent({
     const { computeSize } = useSize(props)
 
     const refElem = ref<HTMLDivElement>()
+    const refPopupElem = ref<HTMLDivElement>()
     const refDragLineElem = ref<HTMLDivElement>()
     const refModalDragLineElem = ref<HTMLDivElement>()
 
@@ -885,6 +886,7 @@ export default defineComponent({
               }
 
               return h('div', {
+                ref: refPopupElem,
                 class: ['vxe-upload--more-popup', {
                   'is--readonly': formReadonly,
                   'is--disabled': isDisabled,
@@ -948,12 +950,14 @@ export default defineComponent({
     }
 
     const showDropTip = (evnt: DragEvent, dragEl: HTMLElement, dragPos: string) => {
+      const { showMorePopup } = reactData
       const el = refElem.value
-      if (!el) {
+      const popupEl = refPopupElem.value
+      const wrapperEl = showMorePopup ? popupEl : el
+      if (!wrapperEl) {
         return
       }
-      const { showMorePopup } = reactData
-      const wrapperRect = el.getBoundingClientRect()
+      const wrapperRect = wrapperEl.getBoundingClientRect()
       const ddLineEl = refDragLineElem.value
       const mdLineEl = refModalDragLineElem.value
       const currDLineEl = showMorePopup ? mdLineEl : ddLineEl
@@ -1596,7 +1600,7 @@ export default defineComponent({
           errLog('vxe.error.errConflicts', ['multiple', 'single-mode'])
         }
         if (props.imageStyle) {
-          errLog('vxe.error.delProp', ['image-style', 'image-config'])
+          warnLog('vxe.error.delProp', ['image-style', 'image-config'])
         }
       }
       globalEvents.on($xeUpload, 'paste', handleGlobalPasteEvent)
