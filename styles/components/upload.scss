@@ -82,8 +82,7 @@
   flex-direction: row;
   align-items: center;
   line-height: 1.5em;
-  margin-bottom: var(--vxe-ui-layout-padding-half);
-  padding: 0.1em var(--vxe-ui-layout-padding-half);
+  padding: var(--vxe-ui-layout-padding-half);
   &:hover {
     background-color: var(--vxe-ui-base-hover-background-color);
     &:not(.is--loading) {

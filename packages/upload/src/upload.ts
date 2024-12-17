@@ -3,7 +3,7 @@ import { defineVxeComponent } from '../../ui/src/comp'
 import XEUtils from 'xe-utils'
 import { VxeUI, getConfig, getI18n, getIcon, globalMixins, createEvent, globalEvents, renderEmptyElement } from '../../ui'
 import { getSlotVNs } from '../..//ui/src/vn'
-import { errLog } from '../../ui/src/log'
+import { errLog, warnLog } from '../../ui/src/log'
 import { tpImg, getEventTargetNode, toCssUnit } from '../../ui/src/dom'
 import { readLocalFile } from './util'
 import VxeButtonComponent from '../../button/src/button'
@@ -30,12 +30,14 @@ function showDropTip ($xeUpload: VxeUploadConstructor, evnt: DragEvent, dragEl: 
 
   const reactData = $xeUpload.reactData
 
+  const { showMorePopup } = reactData
   const el = $xeUpload.$refs.refElem as HTMLDivElement
-  if (!el) {
+  const popupEl = document.getElementById(`refPopupElem${xID}`) as HTMLDivElement
+  const wrapperEl = showMorePopup ? popupEl : el
+  if (!wrapperEl) {
     return
   }
-  const { showMorePopup } = reactData
-  const wrapperRect = el.getBoundingClientRect()
+  const wrapperRect = wrapperEl.getBoundingClientRect()
   const ddLineEl = $xeUpload.$refs.refDragLineElem as HTMLDivElement
   const mdLineEl = document.getElementById(`refModalDragLineElem${xID}`) as HTMLDivElement
   const currDLineEl = showMorePopup ? mdLineEl : ddLineEl
@@ -1018,6 +1020,9 @@ export default defineVxeComponent({
               }
 
               return h('div', {
+                attrs: {
+                  id: `refPopupElem${xID}`
+                },
                 class: ['vxe-upload--more-popup', {
                   'is--readonly': formReadonly,
                   'is--disabled': isDisabled,
@@ -1776,7 +1781,7 @@ export default defineVxeComponent({
         errLog('vxe.error.errConflicts', ['multiple', 'single-mode'])
       }
       if (props.imageStyle) {
-        errLog('vxe.error.delProp', ['image-style', 'image-config'])
+        warnLog('vxe.error.delProp', ['image-style', 'image-config'])
       }
     }
     globalEvents.on($xeUpload, 'paste', $xeUpload.handleGlobalPasteEvent)
