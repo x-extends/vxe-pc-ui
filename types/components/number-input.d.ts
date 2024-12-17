@@ -47,6 +47,9 @@ export namespace VxeNumberInputPropTypes {
   export type PrefixIcon = string
   export type SuffixIcon = string
 
+  export type ShowCurrency = boolean
+  export type CurrencySymbol = string | null
+
   /**
    * 请使用 AutoComplete
    * @deprecated
@@ -90,6 +93,15 @@ export interface VxeNumberInputProps {
 
   prefixIcon?: VxeNumberInputPropTypes.PrefixIcon
   suffixIcon?: VxeNumberInputPropTypes.SuffixIcon
+
+  /**
+   * 只对 type=amount 有效，是否显示前缀货币符号
+   */
+  showCurrency?: VxeNumberInputPropTypes.ShowCurrency
+  /**
+   * 只对 type=amount 有效，自定义货币符号
+   */
+  currencySymbol?: VxeNumberInputPropTypes.CurrencySymbol
 
   /**
    * 请使用 autoComplete
