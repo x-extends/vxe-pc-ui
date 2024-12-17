@@ -77,6 +77,14 @@ export default defineVxeComponent({
       type: Boolean as PropType<VxeNumberInputPropTypes.Exponential>,
       default: () => getConfig().numberInput.exponential
     },
+    showCurrency: {
+      type: Boolean as PropType<VxeNumberInputPropTypes.ShowCurrency>,
+      default: () => getConfig().numberInput.showCurrency
+    },
+    currencySymbol: {
+      type: String as PropType<VxeNumberInputPropTypes.CurrencySymbol>,
+      default: () => getConfig().numberInput.currencySymbol
+    },
 
     // number、integer、float
     controls: {
@@ -253,11 +261,15 @@ export default defineVxeComponent({
       const props = $xeNumberInput
       const reactData = $xeNumberInput.reactData
 
-      const { type } = props
+      const { type, showCurrency, currencySymbol } = props
       const { inputValue } = reactData
       const digitsValue = $xeNumberInput.computeDigitsValue
       if (type === 'amount') {
-        return XEUtils.commafy(XEUtils.toNumber(inputValue), { digits: digitsValue })
+        const amountLabel = XEUtils.commafy(XEUtils.toNumber(inputValue), { digits: digitsValue })
+        if (showCurrency) {
+          return `${currencySymbol || getI18n('vxe.numberInput.currencySymbol') || ''}${amountLabel}`
+        }
+        return amountLabel
       }
       return XEUtils.toString(inputValue)
     },

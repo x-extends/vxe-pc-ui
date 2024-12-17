@@ -1909,6 +1909,14 @@ export namespace VxeTablePropTypes {
      */
     columns?: VxeTableDefines.ColumnInfo[] | ExportOrPrintColumnOption[]
     /**
+     * 指定列
+     */
+    includeFields?: string[]
+    /**
+     * 排序列
+     */
+    excludeFields?: string[]
+    /**
      * 列过滤方法
      */
     columnFilterMethod?(params: { column: VxeTableDefines.ColumnInfo, $columnIndex: number }): boolean
@@ -2017,6 +2025,14 @@ export namespace VxeTablePropTypes {
      * 自定义参数
      */
     params?: Record<string, any>
+    /**
+     * 指定列
+     */
+    includeFields?: string[]
+    /**
+     * 排序列
+     */
+    excludeFields?: string[]
     /**
      * 列过滤方法
      */
