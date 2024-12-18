@@ -735,6 +735,7 @@ export namespace VxeTablePropTypes {
     showIcon?: boolean
     iconNone?: string
     iconMatch?: string
+    destroyOnClose?: boolean
     confirmButtonText?: string
     resetButtonText?: string
   }
@@ -3492,7 +3493,7 @@ export interface TableMethods<DT = any> {
   /**
    * 用于 tree-config.lazy，手动清空懒加载树节点的状态，数据会恢复成未展开的状态，当再次展开时会重新加载
    */
-  clearTreeExpandLoaded(row: any): Promise<any>
+  clearTreeExpandLoaded(row: any | any[]): Promise<any>
   /**
    * 重新懒加载树节点，并展开该节点
    * @param rows 指定行
