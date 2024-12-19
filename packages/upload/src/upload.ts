@@ -874,7 +874,7 @@ export default defineComponent({
           slots: {
             default () {
               const { showErrorStatus, dragToUpload, dragSort } = props
-              const { isDragMove, isDragUploadStatus, dragIndex } = reactData
+              const { isActivated, isDragMove, isDragUploadStatus, dragIndex } = reactData
               const { fileList } = reactData
               const isDisabled = computeIsDisabled.value
 
@@ -890,6 +890,7 @@ export default defineComponent({
                 class: ['vxe-upload--more-popup', {
                   'is--readonly': formReadonly,
                   'is--disabled': isDisabled,
+                  'is--active': isActivated,
                   'show--error': showErrorStatus,
                   'is--drag': isDragUploadStatus
                 }],
@@ -1079,7 +1080,13 @@ export default defineComponent({
 
     const handleGlobalMousedownEvent = (evnt: MouseEvent) => {
       const el = refElem.value
-      const isActivated = getEventTargetNode(evnt, el).flag
+      const popupEl = refPopupElem.value
+      let isActivated = getEventTargetNode(evnt, el).flag
+      if (!isActivated && popupEl) {
+        const parentEl = popupEl.parentElement || popupEl
+        const modalEl = parentEl ? parentEl.parentElement : parentEl
+        isActivated = getEventTargetNode(evnt, modalEl).flag
+      }
       reactData.isActivated = isActivated
     }
 

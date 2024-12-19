@@ -284,6 +284,11 @@ const routes: Array<RouteRecordRaw> = [
     path: '/component/table-select',
     name: 'TableSelect',
     component: () => import('../views/table-select/TableSelect.vue')
+  },
+  {
+    path: '/component/color-picker',
+    name: 'ColorPickerTest',
+    component: () => import('../views/color-picker/ColorPickerTest.vue')
   }
 ]
 

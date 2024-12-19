@@ -68,7 +68,7 @@ export default defineComponent({
     })
 
     const internalData: IconPickerInternalData = {
-      hpTimeout: undefined
+      // hpTimeout: undefined
     }
 
     const refElem = ref() as Ref<HTMLDivElement>
@@ -264,7 +264,7 @@ export default defineComponent({
       reactData.selectIcon = selectValue
       if (selectValue !== props.modelValue) {
         emit('update:modelValue', selectValue)
-        iconPickerMethods.dispatchEvent('change', { value: selectValue }, evnt)
+        dispatchEvent('change', { value: selectValue }, evnt)
         // 自动更新校验状态
         if ($xeForm && formItemInfo) {
           $xeForm.triggerItemEvent(evnt, formItemInfo.itemConfig.field, selectValue)
@@ -287,7 +287,7 @@ export default defineComponent({
 
     const clearValueEvent = (evnt: Event, selectValue: any) => {
       changeEvent(evnt, selectValue)
-      iconPickerMethods.dispatchEvent('clear', { value: selectValue }, evnt)
+      dispatchEvent('clear', { value: selectValue }, evnt)
     }
 
     const clearEvent = (params: any, evnt: Event) => {
@@ -306,7 +306,7 @@ export default defineComponent({
 
     const clickEvent = (evnt: MouseEvent) => {
       togglePanelEvent(evnt)
-      iconPickerMethods.dispatchEvent('click', {}, evnt)
+      dispatchEvent('click', {}, evnt)
     }
 
     const handleGlobalMousewheelEvent = (evnt: MouseEvent) => {
