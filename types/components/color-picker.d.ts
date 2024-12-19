@@ -1,4 +1,4 @@
-import { DefineVxeComponentApp, DefineVxeComponentOptions, DefineVxeComponentInstance, VxeComponentEventParams } from '@vxe-ui/core'
+import { DefineVxeComponentApp, DefineVxeComponentOptions, DefineVxeComponentInstance, VxeComponentEventParams, VxeComponentStyleType } from '@vxe-ui/core'
 
 /* eslint-disable @typescript-eslint/no-empty-interface,no-use-before-define,@typescript-eslint/ban-types */
 
@@ -16,9 +16,32 @@ export interface ColorPickerPrivateRef {
 export interface VxeColorPickerPrivateRef extends ColorPickerPrivateRef { }
 
 export namespace VxeColorPickerPropTypes {
+  export type ModelValue = string
+  export type Size = VxeComponentSizeType
+  export type ClassName = string | ((params: { $colorPicker: VxeColorPickerConstructor }) => string)
+  export type PopupClassName = string | ((params: {$colorPicker: VxeColorPickerConstructor }) => string)
+  export type Readonly = boolean
+  export type Disabled = boolean
+  export type Placeholder = string
+  export type Clearable = boolean
+  export type Placement = 'top' | 'bottom' | '' | null
+  export type Transfer = boolean
 }
 
 export interface VxeColorPickerProps {
+  /**
+   * 绑定值
+   */
+  modelValue?: VxeColorPickerPropTypes.ModelValue
+  size?: VxeColorPickerPropTypes.Size
+  className?: VxeColorPickerPropTypes.ClassName
+  popupClassName?: VxeColorPickerPropTypes.PopupClassName
+  readonly?: VxeColorPickerPropTypes.Readonly
+  disabled?: VxeColorPickerPropTypes.Disabled
+  placeholder?: VxeColorPickerPropTypes.Placeholder
+  clearable?: VxeColorPickerPropTypes.Clearable
+  placement?: VxeColorPickerPropTypes.Placement
+  transfer?: VxeColorPickerPropTypes.Transfer
 }
 
 export interface ColorPickerPrivateComputed {
@@ -26,6 +49,18 @@ export interface ColorPickerPrivateComputed {
 export interface VxeColorPickerPrivateComputed extends ColorPickerPrivateComputed { }
 
 export interface ColorPickerReactData {
+  initialized: boolean
+  selectColor: string
+  panelIndex: number
+  panelStyle: VxeComponentStyleType
+  panelPlacement: any
+  visiblePanel: boolean
+  isAniVisible: boolean
+  isActivated: boolean
+}
+
+export interface ColorPickerInternalData {
+  hpTimeout?: undefined | number
 }
 
 export interface ColorPickerMethods {
@@ -35,7 +70,12 @@ export interface VxeColorPickerMethods extends ColorPickerMethods { }
 export interface ColorPickerPrivateMethods { }
 export interface VxeColorPickerPrivateMethods extends ColorPickerPrivateMethods { }
 
-export type VxeColorPickerEmits = []
+export type VxeColorPickerEmits = [
+  'update:modelValue',
+  'change',
+  'clear',
+  'click'
+]
 
 export namespace VxeColorPickerDefines {
   export interface ColorPickerEventParams extends VxeComponentEventParams {

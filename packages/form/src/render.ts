@@ -1,6 +1,6 @@
 import { CreateElement, VNode } from 'vue'
 import { getIcon, getI18n, renderer, renderEmptyElement } from '../../ui'
-import { getFuncText, isEnableConf } from '../../ui/src/utils'
+import { eqEmptyValue, getFuncText, isEnableConf } from '../../ui/src/utils'
 import { toCssUnit } from '../../ui/src/dom'
 import { getSlotVNs } from '../../ui/src/vn'
 import { isActiveItem } from './util'
@@ -238,7 +238,8 @@ export const renderItemContent = (h: CreateElement, $xeForm: VxeFormConstructor 
   } else if (rftContent) {
     contentVNs = getSlotVNs(rftContent.call($xeForm, h, itemRender, params))
   } else if (field) {
-    contentVNs = [`${XEUtils.get(data, field)}`]
+    const itemValue = XEUtils.get(data, field)
+    contentVNs = [eqEmptyValue(itemValue) ? '' : `${itemValue}`]
   }
   if (collapseNode) {
     contentVNs.push(

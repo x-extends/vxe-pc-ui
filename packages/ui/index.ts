@@ -79,6 +79,7 @@ setConfig({
   },
   collapsePane: {},
   countdown: {},
+  colorPicker: {},
   datePicker: {
     // size: null,
     // transfer: false

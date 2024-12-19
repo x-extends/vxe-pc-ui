@@ -12,6 +12,14 @@ export default defineVxeComponent({
   data () {
     const xID = XEUtils.uniqueId()
     const reactData: ColorPickerReactData = {
+      initialized: false,
+      selectColor: '',
+      panelIndex: 0,
+      panelStyle: {},
+      panelPlacement: null,
+      visiblePanel: false,
+      isAniVisible: false,
+      isActivated: false
     }
     return {
       xID,

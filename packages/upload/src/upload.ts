@@ -1008,7 +1008,7 @@ export default defineVxeComponent({
           slots: {
             default (params, h) {
               const { showErrorStatus, dragToUpload, dragSort } = props
-              const { isDragMove, isDragUploadStatus, dragIndex } = reactData
+              const { isActivated, isDragMove, isDragUploadStatus, dragIndex } = reactData
               const { fileList } = reactData
               const isDisabled = $xeUpload.computeIsDisabled
 
@@ -1026,6 +1026,7 @@ export default defineVxeComponent({
                 class: ['vxe-upload--more-popup', {
                   'is--readonly': formReadonly,
                   'is--disabled': isDisabled,
+                  'is--active': isActivated,
                   'show--error': showErrorStatus,
                   'is--drag': isDragUploadStatus
                 }],
@@ -1199,8 +1200,14 @@ export default defineVxeComponent({
       const $xeUpload = this
       const reactData = $xeUpload.reactData
 
-      const el = $xeUpload.$refs.refElem
-      const isActivated = getEventTargetNode(evnt, el).flag
+      const el = $xeUpload.$refs.refElem as HTMLDivElement
+      const popupEl = $xeUpload.$refs.refPopupElem as HTMLDivElement
+      let isActivated = getEventTargetNode(evnt, el).flag
+      if (!isActivated && popupEl) {
+        const parentEl = popupEl.parentElement || popupEl
+        const modalEl = parentEl ? parentEl.parentElement : parentEl
+        isActivated = getEventTargetNode(evnt, modalEl).flag
+      }
       reactData.isActivated = isActivated
     },
     handleGlobalBlurEvent () {
