@@ -136,6 +136,7 @@ export default defineComponent({
         : (options
             ? options.map(item => {
               return h(VxeCheckboxComponent, {
+                key: item[valueField],
                 label: item[valueField],
                 content: item[labelField],
                 disabled: item[disabledField]

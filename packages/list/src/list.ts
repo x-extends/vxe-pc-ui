@@ -153,7 +153,7 @@ export default defineComponent({
         if (firstItemElem) {
           rowHeight = firstItemElem.offsetHeight
         }
-        rowHeight = Math.max(20, rowHeight)
+        rowHeight = Math.max(12, rowHeight)
         scrollYStore.rowHeight = rowHeight
         // 计算 Y 逻辑
         if (scrollYLoad) {

@@ -122,11 +122,13 @@ export default defineComponent({
     Object.assign($xeRadio, radioMethods, radioPrivateMethods)
 
     const renderVN = () => {
+      const { label } = props
       const vSize = computeSize.value
       const isDisabled = computeIsDisabled.value
       const name = computeName.value
       const isChecked = computeChecked.value
       return h('label', {
+        key: label,
         class: ['vxe-radio', {
           [`size--${vSize}`]: vSize,
           'is--checked': isChecked,

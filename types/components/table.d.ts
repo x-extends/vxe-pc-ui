@@ -377,7 +377,7 @@ export namespace VxeTablePropTypes {
     /**
      * 垂直对齐方式
      */
-    verticalAlign?: '' | 'top' | 'center'
+    verticalAlign?: '' | 'top' | 'center' | null
   }
 
   /**

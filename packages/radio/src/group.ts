@@ -124,6 +124,7 @@ export default defineComponent({
         : (options
             ? options.map(item => {
               return h(btnComp, {
+                key: item[valueField],
                 label: item[valueField],
                 content: item[labelField],
                 disabled: item[disabledField]

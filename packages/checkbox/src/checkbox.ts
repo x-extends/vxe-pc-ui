@@ -112,11 +112,13 @@ export default defineComponent({
     Object.assign($xeCheckbox, checkboxMethods)
 
     const renderVN = () => {
+      const { label } = props
       const vSize = computeSize.value
       const isDisabled = computeIsDisabled.value
       const isChecked = computeIsChecked.value
       const indeterminate = !isChecked && props.indeterminate
       return h('label', {
+        key: label,
         class: ['vxe-checkbox', {
           [`size--${vSize}`]: vSize,
           'is--indeterminate': indeterminate,

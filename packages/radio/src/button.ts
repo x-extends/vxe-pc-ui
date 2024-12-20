@@ -119,12 +119,14 @@ export default defineComponent({
     }
 
     const renderVN = () => {
+      const { label } = props
       const vSize = computeSize.value
       const isDisabled = computeIsDisabled.value
       const name = computeName.value
       const isChecked = computeChecked.value
 
       return h('label', {
+        key: label,
         class: ['vxe-radio', 'vxe-radio-button', {
           [`size--${vSize}`]: vSize,
           'is--disabled': isDisabled
