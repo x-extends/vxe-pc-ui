@@ -2,7 +2,7 @@ import { PropType, CreateElement, VNode } from 'vue'
 import { defineVxeComponent } from '../../ui/src/comp'
 import XEUtils from 'xe-utils'
 import { getConfig, globalEvents, globalResize, createEvent, globalMixins } from '../../ui'
-import { browse } from '../../ui/src/dom'
+import { browse, isScale } from '../../ui/src/dom'
 import { getSlotVNs } from '../../ui/src/vn'
 import VxeLoadingComponent from '../../loading/src/loading'
 
@@ -29,7 +29,9 @@ export default defineVxeComponent({
     const reactData: ListReactData = {
       scrollYLoad: false,
       bodyHeight: 0,
-      rowHeight: 0,
+      customHeight: 0,
+      customMaxHeight: 0,
+      parentHeight: 0,
       topSpaceHeight: 0,
       items: []
     }
@@ -65,14 +67,16 @@ export default defineVxeComponent({
     computeStyles () {
       const $xeList = this
       const props = $xeList
+      const reactData = $xeList.reactData
 
       const { height, maxHeight } = props
+      const { customHeight, customMaxHeight } = reactData
       const style: { [key: string]: string | number } = {}
       if (height) {
-        style.height = `${isNaN(height as number) ? height : `${height}px`}`
+        style.height = `${customHeight}px`
       } else if (maxHeight) {
         style.height = 'auto'
-        style.maxHeight = `${isNaN(maxHeight as number) ? maxHeight : `${maxHeight}px`}`
+        style.maxHeight = `${customMaxHeight}px`
       }
       return style
     }
@@ -135,6 +139,35 @@ export default defineVxeComponent({
       $xeList.clearScroll()
       return $xeList.loadData(datas)
     },
+    calcTableHeight (key: 'height' | 'maxHeight') {
+      const $xeList = this
+      const props = $xeList
+      const reactData = $xeList.reactData
+
+      const { parentHeight } = reactData
+      const val = props[key]
+      let num = 0
+      if (val) {
+        if (val === '100%' || val === 'auto') {
+          num = parentHeight
+        } else {
+          if (isScale(val)) {
+            num = Math.floor((XEUtils.toInteger(val) || 1) / 100 * parentHeight)
+          } else {
+            num = XEUtils.toNumber(val)
+          }
+          num = Math.max(40, num)
+        }
+      }
+      return num
+    },
+    updateHeight () {
+      const $xeList = this
+      const reactData = $xeList.reactData
+
+      reactData.customHeight = $xeList.calcTableHeight('height')
+      reactData.customMaxHeight = $xeList.calcTableHeight('maxHeight')
+    },
     updateYSpace  () {
       const $xeList = this
       const reactData = $xeList.reactData
@@ -169,7 +202,7 @@ export default defineVxeComponent({
       return $xeList.$nextTick().then(() => {
         const { scrollYLoad } = reactData
         const { scrollYStore } = internalData
-        const virtualBodyElem = $xeList.$refs.refVirtualBody as HTMLElement
+        const virtualBodyElem = $xeList.$refs.refVirtualBody as HTMLDivElement
         const sYOpts = $xeList.computeSYOpts
         let rowHeight = 0
         let firstItemElem: HTMLElement | undefined
@@ -193,12 +226,11 @@ export default defineVxeComponent({
           const offsetYSize = sYOpts.oSize ? XEUtils.toNumber(sYOpts.oSize) : (browse.edge ? 10 : 0)
           scrollYStore.offsetSize = offsetYSize
           scrollYStore.visibleSize = visibleYSize
-          scrollYStore.endIndex = Math.max(scrollYStore.startIndex, visibleYSize + offsetYSize, scrollYStore.endIndex)
+          scrollYStore.endIndex = Math.max(scrollYStore.startIndex + visibleYSize + offsetYSize, scrollYStore.endIndex)
           $xeList.updateYData()
         } else {
           $xeList.updateYSpace()
         }
-        reactData.rowHeight = rowHeight
       })
     },
     /**
@@ -261,12 +293,18 @@ export default defineVxeComponent({
      */
     recalculate  () {
       const $xeList = this
+      const reactData = $xeList.reactData
 
       const el = $xeList.$refs.refElem as HTMLDivElement
-      if (el.clientWidth && el.clientHeight) {
-        return $xeList.computeScrollLoad()
+      if (el) {
+        const parentEl = el.parentElement
+        reactData.parentHeight = parentEl ? parentEl.clientHeight : 0
+        $xeList.updateHeight()
+        if (el.clientWidth && el.clientHeight) {
+          return $xeList.computeScrollLoad()
+        }
       }
-      return Promise.resolve()
+      return $xeList.$nextTick()
     },
     loadYData  (evnt: Event) {
       const $xeList = this
@@ -367,6 +405,16 @@ export default defineVxeComponent({
 
       $xeList.loadData(props.data || [])
     },
+    height () {
+      const $xeList = this
+
+      $xeList.recalculate()
+    },
+    maxHeight () {
+      const $xeList = this
+
+      $xeList.recalculate()
+    },
     syncResize (val) {
       const $xeList = this
 
@@ -380,9 +428,6 @@ export default defineVxeComponent({
     const $xeList = this
     const props = $xeList
 
-    globalEvents.on($xeList, 'resize', () => {
-      $xeList.recalculate()
-    })
     $xeList.loadData(props.data || [])
   },
   mounted () {
@@ -390,12 +435,17 @@ export default defineVxeComponent({
     const props = $xeList
     const internalData = $xeList.internalData
 
+    $xeList.recalculate()
     if (props.autoResize) {
       const el = $xeList.$refs.refElem as HTMLDivElement
       const resizeObserver = globalResize.create(() => $xeList.recalculate())
       resizeObserver.observe(el)
+      if (el) {
+        resizeObserver.observe(el.parentElement as HTMLDivElement)
+      }
       internalData.resizeObserver = resizeObserver
     }
+    globalEvents.on($xeList, 'resize', $xeList.recalculate)
   },
   activated () {
     const $xeList = this
