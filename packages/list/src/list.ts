@@ -1,7 +1,7 @@
-import { defineComponent, h, PropType, ref, Ref, computed, onUnmounted, watch, reactive, nextTick, onActivated } from 'vue'
+import { defineComponent, h, PropType, ref, Ref, computed, onUnmounted, watch, reactive, nextTick, onActivated, onMounted } from 'vue'
 import XEUtils from 'xe-utils'
 import { getConfig, globalEvents, globalResize, createEvent, useSize } from '../../ui'
-import { browse } from '../../ui/src/dom'
+import { browse, isScale } from '../../ui/src/dom'
 import VxeLoadingComponent from '../../loading/src/loading'
 
 import type { VxeListConstructor, VxeListPropTypes, VxeListEmits, ListReactData, ListInternalData, ValueOf, ListMethods, ListPrivateRef, VxeListMethods } from '../../../types'
@@ -32,6 +32,9 @@ export default defineComponent({
     const reactData = reactive<ListReactData>({
       scrollYLoad: false,
       bodyHeight: 0,
+      customHeight: 0,
+      customMaxHeight: 0,
+      parentHeight: 0,
       topSpaceHeight: 0,
       items: []
     })
@@ -73,18 +76,43 @@ export default defineComponent({
 
     const computeStyles = computed(() => {
       const { height, maxHeight } = props
+      const { customHeight, customMaxHeight } = reactData
       const style: { [key: string]: string | number } = {}
       if (height) {
-        style.height = `${isNaN(height as number) ? height : `${height}px`}`
+        style.height = `${customHeight}px`
       } else if (maxHeight) {
         style.height = 'auto'
-        style.maxHeight = `${isNaN(maxHeight as number) ? maxHeight : `${maxHeight}px`}`
+        style.maxHeight = `${customMaxHeight}px`
       }
       return style
     })
 
     const dispatchEvent = (type: ValueOf<VxeListEmits>, params: Record<string, any>, evnt: Event | null) => {
       emit(type, createEvent(evnt, { $list: $xeList }, params))
+    }
+
+    const calcTableHeight = (key: 'height' | 'maxHeight') => {
+      const { parentHeight } = reactData
+      const val = props[key]
+      let num = 0
+      if (val) {
+        if (val === '100%' || val === 'auto') {
+          num = parentHeight
+        } else {
+          if (isScale(val)) {
+            num = Math.floor((XEUtils.toInteger(val) || 1) / 100 * parentHeight)
+          } else {
+            num = XEUtils.toNumber(val)
+          }
+          num = Math.max(40, num)
+        }
+      }
+      return num
+    }
+
+    const updateHeight = () => {
+      reactData.customHeight = calcTableHeight('height')
+      reactData.customMaxHeight = calcTableHeight('maxHeight')
     }
 
     const updateYSpace = () => {
@@ -134,7 +162,7 @@ export default defineComponent({
           const offsetYSize = sYOpts.oSize ? XEUtils.toNumber(sYOpts.oSize) : (browse.edge ? 10 : 0)
           scrollYStore.offsetSize = offsetYSize
           scrollYStore.visibleSize = visibleYSize
-          scrollYStore.endIndex = Math.max(scrollYStore.startIndex, visibleYSize + offsetYSize, scrollYStore.endIndex)
+          scrollYStore.endIndex = Math.max(scrollYStore.startIndex + visibleYSize + offsetYSize, scrollYStore.endIndex)
           updateYData()
         } else {
           updateYSpace()
@@ -197,10 +225,15 @@ export default defineComponent({
      */
     const recalculate = () => {
       const el = refElem.value
-      if (el.clientWidth && el.clientHeight) {
-        return computeScrollLoad()
+      if (el) {
+        const parentEl = el.parentElement
+        reactData.parentHeight = parentEl ? parentEl.clientHeight : 0
+        updateHeight()
+        if (el.clientWidth && el.clientHeight) {
+          return computeScrollLoad()
+        }
       }
-      return Promise.resolve()
+      return nextTick()
     }
 
     const loadYData = (evnt: Event) => {
@@ -286,6 +319,14 @@ export default defineComponent({
       loadData(props.data || [])
     })
 
+    watch(() => props.height, () => {
+      recalculate()
+    })
+
+    watch(() => props.maxHeight, () => {
+      recalculate()
+    })
+
     watch(() => props.syncResize, (value) => {
       if (value) {
         recalculate()
@@ -298,16 +339,22 @@ export default defineComponent({
     })
 
     nextTick(() => {
-      globalEvents.on($xeList, 'resize', () => {
-        recalculate()
-      })
+      loadData(props.data || [])
+    })
+
+    onMounted(() => {
+      recalculate()
+
       if (props.autoResize) {
         const el = refElem.value
         const resizeObserver = globalResize.create(() => recalculate())
         resizeObserver.observe(el)
+        if (el) {
+          resizeObserver.observe(el.parentElement as HTMLDivElement)
+        }
         internalData.resizeObserver = resizeObserver
       }
-      loadData(props.data || [])
+      globalEvents.on($xeList, 'resize', recalculate)
     })
 
     onUnmounted(() => {
