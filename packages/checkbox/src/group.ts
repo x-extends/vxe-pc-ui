@@ -173,6 +173,7 @@ export default defineVxeComponent({
         : (options
             ? options.map(item => {
               return h(VxeCheckboxComponent, {
+                key: item[valueField],
                 props: {
                   label: item[valueField],
                   content: item[labelField],

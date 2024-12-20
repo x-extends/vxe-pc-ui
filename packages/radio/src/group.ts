@@ -159,6 +159,7 @@ export default defineVxeComponent({
         : (options
             ? options.map(item => {
               return h(btnComp, {
+                key: item[valueField],
                 props: {
                   label: item[valueField],
                   content: item[labelField],

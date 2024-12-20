@@ -162,12 +162,14 @@ export default defineVxeComponent({
       const props = $xeRadioButton
       const slots = $xeRadioButton.$scopedSlots
 
+      const { label } = props
       const vSize = $xeRadioButton.computeSize
       const isDisabled = $xeRadioButton.computeIsDisabled
       const name = $xeRadioButton.computeName
       const isChecked = $xeRadioButton.computeChecked
 
       return h('label', {
+        key: label,
         class: ['vxe-radio', 'vxe-radio-button', {
           [`size--${vSize}`]: vSize,
           'is--disabled': isDisabled

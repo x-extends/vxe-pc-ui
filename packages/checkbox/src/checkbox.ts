@@ -144,11 +144,13 @@ export default defineVxeComponent({
       const props = $xeCheckbox
       const slots = $xeCheckbox.$scopedSlots
 
+      const { label } = props
       const vSize = $xeCheckbox.computeSize
       const isDisabled = $xeCheckbox.computeIsDisabled
       const isChecked = $xeCheckbox.computeIsChecked
       const indeterminate = !isChecked && props.indeterminate
       return h('label', {
+        key: label,
         class: ['vxe-checkbox', {
           [`size--${vSize}`]: vSize,
           'is--indeterminate': indeterminate,
