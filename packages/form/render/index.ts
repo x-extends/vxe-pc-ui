@@ -430,8 +430,33 @@ renderer.mixin({
       ]
     }
   },
+  VxeColorPicker: {
+    formItemAutoFocus: 'input',
+    renderFormItemContent (h: CreateElement, renderOpts: any, params: any) {
+      const { data, field } = params
+      const { options } = renderOpts
+      const itemValue = XEUtils.get(data, field)
+      return [
+        h(getDefaultComponent(renderOpts), {
+          props: getComponentFormItemProps(renderOpts, params, itemValue, { colors: options }),
+          on: getItemOns(renderOpts, params)
+        })
+      ]
+    }
+  },
   VxeIconPicker: {
-    renderFormItemContent: defaultFormItemRender
+    formItemAutoFocus: 'input',
+    renderFormItemContent (h: CreateElement, renderOpts: any, params: any) {
+      const { data, field } = params
+      const { options } = renderOpts
+      const itemValue = XEUtils.get(data, field)
+      return [
+        h(getDefaultComponent(renderOpts), {
+          props: getComponentFormItemProps(renderOpts, params, itemValue, { icons: options }),
+          on: getItemOns(renderOpts, params)
+        })
+      ]
+    }
   },
   VxeRadio: {
     renderFormItemContent: defaultFormItemRender

@@ -22,7 +22,10 @@ export default defineVxeComponent({
   props: {
     value: String as PropType<VxeColorPickerPropTypes.ModelValue>,
     placeholder: String as PropType<VxeColorPickerPropTypes.Placeholder>,
-    clearable: Boolean as PropType<VxeColorPickerPropTypes.Clearable>,
+    clearable: {
+      type: Boolean as PropType<VxeColorPickerPropTypes.Clearable>,
+      default: () => getConfig().colorPicker.clearable
+    },
     type: {
       type: String as PropType<VxeColorPickerPropTypes.Type>,
       default: () => getConfig().colorPicker.type
@@ -65,6 +68,30 @@ export default defineVxeComponent({
     transfer: {
       type: Boolean as PropType<VxeColorPickerPropTypes.Transfer>,
       default: null
+    }
+  },
+  inject: {
+    $xeModal: {
+      default: null
+    },
+    $xeDrawer: {
+      default: null
+    },
+    $xeTable: {
+      default: null
+    },
+    $xeForm: {
+      default: null
+    },
+    formItemInfo: {
+      from: 'xeFormItemInfo',
+      default: null
+    }
+  },
+  provide () {
+    const $xeColorPicker = this
+    return {
+      $xeColorPicker
     }
   },
   data () {
@@ -141,7 +168,7 @@ export default defineVxeComponent({
 
       const { transfer } = props
       if (transfer === null) {
-        const globalTransfer = getConfig().iconPicker.transfer
+        const globalTransfer = getConfig().colorPicker.transfer
         if (XEUtils.isBoolean(globalTransfer)) {
           return globalTransfer
         }
@@ -411,6 +438,23 @@ export default defineVxeComponent({
 
       $xeColorPicker.changeEvent(evnt, selectValue)
       $xeColorPicker.dispatchEvent('clear', { value: selectValue }, evnt)
+    },
+    focusEvent () {
+      const $xeColorPicker = this
+      const reactData = $xeColorPicker.reactData
+
+      const isDisabled = $xeColorPicker.computeIsDisabled
+      if (!isDisabled) {
+        if (!reactData.visiblePanel) {
+          $xeColorPicker.showOptionPanel()
+        }
+      }
+    },
+    blurEvent () {
+      const $xeColorPicker = this
+      const reactData = $xeColorPicker.reactData
+
+      reactData.isActivated = false
     },
     clearEvent (evnt: Event) {
       const $xeColorPicker = this
@@ -976,7 +1020,14 @@ export default defineVxeComponent({
         return h('div', {
           ref: 'refElem',
           class: ['vxe-color-picker--readonly', className]
-        }, 'x')
+        }, [
+          h('div', {
+            class: 'vxe-color-picker--readonly-color',
+            style: {
+              backgroundColor: value
+            }
+          })
+        ])
       }
       return h('div', {
         ref: 'refElem',
@@ -988,6 +1039,14 @@ export default defineVxeComponent({
           'is--active': isActivated
         }]
       }, [
+        h('input', {
+          ref: 'refInput',
+          class: 'vxe-color-picker--input',
+          on: {
+            focus: $xeColorPicker.focusEvent,
+            blur: $xeColorPicker.blurEvent
+          }
+        }),
         h('div', {
           class: 'vxe-color-picker--inner',
           on: {
@@ -1018,37 +1077,33 @@ export default defineVxeComponent({
             ? h('div', {
               class: 'vxe-color-picker--panel-wrapper'
             }, [
+              $xeColorPicker.renderColorWrapper(h),
+              $xeColorPicker.renderColorBar(h),
+              $xeColorPicker.renderQuickWrapper(h),
               h('div', {
-                class: ''
+                class: 'vxe-color-picker--footer-wrapper'
               }, [
-                $xeColorPicker.renderColorWrapper(h),
-                $xeColorPicker.renderColorBar(h),
-                $xeColorPicker.renderQuickWrapper(h),
-                h('div', {
-                  class: 'vxe-color-picker--footer-wrapper'
-                }, [
-                  clearable
-                    ? h(VxeButtonComponent, {
-                      props: {
-                        content: getI18n('vxe.colorPicker.clear'),
-                        size: 'mini'
-                      },
-                      on: {
-                        click: $xeColorPicker.clearEvent
-                      }
-                    })
-                    : renderEmptyElement($xeColorPicker),
-                  h(VxeButtonComponent, {
+                clearable
+                  ? h(VxeButtonComponent, {
                     props: {
-                      content: getI18n('vxe.colorPicker.confirm'),
-                      size: 'mini',
-                      status: 'primary'
+                      content: getI18n('vxe.colorPicker.clear'),
+                      size: 'mini'
                     },
                     on: {
-                      click: $xeColorPicker.confirmEvent
+                      click: $xeColorPicker.clearEvent
                     }
                   })
-                ])
+                  : renderEmptyElement($xeColorPicker),
+                h(VxeButtonComponent, {
+                  props: {
+                    content: getI18n('vxe.colorPicker.confirm'),
+                    size: 'mini',
+                    status: 'primary'
+                  },
+                  on: {
+                    click: $xeColorPicker.confirmEvent
+                  }
+                })
               ])
             ])
             : renderEmptyElement($xeColorPicker)

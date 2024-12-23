@@ -81,6 +81,7 @@ setConfig({
   countdown: {},
   colorPicker: {
     type: 'hex',
+    clearable: true,
     showAlpha: true,
     clickToCopy: true,
     showColorExtractor: true,
