@@ -1,4 +1,4 @@
-import { defineComponent, h, Teleport, PropType, ref, Ref, inject, watch, computed, provide, onUnmounted, reactive, nextTick, onMounted, createCommentVNode } from 'vue'
+import { defineComponent, h, Teleport, PropType, ref, inject, watch, computed, provide, onUnmounted, reactive, nextTick, onMounted, createCommentVNode } from 'vue'
 import XEUtils from 'xe-utils'
 import { getConfig, getIcon, getI18n, globalEvents, createEvent, useSize, GLOBAL_EVENT_KEYS } from '../../ui'
 import { getEventTargetNode, getAbsolutePos } from '../../ui/src/dom'
@@ -71,9 +71,9 @@ export default defineComponent({
       // hpTimeout: undefined
     }
 
-    const refElem = ref() as Ref<HTMLDivElement>
-    const refInput = ref() as Ref<HTMLInputElement>
-    const refOptionPanel = ref() as Ref<HTMLDivElement>
+    const refElem = ref<HTMLDivElement>()
+    const refInput = ref<HTMLInputElement>()
+    const refOptionPanel = ref<HTMLDivElement>()
 
     const refMaps: IconPickerPrivateRef = {
       refElem
@@ -418,12 +418,16 @@ export default defineComponent({
       focus () {
         const $input = refInput.value
         reactData.isActivated = true
-        $input.blur()
+        if ($input) {
+          $input.blur()
+        }
         return nextTick()
       },
       blur () {
         const $input = refInput.value
-        $input.blur()
+        if ($input) {
+          $input.blur()
+        }
         reactData.isActivated = false
         return nextTick()
       }

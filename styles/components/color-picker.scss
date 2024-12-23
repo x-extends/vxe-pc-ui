@@ -1,14 +1,6 @@
 @use '../helpers/baseMixin.scss';
 
 .vxe-color-picker {
-  position: relative;
-  display: inline-block;
-  color: var(--vxe-ui-font-color);
-  width: 2.4em;
-  border: 1px solid var(--vxe-ui-input-border-color);
-  border-radius: var(--vxe-ui-base-border-radius);
-  background-color: var(--vxe-ui-layout-background-color);
-  padding: 0.25em;
   &.is--selected {
     .vxe-color-picker--inner-color {
       color: #fff;
@@ -18,6 +10,16 @@
     border-color: var(--vxe-ui-font-primary-color);
   }
 }
+.vxe-color-picker,
+.vxe-color-picker--readonly {
+  position: relative;
+  display: inline-block;
+  width: 2.4em;
+  padding: 0.25em;
+  border: 1px solid var(--vxe-ui-input-border-color);
+  border-radius: var(--vxe-ui-base-border-radius);
+  background-color: var(--vxe-ui-layout-background-color);
+}
 
 .vxe-color-picker--inner,
 .vxe-color-picker--preview-btn,
@@ -25,12 +27,28 @@
   background: #fff url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAB4AAAAeCAYAAAA7MK6iAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAWElEQVRIiWM8fubkfwYygKWJOSM5+mCAhRLNoxaPWjxq8ajFoxbTyeL/DAfJ0Xjs3Cl7Siwmu4Yht1aDgZEYx6MWj1o8avGoxaMWD3qLya5X//4nqx6HAQC7RBGFzolqTAAAAABJRU5ErkJggg==);
 }
 
-.vxe-color-picker--inner {
+.vxe-color-picker--inner,
+.vxe-color-picker--readonly-color {
   width: 100%;
   height: 100%;
   background-size: 1em 1em;
   border-radius: var(--vxe-ui-base-border-radius);
+}
+
+.vxe-color-picker--readonly-color {
+  border: 1px solid var(--vxe-ui-input-border-color);
+}
+
+.vxe-color-picker--inner {
   cursor: pointer;
+}
+.vxe-color-picker--input {
+  position: absolute;
+  z-index: -1;
+  width: 1px;
+  height: 1px;
+  outline: 0;
+  border: 0;
 }
 .vxe-color-picker--inner-color {
   width: 100%;
@@ -45,6 +63,7 @@
 
 .vxe-color-picker--panel-wrapper {
   position: relative;
+  width: 23.4em;
   border-radius: var(--vxe-ui-base-border-radius);
   border: 1px solid var(--vxe-ui-base-popup-border-color);
   box-shadow: var(--vxe-ui-base-popup-box-shadow);
@@ -84,7 +103,6 @@
 .vxe-color-picker--color-wrapper {
   position: relative;
   height: 130px;
-  width: 23.2em;
   overflow: hidden;
 }
 .vxe-color-picker--white-bg,
@@ -313,7 +331,8 @@
   padding: 0 0.4em 0.4em 0.4em;
 }
 
-.vxe-color-picker {
+.vxe-color-picker,
+.vxe-color-picker--readonly {
   height: var(--vxe-ui-input-height-default);
   line-height: var(--vxe-ui-input-height-default);
   &.size--medium {
@@ -331,6 +350,7 @@
 }
 
 .vxe-color-picker,
+.vxe-color-picker--readonly,
 .vxe-color-picker--panel {
   font-size: var(--vxe-ui-font-size-default);
   &.size--medium {

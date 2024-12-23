@@ -1,6 +1,6 @@
 <template>
   <div>
-    <vxe-color-picker v-model="val1" clearable></vxe-color-picker>
+    <vxe-color-picker v-model="val1" clearable readonly></vxe-color-picker>
     <vxe-color-picker v-model="val2" show-alpha clearable></vxe-color-picker>
     <vxe-color-picker v-model="val3" type="rgb" show-alpha clearable></vxe-color-picker>
     <vxe-color-picker v-model="val4" clearable :colors="list1"></vxe-color-picker>
