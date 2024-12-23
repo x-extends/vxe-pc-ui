@@ -1486,13 +1486,15 @@ export namespace VxeTablePropTypes {
       row: DT
       column: VxeTableDefines.ColumnInfo<DT>
       cellValue: any
+      findValue: string
+      replaceValue: string
     }) => void
     /**
      * 自定义单元格替换之前的方法，可以通过返回 false 阻止替换行为
      */
     beforeReplaceMethod?:(params: {
       isAll: boolean
-      findValue: string | null
+      findValue: string
       replaceValue: string
       $table: VxeTableConstructor<DT> & VxeTablePrivateMethods<DT>
       $grid: VxeGridConstructor<DT> | null | undefined
@@ -1502,7 +1504,7 @@ export namespace VxeTablePropTypes {
      */
     afterReplaceMethod?:(params: {
       isAll: boolean
-      findValue: string | null
+      findValue: string
       replaceValue: string
       result: VxeTableProDefines.FindAndReplaceResult[]
       $table: VxeTableConstructor<DT> & VxeTablePrivateMethods<DT>

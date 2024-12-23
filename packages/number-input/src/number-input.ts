@@ -401,7 +401,7 @@ export default defineVxeComponent({
       const reactData = $xeNumberInput.reactData
 
       const inpImmediate = $xeNumberInput.computeInpImmediate
-      const value = inputValue === '' || XEUtils.eqNull(inputValue) ? null : XEUtils.toNumber(inputValue)
+      const value = inputValue === eqEmptyValue(inputValue) ? null : XEUtils.toNumber(inputValue)
       reactData.inputValue = inputValue
       if (inpImmediate) {
         $xeNumberInput.handleChange(value, inputValue, evnt)
@@ -428,6 +428,8 @@ export default defineVxeComponent({
       const $xeNumberInput = this
       const reactData = $xeNumberInput.reactData
 
+      const { inputValue } = reactData
+      reactData.inputValue = eqEmptyValue(inputValue) ? '' : `${XEUtils.toNumber(inputValue)}`
       reactData.isFocus = true
       reactData.isActivated = true
       $xeNumberInput.triggerEvent(evnt)

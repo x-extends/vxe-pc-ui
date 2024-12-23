@@ -234,5 +234,8 @@ declare module '@vxe-ui/core' {
     // rate
     RATE_CHECKED?: string
     RATE_UNCHECKED?: string
+
+    // color-picker
+    COLOR_COPY?: string
   }
 }

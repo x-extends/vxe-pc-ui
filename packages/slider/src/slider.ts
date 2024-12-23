@@ -216,8 +216,6 @@ export default defineVxeComponent({
       const minNum = $xeSlider.computeMinNum
       if (!(formReadonly || isDisabled)) {
         evnt.preventDefault()
-        const domMousemove = document.onmousemove
-        const domMouseup = document.onmouseup
         document.onmousemove = evnt => {
           evnt.preventDefault()
           const barElem = $xeSlider.$refs.refBarElem as HTMLDivElement
@@ -233,8 +231,8 @@ export default defineVxeComponent({
           $xeSlider.updateBarStyle()
         }
         document.onmouseup = (evnt: MouseEvent) => {
-          document.onmousemove = domMousemove
-          document.onmouseup = domMouseup
+          document.onmousemove = null
+          document.onmouseup = null
           $xeSlider.changeEvent(evnt)
           $xeSlider.updateBarStyle()
         }

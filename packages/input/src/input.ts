@@ -2,7 +2,7 @@ import { PropType, CreateElement, VNode } from 'vue'
 import { defineVxeComponent } from '../../ui/src/comp'
 import XEUtils from 'xe-utils'
 import { getConfig, getIcon, getI18n, globalEvents, GLOBAL_EVENT_KEYS, createEvent, globalMixins, renderEmptyElement } from '../../ui'
-import { getFuncText, getLastZIndex, nextZIndex } from '../../ui/src/utils'
+import { getFuncText, getLastZIndex, nextZIndex, eqEmptyValue } from '../../ui/src/utils'
 import { hasClass, getAbsolutePos, getEventTargetNode } from '../../ui/src/dom'
 import { toStringTimeDate, getDateQuarter } from '../../date-picker/src/util'
 import { handleNumber, toFloatValueFixed } from '../../number-input/src/util'
@@ -42,7 +42,10 @@ export default defineVxeComponent({
       type: Boolean as PropType<VxeInputPropTypes.Disabled>,
       default: null
     },
-    placeholder: String as PropType<VxeInputPropTypes.Placeholder>,
+    placeholder: {
+      type: String as PropType<VxeInputPropTypes.Placeholder>,
+      default: null
+    },
     maxLength: [String, Number] as PropType<VxeInputPropTypes.MaxLength>,
     autoComplete: {
       type: String as PropType<VxeInputPropTypes.AutoComplete>,
@@ -802,11 +805,14 @@ export default defineVxeComponent({
       if (placeholder) {
         return getFuncText(placeholder)
       }
-      const globalPlaceholder = getConfig().input.placeholder
-      if (globalPlaceholder) {
-        return getFuncText(globalPlaceholder)
+      if (XEUtils.eqNull(placeholder)) {
+        const globalPlaceholder = getConfig().input.placeholder
+        if (globalPlaceholder) {
+          return getFuncText(globalPlaceholder)
+        }
+        return getI18n('vxe.base.pleaseInput')
       }
-      return getI18n('vxe.base.pleaseInput')
+      return placeholder
     },
     computeInpImmediate () {
       const $xeInput = this
@@ -1016,9 +1022,13 @@ export default defineVxeComponent({
       const $xeInput = this
       const reactData = $xeInput.reactData
 
-      reactData.isActivated = true
+      const { inputValue } = reactData
+      const isNumType = $xeInput.computeIsNumType
       const isDatePickerType = $xeInput.computeIsDatePickerType
-      if (isDatePickerType) {
+      reactData.isActivated = true
+      if (isNumType) {
+        reactData.inputValue = eqEmptyValue(inputValue) ? '' : `${XEUtils.toNumber(inputValue)}`
+      } else if (isDatePickerType) {
         $xeInput.datePickerOpenEvent(evnt)
       }
       $xeInput.triggerEvent(evnt)
