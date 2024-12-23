@@ -25,11 +25,20 @@ export interface VxeColorPickerPrivateRef extends ColorPickerPrivateRef { }
 export namespace VxeColorPickerPropTypes {
   export type ModelValue = string
   export type Size = VxeComponentSizeType
+  export type Type = 'rgb' | 'rgba' | 'hex'
   export type ClassName = string | ((params: { $colorPicker: VxeColorPickerConstructor }) => string)
   export type PopupClassName = string | ((params: {$colorPicker: VxeColorPickerConstructor }) => string)
+  export type Colors = string[] | {
+    label?: string
+    value: string
+  }[]
+  export type ShowAlpha = boolean
+  export type ShowColorExtractor = boolean
+  export type ShowQuick = boolean
   export type Readonly = boolean
   export type Disabled = boolean
   export type Placeholder = string
+  export type ClickToCopy = boolean
   export type Clearable = boolean
   export type Placement = 'top' | 'bottom' | '' | null
   export type Transfer = boolean
@@ -41,11 +50,17 @@ export interface VxeColorPickerProps {
    */
   modelValue?: VxeColorPickerPropTypes.ModelValue
   size?: VxeColorPickerPropTypes.Size
+  type?: VxeColorPickerPropTypes.Type
   className?: VxeColorPickerPropTypes.ClassName
   popupClassName?: VxeColorPickerPropTypes.PopupClassName
+  colors?: VxeColorPickerPropTypes.Colors
+  showAlpha?: VxeColorPickerPropTypes.ShowAlpha
+  showColorExtractor?: VxeColorPickerPropTypes.ShowColorExtractor
+  showQuick?: VxeColorPickerPropTypes.ShowQuick
   readonly?: VxeColorPickerPropTypes.Readonly
   disabled?: VxeColorPickerPropTypes.Disabled
   placeholder?: VxeColorPickerPropTypes.Placeholder
+  clickToCopy?: VxeColorPickerPropTypes.ClickToCopy
   clearable?: VxeColorPickerPropTypes.Clearable
   placement?: VxeColorPickerPropTypes.Placement
   transfer?: VxeColorPickerPropTypes.Transfer
@@ -58,6 +73,12 @@ export interface VxeColorPickerPrivateComputed extends ColorPickerPrivateCompute
 export interface ColorPickerReactData {
   initialized: boolean
   selectColor: string
+  panelColor: string
+  hexValue: string
+  rValue: number
+  gValue: number
+  bValue: number
+  aValue: number
   panelIndex: number
   panelStyle: VxeComponentStyleType
   panelPlacement: any

@@ -193,8 +193,6 @@ export default defineComponent({
       const minNum = computeMinNum.value
       if (!(formReadonly || isDisabled)) {
         evnt.preventDefault()
-        const domMousemove = document.onmousemove
-        const domMouseup = document.onmouseup
         document.onmousemove = evnt => {
           evnt.preventDefault()
           const el = refElem.value
@@ -211,8 +209,8 @@ export default defineComponent({
           updateBarStyle()
         }
         document.onmouseup = (evnt: MouseEvent) => {
-          document.onmousemove = domMousemove
-          document.onmouseup = domMouseup
+          document.onmousemove = null
+          document.onmouseup = null
           changeEvent(evnt)
           updateBarStyle()
         }

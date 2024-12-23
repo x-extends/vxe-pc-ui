@@ -325,7 +325,7 @@ export default defineComponent({
 
     const emitInputEvent = (inputValue: any, evnt: Event) => {
       const inpImmediate = computeInpImmediate.value
-      const value = inputValue === '' || XEUtils.eqNull(inputValue) ? null : XEUtils.toNumber(inputValue)
+      const value = eqEmptyValue(inputValue) ? null : XEUtils.toNumber(inputValue)
       reactData.inputValue = inputValue
       if (inpImmediate) {
         handleChange(value, inputValue, evnt)
@@ -348,6 +348,8 @@ export default defineComponent({
     }
 
     const focusEvent = (evnt: Event & { type: 'focus' }) => {
+      const { inputValue } = reactData
+      reactData.inputValue = eqEmptyValue(inputValue) ? '' : `${XEUtils.toNumber(inputValue)}`
       reactData.isFocus = true
       reactData.isActivated = true
       triggerEvent(evnt)

@@ -79,7 +79,13 @@ setConfig({
   },
   collapsePane: {},
   countdown: {},
-  colorPicker: {},
+  colorPicker: {
+    type: 'hex',
+    showAlpha: true,
+    clickToCopy: true,
+    showColorExtractor: true,
+    showQuick: true
+  },
   datePicker: {
     // size: null,
     // transfer: false
@@ -535,7 +541,10 @@ setIcon({
 
   // rate
   RATE_CHECKED: iconPrefix + 'star-fill',
-  RATE_UNCHECKED: iconPrefix + 'star'
+  RATE_UNCHECKED: iconPrefix + 'star',
+
+  // color-picker
+  COLOR_COPY: iconPrefix + 'copy'
 })
 
 export * from '@vxe-ui/core'

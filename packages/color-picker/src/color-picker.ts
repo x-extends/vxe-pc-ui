@@ -1,10 +1,13 @@
 import { defineComponent, watch, computed, provide, ref, inject, Teleport, h, nextTick, PropType, reactive, onMounted, onUnmounted } from 'vue'
 import XEUtils from 'xe-utils'
-import { getConfig, globalEvents, createEvent, useSize, renderEmptyElement } from '../../ui'
-import { getEventTargetNode, getAbsolutePos } from '../../ui/src/dom'
+import { VxeUI, getIcon, getConfig, getI18n, globalEvents, createEvent, useSize, renderEmptyElement } from '../../ui'
+import { getEventTargetNode, getAbsolutePos, toCssUnit } from '../../ui/src/dom'
 import { getLastZIndex, nextZIndex } from '../../ui/src/utils'
+import { parseColor, updateColorAlpha, hexToHsv, rgbToHsv, rgbToHex, hexToRgb, hsvToRgb, toRgb } from './util'
+import VxeButtonComponent from '../../button/src/button'
+import VxeInputComponent from '../../input/src/input'
 
-import type { ColorPickerReactData, VxeColorPickerPropTypes, VxeColorPickerEmits, ColorPickerInternalData, ColorPickerMethods, ColorPickerPrivateMethods, ValueOf, ColorPickerPrivateRef, VxeColorPickerPrivateComputed, VxeColorPickerConstructor, VxeColorPickerPrivateMethods, VxeModalConstructor, VxeModalMethods, VxeDrawerConstructor, VxeDrawerMethods, VxeTableConstructor, VxeTablePrivateMethods, VxeFormConstructor, VxeFormPrivateMethods } from '../../../types'
+import type { ColorPickerReactData, VxeColorPickerPropTypes, VxeColorPickerEmits, ColorPickerInternalData, ColorPickerMethods, ColorPickerPrivateMethods, ValueOf, ColorPickerPrivateRef, VxeColorPickerPrivateComputed, VxeColorPickerConstructor, VxeColorPickerPrivateMethods, VxeModalConstructor, VxeModalMethods, VxeDrawerConstructor, VxeDrawerMethods, VxeTableConstructor, VxeTablePrivateMethods, VxeFormDefines, VxeFormConstructor, VxeFormPrivateMethods } from '../../../types'
 
 export default defineComponent({
   name: 'VxeColorPicker',
@@ -12,12 +15,32 @@ export default defineComponent({
     modelValue: String as PropType<VxeColorPickerPropTypes.ModelValue>,
     placeholder: String as PropType<VxeColorPickerPropTypes.Placeholder>,
     clearable: Boolean as PropType<VxeColorPickerPropTypes.Clearable>,
+    type: {
+      type: String as PropType<VxeColorPickerPropTypes.Type>,
+      default: () => getConfig().colorPicker.type
+    },
     size: {
       type: String as PropType<VxeColorPickerPropTypes.Size>,
       default: () => getConfig().colorPicker.size || getConfig().size
     },
     className: [String, Function] as PropType<VxeColorPickerPropTypes.ClassName>,
     popupClassName: [String, Function] as PropType<VxeColorPickerPropTypes.PopupClassName>,
+    colors: {
+      type: Array as PropType<VxeColorPickerPropTypes.Colors>,
+      default: () => XEUtils.clone(getConfig().colorPicker.colors, true) || []
+    },
+    showAlpha: {
+      type: Boolean as PropType<VxeColorPickerPropTypes.ShowAlpha>,
+      default: () => getConfig().colorPicker.showAlpha
+    },
+    showColorExtractor: {
+      type: Boolean as PropType<VxeColorPickerPropTypes.ShowColorExtractor>,
+      default: () => getConfig().colorPicker.showColorExtractor
+    },
+    showQuick: {
+      type: Boolean as PropType<VxeColorPickerPropTypes.ShowQuick>,
+      default: () => getConfig().colorPicker.showQuick
+    },
     readonly: {
       type: Boolean as PropType<VxeColorPickerPropTypes.Readonly>,
       default: null
@@ -25,6 +48,10 @@ export default defineComponent({
     disabled: {
       type: Boolean as PropType<VxeColorPickerPropTypes.Disabled>,
       default: null
+    },
+    clickToCopy: {
+      type: Boolean as PropType<VxeColorPickerPropTypes.ClickToCopy>,
+      default: () => getConfig().colorPicker.clickToCopy
     },
     placement: String as PropType<VxeColorPickerPropTypes.Placement>,
     transfer: {
@@ -45,7 +72,7 @@ export default defineComponent({
     const $xeDrawer = inject<(VxeDrawerConstructor & VxeDrawerMethods) | null>('$xeDrawer', null)
     const $xeTable = inject<(VxeTableConstructor & VxeTablePrivateMethods) | null>('$xeTable', null)
     const $xeForm = inject<(VxeFormConstructor & VxeFormPrivateMethods) | null>('$xeForm', null)
-    // const formItemInfo = inject<VxeFormDefines.ProvideItemInfo | null>('xeFormItemInfo', null)
+    const formItemInfo = inject<VxeFormDefines.ProvideItemInfo | null>('xeFormItemInfo', null)
 
     const xID = XEUtils.uniqueId()
 
@@ -53,10 +80,22 @@ export default defineComponent({
 
     const refElem = ref<HTMLDivElement>()
     const refOptionPanel = ref<HTMLDivElement>()
+    const refHueSliderElem = ref<HTMLDivElement>()
+    const refHueSliderBtnElem = ref<HTMLDivElement>()
+    const refAlphaSliderElem = ref<HTMLDivElement>()
+    const refAlphaSliderBtnElem = ref<HTMLDivElement>()
+    const refColorPanelElem = ref<HTMLDivElement>()
+    const refColorActiveElem = ref<HTMLDivElement>()
 
     const reactData = reactive<ColorPickerReactData>({
       initialized: false,
       selectColor: `${props.modelValue || ''}`,
+      panelColor: '',
+      hexValue: '',
+      rValue: 0,
+      gValue: 0,
+      bValue: 0,
+      aValue: 0,
       panelIndex: 0,
       panelStyle: {},
       panelPlacement: null,
@@ -105,6 +144,38 @@ export default defineComponent({
       return transfer
     })
 
+    const computeColorList = computed(() => {
+      const { colors } = props
+      if (colors) {
+        return colors.map(item => {
+          if (XEUtils.isString(item)) {
+            return {
+              label: item,
+              value: item
+            }
+          }
+          return {
+            label: XEUtils.eqNull(item.label) ? item.value : item.label,
+            value: item.value
+          }
+        })
+      }
+      return []
+    })
+
+    const computeValueType = computed(() => {
+      const { type } = props
+      if (type === 'rgb' || type === 'rgba') {
+        return 'rgb'
+      }
+      return 'hex'
+    })
+
+    const computeIsRgb = computed(() => {
+      const valueType = computeValueType.value
+      return valueType === 'rgb'
+    })
+
     const refMaps: ColorPickerPrivateRef = {
       refElem
     }
@@ -121,6 +192,63 @@ export default defineComponent({
       getRefMaps: () => refMaps,
       getComputeMaps: () => computeMaps
     } as unknown as VxeColorPickerConstructor & VxeColorPickerPrivateMethods
+
+    const emitModel = (value: any) => {
+      emit('update:modelValue', value)
+    }
+
+    const updateMode = () => {
+      const { modelValue } = props
+      reactData.selectColor = XEUtils.toValueString(modelValue)
+      updateModelColor()
+    }
+
+    const updateModelColor = () => {
+      const { selectColor, isAniVisible } = reactData
+      const isRgb = computeIsRgb.value
+      const hueSliderEl = refHueSliderElem.value
+      const alphaSliderEl = refAlphaSliderElem.value
+      const colorRest = parseColor(selectColor)
+      reactData.hexValue = colorRest.hex
+      reactData.rValue = colorRest.r
+      reactData.gValue = colorRest.g
+      reactData.bValue = colorRest.b
+      reactData.aValue = colorRest.a
+      if (colorRest.value) {
+        if (isRgb) {
+          if (colorRest.type === 'hex') {
+            const rgbRest = hexToRgb(colorRest.hex)
+            if (rgbRest) {
+              reactData.rValue = rgbRest.r
+              reactData.gValue = rgbRest.g
+              reactData.bValue = rgbRest.b
+              reactData.aValue = rgbRest.a
+            }
+          }
+        } else {
+          if (colorRest.type !== 'hex') {
+            reactData.hexValue = rgbToHex(colorRest)
+          }
+        }
+      }
+      if (isAniVisible) {
+        const hsvRest = colorRest.type === 'hex' ? hexToHsv(colorRest.hex) : rgbToHsv(colorRest)
+        const colorPanelEl = refColorPanelElem.value
+        if (hsvRest) {
+          if (colorPanelEl) {
+            const offsetTop = colorPanelEl.clientHeight * (1 - hsvRest.v)
+            const offsetLeft = colorPanelEl.clientWidth * hsvRest.s
+            handlePanelColor(offsetLeft, offsetTop)
+          }
+          if (hueSliderEl) {
+            handleHueColor(XEUtils.ceil((1 - hsvRest.h / 360) * hueSliderEl.clientWidth))
+          }
+        }
+        if (alphaSliderEl) {
+          handleAlphaColor(alphaSliderEl.clientWidth * colorRest.a)
+        }
+      }
+    }
 
     const updateZindex = () => {
       if (reactData.panelIndex < getLastZIndex()) {
@@ -213,6 +341,7 @@ export default defineComponent({
         reactData.isActivated = true
         reactData.isAniVisible = true
         setTimeout(() => {
+          updateModelColor()
           reactData.visiblePanel = true
         }, 10)
         updateZindex()
@@ -227,40 +356,33 @@ export default defineComponent({
       }, 350)
     }
 
-    // const changeEvent = (evnt: Event, selectValue: any) => {
-    //   reactData.selectColor = selectValue
-    //   if (selectValue !== props.modelValue) {
-    //     emit('update:modelValue', selectValue)
-    //     dispatchEvent('change', { value: selectValue }, evnt)
-    //     // 自动更新校验状态
-    //     if ($xeForm && formItemInfo) {
-    //       $xeForm.triggerItemEvent(evnt, formItemInfo.itemConfig.field, selectValue)
-    //     }
-    //   }
-    // }
+    const changeEvent = (evnt: Event, value: any) => {
+      reactData.selectColor = value
+      if (value !== props.modelValue) {
+        emitModel(value)
+        dispatchEvent('change', { value }, evnt)
+        // 自动更新校验状态
+        if ($xeForm && formItemInfo) {
+          $xeForm.triggerItemEvent(evnt, formItemInfo.itemConfig.field, value)
+        }
+      }
+    }
 
-    // const focusEvent = () => {
-    //   const isDisabled = computeIsDisabled.value
-    //   if (!isDisabled) {
-    //     if (!reactData.visiblePanel) {
-    //       showOptionPanel()
-    //     }
-    //   }
-    // }
+    const clearValueEvent = (evnt: Event, selectValue: any) => {
+      changeEvent(evnt, selectValue)
+      dispatchEvent('clear', { value: selectValue }, evnt)
+    }
 
-    // const blurEvent = () => {
-    //   reactData.isActivated = false
-    // }
+    const clearEvent = (evnt: Event) => {
+      clearValueEvent(evnt, null)
+      hideOptionPanel()
+    }
 
-    // const clearValueEvent = (evnt: Event, selectValue: any) => {
-    //   changeEvent(evnt, selectValue)
-    //   dispatchEvent('clear', { value: selectValue }, evnt)
-    // }
-
-    // const clearEvent = (params: any, evnt: Event) => {
-    //   clearValueEvent(evnt, null)
-    //   hideOptionPanel()
-    // }
+    const confirmEvent = (evnt: MouseEvent) => {
+      const { selectColor } = reactData
+      changeEvent(evnt, selectColor)
+      hideOptionPanel()
+    }
 
     const togglePanelEvent = (evnt: MouseEvent) => {
       evnt.preventDefault()
@@ -274,6 +396,189 @@ export default defineComponent({
     const clickEvent = (evnt: MouseEvent) => {
       togglePanelEvent(evnt)
       dispatchEvent('click', {}, evnt)
+    }
+
+    const handleHueColor = (offsetLeft: number) => {
+      const hueSliderEl = refHueSliderElem.value
+      const hueSliderBtnEl = refHueSliderBtnElem.value
+      if (hueSliderEl && hueSliderBtnEl) {
+        if (offsetLeft < 0) {
+          offsetLeft = 0
+        }
+        const barWidth = XEUtils.toInteger(hueSliderEl.clientWidth)
+        const itemNum = 255
+        const countNum = itemNum * 6
+        const offsetX = XEUtils.ceil(countNum / barWidth * offsetLeft)
+        const offsetNum = offsetX % itemNum
+        let rNum = 0
+        let gNum = 0
+        let bNum = 0
+        switch (Math.ceil(offsetX / itemNum)) {
+          case 1:
+            rNum = itemNum
+            bNum = offsetNum
+            break
+          case 2:
+            rNum = itemNum - offsetNum
+            bNum = itemNum
+            break
+          case 3:
+            gNum = offsetNum
+            bNum = itemNum
+            break
+          case 4:
+            gNum = itemNum
+            bNum = itemNum - offsetNum
+            break
+          case 5:
+            rNum = offsetNum
+            gNum = itemNum
+            break
+          case 6:
+            rNum = itemNum
+            gNum = itemNum - offsetNum
+            break
+        }
+        reactData.panelColor = toRgb(rNum, gNum, bNum)
+        hueSliderBtnEl.style.left = toCssUnit(offsetLeft)
+      }
+    }
+
+    const handleHueBarEvent = (evnt: MouseEvent) => {
+      const hueSliderEl = refHueSliderElem.value
+      const hueSliderBtnEl = refHueSliderBtnElem.value
+      if (hueSliderEl && hueSliderBtnEl) {
+        const hueSliderRect = hueSliderEl.getBoundingClientRect()
+        const barWidth = XEUtils.toInteger(hueSliderEl.clientWidth)
+        const offsetLeft = XEUtils.ceil(Math.min(barWidth - 1, Math.max(1, evnt.clientX - hueSliderRect.x)))
+        handleHueColor(offsetLeft)
+      }
+    }
+
+    const handleHueSliderMousedownEvent = (evnt: MouseEvent) => {
+      evnt.preventDefault()
+      document.onmousemove = evnt => {
+        evnt.preventDefault()
+        handleHueBarEvent(evnt)
+      }
+      document.onmouseup = (evnt: MouseEvent) => {
+        document.onmousemove = null
+        document.onmouseup = null
+        handleHueBarEvent(evnt)
+      }
+    }
+
+    const handleAlphaColor = (offsetLeft: number) => {
+      const { selectColor } = reactData
+      const alphaSliderEl = refAlphaSliderElem.value
+      const alphaSliderBtnEl = refAlphaSliderBtnElem.value
+      if (alphaSliderEl && alphaSliderBtnEl) {
+        const alphaSliderRect = alphaSliderEl.getBoundingClientRect()
+        const barWidth = alphaSliderRect.width
+        if (offsetLeft < 0) {
+          offsetLeft = 0
+        }
+        if (offsetLeft > barWidth) {
+          offsetLeft = barWidth
+        }
+        const alpha = XEUtils.ceil(100 / barWidth * offsetLeft / 100, 2)
+        reactData.aValue = alpha
+        alphaSliderBtnEl.style.left = toCssUnit(offsetLeft)
+        reactData.selectColor = updateColorAlpha(selectColor, alpha)
+      }
+    }
+
+    const handleAlphaBarEvent = (evnt: MouseEvent) => {
+      const alphaSliderEl = refAlphaSliderElem.value
+      const alphaSliderBtnEl = refAlphaSliderBtnElem.value
+      if (alphaSliderEl && alphaSliderBtnEl) {
+        const alphaSliderRect = alphaSliderEl.getBoundingClientRect()
+        const barWidth = alphaSliderRect.width
+        const offsetLeft = Math.min(barWidth, Math.max(0, evnt.clientX - alphaSliderRect.x))
+        handleAlphaColor(offsetLeft)
+        updateModelColor()
+      }
+    }
+
+    const handleAlphaSliderMousedownEvent = (evnt: MouseEvent) => {
+      evnt.preventDefault()
+      document.onmousemove = evnt => {
+        evnt.preventDefault()
+        handleAlphaBarEvent(evnt)
+      }
+      document.onmouseup = (evnt: MouseEvent) => {
+        document.onmousemove = null
+        document.onmouseup = null
+        handleAlphaBarEvent(evnt)
+      }
+    }
+
+    const handleInputRgbEvent = () => {
+      const { rValue, gValue, bValue, aValue } = reactData
+      reactData.selectColor = toRgb(rValue, gValue, bValue, aValue)
+      updateModelColor()
+    }
+
+    const handleInputAlphaEvent = () => {
+      const { aValue } = reactData
+      const alphaSliderEl = refAlphaSliderElem.value
+      const alphaSliderBtnEl = refAlphaSliderBtnElem.value
+      if (alphaSliderEl && alphaSliderBtnEl) {
+        const alphaSliderRect = alphaSliderEl.getBoundingClientRect()
+        const barWidth = alphaSliderRect.width
+        const offsetLeft = barWidth * aValue
+        handleAlphaColor(offsetLeft)
+      }
+    }
+
+    const handleQuickEvent = (evnt: MouseEvent, item: any) => {
+      const value = item.value
+      reactData.selectColor = value
+      updateModelColor()
+    }
+
+    const handlePanelColor = (offsetLeft: number, offsetTop: number) => {
+      const colorActiveEl = refColorActiveElem.value
+      if (colorActiveEl) {
+        colorActiveEl.style.top = toCssUnit(offsetTop)
+        colorActiveEl.style.left = toCssUnit(offsetLeft)
+      }
+    }
+
+    const handleSelectColorMousedownEvent = (evnt: MouseEvent) => {
+      const { showAlpha } = props
+      const { panelColor, aValue } = reactData
+      const colorPanelEl = refColorPanelElem.value
+      const colorActiveEl = refColorActiveElem.value
+      if (colorPanelEl && colorActiveEl) {
+        const colorPanelRect = colorPanelEl.getBoundingClientRect()
+        const offsetTop = evnt.clientY - colorPanelRect.y
+        const offsetLeft = evnt.clientX - colorPanelRect.x
+        const colorRest = parseColor(panelColor)
+        if (colorRest) {
+          const hsvRest = colorRest.type === 'hex' ? hexToHsv(colorRest.hex) : rgbToHsv(colorRest)
+          if (hsvRest) {
+            const ragRest = hsvToRgb(hsvRest.h, offsetLeft / colorPanelEl.clientWidth, (1 - offsetTop / colorPanelEl.clientHeight))
+            reactData.selectColor = toRgb(ragRest.r, ragRest.g, ragRest.b, showAlpha ? aValue : null)
+            handlePanelColor(offsetLeft, offsetTop)
+            updateModelColor()
+          }
+        }
+      }
+    }
+
+    const handleCopyColorEvent = () => {
+      const { selectColor } = reactData
+      if (selectColor) {
+        if (VxeUI.clipboard.copy(selectColor)) {
+          if (VxeUI.modal) {
+            VxeUI.modal.message({
+              content: getI18n('vxe.colorPicker.copySuccess', [selectColor]),
+              status: 'success'
+            })
+          }
+        }
+      }
     }
 
     const handleGlobalMousewheelEvent = (evnt: MouseEvent) => {
@@ -322,22 +627,237 @@ export default defineComponent({
     Object.assign($xeColorPicker, colorPickerMethods, colorPickerPrivateMethods)
 
     const renderColorWrapper = () => {
-      return h('div', {}, [
+      const { showColorExtractor } = props
+      const { panelColor } = reactData
+      if (showColorExtractor) {
+        return h('div', {
+          ref: refColorPanelElem,
+          class: 'vxe-color-picker--color-wrapper',
+          onMousedown: handleSelectColorMousedownEvent
+        }, [
+          h('div', {
+            class: 'vxe-color-picker--color-bg',
+            style: {
+              backgroundColor: panelColor
+            }
+          }),
+          h('div', {
+            class: 'vxe-color-picker--white-bg'
+          }),
+          h('div', {
+            class: 'vxe-color-picker--black-bg'
+          }),
+          h('div', {
+            ref: refColorActiveElem,
+            class: 'vxe-color-picker--color-active'
+          })
+        ])
+      }
+      return renderEmptyElement($xeColorPicker)
+    }
+
+    const renderColorBar = () => {
+      const { showAlpha, clickToCopy } = props
+      const { hexValue, rValue, gValue, bValue, aValue, selectColor, panelColor } = reactData
+      const valueType = computeValueType.value
+      const isRgb = computeIsRgb.value
+      return h('div', {
+        class: 'vxe-color-picker--bar-wrapper'
+      }, [
         h('div', {
-          class: 'vxe-color-picker--view-wrapper'
-        }),
+          class: 'vxe-color-picker--slider-wrapper'
+        }, [
+          h('div', {
+            class: 'vxe-color-picker--slider-preview'
+          }, [
+            h('div', {
+              class: 'vxe-color-picker--preview-btn'
+            }, [
+              h('div', {
+                class: 'vxe-color-picker--preview-color',
+                style: {
+                  backgroundColor: selectColor
+                }
+              }, clickToCopy
+                ? [
+                    h('span', {
+                      class: 'vxe-color-picker--preview-copy-btn',
+                      onClick: handleCopyColorEvent
+                    }, [
+                      h('i', {
+                        class: getIcon().COLOR_COPY
+                      })
+                    ])
+                  ]
+                : [])
+            ])
+          ]),
+          h('div', {
+            class: 'vxe-color-picker--slider-handle'
+          }, [
+            h('div', {
+              ref: refHueSliderElem,
+              class: 'vxe-color-picker--bar-hue-slider',
+              onClick: handleHueBarEvent
+            }, [
+              h('div', {
+                ref: refHueSliderBtnElem,
+                class: 'vxe-color-picker--bar-hue-btn',
+                onMousedown: handleHueSliderMousedownEvent
+              })
+            ]),
+            showAlpha
+              ? h('div', {
+                ref: refAlphaSliderElem,
+                class: 'vxe-color-picker--bar-alpha-slider',
+                onClick: handleAlphaBarEvent
+              }, [
+                h('div', {
+                  class: 'vxe-color-picker--bar-alpha-bg',
+                  style: {
+                    background: `linear-gradient(to right, rgba(0, 0, 0, 0), ${panelColor})`
+                  }
+                }),
+                h('div', {
+                  ref: refAlphaSliderBtnElem,
+                  class: 'vxe-color-picker--bar-alpha-btn',
+                  onMousedown: handleAlphaSliderMousedownEvent
+                })
+              ])
+              : renderEmptyElement($xeColorPicker)
+          ])
+        ]),
         h('div', {
-          class: 'vxe-color-picker--convenient-wrapper'
-        }),
-        h('div', {
-          class: ''
-        })
+          class: `vxe-color-picker--${valueType}-wrapper`
+        }, isRgb
+          ? [
+              h('div', {
+                class: 'vxe-color-picker--input-wrapper'
+              }, [
+                h(VxeInputComponent, {
+                  type: 'integer',
+                  size: 'mini',
+                  align: 'center',
+                  min: 0,
+                  max: 255,
+                  maxLength: 3,
+                  placeholder: '',
+                  modelValue: rValue,
+                  'onUpdate:modelValue' (val) {
+                    reactData.rValue = val
+                  },
+                  onChange: handleInputRgbEvent
+                }),
+                h(VxeInputComponent, {
+                  type: 'integer',
+                  size: 'mini',
+                  align: 'center',
+                  min: 0,
+                  max: 255,
+                  maxLength: 3,
+                  placeholder: '',
+                  modelValue: gValue,
+                  'onUpdate:modelValue' (val) {
+                    reactData.gValue = val
+                  },
+                  onChange: handleInputRgbEvent
+                }),
+                h(VxeInputComponent, {
+                  type: 'integer',
+                  size: 'mini',
+                  align: 'center',
+                  min: 0,
+                  max: 255,
+                  maxLength: 3,
+                  placeholder: '',
+                  modelValue: bValue,
+                  'onUpdate:modelValue' (val) {
+                    reactData.bValue = val
+                  },
+                  onChange: handleInputRgbEvent
+                }),
+                h(VxeInputComponent, {
+                  type: 'number',
+                  size: 'mini',
+                  align: 'center',
+                  min: 0,
+                  max: 1,
+                  step: 0.01,
+                  maxLength: 4,
+                  placeholder: '',
+                  modelValue: aValue,
+                  'onUpdate:modelValue' (val) {
+                    reactData.aValue = val
+                  },
+                  onChange: handleInputAlphaEvent
+                })
+              ]),
+              h('div', {
+                class: 'vxe-color-picker--input-title'
+              }, [
+                h('span', 'R'),
+                h('span', 'G'),
+                h('span', 'B'),
+                h('span', 'A')
+              ])]
+          : [
+              h('div', {
+                class: 'vxe-color-picker--input-title'
+              }, 'HEX'),
+              h('div', {
+                class: 'vxe-color-picker--input-wrapper'
+              }, [
+                h(VxeInputComponent, {
+                  type: 'text',
+                  size: 'mini',
+                  align: 'center',
+                  maxLength: 9,
+                  placeholder: '',
+                  modelValue: hexValue,
+                  'onUpdate:modelValue' (val) {
+                    reactData.hexValue = val
+                  },
+                  onChange () {
+                    const colorRest = parseColor(reactData.hexValue)
+                    if (colorRest) {
+                      if (colorRest.value) {
+                        reactData.selectColor = colorRest.value
+                        updateModelColor()
+                      }
+                    }
+                  }
+                })
+              ])
+            ])
       ])
     }
 
+    const renderQuickWrapper = () => {
+      const { showQuick } = props
+      const colorList = computeColorList.value
+      if (showQuick && colorList.length) {
+        return h('div', {
+          class: 'vxe-color-picker--quick-wrapper'
+        }, colorList.map((item, i) => {
+          return h('div', {
+            key: i,
+            class: 'vxe-color-picker--quick-item',
+            title: item.label || '',
+            style: {
+              backgroundColor: item.value
+            },
+            onClick (evnt) {
+              handleQuickEvent(evnt, item)
+            }
+          })
+        }))
+      }
+      return renderEmptyElement($xeColorPicker)
+    }
+
     const renderVN = () => {
-      const { className, popupClassName, clearable } = props
-      const { initialized, isActivated, isAniVisible, visiblePanel, selectColor } = reactData
+      const { className, popupClassName, clearable, modelValue } = props
+      const { initialized, isActivated, isAniVisible, visiblePanel } = reactData
       const vSize = computeSize.value
       const isDisabled = computeIsDisabled.value
       const btnTransfer = computeBtnTransfer.value
@@ -353,16 +873,23 @@ export default defineComponent({
         ref: refElem,
         class: ['vxe-color-picker', className ? (XEUtils.isFunction(className) ? className({ $colorPicker: $xeColorPicker }) : className) : '', {
           [`size--${vSize}`]: vSize,
-          'show--clear': clearable && !isDisabled && !!selectColor,
+          'is--selected': !!modelValue,
           'is--visible': visiblePanel,
           'is--disabled': isDisabled,
           'is--active': isActivated
         }]
       }, [
         h('div', {
-          class: 'vxe-ico-picker--inner',
+          class: 'vxe-color-picker--inner',
           onClick: clickEvent
-        }, 'x'),
+        }, [
+          h('div', {
+            class: 'vxe-color-picker--inner-color',
+            style: {
+              backgroundColor: modelValue
+            }
+          })
+        ]),
         h(Teleport, {
           to: 'body',
           disabled: btnTransfer ? !initialized : true
@@ -382,7 +909,30 @@ export default defineComponent({
               ? h('div', {
                 class: 'vxe-color-picker--panel-wrapper'
               }, [
-                renderColorWrapper()
+                h('div', {
+                  class: ''
+                }, [
+                  renderColorWrapper(),
+                  renderColorBar(),
+                  renderQuickWrapper(),
+                  h('div', {
+                    class: 'vxe-color-picker--footer-wrapper'
+                  }, [
+                    clearable
+                      ? h(VxeButtonComponent, {
+                        content: getI18n('vxe.colorPicker.clear'),
+                        size: 'mini',
+                        onClick: clearEvent
+                      })
+                      : renderEmptyElement($xeColorPicker),
+                    h(VxeButtonComponent, {
+                      content: getI18n('vxe.colorPicker.confirm'),
+                      size: 'mini',
+                      status: 'primary',
+                      onClick: confirmEvent
+                    })
+                  ])
+                ])
               ])
               : renderEmptyElement($xeColorPicker)
           ])
@@ -390,8 +940,8 @@ export default defineComponent({
       ])
     }
 
-    watch(() => props.modelValue, (val) => {
-      reactData.selectColor = `${val || ''}`
+    watch(() => props.modelValue, () => {
+      updateMode()
     })
 
     onMounted(() => {
@@ -405,6 +955,8 @@ export default defineComponent({
       globalEvents.off($xeColorPicker, 'mousedown')
       globalEvents.off($xeColorPicker, 'blur')
     })
+
+    updateMode()
 
     provide('$xeColorPicker', $xeColorPicker)
 
