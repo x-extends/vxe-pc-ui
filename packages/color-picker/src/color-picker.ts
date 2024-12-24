@@ -1123,7 +1123,7 @@ export default defineVxeComponent({
     const props = $xeColorPicker
     const reactData = $xeColorPicker.reactData
 
-    reactData.selectColor = props.value
+    reactData.selectColor = `${props.value || ''}`
     $xeColorPicker.updateMode()
 
     globalEvents.on($xeColorPicker, 'mousewheel', $xeColorPicker.handleGlobalMousewheelEvent)

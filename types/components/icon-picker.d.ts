@@ -16,7 +16,7 @@ export interface IconPickerPrivateRef {
 export interface VxeIconPickerPrivateRef extends IconPickerPrivateRef { }
 
 export namespace VxeIconPickerPropTypes {
-  export type ModelValue = string
+  export type ModelValue = string | null
   export type Placeholder = string
   export type Size = VxeComponentSizeType
   export type ClassName = string | ((params: { $iconPicker: VxeIconPickerConstructor }) => string)

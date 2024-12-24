@@ -101,7 +101,13 @@ export default defineVxeComponent({
     emitModel (value: any) {
       const $xeRate = this
 
+      const { _events } = $xeRate as any
       $xeRate.$emit('input', value)
+      if (_events && _events.modelValue) {
+        $xeRate.$emit('modelValue', value)
+      } else {
+        $xeRate.$emit('model-value', value)
+      }
     },
     mouseenterEvent (evnt: MouseEvent, item: any) {
       const $xeRate = this

@@ -48,6 +48,9 @@
     <p>
       <vxe-number-input v-model="demo1.value800" type="amount"></vxe-number-input>
     </p>
+    <p>
+      <vxe-number-input v-model="demo1.value900" type="float" :auto-fill="false"></vxe-number-input>
+    </p>
   </div>
 </template>
 
@@ -77,7 +80,8 @@ export default Vue.extend({
         value602: null,
         value603: null,
         value700: 1234,
-        value800: null
+        value800: null,
+        value900: null
       }
     }
   }
