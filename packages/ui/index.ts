@@ -228,6 +228,7 @@ setConfig({
     // size: null,
     // transfer: false
     digits: 2,
+    autoFill: true,
     controls: true
   },
   optgroup: {},
