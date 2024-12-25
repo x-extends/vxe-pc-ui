@@ -3,9 +3,10 @@ import XEUtils from 'xe-utils'
 import { getConfig, getIcon, createEvent, permission, useSize, globalEvents } from '../../ui'
 import { toCssUnit } from '../../ui/src/dom'
 import { getLastZIndex, nextZIndex } from '../../ui/src/utils'
+import { getSlotVNs } from '../../ui/src/vn'
 import VxeLoadingComponent from '../../loading/src/loading'
 
-import type { VxeMenuDefines, VxeMenuPropTypes, MenuReactData, VxeMenuEmits, MenuMethods, VxeLayoutAsidePropTypes, MenuPrivateMethods, MenuPrivateRef, VxeMenuPrivateComputed, VxeMenuConstructor, VxeMenuPrivateMethods, ValueOf, VxeLayoutAsideConstructor, VxeLayoutAsidePrivateMethods } from '../../../types'
+import type { VxeMenuDefines, VxeMenuPropTypes, MenuReactData, VxeMenuEmits, MenuMethods, VxeComponentSlotType, VxeLayoutAsidePropTypes, MenuPrivateMethods, MenuPrivateRef, VxeMenuPrivateComputed, VxeMenuConstructor, VxeMenuPrivateMethods, ValueOf, VxeLayoutAsideConstructor, VxeLayoutAsidePrivateMethods } from '../../../types'
 
 export default defineComponent({
   name: 'VxeMenu',
@@ -32,7 +33,7 @@ export default defineComponent({
     'click'
   ] as VxeMenuEmits,
   setup (props, context) {
-    const { emit } = context
+    const { emit, slots } = context
 
     const xID = XEUtils.uniqueId()
 
@@ -63,7 +64,7 @@ export default defineComponent({
         return collapsed
       }
       if ($xeLayoutAside) {
-        return $xeLayoutAside.props.collapsed
+        return !!$xeLayoutAside.props.collapsed
       }
       return false
     })
@@ -239,6 +240,18 @@ export default defineComponent({
       reactData.isEnterCollapse = false
     }
 
+    const callSlot = <T>(slotFunc: ((params: T) => VxeComponentSlotType | VxeComponentSlotType[]) | string | null, params: T) => {
+      if (slotFunc) {
+        if (XEUtils.isString(slotFunc)) {
+          slotFunc = slots[slotFunc] || null
+        }
+        if (XEUtils.isFunction(slotFunc)) {
+          return getSlotVNs(slotFunc(params))
+        }
+      }
+      return []
+    }
+
     const dispatchEvent = (type: ValueOf<VxeMenuEmits>, params: Record<string, any>, evnt: Event | null) => {
       emit(type, createEvent(evnt, { $menu: $xeMenu }, params))
     }
@@ -253,10 +266,12 @@ export default defineComponent({
     Object.assign($xeMenu, menuMethods, menuPrivateMethods)
 
     const renderMenuTitle = (item: VxeMenuDefines.MenuItem) => {
-      const { icon, isExpand, hasChild } = item
+      const { icon, isExpand, hasChild, slots: itemSlots } = item
+      const optionSlot = itemSlots ? itemSlots.default : slots.option
       const title = getMenuTitle(item)
+      const isCollapsed = computeIsCollapsed.value
       return [
-        h('span', {
+        h('div', {
           class: 'vxe-menu--item-link-icon'
         }, icon
           ? [
@@ -265,12 +280,19 @@ export default defineComponent({
               })
             ]
           : []),
-        h('span', {
-          class: 'vxe-menu--item-link-title',
-          title
-        }, title),
+        optionSlot
+          ? h('div', {
+            class: 'vxe-menu--item-custom-title'
+          }, callSlot(optionSlot, {
+            option: item as any,
+            collapsed: isCollapsed
+          }))
+          : h('div', {
+            class: 'vxe-menu--item-link-title',
+            title
+          }, title),
         hasChild
-          ? h('span', {
+          ? h('div', {
             class: 'vxe-menu--item-link-collapse',
             onClick (evnt: KeyboardEvent) {
               handleClickIconCollapse(evnt, item)

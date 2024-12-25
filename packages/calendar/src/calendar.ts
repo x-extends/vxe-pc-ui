@@ -5,7 +5,7 @@ import { toCssUnit } from '../..//ui/src/dom'
 import VxeButtonComponent from '../../button/src/button'
 import XEUtils from 'xe-utils'
 
-import type { VxeCalendarConstructor, VxeCalendarEmits, CalendarInternalData, CalendarReactData, CalendarMethods, VxeCalendarPropTypes, CalendarPrivateRef, VxeDatePickerDefines } from '../../../types'
+import type { VxeCalendarConstructor, VxeCalendarEmits, CalendarInternalData, CalendarReactData, CalendarMethods, VxeCalendarPropTypes, CalendarPrivateRef, VxeDatePickerDefines, ValueOf } from '../../../types'
 
 export default defineComponent({
   name: 'VxeCalendar',
@@ -61,7 +61,8 @@ export default defineComponent({
     'click',
     'date-prev',
     'date-today',
-    'date-next'
+    'date-next',
+    'view-change'
   ] as VxeCalendarEmits,
   setup (props, context) {
     const { emit } = context
@@ -100,8 +101,6 @@ export default defineComponent({
       internalData,
       getRefMaps: () => refMaps
     } as unknown as VxeCalendarConstructor
-
-    let calendarMethods = {} as CalendarMethods
 
     const computeCalendarStyle = computed(() => {
       const { height, width } = props
@@ -444,7 +443,7 @@ export default defineComponent({
       reactData.inputValue = value
       emit('update:modelValue', value)
       if (XEUtils.toValueString(props.modelValue) !== value) {
-        calendarMethods.dispatchEvent('change', { value }, evnt as any)
+        dispatchEvent('change', { value }, evnt as any)
       }
     }
 
@@ -547,7 +546,7 @@ export default defineComponent({
       dateMonthHandle(currentDate, 0)
     }
 
-    const dateToggleTypeEvent = () => {
+    const dateToggleTypeEvent = (evnt: MouseEvent) => {
       let { datePanelType } = reactData
       if (datePanelType === 'month' || datePanelType === 'quarter') {
         datePanelType = 'year'
@@ -555,6 +554,7 @@ export default defineComponent({
         datePanelType = 'month'
       }
       reactData.datePanelType = datePanelType
+      changeViewEvent(evnt)
     }
 
     const datePrevEvent = (evnt: Event) => {
@@ -580,7 +580,8 @@ export default defineComponent({
             reactData.selectMonth = XEUtils.getWhatMonth(selectMonth, -1, 'first')
           }
         }
-        calendarMethods.dispatchEvent('date-prev', { type }, evnt)
+        dispatchEvent('date-prev', { type }, evnt)
+        changeViewEvent(evnt)
       }
     }
 
@@ -589,7 +590,8 @@ export default defineComponent({
       if (!props.multiple) {
         dateChange(reactData.currentDate)
       }
-      calendarMethods.dispatchEvent('date-today', { type: props.type }, evnt)
+      dispatchEvent('date-today', { type: props.type }, evnt)
+      changeViewEvent(evnt)
     }
 
     const dateNextEvent = (evnt: Event) => {
@@ -615,7 +617,8 @@ export default defineComponent({
             reactData.selectMonth = XEUtils.getWhatMonth(selectMonth, 1, 'first')
           }
         }
-        calendarMethods.dispatchEvent('date-next', { type }, evnt)
+        dispatchEvent('date-next', { type }, evnt)
+        changeViewEvent(evnt)
       }
     }
 
@@ -625,6 +628,40 @@ export default defineComponent({
       return disabledMethod && disabledMethod({ type: datePanelType, viewType: datePanelType, date: item.date, $calendar: $xeCalendar })
     }
 
+    const changeViewEvent = (evnt: Event | null) => {
+      const { datePanelType } = reactData
+      const yearDatas = computeYearDatas.value
+      const quarterDatas = computeQuarterDatas.value
+      const monthDatas = computeMonthDatas.value
+      const weekDates = computeWeekDates.value
+      const dayDatas = computeDayDatas.value
+      const viewDates: Date[] = []
+      let dataList: { date: Date }[][] = []
+      switch (datePanelType) {
+        case 'year':
+          dataList = yearDatas
+          break
+        case 'quarter':
+          dataList = quarterDatas
+          break
+        case 'month':
+          dataList = monthDatas
+          break
+        case 'week':
+          dataList = weekDates
+          break
+        case 'day':
+          dataList = dayDatas
+          break
+      }
+      dataList.forEach(rows => {
+        rows.forEach(item => {
+          viewDates.push(item.date)
+        })
+      })
+      dispatchEvent('view-change', { viewType: datePanelType, viewDates }, evnt)
+    }
+
     const dateSelectItem = (date: Date) => {
       const { type } = props
       const { datePanelType } = reactData
@@ -632,6 +669,7 @@ export default defineComponent({
         if (datePanelType === 'year') {
           reactData.datePanelType = 'month'
           dateCheckMonth(date)
+          changeViewEvent(null)
         } else {
           dateChange(date)
         }
@@ -641,6 +679,7 @@ export default defineComponent({
         if (datePanelType === 'year') {
           reactData.datePanelType = 'quarter'
           dateCheckMonth(date)
+          changeViewEvent(null)
         } else {
           dateChange(date)
         }
@@ -648,9 +687,11 @@ export default defineComponent({
         if (datePanelType === 'month') {
           reactData.datePanelType = type === 'week' ? type : 'day'
           dateCheckMonth(date)
+          changeViewEvent(null)
         } else if (datePanelType === 'year') {
           reactData.datePanelType = 'month'
           dateCheckMonth(date)
+          changeViewEvent(null)
         } else {
           dateChange(date)
         }
@@ -1044,10 +1085,12 @@ export default defineComponent({
       ]
     }
 
-    calendarMethods = {
-      dispatchEvent (type, params, evnt) {
-        emit(type, createEvent(evnt, { $input: $xeCalendar }, params))
-      }
+    const dispatchEvent = (type: ValueOf<VxeCalendarEmits>, params: Record<string, any>, evnt: Event | null) => {
+      emit(type, createEvent(evnt, { $input: $xeCalendar }, params))
+    }
+
+    const calendarMethods: CalendarMethods = {
+      dispatchEvent
     }
 
     Object.assign($xeCalendar, calendarMethods)

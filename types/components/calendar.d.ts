@@ -92,7 +92,8 @@ export type VxeCalendarEmits = [
   'click',
   'date-prev',
   'date-today',
-  'date-next'
+  'date-next',
+  'view-change'
 ]
 
 export namespace VxeCalendarDefines {
@@ -142,13 +143,55 @@ export namespace VxeCalendarDefines {
     viewType: DatePanelType
     date: Date
   }
+
+  export interface ChangeEventParams extends CalendarEventParams {
+    value: string
+  }
+  export interface ClickEventParams extends CalendarEventParams { }
+  export interface DatePrevEventParams extends CalendarEventParams {
+    type: DatePanelType
+   }
+  export interface DateTodayEventParams extends CalendarEventParams {
+    type: DatePanelType
+  }
+  export interface DateNextEventParams extends CalendarEventParams {
+    type: DatePanelType
+  }
+  export interface ViewChangeEventParams extends CalendarEventParams {
+    viewType: DatePanelType
+    viewDates: Date[]
+  }
 }
 
-export type VxeCalendarEventProps = {}
+export type VxeCalendarEventProps = {
+  onInput?: VxeCalendarEvents.Input
+  onChange?: VxeCalendarEvents.Change
+  onClick?: VxeCalendarEvents.Click
+  onDatePrev?: VxeCalendarEvents.DatePrev
+  onDateToday?: VxeCalendarEvents.DateToday
+  onDateNext?: VxeCalendarEvents.DateNext
+  onViewChange?: VxeCalendarEvents.ViewChange
+}
 
-export interface VxeCalendarListeners { }
+export interface VxeCalendarListeners {
+  input?: VxeCalendarEvents.Input
+  change?: VxeCalendarEvents.Change
+  click?: VxeCalendarEvents.Click
+  datePrev?: VxeCalendarEvents.DatePrev
+  dateToday?: VxeCalendarEvents.DateToday
+  dateNext?: VxeCalendarEvents.DateNext
+  viewChange?: VxeCalendarEvents.ViewChange
+}
 
-export namespace VxeCalendarEvents { }
+export namespace VxeCalendarEvents {
+  export type Input = (params: VxeCalendarDefines.InputEventParams) => void
+  export type Change = (params: VxeCalendarDefines.ChangeEventParams) => void
+  export type Click = (params: VxeCalendarDefines.ClickEventParams) => void
+  export type DatePrev = (params: VxeCalendarDefines.DatePrevEventParams) => void
+  export type DateToday = (params: VxeCalendarDefines.DateTodayEventParams) => void
+  export type DateNext = (params: VxeCalendarDefines.DateNextEventParams) => void
+  export type ViewChange = (params: VxeCalendarDefines.ViewChangeEventParams) => void
+}
 
 export namespace VxeCalendarSlotTypes {
   export interface DefaultSlotParams {}
