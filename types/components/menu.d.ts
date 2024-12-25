@@ -1,3 +1,4 @@
+import { CreateElement } from 'vue'
 import { DefineVxeComponentApp, DefineVxeComponentOptions, DefineVxeComponentInstance, VxeComponentEventParams, ValueOf, VxeComponentSizeType, VxeComponentStyleType, VxeComponentPermissionCodeType } from '@vxe-ui/core'
 import { VxeLinkPropTypes } from './link'
 
@@ -21,18 +22,6 @@ export namespace VxeMenuPropTypes {
   export type Size = VxeComponentSizeType
   export type Loading = boolean
 
-  export interface MenuOneOption extends MenuOption {
-    children?: MenuTwoOption[]
-  }
-
-  export interface MenuTwoOption extends MenuOption {
-    children?: MenuThreeOption[]
-  }
-
-  export interface MenuThreeOption extends MenuOption {
-    children?: MenuOption[]
-  }
-
   export interface MenuOption {
     name?: VxeMenuPropTypes.ModelValue
     title?: string | number
@@ -40,6 +29,13 @@ export namespace VxeMenuPropTypes {
     routerLink?: VxeLinkPropTypes.RouterLink
     expanded?: boolean
     permissionCode?: VxeComponentPermissionCodeType
+    children?: MenuOption[]
+    slots?: {
+      default?: string | ((params: {
+        option: Required<MenuOption>
+        collapsed: boolean
+      }, h: CreateElement) => VxeComponentSlotType | VxeComponentSlotType[]) | null
+    }
   }
 
   export type Collapsed = boolean
@@ -127,6 +123,14 @@ export namespace VxeMenuSlotTypes {
 
 export interface VxeMenuSlots {
   default?: (params: VxeMenuSlotTypes.DefaultSlotParams) => any
+  /**
+   * 自定义弹窗容器选项模板
+   */
+  option?: ((params: {
+    option: Required<MenuOption>
+    collapsed: boolean
+    [key: string]: any
+  }) => any) | undefined
 }
 
 export const Menu: typeof VxeMenu

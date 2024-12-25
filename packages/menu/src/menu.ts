@@ -4,6 +4,7 @@ import XEUtils from 'xe-utils'
 import { getConfig, getIcon, createEvent, permission, globalMixins, globalEvents, renderEmptyElement } from '../../ui'
 import { toCssUnit } from '../../ui/src/dom'
 import { getLastZIndex, nextZIndex } from '../../ui/src/utils'
+import { getSlotVNs } from '../../ui/src/vn'
 import VxeLoadingComponent from '../../loading/index'
 
 import type { VxeMenuDefines, MenuReactData, VxeMenuPropTypes, VxeLayoutAsideConstructor, VxeMenuEmits, VxeLayoutAsidePropTypes, VxeComponentPermissionInfo, VxeComponentSizeType, ValueOf } from '../../../types'
@@ -66,7 +67,7 @@ export default defineVxeComponent({
         return collapsed
       }
       if ($xeLayoutAside) {
-        return $xeLayoutAside.collapsed
+        return !!$xeLayoutAside.collapsed
       }
       return false
     },
@@ -111,6 +112,20 @@ export default defineVxeComponent({
       } else {
         $xeMenu.$emit('model-value', value)
       }
+    },
+    callSlot (slotFunc: any, params: any, h: CreateElement) {
+      const $xeMenu = this
+      const slots = $xeMenu.$scopedSlots
+
+      if (slotFunc) {
+        if (XEUtils.isString(slotFunc)) {
+          slotFunc = slots[slotFunc] || null
+        }
+        if (XEUtils.isFunction(slotFunc)) {
+          return getSlotVNs(slotFunc.call($xeMenu, params, h))
+        }
+      }
+      return []
     },
     getMenuTitle  (item: VxeMenuPropTypes.MenuOption) {
       return `${item.title || item.name}`
@@ -269,11 +284,14 @@ export default defineVxeComponent({
     //
     renderMenuTitle (h:CreateElement, item: VxeMenuDefines.MenuItem) {
       const $xeMenu = this
+      const slots = $xeMenu.$scopedSlots
 
-      const { icon, isExpand, hasChild } = item
+      const { icon, isExpand, hasChild, slots: itemSlots } = item
+      const optionSlot = itemSlots ? itemSlots.default : slots.option
       const title = $xeMenu.getMenuTitle(item)
+      const isCollapsed = $xeMenu.computeIsCollapsed
       return [
-        h('span', {
+        h('div', {
           class: 'vxe-menu--item-link-icon'
         }, icon
           ? [
@@ -282,14 +300,21 @@ export default defineVxeComponent({
               })
             ]
           : []),
-        h('span', {
-          class: 'vxe-menu--item-link-title',
-          attrs: {
-            title
-          }
-        }, title),
+        optionSlot
+          ? h('div', {
+            class: 'vxe-menu--item-custom-title'
+          }, $xeMenu.callSlot(optionSlot, {
+            option: item as any,
+            collapsed: isCollapsed
+          }, h))
+          : h('div', {
+            class: 'vxe-menu--item-link-title',
+            attrs: {
+              title
+            }
+          }, title),
         hasChild
-          ? h('span', {
+          ? h('div', {
             class: 'vxe-menu--item-link-collapse',
             on: {
               click (evnt: KeyboardEvent) {

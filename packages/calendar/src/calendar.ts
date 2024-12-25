@@ -618,7 +618,7 @@ export default defineVxeComponent({
       reactData.currentDate = currentDate
       $xeCalendar.dateMonthHandle(currentDate, 0)
     },
-    dateToggleTypeEvent  () {
+    dateToggleTypeEvent  (evnt: MouseEvent) {
       const $xeCalendar = this
       const reactData = $xeCalendar.reactData
 
@@ -629,6 +629,7 @@ export default defineVxeComponent({
         datePanelType = 'month'
       }
       reactData.datePanelType = datePanelType
+      $xeCalendar.changeViewEvent(evnt)
     },
     datePrevEvent  (evnt: Event) {
       const $xeCalendar = this
@@ -659,6 +660,7 @@ export default defineVxeComponent({
           }
         }
         $xeCalendar.dispatchEvent('date-prev', { type }, evnt)
+        $xeCalendar.changeViewEvent(evnt)
       }
     },
     dateTodayMonthEvent  (evnt: Event) {
@@ -671,6 +673,7 @@ export default defineVxeComponent({
         $xeCalendar.dateChange(reactData.currentDate)
       }
       $xeCalendar.dispatchEvent('date-today', { type: props.type }, evnt)
+      $xeCalendar.changeViewEvent(evnt)
     },
     dateNextEvent (evnt: Event) {
       const $xeCalendar = this
@@ -701,6 +704,7 @@ export default defineVxeComponent({
           }
         }
         $xeCalendar.dispatchEvent('date-next', { type }, evnt)
+        $xeCalendar.changeViewEvent(evnt)
       }
     },
     isDateDisabled  (item: { date: Date }) {
@@ -711,6 +715,42 @@ export default defineVxeComponent({
       const { disabledMethod } = props
       const { datePanelType } = reactData
       return disabledMethod && disabledMethod({ type: datePanelType, viewType: datePanelType, date: item.date, $calendar: $xeCalendar as VxeCalendarConstructor })
+    },
+    changeViewEvent (evnt: Event | null) {
+      const $xeCalendar = this
+      const reactData = $xeCalendar.reactData
+
+      const { datePanelType } = reactData
+      const yearDatas = $xeCalendar.computeYearDatas
+      const quarterDatas = $xeCalendar.computeQuarterDatas
+      const monthDatas = $xeCalendar.computeMonthDatas
+      const weekDates = $xeCalendar.computeWeekDates
+      const dayDatas = $xeCalendar.computeDayDatas
+      const viewDates: Date[] = []
+      let dataList: { date: Date }[][] = []
+      switch (datePanelType) {
+        case 'year':
+          dataList = yearDatas
+          break
+        case 'quarter':
+          dataList = quarterDatas
+          break
+        case 'month':
+          dataList = monthDatas
+          break
+        case 'week':
+          dataList = weekDates
+          break
+        case 'day':
+          dataList = dayDatas
+          break
+      }
+      dataList.forEach(rows => {
+        rows.forEach(item => {
+          viewDates.push(item.date)
+        })
+      })
+      $xeCalendar.dispatchEvent('view-change', { viewType: datePanelType, viewDates }, evnt)
     },
     dateSelectItem (date: Date) {
       const $xeCalendar = this
@@ -723,6 +763,7 @@ export default defineVxeComponent({
         if (datePanelType === 'year') {
           reactData.datePanelType = 'month'
           $xeCalendar.dateCheckMonth(date)
+          $xeCalendar.changeViewEvent(null)
         } else {
           $xeCalendar.dateChange(date)
         }
@@ -732,6 +773,7 @@ export default defineVxeComponent({
         if (datePanelType === 'year') {
           reactData.datePanelType = 'quarter'
           $xeCalendar.dateCheckMonth(date)
+          $xeCalendar.changeViewEvent(null)
         } else {
           $xeCalendar.dateChange(date)
         }
@@ -739,9 +781,11 @@ export default defineVxeComponent({
         if (datePanelType === 'month') {
           reactData.datePanelType = type === 'week' ? type : 'day'
           $xeCalendar.dateCheckMonth(date)
+          $xeCalendar.changeViewEvent(null)
         } else if (datePanelType === 'year') {
           reactData.datePanelType = 'month'
           $xeCalendar.dateCheckMonth(date)
+          $xeCalendar.changeViewEvent(null)
         } else {
           $xeCalendar.dateChange(date)
         }

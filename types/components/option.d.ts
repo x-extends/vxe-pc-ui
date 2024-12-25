@@ -29,7 +29,7 @@ export namespace VxeOptionPropTypes {
     default?: string | ((params: {
       option: any
       $select: VxeSelectConstructor
-    }) => VxeComponentSlotType | VxeComponentSlotType[]) | null
+    }, h: CreateElement) => VxeComponentSlotType | VxeComponentSlotType[]) | null
   }
 }
 
