@@ -3676,7 +3676,8 @@ export interface TablePrivateMethods<D = any> {
   handleColumnSortEvent(evnt: Event, column: VxeTableDefines.ColumnInfo): void
   triggerSortEvent(evnt: Event, column: VxeTableDefines.ColumnInfo<any>, order: VxeTablePropTypes.SortOrder): void
   triggerHeaderCellMousedownEvent(evnt: any, params: any): void
-  triggerCellMousedownEvent(evnt: any, params: any): void
+  triggerCellMousedownEvent(evnt: MouseEvent, params: any): void
+  triggerCellMouseupEvent(evnt: MouseEvent): void
   handleRowDragDragstartEvent (evnt: DragEvent): void
   handleRowDragDragendEvent(evnt: DragEvent): void
   handleRowDragDragoverEvent(evnt: DragEvent,): void
