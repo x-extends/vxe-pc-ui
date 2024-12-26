@@ -3676,6 +3676,7 @@ export interface TablePrivateMethods<D = any> {
   triggerTreeExpandEvent(evnt: Event, params: VxeTableDefines.CellRenderBodyParams<any>): void
   triggerSortEvent(evnt: Event, column: VxeTableDefines.ColumnInfo<any>, order: VxeTablePropTypes.SortOrder): void
   triggerHeaderCellMousedownEvent(evnt: any, params: any): void
+  triggerCellMousedownEvent(evnt: MouseEvent, params: any): void
   triggerCellMousedownEvent(evnt: any, params: any): void
   handleRowDragDragstartEvent (evnt: DragEvent): void
   handleRowDragDragendEvent(evnt: DragEvent): void

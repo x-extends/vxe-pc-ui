@@ -489,18 +489,18 @@ export default defineVxeComponent({
       const { inputValue } = reactData
       const digitsValue = $xeNumberInput.computeDigitsValue
       const decimalsType = $xeNumberInput.computeDecimalsType
-      if (decimalsType) {
-        if (val) {
-          let textValue = ''
-          if (val) {
-            textValue = toFloatValueFixed(val, digitsValue)
-            if (!autoFill) {
-              textValue = `${XEUtils.toNumber(textValue)}`
-            }
+      if (eqEmptyValue(val)) {
+        reactData.inputValue = ''
+      } else {
+        let textValue = `${val}`
+        if (decimalsType) {
+          textValue = toFloatValueFixed(val, digitsValue)
+          if (!autoFill) {
+            textValue = `${XEUtils.toNumber(textValue)}`
           }
-          if (textValue !== inputValue) {
-            reactData.inputValue = textValue
-          }
+        }
+        if (textValue !== inputValue) {
+          reactData.inputValue = textValue
         }
       }
     },
@@ -529,6 +529,8 @@ export default defineVxeComponent({
           }
           if (inputValue !== validValue) {
             $xeNumberInput.handleChange(validValue, textValue, { type: 'init' })
+          } else {
+            reactData.inputValue = textValue
           }
         }
       }
