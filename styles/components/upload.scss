@@ -359,6 +359,7 @@
   .vxe-upload--file-message-over-extra {
     margin-top: 0.5em;
     max-height: 160px;
+    max-width: 380px;
     overflow: auto;
     border: 1px solid var(--vxe-ui-input-border-color);
     padding: var(--vxe-ui-layout-padding-half) var(--vxe-ui-layout-padding-default);
@@ -403,6 +404,9 @@
 
 .vxe-upload--more-popup {
   position: relative;
+  .vxe-upload--file-list {
+    max-height: none;
+  }
 }
 .vxe-upload,
 .vxe-upload--more-popup {

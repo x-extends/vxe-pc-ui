@@ -397,8 +397,8 @@ export default defineVxeComponent({
 
       const value = eqEmptyValue(val) ? null : Number(val)
       const isChange = value !== props.value
-      internalData.isUM = true
       if (isChange) {
+        internalData.isUM = true
         $xeNumberInput.emitModel(value)
       }
       if (reactData.inputValue !== inputValue) {

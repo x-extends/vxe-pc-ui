@@ -383,8 +383,8 @@ export default defineVxeComponent({
       const { width, height } = props
       const boxElem = $xeModal.getBox()
       if (boxElem) {
-        boxElem.style.width = toCssUnit(width)
-        boxElem.style.height = toCssUnit(height)
+        boxElem.style.width = width ? toCssUnit(width) : ''
+        boxElem.style.height = height ? toCssUnit(height) : ''
       }
       return $xeModal.$nextTick()
     },

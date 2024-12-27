@@ -94,10 +94,10 @@ export namespace VxeModalPropTypes {
   export type ShowMinimize = boolean
   export type ShowClose = boolean
   export type DblclickZoom = boolean
-  export type Width = number | string
-  export type Height = number | string
-  export type MinWidth = number | string
-  export type MinHeight = number | string
+  export type Width = number | string | null
+  export type Height = number | string | null
+  export type MinWidth = number | string | null
+  export type MinHeight = number | string | null
   export type ZIndex = number
   export type MarginSize = number | string
   export type Fullscreen = boolean
