@@ -600,6 +600,7 @@ export default defineComponent({
             VxeUI.modal.notification({
               title: getI18n('vxe.modal.errTitle'),
               status: 'error',
+              width: null,
               slots: {
                 default () {
                   return h('div', {

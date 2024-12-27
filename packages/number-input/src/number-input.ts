@@ -324,8 +324,8 @@ export default defineComponent({
     const handleChange = (val: number | null, inputValue: string, evnt: Event | { type: string }) => {
       const value = eqEmptyValue(val) ? null : Number(val)
       const isChange = value !== props.modelValue
-      internalData.isUM = true
       if (isChange) {
+        internalData.isUM = true
         emit('update:modelValue', value)
       }
       if (reactData.inputValue !== inputValue) {

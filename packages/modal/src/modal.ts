@@ -266,8 +266,8 @@ export default defineComponent({
       const { width, height } = props
       const boxElem = getBox()
       if (boxElem) {
-        boxElem.style.width = toCssUnit(width)
-        boxElem.style.height = toCssUnit(height)
+        boxElem.style.width = width ? toCssUnit(width) : ''
+        boxElem.style.height = height ? toCssUnit(height) : ''
       }
       return nextTick()
     }
