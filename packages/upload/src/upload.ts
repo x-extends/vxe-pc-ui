@@ -3,11 +3,11 @@ import XEUtils from 'xe-utils'
 import { VxeUI, getConfig, getI18n, getIcon, useSize, createEvent, globalEvents, renderEmptyElement } from '../../ui'
 import { getSlotVNs } from '../..//ui/src/vn'
 import { errLog, warnLog } from '../../ui/src/log'
-import { tpImg, getEventTargetNode, toCssUnit } from '../../ui/src/dom'
+import { initTpImg, getTpImg, getEventTargetNode, toCssUnit } from '../../ui/src/dom'
 import { readLocalFile } from './util'
 import VxeButtonComponent from '../../button/src/button'
 
-import type { VxeUploadDefines, VxeUploadPropTypes, UploadReactData, UploadInternalData, UploadPrivateMethods, UploadMethods, VxeUploadEmits, UploadPrivateRef, VxeUploadPrivateComputed, VxeUploadConstructor, VxeUploadPrivateMethods, VxeFormDefines, VxeFormConstructor, VxeFormPrivateMethods, ValueOf } from '../../../types'
+import type { VxeUploadDefines, VxeUploadPropTypes, UploadReactData, UploadInternalData, UploadPrivateMethods, UploadMethods, VxeUploadEmits, UploadPrivateRef, VxeUploadPrivateComputed, VxeUploadConstructor, VxeUploadPrivateMethods, VxeFormDefines, VxeFormConstructor, VxeFormPrivateMethods, ValueOf, VxeTableConstructor, VxeTablePrivateMethods } from '../../../types'
 
 export default defineComponent({
   name: 'VxeUpload',
@@ -166,6 +166,7 @@ export default defineComponent({
 
     const $xeForm = inject<VxeFormConstructor & VxeFormPrivateMethods | null>('$xeForm', null)
     const formItemInfo = inject<VxeFormDefines.ProvideItemInfo | null>('xeFormItemInfo', null)
+    const $xeTable = inject<(VxeTableConstructor & VxeTablePrivateMethods) | null>('$xeTable', null)
 
     const xID = XEUtils.uniqueId()
 
@@ -364,12 +365,13 @@ export default defineComponent({
         ? (modelValue ? (XEUtils.isArray(modelValue) ? modelValue : [modelValue]) : []).map(item => {
             if (!item || XEUtils.isString(item)) {
               const url = `${item || ''}`
-              const name = parseFileName(url)
+              const urlObj = XEUtils.parseUrl(item)
+              const name = (urlObj ? urlObj.searchQuery[nameProp] : '') || parseFileName(url)
               return {
                 [nameProp]: name,
-                [typeProp]: parseFileType(name),
+                [typeProp]: (urlObj ? urlObj.searchQuery[typeProp] : '') || parseFileType(name),
                 [urlProp]: url,
-                [sizeProp]: 0,
+                [sizeProp]: XEUtils.toNumber(urlObj ? urlObj.searchQuery[sizeProp] : 0) || 0,
                 [keyField]: getUniqueKey()
               }
             }
@@ -404,9 +406,19 @@ export default defineComponent({
     const handleChange = (value: VxeUploadDefines.FileObjItem[]) => {
       const { singleMode, urlMode } = props
       const urlProp = computeUrlProp.value
+      const nameProp = computeNameProp.value
       let restList = value ? value.slice(0) : []
       if (urlMode) {
-        restList = restList.map(item => item[urlProp])
+        restList = restList.map(item => {
+          const url = item[urlProp]
+          if (url) {
+            const urlObj = XEUtils.parseUrl(url)
+            if (!urlObj.searchQuery[nameProp]) {
+              return `${url}${url.indexOf('?') === -1 ? '?' : '&'}${nameProp}=${encodeURIComponent(item[nameProp] || '')}`
+            }
+          }
+          return url
+        })
       }
       emit('update:modelValue', singleMode ? (restList[0] || null) : restList)
     }
@@ -987,10 +999,9 @@ export default defineComponent({
 
     // 拖拽
     const handleDragSortDragstartEvent = (evnt: DragEvent) => {
+      evnt.stopPropagation()
       if (evnt.dataTransfer) {
-        const img = new Image()
-        img.src = tpImg
-        evnt.dataTransfer.setDragImage(img, 0, 0)
+        evnt.dataTransfer.setDragImage(getTpImg(), 0, 0)
       }
       const dragEl = evnt.currentTarget as HTMLElement
       const parentEl = dragEl.parentElement as HTMLDivElement
@@ -1003,8 +1014,8 @@ export default defineComponent({
     }
 
     const handleDragSortDragoverEvent = (evnt: DragEvent) => {
+      evnt.stopPropagation()
       evnt.preventDefault()
-
       const { dragIndex } = reactData
       if (dragIndex === -1) {
         return
@@ -1056,6 +1067,13 @@ export default defineComponent({
       }
       hideDropTip()
       reactData.dragIndex = -1
+    }
+
+    const handleItemMousedownEvent = (evnt: MouseEvent) => {
+      if ($xeTable) {
+        evnt.stopPropagation()
+      }
+      reactData.isActivated = true
     }
 
     const handleGlobalPasteEvent = (evnt: ClipboardEvent) => {
@@ -1117,7 +1135,7 @@ export default defineComponent({
       const cornerSlot = slots.corner
 
       const ons: Record<string, any> = {}
-      if (dragSort) {
+      if (dragSort && currList.length > 1) {
         ons.onDragstart = handleDragSortDragstartEvent
         ons.onDragover = handleDragSortDragoverEvent
         ons.onDragend = handleDragSortDragendEvent
@@ -1330,8 +1348,10 @@ export default defineComponent({
       const imgStyle = computeImgStyle.value
       const cornerSlot = slots.corner
 
-      const ons: Record<string, any> = {}
-      if (dragSort) {
+      const ons: Record<string, any> = {
+        onMousedown: handleItemMousedownEvent
+      }
+      if (dragSort && currList.length > 1) {
         ons.onDragstart = handleDragSortDragstartEvent
         ons.onDragover = handleDragSortDragoverEvent
         ons.onDragend = handleDragSortDragendEvent
@@ -1556,7 +1576,9 @@ export default defineComponent({
       const formReadonly = computeFormReadonly.value
       const isImage = computeIsImage.value
 
-      const ons: Record<string, any> = {}
+      const ons: Record<string, any> = {
+        onMousedown: handleItemMousedownEvent
+      }
       if (dragToUpload && dragIndex === -1) {
         ons.onDragover = handleUploadDragoverEvent
         ons.onDragleave = handleUploadDragleaveEvent
@@ -1610,6 +1632,10 @@ export default defineComponent({
         if (props.imageStyle) {
           warnLog('vxe.error.delProp', ['image-style', 'image-config'])
         }
+      }
+
+      if (props.dragSort) {
+        initTpImg()
       }
       globalEvents.on($xeUpload, 'paste', handleGlobalPasteEvent)
       globalEvents.on($xeUpload, 'mousedown', handleGlobalMousedownEvent)
