@@ -125,18 +125,18 @@ export namespace VxeMenuEvents {
 
 export namespace VxeMenuSlotTypes {
   export interface DefaultSlotParams {}
+  export interface OptionSlotParams {
+    option: Required<VxeMenuPropTypes.MenuOption>
+    collapsed: boolean
+  }
 }
 
 export interface VxeMenuSlots {
   default?: (params: VxeMenuSlotTypes.DefaultSlotParams) => any
   /**
-   * 自定义弹窗容器选项模板
+   * 自定义菜单项的模板
    */
-  option?: ((params: {
-    option: Required<MenuOption>
-    collapsed: boolean
-    [key: string]: any
-  }) => any) | undefined
+  option?: (params: VxeMenuSlotTypes.OptionSlotParams) => any
 }
 
 export const Menu: typeof VxeMenu

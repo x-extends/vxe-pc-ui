@@ -1,6 +1,6 @@
 import { RenderFunction, SetupContext, Ref, ComputedRef } from 'vue'
 import { DefineVxeComponentApp, DefineVxeComponentOptions, DefineVxeComponentInstance, VxeComponentBaseOptions, VxeComponentEventParams, VxeComponentSizeType, VxeComponentSlotType, ValueOf } from '@vxe-ui/core'
-import { VxeToolbarInstance, VxeToolbarProps, VxeToolbarPropTypes } from './toolbar'
+import { VxeToolbarInstance, VxeToolbarProps, VxeToolbarPropTypes, VxeToolbarSlotTypes } from './toolbar'
 import { VxeTableDefines, VxeTableInstance, VxeTableEmits, VxeTableConstructor, VxeTableProps, TableMethods } from './table'
 import { VxePagerInstance, VxePagerProps, VxePagerDefines } from './pager'
 import { VxeFormInstance, VxeFormProps, VxeFormDefines } from './form'
@@ -188,9 +188,34 @@ export namespace VxeGridPropTypes {
       iconIn?: string
       iconOut?: string
     }
+    /**
+     * 自定义插槽模板
+     */
     slots?: {
-      buttons?: string | ((params: { [key: string]: any }) => VxeComponentSlotType | VxeComponentSlotType[])
-      tools?: string | ((params: { [key: string]: any }) => VxeComponentSlotType | VxeComponentSlotType[])
+      /**
+       * 自定义左侧按钮列表
+       */
+      buttons?: string | ((params: VxeToolbarSlotTypes.DefaultSlotParams) => VxeComponentSlotType | VxeComponentSlotType[])
+      /**
+       * 自定义左侧按钮列表前缀插槽模板
+       */
+      buttonPrefix?: string | ((params: VxeToolbarSlotTypes.DefaultSlotParams) => VxeComponentSlotType | VxeComponentSlotType[])
+      /**
+       * 自定义左侧按钮列表后缀插槽模板
+       */
+      buttonSuffix?: string | ((params: VxeToolbarSlotTypes.DefaultSlotParams) => VxeComponentSlotType | VxeComponentSlotType[])
+      /**
+       * 自定义右侧工具列表
+       */
+      tools?: string | ((params: VxeToolbarSlotTypes.DefaultSlotParams) => VxeComponentSlotType | VxeComponentSlotType[])
+      /**
+       * 自定义右侧工具列表前缀插槽模板
+       */
+      toolPrefix?: string | ((params: VxeToolbarSlotTypes.DefaultSlotParams) => VxeComponentSlotType | VxeComponentSlotType[])
+      /**
+       * 自定义右侧工具列表后缀插槽模板
+       */
+      toolSuffix?: string | ((params: VxeToolbarSlotTypes.DefaultSlotParams) => VxeComponentSlotType | VxeComponentSlotType[])
     }
   }
 
@@ -632,23 +657,40 @@ export namespace VxeGridEvents {
 }
 
 export namespace VxeGridSlotTypes {
-  export interface DefaultSlotParams {}
-}
-
-export interface VxeGridSlots<D = any> {
-  /**
-   * 自定义插槽模板
-   */
-  [key: string]: ((params: {
+  export interface DefaultSlotParams<D = any> {
     $table: VxeTableConstructor<D>
     $grid: VxeGridConstructor<D> | null | undefined
+    /**
+     * 当前行对象，支持数据双向绑定
+     */
     row: D
+    /**
+     * 相对于 data 中的索引，等同于 getRowIndex(row)
+     */
     rowIndex: number
+    /**
+     * 相对于可视区渲染中的行索引，等同于 getVMRowIndex(row)
+     */
     $rowIndex: number
+    /**
+     * 相对于当前表格数据的索引，等同于 getVTRowIndex(row)
+     */
     _rowIndex: number
+    /**
+     * 当前列对象
+     */
     column: VxeTableDefines.ColumnInfo<D>
+    /**
+     * 相对于 columns 中的索引，等同于 getTColumnIndex(column)
+     */
     columnIndex: number
+    /**
+     * 相对于可视区渲染中的列索引，等同于 getVMColumnIndex(column)
+     */
     $columnIndex: number
+    /**
+     * 相对于当前表格列的索引，等同于 getVTColumnIndex(column)
+     */
     _columnIndex: number
 
     checked?: boolean
@@ -657,71 +699,62 @@ export interface VxeGridSlots<D = any> {
     items: D[]
 
     [key: string]: any
-  }) => any) | undefined
+  }
+
+  export interface BaseSlotParams<D = any> {
+    $table: VxeTableConstructor<D>
+    $grid: VxeGridConstructor<D> | null | undefined
+  }
+  export interface EmptySlotParams<D = any> extends BaseSlotParams<D> {}
+  export interface LoadingSlotParams<D = any> extends BaseSlotParams<D> {}
+  export interface FormSlotParams<D = any> extends BaseSlotParams<D> {}
+  export interface ToolbarSlotParams<D = any> extends BaseSlotParams<D> {}
+  export interface TopSlotParams<D = any> extends BaseSlotParams<D> {}
+  export interface BottomSlotParams<D = any> extends BaseSlotParams<D> {}
+  export interface LeftSlotParams<D = any> extends BaseSlotParams<D> {}
+  export interface RightSlotParams<D = any> extends BaseSlotParams<D> {}
+  export interface PagerSlotParams<D = any> extends BaseSlotParams<D> {}
+}
+
+export interface VxeGridSlots<D = any> {
+  [key: string]: ((params: VxeGridSlotTypes.DefaultSlotParams<D>) => any) | undefined
 
   /**
    * 自定义空数据时显示模板
    */
-  empty?(params: {
-    $table: VxeTableConstructor<D>
-    $grid: VxeGridConstructor<D> | null | undefined
-  }): any
+  empty?(params: VxeGridSlotTypes.EmptySlotParams<D>): any
   /**
    * 自定义加载中模板
    */
-  loading?(params: {
-    $table: VxeTableConstructor<D>
-    $grid: VxeGridConstructor<D> | null | undefined
-  }): any
+  loading?(params: VxeGridSlotTypes.LoadingSlotParams<D>): any
   /**
    * 自定义表单模板
    */
-  form?(params: {
-    $table: VxeTableConstructor<D>
-    $grid: VxeGridConstructor<D> | null | undefined
-  }): any
+  form?(params: VxeGridSlotTypes.FormSlotParams<D>): any
   /**
    * 自定义工具栏模板
    */
-  toolbar?(params: {
-    $table: VxeTableConstructor<D>
-    $grid: VxeGridConstructor<D> | null | undefined
-  }): any
+  toolbar?(params: VxeGridSlotTypes.ToolbarSlotParams<D>): any
   /**
    * 自定义表格顶部模板
    */
-  top?(params: {
-    $table: VxeTableConstructor<D>
-    $grid: VxeGridConstructor<D> | null | undefined
-  }): any
+  top?(params: VxeGridSlotTypes.TopSlotParams<D>): any
   /**
    * 自定义表格底部模板
    */
-  bottom?(params: {
-    $table: VxeTableConstructor<D>
-    $grid: VxeGridConstructor<D> | null | undefined
-  }): any
+  bottom?(params: VxeGridSlotTypes.BottomSlotParams<D>): any
   /**
    * 自定义表格左侧模板
    */
-  left?(params: {
-    $table: VxeTableConstructor<D>
-    $grid: VxeGridConstructor<D> | null | undefined
-  }): any
+  left?(params: VxeGridSlotTypes.LeftSlotParams<D>): any
   /**
    * 自定义表格右侧模板
    */
-  right?(params: {
-    $table: VxeTableConstructor<D>
-    $grid: VxeGridConstructor<D> | null | undefined
-  }): any
+  right?(params: VxeGridSlotTypes.RightSlotParams<D>): any
   /**
    * 自定义分页模板
    */
-  pager?(params: {
-    $table: VxeTableConstructor<D>
-    $grid: VxeGridConstructor<D> | null | undefined
-  }): any
+  pager?(params: VxeGridSlotTypes.PagerSlotParams<D>): any
 }
 
 export const Grid: typeof VxeGrid
