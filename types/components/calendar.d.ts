@@ -137,6 +137,9 @@ export namespace VxeCalendarDefines {
     date: Date
   }
 
+  export interface InputEventParams extends CalendarEventParams {
+    value: string
+  }
   export interface ChangeEventParams extends CalendarEventParams {
     value: string
   }

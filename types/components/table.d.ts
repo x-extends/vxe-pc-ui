@@ -1857,11 +1857,19 @@ export namespace VxeTablePropTypes {
     /**
      * 文件名
      */
-    filename?: string
+    filename?: string | ((params: {
+      $table: VxeTableConstructor
+      $grid?: VxeGridConstructor | null
+      options: ExportOpts
+    }) => string)
     /**
      * 表名
      */
-    sheetName?: string
+    sheetName?: string | ((params: {
+      $table: VxeTableConstructor
+      $grid?: VxeGridConstructor | null
+      options: ExportOpts
+    }) => string)
     /**
      * 文件类型
      */
@@ -1953,9 +1961,14 @@ export namespace VxeTablePropTypes {
       options: ExportHandleOptions
     }): Promise<any>
     beforeExportMethod?(params: {
+      $table: VxeTableConstructor
+      $grid?: VxeGridConstructor | null
       options: ExportHandleOptions
     }): void
     afterExportMethod?(params: {
+      $table: VxeTableConstructor
+      $grid?: VxeGridConstructor | null
+      status: boolean
       options: ExportHandleOptions
     }): void
 
@@ -1971,10 +1984,21 @@ export namespace VxeTablePropTypes {
     }
   }
   export interface ExportOpts extends ExportConfig { }
-  export interface ExportHandleOptions extends ExportConfig {
+  export interface ExportHandleOptions extends Exclude<ExportConfig, 'filename' | 'sheetName'> {
+    filename: string
+    sheetName: string
     data: any[]
     columns: VxeTableDefines.ColumnInfo[]
     colgroups: VxeTableDefines.ColumnInfo[][]
+
+    /**
+     * @private
+     */
+    _isCustomColumn?: boolean
+    /**
+     * @private
+     */
+    print?: boolean
   }
 
   /**
@@ -1984,7 +2008,11 @@ export namespace VxeTablePropTypes {
     /**
      * 表名
      */
-    sheetName?: string
+    sheetName?: string | ((params: {
+      $table: VxeTableConstructor
+      $grid?: VxeGridConstructor | null
+      options: ExportOpts
+    }) => string)
     /**
      * 导出数据的方式
      */
@@ -4857,23 +4885,24 @@ export namespace VxeTableEvents {
 
 export namespace VxeTableSlotTypes {
   export interface DefaultSlotParams {}
+
+  export interface BaseSlotParams<D = any> {
+    $table: VxeTableConstructor<D>
+    $grid: VxeGridConstructor<D> | null | undefined
+  }
+  export interface EmptySlotParams<D = any> extends BaseSlotParams<D> {}
+  export interface LoadingSlotParams<D = any> extends BaseSlotParams<D> {}
 }
 
 export interface VxeTableSlots<D = any> {
   /**
    * 自定义空数据时显示模板
    */
-  empty?(params: {
-    $table: VxeTableConstructor<D>
-    $grid: VxeGridConstructor<D> | null | undefined
-  }): any
+  empty?(params: VxeTableSlotTypes.EmptySlotParams<D>): any
   /**
    * 自定义加载中模板
    */
-  loading?(params: {
-    $table: VxeTableConstructor<D>
-    $grid: VxeGridConstructor<D> | null | undefined
-  }): any
+  loading?(params: VxeTableSlotTypes.LoadingSlotParams<D>): any
 }
 
 export * from './table-module'

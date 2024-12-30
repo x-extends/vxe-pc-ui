@@ -293,15 +293,27 @@ export interface VxeToolbarSlots {
   /**
    * 自定义左侧按钮列表
    */
-  buttons?: (params: {
-    [key: string]: any
-  }) => any
+  buttons?: (params: VxeToolbarSlotTypes.DefaultSlotParams) => any
+  /**
+   * 自定义左侧按钮列表前缀插槽模板
+   */
+  buttonPrefix?: (params: VxeToolbarSlotTypes.DefaultSlotParams) => any
+  /**
+   * 自定义左侧按钮列表后缀插槽模板
+   */
+  buttonSuffix?: (params: VxeToolbarSlotTypes.DefaultSlotParams) => any
   /**
    * 自定义右侧工具列表
    */
-  tools?: ((params: {
-    [key: string]: any
-  }) => any) | undefined
+  tools?: (params: VxeToolbarSlotTypes.DefaultSlotParams) => any
+  /**
+   * 自定义右侧工具列表前缀插槽模板
+   */
+  toolPrefix?: (params: VxeToolbarSlotTypes.DefaultSlotParams) => any
+  /**
+   * 自定义右侧工具列表后缀插槽模板
+   */
+  toolSuffix?: (params: VxeToolbarSlotTypes.DefaultSlotParams) => any
 }
 
 export const Toolbar: typeof VxeToolbar
