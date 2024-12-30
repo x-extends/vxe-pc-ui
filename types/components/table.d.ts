@@ -2877,6 +2877,8 @@ export interface TableInternalData<D = any> {
   lyRunTime?: undefined | number
   lyTimeout?: undefined | number
 
+  reRunTime?: undefined | number
+
   // 内部属性
   _lastResizeTime?: any
   _keyCtx?: any
