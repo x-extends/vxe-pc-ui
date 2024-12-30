@@ -9,7 +9,10 @@ import VxeFormItemComponent from '../../form/src/form-item'
 import VxeButtonComponent from '../../button/src/button'
 import VxeCheckboxComponent from '../../checkbox/src/checkbox'
 
-import type { VxeGlobalRendererHandles, VxeFormDesignConstructor, VxeFormDesignDefines, VxeFormDesignPrivateMethods, VxeFormViewConstructor, VxeColumnPropTypes, VxeFormViewPrivateMethods, VxeGridComponent, VxeGridPropTypes, VxeGridProps, VxeTableDefines, VxeGridInstance } from '../../../types'
+import type { VxeGlobalRendererHandles, VxeFormDesignConstructor, VxeFormDesignDefines, VxeFormDesignPrivateMethods, VxeFormViewConstructor, VxeFormViewPrivateMethods } from '../../../types'
+import type { VxeGridComponent, VxeGridPropTypes, VxeGridProps, VxeGridInstance } from '../../../types/components/grid'
+import type { VxeTableDefines } from '../../../types/components/table'
+import type { VxeColumnPropTypes } from '../../../types/components/column'
 
 const ViewSubItemComponent = defineComponent({
   props: {

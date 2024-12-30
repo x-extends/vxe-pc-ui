@@ -1,7 +1,8 @@
 import { computed } from 'vue'
 import XEUtils from 'xe-utils'
 
-import type { VxeTableDefines, VxeGlobalRendererHandles, VxeFormDesignDefines } from '../../../../types'
+import type { VxeGlobalRendererHandles, VxeFormDesignDefines } from '../../../../types'
+import type { VxeTableDefines } from '../../../../types/components/table'
 
 export function useSubtableView <D = any, P = Record<string, any>> (props: {
   renderOpts: VxeGlobalRendererHandles.RenderFormDesignWidgetSubtableEditViewOptions

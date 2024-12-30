@@ -10,7 +10,8 @@ import VxeRadioGroupComponent from '../../radio/src/group'
 import VxeButtonComponent from '../../button/src/button'
 import XEUtils from 'xe-utils'
 
-import type { VxeListDesignConstructor, VxeListDesignPrivateMethods, VxeTableDefines, VxeSelectPropTypes, VxeListDesignDefines, VxeFormItemPropTypes, VxeGlobalRendererHandles } from '../../../types'
+import type { VxeListDesignConstructor, VxeListDesignPrivateMethods, VxeSelectPropTypes, VxeListDesignDefines, VxeFormItemPropTypes, VxeGlobalRendererHandles } from '../../../types'
+import type { VxeTableDefines } from '../../../types/components/table'
 
 interface SearchConfigObjItem extends VxeListDesignDefines.ListColumnObjItem {
   checked: boolean
