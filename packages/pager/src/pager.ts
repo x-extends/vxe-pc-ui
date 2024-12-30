@@ -6,7 +6,8 @@ import { errLog } from '../../ui/src/log'
 import VxeSelectComponent from '../../select/src/select'
 import VxeInputComponent from '../../input/src/input'
 
-import type { VxePagerPropTypes, VxePagerEmits, VxeInputDefines, VxeSelectDefines, ValueOf, VxeComponentSizeType, PagerReactData, VxeGridConstructor, VxeGridPrivateMethods } from '../../../types'
+import type { VxePagerPropTypes, VxePagerEmits, VxeInputDefines, VxeSelectDefines, ValueOf, VxeComponentSizeType, PagerReactData } from '../../../types'
+import type { VxeGridConstructor, VxeGridPrivateMethods } from '../../../types/components/grid'
 
 export default defineVxeComponent({
   name: 'VxePager',

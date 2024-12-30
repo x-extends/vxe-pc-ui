@@ -211,7 +211,8 @@
 <script lang="ts">
 import Vue from 'vue'
 import { VxeUI } from '../../../packages'
-import { VxeGridPropTypes, VxeModalDefines } from '../../../types'
+import { VxeModalDefines } from '../../../types'
+import { VxeGridPropTypes } from '../../../types/components/grid'
 
 export default Vue.extend({
   data () {

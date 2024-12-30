@@ -7,7 +7,9 @@ import { getLastZIndex, nextZIndex } from '../../ui/src/utils'
 import { errLog } from '../../ui/src/log'
 import VxeInputComponent from '../../input/src/input'
 
-import type { TableSelectReactData, VxeTableSelectPropTypes, TableSelectInternalData, VxeTableSelectEmits, VxeGridInstance, VxeFormDefines, VxeGridDefines, VxeTablePropTypes, VxeGridComponent, ValueOf, VxeComponentStyleType, VxeComponentSizeType, VxeModalConstructor, VxeModalMethods, VxeDrawerConstructor, VxeDrawerMethods, VxeTableConstructor, VxeTablePrivateMethods, VxeFormConstructor, VxeFormPrivateMethods } from '../../../types'
+import type { TableSelectReactData, VxeTableSelectPropTypes, TableSelectInternalData, VxeTableSelectEmits, VxeFormDefines, ValueOf, VxeComponentStyleType, VxeComponentSizeType, VxeModalConstructor, VxeModalMethods, VxeDrawerConstructor, VxeDrawerMethods, VxeFormConstructor, VxeFormPrivateMethods } from '../../../types'
+import type { VxeTableConstructor, VxeTablePrivateMethods, VxeTablePropTypes } from '../../../types/components/table'
+import type { VxeGridInstance, VxeGridDefines, VxeGridComponent } from '../../../types/components/grid'
 
 export function getRowUniqueId () {
   return XEUtils.uniqueId('row_')

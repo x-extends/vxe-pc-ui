@@ -5,7 +5,8 @@ import { getConfig, globalEvents, createEvent, globalMixins, VxeComponentStyleTy
 import { getAbsolutePos, getEventTargetNode } from '../../ui/src/dom'
 import { getLastZIndex, nextZIndex } from '../../ui/src/utils'
 
-import type { PulldownInternalData, VxePulldownPropTypes, VxePulldownEmits, VxeComponentSizeType, PulldownReactData, VxeTableConstructor, VxeTablePrivateMethods, VxeFormConstructor, VxeFormPrivateMethods, VxeModalConstructor, VxeDrawerConstructor, VxeDrawerMethods, VxeModalMethods } from '../../../types'
+import type { PulldownInternalData, VxePulldownPropTypes, VxePulldownEmits, VxeComponentSizeType, PulldownReactData, VxeFormConstructor, VxeFormPrivateMethods, VxeModalConstructor, VxeDrawerConstructor, VxeDrawerMethods, VxeModalMethods } from '../../../types'
+import type { VxeTableConstructor, VxeTablePrivateMethods } from '../../../types/components/table'
 
 export default defineVxeComponent({
   name: 'VxePulldown',

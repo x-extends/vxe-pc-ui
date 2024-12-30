@@ -11,7 +11,8 @@ import VxeLoadingComponent from '../../loading/src/loading'
 import { getSlotVNs } from '../../ui/src/vn'
 import { warnLog, errLog } from '../../ui/src/log'
 
-import type { VxeFormPropTypes, VxeFormEmits, VxeComponentSizeType, ValueOf, VxeGridConstructor, FormReactData, VxeFormDefines, VxeFormItemPropTypes, FormInternalData, VxeTooltipConstructor } from '../../../types'
+import type { VxeFormPropTypes, VxeFormEmits, VxeComponentSizeType, ValueOf, FormReactData, VxeFormDefines, VxeFormItemPropTypes, FormInternalData, VxeTooltipConstructor } from '../../../types'
+import type { VxeGridConstructor } from '../../../types/components/grid'
 
 class Rule {
   constructor (rule: any) {

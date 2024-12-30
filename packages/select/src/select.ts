@@ -7,7 +7,8 @@ import { getLastZIndex, nextZIndex, getFuncText } from '../../ui/src/utils'
 import VxeInputComponent from '../../input/src/input'
 import { getSlotVNs } from '../../ui/src/vn'
 
-import type { VxeSelectPropTypes, SelectInternalData, ValueOf, VxeComponentSizeType, SelectReactData, VxeSelectEmits, VxeSelectDefines, VxeOptgroupProps, VxeOptionProps, VxeTableConstructor, VxeDrawerConstructor, VxeDrawerMethods, VxeTablePrivateMethods, VxeFormDefines, VxeFormConstructor, VxeFormPrivateMethods, VxeModalConstructor, VxeModalMethods, VxeInputConstructor } from '../../../types'
+import type { VxeSelectPropTypes, SelectInternalData, ValueOf, VxeComponentSizeType, SelectReactData, VxeSelectEmits, VxeSelectDefines, VxeOptgroupProps, VxeOptionProps, VxeDrawerConstructor, VxeDrawerMethods, VxeFormDefines, VxeFormConstructor, VxeFormPrivateMethods, VxeModalConstructor, VxeModalMethods, VxeInputConstructor } from '../../../types'
+import type { VxeTableConstructor, VxeTablePrivateMethods } from '../../../types/components/table'
 
 function isOptionVisible (option: any) {
   return option.visible !== false

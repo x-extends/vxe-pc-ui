@@ -7,7 +7,8 @@ import { getAbsolutePos, getEventTargetNode } from '../../ui/src/dom'
 import { toStringTimeDate, getDateQuarter } from './util'
 import { getSlotVNs } from '../..//ui/src/vn'
 
-import type { VxeDatePickerConstructor, DatePickerInternalData, VxeDatePickerEmits, DatePickerReactData, VxeDatePickerPropTypes, VxeComponentStyleType, VxeFormConstructor, VxeFormPrivateMethods, VxeFormDefines, VxeTableConstructor, VxeDrawerConstructor, VxeDrawerMethods, VxeTablePrivateMethods, VxeModalConstructor, VxeModalMethods, VxeDatePickerDefines, VxeComponentSizeType, ValueOf } from '../../../types'
+import type { VxeDatePickerConstructor, DatePickerInternalData, VxeDatePickerEmits, DatePickerReactData, VxeDatePickerPropTypes, VxeComponentStyleType, VxeFormConstructor, VxeFormPrivateMethods, VxeFormDefines, VxeDrawerConstructor, VxeDrawerMethods, VxeModalConstructor, VxeModalMethods, VxeDatePickerDefines, VxeComponentSizeType, ValueOf } from '../../../types'
+import type { VxeTableConstructor, VxeTablePrivateMethods } from '../../../types/components/table'
 
 export default defineVxeComponent({
   name: 'VxeDatePicker',

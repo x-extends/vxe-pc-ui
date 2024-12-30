@@ -8,7 +8,8 @@ import { toStringTimeDate, getDateQuarter } from '../../date-picker/src/util'
 import { handleNumber, toFloatValueFixed } from '../../number-input/src/util'
 import { getSlotVNs } from '../..//ui/src/vn'
 
-import type { VxeInputConstructor, VxeInputEmits, InputInternalData, InputReactData, ValueOf, VxeInputPropTypes, VxeComponentStyleType, VxeFormConstructor, VxeFormPrivateMethods, VxeFormDefines, VxeComponentSizeType, VxeTableConstructor, VxeTablePrivateMethods, VxeDrawerConstructor, VxeDrawerMethods, VxeModalConstructor, VxeModalMethods, VxeDatePickerDefines, VxeSelectConstructor, VxeSelectMethods, VxeTreeSelectConstructor, VxeTreeSelectMethods } from '../../../types'
+import type { VxeInputConstructor, VxeInputEmits, InputInternalData, InputReactData, ValueOf, VxeInputPropTypes, VxeComponentStyleType, VxeFormConstructor, VxeFormPrivateMethods, VxeFormDefines, VxeComponentSizeType, VxeDrawerConstructor, VxeDrawerMethods, VxeModalConstructor, VxeModalMethods, VxeDatePickerDefines, VxeSelectConstructor, VxeSelectMethods, VxeTreeSelectConstructor, VxeTreeSelectMethods } from '../../../types'
+import type { VxeTableConstructor, VxeTablePrivateMethods } from '../../../types/components/table'
 
 export default defineVxeComponent({
   name: 'VxeInput',

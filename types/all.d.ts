@@ -279,8 +279,8 @@ export * from './components/upload'
 export * from './components/watermark'
 
 // 兼容老版本
-export * from './components/column'
-export * from './components/colgroup'
-export * from './components/table'
-export * from './components/grid'
-export * from './components/toolbar'
+// export * from './components/column'
+// export * from './components/colgroup'
+// export * from './components/table'
+// export * from './components/grid'
+// export * from './components/toolbar'
