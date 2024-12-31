@@ -24,7 +24,7 @@ export interface VxeGridConstructor<D = any> extends VxeComponentBaseOptions, Vx
 
 export interface GridPrivateRef<D = any> {
   refElem: Ref<HTMLDivElement | undefined>
-  refTable: Ref<VxeTableInstance>
+  refTable: Ref<VxeTableInstance<D>>
   refForm: Ref<VxeFormInstance>
   refToolbar: Ref<VxeToolbarInstance>
   refPager: Ref<VxePagerInstance>

@@ -253,15 +253,21 @@ export interface ModalMethods {
   /**
    * 如果窗口处于常规状态，则最小化窗口
    */
-  minimize(): Promise<any>
+  minimize(): Promise<{
+    status: boolean
+  }>
   /**
    * 如果窗口处于常规状态，则最大化窗口
    */
-  maximize(): Promise<any>
+  maximize(): Promise<{
+    status: boolean
+  }>
   /**
    * 如果窗口处于最大化状态，则还原窗口
    */
-  revert(): Promise<any>
+  revert(): Promise<{
+    status: boolean
+  }>
 }
 export interface VxeModalMethods extends ModalMethods { }
 

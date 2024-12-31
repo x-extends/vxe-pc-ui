@@ -1,5 +1,5 @@
-import { VxeTableConstructor, VxeTableDefines, VxeTablePropTypes, VxeTablePrivateMethods } from '../components/table'
-import { VxeGridConstructor, VxeGridPrivateMethods } from '../components/grid'
+import { VxeTableConstructor, VxeTableDefines, VxeTablePropTypes } from '../components/table'
+import { VxeGridConstructor } from '../components/grid'
 
 declare module '@vxe-ui/core' {
   export namespace VxeGlobalInterceptorHandles {
@@ -15,8 +15,8 @@ declare module '@vxe-ui/core' {
     export type Type = HookType | EventType
 
     export interface InterceptorParams {
-      $grid?: VxeGridConstructor<any> & VxeGridPrivateMethods<any>
-      $table: VxeTableConstructor<any> & VxeTablePrivateMethods<any>
+      $grid: VxeGridConstructor | null | undefined
+      $table: VxeTableConstructor
       $event: Event
     }
 

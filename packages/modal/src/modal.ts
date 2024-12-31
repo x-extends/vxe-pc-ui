@@ -497,18 +497,24 @@ export default defineComponent({
             content: getI18n('vxe.modal.miniMaxSize', [minimizeMaxSize])
           })
         }
-        return nextTick()
+        return Promise.resolve({
+          status: false
+        })
       }
       reactData.prevZoomStatus = prevZoomStatus
       reactData.zoomStatus = 'minimize'
       return nextTick().then(() => {
         const boxElem = getBox()
         if (!boxElem) {
-          return
+          return {
+            status: false
+          }
         }
         const headerEl = refHeaderElem.value
         if (!headerEl) {
-          return
+          return {
+            status: false
+          }
         }
         const { visibleHeight } = getDomNode()
         // 如果当前处于复原状态
@@ -560,6 +566,9 @@ export default defineComponent({
           height: `${headerEl.offsetHeight}px`
         })
         savePosStorage()
+        return {
+          status: true
+        }
       })
     }
 
@@ -587,6 +596,9 @@ export default defineComponent({
           })
         }
         savePosStorage()
+        return {
+          status: true
+        }
       })
     }
 
@@ -764,7 +776,14 @@ export default defineComponent({
             })
           }
           savePosStorage()
-          return nextTick()
+          return nextTick().then(() => {
+            return {
+              status: true
+            }
+          })
+        }
+        return {
+          status: false
         }
       })
     }
@@ -1065,10 +1084,33 @@ export default defineComponent({
       setPosition,
       isMinimized,
       isMaximized,
-      zoom: handleZoom,
-      minimize: handleMinimize,
-      maximize: handleMaximize,
-      revert: handleRevert
+      zoom () {
+        return handleZoom()
+      },
+      minimize () {
+        if (!reactData.visible) {
+          return Promise.resolve({
+            status: false
+          })
+        }
+        return handleMinimize()
+      },
+      maximize () {
+        if (!reactData.visible) {
+          return Promise.resolve({
+            status: false
+          })
+        }
+        return handleMaximize()
+      },
+      revert () {
+        if (!reactData.visible) {
+          return Promise.resolve({
+            status: false
+          })
+        }
+        return handleRevert()
+      }
     }
 
     Object.assign($xeModal, modalMethods)

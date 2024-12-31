@@ -175,12 +175,12 @@ export namespace VxeTableProDefines {
     extendRows: any[]
     extendCols: VxeTableDefines.ColumnInfo<D>[]
     direction: ExtendCellAreaDirection
-    $table: VxeTableConstructor<D> & VxeTablePrivateMethods<D>
+    $table: VxeTableConstructor<D>
     $grid: VxeGridConstructor<D> | null | undefined
   }
 
   interface EventParams<D = any> extends VxeComponentEventParams {
-    $table: VxeTableConstructor<D> & VxeTablePrivateMethods<D>
+    $table: VxeTableConstructor<D>
     $grid: VxeGridConstructor<D> | null | undefined
   }
 

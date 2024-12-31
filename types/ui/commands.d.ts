@@ -20,7 +20,7 @@ declare module '@vxe-ui/core' {
     }
 
     export interface TableCommandMethodParams {
-      $grid: VxeGridConstructor | null
+      $grid: VxeGridConstructor | null | undefined
       $table: VxeTableConstructor
       button?: VxeToolbarPropTypes.ButtonConfig | null
       code?: string
