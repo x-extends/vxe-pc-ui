@@ -1,3 +1,4 @@
+import { CreateElement } from 'vue'
 import { DefineVxeComponentApp, DefineVxeComponentOptions, DefineVxeComponentInstance, VxeComponentEventParams, VxeComponentSlotType } from '@vxe-ui/core'
 import { VxeSelectConstructor } from './select'
 

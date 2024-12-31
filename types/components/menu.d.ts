@@ -1,5 +1,5 @@
 import { CreateElement } from 'vue'
-import { DefineVxeComponentApp, DefineVxeComponentOptions, DefineVxeComponentInstance, VxeComponentEventParams, ValueOf, VxeComponentSizeType, VxeComponentStyleType, VxeComponentPermissionCodeType } from '@vxe-ui/core'
+import { DefineVxeComponentApp, DefineVxeComponentOptions, DefineVxeComponentInstance, VxeComponentEventParams, ValueOf, VxeComponentSizeType, VxeComponentStyleType, VxeComponentPermissionCodeType, VxeComponentSlotType } from '@vxe-ui/core'
 import { VxeLinkPropTypes } from './link'
 
 /* eslint-disable @typescript-eslint/no-empty-interface,no-use-before-define,@typescript-eslint/ban-types */
@@ -41,7 +41,7 @@ export namespace VxeMenuPropTypes {
   export type Collapsed = boolean
   export type CollapseFixed = boolean
   export type ExpandAll = boolean
-  export type Options = MenuOneOption[]
+  export type Options = MenuOption[]
 }
 
 export interface VxeMenuProps {

@@ -289,6 +289,10 @@ export namespace VxeToolbarEvents {
   export type ToolClick<D = any> = (params: VxeToolbarDefines.ToolClickEndEventParams<D>) => void
 }
 
+export namespace VxeToolbarSlotTypes {
+  export interface DefaultSlotParams {}
+}
+
 export interface VxeToolbarSlots {
   /**
    * 自定义左侧按钮列表

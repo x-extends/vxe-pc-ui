@@ -1,5 +1,5 @@
 import { DefineVxeComponentApp, DefineVxeComponentOptions, DefineVxeComponentInstance, VxeComponentEventParams, VxeComponentSizeType, VxeComponentSlotType, ValueOf } from '@vxe-ui/core'
-import { VxeToolbarProps, VxeToolbarPropTypes } from './toolbar'
+import { VxeToolbarProps, VxeToolbarPropTypes, VxeToolbarSlotTypes } from './toolbar'
 import { VxeTableDefines, VxeTableEmits, VxeTableConstructor, VxeTableProps, TableMethods } from './table'
 import { VxePagerProps, VxePagerDefines } from './pager'
 import { VxeFormProps, VxeFormDefines } from './form'
