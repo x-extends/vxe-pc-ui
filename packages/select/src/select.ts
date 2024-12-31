@@ -21,6 +21,7 @@ export default defineComponent({
   name: 'VxeSelect',
   props: {
     modelValue: [String, Number, Boolean, Array] as PropType<VxeSelectPropTypes.ModelValue>,
+    defaultConfig: Object as PropType<VxeSelectPropTypes.DefaultConfig>,
     clearable: Boolean as PropType<VxeSelectPropTypes.Clearable>,
     placeholder: String as PropType<VxeSelectPropTypes.Placeholder>,
     readonly: {
@@ -207,6 +208,9 @@ export default defineComponent({
       return getI18n('vxe.base.pleaseSelect')
     })
 
+    const computeDefaultOpts = computed(() => {
+      return Object.assign({}, props.defaultConfig)
+    })
     const computePropsOpts = computed(() => {
       return Object.assign({}, props.optionProps)
     })
@@ -963,8 +967,10 @@ export default defineComponent({
      */
     const loadData = (datas: any[]) => {
       cacheItemMap(datas || [])
-      const { fullData, scrollYStore } = internalData
+      const { isLoaded, fullData, scrollYStore } = internalData
+      const defaultOpts = computeDefaultOpts.value
       const sYOpts = computeSYOpts.value
+      const valueField = computeValueField.value
       Object.assign(scrollYStore, {
         startIndex: 0,
         endIndex: 1,
@@ -974,6 +980,22 @@ export default defineComponent({
       // 如果gt为0，则总是启用
       reactData.scrollYLoad = !!sYOpts.enabled && sYOpts.gt > -1 && (sYOpts.gt === 0 || sYOpts.gt <= fullData.length)
       handleData()
+      if (!isLoaded) {
+        const { selectMode } = defaultOpts
+        if (datas.length > 0 && XEUtils.eqNull(props.modelValue)) {
+          if (selectMode === 'first' || selectMode === 'last') {
+            const selectItem = XEUtils[selectMode](datas)
+            if (selectItem) {
+              nextTick(() => {
+                if (XEUtils.eqNull(props.modelValue)) {
+                  emitModel(selectItem[valueField])
+                }
+              })
+            }
+          }
+          internalData.isLoaded = true
+        }
+      }
       return computeScrollLoad().then(() => {
         refreshScroll()
       })
@@ -999,6 +1021,7 @@ export default defineComponent({
       dispatchEvent,
       loadData,
       reloadData (datas) {
+        internalData.isLoaded = false
         clearScroll()
         return loadData(datas)
       },

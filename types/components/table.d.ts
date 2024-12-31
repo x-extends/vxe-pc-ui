@@ -454,15 +454,19 @@ export namespace VxeTablePropTypes {
      */
     trigger?: 'default' | 'cell' | 'row' | '' | null
     /**
-     * 只对 tree-config 启用有效，是否跨节点拖拽，用于树结构，启用后允许拖拽到其他的子节点，除自身节点之外
+     * 只对 tree-config 启用有效，是否允许同级行拖拽，用于树结构，启用后允许同层级之间进行拖拽
+     */
+    isPeerDrag?: boolean
+    /**
+     * 只对 tree-config 启用有效，是否允许同级/跨层行拖拽，用于树结构，启用后允许跨层级拖拽（除了上级拖到子级）
      */
     isCrossDrag?: boolean
     /**
-     * 只对 tree-config 启用有效，是否允许拖拽成目标节点的子级
+     * 需要 isCrossDrag，只对 tree-config 启用有效，是否允许拖拽成目标行的子级
      */
     isToChildDrag?: boolean
     /**
-     * 只对 tree-config 启用有效，是否允许将自己拖拽到子孙节点中
+     * 需要 isCrossDrag，只对 tree-config 启用有效，是否允许将自己拖拽到子级行中
      */
     isSelfToChildDrag?: boolean
     /**
@@ -526,11 +530,15 @@ export namespace VxeTablePropTypes {
      */
     trigger?: 'default' | 'cell' | '' | null
     /**
-     * 用于分组表头，是否跨列拖拽，启用后允许拖拽到其他的列，除自身列之外
+     * 用于分组表头，是否允许同级列拖拽，启用后允许同层级列之间进行拖拽
+     */
+    isPeerDrag?: boolean
+    /**
+     * 需要 isCrossDrag，用于分组表头，是否同级/跨层列拖拽，启用后允许跨拖拽列拖拽（除了上级拖到子级）
      */
     isCrossDrag?: boolean
     /**
-     * 是否允许拖拽成目标列的子级
+     * 需要 isCrossDrag，是否允许拖拽成目标列的子级
      */
     isToChildDrag?: boolean
     /**

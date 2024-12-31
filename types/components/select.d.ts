@@ -27,6 +27,12 @@ export interface VxeSelectPrivateRef extends SelectPrivateRef { }
 export namespace VxeSelectPropTypes {
   export type Size = VxeComponentSizeType
   export type ModelValue = string | number | boolean | null | (string | number | boolean)[]
+  export interface DefaultConfig {
+    /**
+     * 默认选择模式，默认选中行为只会在初始化时触发一次
+     */
+    selectMode?: 'first' | 'last'
+  }
   export type Clearable = boolean
   export type Placeholder = string
   export type Readonly = boolean
@@ -90,6 +96,7 @@ export namespace VxeSelectPropTypes {
 export interface VxeSelectProps {
   size?: VxeSelectPropTypes.Size
   modelValue?: VxeSelectPropTypes.ModelValue
+  defaultConfig?: VxeSelectPropTypes.DefaultConfig
   clearable?: VxeSelectPropTypes.Clearable
   placeholder?: VxeSelectPropTypes.Placeholder
   readonly?: VxeSelectPropTypes.Readonly
@@ -154,6 +161,7 @@ export interface SelectReactData {
 }
 
 export interface SelectInternalData {
+  isLoaded?: boolean
   synchData: any[]
   fullData: any[]
   optGroupKeyMaps: Record<string, any>
