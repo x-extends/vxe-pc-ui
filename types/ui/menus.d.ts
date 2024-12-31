@@ -1,6 +1,5 @@
-import { VxeTableConstructor, VxeTableDefines, VxeTablePrivateMethods } from '../components/table'
+import { VxeTableConstructor, VxeTableDefines } from '../components/table'
 import { VxeGridConstructor } from '../components/grid'
-import { VxeGlobalRendererHandles } from '@vxe-ui/core'
 
 /* eslint-disable no-use-before-define */
 
@@ -20,8 +19,8 @@ declare module '@vxe-ui/core' {
     }
 
     export interface TableMenuMethodParams extends VxeGlobalRendererHandles.RenderCellParams {
-      $grid: VxeGridConstructor | null
-      $table: VxeTableConstructor & VxeTablePrivateMethods
+      $grid: VxeGridConstructor | null | undefined
+      $table: VxeTableConstructor
       $event: MouseEvent
       menu: VxeTableDefines.MenuFirstOption | VxeTableDefines.MenuChildOption
     }

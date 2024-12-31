@@ -236,14 +236,14 @@ export interface ToolbarReactData {
 }
 
 export interface ToolbarInternalData {
-  connectTable: (VxeTableConstructor<any> & VxeTablePrivateMethods<any>) | null
+  connectTable: VxeTableConstructor<any> & VxeTablePrivateMethods<any> | null | undefined
 }
 
 export interface ToolbarMethods {
   dispatchEvent(type: ValueOf<VxeToolbarEmits>, params: Record<string, any>, evnt: Event | null): void
   syncUpdate(params: {
     collectColumn: VxeTableDefines.ColumnInfo<any>[]
-    $table: VxeTableConstructor<any> & VxeTablePrivateMethods<any>
+    $table: VxeTableConstructor
   }): void
 }
 export interface VxeToolbarMethods extends ToolbarMethods { }
@@ -260,7 +260,7 @@ export namespace VxeToolbarDefines {
   export interface ToolbarEventParams<D = any> extends VxeComponentEventParams {
     $toolbar: VxeToolbarConstructor
     $table: VxeTableConstructor<D>
-    $grid: VxeGridConstructor<D>
+    $grid: VxeGridConstructor<D> | null | undefined
   }
 
   export interface ButtonClickEventParams<D = any> extends ToolbarEventParams<D> {

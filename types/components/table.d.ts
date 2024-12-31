@@ -1,4 +1,4 @@
-import { VNode } from 'vue'
+import { VNode, CreateElement } from 'vue'
 import { DefineVxeComponentApp, DefineVxeComponentOptions, DefineVxeComponentInstance, VxeComponentEventParams, VxeComponentSizeType, ValueOf, VxeGlobalConfig, VxeComponentStyleType, VxeComponentSlotType } from '@vxe-ui/core'
 import { VxeColumnPropTypes, VxeColumnProps, VxeColumnSlotTypes } from './column'
 import { VxeTableProDefines, VxeTableProEmits } from './table-plugins'
@@ -16,7 +16,12 @@ export type VxeTableComponent = DefineVxeComponentOptions<VxeTableProps>
 export type VxeTableInstance<D = any> = DefineVxeComponentInstance<{
   reactData: TableReactData<D>
   internalData: TableInternalData<D>
-  xegrid: VxeGridConstructor | null
+  $xeGrid: VxeGridConstructor<D> | null | undefined
+
+  /**
+   * @deprecated
+   */
+  xegrid: VxeGridConstructor<D> | null | undefined
 }, VxeTableProps<D>, VxeTablePrivateComputed<D>, VxeTableMethods<D>>
 
 export type VxeTableConstructor<D = any> = VxeTableInstance<D>
@@ -35,7 +40,7 @@ export type VxeTableDataRow = VxeTablePropTypes.Row
 export namespace VxeTablePropTypes {
   export type Size = VxeComponentSizeType
   export type ID<D = any> = string | ((params: {
-    $table: VxeTableConstructor<D> & VxeTablePrivateMethods<D>
+    $table: VxeTableConstructor<D>
     $grid: VxeGridConstructor<D> | null | undefined
   }) => string | number | null)
 
@@ -66,14 +71,14 @@ export namespace VxeTablePropTypes {
   export type FooterData = Record<string, any>[]
 
   export type FooterMethod<D = any> = (params: {
-    $table: VxeTableConstructor<D> & VxeTablePrivateMethods<D>
+    $table: VxeTableConstructor<D>
     $grid: VxeGridConstructor<D> | null | undefined
     columns: VxeTableDefines.ColumnInfo<D>[]
     data: D[]
   }) => Array<string | number | null>[] | any[]
 
   export type RowClassName<D = VxeTablePropTypes.Row> = string | ((params: {
-    $table: VxeTableConstructor<D> & VxeTablePrivateMethods<D>
+    $table: VxeTableConstructor<D>
     row: D
     rowIndex: number
     $rowIndex: number
@@ -81,7 +86,7 @@ export namespace VxeTablePropTypes {
   }) => void | null | string | { [key: string]: boolean | null | undefined })
 
   export type CellClassName<D = VxeTablePropTypes.Row> = string | ((params: {
-    $table: VxeTableConstructor<D> & VxeTablePrivateMethods<D>
+    $table: VxeTableConstructor<D>
     row: D
     rowIndex: number
     $rowIndex: number
@@ -93,14 +98,14 @@ export namespace VxeTablePropTypes {
   }) => void | null | string | { [key: string]: boolean | null | undefined })
 
   export type HeaderRowClassName<D = VxeTablePropTypes.Row> = string | ((params: {
-    $table: VxeTableConstructor<D> & VxeTablePrivateMethods<D>
+    $table: VxeTableConstructor<D>
     $rowIndex: number
     fixed: VxeColumnPropTypes.Fixed
     type: string
   }) => void | null | string | { [key: string]: boolean | null | undefined })
 
   export type HeaderCellClassName<D = VxeTablePropTypes.Row> = string | ((params: {
-    $table: VxeTableConstructor<D> & VxeTablePrivateMethods<D>
+    $table: VxeTableConstructor<D>
     $rowIndex: number
     column: VxeTableDefines.ColumnInfo<D>
     columnIndex: number
@@ -111,7 +116,7 @@ export namespace VxeTablePropTypes {
   }) => void | null | string | { [key: string]: boolean | null | undefined })
 
   export type FooterRowClassName<D = VxeTablePropTypes.Row> = string | ((params: {
-    $table: VxeTableConstructor<D> & VxeTablePrivateMethods<D>
+    $table: VxeTableConstructor<D>
     row: D
     $rowIndex: number
     _rowIndex: number
@@ -120,7 +125,7 @@ export namespace VxeTablePropTypes {
   }) => void | null | string | { [key: string]: boolean | null | undefined })
 
   export type FooterCellClassName<D = VxeTablePropTypes.Row> = string | ((params: {
-    $table: VxeTableConstructor<D> & VxeTablePrivateMethods<D>
+    $table: VxeTableConstructor<D>
     row: D
     $rowIndex: number
     _rowIndex: number
@@ -142,7 +147,7 @@ export namespace VxeTablePropTypes {
   }) => void | null | VxeComponentStyleType)
 
   export type HeaderCellStyle<D = VxeTablePropTypes.Row> = VxeComponentStyleType | ((params: {
-    $table: VxeTableConstructor<D> & VxeTablePrivateMethods<D>
+    $table: VxeTableConstructor<D>
     $rowIndex: number
     column: VxeTableDefines.ColumnInfo<D>
     columnIndex: number
@@ -150,7 +155,7 @@ export namespace VxeTablePropTypes {
   }) => void | null | VxeComponentStyleType)
 
   export type FooterCellStyle<D = any> = VxeComponentStyleType | ((params: {
-    $table: VxeTableConstructor<D> & VxeTablePrivateMethods<D>
+    $table: VxeTableConstructor<D>
     row: D
     $rowIndex: number
     column: VxeTableDefines.ColumnInfo<D>
@@ -160,7 +165,7 @@ export namespace VxeTablePropTypes {
   }) => void | null | VxeComponentStyleType)
 
   export type RowStyle<D = VxeTablePropTypes.Row> = VxeComponentStyleType | ((params: {
-    $table: VxeTableConstructor<D> & VxeTablePrivateMethods<D>
+    $table: VxeTableConstructor<D>
     row: D
     rowIndex: number
     $rowIndex: number
@@ -168,14 +173,14 @@ export namespace VxeTablePropTypes {
   }) => void | null | VxeComponentStyleType)
 
   export type HeaderRowStyle<D = VxeTablePropTypes.Row> = VxeComponentStyleType | ((params: {
-    $table: VxeTableConstructor<D> & VxeTablePrivateMethods<D>
+    $table: VxeTableConstructor<D>
     $rowIndex: number
     fixed: VxeColumnPropTypes.Fixed
     type: string
   }) => void | null | VxeComponentStyleType)
 
   export type FooterRowStyle<D = any> = VxeComponentStyleType | ((params: {
-    $table: VxeTableConstructor<D> & VxeTablePrivateMethods<D>
+    $table: VxeTableConstructor<D>
     row: D
     $rowIndex: number
     _rowIndex: number
@@ -189,7 +194,7 @@ export namespace VxeTablePropTypes {
   export type MergeFooterItems<D = any> = MergeFooterItem<D>[]
 
   export type SpanMethod<D = VxeTablePropTypes.Row> = (params: {
-    $table: VxeTableConstructor<D> & VxeTablePrivateMethods<D>
+    $table: VxeTableConstructor<D>
     column: VxeTableDefines.ColumnInfo<D>
     columnIndex: number
     $columnIndex: number
@@ -204,7 +209,7 @@ export namespace VxeTablePropTypes {
   }) => void | { rowspan: number, colspan: number }
 
   export type FooterSpanMethod<D = any> = (params: {
-    $table: VxeTableConstructor<D> & VxeTablePrivateMethods<D>
+    $table: VxeTableConstructor<D>
     column: VxeTableDefines.ColumnInfo<D>
     columnIndex: number
     _columnIndex: number
@@ -427,15 +432,19 @@ export namespace VxeTablePropTypes {
      */
     trigger?: 'default' | 'cell' | 'row' | '' | null
     /**
-     * 只对 tree-config 启用有效，是否跨节点拖拽，用于树结构，启用后允许拖拽到其他的子节点，除自身节点之外
+     * 只对 tree-config 启用有效，是否允许同级行拖拽，用于树结构，启用后允许同层级之间进行拖拽
+     */
+    isPeerDrag?: boolean
+    /**
+     * 只对 tree-config 启用有效，是否允许同级/跨层行拖拽，用于树结构，启用后允许跨层级拖拽（除了上级拖到子级）
      */
     isCrossDrag?: boolean
     /**
-     * 只对 tree-config 启用有效，是否允许拖拽成目标节点的子级
+     * 需要 isCrossDrag，只对 tree-config 启用有效，是否允许拖拽成目标行的子级
      */
     isToChildDrag?: boolean
     /**
-     * 只对 tree-config 启用有效，是否允许将自己拖拽到子孙节点中
+     * 需要 isCrossDrag，只对 tree-config 启用有效，是否允许将自己拖拽到子级行中
      */
     isSelfToChildDrag?: boolean
     /**
@@ -499,15 +508,19 @@ export namespace VxeTablePropTypes {
      */
     trigger?: 'default' | 'cell' | '' | null
     /**
-     * 用于分组表头，是否跨列拖拽，启用后允许拖拽到其他的列，除自身列之外
+     * 用于分组表头，是否允许同级列拖拽，启用后允许同层级列之间进行拖拽
+     */
+    isPeerDrag?: boolean
+    /**
+     * 用于分组表头，是否同级/跨层级列拖拽，启用后允许跨拖拽列拖拽（除了上级拖到子级）
      */
     isCrossDrag?: boolean
     /**
-     * 是否允许拖拽成目标列的子级
+     * 需要 isCrossDrag，是否允许拖拽成目标列的子级
      */
     isToChildDrag?: boolean
     /**
-     * 用于分组表头，是否允许将自己拖拽到子孙列中
+     * 需要 isCrossDrag，用于分组表头，是否允许将自己拖拽到子孙列中
      */
     isSelfToChildDrag?: boolean
     /**
@@ -653,7 +666,7 @@ export namespace VxeTablePropTypes {
      * 列宽拖动的最小宽度
      */
     minWidth?: number | string | ((params: {
-      $table: VxeTableConstructor<D> & VxeTablePrivateMethods<D>
+      $table: VxeTableConstructor<D>
       column: VxeTableDefines.ColumnInfo<D>
       columnIndex: number
       $columnIndex: number
@@ -664,7 +677,7 @@ export namespace VxeTablePropTypes {
      * 列宽拖动的最大宽度
      */
     maxWidth?: number | string | ((params: {
-      $table: VxeTableConstructor<D> & VxeTablePrivateMethods<D>
+      $table: VxeTableConstructor<D>
       column: VxeTableDefines.ColumnInfo<D>
       columnIndex: number
       $columnIndex: number
@@ -702,7 +715,7 @@ export namespace VxeTablePropTypes {
     defaultSort?: SortConfigDefaultSort | SortConfigDefaultSort[]
     orders?: SortOrder[]
     sortMethod?(params: {
-      $table: VxeTableConstructor<D> & VxeTablePrivateMethods<D>
+      $table: VxeTableConstructor<D>
       data: D[]
       sortList: VxeTableDefines.SortCheckedParams[]
     }): any[]
@@ -832,13 +845,13 @@ export namespace VxeTablePropTypes {
     height?: number
     padding?: boolean
     loadMethod?(params: {
-      $table: VxeTableConstructor<D> & VxeTablePrivateMethods<D>
+      $table: VxeTableConstructor<D>
       row: D
       rowIndex: number
       $rowIndex: number
     }): Promise<void>
     toggleMethod?(params: {
-      $table: VxeTableConstructor<D> & VxeTablePrivateMethods<D>
+      $table: VxeTableConstructor<D>
       expanded: boolean
       row: D
       rowIndex: number
@@ -923,14 +936,14 @@ export namespace VxeTablePropTypes {
      * 该方法用于异步加载子节点
      */
     loadMethod?(params: {
-      $table: VxeTableConstructor<D> & VxeTablePrivateMethods<D>
+      $table: VxeTableConstructor<D>
       row: D
     }): Promise<any[]>
     /**
      * 该方法在展开或关闭触发之前调用，可以通过返回值来决定是否允许继续执行
      */
     toggleMethod?(params: {
-      $table: VxeTableConstructor<D> & VxeTablePrivateMethods<D>
+      $table: VxeTableConstructor<D>
       expanded: boolean
       row: D
       column: VxeTableDefines.ColumnInfo<D>
@@ -1057,7 +1070,7 @@ export namespace VxeTablePropTypes {
     selectedMethod?(params: {
       row: D
       column: VxeTableDefines.ColumnInfo<D>
-      $table: VxeTableConstructor<D> & VxeTablePrivateMethods<D>
+      $table: VxeTableConstructor<D>
       $grid: VxeGridConstructor<D> | null | undefined
     }): boolean
     /**
@@ -1205,7 +1218,7 @@ export namespace VxeTablePropTypes {
       columnIndex: number
       $columnIndex: number
       _columnIndex: number
-      $table: VxeTableConstructor<D> & VxeTablePrivateMethods<D>
+      $table: VxeTableConstructor<D>
     }): boolean
     /**
      * 只对 isEnter=true 有效，用于重写回车键的方法
@@ -1219,7 +1232,7 @@ export namespace VxeTablePropTypes {
       columnIndex: number
       $columnIndex: number
       _columnIndex: number
-      $table: VxeTableConstructor<D> & VxeTablePrivateMethods<D>
+      $table: VxeTableConstructor<D>
     }): void
     /**
      * 只对 isDel=true 有效，用于删除键清空单元格内容方法
@@ -1229,7 +1242,7 @@ export namespace VxeTablePropTypes {
       rowIndex: number
       column: VxeTableDefines.ColumnInfo<D>
       columnIndex: number
-      $table: VxeTableConstructor<D> & VxeTablePrivateMethods<D>
+      $table: VxeTableConstructor<D>
     }): void
     /**
      * 只对 isDel=true 有效，用于重写回退键清空单元格内容并激活为编辑状态方法
@@ -1239,7 +1252,7 @@ export namespace VxeTablePropTypes {
       rowIndex: number
       column: VxeTableDefines.ColumnInfo<D>
       columnIndex: number
-      $table: VxeTableConstructor<D> & VxeTablePrivateMethods<D>
+      $table: VxeTableConstructor<D>
     }): void
     /**
      * 只对 isEdit=true 有效，用于重写编辑单元格方法
@@ -1249,7 +1262,7 @@ export namespace VxeTablePropTypes {
       rowIndex: number
       column: VxeTableDefines.ColumnInfo<D>
       columnIndex: number
-      $table: VxeTableConstructor<D> & VxeTablePrivateMethods<D>
+      $table: VxeTableConstructor<D>
       $grid: VxeGridConstructor<D> | null | undefined
     }): void
   }
@@ -1810,7 +1823,7 @@ export namespace VxeTablePropTypes {
      */
     importMethod?(params: {
       $table: VxeTableConstructor
-      $grid: VxeGridConstructor
+      $grid: VxeGridConstructor | null | undefined
       file: File
       options: ImportHandleOptions
     }): Promise<any>
@@ -1859,7 +1872,7 @@ export namespace VxeTablePropTypes {
      */
     filename?: string | ((params: {
       $table: VxeTableConstructor
-      $grid?: VxeGridConstructor | null
+      $grid: VxeGridConstructor | null | undefined
       options: ExportOpts
     }) => string)
     /**
@@ -1867,7 +1880,7 @@ export namespace VxeTablePropTypes {
      */
     sheetName?: string | ((params: {
       $table: VxeTableConstructor
-      $grid?: VxeGridConstructor | null
+      $grid: VxeGridConstructor | null | undefined
       options: ExportOpts
     }) => string)
     /**
@@ -1957,17 +1970,17 @@ export namespace VxeTablePropTypes {
      */
     exportMethod?(params: {
       $table: VxeTableConstructor
-      $grid?: VxeGridConstructor
+      $grid: VxeGridConstructor | null | undefined
       options: ExportHandleOptions
     }): Promise<any>
     beforeExportMethod?(params: {
       $table: VxeTableConstructor
-      $grid?: VxeGridConstructor | null
+      $grid: VxeGridConstructor | null | undefined
       options: ExportHandleOptions
     }): void
     afterExportMethod?(params: {
       $table: VxeTableConstructor
-      $grid?: VxeGridConstructor | null
+      $grid: VxeGridConstructor | null | undefined
       status: boolean
       options: ExportHandleOptions
     }): void
@@ -1994,6 +2007,13 @@ export namespace VxeTablePropTypes {
     /**
      * @private
      */
+    isAllExpand?: boolean
+    /**
+     * @private
+     */
+    /**
+     * @private
+     */
     _isCustomColumn?: boolean
     /**
      * @private
@@ -2010,7 +2030,7 @@ export namespace VxeTablePropTypes {
      */
     sheetName?: string | ((params: {
       $table: VxeTableConstructor
-      $grid?: VxeGridConstructor | null
+      $grid: VxeGridConstructor | null | undefined
       options: ExportOpts
     }) => string)
     /**
@@ -3658,7 +3678,7 @@ export interface TablePrivateMethods<D = any> {
    */
   getSetupOptions(): Required<VxeGlobalConfig>
   updateAfterDataIndex(): void
-  callSlot<T>(slotFunc: ((params: T) => VxeComponentSlotType | VxeComponentSlotType[]) | string | null, params: T): VxeComponentSlotType[]
+  callSlot<T>(slotFunc: ((params: T) => VxeComponentSlotType | VxeComponentSlotType[]) | string | null, params: T, h: CreateElement): VxeComponentSlotType[]
   getParentElem(): Element | null
   getParentHeight(): number
   getExcludeHeight(): number
@@ -3698,7 +3718,7 @@ export interface TablePrivateMethods<D = any> {
     column: VxeTableDefines.ColumnInfo<any>
   }): void
   triggerCurrentRowEvent(evnt: Event, params: {
-    $table: VxeTableConstructor<any> & VxeTablePrivateMethods<any>
+    $table: VxeTableConstructor<any>
     row: any
     rowIndex: number
     $rowIndex: number
@@ -4068,8 +4088,8 @@ export namespace VxeTableDefines {
   }
 
   export interface CellRenderHeaderParams<D = any> {
-    $table: VxeTableConstructor<D> & VxeTablePrivateMethods<D>
-    $grid: VxeGridConstructor<D> | null
+    $table: VxeTableConstructor<D>
+    $grid: VxeGridConstructor<D> | null | undefined
     $rowIndex: number
     column: ColumnInfo<D>
     columnIndex: number
@@ -4085,8 +4105,8 @@ export namespace VxeTableDefines {
   }
 
   export interface CellRenderBodyParams<D = any> {
-    $table: VxeTableConstructor<D> & VxeTablePrivateMethods<D>
-    $grid: VxeGridConstructor<D> | null
+    $table: VxeTableConstructor<D>
+    $grid: VxeGridConstructor<D> | null | undefined
     seq: string | number
     rowid: string
     row: D
@@ -4125,8 +4145,8 @@ export namespace VxeTableDefines {
   export interface CellRenderCellParams<D = any> extends CellRenderBodyParams<D> { }
 
   export interface CellRenderFooterParams<D = any> {
-    $table: VxeTableConstructor<D> & VxeTablePrivateMethods<D>
-    $grid: VxeGridConstructor<D> | null
+    $table: VxeTableConstructor<D>
+    $grid: VxeGridConstructor<D> | null | undefined
     row: D
     rowIndex: number
     _rowIndex: number
@@ -4150,7 +4170,7 @@ export namespace VxeTableDefines {
   }
 
   interface TableEventParams<D = any> extends VxeComponentEventParams {
-    $table: VxeTableConstructor<D> & VxeTablePrivateMethods<D>
+    $table: VxeTableConstructor<D>
   }
 
   interface TableBaseHeaderCellParams<D = any> {
@@ -4501,7 +4521,7 @@ export namespace VxeTableDefines {
 
   export interface ExtortSheetMethodParams {
     $table: VxeTableConstructor
-    $grid?: VxeGridConstructor
+    $grid: VxeGridConstructor | null | undefined
     options: VxeTablePropTypes.ExportHandleOptions
     datas: any[]
     columns: VxeTableDefines.ColumnInfo[]
@@ -4592,7 +4612,7 @@ export namespace VxeTableDefines {
   }
   export interface RuleValidatorParams<D = any> {
     $table: VxeTableConstructor<D>
-    $grid: VxeGridConstructor<D> | null
+    $grid: VxeGridConstructor<D> | null | undefined
     cellValue: any
     rule: ValidatorRule<D>
     rules: ValidatorRule<D>[]

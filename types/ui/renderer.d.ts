@@ -1,6 +1,6 @@
 import { CreateElement } from 'vue'
 import { VxeComponentStyleType, VxeComponentClassNameType, VxeComponentSlotType, VxeComponentAlignType } from '@vxe-ui/core'
-import { VxeTableConstructor, VxeTablePropTypes, VxeTableDefines, VxeTablePrivateMethods } from '../components/table'
+import { VxeTableConstructor, VxeTablePropTypes, VxeTableDefines } from '../components/table'
 import { VxeFormItemPropTypes, VxeFormItemSlotTypes, FormItemContentRenderParams, FormItemVisibleParams, FormItemResetParams } from '../components/form-item'
 import { VxeGridConstructor, VxeGridPropTypes } from '../components/grid'
 import { VxeColumnPropTypes } from '../components/column'
@@ -258,7 +258,7 @@ declare module '@vxe-ui/core' {
      */
     export interface RenderFilterParams<D = any> extends RenderTableFilterParams<D> {}
     export interface RenderTableFilterParams<D = any> {
-      $table: VxeTableConstructor<D> & VxeTablePrivateMethods<D>
+      $table: VxeTableConstructor<D>
       $panel: any
       column: {
         filters: VxeTableDefines.FilterOption[]
@@ -273,7 +273,7 @@ declare module '@vxe-ui/core' {
      */
     export interface FilterMethodParams<D = any> extends TableFilterMethodParams<D> {}
     export interface TableFilterMethodParams<D = any> {
-      $table: VxeTableConstructor<D> & VxeTablePrivateMethods<D>
+      $table: VxeTableConstructor<D>
       value: any
       option: VxeTableDefines.FilterOption
       cellValue: any
@@ -286,7 +286,7 @@ declare module '@vxe-ui/core' {
      */
     export interface FilterRemoteMethod<D = any> extends TableFilterRemoteMethod<D> {}
     export interface TableFilterRemoteMethod<D = any> extends VxeTableDefines.FilterChangeParams<D> {
-      $table: VxeTableConstructor<D> & VxeTablePrivateMethods<D>
+      $table: VxeTableConstructor<D>
     }
 
     /**
@@ -294,7 +294,7 @@ declare module '@vxe-ui/core' {
      */
     export interface FilterResetMethodParams<D = any> extends TableFilterResetMethodParams<D> {}
     export interface TableFilterResetMethodParams<D = any> {
-      $table: VxeTableConstructor<D> & VxeTablePrivateMethods<D>
+      $table: VxeTableConstructor<D>
       options: VxeTableDefines.FilterOption[]
       column: VxeTableDefines.ColumnInfo<D>
     }
@@ -304,7 +304,7 @@ declare module '@vxe-ui/core' {
      */
     export interface FilterRecoverMethodParams<D = any> extends TableFilterRecoverMethodParams<D> {}
     export interface TableFilterRecoverMethodParams<D = any> {
-      $table: VxeTableConstructor<D> & VxeTablePrivateMethods<D>
+      $table: VxeTableConstructor<D>
       option: VxeTableDefines.FilterOption
       column: VxeTableDefines.ColumnInfo<D>
     }
@@ -317,7 +317,7 @@ declare module '@vxe-ui/core' {
 
     export interface RenderHeaderParams<D = any> extends RenderTableHeaderParams<D> {}
     export interface RenderTableHeaderParams<D = any> {
-      $table: VxeTableConstructor<D> & VxeTablePrivateMethods<D>
+      $table: VxeTableConstructor<D>
       column: VxeTableDefines.ColumnInfo<D>
       columnIndex: number
       $columnIndex: number
@@ -344,7 +344,7 @@ declare module '@vxe-ui/core' {
      */
     export interface RenderFooterParams<D = any> extends RenderTableFooterParams<D>{}
     export interface RenderTableFooterParams<D = any> {
-      $table: VxeTableConstructor<D> & VxeTablePrivateMethods<D>
+      $table: VxeTableConstructor<D>
       column: VxeTableDefines.ColumnInfo<D>
       columnIndex: number
       _columnIndex: number
@@ -357,6 +357,7 @@ declare module '@vxe-ui/core' {
 
     export interface ExportMethodParams<D = any> extends TableExportMethodParams<D> {}
     export interface TableExportMethodParams<D = any> {
+      $table: VxeTableConstructor<D>
       row: D
       column: VxeTableDefines.ColumnInfo<D>
       options: VxeTablePropTypes.ExportHandleOptions
@@ -364,6 +365,7 @@ declare module '@vxe-ui/core' {
 
     export interface FooterExportMethodParams<D = any> extends TableFooterExportMethodParams<D> {}
     export interface TableFooterExportMethodParams<D = any> {
+      $table: VxeTableConstructor<D>
       items: any[]
       _columnIndex: number
       column: VxeTableDefines.ColumnInfo<D>
@@ -393,8 +395,8 @@ declare module '@vxe-ui/core' {
      */
     export interface RenderCellParams<D = any> extends RenderTableCellParams<D> {}
     export interface RenderTableCellParams<D = any> {
-      $table: VxeTableConstructor<D> & VxeTablePrivateMethods<D>
-      $grid: VxeGridConstructor<D> | null
+      $table: VxeTableConstructor<D>
+      $grid: VxeGridConstructor<D> | null | undefined
       column: VxeTableDefines.ColumnInfo<D>
       columnIndex: number
       $columnIndex: number
@@ -426,7 +428,7 @@ declare module '@vxe-ui/core' {
      */
     export interface RenderEmptyParams<D = any> extends RenderTableEmptyParams<D> {}
     export interface RenderTableEmptyParams<D = any> {
-      $table: VxeTableConstructor<D> & VxeTablePrivateMethods<D>
+      $table: VxeTableConstructor<D>
     }
 
     /**
@@ -505,15 +507,15 @@ declare module '@vxe-ui/core' {
 
     export interface RenderButtonOptions extends VxeToolbarPropTypes.ButtonRender { }
     export interface RenderButtonParams<D = any> {
-      $grid: VxeGridConstructor | null
-      $table: VxeTableConstructor<D> & VxeTablePrivateMethods<D>
+      $grid: VxeGridConstructor<D> | null | undefined
+      $table: VxeTableConstructor<D>
       button: VxeToolbarPropTypes.ButtonConfig
     }
 
     export interface RenderToolOptions extends VxeToolbarPropTypes.ToolRender { }
     export interface RenderToolParams<D = any> {
-      $grid: VxeGridConstructor | null
-      $table: VxeTableConstructor<D> & VxeTablePrivateMethods<D>
+      $grid: VxeGridConstructor<D> | null | undefined
+      $table: VxeTableConstructor<D>
       tool: VxeToolbarPropTypes.ToolConfig
     }
   }
@@ -627,7 +629,7 @@ declare module '@vxe-ui/core' {
   export namespace VxeGlobalRendererHandles {
     export interface RenderFormItemAutoFocusParams {
       $form: VxeFormConstructor
-      $grid: VxeGridConstructor | null
+      $grid: VxeGridConstructor | null | undefined
       data: any
       item: VxeFormDefines.ItemInfo
       field: string
@@ -829,19 +831,19 @@ declare module '@vxe-ui/core' {
 
     export interface RenderFormDesignWidgetSubtableDefaultViewOptions<D = any> extends VxeGlobalRendererHandles.RenderTableDefaultOptions<D> {}
     export interface RenderFormDesignWidgetSubtableDefaultViewParams<D = any> extends Omit<VxeGlobalRendererHandles.RenderTableDefaultParams<D>, '$table'> {
-      $table: (VxeTableConstructor<D> & VxeTablePrivateMethods<D>) | null
+      $table: VxeTableConstructor<D> | null
       widget: VxeFormDesignDefines.WidgetObjItem
     }
 
     export interface RenderFormDesignWidgetSubtableCellViewOptions<D = any> extends VxeGlobalRendererHandles.RenderTableCellOptions<D> {}
     export interface RenderFormDesignWidgetSubtableCellViewParams<D = any> extends Omit<VxeGlobalRendererHandles.RenderTableCellParams<D>, '$table'> {
-      $table: (VxeTableConstructor<D> & VxeTablePrivateMethods<D>) | null
+      $table: VxeTableConstructor<D> | null
       widget: VxeFormDesignDefines.WidgetObjItem
     }
 
     export interface RenderFormDesignWidgetSubtableEditViewOptions<D = any> extends VxeGlobalRendererHandles.RenderTableEditOptions<D> {}
     export interface RenderFormDesignWidgetSubtableEditViewParams<D = any> extends Omit<VxeGlobalRendererHandles.RenderTableEditParams<D>, '$table'> {
-      $table: (VxeTableConstructor<D> & VxeTablePrivateMethods<D>) | null
+      $table: VxeTableConstructor<D> | null
       widget: VxeFormDesignDefines.WidgetObjItem
     }
 

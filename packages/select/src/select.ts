@@ -29,6 +29,7 @@ export default defineVxeComponent({
   },
   props: {
     value: [String, Number, Boolean, Array] as PropType<VxeSelectPropTypes.ModelValue>,
+    defaultConfig: Object as PropType<VxeSelectPropTypes.DefaultConfig>,
     clearable: Boolean as PropType<VxeSelectPropTypes.Clearable>,
     placeholder: String as PropType<VxeSelectPropTypes.Placeholder>,
     readonly: {
@@ -225,6 +226,12 @@ export default defineVxeComponent({
         return getFuncText(globalPlaceholder)
       }
       return getI18n('vxe.base.pleaseSelect')
+    },
+    computeDefaultOpts () {
+      const $xeSelect = this
+      const props = $xeSelect
+
+      return Object.assign({}, props.defaultConfig)
     },
     computePropsOpts () {
       const $xeSelect = this
@@ -1228,12 +1235,15 @@ export default defineVxeComponent({
      */
     loadData (datas: any[]) {
       const $xeSelect = this
+      const props = $xeSelect
       const reactData = $xeSelect.reactData
       const internalData = $xeSelect.internalData
 
       $xeSelect.cacheItemMap(datas || [])
-      const { fullData, scrollYStore } = internalData
+      const { isLoaded, fullData, scrollYStore } = internalData
+      const defaultOpts = $xeSelect.computeDefaultOpts
       const sYOpts = $xeSelect.computeSYOpts
+      const valueField = $xeSelect.computeValueField
       Object.assign(scrollYStore, {
         startIndex: 0,
         endIndex: 1,
@@ -1243,13 +1253,31 @@ export default defineVxeComponent({
       // 如果gt为0，则总是启用
       reactData.scrollYLoad = !!sYOpts.enabled && sYOpts.gt > -1 && (sYOpts.gt === 0 || sYOpts.gt <= fullData.length)
       $xeSelect.handleData()
+      if (!isLoaded) {
+        const { selectMode } = defaultOpts
+        if (datas.length > 0 && XEUtils.eqNull(props.value)) {
+          if (selectMode === 'first' || selectMode === 'last') {
+            const selectItem = XEUtils[selectMode](datas)
+            if (selectItem) {
+              $xeSelect.$nextTick(() => {
+                if (XEUtils.eqNull(props.value)) {
+                  $xeSelect.emitModel(selectItem[valueField])
+                }
+              })
+            }
+          }
+          internalData.isLoaded = true
+        }
+      }
       return $xeSelect.computeScrollLoad().then(() => {
         $xeSelect.refreshScroll()
       })
     },
     reloadData (datas: any[]) {
       const $xeSelect = this
+      const internalData = $xeSelect.internalData
 
+      internalData.isLoaded = false
       $xeSelect.clearScroll()
       return $xeSelect.loadData(datas)
     },

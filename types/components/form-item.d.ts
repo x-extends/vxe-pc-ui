@@ -66,7 +66,7 @@ export namespace VxeFormItemPropTypes {
   export type TitleOverflow = VxeFormPropTypes.TitleOverflow
 
   export type ResetValue = string | number | any[] | object | RegExp | null | undefined | ((params: {
-    $grid: VxeGridConstructor | null
+    $grid: VxeGridConstructor | null | undefined
     $form: VxeFormConstructor
     data: any
     item: VxeFormDefines.ItemInfo
@@ -272,7 +272,7 @@ export namespace VxeFormItemDefines {
  */
 export interface FormItemContentRenderParams {
   $form: VxeFormConstructor
-  $grid: VxeGridConstructor | null
+  $grid: VxeGridConstructor | null | undefined
   data: any
   item: VxeFormDefines.ItemInfo
   disabled: boolean | undefined
@@ -289,7 +289,7 @@ export interface FormItemContentRenderParams {
  */
 export interface FormItemVisibleParams {
   $form: VxeFormConstructor
-  $grid: VxeGridConstructor | null
+  $grid: VxeGridConstructor | null | undefined
   data: any
   item: VxeFormDefines.ItemInfo
   field: string
@@ -304,7 +304,7 @@ export interface FormItemVisibleParams {
  */
 export interface FormItemResetParams {
   $form: VxeFormConstructor
-  $grid: VxeGridConstructor | null
+  $grid: VxeGridConstructor | null | undefined
   data: any
   item: VxeFormDefines.ItemInfo
   field: string
@@ -323,7 +323,7 @@ export namespace VxeFormItemEvents { }
 export namespace VxeFormItemSlotTypes {
   export interface DefaultSlotParams<D = any> {
     $form: VxeFormConstructor<D>
-    $grid: VxeGridConstructor | null
+    $grid: VxeGridConstructor | null | undefined
     data: D
     item: VxeFormDefines.ItemInfo
     disabled: boolean | undefined
@@ -336,7 +336,7 @@ export namespace VxeFormItemSlotTypes {
   }
   export interface ValidSlotParams<D = any> {
     $form: VxeFormConstructor<D>
-    $grid: VxeGridConstructor | null
+    $grid: VxeGridConstructor | null | undefined
     field: string
     rule: VxeFormDefines.FormRule<D>
   }

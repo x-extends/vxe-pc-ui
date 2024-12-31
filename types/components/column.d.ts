@@ -77,7 +77,7 @@ export namespace VxeColumnPropTypes {
   export type FilterMultiple = boolean
 
   interface FilterMethodParams<D = any> {
-    $table: VxeTableConstructor<D>,
+    $table: VxeTableConstructor<D>
     value: any
     option: VxeTableDefines.FilterOption
     cellValue: any
@@ -143,25 +143,27 @@ export namespace VxeColumnPropTypes {
   export type Visible = boolean
 
   interface ExportMethodParams<D = any> {
-    $table: VxeTableConstructor<D>,
+    $table: VxeTableConstructor<D>
     row: D
     column: VxeTableDefines.ColumnInfo<D>
+    options: VxeTablePropTypes.ExportHandleOptions
   }
   export type ExportMethod<D = any> = (params: ExportMethodParams<D>) => string | number
 
   interface HeaderExportParams<D = any> {
-    $table: VxeTableConstructor<D>,
-    options: VxeTablePropTypes.ExportConfig
+    $table: VxeTableConstructor<D>
     column: VxeTableDefines.ColumnInfo<D>
+    options: VxeTablePropTypes.ExportHandleOptions
   }
   export type HeaderExportMethod<D = any> = (params: HeaderExportParams<D>) => string | number
 
   interface FooterExportParams<D = any> {
-    $table: VxeTableConstructor<D>,
+    $table: VxeTableConstructor<D>
     items: any[]
     row: any
     column: VxeTableDefines.ColumnInfo<D>
     _columnIndex: number
+    options: VxeTablePropTypes.ExportHandleOptions
   }
   export type FooterExportMethod<D = any> = (params: FooterExportParams<D>) => string | number
 

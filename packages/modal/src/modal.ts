@@ -363,17 +363,35 @@ export default defineVxeComponent({
     },
     minimize () {
       const $xeModal = this
+      const reactData = $xeModal.reactData
 
+      if (!reactData.visible) {
+        return Promise.resolve({
+          status: false
+        })
+      }
       return $xeModal.handleMinimize()
     },
     maximize () {
       const $xeModal = this
+      const reactData = $xeModal.reactData
 
+      if (!reactData.visible) {
+        return Promise.resolve({
+          status: false
+        })
+      }
       return $xeModal.handleMaximize()
     },
     revert () {
       const $xeModal = this
+      const reactData = $xeModal.reactData
 
+      if (!reactData.visible) {
+        return Promise.resolve({
+          status: false
+        })
+      }
       return $xeModal.handleRevert()
     },
     recalculate  () {
@@ -642,18 +660,24 @@ export default defineVxeComponent({
             content: getI18n('vxe.modal.miniMaxSize', [minimizeMaxSize])
           })
         }
-        return $xeModal.$nextTick()
+        return Promise.resolve({
+          status: false
+        })
       }
       reactData.prevZoomStatus = prevZoomStatus
       reactData.zoomStatus = 'minimize'
       return $xeModal.$nextTick().then(() => {
         const boxElem = $xeModal.getBox()
         if (!boxElem) {
-          return
+          return {
+            status: false
+          }
         }
         const headerEl = $xeModal.$refs.refHeaderElem as HTMLDivElement
         if (!headerEl) {
-          return
+          return {
+            status: false
+          }
         }
         const { visibleHeight } = getDomNode()
         // 如果当前处于复原状态
@@ -705,6 +729,9 @@ export default defineVxeComponent({
           height: `${headerEl.offsetHeight}px`
         })
         $xeModal.savePosStorage()
+        return {
+          status: true
+        }
       })
     },
     handleMaximize () {
@@ -927,7 +954,14 @@ export default defineVxeComponent({
             })
           }
           $xeModal.savePosStorage()
-          return $xeModal.$nextTick()
+          return $xeModal.$nextTick().then(() => {
+            return {
+              status: true
+            }
+          })
+        }
+        return {
+          status: false
         }
       })
     },
