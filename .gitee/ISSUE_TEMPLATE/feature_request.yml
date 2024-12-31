@@ -32,5 +32,4 @@ body:
     description: "官方只维护最新版本，如果不是最新版本，请先更新到[最新版本](https://vxeui.com/)之后再反馈问题！"
     options:
     - label: "我已确认是使用当前的最新版本。"
-  validations:
-    required: true
+      required: true

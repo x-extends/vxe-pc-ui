@@ -16,7 +16,6 @@ body:
     description: "按要求准备好复现 Demo，复现 Demo 操作步骤：https://vxeui.com/issues.html"
     options:
     - label: "我已准备好复现链接"
-  validations:
       required: true
 - type: textarea
   id: issue_describe
@@ -73,5 +72,4 @@ body:
     description: "我已确认是最新版本，仅支持提交最新版本的问题反馈，非最新版本不予处理，一律关闭"
     options:
     - label: "我已确认是使用最新版本"
-  validations:
       required: true
