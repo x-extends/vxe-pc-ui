@@ -713,6 +713,8 @@ export namespace VxeGridSlotTypes {
   export interface BottomSlotParams<D = any> extends BaseSlotParams<D> {}
   export interface LeftSlotParams<D = any> extends BaseSlotParams<D> {}
   export interface RightSlotParams<D = any> extends BaseSlotParams<D> {}
+  export interface AsideLeftSlotParams<D = any> extends BaseSlotParams<D> {}
+  export interface AsideRightSlotParams<D = any> extends BaseSlotParams<D> {}
   export interface PagerSlotParams<D = any> extends BaseSlotParams<D> {}
 }
 
@@ -744,13 +746,23 @@ export interface VxeGridSlots<D = any> {
    */
   bottom?(params: VxeGridSlotTypes.BottomSlotParams<D>): any
   /**
-   * 自定义表格左侧模板
+   * 自定义表格左边模板
    */
   left?(params: VxeGridSlotTypes.LeftSlotParams<D>): any
   /**
-   * 自定义表格右侧模板
+   * 自定义表格边侧模板
    */
   right?(params: VxeGridSlotTypes.RightSlotParams<D>): any
+  /**
+   * 自定义左侧模板
+   */
+  asideLeft?(params: VxeGridSlotTypes.AsideLeftSlotParams<D>): any
+  'aside-left'?(params: VxeGridSlotTypes.AsideLeftSlotParams<D>): any
+  /**
+   * 自定义右侧模板
+   */
+  asideRight?(params: VxeGridSlotTypes.AsideRightSlotParams<D>): any
+  'aside-right'?(params: VxeGridSlotTypes.AsideRightSlotParams<D>): any
   /**
    * 自定义分页模板
    */
