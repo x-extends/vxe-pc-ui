@@ -23,7 +23,8 @@ export interface VxeGridPrivateRef<D = any> extends GridPrivateRef<D> { }
 export namespace VxeGridPropTypes {
   export type Size = VxeComponentSizeType
 
-  export type Layouts = ('Form' | 'Toolbar' | 'Top' | 'Table' | 'Bottom' | 'Pager')[]
+  export type LayoutKey = 'Form' | 'Toolbar' | 'Top' | 'Table' | 'Bottom' | 'Pager'
+  export type Layouts = LayoutKey[] |LayoutKey[][]
 
   export type Column<D = any> = VxeTableDefines.ColumnOptions<D>
   export type Columns<D = any> = Column<D>[]
