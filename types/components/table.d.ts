@@ -685,6 +685,10 @@ export namespace VxeTablePropTypes {
      */
     showDragTip?: boolean
     /**
+     * 双击自适应列宽，启用后双向拖拽线，自动根据整列的内容自适应调整列宽
+     */
+    isDblclickAutoWidth?: boolean
+    /**
      * 列宽拖动的最小宽度
      */
     minWidth?: number | string | ((params: {
@@ -2800,6 +2804,8 @@ export interface TableReactData<D = any> {
   },
   scrollVMLoading: boolean
 
+  isCalcCellHeight: number
+
   isCustomStatus: boolean
 
   isDragRowMove: Boolean
@@ -2911,6 +2917,7 @@ export interface TableInternalData<D = any> {
   inFooterScroll?: boolean
   // 同步滚动
   lcsTimeout?: undefined | number
+  lcsRunTime?: undefined | number
 
   // 横向虚拟
   lxRunTime?: undefined | number
@@ -3876,6 +3883,7 @@ export namespace VxeTableDefines {
     parent: any
     level: number
     height: number
+    oTop: number
     treeLoaded?: boolean
     expandLoaded?: boolean
     formatData?: {

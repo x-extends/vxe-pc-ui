@@ -132,7 +132,10 @@ export default defineComponent({
       type: Boolean as PropType<VxeModalPropTypes.Draggable>,
       default: () => getConfig().modal.draggable
     },
-    remember: { type: Boolean, default: () => getConfig().modal.remember },
+    remember: {
+      type: Boolean,
+      default: () => getConfig().modal.remember
+    },
     destroyOnClose: {
       type: Boolean as PropType<VxeModalPropTypes.DestroyOnClose>,
       default: () => getConfig().modal.destroyOnClose
@@ -399,13 +402,13 @@ export default defineComponent({
     }
 
     const hasPosStorage = () => {
-      const { id, remember, storage, storageKey } = props
-      return !!(id && remember && storage && getStorageMap(storageKey)[id])
+      const { id, storage, storageKey } = props
+      return !!(id && storage && getStorageMap(storageKey)[id])
     }
 
     const restorePosStorage = () => {
-      const { id, remember, storage, storageKey } = props
-      if (id && remember && storage) {
+      const { id, storage, storageKey } = props
+      if (id && storage) {
         const posStorage = getStorageMap(storageKey)[id]
         if (posStorage) {
           const boxElem = getBox()
@@ -446,9 +449,12 @@ export default defineComponent({
     }
 
     const savePosStorage = () => {
-      const { id, remember, storage, storageKey } = props
-      const { revertLocat } = reactData
-      if (id && remember && storage) {
+      const { id, storage, storageKey } = props
+      const { zoomStatus, revertLocat } = reactData
+      if (zoomStatus) {
+        return
+      }
+      if (id && storage) {
         const boxElem = getBox()
         if (!boxElem) {
           return
@@ -681,21 +687,24 @@ export default defineComponent({
           nextTick(() => {
             const { fullscreen } = props
             const { firstOpen } = reactData
-            if (!remember || firstOpen) {
-              updatePosition().then(() => {
-                setTimeout(() => updatePosition(), 20)
-              })
-            }
             if (firstOpen) {
               reactData.firstOpen = false
               if (hasPosStorage()) {
                 restorePosStorage()
-              } else if (fullscreen) {
-                nextTick(() => handleMaximize())
+              } else {
+                if (fullscreen) {
+                  nextTick(() => handleMaximize())
+                } else {
+                  updatePosition().then(() => {
+                    setTimeout(() => updatePosition(), 20)
+                  })
+                }
               }
             } else {
-              if (fullscreen) {
-                nextTick(() => handleMaximize())
+              if (!remember) {
+                updatePosition().then(() => {
+                  setTimeout(() => updatePosition(), 20)
+                })
               }
             }
           })
@@ -862,7 +871,7 @@ export default defineComponent({
     }
 
     const mousedownEvent = (evnt: MouseEvent) => {
-      const { remember, storage } = props
+      const { storage } = props
       const { zoomStatus } = reactData
       const marginSize = XEUtils.toNumber(props.marginSize)
       const boxElem = getBox()
@@ -906,7 +915,7 @@ export default defineComponent({
         document.onmouseup = () => {
           document.onmousemove = domMousemove
           document.onmouseup = domMouseup
-          if (remember && storage) {
+          if (storage) {
             nextTick(() => {
               savePosStorage()
             })
@@ -920,7 +929,7 @@ export default defineComponent({
 
     const dragEvent = (evnt: MouseEvent) => {
       evnt.preventDefault()
-      const { remember, storage } = props
+      const { storage } = props
       const { visibleHeight, visibleWidth } = getDomNode()
       const marginSize = XEUtils.toNumber(props.marginSize)
       const targetElem = evnt.target as HTMLSpanElement
@@ -1054,7 +1063,7 @@ export default defineComponent({
             break
         }
         boxElem.className = boxElem.className.replace(/\s?is--drag/, '') + ' is--drag'
-        if (remember && storage) {
+        if (storage) {
           savePosStorage()
         }
         dispatchEvent('resize', params, evnt)

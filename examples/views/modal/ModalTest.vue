@@ -211,7 +211,8 @@
 <script lang="ts" setup>
 import { reactive } from 'vue'
 import { VxeUI } from '../../../packages'
-import { VxeGridPropTypes, VxeModalDefines } from '../../../types'
+import { VxeModalDefines } from '../../../types'
+import { VxeGridPropTypes } from 'vxe-table'
 
 const demo1 = reactive({
   value1: false,
