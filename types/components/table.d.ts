@@ -3696,6 +3696,7 @@ export interface TablePrivateMethods<D = any> {
   updateAllCheckboxStatus(): void
   checkSelectionStatus(): void
   handleBatchSelectRows(rows: any[], value: any, isForce?: boolean): void
+  handleResizeDblclickEvent(evnt: MouseEvent, params: VxeTableDefines.CellRenderHeaderParams): void
   /**
    * use handleBatchSelectRows
    * @deprecated

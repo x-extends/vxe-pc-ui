@@ -658,11 +658,6 @@ export default defineComponent({
         reactData.contentVisible = false
         updateZindex()
         allActiveModals.push($xeModal)
-        if (!remember) {
-          nextTick(() => {
-            recalculate()
-          })
-        }
         setTimeout(() => {
           reactData.contentVisible = true
           nextTick(() => {
@@ -695,6 +690,7 @@ export default defineComponent({
                 if (fullscreen) {
                   nextTick(() => handleMaximize())
                 } else {
+                  recalculate()
                   updatePosition().then(() => {
                     setTimeout(() => updatePosition(), 20)
                   })
@@ -702,6 +698,7 @@ export default defineComponent({
               }
             } else {
               if (!remember) {
+                recalculate()
                 updatePosition().then(() => {
                   setTimeout(() => updatePosition(), 20)
                 })
