@@ -918,15 +918,19 @@ export default defineComponent({
       }
       if (XEUtils.isValidDate(dValue)) {
         dLabel = XEUtils.toDateString(dValue, dateLabelFormat, { firstDay: firstDayOfWeek })
-        // 由于年份和第几周是冲突的行为，所以需要特殊处理，判断是否跨年
+        // 周选择器，由于年份和第几周是冲突的行为，所以需要特殊处理，判断是否跨年，例如
+        // '2024-12-31' 'yyyy-MM-dd W' >> '2024-12-31 1'
+        // '2025-01-01' 'yyyy-MM-dd W' >> '2025-01-01 1'
         if (dateLabelFormat && type === 'week') {
-          const firstWeekDate = XEUtils.getWhatWeek(dValue, 0, firstDayOfWeek, firstDayOfWeek)
-          if (firstWeekDate.getFullYear() < dValue.getFullYear()) {
+          const weekNum = XEUtils.getYearWeek(dValue, firstDayOfWeek)
+          const weekDate = XEUtils.getWhatWeek(dValue, 0, weekNum === 1 ? ((6 + firstDayOfWeek) % 7) as VxeInputPropTypes.StartDay : firstDayOfWeek, firstDayOfWeek)
+          const weekFullYear = weekDate.getFullYear()
+          if (weekFullYear !== dValue.getFullYear()) {
             const yyIndex = dateLabelFormat.indexOf('yyyy')
             if (yyIndex > -1) {
               const yyNum = Number(dLabel.substring(yyIndex, yyIndex + 4))
               if (yyNum && !isNaN(yyNum)) {
-                dLabel = dLabel.replace(`${yyNum}`, `${yyNum - 1}`)
+                dLabel = dLabel.replace(`${yyNum}`, `${weekFullYear}`)
               }
             }
           }
@@ -983,7 +987,10 @@ export default defineComponent({
     }
 
     const dateCheckMonth = (date: Date) => {
-      const month = XEUtils.getWhatMonth(date, 0, 'first')
+      const firstDayOfWeek = computeFirstDayOfWeek.value
+      const weekNum = XEUtils.getYearWeek(date, firstDayOfWeek)
+      const weekStartDate = XEUtils.getWhatWeek(date, 0, firstDayOfWeek, firstDayOfWeek)
+      const month = XEUtils.getWhatMonth(weekNum === 1 ? XEUtils.getWhatDay(weekStartDate, 6) : date, 0, 'first')
       if (!XEUtils.isEqual(month, reactData.selectMonth)) {
         reactData.selectMonth = month
       }
@@ -1270,7 +1277,11 @@ export default defineComponent({
 
     // 日期
     const dateMonthHandle = (date: Date, offsetMonth: number) => {
-      reactData.selectMonth = XEUtils.getWhatMonth(date, offsetMonth, 'first')
+      const firstDayOfWeek = computeFirstDayOfWeek.value
+      const weekNum = XEUtils.getYearWeek(date, firstDayOfWeek)
+      const weekStartDate = XEUtils.getWhatWeek(date, 0, firstDayOfWeek, firstDayOfWeek)
+      const month = XEUtils.getWhatMonth(weekNum === 1 ? XEUtils.getWhatDay(weekStartDate, 6) : date, offsetMonth, 'first')
+      reactData.selectMonth = month
     }
 
     const dateNowHandle = () => {
