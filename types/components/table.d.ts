@@ -4463,6 +4463,7 @@ export namespace VxeTableDefines {
     newRow: D
     oldRow: D
     dragPos: 'top' | 'bottom'
+    dragToChild: boolean
     offsetIndex: 0 | 1
     _index: {
       newIndex: number
@@ -4485,6 +4486,7 @@ export namespace VxeTableDefines {
     newColumn: VxeTableDefines.ColumnInfo<D>
     oldColumn: VxeTableDefines.ColumnInfo<D>
     dragPos: 'left' | 'right'
+    dragToChild: boolean
     offsetIndex: 0 | 1
     _index: {
       newIndex: number
