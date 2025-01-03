@@ -137,7 +137,10 @@ export default defineVxeComponent({
       type: Boolean as PropType<VxeModalPropTypes.Draggable>,
       default: () => getConfig().modal.draggable
     },
-    remember: { type: Boolean, default: () => getConfig().modal.remember },
+    remember: {
+      type: Boolean,
+      default: () => getConfig().modal.remember
+    },
     destroyOnClose: {
       type: Boolean as PropType<VxeModalPropTypes.DestroyOnClose>,
       default: () => getConfig().modal.destroyOnClose
@@ -552,16 +555,16 @@ export default defineVxeComponent({
       const $xeModal = this
       const props = $xeModal
 
-      const { id, remember, storage, storageKey } = props
-      return !!(id && remember && storage && $xeModal.getStorageMap(storageKey)[id])
+      const { id, storage, storageKey } = props
+      return !!(id && storage && $xeModal.getStorageMap(storageKey)[id])
     },
     restorePosStorage () {
       const $xeModal = this
       const props = $xeModal
       const reactData = $xeModal.reactData
 
-      const { id, remember, storage, storageKey } = props
-      if (id && remember && storage) {
+      const { id, storage, storageKey } = props
+      if (id && storage) {
         const posStorage = $xeModal.getStorageMap(storageKey)[id]
         if (posStorage) {
           const boxElem = $xeModal.getBox()
@@ -607,9 +610,12 @@ export default defineVxeComponent({
       const props = $xeModal
       const reactData = $xeModal.reactData
 
-      const { id, remember, storage, storageKey } = props
-      const { revertLocat } = reactData
-      if (id && remember && storage) {
+      const { id, storage, storageKey } = props
+      const { zoomStatus, revertLocat } = reactData
+      if (zoomStatus) {
+        return
+      }
+      if (id && storage) {
         const boxElem = $xeModal.getBox()
         if (!boxElem) {
           return
@@ -858,21 +864,24 @@ export default defineVxeComponent({
           $xeModal.$nextTick(() => {
             const { fullscreen } = props
             const { firstOpen } = reactData
-            if (!remember || firstOpen) {
-              $xeModal.updatePosition().then(() => {
-                setTimeout(() => $xeModal.updatePosition(), 20)
-              })
-            }
             if (firstOpen) {
               reactData.firstOpen = false
               if ($xeModal.hasPosStorage()) {
                 $xeModal.restorePosStorage()
-              } else if (fullscreen) {
-                $xeModal.$nextTick(() => $xeModal.handleMaximize())
+              } else {
+                if (fullscreen) {
+                  $xeModal.$nextTick(() => $xeModal.handleMaximize())
+                } else {
+                  $xeModal.updatePosition().then(() => {
+                    setTimeout(() => $xeModal.updatePosition(), 20)
+                  })
+                }
               }
             } else {
-              if (fullscreen) {
-                $xeModal.$nextTick(() => $xeModal.handleMaximize())
+              if (!remember) {
+                $xeModal.updatePosition().then(() => {
+                  setTimeout(() => $xeModal.updatePosition(), 20)
+                })
               }
             }
           })
@@ -1020,7 +1029,7 @@ export default defineVxeComponent({
       const props = $xeModal
       const reactData = $xeModal.reactData
 
-      const { remember, storage } = props
+      const { storage } = props
       const { zoomStatus } = reactData
       const marginSize = XEUtils.toNumber(props.marginSize)
       const boxElem = $xeModal.getBox()
@@ -1064,7 +1073,7 @@ export default defineVxeComponent({
         document.onmouseup = () => {
           document.onmousemove = domMousemove
           document.onmouseup = domMouseup
-          if (remember && storage) {
+          if (storage) {
             $xeModal.$nextTick(() => {
               $xeModal.savePosStorage()
             })
@@ -1081,7 +1090,7 @@ export default defineVxeComponent({
       const reactData = $xeModal.reactData
 
       evnt.preventDefault()
-      const { remember, storage } = props
+      const { storage } = props
       const { visibleHeight, visibleWidth } = getDomNode()
       const marginSize = XEUtils.toNumber(props.marginSize)
       const targetElem = evnt.target as HTMLSpanElement
@@ -1215,7 +1224,7 @@ export default defineVxeComponent({
             break
         }
         boxElem.className = boxElem.className.replace(/\s?is--drag/, '') + ' is--drag'
-        if (remember && storage) {
+        if (storage) {
           $xeModal.savePosStorage()
         }
         $xeModal.dispatchEvent('resize', params, evnt)
