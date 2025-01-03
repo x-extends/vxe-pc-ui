@@ -2542,6 +2542,7 @@ export interface TablePrivateComputed<D = any> {
   computeEmptyOpts: VxeTablePropTypes.EmptyOpts
   computeLoadingOpts: VxeTablePropTypes.LoadingOpts
   computeCustomOpts: VxeTablePropTypes.CustomOpts<D>
+  computeAutoWidthColumnList: VxeTableDefines.ColumnInfo<D>[]
   computeFixedColumnSize: number
   computeIsMaxFixedColumn: boolean
   computeIsAllCheckboxDisabled: boolean
@@ -3705,6 +3706,7 @@ export interface TablePrivateMethods<D = any> {
   updateAllCheckboxStatus(): void
   checkSelectionStatus(): void
   handleBatchSelectRows(rows: any[], value: any, isForce?: boolean): void
+  handleResizeDblclickEvent(evnt: MouseEvent, params: VxeTableDefines.CellRenderHeaderParams): void
   /**
    * use handleBatchSelectRows
    * @deprecated

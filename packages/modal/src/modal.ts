@@ -835,11 +835,6 @@ export default defineVxeComponent({
         reactData.contentVisible = false
         $xeModal.updateZindex()
         allActiveModals.push($xeModal as VxeModalConstructor)
-        if (!remember) {
-          $xeModal.$nextTick(() => {
-            $xeModal.recalculate()
-          })
-        }
         setTimeout(() => {
           reactData.contentVisible = true
           $xeModal.$nextTick(() => {
@@ -872,6 +867,7 @@ export default defineVxeComponent({
                 if (fullscreen) {
                   $xeModal.$nextTick(() => $xeModal.handleMaximize())
                 } else {
+                  $xeModal.recalculate()
                   $xeModal.updatePosition().then(() => {
                     setTimeout(() => $xeModal.updatePosition(), 20)
                   })
@@ -879,6 +875,7 @@ export default defineVxeComponent({
               }
             } else {
               if (!remember) {
+                $xeModal.recalculate()
                 $xeModal.updatePosition().then(() => {
                   setTimeout(() => $xeModal.updatePosition(), 20)
                 })
