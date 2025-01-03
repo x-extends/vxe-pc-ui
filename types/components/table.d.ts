@@ -2899,8 +2899,9 @@ export interface TableInternalData<D = any> {
   initStatus: boolean
   isActivated: boolean
 
-  // 刷新属性
+  // 刷新布局
   rceTimeout?: undefined | number
+  rceRunTime?: undefined | number
 
   // 滚动属性
   intoRunScroll?: boolean
@@ -2908,14 +2909,19 @@ export interface TableInternalData<D = any> {
   inBodyScroll?: boolean
   bodyScrollType?: '' | 'left' | 'right'
   inFooterScroll?: boolean
+  // 同步滚动
   lcsTimeout?: undefined | number
 
+  // 横向虚拟
   lxRunTime?: undefined | number
   lxTimeout?: undefined | number
+  // 纵向虚拟
   lyRunTime?: undefined | number
   lyTimeout?: undefined | number
 
-  reRunTime?: undefined | number
+  // 动态高度
+  chRunTime?: undefined | number
+  chTimeout?: undefined | number
 
   // 内部属性
   _lastResizeTime?: any
