@@ -67,6 +67,53 @@
     <p>
       <vxe-date-picker v-model="demo1.value900" readonly></vxe-date-picker>
     </p>
+
+    <p>
+      <vxe-date-picker v-model="demo1.val1" placeholder="周选择，周天开始" type="week" :start-day="0">
+        <template #header>
+          <div>666</div>
+        </template>
+        <template #footer>
+          <div>555</div>
+        </template>
+        <template #top>
+          <div>111</div>
+        </template>
+        <template #bottom>
+          <div>222</div>
+        </template>
+        <template #left>
+          <div>333</div>
+        </template>
+        <template #right>
+          <div>444</div>
+        </template>
+      </vxe-date-picker>
+      <vxe-date-picker v-model="demo1.val2" placeholder="周选择，周一开始" type="week" :start-day="1">
+        <template #top>
+          <div>111</div>
+        </template>
+      </vxe-date-picker>
+      <vxe-date-picker v-model="demo1.val3" placeholder="周选择，周二开始" type="week" :start-day="2">
+        <template #bottom>
+          <div>222</div>
+        </template>
+      </vxe-date-picker>
+      <vxe-date-picker v-model="demo1.val4" placeholder="周选择，周三开始" type="week" :start-day="3" clearable>
+        <template #left>
+          <div>333</div>
+        </template>
+      </vxe-date-picker>
+      <vxe-date-picker v-model="demo1.val5" placeholder="周选择，周四开始" type="week" :start-day="4" clearable>
+        <template #right>
+          <div>444</div>
+        </template>
+      </vxe-date-picker>
+      <vxe-date-picker v-model="demo1.val6" placeholder="周选择，周五开始" type="week" :start-day="5" clearable></vxe-date-picker>
+      <vxe-date-picker v-model="demo1.val7" placeholder="周选择，周六开始" type="week" :start-day="6" clearable></vxe-date-picker>
+
+      <vxe-date-picker v-model="demo1.val8" placeholder="可选日期限制" start-date="2000-01-01" end-date="2040-01-01"></vxe-date-picker>
+    </p>
   </div>
 </template>
 
@@ -79,6 +126,14 @@ export default Vue.extend({
   data () {
     return {
       demo1: {
+        val1: '',
+        val2: '',
+        val3: '',
+        val4: '',
+        val5: '',
+        val6: '',
+        val7: '',
+        val8: '',
         value100: '',
         value101: '',
         value102: '',

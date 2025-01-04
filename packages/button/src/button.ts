@@ -419,9 +419,8 @@ export default defineVxeComponent({
 
       if ($xeButtonGroup) {
         $xeButtonGroup.handleClick({ name: this.name }, evnt)
-      } else {
-        this.dispatchEvent('click', { $event: evnt }, evnt)
       }
+      this.dispatchEvent('click', { $event: evnt }, evnt)
     },
     mousedownDropdownEvent (evnt: MouseEvent) {
       const isLeftBtn = evnt.button === 0

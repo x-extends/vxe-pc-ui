@@ -739,6 +739,7 @@ export default defineVxeComponent({
       const $xeDatePicker = this
       const reactData = $xeDatePicker.reactData
 
+      const { isActivated, visiblePanel } = reactData
       let val: any = ''
       if (modelValue) {
         if (XEUtils.isNumber(modelValue) && /^[0-9]{11,15}$/.test(`${modelValue}`)) {
@@ -748,6 +749,9 @@ export default defineVxeComponent({
         }
       }
       reactData.inputValue = val
+      if (isActivated && visiblePanel) {
+        $xeDatePicker.dateOpenPanel()
+      }
     },
     parseDate  (value: VxeDatePickerPropTypes.ModelValue, format: string) {
       const $xeDatePicker = this
@@ -2266,62 +2270,117 @@ export default defineVxeComponent({
     renderPanel (h: CreateElement) {
       const $xeDatePicker = this
       const props = $xeDatePicker
+      const slots = $xeDatePicker.$scopedSlots
       const reactData = $xeDatePicker.reactData
 
       const { type } = props
       const { initialized, isAniVisible, visiblePanel, panelPlacement, panelStyle } = reactData
       const vSize = $xeDatePicker.computeSize
-      const isDatePickerType = $xeDatePicker.computeIsDatePickerType
       const btnTransfer = $xeDatePicker.computeBtnTransfer
+      const headerSlot = slots.header
+      const footerSlot = slots.footer
+      const topSlot = slots.top
+      const bottomSlot = slots.bottom
+      const leftSlot = slots.left
+      const rightSlot = slots.right
       const renders = []
-      if (isDatePickerType) {
-        if (type === 'datetime') {
-          renders.push(
+      if (type === 'datetime') {
+        renders.push(
+          h('div', {
+            key: type,
+            ref: 'refPanelWrapper',
+            class: 'vxe-date-picker--panel-datetime-layout-wrapper'
+          }, [
             h('div', {
-              key: type,
-              ref: 'refPanelWrapper',
+              class: 'vxe-date-picker--panel-datetime-left-wrapper'
+            }, $xeDatePicker.renderDatePanel(h)),
+            h('div', {
+              class: 'vxe-date-picker--panel-datetime-right-wrapper'
+            }, $xeDatePicker.renderTimePanel(h))
+          ])
+        )
+      } else if (type === 'time') {
+        renders.push(
+          h('div', {
+            key: type,
+            ref: 'refPanelWrapper',
+            class: 'vxe-date-picker--panel-wrapper'
+          }, $xeDatePicker.renderTimePanel(h))
+        )
+      } else {
+        renders.push(
+          h('div', {
+            key: type || 'default',
+            ref: 'refPanelWrapper',
+            class: 'vxe-date-picker--panel-wrapper'
+          }, $xeDatePicker.renderDatePanel(h))
+        )
+      }
+      return h('div', {
+        ref: 'refInputPanel',
+        class: ['vxe-table--ignore-clear vxe-date-picker--panel', `type--${type}`, {
+          [`size--${vSize}`]: vSize,
+          'is--transfer': btnTransfer,
+          'ani--leave': isAniVisible,
+          'ani--enter': visiblePanel,
+          'show--top': !!(topSlot || headerSlot),
+          'show--bottom': !!(bottomSlot || footerSlot),
+          'show--left': !!leftSlot,
+          'show--right': !!rightSlot
+        }],
+        attrs: {
+          placement: panelPlacement
+        },
+        style: panelStyle
+      }, initialized && (visiblePanel || isAniVisible)
+        ? [
+            h('div', {
               class: 'vxe-date-picker--panel-layout-wrapper'
             }, [
+              topSlot
+                ? h('div', {
+                  class: 'vxe-date-picker--panel-top-wrapper'
+                }, topSlot({}))
+                : renderEmptyElement($xeDatePicker),
               h('div', {
-                class: 'vxe-date-picker--panel-left-wrapper'
-              }, $xeDatePicker.renderDatePanel(h)),
-              h('div', {
-                class: 'vxe-date-picker--panel-right-wrapper'
-              }, $xeDatePicker.renderTimePanel(h))
+                class: 'vxe-date-picker--panel-body-layout-wrapper'
+              }, [
+                leftSlot
+                  ? h('div', {
+                    class: 'vxe-date-picker--panel-left-wrapper'
+                  }, leftSlot({}))
+                  : renderEmptyElement($xeDatePicker),
+                h('div', {
+                  class: 'vxe-date-picker--panel-body-content-wrapper'
+                }, [
+                  headerSlot
+                    ? h('div', {
+                      class: 'vxe-date-picker--panel-header-wrapper'
+                    }, headerSlot({}))
+                    : renderEmptyElement($xeDatePicker),
+                  h('div', {
+                    class: 'vxe-date-picker--panel-body-wrapper'
+                  }, renders),
+                  footerSlot
+                    ? h('div', {
+                      class: 'vxe-date-picker--panel-footer-wrapper'
+                    }, footerSlot({}))
+                    : renderEmptyElement($xeDatePicker)
+                ]),
+                rightSlot
+                  ? h('div', {
+                    class: 'vxe-date-picker--panel-right-wrapper'
+                  }, rightSlot({}))
+                  : renderEmptyElement($xeDatePicker)
+              ]),
+              bottomSlot
+                ? h('div', {
+                  class: 'vxe-date-picker--panel-bottom-wrapper'
+                }, bottomSlot({}))
+                : renderEmptyElement($xeDatePicker)
             ])
-          )
-        } else if (type === 'time') {
-          renders.push(
-            h('div', {
-              key: type,
-              ref: 'refPanelWrapper',
-              class: 'vxe-date-picker--panel-wrapper'
-            }, $xeDatePicker.renderTimePanel(h))
-          )
-        } else {
-          renders.push(
-            h('div', {
-              key: type || 'default',
-              ref: 'refPanelWrapper',
-              class: 'vxe-date-picker--panel-wrapper'
-            }, $xeDatePicker.renderDatePanel(h))
-          )
-        }
-        return h('div', {
-          ref: 'refInputPanel',
-          class: ['vxe-table--ignore-clear vxe-date-picker--panel', `type--${type}`, {
-            [`size--${vSize}`]: vSize,
-            'is--transfer': btnTransfer,
-            'ani--leave': isAniVisible,
-            'ani--enter': visiblePanel
-          }],
-          attrs: {
-            placement: panelPlacement
-          },
-          style: panelStyle
-        }, initialized && (visiblePanel || isAniVisible) ? renders : [])
-      }
-      return renderEmptyElement($xeDatePicker)
+          ]
+        : [])
     },
     renderPrefixIcon (h: CreateElement) {
       const $xeDatePicker = this

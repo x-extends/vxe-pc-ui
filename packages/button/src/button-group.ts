@@ -17,6 +17,7 @@ export default defineVxeComponent({
     mode: String as PropType<VxeButtonGroupPropTypes.Mode>,
     status: String as PropType<VxeButtonGroupPropTypes.Status>,
     round: Boolean as PropType<VxeButtonGroupPropTypes.Round>,
+    vertical: Boolean as PropType<VxeButtonGroupPropTypes.Vertical>,
     circle: Boolean as PropType<VxeButtonGroupPropTypes.Circle>,
     className: [String, Function] as PropType<VxeButtonGroupPropTypes.ClassName>,
     disabled: Boolean as PropType<VxeButtonGroupPropTypes.Disabled>,
@@ -74,7 +75,7 @@ export default defineVxeComponent({
       const props = $xeButtonGroup
       const slots = $xeButtonGroup.$scopedSlots
 
-      const { className, options } = props
+      const { className, options, vertical } = props
       const permissionInfo = $xeButtonGroup.computePermissionInfo
       const defaultSlot = slots.default
       if (!permissionInfo.visible) {
@@ -82,7 +83,9 @@ export default defineVxeComponent({
       }
 
       return h('div', {
-        class: ['vxe-button-group', className ? (XEUtils.isFunction(className) ? className({ $buttonGroup: $xeButtonGroup }) : className) : '']
+        class: ['vxe-button-group', className ? (XEUtils.isFunction(className) ? className({ $buttonGroup: $xeButtonGroup }) : className) : '', {
+          'is--vertical': vertical
+        }]
       }, defaultSlot
         ? defaultSlot({})
         : (options
