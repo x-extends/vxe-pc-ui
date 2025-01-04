@@ -1,9 +1,9 @@
-import { defineComponent, h, provide, PropType, createCommentVNode } from 'vue'
+import { defineComponent, h, reactive, provide, PropType, createCommentVNode } from 'vue'
 import { getConfig, createEvent, useSize, usePermission } from '@vxe-ui/core'
 import XEUtils from 'xe-utils'
 import VxeButtonComponent from './button'
 
-import type { VxeButtonGroupPropTypes, VxeButtonGroupEmits, VxeButtonGroupConstructor, VxeButtonGroupPrivateMethods, ButtonGroupMethods, ButtonPrivateComputed, ButtonGroupPrivateMethods } from '../../../types'
+import type { VxeButtonGroupPropTypes, VxeButtonGroupEmits, ButtonGroupReactData, VxeButtonGroupConstructor, VxeButtonGroupPrivateMethods, ButtonGroupMethods, ButtonPrivateComputed, ButtonGroupPrivateMethods } from '../../../types'
 
 export default defineComponent({
   name: 'VxeButtonGroup',
@@ -12,6 +12,7 @@ export default defineComponent({
     mode: String as PropType<VxeButtonGroupPropTypes.Mode>,
     status: String as PropType<VxeButtonGroupPropTypes.Status>,
     round: Boolean as PropType<VxeButtonGroupPropTypes.Round>,
+    vertical: Boolean as PropType<VxeButtonGroupPropTypes.Vertical>,
     circle: Boolean as PropType<VxeButtonGroupPropTypes.Circle>,
     className: [String, Function] as PropType<VxeButtonGroupPropTypes.ClassName>,
     disabled: Boolean as PropType<VxeButtonGroupPropTypes.Disabled>,
@@ -29,12 +30,16 @@ export default defineComponent({
 
     const xID = XEUtils.uniqueId()
 
+    const reactData = reactive<ButtonGroupReactData>({
+    })
+
     const computeMaps: ButtonPrivateComputed = {}
 
     const $xeButtonGroup = {
       xID,
       props,
       context,
+      reactData,
 
       getComputeMaps: () => computeMaps
     } as unknown as VxeButtonGroupConstructor & VxeButtonGroupPrivateMethods
@@ -61,14 +66,16 @@ export default defineComponent({
     Object.assign($xeButtonGroup, buttonGroupMethods, buttonGroupPrivateMethods)
 
     const renderVN = () => {
-      const { className, options } = props
+      const { className, options, vertical } = props
       const permissionInfo = computePermissionInfo.value
       const defaultSlot = slots.default
       if (!permissionInfo.visible) {
         return createCommentVNode()
       }
       return h('div', {
-        class: ['vxe-button-group', className ? (XEUtils.isFunction(className) ? className({ $buttonGroup: $xeButtonGroup }) : className) : '']
+        class: ['vxe-button-group', className ? (XEUtils.isFunction(className) ? className({ $buttonGroup: $xeButtonGroup }) : className) : '', {
+          'is--vertical': vertical
+        }]
       }, defaultSlot
         ? defaultSlot({})
         : (options

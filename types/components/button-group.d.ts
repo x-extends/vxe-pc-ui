@@ -28,6 +28,7 @@ export namespace VxeButtonGroupPropTypes {
   export type PermissionCode = VxeComponentPermissionCodeType
   export type Options = VxeButtonProps[]
   export type Round = boolean
+  export type Vertical = boolean
   export type Circle = boolean
   export type Disabled = boolean
   export type Mode = VxeButtonPropTypes.Mode
@@ -42,6 +43,7 @@ export type VxeButtonGroupProps = {
   mode?: VxeButtonGroupPropTypes.Mode
   status?: VxeButtonGroupPropTypes.Status
   round?: VxeButtonGroupPropTypes.Round
+  vertical?: VxeButtonGroupPropTypes.Vertical
   circle?: VxeButtonGroupPropTypes.Circle
   /**
    * 是否禁用

@@ -306,9 +306,8 @@ export default defineComponent({
     const clickEvent = (evnt: Event) => {
       if ($xeButtonGroup) {
         $xeButtonGroup.handleClick({ name: props.name }, evnt)
-      } else {
-        dispatchEvent('click', { $event: evnt }, evnt)
       }
+      dispatchEvent('click', { $event: evnt }, evnt)
     }
 
     const mousedownDropdownEvent = (evnt: MouseEvent) => {

@@ -1,3 +1,9 @@
 .vxe-button-group {
   display: inline-flex;
+  &.is--vertical {
+    flex-direction: column;
+    .vxe-button {
+      margin: 0;
+    }
+  }
 }
