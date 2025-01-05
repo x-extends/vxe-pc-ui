@@ -112,14 +112,14 @@
       <vxe-date-picker v-model="demo1.val6" placeholder="周选择，周五开始" type="week" :start-day="5" clearable></vxe-date-picker>
       <vxe-date-picker v-model="demo1.val7" placeholder="周选择，周六开始" type="week" :start-day="6" clearable></vxe-date-picker>
 
-      <vxe-date-picker v-model="demo1.val8" placeholder="可选日期限制" start-date="2000-01-01" end-date="2040-01-01"></vxe-date-picker>
+      <vxe-date-picker v-model="demo1.val8" placeholder="可选日期限制" start-date="2000-01-01" end-date="2040-01-01" :shortcut-config="shortcutConfig1"></vxe-date-picker>
     </p>
   </div>
 </template>
 
 <script lang="ts">
 import Vue from 'vue'
-import { VxeInputDefines } from '../../../types'
+import { VxeInputDefines, VxeDatePickerPropTypes } from '../../../types'
 import XEUtils from 'xe-utils'
 
 export default Vue.extend({
@@ -258,7 +258,14 @@ export default Vue.extend({
             important: true // 是否标记为重要节日
           }
         }
-      } as any
+      } as any,
+      shortcutConfig1: {
+        options: [
+          { content: '上一周' },
+          { content: '本周' },
+          { content: '下一周' }
+        ]
+      } as VxeDatePickerPropTypes.ShortcutConfig
     }
   },
   methods: {

@@ -1,4 +1,4 @@
-import { DefineVxeComponentApp, DefineVxeComponentOptions, DefineVxeComponentInstance, VxeComponentSizeType, VxeComponentEventParams, VxeComponentPermissionCodeType, ValueOf } from '@vxe-ui/core'
+import { DefineVxeComponentApp, DefineVxeComponentOptions, DefineVxeComponentInstance, VxeComponentSizeType, VxeComponentAlignType, VxeComponentEventParams, VxeComponentPermissionCodeType, ValueOf } from '@vxe-ui/core'
 import { VxeButtonProps, VxeButtonPropTypes } from './button'
 
 /* eslint-disable @typescript-eslint/no-empty-interface,no-use-before-define,@typescript-eslint/ban-types */
@@ -23,6 +23,7 @@ export namespace VxeButtonGroupPropTypes {
   export type Round = boolean
   export type Vertical = boolean
   export type Circle = boolean
+  export type Align = VxeComponentAlignType
   export type Disabled = boolean
   export type Mode = VxeButtonPropTypes.Mode
   export type Status = VxeButtonPropTypes.Status
@@ -36,6 +37,7 @@ export interface VxeButtonGroupProps {
   mode?: VxeButtonGroupPropTypes.Mode
   status?: VxeButtonGroupPropTypes.Status
   round?: VxeButtonGroupPropTypes.Round
+  align?: VxeButtonGroupPropTypes.Align
   vertical?: VxeButtonGroupPropTypes.Vertical
   circle?: VxeButtonGroupPropTypes.Circle
   /**

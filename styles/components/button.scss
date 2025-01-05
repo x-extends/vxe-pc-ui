@@ -274,6 +274,13 @@ $btnThemeList: (
     margin-left: 0.72em;
   }
 }
+.vxe-button--dropdown {
+  &+.vxe-button-wrapper,
+  &+.vxe-button.type--button,
+  &+.vxe-button--dropdown {
+    margin-left: 0.72em;
+  }
+}
 .vxe-button--loading-icon,
 .vxe-button--icon {
   min-width: var(--vxe-ui-font-size-default);
@@ -300,11 +307,6 @@ $btnThemeList: (
 .vxe-button--dropdown {
   position: relative;
   outline: 0;
-  &+.vxe-button-wrapper,
-  &+.vxe-button.type--button,
-  &+.vxe-button--dropdown {
-    margin-left: 12px;
-  }
   & > .vxe-button {
     &.type--button {
       @for $index from 0 to list.length($btnThemeList) {

@@ -91,7 +91,13 @@ setConfig({
     startDate: new Date(1900, 0, 1),
     endDate: new Date(2100, 0, 1),
     startDay: 1,
-    selectDay: 1
+    selectDay: 1,
+    shortcutConfig: {
+      // position: 'left',
+      align: 'left',
+      mode: 'text',
+      autoClose: true
+    }
   },
   drawer: {
     // size: null,

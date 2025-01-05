@@ -19,6 +19,7 @@ export default defineVxeComponent({
     round: Boolean as PropType<VxeButtonGroupPropTypes.Round>,
     vertical: Boolean as PropType<VxeButtonGroupPropTypes.Vertical>,
     circle: Boolean as PropType<VxeButtonGroupPropTypes.Circle>,
+    align: String as PropType<VxeButtonGroupPropTypes.Align>,
     className: [String, Function] as PropType<VxeButtonGroupPropTypes.ClassName>,
     disabled: Boolean as PropType<VxeButtonGroupPropTypes.Disabled>,
     permissionCode: [String, Number] as PropType<VxeButtonGroupPropTypes.PermissionCode>,
