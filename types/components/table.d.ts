@@ -749,7 +749,18 @@ export namespace VxeTablePropTypes {
     multiple?: boolean
     chronological?: boolean
     trigger?: 'default' | 'cell'
+    /**
+     * 是否显示排序按钮图标
+     */
     showIcon?: boolean
+    /**
+     * 排序按钮图标的显示方法，该方法的返回值用于决定该列是否显示排序按钮图标
+     * @param params
+     */
+    iconVisibleMethod?(params: {
+      $table: VxeTableConstructor<D>
+      column: VxeTableDefines.ColumnInfo<D>
+    }): boolean
     iconLayout?: 'horizontal' | 'vertical'
     iconAsc?: string
     iconDesc?: string
@@ -771,7 +782,18 @@ export namespace VxeTablePropTypes {
       column: VxeTableDefines.ColumnInfo<D>
     }) => any
     remote?: boolean
+    /**
+     * 是否显示筛选按钮图标
+     */
     showIcon?: boolean
+    /**
+     * 筛选按钮图标的显示方法，该方法的返回值用于决定该列是否显示筛选按钮图标
+     * @param params
+     */
+    iconVisibleMethod?(params: {
+      $table: VxeTableConstructor<D>
+      column: VxeTableDefines.ColumnInfo<D>
+    }): boolean
     iconNone?: string
     iconMatch?: string
     destroyOnClose?: boolean
@@ -3696,7 +3718,7 @@ export interface TablePrivateMethods<D = any> {
   updateAllCheckboxStatus(): void
   checkSelectionStatus(): void
   handleBatchSelectRows(rows: any[], value: any, isForce?: boolean): void
-  handleResizeDblclickEvent(evnt: MouseEvent, params: VxeTableDefines.CellRenderHeaderParams): void
+  handleResizeDblclickEvent(evnt: MouseEvent, params: VxeTableDefines.CellRenderHeaderParams & { $table: VxeTableConstructor & VxeTablePrivateMethods }): void
   /**
    * use handleBatchSelectRows
    * @deprecated
@@ -4108,6 +4130,7 @@ export namespace VxeTableDefines {
     type: string
     isHidden: boolean
     hasFilter: boolean
+    firstFilterOption: VxeColumnPropTypes.FilterItem | null
 
     checked?: boolean
     indeterminate?: boolean
