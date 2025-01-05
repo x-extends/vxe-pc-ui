@@ -1,5 +1,7 @@
 import { RenderFunction, SetupContext, Ref } from 'vue'
 import { DefineVxeComponentApp, DefineVxeComponentOptions, DefineVxeComponentInstance, VxeComponentBaseOptions, VxeComponentEventParams, ValueOf, VxeComponentStyleType, VxeComponentSizeType } from '@vxe-ui/core'
+import { VxeButtonGroupPropTypes } from './button-group'
+import { VxeButtonProps } from './button'
 
 /* eslint-disable no-use-before-define,@typescript-eslint/ban-types */
 
@@ -65,6 +67,19 @@ export namespace VxeDatePickerPropTypes {
   export type Placement = 'top' | 'bottom' | '' | null
   export type Transfer = boolean
 
+  export interface ShortcutConfig {
+    enabled?: boolean
+    position?: 'top' | 'bottom' | 'left' | 'right' | 'header' | 'footer' | null
+    align?: VxeButtonGroupPropTypes.Align
+    mode?: VxeButtonGroupPropTypes.Mode
+    options?: VxeDatePickerDefines.ShortcutOption[]
+    /**
+     * 点击按钮后自动关闭弹窗面板
+     */
+    autoClose?: boolean
+    clickMethod?: (params: VxeDatePickerDefines.ShortcutClickParams) => void
+  }
+
   /**
    * 请使用 AutoComplete
    * @deprecated
@@ -123,6 +138,8 @@ export interface VxeDatePickerProps {
   editable?: VxeDatePickerPropTypes.Editable
   festivalMethod?: VxeDatePickerPropTypes.FestivalMethod
   disabledMethod?: VxeDatePickerPropTypes.DisabledMethod
+
+  shortcutConfig?: VxeDatePickerPropTypes.ShortcutConfig
 
   // week
   selectDay?: VxeDatePickerPropTypes.SelectDay
@@ -205,7 +222,8 @@ export type VxeDatePickerEmits = [
   'suffix-click',
   'date-prev',
   'date-today',
-  'date-next'
+  'date-next',
+  'shortcut-click'
 ]
 
 export namespace VxeDatePickerDefines {
@@ -257,6 +275,10 @@ export namespace VxeDatePickerDefines {
 
   export type DatePanelType = 'year' | 'quarter' | 'month' | 'week' | 'day'
 
+  export interface ShortcutOption extends VxeButtonProps {
+    clickMethod?: (params: VxeDatePickerDefines.ShortcutClickParams) => void
+  }
+
   interface DateFestivalItem {
     /**
      * 显示名称
@@ -305,21 +327,30 @@ export namespace VxeDatePickerDefines {
 
   export interface ChangeParams extends DatePickerParams {}
   export interface ChangeEventParams extends DatePickerEventParams, ChangeParams { }
+
+  export interface ShortcutClickParams {
+    $datePicker: VxeDatePickerConstructor
+    option: VxeDatePickerDefines.ShortcutOption
+  }
+  export interface ShortcutClickEventParams extends DatePickerEventParams, ShortcutClickParams {}
 }
 
 export type VxeDatePickerEventProps = {
   onInput?: VxeDatePickerEvents.Input
   onChange?: VxeDatePickerEvents.Change
+  onShortcutClick?: VxeDatePickerEvents.ShortcutClick
 }
 
 export interface VxeDatePickerListeners {
   input?: VxeDatePickerEvents.Input
   change?: VxeDatePickerEvents.Change
+  shortcutClick?: VxeDatePickerEvents.ShortcutClick
 }
 
 export namespace VxeDatePickerEvents {
   export type Input = (params: VxeDatePickerDefines.InputEventParams) => void
   export type Change = (params: VxeDatePickerDefines.ChangeEventParams) => void
+  export type ShortcutClick = (params: VxeDatePickerDefines.ShortcutClickEventParams) => void
 }
 
 export namespace VxeDatePickerSlotTypes {

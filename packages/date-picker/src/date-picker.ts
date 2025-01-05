@@ -1,12 +1,13 @@
 import { defineComponent, h, Teleport, ref, Ref, computed, reactive, inject, nextTick, watch, onUnmounted, PropType, createCommentVNode } from 'vue'
 import XEUtils from 'xe-utils'
 import { getConfig, getIcon, getI18n, globalEvents, GLOBAL_EVENT_KEYS, createEvent, useSize, renderEmptyElement } from '../../ui'
-import { getFuncText, getLastZIndex, nextZIndex } from '../../ui/src/utils'
+import { getFuncText, getLastZIndex, nextZIndex, isEnableConf } from '../../ui/src/utils'
 import { getAbsolutePos, getEventTargetNode } from '../../ui/src/dom'
 import { toStringTimeDate, getDateQuarter } from './util'
 import { getSlotVNs } from '../..//ui/src/vn'
+import VxeButtonGroupComponent from '../../button/src/button-group'
 
-import type { VxeDatePickerConstructor, VxeDatePickerEmits, DatePickerInternalData, DatePickerReactData, VxeComponentStyleType, DatePickerMethods, VxeDatePickerPropTypes, DatePickerPrivateRef, VxeFormConstructor, VxeFormPrivateMethods, VxeFormDefines, ValueOf, VxeModalConstructor, VxeDrawerConstructor, VxeModalMethods, VxeDrawerMethods, VxeDatePickerDefines } from '../../../types'
+import type { VxeDatePickerConstructor, VxeDatePickerEmits, DatePickerInternalData, DatePickerReactData, VxeComponentStyleType, DatePickerMethods, VxeDatePickerPropTypes, DatePickerPrivateRef, VxeFormConstructor, VxeFormPrivateMethods, VxeFormDefines, ValueOf, VxeModalConstructor, VxeDrawerConstructor, VxeModalMethods, VxeDrawerMethods, VxeDatePickerDefines, VxeButtonGroupEvents } from '../../../types'
 import type { VxeTableConstructor, VxeTablePrivateMethods } from '../../../types/components/table'
 
 export default defineComponent({
@@ -93,6 +94,8 @@ export default defineComponent({
       default: null
     },
 
+    shortcutConfig: Object as PropType<VxeDatePickerPropTypes.ShortcutConfig>,
+
     // 已废弃 startWeek，被 startDay 替换
     startWeek: Number as PropType<VxeDatePickerPropTypes.StartDay>,
     // 已废弃
@@ -115,7 +118,8 @@ export default defineComponent({
     'suffix-click',
     'date-prev',
     'date-today',
-    'date-next'
+    'date-next',
+    'shortcut-click'
   ] as VxeDatePickerEmits,
   setup (props, context) {
     const { slots, emit } = context
@@ -623,6 +627,10 @@ export default defineComponent({
       return immediate
     })
 
+    const computeShortcutOpts = computed(() => {
+      return Object.assign({}, getConfig().datePicker.shortcutConfig, props.shortcutConfig)
+    })
+
     const updateModelValue = (modelValue: VxeDatePickerPropTypes.ModelValue | undefined) => {
       const { isActivated, visiblePanel } = reactData
       let val: any = ''
@@ -640,23 +648,29 @@ export default defineComponent({
     }
 
     const parseDate = (value: VxeDatePickerPropTypes.ModelValue, format: string) => {
-      const { type } = props
+      const { type, multiple } = props
       if (type === 'time') {
         return toStringTimeDate(value)
+      }
+      if (XEUtils.isArray(value)) {
+        return XEUtils.toStringDate(value[0], format)
+      }
+      if (XEUtils.isString(value)) {
+        return XEUtils.toStringDate(multiple ? XEUtils.last(value.split(',')) : value, format)
       }
       return XEUtils.toStringDate(value, format)
     }
 
     const triggerEvent = (evnt: Event & { type: 'input' | 'change' | 'keydown' | 'keyup' | 'wheel' | 'click' | 'focus' | 'blur' }) => {
       const { inputValue } = reactData
-      datePickerMethods.dispatchEvent(evnt.type, { value: inputValue }, evnt)
+      dispatchEvent(evnt.type, { value: inputValue }, evnt)
     }
 
     const handleChange = (value: string, evnt: Event | { type: string }) => {
       reactData.inputValue = value
       emit('update:modelValue', value)
       if (XEUtils.toValueString(props.modelValue) !== value) {
-        datePickerMethods.dispatchEvent('change', { value }, evnt as any)
+        dispatchEvent('change', { value }, evnt as any)
         // 自动更新校验状态
         if ($xeForm && formItemInfo) {
           $xeForm.triggerItemEvent(evnt, formItemInfo.itemConfig.field, value)
@@ -674,7 +688,7 @@ export default defineComponent({
         if (inpImmediate) {
           handleChange(value, evnt)
         } else {
-          datePickerMethods.dispatchEvent('input', { value }, evnt)
+          dispatchEvent('input', { value }, evnt)
         }
       }
     }
@@ -699,7 +713,7 @@ export default defineComponent({
       const isDisabled = computeIsDisabled.value
       if (!isDisabled) {
         const { inputValue } = reactData
-        datePickerMethods.dispatchEvent('prefix-click', { value: inputValue }, evnt)
+        dispatchEvent('prefix-click', { value: inputValue }, evnt)
       }
     }
 
@@ -719,14 +733,14 @@ export default defineComponent({
         hidePanel()
       }
       handleChange('', evnt)
-      datePickerMethods.dispatchEvent('clear', { value }, evnt)
+      dispatchEvent('clear', { value }, evnt)
     }
 
     const clickSuffixEvent = (evnt: Event) => {
       const isDisabled = computeIsDisabled.value
       if (!isDisabled) {
         const { inputValue } = reactData
-        datePickerMethods.dispatchEvent('suffix-click', { value: inputValue }, evnt)
+        dispatchEvent('suffix-click', { value: inputValue }, evnt)
       }
     }
 
@@ -803,7 +817,7 @@ export default defineComponent({
       }
     }
 
-    const dateChange = (date: Date) => {
+    const dateChange = (date: Date, isReload?: boolean) => {
       const { modelValue, multiple } = props
       const { datetimePanelValue } = reactData
       const isDateTimeType = computeIsDateTimeType.value
@@ -823,10 +837,9 @@ export default defineComponent({
       dateCheckMonth(date)
       if (multiple) {
         // 如果为多选
-        const dateMultipleValue = computeDateMultipleValue.value
         if (isDateTimeType) {
           // 如果是datetime特殊类型
-          const dateListValue = [...computeDateListValue.value]
+          const dateListValue = isReload ? [] : [...computeDateListValue.value]
           const datetimeRest: Date[] = []
           const eqIndex = XEUtils.findIndexOf(dateListValue, val => XEUtils.isDateSame(date, val, 'yyyyMMdd'))
           if (eqIndex === -1) {
@@ -846,6 +859,7 @@ export default defineComponent({
           })
           handleChange(datetimeRest.map(date => XEUtils.toDateString(date, dateValueFormat)).join(','), { type: 'update' })
         } else {
+          const dateMultipleValue = isReload ? [] : computeDateMultipleValue.value
           // 如果是日期类型
           if (dateMultipleValue.some(val => XEUtils.isEqual(val, inpVal))) {
             handleChange(dateMultipleValue.filter(val => !XEUtils.isEqual(val, inpVal)).join(','), { type: 'update' })
@@ -917,7 +931,7 @@ export default defineComponent({
       if (!reactData.visiblePanel) {
         reactData.isActivated = false
       }
-      datePickerMethods.dispatchEvent('blur', { value }, evnt)
+      dispatchEvent('blur', { value }, evnt)
       // 自动更新校验状态
       if ($xeForm && formItemInfo) {
         $xeForm.triggerItemEvent(evnt, formItemInfo.itemConfig.field, value)
@@ -949,7 +963,21 @@ export default defineComponent({
     }
 
     const dateNowHandle = () => {
-      const currentDate = XEUtils.getWhatDay(Date.now(), 0, 'first')
+      const { type } = props
+      const firstDayOfWeek = computeFirstDayOfWeek.value
+      let currentDate = new Date()
+      switch (type) {
+        case 'week':
+          currentDate = XEUtils.getWhatWeek(currentDate, 0, firstDayOfWeek)
+          break
+        case 'datetime':
+          currentDate = new Date()
+          reactData.datetimePanelValue = new Date()
+          break
+        default:
+          currentDate = XEUtils.getWhatDay(Date.now(), 0, 'first')
+          break
+      }
       reactData.currentDate = currentDate
       dateMonthHandle(currentDate, 0)
     }
@@ -990,17 +1018,17 @@ export default defineComponent({
           }
         }
         reactData.selectMonth = viewDate
-        datePickerMethods.dispatchEvent('date-prev', { viewType: datePanelType, viewDate, value, type }, evnt)
+        dispatchEvent('date-prev', { viewType: datePanelType, viewDate, value, type }, evnt)
       }
     }
 
     const dateTodayMonthEvent = (evnt: Event) => {
       dateNowHandle()
+      dateChange(reactData.currentDate, true)
       if (!props.multiple) {
-        dateChange(reactData.currentDate)
         hidePanel()
       }
-      datePickerMethods.dispatchEvent('date-today', { type: props.type }, evnt)
+      dispatchEvent('date-today', { type: props.type }, evnt)
     }
 
     const dateNextEvent = (evnt: Event) => {
@@ -1029,7 +1057,7 @@ export default defineComponent({
           }
         }
         reactData.selectMonth = viewDate
-        datePickerMethods.dispatchEvent('date-next', { viewType: datePanelType, value, type }, evnt)
+        dispatchEvent('date-next', { viewType: datePanelType, value, type }, evnt)
       }
     }
 
@@ -1278,17 +1306,25 @@ export default defineComponent({
             offsetMonth = XEUtils.getWhatMonth(offsetMonth, 4)
           }
           dateMoveMonth(offsetMonth)
-        } else {
+        } else if (datePanelType === 'week') {
           let offsetDay = datePanelValue || XEUtils.getWhatDay(Date.now(), 0, 'first')
           const firstDayOfWeek = computeFirstDayOfWeek.value
+          if (isUpArrow) {
+            offsetDay = XEUtils.getWhatWeek(offsetDay, -1, firstDayOfWeek)
+          } else if (isDwArrow) {
+            offsetDay = XEUtils.getWhatWeek(offsetDay, 1, firstDayOfWeek)
+          }
+          dateMoveDay(offsetDay)
+        } else {
+          let offsetDay = datePanelValue || XEUtils.getWhatDay(Date.now(), 0, 'first')
           if (isLeftArrow) {
             offsetDay = XEUtils.getWhatDay(offsetDay, -1)
           } else if (isUpArrow) {
-            offsetDay = XEUtils.getWhatWeek(offsetDay, -1, firstDayOfWeek)
+            offsetDay = XEUtils.getWhatWeek(offsetDay, -1, offsetDay.getDay() as VxeDatePickerPropTypes.StartDay)
           } else if (isRightArrow) {
             offsetDay = XEUtils.getWhatDay(offsetDay, 1)
           } else if (isDwArrow) {
-            offsetDay = XEUtils.getWhatWeek(offsetDay, 1, firstDayOfWeek)
+            offsetDay = XEUtils.getWhatWeek(offsetDay, 1, offsetDay.getDay() as VxeDatePickerPropTypes.StartDay)
           }
           dateMoveDay(offsetDay)
         }
@@ -1455,7 +1491,22 @@ export default defineComponent({
       triggerEvent(evnt)
     }
 
-    // 弹出面板
+    const handleShortcutEvent: VxeButtonGroupEvents.Click = ({ option, $event }) => {
+      const shortcutOpts = computeShortcutOpts.value
+      const { autoClose } = shortcutOpts
+      const clickMethod = (option as VxeDatePickerDefines.ShortcutOption).clickMethod || shortcutOpts.clickMethod
+      const shortcutParams = {
+        $datePicker: $xeDatePicker,
+        option: option as VxeDatePickerDefines.ShortcutOption
+      }
+      if (clickMethod) {
+        clickMethod(shortcutParams)
+      }
+      if (autoClose) {
+        hidePanel()
+      }
+      dispatchEvent('shortcut-click', shortcutParams, $event)
+    }
 
     // 全局事件
     const handleGlobalMousedownEvent = (evnt: Event) => {
@@ -1998,17 +2049,39 @@ export default defineComponent({
       ]
     }
 
+    const renderShortcutBtn = (pos: 'top' | 'bottom' | 'left' | 'right' | 'header' | 'footer', isVertical?: boolean) => {
+      const shortcutOpts = computeShortcutOpts.value
+      const { options, position, align, mode } = shortcutOpts
+      if (isEnableConf(shortcutOpts) && options && options.length && (position || 'left') === pos) {
+        return h('div', {
+          class: `vxe-date-picker--panel-${pos}-wrapper`
+        }, [
+          h(VxeButtonGroupComponent, {
+            options,
+            mode,
+            align,
+            vertical: isVertical,
+            onClick: handleShortcutEvent
+          })
+        ])
+      }
+      return renderEmptyElement($xeDatePicker)
+    }
+
     const renderPanel = () => {
       const { type } = props
       const { initialized, isAniVisible, visiblePanel, panelPlacement, panelStyle } = reactData
       const vSize = computeSize.value
       const btnTransfer = computeBtnTransfer.value
+      const shortcutOpts = computeShortcutOpts.value
+      const { options, position } = shortcutOpts
       const headerSlot = slots.header
       const footerSlot = slots.footer
       const topSlot = slots.top
       const bottomSlot = slots.bottom
       const leftSlot = slots.left
       const rightSlot = slots.right
+      const hasShortcutBtn = options && options.length
       const renders = []
       if (type === 'datetime') {
         renders.push(
@@ -2053,10 +2126,10 @@ export default defineComponent({
             'is--transfer': btnTransfer,
             'ani--leave': isAniVisible,
             'ani--enter': visiblePanel,
-            'show--top': !!(topSlot || headerSlot),
-            'show--bottom': !!(bottomSlot || footerSlot),
-            'show--left': !!leftSlot,
-            'show--right': !!rightSlot
+            'show--top': !!(topSlot || headerSlot || (hasShortcutBtn && (position === 'top' || position === 'header'))),
+            'show--bottom': !!(bottomSlot || footerSlot || (hasShortcutBtn && (position === 'bottom' || position === 'footer'))),
+            'show--left': !!(leftSlot || (hasShortcutBtn && position === 'left')),
+            'show--right': !!(rightSlot || (hasShortcutBtn && position === 'right'))
           }],
           placement: panelPlacement,
           style: panelStyle
@@ -2069,7 +2142,7 @@ export default defineComponent({
                   ? h('div', {
                     class: 'vxe-date-picker--panel-top-wrapper'
                   }, topSlot({}))
-                  : renderEmptyElement($xeDatePicker),
+                  : renderShortcutBtn('top'),
                 h('div', {
                   class: 'vxe-date-picker--panel-body-layout-wrapper'
                 }, [
@@ -2077,7 +2150,7 @@ export default defineComponent({
                     ? h('div', {
                       class: 'vxe-date-picker--panel-left-wrapper'
                     }, leftSlot({}))
-                    : renderEmptyElement($xeDatePicker),
+                    : renderShortcutBtn('left', true),
                   h('div', {
                     class: 'vxe-date-picker--panel-body-content-wrapper'
                   }, [
@@ -2085,7 +2158,7 @@ export default defineComponent({
                       ? h('div', {
                         class: 'vxe-date-picker--panel-header-wrapper'
                       }, headerSlot({}))
-                      : renderEmptyElement($xeDatePicker),
+                      : renderShortcutBtn('header'),
                     h('div', {
                       class: 'vxe-date-picker--panel-body-wrapper'
                     }, renders),
@@ -2093,19 +2166,19 @@ export default defineComponent({
                       ? h('div', {
                         class: 'vxe-date-picker--panel-footer-wrapper'
                       }, footerSlot({}))
-                      : renderEmptyElement($xeDatePicker)
+                      : renderShortcutBtn('footer')
                   ]),
                   rightSlot
                     ? h('div', {
                       class: 'vxe-date-picker--panel-right-wrapper'
                     }, rightSlot({}))
-                    : renderEmptyElement($xeDatePicker)
+                    : renderShortcutBtn('right', true)
                 ]),
                 bottomSlot
                   ? h('div', {
                     class: 'vxe-date-picker--panel-bottom-wrapper'
                   }, bottomSlot({}))
-                  : renderEmptyElement($xeDatePicker)
+                  : renderShortcutBtn('bottom')
               ])
             ]
           : [])

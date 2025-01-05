@@ -1,5 +1,5 @@
 import { RenderFunction, SetupContext, Ref } from 'vue'
-import { DefineVxeComponentApp, DefineVxeComponentOptions, VxeComponentBaseOptions, DefineVxeComponentInstance, VxeComponentEventParams, VxeComponentPermissionCodeType, VxeComponentStatusType, VxeComponentSizeType, VxeComponentStyleType, ValueOf } from '@vxe-ui/core'
+import { DefineVxeComponentApp, DefineVxeComponentOptions, VxeComponentBaseOptions, DefineVxeComponentInstance, VxeComponentAlignType, VxeComponentEventParams, VxeComponentPermissionCodeType, VxeComponentStatusType, VxeComponentSizeType, VxeComponentStyleType, ValueOf } from '@vxe-ui/core'
 import { VxeTooltipDefines } from './tooltip'
 
 /* eslint-disable no-use-before-define,@typescript-eslint/ban-types */
@@ -49,7 +49,7 @@ export namespace VxeButtonPropTypes {
   export type Disabled = boolean
   export type Loading = boolean
   export type Trigger = 'manual' | 'hover' | 'click' | '' | null
-  export type Align = 'left' | 'center' | 'right' | '' | null
+  export type Align = VxeComponentAlignType
 
   export type PrefixTooltip = VxeTooltipDefines.TooltipHelperOption
   export type SuffixTooltip = VxeTooltipDefines.TooltipHelperOption

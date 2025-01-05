@@ -112,14 +112,17 @@
       <vxe-date-picker v-model="demo1.val6" placeholder="周选择，周五开始" type="week" :start-day="5" clearable></vxe-date-picker>
       <vxe-date-picker v-model="demo1.val7" placeholder="周选择，周六开始" type="week" :start-day="6" clearable></vxe-date-picker>
 
-      <vxe-date-picker v-model="demo1.val8" placeholder="可选日期限制" start-date="2000-01-01" end-date="2040-01-01"></vxe-date-picker>
+      <vxe-date-picker v-model="demo1.val8" placeholder="可选日期限制" start-date="2000-01-01" end-date="2040-01-01" :shortcut-config="shortcutConfig1"></vxe-date-picker>
+
+      <vxe-date-picker v-model="demo1.val828" placeholder="时:分" type="time" value-format="HH:mm" label-format="HH:mm" clearable></vxe-date-picker>
+      <vxe-date-picker v-model="demo1.val829" placeholder="时" type="time" value-format="HH" label-format="HH" clearable></vxe-date-picker>
     </p>
   </div>
 </template>
 
 <script lang="ts" setup>
-import { reactive } from 'vue'
-import { VxeInputPropTypes, VxeInputDefines } from '../../../types'
+import { ref, reactive } from 'vue'
+import { VxeDatePickerPropTypes, VxeInputDefines } from '../../../types'
 import XEUtils from 'xe-utils'
 
 const demo1 = reactive({
@@ -183,10 +186,20 @@ const demo1 = reactive({
   value803: '',
   value804: '',
   value805: '',
-  value900: '11111111'
+  value900: '11111111',
+  val828: '',
+  val829: ''
 })
 
-const disabledDateMethod: VxeInputPropTypes.DisabledMethod = (params) => {
+const shortcutConfig1 = ref<VxeDatePickerPropTypes.ShortcutConfig>({
+  options: [
+    { content: '上一周' },
+    { content: '本周' },
+    { content: '下一周' }
+  ]
+})
+
+const disabledDateMethod: VxeDatePickerPropTypes.DisabledMethod = (params) => {
   const { date } = params
   const dd = date.getDate()
   return dd > 15
@@ -213,7 +226,7 @@ const noticeMaps: { [key: string]: VxeInputDefines.DateFestivalInfo } = {
     label: '游泳'
   }
 }
-const festivalNoticeMethod: VxeInputPropTypes.FestivalMethod = (params) => {
+const festivalNoticeMethod: VxeDatePickerPropTypes.FestivalMethod = (params) => {
   const { date, viewType } = params
   if (viewType === 'day') {
     const ymd = XEUtils.toDateString(date, 'yyyyMMdd')
@@ -271,7 +284,7 @@ const calendarMaps: { [key: string]: VxeInputDefines.DateFestivalInfo } = {
     }
   }
 }
-const festivalCalendarMethod: VxeInputPropTypes.FestivalMethod = (params) => {
+const festivalCalendarMethod: VxeDatePickerPropTypes.FestivalMethod = (params) => {
   const { date, viewType } = params
   if (viewType === 'day') {
     const ymd = XEUtils.toDateString(date, 'yyyyMMdd')

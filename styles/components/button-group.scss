@@ -2,8 +2,20 @@
   display: inline-flex;
   &.is--vertical {
     flex-direction: column;
-    .vxe-button {
-      margin: 0;
+    .vxe-button,
+    .vxe-button-wrapper {
+      &+.vxe-button-wrapper,
+      &+.vxe-button,
+      &+.vxe-button--dropdown {
+        margin-top: 0.5em;
+      }
+    }
+    .vxe-button--dropdown {
+      &+.vxe-button-wrapper,
+      &+.vxe-button,
+      &+.vxe-button--dropdown {
+        margin-top: 0.5em;
+      }
     }
   }
 }
