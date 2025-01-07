@@ -3766,6 +3766,7 @@ export interface TablePrivateMethods<D = any> {
   triggerHeaderCellMousedownEvent(evnt: any, params: any): void
   triggerCellMousedownEvent(evnt: MouseEvent, params: any): void
   triggerCellMousedownEvent(evnt: any, params: any): void
+  handleRowDragSwapEvent (evnt: DragEvent, isSyncRow: boolean | undefined, dragRow: any, prevDragRow: any, prevDragPos: '' | 'top' | 'bottom' | 'left' | 'right' | undefined, prevDragToChild: boolean | undefined): Promise<void>
   handleRowDragDragstartEvent (evnt: DragEvent): void
   handleRowDragDragendEvent(evnt: DragEvent): void
   handleRowDragDragoverEvent(evnt: DragEvent,): void

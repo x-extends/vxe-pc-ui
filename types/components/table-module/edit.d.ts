@@ -16,13 +16,13 @@ export interface TableEditMethods<D = any> {
    * @param {Object/Array} records 新的数据
    * @param {Row} targetRow 指定行
    */
-  insertAt(records: any, targetRow: any | -1 | null): Promise<{ row: D, rows: D[] }>
+  insertAt(records: any, targetRow?: any | -1 | null): Promise<{ row: D, rows: D[] }>
   /**
    * 与 insertAt 行为一致，区别就是会插入指定目标的到下一行
    * @param records records 新的数据
    * @param targetRow row 指定行
    */
-  insertNextAt(records: any, targetRow: any | -1 | null): Promise<{ row: D, rows: D[] }>
+  insertNextAt(records: any, targetRow?: any | -1 | null): Promise<{ row: D, rows: D[] }>
   /**
    * 用于树结构，往指定节点插入子级临时数据，从子级的第一行新增一行或多行新数据
    * @param records 新数据
