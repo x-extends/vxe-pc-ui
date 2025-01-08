@@ -75,6 +75,10 @@ export default defineVxeComponent({
       default: null
     },
     step: [String, Number] as PropType<VxeInputPropTypes.Step>,
+    trim: {
+      type: Boolean as PropType<VxeInputPropTypes.Trim>,
+      default: () => getConfig().input.trim
+    },
     exponential: {
       type: Boolean as PropType<VxeInputPropTypes.Exponential>,
       default: () => getConfig().input.exponential
@@ -876,12 +880,14 @@ export default defineVxeComponent({
     },
     emitModel (value: any) {
       const $xeInput = this
+      const props = $xeInput
 
+      const { trim } = props
       const { _events } = $xeInput as any
       if (_events && _events.modelValue) {
-        $xeInput.$emit('modelValue', value)
+        $xeInput.$emit('modelValue', trim ? `${value || ''}`.trim() : value)
       } else {
-        $xeInput.$emit('model-value', value)
+        $xeInput.$emit('model-value', trim ? `${value || ''}`.trim() : value)
       }
     },
     focus () {
@@ -950,6 +956,9 @@ export default defineVxeComponent({
       const $xeSelect = $xeInput.$xeSelect
       const $xeTreeSelect = $xeInput.$xeTreeSelect
 
+      if (props.trim) {
+        value = `${value || ''}`.trim()
+      }
       reactData.inputValue = value
       $xeInput.emitModel(value)
       $xeInput.dispatchEvent('input', { value }, evnt as any)

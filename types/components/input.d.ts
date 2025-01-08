@@ -39,6 +39,7 @@ export namespace VxeInputPropTypes {
   export type Min = string | number
   export type Max = string | number
   export type Step = string | number
+  export type Trim = boolean
   export type Exponential = boolean
   export type Controls = boolean
   export type Digits = string | number
@@ -98,6 +99,7 @@ export interface VxeInputProps {
   min?: VxeInputPropTypes.Min
   max?: VxeInputPropTypes.Max
   step?: VxeInputPropTypes.Step
+  trim?: VxeInputPropTypes.Trim
   exponential?: VxeInputPropTypes.Exponential
 
   // number、integer、float、password
