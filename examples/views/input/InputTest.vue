@@ -1,7 +1,7 @@
 <template>
   <div>
     <p>
-      <vxe-input v-model="demo1.value100" placeholder="默认尺寸"></vxe-input>
+      <vxe-input v-model="demo1.value100" placeholder="默认尺寸" trim></vxe-input>
       <vxe-input v-model="demo1.value101" placeholder="中等尺寸" size="medium"></vxe-input>
       <vxe-input v-model="demo1.value102" placeholder="小型尺寸" size="small"></vxe-input>
       <vxe-input v-model="demo1.value103" placeholder="超小尺寸" size="mini"></vxe-input>

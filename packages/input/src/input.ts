@@ -67,6 +67,10 @@ export default defineComponent({
       default: null
     },
     step: [String, Number] as PropType<VxeInputPropTypes.Step>,
+    trim: {
+      type: Boolean as PropType<VxeInputPropTypes.Trim>,
+      default: () => getConfig().input.trim
+    },
     exponential: {
       type: Boolean as PropType<VxeInputPropTypes.Exponential>,
       default: () => getConfig().input.exponential
@@ -787,14 +791,21 @@ export default defineComponent({
       return restVal.slice(0, inpMaxLength)
     }
 
+    const emitModel = (value: string) => {
+      emit('update:modelValue', value)
+    }
+
     const triggerEvent = (evnt: Event & { type: 'input' | 'change' | 'keydown' | 'keyup' | 'wheel' | 'click' | 'focus' | 'blur' }) => {
       const { inputValue } = reactData
       inputMethods.dispatchEvent(evnt.type, { value: inputValue }, evnt)
     }
 
     const handleChange = (value: string, evnt: Event | { type: string }) => {
+      if (props.trim) {
+        value = `${value || ''}`.trim()
+      }
       reactData.inputValue = value
-      emit('update:modelValue', value)
+      emitModel(value)
       inputMethods.dispatchEvent('input', { value }, evnt as any)
       if (XEUtils.toValueString(props.modelValue) !== value) {
         inputMethods.dispatchEvent('change', { value }, evnt as any)
