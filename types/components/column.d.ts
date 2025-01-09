@@ -1,5 +1,5 @@
 import { DefineVxeComponentApp, DefineVxeComponentOptions, DefineVxeComponentInstance, VxeComponentEventParams, VxeComponentSlotType, ValueOf } from '@vxe-ui/core'
-import { VxeTableDefines, VxeTablePropTypes, VxeTableConstructor } from './table'
+import { VxeTableDefines, VxeTablePropTypes, VxeTableConstructor, VxeTableSlotTypes } from './table'
 import { VxeTooltipDefines } from './tooltip'
 import { VxeGlobalRendererHandles } from '../ui'
 
@@ -335,6 +335,16 @@ export namespace VxeColumnPropTypes {
      * 只对 edit-render 启用时有效，自定义可编辑组件模板
      */
     valid?: string | ((params: VxeColumnSlotTypes.ValidSlotParams<D>) => VxeComponentSlotType[] | VxeComponentSlotType) | null
+    /**
+     * 只对 row-config.drag 开启后有效，自定义行拖拽按钮图标
+     */
+    rowDragIcon?: string | ((params: VxeTableSlotTypes.RowDragIconSlotParams<D>) => VxeComponentSlotType[] | VxeComponentSlotType) | null
+    'row-drag-icon'?: string | ((params: VxeTableSlotTypes.RowDragIconSlotParams<D>) => VxeComponentSlotType[] | VxeComponentSlotType) | null
+    /**
+     * 只对 column-config.drag 开启后有效，自定义列拖拽按钮图标
+     */
+    columnDragIcon?: string | ((params: VxeTableSlotTypes.ColumnDragIconSlotParams<D>) => VxeComponentSlotType[] | VxeComponentSlotType) | null
+    'column-drag-icon'?: string | ((params: VxeTableSlotTypes.ColumnDragIconSlotParams<D>) => VxeComponentSlotType[] | VxeComponentSlotType) | null
 
     /**
      * 已废弃
@@ -625,6 +635,16 @@ export interface VxeColumnSlots<D = any> {
    * 只对 edit-render 启用时有效，自定义展示错误校验模板
    */
   valid?: (params: VxeColumnSlotTypes.ValidSlotParams<D>) => any
+  /**
+   * 只对 row-config.drag 开启后有效，自定义行拖拽按钮图标
+   */
+  rowDragIcon?: (params: VxeTableSlotTypes.RowDragIconSlotParams<D>) => any
+  'row-drag-icon'?: (params: VxeTableSlotTypes.RowDragIconSlotParams<D>) => any
+  /**
+   * 只对 column-config.drag 开启后有效，自定义列拖拽按钮图标
+   */
+  columnDragIcon?: (params: VxeTableSlotTypes.ColumnDragIconSlotParams<D>) => any
+  'column-drag-icon'?: (params: VxeTableSlotTypes.ColumnDragIconSlotParams<D>) => any
 
   /**
    * 已废弃

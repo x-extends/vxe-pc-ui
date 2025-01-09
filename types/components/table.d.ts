@@ -4163,20 +4163,18 @@ export namespace VxeTableDefines {
     isEdit: boolean
     level: number
     /**
-     * 已废弃
      * @deprecated
      * @private
      */
     visibleData: D[]
     /**
-     * 已废弃
      * @deprecated
      * @private
      */
     data: D[]
     /**
      * 已废弃
-     * @deprecated
+      * @deprecated
      */
     items: any[]
   }
@@ -4954,6 +4952,9 @@ export namespace VxeTableSlotTypes {
   }
   export interface EmptySlotParams<D = any> extends BaseSlotParams<D> {}
   export interface LoadingSlotParams<D = any> extends BaseSlotParams<D> {}
+
+  export interface RowDragIconSlotParams<D = any> extends BaseSlotParams<D>, VxeTableDefines.CellRenderBodyParams<D> {}
+  export interface ColumnDragIconSlotParams<D = any> extends BaseSlotParams<D>, VxeTableDefines.CellRenderHeaderParams<D> {}
 }
 
 export interface VxeTableSlots<D = any> {
@@ -4965,6 +4966,18 @@ export interface VxeTableSlots<D = any> {
    * 自定义加载中模板
    */
   loading?(params: VxeTableSlotTypes.LoadingSlotParams<D>): any
+
+  /**
+   * 只对 row-config.drag 开启后有效，自定义行拖拽按钮图标
+   */
+  rowDragIcon?: (params: VxeTableSlotTypes.RowDragIconSlotParams<D>) => any
+  'row-drag-icon'?: (params: VxeTableSlotTypes.RowDragIconSlotParams<D>) => any
+
+  /**
+   * 只对 column-config.drag 开启后有效，自定义列拖拽按钮图标
+   */
+  columnDragIcon?: (params: VxeTableSlotTypes.ColumnDragIconSlotParams<D>) => any
+  'column-drag-icon'?: (params: VxeTableSlotTypes.ColumnDragIconSlotParams<D>) => any
 }
 
 export * from './table-module'

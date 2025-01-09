@@ -1,6 +1,7 @@
 import { DefineVxeComponentApp, DefineVxeComponentOptions, DefineVxeComponentInstance, VxeComponentEventParams, VxeComponentSizeType, VxeComponentSlotType, ValueOf } from '@vxe-ui/core'
 import { VxeToolbarProps, VxeToolbarPropTypes, VxeToolbarSlotTypes } from './toolbar'
-import { VxeTableDefines, VxeTableEmits, VxeTableConstructor, VxeTableProps, TableMethods } from './table'
+import { VxeTableDefines, VxeTableEmits, VxeTableConstructor, VxeTableProps, TableMethods, VxeTableSlotTypes } from './table'
+import { VxeColumnPropTypes } from './column'
 import { VxePagerProps, VxePagerDefines } from './pager'
 import { VxeFormProps, VxeFormDefines } from './form'
 import { VxeFormItemProps } from './form-item'
@@ -656,6 +657,7 @@ export namespace VxeGridSlotTypes {
   export interface DefaultSlotParams<D = any> {
     $table: VxeTableConstructor<D>
     $grid: VxeGridConstructor<D> | null | undefined
+    rowid: string
     /**
      * 当前行对象，支持数据双向绑定
      */
@@ -689,10 +691,30 @@ export namespace VxeGridSlotTypes {
      */
     _columnIndex: number
 
+    type: string
+    fixed: VxeColumnPropTypes.Fixed
     checked?: boolean
     indeterminate?: boolean
+    seq: string | number
+    level: number
+    isEdit: boolean
+    isHidden: boolean
 
-    items: D[]
+    /**
+     * @deprecated
+     * @private
+     */
+    visibleData: D[]
+    /**
+      * @deprecated
+      * @private
+      */
+    data: D[]
+    /**
+      * 已废弃
+      * @deprecated
+      */
+    items: any[]
 
     [key: string]: any
   }
@@ -712,6 +734,8 @@ export namespace VxeGridSlotTypes {
   export interface AsideLeftSlotParams<D = any> extends BaseSlotParams<D> {}
   export interface AsideRightSlotParams<D = any> extends BaseSlotParams<D> {}
   export interface PagerSlotParams<D = any> extends BaseSlotParams<D> {}
+  export interface RowDragIconSlotParams<D = any> extends VxeTableSlotTypes.RowDragIconSlotParams<D> {}
+  export interface ColumnDragIconSlotParams<D = any> extends VxeTableSlotTypes.ColumnDragIconSlotParams<D> {}
 }
 
 export interface VxeGridSlots<D = any> {
@@ -763,6 +787,18 @@ export interface VxeGridSlots<D = any> {
    * 自定义分页模板
    */
   pager?(params: VxeGridSlotTypes.PagerSlotParams<D>): any
+
+  /**
+   * 只对 row-config.drag 开启后有效，自定义行拖拽按钮图标
+   */
+  rowDragIcon?(params: VxeGridSlotTypes.RowDragIconSlotParams<D>): any
+  'row-drag-icon'?(params: VxeGridSlotTypes.RowDragIconSlotParams<D>): any
+
+  /**
+   * 只对 column-config.drag 开启后有效，自定义列拖拽按钮图标
+   */
+  columnDragIcon?(params: VxeGridSlotTypes.RowDragIconSlotParams<D> | VxeGridSlotTypes.ColumnDragIconSlotParams<D>): any
+  'column-drag-icon'?(params: VxeGridSlotTypes.RowDragIconSlotParams<D> | VxeGridSlotTypes.ColumnDragIconSlotParams<D>): any
 }
 
 export const Grid: typeof VxeGrid
