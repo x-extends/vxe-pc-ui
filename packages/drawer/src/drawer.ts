@@ -291,6 +291,10 @@ export default defineVxeComponent({
       const { initialized, visible } = reactData
       if (!initialized) {
         reactData.initialized = true
+        if (this.transfer) {
+          const elem = $xeDrawer.$refs.refElem as HTMLDivElement
+          document.body.appendChild(elem)
+        }
       }
       if (!visible) {
         reactData.visible = true
