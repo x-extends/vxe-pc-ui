@@ -1,4 +1,4 @@
-import { defineComponent, h, Teleport, ref, Ref, computed, reactive, provide, nextTick, watch, PropType, VNode, onMounted, onUnmounted, createCommentVNode } from 'vue'
+import { defineComponent, h, Teleport, ref, Ref, inject, computed, reactive, provide, nextTick, watch, PropType, VNode, onMounted, onUnmounted, createCommentVNode } from 'vue'
 import XEUtils from 'xe-utils'
 import { getDomNode, getEventTargetNode, toCssUnit } from '../../ui/src/dom'
 import { getLastZIndex, nextZIndex, getFuncText, handleBooleanDefaultValue } from '../../ui/src/utils'
@@ -8,7 +8,8 @@ import VxeLoadingComponent from '../../loading/index'
 import { getSlotVNs } from '../../ui/src/vn'
 import { warnLog, errLog } from '../../ui/src/log'
 
-import type { VxeModalConstructor, VxeModalPropTypes, ModalReactData, ModalInternalData, VxeModalEmits, VxeModalPrivateComputed, ModalEventTypes, VxeButtonInstance, ModalMethods, ModalPrivateRef, VxeModalMethods, ValueOf } from '../../../types'
+import type { VxeModalConstructor, VxeModalPropTypes, ModalReactData, ModalInternalData, VxeModalEmits, VxeModalPrivateComputed, ModalEventTypes, VxeButtonInstance, ModalMethods, ModalPrivateRef, VxeModalMethods, ValueOf, VxeDrawerConstructor, VxeDrawerMethods, VxeFormConstructor, VxeFormPrivateMethods } from '../../../types'
+import type { VxeTableConstructor, VxeTablePrivateMethods } from '../../../types/components/table'
 
 export const allActiveModals: VxeModalConstructor[] = []
 const msgQueue: VxeModalConstructor[] = []
@@ -198,6 +199,11 @@ export default defineComponent({
 
     const xID = XEUtils.uniqueId()
 
+    const $xeParentModal = inject<(VxeModalConstructor & VxeModalMethods)| null>('$xeModal', null)
+    const $xeDrawer = inject<(VxeDrawerConstructor & VxeDrawerMethods) | null>('$xeDrawer', null)
+    const $xeTable = inject<(VxeTableConstructor & VxeTablePrivateMethods) | null>('$xeTable', null)
+    const $xeForm = inject<(VxeFormConstructor & VxeFormPrivateMethods)| null>('$xeForm', null)
+
     const { computeSize } = useSize(props)
 
     const reactData = reactive<ModalReactData>({
@@ -226,6 +232,20 @@ export default defineComponent({
     const refMaps: ModalPrivateRef = {
       refElem
     }
+
+    const computeBtnTransfer = computed(() => {
+      const { transfer } = props
+      if (transfer === null) {
+        const globalTransfer = getConfig().modal.transfer
+        if (XEUtils.isBoolean(globalTransfer)) {
+          return globalTransfer
+        }
+        if ($xeTable || $xeParentModal || $xeDrawer || $xeForm) {
+          return true
+        }
+      }
+      return transfer
+    })
 
     const computeIsMsg = computed(() => {
       return props.type === 'message' || props.type === 'notification'
@@ -1312,6 +1332,7 @@ export default defineComponent({
       const vSize = computeSize.value
       const isMsg = computeIsMsg.value
       const isMinimizeStatus = computeIsMinimizeStatus.value
+      const btnTransfer = computeBtnTransfer.value
       const ons: Record<string, any> = {}
       if (isMsg) {
         ons.onMouseover = selfMouseoverEvent
@@ -1319,7 +1340,7 @@ export default defineComponent({
       }
       return h(Teleport, {
         to: 'body',
-        disabled: props.transfer ? !initialized : true
+        disabled: btnTransfer ? !initialized : true
       }, [
         h('div', {
           ref: refElem,

@@ -1,4 +1,4 @@
-import { defineComponent, h, Teleport, ref, Ref, reactive, nextTick, provide, watch, PropType, onMounted, onUnmounted, computed } from 'vue'
+import { defineComponent, h, Teleport, ref, Ref, inject, reactive, nextTick, provide, watch, PropType, onMounted, onUnmounted, computed } from 'vue'
 import XEUtils from 'xe-utils'
 import { useSize, getIcon, getConfig, getI18n, globalEvents, GLOBAL_EVENT_KEYS, createEvent, renderEmptyElement } from '../../ui'
 import { getLastZIndex, nextZIndex, getFuncText } from '../../ui/src/utils'
@@ -7,7 +7,8 @@ import { getSlotVNs } from '../../ui/src/vn'
 import VxeButtonComponent from '../../button/src/button'
 import VxeLoadingComponent from '../../loading/index'
 
-import type { VxeDrawerPropTypes, DrawerReactData, VxeDrawerEmits, DrawerPrivateRef, DrawerMethods, DrawerPrivateMethods, VxeDrawerPrivateComputed, VxeDrawerConstructor, VxeDrawerPrivateMethods, VxeButtonInstance, DrawerEventTypes, ValueOf } from '../../../types'
+import type { VxeDrawerPropTypes, DrawerReactData, VxeDrawerEmits, DrawerPrivateRef, DrawerMethods, DrawerPrivateMethods, VxeDrawerPrivateComputed, VxeDrawerConstructor, VxeDrawerMethods, VxeButtonInstance, DrawerEventTypes, ValueOf, VxeModalConstructor, VxeModalMethods, VxeFormConstructor, VxeFormPrivateMethods } from '../../../types'
+import type { VxeTableConstructor, VxeTablePrivateMethods } from '../../../types/components/table'
 
 export const allActiveDrawers: VxeDrawerConstructor[] = []
 
@@ -128,6 +129,11 @@ export default defineComponent({
 
     const xID = XEUtils.uniqueId()
 
+    const $xeModal = inject<(VxeModalConstructor & VxeModalMethods)| null>('$xeModal', null)
+    const $xeParentDrawer = inject<(VxeDrawerConstructor & VxeDrawerMethods) | null>('$xeDrawer', null)
+    const $xeTable = inject<(VxeTableConstructor & VxeTablePrivateMethods) | null>('$xeTable', null)
+    const $xeForm = inject<(VxeFormConstructor & VxeFormPrivateMethods)| null>('$xeForm', null)
+
     const { computeSize } = useSize(props)
 
     const refElem = ref<HTMLDivElement>()
@@ -145,6 +151,20 @@ export default defineComponent({
     const refMaps: DrawerPrivateRef = {
       refElem
     }
+
+    const computeBtnTransfer = computed(() => {
+      const { transfer } = props
+      if (transfer === null) {
+        const globalTransfer = getConfig().modal.transfer
+        if (XEUtils.isBoolean(globalTransfer)) {
+          return globalTransfer
+        }
+        if ($xeTable || $xeModal || $xeParentDrawer || $xeForm) {
+          return true
+        }
+      }
+      return transfer
+    })
 
     const computeDragType = computed(() => {
       switch (props.position) {
@@ -169,7 +189,7 @@ export default defineComponent({
 
       getRefMaps: () => refMaps,
       getComputeMaps: () => computeMaps
-    } as unknown as VxeDrawerConstructor & VxeDrawerPrivateMethods
+    } as unknown as VxeDrawerConstructor & VxeDrawerMethods
 
     const getBox = () => {
       const boxElem = refDrawerBox.value
@@ -531,9 +551,10 @@ export default defineComponent({
       const asideSlot = slots.aside || propSlots.aside
       const vSize = computeSize.value
       const dragType = computeDragType.value
+      const btnTransfer = computeBtnTransfer.value
       return h(Teleport, {
         to: 'body',
-        disabled: props.transfer ? !initialized : true
+        disabled: btnTransfer ? !initialized : true
       }, [
         h('div', {
           ref: refElem,

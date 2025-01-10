@@ -1,5 +1,5 @@
 import { VxeComponentEventParams } from '@vxe-ui/core'
-import { VxeTableDefines, VxeTableConstructor, VxeTablePrivateMethods } from '../table'
+import { VxeTableDefines, VxeTableConstructor } from '../table'
 import { VxeGridConstructor } from '../grid'
 
 /* eslint-disable no-use-before-define */
