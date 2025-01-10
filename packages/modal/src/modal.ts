@@ -9,7 +9,8 @@ import VxeLoadingComponent from '../../loading/index'
 import { getSlotVNs } from '../../ui/src/vn'
 import { warnLog, errLog } from '../../ui/src/log'
 
-import type { VxeModalConstructor, VxeModalPropTypes, ModalReactData, ModalInternalData, ModalEventTypes, VxeModalEmits, VxeComponentSizeType, VxeComponentPermissionInfo, ValueOf, VxeButtonConstructor } from '../../../types'
+import type { VxeModalConstructor, VxeModalPropTypes, ModalReactData, ModalInternalData, VxeModalMethods, ModalEventTypes, VxeModalEmits, VxeComponentSizeType, VxeComponentPermissionInfo, ValueOf, VxeButtonConstructor, VxeDrawerConstructor, VxeDrawerMethods, VxeFormConstructor, VxeFormPrivateMethods } from '../../../types'
+import type { VxeTableConstructor, VxeTablePrivateMethods } from '../../../types/components/table'
 
 export const allActiveModals: VxeModalConstructor[] = []
 const msgQueue: VxeModalConstructor[] = []
@@ -186,6 +187,21 @@ export default defineVxeComponent({
       default: () => getConfig().modal.animat
     }
   },
+  inject: {
+    $xeParentModal: {
+      from: '$xeModal',
+      default: null
+    },
+    $xeDrawer: {
+      default: null
+    },
+    $xeTable: {
+      default: null
+    },
+    $xeForm: {
+      default: null
+    }
+  },
   provide () {
     const $xeModal = this
     return {
@@ -219,7 +235,31 @@ export default defineVxeComponent({
     ...({} as {
       computePermissionInfo(): VxeComponentPermissionInfo
       computeSize(): VxeComponentSizeType
+      $xeParentModal(): (VxeModalConstructor & VxeModalMethods) | null
+      $xeDrawer(): (VxeDrawerConstructor & VxeDrawerMethods) | null
+      $xeTable(): (VxeTableConstructor & VxeTablePrivateMethods) | null
+      $xeForm(): (VxeFormConstructor & VxeFormPrivateMethods) | null
     }),
+    computeBtnTransfer () {
+      const $xeSelect = this
+      const props = $xeSelect
+      const $xeTable = $xeSelect.$xeTable
+      const $xeParentModal = $xeSelect.$xeParentModal
+      const $xeDrawer = $xeSelect.$xeDrawer
+      const $xeForm = $xeSelect.$xeForm
+
+      const { transfer } = props
+      if (transfer === null) {
+        const globalTransfer = getConfig().select.transfer
+        if (XEUtils.isBoolean(globalTransfer)) {
+          return globalTransfer
+        }
+        if ($xeTable || $xeParentModal || $xeDrawer || $xeForm) {
+          return true
+        }
+      }
+      return transfer
+    },
     computeIsMsg () {
       const $xeModal = this
       const props = $xeModal
@@ -822,11 +862,12 @@ export default defineVxeComponent({
       const { remember, showFooter } = props
       const { initialized, visible } = reactData
       const isMsg = $xeModal.computeIsMsg
+      const btnTransfer = $xeModal.computeBtnTransfer
       if (!initialized) {
         reactData.initialized = true
-        if (this.transfer) {
-          const elem = $xeModal.$refs.refElem as HTMLDivElement
-          document.body.appendChild(elem)
+        if (btnTransfer) {
+          const panelElem = $xeModal.$refs.refElem as HTMLDivElement
+          document.body.appendChild(panelElem)
         }
       }
       if (!visible) {

@@ -1130,6 +1130,37 @@ export namespace VxeTablePropTypes {
      */
     extendByCalc?: boolean
     /**
+     * 只对 mouse-config.extension 启用后有效，扩展区域的方向控制
+     */
+    extendDirection?: boolean | {
+      /**
+       * 是否允许向上扩展
+       */
+      top?: boolean
+      /**
+       * 是否允许向下扩展
+       */
+      bottom?: boolean
+      /**
+       * 是否允许向左扩展
+       */
+      left?: boolean
+      /**
+       * 是否允许向右扩展
+       */
+      right?: boolean
+    }
+    /**
+     * 只对 mouse-config.extension 启用后有效，扩展区域之前的方法，可以通过返回 false 阻止扩展行为
+     * @param params
+     */
+    beforeExtendMethod?(params: VxeTableProDefines.CellAreaExtensionStartParams<D>): boolean
+    /**
+     * 只对 mouse-config.extension 启用后有效，扩展区域之后的方法
+     * @param params
+     */
+    afterExtendMethod?(params: VxeTableProDefines.CellAreaExtensionEndParams<D>): void
+    /**
      * 当点击表格之外，是否自动清除单元格的选取状态
      */
     autoClear?: boolean
@@ -1148,7 +1179,7 @@ export namespace VxeTablePropTypes {
       column: VxeTableDefines.ColumnInfo<D>
     } & VxeTableProDefines.ExtendCellAreaCalcBaseParams<D>): void
     /**
-     * 只对 extendByCopy | extendByCalc 启用后有效，自定义单元格扩展区域赋值之前的方法，可以通过返回 false 阻止扩展行为
+     * 只对 extendByCopy | extendByCalc 启用后有效，自定义单元格扩展区域赋值之前的方法，可以通过返回 false 阻止扩展赋值行为
      * @param params
      */
     beforeExtendSetMethod?(params: VxeTableProDefines.ExtendCellAreaCalcBaseParams<D>): boolean
@@ -1158,7 +1189,7 @@ export namespace VxeTablePropTypes {
      */
     afterExtendSetMethod?(params: {
       extendValues: any[][]
-    } & VxeTableProDefines.ExtendCellAreaCalcBaseParams<D>): boolean
+    } & VxeTableProDefines.ExtendCellAreaCalcBaseParams<D>): void
   }
   export interface AreaOpts<D = any> extends AreaConfig<D> { }
 

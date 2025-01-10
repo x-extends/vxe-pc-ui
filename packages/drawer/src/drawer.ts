@@ -8,7 +8,8 @@ import { getSlotVNs } from '../../ui/src/vn'
 import VxeButtonComponent from '../../button/src/button'
 import VxeLoadingComponent from '../../loading/index'
 
-import type { VxeDrawerPropTypes, DrawerReactData, VxeDrawerEmits, ValueOf, VxeDrawerConstructor, VxeButtonConstructor, DrawerEventTypes } from '../../../types'
+import type { VxeDrawerPropTypes, DrawerReactData, VxeDrawerEmits, VxeDrawerMethods, ValueOf, VxeDrawerConstructor, VxeButtonConstructor, DrawerEventTypes, VxeModalConstructor, VxeModalMethods, VxeFormConstructor, VxeFormPrivateMethods } from '../../../types'
+import type { VxeTableConstructor, VxeTablePrivateMethods } from '../../../types/components/table'
 
 export const allActiveDrawers: VxeDrawerConstructor[] = []
 
@@ -118,6 +119,21 @@ export default defineVxeComponent({
     },
     slots: Object as PropType<VxeDrawerPropTypes.Slots>
   },
+  inject: {
+    $xeModal: {
+      default: null
+    },
+    $xeParentDrawer: {
+      from: '$xeDrawer',
+      default: null
+    },
+    $xeTable: {
+      default: null
+    },
+    $xeForm: {
+      default: null
+    }
+  },
   provide () {
     const $xeDrawer = this
     return {
@@ -139,7 +155,31 @@ export default defineVxeComponent({
   computed: {
     ...({} as {
       computeSize(): DrawerReactData
+      $xeModal(): (VxeModalConstructor & VxeModalMethods) | null
+      $xeParentDrawer(): (VxeDrawerConstructor & VxeDrawerMethods) | null
+      $xeTable(): (VxeTableConstructor & VxeTablePrivateMethods) | null
+      $xeForm(): (VxeFormConstructor & VxeFormPrivateMethods) | null
     }),
+    computeBtnTransfer () {
+      const $xeSelect = this
+      const props = $xeSelect
+      const $xeTable = $xeSelect.$xeTable
+      const $xeModal = $xeSelect.$xeModal
+      const $xeParentDrawer = $xeSelect.$xeParentDrawer
+      const $xeForm = $xeSelect.$xeForm
+
+      const { transfer } = props
+      if (transfer === null) {
+        const globalTransfer = getConfig().select.transfer
+        if (XEUtils.isBoolean(globalTransfer)) {
+          return globalTransfer
+        }
+        if ($xeTable || $xeModal || $xeParentDrawer || $xeForm) {
+          return true
+        }
+      }
+      return transfer
+    },
     computeDragType () {
       const $xeDrawer = this
       const props = $xeDrawer
@@ -289,11 +329,12 @@ export default defineVxeComponent({
 
       const { showFooter } = props
       const { initialized, visible } = reactData
+      const btnTransfer = $xeDrawer.computeBtnTransfer
       if (!initialized) {
         reactData.initialized = true
-        if (this.transfer) {
-          const elem = $xeDrawer.$refs.refElem as HTMLDivElement
-          document.body.appendChild(elem)
+        if (btnTransfer) {
+          const panelElem = $xeDrawer.$refs.refElem as HTMLDivElement
+          document.body.appendChild(panelElem)
         }
       }
       if (!visible) {
@@ -704,11 +745,10 @@ export default defineVxeComponent({
   },
   beforeDestroy () {
     const $xeDrawer = this
-    const reactData = $xeDrawer.reactData
 
-    const { drawerZIndex } = reactData
-    if (allActiveDrawers.some(comp => comp.reactData.visible && comp.reactData.drawerZIndex > drawerZIndex)) {
-      $xeDrawer.updateZindex()
+    const panelElem = $xeDrawer.$refs.refElem as HTMLDivElement
+    if (panelElem && panelElem.parentNode) {
+      panelElem.parentNode.removeChild(panelElem)
     }
     globalEvents.off($xeDrawer, 'keydown')
   },
