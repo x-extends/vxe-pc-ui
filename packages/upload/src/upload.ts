@@ -493,9 +493,10 @@ export default defineVxeComponent({
       return decodeURIComponent(`${url || ''}`).split('/').pop() || ''
     },
     parseFileType  (name: string) {
-      const index = name ? name.indexOf('.') : -1
-      if (index > -1) {
-        return name.substring(index + 1, name.length).toLowerCase()
+      // 这里不用split('.').pop()因为没有后缀时会返回自身
+      const index = name.lastIndexOf('.')
+      if (index > 0) {
+        return name.substring(index + 1).toLowerCase()
       }
       return ''
     },
