@@ -1,4 +1,5 @@
 import { VNode, CreateElement } from 'vue'
+import { NormalizedScopedSlot } from 'vue/types/vnode'
 import { DefineVxeComponentApp, DefineVxeComponentOptions, DefineVxeComponentInstance, VxeComponentEventParams, VxeComponentSizeType, ValueOf, VxeGlobalConfig, VxeComponentStyleType, VxeComponentSlotType } from '@vxe-ui/core'
 import { VxeColumnPropTypes, VxeColumnProps, VxeColumnSlotTypes } from './column'
 import { VxeTableProDefines, VxeTableProEmits } from './table-plugins'
@@ -1796,9 +1797,9 @@ export namespace VxeTablePropTypes {
 
   export interface ScrollY {
     /**
-     * 滚动模式，
-     * default 原生滚动模式
-     * wheel 优化模式可以降低渲染期的白屏
+     * 默认行为，无需设置
+     * @deprecated
+     * @private
      */
     mode?: 'default' | 'wheel'
     /**
@@ -1836,6 +1837,92 @@ export namespace VxeTablePropTypes {
   export interface SYOpts extends ScrollY {
     gt: number
     oSize: number
+  }
+
+  export interface VirtualXConfig {
+    /**
+     * 指定大于指定列时自动启动横向虚拟滚动，如果为 0 则总是启用；如果需要关闭，可以设置 enabled 为 false
+     */
+    gt?: number
+    /**
+     * 指定每次渲染的数据偏移量，偏移量越大渲染次数就越少，但每次渲染耗时就越久（对于低性能浏览器可以设置大一点，减低渲染次数）
+     */
+    oSize?: number
+    /**
+     * 是否启用，支持局部/全局启用
+     */
+    enabled?: boolean
+    /**
+     * 是否开启实时渲染，当单元格渲染量太大时应该关闭，避免卡顿
+     */
+    immediate?: boolean
+    /**
+     * 当数据源被更改时，自动将横向滚动条滚动到左侧
+     */
+    scrollToLeftOnChange?: boolean
+    /**
+     * 滚动到边界触发的阈值会触发 scroll-boundary 事件
+     */
+    threshold?: string | number
+  }
+
+  export interface VirtualYConfig {
+    /**
+     * 指定大于指定行时自动启动纵向虚拟滚动，如果为 0 则总是启用；如果需要关闭，可以设置 enabled 为 false（注：启用纵向虚拟滚动之后将不能支持动态行高）
+     */
+    gt?: number
+    /**
+     * 指定每次渲染的数据偏移量，偏移量越大渲染次数就越少，但每次渲染耗时就越久（对于低性能浏览器可以设置大一点，减低渲染次数）
+     */
+    oSize?: number
+    /**
+     * 是否启用，支持局部/全局启用
+     */
+    enabled?: boolean
+    /**
+     * 是否开启实时渲染，当单元格渲染量太大时应该关闭，避免卡顿
+     */
+    immediate?: boolean
+    /**
+     * 当数据源被更改时，自动将纵向滚动条复原到顶部
+     */
+    scrollToTopOnChange?: boolean
+    /**
+     * 滚动到边界触发的阈值会触发 scroll-boundary 事件
+     */
+    threshold?: string | number
+  }
+
+  /**
+   * 滚动条配置项
+   */
+  export interface ScrollbarConfig {
+    /**
+     * 滚动宽度
+     */
+    width?: number
+    /**
+     * 滚动宽度
+     */
+    height?: number
+    /**
+     * 横向滚动条
+     */
+    x?: {
+      /**
+       * 滚动显示位置
+       */
+      position?: 'top' | 'bottom' | ''
+    }
+    /**
+     * 纵向滚动条
+     */
+    y?: {
+      /**
+       * 滚动显示位置
+       */
+      position?: 'left' | 'right' | ''
+    }
   }
 
   export type Params = any
@@ -2483,13 +2570,27 @@ export interface VxeTableProps<D = any> {
    */
   loadingConfig?: VxeTablePropTypes.LoadingConfig
   /**
-   * 横向虚拟滚动配置
+   * 已废弃，不建议使用，被 virtual-x-config 替换
+   * @deprecated
    */
   scrollX?: VxeTablePropTypes.ScrollX
   /**
-   * 纵向虚拟滚动配置
+   * 已废弃，不建议使用，被 virtual-y-config 替换
+   * @deprecated
    */
   scrollY?: VxeTablePropTypes.ScrollY
+  /**
+   * 横向虚拟滚动配置
+   */
+  virtualXConfig?: VxeTablePropTypes.VirtualXConfig
+  /**
+   * 纵向虚拟滚动配置
+   */
+  virtualYConfig?: VxeTablePropTypes.VirtualYConfig
+  /**
+   * 滚动条配置项
+   */
+  scrollbarConfig?: VxeTablePropTypes.ScrollbarConfig
   /**
    * 自定义参数（可以用来存放一些自定义的数据）
    */
@@ -2561,9 +2662,13 @@ export interface TablePrivateComputed<D = any> {
   computeSize: VxeTablePropTypes.Size
   computeTableId: string
   computeValidOpts: VxeTablePropTypes.ValidOpts<D>
-  computeSXOpts: VxeTablePropTypes.SXOpts
-  computeSYOpts: VxeTablePropTypes.SYOpts
+  computeVirtualXOpts: VxeTablePropTypes.VirtualXConfig
+  computeVirtualYOpts: VxeTablePropTypes.VirtualYConfig
+  computeScrollbarOpts: VxeTablePropTypes.ScrollbarConfig
   computeColumnOpts: VxeTablePropTypes.ColumnOpts
+  computeScrollXThreshold: number
+  computeScrollYThreshold: number
+  computeDefaultRowHeight: number
   computeCellOpts: VxeTablePropTypes.CellConfig
   computeRowOpts: VxeTablePropTypes.RowOpts
   computeRowDragOpts: VxeTablePropTypes.RowDragConfig
@@ -2594,8 +2699,11 @@ export interface TablePrivateComputed<D = any> {
   computeTreeOpts: VxeTablePropTypes.TreeOpts<D>
   computeEmptyOpts: VxeTablePropTypes.EmptyOpts
   computeLoadingOpts: VxeTablePropTypes.LoadingOpts
+  computeCellOffsetWidth: number
   computeCustomOpts: VxeTablePropTypes.CustomOpts<D>
   computeAutoWidthColumnList: VxeTableDefines.ColumnInfo<D>[]
+  computeLeftFixedWidth: number
+  computeRightFixedWidth: number
   computeFixedColumnSize: number
   computeIsMaxFixedColumn: boolean
   computeIsAllCheckboxDisabled: boolean
@@ -2640,6 +2748,16 @@ export interface TablePrivateComputed<D = any> {
     x: boolean
     y: boolean
   }
+  computeTableBorder: 'default' | 'full' | 'outer' | 'inner' | 'none'
+
+  /**
+   * @deprecated
+   */
+  computeSXOpts: VxeTablePropTypes.SXOpts
+  /**
+   * @deprecated
+   */
+  computeSYOpts: VxeTablePropTypes.SYOpts
 }
 export interface VxeTablePrivateComputed<D = any> extends TablePrivateComputed<D> { }
 
@@ -2875,11 +2993,11 @@ export interface TableReactData<D = any> {
   isDragRowMove: Boolean
   dragRow: any
   isDragColMove: boolean
-  dragCol: any
+  dragCol: VxeTableDefines.ColumnInfo | null
   dragTipText: string
 
   _isResize: boolean
-  _isLoading: boolean
+  isLoading: boolean
 }
 
 export interface TableInternalData<D = any> {
@@ -2889,17 +3007,22 @@ export interface TableInternalData<D = any> {
   }
   // 存放横向 X 虚拟滚动相关的信息
   scrollXStore: {
+    preloadSize: number
     offsetSize: number
     visibleSize: number
+    visibleStartIndex: number
+    visibleEndIndex: number
     startIndex: number
     endIndex: number
   }
   // 存放纵向 Y 虚拟滚动相关信息
   scrollYStore: {
     adaptive?: boolean
-    rowHeight: number
+    preloadSize: number
     offsetSize: number
     visibleSize: number
+    visibleStartIndex: number
+    visibleEndIndex: number
     startIndex: number
     endIndex: number
   }
@@ -2969,6 +3092,8 @@ export interface TableInternalData<D = any> {
   initStatus: boolean
   isActivated: boolean
 
+  keyCtxTimeout?: undefined | number
+
   // 刷新布局
   rceTimeout?: undefined | number
   rceRunTime?: undefined | number
@@ -2976,9 +3101,12 @@ export interface TableInternalData<D = any> {
   // 滚动属性
   intoRunScroll?: boolean
   inVirtualScroll?: boolean
+  inWheelScroll?: boolean
+
+  inHeaderScroll?: boolean
   inBodyScroll?: boolean
-  bodyScrollType?: '' | 'left' | 'right'
   inFooterScroll?: boolean
+  scrollRenderType?: '' | 'left' | 'right'
   // 同步滚动
   lcsTimeout?: undefined | number
   lcsRunTime?: undefined | number
@@ -3745,7 +3873,7 @@ export interface TablePrivateMethods<D = any> {
    */
   getSetupOptions(): Required<VxeGlobalConfig>
   updateAfterDataIndex(): void
-  callSlot<T>(slotFunc: ((params: T) => VxeComponentSlotType | VxeComponentSlotType[]) | string | null, params: T, h: CreateElement): VxeComponentSlotType[]
+  callSlot<T>(slotFunc: NormalizedScopedSlot | ((params: T) => VxeComponentSlotType | VxeComponentSlotType[]) | string | null, params: T, h: CreateElement): VxeComponentSlotType[]
   getParentElem(): Element | null
   getParentHeight(): number
   getExcludeHeight(): number
@@ -3797,6 +3925,7 @@ export interface TablePrivateMethods<D = any> {
   triggerHeaderCellMousedownEvent(evnt: any, params: any): void
   triggerCellMousedownEvent(evnt: MouseEvent, params: any): void
   triggerCellMousedownEvent(evnt: any, params: any): void
+  triggerCellMouseupEvent(evnt: MouseEvent): void
   handleRowDragSwapEvent (evnt: DragEvent, isSyncRow: boolean | undefined, dragRow: any, prevDragRow: any, prevDragPos: '' | 'top' | 'bottom' | 'left' | 'right' | undefined, prevDragToChild: boolean | undefined): Promise<void>
   handleRowDragDragstartEvent (evnt: DragEvent): void
   handleRowDragDragendEvent(evnt: DragEvent): void
@@ -3821,6 +3950,10 @@ export interface TablePrivateMethods<D = any> {
   }): void
   triggerScrollXEvent(evnt: Event): void
   triggerScrollYEvent(evnt: Event): void
+  triggerHeaderScrollEvent(evnt: Event, fixedType: 'right' | 'left' | ''): void
+  triggerBodyScrollEvent(evnt: Event, fixedType: 'right' | 'left' | ''): void
+  triggerFooterScrollEvent(evnt: Event, fixedType: 'right' | 'left' | ''): void
+  triggerBodyWheelEvent(evnt: WheelEvent): void
   scrollToTreeRow(row: any): Promise<any>
   updateScrollYStatus(fullData?: any[]): boolean
   updateScrollXSpace(): void
@@ -3890,6 +4023,7 @@ export type VxeTableEmits = [
   'column-dragstart',
   'column-dragover',
   'column-dragend',
+  'enter-append-row',
 
   'edit-actived', // 已废弃
 
@@ -3897,6 +4031,7 @@ export type VxeTableEmits = [
   'edit-disabled',
   'valid-error',
   'scroll',
+  'scroll-boundary',
   'custom',
 
   ...VxeTableProEmits
@@ -4133,19 +4268,19 @@ export namespace VxeTableDefines {
     /**
      * @private
      */
-    renderHeader(params: CellRenderHeaderParams<D>): VNode[]
+    renderHeader(h: CreateElement, params: CellRenderHeaderParams<D>): VNode[]
     /**
      * @private
      */
-    renderCell(params: CellRenderCellParams<D>): VNode[]
+    renderCell(h: CreateElement, params: CellRenderCellParams<D>): VNode[]
     /**
      * @private
      */
-    renderData(params: CellRenderDataParams<D>): VNode[]
+    renderData(h: CreateElement, params: CellRenderDataParams<D>): VNode[]
     /**
      * @private
      */
-    renderFooter(params: CellRenderFooterParams<D>): VNode[]
+    renderFooter(h: CreateElement, params: CellRenderFooterParams<D>): VNode[]
 
     /**
      * 获取列标题
