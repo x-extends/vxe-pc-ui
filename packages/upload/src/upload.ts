@@ -493,9 +493,9 @@ export default defineVxeComponent({
       return decodeURIComponent(`${url || ''}`).split('/').pop() || ''
     },
     parseFileType  (name: string) {
-      const index = name ? name.indexOf('.') : -1
-      if (index > -1) {
-        return name.substring(index + 1, name.length).toLowerCase()
+      const index = name.lastIndexOf('.')
+      if (index > 0) {
+        return name.substring(index + 1).toLowerCase()
       }
       return ''
     },
