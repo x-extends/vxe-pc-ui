@@ -77,7 +77,8 @@ export default {
       customRestore: 'Відновити за замовчуванням',
       maxFixedCol: 'Максимальна кількість зафіксованих стовпців не повинна перевищувати {0}',
       dragTip: 'Переміщення: {0}',
-      resizeColTip: '{0} пікселів'
+      resizeColTip: '宽：{0} 像素',
+      resizeRowTip: '高：{0} 像素'
     },
     grid: {
       selectOneRecord: 'Будь ласка, виберіть хоча б один запис!',
