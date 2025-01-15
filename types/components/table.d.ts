@@ -329,7 +329,8 @@ export namespace VxeTablePropTypes {
      */
     resizable?: boolean
     /**
-     * 只对 show-overflow 有效，每一行的高度
+     * 已废弃，被 cell-config.height 替换
+     * @deprecated
      */
     height?: number
     /**
@@ -703,6 +704,30 @@ export namespace VxeTablePropTypes {
      * 双击自适应列宽，启用后双向拖拽线，自动根据整列的内容自适应调整列宽
      */
     isDblclickAutoWidth?: boolean
+    /**
+     * 行高拖动的最小高度
+     */
+    minHeight?: number | string | ((params: {
+      $table: VxeTableConstructor<D>
+      column: VxeTableDefines.ColumnInfo<D>
+      columnIndex: number
+      $columnIndex: number
+      $rowIndex: number
+      rowIndex: number
+      row: any
+    }) => number | string)
+    /**
+     * 行高拖动的最大高度
+     */
+    maxHeight?: number | string | ((params: {
+      $table: VxeTableConstructor<D>
+      column: VxeTableDefines.ColumnInfo<D>
+      columnIndex: number
+      $columnIndex: number
+      $rowIndex: number
+      rowIndex: number
+      row: any
+    }) => number | string)
     /**
      * 列宽拖动的最小宽度
      */
@@ -2349,7 +2374,8 @@ export interface VxeTableProps<D = any> {
    */
   stripe?: VxeTablePropTypes.Stripe
   /**
-   * 单元格是否有边距
+   * 已废弃，被 cell-config.padding 替换
+   * @deprecated
    */
   padding?: VxeTablePropTypes.Padding
   /**
@@ -3041,7 +3067,8 @@ export interface TableReactData<D = any> {
   },
   scrollVMLoading: boolean
 
-  isCalcCellHeight: number
+  calcCellHeightFlag: number
+  resizeHeightFlag: number
 
   isCustomStatus: boolean
 
@@ -3051,7 +3078,7 @@ export interface TableReactData<D = any> {
   dragCol: VxeTableDefines.ColumnInfo | null
   dragTipText: string
 
-  _isResize: boolean
+  isDragResize: boolean
   isLoading: boolean
 }
 
@@ -3942,7 +3969,10 @@ export interface TablePrivateMethods<D = any> {
   updateAllCheckboxStatus(): void
   checkSelectionStatus(): void
   handleBatchSelectRows(rows: any[], value: any, isForce?: boolean): void
-  handleResizeDblclickEvent(evnt: MouseEvent, params: VxeTableDefines.CellRenderHeaderParams & { $table: VxeTableConstructor & VxeTablePrivateMethods }): void
+  handleColResizeMousedownEvent(evnt: MouseEvent, fixedType: 'left' | 'right' | '', params: VxeTableDefines.CellRenderHeaderParams & { $table: VxeTableConstructor & VxeTablePrivateMethods }): void
+  handleColResizeDblclickEvent(evnt: MouseEvent, params: VxeTableDefines.CellRenderHeaderParams & { $table: VxeTableConstructor & VxeTablePrivateMethods }): void
+  handleRowResizeMousedownEvent(evnt: MouseEvent, params: VxeTableDefines.CellRenderBodyParams & { $table: VxeTableConstructor & VxeTablePrivateMethods }): void
+  handleRowResizeDblclickEvent(evnt: MouseEvent, params: VxeTableDefines.CellRenderBodyParams & { $table: VxeTableConstructor & VxeTablePrivateMethods }): void
   /**
    * use handleBatchSelectRows
    * @deprecated
@@ -4069,7 +4099,11 @@ export type VxeTableEmits = [
   'filter-change',
   'filter-visible',
   'clear-filter',
-  'resizable-change',
+
+  'resizable-change', // 已废弃
+
+  'column-resizable-change',
+  'row-resizable-change',
   'toggle-row-expand',
   'toggle-tree-expand',
   'menu-click',
@@ -4138,6 +4172,7 @@ export namespace VxeTableDefines {
     parent: any
     level: number
     height: number
+    resizeHeight: number
     oTop: number
     treeLoaded?: boolean
     expandLoaded?: boolean
@@ -4201,6 +4236,7 @@ export namespace VxeTableDefines {
     filterRender: VxeColumnPropTypes.FilterRender
     treeNode: VxeColumnPropTypes.TreeNode
     dragSort: VxeColumnPropTypes.DragSort
+    rowResize: VxeColumnPropTypes.RowResize
     visible: VxeColumnPropTypes.Visible
     exportMethod: VxeColumnPropTypes.ExportMethod<D>
     footerExportMethod: VxeColumnPropTypes.FooterExportMethod

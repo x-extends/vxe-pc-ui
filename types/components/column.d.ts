@@ -140,6 +140,10 @@ export namespace VxeColumnPropTypes {
    * 设置为拖拽排序
    */
   export type DragSort = boolean
+  /**
+   * 设置为行高拖拽
+   */
+  export type RowResize = boolean
   export type Visible = boolean
 
   interface ExportMethodParams<D = any> {
@@ -468,6 +472,10 @@ export interface VxeColumnProps<D = any> {
    * 设置为拖拽排序
    */
   dragSort?: VxeColumnPropTypes.DragSort
+  /**
+   * 设置为行高拖拽
+   */
+  rowResize?: VxeColumnPropTypes.RowResize
   /**
    * 是否可视
    */
