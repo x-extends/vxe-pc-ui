@@ -375,9 +375,45 @@ export namespace VxeTablePropTypes {
    */
   export interface CellConfig<D = any>{
     /**
+     * 单元格默认高度
+     */
+    height?: number
+    /**
+     * 是否显示间距
+     */
+    padding?: boolean
+    /**
      * 垂直对齐方式
      */
     verticalAlign?: '' | 'top' | 'center' | null
+  }
+
+  /**
+   * 表头单元格配置项
+   */
+  export interface HeaderCellConfig<D = any>{
+    /**
+     * 单元格默认高度
+     */
+    height?: number
+    /**
+     * 是否显示间距
+     */
+    padding?: boolean
+  }
+
+  /**
+   * 表尾单元格配置项
+   */
+  export interface FooterCellConfig<D = any>{
+    /**
+     * 单元格默认高度
+     */
+    height?: number
+    /**
+     * 是否显示间距
+     */
+    padding?: boolean
   }
 
   /**
@@ -1874,9 +1910,13 @@ export namespace VxeTablePropTypes {
      */
     gt?: number
     /**
-     * 指定每次渲染的数据偏移量，偏移量越大渲染次数就越少，但每次渲染耗时就越久（对于低性能浏览器可以设置大一点，减低渲染次数）
+     * 指定每次渲染的数据偏移量，偏移量越大渲染次数就越少，但每次渲染耗时就越久
      */
     oSize?: number
+    /**
+     * 预加载数量
+     */
+    preSize?: Number
     /**
      * 是否启用，支持局部/全局启用
      */
@@ -1901,9 +1941,13 @@ export namespace VxeTablePropTypes {
      */
     gt?: number
     /**
-     * 指定每次渲染的数据偏移量，偏移量越大渲染次数就越少，但每次渲染耗时就越久（对于低性能浏览器可以设置大一点，减低渲染次数）
+     * 指定每次渲染的数据偏移量，偏移量越大渲染次数就越少，但每次渲染耗时就越久
      */
     oSize?: number
+    /**
+     * 预加载数量
+     */
+    preSize?: Number
     /**
      * 是否启用，支持局部/全局启用
      */
@@ -1927,11 +1971,11 @@ export namespace VxeTablePropTypes {
    */
   export interface ScrollbarConfig {
     /**
-     * 滚动宽度
+     * 滚动条宽度
      */
     width?: number
     /**
-     * 滚动宽度
+     * 滚动条高度
      */
     height?: number
     /**
@@ -1939,7 +1983,7 @@ export namespace VxeTablePropTypes {
      */
     x?: {
       /**
-       * 滚动显示位置
+       * 滚动条显示位置
        */
       position?: 'top' | 'bottom' | ''
     }
@@ -1948,7 +1992,7 @@ export namespace VxeTablePropTypes {
      */
     y?: {
       /**
-       * 滚动显示位置
+       * 滚动条显示位置
        */
       position?: 'left' | 'right' | ''
     }
@@ -2475,6 +2519,14 @@ export interface VxeTableProps<D = any> {
    */
   cellConfig?: VxeTablePropTypes.CellConfig<D>
   /**
+   * 表头单元格配置信息
+   */
+  headerCellConfig?: VxeTablePropTypes.HeaderCellConfig<D>
+  /**
+   * 表尾单元格配置信息
+   */
+  footerCellConfig?: VxeTablePropTypes.FooterCellConfig<D>
+  /**
    * 当前行配置项
    */
   currentConfig?: VxeTablePropTypes.CurrentConfig<D>
@@ -2691,11 +2743,15 @@ export interface TablePrivateComputed<D = any> {
   computeVirtualXOpts: ComputedRef<VxeTablePropTypes.VirtualXConfig>
   computeVirtualYOpts: ComputedRef<VxeTablePropTypes.VirtualYConfig>
   computeScrollbarOpts: ComputedRef<VxeTablePropTypes.ScrollbarConfig>
+  computeScrollbarXToTop: ComputedRef<boolean>
+  computeScrollbarYToLeft: ComputedRef<boolean>
   computeColumnOpts: ComputedRef<VxeTablePropTypes.ColumnOpts>
   computeScrollXThreshold: ComputedRef<number>
   computeScrollYThreshold: ComputedRef<number>
   computeDefaultRowHeight: ComputedRef<number>
   computeCellOpts: ComputedRef<VxeTablePropTypes.CellConfig>
+  computeHeaderCellOpts: ComputedRef<VxeTablePropTypes.HeaderCellConfig>
+  computeFooterCellOpts: ComputedRef<VxeTablePropTypes.FooterCellConfig>
   computeRowOpts: ComputedRef<VxeTablePropTypes.RowOpts>
   computeRowDragOpts: ComputedRef<VxeTablePropTypes.RowDragConfig>
   computeColumnDragOpts: ComputedRef<VxeTablePropTypes.ColumnDragConfig>
@@ -2749,7 +2805,6 @@ export interface TablePrivateComputed<D = any> {
 export interface VxeTablePrivateComputed extends TablePrivateComputed { }
 
 export interface TableReactData<D = any> {
-  isCalcColumn: boolean
   // 低性能的静态列
   staticColumns: any[]
   // 渲染的列分组
@@ -3942,6 +3997,8 @@ export interface TablePrivateMethods<D = any> {
   triggerBodyScrollEvent(evnt: Event, fixedType: 'right' | 'left' | ''): void
   triggerFooterScrollEvent(evnt: Event, fixedType: 'right' | 'left' | ''): void
   triggerBodyWheelEvent(evnt: WheelEvent): void
+  triggerVirtualScrollXEvent(evnt: Event): void
+  triggerVirtualScrollYEvent(evnt: Event): void
   scrollToTreeRow(row: any): Promise<any>
   updateScrollYStatus(fullData?: any[]): boolean
   updateScrollXSpace(): void
@@ -4064,6 +4121,7 @@ export namespace VxeTableDefines {
     index: number
     $index: number
     _index: number
+    treeIndex: number
     items: any[]
     parent: any
     level: number
