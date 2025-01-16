@@ -3484,7 +3484,7 @@ export interface TableMethods<DT = any> {
    * @param fieldOrColumns 列对象或字段名,支持传多个
    * @param width 宽度 %，px
    */
-  setColumnWidth(fieldOrColumns: VxeColumnPropTypes.Field | VxeTableDefines.ColumnInfo<any> | VxeColumnPropTypes.Field[] | VxeTableDefines.ColumnInfo<any>[], width: number | string): Promise<void>
+  setColumnWidth(fieldOrColumns: VxeColumnPropTypes.Field | VxeTableDefines.ColumnInfo<any> | VxeColumnPropTypes.Field[] | VxeTableDefines.ColumnInfo<any>[], width: number | string): Promise<{ status: boolean }>
   /**
    * 获取列宽
    * @param fieldOrColumn 列对象或字段名
@@ -3506,6 +3506,26 @@ export interface TableMethods<DT = any> {
    * 如果传 true 则会检查列顺序并排序
    */
   refreshColumn(resiveOrder?: boolean): Promise<void>
+  /**
+   * 批量设置行高
+   * @param heightConf
+   */
+  setRowHeightConf(heightConf: Record<string, number>): Promise<{ status: boolean }>
+  /**
+   * 批量获取行高
+   */
+  getRowHeightConf(isFull?: boolean): Record<string, number>
+  /**
+   * 设置行高
+   * @param rowOrId 指定单行或多行
+   * @param height 高度
+   */
+  setRowHeight(rowOrId: any | any[], height: number | string): Promise<{ status: boolean }>
+  /**
+   * 获取指定行的高度
+   * @param rowOrId
+   */
+  getRowHeight(rowOrId: any): number
   /**
    * 刷新滚动操作，手动同步滚动相关位置
    * 对于某些特殊的操作，比如滚动条错位、固定列不同步
