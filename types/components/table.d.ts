@@ -701,9 +701,21 @@ export namespace VxeTablePropTypes {
      */
     showDragTip?: boolean
     /**
-     * 双击自适应列宽，启用后双向拖拽线，自动根据整列的内容自适应调整列宽
+     * 双击自适应列宽，启用后双击拖拽线，自动根据整列的内容自适应调整列宽
      */
     isDblclickAutoWidth?: boolean
+    /**
+     * 双击自适应行高，启用后双击拖拽线，自动根据整列的内容自适应调整行高
+     */
+    isDblclickAutoHeight?: boolean
+    /**
+     * 当拖拽调整列宽时，是否自动同步更新所选区域的所有列宽
+     */
+    isSyncAutoWidth?: boolean
+    /**
+     * 当拖拽调整行高时，是否自动同步更新所选区域的所有行高
+     */
+    isSyncAutoHeight?: boolean
     /**
      * 行高拖动的最小高度
      */
@@ -2761,6 +2773,8 @@ export interface TablePrivateComputed<D = any> {
   computeRadioOpts: VxeTablePropTypes.RadioOpts<D>
   computeCheckboxOpts: VxeTablePropTypes.CheckboxOpts<D>
   computeTooltipOpts: VxeTablePropTypes.TooltipOpts<D>
+  computeTableTipConfig: VxeTablePropTypes.TooltipConfig<D>
+  computeValidTipConfig: VxeTablePropTypes.TooltipConfig<D>
   computeEditOpts: VxeTablePropTypes.EditOpts<D>
   computeSortOpts: VxeTablePropTypes.SortConfig<D>
   computeFilterOpts: VxeTablePropTypes.FilterOpts<D>
@@ -2866,7 +2880,11 @@ export interface TableReactData<D = any> {
   scrollbarHeight: number
   // 最后滚动时间戳
   lastScrollTime: number
-  // 行高
+  /**
+   * 行高
+   * @deprecated
+   * @property
+   */
   rowHeight: number
   // 表格父容器的高度
   parentHeight: number
@@ -3203,6 +3221,8 @@ export interface TableInternalData<D = any> {
   // 动态高度
   chRunTime?: undefined | number
   chTimeout?: undefined | number
+
+  isResizeCellHeight?: boolean
 
   // 内部属性
   _lastResizeTime?: any
@@ -3974,24 +3994,82 @@ export interface TablePrivateMethods<D = any> {
    * @deprecated
    */
   getSetupOptions(): Required<VxeGlobalConfig>
+  /**
+   * @private
+   */
   updateAfterDataIndex(): void
+  /**
+   * @private
+   */
   callSlot<T>(slotFunc: NormalizedScopedSlot | ((params: T) => VxeComponentSlotType | VxeComponentSlotType[]) | string | null, params: T, h: CreateElement): VxeComponentSlotType[]
+
+  /**
+   * @private
+   */
   getParentElem(): Element | null
+  /**
+   * @private
+   */
   getParentHeight(): number
+  /**
+   * @private
+   */
   getExcludeHeight(): number
+  /**
+   * @private
+   */
   defineField(records: any[]): any[]
+  /**
+   * @private
+   */
   handleTableData(force?: boolean): Promise<any>
-  cacheRowMap(isSource?: boolean): void
+  /**
+   * @private
+   */
+  cacheRowMap(isReset: boolean, isSource?: boolean, force?: boolean): void
+  /**
+   * @private
+   */
   cacheSourceMap(fullData: any[]): void
+  /**
+   * @private
+   */
   saveCustomStore(type: 'confirm' | 'reset' | 'update:width' | 'update:fixed' | 'update:sort' | 'update:visible'): Promise<any>
+  /**
+   * @private
+   */
   analyColumnWidth(): void
+  /**
+   * @private
+   */
   updateCheckboxStatus(): void
+  /**
+   * @private
+   */
   updateAllCheckboxStatus(): void
+  /**
+   * @private
+   */
   checkSelectionStatus(): void
+  /**
+   * @private
+   */
   handleBatchSelectRows(rows: any[], value: any, isForce?: boolean): void
+  /**
+   * @private
+   */
   handleColResizeMousedownEvent(evnt: MouseEvent, fixedType: 'left' | 'right' | '', params: VxeTableDefines.CellRenderHeaderParams & { $table: VxeTableConstructor & VxeTablePrivateMethods }): void
+  /**
+   * @private
+   */
   handleColResizeDblclickEvent(evnt: MouseEvent, params: VxeTableDefines.CellRenderHeaderParams & { $table: VxeTableConstructor & VxeTablePrivateMethods }): void
+  /**
+   * @private
+   */
   handleRowResizeMousedownEvent(evnt: MouseEvent, params: VxeTableDefines.CellRenderBodyParams & { $table: VxeTableConstructor & VxeTablePrivateMethods }): void
+  /**
+   * @private
+   */
   handleRowResizeDblclickEvent(evnt: MouseEvent, params: VxeTableDefines.CellRenderBodyParams & { $table: VxeTableConstructor & VxeTablePrivateMethods }): void
   /**
    * use handleBatchSelectRows
