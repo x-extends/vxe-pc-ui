@@ -86,6 +86,10 @@ export interface VxeTableProPrivateMethods<D = any> {
   handleCopyCellAreaEvent(evnt: ClipboardEvent): void
   handlePasteCellAreaEvent(evnt: ClipboardEvent): void
   handleCutCellAreaEvent(evnt: ClipboardEvent): void
+  handleColResizeCellAreaEvent(evnt: MouseEvent, params: any): void
+  handleColResizeDblclickCellAreaEvent(evnt: MouseEvent, params: any): void
+  handleRowResizeCellAreaEvent(evnt: MouseEvent, params: any): void
+  handleRowResizeDblclickCellAreaEvent(evnt: MouseEvent, params: any): void
   triggerCellAreaExtendMousedownEvent(evnt: MouseEvent, params: any): void
   triggerCopyCellAreaEvent(evnt: MouseEvent): void
   triggerCutCellAreaEvent(evnt: MouseEvent): void
