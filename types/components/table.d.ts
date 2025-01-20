@@ -522,6 +522,10 @@ export namespace VxeTablePropTypes {
      */
     dragEndMethod?(params: Omit<VxeTableDefines.RowDragendEventParams<D>, '_index'>): Promise<boolean> | boolean
     /**
+     * 用于 isToChildDrag，在拖拽完成后，该方法的返回值用于决定是否拖拽成子级
+     */
+    dragToChildMethod?(params: Omit<VxeTableDefines.RowDragToChildMethod<D>, '_index'>): boolean
+    /**
      * 自定义插槽模板
      */
     slots?: {
@@ -595,6 +599,10 @@ export namespace VxeTablePropTypes {
      * 拖拽结束时是否允许行拖拽调整顺序的方法，该方法的返回值用来决定是否允许被拖拽调整顺序
      */
     dragEndMethod?(params: Omit<VxeTableDefines.ColumnDragendEventParams<D>, '_index'>): Promise<boolean> | boolean
+    /**
+     * 用于 isToChildDrag，在拖拽完成后，该方法的返回值用于决定是否拖拽成子级
+     */
+    dragToChildMethod?(params: Omit<VxeTableDefines.ColumnDragToChildMethod<D>, '_index'>): boolean
     /**
      * 自定义插槽模板
      */
@@ -3174,10 +3182,6 @@ export interface TableInternalData<D = any> {
   fullDataRowIdData: Record<string, VxeTableDefines.RowCacheItem<D>>
   fullColumnIdData: Record<string, VxeTableDefines.ColumnCacheItem<D>>
   fullColumnFieldData: Record<string, VxeTableDefines.ColumnCacheItem<D>>
-  // 列选取状态
-  columnStatusMaps: Record<string, boolean>
-  // 行选取状态
-  rowStatusMaps: Record<string, boolean>
 
   // 上一个拖动的行
   prevDragRow?: any
@@ -4856,6 +4860,8 @@ export namespace VxeTableDefines {
     }
   }
 
+  export interface RowDragToChildMethod<D = any> extends RowDragendEventParams<D> {}
+
   export interface ColumnDragstartEventParams<D = any> {
     column: VxeTableDefines.ColumnInfo<D>
   }
@@ -4878,6 +4884,8 @@ export namespace VxeTableDefines {
       oldIndex: number
     }
   }
+
+  export interface ColumnDragToChildMethod<D = any> extends ColumnDragendEventParams<D> {}
 
   export interface EnterAppendRowEventParams<D = any> {
     row: D
