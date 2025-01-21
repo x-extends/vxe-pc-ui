@@ -382,11 +382,11 @@ export namespace VxeTablePropTypes {
     /**
      * 是否显示间距
      */
-    padding?: boolean
+    padding?: VxeColumnPropTypes.Padding
     /**
      * 垂直对齐方式
      */
-    verticalAlign?: '' | 'top' | 'center' | null
+    verticalAlign?: VxeColumnPropTypes.VerticalAlign
   }
 
   /**
@@ -396,7 +396,7 @@ export namespace VxeTablePropTypes {
     /**
      * 单元格默认高度
      */
-    height?: number
+    height?: number | 'unset'
     /**
      * 是否显示间距
      */
@@ -410,7 +410,7 @@ export namespace VxeTablePropTypes {
     /**
      * 单元格默认高度
      */
-    height?: number
+    height?: number | 'unset'
     /**
      * 是否显示间距
      */
@@ -4315,6 +4315,8 @@ export namespace VxeTableDefines {
     footerClassName: VxeColumnPropTypes.FooterClassName
     formatter: VxeColumnPropTypes.Formatter<D>
     footerFormatter: VxeColumnPropTypes.FooterFormatter<D>
+    padding: VxeColumnPropTypes.Padding
+    verticalAlign: VxeColumnPropTypes.VerticalAlign
     sortable: VxeColumnPropTypes.Sortable
     sortBy: VxeColumnPropTypes.SortBy
     sortType: VxeColumnPropTypes.SortType
