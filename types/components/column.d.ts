@@ -38,6 +38,8 @@ export namespace VxeColumnPropTypes {
   export type ClassName<D = any> = string | ((params: VxeGlobalRendererHandles.RenderCellParams<D>) => string | any[] | { [key: string]: boolean })
   export type HeaderClassName<D = any> = string | ((params: VxeGlobalRendererHandles.RenderHeaderParams<D>) => string | any[] | { [key: string]: boolean })
   export type FooterClassName<D = any> = string | ((params: VxeGlobalRendererHandles.RenderFooterParams<D>) => string | any[] | { [key: string]: boolean })
+  export type Padding = boolean
+  export type VerticalAlign = '' | 'top' | 'center' | null
 
   export type Formatter<D = any> = ((params: {
     cellValue: any
