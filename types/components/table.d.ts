@@ -807,7 +807,18 @@ export namespace VxeTablePropTypes {
     }): any[]
     remote?: boolean
     multiple?: boolean
+    /**
+     * 只对 multiple 有效，是否按照先后触发顺序进行排序
+     */
     chronological?: boolean
+    /**
+     * 只对 allowBtn 有效，是否启用当点击排序图标时，如果与当前一致，则取消排序
+     */
+    allowClear?: boolean
+    /**
+     * 是否允许点击排序图标进行操作
+     */
+    allowBtn?: boolean
     trigger?: 'default' | 'cell'
     /**
      * 是否显示排序按钮图标

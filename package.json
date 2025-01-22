@@ -1,6 +1,6 @@
 {
   "name": "vxe-pc-ui",
-  "version": "3.3.82",
+  "version": "3.3.83",
   "description": "A vue based PC component library",
   "scripts": {
     "update": "npm install --legacy-peer-deps",
