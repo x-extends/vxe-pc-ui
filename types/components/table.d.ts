@@ -3116,7 +3116,8 @@ export interface TableReactData<D = any> {
   dragTipText: string
 
   isDragResize: boolean
-  isLoading: boolean
+  isRowLoading: boolean
+  isColLoading: boolean
 }
 
 export interface TableInternalData<D = any> {
