@@ -722,9 +722,17 @@ export namespace VxeTablePropTypes {
    */
   export interface ResizableConfig<D = VxeTablePropTypes.Row> {
     /**
-     * 列宽拖拽模式，支持自适应和固定模式
+     * 拖拽模式，如果是列拖拽，则支持自适应和固定模式
      */
     dragMode?: 'auto' | 'fixed' | ''
+    /**
+     * 所有单元格默认允许拖拽调整行高
+     */
+    isAllRowDrag?: boolean
+    /**
+     * 所有单元格默认允许拖拽调整列宽
+     */
+    isAllColumnDrag?: boolean
     /**
      * 显示列宽拖拽提示，拖拽过程中实时显示列宽
      */
@@ -4060,11 +4068,11 @@ export interface TablePrivateMethods<D = any> {
   /**
    * @private
    */
-  handleColResizeMousedownEvent(evnt: MouseEvent, fixedType: 'left' | 'right' | '', params: VxeTableDefines.CellRenderHeaderParams & { $table: VxeTableConstructor & VxeTablePrivateMethods }): void
+  handleColResizeMousedownEvent(evnt: MouseEvent, fixedType: 'left' | 'right' | '', params: (VxeTableDefines.CellRenderHeaderParams | VxeTableDefines.CellRenderBodyParams | VxeTableDefines.CellRenderFooterParams) & { $table: VxeTableConstructor & VxeTablePrivateMethods }): void
   /**
    * @private
    */
-  handleColResizeDblclickEvent(evnt: MouseEvent, params: VxeTableDefines.CellRenderHeaderParams & { $table: VxeTableConstructor & VxeTablePrivateMethods }): void
+  handleColResizeDblclickEvent(evnt: MouseEvent, params: (VxeTableDefines.CellRenderHeaderParams | VxeTableDefines.CellRenderBodyParams | VxeTableDefines.CellRenderFooterParams) & { $table: VxeTableConstructor & VxeTablePrivateMethods }): void
   /**
    * @private
    */
