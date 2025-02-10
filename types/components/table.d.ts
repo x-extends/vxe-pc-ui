@@ -487,6 +487,10 @@ export namespace VxeTablePropTypes {
      */
     showIcon?: boolean
     /**
+     * 显示拖拽提示，拖拽过程中显示信息
+     */
+    showDragTip?: boolean
+    /**
      * 触发拖拽方式
      */
     trigger?: 'default' | 'cell' | 'row' | '' | null
@@ -566,6 +570,10 @@ export namespace VxeTablePropTypes {
      * 是否显示拖拽按钮图标
      */
     showIcon?: boolean
+    /**
+     * 显示拖拽提示，拖拽过程中显示信息
+     */
+    showDragTip?: boolean
     /**
      * 触发拖拽方式
      */
