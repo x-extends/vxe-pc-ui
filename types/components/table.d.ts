@@ -2971,9 +2971,9 @@ export interface TableReactData<D = any> {
     import: boolean
     export: boolean
     custom: boolean
-  },
+  }
   // 自定义列相关的信息
-  customStore: VxeTableDefines.VxeTableCustomStoreObj,
+  customStore: VxeTableDefines.VxeTableCustomStoreObj
   customColumnList: VxeTableDefines.ColumnInfo<D>[]
   // 当前选中的筛选列
   filterStore: {
@@ -2986,7 +2986,7 @@ export interface TableReactData<D = any> {
     visible: boolean
     maxHeight: number | null
     [key: string]: any
-  },
+  }
   // 存放列相关的信息
   columnStore: {
     leftList: VxeTableDefines.ColumnInfo<D>[]
@@ -3000,7 +3000,7 @@ export interface TableReactData<D = any> {
     scaleMinList: VxeTableDefines.ColumnInfo<D>[]
     autoList: VxeTableDefines.ColumnInfo<D>[]
     remainList: VxeTableDefines.ColumnInfo<D>[]
-  },
+  }
   // 存放快捷菜单的信息
   ctxMenuStore: {
     selected: any
@@ -3010,7 +3010,7 @@ export interface TableReactData<D = any> {
     list: any[][]
     style: any
     [key: string]: any
-  },
+  }
   // 存放可编辑相关信息
   editStore: {
     indexs: {
@@ -3018,39 +3018,39 @@ export interface TableReactData<D = any> {
     },
     titles: {
       columns: any[]
-    },
+    }
     // 选中源
     selected: {
       row: D | null
       column: any
       [key: string]: any
-    },
+    }
     // 已复制源
     copyed: {
       cut: boolean
       rows: D[]
       columns: any[]
       [key: string]: any
-    },
+    }
     // 激活
     actived: {
       row: D | null
       column: any
       [key: string]: any
-    },
+    }
     // 当前被强制聚焦单元格，只会在鼠标点击后算聚焦
     focused: {
       row: D | null
       column: any
       [key: string]: any
-    },
+    }
     insertMaps: {
       [key: string]: any
     }
     removeMaps: {
       [key: string]: any
     }
-  },
+  }
   // 存放 tooltip 相关信息
   tooltipStore: {
     row: D | null
@@ -3066,7 +3066,7 @@ export interface TableReactData<D = any> {
   // 存放数据校验相关信息
   validStore: {
     visible: boolean
-  },
+  }
   validErrorMaps: {
     [key: string]: {
       row: D | null
@@ -3074,7 +3074,7 @@ export interface TableReactData<D = any> {
       rule: any
       content: any
     }
-  },
+  }
   // 导入相关信息
   importStore: {
     inited: boolean
@@ -3084,12 +3084,12 @@ export interface TableReactData<D = any> {
     typeList: any[]
     filename: any
     visible: boolean
-  },
+  }
   importParams: {
     mode: any
     types: any
     message: boolean
-  },
+  }
   // 导出相关信息
   exportStore: {
     inited: boolean
@@ -3103,7 +3103,7 @@ export interface TableReactData<D = any> {
     hasTree: boolean
     hasColgroup: boolean
     visible: boolean
-  },
+  }
   exportParams: {
     filename: any
     sheetName: any
@@ -3117,7 +3117,14 @@ export interface TableReactData<D = any> {
     message: boolean
     isHeader: boolean
     isFooter: boolean
-  },
+  }
+  rowHeightStore: {
+    default: number
+    medium: number
+    small: number
+    mini: number
+  }
+
   scrollVMLoading: boolean
 
   calcCellHeightFlag: number
@@ -4163,6 +4170,13 @@ export interface TablePrivateMethods<D = any> {
     type: string
     fixed: VxeColumnPropTypes.Fixed
   }): void
+  /**
+   * @private
+   */
+  handleCellRuleUpdateStatus(type: 'change' | 'blur', cellParams: {
+    row: any
+    column: VxeTableDefines.ColumnInfo<any>
+  }, cellValue?: any): Promise<any>
   triggerScrollXEvent(evnt: Event): void
   triggerScrollYEvent(evnt: Event): void
   triggerHeaderScrollEvent(evnt: Event, fixedType: 'right' | 'left' | ''): void
