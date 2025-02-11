@@ -4156,6 +4156,13 @@ export interface TablePrivateMethods<D = any> {
     type: string
     fixed: VxeColumnPropTypes.Fixed
   }): void
+  /**
+   * @private
+   */
+  handleCellRuleUpdateStatus(type: 'change' | 'blur', cellParams: {
+    row: any
+    column: VxeTableDefines.ColumnInfo<any>
+  }, cellValue?: any): Promise<any>
   triggerScrollXEvent(evnt: Event): void
   triggerScrollYEvent(evnt: Event): void
   triggerHeaderScrollEvent(evnt: Event, fixedType: 'right' | 'left' | ''): void
