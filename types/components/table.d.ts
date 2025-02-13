@@ -1000,6 +1000,7 @@ export namespace VxeTablePropTypes {
     reserve?: boolean
     height?: number
     padding?: boolean
+    mode?: 'inside' | 'fixed' | '' | null
     loadMethod?(params: {
       $table: VxeTableConstructor<D>
       row: D
@@ -3112,6 +3113,7 @@ export interface TableReactData<D = any> {
 
   scrollVMLoading: boolean
 
+  rowExpandHeightFlag: number
   calcCellHeightFlag: number
   resizeHeightFlag: number
 
@@ -4304,6 +4306,7 @@ export namespace VxeTableDefines {
     height: number
     resizeHeight: number
     oTop: number
+    expandHeight: number
     treeLoaded?: boolean
     expandLoaded?: boolean
     formatData?: {
