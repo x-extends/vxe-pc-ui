@@ -1000,6 +1000,10 @@ export namespace VxeTablePropTypes {
     reserve?: boolean
     height?: number
     padding?: boolean
+    /**
+     * @deprecated
+     * @private
+     */
     mode?: 'inside' | 'fixed' | '' | null
     loadMethod?(params: {
       $table: VxeTableConstructor<D>
