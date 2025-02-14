@@ -82,7 +82,7 @@ export interface VxeTableProPrivateMethods<D = any> {
   handleMousedownCellAreaEvent(evnt: MouseEvent, params: VxeTableDefines.CellClickEventParams<D>): void
   handleFilterEvent(evnt: Event, params: VxeTableDefines.FilterChangeEventParams<D>): any
   handleSortEvent(evnt: Event, params: VxeTableDefines.SortChangeEventParams<D>): any
-  handleRecalculateCellAreas(): any
+  handleRecalculateCellAreaEvent(): any
   handleCopyCellAreaEvent(evnt: ClipboardEvent): void
   handlePasteCellAreaEvent(evnt: ClipboardEvent): void
   handleCutCellAreaEvent(evnt: ClipboardEvent): void
