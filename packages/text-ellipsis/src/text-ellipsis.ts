@@ -1,18 +1,29 @@
-import { defineComponent, ref, h, PropType, watch, computed, reactive, onMounted, onBeforeUnmount } from 'vue'
+import { defineComponent, ref, h, PropType, watch, computed, reactive, resolveComponent, onMounted, onBeforeUnmount } from 'vue'
 import XEUtils from 'xe-utils'
-import { getConfig, createEvent, useSize } from '../../ui'
+import { getConfig, createEvent, usePermission, useSize, renderEmptyElement } from '../../ui'
 
 import type { TextEllipsisReactData, VxeTextEllipsisEmits, VxeTextEllipsisPropTypes, TextEllipsisMethods, TextEllipsisPrivateMethods, ValueOf, TextEllipsisPrivateRef, VxeTextEllipsisPrivateComputed, VxeTextEllipsisConstructor, VxeTextEllipsisPrivateMethods } from '../../../types'
 
 export default defineComponent({
   name: 'VxeTextEllipsis',
   props: {
+    href: String as PropType<VxeTextEllipsisPropTypes.Href>,
+    target: String as PropType<VxeTextEllipsisPropTypes.Target>,
     content: [String, Number] as PropType<VxeTextEllipsisPropTypes.Content>,
     lineClamp: [String, Number] as PropType<VxeTextEllipsisPropTypes.LineClamp>,
     status: String as PropType<VxeTextEllipsisPropTypes.Status>,
     title: [String, Number] as PropType<VxeTextEllipsisPropTypes.Title>,
     loading: Boolean as PropType<VxeTextEllipsisPropTypes.Loading>,
     offsetLength: [String, Number] as PropType<VxeTextEllipsisPropTypes.OffsetLength>,
+    routerLink: Object as PropType<VxeTextEllipsisPropTypes.RouterLink>,
+    underline: {
+      type: Boolean as PropType<VxeTextEllipsisPropTypes.Underline>,
+      default: () => getConfig().textEllipsis.underline
+    },
+    /**
+     * 权限码
+     */
+    permissionCode: [String, Number] as PropType<VxeTextEllipsisPropTypes.PermissionCode>,
     size: {
       type: String as PropType<VxeTextEllipsisPropTypes.Size>,
       default: () => getConfig().textEllipsis.size || getConfig().size
@@ -27,6 +38,8 @@ export default defineComponent({
     const xID = XEUtils.uniqueId()
 
     const { computeSize } = useSize(props)
+
+    const { computePermissionInfo } = usePermission(props)
 
     const refElem = ref<HTMLDivElement>()
     const realityElem = ref<HTMLDivElement>()
@@ -171,17 +184,50 @@ export default defineComponent({
 
     Object.assign($xeTextEllipsis, textEllipsisMethods, textEllipsisPrivateMethods)
 
-    const renderVN = () => {
-      const { loading, status, title } = props
-      const vSize = computeSize.value
+    const renderContent = () => {
+      const { routerLink, href, target, title } = props
       const visibleContent = computeVisibleContent.value
+      if (routerLink) {
+        return h(resolveComponent('router-link'), {
+          class: 'vxe-text-ellipsis--link',
+          title,
+          target,
+          to: routerLink
+        }, {
+          default () {
+            return renderContent()
+          }
+        })
+      }
+      if (href) {
+        return h('a', {
+          class: 'vxe-text-ellipsis--link',
+          href,
+          target,
+          title
+        }, visibleContent)
+      }
+      return h('span', {
+        class: 'vxe-text-ellipsis--content'
+      }, visibleContent)
+    }
+
+    const renderVN = () => {
+      const { loading, status, title, underline } = props
+      const permissionInfo = computePermissionInfo.value
+      const vSize = computeSize.value
       const textLineClamp = computeTextLineClamp.value
+
+      if (!permissionInfo.visible) {
+        return renderEmptyElement($xeTextEllipsis)
+      }
 
       return h('div', {
         ref: refElem,
         class: ['vxe-text-ellipsis', textLineClamp > 1 ? 'is--multi' : 'is--single', {
           [`size--${vSize}`]: vSize,
           [`theme--${status}`]: status,
+          'is--underline': underline,
           'is--loading': loading
         }],
         title,
@@ -189,11 +235,9 @@ export default defineComponent({
       }, [
         h('span', {
           ref: realityElem,
-          class: 'vxe-text-ellipsis-reality'
+          class: 'vxe-text-ellipsis--reality'
         }),
-        h('span', {
-          class: 'vxe-text-ellipsis-content'
-        }, visibleContent)
+        renderContent()
       ])
     }
 

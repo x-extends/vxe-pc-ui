@@ -1,6 +1,6 @@
-import { defineComponent, ref, h, reactive, PropType, createCommentVNode, resolveComponent } from 'vue'
+import { defineComponent, ref, h, reactive, PropType, resolveComponent } from 'vue'
 import XEUtils from 'xe-utils'
-import { getConfig, usePermission, useSize, createEvent } from '../../ui'
+import { getConfig, usePermission, useSize, createEvent, renderEmptyElement } from '../../ui'
 import { getSlotVNs } from '../../ui/src/vn'
 
 import type { VxeLinkPropTypes, LinkReactData, LinkPrivateRef, LinkMethods, LinkPrivateMethods, VxeLinkEmits, VxeLinkPrivateComputed, VxeLinkConstructor, VxeLinkPrivateMethods, ValueOf } from '../../../types'
@@ -95,12 +95,12 @@ export default defineComponent({
                   class: icon
                 })
               ])
-          : createCommentVNode(),
+          : renderEmptyElement($xeLink),
         defaultSlot || textContent
           ? h('span', {
             class: 'vxe-link--content'
           }, defaultSlot ? defaultSlot({}) : textContent)
-          : createCommentVNode()
+          : renderEmptyElement($xeLink)
       ]
     }
 
@@ -108,9 +108,11 @@ export default defineComponent({
       const { status, target, href, title, underline, routerLink } = props
       const permissionInfo = computePermissionInfo.value
       const vSize = computeSize.value
+
       if (!permissionInfo.visible) {
-        return createCommentVNode()
+        return renderEmptyElement($xeLink)
       }
+
       if (routerLink) {
         return h(resolveComponent('router-link'), {
           class: ['vxe-link', {
