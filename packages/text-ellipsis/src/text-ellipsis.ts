@@ -1,9 +1,9 @@
 import { PropType, CreateElement, VNode } from 'vue'
 import { defineVxeComponent } from '../../ui/src/comp'
 import XEUtils from 'xe-utils'
-import { getConfig, createEvent, globalMixins } from '../../ui'
+import { getConfig, createEvent, renderEmptyElement, globalMixins } from '../../ui'
 
-import type { VxeTextEllipsisPropTypes, TextEllipsisReactData, VxeTextEllipsisEmits, VxeComponentSizeType, ValueOf } from '../../../types'
+import type { VxeTextEllipsisPropTypes, TextEllipsisReactData, VxeTextEllipsisEmits, VxeComponentSizeType, ValueOf, VxeComponentPermissionInfo } from '../../../types'
 
 export default defineVxeComponent({
   name: 'VxeTextEllipsis',
@@ -12,12 +12,23 @@ export default defineVxeComponent({
     globalMixins.permissionMixin
   ],
   props: {
+    href: String as PropType<VxeTextEllipsisPropTypes.Href>,
+    target: String as PropType<VxeTextEllipsisPropTypes.Target>,
     content: [String, Number] as PropType<VxeTextEllipsisPropTypes.Content>,
     lineClamp: [String, Number] as PropType<VxeTextEllipsisPropTypes.LineClamp>,
     status: String as PropType<VxeTextEllipsisPropTypes.Status>,
     title: [String, Number] as PropType<VxeTextEllipsisPropTypes.Title>,
     loading: Boolean as PropType<VxeTextEllipsisPropTypes.Loading>,
     offsetLength: [String, Number] as PropType<VxeTextEllipsisPropTypes.OffsetLength>,
+    routerLink: Object as PropType<VxeTextEllipsisPropTypes.RouterLink>,
+    underline: {
+      type: Boolean as PropType<VxeTextEllipsisPropTypes.Underline>,
+      default: () => getConfig().textEllipsis.underline
+    },
+    /**
+     * 权限码
+     */
+    permissionCode: [String, Number] as PropType<VxeTextEllipsisPropTypes.PermissionCode>,
     size: {
       type: String as PropType<VxeTextEllipsisPropTypes.Size>,
       default: () => getConfig().textEllipsis.size || getConfig().size
@@ -35,6 +46,7 @@ export default defineVxeComponent({
   },
   computed: {
     ...({} as {
+      computePermissionInfo(): VxeComponentPermissionInfo
       computeSize(): VxeComponentSizeType
     }),
     computeTextLineClamp () {
@@ -170,20 +182,55 @@ export default defineVxeComponent({
     //
     // Render
     //
+    renderContent (h: CreateElement) {
+      const $xeTextEllipsis = this
+      const props = $xeTextEllipsis
+
+      const { routerLink, href, target, title } = props
+      const visibleContent = $xeTextEllipsis.computeVisibleContent
+      if (routerLink) {
+        return h('router-link', {
+          class: 'vxe-text-ellipsis--link',
+          props: {
+            title,
+            target,
+            custom: true
+          }
+        }, visibleContent)
+      }
+      if (href) {
+        return h('a', {
+          class: 'vxe-text-ellipsis--link',
+          attrs: {
+            href,
+            target,
+            title
+          }
+        }, visibleContent)
+      }
+      return h('span', {
+        class: 'vxe-text-ellipsis--content'
+      }, visibleContent)
+    },
     renderVN (h: CreateElement): VNode {
       const $xeTextEllipsis = this
       const props = $xeTextEllipsis
 
-      const { loading, status, title } = props
+      const { loading, status, title, underline } = props
+      const permissionInfo = $xeTextEllipsis.computePermissionInfo
       const vSize = $xeTextEllipsis.computeSize
-      const visibleContent = $xeTextEllipsis.computeVisibleContent
       const textLineClamp = $xeTextEllipsis.computeTextLineClamp
+
+      if (!permissionInfo.visible) {
+        return renderEmptyElement($xeTextEllipsis)
+      }
 
       return h('div', {
         ref: 'refElem',
         class: ['vxe-text-ellipsis', textLineClamp > 1 ? 'is--multi' : 'is--single', {
           [`size--${vSize}`]: vSize,
           [`theme--${status}`]: status,
+          'is--underline': underline,
           'is--loading': loading
         }],
         attrs: {
@@ -195,11 +242,9 @@ export default defineVxeComponent({
       }, [
         h('span', {
           ref: 'realityElem',
-          class: 'vxe-text-ellipsis-reality'
+          class: 'vxe-text-ellipsis--reality'
         }),
-        h('span', {
-          class: 'vxe-text-ellipsis-content'
-        }, visibleContent)
+        $xeTextEllipsis.renderContent(h)
       ])
     }
   },

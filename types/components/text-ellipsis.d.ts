@@ -1,4 +1,4 @@
-import { DefineVxeComponentApp, DefineVxeComponentOptions, DefineVxeComponentInstance, VxeComponentEventParams, VxeComponentSizeType, ValueOf, VxeComponentStatusType } from '@vxe-ui/core'
+import { DefineVxeComponentApp, DefineVxeComponentOptions, DefineVxeComponentInstance, VxeComponentEventParams, VxeComponentSizeType, ValueOf, VxeComponentStatusType, VxeComponentPermissionCodeType } from '@vxe-ui/core'
 
 /* eslint-disable @typescript-eslint/no-empty-interface,no-use-before-define,@typescript-eslint/ban-types */
 
@@ -16,21 +16,37 @@ export interface TextEllipsisPrivateRef {
 export interface VxeTextEllipsisPrivateRef extends TextEllipsisPrivateRef { }
 
 export namespace VxeTextEllipsisPropTypes {
+  export type Href = null | string
+  export type Target = null | '' | '_blank' | '_self' | '_parent' | '_top'
   export type Status = VxeComponentStatusType
   export type Title = string | number
   export type LineClamp = string | number
   export type Loading = boolean
   export type OffsetLength = string | number
+  export type RouterLink = {
+    path?: string
+    name?: string | number | null
+    query?: any
+    params?: any
+    target?: null | '' | '_blank' | '_self' | '_parent' | '_top'
+  }
+  export type Underline = boolean
+  export type PermissionCode = VxeComponentPermissionCodeType
   export type Content = string | number
   export type Size = VxeComponentSizeType
 }
 
 export type VxeTextEllipsisProps = {
+  href?: VxeTextEllipsisPropTypes.Href
+  target?: VxeTextEllipsisPropTypes.Target
   status?: VxeTextEllipsisPropTypes.Status
   title?: VxeTextEllipsisPropTypes.Title
   lineClamp?: VxeTextEllipsisPropTypes.LineClamp
   loading?: VxeTextEllipsisPropTypes.Loading
   offsetLength?: VxeTextEllipsisPropTypes.OffsetLength
+  underline?: VxeTextEllipsisPropTypes.Underline
+  routerLink?: VxeTextEllipsisPropTypes.RouterLink
+  permissionCode?: VxeTextEllipsisPropTypes.PermissionCode
   content?: VxeTextEllipsisPropTypes.Content
   size?: VxeTextEllipsisPropTypes.Size
 }

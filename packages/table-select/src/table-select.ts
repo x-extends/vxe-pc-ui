@@ -611,11 +611,13 @@ export default defineVxeComponent({
 
       const { $grid, $event } = params
       const valueField = $xeTableSelect.computeValueField
-      const checkboxRecords = $grid.getCheckboxRecords()
-      const value = checkboxRecords.map(row => {
-        return row[valueField]
-      })
-      $xeTableSelect.changeEvent($event, value)
+      if ($grid) {
+        const checkboxRecords = $grid.getCheckboxRecords()
+        const value = checkboxRecords.map(row => {
+          return row[valueField]
+        })
+        $xeTableSelect.changeEvent($event, value)
+      }
     },
     checkboxAllEvent (params: VxeGridDefines.CheckboxAllEventParams) {
       const $xeTableSelect = this

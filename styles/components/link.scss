@@ -54,8 +54,8 @@ $btnThemeList: (
 
 .vxe-link {
   text-decoration: none;
+  color: inherit;
   &:not(.is--disabled) {
-    color: var(--vxe-ui-font-color);
     cursor: pointer;
     &:hover {
       color: var(--vxe-ui-font-primary-color);

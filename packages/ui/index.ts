@@ -300,7 +300,9 @@ setConfig({
   },
   tabs: {},
   tag: {},
-  textEllipsis: {},
+  textEllipsis: {
+    underline: true
+  },
   text: {},
   textarea: {
     resize: 'none'

@@ -56,11 +56,25 @@ $btnThemeList: (
   display: block;
   overflow: hidden;
   white-space: normal;
-  color: var(--vxe-ui-font-color);
   @for $index from 0 to list.length($btnThemeList) {
     $item: list.nth($btnThemeList, $index + 1);
     &.theme--#{map.get($item, name)} {
       color: map.get($item, textColor);
+      & > .vxe-text-ellipsis--link {
+        &:focus {
+          color: map.get($item, btnDarkenColor);
+        }
+        &:hover {
+          color: map.get($item, btnLightenColor);
+        }
+      }
+    }
+  }
+  &.is--underline {
+    &:hover {
+      .vxe-text-ellipsis--link {
+        text-decoration: underline;
+      }
     }
   }
   &.is--single {
@@ -85,7 +99,7 @@ $btnThemeList: (
       }
     }
   }
-  .vxe-text-ellipsis-reality {
+  .vxe-text-ellipsis--reality {
     display: none;
     z-index: -1;
     pointer-events: none;
@@ -95,8 +109,13 @@ $btnThemeList: (
   padding: 0 0.1em;
   user-select: none;
 }
-.vxe-text-ellipsis--content {
+.vxe-text-ellipsis--content,
+.vxe-text-ellipsis--link {
   padding: 0 0.1em;
+}
+.vxe-text-ellipsis--link {
+  text-decoration: none;
+  color: inherit;
 }
 
 .vxe-text-ellipsis {

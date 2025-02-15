@@ -99,9 +99,11 @@ export default defineVxeComponent({
       const { status, target, href, title, underline, routerLink } = props
       const permissionInfo = $xeLink.computePermissionInfo
       const vSize = $xeLink.computeSize
+
       if (!permissionInfo.visible) {
         return renderEmptyElement($xeLink)
       }
+
       if (routerLink) {
         return h('router-link', {
           class: ['vxe-link', {
