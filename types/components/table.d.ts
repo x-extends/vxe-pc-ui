@@ -980,8 +980,7 @@ export namespace VxeTablePropTypes {
     height?: number
     padding?: boolean
     /**
-     * @deprecated
-     * @private
+     * 展开内容的显示模式
      */
     mode?: 'inside' | 'fixed' | '' | null
     loadMethod?(params: {
