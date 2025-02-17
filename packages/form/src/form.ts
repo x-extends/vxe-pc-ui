@@ -312,6 +312,7 @@ export default defineComponent({
           return []
         }
       }
+      return resetValue
     }
 
     const reset = () => {
