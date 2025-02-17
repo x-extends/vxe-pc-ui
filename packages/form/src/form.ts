@@ -330,6 +330,7 @@ export default defineVxeComponent({
           return []
         }
       }
+      return resetValue
     },
     reset  () {
       const $xeForm = this
