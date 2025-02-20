@@ -785,7 +785,7 @@ export default defineVxeComponent({
           [nameProp]: name,
           [typeProp]: $xeUpload.parseFileType(name),
           [sizeProp]: file.size,
-          [urlProp]: '',
+          [urlProp]: URL.createObjectURL(file),
           [keyField]: fileKey
         }
         if (uploadFn) {

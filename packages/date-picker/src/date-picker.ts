@@ -778,7 +778,7 @@ export default defineVxeComponent({
       }
       return XEUtils.toStringDate(value, format)
     },
-    triggerEvent  (evnt: Event & { type: 'input' | 'change' | 'keydown' | 'keyup' | 'wheel' | 'click' | 'focus' | 'blur' }) {
+    triggerEvent  (evnt: Event & { type: 'input' | 'change' | 'keydown' | 'keyup' | 'click' | 'focus' | 'blur' }) {
       const $xeDatePicker = this
       const reactData = $xeDatePicker.reactData
 
@@ -1104,14 +1104,6 @@ export default defineVxeComponent({
       $xeDatePicker.triggerEvent(evnt)
     },
     keyupEvent (evnt: KeyboardEvent & { type: 'keyup' }) {
-      const $xeDatePicker = this
-
-      $xeDatePicker.triggerEvent(evnt)
-    },
-    wheelEvent  (evnt: WheelEvent & {
-      type: 'wheel';
-      wheelDelta: number;
-    }) {
       const $xeDatePicker = this
 
       $xeDatePicker.triggerEvent(evnt)
@@ -2609,7 +2601,6 @@ export default defineVxeComponent({
             on: {
               keydown: $xeDatePicker.keydownEvent,
               keyup: $xeDatePicker.keyupEvent,
-              wheel: $xeDatePicker.wheelEvent,
               click: $xeDatePicker.clickEvent,
               input: $xeDatePicker.inputEvent,
               change: $xeDatePicker.changeEvent,

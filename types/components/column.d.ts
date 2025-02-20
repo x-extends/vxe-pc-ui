@@ -208,6 +208,11 @@ export namespace VxeColumnPropTypes {
     optionGroups?: any[]
     optionGroupProps?: VxeGlobalRendererHandles.RenderOptionGroupProps
     content?: string
+
+    /**
+     * 只对特定功能有效，当值为负数时，自动显示为红色
+     */
+    showNegativeStatus?: boolean
   }
 
   /**
@@ -243,6 +248,11 @@ export namespace VxeColumnPropTypes {
     immediate?: boolean
     content?: string
     placeholder?: string
+
+    /**
+     * 只对 VxeNumberInput 有效，当值为负数时，自动显示为红色
+     */
+    showNegativeStatus?: boolean
 
     /**
      * 已废弃，请使用 autoFocus
