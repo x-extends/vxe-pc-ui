@@ -1,10 +1,10 @@
 <template>
   <div>
     <p>
-      <vxe-upload v-model="fileList1" :limit-size="30" show-error-status pasteToUpload :limit-count="10" :upload-method="uploadMethod"></vxe-upload>
+      <vxe-upload v-model="fileList1" :limit-size="30" show-error-status pasteToUpload :limit-count="10"></vxe-upload>
     </p>
     <p>
-      <vxe-upload v-model="imgList1" mode="image" multiple show-error-status pasteToUpload :upload-method="uploadMethod"></vxe-upload>
+      <vxe-upload v-model="imgList1" mode="image" multiple show-error-status pasteToUpload></vxe-upload>
     </p>
     <p>
       <vxe-upload v-model="fileList" multiple drag-sort :limit-size="30" autoHiddenButton show-error-status :limit-count="10" showDownloadButton :upload-method="uploadMethod"></vxe-upload>

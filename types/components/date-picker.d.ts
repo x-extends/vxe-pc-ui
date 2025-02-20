@@ -213,7 +213,6 @@ export type VxeDatePickerEmits = [
   'change',
   'keydown',
   'keyup',
-  'wheel',
   'click',
   'focus',
   'blur',

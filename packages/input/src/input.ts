@@ -1267,10 +1267,7 @@ export default defineComponent({
       }
     }
 
-    const wheelEvent = (evnt: WheelEvent & {
-      type: 'wheel';
-      wheelDelta: number;
-    }) => {
+    const wheelEvent = (evnt: WheelEvent) => {
       const isNumType = computeIsNumType.value
       if (isNumType && props.controls) {
         if (reactData.isActivated) {
@@ -1283,7 +1280,7 @@ export default defineComponent({
           evnt.preventDefault()
         }
       }
-      triggerEvent(evnt)
+      triggerEvent(evnt as any)
     }
 
     // 日期

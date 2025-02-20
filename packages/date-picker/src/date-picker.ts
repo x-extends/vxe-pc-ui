@@ -109,7 +109,6 @@ export default defineComponent({
     'change',
     'keydown',
     'keyup',
-    'wheel',
     'click',
     'focus',
     'blur',
@@ -661,7 +660,7 @@ export default defineComponent({
       return XEUtils.toStringDate(value, format)
     }
 
-    const triggerEvent = (evnt: Event & { type: 'input' | 'change' | 'keydown' | 'keyup' | 'wheel' | 'click' | 'focus' | 'blur' }) => {
+    const triggerEvent = (evnt: Event & { type: 'input' | 'change' | 'keydown' | 'keyup' | 'click' | 'focus' | 'blur' }) => {
       const { inputValue } = reactData
       dispatchEvent(evnt.type, { value: inputValue }, evnt)
     }
@@ -943,13 +942,6 @@ export default defineComponent({
     }
 
     const keyupEvent = (evnt: KeyboardEvent & { type: 'keyup' }) => {
-      triggerEvent(evnt)
-    }
-
-    const wheelEvent = (evnt: WheelEvent & {
-      type: 'wheel';
-      wheelDelta: number;
-    }) => {
       triggerEvent(evnt)
     }
 
@@ -2302,7 +2294,6 @@ export default defineComponent({
             autocomplete: autoComplete || autocomplete,
             onKeydown: keydownEvent,
             onKeyup: keyupEvent,
-            onWheel: wheelEvent,
             onClick: clickEvent,
             onInput: inputEvent,
             onChange: changeEvent,

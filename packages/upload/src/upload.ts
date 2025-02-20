@@ -665,7 +665,7 @@ export default defineComponent({
           [nameProp]: name,
           [typeProp]: parseFileType(name),
           [sizeProp]: file.size,
-          [urlProp]: '',
+          [urlProp]: URL.createObjectURL(file),
           [keyField]: fileKey
         }
         if (uploadFn) {
