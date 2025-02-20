@@ -4070,7 +4070,7 @@ export interface TablePrivateMethods<D = any> {
   /**
    * @private
    */
-  cacheRowMap(isReset: boolean, isSource?: boolean, force?: boolean): void
+  cacheRowMap(isUpdate: boolean): void
   /**
    * @private
    */
