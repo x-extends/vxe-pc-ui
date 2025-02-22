@@ -57,6 +57,10 @@ export default defineVxeComponent({
       default: () => getConfig().datePicker.size || getConfig().size
     },
     multiple: Boolean as PropType<VxeDatePickerPropTypes.Multiple>,
+    limitCount: {
+      type: [String, Number] as PropType<VxeDatePickerPropTypes.LimitCount>,
+      default: () => getConfig().upload.limitCount
+    },
 
     // date、week、month、quarter、year
     startDate: {
@@ -285,6 +289,24 @@ export default defineVxeComponent({
       const dateListValue = $xeDatePicker.computeDateListValue as Array<string | number | Date | null>
       const dateLabelFormat = $xeDatePicker.computeDateLabelFormat as string
       return dateListValue.map(date => XEUtils.toDateString(date, dateLabelFormat)).join(', ')
+    },
+    computeLimitMaxCount () {
+      const $xeDatePicker = this
+      const props = $xeDatePicker
+
+      return props.multiple ? XEUtils.toNumber(props.limitCount) : 0
+    },
+    computeOverCount () {
+      const $xeDatePicker = this
+      const props = $xeDatePicker
+
+      const { multiple } = props
+      const limitMaxCount = $xeDatePicker.computeLimitMaxCount as number
+      const dateMultipleValue = $xeDatePicker.computeDateMultipleValue as string[]
+      if (multiple && limitMaxCount) {
+        return dateMultipleValue.length >= limitMaxCount
+      }
+      return false
     },
     computeDateValueFormat () {
       const $xeDatePicker = this
@@ -990,6 +1012,7 @@ export default defineVxeComponent({
       const inpVal = XEUtils.toDateString(date, dateValueFormat, { firstDay: firstDayOfWeek })
       $xeDatePicker.dateCheckMonth(date)
       if (multiple) {
+        const overCount = $xeDatePicker.computeOverCount
         // 如果为多选
         if (isDateTimeType) {
           // 如果是datetime特殊类型
@@ -997,6 +1020,10 @@ export default defineVxeComponent({
           const datetimeRest: Date[] = []
           const eqIndex = XEUtils.findIndexOf(dateListValue, val => XEUtils.isDateSame(date, val, 'yyyyMMdd'))
           if (eqIndex === -1) {
+            if (overCount) {
+              // 如果超出最大多选数量
+              return
+            }
             dateListValue.push(date)
           } else {
             dateListValue.splice(eqIndex, 1)
@@ -1018,6 +1045,10 @@ export default defineVxeComponent({
           if (dateMultipleValue.some(val => XEUtils.isEqual(val, inpVal))) {
             $xeDatePicker.handleChange(dateMultipleValue.filter(val => !XEUtils.isEqual(val, inpVal)).join(','), { type: 'update' })
           } else {
+            if (overCount) {
+              // 如果超出最大多选数量
+              return
+            }
             $xeDatePicker.handleChange(dateMultipleValue.concat([inpVal]).join(','), { type: 'update' })
           }
         }
@@ -1399,6 +1430,13 @@ export default defineVxeComponent({
       }
       $xeDatePicker.dateTimeChangeEvent(evnt)
     },
+    // dateClearEvent (evnt: MouseEvent) {
+    //   const $xeDatePicker = this
+
+    //   const value = ''
+    //   $xeDatePicker.handleChange(value, evnt)
+    //   $xeDatePicker.dispatchEvent('clear', { value }, evnt)
+    // },
     dateConfirmEvent  () {
       const $xeDatePicker = this
       const props = $xeDatePicker
@@ -1914,6 +1952,7 @@ export default defineVxeComponent({
       const dateHeaders = $xeDatePicker.computeDateHeaders
       const dayDatas = $xeDatePicker.computeDayDatas
       const dateListValue = $xeDatePicker.computeDateListValue
+      const overCount = $xeDatePicker.computeOverCount
       const matchFormat = 'yyyyMMdd'
       return [
         h('table', {
@@ -1931,6 +1970,7 @@ export default defineVxeComponent({
           ]),
           h('tbody', dayDatas.map((rows) => {
             return h('tr', rows.map((item) => {
+              const isSelected = multiple ? dateListValue.some(val => XEUtils.isDateSame(val, item.date, matchFormat)) : XEUtils.isDateSame(dateValue, item.date, matchFormat)
               return h('td', {
                 class: {
                   'is--prev': item.isPrev,
@@ -1938,8 +1978,9 @@ export default defineVxeComponent({
                   'is--now': item.isNow,
                   'is--next': item.isNext,
                   'is--disabled': $xeDatePicker.isDateDisabled(item),
-                  'is--selected': multiple ? dateListValue.some(val => XEUtils.isDateSame(val, item.date, matchFormat)) : XEUtils.isDateSame(dateValue, item.date, matchFormat),
-                  'is--hover': XEUtils.isDateSame(datePanelValue, item.date, matchFormat)
+                  'is--selected': isSelected,
+                  'is--over': overCount && !isSelected,
+                  'is--hover': !overCount && XEUtils.isDateSame(datePanelValue, item.date, matchFormat)
                 },
                 on: {
                   click: () => $xeDatePicker.dateSelectEvent(item),
@@ -1962,6 +2003,7 @@ export default defineVxeComponent({
       const weekHeaders = $xeDatePicker.computeWeekHeaders
       const weekDates = $xeDatePicker.computeWeekDates
       const dateListValue = $xeDatePicker.computeDateListValue
+      const overCount = $xeDatePicker.computeOverCount
       const matchFormat = 'yyyyMMdd'
       return [
         h('table', {
@@ -1989,7 +2031,8 @@ export default defineVxeComponent({
                   'is--next': item.isNext,
                   'is--disabled': $xeDatePicker.isDateDisabled(item),
                   'is--selected': isSelected,
-                  'is--hover': isHover
+                  'is--over': overCount && !isSelected,
+                  'is--hover': !overCount && isHover
                 },
                 on: {
                   click: () => $xeDatePicker.dateSelectEvent(item),
@@ -2011,6 +2054,7 @@ export default defineVxeComponent({
       const dateValue = $xeDatePicker.computeDateValue
       const monthDatas = $xeDatePicker.computeMonthDatas
       const dateListValue = $xeDatePicker.computeDateListValue
+      const overCount = $xeDatePicker.computeOverCount
       const matchFormat = 'yyyyMM'
       return [
         h('table', {
@@ -2023,6 +2067,7 @@ export default defineVxeComponent({
         }, [
           h('tbody', monthDatas.map((rows) => {
             return h('tr', rows.map((item) => {
+              const isSelected = multiple ? dateListValue.some(val => XEUtils.isDateSame(val, item.date, matchFormat)) : XEUtils.isDateSame(dateValue, item.date, matchFormat)
               return h('td', {
                 class: {
                   'is--prev': item.isPrev,
@@ -2030,8 +2075,9 @@ export default defineVxeComponent({
                   'is--now': item.isNow,
                   'is--next': item.isNext,
                   'is--disabled': $xeDatePicker.isDateDisabled(item),
-                  'is--selected': multiple ? dateListValue.some(val => XEUtils.isDateSame(val, item.date, matchFormat)) : XEUtils.isDateSame(dateValue, item.date, matchFormat),
-                  'is--hover': XEUtils.isDateSame(datePanelValue, item.date, matchFormat)
+                  'is--selected': isSelected,
+                  'is--over': overCount && !isSelected,
+                  'is--hover': !overCount && XEUtils.isDateSame(datePanelValue, item.date, matchFormat)
                 },
                 on: {
                   click: () => $xeDatePicker.dateSelectEvent(item),
@@ -2053,6 +2099,7 @@ export default defineVxeComponent({
       const dateValue = $xeDatePicker.computeDateValue
       const quarterDatas = $xeDatePicker.computeQuarterDatas
       const dateListValue = $xeDatePicker.computeDateListValue
+      const overCount = $xeDatePicker.computeOverCount
       const matchFormat = 'yyyyq'
       return [
         h('table', {
@@ -2065,6 +2112,7 @@ export default defineVxeComponent({
         }, [
           h('tbody', quarterDatas.map((rows) => {
             return h('tr', rows.map((item) => {
+              const isSelected = multiple ? dateListValue.some(val => XEUtils.isDateSame(val, item.date, matchFormat)) : XEUtils.isDateSame(dateValue, item.date, matchFormat)
               return h('td', {
                 class: {
                   'is--prev': item.isPrev,
@@ -2072,8 +2120,9 @@ export default defineVxeComponent({
                   'is--now': item.isNow,
                   'is--next': item.isNext,
                   'is--disabled': $xeDatePicker.isDateDisabled(item),
-                  'is--selected': multiple ? dateListValue.some(val => XEUtils.isDateSame(val, item.date, matchFormat)) : XEUtils.isDateSame(dateValue, item.date, matchFormat),
-                  'is--hover': XEUtils.isDateSame(datePanelValue, item.date, matchFormat)
+                  'is--selected': isSelected,
+                  'is--over': overCount && !isSelected,
+                  'is--hover': !overCount && XEUtils.isDateSame(datePanelValue, item.date, matchFormat)
                 },
                 on: {
                   click: () => $xeDatePicker.dateSelectEvent(item),
@@ -2095,6 +2144,7 @@ export default defineVxeComponent({
       const dateValue = $xeDatePicker.computeDateValue
       const yearDatas = $xeDatePicker.computeYearDatas
       const dateListValue = $xeDatePicker.computeDateListValue
+      const overCount = $xeDatePicker.computeOverCount
       const matchFormat = 'yyyy'
       return [
         h('table', {
@@ -2107,6 +2157,7 @@ export default defineVxeComponent({
         }, [
           h('tbody', yearDatas.map((rows) => {
             return h('tr', rows.map((item) => {
+              const isSelected = multiple ? dateListValue.some(val => XEUtils.isDateSame(val, item.date, matchFormat)) : XEUtils.isDateSame(dateValue, item.date, matchFormat)
               return h('td', {
                 class: {
                   'is--prev': item.isPrev,
@@ -2114,8 +2165,9 @@ export default defineVxeComponent({
                   'is--now': item.isNow,
                   'is--next': item.isNext,
                   'is--disabled': $xeDatePicker.isDateDisabled(item),
-                  'is--selected': multiple ? dateListValue.some(val => XEUtils.isDateSame(val, item.date, matchFormat)) : XEUtils.isDateSame(dateValue, item.date, matchFormat),
-                  'is--hover': XEUtils.isDateSame(datePanelValue, item.date, matchFormat)
+                  'is--selected': isSelected,
+                  'is--over': overCount && !isSelected,
+                  'is--hover': !overCount && XEUtils.isDateSame(datePanelValue, item.date, matchFormat)
                 },
                 on: {
                   click: () => $xeDatePicker.dateSelectEvent(item),

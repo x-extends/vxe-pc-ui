@@ -221,6 +221,7 @@ setConfig({
         left: 32
       }
     },
+    // remember: false,
     // storage: false,
     storageKey: 'VXE_MODAL_POSITION'
   },
