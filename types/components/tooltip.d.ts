@@ -143,6 +143,7 @@ export namespace VxeTooltipSlotTypes {
 
 export interface VxeTooltipSlots {
   default?: (params: VxeTooltipSlotTypes.DefaultSlotParams) => any
+  content?: (params: VxeTooltipSlotTypes.DefaultSlotParams) => any
 }
 
 export const Tooltip: typeof VxeTooltip

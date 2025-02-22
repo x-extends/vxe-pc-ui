@@ -38,6 +38,7 @@ export namespace VxeDatePickerPropTypes {
   export type Placeholder = string
   export type MaxLength = string | number
   export type Multiple = boolean
+  export type LimitCount = string | number
   export type ShowWordCount = boolean
   export type CountMethod = (params: {
     value: string
@@ -105,6 +106,7 @@ export interface VxeDatePickerProps {
   placeholder?: VxeDatePickerPropTypes.Placeholder
   maxLength?: VxeDatePickerPropTypes.MaxLength
   multiple?: VxeDatePickerPropTypes.Multiple
+  limitCount?: VxeDatePickerPropTypes.LimitCount
   /**
    * 是否显示字数统计
    */

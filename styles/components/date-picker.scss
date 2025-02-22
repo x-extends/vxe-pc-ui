@@ -481,6 +481,9 @@
         color: var(--vxe-ui-input-disabled-color);
       }
     }
+    &.is--over {
+      cursor: no-drop;
+    }
   }
 }
 

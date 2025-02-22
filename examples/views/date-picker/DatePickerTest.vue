@@ -24,12 +24,12 @@
     </p>
 
     <p>
-      <vxe-date-picker v-model="demo1.value800" placeholder="日期多选" type="date" multiple></vxe-date-picker>
-      <vxe-date-picker v-model="demo1.value801" placeholder="日期多选" type="month" multiple></vxe-date-picker>
-      <vxe-date-picker v-model="demo1.value802" placeholder="日期多选" type="quarter" multiple></vxe-date-picker>
-      <vxe-date-picker v-model="demo1.value803" placeholder="日期多选" type="year" multiple></vxe-date-picker>
-      <vxe-date-picker v-model="demo1.value804" placeholder="日期多选" type="week" multiple></vxe-date-picker>
-      <vxe-date-picker v-model="demo1.value805" placeholder="日期多选" type="datetime" multiple></vxe-date-picker>
+      <vxe-date-picker v-model="demo1.value800" placeholder="日期多选" type="date" multiple limit-count="2"></vxe-date-picker>
+      <vxe-date-picker v-model="demo1.value801" placeholder="日期多选" type="month" multiple limit-count="2"></vxe-date-picker>
+      <vxe-date-picker v-model="demo1.value802" placeholder="日期多选" type="quarter" multiple limit-count="2"></vxe-date-picker>
+      <vxe-date-picker v-model="demo1.value803" placeholder="日期多选" type="year" multiple limit-count="2"></vxe-date-picker>
+      <vxe-date-picker v-model="demo1.value804" placeholder="日期多选" type="week" multiple limit-count="2"></vxe-date-picker>
+      <vxe-date-picker v-model="demo1.value805" placeholder="日期多选" type="datetime" multiple limit-count="2"></vxe-date-picker>
     </p>
 
     <p>

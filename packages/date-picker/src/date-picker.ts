@@ -49,6 +49,10 @@ export default defineComponent({
       default: () => getConfig().datePicker.size || getConfig().size
     },
     multiple: Boolean as PropType<VxeDatePickerPropTypes.Multiple>,
+    limitCount: {
+      type: [String, Number] as PropType<VxeDatePickerPropTypes.LimitCount>,
+      default: () => getConfig().upload.limitCount
+    },
 
     // date、week、month、quarter、year
     startDate: {
@@ -267,6 +271,20 @@ export default defineComponent({
       const dateListValue = computeDateListValue.value
       const dateLabelFormat = computeDateLabelFormat.value
       return dateListValue.map(date => XEUtils.toDateString(date, dateLabelFormat)).join(', ')
+    })
+
+    const computeLimitMaxCount = computed(() => {
+      return props.multiple ? XEUtils.toNumber(props.limitCount) : 0
+    })
+
+    const computeOverCount = computed(() => {
+      const { multiple } = props
+      const limitMaxCount = computeLimitMaxCount.value
+      const dateMultipleValue = computeDateMultipleValue.value
+      if (multiple && limitMaxCount) {
+        return dateMultipleValue.length >= limitMaxCount
+      }
+      return false
     })
 
     const computeDateValueFormat = computed(() => {
@@ -835,6 +853,7 @@ export default defineComponent({
       const inpVal = XEUtils.toDateString(date, dateValueFormat, { firstDay: firstDayOfWeek })
       dateCheckMonth(date)
       if (multiple) {
+        const overCount = computeOverCount.value
         // 如果为多选
         if (isDateTimeType) {
           // 如果是datetime特殊类型
@@ -842,6 +861,10 @@ export default defineComponent({
           const datetimeRest: Date[] = []
           const eqIndex = XEUtils.findIndexOf(dateListValue, val => XEUtils.isDateSame(date, val, 'yyyyMMdd'))
           if (eqIndex === -1) {
+            if (overCount) {
+              // 如果超出最大多选数量
+              return
+            }
             dateListValue.push(date)
           } else {
             dateListValue.splice(eqIndex, 1)
@@ -863,6 +886,10 @@ export default defineComponent({
           if (dateMultipleValue.some(val => XEUtils.isEqual(val, inpVal))) {
             handleChange(dateMultipleValue.filter(val => !XEUtils.isEqual(val, inpVal)).join(','), { type: 'update' })
           } else {
+            if (overCount) {
+              // 如果超出最大多选数量
+              return
+            }
             handleChange(dateMultipleValue.concat([inpVal]).join(','), { type: 'update' })
           }
         }
@@ -1201,6 +1228,12 @@ export default defineComponent({
       }
       dateTimeChangeEvent(evnt)
     }
+
+    // const dateClearEvent = (evnt: MouseEvent) => {
+    //   const value = ''
+    //   handleChange(value, evnt)
+    //   dispatchEvent('clear', { value }, evnt)
+    // }
 
     const dateConfirmEvent = () => {
       const { multiple } = props
@@ -1699,6 +1732,7 @@ export default defineComponent({
       const dateHeaders = computeDateHeaders.value
       const dayDatas = computeDayDatas.value
       const dateListValue = computeDateListValue.value
+      const overCount = computeOverCount.value
       const matchFormat = 'yyyyMMdd'
       return [
         h('table', {
@@ -1714,6 +1748,7 @@ export default defineComponent({
           ]),
           h('tbody', dayDatas.map((rows) => {
             return h('tr', rows.map((item) => {
+              const isSelected = multiple ? dateListValue.some(val => XEUtils.isDateSame(val, item.date, matchFormat)) : XEUtils.isDateSame(dateValue, item.date, matchFormat)
               return h('td', {
                 class: {
                   'is--prev': item.isPrev,
@@ -1721,8 +1756,9 @@ export default defineComponent({
                   'is--now': item.isNow,
                   'is--next': item.isNext,
                   'is--disabled': isDateDisabled(item),
-                  'is--selected': multiple ? dateListValue.some(val => XEUtils.isDateSame(val, item.date, matchFormat)) : XEUtils.isDateSame(dateValue, item.date, matchFormat),
-                  'is--hover': XEUtils.isDateSame(datePanelValue, item.date, matchFormat)
+                  'is--selected': isSelected,
+                  'is--over': overCount && !isSelected,
+                  'is--hover': !overCount && XEUtils.isDateSame(datePanelValue, item.date, matchFormat)
                 },
                 onClick: () => dateSelectEvent(item),
                 onMouseenter: () => dateMouseenterEvent(item)
@@ -1740,6 +1776,7 @@ export default defineComponent({
       const weekHeaders = computeWeekHeaders.value
       const weekDates = computeWeekDates.value
       const dateListValue = computeDateListValue.value
+      const overCount = computeOverCount.value
       const matchFormat = 'yyyyMMdd'
       return [
         h('table', {
@@ -1765,7 +1802,8 @@ export default defineComponent({
                   'is--next': item.isNext,
                   'is--disabled': isDateDisabled(item),
                   'is--selected': isSelected,
-                  'is--hover': isHover
+                  'is--over': overCount && !isSelected,
+                  'is--hover': !overCount && isHover
                 },
                 // event
                 onClick: () => dateSelectEvent(item),
@@ -1783,6 +1821,7 @@ export default defineComponent({
       const dateValue = computeDateValue.value
       const monthDatas = computeMonthDatas.value
       const dateListValue = computeDateListValue.value
+      const overCount = computeOverCount.value
       const matchFormat = 'yyyyMM'
       return [
         h('table', {
@@ -1793,6 +1832,7 @@ export default defineComponent({
         }, [
           h('tbody', monthDatas.map((rows) => {
             return h('tr', rows.map((item) => {
+              const isSelected = multiple ? dateListValue.some(val => XEUtils.isDateSame(val, item.date, matchFormat)) : XEUtils.isDateSame(dateValue, item.date, matchFormat)
               return h('td', {
                 class: {
                   'is--prev': item.isPrev,
@@ -1800,8 +1840,9 @@ export default defineComponent({
                   'is--now': item.isNow,
                   'is--next': item.isNext,
                   'is--disabled': isDateDisabled(item),
-                  'is--selected': multiple ? dateListValue.some(val => XEUtils.isDateSame(val, item.date, matchFormat)) : XEUtils.isDateSame(dateValue, item.date, matchFormat),
-                  'is--hover': XEUtils.isDateSame(datePanelValue, item.date, matchFormat)
+                  'is--selected': isSelected,
+                  'is--over': overCount && !isSelected,
+                  'is--hover': !overCount && XEUtils.isDateSame(datePanelValue, item.date, matchFormat)
                 },
                 onClick: () => dateSelectEvent(item),
                 onMouseenter: () => dateMouseenterEvent(item)
@@ -1818,6 +1859,7 @@ export default defineComponent({
       const dateValue = computeDateValue.value
       const quarterDatas = computeQuarterDatas.value
       const dateListValue = computeDateListValue.value
+      const overCount = computeOverCount.value
       const matchFormat = 'yyyyq'
       return [
         h('table', {
@@ -1828,6 +1870,7 @@ export default defineComponent({
         }, [
           h('tbody', quarterDatas.map((rows) => {
             return h('tr', rows.map((item) => {
+              const isSelected = multiple ? dateListValue.some(val => XEUtils.isDateSame(val, item.date, matchFormat)) : XEUtils.isDateSame(dateValue, item.date, matchFormat)
               return h('td', {
                 class: {
                   'is--prev': item.isPrev,
@@ -1835,8 +1878,9 @@ export default defineComponent({
                   'is--now': item.isNow,
                   'is--next': item.isNext,
                   'is--disabled': isDateDisabled(item),
-                  'is--selected': multiple ? dateListValue.some(val => XEUtils.isDateSame(val, item.date, matchFormat)) : XEUtils.isDateSame(dateValue, item.date, matchFormat),
-                  'is--hover': XEUtils.isDateSame(datePanelValue, item.date, matchFormat)
+                  'is--selected': isSelected,
+                  'is--over': overCount && !isSelected,
+                  'is--hover': !overCount && XEUtils.isDateSame(datePanelValue, item.date, matchFormat)
                 },
                 onClick: () => dateSelectEvent(item),
                 onMouseenter: () => dateMouseenterEvent(item)
@@ -1853,6 +1897,7 @@ export default defineComponent({
       const dateValue = computeDateValue.value
       const yearDatas = computeYearDatas.value
       const dateListValue = computeDateListValue.value
+      const overCount = computeOverCount.value
       const matchFormat = 'yyyy'
       return [
         h('table', {
@@ -1863,6 +1908,7 @@ export default defineComponent({
         }, [
           h('tbody', yearDatas.map((rows) => {
             return h('tr', rows.map((item) => {
+              const isSelected = multiple ? dateListValue.some(val => XEUtils.isDateSame(val, item.date, matchFormat)) : XEUtils.isDateSame(dateValue, item.date, matchFormat)
               return h('td', {
                 class: {
                   'is--prev': item.isPrev,
@@ -1870,8 +1916,9 @@ export default defineComponent({
                   'is--now': item.isNow,
                   'is--next': item.isNext,
                   'is--disabled': isDateDisabled(item),
-                  'is--selected': multiple ? dateListValue.some(val => XEUtils.isDateSame(val, item.date, matchFormat)) : XEUtils.isDateSame(dateValue, item.date, matchFormat),
-                  'is--hover': XEUtils.isDateSame(datePanelValue, item.date, matchFormat)
+                  'is--selected': isSelected,
+                  'is--over': overCount && !isSelected,
+                  'is--hover': !overCount && XEUtils.isDateSame(datePanelValue, item.date, matchFormat)
                 },
                 onClick: () => dateSelectEvent(item),
                 onMouseenter: () => dateMouseenterEvent(item)
@@ -1903,6 +1950,7 @@ export default defineComponent({
       const isDisabledPrevDateBtn = computeIsDisabledPrevDateBtn.value
       const isDisabledNextDateBtn = computeIsDisabledNextDateBtn.value
       const selectDatePanelLabel = computeSelectDatePanelLabel.value
+      const supportMultiples = computeSupportMultiples.value
       return [
         h('div', {
           class: 'vxe-date-picker--date-picker-header'
@@ -1950,7 +1998,7 @@ export default defineComponent({
                 class: 'vxe-icon-caret-right'
               })
             ]),
-            multiple && computeSupportMultiples.value
+            multiple && supportMultiples
               ? h('span', {
                 class: 'vxe-date-picker--date-picker-btn vxe-date-picker--date-picker-confirm-btn'
               }, [
