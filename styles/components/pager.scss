@@ -29,6 +29,8 @@
       background-color: var(--vxe-ui-loading-background-color);
     }
   }
+  .vxe-pager--home-btn,
+  .vxe-pager--end-btn,
   .vxe-pager--prev-btn,
   .vxe-pager--next-btn,
   .vxe-pager--num-btn,
@@ -54,6 +56,8 @@
   &.is--border,
   &.is--perfect {
     &:not(.is--background) {
+      .vxe-pager--home-btn,
+      .vxe-pager--end-btn,
       .vxe-pager--prev-btn,
       .vxe-pager--next-btn,
       .vxe-pager--num-btn,
@@ -65,6 +69,8 @@
   }
   &.is--background,
   &.is--perfect {
+    .vxe-pager--home-btn,
+    .vxe-pager--end-btn,
     .vxe-pager--prev-btn,
     .vxe-pager--next-btn,
     .vxe-pager--jump-prev,
@@ -118,6 +124,8 @@
   .vxe-pager--left-wrapper,
   .vxe-pager--right-wrapper,
   .vxe-pager--total,
+  .vxe-pager--home-btn,
+  .vxe-pager--end-btn,
   .vxe-pager--prev-btn,
   .vxe-pager--next-btn,
   .vxe-pager--jump,
@@ -129,6 +137,8 @@
     vertical-align: middle;
     display: inline-block;
   }
+  .vxe-pager--home-btn,
+  .vxe-pager--end-btn,
   .vxe-pager--prev-btn,
   .vxe-pager--jump-prev,
   .vxe-pager--num-btn,
@@ -140,6 +150,8 @@
   .vxe-pager--left-wrapper,
   .vxe-pager--right-wrapper,
   .vxe-pager--count,
+  .vxe-pager--home-btn,
+  .vxe-pager--end-btn,
   .vxe-pager--prev-btn,
   .vxe-pager--next-btn,
   .vxe-pager--jump-prev,
@@ -153,6 +165,8 @@
     text-align: center;
   }
   .vxe-pager--jump-prev,
+  .vxe-pager--home-btn,
+  .vxe-pager--end-btn,
   .vxe-pager--prev-btn,
   .vxe-pager--next-btn,
   .vxe-pager--jump-next,
@@ -181,6 +195,8 @@
     }
   }
   .vxe-pager--jump-prev,
+  .vxe-pager--home-btn,
+  .vxe-pager--end-btn,
   .vxe-pager--prev-btn,
   .vxe-pager--next-btn,
   .vxe-pager--jump-next,

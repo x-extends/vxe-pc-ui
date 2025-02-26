@@ -35,7 +35,7 @@
         v-model:current-page="page4.currentPage"
         v-model:page-size="page4.pageSize"
         :total="page4.totalResult"
-        :layouts="['PrevJump', 'PrevPage', 'Number', 'NextPage', 'NextJump', 'Sizes', 'FullJump', 'Total']">
+        :layouts="['Home', 'PrevJump', 'PrevPage', 'Number', 'NextPage', 'NextJump', 'End', 'Sizes', 'FullJump', 'Total']">
       </vxe-pager>
 
       <vxe-pager

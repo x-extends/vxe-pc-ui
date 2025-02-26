@@ -253,27 +253,35 @@ export default defineComponent({
     // 第一页
     const renderHomePage = () => {
       const { currentPage } = props
-      const homePageSlot = slots.homePage || slots['home-page']
+      const homeSlot = slots.home
+      if (homeSlot) {
+        return h('span', {
+          class: 'vxe-pager--custom-home-btn'
+        }, homeSlot({ currentPage }))
+      }
       return h('button', {
-        class: ['vxe-pager--prev-btn', {
+        class: ['vxe-pager--home-btn', {
           'is--disabled': currentPage <= 1
         }],
         type: 'button',
         title: getI18n('vxe.pager.homePageTitle'),
         onClick: handleHomePage
-      }, homePageSlot
-        ? homePageSlot({ currentPage })
-        : [
-            h('i', {
-              class: ['vxe-pager--btn-icon', props.iconHomePage || getIcon().PAGER_HOME]
-            })
-          ])
+      }, [
+        h('i', {
+          class: ['vxe-pager--btn-icon', props.iconHomePage || getIcon().PAGER_HOME]
+        })
+      ])
     }
 
     // 上一页
     const renderPrevPage = () => {
       const { currentPage } = props
       const prevPageSlot = slots.prevPage || slots['prev-page']
+      if (prevPageSlot) {
+        return h('span', {
+          class: 'vxe-pager--custom-prev-btn'
+        }, prevPageSlot({ currentPage }))
+      }
       return h('button', {
         class: ['vxe-pager--prev-btn', {
           'is--disabled': currentPage <= 1
@@ -281,19 +289,22 @@ export default defineComponent({
         type: 'button',
         title: getI18n('vxe.pager.prevPageTitle'),
         onClick: handlePrevPage
-      }, prevPageSlot
-        ? prevPageSlot({ currentPage })
-        : [
-            h('i', {
-              class: ['vxe-pager--btn-icon', props.iconPrevPage || getIcon().PAGER_PREV_PAGE]
-            })
-          ])
+      }, [
+        h('i', {
+          class: ['vxe-pager--btn-icon', props.iconPrevPage || getIcon().PAGER_PREV_PAGE]
+        })
+      ])
     }
 
     // 向上翻页
     const renderPrevJump = (tagName?: string) => {
       const { currentPage } = props
-      const jumpPrevSlot = slots.jumpPrev || slots['jump-prev']
+      const prevJumpSlot = slots.prevJump || slots['prev-jump']
+      if (prevJumpSlot) {
+        return h('span', {
+          class: 'vxe-pager--custom-jump-prev'
+        }, prevJumpSlot({ currentPage }))
+      }
       return h(tagName || 'button', {
         class: ['vxe-pager--jump-prev', {
           'is--fixed': !tagName,
@@ -302,25 +313,28 @@ export default defineComponent({
         type: 'button',
         title: getI18n('vxe.pager.prevJumpTitle'),
         onClick: handlePrevJump
-      }, jumpPrevSlot
-        ? jumpPrevSlot({ currentPage })
-        : [
-            tagName
-              ? h('i', {
-                class: ['vxe-pager--jump-more-icon', props.iconJumpMore || getIcon().PAGER_JUMP_MORE]
-              })
-              : null,
-            h('i', {
-              class: ['vxe-pager--jump-icon', props.iconJumpPrev || getIcon().PAGER_JUMP_PREV]
-            })
-          ])
+      }, [
+        tagName
+          ? h('i', {
+            class: ['vxe-pager--jump-more-icon', props.iconJumpMore || getIcon().PAGER_JUMP_MORE]
+          })
+          : null,
+        h('i', {
+          class: ['vxe-pager--jump-icon', props.iconJumpPrev || getIcon().PAGER_JUMP_PREV]
+        })
+      ])
     }
 
     // 向下翻页
     const renderNextJump = (tagName?: string) => {
       const { currentPage } = props
-      const jumpNextSlot = slots.jumpNext || slots['jump-next']
+      const nextJumpSlot = slots.nextJump || slots['next-jump']
       const pageCount = computePageCount.value
+      if (nextJumpSlot) {
+        return h('span', {
+          class: 'vxe-pager--custom-jump-next'
+        }, nextJumpSlot({ currentPage }))
+      }
       return h(tagName || 'button', {
         class: ['vxe-pager--jump-next', {
           'is--fixed': !tagName,
@@ -329,18 +343,16 @@ export default defineComponent({
         type: 'button',
         title: getI18n('vxe.pager.nextJumpTitle'),
         onClick: handleNextJump
-      }, jumpNextSlot
-        ? jumpNextSlot({ currentPage })
-        : [
-            tagName
-              ? h('i', {
-                class: ['vxe-pager--jump-more-icon', props.iconJumpMore || getIcon().PAGER_JUMP_MORE]
-              })
-              : null,
-            h('i', {
-              class: ['vxe-pager--jump-icon', props.iconJumpNext || getIcon().PAGER_JUMP_NEXT]
-            })
-          ])
+      }, [
+        tagName
+          ? h('i', {
+            class: ['vxe-pager--jump-more-icon', props.iconJumpMore || getIcon().PAGER_JUMP_MORE]
+          })
+          : null,
+        h('i', {
+          class: ['vxe-pager--jump-icon', props.iconJumpNext || getIcon().PAGER_JUMP_NEXT]
+        })
+      ])
     }
 
     // 下一页
@@ -348,6 +360,11 @@ export default defineComponent({
       const { currentPage } = props
       const nextPageSlot = slots.nextPage || slots['next-page']
       const pageCount = computePageCount.value
+      if (nextPageSlot) {
+        return h('span', {
+          class: 'vxe-pager--custom-next-btn'
+        }, nextPageSlot({ currentPage }))
+      }
       return h('button', {
         class: ['vxe-pager--next-btn', {
           'is--disabled': currentPage >= pageCount
@@ -355,40 +372,41 @@ export default defineComponent({
         type: 'button',
         title: getI18n('vxe.pager.nextPageTitle'),
         onClick: handleNextPage
-      }, nextPageSlot
-        ? nextPageSlot({ currentPage })
-        : [
-            h('i', {
-              class: ['vxe-pager--btn-icon', props.iconNextPage || getIcon().PAGER_NEXT_PAGE]
-            })
-          ])
+      }, [
+        h('i', {
+          class: ['vxe-pager--btn-icon', props.iconNextPage || getIcon().PAGER_NEXT_PAGE]
+        })
+      ])
     }
 
     // 最后一页
     const renderEndPage = () => {
       const { currentPage } = props
-      const endPageSlot = slots.endPage || slots['end-page']
+      const endSlot = slots.end
       const pageCount = computePageCount.value
+      if (endSlot) {
+        return h('span', {
+          class: 'vxe-pager--custom-end-btn'
+        }, endSlot({ currentPage, pageCount }))
+      }
       return h('button', {
-        class: ['vxe-pager--prev-btn', {
+        class: ['vxe-pager--end-btn', {
           'is--disabled': currentPage >= pageCount
         }],
         type: 'button',
         title: getI18n('vxe.pager.endPageTitle'),
         onClick: handleEndPage
-      }, endPageSlot
-        ? endPageSlot({ currentPage })
-        : [
-            h('i', {
-              class: ['vxe-pager--btn-icon', props.iconEndPage || getIcon().PAGER_END]
-            })
-          ])
+      }, [
+        h('i', {
+          class: ['vxe-pager--btn-icon', props.iconEndPage || getIcon().PAGER_END]
+        })
+      ])
     }
 
     // 页数
     const renderNumber = (showJump?: boolean) => {
       const { currentPage, pagerCount } = props
-      const numberSlot = showJump ? (slots.jumpNumber || slots['jump-number']) : slots.number
+      const numberSlot = showJump ? (slots.numberJump || slots['number-jump']) : slots.number
       const nums = []
       const pageCount = computePageCount.value
       const numList = computeNumList.value
@@ -396,6 +414,7 @@ export default defineComponent({
       const isOv = pageCount > pagerCount
       const isLt = isOv && currentPage > offsetNumber + 1
       const isGt = isOv && currentPage < pageCount - offsetNumber
+      const restList: number[] = []
       let startNumber = 1
 
       if (isOv) {
@@ -406,13 +425,8 @@ export default defineComponent({
         }
       }
 
-      if (numberSlot) {
-        return h('span', {
-          class: 'vxe-pager--btn-wrapper'
-        }, numberSlot({ numList, currentPage, pageCount, startNumber }))
-      }
-
       if (showJump && isLt) {
+        restList.push(1)
         nums.push(
           h('button', {
             class: 'vxe-pager--num-btn',
@@ -425,6 +439,7 @@ export default defineComponent({
       numList.forEach((item, index) => {
         const number = startNumber + index
         if (number <= pageCount) {
+          restList.push(number)
           nums.push(
             h('button', {
               key: number,
@@ -438,6 +453,7 @@ export default defineComponent({
         }
       })
       if (showJump && isGt) {
+        restList.push(pageCount)
         nums.push(
           renderNextJump('button'),
           h('button', {
@@ -446,6 +462,11 @@ export default defineComponent({
             onClick: (evnt: Event) => jumpPageEvent(evnt, pageCount)
           }, pageCount)
         )
+      }
+      if (numberSlot) {
+        return h('span', {
+          class: 'vxe-pager--custom-btn-wrapper'
+        }, numberSlot({ numList: restList, currentPage, pageCount }))
       }
       return h('span', {
         class: 'vxe-pager--btn-wrapper'
@@ -464,7 +485,7 @@ export default defineComponent({
       const sizeList = computeSizeList.value
       if (sizesSlot) {
         return h('span', {
-          class: 'vxe-pager--sizes'
+          class: 'vxe-pager--custom-sizes'
         }, sizesSlot({ pageSize, options: sizeList }))
       }
       return h(VxeSelectComponent, {
@@ -482,37 +503,40 @@ export default defineComponent({
       const { inpCurrPage } = reactData
       const jumpSlot = isFull ? (slots.fullJump || slots['full-jump']) : slots.jump
       const pageCount = computePageCount.value
+      if (jumpSlot) {
+        return h('span', {
+          class: 'vxe-pager--custom-jump'
+        }, jumpSlot({ currentPage: inpCurrPage, pageCount }))
+      }
       return h('span', {
         class: 'vxe-pager--jump'
-      }, jumpSlot
-        ? jumpSlot({ currentPage: inpCurrPage, pageCount })
-        : [
-            isFull
-              ? h('span', {
-                class: 'vxe-pager--goto-text'
-              }, getI18n('vxe.pager.goto'))
-              : null,
-            h(VxeInputComponent, {
-              class: 'vxe-pager--goto',
-              modelValue: reactData.inpCurrPage,
-              placeholder: getI18n('vxe.pager.gotoTitle'),
-              align: 'center',
-              type: 'integer',
-              max: pageCount,
-              min: 1,
-              controls: false,
-              onKeydown: jumpKeydownEvent,
-              onBlur: triggerJumpEvent,
-              'onUpdate:modelValue' (val) {
-                reactData.inpCurrPage = val
-              }
-            }),
-            isFull
-              ? h('span', {
-                class: 'vxe-pager--classifier-text'
-              }, getI18n('vxe.pager.pageClassifier'))
-              : null
-          ])
+      }, [
+        isFull
+          ? h('span', {
+            class: 'vxe-pager--goto-text'
+          }, getI18n('vxe.pager.goto'))
+          : null,
+        h(VxeInputComponent, {
+          class: 'vxe-pager--goto',
+          modelValue: reactData.inpCurrPage,
+          placeholder: getI18n('vxe.pager.gotoTitle'),
+          align: 'center',
+          type: 'integer',
+          max: pageCount,
+          min: 1,
+          controls: false,
+          onKeydown: jumpKeydownEvent,
+          onBlur: triggerJumpEvent,
+          'onUpdate:modelValue' (val) {
+            reactData.inpCurrPage = val
+          }
+        }),
+        isFull
+          ? h('span', {
+            class: 'vxe-pager--classifier-text'
+          }, getI18n('vxe.pager.pageClassifier'))
+          : null
+      ])
     }
 
     // FullJump
@@ -525,25 +549,33 @@ export default defineComponent({
       const { currentPage } = props
       const pageCountSlot = slots.pageCount || slots['page-count']
       const pageCount = computePageCount.value
+      if (pageCountSlot) {
+        return h('span', {
+          class: 'vxe-pager--custom-count'
+        }, pageCountSlot({ currentPage, pageCount }))
+      }
       return h('span', {
         class: 'vxe-pager--count'
-      }, pageCountSlot
-        ? pageCountSlot({ currentPage, pageCount })
-        : [
-            h('span', {
-              class: 'vxe-pager--separator'
-            }),
-            h('span', pageCount)
-          ])
+      }, [
+        h('span', {
+          class: 'vxe-pager--separator'
+        }),
+        h('span', pageCount)
+      ])
     }
 
     // total
     const renderTotal = () => {
       const { currentPage, total } = props
       const totalSlot = slots.total
+      if (totalSlot) {
+        return h('span', {
+          class: 'vxe-pager--custom-total'
+        }, totalSlot({ total, currentPage }))
+      }
       return h('span', {
         class: 'vxe-pager--total'
-      }, totalSlot ? totalSlot({ total, currentPage }) : getI18n('vxe.pager.total', [total]))
+      }, getI18n('vxe.pager.total', [total]))
     }
 
     const dispatchEvent = (type: ValueOf<VxePagerEmits>, params: Record<string, any>, evnt: Event | null) => {
