@@ -194,25 +194,25 @@ export namespace VxePagerSlotTypes {
   export interface DefaultSlotParams {
     [key: string]: any
   }
-  export interface HomePageSlotParams {
+  export interface HomeSlotParams {
     currentPage: number
   }
   export interface PrevPageSlotParams {
     currentPage: number
   }
-  export interface JumpPrevSlotParams {
+  export interface PrevJumpSlotParams {
     currentPage: number
   }
-  export interface JumpNextSlotParams {
+  export interface NextJumpSlotParams {
     currentPage: number
   }
   export interface NextPageSlotParams {
     currentPage: number
   }
-  export interface EndPageSlotParams {
+  export interface EndSlotParams {
     currentPage: number
   }
-  export interface JumpNumberSlotParams {
+  export interface NumberJumpSlotParams {
     numList: number[]
     currentPage: number
     pageCount: number
@@ -243,27 +243,25 @@ export interface VxePagerSlots {
 
   right?: (params: VxePagerSlotTypes.DefaultSlotParams) => any
 
-  homePage?: (params: VxePagerSlotTypes.HomePageSlotParams) => any
-  'home-page'?: (params: VxePagerSlotTypes.HomePageSlotParams) => any
+  home?: (params: VxePagerSlotTypes.HomeSlotParams) => any
 
   prevPage?: (params: VxePagerSlotTypes.PrevPageSlotParams) => any
   'prev-page'?: (params: VxePagerSlotTypes.PrevPageSlotParams) => any
 
-  jumpPrev?: (params: VxePagerSlotTypes.JumpPrevSlotParams) => any
-  'jump-prev'?: (params: VxePagerSlotTypes.JumpPrevSlotParams) => any
+  prevJump?: (params: VxePagerSlotTypes.PrevJumpSlotParams) => any
+  'prev-jump'?: (params: VxePagerSlotTypes.PrevJumpSlotParams) => any
 
-  jumpNext?: (params: VxePagerSlotTypes.JumpNextSlotParams) => any
-  'jump-next'?: (params: VxePagerSlotTypes.JumpNextSlotParams) => any
+  nextJump?: (params: VxePagerSlotTypes.NextJumpSlotParams) => any
+  'next-jump'?: (params: VxePagerSlotTypes.NextJumpSlotParams) => any
 
   nextPage?: (params: VxePagerSlotTypes.NextPageSlotParams) => any
   'next-page'?: (params: VxePagerSlotTypes.NextPageSlotParams) => any
 
-  endPage?: (params: VxePagerSlotTypes.EndPageSlotParams) => any
-  'end-page'?: (params: VxePagerSlotTypes.EndPageSlotParams) => any
+  end?: (params: VxePagerSlotTypes.EndSlotParams) => any
 
-  number?: (params: VxePagerSlotTypes.JumpNumberSlotParams) => any
-  jumpNumber?: (params: VxePagerSlotTypes.JumpNumberSlotParams) => any
-  'jump-number'?: (params: VxePagerSlotTypes.JumpNumberSlotParams) => any
+  number?: (params: VxePagerSlotTypes.NumberJumpSlotParams) => any
+  numberJump?: (params: VxePagerSlotTypes.NumberJumpSlotParams) => any
+  'number-jump'?: (params: VxePagerSlotTypes.NumberJumpSlotParams) => any
 
   sizes?: (params: VxePagerSlotTypes.SizesSlotParams) => any
 
