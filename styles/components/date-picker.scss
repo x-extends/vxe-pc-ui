@@ -164,7 +164,7 @@
 }
 
 .vxe-date-picker--panel-layout-wrapper {
-  display: flex;
+  display: inline-flex;
   flex-direction: column;
   pointer-events: auto;
   background-color: var(--vxe-ui-layout-background-color);

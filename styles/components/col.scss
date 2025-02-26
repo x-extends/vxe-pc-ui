@@ -32,8 +32,30 @@ $colSpanList: 4.16667%, 8.33333%, 12.5%, 16.66667%, 20.83333%, 25%, 29.16667%, 3
     }
   }
 }
+
 .vxe-col--inner {
   display: flex;
   flex-direction: column;
   width: 100%;
+}
+
+.vxe-col {
+  &.is--span,
+  &.is--width {
+    & > .vxe-col--inner {
+      & > .vxe-default-textarea,
+      & > .vxe-default-select,
+      & > .vxe-input,
+      & > .vxe-number-input,
+      & > .vxe-password-input,
+      & > .vxe-date-picker,
+      & > .vxe-textarea,
+      & > .vxe-select,
+      & > .vxe-tree-select,
+      & > .vxe-table-select,
+      & > .vxe-ico-picker {
+        width: 100%;
+      }
+    }
+  }
 }

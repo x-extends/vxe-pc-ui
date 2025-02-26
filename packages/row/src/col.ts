@@ -106,13 +106,14 @@ export default defineComponent({
     Object.assign($xeCol, colMethods, colPrivateMethods)
 
     const renderVN = () => {
-      const { span, fill, align, ellipsis } = props
+      const { span, fill, align, width, ellipsis } = props
       const colStyle = computeColStyle.value
       const defaultSlot = slots.default
       return h('div', {
         ref: refElem,
         class: ['vxe-col', span ? `span${span}` : '', align ? `align--${align}` : '', {
-          'is--span': span,
+          'is--span': !!span,
+          'is--width': !!width,
           'is--fill': fill,
           'is--ellipsis': ellipsis
         }],
