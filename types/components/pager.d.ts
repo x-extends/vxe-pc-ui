@@ -194,11 +194,87 @@ export namespace VxePagerSlotTypes {
   export interface DefaultSlotParams {
     [key: string]: any
   }
+  export interface HomePageSlotParams {
+    currentPage: number
+  }
+  export interface PrevPageSlotParams {
+    currentPage: number
+  }
+  export interface JumpPrevSlotParams {
+    currentPage: number
+  }
+  export interface JumpNextSlotParams {
+    currentPage: number
+  }
+  export interface NextPageSlotParams {
+    currentPage: number
+  }
+  export interface EndPageSlotParams {
+    currentPage: number
+  }
+  export interface JumpNumberSlotParams {
+    numList: number[]
+    currentPage: number
+    pageCount: number
+  }
+  export interface SizesSlotParams {
+    currentPage: number
+    options: {
+      label: number | string
+      value: number | string
+    }[]
+  }
+  export interface FullJumpSlotParams {
+    currentPage: number
+    pageCount: number
+  }
+  export interface PageCountSlotParams {
+    currentPage: number
+    pageCount: number
+  }
+  export interface TotalSlotParams {
+    currentPage: number
+    total: number
+  }
 }
 
 export interface VxePagerSlots {
   left?: (params: VxePagerSlotTypes.DefaultSlotParams) => any
+
   right?: (params: VxePagerSlotTypes.DefaultSlotParams) => any
+
+  homePage?: (params: VxePagerSlotTypes.HomePageSlotParams) => any
+  'home-page'?: (params: VxePagerSlotTypes.HomePageSlotParams) => any
+
+  prevPage?: (params: VxePagerSlotTypes.PrevPageSlotParams) => any
+  'prev-page'?: (params: VxePagerSlotTypes.PrevPageSlotParams) => any
+
+  jumpPrev?: (params: VxePagerSlotTypes.JumpPrevSlotParams) => any
+  'jump-prev'?: (params: VxePagerSlotTypes.JumpPrevSlotParams) => any
+
+  jumpNext?: (params: VxePagerSlotTypes.JumpNextSlotParams) => any
+  'jump-next'?: (params: VxePagerSlotTypes.JumpNextSlotParams) => any
+
+  nextPage?: (params: VxePagerSlotTypes.NextPageSlotParams) => any
+  'next-page'?: (params: VxePagerSlotTypes.NextPageSlotParams) => any
+
+  endPage?: (params: VxePagerSlotTypes.EndPageSlotParams) => any
+  'end-page'?: (params: VxePagerSlotTypes.EndPageSlotParams) => any
+
+  number?: (params: VxePagerSlotTypes.JumpNumberSlotParams) => any
+  jumpNumber?: (params: VxePagerSlotTypes.JumpNumberSlotParams) => any
+  'jump-number'?: (params: VxePagerSlotTypes.JumpNumberSlotParams) => any
+
+  sizes?: (params: VxePagerSlotTypes.SizesSlotParams) => any
+
+  fullJump?: (params: VxePagerSlotTypes.FullJumpSlotParams) => any
+  'full-jump'?: (params: VxePagerSlotTypes.FullJumpSlotParams) => any
+  jump?: (params: VxePagerSlotTypes.FullJumpSlotParams) => any
+
+  pageCount?: (params: VxePagerSlotTypes.PageCountSlotParams) => any
+  'page-count'?: (params: VxePagerSlotTypes.PageCountSlotParams) => any
+
+  total?: (params: VxePagerSlotTypes.TotalSlotParams) => any
 }
 
 export const Pager: typeof VxePager

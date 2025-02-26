@@ -3130,6 +3130,12 @@ export interface TableReactData<D = any> {
   }
 
   scrollVMLoading: boolean
+  scrollYHeight: number
+  scrollYTop: number
+  isScrollYBig: boolean
+  scrollXLeft: number
+  scrollXWidth: number
+  isScrollXBig: boolean
 
   rowExpandHeightFlag: number
   calcCellHeightFlag: number
@@ -4343,6 +4349,7 @@ export namespace VxeTableDefines {
     items: VxeTableDefines.ColumnInfo<D>[]
     parent: VxeTableDefines.ColumnInfo<D> | null
     width: number
+    oLeft: number
   }
 
   /**
