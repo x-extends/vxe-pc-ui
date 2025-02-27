@@ -3682,7 +3682,7 @@ export interface TableMethods<DT = any> {
   /**
    * 用于 radio-config.reserve，获取已保留选中的行数据
    */
-  getRadioReserveRecord(isFull?: boolean): any[]
+  getRadioReserveRecord(isFull?: boolean): DT | null
   /**
    * 用于 radio-config.reserve，手动清空用户保留选中的行数据
    */

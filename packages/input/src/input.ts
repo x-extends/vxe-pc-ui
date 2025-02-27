@@ -47,7 +47,10 @@ export default defineVxeComponent({
       type: String as PropType<VxeInputPropTypes.Placeholder>,
       default: null
     },
-    maxLength: [String, Number] as PropType<VxeInputPropTypes.MaxLength>,
+    maxLength: {
+      type: [String, Number] as PropType<VxeInputPropTypes.MaxLength>,
+      default: () => getConfig().input.maxLength
+    },
     autoComplete: {
       type: String as PropType<VxeInputPropTypes.AutoComplete>,
       default: 'off'
