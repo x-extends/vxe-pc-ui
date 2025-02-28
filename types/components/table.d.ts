@@ -4901,6 +4901,7 @@ export namespace VxeTableDefines {
   export interface RowDragoverEventParams<D = any> {
     oldRow: D
     targetRow: D
+    dragRow: D
     dragPos: 'top' | 'bottom'
     offsetIndex: 0 | 1
   }
@@ -4908,6 +4909,7 @@ export namespace VxeTableDefines {
   export interface RowDragendEventParams<D = any> {
     newRow: D
     oldRow: D
+    dragRow: D
     dragPos: 'top' | 'bottom'
     dragToChild: boolean
     offsetIndex: 0 | 1
@@ -4926,6 +4928,7 @@ export namespace VxeTableDefines {
   export interface ColumnDragoverEventParams<D = any> {
     oldColumn: VxeTableDefines.ColumnInfo<D>
     targetColumn: VxeTableDefines.ColumnInfo<D>
+    dragColumn: VxeTableDefines.ColumnInfo<D>
     dragPos: 'left' | 'right'
     offsetIndex: 0 | 1
   }
@@ -4933,6 +4936,7 @@ export namespace VxeTableDefines {
   export interface ColumnDragendEventParams<D = any> {
     newColumn: VxeTableDefines.ColumnInfo<D>
     oldColumn: VxeTableDefines.ColumnInfo<D>
+    dragColumn: VxeTableDefines.ColumnInfo<D>
     dragPos: 'left' | 'right'
     offsetIndex: 0 | 1
     dragToChild: boolean
