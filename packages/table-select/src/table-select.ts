@@ -15,7 +15,7 @@ export function getRowUniqueId () {
   return XEUtils.uniqueId('row_')
 }
 
-export default defineVxeComponent({
+export default /* define-vxe-component start */ defineVxeComponent({
   name: 'VxeTableSelect',
   mixins: [
     globalMixins.sizeMixin
@@ -818,4 +818,4 @@ export default defineVxeComponent({
   render (this: any, h) {
     return this.renderVN(h)
   }
-})
+}) /* define-vxe-component end */

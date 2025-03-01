@@ -7,7 +7,7 @@ import { getContentUrl } from './util'
 
 import type { WatermarkReactData, VxeWatermarkPropTypes, VxeWatermarkEmits, ValueOf, VxeComponentStyleType } from '../../../types'
 
-export default defineVxeComponent({
+export default /* define-vxe-component start */ defineVxeComponent({
   name: 'VxeWatermark',
   props: {
     width: String as PropType<VxeWatermarkPropTypes.Width>,
@@ -163,4 +163,4 @@ export default defineVxeComponent({
   render (this: any, h) {
     return this.renderVN(h)
   }
-})
+}) /* define-vxe-component end */

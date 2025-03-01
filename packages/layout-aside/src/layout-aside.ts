@@ -7,7 +7,7 @@ import XEUtils from 'xe-utils'
 
 import type { VxeLayoutAsidePropTypes, LayoutAsideReactData, VxeComponentSizeType, VxeLayoutAsideEmits, ValueOf } from '../../../types'
 
-export default defineVxeComponent({
+export default /* define-vxe-component start */ defineVxeComponent({
   name: 'VxeLayoutAside',
   mixins: [
     globalMixins.sizeMixin
@@ -112,4 +112,4 @@ export default defineVxeComponent({
   render (this: any, h) {
     return this.renderVN(h)
   }
-})
+}) /* define-vxe-component end */

@@ -9,7 +9,7 @@ import VxeInputComponent from '../../input/src/input'
 import type { VxePagerPropTypes, VxePagerEmits, VxeInputDefines, VxeSelectDefines, ValueOf, VxeComponentSizeType, PagerReactData } from '../../../types'
 import type { VxeGridConstructor, VxeGridPrivateMethods } from '../../../types/components/grid'
 
-export default defineVxeComponent({
+export default /* define-vxe-component start */ defineVxeComponent({
   name: 'VxePager',
   mixins: [
     globalMixins.sizeMixin
@@ -835,4 +835,4 @@ export default defineVxeComponent({
   render (this: any, h) {
     return this.renderVN(h)
   }
-})
+}) /* define-vxe-component end */

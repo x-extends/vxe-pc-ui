@@ -5,7 +5,7 @@ import { getIcon, createEvent, renderEmptyElement } from '../../ui'
 
 import type { ResultReactData, VxeResultEmits, ValueOf, VxeResultPropTypes } from '../../../types'
 
-export default defineVxeComponent({
+export default /* define-vxe-component start */ defineVxeComponent({
   name: 'VxeResult',
   props: {
     imageUrl: String as PropType<VxeResultPropTypes.ImageUrl>,
@@ -90,4 +90,4 @@ export default defineVxeComponent({
   render (this: any, h) {
     return this.renderVN(h)
   }
-})
+}) /* define-vxe-component end */

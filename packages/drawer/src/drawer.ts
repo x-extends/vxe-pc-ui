@@ -13,7 +13,7 @@ import type { VxeTableConstructor, VxeTablePrivateMethods } from '../../../types
 
 export const allActiveDrawers: VxeDrawerConstructor[] = []
 
-export default defineVxeComponent({
+export default /* define-vxe-component start */ defineVxeComponent({
   name: 'VxeDrawer',
   mixins: [
     globalMixins.sizeMixin,
@@ -755,4 +755,4 @@ export default defineVxeComponent({
   render (this: any, h) {
     return this.renderVN(h)
   }
-})
+}) /* define-vxe-component end */

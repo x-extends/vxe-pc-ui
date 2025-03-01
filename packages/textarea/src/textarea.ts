@@ -8,7 +8,7 @@ import type { VxeTextareaPropTypes, TextareaReactData, VxeComponentSizeType, Vxe
 
 let autoTxtElem: HTMLDivElement
 
-export default defineVxeComponent({
+export default /* define-vxe-component start */ defineVxeComponent({
   name: 'VxeTextarea',
   model: {
     prop: 'value',
@@ -426,4 +426,4 @@ export default defineVxeComponent({
   render (this: any, h) {
     return this.renderVN(h)
   }
-})
+}) /* define-vxe-component end */

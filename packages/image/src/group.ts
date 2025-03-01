@@ -7,7 +7,7 @@ import VxeImageComponent from './image'
 
 import type { VxeImageGroupPropTypes, VxeImageGroupEmits, ImageGroupReactData, ValueOf, VxeComponentSizeType } from '../../../types'
 
-export default defineVxeComponent({
+export default /* define-vxe-component start */ defineVxeComponent({
   name: 'VxeImageGroup',
   mixins: [
     globalMixins.sizeMixin
@@ -135,4 +135,4 @@ export default defineVxeComponent({
   render (this: any, h) {
     return this.renderVN(h)
   }
-})
+}) /* define-vxe-component end */

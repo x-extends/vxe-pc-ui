@@ -7,7 +7,7 @@ import VxeTextComponent from '../../text/src/text'
 
 import type { VxeCountdownPropTypes, CountdownReactData, CountdownInternalData, VxeCountdownEmits, VxeComponentSizeType, ValueOf } from '../../../types'
 
-export default defineVxeComponent({
+export default /* define-vxe-component start */ defineVxeComponent({
   name: 'VxeCountdown',
   mixins: [
     globalMixins.sizeMixin
@@ -272,4 +272,4 @@ export default defineVxeComponent({
   render (this: any, h) {
     return this.renderVN(h)
   }
-})
+}) /* define-vxe-component end */

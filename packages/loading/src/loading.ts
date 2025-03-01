@@ -6,7 +6,7 @@ import XEUtils from 'xe-utils'
 
 import type { VxeLoadingPropTypes, LoadingReactData, VxeLoadingEmits, VxeComponentSizeType, ValueOf } from '../../../types'
 
-export default defineVxeComponent({
+export default /* define-vxe-component start */ defineVxeComponent({
   name: 'VxeLoading',
   mixins: [
     globalMixins.sizeMixin
@@ -159,4 +159,4 @@ export default defineVxeComponent({
   render (this: any, h) {
     return this.renderVN(h)
   }
-})
+}) /* define-vxe-component end */

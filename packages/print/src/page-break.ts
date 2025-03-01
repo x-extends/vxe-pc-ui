@@ -6,7 +6,7 @@ import { assemblePageBreak, destroyPageBreak } from './util'
 
 import type { PrintPageBreakReactData, VxePrintPageBreakEmits, VxeComponentSizeType, ValueOf, VxePrintDefines, VxePrintConstructor, VxePrintPrivateMethods } from '../../../types'
 
-export default defineVxeComponent({
+export default /* define-vxe-component start */ defineVxeComponent({
   name: 'VxePrintPageBreak',
   props: {},
   data () {
@@ -75,4 +75,4 @@ export default defineVxeComponent({
   render (this: any, h) {
     return this.renderVN(h)
   }
-})
+}) /* define-vxe-component end */

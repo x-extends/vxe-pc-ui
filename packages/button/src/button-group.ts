@@ -6,7 +6,7 @@ import VxeButtonComponent from './button'
 
 import type { VxeButtonGroupPropTypes, VxeButtonGroupEmits, VxeComponentPermissionInfo, ButtonGroupReactData, VxeComponentSizeType, ValueOf } from '../../../types'
 
-export default defineVxeComponent({
+export default /* define-vxe-component start */ defineVxeComponent({
   name: 'VxeButtonGroup',
   mixins: [
     globalMixins.sizeMixin,
@@ -102,4 +102,4 @@ export default defineVxeComponent({
   render (this: any, h) {
     return this.renderVN(h)
   }
-})
+}) /* define-vxe-component end */

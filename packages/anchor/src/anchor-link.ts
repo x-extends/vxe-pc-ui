@@ -6,7 +6,7 @@ import { assembleAnchorLink, destroyAnchorLink } from './util'
 
 import type { VxeAnchorLinkDefines, VxeAnchorLinkPropTypes, AnchorLinkReactData, VxeComponentSizeType, VxeAnchorLinkEmits, VxeAnchorLinkConstructor, VxeAnchorLinkPrivateMethods, VxeAnchorConstructor, VxeAnchorPrivateMethods, ValueOf } from '../../../types'
 
-export default defineVxeComponent({
+export default /* define-vxe-component start */ defineVxeComponent({
   name: 'VxeAnchorLink',
   props: {
     content: [String, Number] as PropType<VxeAnchorLinkPropTypes.Content>,
@@ -155,4 +155,4 @@ export default defineVxeComponent({
   render (this: any, h) {
     return this.renderVN(h)
   }
-})
+}) /* define-vxe-component end */

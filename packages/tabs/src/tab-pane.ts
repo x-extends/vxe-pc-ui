@@ -6,7 +6,7 @@ import { assembleTabItem, destroyTabItem } from './util'
 
 import type { VxeTabPanePropTypes, TabPaneReactData, VxeComponentSizeType, VxeTabPaneEmits, ValueOf, VxeTabPaneDefines, VxeTabsConstructor, VxeTabsPrivateMethods } from '../../../types'
 
-export default defineVxeComponent({
+export default /* define-vxe-component start */ defineVxeComponent({
   name: 'VxeTabPane',
   props: {
     title: [String, Number] as PropType<VxeTabPanePropTypes.Title>,
@@ -134,4 +134,4 @@ export default defineVxeComponent({
   render (this: any, h) {
     return this.renderVN(h)
   }
-})
+}) /* define-vxe-component end */

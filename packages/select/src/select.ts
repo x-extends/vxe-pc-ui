@@ -18,7 +18,7 @@ function getOptUniqueId () {
   return XEUtils.uniqueId('opt_')
 }
 
-export default defineVxeComponent({
+export default /* define-vxe-component start */ defineVxeComponent({
   name: 'VxeSelect',
   mixins: [
     globalMixins.sizeMixin
@@ -1595,4 +1595,4 @@ export default defineVxeComponent({
   render (this: any, h) {
     return this.renderVN(h)
   }
-})
+}) /* define-vxe-component end */

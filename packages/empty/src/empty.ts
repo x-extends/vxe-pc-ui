@@ -5,7 +5,7 @@ import { getI18n, getIcon, createEvent } from '../../ui'
 
 import type { EmptyReactData, VxeEmptyEmits, ValueOf, VxeEmptyPropTypes } from '../../../types'
 
-export default defineVxeComponent({
+export default /* define-vxe-component start */ defineVxeComponent({
   name: 'VxeEmpty',
   props: {
     imageUrl: String as PropType<VxeEmptyPropTypes.ImageUrl>,
@@ -77,4 +77,4 @@ export default defineVxeComponent({
   render (this: any, h) {
     return this.renderVN(h)
   }
-})
+}) /* define-vxe-component end */

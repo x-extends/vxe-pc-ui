@@ -6,7 +6,7 @@ import VxeCheckboxComponent from './checkbox'
 
 import type { VxeCheckboxGroupEmits, VxeCheckboxPropTypes, ValueOf, CheckboxGroupReactData, VxeComponentSizeType, VxeCheckboxGroupPropTypes, VxeFormConstructor, VxeFormPrivateMethods, VxeFormDefines } from '../../../types'
 
-export default defineVxeComponent({
+export default /* define-vxe-component start */ defineVxeComponent({
   name: 'VxeCheckboxGroup',
   mixins: [
     globalMixins.sizeMixin
@@ -187,4 +187,4 @@ export default defineVxeComponent({
   render (this: any, h) {
     return this.renderVN(h)
   }
-})
+}) /* define-vxe-component end */

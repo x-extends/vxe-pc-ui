@@ -5,7 +5,7 @@ import { globalMixins, createEvent, renderEmptyElement } from '../../ui'
 
 import type { VxeBreadcrumbItemPropTypes, BreadcrumbItemReactData, VxeComponentSizeType, VxeBreadcrumbEmits, VxeBreadcrumbConstructor, VxeBreadcrumbPrivateMethods, ValueOf } from '../../../types'
 
-export default defineVxeComponent({
+export default /* define-vxe-component start */ defineVxeComponent({
   name: 'VxeBreadcrumbItem',
   mixins: [
     globalMixins.sizeMixin
@@ -115,4 +115,4 @@ export default defineVxeComponent({
   render (this: any, h) {
     return this.renderVN(h)
   }
-})
+}) /* define-vxe-component end */

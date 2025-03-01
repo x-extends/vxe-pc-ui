@@ -11,7 +11,7 @@ import VxeButtonGroupComponent from '../../button/src/button-group'
 import type { VxeDatePickerConstructor, DatePickerInternalData, VxeDatePickerEmits, DatePickerReactData, VxeDatePickerPropTypes, VxeComponentStyleType, VxeFormConstructor, VxeFormPrivateMethods, VxeFormDefines, VxeDrawerConstructor, VxeDrawerMethods, VxeModalConstructor, VxeModalMethods, VxeDatePickerDefines, VxeComponentSizeType, ValueOf, VxeButtonGroupDefines } from '../../../types'
 import type { VxeTableConstructor, VxeTablePrivateMethods } from '../../../types/components/table'
 
-export default defineVxeComponent({
+export default /* define-vxe-component start */ defineVxeComponent({
   name: 'VxeDatePicker',
   mixins: [
     globalMixins.sizeMixin
@@ -2733,4 +2733,4 @@ export default defineVxeComponent({
   render (this: any, h) {
     return this.renderVN(h)
   }
-})
+}) /* define-vxe-component end */

@@ -5,7 +5,7 @@ import { getConfig, getIcon, createEvent, globalMixins } from '../../ui'
 
 import type { RateReactData, VxeRateEmits, VxeRatePropTypes, ValueOf, VxeFormDefines, VxeFormConstructor, VxeFormPrivateMethods, VxeComponentSizeType, VxeComponentPermissionInfo } from '../../../types'
 
-export default defineVxeComponent({
+export default /* define-vxe-component start */ defineVxeComponent({
   name: 'VxeRate',
   mixins: [
     globalMixins.sizeMixin,
@@ -196,4 +196,4 @@ export default defineVxeComponent({
   render (this: any, h) {
     return this.renderVN(h)
   }
-})
+}) /* define-vxe-component end */

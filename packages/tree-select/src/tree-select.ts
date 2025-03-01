@@ -16,7 +16,7 @@ function getOptUniqueId () {
   return XEUtils.uniqueId('node_')
 }
 
-export default defineVxeComponent({
+export default /* define-vxe-component start */ defineVxeComponent({
   name: 'VxeTreeSelect',
   mixins: [
     globalMixins.sizeMixin
@@ -785,4 +785,4 @@ export default defineVxeComponent({
   render (this: any, h) {
     return this.renderVN(h)
   }
-})
+}) /* define-vxe-component end */

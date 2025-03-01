@@ -6,7 +6,7 @@ import { toCssUnit } from '../../ui/src/dom'
 
 import type { NoticeBarReactData, VxeNoticeBarEmits, ValueOf, VxeNoticeBarPropTypes, VxeComponentSizeType } from '../../../types'
 
-export default defineVxeComponent({
+export default /* define-vxe-component start */ defineVxeComponent({
   name: 'VxeNoticeBar',
   mixins: [
     globalMixins.sizeMixin
@@ -143,4 +143,4 @@ export default defineVxeComponent({
   render (this: any, h) {
     return this.renderVN(h)
   }
-})
+}) /* define-vxe-component end */

@@ -88,7 +88,7 @@ export const formItemProps = {
 
 const formItemPropKeys = Object.keys(formItemProps)
 
-export default defineVxeComponent({
+export default /* define-vxe-component start */ defineVxeComponent({
   name: 'VxeFormItem',
   mixins: [
     globalMixins.sizeMixin
@@ -207,4 +207,4 @@ export default defineVxeComponent({
   render (this: any, h) {
     return this.renderVN(h)
   }
-})
+}) /* define-vxe-component end */

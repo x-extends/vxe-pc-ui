@@ -6,7 +6,7 @@ import { assembleCarouselItem, destroyCarouselItem } from './util'
 
 import type { VxeCarouselItemPropTypes, CarouselItemReactData, VxeCarouselItemEmits, VxeCarouselDefines, VxeComponentSizeType, ValueOf, VxeCarouselConstructor, VxeCarouselPrivateMethods } from '../../../types'
 
-export default defineVxeComponent({
+export default /* define-vxe-component start */ defineVxeComponent({
   name: 'VxeCarouselItem',
   mixins: [
     globalMixins.sizeMixin
@@ -111,4 +111,4 @@ export default defineVxeComponent({
   render (this: any, h) {
     return this.renderVN(h)
   }
-})
+}) /* define-vxe-component end */

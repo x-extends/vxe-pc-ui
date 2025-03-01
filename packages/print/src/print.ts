@@ -7,7 +7,7 @@ import { getSlotVNs } from '../..//ui/src/vn'
 
 import type { VxePrintPropTypes, PrintReactData, VxePrintEmits, ValueOf } from '../../../types'
 
-export default defineVxeComponent({
+export default /* define-vxe-component start */ defineVxeComponent({
   name: 'VxePrint',
   props: {
     align: {
@@ -236,4 +236,4 @@ export default defineVxeComponent({
   render (this: any, h) {
     return this.renderVN(h)
   }
-})
+}) /* define-vxe-component end */

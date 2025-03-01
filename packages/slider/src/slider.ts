@@ -5,7 +5,7 @@ import { getConfig, createEvent, renderEmptyElement } from '../../ui'
 
 import type { SliderReactData, VxeSliderEmits, ValueOf, VxeSliderPropTypes, VxeFormDefines, VxeComponentSizeType, VxeFormConstructor, VxeFormPrivateMethods } from '../../../types'
 
-export default defineVxeComponent({
+export default /* define-vxe-component start */ defineVxeComponent({
   name: 'VxeSlider',
   model: {
     prop: 'value',
@@ -326,4 +326,4 @@ export default defineVxeComponent({
   render (this: any, h) {
     return this.renderVN(h)
   }
-})
+}) /* define-vxe-component end */

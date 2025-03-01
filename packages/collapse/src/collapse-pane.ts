@@ -6,7 +6,7 @@ import { assembleCollapseItem, destroyCollapseItem } from './util'
 
 import type { CollapsePaneReactData, VxeCollapsePanePropTypes, VxeCollapsePaneEmits, VxeCollapsePrivateMethods, ValueOf, VxeCollapseConstructor, VxeCollapsePaneDefines } from '../../../types'
 
-export default defineVxeComponent({
+export default /* define-vxe-component start */ defineVxeComponent({
   name: 'VxeCollapsePane',
   props: {
     title: [String, Number] as PropType<VxeCollapsePanePropTypes.Title>,
@@ -133,4 +133,4 @@ export default defineVxeComponent({
   render (this: any, h) {
     return this.renderVN(h)
   }
-})
+}) /* define-vxe-component end */

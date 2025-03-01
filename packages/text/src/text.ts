@@ -6,7 +6,7 @@ import { getSlotVNs } from '../../ui/src/vn'
 
 import type { VxeTextPropTypes, TextReactData, VxeTextEmits, VxeComponentSizeType, ValueOf } from '../../../types'
 
-export default defineVxeComponent({
+export default /* define-vxe-component start */ defineVxeComponent({
   name: 'VxeText',
   mixins: [
     globalMixins.sizeMixin,
@@ -150,4 +150,4 @@ export default defineVxeComponent({
   render (this: any, h) {
     return this.renderVN(h)
   }
-})
+}) /* define-vxe-component end */

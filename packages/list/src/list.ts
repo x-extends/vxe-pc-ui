@@ -8,7 +8,7 @@ import VxeLoadingComponent from '../../loading/src/loading'
 
 import type { VxeListPropTypes, VxeListEmits, VxeComponentSizeType, ListReactData, ValueOf, ListInternalData } from '../../../types'
 
-export default defineVxeComponent({
+export default /* define-vxe-component start */ defineVxeComponent({
   name: 'VxeList',
   mixins: [
     globalMixins.sizeMixin
@@ -465,4 +465,4 @@ export default defineVxeComponent({
   render (this: any, h) {
     return this.renderVN(h)
   }
-})
+}) /* define-vxe-component end */

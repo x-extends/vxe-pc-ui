@@ -6,7 +6,7 @@ import { getDomNode, addClass, removeClass } from '../..//ui/src/dom'
 
 import type { ImagePreviewReactData, VxeGlobalIcon, VxeImagePreviewEmits, VxeComponentSizeType, VxeImagePreviewPropTypes, ValueOf } from '../../../types'
 
-export default defineVxeComponent({
+export default /* define-vxe-component start */ defineVxeComponent({
   name: 'VxeImagePreview',
   props: {
     value: Number as PropType<VxeImagePreviewPropTypes.ModelValue>,
@@ -706,4 +706,4 @@ export default defineVxeComponent({
   render (this: any, h) {
     return this.renderVN(h)
   }
-})
+}) /* define-vxe-component end */

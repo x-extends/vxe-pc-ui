@@ -5,7 +5,7 @@ import { getConfig, createEvent, renderEmptyElement, globalMixins } from '../../
 
 import type { VxeTextEllipsisPropTypes, TextEllipsisReactData, VxeTextEllipsisEmits, VxeComponentSizeType, ValueOf, VxeComponentPermissionInfo } from '../../../types'
 
-export default defineVxeComponent({
+export default /* define-vxe-component start */ defineVxeComponent({
   name: 'VxeTextEllipsis',
   mixins: [
     globalMixins.sizeMixin,
@@ -288,4 +288,4 @@ export default defineVxeComponent({
   render (this: any, h) {
     return this.renderVN(h)
   }
-})
+}) /* define-vxe-component end */

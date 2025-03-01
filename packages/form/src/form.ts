@@ -63,7 +63,7 @@ const validErrorRuleValue = (rule: VxeFormDefines.FormRule, val: any) => {
   return false
 }
 
-export default defineVxeComponent({
+export default /* define-vxe-component start */ defineVxeComponent({
   name: 'VxeForm',
   mixins: [
     globalMixins.sizeMixin
@@ -840,4 +840,4 @@ export default defineVxeComponent({
   render (this: any, h) {
     return this.renderVN(h)
   }
-})
+}) /* define-vxe-component end */

@@ -8,7 +8,7 @@ import VxeButtonComponent from '../../button/src/button'
 
 import type { VxeCalendarEmits, CalendarInternalData, CalendarReactData, ValueOf, VxeCalendarPropTypes, VxeComponentSizeType, VxeDatePickerDefines, VxeCalendarConstructor } from '../../../types'
 
-export default defineVxeComponent({
+export default /* define-vxe-component start */ defineVxeComponent({
   name: 'VxeCalendar',
   mixins: [
     globalMixins.sizeMixin
@@ -1327,4 +1327,4 @@ export default defineVxeComponent({
   render (this: any, h) {
     return this.renderVN(h)
   }
-})
+}) /* define-vxe-component end */

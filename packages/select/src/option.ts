@@ -7,7 +7,7 @@ import { OptionInfo } from './option-info'
 
 import type { VxeSelectConstructor, VxeOptionEmits, VxeOptionPropTypes, OptionReactData, VxeComponentSizeType, ValueOf } from '../../../types'
 
-export default defineVxeComponent({
+export default /* define-vxe-component start */ defineVxeComponent({
   name: 'VxeOption',
   mixins: [
     globalMixins.sizeMixin
@@ -100,4 +100,4 @@ export default defineVxeComponent({
   render (this: any, h) {
     return this.renderVN(h)
   }
-})
+}) /* define-vxe-component end */

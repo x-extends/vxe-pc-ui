@@ -5,7 +5,7 @@ import { getConfig, createEvent, globalMixins } from '../../ui'
 
 import type { VxeIconPropTypes, VxeComponentSizeType, IconReactData, VxeIconEmits, ValueOf } from '../../../types'
 
-export default defineVxeComponent({
+export default /* define-vxe-component start */ defineVxeComponent({
   name: 'VxeIcon',
   mixins: [
     globalMixins.sizeMixin
@@ -72,4 +72,4 @@ export default defineVxeComponent({
   render (this: any, h) {
     return this.renderVN(h)
   }
-})
+}) /* define-vxe-component end */

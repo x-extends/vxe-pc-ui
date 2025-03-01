@@ -11,7 +11,7 @@ import type { VxeFormConstructor, FormGroupReactData, VxeFormPrivateMethods, Vxe
 
 const formItemPropKeys = Object.keys(formItemProps)
 
-export default defineVxeComponent({
+export default /* define-vxe-component start */ defineVxeComponent({
   name: 'VxeFormGroup',
   mixins: [
     globalMixins.sizeMixin
@@ -118,4 +118,4 @@ export default defineVxeComponent({
   render (this: any, h) {
     return this.renderVN(h)
   }
-})
+}) /* define-vxe-component end */

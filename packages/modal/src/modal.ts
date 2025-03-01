@@ -19,7 +19,7 @@ const notifyQueue: VxeModalConstructor[] = []
 const lockScrollAttrKey = 'data-vxe-lock-scroll'
 const lockScrollCssWidthKey = '--vxe-ui-modal-lock-scroll-view-width'
 
-export default defineVxeComponent({
+export default /* define-vxe-component start */ defineVxeComponent({
   name: 'VxeModal',
   mixins: [
     globalMixins.sizeMixin,
@@ -1637,4 +1637,4 @@ export default defineVxeComponent({
   render (this: any, h) {
     return this.renderVN(h)
   }
-})
+}) /* define-vxe-component end */

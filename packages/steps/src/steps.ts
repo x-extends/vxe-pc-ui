@@ -5,7 +5,7 @@ import { createEvent } from '../../ui'
 
 import type { StepsReactData, VxeStepsEmits, ValueOf } from '../../../types'
 
-export default defineVxeComponent({
+export default /* define-vxe-component start */ defineVxeComponent({
   name: 'VxeSteps',
   props: {
   },
@@ -54,4 +54,4 @@ export default defineVxeComponent({
   render (this: any, h) {
     return this.renderVN(h)
   }
-})
+}) /* define-vxe-component end */

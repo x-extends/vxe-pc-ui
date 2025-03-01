@@ -5,7 +5,7 @@ import { getConfig, createEvent, globalMixins, renderEmptyElement } from '../../
 
 import type { BadgeReactData, VxeBadgeEmits, VxeBadgePropTypes, ValueOf, VxeComponentSizeType } from '../../../types'
 
-export default defineVxeComponent({
+export default /* define-vxe-component start */ defineVxeComponent({
   name: 'VxeBadge',
   mixins: [
     globalMixins.sizeMixin
@@ -84,4 +84,4 @@ export default defineVxeComponent({
   render (this: any, h) {
     return this.renderVN(h)
   }
-})
+}) /* define-vxe-component end */

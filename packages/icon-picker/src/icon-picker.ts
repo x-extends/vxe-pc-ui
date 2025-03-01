@@ -8,7 +8,7 @@ import { getLastZIndex, nextZIndex, getFuncText } from '../../ui/src/utils'
 import type { VxeIconPickerPropTypes, IconPickerInternalData, ValueOf, IconPickerReactData, VxeComponentSizeType, VxeIconPickerEmits, VxeIconPickerDefines, VxeDrawerConstructor, VxeDrawerMethods, VxeFormDefines, VxeFormConstructor, VxeFormPrivateMethods, VxeModalConstructor, VxeModalMethods } from '../../../types'
 import type { VxeTableConstructor, VxeTablePrivateMethods } from '../../../types/components/table'
 
-export default defineVxeComponent({
+export default /* define-vxe-component start */ defineVxeComponent({
   name: 'VxeIconPicker',
   mixins: [
     globalMixins.sizeMixin
@@ -172,7 +172,7 @@ export default defineVxeComponent({
       return icons.map(name => {
         return {
           title: name,
-          icon: `vxe-icon-${name}`
+          icon: `vxe-icon-${`${name || ''}`.replace(/^vxe-icon-/, '')}`
         }
       })
     },
@@ -717,4 +717,4 @@ export default defineVxeComponent({
   render (this: any, h) {
     return this.renderVN(h)
   }
-})
+}) /* define-vxe-component end */

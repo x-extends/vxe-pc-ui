@@ -27,7 +27,7 @@ function handleSetExpand (nodeid: string, expanded: boolean, expandedMaps: Recor
   }
 }
 
-export default defineVxeComponent({
+export default /* define-vxe-component start */ defineVxeComponent({
   name: 'VxeTree',
   mixins: [
     globalMixins.sizeMixin
@@ -1414,4 +1414,4 @@ export default defineVxeComponent({
   render (this: any, h) {
     return this.renderVN(h)
   }
-})
+}) /* define-vxe-component end */

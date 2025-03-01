@@ -7,7 +7,7 @@ import VxeRadioButtonComponent from './button'
 
 import type { VxeRadioGroupPropTypes, VxeRadioGroupEmits, VxeFormDefines, VxeFormConstructor, VxeFormPrivateMethods, VxeComponentPermissionInfo, VxeComponentSizeType, RadioGroupReactData, ValueOf } from '../../../types'
 
-export default defineVxeComponent({
+export default /* define-vxe-component start */ defineVxeComponent({
   name: 'VxeRadioGroup',
   mixins: [
     globalMixins.sizeMixin,
@@ -173,4 +173,4 @@ export default defineVxeComponent({
   render (this: any, h) {
     return this.renderVN(h)
   }
-})
+}) /* define-vxe-component end */

@@ -6,7 +6,7 @@ import XEUtils from 'xe-utils'
 
 import type { CollapseReactData, VxeCollapseEmits, VxeCollapsePropTypes, VxeCollapsePanePropTypes, VxeCollapsePaneProps, VxeCollapsePaneDefines, VxeComponentSizeType, ValueOf } from '../../../types'
 
-export default defineVxeComponent({
+export default /* define-vxe-component start */ defineVxeComponent({
   name: 'VxeCollapse',
   mixins: [
     globalMixins.sizeMixin,
@@ -251,4 +251,4 @@ export default defineVxeComponent({
   render (this: any, h) {
     return this.renderVN(h)
   }
-})
+}) /* define-vxe-component end */

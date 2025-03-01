@@ -8,7 +8,7 @@ import VxeLoadingComponent from '../../loading/src/loading'
 
 import type { CardReactData, VxeCardEmits, VxeCardPropTypes, ValueOf, VxeComponentSizeType } from '../../../types'
 
-export default defineVxeComponent({
+export default /* define-vxe-component start */ defineVxeComponent({
   name: 'VxeCard',
   mixins: [
     globalMixins.sizeMixin
@@ -153,4 +153,4 @@ export default defineVxeComponent({
   render (this: any, h) {
     return this.renderVN(h)
   }
-})
+}) /* define-vxe-component end */

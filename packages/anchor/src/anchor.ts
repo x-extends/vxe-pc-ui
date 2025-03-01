@@ -7,7 +7,7 @@ import VxeAnchorLinkComponent from './anchor-link'
 
 import type { VxeAnchorPropTypes, AnchorReactData, VxeAnchorLinkPropTypes, VxeAnchorEmits, ValueOf } from '../../../types'
 
-export default defineVxeComponent({
+export default /* define-vxe-component start */ defineVxeComponent({
   name: 'VxeAnchor',
   props: {
     value: String as PropType<VxeAnchorPropTypes.ModelValue>,
@@ -253,4 +253,4 @@ export default defineVxeComponent({
   render (this: any, h) {
     return this.renderVN(h)
   }
-})
+}) /* define-vxe-component end */

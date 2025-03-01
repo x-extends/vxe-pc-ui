@@ -6,7 +6,7 @@ import VxeBreadcrumbItemComponent from './breadcrumb-item'
 
 import type { VxeBreadcrumbPropTypes, BreadcrumbReactData, VxeBreadcrumbItemProps, VxeComponentSizeType, VxeBreadcrumbEmits, ValueOf } from '../../../types'
 
-export default defineVxeComponent({
+export default /* define-vxe-component start */ defineVxeComponent({
   name: 'VxeBreadcrumb',
   mixins: [
     globalMixins.sizeMixin
@@ -86,4 +86,4 @@ export default defineVxeComponent({
   render (this: any, h) {
     return this.renderVN(h)
   }
-})
+}) /* define-vxe-component end */

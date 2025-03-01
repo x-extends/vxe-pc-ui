@@ -6,7 +6,7 @@ import { toCssUnit } from '../../ui/src/dom'
 
 import type { AvatarReactData, VxeAvatarEmits, VxeAvatarPropTypes, ValueOf, VxeComponentStyleType, VxeComponentSizeType } from '../../../types'
 
-export default defineVxeComponent({
+export default /* define-vxe-component start */ defineVxeComponent({
   name: 'VxeAvatar',
   mixins: [
     globalMixins.sizeMixin
@@ -138,4 +138,4 @@ export default defineVxeComponent({
   render (this: any, h) {
     return this.renderVN(h)
   }
-})
+}) /* define-vxe-component end */

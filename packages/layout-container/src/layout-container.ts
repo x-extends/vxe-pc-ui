@@ -5,7 +5,7 @@ import { getConfig, globalMixins, createEvent } from '../../ui'
 
 import type { VxeLayoutContainerPropTypes, LayoutContainerReactData, VxeLayoutContainerEmits, VxeComponentSizeType, ValueOf } from '../../../types'
 
-export default defineVxeComponent({
+export default /* define-vxe-component start */ defineVxeComponent({
   name: 'VxeLayoutContainer',
   mixins: [
     globalMixins.sizeMixin
@@ -62,4 +62,4 @@ export default defineVxeComponent({
   render (this: any, h) {
     return this.renderVN(h)
   }
-})
+}) /* define-vxe-component end */

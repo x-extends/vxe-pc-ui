@@ -66,7 +66,7 @@ function hideDropTip ($xeUpload: VxeUploadConstructor) {
   }
 }
 
-export default defineVxeComponent({
+export default /* define-vxe-component start */ defineVxeComponent({
   name: 'VxeUpload',
   model: {
     prop: 'value',
@@ -1836,4 +1836,4 @@ export default defineVxeComponent({
   render (this: any, h) {
     return this.renderVN(h)
   }
-})
+}) /* define-vxe-component end */
