@@ -143,10 +143,16 @@ export default defineComponent({
       if (!icons || !icons.length) {
         icons = getConfig().iconPicker.icons || []
       }
-      return icons.map(name => {
+      return icons.map(item => {
+        if (XEUtils.isString(item)) {
+          return {
+            title: item,
+            icon: `vxe-icon-${`${item || ''}`.replace(/^vxe-icon-/, '')}`
+          }
+        }
         return {
-          title: name,
-          icon: `vxe-icon-${name}`
+          title: `${item.title || ''}`,
+          icon: item.icon || ''
         }
       })
     })

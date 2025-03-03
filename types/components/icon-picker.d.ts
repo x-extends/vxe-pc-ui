@@ -30,7 +30,10 @@ export namespace VxeIconPickerPropTypes {
   export type PopupClassName = string | ((params: {$iconPicker: VxeIconPickerConstructor }) => string)
   export type Readonly = boolean
   export type Disabled = boolean
-  export type Icons = string[]
+  export type Icons = string[] | {
+    title?: string | number
+    icon: string
+  }[]
   export type Clearable = boolean
   export type ShowIconTitle = boolean
   export type Placement = 'top' | 'bottom' | '' | null

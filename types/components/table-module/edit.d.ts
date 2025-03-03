@@ -145,10 +145,10 @@ export interface TableEditMethods<D = any> {
    */
   setActiveRow(row: any): Promise<void>
   /**
-   * 用于 edit-config，激活行编辑并默认激活第一个列，也可以指定列
+   * 用于 edit-config，激活行编辑并默认激活第一个列，也可以指定列；如果第二个参数为 true，则默认自动激活第一个可编辑列；也可以传指定列
    * @param row 指定行
    */
-  setEditRow(row: any, fieldOrColumn?: string | VxeTableDefines.ColumnInfo<any>): Promise<void>
+  setEditRow(row: any, fieldOrColumn?: boolean | string | VxeTableDefines.ColumnInfo<any>): Promise<void>
   /**
    * 请使用 setEditCell
    * @deprecated
