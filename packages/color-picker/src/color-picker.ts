@@ -656,15 +656,17 @@ export default /* define-vxe-component start */ defineVxeComponent({
         colorActiveEl.style.left = toCssUnit(offsetLeft)
       }
     },
-    handleEyeDropperEvent (evnt: MouseEvent) {
+    handleEyeDropperEvent () {
       const $xeColorPicker = this
+      const reactData = $xeColorPicker.reactData
 
       if (WinEyeDropper) {
         try {
           const eyeDropper = new WinEyeDropper()
           eyeDropper.open().then((rest: any) => {
             if (rest && rest.sRGBHex) {
-              $xeColorPicker.changeEvent(evnt, rest.sRGBHex)
+              reactData.selectColor = rest.sRGBHex
+              $xeColorPicker.updateModelColor()
             }
           }).catch(() => {
           })
