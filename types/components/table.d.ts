@@ -3253,10 +3253,13 @@ export interface TableInternalData<D = any> {
   tableFullColumn: VxeTableDefines.ColumnInfo<D>[]
   // 渲染所有列
   visibleColumn: VxeTableDefines.ColumnInfo<D>[]
-  // 缓存数据集
+
+  // 全量数据集（包括当前和已删除）
   fullAllDataRowIdData: Record<string, VxeTableDefines.RowCacheItem<D>>
-  sourceDataRowIdData: Record<string, D>
+  // 数据集（仅当前）
   fullDataRowIdData: Record<string, VxeTableDefines.RowCacheItem<D>>
+
+  sourceDataRowIdData: Record<string, D>
   fullColumnIdData: Record<string, VxeTableDefines.ColumnCacheItem<D>>
   fullColumnFieldData: Record<string, VxeTableDefines.ColumnCacheItem<D>>
 
@@ -3477,6 +3480,11 @@ export interface TableMethods<DT = any> {
    * @param row 指定行
    */
   isInsertByRow(row: any | null): boolean
+  /**
+   * 判断行是否被删除
+   * @param row 指定行
+   */
+  isRemoveByRow(row: any | null): boolean
   /**
    * 删除所有新增的临时数据
    */

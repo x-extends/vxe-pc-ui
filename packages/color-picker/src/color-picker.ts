@@ -569,13 +569,14 @@ export default defineComponent({
       }
     }
 
-    const handleEyeDropperEvent = (evnt: MouseEvent) => {
+    const handleEyeDropperEvent = () => {
       if (WinEyeDropper) {
         try {
           const eyeDropper = new WinEyeDropper()
           eyeDropper.open().then((rest: any) => {
             if (rest && rest.sRGBHex) {
-              changeEvent(evnt, rest.sRGBHex)
+              reactData.selectColor = rest.sRGBHex
+              updateModelColor()
             }
           }).catch(() => {
           })
