@@ -342,13 +342,13 @@ export default /* define-vxe-component start */ defineVxeComponent({
       if (contentSlot) {
         return h('div', {
           key: 1,
-          class: 'vxe-table--tooltip-content'
+          class: 'vxe-tooltip--content'
         }, getSlotVNs(contentSlot({})))
       }
       if (useHTML) {
         return h('div', {
           key: 2,
-          class: 'vxe-table--tooltip-content',
+          class: 'vxe-tooltip--content',
           domProps: {
             innerHTML: tipContent
           }
@@ -356,7 +356,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       }
       return h('div', {
         key: 3,
-        class: 'vxe-table--tooltip-content'
+        class: 'vxe-tooltip--content'
       }, `${tipContent}`)
     },
     renderVN (h: CreateElement): VNode {
@@ -378,7 +378,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       }
       return h('div', {
         ref: 'refElem',
-        class: ['vxe-table--tooltip-wrapper', `theme--${theme}`, popupClassName ? (XEUtils.isFunction(popupClassName) ? popupClassName({ $tooltip: $xeTooltip }) : popupClassName) : '', {
+        class: ['vxe-tooltip--wrapper', `theme--${theme}`, popupClassName ? (XEUtils.isFunction(popupClassName) ? popupClassName({ $tooltip: $xeTooltip }) : popupClassName) : '', {
           [`size--${vSize}`]: vSize,
           [`placement--${tipStore.placement}`]: tipStore.placement,
           'is--enterable': enterable,
@@ -391,7 +391,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       }, [
         $xeTooltip.renderContent(h),
         h('div', {
-          class: 'vxe-table--tooltip-arrow',
+          class: 'vxe-tooltip--arrow',
           style: tipStore.arrowStyle
         }),
         ...(defaultSlot ? getSlotVNs(defaultSlot({})) : [])

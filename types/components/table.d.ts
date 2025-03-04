@@ -912,24 +912,70 @@ export namespace VxeTablePropTypes {
    * 复选框配置项
    */
   export interface CheckboxConfig<D = VxeTablePropTypes.Row> {
+    /**
+     * 是否保留勾选状态，对于某些场景可能会用到，比如数据被刷新之后还保留之前选中的状态
+     */
     reserve?: boolean
+    /**
+     * 是否显示保留勾选状态，启用后如果存在保留记录，则未勾选当前页数据也会显示未半选状态
+     */
+    showReserveStatus?: boolean
+    /**
+     * 复选框显示的字段名，可以直接显示在复选框中
+     */
     labelField?: string
+    /**
+     * 绑定选中属性，行数据中必须存在该字段，否则无效
+     */
     checkField?: string
     indeterminateField?: string
+    /**
+     * 是否显示全选按钮，如果 checkStrictly=true 则默认为 false
+     */
     showHeader?: boolean
+    /**
+     * 默认勾选所有，只会在初始化时被触发一次
+     */
     checkAll?: boolean
+    /**
+     * 默认勾选指定行，只会在初始化时被触发一次，需要有 row-config.keyField
+     */
     checkRowKeys?: string[] | number[]
+    /**
+     * 是否严格的遵循父子不互相关联的做法
+     */
     checkStrictly?: boolean
+    /**
+     * 严格模式，当数据为空或全部禁用时，列头的复选框为禁用状态
+     */
     strict?: boolean
+    /**
+     * 开启复选框指定行选择功能，启用后通过鼠标点击和 shift 键选取指定范围的行
+     */
     isShiftKey?: boolean
+    /**
+     * 是否允许勾选的方法，该方法，的返回值用来决定这一行的 checkbox 是否可以勾选
+     */
     checkMethod?(params: {
       row: D
     }): boolean
+    /**
+     * 是否允许勾选的方法，该方法，的返回值用来决定这一行的 checkbox 是否显示
+     */
     visibleMethod?(params: {
       row: D
     }): boolean
+    /**
+     * 触发方式
+     */
     trigger?: 'default' | 'cell' | 'row' | 'manual' | '' | null
+    /**
+     * 是否高亮勾选行
+     */
     highlight?: boolean
+    /**
+     * 开启复选框范围选择功能，启用后通过鼠标在复选框的列内滑动选中或取消指定行
+     */
     range?: boolean
 
     /**

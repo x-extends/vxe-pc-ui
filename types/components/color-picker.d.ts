@@ -26,6 +26,7 @@ export namespace VxeColorPickerPropTypes {
     value: string
   }[]
   export type ShowAlpha = boolean
+  export type ShowEyeDropper = boolean
   export type ShowColorExtractor = boolean
   export type ShowQuick = boolean
   export type Readonly = boolean
@@ -48,6 +49,7 @@ export interface VxeColorPickerProps {
   popupClassName?: VxeColorPickerPropTypes.PopupClassName
   colors?: VxeColorPickerPropTypes.Colors
   showAlpha?: VxeColorPickerPropTypes.ShowAlpha
+  showEyeDropper?: VxeColorPickerPropTypes.ShowEyeDropper
   showColorExtractor?: VxeColorPickerPropTypes.ShowColorExtractor
   showQuick?: VxeColorPickerPropTypes.ShowQuick
   readonly?: VxeColorPickerPropTypes.Readonly

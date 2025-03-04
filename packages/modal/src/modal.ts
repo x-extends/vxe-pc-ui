@@ -782,6 +782,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
     },
     handleMaximize () {
       const $xeModal = this
+      const props = $xeModal
       const reactData = $xeModal.reactData
 
       const prevZoomStatus = reactData.zoomStatus
@@ -792,9 +793,12 @@ export default /* define-vxe-component start */ defineVxeComponent({
         if (boxElem) {
           // 如果当前处于复原状态
           if (!prevZoomStatus) {
+            const marginSize = XEUtils.toNumber(props.marginSize)
+            const clientVisibleWidth = document.documentElement.clientWidth || document.body.clientWidth
+            const clientVisibleHeight = document.documentElement.clientHeight || document.body.clientHeight
             reactData.revertLocat = {
-              top: boxElem.offsetTop,
-              left: boxElem.offsetLeft,
+              top: Math.max(marginSize, clientVisibleHeight / 2 - boxElem.offsetHeight / 2),
+              left: Math.max(marginSize, clientVisibleWidth / 2 - boxElem.offsetWidth / 2),
               width: boxElem.offsetWidth + (boxElem.style.width ? 0 : 1),
               height: boxElem.offsetHeight + (boxElem.style.height ? 0 : 1)
             }
