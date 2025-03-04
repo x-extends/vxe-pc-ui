@@ -1,4 +1,4 @@
-.vxe-table--tooltip-wrapper {
+.vxe-tooltip--wrapper {
   display: none;
   position: absolute;
   top: -100%;
@@ -19,7 +19,7 @@
     display: block;
   }
   &.is--arrow {
-    .vxe-table--tooltip-arrow {
+    .vxe-tooltip--arrow {
       display: block;
     }
   }
@@ -33,10 +33,10 @@
       background-color: transparent;
     }
   }
-  .vxe-table--tooltip-content {
+  .vxe-tooltip--content {
     white-space: pre-line;
   }
-  .vxe-table--tooltip-arrow {
+  .vxe-tooltip--arrow {
     display: none;
     position: absolute;
     border-color: transparent;
@@ -59,7 +59,7 @@
         bottom: -6px;
       }
     }
-    .vxe-table--tooltip-arrow {
+    .vxe-tooltip--arrow {
       bottom: -12px;
       &:before {
         top: -7px;
@@ -72,7 +72,7 @@
         top: -6px;
       }
     }
-    .vxe-table--tooltip-arrow {
+    .vxe-tooltip--arrow {
       top: -12px;
       &:before {
         top: -4px;
@@ -80,12 +80,12 @@
     }
   }
 }
-.vxe-table--tooltip-wrapper {
+.vxe-tooltip--wrapper {
   &.theme--light {
     background-color: var(--vxe-ui-layout-background-color);
     border: 1px solid var(--vxe-ui-input-border-color);
     &.placement--top {
-      .vxe-table--tooltip-arrow {
+      .vxe-tooltip--arrow {
         border-top-color: var(--vxe-ui-input-border-color);
         &:before {
           border-top-color: var(--vxe-ui-layout-background-color);
@@ -93,7 +93,7 @@
       }
     }
     &.placement--bottom {
-      .vxe-table--tooltip-arrow {
+      .vxe-tooltip--arrow {
         border-bottom-color: var(--vxe-ui-input-border-color);
         &:before {
           border-bottom-color: var(--vxe-ui-layout-background-color);
@@ -105,7 +105,7 @@
     background: var(--vxe-ui-tooltip-dark-background-color);
     color: var(--vxe-ui-tooltip-dark-color);
     &.placement--top {
-      .vxe-table--tooltip-arrow {
+      .vxe-tooltip--arrow {
         border-top-color: var(--vxe-ui-tooltip-dark-background-color);
         &:before {
           border-top-color: var(--vxe-ui-tooltip-dark-background-color);
@@ -113,7 +113,7 @@
       }
     }
     &.placement--bottom {
-      .vxe-table--tooltip-arrow {
+      .vxe-tooltip--arrow {
         border-bottom-color: var(--vxe-ui-tooltip-dark-background-color);
         &:before {
           border-bottom-color: var(--vxe-ui-tooltip-dark-background-color);

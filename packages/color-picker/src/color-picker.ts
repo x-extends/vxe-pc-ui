@@ -10,6 +10,8 @@ import VxeInputComponent from '../../input/src/input'
 import type { ColorPickerReactData, VxeColorPickerPropTypes, VxeColorPickerEmits, ColorPickerInternalData, ColorPickerMethods, ColorPickerPrivateMethods, ValueOf, ColorPickerPrivateRef, VxeColorPickerPrivateComputed, VxeColorPickerConstructor, VxeColorPickerPrivateMethods, VxeModalConstructor, VxeModalMethods, VxeDrawerConstructor, VxeDrawerMethods, VxeFormDefines, VxeFormConstructor, VxeFormPrivateMethods } from '../../../types'
 import type { VxeTableConstructor, VxeTablePrivateMethods } from '../../../types/components/table'
 
+const WinEyeDropper = (window as any).EyeDropper
+
 export default defineComponent({
   name: 'VxeColorPicker',
   props: {
@@ -36,6 +38,10 @@ export default defineComponent({
     showAlpha: {
       type: Boolean as PropType<VxeColorPickerPropTypes.ShowAlpha>,
       default: () => getConfig().colorPicker.showAlpha
+    },
+    showEyeDropper: {
+      type: Boolean as PropType<VxeColorPickerPropTypes.ShowEyeDropper>,
+      default: () => getConfig().colorPicker.showEyeDropper
     },
     showColorExtractor: {
       type: Boolean as PropType<VxeColorPickerPropTypes.ShowColorExtractor>,
@@ -563,6 +569,20 @@ export default defineComponent({
       }
     }
 
+    const handleEyeDropperEvent = (evnt: MouseEvent) => {
+      if (WinEyeDropper) {
+        try {
+          const eyeDropper = new WinEyeDropper()
+          eyeDropper.open().then((rest: any) => {
+            if (rest && rest.sRGBHex) {
+              changeEvent(evnt, rest.sRGBHex)
+            }
+          }).catch(() => {
+          })
+        } catch (e) {}
+      }
+    }
+
     const handleSelectColorMousedownEvent = (evnt: MouseEvent) => {
       const { showAlpha } = props
       const { panelColor, aValue } = reactData
@@ -675,7 +695,7 @@ export default defineComponent({
     }
 
     const renderColorBar = () => {
-      const { showAlpha, clickToCopy } = props
+      const { showAlpha, clickToCopy, showEyeDropper } = props
       const { hexValue, rValue, gValue, bValue, aValue, selectColor, panelColor } = reactData
       const valueType = computeValueType.value
       const isRgb = computeIsRgb.value
@@ -685,6 +705,20 @@ export default defineComponent({
         h('div', {
           class: 'vxe-color-picker--slider-wrapper'
         }, [
+          showEyeDropper && WinEyeDropper
+            ? h('div', {
+              class: 'vxe-color-picker--color-dropper'
+            }, [
+              h('span', {
+                class: 'vxe-color-picker--color-dropper-btn',
+                onClick: handleEyeDropperEvent
+              }, [
+                h('i', {
+                  class: getIcon().EYE_DROPPER
+                })
+              ])
+            ])
+            : renderEmptyElement($xeColorPicker),
           h('div', {
             class: 'vxe-color-picker--slider-preview'
           }, [

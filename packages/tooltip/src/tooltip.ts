@@ -284,19 +284,19 @@ export default defineComponent({
       if (contentSlot) {
         return h('div', {
           key: 1,
-          class: 'vxe-table--tooltip-content'
+          class: 'vxe-tooltip--content'
         }, getSlotVNs(contentSlot({})))
       }
       if (useHTML) {
         return h('div', {
           key: 2,
-          class: 'vxe-table--tooltip-content',
+          class: 'vxe-tooltip--content',
           innerHTML: tipContent
         })
       }
       return h('div', {
         key: 3,
-        class: 'vxe-table--tooltip-content'
+        class: 'vxe-tooltip--content'
       }, `${tipContent}`)
     }
 
@@ -314,7 +314,7 @@ export default defineComponent({
       }
       return h('div', {
         ref: refElem,
-        class: ['vxe-table--tooltip-wrapper', `theme--${theme}`, popupClassName ? (XEUtils.isFunction(popupClassName) ? popupClassName({ $tooltip: $xeTooltip }) : popupClassName) : '', {
+        class: ['vxe-tooltip--wrapper', `theme--${theme}`, popupClassName ? (XEUtils.isFunction(popupClassName) ? popupClassName({ $tooltip: $xeTooltip }) : popupClassName) : '', {
           [`size--${vSize}`]: vSize,
           [`placement--${tipStore.placement}`]: tipStore.placement,
           'is--enterable': enterable,
@@ -327,7 +327,7 @@ export default defineComponent({
       }, [
         renderContent(),
         h('div', {
-          class: 'vxe-table--tooltip-arrow',
+          class: 'vxe-tooltip--arrow',
           style: tipStore.arrowStyle
         }),
         ...(defaultSlot ? getSlotVNs(defaultSlot({})) : [])

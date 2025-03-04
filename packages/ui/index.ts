@@ -550,7 +550,8 @@ setIcon({
   RATE_UNCHECKED: iconPrefix + 'star',
 
   // color-picker
-  COLOR_COPY: iconPrefix + 'copy'
+  COLOR_COPY: iconPrefix + 'copy',
+  EYE_DROPPER: iconPrefix + 'dropper'
 })
 
 export * from '@vxe-ui/core'

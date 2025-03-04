@@ -4,8 +4,8 @@
     <vxe-color-picker v-model="val2" show-alpha clearable></vxe-color-picker>
     <vxe-color-picker v-model="val3" type="rgb" show-alpha clearable></vxe-color-picker>
     <vxe-color-picker v-model="val4" clearable :colors="list1"></vxe-color-picker>
-    <vxe-color-picker v-model="val5" clearable :colors="list1"></vxe-color-picker>
-    <vxe-color-picker v-model="val6" type="rgb" show-alpha clearable :colors="list2"></vxe-color-picker>
+    <vxe-color-picker v-model="val5" clearable :colors="list1" showEyeDropper></vxe-color-picker>
+    <vxe-color-picker v-model="val6" type="rgb" show-alpha clearable :colors="list2" showEyeDropper></vxe-color-picker>
   </div>
 </template>
 

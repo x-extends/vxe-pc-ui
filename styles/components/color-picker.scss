@@ -167,14 +167,32 @@
   display: flex;
   flex-direction: row;
 }
+.vxe-color-picker--color-dropper,
+.vxe-color-picker--slider-preview {
+  padding-left: 0.8em;
+}
+.vxe-color-picker--color-dropper {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  padding-left: 0.8em;
+  font-size: 1.2em;
+  cursor: pointer;
+  @include baseMixin.createAnimationTransition(transform, 0.1s);
+  &:hover {
+    color: var(--vxe-ui-font-primary-color);
+  }
+  &:active {
+    transform: scale(0.8);
+  }
+}
 .vxe-color-picker--slider-preview {
   display: flex;
   flex-direction: row;
   flex-shrink: 0;
   align-items: center;
   justify-content: center;
-  width: 60px;
-  padding-left: 0.5em;
 }
 .vxe-color-picker--preview-btn,
 .vxe-color-picker--preview-color {
@@ -225,7 +243,7 @@
   flex-direction: column;
   justify-content: center;
   flex-grow: 1;
-  padding: 0 0.6em;
+  padding: 0 0.8em;
 }
 .vxe-color-picker--bar-hue-slider,
 .vxe-color-picker--bar-alpha-slider {

@@ -237,5 +237,6 @@ declare module '@vxe-ui/core' {
 
     // color-picker
     COLOR_COPY?: string
+    EYE_DROPPER?: string
   }
 }
