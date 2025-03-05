@@ -877,7 +877,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
 
       return new Promise<void>(resolve => {
         reactData.visiblePanel = false
-        internalData.hpTimeout = window.setTimeout(() => {
+        internalData.hpTimeout = setTimeout(() => {
           reactData.isAniVisible = false
           resolve()
         }, 350)

@@ -647,7 +647,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const $xeNumberInput = this
       const internalData = $xeNumberInput.internalData
 
-      internalData.dnTimeout = window.setTimeout(() => {
+      internalData.dnTimeout = setTimeout(() => {
         $xeNumberInput.numberNextEvent(evnt)
         $xeNumberInput.numberDownNextEvent(evnt)
       }, 60)
@@ -724,7 +724,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const $xeNumberInput = this
       const internalData = $xeNumberInput.internalData
 
-      internalData.dnTimeout = window.setTimeout(() => {
+      internalData.dnTimeout = setTimeout(() => {
         $xeNumberInput.numberPrevEvent(evnt)
         $xeNumberInput.numberDownPrevEvent(evnt)
       }, 60)
@@ -741,7 +741,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
         } else {
           $xeNumberInput.numberNextEvent(evnt)
         }
-        internalData.dnTimeout = window.setTimeout(() => {
+        internalData.dnTimeout = setTimeout(() => {
           if (isPrevNumber) {
             $xeNumberInput.numberDownPrevEvent(evnt)
           } else {

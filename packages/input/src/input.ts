@@ -1063,7 +1063,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
 
       return new Promise<void>(resolve => {
         reactData.visiblePanel = false
-        internalData.hpTimeout = window.setTimeout(() => {
+        internalData.hpTimeout = setTimeout(() => {
           reactData.isAniVisible = false
           resolve()
         }, 350)
@@ -1383,7 +1383,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const $xeInput = this
       const internalData = $xeInput.internalData
 
-      internalData.dnTimeout = window.setTimeout(() => {
+      internalData.dnTimeout = setTimeout(() => {
         $xeInput.numberNextEvent(evnt)
         $xeInput.numberDownNextEvent(evnt)
       }, 60)
@@ -1462,7 +1462,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const $xeInput = this
       const internalData = $xeInput.internalData
 
-      internalData.dnTimeout = window.setTimeout(() => {
+      internalData.dnTimeout = setTimeout(() => {
         $xeInput.numberPrevEvent(evnt)
         $xeInput.numberDownPrevEvent(evnt)
       }, 60)
@@ -1479,7 +1479,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
         } else {
           $xeInput.numberNextEvent(evnt)
         }
-        internalData.dnTimeout = window.setTimeout(() => {
+        internalData.dnTimeout = setTimeout(() => {
           if (isPrevNumber) {
             $xeInput.numberDownPrevEvent(evnt)
           } else {

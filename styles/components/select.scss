@@ -129,6 +129,7 @@
 }
 
 .vxe-select-option {
+  position: relative;
   padding: 0 0.6em;
   max-width: 600px;
   white-space: nowrap;
@@ -137,6 +138,17 @@
   white-space: nowrap;
   user-select: none;
   cursor: pointer;
+  &.is--add {
+    padding-right: 2em;
+    &:hover {
+      .vxe-select-option--add-icon {
+        color: var(--vxe-ui-font-primary-color);
+      }
+    }
+    .vxe-select-option--add-icon {
+      display: block;
+    }
+  }
   &.is--selected {
     color: var(--vxe-ui-font-primary-color);
   }
@@ -154,6 +166,13 @@
   color: var(--vxe-ui-select-title-color);
   font-size: 12px;
   cursor: default;
+}
+
+.vxe-select-option--add-icon {
+  display: none;
+  position: absolute;
+  top: 0;
+  right: 0.6em;
 }
 
 .vxe-select--search-icon {

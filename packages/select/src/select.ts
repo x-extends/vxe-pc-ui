@@ -47,6 +47,10 @@ export default /* define-vxe-component start */ defineVxeComponent({
       default: () => getConfig().select.multiCharOverflow
     },
     prefixIcon: String as PropType<VxeSelectPropTypes.PrefixIcon>,
+    allowCreate: {
+      type: Boolean as PropType<VxeSelectPropTypes.AllowCreate>,
+      default: () => getConfig().select.allowCreate
+    },
     placement: String as PropType<VxeSelectPropTypes.Placement>,
     options: Array as PropType<VxeSelectPropTypes.Options>,
     optionProps: Object as PropType<VxeSelectPropTypes.OptionProps>,
@@ -133,6 +137,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
     const internalData: SelectInternalData = {
       synchData: [],
       fullData: [],
+      optAddMaps: {},
       optGroupKeyMaps: {},
       optFullValMaps: {},
       remoteValMaps: {},
@@ -704,7 +709,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       reactData.searchValue = ''
       reactData.searchLoading = false
       reactData.visiblePanel = false
-      internalData.hpTimeout = window.setTimeout(() => {
+      internalData.hpTimeout = setTimeout(() => {
         reactData.isAniVisible = false
       }, 350)
     },
@@ -932,7 +937,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
           $xeSelect.showOptionPanel()
           setTimeout(() => {
             reactData.triggerFocusPanel = false
-          }, 150)
+          }, 500)
         }
       }
       $xeSelect.dispatchEvent('focus', {}, evnt)
@@ -1033,12 +1038,28 @@ export default /* define-vxe-component start */ defineVxeComponent({
     },
     handleData () {
       const $xeSelect = this
+      const props = $xeSelect
       const reactData = $xeSelect.reactData
       const internalData = $xeSelect.internalData
 
-      const { scrollYLoad, afterVisibleList } = reactData
-      const { scrollYStore } = internalData
-      reactData.optList = scrollYLoad ? afterVisibleList.slice(scrollYStore.startIndex, scrollYStore.endIndex) : afterVisibleList.slice(0)
+      const { filterable, allowCreate } = props
+      const { scrollYLoad, afterVisibleList, searchValue } = reactData
+      const { optAddMaps, scrollYStore } = internalData
+      const labelField = $xeSelect.computeLabelField
+      const valueField = $xeSelect.computeValueField
+      const restList = scrollYLoad ? afterVisibleList.slice(scrollYStore.startIndex, scrollYStore.endIndex) : afterVisibleList.slice(0)
+      if (filterable && allowCreate && searchValue) {
+        if (!restList.some(option => option[labelField] === searchValue)) {
+          const addItem = optAddMaps[searchValue] || {
+            [$xeSelect.getOptKey()]: searchValue,
+            [labelField]: searchValue,
+            [valueField]: searchValue
+          }
+          optAddMaps[searchValue] = addItem
+          restList.unshift(addItem)
+        }
+      }
+      reactData.optList = restList
       return $xeSelect.$nextTick()
     },
     updateYData () {
@@ -1310,9 +1331,11 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const props = $xeSelect
       const slots = $xeSelect.$scopedSlots
       const reactData = $xeSelect.reactData
+      const internalData = $xeSelect.internalData
 
-      const { optionKey, value } = props
+      const { allowCreate, optionKey, value } = props
       const { currentOption } = reactData
+      const { optAddMaps } = internalData
       const optionOpts = $xeSelect.computeOptionOpts
       const labelField = $xeSelect.computeLabelField
       const valueField = $xeSelect.computeValueField
@@ -1324,11 +1347,13 @@ export default /* define-vxe-component start */ defineVxeComponent({
         const optid = $xeSelect.getOptId(option)
         const optionValue = option[valueField as 'value']
         const isOptGroup = $xeSelect.hasOptGroupById(optid)
-        const isSelected = XEUtils.isArray(value) ? value.indexOf(optionValue) > -1 : value === optionValue
-        const isVisible = !isOptGroup || isOptionVisible(option)
-        const isDisabled = $xeSelect.checkOptionDisabled(isSelected, option, group)
+        const isAdd = !!(allowCreate && optAddMaps[optid])
+        const isSelected = !isAdd && (XEUtils.isArray(value) ? value.indexOf(optionValue) > -1 : value === optionValue)
+        const isVisible = isAdd || (!isOptGroup || isOptionVisible(option))
+        const isDisabled = !isAdd && $xeSelect.checkOptionDisabled(isSelected, option, group)
         const defaultSlot = slots ? slots.default : null
         const optParams = { option, group: null, $select: $xeSelect }
+        const optVNs = optionSlot ? $xeSelect.callSlot(optionSlot, optParams, h) : (defaultSlot ? $xeSelect.callSlot(defaultSlot, optParams, h) : getFuncText(option[(isOptGroup ? groupLabelField : labelField) as 'label']))
         return isVisible
           ? h('div', {
             key: useKey || optionKey ? optid : cIndex,
@@ -1336,6 +1361,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
               'vxe-select-optgroup': isOptGroup,
               'is--disabled': isDisabled,
               'is--selected': isSelected,
+              'is--add': isAdd,
               'is--hover': currentOption && $xeSelect.getOptId(currentOption) === optid
             }],
             attrs: {
@@ -1359,7 +1385,24 @@ export default /* define-vxe-component start */ defineVxeComponent({
                 }
               }
             }
-          }, optionSlot ? $xeSelect.callSlot(optionSlot, optParams, h) : (defaultSlot ? $xeSelect.callSlot(defaultSlot, optParams, h) : getFuncText(option[(isOptGroup ? groupLabelField : labelField) as 'label'])))
+          }, allowCreate
+            ? [
+                h('span', {
+                  key: 1,
+                  class: 'vxe-select-option--label'
+                }, optVNs),
+                isAdd
+                  ? h('span', {
+                    key: 2,
+                    class: 'vxe-select-option--add-icon'
+                  }, [
+                    h('i', {
+                      class: getIcon().ADD_OPTION
+                    })
+                  ])
+                  : renderEmptyElement($xeSelect)
+              ]
+            : optVNs)
           : renderEmptyElement($xeSelect)
       })
     },

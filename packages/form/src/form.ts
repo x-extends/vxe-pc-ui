@@ -552,7 +552,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
           }
         }).catch(() => {
           return new Promise<void>((resolve) => {
-            internalData.meTimeout = window.setTimeout(() => {
+            internalData.meTimeout = setTimeout(() => {
               itemList.forEach((item) => {
                 if (item.errRule) {
                   item.showError = true

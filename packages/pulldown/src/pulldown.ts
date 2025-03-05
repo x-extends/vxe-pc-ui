@@ -273,7 +273,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       $xePulldown.emitModel(false)
       return new Promise<void>(resolve => {
         if (reactData.isAniVisible) {
-          internalData.hpTimeout = window.setTimeout(() => {
+          internalData.hpTimeout = setTimeout(() => {
             reactData.isAniVisible = false
             $xePulldown.$nextTick(() => {
               resolve()

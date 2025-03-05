@@ -453,7 +453,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const internalData = $xeTreeSelect.internalData
 
       reactData.visiblePanel = false
-      internalData.hpTimeout = window.setTimeout(() => {
+      internalData.hpTimeout = setTimeout(() => {
         reactData.isAniVisible = false
       }, 350)
     },

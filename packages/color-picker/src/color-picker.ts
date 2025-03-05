@@ -11,7 +11,7 @@ import VxeInputComponent from '../../input/src/input'
 import type { ColorPickerReactData, VxeColorPickerPropTypes, VxeColorPickerEmits, VxeComponentSizeType, ColorPickerInternalData, ValueOf, VxeModalConstructor, VxeModalMethods, VxeDrawerConstructor, VxeDrawerMethods, VxeFormDefines, VxeFormConstructor, VxeFormPrivateMethods } from '../../../types'
 import type { VxeTableConstructor, VxeTablePrivateMethods } from '../../../types/components/table'
 
-const WinEyeDropper = (window as any).EyeDropper
+const WinEyeDropper = typeof window !== 'undefined' ? (window as any).EyeDropper : null
 
 export default /* define-vxe-component start */ defineVxeComponent({
   name: 'VxeColorPicker',
@@ -419,7 +419,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const internalData = $xeColorPicker.internalData
 
       reactData.visiblePanel = false
-      internalData.hpTimeout = window.setTimeout(() => {
+      internalData.hpTimeout = setTimeout(() => {
         reactData.isAniVisible = false
       }, 350)
     },
