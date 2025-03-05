@@ -424,7 +424,7 @@ export default defineComponent({
       if (internalData.hpTimeout) {
         clearTimeout(internalData.hpTimeout)
       }
-      internalData.hpTimeout = window.setTimeout(() => {
+      internalData.hpTimeout = setTimeout(() => {
         reactData.isAniVisible = false
         internalData.hpTimeout = undefined
       }, 350)

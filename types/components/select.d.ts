@@ -43,6 +43,7 @@ export namespace VxeSelectPropTypes {
   export type Multiple = boolean
   export type MultiCharOverflow = number | string
   export type PrefixIcon = string
+  export type AllowCreate = boolean
   export type Placement = 'top' | 'bottom' | ''
   export type Options = VxeSelectDefines.SelectOptions[]
   export type OptionProps = {
@@ -107,6 +108,7 @@ export interface VxeSelectProps {
   multiple?: VxeSelectPropTypes.Multiple
   multiCharOverflow?: VxeSelectPropTypes.MultiCharOverflow
   prefixIcon?: VxeSelectPropTypes.PrefixIcon
+  allowCreate?: VxeSelectPropTypes.AllowCreate
   placement?: VxeSelectPropTypes.Placement
   options?: VxeSelectPropTypes.Options
   optionProps?: VxeSelectPropTypes.OptionProps
@@ -164,6 +166,7 @@ export interface SelectInternalData {
   isLoaded?: boolean
   synchData: any[]
   fullData: any[]
+  optAddMaps: Record<string, any>
   optGroupKeyMaps: Record<string, any>
   optFullValMaps: Record<string, VxeSelectDefines.OptCacheItem>
   remoteValMaps: Record<string, VxeSelectDefines.OptCacheItem>

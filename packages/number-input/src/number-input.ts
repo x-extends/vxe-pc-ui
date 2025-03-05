@@ -539,7 +539,7 @@ export default defineComponent({
     }
 
     const numberDownNextEvent = (evnt: Event) => {
-      internalData.dnTimeout = window.setTimeout(() => {
+      internalData.dnTimeout = setTimeout(() => {
         numberNextEvent(evnt)
         numberDownNextEvent(evnt)
       }, 60)
@@ -607,7 +607,7 @@ export default defineComponent({
     }
 
     const numberDownPrevEvent = (evnt: Event) => {
-      internalData.dnTimeout = window.setTimeout(() => {
+      internalData.dnTimeout = setTimeout(() => {
         numberPrevEvent(evnt)
         numberDownPrevEvent(evnt)
       }, 60)
@@ -622,7 +622,7 @@ export default defineComponent({
         } else {
           numberNextEvent(evnt)
         }
-        internalData.dnTimeout = window.setTimeout(() => {
+        internalData.dnTimeout = setTimeout(() => {
           if (isPrevNumber) {
             numberDownPrevEvent(evnt)
           } else {

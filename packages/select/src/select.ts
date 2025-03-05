@@ -1,6 +1,6 @@
-import { defineComponent, h, Teleport, PropType, ref, Ref, inject, computed, provide, onUnmounted, reactive, nextTick, watch, onMounted, createCommentVNode } from 'vue'
+import { defineComponent, h, Teleport, PropType, ref, Ref, inject, computed, provide, onUnmounted, reactive, nextTick, watch, onMounted } from 'vue'
 import XEUtils from 'xe-utils'
-import { getConfig, getIcon, getI18n, globalEvents, GLOBAL_EVENT_KEYS, createEvent, useSize } from '../../ui'
+import { getConfig, getIcon, getI18n, globalEvents, GLOBAL_EVENT_KEYS, createEvent, useSize, renderEmptyElement } from '../../ui'
 import { getEventTargetNode, getAbsolutePos } from '../../ui/src/dom'
 import { getLastZIndex, nextZIndex, getFuncText } from '../../ui/src/utils'
 import { getSlotVNs } from '../../ui/src/vn'
@@ -39,6 +39,10 @@ export default defineComponent({
       default: () => getConfig().select.multiCharOverflow
     },
     prefixIcon: String as PropType<VxeSelectPropTypes.PrefixIcon>,
+    allowCreate: {
+      type: Boolean as PropType<VxeSelectPropTypes.AllowCreate>,
+      default: () => getConfig().select.allowCreate
+    },
     placement: String as PropType<VxeSelectPropTypes.Placement>,
     options: Array as PropType<VxeSelectPropTypes.Options>,
     optionProps: Object as PropType<VxeSelectPropTypes.OptionProps>,
@@ -129,6 +133,7 @@ export default defineComponent({
     const internalData: SelectInternalData = {
       synchData: [],
       fullData: [],
+      optAddMaps: {},
       optGroupKeyMaps: {},
       optFullValMaps: {},
       remoteValMaps: {},
@@ -503,7 +508,7 @@ export default defineComponent({
       reactData.searchValue = ''
       reactData.searchLoading = false
       reactData.visiblePanel = false
-      internalData.hpTimeout = window.setTimeout(() => {
+      internalData.hpTimeout = setTimeout(() => {
         reactData.isAniVisible = false
       }, 350)
     }
@@ -704,7 +709,7 @@ export default defineComponent({
           showOptionPanel()
           setTimeout(() => {
             reactData.triggerFocusPanel = false
-          }, 150)
+          }, 500)
         }
       }
       dispatchEvent('focus', {}, evnt)
@@ -786,9 +791,24 @@ export default defineComponent({
     }
 
     const handleData = () => {
-      const { scrollYLoad, afterVisibleList } = reactData
-      const { scrollYStore } = internalData
-      reactData.optList = scrollYLoad ? afterVisibleList.slice(scrollYStore.startIndex, scrollYStore.endIndex) : afterVisibleList.slice(0)
+      const { filterable, allowCreate } = props
+      const { scrollYLoad, afterVisibleList, searchValue } = reactData
+      const { optAddMaps, scrollYStore } = internalData
+      const labelField = computeLabelField.value
+      const valueField = computeValueField.value
+      const restList = scrollYLoad ? afterVisibleList.slice(scrollYStore.startIndex, scrollYStore.endIndex) : afterVisibleList.slice(0)
+      if (filterable && allowCreate && searchValue) {
+        if (!restList.some(option => option[labelField] === searchValue)) {
+          const addItem = optAddMaps[searchValue] || {
+            [getOptKey()]: searchValue,
+            [labelField]: searchValue,
+            [valueField]: searchValue
+          }
+          optAddMaps[searchValue] = addItem
+          restList.unshift(addItem)
+        }
+      }
+      reactData.optList = restList
       return nextTick()
     }
 
@@ -1072,8 +1092,9 @@ export default defineComponent({
     Object.assign($xeSelect, selectMethods)
 
     const renderOption = (list: VxeOptionProps[], group?: VxeOptgroupProps) => {
-      const { optionKey, modelValue } = props
+      const { allowCreate, optionKey, modelValue } = props
       const { currentOption } = reactData
+      const { optAddMaps } = internalData
       const optionOpts = computeOptionOpts.value
       const labelField = computeLabelField.value
       const valueField = computeValueField.value
@@ -1085,11 +1106,13 @@ export default defineComponent({
         const optid = getOptId(option)
         const optionValue = option[valueField as 'value']
         const isOptGroup = hasOptGroupById(optid)
-        const isSelected = XEUtils.isArray(modelValue) ? modelValue.indexOf(optionValue) > -1 : modelValue === optionValue
-        const isVisible = !isOptGroup || isOptionVisible(option)
-        const isDisabled = checkOptionDisabled(isSelected, option, group)
+        const isAdd = !!(allowCreate && optAddMaps[optid])
+        const isSelected = !isAdd && (XEUtils.isArray(modelValue) ? modelValue.indexOf(optionValue) > -1 : modelValue === optionValue)
+        const isVisible = isAdd || (!isOptGroup || isOptionVisible(option))
+        const isDisabled = !isAdd && checkOptionDisabled(isSelected, option, group)
         const defaultSlot = slots ? slots.default : null
         const optParams = { option, group: null, $select: $xeSelect }
+        const optVNs = optionSlot ? callSlot(optionSlot, optParams) : (defaultSlot ? callSlot(defaultSlot, optParams) : getFuncText(option[(isOptGroup ? groupLabelField : labelField) as 'label']))
         return isVisible
           ? h('div', {
             key: useKey || optionKey ? optid : cIndex,
@@ -1097,6 +1120,7 @@ export default defineComponent({
               'vxe-select-optgroup': isOptGroup,
               'is--disabled': isDisabled,
               'is--selected': isSelected,
+              'is--add': isAdd,
               'is--hover': currentOption && getOptId(currentOption) === optid
             }],
             // attrs
@@ -1118,8 +1142,25 @@ export default defineComponent({
                 setCurrentOption(option)
               }
             }
-          }, optionSlot ? callSlot(optionSlot, optParams) : (defaultSlot ? callSlot(defaultSlot, optParams) : getFuncText(option[(isOptGroup ? groupLabelField : labelField) as 'label'])))
-          : createCommentVNode()
+          }, allowCreate
+            ? [
+                h('span', {
+                  key: 1,
+                  class: 'vxe-select-option--label'
+                }, optVNs),
+                isAdd
+                  ? h('span', {
+                    key: 2,
+                    class: 'vxe-select-option--add-icon'
+                  }, [
+                    h('i', {
+                      class: getIcon().ADD_OPTION
+                    })
+                  ])
+                  : renderEmptyElement($xeSelect)
+              ]
+            : optVNs)
+          : renderEmptyElement($xeSelect)
       })
     }
 
@@ -1249,12 +1290,12 @@ export default defineComponent({
                         onSearch: triggerSearchEvent
                       })
                     ])
-                    : createCommentVNode(),
+                    : renderEmptyElement($xeSelect),
                   headerSlot
                     ? h('div', {
                       class: 'vxe-select--panel-header'
                     }, headerSlot({}))
-                    : createCommentVNode(),
+                    : renderEmptyElement($xeSelect),
                   h('div', {
                     class: 'vxe-select--panel-body'
                   }, [
@@ -1282,7 +1323,7 @@ export default defineComponent({
                     ? h('div', {
                       class: 'vxe-select--panel-footer'
                     }, footerSlot({}))
-                    : createCommentVNode()
+                    : renderEmptyElement($xeSelect)
                 ])
               ]
             : [])

@@ -59,6 +59,9 @@
       <vxe-select v-model="demo1.value24" placeholder="远程搜索" filterable clearable remote :remote-method="remoteMethod24">
         <vxe-option v-for="(item, index) in demo1.list24" :key="index" :value="item.value" :label="item.label"></vxe-option>
       </vxe-select>
+      <vxe-select v-model="demo1.value28" placeholder="远程搜索" filterable clearable allow-create>
+        <vxe-option v-for="(item, index) in demo1.list24" :key="index" :value="item.value" :label="item.label"></vxe-option>
+      </vxe-select>
       <vxe-select v-model="demo1.value22" placeholder="自定义选项样式" clearable>
         <vxe-option value="1" label="选项1"></vxe-option>
         <vxe-option value="2" label="选项2" class-name="red"></vxe-option>
@@ -232,6 +235,7 @@ const demo1 = reactive({
   value22: null,
   value23: null,
   value24: null,
+  value28: null,
   list24: [
     { value: 11, label: '111' },
     { value: 22, label: '131' },

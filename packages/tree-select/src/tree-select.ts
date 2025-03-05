@@ -386,7 +386,7 @@ export default defineComponent({
 
     const hideOptionPanel = () => {
       reactData.visiblePanel = false
-      internalData.hpTimeout = window.setTimeout(() => {
+      internalData.hpTimeout = setTimeout(() => {
         reactData.isAniVisible = false
       }, 350)
     }

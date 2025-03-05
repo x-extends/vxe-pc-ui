@@ -228,7 +228,7 @@ export default defineComponent({
       emit('update:modelValue', false)
       return new Promise<void>(resolve => {
         if (reactData.isAniVisible) {
-          internalData.hpTimeout = window.setTimeout(() => {
+          internalData.hpTimeout = setTimeout(() => {
             reactData.isAniVisible = false
             nextTick(() => {
               resolve()

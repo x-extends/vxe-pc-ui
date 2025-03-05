@@ -10,8 +10,6 @@ import VxeInputComponent from '../../input/src/input'
 import type { ColorPickerReactData, VxeColorPickerPropTypes, VxeColorPickerEmits, ColorPickerInternalData, ColorPickerMethods, ColorPickerPrivateMethods, ValueOf, ColorPickerPrivateRef, VxeColorPickerPrivateComputed, VxeColorPickerConstructor, VxeColorPickerPrivateMethods, VxeModalConstructor, VxeModalMethods, VxeDrawerConstructor, VxeDrawerMethods, VxeFormDefines, VxeFormConstructor, VxeFormPrivateMethods } from '../../../types'
 import type { VxeTableConstructor, VxeTablePrivateMethods } from '../../../types/components/table'
 
-const WinEyeDropper = (window as any).EyeDropper
-
 export default defineComponent({
   name: 'VxeColorPicker',
   props: {
@@ -83,6 +81,8 @@ export default defineComponent({
     const $xeTable = inject<(VxeTableConstructor & VxeTablePrivateMethods) | null>('$xeTable', null)
     const $xeForm = inject<(VxeFormConstructor & VxeFormPrivateMethods) | null>('$xeForm', null)
     const formItemInfo = inject<VxeFormDefines.ProvideItemInfo | null>('xeFormItemInfo', null)
+
+    const WinEyeDropper = typeof window !== 'undefined' ? (window as any).EyeDropper : null
 
     const xID = XEUtils.uniqueId()
 
@@ -362,7 +362,7 @@ export default defineComponent({
 
     const hideOptionPanel = () => {
       reactData.visiblePanel = false
-      internalData.hpTimeout = window.setTimeout(() => {
+      internalData.hpTimeout = setTimeout(() => {
         reactData.isAniVisible = false
       }, 350)
     }
