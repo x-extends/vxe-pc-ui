@@ -824,38 +824,60 @@ export default /* define-vxe-component start */ defineVxeComponent({
     },
     findOffsetOption (option: any, isDwArrow: boolean) {
       const $xeSelect = this
+      const props = $xeSelect
       const reactData = $xeSelect.reactData
       const internalData = $xeSelect.internalData
 
-      const { afterVisibleList } = reactData
-      const { optFullValMaps } = internalData
+      const { allowCreate } = props
+      const { afterVisibleList, optList } = reactData
+      const { optFullValMaps, optAddMaps } = internalData
       const valueField = $xeSelect.computeValueField
+      let fullList = afterVisibleList
+      let offsetAddIndex = 0
+      if (allowCreate && optList.length) {
+        const firstItem = optList[0]
+        const optid = $xeSelect.getOptId(firstItem)
+        if (optAddMaps[optid]) {
+          offsetAddIndex = 1
+          fullList = [optAddMaps[optid]].concat(fullList)
+        }
+      }
       if (!option) {
-        for (let i = 0; i < afterVisibleList.length - 1; i++) {
-          const item = afterVisibleList[i]
-          if ($xeSelect.validOffsetOption(item)) {
-            return item
+        if (isDwArrow) {
+          for (let i = 0; i < fullList.length; i++) {
+            const item = fullList[i]
+            if ($xeSelect.validOffsetOption(item)) {
+              return item
+            }
+          }
+        } else {
+          for (let len = fullList.length - 1; len >= 0; len--) {
+            const item = fullList[len]
+            if ($xeSelect.validOffsetOption(item)) {
+              return item
+            }
           }
         }
       }
-      const cacheItem = optFullValMaps[option[valueField]]
+      let avIndex = 0
+      const cacheItem = option ? optFullValMaps[option[valueField]] : null
       if (cacheItem) {
-        const avIndex = cacheItem._index
-        if (avIndex > -1) {
-          if (isDwArrow) {
-            for (let i = avIndex + 1; i <= afterVisibleList.length - 1; i++) {
-              const item = afterVisibleList[i]
+        avIndex = cacheItem._index + offsetAddIndex
+      }
+      if (avIndex > -1) {
+        if (isDwArrow) {
+          for (let i = avIndex + 1; i <= fullList.length - 1; i++) {
+            const item = fullList[i]
+            if ($xeSelect.validOffsetOption(item)) {
+              return item
+            }
+          }
+        } else {
+          if (avIndex > 0) {
+            for (let len = avIndex - 1; len >= 0; len--) {
+              const item = fullList[len]
               if ($xeSelect.validOffsetOption(item)) {
                 return item
-              }
-            }
-          } else {
-            if (avIndex > 0) {
-              for (let len = avIndex - 1; len >= 0; len--) {
-                const item = afterVisibleList[len]
-                if ($xeSelect.validOffsetOption(item)) {
-                  return item
-                }
               }
             }
           }
@@ -891,7 +913,11 @@ export default /* define-vxe-component start */ defineVxeComponent({
             $xeSelect.changeOptionEvent(evnt, currentOption)
           } else if (isUpArrow || isDwArrow) {
             evnt.preventDefault()
-            const offsetOption = $xeSelect.findOffsetOption(currentOption, isDwArrow)
+            let offsetOption = $xeSelect.findOffsetOption(currentOption, isDwArrow)
+            // 如果不匹配，默认最接近一个
+            if (!offsetOption) {
+              offsetOption = $xeSelect.findOffsetOption(null, isDwArrow)
+            }
             if (offsetOption) {
               $xeSelect.setCurrentOption(offsetOption)
               $xeSelect.handleScrollToOption(offsetOption, isDwArrow)
@@ -1140,10 +1166,14 @@ export default /* define-vxe-component start */ defineVxeComponent({
               if (isDwArrow) {
                 if (optElem.offsetTop + optElem.offsetHeight - optWrapperElem.scrollTop > wrapperHeight) {
                   optWrapperElem.scrollTop = optElem.offsetTop + optElem.offsetHeight - wrapperHeight
+                } else if (optElem.offsetTop + offsetPadding < optWrapperElem.scrollTop || optElem.offsetTop + offsetPadding > optWrapperElem.scrollTop + optWrapperElem.clientHeight) {
+                  optWrapperElem.scrollTop = optElem.offsetTop - offsetPadding
                 }
               } else {
                 if (optElem.offsetTop + offsetPadding < optWrapperElem.scrollTop || optElem.offsetTop + offsetPadding > optWrapperElem.scrollTop + optWrapperElem.clientHeight) {
                   optWrapperElem.scrollTop = optElem.offsetTop - offsetPadding
+                } else if (optElem.offsetTop + optElem.offsetHeight - optWrapperElem.scrollTop > wrapperHeight) {
+                  optWrapperElem.scrollTop = optElem.offsetTop + optElem.offsetHeight - wrapperHeight
                 }
               }
             } else if (scrollYLoad) {
