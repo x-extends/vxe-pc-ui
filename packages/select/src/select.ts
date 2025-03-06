@@ -85,7 +85,8 @@ export default defineComponent({
     'blur',
     'focus',
     'click',
-    'scroll'
+    'scroll',
+    'visible-change'
   ] as VxeSelectEmits,
   setup (props, context) {
     const { slots, emit } = context
@@ -501,6 +502,7 @@ export default defineComponent({
         }, 100)
         updateZIndex()
         updatePlacement()
+        dispatchEvent('visible-change', { visible: true }, null)
       }
     }
 
@@ -511,6 +513,7 @@ export default defineComponent({
       internalData.hpTimeout = setTimeout(() => {
         reactData.isAniVisible = false
       }, 350)
+      dispatchEvent('visible-change', { visible: false }, null)
     }
 
     const changeEvent = (evnt: Event, selectValue: any) => {
@@ -717,12 +720,17 @@ export default defineComponent({
 
     const clickEvent = (evnt: MouseEvent) => {
       togglePanelEvent(evnt)
-      dispatchEvent('click', {}, evnt)
+      dispatchEvent('click', { triggerButton: false, visible: reactData.visiblePanel }, evnt)
     }
 
     const blurEvent = (evnt: FocusEvent) => {
       reactData.isActivated = false
       dispatchEvent('blur', {}, evnt)
+    }
+
+    const suffixClickEvent = (evnt: MouseEvent) => {
+      togglePanelEvent(evnt)
+      dispatchEvent('click', { triggerButton: true, visible: reactData.visiblePanel }, evnt)
     }
 
     const modelSearchEvent = (value: string) => {
@@ -1246,7 +1254,7 @@ export default defineComponent({
           onClick: clickEvent,
           onFocus: focusEvent,
           onBlur: blurEvent,
-          onSuffixClick: togglePanelEvent
+          onSuffixClick: suffixClickEvent
         }, prefixSlot
           ? {
               prefix: () => prefixSlot({})
