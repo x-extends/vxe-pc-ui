@@ -608,35 +608,56 @@ export default defineComponent({
     }
 
     const findOffsetOption = (option: any, isDwArrow: boolean) => {
-      const { afterVisibleList } = reactData
-      const { optFullValMaps } = internalData
+      const { allowCreate } = props
+      const { afterVisibleList, optList } = reactData
+      const { optFullValMaps, optAddMaps } = internalData
       const valueField = computeValueField.value
+      let fullList = afterVisibleList
+      let offsetAddIndex = 0
+      if (allowCreate && optList.length) {
+        const firstItem = optList[0]
+        const optid = getOptId(firstItem)
+        if (optAddMaps[optid]) {
+          offsetAddIndex = 1
+          fullList = [optAddMaps[optid]].concat(fullList)
+        }
+      }
       if (!option) {
-        for (let i = 0; i < afterVisibleList.length - 1; i++) {
-          const item = afterVisibleList[i]
-          if (validOffsetOption(item)) {
-            return item
+        if (isDwArrow) {
+          for (let i = 0; i < fullList.length; i++) {
+            const item = fullList[i]
+            if (validOffsetOption(item)) {
+              return item
+            }
+          }
+        } else {
+          for (let len = fullList.length - 1; len >= 0; len--) {
+            const item = fullList[len]
+            if (validOffsetOption(item)) {
+              return item
+            }
           }
         }
       }
-      const cacheItem = optFullValMaps[option[valueField]]
+      let avIndex = 0
+      const cacheItem = option ? optFullValMaps[option[valueField]] : null
       if (cacheItem) {
-        const avIndex = cacheItem._index
-        if (avIndex > -1) {
-          if (isDwArrow) {
-            for (let i = avIndex + 1; i <= afterVisibleList.length - 1; i++) {
-              const item = afterVisibleList[i]
+        avIndex = cacheItem._index + offsetAddIndex
+      }
+      if (avIndex > -1) {
+        if (isDwArrow) {
+          for (let i = avIndex + 1; i <= fullList.length - 1; i++) {
+            const item = fullList[i]
+            if (validOffsetOption(item)) {
+              return item
+            }
+          }
+        } else {
+          if (avIndex > 0) {
+            for (let len = avIndex - 1; len >= 0; len--) {
+              const item = fullList[len]
               if (validOffsetOption(item)) {
                 return item
-              }
-            }
-          } else {
-            if (avIndex > 0) {
-              for (let len = avIndex - 1; len >= 0; len--) {
-                const item = afterVisibleList[len]
-                if (validOffsetOption(item)) {
-                  return item
-                }
               }
             }
           }
@@ -669,7 +690,11 @@ export default defineComponent({
             changeOptionEvent(evnt, currentOption)
           } else if (isUpArrow || isDwArrow) {
             evnt.preventDefault()
-            const offsetOption = findOffsetOption(currentOption, isDwArrow)
+            let offsetOption = findOffsetOption(currentOption, isDwArrow)
+            // 如果不匹配，默认最接近一个
+            if (!offsetOption) {
+              offsetOption = findOffsetOption(null, isDwArrow)
+            }
             if (offsetOption) {
               setCurrentOption(offsetOption)
               handleScrollToOption(offsetOption, isDwArrow)
@@ -807,11 +832,11 @@ export default defineComponent({
       const restList = scrollYLoad ? afterVisibleList.slice(scrollYStore.startIndex, scrollYStore.endIndex) : afterVisibleList.slice(0)
       if (filterable && allowCreate && searchValue) {
         if (!restList.some(option => option[labelField] === searchValue)) {
-          const addItem = optAddMaps[searchValue] || {
+          const addItem = optAddMaps[searchValue] || reactive({
             [getOptKey()]: searchValue,
             [labelField]: searchValue,
             [valueField]: searchValue
-          }
+          })
           optAddMaps[searchValue] = addItem
           restList.unshift(addItem)
         }
@@ -880,10 +905,14 @@ export default defineComponent({
               if (isDwArrow) {
                 if (optElem.offsetTop + optElem.offsetHeight - optWrapperElem.scrollTop > wrapperHeight) {
                   optWrapperElem.scrollTop = optElem.offsetTop + optElem.offsetHeight - wrapperHeight
+                } else if (optElem.offsetTop + offsetPadding < optWrapperElem.scrollTop || optElem.offsetTop + offsetPadding > optWrapperElem.scrollTop + optWrapperElem.clientHeight) {
+                  optWrapperElem.scrollTop = optElem.offsetTop - offsetPadding
                 }
               } else {
                 if (optElem.offsetTop + offsetPadding < optWrapperElem.scrollTop || optElem.offsetTop + offsetPadding > optWrapperElem.scrollTop + optWrapperElem.clientHeight) {
                   optWrapperElem.scrollTop = optElem.offsetTop - offsetPadding
+                } else if (optElem.offsetTop + optElem.offsetHeight - optWrapperElem.scrollTop > wrapperHeight) {
+                  optWrapperElem.scrollTop = optElem.offsetTop + optElem.offsetHeight - wrapperHeight
                 }
               }
             } else if (scrollYLoad) {
