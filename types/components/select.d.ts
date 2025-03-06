@@ -237,7 +237,8 @@ export type VxeSelectEmits = [
   'blur',
   'focus',
   'click',
-  'scroll'
+  'scroll',
+  'visible-change'
 ]
 
 export namespace VxeSelectDefines {
@@ -286,8 +287,14 @@ export namespace VxeSelectDefines {
 
   export interface FocusEventParams extends SelectEventParams { }
   export interface BlurEventParams extends SelectEventParams { }
-  export interface ClickEventParams extends SelectEventParams { }
+  export interface ClickEventParams extends SelectEventParams {
+    triggerButton: boolean
+    visible: boolean
+  }
   export interface ScrollEventParams extends SelectEventParams { }
+  export interface VisibleChangeEventParams extends SelectEventParams {
+    visible: boolean
+  }
 }
 
 export type VxeSelectEventProps = {
@@ -297,6 +304,7 @@ export type VxeSelectEventProps = {
   onBlur?: VxeSelectEvents.Blur
   onClick?: VxeSelectEvents.Click
   onScroll?: VxeSelectEvents.Scroll
+  onVisibleChange?: VxeSelectEvents.VisibleChange
 }
 
 export interface VxeSelectListeners {
@@ -306,6 +314,7 @@ export interface VxeSelectListeners {
   blur?: VxeSelectEvents.Blur
   click?: VxeSelectEvents.Click
   scroll?: VxeSelectEvents.Scroll
+  visibleChange?: VxeSelectEvents.VisibleChange
 }
 
 export namespace VxeSelectEvents {
@@ -315,6 +324,7 @@ export namespace VxeSelectEvents {
   export type Blur = (params: VxeSelectDefines.BlurEventParams) => void
   export type Click = (params: VxeSelectDefines.ClickEventParams) => void
   export type Scroll = (params: VxeSelectDefines.ScrollEventParams) => void
+  export type VisibleChange = (params: VxeSelectDefines.VisibleChangeEventParams) => void
 }
 
 export namespace VxeSelectSlotTypes {

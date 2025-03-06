@@ -821,14 +821,14 @@ export default /* define-vxe-component start */ defineVxeComponent({
     const reactData = $xeForm.reactData
 
     reactData.collapseAll = !!props.collapseStatus
-    if (props.items) {
-      $xeForm.loadItem(props.items)
-    }
   },
   mounted () {
     const $xeForm = this
     const props = $xeForm
 
+    if (props.items) {
+      $xeForm.loadItem(props.items)
+    }
     $xeForm.$nextTick(() => {
       if (process.env.VUE_APP_VXE_ENV === 'development') {
         if (props.customLayout && props.items) {

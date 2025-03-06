@@ -699,6 +699,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
         }, 100)
         $xeSelect.updateZIndex()
         $xeSelect.updatePlacement()
+        $xeSelect.dispatchEvent('visible-change', { visible: true }, null)
       }
     },
     hideOptionPanel () {
@@ -712,6 +713,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       internalData.hpTimeout = setTimeout(() => {
         reactData.isAniVisible = false
       }, 350)
+      $xeSelect.dispatchEvent('visible-change', { visible: false }, null)
     },
     changeEvent (evnt: Event, selectValue: any) {
       const $xeSelect = this
@@ -944,9 +946,10 @@ export default /* define-vxe-component start */ defineVxeComponent({
     },
     clickEvent  (evnt: MouseEvent) {
       const $xeSelect = this
+      const reactData = $xeSelect.reactData
 
       $xeSelect.togglePanelEvent(evnt)
-      $xeSelect.dispatchEvent('click', {}, evnt)
+      $xeSelect.dispatchEvent('click', { triggerButton: false, visible: reactData.visiblePanel }, evnt)
     },
     blurEvent  (evnt: FocusEvent) {
       const $xeSelect = this
@@ -954,6 +957,13 @@ export default /* define-vxe-component start */ defineVxeComponent({
 
       reactData.isActivated = false
       $xeSelect.dispatchEvent('blur', {}, evnt)
+    },
+    suffixClickEvent (evnt: MouseEvent) {
+      const $xeSelect = this
+      const reactData = $xeSelect.reactData
+
+      $xeSelect.togglePanelEvent(evnt)
+      $xeSelect.dispatchEvent('click', { triggerButton: true, visible: reactData.visiblePanel }, evnt)
     },
     modelSearchEvent  (value: string) {
       const $xeSelect = this
@@ -1499,7 +1509,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
             click: $xeSelect.clickEvent,
             focus: $xeSelect.focusEvent,
             blur: $xeSelect.blurEvent,
-            'suffix-click': $xeSelect.togglePanelEvent
+            'suffix-click': $xeSelect.suffixClickEvent
           },
           scopedSlots: prefixSlot
             ? {
