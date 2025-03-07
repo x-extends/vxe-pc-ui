@@ -1,5 +1,5 @@
 import { defineComponent, h, ref, Ref, computed, reactive, watch, PropType, onMounted } from 'vue'
-import { getConfig, getI18n, createEvent, useSize } from '../../ui'
+import { getConfig, getI18n, createEvent, useSize, renderEmptyElement } from '../../ui'
 import { getDateQuarter } from '../../date-picker/src/util'
 import { toCssUnit } from '../..//ui/src/dom'
 import VxeButtonComponent from '../../button/src/button'
@@ -242,8 +242,10 @@ export default defineComponent({
       return years
     })
 
-    const computeSelectDatePanelLabel = computed(() => {
+    const computeSelectDatePanelObj = computed(() => {
       const isCalendarType = computeIsCalendarType.value
+      let y = ''
+      let m = ''
       if (isCalendarType) {
         const { datePanelType, selectMonth } = reactData
         const yearList = computeYearList.value
@@ -253,16 +255,19 @@ export default defineComponent({
           year = selectMonth.getFullYear()
           month = selectMonth.getMonth() + 1
         }
-        if (datePanelType === 'quarter') {
-          return getI18n('vxe.input.date.quarterLabel', [year])
-        } else if (datePanelType === 'month') {
-          return getI18n('vxe.input.date.monthLabel', [year])
+        if (datePanelType === 'quarter' || datePanelType === 'month') {
+          y = `${year}`
         } else if (datePanelType === 'year') {
-          return yearList.length ? `${yearList[0].year} - ${yearList[yearList.length - 1].year}` : ''
+          y = yearList.length ? `${yearList[0].year} - ${yearList[yearList.length - 1].year}` : ''
+        } else {
+          y = `${year}`
+          m = month ? getI18n(`vxe.input.date.m${month}`) : '-'
         }
-        return getI18n('vxe.input.date.dayLabel', [year, month ? getI18n(`vxe.input.date.m${month}`) : '-'])
       }
-      return ''
+      return {
+        y,
+        m
+      }
     })
 
     const computeFirstDayOfWeek = computed(() => {
@@ -546,7 +551,11 @@ export default defineComponent({
       dateMonthHandle(currentDate, 0)
     }
 
-    const dateToggleTypeEvent = (evnt: MouseEvent) => {
+    const dateToggleYearTypeEvent = () => {
+      reactData.datePanelType = 'year'
+    }
+
+    const dateToggleMonthTypeEvent = (evnt: MouseEvent) => {
       let { datePanelType } = reactData
       if (datePanelType === 'month' || datePanelType === 'quarter') {
         datePanelType = 'year'
@@ -1035,7 +1044,7 @@ export default defineComponent({
       const { datePanelType } = reactData
       const isDisabledPrevDateBtn = computeIsDisabledPrevDateBtn.value
       const isDisabledNextDateBtn = computeIsDisabledNextDateBtn.value
-      const selectDatePanelLabel = computeSelectDatePanelLabel.value
+      const selectDatePanelObj = computeSelectDatePanelObj.value
       return [
         h('div', {
           class: 'vxe-calendar--header'
@@ -1043,11 +1052,28 @@ export default defineComponent({
           h('div', {
             class: 'vxe-calendar--type-wrapper'
           }, [
-            h(VxeButtonComponent, {
-              disabled: datePanelType === 'year',
-              content: selectDatePanelLabel,
-              onClick: dateToggleTypeEvent
-            })
+            datePanelType === 'year'
+              ? h(VxeButtonComponent, {
+                class: 'vxe-calendar--date-picker-label',
+                disabled: datePanelType === 'year',
+                content: selectDatePanelObj.y
+              })
+              : h('span', {
+                class: 'vxe-calendar--date-picker-btns'
+              }, [
+                h(VxeButtonComponent, {
+                  class: 'vxe-calendar--date-picker-btn',
+                  content: selectDatePanelObj.y,
+                  onClick: dateToggleYearTypeEvent
+                }),
+                selectDatePanelObj.m
+                  ? h(VxeButtonComponent, {
+                    class: 'vxe-calendar--date-picker-btn',
+                    content: selectDatePanelObj.m,
+                    onClick: dateToggleMonthTypeEvent
+                  })
+                  : renderEmptyElement($xeCalendar)
+              ])
           ]),
           h('div', {
             class: 'vxe-calendar--btn-wrapper'
