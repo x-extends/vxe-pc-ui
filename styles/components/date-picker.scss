@@ -325,7 +325,11 @@
   margin-right: 0.5em;
 }
 .vxe-date-picker--time-picker-btn {
+  display: flex;
   flex-shrink: 0;
+  &:active {
+    transform: scale(0.9);
+  }
 }
 .vxe-date-picker--time-picker-confirm,
 .vxe-date-picker--date-picker-confirm {
@@ -391,10 +395,19 @@
   &:not(.is--disabled) {
     cursor: pointer;
     &:hover {
+      color: var(--vxe-ui-font-primary-color);
       background-color: #fff;
     }
     &:active {
       background-color: #fff;
+    }
+  }
+}
+.vxe-date-picker--date-picker-btns {
+  .vxe-date-picker--date-picker-btn {
+    margin-left: 0.6em;
+    &:first-child {
+      margin-left: 0;
     }
   }
 }
@@ -523,6 +536,8 @@
 
 .vxe-date-picker--date-label {
   position: relative;
+  font-size: 1.1em;
+  line-height: 1em;
   &.is-notice {
     &:before {
       content: "";
@@ -541,8 +556,8 @@
   position: absolute;
   right: 0.1em;
   top: -0.2em;
-  font-size: 0.86em;
-  transform: scale(0.85);
+  font-size: 12px;
+  transform: scale(0.9);
   color: var(--vxe-ui-input-date-extra-color);
   &.is-important {
     color: var(--vxe-ui-input-date-extra-important-color);
@@ -551,7 +566,8 @@
 
 .vxe-date-picker--date-festival {
   color: var(--vxe-ui-input-date-festival-color);
-  height: 14px;
+  height: 1.2em;
+  line-height: 1.1em;
   overflow: hidden;
   &.is-important {
     color: var(--vxe-ui-input-date-festival-important-color);
@@ -559,8 +575,8 @@
 }
 .vxe-date-picker--date-festival--label {
   display: block;
-  font-size: 0.86em;
-  transform: scale(0.9);
+  font-size: 1em;
+  transform: scale(0.8);
 }
 
 @keyframes festivalOverlap2 {
@@ -760,6 +776,9 @@
   .vxe-date-picker--date-picker-btn-wrapper {
     .vxe-date-picker--date-picker-btn {
       margin-left: 9px - $sizeIndex;
+      &:active {
+        transform: scale(0.9);
+      }
     }
     .vxe-date-picker--date-picker-prev-btn,
     .vxe-date-picker--date-picker-current-btn,
@@ -771,7 +790,7 @@
   }
   .vxe-date-picker--date-picker-type-wrapper {
     .vxe-date-picker--date-picker-label,
-    .vxe-date-picker--date-picker-btn {
+    .vxe-date-picker--date-picker-btns {
       padding: 0 10px - $sizeIndex;
     }
   }
@@ -830,9 +849,6 @@
   .vxe-date-picker--time-picker-confirm,
   .vxe-date-picker--date-picker-confirm {
     height: 31px - $sizeIndex;
-  }
-  .vxe-date-picker--date-label {
-    line-height: calc(list.nth($fontSizeList, $sizeIndex) + 1px);
   }
 }
 

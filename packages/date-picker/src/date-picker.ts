@@ -418,30 +418,35 @@ export default /* define-vxe-component start */ defineVxeComponent({
       }
       return years
     },
-    computeSelectDatePanelLabel () {
+    computeSelectDatePanelObj () {
       const $xeDatePicker = (this as any)
       const reactData = $xeDatePicker.reactData
 
       const isDatePickerType = $xeDatePicker.computeIsDatePickerType
+      let y = ''
+      let m = ''
       if (isDatePickerType) {
         const { datePanelType, selectMonth } = reactData
-        const yearList = $xeDatePicker.computeYearList as VxeDatePickerDefines.DateYearItem[]
+        const yearList = $xeDatePicker.computeYearList
         let year = ''
         let month
         if (selectMonth) {
           year = selectMonth.getFullYear()
           month = selectMonth.getMonth() + 1
         }
-        if (datePanelType === 'quarter') {
-          return getI18n('vxe.input.date.quarterLabel', [year])
-        } else if (datePanelType === 'month') {
-          return getI18n('vxe.input.date.monthLabel', [year])
+        if (datePanelType === 'quarter' || datePanelType === 'month') {
+          y = `${year}`
         } else if (datePanelType === 'year') {
-          return yearList.length ? `${yearList[0].year} - ${yearList[yearList.length - 1].year}` : ''
+          y = yearList.length ? `${yearList[0].year} - ${yearList[yearList.length - 1].year}` : ''
+        } else {
+          y = `${year}`
+          m = month ? getI18n(`vxe.input.date.m${month}`) : '-'
         }
-        return getI18n('vxe.input.date.dayLabel', [year, month ? getI18n(`vxe.input.date.m${month}`) : '-'])
       }
-      return ''
+      return {
+        y,
+        m
+      }
     },
     computeFirstDayOfWeek () {
       const $xeDatePicker = this
@@ -1173,7 +1178,13 @@ export default /* define-vxe-component start */ defineVxeComponent({
       reactData.currentDate = currentDate
       $xeDatePicker.dateMonthHandle(currentDate, 0)
     },
-    dateToggleTypeEvent  () {
+    dateToggleYearTypeEvent () {
+      const $xeDatePicker = this
+      const reactData = $xeDatePicker.reactData
+
+      reactData.datePanelType = 'year'
+    },
+    dateToggleMonthTypeEvent  () {
       const $xeDatePicker = this
       const reactData = $xeDatePicker.reactData
 
@@ -2205,7 +2216,8 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const { datePanelType } = reactData
       const isDisabledPrevDateBtn = $xeDatePicker.computeIsDisabledPrevDateBtn
       const isDisabledNextDateBtn = $xeDatePicker.computeIsDisabledNextDateBtn
-      const selectDatePanelLabel = $xeDatePicker.computeSelectDatePanelLabel
+      const selectDatePanelObj = $xeDatePicker.computeSelectDatePanelObj
+      const supportMultiples = $xeDatePicker.computeSupportMultiples
       return [
         h('div', {
           class: 'vxe-date-picker--date-picker-header'
@@ -2216,13 +2228,25 @@ export default /* define-vxe-component start */ defineVxeComponent({
             datePanelType === 'year'
               ? h('span', {
                 class: 'vxe-date-picker--date-picker-label'
-              }, selectDatePanelLabel)
+              }, selectDatePanelObj.y)
               : h('span', {
-                class: 'vxe-date-picker--date-picker-btn',
-                on: {
-                  click: $xeDatePicker.dateToggleTypeEvent
-                }
-              }, selectDatePanelLabel)
+                class: 'vxe-date-picker--date-picker-btns'
+              }, [
+                h('span', {
+                  class: 'vxe-date-picker--date-picker-btn',
+                  on: {
+                    click: $xeDatePicker.dateToggleYearTypeEvent
+                  }
+                }, selectDatePanelObj.y),
+                selectDatePanelObj.m
+                  ? h('span', {
+                    class: 'vxe-date-picker--date-picker-btn',
+                    on: {
+                      click: $xeDatePicker.dateToggleMonthTypeEvent
+                    }
+                  }, selectDatePanelObj.m)
+                  : renderEmptyElement($xeDatePicker)
+              ])
           ]),
           h('div', {
             class: 'vxe-date-picker--date-picker-btn-wrapper'
@@ -2261,7 +2285,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
                 class: 'vxe-icon-caret-right'
               })
             ]),
-            multiple && $xeDatePicker.computeSupportMultiples
+            multiple && supportMultiples
               ? h('span', {
                 class: 'vxe-date-picker--date-picker-btn vxe-date-picker--date-picker-confirm-btn'
               }, [
