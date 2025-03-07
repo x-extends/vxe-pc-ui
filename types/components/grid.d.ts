@@ -268,6 +268,10 @@ export interface GridReactData<D = any> {
 export interface GridMethods<D = any> {
   dispatchEvent(type: ValueOf<VxeGridEmits>, params: Record<string, any>, evnt: Event | null): void
   /**
+   * 获取根元素
+   */
+  getEl(): HTMLDivElement
+  /**
    * 给数据代理提交指令
    * @param code 指令编码
    */

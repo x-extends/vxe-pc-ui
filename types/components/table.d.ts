@@ -3336,6 +3336,10 @@ export interface TableInternalData<D = any> {
 export interface TableMethods<DT = any> {
   dispatchEvent(type: ValueOf<VxeTableEmits>, params: Record<string, any>, evnt: Event | null): void
   /**
+   * 获取根元素
+   */
+  getEl(): HTMLDivElement
+  /**
    * 手动清除表格所有条件，还原到初始状态
    * 对于增删改查的场景中可能会用到，比如在数据保存之后清除表格缓存
    */
@@ -3546,6 +3550,50 @@ export interface TableMethods<DT = any> {
     visibleColumn: VxeTableDefines.ColumnInfo<DT>[]
     tableColumn: VxeTableDefines.ColumnInfo<DT>[]
   }
+  /**
+   * 移动列到指定列的位置
+   * @param fieldOrColumn
+   * @param targetFieldOrColumn 列对象、列字段、移动偏移量
+   * @param options
+   */
+  moveColumnTo(fieldOrColumn: VxeColumnPropTypes.Field | VxeTableDefines.ColumnInfo, targetFieldOrColumn: VxeColumnPropTypes.Field | VxeTableDefines.ColumnInfo | number, options?: {
+    /**
+     * 只对 row-drag-config.isCrossDrag 有效，允许跨层级移动
+     */
+    isCrossDrag?: boolean
+    /**
+     * 只对 column-drag-config.isToChildDrag 有效，移动成子级
+     */
+    dragToChild?: boolean
+    /**
+     * 移动到目标列的左边或右边位置
+     */
+    dragPos?: 'left' | 'right' | '' | null
+  }): Promise<{
+    status: boolean
+  }>
+  /**
+   * 移动行到指定行的位置
+   * @param rowidOrRow
+   * @param targetRowidOrRow 行对象、行主键、移动偏移量
+   * @param options
+   */
+  moveRowTo(rowidOrRow: any, targetRowidOrRow: any, options?: {
+    /**
+     * 只对 row-drag-config.isCrossDrag 有效，允许跨层级移动
+     */
+    isCrossDrag?: boolean
+    /**
+     * 只对 row-drag-config.isToChildDrag 有效，移动成子级
+     */
+    dragToChild?: boolean
+    /**
+     * 移动到目标行的上方或下方位置
+     */
+    dragPos?: 'top' | 'bottom' | '' | null
+  }): Promise<{
+    status: boolean
+  }>
   /**
    * 获取表格的全量列
    */
@@ -4213,7 +4261,7 @@ export interface TablePrivateMethods<D = any> {
   triggerCellMousedownEvent(evnt: MouseEvent, params: any): void
   triggerCellMousedownEvent(evnt: any, params: any): void
   triggerCellMouseupEvent(evnt: MouseEvent): void
-  handleRowDragSwapEvent (evnt: DragEvent, isSyncRow: boolean | undefined, dragRow: any, prevDragRow: any, prevDragPos: '' | 'top' | 'bottom' | 'left' | 'right' | undefined, prevDragToChild: boolean | undefined): Promise<void>
+  handleRowDragSwapEvent (evnt: DragEvent | null, isSyncRow: boolean | undefined, dragRow: any, prevDragRow: any, prevDragPos: '' | 'top' | 'bottom' | 'left' | 'right' | undefined, prevDragToChild: boolean | undefined): Promise<{ status: boolean }>
   handleRowDragDragstartEvent (evnt: DragEvent): void
   handleRowDragDragendEvent(evnt: DragEvent): void
   handleRowDragDragoverEvent(evnt: DragEvent,): void
@@ -4224,7 +4272,7 @@ export interface TablePrivateMethods<D = any> {
   handleCellDragMouseupEvent (evnt: MouseEvent): void
   handleHeaderCellDragDragstartEvent (evnt: DragEvent): void
   handleColDragSwapColumn(): void
-  handleColDragSwapEvent (evnt: DragEvent, isSyncColumn: boolean | undefined, dragCol: VxeTableDefines.ColumnInfo | null | undefined, prevDragCol: VxeTableDefines.ColumnInfo | undefined, prevDragPos: '' | 'top' | 'bottom' | 'left' | 'right' | undefined, prevDragToChild: boolean | undefined): Promise<void>
+  handleColDragSwapEvent (evnt: DragEvent | null, isSyncColumn: boolean | undefined, dragCol: VxeTableDefines.ColumnInfo | null | undefined, prevDragCol: VxeTableDefines.ColumnInfo | null | undefined, prevDragPos: '' | 'top' | 'bottom' | 'left' | 'right' | undefined, prevDragToChild: boolean | undefined): Promise<{ status: boolean }>
   handleHeaderCellDragDragendEvent(evnt: DragEvent): void
   handleHeaderCellDragDragoverEvent(evnt: DragEvent,): void
   handleHeaderCellDragMousedownEvent (evnt: MouseEvent, params: {
