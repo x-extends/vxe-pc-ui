@@ -298,7 +298,11 @@
   margin-right: 0.5em;
 }
 .vxe-input--time-picker-btn {
+  display: flex;
   flex-shrink: 0;
+  &:active {
+    transform: scale(0.9);
+  }
 }
 .vxe-input--time-picker-confirm,
 .vxe-input--date-picker-confirm {
@@ -368,6 +372,14 @@
     }
     &:active {
       background-color: #fff;
+    }
+  }
+}
+.vxe-input--date-picker-btns {
+  .vxe-input--date-picker-btn {
+    margin-left: 0.6em;
+    &:first-child {
+      margin-left: 0;
     }
   }
 }
@@ -709,6 +721,9 @@
   .vxe-input--date-picker-btn-wrapper {
     .vxe-input--date-picker-btn {
       margin-left: 9px - $sizeIndex;
+      &:active {
+        transform: scale(0.9);
+      }
     }
     .vxe-input--date-picker-prev-btn,
     .vxe-input--date-picker-current-btn,
@@ -720,7 +735,7 @@
   }
   .vxe-input--date-picker-type-wrapper {
     .vxe-input--date-picker-label,
-    .vxe-input--date-picker-btn {
+    .vxe-input--date-picker-btns {
       padding: 0 10px - $sizeIndex;
     }
   }

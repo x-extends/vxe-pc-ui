@@ -518,30 +518,35 @@ export default /* define-vxe-component start */ defineVxeComponent({
       }
       return years
     },
-    computeSelectDatePanelLabel (this: any) {
-      const $xeInput = this
+    computeSelectDatePanelObj () {
+      const $xeInput = (this as any)
       const reactData = $xeInput.reactData
 
       const isDatePickerType = $xeInput.computeIsDatePickerType
+      let y = ''
+      let m = ''
       if (isDatePickerType) {
         const { datePanelType, selectMonth } = reactData
-        const yearList = $xeInput.computeYearList as VxeDatePickerDefines.DateYearItem[]
+        const yearList = $xeInput.computeYearList
         let year = ''
         let month
         if (selectMonth) {
           year = selectMonth.getFullYear()
           month = selectMonth.getMonth() + 1
         }
-        if (datePanelType === 'quarter') {
-          return getI18n('vxe.input.date.quarterLabel', [year])
-        } else if (datePanelType === 'month') {
-          return getI18n('vxe.input.date.monthLabel', [year])
+        if (datePanelType === 'quarter' || datePanelType === 'month') {
+          y = getI18n('vxe.datePicker.yearTitle', [year])
         } else if (datePanelType === 'year') {
-          return yearList.length ? `${yearList[0].year} - ${yearList[yearList.length - 1].year}` : ''
+          y = yearList.length ? `${yearList[0].year} - ${yearList[yearList.length - 1].year}` : ''
+        } else {
+          y = getI18n('vxe.datePicker.yearTitle', [year])
+          m = month ? getI18n(`vxe.input.date.m${month}`) : '-'
         }
-        return getI18n('vxe.input.date.dayLabel', [year, month ? getI18n(`vxe.input.date.m${month}`) : '-'])
       }
-      return ''
+      return {
+        y,
+        m
+      }
     },
     computeFirstDayOfWeek () {
       const $xeInput = this
@@ -1529,7 +1534,13 @@ export default /* define-vxe-component start */ defineVxeComponent({
       reactData.currentDate = currentDate
       $xeInput.dateMonthHandle(currentDate, 0)
     },
-    dateToggleTypeEvent () {
+    dateToggleYearTypeEvent () {
+      const $xeInput = this
+      const reactData = $xeInput.reactData
+
+      reactData.datePanelType = 'year'
+    },
+    dateToggleMonthTypeEvent () {
       const $xeInput = this
       const reactData = $xeInput.reactData
 
@@ -2502,7 +2513,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const { datePanelType } = reactData
       const isDisabledPrevDateBtn = $xeInput.computeIsDisabledPrevDateBtn
       const isDisabledNextDateBtn = $xeInput.computeIsDisabledNextDateBtn
-      const selectDatePanelLabel = $xeInput.computeSelectDatePanelLabel
+      const selectDatePanelObj = $xeInput.computeSelectDatePanelObj
       return [
         h('div', {
           class: 'vxe-input--date-picker-header'
@@ -2513,13 +2524,25 @@ export default /* define-vxe-component start */ defineVxeComponent({
             datePanelType === 'year'
               ? h('span', {
                 class: 'vxe-input--date-picker-label'
-              }, selectDatePanelLabel)
+              }, selectDatePanelObj.y)
               : h('span', {
-                class: 'vxe-input--date-picker-btn',
-                on: {
-                  click: $xeInput.dateToggleTypeEvent
-                }
-              }, selectDatePanelLabel)
+                class: 'vxe-input--date-picker-btns'
+              }, [
+                h('span', {
+                  class: 'vxe-input--date-picker-btn',
+                  on: {
+                    click: $xeInput.dateToggleYearTypeEvent
+                  }
+                }, selectDatePanelObj.y),
+                selectDatePanelObj.m
+                  ? h('span', {
+                    class: 'vxe-input--date-picker-btn',
+                    on: {
+                      click: $xeInput.dateToggleMonthTypeEvent
+                    }
+                  }, selectDatePanelObj.m)
+                  : renderEmptyElement($xeInput)
+              ])
           ]),
           h('div', {
             class: 'vxe-input--date-picker-btn-wrapper'

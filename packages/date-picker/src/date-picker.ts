@@ -435,11 +435,11 @@ export default /* define-vxe-component start */ defineVxeComponent({
           month = selectMonth.getMonth() + 1
         }
         if (datePanelType === 'quarter' || datePanelType === 'month') {
-          y = `${year}`
+          y = getI18n('vxe.datePicker.yearTitle', [year])
         } else if (datePanelType === 'year') {
           y = yearList.length ? `${yearList[0].year} - ${yearList[yearList.length - 1].year}` : ''
         } else {
-          y = `${year}`
+          y = getI18n('vxe.datePicker.yearTitle', [year])
           m = month ? getI18n(`vxe.input.date.m${month}`) : '-'
         }
       }
