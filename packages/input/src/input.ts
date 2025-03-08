@@ -1,13 +1,13 @@
 import { defineComponent, h, Teleport, ref, Ref, computed, reactive, onMounted, inject, nextTick, watch, onBeforeUnmount, PropType, createCommentVNode } from 'vue'
 import XEUtils from 'xe-utils'
-import { getConfig, getIcon, getI18n, globalEvents, GLOBAL_EVENT_KEYS, createEvent, useSize, VxeComponentStyleType } from '../../ui'
+import { getConfig, getIcon, getI18n, globalEvents, GLOBAL_EVENT_KEYS, createEvent, useSize, renderEmptyElement } from '../../ui'
 import { getFuncText, getLastZIndex, nextZIndex, eqEmptyValue } from '../../ui/src/utils'
 import { hasClass, getAbsolutePos, getEventTargetNode } from '../../ui/src/dom'
 import { toStringTimeDate, getDateQuarter } from '../../date-picker/src/util'
 import { handleNumber, toFloatValueFixed } from '../../number-input/src/util'
 import { getSlotVNs } from '../..//ui/src/vn'
 
-import type { VxeInputConstructor, VxeInputEmits, InputReactData, InputMethods, ValueOf, InputInternalData, VxeInputPropTypes, InputPrivateRef, VxeFormConstructor, VxeFormPrivateMethods, VxeFormDefines, VxeDrawerConstructor, VxeDrawerMethods, VxeModalConstructor, VxeModalMethods, VxeDatePickerDefines, VxeSelectConstructor, VxeSelectMethods, VxeTreeSelectConstructor, VxeTreeSelectMethods } from '../../../types'
+import type { VxeInputConstructor, VxeInputEmits, InputReactData, InputMethods, ValueOf, InputInternalData, VxeInputPropTypes, InputPrivateRef, VxeFormConstructor, VxeFormPrivateMethods, VxeFormDefines, VxeDrawerConstructor, VxeDrawerMethods, VxeModalConstructor, VxeModalMethods, VxeDatePickerDefines, VxeSelectConstructor, VxeSelectMethods, VxeTreeSelectConstructor, VxeTreeSelectMethods, VxeComponentStyleType } from '../../../types'
 import type { VxeTableConstructor, VxeTablePrivateMethods } from '../../../types/components/table'
 
 export default defineComponent({
@@ -475,8 +475,10 @@ export default defineComponent({
       return years
     })
 
-    const computeSelectDatePanelLabel = computed(() => {
+    const computeSelectDatePanelObj = computed(() => {
       const isDatePickerType = computeIsDatePickerType.value
+      let y = ''
+      let m = ''
       if (isDatePickerType) {
         const { datePanelType, selectMonth } = reactData
         const yearList = computeYearList.value
@@ -486,16 +488,19 @@ export default defineComponent({
           year = selectMonth.getFullYear()
           month = selectMonth.getMonth() + 1
         }
-        if (datePanelType === 'quarter') {
-          return getI18n('vxe.input.date.quarterLabel', [year])
-        } else if (datePanelType === 'month') {
-          return getI18n('vxe.input.date.monthLabel', [year])
+        if (datePanelType === 'quarter' || datePanelType === 'month') {
+          y = getI18n('vxe.datePicker.yearTitle', [year])
         } else if (datePanelType === 'year') {
-          return yearList.length ? `${yearList[0].year} - ${yearList[yearList.length - 1].year}` : ''
+          y = yearList.length ? `${yearList[0].year} - ${yearList[yearList.length - 1].year}` : ''
+        } else {
+          y = getI18n('vxe.datePicker.yearTitle', [year])
+          m = month ? getI18n(`vxe.input.date.m${month}`) : '-'
         }
-        return getI18n('vxe.input.date.dayLabel', [year, month ? getI18n(`vxe.input.date.m${month}`) : '-'])
       }
-      return ''
+      return {
+        y,
+        m
+      }
     })
 
     const computeFirstDayOfWeek = computed(() => {
@@ -1301,7 +1306,11 @@ export default defineComponent({
       dateMonthHandle(currentDate, 0)
     }
 
-    const dateToggleTypeEvent = () => {
+    const dateToggleYearTypeEvent = () => {
+      reactData.datePanelType = 'year'
+    }
+
+    const dateToggleMonthTypeEvent = () => {
       let { datePanelType } = reactData
       if (datePanelType === 'month' || datePanelType === 'quarter') {
         datePanelType = 'year'
@@ -2163,7 +2172,7 @@ export default defineComponent({
       const { datePanelType } = reactData
       const isDisabledPrevDateBtn = computeIsDisabledPrevDateBtn.value
       const isDisabledNextDateBtn = computeIsDisabledNextDateBtn.value
-      const selectDatePanelLabel = computeSelectDatePanelLabel.value
+      const selectDatePanelObj = computeSelectDatePanelObj.value
       return [
         h('div', {
           class: 'vxe-input--date-picker-header'
@@ -2174,11 +2183,21 @@ export default defineComponent({
             datePanelType === 'year'
               ? h('span', {
                 class: 'vxe-input--date-picker-label'
-              }, selectDatePanelLabel)
+              }, selectDatePanelObj.y)
               : h('span', {
-                class: 'vxe-input--date-picker-btn',
-                onClick: dateToggleTypeEvent
-              }, selectDatePanelLabel)
+                class: 'vxe-input--date-picker-btns'
+              }, [
+                h('span', {
+                  class: 'vxe-input--date-picker-btn',
+                  onClick: dateToggleYearTypeEvent
+                }, selectDatePanelObj.y),
+                selectDatePanelObj.m
+                  ? h('span', {
+                    class: 'vxe-input--date-picker-btn',
+                    onClick: dateToggleMonthTypeEvent
+                  }, selectDatePanelObj.m)
+                  : renderEmptyElement($xeInput)
+              ])
           ]),
           h('div', {
             class: 'vxe-input--date-picker-btn-wrapper'
