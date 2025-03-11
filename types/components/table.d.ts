@@ -368,7 +368,25 @@ export namespace VxeTablePropTypes {
   /**
    * 当前行配置项
    */
-  export interface CurrentConfig<D = any>{
+  export interface CurrentRowConfig<D = any> {
+    /**
+     * 只对 mouse-config.selected 启用有效，是否跟随单元格选中而移动高亮行
+     */
+    isFollowSelected?: boolean
+  }
+
+  /**
+   * 当前列配置项
+   */
+  export interface CurrentColumnConfig<D = any> {
+    /**
+     * 触发方式
+     */
+    trigger?: 'default' | 'header' | 'cell' | '' | null
+    /**
+     * 只对 mouse-config.selected 启用有效，是否跟随单元格选中而移动高亮列
+     */
+    isFollowSelected?: boolean
   }
 
   /**
@@ -2652,7 +2670,11 @@ export interface VxeTableProps<D = any> {
   /**
    * 当前行配置项
    */
-  currentConfig?: VxeTablePropTypes.CurrentConfig<D>
+  currentRowConfig?: VxeTablePropTypes.CurrentRowConfig<D>
+  /**
+   * 当前列配置项
+   */
+  currentColumnConfig?: VxeTablePropTypes.CurrentColumnConfig<D>
   /**
    * 已废弃，被 rowDragConfig 替换
    * @deprecated
@@ -2869,6 +2891,7 @@ export interface TablePrivateComputed<D = any> {
   computeScrollbarXToTop: ComputedRef<boolean>
   computeScrollbarYToLeft: ComputedRef<boolean>
   computeColumnOpts: ComputedRef<VxeTablePropTypes.ColumnOpts>
+  computeCurrentColumnOpts: ComputedRef<VxeTablePropTypes.CurrentColumnConfig>
   computeScrollXThreshold: ComputedRef<number>
   computeScrollYThreshold: ComputedRef<number>
   computeDefaultRowHeight: ComputedRef<number>
@@ -2876,6 +2899,7 @@ export interface TablePrivateComputed<D = any> {
   computeHeaderCellOpts: ComputedRef<VxeTablePropTypes.HeaderCellConfig>
   computeFooterCellOpts: ComputedRef<VxeTablePropTypes.FooterCellConfig>
   computeRowOpts: ComputedRef<VxeTablePropTypes.RowOpts>
+  computeCurrentRowOpts: ComputedRef<VxeTablePropTypes.CurrentRowConfig>
   computeRowDragOpts: ComputedRef<VxeTablePropTypes.RowDragConfig>
   computeColumnDragOpts: ComputedRef<VxeTablePropTypes.ColumnDragConfig>
   computeResizeOpts: ComputedRef<VxeTablePropTypes.ResizeOpts>

@@ -4,8 +4,9 @@ export interface TableKeyboardMethods<D = any> {}
 
 export interface TableKeyboardPrivateMethods<D = any> {
   moveTabSelected(args: any, isLeft: any, evnt: any): void
-  moveCurrentRow(isUpArrow: any, isDwArrow: any, evnt: any): void
-  moveSelected(args: any, isLeftArrow: any, isUpArrow: any, isRightArrow: any, isDwArrow: any, evnt: any): void
+  moveCurrentRow(isUpArrow: boolean, isDwArrow: boolean, evnt: any): void
+  moveCurrentColumn(isLeftArrow: boolean, isRightArrow: boolean, evnt: any): void
+  moveSelected(args: any, isLeftArrow: boolean, isUpArrow: boolean, isRightArrow: boolean, isDwArrow: boolean, evnt: any): void
   handleCellMousedownEvent(evnt: any, params: any): void
  }
 
