@@ -194,6 +194,8 @@ export namespace VxePagerSlotTypes {
   export interface DefaultSlotParams {
     [key: string]: any
   }
+  export interface LeftSlotParams {}
+  export interface RightSlotParams {}
   export interface HomeSlotParams {
     currentPage: number
   }
@@ -239,9 +241,9 @@ export namespace VxePagerSlotTypes {
 }
 
 export interface VxePagerSlots {
-  left?: (params: VxePagerSlotTypes.DefaultSlotParams) => any
+  left?: (params: VxePagerSlotTypes.LeftSlotParams) => any
 
-  right?: (params: VxePagerSlotTypes.DefaultSlotParams) => any
+  right?: (params: VxePagerSlotTypes.RightSlotParams) => any
 
   home?: (params: VxePagerSlotTypes.HomeSlotParams) => any
 

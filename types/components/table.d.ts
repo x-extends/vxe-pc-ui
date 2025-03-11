@@ -343,7 +343,25 @@ export namespace VxeTablePropTypes {
   /**
    * 当前行配置项
    */
-  export interface CurrentConfig<D = any>{
+  export interface CurrentRowConfig<D = any> {
+    /**
+     * 只对 mouse-config.selected 启用有效，是否跟随单元格选中而移动高亮行
+     */
+    isFollowSelected?: boolean
+  }
+
+  /**
+   * 当前列配置项
+   */
+  export interface CurrentColumnConfig<D = any> {
+    /**
+     * 触发方式
+     */
+    trigger?: 'default' | 'header' | 'cell' | '' | null
+    /**
+     * 只对 mouse-config.selected 启用有效，是否跟随单元格选中而移动高亮列
+     */
+    isFollowSelected?: boolean
   }
 
   /**
@@ -2626,7 +2644,11 @@ export interface VxeTableProps<D = any> {
   /**
    * 当前行配置项
    */
-  currentConfig?: VxeTablePropTypes.CurrentConfig<D>
+  currentRowConfig?: VxeTablePropTypes.CurrentRowConfig<D>
+  /**
+   * 当前列配置项
+   */
+  currentColumnConfig?: VxeTablePropTypes.CurrentColumnConfig<D>
   /**
    * 已废弃，被 rowDragConfig 替换
    * @deprecated
@@ -2843,6 +2865,7 @@ export interface TablePrivateComputed<D = any> {
   computeScrollbarXToTop: boolean
   computeScrollbarYToLeft: boolean
   computeColumnOpts: VxeTablePropTypes.ColumnOpts
+  computeCurrentColumnOpts: VxeTablePropTypes.CurrentColumnConfig
   computeScrollXThreshold: number
   computeScrollYThreshold: number
   computeDefaultRowHeight: number
@@ -2850,6 +2873,7 @@ export interface TablePrivateComputed<D = any> {
   computeHeaderCellOpts: VxeTablePropTypes.HeaderCellConfig
   computeFooterCellOpts: VxeTablePropTypes.FooterCellConfig
   computeRowOpts: VxeTablePropTypes.RowOpts
+  computeCurrentRowOpts: VxeTablePropTypes.CurrentRowConfig
   computeRowDragOpts: VxeTablePropTypes.RowDragConfig
   computeColumnDragOpts: VxeTablePropTypes.ColumnDragConfig
   computeResizeOpts: VxeTablePropTypes.ResizeOpts,

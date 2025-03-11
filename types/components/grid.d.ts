@@ -2,7 +2,7 @@ import { DefineVxeComponentApp, DefineVxeComponentOptions, DefineVxeComponentIns
 import { VxeToolbarProps, VxeToolbarPropTypes, VxeToolbarSlotTypes } from './toolbar'
 import { VxeTableDefines, VxeTableEmits, VxeTableConstructor, VxeTableProps, TableMethods, VxeTableSlotTypes } from './table'
 import { VxeColumnPropTypes } from './column'
-import { VxePagerProps, VxePagerDefines } from './pager'
+import { VxePagerProps, VxePagerDefines, VxePagerSlotTypes } from './pager'
 import { VxeFormProps, VxeFormDefines } from './form'
 import { VxeFormItemProps } from './form-item'
 
@@ -32,7 +32,23 @@ export namespace VxeGridPropTypes {
 
   export interface PagerConfig extends VxePagerProps {
     enabled?: boolean
-    slots?: any
+    slots?: {
+      left?: string | ((params: VxePagerSlotTypes.LeftSlotParams) => VxeComponentSlotType | VxeComponentSlotType[])
+      right?: string | ((params: VxePagerSlotTypes.RightSlotParams) => VxeComponentSlotType | VxeComponentSlotType[])
+      home?: string | ((params: VxePagerSlotTypes.HomeSlotParams) => VxeComponentSlotType | VxeComponentSlotType[])
+      prevPage?: string | ((params: VxePagerSlotTypes.PrevPageSlotParams) => VxeComponentSlotType | VxeComponentSlotType[])
+      prevJump?: string | ((params: VxePagerSlotTypes.PrevJumpSlotParams) => VxeComponentSlotType | VxeComponentSlotType[])
+      nextJump?: string | ((params: VxePagerSlotTypes.NextJumpSlotParams) => VxeComponentSlotType | VxeComponentSlotType[])
+      nextPage?: string | ((params: VxePagerSlotTypes.NextPageSlotParams) => VxeComponentSlotType | VxeComponentSlotType[])
+      end?: string | ((params: VxePagerSlotTypes.EndSlotParams) => VxeComponentSlotType | VxeComponentSlotType[])
+      number?: string | ((params: VxePagerSlotTypes.NumberJumpSlotParams) => VxeComponentSlotType | VxeComponentSlotType[])
+      numberJump?: string | ((params: VxePagerSlotTypes.NumberJumpSlotParams) => VxeComponentSlotType | VxeComponentSlotType[])
+      sizes?: string | ((params: VxePagerSlotTypes.SizesSlotParams) => VxeComponentSlotType | VxeComponentSlotType[])
+      fullJump?: string | ((params: VxePagerSlotTypes.FullJumpSlotParams) => VxeComponentSlotType | VxeComponentSlotType[])
+      jump?:string | ((params: VxePagerSlotTypes.FullJumpSlotParams) => VxeComponentSlotType | VxeComponentSlotType[])
+      pageCount?: string | ((params: VxePagerSlotTypes.PageCountSlotParams) => VxeComponentSlotType | VxeComponentSlotType[])
+      total?: string | ((params: VxePagerSlotTypes.TotalSlotParams) => VxeComponentSlotType | VxeComponentSlotType[])
+    }
   }
   export interface PagerOpts extends PagerConfig { }
 
