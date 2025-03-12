@@ -1279,7 +1279,7 @@ export default defineComponent({
     }
 
     const renderAllMode = () => {
-      const { moreConfig, dragSort } = props
+      const { showList, moreConfig, dragSort } = props
       const { fileList, isDragMove } = reactData
       const moreOpts = computeMoreOpts.value
 
@@ -1296,49 +1296,53 @@ export default defineComponent({
       return h('div', {
         key: 'all',
         class: 'vxe-upload--file-wrapper'
-      }, [
-        showMoreButton && moreConfig && isHorizontal
-          ? createCommentVNode()
-          : renderFileAction(true),
-        currList.length || (showMoreButton && isHorizontal)
-          ? h('div', {
-            class: ['vxe-upload--file-list-wrapper', {
-              'is--horizontal': isHorizontal
-            }]
-          }, [
-            currList.length
-              ? (
-                  dragSort
-                    ? h(TransitionGroup, {
-                      name: `vxe-upload--drag-list${isDragMove ? '' : '-disabled'}`,
-                      tag: 'div',
-                      class: 'vxe-upload--file-list'
-                    }, {
-                      default: () => renderFileItemList(currList, false)
-                    })
-                    : h('div', {
-                      class: 'vxe-upload--file-list'
-                    }, renderFileItemList(currList, false))
-                )
-              : createCommentVNode(),
-            showMoreButton && overMaxNum
-              ? h('div', {
-                class: 'vxe-upload--file-over-more'
-              }, [
-                h(VxeButtonComponent, {
-                  mode: 'text',
-                  content: getI18n('vxe.upload.moreBtnText', [fileList.length]),
-                  status: 'primary',
-                  onClick: handleMoreEvent
-                })
-              ])
-              : createCommentVNode(),
+      }, showList
+        ? [
             showMoreButton && moreConfig && isHorizontal
-              ? renderFileAction(false)
+              ? createCommentVNode()
+              : renderFileAction(true),
+            (currList.length || (showMoreButton && isHorizontal))
+              ? h('div', {
+                class: ['vxe-upload--file-list-wrapper', {
+                  'is--horizontal': isHorizontal
+                }]
+              }, [
+                currList.length
+                  ? (
+                      dragSort
+                        ? h(TransitionGroup, {
+                          name: `vxe-upload--drag-list${isDragMove ? '' : '-disabled'}`,
+                          tag: 'div',
+                          class: 'vxe-upload--file-list'
+                        }, {
+                          default: () => renderFileItemList(currList, false)
+                        })
+                        : h('div', {
+                          class: 'vxe-upload--file-list'
+                        }, renderFileItemList(currList, false))
+                    )
+                  : createCommentVNode(),
+                showMoreButton && overMaxNum
+                  ? h('div', {
+                    class: 'vxe-upload--file-over-more'
+                  }, [
+                    h(VxeButtonComponent, {
+                      mode: 'text',
+                      content: getI18n('vxe.upload.moreBtnText', [fileList.length]),
+                      status: 'primary',
+                      onClick: handleMoreEvent
+                    })
+                  ])
+                  : createCommentVNode(),
+                showMoreButton && moreConfig && isHorizontal
+                  ? renderFileAction(false)
+                  : createCommentVNode()
+              ])
               : createCommentVNode()
+          ]
+        : [
+            renderFileAction(false)
           ])
-          : createCommentVNode()
-      ])
     }
 
     const renderImageItemList = (currList: VxeUploadDefines.FileObjItem[], isMoreView: boolean) => {
@@ -1511,7 +1515,7 @@ export default defineComponent({
     }
 
     const renderImageMode = () => {
-      const { dragSort } = props
+      const { showList, dragSort } = props
       const { fileList, isDragMove } = reactData
       const moreOpts = computeMoreOpts.value
 
@@ -1526,48 +1530,56 @@ export default defineComponent({
       return h('div', {
         key: 'image',
         class: 'vxe-upload--image-wrapper'
-      }, [
-        dragSort
-          ? h(TransitionGroup, {
-            name: `vxe-upload--drag-list${isDragMove ? '' : '-disabled'}`,
-            tag: 'div',
-            class: 'vxe-upload--image-list'
-          }, {
-            default: () => renderImageItemList(currList, false).concat([
-              showMoreButton && overMaxNum
-                ? h('div', {
-                  key: 'om',
-                  class: 'vxe-upload--image-over-more'
-                }, [
-                  h(VxeButtonComponent, {
-                    mode: 'text',
-                    content: getI18n('vxe.upload.moreBtnText', [fileList.length]),
-                    status: 'primary',
-                    onClick: handleMoreEvent
-                  })
+      }, showList
+        ? [
+            dragSort
+              ? h(TransitionGroup, {
+                name: `vxe-upload--drag-list${isDragMove ? '' : '-disabled'}`,
+                tag: 'div',
+                class: 'vxe-upload--image-list'
+              }, {
+                default: () => renderImageItemList(currList, false).concat([
+                  showMoreButton && overMaxNum
+                    ? h('div', {
+                      key: 'om',
+                      class: 'vxe-upload--image-over-more'
+                    }, [
+                      h(VxeButtonComponent, {
+                        mode: 'text',
+                        content: getI18n('vxe.upload.moreBtnText', [fileList.length]),
+                        status: 'primary',
+                        onClick: handleMoreEvent
+                      })
+                    ])
+                    : createCommentVNode(),
+                  renderImageAction(false)
                 ])
-                : createCommentVNode(),
+              })
+              : h('div', {
+                class: 'vxe-upload--image-list'
+              }, renderImageItemList(currList, false).concat([
+                showMoreButton && overMaxNum
+                  ? h('div', {
+                    class: 'vxe-upload--image-over-more'
+                  }, [
+                    h(VxeButtonComponent, {
+                      mode: 'text',
+                      content: getI18n('vxe.upload.moreBtnText', [fileList.length]),
+                      status: 'primary',
+                      onClick: handleMoreEvent
+                    })
+                  ])
+                  : createCommentVNode(),
+                renderImageAction(false)
+              ]))
+          ]
+        : [
+            h('div', {
+              class: 'vxe-upload--image-list'
+            }, [
               renderImageAction(false)
             ])
-          })
-          : h('div', {
-            class: 'vxe-upload--image-list'
-          }, renderImageItemList(currList, false).concat([
-            showMoreButton && overMaxNum
-              ? h('div', {
-                class: 'vxe-upload--image-over-more'
-              }, [
-                h(VxeButtonComponent, {
-                  mode: 'text',
-                  content: getI18n('vxe.upload.moreBtnText', [fileList.length]),
-                  status: 'primary',
-                  onClick: handleMoreEvent
-                })
-              ])
-              : createCommentVNode(),
-            renderImageAction(false)
-          ]))
-      ])
+          ])
     }
 
     const renderVN = () => {
