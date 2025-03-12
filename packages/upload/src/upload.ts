@@ -1424,7 +1424,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const props = $xeUpload
       const reactData = $xeUpload.reactData
 
-      const { moreConfig, dragSort } = props
+      const { showList, moreConfig, dragSort } = props
       const { fileList, isDragMove } = reactData
       const moreOpts = $xeUpload.computeMoreOpts
 
@@ -1441,53 +1441,57 @@ export default /* define-vxe-component start */ defineVxeComponent({
       return h('div', {
         key: 'all',
         class: 'vxe-upload--file-wrapper'
-      }, [
-        showMoreButton && moreConfig && isHorizontal
-          ? renderEmptyElement($xeUpload)
-          : $xeUpload.renderFileAction(h, true),
-        currList.length || (showMoreButton && isHorizontal)
-          ? h('div', {
-            class: ['vxe-upload--file-list-wrapper', {
-              'is--horizontal': isHorizontal
-            }]
-          }, [
-            currList.length
-              ? (
-                  dragSort
-                    ? h('transition-group', {
-                      attrs: {
-                        name: `vxe-upload--drag-list${isDragMove ? '' : '-disabled'}`,
-                        tag: 'div'
-                      },
-                      class: 'vxe-upload--file-list'
-                    }, $xeUpload.renderFileItemList(h, currList, false))
-                    : h('div', {
-                      class: 'vxe-upload--file-list'
-                    }, $xeUpload.renderFileItemList(h, currList, false))
-                )
-              : renderEmptyElement($xeUpload),
-            showMoreButton && overMaxNum
-              ? h('div', {
-                class: 'vxe-upload--file-over-more'
-              }, [
-                h(VxeButtonComponent, {
-                  props: {
-                    mode: 'text',
-                    content: getI18n('vxe.upload.moreBtnText', [fileList.length]),
-                    status: 'primary'
-                  },
-                  on: {
-                    click: $xeUpload.handleMoreEvent
-                  }
-                })
-              ])
-              : renderEmptyElement($xeUpload),
+      }, showList
+        ? [
             showMoreButton && moreConfig && isHorizontal
-              ? $xeUpload.renderFileAction(h, false)
+              ? renderEmptyElement($xeUpload)
+              : $xeUpload.renderFileAction(h, true),
+            currList.length || (showMoreButton && isHorizontal)
+              ? h('div', {
+                class: ['vxe-upload--file-list-wrapper', {
+                  'is--horizontal': isHorizontal
+                }]
+              }, [
+                currList.length
+                  ? (
+                      dragSort
+                        ? h('transition-group', {
+                          attrs: {
+                            name: `vxe-upload--drag-list${isDragMove ? '' : '-disabled'}`,
+                            tag: 'div'
+                          },
+                          class: 'vxe-upload--file-list'
+                        }, $xeUpload.renderFileItemList(h, currList, false))
+                        : h('div', {
+                          class: 'vxe-upload--file-list'
+                        }, $xeUpload.renderFileItemList(h, currList, false))
+                    )
+                  : renderEmptyElement($xeUpload),
+                showMoreButton && overMaxNum
+                  ? h('div', {
+                    class: 'vxe-upload--file-over-more'
+                  }, [
+                    h(VxeButtonComponent, {
+                      props: {
+                        mode: 'text',
+                        content: getI18n('vxe.upload.moreBtnText', [fileList.length]),
+                        status: 'primary'
+                      },
+                      on: {
+                        click: $xeUpload.handleMoreEvent
+                      }
+                    })
+                  ])
+                  : renderEmptyElement($xeUpload),
+                showMoreButton && moreConfig && isHorizontal
+                  ? $xeUpload.renderFileAction(h, false)
+                  : renderEmptyElement($xeUpload)
+              ])
               : renderEmptyElement($xeUpload)
+          ]
+        : [
+            $xeUpload.renderFileAction(h, false)
           ])
-          : renderEmptyElement($xeUpload)
-      ])
     },
     renderImageItemList (h: CreateElement, currList: VxeUploadDefines.FileObjItem[], isMoreView: boolean) {
       const $xeUpload = this
@@ -1686,7 +1690,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const props = $xeUpload
       const reactData = $xeUpload.reactData
 
-      const { dragSort } = props
+      const { showList, dragSort } = props
       const { fileList, isDragMove } = reactData
       const moreOpts = $xeUpload.computeMoreOpts
 
@@ -1701,56 +1705,64 @@ export default /* define-vxe-component start */ defineVxeComponent({
       return h('div', {
         key: 'image',
         class: 'vxe-upload--image-wrapper'
-      }, [
-        dragSort
-          ? h('transition-group', {
-            attrs: {
-              name: `vxe-upload--drag-list${isDragMove ? '' : '-disabled'}`,
-              tag: 'div'
-            },
-            class: 'vxe-upload--image-list'
-          }, $xeUpload.renderImageItemList(h, currList, false).concat([
-            showMoreButton && overMaxNum
-              ? h('div', {
-                key: 'om',
-                class: 'vxe-upload--image-over-more'
-              }, [
-                h(VxeButtonComponent, {
-                  props: {
-                    mode: 'text',
-                    content: getI18n('vxe.upload.moreBtnText', [fileList.length]),
-                    status: 'primary'
-                  },
-                  on: {
-                    click: $xeUpload.handleMoreEvent
-                  }
-                })
-              ])
-              : renderEmptyElement($xeUpload),
-            $xeUpload.renderImageAction(h, false)
-          ]))
-          : h('div', {
-            class: 'vxe-upload--image-list'
-          }, $xeUpload.renderImageItemList(h, currList, false).concat([
-            showMoreButton && overMaxNum
-              ? h('div', {
-                class: 'vxe-upload--image-over-more'
-              }, [
-                h(VxeButtonComponent, {
-                  props: {
-                    mode: 'text',
-                    content: getI18n('vxe.upload.moreBtnText', [fileList.length]),
-                    status: 'primary'
-                  },
-                  on: {
-                    click: $xeUpload.handleMoreEvent
-                  }
-                })
-              ])
-              : renderEmptyElement($xeUpload),
-            $xeUpload.renderImageAction(h, false)
-          ]))
-      ])
+      }, showList
+        ? [
+            dragSort
+              ? h('transition-group', {
+                attrs: {
+                  name: `vxe-upload--drag-list${isDragMove ? '' : '-disabled'}`,
+                  tag: 'div'
+                },
+                class: 'vxe-upload--image-list'
+              }, $xeUpload.renderImageItemList(h, currList, false).concat([
+                showMoreButton && overMaxNum
+                  ? h('div', {
+                    key: 'om',
+                    class: 'vxe-upload--image-over-more'
+                  }, [
+                    h(VxeButtonComponent, {
+                      props: {
+                        mode: 'text',
+                        content: getI18n('vxe.upload.moreBtnText', [fileList.length]),
+                        status: 'primary'
+                      },
+                      on: {
+                        click: $xeUpload.handleMoreEvent
+                      }
+                    })
+                  ])
+                  : renderEmptyElement($xeUpload),
+                $xeUpload.renderImageAction(h, false)
+              ]))
+              : h('div', {
+                class: 'vxe-upload--image-list'
+              }, $xeUpload.renderImageItemList(h, currList, false).concat([
+                showMoreButton && overMaxNum
+                  ? h('div', {
+                    class: 'vxe-upload--image-over-more'
+                  }, [
+                    h(VxeButtonComponent, {
+                      props: {
+                        mode: 'text',
+                        content: getI18n('vxe.upload.moreBtnText', [fileList.length]),
+                        status: 'primary'
+                      },
+                      on: {
+                        click: $xeUpload.handleMoreEvent
+                      }
+                    })
+                  ])
+                  : renderEmptyElement($xeUpload),
+                $xeUpload.renderImageAction(h, false)
+              ]))
+          ]
+        : [
+            h('div', {
+              class: 'vxe-upload--image-list'
+            }, [
+              $xeUpload.renderImageAction(h, false)
+            ])
+          ])
     },
     renderVN (h: CreateElement): VNode {
       const $xeUpload = this
