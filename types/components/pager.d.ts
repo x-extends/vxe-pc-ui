@@ -148,6 +148,10 @@ export interface PagerMethods {
    * 向下翻页
    */
   nextJump(): Promise<any>
+  /**
+   * 跳转到指定页面
+   */
+  jumpPage(currentPage: number | string | null | undefined): Promise<any>
 }
 export interface VxePagerMethods extends PagerMethods { }
 
@@ -198,29 +202,45 @@ export namespace VxePagerSlotTypes {
   export interface RightSlotParams {}
   export interface HomeSlotParams {
     currentPage: number
+    total: number
+    pageCount: number
   }
   export interface PrevPageSlotParams {
     currentPage: number
+    total: number
+    pageCount: number
   }
   export interface PrevJumpSlotParams {
     currentPage: number
+    total: number
+    pageCount: number
   }
   export interface NextJumpSlotParams {
     currentPage: number
+    total: number
+    pageCount: number
   }
   export interface NextPageSlotParams {
     currentPage: number
+    total: number
+    pageCount: number
   }
   export interface EndSlotParams {
     currentPage: number
+    total: number
+    pageCount: number
   }
   export interface NumberJumpSlotParams {
     numList: number[]
     currentPage: number
+    total: number
     pageCount: number
   }
   export interface SizesSlotParams {
     currentPage: number
+    total: number
+    pageCount: number
+    pageSize: number
     options: {
       label: number | string
       value: number | string
@@ -228,15 +248,18 @@ export namespace VxePagerSlotTypes {
   }
   export interface FullJumpSlotParams {
     currentPage: number
+    total: number
     pageCount: number
   }
   export interface PageCountSlotParams {
     currentPage: number
+    total: number
     pageCount: number
   }
   export interface TotalSlotParams {
     currentPage: number
     total: number
+    pageCount: number
   }
 }
 

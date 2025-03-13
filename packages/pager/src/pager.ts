@@ -195,6 +195,15 @@ export default /* define-vxe-component start */ defineVxeComponent({
       $xePager.handleNextJump()
       return $xePager.$nextTick()
     },
+    jumpPage (currentPage: number) {
+      const $xePager = this
+      const reactData = $xePager.reactData
+
+      const current = XEUtils.toNumber(currentPage) || 1
+      reactData.inpCurrPage = current
+      $xePager.changeCurrentPage(current)
+      return $xePager.$nextTick()
+    },
     getPageCount  (total: number, size: number) {
       return Math.max(Math.ceil(total / size), 1)
     },
@@ -323,12 +332,13 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const props = $xePager
       const slots = $xePager.$scopedSlots
 
-      const { currentPage } = props
+      const { currentPage, total } = props
       const homeSlot = slots.home
+      const pageCount = $xePager.computePageCount
       if (homeSlot) {
         return h('span', {
           class: 'vxe-pager--custom-home-btn'
-        }, homeSlot({ currentPage }))
+        }, homeSlot({ $pager: $xePager, total, currentPage, pageCount }))
       }
       return h('button', {
         class: ['vxe-pager--home-btn', {
@@ -353,12 +363,13 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const props = $xePager
       const slots = $xePager.$scopedSlots
 
-      const { currentPage } = props
+      const { currentPage, total } = props
       const prevPageSlot = slots.prevPage || slots['prev-page']
+      const pageCount = $xePager.computePageCount
       if (prevPageSlot) {
         return h('span', {
           class: 'vxe-pager--custom-prev-btn'
-        }, prevPageSlot({ currentPage }))
+        }, prevPageSlot({ $pager: $xePager, total, currentPage, pageCount }))
       }
       return h('button', {
         class: ['vxe-pager--prev-btn', {
@@ -383,12 +394,13 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const props = $xePager
       const slots = $xePager.$scopedSlots
 
-      const { currentPage } = props
+      const { currentPage, total } = props
       const prevJumpSlot = slots.prevJump || slots['prev-jump']
+      const pageCount = $xePager.computePageCount
       if (prevJumpSlot) {
         return h('span', {
           class: 'vxe-pager--custom-jump-prev'
-        }, prevJumpSlot({ currentPage }))
+        }, prevJumpSlot({ $pager: $xePager, total, currentPage, pageCount }))
       }
       return h(tagName || 'button', {
         class: ['vxe-pager--jump-prev', {
@@ -419,13 +431,13 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const props = $xePager
       const slots = $xePager.$scopedSlots
 
-      const { currentPage } = props
+      const { currentPage, total } = props
       const nextJumpSlot = slots.nextJump || slots['next-jump']
       const pageCount = $xePager.computePageCount
       if (nextJumpSlot) {
         return h('span', {
           class: 'vxe-pager--custom-jump-next'
-        }, nextJumpSlot({ currentPage }))
+        }, nextJumpSlot({ $pager: $xePager, total, currentPage, pageCount }))
       }
       return h(tagName || 'button', {
         class: ['vxe-pager--jump-next', {
@@ -456,13 +468,13 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const props = $xePager
       const slots = $xePager.$scopedSlots
 
-      const { currentPage } = props
+      const { currentPage, total } = props
       const nextPageSlot = slots.nextPage || slots['next-page']
       const pageCount = $xePager.computePageCount
       if (nextPageSlot) {
         return h('span', {
           class: 'vxe-pager--custom-next-btn'
-        }, nextPageSlot({ currentPage }))
+        }, nextPageSlot({ $pager: $xePager, total, currentPage, pageCount }))
       }
       return h('button', {
         class: ['vxe-pager--next-btn', {
@@ -487,13 +499,13 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const props = $xePager
       const slots = $xePager.$scopedSlots
 
-      const { currentPage } = props
+      const { currentPage, total } = props
       const endSlot = slots.end
       const pageCount = $xePager.computePageCount
       if (endSlot) {
         return h('span', {
           class: 'vxe-pager--custom-end-btn'
-        }, endSlot({ currentPage, pageCount }))
+        }, endSlot({ $pager: $xePager, total, currentPage, pageCount }))
       }
       return h('button', {
         class: ['vxe-pager--end-btn', {
@@ -518,7 +530,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const props = $xePager
       const slots = $xePager.$scopedSlots
 
-      const { currentPage, pagerCount } = props
+      const { currentPage, total, pagerCount } = props
       const numberSlot = showJump ? (slots.numberJump || slots['number-jump']) : slots.number
       const nums = []
       const pageCount = $xePager.computePageCount
@@ -591,7 +603,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       if (numberSlot) {
         return h('span', {
           class: 'vxe-pager--custom-btn-wrapper'
-        }, numberSlot({ numList: restList, currentPage, pageCount }))
+        }, numberSlot({ $pager: $xePager, total, numList: restList, currentPage, pageCount }))
       }
       return h('span', {
         class: 'vxe-pager--btn-wrapper'
@@ -609,13 +621,14 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const props = $xePager
       const slots = $xePager.$scopedSlots
 
-      const { pageSize, pageSizePlacement, transfer } = props
+      const { currentPage, total, pageSize, pageSizePlacement, transfer } = props
       const sizesSlot = slots.sizes
       const sizeList = $xePager.computeSizeList
+      const pageCount = $xePager.computePageCount
       if (sizesSlot) {
         return h('span', {
           class: 'vxe-pager--custom-sizes'
-        }, sizesSlot({ pageSize, options: sizeList }))
+        }, sizesSlot({ $pager: $xePager, total, currentPage, pageCount, pageSize, options: sizeList }))
       }
       return h(VxeSelectComponent, {
         class: 'vxe-pager--sizes',
@@ -633,16 +646,18 @@ export default /* define-vxe-component start */ defineVxeComponent({
     // Jump
     renderJump (h: CreateElement, isFull?: boolean) {
       const $xePager = this
+      const props = $xePager
       const reactData = $xePager.reactData
       const slots = $xePager.$scopedSlots
 
+      const { total } = props
       const { inpCurrPage } = reactData
       const jumpSlot = isFull ? (slots.fullJump || slots['full-jump']) : slots.jump
       const pageCount = $xePager.computePageCount
       if (jumpSlot) {
         return h('span', {
           class: 'vxe-pager--custom-jump'
-        }, jumpSlot({ currentPage: inpCurrPage, pageCount }))
+        }, jumpSlot({ $pager: $xePager, total, currentPage: inpCurrPage, pageCount }))
       }
       return h('span', {
         class: 'vxe-pager--jump'
@@ -690,13 +705,13 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const props = $xePager
       const slots = $xePager.$scopedSlots
 
-      const { currentPage } = props
+      const { currentPage, total } = props
       const pageCountSlot = slots.pageCount || slots['page-count']
       const pageCount = $xePager.computePageCount
       if (pageCountSlot) {
         return h('span', {
           class: 'vxe-pager--custom-count'
-        }, pageCountSlot({ currentPage, pageCount }))
+        }, pageCountSlot({ $pager: $xePager, total, currentPage, pageCount }))
       }
       return h('span', {
         class: 'vxe-pager--count'
@@ -715,10 +730,11 @@ export default /* define-vxe-component start */ defineVxeComponent({
 
       const { total, currentPage } = props
       const totalSlot = slots.total
+      const pageCount = $xePager.computePageCount
       if (totalSlot) {
         return h('span', {
           class: 'vxe-pager--custom-total'
-        }, totalSlot({ total, currentPage }))
+        }, totalSlot({ $pager: $xePager, total, currentPage, pageCount }))
       }
       return h('span', {
         class: 'vxe-pager--total'
