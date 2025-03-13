@@ -17,6 +17,7 @@ export default defineComponent({
     size: { type: String as PropType<VxeListPropTypes.Size>, default: () => getConfig().list.size || getConfig().size },
     autoResize: { type: Boolean as PropType<VxeListPropTypes.AutoResize>, default: () => getConfig().list.autoResize },
     syncResize: [Boolean, String, Number] as PropType<VxeListPropTypes.SyncResize>,
+    virtualYConfig: Object as PropType<VxeListPropTypes.VirtualYConfig>,
     scrollY: Object as PropType<VxeListPropTypes.ScrollY>
   },
   emits: [
@@ -71,7 +72,7 @@ export default defineComponent({
     } as unknown as VxeListConstructor & VxeListMethods
 
     const computeSYOpts = computed(() => {
-      return Object.assign({} as { gt: number }, getConfig().list.scrollY, props.scrollY)
+      return Object.assign({} as { gt: number }, getConfig().list.virtualYConfig || getConfig().list.scrollY, props.virtualYConfig || props.scrollY)
     })
 
     const computeStyles = computed(() => {

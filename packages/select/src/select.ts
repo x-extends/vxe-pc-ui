@@ -62,12 +62,15 @@ export default defineComponent({
     filterable: Boolean as PropType<VxeSelectPropTypes.Filterable>,
     filterMethod: Function as PropType<VxeSelectPropTypes.FilterMethod>,
     remote: Boolean as PropType<VxeSelectPropTypes.Remote>,
+    // 已废弃，被 remote-config.queryMethod 替换
     remoteMethod: Function as PropType<VxeSelectPropTypes.RemoteMethod>,
+    remoteConfig: Object as PropType<VxeSelectPropTypes.RemoteConfig>,
     emptyText: String as PropType<VxeSelectPropTypes.EmptyText>,
     transfer: {
       type: Boolean as PropType<VxeSelectPropTypes.Transfer>,
       default: null
     },
+    virtualYConfig: Object as PropType<VxeSelectPropTypes.VirtualYConfig>,
     scrollY: Object as PropType<VxeSelectPropTypes.ScrollY>,
 
     // 已废弃，被 option-config.keyField 替换
@@ -254,7 +257,11 @@ export default defineComponent({
     })
 
     const computeSYOpts = computed(() => {
-      return Object.assign({} as { gt: number }, getConfig().select.scrollY, props.scrollY)
+      return Object.assign({} as { gt: number }, getConfig().select.virtualYConfig || getConfig().select.scrollY, props.virtualYConfig || props.scrollY)
+    })
+
+    const computeRemoteOpts = computed(() => {
+      return Object.assign({}, getConfig().select.remoteConfig, props.remoteConfig)
     })
 
     const computeOptionOpts = computed(() => {
@@ -367,7 +374,7 @@ export default defineComponent({
      * 处理选项，当选项被动态显示/隐藏时可能会用到
      */
     const handleOption = () => {
-      const { filterable, filterMethod } = props
+      const { modelValue, filterable, filterMethod } = props
       const { searchValue } = reactData
       const { fullData, optFullValMaps } = internalData
       const labelField = computeLabelField.value
@@ -375,7 +382,7 @@ export default defineComponent({
       const searchStr = `${searchValue || ''}`.toLowerCase()
       let avList: any[] = []
       if (filterable && filterMethod) {
-        avList = fullData.filter(option => isOptionVisible(option) && filterMethod({ group: null, option, searchValue: searchStr }))
+        avList = fullData.filter(option => isOptionVisible(option) && filterMethod({ $select: $xeSelect, group: null, option, searchValue, value: modelValue }))
       } else if (filterable) {
         avList = fullData.filter(option => isOptionVisible(option) && (!searchStr || `${option[labelField]}`.toLowerCase().indexOf(searchStr) > -1))
       } else {
@@ -475,9 +482,10 @@ export default defineComponent({
     }
 
     const showOptionPanel = () => {
-      const { loading, filterable } = props
-      const { hpTimeout } = internalData
+      const { loading, filterable, remote } = props
+      const { fullData, hpTimeout } = internalData
       const isDisabled = computeIsDisabled.value
+      const remoteOpts = computeRemoteOpts.value
       if (!loading && !isDisabled) {
         if (hpTimeout) {
           clearTimeout(hpTimeout)
@@ -489,8 +497,12 @@ export default defineComponent({
         reactData.isActivated = true
         reactData.isAniVisible = true
         if (filterable) {
-          handleOption()
-          updateYData()
+          if (remote && remoteOpts.enabled && remoteOpts.autoLoad && !fullData.length) {
+            handleSearchEvent()
+          } else {
+            handleOption()
+            updateYData()
+          }
         }
         setTimeout(() => {
           reactData.visiblePanel = true
@@ -767,12 +779,14 @@ export default defineComponent({
     }
 
     const handleSearchEvent = () => {
-      const { remote, remoteMethod } = props
+      const { modelValue, remote, remoteMethod } = props
       const { searchValue } = reactData
-      if (remote && remoteMethod) {
+      const remoteOpts = computeRemoteOpts.value
+      const queryMethod = remoteOpts.queryMethod || remoteMethod
+      if (remote && queryMethod && remoteOpts.enabled) {
         reactData.searchLoading = true
         Promise.resolve(
-          remoteMethod({ searchValue })
+          queryMethod({ $select: $xeSelect, searchValue, value: modelValue })
         ).then(() => nextTick())
           .catch(() => nextTick())
           .finally(() => {

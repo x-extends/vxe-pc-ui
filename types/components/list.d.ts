@@ -32,6 +32,30 @@ export namespace VxeListPropTypes {
   export type AutoResize = boolean
   export type ClassName = string | ((params: { $list: VxeListConstructor }) => string)
   export type SyncResize = boolean | string | number
+
+  export interface VirtualYConfig {
+    /**
+     * 指定大于指定行时自动启动纵向虚拟滚动，如果为 0 则总是启用，如果为 -1 则关闭
+     */
+    gt?: number
+    /**
+     * 指定每次渲染的数据偏移量，偏移量越大渲染次数就越少，但每次渲染耗时就越久
+     */
+    oSize?: number
+    /**
+     * 指定列表项的 className
+     */
+    sItem?: string
+    /**
+     * 是否启用
+     */
+    enabled?: boolean
+  }
+
+  /**
+   * 已被 VirtualYConfig 替换
+   * @deprecated
+   */
   export interface ScrollY {
     /**
      * 指定大于指定行时自动启动纵向虚拟滚动，如果为 0 则总是启用，如果为 -1 则关闭
@@ -61,6 +85,12 @@ export interface VxeListProps<D = any> {
   autoResize?: VxeListPropTypes.AutoResize
   syncResize?: VxeListPropTypes.SyncResize
   className?: VxeListPropTypes.ClassName
+  virtualYConfig?: VxeListPropTypes.VirtualYConfig
+
+  /**
+   * 已废弃，被 virtual-y-config 替换
+   * @deprecated
+   */
   scrollY?: VxeListPropTypes.ScrollY
 }
 

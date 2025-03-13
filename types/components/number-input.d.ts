@@ -45,6 +45,7 @@ export namespace VxeNumberInputPropTypes {
   export type Controls = boolean
   export type Digits = string | number
   export type AutoFill = boolean
+  export type Editable = boolean
   export type PrefixIcon = string
   export type SuffixIcon = string
 
@@ -92,6 +93,8 @@ export interface VxeNumberInputProps {
   // float
   digits?: VxeNumberInputPropTypes.Digits
   autoFill?: VxeNumberInputPropTypes.AutoFill
+
+  editable?: VxeNumberInputPropTypes.Editable
 
   prefixIcon?: VxeNumberInputPropTypes.PrefixIcon
   suffixIcon?: VxeNumberInputPropTypes.SuffixIcon

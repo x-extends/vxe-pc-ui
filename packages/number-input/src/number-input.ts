@@ -49,7 +49,6 @@ export default defineComponent({
       type: String as PropType<VxeNumberInputPropTypes.Size>,
       default: () => getConfig().numberInput.size || getConfig().size
     },
-    multiple: Boolean as PropType<VxeNumberInputPropTypes.Multiple>,
 
     // number、integer、float
     min: {
@@ -88,6 +87,10 @@ export default defineComponent({
     autoFill: {
       type: Boolean as PropType<VxeNumberInputPropTypes.AutoFill>,
       default: () => getConfig().numberInput.autoFill
+    },
+    editable: {
+      type: Boolean as PropType<VxeNumberInputPropTypes.Editable>,
+      default: true
     },
 
     prefixIcon: String as PropType<VxeNumberInputPropTypes.PrefixIcon>,
@@ -214,9 +217,9 @@ export default defineComponent({
     })
 
     const computeInputReadonly = computed(() => {
-      const { multiple } = props
+      const { editable } = props
       const formReadonly = computeFormReadonly.value
-      return formReadonly || multiple
+      return formReadonly || !editable
     })
 
     const computeInpPlaceholder = computed(() => {
@@ -371,11 +374,14 @@ export default defineComponent({
     }
 
     const focusEvent = (evnt: Event & { type: 'focus' }) => {
-      const { inputValue } = reactData
-      reactData.inputValue = eqEmptyValue(inputValue) ? '' : `${XEUtils.toNumber(inputValue)}`
-      reactData.isFocus = true
-      reactData.isActivated = true
-      triggerEvent(evnt)
+      const inputReadonly = computeInputReadonly.value
+      if (!inputReadonly) {
+        const { inputValue } = reactData
+        reactData.inputValue = eqEmptyValue(inputValue) ? '' : `${XEUtils.toNumber(inputValue)}`
+        reactData.isFocus = true
+        reactData.isActivated = true
+        triggerEvent(evnt)
+      }
     }
 
     const clickPrefixEvent = (evnt: Event) => {
@@ -572,6 +578,7 @@ export default defineComponent({
 
     const keydownEvent = (evnt: KeyboardEvent & { type: 'keydown' }) => {
       const { exponential, controls } = props
+      const inputReadonly = computeInputReadonly.value
       const isCtrlKey = evnt.ctrlKey
       const isShiftKey = evnt.shiftKey
       const isAltKey = evnt.altKey
@@ -585,7 +592,7 @@ export default defineComponent({
       if (isEsc) {
         afterCheckValue()
       } else if (isUpArrow || isDwArrow) {
-        if (controls) {
+        if (controls && !inputReadonly) {
           numberKeydownEvent(evnt)
         }
       }
@@ -636,7 +643,8 @@ export default defineComponent({
       type: 'wheel';
       wheelDelta: number;
     }) => {
-      if (props.controls) {
+      const inputReadonly = computeInputReadonly.value
+      if (props.controls && !inputReadonly) {
         if (reactData.isActivated) {
           evnt.stopPropagation()
           evnt.preventDefault()
@@ -661,8 +669,9 @@ export default defineComponent({
       const el = refElem.value
       const panelElem = refInputPanel.value
       const isDisabled = computeIsDisabled.value
+      const inputReadonly = computeInputReadonly.value
       const inpImmediate = computeInpImmediate.value
-      if (!isDisabled && isActivated) {
+      if (!isDisabled && !inputReadonly && isActivated) {
         reactData.isActivated = getEventTargetNode(evnt, el).flag || getEventTargetNode(evnt, panelElem).flag
         if (!reactData.isActivated) {
           if (!inpImmediate) {
@@ -678,7 +687,8 @@ export default defineComponent({
     const handleGlobalKeydownEvent = (evnt: KeyboardEvent) => {
       const { clearable } = props
       const isDisabled = computeIsDisabled.value
-      if (!isDisabled) {
+      const inputReadonly = computeInputReadonly.value
+      if (!isDisabled && !inputReadonly) {
         const isTab = globalEvents.hasKey(evnt, GLOBAL_EVENT_KEYS.TAB)
         const isDel = globalEvents.hasKey(evnt, GLOBAL_EVENT_KEYS.DELETE)
         let isActivated = reactData.isActivated
@@ -801,7 +811,8 @@ export default defineComponent({
 
     const renderExtraSuffixIcon = () => {
       const { controls } = props
-      if (controls) {
+      const inputReadonly = computeInputReadonly.value
+      if (controls && !inputReadonly) {
         return renderNumberIcon()
       }
       return createCommentVNode()
@@ -815,9 +826,12 @@ export default defineComponent({
       dispatchEvent,
 
       focus () {
-        const inputElem = refInputTarget.value
-        reactData.isActivated = true
-        inputElem.focus()
+        const inputReadonly = computeInputReadonly.value
+        if (!inputReadonly) {
+          const inputElem = refInputTarget.value
+          reactData.isActivated = true
+          inputElem.focus()
+        }
         return nextTick()
       },
       blur () {
@@ -860,7 +874,7 @@ export default defineComponent({
         class: ['vxe-number-input', `type--${type}`, className, {
           [`size--${vSize}`]: vSize,
           [`is--${align}`]: align,
-          'is--controls': controls,
+          'is--controls': controls && !inputReadonly,
           'is--prefix': !!prefix,
           'is--suffix': !!suffix,
           'is--disabled': isDisabled,
