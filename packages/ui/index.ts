@@ -181,7 +181,7 @@ setConfig({
   listView: {},
   list: {
     // size: null,
-    scrollY: {
+    virtualYConfig: {
       enabled: true,
       gt: 100
       // oSize: 0
@@ -267,7 +267,11 @@ setConfig({
   row: {},
   select: {
     multiCharOverflow: 8,
-    scrollY: {
+    remoteConfig: {
+      enabled: true,
+      autoLoad: true
+    },
+    virtualYConfig: {
       enabled: true,
       gt: 100,
       oSize: 2
@@ -288,12 +292,11 @@ setConfig({
       rowConfig: {
         isHover: true
       },
-      scrollX: {
+      virtualXConfig: {
         enabled: true,
         gt: 0
       },
-      scrollY: {
-        mode: 'wheel',
+      virtualYConfig: {
         enabled: true,
         gt: 0
       }

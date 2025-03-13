@@ -1944,6 +1944,10 @@ export namespace VxeTablePropTypes {
   export type Animat = boolean
   export type DelayHover = number
 
+  /**
+   * 已被 VirtualXConfig 替换
+   * @deprecated
+   */
   export interface ScrollX {
     /**
      * 指定大于指定列时自动启动横向虚拟滚动，如果为 0 则总是启用；如果需要关闭，可以设置 enabled 为 false
@@ -1971,6 +1975,10 @@ export namespace VxeTablePropTypes {
     oSize: number
   }
 
+  /**
+   * 已被 VirtualYConfig 替换
+   * @deprecated
+   */
   export interface ScrollY {
     /**
      * 默认行为，无需设置

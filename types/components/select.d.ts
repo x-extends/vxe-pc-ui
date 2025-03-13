@@ -51,9 +51,39 @@ export namespace VxeSelectPropTypes {
     key?: string
   }
   export type Filterable = boolean
-  export type FilterMethod = (params: { group: any, option: any, searchValue: string }) => boolean
+  export type FilterMethod = (params: {
+    $select: VxeSelectConstructor
+    group: any
+    option: any
+    searchValue: string
+    value: ModelValue | undefined
+  }) => boolean
   export type Remote = boolean
+  /**
+   * 已废弃，被 remote-config.queryMethod 替换
+   * @deprecated
+   */
   export type RemoteMethod = (params: { searchValue: string }) => Promise<void> | void
+
+  export interface RemoteConfig {
+    /**
+     * 是否启用
+     */
+    enabled?: boolean
+    /**
+     * 当列表为空时，是否默认自动调用远程方法
+     */
+    autoLoad?: boolean
+    /**
+     * 远程方法
+     */
+    queryMethod?(params: {
+      $select: VxeSelectConstructor
+      searchValue: string
+      value: ModelValue | undefined
+    }): Promise<void> | void
+  }
+
   export type Max = number | string
   /**
    * 选项配置项
@@ -67,6 +97,10 @@ export namespace VxeSelectPropTypes {
   export type OptionKey = boolean
   export type Transfer = boolean
 
+  /**
+   * 已被 VirtualYConfig 替换
+   * @deprecated
+   */
   export interface ScrollY {
     /**
      * 指定大于指定行时自动启动纵向虚拟滚动，如果为 0 则总是启用，如果为 -1 则关闭
@@ -84,6 +118,26 @@ export namespace VxeSelectPropTypes {
      * 是否启用
      */
     enabled?: boolean
+  }
+
+  export interface VirtualYConfig {
+    /**
+     * 指定大于指定行时自动启动纵向虚拟滚动，如果为 0 则总是启用，如果为 -1 则关闭
+     */
+    gt?: number
+    /**
+     * 指定每次渲染的数据偏移量，偏移量越大渲染次数就越少，但每次渲染耗时就越久
+     */
+    oSize?: number
+    /**
+     * 指定列表项的 className
+     */
+    sItem?: string
+    /**
+     * 是否启用
+     */
+    enabled?: boolean
+
   }
 }
 
@@ -112,19 +166,30 @@ export interface VxeSelectProps {
   filterable?: VxeSelectPropTypes.Filterable
   filterMethod?: VxeSelectPropTypes.FilterMethod
   remote?: VxeSelectPropTypes.Remote
+  /**
+   * 已废弃，被 remote-config.queryMethod 替换
+   * @deprecated
+   */
   remoteMethod?: VxeSelectPropTypes.RemoteMethod
+  remoteConfig?: VxeSelectPropTypes.RemoteConfig
   max?: VxeSelectPropTypes.Max
   /**
-   * 已废弃，被 optionConfig.keyField 替换
+   * 已废弃，被 option-config.keyField 替换
    * @deprecated
    */
   optionId?: VxeSelectPropTypes.OptionId
   /**
-   * 已废弃，被 optionConfig.useKey 替换
+   * 已废弃，被 option-config.useKey 替换
    * @deprecated
    */
   optionKey?: VxeSelectPropTypes.OptionKey
   transfer?: VxeSelectPropTypes.Transfer
+  virtualYConfig?: VxeSelectPropTypes.VirtualYConfig
+
+  /**
+   * 已废弃，被 virtual-y-config 替换
+   * @deprecated
+   */
   scrollY?: VxeSelectPropTypes.ScrollY
 }
 

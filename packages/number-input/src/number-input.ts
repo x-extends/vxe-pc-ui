@@ -64,7 +64,6 @@ export default /* define-vxe-component start */ defineVxeComponent({
       type: String as PropType<VxeNumberInputPropTypes.Size>,
       default: () => getConfig().numberInput.size || getConfig().size
     },
-    multiple: Boolean as PropType<VxeNumberInputPropTypes.Multiple>,
 
     // number、integer、float
     min: {
@@ -103,6 +102,10 @@ export default /* define-vxe-component start */ defineVxeComponent({
     autoFill: {
       type: Boolean as PropType<VxeNumberInputPropTypes.AutoFill>,
       default: () => getConfig().numberInput.autoFill
+    },
+    editable: {
+      type: Boolean as PropType<VxeNumberInputPropTypes.Editable>,
+      default: true
     },
 
     prefixIcon: String as PropType<VxeNumberInputPropTypes.PrefixIcon>,
@@ -221,9 +224,9 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const $xeNumberInput = this
       const props = $xeNumberInput
 
-      const { multiple } = props
+      const { editable } = props
       const formReadonly = $xeNumberInput.computeFormReadonly
-      return formReadonly || multiple
+      return formReadonly || !editable
     },
     computeInpPlaceholder () {
       const $xeNumberInput = this
@@ -338,9 +341,12 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const $xeNumberInput = this
       const reactData = $xeNumberInput.reactData
 
-      const inputElem = $xeNumberInput.$refs.refInputTarget as HTMLInputElement
-      reactData.isActivated = true
-      inputElem.focus()
+      const inputReadonly = $xeNumberInput.computeInputReadonly
+      if (!inputReadonly) {
+        const inputElem = $xeNumberInput.$refs.refInputTarget as HTMLInputElement
+        reactData.isActivated = true
+        inputElem.focus()
+      }
       return $xeNumberInput.$nextTick()
     },
     blur () {
@@ -450,11 +456,14 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const $xeNumberInput = this
       const reactData = $xeNumberInput.reactData
 
-      const { inputValue } = reactData
-      reactData.inputValue = eqEmptyValue(inputValue) ? '' : `${XEUtils.toNumber(inputValue)}`
-      reactData.isFocus = true
-      reactData.isActivated = true
-      $xeNumberInput.triggerEvent(evnt)
+      const inputReadonly = $xeNumberInput.computeInputReadonly
+      if (!inputReadonly) {
+        const { inputValue } = reactData
+        reactData.inputValue = eqEmptyValue(inputValue) ? '' : `${XEUtils.toNumber(inputValue)}`
+        reactData.isFocus = true
+        reactData.isActivated = true
+        $xeNumberInput.triggerEvent(evnt)
+      }
     },
     clickPrefixEvent (evnt: Event) {
       const $xeNumberInput = this
@@ -685,6 +694,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const props = $xeNumberInput
 
       const { exponential, controls } = props
+      const inputReadonly = $xeNumberInput.computeInputReadonly
       const isCtrlKey = evnt.ctrlKey
       const isShiftKey = evnt.shiftKey
       const isAltKey = evnt.altKey
@@ -698,7 +708,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       if (isEsc) {
         $xeNumberInput.afterCheckValue()
       } else if (isUpArrow || isDwArrow) {
-        if (controls) {
+        if (controls && !inputReadonly) {
           $xeNumberInput.numberKeydownEvent(evnt)
         }
       }
@@ -758,7 +768,8 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const props = $xeNumberInput
       const reactData = $xeNumberInput.reactData
 
-      if (props.controls) {
+      const inputReadonly = $xeNumberInput.computeInputReadonly
+      if (props.controls && !inputReadonly) {
         if (reactData.isActivated) {
           evnt.stopPropagation()
           evnt.preventDefault()
@@ -787,7 +798,8 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const panelElem = $xeNumberInput.$refs.refInputPanel as HTMLDivElement
       const isDisabled = $xeNumberInput.computeIsDisabled
       const inpImmediate = $xeNumberInput.computeInpImmediate
-      if (!isDisabled && isActivated) {
+      const inputReadonly = $xeNumberInput.computeInputReadonly
+      if (!isDisabled && !inputReadonly && isActivated) {
         reactData.isActivated = getEventTargetNode(evnt, el).flag || getEventTargetNode(evnt, panelElem).flag
         if (!reactData.isActivated) {
           if (!inpImmediate) {
@@ -806,7 +818,8 @@ export default /* define-vxe-component start */ defineVxeComponent({
 
       const { clearable } = props
       const isDisabled = $xeNumberInput.computeIsDisabled
-      if (!isDisabled) {
+      const inputReadonly = $xeNumberInput.computeInputReadonly
+      if (!isDisabled && !inputReadonly) {
         const isTab = globalEvents.hasKey(evnt, GLOBAL_EVENT_KEYS.TAB)
         const isDel = globalEvents.hasKey(evnt, GLOBAL_EVENT_KEYS.DELETE)
         let isActivated = reactData.isActivated
@@ -955,7 +968,8 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const props = $xeNumberInput
 
       const { controls } = props
-      if (controls) {
+      const inputReadonly = $xeNumberInput.computeInputReadonly
+      if (controls && !inputReadonly) {
         return $xeNumberInput.renderNumberIcon(h)
       }
       return renderEmptyElement($xeNumberInput)
@@ -988,7 +1002,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
         class: ['vxe-number-input', `type--${type}`, className, {
           [`size--${vSize}`]: vSize,
           [`is--${align}`]: align,
-          'is--controls': controls,
+          'is--controls': controls && !inputReadonly,
           'is--prefix': !!prefix,
           'is--suffix': !!suffix,
           'is--disabled': isDisabled,
