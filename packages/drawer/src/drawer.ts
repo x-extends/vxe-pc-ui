@@ -636,7 +636,7 @@ export default defineComponent({
       globalEvents.off($xeDrawer, 'keydown')
     })
 
-    provide('$xeDrawer', '$xeDrawer')
+    provide('$xeDrawer', $xeDrawer)
 
     $xeDrawer.renderVN = renderVN
 
