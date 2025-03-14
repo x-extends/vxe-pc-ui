@@ -570,6 +570,7 @@ export default {
       },
       filterCombination: {
         menus: {
+          sort: '排序',
           clearSort: 'Очистити сортування',
           sortAsc: 'По зростанню',
           sortDesc: 'По спаданню',
