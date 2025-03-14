@@ -866,6 +866,14 @@ export namespace VxeTablePropTypes {
       $table: VxeTableConstructor<D>
       column: VxeTableDefines.ColumnInfo<D>
     }): boolean
+    /**
+     * 自定义列头升级按钮的 title 提示语
+     */
+    ascTitle?: string | number
+    /**
+     * 自定义列头倒序按钮的 title 提示语
+     */
+    descTitle?: string | number
     iconLayout?: 'horizontal' | 'vertical'
     iconAsc?: string
     iconDesc?: string
