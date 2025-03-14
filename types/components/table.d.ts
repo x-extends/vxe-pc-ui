@@ -931,6 +931,10 @@ export namespace VxeTablePropTypes {
    */
   export interface CheckboxConfig<D = VxeTablePropTypes.Row> {
     /**
+     * 自定义列头复选框的 title 提示语
+     */
+    headerTitle?: string | number
+    /**
      * 是否保留勾选状态，对于某些场景可能会用到，比如数据被刷新之后还保留之前选中的状态
      */
     reserve?: boolean

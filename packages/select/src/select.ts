@@ -7,7 +7,7 @@ import { getLastZIndex, nextZIndex, getFuncText } from '../../ui/src/utils'
 import VxeInputComponent from '../../input/src/input'
 import { getSlotVNs } from '../../ui/src/vn'
 
-import type { VxeSelectPropTypes, SelectInternalData, ValueOf, VxeComponentSizeType, SelectReactData, VxeSelectEmits, VxeSelectDefines, VxeOptgroupProps, VxeOptionProps, VxeDrawerConstructor, VxeDrawerMethods, VxeFormDefines, VxeFormConstructor, VxeFormPrivateMethods, VxeModalConstructor, VxeModalMethods, VxeInputConstructor } from '../../../types'
+import type { VxeSelectPropTypes, SelectInternalData, ValueOf, VxeComponentSizeType, SelectReactData, VxeSelectEmits, VxeInputDefines, VxeSelectDefines, VxeOptgroupProps, VxeOptionProps, VxeDrawerConstructor, VxeDrawerMethods, VxeFormDefines, VxeFormConstructor, VxeFormPrivateMethods, VxeModalConstructor, VxeModalMethods, VxeInputConstructor } from '../../../types'
 import type { VxeTableConstructor, VxeTablePrivateMethods } from '../../../types/components/table'
 
 function isOptionVisible (option: any) {
@@ -697,7 +697,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
         reactData.isAniVisible = true
         if (filterable) {
           if (remote && remoteOpts.enabled && remoteOpts.autoLoad && !fullData.length) {
-            $xeSelect.handleSearchEvent()
+            $xeSelect.triggerSearchEvent()
           } else {
             $xeSelect.handleOption()
             $xeSelect.updateYData()
@@ -752,10 +752,11 @@ export default /* define-vxe-component start */ defineVxeComponent({
       $xeSelect.changeEvent(evnt, selectValue)
       $xeSelect.dispatchEvent('clear', { value: selectValue }, evnt)
     },
-    clearEvent (params: any, evnt: Event) {
+    clearEvent (params: VxeInputDefines.ClearEventParams) {
       const $xeSelect = this
 
-      $xeSelect.clearValueEvent(evnt, null)
+      const { $event } = params
+      $xeSelect.clearValueEvent($event, null)
       $xeSelect.hideOptionPanel()
     },
     changeOptionEvent (evnt: Event, option: any) {
@@ -1548,6 +1549,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
             type: 'text',
             prefixIcon: props.prefixIcon,
             suffixIcon: loading ? getIcon().SELECT_LOADED : (visiblePanel ? getIcon().SELECT_OPEN : getIcon().SELECT_CLOSE),
+            autoFocus: false,
             value: selectLabel
           },
           on: {

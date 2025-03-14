@@ -698,11 +698,12 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const isCtrlKey = evnt.ctrlKey
       const isShiftKey = evnt.shiftKey
       const isAltKey = evnt.altKey
+      const isMetaKey = evnt.metaKey
       const keyCode = evnt.keyCode
       const isEsc = globalEvents.hasKey(evnt, GLOBAL_EVENT_KEYS.ESCAPE)
       const isUpArrow = globalEvents.hasKey(evnt, GLOBAL_EVENT_KEYS.ARROW_UP)
       const isDwArrow = globalEvents.hasKey(evnt, GLOBAL_EVENT_KEYS.ARROW_DOWN)
-      if (!isCtrlKey && !isShiftKey && !isAltKey && (globalEvents.hasKey(evnt, GLOBAL_EVENT_KEYS.SPACEBAR) || ((!exponential || keyCode !== 69) && (keyCode >= 65 && keyCode <= 90)) || (keyCode >= 186 && keyCode <= 188) || keyCode >= 191)) {
+      if (!isCtrlKey && !isShiftKey && !isAltKey && !isMetaKey && (globalEvents.hasKey(evnt, GLOBAL_EVENT_KEYS.SPACEBAR) || ((!exponential || keyCode !== 69) && (keyCode >= 65 && keyCode <= 90)) || (keyCode >= 186 && keyCode <= 188) || keyCode >= 191)) {
         evnt.preventDefault()
       }
       if (isEsc) {
