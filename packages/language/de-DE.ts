@@ -571,6 +571,7 @@ export default
       },
       filterCombination: {
         menus: {
+          sort: '排序',
           clearSort: 'Klare Sortierung',
           sortAsc: 'Aufsteigende Reihenfolge',
           sortDesc: 'absteigende Reihenfolge',

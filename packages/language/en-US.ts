@@ -570,6 +570,7 @@ export default {
       },
       filterCombination: {
         menus: {
+          sort: '排序',
           clearSort: 'Clear sort',
           sortAsc: 'Ascending order',
           sortDesc: 'descending order',

@@ -570,6 +570,7 @@ export default {
       },
       filterCombination: {
         menus: {
+          sort: '排序',
           clearSort: 'Tiszta rendezés',
           sortAsc: 'Növekvő sorrend',
           sortDesc: 'csökkenő sorrendben',
