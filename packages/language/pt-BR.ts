@@ -634,6 +634,7 @@ export default {
       },
       combination: {
         menus: {
+          sort: '排序',
           clearSort: 'Limpar ordenação',
           sortAsc: 'Ordem ascendente',
           sortDesc: 'Ordem descendente',

@@ -643,6 +643,7 @@ export default {
       },
       combination: {
         menus: {
+          sort: '排序',
           clearSort: 'Limpiar ordenamiento',
           sortAsc: 'Orden ascendente',
           sortDesc: 'Orden descendente',
