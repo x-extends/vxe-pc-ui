@@ -6,7 +6,7 @@ import { getLastZIndex, nextZIndex, getFuncText } from '../../ui/src/utils'
 import { getSlotVNs } from '../../ui/src/vn'
 import VxeInputComponent from '../../input/src/input'
 
-import type { VxeSelectPropTypes, VxeSelectConstructor, SelectInternalData, SelectReactData, VxeSelectDefines, ValueOf, VxeSelectEmits, VxeComponentSlotType, VxeInputConstructor, SelectMethods, SelectPrivateRef, VxeSelectMethods, VxeOptgroupProps, VxeOptionProps, VxeDrawerConstructor, VxeDrawerMethods, VxeFormDefines, VxeFormConstructor, VxeFormPrivateMethods, VxeModalConstructor, VxeModalMethods } from '../../../types'
+import type { VxeSelectPropTypes, VxeSelectConstructor, SelectInternalData, SelectReactData, VxeSelectDefines, ValueOf, VxeSelectEmits, VxeComponentSlotType, VxeInputConstructor, SelectMethods, SelectPrivateRef, VxeSelectMethods, VxeOptgroupProps, VxeOptionProps, VxeDrawerConstructor, VxeDrawerMethods, VxeFormDefines, VxeFormConstructor, VxeFormPrivateMethods, VxeModalConstructor, VxeModalMethods, VxeInputEvents } from '../../../types'
 import type { VxeTableConstructor, VxeTablePrivateMethods } from '../../../types/components/table'
 
 function isOptionVisible (option: any) {
@@ -498,7 +498,7 @@ export default defineComponent({
         reactData.isAniVisible = true
         if (filterable) {
           if (remote && remoteOpts.enabled && remoteOpts.autoLoad && !fullData.length) {
-            handleSearchEvent()
+            triggerSearchEvent()
           } else {
             handleOption()
             updateYData()
@@ -545,8 +545,9 @@ export default defineComponent({
       dispatchEvent('clear', { value: selectValue }, evnt)
     }
 
-    const clearEvent = (params: any, evnt: Event) => {
-      clearValueEvent(evnt, null)
+    const clearEvent: VxeInputEvents.Clear = (params) => {
+      const { $event } = params
+      clearValueEvent($event, null)
       hideOptionPanel()
     }
 
@@ -1292,6 +1293,7 @@ export default defineComponent({
           type: 'text',
           prefixIcon: props.prefixIcon,
           suffixIcon: loading ? getIcon().SELECT_LOADED : (visiblePanel ? getIcon().SELECT_OPEN : getIcon().SELECT_CLOSE),
+          autoFocus: false,
           modelValue: selectLabel,
           onClear: clearEvent,
           onClick: clickEvent,

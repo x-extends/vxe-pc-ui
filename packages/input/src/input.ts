@@ -47,6 +47,10 @@ export default defineComponent({
       type: String as PropType<VxeInputPropTypes.AutoComplete>,
       default: 'off'
     },
+    autoFocus: {
+      type: Boolean as PropType<VxeInputPropTypes.AutoFocus>,
+      default: null
+    },
     align: String as PropType<VxeInputPropTypes.Align>,
     form: String as PropType<VxeInputPropTypes.Form>,
     className: String as PropType<VxeInputPropTypes.ClassName>,
@@ -904,14 +908,16 @@ export default defineComponent({
     }
 
     const clearValueEvent = (evnt: Event, value: VxeInputPropTypes.ModelValue) => {
-      const { type } = props
+      const { type, autoFocus } = props
       const isNumType = computeIsNumType.value
       const isDatePickerType = computeIsDatePickerType.value
       if (isDatePickerType) {
         hidePanel()
       }
-      if (isNumType || ['text', 'search', 'password'].indexOf(type) > -1) {
-        focus()
+      if (autoFocus || autoFocus === null) {
+        if (isNumType || ['text', 'search', 'password'].indexOf(type) > -1) {
+          focus()
+        }
       }
       handleChange('', evnt)
       inputMethods.dispatchEvent('clear', { value }, evnt)
@@ -1217,11 +1223,12 @@ export default defineComponent({
         const isCtrlKey = evnt.ctrlKey
         const isShiftKey = evnt.shiftKey
         const isAltKey = evnt.altKey
+        const isMetaKey = evnt.metaKey
         const keyCode = evnt.keyCode
         const isEsc = globalEvents.hasKey(evnt, GLOBAL_EVENT_KEYS.ESCAPE)
         const isUpArrow = globalEvents.hasKey(evnt, GLOBAL_EVENT_KEYS.ARROW_UP)
         const isDwArrow = globalEvents.hasKey(evnt, GLOBAL_EVENT_KEYS.ARROW_DOWN)
-        if (!isCtrlKey && !isShiftKey && !isAltKey && (globalEvents.hasKey(evnt, GLOBAL_EVENT_KEYS.SPACEBAR) || ((!exponential || keyCode !== 69) && (keyCode >= 65 && keyCode <= 90)) || (keyCode >= 186 && keyCode <= 188) || keyCode >= 191)) {
+        if (!isCtrlKey && !isShiftKey && !isAltKey && !isMetaKey && (globalEvents.hasKey(evnt, GLOBAL_EVENT_KEYS.SPACEBAR) || ((!exponential || keyCode !== 69) && (keyCode >= 65 && keyCode <= 90)) || (keyCode >= 186 && keyCode <= 188) || keyCode >= 191)) {
           evnt.preventDefault()
         }
         if (isEsc) {

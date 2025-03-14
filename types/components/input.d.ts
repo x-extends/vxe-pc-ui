@@ -42,6 +42,7 @@ export namespace VxeInputPropTypes {
     value: string
   }) => number
   export type AutoComplete = string
+  export type AutoFocus = boolean
   export type Align = VxeComponentAlignType
   export type Form = string
   export type Min = string | number
@@ -100,6 +101,7 @@ export interface VxeInputProps {
    */
   countMethod?: VxeInputPropTypes.CountMethod
   autoComplete?: VxeInputPropTypes.AutoComplete
+  autoFocus?: VxeInputPropTypes.AutoFocus
   align?: VxeInputPropTypes.Align
   form?: VxeInputPropTypes.Form
 
