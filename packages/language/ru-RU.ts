@@ -675,6 +675,7 @@ export default {
       },
       combination: {
         menus: {
+          sort: '排序',
           clearSort: 'Очистить сортировку',
           sortAsc: 'По возрастанию',
           sortDesc: 'порядок убывания',

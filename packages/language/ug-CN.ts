@@ -675,6 +675,7 @@ export default {
       },
       combination: {
         menus: {
+          sort: '排序',
           clearSort: 'تەرتىپنى تازىلاش',
           sortAsc: 'ئېشىش',
           sortDesc: 'كېمىيىش',

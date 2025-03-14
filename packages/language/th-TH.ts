@@ -675,6 +675,7 @@ export default {
       },
       combination: {
         menus: {
+          sort: '排序',
           clearSort: 'เรียงลำดับให้ชัดเจน',
           sortAsc: 'ลำดับจากน้อยไปหามาก',
           sortDesc: 'ลำดับจากมากไปน้อย',
