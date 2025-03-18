@@ -67,7 +67,8 @@ export interface VxeCollapsePrivateMethods extends CollapsePrivateMethods { }
 
 export type VxeCollapseEmits = [
   'update:modelValue',
-  'collapse-load'
+  'load',
+  'change'
 ]
 
 export namespace VxeCollapseDefines {

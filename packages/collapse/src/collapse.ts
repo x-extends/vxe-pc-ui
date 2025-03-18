@@ -22,7 +22,8 @@ export default defineComponent({
   },
   emits: [
     'update:modelValue',
-    'collapse-load'
+    'load',
+    'change'
   ] as VxeCollapseEmits,
   setup (props, context) {
     const { emit, slots } = context
@@ -85,6 +86,7 @@ export default defineComponent({
       const { initNames } = reactData
       if (name && !initNames.includes(name)) {
         initNames.push(name)
+        dispatchEvent('load', { name }, null)
         return true
       }
       return false
@@ -149,6 +151,7 @@ export default defineComponent({
           activeNames.splice(aIndex, 1)
         }
         addInitName(name)
+        dispatchEvent('change', { value: activeNames, name }, evnt)
       }
     }
 
