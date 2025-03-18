@@ -1,10 +1,8 @@
 import { h, resolveComponent, ComponentOptions } from 'vue'
 import XEUtils from 'xe-utils'
-import { renderer } from '../../ui'
+import { renderer, getComponent } from '../../ui'
 import { getOnName, getModelEvent, getChangeEvent } from '../../ui/src/vn'
 import { errLog } from '../../ui/src/log'
-
-import type { VxeButtonComponent } from '../../../types/all'
 
 const componentDefaultModelProp = 'modelValue'
 
@@ -17,7 +15,7 @@ function getOldComponentName (name: string) {
 }
 
 function getDefaultComponent ({ name }: any) {
-  return resolveComponent(name) as ComponentOptions
+  return getComponent(name) || resolveComponent(name)
 }
 
 /**
@@ -209,7 +207,7 @@ function oldItemRender (renderOpts: any, params: any) {
  */
 function oldButtonItemRender (renderOpts: any, params: any) {
   return [
-    h(resolveComponent('vxe-button') as VxeButtonComponent, {
+    h(resolveComponent('vxe-button'), {
       ...getComponentFormItemProps(renderOpts, params, null),
       ...getComponentOns(renderOpts, params)
     })

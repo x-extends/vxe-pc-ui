@@ -1,5 +1,5 @@
 import { App } from 'vue'
-import { VxeGlobalConfig } from './ui'
+import { VxeGlobalConfig, VxeComponentKebabCaseKeys } from './ui'
 
 import VxeAlert from './components/alert'
 import VxeAnchor from './components/anchor'
@@ -188,7 +188,7 @@ declare module '@vue/runtime-core' {
 }
 
 declare module '@vxe-ui/core' {
-  export interface VxeGlobalComponents extends AllComponents {}
+  export interface VxeGlobalComponents extends AllComponents, VxeComponentKebabCaseKeys<AllComponents> {}
 }
 
 export * from './ui'

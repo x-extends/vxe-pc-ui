@@ -2127,6 +2127,35 @@ export default defineComponent({
       return renderEmptyElement($xeDatePicker)
     }
 
+    const renderPickerPanel = () => {
+      const { type } = props
+      if (type === 'datetime') {
+        return h('div', {
+          key: type,
+          ref: refPanelWrapper,
+          class: 'vxe-date-picker--panel-datetime-layout-wrapper'
+        }, [
+          h('div', {
+            class: 'vxe-date-picker--panel-datetime-left-wrapper'
+          }, renderDatePanel()),
+          h('div', {
+            class: 'vxe-date-picker--panel-datetime-right-wrapper'
+          }, renderTimePanel())
+        ])
+      } else if (type === 'time') {
+        return h('div', {
+          key: type,
+          ref: refPanelWrapper,
+          class: 'vxe-date-picker--panel-wrapper'
+        }, renderTimePanel())
+      }
+      return h('div', {
+        key: type || 'default',
+        ref: refPanelWrapper,
+        class: 'vxe-date-picker--panel-wrapper'
+      }, renderDatePanel())
+    }
+
     const renderPanel = () => {
       const { type } = props
       const { initialized, isAniVisible, visiblePanel, panelPlacement, panelStyle } = reactData
@@ -2141,39 +2170,6 @@ export default defineComponent({
       const leftSlot = slots.left
       const rightSlot = slots.right
       const hasShortcutBtn = options && options.length
-      const renders = []
-      if (type === 'datetime') {
-        renders.push(
-          h('div', {
-            key: type,
-            ref: refPanelWrapper,
-            class: 'vxe-date-picker--panel-datetime-layout-wrapper'
-          }, [
-            h('div', {
-              class: 'vxe-date-picker--panel-datetime-left-wrapper'
-            }, renderDatePanel()),
-            h('div', {
-              class: 'vxe-date-picker--panel-datetime-right-wrapper'
-            }, renderTimePanel())
-          ])
-        )
-      } else if (type === 'time') {
-        renders.push(
-          h('div', {
-            key: type,
-            ref: refPanelWrapper,
-            class: 'vxe-date-picker--panel-wrapper'
-          }, renderTimePanel())
-        )
-      } else {
-        renders.push(
-          h('div', {
-            key: type || 'default',
-            ref: refPanelWrapper,
-            class: 'vxe-date-picker--panel-wrapper'
-          }, renderDatePanel())
-        )
-      }
       return h(Teleport, {
         to: 'body',
         disabled: btnTransfer ? !initialized : true
@@ -2220,7 +2216,9 @@ export default defineComponent({
                       : renderShortcutBtn('header'),
                     h('div', {
                       class: 'vxe-date-picker--panel-body-wrapper'
-                    }, renders),
+                    }, [
+                      renderPickerPanel()
+                    ]),
                     footerSlot
                       ? h('div', {
                         class: 'vxe-date-picker--panel-footer-wrapper'
