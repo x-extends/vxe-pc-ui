@@ -58,7 +58,10 @@ export interface VxeCollapseMethods extends CollapseMethods { }
 export interface CollapsePrivateMethods { }
 export interface VxeCollapsePrivateMethods extends CollapsePrivateMethods { }
 
-export type VxeCollapseEmits = []
+export type VxeCollapseEmits = [
+  'load',
+  'change'
+]
 
 export namespace VxeCollapseDefines {
   export interface CollapseEventParams extends VxeComponentEventParams {

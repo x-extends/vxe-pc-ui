@@ -94,6 +94,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const { initNames } = reactData
       if (name && !initNames.includes(name)) {
         initNames.push(name)
+        $xeCollapse.dispatchEvent('load', { name }, null)
         return true
       }
       return false
@@ -156,6 +157,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
           activeNames.splice(aIndex, 1)
         }
         $xeCollapse.addInitName(name)
+        $xeCollapse.dispatchEvent('change', { value: activeNames, name }, evnt)
       }
     },
 

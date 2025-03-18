@@ -1017,6 +1017,13 @@ export namespace VxeTablePropTypes {
   export interface CheckboxOpts<D = VxeTablePropTypes.Row> extends CheckboxConfig<D> { }
 
   /**
+   * 透视表配置项
+   */
+  // export interface PivotConfig<D = any> {
+
+  // }
+
+  /**
    * 提示信息配置项
    */
   export interface TooltipConfig<D = VxeTablePropTypes.Row> {
