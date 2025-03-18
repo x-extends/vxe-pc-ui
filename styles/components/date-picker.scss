@@ -182,6 +182,10 @@
 .vxe-date-picker--panel-body-wrapper {
   flex-grow: 1;
 }
+.vxe-date-picker--panel-body-wrapper {
+  display: flex;
+  flex-direction: row;
+}
 .vxe-date-picker--panel-top-wrapper,
 .vxe-date-picker--panel-bottom-wrapper,
 .vxe-date-picker--panel-left-wrapper,
@@ -536,7 +540,6 @@
 
 .vxe-date-picker--date-label {
   position: relative;
-  font-size: 1.1em;
   line-height: 1em;
   &.is-notice {
     &:before {

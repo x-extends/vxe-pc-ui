@@ -1,5 +1,5 @@
 import { VueConstructor } from 'vue'
-import { VxeUIExport, VxeGlobalConfig } from './ui'
+import { VxeUIExport, VxeGlobalConfig, VxeComponentKebabCaseKeys } from './ui'
 
 import VxeAlert from './components/alert'
 import VxeAnchor from './components/anchor'
@@ -190,7 +190,7 @@ interface AllComponents {
 }
 
 declare module '@vxe-ui/core' {
-  export interface VxeGlobalComponents extends AllComponents {}
+  export interface VxeGlobalComponents extends AllComponents, VxeComponentKebabCaseKeys<AllComponents> {}
 }
 
 export * from './ui'

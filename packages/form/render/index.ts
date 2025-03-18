@@ -1,6 +1,6 @@
 import { CreateElement } from 'vue'
 import XEUtils from 'xe-utils'
-import { renderer } from '../../ui'
+import { renderer, getComponent } from '../../ui'
 import { getOnName, getModelEvent, getChangeEvent } from '../../ui/src/vn'
 import { errLog } from '../../ui/src/log'
 
@@ -23,7 +23,7 @@ function getOldComponent ({ name }: any) {
 }
 
 function getDefaultComponent ({ name }: any) {
-  return name
+  return getComponent(name) || name
 }
 
 function getNativeAttrs (renderOpts: any) {
