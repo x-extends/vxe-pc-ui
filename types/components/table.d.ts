@@ -2921,6 +2921,12 @@ export interface TablePrivateComputed<D = any> {
   computeCurrentColumnOpts: ComputedRef<VxeTablePropTypes.CurrentColumnConfig>
   computeScrollXThreshold: ComputedRef<number>
   computeScrollYThreshold: ComputedRef<number>
+  computeRowHeightMaps: ComputedRef<{
+    default: number
+    medium: number
+    small: number
+    mini: number
+  }>
   computeDefaultRowHeight: ComputedRef<number>
   computeCellOpts: ComputedRef<VxeTablePropTypes.CellConfig>
   computeHeaderCellOpts: ComputedRef<VxeTablePropTypes.HeaderCellConfig>
@@ -3016,8 +3022,6 @@ export interface TableReactData<D = any> {
   isAllSelected: boolean
   // 复选框属性，有选中且非全选状态
   isIndeterminate: boolean
-  // 复选框属性，已选中的行集合
-  selectCheckboxMaps: Record<string, D>
   // 当前行
   currentRow: D | null
   // 单选框属性，选中列
@@ -3029,18 +3033,8 @@ export interface TableReactData<D = any> {
   // 展开列信息
   expandColumn: any
   hasFixedColumn: boolean
-  // 已展开的行
-  rowExpandedMaps: Record<string, D | null>
-  // 懒加载中的展开行
-  rowExpandLazyLoadedMaps: Record<string, D | null>
   // 树节点列信息
   treeNodeColumn: any
-  // 已展开树节点
-  treeExpandedMaps: Record<string, D | null>
-  // 懒加载中的树节点的集合
-  treeExpandLazyLoadedMaps: Record<string, D | null>
-  // 树节点不确定状态的集合
-  treeIndeterminateMaps: Record<string, D | null>
   // 合并单元格的对象集
   mergeList: VxeTableDefines.MergeItem<D>[]
   // 合并表尾数据的对象集
@@ -3049,8 +3043,6 @@ export interface TableReactData<D = any> {
   upDataFlag: number
   // 刷新列标识，当列的特定属性被改变时，触发表格刷新列
   reColumnFlag: number
-  // 已标记的对象集
-  pendingRowMaps: Record<string, D | null>
   // 初始化标识
   initStore: {
     filter: boolean
@@ -3211,6 +3203,11 @@ export interface TableReactData<D = any> {
     mini: number
   }
 
+  rowExpandedFlag: number
+  treeExpandedFlag: number
+  updateCheckboxFlag: number
+  pendingRowFlag: number
+
   scrollVMLoading: boolean
   scrollYHeight: number
   scrollYTop: number
@@ -3313,6 +3310,19 @@ export interface TableInternalData<D = any> {
   sourceDataRowIdData: Record<string, D>
   fullColumnIdData: Record<string, VxeTableDefines.ColumnCacheItem<D>>
   fullColumnFieldData: Record<string, VxeTableDefines.ColumnCacheItem<D>>
+
+  // 已展开的行
+  rowExpandedMaps: Record<string, D | null>
+  // 懒加载中的展开行
+  rowExpandLazyLoadedMaps: Record<string, D | null>
+  // 已展开树节点
+  treeExpandedMaps: Record<string, D | null>
+  // 懒加载中的树节点的集合
+  treeExpandLazyLoadedMaps: Record<string, D | null>
+  // 复选框属性，已选中的行集合
+  selectCheckboxMaps: Record<string, D>
+  // 已标记的对象集
+  pendingRowMaps: Record<string, D | null>
 
   // 上一个拖动的行
   prevDragRow?: any

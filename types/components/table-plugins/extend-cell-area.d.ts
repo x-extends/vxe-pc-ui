@@ -14,11 +14,12 @@ export interface VxeTableProMethods<D = any> {
    */
   getActiveCellArea(): VxeTableProDefines.MouseActiveCellArea | null
   /**
-   * @deprecated
+   * 用于 mouse-config.area，用于获取标记为复制粘贴的区域
    */
   getCopyCellArea(): VxeTableProDefines.MouseCellArea | null
   /**
-   * 用于 mouse-config.area，用于获取标记为复制粘贴的区域
+   * 请使用 getCopyCellArea
+   * @deprecated
    */
   getCopyCellAreas(): VxeTableProDefines.MouseCellArea[]
   /**
