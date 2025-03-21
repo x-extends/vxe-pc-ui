@@ -1,6 +1,7 @@
 import { VxeComponentEventParams } from '@vxe-ui/core'
 import { VxeTableDefines, VxeTableConstructor } from '../table'
 import { VxeGridConstructor } from '../grid'
+import { VxeModalConstructor, VxeModalMethods } from '../modal'
 
 /* eslint-disable no-use-before-define */
 
@@ -100,6 +101,36 @@ export interface VxeTableProPrivateMethods<D = any> {
 export type VxeProPluginPrivateMethods<D = any> = VxeTableProPrivateMethods<D>
 
 declare module '../table' {
+  export interface TableInternalData<D = any> {
+    fnrStore?: {
+      visible: boolean
+      activeTab: string
+      findValue: string
+      replaceValue: string
+      isRE: boolean
+      isWhole: boolean
+      isSensitive: boolean
+      showREErr: boolean
+      showCount: boolean
+      findCellRE: RegExp | null
+      findCount: number
+    }
+    fnrTabs?: VxeTableProDefines.FNRTab[]
+    fnrSearchList?: VxeTableProDefines.FNRSearch[]
+    azIndex?: number
+    fnrActiveModal?: (VxeModalConstructor & VxeModalMethods) | null
+
+    cellAreas?: VxeTableProDefines.MouseCellArea<D>[] | null
+    activeCellArea?: VxeTableProDefines.MouseActiveCellArea | null
+
+    copyAreaMpas?: {
+      cut: boolean;
+      cellAreas: VxeTableProDefines.MouseCellArea[];
+    } | null
+
+    _msTout?: any
+    _isCAEd?: boolean
+  }
   export interface VxeTableMethods<D = any> extends VxeTableProMethods<D> { }
   export interface VxeTablePrivateMethods<D = any> extends VxeTableProPrivateMethods<D> { }
 }

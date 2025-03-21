@@ -24,7 +24,12 @@ export interface VxeTableConstructor<D = any> extends VxeComponentBaseOptions, V
   getComputeMaps(): TablePrivateComputed
   renderVN: RenderFunction
 
-  xegrid: VxeGridConstructor<D> | null
+  xeGrid: VxeGridConstructor<D> | null
+
+  /**
+   * @deprecated
+   */
+  xegrid: VxeGridConstructor<D> | null | undefined
 }
 
 export interface TablePrivateRef {
@@ -915,6 +920,13 @@ export namespace VxeTablePropTypes {
       row: D
       column: VxeTableDefines.ColumnInfo<D>
     }) => any
+    /**
+     * 是否精确筛选到每一行，默认情况下是父级被匹配到则所有子级也被匹配；如果传 true 则会对每一行进行筛选
+     */
+    isEvery?: boolean
+    /**
+     * 是否启用远程筛选
+     */
     remote?: boolean
     /**
      * 是否显示筛选按钮图标
