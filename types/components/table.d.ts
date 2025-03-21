@@ -17,7 +17,7 @@ export type VxeTableComponent = DefineVxeComponentOptions<VxeTableProps>
 export type VxeTableInstance<D = any> = DefineVxeComponentInstance<{
   reactData: TableReactData<D>
   internalData: TableInternalData<D>
-  $xeGrid: VxeGridConstructor<D> | null | undefined
+  xeGrid: VxeGridConstructor<D> | null | undefined
 
   /**
    * @deprecated
@@ -894,6 +894,13 @@ export namespace VxeTablePropTypes {
       row: D
       column: VxeTableDefines.ColumnInfo<D>
     }) => any
+    /**
+     * 是否精确筛选到每一行，默认情况下是父级被匹配到则所有子级也被匹配；如果传 true 则会对每一行进行筛选
+     */
+    isEvery?: boolean
+    /**
+     * 是否启用远程筛选
+     */
     remote?: boolean
     /**
      * 是否显示筛选按钮图标
