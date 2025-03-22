@@ -2,7 +2,7 @@ import { VNode, CreateElement } from 'vue'
 import { NormalizedScopedSlot } from 'vue/types/vnode'
 import { DefineVxeComponentApp, DefineVxeComponentOptions, DefineVxeComponentInstance, VxeComponentEventParams, VxeComponentSizeType, ValueOf, VxeGlobalConfig, VxeComponentStyleType, VxeComponentSlotType } from '@vxe-ui/core'
 import { VxeColumnPropTypes, VxeColumnProps, VxeColumnSlotTypes } from './column'
-import { VxeTableProDefines, VxeTableProEmits } from './table-plugins'
+import { VxeTableExtendCellAreaDefines, VxeTableExtendCellAreaEmits } from './table-plugins'
 import { VxeGridConstructor } from './grid'
 import { VxeTooltipPropTypes } from './tooltip'
 import { VxeModalPropTypes } from './modal'
@@ -1357,12 +1357,12 @@ export namespace VxeTablePropTypes {
      * 只对 mouse-config.extension 启用后有效，扩展区域之前的方法，可以通过返回 false 阻止扩展行为
      * @param params
      */
-    beforeExtendMethod?(params: VxeTableProDefines.CellAreaExtensionStartParams<D>): boolean
+    beforeExtendMethod?(params: VxeTableExtendCellAreaDefines.CellAreaExtensionStartParams<D>): boolean
     /**
      * 只对 mouse-config.extension 启用后有效，扩展区域之后的方法
      * @param params
      */
-    afterExtendMethod?(params: VxeTableProDefines.CellAreaExtensionEndParams<D>): void
+    afterExtendMethod?(params: VxeTableExtendCellAreaDefines.CellAreaExtensionEndParams<D>): void
     /**
      * 当点击表格之外，是否自动清除单元格的选取状态
      */
@@ -1371,7 +1371,7 @@ export namespace VxeTablePropTypes {
      * 只对 extendByCalc 启用后有效，重写单元格扩展区域计算值的方法
      * @param params
      */
-    extendCalcMethod?(params: VxeTableProDefines.ExtendCellAreaCalcBaseParams<D>): any[][]
+    extendCalcMethod?(params: VxeTableExtendCellAreaDefines.ExtendCellAreaCalcBaseParams<D>): any[][]
     /**
      * 只对 extendByCopy | extendByCalc 启用后有效，重写单元格扩展区域赋值的方法
      * @param params
@@ -1380,19 +1380,19 @@ export namespace VxeTablePropTypes {
       cellValue: any
       row: D
       column: VxeTableDefines.ColumnInfo<D>
-    } & VxeTableProDefines.ExtendCellAreaCalcBaseParams<D>): void
+    } & VxeTableExtendCellAreaDefines.ExtendCellAreaCalcBaseParams<D>): void
     /**
      * 只对 extendByCopy | extendByCalc 启用后有效，自定义单元格扩展区域赋值之前的方法，可以通过返回 false 阻止扩展赋值行为
      * @param params
      */
-    beforeExtendSetMethod?(params: VxeTableProDefines.ExtendCellAreaCalcBaseParams<D>): boolean
+    beforeExtendSetMethod?(params: VxeTableExtendCellAreaDefines.ExtendCellAreaCalcBaseParams<D>): boolean
     /**
      * 只对 extendByCopy | extendByCalc 启用后有效，自定义单元格扩展区域赋值之后的方法
      * @param params
      */
     afterExtendSetMethod?(params: {
       extendValues: any[][]
-    } & VxeTableProDefines.ExtendCellAreaCalcBaseParams<D>): void
+    } & VxeTableExtendCellAreaDefines.ExtendCellAreaCalcBaseParams<D>): void
   }
   export interface AreaOpts<D = any> extends AreaConfig<D> { }
 
@@ -1584,8 +1584,8 @@ export namespace VxeTablePropTypes {
      */
     beforeCopyMethod?(params: {
       isCut: boolean
-      activeArea: VxeTableProDefines.MouseActiveCellArea
-      targetAreas: VxeTableProDefines.CellAreaParams<DT>[]
+      activeArea: VxeTableExtendCellAreaDefines.MouseActiveCellArea
+      targetAreas: VxeTableExtendCellAreaDefines.CellAreaParams<DT>[]
       $table: VxeTableConstructor<DT> & VxeTablePrivateMethods<DT>
       $grid: VxeGridConstructor<DT> | null | undefined
     }): boolean
@@ -1594,7 +1594,7 @@ export namespace VxeTablePropTypes {
      */
     afterCopyMethod?(params: {
       isCut: boolean
-      targetAreas: VxeTableProDefines.CellAreaParams<DT>[]
+      targetAreas: VxeTableExtendCellAreaDefines.CellAreaParams<DT>[]
       $table: VxeTableConstructor<DT> & VxeTablePrivateMethods<DT>
       $grid: VxeGridConstructor<DT> | null | undefined
     }): boolean
@@ -1616,9 +1616,9 @@ export namespace VxeTablePropTypes {
      * 自定义单元格剪贴值清除之前的方法，可以通过返回 false 阻止清除行为
      */
     beforeCutMethod?:(params: {
-      activeArea: VxeTableProDefines.MouseActiveCellArea
-      cutAreas: VxeTableProDefines.CellAreaParams<DT>[]
-      currentAreas: VxeTableProDefines.CellAreaParams<DT>[]
+      activeArea: VxeTableExtendCellAreaDefines.MouseActiveCellArea
+      cutAreas: VxeTableExtendCellAreaDefines.CellAreaParams<DT>[]
+      currentAreas: VxeTableExtendCellAreaDefines.CellAreaParams<DT>[]
       clipData: {
         text?: string
         html?: string
@@ -1630,8 +1630,8 @@ export namespace VxeTablePropTypes {
      * 自定义单元格剪贴值清除之后的方法
      */
     afterCutMethod?:(params: {
-      cutAreas: VxeTableProDefines.CellAreaParams<DT>[]
-      currentAreas: VxeTableProDefines.CellAreaParams<DT>[]
+      cutAreas: VxeTableExtendCellAreaDefines.CellAreaParams<DT>[]
+      currentAreas: VxeTableExtendCellAreaDefines.CellAreaParams<DT>[]
       $table: VxeTableConstructor<DT> & VxeTablePrivateMethods<DT>
       $grid: VxeGridConstructor<DT> | null | undefined
     }) => void
@@ -1655,10 +1655,10 @@ export namespace VxeTablePropTypes {
      */
     beforePasteMethod?(params: {
       isCut: boolean
-      activeArea: VxeTableProDefines.MouseActiveCellArea
-      cutAreas: VxeTableProDefines.CellAreaParams<DT>[]
-      currentAreas: VxeTableProDefines.CellAreaParams<DT>[]
-      targetAreas: VxeTableProDefines.CellAreaParams<DT>[]
+      activeArea: VxeTableExtendCellAreaDefines.MouseActiveCellArea
+      cutAreas: VxeTableExtendCellAreaDefines.CellAreaParams<DT>[]
+      currentAreas: VxeTableExtendCellAreaDefines.CellAreaParams<DT>[]
+      targetAreas: VxeTableExtendCellAreaDefines.CellAreaParams<DT>[]
       cellValues: string[][]
       pasteCells: string[][]
       clipData: {
@@ -1673,9 +1673,9 @@ export namespace VxeTablePropTypes {
      */
     afterPasteMethod?(params: {
       isCut: boolean
-      currentAreas: VxeTableProDefines.CellAreaParams<DT>[]
-      cutAreas: VxeTableProDefines.CellAreaParams<DT>[]
-      targetAreas: VxeTableProDefines.CellAreaParams<DT>[]
+      currentAreas: VxeTableExtendCellAreaDefines.CellAreaParams<DT>[]
+      cutAreas: VxeTableExtendCellAreaDefines.CellAreaParams<DT>[]
+      targetAreas: VxeTableExtendCellAreaDefines.CellAreaParams<DT>[]
       cellValues: any[][]
       pasteCells: string[][]
       insertRows: DT[]
@@ -1687,8 +1687,8 @@ export namespace VxeTablePropTypes {
      * 只对 isRowIncrement 有效，自定义创建自增行数据的方法
      */
     createRowsMethod?(params: {
-      currentAreas: VxeTableProDefines.CellAreaParams<DT>[]
-      targetAreas: VxeTableProDefines.CellAreaParams<DT>[]
+      currentAreas: VxeTableExtendCellAreaDefines.CellAreaParams<DT>[]
+      targetAreas: VxeTableExtendCellAreaDefines.CellAreaParams<DT>[]
       cellValues: any[][]
       pasteCells: string[][]
       insertRows: DT[]
@@ -1699,8 +1699,8 @@ export namespace VxeTablePropTypes {
      * 只对 isColumnIncrement 有效，自定义创建自增列配置的方法
      */
     createColumnsMethod?(params: {
-      currentAreas: VxeTableProDefines.CellAreaParams<DT>[]
-      targetAreas: VxeTableProDefines.CellAreaParams<DT>[]
+      currentAreas: VxeTableExtendCellAreaDefines.CellAreaParams<DT>[]
+      targetAreas: VxeTableExtendCellAreaDefines.CellAreaParams<DT>[]
       cellValues: any[][]
       pasteCells: string[][]
       insertColumns: VxeTableDefines.ColumnOptions[]
@@ -1744,7 +1744,7 @@ export namespace VxeTablePropTypes {
     afterFindMethod?(params: {
       isAll: boolean
       findValue: string | null
-      result: VxeTableProDefines.FindAndReplaceResult[]
+      result: VxeTableExtendCellAreaDefines.FindAndReplaceResult[]
       $table: VxeTableConstructor<DT> & VxeTablePrivateMethods<DT>
       $grid: VxeGridConstructor<DT> | null | undefined
     }): void
@@ -1779,7 +1779,7 @@ export namespace VxeTablePropTypes {
       isAll: boolean
       findValue: string
       replaceValue: string
-      result: VxeTableProDefines.FindAndReplaceResult[]
+      result: VxeTableExtendCellAreaDefines.FindAndReplaceResult[]
       $table: VxeTableConstructor<DT> & VxeTablePrivateMethods<DT>
       $grid: VxeGridConstructor<DT> | null | undefined
     }) => void
@@ -4450,7 +4450,7 @@ export type VxeTableEmits = [
   'scroll-boundary',
   'custom',
 
-  ...VxeTableProEmits
+  ...VxeTableExtendCellAreaEmits
 ]
 
 export namespace VxeTableDefines {
@@ -4928,8 +4928,8 @@ export namespace VxeTableDefines {
     rowIndex: number
     column: VxeTableDefines.ColumnInfo<D>
     columnIndex: number
-    activeArea: VxeTableProDefines.MouseActiveCellArea<D>
-    cellAreas: VxeTableProDefines.MouseCellArea<D>[]
+    activeArea: VxeTableExtendCellAreaDefines.MouseActiveCellArea<D>
+    cellAreas: VxeTableExtendCellAreaDefines.MouseCellArea<D>[]
    }
   export interface CellDeleteValueEventParams<D = any> extends TableEventParams<D>, CellDeleteValueParams<D> { }
 
