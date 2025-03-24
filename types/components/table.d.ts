@@ -3241,6 +3241,7 @@ export interface TableReactData<D = any> {
   rowExpandHeightFlag: number
   calcCellHeightFlag: number
   resizeHeightFlag: number
+  resizeWidthFlag: number
 
   isCustomStatus: boolean
 
