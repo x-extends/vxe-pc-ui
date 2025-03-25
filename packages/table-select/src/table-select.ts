@@ -2,6 +2,7 @@ import { defineComponent, ref, h, PropType, computed, inject, watch, provide, ne
 import XEUtils from 'xe-utils'
 import { VxeUI, getConfig, getIcon, globalEvents, getI18n, createEvent, useSize, renderEmptyElement } from '../../ui'
 import { getEventTargetNode, getAbsolutePos, toCssUnit } from '../../ui/src/dom'
+import { getOnName } from '../../ui/src/vn'
 import { getLastZIndex, nextZIndex } from '../../ui/src/utils'
 import { errLog } from '../../ui/src/log'
 import VxeInputComponent from '../../input/src/input'
@@ -56,7 +57,12 @@ export default defineComponent({
     'clear',
     'blur',
     'focus',
-    'click'
+    'click',
+
+    'form-submit',
+    'form-reset',
+    'form-collapse',
+    'page-change'
   ] as VxeTableSelectEmits,
   setup (props, context) {
     const { emit, slots } = context
@@ -207,6 +213,19 @@ export default defineComponent({
       getRefMaps: () => refMaps,
       getComputeMaps: () => computeMaps
     } as unknown as VxeTableSelectConstructor & VxeTableSelectPrivateMethods
+
+    const gridEventKeys: ValueOf<VxeTableSelectEmits>[] = [
+      'form-submit',
+      'form-reset',
+      'form-collapse',
+      'page-change'
+    ]
+    const gridEvents: Record<string, any> = {}
+    gridEventKeys.forEach(name => {
+      gridEvents[getOnName(XEUtils.camelCase(name))] = (params: any) => {
+        dispatchEvent(name, params, params.$event)
+      }
+    })
 
     const dispatchEvent = (type: ValueOf<VxeTableSelectEmits>, params: Record<string, any>, evnt: Event | null) => {
       emit(type, createEvent(evnt, { $tableSelect: $xeTableSelect }, params))
@@ -641,6 +660,7 @@ export default defineComponent({
                       VxeTableGridComponent
                         ? h(VxeTableGridComponent, {
                           ...gridOpts,
+                          ...gridEvents,
                           class: 'vxe-table-select--grid',
                           ref: refGrid,
                           rowConfig: rowOpts,
