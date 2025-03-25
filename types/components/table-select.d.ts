@@ -1,5 +1,5 @@
 import { DefineVxeComponentApp, DefineVxeComponentOptions, DefineVxeComponentInstance, VxeComponentEventParams, VxeComponentSizeType } from '@vxe-ui/core'
-import { VxeGridProps, VxeGridPropTypes } from './grid'
+import { VxeGridProps, VxeGridPropTypes, VxeGridDefines } from './grid'
 
 /* eslint-disable @typescript-eslint/no-empty-interface,no-use-before-define,@typescript-eslint/ban-types */
 
@@ -107,6 +107,11 @@ export type VxeTableSelectEmits = [
   'blur',
   'focus',
   'click',
+
+  'form-submit',
+  'form-reset',
+  'form-collapse',
+  'page-change'
 ]
 
 export namespace VxeTableSelectDefines {
@@ -126,6 +131,11 @@ export namespace VxeTableSelectDefines {
   export interface FocusEventParams extends TableSelectEventParams { }
   export interface BlurEventParams extends TableSelectEventParams { }
   export interface ClickEventParams extends TableSelectEventParams { }
+
+  export interface FormSubmitEventParams<D = any> extends TableSelectEventParams, VxeGridDefines.FormSubmitEventParams<D> {}
+  export interface FormResetEventParams<D = any> extends TableSelectEventParams, VxeGridDefines.FormResetEventParams<D> {}
+  export interface FormCollapseEventParams<D = any> extends TableSelectEventParams, VxeGridDefines.FormCollapseEventParams<D> {}
+  export interface PageChangeEventParams<D = any> extends TableSelectEventParams, VxeGridDefines.PageChangeEventParams<D> {}
 }
 
 export type VxeTableSelectEventProps<D = any> = {
@@ -134,6 +144,11 @@ export type VxeTableSelectEventProps<D = any> = {
   onFocus?: VxeTableSelectEvents.Focus
   onBlur?: VxeTableSelectEvents.Blur
   onClick?: VxeTableSelectEvents.Click
+
+  onFormSubmit?: VxeTableSelectEvents.FormSubmit
+  onFormReset?: VxeTableSelectEvents.FormReset
+  onFormCollapse?: VxeTableSelectEvents.FormCollapse
+  onPageChange?: VxeTableSelectEvents.PageChange
 }
 
 export interface VxeTableSelectListeners<D = any> {
@@ -142,6 +157,11 @@ export interface VxeTableSelectListeners<D = any> {
   focus?: VxeTableSelectEvents.Focus
   blur?: VxeTableSelectEvents.Blur
   click?: VxeTableSelectEvents.Click
+
+  formSubmit?: VxeTableSelectEvents.FormSubmit
+  formReset?: VxeTableSelectEvents.FormReset
+  formCollapse?: VxeTableSelectEvents.FormCollapse
+  pageChange?: VxeTableSelectEvents.PageChange
 }
 
 export namespace VxeTableSelectEvents {
@@ -150,6 +170,11 @@ export namespace VxeTableSelectEvents {
   export type Focus = (params: VxeTableSelectDefines.FocusEventParams) => void
   export type Blur = (params: VxeTableSelectDefines.BlurEventParams) => void
   export type Click = (params: VxeTableSelectDefines.ClickEventParams) => void
+
+  export type FormSubmit<D = any> = (params: VxeTableSelectDefines.FormSubmitEventParams<D>) => void
+  export type FormReset<D = any> = (params: VxeTableSelectDefines.FormResetEventParams<D>) => void
+  export type FormCollapse<D = any> = (params: VxeTableSelectDefines.FormCollapseEventParams<D>) => void
+  export type PageChange<D = any> = (params: VxeTableSelectDefines.PageChangeEventParams<D>) => void
 }
 
 export namespace VxeTableSelectSlotTypes {

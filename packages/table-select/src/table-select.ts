@@ -3,6 +3,7 @@ import { defineVxeComponent } from '../../ui/src/comp'
 import XEUtils from 'xe-utils'
 import { VxeUI, getConfig, getIcon, globalEvents, getI18n, createEvent, renderEmptyElement, globalMixins } from '../../ui'
 import { getEventTargetNode, getAbsolutePos, toCssUnit } from '../../ui/src/dom'
+import { getOnName } from '../../ui/src/vn'
 import { getLastZIndex, nextZIndex } from '../../ui/src/utils'
 import { errLog } from '../../ui/src/log'
 import VxeInputComponent from '../../input/src/input'
@@ -102,10 +103,14 @@ export default /* define-vxe-component start */ defineVxeComponent({
       // hpTimeout: undefined,
       // vpTimeout: undefined
     }
+
+    const gridEvents: Record<string, any> = {}
+
     return {
       xID,
       reactData,
-      internalData
+      internalData,
+      gridEvents
     }
   },
   computed: {
@@ -740,6 +745,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
                           autoResize: true
                         },
                         on: {
+                          ...$xeTableSelect.gridEvents,
                           'radio-change': $xeTableSelect.radioChangeEvent,
                           'checkbox-change': $xeTableSelect.checkboxChangeEvent,
                           'checkbox-all': $xeTableSelect.checkboxAllEvent
@@ -784,6 +790,19 @@ export default /* define-vxe-component start */ defineVxeComponent({
   created () {
     const $xeTableSelect = this
     const props = $xeTableSelect
+
+    const gridEventKeys: ValueOf<VxeTableSelectEmits>[] = [
+      'form-submit',
+      'form-reset',
+      'form-collapse',
+      'page-change'
+    ]
+    const { gridEvents } = $xeTableSelect
+    gridEventKeys.forEach(name => {
+      gridEvents[getOnName(name)] = (params: any) => {
+        $xeTableSelect.dispatchEvent(name, params, params.$event)
+      }
+    })
 
     $xeTableSelect.loadTableColumn(props.columns || [])
     $xeTableSelect.cacheDataMap()
