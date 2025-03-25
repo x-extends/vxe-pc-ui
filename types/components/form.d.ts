@@ -19,7 +19,7 @@ export interface VxeFormConstructor<D = any> extends VxeComponentBaseOptions, Vx
   getComputeMaps(): FormPrivateComputed
   renderVN: RenderFunction
 
-  xegrid: VxeGridConstructor | null
+  xeGrid: VxeGridConstructor | null
 }
 
 export interface FormPrivateRef {

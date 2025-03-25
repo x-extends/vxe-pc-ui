@@ -35,6 +35,8 @@ function renderSuffixIcon (titleSuffix: VxeFormItemPropTypes.TitleSuffix) {
 export const getItemClass = ($xeForm: VxeFormConstructor & VxeFormPrivateMethods, item: VxeFormDefines.ItemInfo, isGroup?: boolean) => {
   const formProps = $xeForm.props
   const formReactData = $xeForm.reactData
+  const $xeGrid = $xeForm.xeGrid
+
   const { data, rules, readonly, disabled, span: allSpan, titleBackground: allTitleBackground, titleBold: allTitleBold, titleColon: allTitleColon, titleAsterisk: allTitleAsterisk, vertical: allVertical, padding: allPadding } = formProps
   const { collapseAll } = formReactData
   const { folding, field, itemRender, showError, className, vertical, padding, children, showContent } = item
@@ -47,7 +49,7 @@ export const getItemClass = ($xeForm: VxeFormConstructor & VxeFormPrivateMethods
   const titleBold = XEUtils.eqNull(item.titleBold) ? allTitleBold : item.titleBold
   const titleColon = XEUtils.eqNull(item.titleColon) ? allTitleColon : item.titleColon
   const titleAsterisk = XEUtils.eqNull(item.titleAsterisk) ? allTitleAsterisk : item.titleAsterisk
-  const params = { data, disabled, readonly, field, property: field, item, $form: $xeForm, $grid: $xeForm.xegrid }
+  const params = { data, disabled, readonly, field, property: field, item, $form: $xeForm, $grid: $xeGrid }
   const hasGroup = children && children.length > 0
   let isRequired = false
   let isValid = false
@@ -84,13 +86,15 @@ export const getItemClass = ($xeForm: VxeFormConstructor & VxeFormPrivateMethods
 
 export const getItemContentClass = ($xeForm: VxeFormConstructor & VxeFormPrivateMethods, item: VxeFormDefines.ItemInfo, isGroup?: boolean) => {
   const formProps = $xeForm.props
+  const $xeGrid = $xeForm.xeGrid
+
   const { data, readonly, disabled, align: allAlign, verticalAlign: allVerticalAlign } = formProps
   const { field, itemRender, contentClassName, children } = item
   const compConf = isEnableConf(itemRender) ? renderer.get(itemRender.name) : null
   const itemContentClassName = compConf ? (compConf.formItemContentClassName || compConf.itemContentClassName) : ''
   const align = XEUtils.eqNull(item.align) ? allAlign : item.align
   const verticalAlign = XEUtils.eqNull(item.verticalAlign) ? allVerticalAlign : item.verticalAlign
-  const params = { data, disabled, readonly, field, property: field, item, $form: $xeForm, $grid: $xeForm.xegrid }
+  const params = { data, disabled, readonly, field, property: field, item, $form: $xeForm, $grid: $xeGrid }
   const hasGroup = children && children.length > 0
 
   return [
@@ -105,6 +109,8 @@ export const getItemContentClass = ($xeForm: VxeFormConstructor & VxeFormPrivate
 
 export function renderTitle ($xeForm: VxeFormConstructor & VxeFormPrivateMethods, item: VxeFormDefines.ItemInfo, isGroup?: boolean) {
   const formProps = $xeForm.props
+  const $xeGrid = $xeForm.xeGrid
+
   const { data, readonly, disabled, titleAlign: allTitleAlign, titleWidth: allTitleWidth, titleOverflow: allTitleOverflow, vertical: allVertical } = formProps
   const { slots, title, field, itemRender, titleOverflow, vertical, showTitle, titleClassName, titleStyle, titlePrefix, titleSuffix, children, showContent } = item
   const { computeTooltipOpts } = $xeForm.getComputeMaps()
@@ -120,7 +126,7 @@ export function renderTitle ($xeForm: VxeFormConstructor & VxeFormPrivateMethods
   const ovTitle = itemOverflow === 'title'
   const ovTooltip = itemOverflow === true || itemOverflow === 'tooltip'
   const hasEllipsis = ovTitle || ovTooltip || ovEllipsis
-  const params = { data, disabled, readonly, field, property: field, item, $form: $xeForm, $grid: $xeForm.xegrid }
+  const params = { data, disabled, readonly, field, property: field, item, $form: $xeForm, $grid: $xeGrid }
   const titleSlot = slots ? slots.title : null
   const extraSlot = slots ? slots.extra : null
   const isTitle = (showTitle !== false) && (title || titleSlot)
@@ -209,6 +215,8 @@ export function renderTitle ($xeForm: VxeFormConstructor & VxeFormPrivateMethods
 export const renderItemContent = ($xeForm: VxeFormConstructor & VxeFormPrivateMethods, item: VxeFormDefines.ItemInfo) => {
   const formProps = $xeForm.props
   const formReactData = $xeForm.reactData
+  const $xeGrid = $xeForm.xeGrid
+
   const { computeCollapseOpts, computeValidOpts } = $xeForm.getComputeMaps()
   const { data, readonly, disabled } = formProps
   const { collapseAll } = formReactData
@@ -219,7 +227,7 @@ export const renderItemContent = ($xeForm: VxeFormConstructor & VxeFormPrivateMe
   const validOpts = computeValidOpts.value
   const compConf = isEnableConf(itemRender) ? renderer.get(itemRender.name) : null
 
-  const params = { data, disabled, readonly, field, property: field, item, $form: $xeForm, $grid: $xeForm.xegrid }
+  const params = { data, disabled, readonly, field, property: field, item, $form: $xeForm, $grid: $xeGrid }
 
   let contentVNs: VxeComponentSlotType[] = []
   const rftContent = compConf ? (compConf.renderFormItemContent || compConf.renderItemContent) : null

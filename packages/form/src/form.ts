@@ -211,7 +211,7 @@ export default defineComponent({
       context,
       reactData,
 
-      xegrid: $xeGrid,
+      xeGrid: $xeGrid,
       getRefMaps: () => refMaps,
       getComputeMaps: () => computeMaps
     } as unknown as VxeFormConstructor & VxeFormPrivateMethods
@@ -302,10 +302,12 @@ export default defineComponent({
     }
 
     const getResetValue = (item: VxeFormDefines.ItemInfo, data: any) => {
+      const $xeGrid = $xeForm.xeGrid
+
       const { field, resetValue } = item
       const itemValue = XEUtils.get(data, field)
       if (XEUtils.isFunction(resetValue)) {
-        return resetValue({ field, item, data, $form: $xeForm, $grid: $xeForm.xegrid })
+        return resetValue({ field, item, data, $form: $xeForm, $grid: $xeGrid })
       } else if (resetValue === null) {
         // 默认
         if (XEUtils.isArray(itemValue)) {
@@ -316,6 +318,8 @@ export default defineComponent({
     }
 
     const reset = () => {
+      const $xeGrid = $xeForm.xeGrid
+
       const { data } = props
       const itemList = getItems()
       if (data) {
@@ -325,7 +329,7 @@ export default defineComponent({
             const compConf = renderer.get(itemRender.name)
             const fiResetMethod = compConf ? (compConf.formItemResetMethod || compConf.itemResetMethod) : null
             if (compConf && fiResetMethod) {
-              fiResetMethod({ data, field, property: field, item, $form: $xeForm, $grid: $xeForm.xegrid })
+              fiResetMethod({ data, field, property: field, item, $form: $xeForm, $grid: $xeGrid })
             } else if (field) {
               XEUtils.set(data, field, getResetValue(item, data))
             }

@@ -33,6 +33,8 @@ export function isHiddenItem ($xeForm: VxeFormConstructor, formItem: VxeFormDefi
 }
 
 export function isActiveItem ($xeForm: VxeFormConstructor, formItem: VxeFormDefines.ItemInfo) {
+  const $xeGrid = $xeForm.xeGrid
+
   let { visibleMethod, itemRender, visible, field } = formItem
   if (visible === false) {
     return visible
@@ -47,7 +49,7 @@ export function isActiveItem ($xeForm: VxeFormConstructor, formItem: VxeFormDefi
   }
   const formProps = $xeForm.props
   const { data } = formProps
-  return visibleMethod({ data, field, property: field, item: formItem, $form: $xeForm, $grid: $xeForm.xegrid })
+  return visibleMethod({ data, field, property: field, item: formItem, $form: $xeForm, $grid: $xeGrid })
 }
 
 export function watchItem (props: any, formItem: ItemInfo) {

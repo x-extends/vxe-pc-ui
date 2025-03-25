@@ -25,6 +25,8 @@ export default defineComponent({
 
     const renderVN = () => {
       const formProps = $xeForm.props
+      const $xeGrid = $xeForm.xeGrid
+
       const item = formItem as unknown as VxeFormDefines.ItemInfo
       const { data, readonly, disabled } = formProps
       const { visible, field, itemRender, contentStyle } = item
@@ -32,7 +34,7 @@ export default defineComponent({
       const itemStyle = compConf ? (compConf.formItemStyle || compConf.itemStyle) : null
       const itemContentStyle = compConf ? (compConf.formItemContentStyle || compConf.itemContentStyle) : null
       const defaultSlot = slots ? slots.default : null
-      const params = { data, disabled, readonly, field, property: field, item, $form: $xeForm, $grid: $xeForm.xegrid }
+      const params = { data, disabled, readonly, field, property: field, item, $form: $xeForm, $grid: $xeGrid }
       if (visible === false) {
         return createCommentVNode()
       }
