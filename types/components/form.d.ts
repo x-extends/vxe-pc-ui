@@ -11,7 +11,7 @@ export type VxeFormComponent = DefineVxeComponentOptions<VxeFormProps>
 export type VxeFormInstance<D = any> = DefineVxeComponentInstance<{
   reactData: FormReactData
   internalData: FormInternalData
-  xegrid: VxeGridConstructor | null
+  $xeGrid: VxeGridConstructor | null
 }, VxeFormProps<D>, VxeFormPrivateComputed, VxeFormMethods<D>>
 
 export type VxeFormConstructor<D = any> = VxeFormInstance<D>

@@ -187,7 +187,6 @@ export default /* define-vxe-component start */ defineVxeComponent({
     ...({} as {
       computeSize(): VxeComponentSizeType
       $xeGrid(): VxeGridConstructor | null
-      xegrid(): VxeGridConstructor | null
     }),
     computeValidOpts () {
       const $xeForm = this
@@ -319,11 +318,12 @@ export default /* define-vxe-component start */ defineVxeComponent({
     },
     getResetValue (item: VxeFormDefines.ItemInfo, data: any) {
       const $xeForm = this
+      const $xeGrid = $xeForm.$xeGrid
 
       const { field, resetValue } = item
       const itemValue = XEUtils.get(data, field)
       if (XEUtils.isFunction(resetValue)) {
-        return resetValue({ field, item, data, $form: $xeForm, $grid: $xeForm.xegrid })
+        return resetValue({ field, item, data, $form: $xeForm, $grid: $xeGrid })
       } else if (resetValue === null) {
         // 默认
         if (XEUtils.isArray(itemValue)) {
@@ -335,6 +335,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
     reset  () {
       const $xeForm = this
       const props = $xeForm
+      const $xeGrid = $xeForm.$xeGrid
 
       const { data } = props
       const itemList = $xeForm.getItems()
@@ -345,7 +346,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
             const compConf = renderer.get(itemRender.name)
             const fiResetMethod = compConf ? (compConf.formItemResetMethod || compConf.itemResetMethod) : null
             if (compConf && fiResetMethod) {
-              fiResetMethod({ data, field, property: field, item, $form: $xeForm, $grid: $xeForm.xegrid })
+              fiResetMethod({ data, field, property: field, item, $form: $xeForm, $grid: $xeGrid })
             } else if (field) {
               XEUtils.set(data, field, $xeForm.getResetValue(item, data))
             }

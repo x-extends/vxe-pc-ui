@@ -17,7 +17,7 @@ export type VxeTableComponent = DefineVxeComponentOptions<VxeTableProps>
 export type VxeTableInstance<D = any> = DefineVxeComponentInstance<{
   reactData: TableReactData<D>
   internalData: TableInternalData<D>
-  xeGrid: VxeGridConstructor<D> | null | undefined
+  $xeGrid: VxeGridConstructor<D> | null | undefined
 
   /**
    * @deprecated

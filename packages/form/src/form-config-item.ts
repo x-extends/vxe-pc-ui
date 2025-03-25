@@ -43,7 +43,7 @@ const VxeFormConfigItem = defineVxeComponent({
       const compConf = isEnableConf(itemRender) ? renderer.get(itemRender.name) : null
       const itemStyle = compConf ? (compConf.formItemStyle || compConf.itemStyle) : null
       const itemContentStyle = compConf ? (compConf.formItemContentStyle || compConf.itemContentStyle) : null
-      const params = { data, disabled, readonly, field, property: field, item, $form: $xeForm, $grid: $xeForm.xegrid }
+      const params = { data, disabled, readonly, field, property: field, item, $form: $xeForm, $grid: $xeForm.$xeGrid }
       const hasGroup = children && children.length > 0
       if (visible === false) {
         return renderEmptyElement($xeFormConfigItem)
