@@ -123,7 +123,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       optList: [],
       afterVisibleList: [],
       staticOptions: [],
-      reactFlag: 0,
+      reactFlag: 1,
 
       currentOption: null,
       searchValue: '',
@@ -320,14 +320,16 @@ export default /* define-vxe-component start */ defineVxeComponent({
     computeSelectLabel (this: any) {
       const $xeSelect = this
       const props = $xeSelect
+      const reactData = $xeSelect.reactData
 
       const { value, remote, multiple } = props
+      const { reactFlag } = reactData
       const multiMaxCharNum = $xeSelect.computeMultiMaxCharNum
       if (XEUtils.eqNull(value)) {
         return ''
       }
       const vals = XEUtils.isArray(value) ? value : [value]
-      if (remote) {
+      if (remote && reactFlag) {
         return vals.map(val => $xeSelect.getRemoteSelectLabel(val)).join(', ')
       }
       return vals.map((val) => {
@@ -441,9 +443,9 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const $xeSelect = this
       const internalData = $xeSelect.internalData
 
-      const { remoteValMaps } = internalData
+      const { remoteValMaps, optFullValMaps } = internalData
       const labelField = $xeSelect.computeLabelField
-      const remoteItem = remoteValMaps[value]
+      const remoteItem = remoteValMaps[value] || optFullValMaps[value]
       const item = remoteItem ? remoteItem.item : null
       return XEUtils.toValueString(item ? item[labelField] : value)
     },
