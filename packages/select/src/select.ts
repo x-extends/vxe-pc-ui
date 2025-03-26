@@ -274,12 +274,13 @@ export default defineComponent({
 
     const computeSelectLabel = computed(() => {
       const { modelValue, remote, multiple } = props
+      const { reactFlag } = reactData
       const multiMaxCharNum = computeMultiMaxCharNum.value
       if (XEUtils.eqNull(modelValue)) {
         return ''
       }
       const vals = XEUtils.isArray(modelValue) ? modelValue : [modelValue]
-      if (remote) {
+      if (remote && reactFlag) {
         return vals.map(val => getRemoteSelectLabel(val)).join(', ')
       }
       return vals.map((val) => {
@@ -322,9 +323,9 @@ export default defineComponent({
     }
 
     const getRemoteSelectLabel = (value: any) => {
-      const { remoteValMaps } = internalData
+      const { remoteValMaps, optFullValMaps } = internalData
       const labelField = computeLabelField.value
-      const remoteItem = remoteValMaps[value]
+      const remoteItem = remoteValMaps[value] || optFullValMaps[value]
       const item = remoteItem ? remoteItem.item : null
       return XEUtils.toValueString(item ? item[labelField] : value)
     }
