@@ -278,8 +278,10 @@ setConfig({
     }
   },
   split: {
-    minWidth: 40,
-    minHeight: 40
+    itemConfig: {
+      minWidth: 40,
+      minHeight: 40
+    }
   },
   splitItem: {},
   slider: {

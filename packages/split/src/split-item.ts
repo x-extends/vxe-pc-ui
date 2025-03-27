@@ -38,7 +38,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
     const xID = XEUtils.uniqueId()
     const reactData: SplitItemReactData = {
     }
-    const itemConfig: VxeSplitDefines.ItemConfig = {
+    const chunkConfig: VxeSplitDefines.ChunkConfig = {
       id: xID,
       width: 0,
       height: 0,
@@ -52,7 +52,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
     return {
       xID,
       reactData,
-      itemConfig
+      chunkConfig
     }
   },
   computed: {
@@ -62,35 +62,29 @@ export default /* define-vxe-component start */ defineVxeComponent({
     })
   },
   watch: {
-    span (val) {
-      const $xeSplitItem = this
-      const itemConfig = $xeSplitItem.itemConfig
-
-      itemConfig.span = val
-    },
     width (val) {
       const $xeSplitItem = this
-      const itemConfig = $xeSplitItem.itemConfig
+      const chunkConfig = $xeSplitItem.chunkConfig
 
-      itemConfig.width = val
+      chunkConfig.width = val
     },
     height (val) {
       const $xeSplitItem = this
-      const itemConfig = $xeSplitItem.itemConfig
+      const chunkConfig = $xeSplitItem.chunkConfig
 
-      itemConfig.height = val
+      chunkConfig.height = val
     },
     minWidth (val) {
       const $xeSplitItem = this
-      const itemConfig = $xeSplitItem.itemConfig
+      const chunkConfig = $xeSplitItem.chunkConfig
 
-      itemConfig.minWidth = val
+      chunkConfig.minWidth = val
     },
     minHeight (val) {
       const $xeSplitItem = this
-      const itemConfig = $xeSplitItem.itemConfig
+      const chunkConfig = $xeSplitItem.chunkConfig
 
-      itemConfig.minHeight = val
+      chunkConfig.minHeight = val
     }
   },
   methods: {
@@ -114,9 +108,9 @@ export default /* define-vxe-component start */ defineVxeComponent({
     const $xeSplitItem = this
     const props = $xeSplitItem
     const slots = $xeSplitItem.$scopedSlots
-    const itemConfig = $xeSplitItem.itemConfig
+    const chunkConfig = $xeSplitItem.chunkConfig
 
-    Object.assign(itemConfig, {
+    Object.assign(chunkConfig, {
       width: props.width,
       height: props.height,
       minWidth: props.minWidth,
@@ -129,23 +123,23 @@ export default /* define-vxe-component start */ defineVxeComponent({
   mounted () {
     const $xeSplitItem = this
     const slots = $xeSplitItem.$scopedSlots
-    const itemConfig = $xeSplitItem.itemConfig
+    const chunkConfig = $xeSplitItem.chunkConfig
     const $xeSplit = $xeSplitItem.$xeSplit
 
-    itemConfig.slots = slots
+    chunkConfig.slots = slots
 
     const elem = $xeSplitItem.$refs.refElem as HTMLElement
     if ($xeSplit && elem) {
-      assembleSplitItem($xeSplit, elem, itemConfig)
+      assembleSplitItem($xeSplit, elem, chunkConfig)
     }
   },
   beforeDestroy () {
     const $xeSplitItem = this
-    const itemConfig = $xeSplitItem.itemConfig
+    const chunkConfig = $xeSplitItem.chunkConfig
     const $xeSplit = $xeSplitItem.$xeSplit
 
     if ($xeSplit) {
-      destroySplitItem($xeSplit, itemConfig)
+      destroySplitItem($xeSplit, chunkConfig)
     }
   },
   render (this: any, h) {

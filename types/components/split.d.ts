@@ -17,27 +17,31 @@ export interface SplitPrivateRef {
 export interface VxeSplitPrivateRef extends SplitPrivateRef { }
 
 export namespace VxeSplitPropTypes {
-  export type Resize = boolean
+  export type Height = string | number
+  export type Width = string | number
   export type Vertical = boolean
   export type Border = boolean
-  export type MinWidth = string | number
-  export type MinHeight = string | number
+  export interface ItemConfig {
+    minWidth?: string | number
+    minHeight?: string | number
+  }
 }
 
 export type VxeSplitProps = {
-  resize?: VxeSplitPropTypes.Resize
+  height?: VxeSplitPropTypes.Height
+  width?: VxeSplitPropTypes.Width
   vertical?: VxeSplitPropTypes.Vertical
   border?: VxeSplitPropTypes.Border
-  minWidth?: VxeSplitPropTypes.MinWidth
-  minHeight?: VxeSplitPropTypes.MinHeight
+  itemConfig?: VxeSplitPropTypes.ItemConfig
 }
 
 export interface SplitPrivateComputed {
+  computeItemOpts: VxeSplitPropTypes.ItemConfig
 }
 export interface VxeSplitPrivateComputed extends SplitPrivateComputed { }
 
 export interface SplitReactData {
-  staticItems: VxeSplitDefines.ItemConfig[]
+  staticItems: VxeSplitDefines.ChunkConfig[]
 }
 
 export interface SplitInternalData {
@@ -60,7 +64,7 @@ export namespace VxeSplitDefines {
     $split: VxeSplitConstructor
   }
 
-  export interface ItemConfig extends VxeSplitItemProps {
+  export interface ChunkConfig extends VxeSplitItemProps {
     id: string
     renderWidth: number
     renderHeight: number

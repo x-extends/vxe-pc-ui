@@ -16,7 +16,6 @@ export interface SplitItemPrivateRef {
 export interface VxeSplitItemPrivateRef extends SplitItemPrivateRef { }
 
 export namespace VxeSplitItemPropTypes {
-  export type Span = string | number
   export type Width = string | number
   export type Height = string | number
   export type MinWidth = string | number
@@ -24,7 +23,6 @@ export namespace VxeSplitItemPropTypes {
 }
 
 export type VxeSplitItemProps = {
-  span?: VxeSplitItemPropTypes.Span
   width?: VxeSplitItemPropTypes.Width
   height?: VxeSplitItemPropTypes.Height
   minWidth?: VxeSplitItemPropTypes.MinWidth
