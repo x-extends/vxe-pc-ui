@@ -145,7 +145,7 @@
   --vxe-ui-switch-font-color: #fff;
   --vxe-ui-switch-icon-background-color: #fff;
   --vxe-ui-switch-open-background-color: var(--vxe-ui-font-primary-color);
-  --vxe-ui-switch-disabled-background-color: rgba(0,0,0,0.15) ;
+  --vxe-ui-switch-disabled-background-color: rgba(0,0,0,0.15);
 
   /*upload*/
   --vxe-ui-upload-file-button-border-style: dashed;
@@ -175,4 +175,8 @@
   --vxe-ui-calendar-selected-color: #fff;
   --vxe-ui-calendar-festival-selected-color: var(--vxe-ui-calendar-selected-color);
   --vxe-ui-calendar-notice-selected-background-color: var(--vxe-ui-calendar-selected-color);
+
+  /*split*/
+  --vxe-split-handle-bar-width: 0.4em;
+  --vxe-split-handle-bar-height: var(--vxe-split-handle-bar-width);
 }

@@ -1,5 +1,5 @@
 import { RenderFunction, SetupContext, Ref } from 'vue'
-import { DefineVxeComponentApp, DefineVxeComponentOptions, DefineVxeComponentInstance, VxeComponentBaseOptions, VxeComponentEventParams, VxeComponentSizeType } from '@vxe-ui/core'
+import { DefineVxeComponentApp, DefineVxeComponentOptions, DefineVxeComponentInstance, VxeComponentBaseOptions, VxeComponentEventParams, VxeComponentSizeType, VxeComponentAlignType } from '@vxe-ui/core'
 
 /* eslint-disable no-use-before-define,@typescript-eslint/ban-types */
 
@@ -23,10 +23,20 @@ export interface ColPrivateRef {
 export interface VxeColPrivateRef extends ColPrivateRef { }
 
 export namespace VxeColPropTypes {
+  export type Span = string | number
+  export type Align = VxeComponentAlignType
+  export type Width = string | number
+  export type Fill = boolean
+  export type Ellipsis = boolean
   export type Size = VxeComponentSizeType
 }
 
 export interface VxeColProps {
+  span?: VxeColPropTypes.Span
+  align?: VxeColPropTypes.Align
+  width?: VxeColPropTypes.Width
+  fill?: VxeColPropTypes.Fill
+  ellipsis?: VxeColPropTypes.Ellipsis
   size?: VxeColPropTypes.Size
 }
 

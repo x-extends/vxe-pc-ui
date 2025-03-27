@@ -79,23 +79,77 @@ export interface VxeTableExtendCellAreaMethods<D = any> {
 }
 
 export interface VxeTableExtendCellAreaPrivateMethods<D = any> {
+  /**
+   * @private
+   */
   handleKeyboardCellAreaEvent(evnt: KeyboardEvent): void
+  /**
+   * @private
+   */
   handleHeaderCellAreaEvent(evnt: MouseEvent, params: VxeTableDefines.HeaderCellClickEventParams<D>): void
+  /**
+   * @private
+   */
   handleCellAreaMousedownEvent(evnt: MouseEvent, params: VxeTableDefines.CellClickEventParams<D>): void
+  /**
+   * @private
+   */
   handleFilterEvent(evnt: Event, params: VxeTableDefines.FilterChangeEventParams<D>): any
+  /**
+   * @private
+   */
   handleSortEvent(evnt: Event, params: VxeTableDefines.SortChangeEventParams<D>): any
+  /**
+   * @private
+   */
   handleRecalculateCellAreaEvent(): any
+  /**
+   * @private
+   */
   handleCopyCellAreaEvent(evnt: ClipboardEvent): void
+  /**
+   * @private
+   */
   handlePasteCellAreaEvent(evnt: ClipboardEvent): void
+  /**
+   * @private
+   */
   handleCutCellAreaEvent(evnt: ClipboardEvent): void
+  /**
+   * @private
+   */
   handleColResizeCellAreaEvent(evnt: MouseEvent, params: any): void
+  /**
+   * @private
+   */
   handleColResizeDblclickCellAreaEvent(evnt: MouseEvent, params: any): void
+  /**
+   * @private
+   */
   handleRowResizeCellAreaEvent(evnt: MouseEvent, params: any): void
+  /**
+   * @private
+   */
   handleRowResizeDblclickCellAreaEvent(evnt: MouseEvent, params: any): void
+  /**
+   * @private
+   */
   triggerCellAreaExtendMousedownEvent(evnt: MouseEvent, params: any): void
+  /**
+   * @private
+   */
   triggerCopyCellAreaEvent(evnt: MouseEvent): void
+  /**
+   * @private
+   */
   triggerCutCellAreaEvent(evnt: MouseEvent): void
+  /**
+   * @private
+   */
   triggerPasteCellAreaEvent(evnt: MouseEvent): void
+  /**
+   * @private
+   */
   triggerFNROpenEvent(evnt: MouseEvent, tab: 'find' | 'replace'): void
 }
 

@@ -62,6 +62,8 @@ import { VxeRateProps } from '../components/rate'
 import { VxeResultProps } from '../components/result'
 import { VxeRowProps } from '../components/row'
 import { VxeSelectProps } from '../components/select'
+import { VxeSplitProps } from '../components/split'
+import { VxeSplitItemProps } from '../components/split-item'
 import { VxeSliderProps } from '../components/slider'
 import { VxeStepsProps } from '../components/steps'
 import { VxeSwitchProps } from '../components/switch'
@@ -151,6 +153,8 @@ declare module '@vxe-ui/core' {
     result?: VxeResultProps
     row?: VxeRowProps
     select?: VxeSelectProps
+    split?: VxeSplitProps
+    splitItem?: VxeSplitItemProps
     slider?: VxeSliderProps
     steps?: VxeStepsProps
     switch?: VxeSwitchProps

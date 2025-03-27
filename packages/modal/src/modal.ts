@@ -959,8 +959,6 @@ export default defineComponent({
       const maxWidth = visibleWidth
       const maxHeight = visibleHeight
       const boxElem = getBox()
-      const domMousemove = document.onmousemove
-      const domMouseup = document.onmouseup
       const clientWidth = boxElem.clientWidth
       const clientHeight = boxElem.clientHeight
       const disX = evnt.clientX
@@ -1090,8 +1088,8 @@ export default defineComponent({
       }
       document.onmouseup = () => {
         reactData.revertLocat = null
-        document.onmousemove = domMousemove
-        document.onmouseup = domMouseup
+        document.onmousemove = null
+        document.onmouseup = null
         setTimeout(() => {
           boxElem.className = boxElem.className.replace(/\s?is--drag/, '')
         }, 50)

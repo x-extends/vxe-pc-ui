@@ -277,6 +277,11 @@ setConfig({
       oSize: 2
     }
   },
+  split: {
+    minWidth: 40,
+    minHeight: 40
+  },
+  splitItem: {},
   slider: {
     max: 100,
     min: 0

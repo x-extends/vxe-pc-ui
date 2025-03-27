@@ -14,6 +14,13 @@ export function getLastZIndex () {
   return DomZIndex.getCurrent()
 }
 
+export function getGlobalDefaultConfig (value: any, globalValue: any) {
+  if (XEUtils.eqNull(value)) {
+    return globalValue
+  }
+  return value
+}
+
 export function getFuncText (content: string | number | boolean | null | undefined, args?: any) {
   if (content) {
     const translate = getConfig().translate
