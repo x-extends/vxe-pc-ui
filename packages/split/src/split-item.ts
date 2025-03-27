@@ -30,7 +30,7 @@ export default defineComponent({
 
     const refElem = ref<HTMLDivElement>()
 
-    const itemConfig = reactive<VxeSplitDefines.ItemConfig>({
+    const chunkConfig = reactive<VxeSplitDefines.ChunkConfig>({
       id: xID,
       width: props.width,
       height: props.height,
@@ -85,31 +85,31 @@ export default defineComponent({
     }
 
     watch(() => props.width, (val) => {
-      itemConfig.width = val
+      chunkConfig.width = val
     })
 
     watch(() => props.height, (val) => {
-      itemConfig.height = val
+      chunkConfig.height = val
     })
 
     watch(() => props.minWidth, (val) => {
-      itemConfig.minWidth = val
+      chunkConfig.minWidth = val
     })
 
     watch(() => props.minHeight, (val) => {
-      itemConfig.minHeight = val
+      chunkConfig.minHeight = val
     })
 
     onMounted(() => {
       const elem = refElem.value
       if ($xeSplit && elem) {
-        assembleSplitItem($xeSplit, elem, itemConfig)
+        assembleSplitItem($xeSplit, elem, chunkConfig)
       }
     })
 
     onUnmounted(() => {
       if ($xeSplit) {
-        destroySplitItem($xeSplit, itemConfig)
+        destroySplitItem($xeSplit, chunkConfig)
       }
     })
 

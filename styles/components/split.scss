@@ -57,6 +57,9 @@
   word-break: break-word;
   overflow: auto;
   flex-grow: 1;
+  & > .vxe-split {
+    height: 100%;
+  }
 }
 
 .vxe-split-item {

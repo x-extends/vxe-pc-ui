@@ -1,4 +1,4 @@
-import { defineComponent, PropType, ref, h, reactive, provide, VNode, watch, nextTick, onMounted, onActivated } from 'vue'
+import { defineComponent, PropType, ref, h, reactive, provide, VNode, computed, watch, nextTick, onMounted, onActivated } from 'vue'
 import { getConfig, createEvent, renderEmptyElement } from '../../ui'
 import { getSlotVNs } from '../../ui/src/vn'
 import { toCssUnit, isScale, addClass, removeClass } from '../../ui/src/dom'
@@ -10,10 +10,8 @@ import type { SplitReactData, SplitPrivateRef, VxeSplitPropTypes, SplitInternalD
 export default defineComponent({
   name: 'VxeSplit',
   props: {
-    resize: {
-      type: Boolean as PropType<VxeSplitPropTypes.Resize>,
-      default: null
-    },
+    width: [Number, String] as PropType<VxeSplitPropTypes.Width>,
+    height: [Number, String] as PropType<VxeSplitPropTypes.Height>,
     vertical: {
       type: Boolean as PropType<VxeSplitPropTypes.Vertical>,
       default: () => getConfig().split.vertical
@@ -22,14 +20,7 @@ export default defineComponent({
       type: Boolean as PropType<VxeSplitPropTypes.Border>,
       default: () => getConfig().split.border
     },
-    minWidth: {
-      type: [Number, String] as PropType<VxeSplitPropTypes.MinWidth>,
-      default: () => getConfig().split.minWidth
-    },
-    minHeight: {
-      type: [Number, String] as PropType<VxeSplitPropTypes.MinHeight>,
-      default: () => getConfig().split.minHeight
-    }
+    itemConfig: Object as PropType<VxeSplitPropTypes.ItemConfig>
   },
   emits: [
   ] as VxeSplitEmits,
@@ -47,7 +38,12 @@ export default defineComponent({
     const internalData: SplitInternalData = {
     }
 
+    const computeItemOpts = computed(() => {
+      return Object.assign({}, getConfig().split.itemConfig, props.itemConfig)
+    })
+
     const computeMaps: VxeSplitPrivateComputed = {
+      computeItemOpts
     }
 
     const refMaps: SplitPrivateRef = {
@@ -83,7 +79,7 @@ export default defineComponent({
 
     const recalculate = () => {
       return nextTick().then(() => {
-        const { vertical, minWidth, minHeight } = props
+        const { vertical } = props
         const { staticItems } = reactData
         const el = refElem.value
         if (!el) {
@@ -94,7 +90,10 @@ export default defineComponent({
         if (!wrapperWidth || !wrapperHeight) {
           return
         }
-        const residueItems: VxeSplitDefines.ItemConfig[] = []
+        const itemOpts = computeItemOpts.value
+        const allMinWidth = XEUtils.toNumber(itemOpts.minWidth)
+        const allMinHeight = XEUtils.toNumber(itemOpts.minHeight)
+        const residueItems: VxeSplitDefines.ChunkConfig[] = []
         if (vertical) {
           let countHeight = 0
           staticItems.forEach(item => {
@@ -115,7 +114,7 @@ export default defineComponent({
           if (residueItems.length) {
             const reMeanHeight = (wrapperHeight - countHeight) / residueItems.length
             residueItems.forEach(item => {
-              item.renderHeight = Math.max(getGlobalDefaultConfig(item.minHeight, minHeight), reMeanHeight)
+              item.renderHeight = Math.max(XEUtils.toNumber(getGlobalDefaultConfig(item.minHeight, allMinHeight)), reMeanHeight)
             })
           }
         } else {
@@ -138,7 +137,7 @@ export default defineComponent({
           if (residueItems.length) {
             const reMeanWidth = (wrapperWidth - countWidth) / residueItems.length
             residueItems.forEach(item => {
-              item.renderWidth = Math.max(getGlobalDefaultConfig(item.minWidth, minWidth), reMeanWidth)
+              item.renderWidth = Math.max(XEUtils.toNumber(getGlobalDefaultConfig(item.minWidth, allMinWidth)), reMeanWidth)
             })
           }
         }
@@ -147,7 +146,7 @@ export default defineComponent({
 
     const dragEvent = (evnt: MouseEvent) => {
       evnt.preventDefault()
-      const { vertical, minWidth, minHeight } = props
+      const { vertical } = props
       const { staticItems } = reactData
       const handleEl = evnt.currentTarget as HTMLDivElement
       const el = refElem.value
@@ -160,6 +159,9 @@ export default defineComponent({
       if (!item) {
         return
       }
+      const itemOpts = computeItemOpts.value
+      const allMinWidth = XEUtils.toNumber(itemOpts.minWidth)
+      const allMinHeight = XEUtils.toNumber(itemOpts.minHeight)
       const prevItem = staticItems[itemIndex - 1]
       const prevItemEl = prevItem ? el.querySelector<HTMLDivElement>(`.vxe-split-item[xid="${prevItem.id}"]`) : null
       const currItemEl = item ? el.querySelector<HTMLDivElement>(`.vxe-split-item[xid="${item.id}"]`) : null
@@ -167,10 +169,10 @@ export default defineComponent({
       const currWidth = currItemEl ? currItemEl.clientWidth : 0
       const prevHeight = prevItemEl ? prevItemEl.clientHeight : 0
       const currHeight = currItemEl ? currItemEl.clientHeight : 0
-      const prevMinWidth = prevItem ? getGlobalDefaultConfig(prevItem.minWidth, minWidth) : minWidth
-      const currMinWidth = getGlobalDefaultConfig(item.minWidth, minWidth)
-      const prevMinHeight = prevItem ? getGlobalDefaultConfig(prevItem.minHeight, minHeight) : minHeight
-      const currMinHeight = getGlobalDefaultConfig(item.minHeight, minHeight)
+      const prevMinWidth = XEUtils.toNumber(prevItem ? getGlobalDefaultConfig(prevItem.minWidth, allMinWidth) : allMinWidth)
+      const currMinWidth = XEUtils.toNumber(getGlobalDefaultConfig(item.minWidth, allMinWidth))
+      const prevMinHeight = XEUtils.toNumber(prevItem ? getGlobalDefaultConfig(prevItem.minHeight, allMinHeight) : allMinHeight)
+      const currMinHeight = XEUtils.toNumber(getGlobalDefaultConfig(item.minHeight, allMinHeight))
       const disX = evnt.clientX
       const disY = evnt.clientY
       addClass(el, 'is--drag')
@@ -278,11 +280,19 @@ export default defineComponent({
     }
 
     const renderVN = () => {
-      const { vertical } = props
+      const { vertical, width, height } = props
       const defaultSlot = slots.default
+      const stys: Record<string, string | number> = {}
+      if (height) {
+        stys.height = toCssUnit(height)
+      }
+      if (width) {
+        stys.width = toCssUnit(width)
+      }
       return h('div', {
         ref: refElem,
-        class: ['vxe-split', vertical ? 'is--vertical' : 'is--horizontal']
+        class: ['vxe-split', vertical ? 'is--vertical' : 'is--horizontal'],
+        style: stys
       }, [
         h('div', {
           class: 'vxe-split-slots'
