@@ -55,17 +55,27 @@
 .vxe-split-item--wrapper {
   position: relative;
   word-break: break-word;
-  overflow: auto;
+  overflow: hidden;
   flex-grow: 1;
   & > .vxe-split {
     height: 100%;
   }
+}
+.vxe-split-item--inner {
+  height: 100%;
+  width: 100%;
+  overflow: auto;
 }
 
 .vxe-split-item {
   display: flex;
   position: relative;
   overflow: auto;
+  &.is--padding {
+    & > .vxe-split-item--wrapper {
+      padding: var(--vxe-ui-layout-padding-default);
+    }
+  }
   &.is--fill {
     flex-grow: 1;
   }

@@ -24,6 +24,10 @@ export default /* define-vxe-component start */ defineVxeComponent({
       type: Boolean as PropType<VxeSplitPropTypes.Border>,
       default: () => getConfig().split.border
     },
+    padding: {
+      type: Boolean as PropType<VxeSplitPropTypes.Padding>,
+      default: () => getConfig().split.padding
+    },
     itemConfig: Object as PropType<VxeSplitPropTypes.ItemConfig>
   },
   data () {
@@ -237,7 +241,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const props = $xeSplit
       const reactData = $xeSplit.reactData
 
-      const { border, vertical } = props
+      const { border, padding, vertical } = props
       const { staticItems } = reactData
       const itemVNs: VNode[] = []
       staticItems.forEach((item, index) => {
@@ -259,6 +263,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
               xid: id
             },
             class: ['vxe-split-item', vertical ? 'is--vertical' : 'is--horizontal', {
+              'is--padding': padding,
               'is--border': border,
               'is--height': renderHeight,
               'is--width': renderWidth,
@@ -283,7 +288,11 @@ export default /* define-vxe-component start */ defineVxeComponent({
                 xid: id
               },
               class: 'vxe-split-item--wrapper'
-            }, defaultSlot ? $xeSplit.callSlot(defaultSlot, { }) : [])
+            }, [
+              h('div', {
+                class: 'vxe-split-item--inner'
+              }, defaultSlot ? $xeSplit.callSlot(defaultSlot, { }) : [])
+            ])
           ])
         )
       })

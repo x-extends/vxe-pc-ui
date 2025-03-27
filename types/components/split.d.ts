@@ -19,6 +19,7 @@ export interface VxeSplitPrivateRef extends SplitPrivateRef { }
 export namespace VxeSplitPropTypes {
   export type Height = string | number
   export type Width = string | number
+  export type Padding = boolean
   export type Vertical = boolean
   export type Border = boolean
   export interface ItemConfig {
@@ -30,6 +31,7 @@ export namespace VxeSplitPropTypes {
 export type VxeSplitProps = {
   height?: VxeSplitPropTypes.Height
   width?: VxeSplitPropTypes.Width
+  padding?: VxeSplitPropTypes.Padding
   vertical?: VxeSplitPropTypes.Vertical
   border?: VxeSplitPropTypes.Border
   itemConfig?: VxeSplitPropTypes.ItemConfig
