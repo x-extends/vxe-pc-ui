@@ -8,6 +8,7 @@ import { VxeTooltipPropTypes } from './tooltip'
 import { VxeModalPropTypes } from './modal'
 import { VxeDrawerPropTypes } from './drawer'
 import { VxeToolbarConstructor, VxeToolbarInstance } from './toolbar'
+import { VxeTabsConstructor, VxeTabsPrivateMethods } from './tabs'
 
 /* eslint-disable @typescript-eslint/no-empty-interface,no-use-before-define,@typescript-eslint/ban-types,@typescript-eslint/no-unused-vars */
 
@@ -18,6 +19,7 @@ export type VxeTableInstance<D = any> = DefineVxeComponentInstance<{
   reactData: TableReactData<D>
   internalData: TableInternalData<D>
   $xeGrid: VxeGridConstructor<D> | null | undefined
+  $xeTabs: (VxeTabsConstructor & VxeTabsPrivateMethods) | null
 
   /**
    * @deprecated
@@ -2893,8 +2895,8 @@ export interface TablePrivateComputed<D = any> {
   computeSize: VxeTablePropTypes.Size
   computeTableId: string
   computeValidOpts: VxeTablePropTypes.ValidOpts<D>
-  computeVirtualXOpts: VxeTablePropTypes.VirtualXConfig
-  computeVirtualYOpts: VxeTablePropTypes.VirtualYConfig
+  computeVirtualXOpts: VxeTablePropTypes.VirtualXConfig & { gt: number }
+  computeVirtualYOpts: VxeTablePropTypes.VirtualYConfig & { gt: number }
   computeScrollbarOpts: VxeTablePropTypes.ScrollbarConfig
   computeScrollbarXToTop: boolean
   computeScrollbarYToLeft: boolean
@@ -2998,11 +3000,11 @@ export interface TablePrivateComputed<D = any> {
   /**
    * @deprecated
    */
-  computeSXOpts: VxeTablePropTypes.SXOpts
+  computeSXOpts: VxeTablePropTypes.VirtualXConfig & { gt: number }
   /**
    * @deprecated
    */
-  computeSYOpts: VxeTablePropTypes.SYOpts
+  computeSYOpts: VxeTablePropTypes.VirtualYConfig & { gt: number }
 }
 export interface VxeTablePrivateComputed<D = any> extends TablePrivateComputed<D> { }
 
@@ -3144,12 +3146,6 @@ export interface TableReactData<D = any> {
       column: any
       [key: string]: any
     }
-    insertMaps: {
-      [key: string]: any
-    }
-    removeMaps: {
-      [key: string]: any
-    }
   }
   // 存放 tooltip 相关信息
   tooltipStore: {
@@ -3229,6 +3225,8 @@ export interface TableReactData<D = any> {
   treeExpandedFlag: number
   updateCheckboxFlag: number
   pendingRowFlag: number
+  insertRowFlag: number
+  removeRowFlag: number
 
   scrollVMLoading: boolean
   scrollYHeight: number
@@ -3346,6 +3344,10 @@ export interface TableInternalData<D = any> {
   selectCheckboxMaps: Record<string, D>
   // 已标记的对象集
   pendingRowMaps: Record<string, D | null>
+  // 已新增的临时行
+  insertRowMaps: Record<string, D | null>
+  // 已删除行
+  removeRowMaps: Record<string, D | null>
 
   // 上一个拖动的行
   prevDragRow?: any
@@ -4297,57 +4299,177 @@ export interface TablePrivateMethods<D = any> {
    * @deprecated
    */
   handleSelectRow(params: any, value: any, isForce?: boolean): void
+  /**
+   * @private
+   */
   handleCustom(): Promise<void>
+  /**
+   * @private
+   */
   handleUpdateDataQueue(): void
+  /**
+   * @private
+   */
   handleRefreshColumnQueue(): void
+  /**
+   * @private
+   */
   preventEvent(evnt: any, type: any, args?: any, next?: any, end?: any): any
+  /**
+   * @private
+   */
   triggerHeaderTitleEvent(evnt: MouseEvent, iconParams: VxeColumnPropTypes.TitlePrefix | VxeColumnPropTypes.TitleSuffix, params: VxeTableDefines.CellRenderHeaderParams<any>): void
+  /**
+   * @private
+   */
   triggerHeaderTooltipEvent(evnt: MouseEvent, params: VxeTableDefines.CellRenderHeaderParams<any>): void
+  /**
+   * @private
+   */
   triggerBodyTooltipEvent(evnt: MouseEvent, params: VxeTableDefines.CellRenderBodyParams<any>): void
+  /**
+   * @private
+   */
   triggerFooterTooltipEvent(evnt: MouseEvent, params: VxeTableDefines.CellRenderFooterParams<any>): void
+  /**
+   * @private
+   */
   handleTargetLeaveEvent(evnt: MouseEvent): void
+  /**
+   * @private
+   */
   triggerHeaderCellClickEvent(evnt: MouseEvent, params: VxeTableDefines.CellRenderHeaderParams<any>): void
+  /**
+   * @private
+   */
   triggerHeaderCellDblclickEvent(evnt: MouseEvent, params: VxeTableDefines.CellRenderHeaderParams<any>): void
+  /**
+   * @private
+   */
   triggerCellClickEvent(evnt: MouseEvent, params: VxeTableDefines.CellRenderBodyParams<any>): void
+  /**
+   * @private
+   */
   triggerCellDblclickEvent(evnt: MouseEvent, params: VxeTableDefines.CellRenderBodyParams<any>): void
+  /**
+   * @private
+   */
   handleToggleCheckRowEvent(evnt: Event | null, params: { row: any }): void
+  /**
+   * @private
+   */
   triggerCheckRowEvent(evnt: Event, params: { row: any }, value: boolean): void
+  /**
+   * @private
+   */
   triggerCheckAllEvent(evnt: MouseEvent | null, value: boolean): void
+  /**
+   * @private
+   */
   triggerRadioRowEvent(evnt: Event, params: { row: any }): void
+  /**
+   * @private
+   */
   triggerCurrentColumnEvent(evnt: Event, params: {
     column: VxeTableDefines.ColumnInfo<any>
   }): void
+  /**
+   * @private
+   */
   triggerCurrentRowEvent(evnt: Event, params: {
     $table: VxeTableConstructor<any>
     row: any
     rowIndex: number
     $rowIndex: number
   }): void
+  /**
+   * @private
+   */
   triggerRowExpandEvent(evnt: Event, params: VxeTableDefines.CellRenderBodyParams<any>): void
+  /**
+   * @private
+   */
   triggerTreeExpandEvent(evnt: Event, params: VxeTableDefines.CellRenderBodyParams<any>): void
+  /**
+   * @private
+   */
   triggerSortEvent(evnt: Event, column: VxeTableDefines.ColumnInfo<any>, order: VxeTablePropTypes.SortOrder): void
+  /**
+   * @private
+   */
   triggerHeaderCellMousedownEvent(evnt: any, params: any): void
+  /**
+   * @private
+   */
   triggerCellMousedownEvent(evnt: MouseEvent, params: any): void
+  /**
+   * @private
+   */
   triggerCellMousedownEvent(evnt: any, params: any): void
+  /**
+   * @private
+   */
   triggerCellMouseupEvent(evnt: MouseEvent): void
+  /**
+   * @private
+   */
   handleRowDragSwapEvent (evnt: DragEvent | null, isSyncRow: boolean | undefined, dragRow: any, prevDragRow: any, prevDragPos: '' | 'top' | 'bottom' | 'left' | 'right' | undefined, prevDragToChild: boolean | undefined): Promise<{ status: boolean }>
+  /**
+   * @private
+   */
   handleRowDragDragstartEvent (evnt: DragEvent): void
+  /**
+   * @private
+   */
   handleRowDragDragendEvent(evnt: DragEvent): void
+  /**
+   * @private
+   */
   handleRowDragDragoverEvent(evnt: DragEvent,): void
+  /**
+   * @private
+   */
   handleCellDragMousedownEvent (evnt: MouseEvent, params: {
     row: any
     column: VxeTableDefines.ColumnInfo
   }): void
+  /**
+   * @private
+   */
   handleCellDragMouseupEvent (evnt: MouseEvent): void
+  /**
+   * @private
+   */
   handleHeaderCellDragDragstartEvent (evnt: DragEvent): void
+  /**
+   * @private
+   */
   handleColDragSwapColumn(): void
+  /**
+   * @private
+   */
   handleColDragSwapEvent (evnt: DragEvent | null, isSyncColumn: boolean | undefined, dragCol: VxeTableDefines.ColumnInfo | null | undefined, prevDragCol: VxeTableDefines.ColumnInfo | null | undefined, prevDragPos: '' | 'top' | 'bottom' | 'left' | 'right' | undefined, prevDragToChild: boolean | undefined): Promise<{ status: boolean }>
+  /**
+   * @private
+   */
   handleHeaderCellDragDragendEvent(evnt: DragEvent): void
-  handleHeaderCellDragDragoverEvent(evnt: DragEvent,): void
+  /**
+   * @private
+   */
+  handleHeaderCellDragDragoverEvent(evnt: DragEvent): void
+  /**
+   * @private
+   */
   handleHeaderCellDragMousedownEvent (evnt: MouseEvent, params: {
     column: VxeTableDefines.ColumnInfo
   }): void
+  /**
+   * @private
+   */
   handleHeaderCellDragMouseupEvent (evnt: MouseEvent): void
+  /**
+   * @private
+   */
   handleScrollEvent(evnt: Event, isRollY: boolean, isRollX: boolean, scrollTop: number, scrollLeft: number, params: {
     type: string
     fixed: VxeColumnPropTypes.Fixed

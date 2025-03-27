@@ -286,6 +286,11 @@ const routes: Array<RouteConfig> = [
     path: '/component/color-picker',
     name: 'ColorPickerTest',
     component: () => import('../views/color-picker/ColorPickerTest.vue')
+  },
+  {
+    path: '/component/split',
+    name: 'SplitTest',
+    component: () => import('../views/split/SplitTest.vue')
   }
 ]
 

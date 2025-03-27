@@ -1,0 +1,103 @@
+@use "sass:list";
+
+.vxe-split {
+  &.is--vertical {
+    & > .vxe-split-wrapper {
+      flex-direction: column;
+      & > .vxe-split-item {
+        width: 100%;
+      }
+    }
+  }
+  &.is--drag {
+    user-select: none;
+    & > .vxe-split-wrapper {
+      & > .vxe-split-item {
+        & > .vxe-split-item--wrapper {
+          &::after {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+            background: transparent;
+          }
+        }
+      }
+    } 
+  }
+}
+.vxe-split-wrapper {
+  height: 100%;
+  display: flex;
+  flex-direction: row;
+  overflow: hidden;
+}
+
+.vxe-split-slots {
+  display: none;
+}
+
+.vxe-split-item-handle {
+  flex-shrink: 0;
+  background-color: var(--vxe-split-handle-bar-background-color);
+  user-select: none;
+  &:hover {
+    background-color: var(--vxe-ui-font-primary-lighten-color);
+  }
+  &:active {
+    background-color: var(--vxe-ui-font-primary-darken-color);
+  }
+}
+
+.vxe-split-item--wrapper {
+  position: relative;
+  word-break: break-word;
+  overflow: auto;
+  flex-grow: 1;
+}
+
+.vxe-split-item {
+  display: flex;
+  position: relative;
+  overflow: auto;
+  &.is--fill {
+    flex-grow: 1;
+  }
+  &.is--width, 
+  &.is--height {
+    flex-shrink: 0;
+  }
+  &.is--border {
+    & > .vxe-split-item--wrapper,
+    & > .vxe-split-item-handle {
+      border: 1px solid var(--vxe-ui-base-popup-border-color);
+    }
+  }
+  &.is--horizontal {
+    flex-direction: row;
+    & > .vxe-split-item-handle {
+      width: var(--vxe-split-handle-bar-width);
+      cursor: w-resize;
+    }
+    &.is--border {
+      & > .vxe-split-item-handle {
+        border-width: 1px 0 1px 0;
+      }
+    }
+  }
+  &.is--vertical {
+    flex-direction: column;
+    & > .vxe-split-item-handle {
+      height: var(--vxe-split-handle-bar-height);
+      cursor: n-resize;
+    }
+    &.is--border {
+      & > .vxe-split-item-handle {
+        border-width: 0 1px 0 1px;
+      }
+    }
+  }
+}

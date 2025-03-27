@@ -99,7 +99,8 @@ export default Vue.extend({
         { name: 'SliderTest', routerLink: { name: 'SliderTest' } },
         { name: 'RateTest', routerLink: { name: 'RateTest' } },
         { name: 'TableSelect', routerLink: { name: 'TableSelect' } },
-        { name: 'ColorPickerTest', routerLink: { name: 'ColorPickerTest' } }
+        { name: 'ColorPickerTest', routerLink: { name: 'ColorPickerTest' } },
+        { name: 'SplitTest', routerLink: { name: 'SplitTest' } }
       ]
     }
   },

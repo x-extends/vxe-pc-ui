@@ -12,11 +12,11 @@ export default /* define-vxe-component start */ defineVxeComponent({
     globalMixins.sizeMixin
   ],
   props: {
-    span: [Number, String],
-    align: String,
-    width: [Number, String],
-    fill: Boolean,
-    ellipsis: Boolean,
+    span: [Number, String] as PropType<VxeColPropTypes.Span>,
+    align: String as PropType<VxeColPropTypes.Align>,
+    width: [Number, String] as PropType<VxeColPropTypes.Width>,
+    fill: Boolean as PropType<VxeColPropTypes.Fill>,
+    ellipsis: Boolean as PropType<VxeColPropTypes.Ellipsis>,
     size: {
       type: String as PropType<VxeColPropTypes.Size>,
       default: () => getConfig().col.size || getConfig().size

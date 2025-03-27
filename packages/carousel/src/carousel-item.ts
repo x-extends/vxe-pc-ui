@@ -91,8 +91,11 @@ export default /* define-vxe-component start */ defineVxeComponent({
   },
   mounted () {
     const $xeCarouselItem = this
+    const slots = $xeCarouselItem.$scopedSlots
     const itemConfig = $xeCarouselItem.itemConfig
     const $xeCarousel = $xeCarouselItem.$xeCarousel
+
+    itemConfig.slots = slots
 
     const elem = $xeCarouselItem.$refs.refElem as HTMLElement
     if ($xeCarousel && elem) {
