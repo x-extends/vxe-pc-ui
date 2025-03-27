@@ -1,4 +1,5 @@
 @use "sass:list";
+@use '../helpers/baseMixin.scss';
 
 .vxe-split {
   &.is--vertical {
@@ -41,15 +42,9 @@
 }
 
 .vxe-split-item-handle {
+  position: relative;
   flex-shrink: 0;
-  background-color: var(--vxe-split-handle-bar-background-color);
   user-select: none;
-  &:hover {
-    background-color: var(--vxe-ui-font-primary-lighten-color);
-  }
-  &:active {
-    background-color: var(--vxe-ui-font-primary-darken-color);
-  }
 }
 
 .vxe-split-item--wrapper {
@@ -57,20 +52,35 @@
   word-break: break-word;
   overflow: hidden;
   flex-grow: 1;
-  & > .vxe-split {
-    height: 100%;
-  }
 }
 .vxe-split-item--inner {
   height: 100%;
   width: 100%;
   overflow: auto;
+  & > .vxe-split {
+    height: 100%;
+  }
+}
+.vxe-split-item-handle-bar {
+  background-color: var(--vxe-split-handle-bar-background-color);
+}
+.vxe-split-item-action-btn {
+  display: block;
+  position: absolute;
+  z-index: 2;
+  cursor: pointer;
+  background-color: var(--vxe-ui-layout-background-color);
+  border: 1px solid var(--vxe-ui-input-border-color);
+  @include baseMixin.createAnimationTransition(transform, 0.1s);
 }
 
 .vxe-split-item {
   display: flex;
   position: relative;
   overflow: auto;
+  &.is--hidden {
+    width: 0;
+  }
   &.is--padding {
     & > .vxe-split-item--wrapper {
       padding: var(--vxe-ui-layout-padding-default);
@@ -89,11 +99,61 @@
       border: 1px solid var(--vxe-ui-base-popup-border-color);
     }
   }
+  &.is--expand {
+    &.is--horizontal {
+      & > .vxe-split-item-handle {
+        .vxe-split-item-handle-bar {
+          cursor: w-resize;
+        }
+      }
+    }
+    &.is--vertical {
+      & > .vxe-split-item-handle {
+        .vxe-split-item-handle-bar {
+          cursor: n-resize;
+        }
+      }
+    }
+    & > .vxe-split-item-handle {
+      & > .vxe-split-item-handle-bar {
+        background-color: var(--vxe-split-handle-bar-background-color);
+        &:hover {
+          background-color: var(--vxe-ui-font-primary-lighten-color);
+        }
+        &:active {
+          background-color: var(--vxe-ui-font-primary-darken-color);
+        }
+      }
+    }
+  }
   &.is--horizontal {
     flex-direction: row;
     & > .vxe-split-item-handle {
-      width: var(--vxe-split-handle-bar-width);
-      cursor: w-resize;
+      &.to--prev {
+        .vxe-split-item-action-btn {
+          left: 0;
+        }
+      }
+      &.to--next {
+        .vxe-split-item-action-btn {
+          right: 0;
+        }
+      }
+      .vxe-split-item-handle-bar {
+        width: var(--vxe-split-handle-bar-width);
+        height: 100%;
+      }
+      .vxe-split-item-action-btn {
+        top: 50%;
+        transform: translateY(-50%);
+        padding: 1em 0;
+        &:hover {
+          color: var(--vxe-ui-font-primary-color);
+        }
+        &:active {
+          transform: translateY(-50%) scale(0.9);
+        }
+      }
     }
     &.is--border {
       & > .vxe-split-item-handle {
@@ -104,8 +164,31 @@
   &.is--vertical {
     flex-direction: column;
     & > .vxe-split-item-handle {
-      height: var(--vxe-split-handle-bar-height);
-      cursor: n-resize;
+      &.to--prev {
+        .vxe-split-item-action-btn {
+          top: 0;
+        }
+      }
+      &.to--next {
+        .vxe-split-item-action-btn {
+          bottom: 0;
+        }
+      }
+      .vxe-split-item-handle-bar {
+        height: var(--vxe-split-handle-bar-height);
+        width: 100%;
+      }
+      .vxe-split-item-action-btn {
+        left: 50%;
+        transform: translateX(-50%);
+        padding: 0 1em;
+        &:hover {
+          color: var(--vxe-ui-font-primary-color);
+        }
+        &:active {
+          transform: translateX(-50%) scale(0.9);
+        }
+      }
     }
     &.is--border {
       & > .vxe-split-item-handle {

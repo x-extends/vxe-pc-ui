@@ -2,11 +2,13 @@ import { PropType, CreateElement, VNode } from 'vue'
 import { defineVxeComponent } from '../../ui/src/comp'
 import XEUtils from 'xe-utils'
 import { getConfig, globalEvents, globalResize, createEvent, globalMixins } from '../../ui'
-import { browse, isScale } from '../../ui/src/dom'
+import { isScale } from '../../ui/src/dom'
 import { getSlotVNs } from '../../ui/src/vn'
 import VxeLoadingComponent from '../../loading/src/loading'
 
 import type { VxeListPropTypes, VxeListEmits, VxeComponentSizeType, ListReactData, ValueOf, ListInternalData } from '../../../types'
+
+const browseObj = XEUtils.browse()
 
 export default /* define-vxe-component start */ defineVxeComponent({
   name: 'VxeList',
@@ -224,7 +226,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
         if (scrollYLoad) {
           const scrollBodyElem = $xeList.$refs.refVirtualWrapper as HTMLElement
           const visibleYSize = Math.max(8, Math.ceil(scrollBodyElem.clientHeight / rowHeight))
-          const offsetYSize = sYOpts.oSize ? XEUtils.toNumber(sYOpts.oSize) : (browse.edge ? 10 : 0)
+          const offsetYSize = sYOpts.oSize ? XEUtils.toNumber(sYOpts.oSize) : (browseObj.edge ? 10 : 0)
           scrollYStore.offsetSize = offsetYSize
           scrollYStore.visibleSize = visibleYSize
           scrollYStore.endIndex = Math.max(scrollYStore.startIndex + visibleYSize + offsetYSize, scrollYStore.endIndex)

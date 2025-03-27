@@ -12,8 +12,10 @@ export default /* define-vxe-component start */ defineVxeComponent({
     globalMixins.sizeMixin
   ],
   props: {
+    name: [Number, String] as PropType<VxeSplitItemPropTypes.Name>,
     width: [Number, String] as PropType<VxeSplitItemPropTypes.Width>,
     height: [Number, String] as PropType<VxeSplitItemPropTypes.Height>,
+    showAction: Boolean as PropType<VxeSplitItemPropTypes.ShowAction>,
     minWidth: {
       type: [Number, String] as PropType<VxeSplitItemPropTypes.MinWidth>,
       default: () => null
@@ -40,12 +42,20 @@ export default /* define-vxe-component start */ defineVxeComponent({
     }
     const chunkConfig: VxeSplitDefines.ChunkConfig = {
       id: xID,
+      name: '',
       width: 0,
       height: 0,
       minWidth: 0,
       minHeight: 0,
+      showAction: false,
+      isVisible: true,
+      isExpand: true,
       renderWidth: 0,
+      resizeWidth: 0,
+      foldWidth: 0,
       renderHeight: 0,
+      resizeHeight: 0,
+      foldHeight: 0,
       slots: {}
     }
 
@@ -62,6 +72,12 @@ export default /* define-vxe-component start */ defineVxeComponent({
     })
   },
   watch: {
+    name (val) {
+      const $xeSplitItem = this
+      const chunkConfig = $xeSplitItem.chunkConfig
+
+      chunkConfig.name = val
+    },
     width (val) {
       const $xeSplitItem = this
       const chunkConfig = $xeSplitItem.chunkConfig
@@ -85,6 +101,12 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const chunkConfig = $xeSplitItem.chunkConfig
 
       chunkConfig.minHeight = val
+    },
+    showAction (val) {
+      const $xeSplitItem = this
+      const chunkConfig = $xeSplitItem.chunkConfig
+
+      chunkConfig.showAction = val
     }
   },
   methods: {
@@ -111,12 +133,12 @@ export default /* define-vxe-component start */ defineVxeComponent({
     const chunkConfig = $xeSplitItem.chunkConfig
 
     Object.assign(chunkConfig, {
+      name: props.name,
       width: props.width,
       height: props.height,
       minWidth: props.minWidth,
       minHeight: props.minHeight,
-      renderWidth: 0,
-      renderHeight: 0,
+      showAction: props.showAction,
       slots
     })
   },
