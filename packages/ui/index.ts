@@ -562,7 +562,13 @@ setIcon({
 
   // color-picker
   COLOR_COPY: iconPrefix + 'copy',
-  EYE_DROPPER: iconPrefix + 'dropper'
+  EYE_DROPPER: iconPrefix + 'dropper',
+
+  // split
+  SPLIT_TOP_ACTION: iconPrefix + 'arrow-up',
+  SPLIT_BOTTOM_ACTION: iconPrefix + 'arrow-down',
+  SPLIT_LEFT_ACTION: iconPrefix + 'arrow-left',
+  SPLIT_RIGHT_ACTION: iconPrefix + 'arrow-right'
 })
 
 export * from '@vxe-ui/core'

@@ -23,17 +23,21 @@ export interface SplitItemPrivateRef {
 export interface VxeSplitItemPrivateRef extends SplitItemPrivateRef { }
 
 export namespace VxeSplitItemPropTypes {
+  export type Name = string | number
   export type Width = string | number
   export type Height = string | number
   export type MinWidth = string | number
   export type MinHeight = string | number
+  export type ShowAction = boolean
 }
 
-export type VxeSplitItemProps = {
+export interface VxeSplitItemProps {
+  name?: VxeSplitItemPropTypes.Name
   width?: VxeSplitItemPropTypes.Width
   height?: VxeSplitItemPropTypes.Height
   minWidth?: VxeSplitItemPropTypes.MinWidth
   minHeight?: VxeSplitItemPropTypes.MinHeight
+  showAction?: VxeSplitItemPropTypes.ShowAction
 
   slots?: {
     default?: string | ((params: VxeSplitItemSlotTypes.DefaultSlotParams) => VxeComponentSlotType | VxeComponentSlotType[])

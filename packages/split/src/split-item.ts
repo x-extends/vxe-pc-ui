@@ -8,8 +8,10 @@ import type { SplitItemReactData, VxeSplitItemPropTypes, SplitItemPrivateRef, Sp
 export default defineComponent({
   name: 'VxeSplitItem',
   props: {
+    name: [Number, String] as PropType<VxeSplitItemPropTypes.Name>,
     width: [Number, String] as PropType<VxeSplitItemPropTypes.Width>,
     height: [Number, String] as PropType<VxeSplitItemPropTypes.Height>,
+    showAction: Boolean as PropType<VxeSplitItemPropTypes.ShowAction>,
     minWidth: {
       type: [Number, String] as PropType<VxeSplitItemPropTypes.MinWidth>,
       default: () => null
@@ -32,12 +34,20 @@ export default defineComponent({
 
     const chunkConfig = reactive<VxeSplitDefines.ChunkConfig>({
       id: xID,
+      name: props.name,
       width: props.width,
       height: props.height,
       minWidth: props.minWidth,
       minHeight: props.minHeight,
+      showAction: props.showAction,
+      isVisible: true,
+      isExpand: true,
       renderWidth: 0,
+      resizeWidth: 0,
+      foldWidth: 0,
       renderHeight: 0,
+      resizeHeight: 0,
+      foldHeight: 0,
       slots: slots
     })
 
@@ -84,6 +94,10 @@ export default defineComponent({
       })
     }
 
+    watch(() => props.name, (val) => {
+      chunkConfig.name = val
+    })
+
     watch(() => props.width, (val) => {
       chunkConfig.width = val
     })
@@ -98,6 +112,10 @@ export default defineComponent({
 
     watch(() => props.minHeight, (val) => {
       chunkConfig.minHeight = val
+    })
+
+    watch(() => props.showAction, (val) => {
+      chunkConfig.showAction = val
     })
 
     onMounted(() => {

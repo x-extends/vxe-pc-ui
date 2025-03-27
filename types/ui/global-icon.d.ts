@@ -239,5 +239,11 @@ declare module '@vxe-ui/core' {
     // color-picker
     COLOR_COPY?: string
     EYE_DROPPER?: string
+
+    // split
+    SPLIT_TOP_ACTION?: string
+    SPLIT_BOTTOM_ACTION?: string
+    SPLIT_LEFT_ACTION?: string
+    SPLIT_RIGHT_ACTION?: string
   }
 }

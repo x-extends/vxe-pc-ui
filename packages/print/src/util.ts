@@ -2,6 +2,8 @@ import XEUtils from 'xe-utils'
 
 import type { VxePrintProps, VxePrintDefines, VxePrintConstructor, VxePrintPrivateMethods } from '../../../types'
 
+const browseObj = XEUtils.browse()
+
 // 打印
 let printFrame: any
 
@@ -72,7 +74,7 @@ function handlePrint (opts: VxePrintProps & { _pageBreaks: boolean }, printHtml 
   return new Promise<{
     status: boolean
   }>(resolve => {
-    if (XEUtils.browse().msie) {
+    if (browseObj.msie) {
       removeFrame()
       printFrame = createPrintFrame()
       appendPrintFrame()

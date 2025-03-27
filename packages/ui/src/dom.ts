@@ -1,7 +1,5 @@
 import XEUtils from 'xe-utils'
 
-export const browse = XEUtils.browse()
-
 let tpImgEl: HTMLImageElement | undefined
 
 export function initTpImg () {
