@@ -20,6 +20,10 @@ export default defineComponent({
       type: Boolean as PropType<VxeSplitPropTypes.Border>,
       default: () => getConfig().split.border
     },
+    padding: {
+      type: Boolean as PropType<VxeSplitPropTypes.Padding>,
+      default: () => getConfig().split.padding
+    },
     itemConfig: Object as PropType<VxeSplitPropTypes.ItemConfig>
   },
   emits: [
@@ -232,7 +236,7 @@ export default defineComponent({
     Object.assign($xeSplit, splitMethods, splitPrivateMethods)
 
     const renderItems = () => {
-      const { border, vertical } = props
+      const { border, padding, vertical } = props
       const { staticItems } = reactData
       const itemVNs: VNode[] = []
       staticItems.forEach((item, index) => {
@@ -252,6 +256,7 @@ export default defineComponent({
           h('div', {
             xid: id,
             class: ['vxe-split-item', vertical ? 'is--vertical' : 'is--horizontal', {
+              'is--padding': padding,
               'is--border': border,
               'is--height': renderHeight,
               'is--width': renderWidth,
@@ -270,7 +275,11 @@ export default defineComponent({
             h('div', {
               xid: id,
               class: 'vxe-split-item--wrapper'
-            }, defaultSlot ? callSlot(defaultSlot, { }) : [])
+            }, [
+              h('div', {
+                class: 'vxe-split-item--inner'
+              }, defaultSlot ? callSlot(defaultSlot, { }) : [])
+            ])
           ])
         )
       })
