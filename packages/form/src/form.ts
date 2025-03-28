@@ -230,19 +230,17 @@ export default defineComponent({
 
     const loadItem = (list: VxeFormPropTypes.Items) => {
       if (list.length) {
-        if (process.env.VUE_APP_VXE_ENV === 'development') {
-          list.forEach((item) => {
-            if (item.slots) {
-              XEUtils.each(item.slots, (func) => {
-                if (!XEUtils.isFunction(func)) {
-                  if (!slots[func]) {
-                    errLog('vxe.error.notSlot', [func])
-                  }
+        list.forEach((item) => {
+          if (item.slots) {
+            XEUtils.each(item.slots, (func) => {
+              if (!XEUtils.isFunction(func)) {
+                if (!slots[func]) {
+                  errLog('vxe.error.notSlot', [func])
                 }
-              })
-            }
-          })
-        }
+              }
+            })
+          }
+        })
       }
       reactData.staticItems = XEUtils.mapTree(list, item => createItem($xeForm, item), { children: 'children' })
       return nextTick()
@@ -792,10 +790,8 @@ export default defineComponent({
 
     onMounted(() => {
       nextTick(() => {
-        if (process.env.VUE_APP_VXE_ENV === 'development') {
-          if (props.customLayout && props.items) {
-            errLog('vxe.error.errConflicts', ['custom-layout', 'items'])
-          }
+        if (props.customLayout && props.items) {
+          errLog('vxe.error.errConflicts', ['custom-layout', 'items'])
         }
       })
     })

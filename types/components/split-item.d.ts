@@ -82,6 +82,9 @@ export namespace VxeSplitItemEvents {
 
 export namespace VxeSplitItemSlotTypes {
   export interface DefaultSlotParams {
+    name: VxeSplitItemPropTypes.Name
+    isVisible: boolean
+    isExpand: boolean
   }
 }
 

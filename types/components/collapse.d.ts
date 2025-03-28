@@ -68,20 +68,39 @@ export interface VxeCollapsePrivateMethods extends CollapsePrivateMethods { }
 export type VxeCollapseEmits = [
   'update:modelValue',
   'load',
-  'change'
+  'change',
+  'toggle-expand',
 ]
 
 export namespace VxeCollapseDefines {
   export interface CollapseEventParams extends VxeComponentEventParams {
     $collapse: VxeCollapseConstructor
   }
+  export interface ChangeEventParams extends CollapseEventParams {
+    value: (string | number)[]
+    name: VxeCollapsePanePropTypes.Name
+  }
+  export interface ToggleExpandEventParams extends CollapseEventParams {
+    value: (string | number)[]
+    name: VxeCollapsePanePropTypes.Name
+    expanded: boolean
+  }
 }
 
-export type VxeCollapseEventProps = {}
+export type VxeCollapseEventProps = {
+  onChange?: VxeCollapseEvents.Change
+  onToggleExpand?: VxeCollapseEvents.ToggleExpand
+}
 
-export interface VxeCollapseListeners { }
+export interface VxeCollapseListeners {
+  change?: VxeCollapseEvents.Change
+  onToggleExpand?: VxeCollapseEvents.ToggleExpand
+}
 
-export namespace VxeCollapseEvents { }
+export namespace VxeCollapseEvents {
+  export type Change = (params: VxeCollapseDefines.ChangeEventParams) => void
+  export type ToggleExpand = (params: VxeCollapseDefines.ToggleExpandEventParams) => void
+}
 
 export namespace VxeCollapseSlotTypes {
   export interface DefaultSlotParams {}

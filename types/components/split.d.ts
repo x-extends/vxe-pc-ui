@@ -29,6 +29,7 @@ export namespace VxeSplitPropTypes {
   export type Padding = boolean
   export type Vertical = boolean
   export type Border = boolean
+  export type Items = VxeSplitItemProps[]
   export interface ItemConfig {
     minWidth?: string | number
     minHeight?: string | number
@@ -63,13 +64,41 @@ export namespace VxeSplitPropTypes {
 }
 
 export type VxeSplitProps = {
+  /**
+   * 高度
+   */
   height?: VxeSplitPropTypes.Height
+  /**
+   * 宽度
+   */
   width?: VxeSplitPropTypes.Width
+  /**
+   * 显示边距
+   */
   padding?: VxeSplitPropTypes.Padding
+  /**
+   * 使用垂直布局
+   */
   vertical?: VxeSplitPropTypes.Vertical
+  /**
+   * 是否带有边框
+   */
   border?: VxeSplitPropTypes.Border
+  /**
+   * 面板列表
+   */
+  items?: VxeSplitPropTypes.Items
+  /**
+   * 面板的配置项
+   */
   itemConfig?: VxeSplitPropTypes.ItemConfig
+  /**
+   * 拖动条配置项
+   */
   barConfig?: VxeSplitPropTypes.BarConfig
+  /**
+   * 折叠按钮配置项
+   */
   actionConfig?: VxeSplitPropTypes.ActionConfig
 }
 
@@ -83,6 +112,7 @@ export interface VxeSplitPrivateComputed extends SplitPrivateComputed { }
 
 export interface SplitReactData {
   staticItems: VxeSplitDefines.ChunkConfig[]
+  itemList: VxeSplitDefines.ChunkConfig[]
 }
 
 export interface SplitInternalData {
@@ -90,8 +120,22 @@ export interface SplitInternalData {
 
 export interface SplitMethods {
   dispatchEvent(type: ValueOf<VxeSplitEmits>, params: Record<string, any>, evnt: Event | null): void
+  /**
+   * 重新计算布局
+   */
   recalculate(): Promise<void>
+  /**
+   * 重置面板
+   */
   reset(): Promise<void>
+  /**
+   * 加载面板配置
+   */
+  loadItem(list: VxeSplitItemProps[]): Promise<void>
+  /**
+   * 重新加载面板配置，区别就是会重置
+   */
+  reloadItem(list: VxeSplitItemProps[]): Promise<void>
 }
 export interface VxeSplitMethods extends SplitMethods { }
 
@@ -101,6 +145,7 @@ export interface VxeSplitPrivateMethods extends SplitPrivateMethods { }
 export type VxeSplitEmits = [
   'action-dblclick',
   'action-click',
+  'toggle-expand',
   'resize-start',
   'resize-drag',
   'resize-end'
@@ -126,11 +171,15 @@ export namespace VxeSplitDefines {
   export interface ActionClickEventParams extends SplitEventParams {
     item: ChunkConfig
     name: VxeSplitItemPropTypes.Name
+  }
+  export interface ActionDblclickEventParams extends ActionClickEventParams {}
+  export interface ToggleExpandEventParams extends SplitEventParams {
+    item: ChunkConfig
+    name: VxeSplitItemPropTypes.Name
     targetItem: ChunkConfig
     targetName: VxeSplitItemPropTypes.Name
     expanded: boolean
   }
-  export interface ActionDblclickEventParams extends ActionClickEventParams {}
   export interface ResizeStartEventParams extends SplitEventParams {
     item: ChunkConfig
     name: VxeSplitItemPropTypes.Name
@@ -154,6 +203,7 @@ export namespace VxeSplitDefines {
 export type VxeSplitEventProps = {
   onActionDblclick?: VxeSplitEvents.ActionDblclick
   onActionClick?: VxeSplitEvents.ActionClick
+  onToggleExpand?: VxeSplitEvents.ToggleExpand
   onResizeStart?: VxeSplitEvents.ResizeStart
   onResizeDrag?: VxeSplitEvents.ResizeDrag
   onResizeEnd?: VxeSplitEvents.ResizeEnd
@@ -162,6 +212,7 @@ export type VxeSplitEventProps = {
 export interface VxeSplitListeners {
   actionDblclick?: VxeSplitEvents.ActionDblclick
   actionClick?: VxeSplitEvents.ActionClick
+  toggleExpand?: VxeSplitEvents.ToggleExpand
   resizeStart?: VxeSplitEvents.ResizeStart
   resizeDrag?: VxeSplitEvents.ResizeDrag
   resizeEnd?: VxeSplitEvents.ResizeEnd
@@ -170,6 +221,7 @@ export interface VxeSplitListeners {
 export namespace VxeSplitEvents {
   export type ActionDblclick = (params: VxeSplitDefines.ActionDblclickEventParams) => void
   export type ActionClick = (params: VxeSplitDefines.ActionClickEventParams) => void
+  export type ToggleExpand = (params: VxeSplitDefines.ToggleExpandEventParams) => void
   export type ResizeStart = (params: VxeSplitDefines.ResizeStartEventParams) => void
   export type ResizeDrag = (params: VxeSplitDefines.ResizeDragEventParams) => void
   export type ResizeEnd = (params: VxeSplitDefines.ResizeEndEventParams) => void
@@ -181,6 +233,15 @@ export namespace VxeSplitSlotTypes {
 }
 
 export interface VxeSplitSlots {
+  /**
+   * 自定义插槽模板
+   */
+  [key: string]: ((params: {
+    name: VxeSplitItemPropTypes.Name
+    isVisible: boolean
+    isExpand: boolean
+  }) => any) | undefined
+
   default?: (params: VxeSplitSlotTypes.DefaultSlotParams) => any
 }
 

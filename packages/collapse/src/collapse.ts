@@ -23,7 +23,8 @@ export default defineComponent({
   emits: [
     'update:modelValue',
     'load',
-    'change'
+    'change',
+    'toggle-expand'
   ] as VxeCollapseEmits,
   setup (props, context) {
     const { emit, slots } = context
@@ -145,13 +146,16 @@ export default defineComponent({
       const { name } = item
       if (name) {
         const aIndex = activeNames.indexOf(name)
+        let expanded = false
         if (aIndex === -1) {
+          expanded = true
           activeNames.push(name)
         } else {
           activeNames.splice(aIndex, 1)
         }
         addInitName(name)
         dispatchEvent('change', { value: activeNames, name }, evnt)
+        dispatchEvent('toggle-expand', { value: activeNames, name, expanded }, evnt)
       }
     }
 
