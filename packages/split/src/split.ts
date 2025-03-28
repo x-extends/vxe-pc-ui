@@ -5,8 +5,9 @@ import { getConfig, getIcon, createEvent, globalEvents, globalMixins, renderEmpt
 import { getSlotVNs } from '../../ui/src/vn'
 import { toCssUnit, isScale, addClass, removeClass } from '../../ui/src/dom'
 import { getGlobalDefaultConfig } from '../../ui/src/utils'
+import { errLog } from '../../ui/src/log'
 
-import type { SplitReactData, VxeSplitPropTypes, VxeComponentSizeType, SplitInternalData, VxeSplitEmits, ValueOf, VxeSplitDefines } from '../../../types'
+import type { SplitReactData, VxeSplitPropTypes, VxeComponentSizeType, SplitInternalData, VxeSplitEmits, ValueOf, VxeSplitItemProps, VxeSplitDefines } from '../../../types'
 
 export default /* define-vxe-component start */ defineVxeComponent({
   name: 'VxeSplit',
@@ -28,6 +29,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       type: Boolean as PropType<VxeSplitPropTypes.Padding>,
       default: () => getConfig().split.padding
     },
+    items: Array as PropType<VxeSplitPropTypes.Items>,
     itemConfig: Object as PropType<VxeSplitPropTypes.ItemConfig>,
     barConfig: Object as PropType<VxeSplitPropTypes.BarConfig>,
     actionConfig: Object as PropType<VxeSplitPropTypes.ActionConfig>
@@ -35,14 +37,16 @@ export default /* define-vxe-component start */ defineVxeComponent({
   data () {
     const xID = XEUtils.uniqueId()
     const reactData: SplitReactData = {
-      staticItems: []
+      staticItems: [],
+      itemList: []
     }
     const internalData: SplitInternalData = {
     }
     return {
       xID,
       reactData,
-      internalData
+      internalData,
+      reFlag: 0
     }
   },
   provide () {
@@ -92,6 +96,30 @@ export default /* define-vxe-component start */ defineVxeComponent({
         stys.width = toCssUnit(width)
       }
       return stys
+    },
+    computeSItemSize () {
+      const $xeSplit = this
+      const reactData = $xeSplit.reactData as SplitReactData
+
+      return reactData.staticItems.length
+    }
+  },
+  watch: {
+    items (val) {
+      const $xeSplit = this
+
+      $xeSplit.loadItem(val || [])
+    },
+    computeSItemSize () {
+      const $xeSplit = this
+      const props = $xeSplit
+      const reactData = $xeSplit.reactData
+
+      if (props.items && props.items.length) {
+        errLog('vxe.error.errConflicts', ['<vxe-split-item ...>', 'items'])
+      }
+      reactData.itemList = reactData.staticItems
+      $xeSplit.recalculate()
     }
   },
   methods: {
@@ -120,8 +148,8 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const $xeSplit = this
       const reactData = $xeSplit.reactData
 
-      const { staticItems } = reactData
-      staticItems.forEach(item => {
+      const { itemList } = reactData
+      itemList.forEach(item => {
         item.isExpand = true
         item.isVisible = true
         item.foldHeight = 0
@@ -131,6 +159,51 @@ export default /* define-vxe-component start */ defineVxeComponent({
       })
       return $xeSplit.$nextTick()
     },
+    handleLoadItem (list: VxeSplitItemProps[], isReset: boolean) {
+      const $xeSplit = this
+      const slots = $xeSplit.$scopedSlots
+      const reactData = $xeSplit.reactData
+
+      const { staticItems } = reactData
+      const itemDef = {
+        isVisible: true,
+        isExpand: true,
+        renderWidth: 0,
+        resizeWidth: 0,
+        foldWidth: 0,
+        renderHeight: 0,
+        resizeHeight: 0,
+        foldHeight: 0
+      }
+      reactData.itemList = list.map(item => {
+        if (item.slots) {
+          XEUtils.each(item.slots, (func) => {
+            if (!XEUtils.isFunction(func)) {
+              if (!slots[func]) {
+                errLog('vxe.error.notSlot', [func])
+              }
+            }
+          })
+        }
+        return Object.assign({}, isReset ? null : itemDef, item, isReset ? itemDef : null, {
+          id: XEUtils.uniqueId()
+        })
+      })
+      if (staticItems.length) {
+        errLog('vxe.error.errConflicts', ['<vxe-split-item ...>', 'items'])
+      }
+      return $xeSplit.recalculate()
+    },
+    loadItem (list: VxeSplitItemProps[]) {
+      const $xeSplit = this
+
+      return $xeSplit.handleLoadItem(list || [], false)
+    },
+    reloadItem (list: VxeSplitItemProps[]) {
+      const $xeSplit = this
+
+      return $xeSplit.handleLoadItem(list || [], true)
+    },
     recalculate () {
       const $xeSplit = this
       const props = $xeSplit
@@ -138,7 +211,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
 
       return $xeSplit.$nextTick().then(() => {
         const { vertical } = props
-        const { staticItems } = reactData
+        const { itemList } = reactData
         const el = $xeSplit.$refs.refElem as HTMLDivElement
         if (!el) {
           return
@@ -154,7 +227,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
         const residueItems: VxeSplitDefines.ChunkConfig[] = []
         if (vertical) {
           let countHeight = 0
-          staticItems.forEach(item => {
+          itemList.forEach(item => {
             const { height } = item
             let itemHeight = 0
             if (height) {
@@ -177,7 +250,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
           }
         } else {
           let countWidth = 0
-          staticItems.forEach(item => {
+          itemList.forEach(item => {
             const { width } = item
             let itemWidth = 0
             if (width) {
@@ -208,7 +281,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
 
       evnt.preventDefault()
       const { vertical } = props
-      const { staticItems } = reactData
+      const { itemList } = reactData
       const barEl = evnt.currentTarget as HTMLDivElement
       const handleEl = barEl.parentElement as HTMLDivElement
       const el = $xeSplit.$refs.refElem as HTMLDivElement
@@ -216,8 +289,8 @@ export default /* define-vxe-component start */ defineVxeComponent({
         return
       }
       const itemId = handleEl.getAttribute('itemid')
-      const itemIndex = XEUtils.findIndexOf(staticItems, item => item.id === itemId)
-      const item = staticItems[itemIndex]
+      const itemIndex = XEUtils.findIndexOf(itemList, item => item.id === itemId)
+      const item = itemList[itemIndex]
       if (!item) {
         return
       }
@@ -228,7 +301,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const itemOpts = $xeSplit.computeItemOpts
       const allMinWidth = XEUtils.toNumber(itemOpts.minWidth)
       const allMinHeight = XEUtils.toNumber(itemOpts.minHeight)
-      const targetItem = staticItems[itemIndex + (isFoldNext ? 1 : -1)]
+      const targetItem = itemList[itemIndex + (isFoldNext ? 1 : -1)]
       const targetItemEl = targetItem ? el.querySelector<HTMLDivElement>(`.vxe-split-item[itemid="${targetItem.id}"]`) : null
       const currItemEl = item ? el.querySelector<HTMLDivElement>(`.vxe-split-item[itemid="${item.id}"]`) : null
       const targetWidth = targetItemEl ? targetItemEl.clientWidth : 0
@@ -307,14 +380,14 @@ export default /* define-vxe-component start */ defineVxeComponent({
         return
       }
       const { vertical } = props
-      const { staticItems } = reactData
+      const { itemList } = reactData
       const isFoldNext = $xeSplit.computeIsFoldNext
       const btnEl = evnt.currentTarget as HTMLDivElement
       const handleEl = btnEl.parentElement as HTMLDivElement
       const itemId = handleEl.getAttribute('itemid')
-      const itemIndex = XEUtils.findIndexOf(staticItems, item => item.id === itemId)
-      const item = staticItems[itemIndex]
-      const targetItem = staticItems[itemIndex + (isFoldNext ? 1 : -1)]
+      const itemIndex = XEUtils.findIndexOf(itemList, item => item.id === itemId)
+      const item = itemList[itemIndex]
+      const targetItem = itemList[itemIndex + (isFoldNext ? 1 : -1)]
       if (item) {
         const { showAction, isExpand } = item
         if (showAction) {
@@ -335,10 +408,44 @@ export default /* define-vxe-component start */ defineVxeComponent({
               item.foldWidth = isExpand ? (targetItem.resizeWidth || targetItem.renderWidth) + (item.resizeWidth || item.renderWidth) : 0
             }
           }
-          $xeSplit.dispatchEvent(evnt.type === 'dblclick' ? 'action-dblclick' : 'action-click', { item, name: item.name, targetItem, targetName: targetItem ? targetItem.name : '', expanded: item.isExpand }, evnt)
+          $xeSplit.dispatchEvent('toggle-expand', { item, name: item.name, targetItem, targetName: targetItem ? targetItem.name : '', expanded: item.isExpand }, evnt)
           $xeSplit.recalculate()
         }
       }
+    },
+    handleActionDblclickEvent (evnt: MouseEvent) {
+      const $xeSplit = this
+      const reactData = $xeSplit.reactData
+
+      const { itemList } = reactData
+      const actionOpts = $xeSplit.computeActionOpts
+      const btnEl = evnt.currentTarget as HTMLDivElement
+      const handleEl = btnEl.parentElement as HTMLDivElement
+      const itemId = handleEl.getAttribute('itemid')
+      const itemIndex = XEUtils.findIndexOf(itemList, item => item.id === itemId)
+      const item = itemList[itemIndex]
+
+      if (actionOpts.trigger === 'dblclick') {
+        $xeSplit.handleItemActionEvent(evnt)
+      }
+      $xeSplit.dispatchEvent('action-dblclick', { item, name: item ? item.name : '' }, evnt)
+    },
+    handleActionClickEvent (evnt: MouseEvent) {
+      const $xeSplit = this
+      const reactData = $xeSplit.reactData
+
+      const { itemList } = reactData
+      const actionOpts = $xeSplit.computeActionOpts
+      const btnEl = evnt.currentTarget as HTMLDivElement
+      const handleEl = btnEl.parentElement as HTMLDivElement
+      const itemId = handleEl.getAttribute('itemid')
+      const itemIndex = XEUtils.findIndexOf(itemList, item => item.id === itemId)
+      const item = itemList[itemIndex]
+
+      if (actionOpts.trigger !== 'dblclick') {
+        $xeSplit.handleItemActionEvent(evnt)
+      }
+      $xeSplit.dispatchEvent('action-click', { item, name: item ? item.name : '' }, evnt)
     },
     handleGlobalResizeEvent () {
       const $xeSplit = this
@@ -429,11 +536,11 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const reactData = $xeSplit.reactData
 
       const { border, padding, vertical } = props
-      const { staticItems } = reactData
+      const { itemList } = reactData
       const isFoldNext = $xeSplit.computeIsFoldNext
       const itemVNs: VNode[] = []
-      staticItems.forEach((item, index) => {
-        const { id, slots, renderHeight, resizeHeight, foldHeight, renderWidth, resizeWidth, foldWidth, isVisible, isExpand } = item
+      itemList.forEach((item, index) => {
+        const { id, name, slots, renderHeight, resizeHeight, foldHeight, renderWidth, resizeWidth, foldWidth, isVisible, isExpand } = item
         const defaultSlot = slots ? slots.default : null
         const stys: Record<string, string | number> = {}
         const itemWidth = isVisible ? (foldWidth || resizeWidth || renderWidth) : 0
@@ -473,9 +580,9 @@ export default /* define-vxe-component start */ defineVxeComponent({
             }, [
               h('div', {
                 class: 'vxe-split-item--inner'
-              }, defaultSlot ? $xeSplit.callSlot(defaultSlot, { }) : [])
+              }, defaultSlot ? $xeSplit.callSlot(defaultSlot, { name, isVisible, isExpand }) : [])
             ]),
-            isFoldNext && index < staticItems.length - 1 ? $xeSplit.renderHandleBar(h, item) : renderEmptyElement($xeSplit)
+            isFoldNext && index < itemList.length - 1 ? $xeSplit.renderHandleBar(h, item) : renderEmptyElement($xeSplit)
           ])
         )
       })
@@ -516,7 +623,11 @@ export default /* define-vxe-component start */ defineVxeComponent({
   },
   mounted () {
     const $xeSplit = this
+    const props = $xeSplit
 
+    if (props.items) {
+      $xeSplit.loadItem(props.items)
+    }
     $xeSplit.$nextTick(() => {
       $xeSplit.recalculate()
     })

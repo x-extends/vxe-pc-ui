@@ -94,13 +94,23 @@ export namespace VxeCarouselDefines {
     className: VxeCarouselItemPropTypes.ClassName | undefined
     slots: VxeCarouselItemSlots
   }
+
+  export interface ChangeEventParams extends CarouselEventParams {
+    value: VxeCarouselPropTypes.ModelValue
+  }
 }
 
-export type VxeCarouselEventProps = {}
+export type VxeCarouselEventProps = {
+  onChange?: VxeCarouselEvents.Change
+}
 
-export interface VxeCarouselListeners { }
+export interface VxeCarouselListeners {
+  change?: VxeCarouselEvents.Change
+}
 
-export namespace VxeCarouselEvents { }
+export namespace VxeCarouselEvents {
+  export type Change = (params: VxeCarouselDefines.ChangeEventParams) => void
+}
 
 export namespace VxeCarouselSlotTypes {
   export interface DefaultSlotParams {}

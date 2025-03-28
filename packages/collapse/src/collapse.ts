@@ -151,13 +151,16 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const { name } = item
       if (name) {
         const aIndex = activeNames.indexOf(name)
+        let expanded = false
         if (aIndex === -1) {
+          expanded = true
           activeNames.push(name)
         } else {
           activeNames.splice(aIndex, 1)
         }
         $xeCollapse.addInitName(name)
         $xeCollapse.dispatchEvent('change', { value: activeNames, name }, evnt)
+        $xeCollapse.dispatchEvent('toggle-expand', { value: activeNames, name, expanded }, evnt)
       }
     },
 
