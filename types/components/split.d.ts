@@ -84,6 +84,7 @@ export interface SplitInternalData {
 export interface SplitMethods {
   dispatchEvent(type: ValueOf<VxeSplitEmits>, params: Record<string, any>, evnt: Event | null): void
   recalculate(): Promise<void>
+  reset(): Promise<void>
 }
 export interface VxeSplitMethods extends SplitMethods { }
 

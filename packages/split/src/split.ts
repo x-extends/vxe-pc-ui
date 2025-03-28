@@ -116,6 +116,21 @@ export default /* define-vxe-component start */ defineVxeComponent({
       }
       return []
     },
+    reset () {
+      const $xeSplit = this
+      const reactData = $xeSplit.reactData
+
+      const { staticItems } = reactData
+      staticItems.forEach(item => {
+        item.isExpand = true
+        item.isVisible = true
+        item.foldHeight = 0
+        item.foldWidth = 0
+        item.resizeHeight = 0
+        item.resizeWidth = 0
+      })
+      return $xeSplit.$nextTick()
+    },
     recalculate () {
       const $xeSplit = this
       const props = $xeSplit
@@ -278,6 +293,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
         document.onmouseup = null
         removeClass(el, 'is--drag')
         $xeSplit.dispatchEvent('resize-end', { item, name: item.name, resizeHeight: item.resizeHeight, resizeWidth: item.resizeWidth }, evnt)
+        $xeSplit.recalculate()
       }
       $xeSplit.dispatchEvent('resize-start', { item, name: item.name }, evnt)
     },
@@ -320,6 +336,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
             }
           }
           $xeSplit.dispatchEvent(evnt.type === 'dblclick' ? 'action-dblclick' : 'action-click', { item, name: item.name, targetItem, targetName: targetItem ? targetItem.name : '', expanded: item.isExpand }, evnt)
+          $xeSplit.recalculate()
         }
       }
     },
