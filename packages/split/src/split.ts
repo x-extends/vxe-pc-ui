@@ -147,6 +147,19 @@ export default defineComponent({
       return ''
     }
 
+    const reset = () => {
+      const { staticItems } = reactData
+      staticItems.forEach(item => {
+        item.isExpand = true
+        item.isVisible = true
+        item.foldHeight = 0
+        item.foldWidth = 0
+        item.resizeHeight = 0
+        item.resizeWidth = 0
+      })
+      return nextTick()
+    }
+
     const recalculate = () => {
       return nextTick().then(() => {
         const { vertical } = props
@@ -302,6 +315,7 @@ export default defineComponent({
         document.onmouseup = null
         removeClass(el, 'is--drag')
         dispatchEvent('resize-end', { item, name: item.name, resizeHeight: item.resizeHeight, resizeWidth: item.resizeWidth }, evnt)
+        recalculate()
       }
       dispatchEvent('resize-start', { item, name: item.name }, evnt)
     }
@@ -341,6 +355,7 @@ export default defineComponent({
             }
           }
           dispatchEvent(evnt.type === 'dblclick' ? 'action-dblclick' : 'action-click', { item, name: item.name, targetItem, targetName: targetItem ? targetItem.name : '', expanded: item.isExpand }, evnt)
+          recalculate()
         }
       }
     }
@@ -351,7 +366,8 @@ export default defineComponent({
 
     const splitMethods: SplitMethods = {
       dispatchEvent,
-      recalculate
+      recalculate,
+      reset
     }
 
     const splitPrivateMethods: SplitPrivateMethods = {

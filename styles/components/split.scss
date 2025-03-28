@@ -77,7 +77,7 @@
 .vxe-split-item {
   display: flex;
   position: relative;
-  overflow: auto;
+  overflow: hidden;
   &.is--hidden {
     width: 0;
   }
