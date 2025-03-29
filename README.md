@@ -116,7 +116,7 @@
 * [x] row 行
 * [x] select 下拉框
 * [x] spilt 分割面板
-* [x] spilt-item 分割面板-面板
+* [x] spilt-pane 分割面板-面板
 * [x] slider 滑块
 * [ ] steps 步骤条
 * [x] switch 开关

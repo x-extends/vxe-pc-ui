@@ -66,7 +66,7 @@ import VxeResult from './components/result'
 import VxeRow from './components/row'
 import VxeSelect from './components/select'
 import VxeSplit from './components/split'
-import VxeSplitItem from './components/split-item'
+import VxeSplitPane from './components/split-pane'
 import VxeSlider from './components/slider'
 import VxeRate from './components/rate'
 import VxeSteps from './components/steps'
@@ -161,7 +161,7 @@ interface AllComponents {
   VxeRow: typeof VxeRow
   VxeSelect: typeof VxeSelect
   VxeSplit: typeof VxeSplit
-  VxeSplitItem: typeof VxeSplitItem
+  VxeSplitPane: typeof VxeSplitPane
   VxeSlider: typeof VxeSlider
   VxeSteps: typeof VxeSteps
   VxeSwitch: typeof VxeSwitch
@@ -264,7 +264,7 @@ export * from './components/result'
 export * from './components/row'
 export * from './components/select'
 export * from './components/split'
-export * from './components/split-item'
+export * from './components/split-pane'
 export * from './components/slider'
 export * from './components/steps'
 export * from './components/switch'

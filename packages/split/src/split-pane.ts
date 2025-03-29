@@ -3,26 +3,26 @@ import { createEvent } from '../../ui'
 import { assembleSplitItem, destroySplitItem } from './util'
 import XEUtils from 'xe-utils'
 
-import type { SplitItemReactData, VxeSplitItemPropTypes, SplitItemPrivateRef, SplitItemInternalData, SplitItemMethods, VxeSplitItemPrivateComputed, SplitItemPrivateMethods, VxeSplitItemEmits, VxeSplitItemConstructor, ValueOf, VxeSplitDefines, VxeSplitItemPrivateMethods, VxeSplitConstructor, VxeSplitPrivateMethods } from '../../../types'
+import type { SplitItemReactData, VxeSplitPanePropTypes, SplitItemPrivateRef, SplitItemInternalData, SplitItemMethods, VxeSplitPanePrivateComputed, SplitItemPrivateMethods, VxeSplitPaneEmits, VxeSplitPaneConstructor, ValueOf, VxeSplitDefines, VxeSplitPanePrivateMethods, VxeSplitConstructor, VxeSplitPrivateMethods } from '../../../types'
 
 export default defineComponent({
-  name: 'VxeSplitItem',
+  name: 'VxeSplitPane',
   props: {
-    name: [Number, String] as PropType<VxeSplitItemPropTypes.Name>,
-    width: [Number, String] as PropType<VxeSplitItemPropTypes.Width>,
-    height: [Number, String] as PropType<VxeSplitItemPropTypes.Height>,
-    showAction: Boolean as PropType<VxeSplitItemPropTypes.ShowAction>,
+    name: [Number, String] as PropType<VxeSplitPanePropTypes.Name>,
+    width: [Number, String] as PropType<VxeSplitPanePropTypes.Width>,
+    height: [Number, String] as PropType<VxeSplitPanePropTypes.Height>,
+    showAction: Boolean as PropType<VxeSplitPanePropTypes.ShowAction>,
     minWidth: {
-      type: [Number, String] as PropType<VxeSplitItemPropTypes.MinWidth>,
+      type: [Number, String] as PropType<VxeSplitPanePropTypes.MinWidth>,
       default: () => null
     },
     minHeight: {
-      type: [Number, String] as PropType<VxeSplitItemPropTypes.MinHeight>,
+      type: [Number, String] as PropType<VxeSplitPanePropTypes.MinHeight>,
       default: () => null
     }
   },
   emits: [
-  ] as VxeSplitItemEmits,
+  ] as VxeSplitPaneEmits,
   setup (props, context) {
     const { emit, slots } = context
 
@@ -32,7 +32,7 @@ export default defineComponent({
 
     const refElem = ref<HTMLDivElement>()
 
-    const chunkConfig = reactive<VxeSplitDefines.ChunkConfig>({
+    const paneConfig = reactive<VxeSplitDefines.PaneConfig>({
       id: xID,
       name: props.name,
       width: props.width,
@@ -57,7 +57,7 @@ export default defineComponent({
     const internalData: SplitItemInternalData = {
     }
 
-    const computeMaps: VxeSplitItemPrivateComputed = {
+    const computeMaps: VxeSplitPanePrivateComputed = {
     }
 
     const refMaps: SplitItemPrivateRef = {
@@ -73,20 +73,20 @@ export default defineComponent({
 
       getRefMaps: () => refMaps,
       getComputeMaps: () => computeMaps
-    } as unknown as VxeSplitItemConstructor & VxeSplitItemPrivateMethods
+    } as unknown as VxeSplitPaneConstructor & VxeSplitPanePrivateMethods
 
-    const dispatchEvent = (type: ValueOf<VxeSplitItemEmits>, params: Record<string, any>, evnt: Event | null) => {
-      emit(type, createEvent(evnt, { $splitItem: $xeSplitItem }, params))
+    const dispatchEvent = (type: ValueOf<VxeSplitPaneEmits>, params: Record<string, any>, evnt: Event | null) => {
+      emit(type, createEvent(evnt, { $splitPane: $xeSplitItem }, params))
     }
 
-    const splitItemMethods: SplitItemMethods = {
+    const splitPaneMethods: SplitItemMethods = {
       dispatchEvent
     }
 
-    const splitItemPrivateMethods: SplitItemPrivateMethods = {
+    const splitPanePrivateMethods: SplitItemPrivateMethods = {
     }
 
-    Object.assign($xeSplitItem, splitItemMethods, splitItemPrivateMethods)
+    Object.assign($xeSplitItem, splitPaneMethods, splitPanePrivateMethods)
 
     const renderVN = () => {
       return h('div', {
@@ -95,39 +95,39 @@ export default defineComponent({
     }
 
     watch(() => props.name, (val) => {
-      chunkConfig.name = val
+      paneConfig.name = val
     })
 
     watch(() => props.width, (val) => {
-      chunkConfig.width = val
+      paneConfig.width = val
     })
 
     watch(() => props.height, (val) => {
-      chunkConfig.height = val
+      paneConfig.height = val
     })
 
     watch(() => props.minWidth, (val) => {
-      chunkConfig.minWidth = val
+      paneConfig.minWidth = val
     })
 
     watch(() => props.minHeight, (val) => {
-      chunkConfig.minHeight = val
+      paneConfig.minHeight = val
     })
 
     watch(() => props.showAction, (val) => {
-      chunkConfig.showAction = val
+      paneConfig.showAction = val
     })
 
     onMounted(() => {
       const elem = refElem.value
       if ($xeSplit && elem) {
-        assembleSplitItem($xeSplit, elem, chunkConfig)
+        assembleSplitItem($xeSplit, elem, paneConfig)
       }
     })
 
     onUnmounted(() => {
       if ($xeSplit) {
-        destroySplitItem($xeSplit, chunkConfig)
+        destroySplitItem($xeSplit, paneConfig)
       }
     })
 

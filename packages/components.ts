@@ -67,7 +67,7 @@ import VxeResult from './result'
 import VxeRow from './row'
 import VxeSelect from './select'
 import VxeSplit from './split'
-import VxeSplitItem from './split-item'
+import VxeSplitPane from './split-pane'
 import VxeSlider from './slider'
 import VxeSteps from './steps'
 import VxeSwitch from './switch'
@@ -153,7 +153,7 @@ const components = [
   VxeRow,
   VxeSelect,
   VxeSplit,
-  VxeSplitItem,
+  VxeSplitPane,
   VxeSlider,
   VxeSteps,
   VxeSwitch,
@@ -260,7 +260,7 @@ export * from './result'
 export * from './row'
 export * from './select'
 export * from './split'
-export * from './split-item'
+export * from './split-pane'
 export * from './slider'
 export * from './steps'
 export * from './switch'

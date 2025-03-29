@@ -5,7 +5,7 @@
   &.is--vertical {
     & > .vxe-split-wrapper {
       flex-direction: column;
-      & > .vxe-split-item {
+      & > .vxe-split-pane {
         width: 100%;
       }
     }
@@ -13,8 +13,8 @@
   &.is--drag {
     user-select: none;
     & > .vxe-split-wrapper {
-      & > .vxe-split-item {
-        & > .vxe-split-item--wrapper {
+      & > .vxe-split-pane {
+        & > .vxe-split-pane--wrapper {
           &::after {
             content: "";
             position: absolute;
@@ -41,19 +41,19 @@
   display: none;
 }
 
-.vxe-split-item-handle {
+.vxe-split-pane-handle {
   position: relative;
   flex-shrink: 0;
   user-select: none;
 }
 
-.vxe-split-item--wrapper {
+.vxe-split-pane--wrapper {
   position: relative;
   word-break: break-word;
   overflow: hidden;
   flex-grow: 1;
 }
-.vxe-split-item--inner {
+.vxe-split-pane--inner {
   height: 100%;
   width: 100%;
   overflow: auto;
@@ -61,10 +61,10 @@
     height: 100%;
   }
 }
-.vxe-split-item-handle-bar {
+.vxe-split-pane-handle-bar {
   background-color: var(--vxe-split-handle-bar-background-color);
 }
-.vxe-split-item-action-btn {
+.vxe-split-pane-action-btn {
   display: block;
   position: absolute;
   z-index: 2;
@@ -74,7 +74,7 @@
   @include baseMixin.createAnimationTransition(transform, 0.1s);
 }
 
-.vxe-split-item {
+.vxe-split-pane {
   display: flex;
   position: relative;
   overflow: hidden;
@@ -82,7 +82,7 @@
     width: 0;
   }
   &.is--padding {
-    & > .vxe-split-item--wrapper {
+    & > .vxe-split-pane--wrapper {
       padding: var(--vxe-ui-layout-padding-default);
     }
   }
@@ -94,28 +94,28 @@
     flex-shrink: 0;
   }
   &.is--border {
-    & > .vxe-split-item--wrapper,
-    & > .vxe-split-item-handle {
+    & > .vxe-split-pane--wrapper,
+    & > .vxe-split-pane-handle {
       border: 1px solid var(--vxe-ui-base-popup-border-color);
     }
   }
   &.is--expand {
     &.is--horizontal {
-      & > .vxe-split-item-handle {
-        .vxe-split-item-handle-bar {
+      & > .vxe-split-pane-handle {
+        .vxe-split-pane-handle-bar {
           cursor: w-resize;
         }
       }
     }
     &.is--vertical {
-      & > .vxe-split-item-handle {
-        .vxe-split-item-handle-bar {
+      & > .vxe-split-pane-handle {
+        .vxe-split-pane-handle-bar {
           cursor: n-resize;
         }
       }
     }
-    & > .vxe-split-item-handle {
-      & > .vxe-split-item-handle-bar {
+    & > .vxe-split-pane-handle {
+      & > .vxe-split-pane-handle-bar {
         background-color: var(--vxe-split-handle-bar-background-color);
         &:hover {
           background-color: var(--vxe-ui-font-primary-lighten-color);
@@ -128,22 +128,22 @@
   }
   &.is--horizontal {
     flex-direction: row;
-    & > .vxe-split-item-handle {
+    & > .vxe-split-pane-handle {
       &.to--prev {
-        .vxe-split-item-action-btn {
+        .vxe-split-pane-action-btn {
           left: 0;
         }
       }
       &.to--next {
-        .vxe-split-item-action-btn {
+        .vxe-split-pane-action-btn {
           right: 0;
         }
       }
-      .vxe-split-item-handle-bar {
+      .vxe-split-pane-handle-bar {
         width: var(--vxe-split-handle-bar-width);
         height: 100%;
       }
-      .vxe-split-item-action-btn {
+      .vxe-split-pane-action-btn {
         top: 50%;
         transform: translateY(-50%);
         padding: 1em 0;
@@ -156,29 +156,29 @@
       }
     }
     &.is--border {
-      & > .vxe-split-item-handle {
+      & > .vxe-split-pane-handle {
         border-width: 1px 0 1px 0;
       }
     }
   }
   &.is--vertical {
     flex-direction: column;
-    & > .vxe-split-item-handle {
+    & > .vxe-split-pane-handle {
       &.to--prev {
-        .vxe-split-item-action-btn {
+        .vxe-split-pane-action-btn {
           top: 0;
         }
       }
       &.to--next {
-        .vxe-split-item-action-btn {
+        .vxe-split-pane-action-btn {
           bottom: 0;
         }
       }
-      .vxe-split-item-handle-bar {
+      .vxe-split-pane-handle-bar {
         height: var(--vxe-split-handle-bar-height);
         width: 100%;
       }
-      .vxe-split-item-action-btn {
+      .vxe-split-pane-action-btn {
         left: 50%;
         transform: translateX(-50%);
         padding: 0 1em;
@@ -191,7 +191,7 @@
       }
     }
     &.is--border {
-      & > .vxe-split-item-handle {
+      & > .vxe-split-pane-handle {
         border-width: 0 1px 0 1px;
       }
     }
