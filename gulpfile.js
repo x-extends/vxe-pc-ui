@@ -96,7 +96,7 @@ const componentList = [
   'row',
   'select',
   'split',
-  'split-item',
+  'split-pane',
   'slider',
   'steps',
   'switch',

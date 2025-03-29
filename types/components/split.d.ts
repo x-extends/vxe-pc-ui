@@ -1,5 +1,5 @@
 import { DefineVxeComponentApp, DefineVxeComponentOptions, DefineVxeComponentInstance, VxeComponentEventParams, ValueOf } from '@vxe-ui/core'
-import { VxeSplitItemProps, VxeSplitItemPropTypes } from './split-item'
+import { VxeSplitPaneProps, VxeSplitPanePropTypes } from './split-pane'
 
 /* eslint-disable @typescript-eslint/no-empty-interface,no-use-before-define,@typescript-eslint/ban-types */
 
@@ -22,7 +22,7 @@ export namespace VxeSplitPropTypes {
   export type Padding = boolean
   export type Vertical = boolean
   export type Border = boolean
-  export type Items = VxeSplitItemProps[]
+  export type Items = VxeSplitPaneProps[]
   export interface ItemConfig {
     minWidth?: string | number
     minHeight?: string | number
@@ -104,8 +104,8 @@ export interface SplitPrivateComputed {
 export interface VxeSplitPrivateComputed extends SplitPrivateComputed { }
 
 export interface SplitReactData {
-  staticItems: VxeSplitDefines.ChunkConfig[]
-  itemList: VxeSplitDefines.ChunkConfig[]
+  staticItems: VxeSplitDefines.PaneConfig[]
+  itemList: VxeSplitDefines.PaneConfig[]
 }
 
 export interface SplitInternalData {
@@ -124,11 +124,11 @@ export interface SplitMethods {
   /**
    * 加载面板配置
    */
-  loadItem(list: VxeSplitItemProps[]): Promise<void>
+  loadItem(list: VxeSplitPaneProps[]): Promise<void>
   /**
    * 重新加载面板配置，区别就是会重置
    */
-  reloadItem(list: VxeSplitItemProps[]): Promise<void>
+  reloadItem(list: VxeSplitPaneProps[]): Promise<void>
 }
 export interface VxeSplitMethods extends SplitMethods { }
 
@@ -149,7 +149,7 @@ export namespace VxeSplitDefines {
     $split: VxeSplitConstructor
   }
 
-  export interface ChunkConfig extends VxeSplitItemProps {
+  export interface PaneConfig extends VxeSplitPaneProps {
     id: string
     isVisible: boolean
     isExpand: boolean
@@ -162,32 +162,32 @@ export namespace VxeSplitDefines {
   }
 
   export interface ActionClickEventParams extends SplitEventParams {
-    item: ChunkConfig
-    name: VxeSplitItemPropTypes.Name
+    item: PaneConfig
+    name: VxeSplitPanePropTypes.Name
   }
   export interface ActionDblclickEventParams extends ActionClickEventParams {}
   export interface ToggleExpandEventParams extends SplitEventParams {
-    item: ChunkConfig
-    name: VxeSplitItemPropTypes.Name
-    targetItem: ChunkConfig
-    targetName: VxeSplitItemPropTypes.Name
+    item: PaneConfig
+    name: VxeSplitPanePropTypes.Name
+    targetItem: PaneConfig
+    targetName: VxeSplitPanePropTypes.Name
     expanded: boolean
   }
   export interface ResizeStartEventParams extends SplitEventParams {
-    item: ChunkConfig
-    name: VxeSplitItemPropTypes.Name
+    item: PaneConfig
+    name: VxeSplitPanePropTypes.Name
   }
   export interface ResizeDragEventParams extends SplitEventParams {
-    item: ChunkConfig
-    name: VxeSplitItemPropTypes.Name
+    item: PaneConfig
+    name: VxeSplitPanePropTypes.Name
     offsetHeight: number
     resizeHeight: number
     offsetWidth: number
     resizeWidth: number
   }
   export interface ResizeEndEventParams extends SplitEventParams {
-    item: ChunkConfig
-    name: VxeSplitItemPropTypes.Name
+    item: PaneConfig
+    name: VxeSplitPanePropTypes.Name
     resizeHeight: number
     resizeWidth: number
   }
@@ -230,7 +230,7 @@ export interface VxeSplitSlots {
    * 自定义插槽模板
    */
   [key: string]: ((params: {
-    name: VxeSplitItemPropTypes.Name
+    name: VxeSplitPanePropTypes.Name
     isVisible: boolean
     isExpand: boolean
   }) => any) | undefined

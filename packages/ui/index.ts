@@ -283,7 +283,7 @@ setConfig({
       minHeight: 40
     }
   },
-  splitItem: {},
+  splitPane: {},
   slider: {
     max: 100,
     min: 0

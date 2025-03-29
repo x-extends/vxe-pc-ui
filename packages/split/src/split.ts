@@ -7,7 +7,7 @@ import { toCssUnit, isScale, addClass, removeClass } from '../../ui/src/dom'
 import { getGlobalDefaultConfig } from '../../ui/src/utils'
 import { errLog } from '../../ui/src/log'
 
-import type { SplitReactData, VxeSplitPropTypes, VxeComponentSizeType, SplitInternalData, VxeSplitEmits, ValueOf, VxeSplitItemProps, VxeSplitDefines } from '../../../types'
+import type { SplitReactData, VxeSplitPropTypes, VxeComponentSizeType, SplitInternalData, VxeSplitEmits, ValueOf, VxeSplitPaneProps, VxeSplitDefines } from '../../../types'
 
 export default /* define-vxe-component start */ defineVxeComponent({
   name: 'VxeSplit',
@@ -116,7 +116,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const reactData = $xeSplit.reactData
 
       if (props.items && props.items.length) {
-        errLog('vxe.error.errConflicts', ['<vxe-split-item ...>', 'items'])
+        errLog('vxe.error.errConflicts', ['<vxe-split-pane ...>', 'items'])
       }
       reactData.itemList = reactData.staticItems
       $xeSplit.recalculate()
@@ -159,7 +159,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       })
       return $xeSplit.$nextTick()
     },
-    handleLoadItem (list: VxeSplitItemProps[], isReset: boolean) {
+    handleLoadItem (list: VxeSplitPaneProps[], isReset: boolean) {
       const $xeSplit = this
       const slots = $xeSplit.$scopedSlots
       const reactData = $xeSplit.reactData
@@ -190,16 +190,16 @@ export default /* define-vxe-component start */ defineVxeComponent({
         })
       })
       if (staticItems.length) {
-        errLog('vxe.error.errConflicts', ['<vxe-split-item ...>', 'items'])
+        errLog('vxe.error.errConflicts', ['<vxe-split-pane ...>', 'items'])
       }
       return $xeSplit.recalculate()
     },
-    loadItem (list: VxeSplitItemProps[]) {
+    loadItem (list: VxeSplitPaneProps[]) {
       const $xeSplit = this
 
       return $xeSplit.handleLoadItem(list || [], false)
     },
-    reloadItem (list: VxeSplitItemProps[]) {
+    reloadItem (list: VxeSplitPaneProps[]) {
       const $xeSplit = this
 
       return $xeSplit.handleLoadItem(list || [], true)
@@ -224,7 +224,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
         const itemOpts = $xeSplit.computeItemOpts
         const allMinWidth = XEUtils.toNumber(itemOpts.minWidth)
         const allMinHeight = XEUtils.toNumber(itemOpts.minHeight)
-        const residueItems: VxeSplitDefines.ChunkConfig[] = []
+        const residueItems: VxeSplitDefines.PaneConfig[] = []
         if (vertical) {
           let countHeight = 0
           itemList.forEach(item => {
@@ -302,8 +302,8 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const allMinWidth = XEUtils.toNumber(itemOpts.minWidth)
       const allMinHeight = XEUtils.toNumber(itemOpts.minHeight)
       const targetItem = itemList[itemIndex + (isFoldNext ? 1 : -1)]
-      const targetItemEl = targetItem ? el.querySelector<HTMLDivElement>(`.vxe-split-item[itemid="${targetItem.id}"]`) : null
-      const currItemEl = item ? el.querySelector<HTMLDivElement>(`.vxe-split-item[itemid="${item.id}"]`) : null
+      const targetItemEl = targetItem ? el.querySelector<HTMLDivElement>(`.vxe-split-pane[itemid="${targetItem.id}"]`) : null
+      const currItemEl = item ? el.querySelector<HTMLDivElement>(`.vxe-split-pane[itemid="${item.id}"]`) : null
       const targetWidth = targetItemEl ? targetItemEl.clientWidth : 0
       const currWidth = currItemEl ? currItemEl.clientWidth : 0
       const targetHeight = targetItemEl ? targetItemEl.clientHeight : 0
@@ -452,7 +452,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
 
       $xeSplit.recalculate()
     },
-    getDefaultActionIcon (item: VxeSplitDefines.ChunkConfig) {
+    getDefaultActionIcon (item: VxeSplitDefines.PaneConfig) {
       const $xeSplit = this
       const props = $xeSplit
 
@@ -488,7 +488,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
     //
     // Render
     //
-    renderHandleBar (h: CreateElement, item: VxeSplitDefines.ChunkConfig) {
+    renderHandleBar (h: CreateElement, item: VxeSplitDefines.PaneConfig) {
       const $xeSplit = this
 
       const barStyle = $xeSplit.computeBarStyle
@@ -509,10 +509,10 @@ export default /* define-vxe-component start */ defineVxeComponent({
         attrs: {
           itemid: id
         },
-        class: ['vxe-split-item-handle', isFoldNext ? 'to--next' : 'to--prev']
+        class: ['vxe-split-pane-handle', isFoldNext ? 'to--next' : 'to--prev']
       }, [
         h('div', {
-          class: 'vxe-split-item-handle-bar',
+          class: 'vxe-split-pane-handle-bar',
           style: barStyle,
           on: {
             mousedown: $xeSplit.dragEvent
@@ -520,7 +520,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
         }),
         showAction
           ? h('span', {
-            class: 'vxe-split-item-action-btn',
+            class: 'vxe-split-pane-action-btn',
             on: btnOns
           }, [
             h('i', {
@@ -559,7 +559,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
             attrs: {
               itemid: id
             },
-            class: ['vxe-split-item', vertical ? 'is--vertical' : 'is--horizontal', {
+            class: ['vxe-split-pane', vertical ? 'is--vertical' : 'is--horizontal', {
               'is--padding': padding,
               'is--border': border,
               'is--height': itemHeight,
@@ -576,10 +576,10 @@ export default /* define-vxe-component start */ defineVxeComponent({
               attrs: {
                 itemid: id
               },
-              class: 'vxe-split-item--wrapper'
+              class: 'vxe-split-pane--wrapper'
             }, [
               h('div', {
-                class: 'vxe-split-item--inner'
+                class: 'vxe-split-pane--inner'
               }, defaultSlot ? $xeSplit.callSlot(defaultSlot, { name, isVisible, isExpand }) : [])
             ]),
             isFoldNext && index < itemList.length - 1 ? $xeSplit.renderHandleBar(h, item) : renderEmptyElement($xeSplit)
