@@ -364,7 +364,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       }
       return ''
     },
-    computedDefHintText () {
+    computedDefTipText () {
       const $xeUpload = this
       const props = $xeUpload
 
@@ -375,26 +375,26 @@ export default /* define-vxe-component start */ defineVxeComponent({
       if (XEUtils.isString(tipText)) {
         return tipText
       }
-      const defHints: string[] = []
+      const defTips: string[] = []
       if (isImage) {
         if (multiple && limitCount) {
-          defHints.push(getI18n('vxe.upload.imgCountHint', [limitCount]))
+          defTips.push(getI18n('vxe.upload.imgCountHint', [limitCount]))
         }
         if (limitSize && limitSizeUnit) {
-          defHints.push(getI18n('vxe.upload.imgSizeHint', [limitSizeUnit]))
+          defTips.push(getI18n('vxe.upload.imgSizeHint', [limitSizeUnit]))
         }
       } else {
         if (fileTypes && fileTypes.length) {
-          defHints.push(getI18n('vxe.upload.fileTypeHint', [fileTypes.join('/')]))
+          defTips.push(getI18n('vxe.upload.fileTypeHint', [fileTypes.join('/')]))
         }
         if (limitSize && limitSizeUnit) {
-          defHints.push(getI18n('vxe.upload.fileSizeHint', [limitSizeUnit]))
+          defTips.push(getI18n('vxe.upload.fileSizeHint', [limitSizeUnit]))
         }
         if (multiple && limitCount) {
-          defHints.push(getI18n('vxe.upload.fileCountHint', [limitCount]))
+          defTips.push(getI18n('vxe.upload.fileCountHint', [limitCount]))
         }
       }
-      return defHints.join(getI18n('vxe.base.comma'))
+      return defTips.join(getI18n('vxe.base.comma'))
     },
     computeImageOpts () {
       const $xeUpload = this
@@ -1382,7 +1382,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const { showUploadButton, buttonText, buttonIcon, showButtonText, showButtonIcon, autoHiddenButton } = props
       const isDisabled = $xeUpload.computeIsDisabled
       const formReadonly = $xeUpload.computeFormReadonly
-      const defHintText = $xeUpload.computedDefHintText
+      const defTipText = $xeUpload.computedDefTipText
       const overCount = $xeUpload.computeOverCount
       const defaultSlot = slots.default
       const tipSlot = slots.tip || slots.hint
@@ -1412,10 +1412,10 @@ export default /* define-vxe-component start */ defineVxeComponent({
                   }
                 })
               ]),
-        isMoreView && (defHintText || tipSlot)
+        defTipText || tipSlot
           ? h('div', {
             class: 'vxe-upload--file-action-tip'
-          }, tipSlot ? getSlotVNs(tipSlot({ $upload: $xeUpload })) : defHintText)
+          }, tipSlot ? getSlotVNs(tipSlot({ $upload: $xeUpload })) : defTipText)
           : renderEmptyElement($xeUpload)
       ])
     },
@@ -1637,11 +1637,11 @@ export default /* define-vxe-component start */ defineVxeComponent({
 
       const { showUploadButton, buttonText, buttonIcon, showButtonText, showButtonIcon, autoHiddenButton } = props
       const formReadonly = $xeUpload.computeFormReadonly
-      const defHintText = $xeUpload.computedDefHintText
+      const defTipText = $xeUpload.computedDefTipText
       const overCount = $xeUpload.computeOverCount
       const imgStyle = $xeUpload.computeImgStyle
       const defaultSlot = slots.default
-      const hintSlot = slots.hint
+      const tipSlot = slots.tip || slots.hint
 
       if (formReadonly || !showUploadButton || (autoHiddenButton && overCount)) {
         return renderEmptyElement($xeUpload)
@@ -1676,10 +1676,10 @@ export default /* define-vxe-component start */ defineVxeComponent({
                     class: 'vxe-upload--image-action-content'
                   }, buttonText ? `${buttonText}` : getI18n('vxe.upload.imgBtnText'))
                   : renderEmptyElement($xeUpload),
-                isMoreView && (defHintText || hintSlot)
+                defTipText || tipSlot
                   ? h('div', {
                     class: 'vxe-upload--image-action-hint'
-                  }, hintSlot ? getSlotVNs(hintSlot({ $upload: $xeUpload })) : defHintText)
+                  }, tipSlot ? getSlotVNs(tipSlot({ $upload: $xeUpload })) : defTipText)
                   : renderEmptyElement($xeUpload)
               ])
             ])
