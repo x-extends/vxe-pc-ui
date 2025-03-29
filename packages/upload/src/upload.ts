@@ -280,7 +280,7 @@ export default defineComponent({
       return ''
     })
 
-    const computedDefHintText = computed(() => {
+    const computedDefTipText = computed(() => {
       const { limitSize, fileTypes, multiple, limitCount } = props
       const tipText = props.tipText || props.hintText
       const isImage = computeIsImage.value
@@ -288,26 +288,26 @@ export default defineComponent({
       if (XEUtils.isString(tipText)) {
         return tipText
       }
-      const defHints: string[] = []
+      const defTips: string[] = []
       if (isImage) {
         if (multiple && limitCount) {
-          defHints.push(getI18n('vxe.upload.imgCountHint', [limitCount]))
+          defTips.push(getI18n('vxe.upload.imgCountHint', [limitCount]))
         }
         if (limitSize && limitSizeUnit) {
-          defHints.push(getI18n('vxe.upload.imgSizeHint', [limitSizeUnit]))
+          defTips.push(getI18n('vxe.upload.imgSizeHint', [limitSizeUnit]))
         }
       } else {
         if (fileTypes && fileTypes.length) {
-          defHints.push(getI18n('vxe.upload.fileTypeHint', [fileTypes.join('/')]))
+          defTips.push(getI18n('vxe.upload.fileTypeHint', [fileTypes.join('/')]))
         }
         if (limitSize && limitSizeUnit) {
-          defHints.push(getI18n('vxe.upload.fileSizeHint', [limitSizeUnit]))
+          defTips.push(getI18n('vxe.upload.fileSizeHint', [limitSizeUnit]))
         }
         if (multiple && limitCount) {
-          defHints.push(getI18n('vxe.upload.fileCountHint', [limitCount]))
+          defTips.push(getI18n('vxe.upload.fileCountHint', [limitCount]))
         }
       }
-      return defHints.join(getI18n('vxe.base.comma'))
+      return defTips.join(getI18n('vxe.base.comma'))
     })
 
     const computeImageOpts = computed(() => {
@@ -1244,7 +1244,7 @@ export default defineComponent({
       const { showUploadButton, buttonText, buttonIcon, showButtonText, showButtonIcon, autoHiddenButton } = props
       const isDisabled = computeIsDisabled.value
       const formReadonly = computeFormReadonly.value
-      const defHintText = computedDefHintText.value
+      const defTipText = computedDefTipText.value
       const overCount = computeOverCount.value
       const defaultSlot = slots.default
       const tipSlot = slots.tip || slots.hint
@@ -1270,10 +1270,10 @@ export default defineComponent({
                   disabled: isDisabled
                 })
               ]),
-        isMoreView && (defHintText || tipSlot)
+        defTipText || tipSlot
           ? h('div', {
             class: 'vxe-upload--file-action-tip'
-          }, tipSlot ? getSlotVNs(tipSlot({ $upload: $xeUpload })) : defHintText)
+          }, tipSlot ? getSlotVNs(tipSlot({ $upload: $xeUpload })) : defTipText)
           : createCommentVNode()
       ])
     }
@@ -1467,11 +1467,11 @@ export default defineComponent({
     const renderImageAction = (isMoreView: boolean) => {
       const { showUploadButton, buttonText, buttonIcon, showButtonText, showButtonIcon, autoHiddenButton } = props
       const formReadonly = computeFormReadonly.value
-      const defHintText = computedDefHintText.value
+      const defTipText = computedDefTipText.value
       const overCount = computeOverCount.value
       const imgStyle = computeImgStyle.value
       const defaultSlot = slots.default
-      const hintSlot = slots.hint
+      const tipSlot = slots.tip || slots.hint
 
       if (formReadonly || !showUploadButton || (autoHiddenButton && overCount)) {
         return createCommentVNode()
@@ -1504,10 +1504,10 @@ export default defineComponent({
                     class: 'vxe-upload--image-action-content'
                   }, buttonText ? `${buttonText}` : getI18n('vxe.upload.imgBtnText'))
                   : createCommentVNode(),
-                isMoreView && (defHintText || hintSlot)
+                defTipText || tipSlot
                   ? h('div', {
                     class: 'vxe-upload--image-action-hint'
-                  }, hintSlot ? getSlotVNs(hintSlot({ $upload: $xeUpload })) : defHintText)
+                  }, tipSlot ? getSlotVNs(tipSlot({ $upload: $xeUpload })) : defTipText)
                   : createCommentVNode()
               ])
             ])

@@ -1206,7 +1206,6 @@ export default defineComponent({
 
     const renderHeader = () => {
       const { slots: propSlots = {}, showZoom, showMaximize, draggable } = props
-      const isMsg = computeIsMsg.value
       const headerSlot = slots.header || propSlots.header
       if (props.showHeader) {
         const headerOns: Record<string, any> = {}
@@ -1219,7 +1218,7 @@ export default defineComponent({
         return h('div', {
           ref: refHeaderElem,
           class: ['vxe-modal--header', {
-            'is--ellipsis': !isMsg && props.showTitleOverflow
+            'is--ellipsis': props.showTitleOverflow
           }],
           ...headerOns
         }, headerSlot ? getSlotVNs(headerSlot({ $modal: $xeModal })) : renderTitles())
