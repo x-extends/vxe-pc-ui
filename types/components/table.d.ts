@@ -2938,6 +2938,7 @@ export interface TablePrivateComputed<D = any> {
   computeBodyMenu: VxeTableDefines.MenuFirstOption
   computeFooterMenu: VxeTableDefines.MenuFirstOption
   computeIsMenu: boolean
+  computeMenuList: any[]
   computeMenuOpts: VxeTablePropTypes.MenuOpts<D>
   computeExportOpts: VxeTablePropTypes.ExportOpts
   computeImportOpts: VxeTablePropTypes.ImportOpts
