@@ -8,7 +8,7 @@ export interface TableMenuMethods<D = any> {
 }
 
 export interface TableMenuPrivateMethods<D = any> {
-  moveCtxMenu(evnt: any, ctxMenuStore: any, property: any, hasOper: boolean, operRest: any, menuList: any): void
+  moveCtxMenu(evnt: KeyboardEvent, ctxMenuStore: any, property: 'selectChild' | 'selected', hasOper: boolean, operRest: any, menuList: any[]): void
   handleOpenMenuEvent(evnt: Event, type: 'header' | 'body' | 'footer', params: any): void
   handleGlobalContextmenuEvent(evnt: any): void
   ctxMenuMouseoverEvent(evnt: any, item: any, child?: any): void
