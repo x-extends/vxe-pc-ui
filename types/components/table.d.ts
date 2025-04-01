@@ -2279,6 +2279,10 @@ export namespace VxeTablePropTypes {
      */
     isHeader?: boolean
     /**
+     * 是否导出标题，如果为 false 则导出字段名
+     */
+    isTitle?: boolean
+    /**
      * 是否需要表尾
      */
     isFooter?: boolean
@@ -3213,6 +3217,7 @@ export interface TableReactData<D = any> {
     original: boolean
     message: boolean
     isHeader: boolean
+    isTitle: boolean
     isFooter: boolean
   }
   rowHeightStore: {
