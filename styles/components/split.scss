@@ -72,6 +72,10 @@
   background-color: var(--vxe-ui-layout-background-color);
   border: 1px solid var(--vxe-ui-input-border-color);
   @include baseMixin.createAnimationTransition(transform, 0.1s);
+  &:hover {
+    color: var(--vxe-ui-layout-background-color);
+    background-color: var(--vxe-ui-font-primary-lighten-color);
+  }
 }
 
 .vxe-split-pane {
@@ -147,9 +151,6 @@
         top: 50%;
         transform: translateY(-50%);
         padding: 1em 0;
-        &:hover {
-          color: var(--vxe-ui-font-primary-color);
-        }
         &:active {
           transform: translateY(-50%) scale(0.9);
         }
@@ -182,9 +183,6 @@
         left: 50%;
         transform: translateX(-50%);
         padding: 0 1em;
-        &:hover {
-          color: var(--vxe-ui-font-primary-color);
-        }
         &:active {
           transform: translateX(-50%) scale(0.9);
         }

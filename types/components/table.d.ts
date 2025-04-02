@@ -3064,10 +3064,6 @@ export interface TableReactData<D = any> {
   hasFixedColumn: boolean
   // 树节点列信息
   treeNodeColumn: any
-  // 合并单元格的对象集
-  mergeList: VxeTableDefines.MergeItem<D>[]
-  // 合并表尾数据的对象集
-  mergeFooterList: VxeTableDefines.MergeItem<D>[]
   // 刷新列标识，当列筛选被改变时，触发表格刷新数据
   upDataFlag: number
   // 刷新列标识，当列的特定属性被改变时，触发表格刷新列
@@ -3233,6 +3229,8 @@ export interface TableReactData<D = any> {
   pendingRowFlag: number
   insertRowFlag: number
   removeRowFlag: number
+  mergeBodyFlag: number
+  mergeFootFlag: number
 
   scrollVMLoading: boolean
   scrollYHeight: number
@@ -3333,11 +3331,23 @@ export interface TableInternalData<D = any> {
   fullAllDataRowIdData: Record<string, VxeTableDefines.RowCacheItem<D>>
   // 数据集（仅当前）
   fullDataRowIdData: Record<string, VxeTableDefines.RowCacheItem<D>>
+  // 数据集（仅可视）
+  visibleDataRowIdData: Record<string, D>
 
   sourceDataRowIdData: Record<string, D>
   fullColumnIdData: Record<string, VxeTableDefines.ColumnCacheItem<D>>
   fullColumnFieldData: Record<string, VxeTableDefines.ColumnCacheItem<D>>
 
+  // 合并单元格的数据
+  mergeBodyList: VxeTableDefines.MergeItem<D>[]
+  mergeBodyMaps: Record<string, VxeTableDefines.MergeItem>
+  // 合并表尾的数据
+  mergeFooterList: VxeTableDefines.MergeItem<D>[]
+  mergeFooterMaps: Record<string, VxeTableDefines.MergeItem>
+  // 已合并单元格数据集合
+  mergeBodyCellMaps: Record<string, VxeTableDefines.MergeCacheItem>
+  // 已合并表尾数据集合
+  mergeFooterCellMaps: Record<string, VxeTableDefines.MergeCacheItem>
   // 已展开的行
   rowExpandedMaps: Record<string, D | null>
   // 懒加载中的展开行
@@ -4255,7 +4265,7 @@ export interface TablePrivateMethods<D = any> {
   /**
    * @private
    */
-  cacheRowMap(isUpdate: boolean): void
+  cacheRowMap(isReset: boolean): void
   /**
    * @private
    */
@@ -4300,6 +4310,14 @@ export interface TablePrivateMethods<D = any> {
    * @private
    */
   handleRowResizeDblclickEvent(evnt: MouseEvent, params: VxeTableDefines.CellRenderBodyParams & { $table: VxeTableConstructor & VxeTablePrivateMethods }): void
+  /**
+   * @private
+   */
+  handleUpdateBodyMerge(): void
+  /**
+   * @private
+   */
+  handleUpdateFooterMerge(): void
   /**
    * use handleBatchSelectRows
    * @deprecated
@@ -4649,6 +4667,11 @@ export namespace VxeTableDefines {
     parent: VxeTableDefines.ColumnInfo<D> | null
     width: number
     oLeft: number
+  }
+
+  export interface MergeCacheItem {
+    rowspan: number
+    colspan: number
   }
 
   /**
