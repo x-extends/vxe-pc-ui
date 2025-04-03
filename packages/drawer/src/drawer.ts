@@ -145,7 +145,8 @@ export default /* define-vxe-component start */ defineVxeComponent({
       initialized: false,
       visible: false,
       contentVisible: false,
-      drawerZIndex: 0
+      drawerZIndex: 0,
+      resizeFlag: 1
     }
     return {
       xID: XEUtils.uniqueId(),
@@ -403,6 +404,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
 
     dragEvent (evnt: MouseEvent) {
       const $xeModal = this
+      const reactData = $xeModal.reactData
 
       evnt.preventDefault()
       const { visibleHeight, visibleWidth } = getDomNode()
@@ -414,8 +416,6 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const maxWidth = visibleWidth
       const maxHeight = visibleHeight
       const boxElem = $xeModal.getBox()
-      const domMousemove = document.onmousemove
-      const domMouseup = document.onmouseup
       const clientWidth = boxElem.clientWidth
       const clientHeight = boxElem.clientHeight
       const disX = evnt.clientX
@@ -469,10 +469,12 @@ export default /* define-vxe-component start */ defineVxeComponent({
         }
         boxElem.className = boxElem.className.replace(/\s?is--drag/, '') + ' is--drag'
         $xeModal.dispatchEvent('resize', params, evnt)
+        reactData.resizeFlag++
       }
       document.onmouseup = () => {
-        document.onmousemove = domMousemove
-        document.onmouseup = domMouseup
+        document.onmousemove = null
+        document.onmouseup = null
+        reactData.resizeFlag++
         setTimeout(() => {
           boxElem.className = boxElem.className.replace(/\s?is--drag/, '')
         }, 50)

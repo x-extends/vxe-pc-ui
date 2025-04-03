@@ -220,7 +220,8 @@ export default /* define-vxe-component start */ defineVxeComponent({
       zoomStatus: '',
       revertLocat: null,
       prevLocat: null,
-      firstOpen: true
+      firstOpen: true,
+      resizeFlag: 1
     }
     const internalData: ModalInternalData = {
       msgTimeout: undefined
@@ -1080,8 +1081,6 @@ export default /* define-vxe-component start */ defineVxeComponent({
       }
       if (zoomStatus !== 'maximize' && evnt.button === 0 && !getEventTargetNode(evnt, boxElem, 'trigger--btn').flag) {
         evnt.preventDefault()
-        const domMousemove = document.onmousemove
-        const domMouseup = document.onmouseup
         const disX = evnt.clientX - boxElem.offsetLeft
         const disY = evnt.clientY - boxElem.offsetTop
         const { visibleHeight, visibleWidth } = getDomNode()
@@ -1111,15 +1110,17 @@ export default /* define-vxe-component start */ defineVxeComponent({
           boxElem.style.top = `${top}px`
           boxElem.className = boxElem.className.replace(/\s?is--drag/, '') + ' is--drag'
           $xeModal.$emit('move', createEvent(evnt, { type: 'move' }))
+          reactData.resizeFlag++
         }
         document.onmouseup = () => {
-          document.onmousemove = domMousemove
-          document.onmouseup = domMouseup
+          document.onmousemove = null
+          document.onmouseup = null
           if (storage) {
             $xeModal.$nextTick(() => {
               $xeModal.savePosStorage()
             })
           }
+          reactData.resizeFlag++
           setTimeout(() => {
             boxElem.className = boxElem.className.replace(/\s?is--drag/, '')
           }, 50)

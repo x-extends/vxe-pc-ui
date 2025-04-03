@@ -1,7 +1,7 @@
 import { CreateElement, PropType, VNode } from 'vue'
 import { defineVxeComponent } from '../../ui/src/comp'
 import XEUtils from 'xe-utils'
-import { getConfig, getIcon, createEvent, globalEvents, globalMixins, renderEmptyElement } from '../../ui'
+import { getConfig, getIcon, createEvent, globalEvents, globalMixins, globalResize, renderEmptyElement } from '../../ui'
 import { getSlotVNs } from '../../ui/src/vn'
 import { toCssUnit, isScale, addClass, removeClass } from '../../ui/src/dom'
 import { getGlobalDefaultConfig } from '../../ui/src/utils'
@@ -28,6 +28,10 @@ export default /* define-vxe-component start */ defineVxeComponent({
     padding: {
       type: Boolean as PropType<VxeSplitPropTypes.Padding>,
       default: () => getConfig().split.padding
+    },
+    resize: {
+      type: Boolean as PropType<VxeSplitPropTypes.Resize>,
+      default: () => getConfig().split.resize
     },
     items: Array as PropType<VxeSplitPropTypes.Items>,
     itemConfig: Object as PropType<VxeSplitPropTypes.ItemConfig>,
@@ -82,6 +86,12 @@ export default /* define-vxe-component start */ defineVxeComponent({
 
       const actionOpts = $xeSplit.computeActionOpts as VxeSplitPropTypes.ActionConfig
       return actionOpts.direction === 'next'
+    },
+    computeVisibleItems () {
+      const $xeSplit = this
+      const reactData = $xeSplit.reactData as SplitReactData
+
+      return reactData.itemList.filter(item => item.isVisible)
     },
     computeBarStyle () {
       const $xeSplit = this
@@ -279,9 +289,12 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const props = $xeSplit
       const reactData = $xeSplit.reactData
 
-      evnt.preventDefault()
-      const { vertical } = props
+      const { resize, vertical } = props
       const { itemList } = reactData
+      if (!resize) {
+        return
+      }
+      evnt.preventDefault()
       const barEl = evnt.currentTarget as HTMLDivElement
       const handleEl = barEl.parentElement as HTMLDivElement
       const el = $xeSplit.$refs.refElem as HTMLDivElement
@@ -535,8 +548,9 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const props = $xeSplit
       const reactData = $xeSplit.reactData
 
-      const { border, padding, vertical } = props
+      const { border, padding, resize, vertical } = props
       const { itemList } = reactData
+      const visibleItems = $xeSplit.computeVisibleItems
       const isFoldNext = $xeSplit.computeIsFoldNext
       const itemVNs: VNode[] = []
       itemList.forEach((item, index) => {
@@ -545,13 +559,14 @@ export default /* define-vxe-component start */ defineVxeComponent({
         const stys: Record<string, string | number> = {}
         const itemWidth = isVisible ? (foldWidth || resizeWidth || renderWidth) : 0
         const itemHeight = isVisible ? (foldHeight || resizeHeight || renderHeight) : 0
+        // 当只剩下一个可视区自动占用 100%
         if (vertical) {
           if (itemHeight) {
-            stys.height = toCssUnit(itemHeight)
+            stys.height = visibleItems.length === 1 ? '100%' : toCssUnit(itemHeight)
           }
         } else {
           if (itemWidth) {
-            stys.width = toCssUnit(itemWidth)
+            stys.width = visibleItems.length === 1 ? '100%' : toCssUnit(itemWidth)
           }
         }
         itemVNs.push(
@@ -560,6 +575,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
               itemid: id
             },
             class: ['vxe-split-pane', vertical ? 'is--vertical' : 'is--horizontal', {
+              'is--resize': resize,
               'is--padding': padding,
               'is--border': border,
               'is--height': itemHeight,
@@ -625,6 +641,14 @@ export default /* define-vxe-component start */ defineVxeComponent({
     const $xeSplit = this
     const props = $xeSplit
 
+    const el = $xeSplit.$refs.refElem as HTMLDivElement
+    if (el) {
+      const resizeObserver = globalResize.create(() => {
+        $xeSplit.recalculate()
+      })
+      resizeObserver.observe(el)
+      ;(this as any).$resize = resizeObserver
+    }
     if (props.items) {
       $xeSplit.loadItem(props.items)
     }
@@ -635,6 +659,9 @@ export default /* define-vxe-component start */ defineVxeComponent({
   beforeDestroy () {
     const $xeSplit = this
 
+    if ((this as any).$resize) {
+      (this as any).$resize.disconnect()
+    }
     globalEvents.off($xeSplit, 'resize')
   },
   render (this: any, h) {

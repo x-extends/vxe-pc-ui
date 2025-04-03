@@ -105,6 +105,7 @@ export interface DrawerReactData {
   visible: boolean
   contentVisible: boolean
   drawerZIndex: number
+  resizeFlag: number
 }
 
 export interface DrawerMethods {

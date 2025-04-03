@@ -22,6 +22,7 @@ export namespace VxeSplitPropTypes {
   export type Padding = boolean
   export type Vertical = boolean
   export type Border = boolean
+  export type Resize = boolean
   export type Items = VxeSplitPaneProps[]
   export interface ItemConfig {
     minWidth?: string | number
@@ -77,6 +78,10 @@ export type VxeSplitProps = {
    * 是否带有边框
    */
   border?: VxeSplitPropTypes.Border
+  /**
+   * 是否允许拖拽
+   */
+  resize?: VxeSplitPropTypes.Resize
   /**
    * 面板列表
    */
