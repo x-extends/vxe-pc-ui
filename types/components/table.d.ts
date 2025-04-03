@@ -5696,11 +5696,33 @@ export namespace VxeTableSlotTypes {
   export interface EmptySlotParams<D = any> extends BaseSlotParams<D> {}
   export interface LoadingSlotParams<D = any> extends BaseSlotParams<D> {}
 
-  export interface RowDragIconSlotParams<D = any> extends BaseSlotParams<D>, VxeTableDefines.CellRenderBodyParams<D> {}
-  export interface ColumnDragIconSlotParams<D = any> extends BaseSlotParams<D>, VxeTableDefines.CellRenderHeaderParams<D> {}
+  export interface RowDragIconSlotParams<D = any> extends BaseSlotParams<D> {
+    row: D
+    column: VxeTableDefines.ColumnInfo<D>
+  }
+  export interface ColumnDragIconSlotParams<D = any> extends BaseSlotParams<D> {
+    column: VxeTableDefines.ColumnInfo<D>
+  }
 }
 
 export interface VxeTableSlots<D = any> {
+  /**
+   * 自定义插槽模板
+   */
+  // [key: string]: ((params: {
+  //   $table: VxeTableConstructor<D>
+  //   $grid: VxeGridConstructor<D> | null | undefined
+  //   row: D
+  //   rowIndex: number
+  //   $rowIndex: number
+  //   _rowIndex: number
+  //   column: VxeTableDefines.ColumnInfo<D>
+  //   columnIndex: number
+  //   $columnIndex: number
+  //   _columnIndex: number
+  //   [key: string]: any
+  // }) => any) | undefined
+
   /**
    * 自定义空数据时显示模板
    */

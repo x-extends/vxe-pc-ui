@@ -145,7 +145,8 @@ export default defineComponent({
       initialized: false,
       visible: false,
       contentVisible: false,
-      drawerZIndex: 0
+      drawerZIndex: 0,
+      resizeFlag: 1
     })
 
     const refMaps: DrawerPrivateRef = {
@@ -350,8 +351,6 @@ export default defineComponent({
       const maxWidth = visibleWidth
       const maxHeight = visibleHeight
       const boxElem = getBox()
-      const domMousemove = document.onmousemove
-      const domMouseup = document.onmouseup
       const clientWidth = boxElem.clientWidth
       const clientHeight = boxElem.clientHeight
       const disX = evnt.clientX
@@ -405,10 +404,12 @@ export default defineComponent({
         }
         boxElem.className = boxElem.className.replace(/\s?is--drag/, '') + ' is--drag'
         dispatchEvent('resize', params, evnt)
+        reactData.resizeFlag++
       }
       document.onmouseup = () => {
-        document.onmousemove = domMousemove
-        document.onmouseup = domMouseup
+        document.onmousemove = null
+        document.onmouseup = null
+        reactData.resizeFlag++
         setTimeout(() => {
           boxElem.className = boxElem.className.replace(/\s?is--drag/, '')
         }, 50)

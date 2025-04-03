@@ -216,7 +216,8 @@ export default defineComponent({
       zoomStatus: '',
       revertLocat: null,
       prevLocat: null,
-      firstOpen: true
+      firstOpen: true,
+      resizeFlag: 1
     })
 
     const internalData: ModalInternalData = {
@@ -900,8 +901,6 @@ export default defineComponent({
       }
       if (zoomStatus !== 'maximize' && evnt.button === 0 && !getEventTargetNode(evnt, boxElem, 'trigger--btn').flag) {
         evnt.preventDefault()
-        const domMousemove = document.onmousemove
-        const domMouseup = document.onmouseup
         const disX = evnt.clientX - boxElem.offsetLeft
         const disY = evnt.clientY - boxElem.offsetTop
         const { visibleHeight, visibleWidth } = getDomNode()
@@ -931,15 +930,17 @@ export default defineComponent({
           boxElem.style.top = `${top}px`
           boxElem.className = boxElem.className.replace(/\s?is--drag/, '') + ' is--drag'
           dispatchEvent('move', { type: 'move' }, evnt)
+          reactData.resizeFlag++
         }
         document.onmouseup = () => {
-          document.onmousemove = domMousemove
-          document.onmouseup = domMouseup
+          document.onmousemove = null
+          document.onmouseup = null
           if (storage) {
             nextTick(() => {
               savePosStorage()
             })
           }
+          reactData.resizeFlag++
           setTimeout(() => {
             boxElem.className = boxElem.className.replace(/\s?is--drag/, '')
           }, 50)

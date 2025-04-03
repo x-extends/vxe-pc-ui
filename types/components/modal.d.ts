@@ -207,6 +207,7 @@ export interface ModalReactData {
     height: number
   } | null
   firstOpen: boolean
+  resizeFlag: number
 }
 
 export interface ModalInternalData {

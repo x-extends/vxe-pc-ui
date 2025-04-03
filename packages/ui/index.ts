@@ -278,6 +278,7 @@ setConfig({
     }
   },
   split: {
+    resize: true,
     itemConfig: {
       minWidth: 40,
       minHeight: 40

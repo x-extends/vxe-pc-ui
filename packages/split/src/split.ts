@@ -1,5 +1,5 @@
 import { defineComponent, PropType, ref, h, reactive, provide, VNode, computed, watch, nextTick, onMounted, onUnmounted, onActivated } from 'vue'
-import { getConfig, getIcon, createEvent, globalEvents, renderEmptyElement } from '../../ui'
+import { getConfig, getIcon, createEvent, globalEvents, globalResize, renderEmptyElement } from '../../ui'
 import { getSlotVNs } from '../../ui/src/vn'
 import { toCssUnit, isScale, addClass, removeClass } from '../../ui/src/dom'
 import { getGlobalDefaultConfig } from '../../ui/src/utils'
@@ -24,6 +24,10 @@ export default defineComponent({
     padding: {
       type: Boolean as PropType<VxeSplitPropTypes.Padding>,
       default: () => getConfig().split.padding
+    },
+    resize: {
+      type: Boolean as PropType<VxeSplitPropTypes.Resize>,
+      default: () => getConfig().split.resize
     },
     items: Array as PropType<VxeSplitPropTypes.Items>,
     itemConfig: Object as PropType<VxeSplitPropTypes.ItemConfig>,
@@ -68,6 +72,10 @@ export default defineComponent({
     const computeIsFoldNext = computed(() => {
       const actionOpts = computeActionOpts.value
       return actionOpts.direction === 'next'
+    })
+
+    const computeVisibleItems = computed(() => {
+      return reactData.itemList.filter(item => item.isVisible)
     })
 
     const computeBarStyle = computed(() => {
@@ -272,9 +280,12 @@ export default defineComponent({
     }
 
     const dragEvent = (evnt: MouseEvent) => {
-      evnt.preventDefault()
-      const { vertical } = props
+      const { resize, vertical } = props
       const { itemList } = reactData
+      if (!resize) {
+        return
+      }
+      evnt.preventDefault()
       const barEl = evnt.currentTarget as HTMLDivElement
       const handleEl = barEl.parentElement as HTMLDivElement
       const el = refElem.value
@@ -481,8 +492,9 @@ export default defineComponent({
     }
 
     const renderItems = () => {
-      const { border, padding, vertical } = props
+      const { border, padding, resize, vertical } = props
       const { itemList } = reactData
+      const visibleItems = computeVisibleItems.value
       const isFoldNext = computeIsFoldNext.value
       const itemVNs: VNode[] = []
       itemList.forEach((item, index) => {
@@ -491,19 +503,21 @@ export default defineComponent({
         const stys: Record<string, string | number> = {}
         const itemWidth = isVisible ? (foldWidth || resizeWidth || renderWidth) : 0
         const itemHeight = isVisible ? (foldHeight || resizeHeight || renderHeight) : 0
+        // 当只剩下一个可视区自动占用 100%
         if (vertical) {
           if (itemHeight) {
-            stys.height = toCssUnit(itemHeight)
+            stys.height = visibleItems.length === 1 ? '100%' : toCssUnit(itemHeight)
           }
         } else {
           if (itemWidth) {
-            stys.width = toCssUnit(itemWidth)
+            stys.width = visibleItems.length === 1 ? '100%' : toCssUnit(itemWidth)
           }
         }
         itemVNs.push(
           h('div', {
             itemid: id,
             class: ['vxe-split-pane', vertical ? 'is--vertical' : 'is--horizontal', {
+              'is--resize': resize,
               'is--padding': padding,
               'is--border': border,
               'is--height': itemHeight,
@@ -574,15 +588,28 @@ export default defineComponent({
       recalculate()
     })
 
+    let resizeObserver: ResizeObserver
+
     onMounted(() => {
       nextTick(() => {
         recalculate()
       })
 
+      const el = refElem.value
+      if (el) {
+        resizeObserver = globalResize.create(() => {
+          recalculate()
+        })
+        resizeObserver.observe(el)
+      }
+
       globalEvents.on($xeSplit, 'resize', handleGlobalResizeEvent)
     })
 
     onUnmounted(() => {
+      if (resizeObserver) {
+        resizeObserver.disconnect()
+      }
       globalEvents.off($xeSplit, 'resize')
     })
 
