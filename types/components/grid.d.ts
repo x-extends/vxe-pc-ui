@@ -403,7 +403,10 @@ export namespace VxeGridDefines {
   export interface PasteEventParams<D = any> extends GridEventParams<D>, VxeTableDefines.PasteEventParams<D> { }
   export interface CopyEventParams<D = any> extends GridEventParams<D>, VxeTableDefines.CopyEventParams<D> { }
   export interface CutEventParams<D = any> extends GridEventParams<D>, VxeTableDefines.CutEventParams<D> { }
-  export interface CurrentChangeEventParams<D = any> extends GridEventParams<D>, VxeTableDefines.CurrentChangeEventParams<D> { }
+  export interface CurrentRowChangeParams<D = any> extends GridEventParams<D>, VxeTableDefines.CurrentRowChangeEventParams<D> { }
+  export interface CurrentRowDisabledParams<D = any> extends GridEventParams<D>, VxeTableDefines.CurrentRowDisabledEventParams<D> { }
+  export interface CurrentColumnChangeParams<D = any> extends GridEventParams<D>, VxeTableDefines.CurrentColumnChangeEventParams<D> { }
+  export interface CurrentColumnDisabledParams<D = any> extends GridEventParams<D>, VxeTableDefines.CurrentColumnDisabledEventParams<D> { }
   export interface RadioChangeEventParams<D = any> extends GridEventParams<D>, VxeTableDefines.RadioChangeEventParams<D> { }
   export interface CheckboxChangeEventParams<D = any> extends GridEventParams<D>, VxeTableDefines.CheckboxChangeEventParams<D> { }
   export interface CheckboxAllEventParams<D = any> extends GridEventParams<D>, VxeTableDefines.CheckboxAllEventParams<D> { }
@@ -485,7 +488,10 @@ export interface VxeGridEventProps<D = any> {
   onPaste?: VxeGridEvents.Paste<D>
   onCopy?: VxeGridEvents.Copy<D>
   onCut?: VxeGridEvents.Cut<D>
-  onCurrentChange?: VxeGridEvents.CurrentChange<D>
+  onCurrentRowChange?: VxeGridEvents.CurrentRowChange<D>
+  onCurrentRowDisabled?: VxeGridEvents.CurrentRowDisabled<D>
+  onCurrentColumnChange?: VxeGridEvents.CurrentColumnChange<D>
+  onCurrentColumnDisabled?: VxeGridEvents.CurrentColumnDisabled<D>
   onRadioChange?: VxeGridEvents.RadioChange<D>
   onCheckboxChange?: VxeGridEvents.CheckboxChange<D>
   onCheckboxAll?: VxeGridEvents.CheckboxAll<D>
@@ -552,7 +558,10 @@ export interface VxeGridListeners<D = any> {
   paste?: VxeGridEvents.Paste<D>
   copy?: VxeGridEvents.Copy<D>
   cut?: VxeGridEvents.Cut<D>
-  currentChange?: VxeGridEvents.CurrentChange<D>
+  currentRowChange?: VxeGridEvents.CurrentRowChange<D>
+  currentRowDisabled?: VxeGridEvents.CurrentRowDisabled<D>
+  currentColumnChange?: VxeGridEvents.CurrentColumnChange<D>
+  currentColumnDisabled?: VxeGridEvents.CurrentColumnDisabled<D>
   radioChange?: VxeGridEvents.RadioChange<D>
   checkboxChange?: VxeGridEvents.CheckboxChange<D>
   checkboxAll?: VxeGridEvents.CheckboxAll<D>
@@ -619,7 +628,10 @@ export namespace VxeGridEvents {
   export type Paste<D = any> = (params: VxeGridDefines.PasteEventParams<D>) => void
   export type Copy<D = any> = (params: VxeGridDefines.CopyEventParams<D>) => void
   export type Cut<D = any> = (params: VxeGridDefines.CutEventParams<D>) => void
-  export type CurrentChange<D = any> = (params: VxeGridDefines.CurrentChangeEventParams<D>) => void
+  export type CurrentRowChange<D = any> = (params: VxeGridDefines.CurrentRowChangeParams<D>) => void
+  export type CurrentRowDisabled<D = any> = (params: VxeGridDefines.CurrentRowDisabledParams<D>) => void
+  export type CurrentColumnChange<D = any> = (params: VxeGridDefines.CurrentColumnChangeParams<D>) => void
+  export type CurrentColumnDisabled<D = any> = (params: VxeGridDefines.CurrentColumnDisabledParams<D>) => void
   export type RadioChange<D = any> = (params: VxeGridDefines.RadioChangeEventParams<D>) => void
   export type CheckboxChange<D = any> = (params: VxeGridDefines.CheckboxChangeEventParams<D>) => void
   export type CheckboxAll<D = any> = (params: VxeGridDefines.CheckboxAllEventParams<D>) => void
