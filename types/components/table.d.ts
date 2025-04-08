@@ -1749,6 +1749,8 @@ export namespace VxeTablePropTypes {
      */
     findMethod?(params: {
       cellValue: any
+      row: DT
+      column: VxeTableDefines.ColumnInfo<DT>
       isWhole: boolean
       isRE: boolean
       isSensitive: boolean

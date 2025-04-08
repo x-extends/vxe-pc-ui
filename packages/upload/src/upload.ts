@@ -136,6 +136,10 @@ export default defineComponent({
       type: Boolean as PropType<VxeUploadPropTypes.ShowPreview>,
       default: () => getConfig().upload.showPreview
     },
+    showTip: {
+      type: Boolean as PropType<VxeUploadPropTypes.ShowTip>,
+      default: () => null
+    },
     tipText: String as PropType<VxeUploadPropTypes.TipText>,
     hintText: String as PropType<VxeUploadPropTypes.HintText>,
     previewMethod: Function as PropType<VxeUploadPropTypes.PreviewMethod>,
@@ -278,6 +282,21 @@ export default defineComponent({
         return `${limitSize}M`
       }
       return ''
+    })
+
+    const computedShowTipText = computed(() => {
+      const { showTip, tipText } = props
+      if (XEUtils.isBoolean(showTip)) {
+        return showTip
+      }
+      const defShowTip = getConfig().upload.showTip
+      if (XEUtils.isBoolean(defShowTip)) {
+        return defShowTip
+      }
+      if (tipText) {
+        return true
+      }
+      return false
     })
 
     const computedDefTipText = computed(() => {
@@ -1244,6 +1263,7 @@ export default defineComponent({
       const { showUploadButton, buttonText, buttonIcon, showButtonText, showButtonIcon, autoHiddenButton } = props
       const isDisabled = computeIsDisabled.value
       const formReadonly = computeFormReadonly.value
+      const showTipText = computedShowTipText.value
       const defTipText = computedDefTipText.value
       const overCount = computeOverCount.value
       const defaultSlot = slots.default
@@ -1270,7 +1290,7 @@ export default defineComponent({
                   disabled: isDisabled
                 })
               ]),
-        defTipText || tipSlot
+        showTipText && (defTipText || tipSlot)
           ? h('div', {
             class: 'vxe-upload--file-action-tip'
           }, tipSlot ? getSlotVNs(tipSlot({ $upload: $xeUpload })) : defTipText)
@@ -1467,6 +1487,7 @@ export default defineComponent({
     const renderImageAction = (isMoreView: boolean) => {
       const { showUploadButton, buttonText, buttonIcon, showButtonText, showButtonIcon, autoHiddenButton } = props
       const formReadonly = computeFormReadonly.value
+      const showTipText = computedShowTipText.value
       const defTipText = computedDefTipText.value
       const overCount = computeOverCount.value
       const imgStyle = computeImgStyle.value
@@ -1504,7 +1525,7 @@ export default defineComponent({
                     class: 'vxe-upload--image-action-content'
                   }, buttonText ? `${buttonText}` : getI18n('vxe.upload.imgBtnText'))
                   : createCommentVNode(),
-                defTipText || tipSlot
+                showTipText && (defTipText || tipSlot)
                   ? h('div', {
                     class: 'vxe-upload--image-action-hint'
                   }, tipSlot ? getSlotVNs(tipSlot({ $upload: $xeUpload })) : defTipText)

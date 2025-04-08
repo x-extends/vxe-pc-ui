@@ -63,6 +63,7 @@ export namespace VxeUploadPropTypes {
   export type TypeField = string
   export type UrlField = string
   export type SizeField = string
+  export type ShowTip = boolean
   export type TipText = string
   export type ButtonText = string
   export type ButtonIcon = string
@@ -162,6 +163,7 @@ export interface VxeUploadProps {
   showProgress?: VxeUploadPropTypes.ShowProgress
   progressText?: VxeUploadPropTypes.ProgressText
   autoHiddenButton?: VxeUploadPropTypes.AutoHiddenButton
+  showTip?: VxeUploadPropTypes.ShowTip
   tipText?: VxeUploadPropTypes.TipText
   previewMethod?: VxeUploadPropTypes.PreviewMethod
   uploadMethod?: VxeUploadPropTypes.UploadMethod
