@@ -199,6 +199,10 @@ export default /* define-vxe-component start */ defineVxeComponent({
       type: Boolean as PropType<VxeUploadPropTypes.ShowPreview>,
       default: () => getConfig().upload.showPreview
     },
+    showTip: {
+      type: Boolean as PropType<VxeUploadPropTypes.ShowTip>,
+      default: () => getConfig().upload.showTip
+    },
     tipText: String as PropType<VxeUploadPropTypes.TipText>,
     hintText: String as PropType<VxeUploadPropTypes.HintText>,
     previewMethod: Function as PropType<VxeUploadPropTypes.PreviewMethod>,
@@ -363,6 +367,23 @@ export default /* define-vxe-component start */ defineVxeComponent({
         return `${limitSize}M`
       }
       return ''
+    },
+    computedShowTipText () {
+      const $xeUpload = this
+      const props = $xeUpload
+
+      const { showTip, tipText } = props
+      if (XEUtils.isBoolean(showTip)) {
+        return showTip
+      }
+      const defShowTip = getConfig().upload.showTip
+      if (XEUtils.isBoolean(defShowTip)) {
+        return defShowTip
+      }
+      if (tipText) {
+        return true
+      }
+      return false
     },
     computedDefTipText () {
       const $xeUpload = this
@@ -1382,6 +1403,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const { showUploadButton, buttonText, buttonIcon, showButtonText, showButtonIcon, autoHiddenButton } = props
       const isDisabled = $xeUpload.computeIsDisabled
       const formReadonly = $xeUpload.computeFormReadonly
+      const showTipText = $xeUpload.computedShowTipText
       const defTipText = $xeUpload.computedDefTipText
       const overCount = $xeUpload.computeOverCount
       const defaultSlot = slots.default
@@ -1412,7 +1434,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
                   }
                 })
               ]),
-        defTipText || tipSlot
+        showTipText && (defTipText || tipSlot)
           ? h('div', {
             class: 'vxe-upload--file-action-tip'
           }, tipSlot ? getSlotVNs(tipSlot({ $upload: $xeUpload })) : defTipText)
@@ -1637,6 +1659,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
 
       const { showUploadButton, buttonText, buttonIcon, showButtonText, showButtonIcon, autoHiddenButton } = props
       const formReadonly = $xeUpload.computeFormReadonly
+      const showTipText = $xeUpload.computedShowTipText
       const defTipText = $xeUpload.computedDefTipText
       const overCount = $xeUpload.computeOverCount
       const imgStyle = $xeUpload.computeImgStyle
@@ -1676,7 +1699,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
                     class: 'vxe-upload--image-action-content'
                   }, buttonText ? `${buttonText}` : getI18n('vxe.upload.imgBtnText'))
                   : renderEmptyElement($xeUpload),
-                defTipText || tipSlot
+                showTipText && (defTipText || tipSlot)
                   ? h('div', {
                     class: 'vxe-upload--image-action-hint'
                   }, tipSlot ? getSlotVNs(tipSlot({ $upload: $xeUpload })) : defTipText)
