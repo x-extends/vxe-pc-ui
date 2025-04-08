@@ -258,6 +258,10 @@ export namespace VxeTablePropTypes {
      * 当鼠标移到列头时，是否要高亮当前头
      */
     isHover?: boolean
+    /**
+     * 已废弃，请使用 current-column-config.beforeSelectMethod
+     * @deprecated
+     */
     currentMethod?(params: {
       column: VxeTableDefines.ColumnInfo<D>
     }): boolean
@@ -317,7 +321,8 @@ export namespace VxeTablePropTypes {
      */
     isCurrent?: boolean
     /**
-     * 是否允许高亮当前行的方法，该方法的返回值用来决定这一行是否可以高亮当前行
+     * 已废弃，请使用 current-row-config.beforeSelectMethod
+     * @deprecated
      */
     currentMethod?(params: {
       row: D
@@ -350,6 +355,13 @@ export namespace VxeTablePropTypes {
      * 只对 mouse-config.selected 启用有效，是否跟随单元格选中而移动高亮行
      */
     isFollowSelected?: boolean
+    /**
+     * 用于选中当前行执行之前的方法，返回 false 可以阻止默认行为
+     */
+    beforeSelectMethod?(params: {
+      row: D
+      $table: VxeTableConstructor<D>
+    }): boolean
   }
 
   /**
@@ -364,6 +376,13 @@ export namespace VxeTablePropTypes {
      * 只对 mouse-config.selected 启用有效，是否跟随单元格选中而移动高亮列
      */
     isFollowSelected?: boolean
+    /**
+     * 用于选中当前列执行之前的方法，返回 false 可以阻止默认行为
+     */
+    beforeSelectMethod?(params: {
+      column: VxeTableDefines.ColumnInfo<D>
+      $table: VxeTableConstructor<D>
+    }): boolean
   }
 
   /**
@@ -4545,7 +4564,13 @@ export type VxeTableEmits = [
   'paste',
   'copy',
   'cut',
-  'current-change',
+
+  'current-change', // 已废弃
+
+  'current-row-change',
+  'current-row-disabled',
+  'current-column-change',
+  'current-column-disabled',
   'radio-change',
   'checkbox-change',
   'checkbox-all',
@@ -4996,11 +5021,25 @@ export namespace VxeTableDefines {
   export interface CutParams { }
   export interface CutEventParams<D = any> extends TableEventParams<D>, CutParams { }
 
-  export interface CurrentChangeParams<D = any> extends TableBaseCellParams<D> {
+  export interface CurrentRowChangeParams<D = any> extends TableBaseCellParams<D> {
     newValue: any
     oldValue: any
   }
-  export interface CurrentChangeEventParams<D = any> extends TableEventParams<D>, CurrentChangeParams<D> { }
+  export interface CurrentRowChangeEventParams<D = any> extends TableEventParams<D>, CurrentRowChangeParams<D> { }
+
+  export interface CurrentRowDisabledEventParams<D = any> extends TableEventParams<D> {
+    row: any
+  }
+
+  export interface CurrentColumnChangeParams<D = any> extends TableBaseCellParams<D> {
+    newValue: ColumnInfo<D>
+    oldValue: ColumnInfo<D>
+  }
+  export interface CurrentColumnChangeEventParams<D = any> extends TableEventParams<D>, CurrentColumnChangeParams<D> { }
+
+  export interface CurrentColumnDisabledEventParams<D = any> extends TableEventParams<D> {
+    column: ColumnInfo<D>
+  }
 
   export interface RadioChangeParams<D = any> extends TableBaseCellParams<D> {
     newValue: any
@@ -5516,7 +5555,10 @@ export interface VxeTableEventProps<D = any> {
   onPaste?: VxeTableEvents.Paste<D>
   onCopy?: VxeTableEvents.Copy<D>
   onCut?: VxeTableEvents.Cut<D>
-  onCurrentChange?: VxeTableEvents.CurrentChange<D>
+  onCurrentRowChange?: VxeTableEvents.CurrentRowChange<D>
+  onCurrentRowDisabled?: VxeTableEvents.CurrentRowDisabled<D>
+  onCurrentColumnChange?: VxeTableEvents.CurrentColumnChange<D>
+  onCurrentColumnDisabled?: VxeTableEvents.CurrentColumnDisabled<D>
   onRadioChange?: VxeTableEvents.RadioChange<D>
   onCheckboxChange?: VxeTableEvents.CheckboxChange<D>
   onCheckboxAll?: VxeTableEvents.CheckboxAll<D>
@@ -5581,7 +5623,10 @@ export interface VxeTableListeners<D = any> {
   paste?: VxeTableEvents.Paste<D>
   copy?: VxeTableEvents.Copy<D>
   cut?: VxeTableEvents.Cut<D>
-  currentChange?: VxeTableEvents.CurrentChange<D>
+  currentRowChange?: VxeTableEvents.CurrentRowChange<D>
+  currentRowDisabled?: VxeTableEvents.CurrentRowDisabled<D>
+  currentColumnChange?: VxeTableEvents.CurrentColumnChange<D>
+  currentColumnDisabled?: VxeTableEvents.CurrentColumnDisabled<D>
   radioChange?: VxeTableEvents.RadioChange<D>
   checkboxChange?: VxeTableEvents.CheckboxChange<D>
   checkboxAll?: VxeTableEvents.CheckboxAll<D>
@@ -5645,7 +5690,10 @@ export namespace VxeTableEvents {
   export type Paste<D = VxeTablePropTypes.Row> = (params: VxeTableDefines.PasteEventParams<D>) => void
   export type Copy<D = VxeTablePropTypes.Row> = (params: VxeTableDefines.CopyEventParams<D>) => void
   export type Cut<D = VxeTablePropTypes.Row> = (params: VxeTableDefines.CutEventParams<D>) => void
-  export type CurrentChange<D = VxeTablePropTypes.Row> = (params: VxeTableDefines.CurrentChangeEventParams<D>) => void
+  export type CurrentRowChange<D = VxeTablePropTypes.Row> = (params: VxeTableDefines.CurrentRowChangeEventParams<D>) => void
+  export type CurrentRowDisabled<D = VxeTablePropTypes.Row> = (params: VxeTableDefines.CurrentRowDisabledEventParams<D>) => void
+  export type CurrentColumnChange<D = VxeTablePropTypes.Row> = (params: VxeTableDefines.CurrentColumnChangeEventParams<D>) => void
+  export type CurrentColumnDisabled<D = VxeTablePropTypes.Row> = (params: VxeTableDefines.CurrentColumnDisabledEventParams<D>) => void
   export type RadioChange<D = VxeTablePropTypes.Row> = (params: VxeTableDefines.RadioChangeEventParams<D>) => void
   export type CheckboxChange<D = VxeTablePropTypes.Row> = (params: VxeTableDefines.CheckboxChangeEventParams<D>) => void
   export type CheckboxAll<D = VxeTablePropTypes.Row> = (params: VxeTableDefines.CheckboxAllEventParams<D>) => void
