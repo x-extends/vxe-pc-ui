@@ -3700,7 +3700,7 @@ export interface TableMethods<DT = any> {
   getData(): DT[]
   getData(rowIndex: number): DT
   /**
-   * 用于 type=checkbox，获取已选中的行数据
+   * 用于 type=checkbox，获取已选中的行数据；如果 isFull=true 则包含完整当前列表（包含筛选）；否则返回当前列表
    */
   getCheckboxRecords(isFull?: boolean): DT[]
   /**
@@ -3886,11 +3886,11 @@ export interface TableMethods<DT = any> {
    */
   clearRadioReserve(): Promise<any>
   /**
-   * 用于 checkbox-config.reserve，获取已保留选中的行数据
+   * 用于 checkbox-config.reserve，获取已保留选中的行数据；如果 isFull=true 则包含完整当前列表（包含筛选）；否则返回当前列表
    */
   getCheckboxReserveRecords(isFull?: boolean): any[]
   /**
-   * 用于 type=checkbox，获取半选状态的行数据
+   * 用于 type=checkbox，获取半选状态的行数据；如果 isFull=true 则包含完整当前列表（包含筛选）；否则返回当前列表
    */
   getCheckboxIndeterminateRecords(isFull?: boolean): any[]
   /**
