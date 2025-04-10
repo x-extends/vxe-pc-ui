@@ -2949,7 +2949,11 @@ export interface TablePrivateComputed<D = any> {
   computeRadioOpts: VxeTablePropTypes.RadioOpts<D>
   computeCheckboxOpts: VxeTablePropTypes.CheckboxOpts<D>
   computeTooltipOpts: VxeTablePropTypes.TooltipOpts<D>
-  computeTableTipConfig: VxeTablePropTypes.TooltipConfig<D>
+  computeTableTipConfig: VxeTablePropTypes.TooltipConfig<D> & {
+    useHTML?: VxeTooltipPropTypes.UseHTML
+    enterable?: VxeTooltipPropTypes.Enterable
+    theme?: VxeTooltipPropTypes.Theme
+  }
   computeValidTipConfig: VxeTablePropTypes.TooltipConfig<D>
   computeEditOpts: VxeTablePropTypes.EditOpts<D>
   computeSortOpts: VxeTablePropTypes.SortConfig<D>
