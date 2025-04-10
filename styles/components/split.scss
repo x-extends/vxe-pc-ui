@@ -2,6 +2,7 @@
 @use '../helpers/baseMixin.scss';
 
 .vxe-split {
+  width: 100%;
   &.is--vertical {
     & > .vxe-split-wrapper {
       flex-direction: column;
