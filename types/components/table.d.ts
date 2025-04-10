@@ -3226,6 +3226,7 @@ export interface TableReactData<D = any> {
     isFooter: boolean
   }
   rowHeightStore: {
+    large: number
     default: number
     medium: number
     small: number
