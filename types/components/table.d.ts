@@ -2930,6 +2930,7 @@ export interface TablePrivateComputed<D = any> {
   computeScrollXThreshold: number
   computeScrollYThreshold: number
   computeRowHeightMaps: {
+    large: number
     default: number
     medium: number
     small: number
@@ -3242,6 +3243,7 @@ export interface TableReactData<D = any> {
     isFooter: boolean
   }
   rowHeightStore: {
+    large: number
     default: number
     medium: number
     small: number
