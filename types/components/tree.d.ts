@@ -60,10 +60,10 @@ export namespace VxeTreePropTypes {
   export type IsHover = boolean
   export type ShowLine = boolean
   export type Indent = number
+  export type ExpandAll = boolean
   export type ShowRadio = boolean
   export type CheckNodeKey = string | number | null
   export interface RadioConfig<D = any> {
-    checkNodeKey?: string
     strict?: boolean
     visibleMethod?: (params: { node: D }) => boolean
     checkMethod?: (params: { node: D }) => boolean
@@ -119,6 +119,7 @@ export interface VxeTreeProps<D = any> {
   childrenField?: VxeTreePropTypes.ChildrenField
   hasChildField?: VxeTreePropTypes.HasChildField
   mapChildrenField?: VxeTreePropTypes.MapChildrenField
+  expandAll?: VxeTreePropTypes.ExpandAll
   transform?: VxeTreePropTypes.Transform
   trigger?: VxeTreePropTypes.Trigger
   /**
@@ -172,6 +173,7 @@ export interface TreeReactData {
 }
 
 export interface TreeInternalData {
+  initialized?: boolean
 }
 
 export interface TreeMethods<D = any> {
@@ -314,6 +316,7 @@ export namespace VxeTreeEvents {
 export namespace VxeTreeSlotTypes {
   export interface DefaultSlotParams {
     node: any
+    isExpand: boolean
   }
   export interface IconSlotParams {
     node: any

@@ -62,6 +62,7 @@ export default defineComponent({
     isCurrent: Boolean as PropType<VxeTreePropTypes.IsCurrent>,
     // 已废弃
     isHover: Boolean as PropType<VxeTreePropTypes.IsHover>,
+    expandAll: Boolean as PropType<VxeTreePropTypes.ExpandAll>,
     showLine: {
       type: Boolean as PropType<VxeTreePropTypes.ShowLine>,
       default: () => getConfig().tree.showLine
@@ -147,6 +148,7 @@ export default defineComponent({
     })
 
     const internalData: TreeInternalData = {
+      // initialized: false
     }
 
     const refMaps: TreePrivateRef = {
@@ -639,7 +641,8 @@ export default defineComponent({
     }
 
     const updateData = (list: any[]) => {
-      const { transform } = props
+      const { expandAll, transform } = props
+      const { initialized } = internalData
       const keyField = computeKeyField.value
       const parentField = computeParentField.value
       const childrenField = computeChildrenField.value
@@ -649,6 +652,12 @@ export default defineComponent({
         reactData.treeList = list ? list.slice(0) : []
       }
       cacheNodeMap()
+      if (expandAll && !initialized) {
+        if (list && list.length) {
+          internalData.initialized = true
+          $xeTree.setAllExpandNode(true)
+        }
+      }
     }
 
     const handleCountLine = (item: any, isRoot: boolean, nodeItem: VxeTreeDefines.NodeCacheItem) => {
@@ -1166,11 +1175,11 @@ export default defineComponent({
           }, [
             h('div', {
               class: 'vxe-tree--node-item-title'
-            }, titleSlot ? getSlotVNs(titleSlot({ node })) : `${nodeValue}`),
+            }, titleSlot ? getSlotVNs(titleSlot({ node, isExpand })) : `${nodeValue}`),
             extraSlot
               ? h('div', {
                 class: 'vxe-tree--node-item-extra'
-              }, getSlotVNs(extraSlot({ node })))
+              }, getSlotVNs(extraSlot({ node, isExpand })))
               : createCommentVNode()
           ])
         ]),
