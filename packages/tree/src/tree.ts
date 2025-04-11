@@ -384,7 +384,7 @@ export default defineComponent({
       getCurrentNode () {
         const { currentNode, nodeMaps } = reactData
         if (currentNode) {
-          const nodeItem = nodeMaps[currentNode]
+          const nodeItem = nodeMaps[getNodeId(currentNode)]
           if (nodeItem) {
             return nodeItem.item
           }
