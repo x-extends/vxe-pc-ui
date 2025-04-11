@@ -11,6 +11,7 @@ import { getSlotVNs } from '../../ui/src/vn'
 import { warnLog, errLog } from '../../ui/src/log'
 
 import type { VxeFormConstructor, VxeFormPropTypes, VxeFormEmits, FormReactData, FormMethods, FormPrivateRef, VxeFormPrivateMethods, VxeFormDefines, VxeFormItemPropTypes, VxeTooltipInstance, FormInternalData, VxeFormPrivateComputed } from '../../../types'
+import type { VxeGridConstructor, VxeGridPrivateMethods } from '../../../types/components/grid'
 
 class Rule {
   constructor (rule: any) {
@@ -154,6 +155,8 @@ export default defineComponent({
   setup (props, context) {
     const { slots, emit } = context
 
+    const $xeGrid = inject<(VxeGridConstructor & VxeGridPrivateMethods) | null>('$xeGrid', null)
+
     const xID = XEUtils.uniqueId()
 
     const { computeSize } = useSize(props)
@@ -172,10 +175,6 @@ export default defineComponent({
         visible: false
       }
     })
-
-    provide('xeFormItemInfo', null)
-
-    const $xeGrid = inject<any>('$xeGrid', null)
 
     const refElem = ref<HTMLFormElement>()
     const refTooltip = ref() as Ref<VxeTooltipInstance>
@@ -275,6 +274,11 @@ export default defineComponent({
       const status = getCollapseStatus()
       formMethods.dispatchEvent('toggle-collapse', { status, collapse: status, data: props.data }, evnt)
       formMethods.dispatchEvent('collapse', { status, collapse: status, data: props.data }, evnt)
+      nextTick(() => {
+        if ($xeGrid) {
+          $xeGrid.recalculate()
+        }
+      })
     }
 
     const clearValidate = (fieldOrItem?: VxeFormItemPropTypes.Field | VxeFormItemPropTypes.Field[] | VxeFormDefines.ItemInfo | VxeFormDefines.ItemInfo[]) => {
@@ -300,8 +304,6 @@ export default defineComponent({
     }
 
     const getResetValue = (item: VxeFormDefines.ItemInfo, data: any) => {
-      const $xeGrid = $xeForm.xeGrid
-
       const { field, resetValue } = item
       const itemValue = XEUtils.get(data, field)
       if (XEUtils.isFunction(resetValue)) {
@@ -316,8 +318,6 @@ export default defineComponent({
     }
 
     const reset = () => {
-      const $xeGrid = $xeForm.xeGrid
-
       const { data } = props
       const itemList = getItems()
       if (data) {
@@ -799,6 +799,8 @@ export default defineComponent({
     if (props.items) {
       loadItem(props.items)
     }
+
+    provide('xeFormItemInfo', null)
 
     provide('$xeForm', $xeForm)
     provide('$xeFormGroup', null)

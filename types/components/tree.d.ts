@@ -315,9 +315,13 @@ export namespace VxeTreeSlotTypes {
   export interface DefaultSlotParams {
     node: any
   }
+  export interface IconSlotParams {
+    node: any
+  }
 }
 
 export interface VxeTreeSlots {
+  icon?: (params: VxeTreeSlotTypes.IconSlotParams) => any
   title?: (params: VxeTreeSlotTypes.DefaultSlotParams) => any
   extra?: (params: VxeTreeSlotTypes.DefaultSlotParams) => any
   loading?: (params: {}) => any
