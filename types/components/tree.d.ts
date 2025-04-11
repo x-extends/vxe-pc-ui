@@ -306,6 +306,7 @@ export namespace VxeTreeSlotTypes {
   }
   export interface IconSlotParams {
     node: any
+    isExpand: boolean
   }
 }
 

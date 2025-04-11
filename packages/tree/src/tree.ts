@@ -283,7 +283,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
 
       const { currentNode, nodeMaps } = reactData
       if (currentNode) {
-        const nodeItem = nodeMaps[currentNode]
+        const nodeItem = nodeMaps[$xeTree.getNodeId(currentNode)]
         if (nodeItem) {
           return nodeItem.item
         }
