@@ -1207,6 +1207,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const hasChildField = $xeTree.computeHasChildField
       const childList: any[] = XEUtils.get(node, childrenField)
       const hasChild = childList && childList.length
+      const iconSlot = slots.icon
       const titleSlot = slots.title
       const extraSlot = slots.extra
       const nodeid = $xeTree.getNodeId(node)
@@ -1289,11 +1290,13 @@ export default /* define-vxe-component start */ defineVxeComponent({
                         $xeTree.toggleExpandEvent(evnt, node)
                       }
                     }
-                  }, [
-                    h('i', {
-                      class: isLazyLoading ? (iconLoaded || getIcon().TREE_NODE_LOADED) : (isExpand ? (iconOpen || getIcon().TREE_NODE_OPEN) : (iconClose || getIcon().TREE_NODE_CLOSE))
-                    })
-                  ])
+                  }, iconSlot
+                    ? iconSlot({ node, isExpand })
+                    : [
+                        h('i', {
+                          class: isLazyLoading ? (iconLoaded || getIcon().TREE_NODE_LOADED) : (isExpand ? (iconOpen || getIcon().TREE_NODE_OPEN) : (iconClose || getIcon().TREE_NODE_CLOSE))
+                        })
+                      ])
                 ]
               : [])
             : renderEmptyElement($xeTree),

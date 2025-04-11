@@ -12,7 +12,7 @@ import { getSlotVNs } from '../../ui/src/vn'
 import { warnLog, errLog } from '../../ui/src/log'
 
 import type { VxeFormPropTypes, VxeFormEmits, VxeComponentSizeType, ValueOf, FormReactData, VxeFormDefines, VxeFormItemPropTypes, FormInternalData, VxeTooltipConstructor } from '../../../types'
-import type { VxeGridConstructor } from '../../../types/components/grid'
+import type { VxeGridConstructor, VxeGridPrivateMethods } from '../../../types/components/grid'
 
 class Rule {
   constructor (rule: any) {
@@ -186,7 +186,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
   computed: {
     ...({} as {
       computeSize(): VxeComponentSizeType
-      $xeGrid(): VxeGridConstructor | null
+      $xeGrid(): (VxeGridConstructor & VxeGridPrivateMethods) | null
     }),
     computeValidOpts () {
       const $xeForm = this
@@ -285,11 +285,17 @@ export default /* define-vxe-component start */ defineVxeComponent({
     toggleCollapseEvent  (evnt: Event) {
       const $xeForm = this
       const props = $xeForm
+      const $xeGrid = $xeForm.$xeGrid
 
       $xeForm.toggleCollapse()
       const status = $xeForm.getCollapseStatus()
       $xeForm.dispatchEvent('toggle-collapse', { status, collapse: status, data: props.data }, evnt)
       $xeForm.dispatchEvent('collapse', { status, collapse: status, data: props.data }, evnt)
+      $xeForm.$nextTick(() => {
+        if ($xeGrid) {
+          $xeGrid.recalculate()
+        }
+      })
     },
     clearValidate  (fieldOrItem?: VxeFormItemPropTypes.Field | VxeFormItemPropTypes.Field[] | VxeFormDefines.ItemInfo | VxeFormDefines.ItemInfo[]) {
       const $xeForm = this
