@@ -352,6 +352,10 @@ export namespace VxeTablePropTypes {
    */
   export interface CurrentRowConfig<D = any> {
     /**
+     * 触发方式
+     */
+    trigger?: 'default' | 'row' | 'manual' | '' | null
+    /**
      * 只对 mouse-config.selected 启用有效，是否跟随单元格选中而移动高亮行
      */
     isFollowSelected?: boolean
@@ -371,7 +375,7 @@ export namespace VxeTablePropTypes {
     /**
      * 触发方式
      */
-    trigger?: 'default' | 'header' | 'cell' | '' | null
+    trigger?: 'default' | 'header' | 'cell' | 'manual' | '' | null
     /**
      * 只对 mouse-config.selected 启用有效，是否跟随单元格选中而移动高亮列
      */
