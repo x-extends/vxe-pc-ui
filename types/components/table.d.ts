@@ -939,6 +939,7 @@ export namespace VxeTablePropTypes {
       $table: VxeTableConstructor<D>
       column: VxeTableDefines.ColumnInfo<D>
     }): boolean
+    transfer?: boolean
     iconNone?: string
     iconMatch?: string
     destroyOnClose?: boolean
@@ -3440,6 +3441,9 @@ export interface TableInternalData<D = any> {
   chTimeout?: undefined | number
 
   isResizeCellHeight?: boolean
+
+  // 展开手风琴
+  treeEATime?: undefined | number
 
   // 内部属性
   _lastResizeTime?: any
