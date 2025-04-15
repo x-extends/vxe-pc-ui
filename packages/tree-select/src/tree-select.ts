@@ -720,6 +720,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
                         parentField: treeOpts.parentField || parentField,
                         hasChildField: treeOpts.hasChildField || hasChildField,
                         accordion: treeOpts.accordion,
+                        expandAll: treeOpts.expandAll,
                         nodeConfig: treeNodeOpts,
                         lazy: treeOpts.lazy,
                         loadMethod: treeOpts.loadMethod,
