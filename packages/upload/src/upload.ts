@@ -68,9 +68,25 @@ export default defineComponent({
       type: [String, Number] as PropType<VxeUploadPropTypes.LimitSize>,
       default: () => getConfig().upload.limitSize
     },
+    showLimitSize: {
+      type: Boolean as PropType<VxeUploadPropTypes.ShowLimitSize>,
+      default: () => getConfig().upload.showLimitSize
+    },
+    limitSizeText: {
+      type: [String, Number, Function] as PropType<VxeUploadPropTypes.LimitSizeText>,
+      default: () => getConfig().upload.limitSizeText
+    },
     limitCount: {
       type: [String, Number] as PropType<VxeUploadPropTypes.LimitCount>,
       default: () => getConfig().upload.limitCount
+    },
+    showLimitCount: {
+      type: Boolean as PropType<VxeUploadPropTypes.ShowLimitCount>,
+      default: () => getConfig().upload.showLimitCount
+    },
+    limitCountText: {
+      type: [String, Number, Function] as PropType<VxeUploadPropTypes.LimitCountText>,
+      default: () => getConfig().upload.limitCountText
     },
     nameField: {
       type: String as PropType<VxeUploadPropTypes.NameField>,
@@ -97,7 +113,7 @@ export default defineComponent({
       default: () => getConfig().upload.showProgress
     },
     progressText: {
-      type: String as PropType<VxeUploadPropTypes.ProgressText>,
+      type: [String, Number, Function] as PropType<VxeUploadPropTypes.ProgressText>,
       default: () => getConfig().upload.progressText
     },
     autoHiddenButton: {
@@ -109,7 +125,7 @@ export default defineComponent({
       default: () => getConfig().upload.showUploadButton
     },
     buttonText: {
-      type: String as PropType<VxeUploadPropTypes.ButtonText>,
+      type: [String, Number, Function] as PropType<VxeUploadPropTypes.ButtonText>,
       default: () => getConfig().upload.buttonText
     },
     buttonIcon: {
@@ -140,7 +156,7 @@ export default defineComponent({
       type: Boolean as PropType<VxeUploadPropTypes.ShowTip>,
       default: () => null
     },
-    tipText: String as PropType<VxeUploadPropTypes.TipText>,
+    tipText: [String, Number, Function] as PropType<VxeUploadPropTypes.TipText>,
     hintText: String as PropType<VxeUploadPropTypes.HintText>,
     previewMethod: Function as PropType<VxeUploadPropTypes.PreviewMethod>,
     uploadMethod: Function as PropType<VxeUploadPropTypes.UploadMethod>,
@@ -249,7 +265,7 @@ export default defineComponent({
       return props.sizeField || 'size'
     })
 
-    const computeLimitMaxSizeB = computed(() => {
+    const computeLimitMaxSize = computed(() => {
       return XEUtils.toNumber(props.limitSize) * 1024 * 1024
     })
 
@@ -306,6 +322,9 @@ export default defineComponent({
       const limitSizeUnit = computeLimitSizeUnit.value
       if (XEUtils.isString(tipText)) {
         return tipText
+      }
+      if (XEUtils.isFunction(tipText)) {
+        return `${tipText({})}`
       }
       const defTips: string[] = []
       if (isImage) {
@@ -601,7 +620,7 @@ export default defineComponent({
       }
     }
     const uploadFile = (files: File[], evnt: Event | null) => {
-      const { multiple, urlMode } = props
+      const { multiple, urlMode, showLimitSize, limitSizeText, showLimitCount, limitCountText } = props
       const { fileList } = reactData
       const uploadFn = props.uploadMethod || getConfig().upload.uploadMethod
       const keyField = computeKeyField.value
@@ -609,27 +628,33 @@ export default defineComponent({
       const typeProp = computeTypeProp.value
       const urlProp = computeUrlProp.value
       const sizeProp = computeSizeProp.value
-      const limitMaxSizeB = computeLimitMaxSizeB.value
+      const limitMaxSize = computeLimitMaxSize.value
       const limitMaxCount = computeLimitMaxCount.value
       const limitSizeUnit = computeLimitSizeUnit.value
       let selectFiles = files
 
       if (multiple && limitMaxCount) {
         // 校验文件数量
-        if (fileList.length >= limitMaxCount) {
+        if (showLimitCount && fileList.length >= limitMaxCount) {
           if (VxeUI.modal) {
             VxeUI.modal.notification({
               title: getI18n('vxe.modal.errTitle'),
               status: 'error',
-              content: getI18n('vxe.upload.overCountErr', [limitMaxCount])
+              content: limitCountText ? `${XEUtils.isFunction(limitCountText) ? limitCountText({ maxCount: limitMaxCount }) : limitCountText}` : getI18n('vxe.upload.overCountErr', [limitMaxCount])
             })
           }
           return
         }
         const overNum = selectFiles.length - (limitMaxCount - fileList.length)
-        if (overNum > 0) {
+        if (showLimitCount && overNum > 0) {
           const overExtraList = selectFiles.slice(limitMaxCount - fileList.length)
-          if (VxeUI.modal) {
+          if (limitCountText) {
+            VxeUI.modal.notification({
+              title: getI18n('vxe.modal.errTitle'),
+              status: 'error',
+              content: `${XEUtils.isFunction(limitCountText) ? limitCountText({ maxCount: limitMaxCount }) : limitCountText}`
+            })
+          } else if (VxeUI.modal) {
             VxeUI.modal.notification({
               title: getI18n('vxe.modal.errTitle'),
               status: 'error',
@@ -658,15 +683,15 @@ export default defineComponent({
       }
 
       // 校验文件大小
-      if (limitMaxSizeB) {
+      if (showLimitSize && limitMaxSize) {
         for (let i = 0; i < files.length; i++) {
           const file = files[0]
-          if (file.size > limitMaxSizeB) {
+          if (file.size > limitMaxSize) {
             if (VxeUI.modal) {
               VxeUI.modal.notification({
                 title: getI18n('vxe.modal.errTitle'),
                 status: 'error',
-                content: getI18n('vxe.upload.overSizeErr', [limitSizeUnit])
+                content: limitSizeText ? `${XEUtils.isFunction(limitSizeText) ? limitSizeText({ maxSize: limitMaxSize }) : limitSizeText}` : getI18n('vxe.upload.overSizeErr', [limitSizeUnit])
               })
             }
             return
@@ -1205,7 +1230,7 @@ export default defineComponent({
           showProgress && isLoading && cacheItem
             ? h('div', {
               class: 'vxe-upload--file-item-loading-text'
-            }, progressText ? XEUtils.toFormatString(progressText, { percent: cacheItem.percent }) : getI18n('vxe.upload.uploadProgress', [cacheItem.percent]))
+            }, progressText ? XEUtils.toFormatString(`${XEUtils.isFunction(progressText) ? progressText({}) : progressText}`, { percent: cacheItem.percent }) : getI18n('vxe.upload.uploadProgress', [cacheItem.percent]))
             : createCommentVNode(),
           showErrorStatus && isError
             ? h('div', {
@@ -1285,7 +1310,7 @@ export default defineComponent({
             : [
                 h(VxeButtonComponent, {
                   class: 'vxe-upload--file-action-button',
-                  content: (isMoreView || showButtonText) ? (buttonText ? `${buttonText}` : getI18n('vxe.upload.fileBtnText')) : '',
+                  content: (isMoreView || showButtonText) ? (buttonText ? `${XEUtils.isFunction(buttonText) ? buttonText({}) : buttonText}` : getI18n('vxe.upload.fileBtnText')) : '',
                   icon: showButtonIcon ? (buttonIcon || getIcon().UPLOAD_FILE_ADD) : '',
                   disabled: isDisabled
                 })
@@ -1293,7 +1318,7 @@ export default defineComponent({
         showTipText && (defTipText || tipSlot)
           ? h('div', {
             class: 'vxe-upload--file-action-tip'
-          }, tipSlot ? getSlotVNs(tipSlot({ $upload: $xeUpload })) : defTipText)
+          }, tipSlot ? getSlotVNs(tipSlot({ $upload: $xeUpload })) : `${defTipText}`)
           : createCommentVNode()
       ])
     }
@@ -1424,7 +1449,7 @@ export default defineComponent({
                 showProgress
                   ? h('div', {
                     class: 'vxe-upload--image-item-loading-text'
-                  }, progressText ? XEUtils.toFormatString(progressText, { percent: cacheItem.percent }) : getI18n('vxe.upload.uploadProgress', [cacheItem.percent]))
+                  }, progressText ? XEUtils.toFormatString(`${XEUtils.isFunction(progressText) ? progressText({}) : progressText}`, { percent: cacheItem.percent }) : getI18n('vxe.upload.uploadProgress', [cacheItem.percent]))
                   : createCommentVNode()
               ])
               : createCommentVNode(),
@@ -1523,12 +1548,12 @@ export default defineComponent({
                 isMoreView || showButtonText
                   ? h('div', {
                     class: 'vxe-upload--image-action-content'
-                  }, buttonText ? `${buttonText}` : getI18n('vxe.upload.imgBtnText'))
+                  }, buttonText ? `${XEUtils.isFunction(buttonText) ? buttonText({}) : buttonText}` : getI18n('vxe.upload.imgBtnText'))
                   : createCommentVNode(),
                 showTipText && (defTipText || tipSlot)
                   ? h('div', {
                     class: 'vxe-upload--image-action-hint'
-                  }, tipSlot ? getSlotVNs(tipSlot({ $upload: $xeUpload })) : defTipText)
+                  }, tipSlot ? getSlotVNs(tipSlot({ $upload: $xeUpload })) : `${defTipText}`)
                   : createCommentVNode()
               ])
             ])

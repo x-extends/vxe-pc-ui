@@ -699,9 +699,11 @@ export default defineComponent({
           if (isEsc || isTab) {
             hideOptionPanel()
           } else if (isEnter) {
-            evnt.preventDefault()
-            evnt.stopPropagation()
-            changeOptionEvent(evnt, currentOption)
+            if (currentOption) {
+              evnt.preventDefault()
+              evnt.stopPropagation()
+              changeOptionEvent(evnt, currentOption)
+            }
           } else if (isUpArrow || isDwArrow) {
             evnt.preventDefault()
             let offsetOption = findOffsetOption(currentOption, isDwArrow)
