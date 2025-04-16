@@ -351,8 +351,10 @@ setConfig({
     showRemoveButton: true,
     showButtonIcon: true,
     showPreview: true,
-    dragToUpload: true
-    // imageConfig: {}
+    dragToUpload: true,
+    // imageConfig: {},
+    showLimitSize: true,
+    showLimitCount: true
   },
   watermark: {
     rotate: -30,

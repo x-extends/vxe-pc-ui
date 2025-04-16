@@ -925,9 +925,11 @@ export default /* define-vxe-component start */ defineVxeComponent({
           if (isEsc || isTab) {
             $xeSelect.hideOptionPanel()
           } else if (isEnter) {
-            evnt.preventDefault()
-            evnt.stopPropagation()
-            $xeSelect.changeOptionEvent(evnt, currentOption)
+            if (currentOption) {
+              evnt.preventDefault()
+              evnt.stopPropagation()
+              $xeSelect.changeOptionEvent(evnt, currentOption)
+            }
           } else if (isUpArrow || isDwArrow) {
             evnt.preventDefault()
             let offsetOption = $xeSelect.findOffsetOption(currentOption, isDwArrow)

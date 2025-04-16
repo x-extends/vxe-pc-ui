@@ -51,15 +51,23 @@ export namespace VxeUploadPropTypes {
   export type UrlMode = boolean
   export type Multiple = boolean
   export type LimitSize = number | string
+  export type ShowLimitSize = boolean
+  export type LimitSizeText = number | string | ((params: {
+    maxSize: number
+  }) => number | string)
   export type LimitCount = number | string
+  export type ShowLimitCount = boolean
+  export type LimitCountText = number | string | ((params: {
+    maxCount: number
+  }) => number | string)
   export type NameField = string
   export type TypeField = string
   export type UrlField = string
   export type SizeField = string
   export type ShowTip = boolean
-  export type TipText = string
+  export type TipText = number | string | ((params: {}) => number | string)
   export type ButtonText = string
-  export type ButtonIcon = string
+  export type ButtonIcon = number | string | ((params: {}) => number | string)
   export type ShowButtonText = boolean
   export type ShowButtonIcon = boolean
   export type ShowRemoveButton = boolean
@@ -67,7 +75,7 @@ export namespace VxeUploadPropTypes {
   export type ShowPreview = boolean
   export type ShowErrorStatus = boolean
   export type ShowProgress = boolean
-  export type ProgressText = string
+  export type ProgressText = number | string | ((params: {}) => number | string)
   export type AutoHiddenButton = boolean
   export type ShowUploadButton = boolean
   export type PreviewMethod = undefined | ((params: {
@@ -139,7 +147,11 @@ export interface VxeUploadProps {
    * 限制文件大小，单位M
    */
   limitSize?: VxeUploadPropTypes.LimitSize
+  showLimitSize?: VxeUploadPropTypes.ShowLimitSize
+  limitSizeText?: VxeUploadPropTypes.LimitSizeText
   limitCount?: VxeUploadPropTypes.LimitCount
+  showLimitCount?: VxeUploadPropTypes.ShowLimitCount
+  limitCountText?: VxeUploadPropTypes.LimitCountText
   nameField?: VxeUploadPropTypes.NameField
   typeField?: VxeUploadPropTypes.TypeField
   urlField?: VxeUploadPropTypes.UrlField
