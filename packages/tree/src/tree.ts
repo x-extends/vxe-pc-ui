@@ -595,6 +595,19 @@ export default /* define-vxe-component start */ defineVxeComponent({
 
       return $xeTree.isIndeterminateByCheckboxNodeid($xeTree.getNodeId(node))
     },
+    getCheckboxIndeterminateNodes () {
+      const $xeTree = this
+      const reactData = $xeTree.reactData
+
+      const { treeList, indeterminateCheckboxMaps } = reactData
+      const indeterminateNodes: any[] = []
+      XEUtils.eachTree(treeList, (node) => {
+        if (indeterminateCheckboxMaps[$xeTree.getNodeId(node)]) {
+          indeterminateNodes.push(node)
+        }
+      })
+      return indeterminateNodes
+    },
     emitCheckboxMode  (value: VxeTreePropTypes.CheckNodeKeys) {
       const $xeTree = this
 

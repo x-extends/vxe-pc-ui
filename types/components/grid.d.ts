@@ -733,16 +733,16 @@ export namespace VxeGridSlotTypes {
     isEdit: boolean
     isHidden: boolean
 
+    // 混用多组件不具名插槽
+    field: string
+    item: any
+    data: any
+
     /**
      * @deprecated
      * @private
      */
     visibleData: D[]
-    /**
-      * @deprecated
-      * @private
-      */
-    data: D[]
     /**
       * 已废弃
       * @deprecated
