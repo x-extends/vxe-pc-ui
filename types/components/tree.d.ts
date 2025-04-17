@@ -216,6 +216,7 @@ export interface TreeMethods<D = any> {
   isCheckedByCheckboxNodeId(nodeKey: any): boolean
   isIndeterminateByCheckboxNode(node: any): boolean
   isCheckedByCheckboxNode(node: any): boolean
+  getCheckboxIndeterminateNodes(): D[]
 }
 export interface VxeTreeMethods<D = any> extends TreeMethods<D> { }
 

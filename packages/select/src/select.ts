@@ -558,6 +558,9 @@ export default defineComponent({
       const valueField = computeValueField.value
       const selectValue = option[valueField]
       const remoteItem = remoteValMaps[selectValue]
+      if (!reactData.visiblePanel) {
+        return
+      }
       if (remoteItem) {
         remoteItem.item = option
       } else {

@@ -612,7 +612,17 @@ export default defineComponent({
       isCheckedByRadioNode,
       isCheckedByCheckboxNodeId,
       isIndeterminateByCheckboxNode,
-      isCheckedByCheckboxNode
+      isCheckedByCheckboxNode,
+      getCheckboxIndeterminateNodes () {
+        const { treeList, indeterminateCheckboxMaps } = reactData
+        const indeterminateNodes: any[] = []
+        XEUtils.eachTree(treeList, (node) => {
+          if (indeterminateCheckboxMaps[getNodeId(node)]) {
+            indeterminateNodes.push(node)
+          }
+        })
+        return indeterminateNodes
+      }
     }
 
     const cacheNodeMap = () => {
