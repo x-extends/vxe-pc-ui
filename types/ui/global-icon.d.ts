@@ -29,6 +29,8 @@ declare module '@vxe-ui/core' {
     TABLE_DRAG_STATUS_SUB_ROW?: string
     TABLE_DRAG_STATUS_COLUMN?: string
     TABLE_DRAG_DISABLED?: string
+    TABLE_ROW_GROUP_OPEN?: string
+    TABLE_ROW_GROUP_CLOSE?: string
 
     // toolbar
     TOOLBAR_TOOLS_REFRESH?: string

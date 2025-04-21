@@ -2,7 +2,7 @@ import { CreateElement, PropType, VNode } from 'vue'
 import { defineVxeComponent } from '../../ui/src/comp'
 import XEUtils from 'xe-utils'
 import { VxeUI, getConfig, createEvent, getIcon, globalEvents, GLOBAL_EVENT_KEYS, getI18n, renderEmptyElement } from '../../ui'
-import { getDomNode, addClass, removeClass } from '../..//ui/src/dom'
+import { getDomNode, addClass, removeClass, hasControlKey } from '../..//ui/src/dom'
 
 import type { ImagePreviewReactData, VxeGlobalIcon, VxeImagePreviewEmits, VxeComponentSizeType, VxeImagePreviewPropTypes, ValueOf } from '../../../types'
 
@@ -446,7 +446,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const $xeImagePreview = this
       const reactData = $xeImagePreview.reactData
 
-      const hasCtrlKey = evnt.ctrlKey
+      const isControlKey = hasControlKey(evnt)
       const hasShiftKey = evnt.shiftKey
       const isUpArrow = globalEvents.hasKey(evnt, GLOBAL_EVENT_KEYS.ARROW_UP)
       const isDownArrow = globalEvents.hasKey(evnt, GLOBAL_EVENT_KEYS.ARROW_DOWN)
@@ -482,14 +482,14 @@ export default /* define-vxe-component start */ defineVxeComponent({
         } else {
           $xeImagePreview.handleChange(true)
         }
-      } else if (isR && hasCtrlKey) {
+      } else if (isR && isControlKey) {
         evnt.preventDefault()
         if (hasShiftKey) {
           $xeImagePreview.handleRotateImg(false)
         } else {
           $xeImagePreview.handleRotateImg(true)
         }
-      } else if (isP && hasCtrlKey) {
+      } else if (isP && isControlKey) {
         evnt.preventDefault()
         $xeImagePreview.handlePrintImg()
       }

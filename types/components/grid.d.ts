@@ -424,6 +424,7 @@ export namespace VxeGridDefines {
   export interface FilterChangeEventParams<D = any> extends GridEventParams<D>, VxeTableDefines.FilterChangeEventParams<D> { }
   export interface FilterVisibleEventParams<D = any> extends GridEventParams<D>, VxeTableDefines.FilterVisibleEventParams<D> { }
   export interface ResizableChangeEventParams<D = any> extends GridEventParams<D>, VxeTableDefines.ResizableChangeEventParams<D> { }
+  export interface ToggleRowGroupExpandEventParams<D = any> extends GridEventParams<D>, VxeTableDefines.ToggleRowGroupExpandEventParams<D> { }
   export interface ToggleRowExpandEventParams<D = any> extends GridEventParams<D>, VxeTableDefines.ToggleRowExpandEventParams<D> { }
   export interface ToggleTreeExpandEventParams<D = any> extends GridEventParams<D>, VxeTableDefines.ToggleTreeExpandEventParams<D> { }
   export interface MenuClickEventParams<D = any> extends GridEventParams<D>, VxeTableDefines.MenuClickEventParams<D> { }
@@ -509,6 +510,7 @@ export interface VxeGridEventProps<D = any> {
   onFilterChange?: VxeGridEvents.FilterChange<D>
   onFilterVisible?: VxeGridEvents.FilterVisible<D>
   onResizableChange?: VxeGridEvents.ResizableChange<D>
+  onToggleRowGroupExpand?: VxeGridEvents.ToggleRowGroupExpand<D>
   onToggleRowExpand?: VxeGridEvents.ToggleRowExpand<D>
   onToggleTreeExpand?: VxeGridEvents.ToggleTreeExpand<D>
   onMenuClick?: VxeGridEvents.MenuClick<D>
@@ -579,6 +581,7 @@ export interface VxeGridListeners<D = any> {
   filterChange?: VxeGridEvents.FilterChange<D>
   filterVisible?: VxeGridEvents.FilterVisible<D>
   resizableChange?: VxeGridEvents.ResizableChange<D>
+  toggleRowGroupExpand?: VxeGridEvents.ToggleRowGroupExpand<D>
   toggleRowExpand?: VxeGridEvents.ToggleRowExpand<D>
   toggleTreeExpand?: VxeGridEvents.ToggleTreeExpand<D>
   menuClick?: VxeGridEvents.MenuClick<D>
@@ -649,6 +652,7 @@ export namespace VxeGridEvents {
   export type FilterChange<D = any> = (params: VxeGridDefines.FilterChangeEventParams<D>) => void
   export type FilterVisible<D = any> = (params: VxeGridDefines.FilterVisibleEventParams<D>) => void
   export type ResizableChange<D = any> = (params: VxeGridDefines.ResizableChangeEventParams<D>) => void
+  export type ToggleRowGroupExpand<D = any> = (params: VxeGridDefines.ToggleRowGroupExpandEventParams<D>) => void
   export type ToggleRowExpand<D = any> = (params: VxeGridDefines.ToggleRowExpandEventParams<D>) => void
   export type ToggleTreeExpand<D = any> = (params: VxeGridDefines.ToggleTreeExpandEventParams<D>) => void
   export type MenuClick<D = any> = (params: VxeGridDefines.MenuClickEventParams<D>) => void
