@@ -3,7 +3,7 @@ import { defineVxeComponent } from '../../ui/src/comp'
 import XEUtils from 'xe-utils'
 import { getConfig, getI18n, createEvent, globalMixins, renderEmptyElement } from '../../ui'
 import { getDateQuarter } from '../../date-picker/src/util'
-import { toCssUnit } from '../..//ui/src/dom'
+import { toCssUnit } from '../../ui/src/dom'
 import VxeButtonComponent from '../../button/src/button'
 
 import type { VxeCalendarEmits, CalendarInternalData, CalendarReactData, ValueOf, VxeCalendarPropTypes, VxeComponentSizeType, VxeDatePickerDefines, VxeCalendarConstructor } from '../../../types'

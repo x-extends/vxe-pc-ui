@@ -5,7 +5,7 @@ import { getConfig, getIcon, getI18n, globalEvents, GLOBAL_EVENT_KEYS, createEve
 import { getFuncText, getLastZIndex, nextZIndex, isEnableConf } from '../../ui/src/utils'
 import { getAbsolutePos, getEventTargetNode } from '../../ui/src/dom'
 import { toStringTimeDate, getDateQuarter } from './util'
-import { getSlotVNs } from '../..//ui/src/vn'
+import { getSlotVNs } from '../../ui/src/vn'
 import VxeButtonGroupComponent from '../../button/src/button-group'
 
 import type { VxeDatePickerConstructor, DatePickerInternalData, VxeDatePickerEmits, DatePickerReactData, VxeDatePickerPropTypes, VxeComponentStyleType, VxeFormConstructor, VxeFormPrivateMethods, VxeFormDefines, VxeDrawerConstructor, VxeDrawerMethods, VxeModalConstructor, VxeModalMethods, VxeDatePickerDefines, VxeComponentSizeType, ValueOf, VxeButtonGroupDefines } from '../../../types'

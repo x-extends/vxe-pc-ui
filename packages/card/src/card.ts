@@ -2,7 +2,7 @@ import { PropType, CreateElement, VNode } from 'vue'
 import { defineVxeComponent } from '../../ui/src/comp'
 import XEUtils from 'xe-utils'
 import { getConfig, createEvent, globalMixins, renderEmptyElement } from '../../ui'
-import { toCssUnit } from '../..//ui/src/dom'
+import { toCssUnit } from '../../ui/src/dom'
 import { getSlotVNs } from '../../ui/src/vn'
 import VxeLoadingComponent from '../../loading/src/loading'
 
