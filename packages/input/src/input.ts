@@ -2,7 +2,7 @@ import { defineComponent, h, Teleport, ref, Ref, computed, reactive, onMounted, 
 import XEUtils from 'xe-utils'
 import { getConfig, getIcon, getI18n, globalEvents, GLOBAL_EVENT_KEYS, createEvent, useSize, renderEmptyElement } from '../../ui'
 import { getFuncText, getLastZIndex, nextZIndex, eqEmptyValue } from '../../ui/src/utils'
-import { hasClass, getAbsolutePos, getEventTargetNode } from '../../ui/src/dom'
+import { hasClass, getAbsolutePos, getEventTargetNode, hasControlKey } from '../../ui/src/dom'
 import { toStringTimeDate, getDateQuarter } from '../../date-picker/src/util'
 import { handleNumber, toFloatValueFixed } from '../../number-input/src/util'
 import { getSlotVNs } from '../..//ui/src/vn'
@@ -1220,15 +1220,14 @@ export default defineComponent({
       const { exponential, controls } = props
       const isNumType = computeIsNumType.value
       if (isNumType) {
-        const isCtrlKey = evnt.ctrlKey
+        const isControlKey = hasControlKey(evnt)
         const isShiftKey = evnt.shiftKey
         const isAltKey = evnt.altKey
-        const isMetaKey = evnt.metaKey
         const keyCode = evnt.keyCode
         const isEsc = globalEvents.hasKey(evnt, GLOBAL_EVENT_KEYS.ESCAPE)
         const isUpArrow = globalEvents.hasKey(evnt, GLOBAL_EVENT_KEYS.ARROW_UP)
         const isDwArrow = globalEvents.hasKey(evnt, GLOBAL_EVENT_KEYS.ARROW_DOWN)
-        if (!isCtrlKey && !isShiftKey && !isAltKey && !isMetaKey && (globalEvents.hasKey(evnt, GLOBAL_EVENT_KEYS.SPACEBAR) || ((!exponential || keyCode !== 69) && (keyCode >= 65 && keyCode <= 90)) || (keyCode >= 186 && keyCode <= 188) || keyCode >= 191)) {
+        if (!isControlKey && !isShiftKey && !isAltKey && (globalEvents.hasKey(evnt, GLOBAL_EVENT_KEYS.SPACEBAR) || ((!exponential || keyCode !== 69) && (keyCode >= 65 && keyCode <= 90)) || (keyCode >= 186 && keyCode <= 188) || keyCode >= 191)) {
           evnt.preventDefault()
         }
         if (isEsc) {

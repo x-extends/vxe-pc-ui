@@ -141,6 +141,10 @@ export namespace VxeColumnPropTypes {
   }
 
   /**
+   * 设置为分组节点
+   */
+  export type RowGroupNode = boolean
+  /**
    * 设置为树节点
    */
   export type TreeNode = boolean
@@ -170,8 +174,15 @@ export namespace VxeColumnPropTypes {
   export type HeaderExportMethod<D = any> = (params: HeaderExportParams<D>) => string | number
 
   interface FooterExportParams<D = any> {
-    $table: VxeTableConstructor<D>,
+    $table: VxeTableConstructor<D>
+    /**
+     * @deprecated
+     */
     items: any[]
+    /**
+     * @deprecated
+     */
+    itemIndex: number
     row: any
     column: VxeTableDefines.ColumnInfo<D>
     _columnIndex: number
@@ -490,6 +501,10 @@ export interface VxeColumnProps<D = any> {
    * 筛选模板配置项
    */
   filterRender?: VxeColumnPropTypes.FilterRender
+  /**
+   * 设置为分组节点
+   */
+  rowGroupNode?: VxeColumnPropTypes.RowGroupNode
   /**
    * 设置为树节点
    */

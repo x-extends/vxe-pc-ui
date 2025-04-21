@@ -1,7 +1,7 @@
 import { defineComponent, h, provide, PropType, ref, reactive, computed, watch, onMounted, onUnmounted, createCommentVNode, onBeforeUnmount } from 'vue'
 import { VxeUI, getConfig, createEvent, getIcon, globalEvents, GLOBAL_EVENT_KEYS, getI18n } from '../../ui'
 import XEUtils from 'xe-utils'
-import { getDomNode, addClass, removeClass } from '../..//ui/src/dom'
+import { getDomNode, addClass, removeClass, hasControlKey } from '../..//ui/src/dom'
 
 import type { VxeImagePreviewConstructor, ImagePreviewReactData, ImagePreviewPrivateRef, VxeGlobalIcon, VxeImagePreviewEmits, VxeImagePreviewPrivateMethods, ImagePreviewPrivateMethods, ImagePreviewPrivateComputed, ImagePreviewMethods, VxeImagePreviewPropTypes, ValueOf } from '../../../types'
 
@@ -416,7 +416,7 @@ export default defineComponent({
     }
 
     const handleGlobalKeydownEvent = (evnt: KeyboardEvent) => {
-      const hasCtrlKey = evnt.ctrlKey
+      const isControlKey = hasControlKey(evnt)
       const hasShiftKey = evnt.shiftKey
       const isUpArrow = globalEvents.hasKey(evnt, GLOBAL_EVENT_KEYS.ARROW_UP)
       const isDownArrow = globalEvents.hasKey(evnt, GLOBAL_EVENT_KEYS.ARROW_DOWN)
@@ -452,14 +452,14 @@ export default defineComponent({
         } else {
           handleChange(true)
         }
-      } else if (isR && hasCtrlKey) {
+      } else if (isR && isControlKey) {
         evnt.preventDefault()
         if (hasShiftKey) {
           handleRotateImg(false)
         } else {
           handleRotateImg(true)
         }
-      } else if (isP && hasCtrlKey) {
+      } else if (isP && isControlKey) {
         evnt.preventDefault()
         handlePrintImg()
       }
