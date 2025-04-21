@@ -1,7 +1,7 @@
 import { defineComponent, h, provide, PropType, ref, reactive, computed, watch, onMounted, onUnmounted, createCommentVNode, onBeforeUnmount } from 'vue'
 import { VxeUI, getConfig, createEvent, getIcon, globalEvents, GLOBAL_EVENT_KEYS, getI18n } from '../../ui'
 import XEUtils from 'xe-utils'
-import { getDomNode, addClass, removeClass, hasControlKey } from '../..//ui/src/dom'
+import { getDomNode, addClass, removeClass, hasControlKey } from '../../ui/src/dom'
 
 import type { VxeImagePreviewConstructor, ImagePreviewReactData, ImagePreviewPrivateRef, VxeGlobalIcon, VxeImagePreviewEmits, VxeImagePreviewPrivateMethods, ImagePreviewPrivateMethods, ImagePreviewPrivateComputed, ImagePreviewMethods, VxeImagePreviewPropTypes, ValueOf } from '../../../types'
 

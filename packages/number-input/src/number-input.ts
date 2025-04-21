@@ -3,7 +3,7 @@ import XEUtils from 'xe-utils'
 import { getConfig, getIcon, getI18n, globalEvents, GLOBAL_EVENT_KEYS, createEvent, useSize } from '../../ui'
 import { getFuncText, eqEmptyValue } from '../../ui/src/utils'
 import { hasClass, getEventTargetNode, hasControlKey } from '../../ui/src/dom'
-import { getSlotVNs } from '../..//ui/src/vn'
+import { getSlotVNs } from '../../ui/src/vn'
 import { handleNumber, toFloatValueFixed } from './util'
 
 import type { VxeNumberInputConstructor, NumberInputInternalData, VxeNumberInputEmits, NumberInputReactData, NumberInputMethods, VxeNumberInputPropTypes, InputPrivateRef, VxeFormConstructor, VxeFormPrivateMethods, VxeFormDefines, ValueOf } from '../../../types'
