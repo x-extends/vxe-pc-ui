@@ -2,7 +2,7 @@ import { defineComponent, ref, h, reactive, PropType, provide, createCommentVNod
 import XEUtils from 'xe-utils'
 import { getConfig, createEvent } from '../../ui'
 import { printHtml } from './util'
-import { getSlotVNs } from '../..//ui/src/vn'
+import { getSlotVNs } from '../../ui/src/vn'
 
 import type { VxePrintPropTypes, PrintReactData, PrintPrivateRef, VxePrintEmits, PrintPrivateMethods, ValueOf, VxePrintPrivateComputed, VxePrintConstructor, VxePrintPrivateMethods, PrintMethods } from '../../../types'
 

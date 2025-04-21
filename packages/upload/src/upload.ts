@@ -1,7 +1,7 @@
 import { defineComponent, ref, h, reactive, watch, computed, TransitionGroup, PropType, inject, createCommentVNode, onUnmounted, onMounted } from 'vue'
 import XEUtils from 'xe-utils'
 import { VxeUI, getConfig, getI18n, getIcon, useSize, createEvent, globalEvents, renderEmptyElement } from '../../ui'
-import { getSlotVNs } from '../..//ui/src/vn'
+import { getSlotVNs } from '../../ui/src/vn'
 import { errLog, warnLog } from '../../ui/src/log'
 import { initTpImg, getTpImg, getEventTargetNode, toCssUnit } from '../../ui/src/dom'
 import { readLocalFile } from './util'

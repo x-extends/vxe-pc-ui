@@ -5,7 +5,7 @@ import { getFuncText, getLastZIndex, nextZIndex, eqEmptyValue } from '../../ui/s
 import { hasClass, getAbsolutePos, getEventTargetNode, hasControlKey } from '../../ui/src/dom'
 import { toStringTimeDate, getDateQuarter } from '../../date-picker/src/util'
 import { handleNumber, toFloatValueFixed } from '../../number-input/src/util'
-import { getSlotVNs } from '../..//ui/src/vn'
+import { getSlotVNs } from '../../ui/src/vn'
 
 import type { VxeInputConstructor, VxeInputEmits, InputReactData, InputMethods, ValueOf, InputInternalData, VxeInputPropTypes, InputPrivateRef, VxeFormConstructor, VxeFormPrivateMethods, VxeFormDefines, VxeDrawerConstructor, VxeDrawerMethods, VxeModalConstructor, VxeModalMethods, VxeDatePickerDefines, VxeSelectConstructor, VxeSelectMethods, VxeTreeSelectConstructor, VxeTreeSelectMethods, VxeComponentStyleType } from '../../../types'
 import type { VxeTableConstructor, VxeTablePrivateMethods } from '../../../types/components/table'

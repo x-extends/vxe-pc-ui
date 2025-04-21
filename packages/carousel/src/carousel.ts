@@ -1,7 +1,7 @@
 import { defineComponent, ref, h, reactive, provide, PropType, watch, nextTick, onMounted, computed, onUnmounted, createCommentVNode } from 'vue'
 import { getConfig, getIcon, createEvent } from '../../ui'
 import { getSlotVNs } from '../../ui/src/vn'
-import { toCssUnit } from '../..//ui/src/dom'
+import { toCssUnit } from '../../ui/src/dom'
 import VxeLoadingComponent from '../../loading/src/loading'
 import XEUtils from 'xe-utils'
 

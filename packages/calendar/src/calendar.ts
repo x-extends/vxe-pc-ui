@@ -1,7 +1,7 @@
 import { defineComponent, h, ref, Ref, computed, reactive, watch, PropType, onMounted } from 'vue'
 import { getConfig, getI18n, createEvent, useSize, renderEmptyElement } from '../../ui'
 import { getDateQuarter } from '../../date-picker/src/util'
-import { toCssUnit } from '../..//ui/src/dom'
+import { toCssUnit } from '../../ui/src/dom'
 import VxeButtonComponent from '../../button/src/button'
 import XEUtils from 'xe-utils'
 

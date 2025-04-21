@@ -1,8 +1,8 @@
 import { defineComponent, ref, h, reactive, inject, PropType, provide, computed, onUnmounted, createCommentVNode, watch, nextTick, onMounted } from 'vue'
 import { createEvent, getConfig, getIcon, globalEvents, permission, renderEmptyElement } from '../../ui'
 import { getSlotVNs } from '../../ui/src/vn'
-import { toCssUnit } from '../..//ui/src/dom'
-import { isEnableConf } from '../..//ui/src/utils'
+import { toCssUnit } from '../../ui/src/dom'
+import { isEnableConf } from '../../ui/src/utils'
 import { warnLog, errLog } from '../../ui/src/log'
 import XEUtils from 'xe-utils'
 
