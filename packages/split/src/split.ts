@@ -93,6 +93,14 @@ export default /* define-vxe-component start */ defineVxeComponent({
 
       return reactData.itemList.filter(item => item.isVisible)
     },
+    computeAutoItems () {
+      const $xeSplit = this
+      const props = $xeSplit
+      const reactData = ($xeSplit as any).reactData as SplitReactData
+
+      const { vertical } = props
+      return reactData.itemList.filter(item => vertical ? !item.height : !item.width)
+    },
     computeBarStyle () {
       const $xeSplit = this
 
@@ -551,6 +559,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const { border, padding, resize, vertical } = props
       const { itemList } = reactData
       const visibleItems = $xeSplit.computeVisibleItems
+      const autoItems = $xeSplit.computeAutoItems
       const isFoldNext = $xeSplit.computeIsFoldNext
       const itemVNs: VNode[] = []
       itemList.forEach((item, index) => {
@@ -560,13 +569,15 @@ export default /* define-vxe-component start */ defineVxeComponent({
         let itemWidth = isVisible ? (foldWidth || resizeWidth || renderWidth) : 0
         let itemHeight = isVisible ? (foldHeight || resizeHeight || renderHeight) : 0
         // 至少存在一个自适应
-        if (vertical) {
-          if (!item.height) {
-            itemHeight = 0
-          }
-        } else {
-          if (!item.width) {
-            itemWidth = 0
+        if (autoItems.length === 1) {
+          if (vertical) {
+            if (!item.height) {
+              itemHeight = 0
+            }
+          } else {
+            if (!item.width) {
+              itemWidth = 0
+            }
           }
         }
         // 当只剩下一个可视区自动占用 100%
