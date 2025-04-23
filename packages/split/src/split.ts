@@ -78,6 +78,11 @@ export default defineComponent({
       return reactData.itemList.filter(item => item.isVisible)
     })
 
+    const computeAutoItems = computed(() => {
+      const { vertical } = props
+      return reactData.itemList.filter(item => vertical ? !item.height : !item.width)
+    })
+
     const computeBarStyle = computed(() => {
       const barOpts = computeBarOpts.value
       const { width, height } = barOpts
@@ -495,6 +500,7 @@ export default defineComponent({
       const { border, padding, resize, vertical } = props
       const { itemList } = reactData
       const visibleItems = computeVisibleItems.value
+      const autoItems = computeAutoItems.value
       const isFoldNext = computeIsFoldNext.value
       const itemVNs: VNode[] = []
       itemList.forEach((item, index) => {
@@ -504,13 +510,15 @@ export default defineComponent({
         let itemWidth = isVisible ? (foldWidth || resizeWidth || renderWidth) : 0
         let itemHeight = isVisible ? (foldHeight || resizeHeight || renderHeight) : 0
         // 至少存在一个自适应
-        if (vertical) {
-          if (!item.height) {
-            itemHeight = 0
-          }
-        } else {
-          if (!item.width) {
-            itemWidth = 0
+        if (autoItems.length === 1) {
+          if (vertical) {
+            if (!item.height) {
+              itemHeight = 0
+            }
+          } else {
+            if (!item.width) {
+              itemWidth = 0
+            }
           }
         }
         // 当只剩下一个可视区自动占用 100%
