@@ -557,8 +557,18 @@ export default /* define-vxe-component start */ defineVxeComponent({
         const { id, name, slots, renderHeight, resizeHeight, foldHeight, renderWidth, resizeWidth, foldWidth, isVisible, isExpand } = item
         const defaultSlot = slots ? slots.default : null
         const stys: Record<string, string | number> = {}
-        const itemWidth = isVisible ? (foldWidth || resizeWidth || renderWidth) : 0
-        const itemHeight = isVisible ? (foldHeight || resizeHeight || renderHeight) : 0
+        let itemWidth = isVisible ? (foldWidth || resizeWidth || renderWidth) : 0
+        let itemHeight = isVisible ? (foldHeight || resizeHeight || renderHeight) : 0
+        // 至少存在一个自适应
+        if (vertical) {
+          if (!item.height) {
+            itemHeight = 0
+          }
+        } else {
+          if (!item.width) {
+            itemWidth = 0
+          }
+        }
         // 当只剩下一个可视区自动占用 100%
         if (vertical) {
           if (itemHeight) {
@@ -569,6 +579,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
             stys.width = visibleItems.length === 1 ? '100%' : toCssUnit(itemWidth)
           }
         }
+
         itemVNs.push(
           h('div', {
             attrs: {
