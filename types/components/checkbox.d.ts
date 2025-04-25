@@ -3,7 +3,7 @@ import { DefineVxeComponentApp, DefineVxeComponentOptions, DefineVxeComponentIns
 
 /* eslint-disable no-use-before-define,@typescript-eslint/ban-types */
 
-export declare const VxeCheckbox: DefineVxeComponentApp<VxeCheckboxProps, VxeCheckboxEventProps, VxeCheckboxSlots>
+export declare const VxeCheckbox: DefineVxeComponentApp<VxeCheckboxProps, VxeCheckboxEventProps, VxeCheckboxSlots, VxeCheckboxMethods>
 export type VxeCheckboxComponent = DefineVxeComponentOptions<VxeCheckboxProps, VxeCheckboxEventProps>
 
 export type VxeCheckboxInstance = DefineVxeComponentInstance<VxeCheckboxProps, VxeCheckboxConstructor>

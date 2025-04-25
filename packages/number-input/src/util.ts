@@ -1,7 +1,7 @@
 import XEUtils from 'xe-utils'
 
 export function handleNumber (val: string | number | null | undefined) {
-  return XEUtils.isString(val) ? val.replace(/,/g, '') : val
+  return XEUtils.isString(val) ? val.replace(/[^0-9e.-]/g, '') : val
 }
 
 export function toFloatValueFixed (inputValue: string | number, digitsValue: number) {

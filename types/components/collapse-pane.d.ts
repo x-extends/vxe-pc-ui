@@ -3,7 +3,7 @@ import { DefineVxeComponentApp, DefineVxeComponentOptions, DefineVxeComponentIns
 
 /* eslint-disable no-use-before-define,@typescript-eslint/ban-types */
 
-export declare const VxeCollapsePane: DefineVxeComponentApp<VxeCollapsePaneProps, VxeCollapsePaneEventProps, VxeCollapsePaneSlots>
+export declare const VxeCollapsePane: DefineVxeComponentApp<VxeCollapsePaneProps, VxeCollapsePaneEventProps, VxeCollapsePaneSlots, VxeCollapsePaneMethods>
 export type VxeCollapsePaneComponent = DefineVxeComponentOptions<VxeCollapsePaneProps, VxeCollapsePaneEventProps>
 
 export type VxeCollapsePaneInstance = DefineVxeComponentInstance<VxeCollapsePaneProps, VxeCollapsePaneConstructor>

@@ -3,7 +3,7 @@ import { DefineVxeComponentApp, DefineVxeComponentOptions, DefineVxeComponentIns
 
 /* eslint-disable no-use-before-define,@typescript-eslint/ban-types */
 
-export declare const VxeSlider: DefineVxeComponentApp<VxeSliderProps, VxeSliderEventProps, VxeSliderSlots>
+export declare const VxeSlider: DefineVxeComponentApp<VxeSliderProps, VxeSliderEventProps, VxeSliderSlots, VxeSliderMethods>
 export type VxeSliderComponent = DefineVxeComponentOptions<VxeSliderProps, VxeSliderEventProps>
 
 export type VxeSliderInstance = DefineVxeComponentInstance<VxeSliderProps, VxeSliderConstructor>

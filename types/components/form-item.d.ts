@@ -6,7 +6,7 @@ import { VxeTooltipDefines } from './tooltip'
 
 /* eslint-disable no-use-before-define,@typescript-eslint/ban-types */
 
-export declare const VxeFormItem: DefineVxeComponentApp<VxeFormItemProps, VxeFormItemEventProps, VxeFormItemSlots>
+export declare const VxeFormItem: DefineVxeComponentApp<VxeFormItemProps, VxeFormItemEventProps, VxeFormItemSlots, VxeFormItemMethods>
 export type VxeFormItemComponent = DefineVxeComponentOptions<VxeFormItemProps, VxeFormItemEventProps>
 
 export interface VxeFormItemConstructor extends VxeComponentBaseOptions, VxeFormItemMethods {

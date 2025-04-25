@@ -4,7 +4,7 @@ import { VxeRadioPropTypes } from './radio'
 
 /* eslint-disable no-use-before-define,@typescript-eslint/ban-types */
 
-export declare const VxeRadioGroup: DefineVxeComponentApp<VxeRadioGroupProps, VxeRadioGroupEventProps, VxeRadioGroupSlots>
+export declare const VxeRadioGroup: DefineVxeComponentApp<VxeRadioGroupProps, VxeRadioGroupEventProps, VxeRadioGroupSlots, VxeRadioGroupMethods>
 export type VxeRadioGroupComponent = DefineVxeComponentOptions<VxeRadioGroupProps, VxeRadioGroupEventProps>
 
 export type VxeRadioGroupInstance = DefineVxeComponentInstance<VxeRadioGroupProps, VxeRadioGroupConstructor>

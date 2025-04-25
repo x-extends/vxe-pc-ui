@@ -1085,19 +1085,29 @@ export default defineComponent({
       if (!inputReadonly) {
         if (isNumType) {
           if (inputValue) {
-            let inpNumVal: number | string = type === 'integer' ? XEUtils.toInteger(handleNumber(inputValue)) : XEUtils.toNumber(handleNumber(inputValue))
-            if (!validMinNum(inpNumVal)) {
-              inpNumVal = min
-            } else if (!validMaxNum(inpNumVal)) {
-              inpNumVal = max
-            }
-            if (exponential) {
-              const inpStringVal = XEUtils.toValueString(inputValue).toLowerCase()
-              if (inpStringVal === XEUtils.toNumber(inpNumVal).toExponential()) {
-                inpNumVal = inpStringVal
+            const inpVal = `${handleNumber(inputValue)}`
+            if (inpVal) {
+              let inpNumVal: number | string = type === 'integer' ? XEUtils.toInteger(inpVal) : XEUtils.toNumber(inpVal)
+              if (!validMinNum(inpNumVal)) {
+                inpNumVal = min
+              } else if (!validMaxNum(inpNumVal)) {
+                inpNumVal = max
               }
+              if (exponential) {
+                const inpStringVal = XEUtils.toValueString(inputValue).toLowerCase()
+                if (inpStringVal === XEUtils.toNumber(inpNumVal).toExponential()) {
+                  inpNumVal = inpStringVal
+                }
+              }
+              handleChange(getNumberValue(inpNumVal), { type: 'check' })
+            } else {
+              // 输入错误字符，清空
+              let inpValue = ''
+              if (min || min === 0) {
+                inpValue = `${min}`
+              }
+              handleChange(inpValue, { type: 'check' })
             }
-            handleChange(getNumberValue(inpNumVal), { type: 'check' })
           }
         } else if (isDatePickerType) {
           if (inputValue) {
@@ -1217,7 +1227,7 @@ export default defineComponent({
     }
 
     const keydownEvent = (evnt: KeyboardEvent & { type: 'keydown' }) => {
-      const { exponential, controls } = props
+      const { type, exponential, controls } = props
       const isNumType = computeIsNumType.value
       if (isNumType) {
         const isControlKey = hasControlKey(evnt)
@@ -1227,8 +1237,10 @@ export default defineComponent({
         const isEsc = globalEvents.hasKey(evnt, GLOBAL_EVENT_KEYS.ESCAPE)
         const isUpArrow = globalEvents.hasKey(evnt, GLOBAL_EVENT_KEYS.ARROW_UP)
         const isDwArrow = globalEvents.hasKey(evnt, GLOBAL_EVENT_KEYS.ARROW_DOWN)
-        if (!isControlKey && !isShiftKey && !isAltKey && (globalEvents.hasKey(evnt, GLOBAL_EVENT_KEYS.SPACEBAR) || ((!exponential || keyCode !== 69) && (keyCode >= 65 && keyCode <= 90)) || (keyCode >= 186 && keyCode <= 188) || keyCode >= 191)) {
-          evnt.preventDefault()
+        if (!isControlKey && !isShiftKey && !isAltKey) {
+          if (globalEvents.hasKey(evnt, GLOBAL_EVENT_KEYS.SPACEBAR) || (type === 'integer' && keyCode === 110) || ((!exponential || keyCode !== 69) && (keyCode >= 65 && keyCode <= 90)) || (keyCode >= 186 && keyCode <= 188) || keyCode >= 191) {
+            evnt.preventDefault()
+          }
         }
         if (isEsc) {
           afterCheckValue()

@@ -3,7 +3,7 @@ import { DefineVxeComponentApp, DefineVxeComponentOptions, DefineVxeComponentIns
 
 /* eslint-disable no-use-before-define,@typescript-eslint/ban-types */
 
-export declare const VxeTextarea: DefineVxeComponentApp<VxeTextareaProps, VxeTextareaEventProps, VxeTextareaSlots>
+export declare const VxeTextarea: DefineVxeComponentApp<VxeTextareaProps, VxeTextareaEventProps, VxeTextareaSlots, VxeTextareaMethods>
 export type VxeTextareaComponent = DefineVxeComponentOptions<VxeTextareaProps, VxeTextareaEventProps>
 
 export type VxeTextareaInstance = DefineVxeComponentInstance<VxeTextareaProps, VxeTextareaConstructor>

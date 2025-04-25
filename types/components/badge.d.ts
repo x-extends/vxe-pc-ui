@@ -3,7 +3,7 @@ import { DefineVxeComponentApp, DefineVxeComponentOptions, DefineVxeComponentIns
 
 /* eslint-disable no-use-before-define,@typescript-eslint/ban-types */
 
-export declare const VxeBadge: DefineVxeComponentApp<VxeBadgeProps, VxeBadgeEventProps, VxeBadgeSlots>
+export declare const VxeBadge: DefineVxeComponentApp<VxeBadgeProps, VxeBadgeEventProps, VxeBadgeSlots, VxeBadgeMethods>
 export type VxeBadgeComponent = DefineVxeComponentOptions<VxeBadgeProps, VxeBadgeEventProps>
 
 export type VxeBadgeInstance = DefineVxeComponentInstance<VxeBadgeProps, VxeBadgeConstructor>

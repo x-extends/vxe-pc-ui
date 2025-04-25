@@ -4,7 +4,7 @@ import { VxeLinkPropTypes } from './link'
 
 /* eslint-disable no-use-before-define,@typescript-eslint/ban-types */
 
-export declare const VxeMenu: DefineVxeComponentApp<VxeMenuProps, VxeMenuEventProps, VxeMenuSlots>
+export declare const VxeMenu: DefineVxeComponentApp<VxeMenuProps, VxeMenuEventProps, VxeMenuSlots, VxeMenuMethods>
 export type VxeMenuComponent = DefineVxeComponentOptions<VxeMenuProps, VxeMenuEventProps>
 
 export type VxeMenuInstance = DefineVxeComponentInstance<VxeMenuProps, VxeMenuConstructor>

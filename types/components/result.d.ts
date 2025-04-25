@@ -3,7 +3,7 @@ import { DefineVxeComponentApp, DefineVxeComponentOptions, DefineVxeComponentIns
 
 /* eslint-disable no-use-before-define,@typescript-eslint/ban-types */
 
-export declare const VxeResult: DefineVxeComponentApp<VxeResultProps, VxeResultEventProps, VxeResultSlots>
+export declare const VxeResult: DefineVxeComponentApp<VxeResultProps, VxeResultEventProps, VxeResultSlots, VxeResultMethods>
 export type VxeResultComponent = DefineVxeComponentOptions<VxeResultProps, VxeResultEventProps>
 
 export type VxeResultInstance = DefineVxeComponentInstance<VxeResultProps, VxeResultConstructor>

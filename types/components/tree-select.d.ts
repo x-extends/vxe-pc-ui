@@ -4,7 +4,7 @@ import { VxeTreeProps } from './tree'
 
 /* eslint-disable no-use-before-define,@typescript-eslint/ban-types */
 
-export declare const VxeTreeSelect: DefineVxeComponentApp<VxeTreeSelectProps, VxeTreeSelectEventProps, VxeTreeSelectSlots>
+export declare const VxeTreeSelect: DefineVxeComponentApp<VxeTreeSelectProps, VxeTreeSelectEventProps, VxeTreeSelectSlots, VxeTreeSelectMethods>
 export type VxeTreeSelectComponent = DefineVxeComponentOptions<VxeTreeSelectProps, VxeTreeSelectEventProps>
 
 export type VxeTreeSelectInstance = DefineVxeComponentInstance<VxeTreeSelectProps, VxeTreeSelectConstructor>

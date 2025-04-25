@@ -3,7 +3,7 @@ import { DefineVxeComponentApp, DefineVxeComponentOptions, DefineVxeComponentIns
 
 /* eslint-disable no-use-before-define,@typescript-eslint/ban-types */
 
-export declare const VxeIconPicker: DefineVxeComponentApp<VxeIconPickerProps, VxeIconPickerEventProps, VxeIconPickerSlots>
+export declare const VxeIconPicker: DefineVxeComponentApp<VxeIconPickerProps, VxeIconPickerEventProps, VxeIconPickerSlots, VxeIconPickerMethods>
 export type VxeIconPickerComponent = DefineVxeComponentOptions<VxeIconPickerProps, VxeIconPickerEventProps>
 
 export type VxeIconPickerInstance = DefineVxeComponentInstance<VxeIconPickerProps, VxeIconPickerConstructor>

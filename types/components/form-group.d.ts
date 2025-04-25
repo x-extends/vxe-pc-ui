@@ -4,7 +4,7 @@ import { VxeFormItemPropTypes } from './form-item'
 
 /* eslint-disable no-use-before-define,@typescript-eslint/ban-types */
 
-export declare const VxeFormGroup: DefineVxeComponentApp<VxeFormGroupProps, VxeFormGroupEventProps, VxeFormGroupSlots>
+export declare const VxeFormGroup: DefineVxeComponentApp<VxeFormGroupProps, VxeFormGroupEventProps, VxeFormGroupSlots, VxeFormGroupMethods>
 export type VxeFormGroupComponent = DefineVxeComponentOptions<VxeFormGroupProps, VxeFormGroupEventProps>
 
 export interface VxeFormGroupConstructor extends VxeComponentBaseOptions, VxeFormGroupMethods {

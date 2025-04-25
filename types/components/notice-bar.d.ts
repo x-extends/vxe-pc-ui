@@ -1,9 +1,9 @@
 import { RenderFunction, SetupContext, Ref } from 'vue'
-import { DefineVxeComponentApp, DefineVxeComponentOptions, VxeComponentBaseOptions, DefineVxeComponentInstance, VxeComponentEventParams, VxeComponentSizeType, VxeComponentStatusType, ValueOf } from '@vxe-ui/core'
+import { DefineVxeComponentApp, DefineVxeComponentOptions, VxeComponentBaseOptions, DefineVxeComponentInstance, VxeComponentEventParams, VxeComponentSizeType, ValueOf } from '@vxe-ui/core'
 
 /* eslint-disable no-use-before-define,@typescript-eslint/ban-types */
 
-export declare const VxeNoticeBar: DefineVxeComponentApp<VxeNoticeBarProps, VxeNoticeBarEventProps, VxeNoticeBarSlots>
+export declare const VxeNoticeBar: DefineVxeComponentApp<VxeNoticeBarProps, VxeNoticeBarEventProps, VxeNoticeBarSlots, VxeNoticeBarMethods>
 export type VxeNoticeBarComponent = DefineVxeComponentOptions<VxeNoticeBarProps, VxeNoticeBarEventProps>
 
 export type VxeNoticeBarInstance = DefineVxeComponentInstance<VxeNoticeBarProps, VxeNoticeBarConstructor>

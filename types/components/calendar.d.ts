@@ -3,7 +3,7 @@ import { DefineVxeComponentApp, DefineVxeComponentOptions, DefineVxeComponentIns
 
 /* eslint-disable no-use-before-define,@typescript-eslint/ban-types */
 
-export declare const VxeCalendar: DefineVxeComponentApp<VxeCalendarProps, VxeCalendarEventProps, VxeCalendarSlots>
+export declare const VxeCalendar: DefineVxeComponentApp<VxeCalendarProps, VxeCalendarEventProps, VxeCalendarSlots, VxeCalendarMethods>
 export type VxeCalendarComponent = DefineVxeComponentOptions<VxeCalendarProps, VxeCalendarEventProps>
 
 export type VxeCalendarInstance = DefineVxeComponentInstance<VxeCalendarProps, VxeCalendarConstructor>

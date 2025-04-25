@@ -4,7 +4,7 @@ import { VxeCarouselItemPropTypes, VxeCarouselItemProps, VxeCarouselItemSlots } 
 
 /* eslint-disable no-use-before-define,@typescript-eslint/ban-types */
 
-export declare const VxeCarousel: DefineVxeComponentApp<VxeCarouselProps, VxeCarouselEventProps, VxeCarouselSlots>
+export declare const VxeCarousel: DefineVxeComponentApp<VxeCarouselProps, VxeCarouselEventProps, VxeCarouselSlots, VxeCarouselMethods>
 export type VxeCarouselComponent = DefineVxeComponentOptions<VxeCarouselProps, VxeCarouselEventProps>
 
 export type VxeCarouselInstance = DefineVxeComponentInstance<VxeCarouselProps, VxeCarouselConstructor>

@@ -4,7 +4,7 @@ import { VxeIconPropTypes } from './icon'
 
 /* eslint-disable no-use-before-define,@typescript-eslint/ban-types */
 
-export declare const VxeTooltip: DefineVxeComponentApp<VxeTooltipProps, VxeTooltipEventProps, VxeTooltipSlots>
+export declare const VxeTooltip: DefineVxeComponentApp<VxeTooltipProps, VxeTooltipEventProps, VxeTooltipSlots, VxeTooltipMethods>
 export type VxeTooltipComponent = DefineVxeComponentOptions<VxeTooltipProps, VxeTooltipEventProps>
 
 export type VxeTooltipInstance = DefineVxeComponentInstance<VxeTooltipProps, VxeTooltipConstructor>

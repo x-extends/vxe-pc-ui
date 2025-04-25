@@ -10,7 +10,7 @@ import { VxeToolbarConstructor, VxeToolbarInstance } from './toolbar'
 
 /* eslint-disable no-use-before-define,@typescript-eslint/ban-types */
 
-export declare const VxeTable: DefineVxeComponentApp<VxeTableProps, VxeTableEventProps, VxeTableSlots>
+export declare const VxeTable: DefineVxeComponentApp<VxeTableProps, VxeTableEventProps, VxeTableSlots, VxeTableMethods>
 export type VxeTableComponent = DefineVxeComponentOptions<VxeTableProps, VxeTableEventProps>
 
 export type VxeTableInstance<D = any> = DefineVxeComponentInstance<VxeTableProps<D>, VxeTableConstructor>

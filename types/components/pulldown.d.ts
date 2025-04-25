@@ -3,7 +3,7 @@ import { DefineVxeComponentApp, DefineVxeComponentOptions, DefineVxeComponentIns
 
 /* eslint-disable no-use-before-define,@typescript-eslint/ban-types */
 
-export declare const VxePulldown: DefineVxeComponentApp<VxePulldownProps, VxePulldownEventProps, VxePulldownSlots>
+export declare const VxePulldown: DefineVxeComponentApp<VxePulldownProps, VxePulldownEventProps, VxePulldownSlots, VxePulldownMethods>
 export type VxePulldownComponent = DefineVxeComponentOptions<VxePulldownProps, VxePulldownEventProps>
 
 export type VxePulldownInstance = DefineVxeComponentInstance<VxePulldownProps, VxePulldownConstructor>

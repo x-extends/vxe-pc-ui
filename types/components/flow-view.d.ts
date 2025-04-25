@@ -3,7 +3,7 @@ import { DefineVxeComponentApp, DefineVxeComponentOptions, DefineVxeComponentIns
 
 /* eslint-disable no-use-before-define,@typescript-eslint/ban-types */
 
-export declare const VxeFlowView: DefineVxeComponentApp<VxeFlowViewProps, VxeFlowViewEventProps, VxeFlowViewSlots>
+export declare const VxeFlowView: DefineVxeComponentApp<VxeFlowViewProps, VxeFlowViewEventProps, VxeFlowViewSlots, VxeFlowViewMethods>
 export type VxeFlowViewComponent = DefineVxeComponentOptions<VxeFlowViewProps, VxeFlowViewEventProps>
 
 export type VxeFlowViewInstance = DefineVxeComponentInstance<VxeFlowViewProps, VxeFlowViewConstructor>

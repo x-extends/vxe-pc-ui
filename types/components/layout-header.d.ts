@@ -3,7 +3,7 @@ import { DefineVxeComponentApp, DefineVxeComponentOptions, VxeComponentBaseOptio
 
 /* eslint-disable no-use-before-define,@typescript-eslint/ban-types */
 
-export declare const VxeLayoutHeader: DefineVxeComponentApp<VxeLayoutHeaderProps, VxeLayoutHeaderEventProps, VxeLayoutHeaderSlots>
+export declare const VxeLayoutHeader: DefineVxeComponentApp<VxeLayoutHeaderProps, VxeLayoutHeaderEventProps, VxeLayoutHeaderSlots, VxeLayoutHeaderMethods>
 export type VxeLayoutHeaderComponent = DefineVxeComponentOptions<VxeLayoutHeaderProps, VxeLayoutHeaderEventProps>
 
 export interface VxeLayoutHeaderConstructor extends VxeComponentBaseOptions, VxeLayoutHeaderMethods {

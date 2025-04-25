@@ -3,7 +3,7 @@ import { DefineVxeComponentApp, DefineVxeComponentOptions, DefineVxeComponentIns
 
 /* eslint-disable no-use-before-define,@typescript-eslint/ban-types */
 
-export declare const VxeWatermark: DefineVxeComponentApp<VxeWatermarkProps, VxeWatermarkEventProps, VxeWatermarkSlots>
+export declare const VxeWatermark: DefineVxeComponentApp<VxeWatermarkProps, VxeWatermarkEventProps, VxeWatermarkSlots, VxeWatermarkMethods>
 export type VxeWatermarkComponent = DefineVxeComponentOptions<VxeWatermarkProps, VxeWatermarkEventProps>
 
 export type VxeWatermarkInstance = DefineVxeComponentInstance<VxeWatermarkProps, VxeWatermarkConstructor>

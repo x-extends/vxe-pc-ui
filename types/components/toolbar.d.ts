@@ -6,7 +6,7 @@ import { VxeGridConstructor } from './grid'
 
 /* eslint-disable no-use-before-define,@typescript-eslint/ban-types */
 
-export declare const VxeToolbar: DefineVxeComponentApp<VxeToolbarProps, VxeToolbarEventProps, VxeToolbarSlots>
+export declare const VxeToolbar: DefineVxeComponentApp<VxeToolbarProps, VxeToolbarEventProps, VxeToolbarSlots, VxeToolbarMethods>
 export type VxeToolbarComponent = DefineVxeComponentOptions<VxeToolbarProps, VxeToolbarEventProps>
 
 export type VxeToolbarInstance = DefineVxeComponentInstance<VxeToolbarProps, VxeToolbarConstructor>

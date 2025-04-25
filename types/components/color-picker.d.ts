@@ -3,7 +3,7 @@ import { DefineVxeComponentApp, DefineVxeComponentOptions, DefineVxeComponentIns
 
 /* eslint-disable no-use-before-define,@typescript-eslint/ban-types */
 
-export declare const VxeColorPicker: DefineVxeComponentApp<VxeColorPickerProps, VxeColorPickerEventProps, VxeColorPickerSlots>
+export declare const VxeColorPicker: DefineVxeComponentApp<VxeColorPickerProps, VxeColorPickerEventProps, VxeColorPickerSlots, VxeColorPickerMethods>
 export type VxeColorPickerComponent = DefineVxeComponentOptions<VxeColorPickerProps, VxeColorPickerEventProps>
 
 export type VxeColorPickerInstance = DefineVxeComponentInstance<VxeColorPickerProps, VxeColorPickerConstructor>

@@ -4,7 +4,7 @@ import { VxeFormPropTypes } from '../components/form'
 
 /* eslint-disable no-use-before-define,@typescript-eslint/ban-types */
 
-export declare const VxeFormDesign: DefineVxeComponentApp<VxeFormDesignProps, VxeFormDesignEventProps, VxeFormDesignSlots>
+export declare const VxeFormDesign: DefineVxeComponentApp<VxeFormDesignProps, VxeFormDesignEventProps, VxeFormDesignSlots, VxeFormDesignMethods>
 export type VxeFormDesignComponent = DefineVxeComponentOptions<VxeFormDesignProps, VxeFormDesignEventProps>
 
 export type VxeFormDesignInstance = DefineVxeComponentInstance<VxeFormDesignProps, VxeFormDesignConstructor>

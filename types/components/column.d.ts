@@ -6,7 +6,7 @@ import { VxeGlobalRendererHandles } from '../ui'
 
 /* eslint-disable no-use-before-define,@typescript-eslint/ban-types */
 
-export declare const VxeColumn: DefineVxeComponentApp<VxeColumnProps, VxeColumnEventProps, VxeColumnSlots>
+export declare const VxeColumn: DefineVxeComponentApp<VxeColumnProps, VxeColumnEventProps, VxeColumnSlots, VxeColumnMethods>
 export type VxeColumnComponent = DefineVxeComponentOptions<VxeColumnProps, VxeColumnEventProps>
 
 export type VxeColumnInstance = DefineVxeComponentInstance<VxeColumnProps, VxeColumnConstructor>

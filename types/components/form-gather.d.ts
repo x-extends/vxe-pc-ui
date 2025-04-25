@@ -7,7 +7,7 @@ import { VxeFormItemPropTypes } from './form-item'
 /**
  * @deprecated
  */
-export declare const VxeFormGather: DefineVxeComponentApp<VxeFormGatherProps, VxeFormGatherEventProps, VxeFormGatherSlots>
+export declare const VxeFormGather: DefineVxeComponentApp<VxeFormGatherProps, VxeFormGatherEventProps, VxeFormGatherSlots, VxeFormGatherMethods>
 /**
  * @deprecated
  */

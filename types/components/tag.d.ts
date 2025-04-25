@@ -3,7 +3,7 @@ import { DefineVxeComponentApp, DefineVxeComponentOptions, DefineVxeComponentIns
 
 /* eslint-disable no-use-before-define,@typescript-eslint/ban-types */
 
-export declare const VxeTag: DefineVxeComponentApp<VxeTagProps, VxeTagEventProps, VxeTagSlots>
+export declare const VxeTag: DefineVxeComponentApp<VxeTagProps, VxeTagEventProps, VxeTagSlots, VxeTagMethods>
 export type VxeTagComponent = DefineVxeComponentOptions<VxeTagProps, VxeTagEventProps>
 
 export type VxeTagInstance = DefineVxeComponentInstance<VxeTagProps, VxeTagConstructor>

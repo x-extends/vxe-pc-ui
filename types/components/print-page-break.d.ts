@@ -3,7 +3,7 @@ import { DefineVxeComponentApp, DefineVxeComponentOptions, DefineVxeComponentIns
 
 /* eslint-disable no-use-before-define,@typescript-eslint/ban-types */
 
-export declare const VxePrintPageBreak: DefineVxeComponentApp<VxePrintPageBreakProps, VxePrintPageBreakEventProps, VxePrintPageBreakSlots>
+export declare const VxePrintPageBreak: DefineVxeComponentApp<VxePrintPageBreakProps, VxePrintPageBreakEventProps, VxePrintPageBreakSlots, VxePrintPageBreakMethods>
 export type VxePrintPageBreakComponent = DefineVxeComponentOptions<VxePrintPageBreakProps, VxePrintPageBreakEventProps>
 
 export type VxePrintPageBreakInstance = DefineVxeComponentInstance<VxePrintPageBreakProps, VxePrintPageBreakConstructor>

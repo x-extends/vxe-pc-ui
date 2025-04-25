@@ -3,7 +3,7 @@ import { DefineVxeComponentApp, DefineVxeComponentOptions, DefineVxeComponentIns
 
 /* eslint-disable no-use-before-define,@typescript-eslint/ban-types */
 
-export declare const VxeSwitch: DefineVxeComponentApp<VxeSwitchProps, VxeSwitchEventProps, VxeSwitchSlots>
+export declare const VxeSwitch: DefineVxeComponentApp<VxeSwitchProps, VxeSwitchEventProps, VxeSwitchSlots, VxeSwitchMethods>
 export type VxeSwitchComponent = DefineVxeComponentOptions<VxeSwitchProps, VxeSwitchEventProps>
 
 export type VxeSwitchInstance = DefineVxeComponentInstance<VxeSwitchProps, VxeSwitchConstructor>
