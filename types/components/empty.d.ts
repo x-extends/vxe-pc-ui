@@ -2,7 +2,7 @@ import { DefineVxeComponentApp, DefineVxeComponentOptions, DefineVxeComponentIns
 
 /* eslint-disable @typescript-eslint/no-empty-interface,no-use-before-define,@typescript-eslint/ban-types */
 
-export declare const VxeEmpty: DefineVxeComponentApp<VxeEmptyProps, VxeEmptyEventProps, VxeEmptySlots>
+export declare const VxeEmpty: DefineVxeComponentApp<VxeEmptyProps, VxeEmptyEventProps, VxeEmptySlots, VxeEmptyMethods>
 export type VxeEmptyComponent = DefineVxeComponentOptions<VxeEmptyProps>
 
 export type VxeEmptyInstance = DefineVxeComponentInstance<{

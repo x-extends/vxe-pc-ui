@@ -2,7 +2,7 @@ import { DefineVxeComponentApp, DefineVxeComponentOptions, DefineVxeComponentIns
 
 /* eslint-disable no-use-before-define,@typescript-eslint/ban-types,@typescript-eslint/no-unused-vars */
 
-export declare const VxeTree: DefineVxeComponentApp<VxeTreeProps, VxeTreeEventProps, VxeTreeSlots>
+export declare const VxeTree: DefineVxeComponentApp<VxeTreeProps, VxeTreeEventProps, VxeTreeSlots, VxeTreeMethods>
 export type VxeTreeComponent = DefineVxeComponentOptions<VxeTreeProps>
 
 export type VxeTreeInstance<D = any> = DefineVxeComponentInstance<{

@@ -2,7 +2,7 @@ import { DefineVxeComponentApp, DefineVxeComponentOptions, DefineVxeComponentIns
 
 /* eslint-disable @typescript-eslint/no-empty-interface,no-use-before-define,@typescript-eslint/ban-types */
 
-export declare const VxeTabPane: DefineVxeComponentApp<VxeTabPaneProps, VxeTabPaneEventProps, VxeTabPaneSlots>
+export declare const VxeTabPane: DefineVxeComponentApp<VxeTabPaneProps, VxeTabPaneEventProps, VxeTabPaneSlots, VxeTabPaneMethods>
 export type VxeTabPaneComponent = DefineVxeComponentOptions<VxeTabPaneProps>
 
 export type VxeTabPaneInstance = DefineVxeComponentInstance<{

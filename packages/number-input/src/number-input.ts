@@ -693,7 +693,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const $xeNumberInput = this
       const props = $xeNumberInput
 
-      const { exponential, controls } = props
+      const { type, exponential, controls } = props
       const inputReadonly = $xeNumberInput.computeInputReadonly
       const isControlKey = hasControlKey(evnt)
       const isShiftKey = evnt.shiftKey
@@ -702,8 +702,10 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const isEsc = globalEvents.hasKey(evnt, GLOBAL_EVENT_KEYS.ESCAPE)
       const isUpArrow = globalEvents.hasKey(evnt, GLOBAL_EVENT_KEYS.ARROW_UP)
       const isDwArrow = globalEvents.hasKey(evnt, GLOBAL_EVENT_KEYS.ARROW_DOWN)
-      if (!isControlKey && !isShiftKey && !isAltKey && (globalEvents.hasKey(evnt, GLOBAL_EVENT_KEYS.SPACEBAR) || ((!exponential || keyCode !== 69) && (keyCode >= 65 && keyCode <= 90)) || (keyCode >= 186 && keyCode <= 188) || keyCode >= 191)) {
-        evnt.preventDefault()
+      if (!isControlKey && !isShiftKey && !isAltKey) {
+        if (globalEvents.hasKey(evnt, GLOBAL_EVENT_KEYS.SPACEBAR) || (type === 'integer' && keyCode === 110) || ((!exponential || keyCode !== 69) && (keyCode >= 65 && keyCode <= 90)) || (keyCode >= 186 && keyCode <= 188) || keyCode >= 191) {
+          evnt.preventDefault()
+        }
       }
       if (isEsc) {
         $xeNumberInput.afterCheckValue()

@@ -2,7 +2,7 @@ import { DefineVxeComponentApp, DefineVxeComponentOptions, DefineVxeComponentIns
 
 /* eslint-disable @typescript-eslint/no-empty-interface,no-use-before-define,@typescript-eslint/ban-types */
 
-export declare const VxeRadio: DefineVxeComponentApp<VxeRadioProps, VxeRadioEventProps, VxeRadioSlots>
+export declare const VxeRadio: DefineVxeComponentApp<VxeRadioProps, VxeRadioEventProps, VxeRadioSlots, VxeRadioMethods>
 export type VxeRadioComponent = DefineVxeComponentOptions<VxeRadioProps>
 
 export type VxeRadioInstance = DefineVxeComponentInstance<{

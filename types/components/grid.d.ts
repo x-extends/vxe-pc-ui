@@ -9,7 +9,7 @@ import { VxeFormItemProps } from './form-item'
 
 /* eslint-disable no-use-before-define,@typescript-eslint/ban-types,@typescript-eslint/no-unused-vars */
 
-export declare const VxeGrid: DefineVxeComponentApp<VxeGridProps, VxeGridEventProps, VxeGridSlots>
+export declare const VxeGrid: DefineVxeComponentApp<VxeGridProps, VxeGridEventProps, VxeGridSlots, VxeGridMethods>
 export type VxeGridComponent = DefineVxeComponentOptions<VxeGridProps>
 
 export type VxeGridInstance<D = any> = DefineVxeComponentInstance<{

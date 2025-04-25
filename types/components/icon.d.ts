@@ -2,7 +2,7 @@ import { DefineVxeComponentApp, DefineVxeComponentOptions, DefineVxeComponentIns
 
 /* eslint-disable @typescript-eslint/no-empty-interface,no-use-before-define,@typescript-eslint/ban-types */
 
-export declare const VxeIcon: DefineVxeComponentApp<VxeIconProps, VxeIconEventProps, VxeIconSlots>
+export declare const VxeIcon: DefineVxeComponentApp<VxeIconProps, VxeIconEventProps, VxeIconSlots, VxeIconMethods>
 export type VxeIconComponent = DefineVxeComponentOptions<VxeIconProps>
 
 export type VxeIconInstance = DefineVxeComponentInstance<{

@@ -2,7 +2,7 @@ import { DefineVxeComponentApp, DefineVxeComponentOptions, DefineVxeComponentIns
 
 /* eslint-disable @typescript-eslint/no-empty-interface,no-use-before-define,@typescript-eslint/ban-types */
 
-export declare const VxeAvatar: DefineVxeComponentApp<VxeAvatarProps, VxeAvatarEventProps, VxeAvatarSlots>
+export declare const VxeAvatar: DefineVxeComponentApp<VxeAvatarProps, VxeAvatarEventProps, VxeAvatarSlots, VxeAvatarMethods>
 export type VxeAvatarComponent = DefineVxeComponentOptions<VxeAvatarProps>
 
 export type VxeAvatarInstance = DefineVxeComponentInstance<{

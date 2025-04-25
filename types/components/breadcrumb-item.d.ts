@@ -2,7 +2,7 @@ import { DefineVxeComponentApp, DefineVxeComponentOptions, DefineVxeComponentIns
 
 /* eslint-disable @typescript-eslint/no-empty-interface,no-use-before-define,@typescript-eslint/ban-types */
 
-export declare const VxeBreadcrumbItem: DefineVxeComponentApp<VxeBreadcrumbItemProps, VxeBreadcrumbItemEventProps, VxeBreadcrumbItemSlots>
+export declare const VxeBreadcrumbItem: DefineVxeComponentApp<VxeBreadcrumbItemProps, VxeBreadcrumbItemEventProps, VxeBreadcrumbItemSlots, VxeBreadcrumbItemMethods>
 export type VxeBreadcrumbItemComponent = DefineVxeComponentOptions<VxeBreadcrumbItemProps>
 
 export type VxeBreadcrumbItemInstance = DefineVxeComponentInstance<{

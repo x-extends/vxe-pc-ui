@@ -3,7 +3,7 @@ import { VxeAnchorLinkProps, VxeAnchorLinkPropTypes, VxeAnchorLinkDefines } from
 
 /* eslint-disable @typescript-eslint/no-empty-interface,no-use-before-define,@typescript-eslint/ban-types */
 
-export declare const VxeAnchor: DefineVxeComponentApp<VxeAnchorProps, VxeAnchorEventProps, VxeAnchorSlots>
+export declare const VxeAnchor: DefineVxeComponentApp<VxeAnchorProps, VxeAnchorEventProps, VxeAnchorSlots, VxeAnchorMethods>
 export type VxeAnchorComponent = DefineVxeComponentOptions<VxeAnchorProps>
 
 export type VxeAnchorInstance = DefineVxeComponentInstance<{

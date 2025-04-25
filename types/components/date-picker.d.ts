@@ -4,7 +4,7 @@ import { VxeButtonProps } from './button'
 
 /* eslint-disable @typescript-eslint/no-empty-interface,no-use-before-define,@typescript-eslint/ban-types */
 
-export declare const VxeDatePicker: DefineVxeComponentApp<VxeDatePickerProps, VxeDatePickerEventProps, VxeDatePickerSlots>
+export declare const VxeDatePicker: DefineVxeComponentApp<VxeDatePickerProps, VxeDatePickerEventProps, VxeDatePickerSlots, VxeDatePickerMethods>
 export type VxeDatePickerComponent = DefineVxeComponentOptions<VxeDatePickerProps>
 
 export type VxeDatePickerInstance = DefineVxeComponentInstance<{

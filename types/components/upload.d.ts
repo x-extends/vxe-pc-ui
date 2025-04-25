@@ -3,7 +3,7 @@ import { VxeImagePropTypes } from './image'
 
 /* eslint-disable @typescript-eslint/no-empty-interface,no-use-before-define,@typescript-eslint/ban-types */
 
-export declare const VxeUpload: DefineVxeComponentApp<VxeUploadProps, VxeUploadEventProps, VxeUploadSlots>
+export declare const VxeUpload: DefineVxeComponentApp<VxeUploadProps, VxeUploadEventProps, VxeUploadSlots, VxeUploadMethods>
 export type VxeUploadComponent = DefineVxeComponentOptions<VxeUploadProps>
 
 export type VxeUploadInstance = DefineVxeComponentInstance<{

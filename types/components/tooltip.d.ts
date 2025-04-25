@@ -3,7 +3,7 @@ import { VxeIconPropTypes } from './icon'
 
 /* eslint-disable @typescript-eslint/no-empty-interface,no-use-before-define,@typescript-eslint/ban-types */
 
-export declare const VxeTooltip: DefineVxeComponentApp<VxeTooltipProps, VxeTooltipEventProps, VxeTooltipSlots>
+export declare const VxeTooltip: DefineVxeComponentApp<VxeTooltipProps, VxeTooltipEventProps, VxeTooltipSlots, VxeTooltipMethods>
 export type VxeTooltipComponent = DefineVxeComponentOptions<VxeTooltipProps>
 
 export type VxeTooltipInstance = DefineVxeComponentInstance<{

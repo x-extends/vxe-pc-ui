@@ -4,7 +4,7 @@ import { VxeOptionProps, VxeOptionPropTypes } from './option'
 
 /* eslint-disable @typescript-eslint/no-empty-interface,no-use-before-define,@typescript-eslint/ban-types */
 
-export declare const VxeSelect: DefineVxeComponentApp<VxeSelectProps, VxeSelectEventProps, VxeSelectSlots>
+export declare const VxeSelect: DefineVxeComponentApp<VxeSelectProps, VxeSelectEventProps, VxeSelectSlots, VxeSelectMethods>
 export type VxeSelectComponent = DefineVxeComponentOptions<VxeSelectProps>
 
 export type VxeSelectInstance = DefineVxeComponentInstance<{

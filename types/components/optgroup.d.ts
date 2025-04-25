@@ -3,7 +3,7 @@ import { VxeOptionPropTypes } from './option'
 
 /* eslint-disable @typescript-eslint/no-empty-interface,no-use-before-define,@typescript-eslint/ban-types */
 
-export declare const VxeOptgroup: DefineVxeComponentApp<VxeOptgroupProps, VxeOptgroupEventProps, VxeOptgroupSlots>
+export declare const VxeOptgroup: DefineVxeComponentApp<VxeOptgroupProps, VxeOptgroupEventProps, VxeOptgroupSlots, VxeOptgroupMethods>
 export type VxeOptgroupComponent = DefineVxeComponentOptions<VxeOptgroupProps>
 
 export type VxeOptgroupInstance = DefineVxeComponentInstance<{

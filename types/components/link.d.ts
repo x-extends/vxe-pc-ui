@@ -2,7 +2,7 @@ import { DefineVxeComponentApp, DefineVxeComponentOptions, DefineVxeComponentIns
 
 /* eslint-disable @typescript-eslint/no-empty-interface,no-use-before-define,@typescript-eslint/ban-types */
 
-export declare const VxeLink: DefineVxeComponentApp<VxeLinkProps, VxeLinkEventProps, VxeLinkSlots>
+export declare const VxeLink: DefineVxeComponentApp<VxeLinkProps, VxeLinkEventProps, VxeLinkSlots, VxeLinkMethods>
 export type VxeLinkComponent = DefineVxeComponentOptions<VxeLinkProps>
 
 export type VxeLinkInstance = DefineVxeComponentInstance<{

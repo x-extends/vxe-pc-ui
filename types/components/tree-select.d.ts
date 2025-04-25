@@ -3,7 +3,7 @@ import { VxeTreeProps } from './tree'
 
 /* eslint-disable @typescript-eslint/no-empty-interface,no-use-before-define,@typescript-eslint/ban-types */
 
-export declare const VxeTreeSelect: DefineVxeComponentApp<VxeTreeSelectProps, VxeTreeSelectEventProps, VxeTreeSelectSlots>
+export declare const VxeTreeSelect: DefineVxeComponentApp<VxeTreeSelectProps, VxeTreeSelectEventProps, VxeTreeSelectSlots, VxeTreeSelectMethods>
 export type VxeTreeSelectComponent = DefineVxeComponentOptions<VxeTreeSelectProps>
 
 export type VxeTreeSelectInstance = DefineVxeComponentInstance<{

@@ -2,7 +2,7 @@ import { DefineVxeComponentApp, DefineVxeComponentOptions, DefineVxeComponentIns
 
 /* eslint-disable @typescript-eslint/no-empty-interface,no-use-before-define,@typescript-eslint/ban-types */
 
-export declare const VxeImageGroup: DefineVxeComponentApp<VxeImageGroupProps, VxeImageGroupEventProps, VxeImageGroupSlots>
+export declare const VxeImageGroup: DefineVxeComponentApp<VxeImageGroupProps, VxeImageGroupEventProps, VxeImageGroupSlots, VxeImageGroupMethods>
 export type VxeImageGroupComponent = DefineVxeComponentOptions<VxeImageGroupProps>
 
 export type VxeImageGroupInstance = DefineVxeComponentInstance<{

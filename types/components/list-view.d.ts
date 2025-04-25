@@ -7,7 +7,7 @@ import { VxeButtonProps } from './button'
 
 /* eslint-disable no-use-before-define,@typescript-eslint/ban-types,@typescript-eslint/no-unused-vars */
 
-export declare const VxeListView: DefineVxeComponentApp<VxeListViewProps, VxeListViewEventProps, VxeListViewSlots>
+export declare const VxeListView: DefineVxeComponentApp<VxeListViewProps, VxeListViewEventProps, VxeListViewSlots, VxeListViewMethods>
 export type VxeListViewComponent = DefineVxeComponentOptions<VxeListViewProps>
 
 export type VxeListViewInstance = DefineVxeComponentInstance<{

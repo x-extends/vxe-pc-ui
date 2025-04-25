@@ -3,7 +3,7 @@ import { DefineVxeComponentApp, DefineVxeComponentOptions, DefineVxeComponentIns
 
 /* eslint-disable @typescript-eslint/no-empty-interface,no-use-before-define,@typescript-eslint/ban-types */
 
-export declare const VxeDrawer: DefineVxeComponentApp<VxeDrawerProps, VxeDrawerEventProps, VxeDrawerSlots>
+export declare const VxeDrawer: DefineVxeComponentApp<VxeDrawerProps, VxeDrawerEventProps, VxeDrawerSlots, VxeDrawerMethods>
 export type VxeDrawerComponent = DefineVxeComponentOptions<VxeDrawerProps>
 
 export type VxeDrawerInstance = DefineVxeComponentInstance<{

@@ -2,7 +2,7 @@ import { DefineVxeComponentApp, DefineVxeComponentOptions, DefineVxeComponentIns
 
 /* eslint-disable @typescript-eslint/no-empty-interface,no-use-before-define,@typescript-eslint/ban-types */
 
-export declare const VxeText: DefineVxeComponentApp<VxeTextProps, VxeTextEventProps, VxeTextSlots>
+export declare const VxeText: DefineVxeComponentApp<VxeTextProps, VxeTextEventProps, VxeTextSlots, VxeTextMethods>
 export type VxeTextComponent = DefineVxeComponentOptions<VxeTextProps>
 
 export type VxeTextInstance = DefineVxeComponentInstance<{

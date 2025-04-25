@@ -2,7 +2,7 @@ import { DefineVxeComponentApp, DefineVxeComponentOptions, DefineVxeComponentIns
 
 /* eslint-disable @typescript-eslint/no-empty-interface,no-use-before-define,@typescript-eslint/ban-types */
 
-export declare const VxeNoticeBar: DefineVxeComponentApp<VxeNoticeBarProps, VxeNoticeBarEventProps, VxeNoticeBarSlots>
+export declare const VxeNoticeBar: DefineVxeComponentApp<VxeNoticeBarProps, VxeNoticeBarEventProps, VxeNoticeBarSlots, VxeNoticeBarMethods>
 export type VxeNoticeBarComponent = DefineVxeComponentOptions<VxeNoticeBarProps>
 
 export type VxeNoticeBarInstance = DefineVxeComponentInstance<{

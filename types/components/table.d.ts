@@ -12,7 +12,7 @@ import { VxeTabsConstructor, VxeTabsPrivateMethods } from './tabs'
 
 /* eslint-disable @typescript-eslint/no-empty-interface,no-use-before-define,@typescript-eslint/ban-types,@typescript-eslint/no-unused-vars */
 
-export declare const VxeTable: DefineVxeComponentApp<VxeTableProps, VxeTableEventProps, VxeTableSlots>
+export declare const VxeTable: DefineVxeComponentApp<VxeTableProps, VxeTableEventProps, VxeTableSlots, VxeTableMethods>
 export type VxeTableComponent = DefineVxeComponentOptions<VxeTableProps>
 
 export type VxeTableInstance<D = any> = DefineVxeComponentInstance<{
@@ -4635,6 +4635,10 @@ export interface TablePrivateMethods<D = any> {
    * @private
    */
   triggerTreeExpandEvent(evnt: Event, params: VxeTableDefines.CellRenderBodyParams<any>): void
+  /**
+   * @private
+   */
+  handleColumnSortEvent(evnt: Event, column: VxeTableDefines.ColumnInfo): void
   /**
    * @private
    */

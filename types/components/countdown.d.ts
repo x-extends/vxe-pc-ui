@@ -3,7 +3,7 @@ import { DateDiffResult } from 'xe-utils'
 
 /* eslint-disable @typescript-eslint/no-empty-interface,no-use-before-define,@typescript-eslint/ban-types */
 
-export declare const VxeCountdown: DefineVxeComponentApp<VxeCountdownProps, VxeCountdownEventProps, VxeCountdownSlots>
+export declare const VxeCountdown: DefineVxeComponentApp<VxeCountdownProps, VxeCountdownEventProps, VxeCountdownSlots, VxeCountdownMethods>
 export type VxeCountdownComponent = DefineVxeComponentOptions<VxeCountdownProps>
 
 export type VxeCountdownInstance = DefineVxeComponentInstance<{

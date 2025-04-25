@@ -3,7 +3,7 @@ import { VxeTooltipDefines } from './tooltip'
 
 /* eslint-disable @typescript-eslint/no-empty-interface,no-use-before-define,@typescript-eslint/ban-types */
 
-export declare const VxeButton: DefineVxeComponentApp<VxeButtonProps, VxeButtonEventProps, VxeButtonSlots>
+export declare const VxeButton: DefineVxeComponentApp<VxeButtonProps, VxeButtonEventProps, VxeButtonSlots, VxeButtonMethods>
 export type VxeButtonComponent = DefineVxeComponentOptions<VxeButtonProps>
 
 export type VxeButtonInstance = DefineVxeComponentInstance<{

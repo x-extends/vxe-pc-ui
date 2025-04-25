@@ -3,7 +3,7 @@ import { VxeGridProps, VxeGridPropTypes, VxeGridDefines } from './grid'
 
 /* eslint-disable @typescript-eslint/no-empty-interface,no-use-before-define,@typescript-eslint/ban-types */
 
-export declare const VxeTableSelect: DefineVxeComponentApp<VxeTableSelectProps, VxeTableSelectEventProps, VxeTableSelectSlots>
+export declare const VxeTableSelect: DefineVxeComponentApp<VxeTableSelectProps, VxeTableSelectEventProps, VxeTableSelectSlots, VxeTableSelectMethods>
 export type VxeTableSelectComponent = DefineVxeComponentOptions<VxeTableSelectProps>
 
 export type VxeTableSelectInstance = DefineVxeComponentInstance<{

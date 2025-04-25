@@ -5,7 +5,7 @@ import { VxeGridConstructor } from './grid'
 
 /* eslint-disable @typescript-eslint/no-empty-interface,no-use-before-define,@typescript-eslint/ban-types,@typescript-eslint/no-unused-vars */
 
-export declare const VxeForm: DefineVxeComponentApp<VxeFormProps, VxeFormEventProps, VxeFormSlots>
+export declare const VxeForm: DefineVxeComponentApp<VxeFormProps, VxeFormEventProps, VxeFormSlots, VxeFormMethods>
 export type VxeFormComponent = DefineVxeComponentOptions<VxeFormProps>
 
 export type VxeFormInstance<D = any> = DefineVxeComponentInstance<{

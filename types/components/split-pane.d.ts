@@ -2,7 +2,7 @@ import { DefineVxeComponentApp, DefineVxeComponentOptions, DefineVxeComponentIns
 
 /* eslint-disable @typescript-eslint/no-empty-interface,no-use-before-define,@typescript-eslint/ban-types */
 
-export declare const VxeSplitPane: DefineVxeComponentApp<VxeSplitPaneProps, VxeSplitPaneEventProps, VxeSplitPaneSlots>
+export declare const VxeSplitPane: DefineVxeComponentApp<VxeSplitPaneProps, VxeSplitPaneEventProps, VxeSplitPaneSlots, VxeSplitPaneMethods>
 export type VxeSplitPaneComponent = DefineVxeComponentOptions<VxeSplitPaneProps>
 
 export type VxeSplitPaneInstance = DefineVxeComponentInstance<{

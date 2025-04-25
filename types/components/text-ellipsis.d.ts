@@ -2,7 +2,7 @@ import { DefineVxeComponentApp, DefineVxeComponentOptions, DefineVxeComponentIns
 
 /* eslint-disable @typescript-eslint/no-empty-interface,no-use-before-define,@typescript-eslint/ban-types */
 
-export declare const VxeTextEllipsis: DefineVxeComponentApp<VxeTextEllipsisProps, VxeTextEllipsisEventProps, VxeTextEllipsisSlots>
+export declare const VxeTextEllipsis: DefineVxeComponentApp<VxeTextEllipsisProps, VxeTextEllipsisEventProps, VxeTextEllipsisSlots, VxeTextEllipsisMethods>
 export type VxeTextEllipsisComponent = DefineVxeComponentOptions<VxeTextEllipsisProps>
 
 export type VxeTextEllipsisInstance = DefineVxeComponentInstance<{

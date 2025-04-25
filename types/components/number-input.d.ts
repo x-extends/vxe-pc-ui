@@ -2,7 +2,7 @@ import { DefineVxeComponentApp, DefineVxeComponentOptions, DefineVxeComponentIns
 
 /* eslint-disable @typescript-eslint/no-empty-interface,no-use-before-define,@typescript-eslint/ban-types */
 
-export declare const VxeNumberInput: DefineVxeComponentApp<VxeNumberInputProps, VxeNumberInputEventProps, VxeNumberInputSlots>
+export declare const VxeNumberInput: DefineVxeComponentApp<VxeNumberInputProps, VxeNumberInputEventProps, VxeNumberInputSlots, VxeNumberInputMethods>
 export type VxeNumberInputComponent = DefineVxeComponentOptions<VxeNumberInputProps>
 
 export type VxeNumberInputInstance = DefineVxeComponentInstance<{
