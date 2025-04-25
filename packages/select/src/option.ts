@@ -72,21 +72,21 @@ export default /* define-vxe-component start */ defineVxeComponent({
   created () {
     const $xeOption = this
     const props = $xeOption
-    const slots = $xeOption.$scopedSlots
     const $xeSelect = $xeOption.$xeSelect
 
     const optionConfig = createOption($xeSelect, props)
-    optionConfig.slots = slots
     $xeOption.optionConfig = optionConfig
 
     watchOption($xeOption, optionConfig)
   },
   mounted () {
     const $xeOption = this
+    const slots = $xeOption.$scopedSlots
     const optionConfig = $xeOption.optionConfig
     const $xeSelect = $xeOption.$xeSelect
     const $xeOptgroup = $xeOption.$xeOptgroup
 
+    optionConfig.slots = slots
     const el = $xeOption.$refs.elem as HTMLDivElement
     assembleOption($xeSelect, el, optionConfig, $xeOptgroup)
   },
