@@ -59,6 +59,10 @@ export default defineComponent({
       type: [String, Number] as PropType<VxeNumberInputPropTypes.Max>,
       default: null
     },
+    wheel: {
+      type: Boolean as PropType<VxeNumberInputPropTypes.Wheel>,
+      default: () => getConfig().numberInput.wheel ?? true
+    },
     step: [String, Number] as PropType<VxeNumberInputPropTypes.Step>,
     exponential: {
       type: Boolean as PropType<VxeNumberInputPropTypes.Exponential>,
@@ -646,7 +650,7 @@ export default defineComponent({
       wheelDelta: number;
     }) => {
       const inputReadonly = computeInputReadonly.value
-      if (props.controls && !inputReadonly) {
+      if (props.controls && !inputReadonly && props.wheel) {
         if (reactData.isActivated) {
           evnt.stopPropagation()
           evnt.preventDefault()

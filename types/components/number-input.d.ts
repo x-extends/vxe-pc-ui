@@ -40,6 +40,7 @@ export namespace VxeNumberInputPropTypes {
   export type Form = string
   export type Min = string | number
   export type Max = string | number
+  export type Wheel = boolean
   export type Step = string | number
   export type Exponential = boolean
   export type Controls = boolean
@@ -84,6 +85,7 @@ export interface VxeNumberInputProps {
   // number、integer、float
   min?: VxeNumberInputPropTypes.Min
   max?: VxeNumberInputPropTypes.Max
+  wheel?: VxeNumberInputPropTypes.Wheel
   step?: VxeNumberInputPropTypes.Step
   exponential?: VxeNumberInputPropTypes.Exponential
 
