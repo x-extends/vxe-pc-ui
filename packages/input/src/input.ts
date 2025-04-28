@@ -73,6 +73,10 @@ export default defineComponent({
       type: [String, Number] as PropType<VxeInputPropTypes.Max>,
       default: null
     },
+    wheel: {
+      type: [String, Number] as PropType<VxeInputPropTypes.Max>,
+      default: () => getConfig().input.wheel ?? true
+    },
     step: [String, Number] as PropType<VxeInputPropTypes.Step>,
     trim: {
       type: Boolean as PropType<VxeInputPropTypes.Trim>,
@@ -1295,7 +1299,7 @@ export default defineComponent({
 
     const wheelEvent = (evnt: WheelEvent) => {
       const isNumType = computeIsNumType.value
-      if (isNumType && props.controls) {
+      if (isNumType && props.controls && props.wheel) {
         if (reactData.isActivated) {
           const delta = evnt.deltaY
           if (delta > 0) {
