@@ -3548,10 +3548,13 @@ export interface TableInternalData<D = any> {
   // 已删除行
   removeRowMaps: Record<string, D | null>
 
+  // 单元格值缓存
+  cvCacheMaps: Record<string, any>
+
   // 上一个拖动的行
   prevDragRow?: any
   // 上一个拖动的列
-  prevDragCol?: VxeTableDefines.ColumnInfo
+  prevDragCol?: VxeTableDefines.ColumnInfo | null
   prevDragToChild?: boolean
   prevDragPos?: 'top' | 'bottom' | 'left' | 'right' | ''
 
