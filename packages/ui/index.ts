@@ -231,7 +231,12 @@ setConfig({
     // transfer: false
     digits: 2,
     autoFill: true,
-    controls: true
+    controlConfig: {
+      enabled: true,
+      // layout: 'default',
+      showButton: true,
+      isWheel: true
+    }
   },
   optgroup: {},
   option: {},
@@ -414,10 +419,12 @@ setIcon({
   // input
   INPUT_CLEAR: iconPrefix + 'error-circle-fill',
   INPUT_SEARCH: iconPrefix + 'search',
+  INPUT_PLUS_NUM: iconPrefix + 'caret-up',
+  INPUT_MINUS_NUM: iconPrefix + 'caret-down',
 
   // number-picker
-  NUMBER_INPUT_PREV_NUM: iconPrefix + 'caret-up',
-  NUMBER_INPUT_NEXT_NUM: iconPrefix + 'caret-down',
+  NUMBER_INPUT_MINUS_NUM: iconPrefix + 'minus',
+  NUMBER_INPUT_PLUS_NUM: iconPrefix + 'add',
 
   // date-picker
   DATE_PICKER_DATE: iconPrefix + 'calendar',

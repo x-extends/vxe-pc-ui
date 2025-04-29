@@ -2788,7 +2788,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
             }
           }, [
             h('i', {
-              class: getIcon().NUMBER_INPUT_PREV_NUM
+              class: getIcon().INPUT_PLUS_NUM
             })
           ]),
           h('div', {
@@ -2802,7 +2802,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
             }
           }, [
             h('i', {
-              class: getIcon().NUMBER_INPUT_NEXT_NUM
+              class: getIcon().INPUT_MINUS_NUM
             })
           ])
         ])

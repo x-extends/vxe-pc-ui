@@ -89,10 +89,12 @@ declare module '@vxe-ui/core' {
     // input
     INPUT_CLEAR?: string
     INPUT_SEARCH?: string
+    INPUT_PLUS_NUM?: string
+    INPUT_MINUS_NUM?: string
 
     // number-picker
-    NUMBER_INPUT_PREV_NUM?: string
-    NUMBER_INPUT_NEXT_NUM?: string
+    NUMBER_INPUT_PLUS_NUM?: string
+    NUMBER_INPUT_MINUS_NUM?: string
 
     // date-picker
     DATE_PICKER_DATE?: string

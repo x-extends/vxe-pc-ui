@@ -1,14 +1,15 @@
 @use "sass:list";
+@use '../helpers/baseMixin.scss';
 
 .vxe-number-input--readonly {
   color: var(--vxe-ui-font-color);
   display: inline-flex;
 }
-.vxe-number-input--wrapper {
+.vxe-number-input--input-inner {
   flex-grow: 1;
   overflow: hidden;
 }
-.vxe-number-input--inner {
+.vxe-number-input--input {
   display: block;
   width: 100%;
   height: 100%;
@@ -33,8 +34,6 @@
     appearance: none;
     -moz-appearance: textfield;
   }
-  &[type="search"],
-  &[type="search"]::-webkit-search-cancel-button,
   &[type="number"]::-webkit-outer-spin-button,
   &[type="number"]::-webkit-inner-spin-button {
     appearance: none;
@@ -45,6 +44,11 @@
     background-color: var(--vxe-ui-input-disabled-background-color);
   }
 }
+.vxe-number-input--input-wrapper {
+  display: flex;
+  flex-grow: 1;
+  overflow: hidden;
+}
 
 // 禁用
 .vxe-number-input {
@@ -52,8 +56,7 @@
     background-color: var(--vxe-ui-input-disabled-background-color);
     .vxe-number-input--prefix,
     .vxe-number-input--suffix,
-    .vxe-number-input--clear-icon,
-    .vxe-number-input--control-icon {
+    .vxe-number-input--clear-icon {
       cursor: not-allowed;
     }
     .vxe-number-input--prefix,
@@ -94,12 +97,10 @@
   padding-left: 0.5em;
 }
 .vxe-number-input--clear-icon,
-.vxe-number-input--control-icon,
 .vxe-number-input--suffix-icon {
   padding-right: 0.5em;
 }
-.vxe-number-input--clear-icon,
-.vxe-number-input--control-icon {
+.vxe-number-input--clear-icon {
   height: 100%;
   color: var(--vxe-ui-input-placeholder-color);
   cursor: pointer;
@@ -111,30 +112,6 @@
   }
   &:active {
     color: var(--vxe-ui-font-primary-color);
-  }
-}
-
-.vxe-number-input--number-btn {
-  height: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  &:hover {
-    color: var(--vxe-ui-font-color);
-  }
-  &:active {
-    color: var(--vxe-ui-font-primary-color);
-  }
-}
-.vxe-number-input--number-icon {
-  display: flex;
-  flex-direction: column;
-  height: 100%;
-  .vxe-number-input--number-btn {
-    &.is--disabled {
-      cursor: no-drop;
-      color: var(--vxe-ui-font-disabled-color);
-    }
   }
 }
 
@@ -152,421 +129,103 @@
 // 对齐方式
 .vxe-number-input {
   &.is--left {
-    .vxe-number-input--inner {
+    .vxe-number-input--input {
       text-align: left;
     }
   }
   &.is--center {
-    .vxe-number-input--inner {
+    .vxe-number-input--input {
       text-align: center;
     }
   }
   &.is--right {
-    .vxe-number-input--inner {
+    .vxe-number-input--input {
       text-align: right;
     }
   }
 }
 
-.vxe-number-input--panel {
-  display: none;
-  position: absolute;
-  left: 0;
-  padding: 4px 0;
-  color: var(--vxe-ui-font-color);
-  font-size: var(--vxe-ui-font-size-default);
-  text-align: left;
-  &:not(.is--transfer) {
-    min-width: 100%;
-  }
-  &.is--transfer {
-    position: fixed;
-  }
-  &.ani--leave {
-    display: block;
-    opacity: 0;
-    transform: scaleY(0.5);
-    transition: transform .3s cubic-bezier(.23,1,.32,1), opacity .3s cubic-bezier(.23,1,.32,1);
-    transform-origin: center top;
-    backface-visibility: hidden;
-    transform-style: preserve-3d;
-    &[placement="top"] {
-      transform-origin: center bottom;
-    }
-  }
-  &.ani--enter {
-    opacity: 1;
-    transform: scaleY(1);
-  }
-}
-
-.vxe-number-input--panel-wrapper,
-.vxe-number-input--panel-layout-wrapper {
-  background-color: var(--vxe-ui-layout-background-color);
-  border: 1px solid var(--vxe-ui-base-popup-border-color);
-  box-shadow: 0 0 6px 2px rgba(0, 0, 0, 0.1);
-  border-radius: var(--vxe-ui-base-border-radius);
-}
-
-.vxe-number-input--panel-wrapper {
-  overflow-x: hidden;
-  overflow-y: auto;
-}
-
-.vxe-number-input--panel-layout-wrapper {
-  display: flex;
-  flex-direction: row;
-}
-
-.vxe-number-input--panel {
-  &.type--date,
-  &.type--week,
-  &.type--month,
-  &.type--quarter,
-  &.type--year {
-    user-select: none;
-  }
-  &.type--datetime {
-    .vxe-number-input--panel-right-wrapper {
-      display: flex;
-      flex-direction: column;
-      border-left: 1px solid var(--vxe-ui-input-border-color);
-    }
-  }
-  &.type--date,
-  &.type--datetime {
-    .vxe-number-input--date-picker-body {
-      th {
-        width: 14.28571%;
-      }
-    }
-  }
-  &.type--week {
-    .vxe-number-input--date-picker-body {
-      table {
-        th {
-          width: 12%;
-          &:first-child {
-            width: 14%;
-          }
-        }
-      }
-    }
-  }
-  &.type--quarter {
-    .vxe-number-input--date-picker-body {
-      table {
-        th {
-          width: 50%;
-        }
-      }
-    }
-  }
-  &.type--month,
-  &.type--year {
-    .vxe-number-input--date-picker-body {
-      td {
-        width: 25%;
-      }
-    }
-  }
-}
-
-.vxe-number-input--time-picker-title {
-  display: inline-block;
-  text-align: center;
-  border: 1px solid var(--vxe-ui-input-border-color);
-  border-radius: var(--vxe-ui-base-border-radius);
-}
-.vxe-number-input--time-picker-confirm {
-  position: absolute;
-  right: 0;
-  top: 0;
-}
-.vxe-number-input--time-picker-confirm,
-.vxe-number-input--date-picker-confirm {
+// 控制按钮
+.vxe-number-input--minus-btn,
+.vxe-number-input--plus-btn {
+  border: 0;
   outline: 0;
-  border: 1px solid var(--vxe-ui-input-border-color);
-  border-radius: var(--vxe-ui-base-border-radius);
+  width: 3em;
+  flex-shrink: 0;
+  font-family: inherit;
+  color: var(--vxe-ui-font-color);
+  user-select: none;
+  appearance: none;
   cursor: pointer;
-  color: var(--vxe-ui-input-date-time-confirm-button-color);
-  border-color: var(--vxe-ui-font-primary-color);
-  background-color: var(--vxe-ui-font-primary-color);
+  background-color: var(--vxe-ui-number-input-control-button-color);
+  transform: scale(1);
+  @include baseMixin.createAnimationTransition(transform, 0.1s);
+  &:focus,
   &:hover {
-    background-color: var(--vxe-ui-font-primary-lighten-color);
-    border-color: var(--vxe-ui-font-primary-lighten-color);
+    color: var(--vxe-ui-font-primary-color);
   }
   &:active {
-    background-color: var(--vxe-ui-font-primary-darken-color);
-    border-color: var(--vxe-ui-font-primary-darken-color);
+    transform: scale(0.9);
   }
-}
-
-.vxe-number-input--time-picker-header {
-  display: flex;
-  position: relative;
-  flex-shrink: 0;
-}
-
-.vxe-number-input--date-picker-header {
-  display: flex;
-  flex-direction: row;
-  user-select: none;
-  .vxe-number-input--date-picker-type-wrapper {
-    flex-grow: 1;
-  }
-  .vxe-number-input--date-picker-btn-wrapper {
-    flex-shrink: 0;
-    text-align: center;
-  }
-}
-.vxe-number-input--date-picker-type-wrapper {
-  .vxe-number-input--date-picker-label,
-  .vxe-number-input--date-picker-btn {
-    display: inline-block;
-  }
-}
-.vxe-number-input--date-picker-btn-wrapper {
-  display: flex;
-  flex-direction: row;
-}
-.vxe-number-input--date-picker-label,
-.vxe-number-input--date-picker-btn {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background-color: var(--vxe-ui-layout-background-color);
-}
-.vxe-number-input--date-picker-btn {
   &.is--disabled {
+    cursor: not-allowed;
     color: var(--vxe-ui-font-disabled-color);
-    cursor: no-drop;
   }
-  &:not(.is--disabled) {
-    cursor: pointer;
-    &:hover {
-      background-color: #fff;
-    }
-    &:active {
-      background-color: #fff;
+}
+.vxe-number-input--side-control {
+  display: inline-flex;
+  flex-direction: column;
+  flex-shrink: 0;
+  height: 100%;
+  & > .vxe-number-input--plus-btn {
+    border-bottom: 1px solid var(--vxe-ui-input-border-color);
+  }
+  & > .vxe-number-input--minus-btn,
+  & > .vxe-number-input--plus-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 50%;
+    i {
+      font-size: 0.72em;
     }
   }
 }
-.vxe-number-input--date-picker-body {
-  border-radius: var(--vxe-ui-base-border-radius);
-  border: 1px solid var(--vxe-ui-base-popup-border-color);
-  user-select: none;
-  table {
-    border: 0;
-    width: 100%;
-    border-spacing: 0;
-    border-collapse: separate;
-    text-align: center;
-    table-layout: fixed
-  }
-  th,
-  td {
-    font-weight: normal;
-  }
-  th {
-    box-shadow: inset 0 -1px 0 0 var(--vxe-ui-base-popup-border-color);
-  }
-  td {
-    &.is--prev,
-    &.is--next {
-      color: var(--vxe-ui-font-disabled-color);
-      .vxe-number-input--date-label,
-      .vxe-number-input--date-festival {
-        color: var(--vxe-ui-font-disabled-color);
+.vxe-number-input {
+  &.control-left {
+    .vxe-number-input--side-control {
+      border-right: 1px solid var(--vxe-ui-input-border-color);
+      & > .vxe-number-input--plus-btn {
+        border-radius: var(--vxe-ui-base-border-radius) 0 0 0;
       }
-    }
-    &.is--now {
-      box-shadow: inset 0 0 0 1px var(--vxe-ui-base-popup-border-color);
-      &:not(.is--selected) {
-        &.is--current {
-          color: var(--vxe-ui-font-primary-color);
-          .vxe-number-input--date-label,
-          .vxe-number-input--date-festival {
-            color: var(--vxe-ui-font-primary-color);
-          }
-        }
-      }
-    }
-    &.is--hover {
-      background-color: var(--vxe-ui-input-date-picker-hover-background-color);
-    }
-    &.is--selected {
-      color: var(--vxe-ui-input-date-picker-selected-color);
-      background-color: var(--vxe-ui-font-primary-color);
-      &.is--prev,
-      &.is--next {
-        background-color: var(--vxe-ui-font-primary-lighten-color);
-      }
-      .vxe-number-input--date-label,
-      .vxe-number-input--date-festival {
-        color: var(--vxe-ui-input-date-picker-festival-selected-color);
-      }
-      .vxe-number-input--date-label {
-        &.is-notice {
-          &:before {
-            background-color: var(--vxe-ui-input-date-picker-notice-selected-background-color);
-          }
-        }
-      }
-    }
-    &:not(.is--disabled) {
-      cursor: pointer;
-    }
-    &.is--disabled {
-      cursor: no-drop;
-      color: var(--vxe-ui-input-disabled-color);
-      background-color: var(--vxe-ui-input-disabled-background-color);
-      .vxe-number-input--date-label,
-      .vxe-number-input--date-festival {
-        color: var(--vxe-ui-input-disabled-color);
+      & > .vxe-number-input--minus-btn {
+        border-radius: 0 0 0 var(--vxe-ui-base-border-radius);
       }
     }
   }
-}
-
-.vxe-number-input--date-week-view {
-  th {
-    &:first-child {
-      box-shadow: inset -1px -1px 0 0 var(--vxe-ui-base-popup-border-color);
+  &.control-right {
+    .vxe-number-input--side-control {
+      border-left: 1px solid var(--vxe-ui-input-border-color);
+      & > .vxe-number-input--plus-btn {
+        border-radius: 0 var(--vxe-ui-base-border-radius) 0 0;
+      }
+      & > .vxe-number-input--minus-btn {
+        border-radius: 0 0 var(--vxe-ui-base-border-radius) 0;
+      }
     }
   }
-  td {
-    &:first-child {
-      box-shadow: inset -1px 0 0 0 var(--vxe-ui-base-popup-border-color);
-    }
-  }
-}
-
-.vxe-number-input--date-label,
-.vxe-number-input--date-festival {
-  display: block;
-  overflow: hidden;
-}
-
-.vxe-number-input--date-label {
-  position: relative;
-  &.is-notice {
-    &:before {
-      content: "";
-      position: absolute;
-      width: 4px;
-      height: 4px;
-      left: 0.8em;
-      top: 0.1em;
-      transform: translateX(-50%);
-      border-radius: 100%;
-      background-color: var(--vxe-ui-input-date-notice-background-color);
-    }
-  }
-}
-.vxe-number-input--date-label--extra {
-  position: absolute;
-  right: 0.1em;
-  top: -0.2em;
-  font-size: 12px;
-  line-height: 12px;
-  transform: scale(0.7);
-  color: var(--vxe-ui-input-date-extra-color);
-  &.is-important {
-    color: var(--vxe-ui-input-date-extra-important-color);
-  }
-}
-
-.vxe-number-input--date-festival {
-  color: var(--vxe-ui-input-date-festival-color);
-  height: 14px;
-  line-height: 1;
-  overflow: hidden;
-  &.is-important {
-    color: var(--vxe-ui-input-date-festival-important-color);
-  }
-}
-.vxe-number-input--date-festival--label {
-  display: block;
-  font-size: 12px;
-  transform: scale(0.8);
-}
-
-@keyframes festivalOverlap2 {
-  0%, 45%, 100% {
-    transform: translateY(0);
-  }
-  50%, 95% {
-    transform: translateY(-14px);
-  }
-}
-
-@keyframes festivalOverlap3 {
-  0%, 20%, 100% {
-    transform: translateY(0);
-  }
-  25%, 45%, 75%, 95% {
-    transform: translateY(-14px);
-  }
-  50%, 70% {
-    transform: translateY(-28px);
-  }
-}
-
-.vxe-number-input--date-festival--overlap {
-  display: block;
-  font-size: 12px;
-  &.overlap--2 {
-    animation: festivalOverlap2 6s infinite ease-in-out;
-  }
-  &.overlap--3 {
-    animation: festivalOverlap3 9s infinite ease-in-out;
-  }
-  & > span {
-    height: 14px;
-    display: block;
-    transform: scale(0.8);
-  }
-}
-
-.vxe-number-input--time-picker-body {
-  position: relative;
-  display: flex;
-  flex-direction: row;
-  border: 1px solid var(--vxe-ui-base-popup-border-color);
-  flex-grow: 1;
-  border-radius: var(--vxe-ui-base-border-radius);
-  user-select: none;
-  & > ul {
+  & > .vxe-number-input--minus-btn,
+  & > .vxe-number-input--plus-btn {
     height: 100%;
-    overflow: hidden;
-    margin: 0;
-    padding: 0;
-    &:before,
-    &:after {
-      content: " ";
-      display: block;
-    }
-    &:hover {
-      overflow-y: auto;
-    }
-    & > li {
-      display: block;
-      &:hover {
-        background-color: var(--vxe-ui-input-date-picker-hover-background-color);
-        cursor: pointer;
-      }
-      &.is--selected {
-        font-weight: 700;
-        color: var(--vxe-ui-font-primary-color);
-      }
-    }
+    font-size: 0.84em;
   }
-  .vxe-number-input--time-picker-minute-list {
-    border-left: 1px solid var(--vxe-ui-base-popup-border-color);
+  & > .vxe-number-input--minus-btn {
+    border-right: 1px solid var(--vxe-ui-input-border-color);
+    border-radius: var(--vxe-ui-base-border-radius) 0 0 var(--vxe-ui-base-border-radius);
   }
-  .vxe-number-input--time-picker-second-list {
-    border-left: 1px solid var(--vxe-ui-base-popup-border-color);
+  & > .vxe-number-input--plus-btn {
+    border-left: 1px solid var(--vxe-ui-input-border-color);
+    border-radius: 0 var(--vxe-ui-base-border-radius) var(--vxe-ui-base-border-radius) 0;
   }
 }
 
@@ -574,15 +233,7 @@
   font-size: var(--vxe-ui-font-size-default);
   height: var(--vxe-ui-input-height-default);
   line-height: var(--vxe-ui-input-height-default);
-  .vxe-number-input--inner {
-    &[type="date"]::-webkit-inner-spin-button,
-    &[type="month"]::-webkit-inner-spin-button,
-    &[type="week"]::-webkit-inner-spin-button {
-      margin-top: 6px;
-    }
-    &[type="date"]::-webkit-inner-spin-button,
-    &[type="month"]::-webkit-inner-spin-button,
-    &[type="week"]::-webkit-inner-spin-button,
+  .vxe-number-input--input {
     &[type="number"]::-webkit-inner-spin-button {
       height: 24px;
     }
@@ -591,191 +242,15 @@
     font-size: var(--vxe-ui-font-size-medium);
     height: var(--vxe-ui-input-height-medium);
     line-height: var(--vxe-ui-input-height-medium);
-    .vxe-number-input--inner {
-      &[type="date"]::-webkit-inner-spin-button,
-      &[type="month"]::-webkit-inner-spin-button,
-      &[type="week"]::-webkit-inner-spin-button {
-        margin-top: 4px;
-      }
-    }
   }
   &.size--small {
     font-size: var(--vxe-ui-font-size-small);
     height: var(--vxe-ui-input-height-small);
     line-height: var(--vxe-ui-input-height-small);
-    .vxe-number-input--inner {
-      &[type="date"]::-webkit-inner-spin-button,
-      &[type="month"]::-webkit-inner-spin-button,
-      &[type="week"]::-webkit-inner-spin-button {
-        margin-top: 2px;
-      }
-    }
   }
   &.size--mini {
     font-size: var(--vxe-ui-font-size-mini);
     height: var(--vxe-ui-input-height-mini);
     line-height: var(--vxe-ui-input-height-mini);
-    .vxe-number-input--inner {
-      &[type="date"]::-webkit-inner-spin-button,
-      &[type="month"]::-webkit-inner-spin-button,
-      &[type="week"]::-webkit-inner-spin-button {
-        margin-top: 0;
-      }
-    }
-  }
-}
-
-@mixin getPanelStyle ($sizeIndex) {
-  $fontSizeList: var(--vxe-ui-font-size-default), var(--vxe-ui-font-size-medium), var(--vxe-ui-font-size-small), var(--vxe-ui-font-size-mini);
-  $timeWeekRowHeightList: var(--vxe-ui-input-date-time-week-row-height-default), var(--vxe-ui-input-date-time-week-row-height-medium), var(--vxe-ui-input-date-time-week-row-height-small), var(--vxe-ui-input-date-time-week-row-height-mini);
-  $monthYearRowHeightList: var(--vxe-ui-input-date-month-year-row-height-default), var(--vxe-ui-input-date-month-year-row-height-medium), var(--vxe-ui-input-date-month-year-row-height-small), var(--vxe-ui-input-date-month-year-row-height-mini);
-  $quarterRowHeightList: var(--vxe-ui-input-date-quarter-row-height-default), var(--vxe-ui-input-date-quarter-row-height-medium), var(--vxe-ui-input-date-quarter-row-height-small), var(--vxe-ui-input-date-quarter-row-height-mini);
-  $titleRowHeightList: var(--vxe-ui-input-date-title-height-default), var(--vxe-ui-input-date-title-height-medium), var(--vxe-ui-input-date-title-height-small), var(--vxe-ui-input-date-title-height-mini);
-  
-  font-size: list.nth($fontSizeList, $sizeIndex);
-  .vxe-number-input--panel-wrapper {
-    max-height: 400px - $sizeIndex * 20;
-  }
-  &.type--date,
-  &.type--time,
-  &.type--week,
-  &.type--month,
-  &.type--quarter,
-  &.type--year {
-    .vxe-number-input--panel-wrapper {
-      padding: 12px - $sizeIndex;
-    }
-  }
-  &.type--date,
-  &.type--month,
-  &.type--quarter,
-  &.type--year {
-    .vxe-number-input--panel-wrapper {
-      $widthList: 336px, 336px, 312px, 288px;
-      width: list.nth($widthList, $sizeIndex);
-    }
-  }
-  &.type--week {
-    .vxe-number-input--panel-wrapper {
-      $widthList: 380px, 380px, 354px, 326px;
-      width: list.nth($widthList, $sizeIndex);
-    }
-  }
-  &.type--time {
-    .vxe-number-input--panel-wrapper {
-      $widthList: 170px, 168px, 154px, 146px;
-      width: list.nth($widthList, $sizeIndex);
-    }
-  }
-  &.type--datetime {
-    .vxe-number-input--panel-left-wrapper {
-      $widthList: 336px, 336px, 312px, 288px;
-      width: list.nth($widthList, $sizeIndex);
-    }
-    .vxe-number-input--panel-left-wrapper,
-    .vxe-number-input--panel-right-wrapper {
-      padding: 12px - $sizeIndex;
-    }
-  }
-  .vxe-number-input--time-picker-title {
-    height: 31px - $sizeIndex;
-    line-height: 31px - $sizeIndex;
-    padding: 0 12px - $sizeIndex;
-  }
-  .vxe-number-input--date-picker-label,
-  .vxe-number-input--date-picker-btn {
-    height: 31px - $sizeIndex;
-    line-height: 31px - $sizeIndex;
-  }
-  .vxe-number-input--date-picker-btn-wrapper {
-    .vxe-number-input--date-picker-btn {
-      margin-left: 9px - $sizeIndex;
-    }
-    .vxe-number-input--date-picker-prev-btn,
-    .vxe-number-input--date-picker-current-btn,
-    .vxe-number-input--date-picker-next-btn {
-      width: 31px - $sizeIndex;
-      border-radius: var(--vxe-ui-base-border-radius);
-      border: 1px solid var(--vxe-ui-input-border-color);
-    }
-  }
-  .vxe-number-input--date-picker-type-wrapper {
-    .vxe-number-input--date-picker-label,
-    .vxe-number-input--date-picker-btn {
-      padding: 0 10px - $sizeIndex;
-    }
-  }
-  .vxe-number-input--time-picker-header,
-  .vxe-number-input--date-picker-header {
-    $paddingBottomList: 8px, 7px, 6px, 5px;
-    padding-bottom: list.nth($paddingBottomList, $sizeIndex);
-  }
-  .vxe-number-input--date-picker-body table,
-  .vxe-number-input--time-picker-body {
-    height: calc(list.nth($timeWeekRowHeightList, $sizeIndex) * 6 + list.nth($titleRowHeightList, $sizeIndex));
-  }
-  .vxe-number-input--time-picker-body {
-    $ulWidthList: 48px, 48px, 44px, 42px;
-    & > ul {
-      width: list.nth($ulWidthList, $sizeIndex);
-      &:before,
-      &:after {
-        $heightList: 120px, 120px, 110px, 100px;
-        height: list.nth($heightList, $sizeIndex);
-      }
-      & > li {
-        height: 26px;
-        padding-left: 10px - $sizeIndex;
-      }
-    }
-    .vxe-number-input--time-picker-minute-list {
-      left: list.nth($ulWidthList, $sizeIndex);
-    }
-    .vxe-number-input--time-picker-second-list {
-      left: calc(list.nth($ulWidthList, $sizeIndex) * 2);
-    }
-  }
-  .vxe-number-input--date-day-view,
-  .vxe-number-input--date-week-view {
-    td {
-      height: list.nth($timeWeekRowHeightList, $sizeIndex);
-    }
-  }
-  .vxe-number-input--date-quarter-view {
-    td {
-      height: list.nth($quarterRowHeightList, $sizeIndex);
-    }
-  }
-  .vxe-number-input--date-month-view,
-  .vxe-number-input--date-year-view {
-    td {
-      height: list.nth($monthYearRowHeightList, $sizeIndex);
-    }
-  }
-  .vxe-number-input--date-picker-body {
-    th {
-      height: list.nth($titleRowHeightList, $sizeIndex);
-    }
-  }
-  .vxe-number-input--time-picker-confirm,
-  .vxe-number-input--date-picker-confirm {
-    height: 31px - $sizeIndex;
-    padding: 0 10px - $sizeIndex;
-  }
-  .vxe-number-input--date-label {
-    line-height: calc(list.nth($fontSizeList, $sizeIndex) + 1px);
-  }
-}
-
-.vxe-number-input--panel {
-  @include getPanelStyle(1);
-  &.size--medium {
-    @include getPanelStyle(2);
-  }
-  &.size--small {
-    @include getPanelStyle(3);
-  }
-  &.size--mini {
-    @include getPanelStyle(4);
   }
 }

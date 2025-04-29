@@ -35,10 +35,33 @@ export namespace VxeNumberInputPropTypes {
   export type Max = string | number
   export type Step = string | number
   export type Exponential = boolean
+  /**
+   * @deprecated
+   */
   export type Controls = boolean
+  export interface ControlConfig {
+    /**
+     * 是否启用，支持局部/全局启用
+     */
+    enabled?: boolean
+    /**
+     * 只对 enabled 启用后有效，是否显示控制按钮
+     */
+    showButton?: boolean
+    /**
+     * 只对 enabled 启用后有效，是否启用鼠标滚轮操作
+     */
+    isWheel?: boolean
+    /**
+     * 按钮的布局方式
+     */
+    layout?: 'left' | 'right' | 'default' | ''
+  }
   export type Digits = string | number
   export type AutoFill = boolean
   export type Editable = boolean
+  export type PlusIcon = string
+  export type MinusIcon = string
   export type PrefixIcon = string
   export type SuffixIcon = string
 
@@ -74,20 +97,55 @@ export interface VxeNumberInputProps {
   align?: VxeNumberInputPropTypes.Align
   form?: VxeNumberInputPropTypes.Form
 
-  // number、integer、float
+  /**
+   * 最小值
+   */
   min?: VxeNumberInputPropTypes.Min
+  /**
+   * 最大值
+   */
   max?: VxeNumberInputPropTypes.Max
+  /**
+   * 数字间隔，当启用控制按钮时有效
+   */
   step?: VxeNumberInputPropTypes.Step
+  /**
+   * 是否允许输入科学计数
+   */
   exponential?: VxeNumberInputPropTypes.Exponential
 
-  // number、integer、float、password
+  /**
+   * 已废弃，请使用 control-config.showButton
+   * @deprecated
+   */
   controls?: VxeNumberInputPropTypes.Controls
+  /**
+   * 控制按钮配置项
+   */
+  controlConfig?: VxeNumberInputPropTypes.ControlConfig
 
-  // float
+  /**
+   * 小数位数
+   */
   digits?: VxeNumberInputPropTypes.Digits
+  /**
+   * 只对 type=float,amount 有效，当输入的小数位数不足时，自动给小数后面补 0
+   */
   autoFill?: VxeNumberInputPropTypes.AutoFill
 
+  /**
+   * 文本框是否允许输入
+   */
   editable?: VxeNumberInputPropTypes.Editable
+
+  /**
+   * 自定义增加按钮图标
+   */
+  plusIcon?: VxeNumberInputPropTypes.PlusIcon
+  /**
+   * 自定义减少按钮图标
+   */
+  minusIcon?: VxeNumberInputPropTypes.MinusIcon
 
   prefixIcon?: VxeNumberInputPropTypes.PrefixIcon
   suffixIcon?: VxeNumberInputPropTypes.SuffixIcon
@@ -114,6 +172,7 @@ export interface VxeNumberInputProps {
 }
 
 export interface NumberInputPrivateComputed {
+  computeControlOpts: VxeNumberInputPropTypes.ControlConfig
 }
 export interface VxeNumberInputPrivateComputed extends NumberInputPrivateComputed { }
 
@@ -125,6 +184,8 @@ export interface NumberInputReactData {
 
 export interface NumberInputInternalData {
   dnTimeout?: undefined | number
+  ainTimeout?: undefined | number
+  isMouseDown?: boolean
   isUM?: boolean
 }
 
@@ -159,10 +220,14 @@ export type VxeNumberInputEmits = [
   'focus',
   'blur',
   'clear',
+  'plus-number',
+  'minus-number',
+  'prefix-click',
+  'suffix-click',
+
+  // 已废弃
   'prev-number',
   'next-number',
-  'prefix-click',
-  'suffix-click'
 ]
 
 export namespace VxeNumberInputDefines {
@@ -177,21 +242,30 @@ export namespace VxeNumberInputDefines {
 
   export interface ChangeParams extends NumberInputParams {}
   export interface ChangeEventParams extends NumberInputEventParams, ChangeParams { }
+
+  export interface PlusNumberEventParams extends NumberInputEventParams, NumberInputParams { }
+  export interface MinusNumberEventParams extends NumberInputEventParams, NumberInputParams { }
 }
 
 export type VxeNumberInputEventProps = {
   onInput?: VxeNumberInputEvents.Input
   onChange?: VxeNumberInputEvents.Change
+  onPlusNumber?: VxeNumberInputEvents.PlusNumber
+  onMinusNumber?: VxeNumberInputEvents.MinusNumber
 }
 
 export interface VxeNumberInputListeners {
   input?: VxeNumberInputEvents.Input
   change?: VxeNumberInputEvents.Change
+  plusNumber?: VxeNumberInputEvents.PlusNumber
+  minusNumber?: VxeNumberInputEvents.MinusNumber
 }
 
 export namespace VxeNumberInputEvents {
   export type Input = (params: VxeNumberInputDefines.InputEventParams) => void
   export type Change = (params: VxeNumberInputDefines.ChangeEventParams) => void
+  export type PlusNumber = (params: VxeNumberInputDefines.PlusNumberEventParams) => void
+  export type MinusNumber = (params: VxeNumberInputDefines.MinusNumberEventParams) => void
 }
 
 export namespace VxeNumberInputSlotTypes {

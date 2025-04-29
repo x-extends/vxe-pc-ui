@@ -2,7 +2,7 @@ import { CreateElement, PropType, VNode } from 'vue'
 import { defineVxeComponent } from '../../ui/src/comp'
 import XEUtils from 'xe-utils'
 import { getConfig, getIcon, getI18n, globalEvents, GLOBAL_EVENT_KEYS, createEvent, globalMixins, renderEmptyElement } from '../../ui'
-import { getFuncText, eqEmptyValue } from '../../ui/src/utils'
+import { getFuncText, eqEmptyValue, isEnableConf } from '../../ui/src/utils'
 import { hasClass, getEventTargetNode, hasControlKey } from '../../ui/src/dom'
 import { getSlotVNs } from '../../ui/src/vn'
 import { handleNumber, toFloatValueFixed } from './util'
@@ -87,12 +87,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       type: String as PropType<VxeNumberInputPropTypes.CurrencySymbol>,
       default: () => getConfig().numberInput.currencySymbol
     },
-
-    // number、integer、float
-    controls: {
-      type: Boolean as PropType<VxeNumberInputPropTypes.Controls>,
-      default: () => getConfig().numberInput.controls
-    },
+    controlConfig: Object as PropType<VxeNumberInputPropTypes.ControlConfig>,
 
     // float
     digits: {
@@ -108,9 +103,16 @@ export default /* define-vxe-component start */ defineVxeComponent({
       default: true
     },
 
+    plusIcon: String as PropType<VxeNumberInputPropTypes.PlusIcon>,
+    minusIcon: String as PropType<VxeNumberInputPropTypes.MinusIcon>,
     prefixIcon: String as PropType<VxeNumberInputPropTypes.PrefixIcon>,
     suffixIcon: String as PropType<VxeNumberInputPropTypes.SuffixIcon>,
 
+    // 已废弃
+    controls: {
+      type: Boolean as PropType<VxeNumberInputPropTypes.Controls>,
+      default: null
+    },
     // 已废弃
     maxlength: [String, Number] as PropType<VxeNumberInputPropTypes.Maxlength>,
     // 已废弃
@@ -134,6 +136,8 @@ export default /* define-vxe-component start */ defineVxeComponent({
     }
     const internalData: NumberInputInternalData = {
       // dnTimeout: undefined,
+      // ainTimeout: undefined,
+      // isMouseDown: undefined,
       // isUM: undefined
     }
     return {
@@ -191,6 +195,12 @@ export default /* define-vxe-component start */ defineVxeComponent({
         }
       }
       return XEUtils.toInteger(defDigits) || 1
+    },
+    computeControlOpts () {
+      const $xeNumberInput = this
+      const props = $xeNumberInput
+
+      return Object.assign({}, getConfig().numberInput.controlConfig, props.controlConfig)
     },
     computeDecimalsType () {
       const $xeNumberInput = this
@@ -273,9 +283,10 @@ export default /* define-vxe-component start */ defineVxeComponent({
 
       const { type, showCurrency, currencySymbol, autoFill } = props
       const { inputValue } = reactData
-      const digitsValue = $xeNumberInput.computeDigitsValue as number
+      const digitsValue = $xeNumberInput.computeDigitsValue
       if (type === 'amount') {
-        let amountLabel = XEUtils.commafy(XEUtils.toNumber(inputValue), { digits: digitsValue })
+        const num = XEUtils.toNumber(inputValue)
+        let amountLabel = XEUtils.commafy(num, { digits: digitsValue })
         if (!autoFill) {
           const [iStr, dStr] = amountLabel.split('.')
           if (dStr) {
@@ -638,41 +649,34 @@ export default /* define-vxe-component start */ defineVxeComponent({
       }
       $xeNumberInput.emitInputEvent($xeNumberInput.getNumberValue(restNum), evnt as (Event & { type: 'input' }))
     },
-    numberNextEvent (evnt: Event) {
-      const $xeNumberInput = this
-      const reactData = $xeNumberInput.reactData
-
-      const isDisabled = $xeNumberInput.computeIsDisabled
-      const formReadonly = $xeNumberInput.computeFormReadonly
-      const isDisabledSubtractNumber = $xeNumberInput.computeIsDisabledSubtractNumber
-      $xeNumberInput.numberStopDown()
-      if (!isDisabled && !formReadonly && !isDisabledSubtractNumber) {
-        $xeNumberInput.numberChange(false, evnt)
-      }
-      reactData.isActivated = true
-      $xeNumberInput.dispatchEvent('next-number', { value: reactData.inputValue }, evnt)
-    },
-    numberDownNextEvent (evnt: Event) {
-      const $xeNumberInput = this
-      const internalData = $xeNumberInput.internalData
-
-      internalData.dnTimeout = setTimeout(() => {
-        $xeNumberInput.numberNextEvent(evnt)
-        $xeNumberInput.numberDownNextEvent(evnt)
-      }, 60)
-    },
-    numberPrevEvent (evnt: Event) {
+    numberPlusEvent (evnt: Event) {
       const $xeNumberInput = this
       const reactData = $xeNumberInput.reactData
 
       const isDisabled = $xeNumberInput.computeIsDisabled
       const formReadonly = $xeNumberInput.computeFormReadonly
       const isDisabledAddNumber = $xeNumberInput.computeIsDisabledAddNumber
-      $xeNumberInput.numberStopDown()
       if (!isDisabled && !formReadonly && !isDisabledAddNumber) {
         $xeNumberInput.numberChange(true, evnt)
       }
       reactData.isActivated = true
+      $xeNumberInput.dispatchEvent('plus-number', { value: reactData.inputValue }, evnt)
+      // 已废弃
+      $xeNumberInput.dispatchEvent('next-number', { value: reactData.inputValue }, evnt)
+    },
+    numberMinusEvent (evnt: Event) {
+      const $xeNumberInput = this
+      const reactData = $xeNumberInput.reactData
+
+      const isDisabled = $xeNumberInput.computeIsDisabled
+      const formReadonly = $xeNumberInput.computeFormReadonly
+      const isDisabledSubtractNumber = $xeNumberInput.computeIsDisabledSubtractNumber
+      if (!isDisabled && !formReadonly && !isDisabledSubtractNumber) {
+        $xeNumberInput.numberChange(false, evnt)
+      }
+      reactData.isActivated = true
+      $xeNumberInput.dispatchEvent('minus-number', { value: reactData.inputValue }, evnt)
+      // 已废弃
       $xeNumberInput.dispatchEvent('prev-number', { value: reactData.inputValue }, evnt)
     },
     numberKeydownEvent  (evnt: KeyboardEvent) {
@@ -683,9 +687,9 @@ export default /* define-vxe-component start */ defineVxeComponent({
       if (isUpArrow || isDwArrow) {
         evnt.preventDefault()
         if (isUpArrow) {
-          $xeNumberInput.numberPrevEvent(evnt)
+          $xeNumberInput.numberMinusEvent(evnt)
         } else {
-          $xeNumberInput.numberNextEvent(evnt)
+          $xeNumberInput.numberPlusEvent(evnt)
         }
       }
     },
@@ -694,6 +698,8 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const props = $xeNumberInput
 
       const { type, exponential, controls } = props
+      const controlOpts = $xeNumberInput.computeControlOpts
+      const { showButton } = controlOpts
       const inputReadonly = $xeNumberInput.computeInputReadonly
       const isControlKey = hasControlKey(evnt)
       const isShiftKey = evnt.shiftKey
@@ -710,7 +716,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       if (isEsc) {
         $xeNumberInput.afterCheckValue()
       } else if (isUpArrow || isDwArrow) {
-        if (controls && !inputReadonly) {
+        if (isEnableConf(controlOpts) && (controls === false ? controls : showButton) && !inputReadonly) {
           $xeNumberInput.numberKeydownEvent(evnt)
         }
       }
@@ -722,7 +728,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       $xeNumberInput.triggerEvent(evnt)
     },
     // 数值
-    numberStopDown () {
+    stopDown () {
       const $xeNumberInput = this
       const internalData = $xeNumberInput.internalData
 
@@ -732,32 +738,76 @@ export default /* define-vxe-component start */ defineVxeComponent({
         internalData.dnTimeout = undefined
       }
     },
-    numberDownPrevEvent  (evnt: Event) {
+    stopAutoIncrement () {
       const $xeNumberInput = this
       const internalData = $xeNumberInput.internalData
 
-      internalData.dnTimeout = setTimeout(() => {
-        $xeNumberInput.numberPrevEvent(evnt)
-        $xeNumberInput.numberDownPrevEvent(evnt)
+      const { ainTimeout } = internalData
+      if (ainTimeout) {
+        clearTimeout(ainTimeout)
+        internalData.ainTimeout = undefined
+      }
+    },
+    numberDownMinusEvent (evnt: Event) {
+      const $xeNumberInput = this
+      const internalData = $xeNumberInput.internalData
+
+      $xeNumberInput.numberStopAll()
+      internalData.ainTimeout = setTimeout(() => {
+        $xeNumberInput.numberMinusEvent(evnt)
+        $xeNumberInput.numberDownMinusEvent(evnt)
       }, 60)
     },
-    numberMousedownEvent  (evnt: MouseEvent) {
+    numberDownPlusEvent (evnt: Event) {
       const $xeNumberInput = this
       const internalData = $xeNumberInput.internalData
 
-      $xeNumberInput.numberStopDown()
-      if (evnt.button === 0) {
-        const isPrevNumber = hasClass(evnt.currentTarget, 'is--prev')
-        if (isPrevNumber) {
-          $xeNumberInput.numberPrevEvent(evnt)
+      $xeNumberInput.numberStopAll()
+      internalData.ainTimeout = setTimeout(() => {
+        $xeNumberInput.numberPlusEvent(evnt)
+        $xeNumberInput.numberDownPlusEvent(evnt)
+      }, 60)
+    },
+    numberStopAll () {
+      const $xeNumberInput = this
+
+      $xeNumberInput.stopDown()
+      $xeNumberInput.stopAutoIncrement()
+    },
+    numberClickEvent (evnt: MouseEvent) {
+      const $xeNumberInput = this
+      const internalData = $xeNumberInput.internalData
+
+      if (internalData.isMouseDown) {
+        internalData.isMouseDown = false
+      } else {
+        $xeNumberInput.numberStopAll()
+        const isAddNumber = hasClass(evnt.currentTarget, 'is--plus')
+        if (isAddNumber) {
+          $xeNumberInput.numberPlusEvent(evnt)
         } else {
-          $xeNumberInput.numberNextEvent(evnt)
+          $xeNumberInput.numberMinusEvent(evnt)
+        }
+      }
+    },
+    numberMousedownEvent (evnt: MouseEvent) {
+      const $xeNumberInput = this
+      const internalData = $xeNumberInput.internalData
+
+      $xeNumberInput.numberStopAll()
+      internalData.isMouseDown = true
+      if (evnt.button === 0) {
+        const isAddNumber = hasClass(evnt.currentTarget, 'is--plus')
+        if (isAddNumber) {
+          $xeNumberInput.numberPlusEvent(evnt)
+        } else {
+          $xeNumberInput.numberMinusEvent(evnt)
         }
         internalData.dnTimeout = setTimeout(() => {
-          if (isPrevNumber) {
-            $xeNumberInput.numberDownPrevEvent(evnt)
+          if (isAddNumber) {
+            $xeNumberInput.numberDownPlusEvent(evnt)
           } else {
-            $xeNumberInput.numberDownNextEvent(evnt)
+            $xeNumberInput.numberDownMinusEvent(evnt)
           }
         }, 500)
       }
@@ -770,16 +820,19 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const props = $xeNumberInput
       const reactData = $xeNumberInput.reactData
 
+      const { controls } = props
+      const controlOpts = $xeNumberInput.computeControlOpts
+      const { isWheel } = controlOpts
       const inputReadonly = $xeNumberInput.computeInputReadonly
-      if (props.controls && !inputReadonly) {
+      if (isEnableConf(controlOpts) && (controls === false ? controls : isWheel) && !inputReadonly) {
         if (reactData.isActivated) {
           evnt.stopPropagation()
           evnt.preventDefault()
           const delta = evnt.deltaY
           if (delta > 0) {
-            $xeNumberInput.numberNextEvent(evnt)
+            $xeNumberInput.numberPlusEvent(evnt)
           } else if (delta < 0) {
-            $xeNumberInput.numberPrevEvent(evnt)
+            $xeNumberInput.numberMinusEvent(evnt)
           }
         }
       }
@@ -852,49 +905,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
     //
     // Render
     //
-    renderNumberIcon (h: CreateElement): VNode {
-      const $xeNumberInput = this
-
-      const isDisabledAddNumber = $xeNumberInput.computeIsDisabledAddNumber
-      const isDisabledSubtractNumber = $xeNumberInput.computeIsDisabledSubtractNumber
-      return h('div', {
-        class: 'vxe-input--control-icon'
-      }, [
-        h('div', {
-          class: 'vxe-input--number-icon'
-        }, [
-          h('div', {
-            class: ['vxe-input--number-btn is--prev', {
-              'is--disabled': isDisabledAddNumber
-            }],
-            on: {
-              mousedown: $xeNumberInput.numberMousedownEvent,
-              mouseup: $xeNumberInput.numberStopDown,
-              mouseleave: $xeNumberInput.numberStopDown
-            }
-          }, [
-            h('i', {
-              class: getIcon().NUMBER_INPUT_PREV_NUM
-            })
-          ]),
-          h('div', {
-            class: ['vxe-input--number-btn is--next', {
-              'is--disabled': isDisabledSubtractNumber
-            }],
-            on: {
-              mousedown: $xeNumberInput.numberMousedownEvent,
-              mouseup: $xeNumberInput.numberStopDown,
-              mouseleave: $xeNumberInput.numberStopDown
-            }
-          }, [
-            h('i', {
-              class: getIcon().NUMBER_INPUT_NEXT_NUM
-            })
-          ])
-        ])
-      ])
-    },
-    renderPrefixIcon (h: CreateElement): VNode | null {
+    renderPrefixIcon (h: CreateElement) {
       const $xeNumberInput = this
       const props = $xeNumberInput
       const slots = $xeNumberInput.$scopedSlots
@@ -918,13 +929,13 @@ export default /* define-vxe-component start */ defineVxeComponent({
                 })
               ])
         ])
-        : null
+        : renderEmptyElement($xeNumberInput)
     },
-    renderSuffixIcon  (h: CreateElement): VNode {
+    renderSuffixIcon (h: CreateElement) {
       const $xeNumberInput = this
       const props = $xeNumberInput
-      const slots = $xeNumberInput.$scopedSlots
       const reactData = $xeNumberInput.reactData
+      const slots = $xeNumberInput.$scopedSlots
 
       const { suffixIcon } = props
       const { inputValue } = reactData
@@ -948,7 +959,6 @@ export default /* define-vxe-component start */ defineVxeComponent({
             })
           ])
           : renderEmptyElement($xeNumberInput),
-        $xeNumberInput.renderExtraSuffixIcon(h),
         suffixSlot || suffixIcon
           ? h('div', {
             class: 'vxe-number-input--suffix-icon',
@@ -965,63 +975,29 @@ export default /* define-vxe-component start */ defineVxeComponent({
           : renderEmptyElement($xeNumberInput)
       ])
     },
-    renderExtraSuffixIcon (h: CreateElement): VNode {
-      const $xeNumberInput = this
-      const props = $xeNumberInput
-
-      const { controls } = props
-      const inputReadonly = $xeNumberInput.computeInputReadonly
-      if (controls && !inputReadonly) {
-        return $xeNumberInput.renderNumberIcon(h)
-      }
-      return renderEmptyElement($xeNumberInput)
-    },
-    renderVN (h: CreateElement): VNode {
+    renderInput (h: CreateElement) {
       const $xeNumberInput = this
       const props = $xeNumberInput
       const reactData = $xeNumberInput.reactData
 
-      const { className, controls, type, align, name, autocomplete, autoComplete } = props
-      const { inputValue, isFocus, isActivated } = reactData
-      const vSize = $xeNumberInput.computeSize
+      const { type, name, autocomplete, autoComplete } = props
+      const { inputValue, isFocus } = reactData
       const isDisabled = $xeNumberInput.computeIsDisabled
-      const formReadonly = $xeNumberInput.computeFormReadonly
       const numLabel = $xeNumberInput.computeNumLabel
-      if (formReadonly) {
-        return h('div', {
-          ref: 'refElem',
-          class: ['vxe-number-input--readonly', `type--${type}`, className]
-        }, numLabel)
-      }
       const inputReadonly = $xeNumberInput.computeInputReadonly
       const inpMaxLength = $xeNumberInput.computeInpMaxLength
       const inpPlaceholder = $xeNumberInput.computeInpPlaceholder
-      const isClearable = $xeNumberInput.computeIsClearable
-      const prefix = $xeNumberInput.renderPrefixIcon(h)
-      const suffix = $xeNumberInput.renderSuffixIcon(h)
       return h('div', {
-        ref: 'refElem',
-        class: ['vxe-number-input', `type--${type}`, className, {
-          [`size--${vSize}`]: vSize,
-          [`is--${align}`]: align,
-          'is--controls': controls && !inputReadonly,
-          'is--prefix': !!prefix,
-          'is--suffix': !!suffix,
-          'is--disabled': isDisabled,
-          'is--active': isActivated,
-          'show--clear': isClearable && !isDisabled && !(inputValue === '' || XEUtils.eqNull(inputValue))
-        }],
-        attrs: {
-          spellcheck: false
-        }
+        key: 'ni',
+        class: 'vxe-number-input--input-wrapper'
       }, [
-        prefix || renderEmptyElement($xeNumberInput),
+        $xeNumberInput.renderPrefixIcon(h),
         h('div', {
-          class: 'vxe-number-input--wrapper'
+          class: 'vxe-number-input--input-inner'
         }, [
           h('input', {
             ref: 'refInputTarget',
-            class: 'vxe-number-input--inner',
+            class: 'vxe-number-input--input',
             domProps: {
               value: !isFocus && type === 'amount' ? numLabel : inputValue
             },
@@ -1046,8 +1022,125 @@ export default /* define-vxe-component start */ defineVxeComponent({
             }
           })
         ]),
-        suffix || renderEmptyElement($xeNumberInput)
+        $xeNumberInput.renderSuffixIcon(h)
       ])
+    },
+    renderMinusBtn (h: CreateElement) {
+      const $xeNumberInput = this
+      const props = $xeNumberInput
+
+      const { minusIcon } = props
+      const isDisabledSubtractNumber = $xeNumberInput.computeIsDisabledSubtractNumber
+      return h('button', {
+        key: 'prev',
+        class: ['vxe-number-input--minus-btn is--minus', {
+          'is--disabled': isDisabledSubtractNumber
+        }],
+        on: {
+          click: $xeNumberInput.numberClickEvent,
+          mousedown: $xeNumberInput.numberMousedownEvent,
+          mouseup: $xeNumberInput.numberStopAll,
+          mouseleave: $xeNumberInput.numberStopAll
+        }
+      }, [
+        h('i', {
+          class: minusIcon || getIcon().NUMBER_INPUT_MINUS_NUM
+        })
+      ])
+    },
+    renderPlusBtn (h: CreateElement) {
+      const $xeNumberInput = this
+      const props = $xeNumberInput
+
+      const { plusIcon } = props
+      const isDisabledAddNumber = $xeNumberInput.computeIsDisabledAddNumber
+      return h('button', {
+        key: 'next',
+        class: ['vxe-number-input--plus-btn is--plus', {
+          'is--disabled': isDisabledAddNumber
+        }],
+        on: {
+          click: $xeNumberInput.numberClickEvent,
+          mousedown: $xeNumberInput.numberMousedownEvent,
+          mouseup: $xeNumberInput.numberStopAll,
+          mouseleave: $xeNumberInput.numberStopAll
+        }
+      }, [
+        h('i', {
+          class: plusIcon || getIcon().NUMBER_INPUT_PLUS_NUM
+        })
+      ])
+    },
+    renderSideControl (h: CreateElement) {
+      const $xeNumberInput = this
+
+      return h('div', {
+        key: 'cplr',
+        class: 'vxe-number-input--side-control'
+      }, [
+        $xeNumberInput.renderPlusBtn(h),
+        $xeNumberInput.renderMinusBtn(h)
+      ])
+    },
+    renderVN (h: CreateElement): VNode {
+      const $xeNumberInput = this
+      const props = $xeNumberInput
+      const reactData = $xeNumberInput.reactData
+      const slots = $xeNumberInput.$scopedSlots
+
+      const { className, controls, type, align, prefixIcon, suffixIcon } = props
+      const { inputValue, isActivated } = reactData
+      const vSize = $xeNumberInput.computeSize
+      const controlOpts = $xeNumberInput.computeControlOpts
+      const { layout, showButton } = controlOpts
+      const isDisabled = $xeNumberInput.computeIsDisabled
+      const formReadonly = $xeNumberInput.computeFormReadonly
+      const numLabel = $xeNumberInput.computeNumLabel
+      const prefixSlot = slots.prefix
+      const suffixSlot = slots.suffix
+      if (formReadonly) {
+        return h('div', {
+          ref: 'refElem',
+          class: ['vxe-number-input--readonly', `type--${type}`, className]
+        }, numLabel)
+      }
+      const inputReadonly = $xeNumberInput.computeInputReadonly
+      const isClearable = $xeNumberInput.computeIsClearable
+      const isControls = isEnableConf(controlOpts) && (controls === false ? controls : showButton)
+      return h('div', {
+        ref: 'refElem',
+        class: ['vxe-number-input', `type--${type}`, `control-${layout === 'right' || layout === 'left' ? layout : 'default'}`, className, {
+          [`size--${vSize}`]: vSize,
+          [`is--${align}`]: align,
+          'is--controls': isControls && !inputReadonly,
+          'is--prefix': !!prefixSlot || prefixIcon,
+          'is--suffix': !!suffixSlot || suffixIcon,
+          'is--disabled': isDisabled,
+          'is--active': isActivated,
+          'show--clear': isClearable && !isDisabled && !(inputValue === '' || XEUtils.eqNull(inputValue))
+        }],
+        attrs: {
+          spellcheck: false
+        }
+      }, isControls
+        ? (layout === 'right'
+            ? [
+                $xeNumberInput.renderInput(h),
+                $xeNumberInput.renderSideControl(h)
+              ]
+            : (layout === 'left'
+                ? [
+                    $xeNumberInput.renderSideControl(h),
+                    $xeNumberInput.renderInput(h)
+                  ]
+                : [
+                    $xeNumberInput.renderMinusBtn(h),
+                    $xeNumberInput.renderInput(h),
+                    $xeNumberInput.renderPlusBtn(h)
+                  ]))
+        : [
+            $xeNumberInput.renderInput(h)
+          ])
     }
   },
   watch: {
@@ -1092,7 +1185,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
     const reactData = $xeNumberInput.reactData
 
     reactData.isFocus = false
-    $xeNumberInput.numberStopDown()
+    $xeNumberInput.numberStopAll()
     $xeNumberInput.afterCheckValue()
     globalEvents.off($xeNumberInput, 'mousedown')
     globalEvents.off($xeNumberInput, 'keydown')

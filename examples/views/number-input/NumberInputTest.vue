@@ -28,7 +28,7 @@
       </vxe-number-input>
       <vxe-number-input v-model="demo1.value601" placeholder="自定义后缀图标">
         <template #suffix>
-          <i class="fa fa-search my-green"></i>
+          <i class="vxe-icon-usd my-green"></i>
         </template>
       </vxe-number-input>
       <vxe-number-input v-model="demo1.value602" class="my-domain" placeholder="自定义前缀模板">
@@ -38,7 +38,7 @@
       </vxe-number-input>
       <vxe-number-input v-model="demo1.value603" class="my-search" placeholder="自定义后缀模板">
         <template #suffix>
-          <i class="fa fa-search"></i>
+          <i class="vxe-icon-rmb"></i>
         </template>
       </vxe-number-input>
     </p>
@@ -49,7 +49,22 @@
       <vxe-number-input v-model="demo1.value800" type="amount"></vxe-number-input>
     </p>
     <p>
-      <vxe-number-input v-model="demo1.value900" type="float" :auto-fill="false"></vxe-number-input>
+      <vxe-number-input v-model="demo1.value900" type="float" :auto-fill="false" :controls="false"></vxe-number-input>
+    </p>
+    <p>
+      <vxe-number-input v-model="demo1.value901" type="float" :auto-fill="false" :control-config="{enabled: false}"></vxe-number-input>
+    </p>
+    <p>
+      <vxe-number-input v-model="demo1.value902" type="float" :auto-fill="false" :control-config="{showButton: false}"></vxe-number-input>
+    </p>
+    <p>
+      <vxe-number-input v-model="demo1.value903" type="float" :auto-fill="false" :control-config="{isWheel: false}"></vxe-number-input>
+    </p>
+    <p>
+      <vxe-number-input v-model="demo1.value904" type="float" :control-config="{layout: 'left'}"></vxe-number-input>
+    </p>
+    <p>
+      <vxe-number-input v-model="demo1.value905" type="float" :control-config="{layout: 'right'}" next-icon="vxe-icon-arrow-up" prev-icon="vxe-icon-arrow-down"></vxe-number-input>
     </p>
   </div>
 </template>
@@ -80,8 +95,13 @@ export default Vue.extend({
         value602: null,
         value603: null,
         value700: 1234,
-        value800: null,
-        value900: null
+        value800: '3.1',
+        value900: '3.2',
+        value901: '3.3',
+        value902: '3.4',
+        value903: '3.5',
+        value904: '3.6',
+        value905: '3.7'
       }
     }
   }
