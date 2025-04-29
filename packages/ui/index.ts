@@ -233,7 +233,7 @@ setConfig({
     autoFill: true,
     controlConfig: {
       enabled: true,
-      // layout: 'default',
+      layout: 'right',
       showButton: true,
       isWheel: true
     }
