@@ -458,37 +458,37 @@
   .vxe-form--item {
     &:not(.is--vertical) {
       .vxe-form--item-title {
-        min-height: calc(var(--vxe-ui-form-item-min-height-default) + 0.6em);
+        min-height: calc(var(--vxe-ui-form-item-min-height-default));
       }
     }
     .vxe-form--item-content {
-      min-height: calc(var(--vxe-ui-form-item-min-height-default) + 0.6em);
+      min-height: calc(var(--vxe-ui-form-item-min-height-default));
     }
   }
   &.is--border {
     .vxe-form--item {
       .vxe-form--item-title {
-        min-height: calc(var(--vxe-ui-form-item-min-height-default) + 0.6em);
+        min-height: calc(var(--vxe-ui-form-item-min-height-default));
       }
     }
     &.size--medium {
       .vxe-form--item {
         .vxe-form--item-title {
-          min-height: calc(var(--vxe-ui-form-item-min-height-medium) + 0.6em);
+          min-height: calc(var(--vxe-ui-form-item-min-height-medium) );
         }
       }
     }
     &.size--small {
       .vxe-form--item {
         .vxe-form--item-title {
-          min-height: calc(var(--vxe-ui-form-item-min-height-small) + 0.6em);
+          min-height: calc(var(--vxe-ui-form-item-min-height-small));
         }
       }
     }
     &.size--mini {
       .vxe-form--item {
         .vxe-form--item-title {
-          min-height: calc(var(--vxe-ui-form-item-min-height-mini) + 0.6em);
+          min-height: calc(var(--vxe-ui-form-item-min-height-mini));
         }
       }
     }
@@ -509,11 +509,11 @@
     .vxe-form--item {
       &:not(.is--vertical) {
         .vxe-form--item-title {
-          min-height: calc(var(--vxe-ui-form-item-min-height-medium) + 0.6em);
+          min-height: calc(var(--vxe-ui-form-item-min-height-medium));
         }
       }
       .vxe-form--item-content {
-        min-height: calc(var(--vxe-ui-form-item-min-height-medium) + 0.6em);
+        min-height: calc(var(--vxe-ui-form-item-min-height-medium));
       }
     }
   }
@@ -533,11 +533,11 @@
     .vxe-form--item {
       &:not(.is--vertical) {
         .vxe-form--item-title {
-          min-height: calc(var(--vxe-ui-form-item-min-height-small) + 0.6em);
+          min-height: calc(var(--vxe-ui-form-item-min-height-small));
         }
       }
       .vxe-form--item-content {
-        min-height: calc(var(--vxe-ui-form-item-min-height-small) + 0.6em);
+        min-height: calc(var(--vxe-ui-form-item-min-height-small));
       }
     }
   }
@@ -557,11 +557,11 @@
     .vxe-form--item {
       &:not(.is--vertical) {
         .vxe-form--item-title {
-          min-height: calc(var(--vxe-ui-form-item-min-height-mini) + 0.6em);
+          min-height: calc(var(--vxe-ui-form-item-min-height-mini));
         }
       }
       .vxe-form--item-content {
-        min-height: calc(var(--vxe-ui-form-item-min-height-mini) + 0.6em);
+        min-height: calc(var(--vxe-ui-form-item-min-height-mini));
       }
     }
   }
