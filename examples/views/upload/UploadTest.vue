@@ -1,13 +1,13 @@
 <template>
   <div>
     <p>
-      <vxe-upload v-model="fileList1" :limit-size="30" show-error-status pasteToUpload :limit-count="10" :upload-method="uploadMethod"></vxe-upload>
+      <vxe-upload v-model="fileList1" :limit-size="30" show-error-status pasteToUpload :limit-count="10" :file-types="['pdf', 'xlsx']"></vxe-upload>
     </p>
     <p>
-      <vxe-upload v-model="imgList1" mode="image" multiple show-error-status pasteToUpload :upload-method="uploadMethod"></vxe-upload>
+      <vxe-upload v-model="imgList1" mode="image" multiple show-error-status pasteToUpload></vxe-upload>
     </p>
     <p>
-      <vxe-upload v-model="fileList" multiple drag-sort :limit-size="30" autoHiddenButton show-error-status :limit-count="10" showDownloadButton :upload-method="uploadMethod"></vxe-upload>
+      <vxe-upload v-model="fileList" multiple drag-sort :limit-size="30" show-list autoHiddenButton show-error-status :limit-count="10" showDownloadButton :upload-method="uploadMethod"></vxe-upload>
     </p>
     <p>
       <vxe-upload v-model="imgList" mode="image" drag-sort multiple :image-config="{circle: true}" show-error-status :upload-method="uploadMethod" showDownloadButton></vxe-upload>
@@ -19,7 +19,7 @@
       <vxe-upload v-model="imgList" mode="image" multiple disabled show-error-status :upload-method="uploadMethod"></vxe-upload>
     </p>
     <p>
-      <vxe-upload v-model="fileList" multiple drag-sort :limit-size="30" showDownloadButton show-error-status :more-config="{maxCount: 2, layout: 'horizontal'}" show-progress>
+      <vxe-upload v-model="fileList" pasteToUpload multiple drag-sort :limit-size="30" showDownloadButton show-error-status :more-config="{maxCount: 2, layout: 'horizontal'}" show-progress>
         <template #corner>
           <vxe-button mode="text" icon="vxe-icon-edit"></vxe-button>
           <vxe-button mode="text" icon="vxe-icon-edit"></vxe-button>
@@ -27,7 +27,7 @@
       </vxe-upload>
     </p>
     <p>
-      <vxe-upload v-model="imgList" mode="image" multiple drag-sort show-error-status showDownloadButton :more-config="{maxCount: 2}" show-progress>
+      <vxe-upload v-model="imgList" mode="image" pasteToUpload multiple drag-sort show-error-status showDownloadButton :more-config="{maxCount: 2}" show-progress>
         <template #corner>
           <vxe-button mode="text" icon="vxe-icon-edit"></vxe-button>
           <vxe-button mode="text" icon="vxe-icon-edit"></vxe-button>

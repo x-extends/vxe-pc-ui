@@ -1005,7 +1005,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const props = $xeUpload
       const internalData = $xeUpload.internalData
 
-      const { imageTypes } = props
+      const { imageTypes, fileTypes } = props
       const { imagePreviewTypes } = internalData
       const isImage = $xeUpload.computeIsImage
       if (isImage) {
@@ -1017,6 +1017,25 @@ export default /* define-vxe-component start */ defineVxeComponent({
           }
           return false
         })
+      } else {
+        if (fileTypes && fileTypes.length) {
+          const errTypes: string[] = []
+          files.forEach(file => {
+            const fileType = $xeUpload.parseFileType(file.name)
+            if (!fileTypes.some(type => `${type}`.toLowerCase() === fileType)) {
+              errTypes.push(fileType)
+            }
+          })
+          if (errTypes.length) {
+            if (VxeUI.modal) {
+              VxeUI.modal.message({
+                content: getI18n('vxe.error.notType', [errTypes.join(', ')]),
+                status: 'error'
+              })
+            }
+            return
+          }
+        }
       }
       // 如果全部不满足条件
       if (!files.length) {
