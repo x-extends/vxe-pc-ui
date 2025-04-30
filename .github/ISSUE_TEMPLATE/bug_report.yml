@@ -13,7 +13,7 @@ body:
   id: issue_confirm_read_agreement
   attributes:
     label: "是否已准备好复现链接与示例代码？"
-    description: "按要求准备好复现 Demo，复现 Demo 操作步骤：https://vxeui.com/issues.html"
+    description: "按要求准备好复现 Demo，复现 Demo 操作步骤：<https://vxeui.com/issues.html>"
     options:
     - label: "我确定已准备好以上复现链接"
       required: true
@@ -55,14 +55,14 @@ body:
   id: issue_vxe_ui_version
   attributes:
     label: "vxe-pc-ui 版本："
-    placeholder: "例如：4.5.20"
+    placeholder: "例如：4.5.33"
   validations:
     required: true
 - type: input
   id: issue_vxe_table_version
   attributes:
     label: "vxe-table 版本："
-    placeholder: "例如：4.13.1"
+    placeholder: "例如：4.13.16"
   validations:
     required: true
 - type: checkboxes

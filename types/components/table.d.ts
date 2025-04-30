@@ -1867,7 +1867,7 @@ export namespace VxeTablePropTypes {
   /**
    * 查找/替换配置项
    */
-  export interface FNRConfig<DT = any> {
+  export interface FnrConfig<DT = any> {
     /**
      * 是否启用查找功能
      */
@@ -1944,7 +1944,13 @@ export namespace VxeTablePropTypes {
       result: VxeTableExtendCellAreaDefines.FindAndReplaceResult[]
     }) => void
   }
-  export interface FNROpts<D = any> extends FNRConfig<D> { }
+  export interface FNROpts<DT = any> extends FnrConfig<DT> { }
+
+  /**
+   * 已废弃，请使用 FnrConfig
+   * @deprecated
+   */
+  export interface FNRConfig<DT = any> extends FnrConfig<DT> {}
 
   /**
    * 编辑配置项
@@ -2964,7 +2970,7 @@ export interface VxeTableProps<D = any> {
   /**
    * 查找/替换配置项
    */
-  fnrConfig?: VxeTablePropTypes.FNRConfig<D>
+  fnrConfig?: VxeTablePropTypes.FnrConfig<D>
   /**
    * 按键配置项
    */

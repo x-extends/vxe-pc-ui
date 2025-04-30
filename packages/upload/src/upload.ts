@@ -864,7 +864,7 @@ export default defineComponent({
     }
 
     const uploadTransferFileEvent = (evnt: Event, files: File[]) => {
-      const { imageTypes } = props
+      const { imageTypes, fileTypes } = props
       const { imagePreviewTypes } = internalData
       const isImage = computeIsImage.value
       if (isImage) {
@@ -876,6 +876,25 @@ export default defineComponent({
           }
           return false
         })
+      } else {
+        if (fileTypes && fileTypes.length) {
+          const errTypes: string[] = []
+          files.forEach(file => {
+            const fileType = parseFileType(file.name)
+            if (!fileTypes.some(type => `${type}`.toLowerCase() === fileType)) {
+              errTypes.push(fileType)
+            }
+          })
+          if (errTypes.length) {
+            if (VxeUI.modal) {
+              VxeUI.modal.message({
+                content: getI18n('vxe.error.notType', [errTypes.join(', ')]),
+                status: 'error'
+              })
+            }
+            return
+          }
+        }
       }
       // 如果全部不满足条件
       if (!files.length) {

@@ -1,13 +1,13 @@
 <template>
   <div>
     <p>
-      <vxe-upload v-model="fileList1" :limit-size="30" show-error-status pasteToUpload :limit-count="10"></vxe-upload>
+      <vxe-upload v-model="fileList1" :limit-size="30" show-error-status pasteToUpload :limit-count="10" :file-types="['pdf', 'xlsx']"></vxe-upload>
     </p>
     <p>
       <vxe-upload v-model="imgList1" mode="image" multiple show-error-status pasteToUpload></vxe-upload>
     </p>
     <p>
-      <vxe-upload v-model="fileList" multiple drag-sort :limit-size="30" showList="true" autoHiddenButton show-error-status :limit-count="10" showDownloadButton :upload-method="uploadMethod"></vxe-upload>
+      <vxe-upload v-model="fileList" multiple drag-sort :limit-size="30" show-list autoHiddenButton show-error-status :limit-count="10" showDownloadButton :upload-method="uploadMethod"></vxe-upload>
     </p>
     <p>
       <vxe-upload v-model="imgList" mode="image" drag-sort multiple :image-config="{circle: true}" show-error-status :upload-method="uploadMethod" showDownloadButton></vxe-upload>
