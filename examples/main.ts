@@ -1,7 +1,6 @@
 import { createApp } from 'vue'
 import App from './App.vue'
 import router from './router'
-import i18n from './i18n'
 
 import './styles/index.scss'
 
@@ -42,7 +41,6 @@ window.axios.defaults.baseURL = process.env.VUE_APP_SERVE_API_URL
 const app = createApp(App)
 
 app.use(router)
-app.use(i18n)
 app.use(VxeUI)
 // app.use(VxeUITable)
 
