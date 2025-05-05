@@ -51,9 +51,17 @@ export interface TableFilterMethods<D = any> {
    */
   saveFilterPanel(): Promise<any>
   /**
+   * 用于在自定义面板中使用，手动确认筛选并触发 filter-change 事件
+   */
+  saveFilterPanelByEvent(event: Event): Promise<any>
+  /**
    * 用于在自定义面板中使用，手动重置筛选
    */
   resetFilterPanel(): Promise<any>
+  /**
+   * 用于在自定义面板中使用，手动重置筛选并触发 filter-change 事件
+   */
+  resetFilterPanelByEvent(event: Event): Promise<any>
   /**
    * 获取当前筛选的所有列信息
    */
