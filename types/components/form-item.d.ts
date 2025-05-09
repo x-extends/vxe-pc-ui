@@ -115,6 +115,10 @@ export namespace VxeFormItemPropTypes {
       key?: string
     }
     children?: any[]
+
+    startField?: string
+    endField?: string
+
     /**
      * 渲染组件的内容（需要渲染器支持）
      */

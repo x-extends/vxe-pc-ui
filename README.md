@@ -73,6 +73,7 @@
 * [ ] color-picker 颜色选择器
 * [x] countdown 倒计时
 * [x] date-picker 日期选择器
+* [x] date-range-picker 日期范围选择器
 * [x] drawer 抽屉
 * [x] empty 空数据
 * [ ] flow-design 流程设计器

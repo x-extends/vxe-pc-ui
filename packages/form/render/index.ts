@@ -4,6 +4,8 @@ import { renderer, getComponent } from '../../ui'
 import { getOnName, getModelEvent, getChangeEvent } from '../../ui/src/vn'
 import { errLog } from '../../ui/src/log'
 
+import type { VxeGlobalRendererHandles } from '../../../types'
+
 const componentDefaultModelProp = 'modelValue'
 
 /**
@@ -87,8 +89,12 @@ function getNativeElementOns (renderOpts: any, params: any, modelFunc?: any, cha
  * @param modelFunc
  * @param changeFunc
  */
-function getComponentOns (renderOpts: any, params: any, modelFunc?: any, changeFunc?: any) {
+function getComponentOns (renderOpts: any, params: any, eFns?: {
+  model: (cellValue: any) => void
+  change?: (...args: any[]) => void
+}, eventOns?: Record<string, any>) {
   const { events } = renderOpts
+  const { model: modelFunc, change: changeFunc } = eFns || {}
   const modelEvent = getModelEvent(renderOpts.name)
   const changeEvent = getChangeEvent(renderOpts.name)
   const ons: any = {}
@@ -118,17 +124,20 @@ function getComponentOns (renderOpts: any, params: any, modelFunc?: any, changeF
       }
     }
   }
-  return ons
+  return eventOns ? Object.assign(ons, eventOns) : ons
 }
 
 function getItemOns (renderOpts: any, params: any) {
   const { $form, data, field } = params
-  return getComponentOns(renderOpts, params, (value: any) => {
+  return getComponentOns(renderOpts, params, {
+    model (value) {
     // 处理 model 值双向绑定
-    XEUtils.set(data, field, value)
-  }, () => {
+      XEUtils.set(data, field, value)
+    },
+    change (params) {
     // 处理 change 事件相关逻辑
-    $form.updateStatus(params)
+      $form.updateStatus(params)
+    }
   })
 }
 
@@ -178,7 +187,7 @@ function nativeItemRender (renderOpts: any, params: any) {
   ]
 }
 
-function defaultItemRender (renderOpts: any, params: any) {
+function defaultItemRender (renderOpts: VxeGlobalRendererHandles.RenderFormItemContentOptions, params: VxeGlobalRendererHandles.RenderFormItemContentParams) {
   const { data, field } = params
   const itemValue = XEUtils.get(data, field)
   return [
@@ -361,6 +370,45 @@ renderer.mixin({
   VxeDatePicker: {
     formItemAutoFocus: 'input',
     renderFormItemContent: defaultItemRender
+  },
+  VxeDateRangePicker: {
+    formItemAutoFocus: 'input',
+    renderFormItemContent (renderOpts, params) {
+      const { startField, endField } = renderOpts
+      const { $form, data, field } = params
+      const itemValue = XEUtils.get(data, field)
+      const seProps: Record<string, any> = {}
+      const seOs: Record<string, any> = {}
+      if (startField && endField) {
+        seProps.startValue = XEUtils.get(data, startField)
+        seProps.endValue = XEUtils.get(data, endField)
+        seOs['onUpdate:startValue'] = (value: any) => {
+          if (startField) {
+            XEUtils.set(data, startField, value)
+          }
+        }
+        seOs['onUpdate:endValue'] = (value: any) => {
+          if (endField) {
+            XEUtils.set(data, endField, value)
+          }
+        }
+      }
+      return [
+        h(getDefaultComponent(renderOpts), {
+          ...getComponentFormItemProps(renderOpts, params, itemValue, seProps),
+          ...getComponentOns(renderOpts, params, {
+            model (value: any) {
+              // 处理 model 值双向绑定
+              XEUtils.set(data, field, value)
+            },
+            change () {
+              // 处理 change 事件相关逻辑
+              $form.updateStatus(params)
+            }
+          }, seOs)
+        })
+      ]
+    }
   },
   VxeButton: {
     renderFormItemContent: defaultFormItemRender

@@ -131,6 +131,9 @@ export namespace VxeColumnPropTypes {
      */
     children?: any[]
 
+    startField?: string
+    endField?: string
+
     enabled?: boolean
     options?: any[]
     optionProps?: VxeGlobalRendererHandles.RenderOptionProps
@@ -219,6 +222,9 @@ export namespace VxeColumnPropTypes {
      */
     children?: any[]
 
+    startField?: string
+    endField?: string
+
     events?: Record<string, (cellParams: VxeColumnSlotTypes.DefaultSlotParams<D>, ...args: any[]) => any>
     options?: any[]
     optionProps?: VxeGlobalRendererHandles.RenderOptionProps
@@ -252,6 +258,9 @@ export namespace VxeColumnPropTypes {
      * 多目标渲染
      */
     children?: any[]
+
+    startField?: string
+    endField?: string
 
     events?: Record<string, (cellParams: VxeColumnSlotTypes.EditSlotParams<D>, ...args: any[]) => any>
     enabled?: boolean
