@@ -128,7 +128,7 @@ export default Vue.extend({
         val6: '',
         val7: '',
         val8: '',
-        value100: '',
+        value100: '2025-10-01,2025-11-01',
         value101: '',
         value102: '',
         value103: '',

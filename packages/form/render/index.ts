@@ -4,6 +4,8 @@ import { renderer, getComponent } from '../../ui'
 import { getOnName, getModelEvent, getChangeEvent } from '../../ui/src/vn'
 import { errLog } from '../../ui/src/log'
 
+import type { VxeGlobalRendererHandles } from '../../../types'
+
 const componentDefaultModelProp = 'value'
 
 /**
@@ -87,17 +89,19 @@ function getElementOns (renderOpts: any, params: any, modelFunc?: any, changeFun
  * @param modelFunc
  * @param changeFunc
  */
-function getComponentOns (renderOpts: any, params: any, modelFunc?: any, changeFunc?: any) {
+function getComponentOns (renderOpts: any, params: any, eFns?: {
+  model: (cellValue: any) => void
+  change?: (...args: any[]) => void
+}, eventOns?: Record<string, any>) {
   const { events } = renderOpts
+  const { model: modelFunc, change: changeFunc } = eFns || {}
   const modelEvent = getModelEvent(renderOpts.name)
   const changeEvent = getChangeEvent(renderOpts.name)
   const ons: any = {}
   XEUtils.objectEach(events, (func, key: any) => {
     ons[getOnName(key)] = function (...args: any[]) {
-      if (process.env.VUE_APP_VXE_ENV === 'development') {
-        if (!XEUtils.isFunction(func)) {
-          errLog('vxe.error.errFunc', [func])
-        }
+      if (!XEUtils.isFunction(func)) {
+        errLog('vxe.error.errFunc', [func])
       }
       func(params, ...args)
     }
@@ -118,17 +122,20 @@ function getComponentOns (renderOpts: any, params: any, modelFunc?: any, changeF
       }
     }
   }
-  return ons
+  return eventOns ? Object.assign(ons, eventOns) : ons
 }
 
 function getItemOns (renderOpts: any, params: any) {
   const { $form, data, field } = params
-  return getComponentOns(renderOpts, params, (value: any) => {
-    // 处理 model 值双向绑定
-    XEUtils.set(data, field, value)
-  }, () => {
-    // 处理 change 事件相关逻辑
-    $form.updateStatus(params)
+  return getComponentOns(renderOpts, params, {
+    model (value: any) {
+      // 处理 model 值双向绑定
+      XEUtils.set(data, field, value)
+    },
+    change () {
+      // 处理 change 事件相关逻辑
+      $form.updateStatus(params)
+    }
   })
 }
 
@@ -182,7 +189,7 @@ function nativeItemRender (h: CreateElement, renderOpts: any, params: any) {
   ]
 }
 
-function defaultItemRender (h: CreateElement, renderOpts: any, params: any) {
+function defaultItemRender (h: CreateElement, renderOpts: VxeGlobalRendererHandles.RenderFormItemContentOptions, params: VxeGlobalRendererHandles.RenderFormItemContentParams) {
   const { data, field } = params
   const itemValue = XEUtils.get(data, field)
   return [
@@ -374,6 +381,46 @@ renderer.mixin({
   VxeDatePicker: {
     formItemAutoFocus: 'input',
     renderFormItemContent: defaultItemRender
+  },
+  VxeDateRangePicker: {
+    formItemAutoFocus: 'input',
+    renderFormItemContent (h, renderOpts, params) {
+      const { startField, endField } = renderOpts
+      const { $form, data, field } = params
+      const itemValue = XEUtils.get(data, field)
+      const seProps: Record<string, any> = {}
+      const seOs: Record<string, any> = {}
+      if (startField && endField) {
+        seProps.startValue = XEUtils.get(data, startField)
+        seProps.endValue = XEUtils.get(data, endField)
+        seOs['update:startValue'] = (value: any) => {
+          if (startField) {
+            XEUtils.set(data, startField, value)
+          }
+        }
+        seOs['update:endValue'] = (value: any) => {
+          if (endField) {
+            XEUtils.set(data, endField, value)
+          }
+        }
+      }
+      return [
+        h(getDefaultComponent(renderOpts), {
+          props: getComponentFormItemProps(renderOpts, params, itemValue, seProps),
+          on: getComponentOns(renderOpts, params, {
+            model (value: any) {
+              // 处理 model 值双向绑定
+              XEUtils.set(data, field, value)
+            },
+            change () {
+              // 处理 change 事件相关逻辑
+              $form.updateStatus(params)
+            }
+          }, seOs)
+
+        })
+      ]
+    }
   },
   VxeButton: {
     renderFormItemContent: defaultFormItemRender

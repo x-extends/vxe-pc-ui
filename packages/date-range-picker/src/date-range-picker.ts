@@ -654,10 +654,10 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const reactData = $xeDateRangePicker.reactData
       const internalData = $xeDateRangePicker.internalData
 
-      const { endValue } = reactData
       const { selectStatus } = internalData
       const { value, $event } = params
-      $xeDateRangePicker.handleChange(value, selectStatus ? endValue : '', $event)
+      const endValue = selectStatus ? reactData.endValue : ''
+      $xeDateRangePicker.handleChange(value, endValue, $event)
       $xeDateRangePicker.handleSelectClose()
       if (!selectStatus) {
         internalData.selectStatus = true
@@ -678,10 +678,10 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const reactData = $xeDateRangePicker.reactData
       const internalData = $xeDateRangePicker.internalData
 
-      const { startValue } = reactData
       const { selectStatus } = internalData
       const { value, $event } = params
-      $xeDateRangePicker.handleChange(selectStatus ? startValue : '', value, $event)
+      const startValue = selectStatus ? reactData.startValue : ''
+      $xeDateRangePicker.handleChange(startValue, value, $event)
       $xeDateRangePicker.handleSelectClose()
       if (!selectStatus) {
         internalData.selectStatus = true
