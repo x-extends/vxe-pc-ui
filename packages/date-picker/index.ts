@@ -6,7 +6,6 @@ import { dynamicApp } from '../dynamics'
 export const VxeDatePicker = Object.assign({}, VxeDatePickerComponent, {
   install (app: App) {
     app.component(VxeDatePickerComponent.name as string, VxeDatePickerComponent)
-    app.component('VxeDateInput', VxeDatePickerComponent)
   }
 })
 

@@ -16,7 +16,7 @@
       <vxe-date-picker v-model="demo1.value405" placeholder="时间选择" type="time" clearable></vxe-date-picker>
       <vxe-date-picker v-model="demo1.value406" placeholder="日期和时间选择" type="datetime" transfer></vxe-date-picker>
       <vxe-date-picker v-model="demo1.value410" placeholder="yyyy-MM-dd HH:mm" type="datetime" valueFormat="yyyy-MM-dd HH:mm" transfer></vxe-date-picker>
-      <vxe-date-picker v-model="demo1.value411" placeholder="yyyy-MM-dd HH" type="datetime" valueFormat="yyyy-MM-dd HH" transfer></vxe-date-picker>
+      <vxe-date-picker v-model="demo1.value411" placeholder="yyyy-MM-dd HH" type="datetime" valueFormat="yyyy-MM-dd HH" labelFormat="yyyy-MM-dd HH" transfer></vxe-date-picker>
       <vxe-date-picker v-model="demo1.value412" placeholder="yyyy-MM-dd" type="datetime" valueFormat="yyyy-MM-dd" transfer></vxe-date-picker>
       <vxe-date-picker v-model="demo1.value407" placeholder="禁用日期" type="date" :disabled-method="disabledDateMethod" transfer></vxe-date-picker>
       <vxe-date-picker v-model="demo1.value408" placeholder="小圆点" type="date" :festival-method="festivalNoticeMethod" transfer></vxe-date-picker>

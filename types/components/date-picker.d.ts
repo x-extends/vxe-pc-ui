@@ -1,5 +1,6 @@
 import { RenderFunction, SetupContext, Ref } from 'vue'
 import { DefineVxeComponentApp, DefineVxeComponentOptions, DefineVxeComponentInstance, VxeComponentBaseOptions, VxeComponentEventParams, ValueOf, VxeComponentStyleType, VxeComponentSizeType } from '@vxe-ui/core'
+import { VxeDatePanelPropTypes, VxeDatePanelDefines } from './date-panel'
 import { VxeButtonGroupPropTypes } from './button-group'
 import { VxeButtonProps } from './button'
 
@@ -31,27 +32,15 @@ export namespace VxeDatePickerPropTypes {
   export type ClassName = string
   export type Immediate = boolean
   export type Name = string
-  export type Type = 'date' | 'time' | 'datetime' | 'week' | 'month' | 'quarter' | 'year'
+  export type Type = VxeDatePanelPropTypes.Type
   export type Clearable = boolean
   export type Readonly = boolean
   export type Disabled = boolean
   export type Placeholder = string
-  export type MaxLength = string | number
   export type Multiple = boolean
   export type LimitCount = string | number
-  export type ShowWordCount = boolean
-  export type CountMethod = (params: {
-    value: string
-  }) => number
   export type AutoComplete = string
-  export type Align = string
   export type Form = string
-  export type Min = string | number
-  export type Max = string | number
-  export type Step = string | number
-  export type Exponential = boolean
-  export type Controls = boolean
-  export type Digits = string | number
   export type StartDate = string | number | Date
   export type EndDate = string | number | Date
   export type MinDate = string | number | Date
@@ -61,12 +50,15 @@ export namespace VxeDatePickerPropTypes {
   export type LabelFormat = string
   export type ValueFormat = string
   export type Editable = boolean
-  export type FestivalMethod = (params: VxeDatePickerDefines.DateFestivalParams) => VxeDatePickerDefines.DateFestivalInfo | null | void
-  export type DisabledMethod = (params: VxeDatePickerDefines.DateDisabledParams) => boolean
+  export type FestivalMethod = VxeDatePanelPropTypes.FestivalMethod
+  export type DisabledMethod = VxeDatePanelPropTypes.DisabledMethod
+  export type AutoClose = boolean
   export type PrefixIcon = string
   export type SuffixIcon = string
   export type Placement = 'top' | 'bottom' | '' | null
   export type Transfer = boolean
+  export type ShowClearButton = boolean | null
+  export type ShowConfirmButton = boolean | null
 
   export interface ShortcutConfig {
     enabled?: boolean
@@ -80,17 +72,6 @@ export namespace VxeDatePickerPropTypes {
     autoClose?: boolean
     clickMethod?: (params: VxeDatePickerDefines.ShortcutClickParams) => void
   }
-
-  /**
-   * 请使用 AutoComplete
-   * @deprecated
-   */
-  export type Autocomplete = string
-  /**
-   * 请使用 MaxLength
-   * @deprecated
-   */
-  export type Maxlength = string | number
 }
 
 export interface VxeDatePickerProps {
@@ -104,36 +85,19 @@ export interface VxeDatePickerProps {
   readonly?: VxeDatePickerPropTypes.Readonly
   disabled?: VxeDatePickerPropTypes.Disabled
   placeholder?: VxeDatePickerPropTypes.Placeholder
-  maxLength?: VxeDatePickerPropTypes.MaxLength
   multiple?: VxeDatePickerPropTypes.Multiple
   limitCount?: VxeDatePickerPropTypes.LimitCount
-  /**
-   * 是否显示字数统计
-   */
-  showWordCount?: VxeDatePickerPropTypes.ShowWordCount
-  /**
-   * 自定义字数统计方法
-   */
-  countMethod?: VxeDatePickerPropTypes.CountMethod
-  autocomplete?: VxeDatePickerPropTypes.Autocomplete
-  align?: VxeDatePickerPropTypes.Align
+  autoComplete?: VxeDatePickerPropTypes.AutoComplete
   form?: VxeDatePickerPropTypes.Form
 
-  // number、integer、float、password
-  controls?: VxeDatePickerPropTypes.Controls
-
-  // float
-  digits?: VxeDatePickerPropTypes.Digits
-
-  // date、week、month、quarter、year
+  /**
+   * 日期面板的起始周为星期几
+   */
   startDate?: VxeDatePickerPropTypes.StartDate
   endDate?: VxeDatePickerPropTypes.EndDate
   minDate?: VxeDatePickerPropTypes.MinDate
   maxDate?: VxeDatePickerPropTypes.MaxDate
-  /**
-   * @deprecated
-   */
-  startWeek?: VxeDatePickerPropTypes.StartDay
+
   startDay?: VxeDatePickerPropTypes.StartDay
   labelFormat?: VxeDatePickerPropTypes.LabelFormat
   valueFormat?: VxeDatePickerPropTypes.ValueFormat
@@ -142,14 +106,23 @@ export interface VxeDatePickerProps {
   disabledMethod?: VxeDatePickerPropTypes.DisabledMethod
 
   shortcutConfig?: VxeDatePickerPropTypes.ShortcutConfig
+  /**
+   * 只对 type=date,week,month,quarter,year 有效，选择完日期后自动关闭
+   */
+  autoClose?: VxeDatePickerPropTypes.AutoClose
 
-  // week
+  /**
+   * 只对 type=week 有效，选中日期后指定为一周的哪一天
+   */
   selectDay?: VxeDatePickerPropTypes.SelectDay
 
   prefixIcon?: VxeDatePickerPropTypes.PrefixIcon
   suffixIcon?: VxeDatePickerPropTypes.SuffixIcon
   placement?: VxeDatePickerPropTypes.Placement
   transfer?: VxeDatePickerPropTypes.Transfer
+
+  showClearButton?: VxeDatePickerPropTypes.ShowClearButton
+  showConfirmButton?: VxeDatePickerPropTypes.ShowConfirmButton
 }
 
 export interface DatePickerPrivateComputed {
@@ -165,23 +138,23 @@ export interface DatePickerReactData {
   panelPlacement: VxeDatePickerPropTypes.Placement
   isActivated: boolean
   inputValue: any
-  datetimePanelValue: Date | null
-  datePanelValue: Date | null
-  datePanelLabel: string
-  datePanelType: VxeDatePickerDefines.DatePanelType
-  selectMonth: any
-  currentDate: any
+  inputLabel: string
 }
 
 export interface DatePickerInternalData {
-  yearSize: number
-  monthSize: number
-  quarterSize: number
   hpTimeout?: undefined | number
 }
 
 export interface DatePickerMethods {
   dispatchEvent(type: ValueOf<VxeDatePickerEmits>, params: Record<string, any>, evnt: Event | null): void
+  /**
+   * 修改绑定值
+   */
+  setModelValue(value: string): void
+  /**
+   * 修改绑定值并触发相关事件
+   */
+  setModelValueByEvent(evnt: Event, value: string): void
   /**
    * 获取焦点
    */
@@ -232,93 +205,13 @@ export namespace VxeDatePickerDefines {
     $datePicker: VxeDatePickerConstructor
   }
 
-  export interface DateYearItem {
-    date: Date;
-    isPrev: boolean;
-    isCurrent: boolean;
-    isNow: boolean;
-    isNext: boolean;
-    year: number;
-  }
-
-  export interface DateMonthItem {
-    date: Date;
-    isPrev: boolean;
-    isCurrent: boolean;
-    isNow: boolean;
-    isNext: boolean;
-    month: number;
-  }
-
-  export interface DateQuarterItem {
-    date: Date;
-    isPrev: boolean;
-    isCurrent: boolean;
-    isNow: boolean;
-    isNext: boolean;
-    quarter: number;
-  }
-
-  export interface DateDayItem {
-    date: Date;
-    isWeekNumber?: boolean;
-    isPrev: boolean;
-    isCurrent: boolean;
-    isNow: boolean;
-    isNext: boolean;
-    label: number;
-  }
-
-  export interface DateHourMinuteSecondItem {
-    value: number;
-    label: string;
-  }
-
-  export type DatePanelType = 'year' | 'quarter' | 'month' | 'week' | 'day'
+  export type DateFestivalInfo = VxeDatePanelDefines.DateFestivalInfo
+  export type DateFestivalParams = VxeDatePanelDefines.DateFestivalParams
+  export type DateDisabledParams = VxeDatePanelDefines.DateDisabledParams
 
   export interface ShortcutOption extends VxeButtonProps {
+    code?: string
     clickMethod?: (params: VxeDatePickerDefines.ShortcutClickParams) => void
-  }
-
-  interface DateFestivalItem {
-    /**
-     * 显示名称
-     */
-    label?: string
-    /**
-     * 标记为重要信息
-     */
-    important?: boolean
-    className?: string
-    style?: VxeComponentStyleType
-  }
-
-  /**
-   * 日期节日对象
-   */
-  export interface DateFestivalInfo extends DateFestivalItem {
-    /**
-     * 显示左上角小圆点通知
-     */
-    notice?: boolean
-    /**
-     * 显示右上角信息
-     */
-    extra?: string | DateFestivalItem
-  }
-
-  export interface DateFestivalParams {
-    $datePicker: VxeDatePickerConstructor
-    type: string
-    viewType: DatePanelType
-    date: Date
-  }
-
-  export interface DateDisabledParams {
-    $datePicker: VxeDatePickerConstructor
-    type: string
-    viewType: DatePanelType
-    date: Date
   }
 
   export interface DatePickerParams {

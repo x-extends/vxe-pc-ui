@@ -76,6 +76,14 @@
   &.ani--enter {
     opacity: 1;
     transform: scaleY(1);
+    & > div {
+      &::after {
+        display: none;
+      }
+    }
+  }
+  & > div {
+    @include baseMixin.createEmptyMask();
   }
 }
 

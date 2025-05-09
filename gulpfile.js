@@ -50,7 +50,9 @@ const componentList = [
   'collapse-pane',
   'color-picker',
   'countdown',
+  'date-panel',
   'date-picker',
+  'date-range-picker',
   'drawer',
   'empty',
   'flow-design',
@@ -117,7 +119,7 @@ const componentList = [
 
 const languages = [
   'zh-CN',
-  'zh-TC',
+  'zh-CHT',
   'zh-HK',
   'zh-MO',
   'zh-TW',
@@ -125,10 +127,22 @@ const languages = [
   'ja-JP',
   'es-ES',
   'pt-BR',
-  'hu-HU',
-  'ko-KR',
+  'vi-VN',
   'ru-RU',
-  'uk-UA'
+  'ko-KR',
+  'hu-HU',
+  'ug-CN',
+  'uz-UZ',
+  'nb-NO',
+  'hy-AM',
+  'fr-FR',
+  'de-DE',
+  'ar-EG',
+  'uk-UA',
+  'th-TH',
+  'it-IT',
+  'id-ID',
+  'ms-MY'
 ]
 
 const styleCode = 'require(\'./style.css\')'

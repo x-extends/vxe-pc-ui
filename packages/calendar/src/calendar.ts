@@ -1,11 +1,11 @@
 import { defineComponent, h, ref, Ref, computed, reactive, watch, PropType, onMounted } from 'vue'
 import { getConfig, getI18n, createEvent, useSize, renderEmptyElement } from '../../ui'
-import { getDateQuarter } from '../../date-picker/src/util'
+import { getDateQuarter } from '../../date-panel/src/util'
 import { toCssUnit } from '../../ui/src/dom'
 import VxeButtonComponent from '../../button/src/button'
 import XEUtils from 'xe-utils'
 
-import type { VxeCalendarConstructor, VxeCalendarEmits, CalendarInternalData, CalendarReactData, CalendarMethods, VxeCalendarPropTypes, CalendarPrivateRef, VxeDatePickerDefines, ValueOf } from '../../../types'
+import type { VxeCalendarConstructor, VxeCalendarEmits, CalendarInternalData, CalendarReactData, CalendarMethods, VxeCalendarPropTypes, CalendarPrivateRef, VxeDatePanelDefines, ValueOf } from '../../../types'
 
 export default defineComponent({
   name: 'VxeCalendar',
@@ -221,7 +221,7 @@ export default defineComponent({
     const computeYearList = computed(() => {
       const { selectMonth, currentDate } = reactData
       const { yearSize } = internalData
-      const years: VxeDatePickerDefines.DateYearItem[] = []
+      const years: VxeDatePanelDefines.DateYearItem[] = []
       if (selectMonth && currentDate) {
         const currFullYear = currentDate.getFullYear()
         const selectFullYear = selectMonth.getFullYear()
@@ -324,7 +324,7 @@ export default defineComponent({
     const computeQuarterList = computed(() => {
       const { selectMonth, currentDate } = reactData
       const { quarterSize } = internalData
-      const quarters: VxeDatePickerDefines.DateQuarterItem[] = []
+      const quarters: VxeDatePanelDefines.DateQuarterItem[] = []
       if (selectMonth && currentDate) {
         const currFullYear = currentDate.getFullYear()
         const currQuarter = getDateQuarter(currentDate)
@@ -356,7 +356,7 @@ export default defineComponent({
     const computeMonthList = computed(() => {
       const { selectMonth, currentDate } = reactData
       const { monthSize } = internalData
-      const months: VxeDatePickerDefines.DateMonthItem[] = []
+      const months: VxeDatePanelDefines.DateMonthItem[] = []
       if (selectMonth && currentDate) {
         const currFullYear = currentDate.getFullYear()
         const currMonth = currentDate.getMonth()
@@ -386,7 +386,7 @@ export default defineComponent({
 
     const computeDayList = computed(() => {
       const { selectMonth, currentDate } = reactData
-      const days: VxeDatePickerDefines.DateDayItem[] = []
+      const days: VxeDatePanelDefines.DateDayItem[] = []
       if (selectMonth && currentDate) {
         const dateHMSTime = computeDateHMSTime.value
         const weekDatas = computeWeekDatas.value
@@ -427,7 +427,7 @@ export default defineComponent({
       const firstDayOfWeek = computeFirstDayOfWeek.value
       return dayDatas.map((list) => {
         const firstItem = list[0]
-        const item: VxeDatePickerDefines.DateDayItem = {
+        const item: VxeDatePanelDefines.DateDayItem = {
           date: firstItem.date,
           isWeekNumber: true,
           isPrev: false,
@@ -707,7 +707,7 @@ export default defineComponent({
       }
     }
 
-    const dateSelectEvent = (item: VxeDatePickerDefines.DateYearItem | VxeDatePickerDefines.DateQuarterItem | VxeDatePickerDefines.DateMonthItem | VxeDatePickerDefines.DateDayItem) => {
+    const dateSelectEvent = (item: VxeDatePanelDefines.DateYearItem | VxeDatePanelDefines.DateQuarterItem | VxeDatePanelDefines.DateMonthItem | VxeDatePanelDefines.DateDayItem) => {
       if (!isDateDisabled(item)) {
         dateSelectItem(item.date)
       }
@@ -753,7 +753,7 @@ export default defineComponent({
       }
     }
 
-    const dateMouseenterEvent = (item: VxeDatePickerDefines.DateYearItem | VxeDatePickerDefines.DateQuarterItem | VxeDatePickerDefines.DateMonthItem | VxeDatePickerDefines.DateDayItem) => {
+    const dateMouseenterEvent = (item: VxeDatePanelDefines.DateYearItem | VxeDatePanelDefines.DateQuarterItem | VxeDatePanelDefines.DateMonthItem | VxeDatePanelDefines.DateDayItem) => {
       if (!isDateDisabled(item)) {
         const { datePanelType } = reactData
         if (datePanelType === 'month') {
@@ -788,7 +788,7 @@ export default defineComponent({
       }
     }
 
-    const renderDateLabel = (item: VxeDatePickerDefines.DateYearItem | VxeDatePickerDefines.DateQuarterItem | VxeDatePickerDefines.DateMonthItem | VxeDatePickerDefines.DateDayItem, label: string | number) => {
+    const renderDateLabel = (item: VxeDatePanelDefines.DateYearItem | VxeDatePanelDefines.DateQuarterItem | VxeDatePanelDefines.DateMonthItem | VxeDatePanelDefines.DateDayItem, label: string | number) => {
       const { festivalMethod } = props
       if (festivalMethod) {
         const { datePanelType } = reactData

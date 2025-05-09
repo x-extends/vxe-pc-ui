@@ -21,7 +21,9 @@ import VxeCollapse from './components/collapse'
 import VxeCollapsePane from './components/collapse-pane'
 import VxeColorPicker from './components/color-picker'
 import VxeCountdown from './components/countdown'
+import VxeDatePanel from './components/date-panel'
 import VxeDatePicker from './components/date-picker'
+import VxeDateRangePicker from './components/date-range-picker'
 import VxeDrawer from './components/drawer'
 import VxeEmpty from './components/empty'
 import VxeFlowDesign from './components/flow-design'
@@ -115,7 +117,9 @@ interface AllComponents {
   VxeCollapsePane: typeof VxeCollapsePane
   VxeColorPicker: typeof VxeColorPicker
   VxeCountdown: typeof VxeCountdown
+  VxeDatePanel: typeof VxeDatePanel
   VxeDatePicker: typeof VxeDatePicker
+  VxeDateRangePicker: typeof VxeDateRangePicker
   VxeDrawer: typeof VxeDrawer
   VxeEmpty: typeof VxeEmpty
   VxeFlowDesign: typeof VxeFlowDesign
@@ -218,7 +222,9 @@ export * from './components/collapse'
 export * from './components/collapse-pane'
 export * from './components/color-picker'
 export * from './components/countdown'
+export * from './components/date-panel'
 export * from './components/date-picker'
+export * from './components/date-range-picker'
 export * from './components/drawer'
 export * from './components/empty'
 export * from './components/flow-design'

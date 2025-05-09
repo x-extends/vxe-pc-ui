@@ -1,6 +1,7 @@
 import XEUtils from 'xe-utils'
+import { toCssUnit } from '../../ui/src/dom'
 
-import type { VxePrintProps, VxePrintDefines, VxePrintConstructor, VxePrintPrivateMethods } from '../../../types'
+import type { VxePrintProps, VxePrintPropTypes, VxePrintDefines, VxePrintConstructor, VxePrintPrivateMethods } from '../../../types'
 
 const browseObj = XEUtils.browse()
 
@@ -42,17 +43,59 @@ function getExportBlobByString (str: string, type: string) {
   return new Blob([str], { type: `text/${type};charset=utf-8;` })
 }
 
-const printMargin = 80
+const defaultPrintMargin = 50
+
+function parseMargin (val?: string | number | null | VxePrintPropTypes.PageStyle) {
+  let mVal: string | number = defaultPrintMargin
+  let top: string | number = mVal
+  let bottom: string | number = mVal
+  let left: string | number = mVal
+  let right: string | number = mVal
+  if (XEUtils.isString(val) || XEUtils.isNumber(val)) {
+    mVal = val
+    top = mVal
+    bottom = mVal
+    left = mVal
+    right = mVal
+  } else if (XEUtils.isPlainObject(val)) {
+    if (val.margin) {
+      mVal = val.margin
+      top = mVal
+      bottom = mVal
+      left = mVal
+      right = mVal
+    }
+    if (val.marginTop) {
+      top = val.marginTop
+    }
+    if (val.marginBottom) {
+      bottom = val.marginBottom
+    }
+    if (val.marginLeft) {
+      left = val.marginLeft
+    }
+    if (val.marginRight) {
+      right = val.marginRight
+    }
+  }
+  return {
+    top: toCssUnit(top),
+    bottom: toCssUnit(bottom),
+    left: toCssUnit(left),
+    right: toCssUnit(right)
+  }
+}
 
 function createHtmlPage (opts: VxePrintProps & { _pageBreaks: boolean }, printHtml: string): string {
-  const { customStyle } = opts
+  const { pageStyle, customStyle } = opts
+  const marginObj = parseMargin(pageStyle)
   return [
     '<!DOCTYPE html><html>',
     '<head>',
     '<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no,minimal-ui">',
     `<title>${opts.title || ''}</title>`,
     opts._pageBreaks || (opts.pageBreaks && opts.pageBreaks.length) ? '<style media="print">@page {size: auto;margin: 0mm;}</style>' : '',
-    `<style>.vxe-print-slots{display: none;}.vxe-print-page-break.align--center{text-align:center;}.vxe-print-page-break.align--left{text-align:left;}.vxe-print-page-break.align--right{text-align:right;}.vxe-print-page-break--header-title{font-size:1.8em;text-align:center;line-height:${printMargin}px;}.vxe-print-page-break{page-break-before:always;display:flex;flex-direction:column;height:100vh;overflow:hidden;}.vxe-print-page-break--body{display:flex;flex-direction:row;flex-grow:1;overflow: hidden;}.vxe-print-page-break--left,.vxe-print-page-break--right{flex-shrink:0;width:${printMargin}px;height:100%;}.vxe-print-page-break--header,.vxe-print-page-break--footer{flex-shrink:0;height:${printMargin}px;width:100%;}.vxe-print-page-break--content{flex-grow: 1;overflow: hidden;}.vxe-print-page-break--footer-page-number{line-height:${printMargin}px;text-align:center;}</style>`,
+    `<style>.vxe-print-slots{display: none;}.vxe-print-page-break.align--center{text-align:center;}.vxe-print-page-break.align--left{text-align:left;}.vxe-print-page-break.align--right{text-align:right;}.vxe-print-page-break--header-title{font-size:1.8em;line-height:${marginObj.top || 'normal'};text-align:center;}.vxe-print-page-break{page-break-before:always;display:flex;flex-direction:column;height:100vh;overflow:hidden;}.vxe-print-page-break--body{display:flex;flex-direction:row;flex-grow:1;overflow: hidden;}.vxe-print-page-break--left,.vxe-print-page-break--right{flex-shrink:0;height:100%;}.vxe-print-page-break--left{width:${marginObj.left};}.vxe-print-page-break--right{width:${marginObj.right};}.vxe-print-page-break--header,.vxe-print-page-break--footer{flex-shrink:0;width:100%;}.vxe-print-page-break--header{height:${marginObj.top};}.vxe-print-page-break--footer{height:${marginObj.bottom};}.vxe-print-page-break--content{flex-grow: 1;overflow: hidden;}.vxe-print-page-break--footer-page-number{line-height:${marginObj.bottom || 'normal'};text-align:center;}</style>`,
     '<style>.vxe-table{white-space:pre;}</style>',
     `<style>${defaultHtmlStyle}</style>`,
     customStyle ? `<style>${customStyle}</style>` : '',

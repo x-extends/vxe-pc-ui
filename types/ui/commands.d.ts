@@ -1,12 +1,22 @@
 import { VxeGridConstructor } from '../components/grid'
 import { VxeToolbarPropTypes } from '../components/toolbar'
 import { VxeTableConstructor } from '../components/table'
+import { VxeDatePickerConstructor, VxeDatePickerDefines } from '../components/date-picker'
+import { VxeDateRangePickerConstructor, VxeDateRangePickerDefines } from '../components/date-range-picker'
 
 /* eslint-disable no-use-before-define */
 
 declare module '@vxe-ui/core' {
   export namespace VxeGlobalCommandsHandles {
     export interface CommandsOptions {
+      /**
+       * 日期选择器 - 自定义日期快捷按钮指令方法
+       */
+      datePickerCommandMethod?: (params: DatePickerCommandMethodParams) => void
+      /**
+       * 日期范围选择器 - 自定义日期快捷按钮指令方法
+       */
+      dateRangePickerCommandMethod?: (params: DateRangePickerCommandMethodParams) => void
       /**
        * 表格 - 自定义工具栏或数据代理的指令方法
        */
@@ -19,11 +29,27 @@ declare module '@vxe-ui/core' {
       commandMethod?: (params: TableCommandMethodParams, ...args: any[]) => void
     }
 
+    export interface DatePickerCommandMethodParams {
+      $datePicker: VxeDatePickerConstructor
+      option: VxeDatePickerDefines.ShortcutOption
+      code: string | undefined
+      value: string
+    }
+
+    export interface DateRangePickerCommandMethodParams {
+      $dateRangePicker: VxeDateRangePickerConstructor
+      option: VxeDateRangePickerDefines.ShortcutOption
+      code: string | undefined
+      value: string | string[]
+      startValue: string
+      endValue: string
+    }
+
     export interface TableCommandMethodParams {
       $grid: VxeGridConstructor | null | undefined
       $table: VxeTableConstructor
-      button?: VxeToolbarPropTypes.ButtonConfig | null
-      code?: string
+      button: VxeToolbarPropTypes.ButtonConfig | null | undefined
+      code: string | undefined
     }
   }
 }

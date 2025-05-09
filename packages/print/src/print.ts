@@ -38,6 +38,10 @@ export default defineComponent({
       type: Boolean as PropType<VxePrintPropTypes.ShowAllPageTitle>,
       default: () => getConfig().print.showAllPageTitle
     },
+    pageStyle: {
+      type: Object as PropType<VxePrintPropTypes.PageStyle>,
+      default: () => getConfig().print.pageStyle
+    },
     customStyle: {
       type: String as PropType<VxePrintPropTypes.CustomStyle>,
       default: () => getConfig().print.customStyle
