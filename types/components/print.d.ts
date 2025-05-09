@@ -25,6 +25,13 @@ export namespace VxePrintPropTypes {
   export type FooterAlign = VxeComponentAlignType
   export type PageBreaks = VxePrintDefines.PageBreakObj[]
   export type ShowPageNumber = boolean
+  export interface PageStyle {
+    margin?: number | string | null
+    marginTop?: number | string | null
+    marginBottom?: number | string | null
+    marginLeft?: number | string | null
+    marginRight?: number | string | null
+  }
   export type CustomStyle = string
   export type ShowAllPageTitle = boolean
   export type HeaderHtml = string | ((params: VxePrintDefines.PageBreakParams) => string)
@@ -51,6 +58,7 @@ export interface VxePrintProps {
   customLayout?: VxePrintPropTypes.CustomLayout
   showPageNumber?: VxePrintPropTypes.ShowPageNumber
   footerAlign?: VxePrintPropTypes.FooterAlign
+  pageStyle?: VxePrintPropTypes.PageStyle
   customStyle?: VxePrintPropTypes.CustomStyle
   headerHtml?: VxePrintPropTypes.HeaderHtml
   footerHtml?: VxePrintPropTypes.FooterHtml

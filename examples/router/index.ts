@@ -143,9 +143,19 @@ const routes: Array<RouteConfig> = [
     component: () => import('../views/password-input/PasswordInputTest.vue')
   },
   {
+    path: '/component/date-panel',
+    name: 'DatePanelTest',
+    component: () => import('../views/date-panel/DatePanelTest.vue')
+  },
+  {
     path: '/component/date-picker',
     name: 'DatePickerTest',
     component: () => import('../views/date-picker/DatePickerTest.vue')
+  },
+  {
+    path: '/component/date-range-picker',
+    name: 'DateRangePickerTest',
+    component: () => import('../views/date-range-picker/DateRangePickerTest.vue')
   },
   {
     path: '/component/textarea',

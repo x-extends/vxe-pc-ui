@@ -148,14 +148,17 @@ function renderNativeOptgroup (h: CreateElement, renderOpts: any, params: any, r
   const { optionGroups, optionGroupProps = {} } = renderOpts
   const groupOptions = optionGroupProps.options || 'options'
   const groupLabel = optionGroupProps.label || 'label'
-  return optionGroups.map((group: any, gIndex: any) => {
-    return h('optgroup', {
-      key: gIndex,
-      attrs: {
-        label: group[groupLabel]
-      }
-    }, renderOptionsMethods(group[groupOptions], renderOpts, params))
-  })
+  if (optionGroups) {
+    return optionGroups.map((group: any, gIndex: any) => {
+      return h('optgroup', {
+        key: gIndex,
+        attrs: {
+          label: group[groupLabel]
+        }
+      }, renderOptionsMethods(group[groupOptions], renderOpts, params))
+    })
+  }
+  return []
 }
 
 /**
@@ -236,17 +239,20 @@ function renderNativeFormOptions (h: CreateElement, options: any, renderOpts: an
   const valueProp = optionProps.value || 'value'
   const disabledProp = optionProps.disabled || 'disabled'
   const cellValue = XEUtils.get(data, field)
-  return options.map((item: any, oIndex: any) => {
-    return h('option', {
-      key: oIndex,
-      props: {
-        value: item[valueProp],
-        disabled: item[disabledProp],
-        /* eslint-disable eqeqeq */
-        selected: item[valueProp] == cellValue
-      }
-    }, item[labelProp])
-  })
+  if (options) {
+    return options.map((item: any, oIndex: any) => {
+      return h('option', {
+        key: oIndex,
+        props: {
+          value: item[valueProp],
+          disabled: item[disabledProp],
+          /* eslint-disable eqeqeq */
+          selected: item[valueProp] == cellValue
+        }
+      }, item[labelProp])
+    })
+  }
+  return []
 }
 
 /**

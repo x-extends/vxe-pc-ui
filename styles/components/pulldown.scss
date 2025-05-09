@@ -1,3 +1,5 @@
+@use '../helpers/baseMixin.scss';
+
 .vxe-pulldown {
   position: relative;
   display: inline-block;
@@ -39,6 +41,14 @@
   &.ani--enter {
     opacity: 1;
     transform: scaleY(1);
+    & > div {
+      &::after {
+        display: none;
+      }
+    }
+  }
+  & > div {
+    @include baseMixin.createEmptyMask();
   }
 }
 .vxe-pulldown--panel-wrapper {

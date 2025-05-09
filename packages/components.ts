@@ -23,7 +23,9 @@ import VxeCollapse from './collapse'
 import VxeCollapsePane from './collapse-pane'
 import VxeColorPicker from './color-picker'
 import VxeCountdown from './countdown'
+import VxeDatePanel from './date-panel'
 import VxeDatePicker from './date-picker'
+import VxeDateRangePicker from './date-range-picker'
 import VxeDrawer, { DrawerController } from './drawer'
 import VxeEmpty from './empty'
 import VxeForm from './form'
@@ -109,7 +111,9 @@ const components = [
   VxeCollapsePane,
   VxeColorPicker,
   VxeCountdown,
+  VxeDatePanel,
   VxeDatePicker,
+  VxeDateRangePicker,
   VxeDrawer,
   VxeEmpty,
   VxeForm,
@@ -216,7 +220,9 @@ export * from './collapse'
 export * from './collapse-pane'
 export * from './color-picker'
 export * from './countdown'
+export * from './date-panel'
 export * from './date-picker'
+export * from './date-range-picker'
 export * from './drawer'
 export * from './empty'
 export * from './form'

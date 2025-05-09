@@ -77,7 +77,7 @@ export namespace VxeButtonGroupDefines {
 
   export interface ClickEventParams extends ButtonGroupEventParams {
     name: VxeButtonPropTypes.Name
-    option: VxeButtonProps
+    option: VxeButtonProps & Record<string, any>
   }
 }
 
