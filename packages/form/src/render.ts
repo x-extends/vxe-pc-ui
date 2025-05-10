@@ -1,5 +1,5 @@
 import { CreateElement, VNode } from 'vue'
-import { getIcon, getI18n, renderer, renderEmptyElement } from '../../ui'
+import { getIcon, getI18n, formats, renderer, renderEmptyElement } from '../../ui'
 import { eqEmptyValue, getFuncText, isEnableConf } from '../../ui/src/utils'
 import { toCssUnit } from '../../ui/src/dom'
 import { getSlotVNs } from '../../ui/src/vn'
@@ -226,18 +226,21 @@ export function renderTitle (h: CreateElement, $xeForm: VxeFormConstructor & Vxe
 export const renderItemContent = (h: CreateElement, $xeForm: VxeFormConstructor & VxeFormPrivateMethods, item: VxeFormDefines.ItemInfo) => {
   const formProps = $xeForm
   const formReactData = $xeForm.reactData
+  const formInternalData = $xeForm.internalData
   const $xeGrid = $xeForm.$xeGrid
 
   const { data, readonly, disabled } = formProps
+  const { itemFormatCache } = formInternalData
   const { collapseAll } = formReactData
-  const { slots, field, itemRender, collapseNode, errRule } = item
+  const { slots, field, itemRender, collapseNode, errRule, formatter } = item
   const defaultSlot = slots ? slots.default : null
   const validSlot = slots ? slots.valid : null
   const validOpts = $xeForm.computeValidOpts
   const collapseOpts = $xeForm.computeCollapseOpts
   const compConf = isEnableConf(itemRender) ? renderer.get(itemRender.name) : null
 
-  const params = { data, disabled, readonly, field, property: field, item, $form: $xeForm, $grid: $xeGrid }
+  const itemValue = XEUtils.get(data, field)
+  const params = { data, disabled, readonly, field, property: field, item, itemValue, $form: $xeForm, $grid: $xeGrid }
 
   let contentVNs: VxeComponentSlotType[] = []
   const rftContent = compConf ? (compConf.renderFormItemContent || compConf.renderItemContent) : null
@@ -246,8 +249,44 @@ export const renderItemContent = (h: CreateElement, $xeForm: VxeFormConstructor 
   } else if (rftContent) {
     contentVNs = getSlotVNs(rftContent.call($xeForm, h, itemRender, params))
   } else if (field) {
-    const itemValue = XEUtils.get(data, field)
-    contentVNs = [eqEmptyValue(itemValue) ? '' : `${itemValue}`]
+    let itemLabel = itemValue
+    if (formatter) {
+      let formatData: {
+        value?: any
+        label?: any
+      } | undefined
+      if (field) {
+        const itemRest = itemFormatCache[field]
+        if (itemRest) {
+          formatData = itemRest.formatData
+          if (formatData) {
+            if (formatData.value === itemValue) {
+              return formatData.label
+            }
+          } else {
+            formatData = itemRest.formatData = {}
+          }
+        } else {
+          itemFormatCache[field] = { field }
+        }
+      }
+      if (XEUtils.isString(formatter)) {
+        const gFormatOpts = formats.get(formatter)
+        const fiFormatMethod = gFormatOpts ? gFormatOpts.formItemFormatMethod : null
+        itemLabel = fiFormatMethod ? fiFormatMethod(params) : ''
+      } else if (XEUtils.isArray(formatter)) {
+        const gFormatOpts = formats.get(formatter[0])
+        const fiFormatMethod = gFormatOpts ? gFormatOpts.formItemFormatMethod : null
+        itemLabel = fiFormatMethod ? fiFormatMethod(params, ...formatter.slice(1)) : ''
+      } else {
+        itemLabel = formatter(params)
+      }
+      if (formatData) {
+        formatData.value = itemValue
+        formatData.label = itemLabel
+      }
+    }
+    contentVNs = [eqEmptyValue(itemLabel) ? '' : `${itemLabel}`]
   }
   if (collapseNode) {
     contentVNs.push(

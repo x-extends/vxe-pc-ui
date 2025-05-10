@@ -175,7 +175,8 @@ export default /* define-vxe-component start */ defineVxeComponent({
       tooltipStore: {
         item: null,
         visible: false
-      }
+      },
+      itemFormatCache: {}
     }
     return {
       xID,
@@ -233,6 +234,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const $xeForm = this
       const slots = $xeForm.$scopedSlots
       const reactData = $xeForm.reactData
+      const internalData = $xeForm.internalData
 
       if (list.length) {
         list.forEach((item) => {
@@ -248,6 +250,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
         })
       }
       reactData.staticItems = XEUtils.mapTree(list, item => createItem($xeForm, item), { children: 'children' })
+      internalData.itemFormatCache = {}
       return $xeForm.$nextTick()
     },
     getItems () {
@@ -340,6 +343,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const $xeForm = this
       const props = $xeForm
       const $xeGrid = $xeForm.$xeGrid
+      const internalData = $xeForm.internalData
 
       const { data } = props
       const itemList = $xeForm.getItems()
@@ -357,6 +361,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
           }
         })
       }
+      internalData.itemFormatCache = {}
       return $xeForm.clearValidate()
     },
     resetEvent  (evnt: Event) {

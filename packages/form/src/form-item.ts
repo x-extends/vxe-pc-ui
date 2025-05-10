@@ -59,6 +59,7 @@ export const formItemProps = {
     type: Boolean as PropType<VxeFormItemPropTypes.Padding>,
     default: null
   },
+  formatter: [String, Function] as PropType<VxeFormItemPropTypes.Formatter>,
   className: [String, Function] as PropType<VxeFormItemPropTypes.ClassName>,
   contentClassName: [String, Function] as PropType<VxeFormItemPropTypes.ContentClassName>,
   contentStyle: [Object, Function] as PropType<VxeFormItemPropTypes.ContentStyle>,

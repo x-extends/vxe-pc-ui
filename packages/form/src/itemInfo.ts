@@ -1,7 +1,24 @@
+import { formats } from '../../ui'
 import XEUtils from 'xe-utils'
+import { errLog } from '../../ui/src/log'
 
 export class ItemInfo {
   constructor ($xeForm: any, item: any) {
+    const { formatter } = item
+    if (formatter) {
+      if (XEUtils.isString(formatter)) {
+        const gFormatOpts = formats.get(formatter)
+        if (!gFormatOpts || !gFormatOpts.formItemFormatMethod) {
+          errLog('vxe.error.notFormats', [formatter])
+        }
+      } else if (XEUtils.isArray(formatter)) {
+        const gFormatOpts = formats.get(formatter[0])
+        if (!gFormatOpts || !gFormatOpts.formItemFormatMethod) {
+          errLog('vxe.error.notFormats', [formatter[0]])
+        }
+      }
+    }
+
     Object.assign(this, {
       id: XEUtils.uniqueId('item_'),
       title: item.title,
@@ -34,6 +51,7 @@ export class ItemInfo {
       titleStyle: item.titleStyle,
       itemRender: item.itemRender,
       rules: item.rules,
+      formatter: item.formatter,
       // 渲染属性
       showError: false,
       errRule: null,
