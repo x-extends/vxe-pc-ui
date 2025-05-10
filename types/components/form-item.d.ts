@@ -70,6 +70,15 @@ export namespace VxeFormItemPropTypes {
 
   export type TitleOverflow = VxeFormPropTypes.TitleOverflow
 
+  export type Formatter<D = any> = string | ((params: {
+    $grid: VxeGridConstructor | null | undefined
+    $form: VxeFormConstructor<D>
+    data: D
+    item: VxeFormDefines.ItemInfo
+    field: string
+    itemValue: any
+  }) => string | number)
+
   export type ResetValue = string | number | any[] | object | RegExp | null | undefined | ((params: {
     $grid: VxeGridConstructor | null | undefined
     $form: VxeFormConstructor
@@ -221,6 +230,10 @@ export interface VxeFormItemProps<D = any> {
    */
   titleSuffix?: VxeFormItemPropTypes.TitleSuffix
   titleOverflow?: VxeFormItemPropTypes.TitleOverflow
+  /**
+   * 格式化显示内容
+   */
+  formatter?: VxeFormItemPropTypes.Formatter
   /**
    * 重置时的默认值
    */

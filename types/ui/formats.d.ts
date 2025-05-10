@@ -1,3 +1,4 @@
+import { VxeFormDefines } from '../components/form'
 import { VxeTableDefines } from '../components/table'
 
 /* eslint-disable no-use-before-define */
@@ -5,6 +6,10 @@ import { VxeTableDefines } from '../components/table'
 declare module '@vxe-ui/core' {
   export namespace VxeGlobalFormatsHandles {
     export interface FormatsOptions {
+      /**
+       * 表单 - 自定义表单项格式化方法
+       */
+      formItemFormatMethod?: (params: FormItemFormatMethodParams, ...args: any[]) => string | number
       /**
        * 表格 - 自定义单元格格式化方法
        */
@@ -20,11 +25,20 @@ declare module '@vxe-ui/core' {
        */
       cellFormatMethod?: (params: TableCellFormatMethodParams, ...args: any[]) => string | number
     }
+
+    export interface FormItemFormatMethodParams {
+      itemValue: any
+      data: any
+      item: VxeFormDefines.ItemInfo
+      field: string
+    }
+
     export interface TableCellFormatMethodParams {
       cellValue: any
       row: any
       column: VxeTableDefines.ColumnInfo
     }
+
     export interface TableFooterCellFormatMethodParams {
       itemValue: any
       column: VxeTableDefines.ColumnInfo

@@ -173,7 +173,8 @@ export default defineComponent({
       tooltipStore: {
         item: null,
         visible: false
-      }
+      },
+      itemFormatCache: {}
     })
 
     const refElem = ref<HTMLFormElement>()
@@ -209,6 +210,7 @@ export default defineComponent({
       props,
       context,
       reactData,
+      internalData,
 
       xeGrid: $xeGrid,
       getRefMaps: () => refMaps,
@@ -242,6 +244,7 @@ export default defineComponent({
         })
       }
       reactData.staticItems = XEUtils.mapTree(list, item => createItem($xeForm, item), { children: 'children' })
+      internalData.itemFormatCache = {}
       return nextTick()
     }
 
@@ -334,6 +337,7 @@ export default defineComponent({
           }
         })
       }
+      internalData.itemFormatCache = {}
       return clearValidate()
     }
 

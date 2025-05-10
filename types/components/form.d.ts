@@ -146,6 +146,13 @@ export interface FormInternalData {
     item: VxeFormDefines.ItemInfo | null
     visible: boolean
   }
+  itemFormatCache: Record<string, {
+    field: string
+    formatData?: {
+      value?: any
+      label?: any
+    }
+  }>
 }
 
 export interface FormMethods<D = any> {
@@ -257,6 +264,7 @@ export namespace VxeFormDefines {
     readonly: VxeFormItemPropTypes.Readonly
     itemRender: VxeFormItemPropTypes.ItemRender
     rules: VxeFormItemPropTypes.Rules
+    formatter: VxeFormItemPropTypes.Formatter
     // 渲染属性
     showError: boolean
     errRule: any
