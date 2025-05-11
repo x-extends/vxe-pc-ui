@@ -57,13 +57,14 @@ export default defineComponent({
 
     // date、week、month、quarter、year
     startDate: {
-      type: [String, Number, Date] as PropType<VxeDatePickerPropTypes.MinDate>,
+      type: [String, Number, Date] as PropType<VxeDatePickerPropTypes.StartDate>,
       default: () => getConfig().datePicker.startDate
     },
     endDate: {
       type: [String, Number, Date] as PropType<VxeDatePickerPropTypes.MaxDate>,
       default: () => getConfig().datePicker.endDate
     },
+    defaultDate: [String, Number, Date] as PropType<VxeDatePickerPropTypes.DefaultDate>,
     minDate: [String, Number, Date] as PropType<VxeDatePickerPropTypes.MinDate>,
     maxDate: [String, Number, Date] as PropType<VxeDatePickerPropTypes.MaxDate>,
     startDay: {
@@ -441,12 +442,14 @@ export default defineComponent({
     }
 
     const panelChangeEvent = (params: any) => {
-      const { multiple } = props
+      const { multiple, autoClose } = props
       const { value, $event } = params
       const isDateTimeType = computeIsDateTimeType.value
       handleChange(value, $event)
       if (!multiple && !isDateTimeType) {
-        hidePanel()
+        if (autoClose) {
+          hidePanel()
+        }
       }
     }
 
@@ -805,6 +808,7 @@ export default defineComponent({
                         startDate: props.startDate,
                         endDate: props.endDate,
                         minDate: props.minDate,
+                        defaultDate: props.defaultDate,
                         maxDate: props.maxDate,
                         startDay: props.startDay,
                         labelFormat: props.labelFormat,
@@ -812,8 +816,7 @@ export default defineComponent({
                         festivalMethod: props.festivalMethod,
                         disabledMethod: props.disabledMethod,
                         selectDay: props.selectDay,
-                        onChange: panelChangeEvent,
-                        onDateToday: hidePanel
+                        onChange: panelChangeEvent
                       })
                     ]),
                     h('div', {

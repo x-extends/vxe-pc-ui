@@ -1,7 +1,7 @@
 <template>
   <div>
     <p>
-      <vxe-date-picker v-model="demo1.value100" placeholder="默认尺寸"></vxe-date-picker>
+      <vxe-date-picker v-model="demo1.value100" placeholder="默认尺寸" default-date="2020-10-10"></vxe-date-picker>
       <vxe-date-picker v-model="demo1.value101" placeholder="中等尺寸" size="medium"></vxe-date-picker>
       <vxe-date-picker v-model="demo1.value102" placeholder="小型尺寸" size="small"></vxe-date-picker>
       <vxe-date-picker v-model="demo1.value103" placeholder="超小尺寸" size="mini"></vxe-date-picker>

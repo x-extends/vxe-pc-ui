@@ -54,6 +54,7 @@ export default defineComponent({
 
     minDate: [String, Number, Date] as PropType<VxeDateRangePickerPropTypes.MinDate>,
     maxDate: [String, Number, Date] as PropType<VxeDateRangePickerPropTypes.MaxDate>,
+    defaultDate: [String, Number, Date] as PropType<VxeDateRangePickerPropTypes.DefaultDate>,
     startDay: {
       type: [String, Number] as PropType<VxeDateRangePickerPropTypes.StartDay>,
       default: () => getConfig().dateRangePicker.startDay
@@ -474,8 +475,8 @@ export default defineComponent({
       const $startDatePanel = refStartDatePanel.value
       const $endDatePanel = refEndDatePanel.value
       if ($startDatePanel && $endDatePanel) {
-        const startValue = $startDatePanel.getValue()
-        const endValue = $endDatePanel.getValue()
+        const startValue = $startDatePanel.getModelValue()
+        const endValue = $endDatePanel.getModelValue()
         if (!startValue || !endValue) {
           handleChange('', '', { type: 'check' })
         }
@@ -538,8 +539,8 @@ export default defineComponent({
       const $startDatePanel = refStartDatePanel.value
       const $endDatePanel = refEndDatePanel.value
       if ($startDatePanel && $endDatePanel) {
-        const startValue = $startDatePanel.getValue()
-        const endValue = $endDatePanel.getValue()
+        const startValue = $startDatePanel.getModelValue()
+        const endValue = $endDatePanel.getModelValue()
         if (startValue && endValue) {
           $startDatePanel.confirmByEvent(evnt)
           $endDatePanel.confirmByEvent(evnt)
@@ -563,7 +564,7 @@ export default defineComponent({
         const $startDatePanel = refStartDatePanel.value
         const $endDatePanel = refEndDatePanel.value
         if ($startDatePanel && $endDatePanel) {
-          const startValue = $startDatePanel.getValue()
+          const startValue = $startDatePanel.getModelValue()
           if (!endValue && startValue) {
             $endDatePanel.setPanelDate(XEUtils.toStringDate(startValue))
           }
@@ -584,7 +585,7 @@ export default defineComponent({
         const $startDatePanel = refStartDatePanel.value
         const $endDatePanel = refEndDatePanel.value
         if ($startDatePanel && $endDatePanel) {
-          const endValue = $endDatePanel.getValue()
+          const endValue = $endDatePanel.getModelValue()
           if (!startValue && endValue) {
             $startDatePanel.setPanelDate(XEUtils.toStringDate(endValue))
           }

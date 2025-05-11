@@ -306,12 +306,11 @@ export default defineComponent({
       return nextTick()
     }
 
-    const getResetValue = (item: VxeFormDefines.ItemInfo, data: any) => {
+    const getResetValue = (item: VxeFormDefines.ItemInfo, data: any, itemValue: any) => {
       const { field, resetValue } = item
-      const itemValue = XEUtils.get(data, field)
       if (XEUtils.isFunction(resetValue)) {
         return resetValue({ field, item, data, $form: $xeForm, $grid: $xeGrid })
-      } else if (resetValue === null) {
+      } else if (XEUtils.eqNull(resetValue)) {
         // 默认
         if (XEUtils.isArray(itemValue)) {
           return []
@@ -327,12 +326,18 @@ export default defineComponent({
         itemList.forEach((item) => {
           const { field, itemRender } = item
           if (isEnableConf(itemRender)) {
-            const compConf = renderer.get(itemRender.name)
+            const { name, startField, endField } = itemRender
+            const compConf = renderer.get(name)
             const fiResetMethod = compConf ? (compConf.formItemResetMethod || compConf.itemResetMethod) : null
             if (compConf && fiResetMethod) {
               fiResetMethod({ data, field, property: field, item, $form: $xeForm, $grid: $xeGrid })
             } else if (field) {
-              XEUtils.set(data, field, getResetValue(item, data))
+              const itemValue = XEUtils.get(data, field)
+              XEUtils.set(data, field, getResetValue(item, data, itemValue))
+            }
+            if (startField && endField) {
+              XEUtils.set(data, startField, getResetValue(item, data, XEUtils.get(data, startField)))
+              XEUtils.set(data, endField, getResetValue(item, data, XEUtils.get(data, endField)))
             }
           }
         })

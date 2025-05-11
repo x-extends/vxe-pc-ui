@@ -43,6 +43,7 @@ export namespace VxeDatePickerPropTypes {
   export type Form = string
   export type StartDate = string | number | Date
   export type EndDate = string | number | Date
+  export type DefaultDate = string | number | Date
   export type MinDate = string | number | Date
   export type MaxDate = string | number | Date
   export type StartDay = 0 | 1 | 2 | 3 | 4 | 5 | 6
@@ -95,6 +96,7 @@ export interface VxeDatePickerProps {
    */
   startDate?: VxeDatePickerPropTypes.StartDate
   endDate?: VxeDatePickerPropTypes.EndDate
+  defaultDate?: VxeDatePickerPropTypes.DefaultDate
   minDate?: VxeDatePickerPropTypes.MinDate
   maxDate?: VxeDatePickerPropTypes.MaxDate
 

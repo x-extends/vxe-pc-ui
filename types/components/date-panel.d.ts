@@ -32,6 +32,7 @@ export namespace VxeDatePanelPropTypes {
   export type LimitCount = string | number
   export type StartDate = string | number | Date
   export type EndDate = string | number | Date
+  export type DefaultDate = string | number | Date
   export type MinDate = string | number | Date
   export type MaxDate = string | number | Date
   export type StartDay = 0 | 1 | 2 | 3 | 4 | 5 | 6
@@ -55,6 +56,7 @@ export interface VxeDatePanelProps {
    */
   startDate?: VxeDatePanelPropTypes.StartDate
   endDate?: VxeDatePanelPropTypes.EndDate
+  defaultDate?: VxeDatePanelPropTypes.DefaultDate
   minDate?: VxeDatePanelPropTypes.MinDate
   maxDate?: VxeDatePanelPropTypes.MaxDate
 
@@ -97,7 +99,7 @@ export interface DatePanelInternalData {
 export interface DatePanelMethods {
   dispatchEvent(type: ValueOf<VxeDatePanelEmits>, params: Record<string, any>, evnt: Event | null): void
 
-  getValue(): string
+  getModelValue(): string
   setPanelDate(date: Date): void
   getPanelDate(): Date
   checkValue(inputLabel: string): void

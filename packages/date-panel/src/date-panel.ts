@@ -33,6 +33,7 @@ export default defineComponent({
       type: [String, Number, Date] as PropType<VxeDatePanelPropTypes.EndDate>,
       default: () => getConfig().datePanel.endDate
     },
+    defaultDate: [String, Number, Date] as PropType<VxeDatePanelPropTypes.DefaultDate>,
     minDate: [String, Number, Date] as PropType<VxeDatePanelPropTypes.MinDate>,
     maxDate: [String, Number, Date] as PropType<VxeDatePanelPropTypes.MaxDate>,
     startDay: {
@@ -1026,8 +1027,9 @@ export default defineComponent({
     }
 
     const dateOpenPanel = () => {
-      const { type } = props
+      const { type, defaultDate } = props
       const isDateTimeType = computeIsDateTimeType.value
+      const dateValueFormat = computeDateValueFormat.value
       const dateValue = computeDateValue.value
       if (['year', 'quarter', 'month', 'week'].indexOf(type) > -1) {
         reactData.datePanelType = type as 'year' | 'quarter' | 'month' | 'week'
@@ -1039,7 +1041,16 @@ export default defineComponent({
         dateMonthHandle(dateValue, 0)
         dateParseValue(dateValue)
       } else {
-        dateNowHandle()
+        if (defaultDate) {
+          const defDate = parseDate(defaultDate, dateValueFormat)
+          if (XEUtils.isValidDate(defDate)) {
+            dateMonthHandle(defDate, 0)
+          } else {
+            dateNowHandle()
+          }
+        } else {
+          dateNowHandle()
+        }
       }
       if (isDateTimeType) {
         reactData.datetimePanelValue = reactData.datePanelValue || XEUtils.getWhatDay(Date.now(), 0, 'first')
@@ -1059,7 +1070,7 @@ export default defineComponent({
     const datePanelMethods: DatePanelMethods = {
       dispatchEvent,
 
-      getValue () {
+      getModelValue () {
         return reactData.inputValue
       },
       setPanelDate (date) {
