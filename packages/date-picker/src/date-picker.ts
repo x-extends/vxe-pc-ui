@@ -65,13 +65,14 @@ export default /* define-vxe-component start */ defineVxeComponent({
 
     // date、week、month、quarter、year
     startDate: {
-      type: [String, Number, Date] as PropType<VxeDatePickerPropTypes.MinDate>,
+      type: [String, Number, Date] as PropType<VxeDatePickerPropTypes.StartDate>,
       default: () => getConfig().datePicker.startDate
     },
     endDate: {
       type: [String, Number, Date] as PropType<VxeDatePickerPropTypes.MaxDate>,
       default: () => getConfig().datePicker.endDate
     },
+    defaultDate: [String, Number, Date] as PropType<VxeDatePickerPropTypes.DefaultDate>,
     minDate: [String, Number, Date] as PropType<VxeDatePickerPropTypes.MinDate>,
     maxDate: [String, Number, Date] as PropType<VxeDatePickerPropTypes.MaxDate>,
     startDay: {
@@ -530,12 +531,14 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const $xeDatePicker = this
       const props = $xeDatePicker
 
-      const { multiple } = props
+      const { multiple, autoClose } = props
       const { value, $event } = params
       const isDateTimeType = $xeDatePicker.computeIsDateTimeType
       $xeDatePicker.handleChange(value, $event)
       if (!multiple && !isDateTimeType) {
-        $xeDatePicker.hidePanel()
+        if (autoClose) {
+          $xeDatePicker.hidePanel()
+        }
       }
     },
     // 全局事件
@@ -933,6 +936,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
                         startDate: props.startDate,
                         endDate: props.endDate,
                         minDate: props.minDate,
+                        defaultDate: props.defaultDate,
                         maxDate: props.maxDate,
                         startDay: props.startDay,
                         labelFormat: props.labelFormat,
@@ -942,8 +946,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
                         selectDay: props.selectDay
                       },
                       on: {
-                        change: $xeDatePicker.panelChangeEvent,
-                        dateToday: $xeDatePicker.hidePanel
+                        change: $xeDatePicker.panelChangeEvent
                       }
                     })
                   ]),

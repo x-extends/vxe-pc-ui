@@ -41,6 +41,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       type: [String, Number, Date] as PropType<VxeDatePanelPropTypes.EndDate>,
       default: () => getConfig().datePanel.endDate
     },
+    defaultDate: [String, Number, Date] as PropType<VxeDatePanelPropTypes.DefaultDate>,
     minDate: [String, Number, Date] as PropType<VxeDatePanelPropTypes.MinDate>,
     maxDate: [String, Number, Date] as PropType<VxeDatePanelPropTypes.MaxDate>,
     startDay: {
@@ -1171,8 +1172,9 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const props = $xeDatePanel
       const reactData = $xeDatePanel.reactData
 
-      const { type } = props
+      const { type, defaultDate } = props
       const isDateTimeType = $xeDatePanel.computeIsDateTimeType
+      const dateValueFormat = $xeDatePanel.computeDateValueFormat
       const dateValue = $xeDatePanel.computeDateValue
       if (['year', 'quarter', 'month', 'week'].indexOf(type) > -1) {
         reactData.datePanelType = type as 'year' | 'quarter' | 'month' | 'week'
@@ -1184,7 +1186,16 @@ export default /* define-vxe-component start */ defineVxeComponent({
         $xeDatePanel.dateMonthHandle(dateValue, 0)
         $xeDatePanel.dateParseValue(dateValue)
       } else {
-        $xeDatePanel.dateNowHandle()
+        if (defaultDate) {
+          const defDate = $xeDatePanel.parseDate(defaultDate, dateValueFormat)
+          if (XEUtils.isValidDate(defDate)) {
+            $xeDatePanel.dateMonthHandle(defDate, 0)
+          } else {
+            $xeDatePanel.dateNowHandle()
+          }
+        } else {
+          $xeDatePanel.dateNowHandle()
+        }
       }
       if (isDateTimeType) {
         reactData.datetimePanelValue = reactData.datePanelValue || XEUtils.getWhatDay(Date.now(), 0, 'first')
@@ -1196,7 +1207,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
         })
       }
     },
-    getValue () {
+    getModelValue () {
       const $xeDatePanel = this
       const reactData = $xeDatePanel.reactData
 
