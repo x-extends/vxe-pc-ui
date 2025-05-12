@@ -38,6 +38,27 @@ export namespace VxePrintPropTypes {
     marginBottom?: number | string | null
     marginLeft?: number | string | null
     marginRight?: number | string | null
+    fontSize?: number | string | null
+    color?: string | null
+    textAlign?: VxeComponentAlignType
+    header?: {
+      height?: number | string | null
+      textAlign?: VxeComponentAlignType
+    }
+    title?: {
+      fontSize?: number | string | null
+      color?: string | null
+      textAlign?: VxeComponentAlignType
+    }
+    footer?: {
+      height?: number | string | null
+      textAlign?: VxeComponentAlignType
+    }
+    pageNumber?: {
+      fontSize?: number | string | null
+      color?: string | null
+      textAlign?: VxeComponentAlignType
+    }
   }
   export type CustomStyle = string
   export type ShowAllPageTitle = boolean

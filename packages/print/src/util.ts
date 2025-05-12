@@ -9,7 +9,11 @@ const browseObj = XEUtils.browse()
 let printFrame: any
 
 // 默认导出或打印的 HTML 样式
-const defaultHtmlStyle = 'body{margin:0;padding:0;color:#000000;font-size:14px;font-family:"Microsoft YaHei",微软雅黑,"MicrosoftJhengHei",华文细黑,STHeiti,MingLiu}body *{-webkit-box-sizing:border-box;box-sizing:border-box}.vxe-table{border-collapse:collapse;text-align:left;border-spacing:0}.vxe-table:not(.is--print){table-layout:fixed}.vxe-table,.vxe-table th,.vxe-table td,.vxe-table td{border-color:#D0D0D0;border-style:solid;border-width:0}.vxe-table.is--print{width:100%}.border--default,.border--full,.border--outer{border-top-width:1px}.border--default,.border--full,.border--outer{border-left-width:1px}.border--outer,.border--default th,.border--default td,.border--full th,.border--full td,.border--outer th,.border--inner th,.border--inner td{border-bottom-width:1px}.border--default,.border--outer,.border--full th,.border--full td{border-right-width:1px}.border--default th,.border--full th,.border--outer th{background-color:#f8f8f9}.vxe-table td>div,.vxe-table th>div{padding:.5em .4em}.col--center{text-align:center}.col--right{text-align:right}.vxe-table:not(.is--print) .col--ellipsis>div{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;word-break:break-all}.vxe-table--tree-node{text-align:left}.vxe-table--tree-node-wrapper{position:relative}.vxe-table--tree-icon-wrapper{position:absolute;top:50%;width:1em;height:1em;text-align:center;-webkit-transform:translateY(-50%);transform:translateY(-50%);-webkit-user-select:none;-moz-user-select:none;-ms-user-select:none;user-select:none;cursor:pointer}.vxe-table--tree-unfold-icon,.vxe-table--tree-fold-icon{position:absolute;width:0;height:0;border-style:solid;border-width:.5em;border-right-color:transparent;border-bottom-color:transparent}.vxe-table--tree-unfold-icon{left:.3em;top:0;border-left-color:#939599;border-top-color:transparent}.vxe-table--tree-fold-icon{left:0;top:.3em;border-left-color:transparent;border-top-color:#939599}.vxe-table--tree-cell{display:block;padding-left:1.5em}.vxe-table input[type="checkbox"]{margin:0}.vxe-table input[type="checkbox"],.vxe-table input[type="radio"],.vxe-table input[type="checkbox"]+span,.vxe-table input[type="radio"]+span{vertical-align:middle;padding-left:0.4em}'
+const defaultHtmlStyle = 'body{padding:0;font-family:"Microsoft YaHei",微软雅黑,"MicrosoftJhengHei",华文细黑,STHeiti,MingLiu}body *{-webkit-box-sizing:border-box;box-sizing:border-box}.vxe-table{border-collapse:collapse;text-align:left;border-spacing:0}.vxe-table:not(.is--print){table-layout:fixed}.vxe-table,.vxe-table th,.vxe-table td,.vxe-table td{border-color:#D0D0D0;border-style:solid;border-width:0}.vxe-table.is--print{width:100%}.border--default,.border--full,.border--outer{border-top-width:1px}.border--default,.border--full,.border--outer{border-left-width:1px}.border--outer,.border--default th,.border--default td,.border--full th,.border--full td,.border--outer th,.border--inner th,.border--inner td{border-bottom-width:1px}.border--default,.border--outer,.border--full th,.border--full td{border-right-width:1px}.border--default th,.border--full th,.border--outer th{background-color:#f8f8f9}.vxe-table td>div,.vxe-table th>div{padding:.5em .4em}.col--center{text-align:center}.col--right{text-align:right}.vxe-table:not(.is--print) .col--ellipsis>div{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;word-break:break-all}.vxe-table--tree-node{text-align:left}.vxe-table--tree-node-wrapper{position:relative}.vxe-table--tree-icon-wrapper{position:absolute;top:50%;width:1em;height:1em;text-align:center;-webkit-transform:translateY(-50%);transform:translateY(-50%);-webkit-user-select:none;-moz-user-select:none;-ms-user-select:none;user-select:none;cursor:pointer}.vxe-table--tree-unfold-icon,.vxe-table--tree-fold-icon{position:absolute;width:0;height:0;border-style:solid;border-width:.5em;border-right-color:transparent;border-bottom-color:transparent}.vxe-table--tree-unfold-icon{left:.3em;top:0;border-left-color:#939599;border-top-color:transparent}.vxe-table--tree-fold-icon{left:0;top:.3em;border-left-color:transparent;border-top-color:#939599}.vxe-table--tree-cell{display:block;padding-left:1.5em}.vxe-table input[type="checkbox"]{margin:0}.vxe-table input[type="checkbox"],.vxe-table input[type="radio"],.vxe-table input[type="checkbox"]+span,.vxe-table input[type="radio"]+span{vertical-align:middle;padding-left:0.4em}'
+
+export function trimHtml (html: string) {
+  return `${html}`.replace(/(<!---->)/, '')
+}
 
 export function createPrintFrame () {
   const frame = document.createElement('iframe')
@@ -44,60 +48,90 @@ function getExportBlobByString (str: string, type: string) {
 }
 
 const defaultPrintMargin = 50
+const defaultFontColor = '#000000'
 
-function parseMargin (val?: string | number | null | VxePrintPropTypes.PageStyle) {
+function parsePageStyle (val?: VxePrintPropTypes.PageStyle) {
+  const styOpts = Object.assign({}, val)
+  const headStyOpts = Object.assign({}, styOpts.header)
+  const titStyOpts = Object.assign({}, styOpts.title)
+  const footStyOpts = Object.assign({}, styOpts.footer)
+  const pnStyOpts = Object.assign({}, styOpts.pageNumber)
   let mVal: string | number = defaultPrintMargin
-  let top: string | number = mVal
-  let bottom: string | number = mVal
-  let left: string | number = mVal
-  let right: string | number = mVal
-  if (XEUtils.isString(val) || XEUtils.isNumber(val)) {
-    mVal = val
-    top = mVal
-    bottom = mVal
-    left = mVal
-    right = mVal
-  } else if (XEUtils.isPlainObject(val)) {
-    if (val.margin) {
-      mVal = val.margin
-      top = mVal
-      bottom = mVal
-      left = mVal
-      right = mVal
-    }
-    if (val.marginTop) {
-      top = val.marginTop
-    }
-    if (val.marginBottom) {
-      bottom = val.marginBottom
-    }
-    if (val.marginLeft) {
-      left = val.marginLeft
-    }
-    if (val.marginRight) {
-      right = val.marginRight
-    }
+  let marginTop: string | number = mVal
+  let marginBottom: string | number = mVal
+  let marginLeft: string | number = mVal
+  let marginRight: string | number = mVal
+  if (XEUtils.isNumber(styOpts.margin) || XEUtils.isString(styOpts.margin)) {
+    mVal = styOpts.margin
+    marginTop = mVal
+    marginBottom = mVal
+    marginLeft = mVal
+    marginRight = mVal
   }
   return {
-    top: toCssUnit(top),
-    bottom: toCssUnit(bottom),
-    left: toCssUnit(left),
-    right: toCssUnit(right)
+    marginTop: toCssUnit(styOpts.marginTop || marginTop),
+    marginBottom: toCssUnit(styOpts.marginBottom || marginBottom),
+    marginLeft: toCssUnit(styOpts.marginLeft || marginLeft),
+    marginRight: toCssUnit(styOpts.marginRight || marginRight),
+    fontSize: toCssUnit(styOpts.fontSize),
+    color: styOpts.color,
+    textAlign: styOpts.textAlign,
+    header: {
+      height: toCssUnit(headStyOpts.height),
+      textAlign: headStyOpts.textAlign
+    },
+    title: {
+      color: titStyOpts.color,
+      fontSize: toCssUnit(titStyOpts.fontSize),
+      textAlign: titStyOpts.textAlign
+    },
+    footer: {
+      height: toCssUnit(footStyOpts.height),
+      textAlign: footStyOpts.textAlign
+    },
+    pageNumber: {
+      color: pnStyOpts.color,
+      fontSize: toCssUnit(pnStyOpts.fontSize),
+      textAlign: pnStyOpts.textAlign
+    }
   }
 }
 
 function createHtmlPage (opts: VxePrintProps & { _pageBreaks: boolean }, printHtml: string): string {
   const { pageStyle, customStyle } = opts
-  const marginObj = parseMargin(pageStyle)
+  const pageStyObj = parsePageStyle(pageStyle)
+  const headStyOpts = pageStyObj.header
+  const titStyOpts = pageStyObj.title
+  const footStyOpts = pageStyObj.header
+  const pnStyOpts = pageStyObj.pageNumber
+  const isPbMode = opts._pageBreaks || (opts.pageBreaks && opts.pageBreaks.length)
   return [
     '<!DOCTYPE html><html>',
     '<head>',
     '<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no,minimal-ui">',
     `<title>${opts.title || ''}</title>`,
-    opts._pageBreaks || (opts.pageBreaks && opts.pageBreaks.length) ? '<style media="print">@page {size: auto;margin: 0mm;}</style>' : '',
-    `<style>.vxe-print-slots{display: none;}.vxe-print-page-break.align--center{text-align:center;}.vxe-print-page-break.align--left{text-align:left;}.vxe-print-page-break.align--right{text-align:right;}.vxe-print-page-break--header-title{font-size:1.8em;line-height:${marginObj.top || 'normal'};text-align:center;}.vxe-print-page-break{page-break-before:always;display:flex;flex-direction:column;height:100vh;overflow:hidden;}.vxe-print-page-break--body{display:flex;flex-direction:row;flex-grow:1;overflow: hidden;}.vxe-print-page-break--left,.vxe-print-page-break--right{flex-shrink:0;height:100%;}.vxe-print-page-break--left{width:${marginObj.left};}.vxe-print-page-break--right{width:${marginObj.right};}.vxe-print-page-break--header,.vxe-print-page-break--footer{flex-shrink:0;width:100%;}.vxe-print-page-break--header{height:${marginObj.top};}.vxe-print-page-break--footer{height:${marginObj.bottom};}.vxe-print-page-break--content{flex-grow: 1;overflow: hidden;}.vxe-print-page-break--footer-page-number{line-height:${marginObj.bottom || 'normal'};text-align:center;}</style>`,
+    '<style media="print">@page{size:auto;margin: 0mm;}</style>',
+    `<style>body{font-size:${pageStyObj.fontSize || '14px'};color:${pageStyObj.color || defaultFontColor};text-align:${pageStyObj.textAlign || 'left'};}</style>`,
+    '<style>',
+    '.vxe-print-slots{display:none;}',
+    '.vxe-print-page-break.align--center{text-align:center;}',
+    '.vxe-print-page-break.align--left{text-align:left;}',
+    '.vxe-print-page-break.align--right{text-align:right;}',
+    '.vxe-print-page-break{break-before:always;page-break-before:always;display:flex;flex-direction:column;height:100vh;overflow:hidden;}',
+    '.vxe-print-page-break--body{display:flex;flex-direction:row;flex-grow:1;overflow:hidden;}',
+    '.vxe-print-page-break--left,.vxe-print-page-break--right{flex-shrink:0;height:100%;}',
+    `.vxe-print-page-break--left{width:${pageStyObj.marginLeft};}`,
+    `.vxe-print-page-break--right{width:${pageStyObj.marginRight};}`,
+    '.vxe-print-page-break--header,.vxe-print-page-break--footer{display:flex;justify-content:center;flex-direction:column;flex-shrink:0;width:100%;}',
+    `.vxe-print-page-break--header{height:${headStyOpts.height || pageStyObj.marginTop};padding:0 ${pageStyObj.marginLeft} 0 ${pageStyObj.marginRight};text-align:${headStyOpts.textAlign || 'left'};}`,
+    `.vxe-print-page-break--header-title{font-size:${titStyOpts.fontSize || '1.6em'};color:${titStyOpts.color || defaultFontColor};text-align:${opts.headerAlign || pnStyOpts.textAlign || 'center'};}`,
+    `.vxe-print-page-break--footer{height:${footStyOpts.height || pageStyObj.marginBottom};padding:0 ${pageStyObj.marginLeft} 0 ${pageStyObj.marginRight};text-align:${footStyOpts.textAlign || 'left'};}`,
+    '.vxe-print-page-break--content{flex-grow:1;overflow:hidden;}',
+    `.vxe-print-page-break--footer-page-number{font-size:${pnStyOpts.fontSize || '1.2em'};color:${pnStyOpts.color || defaultFontColor};text-align:${opts.footerAlign || pnStyOpts.textAlign || 'center'};}`,
+    '</style>',
     '<style>.vxe-table{white-space:pre;}</style>',
     `<style>${defaultHtmlStyle}</style>`,
+    isPbMode ? '<style>body{margin:0;}</style>' : `<style>body{margin:${pageStyObj.marginTop} ${pageStyObj.marginRight} ${pageStyObj.marginBottom} ${pageStyObj.marginLeft};}</style>`,
     customStyle ? `<style>${customStyle}</style>` : '',
     '</head>',
     '<body>',

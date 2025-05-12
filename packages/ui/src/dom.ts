@@ -71,7 +71,7 @@ export function hasControlKey (evnt: KeyboardEvent | MouseEvent | DragEvent) {
   return evnt.ctrlKey || evnt.metaKey
 }
 
-export function toCssUnit (val?: number | string, unit = 'px') {
+export function toCssUnit (val?: number | string | null, unit = 'px') {
   if (XEUtils.isNumber(val) || /^\d+$/.test(`${val}`)) {
     return `${val}${unit}`
   }

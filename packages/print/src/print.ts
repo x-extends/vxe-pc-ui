@@ -1,7 +1,7 @@
 import { defineComponent, ref, h, reactive, PropType, provide, createCommentVNode } from 'vue'
 import XEUtils from 'xe-utils'
 import { getConfig, createEvent } from '../../ui'
-import { printHtml } from './util'
+import { printHtml, trimHtml } from './util'
 import { getSlotVNs } from '../../ui/src/vn'
 
 import type { VxePrintPropTypes, PrintReactData, PrintPrivateRef, VxePrintEmits, PrintPrivateMethods, ValueOf, VxePrintPrivateComputed, VxePrintConstructor, VxePrintPrivateMethods, PrintMethods } from '../../../types'
@@ -87,7 +87,7 @@ export default defineComponent({
         const elem = refElem.value
         return printHtml(Object.assign({}, props, {
           _pageBreaks: !!reactData.staticPageBreaks.length,
-          html: (elem ? elem.outerHTML : '') || props.html || props.content || ''
+          html: trimHtml(elem ? elem.outerHTML : '') || props.html || props.content || ''
         }))
       }
     }
