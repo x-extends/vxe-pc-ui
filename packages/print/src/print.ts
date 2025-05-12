@@ -2,7 +2,7 @@ import { PropType, CreateElement, VNode } from 'vue'
 import { defineVxeComponent } from '../../ui/src/comp'
 import XEUtils from 'xe-utils'
 import { getConfig, createEvent, renderEmptyElement } from '../../ui'
-import { printHtml } from './util'
+import { printHtml, trimHtml } from './util'
 import { getSlotVNs } from '../../ui/src/vn'
 
 import type { VxePrintPropTypes, PrintReactData, VxePrintEmits, ValueOf } from '../../../types'
@@ -80,7 +80,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const elem = $xePrint.$refs.refElem as HTMLDivElement
       return printHtml(Object.assign({}, props, {
         _pageBreaks: !!reactData.staticPageBreaks.length,
-        html: (elem ? elem.outerHTML : '') || props.html || props.content || ''
+        html: trimHtml(elem ? elem.outerHTML : '') || props.html || props.content || ''
       }))
     },
 
