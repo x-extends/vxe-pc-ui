@@ -4243,6 +4243,10 @@ export interface TableMethods<DT = any> {
    */
   clearSort(fieldOrColumn?: VxeColumnPropTypes.Field | VxeTableDefines.ColumnInfo<any> | null): Promise<void>
   /**
+   * 区别就是会触发对应的事件
+   */
+  clearSortByEvent(event: Event, fieldOrColumn?: VxeColumnPropTypes.Field | VxeTableDefines.ColumnInfo<any> | null): Promise<void>
+  /**
    * 判断指定列是否为排序状态，如果为空则判断所有列
    * @param columnOrField 列对象或字段名
    */
@@ -4260,6 +4264,10 @@ export interface TableMethods<DT = any> {
    * @deprecated
    */
   isFilter(fieldOrColumn: VxeColumnPropTypes.Field | VxeTableDefines.ColumnInfo<any> | null): boolean
+  /**
+   * 区别就是会触发对应的事件
+   */
+  clearFilterByEvent(event: Event, fieldOrColumn?: VxeColumnPropTypes.Field | VxeTableDefines.ColumnInfo<any> | null): Promise<void>
   /**
    * 判断指定列是否为筛选状态，如果为空则判断所有列
    * @param columnOrField 列对象或字段名
@@ -4840,9 +4848,11 @@ export type VxeTableEmits = [
   'clear-merge',
   'sort-change',
   'clear-sort',
+  'clear-all-sort',
   'filter-change',
   'filter-visible',
   'clear-filter',
+  'clear-all-filter',
 
   'resizable-change', // 已废弃
 
