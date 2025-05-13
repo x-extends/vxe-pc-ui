@@ -2,7 +2,7 @@ import { defineComponent, h, Teleport, ref, Ref, computed, provide, reactive, in
 import XEUtils from 'xe-utils'
 import { getConfig, getIcon, getI18n, commands, createEvent, globalEvents, useSize, renderEmptyElement } from '../../ui'
 import { getFuncText, getLastZIndex, nextZIndex, isEnableConf } from '../../ui/src/utils'
-import { getAbsolutePos, getEventTargetNode } from '../../ui/src/dom'
+import { updatePanelPlacement, getEventTargetNode } from '../../ui/src/dom'
 import { getSlotVNs } from '../../ui/src/vn'
 import { parseDateObj, getDateByCode } from '../../date-panel/src/util'
 import { errLog } from '../../ui/src/log'
@@ -10,7 +10,7 @@ import VxeDatePanelComponent from '../../date-panel/src/date-panel'
 import VxeButtonComponent from '../../button/src/button'
 import VxeButtonGroupComponent from '../../button/src/button-group'
 
-import type { VxeDatePickerConstructor, VxeDatePickerEmits, DatePickerInternalData, DatePickerReactData, VxeComponentStyleType, DatePickerMethods, VxeDatePickerPropTypes, DatePickerPrivateRef, VxeFormConstructor, VxeFormPrivateMethods, VxeFormDefines, ValueOf, VxeModalConstructor, VxeDrawerConstructor, VxeModalMethods, VxeDrawerMethods, VxeDatePickerDefines, VxeButtonGroupEvents, VxeDatePanelConstructor } from '../../../types'
+import type { VxeDatePickerConstructor, VxeDatePickerEmits, DatePickerInternalData, DatePickerReactData, DatePickerMethods, VxeDatePickerPropTypes, DatePickerPrivateRef, VxeFormConstructor, VxeFormPrivateMethods, VxeFormDefines, ValueOf, VxeModalConstructor, VxeDrawerConstructor, VxeModalMethods, VxeDrawerMethods, VxeDatePickerDefines, VxeButtonGroupEvents, VxeDatePanelConstructor } from '../../../types'
 import type { VxeTableConstructor, VxeTablePrivateMethods } from '../../../types/components/table'
 
 export default defineComponent({
@@ -511,76 +511,24 @@ export default defineComponent({
     }
 
     const updatePlacement = () => {
-      return nextTick().then(() => {
-        const { placement } = props
-        const { panelIndex } = reactData
-        const targetElem = refInputTarget.value
-        const panelElem = refInputPanel.value
-        const btnTransfer = computeBtnTransfer.value
-        if (targetElem && panelElem) {
-          const targetHeight = targetElem.offsetHeight
-          const targetWidth = targetElem.offsetWidth
-          const panelHeight = panelElem.offsetHeight
-          const panelWidth = panelElem.offsetWidth
-          const marginSize = 5
-          const panelStyle: VxeComponentStyleType = {
-            zIndex: panelIndex
-          }
-          const { boundingTop, boundingLeft, visibleHeight, visibleWidth } = getAbsolutePos(targetElem)
-          let panelPlacement: VxeDatePickerPropTypes.Placement = 'bottom'
-          if (btnTransfer) {
-            let left = boundingLeft
-            let top = boundingTop + targetHeight
-            if (placement === 'top') {
-              panelPlacement = 'top'
-              top = boundingTop - panelHeight
-            } else if (!placement) {
-              // 如果下面不够放，则向上
-              if (top + panelHeight + marginSize > visibleHeight) {
-                panelPlacement = 'top'
-                top = boundingTop - panelHeight
-              }
-              // 如果上面不够放，则向下（优先）
-              if (top < marginSize) {
-                panelPlacement = 'bottom'
-                top = boundingTop + targetHeight
-              }
-            }
-            // 如果溢出右边
-            if (left + panelWidth + marginSize > visibleWidth) {
-              left -= left + panelWidth + marginSize - visibleWidth
-            }
-            // 如果溢出左边
-            if (left < marginSize) {
-              left = marginSize
-            }
-            Object.assign(panelStyle, {
-              left: `${left}px`,
-              top: `${top}px`,
-              minWidth: `${targetWidth}px`
-            })
-          } else {
-            if (placement === 'top') {
-              panelPlacement = 'top'
-              panelStyle.bottom = `${targetHeight}px`
-            } else if (!placement) {
-              // 如果下面不够放，则向上
-              panelStyle.top = `${targetHeight}px`
-              if (boundingTop + targetHeight + panelHeight > visibleHeight) {
-                // 如果上面不够放，则向下（优先）
-                if (boundingTop - targetHeight - panelHeight > marginSize) {
-                  panelPlacement = 'top'
-                  panelStyle.top = ''
-                  panelStyle.bottom = `${targetHeight}px`
-                }
-              }
-            }
-          }
-          reactData.panelStyle = panelStyle
-          reactData.panelPlacement = panelPlacement
-          return nextTick()
-        }
-      })
+      const { placement } = props
+      const { panelIndex } = reactData
+      const targetElem = refInputTarget.value
+      const panelElem = refInputPanel.value
+      const btnTransfer = computeBtnTransfer.value
+      const handleStyle = () => {
+        const ppObj = updatePanelPlacement(targetElem, panelElem, {
+          placement,
+          teleportTo: btnTransfer
+        })
+        const panelStyle: { [key: string]: string | number } = Object.assign(ppObj.style, {
+          zIndex: panelIndex
+        })
+        reactData.panelStyle = panelStyle
+        reactData.panelPlacement = ppObj.placement
+      }
+      handleStyle()
+      return nextTick().then(handleStyle)
     }
 
     const showPanel = () => {

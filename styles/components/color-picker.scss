@@ -1,4 +1,5 @@
 @use '../helpers/baseMixin.scss';
+@use '../helpers/placement.scss';
 
 .vxe-color-picker {
   &.is--selected {
@@ -71,33 +72,7 @@
 }
 
 .vxe-color-picker--panel {
-  display: none;
-  position: absolute;
-  left: 0;
-  padding: 4px 0;
-  color: var(--vxe-ui-font-color);
-  text-align: left;
-  &:not(.is--transfer) {
-    min-width: 100%;
-  }
-  &.is--transfer {
-    position: fixed;
-  }
-  &.ani--leave {
-    display: block;
-    opacity: 0;
-    transform: scaleY(0.5);
-    transition: transform .3s cubic-bezier(.23,1,.32,1), opacity .3s cubic-bezier(.23,1,.32,1);
-    transform-origin: center top;
-    backface-visibility: hidden;
-    &[placement="top"] {
-      transform-origin: center bottom;
-    }
-  }
-  &.ani--enter {
-    opacity: 1;
-    transform: scaleY(1);
-  }
+  @include placement.createPlacementPanel();
 }
 
 .vxe-color-picker--color-wrapper {

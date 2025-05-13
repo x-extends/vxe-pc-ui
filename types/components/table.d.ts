@@ -1943,6 +1943,54 @@ export namespace VxeTablePropTypes {
       replaceValue: string
       result: VxeTableExtendCellAreaDefines.FindAndReplaceResult[]
     }) => void
+    /**
+     * 匹配选项配置
+     */
+    matchOptions?: {
+      /**
+       * 是否启用正则表达式
+       */
+      isRE?: boolean
+      /**
+       * 是否启用全词匹配
+       */
+      isWhole?: boolean
+      /**
+       * 是否启用区分大小写
+       */
+      isSensitive?: boolean
+    }
+    /**
+     * 列表配置项
+     */
+    listOptions?: {
+      /**
+       * 格式化列表的显示值
+       */
+      formatCellValue?(params: {
+        item: VxeTableExtendCellAreaDefines.FNRSearch
+        cellValue: any
+      }): string | number
+    }
+    /**
+     * 弹窗配置项
+     */
+    modalOptions?: {
+      title?: VxeModalPropTypes.Title
+      width?: VxeModalPropTypes.Width
+      minWidth?: VxeModalPropTypes.MinWidth
+      height?: VxeModalPropTypes.Height
+      minHeight?: VxeModalPropTypes.MinHeight
+      className?: VxeModalPropTypes.ClassName
+      resize?: VxeModalPropTypes.Resize
+      showMaximize?: VxeModalPropTypes.ShowMaximize
+      showMinimize?: VxeModalPropTypes.ShowMinimize
+      showZoom?: VxeModalPropTypes.ShowZoom
+      lockView?: VxeModalPropTypes.LockView
+      mask?: VxeModalPropTypes.Mask
+      maskClosable?: VxeModalPropTypes.MaskClosable
+      escClosable?: VxeModalPropTypes.EscClosable
+    }
   }
   export interface FNROpts<DT = any> extends FnrConfig<DT> { }
 
@@ -3095,6 +3143,7 @@ export interface VxeTableProps<D = any> {
 export interface TablePrivateComputed<D = any> {
   computeSize: ComputedRef<VxeTablePropTypes.Size>
   computeTableId: ComputedRef<string>
+  computeRowField: ComputedRef<string>
   computeValidOpts: ComputedRef<VxeTablePropTypes.ValidOpts<D>>
   computeVirtualXOpts: ComputedRef<VxeTablePropTypes.VirtualXConfig & { gt: number }>
   computeVirtualYOpts: ComputedRef<VxeTablePropTypes.VirtualYConfig & { gt: number }>
@@ -3426,6 +3475,8 @@ export interface TableReactData<D = any> {
 
 export interface TableInternalData<D = any> {
   tZindex: number
+  currKeyField: string
+  isCurrDeepKey: boolean
   elemStore: {
     [key: string]: Ref<HTMLElement> |Ref<ComponentPublicInstance> | null
   }

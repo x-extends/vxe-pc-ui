@@ -48,7 +48,7 @@
 
         <template #footer>
           <div>
-            <vxe-button mode="text">按钮</vxe-button>
+            <vxe-button mode="text">按钮按钮按钮按钮按钮按钮按钮按钮按钮按钮按钮按钮</vxe-button>
             <vxe-button mode="text">按钮</vxe-button>
             <vxe-button mode="text">按钮</vxe-button>
             <vxe-button mode="text">按钮</vxe-button>
@@ -99,7 +99,7 @@
       <vxe-select v-model="demo1.value32" placeholder="禁用分组" clearable transfer>
         <vxe-optgroup label="选项2" disabled>
           <vxe-option value="2-1" label="选项2-1"></vxe-option>
-          <vxe-option value="2-2" label="选项2-2"></vxe-option>
+          <vxe-option value="2-2" label="选项2-2选项2-2选项2-2选项2-2选项2-2选项2-2选项2-2选项2-2选项2-2"></vxe-option>
           <vxe-option value="2-3" label="选项2-3"></vxe-option>
         </vxe-optgroup>
         <vxe-optgroup label="选项3">

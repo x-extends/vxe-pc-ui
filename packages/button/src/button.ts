@@ -1,7 +1,7 @@
 import { defineComponent, h, ref, computed, Teleport, resolveComponent, VNode, onUnmounted, reactive, nextTick, PropType, onMounted, inject, createCommentVNode } from 'vue'
 import XEUtils from 'xe-utils'
 import { getConfig, globalEvents, getIcon, createEvent, useSize, usePermission } from '../../ui'
-import { getAbsolutePos, getEventTargetNode } from '../../ui/src/dom'
+import { getEventTargetNode, updatePanelPlacement } from '../../ui/src/dom'
 import { getFuncText, getLastZIndex, nextZIndex } from '../../ui/src/utils'
 import { warnLog } from '../../ui/src/log'
 import VxeTooltipComponent from '../../tooltip/src/tooltip'
@@ -243,75 +243,24 @@ export default defineComponent({
     }
 
     const updatePlacement = () => {
-      return nextTick().then(() => {
-        const { placement } = props
-        const { panelIndex } = reactData
-        const targetElem = refButton.value
-        const panelElem = refBtnPanel.value
-        const btnTransfer = computeBtnTransfer.value
-        if (panelElem && targetElem) {
-          const targetHeight = targetElem.offsetHeight
-          const targetWidth = targetElem.offsetWidth
-          const panelHeight = panelElem.offsetHeight
-          const panelWidth = panelElem.offsetWidth
-          const marginSize = 5
-          const panelStyle: { [key: string]: string | number } = {
-            zIndex: panelIndex
-          }
-          const { top, left, boundingTop, visibleHeight, visibleWidth } = getAbsolutePos(targetElem)
-          let panelPlacement = 'bottom'
-          if (btnTransfer) {
-            let btnLeft = left + targetWidth - panelWidth
-            let btnTop = top + targetHeight
-            if (placement === 'top') {
-              panelPlacement = 'top'
-              btnTop = top - panelHeight
-            } else if (!placement) {
-              // 如果下面不够放，则向上
-              if (boundingTop + targetHeight + panelHeight + marginSize > visibleHeight) {
-                panelPlacement = 'top'
-                btnTop = top - panelHeight
-              }
-              // 如果上面不够放，则向下（优先）
-              if (btnTop < marginSize) {
-                panelPlacement = 'bottom'
-                btnTop = top + targetHeight
-              }
-            }
-            // 如果溢出右边
-            if (btnLeft + panelWidth + marginSize > visibleWidth) {
-              btnLeft -= btnLeft + panelWidth + marginSize - visibleWidth
-            }
-            // 如果溢出左边
-            if (btnLeft < marginSize) {
-              btnLeft = marginSize
-            }
-            Object.assign(panelStyle, {
-              left: `${btnLeft}px`,
-              right: 'auto',
-              top: `${btnTop}px`,
-              minWidth: `${targetWidth}px`
-            })
-          } else {
-            if (placement === 'top') {
-              panelPlacement = 'top'
-              panelStyle.bottom = `${targetHeight}px`
-            } else if (!placement) {
-              // 如果下面不够放，则向上
-              if (boundingTop + targetHeight + panelHeight > visibleHeight) {
-                // 如果上面不够放，则向下（优先）
-                if (boundingTop - targetHeight - panelHeight > marginSize) {
-                  panelPlacement = 'top'
-                  panelStyle.bottom = `${targetHeight}px`
-                }
-              }
-            }
-          }
-          reactData.panelStyle = panelStyle
-          reactData.panelPlacement = panelPlacement
-          return nextTick()
-        }
-      })
+      const { placement } = props
+      const { panelIndex } = reactData
+      const targetElem = refButton.value
+      const panelElem = refBtnPanel.value
+      const btnTransfer = computeBtnTransfer.value
+      const handleStyle = () => {
+        const ppObj = updatePanelPlacement(targetElem, panelElem, {
+          placement,
+          teleportTo: btnTransfer
+        })
+        const panelStyle: { [key: string]: string | number } = Object.assign(ppObj.style, {
+          zIndex: panelIndex
+        })
+        reactData.panelStyle = panelStyle
+        reactData.panelPlacement = ppObj.placement
+      }
+      handleStyle()
+      return nextTick().then(handleStyle)
     }
 
     const clickEvent = (evnt: Event) => {
@@ -653,6 +602,7 @@ export default defineComponent({
               ref: refBtnPanel,
               class: ['vxe-button--dropdown-panel', popupClassName ? (XEUtils.isFunction(popupClassName) ? popupClassName({ $button: $xeButton }) : popupClassName) : '', {
                 [`size--${vSize}`]: vSize,
+                'is--transfer': btnTransfer,
                 'ani--leave': isAniVisible,
                 'ani--enter': visiblePanel
               }],

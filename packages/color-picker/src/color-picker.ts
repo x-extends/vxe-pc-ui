@@ -1,7 +1,7 @@
 import { defineComponent, watch, computed, provide, ref, inject, Teleport, h, nextTick, PropType, reactive, onMounted, onUnmounted } from 'vue'
 import XEUtils from 'xe-utils'
 import { VxeUI, getIcon, getConfig, getI18n, globalEvents, createEvent, useSize, renderEmptyElement } from '../../ui'
-import { getEventTargetNode, getAbsolutePos, toCssUnit } from '../../ui/src/dom'
+import { getEventTargetNode, toCssUnit, updatePanelPlacement } from '../../ui/src/dom'
 import { getLastZIndex, nextZIndex } from '../../ui/src/utils'
 import { parseColor, updateColorAlpha, hexToHsv, rgbToHsv, rgbToHex, hexToRgb, hsvToRgb, toRgb } from './util'
 import VxeButtonComponent from '../../button/src/button'
@@ -268,74 +268,24 @@ export default defineComponent({
     }
 
     const updatePlacement = () => {
-      return nextTick().then(() => {
-        const { placement } = props
-        const { panelIndex } = reactData
-        const el = refElem.value
-        const panelElem = refOptionPanel.value
-        const btnTransfer = computeBtnTransfer.value
-        if (panelElem && el) {
-          const targetHeight = el.offsetHeight
-          const targetWidth = el.offsetWidth
-          const panelHeight = panelElem.offsetHeight
-          const panelWidth = panelElem.offsetWidth
-          const marginSize = 5
-          const panelStyle: { [key: string]: any } = {
-            zIndex: panelIndex
-          }
-          const { boundingTop, boundingLeft, visibleHeight, visibleWidth } = getAbsolutePos(el)
-          let panelPlacement = 'bottom'
-          if (btnTransfer) {
-            let left = boundingLeft
-            let top = boundingTop + targetHeight
-            if (placement === 'top') {
-              panelPlacement = 'top'
-              top = boundingTop - panelHeight
-            } else if (!placement) {
-              // 如果下面不够放，则向上
-              if (top + panelHeight + marginSize > visibleHeight) {
-                panelPlacement = 'top'
-                top = boundingTop - panelHeight
-              }
-              // 如果上面不够放，则向下（优先）
-              if (top < marginSize) {
-                panelPlacement = 'bottom'
-                top = boundingTop + targetHeight
-              }
-            }
-            // 如果溢出右边
-            if (left + panelWidth + marginSize > visibleWidth) {
-              left -= left + panelWidth + marginSize - visibleWidth
-            }
-            // 如果溢出左边
-            if (left < marginSize) {
-              left = marginSize
-            }
-            Object.assign(panelStyle, {
-              left: `${left}px`,
-              top: `${top}px`,
-              minWidth: `${targetWidth}px`
-            })
-          } else {
-            if (placement === 'top') {
-              panelPlacement = 'top'
-              panelStyle.bottom = `${targetHeight}px`
-            } else if (!placement) {
-              // 如果下面不够放，则向上
-              if (boundingTop + targetHeight + panelHeight > visibleHeight) {
-                // 如果上面不够放，则向下（优先）
-                if (boundingTop - targetHeight - panelHeight > marginSize) {
-                  panelPlacement = 'top'
-                  panelStyle.bottom = `${targetHeight}px`
-                }
-              }
-            }
-          }
-          reactData.panelStyle = panelStyle
-          reactData.panelPlacement = panelPlacement
-          return nextTick()
-        }
-      })
+      const { placement } = props
+      const { panelIndex } = reactData
+      const targetElem = refElem.value
+      const panelElem = refOptionPanel.value
+      const btnTransfer = computeBtnTransfer.value
+      const handleStyle = () => {
+        const ppObj = updatePanelPlacement(targetElem, panelElem, {
+          placement,
+          teleportTo: btnTransfer
+        })
+        const panelStyle: { [key: string]: string | number } = Object.assign(ppObj.style, {
+          zIndex: panelIndex
+        })
+        reactData.panelStyle = panelStyle
+        reactData.panelPlacement = ppObj.placement
+      }
+      handleStyle()
+      return nextTick().then(handleStyle)
     }
 
     const showOptionPanel = () => {

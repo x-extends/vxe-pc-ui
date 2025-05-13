@@ -44,7 +44,7 @@
       <vxe-button mode="text" status="success" content="信息颜色"></vxe-button>
       <vxe-button mode="text" status="info" content="信息颜色"></vxe-button>
       <vxe-button mode="text" status="warning" content="警告颜色"></vxe-button>
-      <vxe-button mode="text" status="danger" content="危险颜色"></vxe-button>
+      <vxe-button mode="text" status="danger" content="危险颜色危险颜色危险颜色危险颜色"></vxe-button>
     </p>
 
     <p>
@@ -121,7 +121,7 @@
         <template #default>信息颜色</template>
         <template #dropdowns>
           <vxe-button mode="text" content="下拉按钮1"></vxe-button>
-          <vxe-button mode="text" content="下拉按钮2" class="my-purple"></vxe-button>
+          <vxe-button mode="text" content="下拉按钮2下拉按钮2下拉按钮2下拉按钮2下拉按钮2" class="my-purple"></vxe-button>
           <vxe-button mode="text" content="下拉按钮3"></vxe-button>
         </template>
       </vxe-button>
@@ -156,7 +156,7 @@
         <template #default>点击</template>
         <template #dropdowns>
           <vxe-button mode="text" content="下拉按钮1"></vxe-button>
-          <vxe-button mode="text" content="下拉按钮2" status="danger"></vxe-button>
+          <vxe-button mode="text" content="下拉按钮2下拉按钮2下拉按钮2下拉按钮2" status="danger"></vxe-button>
           <vxe-button mode="text" content="下拉按钮3"></vxe-button>
         </template>
       </vxe-button>
