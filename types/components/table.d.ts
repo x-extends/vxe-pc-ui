@@ -2225,9 +2225,7 @@ export namespace VxeTablePropTypes {
    */
   export interface ScrollY {
     /**
-     * 默认行为，无需设置
-     * @deprecated
-     * @private
+     * 滚动模式，会在受支持的场景中使用该模式，一般无需设置
      */
     mode?: 'default' | 'wheel'
     /**
@@ -2331,6 +2329,10 @@ export namespace VxeTablePropTypes {
      * 滚动到边界触发的阈值会触发 scroll-boundary 事件
      */
     threshold?: string | number
+    /**
+     * 滚动模式，会在受支持的场景中使用该模式，一般无需设置
+     */
+    mode?: 'default' | 'scroll' | 'wheel' | ''
   }
 
   /**

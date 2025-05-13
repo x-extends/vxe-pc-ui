@@ -1,15 +1,15 @@
 import { defineComponent, h, ref, computed, Teleport, resolveComponent, VNode, onUnmounted, reactive, nextTick, PropType, onMounted, inject, createCommentVNode } from 'vue'
 import XEUtils from 'xe-utils'
-import { getConfig, globalEvents, getIcon, createEvent, useSize, usePermission } from '../../ui'
+import { getConfig, globalEvents, getIcon, createEvent, useSize, usePermission, permission } from '../../ui'
 import { getEventTargetNode, updatePanelPlacement } from '../../ui/src/dom'
 import { getFuncText, getLastZIndex, nextZIndex } from '../../ui/src/utils'
 import { warnLog } from '../../ui/src/log'
 import VxeTooltipComponent from '../../tooltip/src/tooltip'
 
-import type { VxeButtonConstructor, VxeButtonPropTypes, VxeButtonEmits, ButtonReactData, ButtonMethods, ButtonPrivateRef, ButtonInternalData, VxeButtonGroupConstructor, VxeButtonGroupPrivateMethods, VxeDrawerConstructor, VxeDrawerMethods, VxeFormConstructor, VxeFormPrivateMethods, VxeModalConstructor, VxeModalMethods, ValueOf } from '../../../types'
+import type { VxeButtonConstructor, VxeButtonPropTypes, VxeButtonEmits, ButtonReactData, ButtonMethods, VxeButtonDefines, ButtonPrivateRef, ButtonInternalData, VxeButtonGroupConstructor, VxeButtonGroupPrivateMethods, VxeDrawerConstructor, VxeDrawerMethods, VxeFormConstructor, VxeFormPrivateMethods, VxeModalConstructor, VxeModalMethods, ValueOf } from '../../../types'
 import type { VxeTableConstructor, VxeTablePrivateMethods } from '../../../types/components/table'
 
-export default defineComponent({
+const VxeButtonComponent = defineComponent({
   name: 'VxeButton',
   props: {
     /**
@@ -78,6 +78,7 @@ export default defineComponent({
     align: String as PropType<VxeButtonPropTypes.Align>,
     prefixTooltip: Object as PropType<VxeButtonPropTypes.PrefixTooltip>,
     suffixTooltip: Object as PropType<VxeButtonPropTypes.SuffixTooltip>,
+    options: Array as PropType<VxeButtonPropTypes.Options>,
     /**
      * 在下拉面板关闭时销毁内容
      */
@@ -228,6 +229,17 @@ export default defineComponent({
       return false
     })
 
+    const computeDownBtnList = computed(() => {
+      const { options } = props
+      if (options) {
+        return options.filter(item => {
+          const { permissionCode } = item
+          return !permissionCode || permission.checkVisible(permissionCode)
+        })
+      }
+      return []
+    })
+
     const computePrefixTipOpts = computed(() => {
       return Object.assign({}, props.prefixTooltip)
     })
@@ -270,6 +282,12 @@ export default defineComponent({
       dispatchEvent('click', { $event: evnt }, evnt)
     }
 
+    const downBtnClickEvent = (params: VxeButtonDefines.ClickEventParams, option: VxeButtonDefines.DownButtonOption) => {
+      const { $event } = params
+      hidePanel()
+      dispatchEvent('dropdown-click', { name: option.name, option }, $event)
+    }
+
     const mousedownDropdownEvent = (evnt: MouseEvent) => {
       const isLeftBtn = evnt.button === 0
       if (isLeftBtn) {
@@ -291,7 +309,7 @@ export default defineComponent({
             reactData.isAniVisible = false
           }
         }, 350)
-        dispatchEvent('dropdown-click', { name: targetElem.getAttribute('name'), $event: evnt }, evnt)
+        dispatchEvent('dropdown-click', { name: targetElem.getAttribute('name'), option: null }, evnt)
       }
     }
 
@@ -325,7 +343,7 @@ export default defineComponent({
     }
 
     const mouseleaveTargetEvent = (evnt: MouseEvent) => {
-      closePanel()
+      hidePanel()
       mouseleaveEvent(evnt)
     }
 
@@ -343,7 +361,7 @@ export default defineComponent({
       if (!(btnDisabled || loading)) {
         if (trigger === 'click') {
           if (reactData.visiblePanel) {
-            closePanel()
+            hidePanel()
           } else {
             openPanel()
           }
@@ -371,7 +389,7 @@ export default defineComponent({
       return nextTick()
     }
 
-    const closePanel = () => {
+    const hidePanel = () => {
       const panelElem = refBtnPanel.value
       clearTimeout(internalData.showTime)
       if (panelElem) {
@@ -394,7 +412,7 @@ export default defineComponent({
     }
 
     const mouseleaveDropdownEvent = () => {
-      closePanel()
+      hidePanel()
     }
 
     const renderTooltipIcon = (tipOpts: VxeButtonPropTypes.PrefixTooltip | VxeButtonPropTypes.SuffixTooltip, type: 'prefix' | 'suffix') => {
@@ -471,7 +489,7 @@ export default defineComponent({
     buttonMethods = {
       dispatchEvent,
       openPanel,
-      closePanel,
+      closePanel: hidePanel,
       focus () {
         const btnElem = refButton.value
         if (btnElem) {
@@ -491,7 +509,7 @@ export default defineComponent({
     const handleGlobalMousewheelEvent = (evnt: Event) => {
       const panelElem = refBtnPanel.value
       if (reactData.visiblePanel && !getEventTargetNode(evnt, panelElem).flag) {
-        closePanel()
+        hidePanel()
       }
     }
 
@@ -503,7 +521,7 @@ export default defineComponent({
         const panelElem = refBtnPanel.value
         reactData.isActivated = getEventTargetNode(evnt, el).flag || getEventTargetNode(evnt, panelElem).flag
         if (visiblePanel && !reactData.isActivated) {
-          closePanel()
+          hidePanel()
         }
       }
     }
@@ -522,13 +540,14 @@ export default defineComponent({
       const btnTransfer = computeBtnTransfer.value
       const btnDisabled = computeBtnDisabled.value
       const permissionInfo = computePermissionInfo.value
+      const downBtnList = computeDownBtnList.value
       const vSize = computeSize.value
-      const downsSlot = slots.dropdowns
+      const dropdownsSlot = slots.dropdowns
 
       if (!permissionInfo.visible) {
         return createCommentVNode()
       }
-      if (downsSlot) {
+      if (dropdownsSlot || downBtnList.length) {
         const btnOns: Record<string, any> = {}
         const panelOns: Record<string, any> = {}
         if (trigger === 'hover') {
@@ -611,11 +630,39 @@ export default defineComponent({
               ...panelOns
             }, initialized && (visiblePanel || isAniVisible)
               ? [
-                  h('div', {
-                    class: 'vxe-button--dropdown-wrapper',
-                    onMousedown: mousedownDropdownEvent,
-                    onClick: clickDropdownEvent
-                  }, destroyOnClose && !visiblePanel ? [] : downsSlot({}))
+                  dropdownsSlot
+                    ? h('div', {
+                      class: 'vxe-button--dropdown-wrapper',
+                      onMousedown: mousedownDropdownEvent,
+                      onClick: clickDropdownEvent
+                    }, initialized && (destroyOnClose ? (visiblePanel || isAniVisible) : true) ? dropdownsSlot({}) : [])
+                    : h('div', {
+                      class: 'vxe-button--dropdown-wrapper'
+                    }, initialized && (destroyOnClose ? (visiblePanel || isAniVisible) : true)
+                      ? downBtnList.map((option, i) => {
+                        return h(VxeButtonComponent, {
+                          key: i,
+                          type: option.type,
+                          mode: option.mode || btnMode,
+                          className: option.className,
+                          name: option.name,
+                          routerLink: option.routerLink,
+                          permissionCode: option.permissionCode,
+                          title: option.title,
+                          content: option.content,
+                          status: option.status,
+                          icon: option.icon,
+                          round: XEUtils.isBoolean(option.round) ? option.round : (btnMode === 'text' ? false : btnRound),
+                          circle: XEUtils.isBoolean(option.circle) ? option.circle : (btnMode === 'text' ? false : btnCircle),
+                          disabled: option.disabled,
+                          loading: option.loading,
+                          align: option.align,
+                          onClick (params: VxeButtonDefines.ClickEventParams) {
+                            downBtnClickEvent(params, option)
+                          }
+                        })
+                      })
+                      : [])
                 ]
               : [])
           ])
@@ -690,3 +737,5 @@ export default defineComponent({
     return this.renderVN()
   }
 })
+
+export default VxeButtonComponent
