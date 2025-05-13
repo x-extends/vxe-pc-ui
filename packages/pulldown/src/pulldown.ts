@@ -1,8 +1,8 @@
 import { PropType, CreateElement, VNode } from 'vue'
 import { defineVxeComponent } from '../../ui/src/comp'
 import XEUtils from 'xe-utils'
-import { getConfig, globalEvents, createEvent, globalMixins, VxeComponentStyleType, ValueOf, renderEmptyElement } from '../../ui'
-import { getAbsolutePos, getEventTargetNode } from '../../ui/src/dom'
+import { getConfig, globalEvents, createEvent, globalMixins, ValueOf, renderEmptyElement } from '../../ui'
+import { getEventTargetNode, updatePanelPlacement } from '../../ui/src/dom'
 import { getLastZIndex, nextZIndex } from '../../ui/src/utils'
 
 import type { PulldownInternalData, VxePulldownPropTypes, VxePulldownEmits, VxeComponentSizeType, PulldownReactData, VxeFormConstructor, VxeFormPrivateMethods, VxeModalConstructor, VxeDrawerConstructor, VxeDrawerMethods, VxeModalMethods } from '../../../types'
@@ -146,76 +146,24 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const props = $xePulldown
       const reactData = $xePulldown.reactData
 
-      return $xePulldown.$nextTick().then(() => {
-        const { placement } = props
-        const { panelIndex, visiblePanel } = reactData
-        const btnTransfer = $xePulldown.computeBtnTransfer
-        if (visiblePanel) {
-          const targetElem = $xePulldown.$refs.refPulldownContent as HTMLElement
-          const panelElem = $xePulldown.$refs.refPulldownPanel as HTMLElement
-          if (panelElem && targetElem) {
-            const targetHeight = targetElem.offsetHeight
-            const targetWidth = targetElem.offsetWidth
-            const panelHeight = panelElem.offsetHeight
-            const panelWidth = panelElem.offsetWidth
-            const marginSize = 5
-            const panelStyle: VxeComponentStyleType = {
-              zIndex: panelIndex
-            }
-            const { boundingTop, boundingLeft, visibleHeight, visibleWidth } = getAbsolutePos(targetElem)
-            let panelPlacement = 'bottom'
-            if (btnTransfer) {
-              let left = boundingLeft
-              let top = boundingTop + targetHeight
-              if (placement === 'top') {
-                panelPlacement = 'top'
-                top = boundingTop - panelHeight
-              } else if (!placement) {
-                // 如果下面不够放，则向上
-                if (top + panelHeight + marginSize > visibleHeight) {
-                  panelPlacement = 'top'
-                  top = boundingTop - panelHeight
-                }
-                // 如果上面不够放，则向下（优先）
-                if (top < marginSize) {
-                  panelPlacement = 'bottom'
-                  top = boundingTop + targetHeight
-                }
-              }
-              // 如果溢出右边
-              if (left + panelWidth + marginSize > visibleWidth) {
-                left -= left + panelWidth + marginSize - visibleWidth
-              }
-              // 如果溢出左边
-              if (left < marginSize) {
-                left = marginSize
-              }
-              Object.assign(panelStyle, {
-                left: `${left}px`,
-                top: `${top}px`,
-                minWidth: `${targetWidth}px`
-              })
-            } else {
-              if (placement === 'top') {
-                panelPlacement = 'top'
-                panelStyle.bottom = `${targetHeight}px`
-              } else if (!placement) {
-                // 如果下面不够放，则向上
-                if (boundingTop + targetHeight + panelHeight > visibleHeight) {
-                  // 如果上面不够放，则向下（优先）
-                  if (boundingTop - targetHeight - panelHeight > marginSize) {
-                    panelPlacement = 'top'
-                    panelStyle.bottom = `${targetHeight}px`
-                  }
-                }
-              }
-            }
-            reactData.panelStyle = panelStyle
-            reactData.panelPlacement = panelPlacement
-          }
-        }
-        return $xePulldown.$nextTick()
-      })
+      const { placement } = props
+      const { panelIndex } = reactData
+      const targetElem = $xePulldown.$refs.refPulldownContent as HTMLElement
+      const panelElem = $xePulldown.$refs.refPulldownPanel as HTMLDivElement
+      const btnTransfer = $xePulldown.computeBtnTransfer
+      const handleStyle = () => {
+        const ppObj = updatePanelPlacement(targetElem, panelElem, {
+          placement,
+          teleportTo: btnTransfer
+        })
+        const panelStyle: { [key: string]: string | number } = Object.assign(ppObj.style, {
+          zIndex: panelIndex
+        })
+        reactData.panelStyle = panelStyle
+        reactData.panelPlacement = ppObj.placement
+      }
+      handleStyle()
+      return $xePulldown.$nextTick().then(handleStyle)
     },
     /**
      * 显示下拉面板

@@ -1,6 +1,7 @@
 @use "sass:map";
 @use "sass:list";
 @use '../helpers/baseMixin.scss';
+@use '../helpers/placement.scss';
 
 $btnThemeList: (
   (
@@ -356,27 +357,9 @@ $btnThemeList: (
 }
 
 .vxe-button--dropdown-panel {
-  display: none;
-  position: absolute;
-  right: 0;
-  padding: 4px 0;
-  &.ani--leave {
-    display: block;
-    opacity: 0;
-    transform: scaleY(0.5);
-    transition: transform .3s cubic-bezier(.23,1,.32,1), opacity .3s cubic-bezier(.23,1,.32,1);
-    transform-origin: center top;
-    backface-visibility: hidden;
-    transform-style: preserve-3d;
-    &[placement="top"] {
-      transform-origin: center bottom;
-    }
-  }
-  &.ani--enter {
-    opacity: 1;
-    transform: scaleY(1);
-  }
+  @include placement.createPlacementPanel();
 }
+
 .vxe-button--dropdown-wrapper {
   padding: 5px;
   background-color: var(--vxe-ui-layout-background-color);

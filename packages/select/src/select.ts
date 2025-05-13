@@ -2,7 +2,7 @@ import { PropType, CreateElement, VNode } from 'vue'
 import { defineVxeComponent } from '../../ui/src/comp'
 import XEUtils from 'xe-utils'
 import { getConfig, getIcon, getI18n, globalEvents, GLOBAL_EVENT_KEYS, createEvent, globalMixins, renderEmptyElement } from '../../ui'
-import { getEventTargetNode, getAbsolutePos } from '../../ui/src/dom'
+import { getEventTargetNode, updatePanelPlacement } from '../../ui/src/dom'
 import { getLastZIndex, nextZIndex, getFuncText } from '../../ui/src/utils'
 import VxeInputComponent from '../../input/src/input'
 import { getSlotVNs } from '../../ui/src/vn'
@@ -601,74 +601,24 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const props = $xeSelect
       const reactData = $xeSelect.reactData
 
-      return $xeSelect.$nextTick().then(() => {
-        const { placement } = props
-        const { panelIndex } = reactData
-        const el = $xeSelect.$refs.refElem as HTMLDivElement
-        const panelElem = $xeSelect.$refs.refOptionPanel as HTMLDivElement
-        const btnTransfer = $xeSelect.computeBtnTransfer
-        if (panelElem && el) {
-          const targetHeight = el.offsetHeight
-          const targetWidth = el.offsetWidth
-          const panelHeight = panelElem.offsetHeight
-          const panelWidth = panelElem.offsetWidth
-          const marginSize = 5
-          const panelStyle: { [key: string]: any } = {
-            zIndex: panelIndex
-          }
-          const { boundingTop, boundingLeft, visibleHeight, visibleWidth } = getAbsolutePos(el)
-          let panelPlacement = 'bottom'
-          if (btnTransfer) {
-            let left = boundingLeft
-            let top = boundingTop + targetHeight
-            if (placement === 'top') {
-              panelPlacement = 'top'
-              top = boundingTop - panelHeight
-            } else if (!placement) {
-              // 如果下面不够放，则向上
-              if (top + panelHeight + marginSize > visibleHeight) {
-                panelPlacement = 'top'
-                top = boundingTop - panelHeight
-              }
-              // 如果上面不够放，则向下（优先）
-              if (top < marginSize) {
-                panelPlacement = 'bottom'
-                top = boundingTop + targetHeight
-              }
-            }
-            // 如果溢出右边
-            if (left + panelWidth + marginSize > visibleWidth) {
-              left -= left + panelWidth + marginSize - visibleWidth
-            }
-            // 如果溢出左边
-            if (left < marginSize) {
-              left = marginSize
-            }
-            Object.assign(panelStyle, {
-              left: `${left}px`,
-              top: `${top}px`,
-              minWidth: `${targetWidth}px`
-            })
-          } else {
-            if (placement === 'top') {
-              panelPlacement = 'top'
-              panelStyle.bottom = `${targetHeight}px`
-            } else if (!placement) {
-              // 如果下面不够放，则向上
-              if (boundingTop + targetHeight + panelHeight > visibleHeight) {
-                // 如果上面不够放，则向下（优先）
-                if (boundingTop - targetHeight - panelHeight > marginSize) {
-                  panelPlacement = 'top'
-                  panelStyle.bottom = `${targetHeight}px`
-                }
-              }
-            }
-          }
-          reactData.panelStyle = panelStyle
-          reactData.panelPlacement = panelPlacement
-          return $xeSelect.$nextTick()
-        }
-      })
+      const { placement } = props
+      const { panelIndex } = reactData
+      const targetElem = $xeSelect.$refs.refElem as HTMLElement
+      const panelElem = $xeSelect.$refs.refOptionPanel as HTMLDivElement
+      const btnTransfer = $xeSelect.computeBtnTransfer
+      const handleStyle = () => {
+        const ppObj = updatePanelPlacement(targetElem, panelElem, {
+          placement,
+          teleportTo: btnTransfer
+        })
+        const panelStyle: { [key: string]: string | number } = Object.assign(ppObj.style, {
+          zIndex: panelIndex
+        })
+        reactData.panelStyle = panelStyle
+        reactData.panelPlacement = ppObj.placement
+      }
+      handleStyle()
+      return $xeSelect.$nextTick().then(handleStyle)
     },
     showOptionPanel  () {
       const $xeSelect = this
