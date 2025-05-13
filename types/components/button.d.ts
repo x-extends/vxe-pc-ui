@@ -42,6 +42,7 @@ export namespace VxeButtonPropTypes {
   export type Loading = boolean
   export type Trigger = 'manual' | 'hover' | 'click' | '' | null
   export type Align = VxeComponentAlignType
+  export type Options = VxeButtonDefines.DownButtonOption[]
 
   export type PrefixTooltip = VxeTooltipDefines.TooltipHelperOption
   export type SuffixTooltip = VxeTooltipDefines.TooltipHelperOption
@@ -107,6 +108,11 @@ export interface VxeButtonProps {
   trigger?: VxeButtonPropTypes.Trigger
   align?: VxeButtonPropTypes.Align
 
+  /**
+   * 下拉按钮列表
+   */
+  options?: VxeButtonPropTypes.Options
+
   prefixTooltip?: VxeButtonPropTypes.PrefixTooltip
   suffixTooltip?: VxeButtonPropTypes.SuffixTooltip
   /**
@@ -167,6 +173,8 @@ export namespace VxeButtonDefines {
     $button: VxeButtonConstructor
   }
 
+  export type DownButtonOption = Pick<VxeButtonProps, 'type' | 'mode' | 'className' | 'name' | 'routerLink' | 'permissionCode' | 'title' | 'content' | 'status' | 'icon' | 'round' | 'circle' | 'disabled' | 'loading' | 'align'>
+
   export interface ClickParams { }
   export interface ClickEventParams extends ButtonEventParams, ClickParams { }
 
@@ -176,7 +184,10 @@ export namespace VxeButtonDefines {
   export interface MouseleaveParams { }
   export interface MouseleaveEventParams extends ButtonEventParams, MouseleaveParams { }
 
-  export interface DropdownClickParams { }
+  export interface DropdownClickParams {
+    name: VxeButtonPropTypes.Name
+    option: VxeButtonDefines.DownButtonOption | null
+  }
   export interface DropdownClickEventParams extends ButtonEventParams, DropdownClickParams { }
 }
 
