@@ -34,16 +34,11 @@ export interface TableFilterMethods<D = any> {
    */
   openFilter(fieldOrColumn: VxeColumnPropTypes.Field | VxeTableDefines.ColumnInfo<any>):Promise<void>
   /**
-   * 用于 filters，修改筛选列表
-   * @param columnOrField 列对象或字段名
-   * @param options 选项列表
-   * @param update 是否同时更新数据，如果不传，则可以手动调用 updateData() 更新数据
+   * 用于 filters，修改筛选列表，update 是否同时更新数据，如果不传，则可以手动调用 updateData() 更新数据；如果需要同时触发对应的事件，请使用 setFilterByEvent
    */
   setFilter(fieldOrColumn: VxeColumnPropTypes.Field | VxeTableDefines.ColumnInfo<any>, options: VxeColumnPropTypes.FilterItem[], update?: boolean): Promise<void>
   /**
-   * 手动清空筛选条件
-   * 如果不传 column 则清空所有筛选条件，数据会恢复成未筛选的状态
-   * @param column 字段名
+   * 手动清空筛选条件；如果需要同时触发对应的事件，请使用 clearFilterByEvent
    */
   clearFilter(fieldOrColumn?: VxeColumnPropTypes.Field | VxeTableDefines.ColumnInfo<any> | null): Promise<void>
   /**

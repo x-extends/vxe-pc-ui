@@ -4232,14 +4232,15 @@ export interface TableMethods<DT = any> {
   sort(sortConfs: VxeTableDefines.SortConfs[], order?: VxeTablePropTypes.SortOrder): Promise<void>
 
   /**
-   * 手动对表格进行排序
-   * @param sortConfs
-   * @param update 是否同时更新数据，如果不传，则可以手动调用 updateData() 更新数据
+   * 手动对表格进行排序，update 是否同时更新数据，如果不传，则可以手动调用 updateData() 更新数据；如果需要同时触发对应的事件，请使用 setSortByEvent
    */
   setSort(sortConfs: VxeTableDefines.SortConfs | VxeTableDefines.SortConfs[], update?: boolean): Promise<void>
   /**
-   * 手动清空排序条件，数据会恢复成未排序的状态
-   * @param columnOrField 列对象或字段名
+   * 区别就是会触发对应的事件
+   */
+  setSortByEvent(event: Event, sortConfs: VxeTableDefines.SortConfs | VxeTableDefines.SortConfs[], update?: boolean): Promise<void>
+  /**
+   * 手动清空排序条件，数据会恢复成未排序的状态；如果需要同时触发对应的事件，请使用 clearSortByEvent
    */
   clearSort(fieldOrColumn?: VxeColumnPropTypes.Field | VxeTableDefines.ColumnInfo<any> | null): Promise<void>
   /**
@@ -4264,6 +4265,10 @@ export interface TableMethods<DT = any> {
    * @deprecated
    */
   isFilter(fieldOrColumn: VxeColumnPropTypes.Field | VxeTableDefines.ColumnInfo<any> | null): boolean
+  /**
+   * 区别就是会触发对应的事件
+   */
+  setFilterByEvent(event: Event, fieldOrColumn: VxeColumnPropTypes.Field | VxeTableDefines.ColumnInfo<any>, options: VxeColumnPropTypes.FilterItem[], update?: boolean): Promise<void>
   /**
    * 区别就是会触发对应的事件
    */
