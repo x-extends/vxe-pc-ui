@@ -803,9 +803,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
         if (renderFn) {
           childNodes.push(renderFn(h))
         } else {
-          if (process.env.VUE_APP_VXE_ENV === 'development') {
-            errLog('vxe.error.notProp', [`layouts -> ${name}`])
-          }
+          errLog('vxe.error.notProp', [`layouts -> ${name}`])
         }
       })
       if (slots.right) {

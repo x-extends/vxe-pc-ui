@@ -1887,13 +1887,11 @@ export default /* define-vxe-component start */ defineVxeComponent({
     const $xeUpload = this
     const props = $xeUpload
 
-    if (process.env.VUE_APP_VXE_ENV === 'development') {
-      if (props.multiple && props.singleMode) {
-        errLog('vxe.error.errConflicts', ['multiple', 'single-mode'])
-      }
-      if (props.imageStyle) {
-        warnLog('vxe.error.delProp', ['image-style', 'image-config'])
-      }
+    if (props.multiple && props.singleMode) {
+      errLog('vxe.error.errConflicts', ['multiple', 'single-mode'])
+    }
+    if (props.imageStyle) {
+      warnLog('vxe.error.delProp', ['image-style', 'image-config'])
     }
 
     if (props.dragSort) {

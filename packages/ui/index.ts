@@ -11,16 +11,12 @@ VxeUI.uiVersion = version
 VxeUI.dynamicApp = dynamicApp
 
 export function config (options?: VxeGlobalConfig) {
-  if (process.env.VUE_APP_VXE_ENV === 'development') {
-    warnLog('vxe.error.delFunc', ['config', 'setConfig'])
-  }
+  warnLog('vxe.error.delFunc', ['config', 'setConfig'])
   return setConfig(options)
 }
 
 export function setup (options?: VxeGlobalConfig) {
-  if (process.env.VUE_APP_VXE_ENV === 'development') {
-    warnLog('vxe.error.delFunc', ['setup', 'setConfig'])
-  }
+  warnLog('vxe.error.delFunc', ['setup', 'setConfig'])
   return setConfig(options)
 }
 

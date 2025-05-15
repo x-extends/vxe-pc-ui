@@ -760,14 +760,12 @@ export default /* define-vxe-component start */ defineVxeComponent({
   mounted () {
     const $xeTableSelect = this
 
-    if (process.env.VUE_APP_VXE_ENV === 'development') {
-      const VxeTableGridComponent = VxeUI.getComponent<VxeGridComponent>('VxeGrid')
-      $xeTableSelect.$nextTick(() => {
-        if (!VxeTableGridComponent) {
-          errLog('vxe.error.reqComp', ['vxe-grid'])
-        }
-      })
-    }
+    const VxeTableGridComponent = VxeUI.getComponent<VxeGridComponent>('VxeGrid')
+    $xeTableSelect.$nextTick(() => {
+      if (!VxeTableGridComponent) {
+        errLog('vxe.error.reqComp', ['vxe-grid'])
+      }
+    })
 
     globalEvents.on($xeTableSelect, 'mousewheel', $xeTableSelect.handleGlobalMousewheelEvent)
     globalEvents.on($xeTableSelect, 'mousedown', $xeTableSelect.handleGlobalMousedownEvent)

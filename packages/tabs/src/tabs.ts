@@ -134,17 +134,13 @@ export default /* define-vxe-component start */ defineVxeComponent({
     prevTab () {
       const $xeTabs = this
 
-      if (process.env.VUE_APP_VXE_ENV === 'development') {
-        warnLog('vxe.error.delFunc', ['prevTab', 'prev'])
-      }
+      warnLog('vxe.error.delFunc', ['prevTab', 'prev'])
       return $xeTabs.prev()
     },
     nextTab () {
       const $xeTabs = this
 
-      if (process.env.VUE_APP_VXE_ENV === 'development') {
-        warnLog('vxe.error.delFunc', ['nextTab', 'next'])
-      }
+      warnLog('vxe.error.delFunc', ['nextTab', 'next'])
       return $xeTabs.next()
     },
     handleFilterTab (item: VxeTabPaneProps | VxeTabPaneDefines.TabConfig) {
