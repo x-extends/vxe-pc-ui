@@ -1,6 +1,6 @@
-import { defineComponent, onUnmounted, inject, ref, h, reactive, onMounted, provide, createCommentVNode } from 'vue'
+import { defineComponent, onUnmounted, inject, ref, h, reactive, onMounted, provide } from 'vue'
 import { createItem, watchItem, destroyItem, assembleItem, XEFormItemProvide } from './util'
-import { renderer } from '../../ui'
+import { renderer, renderEmptyElement } from '../../ui'
 import { isEnableConf } from '../../ui/src/utils'
 import { formItemProps } from './form-item'
 import { renderTitle, getItemClass, getItemContentClass } from './render'
@@ -13,6 +13,9 @@ export default defineComponent({
   props: formItemProps,
   setup (props, context) {
     const { slots } = context
+
+    const xID = XEUtils.uniqueId()
+
     const refElem = ref<HTMLDivElement>()
     const $xeForm = inject('$xeForm', {} as VxeFormConstructor & VxeFormPrivateMethods)
     const $xeParentFormGroup = inject<XEFormItemProvide | null>('$xeFormGroup', null)
@@ -36,7 +39,7 @@ export default defineComponent({
       const defaultSlot = slots ? slots.default : null
       const params = { data, disabled, readonly, field, property: field, item, $form: $xeForm, $grid: $xeGrid }
       if (visible === false) {
-        return createCommentVNode()
+        return renderEmptyElement($xeFormGroup)
       }
       return h('div', {
         ref: refElem,
@@ -53,6 +56,7 @@ export default defineComponent({
     }
 
     const $xeFormGroup = {
+      xID,
       formItem,
 
       renderVN

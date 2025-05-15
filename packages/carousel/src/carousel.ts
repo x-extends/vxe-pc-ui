@@ -1,5 +1,5 @@
-import { defineComponent, ref, h, reactive, provide, PropType, watch, nextTick, onMounted, computed, onUnmounted, createCommentVNode } from 'vue'
-import { getConfig, getIcon, createEvent } from '../../ui'
+import { defineComponent, ref, h, reactive, provide, PropType, watch, nextTick, onMounted, computed, onUnmounted } from 'vue'
+import { getConfig, getIcon, createEvent, renderEmptyElement } from '../../ui'
 import { getSlotVNs } from '../../ui/src/vn'
 import { toCssUnit } from '../../ui/src/dom'
 import VxeLoadingComponent from '../../loading/src/loading'
@@ -333,7 +333,7 @@ export default defineComponent({
         }, [
           renderItemWrapper(list)
         ]),
-        showIndicators ? renderIndicators(list) : createCommentVNode(),
+        showIndicators ? renderIndicators(list) : renderEmptyElement($xeCarousel),
         h('div', {
           class: 'vxe-carousel--btn-wrapper'
         }, [

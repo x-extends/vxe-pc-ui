@@ -1,6 +1,6 @@
-import { defineComponent, h, ref, Ref, computed, reactive, inject, nextTick, watch, createCommentVNode, PropType } from 'vue'
+import { defineComponent, h, ref, Ref, computed, reactive, inject, nextTick, watch, PropType } from 'vue'
 import XEUtils from 'xe-utils'
-import { getConfig, getIcon, getI18n, createEvent, useSize } from '../../ui'
+import { getConfig, getIcon, getI18n, createEvent, useSize, renderEmptyElement } from '../../ui'
 import { getFuncText } from '../../ui/src/utils'
 import { getSlotVNs } from '../../ui/src/vn'
 
@@ -267,8 +267,8 @@ export default defineComponent({
                 class: getIcon().INPUT_CLEAR
               })
             ])
-            : createCommentVNode(),
-          controls ? renderPasswordIcon() : createCommentVNode(),
+            : renderEmptyElement($xePasswordInput),
+          controls ? renderPasswordIcon() : renderEmptyElement($xePasswordInput),
           suffixSlot || suffixIcon
             ? h('div', {
               class: 'vxe-password-input--suffix-icon',
@@ -280,7 +280,7 @@ export default defineComponent({
                     class: suffixIcon
                   })
                 ])
-            : createCommentVNode()
+            : renderEmptyElement($xePasswordInput)
         ])
         : null
     }
@@ -339,7 +339,7 @@ export default defineComponent({
         }],
         spellcheck: false
       }, [
-        prefix || createCommentVNode(),
+        prefix || renderEmptyElement($xePasswordInput),
         h('div', {
           class: 'vxe-password-input--wrapper'
         }, [
@@ -361,7 +361,7 @@ export default defineComponent({
             onBlur: blurEvent
           })
         ]),
-        suffix || createCommentVNode()
+        suffix || renderEmptyElement($xePasswordInput)
       ])
     }
 

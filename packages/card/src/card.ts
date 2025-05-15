@@ -1,6 +1,6 @@
-import { defineComponent, ref, h, reactive, PropType, createCommentVNode, computed } from 'vue'
+import { defineComponent, ref, h, reactive, PropType, computed } from 'vue'
 import { getSlotVNs } from '../../ui/src/vn'
-import { getConfig, createEvent } from '../../ui'
+import { getConfig, createEvent, renderEmptyElement } from '../../ui'
 import { toCssUnit } from '../../ui/src/dom'
 import VxeLoadingComponent from '../../loading/src/loading'
 import XEUtils from 'xe-utils'
@@ -120,9 +120,9 @@ export default defineComponent({
                   ? h('div', {
                     class: 'vxe-card--header-extra'
                   }, getSlotVNs(extraSlot({})))
-                  : createCommentVNode()
+                  : renderEmptyElement($xeCard)
               ])
-          : createCommentVNode(),
+          : renderEmptyElement($xeCard),
         h('div', {
           class: 'vxe-card--body'
         }, [
@@ -130,7 +130,7 @@ export default defineComponent({
             ? h('div', {
               class: 'vxe-card--body-left'
             }, getSlotVNs(leftSlot({})))
-            : createCommentVNode(),
+            : renderEmptyElement($xeCard),
           h('div', {
             class: 'vxe-card--body-content'
           }, defaultSlot ? getSlotVNs(defaultSlot({})) : []),
@@ -138,13 +138,13 @@ export default defineComponent({
             ? h('div', {
               class: 'vxe-card--body-right'
             }, getSlotVNs(rightSlot({})))
-            : createCommentVNode()
+            : renderEmptyElement($xeCard)
         ]),
         footerSlot
           ? h('div', {
             class: 'vxe-card--footer'
           }, getSlotVNs(footerSlot({})))
-          : createCommentVNode(),
+          : renderEmptyElement($xeCard),
         /**
          * 加载中
          */

@@ -1,9 +1,9 @@
-import { defineComponent, h, provide, PropType, ref, reactive, computed, watch, onMounted, onUnmounted, createCommentVNode, onBeforeUnmount } from 'vue'
-import { VxeUI, getConfig, createEvent, getIcon, globalEvents, GLOBAL_EVENT_KEYS, getI18n } from '../../ui'
+import { defineComponent, h, provide, PropType, ref, reactive, computed, watch, onMounted, onUnmounted, onBeforeUnmount } from 'vue'
+import { VxeUI, getConfig, createEvent, getIcon, globalEvents, GLOBAL_EVENT_KEYS, getI18n, renderEmptyElement } from '../../ui'
 import XEUtils from 'xe-utils'
 import { getDomNode, addClass, removeClass, hasControlKey } from '../../ui/src/dom'
 
-import type { VxeImagePreviewConstructor, ImagePreviewReactData, ImagePreviewPrivateRef, VxeGlobalIcon, VxeImagePreviewEmits, VxeImagePreviewPrivateMethods, ImagePreviewPrivateMethods, ImagePreviewPrivateComputed, ImagePreviewMethods, VxeImagePreviewPropTypes, ValueOf } from '../../../types'
+import type { VxeImagePreviewConstructor, ImagePreviewReactData, ImagePreviewPrivateRef, VxeGlobalIcon, VxeImagePreviewEmits, VxeImagePreviewPrivateMethods, ImagePreviewPrivateMethods, ImagePreviewPrivateComputed, ImagePreviewMethods, VxeImagePreviewPropTypes, ValueOf, VxeImagePreviewDefines } from '../../../types'
 
 export default defineComponent({
   name: 'VxeImagePreview',
@@ -30,6 +30,7 @@ export default defineComponent({
       type: Boolean as PropType<VxeImagePreviewPropTypes.ShowDownloadButton>,
       default: () => getConfig().imagePreview.showDownloadButton
     },
+    toolbarConfig: Object as PropType<VxeImagePreviewPropTypes.ToolbarConfig>,
     beforeDownloadMethod: Function as PropType<VxeImagePreviewPropTypes.BeforeDownloadMethod>,
     downloadMethod: Function as PropType<VxeImagePreviewPropTypes.DownloadMethod>
   },
@@ -65,6 +66,10 @@ export default defineComponent({
 
     const computeMarginSize = computed(() => {
       return XEUtils.toNumber(props.marginSize || 0) || 16
+    })
+
+    const computeToolbarOpts = computed(() => {
+      return Object.assign({}, getConfig().imagePreview.toolbarConfig, props.toolbarConfig)
     })
 
     const computeRotateText = computed(() => {
@@ -314,10 +319,13 @@ export default defineComponent({
 
     const handleDownloadImg = (evnt: MouseEvent) => {
       const { activeIndex } = reactData
+      const toolbarOpts = computeToolbarOpts.value
+      const btnConf = toolbarOpts.download
+      const btnOpts = XEUtils.isBoolean(btnConf) ? {} : (btnConf ? Object.assign({}, btnConf) : {})
       const imgList = computeImgList.value
       const imgUrl = imgList[activeIndex || 0]
-      const beforeDownloadFn = props.beforeDownloadMethod || getConfig().imagePreview.beforeDownloadMethod
-      const downloadFn = props.downloadMethod || getConfig().imagePreview.downloadMethod
+      const beforeDownloadFn = props.beforeDownloadMethod || btnOpts.beforeDownloadMethod || getConfig().imagePreview.beforeDownloadMethod
+      const downloadFn = props.downloadMethod || btnOpts.downloadMethod || getConfig().imagePreview.downloadMethod
       Promise.resolve(
         beforeDownloadFn
           ? beforeDownloadFn({
@@ -345,7 +353,7 @@ export default defineComponent({
       })
     }
 
-    const handleOperationBtn = (evnt: MouseEvent, code: string) => {
+    const handleOperationBtn = (evnt: MouseEvent, code: VxeImagePreviewDefines.ToolbarCode) => {
       const { activeIndex } = reactData
       const imgList = computeImgList.value
       const imgUrl = imgList[activeIndex || 0]
@@ -501,18 +509,24 @@ export default defineComponent({
       }))
     }
 
-    const renderOperationBtn = (code: string, icon: keyof VxeGlobalIcon) => {
-      return h('div', {
-        class: 'vxe-image-preview--operation-btn',
-        title: getI18n(`vxe.imagePreview.operBtn.${code}`),
-        onClick (evnt) {
-          handleOperationBtn(evnt, code)
-        }
-      }, [
-        h('i', {
-          class: getIcon()[icon]
-        })
-      ])
+    const renderOperationBtn = (code: VxeImagePreviewDefines.ToolbarCode, icon: keyof VxeGlobalIcon) => {
+      const toolbarOpts = computeToolbarOpts.value
+      const btnConf = toolbarOpts[code]
+      const btnOpts = XEUtils.isBoolean(btnConf) ? {} : (btnConf ? Object.assign({}, btnConf) : {})
+      const showBtn = btnConf !== false
+      return showBtn
+        ? h('div', {
+          class: 'vxe-image-preview--operation-btn',
+          title: getI18n(`vxe.imagePreview.operBtn.${code}`),
+          onClick (evnt) {
+            handleOperationBtn(evnt, code)
+          }
+        }, [
+          h('i', {
+            class: btnOpts.icon || getIcon()[icon]
+          })
+        ])
+        : renderEmptyElement($xeImagePreview)
     }
 
     const renderBtnWrapper = () => {
@@ -521,6 +535,7 @@ export default defineComponent({
       const imgList = computeImgList.value
       const rotateText = computeRotateText.value
       const scaleText = computeScaleText.value
+      const toolbarOpts = computeToolbarOpts.value
 
       return h('div', {
         class: 'vxe-image-preview--btn-wrapper'
@@ -551,7 +566,7 @@ export default defineComponent({
               class: getIcon().IMAGE_PREVIEW_PREVIOUS
             })
           ])
-          : createCommentVNode(),
+          : renderEmptyElement($xeImagePreview),
         imgList.length > 1
           ? h('div', {
             class: 'vxe-image-preview--next-btn',
@@ -563,7 +578,7 @@ export default defineComponent({
               class: getIcon().IMAGE_PREVIEW_NEXT
             })
           ])
-          : createCommentVNode(),
+          : renderEmptyElement($xeImagePreview),
         h('div', {
           class: 'vxe-image-preview--operation-info'
         }, [
@@ -593,8 +608,8 @@ export default defineComponent({
           renderOperationBtn('pct11', 'IMAGE_PREVIEW_PCT_1_1'),
           renderOperationBtn('rotateLeft', 'IMAGE_PREVIEW_ROTATE_LEFT'),
           renderOperationBtn('rotateRight', 'IMAGE_PREVIEW_ROTATE_RIGHT'),
-          showPrintButton ? renderOperationBtn('print', 'IMAGE_PREVIEW_PRINT') : createCommentVNode(),
-          showDownloadButton ? renderOperationBtn('download', 'IMAGE_PREVIEW_DOWNLOAD') : createCommentVNode()
+          showPrintButton || toolbarOpts.print ? renderOperationBtn('print', 'IMAGE_PREVIEW_PRINT') : renderEmptyElement($xeImagePreview),
+          showDownloadButton || toolbarOpts.download ? renderOperationBtn('download', 'IMAGE_PREVIEW_DOWNLOAD') : renderEmptyElement($xeImagePreview)
         ])
       ])
     }

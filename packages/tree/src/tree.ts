@@ -1,5 +1,5 @@
-import { defineComponent, ref, h, reactive, PropType, computed, VNode, createCommentVNode, watch, onUnmounted, nextTick } from 'vue'
-import { createEvent, getIcon, getConfig, useSize } from '../../ui'
+import { defineComponent, ref, h, reactive, PropType, computed, VNode, watch, onUnmounted, nextTick } from 'vue'
+import { createEvent, getIcon, getConfig, useSize, renderEmptyElement } from '../../ui'
 import XEUtils from 'xe-utils'
 import { getSlotVNs } from '../../ui/src/vn'
 import { toCssUnit } from '../../ui/src/dom'
@@ -1050,7 +1050,7 @@ export default defineComponent({
           })
         ])
       }
-      return createCommentVNode()
+      return renderEmptyElement($xeTree)
     }
 
     const renderCheckbox = (node: any, nodeid: string, isChecked: boolean) => {
@@ -1081,7 +1081,7 @@ export default defineComponent({
           })
         ])
       }
-      return createCommentVNode()
+      return renderEmptyElement($xeTree)
     }
 
     const renderNode = (node: any): VNode => {
@@ -1177,7 +1177,7 @@ export default defineComponent({
                       ])
                 ]
               : [])
-            : createCommentVNode(),
+            : renderEmptyElement($xeTree),
           renderRadio(node, nodeid, isRadioChecked),
           renderCheckbox(node, nodeid, isCheckboxChecked),
           h('div', {
@@ -1190,14 +1190,14 @@ export default defineComponent({
               ? h('div', {
                 class: 'vxe-tree--node-item-extra'
               }, getSlotVNs(extraSlot({ node, isExpand })))
-              : createCommentVNode()
+              : renderEmptyElement($xeTree)
           ])
         ]),
         hasChild && treeExpandedMaps[nodeid]
           ? h('div', {
             class: 'vxe-tree--node-child-wrapper'
           }, childVns)
-          : createCommentVNode()
+          : renderEmptyElement($xeTree)
       ])
     }
 

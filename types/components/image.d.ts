@@ -35,6 +35,7 @@ export namespace VxeImagePropTypes {
   export type Height = number | string
   export type Circle = boolean
   export type MaskClosable = boolean
+  export type ToolbarConfig = VxeImagePreviewPropTypes.ToolbarConfig
   export type ShowPreview = boolean
   export type ShowPrintButton = boolean
   export type ShowDownloadButton = boolean
@@ -50,6 +51,7 @@ export interface VxeImageProps {
   height?: VxeImagePropTypes.Height
   circle?: VxeImagePropTypes.Circle
   maskClosable?: VxeImagePropTypes.MaskClosable
+  toolbarConfig?: VxeImagePropTypes.ToolbarConfig
   showPreview?: VxeImagePropTypes.ShowPreview
   showPrintButton?: VxeImagePropTypes.ShowPrintButton
   showDownloadButton?: VxeImagePropTypes.ShowDownloadButton

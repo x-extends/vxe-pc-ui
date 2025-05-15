@@ -1,6 +1,6 @@
-import { defineComponent, ref, h, reactive, PropType, createCommentVNode } from 'vue'
+import { defineComponent, ref, h, reactive, PropType } from 'vue'
 import XEUtils from 'xe-utils'
-import { getConfig, useSize, usePermission, createEvent } from '../../ui'
+import { getConfig, useSize, usePermission, createEvent, renderEmptyElement } from '../../ui'
 import { getSlotVNs } from '../../ui/src/vn'
 
 import type { VxeTipPropTypes, TipReactData, VxeTipEmits, TipMethods, TipPrivateMethods, TipPrivateRef, VxeTipPrivateComputed, VxeTipConstructor, VxeTipPrivateMethods, ValueOf } from '../../../types'
@@ -82,7 +82,7 @@ export default defineComponent({
       const vSize = computeSize.value
 
       if (!permissionInfo.visible) {
-        return createCommentVNode()
+        return renderEmptyElement($xeTip)
       }
       return h('div', {
         ref: refElem,
@@ -102,7 +102,7 @@ export default defineComponent({
                   class: icon
                 })
               ])
-          : createCommentVNode(),
+          : renderEmptyElement($xeTip),
         h('div', {
           class: 'vxe-tip--body'
         }, [
@@ -110,7 +110,7 @@ export default defineComponent({
             ? h('div', {
               class: 'vxe-tip--title'
             }, titleSlot ? getSlotVNs(titleSlot({})) : XEUtils.toValueString(title))
-            : createCommentVNode(),
+            : renderEmptyElement($xeTip),
           h('div', {
             class: 'vxe-tip--content'
           }, defaultSlot ? getSlotVNs(defaultSlot({})) : XEUtils.toValueString(content))

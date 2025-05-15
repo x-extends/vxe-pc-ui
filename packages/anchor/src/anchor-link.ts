@@ -1,5 +1,6 @@
-import { defineComponent, ref, h, computed, reactive, PropType, inject, createCommentVNode, onMounted, onUnmounted, provide, watch } from 'vue'
+import { defineComponent, ref, h, computed, reactive, PropType, inject, onMounted, onUnmounted, provide, watch } from 'vue'
 import XEUtils from 'xe-utils'
+import { renderEmptyElement } from '../../ui'
 import { assembleAnchorLink, destroyAnchorLink } from './util'
 
 import type { VxeAnchorLinkDefines, VxeAnchorLinkPropTypes, VxeAnchorLinkEmits, AnchorLinkReactData, AnchorLinkPrivateRef, VxeAnchorLinkPrivateComputed, VxeAnchorLinkConstructor, VxeAnchorLinkPrivateMethods, VxeAnchorConstructor, VxeAnchorPrivateMethods } from '../../../types'
@@ -103,7 +104,7 @@ export default defineComponent({
           ? h('div', {
             class: 'vxe-anchor-link--sub-items'
           }, subSlot({}))
-          : createCommentVNode()
+          : renderEmptyElement($xeAnchorLink)
       ])
     }
 

@@ -1,5 +1,5 @@
-import { reactive, defineComponent, h, computed, PropType, watch, createCommentVNode } from 'vue'
-import { getConfig, getIcon, getI18n, createEvent, useSize } from '../../ui'
+import { reactive, defineComponent, h, computed, PropType, watch } from 'vue'
+import { getConfig, getIcon, getI18n, createEvent, useSize, renderEmptyElement } from '../../ui'
 import { getSlotVNs } from '../../ui/src/vn'
 import XEUtils from 'xe-utils'
 
@@ -94,7 +94,7 @@ export default defineComponent({
       const loadingText = computeLoadingText.value
 
       if (!initialized && !modelValue) {
-        return createCommentVNode()
+        return renderEmptyElement($xeLoading)
       }
 
       return h('div', {

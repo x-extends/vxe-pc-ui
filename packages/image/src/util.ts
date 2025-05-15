@@ -30,6 +30,7 @@ export const openPreviewImage: VxeImageDefines.PreviewImageFunction = (options) 
             urlField: opts.urlField,
             marginSize: opts.marginSize,
             maskClosable: opts.maskClosable,
+            toolbarConfig: opts.toolbarConfig,
             showPrintButton: opts.showPrintButton,
             showDownloadButton: opts.showDownloadButton,
             beforeDownloadMethod: opts.beforeDownloadMethod,

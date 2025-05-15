@@ -1,6 +1,6 @@
-import { defineComponent, ref, h, reactive, PropType, createCommentVNode } from 'vue'
+import { defineComponent, ref, h, reactive, PropType } from 'vue'
 import XEUtils from 'xe-utils'
-import { getConfig, getIcon, createEvent } from '../../ui'
+import { getConfig, getIcon, createEvent, renderEmptyElement } from '../../ui'
 import { getSlotVNs } from '../../ui/src/vn'
 
 import type { VxeAlertPropTypes, AlertReactData, AlertPrivateRef, VxeAlertEmits, AlertMethods, AlertPrivateMethods, VxeAlertPrivateComputed, VxeAlertConstructor, VxeAlertPrivateMethods } from '../../../types'
@@ -87,7 +87,7 @@ export default defineComponent({
                   class: icon || getIcon()[`ALERT_${status?.toUpperCase()}` as 'ALERT_SUCCESS']
                 })
               ])
-          : createCommentVNode(),
+          : renderEmptyElement($xeAlert),
         h('div', {
           class: 'vxe-alert--body'
         }, [
@@ -95,7 +95,7 @@ export default defineComponent({
             ? h('div', {
               class: 'vxe-alert--title'
             }, titleSlot ? getSlotVNs(titleSlot({})) : XEUtils.toValueString(title))
-            : createCommentVNode(),
+            : renderEmptyElement($xeAlert),
           h('div', {
             class: 'vxe-alert--content'
           }, defaultSlot ? getSlotVNs(defaultSlot({})) : XEUtils.toValueString(content))
@@ -109,7 +109,7 @@ export default defineComponent({
               class: getIcon().ALERT_CLOSE
             })
           ])
-          : createCommentVNode()
+          : renderEmptyElement($xeAlert)
       ])
     }
 

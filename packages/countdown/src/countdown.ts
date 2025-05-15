@@ -1,5 +1,5 @@
-import { defineComponent, ref, h, reactive, watch, computed, PropType, onUnmounted, onMounted, createCommentVNode } from 'vue'
-import { getConfig, getI18n, createEvent, useSize } from '../../ui'
+import { defineComponent, ref, h, reactive, watch, computed, PropType, onUnmounted, onMounted } from 'vue'
+import { getConfig, getI18n, createEvent, useSize, renderEmptyElement } from '../../ui'
 import { getSlotVNs } from '../../ui/src/vn'
 import VxeTextComponent from '../../text/src/text'
 import XEUtils from 'xe-utils'
@@ -211,7 +211,7 @@ export default defineComponent({
                   status: prefixOpts.status
                 })
               ])
-          : createCommentVNode(),
+          : renderEmptyElement($xeCountdown),
         h('div', {
           class: 'vxe-countdown--content'
         }, defaultSlot
@@ -230,7 +230,7 @@ export default defineComponent({
                   status: suffixOpts.status
                 })
               ])
-          : createCommentVNode()
+          : renderEmptyElement($xeCountdown)
       ])
     }
 

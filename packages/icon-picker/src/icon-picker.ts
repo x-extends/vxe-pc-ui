@@ -1,6 +1,6 @@
-import { defineComponent, h, Teleport, PropType, ref, inject, watch, computed, provide, onUnmounted, reactive, nextTick, onMounted, createCommentVNode } from 'vue'
+import { defineComponent, h, Teleport, PropType, ref, inject, watch, computed, provide, onUnmounted, reactive, nextTick, onMounted } from 'vue'
 import XEUtils from 'xe-utils'
-import { getConfig, getIcon, getI18n, globalEvents, createEvent, useSize, GLOBAL_EVENT_KEYS } from '../../ui'
+import { getConfig, getIcon, getI18n, globalEvents, createEvent, useSize, GLOBAL_EVENT_KEYS, renderEmptyElement } from '../../ui'
 import { getEventTargetNode, getAbsolutePos } from '../../ui/src/dom'
 import { getLastZIndex, nextZIndex, getFuncText } from '../../ui/src/utils'
 
@@ -478,7 +478,7 @@ export default defineComponent({
               ? h('div', {
                 class: 'vxe-ico-picker--item-title'
               }, `${item.title || ''}`)
-              : createCommentVNode()
+              : renderEmptyElement($xeIconPicker)
           ])
         }))
       }))
@@ -575,7 +575,7 @@ export default defineComponent({
               }, [
                 renderIconWrapper()
               ])
-              : createCommentVNode()
+              : renderEmptyElement($xeIconPicker)
           ])
         ])
       ])

@@ -1,5 +1,5 @@
-import { defineComponent, ref, PropType, h, reactive, provide, watch, nextTick, computed, createCommentVNode } from 'vue'
-import { VxeUI, getConfig, createEvent, getI18n, renderer, useSize } from '../../ui'
+import { defineComponent, ref, PropType, h, reactive, provide, watch, nextTick, computed } from 'vue'
+import { VxeUI, getConfig, createEvent, getI18n, renderer, useSize, renderEmptyElement } from '../../ui'
 import { errLog } from '../../ui/src/log'
 import { toCssUnit } from '../../ui/src/dom'
 import { getSlotVNs } from '../../ui/src/vn'
@@ -445,7 +445,7 @@ export default defineComponent({
                 }), Object.assign({}, slots, {
                   default: undefined
                 }))
-                : createCommentVNode())
+                : renderEmptyElement($xeListView))
         ]),
         /**
          * 加载中

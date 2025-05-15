@@ -1,6 +1,6 @@
-import { defineComponent, ref, h, reactive, PropType, VNode, provide, nextTick, onBeforeUnmount, onMounted, watch, createCommentVNode, computed } from 'vue'
+import { defineComponent, ref, h, reactive, PropType, VNode, provide, nextTick, onBeforeUnmount, onMounted, watch, computed } from 'vue'
 import XEUtils from 'xe-utils'
-import { createEvent } from '@vxe-ui/core'
+import { createEvent, renderEmptyElement } from '../../ui'
 import { getOffsetPos } from '../../ui/src/dom'
 import VxeAnchorLinkComponent from './anchor-link'
 
@@ -197,7 +197,7 @@ export default defineComponent({
             ref: refMarkerElem,
             class: 'vxe-anchor--marker'
           })
-          : createCommentVNode()
+          : renderEmptyElement($xeAnchor)
       ])
     }
 

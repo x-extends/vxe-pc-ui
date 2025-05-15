@@ -1,8 +1,8 @@
-import { defineComponent, h, Teleport, ref, Ref, inject, computed, reactive, provide, nextTick, watch, PropType, VNode, onMounted, onUnmounted, createCommentVNode } from 'vue'
+import { defineComponent, h, Teleport, ref, Ref, inject, computed, reactive, provide, nextTick, watch, PropType, VNode, onMounted, onUnmounted } from 'vue'
 import XEUtils from 'xe-utils'
 import { getDomNode, getEventTargetNode, toCssUnit } from '../../ui/src/dom'
 import { getLastZIndex, nextZIndex, getFuncText, handleBooleanDefaultValue } from '../../ui/src/utils'
-import { VxeUI, getConfig, getIcon, getI18n, globalEvents, GLOBAL_EVENT_KEYS, createEvent, useSize } from '../../ui'
+import { VxeUI, getConfig, getIcon, getI18n, globalEvents, GLOBAL_EVENT_KEYS, createEvent, useSize, renderEmptyElement } from '../../ui'
 import VxeButtonComponent from '../../button/src/button'
 import VxeLoadingComponent from '../../loading/index'
 import { getSlotVNs } from '../../ui/src/vn'
@@ -1167,7 +1167,7 @@ export default defineComponent({
             ? h('div', {
               class: 'vxe-modal--corner-wrapper'
             }, getSlotVNs(cornerSlot({ $modal: $xeModal })))
-            : createCommentVNode(),
+            : renderEmptyElement($xeModal),
           (XEUtils.isBoolean(showMinimize) ? showMinimize : showZoom)
             ? h('div', {
               class: ['vxe-modal--zoom-btn', 'trigger--btn'],
@@ -1178,7 +1178,7 @@ export default defineComponent({
                 class: zoomStatus === 'minimize' ? getIcon().MODAL_ZOOM_REVERT : getIcon().MODAL_ZOOM_MIN
               })
             ])
-            : createCommentVNode(),
+            : renderEmptyElement($xeModal),
           (XEUtils.isBoolean(showMaximize) ? showMaximize : showZoom) && zoomStatus !== 'minimize'
             ? h('div', {
               class: ['vxe-modal--zoom-btn', 'trigger--btn'],
@@ -1189,7 +1189,7 @@ export default defineComponent({
                 class: zoomStatus === 'maximize' ? getIcon().MODAL_ZOOM_OUT : getIcon().MODAL_ZOOM_IN
               })
             ])
-            : createCommentVNode(),
+            : renderEmptyElement($xeModal),
           showClose
             ? h('div', {
               class: ['vxe-modal--close-btn', 'trigger--btn'],
@@ -1200,7 +1200,7 @@ export default defineComponent({
                 class: getIcon().MODAL_CLOSE
               })
             ])
-            : createCommentVNode()
+            : renderEmptyElement($xeModal)
         ])
       ]
     }
@@ -1224,7 +1224,7 @@ export default defineComponent({
           ...headerOns
         }, headerSlot ? getSlotVNs(headerSlot({ $modal: $xeModal })) : renderTitles())
       }
-      return createCommentVNode()
+      return renderEmptyElement($xeModal)
     }
 
     const renderBody = () => {
@@ -1258,7 +1258,7 @@ export default defineComponent({
           ? h('div', {
             class: 'vxe-modal--body-left'
           }, getSlotVNs(leftSlot({ $modal: $xeModal })))
-          : createCommentVNode(),
+          : renderEmptyElement($xeModal),
         h('div', {
           class: 'vxe-modal--body-default'
         }, contVNs),
@@ -1266,9 +1266,9 @@ export default defineComponent({
           ? h('div', {
             class: 'vxe-modal--body-right'
           }, getSlotVNs(rightSlot({ $modal: $xeModal })))
-          : createCommentVNode(),
+          : renderEmptyElement($xeModal),
         isMsg
-          ? createCommentVNode()
+          ? renderEmptyElement($xeModal)
           : h(VxeLoadingComponent, {
             class: 'vxe-modal--loading',
             modelValue: props.loading
@@ -1323,7 +1323,7 @@ export default defineComponent({
           class: 'vxe-modal--footer'
         }, footerSlot ? getSlotVNs(footerSlot({ $modal: $xeModal })) : [renderDefaultFooter()])
       }
-      return createCommentVNode()
+      return renderEmptyElement($xeModal)
     }
 
     const renderVN = () => {
@@ -1386,10 +1386,10 @@ export default defineComponent({
                           class: ['vxe-modal--status-icon', iconStatus || getIcon()[`MODAL_${status}`.toLocaleUpperCase() as 'MODAL_SUCCESS' | 'MODAL_ERROR']]
                         })
                       ])
-                      : createCommentVNode()
+                      : renderEmptyElement($xeModal)
                   ]
               )
-              : createCommentVNode(),
+              : renderEmptyElement($xeModal),
             h('div', {
               class: 'vxe-modal--container'
             }, !reactData.initialized || (destroyOnClose && !reactData.visible)
@@ -1408,7 +1408,7 @@ export default defineComponent({
                         onMousedown: dragEvent
                       })
                     }))
-                    : createCommentVNode()
+                    : renderEmptyElement($xeModal)
                 ])
           ])
         ])

@@ -1,10 +1,10 @@
-import { defineComponent, h, Teleport, ref, Ref, onUnmounted, reactive, inject, computed, nextTick, PropType, watch, createCommentVNode } from 'vue'
+import { defineComponent, h, Teleport, ref, Ref, onUnmounted, reactive, inject, computed, nextTick, PropType, watch } from 'vue'
 import XEUtils from 'xe-utils'
-import { getConfig, globalEvents, createEvent, useSize, ValueOf } from '../../ui'
+import { getConfig, globalEvents, createEvent, useSize, renderEmptyElement } from '../../ui'
 import { getEventTargetNode, updatePanelPlacement } from '../../ui/src/dom'
 import { getLastZIndex, nextZIndex } from '../../ui/src/utils'
 
-import type { VxePulldownConstructor, VxePulldownPropTypes, PulldownInternalData, VxePulldownEmits, PulldownReactData, PulldownMethods, PulldownPrivateRef, VxePulldownMethods, VxeDrawerConstructor, VxeDrawerMethods, VxeFormConstructor, VxeFormPrivateMethods, VxeModalConstructor, VxeModalMethods } from '../../../types'
+import type { VxePulldownConstructor, VxePulldownPropTypes, PulldownInternalData, VxePulldownEmits, PulldownReactData, ValueOf, PulldownMethods, PulldownPrivateRef, VxePulldownMethods, VxeDrawerConstructor, VxeDrawerMethods, VxeFormConstructor, VxeFormPrivateMethods, VxeModalConstructor, VxeModalMethods } from '../../../types'
 import type { VxeTableConstructor, VxeTablePrivateMethods } from '../../../types/components/table'
 
 export default defineComponent({
@@ -365,7 +365,7 @@ export default defineComponent({
                     ? h('div', {
                       class: 'vxe-pulldown--panel-header'
                     }, headerSlot({ $pulldown: $xePulldown }))
-                    : createCommentVNode(),
+                    : renderEmptyElement($xePulldown),
                   h('div', {
                     class: 'vxe-pulldown--panel-body'
                   }, dropdownSlot
@@ -377,7 +377,7 @@ export default defineComponent({
                     ? h('div', {
                       class: 'vxe-pulldown--panel-footer'
                     }, footerSlot({ $pulldown: $xePulldown }))
-                    : createCommentVNode()
+                    : renderEmptyElement($xePulldown)
                 ]
               : [])
           ])

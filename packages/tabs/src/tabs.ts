@@ -1,4 +1,4 @@
-import { defineComponent, ref, h, reactive, inject, PropType, provide, computed, onUnmounted, createCommentVNode, watch, nextTick, onMounted } from 'vue'
+import { defineComponent, ref, h, reactive, inject, PropType, provide, computed, onUnmounted, watch, nextTick, onMounted } from 'vue'
 import { createEvent, getConfig, getIcon, globalEvents, permission, renderEmptyElement } from '../../ui'
 import { getSlotVNs } from '../../ui/src/vn'
 import { toCssUnit } from '../../ui/src/dom'
@@ -438,7 +438,7 @@ export default defineComponent({
               class: getIcon().TABS_TAB_BUTTON_LEFT
             })
           ])
-          : createCommentVNode(),
+          : renderEmptyElement($xeTabs),
         h('div', {
           class: 'vxe-tabs-header--wrapper'
         }, [
@@ -482,7 +482,7 @@ export default defineComponent({
                         class: icon
                       })
                     ])
-                    : createCommentVNode(),
+                    : renderEmptyElement($xeTabs),
                   h('span', {
                     class: 'vxe-tabs-header--item-name'
                   }, titleSlot ? callSlot(titleSlot, { name, title }) : `${title}`)
@@ -498,7 +498,7 @@ export default defineComponent({
                       class: isLoading ? getIcon().TABS_TAB_REFRESH_LOADING : getIcon().TABS_TAB_REFRESH
                     })
                   ])
-                  : createCommentVNode(),
+                  : renderEmptyElement($xeTabs),
                 (showClose || (isEnableConf(closeConfig) || closeOpts.enabled)) && (!closeVisibleMethod || closeVisibleMethod(params))
                   ? h('div', {
                     class: 'vxe-tabs-header--close-btn',
@@ -510,7 +510,7 @@ export default defineComponent({
                       class: getIcon().TABS_TAB_CLOSE
                     })
                   ])
-                  : createCommentVNode()
+                  : renderEmptyElement($xeTabs)
               ])
             ])
           }).concat([
@@ -533,12 +533,12 @@ export default defineComponent({
               class: getIcon().TABS_TAB_BUTTON_RIGHT
             })
           ])
-          : createCommentVNode(),
+          : renderEmptyElement($xeTabs),
         extraSlot
           ? h('div', {
             class: 'vxe-tabs-header--extra'
           }, getSlotVNs(extraSlot({})))
-          : createCommentVNode()
+          : renderEmptyElement($xeTabs)
       ])
     }
 
@@ -554,7 +554,7 @@ export default defineComponent({
             'has--content': !!defaultSlot
           }]
         }, defaultSlot ? callSlot(defaultSlot, { name }) : [])
-        : createCommentVNode()
+        : renderEmptyElement($xeTabs)
     }
 
     const renderTabContent = (tabList: VxeTabsPropTypes.Options | VxeTabPaneDefines.TabConfig[]) => {
@@ -562,7 +562,7 @@ export default defineComponent({
       const { activeName } = reactData
       const activeDefaultTab = tabList.find(item => item.name === activeName)
       if (destroyOnClose) {
-        return [activeDefaultTab ? renderTabPane(activeDefaultTab) : createCommentVNode()]
+        return [activeDefaultTab ? renderTabPane(activeDefaultTab) : renderEmptyElement($xeTabs)]
       }
       return tabList.map((item) => renderTabPane(item))
     }

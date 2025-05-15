@@ -1,6 +1,6 @@
-import { defineComponent, ref, h, reactive, nextTick, PropType, inject, provide, watch, createCommentVNode } from 'vue'
+import { defineComponent, ref, h, reactive, nextTick, PropType, inject, provide, watch } from 'vue'
 import XEUtils from 'xe-utils'
-import { getConfig, renderer, useSize, createEvent } from '../../ui'
+import { getConfig, renderer, useSize, createEvent, renderEmptyElement } from '../../ui'
 import { getSlotVNs } from '../../ui/src/vn'
 import { createDefaultFormViewPCFormConfig } from './default-setting-data'
 import VxeFormComponent from '../../form/src/form'
@@ -287,7 +287,7 @@ export default defineComponent({
           ? h('div', {
             class: 'vxe-form-view--top'
           }, getSlotVNs(topSlot({ $formView: $xeFormView })))
-          : createCommentVNode(),
+          : renderEmptyElement($xeFormView),
         h(VxeFormComponent, {
           ref: formRef,
           ...formConfig,
@@ -309,7 +309,7 @@ export default defineComponent({
                     return headerSlot({})
                   }
                 })
-                : createCommentVNode(),
+                : renderEmptyElement($xeFormView),
               ...widgetObjList.map(widget => {
                 const { name } = widget
                 const compConf = renderer.get(name) || {}
@@ -347,7 +347,7 @@ export default defineComponent({
                     return footerSlot({})
                   }
                 })
-                : createCommentVNode()
+                : renderEmptyElement($xeFormView)
             ]
           }
         }),
@@ -355,7 +355,7 @@ export default defineComponent({
           ? h('div', {
             class: 'vxe-form-view--bottom'
           }, getSlotVNs(bottomSlot({ $formView: $xeFormView })))
-          : createCommentVNode()
+          : renderEmptyElement($xeFormView)
       ])
     }
 

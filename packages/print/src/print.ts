@@ -1,6 +1,6 @@
-import { defineComponent, ref, h, reactive, PropType, provide, createCommentVNode } from 'vue'
+import { defineComponent, ref, h, reactive, PropType, provide } from 'vue'
 import XEUtils from 'xe-utils'
-import { getConfig, createEvent } from '../../ui'
+import { getConfig, createEvent, renderEmptyElement } from '../../ui'
 import { printHtml, trimHtml } from './util'
 import { getSlotVNs } from '../../ui/src/vn'
 
@@ -125,7 +125,7 @@ export default defineComponent({
                   ? h('div', {
                     class: 'vxe-print-page-break--header-title'
                   }, `${title || ''}`)
-                  : createCommentVNode()
+                  : renderEmptyElement($xePrint)
               ]),
           h('div', {
             class: 'vxe-print-page-break--body'
@@ -149,7 +149,7 @@ export default defineComponent({
                   ? h('div', {
                     class: 'vxe-print-page-break--footer-page-number'
                   }, `${currentPage}/${pageCount}`)
-                  : createCommentVNode()
+                  : renderEmptyElement($xePrint)
               ])
         ])
       })
@@ -185,7 +185,7 @@ export default defineComponent({
                   ? h('div', {
                     class: 'vxe-print-page-break--header-title'
                   }, `${title || ''}`)
-                  : createCommentVNode()
+                  : renderEmptyElement($xePrint)
               ]),
           h('div', {
             class: 'vxe-print-page-break--body'
@@ -209,7 +209,7 @@ export default defineComponent({
                   ? h('div', {
                     class: 'vxe-print-page-break--footer-page-number'
                   }, `${currentPage}/${pageCount}`)
-                  : createCommentVNode()
+                  : renderEmptyElement($xePrint)
               ])
         ])
       })

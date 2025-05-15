@@ -1,5 +1,5 @@
 import { h, defineComponent, PropType, inject, createCommentVNode } from 'vue'
-import { getIcon, getI18n } from '@vxe-ui/core'
+import { getIcon, getI18n } from '../../ui'
 import VxeFormComponent from '../../form/src/form'
 import VxeFormItemComponent from '../../form/src/form-item'
 import VxeSwitchComponent from '../../switch/src/switch'

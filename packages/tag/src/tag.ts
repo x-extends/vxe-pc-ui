@@ -1,6 +1,6 @@
-import { defineComponent, ref, h, reactive, PropType, createCommentVNode } from 'vue'
+import { defineComponent, ref, h, reactive, PropType } from 'vue'
 import XEUtils from 'xe-utils'
-import { getConfig, createEvent, useSize } from '../../ui'
+import { getConfig, createEvent, useSize, renderEmptyElement } from '../../ui'
 import { getSlotVNs } from '../../ui/src/vn'
 
 import type { VxeTagPropTypes, TagReactData, TagPrivateRef, VxeTagEmits, VxeTagPrivateComputed, TagMethods, TagPrivateMethods, VxeTagConstructor, VxeTagPrivateMethods, ValueOf } from '../../../types'
@@ -81,7 +81,7 @@ export default defineComponent({
                   class: icon
                 })
               ])
-          : createCommentVNode(),
+          : renderEmptyElement($xeTag),
         h('span', {
           class: 'vxe-tag--content'
         }, defaultSlot ? defaultSlot({}) : XEUtils.toValueString(content))

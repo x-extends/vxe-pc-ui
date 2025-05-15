@@ -1,6 +1,6 @@
-import { defineComponent, h, ref, Ref, computed, reactive, nextTick, createCommentVNode, PropType, inject } from 'vue'
+import { defineComponent, h, ref, Ref, computed, reactive, nextTick, PropType, inject } from 'vue'
 import XEUtils from 'xe-utils'
-import { getConfig, createEvent, useSize } from '../../ui'
+import { getConfig, createEvent, useSize, renderEmptyElement } from '../../ui'
 import { getFuncText } from '../../ui/src/utils'
 
 import type { VxeSwitchPropTypes, VxeSwitchConstructor, VxeSwitchEmits, SwitchInternalData, ValueOf, SwitchReactData, SwitchMethods, VxeFormConstructor, VxeFormPrivateMethods, VxeFormDefines } from '../../../types'
@@ -200,7 +200,7 @@ export default defineComponent({
               ? h('i', {
                 class: ['vxe-switch--label-icon', openIcon]
               })
-              : createCommentVNode(),
+              : renderEmptyElement($xeSwitch),
             onShowLabel
           ]),
           h('span', {
@@ -210,7 +210,7 @@ export default defineComponent({
               ? h('i', {
                 class: ['vxe-switch--label-icon', closeIcon]
               })
-              : createCommentVNode(),
+              : renderEmptyElement($xeSwitch),
             offShowLabel
           ]),
           h('span', {

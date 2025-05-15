@@ -1,6 +1,6 @@
-import { defineComponent, h, onUnmounted, inject, ref, provide, onMounted, PropType, reactive, createCommentVNode } from 'vue'
+import { defineComponent, h, onUnmounted, inject, ref, provide, onMounted, PropType, reactive } from 'vue'
 import { createItem, watchItem, destroyItem, assembleItem, XEFormItemProvide } from './util'
-import { renderer } from '../../ui'
+import { renderer, renderEmptyElement } from '../../ui'
 import { isEnableConf } from '../../ui/src/utils'
 import { renderTitle, renderItemContent, getItemClass, getItemContentClass } from './render'
 import XEUtils from 'xe-utils'
@@ -90,6 +90,8 @@ export default defineComponent({
   name: 'VxeFormItem',
   props: formItemProps,
   setup (props, { slots }) {
+    const xID = XEUtils.uniqueId()
+
     const refElem = ref<HTMLDivElement>()
     const $xeForm = inject('$xeForm', {} as VxeFormConstructor & VxeFormPrivateMethods)
     const $xeFormGroup = inject<XEFormItemProvide | null>('$xeFormGroup', null)
@@ -110,7 +112,7 @@ export default defineComponent({
       const itemContentStyle = compConf ? (compConf.formItemContentStyle || compConf.itemContentStyle) : null
       const params = { data, disabled, readonly, field, property: field, item, $form: $xeForm, $grid: $xeGrid }
       if (visible === false) {
-        return createCommentVNode()
+        return renderEmptyElement($xeFormitem)
       }
       return h('div', {
         ref: refElem,
@@ -120,7 +122,7 @@ export default defineComponent({
       }, [
         renderTitle($xeForm, item),
         showContent === false
-          ? createCommentVNode()
+          ? renderEmptyElement($xeFormitem)
           : h('div', {
             class: getItemContentClass($xeForm, item),
             style: Object.assign({}, XEUtils.isFunction(itemContentStyle) ? itemContentStyle(params) : itemContentStyle, XEUtils.isFunction(contentStyle) ? contentStyle(params) : contentStyle)
@@ -140,6 +142,7 @@ export default defineComponent({
     }
 
     const $xeFormitem = {
+      xID,
       formItem,
 
       renderVN

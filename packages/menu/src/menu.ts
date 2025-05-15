@@ -1,6 +1,6 @@
-import { defineComponent, ref, h, reactive, PropType, inject, resolveComponent, createCommentVNode, watch, VNode, computed, nextTick, onBeforeUnmount, onMounted } from 'vue'
+import { defineComponent, ref, h, reactive, PropType, inject, resolveComponent, watch, VNode, computed, nextTick, onBeforeUnmount, onMounted } from 'vue'
 import XEUtils from 'xe-utils'
-import { getConfig, getIcon, createEvent, permission, useSize, globalEvents } from '../../ui'
+import { getConfig, getIcon, createEvent, permission, useSize, globalEvents, renderEmptyElement } from '../../ui'
 import { toCssUnit } from '../../ui/src/dom'
 import { getLastZIndex, nextZIndex } from '../../ui/src/utils'
 import { getSlotVNs } from '../../ui/src/vn'
@@ -302,7 +302,7 @@ export default defineComponent({
               class: isExpand ? getIcon().MENU_ITEM_EXPAND_OPEN : getIcon().MENU_ITEM_EXPAND_CLOSE
             })
           ])
-          : createCommentVNode()
+          : renderEmptyElement($xeMenu)
       ]
     }
 
@@ -312,7 +312,7 @@ export default defineComponent({
       const isCollapsed = computeIsCollapsed.value
       if (item.permissionCode) {
         if (!permission.checkVisible(item.permissionCode)) {
-          return createCommentVNode()
+          return renderEmptyElement($xeMenu)
         }
       }
       return h('div', {
@@ -343,7 +343,7 @@ export default defineComponent({
           ? h('div', {
             class: 'vxe-menu--item-group'
           }, childList.map(child => renderDefaultChildren(child)))
-          : createCommentVNode()
+          : renderEmptyElement($xeMenu)
       ])
     }
 
@@ -351,7 +351,7 @@ export default defineComponent({
       const { itemKey, level, hasChild, isActive, isExactActive, routerLink, childList } = item
       if (item.permissionCode) {
         if (!permission.checkVisible(item.permissionCode)) {
-          return createCommentVNode()
+          return renderEmptyElement($xeMenu)
         }
       }
       return h('div', {
@@ -381,7 +381,7 @@ export default defineComponent({
           ? h('div', {
             class: 'vxe-menu--item-group'
           }, childList.map(child => renderDefaultChildren(child)))
-          : createCommentVNode()
+          : renderEmptyElement($xeMenu)
       ])
     }
 
@@ -418,9 +418,9 @@ export default defineComponent({
               ? h('div', {
                 class: 'vxe-menu--item-list'
               }, menuList.map(child => renderDefaultChildren(child)))
-              : createCommentVNode()
+              : renderEmptyElement($xeMenu)
           ])
-          : createCommentVNode(),
+          : renderEmptyElement($xeMenu),
         /**
          * 加载中
          */

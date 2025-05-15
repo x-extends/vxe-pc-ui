@@ -1,6 +1,6 @@
-import { defineComponent, h, ref, computed, Teleport, resolveComponent, VNode, onUnmounted, reactive, nextTick, PropType, onMounted, inject, createCommentVNode } from 'vue'
+import { defineComponent, h, ref, computed, Teleport, resolveComponent, VNode, onUnmounted, reactive, nextTick, PropType, onMounted, inject } from 'vue'
 import XEUtils from 'xe-utils'
-import { getConfig, globalEvents, getIcon, createEvent, useSize, usePermission, permission } from '../../ui'
+import { getConfig, globalEvents, getIcon, createEvent, useSize, usePermission, permission, renderEmptyElement } from '../../ui'
 import { getEventTargetNode, updatePanelPlacement } from '../../ui/src/dom'
 import { getFuncText, getLastZIndex, nextZIndex } from '../../ui/src/utils'
 import { warnLog } from '../../ui/src/log'
@@ -98,7 +98,8 @@ const VxeButtonComponent = defineComponent({
     'click',
     'mouseenter',
     'mouseleave',
-    'dropdown-click'
+    'dropdown-click',
+    'dropdownClick'
   ] as VxeButtonEmits,
   setup (props, context) {
     const { slots, emit } = context
@@ -545,7 +546,7 @@ const VxeButtonComponent = defineComponent({
       const dropdownsSlot = slots.dropdowns
 
       if (!permissionInfo.visible) {
-        return createCommentVNode()
+        return renderEmptyElement($xeButton)
       }
       if (dropdownsSlot || downBtnList.length) {
         const btnOns: Record<string, any> = {}

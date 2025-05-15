@@ -1,5 +1,5 @@
-import { defineComponent, h, reactive, provide, PropType, createCommentVNode } from 'vue'
-import { getConfig, createEvent, useSize, usePermission } from '@vxe-ui/core'
+import { defineComponent, h, reactive, provide, PropType } from 'vue'
+import { getConfig, createEvent, useSize, usePermission, renderEmptyElement } from '../../ui'
 import XEUtils from 'xe-utils'
 import VxeButtonComponent from './button'
 
@@ -71,7 +71,7 @@ export default defineComponent({
       const permissionInfo = computePermissionInfo.value
       const defaultSlot = slots.default
       if (!permissionInfo.visible) {
-        return createCommentVNode()
+        return renderEmptyElement($xeButtonGroup)
       }
       return h('div', {
         class: ['vxe-button-group', className ? (XEUtils.isFunction(className) ? className({ $buttonGroup: $xeButtonGroup }) : className) : '', {

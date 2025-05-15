@@ -31,6 +31,35 @@ export namespace VxeImagePreviewPropTypes {
   export type MarginSize = string | number
   export type ShowPrintButton = boolean
   export type ShowDownloadButton = boolean
+  export interface ToolbarConfig {
+    layouts?: ('PageNumber' | 'ZoomOut' | 'ZoomIn' | 'PctFull' | 'Pct11' | 'RotateLeft' | 'RotateRight' | 'Print' | 'Download')[]
+    zoomOut?: boolean | {
+      icon?: string
+    }
+    zoomIn?: boolean | {
+      icon?: string
+    }
+    pctFull?: boolean | {
+      icon?: string
+    }
+    pct11?: boolean | {
+      icon?: string
+    }
+    rotateLeft?: boolean | {
+      icon?: string
+    }
+    rotateRight?: boolean | {
+      icon?: string
+    }
+    print?: boolean | {
+      icon?: string
+    }
+    download?: boolean | {
+      icon?: string
+      beforeDownloadMethod?: BeforeDownloadMethod
+      downloadMethod?: DownloadMethod
+    }
+  }
   export type BeforeDownloadMethod = undefined | ((params: {
     $imagePreview: VxeImagePreviewConstructor
     url: any
@@ -49,6 +78,7 @@ export type VxeImagePreviewProps = {
   urlField?: VxeImagePreviewPropTypes.UrlField
   maskClosable?: VxeImagePreviewPropTypes.MaskClosable
   marginSize?: VxeImagePreviewPropTypes.MarginSize
+  toolbarConfig?: VxeImagePreviewPropTypes.ToolbarConfig
   showPrintButton?: VxeImagePreviewPropTypes.ShowPrintButton
   showDownloadButton?: VxeImagePreviewPropTypes.ShowDownloadButton
   downloadMethod?: VxeImagePreviewPropTypes.DownloadMethod
@@ -90,6 +120,8 @@ export namespace VxeImagePreviewDefines {
   export interface ImagePreviewEventParams extends VxeComponentEventParams {
     $imagePreview: VxeImagePreviewConstructor
   }
+
+  export type ToolbarCode = 'zoomOut' | 'zoomIn' | 'pctFull' | 'pct11' | 'rotateLeft' | 'rotateRight' | 'print' | 'download'
 
   export type ChangeParams = {
     checklist: any[]

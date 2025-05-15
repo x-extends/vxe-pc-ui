@@ -1,4 +1,4 @@
-import { defineComponent, ref, h, reactive, watch, computed, TransitionGroup, PropType, inject, createCommentVNode, onUnmounted, onMounted } from 'vue'
+import { defineComponent, ref, h, reactive, watch, computed, TransitionGroup, PropType, inject, onUnmounted, onMounted } from 'vue'
 import XEUtils from 'xe-utils'
 import { VxeUI, getConfig, getI18n, getIcon, useSize, createEvent, globalEvents, renderEmptyElement } from '../../ui'
 import { getSlotVNs } from '../../ui/src/vn'
@@ -1245,12 +1245,12 @@ export default defineComponent({
                 class: getIcon().UPLOAD_LOADING
               })
             ])
-            : createCommentVNode(),
+            : renderEmptyElement($xeUpload),
           showProgress && isLoading && cacheItem
             ? h('div', {
               class: 'vxe-upload--file-item-loading-text'
             }, progressText ? XEUtils.toFormatString(`${XEUtils.isFunction(progressText) ? progressText({}) : progressText}`, { percent: cacheItem.percent }) : getI18n('vxe.upload.uploadProgress', [cacheItem.percent]))
-            : createCommentVNode(),
+            : renderEmptyElement($xeUpload),
           showErrorStatus && isError
             ? h('div', {
               class: 'vxe-upload--image-item-error'
@@ -1265,7 +1265,7 @@ export default defineComponent({
                 }
               })
             ])
-            : createCommentVNode(),
+            : renderEmptyElement($xeUpload),
           h('div', {
             class: 'vxe-upload--file-item-btn-wrapper'
           }, [
@@ -1273,7 +1273,7 @@ export default defineComponent({
               ? h('div', {
                 class: 'vxe-upload--file-item-corner'
               }, getSlotVNs(cornerSlot({ option: item, isMoreView, readonly: formReadonly })))
-              : createCommentVNode(),
+              : renderEmptyElement($xeUpload),
             showDownloadButton && !isLoading
               ? h('div', {
                 class: 'vxe-upload--file-item-download-btn',
@@ -1285,7 +1285,7 @@ export default defineComponent({
                   class: getIcon().UPLOAD_FILE_DOWNLOAD
                 })
               ])
-              : createCommentVNode(),
+              : renderEmptyElement($xeUpload),
             showRemoveButton && !formReadonly && !isDisabled && !isLoading
               ? h('div', {
                 class: 'vxe-upload--file-item-remove-btn',
@@ -1297,7 +1297,7 @@ export default defineComponent({
                   class: getIcon().UPLOAD_FILE_REMOVE
                 })
               ])
-              : createCommentVNode()
+              : renderEmptyElement($xeUpload)
           ])
         ])
       })
@@ -1314,13 +1314,13 @@ export default defineComponent({
       const tipSlot = slots.tip || slots.hint
 
       if (formReadonly || !showUploadButton) {
-        return createCommentVNode()
+        return renderEmptyElement($xeUpload)
       }
       return h('div', {
         class: 'vxe-upload--file-action'
       }, [
         autoHiddenButton && overCount
-          ? createCommentVNode()
+          ? renderEmptyElement($xeUpload)
           : h('div', {
             class: 'vxe-upload--file-action-btn',
             onClick: clickEvent
@@ -1338,7 +1338,7 @@ export default defineComponent({
           ? h('div', {
             class: 'vxe-upload--file-action-tip'
           }, tipSlot ? getSlotVNs(tipSlot({ $upload: $xeUpload })) : `${defTipText}`)
-          : createCommentVNode()
+          : renderEmptyElement($xeUpload)
       ])
     }
 
@@ -1363,7 +1363,7 @@ export default defineComponent({
       }, showList
         ? [
             showMoreButton && moreConfig && isHorizontal
-              ? createCommentVNode()
+              ? renderEmptyElement($xeUpload)
               : renderFileAction(true),
             (currList.length || (showMoreButton && isHorizontal))
               ? h('div', {
@@ -1385,7 +1385,7 @@ export default defineComponent({
                           class: 'vxe-upload--file-list'
                         }, renderFileItemList(currList, false))
                     )
-                  : createCommentVNode(),
+                  : renderEmptyElement($xeUpload),
                 showMoreButton && overMaxNum
                   ? h('div', {
                     class: 'vxe-upload--file-over-more'
@@ -1397,12 +1397,12 @@ export default defineComponent({
                       onClick: handleMoreEvent
                     })
                   ])
-                  : createCommentVNode(),
+                  : renderEmptyElement($xeUpload),
                 showMoreButton && moreConfig && isHorizontal
                   ? renderFileAction(false)
-                  : createCommentVNode()
+                  : renderEmptyElement($xeUpload)
               ])
-              : createCommentVNode()
+              : renderEmptyElement($xeUpload)
           ]
         : [
             renderFileAction(false)
@@ -1469,9 +1469,9 @@ export default defineComponent({
                   ? h('div', {
                     class: 'vxe-upload--image-item-loading-text'
                   }, progressText ? XEUtils.toFormatString(`${XEUtils.isFunction(progressText) ? progressText({}) : progressText}`, { percent: cacheItem.percent }) : getI18n('vxe.upload.uploadProgress', [cacheItem.percent]))
-                  : createCommentVNode()
+                  : renderEmptyElement($xeUpload)
               ])
-              : createCommentVNode(),
+              : renderEmptyElement($xeUpload),
             !isLoading
               ? (
                   isError && showErrorStatus
@@ -1497,7 +1497,7 @@ export default defineComponent({
                       })
                     ])
                 )
-              : createCommentVNode(),
+              : renderEmptyElement($xeUpload),
             h('div', {
               class: 'vxe-upload--image-item-btn-wrapper',
               onClick (evnt) {
@@ -1508,7 +1508,7 @@ export default defineComponent({
                 ? h('div', {
                   class: 'vxe-upload--file-item-corner'
                 }, getSlotVNs(cornerSlot({ option: item, isMoreView, readonly: formReadonly })))
-                : createCommentVNode(),
+                : renderEmptyElement($xeUpload),
               showRemoveButton && !formReadonly && !isDisabled && !isLoading
                 ? h('div', {
                   class: 'vxe-upload--image-item-remove-btn',
@@ -1521,7 +1521,7 @@ export default defineComponent({
                     class: getIcon().UPLOAD_IMAGE_REMOVE
                   })
                 ])
-                : createCommentVNode()
+                : renderEmptyElement($xeUpload)
             ])
           ])
         ])
@@ -1539,7 +1539,7 @@ export default defineComponent({
       const tipSlot = slots.tip || slots.hint
 
       if (formReadonly || !showUploadButton || (autoHiddenButton && overCount)) {
-        return createCommentVNode()
+        return renderEmptyElement($xeUpload)
       }
       return h('div', {
         key: 'action',
@@ -1563,17 +1563,17 @@ export default defineComponent({
                       class: buttonIcon || getIcon().UPLOAD_IMAGE_ADD
                     })
                   ])
-                  : createCommentVNode(),
+                  : renderEmptyElement($xeUpload),
                 isMoreView || showButtonText
                   ? h('div', {
                     class: 'vxe-upload--image-action-content'
                   }, buttonText ? `${XEUtils.isFunction(buttonText) ? buttonText({}) : buttonText}` : getI18n('vxe.upload.imgBtnText'))
-                  : createCommentVNode(),
+                  : renderEmptyElement($xeUpload),
                 showTipText && (defTipText || tipSlot)
                   ? h('div', {
                     class: 'vxe-upload--image-action-hint'
                   }, tipSlot ? getSlotVNs(tipSlot({ $upload: $xeUpload })) : `${defTipText}`)
-                  : createCommentVNode()
+                  : renderEmptyElement($xeUpload)
               ])
             ])
       ])
@@ -1616,7 +1616,7 @@ export default defineComponent({
                         onClick: handleMoreEvent
                       })
                     ])
-                    : createCommentVNode(),
+                    : renderEmptyElement($xeUpload),
                   renderImageAction(false)
                 ])
               })
@@ -1634,7 +1634,7 @@ export default defineComponent({
                       onClick: handleMoreEvent
                     })
                   ])
-                  : createCommentVNode(),
+                  : renderEmptyElement($xeUpload),
                 renderImageAction(false)
               ]))
           ]

@@ -1,5 +1,6 @@
 import { RenderFunction, SetupContext, Ref } from 'vue'
 import { DefineVxeComponentApp, DefineVxeComponentOptions, DefineVxeComponentInstance, VxeComponentBaseOptions, VxeComponentEventParams, ValueOf, VxeComponentSizeType } from '@vxe-ui/core'
+import { VxeImagePreviewPropTypes } from './image-preview'
 
 /* eslint-disable no-use-before-define,@typescript-eslint/ban-types */
 
@@ -33,6 +34,7 @@ export namespace VxeImageGroupPropTypes {
     width?: number | string
     height?: number | string
   }
+  export type ToolbarConfig = VxeImagePreviewPropTypes.ToolbarConfig
   export type ShowPrintButton = boolean
   export type ShowDownloadButton = boolean
 }
@@ -42,6 +44,7 @@ export type VxeImageGroupProps = {
   showPreview?: VxeImageGroupPropTypes.ShowPreview
   urlList?: VxeImageGroupPropTypes.UrlList
   imageStyle?: VxeImageGroupPropTypes.ImageStyle
+  toolbarConfig?: VxeImageGroupPropTypes.ToolbarConfig
   showPrintButton?: VxeImageGroupPropTypes.ShowPrintButton
   showDownloadButton?: VxeImageGroupPropTypes.ShowDownloadButton
 }

@@ -174,7 +174,8 @@ export type VxeButtonEmits = [
   'click',
   'mouseenter',
   'mouseleave',
-  'dropdown-click'
+  'dropdown-click',
+  'dropdownClick'
 ]
 
 export namespace VxeButtonDefines {
