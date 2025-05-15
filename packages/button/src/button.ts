@@ -717,10 +717,8 @@ const VxeButtonComponent = defineComponent({
     $xeButton.renderVN = renderVN
 
     onMounted(() => {
-      if (process.env.VUE_APP_VXE_ENV === 'development') {
-        if (props.type === 'text') {
-          warnLog('vxe.error.delProp', ['type=text', 'mode=text'])
-        }
+      if (props.type === 'text') {
+        warnLog('vxe.error.delProp', ['type=text', 'mode=text'])
       }
 
       globalEvents.on($xeButton, 'mousewheel', handleGlobalMousewheelEvent)

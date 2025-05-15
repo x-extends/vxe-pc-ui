@@ -693,9 +693,7 @@ export default defineComponent({
         if (renderFn) {
           childNodes.push(renderFn())
         } else {
-          if (process.env.VUE_APP_VXE_ENV === 'development') {
-            errLog('vxe.error.notProp', [`layouts -> ${name}`])
-          }
+          errLog('vxe.error.notProp', [`layouts -> ${name}`])
         }
       })
       if (slots.right) {

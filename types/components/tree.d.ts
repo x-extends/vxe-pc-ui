@@ -163,17 +163,19 @@ export interface VxeTreePrivateComputed extends TreePrivateComputed { }
 
 export interface TreeReactData {
   currentNode: any
-  nodeMaps: Record<string, VxeTreeDefines.NodeCacheItem>
   selectRadioKey: VxeTreePropTypes.CheckNodeKey | null
   treeList: any[]
-  treeExpandedMaps: Record<string, boolean>
-  treeExpandLazyLoadedMaps: Record<string, boolean>
-  selectCheckboxMaps: Record<string, boolean>
-  indeterminateCheckboxMaps: Record<string, boolean>
+  updateExpandedFlag: number
+  updateCheckboxFlag: number
 }
 
 export interface TreeInternalData {
   initialized?: boolean
+  nodeMaps: Record<string, VxeTreeDefines.NodeCacheItem>
+  indeterminateRowMaps: Record<string, any>
+  selectCheckboxMaps: Record<string, any>
+  treeExpandedMaps: Record<string, boolean>
+  treeExpandLazyLoadedMaps: Record<string, boolean>
 }
 
 export interface TreeMethods<D = any> {

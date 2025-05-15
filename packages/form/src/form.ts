@@ -1,7 +1,7 @@
 import { defineComponent, h, ref, Ref, provide, computed, inject, reactive, watch, nextTick, PropType, onMounted } from 'vue'
 import XEUtils from 'xe-utils'
 import { getConfig, validators, renderer, createEvent, useSize } from '../../ui'
-import { getFuncText, isEnableConf, eqEmptyValue } from '../../ui/src/utils'
+import { getFuncText, isEnableConf } from '../../ui/src/utils'
 import { scrollToView } from '../../ui/src/dom'
 import { createItem, handleFieldOrItem, isHiddenItem, isActiveItem } from './util'
 import VxeTooltipComponent from '../../tooltip/src/tooltip'
@@ -39,27 +39,104 @@ class Rule {
   [key: string]: any
 }
 
-const validErrorRuleValue = (rule: VxeFormDefines.FormRule, val: any) => {
-  const { type, min, max, pattern } = rule
-  const isNumType = type === 'number'
-  const numVal = isNumType ? XEUtils.toNumber(val) : XEUtils.getSize(val)
-  // 判断数值
-  if (isNumType && isNaN(val)) {
-    return true
-  }
-  // 如果存在 min，判断最小值
-  if (!XEUtils.eqNull(min) && numVal < XEUtils.toNumber(min)) {
-    return true
-  }
-  // 如果存在 max，判断最大值
-  if (!XEUtils.eqNull(max) && numVal > XEUtils.toNumber(max)) {
-    return true
-  }
-  // 如果存在 pattern，正则校验
+// 如果存在 pattern，判断正则
+function validREValue (pattern: string | RegExp | undefined, val: string) {
   if (pattern && !(XEUtils.isRegExp(pattern) ? pattern : new RegExp(pattern)).test(val)) {
-    return true
+    return false
   }
-  return false
+  return true
+}
+
+// 如果存在 max，判断最大值
+function validMaxValue (max: string | number | undefined, num: number) {
+  if (!XEUtils.eqNull(max) && num > XEUtils.toNumber(max)) {
+    return false
+  }
+  return true
+}
+
+// 如果存在 min，判断最小值
+function validMinValue (min: string | number | undefined, num: number) {
+  if (!XEUtils.eqNull(min) && num < XEUtils.toNumber(min)) {
+    return false
+  }
+  return true
+}
+
+function validRuleValue (rule: VxeFormDefines.FormRule, val: any, required: boolean | undefined) {
+  const { type, min, max, pattern } = rule
+  const isArrType = type === 'array'
+  const isNumType = type === 'number'
+  const isStrType = type === 'string'
+  const strVal = `${val}`
+  if (!validREValue(pattern, strVal)) {
+    return false
+  }
+  if (isArrType) {
+    if (!XEUtils.isArray(val)) {
+      return false
+    }
+    if (required) {
+      if (!val.length) {
+        return false
+      }
+    }
+    if (!validMinValue(min, val.length)) {
+      return false
+    }
+    if (!validMaxValue(max, val.length)) {
+      return false
+    }
+  } else if (isNumType) {
+    const numVal = Number(val)
+    if (isNaN(numVal)) {
+      return false
+    }
+    if (!validMinValue(min, numVal)) {
+      return false
+    }
+    if (!validMaxValue(max, numVal)) {
+      return false
+    }
+  } else {
+    if (isStrType) {
+      if (!XEUtils.isString(val)) {
+        return false
+      }
+    }
+    if (required) {
+      if (!strVal) {
+        return false
+      }
+    }
+    if (!validMinValue(min, strVal.length)) {
+      return false
+    }
+    if (!validMaxValue(max, strVal.length)) {
+      return false
+    }
+  }
+  return true
+}
+
+function checkRuleStatus (rule: VxeFormDefines.FormRule, val: any) {
+  const { required } = rule
+  const isEmptyVal = XEUtils.eqNull(val)
+  if (required) {
+    if (isEmptyVal) {
+      return false
+    }
+    if (!validRuleValue(rule, val, required)) {
+      return false
+    }
+  } else {
+    if (!isEmptyVal) {
+      if (!validRuleValue(rule, val, required)) {
+        return false
+      }
+    }
+  }
+  return true
 }
 
 export default defineComponent({
@@ -416,7 +493,7 @@ export default defineComponent({
             if (rules) {
               const itemValue = XEUtils.isUndefined(val) ? XEUtils.get(data, property) : val
               rules.forEach((rule) => {
-                const { type, trigger, required, validator } = rule
+                const { trigger, validator } = rule
                 if (validType === 'all' || !trigger || validType === trigger) {
                   if (validator) {
                     const validParams = {
@@ -436,14 +513,10 @@ export default defineComponent({
                         if (validatorMethod) {
                           customValid = validatorMethod(validParams)
                         } else {
-                          if (process.env.VUE_APP_VXE_ENV === 'development') {
-                            warnLog('vxe.error.notValidators', [validator])
-                          }
+                          warnLog('vxe.error.notValidators', [validator])
                         }
                       } else {
-                        if (process.env.VUE_APP_VXE_ENV === 'development') {
-                          errLog('vxe.error.notValidators', [validator])
-                        }
+                        errLog('vxe.error.notValidators', [validator])
                       }
                     } else {
                       customValid = validator(validParams)
@@ -461,17 +534,7 @@ export default defineComponent({
                       }
                     }
                   } else {
-                    const isArrType = type === 'array'
-                    const isArrVal = XEUtils.isArray(itemValue)
-                    let hasEmpty = true
-                    if (isArrType || isArrVal) {
-                      hasEmpty = !isArrVal || !itemValue.length
-                    } else if (XEUtils.isString(itemValue)) {
-                      hasEmpty = eqEmptyValue(itemValue.trim())
-                    } else {
-                      hasEmpty = eqEmptyValue(itemValue)
-                    }
-                    if (required ? (hasEmpty || validErrorRuleValue(rule, itemValue)) : (!hasEmpty && validErrorRuleValue(rule, itemValue))) {
+                    if (!checkRuleStatus(rule, itemValue)) {
                       errorRules.push(new Rule(rule))
                     }
                   }

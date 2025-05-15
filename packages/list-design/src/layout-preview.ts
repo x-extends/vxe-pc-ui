@@ -118,13 +118,11 @@ export default defineComponent({
       updateTableData()
     })
 
-    if (process.env.VUE_APP_VXE_ENV === 'development') {
-      nextTick(() => {
-        if (!VxeTableGridComponent) {
-          errLog('vxe.error.reqComp', ['vxe-grid'])
-        }
-      })
-    }
+    nextTick(() => {
+      if (!VxeTableGridComponent) {
+        errLog('vxe.error.reqComp', ['vxe-grid'])
+      }
+    })
 
     return () => {
       const { searchFormData, searchFormItems } = listDesignReactData

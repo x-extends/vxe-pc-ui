@@ -399,15 +399,11 @@ export default defineComponent({
         return handlePrevNext(true)
       },
       prevTab () {
-        if (process.env.VUE_APP_VXE_ENV === 'development') {
-          warnLog('vxe.error.delFunc', ['prevTab', 'prev'])
-        }
+        warnLog('vxe.error.delFunc', ['prevTab', 'prev'])
         return tabsMethods.prev()
       },
       nextTab () {
-        if (process.env.VUE_APP_VXE_ENV === 'development') {
-          warnLog('vxe.error.delFunc', ['nextTab', 'next'])
-        }
+        warnLog('vxe.error.delFunc', ['nextTab', 'next'])
         return tabsMethods.next()
       }
     }

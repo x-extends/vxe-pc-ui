@@ -668,13 +668,11 @@ export default defineComponent({
       globalEvents.off($xeTableSelect, 'blur')
     })
 
-    if (process.env.VUE_APP_VXE_ENV === 'development') {
-      nextTick(() => {
-        if (!VxeTableGridComponent) {
-          errLog('vxe.error.reqComp', ['vxe-grid'])
-        }
-      })
-    }
+    nextTick(() => {
+      if (!VxeTableGridComponent) {
+        errLog('vxe.error.reqComp', ['vxe-grid'])
+      }
+    })
 
     provide('$xeTableSelect', $xeTableSelect)
 

@@ -248,9 +248,7 @@ export default defineComponent({
        * @deprecated
        */
       updateItemStatus (widget, value) {
-        if (process.env.VUE_APP_VXE_ENV === 'development') {
-          warnLog('vxe.error.delFunc', ['updateItemStatus', 'updateWidgetStatus'])
-        }
+        warnLog('vxe.error.delFunc', ['updateItemStatus', 'updateWidgetStatus'])
         return updateWidgetStatus(widget, value)
       }
     }
