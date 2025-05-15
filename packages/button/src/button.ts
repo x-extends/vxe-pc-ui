@@ -1,6 +1,7 @@
 import { CreateElement, VNode, PropType } from 'vue'
 import XEUtils from 'xe-utils'
 import { getConfig, globalEvents, getIcon, createEvent, globalMixins, permission, renderEmptyElement } from '../../ui'
+import { getEventCaseName } from '../../ui/src/vn'
 import { defineVxeComponent } from '../../ui/src/comp'
 import { getEventTargetNode, updatePanelPlacement } from '../../ui/src/dom'
 import { getFuncText, getLastZIndex, nextZIndex } from '../../ui/src/utils'
@@ -282,7 +283,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
     //
     dispatchEvent (type: ValueOf<VxeButtonEmits>, params: Record<string, any>, evnt: Event | null) {
       const $xeButton = this
-      $xeButton.$emit(type, createEvent(evnt, { $button: $xeButton }, params))
+      $xeButton.$emit(getEventCaseName($xeButton, type), createEvent(evnt, { $button: $xeButton }, params))
     },
     openPanel () {
       const $xeButton = this

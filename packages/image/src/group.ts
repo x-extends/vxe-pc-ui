@@ -20,6 +20,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
     },
     imageStyle: Object as PropType<VxeImageGroupPropTypes.ImageStyle>,
     size: { type: String as PropType<VxeImageGroupPropTypes.Size>, default: () => getConfig().imageGroup.size || getConfig().size },
+    toolbarConfig: Object as PropType<VxeImageGroupPropTypes.ToolbarConfig>,
     showPrintButton: {
       type: Boolean as PropType<VxeImageGroupPropTypes.ShowPrintButton>,
       default: () => getConfig().imageGroup.showPrintButton
@@ -90,13 +91,14 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const $xeImageGroup = this
       const props = $xeImageGroup
 
-      const { showPreview, showPrintButton, showDownloadButton } = props
+      const { showPreview, toolbarConfig, showPrintButton, showDownloadButton } = props
       const { url } = params
       const imgList = $xeImageGroup.computeImgList
       if (showPreview && url) {
         openPreviewImage({
           activeIndex: Math.max(0, XEUtils.findIndexOf(imgList, item => item.url === url)),
           urlList: imgList,
+          toolbarConfig,
           showPrintButton,
           showDownloadButton
         })

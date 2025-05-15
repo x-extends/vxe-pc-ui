@@ -1,6 +1,8 @@
 import XEUtils from 'xe-utils'
 import { VxeComponentSlotType } from '@vxe-ui/core'
 
+import type { CombinedVueInstance } from 'vue/types/vue'
+
 export function getOnName (type: string) {
   return XEUtils.kebabCase(type)
 }
@@ -39,4 +41,13 @@ export function getSlotVNs (vns: VxeComponentSlotType | VxeComponentSlotType[] |
     return vns
   }
   return vns ? [vns] : []
+}
+
+export function getEventCaseName (_vm: CombinedVueInstance<any, any, any, any, any>, name: string) {
+  const caseName = XEUtils.camelCase(name)
+  if (caseName === name) {
+    return name
+  }
+  const _events = _vm ? _vm._events : null
+  return _events && _events[caseName] ? caseName : name
 }

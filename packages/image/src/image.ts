@@ -24,6 +24,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       type: Boolean as PropType<VxeImagePropTypes.MaskClosable>,
       default: () => getConfig().image.maskClosable
     },
+    toolbarConfig: Object as PropType<VxeImagePropTypes.ToolbarConfig>,
     showPreview: {
       type: Boolean as PropType<VxeImagePropTypes.ShowPreview>,
       default: () => getConfig().image.showPreview
@@ -123,7 +124,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const props = $xeImage
       const $xeImageGroup = $xeImage.$xeImageGroup
 
-      const { showPreview, showPrintButton, showDownloadButton, maskClosable } = props
+      const { showPreview, toolbarConfig, showPrintButton, showDownloadButton, maskClosable } = props
       const imgList = $xeImage.computeImgList
       const imgUrl = $xeImage.computeImgUrl
       if ($xeImageGroup) {
@@ -132,6 +133,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
         if (showPreview && imgUrl) {
           openPreviewImage({
             urlList: imgList,
+            toolbarConfig,
             showPrintButton,
             showDownloadButton,
             maskClosable

@@ -1,4 +1,5 @@
 import { DefineVxeComponentApp, DefineVxeComponentOptions, DefineVxeComponentInstance, VxeComponentEventParams, ValueOf, VxeComponentSizeType } from '@vxe-ui/core'
+import { VxeImagePreviewPropTypes } from './image-preview'
 
 /* eslint-disable @typescript-eslint/no-empty-interface,no-use-before-define,@typescript-eslint/ban-types */
 
@@ -26,6 +27,7 @@ export namespace VxeImageGroupPropTypes {
     width?: number | string
     height?: number | string
   }
+  export type ToolbarConfig = VxeImagePreviewPropTypes.ToolbarConfig
   export type ShowPrintButton = boolean
   export type ShowDownloadButton = boolean
 }
@@ -35,6 +37,7 @@ export interface VxeImageGroupProps {
   showPreview?: VxeImageGroupPropTypes.ShowPreview
   urlList?: VxeImageGroupPropTypes.UrlList
   imageStyle?: VxeImageGroupPropTypes.ImageStyle
+  toolbarConfig?: VxeImageGroupPropTypes.ToolbarConfig
   showPrintButton?: VxeImageGroupPropTypes.ShowPrintButton
   showDownloadButton?: VxeImageGroupPropTypes.ShowDownloadButton
 }
