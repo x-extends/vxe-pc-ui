@@ -504,6 +504,8 @@ export default /* define-vxe-component start */ defineVxeComponent({
             treeExpandedMaps[nodeid] = true
           }
         }, { children: transform ? mapChildrenField : childrenField })
+      } else {
+        internalData.treeExpandedMaps = {}
       }
       reactData.updateExpandedFlag++
       return $xeTree.$nextTick()
