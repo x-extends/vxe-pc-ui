@@ -586,6 +586,8 @@ export default defineComponent({
               treeExpandedMaps[nodeid] = true
             }
           }, { children: transform ? mapChildrenField : childrenField })
+        } else {
+          internalData.treeExpandedMaps = {}
         }
         reactData.updateExpandedFlag++
         return nextTick()
