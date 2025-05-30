@@ -2,7 +2,7 @@ import { PropType, CreateElement, VNode } from 'vue'
 import { defineVxeComponent } from '../../ui/src/comp'
 import XEUtils from 'xe-utils'
 import { getConfig, validators, renderer, createEvent, globalMixins } from '../../ui'
-import { getFuncText, isEnableConf } from '../../ui/src/utils'
+import { eqEmptyValue, getFuncText, isEnableConf } from '../../ui/src/utils'
 import { scrollToView } from '../../ui/src/dom'
 import { createItem, handleFieldOrItem, isHiddenItem, isActiveItem } from './util'
 import VxeTooltipComponent from '../../tooltip/src/tooltip'
@@ -122,7 +122,7 @@ function validRuleValue (rule: VxeFormDefines.FormRule, val: any, required: bool
 
 function checkRuleStatus (rule: VxeFormDefines.FormRule, val: any) {
   const { required } = rule
-  const isEmptyVal = XEUtils.eqNull(val)
+  const isEmptyVal = XEUtils.isArray(val) ? !val.length : eqEmptyValue(val)
   if (required) {
     if (isEmptyVal) {
       return false
