@@ -380,6 +380,10 @@ export namespace VxeTablePropTypes {
    */
   export interface RowGroupConfig<D = any> {
     /**
+     * 分组列展示方式
+     */
+    mode?: 'column' | 'default' | '' | null
+    /**
      * 按指定字段对数据进行分组
      */
     groupFields?: string[]
@@ -424,9 +428,25 @@ export namespace VxeTablePropTypes {
      */
     showTotal?: boolean
     /**
-     * 自定义分组的统计的方法
+     * 自定义分组统计的方法
      */
     totalMethod?:(params: {
+      $table: VxeTableConstructor<D>
+      groupField: VxeColumnPropTypes.Field
+      groupColumn: VxeTableDefines.ColumnInfo<D>
+      column: VxeTableDefines.ColumnInfo<D>
+      groupValue: any
+      totalValue: number
+      children: D[]
+    }) => number | string
+    /**
+     * 按指定需要显示合计的字段
+     */
+    countFields?: string[]
+    /**
+     * 自定义分组合计的方法
+     */
+    countMethod?:(params: {
       $table: VxeTableConstructor<D>
       groupField: VxeColumnPropTypes.Field
       groupColumn: VxeTableDefines.ColumnInfo<D>
