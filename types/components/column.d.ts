@@ -161,6 +161,11 @@ export namespace VxeColumnPropTypes {
   export type RowResize = boolean
   export type Visible = boolean
 
+  /**
+   * 指定聚合函数
+   */
+  export type AggFunc = boolean | 'sum' | 'max' | 'count' | 'avg' | 'min' | 'max' | 'first' | 'last' | '' | null
+
   interface ExportMethodParams<D = any> {
     $table: VxeTableConstructor<D>
     row: D
@@ -530,6 +535,10 @@ export interface VxeColumnProps<D = any> {
    * 是否可视
    */
   visible?: VxeColumnPropTypes.Visible
+   /**
+   * 指定聚合函数
+   */
+  aggFunc?: VxeColumnPropTypes.AggFunc
   /**
    * 自定义表尾单元格数据导出方法
    */
