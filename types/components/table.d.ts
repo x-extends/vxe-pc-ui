@@ -348,9 +348,9 @@ export namespace VxeTablePropTypes {
   export interface RowOpts<D = any> extends RowConfig<D> { }
 
   /**
-   * 行分组配置项
+   * 数据聚合配置项
    */
-  export interface RowGroupConfig<D = any> {
+  export interface AggregateConfig<D = any> {
     /**
      * 分组列展示方式
      */
@@ -412,13 +412,13 @@ export namespace VxeTablePropTypes {
       children: D[]
     }) => number | string
     /**
-     * 按指定需要显示合计的字段
+     * 显示聚合数据的方式
      */
-    countFields?: string[]
+    aggregateVisible?: 'auto' | 'fixed' | '' | null
     /**
-     * 自定义分组合计的方法
+     * 自定义列聚合数据的方法
      */
-    countMethod?:(params: {
+    aggregateMethod?:(params: {
       $table: VxeTableConstructor<D>
       groupField: VxeColumnPropTypes.Field
       groupColumn: VxeTableDefines.ColumnInfo<D>
@@ -437,7 +437,32 @@ export namespace VxeTablePropTypes {
       column: VxeTableDefines.ColumnInfo<D>
       groupValue: any
     }) => number | string
+
+    /**
+     * 请使用 aggregateFields
+     * @deprecated
+     */
+    countFields?: string[]
+    /**
+     * 请使用 aggregateMethod
+     * @deprecated
+     */
+    countMethod?:(params: {
+      $table: VxeTableConstructor<D>
+      groupField: VxeColumnPropTypes.Field
+      groupColumn: VxeTableDefines.ColumnInfo<D>
+      column: VxeTableDefines.ColumnInfo<D>
+      groupValue: any
+      totalValue: number
+      children: D[]
+    }) => number | string
   }
+
+  /**
+   * 已废弃，请使用 AggregateConfig
+   * @deprecated
+   */
+  export interface RowGroupConfig<D = any> extends AggregateConfig<D> {}
 
   /**
    * 当前行配置项
@@ -1695,6 +1720,14 @@ export namespace VxeTablePropTypes {
      */
     isPaste?: boolean
     /**
+     * 是否同时复制列头
+     */
+    isCopyHeader?: boolean
+    /**
+     * 只对 isCopyHeader 有效，是否支持分组列头
+     */
+    isColgroup?: boolean
+    /**
      * 只对 tree-config 启用有效，是否深层粘贴，用于树结构，启用后粘贴时会覆盖到子级数据进行粘贴
      */
     isDeepPaste?: boolean
@@ -2916,7 +2949,12 @@ export interface VxeTableProps<D = any> {
    */
   footerCellConfig?: VxeTablePropTypes.FooterCellConfig<D>
   /**
-   * 行分组配置项
+   * 数据聚合配置项
+   */
+  aggregateConfig?: VxeTablePropTypes.AggregateConfig<D>
+  /**
+   * 已废弃，请使用 aggregateConfig
+   * @deprecated
    */
   rowGroupConfig?: VxeTablePropTypes.RowGroupConfig<D>
   /**
@@ -3159,7 +3197,7 @@ export interface TablePrivateComputed<D = any> {
   computeHeaderCellOpts: VxeTablePropTypes.HeaderCellConfig
   computeFooterCellOpts: VxeTablePropTypes.FooterCellConfig
   computeRowOpts: VxeTablePropTypes.RowOpts
-  computeRowGroupOpts: VxeTablePropTypes.RowGroupConfig
+  computeAggregateOpts: VxeTablePropTypes.AggregateConfig
   computeCurrentRowOpts: VxeTablePropTypes.CurrentRowConfig
   computeRowDragOpts: VxeTablePropTypes.RowDragConfig
   computeColumnDragOpts: VxeTablePropTypes.ColumnDragConfig
@@ -3247,6 +3285,10 @@ export interface TablePrivateComputed<D = any> {
   }
   computeTableBorder: 'default' | 'full' | 'outer' | 'inner' | 'none'
 
+  /**
+   * @deprecated
+   */
+  computeRowGroupOpts: VxeTablePropTypes.RowGroupConfig
   /**
    * @deprecated
    */
@@ -5055,6 +5097,9 @@ export namespace VxeTableDefines {
     exportMethod: VxeColumnPropTypes.ExportMethod<D>
     headerExportMethod: VxeColumnPropTypes.HeaderExportMethod
     footerExportMethod: VxeColumnPropTypes.FooterExportMethod
+
+    aggFunc: VxeColumnPropTypes.AggFunc
+
     /**
      * 已废弃，请使用 titlePrefix
      * @deprecated
@@ -5164,6 +5209,11 @@ export namespace VxeTableDefines {
      * @private
      */
     resizeWidth: number
+    /**
+     * @private
+     */
+    renderAggFn: string
+
     /**
      * @private
      */
