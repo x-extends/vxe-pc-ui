@@ -474,6 +474,14 @@ export interface VxeColumnProps<D = any> {
    */
   footerFormatter?: VxeColumnPropTypes.FooterFormatter<D>
   /**
+   * 单元格默认高度
+   */
+  padding?: VxeColumnPropTypes.Padding
+  /**
+   * 垂直对齐方式
+   */
+  verticalAlign?: VxeColumnPropTypes.VerticalAlign
+  /**
    * 是否允许排序
    */
   sortable?: VxeColumnPropTypes.Sortable
