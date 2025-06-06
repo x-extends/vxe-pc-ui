@@ -436,7 +436,7 @@ export namespace VxeTablePropTypes {
       groupColumn: VxeTableDefines.ColumnInfo<D>
       column: VxeTableDefines.ColumnInfo<D>
       groupValue: any
-      totalValue: number
+      childCount: number
       children: D[]
     }) => number | string
     /**
@@ -452,7 +452,8 @@ export namespace VxeTablePropTypes {
       groupColumn: VxeTableDefines.ColumnInfo<D>
       column: VxeTableDefines.ColumnInfo<D>
       groupValue: any
-      totalValue: number
+      childCount: number
+      aggValue: any
       children: D[]
     }) => number | string
     /**
@@ -467,12 +468,12 @@ export namespace VxeTablePropTypes {
     }) => number | string
 
     /**
-     * 请使用 aggregateFields
+     * 已废弃，请使用 column.aggFunc
      * @deprecated
      */
     countFields?: string[]
     /**
-     * 请使用 aggregateMethod
+     * 已废弃，请使用 aggregateMethod
      * @deprecated
      */
     countMethod?:(params: {
@@ -481,7 +482,7 @@ export namespace VxeTablePropTypes {
       groupColumn: VxeTableDefines.ColumnInfo<D>
       column: VxeTableDefines.ColumnInfo<D>
       groupValue: any
-      totalValue: number
+      childCount: number
       children: D[]
     }) => number | string
   }
@@ -4420,13 +4421,23 @@ export interface TableMethods<DT = any> {
    */
   clearRowGroupExpand(): Promise<void>
   /**
-   * 用于行分组，判断是否展开
+   * 已废弃，请使用 isAggregateExpandByRow
+   * @deprecated
    */
   isRowGroupExpandByRow(row: any): boolean
   /**
-   * 用于行分组，判断是为否为分组的行数据
+   * 已废弃，请使用 isAggregateRecord
+   * @deprecated
    */
   isRowGroupRecord(row: any): boolean
+  /**
+   * 用于数据聚合，判断是否展开
+   */
+  isAggregateExpandByRow(row: any): boolean
+  /**
+   * 用于数据聚合，判断是为否为聚合的行数据
+   */
+  isAggregateRecord(row: any): boolean
   /**
    * 用于 tree-config，用于树表格，获取已展开的节点
    * 注意，即使父节点被收起，只要该节点还处于展开状态都能获取到
@@ -4655,6 +4666,10 @@ export interface TablePrivateMethods<D = any> {
    * @private
    */
   handleUpdateFooterMerge(): void
+  /**
+   * @private
+   */
+  handleAggregateSummaryData(): void
   /**
    * use handleBatchSelectRows
    * @deprecated
@@ -5026,6 +5041,19 @@ export namespace VxeTableDefines {
   export interface MergeCacheItem {
     rowspan: number
     colspan: number
+  }
+
+  export interface AggregateRowInfo {
+    isAggregate: boolean
+    aggData: Record<string, {
+      type: string
+      value: any
+    }>
+    groupContent: string
+    groupField: string
+    childCount: number
+
+    [key: string]: any
   }
 
   /**
