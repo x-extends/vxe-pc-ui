@@ -5419,19 +5419,13 @@ export namespace VxeTableDefines {
   export interface CheckboxChangeParams<D = any> extends TableBaseCellParams<D> {
     checked: boolean
     /**
-     * 已废弃，请调用方法 getCheckboxRecords() 获取
-     * @deprecated
+     * 已选数据
      */
     records: D[]
     /**
-     * 已废弃，请调用方法 getCheckboxReserveRecords() 获取
-     * @deprecated
+     * 已保留数据
      */
     reserves: D[]
-    /**
-     * 已废弃，请调用方法 getCheckboxIndeterminateRecords() 获取
-     * @deprecated
-     */
     indeterminates: D[]
   }
   export interface CheckboxChangeEventParams<D = any> extends TableEventParams<D>, CheckboxChangeParams<D> { }
@@ -5441,13 +5435,11 @@ export namespace VxeTableDefines {
 
   export interface CheckboxRangeStartParams<D = any> {
     /**
-     * 已废弃，请调用方法 getCheckboxRecords() 获取
-     * @deprecated
+     * 已选数据
      */
     records: D[]
     /**
-     * 已废弃，请调用方法 getCheckboxReserveRecords() 获取
-     * @deprecated
+     * 已保留数据
      */
     reserves: D[]
   }
