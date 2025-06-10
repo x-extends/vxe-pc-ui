@@ -155,8 +155,11 @@ function handlePrint (opts: VxePrintProps & { _pageBreaks: boolean }, printHtml 
       removeFrame()
       printFrame = createPrintFrame()
       appendPrintFrame()
-      printFrame.contentDocument.write(printHtml)
-      printFrame.contentDocument.execCommand('print')
+      const contentDocument = printFrame.contentDocument
+      if (contentDocument) {
+        contentDocument.write(printHtml)
+        contentDocument.execCommand('print')
+      }
       setTimeout(() => {
         resolve({
           status: true
@@ -166,9 +169,15 @@ function handlePrint (opts: VxePrintProps & { _pageBreaks: boolean }, printHtml 
       if (!printFrame) {
         printFrame = createPrintFrame()
         printFrame.onload = (evnt: any) => {
-          if (evnt.target.src) {
-            evnt.target.contentWindow.onafterprint = afterPrintEvent
-            evnt.target.contentWindow.print()
+          const frameEl = evnt.target
+          if (frameEl.src) {
+            try {
+              const contentWindow = frameEl.contentWindow
+              if (contentWindow) {
+                contentWindow.onafterprint = afterPrintEvent
+                contentWindow.print()
+              }
+            } catch (e) {}
           }
           resolve({
             status: true
