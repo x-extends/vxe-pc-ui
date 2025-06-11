@@ -1,7 +1,7 @@
 import { defineComponent, h, Teleport, ref, Ref, inject, computed, reactive, provide, nextTick, watch, PropType, VNode, onMounted, onUnmounted } from 'vue'
 import XEUtils from 'xe-utils'
 import { getDomNode, getEventTargetNode, toCssUnit } from '../../ui/src/dom'
-import { getLastZIndex, nextZIndex, getFuncText, handleBooleanDefaultValue } from '../../ui/src/utils'
+import { getLastZIndex, nextZIndex, getSubLastZIndex, nextSubZIndex, getFuncText, handleBooleanDefaultValue } from '../../ui/src/utils'
 import { VxeUI, getConfig, getIcon, getI18n, globalEvents, GLOBAL_EVENT_KEYS, createEvent, useSize, renderEmptyElement } from '../../ui'
 import VxeButtonComponent from '../../button/src/button'
 import VxeLoadingComponent from '../../loading/index'
@@ -301,8 +301,17 @@ export default defineComponent({
       const { modalZindex } = reactData
       if (zIndex) {
         reactData.modalZindex = zIndex
-      } else if (modalZindex < getLastZIndex()) {
-        reactData.modalZindex = nextZIndex()
+      } else {
+        const isMsg = computeIsMsg.value
+        if (isMsg) {
+          if (modalZindex < getSubLastZIndex()) {
+            reactData.modalZindex = nextSubZIndex()
+          }
+        } else {
+          if (modalZindex < getLastZIndex()) {
+            reactData.modalZindex = nextZIndex()
+          }
+        }
       }
     }
 

@@ -14,6 +14,14 @@ export function getLastZIndex () {
   return DomZIndex.getCurrent()
 }
 
+export function nextSubZIndex () {
+  return DomZIndex.getSubNext()
+}
+
+export function getSubLastZIndex () {
+  return DomZIndex.getSubCurrent()
+}
+
 export function getGlobalDefaultConfig (value: any, globalValue: any) {
   if (XEUtils.eqNull(value)) {
     return globalValue
