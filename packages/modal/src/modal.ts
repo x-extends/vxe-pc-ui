@@ -3,7 +3,7 @@ import { defineVxeComponent } from '../../ui/src/comp'
 import XEUtils from 'xe-utils'
 import { VxeUI, getConfig, getI18n, getIcon, createEvent, globalEvents, globalMixins, renderEmptyElement, GLOBAL_EVENT_KEYS } from '../../ui'
 import { getDomNode, getEventTargetNode, toCssUnit } from '../../ui/src/dom'
-import { getLastZIndex, nextZIndex, getFuncText, handleBooleanDefaultValue } from '../../ui/src/utils'
+import { getLastZIndex, nextZIndex, getSubLastZIndex, nextSubZIndex, getFuncText, handleBooleanDefaultValue } from '../../ui/src/utils'
 import VxeButtonComponent from '../../button/src/button'
 import VxeLoadingComponent from '../../loading/index'
 import { getSlotVNs } from '../../ui/src/vn'
@@ -459,8 +459,17 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const { modalZindex } = reactData
       if (zIndex) {
         reactData.modalZindex = zIndex
-      } else if (modalZindex < getLastZIndex()) {
-        reactData.modalZindex = nextZIndex()
+      } else {
+        const isMsg = $xeModal.computeIsMsg
+        if (isMsg) {
+          if (modalZindex < getSubLastZIndex()) {
+            reactData.modalZindex = nextSubZIndex()
+          }
+        } else {
+          if (modalZindex < getLastZIndex()) {
+            reactData.modalZindex = nextZIndex()
+          }
+        }
       }
     },
     updatePosition  () {
