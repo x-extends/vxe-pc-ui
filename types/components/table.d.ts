@@ -1577,6 +1577,10 @@ export namespace VxeTablePropTypes {
    */
   export interface KeyboardConfig<D = any> {
     /**
+     * 是否启用全选
+     */
+    isAll?: boolean
+    /**
      * 是否开启非编辑状态下，上下左右移动功能
      */
     isArrow?: boolean
