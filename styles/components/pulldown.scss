@@ -14,6 +14,9 @@
 }
 .vxe-pulldown--panel-wrapper {
   background-color: var(--vxe-ui-layout-background-color);
+  &.is--shadow {
+    box-shadow: var(--vxe-ui-base-popup-box-shadow);
+  }
 }
 .vxe-pulldown--panel-list {
   .vxe-pulldown--panel-item {

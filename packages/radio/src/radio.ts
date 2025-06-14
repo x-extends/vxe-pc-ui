@@ -173,7 +173,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
 
       return h('label', {
         key: label,
-        class: ['vxe-radio', {
+        class: ['vxe-radio vxe-radio--default', {
           [`size--${vSize}`]: vSize,
           'is--checked': isChecked,
           'is--disabled': isDisabled

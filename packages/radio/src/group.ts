@@ -146,6 +146,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const slots = $xeRadioGroup.$scopedSlots
 
       const { options, type } = props
+      const vSize = $xeRadioGroup.computeSize
       const defaultSlot = slots.default
       const valueField = $xeRadioGroup.computeValueField as 'value'
       const labelField = $xeRadioGroup.computeLabelField as 'label'
@@ -153,7 +154,9 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const btnComp = type === 'button' ? VxeRadioButtonComponent : VxeRadioComponent
 
       return h('div', {
-        class: 'vxe-radio-group'
+        class: ['vxe-radio-group', {
+          [`size--${vSize}`]: vSize
+        }]
       }, defaultSlot
         ? defaultSlot({})
         : (options
