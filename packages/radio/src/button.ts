@@ -127,7 +127,7 @@ export default defineComponent({
 
       return h('label', {
         key: label,
-        class: ['vxe-radio', 'vxe-radio-button', {
+        class: ['vxe-radio vxe-radio--button', {
           [`size--${vSize}`]: vSize,
           'is--disabled': isDisabled
         }],

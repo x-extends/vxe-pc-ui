@@ -349,7 +349,6 @@ export default defineComponent({
             ref: refPulldownPanel,
             class: ['vxe-table--ignore-clear vxe-pulldown--panel', popupClassName ? (XEUtils.isFunction(popupClassName) ? popupClassName({ $pulldown: $xePulldown }) : popupClassName) : '', {
               [`size--${vSize}`]: vSize,
-              'is--shadow': showPopupShadow,
               'is--transfer': btnTransfer,
               'ani--leave': isAniVisible,
               'ani--enter': visiblePanel
@@ -358,7 +357,9 @@ export default defineComponent({
             style: panelStyle
           }, [
             h('div', {
-              class: 'vxe-pulldown--panel-wrapper'
+              class: ['vxe-pulldown--panel-wrapper', {
+                'is--shadow': showPopupShadow
+              }]
             }, initialized && (destroyOnClose ? (visiblePanel || isAniVisible) : true)
               ? [
                   headerSlot

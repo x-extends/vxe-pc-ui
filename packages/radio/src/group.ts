@@ -38,7 +38,7 @@ export default defineComponent({
 
     const xID = XEUtils.uniqueId()
 
-    useSize(props)
+    const { computeSize } = useSize(props)
 
     const reactData = reactive<RadioGroupReactData>({
     })
@@ -111,6 +111,7 @@ export default defineComponent({
 
     const renderVN = () => {
       const { options, type } = props
+      const vSize = computeSize.value
       const defaultSlot = slots.default
       const valueField = computeValueField.value as 'value'
       const labelField = computeLabelField.value as 'label'
@@ -118,7 +119,9 @@ export default defineComponent({
       const btnComp = type === 'button' ? VxeRadioButtonComponent : VxeRadioComponent
 
       return h('div', {
-        class: 'vxe-radio-group'
+        class: ['vxe-radio-group', {
+          [`size--${vSize}`]: vSize
+        }]
       }, defaultSlot
         ? defaultSlot({})
         : (options

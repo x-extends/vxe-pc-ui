@@ -22,9 +22,6 @@
   white-space: nowrap;
   line-height: 1;
   @include baseMixin.createCheckboxIcon();
-  &+.vxe-checkbox {
-    margin-left: 10px;
-  }
   > input {
     &[type="checkbox"] {
       position: absolute;
@@ -95,5 +92,21 @@
   }
   &.size--mini {
     font-size: var(--vxe-ui-font-size-mini);
+  }
+}
+
+.vxe-checkbox {
+  margin-right: var(--vxe-ui-base-margin-gap-default);
+  &.size--medium {
+    margin-right: var(--vxe-ui-base-margin-gap-medium);
+  }
+  &.size--small {
+    margin-right: var(--vxe-ui-base-margin-gap-small);
+  }
+  &.size--mini {
+    margin-right: var(--vxe-ui-base-margin-gap-mini);
+  }
+  &:last-of-type {
+    margin-right: 0;
   }
 }

@@ -6,9 +6,6 @@
   vertical-align: middle;
   line-height: 1;
   font-size: 0;
-  &+.vxe-radio-group {
-    margin-left: 10px;
-  }
 }
 
 .vxe-radio--readonly {
@@ -47,14 +44,9 @@
       }
     }
   }
-  &:not(.vxe-radio-button) {
-    &+.vxe-radio {
-      margin-left: 10px;
-    }
-  }
 }
 
-.vxe-radio-button {
+.vxe-radio--button {
   .vxe-radio--label {
     background-color: var(--vxe-ui-layout-background-color);
   }
@@ -150,5 +142,25 @@
   }
   &.size--mini {
     font-size: var(--vxe-ui-font-size-mini);
+  }
+  &:last-of-type {
+    margin-right: 0;
+  }
+}
+
+.vxe-radio--default,
+.vxe-radio-group {
+  margin-right: var(--vxe-ui-base-margin-gap-default);
+  &.size--medium {
+    margin-right: var(--vxe-ui-base-margin-gap-medium);
+  }
+  &.size--small {
+    margin-right: var(--vxe-ui-base-margin-gap-small);
+  }
+  &.size--mini {
+    margin-right: var(--vxe-ui-base-margin-gap-mini);
+  }
+  &:last-of-type {
+    margin-right: 0;
   }
 }
