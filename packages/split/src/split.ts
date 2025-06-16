@@ -55,6 +55,8 @@ export default defineComponent({
     })
 
     const internalData: SplitInternalData = {
+      wrapperWidth: 0,
+      wrapperHeight: 0
     }
 
     const computeItemOpts = computed(() => {
@@ -80,7 +82,33 @@ export default defineComponent({
 
     const computeAutoItems = computed(() => {
       const { vertical } = props
-      return reactData.itemList.filter(item => vertical ? !item.height : !item.width)
+      const autoItems: VxeSplitDefines.PaneConfig[] = []
+      let heightCount = 0
+      let widthCount = 0
+      reactData.itemList.forEach(vertical
+        ? item => {
+          const { renderHeight, resizeHeight, foldHeight, isVisible, height } = item
+          const itemHeight = isVisible ? (foldHeight || resizeHeight || renderHeight) : 0
+          if (!height) {
+            autoItems.push(item)
+          }
+          heightCount += itemHeight
+        }
+        : item => {
+          const { renderWidth, resizeWidth, foldWidth, isVisible, width } = item
+          const itemWidth = isVisible ? (foldWidth || resizeWidth || renderWidth) : 0
+          if (!width) {
+            autoItems.push(item)
+          }
+          widthCount += itemWidth
+        })
+      return {
+        autoItems,
+        heightCount,
+        heightRatio: heightCount / 100,
+        widthCount,
+        widthRatio: widthCount / 100
+      }
     })
 
     const computeBarStyle = computed(() => {
@@ -225,9 +253,9 @@ export default defineComponent({
         if (!el) {
           return
         }
-        const wrapperWidth = el.clientWidth
-        const wrapperHeight = el.clientHeight
-        if (!wrapperWidth || !wrapperHeight) {
+        const wWidth = el.clientWidth
+        const wHeight = el.clientHeight
+        if (!wWidth || !wHeight) {
           return
         }
         const itemOpts = computeItemOpts.value
@@ -241,7 +269,7 @@ export default defineComponent({
             let itemHeight = 0
             if (height) {
               if (isScale(height)) {
-                itemHeight = wrapperHeight * XEUtils.toNumber(height)
+                itemHeight = wHeight * XEUtils.toNumber(height) / 100
               } else {
                 itemHeight = XEUtils.toNumber(height)
               }
@@ -252,7 +280,7 @@ export default defineComponent({
             countHeight += itemHeight
           })
           if (residueItems.length) {
-            const reMeanHeight = (wrapperHeight - countHeight) / residueItems.length
+            const reMeanHeight = (wHeight - countHeight) / residueItems.length
             residueItems.forEach(item => {
               item.renderHeight = Math.max(XEUtils.toNumber(getGlobalDefaultConfig(item.minHeight, allMinHeight)), reMeanHeight)
             })
@@ -264,7 +292,7 @@ export default defineComponent({
             let itemWidth = 0
             if (width) {
               if (isScale(width)) {
-                itemWidth = wrapperWidth * XEUtils.toNumber(width)
+                itemWidth = wWidth * XEUtils.toNumber(width) / 100
               } else {
                 itemWidth = XEUtils.toNumber(width)
               }
@@ -275,12 +303,14 @@ export default defineComponent({
             countWidth += itemWidth
           })
           if (residueItems.length) {
-            const reMeanWidth = (wrapperWidth - countWidth) / residueItems.length
+            const reMeanWidth = (wWidth - countWidth) / residueItems.length
             residueItems.forEach(item => {
               item.renderWidth = Math.max(XEUtils.toNumber(getGlobalDefaultConfig(item.minWidth, allMinWidth)), reMeanWidth)
             })
           }
         }
+        internalData.wrapperWidth = wWidth
+        internalData.wrapperHeight = wHeight
       })
     }
 
@@ -500,7 +530,7 @@ export default defineComponent({
       const { border, padding, resize, vertical } = props
       const { itemList } = reactData
       const visibleItems = computeVisibleItems.value
-      const autoItems = computeAutoItems.value
+      const { autoItems } = computeAutoItems.value
       const isFoldNext = computeIsFoldNext.value
       const itemVNs: VNode[] = []
       itemList.forEach((item, index) => {
