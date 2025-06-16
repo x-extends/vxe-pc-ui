@@ -45,6 +45,8 @@ export default /* define-vxe-component start */ defineVxeComponent({
       itemList: []
     }
     const internalData: SplitInternalData = {
+      wrapperWidth: 0,
+      wrapperHeight: 0
     }
     return {
       xID,
@@ -99,7 +101,21 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const reactData = ($xeSplit as any).reactData as SplitReactData
 
       const { vertical } = props
-      return reactData.itemList.filter(item => vertical ? !item.height : !item.width)
+      const autoItems: VxeSplitDefines.PaneConfig[] = []
+      reactData.itemList.forEach(vertical
+        ? item => {
+          if (!item.height) {
+            autoItems.push(item)
+          }
+        }
+        : item => {
+          if (!item.width) {
+            autoItems.push(item)
+          }
+        })
+      return {
+        autoItems
+      }
     },
     computeBarStyle () {
       const $xeSplit = this
@@ -226,6 +242,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const $xeSplit = this
       const props = $xeSplit
       const reactData = $xeSplit.reactData
+      const internalData = $xeSplit.internalData
 
       return $xeSplit.$nextTick().then(() => {
         const { vertical } = props
@@ -234,9 +251,9 @@ export default /* define-vxe-component start */ defineVxeComponent({
         if (!el) {
           return
         }
-        const wrapperWidth = el.clientWidth
-        const wrapperHeight = el.clientHeight
-        if (!wrapperWidth || !wrapperHeight) {
+        const wWidth = el.clientWidth
+        const wHeight = el.clientHeight
+        if (!wWidth || !wHeight) {
           return
         }
         const itemOpts = $xeSplit.computeItemOpts
@@ -250,7 +267,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
             let itemHeight = 0
             if (height) {
               if (isScale(height)) {
-                itemHeight = wrapperHeight * XEUtils.toNumber(height)
+                itemHeight = wHeight * XEUtils.toNumber(height) / 100
               } else {
                 itemHeight = XEUtils.toNumber(height)
               }
@@ -261,7 +278,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
             countHeight += itemHeight
           })
           if (residueItems.length) {
-            const reMeanHeight = (wrapperHeight - countHeight) / residueItems.length
+            const reMeanHeight = (wHeight - countHeight) / residueItems.length
             residueItems.forEach(item => {
               item.renderHeight = Math.max(XEUtils.toNumber(getGlobalDefaultConfig(item.minHeight, allMinHeight)), reMeanHeight)
             })
@@ -273,7 +290,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
             let itemWidth = 0
             if (width) {
               if (isScale(width)) {
-                itemWidth = wrapperWidth * XEUtils.toNumber(width)
+                itemWidth = wWidth * XEUtils.toNumber(width) / 100
               } else {
                 itemWidth = XEUtils.toNumber(width)
               }
@@ -284,12 +301,14 @@ export default /* define-vxe-component start */ defineVxeComponent({
             countWidth += itemWidth
           })
           if (residueItems.length) {
-            const reMeanWidth = (wrapperWidth - countWidth) / residueItems.length
+            const reMeanWidth = (wWidth - countWidth) / residueItems.length
             residueItems.forEach(item => {
               item.renderWidth = Math.max(XEUtils.toNumber(getGlobalDefaultConfig(item.minWidth, allMinWidth)), reMeanWidth)
             })
           }
         }
+        internalData.wrapperWidth = wWidth
+        internalData.wrapperHeight = wHeight
       })
     },
     dragEvent (evnt: MouseEvent) {
@@ -559,7 +578,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const { border, padding, resize, vertical } = props
       const { itemList } = reactData
       const visibleItems = $xeSplit.computeVisibleItems
-      const autoItems = $xeSplit.computeAutoItems
+      const { autoItems } = $xeSplit.computeAutoItems
       const isFoldNext = $xeSplit.computeIsFoldNext
       const itemVNs: VNode[] = []
       itemList.forEach((item, index) => {

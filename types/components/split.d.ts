@@ -114,6 +114,8 @@ export interface SplitReactData {
 }
 
 export interface SplitInternalData {
+  wrapperWidth: number
+  wrapperHeight: number
 }
 
 export interface SplitMethods {
