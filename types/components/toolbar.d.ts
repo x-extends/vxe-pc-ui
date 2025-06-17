@@ -18,7 +18,6 @@ export type VxeToolbarConstructor = VxeToolbarInstance
 export interface ToolbarPrivateRef {
 }
 export interface VxeToolbarPrivateRef extends ToolbarPrivateRef { }
-
 export namespace VxeToolbarPropTypes {
   export type Size = VxeComponentSizeType
   export type Id = string
@@ -30,7 +29,7 @@ export namespace VxeToolbarPropTypes {
   export type Resizable = boolean | ResizableConfig
   export interface ResizableOpts extends ResizableConfig { }
 
-  interface RefreshConfig {
+  interface RefreshOptions {
     queryMethod?(params: { [key: string]: any }): any
     code?: 'query' | 'reload' | '' | null
     icon?: string
@@ -40,35 +39,30 @@ export namespace VxeToolbarPropTypes {
      */
     query?(params: { [key: string]: any }): Promise<any>
   }
-  export type Refresh = boolean | RefreshConfig
-  export interface RefreshOpts extends RefreshConfig { }
+  export type Refresh = boolean | RefreshOptions
 
-  interface ImportConfig {
+  interface ImportOptions {
     icon?: string
   }
-  export type Import = boolean | ImportConfig
-  export interface ImportOpts extends ImportConfig { }
+  export type Import = boolean | ImportOptions
 
-  interface ExportConfig {
+  interface ExportOptions {
     icon?: string
   }
-  export type Export = boolean | ExportConfig
-  export interface ExportOpts extends ExportConfig { }
+  export type Export = boolean | ExportOptions
 
-  export interface PrintConfig {
+  export interface PrintOptions {
     icon?: string
   }
-  export type Print = boolean | PrintConfig
-  export interface PrintOpts extends PrintConfig { }
+  export type Print = boolean | PrintOptions
 
-  interface ZoomConfig {
+  interface ZoomOptions {
     iconIn?: string
     iconOut?: string
   }
-  export type Zoom = boolean | ZoomConfig
-  export interface ZoomOpts extends ZoomConfig { }
+  export type Zoom = boolean | ZoomOptions
 
-  interface CustomConfig {
+  interface CustomOptions {
     icon?: string
 
     /**
@@ -117,8 +111,7 @@ export namespace VxeToolbarPropTypes {
      */
     isFooter?: boolean
   }
-  export type Custom = boolean | CustomConfig
-  export interface CustomOpts extends CustomConfig { }
+  export type Custom = boolean | CustomOptions
 
   interface ButtonAndToolConfig extends VxeButtonProps {
     code?: string
@@ -181,7 +174,7 @@ export namespace VxeToolbarPropTypes {
   }) => string)
 }
 
-export interface VxeToolbarProps {
+export type VxeToolbarProps = {
   size?: VxeToolbarPropTypes.Size
   /**
    * 唯一 ID 标识
@@ -199,20 +192,32 @@ export interface VxeToolbarProps {
    * 刷新按钮配置
    */
   refresh?: VxeToolbarPropTypes.Refresh
+  refreshOptions?: VxeToolbarPropTypes.RefreshOptions
   /**
    * 导入按钮配置
    */
   import?: VxeToolbarPropTypes.Import
+  importOptions?: VxeToolbarPropTypes.ImportOptions
   /**
    * 导出按钮配置
    */
   export?: VxeToolbarPropTypes.Export
+  exportOptions?: VxeToolbarPropTypes.ExportOptions
+  /**
+   * 打印按钮配置项
+   */
   print?: VxeToolbarPropTypes.Print
+  printOptions?: VxeToolbarPropTypes.PrintOptions
+  /**
+   * 最大化按钮配置项
+   */
   zoom?: VxeToolbarPropTypes.Zoom
+  zoomOptions?: VxeToolbarPropTypes.ZoomOptions
   /**
    * 自定义列配置
    */
   custom?: VxeToolbarPropTypes.Custom
+  customOptions?: VxeToolbarPropTypes.CustomOptions
   /**
    * 按钮列表
    */

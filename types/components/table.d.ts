@@ -1790,6 +1790,16 @@ export namespace VxeTablePropTypes {
      */
     excludeFields?: string[]
     /**
+     * 重写表头单元格复制取值的方法，将表头单元格复制到剪贴板
+     */
+    copyHeaderMethod?(params: {
+      $table: VxeTableConstructor<DT> & VxeTablePrivateMethods<DT>
+      $grid: VxeGridConstructor<DT> | null | undefined
+      isCut: boolean
+      column: VxeTableDefines.ColumnInfo<DT>
+      title: string
+    }): string
+    /**
      * 重写单元格复制取值的方法，将单元格复制到剪贴板
      */
     copyMethod?(params: {
