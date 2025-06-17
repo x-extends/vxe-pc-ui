@@ -1,4 +1,5 @@
-import { defineComponent, ref, h, reactive, computed, provide, PropType } from 'vue'
+import { ref, h, reactive, computed, provide, PropType } from 'vue'
+import { defineVxeComponent } from '../../ui/src/comp'
 import { toCssUnit } from '../../ui/src/dom'
 import { getConfig, useSize, createEvent } from '../../ui'
 import VxeLoadingComponent from '../../loading/src/loading'
@@ -6,7 +7,7 @@ import XEUtils from 'xe-utils'
 
 import type { VxeLayoutAsidePropTypes, LayoutAsideReactData, VxeLayoutAsideEmits, LayoutAsidePrivateRef, LayoutAsideMethods, LayoutAsidePrivateMethods, VxeLayoutAsidePrivateComputed, VxeLayoutAsideConstructor, VxeLayoutAsidePrivateMethods, ValueOf } from '../../../types'
 
-export default defineComponent({
+export default defineVxeComponent({
   name: 'VxeLayoutAside',
   props: {
     width: [String, Number] as PropType<VxeLayoutAsidePropTypes.Width>,

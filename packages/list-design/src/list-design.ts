@@ -1,4 +1,5 @@
-import { defineComponent, ref, h, PropType, reactive, nextTick, provide, watch } from 'vue'
+import { ref, h, PropType, reactive, nextTick, provide, watch } from 'vue'
+import { defineVxeComponent } from '../../ui/src/comp'
 import XEUtils from 'xe-utils'
 import { toCssUnit } from '../../ui/src/dom'
 import { getConfig, createEvent, renderer, useSize } from '../../ui'
@@ -9,7 +10,7 @@ import LayoutSettingComponent from './layout-setting'
 
 import type { VxeListDesignDefines, VxeListDesignPropTypes, ListDesignReactData, ListDesignPrivateRef, VxeListDesignPrivateComputed, VxeListDesignConstructor, VxeListDesignPrivateMethods, ListDesignMethods, ListDesignPrivateMethods, VxeFormDesignDefines, VxeGlobalRendererHandles } from '../../../types'
 
-export default defineComponent({
+export default defineVxeComponent({
   name: 'VxeListDesign',
   props: {
     size: {

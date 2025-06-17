@@ -1,4 +1,5 @@
-import { PropType, defineComponent, h, ref, computed, inject } from 'vue'
+import { PropType, h, ref, computed, inject } from 'vue'
+import { defineVxeComponent } from '../../ui/src/comp'
 import { getI18n } from '@vxe-ui/core'
 import { useWidgetName } from '../../form-design/src/use'
 import { WidgetRowFormObjVO } from './row-data'
@@ -10,7 +11,7 @@ import XEUtils from 'xe-utils'
 
 import type { VxeGlobalRendererHandles, VxeFormDesignConstructor, VxeFormDesignPrivateMethods } from '../../../types'
 
-export const WidgetRowFormComponent = defineComponent({
+export const WidgetRowFormComponent = defineVxeComponent({
   props: {
     renderOpts: {
       type: Object as PropType<VxeGlobalRendererHandles.RenderFormDesignWidgetFormViewOptions>,

@@ -1,11 +1,12 @@
-import { defineComponent, ref, h, computed, PropType, reactive } from 'vue'
+import { ref, h, computed, PropType, reactive } from 'vue'
+import { defineVxeComponent } from '../../ui/src/comp'
 import XEUtils from 'xe-utils'
 import { getConfig, createEvent, useSize, renderEmptyElement } from '../../ui'
 import { toCssUnit } from '../../ui/src/dom'
 
 import type { AvatarReactData, VxeAvatarEmits, AvatarMethods, VxeAvatarPropTypes, VxeComponentStyleType, AvatarPrivateMethods, ValueOf, AvatarPrivateRef, VxeAvatarPrivateComputed, VxeAvatarConstructor, VxeAvatarPrivateMethods } from '../../../types'
 
-export default defineComponent({
+export default defineVxeComponent({
   name: 'VxeAvatar',
   props: {
     count: [String, Number] as PropType<VxeAvatarPropTypes.Count>,

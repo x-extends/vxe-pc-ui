@@ -1,11 +1,12 @@
-import { defineComponent, h, provide, PropType, ref, reactive, computed, watch, onMounted, onUnmounted, onBeforeUnmount } from 'vue'
+import { h, provide, PropType, ref, reactive, computed, watch, onMounted, onUnmounted, onBeforeUnmount } from 'vue'
+import { defineVxeComponent } from '../../ui/src/comp'
 import { VxeUI, getConfig, createEvent, getIcon, globalEvents, GLOBAL_EVENT_KEYS, getI18n, renderEmptyElement } from '../../ui'
 import XEUtils from 'xe-utils'
 import { getDomNode, addClass, removeClass, hasControlKey } from '../../ui/src/dom'
 
 import type { VxeImagePreviewConstructor, ImagePreviewReactData, ImagePreviewPrivateRef, VxeGlobalIcon, VxeImagePreviewEmits, VxeImagePreviewPrivateMethods, ImagePreviewPrivateMethods, ImagePreviewPrivateComputed, ImagePreviewMethods, VxeImagePreviewPropTypes, ValueOf, VxeImagePreviewDefines } from '../../../types'
 
-export default defineComponent({
+export default defineVxeComponent({
   name: 'VxeImagePreview',
   props: {
     modelValue: Number as PropType<VxeImagePreviewPropTypes.ModelValue>,

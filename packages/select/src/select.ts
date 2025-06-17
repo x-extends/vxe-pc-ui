@@ -1,4 +1,5 @@
-import { defineComponent, h, Teleport, PropType, ref, Ref, inject, computed, provide, onUnmounted, reactive, nextTick, watch, onMounted } from 'vue'
+import { h, Teleport, PropType, ref, Ref, inject, computed, provide, onUnmounted, reactive, nextTick, watch, onMounted } from 'vue'
+import { defineVxeComponent } from '../../ui/src/comp'
 import XEUtils from 'xe-utils'
 import { getConfig, getIcon, getI18n, globalEvents, GLOBAL_EVENT_KEYS, createEvent, useSize, renderEmptyElement } from '../../ui'
 import { getEventTargetNode, updatePanelPlacement } from '../../ui/src/dom'
@@ -17,7 +18,7 @@ function getOptUniqueId () {
   return XEUtils.uniqueId('opt_')
 }
 
-export default defineComponent({
+export default defineVxeComponent({
   name: 'VxeSelect',
   props: {
     modelValue: [String, Number, Boolean, Array] as PropType<VxeSelectPropTypes.ModelValue>,

@@ -1,4 +1,5 @@
-import { defineComponent, h, ref, Ref, computed, reactive, inject, nextTick, watch, onMounted, onBeforeUnmount, PropType } from 'vue'
+import { h, ref, Ref, computed, reactive, inject, nextTick, watch, onMounted, onBeforeUnmount, PropType } from 'vue'
+import { defineVxeComponent } from '../../ui/src/comp'
 import XEUtils from 'xe-utils'
 import { getConfig, getIcon, getI18n, globalEvents, GLOBAL_EVENT_KEYS, createEvent, useSize, renderEmptyElement } from '../../ui'
 import { getFuncText, eqEmptyValue, isEnableConf } from '../../ui/src/utils'
@@ -8,7 +9,7 @@ import { handleNumber, toFloatValueFixed } from './util'
 
 import type { VxeNumberInputConstructor, NumberInputInternalData, VxeNumberInputEmits, VxeNumberInputPrivateComputed, NumberInputReactData, NumberInputMethods, VxeNumberInputPropTypes, InputPrivateRef, VxeFormConstructor, VxeFormPrivateMethods, VxeFormDefines, ValueOf } from '../../../types'
 
-export default defineComponent({
+export default defineVxeComponent({
   name: 'VxeNumberInput',
   props: {
     modelValue: [String, Number] as PropType<VxeNumberInputPropTypes.ModelValue>,

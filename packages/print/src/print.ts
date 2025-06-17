@@ -1,4 +1,5 @@
-import { defineComponent, ref, h, reactive, PropType, provide } from 'vue'
+import { ref, h, reactive, PropType, provide } from 'vue'
+import { defineVxeComponent } from '../../ui/src/comp'
 import XEUtils from 'xe-utils'
 import { getConfig, createEvent, renderEmptyElement } from '../../ui'
 import { printHtml, trimHtml } from './util'
@@ -6,7 +7,7 @@ import { getSlotVNs } from '../../ui/src/vn'
 
 import type { VxePrintPropTypes, PrintReactData, PrintPrivateRef, VxePrintEmits, PrintPrivateMethods, ValueOf, VxePrintPrivateComputed, VxePrintConstructor, VxePrintPrivateMethods, PrintMethods } from '../../../types'
 
-export default defineComponent({
+export default defineVxeComponent({
   name: 'VxePrint',
   props: {
     align: {

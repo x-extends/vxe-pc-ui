@@ -1,11 +1,12 @@
-import { defineComponent, h, ref, Ref, computed, reactive, nextTick, PropType, inject } from 'vue'
+import { h, ref, Ref, computed, reactive, nextTick, PropType, inject } from 'vue'
+import { defineVxeComponent } from '../../ui/src/comp'
 import XEUtils from 'xe-utils'
 import { getConfig, createEvent, useSize, renderEmptyElement } from '../../ui'
 import { getFuncText } from '../../ui/src/utils'
 
 import type { VxeSwitchPropTypes, VxeSwitchConstructor, VxeSwitchEmits, SwitchInternalData, ValueOf, SwitchReactData, SwitchMethods, VxeFormConstructor, VxeFormPrivateMethods, VxeFormDefines } from '../../../types'
 
-export default defineComponent({
+export default defineVxeComponent({
   name: 'VxeSwitch',
   props: {
     modelValue: [String, Number, Boolean] as PropType<VxeSwitchPropTypes.ModelValue>,

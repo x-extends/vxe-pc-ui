@@ -1,10 +1,11 @@
-import { defineComponent, ref, h, reactive, PropType } from 'vue'
+import { ref, h, reactive, PropType } from 'vue'
+import { defineVxeComponent } from '../../ui/src/comp'
 import { createEvent } from '../../ui'
 import XEUtils from 'xe-utils'
 
 import type { VxeLayoutFooterPropTypes, LayoutFooterReactData, LayoutFooterPrivateMethods, LayoutFooterMethods, VxeLayoutFooterEmits, LayoutFooterPrivateRef, VxeLayoutFooterPrivateComputed, VxeLayoutFooterConstructor, ValueOf, VxeLayoutFooterPrivateMethods } from '../../../types'
 
-export default defineComponent({
+export default defineVxeComponent({
   name: 'VxeLayoutFooter',
   props: {
     fixed: Boolean as PropType<VxeLayoutFooterPropTypes.Fixed>,

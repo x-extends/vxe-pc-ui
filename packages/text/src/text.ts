@@ -1,11 +1,12 @@
-import { defineComponent, ref, h, reactive, PropType, createCommentVNode } from 'vue'
+import { ref, h, reactive, PropType, createCommentVNode } from 'vue'
+import { defineVxeComponent } from '../../ui/src/comp'
 import XEUtils from 'xe-utils'
 import { VxeUI, getConfig, getIcon, getI18n, useSize, createEvent } from '../../ui'
 import { getSlotVNs } from '../../ui/src/vn'
 
 import type { VxeTextPropTypes, TextReactData, TextPrivateRef, VxeTextPrivateComputed, TextMethods, TextPrivateMethods, VxeTextEmits, VxeTextConstructor, ValueOf, VxeTextPrivateMethods } from '../../../types'
 
-export default defineComponent({
+export default defineVxeComponent({
   name: 'VxeText',
   props: {
     status: String as PropType<VxeTextPropTypes.Status>,

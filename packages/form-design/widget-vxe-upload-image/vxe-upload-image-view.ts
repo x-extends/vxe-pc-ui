@@ -1,4 +1,5 @@
-import { PropType, defineComponent, h, inject } from 'vue'
+import { PropType, h, inject } from 'vue'
+import { defineVxeComponent } from '../../ui/src/comp'
 import { WidgetVxeUploadImageFormObjVO } from './vxe-upload-image-data'
 import { useWidgetName } from '../../form-design/src/use'
 import VxeFormItemComponent from '../../form/src/form-item'
@@ -6,7 +7,7 @@ import VxeUploadComponent from '../../upload/src/upload'
 
 import type { VxeGlobalRendererHandles, VxeFormViewConstructor, VxeFormViewPrivateMethods } from '../../../types'
 
-export const WidgetVxeUploadImageViewComponent = defineComponent({
+export const WidgetVxeUploadImageViewComponent = defineVxeComponent({
   props: {
     renderOpts: {
       type: Object as PropType<VxeGlobalRendererHandles.RenderFormDesignWidgetViewOptions>,

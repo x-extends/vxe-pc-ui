@@ -1,4 +1,5 @@
-import { PropType, defineComponent, h, inject } from 'vue'
+import { PropType, h, inject } from 'vue'
+import { defineVxeComponent } from '../../ui/src/comp'
 import { WidgetVxeDatePickerFormObjVO } from './vxe-date-picker-data'
 import { useWidgetName } from '../../form-design/src/use'
 import VxeFormItemComponent from '../../form/src/form-item'
@@ -6,7 +7,7 @@ import VxeDatePickerComponent from '../../date-picker/src/date-picker'
 
 import type { VxeGlobalRendererHandles, VxeFormViewConstructor, VxeFormViewPrivateMethods } from '../../../types'
 
-export const WidgetVxeDatePickerViewComponent = defineComponent({
+export const WidgetVxeDatePickerViewComponent = defineVxeComponent({
   props: {
     renderOpts: {
       type: Object as PropType<VxeGlobalRendererHandles.RenderFormDesignWidgetViewOptions>,

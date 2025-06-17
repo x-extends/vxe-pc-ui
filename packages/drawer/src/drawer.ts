@@ -1,4 +1,5 @@
-import { defineComponent, h, Teleport, ref, Ref, inject, reactive, nextTick, provide, watch, PropType, onMounted, onUnmounted, computed } from 'vue'
+import { h, Teleport, ref, Ref, inject, reactive, nextTick, provide, watch, PropType, onMounted, onUnmounted, computed } from 'vue'
+import { defineVxeComponent } from '../../ui/src/comp'
 import XEUtils from 'xe-utils'
 import { useSize, getIcon, getConfig, getI18n, globalEvents, GLOBAL_EVENT_KEYS, createEvent, renderEmptyElement } from '../../ui'
 import { getLastZIndex, nextZIndex, getFuncText } from '../../ui/src/utils'
@@ -12,7 +13,7 @@ import type { VxeTableConstructor, VxeTablePrivateMethods } from '../../../types
 
 export const allActiveDrawers: VxeDrawerConstructor[] = []
 
-export default defineComponent({
+export default defineVxeComponent({
   name: 'VxeDrawer',
   props: {
     modelValue: Boolean as PropType<VxeDrawerPropTypes.ModelValue>,

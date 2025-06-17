@@ -1,4 +1,5 @@
-import { defineComponent, h, ref, Ref, computed, reactive, inject, nextTick, watch, PropType } from 'vue'
+import { h, ref, Ref, computed, reactive, inject, nextTick, watch, PropType } from 'vue'
+import { defineVxeComponent } from '../../ui/src/comp'
 import XEUtils from 'xe-utils'
 import { getConfig, getIcon, getI18n, createEvent, useSize, renderEmptyElement } from '../../ui'
 import { getFuncText } from '../../ui/src/utils'
@@ -6,7 +7,7 @@ import { getSlotVNs } from '../../ui/src/vn'
 
 import type { VxePasswordInputConstructor, VxePasswordInputEmits, PasswordInputReactData, PasswordInputMethods, VxePasswordInputPropTypes, InputPrivateRef, VxeFormConstructor, VxeFormPrivateMethods, VxeFormDefines } from '../../../types'
 
-export default defineComponent({
+export default defineVxeComponent({
   name: 'VxePasswordInput',
   props: {
     modelValue: String as PropType<VxePasswordInputPropTypes.ModelValue>,

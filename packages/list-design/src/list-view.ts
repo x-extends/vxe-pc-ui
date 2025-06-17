@@ -1,4 +1,5 @@
-import { defineComponent, ref, PropType, h, reactive, provide, watch, nextTick, computed } from 'vue'
+import { ref, PropType, h, reactive, provide, watch, nextTick, computed } from 'vue'
+import { defineVxeComponent } from '../../ui/src/comp'
 import { VxeUI, getConfig, createEvent, getI18n, renderer, useSize, renderEmptyElement } from '../../ui'
 import { errLog } from '../../ui/src/log'
 import { toCssUnit } from '../../ui/src/dom'
@@ -11,7 +12,7 @@ import type { ListViewReactData, ListViewPrivateRef, VxeListViewPropTypes, VxeLi
 import type { VxeGridComponent, VxeGridInstance, VxeGridPropTypes, VxeGridProps } from '../../../types/components/grid'
 import type { VxeTableDefines } from '../../../types/components/table'
 
-export default defineComponent({
+export default defineVxeComponent({
   name: 'VxeListView',
   props: {
     size: {

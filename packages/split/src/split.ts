@@ -1,4 +1,5 @@
-import { defineComponent, PropType, ref, h, reactive, provide, VNode, computed, watch, nextTick, onMounted, onUnmounted, onActivated } from 'vue'
+import { PropType, ref, h, reactive, provide, VNode, computed, watch, nextTick, onMounted, onUnmounted, onActivated } from 'vue'
+import { defineVxeComponent } from '../../ui/src/comp'
 import { getConfig, getIcon, createEvent, globalEvents, globalResize, renderEmptyElement } from '../../ui'
 import { getSlotVNs } from '../../ui/src/vn'
 import { toCssUnit, isScale, addClass, removeClass } from '../../ui/src/dom'
@@ -8,7 +9,7 @@ import XEUtils from 'xe-utils'
 
 import type { SplitReactData, SplitPrivateRef, VxeSplitPropTypes, SplitInternalData, SplitMethods, VxeSplitDefines, VxeSplitPaneProps, VxeSplitPrivateComputed, SplitPrivateMethods, VxeSplitEmits, VxeSplitConstructor, ValueOf, VxeSplitPrivateMethods } from '../../../types'
 
-export default defineComponent({
+export default defineVxeComponent({
   name: 'VxeSplit',
   props: {
     width: [Number, String] as PropType<VxeSplitPropTypes.Width>,

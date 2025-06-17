@@ -1,4 +1,5 @@
-import { defineComponent, h, inject, ref, watch, onMounted, createCommentVNode, nextTick, computed } from 'vue'
+import { h, inject, ref, watch, onMounted, createCommentVNode, nextTick, computed } from 'vue'
+import { defineVxeComponent } from '../../ui/src/comp'
 import { VxeUI, getI18n } from '../../ui'
 import { errLog } from '../../ui/src/log'
 import VxeFormComponent from '../../form/src/form'
@@ -8,7 +9,7 @@ import { VxeListDesignConstructor, VxeListDesignPrivateMethods } from '../../../
 import type { VxeGridComponent, VxeGridInstance, VxeGridPropTypes } from '../../../types/components/grid'
 import type { VxeTableEvents, VxeTablePropTypes } from '../../../types/components/table'
 
-export default defineComponent({
+export default defineVxeComponent({
   name: 'ListDesignLayoutView',
   props: {},
   emits: [],

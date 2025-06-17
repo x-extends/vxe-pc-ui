@@ -1,4 +1,5 @@
-import { defineComponent, ref, h, reactive, PropType, computed } from 'vue'
+import { ref, h, reactive, PropType, computed } from 'vue'
+import { defineVxeComponent } from '../../ui/src/comp'
 import { getSlotVNs } from '../../ui/src/vn'
 import { getConfig, createEvent, renderEmptyElement } from '../../ui'
 import { toCssUnit } from '../../ui/src/dom'
@@ -7,7 +8,7 @@ import XEUtils from 'xe-utils'
 
 import type { CardReactData, VxeCardEmits, VxeCardPropTypes, CardPrivateRef, ValueOf, CardMethods, CardPrivateMethods, VxeCardPrivateComputed, VxeCardConstructor, VxeCardPrivateMethods } from '../../../types'
 
-export default defineComponent({
+export default defineVxeComponent({
   name: 'VxeCard',
   props: {
     title: String as PropType<VxeCardPropTypes.Title>,

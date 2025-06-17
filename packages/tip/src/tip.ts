@@ -1,11 +1,12 @@
-import { defineComponent, ref, h, reactive, PropType } from 'vue'
+import { ref, h, reactive, PropType } from 'vue'
+import { defineVxeComponent } from '../../ui/src/comp'
 import XEUtils from 'xe-utils'
 import { getConfig, useSize, usePermission, createEvent, renderEmptyElement } from '../../ui'
 import { getSlotVNs } from '../../ui/src/vn'
 
 import type { VxeTipPropTypes, TipReactData, VxeTipEmits, TipMethods, TipPrivateMethods, TipPrivateRef, VxeTipPrivateComputed, VxeTipConstructor, VxeTipPrivateMethods, ValueOf } from '../../../types'
 
-export default defineComponent({
+export default defineVxeComponent({
   name: 'VxeTip',
   props: {
     title: {

@@ -1,9 +1,10 @@
-import { defineComponent, ref, h, reactive } from 'vue'
+import { ref, h, reactive } from 'vue'
+import { defineVxeComponent } from '../../ui/src/comp'
 import XEUtils from 'xe-utils'
 
 import type { FlowViewReactData, VxeFlowViewEmits, FlowViewPrivateRef, VxeFlowViewPrivateComputed, VxeFlowViewConstructor, VxeFlowViewPrivateMethods } from '../../../types'
 
-export default defineComponent({
+export default defineVxeComponent({
   name: 'VxeFlowView',
   props: {
   },

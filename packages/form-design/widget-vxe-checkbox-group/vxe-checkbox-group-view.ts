@@ -1,4 +1,5 @@
-import { PropType, defineComponent, h, inject } from 'vue'
+import { PropType, h, inject } from 'vue'
+import { defineVxeComponent } from '../../ui/src/comp'
 import { WidgetVxeCheckboxGroupFormObjVO } from './vxe-checkbox-group-data'
 import { useWidgetName } from '../../form-design/src/use'
 import VxeFormItemComponent from '../../form/src/form-item'
@@ -6,7 +7,7 @@ import VxeCheckboxGroupComponent from '../../checkbox/src/group'
 
 import type { VxeGlobalRendererHandles, VxeFormViewConstructor, VxeFormViewPrivateMethods } from '../../../types'
 
-export const WidgetVxeCheckboxGroupViewComponent = defineComponent({
+export const WidgetVxeCheckboxGroupViewComponent = defineVxeComponent({
   props: {
     renderOpts: {
       type: Object as PropType<VxeGlobalRendererHandles.RenderFormDesignWidgetViewOptions>,

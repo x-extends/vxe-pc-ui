@@ -1,11 +1,12 @@
-import { defineComponent, ref, h, reactive, PropType } from 'vue'
+import { ref, h, reactive, PropType } from 'vue'
+import { defineVxeComponent } from '../../ui/src/comp'
 import XEUtils from 'xe-utils'
 import { getConfig, getIcon, createEvent, renderEmptyElement } from '../../ui'
 import { getSlotVNs } from '../../ui/src/vn'
 
 import type { VxeAlertPropTypes, AlertReactData, AlertPrivateRef, VxeAlertEmits, AlertMethods, AlertPrivateMethods, VxeAlertPrivateComputed, VxeAlertConstructor, VxeAlertPrivateMethods } from '../../../types'
 
-export default defineComponent({
+export default defineVxeComponent({
   name: 'VxeAlert',
   props: {
     title: {

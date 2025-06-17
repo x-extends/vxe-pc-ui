@@ -1,4 +1,5 @@
-import { defineComponent, h, Teleport, ref, Ref, computed, reactive, onMounted, inject, nextTick, watch, onBeforeUnmount, PropType, createCommentVNode } from 'vue'
+import { h, Teleport, ref, Ref, computed, reactive, onMounted, inject, nextTick, watch, onBeforeUnmount, PropType, createCommentVNode } from 'vue'
+import { defineVxeComponent } from '../../ui/src/comp'
 import XEUtils from 'xe-utils'
 import { getConfig, getIcon, getI18n, globalEvents, GLOBAL_EVENT_KEYS, createEvent, useSize, renderEmptyElement } from '../../ui'
 import { getFuncText, getLastZIndex, nextZIndex, eqEmptyValue } from '../../ui/src/utils'
@@ -10,7 +11,7 @@ import { getSlotVNs } from '../../ui/src/vn'
 import type { VxeInputConstructor, VxeInputEmits, InputReactData, InputMethods, ValueOf, InputInternalData, VxeInputPropTypes, InputPrivateRef, VxeFormConstructor, VxeFormPrivateMethods, VxeFormDefines, VxeDrawerConstructor, VxeDrawerMethods, VxeModalConstructor, VxeModalMethods, VxeDatePanelDefines, VxeSelectConstructor, VxeSelectMethods, VxeTreeSelectConstructor, VxeTreeSelectMethods, VxeComponentStyleType } from '../../../types'
 import type { VxeTableConstructor, VxeTablePrivateMethods } from '../../../types/components/table'
 
-export default defineComponent({
+export default defineVxeComponent({
   name: 'VxeInput',
   props: {
     modelValue: [String, Number, Date] as PropType<VxeInputPropTypes.ModelValue>,

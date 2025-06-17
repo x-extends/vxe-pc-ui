@@ -1,4 +1,5 @@
-import { defineComponent, h, inject, provide, PropType, createCommentVNode, VNode } from 'vue'
+import { h, inject, provide, PropType, createCommentVNode, VNode } from 'vue'
+import { defineVxeComponent } from '../../ui/src/comp'
 import { renderer } from '../../ui'
 import { isEnableConf } from '../../ui/src/utils'
 import { renderTitle, getItemClass, getItemContentClass, renderItemContent } from './render'
@@ -6,7 +7,7 @@ import XEUtils from 'xe-utils'
 
 import type { VxeFormConstructor, VxeFormDefines, VxeFormPrivateMethods } from '../../../types'
 
-const VxeFormConfigItem = defineComponent({
+const VxeFormConfigItem = defineVxeComponent({
   name: 'VxeFormConfigItem',
   props: {
     itemConfig: Object as PropType<VxeFormDefines.ItemInfo>

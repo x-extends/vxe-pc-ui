@@ -1,11 +1,12 @@
-import { defineComponent, ref, h, computed, reactive, PropType, inject, onMounted, onUnmounted, provide, watch } from 'vue'
+import { ref, h, computed, reactive, PropType, inject, onMounted, onUnmounted, provide, watch } from 'vue'
+import { defineVxeComponent } from '../../ui/src/comp'
 import XEUtils from 'xe-utils'
 import { renderEmptyElement } from '../../ui'
 import { assembleAnchorLink, destroyAnchorLink } from './util'
 
 import type { VxeAnchorLinkDefines, VxeAnchorLinkPropTypes, VxeAnchorLinkEmits, AnchorLinkReactData, AnchorLinkPrivateRef, VxeAnchorLinkPrivateComputed, VxeAnchorLinkConstructor, VxeAnchorLinkPrivateMethods, VxeAnchorConstructor, VxeAnchorPrivateMethods } from '../../../types'
 
-export default defineComponent({
+export default defineVxeComponent({
   name: 'VxeAnchorLink',
   props: {
     content: [String, Number] as PropType<VxeAnchorLinkPropTypes.Content>,

@@ -1,4 +1,5 @@
-import { defineComponent, h, Teleport, ref, Ref, computed, provide, reactive, inject, nextTick, watch, PropType, onUnmounted } from 'vue'
+import { h, Teleport, ref, Ref, computed, provide, reactive, inject, nextTick, watch, PropType, onUnmounted } from 'vue'
+import { defineVxeComponent } from '../../ui/src/comp'
 import XEUtils from 'xe-utils'
 import { getConfig, getIcon, getI18n, commands, createEvent, globalEvents, useSize, renderEmptyElement } from '../../ui'
 import { getFuncText, getLastZIndex, nextZIndex, isEnableConf } from '../../ui/src/utils'
@@ -13,7 +14,7 @@ import VxeButtonGroupComponent from '../../button/src/button-group'
 import type { VxeDatePickerConstructor, VxeDatePickerEmits, DatePickerInternalData, DatePickerReactData, DatePickerMethods, VxeDatePickerPropTypes, DatePickerPrivateRef, VxeFormConstructor, VxeFormPrivateMethods, VxeFormDefines, ValueOf, VxeModalConstructor, VxeDrawerConstructor, VxeModalMethods, VxeDrawerMethods, VxeDatePickerDefines, VxeButtonGroupEvents, VxeDatePanelConstructor } from '../../../types'
 import type { VxeTableConstructor, VxeTablePrivateMethods } from '../../../types/components/table'
 
-export default defineComponent({
+export default defineVxeComponent({
   name: 'VxeDatePicker',
   props: {
     modelValue: [String, Number, Date] as PropType<VxeDatePickerPropTypes.ModelValue>,

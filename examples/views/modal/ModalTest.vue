@@ -212,7 +212,7 @@
 import { reactive } from 'vue'
 import { VxeUI } from '../../../packages'
 import { VxeModalDefines } from '../../../types'
-import { VxeGridPropTypes } from 'vxe-table'
+import { VxeGridPropTypes } from '../../../types/components/grid'
 
 const demo1 = reactive({
   value1: false,

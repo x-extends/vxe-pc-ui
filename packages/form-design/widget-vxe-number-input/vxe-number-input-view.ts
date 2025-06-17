@@ -1,4 +1,5 @@
-import { PropType, defineComponent, h, inject } from 'vue'
+import { PropType, h, inject } from 'vue'
+import { defineVxeComponent } from '../../ui/src/comp'
 import { WidgetVxeNumberInputFormObjVO } from './vxe-number-input-data'
 import { useWidgetName } from '../../form-design/src/use'
 import VxeFormItemComponent from '../../form/src/form-item'
@@ -6,7 +7,7 @@ import VxeNumberInputComponent from '../../number-input/src/number-input'
 
 import type { VxeGlobalRendererHandles, VxeFormViewConstructor, VxeFormViewPrivateMethods } from '../../../types'
 
-export const WidgetVxeNumberInputViewComponent = defineComponent({
+export const WidgetVxeNumberInputViewComponent = defineVxeComponent({
   props: {
     renderOpts: {
       type: Object as PropType<VxeGlobalRendererHandles.RenderFormDesignWidgetViewOptions>,

@@ -1,3 +1,4 @@
+import { DefineVxeComponentOptions } from '@vxe-ui/core'
 import { VxeTableConstructor, VxeTablePrivateMethods, VxeTableDefines } from '../table'
 
 /* eslint-disable @typescript-eslint/no-empty-interface,no-use-before-define,@typescript-eslint/no-unused-vars */
@@ -14,6 +15,12 @@ export interface VxeTableExtendPivotTablePrivateMethods<D = any> {
    * @private
    */
   getPivotTableAggregateCellAggValue(params: VxeTableDefines.CellRenderBodyParams<D> & { $table: VxeTableConstructor<D> & VxeTablePrivateMethods<D> }): string
+  /**
+   * @private
+   */
+  getPivotTableAggregateSimplePanel(): DefineVxeComponentOptions<{
+    customStore: VxeTableDefines.VxeTableCustomStoreObj
+  }, object>
 }
 
 declare module '../table' {

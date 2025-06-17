@@ -1,11 +1,12 @@
-import { defineComponent, ref, h, reactive, inject, onMounted, onUnmounted, createCommentVNode } from 'vue'
+import { ref, h, reactive, inject, onMounted, onUnmounted, createCommentVNode } from 'vue'
+import { defineVxeComponent } from '../../ui/src/comp'
 import XEUtils from 'xe-utils'
 import { createEvent } from '../../ui'
 import { assemblePageBreak, destroyPageBreak } from './util'
 
 import type { PrintPageBreakReactData, PrintPageBreakPrivateRef, ValueOf, PrintPageBreakPrivateMethods, PrintPageBreakMethods, VxePrintPageBreakEmits, VxePrintDefines, VxePrintPageBreakPrivateComputed, VxePrintConstructor, VxePrintPrivateMethods, VxePrintPageBreakConstructor, VxePrintPageBreakPrivateMethods } from '../../../types'
 
-export default defineComponent({
+export default defineVxeComponent({
   name: 'VxePrintPageBreak',
   props: {},
   emits: [] as VxePrintPageBreakEmits,

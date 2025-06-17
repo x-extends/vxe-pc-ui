@@ -1,4 +1,5 @@
-import { VNode, createCommentVNode, defineComponent, h, inject, ref, reactive, provide } from 'vue'
+import { VNode, createCommentVNode, h, inject, ref, reactive, provide } from 'vue'
+import { defineVxeComponent } from '../../ui/src/comp'
 import { getIcon, getI18n, renderer } from '@vxe-ui/core'
 import { getSlotVNs } from '../../ui/src/vn'
 import VxeModalComponent from '../../modal/src/modal'
@@ -10,7 +11,7 @@ import { createDefaultFormViewPCFormConfig, createDefaultFormViewMobileFormConfi
 
 import type { VxeFormDesignConstructor, VxeFormViewDefines, VxeFormDesignPrivateMethods, VxeFormDesignDefines, VxeFormDesignLayoutStyle } from '../../../types'
 
-export default defineComponent({
+export default defineVxeComponent({
   name: 'FormDesignLayoutStyle',
   props: {},
   emits: [],

@@ -1,9 +1,10 @@
-import { defineComponent, h, onUnmounted, inject, ref, Ref, onMounted, PropType } from 'vue'
+import { h, onUnmounted, inject, ref, Ref, onMounted, PropType } from 'vue'
+import { defineVxeComponent } from '../../ui/src/comp'
 import { XEOptionProvide, createOption, watchOption, destroyOption, assembleOption } from './util'
 
 import type { VxeSelectConstructor, VxeOptionEmits, VxeOptionPropTypes } from '../../../types'
 
-export default defineComponent({
+export default defineVxeComponent({
   name: 'VxeOption',
   props: {
     value: [String, Number, Boolean] as PropType<VxeOptionPropTypes.Value>,

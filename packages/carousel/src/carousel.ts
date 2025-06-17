@@ -1,4 +1,5 @@
-import { defineComponent, ref, h, reactive, provide, PropType, watch, nextTick, onMounted, computed, onUnmounted } from 'vue'
+import { ref, h, reactive, provide, PropType, watch, nextTick, onMounted, computed, onUnmounted } from 'vue'
+import { defineVxeComponent } from '../../ui/src/comp'
 import { getConfig, getIcon, createEvent, renderEmptyElement } from '../../ui'
 import { getSlotVNs } from '../../ui/src/vn'
 import { toCssUnit } from '../../ui/src/dom'
@@ -7,7 +8,7 @@ import XEUtils from 'xe-utils'
 
 import type { CarouselReactData, CarouselPrivateRef, VxeCarouselPropTypes, CarouselInternalData, CarouselMethods, CarouselPrivateMethods, VxeCarouselEmits, VxeCarouselDefines, VxeCarouselPrivateComputed, VxeCarouselConstructor, ValueOf, VxeCarouselPrivateMethods } from '../../../types'
 
-export default defineComponent({
+export default defineVxeComponent({
   name: 'VxeCarousel',
   props: {
     modelValue: [String, Number] as PropType<VxeCarouselPropTypes.ModelValue>,

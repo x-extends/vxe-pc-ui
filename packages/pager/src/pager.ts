@@ -1,4 +1,5 @@
-import { defineComponent, h, PropType, computed, inject, ref, Ref, reactive, nextTick, watch } from 'vue'
+import { h, PropType, computed, inject, ref, Ref, reactive, nextTick, watch } from 'vue'
+import { defineVxeComponent } from '../../ui/src/comp'
 import XEUtils from 'xe-utils'
 import { getIcon, getConfig, getI18n, globalEvents, GLOBAL_EVENT_KEYS, createEvent, useSize } from '../../ui'
 import { errLog } from '../../ui/src/log'
@@ -8,7 +9,7 @@ import VxeInputComponent from '../../input/src/input'
 import type { VxePagerPropTypes, VxePagerConstructor, VxePagerEmits, VxeSelectEvents, ValueOf, PagerPrivateRef, PagerMethods, PagerPrivateMethods, VxePagerPrivateMethods, PagerReactData, VxeInputEvents } from '../../../types'
 import type { VxeGridConstructor, VxeGridPrivateMethods } from '../../../types/components/grid'
 
-export default defineComponent({
+export default defineVxeComponent({
   name: 'VxePager',
   props: {
     size: {

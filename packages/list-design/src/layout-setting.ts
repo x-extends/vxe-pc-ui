@@ -1,10 +1,11 @@
-import { defineComponent, h, ref } from 'vue'
+import { h, ref } from 'vue'
+import { defineVxeComponent } from '../../ui/src/comp'
 import { getI18n, getIcon } from '@vxe-ui/core'
 import VxeTabsComponent from '../../tabs/src/tabs'
 import VxeTabPaneComponent from '../../tabs/src/tab-pane'
 import { DefaultFieldSettingFormComponent, DefaultParameterSettingFormComponent } from './default-setting-form'
 
-export default defineComponent({
+export default defineVxeComponent({
   name: 'ListDesignLayoutSetting',
   props: {},
   emits: [],

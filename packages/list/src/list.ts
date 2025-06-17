@@ -1,4 +1,5 @@
-import { defineComponent, h, PropType, ref, Ref, computed, onUnmounted, watch, reactive, nextTick, onActivated, onMounted } from 'vue'
+import { h, PropType, ref, Ref, computed, onUnmounted, watch, reactive, nextTick, onActivated, onMounted } from 'vue'
+import { defineVxeComponent } from '../../ui/src/comp'
 import XEUtils from 'xe-utils'
 import { getConfig, globalEvents, globalResize, createEvent, useSize } from '../../ui'
 import { isScale } from '../../ui/src/dom'
@@ -6,7 +7,7 @@ import VxeLoadingComponent from '../../loading/src/loading'
 
 import type { VxeListConstructor, VxeListPropTypes, VxeListEmits, ListReactData, ListInternalData, ValueOf, ListMethods, ListPrivateRef, VxeListMethods } from '../../../types'
 
-export default defineComponent({
+export default defineVxeComponent({
   name: 'VxeList',
   props: {
     data: Array as PropType<VxeListPropTypes.Data>,

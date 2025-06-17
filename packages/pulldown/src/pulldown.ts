@@ -1,4 +1,5 @@
-import { defineComponent, h, Teleport, ref, Ref, onUnmounted, reactive, inject, computed, nextTick, PropType, watch } from 'vue'
+import { h, Teleport, ref, Ref, onUnmounted, reactive, inject, computed, nextTick, PropType, watch } from 'vue'
+import { defineVxeComponent } from '../../ui/src/comp'
 import XEUtils from 'xe-utils'
 import { getConfig, globalEvents, createEvent, useSize, renderEmptyElement } from '../../ui'
 import { getEventTargetNode, updatePanelPlacement } from '../../ui/src/dom'
@@ -7,7 +8,7 @@ import { getLastZIndex, nextZIndex } from '../../ui/src/utils'
 import type { VxePulldownConstructor, VxePulldownPropTypes, PulldownInternalData, VxePulldownEmits, PulldownReactData, ValueOf, PulldownMethods, PulldownPrivateRef, VxePulldownMethods, VxeDrawerConstructor, VxeDrawerMethods, VxeFormConstructor, VxeFormPrivateMethods, VxeModalConstructor, VxeModalMethods } from '../../../types'
 import type { VxeTableConstructor, VxeTablePrivateMethods } from '../../../types/components/table'
 
-export default defineComponent({
+export default defineVxeComponent({
   name: 'VxePulldown',
   props: {
     modelValue: Boolean as PropType<VxePulldownPropTypes.ModelValue>,

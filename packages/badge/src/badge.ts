@@ -1,10 +1,11 @@
-import { defineComponent, ref, h, computed, reactive, PropType } from 'vue'
+import { ref, h, computed, reactive, PropType } from 'vue'
+import { defineVxeComponent } from '../../ui/src/comp'
 import XEUtils from 'xe-utils'
 import { getConfig, createEvent, useSize, renderEmptyElement } from '../../ui'
 
 import type { BadgeReactData, VxeBadgeEmits, VxeBadgePropTypes, BadgeMethods, BadgePrivateMethods, ValueOf, BadgePrivateRef, VxeBadgePrivateComputed, VxeBadgeConstructor, VxeBadgePrivateMethods } from '../../../types'
 
-export default defineComponent({
+export default defineVxeComponent({
   name: 'VxeBadge',
   props: {
     count: [String, Number] as PropType<VxeBadgePropTypes.Count>,

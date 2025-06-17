@@ -1,4 +1,5 @@
-import { defineComponent, h, Teleport, ref, Ref, inject, computed, reactive, provide, nextTick, watch, PropType, VNode, onMounted, onUnmounted } from 'vue'
+import { h, Teleport, ref, Ref, inject, computed, reactive, provide, nextTick, watch, PropType, VNode, onMounted, onUnmounted } from 'vue'
+import { defineVxeComponent } from '../../ui/src/comp'
 import XEUtils from 'xe-utils'
 import { getDomNode, getEventTargetNode, toCssUnit } from '../../ui/src/dom'
 import { getLastZIndex, nextZIndex, getSubLastZIndex, nextSubZIndex, getFuncText, handleBooleanDefaultValue } from '../../ui/src/utils'
@@ -18,7 +19,7 @@ const notifyQueue: VxeModalConstructor[] = []
 const lockScrollAttrKey = 'data-vxe-lock-scroll'
 const lockScrollCssWidthKey = '--vxe-ui-modal-lock-scroll-view-width'
 
-export default defineComponent({
+export default defineVxeComponent({
   name: 'VxeModal',
   props: {
     modelValue: Boolean as PropType<VxeModalPropTypes.ModelValue>,

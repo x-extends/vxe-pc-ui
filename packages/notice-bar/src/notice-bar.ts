@@ -1,11 +1,12 @@
-import { defineComponent, ref, h, reactive, PropType, computed, onMounted, onBeforeUnmount } from 'vue'
+import { ref, h, reactive, PropType, computed, onMounted, onBeforeUnmount } from 'vue'
+import { defineVxeComponent } from '../../ui/src/comp'
 import XEUtils from 'xe-utils'
 import { getConfig, useSize, createEvent, globalEvents, renderEmptyElement } from '../../ui'
 import { toCssUnit } from '../../ui/src/dom'
 
 import type { VxeNoticeBarPropTypes, NoticeBarReactData, NoticeBarPrivateRef, NoticeBarMethods, NoticeBarPrivateMethods, VxeNoticeBarEmits, VxeNoticeBarPrivateComputed, VxeNoticeBarConstructor, VxeNoticeBarPrivateMethods, ValueOf } from '../../../types'
 
-export default defineComponent({
+export default defineVxeComponent({
   name: 'VxeNoticeBar',
   props: {
     duration: [String, Number] as PropType<VxeNoticeBarPropTypes.Duration>,

@@ -1,10 +1,11 @@
-import { defineComponent, ref, h, reactive, PropType } from 'vue'
+import { ref, h, reactive, PropType } from 'vue'
+import { defineVxeComponent } from '../../ui/src/comp'
 import XEUtils from 'xe-utils'
 import { getIcon, createEvent, renderEmptyElement } from '../../ui'
 
 import type { ResultReactData, VxeResultEmits, ResultMethods, ResultPrivateMethods, VxeResultPropTypes, ValueOf, ResultPrivateRef, VxeResultPrivateComputed, VxeResultConstructor, VxeResultPrivateMethods } from '../../../types'
 
-export default defineComponent({
+export default defineVxeComponent({
   name: 'VxeResult',
   props: {
     imageUrl: String as PropType<VxeResultPropTypes.ImageUrl>,

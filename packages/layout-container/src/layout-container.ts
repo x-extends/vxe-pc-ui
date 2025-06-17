@@ -1,10 +1,11 @@
-import { defineComponent, ref, h, reactive, PropType } from 'vue'
+import { ref, h, reactive, PropType } from 'vue'
+import { defineVxeComponent } from '../../ui/src/comp'
 import { getConfig, useSize, createEvent } from '../../ui'
 import XEUtils from 'xe-utils'
 
 import type { VxeLayoutContainerPropTypes, LayoutContainerReactData, LayoutContainerPrivateMethods, VxeLayoutContainerEmits, LayoutContainerMethods, LayoutContainerPrivateRef, VxeLayoutContainerPrivateComputed, VxeLayoutContainerConstructor, VxeLayoutContainerPrivateMethods, ValueOf } from '../../../types'
 
-export default defineComponent({
+export default defineVxeComponent({
   name: 'VxeLayoutContainer',
   props: {
     vertical: Boolean as PropType<VxeLayoutContainerPropTypes.Vertical>,

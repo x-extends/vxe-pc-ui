@@ -1,11 +1,12 @@
-import { defineComponent, ref, h, reactive, computed, PropType, inject } from 'vue'
+import { ref, h, reactive, computed, PropType, inject } from 'vue'
+import { defineVxeComponent } from '../../ui/src/comp'
 import XEUtils from 'xe-utils'
 import { getConfig, createEvent, useSize } from '../../ui'
 import { toCssUnit } from '../../ui/src/dom'
 
 import type { ColReactData, VxeColPropTypes, ColPrivateRef, VxeColEmits, ColMethods, ColPrivateMethods, VxeColPrivateComputed, VxeColConstructor, VxeColPrivateMethods, ValueOf, VxeRowConstructor, VxeRowPrivateMethods } from '../../../types'
 
-export default defineComponent({
+export default defineVxeComponent({
   name: 'VxeCol',
   props: {
     span: [Number, String] as PropType<VxeColPropTypes.Span>,

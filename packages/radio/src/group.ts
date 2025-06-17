@@ -1,4 +1,5 @@
-import { defineComponent, h, provide, PropType, inject, computed, reactive } from 'vue'
+import { h, provide, PropType, inject, computed, reactive } from 'vue'
+import { defineVxeComponent } from '../../ui/src/comp'
 import XEUtils from 'xe-utils'
 import { getConfig, createEvent, useSize } from '../../ui'
 import VxeRadioComponent from './radio'
@@ -6,7 +7,7 @@ import VxeRadioButtonComponent from './button'
 
 import type { VxeRadioGroupPropTypes, VxeRadioGroupConstructor, RadioGroupReactData, VxeRadioGroupEmits, VxeRadioGroupPrivateMethods, RadioGroupPrivateMethods, RadioGroupPrivateComputed, RadioGroupMethods, VxeFormConstructor, VxeFormPrivateMethods, VxeFormDefines, ValueOf } from '../../../types'
 
-export default defineComponent({
+export default defineVxeComponent({
   name: 'VxeRadioGroup',
   props: {
     modelValue: [String, Number, Boolean] as PropType<VxeRadioGroupPropTypes.ModelValue>,

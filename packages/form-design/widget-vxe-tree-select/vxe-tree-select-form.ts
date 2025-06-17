@@ -1,4 +1,5 @@
-import { PropType, defineComponent, h } from 'vue'
+import { PropType, h } from 'vue'
+import { defineVxeComponent } from '../../ui/src/comp'
 import { getI18n } from '@vxe-ui/core'
 import { WidgetVxeTreeSelectFormObjVO } from './vxe-tree-select-data'
 import VxeFormComponent from '../../form/src/form'
@@ -9,7 +10,7 @@ import { useWidgetName } from '../src/use'
 
 import type { VxeGlobalRendererHandles } from '../../../types'
 
-export const WidgetVxeTreeSelectFormComponent = defineComponent({
+export const WidgetVxeTreeSelectFormComponent = defineVxeComponent({
   props: {
     renderOpts: {
       type: Object as PropType<VxeGlobalRendererHandles.RenderFormDesignWidgetFormViewOptions>,

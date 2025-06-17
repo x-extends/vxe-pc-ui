@@ -1,11 +1,12 @@
-import { defineComponent, PropType, ref, h, reactive, watch, provide, inject, onMounted, onUnmounted } from 'vue'
+import { PropType, ref, h, reactive, watch, provide, inject, onMounted, onUnmounted } from 'vue'
+import { defineVxeComponent } from '../../ui/src/comp'
 import { createEvent } from '../../ui'
 import { assembleSplitItem, destroySplitItem } from './util'
 import XEUtils from 'xe-utils'
 
 import type { SplitItemReactData, VxeSplitPanePropTypes, SplitItemPrivateRef, SplitItemInternalData, SplitItemMethods, VxeSplitPanePrivateComputed, SplitItemPrivateMethods, VxeSplitPaneEmits, VxeSplitPaneConstructor, ValueOf, VxeSplitDefines, VxeSplitPanePrivateMethods, VxeSplitConstructor, VxeSplitPrivateMethods } from '../../../types'
 
-export default defineComponent({
+export default defineVxeComponent({
   name: 'VxeSplitPane',
   props: {
     name: [Number, String] as PropType<VxeSplitPanePropTypes.Name>,

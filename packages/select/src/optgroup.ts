@@ -1,9 +1,10 @@
-import { defineComponent, h, onUnmounted, provide, inject, ref, Ref, onMounted, PropType } from 'vue'
+import { h, onUnmounted, provide, inject, ref, Ref, onMounted, PropType } from 'vue'
+import { defineVxeComponent } from '../../ui/src/comp'
 import { XEOptionProvide, createOption, watchOption, destroyOption, assembleOption } from './util'
 
 import type { VxeSelectConstructor, VxeOptgroupEmits, VxeOptgroupPropTypes } from '../../../types'
 
-export default defineComponent({
+export default defineVxeComponent({
   name: 'VxeOptgroup',
   props: {
     label: {

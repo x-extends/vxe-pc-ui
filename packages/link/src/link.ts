@@ -1,11 +1,12 @@
-import { defineComponent, ref, h, reactive, PropType, resolveComponent } from 'vue'
+import { ref, h, reactive, PropType, resolveComponent } from 'vue'
+import { defineVxeComponent } from '../../ui/src/comp'
 import XEUtils from 'xe-utils'
 import { getConfig, usePermission, useSize, createEvent, renderEmptyElement } from '../../ui'
 import { getSlotVNs } from '../../ui/src/vn'
 
 import type { VxeLinkPropTypes, LinkReactData, LinkPrivateRef, LinkMethods, LinkPrivateMethods, VxeLinkEmits, VxeLinkPrivateComputed, VxeLinkConstructor, VxeLinkPrivateMethods, ValueOf } from '../../../types'
 
-export default defineComponent({
+export default defineVxeComponent({
   name: 'VxeLink',
   props: {
     href: String as PropType<VxeLinkPropTypes.Href>,

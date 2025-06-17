@@ -1,4 +1,5 @@
-import { defineComponent, h, ref, Ref, computed, reactive, watch, PropType, onMounted } from 'vue'
+import { h, ref, Ref, computed, reactive, watch, PropType, onMounted } from 'vue'
+import { defineVxeComponent } from '../../ui/src/comp'
 import { getConfig, getI18n, createEvent, useSize, renderEmptyElement } from '../../ui'
 import { getDateQuarter } from '../../date-panel/src/util'
 import { toCssUnit } from '../../ui/src/dom'
@@ -7,7 +8,7 @@ import XEUtils from 'xe-utils'
 
 import type { VxeCalendarConstructor, VxeCalendarEmits, CalendarInternalData, CalendarReactData, CalendarMethods, VxeCalendarPropTypes, CalendarPrivateRef, VxeDatePanelDefines, ValueOf } from '../../../types'
 
-export default defineComponent({
+export default defineVxeComponent({
   name: 'VxeCalendar',
   props: {
     modelValue: [String, Number, Date] as PropType<VxeCalendarPropTypes.ModelValue>,

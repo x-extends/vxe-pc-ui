@@ -1,11 +1,12 @@
-import { defineComponent, ref, h, reactive, PropType, watch, inject, onMounted, onUnmounted } from 'vue'
+import { ref, h, reactive, PropType, watch, inject, onMounted, onUnmounted } from 'vue'
+import { defineVxeComponent } from '../../ui/src/comp'
 import XEUtils from 'xe-utils'
 import { createEvent } from '../../ui'
 import { assembleTabItem, destroyTabItem } from './util'
 
 import type { VxeTabPanePropTypes, TabPaneReactData, TabPaneMethods, TabPanePrivateMethods, VxeTabPaneEmits, ValueOf, TabPanePrivateRef, VxeTabPanePrivateComputed, VxeTabPaneConstructor, VxeTabPanePrivateMethods, VxeTabPaneDefines, VxeTabsConstructor, VxeTabsPrivateMethods } from '../../../types'
 
-export default defineComponent({
+export default defineVxeComponent({
   name: 'VxeTabPane',
   props: {
     title: [String, Number] as PropType<VxeTabPanePropTypes.Title>,

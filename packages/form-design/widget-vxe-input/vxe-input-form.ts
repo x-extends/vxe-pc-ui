@@ -1,4 +1,5 @@
-import { PropType, defineComponent, h } from 'vue'
+import { PropType, h } from 'vue'
+import { defineVxeComponent } from '../../ui/src/comp'
 import { getI18n } from '@vxe-ui/core'
 import VxeFormComponent from '../../form/src/form'
 import VxeFormItemComponent from '../../form/src/form-item'
@@ -9,7 +10,7 @@ import { useWidgetName } from '../../form-design/src/use'
 
 import type { VxeGlobalRendererHandles } from '../../../types'
 
-export const WidgetVxeInputFormComponent = defineComponent({
+export const WidgetVxeInputFormComponent = defineVxeComponent({
   props: {
     renderOpts: {
       type: Object as PropType<VxeGlobalRendererHandles.RenderFormDesignWidgetFormViewOptions>,

@@ -1,4 +1,5 @@
-import { PropType, defineComponent, h, ref } from 'vue'
+import { PropType, h, ref } from 'vue'
+import { defineVxeComponent } from '../../ui/src/comp'
 import XEUtils from 'xe-utils'
 import { getI18n } from '@vxe-ui/core'
 import { WidgetTextFormObjVO } from './text-data'
@@ -30,7 +31,7 @@ const getBoldOptions = () => {
   ]
 }
 
-export const WidgetTextFormComponent = defineComponent({
+export const WidgetTextFormComponent = defineVxeComponent({
   props: {
     renderOpts: {
       type: Object as PropType<VxeGlobalRendererHandles.RenderFormDesignWidgetFormViewOptions>,

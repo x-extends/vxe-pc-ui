@@ -1,4 +1,5 @@
-import { defineComponent, h, ref, Ref, computed, nextTick, watch, PropType, reactive, inject } from 'vue'
+import { h, ref, Ref, computed, nextTick, watch, PropType, reactive, inject } from 'vue'
+import { defineVxeComponent } from '../../ui/src/comp'
 import XEUtils from 'xe-utils'
 import { getConfig, getI18n, createEvent, useSize } from '../../ui'
 import { getFuncText } from '../../ui/src/utils'
@@ -7,7 +8,7 @@ import type { VxeTextareaPropTypes, TextareaReactData, TextareaMethods, VxeTexta
 
 let autoTxtElem: HTMLDivElement
 
-export default defineComponent({
+export default defineVxeComponent({
   name: 'VxeTextarea',
   props: {
     modelValue: [String, Number] as PropType<VxeTextareaPropTypes.ModelValue>,

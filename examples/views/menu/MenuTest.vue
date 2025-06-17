@@ -9,7 +9,7 @@
 
 <script lang="ts" setup>
 import { ref } from 'vue'
-import { VxeMenuPropTypes, VxeMenuEvents } from 'vxe-pc-ui'
+import { VxeMenuPropTypes, VxeMenuEvents } from '../../../types'
 
 const selectNav = ref('user')
 const isCollapsed = ref(false)

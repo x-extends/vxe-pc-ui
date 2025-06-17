@@ -1,4 +1,5 @@
-import { defineComponent, ref, h, reactive, computed, onMounted, watch, PropType, onUnmounted } from 'vue'
+import { ref, h, reactive, computed, onMounted, watch, PropType, onUnmounted } from 'vue'
+import { defineVxeComponent } from '../../ui/src/comp'
 import XEUtils from 'xe-utils'
 import { getConfig, createEvent, globalEvents } from '../../ui'
 import { toCssUnit } from '../../ui/src/dom'
@@ -6,7 +7,7 @@ import { getContentUrl } from './util'
 
 import type { WatermarkReactData, VxeWatermarkEmits, WatermarkMethods, VxeWatermarkPropTypes, WatermarkPrivateMethods, ValueOf, VxeComponentStyleType, WatermarkPrivateRef, VxeWatermarkPrivateComputed, VxeWatermarkConstructor, VxeWatermarkPrivateMethods } from '../../../types'
 
-export default defineComponent({
+export default defineVxeComponent({
   name: 'VxeWatermark',
   props: {
     width: String as PropType<VxeWatermarkPropTypes.Width>,

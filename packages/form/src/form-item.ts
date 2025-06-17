@@ -1,4 +1,5 @@
-import { defineComponent, h, onUnmounted, inject, ref, provide, onMounted, PropType, reactive } from 'vue'
+import { h, onUnmounted, inject, ref, provide, onMounted, PropType, reactive } from 'vue'
+import { defineVxeComponent } from '../../ui/src/comp'
 import { createItem, watchItem, destroyItem, assembleItem, XEFormItemProvide } from './util'
 import { renderer, renderEmptyElement } from '../../ui'
 import { isEnableConf } from '../../ui/src/utils'
@@ -86,7 +87,7 @@ export const formItemProps = {
   rules: Array as PropType<VxeFormItemPropTypes.Rules>
 }
 
-export default defineComponent({
+export default defineVxeComponent({
   name: 'VxeFormItem',
   props: formItemProps,
   setup (props, { slots }) {

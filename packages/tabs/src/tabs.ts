@@ -1,4 +1,5 @@
-import { defineComponent, ref, h, reactive, inject, PropType, provide, computed, onUnmounted, watch, nextTick, onMounted } from 'vue'
+import { ref, h, reactive, inject, PropType, provide, computed, onUnmounted, watch, nextTick, onMounted } from 'vue'
+import { defineVxeComponent } from '../../ui/src/comp'
 import { createEvent, getConfig, getIcon, globalEvents, permission, renderEmptyElement } from '../../ui'
 import { getSlotVNs } from '../../ui/src/vn'
 import { toCssUnit } from '../../ui/src/dom'
@@ -8,7 +9,7 @@ import XEUtils from 'xe-utils'
 
 import type { VxeTabsPropTypes, VxeTabPaneProps, VxeTabsEmits, TabsInternalData, TabsReactData, TabsPrivateRef, VxeTabsPrivateComputed, VxeTabsConstructor, VxeTabsPrivateMethods, VxeTabPaneDefines, ValueOf, TabsMethods, TabsPrivateMethods } from '../../../types'
 
-export default defineComponent({
+export default defineVxeComponent({
   name: 'VxeTabs',
   props: {
     modelValue: [String, Number, Boolean] as PropType<VxeTabsPropTypes.ModelValue>,

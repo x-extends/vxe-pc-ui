@@ -1,4 +1,5 @@
-import { defineComponent, ref, h, reactive, PropType, computed, VNode, watch, onUnmounted, nextTick } from 'vue'
+import { ref, h, reactive, PropType, computed, VNode, watch, onUnmounted, nextTick } from 'vue'
+import { defineVxeComponent } from '../../ui/src/comp'
 import { createEvent, getIcon, getConfig, useSize, renderEmptyElement } from '../../ui'
 import XEUtils from 'xe-utils'
 import { getSlotVNs } from '../../ui/src/vn'
@@ -14,7 +15,7 @@ function getNodeUniqueId () {
   return XEUtils.uniqueId('node_')
 }
 
-export default defineComponent({
+export default defineVxeComponent({
   name: 'VxeTree',
   props: {
     data: Array as PropType<VxeTreePropTypes.Data>,

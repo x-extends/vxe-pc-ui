@@ -1,11 +1,12 @@
-import { defineComponent, ref, h, reactive, PropType } from 'vue'
+import { ref, h, reactive, PropType } from 'vue'
+import { defineVxeComponent } from '../../ui/src/comp'
 import XEUtils from 'xe-utils'
 import { getConfig, createEvent, useSize, renderEmptyElement } from '../../ui'
 import { getSlotVNs } from '../../ui/src/vn'
 
 import type { VxeTagPropTypes, TagReactData, TagPrivateRef, VxeTagEmits, VxeTagPrivateComputed, TagMethods, TagPrivateMethods, VxeTagConstructor, VxeTagPrivateMethods, ValueOf } from '../../../types'
 
-export default defineComponent({
+export default defineVxeComponent({
   name: 'VxeTag',
   props: {
     status: String as PropType<VxeTagPropTypes.Status>,

@@ -1,11 +1,12 @@
-import { reactive, defineComponent, h, computed, PropType, watch } from 'vue'
+import { reactive, h, computed, PropType, watch } from 'vue'
+import { defineVxeComponent } from '../../ui/src/comp'
 import { getConfig, getIcon, getI18n, createEvent, useSize, renderEmptyElement } from '../../ui'
 import { getSlotVNs } from '../../ui/src/vn'
 import XEUtils from 'xe-utils'
 
 import type { VxeLoadingPropTypes, LoadingReactData, VxeLoadingPrivateComputed, LoadingMethods, LoadingPrivateMethods, VxeLoadingEmits, VxeLoadingConstructor, VxeLoadingPrivateMethods, ValueOf } from '../../../types'
 
-export default defineComponent({
+export default defineVxeComponent({
   name: 'VxeLoading',
   props: {
     modelValue: Boolean as PropType<VxeLoadingPropTypes.ModelValue>,

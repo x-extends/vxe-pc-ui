@@ -1,11 +1,12 @@
-import { defineComponent, h, computed, inject, PropType, reactive } from 'vue'
+import { h, computed, inject, PropType, reactive } from 'vue'
+import { defineVxeComponent } from '../../ui/src/comp'
 import XEUtils from 'xe-utils'
 import { getFuncText } from '../../ui/src/utils'
 import { getConfig, createEvent, useSize, getIcon } from '../../ui'
 
 import type { VxeCheckboxConstructor, VxeCheckboxGroupConstructor, CheckboxReactData, VxeCheckboxEmits, ValueOf, VxeCheckboxGroupPrivateMethods, CheckboxMethods, VxeCheckboxPropTypes, VxeFormConstructor, VxeFormPrivateMethods, VxeFormDefines } from '../../../types'
 
-export default defineComponent({
+export default defineVxeComponent({
   name: 'VxeCheckbox',
   props: {
     modelValue: [String, Number, Boolean] as PropType<VxeCheckboxPropTypes.ModelValue>,

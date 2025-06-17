@@ -1,4 +1,5 @@
-import { defineComponent, h, inject, TransitionGroup } from 'vue'
+import { h, inject, TransitionGroup } from 'vue'
+import { defineVxeComponent } from '../../ui/src/comp'
 import { renderer } from '@vxe-ui/core'
 import { getSlotVNs } from '../../ui/src/vn'
 import { ViewItemComponent } from './layout-view-item'
@@ -8,7 +9,7 @@ import XEUtils from 'xe-utils'
 
 import type { VxeFormDesignConstructor, VxeFormDesignPrivateMethods, VxeGlobalRendererHandles } from '../../../types'
 
-export default defineComponent({
+export default defineVxeComponent({
   name: 'FormDesignLayoutPreview',
   props: {},
   emits: [],

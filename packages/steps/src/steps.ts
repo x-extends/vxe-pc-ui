@@ -1,10 +1,11 @@
-import { defineComponent, ref, h, reactive } from 'vue'
+import { ref, h, reactive } from 'vue'
+import { defineVxeComponent } from '../../ui/src/comp'
 import XEUtils from 'xe-utils'
 import { createEvent } from '../../ui'
 
 import type { StepsReactData, VxeStepsEmits, StepsMethods, StepsPrivateMethods, ValueOf, StepsPrivateRef, VxeStepsPrivateComputed, VxeStepsConstructor, VxeStepsPrivateMethods } from '../../../types'
 
-export default defineComponent({
+export default defineVxeComponent({
   name: 'VxeSteps',
   props: {
   },

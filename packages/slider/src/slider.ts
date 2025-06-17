@@ -1,10 +1,11 @@
-import { defineComponent, ref, h, reactive, PropType, watch, computed, inject, onMounted } from 'vue'
+import { ref, h, reactive, PropType, watch, computed, inject, onMounted } from 'vue'
+import { defineVxeComponent } from '../../ui/src/comp'
 import XEUtils from 'xe-utils'
 import { getConfig, createEvent, renderEmptyElement, useSize } from '../../ui'
 
 import type { SliderReactData, VxeSliderEmits, VxeSliderPropTypes, SliderMethods, VxeFormDefines, VxeFormConstructor, VxeFormPrivateMethods, SliderPrivateMethods, ValueOf, SliderPrivateRef, VxeSliderPrivateComputed, VxeSliderConstructor, VxeSliderPrivateMethods } from '../../../types'
 
-export default defineComponent({
+export default defineVxeComponent({
   name: 'VxeSlider',
   props: {
     modelValue: [String, Number, Array] as PropType<VxeSliderPropTypes.ModelValue>,

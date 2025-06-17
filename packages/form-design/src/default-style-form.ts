@@ -1,4 +1,5 @@
-import { h, defineComponent, ref, PropType, inject, createCommentVNode } from 'vue'
+import { h, ref, PropType, inject, createCommentVNode } from 'vue'
+import { defineVxeComponent } from '../../ui/src/comp'
 import { getI18n } from '@vxe-ui/core'
 import VxeFormComponent from '../../form/src/form'
 import VxeFormItemComponent from '../../form/src/form-item'
@@ -62,7 +63,7 @@ const renderLayoutOption = (
   ])
 }
 
-export const DefaultPCStyleFormComponent = defineComponent({
+export const DefaultPCStyleFormComponent = defineVxeComponent({
   name: 'DefaultPCStyleForm',
   props: {
     formData: {
@@ -203,7 +204,7 @@ export const DefaultPCStyleFormComponent = defineComponent({
   }
 })
 
-export const DefaultMobileStyleFormComponent = defineComponent({
+export const DefaultMobileStyleFormComponent = defineVxeComponent({
   name: 'DefaultMobileStyleForm',
   props: {
     formData: {

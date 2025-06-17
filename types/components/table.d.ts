@@ -822,16 +822,26 @@ export namespace VxeTablePropTypes {
      * 是否启用 localStorage 本地保存，会将列操作状态保留在本地（需要有 id）
      */
     storage?: boolean | VxeTableDefines.VxeTableCustomStorageObj
+    /**
+     * 只对 storage 有效，缓存项的配置
+     */
+    storeOptions?: VxeTableDefines.VxeTableCustomStorageObj
+    /**
+     * 只对 storage 有效，用于重写默认的恢复自定义配置逻辑，用于实现服务端保存
+     */
     restoreStore?(params: {
       $table: VxeTableConstructor<D>
       id: string
       type: 'restore'
       storeData: VxeTableDefines.CustomStoreData
     }): VxeTableDefines.CustomStoreData | Promise<VxeTableDefines.CustomStoreData>
+    /**
+     * 只对 storage 有效，重写默认的保存方法，用于实现服务端保存
+     */
     updateStore?(params: {
       $table: VxeTableConstructor<D>
       id: string
-      type: 'reset' | 'confirm' | 'update:width' | 'update:fixed' | 'update:sort' | 'update:visible'
+      type: 'reset' | 'confirm' | 'update:width' | 'update:fixed' | 'update:sort' | 'update:visible' | 'update:rowGroup' | 'update:aggFunc'
       storeData: VxeTableDefines.CustomStoreData
     }): Promise<any>
     mode?: 'default' | 'modal' | 'drawer' | 'simple' | 'popup' | '' | null
@@ -863,6 +873,9 @@ export namespace VxeTablePropTypes {
       maskClosable?: VxeDrawerPropTypes.MaskClosable
     }
     trigger?: 'manual' | 'hover' | 'click' | '' | null
+    /**
+     * 是否实时同步操作
+     */
     immediate?: boolean
     placement?: 'left' | 'right' | 'top-left' | 'top-right' | 'bottom-left' | 'bottom-right'
     /**
@@ -879,10 +892,30 @@ export namespace VxeTablePropTypes {
       $table: VxeTableConstructor<D>
       column: VxeTableDefines.ColumnInfo<D>
     }): boolean
+    /**
+     * 是否允许个性化列显示与隐藏
+     */
     allowVisible?: boolean
+    /**
+     * 是否允许自定义冻结列
+     */
     allowFixed?: boolean
+    /**
+     * 是否允许自定义排序
+     */
     allowSort?: boolean
+    /**
+     * 是否允许自定义调整列宽
+     */
     allowResizable?: boolean
+    /**
+     * 允许自定义聚合分组配置
+     */
+    allowGroup?: boolean
+    /**
+     * 允许自定义聚合函数配置
+     */
+    allowValues?: boolean
     showFooter?: boolean
     icon?: string
     resetButtonText?: string
@@ -3272,6 +3305,8 @@ export interface TablePrivateComputed<D = any> {
     x: boolean
     y: boolean
   }>
+  computeRowGroupFields: ComputedRef<string[] | null | undefined>
+  computeRowGroupColumns: ComputedRef<VxeTableDefines.ColumnInfo<D>[]>
 
   /**
    * @deprecated
@@ -3505,6 +3540,7 @@ export interface TableReactData<D = any> {
 
   isRowGroupStatus: boolean
   rowGroupList: VxeTableDefines.RowGroupItem[]
+  aggHandleFields: string[]
 
   rowGroupExpandedFlag: number
   rowExpandedFlag: number
@@ -5712,10 +5748,30 @@ export namespace VxeTableDefines {
   }
 
   export interface VxeTableCustomStorageObj {
+    /**
+     * 显示/隐藏列状态
+     */
     visible?: boolean
+    /**
+     * 列拖拽调整顺序
+     */
     resizable?: boolean
+    /**
+     * 冻结列状态
+     */
     fixed?: boolean
+    /**
+     * 列顺序
+     */
     sort?: boolean
+    /**
+     * 聚合分组字段
+     */
+    rowGroup?: boolean
+    /**
+     * 聚合函数
+     */
+    aggFunc?: boolean
   }
 
   export interface ExtortSheetMethodParams {

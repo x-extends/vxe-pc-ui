@@ -1,4 +1,5 @@
-import { defineComponent, ref, h, reactive, PropType, inject, resolveComponent, watch, VNode, computed, nextTick, onBeforeUnmount, onMounted } from 'vue'
+import { ref, h, reactive, PropType, inject, resolveComponent, watch, VNode, computed, nextTick, onBeforeUnmount, onMounted } from 'vue'
+import { defineVxeComponent } from '../../ui/src/comp'
 import XEUtils from 'xe-utils'
 import { getConfig, getIcon, createEvent, permission, useSize, globalEvents, renderEmptyElement } from '../../ui'
 import { toCssUnit } from '../../ui/src/dom'
@@ -8,7 +9,7 @@ import VxeLoadingComponent from '../../loading/src/loading'
 
 import type { VxeMenuDefines, VxeMenuPropTypes, MenuReactData, VxeMenuEmits, MenuMethods, VxeComponentSlotType, VxeLayoutAsidePropTypes, MenuPrivateMethods, MenuPrivateRef, VxeMenuPrivateComputed, VxeMenuConstructor, VxeMenuPrivateMethods, ValueOf, VxeLayoutAsideConstructor, VxeLayoutAsidePrivateMethods } from '../../../types'
 
-export default defineComponent({
+export default defineVxeComponent({
   name: 'VxeMenu',
   props: {
     modelValue: [String, Number] as PropType<VxeMenuPropTypes.ModelValue>,

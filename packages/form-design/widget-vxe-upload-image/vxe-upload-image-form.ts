@@ -1,4 +1,5 @@
-import { PropType, createCommentVNode, defineComponent, h, ref } from 'vue'
+import { PropType, createCommentVNode, h, ref } from 'vue'
+import { defineVxeComponent } from '../../ui/src/comp'
 import { getI18n } from '@vxe-ui/core'
 import { WidgetVxeUploadImageFormObjVO } from './vxe-upload-image-data'
 import { getLimitSizeOptions } from '../widget-vxe-upload-file/vxe-upload-file-data'
@@ -10,7 +11,7 @@ import VxeSwitchComponent from '../../switch/src/switch'
 
 import type { VxeGlobalRendererHandles } from '../../../types'
 
-export const WidgetVxeUploadImageFormComponent = defineComponent({
+export const WidgetVxeUploadImageFormComponent = defineVxeComponent({
   props: {
     renderOpts: {
       type: Object as PropType<VxeGlobalRendererHandles.RenderFormDesignWidgetFormViewOptions>,

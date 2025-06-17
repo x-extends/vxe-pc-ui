@@ -1,4 +1,5 @@
-import { PropType, defineComponent, h, inject } from 'vue'
+import { PropType, h, inject } from 'vue'
+import { defineVxeComponent } from '../../ui/src/comp'
 import { getI18n } from '@vxe-ui/core'
 import { useWidgetName } from '../../form-design/src/use'
 import { WidgetSubtableFormObjVO } from './subtable-data'
@@ -9,7 +10,7 @@ import VxeSwitchComponent from '../../switch/src/switch'
 
 import type { VxeGlobalRendererHandles, VxeFormDesignConstructor, VxeFormDesignPrivateMethods } from '../../../types'
 
-export const WidgetSubtableFormComponent = defineComponent({
+export const WidgetSubtableFormComponent = defineVxeComponent({
   props: {
     renderOpts: {
       type: Object as PropType<VxeGlobalRendererHandles.RenderFormDesignWidgetFormViewOptions>,

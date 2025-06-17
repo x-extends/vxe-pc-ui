@@ -1,4 +1,5 @@
-import { h, defineComponent, ref, inject, createCommentVNode, computed, reactive } from 'vue'
+import { h, ref, inject, createCommentVNode, computed, reactive } from 'vue'
+import { defineVxeComponent } from '../../ui/src/comp'
 import { VxeUI, getIcon, getI18n, renderer } from '@vxe-ui/core'
 import { createListDesignActionButton } from '../render/util'
 import VxeFormComponent from '../../form/src/form'
@@ -23,7 +24,7 @@ interface SearchConfigObjItem extends VxeListDesignDefines.ListColumnObjItem {
 // 控件原始配置信息，带响应
 const refWidgetReactConfigMaps = ref<Record<string, VxeGlobalRendererHandles.CreateFormDesignWidgetConfigObj>>({})
 
-export const DefaultFieldSettingFormComponent = defineComponent({
+export const DefaultFieldSettingFormComponent = defineVxeComponent({
   name: 'DefaultFieldSettingForm',
   props: {},
   emits: [],
@@ -386,7 +387,7 @@ export const DefaultFieldSettingFormComponent = defineComponent({
   }
 })
 
-export const DefaultParameterSettingFormComponent = defineComponent({
+export const DefaultParameterSettingFormComponent = defineVxeComponent({
   name: 'DefaultListSettingTabComponent',
   props: {},
   emits: [],

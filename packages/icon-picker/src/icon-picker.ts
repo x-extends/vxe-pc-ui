@@ -1,4 +1,5 @@
-import { defineComponent, h, Teleport, PropType, ref, inject, watch, computed, provide, onUnmounted, reactive, nextTick, onMounted } from 'vue'
+import { h, Teleport, PropType, ref, inject, watch, computed, provide, onUnmounted, reactive, nextTick, onMounted } from 'vue'
+import { defineVxeComponent } from '../../ui/src/comp'
 import XEUtils from 'xe-utils'
 import { getConfig, getIcon, getI18n, globalEvents, createEvent, useSize, GLOBAL_EVENT_KEYS, renderEmptyElement } from '../../ui'
 import { getEventTargetNode, getAbsolutePos } from '../../ui/src/dom'
@@ -7,7 +8,7 @@ import { getLastZIndex, nextZIndex, getFuncText } from '../../ui/src/utils'
 import type { VxeIconPickerPropTypes, VxeIconPickerConstructor, IconPickerInternalData, ValueOf, IconPickerReactData, VxeIconPickerEmits, IconPickerMethods, IconPickerPrivateRef, VxeIconPickerMethods, VxeIconPickerDefines, VxeDrawerConstructor, VxeDrawerMethods, VxeFormDefines, VxeFormConstructor, VxeFormPrivateMethods, VxeModalConstructor, VxeModalMethods } from '../../../types'
 import type { VxeTableConstructor, VxeTablePrivateMethods } from '../../../types/components/table'
 
-export default defineComponent({
+export default defineVxeComponent({
   name: 'VxeIconPicker',
   props: {
     modelValue: String as PropType<VxeIconPickerPropTypes.ModelValue>,

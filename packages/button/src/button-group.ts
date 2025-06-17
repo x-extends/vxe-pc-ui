@@ -1,11 +1,12 @@
-import { defineComponent, h, reactive, provide, PropType } from 'vue'
+import { h, reactive, provide, PropType } from 'vue'
+import { defineVxeComponent } from '../../ui/src/comp'
 import { getConfig, createEvent, useSize, usePermission, renderEmptyElement } from '../../ui'
 import XEUtils from 'xe-utils'
 import VxeButtonComponent from './button'
 
 import type { VxeButtonGroupPropTypes, VxeButtonGroupEmits, ButtonGroupReactData, VxeButtonGroupConstructor, VxeButtonGroupPrivateMethods, ButtonGroupMethods, ButtonPrivateComputed, ButtonGroupPrivateMethods } from '../../../types'
 
-export default defineComponent({
+export default defineVxeComponent({
   name: 'VxeButtonGroup',
   props: {
     options: Array as PropType<VxeButtonGroupPropTypes.Options>,

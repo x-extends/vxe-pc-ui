@@ -1,4 +1,5 @@
-import { defineComponent, ref, h, reactive, watch, computed, TransitionGroup, PropType, inject, onUnmounted, onMounted } from 'vue'
+import { ref, h, reactive, watch, computed, TransitionGroup, PropType, inject, onUnmounted, onMounted } from 'vue'
+import { defineVxeComponent } from '../../ui/src/comp'
 import XEUtils from 'xe-utils'
 import { VxeUI, getConfig, getI18n, getIcon, useSize, createEvent, globalEvents, renderEmptyElement } from '../../ui'
 import { getSlotVNs } from '../../ui/src/vn'
@@ -10,7 +11,7 @@ import VxeButtonComponent from '../../button/src/button'
 import type { VxeUploadDefines, VxeUploadPropTypes, UploadReactData, UploadInternalData, UploadPrivateMethods, UploadMethods, VxeUploadEmits, UploadPrivateRef, VxeUploadPrivateComputed, VxeUploadConstructor, VxeUploadPrivateMethods, VxeFormDefines, VxeFormConstructor, VxeFormPrivateMethods, ValueOf } from '../../../types'
 import type { VxeTableConstructor, VxeTablePrivateMethods } from '../../../types/components/table'
 
-export default defineComponent({
+export default defineVxeComponent({
   name: 'VxeUpload',
   props: {
     modelValue: [Array, String, Object] as PropType<VxeUploadPropTypes.ModelValue>,

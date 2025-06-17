@@ -1,4 +1,5 @@
-import { defineComponent, h, ref, Ref, nextTick, onBeforeUnmount, onMounted, reactive, watch, PropType } from 'vue'
+import { h, ref, Ref, nextTick, onBeforeUnmount, onMounted, reactive, watch, PropType } from 'vue'
+import { defineVxeComponent } from '../../ui/src/comp'
 import XEUtils from 'xe-utils'
 import { getConfig, createEvent, useSize } from '../../ui'
 import { getLastZIndex, nextZIndex } from '../../ui/src/utils'
@@ -7,7 +8,7 @@ import { getSlotVNs } from '../../ui/src/vn'
 
 import type { VxeTooltipPropTypes, VxeTooltipConstructor, VxeTooltipEmits, TooltipInternalData, TooltipReactData, TooltipMethods, TooltipPrivateRef } from '../../../types'
 
-export default defineComponent({
+export default defineVxeComponent({
   name: 'VxeTooltip',
   props: {
     modelValue: Boolean,

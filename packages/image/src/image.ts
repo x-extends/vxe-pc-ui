@@ -1,4 +1,5 @@
-import { defineComponent, ref, h, inject, reactive, PropType, computed } from 'vue'
+import { ref, h, inject, reactive, PropType, computed } from 'vue'
+import { defineVxeComponent } from '../../ui/src/comp'
 import { getConfig, createEvent, useSize } from '../../ui'
 import XEUtils from 'xe-utils'
 import { toCssUnit } from '../../ui/src/dom'
@@ -6,7 +7,7 @@ import { openPreviewImage } from './util'
 
 import type { VxeImagePropTypes, ImageReactData, VxeImageEmits, ImagePrivateRef, VxeImagePrivateComputed, VxeImageConstructor, VxeImagePrivateMethods, ImageMethods, ImagePrivateMethods, VxeImageGroupConstructor, VxeImageGroupPrivateMethods } from '../../../types'
 
-export default defineComponent({
+export default defineVxeComponent({
   name: 'VxeImage',
   props: {
     src: [String, Array] as PropType<VxeImagePropTypes.Src>,

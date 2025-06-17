@@ -1,4 +1,5 @@
-import { defineComponent, ref, h, PropType, computed, inject, watch, provide, nextTick, Teleport, onMounted, onUnmounted, reactive } from 'vue'
+import { ref, h, PropType, computed, inject, watch, provide, nextTick, Teleport, onMounted, onUnmounted, reactive } from 'vue'
+import { defineVxeComponent } from '../../ui/src/comp'
 import XEUtils from 'xe-utils'
 import { VxeUI, getConfig, getIcon, globalEvents, getI18n, createEvent, useSize, renderEmptyElement } from '../../ui'
 import { getEventTargetNode, updatePanelPlacement, toCssUnit } from '../../ui/src/dom'
@@ -15,7 +16,7 @@ export function getRowUniqueId () {
   return XEUtils.uniqueId('row_')
 }
 
-export default defineComponent({
+export default defineVxeComponent({
   name: 'VxeTableSelect',
   props: {
     modelValue: [String, Number, Array] as PropType<VxeTableSelectPropTypes.ModelValue>,

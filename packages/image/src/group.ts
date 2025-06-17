@@ -1,4 +1,5 @@
-import { defineComponent, computed, h, provide, PropType } from 'vue'
+import { computed, h, provide, PropType } from 'vue'
+import { defineVxeComponent } from '../../ui/src/comp'
 import { getConfig, createEvent, useSize } from '@vxe-ui/core'
 import { openPreviewImage } from './util'
 import XEUtils from 'xe-utils'
@@ -6,7 +7,7 @@ import VxeImageComponent from './image'
 
 import type { VxeImageGroupPropTypes, VxeImageGroupEmits, VxeImageGroupConstructor, VxeImageGroupPrivateMethods, ImageGroupMethods, ButtonPrivateComputed, ImageGroupPrivateMethods } from '../../../types'
 
-export default defineComponent({
+export default defineVxeComponent({
   name: 'VxeImageGroup',
   props: {
     urlList: [Array, String] as PropType<VxeImageGroupPropTypes.UrlList>,

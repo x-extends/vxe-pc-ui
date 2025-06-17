@@ -1,4 +1,5 @@
-import { defineComponent, ref, h, reactive, nextTick, PropType, inject, provide, watch } from 'vue'
+import { ref, h, reactive, nextTick, PropType, inject, provide, watch } from 'vue'
+import { defineVxeComponent } from '../../ui/src/comp'
 import XEUtils from 'xe-utils'
 import { getConfig, renderer, useSize, createEvent, renderEmptyElement } from '../../ui'
 import { getSlotVNs } from '../../ui/src/vn'
@@ -11,7 +12,7 @@ import { warnLog } from '../../ui/src/log'
 
 import type { VxeGlobalRendererHandles, VxeFormViewPropTypes, FormViewReactData, ValueOf, FormViewPrivateRef, FormViewMethods, FormViewPrivateMethods, VxeFormViewEmits, VxeFormViewPrivateComputed, VxeFormProps, VxeFormDesignDefines, VxeFormViewConstructor, VxeFormViewPrivateMethods, VxeFormPropTypes, VxeFormInstance, VxeFormViewDefines, VxeFormDesignLayoutStyle, VxeFormEvents } from '../../../types'
 
-export default defineComponent({
+export default defineVxeComponent({
   name: 'VxeFormView',
   props: {
     modelValue: Object as PropType<VxeFormViewPropTypes.ModelValue>,

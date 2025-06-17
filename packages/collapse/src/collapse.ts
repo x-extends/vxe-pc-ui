@@ -1,11 +1,12 @@
-import { defineComponent, ref, h, reactive, provide, computed, PropType, watch } from 'vue'
+import { ref, h, reactive, provide, computed, PropType, watch } from 'vue'
+import { defineVxeComponent } from '../../ui/src/comp'
 import { getConfig, getIcon, createEvent, permission, renderEmptyElement, useSize } from '../../ui'
 import { getSlotVNs } from '../../ui/src/vn'
 import XEUtils from 'xe-utils'
 
 import type { CollapseReactData, VxeCollapseEmits, CollapsePrivateRef, VxeCollapsePropTypes, VxeCollapsePanePropTypes, VxeCollapsePaneProps, VxeCollapsePaneDefines, ValueOf, CollapseMethods, CollapsePrivateMethods, VxeCollapsePrivateComputed, VxeCollapseConstructor, VxeCollapsePrivateMethods } from '../../../types'
 
-export default defineComponent({
+export default defineVxeComponent({
   name: 'VxeCollapse',
   props: {
     modelValue: Array as PropType<VxeCollapsePropTypes.ModelValue>,

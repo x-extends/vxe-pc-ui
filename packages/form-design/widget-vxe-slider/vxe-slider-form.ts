@@ -1,4 +1,5 @@
-import { PropType, defineComponent, h } from 'vue'
+import { PropType, h } from 'vue'
+import { defineVxeComponent } from '../../ui/src/comp'
 import { getI18n } from '@vxe-ui/core'
 import { WidgetVxeSliderFormObjVO } from './vxe-slider-data'
 import { useWidgetName } from '../src/use'
@@ -8,7 +9,7 @@ import VxeFormItemComponent from '../../form/src/form-item'
 
 import type { VxeGlobalRendererHandles } from '../../../types'
 
-export const WidgetVxeSliderFormComponent = defineComponent({
+export const WidgetVxeSliderFormComponent = defineVxeComponent({
   props: {
     renderOpts: {
       type: Object as PropType<VxeGlobalRendererHandles.RenderFormDesignWidgetFormViewOptions>,

@@ -1,4 +1,5 @@
-import { PropType, defineComponent, h, inject, computed, createCommentVNode } from 'vue'
+import { PropType, h, inject, computed, createCommentVNode } from 'vue'
+import { defineVxeComponent } from '../../ui/src/comp'
 import { hasFormDesignLayoutType } from '../src/util'
 import { renderer, getIcon } from '@vxe-ui/core'
 import { getSlotVNs } from '../../ui/src/vn'
@@ -12,7 +13,7 @@ import VxeButtonComponent from '../../button/src/button'
 
 import type { VxeGlobalRendererHandles, VxeFormDesignDefines, VxeFormDesignConstructor, VxeFormDesignPrivateMethods, VxeFormViewConstructor, VxeFormViewPrivateMethods } from '../../../types'
 
-const ViewColItemComponent = defineComponent({
+const ViewColItemComponent = defineVxeComponent({
   name: 'ViewColItem',
   props: {
     parentWidget: {
@@ -170,7 +171,7 @@ const ViewColItemComponent = defineComponent({
   }
 })
 
-export const WidgetRowEditComponent = defineComponent({
+export const WidgetRowEditComponent = defineVxeComponent({
   name: 'WidgetRowEdit',
   props: {
     renderOpts: {
@@ -217,7 +218,7 @@ export const WidgetRowEditComponent = defineComponent({
   }
 })
 
-export const WidgetRowViewComponent = defineComponent({
+export const WidgetRowViewComponent = defineVxeComponent({
   name: 'WidgetRowView',
   props: {
     renderOpts: {

@@ -1,11 +1,12 @@
-import { defineComponent, ref, h, inject, PropType, watch, reactive, onMounted, onUnmounted } from 'vue'
+import { ref, h, inject, PropType, watch, reactive, onMounted, onUnmounted } from 'vue'
+import { defineVxeComponent } from '../../ui/src/comp'
 import XEUtils from 'xe-utils'
 import { createEvent } from '../../ui'
 import { assembleCollapseItem, destroyCollapseItem } from './util'
 
 import type { CollapsePaneReactData, VxeCollapsePaneEmits, VxeCollapsePanePropTypes, CollapsePaneMethods, CollapsePanePrivateMethods, ValueOf, VxeCollapsePaneDefines, VxeCollapseConstructor, VxeCollapsePrivateMethods, CollapsePanePrivateRef, VxeCollapsePanePrivateComputed, VxeCollapsePaneConstructor, VxeCollapsePanePrivateMethods } from '../../../types'
 
-export default defineComponent({
+export default defineVxeComponent({
   name: 'VxeCollapsePane',
   props: {
     title: [String, Number] as PropType<VxeCollapsePanePropTypes.Title>,

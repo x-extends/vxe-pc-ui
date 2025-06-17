@@ -1,11 +1,12 @@
-import { defineComponent, ref, h, reactive, PropType, inject, watch, onMounted, onUnmounted } from 'vue'
+import { ref, h, reactive, PropType, inject, watch, onMounted, onUnmounted } from 'vue'
+import { defineVxeComponent } from '../../ui/src/comp'
 import { createEvent } from '../../ui'
 import { assembleCarouselItem, destroyCarouselItem } from './util'
 import XEUtils from 'xe-utils'
 
 import type { VxeCarouselItemPropTypes, CarouselItemReactData, CarouselItemPrivateRef, CarouselItemMethods, CarouselItemPrivateMethods, ValueOf, VxeCarouselItemEmits, VxeCarouselDefines, VxeCarouselItemPrivateComputed, VxeCarouselItemConstructor, VxeCarouselItemPrivateMethods, VxeCarouselConstructor, VxeCarouselPrivateMethods } from '../../../types'
 
-export default defineComponent({
+export default defineVxeComponent({
   name: 'VxeCarouselItem',
   props: {
     name: [String, Number] as PropType<VxeCarouselItemPropTypes.Name>,

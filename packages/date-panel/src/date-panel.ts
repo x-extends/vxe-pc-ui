@@ -1,11 +1,12 @@
-import { defineComponent, h, ref, Ref, computed, reactive, nextTick, watch, PropType, VNode } from 'vue'
+import { h, ref, Ref, computed, reactive, nextTick, watch, PropType, VNode } from 'vue'
+import { defineVxeComponent } from '../../ui/src/comp'
 import XEUtils from 'xe-utils'
 import { getConfig, getI18n, createEvent, useSize, renderEmptyElement } from '../../ui'
 import { toStringTimeDate, getDateQuarter, parseDateValue, parseDateObj } from './util'
 
 import type { VxeDatePanelConstructor, DatePanelInternalData, DatePanelReactData, VxeDatePanelPropTypes, DatePanelMethods, ValueOf, VxeDatePanelEmits, VxeDatePanelDefines } from '../../../types'
 
-export default defineComponent({
+export default defineVxeComponent({
   name: 'VxeDatePanel',
   props: {
     modelValue: [String, Number, Date] as PropType<VxeDatePanelPropTypes.ModelValue>,

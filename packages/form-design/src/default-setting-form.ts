@@ -1,4 +1,5 @@
-import { h, defineComponent, PropType, inject, createCommentVNode } from 'vue'
+import { h, PropType, inject, createCommentVNode } from 'vue'
+import { defineVxeComponent } from '../../ui/src/comp'
 import { getIcon, getI18n } from '../../ui'
 import VxeFormComponent from '../../form/src/form'
 import VxeFormItemComponent from '../../form/src/form-item'
@@ -7,7 +8,7 @@ import VxeTextComponent from '../../text/src/text'
 
 import type { VxeFormDesignDefines, VxeFormDesignConstructor, VxeFormDesignPrivateMethods } from '../../../types'
 
-export const DefaultSettingFormComponent = defineComponent({
+export const DefaultSettingFormComponent = defineVxeComponent({
   name: 'DefaultSettingForm',
   props: {
     formData: {

@@ -1,4 +1,5 @@
-import { defineComponent, ref, computed, h, PropType, nextTick, inject, provide, reactive, Teleport, onMounted, onUnmounted, watch } from 'vue'
+import { ref, computed, h, PropType, nextTick, inject, provide, reactive, Teleport, onMounted, onUnmounted, watch } from 'vue'
+import { defineVxeComponent } from '../../ui/src/comp'
 import { getConfig, getI18n, getIcon, globalEvents, createEvent, useSize, renderEmptyElement } from '../../ui'
 import { getEventTargetNode, updatePanelPlacement, toCssUnit } from '../../ui/src/dom'
 import { getLastZIndex, nextZIndex } from '../../ui/src/utils'
@@ -14,7 +15,7 @@ function getOptUniqueId () {
   return XEUtils.uniqueId('node_')
 }
 
-export default defineComponent({
+export default defineVxeComponent({
   name: 'VxeTreeSelect',
   props: {
     modelValue: [String, Number, Array] as PropType<VxeTreeSelectPropTypes.ModelValue>,

@@ -1,10 +1,11 @@
-import { defineComponent, h, PropType } from 'vue'
+import { h, PropType } from 'vue'
+import { defineVxeComponent } from '../../ui/src/comp'
 import { getConfig, createEvent, useSize } from '../../ui'
 import XEUtils from 'xe-utils'
 
 import type { VxeIconPropTypes, VxeIconEmits, IconMethods, IconPrivateMethods, VxeIconConstructor, VxeIconPrivateMethods, ValueOf } from '../../../types'
 
-export default defineComponent({
+export default defineVxeComponent({
   name: 'VxeIcon',
   props: {
     name: String as PropType<VxeIconPropTypes.Name>,

@@ -1,10 +1,11 @@
-import { defineComponent, ref, h, PropType, inject, reactive, computed } from 'vue'
+import { ref, h, PropType, inject, reactive, computed } from 'vue'
+import { defineVxeComponent } from '../../ui/src/comp'
 import XEUtils from 'xe-utils'
 import { getConfig, getIcon, createEvent, useSize } from '../../ui'
 
 import type { RateReactData, VxeRateEmits, RateMethods, VxeRatePropTypes, RatePrivateMethods, VxeFormDefines, ValueOf, VxeFormConstructor, VxeFormPrivateMethods, RatePrivateRef, VxeRatePrivateComputed, VxeRateConstructor, VxeRatePrivateMethods } from '../../../types'
 
-export default defineComponent({
+export default defineVxeComponent({
   name: 'VxeRate',
   props: {
     modelValue: [Number, String] as PropType<VxeRatePropTypes.ModelValue>,

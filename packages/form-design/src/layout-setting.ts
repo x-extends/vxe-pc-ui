@@ -1,4 +1,5 @@
-import { defineComponent, h, inject, createCommentVNode, watch, ref } from 'vue'
+import { h, inject, createCommentVNode, watch, ref } from 'vue'
+import { defineVxeComponent } from '../../ui/src/comp'
 import { getI18n, renderer } from '@vxe-ui/core'
 import { getSlotVNs } from '../../ui/src/vn'
 import VxeTabsComponent from '../../tabs/src/tabs'
@@ -7,7 +8,7 @@ import { DefaultSettingFormComponent } from './default-setting-form'
 
 import type { VxeFormDesignConstructor, VxeFormDesignPrivateMethods } from '../../../types'
 
-export default defineComponent({
+export default defineVxeComponent({
   name: 'FormDesignLayoutSetting',
   props: {},
   emits: [],

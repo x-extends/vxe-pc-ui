@@ -1,4 +1,5 @@
-import { ref, PropType, defineComponent, inject, h, createCommentVNode, TransitionGroup, computed, nextTick } from 'vue'
+import { ref, PropType, inject, h, createCommentVNode, TransitionGroup, computed, nextTick } from 'vue'
+import { defineVxeComponent } from '../../ui/src/comp'
 import { VxeUI, renderer, getIcon, getI18n } from '@vxe-ui/core'
 import XEUtils from 'xe-utils'
 import { hasFormDesignLayoutType } from '../src/util'
@@ -14,7 +15,7 @@ import type { VxeGridComponent, VxeGridPropTypes, VxeGridProps, VxeGridInstance 
 import type { VxeTableDefines } from '../../../types/components/table'
 import type { VxeColumnPropTypes } from '../../../types/components/column'
 
-const ViewSubItemComponent = defineComponent({
+const ViewSubItemComponent = defineVxeComponent({
   props: {
     parentWidget: {
       type: Object as PropType<VxeFormDesignDefines.WidgetObjItem<WidgetSubtableFormObjVO>>,
@@ -197,7 +198,7 @@ const ViewSubItemComponent = defineComponent({
   }
 })
 
-export const WidgetSubtableEditComponent = defineComponent({
+export const WidgetSubtableEditComponent = defineVxeComponent({
   props: {
     renderOpts: {
       type: Object as PropType<VxeGlobalRendererHandles.RenderFormDesignWidgetEditOptions>,
@@ -337,7 +338,7 @@ export const WidgetSubtableEditComponent = defineComponent({
   }
 })
 
-export const WidgetSubtableViewComponent = defineComponent({
+export const WidgetSubtableViewComponent = defineVxeComponent({
   props: {
     renderOpts: {
       type: Object as PropType<VxeGlobalRendererHandles.RenderFormDesignWidgetViewOptions>,

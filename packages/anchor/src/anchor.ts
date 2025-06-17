@@ -1,4 +1,5 @@
-import { defineComponent, ref, h, reactive, PropType, VNode, provide, nextTick, onBeforeUnmount, onMounted, watch, computed } from 'vue'
+import { ref, h, reactive, PropType, VNode, provide, nextTick, onBeforeUnmount, onMounted, watch, computed } from 'vue'
+import { defineVxeComponent } from '../../ui/src/comp'
 import XEUtils from 'xe-utils'
 import { createEvent, renderEmptyElement } from '../../ui'
 import { getOffsetPos } from '../../ui/src/dom'
@@ -6,7 +7,7 @@ import VxeAnchorLinkComponent from './anchor-link'
 
 import type { VxeAnchorPropTypes, AnchorReactData, VxeAnchorEmits, AnchorPrivateRef, VxeAnchorPrivateComputed, VxeAnchorConstructor, VxeAnchorPrivateMethods, AnchorMethods, AnchorPrivateMethods } from '../../../types'
 
-export default defineComponent({
+export default defineVxeComponent({
   name: 'VxeAnchor',
   props: {
     modelValue: String as PropType<VxeAnchorPropTypes.ModelValue>,

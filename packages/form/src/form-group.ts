@@ -1,4 +1,5 @@
-import { defineComponent, onUnmounted, inject, ref, h, reactive, onMounted, provide } from 'vue'
+import { onUnmounted, inject, ref, h, reactive, onMounted, provide } from 'vue'
+import { defineVxeComponent } from '../../ui/src/comp'
 import { createItem, watchItem, destroyItem, assembleItem, XEFormItemProvide } from './util'
 import { renderer, renderEmptyElement } from '../../ui'
 import { isEnableConf } from '../../ui/src/utils'
@@ -8,7 +9,7 @@ import XEUtils from 'xe-utils'
 
 import type { VxeFormConstructor, VxeFormPrivateMethods, VxeFormDefines } from '../../../types'
 
-export default defineComponent({
+export default defineVxeComponent({
   name: 'VxeFormGroup',
   props: formItemProps,
   setup (props, context) {

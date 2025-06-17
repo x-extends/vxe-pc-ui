@@ -1,10 +1,11 @@
-import { defineComponent, ref, h, PropType, watch, computed, reactive, resolveComponent, onMounted, onBeforeUnmount } from 'vue'
+import { ref, h, PropType, watch, computed, reactive, resolveComponent, onMounted, onBeforeUnmount } from 'vue'
+import { defineVxeComponent } from '../../ui/src/comp'
 import XEUtils from 'xe-utils'
 import { getConfig, createEvent, usePermission, useSize, renderEmptyElement } from '../../ui'
 
 import type { TextEllipsisReactData, VxeTextEllipsisEmits, VxeTextEllipsisPropTypes, TextEllipsisMethods, TextEllipsisPrivateMethods, ValueOf, TextEllipsisPrivateRef, VxeTextEllipsisPrivateComputed, VxeTextEllipsisConstructor, VxeTextEllipsisPrivateMethods } from '../../../types'
 
-export default defineComponent({
+export default defineVxeComponent({
   name: 'VxeTextEllipsis',
   props: {
     href: String as PropType<VxeTextEllipsisPropTypes.Href>,

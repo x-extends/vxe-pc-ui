@@ -1,4 +1,5 @@
-import { defineComponent, h, createApp, reactive, createCommentVNode } from 'vue'
+import { h, createApp, reactive, createCommentVNode } from 'vue'
+import { defineVxeComponent } from '../ui/src/comp'
 import { VxeUI } from '@vxe-ui/core'
 
 import type { VxeModalDefines, VxeModalComponent, VxeLoadingComponent, VxeDrawerDefines, VxeLoadingProps, VxeDrawerComponent, VxeWatermarkComponent, VxeWatermarkProps } from '../../types'
@@ -20,7 +21,7 @@ export const dynamicStore = reactive<{
 /**
  * 动态组件
  */
-const VxeDynamics = defineComponent({
+const VxeDynamics = defineVxeComponent({
   setup () {
     const VxeUIModalComponent = VxeUI.getComponent<VxeModalComponent>('VxeModal')
     const VxeUIDrawerComponent = VxeUI.getComponent<VxeDrawerComponent>('VxeDrawer')

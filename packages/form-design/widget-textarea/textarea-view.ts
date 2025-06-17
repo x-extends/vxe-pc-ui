@@ -1,4 +1,5 @@
-import { PropType, defineComponent, h, inject } from 'vue'
+import { PropType, h, inject } from 'vue'
+import { defineVxeComponent } from '../../ui/src/comp'
 import { getI18n } from '@vxe-ui/core'
 import { WidgetTextareaFormObjVO } from './textarea-data'
 import { useWidgetName } from '../../form-design/src/use'
@@ -6,7 +7,7 @@ import VxeFormItemComponent from '../../form/src/form-item'
 
 import type { VxeGlobalRendererHandles, VxeFormViewConstructor, VxeFormViewPrivateMethods } from '../../../types'
 
-export const WidgetTextareaViewComponent = defineComponent({
+export const WidgetTextareaViewComponent = defineVxeComponent({
   props: {
     renderOpts: {
       type: Object as PropType<VxeGlobalRendererHandles.RenderFormDesignWidgetViewOptions>,

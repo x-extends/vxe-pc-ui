@@ -1,4 +1,5 @@
-import { defineComponent, ref, h, PropType, reactive, provide, watch, nextTick, ComponentOptions, createCommentVNode } from 'vue'
+import { ref, h, PropType, reactive, provide, watch, nextTick, ComponentOptions, createCommentVNode } from 'vue'
+import { defineVxeComponent } from '../../ui/src/comp'
 import { VxeUI, getConfig, getIcon, getI18n, renderer, useSize, createEvent, renderEmptyElement } from '../../ui'
 import { toCssUnit } from '../../ui/src/dom'
 import { FormDesignWidgetInfo, getWidgetConfig, getWidgetConfigCustomGroup, configToWidget } from './widget-info'
@@ -12,7 +13,7 @@ import { getDefaultSettingFormData } from './default-setting-data'
 
 import type { VxeFormDesignDefines, VxeFormDesignPropTypes, VxeFormDesignEmits, FormDesignInternalData, FormDesignReactData, FormDesignPrivateRef, VxeFormDesignPrivateComputed, VxeFormDesignConstructor, VxeFormDesignPrivateMethods, FormDesignMethods, FormDesignPrivateMethods } from '../../../types'
 
-export default defineComponent({
+export default defineVxeComponent({
   name: 'VxeFormDesign',
   props: {
     size: {

@@ -1,4 +1,5 @@
-import { defineComponent, h, ref, Ref, provide, computed, inject, reactive, watch, nextTick, PropType, onMounted } from 'vue'
+import { h, ref, Ref, provide, computed, inject, reactive, watch, nextTick, PropType, onMounted } from 'vue'
+import { defineVxeComponent } from '../../ui/src/comp'
 import XEUtils from 'xe-utils'
 import { getConfig, validators, renderer, createEvent, useSize } from '../../ui'
 import { eqEmptyValue, getFuncText, isEnableConf } from '../../ui/src/utils'
@@ -139,7 +140,7 @@ function checkRuleStatus (rule: VxeFormDefines.FormRule, val: any) {
   return true
 }
 
-export default defineComponent({
+export default defineVxeComponent({
   name: 'VxeForm',
   props: {
     collapseStatus: {

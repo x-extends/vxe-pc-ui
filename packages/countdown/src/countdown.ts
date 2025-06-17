@@ -1,4 +1,5 @@
-import { defineComponent, ref, h, reactive, watch, computed, PropType, onUnmounted, onMounted } from 'vue'
+import { ref, h, reactive, watch, computed, PropType, onUnmounted, onMounted } from 'vue'
+import { defineVxeComponent } from '../../ui/src/comp'
 import { getConfig, getI18n, createEvent, useSize, renderEmptyElement } from '../../ui'
 import { getSlotVNs } from '../../ui/src/vn'
 import VxeTextComponent from '../../text/src/text'
@@ -6,7 +7,7 @@ import XEUtils from 'xe-utils'
 
 import type { VxeCountdownPropTypes, CountdownReactData, CountdownInternalData, CountdownPrivateRef, VxeCountdownEmits, VxeCountdownPrivateComputed, VxeCountdownConstructor, VxeCountdownPrivateMethods, ValueOf, CountdownMethods, CountdownPrivateMethods } from '../../../types'
 
-export default defineComponent({
+export default defineVxeComponent({
   name: 'VxeCountdown',
   props: {
     modelValue: [Number, String] as PropType<VxeCountdownPropTypes.ModelValue>,
