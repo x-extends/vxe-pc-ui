@@ -31,6 +31,9 @@ declare module '@vxe-ui/core' {
     TABLE_DRAG_DISABLED?: string
     TABLE_ROW_GROUP_OPEN?: string
     TABLE_ROW_GROUP_CLOSE?: string
+    TABLE_AGGREGATION_GROUPING?: string
+    TABLE_AGGREGATION_VALUES?: string
+    TABLE_AGGREGATION_DELETE?: string
 
     // toolbar
     TOOLBAR_TOOLS_REFRESH?: string

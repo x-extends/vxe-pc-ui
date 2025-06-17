@@ -263,6 +263,7 @@ export interface GridPrivateComputed<D = any> {
   computeFormOpts: VxeGridPropTypes.FormOpts
   computeToolbarOpts: VxeGridPropTypes.ToolbarOpts
   computeZoomOpts:VxeGridPropTypes.ZoomOpts
+  computeTableProps: any
 }
 export interface VxeGridPrivateComputed<D = any> extends GridPrivateComputed<D> { }
 
