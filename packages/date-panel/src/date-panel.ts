@@ -2,7 +2,7 @@ import { h, ref, Ref, computed, reactive, nextTick, watch, PropType, VNode } fro
 import { defineVxeComponent } from '../../ui/src/comp'
 import XEUtils from 'xe-utils'
 import { getConfig, getI18n, createEvent, useSize, renderEmptyElement } from '../../ui'
-import { toStringTimeDate, getDateQuarter, parseDateValue, parseDateObj } from './util'
+import { toStringTimeDate, getDateQuarter, parseDateValue, parseDateObj, handleValueFormat, hasDateValueType, hasTimestampValueType } from './util'
 
 import type { VxeDatePanelConstructor, DatePanelInternalData, DatePanelReactData, VxeDatePanelPropTypes, DatePanelMethods, ValueOf, VxeDatePanelEmits, VxeDatePanelDefines } from '../../../types'
 
@@ -43,6 +43,7 @@ export default defineVxeComponent({
     },
     labelFormat: String as PropType<VxeDatePanelPropTypes.LabelFormat>,
     valueFormat: String as PropType<VxeDatePanelPropTypes.ValueFormat>,
+    timeFormat: String as PropType<VxeDatePanelPropTypes.TimeFormat>,
     festivalMethod: {
       type: Function as PropType<VxeDatePanelPropTypes.FestivalMethod>,
       default: () => getConfig().datePanel.festivalMethod
@@ -174,16 +175,7 @@ export default defineVxeComponent({
 
     const computeDateValueFormat = computed(() => {
       const { type, valueFormat } = props
-      if (valueFormat) {
-        return valueFormat
-      }
-      if (type === 'time') {
-        return 'HH:mm:ss'
-      }
-      if (type === 'datetime') {
-        return 'yyyy-MM-dd HH:mm:ss'
-      }
-      return 'yyyy-MM-dd'
+      return handleValueFormat(type, valueFormat)
     })
 
     const computeDateValue = computed(() => {
@@ -494,13 +486,15 @@ export default defineVxeComponent({
     })
 
     const computeHasTimeMinute = computed(() => {
+      const { timeFormat } = props
       const dateValueFormat = computeDateValueFormat.value
-      return !/HH/.test(dateValueFormat) || /mm/.test(dateValueFormat)
+      return !/HH/.test(timeFormat || dateValueFormat) || /mm/.test(timeFormat || dateValueFormat)
     })
 
     const computeHasTimeSecond = computed(() => {
+      const { timeFormat } = props
       const dateValueFormat = computeDateValueFormat.value
-      return !/HH/.test(dateValueFormat) || /ss/.test(dateValueFormat)
+      return !/HH/.test(timeFormat || dateValueFormat) || /ss/.test(timeFormat || dateValueFormat)
     })
 
     const computeSecondList = computed(() => {
@@ -576,11 +570,27 @@ export default defineVxeComponent({
     }
 
     const handleChange = (value: string, evnt: Event | { type: string }) => {
-      const { modelValue } = props
+      const { type, modelValue, valueFormat } = props
+      const dateValueFormat = computeDateValueFormat.value
       reactData.inputValue = value
-      emit('update:modelValue', value)
-      if (XEUtils.toValueString(modelValue) !== value) {
-        dispatchEvent('change', { value }, evnt as any)
+      if (hasTimestampValueType(valueFormat)) {
+        const dateVal = parseDateValue(value, type, { valueFormat: dateValueFormat })
+        const timeNum = dateVal ? dateVal.getTime() : null
+        emit('update:modelValue', timeNum)
+        if (modelValue !== timeNum) {
+          dispatchEvent('change', { value: timeNum }, evnt as Event)
+        }
+      } else if (hasDateValueType(valueFormat)) {
+        const dateVal = parseDateValue(value, type, { valueFormat: dateValueFormat })
+        emit('update:modelValue', dateVal)
+        if (modelValue && dateVal ? XEUtils.toStringDate(modelValue).getTime() !== dateVal.getTime() : modelValue !== dateVal) {
+          dispatchEvent('change', { value: dateVal }, evnt as Event)
+        }
+      } else {
+        emit('update:modelValue', value)
+        if (XEUtils.toValueString(modelValue) !== value) {
+          dispatchEvent('change', { value }, evnt as Event)
+        }
       }
     }
 

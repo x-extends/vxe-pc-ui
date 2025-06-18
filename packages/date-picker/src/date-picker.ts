@@ -5,7 +5,7 @@ import { getConfig, getIcon, getI18n, commands, createEvent, globalEvents, useSi
 import { getFuncText, getLastZIndex, nextZIndex, isEnableConf } from '../../ui/src/utils'
 import { updatePanelPlacement, getEventTargetNode } from '../../ui/src/dom'
 import { getSlotVNs } from '../../ui/src/vn'
-import { parseDateObj, getDateByCode } from '../../date-panel/src/util'
+import { parseDateObj, parseDateValue, getDateByCode, handleValueFormat, hasDateValueType, hasTimestampValueType } from '../../date-panel/src/util'
 import { errLog } from '../../ui/src/log'
 import VxeDatePanelComponent from '../../date-panel/src/date-panel'
 import VxeButtonComponent from '../../button/src/button'
@@ -74,6 +74,7 @@ export default defineVxeComponent({
     },
     labelFormat: String as PropType<VxeDatePickerPropTypes.LabelFormat>,
     valueFormat: String as PropType<VxeDatePickerPropTypes.ValueFormat>,
+    timeFormat: String as PropType<VxeDatePickerPropTypes.TimeFormat>,
     editable: {
       type: Boolean as PropType<VxeDatePickerPropTypes.Editable>,
       default: true
@@ -282,16 +283,7 @@ export default defineVxeComponent({
 
     const computeDateValueFormat = computed(() => {
       const { type, valueFormat } = props
-      if (valueFormat) {
-        return valueFormat
-      }
-      if (type === 'time') {
-        return 'HH:mm:ss'
-      }
-      if (type === 'datetime') {
-        return 'yyyy-MM-dd HH:mm:ss'
-      }
-      return 'yyyy-MM-dd'
+      return handleValueFormat(type, valueFormat)
     })
 
     const computeFirstDayOfWeek = computed(() => {
@@ -335,14 +327,38 @@ export default defineVxeComponent({
     }
 
     const handleChange = (value: string | number | Date, evnt: Event | { type: string }) => {
-      const { modelValue } = props
+      const { type, modelValue, valueFormat } = props
+      const dateValueFormat = computeDateValueFormat.value
       reactData.inputValue = value
-      emit('update:modelValue', value)
-      if (XEUtils.toValueString(modelValue) !== value) {
-        dispatchEvent('change', { value }, evnt as any)
-        // 自动更新校验状态
-        if ($xeForm && formItemInfo) {
-          $xeForm.triggerItemEvent(evnt, formItemInfo.itemConfig.field, value)
+      if (hasTimestampValueType(valueFormat)) {
+        const dateVal = parseDateValue(value, type, { valueFormat: dateValueFormat })
+        const timeNum = dateVal ? dateVal.getTime() : null
+        emit('update:modelValue', timeNum)
+        if (modelValue !== timeNum) {
+          dispatchEvent('change', { value: timeNum }, evnt as Event)
+          // 自动更新校验状态
+          if ($xeForm && formItemInfo) {
+            $xeForm.triggerItemEvent(evnt, formItemInfo.itemConfig.field, timeNum)
+          }
+        }
+      } else if (hasDateValueType(valueFormat)) {
+        const dateVal = parseDateValue(value, type, { valueFormat: dateValueFormat })
+        emit('update:modelValue', dateVal)
+        if (modelValue && dateVal ? XEUtils.toStringDate(modelValue).getTime() !== dateVal.getTime() : modelValue !== dateVal) {
+          dispatchEvent('change', { value: dateVal }, evnt as Event)
+          // 自动更新校验状态
+          if ($xeForm && formItemInfo) {
+            $xeForm.triggerItemEvent(evnt, formItemInfo.itemConfig.field, dateVal)
+          }
+        }
+      } else {
+        emit('update:modelValue', value)
+        if (XEUtils.toValueString(modelValue) !== value) {
+          dispatchEvent('change', { value }, evnt as Event)
+          // 自动更新校验状态
+          if ($xeForm && formItemInfo) {
+            $xeForm.triggerItemEvent(evnt, formItemInfo.itemConfig.field, value)
+          }
         }
       }
     }
@@ -415,9 +431,10 @@ export default defineVxeComponent({
       }
       if (!reactData.visiblePanel) {
         reactData.isActivated = false
-      }
-      if ($datePanel) {
-        $datePanel.checkValue(reactData.inputLabel)
+        // 未打开面板时才校验
+        if ($datePanel) {
+          $datePanel.checkValue(reactData.inputLabel)
+        }
       }
       dispatchEvent('blur', { value }, evnt)
       // 自动更新校验状态
@@ -762,6 +779,7 @@ export default defineVxeComponent({
                         startDay: props.startDay,
                         labelFormat: props.labelFormat,
                         valueFormat: props.valueFormat,
+                        timeFormat: props.timeFormat,
                         festivalMethod: props.festivalMethod,
                         disabledMethod: props.disabledMethod,
                         selectDay: props.selectDay,

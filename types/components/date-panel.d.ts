@@ -39,6 +39,7 @@ export namespace VxeDatePanelPropTypes {
   export type SelectDay = 0 | 1 | 2 | 3 | 4 | 5 | 6
   export type LabelFormat = string
   export type ValueFormat = string
+  export type TimeFormat = string
   export type FestivalMethod = (params: VxeDatePanelDefines.DateFestivalParams) => VxeDatePanelDefines.DateFestivalInfo | null | void
   export type DisabledMethod = (params: VxeDatePanelDefines.DateDisabledParams) => boolean
 }
@@ -63,6 +64,7 @@ export interface VxeDatePanelProps {
   startDay?: VxeDatePanelPropTypes.StartDay
   labelFormat?: VxeDatePanelPropTypes.LabelFormat
   valueFormat?: VxeDatePanelPropTypes.ValueFormat
+  timeFormat?: VxeDatePanelPropTypes.TimeFormat
   festivalMethod?: VxeDatePanelPropTypes.FestivalMethod
   disabledMethod?: VxeDatePanelPropTypes.DisabledMethod
 
