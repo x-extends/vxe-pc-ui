@@ -5,7 +5,7 @@ import { getConfig, getIcon, getI18n, commands, createEvent, globalEvents, globa
 import { getFuncText, getLastZIndex, nextZIndex, isEnableConf } from '../../ui/src/utils'
 import { updatePanelPlacement, getEventTargetNode } from '../../ui/src/dom'
 import { getSlotVNs } from '../../ui/src/vn'
-import { parseDateObj, getDateByCode } from '../../date-panel/src/util'
+import { parseDateObj, parseDateValue, getDateByCode, handleValueFormat, hasDateValueType, hasTimestampValueType } from '../../date-panel/src/util'
 import { errLog } from '../../ui/src/log'
 import VxeDatePanelComponent from '../../date-panel/src/date-panel'
 import VxeButtonComponent from '../../button/src/button'
@@ -81,6 +81,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
     },
     labelFormat: String as PropType<VxeDatePickerPropTypes.LabelFormat>,
     valueFormat: String as PropType<VxeDatePickerPropTypes.ValueFormat>,
+    timeFormat: String as PropType<VxeDatePickerPropTypes.TimeFormat>,
     editable: {
       type: Boolean as PropType<VxeDatePickerPropTypes.Editable>,
       default: true
@@ -313,16 +314,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const props = $xeDatePicker
 
       const { type, valueFormat } = props
-      if (valueFormat) {
-        return valueFormat
-      }
-      if (type === 'time') {
-        return 'HH:mm:ss'
-      }
-      if (type === 'datetime') {
-        return 'yyyy-MM-dd HH:mm:ss'
-      }
-      return 'yyyy-MM-dd'
+      return handleValueFormat(type, valueFormat)
     },
     computeFirstDayOfWeek () {
       const $xeDatePicker = this
@@ -401,14 +393,38 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const $xeForm = $xeDatePicker.$xeForm
       const formItemInfo = $xeDatePicker.formItemInfo
 
-      const { value: modelValue } = props
+      const { type, value: modelValue, valueFormat } = props
+      const dateValueFormat = $xeDatePicker.computeDateValueFormat
       reactData.inputValue = value
-      $xeDatePicker.emitModel(value)
-      if (XEUtils.toValueString(modelValue) !== value) {
-        $xeDatePicker.dispatchEvent('change', { value }, evnt as any)
-        // 自动更新校验状态
-        if ($xeForm && formItemInfo) {
-          $xeForm.triggerItemEvent(evnt, formItemInfo.itemConfig.field, value)
+      if (hasTimestampValueType(valueFormat)) {
+        const dateVal = parseDateValue(value, type, { valueFormat: dateValueFormat })
+        const timeNum = dateVal ? dateVal.getTime() : null
+        $xeDatePicker.emitModel(timeNum)
+        if (modelValue !== timeNum) {
+          $xeDatePicker.dispatchEvent('change', { value: timeNum }, evnt as Event)
+          // 自动更新校验状态
+          if ($xeForm && formItemInfo) {
+            $xeForm.triggerItemEvent(evnt, formItemInfo.itemConfig.field, timeNum)
+          }
+        }
+      } else if (hasDateValueType(valueFormat)) {
+        const dateVal = parseDateValue(value, type, { valueFormat: dateValueFormat })
+        $xeDatePicker.emitModel(dateVal)
+        if (modelValue && dateVal ? XEUtils.toStringDate(modelValue).getTime() !== dateVal.getTime() : modelValue !== dateVal) {
+          $xeDatePicker.dispatchEvent('change', { value: dateVal }, evnt as Event)
+          // 自动更新校验状态
+          if ($xeForm && formItemInfo) {
+            $xeForm.triggerItemEvent(evnt, formItemInfo.itemConfig.field, dateVal)
+          }
+        }
+      } else {
+        $xeDatePicker.emitModel(value)
+        if (XEUtils.toValueString(modelValue) !== value) {
+          $xeDatePicker.dispatchEvent('change', { value }, evnt as Event)
+          // 自动更新校验状态
+          if ($xeForm && formItemInfo) {
+            $xeForm.triggerItemEvent(evnt, formItemInfo.itemConfig.field, value)
+          }
         }
       }
     },
@@ -498,9 +514,10 @@ export default /* define-vxe-component start */ defineVxeComponent({
       }
       if (!reactData.visiblePanel) {
         reactData.isActivated = false
-      }
-      if ($datePanel) {
-        $datePanel.checkValue(reactData.inputLabel)
+        // 未打开面板时才校验
+        if ($datePanel) {
+          $datePanel.checkValue(reactData.inputLabel)
+        }
       }
       $xeDatePicker.dispatchEvent('blur', { value }, evnt)
       // 自动更新校验状态
@@ -889,6 +906,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
                         startDay: props.startDay,
                         labelFormat: props.labelFormat,
                         valueFormat: props.valueFormat,
+                        timeFormat: props.timeFormat,
                         festivalMethod: props.festivalMethod,
                         disabledMethod: props.disabledMethod,
                         selectDay: props.selectDay

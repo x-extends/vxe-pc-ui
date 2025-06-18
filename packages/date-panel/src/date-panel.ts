@@ -2,7 +2,7 @@ import { PropType, CreateElement, VNode } from 'vue'
 import { defineVxeComponent } from '../../ui/src/comp'
 import XEUtils from 'xe-utils'
 import { getConfig, getI18n, createEvent, globalMixins, renderEmptyElement } from '../../ui'
-import { toStringTimeDate, getDateQuarter, parseDateValue, parseDateObj } from './util'
+import { toStringTimeDate, getDateQuarter, parseDateValue, parseDateObj, handleValueFormat, hasDateValueType, hasTimestampValueType } from './util'
 
 import type { VxeDatePanelConstructor, DatePanelInternalData, DatePanelReactData, VxeDatePanelPropTypes, VxeComponentSizeType, ValueOf, VxeDatePanelEmits, VxeDatePanelDefines } from '../../../types'
 
@@ -50,6 +50,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
     },
     labelFormat: String as PropType<VxeDatePanelPropTypes.LabelFormat>,
     valueFormat: String as PropType<VxeDatePanelPropTypes.ValueFormat>,
+    timeFormat: String as PropType<VxeDatePanelPropTypes.TimeFormat>,
     festivalMethod: {
       type: Function as PropType<VxeDatePanelPropTypes.FestivalMethod>,
       default: () => getConfig().datePanel.festivalMethod
@@ -179,16 +180,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const props = $xeDatePanel
 
       const { type, valueFormat } = props
-      if (valueFormat) {
-        return valueFormat
-      }
-      if (type === 'time') {
-        return 'HH:mm:ss'
-      }
-      if (type === 'datetime') {
-        return 'yyyy-MM-dd HH:mm:ss'
-      }
-      return 'yyyy-MM-dd'
+      return handleValueFormat(type, valueFormat)
     },
     computeDateValue () {
       const $xeDatePanel = this
@@ -538,15 +530,19 @@ export default /* define-vxe-component start */ defineVxeComponent({
     },
     computeHasTimeMinute () {
       const $xeDatePanel = this
+      const props = $xeDatePanel
 
+      const { timeFormat } = props
       const dateValueFormat = $xeDatePanel.computeDateValueFormat as string
-      return !/HH/.test(dateValueFormat) || /mm/.test(dateValueFormat)
+      return !/HH/.test(timeFormat || dateValueFormat) || /mm/.test(timeFormat || dateValueFormat)
     },
     computeHasTimeSecond () {
       const $xeDatePanel = this
+      const props = $xeDatePanel
 
+      const { timeFormat } = props
       const dateValueFormat = $xeDatePanel.computeDateValueFormat as string
-      return !/HH/.test(dateValueFormat) || /ss/.test(dateValueFormat)
+      return !/HH/.test(timeFormat || dateValueFormat) || /ss/.test(timeFormat || dateValueFormat)
     },
     computeSecondList () {
       const $xeDatePanel = this
@@ -656,11 +652,27 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const props = $xeDatePanel
       const reactData = $xeDatePanel.reactData
 
-      const { value: modelValue } = props
+      const { type, value: modelValue, valueFormat } = props
+      const dateValueFormat = $xeDatePanel.computeDateValueFormat
       reactData.inputValue = value
-      $xeDatePanel.emitModel(value)
-      if (XEUtils.toValueString(modelValue) !== value) {
-        $xeDatePanel.dispatchEvent('change', { value }, evnt as any)
+      if (hasTimestampValueType(valueFormat)) {
+        const dateVal = parseDateValue(value, type, { valueFormat: dateValueFormat })
+        const timeNum = dateVal ? dateVal.getTime() : null
+        $xeDatePanel.emitModel(timeNum)
+        if (modelValue !== timeNum) {
+          $xeDatePanel.dispatchEvent('change', { value: timeNum }, evnt as Event)
+        }
+      } else if (hasDateValueType(valueFormat)) {
+        const dateVal = parseDateValue(value, type, { valueFormat: dateValueFormat })
+        $xeDatePanel.emitModel(dateVal)
+        if (modelValue && dateVal ? XEUtils.toStringDate(modelValue).getTime() !== dateVal.getTime() : modelValue !== dateVal) {
+          $xeDatePanel.dispatchEvent('change', { value: dateVal }, evnt as Event)
+        }
+      } else {
+        $xeDatePanel.emitModel(value)
+        if (XEUtils.toValueString(modelValue) !== value) {
+          $xeDatePanel.dispatchEvent('change', { value }, evnt as Event)
+        }
       }
     },
     hidePanel () {

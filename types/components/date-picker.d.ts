@@ -42,6 +42,7 @@ export namespace VxeDatePickerPropTypes {
   export type SelectDay = 0 | 1 | 2 | 3 | 4 | 5 | 6
   export type LabelFormat = string
   export type ValueFormat = string
+  export type TimeFormat = string
   export type Editable = boolean
   export type FestivalMethod = VxeDatePanelPropTypes.FestivalMethod
   export type DisabledMethod = VxeDatePanelPropTypes.DisabledMethod
@@ -95,6 +96,7 @@ export interface VxeDatePickerProps {
   startDay?: VxeDatePickerPropTypes.StartDay
   labelFormat?: VxeDatePickerPropTypes.LabelFormat
   valueFormat?: VxeDatePickerPropTypes.ValueFormat
+  timeFormat?: VxeDatePickerPropTypes.TimeFormat
   editable?: VxeDatePickerPropTypes.Editable
   festivalMethod?: VxeDatePickerPropTypes.FestivalMethod
   disabledMethod?: VxeDatePickerPropTypes.DisabledMethod

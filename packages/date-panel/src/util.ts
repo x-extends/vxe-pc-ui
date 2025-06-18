@@ -2,12 +2,38 @@ import XEUtils from 'xe-utils'
 
 import type { VxeDatePanelPropTypes } from '../../../types'
 
+export function hasTimestampValueType (valueFormat?: string) {
+  return valueFormat === 'timestamp'
+}
+
+export function hasDateValueType (valueFormat?: string) {
+  return valueFormat === 'date'
+}
+
+export function handleValueFormat (type: string, valueFormat?: string) {
+  if (valueFormat) {
+    if (!(hasDateValueType(valueFormat) || hasTimestampValueType(valueFormat))) {
+      return valueFormat
+    }
+  }
+  if (type === 'time') {
+    return 'HH:mm:ss'
+  }
+  if (type === 'datetime') {
+    return 'yyyy-MM-dd HH:mm:ss'
+  }
+  return 'yyyy-MM-dd'
+}
+
 export function toStringTimeDate (str: string | number | Date | null | undefined) {
+  const rest = new Date(2e3, 0, 1)
   if (str) {
-    const rest = new Date()
     let h = 0
     let m = 0
     let s = 0
+    if (XEUtils.isNumber(str) || /^[0-9]{11,15}$/.test(`${str}`)) {
+      str = new Date(Number(str))
+    }
     if (XEUtils.isDate(str)) {
       h = str.getHours()
       m = str.getMinutes()
@@ -26,7 +52,7 @@ export function toStringTimeDate (str: string | number | Date | null | undefined
     rest.setSeconds(s)
     return rest
   }
-  return new Date('')
+  return rest
 }
 
 export function getDateQuarter (date: Date) {
@@ -49,7 +75,7 @@ export const parseDateValue = (val: string | number | Date | null | undefined, t
     if (type === 'time') {
       return toStringTimeDate(val)
     }
-    if (XEUtils.isNumber(val) || /^[0-9]{11,15}$/.test(`${val}`)) {
+    if (XEUtils.isNumber(val) || /^[0-9]{10,15}$/.test(`${val}`)) {
       return new Date(Number(val))
     }
     if (XEUtils.isString(val)) {

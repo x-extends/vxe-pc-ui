@@ -4,7 +4,7 @@ import XEUtils from 'xe-utils'
 import { getConfig, getIcon, getI18n, commands, globalEvents, createEvent, globalMixins, renderEmptyElement } from '../../ui'
 import { getFuncText, getLastZIndex, nextZIndex, isEnableConf } from '../../ui/src/utils'
 import { updatePanelPlacement, getEventTargetNode } from '../../ui/src/dom'
-import { parseDateString, parseDateObj, getRangeDateByCode } from '../../date-panel/src/util'
+import { parseDateString, parseDateObj, getRangeDateByCode, handleValueFormat } from '../../date-panel/src/util'
 import { getSlotVNs } from '../../ui/src/vn'
 import { errLog } from '../../ui/src/log'
 import VxeDatePanelComponent from '../../date-panel/src/date-panel'
@@ -69,6 +69,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
     },
     labelFormat: String as PropType<VxeDateRangePickerPropTypes.LabelFormat>,
     valueFormat: String as PropType<VxeDateRangePickerPropTypes.ValueFormat>,
+    timeFormat: String as PropType<VxeDateRangePickerPropTypes.TimeFormat>,
     editable: {
       type: Boolean as PropType<VxeDateRangePickerPropTypes.Editable>,
       default: true
@@ -301,16 +302,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const props = $xeDateRangePicker
 
       const { type, valueFormat } = props
-      if (valueFormat) {
-        return valueFormat
-      }
-      if (type === 'time') {
-        return 'HH:mm:ss'
-      }
-      if (type === 'datetime') {
-        return 'yyyy-MM-dd HH:mm:ss'
-      }
-      return 'yyyy-MM-dd'
+      return handleValueFormat(type, valueFormat)
     },
     computeFirstDayOfWeek () {
       const $xeDateRangePicker = this
@@ -1045,6 +1037,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
                         endDate: endValue,
                         labelFormat: props.labelFormat,
                         valueFormat: props.valueFormat,
+                        timeFormat: props.timeFormat,
                         festivalMethod: props.festivalMethod,
                         disabledMethod: props.disabledMethod,
                         selectDay: props.selectDay
@@ -1065,6 +1058,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
                         startDate: startValue,
                         labelFormat: props.labelFormat,
                         valueFormat: props.valueFormat,
+                        timeFormat: props.timeFormat,
                         festivalMethod: props.festivalMethod,
                         disabledMethod: props.disabledMethod,
                         selectDay: props.selectDay
