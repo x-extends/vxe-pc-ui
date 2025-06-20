@@ -688,6 +688,13 @@ export default defineVxeComponent({
       hideOptionPanel()
     }
 
+    const handleGlobalResizeEvent = () => {
+      const { visiblePanel } = reactData
+      if (visiblePanel) {
+        updatePlacement()
+      }
+    }
+
     const handleFocusSearch = () => {
       if (props.filterable) {
         nextTick(() => {
@@ -1366,6 +1373,7 @@ export default defineVxeComponent({
       globalEvents.on($xeSelect, 'mousedown', handleGlobalMousedownEvent)
       globalEvents.on($xeSelect, 'keydown', handleGlobalKeydownEvent)
       globalEvents.on($xeSelect, 'blur', handleGlobalBlurEvent)
+      globalEvents.on($xeSelect, 'resize', handleGlobalResizeEvent)
     })
 
     onUnmounted(() => {
@@ -1373,6 +1381,7 @@ export default defineVxeComponent({
       globalEvents.off($xeSelect, 'mousedown')
       globalEvents.off($xeSelect, 'keydown')
       globalEvents.off($xeSelect, 'blur')
+      globalEvents.off($xeSelect, 'resize')
     })
 
     provide('$xeSelect', $xeSelect)

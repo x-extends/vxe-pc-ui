@@ -263,6 +263,13 @@ export default defineVxeComponent({
       }
     }
 
+    const handleGlobalResizeEvent = () => {
+      const { visiblePanel } = reactData
+      if (visiblePanel) {
+        updatePlacement()
+      }
+    }
+
     const dispatchEvent = (type: ValueOf<VxePulldownEmits>, params: Record<string, any>, evnt: Event | null) => {
       emit(type, createEvent(evnt, { $pulldown: $xePulldown }, params))
     }
@@ -293,12 +300,14 @@ export default defineVxeComponent({
       globalEvents.on($xePulldown, 'mousewheel', handleGlobalMousewheelEvent)
       globalEvents.on($xePulldown, 'mousedown', handleGlobalMousedownEvent)
       globalEvents.on($xePulldown, 'blur', handleGlobalBlurEvent)
+      globalEvents.on($xePulldown, 'resize', handleGlobalResizeEvent)
     })
 
     onUnmounted(() => {
       globalEvents.off($xePulldown, 'mousewheel')
       globalEvents.off($xePulldown, 'mousedown')
       globalEvents.off($xePulldown, 'blur')
+      globalEvents.off($xePulldown, 'resize')
     })
 
     const renderDefaultPanel = (options?: VxePulldownPropTypes.Options) => {

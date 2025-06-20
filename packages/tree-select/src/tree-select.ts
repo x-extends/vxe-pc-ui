@@ -397,6 +397,13 @@ export default defineVxeComponent({
       hideOptionPanel()
     }
 
+    const handleGlobalResizeEvent = () => {
+      const { visiblePanel } = reactData
+      if (visiblePanel) {
+        updatePlacement()
+      }
+    }
+
     const focusEvent = (evnt: FocusEvent) => {
       const isDisabled = computeIsDisabled.value
       if (!isDisabled) {
@@ -615,12 +622,14 @@ export default defineVxeComponent({
       globalEvents.on($xeTreeSelect, 'mousewheel', handleGlobalMousewheelEvent)
       globalEvents.on($xeTreeSelect, 'mousedown', handleGlobalMousedownEvent)
       globalEvents.on($xeTreeSelect, 'blur', handleGlobalBlurEvent)
+      globalEvents.on($xeTreeSelect, 'resize', handleGlobalResizeEvent)
     })
 
     onUnmounted(() => {
       globalEvents.off($xeTreeSelect, 'mousewheel')
       globalEvents.off($xeTreeSelect, 'mousedown')
       globalEvents.off($xeTreeSelect, 'blur')
+      globalEvents.off($xeTreeSelect, 'resize')
     })
 
     provide('$xeTreeSelect', $xeTreeSelect)

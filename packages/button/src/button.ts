@@ -528,6 +528,13 @@ const VxeButtonComponent = defineVxeComponent({
       }
     }
 
+    const handleGlobalResizeEvent = () => {
+      const { visiblePanel } = reactData
+      if (visiblePanel) {
+        updatePlacement()
+      }
+    }
+
     Object.assign($xeButton, buttonMethods)
 
     const renderVN = () => {
@@ -724,11 +731,13 @@ const VxeButtonComponent = defineVxeComponent({
 
       globalEvents.on($xeButton, 'mousewheel', handleGlobalMousewheelEvent)
       globalEvents.on($xeButton, 'mousedown', handleGlobalMousedownEvent)
+      globalEvents.on($xeButton, 'resize', handleGlobalResizeEvent)
     })
 
     onUnmounted(() => {
       globalEvents.off($xeButton, 'mousewheel')
       globalEvents.off($xeButton, 'mousedown')
+      globalEvents.off($xeButton, 'resize')
     })
 
     return $xeButton

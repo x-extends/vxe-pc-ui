@@ -603,6 +603,13 @@ export default defineVxeComponent({
       hideOptionPanel()
     }
 
+    const handleGlobalResizeEvent = () => {
+      const { visiblePanel } = reactData
+      if (visiblePanel) {
+        updatePlacement()
+      }
+    }
+
     const dispatchEvent = (type: ValueOf<VxeColorPickerEmits>, params: Record<string, any>, evnt: Event | null) => {
       emit(type, createEvent(evnt, { $colorPicker: $xeColorPicker }, params))
     }
@@ -961,12 +968,14 @@ export default defineVxeComponent({
       globalEvents.on($xeColorPicker, 'mousewheel', handleGlobalMousewheelEvent)
       globalEvents.on($xeColorPicker, 'mousedown', handleGlobalMousedownEvent)
       globalEvents.on($xeColorPicker, 'blur', handleGlobalBlurEvent)
+      globalEvents.on($xeColorPicker, 'resize', handleGlobalResizeEvent)
     })
 
     onUnmounted(() => {
       globalEvents.off($xeColorPicker, 'mousewheel')
       globalEvents.off($xeColorPicker, 'mousedown')
       globalEvents.off($xeColorPicker, 'blur')
+      globalEvents.off($xeColorPicker, 'resize')
     })
 
     updateMode()

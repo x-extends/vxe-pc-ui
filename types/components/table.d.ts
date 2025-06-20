@@ -440,11 +440,12 @@ export namespace VxeTablePropTypes {
       children: D[]
     }) => number | string
     /**
-     * 显示聚合数据的方式
+     * 聚合数据操作按钮的显示方式
      */
-    aggregateVisible?: 'auto' | 'fixed' | '' | null
+    // aggregateVisible?: 'auto' | 'fixed' | '' | null
     /**
-     * 自定义列聚合数据的方法
+     * 请使用 contentMethod
+     * @deprecated
      */
     aggregateMethod?:(params: {
       $table: VxeTableConstructor<D>
@@ -454,6 +455,18 @@ export namespace VxeTablePropTypes {
       groupValue: any
       childCount: number
       aggValue: any
+      children: D[]
+    }) => number | string
+    /**
+     * 自定义列聚合数据的方法
+     */
+    countMethod?:(params: {
+      $table: VxeTableConstructor<D>
+      groupField: VxeColumnPropTypes.Field
+      groupColumn: VxeTableDefines.ColumnInfo<D>
+      column: VxeTableDefines.ColumnInfo<D>
+      groupValue: any
+      childCount: number
       children: D[]
     }) => number | string
     /**
@@ -472,19 +485,6 @@ export namespace VxeTablePropTypes {
      * @deprecated
      */
     countFields?: string[]
-    /**
-     * 已废弃，请使用 aggregateMethod
-     * @deprecated
-     */
-    countMethod?:(params: {
-      $table: VxeTableConstructor<D>
-      groupField: VxeColumnPropTypes.Field
-      groupColumn: VxeTableDefines.ColumnInfo<D>
-      column: VxeTableDefines.ColumnInfo<D>
-      groupValue: any
-      childCount: number
-      children: D[]
-    }) => number | string
   }
 
   /**
@@ -4485,9 +4485,21 @@ export interface TableMethods<DT = any> {
    */
   isAggregateExpandByRow(row: any): boolean
   /**
+   * 用于数据聚合，判断是否展开
+   */
+  isAggregateExpandByRow(row: any): boolean
+  /**
    * 用于数据聚合，判断是为否为聚合的行数据
    */
   isAggregateRecord(row: any): boolean
+  /**
+   * 用于数据聚合，获取分组行的内容
+   */
+  getAggregateContentByRow(row: any): string
+  /**
+   * 用于数据聚合，获取分组行的子行
+   */
+  getAggregateRowChildren(row: any): DT[]
   /**
    * 用于 tree-config，用于树表格，获取已展开的节点
    * 注意，即使父节点被收起，只要该节点还处于展开状态都能获取到

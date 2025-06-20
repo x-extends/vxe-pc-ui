@@ -521,6 +521,13 @@ export default defineVxeComponent({
       }
     }
 
+    const handleGlobalResizeEvent = () => {
+      const { visiblePanel } = reactData
+      if (visiblePanel) {
+        updatePlacement()
+      }
+    }
+
     // 弹出面板
     const updateZindex = () => {
       if (reactData.panelIndex < getLastZIndex()) {
@@ -974,12 +981,14 @@ export default defineVxeComponent({
       globalEvents.on($xeDatePicker, 'mousewheel', handleGlobalMousewheelEvent)
       globalEvents.on($xeDatePicker, 'mousedown', handleGlobalMousedownEvent)
       globalEvents.on($xeDatePicker, 'blur', handleGlobalBlurEvent)
+      globalEvents.on($xeDatePicker, 'resize', handleGlobalResizeEvent)
     })
 
     onUnmounted(() => {
       globalEvents.off($xeDatePicker, 'mousewheel')
       globalEvents.off($xeDatePicker, 'mousedown')
       globalEvents.off($xeDatePicker, 'blur')
+      globalEvents.off($xeDatePicker, 'resize')
     })
 
     updateModelValue()
