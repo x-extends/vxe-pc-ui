@@ -474,6 +474,15 @@ export default /* define-vxe-component start */ defineVxeComponent({
 
       $xeTreeSelect.hideOptionPanel()
     },
+    handleGlobalResizeEvent () {
+      const $xeTreeSelect = this
+      const reactData = $xeTreeSelect.reactData
+
+      const { visiblePanel } = reactData
+      if (visiblePanel) {
+        $xeTreeSelect.updatePlacement()
+      }
+    },
     focusEvent  (evnt: FocusEvent) {
       const $xeTreeSelect = this
       const reactData = $xeTreeSelect.reactData
@@ -721,6 +730,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
     globalEvents.on($xeTreeSelect, 'mousewheel', $xeTreeSelect.handleGlobalMousewheelEvent)
     globalEvents.on($xeTreeSelect, 'mousedown', $xeTreeSelect.handleGlobalMousedownEvent)
     globalEvents.on($xeTreeSelect, 'blur', $xeTreeSelect.handleGlobalBlurEvent)
+    globalEvents.on($xeTreeSelect, 'resize', $xeTreeSelect.handleGlobalResizeEvent)
   },
   beforeDestroy () {
     const $xeTreeSelect = this
@@ -732,6 +742,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
     globalEvents.off($xeTreeSelect, 'mousewheel')
     globalEvents.off($xeTreeSelect, 'mousedown')
     globalEvents.off($xeTreeSelect, 'blur')
+    globalEvents.off($xeTreeSelect, 'resize')
   },
   render (this: any, h) {
     return this.renderVN(h)

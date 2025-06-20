@@ -149,7 +149,7 @@ export function updatePanelPlacement (targetElem: HTMLElement | null | undefined
   teleportTo?: boolean
   marginSize?: number
 }) {
-  const { placement, teleportTo, marginSize } = Object.assign({ teleportTo: false, marginSize: 5 }, options)
+  const { placement, teleportTo, marginSize } = Object.assign({ teleportTo: false, marginSize: 32 }, options)
   let panelPlacement: 'top' | 'bottom' = 'bottom'
   let top: number | '' = ''
   let bottom: number | '' = ''
@@ -164,28 +164,27 @@ export function updatePanelPlacement (targetElem: HTMLElement | null | undefined
     const panelHeight = panelElem.offsetHeight
     const panelWidth = panelElem.offsetWidth
 
-    const bounding = targetElem.getBoundingClientRect()
-    const boundingTop = bounding.top
-    const boundingLeft = bounding.left
+    const panelRect = panelElem.getBoundingClientRect()
+    const targetRect = targetElem.getBoundingClientRect()
     const visibleHeight = documentElement.clientHeight || bodyElem.clientHeight
     const visibleWidth = documentElement.clientWidth || bodyElem.clientWidth
     minWidth = targetElem.offsetWidth
     if (teleportTo) {
-      left = boundingLeft
-      top = boundingTop + targetHeight
+      left = targetRect.left
+      top = targetRect.top + targetHeight
       if (placement === 'top') {
         panelPlacement = 'top'
-        top = boundingTop - panelHeight
+        top = targetRect.top - panelHeight
       } else if (!placement) {
         // 如果下面不够放，则向上
         if (top + panelHeight + marginSize > visibleHeight) {
           panelPlacement = 'top'
-          top = boundingTop - panelHeight
+          top = targetRect.top - panelHeight
         }
         // 如果上面不够放，则向下（优先）
         if (top < marginSize) {
           panelPlacement = 'bottom'
-          top = boundingTop + targetHeight
+          top = targetRect.top + targetHeight
         }
       }
       // 如果溢出右边
@@ -203,14 +202,18 @@ export function updatePanelPlacement (targetElem: HTMLElement | null | undefined
       } else if (!placement) {
         // 如果下面不够放，则向上
         top = targetHeight
-        if (boundingTop + targetHeight + panelHeight > visibleHeight) {
+        if (targetRect.top + targetRect.height + marginSize > visibleHeight) {
           // 如果上面不够放，则向下（优先）
-          if (boundingTop - targetHeight - panelHeight > marginSize) {
+          if (targetRect.top - targetHeight - panelHeight > marginSize) {
             panelPlacement = 'top'
             top = ''
             bottom = targetHeight
           }
         }
+      }
+      // 是否超出右侧
+      if (panelRect.left + panelRect.width + marginSize > visibleWidth) {
+        left = -(panelRect.left + panelRect.width + marginSize - visibleWidth)
       }
     }
     if (XEUtils.isNumber(top)) {

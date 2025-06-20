@@ -735,6 +735,15 @@ export default /* define-vxe-component start */ defineVxeComponent({
         $xeDateRangePicker.hidePanel()
       }
     },
+    handleGlobalResizeEvent () {
+      const $xeDateRangePicker = this
+      const reactData = $xeDateRangePicker.reactData
+
+      const { visiblePanel } = reactData
+      if (visiblePanel) {
+        $xeDateRangePicker.updatePlacement()
+      }
+    },
     // 弹出面板
     updateZindex () {
       const $xeDateRangePicker = this
@@ -1303,6 +1312,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
     globalEvents.on($xeDateRangePicker, 'mousewheel', $xeDateRangePicker.handleGlobalMousewheelEvent)
     globalEvents.on($xeDateRangePicker, 'mousedown', $xeDateRangePicker.handleGlobalMousedownEvent)
     globalEvents.on($xeDateRangePicker, 'blur', $xeDateRangePicker.handleGlobalBlurEvent)
+    globalEvents.on($xeDateRangePicker, 'resize', $xeDateRangePicker.handleGlobalResizeEvent)
   },
   deactivated () {
     const $xeDateRangePicker = this
@@ -1320,6 +1330,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
     globalEvents.off($xeDateRangePicker, 'mousewheel')
     globalEvents.off($xeDateRangePicker, 'mousedown')
     globalEvents.off($xeDateRangePicker, 'blur')
+    globalEvents.off($xeDateRangePicker, 'resize')
   },
   render (this: any, h) {
     return this.renderVN(h)

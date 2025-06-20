@@ -913,6 +913,15 @@ export default /* define-vxe-component start */ defineVxeComponent({
 
       $xeSelect.hideOptionPanel()
     },
+    handleGlobalResizeEvent () {
+      const $xeSelect = this
+      const reactData = $xeSelect.reactData
+
+      const { visiblePanel } = reactData
+      if (visiblePanel) {
+        $xeSelect.updatePlacement()
+      }
+    },
     handleFocusSearch  () {
       const $xeSelect = this
       const props = $xeSelect
@@ -1637,6 +1646,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
     globalEvents.on($xeSelect, 'mousedown', $xeSelect.handleGlobalMousedownEvent)
     globalEvents.on($xeSelect, 'keydown', $xeSelect.handleGlobalKeydownEvent)
     globalEvents.on($xeSelect, 'blur', $xeSelect.handleGlobalBlurEvent)
+    globalEvents.on($xeSelect, 'resize', $xeSelect.handleGlobalResizeEvent)
   },
   beforeDestroy () {
     const $xeSelect = this
@@ -1649,6 +1659,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
     globalEvents.off($xeSelect, 'mousedown')
     globalEvents.off($xeSelect, 'keydown')
     globalEvents.off($xeSelect, 'blur')
+    globalEvents.off($xeSelect, 'resize')
   },
   render (this: any, h) {
     return this.renderVN(h)

@@ -321,6 +321,15 @@ export default /* define-vxe-component start */ defineVxeComponent({
         $xePulldown.dispatchEvent('hide-panel', {}, evnt)
       }
     },
+    handleGlobalResizeEvent () {
+      const $xePulldown = this
+      const reactData = $xePulldown.reactData
+
+      const { visiblePanel } = reactData
+      if (visiblePanel) {
+        $xePulldown.updatePlacement()
+      }
+    },
 
     //
     // Render
@@ -444,6 +453,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
     globalEvents.on($xePulldown, 'mousewheel', $xePulldown.handleGlobalMousewheelEvent)
     globalEvents.on($xePulldown, 'mousedown', $xePulldown.handleGlobalMousedownEvent)
     globalEvents.on($xePulldown, 'blur', $xePulldown.handleGlobalBlurEvent)
+    globalEvents.on($xePulldown, 'resize', $xePulldown.handleGlobalResizeEvent)
   },
   beforeDestroy () {
     const $xePulldown = this
@@ -455,6 +465,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
     globalEvents.off($xePulldown, 'mousewheel')
     globalEvents.off($xePulldown, 'mousedown')
     globalEvents.off($xePulldown, 'blur')
+    globalEvents.off($xePulldown, 'resize')
   },
   render (this: any, h) {
     return this.renderVN(h)

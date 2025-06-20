@@ -701,6 +701,15 @@ export default /* define-vxe-component start */ defineVxeComponent({
 
       $xeColorPicker.hideOptionPanel()
     },
+    handleGlobalResizeEvent () {
+      const $xeColorPicker = this
+      const reactData = $xeColorPicker.reactData
+
+      const { visiblePanel } = reactData
+      if (visiblePanel) {
+        $xeColorPicker.updatePlacement()
+      }
+    },
 
     //
     // Render
@@ -1119,6 +1128,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
     globalEvents.on($xeColorPicker, 'mousewheel', $xeColorPicker.handleGlobalMousewheelEvent)
     globalEvents.on($xeColorPicker, 'mousedown', $xeColorPicker.handleGlobalMousedownEvent)
     globalEvents.on($xeColorPicker, 'blur', $xeColorPicker.handleGlobalBlurEvent)
+    globalEvents.on($xeColorPicker, 'resize', $xeColorPicker.handleGlobalResizeEvent)
   },
   beforeDestroy () {
     const $xeColorPicker = this
@@ -1130,6 +1140,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
     globalEvents.off($xeColorPicker, 'mousewheel')
     globalEvents.off($xeColorPicker, 'mousedown')
     globalEvents.off($xeColorPicker, 'blur')
+    globalEvents.off($xeColorPicker, 'resize')
   },
   render (this: any, h) {
     return this.renderVN(h)

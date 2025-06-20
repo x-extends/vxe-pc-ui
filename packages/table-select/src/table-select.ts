@@ -507,6 +507,15 @@ export default /* define-vxe-component start */ defineVxeComponent({
 
       $xeTableSelect.hideOptionPanel()
     },
+    handleGlobalResizeEvent () {
+      const $xeTableSelect = this
+      const reactData = $xeTableSelect.reactData
+
+      const { visiblePanel } = reactData
+      if (visiblePanel) {
+        $xeTableSelect.updatePlacement()
+      }
+    },
     focusEvent (evnt: FocusEvent) {
       const $xeTableSelect = this
       const reactData = $xeTableSelect.reactData
@@ -770,6 +779,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
     globalEvents.on($xeTableSelect, 'mousewheel', $xeTableSelect.handleGlobalMousewheelEvent)
     globalEvents.on($xeTableSelect, 'mousedown', $xeTableSelect.handleGlobalMousedownEvent)
     globalEvents.on($xeTableSelect, 'blur', $xeTableSelect.handleGlobalBlurEvent)
+    globalEvents.on($xeTableSelect, 'resize', $xeTableSelect.handleGlobalResizeEvent)
   },
   beforeDestroy () {
     const $xeTableSelect = this
@@ -781,6 +791,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
     globalEvents.off($xeTableSelect, 'mousewheel')
     globalEvents.off($xeTableSelect, 'mousedown')
     globalEvents.off($xeTableSelect, 'blur')
+    globalEvents.off($xeTableSelect, 'resize')
   },
   render (this: any, h) {
     return this.renderVN(h)

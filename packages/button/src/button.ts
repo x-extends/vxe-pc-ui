@@ -304,7 +304,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
         }
         internalData.showTime = setTimeout(() => {
           if (panelElem.dataset.active === 'Y') {
-            this.mouseenterDropdownEvent()
+            $xeButton.mouseenterDropdownEvent()
           } else {
             reactData.isAniVisible = false
           }
@@ -340,7 +340,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
         reactData.isAniVisible = false
         reactData.visiblePanel = false
       }
-      return this.$nextTick()
+      return $xeButton.$nextTick()
     },
     focus () {
       const $xeButton = this
@@ -358,7 +358,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       if (btnElem) {
         btnElem.blur()
       }
-      return this.$nextTick()
+      return $xeButton.$nextTick()
     },
 
     //
@@ -398,12 +398,13 @@ export default /* define-vxe-component start */ defineVxeComponent({
     },
     clickEvent (evnt: Event) {
       const $xeButton = this
+      const props = $xeButton
       const $xeButtonGroup = $xeButton.$xeButtonGroup
 
       if ($xeButtonGroup) {
-        $xeButtonGroup.handleClick({ name: this.name }, evnt)
+        $xeButtonGroup.handleClick({ name: props.name }, evnt)
       }
-      this.dispatchEvent('click', { $event: evnt }, evnt)
+      $xeButton.dispatchEvent('click', { $event: evnt }, evnt)
     },
     downBtnClickEvent (params: VxeButtonDefines.ClickEventParams, option: VxeButtonDefines.DownButtonOption) {
       const $xeButton = this
@@ -423,7 +424,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const reactData = $xeButton.reactData
 
       const dropdownElem = evnt.currentTarget
-      const panelElem = this.$refs.refBtnPanel as HTMLElement | undefined
+      const panelElem = $xeButton.$refs.refBtnPanel as HTMLElement | undefined
       const { flag, targetElem } = getEventTargetNode(evnt, dropdownElem, 'vxe-button')
       if (flag) {
         if (panelElem) {
@@ -435,25 +436,25 @@ export default /* define-vxe-component start */ defineVxeComponent({
             reactData.isAniVisible = false
           }
         }, 350)
-        this.dispatchEvent('dropdown-click', { name: targetElem.getAttribute('name'), option: null, $event: evnt }, evnt)
+        $xeButton.dispatchEvent('dropdown-click', { name: targetElem.getAttribute('name'), option: null, $event: evnt }, evnt)
       }
     },
     mouseenterDropdownEvent () {
       const $xeButton = this
       const reactData = $xeButton.reactData
 
-      const panelElem = this.$refs.refBtnPanel as HTMLElement | undefined
+      const panelElem = $xeButton.$refs.refBtnPanel as HTMLElement | undefined
       if (panelElem) {
         panelElem.dataset.active = 'Y'
         reactData.isAniVisible = true
         setTimeout(() => {
           if (panelElem.dataset.active === 'Y') {
             reactData.visiblePanel = true
-            this.updateZindex()
-            this.updatePlacement()
+            $xeButton.updateZindex()
+            $xeButton.updatePlacement()
             setTimeout(() => {
               if (reactData.visiblePanel) {
-                this.updatePlacement()
+                $xeButton.updatePlacement()
               }
             }, 50)
           }
@@ -467,19 +468,25 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const { loading } = props
       const btnDisabled = $xeButton.computeBtnDisabled
       if (!(btnDisabled || loading)) {
-        this.openPanel()
-        this.mouseenterEvent(evnt)
+        $xeButton.openPanel()
+        $xeButton.mouseenterEvent(evnt)
       }
     },
     mouseleaveTargetEvent  (evnt: MouseEvent) {
-      this.hidePanel()
-      this.mouseleaveEvent(evnt)
+      const $xeButton = this
+
+      $xeButton.hidePanel()
+      $xeButton.mouseleaveEvent(evnt)
     },
     mouseenterEvent  (evnt: MouseEvent) {
-      this.dispatchEvent('mouseenter', {}, evnt)
+      const $xeButton = this
+
+      $xeButton.dispatchEvent('mouseenter', {}, evnt)
     },
     mouseleaveEvent (evnt: MouseEvent) {
-      this.dispatchEvent('mouseleave', {}, evnt)
+      const $xeButton = this
+
+      $xeButton.dispatchEvent('mouseleave', {}, evnt)
     },
     clickTargetEvent (evnt: MouseEvent) {
       const $xeButton = this
@@ -492,39 +499,50 @@ export default /* define-vxe-component start */ defineVxeComponent({
         const { trigger } = props
         if (trigger === 'click') {
           if (reactData.visiblePanel) {
-            this.hidePanel()
+            $xeButton.hidePanel()
           } else {
-            this.openPanel()
+            $xeButton.openPanel()
           }
         }
-        this.clickEvent(evnt)
+        $xeButton.clickEvent(evnt)
       }
     },
     mouseleaveDropdownEvent  () {
-      this.hidePanel()
+      const $xeButton = this
+
+      $xeButton.hidePanel()
     },
     handleGlobalMousewheelEvent  (evnt: Event) {
       const $xeButton = this
       const reactData = $xeButton.reactData
 
-      const panelElem = this.$refs.refBtnPanel as HTMLElement | undefined
+      const panelElem = $xeButton.$refs.refBtnPanel as HTMLElement | undefined
       if (reactData.visiblePanel && !getEventTargetNode(evnt, panelElem).flag) {
-        this.hidePanel()
+        $xeButton.hidePanel()
       }
     },
     handleGlobalMousedownEvent  (evnt: MouseEvent) {
       const $xeButton = this
       const reactData = $xeButton.reactData
 
-      const btnDisabled = this.computeBtnDisabled
+      const btnDisabled = $xeButton.computeBtnDisabled
       const { visiblePanel } = reactData
       if (!btnDisabled) {
-        const el = this.$refs.refElem
-        const panelElem = this.$refs.refBtnPanel as HTMLElement | undefined
+        const el = $xeButton.$refs.refElem
+        const panelElem = $xeButton.$refs.refBtnPanel as HTMLElement | undefined
         reactData.isActivated = getEventTargetNode(evnt, el).flag || getEventTargetNode(evnt, panelElem).flag
         if (visiblePanel && !reactData.isActivated) {
-          this.hidePanel()
+          $xeButton.hidePanel()
         }
+      }
+    },
+    handleGlobalResizeEvent () {
+      const $xeButton = this
+      const reactData = $xeButton.reactData
+
+      const { visiblePanel } = reactData
+      if (visiblePanel) {
+        $xeButton.updatePlacement()
       }
     },
 
@@ -819,6 +837,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
 
     globalEvents.on($xeButton, 'mousewheel', $xeButton.handleGlobalMousewheelEvent)
     globalEvents.on($xeButton, 'mousedown', $xeButton.handleGlobalMousedownEvent)
+    globalEvents.on($xeButton, 'resize', $xeButton.handleGlobalResizeEvent)
   },
   beforeDestroy () {
     const $xeButton = this
@@ -833,6 +852,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
 
     globalEvents.off($xeButton, 'mousewheel')
     globalEvents.off($xeButton, 'mousedown')
+    globalEvents.off($xeButton, 'resize')
   },
   render (this: any, h) {
     return this.renderVN(h)
