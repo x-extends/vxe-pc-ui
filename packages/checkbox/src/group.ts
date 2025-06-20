@@ -146,7 +146,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
         checklist.splice(checkIndex, 1)
       }
       $xeCheckboxGroup.emitModel(checklist)
-      $xeCheckboxGroup.dispatchEvent('change', Object.assign({ checklist }, params), evnt)
+      $xeCheckboxGroup.dispatchEvent('change', Object.assign({ }, params, { checklist, value: checklist }), evnt)
       // 自动更新校验状态
       if ($xeForm && formItemInfo) {
         $xeForm.triggerItemEvent(evnt, formItemInfo.itemConfig.field, checklist)

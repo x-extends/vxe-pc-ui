@@ -126,7 +126,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
         $xeRadioGroup.handleChecked({ label }, evnt)
       } else {
         $xeRadio.emitModel(label)
-        $xeRadio.dispatchEvent('change', { label }, evnt)
+        $xeRadio.dispatchEvent('change', { value: label, label }, evnt)
         // 自动更新校验状态
         if ($xeForm && formItemInfo) {
           $xeForm.triggerItemEvent(evnt, formItemInfo.itemConfig.field, label)
