@@ -94,7 +94,7 @@ export default defineVxeComponent({
         $xeRadioGroup.handleChecked({ label }, evnt)
       } else {
         emit('update:modelValue', label)
-        radioButtonMethods.dispatchEvent('change', { label }, evnt)
+        radioButtonMethods.dispatchEvent('change', { value: label, label }, evnt)
         // 自动更新校验状态
         if ($xeForm && formItemInfo) {
           $xeForm.triggerItemEvent(evnt, formItemInfo.itemConfig.field, label)

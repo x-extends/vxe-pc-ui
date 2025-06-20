@@ -100,7 +100,7 @@ export default defineVxeComponent({
       handleChecked (params, evnt) {
         const value = params.label
         emit('update:modelValue', value)
-        dispatchEvent('change', params, evnt)
+        dispatchEvent('change', { value, label: value }, evnt)
         // 自动更新校验状态
         if ($xeForm && formItemInfo) {
           $xeForm.triggerItemEvent(evnt, formItemInfo.itemConfig.field, value)

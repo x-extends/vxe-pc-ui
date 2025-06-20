@@ -5023,6 +5023,9 @@ export type VxeTableEmits = [
   'scroll',
   'scroll-boundary',
   'custom',
+  'custom-visible-change',
+  'custom-visible-all',
+  'custom-fixed-change',
 
   ...VxeTableExtendCellAreaEmits
 ]
