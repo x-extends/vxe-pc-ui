@@ -19,8 +19,10 @@ declare module '@vxe-ui/core' {
     TABLE_CHECKBOX_CHECKED?: string
     TABLE_CHECKBOX_UNCHECKED?: string
     TABLE_CHECKBOX_INDETERMINATE?: string
+    TABLE_CHECKBOX_DISABLED_UNCHECKED?: string
     TABLE_RADIO_CHECKED?: string
     TABLE_RADIO_UNCHECKED?: string
+    TABLE_RADIO_DISABLED_UNCHECKED?: string
     TABLE_CUSTOM_SORT?: string
     TABLE_MENU_OPTIONS?: string
     TABLE_DRAG_ROW?: string
@@ -83,11 +85,13 @@ declare module '@vxe-ui/core' {
     // radio
     RADIO_CHECKED?: string
     RADIO_UNCHECKED?: string
+    RADIO_DISABLED_UNCHECKED?: string
 
     // checkbox
     CHECKBOX_INDETERMINATE?: string
     CHECKBOX_CHECKED?: string
     CHECKBOX_UNCHECKED?: string
+    CHECKBOX_DISABLED_UNCHECKED?: string
 
     // input
     INPUT_CLEAR?: string

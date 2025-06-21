@@ -12,7 +12,7 @@
     </p>
 
     <p>
-      <vxe-checkbox v-model="demo1.value9" content="复选1"></vxe-checkbox>
+      <vxe-checkbox v-model="demo1.value9" content="复选1" disabled></vxe-checkbox>
       <vxe-checkbox v-model="demo1.value10" content="复选2" disabled></vxe-checkbox>
       <vxe-checkbox v-model="demo1.value11" content="自定义值" checked-value="1" unchecked-value="0"></vxe-checkbox>
     </p>
@@ -52,7 +52,7 @@ const demo1 = reactive({
   value6: false,
   value7: false,
   value8: false,
-  value9: true,
+  value9: false,
   value10: true,
   value11: '1',
   value12: ['3'],

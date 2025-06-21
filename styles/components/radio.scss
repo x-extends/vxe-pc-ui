@@ -40,7 +40,7 @@
   &:not(.is--disabled) {
     > input {
       &:focus+.vxe-radio--icon {
-        color: var(--vxe-ui-font-primary-color);
+        box-shadow: 0 0 0.2em 0 var(--vxe-ui-font-primary-color);
       }
     }
   }
@@ -80,38 +80,11 @@
     text-overflow: ellipsis;
     white-space: nowrap;
   }
-  &.is--disabled {
-    cursor: not-allowed;
-    > input {
-      &:not(:checked) {
-        &+.vxe-radio--label {
-          color: var(--vxe-ui-input-disabled-color);
-        }
-      }
-      &:checked {
-        &+.vxe-radio--label {
-          border-color: var(--vxe-ui-font-primary-lighten-color);
-          background-color: var(--vxe-ui-font-primary-lighten-color);
-        }
-      }
-    }
-  }
-  &:not(.is--disabled) {
-    & > input {
-      &:focus {
-        &+.vxe-radio--label {
-          border-color: var(--vxe-ui-font-primary-color);
-          box-shadow: 0 0 0.2em 0 var(--vxe-ui-font-primary-color);
-        }
-      }
-    }
-    &:hover {
-      > input {
-        &:not(:checked) {
-          &+.vxe-radio--label {
-            color: var(--vxe-ui-font-primary-color);
-          }
-        }
+  & > input {
+    &:focus {
+      &+.vxe-radio--label {
+        border-color: var(--vxe-ui-font-primary-color);
+        box-shadow: 0 0 0.2em 0 var(--vxe-ui-font-primary-color);
       }
     }
   }

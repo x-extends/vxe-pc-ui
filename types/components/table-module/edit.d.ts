@@ -85,7 +85,7 @@ export interface TableEditMethods<D = any> {
    */
   getUpdateRecords(): D[]
   /**
-   * 请使用 getEditRecord
+   * 已废弃，请使用 getEditCell
    * @deprecated
    */
   getActiveRecord(): {
@@ -95,10 +95,11 @@ export interface TableEditMethods<D = any> {
     column: VxeTableDefines.ColumnInfo<D>
     columnIndex: number
     $columnIndex: number
-    cell: HTMLElement
+    // cell: HTMLElement
   }
   /**
-   * 用于 edit-config，获取已激活的行数据
+   * 已废弃，请使用 getEditCell
+   * @deprecated
    */
   getEditRecord(): {
     row: D
@@ -107,15 +108,22 @@ export interface TableEditMethods<D = any> {
     column: VxeTableDefines.ColumnInfo<D>
     columnIndex: number
     $columnIndex: number
-    cell: HTMLElement
+    // cell: HTMLElement
   }
+  /**
+   * 用于 edit-config，获取已激活编辑的单元格信息
+   */
+  getEditCell(): {
+    row: D
+    column: VxeTableDefines.ColumnInfo<D>
+  } | null
   /**
    * 用于 mouse-config.selected，获取选中的单元格信息
    */
   getSelectedCell(): {
     row: D
     column: VxeTableDefines.ColumnInfo<D>
-  }
+  } | null
   /**
    * 请使用 clearEdit()
    * @deprecated

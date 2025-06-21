@@ -431,11 +431,13 @@ setIcon({
   // radio
   RADIO_CHECKED: iconPrefix + 'radio-checked-fill',
   RADIO_UNCHECKED: iconPrefix + 'radio-unchecked',
+  RADIO_DISABLED_UNCHECKED: iconPrefix + 'radio-unchecked-fill',
 
   // checkbox
   CHECKBOX_INDETERMINATE: iconPrefix + 'checkbox-indeterminate-fill',
   CHECKBOX_CHECKED: iconPrefix + 'checkbox-checked-fill',
   CHECKBOX_UNCHECKED: iconPrefix + 'checkbox-unchecked',
+  CHECKBOX_DISABLED_UNCHECKED: iconPrefix + 'checkbox-unchecked-fill',
 
   // input
   INPUT_CLEAR: iconPrefix + 'error-circle-fill',

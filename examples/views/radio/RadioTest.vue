@@ -8,7 +8,7 @@
     </p>
 
     <p>
-      <vxe-radio name="n2" v-model="demo1.value2" label="1" content="单选1"></vxe-radio>
+      <vxe-radio name="n2" v-model="demo1.value2" label="1" content="单选1" disabled></vxe-radio>
       <vxe-radio name="n2" v-model="demo1.value2" label="2" content="禁用2" disabled></vxe-radio>
       <vxe-radio name="n2" v-model="demo1.value2" label="3" content="单选3"></vxe-radio>
     </p>

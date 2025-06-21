@@ -908,6 +908,7 @@ export default defineVxeComponent({
         class: ['vxe-number-input--minus-btn is--minus', {
           'is--disabled': isDisabledSubtractNumber
         }],
+        type: 'button',
         onClick: numberClickEvent,
         onMousedown: numberMousedownEvent,
         onMouseup: numberStopAll,
@@ -927,6 +928,7 @@ export default defineVxeComponent({
         class: ['vxe-number-input--plus-btn is--plus', {
           'is--disabled': isDisabledAddNumber
         }],
+        type: 'button',
         onClick: numberClickEvent,
         onMousedown: numberMousedownEvent,
         onMouseup: numberStopAll,
