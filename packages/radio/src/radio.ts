@@ -198,7 +198,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
           }
         }),
         h('span', {
-          class: ['vxe-radio--icon', isChecked ? getIcon().RADIO_CHECKED : getIcon().RADIO_UNCHECKED]
+          class: ['vxe-radio--icon', isChecked ? getIcon().RADIO_CHECKED : (isDisabled ? getIcon().RADIO_DISABLED_UNCHECKED : getIcon().RADIO_UNCHECKED)]
         }),
         h('span', {
           class: 'vxe-radio--label'

@@ -31,43 +31,12 @@
       appearance: none;
     }
   }
-  &.is--indeterminate {
-    > input {
-      &:not(:checked) {
-        &+.vxe-checkbox--icon {
-          color: var(--vxe-ui-font-primary-color);
-        }
-      }
-    }
-  }
   &:not(.is--disabled) {
     & > input {
       &:focus {
         &+.vxe-checkbox--icon {
-          color: var(--vxe-ui-font-primary-color);
           box-shadow: 0 0 0.2em 0 var(--vxe-ui-font-primary-color);
         }
-      }
-    }
-    &:hover {
-      > input {
-        &+.vxe-checkbox--icon {
-          border-color: var(--vxe-ui-font-primary-color);
-        }
-      }
-    }
-  }
-  &.is--disabled {
-    cursor: not-allowed;
-    > input {
-      &+.vxe-checkbox--icon {
-        color: var(--vxe-ui-input-disabled-color);
-        &+.vxe-checkbox--label {
-          color: var(--vxe-ui-font-disabled-color);
-        }
-      }
-      &:checked+.vxe-checkbox--icon {
-        color: var(--vxe-ui-input-disabled-color);
       }
     }
   }

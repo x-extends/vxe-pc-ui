@@ -1036,6 +1036,9 @@ export default /* define-vxe-component start */ defineVxeComponent({
         class: ['vxe-number-input--minus-btn is--minus', {
           'is--disabled': isDisabledSubtractNumber
         }],
+        attrs: {
+          type: 'button'
+        },
         on: {
           click: $xeNumberInput.numberClickEvent,
           mousedown: $xeNumberInput.numberMousedownEvent,
@@ -1059,6 +1062,9 @@ export default /* define-vxe-component start */ defineVxeComponent({
         class: ['vxe-number-input--plus-btn is--plus', {
           'is--disabled': isDisabledAddNumber
         }],
+        attrs: {
+          type: 'button'
+        },
         on: {
           click: $xeNumberInput.numberClickEvent,
           mousedown: $xeNumberInput.numberMousedownEvent,

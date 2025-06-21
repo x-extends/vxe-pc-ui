@@ -418,6 +418,7 @@ setIcon({
   // icon-picker
   ICON_PICKER_OPEN: iconPrefix + 'caret-down rotate180',
   ICON_PICKER_CLOSE: iconPrefix + 'caret-down',
+  RADIO_DISABLED_UNCHECKED: iconPrefix + 'radio-unchecked-fill',
 
   // pager
   PAGER_HOME: iconPrefix + 'home-page',
@@ -436,6 +437,7 @@ setIcon({
   CHECKBOX_INDETERMINATE: iconPrefix + 'checkbox-indeterminate-fill',
   CHECKBOX_CHECKED: iconPrefix + 'checkbox-checked-fill',
   CHECKBOX_UNCHECKED: iconPrefix + 'checkbox-unchecked',
+  CHECKBOX_DISABLED_UNCHECKED: iconPrefix + 'checkbox-unchecked-fill',
 
   // input
   INPUT_CLEAR: iconPrefix + 'error-circle-fill',
