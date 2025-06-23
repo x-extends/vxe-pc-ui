@@ -7,6 +7,7 @@ import { VxeTooltipInstance, VxeTooltipPropTypes } from './tooltip'
 import { VxeModalPropTypes } from './modal'
 import { VxeDrawerPropTypes } from './drawer'
 import { VxeToolbarConstructor, VxeToolbarInstance } from './toolbar'
+import { VxeTableCustomPanelConstructor } from './table-module/custom'
 
 /* eslint-disable no-use-before-define,@typescript-eslint/ban-types */
 
@@ -37,7 +38,7 @@ export interface TablePrivateRef {
   refTooltip: Ref<VxeTooltipInstance>
   refValidTooltip: Ref<VxeTooltipInstance>
   refTableFilter: Ref<any>
-  refTableCustom: Ref<ComponentPublicInstance>
+  refTableCustom: Ref<VxeTableCustomPanelConstructor>
   refTableMenu: Ref<any>
   refTableHeader: Ref<ComponentPublicInstance>
   refTableBody: Ref<ComponentPublicInstance>
@@ -427,6 +428,10 @@ export namespace VxeTablePropTypes {
      * 是否显示分组的统计
      */
     showTotal?: boolean
+    /**
+     * 数据分组允许设置的最大数量
+     */
+    maxGroupSize?: number
     /**
      * 自定义分组统计的方法
      */
