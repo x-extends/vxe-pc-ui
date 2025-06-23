@@ -1,4 +1,45 @@
+import { DefineVxeComponentInstance } from '@vxe-ui/core'
+import { VxeTableDefines, VxeTableConstructor, VxeTableMethods, VxeTablePrivateMethods } from '../table'
+
 /* eslint-disable @typescript-eslint/no-empty-interface,@typescript-eslint/no-unused-vars,no-use-before-define */
+
+export type VxeTableCustomPanelInstance = DefineVxeComponentInstance<{
+  reactData: TableCustomPanelReactData
+  internalData: TableCustomPanelInternalData
+
+  $xeTable: VxeTableConstructor & VxeTableMethods & VxeTablePrivateMethods
+}, VxeTableCustomPanelProps, TableCustomPanelPrivateComputed, VxeTableCustomPanelMethods>
+
+export type VxeTableCustomPanelConstructor = VxeTableCustomPanelInstance
+
+interface VxeTableCustomPanelProps {
+  customStore: VxeTableDefines.VxeTableCustomStoreObj
+}
+
+export interface TableCustomPanelReactData {
+  dragCol: VxeTableDefines.ColumnInfo | null
+  dragGroup: string | null
+  dragValues: string | null
+  dragTipText: string
+}
+
+export interface TableCustomPanelInternalData {
+  prevDragCol?: VxeTableDefines.ColumnInfo | undefined,
+  prevDragToChild?: boolean
+  prevDragPos?: any
+}
+
+export interface TableCustomPanelPrivateRef {
+}
+
+export interface TableCustomPanelPrivateComputed {
+}
+
+export interface VxeTableCustomPanelMethods {
+
+}
+
+type VxeTableCustomPanelEmits = []
 
 export interface VxeCustomPanel {
 }
