@@ -1,4 +1,54 @@
+import { RenderFunction, SetupContext, Ref } from 'vue'
+import { VxeComponentBaseOptions } from '@vxe-ui/core'
+import { VxeTableDefines, VxeTableConstructor, VxeTableMethods, VxeTablePrivateMethods } from '../table'
+
 /* eslint-disable no-use-before-define */
+
+export interface VxeTableCustomPanelConstructor extends VxeComponentBaseOptions, VxeTableCustomPanelMethods {
+  props: VxeTableCustomPanelProps
+  context: SetupContext<VxeTableCustomPanelEmits>
+  reactData: TableCustomPanelReactData
+  internalData: TableCustomPanelInternalData
+  getRefMaps(): TableCustomPanelPrivateRef
+  getComputeMaps(): TableCustomPanelPrivateComputed
+  renderVN: RenderFunction
+
+  xeTable: VxeTableConstructor & VxeTableMethods & VxeTablePrivateMethods
+}
+
+interface VxeTableCustomPanelProps {
+  customStore?: VxeTableDefines.VxeTableCustomStoreObj
+}
+
+export interface TableCustomPanelReactData {
+  dragCol: VxeTableDefines.ColumnInfo | null
+  dragGroup: string | null
+  dragValues: string | null
+  dragTipText: string
+}
+
+export interface TableCustomPanelInternalData {
+  prevDragCol?: VxeTableDefines.ColumnInfo | undefined,
+  prevDragToChild?: boolean
+  prevDragPos?: any
+}
+
+export interface TableCustomPanelPrivateRef {
+  refElem: Ref<HTMLDivElement | undefined>
+  refBodyWrapperElem: Ref<HTMLDivElement | undefined>
+  refCustomBodyElem: Ref<HTMLDivElement | undefined>
+  refDragLineElem: Ref<HTMLDivElement | undefined>
+  refDragTipElem: Ref<HTMLDivElement | undefined>
+}
+
+export interface TableCustomPanelPrivateComputed {
+}
+
+export interface VxeTableCustomPanelMethods {
+
+}
+
+type VxeTableCustomPanelEmits = []
 
 export interface VxeCustomPanel {
 }

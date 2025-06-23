@@ -1821,7 +1821,7 @@ export namespace VxeTablePropTypes {
       $grid: VxeGridConstructor<DT> | null | undefined
       isCut: boolean
       column: VxeTableDefines.ColumnInfo<DT>
-      title: string
+      cellTitle: string
     }): string
     /**
      * 重写单元格复制取值的方法，将单元格复制到剪贴板
@@ -2715,6 +2715,10 @@ export namespace VxeTablePropTypes {
      * @private
      */
     _isCustomColumn?: boolean
+    /**
+     * @private
+     */
+    _isCustomData?: boolean
     /**
      * @private
      */

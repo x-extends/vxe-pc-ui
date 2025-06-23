@@ -21,6 +21,10 @@ export interface VxeTableExtendPivotTablePrivateMethods<D = any> {
   getPivotTableAggregateSimplePanel(): DefineVxeComponentOptions<{
     customStore: VxeTableDefines.VxeTableCustomStoreObj
   }, object>
+  /**
+   * @private
+   */
+  handlePivotTableAggregatePanelDragendEvent(evnt: DragEvent): void
 }
 
 declare module '../table' {
