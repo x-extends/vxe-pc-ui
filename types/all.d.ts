@@ -15,6 +15,7 @@ import VxeCard from './components/card'
 import VxeCarousel from './components/carousel'
 import VxeCarouselItem from './components/carousel-item'
 import VxeCheckbox from './components/checkbox'
+import VxeCheckboxButton from './components/checkbox-button'
 import VxeCheckboxGroup from './components/checkbox-group'
 import VxeCol from './components/col'
 import VxeCollapse from './components/collapse'
@@ -111,6 +112,7 @@ interface AllComponents {
   VxeCarousel: typeof VxeCarousel
   VxeCarouselItem: typeof VxeCarouselItem
   VxeCheckbox: typeof VxeCheckbox
+  VxeCheckboxButton: typeof VxeCheckboxButton
   VxeCheckboxGroup: typeof VxeCheckboxGroup
   VxeCol: typeof VxeCol
   VxeCollapse: typeof VxeCollapse
@@ -216,6 +218,7 @@ export * from './components/card'
 export * from './components/carousel'
 export * from './components/carousel-item'
 export * from './components/checkbox'
+export * from './components/checkbox-button'
 export * from './components/checkbox-group'
 export * from './components/col'
 export * from './components/collapse'

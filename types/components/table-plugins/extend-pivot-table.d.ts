@@ -1,3 +1,4 @@
+import { VNode } from 'vue'
 import { DefineVxeComponentOptions } from '@vxe-ui/core'
 import { VxeTableConstructor, VxeTablePrivateMethods, VxeTableDefines } from '../table'
 
@@ -10,6 +11,10 @@ export interface VxeTableExtendPivotTablePrivateMethods<D = any> {
   /**
    * @private
    */
+  getPivotTableAggregateRenderColTitles(column: VxeTableDefines.ColumnInfo, titleVN: VNode): VNode[]
+  /**
+   * @private
+   */
   handlePivotTableAggregateData(aggList: VxeTableDefines.AggregateRowInfo[]): void
   /**
    * @private
@@ -19,6 +24,12 @@ export interface VxeTableExtendPivotTablePrivateMethods<D = any> {
    * @private
    */
   getPivotTableAggregateSimplePanel(): DefineVxeComponentOptions<{
+    customStore: VxeTableDefines.VxeTableCustomStoreObj
+  }, object>
+  /**
+   * @private
+   */
+  getPivotTableAggregatePopupPanel(): DefineVxeComponentOptions<{
     customStore: VxeTableDefines.VxeTableCustomStoreObj
   }, object>
   /**

@@ -37,6 +37,29 @@
         <vxe-checkbox label="5" content="LESS"></vxe-checkbox>
       </vxe-checkbox-group>
     </p>
+
+    <p>
+      <vxe-checkbox-group v-model="demo1.value21">
+        <vxe-checkbox-button label="1" content="按钮1"></vxe-checkbox-button>
+        <vxe-checkbox-button label="2" content="按钮2"></vxe-checkbox-button>
+        <vxe-checkbox-button label="3" content="按钮3"></vxe-checkbox-button>
+      </vxe-checkbox-group>
+      <vxe-checkbox-group v-model="demo1.value22" size="medium">
+        <vxe-checkbox-button label="1" content="按钮1"></vxe-checkbox-button>
+        <vxe-checkbox-button label="2" content="按钮2"></vxe-checkbox-button>
+        <vxe-checkbox-button label="3" content="按钮3"></vxe-checkbox-button>
+      </vxe-checkbox-group>
+      <vxe-checkbox-group v-model="demo1.value23" size="small">
+        <vxe-checkbox-button label="1" content="按钮1"></vxe-checkbox-button>
+        <vxe-checkbox-button label="2" content="按钮2"></vxe-checkbox-button>
+        <vxe-checkbox-button label="3" content="按钮3"></vxe-checkbox-button>
+      </vxe-checkbox-group>
+      <vxe-checkbox-group v-model="demo1.value24" size="mini">
+        <vxe-checkbox-button label="1" content="按钮1"></vxe-checkbox-button>
+        <vxe-checkbox-button label="2" content="按钮2"></vxe-checkbox-button>
+        <vxe-checkbox-button label="3" content="按钮3"></vxe-checkbox-button>
+      </vxe-checkbox-group>
+    </p>
   </div>
 </template>
 
@@ -57,6 +80,10 @@ const demo1 = reactive({
   value11: '1',
   value12: ['3'],
   value20: [],
+  value21: [],
+  value22: [],
+  value23: ['2'],
+  value24: ['2', '3'],
   opts1: [
     { value: '1', label: 'HTML' },
     { value: '2', label: 'CSS' },

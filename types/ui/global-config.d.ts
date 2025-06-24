@@ -13,6 +13,7 @@ import { VxeCardProps } from '../components/card'
 import { VxeCarouselProps } from '../components/carousel'
 import { VxeCarouselItemProps } from '../components/carousel-item'
 import { VxeCheckboxProps } from '../components/checkbox'
+import { VxeCheckboxButtonProps } from '../components/checkbox-button'
 import { VxeCheckboxGroupProps } from '../components/checkbox-group'
 import { VxeColProps } from '../components/col'
 import { VxeCollapseProps } from '../components/collapse'
@@ -106,6 +107,7 @@ declare module '@vxe-ui/core' {
     carousel?: VxeCarouselProps
     carouselItem?: VxeCarouselItemProps
     checkbox?: VxeCheckboxProps
+    checkboxButton?: VxeCheckboxButtonProps
     checkboxGroup?: VxeCheckboxGroupProps
     col?: VxeColProps
     collapse?: VxeCollapseProps
