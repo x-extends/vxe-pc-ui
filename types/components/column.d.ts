@@ -164,7 +164,7 @@ export namespace VxeColumnPropTypes {
   /**
    * 指定聚合函数
    */
-  export type AggFunc = boolean | 'count' | 'sum' | 'avg' | 'min' | 'max' | 'first' | 'last' | '' | null | undefined
+  export type AggFunc = boolean | 'sum' | 'count' | 'avg' | 'min' | 'max' | 'first' | 'last' | '' | null | undefined
 
   interface ExportMethodParams<D = any> {
     $table: VxeTableConstructor<D>
