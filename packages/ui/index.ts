@@ -60,6 +60,7 @@ setConfig({
   },
   carouselItem: {},
   checkbox: {},
+  checkboxButton: {},
   checkboxGroup: {},
   col: {},
   collapse: {

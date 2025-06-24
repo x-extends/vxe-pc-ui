@@ -64,7 +64,8 @@
   }
 }
 
-.vxe-checkbox {
+.vxe-checkbox--default,
+.vxe-checkbox-group {
   margin-right: var(--vxe-ui-base-margin-gap-default);
   &.size--medium {
     margin-right: var(--vxe-ui-base-margin-gap-medium);

@@ -400,6 +400,17 @@ export namespace VxeTablePropTypes {
      */
     showTotal?: boolean
     /**
+     * 是否显示聚合函数的列标题
+     */
+    showAggFuncTitle?: boolean
+    /**
+     * 聚合函数默认值初始化的方法，当聚合列被创建时会执行一次
+     */
+    initialAggFuncMethod?:(params: {
+      $table: VxeTableConstructor<D>
+      column: VxeTableDefines.ColumnInfo<D>
+    }) => VxeTableDefines.AggFuncType
+    /**
      * 数据分组允许设置的最大数量
      */
     maxGroupSize?: number
@@ -5061,6 +5072,7 @@ export type VxeTableEmits = [
 ]
 
 export namespace VxeTableDefines {
+  export type AggFuncType = 'sum' | 'count' | 'avg' | 'min' | 'max' | 'first' | 'last'
   export interface SortConfs {
     field: string
     order?: VxeTablePropTypes.SortOrder

@@ -44,6 +44,7 @@ const componentList = [
   'carousel',
   'carousel-item',
   'checkbox',
+  'checkbox-button',
   'checkbox-group',
   'col',
   'collapse',

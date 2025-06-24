@@ -2,39 +2,39 @@ import { PropType, CreateElement, VNode } from 'vue'
 import { defineVxeComponent } from '../../ui/src/comp'
 import XEUtils from 'xe-utils'
 import { getFuncText } from '../../ui/src/utils'
-import { getConfig, createEvent, globalMixins, getIcon } from '../../ui'
+import { getConfig, createEvent, globalMixins } from '../../ui'
 
-import type { VxeCheckboxGroupConstructor, VxeCheckboxEmits, ValueOf, CheckboxReactData, VxeComponentSizeType, VxeCheckboxGroupPrivateMethods, VxeCheckboxPropTypes, VxeFormConstructor, VxeFormPrivateMethods, VxeFormDefines } from '../../../types'
+import type { VxeCheckboxButtonPropTypes, CheckboxButtonReactData, CheckboxGroupPrivateComputed, VxeCheckboxGroupConstructor, ValueOf, VxeCheckboxButtonEmits, VxeCheckboxGroupPrivateMethods, VxeFormConstructor, VxeComponentPermissionInfo, VxeComponentSizeType, VxeFormPrivateMethods, VxeFormDefines } from '../../../types'
 
 export default /* define-vxe-component start */ defineVxeComponent({
-  name: 'VxeCheckbox',
+  name: 'VxeCheckboxButton',
   mixins: [
-    globalMixins.sizeMixin
+    globalMixins.sizeMixin,
+    globalMixins.permissionMixin
   ],
   props: {
-    value: [String, Number, Boolean] as PropType<VxeCheckboxPropTypes.ModelValue>,
+    value: [String, Number, Boolean] as PropType<VxeCheckboxButtonPropTypes.ModelValue>,
     label: {
-      type: [String, Number] as PropType<VxeCheckboxPropTypes.Label>,
+      type: [String, Number, Boolean] as PropType<VxeCheckboxButtonPropTypes.Label>,
       default: null
     },
-    indeterminate: Boolean as PropType<VxeCheckboxPropTypes.Indeterminate>,
-    title: [String, Number] as PropType<VxeCheckboxPropTypes.Title>,
+    title: [String, Number] as PropType<VxeCheckboxButtonPropTypes.Title>,
     checkedValue: {
-      type: [String, Number, Boolean] as PropType<VxeCheckboxPropTypes.CheckedValue>,
+      type: [String, Number, Boolean] as PropType<VxeCheckboxButtonPropTypes.CheckedValue>,
       default: true
     },
     uncheckedValue: {
-      type: [String, Number, Boolean] as PropType<VxeCheckboxPropTypes.UncheckedValue>,
+      type: [String, Number, Boolean] as PropType<VxeCheckboxButtonPropTypes.UncheckedValue>,
       default: false
     },
-    content: [String, Number] as PropType<VxeCheckboxPropTypes.Content>,
+    content: [String, Number] as PropType<VxeCheckboxButtonPropTypes.Content>,
     disabled: {
-      type: Boolean as PropType<VxeCheckboxPropTypes.Disabled>,
+      type: Boolean as PropType<VxeCheckboxButtonPropTypes.Disabled>,
       default: null
     },
     size: {
-      type: String as PropType<VxeCheckboxPropTypes.Size>,
-      default: () => getConfig().checkbox.size || getConfig().size
+      type: String as PropType<VxeCheckboxButtonPropTypes.Size>,
+      default: () => getConfig().checkboxButton.size || getConfig().size
     }
   },
   inject: {
@@ -50,7 +50,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
     }
   },
   data () {
-    const reactData: CheckboxReactData = {
+    const reactData: CheckboxButtonReactData = {
     }
     return {
       xID: XEUtils.uniqueId(),
@@ -59,10 +59,11 @@ export default /* define-vxe-component start */ defineVxeComponent({
   },
   computed: {
     ...({} as {
+      computePermissionInfo(): VxeComponentPermissionInfo
       computeSize(): VxeComponentSizeType
       $xeForm(): (VxeFormConstructor & VxeFormPrivateMethods) | null
       formItemInfo(): VxeFormDefines.ProvideItemInfo | null
-      $xeCheckboxGroup(): (VxeCheckboxGroupConstructor & VxeCheckboxGroupPrivateMethods) | null
+      $xeCheckboxGroup(): (VxeCheckboxGroupConstructor & CheckboxGroupPrivateComputed & VxeCheckboxGroupPrivateMethods) | null
     }),
     computeIsChecked () {
       const $xeCheckbox = this
@@ -95,7 +96,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
     //
     // Method
     //
-    dispatchEvent (type: ValueOf<VxeCheckboxEmits>, params: Record<string, any>, evnt: Event | null) {
+    dispatchEvent (type: ValueOf<VxeCheckboxButtonEmits>, params: Record<string, any>, evnt: Event | null) {
       const $xeCheckbox = this
       $xeCheckbox.$emit(type, createEvent(evnt, { $checkbox: $xeCheckbox }, params))
     },
@@ -140,22 +141,20 @@ export default /* define-vxe-component start */ defineVxeComponent({
     // Render
     //
     renderVN (h: CreateElement): VNode {
-      const $xeCheckbox = this
-      const props = $xeCheckbox
-      const slots = $xeCheckbox.$scopedSlots
+      const $xeCheckboxButton = this
+      const props = $xeCheckboxButton
+      const slots = $xeCheckboxButton.$scopedSlots
 
       const { label } = props
-      const vSize = $xeCheckbox.computeSize
-      const isDisabled = $xeCheckbox.computeIsDisabled
-      const isChecked = $xeCheckbox.computeIsChecked
-      const indeterminate = !isChecked && props.indeterminate
+      const vSize = $xeCheckboxButton.computeSize
+      const isDisabled = $xeCheckboxButton.computeIsDisabled
+      const isChecked = $xeCheckboxButton.computeIsChecked
+
       return h('label', {
         key: label,
-        class: ['vxe-checkbox vxe-checkbox--default', {
+        class: ['vxe-checkbox vxe-checkbox--button', {
           [`size--${vSize}`]: vSize,
-          'is--indeterminate': indeterminate,
-          'is--disabled': isDisabled,
-          'is--checked': isChecked
+          'is--disabled': isDisabled
         }],
         attrs: {
           title: props.title
@@ -171,11 +170,8 @@ export default /* define-vxe-component start */ defineVxeComponent({
             disabled: isDisabled
           },
           on: {
-            change: $xeCheckbox.changeEvent
+            change: $xeCheckboxButton.changeEvent
           }
-        }),
-        h('span', {
-          class: ['vxe-checkbox--icon', indeterminate ? getIcon().CHECKBOX_INDETERMINATE : (isChecked ? getIcon().CHECKBOX_CHECKED : (isDisabled ? getIcon().CHECKBOX_DISABLED_UNCHECKED : getIcon().CHECKBOX_UNCHECKED))]
         }),
         h('span', {
           class: 'vxe-checkbox--label'

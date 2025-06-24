@@ -1,3 +1,4 @@
+import { CreateElement, VNode } from 'vue'
 import { DefineVxeComponentOptions } from '@vxe-ui/core'
 import { VxeTableConstructor, VxeTablePrivateMethods, VxeTableDefines } from '../table'
 
@@ -7,6 +8,10 @@ export interface VxeTableExtendPivotTableMethods<D = any> {
 }
 
 export interface VxeTableExtendPivotTablePrivateMethods<D = any> {
+  /**
+   * @private
+   */
+  getPivotTableAggregateRenderColTitles(h: CreateElement, column: VxeTableDefines.ColumnInfo, titleVN: VNode): VNode[]
   /**
    * @private
    */
@@ -24,12 +29,27 @@ export interface VxeTableExtendPivotTablePrivateMethods<D = any> {
   /**
    * @private
    */
+  getPivotTableAggregatePopupPanel(): DefineVxeComponentOptions<{
+    customStore: VxeTableDefines.VxeTableCustomStoreObj
+  }>
+  /**
+   * @private
+   */
   handlePivotTableAggregatePanelDragendEvent(evnt: DragEvent): void
 }
 
 declare module '../table' {
   export interface VxeTableMethods<D = any> extends VxeTableExtendPivotTableMethods<D> { }
   export interface VxeTablePrivateMethods<D = any> extends VxeTableExtendPivotTablePrivateMethods<D> { }
+  export interface TablePrivateComputed<D = any> {
+    omputeAggFnObj: {
+      afList: {
+        label: string
+        value: string
+      }[]
+      afMaps: Record<string, string>
+    }
+  }
 }
 
 declare module '../grid' {

@@ -17,6 +17,7 @@ import VxeCard from './card'
 import VxeCarousel from './carousel'
 import VxeCarouselItem from './carousel-item'
 import VxeCheckbox from './checkbox'
+import VxeCheckboxButton from './checkbox-button'
 import VxeCheckboxGroup from './checkbox-group'
 import VxeCol from './col'
 import VxeCollapse from './collapse'
@@ -105,6 +106,7 @@ const components = [
   VxeCarousel,
   VxeCarouselItem,
   VxeCheckbox,
+  VxeCheckboxButton,
   VxeCheckboxGroup,
   VxeCol,
   VxeCollapse,
@@ -214,6 +216,7 @@ export * from './card'
 export * from './carousel'
 export * from './carousel-item'
 export * from './checkbox'
+export * from './checkbox-button'
 export * from './checkbox-group'
 export * from './col'
 export * from './collapse'
