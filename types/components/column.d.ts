@@ -28,8 +28,8 @@ export namespace VxeColumnPropTypes {
   export type MinWidth = number | string
   export type MaxWidth = number | string
   export type Resizable = boolean
-  export type Fixed = 'left' | 'right' | '' | null
-  export type Align = 'left' | 'center' | 'right' | '' | null
+  export type Fixed = 'left' | 'right' | '' | null | undefined
+  export type Align = 'left' | 'center' | 'right' | '' | null | undefined
   export type HeaderAlign = Align
   export type FooterAlign = Align
   export type ShowOverflow = VxeTablePropTypes.ShowOverflow
@@ -158,7 +158,7 @@ export namespace VxeColumnPropTypes {
   /**
    * 指定聚合函数
    */
-  export type AggFunc = boolean | 'sum' | 'max' | 'count' | 'avg' | 'min' | 'max' | 'first' | 'last' | '' | null
+  export type AggFunc = boolean | 'sum' | 'max' | 'count' | 'avg' | 'min' | 'max' | 'first' | 'last' | '' | null | undefined
 
   interface ExportMethodParams<D = any> {
     $table: VxeTableConstructor<D>

@@ -18,13 +18,15 @@ interface VxeTableCustomPanelProps {
 
 export interface TableCustomPanelReactData {
   dragCol: VxeTableDefines.ColumnInfo | null
+  dragGroupField: string | null | undefined
+  dragAggFnCol?: VxeTableDefines.ColumnInfo | null
   dragTipText: string
 }
 
 export interface TableCustomPanelInternalData {
   prevDragCol?: VxeTableDefines.ColumnInfo | null | undefined
-  prevDragGroup?: string | null | undefined
-  prevDragValues?: string | null | undefined
+  prevDragGroupField?: string | null | undefined
+  prevDragAggFnColid?: string | null | undefined
   prevDragToChild?: boolean
   prevDragPos?: any
 }

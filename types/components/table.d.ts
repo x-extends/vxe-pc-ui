@@ -400,6 +400,10 @@ export namespace VxeTablePropTypes {
      */
     showTotal?: boolean
     /**
+     * 数据分组允许设置的最大数量
+     */
+    maxGroupSize?: number
+    /**
      * 自定义分组统计的方法
      */
     totalMethod?:(params: {
@@ -892,6 +896,10 @@ export namespace VxeTablePropTypes {
      * 允许自定义聚合函数配置
      */
     allowValues?: boolean
+    /**
+     * 当拖拽数据分组或聚合列时，自动更新列可视状态
+     */
+    autoAggGroupValues?: boolean
     showFooter?: boolean
     icon?: string
     resetButtonText?: string
@@ -3572,6 +3580,7 @@ export interface TableReactData<D = any> {
   isRowGroupStatus: boolean
   rowGroupList: VxeTableDefines.RowGroupItem[]
   aggHandleFields: string[]
+  aggHandleAggColumns: VxeTableDefines.ColumnInfo[]
 
   rowGroupExpandedFlag: number
   rowExpandedFlag: number
@@ -4959,6 +4968,7 @@ export interface TablePrivateMethods<D = any> {
   updateScrollYData(): Promise<any>
   checkScrolling(): void
   updateZindex(): void
+  handleUpdateAggData(): Promise<any>
   handleCheckedCheckboxRow(rows: any, value: boolean, isForce?: boolean): Promise<any>
   triggerHoverEvent(evnt: any, params: any): void
   setHoverRow(row: any): void
@@ -5238,11 +5248,15 @@ export namespace VxeTableDefines {
     /**
      * @private
      */
-    defaultVisible: any
+    defaultVisible: boolean
     /**
      * @private
      */
-    defaultFixed: any
+    defaultFixed: VxeColumnPropTypes.Fixed | undefined
+    /**
+     * @private
+     */
+    defaultAggFunc: VxeColumnPropTypes.AggFunc | undefined
     /**
      * @private
      */
@@ -5305,7 +5319,7 @@ export namespace VxeTableDefines {
     /**
      * @private
      */
-    renderAggFn: string
+    renderAggFn: VxeColumnPropTypes.AggFunc
 
     /**
      * @private
@@ -5790,6 +5804,7 @@ export namespace VxeTableDefines {
     sortData?: Record<string, number>
     visibleData?: Record<string, boolean>
     fixedData?: Record<string, VxeColumnPropTypes.Fixed>
+    aggFuncData?: Record<string, VxeColumnPropTypes.AggFunc>
   }
 
   export interface VxeTableCustomStorageObj {
@@ -5812,7 +5827,7 @@ export namespace VxeTableDefines {
     /**
      * 聚合分组字段
      */
-    rowGroup?: boolean
+    // rowGroup?: boolean
     /**
      * 聚合函数
      */
