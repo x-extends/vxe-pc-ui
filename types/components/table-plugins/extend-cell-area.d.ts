@@ -90,7 +90,7 @@ export interface VxeTableExtendCellAreaPrivateMethods<D = any> {
   /**
    * @private
    */
-  triggerCellAreaMousedownEvent(evnt: MouseEvent, params: VxeTableDefines.CellClickEventParams<D>): void
+  triggerCellAreaMousednEvent(evnt: MouseEvent, params: VxeTableDefines.CellClickEventParams<D>): void
   /**
    * @private
    */
