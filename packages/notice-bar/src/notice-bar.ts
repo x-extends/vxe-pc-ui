@@ -1,10 +1,10 @@
-import { ref, h, reactive, PropType, computed, onMounted, onBeforeUnmount } from 'vue'
+import { ref, h, reactive, PropType, computed, onMounted, watch, onBeforeUnmount, inject } from 'vue'
 import { defineVxeComponent } from '../../ui/src/comp'
 import XEUtils from 'xe-utils'
 import { getConfig, useSize, createEvent, globalEvents, renderEmptyElement } from '../../ui'
 import { toCssUnit } from '../../ui/src/dom'
 
-import type { VxeNoticeBarPropTypes, NoticeBarReactData, NoticeBarPrivateRef, NoticeBarMethods, NoticeBarPrivateMethods, VxeNoticeBarEmits, VxeNoticeBarPrivateComputed, VxeNoticeBarConstructor, VxeNoticeBarPrivateMethods, ValueOf } from '../../../types'
+import type { VxeNoticeBarPropTypes, NoticeBarReactData, NoticeBarPrivateRef, NoticeBarMethods, NoticeBarPrivateMethods, VxeNoticeBarEmits, VxeNoticeBarPrivateComputed, VxeNoticeBarConstructor, VxeNoticeBarPrivateMethods, ValueOf, VxeTabsConstructor, VxeTabsPrivateMethods } from '../../../types'
 
 export default defineVxeComponent({
   name: 'VxeNoticeBar',
@@ -33,6 +33,8 @@ export default defineVxeComponent({
   setup (props, context) {
     const { slots, emit } = context
 
+    const $xeTabs = inject<(VxeTabsConstructor & VxeTabsPrivateMethods) | null>('$xeTabs', null)
+
     const xID = XEUtils.uniqueId()
 
     const { computeSize } = useSize(props)
@@ -51,6 +53,10 @@ export default defineVxeComponent({
     const computeNoticeText = computed(() => {
       const { content } = props
       return `${content || ''}`
+    })
+
+    const computeTabsResizeFlag = computed(() => {
+      return $xeTabs ? $xeTabs.reactData.resizeFlag : null
     })
 
     const computeMaps: VxeNoticeBarPrivateComputed = {
@@ -136,7 +142,9 @@ export default defineVxeComponent({
       ])
     }
 
-    $xeNoticeBar.renderVN = renderVN
+    watch(computeTabsResizeFlag, () => {
+      updateAnimationStyle()
+    })
 
     onMounted(() => {
       globalEvents.on($xeNoticeBar, 'resize', updateAnimationStyle)
@@ -146,6 +154,8 @@ export default defineVxeComponent({
     onBeforeUnmount(() => {
       globalEvents.off($xeNoticeBar, 'resize')
     })
+
+    $xeNoticeBar.renderVN = renderVN
 
     return $xeNoticeBar
   },

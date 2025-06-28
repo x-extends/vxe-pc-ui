@@ -1,5 +1,7 @@
 @use '../helpers/baseMixin.scss';
 
+$scrollbarOffsetSize: 20px;
+
 .vxe-tabs {
   display: flex;
   color: var(--vxe-ui-font-color);
@@ -430,16 +432,12 @@
 }
 
 .vxe-tabs-pane--wrapper {
-  display: flex;
+  display: none;
   flex-direction: column;
   flex-grow: 1;
   overflow: hidden;
-}
-.vxe-tabs-pane--body {
-  flex-grow: 1;
-  overflow: hidden;
-  &.is--padding {
-    padding: var(--vxe-ui-layout-padding-default);
+  &.is--content {
+    display: flex;
   }
   &.type--border-card,
   &.type--round-card {
@@ -458,7 +456,14 @@
     }
   }
 }
-.vxe-tabs-pane--top,
+.vxe-tabs-pane--body {
+  flex-grow: 1;
+  overflow: hidden;
+  &.is--padding {
+    padding: var(--vxe-ui-layout-padding-default);
+  }
+}
+.vxe-tabs-pane--header,
 .vxe-tabs-pane--footer {
   flex-shrink: 0;
   overflow: auto;
@@ -612,7 +617,7 @@
     z-index: 2;
     @include baseMixin.createAnimationTransition(all, .3s);
     &.pos--top {
-      bottom: 0;
+      bottom: $scrollbarOffsetSize;
     }
     &.pos--bottom {
       top: 0;
@@ -624,7 +629,7 @@
       width: 4px;
     }
     &.pos--left {
-      right: 0;
+      right: $scrollbarOffsetSize;
     }
     &.pos--right {
       left: 0;
@@ -652,7 +657,7 @@
     }
     &.pos--left,
     &.pos--right {
-      width: 100%;
+      width: calc(100% - 20px);
       transition: color,top 0.3s ease-in-out;
     }
   }
