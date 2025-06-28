@@ -4,7 +4,7 @@ import XEUtils from 'xe-utils'
 import { getConfig, createEvent, globalEvents, renderEmptyElement, globalMixins } from '../../ui'
 import { toCssUnit } from '../../ui/src/dom'
 
-import type { NoticeBarReactData, VxeNoticeBarEmits, ValueOf, VxeNoticeBarPropTypes, VxeComponentSizeType } from '../../../types'
+import type { NoticeBarReactData, VxeNoticeBarEmits, ValueOf, VxeNoticeBarPropTypes, VxeComponentSizeType, VxeTabsConstructor, VxeTabsPrivateMethods } from '../../../types'
 
 export default /* define-vxe-component start */ defineVxeComponent({
   name: 'VxeNoticeBar',
@@ -31,6 +31,12 @@ export default /* define-vxe-component start */ defineVxeComponent({
       default: () => getConfig().noticeBar.size || getConfig().size
     }
   },
+  inject: {
+    $xeTabs: {
+      from: '$xeTabs',
+      default: null
+    }
+  },
   data () {
     const xID = XEUtils.uniqueId()
     const reactData: NoticeBarReactData = {
@@ -44,6 +50,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
   computed: {
     ...({} as {
       computeSize(): VxeComponentSizeType
+      $xeTabs():(VxeTabsConstructor & VxeTabsPrivateMethods) | null
     }),
     computeNoticeText () {
       const $xeNoticeBar = this
@@ -51,6 +58,12 @@ export default /* define-vxe-component start */ defineVxeComponent({
 
       const { content } = props
       return `${content || ''}`
+    },
+    computeTabsResizeFlag () {
+      const $xeNoticeBar = this
+      const $xeTabs = $xeNoticeBar.$xeTabs
+
+      return $xeTabs ? $xeTabs.reactData.resizeFlag : null
     }
   },
   methods: {
@@ -127,6 +140,13 @@ export default /* define-vxe-component start */ defineVxeComponent({
           }, suffixSlot({}))
           : renderEmptyElement($xeNoticeBar)
       ])
+    }
+  },
+  watch: {
+    computeTabsResizeFlag () {
+      const $xeNoticeBar = this
+
+      $xeNoticeBar.updateAnimationStyle()
     }
   },
   mounted () {

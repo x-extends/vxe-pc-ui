@@ -9,6 +9,8 @@ import { warnLog, errLog } from '../../ui/src/log'
 
 import type { VxeTabsPropTypes, VxeTabPaneProps, VxeTabsEmits, TabsInternalData, TabsReactData, VxeComponentSizeType, VxeTabsConstructor, VxeTabsPrivateMethods, VxeTabPaneDefines, ValueOf, VxeComponentStyleType } from '../../../types'
 
+const scrollbarOffsetSize = 20
+
 export default /* define-vxe-component start */ defineVxeComponent({
   name: 'VxeTabs',
   props: {
@@ -28,6 +30,10 @@ export default /* define-vxe-component start */ defineVxeComponent({
       default: () => getConfig().tabs.position
     },
     showClose: Boolean as PropType<VxeTabsPropTypes.ShowClose>,
+    showBody: {
+      type: Boolean as PropType<VxeTabsPropTypes.ShowBody>,
+      default: true
+    },
     padding: {
       type: Boolean as PropType<VxeTabsPropTypes.Padding>,
       default: () => getConfig().tabs.padding
@@ -62,6 +68,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       lintWidth: 0,
       lintHeight: 0,
       scrollbarWidth: 0,
+      scrollbarHeight: 0,
       isTabOver: false,
       resizeFlag: 1,
       cacheTabMaps: {}
@@ -80,7 +87,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       computeSize(): VxeComponentSizeType
       $xeParentTabs():(VxeTabsConstructor & VxeTabsPrivateMethods) | null
     }),
-    computeParentResizeFlag () {
+    computeParentTabsResizeFlag () {
       const $xeTabs = this
       const $xeParentTabs = $xeTabs.$xeParentTabs
 
@@ -267,12 +274,14 @@ export default /* define-vxe-component start */ defineVxeComponent({
         let lintHeight = 0
         let lintLeft = 0
         let lintTop = 0
-        let scrollbarWidth = 0
+        let sBarWidth = 0
+        let sBarHeight = 0
         let isOver = false
         if (headerWrapperEl) {
           const index = XEUtils.findIndexOf(tabStaticOptions.length ? tabStaticOptions : tabOptions, item => item.name === activeName)
-          const { children, offsetWidth, scrollWidth, scrollHeight, clientWidth, clientHeight } = headerWrapperEl
-          scrollbarWidth = offsetWidth - clientWidth
+          const { children, offsetWidth, scrollWidth, offsetHeight, scrollHeight, clientWidth, clientHeight } = headerWrapperEl
+          sBarWidth = offsetWidth - clientWidth
+          sBarHeight = offsetHeight - clientHeight
           if (lrPosition) {
             isOver = scrollHeight !== clientHeight
             if (index > -1) {
@@ -301,7 +310,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
               if (tabEl) {
                 const tabWidth = tabEl.clientWidth
                 if (tabType === 'card') {
-                  lintWidth = tabWidth
+                  lintWidth = tabWidth + 1
                   lintLeft = tabEl.offsetLeft
                 } else if (tabType === 'border-card') {
                   lintWidth = tabWidth
@@ -314,7 +323,8 @@ export default /* define-vxe-component start */ defineVxeComponent({
             }
           }
         }
-        reactData.scrollbarWidth = scrollbarWidth
+        reactData.scrollbarWidth = sBarWidth
+        reactData.scrollbarHeight = sBarHeight
         reactData.lintLeft = lintLeft
         reactData.lintTop = lintTop
         reactData.lintWidth = lintWidth
@@ -620,7 +630,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const reactData = $xeTabs.reactData
 
       const { titleWidth: allTitleWidth, titleAlign: allTitleAlign, showClose, closeConfig, refreshConfig } = props
-      const { activeName, scrollbarWidth, isTabOver, cacheTabMaps } = reactData
+      const { activeName, scrollbarWidth, scrollbarHeight, isTabOver, cacheTabMaps } = reactData
       const tabType = $xeTabs.computeTabType
       const tabPosition = $xeTabs.computeTabPosition
       const lrPosition = $xeTabs.computeLrPosition
@@ -660,11 +670,15 @@ export default /* define-vxe-component start */ defineVxeComponent({
           h('div', {
             ref: 'refHeadWrapperElem',
             class: 'vxe-tabs-header--item-wrapper',
-            style: lrPosition && scrollbarWidth
+            style: lrPosition
               ? {
-                  marginRight: `-${scrollbarWidth}px`
+                  marginRight: `-${scrollbarWidth + scrollbarOffsetSize}px`,
+                  paddingRight: `${scrollbarOffsetSize}px`
                 }
-              : undefined,
+              : {
+                  marginBottom: `-${scrollbarHeight + scrollbarOffsetSize}px`,
+                  paddingBottom: `${scrollbarOffsetSize}px`
+                },
             on: {
               scroll: $xeTabs.checkScrolling
             }
@@ -785,8 +799,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
         ? h('div', {
           key: `${name}`,
           class: ['vxe-tabs-pane--item', {
-            'is--visible': activeName === name,
-            'has--content': !!defaultSlot
+            'is--visible': activeName === name
           }]
         }, defaultSlot ? $xeTabs.callSlot(defaultSlot, { name }, h) : [])
         : renderEmptyElement($xeTabs)
@@ -798,9 +811,9 @@ export default /* define-vxe-component start */ defineVxeComponent({
 
       const { destroyOnClose } = props
       const { activeName } = reactData
-      const activeDefaultTab = tabList.find(item => item.name === activeName)
       if (destroyOnClose) {
-        return [activeDefaultTab ? $xeTabs.renderTabPane(h, activeDefaultTab) : renderEmptyElement($xeTabs)]
+        const activeTab = tabList.find(item => item.name === activeName)
+        return [activeTab ? $xeTabs.renderTabPane(h, activeTab) : renderEmptyElement($xeTabs)]
       }
       return tabList.map((item) => $xeTabs.renderTabPane(h, item))
     },
@@ -810,21 +823,26 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const slots = $xeTabs.$scopedSlots
       const reactData = $xeTabs.reactData
 
-      const { height, padding } = props
+      const { height, padding, showBody } = props
       const { activeName } = reactData
       const tabType = $xeTabs.computeTabType
       const tabPosition = $xeTabs.computeTabPosition
-      const topSlot = slots.top
+      const headerpSlot = slots.header
       const footerSlot = slots.footer
       const defParams = { name: activeName }
+      if (!showBody) {
+        return renderEmptyElement($xeTabs)
+      }
       return h('div', {
         key: 'tb',
-        class: ['vxe-tabs-pane--wrapper', `type--${tabType}`, `pos--${tabPosition}`]
+        class: ['vxe-tabs-pane--wrapper', `type--${tabType}`, `pos--${tabPosition}`, {
+          'is--content': showBody
+        }]
       }, [
-        topSlot
+        headerpSlot
           ? h('div', {
-            class: 'vxe-tabs-pane--top'
-          }, $xeTabs.callSlot(topSlot, defParams, h))
+            class: 'vxe-tabs-pane--header'
+          }, $xeTabs.callSlot(headerpSlot, defParams, h))
           : renderEmptyElement($xeTabs),
         h('div', {
           class: ['vxe-tabs-pane--body', `type--${tabType}`, `pos--${tabPosition}`, {
@@ -887,8 +905,9 @@ export default /* define-vxe-component start */ defineVxeComponent({
   watch: {
     position () {
       const $xeTabs = this
+      const reactData = $xeTabs.reactData
 
-      $xeTabs.updateTabStyle()
+      reactData.resizeFlag++
     },
     value (val) {
       const $xeTabs = this
@@ -899,28 +918,25 @@ export default /* define-vxe-component start */ defineVxeComponent({
     },
     'reactData.activeName' (val) {
       const $xeTabs = this
-      const reactData = $xeTabs.reactData
 
       $xeTabs.scrollToTab(val)
-      $xeTabs.$nextTick(() => {
-        reactData.resizeFlag++
-      })
     },
     options () {
       const $xeTabs = this
       const props = $xeTabs
+      const reactData = $xeTabs.reactData
 
       $xeTabs.initDefaultName(props.options)
-      $xeTabs.updateTabStyle()
+      reactData.resizeFlag++
     },
     'reactData.staticTabs' () {
       const $xeTabs = this
       const reactData = $xeTabs.reactData
 
       $xeTabs.initDefaultName(reactData.staticTabs)
-      $xeTabs.updateTabStyle()
+      reactData.resizeFlag++
     },
-    computeParentResizeFlag () {
+    computeParentTabsResizeFlag () {
       const $xeTabs = this
 
       $xeTabs.$nextTick(() => {

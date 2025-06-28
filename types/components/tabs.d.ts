@@ -27,6 +27,7 @@ export namespace VxeTabsPropTypes {
   export type Type = null | '' | 'default' | 'card' | 'border-card' | 'round-card'
   export type Position = null | '' | 'top' | 'bottom' | 'left' | 'right'
   export type ShowClose = boolean
+  export type ShowBody = boolean
   export type Padding = boolean
   export type Trigger = '' | 'default' | 'click' | 'manual'
   export type BeforeChangeMethod = (params: {
@@ -112,6 +113,7 @@ export type VxeTabsProps = {
   type?: VxeTabsPropTypes.Type
   position?: VxeTabsPropTypes.Position
   showClose?: VxeTabsPropTypes.ShowClose
+  showBody?: VxeTabsPropTypes.ShowBody
   padding?: VxeTabsPropTypes.Padding
   trigger?: VxeTabsPropTypes.Trigger
   beforeChangeMethod?: VxeTabsPropTypes.BeforeChangeMethod
@@ -144,6 +146,7 @@ export interface TabsReactData {
   lintWidth: number
   lintHeight: number
   scrollbarWidth: number
+  scrollbarHeight: number
   isTabOver: boolean
   resizeFlag: number
   cacheTabMaps: Record<string, {
@@ -289,16 +292,17 @@ export interface VxeTabsSlots {
   prefix?: (params: VxeTabsSlotTypes.PrefixSlotParams) => any
   suffix?: (params: VxeTabsSlotTypes.SuffixSlotParams) => any
   /**
-   * 自定义页签顶部模板
+   * 自定义面板头部模板
    */
-  top?(params: VxeTabsSlotTypes.TopSlotParams): any
+  header?(params: VxeTabsSlotTypes.TopSlotParams): any
   /**
-   * 自定义页签底部模板
+   * 自定义面板底部模板
    */
   footer?(params: VxeTabsSlotTypes.FooterSlotParams): any
 
   /**
    * 已废弃，请使用 suffix
+   * @deprecated
    */
   extra?: (params: VxeTabsSlotTypes.SuffixSlotParams) => any
 }
