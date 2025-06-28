@@ -559,6 +559,8 @@ setIcon({
   TABLE_SELECT_CLOSE: iconPrefix + 'caret-down',
 
   // tabs
+  TABS_TAB_BUTTON_TOP: iconPrefix + 'arrow-up',
+  TABS_TAB_BUTTON_BOTTOM: iconPrefix + 'arrow-down',
   TABS_TAB_BUTTON_LEFT: iconPrefix + 'arrow-left',
   TABS_TAB_BUTTON_RIGHT: iconPrefix + 'arrow-right',
   TABS_TAB_CLOSE: iconPrefix + 'close',

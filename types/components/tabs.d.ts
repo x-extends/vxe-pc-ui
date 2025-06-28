@@ -20,10 +20,12 @@ export namespace VxeTabsPropTypes {
   export type ModelValue = undefined | null | VxeTabPanePropTypes.Name
   export type Options = VxeTabPaneProps[]
   export type DestroyOnClose = boolean
+  export type Width = string | number
   export type Height = string | number
   export type TitleWidth = VxeTabPanePropTypes.TitleWidth
   export type TitleAlign = VxeTabPanePropTypes.TitleAlign
   export type Type = null | '' | 'default' | 'card' | 'border-card' | 'round-card'
+  export type Position = null | '' | 'top' | 'bottom' | 'left' | 'right'
   export type ShowClose = boolean
   export type Padding = boolean
   export type Trigger = '' | 'default' | 'click' | 'manual'
@@ -103,10 +105,12 @@ export type VxeTabsProps = {
   modelValue?: VxeTabsPropTypes.ModelValue
   options?: VxeTabsPropTypes.Options
   destroyOnClose?: VxeTabsPropTypes.DestroyOnClose
+  width?: VxeTabsPropTypes.Width
   height?: VxeTabsPropTypes.Height
   titleWidth?: VxeTabsPropTypes.TitleWidth
   titleAlign?: VxeTabsPropTypes.TitleAlign
   type?: VxeTabsPropTypes.Type
+  position?: VxeTabsPropTypes.Position
   showClose?: VxeTabsPropTypes.ShowClose
   padding?: VxeTabsPropTypes.Padding
   trigger?: VxeTabsPropTypes.Trigger
@@ -136,7 +140,10 @@ export interface TabsReactData {
   activeName: VxeTabsPropTypes.ModelValue
   initNames: VxeTabsPropTypes.ModelValue[]
   lintLeft: number
+  lintTop: number
   lintWidth: number
+  lintHeight: number
+  scrollbarWidth: number
   isTabOver: boolean
   resizeFlag: number
   cacheTabMaps: Record<string, {
@@ -262,11 +269,10 @@ export namespace VxeTabsSlotTypes {
   export interface DefaultSlotParams {
     name: VxeTabsPropTypes.ModelValue
   }
-  export interface TabSlotParams {
-    name: VxeTabsPropTypes.ModelValue
-  }
-  export interface ExtraSlotParams {}
-  export interface FooterSlotParams {}
+  export interface PrefixSlotParams extends DefaultSlotParams {}
+  export interface SuffixSlotParams extends DefaultSlotParams {}
+  export interface TopSlotParams extends DefaultSlotParams {}
+  export interface FooterSlotParams extends DefaultSlotParams {}
 }
 
 export interface VxeTabsSlots {
@@ -280,11 +286,21 @@ export interface VxeTabsSlots {
   }) => any) | undefined
 
   default?: (params: VxeTabsSlotTypes.DefaultSlotParams) => any
-  extra?: (params: VxeTabsSlotTypes.ExtraSlotParams) => any
+  prefix?: (params: VxeTabsSlotTypes.PrefixSlotParams) => any
+  suffix?: (params: VxeTabsSlotTypes.SuffixSlotParams) => any
+  /**
+   * 自定义页签顶部模板
+   */
+  top?(params: VxeTabsSlotTypes.TopSlotParams): any
   /**
    * 自定义页签底部模板
    */
   footer?(params: VxeTabsSlotTypes.FooterSlotParams): any
+
+  /**
+   * 已废弃，请使用 suffix
+   */
+  extra?: (params: VxeTabsSlotTypes.SuffixSlotParams) => any
 }
 
 export const Tabs: typeof VxeTabs

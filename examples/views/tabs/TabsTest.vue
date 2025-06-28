@@ -1,68 +1,296 @@
 <template>
   <div>
-    <p>
-      <vxe-tabs modelValue1="3" >
+    <div style="margin: 10px 0;">
+      <vxe-tabs modelValue1="3">
         <vxe-tab-pane title="xxx1" name="1">xxxx</vxe-tab-pane>
         <vxe-tab-pane title="xxx2" name="2" icon="vxe-icon-pc">cccc</vxe-tab-pane>
         <vxe-tab-pane title="xxx3" name="3" icon="vxe-icon-pc">vvvv</vxe-tab-pane>
         <vxe-tab-pane title="xxx4" name="4">ggg</vxe-tab-pane>
         <vxe-tab-pane title="xxx5" name="5">ooo</vxe-tab-pane>
 
+        <template #prefix>
+          <span>22</span>
+        </template>
         <template #extra>
           <span>111</span>
         </template>
       </vxe-tabs>
-    </p>
+    </div>
+    <div style="margin: 10px 0;">
+      <vxe-tabs modelValue1="3" position="bottom">
+        <vxe-tab-pane title="xxx1xxx5 xxxxx5 xx" name="1">xxxx</vxe-tab-pane>
+        <vxe-tab-pane title="xxxxxxx5 xxxxx5 xxxx5 xxxxx5 xx2" name="2" icon="vxe-icon-pc">cccc</vxe-tab-pane>
+        <vxe-tab-pane title="xxxxxxx5 xxxx5 xxxxxxxxx5 xx5 xxxx5 xx3" name="3" icon="vxe-icon-pc">vvvv</vxe-tab-pane>
+        <vxe-tab-pane title="xxx4xxx5 xxxxx5 xxxxx5 xx" name="4">ggg</vxe-tab-pane>
+        <vxe-tab-pane title="xxxxxx5 xx5 xxxx5 xxxx5" name="5">ooo</vxe-tab-pane>
 
-    <p>
-      <vxe-tabs  modelValue1="3" type="card">
+        <template #prefix>
+          <span>22</span>
+        </template>
+        <template #extra>
+          <span>111</span>
+        </template>
+      </vxe-tabs>
+    </div>
+    <div style="margin: 10px 0;">
+      <vxe-tabs modelValue1="3" position="left">
         <vxe-tab-pane title="xxx1" name="1">xxxx</vxe-tab-pane>
         <vxe-tab-pane title="xxx2" name="2" icon="vxe-icon-pc">cccc</vxe-tab-pane>
         <vxe-tab-pane title="xxx3" name="3" icon="vxe-icon-pc">vvvv</vxe-tab-pane>
         <vxe-tab-pane title="xxx4" name="4">ggg</vxe-tab-pane>
         <vxe-tab-pane title="xxx5" name="5">ooo</vxe-tab-pane>
 
+        <template #prefix>
+          <span>22</span>
+        </template>
         <template #extra>
           <span>111</span>
         </template>
       </vxe-tabs>
-    </p>
+    </div>
+    <div style="margin: 10px 0;">
+      <vxe-tabs modelValue1="3" position="right" height="300">
+        <vxe-tab-pane title="xxx1" name="1">xxxx</vxe-tab-pane>
+        <vxe-tab-pane title="xxx2" name="2" icon="vxe-icon-pc">cccc</vxe-tab-pane>
+        <vxe-tab-pane title="xxx3" name="3" icon="vxe-icon-pc">vvvv</vxe-tab-pane>
+        <vxe-tab-pane title="xxx4" name="4">ggg</vxe-tab-pane>
+        <vxe-tab-pane title="xxx5" name="5">ooo</vxe-tab-pane>
+        <vxe-tab-pane title="xxx6" name="6">ooo</vxe-tab-pane>
+        <vxe-tab-pane title="xxx7" name="7">ooo</vxe-tab-pane>
+        <vxe-tab-pane title="xxx8" name="8">ooo</vxe-tab-pane>
+        <vxe-tab-pane title="xxx9" name="9">ooo</vxe-tab-pane>
 
-    <p>
-      <vxe-tabs  modelValue="3" type="border-card" :refresh-config="{}" padding>
+        <template #prefix>
+          <span>22</span>
+        </template>
+        <template #extra>
+          <span>111</span>
+        </template>
+      </vxe-tabs>
+    </div>
+
+    <div style="margin: 10px 0;">
+      <vxe-tabs  modelValue="3" type="card" padding :refresh-config="{}">
         <vxe-tab-pane title="xxx1" name="1">xxxx</vxe-tab-pane>
         <vxe-tab-pane title="xxx2" name="2" icon="vxe-icon-pc">cccc</vxe-tab-pane>
         <vxe-tab-pane title="xxx3" name="3" icon="vxe-icon-pc">vvvv</vxe-tab-pane>
         <vxe-tab-pane title="xxx4" name="4">ggg</vxe-tab-pane>
         <vxe-tab-pane title="xxx5" name="5">ooo</vxe-tab-pane>
 
+        <template #prefix>
+          <span>22</span>
+        </template>
         <template #extra>
           <span>111</span>
         </template>
       </vxe-tabs>
-    </p>
+    </div>
+    <div style="margin: 10px 0;">
+      <vxe-tabs  modelValue="3" type="card" position="bottom" padding :refresh-config="{}">
+        <vxe-tab-pane title="xxx1xxx5 xxxxx5 xx" name="1">xxxx</vxe-tab-pane>
+        <vxe-tab-pane title="xxxxxxx5 xxxxx5 xxxx5 xxxxx5 xx2" name="2" icon="vxe-icon-pc">cccc</vxe-tab-pane>
+        <vxe-tab-pane title="xxxxxxx5 xxxx5 xxxxxxxxx5 xx5 xxxx5 xx3" name="3" icon="vxe-icon-pc">vvvv</vxe-tab-pane>
+        <vxe-tab-pane title="xxx4xxx5 xxxxx5 xxxxx5 xx" name="4">ggg</vxe-tab-pane>
+        <vxe-tab-pane title="xxxxxx5 xx5 xxxx5 xxxx5" name="5">ooo</vxe-tab-pane>
 
-    <p>
+        <template #prefix>
+          <span>22</span>
+        </template>
+        <template #extra>
+          <span>111</span>
+        </template>
+      </vxe-tabs>
+    </div>
+    <div style="margin: 10px 0;">
+      <vxe-tabs  modelValue="3" type="card" position="left" padding :refresh-config="{}">
+        <vxe-tab-pane title="xxx1" name="1">xxxx</vxe-tab-pane>
+        <vxe-tab-pane title="xxx2" name="2" icon="vxe-icon-pc">cccc</vxe-tab-pane>
+        <vxe-tab-pane title="xxx3" name="3" icon="vxe-icon-pc">vvvv</vxe-tab-pane>
+        <vxe-tab-pane title="xxx4" name="4">ggg</vxe-tab-pane>
+        <vxe-tab-pane title="xxx5" name="5">ooo</vxe-tab-pane>
+
+        <template #prefix>
+          <span>22</span>
+        </template>
+        <template #extra>
+          <span>111</span>
+        </template>
+      </vxe-tabs>
+    </div>
+    <div style="margin: 10px 0;">
+      <vxe-tabs  modelValue="3" type="card" position="right" height="300" padding :refresh-config="{}">
+        <vxe-tab-pane title="xxx1" name="1">xxxx</vxe-tab-pane>
+        <vxe-tab-pane title="xxx2" name="2" icon="vxe-icon-pc">cccc</vxe-tab-pane>
+        <vxe-tab-pane title="xxx3" name="3" icon="vxe-icon-pc">vvvv</vxe-tab-pane>
+        <vxe-tab-pane title="xxx4" name="4">ggg</vxe-tab-pane>
+        <vxe-tab-pane title="xxx5" name="5">ooo</vxe-tab-pane>
+        <vxe-tab-pane title="xxx6" name="6">ooo</vxe-tab-pane>
+        <vxe-tab-pane title="xxx7" name="7">ooo</vxe-tab-pane>
+        <vxe-tab-pane title="xxx8" name="8">ooo</vxe-tab-pane>
+        <vxe-tab-pane title="xxx9" name="9">ooo</vxe-tab-pane>
+
+        <template #prefix>
+          <span>22</span>
+        </template>
+        <template #extra>
+          <span>111</span>
+        </template>
+      </vxe-tabs>
+    </div>
+
+    <div style="margin: 10px 0;">
+      <vxe-tabs  modelValue="3" type="border-card" padding :refresh-config="{}">
+        <vxe-tab-pane title="xxxxxxxxx5 xxxx5 xxxxxxxxx5 xx5 xxxx5 x1" name="1">xxxx</vxe-tab-pane>
+        <vxe-tab-pane title="xxxxxxxxx5 xxxx5 xxxxxxxxx5 xx5 xxxx5 x2" name="2" icon="vxe-icon-pc">cccc</vxe-tab-pane>
+        <vxe-tab-pane title="xxxxxxxxx5 xxxx5 xxxxxxxxx5 xx5 xxxx5 x3" name="3" icon="vxe-icon-pc">vvvv</vxe-tab-pane>
+        <vxe-tab-pane title="xxxxxxxx5 xxxx5 xxxxxxxxx5 xx5 xxxx5 xx4" name="4">ggg</vxe-tab-pane>
+        <vxe-tab-pane title="xxxxxxxx5 xxxx5 xxxxxxxxx5 xx5 xxxx5 xx5" name="5">ooo</vxe-tab-pane>
+
+        <template #prefix>
+          <span>22</span>
+        </template>
+        <template #extra>
+          <span>111</span>
+        </template>
+      </vxe-tabs>
+    </div>
+    <div style="margin: 10px 0;">
+      <vxe-tabs  modelValue="3" type="border-card" position="bottom" height="300" padding :refresh-config="{}">
+        <vxe-tab-pane title="xxx1xxx5 xxxxx5 xx" name="1">xxxx</vxe-tab-pane>
+        <vxe-tab-pane title="xxxxxxx5 xxxxx5 xxxx5 xxxxx5 xx2" name="2" icon="vxe-icon-pc">cccc</vxe-tab-pane>
+        <vxe-tab-pane title="xxxxxxx5 xxxx5 xxxxxxxxx5 xx5 xxxx5 xx3" name="3" icon="vxe-icon-pc">vvvv</vxe-tab-pane>
+        <vxe-tab-pane title="xxx4" name="4">ggg</vxe-tab-pane>
+        <vxe-tab-pane title="xxx5" name="5">ooo</vxe-tab-pane>
+        <vxe-tab-pane title="xxx6" name="6">ooo</vxe-tab-pane>
+        <vxe-tab-pane title="xxx7" name="7">ooo</vxe-tab-pane>
+        <vxe-tab-pane title="xxx8" name="8">ooo</vxe-tab-pane>
+        <vxe-tab-pane title="xxx9" name="9">ooo</vxe-tab-pane>
+
+        <template #prefix>
+          <span>22</span>
+        </template>
+        <template #extra>
+          <span>111</span>
+        </template>
+      </vxe-tabs>
+    </div>
+    <div style="margin: 10px 0;">
+      <vxe-tabs  modelValue="3" type="border-card" position="left" height="300" padding :refresh-config="{}">
+        <vxe-tab-pane title="xxx1" name="1">xxxx</vxe-tab-pane>
+        <vxe-tab-pane title="xxx2" name="2" icon="vxe-icon-pc">cccc</vxe-tab-pane>
+        <vxe-tab-pane title="xxx3" name="3" icon="vxe-icon-pc">vvvv</vxe-tab-pane>
+        <vxe-tab-pane title="xxx4" name="4">ggg</vxe-tab-pane>
+        <vxe-tab-pane title="xxx5" name="5">ooo</vxe-tab-pane>
+        <vxe-tab-pane title="xxx6" name="6">ooo</vxe-tab-pane>
+        <vxe-tab-pane title="xxx7" name="7">ooo</vxe-tab-pane>
+        <vxe-tab-pane title="xxx8" name="8">ooo</vxe-tab-pane>
+        <vxe-tab-pane title="xxx9" name="9">ooo</vxe-tab-pane>
+
+        <template #prefix>
+          <span>22</span>
+        </template>
+        <template #extra>
+          <span>111</span>
+        </template>
+      </vxe-tabs>
+    </div>
+    <div style="margin: 10px 0;">
+      <vxe-tabs  modelValue="3" type="border-card" position="right" height="300" padding :refresh-config="{}">
+        <vxe-tab-pane title="xxx1" name="1">xxxx</vxe-tab-pane>
+        <vxe-tab-pane title="xxx2" name="2" icon="vxe-icon-pc">cccc</vxe-tab-pane>
+        <vxe-tab-pane title="xxx3" name="3" icon="vxe-icon-pc">vvvv</vxe-tab-pane>
+        <vxe-tab-pane title="xxx4" name="4">ggg</vxe-tab-pane>
+        <vxe-tab-pane title="xxx5" name="5">ooo</vxe-tab-pane>
+        <vxe-tab-pane title="xxx6" name="6">ooo</vxe-tab-pane>
+        <vxe-tab-pane title="xxx7" name="7">ooo</vxe-tab-pane>
+        <vxe-tab-pane title="xxx8" name="8">ooo</vxe-tab-pane>
+        <vxe-tab-pane title="xxx9" name="9">ooo</vxe-tab-pane>
+
+        <template #prefix>
+          <span>22</span>
+        </template>
+        <template #extra>
+          <span>111</span>
+        </template>
+      </vxe-tabs>
+    </div>
+
+    <div style="margin: 10px 0;">
       <vxe-tabs v-model="val4" type="round-card" :height="300" padding :refresh-config="{}" @tab-load="tabToadEvent">
-        <vxe-tab-pane title="xxxf地方799991" name="1">xxxx</vxe-tab-pane>
-        <vxe-tab-pane title="xxxf地方79999f地方7999956756765657557562" name="2" icon="vxe-icon-pc">cccc</vxe-tab-pane>
+        <vxe-tab-pane title="xxxxx" name="1">xxxx</vxe-tab-pane>
+        <vxe-tab-pane title="bbbbb" name="2" icon="vxe-icon-pc">cccc</vxe-tab-pane>
         <vxe-tab-pane title="xxx45f地方7999965475673" name="3" icon="vxe-icon-pc">vvvv</vxe-tab-pane>
         <vxe-tab-pane title="xxxf地方799994" name="4">ggg</vxe-tab-pane>
         <vxe-tab-pane title="xxx3f地方79999453455" name="5">ooo</vxe-tab-pane>
-        <!-- <vxe-tab-pane title="xxx345f地方79999346666" name="6">666</vxe-tab-pane>
-        <vxe-tab-pane title="xxx345f地方799993777777" name="7">7777</vxe-tab-pane>
-        <vxe-tab-pane title="xxx34f地方799995378888888887" name="8">8888</vxe-tab-pane>
-        <vxe-tab-pane title="xxx3453dsf地方799999999999997" name="9">99999</vxe-tab-pane>
-        <vxe-tab-pane title="xxx34556765765757但是风格995757575757575799999997" name="10">99999</vxe-tab-pane>
-        <vxe-tab-pane title="xxx3454567655765757但是风格9946465464646999999997" name="11">99999</vxe-tab-pane>
-        <vxe-tab-pane title="xxx3455435455765757但是风格99765757但是风格99353454553453543535353534999997" name="12">99999</vxe-tab-pane>
-        <vxe-tab-pane title="xxx34556765765765757但是风格995757但是风格99999997" name="13">99999</vxe-tab-pane> -->
+        <vxe-tab-pane title="xxx7" name="7">ooo</vxe-tab-pane>
+        <vxe-tab-pane title="xxx8" name="8">ooo</vxe-tab-pane>
+        <vxe-tab-pane title="xxx9" name="9">ooo</vxe-tab-pane>
 
+        <template #prefix>
+          <span>22</span>
+        </template>
         <template #extra>
           <span>111</span>
         </template>
       </vxe-tabs>
-    </p>
+    </div>
+    <div style="margin: 10px 0;">
+      <vxe-tabs v-model="val4" type="round-card" position="bottom" :height="300" padding :refresh-config="{}" @tab-load="tabToadEvent">
+        <vxe-tab-pane title="xxx1xxx5 xxxxx5 xx" name="1">xxxx</vxe-tab-pane>
+        <vxe-tab-pane title="xxxxxxx5 xxxxx5 xxxx5 xxxxx5 xx2" name="2" icon="vxe-icon-pc">cccc</vxe-tab-pane>
+        <vxe-tab-pane title="xxxxxxx5 xxxx5 xxxxxxxxx5 xx5 xxxx5 xx3" name="3" icon="vxe-icon-pc">vvvv</vxe-tab-pane>
+        <vxe-tab-pane title="xxx4xxx5 xxxxx5 xxxxx5 xx" name="4">ggg</vxe-tab-pane>
+        <vxe-tab-pane title="xxxxxx5 xx5 xxxx5 xxxx5" name="5">ooo</vxe-tab-pane>
+        <vxe-tab-pane title="xxx7" name="7">ooo</vxe-tab-pane>
+        <vxe-tab-pane title="xxx8" name="8">ooo</vxe-tab-pane>
+        <vxe-tab-pane title="xxx9" name="9">ooo</vxe-tab-pane>
+
+        <template #prefix>
+          <span>22</span>
+        </template>
+        <template #extra>
+          <span>111</span>
+        </template>
+      </vxe-tabs>
+    </div>
+    <div style="margin: 10px 0;">
+      <vxe-tabs v-model="val4" type="round-card" position="left" :height="300" padding :refresh-config="{}" @tab-load="tabToadEvent">
+        <vxe-tab-pane title="xxxxx" name="1">xxxx</vxe-tab-pane>
+        <vxe-tab-pane title="bbbbb" name="2" icon="vxe-icon-pc">cccc</vxe-tab-pane>
+        <vxe-tab-pane title="xxx45f地方7999965475673" name="3" icon="vxe-icon-pc">vvvv</vxe-tab-pane>
+        <vxe-tab-pane title="xxxf地方799994" name="4">ggg</vxe-tab-pane>
+        <vxe-tab-pane title="xxx3f地方79999453455" name="5">ooo</vxe-tab-pane>
+        <vxe-tab-pane title="xxx7" name="7">ooo</vxe-tab-pane>
+        <vxe-tab-pane title="xxx8" name="8">ooo</vxe-tab-pane>
+        <vxe-tab-pane title="xxx9" name="9">ooo</vxe-tab-pane>
+
+        <template #prefix>
+          <span>22</span>
+        </template>
+        <template #extra>
+          <span>111</span>
+        </template>
+      </vxe-tabs>
+    </div>
+    <div style="margin: 10px 0;">
+      <vxe-tabs v-model="val4" type="round-card" position="right" :height="300" padding :refresh-config="{}" @tab-load="tabToadEvent">
+        <vxe-tab-pane title="xxxxx" name="1">xxxx</vxe-tab-pane>
+        <vxe-tab-pane title="bbbbb" name="2" icon="vxe-icon-pc">cccc</vxe-tab-pane>
+        <vxe-tab-pane title="xxx45f地方7999965475673" name="3" icon="vxe-icon-pc">vvvv</vxe-tab-pane>
+        <vxe-tab-pane title="xxxf地方799994" name="4">ggg</vxe-tab-pane>
+        <vxe-tab-pane title="xxx3f地方79999453455" name="5">ooo</vxe-tab-pane>
+        <vxe-tab-pane title="xxx7" name="7">ooo</vxe-tab-pane>
+        <vxe-tab-pane title="xxx8" name="8">ooo</vxe-tab-pane>
+        <vxe-tab-pane title="xxx9" name="9">ooo</vxe-tab-pane>
+
+        <template #prefix>
+          <span>22</span>
+        </template>
+        <template #extra>
+          <span>111</span>
+        </template>
+      </vxe-tabs>
+    </div>
   </div>
 </template>
 
