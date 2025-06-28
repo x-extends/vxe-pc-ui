@@ -2,23 +2,31 @@ import { ref, h, reactive, inject, PropType, provide, computed, onUnmounted, wat
 import { defineVxeComponent } from '../../ui/src/comp'
 import { createEvent, getConfig, getIcon, globalEvents, permission, renderEmptyElement } from '../../ui'
 import { getSlotVNs } from '../../ui/src/vn'
-import { toCssUnit } from '../../ui/src/dom'
+import { toCssUnit, addClass, removeClass } from '../../ui/src/dom'
 import { isEnableConf } from '../../ui/src/utils'
 import { warnLog, errLog } from '../../ui/src/log'
 import XEUtils from 'xe-utils'
 
-import type { VxeTabsPropTypes, VxeTabPaneProps, VxeTabsEmits, TabsInternalData, TabsReactData, TabsPrivateRef, VxeTabsPrivateComputed, VxeTabsConstructor, VxeTabsPrivateMethods, VxeTabPaneDefines, ValueOf, TabsMethods, TabsPrivateMethods } from '../../../types'
+import type { VxeTabsPropTypes, VxeTabPaneProps, VxeTabsEmits, TabsInternalData, TabsReactData, TabsPrivateRef, VxeTabsPrivateComputed, VxeTabsConstructor, VxeTabsPrivateMethods, VxeTabPaneDefines, ValueOf, TabsMethods, TabsPrivateMethods, VxeComponentStyleType } from '../../../types'
 
 export default defineVxeComponent({
   name: 'VxeTabs',
   props: {
     modelValue: [String, Number, Boolean] as PropType<VxeTabsPropTypes.ModelValue>,
     options: Array as PropType<VxeTabsPropTypes.Options>,
+    width: [String, Number] as PropType<VxeTabsPropTypes.Width>,
     height: [String, Number] as PropType<VxeTabsPropTypes.Height>,
     destroyOnClose: Boolean as PropType<VxeTabsPropTypes.DestroyOnClose>,
     titleWidth: [String, Number] as PropType<VxeTabsPropTypes.TitleWidth>,
     titleAlign: [String, Number] as PropType<VxeTabsPropTypes.TitleAlign>,
-    type: String as PropType<VxeTabsPropTypes.Type>,
+    type: {
+      type: String as PropType<VxeTabsPropTypes.Type>,
+      default: () => getConfig().tabs.type
+    },
+    position: {
+      type: String as PropType<VxeTabsPropTypes.Position>,
+      default: () => getConfig().tabs.position
+    },
     showClose: Boolean as PropType<VxeTabsPropTypes.ShowClose>,
     padding: {
       type: Boolean as PropType<VxeTabsPropTypes.Padding>,
@@ -50,13 +58,18 @@ export default defineVxeComponent({
 
     const refElem = ref<HTMLDivElement>()
     const refHeadWrapperElem = ref<HTMLDivElement>()
+    const refHeadPrevElem = ref<HTMLDivElement>()
+    const refHeadNextElem = ref<HTMLDivElement>()
 
     const reactData = reactive<TabsReactData>({
       staticTabs: [],
       activeName: null,
       initNames: [],
       lintLeft: 0,
+      lintTop: 0,
       lintWidth: 0,
+      lintHeight: 0,
+      scrollbarWidth: 0,
       isTabOver: false,
       resizeFlag: 1,
       cacheTabMaps: {}
@@ -69,6 +82,47 @@ export default defineVxeComponent({
     const refMaps: TabsPrivateRef = {
       refElem
     }
+
+    const computeTabType = computed(() => {
+      const { type } = props
+      return type || 'default'
+    })
+
+    const computeTabPosition = computed(() => {
+      const { position } = props
+      return position || 'top'
+    })
+
+    const computeLrPosition = computed(() => {
+      const tabPosition = computeTabPosition.value
+      return tabPosition === 'left' || tabPosition === 'right'
+    })
+
+    const computeLineStyle = computed(() => {
+      const { lintLeft, lintTop, lintWidth, lintHeight } = reactData
+      const lrPosition = computeLrPosition.value
+      return lrPosition
+        ? {
+            top: `${lintTop}px`,
+            height: `${lintHeight}px`
+          }
+        : {
+            left: `${lintLeft}px`,
+            width: `${lintWidth}px`
+          }
+    })
+
+    const computeWrapperStyle = computed(() => {
+      const { width, height } = props
+      const stys: VxeComponentStyleType = {}
+      if (width) {
+        stys.width = toCssUnit(width)
+      }
+      if (width) {
+        stys.height = toCssUnit(height)
+      }
+      return stys
+    })
 
     const computeCloseOpts = computed(() => {
       return Object.assign({}, getConfig().tabs.closeConfig, props.closeConfig)
@@ -123,41 +177,100 @@ export default defineVxeComponent({
       return []
     }
 
+    const checkScrolling = () => {
+      const lrPosition = computeLrPosition.value
+      const headerWrapperEl = refHeadWrapperElem.value
+      const headPrevEl = refHeadPrevElem.value
+      const headNextEl = refHeadNextElem.value
+      if (headerWrapperEl) {
+        const { scrollLeft, scrollTop, clientWidth, clientHeight, scrollWidth, scrollHeight } = headerWrapperEl
+        if (headPrevEl) {
+          if ((lrPosition ? scrollTop : scrollLeft) > 0) {
+            addClass(headPrevEl, 'scrolling--middle')
+          } else {
+            removeClass(headPrevEl, 'scrolling--middle')
+          }
+        }
+        if (headNextEl) {
+          if (lrPosition ? (clientHeight < scrollHeight - Math.ceil(scrollTop)) : (clientWidth < scrollWidth - Math.ceil(scrollLeft))) {
+            addClass(headNextEl, 'scrolling--middle')
+          } else {
+            removeClass(headNextEl, 'scrolling--middle')
+          }
+        }
+      }
+    }
+
     const updateTabStyle = () => {
-      nextTick(() => {
-        const { type } = props
+      const handleStyle = () => {
         const { activeName } = reactData
+        const tabType = computeTabType.value
         const tabOptions = computeTabOptions.value
         const tabStaticOptions = computeTabStaticOptions.value
         const headerWrapperEl = refHeadWrapperElem.value
+        const lrPosition = computeLrPosition.value
         let lintWidth = 0
+        let lintHeight = 0
         let lintLeft = 0
+        let lintTop = 0
+        let scrollbarWidth = 0
         let isOver = false
         if (headerWrapperEl) {
           const index = XEUtils.findIndexOf(tabStaticOptions.length ? tabStaticOptions : tabOptions, item => item.name === activeName)
-          const { children, scrollWidth, clientWidth } = headerWrapperEl
-          isOver = scrollWidth !== clientWidth
-          if (index > -1) {
-            const tabEl = children[index] as HTMLDivElement
-            const tabWidth = tabEl.clientWidth
-            if (type) {
-              if (type === 'card') {
-                lintWidth = tabWidth + 2
-                lintLeft = tabEl.offsetLeft
-              } else if (type === 'border-card') {
-                lintWidth = tabWidth + 2
-                lintLeft = tabEl.offsetLeft - 1
+          const { children, offsetWidth, scrollWidth, scrollHeight, clientWidth, clientHeight } = headerWrapperEl
+          scrollbarWidth = offsetWidth - clientWidth
+          if (lrPosition) {
+            isOver = scrollHeight !== clientHeight
+            if (index > -1) {
+              const tabEl = children[index] as HTMLDivElement
+              if (tabEl) {
+                const tabHeight = tabEl.clientHeight
+                const tabWidth = tabEl.clientWidth
+                if (tabType === 'card') {
+                  lintWidth = tabWidth
+                  lintHeight = tabHeight
+                  lintTop = tabEl.offsetTop
+                } else if (tabType === 'border-card') {
+                  lintWidth = tabWidth
+                  lintHeight = tabHeight
+                  lintTop = tabEl.offsetTop - 1
+                } else {
+                  lintHeight = Math.max(4, Math.floor(tabHeight * 0.6))
+                  lintTop = tabEl.offsetTop + Math.floor((tabHeight - lintHeight) / 2)
+                }
               }
-            } else {
-              lintWidth = Math.max(4, Math.floor(tabWidth * 0.6))
-              lintLeft = tabEl.offsetLeft + Math.floor((tabWidth - lintWidth) / 2)
+            }
+          } else {
+            isOver = scrollWidth !== clientWidth
+            if (index > -1) {
+              const tabEl = children[index] as HTMLDivElement
+              if (tabEl) {
+                const tabWidth = tabEl.clientWidth
+                if (tabType === 'card') {
+                  lintWidth = tabWidth
+                  lintLeft = tabEl.offsetLeft
+                } else if (tabType === 'border-card') {
+                  lintWidth = tabWidth
+                  lintLeft = tabEl.offsetLeft - 1
+                } else {
+                  lintWidth = Math.max(4, Math.floor(tabWidth * 0.6))
+                  lintLeft = tabEl.offsetLeft + Math.floor((tabWidth - lintWidth) / 2)
+                }
+              }
             }
           }
         }
+        reactData.scrollbarWidth = scrollbarWidth
         reactData.lintLeft = lintLeft
+        reactData.lintTop = lintTop
         reactData.lintWidth = lintWidth
+        reactData.lintHeight = lintHeight
         reactData.isTabOver = isOver
-      })
+        checkScrolling()
+      }
+
+      handleStyle()
+      nextTick(handleStyle)
     }
 
     const dispatchEvent = (type: ValueOf<VxeTabsEmits>, params: Record<string, any>, evnt: Event | null) => {
@@ -283,7 +396,9 @@ export default defineVxeComponent({
 
     const startScrollAnimation = (offsetPos: number, offsetSize: number) => {
       const { slTimeout } = internalData
-      let offsetLeft = offsetSize
+      const lrPosition = computeLrPosition.value
+      let offsetLeft = lrPosition ? 0 : offsetSize
+      let offsetTop = lrPosition ? offsetSize : 0
       let scrollCount = 6
       let delayNum = 35
       if (slTimeout) {
@@ -295,19 +410,36 @@ export default defineVxeComponent({
         if (scrollCount > 0) {
           scrollCount--
           if (headerWrapperEl) {
-            const { clientWidth, scrollWidth, scrollLeft } = headerWrapperEl
-            offsetLeft = Math.floor(offsetLeft / 2)
-            if (offsetPos > 0) {
-              if (clientWidth + scrollLeft < scrollWidth) {
-                headerWrapperEl.scrollLeft += offsetLeft
-                delayNum -= 4
-                internalData.slTimeout = setTimeout(scrollAnimate, delayNum)
+            const { clientWidth, clientHeight, scrollWidth, scrollHeight, scrollLeft, scrollTop } = headerWrapperEl
+            if (lrPosition) {
+              offsetTop = Math.floor(offsetTop / 2)
+              if (offsetPos > 0) {
+                if (clientHeight + scrollTop < scrollHeight) {
+                  headerWrapperEl.scrollTop += offsetTop
+                  delayNum -= 4
+                  internalData.slTimeout = setTimeout(scrollAnimate, delayNum)
+                }
+              } else {
+                if (scrollTop > 0) {
+                  headerWrapperEl.scrollTop -= offsetTop
+                  delayNum -= 4
+                  internalData.slTimeout = setTimeout(scrollAnimate, delayNum)
+                }
               }
             } else {
-              if (scrollLeft > 0) {
-                headerWrapperEl.scrollLeft -= offsetLeft
-                delayNum -= 4
-                internalData.slTimeout = setTimeout(scrollAnimate, delayNum)
+              offsetLeft = Math.floor(offsetLeft / 2)
+              if (offsetPos > 0) {
+                if (clientWidth + scrollLeft < scrollWidth) {
+                  headerWrapperEl.scrollLeft += offsetLeft
+                  delayNum -= 4
+                  internalData.slTimeout = setTimeout(scrollAnimate, delayNum)
+                }
+              } else {
+                if (scrollLeft > 0) {
+                  headerWrapperEl.scrollLeft -= offsetLeft
+                  delayNum -= 4
+                  internalData.slTimeout = setTimeout(scrollAnimate, delayNum)
+                }
               }
             }
             updateTabStyle()
@@ -318,9 +450,11 @@ export default defineVxeComponent({
     }
 
     const handleScrollToLeft = (offsetPos: number) => {
+      const lrPosition = computeLrPosition.value
       const headerWrapperEl = refHeadWrapperElem.value
       if (headerWrapperEl) {
-        const offsetSize = Math.floor(headerWrapperEl.clientWidth * 0.75)
+        const { clientWidth, clientHeight } = headerWrapperEl
+        const offsetSize = Math.floor((lrPosition ? clientHeight : clientWidth) * 0.75)
         startScrollAnimation(offsetPos, offsetSize)
       }
     }
@@ -336,24 +470,39 @@ export default defineVxeComponent({
     const scrollToTab = (name: VxeTabsPropTypes.ModelValue) => {
       const tabOptions = computeTabOptions.value
       const tabStaticOptions = computeTabStaticOptions.value
+      const lrPosition = computeLrPosition.value
       return nextTick().then(() => {
         const headerWrapperEl = refHeadWrapperElem.value
         if (headerWrapperEl) {
           const index = XEUtils.findIndexOf(tabStaticOptions.length ? tabStaticOptions : tabOptions, item => item.name === name)
           if (index > -1) {
-            const { scrollLeft, clientWidth, children } = headerWrapperEl
+            const { scrollLeft, scrollTop, clientWidth, clientHeight, children } = headerWrapperEl
             const tabEl = children[index] as HTMLDivElement
             if (tabEl) {
-              const tabOffsetLeft = tabEl.offsetLeft
-              const tabClientWidth = tabEl.clientWidth
-              // 如果右侧被挡
-              const overSize = (tabOffsetLeft + tabClientWidth) - (scrollLeft + clientWidth)
-              if (overSize > 0) {
-                headerWrapperEl.scrollLeft += overSize
-              }
-              // 如果左侧被挡，优先
-              if (tabOffsetLeft < scrollLeft) {
-                headerWrapperEl.scrollLeft = tabOffsetLeft
+              if (lrPosition) {
+                const tabOffsetTop = tabEl.offsetTop
+                const tabClientHeight = tabEl.clientHeight
+                // 如果顶部被挡
+                const overSize = (tabOffsetTop + tabClientHeight) - (scrollTop + clientHeight)
+                if (overSize > 0) {
+                  headerWrapperEl.scrollTop += overSize
+                }
+                // 如果底部被挡，优先
+                if (tabOffsetTop < scrollTop) {
+                  headerWrapperEl.scrollTop = tabOffsetTop
+                }
+              } else {
+                const tabOffsetLeft = tabEl.offsetLeft
+                const tabClientWidth = tabEl.clientWidth
+                // 如果右侧被挡
+                const overSize = (tabOffsetLeft + tabClientWidth) - (scrollLeft + clientWidth)
+                if (overSize > 0) {
+                  headerWrapperEl.scrollLeft += overSize
+                }
+                // 如果左侧被挡，优先
+                if (tabOffsetLeft < scrollLeft) {
+                  headerWrapperEl.scrollLeft = tabOffsetLeft
+                }
               }
             }
           }
@@ -415,33 +564,51 @@ export default defineVxeComponent({
     Object.assign($xeTabs, tabsMethods, tabsPrivateMethods)
 
     const renderTabHeader = (tabList: VxeTabsPropTypes.Options | VxeTabPaneDefines.TabConfig[]) => {
-      const { type, titleWidth: allTitleWidth, titleAlign: allTitleAlign, showClose, closeConfig, refreshConfig } = props
-      const { activeName, lintLeft, lintWidth, isTabOver, cacheTabMaps } = reactData
-      const extraSlot = slots.extra
+      const { titleWidth: allTitleWidth, titleAlign: allTitleAlign, showClose, closeConfig, refreshConfig } = props
+      const { activeName, scrollbarWidth, isTabOver, cacheTabMaps } = reactData
+      const tabType = computeTabType.value
+      const tabPosition = computeTabPosition.value
+      const lrPosition = computeLrPosition.value
+      const lineStyle = computeLineStyle.value
+      const prefixSlot = slots.prefix
+      const suffixSlot = slots.suffix || slots.extra
       const closeOpts = computeCloseOpts.value
       const closeVisibleMethod = closeOpts.visibleMethod
       const refreshOpts = computeRefreshOpts.value
       const refreshVisibleMethod = refreshOpts.visibleMethod
 
       return h('div', {
-        class: 'vxe-tabs-header'
+        key: 'th',
+        class: ['vxe-tabs-header', `type--${tabType}`, `pos--${tabPosition}`]
       }, [
+        prefixSlot
+          ? h('div', {
+            class: ['vxe-tabs-header--prefix', `type--${tabType}`, `pos--${tabPosition}`]
+          }, getSlotVNs(prefixSlot({ name: activeName })))
+          : renderEmptyElement($xeTabs),
         isTabOver
           ? h('div', {
-            class: 'vxe-tabs-header--bar vxe-tabs-header--left-bar',
+            ref: refHeadPrevElem,
+            class: ['vxe-tabs-header--bar vxe-tabs-header--prev-bar', `type--${tabType}`, `pos--${tabPosition}`],
             onClick: scrollLeftEvent
           }, [
             h('span', {
-              class: getIcon().TABS_TAB_BUTTON_LEFT
+              class: lrPosition ? getIcon().TABS_TAB_BUTTON_TOP : getIcon().TABS_TAB_BUTTON_LEFT
             })
           ])
           : renderEmptyElement($xeTabs),
         h('div', {
-          class: 'vxe-tabs-header--wrapper'
+          class: ['vxe-tabs-header--wrapper', `type--${tabType}`, `pos--${tabPosition}`]
         }, [
           h('div', {
             ref: refHeadWrapperElem,
-            class: 'vxe-tabs-header--item-wrapper'
+            class: 'vxe-tabs-header--item-wrapper',
+            style: lrPosition && scrollbarWidth
+              ? {
+                  marginRight: `-${scrollbarWidth}px`
+                }
+              : undefined,
+            onScroll: checkScrolling
           }, tabList.map((item, index) => {
             const { title, titleWidth, titleAlign, icon, name, slots } = item
             const titleSlot = slots ? (slots.title || slots.tab) : null
@@ -453,14 +620,14 @@ export default defineVxeComponent({
             const isLoading = cacheItem ? cacheItem.loading : false
             return h('div', {
               key: `${name}`,
-              class: ['vxe-tabs-header--item', itemAlign ? `align--${itemAlign}` : '', {
+              class: ['vxe-tabs-header--item', `type--${tabType}`, `pos--${tabPosition}`, itemAlign ? `align--${itemAlign}` : '', {
                 'is--active': isActive
               }],
               style: itemWidth
                 ? {
                     width: toCssUnit(itemWidth)
                   }
-                : null,
+                : undefined,
               onClick (evnt: KeyboardEvent) {
                 clickEvent(evnt, item)
               }
@@ -484,9 +651,11 @@ export default defineVxeComponent({
                     class: 'vxe-tabs-header--item-name'
                   }, titleSlot ? callSlot(titleSlot, { name, title }) : `${title}`)
                 ]),
-                (isEnableConf(refreshConfig) || refreshOpts.enabled) && (refreshVisibleMethod ? refreshVisibleMethod(params) : isActive)
+                (isEnableConf(refreshConfig) || refreshOpts.enabled) && (refreshVisibleMethod ? refreshVisibleMethod(params) : true)
                   ? h('div', {
-                    class: 'vxe-tabs-header--refresh-btn',
+                    class: ['vxe-tabs-header--refresh-btn', {
+                      'is--active': isActive
+                    }],
                     onClick (evnt: KeyboardEvent) {
                       handleRefreshTabEvent(evnt, item)
                     }
@@ -498,7 +667,9 @@ export default defineVxeComponent({
                   : renderEmptyElement($xeTabs),
                 (showClose || (isEnableConf(closeConfig) || closeOpts.enabled)) && (!closeVisibleMethod || closeVisibleMethod(params))
                   ? h('div', {
-                    class: 'vxe-tabs-header--close-btn',
+                    class: ['vxe-tabs-header--close-btn', {
+                      'is--active': isActive
+                    }],
                     onClick (evnt: KeyboardEvent) {
                       handleCloseTabEvent(evnt, item, index, tabList)
                     }
@@ -513,28 +684,26 @@ export default defineVxeComponent({
           }).concat([
             h('span', {
               key: 'line',
-              class: `vxe-tabs-header--active-line type--${type || 'default'}`,
-              style: {
-                left: `${lintLeft}px`,
-                width: `${lintWidth}px`
-              }
+              class: ['vxe-tabs-header--active-line', `type--${tabType}`, `pos--${tabPosition}`],
+              style: lineStyle
             })
           ]))
         ]),
         isTabOver
           ? h('div', {
-            class: 'vxe-tabs-header--bar vxe-tabs-header--right-bar',
+            ref: refHeadNextElem,
+            class: ['vxe-tabs-header--bar vxe-tabs-header--next-bar', `type--${tabType}`, `pos--${tabPosition}`],
             onClick: scrollRightEvent
           }, [
             h('span', {
-              class: getIcon().TABS_TAB_BUTTON_RIGHT
+              class: lrPosition ? getIcon().TABS_TAB_BUTTON_BOTTOM : getIcon().TABS_TAB_BUTTON_RIGHT
             })
           ])
           : renderEmptyElement($xeTabs),
-        extraSlot
+        suffixSlot
           ? h('div', {
-            class: 'vxe-tabs-header--extra'
-          }, getSlotVNs(extraSlot({})))
+            class: ['vxe-tabs-header--suffix', `type--${tabType}`, `pos--${tabPosition}`]
+          }, getSlotVNs(suffixSlot({ name: activeName })))
           : renderEmptyElement($xeTabs)
       ])
     }
@@ -564,40 +733,80 @@ export default defineVxeComponent({
       return tabList.map((item) => renderTabPane(item))
     }
 
-    const renderVN = () => {
-      const { type, height, padding, trigger } = props
-      const tabOptions = computeTabOptions.value
-      const tabStaticOptions = computeTabStaticOptions.value
-      const defaultSlot = slots.default
+    const rendetTabBody = (tabList: VxeTabsPropTypes.Options | VxeTabPaneDefines.TabConfig[]) => {
+      const { height, padding } = props
+      const { activeName } = reactData
+      const tabType = computeTabType.value
+      const tabPosition = computeTabPosition.value
+      const topSlot = slots.top
       const footerSlot = slots.footer
-      const tabList = defaultSlot ? tabStaticOptions : tabOptions
-
+      const defParams = { name: activeName }
       return h('div', {
-        ref: refElem,
-        class: ['vxe-tabs', `vxe-tabs--${type || 'default'}`, `trigger--${trigger === 'manual' ? 'trigger' : 'default'}`, {
-          'is--padding': padding,
-          'is--height': height
-        }],
-        style: height
-          ? {
-              height: toCssUnit(height)
-            }
-          : null
+        key: 'tb',
+        class: ['vxe-tabs-pane--wrapper', `type--${tabType}`, `pos--${tabPosition}`]
       }, [
+        topSlot
+          ? h('div', {
+            class: 'vxe-tabs-pane--top'
+          }, callSlot(topSlot, defParams))
+          : renderEmptyElement($xeTabs),
         h('div', {
-          class: 'vxe-tabs-slots'
-        }, defaultSlot ? defaultSlot({}) : []),
-        renderTabHeader(tabList),
-        h('div', {
-          class: 'vxe-tabs-pane'
+          class: ['vxe-tabs-pane--body', `type--${tabType}`, `pos--${tabPosition}`, {
+            'is--padding': padding,
+            'is--height': height
+          }]
         }, renderTabContent(tabList)),
         footerSlot
           ? h('div', {
-            class: 'vxe-tabs-footer'
-          }, callSlot(footerSlot, {}))
+            class: 'vxe-tabs-pane--footer'
+          }, callSlot(footerSlot, defParams))
           : renderEmptyElement($xeTabs)
       ])
     }
+
+    const renderVN = () => {
+      const { height, padding, trigger } = props
+      const { activeName } = reactData
+      const tabOptions = computeTabOptions.value
+      const tabStaticOptions = computeTabStaticOptions.value
+      const tabType = computeTabType.value
+      const tabPosition = computeTabPosition.value
+      const wrapperStyle = computeWrapperStyle.value
+      const defaultSlot = slots.default
+      const tabList = defaultSlot ? tabStaticOptions : tabOptions
+
+      const vns = [
+        h('div', {
+          key: 'ts',
+          class: 'vxe-tabs-slots'
+        }, defaultSlot ? defaultSlot({ name: activeName }) : [])
+      ]
+
+      if (tabPosition === 'right' || tabPosition === 'bottom') {
+        vns.push(
+          rendetTabBody(tabList),
+          renderTabHeader(tabList)
+        )
+      } else {
+        vns.push(
+          renderTabHeader(tabList),
+          rendetTabBody(tabList)
+        )
+      }
+
+      return h('div', {
+        ref: refElem,
+        class: ['vxe-tabs', `pos--${tabPosition}`, `vxe-tabs--${tabType}`, `trigger--${trigger === 'manual' ? 'trigger' : 'default'}`, {
+          'is--padding': padding,
+          'is--height': height
+        }],
+        style: wrapperStyle
+      }, vns)
+    }
+
+    watch(() => props.position, () => {
+      updateTabStyle()
+    })
 
     watch(() => props.modelValue, (val) => {
       addInitName(val, null)

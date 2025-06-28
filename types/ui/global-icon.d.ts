@@ -215,6 +215,8 @@ declare module '@vxe-ui/core' {
     TABLE_SELECT_CLOSE?: string
 
     // tabs
+    TABS_TAB_BUTTON_TOP?: string
+    TABS_TAB_BUTTON_BOTTOM?: string
     TABS_TAB_BUTTON_LEFT?: string
     TABS_TAB_BUTTON_RIGHT?: string
     TABS_TAB_CLOSE?: string
