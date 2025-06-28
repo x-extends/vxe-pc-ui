@@ -6,6 +6,7 @@ import { getSlotVNs } from '../../ui/src/vn'
 import { toCssUnit, addClass, removeClass } from '../../ui/src/dom'
 import { isEnableConf } from '../../ui/src/utils'
 import { warnLog, errLog } from '../../ui/src/log'
+import VxeLoadingComponent from '../../loading/src/loading'
 
 import type { VxeTabsPropTypes, VxeTabPaneProps, VxeTabsEmits, TabsInternalData, TabsReactData, VxeComponentSizeType, VxeTabsConstructor, VxeTabsPrivateMethods, VxeTabPaneDefines, ValueOf, VxeComponentStyleType } from '../../../types'
 
@@ -426,6 +427,9 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const { queryMethod } = refreshOpts
       const cacheItem = name ? cacheTabMaps[`${name}`] : null
       if (cacheItem) {
+        if (cacheItem.loading) {
+          return
+        }
         if (queryMethod) {
           cacheItem.loading = true
           Promise.resolve(
@@ -729,7 +733,9 @@ export default /* define-vxe-component start */ defineVxeComponent({
                 (isEnableConf(refreshConfig) || refreshOpts.enabled) && (refreshVisibleMethod ? refreshVisibleMethod(params) : true)
                   ? h('div', {
                     class: ['vxe-tabs-header--refresh-btn', {
-                      'is--active': isActive
+                      'is--active': isActive,
+                      'is--loading': isLoading,
+                      'is--disabled': isLoading
                     }],
                     on: {
                       click (evnt: KeyboardEvent) {
@@ -824,15 +830,19 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const reactData = $xeTabs.reactData
 
       const { height, padding, showBody } = props
-      const { activeName } = reactData
+      const { activeName, cacheTabMaps } = reactData
       const tabType = $xeTabs.computeTabType
       const tabPosition = $xeTabs.computeTabPosition
+      const refreshOpts = $xeTabs.computeRefreshOpts
+      const { showLoading } = refreshOpts
       const headerpSlot = slots.header
       const footerSlot = slots.footer
-      const defParams = { name: activeName }
       if (!showBody) {
         return renderEmptyElement($xeTabs)
       }
+      const cacheItem = activeName ? cacheTabMaps[`${activeName}`] : null
+      const isLoading = cacheItem ? cacheItem.loading : false
+      const defParams = { name: activeName }
       return h('div', {
         key: 'tb',
         class: ['vxe-tabs-pane--wrapper', `type--${tabType}`, `pos--${tabPosition}`, {
@@ -854,7 +864,15 @@ export default /* define-vxe-component start */ defineVxeComponent({
           ? h('div', {
             class: 'vxe-tabs-pane--footer'
           }, $xeTabs.callSlot(footerSlot, defParams, h))
-          : renderEmptyElement($xeTabs)
+          : renderEmptyElement($xeTabs),
+        showLoading && isLoading
+          ? renderEmptyElement($xeTabs)
+          : h(VxeLoadingComponent, {
+            class: 'vxe-tabs--loading',
+            props: {
+              value: isLoading
+            }
+          })
       ])
     },
     renderVN (h: CreateElement): VNode {

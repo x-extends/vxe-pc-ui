@@ -423,8 +423,13 @@ $scrollbarOffsetSize: 20px;
 }
 .vxe-tabs-header--refresh-btn {
   visibility: hidden;
-  &.is--active {
+  &.is--active,
+  &.is--loading {
     visibility: visible;
+  }
+  &.is--disabled {
+    cursor: no-drop;
+    color: var(--vxe-ui-font-disabled-color);
   }
 }
 .vxe-tabs-header--item-inner {
@@ -433,6 +438,7 @@ $scrollbarOffsetSize: 20px;
 
 .vxe-tabs-pane--wrapper {
   display: none;
+  position: relative;
   flex-direction: column;
   flex-grow: 1;
   overflow: hidden;
