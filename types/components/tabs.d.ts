@@ -84,6 +84,10 @@ export namespace VxeTabsPropTypes {
   }
   export interface RefreshConfig {
     /**
+     * 点击页签刷新后是否显示加载中
+     */
+    showLoading?: boolean
+    /**
      * 是否启用
      */
     enabled?: boolean

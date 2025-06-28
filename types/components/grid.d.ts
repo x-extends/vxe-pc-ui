@@ -129,6 +129,7 @@ export namespace VxeGridPropTypes {
      * @deprecated
      */
     message?: boolean
+    showLoading?: boolean
     showResponseMsg?: boolean
     showActiveMsg?: boolean
     seq?: boolean

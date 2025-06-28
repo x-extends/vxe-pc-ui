@@ -6,6 +6,7 @@ import { toCssUnit, addClass, removeClass } from '../../ui/src/dom'
 import { isEnableConf } from '../../ui/src/utils'
 import { warnLog, errLog } from '../../ui/src/log'
 import XEUtils from 'xe-utils'
+import VxeLoadingComponent from '../../loading/src/loading'
 
 import type { VxeTabsPropTypes, VxeTabPaneProps, VxeTabsEmits, TabsInternalData, TabsReactData, TabsPrivateRef, VxeTabsPrivateComputed, VxeTabsConstructor, VxeTabsPrivateMethods, VxeTabPaneDefines, ValueOf, TabsMethods, TabsPrivateMethods, VxeComponentStyleType } from '../../../types'
 
@@ -371,6 +372,9 @@ export default defineVxeComponent({
       const cacheItem = name ? cacheTabMaps[`${name}`] : null
       if (cacheItem) {
         if (queryMethod) {
+          if (cacheItem.loading) {
+            return
+          }
           cacheItem.loading = true
           Promise.resolve(
             queryMethod({ $tabs: $xeTabs, value: activeName, name, option: item })
@@ -672,7 +676,9 @@ export default defineVxeComponent({
                 (isEnableConf(refreshConfig) || refreshOpts.enabled) && (refreshVisibleMethod ? refreshVisibleMethod(params) : true)
                   ? h('div', {
                     class: ['vxe-tabs-header--refresh-btn', {
-                      'is--active': isActive
+                      'is--active': isActive,
+                      'is--loading': isLoading,
+                      'is--disabled': isLoading
                     }],
                     onClick (evnt: KeyboardEvent) {
                       handleRefreshTabEvent(evnt, item)
@@ -752,15 +758,19 @@ export default defineVxeComponent({
 
     const rendetTabBody = (tabList: VxeTabsPropTypes.Options | VxeTabPaneDefines.TabConfig[]) => {
       const { height, padding, showBody } = props
-      const { activeName } = reactData
+      const { activeName, cacheTabMaps } = reactData
       const tabType = computeTabType.value
       const tabPosition = computeTabPosition.value
+      const refreshOpts = computeRefreshOpts.value
+      const { showLoading } = refreshOpts
       const headerpSlot = slots.header
       const footerSlot = slots.footer
-      const defParams = { name: activeName }
       if (!showBody) {
         return renderEmptyElement($xeTabs)
       }
+      const cacheItem = activeName ? cacheTabMaps[`${activeName}`] : null
+      const isLoading = cacheItem ? cacheItem.loading : false
+      const defParams = { name: activeName }
       return h('div', {
         key: 'tb',
         class: ['vxe-tabs-pane--wrapper', `type--${tabType}`, `pos--${tabPosition}`, {
@@ -782,7 +792,13 @@ export default defineVxeComponent({
           ? h('div', {
             class: 'vxe-tabs-pane--footer'
           }, callSlot(footerSlot, defParams))
-          : renderEmptyElement($xeTabs)
+          : renderEmptyElement($xeTabs),
+        showLoading && isLoading
+          ? renderEmptyElement($xeTabs)
+          : h(VxeLoadingComponent, {
+            class: 'vxe-tabs--loading',
+            modelValue: isLoading
+          })
       ])
     }
 
