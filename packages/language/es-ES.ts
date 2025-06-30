@@ -36,6 +36,7 @@ export default {
       notCommands: 'La directiva global "{0}" no existe',
       notSlot: 'La ranura "{0}" no existe',
       noTree: '"{0}" no es compatible con la estructura del árbol',
+      noGroup: '数据分组后不支持 "{0}"',
       notProp: 'Parámetro no compatible "{0}"',
       checkProp: 'Cuando el volumen de datos es demasiado grande, la casilla de verificación puede tartamudear. Se recomienda establecer el parámetro "{0}" para mejorar la velocidad de renderización',
       coverProp: 'El parámetro "{1}" de "{0}" se define repetidamente, lo que puede causar un error',

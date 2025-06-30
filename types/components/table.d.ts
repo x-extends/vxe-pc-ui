@@ -311,6 +311,23 @@ export namespace VxeTablePropTypes {
      */
     maxWidth?: VxeColumnPropTypes.MaxWidth
     /**
+     * 用于 column.width=auto | column.min-width=auto 自适应单元格宽度参数
+     */
+    autoOptions?: {
+      /**
+       * 是否启用自适应表头单元格宽度
+       */
+      isCalcHeader?: boolean
+      /**
+       * 是否启用自适应表体单元格宽度
+       */
+      isCalcBody?: boolean
+      /**
+       * 是否启用自适应表尾单元格宽度
+       */
+      isCalcFooter?: boolean
+    }
+    /**
      * 固定列允许设置的最大数量（如果是分组，则一个分组算一个）
      */
     maxFixedSize?: number
@@ -957,7 +974,7 @@ export namespace VxeTablePropTypes {
   export interface CustomOpts<D = VxeTablePropTypes.Row> extends CustomConfig<D> { }
 
   /**
-   * 列调整配置项
+   * 调整列宽和行高整配置项
    */
   export interface ResizableConfig<D = VxeTablePropTypes.Row> {
     /**
@@ -3088,9 +3105,10 @@ export interface VxeTableProps<D = any> {
    */
   resizeConfig?: VxeTablePropTypes.ResizeConfig
   /**
-   * 列宽拖动配置项
+   * 调整列宽和行高整配置项
    */
   resizableConfig?: VxeTablePropTypes.ResizableConfig<D>
+  /**
   /**
    * 序号配置项
    */
@@ -3361,9 +3379,9 @@ export interface TableReactData<D = any> {
   // 低性能的静态列
   staticColumns: any[]
   // 渲染的列分组
-  tableGroupColumn: any[]
+  tableGroupColumn: VxeTableDefines.ColumnInfo[]
   // 可视区渲染的列
-  tableColumn: any[]
+  tableColumn: VxeTableDefines.ColumnInfo[]
   // 渲染中的数据
   tableData: D[]
   // 是否启用了横向 X 可视渲染方式加载

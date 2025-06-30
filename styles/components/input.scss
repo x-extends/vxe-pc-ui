@@ -101,16 +101,22 @@
   flex-shrink: 0;
   background-color: var(--vxe-ui-layout-background-color);
 }
-.vxe-input--prefix-icon {
-  padding-left: 0.5em;
+.vxe-input--clear-icon {
+  padding-right: 0.3em;
+  text-align: center;
 }
-.vxe-input--clear-icon,
 .vxe-input--control-icon,
+.vxe-input--prefix-icon,
 .vxe-input--suffix-icon {
-  padding-right: 0.5em;
+  min-width: 1.8em;
+  text-align: center;
 }
 .vxe-input--prefix-icon,
 .vxe-input--suffix-icon {
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   color: var(--vxe-ui-input-placeholder-color);
 }
 .vxe-input--clear-icon,

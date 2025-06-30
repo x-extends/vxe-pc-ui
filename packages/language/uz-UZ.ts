@@ -36,6 +36,7 @@ export default {
       notCommands: "\"{0}\" global ko'rsatmasi mavjud emas",
       notSlot: '"{0}" uyasi mavjud emas',
       noTree: "\"{0}\" daraxt tuzilmasida qo'llab-quvvatlanmaydi",
+      noGroup: '数据分组后不支持 "{0}"',
       notProp: "\"{0}\" ni qo'llab-quvvatlamagan parametr",
       checkProp: "Ma'lumotlar balandligi juda katta bo'lsa, katagiga ko'tarilishi mumkin. Tezlikni yaxshilash uchun \"{0}\" parametrini belgilash tavsiya etiladi",
       coverProp: '"{1}" parametr "{0}" parametr bir necha bor aniqlanadi, bu xatoga olib kelishi mumkin',

@@ -36,6 +36,7 @@ export default {
       notCommands: 'A diretiva global "{0}" não existe',
       notSlot: 'Slot "{0}" não existe',
       noTree: '"{0}" não é suportado na estrutura da árvore',
+      noGroup: '数据分组后不支持 "{0}"',
       notProp: 'Parâmetro não suportado "{0}"',
       checkProp: 'Quando o volume de dados é muito grande, a caixa de seleção pode ser gaguejada. Recomenda -se definir o parâmetro "{0}" para melhorar a velocidade de renderização',
       coverProp: 'O parâmetro "{1}" de "{0}" é definido repetidamente, o que pode causar um erro',
