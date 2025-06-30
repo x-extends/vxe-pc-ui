@@ -153,7 +153,6 @@ $btnThemeList: (
   }
   &.type--button {
     font-family: inherit;
-    height: var(--vxe-ui-button-height-default);
     line-height: 1;
     border: 1px solid var(--vxe-ui-input-border-color);
     text-decoration: none;
@@ -220,7 +219,6 @@ $btnThemeList: (
   &.size--medium {
     font-size: var(--vxe-ui-font-size-medium);
     &.type--button {
-      height: var(--vxe-ui-button-height-medium);
       &.is--circle {
         min-width: var(--vxe-ui-button-height-medium);
       }
@@ -263,6 +261,31 @@ $btnThemeList: (
     .vxe-button--loading-icon,
     .vxe-button--icon {
       min-width: var(--vxe-ui-font-size-mini);
+    }
+  }
+}
+
+
+.vxe-button {
+  &.type--button {
+    height: var(--vxe-ui-button-height-default);
+    &.size--medium {
+      height: var(--vxe-ui-button-height-medium);
+    }
+    &.size--small {
+      height: var(--vxe-ui-button-height-small);
+    }
+    &.size--mini {
+      height: var(--vxe-ui-button-height-mini);
+    }
+  }
+}
+
+.vxe-input--prefix-icon,
+.vxe-input--suffix-icon {
+  & > .vxe-button {
+    &.type--button {
+      height: 100%;
     }
   }
 }

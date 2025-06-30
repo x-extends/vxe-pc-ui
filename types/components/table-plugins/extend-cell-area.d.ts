@@ -239,15 +239,15 @@ export namespace VxeTableExtendCellAreaDefines {
 
   export interface CellAreaConfig<D = any> {
     type?: CELL_AREA_TYPE
-    startColumn: VxeTableDefines.ColumnInfo<D> | number
-    endColumn: VxeTableDefines.ColumnInfo<D> | number
+    startColumn: VxeTableDefines.ColumnInfo<D> | VxeColumnPropTypes.Field | number
+    endColumn: VxeTableDefines.ColumnInfo<D> | VxeColumnPropTypes.Field | number
     startRow: D | number
     endRow: D | number
   }
 
   export interface ActiveCellAreaConfig<D = any> {
     area: VxeTableExtendCellAreaDefines.MouseCellArea<D> | number
-    column: VxeTableDefines.ColumnInfo<D> | number
+    column: VxeTableDefines.ColumnInfo<D> | VxeColumnPropTypes.Field | number
     row: D | number
   }
 

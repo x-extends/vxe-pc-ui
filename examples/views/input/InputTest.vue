@@ -1,6 +1,12 @@
 <template>
   <div>
     <p>
+      <vxe-input class="width-all" placeholder="请输入手机号码">
+        <template #suffix>
+          <vxe-button>发送验证码</vxe-button>
+        </template>
+      </vxe-input>
+
       <vxe-input v-model="demo1.value100" placeholder="默认尺寸"></vxe-input>
       <vxe-input v-model="demo1.value101" placeholder="中等尺寸" size="medium"></vxe-input>
       <vxe-input v-model="demo1.value102" placeholder="小型尺寸" size="small"></vxe-input>
