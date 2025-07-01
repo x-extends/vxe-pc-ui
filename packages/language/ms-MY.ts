@@ -355,7 +355,8 @@ export default {
     colorPicker: {
       clear: 'Jelas',
       confirm: 'mengesahkan',
-      copySuccess: 'Disalin ke papan klip: {0}'
+      copySuccess: 'Disalin ke papan klip: {0}',
+      hex: 'HEX'
     },
     formDesign: {
       formName: 'Nama Bentuk',

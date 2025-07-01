@@ -355,7 +355,8 @@ export default {
     colorPicker: {
       clear: 'Chiaro',
       confirm: 'confermare',
-      copySuccess: 'Copiato sugli appunti: {0}'
+      copySuccess: 'Copiato sugli appunti: {0}',
+      hex: 'HEX'
     },
     formDesign: {
       formName: 'Nome del modulo',

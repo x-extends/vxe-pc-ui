@@ -1059,7 +1059,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
                 ]),
                 h('div', {
                   class: 'vxe-color-picker--input-title'
-                }, 'HEX')
+                }, getI18n('vxe.colorPicker.hex'))
               ])
         ])
       ])

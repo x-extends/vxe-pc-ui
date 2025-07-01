@@ -355,7 +355,8 @@ export default {
     colorPicker: {
       clear: 'Clair',
       confirm: 'confirmer',
-      copySuccess: 'Copie dans le presse-papiers: {0}'
+      copySuccess: 'Copie dans le presse-papiers: {0}',
+      hex: 'HEX'
     },
     formDesign: {
       formName: 'Nom de formulaire',

@@ -355,7 +355,8 @@ export default {
     colorPicker: {
       clear: 'ชัดเจน',
       confirm: 'ยืนยัน',
-      copySuccess: 'คัดลอกไปยังคลิปบอร์ด: {0}'
+      copySuccess: 'คัดลอกไปยังคลิปบอร์ด: {0}',
+      hex: 'HEX'
     },
     formDesign: {
       formName: 'ชื่อแบบฟอร์ม',

@@ -355,7 +355,8 @@ export default {
     colorPicker: {
       clear: 'Klar',
       confirm: 'bekrefte',
-      copySuccess: 'Kopiert til utklippstavlen: {0}'
+      copySuccess: 'Kopiert til utklippstavlen: {0}',
+      hex: 'HEX'
     },
     formDesign: {
       formName: 'Formnavn',

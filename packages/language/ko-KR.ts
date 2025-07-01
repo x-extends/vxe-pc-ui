@@ -355,7 +355,8 @@ export default {
     colorPicker: {
       clear: '분명한',
       confirm: '확인하다',
-      copySuccess: '클립 보드로 복사 : {0}'
+      copySuccess: '클립 보드로 복사 : {0}',
+      hex: 'HEX'
     },
     formDesign: {
       formName: '양식 이름',
