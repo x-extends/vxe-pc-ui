@@ -13,6 +13,11 @@ import type { VxeTableConstructor, VxeTablePrivateMethods } from '../../../types
 
 const WinEyeDropper = typeof window !== 'undefined' ? (window as any).EyeDropper : null
 
+const typeList = [
+  { label: 'HEX', value: 'hex' },
+  { label: 'RGB', value: 'rgb' }
+]
+
 export default /* define-vxe-component start */ defineVxeComponent({
   name: 'VxeColorPicker',
   mixins: [
@@ -105,7 +110,9 @@ export default /* define-vxe-component start */ defineVxeComponent({
     const xID = XEUtils.uniqueId()
     const reactData: ColorPickerReactData = {
       initialized: false,
+      selectTyle: 'hex',
       selectColor: '',
+      showTypePopup: false,
       panelColor: '',
       hexValue: '',
       rValue: 0,
@@ -218,9 +225,17 @@ export default /* define-vxe-component start */ defineVxeComponent({
     },
     computeIsRgb () {
       const $xeColorPicker = this
+      const reactData = ($xeColorPicker as any).reactData
 
-      const valueType = $xeColorPicker.computeValueType
-      return valueType === 'rgb'
+      const { selectTyle } = reactData
+      return selectTyle === 'rgb'
+    },
+    computeSelectTypeItem () {
+      const $xeColorPicker = this
+      const reactData = ($xeColorPicker as any).reactData
+
+      const { selectTyle } = reactData
+      return typeList.find(item => item.value === selectTyle)
     }
   },
   methods: {
@@ -249,6 +264,19 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const { value } = props
       reactData.selectColor = XEUtils.toValueString(value)
       $xeColorPicker.updateModelColor()
+    },
+    updateType () {
+      const $xeColorPicker = this
+      const props = $xeColorPicker
+      const reactData = $xeColorPicker.reactData
+
+      const { type } = props
+      let selectTyle: VxeColorPickerPropTypes.Type = 'hex'
+      if (type === 'rgb' || type === 'rgba') {
+        selectTyle = 'rgb'
+      }
+      reactData.selectTyle = selectTyle
+      $xeColorPicker.updateMode()
     },
     updateModelColor () {
       const $xeColorPicker = this
@@ -443,6 +471,30 @@ export default /* define-vxe-component start */ defineVxeComponent({
 
       $xeColorPicker.togglePanelEvent(evnt)
       $xeColorPicker.dispatchEvent('click', {}, evnt)
+    },
+    handlePanelClickEvent () {
+      const $xeColorPicker = this
+      const reactData = $xeColorPicker.reactData
+
+      reactData.showTypePopup = false
+    },
+    toggleTypeVisibleEvent (evnt: MouseEvent) {
+      const $xeColorPicker = this
+      const reactData = $xeColorPicker.reactData
+
+      evnt.stopPropagation()
+      reactData.showTypePopup = !reactData.showTypePopup
+    },
+    handleChangeType (type: VxeColorPickerPropTypes.Type) {
+      const $xeColorPicker = this
+      const reactData = $xeColorPicker.reactData
+
+      const { selectTyle } = reactData
+      if (type !== selectTyle) {
+        reactData.selectTyle = type
+        $xeColorPicker.updateModelColor()
+      }
+      reactData.showTypePopup = false
     },
     handleHueColor (offsetLeft: number) {
       const $xeColorPicker = this
@@ -755,9 +807,9 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const reactData = $xeColorPicker.reactData
 
       const { showAlpha, clickToCopy, showEyeDropper } = props
-      const { hexValue, rValue, gValue, bValue, aValue, selectColor, panelColor } = reactData
-      const valueType = $xeColorPicker.computeValueType
+      const { selectTyle, showTypePopup, hexValue, rValue, gValue, bValue, aValue, selectColor, panelColor } = reactData
       const isRgb = $xeColorPicker.computeIsRgb
+      const selectTypeItem = $xeColorPicker.computeSelectTypeItem
       return h('div', {
         class: 'vxe-color-picker--bar-wrapper'
       }, [
@@ -775,7 +827,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
                 }
               }, [
                 h('i', {
-                  class: getIcon().EYE_DROPPER
+                  class: getIcon().COLOR_PICKER_EYE_DROPPER
                 })
               ])
             ])
@@ -800,7 +852,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
                       }
                     }, [
                       h('i', {
-                        class: getIcon().COLOR_COPY
+                        class: getIcon().COLOR_PICKER_COLOR_COPY
                       })
                     ])
                   ]
@@ -851,127 +903,165 @@ export default /* define-vxe-component start */ defineVxeComponent({
           ])
         ]),
         h('div', {
-          class: `vxe-color-picker--${valueType}-wrapper`
-        }, isRgb
-          ? [
-              h('div', {
-                class: 'vxe-color-picker--input-wrapper'
+          class: 'vxe-color-picker--custom-wrapper'
+        }, [
+          h('div', {
+            class: 'vxe-color-picker--type-switch'
+          }, [
+            h('div', {
+              class: 'vxe-color-picker--type-label',
+              on: {
+                click: $xeColorPicker.toggleTypeVisibleEvent
+              }
+            }, [
+              h('span', `${selectTypeItem ? selectTypeItem.label : selectTyle}`),
+              h('span', {
+                class: 'vxe-color-picker--type-icon'
               }, [
-                h(VxeInputComponent, {
-                  props: {
-                    type: 'integer',
-                    size: 'mini',
-                    align: 'center',
-                    min: 0,
-                    max: 255,
-                    maxLength: 3,
-                    placeholder: '',
-                    value: rValue
-                  },
-                  on: {
-                    'modelValue' (val: any) {
-                      reactData.rValue = val
-                    },
-                    change: $xeColorPicker.handleInputRgbEvent
-                  }
-                }),
-                h(VxeInputComponent, {
-                  props: {
-                    type: 'integer',
-                    size: 'mini',
-                    align: 'center',
-                    min: 0,
-                    max: 255,
-                    maxLength: 3,
-                    placeholder: '',
-                    value: gValue
-                  },
-                  on: {
-                    'modelValue' (val: any) {
-                      reactData.gValue = val
-                    },
-                    change: $xeColorPicker.handleInputRgbEvent
-                  }
-                }),
-                h(VxeInputComponent, {
-                  props: {
-                    type: 'integer',
-                    size: 'mini',
-                    align: 'center',
-                    min: 0,
-                    max: 255,
-                    maxLength: 3,
-                    placeholder: '',
-                    value: bValue
-                  },
-                  on: {
-                    'modelValue' (val: any) {
-                      reactData.bValue = val
-                    },
-                    change: $xeColorPicker.handleInputRgbEvent
-                  }
-                }),
-                h(VxeInputComponent, {
-                  props: {
-                    type: 'number',
-                    size: 'mini',
-                    align: 'center',
-                    min: 0,
-                    max: 1,
-                    step: 0.01,
-                    maxLength: 4,
-                    placeholder: '',
-                    value: aValue
-                  },
-                  on: {
-                    'modelValue' (val: any) {
-                      reactData.aValue = val
-                    },
-                    change: $xeColorPicker.handleInputAlphaEvent
-                  }
+                h('i', {
+                  class: showTypePopup ? getIcon().COLOR_PICKER_TPTY_OPEN : getIcon().COLOR_PICKER_TPTY_CLOSE
                 })
-              ]),
-              h('div', {
-                class: 'vxe-color-picker--input-title'
-              }, [
-                h('span', 'R'),
-                h('span', 'G'),
-                h('span', 'B'),
-                h('span', 'A')
-              ])]
-          : [
-              h('div', {
-                class: 'vxe-color-picker--input-title'
-              }, 'HEX'),
-              h('div', {
-                class: 'vxe-color-picker--input-wrapper'
-              }, [
-                h(VxeInputComponent, {
-                  props: {
-                    type: 'text',
-                    size: 'mini',
-                    align: 'center',
-                    maxLength: 9,
-                    placeholder: '',
-                    value: hexValue
-                  },
-                  on: {
-                    'modelValue' (val: any) {
-                      reactData.hexValue = val
+              ])
+            ]),
+            h('div', {
+              class: ['vxe-color-picker--type-popup', {
+                'is--visible': showTypePopup
+              }]
+            }, typeList.map(item => {
+              return h('div', {
+                class: 'vxe-color-picker--type-item',
+                on: {
+                  click (evnt: KeyboardEvent) {
+                    evnt.stopPropagation()
+                    $xeColorPicker.handleChangeType(item.value as VxeColorPickerPropTypes.Type)
+                  }
+                }
+              }, item.label)
+            }))
+          ]),
+          h('div', {
+            class: `vxe-color-picker--${selectTyle}-wrapper`
+          }, isRgb
+            ? [
+                h('div', {
+                  class: 'vxe-color-picker--input-wrapper'
+                }, [
+                  h(VxeInputComponent, {
+                    props: {
+                      type: 'integer',
+                      size: 'mini',
+                      align: 'center',
+                      min: 0,
+                      max: 255,
+                      maxLength: 3,
+                      placeholder: '',
+                      value: rValue
                     },
-                    change () {
-                      const colorRest = parseColor(reactData.hexValue)
-                      if (colorRest) {
-                        if (colorRest.value) {
-                          reactData.selectColor = colorRest.value
-                          $xeColorPicker.updateModelColor()
+                    on: {
+                      'modelValue' (val: any) {
+                        reactData.rValue = val
+                      },
+                      change: $xeColorPicker.handleInputRgbEvent
+                    }
+                  }),
+                  h(VxeInputComponent, {
+                    props: {
+                      type: 'integer',
+                      size: 'mini',
+                      align: 'center',
+                      min: 0,
+                      max: 255,
+                      maxLength: 3,
+                      placeholder: '',
+                      value: gValue
+                    },
+                    on: {
+                      'modelValue' (val: any) {
+                        reactData.gValue = val
+                      },
+                      change: $xeColorPicker.handleInputRgbEvent
+                    }
+                  }),
+                  h(VxeInputComponent, {
+                    props: {
+                      type: 'integer',
+                      size: 'mini',
+                      align: 'center',
+                      min: 0,
+                      max: 255,
+                      maxLength: 3,
+                      placeholder: '',
+                      value: bValue
+                    },
+                    on: {
+                      'modelValue' (val: any) {
+                        reactData.bValue = val
+                      },
+                      change: $xeColorPicker.handleInputRgbEvent
+                    }
+                  }),
+                  h(VxeInputComponent, {
+                    props: {
+                      type: 'number',
+                      size: 'mini',
+                      align: 'center',
+                      min: 0,
+                      max: 1,
+                      step: 0.01,
+                      maxLength: 4,
+                      placeholder: '',
+                      value: aValue
+                    },
+                    on: {
+                      'modelValue' (val: any) {
+                        reactData.aValue = val
+                      },
+                      change: $xeColorPicker.handleInputAlphaEvent
+                    }
+                  })
+                ]),
+                h('div', {
+                  class: 'vxe-color-picker--input-title'
+                }, [
+                  h('span', 'R'),
+                  h('span', 'G'),
+                  h('span', 'B'),
+                  h('span', 'A')
+                ])]
+            : [
+                h('div', {
+                  class: 'vxe-color-picker--input-wrapper'
+                }, [
+                  h(VxeInputComponent, {
+                    props: {
+                      type: 'text',
+                      size: 'mini',
+                      align: 'center',
+                      maxLength: 9,
+                      placeholder: '',
+                      value: hexValue
+                    },
+                    on: {
+                      'modelValue' (val: any) {
+                        reactData.hexValue = val
+                      },
+                      change () {
+                        const colorRest = parseColor(reactData.hexValue)
+                        if (colorRest) {
+                          if (colorRest.value) {
+                            reactData.selectColor = colorRest.value
+                            $xeColorPicker.updateModelColor()
+                          }
                         }
                       }
                     }
-                  }
-                })
+                  })
+                ]),
+                h('div', {
+                  class: 'vxe-color-picker--input-title'
+                }, 'HEX')
               ])
-            ])
+        ])
       ])
     },
     renderQuickWrapper (h: CreateElement) {
@@ -1074,7 +1164,10 @@ export default /* define-vxe-component start */ defineVxeComponent({
         }, [
           initialized && (visiblePanel || isAniVisible)
             ? h('div', {
-              class: 'vxe-color-picker--panel-wrapper'
+              class: 'vxe-color-picker--panel-wrapper',
+              on: {
+                click: $xeColorPicker.handlePanelClickEvent
+              }
             }, [
               $xeColorPicker.renderColorWrapper(h),
               $xeColorPicker.renderColorBar(h),
@@ -1115,6 +1208,11 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const $xeColorPicker = this
 
       $xeColorPicker.updateMode()
+    },
+    type () {
+      const $xeColorPicker = this
+
+      $xeColorPicker.updateType()
     }
   },
   created () {
@@ -1123,7 +1221,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
     const reactData = $xeColorPicker.reactData
 
     reactData.selectColor = `${props.value || ''}`
-    $xeColorPicker.updateMode()
+    $xeColorPicker.updateType()
 
     globalEvents.on($xeColorPicker, 'mousewheel', $xeColorPicker.handleGlobalMousewheelEvent)
     globalEvents.on($xeColorPicker, 'mousedown', $xeColorPicker.handleGlobalMousedownEvent)

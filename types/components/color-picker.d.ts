@@ -67,7 +67,9 @@ export interface VxeColorPickerPrivateComputed extends ColorPickerPrivateCompute
 
 export interface ColorPickerReactData {
   initialized: boolean
+  selectTyle: VxeColorPickerPropTypes.Type
   selectColor: string
+  showTypePopup: boolean
   panelColor: string
   hexValue: string
   rValue: number

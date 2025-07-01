@@ -75,7 +75,6 @@ declare module '@vxe-ui/core' {
     // icon-picker
     ICON_PICKER_OPEN?: string
     ICON_PICKER_CLOSE?: string
-    RADIO_DISABLED_UNCHECKED?: string
 
     // pager
     PAGER_HOME?: string
@@ -89,6 +88,7 @@ declare module '@vxe-ui/core' {
     // radio
     RADIO_CHECKED?: string
     RADIO_UNCHECKED?: string
+    RADIO_DISABLED_UNCHECKED?: string
 
     // checkbox
     CHECKBOX_INDETERMINATE?: string
@@ -253,8 +253,10 @@ declare module '@vxe-ui/core' {
     RATE_UNCHECKED?: string
 
     // color-picker
-    COLOR_COPY?: string
-    EYE_DROPPER?: string
+    COLOR_PICKER_COLOR_COPY?: string
+    COLOR_PICKER_EYE_DROPPER?: string
+    COLOR_PICKER_TPTY_OPEN?: string
+    COLOR_PICKER_TPTY_CLOSE?: string
 
     // split
     SPLIT_TOP_ACTION?: string

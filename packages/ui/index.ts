@@ -419,7 +419,6 @@ setIcon({
   // icon-picker
   ICON_PICKER_OPEN: iconPrefix + 'caret-down rotate180',
   ICON_PICKER_CLOSE: iconPrefix + 'caret-down',
-  RADIO_DISABLED_UNCHECKED: iconPrefix + 'radio-unchecked-fill',
 
   // pager
   PAGER_HOME: iconPrefix + 'home-page',
@@ -433,6 +432,7 @@ setIcon({
   // radio
   RADIO_CHECKED: iconPrefix + 'radio-checked-fill',
   RADIO_UNCHECKED: iconPrefix + 'radio-unchecked',
+  RADIO_DISABLED_UNCHECKED: iconPrefix + 'radio-unchecked-fill',
 
   // checkbox
   CHECKBOX_INDETERMINATE: iconPrefix + 'checkbox-indeterminate-fill',
@@ -597,8 +597,10 @@ setIcon({
   RATE_UNCHECKED: iconPrefix + 'star',
 
   // color-picker
-  COLOR_COPY: iconPrefix + 'copy',
-  EYE_DROPPER: iconPrefix + 'dropper',
+  COLOR_PICKER_COLOR_COPY: iconPrefix + 'copy',
+  COLOR_PICKER_EYE_DROPPER: iconPrefix + 'dropper',
+  COLOR_PICKER_TPTY_OPEN: iconPrefix + 'arrow-down rotate180',
+  COLOR_PICKER_TPTY_CLOSE: iconPrefix + 'arrow-down',
 
   // split
   SPLIT_TOP_ACTION: iconPrefix + 'arrow-up',

@@ -269,47 +269,99 @@
   }
 }
 
+.vxe-color-picker--custom-wrapper {
+  display: flex;
+  flex-direction: row;
+  padding: 0 0.8em;
+}
+.vxe-color-picker--type-switch {
+  position: relative;
+  flex-shrink: 0;
+  margin-top: 0.4em;
+}
+.vxe-color-picker--type-icon {
+  padding: 0.25em;
+  color: var(--vxe-ui-input-placeholder-color);
+  i {
+    display: inline-block;
+    @include baseMixin.createAnimationTransition(transform, .2s);
+  }
+}
+.vxe-color-picker--type-label {
+  padding: 0 0.25em;
+  line-height: 2em;
+  cursor: pointer;
+  user-select: none;
+}
+.vxe-color-picker--type-popup {
+  position: absolute;
+  display: none;
+  border-radius: var(--vxe-ui-base-border-radius);
+  border: 1px solid var(--vxe-ui-base-popup-border-color);
+  box-shadow: var(--vxe-ui-base-popup-box-shadow);
+  background-color: var(--vxe-ui-layout-background-color);
+  padding: 0.25em 1em;
+  user-select: none;
+  &.is--visible {
+    display: block;
+  }
+}
+.vxe-color-picker--type-item {
+  line-height: 1.6em;
+  cursor: pointer;
+  &:hover {
+    color: var(--vxe-ui-font-primary-lighten-color);
+  }
+}
+
 .vxe-color-picker--hex-wrapper,
 .vxe-color-picker--rgb-wrapper {
+  flex-grow: 1;
   text-align: center;
   margin-top: 0.4em;
 }
 
-.vxe-color-picker--hex-wrapper {
+.vxe-color-picker--input-wrapper {
   display: flex;
   flex-direction: row;
-  padding: 0 1.8em;
-  .vxe-color-picker--input-wrapper{
-    & > .vxe-input {
-      width: 12em;
-    }
-  }
-  .vxe-color-picker--input-title {
-    padding: 0 0.6em;
-  }
+  align-items: center;
+  justify-content: right;
 }
-
 .vxe-color-picker--input-title {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  line-height: 1.4em;
   color: var(--vxe-ui-input-placeholder-color);
 }
 
-.vxe-color-picker--rgb-wrapper {
-  .vxe-color-picker--input-wrapper {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: center;
+.vxe-color-picker--hex-wrapper {
+  display: flex;
+  flex-direction: column;
+  .vxe-color-picker--input-wrapper{
     & > .vxe-input {
-      width: 5.4em;
-      margin: 0 0.4em;
+      width: 20.2em;
+    }
+  }
+}
+
+.vxe-color-picker--rgb-wrapper {
+  display: flex;
+  flex-direction: column;
+  .vxe-color-picker--input-wrapper {
+    & > .vxe-input {
+      width: 4.6em;
+      margin-left: 0.6em;
+      &:first-child {
+        margin-left: 0;
+      }
+      .vxe-input--control-icon {
+        min-width: 1.6em;
+      }
     }
   }
   .vxe-color-picker--input-title {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: center;
-    line-height: 1.4em;
     & > span {
       display: block;
       width: 50px;
