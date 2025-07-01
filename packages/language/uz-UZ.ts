@@ -355,7 +355,8 @@ export default {
     colorPicker: {
       clear: 'Aniq',
       confirm: 'tasdiqlamoq',
-      copySuccess: "Clipboardga nusxa ko'chirish: {0}"
+      copySuccess: "Clipboardga nusxa ko'chirish: {0}",
+      hex: 'HEX'
     },
     formDesign: {
       formName: 'Forma nomi',

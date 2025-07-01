@@ -355,7 +355,8 @@ export default {
     colorPicker: {
       clear: 'Thông thoáng',
       confirm: 'xác nhận',
-      copySuccess: 'Được sao chép vào bảng tạm: {0}'
+      copySuccess: 'Được sao chép vào bảng tạm: {0}',
+      hex: 'HEX'
     },
     formDesign: {
       formName: 'Tên hình thức',

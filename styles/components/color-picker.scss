@@ -288,7 +288,7 @@
   }
 }
 .vxe-color-picker--type-label {
-  padding: 0 0.25em;
+  padding-left: 0.25em;
   line-height: 2em;
   cursor: pointer;
   user-select: none;
@@ -341,7 +341,7 @@
   flex-direction: column;
   .vxe-color-picker--input-wrapper{
     & > .vxe-input {
-      width: 20.2em;
+      width: 98%;
     }
   }
 }
@@ -349,15 +349,16 @@
 .vxe-color-picker--rgb-wrapper {
   display: flex;
   flex-direction: column;
+  overflow: hidden;
   .vxe-color-picker--input-wrapper {
     & > .vxe-input {
-      width: 4.6em;
-      margin-left: 0.6em;
-      &:first-child {
-        margin-left: 0;
-      }
+      width: 23%;
+      margin-left: 2%;
       .vxe-input--control-icon {
         min-width: 1.6em;
+      }
+      .vxe-input--inner {
+        padding: 0 0 0 0.15em;
       }
     }
   }

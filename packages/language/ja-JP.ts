@@ -355,7 +355,8 @@ export default {
     colorPicker: {
       clear: 'クリア',
       confirm: '確認する',
-      copySuccess: 'クリップボードにコピー：{0}'
+      copySuccess: 'クリップボードにコピー：{0}',
+      hex: 'HEX'
     },
     formDesign: {
       formName: 'フォーム名',

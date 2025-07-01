@@ -355,7 +355,8 @@ export default {
     colorPicker: {
       clear: 'Jernih',
       confirm: 'mengonfirmasi',
-      copySuccess: 'Disalin ke clipboard: {0}'
+      copySuccess: 'Disalin ke clipboard: {0}',
+      hex: 'HEX'
     },
     formDesign: {
       formName: 'Nama bentuk',

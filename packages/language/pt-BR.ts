@@ -355,7 +355,8 @@ export default {
     colorPicker: {
       clear: 'Claro',
       confirm: 'confirmar',
-      copySuccess: 'Copiado para a área de transferência: {0}'
+      copySuccess: 'Copiado para a área de transferência: {0}',
+      hex: 'HEX'
     },
     formDesign: {
       formName: 'Nome do formulário',

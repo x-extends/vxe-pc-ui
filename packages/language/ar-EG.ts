@@ -355,7 +355,8 @@ export default {
     colorPicker: {
       clear: 'واضح',
       confirm: 'يتأكد',
-      copySuccess: 'نسخ إلى الحافظة: {0}'
+      copySuccess: 'نسخ إلى الحافظة: {0}',
+      hex: 'HEX'
     },
     formDesign: {
       formName: 'اسم النموذج',

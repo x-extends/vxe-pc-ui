@@ -355,7 +355,8 @@ export default {
     colorPicker: {
       clear: 'Прозрачный',
       confirm: 'подтверждать',
-      copySuccess: 'Копировано в буфер обмена: {0}'
+      copySuccess: 'Копировано в буфер обмена: {0}',
+      hex: 'HEX'
     },
     formDesign: {
       formName: 'Название формы',

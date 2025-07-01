@@ -355,7 +355,8 @@ export default {
     colorPicker: {
       clear: 'Világos',
       confirm: 'megerősít',
-      copySuccess: 'Másolva a vágólapra: {0}'
+      copySuccess: 'Másolva a vágólapra: {0}',
+      hex: 'HEX'
     },
     formDesign: {
       formName: 'Forma neve',

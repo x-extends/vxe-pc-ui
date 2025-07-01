@@ -355,7 +355,8 @@ export default {
     colorPicker: {
       clear: '清除',
       confirm: '確認',
-      copySuccess: '已復製到剪貼板：{0}'
+      copySuccess: '已復製到剪貼板：{0}',
+      hex: '十六进制'
     },
     formDesign: {
       formName: '表單名稱',
