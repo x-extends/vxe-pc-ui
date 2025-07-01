@@ -597,8 +597,10 @@ setIcon({
   RATE_UNCHECKED: iconPrefix + 'star',
 
   // color-picker
-  COLOR_COPY: iconPrefix + 'copy',
-  EYE_DROPPER: iconPrefix + 'dropper',
+  COLOR_PICKER_COLOR_COPY: iconPrefix + 'copy',
+  COLOR_PICKER_EYE_DROPPER: iconPrefix + 'dropper',
+  COLOR_PICKER_TPTY_OPEN: iconPrefix + 'arrow-down rotate180',
+  COLOR_PICKER_TPTY_CLOSE: iconPrefix + 'arrow-down',
 
   // split
   SPLIT_TOP_ACTION: iconPrefix + 'arrow-up',
