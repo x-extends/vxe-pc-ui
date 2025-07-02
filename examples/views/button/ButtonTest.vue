@@ -172,12 +172,12 @@
     </p>
 
     <p>
-      <vxe-button content="默认图标颜色" icon="fa fa-download"></vxe-button>
-      <vxe-button content="主要图标颜色" icon="fa fa-save my-primary"></vxe-button>
-      <vxe-button content="成功图标颜色" icon="fa fa-check my-success"></vxe-button>
-      <vxe-button content="信息图标颜色" icon="fa fa-info my-info"></vxe-button>
-      <vxe-button content="警告图标颜色" icon="fa fa-warning my-warning"></vxe-button>
-      <vxe-button content="危险图标颜色" icon="fa fa-trash-o my-danger"></vxe-button>
+      <vxe-button content="默认图标颜色" icon="vxe-icon-add-user"></vxe-button>
+      <vxe-button content="主要图标颜色" icon="vxe-icon-bell-fill"></vxe-button>
+      <vxe-button content="成功图标颜色" prefix-icon="vxe-icon-cloud-upload"></vxe-button>
+      <vxe-button content="信息图标颜色" prefix-icon="vxe-icon-chart-bar-y" :prefix-tooltip="{icon: 'vxe-icon-delete-fill', content: 'xxxxx'}"></vxe-button>
+      <vxe-button content="警告图标颜色" suffix-icon="vxe-icon-chat-fill"></vxe-button>
+      <vxe-button content="危险图标颜色" suffix-icon="vxe-icon-bell" :suffix-tooltip="{icon: 'vxe-icon-delete-fill', content: 'xxxxx'}"></vxe-button>
     </p>
 
     <p>

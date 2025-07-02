@@ -53,9 +53,17 @@ const VxeButtonComponent = defineVxeComponent({
      */
     title: String as PropType<VxeButtonPropTypes.Title>,
     /**
-     * 按钮的图标
+     * 按钮的前缀图标，属于 prefix-icon 的简写
      */
     icon: String as PropType<VxeButtonPropTypes.Icon>,
+    /**
+     * 按钮的前缀图标
+     */
+    prefixIcon: String as PropType<VxeButtonPropTypes.PrefixIcon>,
+    /**
+     * 按钮的后缀图标
+     */
+    suffixIcon: String as PropType<VxeButtonPropTypes.SuffixIcon>,
     /**
      * 圆角边框
      */
@@ -243,11 +251,11 @@ const VxeButtonComponent = defineVxeComponent({
     })
 
     const computePrefixTipOpts = computed(() => {
-      return Object.assign({}, props.prefixTooltip)
+      return Object.assign({}, getConfig().button.prefixTooltip, props.prefixTooltip)
     })
 
     const computeSuffixTipOpts = computed(() => {
-      return Object.assign({}, props.suffixTooltip)
+      return Object.assign({}, getConfig().button.suffixTooltip, props.suffixTooltip)
     })
 
     const updateZindex = () => {
@@ -425,18 +433,24 @@ const VxeButtonComponent = defineVxeComponent({
         theme: tipOpts.theme
       }, {
         default () {
-          return h('i', {
-            class: [`vxe-button--tooltip-${type}-icon`, tipOpts.icon || getIcon().BUTTON_TOOLTIP_ICON]
-          })
+          return h('span', {
+            class: `vxe-button--item vxe-button--tooltip-${type}-icon`
+          }, [
+            h('i', {
+              class: tipOpts.icon || getIcon().BUTTON_TOOLTIP_ICON
+            })
+          ])
         }
       })
     }
 
     const renderContent = () => {
-      const { content, icon, loading, prefixTooltip, suffixTooltip } = props
+      const { content, suffixIcon, loading, prefixTooltip, suffixTooltip } = props
+      const prefixIcon = props.prefixIcon || props.icon
       const prefixTipOpts = computePrefixTipOpts.value
       const suffixTipOpts = computeSuffixTipOpts.value
-      const iconSlot = slots.icon
+      const prefixIconSlot = slots.prefix || slots.icon
+      const suffixIconSlot = slots.suffix
       const defaultSlot = slots.default
       const contVNs: VNode[] = []
       if (prefixTooltip) {
@@ -447,33 +461,46 @@ const VxeButtonComponent = defineVxeComponent({
       if (loading) {
         contVNs.push(
           h('i', {
-            class: ['vxe-button--loading-icon', getIcon().BUTTON_LOADING]
+            class: ['vxe-button--item vxe-button--loading-icon', getIcon().BUTTON_LOADING]
           })
         )
-      } else if (iconSlot) {
+      } else if (prefixIconSlot) {
         contVNs.push(
           h('span', {
-            class: 'vxe-button--custom-icon'
-          }, iconSlot({}))
+            class: 'vxe-button--item vxe-button--custom-prefix-icon'
+          }, prefixIconSlot({}))
         )
-      } else if (icon) {
+      } else if (prefixIcon) {
         contVNs.push(
           h('i', {
-            class: ['vxe-button--icon', icon]
+            class: ['vxe-button--item vxe-button--prefix-icon', prefixIcon]
           })
         )
       }
       if (defaultSlot) {
         contVNs.push(
           h('span', {
-            class: 'vxe-button--content'
+            class: 'vxe-button--item vxe-button--content'
           }, defaultSlot({}))
         )
       } else if (content) {
         contVNs.push(
           h('span', {
-            class: 'vxe-button--content'
+            class: 'vxe-button--item vxe-button--content'
           }, getFuncText(content))
+        )
+      }
+      if (suffixIconSlot) {
+        contVNs.push(
+          h('span', {
+            class: 'vxe-button--item vxe-button--custom-suffix-icon'
+          }, suffixIconSlot({}))
+        )
+      } else if (suffixIcon) {
+        contVNs.push(
+          h('i', {
+            class: ['vxe-button--item vxe-button--suffix-icon', suffixIcon]
+          })
         )
       }
       if (suffixTooltip) {

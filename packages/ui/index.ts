@@ -72,7 +72,7 @@ setConfig({
   collapsePane: {},
   countdown: {},
   colorPicker: {
-    type: 'hex',
+    type: 'rgb',
     clearable: true,
     showAlpha: true,
     clickToCopy: true,
@@ -414,7 +414,7 @@ setIcon({
   SELECT_LOADED: iconPrefix + 'spinner roll',
   SELECT_OPEN: iconPrefix + 'caret-down rotate180',
   SELECT_CLOSE: iconPrefix + 'caret-down',
-  ADD_OPTION: iconPrefix + 'add',
+  SELECT_ADD_OPTION: iconPrefix + 'add',
 
   // icon-picker
   ICON_PICKER_OPEN: iconPrefix + 'caret-down rotate180',

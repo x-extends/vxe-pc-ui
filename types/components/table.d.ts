@@ -3613,6 +3613,8 @@ export interface TableReactData<D = any> {
   scrollXWidth: number
   isScrollXBig: boolean
 
+  lazScrollLoading: boolean
+
   rowExpandHeightFlag: number
   calcCellHeightFlag: number
   resizeHeightFlag: number

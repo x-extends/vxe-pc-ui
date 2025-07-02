@@ -222,7 +222,7 @@ export default defineVxeComponent({
     const updateType = () => {
       const { type } = props
       let selectTyle: VxeColorPickerPropTypes.Type = 'hex'
-      if (type === 'rgb' || type === 'rgba') {
+      if (type === 'rgb' || (type as string) === 'rgba') {
         selectTyle = 'rgb'
       }
       reactData.selectTyle = selectTyle
