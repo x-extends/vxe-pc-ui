@@ -18,7 +18,7 @@ export interface VxeColorPickerPrivateRef extends ColorPickerPrivateRef { }
 export namespace VxeColorPickerPropTypes {
   export type ModelValue = string | null
   export type Size = VxeComponentSizeType
-  export type Type = 'rgb' | 'rgba' | 'hex'
+  export type Type = 'rgb' | 'hex'
   export type ClassName = string | ((params: { $colorPicker: VxeColorPickerConstructor }) => string)
   export type PopupClassName = string | ((params: {$colorPicker: VxeColorPickerConstructor }) => string)
   export type Colors = string[] | {

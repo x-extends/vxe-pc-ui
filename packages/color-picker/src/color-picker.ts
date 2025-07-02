@@ -213,16 +213,6 @@ export default /* define-vxe-component start */ defineVxeComponent({
       }
       return []
     },
-    computeValueType () {
-      const $xeColorPicker = this
-      const props = $xeColorPicker
-
-      const { type } = props
-      if (type === 'rgb' || type === 'rgba') {
-        return 'rgb'
-      }
-      return 'hex'
-    },
     computeIsRgb () {
       const $xeColorPicker = this
       const reactData = ($xeColorPicker as any).reactData
@@ -272,7 +262,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
 
       const { type } = props
       let selectTyle: VxeColorPickerPropTypes.Type = 'hex'
-      if (type === 'rgb' || type === 'rgba') {
+      if (type === 'rgb' || (type as string) === 'rgba') {
         selectTyle = 'rgb'
       }
       reactData.selectTyle = selectTyle

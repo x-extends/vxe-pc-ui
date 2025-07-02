@@ -226,10 +226,6 @@ $btnThemeList: (
         border-radius: var(--vxe-ui-button-round-border-radius-medium);
       }
     }
-    .vxe-button--loading-icon,
-    .vxe-button--icon {
-      min-width: var(--vxe-ui-font-size-medium);
-    }
   }
   &.size--small {
     font-size: var(--vxe-ui-font-size-small);
@@ -242,10 +238,6 @@ $btnThemeList: (
         border-radius: var(--vxe-ui-button-round-border-radius-small);
       }
     }
-    .vxe-button--loading-icon,
-    .vxe-button--icon {
-      min-width: var(--vxe-ui-font-size-small);
-    }
   }
   &.size--mini {
     font-size: var(--vxe-ui-font-size-mini);
@@ -257,10 +249,6 @@ $btnThemeList: (
       &.is--round {
         border-radius: var(--vxe-ui-button-round-border-radius-mini);
       }
-    }
-    .vxe-button--loading-icon,
-    .vxe-button--icon {
-      min-width: var(--vxe-ui-font-size-mini);
     }
   }
 }
@@ -290,23 +278,13 @@ $btnThemeList: (
   }
 }
 
-.vxe-button--loading-icon,
-.vxe-button--icon {
-  min-width: var(--vxe-ui-font-size-default);
-  &+.vxe-button--content {
-    margin-left: 0.25em;
+.vxe-button--item {
+  padding: 0 0.1em;
+  &:first-child {
+    padding-left: 0;
   }
-}
-.vxe-button--tooltip-prefix-icon {
-  &+.vxe-button--loading-icon,
-  &+.vxe-button--icon,
-  &+.vxe-button--content {
-    padding-left: 0.25em;
-  }
-}
-.vxe-button--content {
-  &+.vxe-button--tooltip-suffix-icon {
-    margin-left: 0.25em;
+  &:last-child {
+    padding-right: 0;
   }
 }
 .vxe-button--wrapper,

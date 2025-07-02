@@ -35,7 +35,14 @@ export namespace VxeButtonPropTypes {
   export type Placement = '' | 'top' | 'bottom'
   export type Status = VxeComponentStatusType
   export type Title = string
+
+  /**
+   * 按钮的前缀图标，属于 prefix-icon 的简写
+   */
   export type Icon = string
+  export type PrefixIcon = string
+  export type SuffixIcon = string
+
   export type Round = boolean
   export type Circle = boolean
   export type Disabled = boolean
@@ -86,9 +93,17 @@ export interface VxeButtonProps {
    */
   status?: VxeButtonPropTypes.Status
   /**
-   * 按钮的图标
+   * 按钮的前缀图标，属于 prefix-icon 的简写
    */
   icon?: VxeButtonPropTypes.Icon
+  /**
+   * 按钮的前缀图标
+   */
+  prefixIcon?: VxeButtonPropTypes.PrefixIcon
+  /**
+   * 按钮的后缀图标
+   */
+  suffixIcon?: VxeButtonPropTypes.SuffixIcon
   /**
    * 圆角边框
    */
@@ -221,15 +236,25 @@ export interface VxeButtonSlots {
   /**
    * 自定义按钮内容
    */
-  default?: (params: Record<string, any>) => any
+  default?: (params: VxeButtonSlotTypes.DefaultSlotParams) => any
   /**
    * 自定义自定义图标
    */
-  icon?: (params: Record<string, any>) => any
+  prefix?: (params: VxeButtonSlotTypes.DefaultSlotParams) => any
+  /**
+   * 自定义自定义图标
+   */
+  suffix?: (params: VxeButtonSlotTypes.DefaultSlotParams) => any
   /**
    * 自定义下拉按钮
    */
-  dropdowns?: (params: Record<string, any>) => any
+  dropdowns?: (params: VxeButtonSlotTypes.DefaultSlotParams) => any
+
+  /**
+   * 已废弃，被 prefix 替换
+   * @deprecated
+   */
+  icon?: (params: VxeButtonSlotTypes.DefaultSlotParams) => any
 }
 
 export const Button: typeof VxeButton

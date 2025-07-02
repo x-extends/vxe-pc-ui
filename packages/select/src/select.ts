@@ -1420,7 +1420,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
                     class: 'vxe-select-option--add-icon'
                   }, [
                     h('i', {
-                      class: getIcon().ADD_OPTION
+                      class: getIcon().SELECT_ADD_OPTION
                     })
                   ])
                   : renderEmptyElement($xeSelect)

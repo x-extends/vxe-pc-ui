@@ -58,9 +58,17 @@ export default /* define-vxe-component start */ defineVxeComponent({
      */
     title: String as PropType<VxeButtonPropTypes.Title>,
     /**
-     * 按钮的图标
+     * 按钮的前缀图标，属于 prefix-icon 的简写
      */
     icon: String as PropType<VxeButtonPropTypes.Icon>,
+    /**
+     * 按钮的前缀图标
+     */
+    prefixIcon: String as PropType<VxeButtonPropTypes.PrefixIcon>,
+    /**
+     * 按钮的后缀图标
+     */
+    suffixIcon: String as PropType<VxeButtonPropTypes.SuffixIcon>,
     /**
      * 圆角边框
      */
@@ -268,13 +276,13 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const $xeButton = this
       const props = $xeButton
 
-      return Object.assign({}, props.prefixTooltip)
+      return Object.assign({}, getConfig().button.prefixTooltip, props.prefixTooltip)
     },
     computeSuffixTipOpts () {
       const $xeButton = this
       const props = $xeButton
 
-      return Object.assign({}, props.suffixTooltip)
+      return Object.assign({}, getConfig().button.suffixTooltip, props.suffixTooltip)
     }
   },
   methods: {
@@ -559,9 +567,13 @@ export default /* define-vxe-component start */ defineVxeComponent({
         },
         scopedSlots: {
           default: () => {
-            return h('i', {
-              class: [`vxe-button--tooltip-${type}-icon`, tipOpts.icon || getIcon().BUTTON_TOOLTIP_ICON]
-            })
+            return h('span', {
+              class: `vxe-button--item vxe-button--tooltip-${type}-icon`
+            }, [
+              h('i', {
+                class: tipOpts.icon || getIcon().BUTTON_TOOLTIP_ICON
+              })
+            ])
           }
         }
       })
@@ -571,13 +583,14 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const props = $xeButton
       const slots = $xeButton.$scopedSlots
 
-      const { content, icon, loading, prefixTooltip, suffixTooltip } = props
+      const { content, suffixIcon, loading, prefixTooltip, suffixTooltip } = props
+      const prefixIcon = props.prefixIcon || props.icon
       const prefixTipOpts = $xeButton.computePrefixTipOpts
       const suffixTipOpts = $xeButton.computeSuffixTipOpts
-      const iconSlot = slots.icon
+      const prefixIconSlot = slots.prefix || slots.icon
+      const suffixIconSlot = slots.suffix
       const defaultSlot = slots.default
       const contVNs: VNode[] = []
-
       if (prefixTooltip) {
         contVNs.push(
           $xeButton.renderTooltipIcon(h, prefixTipOpts, 'prefix')
@@ -586,33 +599,46 @@ export default /* define-vxe-component start */ defineVxeComponent({
       if (loading) {
         contVNs.push(
           h('i', {
-            class: ['vxe-button--loading-icon', getIcon().BUTTON_LOADING]
+            class: ['vxe-button--item vxe-button--loading-icon', getIcon().BUTTON_LOADING]
           })
         )
-      } else if (iconSlot) {
+      } else if (prefixIconSlot) {
         contVNs.push(
           h('span', {
-            class: 'vxe-button--custom-icon'
-          }, iconSlot.call(this, {}))
+            class: 'vxe-button--item vxe-button--custom-prefix-icon'
+          }, prefixIconSlot.call($xeButton, {}))
         )
-      } else if (icon) {
+      } else if (prefixIcon) {
         contVNs.push(
           h('i', {
-            class: ['vxe-button--icon', icon]
+            class: ['vxe-button--item vxe-button--prefix-icon', prefixIcon]
           })
         )
       }
       if (defaultSlot) {
         contVNs.push(
           h('span', {
-            class: 'vxe-button--content'
-          }, defaultSlot.call(this, {}))
+            class: 'vxe-button--item vxe-button--content'
+          }, defaultSlot.call($xeButton, {}))
         )
       } else if (content) {
         contVNs.push(
           h('span', {
-            class: 'vxe-button--content'
+            class: 'vxe-button--item vxe-button--content'
           }, getFuncText(content))
+        )
+      }
+      if (suffixIconSlot) {
+        contVNs.push(
+          h('span', {
+            class: 'vxe-button--item vxe-button--custom-suffix-icon'
+          }, suffixIconSlot.call($xeButton, {}))
+        )
+      } else if (suffixIcon) {
+        contVNs.push(
+          h('i', {
+            class: ['vxe-button--item vxe-button--suffix-icon', suffixIcon]
+          })
         )
       }
       if (suffixTooltip) {

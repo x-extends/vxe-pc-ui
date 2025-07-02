@@ -70,7 +70,7 @@ declare module '@vxe-ui/core' {
     SELECT_LOADED?: string
     SELECT_OPEN?: string
     SELECT_CLOSE?: string
-    ADD_OPTION?: string
+    SELECT_ADD_OPTION?: string
 
     // icon-picker
     ICON_PICKER_OPEN?: string
