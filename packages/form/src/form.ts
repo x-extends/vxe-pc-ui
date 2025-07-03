@@ -220,7 +220,8 @@ export default defineVxeComponent({
     customLayout: {
       type: Boolean as PropType<VxeFormPropTypes.CustomLayout>,
       default: () => getConfig().form.customLayout
-    }
+    },
+    params: Object as PropType<VxeFormPropTypes.Params>
   },
   emits: [
     'update:collapseStatus',

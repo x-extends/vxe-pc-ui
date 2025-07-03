@@ -93,6 +93,11 @@ export namespace VxeFormPropTypes {
   }
 
   export type CustomLayout = boolean
+
+  /**
+   * 额外的参数
+   */
+  export type Params = any
 }
 
 export interface VxeFormProps<D = any> {
@@ -123,6 +128,11 @@ export interface VxeFormProps<D = any> {
   tooltipConfig?: VxeFormPropTypes.TooltipConfig
   collapseConfig?: VxeFormPropTypes.CollapseConfig
   customLayout?: VxeFormPropTypes.CustomLayout
+
+  /**
+   * 额外的参数
+   */
+  params?: VxeFormPropTypes.Params
 }
 
 export interface FormPrivateComputed {

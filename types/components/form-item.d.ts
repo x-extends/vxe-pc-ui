@@ -148,6 +148,11 @@ export namespace VxeFormItemPropTypes {
     valid?: string | ((params: VxeFormItemSlotTypes.ValidSlotParams) => VxeComponentSlotType | VxeComponentSlotType[]) | null
     extra?: string | ((params: VxeFormItemSlotTypes.ExtraSlotParams) => VxeComponentSlotType | VxeComponentSlotType[]) | null
   }
+
+  /**
+   * 额外的参数
+   */
+  export type Params = any
 }
 
 export interface VxeFormItemProps<D = any> {
@@ -265,6 +270,11 @@ export interface VxeFormItemProps<D = any> {
   Rules?: VxeFormItemPropTypes.Rules<D>
   slots?: VxeFormItemPropTypes.Slots
   children?: VxeFormItemProps<D>[]
+
+  /**
+   * 额外的参数
+   */
+  params?: VxeFormItemPropTypes.Params
 }
 
 export interface FormItemPrivateComputed {

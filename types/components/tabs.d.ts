@@ -283,10 +283,13 @@ export namespace VxeTabsSlotTypes {
   export interface DefaultSlotParams {
     name: VxeTabsPropTypes.ModelValue
   }
-  export interface PrefixSlotParams extends DefaultSlotParams {}
-  export interface SuffixSlotParams extends DefaultSlotParams {}
+  export interface TabPrefixSlotParams extends DefaultSlotParams {}
+  export interface TabSuffixSlotParams extends DefaultSlotParams {}
   export interface TopSlotParams extends DefaultSlotParams {}
   export interface FooterSlotParams extends DefaultSlotParams {}
+  export interface TitleSlotParams extends DefaultSlotParams {
+    title: string
+  }
 }
 
 export interface VxeTabsSlots {
@@ -300,8 +303,10 @@ export interface VxeTabsSlots {
   }) => any) | undefined
 
   default?: (params: VxeTabsSlotTypes.DefaultSlotParams) => any
-  prefix?: (params: VxeTabsSlotTypes.PrefixSlotParams) => any
-  suffix?: (params: VxeTabsSlotTypes.SuffixSlotParams) => any
+  'tab-prefix'?: (params: VxeTabsSlotTypes.TabPrefixSlotParams) => any
+  tabPrefix?: (params: VxeTabsSlotTypes.TabPrefixSlotParams) => any
+  'tab-suffix'?: (params: VxeTabsSlotTypes.TabSuffixSlotParams) => any
+  tabSuffix?: (params: VxeTabsSlotTypes.TabSuffixSlotParams) => any
   /**
    * 自定义面板头部模板
    */
@@ -315,7 +320,7 @@ export interface VxeTabsSlots {
    * 已废弃，请使用 suffix
    * @deprecated
    */
-  extra?: (params: VxeTabsSlotTypes.SuffixSlotParams) => any
+  extra?: (params: VxeTabsSlotTypes.TabSuffixSlotParams) => any
 }
 
 export const Tabs: typeof VxeTabs

@@ -52,6 +52,8 @@ export class ItemInfo {
       itemRender: item.itemRender,
       rules: item.rules,
       formatter,
+      // 自定义参数
+      params: item.params,
       // 渲染属性
       showError: false,
       errRule: null,

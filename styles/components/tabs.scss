@@ -388,18 +388,13 @@ $scrollbarOffsetSize: 20px;
 .vxe-tabs-header--item-content {
   flex-grow: 1;
   max-width: 30em;
+  padding: 0 0.3em;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-}
-.vxe-tabs-header--item-icon {
-  padding: 0 0.6em;
-  &+.vxe-tabs-header--item-name {
-    padding-left: 0;
+  & > span {
+    padding: 0 0.3em;
   }
-}
-.vxe-tabs-header--item-name {
-  padding: 0 0.6em;
 }
 .vxe-tabs-header--refresh-btn,
 .vxe-tabs-header--close-btn {
@@ -407,7 +402,6 @@ $scrollbarOffsetSize: 20px;
   border-radius: 50%;
   width: 1.5em;
   height: 1.5em;
-  margin: 0 0.2em;
   line-height: 1.5em;
   text-align: center;
   &:hover {
@@ -419,6 +413,7 @@ $scrollbarOffsetSize: 20px;
   }
   & > i {
     font-size: 1em;
+    vertical-align: middle;
   }
 }
 .vxe-tabs-header--refresh-btn {
