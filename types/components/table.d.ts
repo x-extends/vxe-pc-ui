@@ -4438,7 +4438,7 @@ export interface TableMethods<DT = any> {
   /**
    * 区别就是会触发对应的事件
    */
-  setFilterByEvent(event: Event, fieldOrColumn: VxeColumnPropTypes.Field | VxeTableDefines.ColumnInfo<any>, options: VxeColumnPropTypes.FilterItem[], update?: boolean): Promise<void>
+  setFilterByEvent(event: Event, fieldOrColumn: VxeColumnPropTypes.Field | VxeTableDefines.ColumnInfo<any>, options: VxeColumnPropTypes.Filters, update?: boolean): Promise<void>
   /**
    * 区别就是会触发对应的事件
    */

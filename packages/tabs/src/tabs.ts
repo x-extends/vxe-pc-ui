@@ -639,8 +639,8 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const tabPosition = $xeTabs.computeTabPosition
       const lrPosition = $xeTabs.computeLrPosition
       const lineStyle = $xeTabs.computeLineStyle
-      const prefixSlot = slots.prefix
-      const suffixSlot = slots.suffix || slots.extra
+      const tabPrefixSlot = slots.tabPrefix || slots['tab-prefix'] || slots.prefix
+      const tabSuffixSlot = slots.tabSuffix || slots['tab-suffix'] || slots.suffix || slots.extra
       const closeOpts = $xeTabs.computeCloseOpts
       const closeVisibleMethod = closeOpts.visibleMethod
       const refreshOpts = $xeTabs.computeRefreshOpts
@@ -650,10 +650,10 @@ export default /* define-vxe-component start */ defineVxeComponent({
         key: 'th',
         class: ['vxe-tabs-header', `type--${tabType}`, `pos--${tabPosition}`]
       }, [
-        prefixSlot
+        tabPrefixSlot
           ? h('div', {
             class: ['vxe-tabs-header--prefix', `type--${tabType}`, `pos--${tabPosition}`]
-          }, getSlotVNs(prefixSlot({ name: activeName })))
+          }, $xeTabs.callSlot(tabPrefixSlot, { name: activeName }, h))
           : renderEmptyElement($xeTabs),
         isTabOver
           ? h('div', {
@@ -687,8 +687,11 @@ export default /* define-vxe-component start */ defineVxeComponent({
               scroll: $xeTabs.checkScrolling
             }
           }, tabList.map((item, index) => {
-            const { title, titleWidth, titleAlign, icon, name, slots } = item
-            const titleSlot = slots ? (slots.title || slots.tab) : null
+            const { title, titleWidth, titleAlign, icon, name } = item
+            const itemSlots = item.slots || {}
+            const titleSlot = itemSlots.title || itemSlots.tab
+            const titlePrefixSlot = itemSlots.titlePrefix || (itemSlots as any)['title-prefix']
+            const titleSuffixSlot = itemSlots.titleSuffix || (itemSlots as any)['title-suffix']
             const itemWidth = titleWidth || allTitleWidth
             const itemAlign = titleAlign || allTitleAlign
             const params = { $tabs: $xeTabs, value: activeName, name, option: item }
@@ -726,9 +729,19 @@ export default /* define-vxe-component start */ defineVxeComponent({
                       })
                     ])
                     : renderEmptyElement($xeTabs),
+                  titlePrefixSlot
+                    ? h('span', {
+                      class: 'vxe-tabs-header--item-prefix'
+                    }, $xeTabs.callSlot(titlePrefixSlot, { name, title }, h))
+                    : renderEmptyElement($xeTabs),
                   h('span', {
                     class: 'vxe-tabs-header--item-name'
-                  }, titleSlot ? $xeTabs.callSlot(titleSlot, { name, title }, h) : `${title}`)
+                  }, titleSlot ? $xeTabs.callSlot(titleSlot, { name, title }, h) : `${title}`),
+                  titleSuffixSlot
+                    ? h('span', {
+                      class: 'vxe-tabs-header--item-suffix'
+                    }, $xeTabs.callSlot(titleSuffixSlot, { name, title }, h))
+                    : renderEmptyElement($xeTabs)
                 ]),
                 (isEnableConf(refreshConfig) || refreshOpts.enabled) && (refreshVisibleMethod ? refreshVisibleMethod(params) : true)
                   ? h('div', {
@@ -787,10 +800,10 @@ export default /* define-vxe-component start */ defineVxeComponent({
             })
           ])
           : renderEmptyElement($xeTabs),
-        suffixSlot
+        tabSuffixSlot
           ? h('div', {
             class: ['vxe-tabs-header--suffix', `type--${tabType}`, `pos--${tabPosition}`]
-          }, getSlotVNs(suffixSlot({ name: activeName })))
+          }, $xeTabs.callSlot(tabSuffixSlot, { name: activeName }, h))
           : renderEmptyElement($xeTabs)
       ])
     },

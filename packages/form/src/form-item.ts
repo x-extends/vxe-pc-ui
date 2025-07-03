@@ -84,7 +84,8 @@ export const formItemProps = {
   folding: Boolean as PropType<VxeFormItemPropTypes.Folding>,
   collapseNode: Boolean as PropType<VxeFormItemPropTypes.CollapseNode>,
   itemRender: Object as PropType<VxeFormItemPropTypes.ItemRender>,
-  rules: Array as PropType<VxeFormItemPropTypes.Rules>
+  rules: Array as PropType<VxeFormItemPropTypes.Rules>,
+  params: Object as PropType<VxeFormItemPropTypes.Params>
 }
 
 const formItemPropKeys = Object.keys(formItemProps)

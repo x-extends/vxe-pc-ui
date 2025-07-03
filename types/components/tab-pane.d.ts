@@ -35,14 +35,16 @@ export interface VxeTabPaneProps {
   permissionCode?: VxeTabPanePropTypes.PermissionCode
 
   slots?: {
-    title?: string | ((params: { [key: string]: any }) => VxeComponentSlotType | VxeComponentSlotType[])
-    default?: string | ((params: { [key: string]: any }) => VxeComponentSlotType | VxeComponentSlotType[])
+    title?: string | ((params: VxeTabPaneSlotTypes.DefaultSlotParams) => VxeComponentSlotType | VxeComponentSlotType[])
+    titlePrefix?: string | ((params: VxeTabPaneSlotTypes.DefaultSlotParams) => VxeComponentSlotType | VxeComponentSlotType[])
+    titleSuffix?: string | ((params: VxeTabPaneSlotTypes.DefaultSlotParams) => VxeComponentSlotType | VxeComponentSlotType[])
+    default?: string | ((params: VxeTabPaneSlotTypes.DefaultSlotParams) => VxeComponentSlotType | VxeComponentSlotType[])
 
     /**
      * 已废弃，被 title 替换
      * @deprecated
      */
-    tab?: string | ((params: { [key: string]: any }) => VxeComponentSlotType | VxeComponentSlotType[])
+    tab?: string | ((params: VxeTabPaneSlotTypes.DefaultSlotParams) => VxeComponentSlotType | VxeComponentSlotType[])
   }
 }
 
@@ -79,12 +81,21 @@ export interface VxeTabPaneListeners { }
 export namespace VxeTabPaneEvents { }
 
 export namespace VxeTabPaneSlotTypes {
-  export interface DefaultSlotParams {}
+  export interface DefaultSlotParams {
+    name: string
+    title: string
+  }
 }
 
 export interface VxeTabPaneSlots {
   title?: (params: VxeTabPaneSlotTypes.DefaultSlotParams) => any
+  'title-prefix'?: (params: VxeTabPaneSlotTypes.DefaultSlotParams) => any
+  titlePrefix?: (params: VxeTabPaneSlotTypes.DefaultSlotParams) => any
+  'title-suffix'?: (params: VxeTabPaneSlotTypes.DefaultSlotParams) => any
+  titleSuffix?: (params: VxeTabPaneSlotTypes.DefaultSlotParams) => any
+
   default?: (params: VxeTabPaneSlotTypes.DefaultSlotParams) => any
+
   /**
    * 已废弃，被 title 替换
    * @deprecated
