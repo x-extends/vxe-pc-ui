@@ -20,19 +20,25 @@
 .vxe-notice-bar--wrapper {
   display: inline-block;
   white-space: nowrap;
+  animation-duration: 15s;
+  animation-timing-function: linear;
+  animation-delay: 0s;
+  animation-direction: normal;
+  animation-fill-mode: none;
+  animation-play-state: running;
 }
 .vxe-notice-bar {
   &.is--horizontal {
     &.dir--left {
       .vxe-notice-bar--wrapper {
         padding-left: 100%;
-        animation: 15s linear 0s infinite normal none running scrollLeftText;
+        animation-name: scrollLeftText;
       }
     }
     &.dir--right {
       .vxe-notice-bar--wrapper {
         padding-left: 100%;
-        animation: 15s linear 0s infinite normal none running scrollRightText;
+        animation-name: scrollRightText;
       }
     }
     .vxe-notice-bar--wrapper {
