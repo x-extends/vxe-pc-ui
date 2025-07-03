@@ -68,10 +68,10 @@ export namespace VxeColumnPropTypes {
   }) => string | number)
   export type SortType = 'auto' | 'string' | 'number' | null
 
-  export interface FilterItem {
+  export interface FilterItem<OD = any> {
     label?: string | number
     value?: any
-    data?: any
+    data?: OD
     resetValue?: any
     checked?: boolean
   }
@@ -80,7 +80,7 @@ export namespace VxeColumnPropTypes {
    * @deprecated
    */
   export interface Filter extends FilterItem {}
-  export type Filters = FilterItem[]
+  export type Filters<OD = any> = FilterItem<OD>[]
 
   export type FilterMultiple = boolean
 
