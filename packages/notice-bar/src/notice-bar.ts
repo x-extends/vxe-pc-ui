@@ -129,7 +129,7 @@ export default defineVxeComponent({
             h('div', {
               class: 'vxe-notice-bar--wrapper',
               style: {
-                animationDuration: `${duration ? toCssUnit(duration, 's') : animationDuration}s`
+                animationDuration: duration ? toCssUnit(duration, 's') : `${animationDuration}s`
               }
             }, defaultSlot ? defaultSlot({}) : noticeText)
           ])
