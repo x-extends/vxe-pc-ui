@@ -7,7 +7,7 @@ import { getLastZIndex, nextZIndex, getFuncText } from '../../ui/src/utils'
 import VxeInputComponent from '../../input/src/input'
 import { getSlotVNs } from '../../ui/src/vn'
 
-import type { VxeSelectPropTypes, SelectInternalData, ValueOf, VxeComponentSizeType, SelectReactData, VxeSelectEmits, VxeInputDefines, VxeSelectDefines, VxeOptgroupProps, VxeOptionProps, VxeDrawerConstructor, VxeDrawerMethods, VxeFormDefines, VxeFormConstructor, VxeFormPrivateMethods, VxeModalConstructor, VxeModalMethods, VxeInputConstructor } from '../../../types'
+import type { VxeSelectPropTypes, SelectInternalData, ValueOf, VxeComponentSizeType, SelectReactData, VxeSelectEmits, VxeInputDefines, VxeSelectDefines, VxeOptgroupProps, VxeOptionProps, VxeDrawerConstructor, VxeDrawerMethods, VxeFormDefines, VxeFormConstructor, VxeFormPrivateMethods, VxeModalConstructor, VxeModalMethods, VxeInputConstructor, VxeComponentSlotType } from '../../../types'
 import type { VxeTableConstructor, VxeTablePrivateMethods } from '../../../types/components/table'
 
 function isOptionVisible (option: any) {
@@ -1376,7 +1376,17 @@ export default /* define-vxe-component start */ defineVxeComponent({
         const isDisabled = !isAdd && $xeSelect.checkOptionDisabled(isSelected, option, group)
         const defaultSlot = slots ? slots.default : null
         const optParams = { option, group: null, $select: $xeSelect }
-        const optVNs = optionSlot ? $xeSelect.callSlot(optionSlot, optParams, h) : (defaultSlot ? $xeSelect.callSlot(defaultSlot, optParams, h) : getFuncText(option[(isOptGroup ? groupLabelField : labelField) as 'label']))
+        let optLabel = ''
+        let optVNs: string | VxeComponentSlotType[] = []
+        if (optionSlot) {
+          optVNs = $xeSelect.callSlot(optionSlot, optParams, h)
+        } else if (defaultSlot) {
+          optVNs = $xeSelect.callSlot(defaultSlot, optParams, h)
+        } else {
+          optLabel = getFuncText(option[(isOptGroup ? groupLabelField : labelField) as 'label'])
+          optVNs = optLabel
+        }
+
         return isVisible
           ? h('div', {
             key: useKey || optionKey ? optid : cIndex,
@@ -1388,7 +1398,8 @@ export default /* define-vxe-component start */ defineVxeComponent({
               'is--hover': currentOption && $xeSelect.getOptId(currentOption) === optid
             }],
             attrs: {
-              optid: optid
+              optid: optid,
+              title: optLabel || null
             },
             on: {
               mousedown: (evnt: MouseEvent) => {
@@ -1557,6 +1568,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
                       class: 'vxe-select-search--input',
                       props: {
                         value: reactData.searchValue,
+                        title: selectLabel,
                         clearable: true,
                         disabled: false,
                         readonly: false,

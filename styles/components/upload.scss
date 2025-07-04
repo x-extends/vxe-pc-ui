@@ -86,23 +86,29 @@
   padding: var(--vxe-ui-layout-padding-half);
   &:hover {
     background-color: var(--vxe-ui-base-hover-background-color);
-    &:not(.is--loading) {
-      .vxe-upload--file-item-name {
-        color: var(--vxe-ui-font-primary-color);
-      }
+    .vxe-upload--file-item-name {
+      color: var(--vxe-ui-font-primary-color);
     }
   }
   &:last-child {
     margin-bottom: 0;
   }
-  &.is--loading {
-    cursor: progress;
-    color: var(--vxe-ui-input-placeholder-color);
-  }
   &.is--preview {
     .vxe-upload--file-item-name {
       cursor: pointer;
     }
+  }
+  &.is--loading {
+    cursor: progress;
+    color: var(--vxe-ui-input-placeholder-color);
+    &:hover {
+      .vxe-upload--file-item-name {
+        color: var(--vxe-ui-input-placeholder-color);
+      }
+    }
+  }
+  &.is--pending {
+    color: var(--vxe-ui-input-placeholder-color);
   }
 }
 .vxe-upload--file-over-more {
@@ -131,7 +137,7 @@
   padding: var(--vxe-ui-layout-padding-half);
   color: var(--vxe-ui-input-placeholder-color);
 }
-.vxe-upload--file-item-error {
+.vxe-upload--file-item-rebtn {
   padding-right: 0.4em;
   color: var(--vxe-ui-status-error-color);
   text-decoration: none;
@@ -249,26 +255,46 @@
   }
 }
 .vxe-upload--image-item {
-  &:hover {
-    &:not(.is--loading) {
-      .vxe-upload--image-item-img-wrapper {
-        border-color: var(--vxe-ui-font-primary-color);
-        &::after {
-          content: "";
-          position: absolute;
-          top: 0;
-          left: 0;
-          width: 100%;
-          height: 100%;
-          pointer-events: none;
-          background-color: rgba(0, 0, 0, 0.1);;
-        }
-      }
-    }
-  }
   &.is--loading {
     .vxe-upload--image-item-box {
       cursor: progress;
+    }
+  }
+  &:hover,
+  &.is--error,
+  &.is--pending {
+    .vxe-upload--image-item-img-wrapper {
+      &::after {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        pointer-events: none;
+      }
+    }
+  }
+  &:hover {
+    .vxe-upload--image-item-img-wrapper {
+      &::after {
+        background-color: rgba(0, 0, 0, 0.1);
+      }
+    }
+  }
+  &.is--error,
+  &.is--pending {
+    .vxe-upload--image-item-img-wrapper {
+      &::after {
+        background-color: rgba(0, 0, 0, 0.4);
+      }
+    }
+    &:hover {
+      .vxe-upload--image-item-img-wrapper {
+        &::after {
+          background-color: rgba(0, 0, 0, 0.5);
+        }
+      }
     }
   }
   &.is--error {
@@ -288,6 +314,10 @@
       &::after {
         border-radius: 50%;
       }
+    }
+    .vxe-upload--image-item-loading,
+    .vxe-upload--image-item-rebtn {
+      border-radius: 50%;
     }
   }
 }
@@ -316,9 +346,21 @@
   width: 100%;
   height: 100%;
   color: var(--vxe-ui-loading-color);
-  background-color: var(--vxe-ui-loading-background-color);
+  background-color: rgba(0, 0, 0, 0.6);
   z-index: 1;
   user-select: none;
+}
+.vxe-upload--image-item-rebtn {
+  position: absolute;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.6);
 }
 .vxe-upload--image-action-hint {
   font-size: 0.8em;
@@ -406,6 +448,13 @@
   position: relative;
   .vxe-upload--file-list {
     max-height: none;
+  }
+  .vxe-upload--file-action-btn {
+    width: 100%;
+    & > .vxe-button {
+      width: 100%;
+      max-width: 100%;
+    }
   }
 }
 .vxe-upload,

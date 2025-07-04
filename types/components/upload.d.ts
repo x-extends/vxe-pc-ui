@@ -28,6 +28,7 @@ export namespace VxeUploadPropTypes {
   export type Mode = null | '' | 'all' | 'image'
   export type Readonly = boolean
   export type Disabled = boolean
+  export type AutoSubmit = boolean
   export type ImageTypes = string[]
   export interface ImageConfig {
     width?: VxeImagePropTypes.Width
@@ -39,8 +40,8 @@ export namespace VxeUploadPropTypes {
    * @deprecated
    */
   export interface ImageStyle {
-    width?: number | string
-    height?: number | string
+    width?: VxeImagePropTypes.Width
+    height?: VxeImagePropTypes.Height
   }
   export type FileTypes = string[]
   export type SingleMode = boolean
@@ -50,7 +51,7 @@ export namespace VxeUploadPropTypes {
   export type KeyField = string
   export type UrlMode = boolean
   export type Multiple = boolean
-  export type LimitSize = number | string
+  export type LimitSize = number | String
   export type ShowLimitSize = boolean
   export type LimitSizeText = number | string | ((params: {
     maxSize: number
@@ -65,9 +66,10 @@ export namespace VxeUploadPropTypes {
   export type UrlField = string
   export type SizeField = string
   export type ShowTip = boolean
+  export type MaxSimultaneousUploads = number | string
   export type TipText = number | string | ((params: {}) => number | string)
-  export type ButtonText = string
-  export type ButtonIcon = number | string | ((params: {}) => number | string)
+  export type ButtonText = number | string | ((params: {}) => number | string)
+  export type ButtonIcon = string
   export type ShowButtonText = boolean
   export type ShowButtonIcon = boolean
   export type ShowRemoveButton = boolean
@@ -76,6 +78,7 @@ export namespace VxeUploadPropTypes {
   export type ShowErrorStatus = boolean
   export type ShowProgress = boolean
   export type ProgressText = number | string | ((params: {}) => number | string)
+  export type ShowSubmitButton = boolean
   export type AutoHiddenButton = boolean
   export type ShowUploadButton = boolean
   export type PreviewMethod = undefined | ((params: {
@@ -121,13 +124,14 @@ export namespace VxeUploadPropTypes {
 }
 
 export interface VxeUploadProps {
-  value?: VxeUploadPropTypes.ModelValue
+  modelValue?: VxeUploadPropTypes.ModelValue
   size?: VxeUploadPropTypes.Size
   showList?: VxeUploadPropTypes.ShowList
   moreConfig?: VxeUploadPropTypes.MoreConfig
   mode?: VxeUploadPropTypes.Mode
   readonly?: VxeUploadPropTypes.Readonly
   disabled?: VxeUploadPropTypes.Disabled
+  autoSubmit?: VxeUploadPropTypes.AutoSubmit
   imageTypes?: VxeUploadPropTypes.ImageTypes
   imageConfig?: VxeUploadPropTypes.ImageConfig
   /**
@@ -167,9 +171,14 @@ export interface VxeUploadProps {
   showErrorStatus?: VxeUploadPropTypes.ShowErrorStatus
   showProgress?: VxeUploadPropTypes.ShowProgress
   progressText?: VxeUploadPropTypes.ProgressText
+  showSubmitButton?: VxeUploadPropTypes.ShowSubmitButton
   autoHiddenButton?: VxeUploadPropTypes.AutoHiddenButton
   showTip?: VxeUploadPropTypes.ShowTip
   tipText?: VxeUploadPropTypes.TipText
+  /**
+   * 用于 autoSubmit=false，最大同时上传数量
+   */
+  maxSimultaneousUploads?: VxeUploadPropTypes.MaxSimultaneousUploads
   previewMethod?: VxeUploadPropTypes.PreviewMethod
   uploadMethod?: VxeUploadPropTypes.UploadMethod
   beforeRemoveMethod?: VxeUploadPropTypes.BeforeRemoveMethod
@@ -217,6 +226,10 @@ export interface UploadMethods {
     files: File[]
     file: File | null
   }>
+  /**
+   * 用于 auto-upload 模式，手动调用上传附件；如果传 true，这包含未上传和上传失败的都会重新提交
+   */
+  submit(isFull?: boolean): Promise<void>
 }
 export interface VxeUploadMethods extends UploadMethods { }
 
@@ -263,7 +276,7 @@ export namespace VxeUploadDefines {
   export interface FileCacheItem {
     file: File
     loading: boolean
-    status: string
+    status: 'error' | 'success' | 'pending'
     percent: number
   }
 

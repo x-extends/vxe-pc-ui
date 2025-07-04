@@ -27,6 +27,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       default: true
     },
     name: String as PropType<VxeInputPropTypes.Name>,
+    title: String as PropType<VxeInputPropTypes.Title>,
     type: {
       type: String as PropType<VxeInputPropTypes.Type>,
       default: 'text'
@@ -2960,7 +2961,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const props = $xeInput
       const reactData = $xeInput.reactData
 
-      const { className, controls, type, align, showWordCount, countMethod, name, autoComplete, autocomplete } = props
+      const { className, controls, type, title, align, showWordCount, countMethod, name, autoComplete, autocomplete } = props
       const { inputValue, visiblePanel, isActivated } = reactData
       const vSize = $xeInput.computeSize
       const isDisabled = $xeInput.computeIsDisabled
@@ -3001,7 +3002,12 @@ export default /* define-vxe-component start */ defineVxeComponent({
       }, [
         prefix || renderEmptyElement($xeInput),
         h('div', {
-          class: 'vxe-input--wrapper'
+          class: 'vxe-input--wrapper',
+          attrs: title
+            ? {
+                title
+              }
+            : undefined
         }, [
           h('input', {
             ref: 'refInputTarget',

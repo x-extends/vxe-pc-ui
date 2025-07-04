@@ -315,6 +315,9 @@ declare module '@vxe-ui/core' {
     export interface RenderHeaderOptions extends RenderTableHeaderOptions { }
     export interface RenderTableHeaderOptions extends VxeGlobalRendererHandles.RenderOptions { }
 
+    /**
+     * @deprecated
+     */
     export interface RenderHeaderParams<D = any> extends RenderTableHeaderParams<D> {}
     export interface RenderTableHeaderParams<D = any> {
       $table: VxeTableConstructor<D>
