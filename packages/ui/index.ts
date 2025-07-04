@@ -381,7 +381,9 @@ setConfig({
     dragToUpload: true,
     // imageConfig: {},
     showLimitSize: true,
-    showLimitCount: true
+    showLimitCount: true,
+    autoSubmit: true,
+    maxSimultaneousUploads: 5
   },
   watermark: {
     rotate: -30,
@@ -504,6 +506,7 @@ setIcon({
   UPLOAD_FILE_ADD: iconPrefix + 'upload',
   UPLOAD_FILE_REMOVE: iconPrefix + 'delete',
   UPLOAD_FILE_DOWNLOAD: iconPrefix + 'download',
+  UPLOAD_IMAGE_UPLOAD: iconPrefix + 'upload',
   UPLOAD_IMAGE_RE_UPLOAD: iconPrefix + 'repeat',
   UPLOAD_IMAGE_ADD: iconPrefix + 'add',
   UPLOAD_IMAGE_REMOVE: iconPrefix + 'close',

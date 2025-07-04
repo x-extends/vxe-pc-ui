@@ -1128,7 +1128,17 @@ export default defineVxeComponent({
         const isDisabled = !isAdd && checkOptionDisabled(isSelected, option, group)
         const defaultSlot = slots ? slots.default : null
         const optParams = { option, group: null, $select: $xeSelect }
-        const optVNs = optionSlot ? callSlot(optionSlot, optParams) : (defaultSlot ? callSlot(defaultSlot, optParams) : getFuncText(option[(isOptGroup ? groupLabelField : labelField) as 'label']))
+        let optLabel = ''
+        let optVNs: string | VxeComponentSlotType[] = []
+        if (optionSlot) {
+          optVNs = callSlot(optionSlot, optParams)
+        } else if (defaultSlot) {
+          optVNs = callSlot(defaultSlot, optParams)
+        } else {
+          optLabel = getFuncText(option[(isOptGroup ? groupLabelField : labelField) as 'label'])
+          optVNs = optLabel
+        }
+
         return isVisible
           ? h('div', {
             key: useKey || optionKey ? optid : cIndex,
@@ -1139,9 +1149,8 @@ export default defineVxeComponent({
               'is--add': isAdd,
               'is--hover': currentOption && getOptId(currentOption) === optid
             }],
-            // attrs
             optid: optid,
-            // event
+            title: optLabel || null,
             onMousedown: (evnt: MouseEvent) => {
               const isLeftBtn = evnt.button === 0
               if (isLeftBtn) {
@@ -1258,6 +1267,7 @@ export default defineVxeComponent({
           prefixIcon: props.prefixIcon,
           suffixIcon: loading ? getIcon().SELECT_LOADED : (visiblePanel ? getIcon().SELECT_OPEN : getIcon().SELECT_CLOSE),
           autoFocus: false,
+          title: selectLabel,
           modelValue: selectLabel,
           onClear: clearEvent,
           onClick: clickEvent,

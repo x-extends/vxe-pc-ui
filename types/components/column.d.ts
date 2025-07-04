@@ -41,9 +41,9 @@ export namespace VxeColumnPropTypes {
   export type ShowOverflow = VxeTablePropTypes.ShowOverflow
   export type ShowHeaderOverflow = ShowOverflow
   export type ShowFooterOverflow = ShowOverflow
-  export type ClassName<D = any> = string | ((params: VxeGlobalRendererHandles.RenderCellParams<D>) => string | any[] | { [key: string]: boolean })
-  export type HeaderClassName<D = any> = string | ((params: VxeGlobalRendererHandles.RenderHeaderParams<D>) => string | any[] | { [key: string]: boolean })
-  export type FooterClassName<D = any> = string | ((params: VxeGlobalRendererHandles.RenderFooterParams<D>) => string | any[] | { [key: string]: boolean })
+  export type ClassName<D = any> = string | ((params: VxeGlobalRendererHandles.RenderTableCellParams<D>) => string | any[] | { [key: string]: boolean })
+  export type HeaderClassName<D = any> = string | ((params: VxeGlobalRendererHandles.RenderTableHeaderParams<D>) => string | any[] | { [key: string]: boolean })
+  export type FooterClassName<D = any> = string | ((params: VxeGlobalRendererHandles.RenderTableFooterParams<D>) => string | any[] | { [key: string]: boolean })
   export type Padding = boolean
   export type VerticalAlign = '' | 'top' | 'center' | null
 

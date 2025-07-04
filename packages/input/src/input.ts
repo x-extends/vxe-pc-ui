@@ -20,6 +20,7 @@ export default defineVxeComponent({
       default: true
     },
     name: String as PropType<VxeInputPropTypes.Name>,
+    title: String as PropType<VxeInputPropTypes.Title>,
     type: {
       type: String as PropType<VxeInputPropTypes.Type>,
       default: 'text'
@@ -2592,7 +2593,7 @@ export default defineVxeComponent({
     Object.assign($xeInput, inputMethods)
 
     const renderVN = () => {
-      const { className, controls, type, align, showWordCount, countMethod, name, autoComplete, autocomplete } = props
+      const { className, controls, type, title, align, showWordCount, countMethod, name, autoComplete, autocomplete } = props
       const { inputValue, visiblePanel, isActivated } = reactData
       const vSize = computeSize.value
       const isDisabled = computeIsDisabled.value
@@ -2631,7 +2632,8 @@ export default defineVxeComponent({
       }, [
         prefix || createCommentVNode(),
         h('div', {
-          class: 'vxe-input--wrapper'
+          class: 'vxe-input--wrapper',
+          title: title || null
         }, [
           h('input', {
             ref: refInputTarget,

@@ -7,10 +7,10 @@
       <vxe-upload v-model="imgList1" mode="image" multiple show-error-status pasteToUpload></vxe-upload>
     </p>
     <p>
-      <vxe-upload v-model="fileList" multiple drag-sort :limit-size="30" show-list autoHiddenButton show-error-status :limit-count="10" showDownloadButton :upload-method="uploadMethod"></vxe-upload>
+      <vxe-upload v-model="fileList" multiple drag-sort :auto-submit="false" show-submit-button :limit-size="30" show-list autoHiddenButton show-error-status :limit-count="10" showDownloadButton :upload-method="uploadMethod"></vxe-upload>
     </p>
     <p>
-      <vxe-upload v-model="imgList" mode="image" drag-sort multiple :image-config="{circle: true}" show-error-status :upload-method="uploadMethod" showDownloadButton></vxe-upload>
+      <vxe-upload v-model="imgList" mode="image" drag-sort multiple :auto-submit="false" show-submit-button :image-config="{circle: true}" show-error-status :upload-method="uploadMethod" showDownloadButton></vxe-upload>
     </p>
     <p>
       <vxe-upload v-model="fileList" multiple :limit-size="30" disabled autoHiddenButton show-error-status showDownloadButton :limit-count="10" :upload-method="uploadMethod"></vxe-upload>

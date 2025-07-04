@@ -28,6 +28,10 @@ export default defineVxeComponent({
       type: Boolean as PropType<VxeUploadPropTypes.Disabled>,
       default: null
     },
+    autoSubmit: {
+      type: Boolean as PropType<VxeUploadPropTypes.AutoSubmit>,
+      default: () => getConfig().upload.autoSubmit
+    },
     mode: {
       type: String as PropType<VxeUploadPropTypes.Mode>,
       default: () => getConfig().upload.mode
@@ -117,6 +121,7 @@ export default defineVxeComponent({
       type: [String, Number, Function] as PropType<VxeUploadPropTypes.ProgressText>,
       default: () => getConfig().upload.progressText
     },
+    showSubmitButton: Boolean as PropType<VxeUploadPropTypes.ShowSubmitButton>,
     autoHiddenButton: {
       type: Boolean as PropType<VxeUploadPropTypes.AutoHiddenButton>,
       default: () => getConfig().upload.autoHiddenButton
@@ -156,6 +161,10 @@ export default defineVxeComponent({
     showTip: {
       type: Boolean as PropType<VxeUploadPropTypes.ShowTip>,
       default: () => null
+    },
+    maxSimultaneousUploads: {
+      type: Number as PropType<VxeUploadPropTypes.MaxSimultaneousUploads>,
+      default: () => getConfig().upload.maxSimultaneousUploads
     },
     tipText: [String, Number, Function] as PropType<VxeUploadPropTypes.TipText>,
     hintText: String as PropType<VxeUploadPropTypes.HintText>,
@@ -570,6 +579,7 @@ export default defineVxeComponent({
           const cacheItem = fileCacheMaps[fileKey]
           if (cacheItem) {
             cacheItem.percent = 100
+            cacheItem.status = 'success'
           }
           Object.assign(item, res)
           dispatchEvent('upload-success', { option: item, data: res }, null)
@@ -611,7 +621,7 @@ export default defineVxeComponent({
       if (uploadFn && cacheItem) {
         const file = cacheItem.file
         cacheItem.loading = true
-        cacheItem.status = ''
+        cacheItem.status = 'pending'
         cacheItem.percent = 0
         handleUploadResult(item, file).then(() => {
           if (urlMode) {
@@ -620,8 +630,8 @@ export default defineVxeComponent({
         })
       }
     }
-    const uploadFile = (files: File[], evnt: Event | null) => {
-      const { multiple, urlMode, showLimitSize, limitSizeText, showLimitCount, limitCountText } = props
+    const handleUploadFile = (files: File[], evnt: Event | null) => {
+      const { multiple, urlMode, showLimitSize, limitSizeText, showLimitCount, limitCountText, autoSubmit } = props
       const { fileList } = reactData
       const uploadFn = props.uploadMethod || getConfig().upload.uploadMethod
       const keyField = computeKeyField.value
@@ -716,13 +726,13 @@ export default defineVxeComponent({
         if (uploadFn) {
           cacheMaps[fileKey] = {
             file: file,
-            loading: true,
-            status: '',
+            loading: !!autoSubmit,
+            status: 'pending',
             percent: 0
           }
         }
         const item = reactive(fileObj)
-        if (uploadFn) {
+        if (uploadFn && autoSubmit) {
           uploadPromiseRests.push(
             handleUploadResult(item, file)
           )
@@ -756,7 +766,7 @@ export default defineVxeComponent({
         multiple,
         types: isImage ? imageTypes : fileTypes
       }).then((params) => {
-        uploadFile(params.files, evnt)
+        handleUploadFile(params.files, evnt)
         return params
       })
     }
@@ -908,7 +918,7 @@ export default defineVxeComponent({
         }
         return
       }
-      uploadFile(files, evnt)
+      handleUploadFile(files, evnt)
     }
 
     const handleUploadDropEvent = (evnt: DragEvent) => {
@@ -1183,6 +1193,43 @@ export default defineVxeComponent({
       dispatchEvent,
       choose () {
         return handleChoose(null)
+      },
+      submit (isFull) {
+        const { maxSimultaneousUploads } = props
+        const msNum = XEUtils.toNumber(maxSimultaneousUploads || 1) || 1
+        const { fileList, fileCacheMaps } = reactData
+        const allPendingList = fileList.filter(item => {
+          const fileKey = getFieldKey(item)
+          const cacheItem = fileCacheMaps[fileKey]
+          return cacheItem && (cacheItem.status === 'pending' || (isFull && cacheItem.status === 'error'))
+        })
+
+        const handleSubmit = (item: VxeUploadDefines.FileObjItem): Promise<void> => {
+          const fileKey = getFieldKey(item)
+          const cacheItem = fileCacheMaps[fileKey]
+          if (cacheItem) {
+            const file = cacheItem.file
+            if (file && (cacheItem.status === 'pending' || (isFull && cacheItem.status === 'error'))) {
+              cacheItem.loading = true
+              cacheItem.percent = 0
+              return handleUploadResult(item, file).then(handleNextSubmit)
+            }
+          }
+          return handleNextSubmit()
+        }
+
+        const handleNextSubmit = (): Promise<void> => {
+          if (allPendingList.length) {
+            const item = allPendingList[0]
+            allPendingList.splice(0, 1)
+            return handleSubmit(item).then(handleNextSubmit)
+          }
+          return Promise.resolve()
+        }
+
+        return Promise.all(allPendingList.splice(0, msNum).map(handleSubmit)).then(() => {
+          // 完成
+        })
       }
     }
 
@@ -1192,7 +1239,7 @@ export default defineVxeComponent({
     Object.assign($xeUpload, uploadMethods, uploadPrivateMethods)
 
     const renderFileItemList = (currList: VxeUploadDefines.FileObjItem[], isMoreView: boolean) => {
-      const { showRemoveButton, showDownloadButton, showProgress, progressText, showPreview, showErrorStatus, dragSort } = props
+      const { showRemoveButton, showDownloadButton, showProgress, progressText, showPreview, showErrorStatus, dragSort, autoSubmit, showSubmitButton } = props
       const { fileCacheMaps } = reactData
       const isDisabled = computeIsDisabled.value
       const formReadonly = computeFormReadonly.value
@@ -1210,13 +1257,21 @@ export default defineVxeComponent({
       return currList.map((item, index) => {
         const fileKey = getFieldKey(item)
         const cacheItem = fileCacheMaps[fileKey]
-        const isLoading = cacheItem && cacheItem.loading
-        const isError = cacheItem && cacheItem.status === 'error'
+        let isLoading = false
+        let isError = false
+        let isPending = false
+        const fileName = `${item[nameProp] || ''}`
+        if (cacheItem) {
+          isLoading = cacheItem.loading
+          isError = cacheItem.status === 'error'
+          isPending = cacheItem.status === 'pending'
+        }
         return h('div', {
           key: dragSort ? fileKey : index,
           class: ['vxe-upload--file-item', {
             'is--preview': showPreview,
             'is--loading': isLoading,
+            'is--pending': isPending,
             'is--error': isError
           }],
           fileid: fileKey,
@@ -1232,12 +1287,13 @@ export default defineVxeComponent({
           ]),
           h('div', {
             class: 'vxe-upload--file-item-name',
+            title: fileName,
             onClick (evnt) {
               if (!isLoading && !isError) {
                 handlePreviewFileEvent(evnt, item)
               }
             }
-          }, `${item[nameProp] || ''}`),
+          }, fileName),
           isLoading
             ? h('div', {
               class: 'vxe-upload--file-item-loading-icon'
@@ -1252,15 +1308,15 @@ export default defineVxeComponent({
               class: 'vxe-upload--file-item-loading-text'
             }, progressText ? XEUtils.toFormatString(`${XEUtils.isFunction(progressText) ? progressText({}) : progressText}`, { percent: cacheItem.percent }) : getI18n('vxe.upload.uploadProgress', [cacheItem.percent]))
             : renderEmptyElement($xeUpload),
-          showErrorStatus && isError
+          !isLoading && ((isError && showErrorStatus) || (isPending && showSubmitButton && !autoSubmit))
             ? h('div', {
-              class: 'vxe-upload--image-item-error'
+              class: 'vxe-upload--file-item-rebtn'
             }, [
               h(VxeButtonComponent, {
-                icon: getIcon().UPLOAD_IMAGE_RE_UPLOAD,
+                icon: isError ? getIcon().UPLOAD_IMAGE_RE_UPLOAD : getIcon().UPLOAD_IMAGE_UPLOAD,
                 mode: 'text',
                 status: 'primary',
-                content: getI18n('vxe.upload.reUpload'),
+                content: isError ? getI18n('vxe.upload.reUpload') : getI18n('vxe.upload.manualUpload'),
                 onClick () {
                   handleReUpload(item)
                 }
@@ -1275,7 +1331,7 @@ export default defineVxeComponent({
                 class: 'vxe-upload--file-item-corner'
               }, getSlotVNs(cornerSlot({ option: item, isMoreView, readonly: formReadonly })))
               : renderEmptyElement($xeUpload),
-            showDownloadButton && !isLoading
+            showDownloadButton && !(isLoading || isPending)
               ? h('div', {
                 class: 'vxe-upload--file-item-download-btn',
                 onClick (evnt: MouseEvent) {
@@ -1411,7 +1467,7 @@ export default defineVxeComponent({
     }
 
     const renderImageItemList = (currList: VxeUploadDefines.FileObjItem[], isMoreView: boolean) => {
-      const { showRemoveButton, showProgress, progressText, showPreview, showErrorStatus, dragSort } = props
+      const { showRemoveButton, showProgress, progressText, showPreview, showErrorStatus, dragSort, autoSubmit, showSubmitButton } = props
       const { fileCacheMaps } = reactData
       const isDisabled = computeIsDisabled.value
       const formReadonly = computeFormReadonly.value
@@ -1431,14 +1487,21 @@ export default defineVxeComponent({
       return currList.map((item, index) => {
         const fileKey = getFieldKey(item)
         const cacheItem = fileCacheMaps[fileKey]
-        const isLoading = cacheItem && cacheItem.loading
-        const isError = cacheItem && cacheItem.status === 'error'
+        let isLoading = false
+        let isError = false
+        let isPending = false
+        if (cacheItem) {
+          isLoading = cacheItem.loading
+          isError = cacheItem.status === 'error'
+          isPending = cacheItem.status === 'pending'
+        }
         return h('div', {
           key: dragSort ? fileKey : index,
           class: ['vxe-upload--image-item', {
             'is--preview': showPreview,
             'is--circle': imageOpts.circle,
             'is--loading': isLoading,
+            'is--pending': isPending,
             'is--error': isError
           }],
           fileid: fileKey,
@@ -1448,7 +1511,6 @@ export default defineVxeComponent({
           h('div', {
             class: 'vxe-upload--image-item-box',
             style: isMoreView ? null : imgStyle,
-            title: getI18n('vxe.upload.viewItemTitle'),
             onClick (evnt) {
               if (!isLoading && !isError) {
                 handlePreviewImageEvent(evnt, item, index)
@@ -1473,31 +1535,29 @@ export default defineVxeComponent({
                   : renderEmptyElement($xeUpload)
               ])
               : renderEmptyElement($xeUpload),
-            !isLoading
-              ? (
-                  isError && showErrorStatus
-                    ? h('div', {
-                      class: 'vxe-upload--image-item-error'
-                    }, [
-                      h(VxeButtonComponent, {
-                        icon: getIcon().UPLOAD_IMAGE_RE_UPLOAD,
-                        mode: 'text',
-                        status: 'primary',
-                        content: getI18n('vxe.upload.reUpload'),
-                        onClick () {
-                          handleReUpload(item)
-                        }
-                      })
-                    ])
-                    : h('div', {
-                      class: 'vxe-upload--image-item-img-wrapper'
-                    }, [
-                      h('img', {
-                        class: 'vxe-upload--image-item-img',
-                        src: getThumbnailFileUrl(item)
-                      })
-                    ])
-                )
+            h('div', {
+              class: 'vxe-upload--image-item-img-wrapper',
+              title: getI18n('vxe.upload.viewItemTitle')
+            }, [
+              h('img', {
+                class: 'vxe-upload--image-item-img',
+                src: getThumbnailFileUrl(item)
+              })
+            ]),
+            !isLoading && ((isError && showErrorStatus) || (isPending && showSubmitButton && !autoSubmit))
+              ? h('div', {
+                class: 'vxe-upload--image-item-rebtn'
+              }, [
+                h(VxeButtonComponent, {
+                  icon: isError ? getIcon().UPLOAD_IMAGE_RE_UPLOAD : getIcon().UPLOAD_IMAGE_UPLOAD,
+                  mode: 'text',
+                  status: 'primary',
+                  content: isError ? getI18n('vxe.upload.reUpload') : getI18n('vxe.upload.manualUpload'),
+                  onClick () {
+                    handleReUpload(item)
+                  }
+                })
+              ])
               : renderEmptyElement($xeUpload),
             h('div', {
               class: 'vxe-upload--image-item-btn-wrapper',

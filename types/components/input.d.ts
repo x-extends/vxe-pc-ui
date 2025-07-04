@@ -29,6 +29,7 @@ export namespace VxeInputPropTypes {
   export type ClassName = string
   export type Immediate = boolean
   export type Name = string
+  export type Title = string
   export type Type = 'text' | 'search' | 'number' | 'integer' | 'float' | 'password' | 'date' | 'time' | 'datetime' | 'week' | 'month' | 'quarter' | 'year'
   export type Clearable = boolean
   export type Editable = boolean
@@ -85,6 +86,7 @@ export interface VxeInputProps {
   className?: VxeInputPropTypes.ClassName
   immediate?: VxeInputPropTypes.Immediate
   name?: VxeInputPropTypes.Name
+  title?: VxeInputPropTypes.Title
   type?: VxeInputPropTypes.Type
   clearable?: VxeInputPropTypes.Clearable
   readonly?: VxeInputPropTypes.Readonly
