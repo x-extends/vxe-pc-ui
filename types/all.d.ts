@@ -27,14 +27,10 @@ import VxeDatePicker from './components/date-picker'
 import VxeDateRangePicker from './components/date-range-picker'
 import VxeDrawer from './components/drawer'
 import VxeEmpty from './components/empty'
-import VxeFlowDesign from './components/flow-design'
-import VxeFlowView from './components/flow-view'
 import VxeForm from './components/form'
-import VxeFormDesign from './components/form-design'
 import VxeFormGather from './components/form-gather'
 import VxeFormGroup from './components/form-group'
 import VxeFormItem from './components/form-item'
-import VxeFormView from './components/form-view'
 import VxeIcon from './components/icon'
 import VxeIconPicker from './components/icon-picker'
 import VxeImage from './components/image'
@@ -47,8 +43,6 @@ import VxeLayoutContainer from './components/layout-container'
 import VxeLayoutFooter from './components/layout-footer'
 import VxeLayoutHeader from './components/layout-header'
 import VxeLink from './components/link'
-import VxeListDesign from './components/list-design'
-import VxeListView from './components/list-view'
 import VxeList from './components/list'
 import VxeLoading from './components/loading'
 import VxeMenu from './components/menu'
@@ -95,6 +89,14 @@ import VxeTable from './components/table'
 import VxeGrid from './components/grid'
 import VxeToolbar from './components/toolbar'
 
+// Vxe Design
+import VxeFlowDesign from './components/flow-design'
+import VxeFlowView from './components/flow-view'
+import VxeFormDesign from './components/form-design'
+import VxeFormView from './components/form-view'
+import VxeListDesign from './components/list-design'
+import VxeListView from './components/list-view'
+
 declare global {
   interface Window {
     VxeUI: VxeUIExport;
@@ -130,14 +132,10 @@ interface AllComponents {
   VxeDateRangePicker: typeof VxeDateRangePicker
   VxeDrawer: typeof VxeDrawer
   VxeEmpty: typeof VxeEmpty
-  VxeFlowDesign: typeof VxeFlowDesign
-  VxeFlowView: typeof VxeFlowView
   VxeForm: typeof VxeForm
-  VxeFormDesign: typeof VxeFormDesign
   VxeFormGather: typeof VxeFormGather
   VxeFormGroup: typeof VxeFormGroup
   VxeFormItem: typeof VxeFormItem
-  VxeFormView: typeof VxeFormView
   VxeIcon: typeof VxeIcon
   VxeIconPicker: typeof VxeIconPicker
   VxeImage: typeof VxeImage
@@ -150,8 +148,6 @@ interface AllComponents {
   VxeLayoutFooter: typeof VxeLayoutFooter
   VxeLayoutHeader: typeof VxeLayoutHeader
   VxeLink: typeof VxeLink
-  VxeListDesign: typeof VxeListDesign
-  VxeListView: typeof VxeListView
   VxeList: typeof VxeList
   VxeLoading: typeof VxeLoading
   VxeMenu: typeof VxeMenu
@@ -197,6 +193,14 @@ interface AllComponents {
   VxeTable: typeof VxeTable
   VxeGrid: typeof VxeGrid
   VxeToolbar: typeof VxeToolbar
+
+  // Vxe Design
+  VxeFlowDesign: typeof VxeFlowDesign
+  VxeFlowView: typeof VxeFlowView
+  VxeFormDesign: typeof VxeFormDesign
+  VxeFormView: typeof VxeFormView
+  VxeListDesign: typeof VxeListDesign
+  VxeListView: typeof VxeListView
 }
 
 declare module '@vxe-ui/core' {
@@ -232,14 +236,10 @@ export * from './components/date-picker'
 export * from './components/date-range-picker'
 export * from './components/drawer'
 export * from './components/empty'
-export * from './components/flow-design'
-export * from './components/flow-view'
 export * from './components/form'
-export * from './components/form-design'
 export * from './components/form-gather'
 export * from './components/form-group'
 export * from './components/form-item'
-export * from './components/form-view'
 export * from './components/icon'
 export * from './components/icon-picker'
 export * from './components/image'
@@ -252,8 +252,6 @@ export * from './components/layout-container'
 export * from './components/layout-footer'
 export * from './components/layout-header'
 export * from './components/link'
-export * from './components/list-design'
-export * from './components/list-view'
 export * from './components/list'
 export * from './components/loading'
 export * from './components/menu'
@@ -292,10 +290,3 @@ export * from './components/tree'
 export * from './components/tree-select'
 export * from './components/upload'
 export * from './components/watermark'
-
-// 兼容老版本
-// export * from './components/column'
-// export * from './components/colgroup'
-// export * from './components/table'
-// export * from './components/grid'
-// export * from './components/toolbar'

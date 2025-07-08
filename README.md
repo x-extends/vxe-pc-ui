@@ -20,25 +20,137 @@
 --- | --- | --- | --- | --- |
 80+ ✔ | 80+ ✔ | 90+ ✔ | 75+ ✔ | 10+ ✔ |
 
+## 在线文档
+
+👉 [组件文档](https://vxeui.com)  
+👉 [表格文档](https://vxetable.cn)  
+
+## QQ 交流群
+
+该群供大家交流問題，如果群人数已满，将会不定期剔除不活跃的。  
+
+![qq](https://vxeui.com/resource/donation/qq1.png)
+![qq](https://vxeui.com/resource/donation/qq2.png)
+
+## 功能点
+
+[👀 Vxe UI](https://vxeui.com)  
+
+* [x] alert 警告提示
+* [x] anchor 锚点
+* [x] anchor-link 锚点-链接
+* [x] avatar 头像
+* [x] badge 徽标
+* [x] breadcrumb 面包屑
+* [x] breadcrumb-item 面包屑-项
+* [x] button 按钮
+* [x] button-group 按钮组
+* [x] calendar 日历
+* [x] card 卡片
+* [x] carousel 走马灯
+* [x] carousel-item 走马灯 - 项
+* [x] checkbox 复选框
+* [x] checkbox-group 复选框-组
+* [x] col 列
+* [x] collapse 展开面板
+* [x] collapse-pane 展开面板-容器
+* [x] color-picker 颜色选择器
+* [x] countdown 倒计时
+* [x] date-picker 日期选择器
+* [x] date-range-picker 日期范围选择器
+* [x] drawer 抽屉
+* [x] empty 空数据
+* [x] form 表单
+* [x] form-group 表单-分组
+* [x] form-item 表单-项
+* [x] icon 图标
+* [x] icon-picker 图标选择
+* [x] image 图片
+* [x] image-group 图片组
+* [x] image-preview 图片预览
+* [x] input 输入框
+* [x] layout-aside 页面布局-左侧
+* [x] layout-body 页面布局-内容
+* [x] layout-container 页面布局-容器
+* [x] layout-footer 页面布局-页尾
+* [x] layout-header 页面布局-页头
+* [x] link 链接
+* [x] list 虚拟列表
+* [x] loading 加载中
+* [x] menu 菜单
+* [x] modal 模态窗口
+* [x] number-input 数值输入框
+* [x] optgroup 下拉框-分组项
+* [x] option 下拉框-项
+* [x] pager 分页
+* [x] password-input 密码输入框
+* [x] print 打印
+* [x] print-page-break 分页打印
+* [x] pulldown 下拉容器
+* [x] radio 单选框
+* [x] radio-button 单选框-按钮
+* [x] radio-group 单选框-组
+* [x] rate 评分
+* [x] result 结果
+* [x] row 行
+* [x] select 下拉框
+* [x] spilt 分割面板
+* [x] spilt-pane 分割面板-面板
+* [x] slider 滑块
+* [ ] steps 步骤条
+* [x] switch 开关
+* [x] tab-pane 页签-容器
+* [x] tabs 页签
+* [x] text-ellipsis 多行文本溢出
+* [x] table-select 表格下拉框
+* [x] textarea 文本域
+* [x] tip 提示
+* [x] tooltip 文字提示
+* [x] tree 树形组件
+* [x] tree-select 树形下拉框
+* [x] upload 附件上传
+* [x] watermark 水印
+
+[👀 Vxe Table](https://vxetable.cn)  
+
+* [x] grid 全功能表格-配置式
+* [x] table 基础表格-标签式
+  * [x] column 基础表格-标签式-常规列
+  * [x] colgroup 基础表格-标签式-分组列
+  * [x] toolbar 基础表格-标签式-工具栏
+
+[👀 Vxe Design](https://design.vxeui.com)   
+
+* [ ] flow-design 工作流设计器
+* [ ] flow-view 工作流设计器-视图渲染
+* [ ] form-design 表单设计器
+* [ ] form-view 表单设计器-视图渲染
+* [ ] list-design 列表设计器
+* [ ] list-view 列表设计器-视图渲染
+
 ## 安装
 
 ```shell
-npm install vxe-table@3 vxe-pc-ui@3
+npm install vxe-pc-ui@3
+# npm install vxe-pc-ui@3 vxe-table@3 vxe-design@3
 ```
 
 ```javascript
 import Vue from 'vue'
 // ...
-import VxeTable from 'vxe-table'
-import 'vxe-table/lib/style.css'
-// ...
-
-import VxeUI from 'vxe-pc-ui'
+import VxeUIAll from 'vxe-pc-ui'
 import 'vxe-pc-ui/lib/style.css'
+
+// import VxeUITable from 'vxe-table'
+// import 'vxe-table/lib/style.css'
+
+// import VxeUIDesign from 'vxe-design'
+// import 'vxe-design/lib/style.css'
 // ...
 
-Vue.use(VxeUI)
-Vue.use(VxeTable)
+Vue.use(VxeUIAll)
+// Vue.use(VxeUITable)
+// Vue.use(VxeUIDesign)
 ```
 
 ### CDN
@@ -55,13 +167,13 @@ Vue.use(VxeTable)
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
   <!-- style -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/vxe-pc-ui@3/lib/style.css">
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/vxe-table@3/lib/style.css">
+  <!-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/vxe-table@3/lib/style.css"> -->
   <!-- vue -->
   <script src="https://cdn.jsdelivr.net/npm/vue@2.6.14"></script>
   <!-- table -->
   <script src="https://cdn.jsdelivr.net/npm/xe-utils"></script>
   <script src="https://cdn.jsdelivr.net/npm/vxe-pc-ui@3"></script>
-  <script src="https://cdn.jsdelivr.net/npm/vxe-table@3"></script>
+  <!-- <script src="https://cdn.jsdelivr.net/npm/vxe-table@3"></script> -->
 </head>
 <body>
   <div id="app">
