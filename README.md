@@ -42,6 +42,7 @@
 
 👉 [组件文档](https://vxeui.com)  
 👉 [表格文档](https://vxetable.cn)  
+👉 [可视化文档](https://design.vxeui.com)  
 
 ## QQ 交流群
 

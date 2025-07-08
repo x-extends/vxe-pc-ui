@@ -20,11 +20,6 @@ A [vue](https://www.npmjs.com/package/vue) based PC component library.
 --- | --- | --- | --- | --- |
 80+ ✔ | 80+ ✔ | 90+ ✔ | 75+ ✔ | 10+ ✔ |
 
-## Online Documents
-
-👉 [UI Document](https://vxeui.com)  
-👉 [Table Document](https://vxetable.cn)  
-
 ## Use
 
 ```shell
