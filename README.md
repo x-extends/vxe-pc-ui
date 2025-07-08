@@ -20,12 +20,12 @@
 
 * 版本说明
   * **V1**
-    * [ ] ~~v1.0 基于 vue2.6+，停止维护 ~~
+    * [x] ~~v1.0 基于 vue2.6+，停止维护 ~~
   * **V2**
-    * [ ] ~~v2.0 基于 vue2.6+，停止维护 ~~
+    * [x] ~~v2.0 基于 vue2.6+，停止维护 ~~
   * **V3**
     * [x] v3.0 基于 vue2.6+，只支持现代浏览器，不支持 IE
-    * [ ] v3.7 拆分 vxe-design 可视化组件和基础组件库
+    * [x] v3.7 拆分 vxe-design 可视化组件和基础组件库
   * **V4**
     * [x] v4.0 基于 vue3.2+，只支持现代浏览器，不支持 IE
     * [x] v4.7 拆分 vxe-design 可视化组件和基础组件库
@@ -196,7 +196,7 @@ createApp(App)
   <!-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/vxe-design@4/lib/style.css"> -->
   <!-- vue -->
   <script src="https://cdn.jsdelivr.net/npm/vue@3"></script>
-  <!-- table -->
+  <!-- vxe -->
   <script src="https://cdn.jsdelivr.net/npm/xe-utils"></script>
   <script src="https://cdn.jsdelivr.net/npm/vxe-pc-ui@4"></script>
   <!-- <script src="https://cdn.jsdelivr.net/npm/vxe-table@4"></script> -->
