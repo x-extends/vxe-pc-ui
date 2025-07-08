@@ -101,16 +101,6 @@ const routes: Array<RouteRecordRaw> = [
     component: () => import('../views/form/FormTest.vue')
   },
   {
-    path: '/component/listDesign',
-    name: 'ListDesignTest',
-    component: () => import('../views/list-design/ListDesignTest.vue')
-  },
-  {
-    path: '/component/formDesign',
-    name: 'FormDesignTest',
-    component: () => import('../views/form-design/FormDesignTest.vue')
-  },
-  {
     path: '/component/modal',
     name: 'ModalTest',
     component: () => import('../views/modal/ModalTest.vue')

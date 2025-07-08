@@ -75,11 +75,17 @@ export namespace VxeSliderDefines {
   }
 }
 
-export type VxeSliderEventProps = {}
+export type VxeSliderEventProps = {
+  'onUpdate:modelValue'?: VxeSliderEvents.UpdateModelValue
+}
 
-export interface VxeSliderListeners { }
+export interface VxeSliderListeners {
+  'update:modelValue'?: VxeSliderEvents.UpdateModelValue
+}
 
-export namespace VxeSliderEvents { }
+export namespace VxeSliderEvents {
+  export type UpdateModelValue = (modelValue: VxeSliderPropTypes.ModelValue) => void
+}
 
 export namespace VxeSliderSlotTypes {
   export interface DefaultSlotParams {}

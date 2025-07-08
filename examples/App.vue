@@ -51,8 +51,6 @@ const navList = ref<VxeMenuPropTypes.Options>([
     ]
   },
   { name: 'FormTest', icon: 'vxe-icon-user-fill', routerLink: { name: 'FormTest' } },
-  { name: 'ListDesignTest', icon: 'vxe-icon-user-fill', routerLink: { name: 'ListDesignTest' } },
-  { name: 'FormDesignTest', icon: 'vxe-icon-user-fill', routerLink: { name: 'FormDesignTest' } },
   { name: 'ModalTest', routerLink: { name: 'ModalTest' } },
   { name: 'DrawerTest', routerLink: { name: 'DrawerTest' } },
   { name: 'TabsTest', routerLink: { name: 'TabsTest' } },

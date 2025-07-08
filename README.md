@@ -23,6 +23,8 @@
   * [x] ~~v2.0 基于 vue2.6+，停止维护 ~~
   * [x] v3.0 基于 vue2.6+，只支持现代浏览器，不支持 IE
   * [x] v4.0 基于 vue3.2+，只支持现代浏览器，不支持 IE
+  * [] v3.7 拆分 vxe-design 可视化组件和基础组件库
+  * [x] v4.7 拆分 vxe-design 可视化组件和基础组件库
   * [ ] 计划功能：虚拟列表，支持百万级数据渲染
   * [ ] 计划功能：虚拟表单，支持万级表单项渲染
   * [ ] 计划功能：全功能表单可视化设计器
@@ -70,7 +72,7 @@
 * [x] col 列
 * [x] collapse 展开面板
 * [x] collapse-pane 展开面板-容器
-* [ ] color-picker 颜色选择器
+* [x] color-picker 颜色选择器
 * [x] countdown 倒计时
 * [x] date-picker 日期选择器
 * [x] date-range-picker 日期范围选择器
@@ -129,29 +131,45 @@
 
 [👀 Vxe Table](https://vxetable.cn)  
 
-* [x] table 表格-基础表格
-* [x] column 表格-列
-* [x] colgroup 表格-分组列
-* [x] toolbar 表格-工具栏
-* [x] grid 表格-配置式
+* [x] grid 全功能表格-配置式
+* [x] table 基础表格-标签式
+  * [x] column 基础表格-标签式-常规列
+  * [x] colgroup 基础表格-标签式-分组列
+  * [x] toolbar 基础表格-标签式-工具栏
+
+[👀 Vxe Design](https://design.vxeui.com)  
+
+* [ ] flow-design 工作流设计器
+* [ ] flow-view 工作流设计器-视图渲染
+* [x] form-design 表单设计器
+* [x] form-view 表单设计器-视图渲染
+* [x] list-design 列表设计器
+* [x] list-view 列表设计器-视图渲染
 
 ## 安装
 
 ```shell
 npm install vxe-pc-ui
+# npm install vxe-pc-ui vxe-table vxe-design
 ```
 
 ```javascript
 // ...
-import VxeUI from 'vxe-pc-ui'
+import VxeUIAll from 'vxe-pc-ui'
 import 'vxe-pc-ui/lib/style.css'
-// ...
-// ...
-import VxeTable from 'vxe-table'
-import 'vxe-table/lib/style.css'
+
+// import VxeUITable from 'vxe-table'
+// import 'vxe-table/lib/style.css'
+
+// import VxeUIDesign from 'vxe-design'
+// import 'vxe-design/lib/style.css'
 // ...
 
-createApp(App).use(VxeUI).use(VxeTable).mount('#app')
+createApp(App)
+  .use(VxeUIAll)
+  // .use(VxeUITable)
+  // .use(VxeUIDesign)
+  .mount('#app')
 ```
 
 ### CDN
@@ -168,13 +186,15 @@ createApp(App).use(VxeUI).use(VxeTable).mount('#app')
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
   <!-- style -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/vxe-pc-ui@4/lib/style.css">
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/vxe-table@4/lib/style.css">
+  <!-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/vxe-table@4/lib/style.css"> -->
+  <!-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/vxe-design@4/lib/style.css"> -->
   <!-- vue -->
   <script src="https://cdn.jsdelivr.net/npm/vue@3"></script>
   <!-- table -->
   <script src="https://cdn.jsdelivr.net/npm/xe-utils"></script>
   <script src="https://cdn.jsdelivr.net/npm/vxe-pc-ui@4"></script>
-  <script src="https://cdn.jsdelivr.net/npm/vxe-table@4"></script>
+  <!-- <script src="https://cdn.jsdelivr.net/npm/vxe-table@4"></script> -->
+  <!-- <script src="https://cdn.jsdelivr.net/npm/vxe-design@4"></script> -->
 </head>
 <body>
   <div id="app">
@@ -225,7 +245,7 @@ createApp(App).use(VxeUI).use(VxeTable).mount('#app')
           }
         }
       }
-      Vue.createApp(App).use(VxeUI).use(VXETable).mount('#app')
+      Vue.createApp(App).use(VxeUIAll).use(VxeUITable).mount('#app')
     })()
   </script>
 </body>

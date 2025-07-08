@@ -30,11 +30,9 @@ import VxeDateRangePicker from './date-range-picker'
 import VxeDrawer, { DrawerController } from './drawer'
 import VxeEmpty from './empty'
 import VxeForm from './form'
-import VxeFormDesign from './form-design'
 import VxeFormGather from './form-gather'
 import VxeFormGroup from './form-group'
 import VxeFormItem from './form-item'
-import VxeFormView from './form-view'
 import VxeIcon from './icon'
 import VxeIconPicker from './icon-picker'
 import VxeImage from './image'
@@ -47,8 +45,6 @@ import VxeLayoutContainer from './layout-container'
 import VxeLayoutFooter from './layout-footer'
 import VxeLayoutHeader from './layout-header'
 import VxeLink from './link'
-import VxeListDesign from './list-design'
-import VxeListView from './list-view'
 import VxeList from './list'
 import VxeLoading, { LoadingController } from './loading'
 import VxeMenu from './menu'
@@ -119,11 +115,9 @@ const components = [
   VxeDrawer,
   VxeEmpty,
   VxeForm,
-  VxeFormDesign,
   VxeFormGather,
   VxeFormGroup,
   VxeFormItem,
-  VxeFormView,
   VxeIcon,
   VxeIconPicker,
   VxeImage,
@@ -136,8 +130,6 @@ const components = [
   VxeLayoutFooter,
   VxeLayoutHeader,
   VxeLink,
-  VxeListDesign,
-  VxeListView,
   VxeList,
   VxeLoading,
   VxeMenu,
@@ -229,11 +221,9 @@ export * from './date-range-picker'
 export * from './drawer'
 export * from './empty'
 export * from './form'
-export * from './form-design'
 export * from './form-gather'
 export * from './form-group'
 export * from './form-item'
-export * from './form-view'
 export * from './icon'
 export * from './icon-picker'
 export * from './image'
@@ -246,8 +236,6 @@ export * from './layout-container'
 export * from './layout-footer'
 export * from './layout-header'
 export * from './link'
-export * from './list-design'
-export * from './list-view'
 export * from './list'
 export * from './loading'
 export * from './menu'

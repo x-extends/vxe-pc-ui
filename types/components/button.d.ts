@@ -201,7 +201,9 @@ export namespace VxeButtonDefines {
   export type DownButtonOption = Pick<VxeButtonProps, 'type' | 'mode' | 'className' | 'name' | 'routerLink' | 'permissionCode' | 'title' | 'content' | 'status' | 'icon' | 'round' | 'circle' | 'disabled' | 'loading' | 'align'>
 
   export interface ClickParams { }
-  export interface ClickEventParams extends ButtonEventParams, ClickParams { }
+  export interface ClickEventParams extends ButtonEventParams, ClickParams {
+    $event: KeyboardEvent
+  }
 
   export interface MouseenterParams { }
   export interface MouseenterEventParams extends ButtonEventParams, MouseenterParams { }

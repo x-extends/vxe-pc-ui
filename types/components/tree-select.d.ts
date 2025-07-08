@@ -166,6 +166,7 @@ export namespace VxeTreeSelectDefines {
 }
 
 export interface VxeTreeSelectEventProps<D = any> {
+  'onUpdate:modelValue'?: VxeTreeSelectEvents.UpdateModelValue
   onChange?: VxeTreeSelectEvents.Change<D>
   onClear?: VxeTreeSelectEvents.Clear
   onFocus?: VxeTreeSelectEvents.Focus
@@ -174,6 +175,7 @@ export interface VxeTreeSelectEventProps<D = any> {
 }
 
 export interface VxeTreeSelectListeners<D = any> {
+  'update:modelValue'?: VxeTreeSelectEvents.UpdateModelValue
   change?: VxeTreeSelectEvents.Change<D>
   clear?: VxeTreeSelectEvents.Clear
   focus?: VxeTreeSelectEvents.Focus
@@ -182,6 +184,7 @@ export interface VxeTreeSelectListeners<D = any> {
 }
 
 export namespace VxeTreeSelectEvents {
+  export type UpdateModelValue = (modelValue: VxeTreeSelectPropTypes.ModelValue) => void
   export type Change<D = any> = (params: VxeTreeSelectDefines.ChangeEventParams<D>) => void
   export type Clear = (params: VxeTreeSelectDefines.ClearEventParams) => void
   export type Focus = (params: VxeTreeSelectDefines.FocusEventParams) => void

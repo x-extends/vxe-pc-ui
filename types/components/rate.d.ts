@@ -64,11 +64,17 @@ export namespace VxeRateDefines {
   }
 }
 
-export type VxeRateEventProps = {}
+export type VxeRateEventProps = {
+  'onUpdate:modelValue'?: VxeRateEvents.UpdateModelValue
+}
 
-export interface VxeRateListeners { }
+export interface VxeRateListeners {
+  'update:modelValue'?: VxeRateEvents.UpdateModelValue
+}
 
-export namespace VxeRateEvents { }
+export namespace VxeRateEvents {
+  export type UpdateModelValue = (modelValue: VxeRatePropTypes.ModelValue) => void
+}
 
 export namespace VxeRateSlotTypes {
   export interface DefaultSlotParams {}
