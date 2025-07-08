@@ -184,6 +184,7 @@ export namespace VxeTextareaDefines {
 }
 
 export type VxeTextareaEventProps = {
+  'onUpdate:modelValue'?: VxeTextareaEvents.UpdateModelValue
   onInput?: VxeTextareaEvents.Input
   onChange?: VxeTextareaEvents.Change
   onKeydown?: VxeTextareaEvents.Keydown
@@ -194,6 +195,7 @@ export type VxeTextareaEventProps = {
 }
 
 export interface VxeTextareaListeners {
+  'update:modelValue'?: VxeTextareaEvents.UpdateModelValue
   input?: VxeTextareaEvents.Input
   change?: VxeTextareaEvents.Change
   keydown?: VxeTextareaEvents.Keydown
@@ -204,6 +206,7 @@ export interface VxeTextareaListeners {
 }
 
 export namespace VxeTextareaEvents {
+  export type UpdateModelValue = (modelValue: VxeTextareaPropTypes.ModelValue) => void
   export type Input = (params: VxeTextareaDefines.InputEventParams) => void
   export type Change = (params: VxeTextareaDefines.ChangeEventParams) => void
   export type Keydown = (params: VxeTextareaDefines.KeydownEventParams) => void

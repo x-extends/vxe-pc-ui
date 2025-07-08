@@ -315,6 +315,7 @@ export namespace VxeUploadDefines {
 }
 
 export type VxeUploadEventProps = {
+  'onUpdate:modelValue'?: VxeUploadEvents.UpdateModelValue
   onAdd?: VxeUploadEvents.Add
   onRemove?: VxeUploadEvents.Remove
   onRemoveFail?: VxeUploadEvents.RemoveFail
@@ -325,6 +326,7 @@ export type VxeUploadEventProps = {
 }
 
 export interface VxeUploadListeners {
+  'update:modelValue'?: VxeUploadEvents.UpdateModelValue
   add?: VxeUploadEvents.Add
   remove?: VxeUploadEvents.Remove
   removeFail?: VxeUploadEvents.RemoveFail
@@ -335,6 +337,7 @@ export interface VxeUploadListeners {
 }
 
 export namespace VxeUploadEvents {
+  export type UpdateModelValue = (modelValue: VxeUploadPropTypes.ModelValue) => void
   export type Add = (params: VxeUploadDefines.AddEventParams) => void
   export type Remove = (params: VxeUploadDefines.RemoveEventParams) => void
   export type RemoveFail = (params: VxeUploadDefines.RemoveFailEventParams) => void

@@ -221,14 +221,17 @@ export namespace VxeDatePanelDefines {
 }
 
 export type VxeDatePanelEventProps = {
+  'onUpdate:modelValue'?: VxeDatePanelEvents.UpdateModelValue
   onChange?: VxeDatePanelEvents.Change
 }
 
 export interface VxeDatePanelListeners {
+  'update:modelValue'?: VxeDatePanelEvents.UpdateModelValue
   change?: VxeDatePanelEvents.Change
 }
 
 export namespace VxeDatePanelEvents {
+  export type UpdateModelValue = (modelValue: VxeDatePanelPropTypes.ModelValue) => void
   export type Change = (params: VxeDatePanelDefines.ChangeEventParams) => void
 }
 

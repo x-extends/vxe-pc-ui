@@ -97,14 +97,17 @@ export namespace VxeRadioDefines {
 }
 
 export type VxeRadioEventProps = {
+  'onUpdate:modelValue'?: VxeRadioEvents.UpdateModelValue
   onChange?: VxeRadioEvents.Change
 }
 
 export interface VxeRadioListeners {
+  'update:modelValue'?: VxeRadioEvents.UpdateModelValue
   change?: VxeRadioEvents.Change
 }
 
 export namespace VxeRadioEvents {
+  export type UpdateModelValue = (modelValue: VxeRadioPropTypes.ModelValue) => void
   export type Change = (params: VxeRadioDefines.ChangeEventParams) => void
 }
 

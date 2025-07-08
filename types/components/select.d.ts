@@ -370,6 +370,7 @@ export namespace VxeSelectDefines {
 }
 
 export type VxeSelectEventProps = {
+  'onUpdate:modelValue'?: VxeSelectEvents.UpdateModelValue
   onChange?: VxeSelectEvents.Change
   onClear?: VxeSelectEvents.Clear
   onFocus?: VxeSelectEvents.Focus
@@ -380,6 +381,7 @@ export type VxeSelectEventProps = {
 }
 
 export interface VxeSelectListeners {
+  'update:modelValue'?: VxeSelectEvents.UpdateModelValue
   change?: VxeSelectEvents.Change
   clear?: VxeSelectEvents.Clear
   focus?: VxeSelectEvents.Focus
@@ -390,6 +392,7 @@ export interface VxeSelectListeners {
 }
 
 export namespace VxeSelectEvents {
+  export type UpdateModelValue = (modelValue: VxeSelectPropTypes.ModelValue) => void
   export type Change = (params: VxeSelectDefines.ChangeEventParams) => void
   export type Clear = (params: VxeSelectDefines.ClearEventParams) => void
   export type Focus = (params: VxeSelectDefines.FocusEventParams) => void

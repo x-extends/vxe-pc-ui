@@ -101,18 +101,21 @@ export namespace VxeSwitchDefines {
 }
 
 export type VxeSwitchEventProps = {
+  'onUpdate:modelValue'?: VxeSwitchEvents.UpdateModelValue
   onChange?: VxeSwitchEvents.Change
   onFocus?: VxeSwitchEvents.Focus
   onBlur?: VxeSwitchEvents.Blur
 }
 
 export interface VxeSwitchListeners {
+  'update:modelValue'?: VxeSwitchEvents.UpdateModelValue
   change?: VxeSwitchEvents.Change
   focus?: VxeSwitchEvents.Focus
   blur?: VxeSwitchEvents.Blur
 }
 
 export namespace VxeSwitchEvents {
+  export type UpdateModelValue = (modelValue: VxeSwitchPropTypes.ModelValue) => void
   export type Change = (params: VxeSwitchDefines.ChangeEventParams) => void
   export type Focus = (params: VxeSwitchDefines.FocusEventParams) => void
   export type Blur = (params: VxeSwitchDefines.BlurEventParams) => void

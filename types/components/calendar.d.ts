@@ -167,6 +167,7 @@ export namespace VxeCalendarDefines {
 }
 
 export type VxeCalendarEventProps = {
+  'onUpdate:modelValue'?: VxeCalendarEvents.UpdateModelValue
   onInput?: VxeCalendarEvents.Input
   onChange?: VxeCalendarEvents.Change
   onClick?: VxeCalendarEvents.Click
@@ -177,6 +178,7 @@ export type VxeCalendarEventProps = {
 }
 
 export interface VxeCalendarListeners {
+  'update:modelValue'?: VxeCalendarEvents.UpdateModelValue
   input?: VxeCalendarEvents.Input
   change?: VxeCalendarEvents.Change
   click?: VxeCalendarEvents.Click
@@ -187,6 +189,7 @@ export interface VxeCalendarListeners {
 }
 
 export namespace VxeCalendarEvents {
+  export type UpdateModelValue = (modelValue: VxeCalendarPropTypes.ModelValue) => void
   export type Input = (params: VxeCalendarDefines.InputEventParams) => void
   export type Change = (params: VxeCalendarDefines.ChangeEventParams) => void
   export type Click = (params: VxeCalendarDefines.ClickEventParams) => void

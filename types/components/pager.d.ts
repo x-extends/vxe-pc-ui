@@ -190,14 +190,20 @@ export namespace VxePagerDefines {
 }
 
 export type VxePagerEventProps = {
+  'onUpdate:pageSize'?: VxePagerEvents.UpdatePageSizeValue
+  'onUpdate:currentPage'?: VxePagerEvents.UpdateCurrentPageValue
   onPageChange?: VxePagerEvents.PageChange
 }
 
 export interface VxePagerListeners {
+  'update:pageSize'?: VxePagerEvents.UpdatePageSizeValue
+  'update:currentPage'?: VxePagerEvents.UpdateCurrentPageValue
   pageChange?: VxePagerEvents.PageChange
 }
 
 export namespace VxePagerEvents {
+  export type UpdatePageSizeValue = (modelValue: VxePagerPropTypes.PageSize) => void
+  export type UpdateCurrentPageValue = (modelValue: VxePagerPropTypes.CurrentPage) => void
   export type PageChange = (params: VxePagerDefines.PageChangeEventParams) => void
 }
 

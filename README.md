@@ -76,13 +76,9 @@
 * [x] date-range-picker 日期范围选择器
 * [x] drawer 抽屉
 * [x] empty 空数据
-* [ ] flow-design 流程设计器
-* [ ] flow-view 流程设计器-视图渲染
 * [x] form 表单
-* [x] form-design 表单设计器
 * [x] form-group 表单-分组
 * [x] form-item 表单-项
-* [x] form-view 表单设计器-视图渲染
 * [x] icon 图标
 * [x] icon-picker 图标选择
 * [x] image 图片
@@ -95,8 +91,6 @@
 * [x] layout-footer 页面布局-页尾
 * [x] layout-header 页面布局-页头
 * [x] link 链接
-* [x] list-design 列表设计器
-* [x] list-view 列表设计器-视图渲染
 * [x] list 虚拟列表
 * [x] loading 加载中
 * [x] menu 菜单

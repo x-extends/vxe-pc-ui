@@ -60,12 +60,6 @@ Compile packaging, generated compiled directory: es,lib
 npm run lib
 ```
 
-## Contributors
-
-Thank you to everyone who contributed to this project.
-
-[![vxe-pc-ui](https://contrib.rocks/image?repo=x-extends/vxe-pc-ui)](https://github.com/x-extends/vxe-pc-ui/graphs/contributors)
-
 ## License
 
 [MIT](LICENSE) © 2019-present, Xu Liangzhan

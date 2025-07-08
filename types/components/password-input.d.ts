@@ -115,11 +115,17 @@ export namespace VxePasswordInputDefines {
   }
 }
 
-export type VxePasswordInputEventProps = {}
+export type VxePasswordInputEventProps = {
+  'onUpdate:modelValue'?: VxePasswordInputEvents.UpdateModelValue
+}
 
-export interface VxePasswordInputListeners { }
+export interface VxePasswordInputListeners {
+  'update:modelValue'?: VxePasswordInputEvents.UpdateModelValue
+}
 
-export namespace VxePasswordInputEvents { }
+export namespace VxePasswordInputEvents {
+  export type UpdateModelValue = (modelValue: VxePasswordInputPropTypes.ModelValue) => void
+}
 
 export namespace VxePasswordInputSlotTypes {
   export interface DefaultSlotParams {}

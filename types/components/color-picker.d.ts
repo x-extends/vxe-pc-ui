@@ -115,11 +115,17 @@ export namespace VxeColorPickerDefines {
   }
 }
 
-export type VxeColorPickerEventProps = {}
+export type VxeColorPickerEventProps = {
+  'onUpdate:modelValue'?: VxeColorPickerEvents.UpdateModelValue
+}
 
-export interface VxeColorPickerListeners { }
+export interface VxeColorPickerListeners {
+  'update:modelValue'?: VxeColorPickerEvents.UpdateModelValue
+}
 
-export namespace VxeColorPickerEvents { }
+export namespace VxeColorPickerEvents {
+  export type UpdateModelValue = (modelValue: VxeColorPickerPropTypes.ModelValue) => void
+}
 
 export namespace VxeColorPickerSlotTypes {
   export interface DefaultSlotParams {}

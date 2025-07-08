@@ -234,18 +234,27 @@ export namespace VxeDateRangePickerDefines {
 }
 
 export type VxeDateRangePickerEventProps = {
+  'onUpdate:modelValue'?: VxeDateRangePickerEvents.UpdateModelValueValue
+  'onUpdate:startValue'?: VxeDateRangePickerEvents.UpdateStartValueValue
+  'onUpdate:endValue'?: VxeDateRangePickerEvents.UpdateEndValueValue
   onInput?: VxeDateRangePickerEvents.Input
   onChange?: VxeDateRangePickerEvents.Change
   onShortcutClick?: VxeDateRangePickerEvents.ShortcutClick
 }
 
 export interface VxeDateRangePickerListeners {
+  'update:modelValue'?: VxeDateRangePickerEvents.UpdateModelValueValue
+  'update:startValue'?: VxeDateRangePickerEvents.UpdateStartValueValue
+  'update:endValue'?: VxeDateRangePickerEvents.UpdateEndValueValue
   input?: VxeDateRangePickerEvents.Input
   change?: VxeDateRangePickerEvents.Change
   shortcutClick?: VxeDateRangePickerEvents.ShortcutClick
 }
 
 export namespace VxeDateRangePickerEvents {
+  export type UpdateModelValueValue = (modelValue: VxeDateRangePickerPropTypes.ModelValue) => void
+  export type UpdateStartValueValue = (modelValue: VxeDateRangePickerPropTypes.StartValue) => void
+  export type UpdateEndValueValue = (modelValue: VxeDateRangePickerPropTypes.EndValue) => void
   export type Input = (params: VxeDateRangePickerDefines.InputEventParams) => void
   export type Change = (params: VxeDateRangePickerDefines.ChangeEventParams) => void
   export type ShortcutClick = (params: VxeDateRangePickerDefines.ShortcutClickEventParams) => void

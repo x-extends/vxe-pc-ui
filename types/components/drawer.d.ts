@@ -204,6 +204,7 @@ export namespace VxeDrawerDefines {
 }
 
 export type VxeDrawerEventProps = {
+  'onUpdate:modelValue'?: VxeDrawerEvents.UpdateModelValue
   onShow?: VxeDrawerEvents.Show
   onHide?: VxeDrawerEvents.Hide
   onBeforeHide?: VxeDrawerEvents.BeforeHide
@@ -214,6 +215,7 @@ export type VxeDrawerEventProps = {
 }
 
 export interface VxeDrawerListeners {
+  'update:modelValue'?: VxeDrawerEvents.UpdateModelValue
   show?: VxeDrawerEvents.Show
   hide?: VxeDrawerEvents.Hide
   beforeHide?: VxeDrawerEvents.BeforeHide
@@ -224,6 +226,7 @@ export interface VxeDrawerListeners {
 }
 
 export namespace VxeDrawerEvents {
+  export type UpdateModelValue = (modelValue: VxeDrawerPropTypes.ModelValue) => void
   export type Show = (params: VxeDrawerDefines.ShowEventParams) => void
   export type Hide = (params: VxeDrawerDefines.HideEventParams) => void
   export type BeforeHide = (params: VxeDrawerDefines.BeforeHideEventParams) => void

@@ -78,14 +78,17 @@ export namespace VxeRadioButtonDefines {
 }
 
 export type VxeRadioButtonEventProps = {
+  'onUpdate:modelValue'?: VxeRadioButtonEvents.UpdateModelValue
   onChange?: VxeRadioButtonEvents.Change
 }
 
 export interface VxeRadioButtonListeners {
+  'update:modelValue'?: VxeRadioButtonEvents.UpdateModelValue
   change?: VxeRadioButtonEvents.Change
 }
 
 export namespace VxeRadioButtonEvents {
+  export type UpdateModelValue = (modelValue: VxeRadioButtonPropTypes.ModelValue) => void
   export type Change = (params: VxeRadioButtonDefines.ChangeEventParams) => void
 }
 

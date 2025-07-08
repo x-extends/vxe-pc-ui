@@ -112,14 +112,17 @@ export namespace VxeMenuDefines {
 }
 
 export type VxeMenuEventProps = {
+  'onUpdate:modelValue'?: VxeMenuEvents.UpdateModelValue
   onClick?: VxeMenuEvents.Click
 }
 
 export interface VxeMenuListeners {
+  'update:modelValue'?: VxeMenuEvents.UpdateModelValue
   click?: VxeMenuEvents.Click
 }
 
 export namespace VxeMenuEvents {
+  export type UpdateModelValue = (modelValue: VxeMenuPropTypes.ModelValue) => void
   export type Click = (params: VxeMenuDefines.ClickEventParams) => void
 }
 

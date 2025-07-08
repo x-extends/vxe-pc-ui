@@ -97,14 +97,17 @@ export namespace VxeCheckboxDefines {
 }
 
 export type VxeCheckboxEventProps = {
+  'onUpdate:modelValue'?: VxeCheckboxEvents.UpdateModelValue
   onChange?: VxeCheckboxEvents.Change
 }
 
 export interface VxeCheckboxListeners {
+  'update:modelValue'?: VxeCheckboxEvents.UpdateModelValue
   change?: VxeCheckboxEvents.Change
 }
 
 export namespace VxeCheckboxEvents {
+  export type UpdateModelValue = (modelValue: VxeCheckboxPropTypes.ModelValue) => void
   export type Change = (params: VxeCheckboxDefines.ChangeEventParams) => void
 }
 

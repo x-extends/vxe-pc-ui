@@ -131,11 +131,17 @@ export namespace VxeTooltipDefines {
   }
 }
 
-export type VxeTooltipEventProps = {}
+export type VxeTooltipEventProps = {
+  'onUpdate:modelValue'?: VxeTooltipEvents.UpdateModelValue
+}
 
-export interface VxeTooltipListeners { }
+export interface VxeTooltipListeners {
+  'update:modelValue'?: VxeTooltipEvents.UpdateModelValue
+}
 
-export namespace VxeTooltipEvents { }
+export namespace VxeTooltipEvents {
+  export type UpdateModelValue = (modelValue: VxeTooltipPropTypes.ModelValue) => void
+}
 
 export namespace VxeTooltipSlotTypes {
   export interface DefaultSlotParams {}

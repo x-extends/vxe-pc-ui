@@ -10,7 +10,7 @@ import VxeInputComponent from '../../input/src/input'
 
 import type { TableSelectReactData, VxeTableSelectEmits, VxeInputConstructor, TableSelectInternalData, VxeTableSelectPropTypes, VxeFormDefines, VxeModalConstructor, VxeModalMethods, VxeDrawerConstructor, VxeDrawerMethods, TableSelectMethods, TableSelectPrivateMethods, ValueOf, TableSelectPrivateRef, VxeTableSelectPrivateComputed, VxeTableSelectConstructor, VxeTableSelectPrivateMethods, VxeFormConstructor, VxeFormPrivateMethods, VxeComponentStyleType } from '../../../types'
 import type { VxeTableConstructor, VxeTablePrivateMethods } from '../../../types/components/table'
-import type { VxeGridInstance, VxeGridComponent, VxeGridEvents } from '../../../types/components/grid'
+import type { VxeGridInstance, VxeGridEvents } from '../../../types/components/grid'
 
 export function getRowUniqueId () {
   return XEUtils.uniqueId('row_')
@@ -68,7 +68,7 @@ export default defineVxeComponent({
   setup (props, context) {
     const { emit, slots } = context
 
-    const VxeTableGridComponent = VxeUI.getComponent<VxeGridComponent>('VxeGrid')
+    const VxeTableGridComponent = VxeUI.getComponent('vxe-grid')
 
     const $xeModal = inject<(VxeModalConstructor & VxeModalMethods)| null>('$xeModal', null)
     const $xeDrawer = inject<(VxeDrawerConstructor & VxeDrawerMethods) | null>('$xeDrawer', null)

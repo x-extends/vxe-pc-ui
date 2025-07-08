@@ -341,6 +341,7 @@ export namespace VxeInputDefines {
 }
 
 export type VxeInputEventProps = {
+  'onUpdate:modelValue'?: VxeInputEvents.UpdateModelValue
   onInput?: VxeInputEvents.Input
   onChange?: VxeInputEvents.Change
   onKeydown?: VxeInputEvents.Keydown
@@ -361,6 +362,7 @@ export type VxeInputEventProps = {
 }
 
 export interface VxeInputListeners {
+  'update:modelValue'?: VxeInputEvents.UpdateModelValue
   input?: VxeInputEvents.Input
   change?: VxeInputEvents.Change
   keydown?: VxeInputEvents.Keydown
@@ -381,6 +383,7 @@ export interface VxeInputListeners {
 }
 
 export namespace VxeInputEvents {
+  export type UpdateModelValue = (modelValue: VxeInputPropTypes.ModelValue) => void
   export type Input = (params: VxeInputDefines.InputEventParams) => void
   export type Change = (params: VxeInputDefines.ChangeEventParams) => void
   export type Keydown = (params: VxeInputDefines.KeydownEventParams) => void

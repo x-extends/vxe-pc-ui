@@ -91,14 +91,17 @@ export namespace VxeRadioGroupDefines {
 }
 
 export type VxeRadioGroupEventProps = {
+  'onUpdate:modelValue'?: VxeRadioGroupEvents.UpdateModelValue
   onChange?: VxeRadioGroupEvents.Change
 }
 
 export interface VxeRadioGroupListeners {
+  'update:modelValue'?: VxeRadioGroupEvents.UpdateModelValue
   change?: VxeRadioGroupEvents.Change
 }
 
 export namespace VxeRadioGroupEvents {
+  export type UpdateModelValue = (modelValue: VxeRadioGroupPropTypes.ModelValue) => void
   export type Change = (params: VxeRadioGroupDefines.ChangeEventParams) => void
 }
 

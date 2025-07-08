@@ -250,6 +250,7 @@ export namespace VxeTabsDefines {
 }
 
 export type VxeTabsEventProps = {
+  'onUpdate:modelValue'?: VxeTabsEvents.UpdateModelValue
   onChange?: VxeTabsEvents.Change
   onTabChange?: VxeTabsEvents.TabChange
   onTabChangeFail?: VxeTabsEvents.TabChangeFail
@@ -260,6 +261,7 @@ export type VxeTabsEventProps = {
 }
 
 export interface VxeTabsListeners {
+  'update:modelValue'?: VxeTabsEvents.UpdateModelValue
   change?: VxeTabsEvents.Change
   tabChange?: VxeTabsEvents.TabChange
   tabChangeFail?: VxeTabsEvents.TabChangeFail
@@ -270,6 +272,7 @@ export interface VxeTabsListeners {
 }
 
 export namespace VxeTabsEvents {
+  export type UpdateModelValue = (modelValue: VxeTabsPropTypes.ModelValue) => void
   export type Change = (params: VxeTabsDefines.ChangeEventParams) => void
   export type TabChange = (params: VxeTabsDefines.TabChangeEventParams) => void
   export type TabChangeFail = (params: VxeTabsDefines.TabChangeFailEventParams) => void

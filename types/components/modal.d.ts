@@ -346,6 +346,7 @@ export namespace VxeModalDefines {
 }
 
 export type VxeModalEventProps = {
+  'onUpdate:modelValue'?: VxeModalEvents.UpdateModelValue
   onShow?: VxeModalEvents.Show
   onHide?: VxeModalEvents.Hide
   onBeforeHide?: VxeModalEvents.BeforeHide
@@ -358,6 +359,7 @@ export type VxeModalEventProps = {
 }
 
 export interface VxeModalListeners {
+  'update:modelValue'?: VxeModalEvents.UpdateModelValue
   show?: VxeModalEvents.Show
   hide?: VxeModalEvents.Hide
   beforeHide?: VxeModalEvents.BeforeHide
@@ -462,6 +464,7 @@ interface ModalVisibleParams {
 }
 
 export namespace VxeModalEvents {
+  export type UpdateModelValue = (modelValue: VxeModalPropTypes.ModelValue) => void
   export type Show = (params: VxeModalDefines.ShowEventParams) => void
   export type Hide = (params: VxeModalDefines.HideEventParams) => void
   export type BeforeHide = (params: VxeModalDefines.BeforeHideEventParams) => void

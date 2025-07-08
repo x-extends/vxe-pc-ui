@@ -127,11 +127,17 @@ export namespace VxeIconPickerDefines {
   }
 }
 
-export type VxeIconPickerEventProps = {}
+export type VxeIconPickerEventProps = {
+  'onUpdate:modelValue'?: VxeIconPickerEvents.UpdateModelValue
+}
 
-export interface VxeIconPickerListeners { }
+export interface VxeIconPickerListeners {
+  'update:modelValue'?: VxeIconPickerEvents.UpdateModelValue
+}
 
-export namespace VxeIconPickerEvents { }
+export namespace VxeIconPickerEvents {
+  export type UpdateModelValue = (modelValue: VxeIconPickerPropTypes.ModelValue) => void
+}
 
 export namespace VxeIconPickerSlotTypes {
   export interface DefaultSlotParams {}

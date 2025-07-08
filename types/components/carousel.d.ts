@@ -108,14 +108,17 @@ export namespace VxeCarouselDefines {
 }
 
 export type VxeCarouselEventProps = {
+  'onUpdate:modelValue'?: VxeCarouselEvents.UpdateModelValue
   onChange?: VxeCarouselEvents.Change
 }
 
 export interface VxeCarouselListeners {
+  'update:modelValue'?: VxeCarouselEvents.UpdateModelValue
   change?: VxeCarouselEvents.Change
 }
 
 export namespace VxeCarouselEvents {
+  export type UpdateModelValue = (modelValue: VxeCarouselPropTypes.ModelValue) => void
   export type Change = (params: VxeCarouselDefines.ChangeEventParams) => void
 }
 

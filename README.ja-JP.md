@@ -60,12 +60,6 @@ npm run serve
 npm run lib
 ```
 
-## 貢献者
-
-Thank you to everyone who contributed to this project.
-
-[![vxe-pc-ui](https://contrib.rocks/image?repo=x-extends/vxe-pc-ui)](https://github.com/x-extends/vxe-pc-ui/graphs/contributors)
-
 ## ライセンス
 
 [MIT](LICENSE) © 2019-present, Xu Liangzhan

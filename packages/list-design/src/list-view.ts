@@ -9,7 +9,7 @@ import VxeLoadingComponent from '../../loading/src/loading'
 import XEUtils from 'xe-utils'
 
 import type { ListViewReactData, ListViewPrivateRef, VxeListViewPropTypes, VxeListViewDefines, VxeListViewEmits, VxeListViewPrivateComputed, VxeListViewConstructor, VxeListDesignDefines, ListViewMethods, ListViewPrivateMethods, VxeGlobalRendererHandles, VxeListViewPrivateMethods, VxeButtonGroupDefines, VxeButtonGroupPropTypes, ValueOf } from '../../../types'
-import type { VxeGridComponent, VxeGridInstance, VxeGridPropTypes, VxeGridProps } from '../../../types/components/grid'
+import type { VxeGridInstance, VxeGridPropTypes, VxeGridProps } from '../../../types/components/grid'
 import type { VxeTableDefines } from '../../../types/components/table'
 
 export default defineVxeComponent({
@@ -37,7 +37,7 @@ export default defineVxeComponent({
     'update:actionButtons'
   ] as VxeListViewEmits,
   setup (props, context) {
-    const VxeTableGridComponent = VxeUI.getComponent<VxeGridComponent>('VxeGrid')
+    const VxeTableGridComponent = VxeUI.getComponent('vxe-grid')
 
     const { emit, slots } = context
 

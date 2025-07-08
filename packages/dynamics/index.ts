@@ -2,7 +2,7 @@ import { h, createApp, reactive, createCommentVNode } from 'vue'
 import { defineVxeComponent } from '../ui/src/comp'
 import { VxeUI } from '@vxe-ui/core'
 
-import type { VxeModalDefines, VxeModalComponent, VxeLoadingComponent, VxeDrawerDefines, VxeLoadingProps, VxeDrawerComponent, VxeWatermarkComponent, VxeWatermarkProps } from '../../types'
+import type { VxeModalDefines, VxeDrawerDefines, VxeLoadingProps, VxeWatermarkProps } from '../../types'
 
 let dynamicContainerElem: HTMLElement
 
@@ -23,10 +23,10 @@ export const dynamicStore = reactive<{
  */
 const VxeDynamics = defineVxeComponent({
   setup () {
-    const VxeUIModalComponent = VxeUI.getComponent<VxeModalComponent>('VxeModal')
-    const VxeUIDrawerComponent = VxeUI.getComponent<VxeDrawerComponent>('VxeDrawer')
-    const VxeUILoadingComponent = VxeUI.getComponent<VxeLoadingComponent>('VxeLoading')
-    const VxeUIWatermarkComponent = VxeUI.getComponent<VxeWatermarkComponent>('VxeWatermark')
+    const VxeUIModalComponent = VxeUI.getComponent('vxe-modal')
+    const VxeUIDrawerComponent = VxeUI.getComponent('vxe-drawer')
+    const VxeUILoadingComponent = VxeUI.getComponent('vxe-loading')
+    const VxeUIWatermarkComponent = VxeUI.getComponent('vxe-watermark')
 
     return () => {
       const { modals, drawers, globalWatermark, globalLoading } = dynamicStore

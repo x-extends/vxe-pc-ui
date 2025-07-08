@@ -234,18 +234,21 @@ export namespace VxeDatePickerDefines {
 }
 
 export type VxeDatePickerEventProps = {
+  'onUpdate:modelValue'?: VxeDatePickerEvents.UpdateModelValue
   onInput?: VxeDatePickerEvents.Input
   onChange?: VxeDatePickerEvents.Change
   onShortcutClick?: VxeDatePickerEvents.ShortcutClick
 }
 
 export interface VxeDatePickerListeners {
+  'update:modelValue'?: VxeDatePickerEvents.UpdateModelValue
   input?: VxeDatePickerEvents.Input
   change?: VxeDatePickerEvents.Change
   shortcutClick?: VxeDatePickerEvents.ShortcutClick
 }
 
 export namespace VxeDatePickerEvents {
+  export type UpdateModelValue = (modelValue: VxeDatePickerPropTypes.ModelValue) => void
   export type Input = (params: VxeDatePickerDefines.InputEventParams) => void
   export type Change = (params: VxeDatePickerDefines.ChangeEventParams) => void
   export type ShortcutClick = (params: VxeDatePickerDefines.ShortcutClickEventParams) => void

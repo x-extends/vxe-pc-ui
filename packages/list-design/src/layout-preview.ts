@@ -6,7 +6,7 @@ import VxeFormComponent from '../../form/src/form'
 import XEUtils from 'xe-utils'
 
 import { VxeListDesignConstructor, VxeListDesignPrivateMethods } from '../../../types'
-import type { VxeGridComponent, VxeGridInstance, VxeGridPropTypes } from '../../../types/components/grid'
+import type { VxeGridInstance, VxeGridPropTypes } from '../../../types/components/grid'
 import type { VxeTableEvents, VxeTablePropTypes } from '../../../types/components/table'
 
 export default defineVxeComponent({
@@ -14,7 +14,7 @@ export default defineVxeComponent({
   props: {},
   emits: [],
   setup () {
-    const VxeTableGridComponent = VxeUI.getComponent<VxeGridComponent>('VxeGrid')
+    const VxeTableGridComponent = VxeUI.getComponent('vxe-grid')
 
     const $xeListDesign = inject<(VxeListDesignConstructor & VxeListDesignPrivateMethods) | null>('$xeListDesign', null)
 

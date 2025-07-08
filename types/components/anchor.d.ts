@@ -69,13 +69,28 @@ export namespace VxeAnchorDefines {
   export interface AnchorEventParams extends VxeComponentEventParams {
     $anchor: VxeAnchorConstructor
   }
+
+  export interface ChangeEventParams extends AnchorEventParams {}
+  export interface ClickEventParams extends AnchorEventParams {}
 }
 
-export type VxeAnchorEventProps = {}
+export type VxeAnchorEventProps = {
+  'onUpdate:modelValue'?: VxeAnchorEvents.UpdateModelValue
+  onChange?: VxeAnchorEvents.Change
+  onClick?: VxeAnchorEvents.Click
+}
 
-export interface VxeAnchorListeners { }
+export interface VxeAnchorListeners {
+  'update:modelValue'?: VxeAnchorEvents.UpdateModelValue
+  change?: VxeAnchorEvents.Change
+  click?: VxeAnchorEvents.Click
+}
 
-export namespace VxeAnchorEvents { }
+export namespace VxeAnchorEvents {
+  export type UpdateModelValue = (modelValue: VxeAnchorPropTypes.ModelValue) => void
+  export type Change = (params: VxeAnchorDefines.ChangeEventParams) => void
+  export type Click = (params: VxeAnchorDefines.ClickEventParams) => void
+}
 
 export namespace VxeAnchorSlotTypes {
   export interface DefaultSlotParams {}

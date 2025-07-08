@@ -173,9 +173,6 @@ declare module '../table' {
     azIndex?: number
     fnrActiveModal?: (VxeModalConstructor & VxeModalMethods) | null
 
-    cellAreas?: VxeTableExtendCellAreaDefines.MouseCellArea<D>[] | null
-    activeCellArea?: VxeTableExtendCellAreaDefines.MouseActiveCellArea | null
-
     copyAreaMpas?: {
       cut: boolean;
       cellAreas: VxeTableExtendCellAreaDefines.MouseCellArea[];
@@ -183,6 +180,12 @@ declare module '../table' {
 
     _msTout?: any
     _isCAEd?: boolean
+
+    isDragcellArea?: boolean
+    isDragcellExtend?: boolean
+
+    cellAreas?: VxeTableExtendCellAreaDefines.MouseCellArea<D>[] | null
+    activeCellArea?: VxeTableExtendCellAreaDefines.MouseActiveCellArea | null
   }
   export interface VxeTableMethods<D = any> extends VxeTableExtendCellAreaMethods<D> { }
   export interface VxeTablePrivateMethods<D = any> extends VxeTableExtendCellAreaPrivateMethods<D> { }

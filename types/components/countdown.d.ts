@@ -77,11 +77,17 @@ export namespace VxeCountdownDefines {
   }
 }
 
-export type VxeCountdownEventProps = {}
+export type VxeCountdownEventProps = {
+  'onUpdate:modelValue'?: VxeCountdownEvents.UpdateModelValue
+}
 
-export interface VxeCountdownListeners { }
+export interface VxeCountdownListeners {
+  'update:modelValue'?: VxeCountdownEvents.UpdateModelValue
+}
 
-export namespace VxeCountdownEvents { }
+export namespace VxeCountdownEvents {
+  export type UpdateModelValue = (modelValue: VxeCountdownPropTypes.ModelValue) => void
+}
 
 export namespace VxeCountdownSlotTypes {
   export interface DefaultSlotParams {

@@ -96,14 +96,17 @@ export namespace VxeCheckboxGroupDefines {
 }
 
 export type VxeCheckboxGroupEventProps = {
+  'onUpdate:modelValue'?: VxeCheckboxGroupEvents.UpdateModelValue
   onChange?: VxeCheckboxGroupEvents.Change
 }
 
 export interface VxeCheckboxGroupListeners {
+  'update:modelValue'?: VxeCheckboxGroupEvents.UpdateModelValue
   change?: VxeCheckboxGroupEvents.Change
 }
 
 export namespace VxeCheckboxGroupEvents {
+  export type UpdateModelValue = (modelValue: VxeCheckboxGroupPropTypes.ModelValue) => void
   export type Change = (params: VxeCheckboxGroupDefines.ChangeEventParams) => void
  }
 

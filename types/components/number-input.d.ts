@@ -255,6 +255,7 @@ export namespace VxeNumberInputDefines {
 }
 
 export type VxeNumberInputEventProps = {
+  'onUpdate:modelValue'?: VxeNumberInputEvents.UpdateModelValue
   onInput?: VxeNumberInputEvents.Input
   onChange?: VxeNumberInputEvents.Change
   onPlusNumber?: VxeNumberInputEvents.PlusNumber
@@ -262,6 +263,7 @@ export type VxeNumberInputEventProps = {
 }
 
 export interface VxeNumberInputListeners {
+  'update:modelValue'?: VxeNumberInputEvents.UpdateModelValue
   input?: VxeNumberInputEvents.Input
   change?: VxeNumberInputEvents.Change
   plusNumber?: VxeNumberInputEvents.PlusNumber
@@ -269,6 +271,7 @@ export interface VxeNumberInputListeners {
 }
 
 export namespace VxeNumberInputEvents {
+  export type UpdateModelValue = (modelValue: VxeNumberInputPropTypes.ModelValue) => void
   export type Input = (params: VxeNumberInputDefines.InputEventParams) => void
   export type Change = (params: VxeNumberInputDefines.ChangeEventParams) => void
   export type PlusNumber = (params: VxeNumberInputDefines.PlusNumberEventParams) => void

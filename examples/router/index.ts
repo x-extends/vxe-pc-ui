@@ -16,7 +16,7 @@ const routes: Array<RouteRecordRaw> = [
     }
   },
   {
-    path: '/table/start/install',
+    path: '/start/install',
     name: 'StartInstall',
     component: StartInstall
   },
