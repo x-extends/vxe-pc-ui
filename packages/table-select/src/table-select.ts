@@ -10,7 +10,7 @@ import VxeInputComponent from '../../input/src/input'
 
 import type { TableSelectReactData, VxeTableSelectPropTypes, TableSelectInternalData, VxeTableSelectEmits, VxeFormDefines, ValueOf, VxeComponentStyleType, VxeComponentSizeType, VxeModalConstructor, VxeModalMethods, VxeDrawerConstructor, VxeDrawerMethods, VxeFormConstructor, VxeFormPrivateMethods } from '../../../types'
 import type { VxeTableConstructor, VxeTablePrivateMethods, VxeTablePropTypes } from '../../../types/components/table'
-import type { VxeGridInstance, VxeGridDefines, VxeGridComponent } from '../../../types/components/grid'
+import type { VxeGridInstance, VxeGridDefines } from '../../../types/components/grid'
 
 export function getRowUniqueId () {
   return XEUtils.uniqueId('row_')
@@ -593,7 +593,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
     // Render
     //
     renderVN (h: CreateElement): VNode {
-      const VxeTableGridComponent = VxeUI.getComponent<VxeGridComponent>('VxeGrid')
+      const VxeTableGridComponent = VxeUI.getComponent('vxe-grid')
 
       const $xeTableSelect = this
       const props = $xeTableSelect
@@ -769,7 +769,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
   mounted () {
     const $xeTableSelect = this
 
-    const VxeTableGridComponent = VxeUI.getComponent<VxeGridComponent>('VxeGrid')
+    const VxeTableGridComponent = VxeUI.getComponent('vxe-grid')
     $xeTableSelect.$nextTick(() => {
       if (!VxeTableGridComponent) {
         errLog('vxe.error.reqComp', ['vxe-grid'])

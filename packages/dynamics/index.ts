@@ -1,5 +1,5 @@
 import Vue, { CreateElement } from 'vue'
-import { renderEmptyElement } from '@vxe-ui/core'
+import { VxeUI, renderEmptyElement } from '@vxe-ui/core'
 
 import type { VxeModalDefines, VxeDrawerDefines, VxeLoadingProps, VxeWatermarkProps } from '../../types'
 
@@ -26,13 +26,18 @@ export const DynamicApp = Vue.extend({
   },
   methods: {
     renderVN (h: CreateElement) {
+      const VxeUIModalComponent = VxeUI.getComponent('vxe-modal')
+      const VxeUIDrawerComponent = VxeUI.getComponent('vxe-drawer')
+      const VxeUILoadingComponent = VxeUI.getComponent('vxe-loading')
+      const VxeUIWatermarkComponent = VxeUI.getComponent('vxe-watermark')
+
       const { modals, drawers, globalLoading, globalWatermark } = this
       return h('div', {}, [
         modals.length
           ? h('div', {
             key: 1,
             class: 'vxe-dynamics--modal'
-          }, modals.map((item) => h('vxe-modal', {
+          }, modals.map((item) => h(VxeUIModalComponent, {
             key: item.key,
             props: item.props,
             on: item.on
@@ -42,20 +47,20 @@ export const DynamicApp = Vue.extend({
           ? h('div', {
             key: 2,
             class: 'vxe-dynamics--drawer'
-          }, drawers.map((item) => h('vxe-drawer', {
+          }, drawers.map((item) => h(VxeUIDrawerComponent, {
             key: item.key,
             props: item.props,
             on: item.on
           })))
           : renderEmptyElement(this),
         globalWatermark
-          ? h('vxe-watermark', {
+          ? h(VxeUILoadingComponent, {
             key: 'gw',
             props: globalWatermark
           })
           : renderEmptyElement(this),
         globalLoading
-          ? h('vxe-loading', {
+          ? h(VxeUIWatermarkComponent, {
             key: 'gl',
             props: globalLoading
           })

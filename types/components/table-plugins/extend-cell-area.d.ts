@@ -179,6 +179,9 @@ declare module '../table' {
     _msTout?: any
     _isCAEd?: boolean
 
+    isDragcellArea?: boolean
+    isDragcellExtend?: boolean
+
     cellAreas?: VxeTableExtendCellAreaDefines.MouseCellArea<D>[] | null
     activeCellArea?: VxeTableExtendCellAreaDefines.MouseActiveCellArea | null
   }
