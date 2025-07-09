@@ -1,12 +1,11 @@
-import { CreateElement } from 'vue'
-import { defineVxeComponent } from '../ui/src/comp'
+import Vue, { CreateElement } from 'vue'
 import { VxeUI, renderEmptyElement } from '@vxe-ui/core'
 
 import type { VxeModalDefines, VxeDrawerDefines, VxeLoadingProps, VxeWatermarkProps } from '../../types'
 
 let dynamicContainerElem: HTMLElement
 
-export const DynamicApp = defineVxeComponent({
+export const DynamicApp = Vue.extend({
   data () {
     const modals: {
       key: number | string
