@@ -62,12 +62,12 @@ const VxeButtonComponent = defineVxeComponent({
      * 按钮的前缀图标
      */
     prefixIcon: String as PropType<VxeButtonPropTypes.PrefixIcon>,
-    prefixIconRender: Object as PropType<VxeButtonPropTypes.PrefixIconRender>,
+    prefixRender: Object as PropType<VxeButtonPropTypes.PrefixRender>,
     /**
      * 按钮的后缀图标
      */
     suffixIcon: String as PropType<VxeButtonPropTypes.SuffixIcon>,
-    suffixIconRender: Object as PropType<VxeButtonPropTypes.SuffixIconRender>,
+    suffixRender: Object as PropType<VxeButtonPropTypes.SuffixRender>,
     /**
      * 圆角边框
      */
@@ -449,9 +449,9 @@ const VxeButtonComponent = defineVxeComponent({
     }
 
     const renderContent = () => {
-      const { content, suffixIcon, loading, prefixTooltip, suffixTooltip, suffixIconRender } = props
+      const { content, suffixIcon, loading, prefixTooltip, suffixTooltip, suffixRender } = props
       const prefixIcon = props.prefixIcon || props.icon
-      const prefixIconRender = props.prefixIconRender || props.iconRender
+      const prefixRender = props.prefixRender || props.iconRender
       const prefixTipOpts = computePrefixTipOpts.value
       const suffixTipOpts = computeSuffixTipOpts.value
       const prefixIconSlot = slots.prefix || slots.icon
@@ -475,13 +475,13 @@ const VxeButtonComponent = defineVxeComponent({
             class: 'vxe-button--item vxe-button--custom-prefix-icon'
           }, prefixIconSlot({}))
         )
-      } else if (prefixIconRender) {
-        const compConf = renderer.get(prefixIconRender.name)
-        const pIconMethod = compConf ? compConf.renderButtonPrefixIcon : null
+      } else if (prefixRender) {
+        const compConf = renderer.get(prefixRender.name)
+        const pIconMethod = compConf ? compConf.renderButtonPrefix : null
         contVNs.push(
           h('span', {
             class: ['vxe-button--item vxe-button--custom-prefix-icon']
-          }, pIconMethod ? getSlotVNs(pIconMethod(prefixIconRender, { $button: $xeButton })) : [])
+          }, pIconMethod ? getSlotVNs(pIconMethod(prefixRender, { $button: $xeButton })) : [])
         )
       } else if (prefixIcon) {
         contVNs.push(
@@ -511,13 +511,13 @@ const VxeButtonComponent = defineVxeComponent({
             class: 'vxe-button--item vxe-button--custom-suffix-icon'
           }, suffixIconSlot({}))
         )
-      } else if (suffixIconRender) {
-        const compConf = renderer.get(suffixIconRender.name)
-        const sIconMethod = compConf ? compConf.renderButtonSuffixIcon : null
+      } else if (suffixRender) {
+        const compConf = renderer.get(suffixRender.name)
+        const sIconMethod = compConf ? compConf.renderButtonSuffix : null
         contVNs.push(
           h('span', {
             class: ['vxe-button--item vxe-button--custom-suffix-icon']
-          }, sIconMethod ? getSlotVNs(sIconMethod(suffixIconRender, { $button: $xeButton })) : [])
+          }, sIconMethod ? getSlotVNs(sIconMethod(suffixRender, { $button: $xeButton })) : [])
         )
       } else if (suffixIcon) {
         contVNs.push(

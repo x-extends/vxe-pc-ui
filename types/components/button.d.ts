@@ -53,9 +53,9 @@ export namespace VxeButtonPropTypes {
     props?: Record<string, any>
   }
   export type PrefixIcon = string
-  export interface PrefixIconRender extends IconRender {}
+  export interface PrefixRender extends IconRender {}
   export type SuffixIcon = string
-  export interface SuffixIconRender extends IconRender {}
+  export interface SuffixRender extends IconRender {}
 
   export type Round = boolean
   export type Circle = boolean
@@ -115,12 +115,12 @@ export interface VxeButtonProps {
    * 按钮的前缀图标
    */
   prefixIcon?: VxeButtonPropTypes.PrefixIcon
-  prefixIconRender?: VxeButtonPropTypes.PrefixIconRender
+  prefixRender?: VxeButtonPropTypes.PrefixRender
   /**
    * 按钮的后缀图标
    */
   suffixIcon?: VxeButtonPropTypes.SuffixIcon
-  suffixIconRender?: VxeButtonPropTypes.SuffixIconRender
+  suffixRender?: VxeButtonPropTypes.SuffixRender
   /**
    * 圆角边框
    */
