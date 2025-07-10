@@ -269,6 +269,15 @@ $btnThemeList: (
   }
 }
 
+.vxe-button--custom-prefix-icon,
+.vxe-button--custom-suffix-icon {
+  & > svg {
+    max-width: 1em;
+    max-height: 1em;
+    vertical-align: middle;
+  }
+}
+
 .vxe-input--prefix-icon,
 .vxe-input--suffix-icon {
   & > .vxe-button {

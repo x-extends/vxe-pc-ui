@@ -5,6 +5,8 @@ import { VxeFormItemPropTypes, VxeFormItemSlotTypes, FormItemContentRenderParams
 import { VxeGridConstructor, VxeGridPropTypes } from '../components/grid'
 import { VxeColumnPropTypes } from '../components/column'
 import { VxeToolbarPropTypes } from '../components/toolbar'
+import { VxeButtonConstructor, VxeButtonPropTypes } from '../components/button'
+import { VxeIconPickerConstructor, VxeIconPickerDefines } from '../components/icon-picker'
 import { VxeFormConstructor, VxeFormDefines, VxeFormProps } from '../components/form'
 import { VxeFormDesignDefines, VxeFormDesignConstructor } from '../components/form-design'
 import { VxeFormViewDefines, VxeFormViewConstructor } from '../components/form-view'
@@ -938,5 +940,50 @@ declare module '@vxe-ui/core' {
       name: string
     }
     export interface RenderListDesignSettingActionButtonFormViewParams {}
+  }
+}
+
+// 按钮
+declare module '@vxe-ui/core' {
+  export interface VxeGlobalRendererOptions {
+    /**
+     * 按钮 - 渲染前缀图标
+     */
+    renderButtonPrefixIcon?(h: CreateElement, renderOpts: VxeGlobalRendererHandles.RenderButtonPrefixIconOptions, params: VxeGlobalRendererHandles.RenderButtonPrefixIconParams): VxeComponentSlotType | VxeComponentSlotType[]
+    /**
+     * 按钮 - 渲染后缀图标
+     */
+    renderButtonSuffixIcon?(h: CreateElement, renderOpts: VxeGlobalRendererHandles.RenderButtonSuffixIconOptions, params: VxeGlobalRendererHandles.RenderButtonSuffixIconParams): VxeComponentSlotType | VxeComponentSlotType[]
+  }
+  export namespace VxeGlobalRendererHandles {
+
+    export interface RenderButtonPrefixIconOptions extends VxeButtonPropTypes.PrefixIconRender { }
+    export interface RenderButtonPrefixIconParams {
+      $button: VxeButtonConstructor
+    }
+
+    export interface RenderButtonSuffixIconOptions extends VxeButtonPropTypes.SuffixIconRender { }
+    export interface RenderButtonSuffixIconParams {
+      $button: VxeButtonConstructor
+    }
+  }
+}
+
+// 图标选择器
+declare module '@vxe-ui/core' {
+  export interface VxeGlobalRendererOptions {
+    /**
+     * 图标选择器 - 渲染图标
+     */
+    renderIconPickerOptionIcon?(h: CreateElement, renderOpts: VxeGlobalRendererHandles.RenderIconPickerOptionIconOptions, params: VxeGlobalRendererHandles.RenderIconPickerOptionIconParams): VxeComponentSlotType | VxeComponentSlotType[]
+  }
+
+  export namespace VxeGlobalRendererHandles {
+
+    export interface RenderIconPickerOptionIconOptions extends VxeIconPickerDefines.OptionIconRender { }
+    export interface RenderIconPickerOptionIconParams {
+      $iconPicker: VxeIconPickerConstructor
+      option: VxeIconPickerDefines.IconItemObj
+    }
   }
 }

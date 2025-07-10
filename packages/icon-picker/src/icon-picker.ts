@@ -1,9 +1,10 @@
 import { PropType, CreateElement, VNode } from 'vue'
 import { defineVxeComponent } from '../../ui/src/comp'
 import XEUtils from 'xe-utils'
-import { getConfig, getIcon, getI18n, globalEvents, createEvent, globalMixins, GLOBAL_EVENT_KEYS, renderEmptyElement } from '../../ui'
+import { getConfig, getIcon, getI18n, globalEvents, renderer, createEvent, globalMixins, GLOBAL_EVENT_KEYS, renderEmptyElement } from '../../ui'
 import { getEventTargetNode, getAbsolutePos } from '../../ui/src/dom'
 import { getLastZIndex, nextZIndex, getFuncText } from '../../ui/src/utils'
+import { getSlotVNs } from '../../ui/src/vn'
 
 import type { VxeIconPickerPropTypes, IconPickerInternalData, ValueOf, IconPickerReactData, VxeComponentSizeType, VxeIconPickerEmits, VxeIconPickerDefines, VxeDrawerConstructor, VxeDrawerMethods, VxeFormDefines, VxeFormConstructor, VxeFormPrivateMethods, VxeModalConstructor, VxeModalMethods } from '../../../types'
 import type { VxeTableConstructor, VxeTablePrivateMethods } from '../../../types/components/table'
@@ -178,7 +179,8 @@ export default /* define-vxe-component start */ defineVxeComponent({
         }
         return {
           title: `${item.title || ''}`,
-          icon: item.icon || ''
+          icon: item.icon || '',
+          iconRender: item.iconRender
         }
       })
     },
@@ -188,8 +190,21 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const iconList = $xeIconPicker.computeIconList as {
         title: string
         icon: string
-    }[]
+        iconRender: VxeIconPickerDefines.OptionIconRender
+      }[]
       return XEUtils.chunk(iconList, 4)
+    },
+    computeSelectIconItem () {
+      const $xeIconPicker = this
+      const reactData = ($xeIconPicker as any).reactData
+
+      const { selectIcon } = reactData
+      const iconList = $xeIconPicker.computeIconList as {
+        title: string
+        icon: string
+        iconRender: VxeIconPickerDefines.OptionIconRender
+      }[]
+      return selectIcon ? iconList.find(item => item.icon === selectIcon) : null
     }
   },
   methods: {
@@ -559,6 +574,9 @@ export default /* define-vxe-component start */ defineVxeComponent({
         return h('div', {
           class: 'vxe-ico-picker--list'
         }, list.map(item => {
+          const { iconRender } = item
+          const compConf = iconRender ? renderer.get(iconRender.name) : null
+          const oIconMethod = compConf ? compConf.renderIconPickerOptionIcon : null
           return h('div', {
             class: 'vxe-ico-picker--item',
             on: {
@@ -571,11 +589,13 @@ export default /* define-vxe-component start */ defineVxeComponent({
           }, [
             h('div', {
               class: 'vxe-ico-picker--item-icon'
-            }, [
-              h('i', {
-                class: item.icon || ''
-              })
-            ]),
+            }, oIconMethod && iconRender
+              ? getSlotVNs(oIconMethod.call($xeIconPicker, h, iconRender, { $iconPicker: $xeIconPicker, option: item }))
+              : [
+                  h('i', {
+                    class: item.icon || ''
+                  })
+                ]),
             showIconTitle
               ? h('div', {
                 class: 'vxe-ico-picker--item-title'
@@ -584,6 +604,32 @@ export default /* define-vxe-component start */ defineVxeComponent({
           ])
         }))
       }))
+    },
+    renderIconView (h: CreateElement) {
+      const $xeIconPicker = this
+      const reactData = $xeIconPicker.reactData
+
+      const { selectIcon } = reactData
+      const selectIconItem = $xeIconPicker.computeSelectIconItem
+      if (selectIconItem) {
+        const { iconRender } = selectIconItem
+        const compConf = iconRender ? renderer.get(iconRender.name) : null
+        const oIconMethod = compConf ? compConf.renderIconPickerOptionIcon : null
+        if (oIconMethod && iconRender) {
+          return h('div', {
+            key: 'inc',
+            class: 'vxe-ico-picker--icon'
+          }, getSlotVNs(oIconMethod.call($xeIconPicker, h, iconRender, { $iconPicker: $xeIconPicker, option: selectIconItem })))
+        }
+      }
+      return h('div', {
+        key: 'ind',
+        class: 'vxe-ico-picker--icon'
+      }, [
+        h('i', {
+          class: selectIcon
+        })
+      ])
     },
     renderVN (h: CreateElement): VNode {
       const $xeIconPicker = this
@@ -633,13 +679,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
             }
           }),
           selectIcon
-            ? h('div', {
-              class: 'vxe-ico-picker--icon'
-            }, [
-              h('i', {
-                class: selectIcon
-              })
-            ])
+            ? $xeIconPicker.renderIconView(h)
             : h('div', {
               class: 'vxe-ico-picker--placeholder'
             }, inpPlaceholder),

@@ -42,6 +42,11 @@
   align-items: center;
   justify-content: left;
   padding: 0 0.5em;
+  & > svg {
+    max-width: 1em;
+    max-height: 1em;
+    vertical-align: middle;
+  }
 }
 .vxe-ico-picker--placeholder {
   flex-grow: 1;
@@ -115,7 +120,12 @@
   align-items: center;
   justify-content: center;
   height: 1.5em;
-  font-size: 1.4em
+  font-size: 1.4em;
+  & > svg {
+    max-width: 1em;
+    max-height: 1em;
+    vertical-align: middle;
+  }
 }
 .vxe-ico-picker--item-title {
   padding: 0 0.2em;
