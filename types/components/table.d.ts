@@ -1554,11 +1554,9 @@ export namespace VxeTablePropTypes {
      */
     selectCellByBody?: boolean
     /**
-     * 只对 mouse-config.area 启用后有效，
-     * 如果为 true，则选中第一列单元格自动选取一整行，
-     * 如果为指定字段，则选中指定单元格自动选取一整行
+     * 只对 mouse-config.area 启用后有效，点击单元格后自动选取当前行的单元格;如果为 true，当选中第一列时联动选择当前行的单元格
      */
-    selectCellToRow?: boolean | string
+    selectCellToRow?: boolean
     /**
      * 只对 mouse-config.area 启用后有效，选择单元格后显示列状态
      */
