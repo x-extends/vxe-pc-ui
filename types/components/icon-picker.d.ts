@@ -33,6 +33,7 @@ export namespace VxeIconPickerPropTypes {
   export type Icons = string[] | {
     title?: string | number
     icon: string
+    iconRender?: VxeIconPickerDefines.OptionIconRender
   }[]
   export type Clearable = boolean
   export type ShowIconTitle = boolean
@@ -121,9 +122,15 @@ export namespace VxeIconPickerDefines {
     $iconPicker: VxeIconPickerConstructor
   }
 
+  export interface OptionIconRender {
+    name: string
+    props?: Record<string, any>
+  }
+
   export interface IconItemObj {
     title?: string
     icon?: string
+    iconRender?: OptionIconRender
   }
 }
 

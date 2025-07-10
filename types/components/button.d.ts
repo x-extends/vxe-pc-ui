@@ -48,8 +48,14 @@ export namespace VxeButtonPropTypes {
    * 按钮的前缀图标，属于 prefix-icon 的简写
    */
   export type Icon = string
+  export interface IconRender {
+    name: string
+    props?: Record<string, any>
+  }
   export type PrefixIcon = string
+  export interface PrefixIconRender extends IconRender {}
   export type SuffixIcon = string
+  export interface SuffixIconRender extends IconRender {}
 
   export type Round = boolean
   export type Circle = boolean
@@ -104,14 +110,17 @@ export interface VxeButtonProps {
    * 按钮的前缀图标，属于 prefix-icon 的简写
    */
   icon?: VxeButtonPropTypes.Icon
+  iconRender?: VxeButtonPropTypes.IconRender
   /**
    * 按钮的前缀图标
    */
   prefixIcon?: VxeButtonPropTypes.PrefixIcon
+  prefixIconRender?: VxeButtonPropTypes.PrefixIconRender
   /**
    * 按钮的后缀图标
    */
   suffixIcon?: VxeButtonPropTypes.SuffixIcon
+  suffixIconRender?: VxeButtonPropTypes.SuffixIconRender
   /**
    * 圆角边框
    */
