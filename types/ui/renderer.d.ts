@@ -947,23 +947,23 @@ declare module '@vxe-ui/core' {
 declare module '@vxe-ui/core' {
   export interface VxeGlobalRendererOptions {
     /**
-     * 按钮 - 渲染前缀图标
+     * 按钮 - 渲染前缀
      */
-    renderButtonPrefixIcon?(h: CreateElement, renderOpts: VxeGlobalRendererHandles.RenderButtonPrefixIconOptions, params: VxeGlobalRendererHandles.RenderButtonPrefixIconParams): VxeComponentSlotType | VxeComponentSlotType[]
+    renderButtonPrefix?(h: CreateElement, renderOpts: VxeGlobalRendererHandles.RenderButtonPrefixOptions, params: VxeGlobalRendererHandles.RenderButtonPrefixParams): VxeComponentSlotType | VxeComponentSlotType[]
     /**
-     * 按钮 - 渲染后缀图标
+     * 按钮 - 渲染后缀
      */
-    renderButtonSuffixIcon?(h: CreateElement, renderOpts: VxeGlobalRendererHandles.RenderButtonSuffixIconOptions, params: VxeGlobalRendererHandles.RenderButtonSuffixIconParams): VxeComponentSlotType | VxeComponentSlotType[]
+    renderButtonSuffix?(h: CreateElement, renderOpts: VxeGlobalRendererHandles.RenderButtonSuffixOptions, params: VxeGlobalRendererHandles.RenderButtonSuffixParams): VxeComponentSlotType | VxeComponentSlotType[]
   }
   export namespace VxeGlobalRendererHandles {
 
-    export interface RenderButtonPrefixIconOptions extends VxeButtonPropTypes.PrefixIconRender { }
-    export interface RenderButtonPrefixIconParams {
+    export interface RenderButtonPrefixOptions extends VxeButtonPropTypes.PrefixRender { }
+    export interface RenderButtonPrefixParams {
       $button: VxeButtonConstructor
     }
 
-    export interface RenderButtonSuffixIconOptions extends VxeButtonPropTypes.SuffixIconRender { }
-    export interface RenderButtonSuffixIconParams {
+    export interface RenderButtonSuffixOptions extends VxeButtonPropTypes.SuffixRender { }
+    export interface RenderButtonSuffixParams {
       $button: VxeButtonConstructor
     }
   }
