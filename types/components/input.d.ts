@@ -1,4 +1,4 @@
-import { DefineVxeComponentApp, DefineVxeComponentOptions, DefineVxeComponentInstance, ValueOf, VxeComponentStyleType, VxeComponentAlignType, VxeComponentSizeType } from '@vxe-ui/core'
+import { DefineVxeComponentApp, DefineVxeComponentOptions, DefineVxeComponentInstance, VxeComponentEventParams, ValueOf, VxeComponentStyleType, VxeComponentAlignType, VxeComponentSizeType } from '@vxe-ui/core'
 
 /* eslint-disable @typescript-eslint/no-empty-interface,no-use-before-define,@typescript-eslint/ban-types */
 
@@ -273,7 +273,7 @@ export namespace VxeInputDefines {
     date: Date
   }
 
-  interface InputKeyboardEventParams {
+  interface InputKeyboardEventParams extends VxeComponentEventParams {
     $input: VxeInputConstructor
     $event: KeyboardEvent
   }

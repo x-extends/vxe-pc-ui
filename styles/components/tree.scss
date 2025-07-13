@@ -4,7 +4,6 @@
   position: relative;
   color: var(--vxe-ui-font-color);
   font-family: var(--vxe-ui-font-family);
-  overflow: auto;
   &.node--trigger {
     .vxe-tree--node-item {
       cursor: pointer;
@@ -58,21 +57,6 @@
     }
   }
   &.show--line {
-    .vxe-tree--node-list-wrapper {
-      position: relative;
-      &::before {
-        content: "";
-        position: absolute;
-        left: 0.7em;
-        top: calc(var(--vxe-ui-tree-node-height) / 2);
-        height: calc(100% - var(--vxe-ui-tree-node-height));
-        border-left-width: var(--vxe-ui-tree-node-line-width);
-        border-left-style: var(--vxe-ui-tree-node-line-style);
-        border-left-color: var(--vxe-ui-tree-node-line-color);
-        pointer-events: none;
-        z-index: 5;
-      }
-    }
     .vxe-tree--node-child-line {
       position: absolute;
       top: 0;
@@ -85,23 +69,30 @@
       pointer-events: none;
       z-index: 5;
     }
-    .vxe-tree--node-item-switcher {
-      position: relative;
-      &::before {
-        content: "";
-        position: absolute;
-        left: 0.8em;
-        top: 50%;
-        width: 0.5em;
-        border-bottom-width: var(--vxe-ui-tree-node-line-width);
-        border-bottom-style: var(--vxe-ui-tree-node-line-style);
-        border-bottom-color: var(--vxe-ui-tree-node-line-color);
-        pointer-events: none;
-        z-index: 5;
-      }
-    }
   }
 }
+
+.vxe-tree--node-line-wrapper {
+  position: relative;
+  display: block;
+  height: 0;
+}
+.vxe-tree--node-line {
+  position: absolute;
+  bottom: calc(var(--vxe-ui-tree-node-height) / 2 * -1);
+  left: 0.6em;
+  width: 0.6em;
+  border-width: 0 0 var(--vxe-ui-tree-node-line-width) var(--vxe-ui-tree-node-line-width);
+  border-style: var(--vxe-ui-tree-node-line-style);
+  border-color: var(--vxe-ui-tree-node-line-color);
+  pointer-events: none;
+}
+
+.vxe-tree--node-list-wrapper {
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
 .vxe-tree--node-child-wrapper {
   position: relative;
 }
@@ -153,6 +144,12 @@
 .vxe-tree--radio-option {
   padding-right: 0.4em;
   @include baseMixin.createRadioIcon();
+}
+
+.vxe-tree--empty-placeholder {
+  padding: 1.4em 0.6em 0 0.6em;
+  text-align: center;
+  color: var(--vxe-ui-input-placeholder-color);
 }
 
 .vxe-tree {

@@ -121,6 +121,16 @@ export function getAbsolutePos (elem: any) {
   return { boundingTop, top: scrollTop + boundingTop, boundingLeft, left: scrollLeft + boundingLeft, visibleHeight, visibleWidth }
 }
 
+export function getPaddingTopBottomSize (elem: HTMLElement) {
+  if (elem) {
+    const computedStyle = getComputedStyle(elem)
+    const paddingTop = XEUtils.toNumber(computedStyle.paddingTop)
+    const paddingBottom = XEUtils.toNumber(computedStyle.paddingBottom)
+    return paddingTop + paddingBottom
+  }
+  return 0
+}
+
 const scrollIntoViewIfNeeded = 'scrollIntoViewIfNeeded'
 const scrollIntoView = 'scrollIntoView'
 

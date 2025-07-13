@@ -31,6 +31,9 @@ export namespace VxeSelectPropTypes {
   export type Readonly = boolean
   export type Loading = boolean
   export type Disabled = boolean
+  export type ShowTotalButoon = boolean
+  export type ShowCheckedButoon = boolean
+  export type ShowClearButton = boolean
   export type ClassName = string | ((params: { $select: VxeSelectConstructor }) => string)
   export type PopupClassName = string | ((params: { $select: VxeSelectConstructor }) => string)
   export type Multiple = boolean
@@ -59,11 +62,6 @@ export namespace VxeSelectPropTypes {
     value: ModelValue | undefined
   }) => boolean
   export type Remote = boolean
-  /**
-   * 已废弃，被 remote-config.queryMethod 替换
-   * @deprecated
-   */
-  export type RemoteMethod = (params: { searchValue: string }) => Promise<void> | void
 
   export interface RemoteConfig {
     /**
@@ -97,29 +95,6 @@ export namespace VxeSelectPropTypes {
   export type OptionKey = boolean
   export type Transfer = boolean
 
-  /**
-   * 已被 VirtualYConfig 替换
-   * @deprecated
-   */
-  export interface ScrollY {
-    /**
-     * 指定大于指定行时自动启动纵向虚拟滚动，如果为 0 则总是启用，如果为 -1 则关闭
-     */
-    gt?: number
-    /**
-     * 指定每次渲染的数据偏移量，偏移量越大渲染次数就越少，但每次渲染耗时就越久
-     */
-    oSize?: number
-    /**
-     * 指定列表项的 className
-     */
-    sItem?: string
-    /**
-     * 是否启用
-     */
-    enabled?: boolean
-  }
-
   export interface VirtualYConfig {
     /**
      * 指定大于指定行时自动启动纵向虚拟滚动，如果为 0 则总是启用，如果为 -1 则关闭
@@ -130,26 +105,35 @@ export namespace VxeSelectPropTypes {
      */
     oSize?: number
     /**
-     * 指定列表项的 className
-     */
-    sItem?: string
-    /**
      * 是否启用
      */
     enabled?: boolean
-
   }
+
+  /**
+   * 已废弃，被 remote-config.queryMethod 替换
+   * @deprecated
+   */
+  export type RemoteMethod = (params: { searchValue: string }) => Promise<void> | void
+  /**
+   * 已被 VirtualYConfig 替换
+   * @deprecated
+   */
+  export interface ScrollY extends VirtualYConfig {}
 }
 
 export interface VxeSelectProps {
   size?: VxeSelectPropTypes.Size
-  value?: VxeSelectPropTypes.ModelValue
+  modelValue?: VxeSelectPropTypes.ModelValue
   defaultConfig?: VxeSelectPropTypes.DefaultConfig
   clearable?: VxeSelectPropTypes.Clearable
   placeholder?: VxeSelectPropTypes.Placeholder
   readonly?: VxeSelectPropTypes.Readonly
   loading?: VxeSelectPropTypes.Loading
   disabled?: VxeSelectPropTypes.Disabled
+  showTotalButoon?: VxeSelectPropTypes.ShowTotalButoon
+  showCheckedButoon?: VxeSelectPropTypes.ShowCheckedButoon
+  showClearButton?: VxeSelectPropTypes.ShowClearButton
   className?: VxeSelectPropTypes.ClassName
   popupClassName?: VxeSelectPropTypes.PopupClassName
   multiple?: VxeSelectPropTypes.Multiple
@@ -166,13 +150,16 @@ export interface VxeSelectProps {
   filterable?: VxeSelectPropTypes.Filterable
   filterMethod?: VxeSelectPropTypes.FilterMethod
   remote?: VxeSelectPropTypes.Remote
+  remoteConfig?: VxeSelectPropTypes.RemoteConfig
+  max?: VxeSelectPropTypes.Max
+  transfer?: VxeSelectPropTypes.Transfer
+  virtualYConfig?: VxeSelectPropTypes.VirtualYConfig
+
   /**
    * 已废弃，被 remote-config.queryMethod 替换
    * @deprecated
    */
   remoteMethod?: VxeSelectPropTypes.RemoteMethod
-  remoteConfig?: VxeSelectPropTypes.RemoteConfig
-  max?: VxeSelectPropTypes.Max
   /**
    * 已废弃，被 option-config.keyField 替换
    * @deprecated
@@ -183,9 +170,6 @@ export interface VxeSelectProps {
    * @deprecated
    */
   optionKey?: VxeSelectPropTypes.OptionKey
-  transfer?: VxeSelectPropTypes.Transfer
-  virtualYConfig?: VxeSelectPropTypes.VirtualYConfig
-
   /**
    * 已废弃，被 virtual-y-config 替换
    * @deprecated
@@ -203,7 +187,6 @@ export interface SelectReactData {
   bodyHeight: number
   topSpaceHeight: number
   optList: any[]
-  afterVisibleList: any[]
   staticOptions: any[]
   reactFlag: number
 
@@ -224,6 +207,7 @@ export interface SelectInternalData {
   isLoaded?: boolean
   synchData: any[]
   fullData: any[]
+  afterVisibleList: any[]
   optAddMaps: Record<string, any>
   optGroupKeyMaps: Record<string, any>
   optFullValMaps: Record<string, VxeSelectDefines.OptCacheItem>
@@ -298,6 +282,7 @@ export interface VxeSelectPrivateMethods extends SelectPrivateMethods { }
 export type VxeSelectEmits = [
   'input',
   'change',
+  'all-change',
   'clear',
   'blur',
   'focus',
@@ -345,6 +330,7 @@ export namespace VxeSelectDefines {
   export interface ChangeEventParams extends SelectEventParams {
     value: any
   }
+  export interface AllChangeEventParams extends ChangeEventParams {}
 
   export interface ClearEventParams extends SelectEventParams {
     value: any
@@ -364,6 +350,7 @@ export namespace VxeSelectDefines {
 
 export type VxeSelectEventProps = {
   onChange?: VxeSelectEvents.Change
+  onAllChange?: VxeSelectEvents.AllChange
   onClear?: VxeSelectEvents.Clear
   onFocus?: VxeSelectEvents.Focus
   onBlur?: VxeSelectEvents.Blur
@@ -374,6 +361,7 @@ export type VxeSelectEventProps = {
 
 export interface VxeSelectListeners {
   change?: VxeSelectEvents.Change
+  allChange?: VxeSelectEvents.AllChange
   clear?: VxeSelectEvents.Clear
   focus?: VxeSelectEvents.Focus
   blur?: VxeSelectEvents.Blur
@@ -384,6 +372,7 @@ export interface VxeSelectListeners {
 
 export namespace VxeSelectEvents {
   export type Change = (params: VxeSelectDefines.ChangeEventParams) => void
+  export type AllChange = (params: VxeSelectDefines.AllChangeEventParams) => void
   export type Clear = (params: VxeSelectDefines.ClearEventParams) => void
   export type Focus = (params: VxeSelectDefines.FocusEventParams) => void
   export type Blur = (params: VxeSelectDefines.BlurEventParams) => void

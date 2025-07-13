@@ -4,10 +4,11 @@ import XEUtils from 'xe-utils'
 import { getConfig, getIcon, getI18n, globalEvents, GLOBAL_EVENT_KEYS, createEvent, globalMixins, renderEmptyElement } from '../../ui'
 import { getEventTargetNode, updatePanelPlacement } from '../../ui/src/dom'
 import { getLastZIndex, nextZIndex, getFuncText } from '../../ui/src/utils'
-import VxeInputComponent from '../../input/src/input'
 import { getSlotVNs } from '../../ui/src/vn'
+import VxeInputComponent from '../../input/src/input'
+import VxeButtonComponent from '../../button/src/button'
 
-import type { VxeSelectPropTypes, SelectInternalData, ValueOf, VxeComponentSizeType, SelectReactData, VxeSelectEmits, VxeInputDefines, VxeSelectDefines, VxeOptgroupProps, VxeOptionProps, VxeDrawerConstructor, VxeDrawerMethods, VxeFormDefines, VxeFormConstructor, VxeFormPrivateMethods, VxeModalConstructor, VxeModalMethods, VxeInputConstructor, VxeComponentSlotType } from '../../../types'
+import type { VxeSelectPropTypes, SelectInternalData, ValueOf, VxeComponentSizeType, SelectReactData, VxeSelectEmits, VxeButtonDefines, VxeInputDefines, VxeSelectDefines, VxeOptionProps, VxeDrawerConstructor, VxeDrawerMethods, VxeFormDefines, VxeFormConstructor, VxeFormPrivateMethods, VxeModalConstructor, VxeModalMethods, VxeInputConstructor, VxeComponentSlotType } from '../../../types'
 import type { VxeTableConstructor, VxeTablePrivateMethods } from '../../../types/components/table'
 
 function isOptionVisible (option: any) {
@@ -70,10 +71,20 @@ export default /* define-vxe-component start */ defineVxeComponent({
     filterable: Boolean as PropType<VxeSelectPropTypes.Filterable>,
     filterMethod: Function as PropType<VxeSelectPropTypes.FilterMethod>,
     remote: Boolean as PropType<VxeSelectPropTypes.Remote>,
-    // 已废弃，被 remote-config.queryMethod 替换
-    remoteMethod: Function as PropType<VxeSelectPropTypes.RemoteMethod>,
     remoteConfig: Object as PropType<VxeSelectPropTypes.RemoteConfig>,
     emptyText: String as PropType<VxeSelectPropTypes.EmptyText>,
+    showTotalButoon: {
+      type: Boolean as PropType<VxeSelectPropTypes.ShowTotalButoon>,
+      default: () => getConfig().select.showTotalButoon
+    },
+    showCheckedButoon: {
+      type: Boolean as PropType<VxeSelectPropTypes.ShowCheckedButoon>,
+      default: () => getConfig().select.showCheckedButoon
+    },
+    showClearButton: {
+      type: Boolean as PropType<VxeSelectPropTypes.ShowClearButton>,
+      default: () => getConfig().select.showClearButton
+    },
     transfer: {
       type: Boolean as PropType<VxeSelectPropTypes.Transfer>,
       default: null
@@ -81,12 +92,23 @@ export default /* define-vxe-component start */ defineVxeComponent({
     virtualYConfig: Object as PropType<VxeSelectPropTypes.VirtualYConfig>,
     scrollY: Object as PropType<VxeSelectPropTypes.ScrollY>,
 
-    // 已废弃，被 option-config.keyField 替换
+    /**
+     * 已废弃，被 remote-config.queryMethod 替换
+     * @deprecated
+     */
+    remoteMethod: Function as PropType<VxeSelectPropTypes.RemoteMethod>,
+    /**
+     * 已废弃，被 option-config.keyField 替换
+     * @deprecated
+     */
     optionId: {
       type: String as PropType<VxeSelectPropTypes.OptionId>,
       default: () => getConfig().select.optionId
     },
-    // 已废弃，被 option-config.useKey 替换
+    /**
+     * 已废弃，被 option-config.useKey 替换
+     * @deprecated
+     */
     optionKey: Boolean as PropType<VxeSelectPropTypes.OptionKey>
   },
   inject: {
@@ -121,7 +143,6 @@ export default /* define-vxe-component start */ defineVxeComponent({
       bodyHeight: 0,
       topSpaceHeight: 0,
       optList: [],
-      afterVisibleList: [],
       staticOptions: [],
       reactFlag: 1,
 
@@ -140,6 +161,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
     const internalData: SelectInternalData = {
       synchData: [],
       fullData: [],
+      afterVisibleList: [],
       optAddMaps: {},
       optGroupKeyMaps: {},
       optFullValMaps: {},
@@ -281,13 +303,10 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const $xeSelect = this
       const props = $xeSelect
 
-      const { value, multiple, max } = props
-      if (multiple && max) {
-        return (XEUtils.isArray(value) ? value.length : (XEUtils.eqNull(value) ? 0 : 1)) >= XEUtils.toNumber(max)
-      }
-      return false
+      const { value: modelValue } = props
+      return ($xeSelect as any).checkMaxLimit(modelValue) as boolean
     },
-    computeSYOpts () {
+    computeVirtualYOpts () {
       const $xeSelect = this
       const props = $xeSelect
 
@@ -399,8 +418,10 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const reactData = $xeSelect.reactData
 
       const $input = $xeSelect.$refs.refInput as VxeInputConstructor
+      if ($input) {
+        $input.blur()
+      }
       reactData.isActivated = true
-      $input.blur()
       return $xeSelect.$nextTick()
     },
     blur () {
@@ -408,7 +429,9 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const reactData = $xeSelect.reactData
 
       const $input = $xeSelect.$refs.refInput as VxeInputConstructor
-      $input.blur()
+      if ($input) {
+        $input.blur()
+      }
       reactData.isActivated = false
       return $xeSelect.$nextTick()
     },
@@ -438,6 +461,16 @@ export default /* define-vxe-component start */ defineVxeComponent({
 
       const optid = option[$xeSelect.getOptKey()]
       return optid ? encodeURIComponent(optid) : ''
+    },
+    checkMaxLimit (selectVals: VxeSelectPropTypes.ModelValue | undefined) {
+      const $xeSelect = this
+      const props = $xeSelect
+
+      const { multiple, max } = props
+      if (multiple && max) {
+        return (XEUtils.isArray(selectVals) ? selectVals.length : (XEUtils.eqNull(selectVals) ? 0 : 1)) >= XEUtils.toNumber(max)
+      }
+      return false
     },
     getRemoteSelectLabel  (value: any) {
       const $xeSelect = this
@@ -501,7 +534,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
           cacheItem._index = index
         }
       })
-      reactData.afterVisibleList = avList
+      internalData.afterVisibleList = avList
       return $xeSelect.$nextTick()
     },
     refreshOption () {
@@ -649,7 +682,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
         reactData.isAniVisible = true
         if (filterable) {
           if (remote && remoteOpts.enabled && remoteOpts.autoLoad && !fullData.length) {
-            $xeSelect.triggerSearchEvent()
+            $xeSelect.handleSearchEvent()
           } else {
             $xeSelect.handleOption()
             $xeSelect.updateYData()
@@ -705,6 +738,40 @@ export default /* define-vxe-component start */ defineVxeComponent({
       $xeSelect.dispatchEvent('clear', { value: selectValue }, evnt)
     },
     clearEvent (params: VxeInputDefines.ClearEventParams) {
+      const $xeSelect = this
+
+      const { $event } = params
+      $xeSelect.clearValueEvent($event, null)
+      $xeSelect.hideOptionPanel()
+    },
+    allCheckedPanelEvent (params: VxeButtonDefines.ClickEventParams) {
+      const $xeSelect = this
+      const props = $xeSelect
+      const reactData = $xeSelect.reactData
+
+      const { $event } = params
+      const { value: modelValue, multiple } = props
+      const { optList } = reactData
+      const valueField = $xeSelect.computeValueField
+      if (multiple) {
+        const multipleValue: any[] = XEUtils.eqNull(modelValue) ? [] : (XEUtils.isArray(modelValue) ? modelValue : [modelValue])
+        for (let i = 0; i < optList.length; i++) {
+          const option = optList[i]
+          const selectValue = option[valueField]
+          // 检测是否超过最大可选数量
+          if ($xeSelect.checkMaxLimit(multipleValue)) {
+            break
+          }
+          if (!multipleValue.some(val => val === selectValue)) {
+            multipleValue.push(selectValue)
+          }
+        }
+        $xeSelect.changeEvent($event, multipleValue)
+        $xeSelect.dispatchEvent('all-change', { value: multipleValue }, $event)
+        $xeSelect.hideOptionPanel()
+      }
+    },
+    clearCheckedPanelEvent (params: VxeButtonDefines.ClickEventParams) {
       const $xeSelect = this
 
       const { $event } = params
@@ -799,8 +866,8 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const internalData = $xeSelect.internalData
 
       const { allowCreate } = props
-      const { afterVisibleList, optList } = reactData
-      const { optFullValMaps, optAddMaps } = internalData
+      const { optList } = reactData
+      const { optFullValMaps, optAddMaps, afterVisibleList } = internalData
       const valueField = $xeSelect.computeValueField
       let fullList = afterVisibleList
       let offsetAddIndex = 0
@@ -972,13 +1039,13 @@ export default /* define-vxe-component start */ defineVxeComponent({
       $xeSelect.togglePanelEvent(evnt)
       $xeSelect.dispatchEvent('click', { triggerButton: true, visible: reactData.visiblePanel }, evnt)
     },
-    modelSearchEvent  (value: string) {
+    modelSearchEvent (value: string) {
       const $xeSelect = this
       const reactData = $xeSelect.reactData
 
       reactData.searchValue = value
     },
-    focusSearchEvent  () {
+    focusSearchEvent () {
       const $xeSelect = this
       const reactData = $xeSelect.reactData
 
@@ -1030,13 +1097,10 @@ export default /* define-vxe-component start */ defineVxeComponent({
         }
       }
     },
-    checkOptionDisabled (isSelected: any, option: VxeOptionProps, group?: VxeOptgroupProps) {
+    checkOptionDisabled (isSelected: any, option: VxeOptionProps) {
       const $xeSelect = this
 
       if (option.disabled) {
-        return true
-      }
-      if (group && group.disabled) {
         return true
       }
       const isMaximize = $xeSelect.computeIsMaximize
@@ -1050,8 +1114,8 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const reactData = $xeSelect.reactData
       const internalData = $xeSelect.internalData
 
-      const { scrollYLoad, afterVisibleList } = reactData
-      const { scrollYStore } = internalData
+      const { scrollYLoad } = reactData
+      const { scrollYStore, afterVisibleList } = internalData
       reactData.bodyHeight = scrollYLoad ? afterVisibleList.length * scrollYStore.rowHeight : 0
       reactData.topSpaceHeight = scrollYLoad ? Math.max(scrollYStore.startIndex * scrollYStore.rowHeight, 0) : 0
     },
@@ -1062,8 +1126,8 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const internalData = $xeSelect.internalData
 
       const { filterable, allowCreate } = props
-      const { scrollYLoad, afterVisibleList, searchValue } = reactData
-      const { optAddMaps, scrollYStore } = internalData
+      const { scrollYLoad, searchValue } = reactData
+      const { optAddMaps, scrollYStore, afterVisibleList } = internalData
       const labelField = $xeSelect.computeLabelField
       const valueField = $xeSelect.computeValueField
       const restList = scrollYLoad ? afterVisibleList.slice(scrollYStore.startIndex, scrollYStore.endIndex) : afterVisibleList.slice(0)
@@ -1096,13 +1160,10 @@ export default /* define-vxe-component start */ defineVxeComponent({
         const { scrollYLoad } = reactData
         const { scrollYStore } = internalData
         const virtualBodyElem = $xeSelect.$refs.refVirtualBody as HTMLDivElement
-        const sYOpts = $xeSelect.computeSYOpts
+        const virtualYOpts = $xeSelect.computeVirtualYOpts
         let rowHeight = 0
         let firstItemElem: HTMLElement | undefined
         if (virtualBodyElem) {
-          if (sYOpts.sItem) {
-            firstItemElem = virtualBodyElem.querySelector(sYOpts.sItem) as HTMLElement
-          }
           if (!firstItemElem) {
             firstItemElem = virtualBodyElem.children[0] as HTMLElement
           }
@@ -1116,7 +1177,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
         if (scrollYLoad) {
           const scrollBodyElem = $xeSelect.$refs.refVirtualWrapper as HTMLDivElement
           const visibleYSize = Math.max(8, scrollBodyElem ? Math.ceil(scrollBodyElem.clientHeight / rowHeight) : 0)
-          const offsetYSize = Math.max(0, Math.min(2, XEUtils.toNumber(sYOpts.oSize)))
+          const offsetYSize = Math.max(0, Math.min(2, XEUtils.toNumber(virtualYOpts.oSize)))
           scrollYStore.offsetSize = offsetYSize
           scrollYStore.visibleSize = visibleYSize
           scrollYStore.endIndex = Math.max(scrollYStore.startIndex, visibleYSize + offsetYSize, scrollYStore.endIndex)
@@ -1286,7 +1347,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       $xeSelect.cacheItemMap(datas || [])
       const { isLoaded, fullData, scrollYStore } = internalData
       const defaultOpts = $xeSelect.computeDefaultOpts
-      const sYOpts = $xeSelect.computeSYOpts
+      const virtualYOpts = $xeSelect.computeVirtualYOpts
       const valueField = $xeSelect.computeValueField
       Object.assign(scrollYStore, {
         startIndex: 0,
@@ -1295,7 +1356,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       })
       internalData.synchData = datas || []
       // 如果gt为0，则总是启用
-      reactData.scrollYLoad = !!sYOpts.enabled && sYOpts.gt > -1 && (sYOpts.gt === 0 || sYOpts.gt <= fullData.length)
+      reactData.scrollYLoad = !!virtualYOpts.enabled && virtualYOpts.gt > -1 && (virtualYOpts.gt === 0 || virtualYOpts.gt <= fullData.length)
       $xeSelect.handleData()
       if (!isLoaded) {
         const { selectMode } = defaultOpts
@@ -1349,7 +1410,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
     //
     // Render
     //
-    renderOption (h: CreateElement, list: VxeOptionProps[], group?: VxeOptgroupProps) {
+    renderOption (h: CreateElement, list: VxeOptionProps[]) {
       const $xeSelect = this
       const props = $xeSelect
       const slots = $xeSelect.$scopedSlots
@@ -1373,9 +1434,9 @@ export default /* define-vxe-component start */ defineVxeComponent({
         const isAdd = !!(allowCreate && optAddMaps[optid])
         const isSelected = !isAdd && (XEUtils.isArray(value) ? value.indexOf(optionValue) > -1 : value === optionValue)
         const isVisible = isAdd || (!isOptGroup || isOptionVisible(option))
-        const isDisabled = !isAdd && $xeSelect.checkOptionDisabled(isSelected, option, group)
+        const isDisabled = !isAdd && $xeSelect.checkOptionDisabled(isSelected, option)
         const defaultSlot = slots ? slots.default : null
-        const optParams = { option, group: null, $select: $xeSelect }
+        const optParams = { option, group: isOptGroup ? option : null, $select: $xeSelect }
         let optLabel = ''
         let optVNs: string | VxeComponentSlotType[] = []
         if (optionSlot) {
@@ -1475,8 +1536,8 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const slots = $xeSelect.$scopedSlots
       const reactData = $xeSelect.reactData
 
-      const { className, popupClassName, loading, filterable } = props
-      const { initialized, isActivated, isAniVisible, visiblePanel, bodyHeight, topSpaceHeight } = reactData
+      const { value: modelValue, className, popupClassName, multiple, loading, filterable, showTotalButoon, showCheckedButoon, showClearButton } = props
+      const { initialized, isActivated, isAniVisible, optList, visiblePanel, bodyHeight, topSpaceHeight } = reactData
       const vSize = $xeSelect.computeSize
       const isDisabled = $xeSelect.computeIsDisabled
       const selectLabel = $xeSelect.computeSelectLabel
@@ -1501,6 +1562,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
           }, selectLabel)
         ])
       }
+      const selectVals = XEUtils.eqNull(modelValue) ? [] : (XEUtils.isArray(modelValue) ? modelValue : [modelValue])
       return h('div', {
         ref: 'refElem',
         class: ['vxe-select', className ? (XEUtils.isFunction(className) ? className({ $select: $xeSelect }) : className) : '', {
@@ -1584,10 +1646,48 @@ export default /* define-vxe-component start */ defineVxeComponent({
                     })
                   ])
                   : renderEmptyElement($xeSelect),
-                headerSlot
+                showTotalButoon || (showCheckedButoon && multiple) || showClearButton || headerSlot
                   ? h('div', {
                     class: 'vxe-select--panel-header'
-                  }, $xeSelect.callSlot(headerSlot, {}, h))
+                  }, headerSlot
+                    ? $xeSelect.callSlot(headerSlot, {}, h)
+                    : [
+                        h('div', {
+                          class: 'vxe-tree-select--header-button'
+                        }, [
+                          showTotalButoon
+                            ? h('div', {
+                              class: 'vxe-tree-select--header-total'
+                            }, getI18n('vxe.select.total', [selectVals.length, optList.length]))
+                            : renderEmptyElement($xeSelect),
+                          h('div', {
+                            class: 'vxe-tree-select--header-btns'
+                          }, [
+                            (showCheckedButoon && multiple)
+                              ? h(VxeButtonComponent, {
+                                props: {
+                                  content: getI18n('vxe.select.allChecked'),
+                                  mode: 'text'
+                                },
+                                on: {
+                                  click: $xeSelect.allCheckedPanelEvent
+                                }
+                              })
+                              : renderEmptyElement($xeSelect),
+                            showClearButton
+                              ? h(VxeButtonComponent, {
+                                props: {
+                                  content: getI18n('vxe.select.clear'),
+                                  mode: 'text'
+                                },
+                                on: {
+                                  click: $xeSelect.clearCheckedPanelEvent
+                                }
+                              })
+                              : renderEmptyElement($xeSelect)
+                          ])
+                        ])
+                      ])
                   : renderEmptyElement($xeSelect),
                 h('div', {
                   class: 'vxe-select--panel-body'
@@ -1609,7 +1709,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
                       ref: 'refVirtualBody',
                       class: 'vxe-select--body',
                       style: {
-                        marginTop: topSpaceHeight ? `${topSpaceHeight}px` : ''
+                        transform: `translateY(${topSpaceHeight}px)`
                       }
                     }, $xeSelect.renderOpts(h))
                   ])
