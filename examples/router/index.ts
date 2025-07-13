@@ -211,9 +211,9 @@ const routes: Array<RouteRecordRaw> = [
     component: () => import('../views/card/CardTest.vue')
   },
   {
-    path: '/component/treeSelect',
+    path: '/component/tree-select',
     name: 'TreeSelectTest',
-    component: () => import('../views/treeSelect/TreeSelectTest.vue')
+    component: () => import('../views/tree-select/TreeSelectTest.vue')
   },
   {
     path: '/component/carousel',

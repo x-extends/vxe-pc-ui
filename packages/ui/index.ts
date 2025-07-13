@@ -300,7 +300,7 @@ setConfig({
     },
     virtualYConfig: {
       enabled: true,
-      gt: 100,
+      gt: 50,
       oSize: 2
     }
   },
@@ -357,16 +357,32 @@ setConfig({
     isArrow: true
   },
   tree: {
+    // autoResize: false,
     indent: 20,
     minHeight: 60,
     radioConfig: {
       strict: true
+    },
+    virtualYConfig: {
+      enabled: true,
+      gt: 50,
+      oSize: 2
     }
   },
   treeSelect: {
+    autoClose: true,
+    virtualYConfig: {
+      enabled: true,
+      gt: 0,
+      oSize: 2
+    },
     treeConfig: {
+      maxHeight: 300,
       radioConfig: {},
-      checkboxConfig: {}
+      checkboxConfig: {},
+      filterConfig: {
+        autoExpandAll: true
+      }
     }
   },
   upload: {

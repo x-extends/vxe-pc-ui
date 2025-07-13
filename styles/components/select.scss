@@ -70,6 +70,25 @@
   background-color: var(--vxe-ui-layout-background-color);
 }
 
+.vxe-select--header-button {
+  display: flex;
+  flex-direction: row;
+}
+.vxe-select--header-total {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  padding-left: 0.8em;
+}
+.vxe-select--header-btns {
+  display: flex;
+  flex-direction: row;
+  flex-grow: 1;
+  justify-content: right;
+}
+
 .vxe-select--panel-header {
   border-bottom: 1px solid var(--vxe-ui-base-popup-border-color);
 }

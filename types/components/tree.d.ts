@@ -26,6 +26,7 @@ export interface VxeTreePrivateRef extends TreePrivateRef { }
 export namespace VxeTreePropTypes {
   export type Data<D = any> = D[]
   export type Loading = boolean
+  export type AutoResize = boolean
   export interface LoadingConfig {
     /**
      * 显示图标
@@ -39,6 +40,7 @@ export namespace VxeTreePropTypes {
   export type Accordion = boolean
   export type Height = string | number
   export type MinHeight = string | number
+  export type MaxHeight = string | number
   export type ParentField = string
   export type ValueField = string
   export type KeyField = string
@@ -65,8 +67,14 @@ export namespace VxeTreePropTypes {
   export type CheckNodeKey = string | number | null
   export interface RadioConfig<D = any> {
     strict?: boolean
-    visibleMethod?: (params: { node: D }) => boolean
-    checkMethod?: (params: { node: D }) => boolean
+    visibleMethod?: (params: {
+      $tree: VxeTreeConstructor
+      node: D
+     }) => boolean
+    checkMethod?: (params: {
+      $tree: VxeTreeConstructor
+      node: D
+     }) => boolean
     highlight?: boolean
     showIcon?: boolean
     trigger?: '' | 'default' | 'node'
@@ -77,8 +85,14 @@ export namespace VxeTreePropTypes {
     showHeader?: boolean
     checkStrictly?: boolean
     highlight?: boolean
-    visibleMethod?: (params: { node: D }) => boolean
-    checkMethod?: (params: { node: D }) => boolean
+    visibleMethod?: (params: {
+      $tree: VxeTreeConstructor
+      node: D
+     }) => boolean
+    checkMethod?: (params: {
+      $tree: VxeTreeConstructor
+      node: D
+    }) => boolean
     showIcon?: boolean
     trigger?: '' | 'default' | 'node'
   }
@@ -103,12 +117,62 @@ export namespace VxeTreePropTypes {
   export type IconClose = string
   export type IconLoaded = string
   export type Size = VxeComponentSizeType
+
+  /**
+   * 根据指定值来筛选数据
+   */
+  export type FilterValue = string | number | null | undefined
+  export interface FilterConfig<D = any> {
+    /**
+     * 过滤后是否自动展开与收起所有节点
+     */
+    autoExpandAll?: boolean
+    /**
+     * 过滤之前的方法
+     */
+    beforeFilterMethod?(params: {
+      $tree: VxeTreeConstructor
+      filterValue: FilterValue
+    }): void
+    /**
+     * 自定义过滤数据方法
+     */
+    filterMethod?:(params: {
+      $tree: VxeTreeConstructor
+      node: D
+      filterValue: FilterValue
+    }) => boolean
+    /**
+     * 过滤之后的方法
+     */
+    afterFilterMethod?(params: {
+      $tree: VxeTreeConstructor
+      filterValue: FilterValue
+    }): void
+  }
+
+  export interface VirtualYConfig {
+    /**
+     * 指定大于指定行时自动启动纵向虚拟滚动，如果为 0 则总是启用，如果为 -1 则关闭
+     */
+    gt?: number
+    /**
+     * 指定每次渲染的数据偏移量，偏移量越大渲染次数就越少，但每次渲染耗时就越久
+     */
+    oSize?: number
+    /**
+     * 是否启用
+     */
+    enabled?: boolean
+  }
 }
 
 export interface VxeTreeProps<D = any> {
   data?: VxeTreePropTypes.Data<D>
+  autoResize?: VxeTreePropTypes.AutoResize
   height?: VxeTreePropTypes.Height
   minHeight?: VxeTreePropTypes.MinHeight
+  maxHeight?: VxeTreePropTypes.MaxHeight
   loading?: VxeTreePropTypes.Loading
   loadingConfig?: VxeTreePropTypes.LoadingConfig
   accordion?: VxeTreePropTypes.Accordion
@@ -141,6 +205,8 @@ export interface VxeTreeProps<D = any> {
   checkNodeKeys?: VxeTreePropTypes.CheckNodeKeys
   checkboxConfig?: VxeTreePropTypes.CheckboxConfig<D>
   nodeConfig?: VxeTreePropTypes.NodeConfig<D>
+  filterValue?: VxeTreePropTypes.FilterValue
+  filterConfig?: VxeTreePropTypes.FilterConfig
   lazy?: VxeTreePropTypes.Lazy
   toggleMethod?: VxeTreePropTypes.ToggleMethod<D>
   /**
@@ -152,9 +218,12 @@ export interface VxeTreeProps<D = any> {
   iconClose?: VxeTreePropTypes.IconClose
   iconLoaded?: VxeTreePropTypes.IconLoaded
   size?: VxeTreePropTypes.Size
+  virtualYConfig?: VxeTreePropTypes.VirtualYConfig
 }
 
 export interface TreePrivateComputed<D = any> {
+  computeChildrenField: ComputedRef<string>
+  computeMapChildrenField: ComputedRef<string>
   computeRadioOpts: ComputedRef<VxeTreePropTypes.RadioConfig<D>>
   computeCheckboxOpts: ComputedRef<VxeTreePropTypes.CheckboxConfig<D>>
   computeNodeOpts: ComputedRef<VxeTreePropTypes.NodeConfig<D>>
@@ -162,7 +231,14 @@ export interface TreePrivateComputed<D = any> {
 export interface VxeTreePrivateComputed extends TreePrivateComputed { }
 
 export interface TreeReactData {
+  parentHeight: number
+  customHeight: number
+  customMinHeight: number
+  customMaxHeight: number
   currentNode: any
+  scrollYLoad: boolean
+  bodyHeight: number
+  topSpaceHeight: number
   selectRadioKey: VxeTreePropTypes.CheckNodeKey | null
   treeList: any[]
   updateExpandedFlag: number
@@ -171,15 +247,34 @@ export interface TreeReactData {
 
 export interface TreeInternalData {
   initialized?: boolean
+  resizeObserver?: ResizeObserver
+  lastFilterValue?: string
+  afterTreeList: any[]
+  treeFullData: any[]
+  afterVisibleList: any[]
   nodeMaps: Record<string, VxeTreeDefines.NodeCacheItem>
   indeterminateRowMaps: Record<string, any>
   selectCheckboxMaps: Record<string, any>
   treeExpandedMaps: Record<string, boolean>
   treeExpandLazyLoadedMaps: Record<string, boolean>
+  lastScrollLeft: number
+  lastScrollTop: number
+  scrollYStore: {
+    startIndex: number
+    endIndex: number
+    visibleSize: number
+    offsetSize: number
+    rowHeight: number
+  }
+  lastScrollTime: number
+  hpTimeout?: undefined | number
 }
 
 export interface TreeMethods<D = any> {
   dispatchEvent(type: ValueOf<VxeTreeEmits>, params: Record<string, any>, evnt: Event | null): void
+  loadData(data: any[]): Promise<any>
+  reloadData(data: any[]): Promise<any>
+  getNodeId(node: any): string
   getCurrentNodeId(): string | number | null
   getCurrentNode(): any | null
   clearCurrentNode(): Promise<any>
@@ -192,8 +287,12 @@ export interface TreeMethods<D = any> {
   setRadioNode(node: any): Promise<any>
   getCheckboxNodeIds(): (string | number)[]
   getCheckboxNodes(): D[]
-  clearCheckboxNode(): Promise<any>
-  setAllCheckboxNode(checked: boolean): Promise<any>
+  clearCheckboxNode(): Promise<{
+    checkNodeKeys: (string | number)[]
+  }>
+  setAllCheckboxNode(checked: boolean): Promise<{
+    checkNodeKeys: (string | number)[]
+  }>
   setCheckboxNode(nodeList: any | any[], checked: boolean): Promise<any>
   setCheckboxByNodeId(nodeKeys: any | any[], checked: boolean): Promise<any>
   /**
@@ -219,6 +318,20 @@ export interface TreeMethods<D = any> {
   isIndeterminateByCheckboxNode(node: any): boolean
   isCheckedByCheckboxNode(node: any): boolean
   getCheckboxIndeterminateNodes(): D[]
+  /**
+   * 重新计算列表
+   */
+  recalculate(): Promise<void>
+  /**
+   * 如果有滚动条，则滚动到对应的位置
+   * @param scrollLeft 左边距离
+   * @param scrollTop 顶部距离
+   */
+  scrollTo(scrollLeft: number | null, scrollTop?: number | null): Promise<void>
+  /**
+   * 手动清除滚动相关信息，还原到初始状态
+   */
+  clearScroll(): Promise<void>
 }
 export interface VxeTreeMethods<D = any> extends TreeMethods<D> { }
 
@@ -235,7 +348,8 @@ export type VxeTreeEmits = [
   'radio-change',
   'checkbox-change',
   'load-success',
-  'load-error'
+  'load-error',
+  'scroll'
 ]
 
 export namespace VxeTreeDefines {
@@ -245,11 +359,12 @@ export namespace VxeTreeDefines {
 
   export interface NodeCacheItem {
     item: any
-    itemIndex: number
+    index: number
     items: any[]
     nodes: any[]
     parent: any
     level: number
+    treeIndex: number
     lineCount: number
     treeLoaded: boolean
   }
@@ -331,6 +446,8 @@ export interface VxeTreeSlots {
   icon?: (params: VxeTreeSlotTypes.IconSlotParams) => any
   title?: (params: VxeTreeSlotTypes.DefaultSlotParams) => any
   extra?: (params: VxeTreeSlotTypes.DefaultSlotParams) => any
+  header?: (params: VxeTreeSlotTypes.DefaultSlotParams) => any
+  footer?: (params: VxeTreeSlotTypes.DefaultSlotParams) => any
   loading?: (params: {}) => any
 }
 

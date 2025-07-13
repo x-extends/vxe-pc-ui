@@ -1,6 +1,6 @@
 import { RenderFunction, SetupContext, Ref } from 'vue'
 import { DefineVxeComponentApp, DefineVxeComponentOptions, DefineVxeComponentInstance, VxeComponentBaseOptions, VxeComponentEventParams, VxeComponentSizeType, ValueOf } from '@vxe-ui/core'
-import { VxeTreeProps } from './tree'
+import { VxeTreeProps, VxeTreePropTypes } from './tree'
 
 /* eslint-disable no-use-before-define,@typescript-eslint/ban-types */
 
@@ -31,6 +31,11 @@ export namespace VxeTreeSelectPropTypes {
   export type Readonly = boolean
   export type Loading = boolean
   export type Disabled = boolean
+  export type AutoClose = boolean
+  export type ShowTotalButoon = boolean
+  export type ShowCheckedButoon = boolean
+  export type ShowExpandButton = boolean
+  export type ShowClearButton = boolean
   export type ClassName = string | ((params: { $treeSelect: VxeTreeSelectConstructor }) => string)
   /**
    * 已废弃，请使用 VxeTreeSelectPropTypes.PopupConfig
@@ -40,6 +45,8 @@ export namespace VxeTreeSelectPropTypes {
   export type Multiple = boolean
   export type PrefixIcon = string
   export type Placement = 'top' | 'bottom'
+  export type Filterable = boolean
+  export type FilterConfig = VxeTreePropTypes.FilterConfig
   export interface Option {
     value?: string | number
     label?: string | number
@@ -47,7 +54,7 @@ export namespace VxeTreeSelectPropTypes {
 
     [key: string]: any
   }
-  export type Options = Option[]
+  export type Options<D = Option> = D[]
   export interface OptionProps {
     value?: string
     label?: string
@@ -64,7 +71,30 @@ export namespace VxeTreeSelectPropTypes {
     parent?: string
   }
   export type Remote = boolean
+  /**
+   * 已废弃，被 remote-config.queryMethod 替换
+   * @deprecated
+   */
   export type RemoteMethod = (params: { searchValue: string }) => Promise<void> | void
+  export interface RemoteConfig {
+    /**
+     * 是否启用
+     */
+    enabled?: boolean
+    /**
+     * 当列表为空时，是否默认自动调用远程查询方法
+     */
+    autoLoad?: boolean
+    /**
+     * 远程查询方法
+     */
+    queryMethod?(params: {
+      $treeSelect: VxeTreeSelectConstructor
+      searchValue: string
+      value: ModelValue | undefined
+    }): Promise<void> | void
+  }
+
   export type Transfer = boolean
   export interface PopupConfig {
     width?: number | string
@@ -72,6 +102,21 @@ export namespace VxeTreeSelectPropTypes {
     className?: string | ((params: { $treeSelect: VxeTreeSelectConstructor }) => string)
   }
   export type TreeConfig<D = any> = Omit<VxeTreeProps<D>, 'data' | 'size'>
+
+  export interface VirtualYConfig {
+    /**
+     * 指定大于指定行时自动启动纵向虚拟滚动，如果为 0 则总是启用，如果为 -1 则关闭
+     */
+    gt?: number
+    /**
+     * 指定每次渲染的数据偏移量，偏移量越大渲染次数就越少，但每次渲染耗时就越久
+     */
+    oSize?: number
+    /**
+     * 是否启用
+     */
+    enabled?: boolean
+  }
 }
 
 export interface VxeTreeSelectProps<D = any> {
@@ -82,18 +127,31 @@ export interface VxeTreeSelectProps<D = any> {
   readonly?: VxeTreeSelectPropTypes.Readonly
   loading?: VxeTreeSelectPropTypes.Loading
   disabled?: VxeTreeSelectPropTypes.Disabled
+  autoClose?: VxeTreeSelectPropTypes.AutoClose
+  showTotalButoon?: VxeTreeSelectPropTypes.ShowTotalButoon
+  showCheckedButoon?: VxeTreeSelectPropTypes.ShowCheckedButoon
+  showClearButton?: VxeTreeSelectPropTypes.ShowClearButton
+  showExpandButton?: VxeTreeSelectPropTypes.ShowExpandButton
   className?: VxeTreeSelectPropTypes.ClassName
   multiple?: VxeTreeSelectPropTypes.Multiple
   prefixIcon?: VxeTreeSelectPropTypes.PrefixIcon
   placement?: VxeTreeSelectPropTypes.Placement
-  options?: VxeTreeSelectPropTypes.Options
+  filterable?: VxeTreeSelectPropTypes.Filterable
+  filterConfig?: VxeTreeSelectPropTypes.FilterConfig
+  options?: VxeTreeSelectPropTypes.Options<D>
   optionProps?: VxeTreeSelectPropTypes.OptionProps
   remote?: VxeTreeSelectPropTypes.Remote
-  remoteMethod?: VxeTreeSelectPropTypes.RemoteMethod
+  remoteConfig?: VxeTreeSelectPropTypes.RemoteConfig
   transfer?: VxeTreeSelectPropTypes.Transfer
   popupConfig?: VxeTreeSelectPropTypes.PopupConfig
   treeConfig?: VxeTreeSelectPropTypes.TreeConfig<D>
+  virtualYConfig?: VxeTreeSelectPropTypes.VirtualYConfig
 
+  /**
+   * 已废弃，被 remote-config.queryMethod 替换
+   * @deprecated
+   */
+  remoteMethod?: VxeTreeSelectPropTypes.RemoteMethod
   /**
    * 已废弃，请使用 popup-config.className
    * @deprecated
@@ -107,14 +165,8 @@ export interface VxeTreeSelectPrivateComputed extends TreeSelectPrivateComputed 
 
 export interface TreeSelectReactData {
   initialized: boolean
-  fullOptionList: any[]
-  fullNodeMaps: Record<string, {
-    item: any
-    index: number
-    items: any[]
-    parent: any
-    nodes: any[]
-  }>
+  searchValue: string
+  searchLoading: boolean
   panelIndex: number
   panelStyle: any
   panelPlacement: any
@@ -126,6 +178,14 @@ export interface TreeSelectReactData {
 
 export interface TreeSelectInternalData {
   hpTimeout?: undefined | number
+  fullOptionList: any[]
+  fullNodeMaps: Record<string, {
+    item: any
+    index: number
+    items: any[]
+    parent: any
+    nodes: any[]
+  }>
 }
 
 export interface TreeSelectMethods {
@@ -139,6 +199,7 @@ export interface VxeTreeSelectPrivateMethods extends TreeSelectPrivateMethods { 
 export type VxeTreeSelectEmits = [
   'update:modelValue',
   'change',
+  'all-change',
   'clear',
   'blur',
   'focus',

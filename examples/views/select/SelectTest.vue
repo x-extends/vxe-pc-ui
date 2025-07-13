@@ -119,14 +119,14 @@
           <vxe-option value="5-4" label="选项5-4"></vxe-option>
         </vxe-optgroup>
       </vxe-select>
-      <vxe-select v-model="demo1.value33" placeholder="多选" multiple>
+      <vxe-select v-model="demo1.value33" placeholder="多选" multiple showCheckedButoon>
         <vxe-option value="1" label="选项1"></vxe-option>
         <vxe-option value="2" label="选项2"></vxe-option>
         <vxe-option value="3" label="选项3"></vxe-option>
         <vxe-option value="4" label="选项4"></vxe-option>
         <vxe-option value="5" label="选项5"></vxe-option>
       </vxe-select>
-      <vxe-select v-model="demo1.value34" placeholder="多选可清除" multiple clearable>
+      <vxe-select v-model="demo1.value34" placeholder="多选可清除" multiple clearable showCheckedButoon>
         <vxe-option value="1" label="选项1"></vxe-option>
         <vxe-option value="2" label="选项2"></vxe-option>
         <vxe-option value="3" label="选项3"></vxe-option>

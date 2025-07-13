@@ -131,7 +131,12 @@ export namespace VxeGridPropTypes {
     message?: boolean
     showLoading?: boolean
     showResponseMsg?: boolean
+    /**
+     * 已废弃，请使用 showActionMsg
+     * @deprecated
+     */
     showActiveMsg?: boolean
+    showActionMsg?: boolean
     seq?: boolean
     sort?: boolean
     filter?: boolean

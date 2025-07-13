@@ -49,8 +49,18 @@ export namespace VxeButtonPropTypes {
    */
   export type Icon = string
   export interface IconRender {
+    /**
+     * 渲染器名称
+     */
     name: string
-    props?: Record<string, any>
+    /**
+     * 目标组件渲染的参数
+     */
+    props?: { [key: string]: any }
+    /**
+     * 目标组件渲染的事件
+     */
+    events?: { [key: string]: (...args: any[]) => any }
   }
   export type PrefixIcon = string
   export interface PrefixRender extends IconRender {}

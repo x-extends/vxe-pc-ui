@@ -398,7 +398,7 @@ export default defineVxeComponent({
             ref: refVirtualBody,
             class: 'vxe-list--body',
             style: {
-              marginTop: topSpaceHeight ? `${topSpaceHeight}px` : ''
+              transform: `translateY(${topSpaceHeight}px)`
             }
           }, defaultSlot ? defaultSlot({ items, $list: $xeList }) : [])
         ]),
