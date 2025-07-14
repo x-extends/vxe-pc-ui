@@ -147,9 +147,15 @@
 }
 
 .vxe-tree--empty-placeholder {
-  padding: 1.4em 0.6em 0 0.6em;
+  margin-top: 1.4em;
   text-align: center;
+  height: var(--vxe-ui-tree-node-height);
   color: var(--vxe-ui-input-placeholder-color);
+}
+
+.vxe-tree--y-space {
+  width: 0;
+  float: left;
 }
 
 .vxe-tree {

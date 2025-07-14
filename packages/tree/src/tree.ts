@@ -816,7 +816,10 @@ export default defineVxeComponent({
           reactData.parentHeight = Math.max(headHeight + footHeight + rowHeight, parentEl.clientHeight - parentPaddingSize - headHeight - footHeight)
         }
         updateHeight()
-        return computeScrollLoad()
+        return computeScrollLoad().then(() => {
+          updateHeight()
+          updateYSpace()
+        })
       }
       return nextTick()
     }
@@ -1338,12 +1341,15 @@ export default defineVxeComponent({
         return treeMethods.clearAllExpandNode()
       },
       clearAllExpandNode () {
-        const { nodeMaps } = internalData
+        const { nodeMaps, scrollYStore } = internalData
         XEUtils.each(nodeMaps, (nodeItem: VxeTreeDefines.NodeCacheItem) => {
           nodeItem.treeLoaded = false
         })
         internalData.treeExpandedMaps = {}
         reactData.updateExpandedFlag++
+        reactData.topSpaceHeight = 0
+        scrollYStore.startIndex = 0
+        scrollYStore.endIndex = 1
         handleTreeToList()
         handleData()
         return recalculate()
@@ -1764,7 +1770,7 @@ export default defineVxeComponent({
           onScroll: scrollEvent
         }, [
           h('div', {
-            class: 'vxe-select--y-space',
+            class: 'vxe-tree--y-space',
             style: {
               height: bodyHeight ? `${bodyHeight}px` : ''
             }
