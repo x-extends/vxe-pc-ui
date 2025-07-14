@@ -152,6 +152,11 @@
   color: var(--vxe-ui-input-placeholder-color);
 }
 
+.vxe-tree--y-space {
+  width: 0;
+  float: left;
+}
+
 .vxe-tree {
   font-size: var(--vxe-ui-font-size-default);
   &.size--medium {

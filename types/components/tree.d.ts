@@ -203,8 +203,8 @@ export interface VxeTreeProps<D = any> {
   lazy?: VxeTreePropTypes.Lazy
   toggleMethod?: VxeTreePropTypes.ToggleMethod<D>
   /**
-     * 该方法用于异步加载子节点
-     */
+   * 该方法用于异步加载子节点
+   */
   loadMethod?: VxeTreePropTypes.LoadMethod<D>
   showIcon?: VxeTreePropTypes.ShowIcon
   iconOpen?: VxeTreePropTypes.IconOpen
