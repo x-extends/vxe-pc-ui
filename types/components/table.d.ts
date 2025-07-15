@@ -1193,9 +1193,12 @@ export namespace VxeTablePropTypes {
      */
     labelField?: string
     /**
-     * 绑定选中属性，行数据中必须存在该字段，否则无效
+     * 绑定选中属性，支持读写，行数据中必须存在该字段，否则无效
      */
     checkField?: string
+    /**
+     * 绑定半选只读属性，仅有只读权限，不支持修改，行数据中必须存在该字段，否则无效
+     */
     indeterminateField?: string
     /**
      * 是否显示全选按钮，如果 checkStrictly=true 则默认为 false
