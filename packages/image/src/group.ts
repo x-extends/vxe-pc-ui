@@ -28,7 +28,8 @@ export default /* define-vxe-component start */ defineVxeComponent({
     showDownloadButton: {
       type: Boolean as PropType<VxeImageGroupPropTypes.ShowDownloadButton>,
       default: () => getConfig().imageGroup.showDownloadButton
-    }
+    },
+    getThumbnailUrlMethod: Function as PropType<VxeImageGroupPropTypes.GetThumbnailUrlMethod>
   },
   provide () {
     const $xeImageGroup = this
@@ -75,6 +76,12 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const props = $xeImageGroup
 
       return Object.assign({}, getConfig().imageGroup.imageStyle, props.imageStyle)
+    },
+    computeGetThumbnailUrlMethod () {
+      const $xeImageGroup = this
+      const props = $xeImageGroup
+
+      return props.getThumbnailUrlMethod || getConfig().imageGroup.getThumbnailUrlMethod
     }
   },
   methods: {
@@ -100,7 +107,15 @@ export default /* define-vxe-component start */ defineVxeComponent({
           urlList: imgList,
           toolbarConfig,
           showPrintButton,
-          showDownloadButton
+          showDownloadButton,
+          events: {
+            change (eventParams) {
+              $xeImageGroup.dispatchEvent('click', eventParams, eventParams.$event)
+            },
+            rotate (eventParams) {
+              $xeImageGroup.dispatchEvent('click', eventParams, eventParams.$event)
+            }
+          }
         })
       }
       $xeImageGroup.dispatchEvent('click', { url, urlList: imgList }, evnt)
@@ -115,6 +130,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const imgList = $xeImageGroup.computeImgList
       const vSize = $xeImageGroup.computeSize
       const imgStyleOpts = $xeImageGroup.computeImgStyleOpts
+      const getThumbnailUrlMethod = $xeImageGroup.computeGetThumbnailUrlMethod
       return h('div', {
         class: ['vxe-image-group', {
           [`size--${vSize}`]: vSize
@@ -127,7 +143,8 @@ export default /* define-vxe-component start */ defineVxeComponent({
               src: item.url,
               alt: item.alt,
               width: imgStyleOpts.width,
-              height: imgStyleOpts.height
+              height: imgStyleOpts.height,
+              getThumbnailUrlMethod
             }
           })
         })

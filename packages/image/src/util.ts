@@ -2,7 +2,7 @@ import { VxeUI } from '@vxe-ui/core'
 import VxeImagePreviewComponent from './preview'
 import XEUtils from 'xe-utils'
 
-import type { VxeImageDefines } from '../../../types'
+import type { VxeImageDefines, VxeImagePreviewDefines } from '../../../types'
 
 export const openPreviewImage: VxeImageDefines.PreviewImageFunction = (options) => {
   if (VxeUI.modal) {
@@ -10,6 +10,7 @@ export const openPreviewImage: VxeImageDefines.PreviewImageFunction = (options) 
       escClosable: true
     }, options)
     const { urlList, activeIndex } = opts
+    const { rotate, change } = opts.events || {}
     const modalId = XEUtils.uniqueId('image-preview')
     VxeUI.modal.open({
       id: modalId,
@@ -39,6 +40,16 @@ export const openPreviewImage: VxeImageDefines.PreviewImageFunction = (options) 
             on: {
               close () {
                 VxeUI.modal.close(modalId)
+              },
+              change (eventParams: VxeImagePreviewDefines.ChangeEventParams) {
+                if (change) {
+                  change.call(this, eventParams)
+                }
+              },
+              rotate (eventParams: VxeImagePreviewDefines.RotateEventParams) {
+                if (rotate) {
+                  rotate.call(this, eventParams)
+                }
               }
             }
           })

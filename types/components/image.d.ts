@@ -1,5 +1,5 @@
 import { DefineVxeComponentApp, DefineVxeComponentOptions, DefineVxeComponentInstance, VxeComponentEventParams, ValueOf, VxeComponentSizeType } from '@vxe-ui/core'
-import { VxeImagePreviewProps, VxeImagePreviewPropTypes } from './image-preview'
+import { VxeImagePreviewProps, VxeImagePreviewPropTypes, VxeImagePreviewListeners } from './image-preview'
 
 /* eslint-disable @typescript-eslint/no-empty-interface,no-use-before-define,@typescript-eslint/ban-types */
 
@@ -33,6 +33,10 @@ export namespace VxeImagePropTypes {
   export type ShowPrintButton = boolean
   export type ShowDownloadButton = boolean
   export type Size = VxeComponentSizeType
+  export type GetThumbnailUrlMethod = ((params: {
+    $image: VxeImageConstructor
+    url: string
+  }) => string)
 }
 
 export interface VxeImageProps {
@@ -49,6 +53,7 @@ export interface VxeImageProps {
   showPrintButton?: VxeImagePropTypes.ShowPrintButton
   showDownloadButton?: VxeImagePropTypes.ShowDownloadButton
   size?: VxeImagePropTypes.Size
+  getThumbnailUrlMethod?: VxeImagePropTypes.GetThumbnailUrlMethod
 }
 
 export interface ImagePrivateComputed {
@@ -67,7 +72,9 @@ export interface ImagePrivateMethods {}
 export interface VxeImagePrivateMethods extends ImagePrivateMethods { }
 
 export type VxeImageEmits = [
-  'click'
+  'click',
+  'change',
+  'rotate'
 ]
 
 export namespace VxeImageDefines {
@@ -75,26 +82,43 @@ export namespace VxeImageDefines {
     $image: VxeImageConstructor
   }
 
-  export interface ClickEventParams {
+  export interface ClickEventParams extends ImageEventParams {
     url: string
+  }
+
+  export interface ChangeEventParams extends ImageEventParams {
+    url: string
+    activeIndex: number
+  }
+
+  export interface RotateEventParams extends ImageEventParams {
+    url: string
+    rotateValue: number
   }
 
   export type PreviewImageFunction = (options: VxeImagePreviewProps & {
     activeIndex?: VxeImagePreviewPropTypes.ModelValue
     escClosable?: boolean
+    events?: VxeImagePreviewListeners
   }) => Promise<any>
 }
 
 export type VxeImageEventProps = {
   onClick?: VxeImageEvents.Click
+  onChange?: VxeImageEvents.Change
+  onRotate?: VxeImageEvents.Rotate
 }
 
 export interface VxeImageListeners {
   click?: VxeImageEvents.Click
+  change?: VxeImageEvents.Change
+  rotate?: VxeImageEvents.Rotate
 }
 
 export namespace VxeImageEvents {
   export type Click = (params: VxeImageDefines.ClickEventParams) => void
+  export type Change = (params: VxeImageDefines.ChangeEventParams) => void
+  export type Rotate = (params: VxeImageDefines.RotateEventParams) => void
 }
 
 export namespace VxeImageSlotTypes {

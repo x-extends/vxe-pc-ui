@@ -251,7 +251,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
         reactData.offsetScale = Number(Math.max(-0.9, offsetScale - stepNum).toFixed(2))
       }
     },
-    handleChange (isNext: boolean) {
+    handleChangeEvent (evnt: Event, isNext: boolean) {
       const $xeImagePreview = this
       const reactData = $xeImagePreview.reactData
 
@@ -270,14 +270,19 @@ export default /* define-vxe-component start */ defineVxeComponent({
           activeIndex--
         }
       }
-      $xeImagePreview.resetStyle()
+      const imgUrl = imgList[activeIndex || 0]
       reactData.activeIndex = activeIndex
+      $xeImagePreview.resetStyle()
       $xeImagePreview.emitModel(activeIndex)
+      $xeImagePreview.dispatchEvent('change', { url: imgUrl, activeIndex }, evnt)
     },
-    handleRotateImg (isRight: boolean) {
+    handleRotateImgEvent (evnt: Event, isRight: boolean) {
       const $xeImagePreview = this
       const reactData = $xeImagePreview.reactData
 
+      const imgList = $xeImagePreview.computeImgList
+      const { activeIndex } = reactData
+      const imgUrl = imgList[activeIndex || 0]
       let offsetRotate = reactData.offsetRotate
       if (isRight) {
         offsetRotate += 90
@@ -285,6 +290,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
         offsetRotate -= 90
       }
       reactData.offsetRotate = offsetRotate
+      $xeImagePreview.dispatchEvent('rotate', { url: imgUrl, rotateValue: offsetRotate }, evnt)
     },
     handlePct11  () {
       const $xeImagePreview = this
@@ -399,10 +405,10 @@ export default /* define-vxe-component start */ defineVxeComponent({
             $xeImagePreview.handlePct11()
             break
           case 'rotateLeft':
-            $xeImagePreview.handleRotateImg(false)
+            $xeImagePreview.handleRotateImgEvent(evnt, false)
             break
           case 'rotateRight':
-            $xeImagePreview.handleRotateImg(true)
+            $xeImagePreview.handleRotateImgEvent(evnt, true)
             break
           case 'print':
             $xeImagePreview.handlePrintImg()
@@ -483,21 +489,21 @@ export default /* define-vxe-component start */ defineVxeComponent({
         if (hasShiftKey) {
           reactData.offsetLeft -= 1
         } else {
-          $xeImagePreview.handleChange(false)
+          $xeImagePreview.handleChangeEvent(evnt, false)
         }
       } else if (isRightArrow) {
         evnt.preventDefault()
         if (hasShiftKey) {
           reactData.offsetLeft += 1
         } else {
-          $xeImagePreview.handleChange(true)
+          $xeImagePreview.handleChangeEvent(evnt, true)
         }
       } else if (isR && isControlKey) {
         evnt.preventDefault()
         if (hasShiftKey) {
-          $xeImagePreview.handleRotateImg(false)
+          $xeImagePreview.handleRotateImgEvent(evnt, false)
         } else {
-          $xeImagePreview.handleRotateImg(true)
+          $xeImagePreview.handleRotateImgEvent(evnt, true)
         }
       } else if (isP && isControlKey) {
         evnt.preventDefault()
@@ -613,8 +619,8 @@ export default /* define-vxe-component start */ defineVxeComponent({
           ? h('div', {
             class: 'vxe-image-preview--previous-btn',
             on: {
-              click () {
-                $xeImagePreview.handleChange(false)
+              click (evnt: KeyboardEvent) {
+                $xeImagePreview.handleChangeEvent(evnt, false)
               }
             }
           }, [
@@ -627,8 +633,8 @@ export default /* define-vxe-component start */ defineVxeComponent({
           ? h('div', {
             class: 'vxe-image-preview--next-btn',
             on: {
-              click () {
-                $xeImagePreview.handleChange(true)
+              click (evnt: KeyboardEvent) {
+                $xeImagePreview.handleChangeEvent(evnt, true)
               }
             }
           }, [

@@ -5,7 +5,7 @@ import { getConfig, createEvent, globalMixins } from '../../ui'
 import { toCssUnit } from '../../ui/src/dom'
 import { openPreviewImage } from './util'
 
-import type { VxeImagePropTypes, ImageReactData, VxeImageEmits, VxeImageGroupConstructor, VxeImageGroupPrivateMethods, ValueOf, VxeComponentSizeType } from '../../../types'
+import type { VxeImagePropTypes, ImageReactData, VxeImageEmits, VxeImageGroupConstructor, VxeImageConstructor, VxeImageGroupPrivateMethods, ValueOf, VxeComponentSizeType } from '../../../types'
 
 export default /* define-vxe-component start */ defineVxeComponent({
   name: 'VxeImage',
@@ -37,7 +37,11 @@ export default /* define-vxe-component start */ defineVxeComponent({
       type: Boolean as PropType<VxeImagePropTypes.ShowDownloadButton>,
       default: () => getConfig().image.showDownloadButton
     },
-    size: { type: String as PropType<VxeImagePropTypes.Size>, default: () => getConfig().image.size || getConfig().size }
+    size: {
+      type: String as PropType<VxeImagePropTypes.Size>,
+      default: () => getConfig().image.size || getConfig().size
+    },
+    getThumbnailUrlMethod: Function as PropType<VxeImagePropTypes.GetThumbnailUrlMethod>
   },
   data () {
     const reactData: ImageReactData = {
@@ -109,6 +113,14 @@ export default /* define-vxe-component start */ defineVxeComponent({
         alt: string | number | undefined;
       } = $xeImage.computeImgItem
       return imgItem ? `${imgItem.url || ''}` : ''
+    },
+    computeImgThumbnailUrl () {
+      const $xeImage = this
+      const props = $xeImage
+
+      const getThumbnailUrlFn = props.getThumbnailUrlMethod || getConfig().image.getThumbnailUrlMethod
+      const imgUrl = $xeImage.computeImgUrl as string
+      return getThumbnailUrlFn ? getThumbnailUrlFn({ url: imgUrl, $image: $xeImage as unknown as VxeImageConstructor }) : ''
     }
   },
   methods: {
@@ -136,7 +148,15 @@ export default /* define-vxe-component start */ defineVxeComponent({
             toolbarConfig,
             showPrintButton,
             showDownloadButton,
-            maskClosable
+            maskClosable,
+            events: {
+              change (eventParams) {
+                $xeImage.dispatchEvent('click', eventParams, eventParams.$event)
+              },
+              rotate (eventParams) {
+                $xeImage.dispatchEvent('click', eventParams, eventParams.$event)
+              }
+            }
           })
         }
         $xeImage.dispatchEvent('click', { url: imgUrl }, evnt)
@@ -153,6 +173,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const { alt, loading, circle } = props
       const imgStyle = $xeImage.computeImgStyle
       const imgUrl = $xeImage.computeImgUrl
+      const imgThumbnailUrl = $xeImage.computeImgThumbnailUrl
       const vSize = $xeImage.computeSize
       return h('img', {
         ref: 'refElem',
@@ -162,7 +183,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
         }],
         style: imgStyle,
         attrs: {
-          src: imgUrl,
+          src: imgThumbnailUrl || imgUrl,
           alt,
           loading
         },

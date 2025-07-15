@@ -1,5 +1,6 @@
 import { DefineVxeComponentApp, DefineVxeComponentOptions, DefineVxeComponentInstance, VxeComponentEventParams, ValueOf, VxeComponentSizeType } from '@vxe-ui/core'
 import { VxeImagePreviewPropTypes } from './image-preview'
+import { VxeImagePropTypes } from './image'
 
 /* eslint-disable @typescript-eslint/no-empty-interface,no-use-before-define,@typescript-eslint/ban-types */
 
@@ -30,6 +31,7 @@ export namespace VxeImageGroupPropTypes {
   export type ToolbarConfig = VxeImagePreviewPropTypes.ToolbarConfig
   export type ShowPrintButton = boolean
   export type ShowDownloadButton = boolean
+  export type GetThumbnailUrlMethod = VxeImagePropTypes.GetThumbnailUrlMethod
 }
 
 export interface VxeImageGroupProps {
@@ -40,6 +42,7 @@ export interface VxeImageGroupProps {
   toolbarConfig?: VxeImageGroupPropTypes.ToolbarConfig
   showPrintButton?: VxeImageGroupPropTypes.ShowPrintButton
   showDownloadButton?: VxeImageGroupPropTypes.ShowDownloadButton
+  getThumbnailUrlMethod?: VxeImageGroupPropTypes.GetThumbnailUrlMethod
 }
 
 export interface ImageGroupPrivateComputed {
@@ -60,7 +63,9 @@ export interface ImageGroupPrivateMethods {
 export interface VxeImageGroupPrivateMethods extends ImageGroupPrivateMethods { }
 
 export type VxeImageGroupEmits = [
-  'click'
+  'click',
+  'change',
+  'rotate'
 ]
 
 export namespace VxeImageGroupDefines {
@@ -68,21 +73,37 @@ export namespace VxeImageGroupDefines {
     $imageGroup: VxeImageGroupConstructor
   }
 
-  export interface ClickEventParams {
+  export interface ClickEventParams extends ImageGroupEventParams {
     url: string
+  }
+
+  export interface ChangeEventParams extends ImageGroupEventParams {
+    url: string
+    activeIndex: number
+  }
+
+  export interface RotateEventParams extends ImageGroupEventParams {
+    url: string
+    rotateValue: number
   }
 }
 
 export type VxeImageGroupEventProps = {
   onClick?: VxeImageGroupEvents.Click
+  onChange?: VxeImageGroupEvents.Change
+  onRotate?: VxeImageGroupEvents.Rotate
 }
 
 export interface VxeImageGroupListeners {
   click?: VxeImageGroupEvents.Click
+  change?: VxeImageGroupEvents.Change
+  rotate?: VxeImageGroupEvents.Rotate
 }
 
 export namespace VxeImageGroupEvents {
   export type Click = (params: VxeImageGroupDefines.ClickEventParams) => void
+  export type Change = (params: VxeImageGroupDefines.ChangeEventParams) => void
+  export type Rotate = (params: VxeImageGroupDefines.RotateEventParams) => void
 }
 
 export namespace VxeImageGroupSlotTypes {

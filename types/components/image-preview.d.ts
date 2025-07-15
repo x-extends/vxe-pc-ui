@@ -105,6 +105,7 @@ export type VxeImagePreviewEmits = [
   'change',
   'download',
   'download-fail',
+  'rotate',
   'close'
 ]
 
@@ -116,21 +117,30 @@ export namespace VxeImagePreviewDefines {
   export type ToolbarCode = 'zoomOut' | 'zoomIn' | 'pctFull' | 'pct11' | 'rotateLeft' | 'rotateRight' | 'print' | 'download'
 
   export type ChangeParams = {
-    checklist: any[]
+    url: string
+    activeIndex: number
   }
   export interface ChangeEventParams extends ImagePreviewEventParams, ChangeParams { }
+
+  export interface RotateEventParams extends ImagePreviewEventParams {
+    url: string
+    rotateValue: number
+  }
 }
 
 export type VxeImagePreviewEventProps = {
   onChange?: VxeImagePreviewEvents.Change
+  onRotate?: VxeImagePreviewEvents.Rotate
 }
 
 export interface VxeImagePreviewListeners {
   change?: VxeImagePreviewEvents.Change
+  rotate?: VxeImagePreviewEvents.Rotate
 }
 
 export namespace VxeImagePreviewEvents {
   export type Change = (params: VxeImagePreviewDefines.ChangeEventParams) => void
+  export type Rotate = (params: VxeImagePreviewDefines.RotateEventParams) => void
  }
 
 export namespace VxeImagePreviewSlotTypes {
