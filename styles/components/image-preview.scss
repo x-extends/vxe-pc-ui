@@ -56,7 +56,10 @@
 }
 .vxe-image-preview--img-item {
   display: none;
-  cursor: grabbing;
+  cursor: grab;
+  &:active {
+    cursor: grabbing;
+  }
   &.is--active {
     display: block;
   }
