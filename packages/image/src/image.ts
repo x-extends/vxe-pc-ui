@@ -151,10 +151,10 @@ export default defineVxeComponent({
             maskClosable,
             events: {
               change (eventParams) {
-                $xeImage.dispatchEvent('click', eventParams, eventParams.$event)
+                $xeImage.dispatchEvent('change', eventParams, eventParams.$event)
               },
               rotate (eventParams) {
-                $xeImage.dispatchEvent('click', eventParams, eventParams.$event)
+                $xeImage.dispatchEvent('rotate', eventParams, eventParams.$event)
               }
             }
           })

@@ -99,10 +99,10 @@ export default defineVxeComponent({
             showDownloadButton,
             events: {
               change (eventParams) {
-                $xeImageGroup.dispatchEvent('click', eventParams, eventParams.$event)
+                $xeImageGroup.dispatchEvent('change', eventParams, eventParams.$event)
               },
               rotate (eventParams) {
-                $xeImageGroup.dispatchEvent('click', eventParams, eventParams.$event)
+                $xeImageGroup.dispatchEvent('rotate', eventParams, eventParams.$event)
               }
             }
           })
