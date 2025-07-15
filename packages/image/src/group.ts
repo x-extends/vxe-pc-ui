@@ -25,10 +25,13 @@ export default defineVxeComponent({
     showDownloadButton: {
       type: Boolean as PropType<VxeImageGroupPropTypes.ShowDownloadButton>,
       default: () => getConfig().imageGroup.showDownloadButton
-    }
+    },
+    getThumbnailUrlMethod: Function as PropType<VxeImageGroupPropTypes.GetThumbnailUrlMethod>
   },
   emits: [
-    'click'
+    'click',
+    'change',
+    'rotate'
   ] as VxeImageGroupEmits,
   setup (props, context) {
     const { emit } = context
@@ -60,6 +63,10 @@ export default defineVxeComponent({
       return Object.assign({}, getConfig().imageGroup.imageStyle, props.imageStyle)
     })
 
+    const computeGetThumbnailUrlMethod = computed(() => {
+      return props.getThumbnailUrlMethod || getConfig().imageGroup.getThumbnailUrlMethod
+    })
+
     const computeMaps: ButtonPrivateComputed = {
       computeSize
     }
@@ -89,10 +96,18 @@ export default defineVxeComponent({
             urlList: imgList,
             toolbarConfig,
             showPrintButton,
-            showDownloadButton
+            showDownloadButton,
+            events: {
+              change (eventParams) {
+                $xeImageGroup.dispatchEvent('click', eventParams, eventParams.$event)
+              },
+              rotate (eventParams) {
+                $xeImageGroup.dispatchEvent('click', eventParams, eventParams.$event)
+              }
+            }
           })
         }
-        imageGroupMethods.dispatchEvent('click', { url, urlList: imgList }, evnt)
+        $xeImageGroup.dispatchEvent('click', { url, urlList: imgList }, evnt)
       }
     }
 
@@ -102,6 +117,7 @@ export default defineVxeComponent({
       const imgList = computeImgList.value
       const vSize = computeSize.value
       const imgStyleOpts = computeImgStyleOpts.value
+      const getThumbnailUrlMethod = computeGetThumbnailUrlMethod.value
       return h('div', {
         class: ['vxe-image-group', {
           [`size--${vSize}`]: vSize
@@ -113,7 +129,8 @@ export default defineVxeComponent({
             src: item.url,
             alt: item.alt,
             width: imgStyleOpts.width,
-            height: imgStyleOpts.height
+            height: imgStyleOpts.height,
+            getThumbnailUrlMethod
           })
         })
         : [])

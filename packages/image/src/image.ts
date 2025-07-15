@@ -34,10 +34,16 @@ export default defineVxeComponent({
       type: Boolean as PropType<VxeImagePropTypes.ShowDownloadButton>,
       default: () => getConfig().image.showDownloadButton
     },
-    size: { type: String as PropType<VxeImagePropTypes.Size>, default: () => getConfig().image.size || getConfig().size }
+    size: {
+      type: String as PropType<VxeImagePropTypes.Size>,
+      default: () => getConfig().image.size || getConfig().size
+    },
+    getThumbnailUrlMethod: Function as PropType<VxeImagePropTypes.GetThumbnailUrlMethod>
   },
   emits: [
-    'click'
+    'click',
+    'change',
+    'rotate'
   ] as VxeImageEmits,
   setup (props, context) {
     const { emit } = context
@@ -103,6 +109,12 @@ export default defineVxeComponent({
       return imgItem ? `${imgItem.url || ''}` : ''
     })
 
+    const computeImgThumbnailUrl = computed(() => {
+      const getThumbnailUrlFn = props.getThumbnailUrlMethod || getConfig().image.getThumbnailUrlMethod
+      const imgUrl = computeImgUrl.value
+      return getThumbnailUrlFn ? getThumbnailUrlFn({ url: imgUrl, $image: $xeImage }) : ''
+    })
+
     const computeMaps: VxeImagePrivateComputed = {
       computeSize
     }
@@ -136,10 +148,18 @@ export default defineVxeComponent({
             toolbarConfig,
             showPrintButton,
             showDownloadButton,
-            maskClosable
+            maskClosable,
+            events: {
+              change (eventParams) {
+                $xeImage.dispatchEvent('click', eventParams, eventParams.$event)
+              },
+              rotate (eventParams) {
+                $xeImage.dispatchEvent('click', eventParams, eventParams.$event)
+              }
+            }
           })
         }
-        imageMethods.dispatchEvent('click', { url: imgUrl }, evnt)
+        $xeImage.dispatchEvent('click', { url: imgUrl }, evnt)
       }
     }
 
@@ -152,6 +172,7 @@ export default defineVxeComponent({
       const { alt, loading, circle } = props
       const imgStyle = computeImgStyle.value
       const imgUrl = computeImgUrl.value
+      const imgThumbnailUrl = computeImgThumbnailUrl.value
       const vSize = computeSize.value
       return h('img', {
         ref: refElem,
@@ -159,7 +180,7 @@ export default defineVxeComponent({
           [`size--${vSize}`]: vSize,
           'is--circle': circle
         }],
-        src: imgUrl,
+        src: imgThumbnailUrl || imgUrl,
         alt,
         loading,
         style: imgStyle,

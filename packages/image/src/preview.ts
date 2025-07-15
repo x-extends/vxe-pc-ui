@@ -40,6 +40,7 @@ export default defineVxeComponent({
     'change',
     'download',
     'download-fail',
+    'rotate',
     'close'
   ] as VxeImagePreviewEmits,
   setup (props, context) {
@@ -241,7 +242,7 @@ export default defineVxeComponent({
       }
     }
 
-    const handleChange = (isNext: boolean) => {
+    const handleChangeEvent = (evnt: Event, isNext: boolean) => {
       let activeIndex = reactData.activeIndex || 0
       const imgList = computeImgList.value
       if (isNext) {
@@ -257,12 +258,17 @@ export default defineVxeComponent({
           activeIndex--
         }
       }
-      resetStyle()
+      const imgUrl = imgList[activeIndex || 0]
       reactData.activeIndex = activeIndex
+      resetStyle()
       emitModel(activeIndex)
+      dispatchEvent('change', { url: imgUrl, activeIndex }, evnt)
     }
 
-    const handleRotateImg = (isRight: boolean) => {
+    const handleRotateImgEvent = (evnt: Event, isRight: boolean) => {
+      const imgList = computeImgList.value
+      const { activeIndex } = reactData
+      const imgUrl = imgList[activeIndex || 0]
       let offsetRotate = reactData.offsetRotate
       if (isRight) {
         offsetRotate += 90
@@ -270,6 +276,7 @@ export default defineVxeComponent({
         offsetRotate -= 90
       }
       reactData.offsetRotate = offsetRotate
+      dispatchEvent('rotate', { url: imgUrl, rotateValue: offsetRotate }, evnt)
     }
 
     const handlePct11 = () => {
@@ -373,10 +380,10 @@ export default defineVxeComponent({
             handlePct11()
             break
           case 'rotateLeft':
-            handleRotateImg(false)
+            handleRotateImgEvent(evnt, false)
             break
           case 'rotateRight':
-            handleRotateImg(true)
+            handleRotateImgEvent(evnt, true)
             break
           case 'print':
             handlePrintImg()
@@ -452,21 +459,21 @@ export default defineVxeComponent({
         if (hasShiftKey) {
           reactData.offsetLeft -= 1
         } else {
-          handleChange(false)
+          handleChangeEvent(evnt, false)
         }
       } else if (isRightArrow) {
         evnt.preventDefault()
         if (hasShiftKey) {
           reactData.offsetLeft += 1
         } else {
-          handleChange(true)
+          handleChangeEvent(evnt, true)
         }
       } else if (isR && isControlKey) {
         evnt.preventDefault()
         if (hasShiftKey) {
-          handleRotateImg(false)
+          handleRotateImgEvent(evnt, false)
         } else {
-          handleRotateImg(true)
+          handleRotateImgEvent(evnt, true)
         }
       } else if (isP && isControlKey) {
         evnt.preventDefault()
@@ -559,8 +566,8 @@ export default defineVxeComponent({
         imgList.length > 1
           ? h('div', {
             class: 'vxe-image-preview--previous-btn',
-            onClick () {
-              handleChange(false)
+            onClick (evnt) {
+              handleChangeEvent(evnt, false)
             }
           }, [
             h('i', {
@@ -571,8 +578,8 @@ export default defineVxeComponent({
         imgList.length > 1
           ? h('div', {
             class: 'vxe-image-preview--next-btn',
-            onClick () {
-              handleChange(true)
+            onClick (evnt) {
+              handleChangeEvent(evnt, true)
             }
           }, [
             h('i', {
