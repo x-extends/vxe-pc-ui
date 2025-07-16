@@ -29,7 +29,7 @@ declare module '@vxe-ui/core' {
     /**
      * 表格 - 自定义筛选渲染内容
      */
-    renderTableFilter?(h: CreateElement, renderOpts: VxeGlobalRendererHandles.RenderTableFilterOptions, params: VxeGlobalRendererHandles.RenderTableFilterParams<any>): VxeComponentSlotType | VxeComponentSlotType[]
+    renderTableFilter?(h: CreateElement, renderOpts: VxeGlobalRendererHandles.RenderTableFilterOptions, renderParams: VxeGlobalRendererHandles.RenderTableFilterParams<any>): VxeComponentSlotType | VxeComponentSlotType[]
     /**
      * 表格 - 自定义筛选逻辑方法
      */
@@ -74,15 +74,15 @@ declare module '@vxe-ui/core' {
     /**
      * 表格 - 渲染头部
      */
-    renderTableHeader?(h: CreateElement, renderOpts: VxeGlobalRendererHandles.RenderTableHeaderOptions, params: VxeGlobalRendererHandles.RenderTableHeaderParams<any>): VxeComponentSlotType | VxeComponentSlotType[]
+    renderTableHeader?(h: CreateElement, renderOpts: VxeGlobalRendererHandles.RenderTableHeaderOptions, renderParams: VxeGlobalRendererHandles.RenderTableHeaderParams<any>): VxeComponentSlotType | VxeComponentSlotType[]
     /**
      * 表格 - 渲染单元格
      */
-    renderTableDefault?(h: CreateElement, renderOpts: VxeGlobalRendererHandles.RenderTableDefaultOptions, params: VxeGlobalRendererHandles.RenderTableDefaultParams<any>): VxeComponentSlotType | VxeComponentSlotType[]
+    renderTableDefault?(h: CreateElement, renderOpts: VxeGlobalRendererHandles.RenderTableDefaultOptions, renderParams: VxeGlobalRendererHandles.RenderTableDefaultParams<any>): VxeComponentSlotType | VxeComponentSlotType[]
     /**
      * 表格 - 渲染尾部
      */
-    renderTableFooter?(h: CreateElement, renderOpts: VxeGlobalRendererHandles.RenderTableFooterOptions, params: VxeGlobalRendererHandles.RenderTableFooterParams<any>): VxeComponentSlotType | VxeComponentSlotType[]
+    renderTableFooter?(h: CreateElement, renderOpts: VxeGlobalRendererHandles.RenderTableFooterOptions, renderParams: VxeGlobalRendererHandles.RenderTableFooterParams<any>): VxeComponentSlotType | VxeComponentSlotType[]
     /**
      * 表格 - 自定义单元格导出逻辑
      */
@@ -103,21 +103,21 @@ declare module '@vxe-ui/core' {
     /**
      * 表格 - 渲染编辑状态时，与 renderTableCell 配合使用
      */
-    renderTableEdit?(h: CreateElement, renderOpts: VxeGlobalRendererHandles.RenderTableEditOptions<any>, params: VxeGlobalRendererHandles.RenderTableEditParams<any>): VxeComponentSlotType | VxeComponentSlotType[]
+    renderTableEdit?(h: CreateElement, renderOpts: VxeGlobalRendererHandles.RenderTableEditOptions<any>, renderParams: VxeGlobalRendererHandles.RenderTableEditParams<any>): VxeComponentSlotType | VxeComponentSlotType[]
     /**
      * 表格 - 渲染非编辑状态时，与 renderTableEdit 配合使用
      */
-    renderTableCell?(h: CreateElement, renderOpts: VxeGlobalRendererHandles.RenderTableCellOptions<any>, params: VxeGlobalRendererHandles.RenderTableCellParams<any>): VxeComponentSlotType | VxeComponentSlotType[]
+    renderTableCell?(h: CreateElement, renderOpts: VxeGlobalRendererHandles.RenderTableCellOptions<any>, renderParams: VxeGlobalRendererHandles.RenderTableCellParams<any>): VxeComponentSlotType | VxeComponentSlotType[]
 
     /**
      * 表格 - 展开行渲染
      */
-    renderTableExpand?(h: CreateElement, renderOpts: VxeGlobalRendererHandles.RenderTableExpandOptions, params: VxeGlobalRendererHandles.RenderTableExpandParams<any>): VxeComponentSlotType | VxeComponentSlotType[]
+    renderTableExpand?(h: CreateElement, renderOpts: VxeGlobalRendererHandles.RenderTableExpandOptions, renderParams: VxeGlobalRendererHandles.RenderTableExpandParams<any>): VxeComponentSlotType | VxeComponentSlotType[]
 
     /**
      * 表格 - 空数据时渲染
      */
-    renderTableEmpty?(h: CreateElement, renderOpts: VxeGlobalRendererHandles.RenderTableEmptyOptions, params: VxeGlobalRendererHandles.RenderTableEmptyParams): VxeComponentSlotType | VxeComponentSlotType[]
+    renderTableEmpty?(h: CreateElement, renderOpts: VxeGlobalRendererHandles.RenderTableEmptyOptions, renderParams: VxeGlobalRendererHandles.RenderTableEmptyParams): VxeComponentSlotType | VxeComponentSlotType[]
 
     /**
      * 已废弃，请使用 tableFilterMethod
@@ -203,37 +203,37 @@ declare module '@vxe-ui/core' {
      * 已废弃，请使用 renderTableHeader
      * @deprecated
      */
-    renderHeader?(h: CreateElement, renderOpts: VxeGlobalRendererHandles.RenderTableHeaderOptions, params: VxeGlobalRendererHandles.RenderTableHeaderParams<any>): VxeComponentSlotType | VxeComponentSlotType[]
+    renderHeader?(h: CreateElement, renderOpts: VxeGlobalRendererHandles.RenderTableHeaderOptions, renderParams: VxeGlobalRendererHandles.RenderTableHeaderParams<any>): VxeComponentSlotType | VxeComponentSlotType[]
     /**
      * 已废弃，请使用 renderTableFooter
      * @deprecated
      */
-    renderFooter?(h: CreateElement, renderOpts: VxeGlobalRendererHandles.RenderTableFooterOptions, params: VxeGlobalRendererHandles.RenderTableFooterParams<any>): VxeComponentSlotType | VxeComponentSlotType[]
+    renderFooter?(h: CreateElement, renderOpts: VxeGlobalRendererHandles.RenderTableFooterOptions, renderParams: VxeGlobalRendererHandles.RenderTableFooterParams<any>): VxeComponentSlotType | VxeComponentSlotType[]
     /**
      * 已废弃，请使用 renderTableFilter
      * @deprecated
      */
-    renderFilter?(h: CreateElement, renderOpts: VxeGlobalRendererHandles.RenderTableFilterOptions, params: VxeGlobalRendererHandles.RenderTableFilterParams<any>): VxeComponentSlotType | VxeComponentSlotType[]
+    renderFilter?(h: CreateElement, renderOpts: VxeGlobalRendererHandles.RenderTableFilterOptions, renderParams: VxeGlobalRendererHandles.RenderTableFilterParams<any>): VxeComponentSlotType | VxeComponentSlotType[]
     /**
      * 已废弃，请使用 renderTableDefault
      * @deprecated
      */
-    renderDefault?(h: CreateElement, renderOpts: VxeGlobalRendererHandles.RenderTableDefaultOptions, params: VxeGlobalRendererHandles.RenderTableDefaultParams<any>): VxeComponentSlotType | VxeComponentSlotType[]
+    renderDefault?(h: CreateElement, renderOpts: VxeGlobalRendererHandles.RenderTableDefaultOptions, renderParams: VxeGlobalRendererHandles.RenderTableDefaultParams<any>): VxeComponentSlotType | VxeComponentSlotType[]
     /**
      * 已废弃，请使用 renderTableEdit
      * @deprecated
      */
-    renderEdit?(h: CreateElement, renderOpts: VxeGlobalRendererHandles.RenderTableEditOptions<any>, params: VxeGlobalRendererHandles.RenderTableEditParams<any>): VxeComponentSlotType | VxeComponentSlotType[]
+    renderEdit?(h: CreateElement, renderOpts: VxeGlobalRendererHandles.RenderTableEditOptions<any>, renderParams: VxeGlobalRendererHandles.RenderTableEditParams<any>): VxeComponentSlotType | VxeComponentSlotType[]
     /**
      * 已废弃，请使用 renderTableCell
      * @deprecated
      */
-    renderCell?(h: CreateElement, renderOpts: VxeGlobalRendererHandles.RenderTableCellOptions<any>, params: VxeGlobalRendererHandles.RenderTableCellParams<any>): VxeComponentSlotType | VxeComponentSlotType[]
+    renderCell?(h: CreateElement, renderOpts: VxeGlobalRendererHandles.RenderTableCellOptions<any>, renderParams: VxeGlobalRendererHandles.RenderTableCellParams<any>): VxeComponentSlotType | VxeComponentSlotType[]
     /**
      * 已废弃，请使用 renderTableExpand
      * @deprecated
      */
-    renderExpand?(h: CreateElement, renderOpts: VxeGlobalRendererHandles.RenderTableExpandOptions, params: VxeGlobalRendererHandles.RenderTableExpandParams<any>): VxeComponentSlotType | VxeComponentSlotType[]
+    renderExpand?(h: CreateElement, renderOpts: VxeGlobalRendererHandles.RenderTableExpandOptions, renderParams: VxeGlobalRendererHandles.RenderTableExpandParams<any>): VxeComponentSlotType | VxeComponentSlotType[]
     /**
      * @deprecated 已废弃
      */
@@ -242,8 +242,8 @@ declare module '@vxe-ui/core' {
      * 已废弃，请使用 renderTableEmptyView
      * @deprecated
      */
-    renderEmpty?(h: CreateElement, renderOpts: VxeGlobalRendererHandles.RenderTableEmptyOptions, params: VxeGlobalRendererHandles.RenderTableEmptyParams): VxeComponentSlotType | VxeComponentSlotType[]
-    renderTableEmptyView?(h: CreateElement, renderOpts: VxeGlobalRendererHandles.RenderTableEmptyOptions, params: VxeGlobalRendererHandles.RenderTableEmptyParams): VxeComponentSlotType | VxeComponentSlotType[]
+    renderEmpty?(h: CreateElement, renderOpts: VxeGlobalRendererHandles.RenderTableEmptyOptions, renderParams: VxeGlobalRendererHandles.RenderTableEmptyParams): VxeComponentSlotType | VxeComponentSlotType[]
+    renderTableEmptyView?(h: CreateElement, renderOpts: VxeGlobalRendererHandles.RenderTableEmptyOptions, renderParams: VxeGlobalRendererHandles.RenderTableEmptyParams): VxeComponentSlotType | VxeComponentSlotType[]
   }
 
   export namespace VxeGlobalRendererHandles {
@@ -497,7 +497,7 @@ declare module '@vxe-ui/core' {
     /**
      * 工具栏 - 渲染左侧按钮
      */
-    renderToolbarButton?(h: CreateElement, renderOpts: VxeGlobalRendererHandles.RenderButtonOptions, params: VxeGlobalRendererHandles.RenderButtonParams<any>): VxeComponentSlotType | VxeComponentSlotType[]
+    renderToolbarButton?(h: CreateElement, renderOpts: VxeGlobalRendererHandles.RenderButtonOptions, renderParams: VxeGlobalRendererHandles.RenderButtonParams<any>): VxeComponentSlotType | VxeComponentSlotType[]
     /**
      * 工具栏 - 右侧按钮设置 class
      */
@@ -505,7 +505,7 @@ declare module '@vxe-ui/core' {
     /**
      * 工具栏 - 渲染右侧按钮
      */
-    renderToolbarTool?(h: CreateElement, renderOpts: VxeGlobalRendererHandles.RenderToolOptions, params: VxeGlobalRendererHandles.RenderToolParams<any>): VxeComponentSlotType | VxeComponentSlotType[]
+    renderToolbarTool?(h: CreateElement, renderOpts: VxeGlobalRendererHandles.RenderToolOptions, renderParams: VxeGlobalRendererHandles.RenderToolParams<any>): VxeComponentSlotType | VxeComponentSlotType[]
   }
 
   export namespace VxeGlobalRendererHandles {
@@ -560,11 +560,11 @@ declare module '@vxe-ui/core' {
     /**
      * 表单项 - 渲染表单项标题
      */
-    renderFormItemTitle?(h: CreateElement, renderOpts: VxeGlobalRendererHandles.RenderFormItemTitleOptions, params: VxeGlobalRendererHandles.RenderFormItemTitleParams): VxeComponentSlotType | VxeComponentSlotType[]
+    renderFormItemTitle?(h: CreateElement, renderOpts: VxeGlobalRendererHandles.RenderFormItemTitleOptions, renderParams: VxeGlobalRendererHandles.RenderFormItemTitleParams): VxeComponentSlotType | VxeComponentSlotType[]
     /**
      * 表单项 - 渲染表单项内容
      */
-    renderFormItemContent?(h: CreateElement, renderOpts: VxeGlobalRendererHandles.RenderFormItemContentOptions, params: VxeGlobalRendererHandles.RenderFormItemContentParams): VxeComponentSlotType | VxeComponentSlotType[]
+    renderFormItemContent?(h: CreateElement, renderOpts: VxeGlobalRendererHandles.RenderFormItemContentOptions, renderParams: VxeGlobalRendererHandles.RenderFormItemContentParams): VxeComponentSlotType | VxeComponentSlotType[]
     /**
      * 表单项 - 自定义表单项被显示隐藏逻辑
      */
@@ -608,17 +608,17 @@ declare module '@vxe-ui/core' {
      * 已废弃，请使用 renderFormItemTitle
      * @deprecated
      */
-    renderItemTitle?(h: CreateElement, renderOpts: VxeGlobalRendererHandles.RenderFormItemTitleOptions, params: VxeGlobalRendererHandles.RenderFormItemTitleParams): VxeComponentSlotType | VxeComponentSlotType[]
+    renderItemTitle?(h: CreateElement, renderOpts: VxeGlobalRendererHandles.RenderFormItemTitleOptions, renderParams: VxeGlobalRendererHandles.RenderFormItemTitleParams): VxeComponentSlotType | VxeComponentSlotType[]
     /**
      * 已废弃，请使用 renderFormItemContent
      * @deprecated
      */
-    renderItem?(h: CreateElement, renderOpts: VxeGlobalRendererHandles.RenderFormItemContentOptions, params: VxeGlobalRendererHandles.RenderFormItemContentParams): VxeComponentSlotType | VxeComponentSlotType[]
+    renderItem?(h: CreateElement, renderOpts: VxeGlobalRendererHandles.RenderFormItemContentOptions, renderParams: VxeGlobalRendererHandles.RenderFormItemContentParams): VxeComponentSlotType | VxeComponentSlotType[]
      /**
      * 已废弃，请使用 renderFormItemContent
      * @deprecated
      */
-    renderItemContent?(h: CreateElement, renderOpts: VxeGlobalRendererHandles.RenderFormItemContentOptions, params: VxeGlobalRendererHandles.RenderFormItemContentParams): VxeComponentSlotType | VxeComponentSlotType[]
+    renderItemContent?(h: CreateElement, renderOpts: VxeGlobalRendererHandles.RenderFormItemContentOptions, renderParams: VxeGlobalRendererHandles.RenderFormItemContentParams): VxeComponentSlotType | VxeComponentSlotType[]
      /**
      * 已废弃，请使用 formItemVisibleMethod
      * @deprecated
@@ -684,7 +684,7 @@ declare module '@vxe-ui/core' {
     /**
      * 表单设计器 - 渲染左侧控件项
      */
-    renderFormDesignWidgetItem?(h: CreateElement, renderOpts: VxeGlobalRendererHandles.RenderFormDesignWidgetItemOptions, params: VxeGlobalRendererHandles.RenderFormDesignWidgetItemParams): VxeComponentSlotType | VxeComponentSlotType[]
+    renderFormDesignWidgetItem?(h: CreateElement, renderOpts: VxeGlobalRendererHandles.RenderFormDesignWidgetItemOptions, renderParams: VxeGlobalRendererHandles.RenderFormDesignWidgetItemParams): VxeComponentSlotType | VxeComponentSlotType[]
     /**
      * 表单设计器 - 创建设计器-表单属性数据
      */
@@ -692,15 +692,15 @@ declare module '@vxe-ui/core' {
     /**
      * 表单设计器 - 渲染设计器-属性表单
      */
-    renderFormDesignSettingFormView?(h: CreateElement, renderOpts: VxeGlobalRendererHandles.RenderFormDesignSettingFormViewOptions, params: VxeGlobalRendererHandles.RenderFormDesignSettingFormViewParams): VxeComponentSlotType | VxeComponentSlotType[]
+    renderFormDesignSettingFormView?(h: CreateElement, renderOpts: VxeGlobalRendererHandles.RenderFormDesignSettingFormViewOptions, renderParams: VxeGlobalRendererHandles.RenderFormDesignSettingFormViewParams): VxeComponentSlotType | VxeComponentSlotType[]
     /**
      * 表单设计器 - 渲染设计器-电脑端表单
      */
-    renderFormDesignStyleFormView?(h: CreateElement, renderOpts: VxeGlobalRendererHandles.RenderFormDesignStyleFormViewOptions, params: VxeGlobalRendererHandles.RenderFormDesignStyleFormViewParams): VxeComponentSlotType | VxeComponentSlotType[]
+    renderFormDesignStyleFormView?(h: CreateElement, renderOpts: VxeGlobalRendererHandles.RenderFormDesignStyleFormViewOptions, renderParams: VxeGlobalRendererHandles.RenderFormDesignStyleFormViewParams): VxeComponentSlotType | VxeComponentSlotType[]
     /**
      * 表单设计器 - 渲染设计器-手机端表单
      */
-    renderFormDesignMobileStyleFormView?(h: CreateElement, renderOpts: VxeGlobalRendererHandles.RenderFormDesignMobileStyleFormViewOptions, params: VxeGlobalRendererHandles.RenderFormDesignMobileStyleFormViewParams): VxeComponentSlotType | VxeComponentSlotType[]
+    renderFormDesignMobileStyleFormView?(h: CreateElement, renderOpts: VxeGlobalRendererHandles.RenderFormDesignMobileStyleFormViewOptions, renderParams: VxeGlobalRendererHandles.RenderFormDesignMobileStyleFormViewParams): VxeComponentSlotType | VxeComponentSlotType[]
     /**
      * 表单设计器 - 创建控件-定义控件信息和控件表单数据
      */
@@ -708,39 +708,39 @@ declare module '@vxe-ui/core' {
     /**
      * 表单设计器 - 渲染右侧-控件属性表单
      */
-    renderFormDesignWidgetFormView?(h: CreateElement, renderOpts: VxeGlobalRendererHandles.RenderFormDesignWidgetFormViewOptions, params: VxeGlobalRendererHandles.RenderFormDesignWidgetFormViewParams): VxeComponentSlotType | VxeComponentSlotType[]
+    renderFormDesignWidgetFormView?(h: CreateElement, renderOpts: VxeGlobalRendererHandles.RenderFormDesignWidgetFormViewOptions, renderParams: VxeGlobalRendererHandles.RenderFormDesignWidgetFormViewParams): VxeComponentSlotType | VxeComponentSlotType[]
     /**
      * 表单设计器 - 控件渲染器（表单-设计时）
      * 如果不设置，则使用 renderFormDesignWidgetView 渲染
      */
-    renderFormDesignWidgetEdit?(h: CreateElement, renderOpts: VxeGlobalRendererHandles.RenderFormDesignWidgetEditOptions, params: VxeGlobalRendererHandles.RenderFormDesignWidgetEditParams): VxeComponentSlotType | VxeComponentSlotType[]
+    renderFormDesignWidgetEdit?(h: CreateElement, renderOpts: VxeGlobalRendererHandles.RenderFormDesignWidgetEditOptions, renderParams: VxeGlobalRendererHandles.RenderFormDesignWidgetEditParams): VxeComponentSlotType | VxeComponentSlotType[]
     /**
      * 表单设计器 - 控件渲染器（表单-预览时 - 电脑端）
      * 如果不设置，则使用 renderFormDesignWidgetView 渲染
      */
-    renderFormDesignWidgetPreview?(h: CreateElement, renderOpts: VxeGlobalRendererHandles.RenderFormDesignWidgetPreviewOptions, params: VxeGlobalRendererHandles.RenderFormDesignWidgetPreviewParams): VxeComponentSlotType | VxeComponentSlotType[]
+    renderFormDesignWidgetPreview?(h: CreateElement, renderOpts: VxeGlobalRendererHandles.RenderFormDesignWidgetPreviewOptions, renderParams: VxeGlobalRendererHandles.RenderFormDesignWidgetPreviewParams): VxeComponentSlotType | VxeComponentSlotType[]
     /**
      * 表单设计器 - 控件渲染器（表单-预览时 - 手机端）
      * 如果不设置，则使用 renderFormDesignWidgetView 渲染
      */
-    renderFormDesignWidgetMobilePreview?(h: CreateElement, renderOpts: VxeGlobalRendererHandles.RenderFormDesignWidgetMobilePreviewOptions, params: VxeGlobalRendererHandles.RenderFormDesignWidgetMobilePreviewParams): VxeComponentSlotType | VxeComponentSlotType[]
+    renderFormDesignWidgetMobilePreview?(h: CreateElement, renderOpts: VxeGlobalRendererHandles.RenderFormDesignWidgetMobilePreviewOptions, renderParams: VxeGlobalRendererHandles.RenderFormDesignWidgetMobilePreviewParams): VxeComponentSlotType | VxeComponentSlotType[]
     /**
      * 表单设计器 - 控件渲染器（表单-默认）
      */
-    renderFormDesignWidgetView?(h: CreateElement, renderOpts: VxeGlobalRendererHandles.RenderFormDesignWidgetViewOptions, params: VxeGlobalRendererHandles.RenderFormDesignWidgetViewParams): VxeComponentSlotType | VxeComponentSlotType[]
+    renderFormDesignWidgetView?(h: CreateElement, renderOpts: VxeGlobalRendererHandles.RenderFormDesignWidgetViewOptions, renderParams: VxeGlobalRendererHandles.RenderFormDesignWidgetViewParams): VxeComponentSlotType | VxeComponentSlotType[]
     /**
      * 表单设计器 - 子表渲染器（表格-默认）
      */
-    renderFormDesignWidgetSubtableDefaultView?(h: CreateElement, renderOpts: VxeGlobalRendererHandles.RenderFormDesignWidgetSubtableDefaultViewOptions, params: VxeGlobalRendererHandles.RenderFormDesignWidgetSubtableDefaultViewParams): VxeComponentSlotType | VxeComponentSlotType[]
+    renderFormDesignWidgetSubtableDefaultView?(h: CreateElement, renderOpts: VxeGlobalRendererHandles.RenderFormDesignWidgetSubtableDefaultViewOptions, renderParams: VxeGlobalRendererHandles.RenderFormDesignWidgetSubtableDefaultViewParams): VxeComponentSlotType | VxeComponentSlotType[]
     /**
      * 表单设计器 - 子表渲染器（表格-查看）
      * 如果不设置，则使用 renderFormDesignWidgetSubtableDefaultView 渲染
      */
-    renderFormDesignWidgetSubtableCellView?(h: CreateElement, renderOpts: VxeGlobalRendererHandles.RenderFormDesignWidgetSubtableCellViewOptions, params: VxeGlobalRendererHandles.RenderFormDesignWidgetSubtableCellViewParams): VxeComponentSlotType | VxeComponentSlotType[]
+    renderFormDesignWidgetSubtableCellView?(h: CreateElement, renderOpts: VxeGlobalRendererHandles.RenderFormDesignWidgetSubtableCellViewOptions, renderParams: VxeGlobalRendererHandles.RenderFormDesignWidgetSubtableCellViewParams): VxeComponentSlotType | VxeComponentSlotType[]
     /**
      * 表单设计器 - 子表渲染器（表格-编辑）
      */
-    renderFormDesignWidgetSubtableEditView?(h: CreateElement, renderOpts: VxeGlobalRendererHandles.RenderFormDesignWidgetSubtableEditViewOptions, params: VxeGlobalRendererHandles.RenderFormDesignWidgetSubtableEditViewParams): VxeComponentSlotType | VxeComponentSlotType[]
+    renderFormDesignWidgetSubtableEditView?(h: CreateElement, renderOpts: VxeGlobalRendererHandles.RenderFormDesignWidgetSubtableEditViewOptions, renderParams: VxeGlobalRendererHandles.RenderFormDesignWidgetSubtableEditViewParams): VxeComponentSlotType | VxeComponentSlotType[]
     /**
      * 表单设计器 - 自定义子表列的解析
      */
@@ -918,7 +918,7 @@ declare module '@vxe-ui/core' {
 
     createListDesignSettingActionButtonConfig?:(params: VxeGlobalRendererHandles.CreateListDesignSettingActionButtonConfigParams) => VxeGlobalRendererHandles.CreateListDesignSettingActionButtonConfigResult
     listDesignSettingActionButtonMethod?:(params: VxeGlobalRendererHandles.ListDesignSettingActionButtonMethodParams) => void
-    renderListDesignSettingActionButtonFormView?(h: CreateElement, renderOpts: VxeGlobalRendererHandles.RenderListDesignSettingActionButtonFormViewOptions, params: VxeGlobalRendererHandles.RenderListDesignSettingActionButtonFormViewParams): VxeComponentSlotType | VxeComponentSlotType[]
+    renderListDesignSettingActionButtonFormView?(h: CreateElement, renderOpts: VxeGlobalRendererHandles.RenderListDesignSettingActionButtonFormViewOptions, renderParams: VxeGlobalRendererHandles.RenderListDesignSettingActionButtonFormViewParams): VxeComponentSlotType | VxeComponentSlotType[]
   }
   export namespace VxeGlobalRendererHandles {
     export interface CreateListDesignSettingFormConfigParams {
@@ -949,11 +949,11 @@ declare module '@vxe-ui/core' {
     /**
      * 按钮 - 渲染前缀
      */
-    renderButtonPrefix?(h: CreateElement, renderOpts: VxeGlobalRendererHandles.RenderButtonPrefixOptions, params: VxeGlobalRendererHandles.RenderButtonPrefixParams): VxeComponentSlotType | VxeComponentSlotType[]
+    renderButtonPrefix?(h: CreateElement, renderOpts: VxeGlobalRendererHandles.RenderButtonPrefixOptions, renderParams: VxeGlobalRendererHandles.RenderButtonPrefixParams): VxeComponentSlotType | VxeComponentSlotType[]
     /**
      * 按钮 - 渲染后缀
      */
-    renderButtonSuffix?(h: CreateElement, renderOpts: VxeGlobalRendererHandles.RenderButtonSuffixOptions, params: VxeGlobalRendererHandles.RenderButtonSuffixParams): VxeComponentSlotType | VxeComponentSlotType[]
+    renderButtonSuffix?(h: CreateElement, renderOpts: VxeGlobalRendererHandles.RenderButtonSuffixOptions, renderParams: VxeGlobalRendererHandles.RenderButtonSuffixParams): VxeComponentSlotType | VxeComponentSlotType[]
   }
   export namespace VxeGlobalRendererHandles {
 
@@ -975,7 +975,7 @@ declare module '@vxe-ui/core' {
     /**
      * 图标选择器 - 渲染图标
      */
-    renderIconPickerOptionIcon?(h: CreateElement, renderOpts: VxeGlobalRendererHandles.RenderIconPickerOptionIconOptions, params: VxeGlobalRendererHandles.RenderIconPickerOptionIconParams): VxeComponentSlotType | VxeComponentSlotType[]
+    renderIconPickerOptionIcon?(h: CreateElement, renderOpts: VxeGlobalRendererHandles.RenderIconPickerOptionIconOptions, renderParams: VxeGlobalRendererHandles.RenderIconPickerOptionIconParams): VxeComponentSlotType | VxeComponentSlotType[]
   }
 
   export namespace VxeGlobalRendererHandles {
