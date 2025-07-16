@@ -275,6 +275,7 @@ export namespace VxeFormDefines {
     itemRender: VxeFormItemPropTypes.ItemRender
     rules: VxeFormItemPropTypes.Rules
     formatter: VxeFormItemPropTypes.Formatter
+    params: any
     // 渲染属性
     showError: boolean
     errRule: any
