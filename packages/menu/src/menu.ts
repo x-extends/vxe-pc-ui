@@ -281,6 +281,15 @@ export default /* define-vxe-component start */ defineVxeComponent({
       })
       reactData.isEnterCollapse = true
     },
+    handleMenuMouseover () {
+      const $xeMenu = this
+      const reactData = $xeMenu.reactData
+
+      const { isEnterCollapse } = reactData
+      if (!isEnterCollapse) {
+        $xeMenu.handleMenuMouseenter()
+      }
+    },
     handleMenuMouseleave  () {
       const $xeMenu = this
       const reactData = $xeMenu.reactData
@@ -441,11 +450,18 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const props = $xeMenu
       const reactData = $xeMenu.reactData
 
-      const { loading } = props
+      const { loading, collapseFixed } = props
       const { initialized, menuList, collapseStyle, isEnterCollapse } = reactData
       const vSize = $xeMenu.computeSize
       const isCollapsed = $xeMenu.computeIsCollapsed
-
+      let ons: Record<string, any> = {}
+      if (collapseFixed) {
+        ons = {
+          mouseenter: $xeMenu.handleMenuMouseenter,
+          mouseover: $xeMenu.handleMenuMouseover,
+          mouseleave: $xeMenu.handleMenuMouseleave
+        }
+      }
       return h('div', {
         ref: 'refElem',
         class: ['vxe-menu', {
@@ -467,10 +483,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
               'is--loading': loading
             }],
             style: collapseStyle,
-            on: {
-              mouseenter: $xeMenu.handleMenuMouseenter,
-              mouseleave: $xeMenu.handleMenuMouseleave
-            }
+            on: ons
           }, [
             isCollapsed
               ? h('div', {

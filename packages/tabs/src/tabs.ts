@@ -139,7 +139,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       if (width) {
         stys.width = toCssUnit(width)
       }
-      if (width) {
+      if (height) {
         stys.height = toCssUnit(height)
       }
       return stys
