@@ -13,6 +13,7 @@ export default defineVxeComponent({
     target: String as PropType<VxeLinkPropTypes.Target>,
     status: String as PropType<VxeLinkPropTypes.Status>,
     title: [String, Number] as PropType<VxeLinkPropTypes.Title>,
+    disabled: Boolean as PropType<VxeLinkPropTypes.Disabled>,
     icon: String as PropType<VxeLinkPropTypes.Icon>,
     routerLink: Object as PropType<VxeLinkPropTypes.RouterLink>,
     underline: {
@@ -75,7 +76,10 @@ export default defineVxeComponent({
     }
 
     const clickEvent = (evnt: MouseEvent) => {
-      dispatchEvent('click', {}, evnt)
+      const { disabled } = props
+      if (!disabled) {
+        dispatchEvent('click', {}, evnt)
+      }
     }
 
     Object.assign($xeLink, linkMethods, linkPrivateMethods)
@@ -106,7 +110,7 @@ export default defineVxeComponent({
     }
 
     const renderVN = () => {
-      const { status, target, href, title, underline, routerLink } = props
+      const { status, target, href, title, underline, disabled, routerLink } = props
       const permissionInfo = computePermissionInfo.value
       const vSize = computeSize.value
 
@@ -119,11 +123,12 @@ export default defineVxeComponent({
           class: ['vxe-link', {
             [`size--${vSize}`]: vSize,
             [`theme--${status}`]: status,
+            'is--disabled': disabled,
             'is--underline': underline
           }],
           title,
           target,
-          to: routerLink,
+          to: disabled ? null : routerLink,
           onClick: clickEvent
         }, {
           default () {
@@ -136,9 +141,10 @@ export default defineVxeComponent({
         class: ['vxe-link', {
           [`size--${vSize}`]: vSize,
           [`theme--${status}`]: status,
+          'is--disabled': disabled,
           'is--underline': underline
         }],
-        href,
+        href: disabled ? null : href,
         target,
         title,
         onClick: clickEvent
