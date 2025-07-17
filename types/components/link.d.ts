@@ -21,6 +21,7 @@ export namespace VxeLinkPropTypes {
   export type Status = VxeComponentStatusType
   export type Title = string | number
   export type Icon = string
+  export type Disabled = boolean
   export type RouterLink = {
     path?: string
     name?: string | number | null
@@ -38,6 +39,7 @@ export interface VxeLinkProps {
   href?: VxeLinkPropTypes.Href
   target?: VxeLinkPropTypes.Target
   status?: VxeLinkPropTypes.Status
+  disabled?: VxeLinkPropTypes.Disabled
   title?: VxeLinkPropTypes.Title
   icon?: VxeLinkPropTypes.Icon
   routerLink?: VxeLinkPropTypes.RouterLink

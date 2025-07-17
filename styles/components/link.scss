@@ -70,6 +70,10 @@ $btnThemeList: (
       }
     }
   }
+  &.is--disabled {
+    color: var(--vxe-ui-font-disabled-color);
+    cursor: no-drop;
+  }
   @for $index from 0 to list.length($btnThemeList) {
     $item: list.nth($btnThemeList, $index + 1);
     &.theme--#{map.get($item, name)} {

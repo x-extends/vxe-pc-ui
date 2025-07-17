@@ -17,6 +17,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
     target: String as PropType<VxeLinkPropTypes.Target>,
     status: String as PropType<VxeLinkPropTypes.Status>,
     title: [String, Number] as PropType<VxeLinkPropTypes.Title>,
+    disabled: Boolean as PropType<VxeLinkPropTypes.Disabled>,
     icon: String as PropType<VxeLinkPropTypes.Icon>,
     routerLink: Object as PropType<VxeLinkPropTypes.RouterLink>,
     underline: {
@@ -57,8 +58,12 @@ export default /* define-vxe-component start */ defineVxeComponent({
     },
     clickEvent  (evnt: MouseEvent) {
       const $xeLink = this
+      const props = $xeLink
 
-      $xeLink.dispatchEvent('click', {}, evnt)
+      const { disabled } = props
+      if (!disabled) {
+        $xeLink.dispatchEvent('click', {}, evnt)
+      }
     },
 
     //
@@ -96,7 +101,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const $xeLink = this
       const props = $xeLink
 
-      const { status, target, href, title, underline, routerLink } = props
+      const { status, target, href, title, underline, disabled, routerLink } = props
       const permissionInfo = $xeLink.computePermissionInfo
       const vSize = $xeLink.computeSize
 
@@ -109,13 +114,14 @@ export default /* define-vxe-component start */ defineVxeComponent({
           class: ['vxe-link', {
             [`size--${vSize}`]: vSize,
             [`theme--${status}`]: status,
+            'is--disabled': disabled,
             'is--underline': underline
           }],
           props: {
             title,
             target,
             custom: true,
-            to: routerLink
+            to: disabled ? null : routerLink
           },
           on: {
             click: $xeLink.clickEvent
@@ -127,10 +133,11 @@ export default /* define-vxe-component start */ defineVxeComponent({
         class: ['vxe-link', {
           [`size--${vSize}`]: vSize,
           [`theme--${status}`]: status,
+          'is--disabled': disabled,
           'is--underline': underline
         }],
         attrs: {
-          href,
+          href: disabled ? null : href,
           target,
           title
         },
