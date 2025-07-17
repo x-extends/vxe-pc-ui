@@ -27,6 +27,7 @@ export namespace VxeMenuPropTypes {
   export type ModelValue = string | number | null
   export type Size = VxeComponentSizeType
   export type Loading = boolean
+  export type Accordion = boolean
 
   export interface MenuOption {
     name?: VxeMenuPropTypes.ModelValue
@@ -54,6 +55,7 @@ export interface VxeMenuProps {
   modelValue?: VxeMenuPropTypes.ModelValue
   size?: VxeMenuPropTypes.Size
   loading?: VxeMenuPropTypes.Loading
+  accordion?: VxeMenuPropTypes.Accordion
   collapsed?: VxeMenuPropTypes.Collapsed
   CollapseFixed?: VxeMenuPropTypes.CollapseFixed
   expandAll?: VxeMenuPropTypes.ExpandAll

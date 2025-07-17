@@ -14,6 +14,10 @@ export default defineVxeComponent({
   props: {
     modelValue: [String, Number] as PropType<VxeMenuPropTypes.ModelValue>,
     expandAll: Boolean as PropType<VxeMenuPropTypes.ExpandAll>,
+    accordion: {
+      type: Boolean as PropType<VxeMenuPropTypes.Accordion>,
+      default: () => getConfig().menu.accordion
+    },
     collapsed: {
       type: Boolean as PropType<VxeMenuPropTypes.Collapsed>,
       default: null
@@ -26,7 +30,7 @@ export default defineVxeComponent({
     },
     size: {
       type: String as PropType<VxeMenuPropTypes.Size>,
-      default: () => getConfig().image.size || getConfig().size
+      default: () => getConfig().menu.size || getConfig().size
     }
   },
   emits: [
@@ -193,11 +197,19 @@ export default defineVxeComponent({
       }
     }
 
-    const handleClickIconCollapse = (evnt: KeyboardEvent, item: VxeMenuDefines.MenuItem) => {
+    const handleClickIconCollapse = (evnt: KeyboardEvent, item: VxeMenuDefines.MenuItem, itemList: VxeMenuDefines.MenuItem[]) => {
+      const { accordion } = props
       const { hasChild, isExpand } = item
       if (hasChild) {
         evnt.stopPropagation()
         evnt.preventDefault()
+        if (accordion) {
+          itemList.forEach(obj => {
+            if (obj !== item) {
+              obj.isExpand = false
+            }
+          })
+        }
         item.isExpand = !isExpand
       }
     }
@@ -207,14 +219,14 @@ export default defineVxeComponent({
       emit('update:modelValue', value)
     }
 
-    const handleClickMenu = (evnt: KeyboardEvent, item: VxeMenuDefines.MenuItem) => {
+    const handleClickMenu = (evnt: KeyboardEvent, item: VxeMenuDefines.MenuItem, itemList: VxeMenuDefines.MenuItem[]) => {
       const { itemKey, routerLink, hasChild } = item
       if (routerLink) {
         emitModel(itemKey)
         handleMenuMouseleave()
       } else {
         if (hasChild) {
-          handleClickIconCollapse(evnt, item)
+          handleClickIconCollapse(evnt, item, itemList)
         } else {
           emitModel(itemKey)
           handleMenuMouseleave()
@@ -266,7 +278,7 @@ export default defineVxeComponent({
 
     Object.assign($xeMenu, menuMethods, menuPrivateMethods)
 
-    const renderMenuTitle = (item: VxeMenuDefines.MenuItem) => {
+    const renderMenuTitle = (item: VxeMenuDefines.MenuItem, itemList: VxeMenuDefines.MenuItem[]) => {
       const { icon, isExpand, hasChild, slots: itemSlots } = item
       const optionSlot = itemSlots ? itemSlots.default : slots.option
       const title = getMenuTitle(item)
@@ -296,7 +308,7 @@ export default defineVxeComponent({
           ? h('div', {
             class: 'vxe-menu--item-link-collapse',
             onClick (evnt: KeyboardEvent) {
-              handleClickIconCollapse(evnt, item)
+              handleClickIconCollapse(evnt, item, itemList)
             }
           }, [
             h('i', {
@@ -307,7 +319,7 @@ export default defineVxeComponent({
       ]
     }
 
-    const renderDefaultChildren = (item: VxeMenuDefines.MenuItem): VNode => {
+    const renderDefaultChildren = (item: VxeMenuDefines.MenuItem, itemList: VxeMenuDefines.MenuItem[]): VNode => {
       const { itemKey, level, hasChild, isActive, isExactActive, isExpand, routerLink, childList } = item
       const { isEnterCollapse } = reactData
       const isCollapsed = computeIsCollapsed.value
@@ -329,26 +341,26 @@ export default defineVxeComponent({
             class: 'vxe-menu--item-link',
             to: routerLink,
             onClick (evnt: KeyboardEvent) {
-              handleClickMenu(evnt, item)
+              handleClickMenu(evnt, item, itemList)
             }
           }, {
-            default: () => renderMenuTitle(item)
+            default: () => renderMenuTitle(item, itemList)
           })
           : h('div', {
             class: 'vxe-menu--item-link',
             onClick (evnt: KeyboardEvent) {
-              handleClickMenu(evnt, item)
+              handleClickMenu(evnt, item, itemList)
             }
-          }, renderMenuTitle(item)),
+          }, renderMenuTitle(item, itemList)),
         hasChild
           ? h('div', {
             class: 'vxe-menu--item-group'
-          }, childList.map(child => renderDefaultChildren(child)))
+          }, childList.map(child => renderDefaultChildren(child, childList)))
           : renderEmptyElement($xeMenu)
       ])
     }
 
-    const renderCollapseChildren = (item: VxeMenuDefines.MenuItem): VNode => {
+    const renderCollapseChildren = (item: VxeMenuDefines.MenuItem, itemList: VxeMenuDefines.MenuItem[]): VNode => {
       const { itemKey, level, hasChild, isActive, isExactActive, routerLink, childList } = item
       if (item.permissionCode) {
         if (!permission.checkVisible(item.permissionCode)) {
@@ -367,21 +379,21 @@ export default defineVxeComponent({
             class: 'vxe-menu--item-link',
             to: routerLink,
             onClick (evnt: KeyboardEvent) {
-              handleClickMenu(evnt, item)
+              handleClickMenu(evnt, item, itemList)
             }
           }, {
-            default: () => renderMenuTitle(item)
+            default: () => renderMenuTitle(item, itemList)
           })
           : h('div', {
             class: 'vxe-menu--item-link',
             onClick (evnt: KeyboardEvent) {
-              handleClickMenu(evnt, item)
+              handleClickMenu(evnt, item, itemList)
             }
-          }, renderMenuTitle(item)),
+          }, renderMenuTitle(item, itemList)),
         hasChild
           ? h('div', {
             class: 'vxe-menu--item-group'
-          }, childList.map(child => renderDefaultChildren(child)))
+          }, childList.map(child => renderDefaultChildren(child, childList)))
           : renderEmptyElement($xeMenu)
       ])
     }
@@ -401,7 +413,7 @@ export default defineVxeComponent({
       }, [
         h('div', {
           class: 'vxe-menu--item-list'
-        }, menuList.map(child => isCollapsed ? renderCollapseChildren(child) : renderDefaultChildren(child))),
+        }, menuList.map(child => isCollapsed ? renderCollapseChildren(child, menuList) : renderDefaultChildren(child, menuList))),
         initialized
           ? h('div', {
             ref: refCollapseElem,
@@ -418,7 +430,7 @@ export default defineVxeComponent({
             isCollapsed
               ? h('div', {
                 class: 'vxe-menu--item-list'
-              }, menuList.map(child => renderDefaultChildren(child)))
+              }, menuList.map(child => renderDefaultChildren(child, menuList)))
               : renderEmptyElement($xeMenu)
           ])
           : renderEmptyElement($xeMenu),

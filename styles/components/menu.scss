@@ -76,6 +76,7 @@
   padding: 0.5em;
   i {
     display: inline-block;
+    font-size: 0.8em;
     @include baseMixin.createAnimationTransition(transform, 0.25s);
   }
 }

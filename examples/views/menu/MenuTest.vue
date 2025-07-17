@@ -2,7 +2,7 @@
   <div>
     <vxe-button @click="isCollapsed = !isCollapsed">切换</vxe-button>
     <div style="display: inline-flex;">
-      <vxe-menu v-model="selectNav" :collapsed="isCollapsed" :options="navList" @click="clickEvent"></vxe-menu>
+      <vxe-menu v-model="selectNav" :collapsed="isCollapsed" :options="navList" accordion @click="clickEvent"></vxe-menu>
     </div>
   </div>
 </template>
