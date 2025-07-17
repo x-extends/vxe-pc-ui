@@ -16,12 +16,12 @@ export interface VxeTableExtendCellAreaMethods<D = any> {
    */
   getActiveCellArea(): VxeTableExtendCellAreaDefines.MouseActiveCellArea | null
   /**
-   * 用于 mouse-config.area，用于获取标记为复制粘贴的区域
+   * 被 getCopyCellAreas 替换
+   * @deprecated
    */
   getCopyCellArea(): VxeTableExtendCellAreaDefines.MouseCellArea | null
   /**
-   * 请使用 getCopyCellArea
-   * @deprecated
+   * 用于 mouse-config.area，用于获取标记为复制粘贴的所有区域
    */
   getCopyCellAreas(): VxeTableExtendCellAreaDefines.MouseCellArea[]
   /**
@@ -172,8 +172,10 @@ declare module '../table' {
     fnrActiveModal?: (VxeModalConstructor & VxeModalMethods) | null
 
     copyAreaMpas?: {
-      cut: boolean;
-      cellAreas: VxeTableExtendCellAreaDefines.MouseCellArea[];
+      cut: boolean
+      cellAreas: VxeTableExtendCellAreaDefines.MouseCellArea[]
+      _c?: boolean
+      _r?: boolean
     } | null
 
     _msTout?: any

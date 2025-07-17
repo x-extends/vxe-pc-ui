@@ -1795,6 +1795,14 @@ export namespace VxeTablePropTypes {
      */
     isPaste?: boolean
     /**
+     * 只对 area-config.multiple 有效，对相同列数的跨行选取多区域进行复制粘贴
+     */
+    isAcrossRow?: boolean
+    /**
+     * 只对 area-config.multiple 有效，对相同行数的跨列选取多区域进行复制粘贴
+     */
+    isAcrossColumn?: boolean
+    /**
      * 是否同时复制列头
      */
     isCopyHeader?: boolean
@@ -3309,7 +3317,7 @@ export interface TablePrivateComputed<D = any> {
   computeAreaOpts: VxeTablePropTypes.AreaOpts
   computeKeyboardOpts: VxeTablePropTypes.KeyboardOpts
   computeClipOpts: VxeTablePropTypes.ClipOpts<D>
-  computeFNROpts: VxeTablePropTypes.FNROpts<D>
+  computeFnrOpts: VxeTablePropTypes.FNROpts<D>
   computeHeaderMenu: VxeTableDefines.MenuFirstOption
   computeBodyMenu: VxeTableDefines.MenuFirstOption
   computeFooterMenu: VxeTableDefines.MenuFirstOption
@@ -3376,6 +3384,10 @@ export interface TablePrivateComputed<D = any> {
   computeRowGroupColumns: VxeTableDefines.ColumnInfo<D>[]
   computeTableBorder: 'default' | 'full' | 'outer' | 'inner' | 'none'
 
+  /**
+   * @deprecated
+   */
+  computeFNROpts: VxeTablePropTypes.FNROpts<D>
   /**
    * @deprecated
    */

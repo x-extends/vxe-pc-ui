@@ -21,8 +21,14 @@ export default /* define-vxe-component start */ defineVxeComponent({
     maxHeight: [Number, String] as PropType<VxeListPropTypes.MaxHeight>,
     loading: Boolean as PropType<VxeListPropTypes.Loading>,
     className: [String, Function] as PropType<VxeListPropTypes.ClassName>,
-    size: { type: String as PropType<VxeListPropTypes.Size>, default: () => getConfig().list.size || getConfig().size },
-    autoResize: { type: Boolean as PropType<VxeListPropTypes.AutoResize>, default: () => getConfig().list.autoResize },
+    size: {
+      type: String as PropType<VxeListPropTypes.Size>,
+      default: () => getConfig().list.size || getConfig().size
+    },
+    autoResize: {
+      type: Boolean as PropType<VxeListPropTypes.AutoResize>,
+      default: () => getConfig().list.autoResize
+    },
     syncResize: [Boolean, String, Number] as PropType<VxeListPropTypes.SyncResize>,
     virtualYConfig: Object as PropType<VxeListPropTypes.VirtualYConfig>,
     scrollY: Object as PropType<VxeListPropTypes.ScrollY>

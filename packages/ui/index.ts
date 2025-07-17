@@ -211,6 +211,7 @@ setConfig({
     showIcon: true,
     showText: true
   },
+  menu: {},
   modal: {
     // size: null,
     top: 16,
