@@ -244,6 +244,13 @@ export default defineVxeComponent({
       reactData.isEnterCollapse = true
     }
 
+    const handleMenuMouseover = () => {
+      const { isEnterCollapse } = reactData
+      if (!isEnterCollapse) {
+        handleMenuMouseenter()
+      }
+    }
+
     const handleMenuMouseleave = () => {
       const { collapseStyle } = reactData
       const el = refElem.value
@@ -399,10 +406,18 @@ export default defineVxeComponent({
     }
 
     const renderVN = () => {
-      const { loading } = props
+      const { loading, collapseFixed } = props
       const { initialized, menuList, collapseStyle, isEnterCollapse } = reactData
       const vSize = computeSize.value
       const isCollapsed = computeIsCollapsed.value
+      let ons: Record<string, any> = {}
+      if (collapseFixed) {
+        ons = {
+          onMouseenter: handleMenuMouseenter,
+          onMouseover: handleMenuMouseover,
+          onMouseleave: handleMenuMouseleave
+        }
+      }
       return h('div', {
         ref: refElem,
         class: ['vxe-menu', {
@@ -424,8 +439,7 @@ export default defineVxeComponent({
               'is--loading': loading
             }],
             style: collapseStyle,
-            onMouseenter: handleMenuMouseenter,
-            onMouseleave: handleMenuMouseleave
+            ...ons
           }, [
             isCollapsed
               ? h('div', {
