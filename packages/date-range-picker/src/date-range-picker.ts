@@ -60,6 +60,14 @@ export default /* define-vxe-component start */ defineVxeComponent({
       default: () => getConfig().dateRangePicker.size || getConfig().size
     },
 
+    // startDate: {
+    //   type: [String, Number, Date] as PropType<VxeDateRangePickerPropTypes.StartDate>,
+    //   default: () => getConfig().dateRangePicker.startDate
+    // },
+    // endDate: {
+    //   type: [String, Number, Date] as PropType<VxeDateRangePickerPropTypes.EndDate>,
+    //   default: () => getConfig().dateRangePicker.endDate
+    // },
     minDate: [String, Number, Date] as PropType<VxeDateRangePickerPropTypes.MinDate>,
     maxDate: [String, Number, Date] as PropType<VxeDateRangePickerPropTypes.MaxDate>,
     defaultDate: [String, Number, Date] as PropType<VxeDateRangePickerPropTypes.DefaultDate>,
@@ -1042,8 +1050,8 @@ export default /* define-vxe-component start */ defineVxeComponent({
                         className: props.className,
                         minDate: props.minDate,
                         maxDate: props.maxDate,
-                        startDay: props.startDay,
                         endDate: endValue,
+                        startDay: props.startDay,
                         labelFormat: props.labelFormat,
                         valueFormat: props.valueFormat,
                         timeFormat: props.timeFormat,
@@ -1063,8 +1071,8 @@ export default /* define-vxe-component start */ defineVxeComponent({
                         className: props.className,
                         minDate: props.minDate,
                         maxDate: props.maxDate,
-                        startDay: props.startDay,
                         startDate: startValue,
+                        startDay: props.startDay,
                         labelFormat: props.labelFormat,
                         valueFormat: props.valueFormat,
                         timeFormat: props.timeFormat,

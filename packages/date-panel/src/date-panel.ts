@@ -948,13 +948,9 @@ export default /* define-vxe-component start */ defineVxeComponent({
         $xeDatePanel.dispatchEvent('date-next', { viewType: datePanelType, value, type }, evnt)
       }
     },
-    isDateDisabled (item: { date: Date }) {
+    isRangeDisabled (item: { date: Date }) {
       const $xeDatePanel = this
-      const props = $xeDatePanel
-      const reactData = $xeDatePanel.reactData
 
-      const { disabledMethod } = props
-      const { datePanelType } = reactData
       const dateStartTime = $xeDatePanel.computeDateStartTime
       const dateEndTime = $xeDatePanel.computeDateEndTime
       const { date } = item
@@ -964,10 +960,25 @@ export default /* define-vxe-component start */ defineVxeComponent({
       if (dateEndTime && dateEndTime.getTime() < date.getTime()) {
         return true
       }
+      return false
+    },
+    isDateDisabled (item: { date: Date }) {
+      const $xeDatePanel = this
+      const props = $xeDatePanel
+      const reactData = $xeDatePanel.reactData
+
+      const { disabledMethod } = props
+      const { datePanelType } = reactData
+      const { date } = item
       if (disabledMethod) {
         return disabledMethod({ type: datePanelType, viewType: datePanelType, date, $datePanel: $xeDatePanel })
       }
       return false
+    },
+    hasAllDisabled (item: { date: Date }) {
+      const $xeDatePanel = this
+
+      return $xeDatePanel.isRangeDisabled(item) || $xeDatePanel.isDateDisabled(item)
     },
     dateSelectItem (date: Date) {
       const $xeDatePanel = this
@@ -1023,14 +1034,14 @@ export default /* define-vxe-component start */ defineVxeComponent({
     dateSelectEvent (item: VxeDatePanelDefines.DateYearItem | VxeDatePanelDefines.DateQuarterItem | VxeDatePanelDefines.DateMonthItem | VxeDatePanelDefines.DateDayItem) {
       const $xeDatePanel = this
 
-      if (!$xeDatePanel.isDateDisabled(item)) {
+      if (!$xeDatePanel.hasAllDisabled(item)) {
         $xeDatePanel.dateSelectItem(item.date)
       }
     },
     dateMoveDay (offsetDay: Date) {
       const $xeDatePanel = this
 
-      if (!$xeDatePanel.isDateDisabled({ date: offsetDay })) {
+      if (!$xeDatePanel.hasAllDisabled({ date: offsetDay })) {
         const dayList = $xeDatePanel.computeDayList
         if (!dayList.some((item) => XEUtils.isDateSame(item.date, offsetDay, 'yyyyMMdd'))) {
           $xeDatePanel.dateCheckMonth(offsetDay)
@@ -1041,7 +1052,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
     dateMoveYear (offsetYear: Date) {
       const $xeDatePanel = this
 
-      if (!$xeDatePanel.isDateDisabled({ date: offsetYear })) {
+      if (!$xeDatePanel.hasAllDisabled({ date: offsetYear })) {
         const yearList = $xeDatePanel.computeYearList
         if (!yearList.some((item) => XEUtils.isDateSame(item.date, offsetYear, 'yyyy'))) {
           $xeDatePanel.dateCheckMonth(offsetYear)
@@ -1052,7 +1063,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
     dateMoveQuarter (offsetQuarter: Date) {
       const $xeDatePanel = this
 
-      if (!$xeDatePanel.isDateDisabled({ date: offsetQuarter })) {
+      if (!$xeDatePanel.hasAllDisabled({ date: offsetQuarter })) {
         const quarterList = $xeDatePanel.computeQuarterList
         if (!quarterList.some((item) => XEUtils.isDateSame(item.date, offsetQuarter, 'yyyyq'))) {
           $xeDatePanel.dateCheckMonth(offsetQuarter)
@@ -1063,7 +1074,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
     dateMoveMonth (offsetMonth: Date) {
       const $xeDatePanel = this
 
-      if (!$xeDatePanel.isDateDisabled({ date: offsetMonth })) {
+      if (!$xeDatePanel.hasAllDisabled({ date: offsetMonth })) {
         const monthList = $xeDatePanel.computeMonthList
         if (!monthList.some((item) => XEUtils.isDateSame(item.date, offsetMonth, 'yyyyMM'))) {
           $xeDatePanel.dateCheckMonth(offsetMonth)
@@ -1075,7 +1086,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const $xeDatePanel = this
       const reactData = $xeDatePanel.reactData
 
-      if (!$xeDatePanel.isDateDisabled(item)) {
+      if (!$xeDatePanel.hasAllDisabled(item)) {
         const { datePanelType } = reactData
         if (datePanelType === 'month') {
           $xeDatePanel.dateMoveMonth(item.date)
@@ -1356,6 +1367,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
                   'is--current': item.isCurrent,
                   'is--now': item.isNow,
                   'is--next': item.isNext,
+                  'is--range-disabled': $xeDatePanel.isRangeDisabled(item),
                   'is--disabled': $xeDatePanel.isDateDisabled(item),
                   'is--selected': isSelected,
                   'is--over': overCount && !isSelected,
@@ -1436,6 +1448,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
                   'is--current': item.isCurrent,
                   'is--now': rIndex ? item.isNow : isNowWeek,
                   'is--next': item.isNext,
+                  'is--range-disabled': $xeDatePanel.isRangeDisabled(item),
                   'is--disabled': $xeDatePanel.isDateDisabled(item),
                   'is--selected': isSelected,
                   'is--over': overCount && !isSelected,
@@ -1491,6 +1504,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
                   'is--current': item.isCurrent,
                   'is--now': item.isNow,
                   'is--next': item.isNext,
+                  'is--range-disabled': $xeDatePanel.isRangeDisabled(item),
                   'is--disabled': $xeDatePanel.isDateDisabled(item),
                   'is--selected': isSelected,
                   'is--over': overCount && !isSelected,
@@ -1546,6 +1560,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
                   'is--current': item.isCurrent,
                   'is--now': item.isNow,
                   'is--next': item.isNext,
+                  'is--range-disabled': $xeDatePanel.isRangeDisabled(item),
                   'is--disabled': $xeDatePanel.isDateDisabled(item),
                   'is--selected': isSelected,
                   'is--over': overCount && !isSelected,
@@ -1601,6 +1616,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
                   'is--current': item.isCurrent,
                   'is--now': item.isNow,
                   'is--next': item.isNext,
+                  'is--range-disabled': $xeDatePanel.isRangeDisabled(item),
                   'is--disabled': $xeDatePanel.isDateDisabled(item),
                   'is--selected': isSelected,
                   'is--over': overCount && !isSelected,

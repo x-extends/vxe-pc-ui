@@ -169,6 +169,18 @@
     }
   }
 }
+
+.vxe-date-panel--view-body {
+  .vxe-date-panel--view-item {
+    cursor: pointer;
+    &.is--disabled {
+      cursor: no-drop;
+    }
+    &.is--over {
+      cursor: no-drop;
+    }
+  }
+}
 .vxe-date-panel--view-row {
   display: flex;
   flex-direction: row;
@@ -233,6 +245,12 @@
       }
     }
   }
+  &.is--range-disabled {
+    .vxe-date-panel--view-item-inner {
+      color: var(--vxe-ui-input-disabled-color);
+      background-color: inherit;
+    }
+  }
   &.is--disabled {
     .vxe-date-panel--view-item-inner {
       color: var(--vxe-ui-input-disabled-color);
@@ -241,17 +259,6 @@
     .vxe-date-panel--label,
     .vxe-date-panel--festival {
       color: var(--vxe-ui-input-disabled-color);
-    }
-  }
-}
-
-.vxe-date-range-picker--panel {
-  .vxe-date-panel--view-item {
-    &.is--disabled {
-      .vxe-date-panel--view-item-inner {
-        color: var(--vxe-ui-input-disabled-color);
-        background-color: inherit;
-      }
     }
   }
 }
@@ -295,17 +302,6 @@
           }
         }
       }
-    }
-  }
-}
-.vxe-date-panel--view-body {
-  .vxe-date-panel--view-item {
-    cursor: pointer;
-    &.is--disabled {
-      cursor: no-drop;
-    }
-    &.is--over {
-      cursor: no-drop;
     }
   }
 }
