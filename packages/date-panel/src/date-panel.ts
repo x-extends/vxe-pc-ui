@@ -831,9 +831,7 @@ export default defineVxeComponent({
       }
     }
 
-    const isDateDisabled = (item: { date: Date }) => {
-      const { disabledMethod } = props
-      const { datePanelType } = reactData
+    const isRangeDisabled = (item: { date: Date }) => {
       const dateStartTime = computeDateStartTime.value
       const dateEndTime = computeDateEndTime.value
       const { date } = item
@@ -843,10 +841,21 @@ export default defineVxeComponent({
       if (dateEndTime && dateEndTime.getTime() < date.getTime()) {
         return true
       }
+      return false
+    }
+
+    const isDateDisabled = (item: { date: Date }) => {
+      const { disabledMethod } = props
+      const { datePanelType } = reactData
+      const { date } = item
       if (disabledMethod) {
         return disabledMethod({ type: datePanelType, viewType: datePanelType, date, $datePanel: $xeDatePanel })
       }
       return false
+    }
+
+    const hasAllDisabled = (item: { date: Date }) => {
+      return isRangeDisabled(item) || isDateDisabled(item)
     }
 
     const dateSelectItem = (date: Date) => {
@@ -898,13 +907,13 @@ export default defineVxeComponent({
     }
 
     const dateSelectEvent = (item: VxeDatePanelDefines.DateYearItem | VxeDatePanelDefines.DateQuarterItem | VxeDatePanelDefines.DateMonthItem | VxeDatePanelDefines.DateDayItem) => {
-      if (!isDateDisabled(item)) {
+      if (!hasAllDisabled(item)) {
         dateSelectItem(item.date)
       }
     }
 
     const dateMoveDay = (offsetDay: Date) => {
-      if (!isDateDisabled({ date: offsetDay })) {
+      if (!hasAllDisabled({ date: offsetDay })) {
         const dayList = computeDayList.value
         if (!dayList.some((item) => XEUtils.isDateSame(item.date, offsetDay, 'yyyyMMdd'))) {
           dateCheckMonth(offsetDay)
@@ -914,7 +923,7 @@ export default defineVxeComponent({
     }
 
     const dateMoveYear = (offsetYear: Date) => {
-      if (!isDateDisabled({ date: offsetYear })) {
+      if (!hasAllDisabled({ date: offsetYear })) {
         const yearList = computeYearList.value
         if (!yearList.some((item) => XEUtils.isDateSame(item.date, offsetYear, 'yyyy'))) {
           dateCheckMonth(offsetYear)
@@ -924,7 +933,7 @@ export default defineVxeComponent({
     }
 
     const dateMoveQuarter = (offsetQuarter: Date) => {
-      if (!isDateDisabled({ date: offsetQuarter })) {
+      if (!hasAllDisabled({ date: offsetQuarter })) {
         const quarterList = computeQuarterList.value
         if (!quarterList.some((item) => XEUtils.isDateSame(item.date, offsetQuarter, 'yyyyq'))) {
           dateCheckMonth(offsetQuarter)
@@ -934,7 +943,7 @@ export default defineVxeComponent({
     }
 
     const dateMoveMonth = (offsetMonth: Date) => {
-      if (!isDateDisabled({ date: offsetMonth })) {
+      if (!hasAllDisabled({ date: offsetMonth })) {
         const monthList = computeMonthList.value
         if (!monthList.some((item) => XEUtils.isDateSame(item.date, offsetMonth, 'yyyyMM'))) {
           dateCheckMonth(offsetMonth)
@@ -944,7 +953,7 @@ export default defineVxeComponent({
     }
 
     const dateMouseenterEvent = (item: VxeDatePanelDefines.DateYearItem | VxeDatePanelDefines.DateQuarterItem | VxeDatePanelDefines.DateMonthItem | VxeDatePanelDefines.DateDayItem) => {
-      if (!isDateDisabled(item)) {
+      if (!hasAllDisabled(item)) {
         const { datePanelType } = reactData
         if (datePanelType === 'month') {
           dateMoveMonth(item.date)
@@ -1199,6 +1208,7 @@ export default defineVxeComponent({
                   'is--current': item.isCurrent,
                   'is--now': item.isNow,
                   'is--next': item.isNext,
+                  'is--range-disabled': isRangeDisabled(item),
                   'is--disabled': isDateDisabled(item),
                   'is--selected': isSelected,
                   'is--over': overCount && !isSelected,
@@ -1274,6 +1284,7 @@ export default defineVxeComponent({
                   'is--current': item.isCurrent,
                   'is--now': rIndex ? item.isNow : isNowWeek,
                   'is--next': item.isNext,
+                  'is--range-disabled': isRangeDisabled(item),
                   'is--disabled': isDateDisabled(item),
                   'is--selected': isSelected,
                   'is--over': overCount && !isSelected,
@@ -1324,6 +1335,7 @@ export default defineVxeComponent({
                   'is--current': item.isCurrent,
                   'is--now': item.isNow,
                   'is--next': item.isNext,
+                  'is--range-disabled': isRangeDisabled(item),
                   'is--disabled': isDateDisabled(item),
                   'is--selected': isSelected,
                   'is--over': overCount && !isSelected,
@@ -1374,6 +1386,7 @@ export default defineVxeComponent({
                   'is--current': item.isCurrent,
                   'is--now': item.isNow,
                   'is--next': item.isNext,
+                  'is--range-disabled': isRangeDisabled(item),
                   'is--disabled': isDateDisabled(item),
                   'is--selected': isSelected,
                   'is--over': overCount && !isSelected,
@@ -1424,6 +1437,7 @@ export default defineVxeComponent({
                   'is--current': item.isCurrent,
                   'is--now': item.isNow,
                   'is--next': item.isNext,
+                  'is--range-disabled': isRangeDisabled(item),
                   'is--disabled': isDateDisabled(item),
                   'is--selected': isSelected,
                   'is--over': overCount && !isSelected,

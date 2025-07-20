@@ -41,9 +41,13 @@ export namespace VxeDateRangePickerPropTypes {
   export type Placeholder = string
   export type AutoComplete = string
   export type Form = string
+
+  // export type StartDate = string | number | Date
+  // export type EndDate = string | number | Date
   export type DefaultDate = string | number | Date
   export type MinDate = string | number | Date
   export type MaxDate = string | number | Date
+
   export type StartDay = 0 | 1 | 2 | 3 | 4 | 5 | 6
   export type SelectDay = 0 | 1 | 2 | 3 | 4 | 5 | 6
   export type LabelFormat = string
@@ -91,6 +95,8 @@ export interface VxeDateRangePickerProps {
   autoComplete?: VxeDateRangePickerPropTypes.AutoComplete
   form?: VxeDateRangePickerPropTypes.Form
 
+  // startDate?: VxeDateRangePickerPropTypes.StartDate
+  // endDate?: VxeDateRangePickerPropTypes.EndDate
   defaultDate?: VxeDateRangePickerPropTypes.DefaultDate
   minDate?: VxeDateRangePickerPropTypes.MinDate
   maxDate?: VxeDateRangePickerPropTypes.MaxDate
