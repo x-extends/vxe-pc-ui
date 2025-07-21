@@ -740,8 +740,21 @@ export default /* define-vxe-component start */ defineVxeComponent({
     },
     handleGlobalBlurEvent () {
       const $xeColorPicker = this
+      const reactData = $xeColorPicker.reactData
 
-      $xeColorPicker.hideOptionPanel()
+      const { visiblePanel, isActivated } = reactData
+      if (visiblePanel) {
+        $xeColorPicker.hideOptionPanel()
+      }
+      if (isActivated) {
+        reactData.isActivated = false
+      }
+      if (visiblePanel || isActivated) {
+        const targetElem = $xeColorPicker.$refs.refInputTarget as HTMLInputElement
+        if (targetElem) {
+          targetElem.blur()
+        }
+      }
     },
     handleGlobalResizeEvent () {
       const $xeColorPicker = this
@@ -1119,7 +1132,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
         }]
       }, [
         h('input', {
-          ref: 'refInput',
+          ref: 'refInputTarget',
           class: 'vxe-color-picker--input',
           on: {
             focus: $xeColorPicker.focusEvent,

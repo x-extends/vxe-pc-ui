@@ -173,6 +173,7 @@
 .vxe-date-panel--view-body {
   .vxe-date-panel--view-item {
     cursor: pointer;
+    &.is--range-disabled,
     &.is--disabled {
       cursor: no-drop;
     }
@@ -262,6 +263,17 @@
     }
   }
 }
+
+// .vxe-date-range-picker--panel {
+//   .vxe-date-panel--view-item {
+//     &.is--range-disabled {
+//       .vxe-date-panel--view-item-inner {
+//         color: var(--vxe-ui-input-disabled-color);
+//         background-color: inherit;
+//       }
+//     }
+//   }
+// }
 
 .vxe-date-panel--view-wrapper {
   &.type--week {

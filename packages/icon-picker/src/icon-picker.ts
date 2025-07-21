@@ -6,7 +6,7 @@ import { getEventTargetNode, getAbsolutePos } from '../../ui/src/dom'
 import { getLastZIndex, nextZIndex, getFuncText } from '../../ui/src/utils'
 import { getSlotVNs } from '../../ui/src/vn'
 
-import type { VxeIconPickerPropTypes, IconPickerInternalData, ValueOf, IconPickerReactData, VxeComponentSizeType, VxeIconPickerEmits, VxeIconPickerDefines, VxeDrawerConstructor, VxeDrawerMethods, VxeFormDefines, VxeFormConstructor, VxeFormPrivateMethods, VxeModalConstructor, VxeModalMethods } from '../../../types'
+import type { VxeIconPickerPropTypes, IconPickerInternalData, ValueOf, IconPickerReactData, VxeInputConstructor, VxeComponentSizeType, VxeIconPickerEmits, VxeIconPickerDefines, VxeDrawerConstructor, VxeDrawerMethods, VxeFormDefines, VxeFormConstructor, VxeFormPrivateMethods, VxeModalConstructor, VxeModalMethods } from '../../../types'
 import type { VxeTableConstructor, VxeTablePrivateMethods } from '../../../types/components/table'
 
 export default /* define-vxe-component start */ defineVxeComponent({
@@ -546,8 +546,21 @@ export default /* define-vxe-component start */ defineVxeComponent({
     },
     handleGlobalBlurEvent  () {
       const $xeIconPicker = this
+      const reactData = $xeIconPicker.reactData
 
-      $xeIconPicker.hideOptionPanel()
+      const { visiblePanel, isActivated } = reactData
+      if (visiblePanel) {
+        $xeIconPicker.hideOptionPanel()
+      }
+      if (isActivated) {
+        reactData.isActivated = false
+      }
+      if (visiblePanel || isActivated) {
+        const $input = $xeIconPicker.$refs.refInput as VxeInputConstructor
+        if ($input) {
+          $input.blur()
+        }
+      }
     },
     handleClickIconEvent  (evnt: MouseEvent, item: VxeIconPickerDefines.IconItemObj) {
       const $xeIconPicker = this

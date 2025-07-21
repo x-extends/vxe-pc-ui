@@ -2224,9 +2224,16 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const { isActivated, visiblePanel } = reactData
       if (visiblePanel) {
         $xeInput.hidePanel()
+      }
+      if (isActivated) {
+        reactData.isActivated = false
+      }
+      if (isActivated) {
         $xeInput.afterCheckValue()
-      } else if (isActivated) {
-        $xeInput.afterCheckValue()
+        const inputElem = $xeInput.$refs.refInputTarget as HTMLInputElement
+        if (inputElem) {
+          inputElem.blur()
+        }
       }
     },
 

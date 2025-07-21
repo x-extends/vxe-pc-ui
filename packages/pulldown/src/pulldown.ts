@@ -213,6 +213,11 @@ export default /* define-vxe-component start */ defineVxeComponent({
      */
     hidePanel () {
       const $xePulldown = this
+
+      return $xePulldown.hideOptionPanel()
+    },
+    hideOptionPanel () {
+      const $xePulldown = this
       const reactData = $xePulldown.reactData
       const internalData = $xePulldown.internalData
 
@@ -242,7 +247,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const reactData = $xePulldown.reactData
 
       if (reactData.visiblePanel) {
-        return $xePulldown.hidePanel()
+        return $xePulldown.hideOptionPanel()
       }
       return $xePulldown.showPanel()
     },
@@ -252,7 +257,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
 
       if (!option.disabled) {
         if (reactData.visiblePanel) {
-          $xePulldown.hidePanel()
+          $xePulldown.hideOptionPanel()
           $xePulldown.dispatchEvent('hide-panel', {}, evnt)
         }
         $xePulldown.dispatchEvent('option-click', { option }, evnt)
@@ -266,7 +271,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const { trigger } = props
       if (trigger === 'click') {
         if (reactData.visiblePanel) {
-          $xePulldown.hidePanel()
+          $xePulldown.hideOptionPanel()
           $xePulldown.dispatchEvent('hide-panel', {}, evnt)
         } else {
           $xePulldown.showPanel()
@@ -288,7 +293,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
           if (getEventTargetNode(evnt, panelElem).flag) {
             $xePulldown.updatePlacement()
           } else {
-            $xePulldown.hidePanel()
+            $xePulldown.hideOptionPanel()
             $xePulldown.dispatchEvent('hide-panel', {}, evnt)
           }
         }
@@ -306,7 +311,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       if (!disabled) {
         reactData.isActivated = getEventTargetNode(evnt, el).flag || getEventTargetNode(evnt, panelElem).flag
         if (visiblePanel && !reactData.isActivated) {
-          $xePulldown.hidePanel()
+          $xePulldown.hideOptionPanel()
           $xePulldown.dispatchEvent('hide-panel', {}, evnt)
         }
       }
@@ -315,10 +320,13 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const $xePulldown = this
       const reactData = $xePulldown.reactData
 
-      if (reactData.visiblePanel) {
-        reactData.isActivated = false
-        $xePulldown.hidePanel()
+      const { visiblePanel, isActivated } = reactData
+      if (visiblePanel) {
+        $xePulldown.hideOptionPanel()
         $xePulldown.dispatchEvent('hide-panel', {}, evnt)
+      }
+      if (isActivated) {
+        reactData.isActivated = false
       }
     },
     handleGlobalResizeEvent () {
@@ -439,7 +447,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       if (val) {
         $xePulldown.showPanel()
       } else {
-        $xePulldown.hidePanel()
+        $xePulldown.hideOptionPanel()
       }
     }
   },

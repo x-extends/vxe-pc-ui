@@ -583,8 +583,21 @@ export default /* define-vxe-component start */ defineVxeComponent({
     },
     handleGlobalBlurEvent () {
       const $xeTreeSelect = this
+      const reactData = $xeTreeSelect.reactData
 
-      $xeTreeSelect.hideOptionPanel()
+      const { visiblePanel, isActivated } = reactData
+      if (visiblePanel) {
+        $xeTreeSelect.hideOptionPanel()
+      }
+      if (isActivated) {
+        reactData.isActivated = false
+      }
+      if (visiblePanel || isActivated) {
+        const $input = $xeTreeSelect.$refs.refInput as VxeInputConstructor
+        if ($input) {
+          $input.blur()
+        }
+      }
     },
     handleGlobalResizeEvent () {
       const $xeTreeSelect = this

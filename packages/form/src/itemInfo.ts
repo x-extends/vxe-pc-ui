@@ -4,7 +4,7 @@ import { errLog } from '../../ui/src/log'
 
 export class ItemInfo {
   constructor ($xeForm: any, item: any) {
-    const { formatter } = item
+    const { field, itemRender, formatter } = item
     if (formatter) {
       if (XEUtils.isString(formatter)) {
         const gFormatOpts = formats.get(formatter)
@@ -19,10 +19,19 @@ export class ItemInfo {
       }
     }
 
+    if (field && itemRender) {
+      if (itemRender.startField && `${itemRender.startField}`.indexOf(field) >= 0) {
+        errLog('vxe.error.modelConflicts', [`field=${field}`, `item-render.startField=${itemRender.startField}`])
+      }
+      if (itemRender.endField && `${itemRender.endField}`.indexOf(field) >= 0) {
+        errLog('vxe.error.modelConflicts', [`field=${field}`, `item-render.endField=${itemRender.endField}`])
+      }
+    }
+
     Object.assign(this, {
       id: XEUtils.uniqueId('item_'),
       title: item.title,
-      field: item.field,
+      field: field,
       span: item.span,
       align: item.align,
       verticalAlign: item.verticalAlign,
@@ -49,7 +58,7 @@ export class ItemInfo {
       contentStyle: item.contentStyle,
       titleClassName: item.titleClassName,
       titleStyle: item.titleStyle,
-      itemRender: item.itemRender,
+      itemRender: itemRender,
       rules: item.rules,
       formatter: item.formatter,
       // 自定义参数

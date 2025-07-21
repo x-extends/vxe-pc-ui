@@ -977,8 +977,21 @@ export default /* define-vxe-component start */ defineVxeComponent({
     },
     handleGlobalBlurEvent () {
       const $xeSelect = this
+      const reactData = $xeSelect.reactData
 
-      $xeSelect.hideOptionPanel()
+      const { visiblePanel, isActivated } = reactData
+      if (visiblePanel) {
+        $xeSelect.hideOptionPanel()
+      }
+      if (isActivated) {
+        reactData.isActivated = false
+      }
+      if (visiblePanel || isActivated) {
+        const $input = $xeSelect.$refs.refInput as VxeInputConstructor
+        if ($input) {
+          $input.blur()
+        }
+      }
     },
     handleGlobalResizeEvent () {
       const $xeSelect = this

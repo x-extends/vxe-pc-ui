@@ -8,7 +8,7 @@ import { getLastZIndex, nextZIndex } from '../../ui/src/utils'
 import { errLog } from '../../ui/src/log'
 import VxeInputComponent from '../../input/src/input'
 
-import type { TableSelectReactData, VxeTableSelectPropTypes, TableSelectInternalData, VxeTableSelectEmits, VxeFormDefines, ValueOf, VxeComponentStyleType, VxeComponentSizeType, VxeModalConstructor, VxeModalMethods, VxeDrawerConstructor, VxeDrawerMethods, VxeFormConstructor, VxeFormPrivateMethods } from '../../../types'
+import type { TableSelectReactData, VxeTableSelectPropTypes, TableSelectInternalData, VxeTableSelectEmits, VxeInputConstructor, VxeFormDefines, ValueOf, VxeComponentStyleType, VxeComponentSizeType, VxeModalConstructor, VxeModalMethods, VxeDrawerConstructor, VxeDrawerMethods, VxeFormConstructor, VxeFormPrivateMethods } from '../../../types'
 import type { VxeTableConstructor, VxeTablePrivateMethods, VxeTablePropTypes } from '../../../types/components/table'
 import type { VxeGridInstance, VxeGridDefines } from '../../../types/components/grid'
 
@@ -504,8 +504,21 @@ export default /* define-vxe-component start */ defineVxeComponent({
     },
     handleGlobalBlurEvent () {
       const $xeTableSelect = this
+      const reactData = $xeTableSelect.reactData
 
-      $xeTableSelect.hideOptionPanel()
+      const { visiblePanel, isActivated } = reactData
+      if (visiblePanel) {
+        $xeTableSelect.hideOptionPanel()
+      }
+      if (isActivated) {
+        reactData.isActivated = false
+      }
+      if (visiblePanel || isActivated) {
+        const $input = $xeTableSelect.$refs.refInput as VxeInputConstructor
+        if ($input) {
+          $input.blur()
+        }
+      }
     },
     handleGlobalResizeEvent () {
       const $xeTableSelect = this

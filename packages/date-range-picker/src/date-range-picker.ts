@@ -738,9 +738,18 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const $xeDateRangePicker = this
       const reactData = $xeDateRangePicker.reactData
 
-      const { visiblePanel } = reactData
+      const { visiblePanel, isActivated } = reactData
       if (visiblePanel) {
         $xeDateRangePicker.hidePanel()
+      }
+      if (isActivated) {
+        reactData.isActivated = false
+      }
+      if (visiblePanel || isActivated) {
+        const targetElem = $xeDateRangePicker.$refs.refInputTarget as HTMLInputElement
+        if (targetElem) {
+          targetElem.blur()
+        }
       }
     },
     handleGlobalResizeEvent () {
