@@ -627,9 +627,18 @@ export default defineVxeComponent({
     }
 
     const handleGlobalBlurEvent = () => {
-      const { visiblePanel } = reactData
+      const { visiblePanel, isActivated } = reactData
       if (visiblePanel) {
         hidePanel()
+      }
+      if (isActivated) {
+        reactData.isActivated = false
+      }
+      if (visiblePanel || isActivated) {
+        const targetElem = refInputTarget.value
+        if (targetElem) {
+          targetElem.blur()
+        }
       }
     }
 

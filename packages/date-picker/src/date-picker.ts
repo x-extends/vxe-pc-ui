@@ -53,7 +53,7 @@ export default defineVxeComponent({
     multiple: Boolean as PropType<VxeDatePickerPropTypes.Multiple>,
     limitCount: {
       type: [String, Number] as PropType<VxeDatePickerPropTypes.LimitCount>,
-      default: () => getConfig().upload.limitCount
+      default: () => getConfig().datePicker.limitCount
     },
 
     // date、week、month、quarter、year
@@ -511,12 +511,17 @@ export default defineVxeComponent({
       const { isActivated, visiblePanel } = reactData
       if (visiblePanel) {
         hidePanel()
+      }
+      if (isActivated) {
+        reactData.isActivated = false
+      }
+      if (visiblePanel || isActivated) {
         if ($datePanel) {
           $datePanel.checkValue(reactData.inputLabel)
         }
-      } else if (isActivated) {
-        if ($datePanel) {
-          $datePanel.checkValue(reactData.inputLabel)
+        const targetElem = refInputTarget.value
+        if (targetElem) {
+          targetElem.blur()
         }
       }
     }

@@ -90,7 +90,7 @@ export default defineVxeComponent({
     const { computeSize } = useSize(props)
 
     const refElem = ref<HTMLDivElement>()
-    const refInput = ref<HTMLInputElement>()
+    const refInputTarget = ref<HTMLInputElement>()
     const refOptionPanel = ref<HTMLDivElement>()
     const refHueSliderElem = ref<HTMLDivElement>()
     const refHueSliderBtnElem = ref<HTMLDivElement>()
@@ -632,7 +632,19 @@ export default defineVxeComponent({
     }
 
     const handleGlobalBlurEvent = () => {
-      hideOptionPanel()
+      const { visiblePanel, isActivated } = reactData
+      if (visiblePanel) {
+        hideOptionPanel()
+      }
+      if (isActivated) {
+        reactData.isActivated = false
+      }
+      if (visiblePanel || isActivated) {
+        const targetElem = refInputTarget.value
+        if (targetElem) {
+          targetElem.blur()
+        }
+      }
     }
 
     const handleGlobalResizeEvent = () => {
@@ -964,7 +976,7 @@ export default defineVxeComponent({
         }]
       }, [
         h('input', {
-          ref: refInput,
+          ref: refInputTarget,
           class: 'vxe-color-picker--input',
           onFocus: focusEvent,
           onBlur: blurEvent

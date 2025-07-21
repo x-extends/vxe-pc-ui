@@ -171,7 +171,7 @@ export default defineVxeComponent({
     /**
      * 隐藏下拉面板
      */
-    const hidePanel = () => {
+    const hideOptionPanel = () => {
       reactData.visiblePanel = false
       dispatchEvent('visible-change', { visible: false }, null)
       emit('update:modelValue', false)
@@ -196,7 +196,7 @@ export default defineVxeComponent({
      */
     const togglePanel = () => {
       if (reactData.visiblePanel) {
-        return hidePanel()
+        return hideOptionPanel()
       }
       return showPanel()
     }
@@ -204,7 +204,7 @@ export default defineVxeComponent({
     const handleOptionEvent = (evnt: Event, option: VxePulldownPropTypes.Option) => {
       if (!option.disabled) {
         if (reactData.visiblePanel) {
-          hidePanel()
+          hideOptionPanel()
           dispatchEvent('hide-panel', {}, evnt)
         }
         dispatchEvent('option-click', { option }, evnt)
@@ -215,7 +215,7 @@ export default defineVxeComponent({
       const { trigger } = props
       if (trigger === 'click') {
         if (reactData.visiblePanel) {
-          hidePanel()
+          hideOptionPanel()
           dispatchEvent('hide-panel', {}, evnt)
         } else {
           showPanel()
@@ -234,7 +234,7 @@ export default defineVxeComponent({
           if (getEventTargetNode(evnt, panelElem).flag) {
             updatePlacement()
           } else {
-            hidePanel()
+            hideOptionPanel()
             dispatchEvent('hide-panel', {}, evnt)
           }
         }
@@ -249,17 +249,20 @@ export default defineVxeComponent({
       if (!disabled) {
         reactData.isActivated = getEventTargetNode(evnt, el).flag || getEventTargetNode(evnt, panelElem).flag
         if (visiblePanel && !reactData.isActivated) {
-          hidePanel()
+          hideOptionPanel()
           dispatchEvent('hide-panel', {}, evnt)
         }
       }
     }
 
     const handleGlobalBlurEvent = (evnt: Event) => {
-      if (reactData.visiblePanel) {
-        reactData.isActivated = false
-        hidePanel()
+      const { visiblePanel, isActivated } = reactData
+      if (visiblePanel) {
+        hideOptionPanel()
         dispatchEvent('hide-panel', {}, evnt)
+      }
+      if (isActivated) {
+        reactData.isActivated = false
       }
     }
 
@@ -279,7 +282,7 @@ export default defineVxeComponent({
       isPanelVisible,
       togglePanel,
       showPanel,
-      hidePanel
+      hidePanel: hideOptionPanel
     }
 
     Object.assign($xePulldown, pulldownMethods)
@@ -289,7 +292,7 @@ export default defineVxeComponent({
       if (value) {
         showPanel()
       } else {
-        hidePanel()
+        hideOptionPanel()
       }
     })
 

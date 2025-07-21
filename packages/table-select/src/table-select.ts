@@ -452,7 +452,19 @@ export default defineVxeComponent({
     }
 
     const handleGlobalBlurEvent = () => {
-      hideOptionPanel()
+      const { visiblePanel, isActivated } = reactData
+      if (visiblePanel) {
+        hideOptionPanel()
+      }
+      if (isActivated) {
+        reactData.isActivated = false
+      }
+      if (visiblePanel || isActivated) {
+        const $input = refInput.value
+        if ($input) {
+          $input.blur()
+        }
+      }
     }
 
     const handleGlobalResizeEvent = () => {
