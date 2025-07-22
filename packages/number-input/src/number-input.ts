@@ -562,13 +562,13 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const $xeNumberInput = this
       const props = $xeNumberInput
 
-      return props.max === null || XEUtils.toNumber(num) <= XEUtils.toNumber(props.max)
+      return props.max === null || props.max === '' || XEUtils.toNumber(num) <= XEUtils.toNumber(props.max)
     },
     validMinNum  (num: number | string) {
       const $xeNumberInput = this
       const props = $xeNumberInput
 
-      return props.min === null || XEUtils.toNumber(num) >= XEUtils.toNumber(props.min)
+      return props.min === null || props.min === '' || XEUtils.toNumber(num) >= XEUtils.toNumber(props.min)
     },
     afterCheckValue  () {
       const $xeNumberInput = this
@@ -592,9 +592,9 @@ export default /* define-vxe-component start */ defineVxeComponent({
         if (inputValue || (min || max)) {
           let inpNumVal: number | string = type === 'integer' ? XEUtils.toInteger(handleNumber(inputValue)) : XEUtils.toNumber(handleNumber(inputValue))
           if (!$xeNumberInput.validMinNum(inpNumVal)) {
-            inpNumVal = min
+            inpNumVal = min as number
           } else if (!$xeNumberInput.validMaxNum(inpNumVal)) {
-            inpNumVal = max
+            inpNumVal = max as number
           }
           if (exponential) {
             const inpStringVal = handleNumberString(inputValue).toLowerCase()
@@ -641,9 +641,9 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const newValue = isPlus ? XEUtils.add(numValue, stepValue) : XEUtils.subtract(numValue, stepValue)
       let restNum: number | string
       if (!$xeNumberInput.validMinNum(newValue)) {
-        restNum = min
+        restNum = min as number
       } else if (!$xeNumberInput.validMaxNum(newValue)) {
-        restNum = max
+        restNum = max as number
       } else {
         restNum = newValue
       }

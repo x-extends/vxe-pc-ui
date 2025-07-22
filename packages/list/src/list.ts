@@ -256,14 +256,18 @@ export default /* define-vxe-component start */ defineVxeComponent({
     },
     /**
      * 如果有滚动条，则滚动到对应的位置
-     * @param {Number} scrollLeft 左距离
-     * @param {Number} scrollTop 上距离
      */
-    scrollTo (scrollLeft: number | null, scrollTop?: number | null) {
+    scrollTo (scrollLeft: { top?: number | null; left?: number | null; } | number | null | undefined, scrollTop?: number | null) {
       const $xeList = this
       const reactData = $xeList.reactData
 
       const scrollBodyElem = $xeList.$refs.refVirtualWrapper as HTMLElement
+      if (scrollLeft) {
+        if (!XEUtils.isNumber(scrollLeft)) {
+          scrollTop = scrollLeft.top
+          scrollLeft = scrollLeft.left
+        }
+      }
       if (XEUtils.isNumber(scrollLeft)) {
         scrollBodyElem.scrollLeft = scrollLeft
       }

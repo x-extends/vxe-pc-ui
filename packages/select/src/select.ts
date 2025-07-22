@@ -524,7 +524,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       if (filterable && filterMethod) {
         avList = fullData.filter(option => isOptionVisible(option) && filterMethod({ $select: $xeSelect, group: null, option, searchValue, value }))
       } else if (filterable) {
-        avList = fullData.filter(option => isOptionVisible(option) && (!searchStr || `${option[labelField]}`.toLowerCase().indexOf(searchStr) > -1))
+        avList = fullData.filter(option => isOptionVisible(option) && (!searchStr || `${option[labelField] || option[valueField]}`.toLowerCase().indexOf(searchStr) > -1))
       } else {
         avList = fullData.filter(isOptionVisible)
       }
@@ -1457,7 +1457,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
         } else if (defaultSlot) {
           optVNs = $xeSelect.callSlot(defaultSlot, optParams, h)
         } else {
-          optLabel = getFuncText(option[(isOptGroup ? groupLabelField : labelField) as 'label'])
+          optLabel = getFuncText(option[(isOptGroup ? groupLabelField : labelField) as 'label'] || optionValue)
           optVNs = optLabel
         }
 

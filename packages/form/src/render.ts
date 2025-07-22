@@ -12,7 +12,7 @@ import type { VxeFormConstructor, VxeFormDefines, VxeFormItemPropTypes, VxeFormP
 
 function renderPrefixIcon (h: CreateElement, titlePrefix: VxeFormItemPropTypes.TitlePrefix) {
   return h('span', {
-    class: 'vxe-form--item-title-prefix'
+    class: 'vxe-form--item-title-tip-prefix'
   }, [
     h(VxeIconComponent, {
       class: titlePrefix.icon || getIcon().FORM_PREFIX,
@@ -25,7 +25,7 @@ function renderPrefixIcon (h: CreateElement, titlePrefix: VxeFormItemPropTypes.T
 
 function renderSuffixIcon (h: CreateElement, titleSuffix: VxeFormItemPropTypes.TitleSuffix) {
   return h('span', {
-    class: 'vxe-form--item-title-suffix'
+    class: 'vxe-form--item-title-tip-suffix'
   }, [
     h(VxeIconComponent, {
       class: titleSuffix.icon || getIcon().FORM_SUFFIX,
@@ -131,14 +131,24 @@ export function renderTitle (h: CreateElement, $xeForm: VxeFormConstructor & Vxe
   const hasEllipsis = ovTitle || ovTooltip || ovEllipsis
   const params = { data, disabled, readonly, field, property: field, item, $form: $xeForm, $grid: $xeGrid }
   const titleSlot = slots ? slots.title : null
-  const extraSlot = slots ? slots.extra : null
+  const prefixSlot = slots ? slots.prefix : null
+  const suffixSlot = slots ? slots.suffix || slots.extra : null
   const isTitle = (showTitle !== false) && (title || titleSlot)
   const hasGroup = children && children.length > 0
   const titVNs: VNode[] = []
+  if (prefixSlot) {
+    titVNs.push(
+      h('span', {
+        key: 'pt',
+        class: 'vxe-form--item-title-prefix'
+      }, $xeForm.callSlot(prefixSlot, params, h))
+    )
+  }
   if (titlePrefix) {
     titVNs.push(
       (titlePrefix.content || titlePrefix.message)
         ? h(VxeTooltipComponent, {
+          key: 'pm',
           props: {
             ...tooltipOpts,
             ...titlePrefix,
@@ -154,6 +164,7 @@ export function renderTitle (h: CreateElement, $xeForm: VxeFormConstructor & Vxe
   const rftTitle = compConf ? (compConf.renderFormItemTitle || compConf.renderItemTitle) : null
   titVNs.push(
     h('span', {
+      key: 'pl',
       class: 'vxe-form--item-title-label'
     }, titleSlot ? $xeForm.callSlot(titleSlot, params, h) : (rftTitle ? getSlotVNs(rftTitle.call($xeForm, h, itemRender, params)) : getFuncText(item.title)))
   )
@@ -162,6 +173,7 @@ export function renderTitle (h: CreateElement, $xeForm: VxeFormConstructor & Vxe
     fixVNs.push(
       (titleSuffix.content || titleSuffix.message)
         ? h(VxeTooltipComponent, {
+          key: 'sm',
           props: {
             ...tooltipOpts,
             ...titleSuffix,
@@ -172,6 +184,14 @@ export function renderTitle (h: CreateElement, $xeForm: VxeFormConstructor & Vxe
           }
         })
         : renderSuffixIcon(h, titleSuffix)
+    )
+  }
+  if (suffixSlot) {
+    fixVNs.push(
+      h('span', {
+        key: 'st',
+        class: 'vxe-form--item-title-suffix'
+      }, $xeForm.callSlot(suffixSlot, params, h))
     )
   }
   const ons: any = ovTooltip
@@ -213,12 +233,7 @@ export function renderTitle (h: CreateElement, $xeForm: VxeFormConstructor & Vxe
       }, titVNs),
       h('div', {
         class: 'vxe-form--item-title-postfix'
-      }, fixVNs),
-      extraSlot
-        ? h('div', {
-          class: 'vxe-form--item-title-extra'
-        }, $xeForm.callSlot(extraSlot, params, h))
-        : renderEmptyElement($xeForm)
+      }, fixVNs)
     ])
     : renderEmptyElement($xeForm)
 }

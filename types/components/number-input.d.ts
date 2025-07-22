@@ -26,14 +26,14 @@ export namespace VxeNumberInputPropTypes {
   export type Readonly = boolean
   export type Disabled = boolean
   export type Placeholder = string
-  export type MaxLength = string | number
+  export type MaxLength = string | number | null
   export type Multiple = boolean
   export type AutoComplete = string
   export type Align = string
   export type Form = string
-  export type Min = string | number
-  export type Max = string | number
-  export type Step = string | number
+  export type Min = string | number | null
+  export type Max = string | number | null
+  export type Step = string | number | null
   export type Exponential = boolean
   /**
    * @deprecated
@@ -57,7 +57,7 @@ export namespace VxeNumberInputPropTypes {
      */
     layout?: 'left' | 'right' | 'default' | ''
   }
-  export type Digits = string | number
+  export type Digits = string | number | null
   export type AutoFill = boolean
   export type Editable = boolean
   export type PlusIcon = string

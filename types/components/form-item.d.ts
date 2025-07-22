@@ -140,7 +140,13 @@ export namespace VxeFormItemPropTypes {
     title?: string | ((params: VxeFormItemSlotTypes.TitleSlotParams) => VxeComponentSlotType | VxeComponentSlotType[]) | null
     default?: string | ((params: VxeFormItemSlotTypes.DefaultSlotParams) => VxeComponentSlotType | VxeComponentSlotType[]) | null
     valid?: string | ((params: VxeFormItemSlotTypes.ValidSlotParams) => VxeComponentSlotType | VxeComponentSlotType[]) | null
-    extra?: string | ((params: VxeFormItemSlotTypes.ExtraSlotParams) => VxeComponentSlotType | VxeComponentSlotType[]) | null
+    prefix?: string | ((params: VxeFormItemSlotTypes.PrefixSlotParams) => VxeComponentSlotType | VxeComponentSlotType[]) | null
+    suffix?: string | ((params: VxeFormItemSlotTypes.SuffixSlotParams) => VxeComponentSlotType | VxeComponentSlotType[]) | null
+    /**
+     * 已废弃，请使用 suffix
+     * @deprecated
+     */
+    extra?: string | ((params: VxeFormItemSlotTypes.SuffixSlotParams) => VxeComponentSlotType | VxeComponentSlotType[]) | null
   }
 
   /**
@@ -367,7 +373,8 @@ export namespace VxeFormItemSlotTypes {
     rule: VxeFormDefines.FormRule<D>
   }
   export interface TitleSlotParams<D = any> extends DefaultSlotParams<D> {}
-  export interface ExtraSlotParams<D = any> extends DefaultSlotParams<D> {}
+  export interface PrefixSlotParams<D = any> extends DefaultSlotParams<D> {}
+  export interface SuffixSlotParams<D = any> extends DefaultSlotParams<D> {}
 }
 
 export interface VxeFormItemSlots {
@@ -380,7 +387,14 @@ export interface VxeFormItemSlots {
    */
   title: (params: VxeFormItemSlotTypes.TitleSlotParams) => any
   valid: (params: VxeFormItemSlotTypes.ValidSlotParams) => any
-  extra: (params: VxeFormItemSlotTypes.ExtraSlotParams) => any
+  prefix: (params: VxeFormItemSlotTypes.PrefixSlotParams) => any
+  suffix: (params: VxeFormItemSlotTypes.SuffixSlotParams) => any
+
+  /**
+   * 已废弃，请使用 suffix
+   * @deprecated
+   */
+  extra: (params: VxeFormItemSlotTypes.SuffixSlotParams) => any
 }
 
 export const FormItem: typeof VxeFormItem

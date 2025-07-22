@@ -28,7 +28,7 @@ export namespace VxeInputPropTypes {
   export type Readonly = boolean
   export type Disabled = boolean
   export type Placeholder = string
-  export type MaxLength = string | number
+  export type MaxLength = string | number | null
   export type Multiple = boolean
   export type ShowWordCount = boolean
   export type CountMethod = (params: {
@@ -38,13 +38,13 @@ export namespace VxeInputPropTypes {
   export type AutoFocus = boolean
   export type Align = VxeComponentAlignType
   export type Form = string
-  export type Min = string | number
-  export type Max = string | number
-  export type Step = string | number
+  export type Min = string | number | null
+  export type Max = string | number | null
+  export type Step = string | number | null
   export type Trim = boolean
   export type Exponential = boolean
   export type Controls = boolean
-  export type Digits = string | number
+  export type Digits = string | number | null
   export type StartDate = string | number | Date
   export type EndDate = string | number | Date
   export type MinDate = string | number | Date
