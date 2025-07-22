@@ -264,11 +264,22 @@ export namespace VxeFormDesignEvents {
 export namespace VxeFormDesignSlotTypes {
   export interface DefaultSlotParams {}
   export interface HeaderSlotParams {}
+  export interface TitleSlotParams {}
   export interface ExtraSlotParams {}
 }
 export interface VxeFormDesignSlots {
   default: (params: VxeFormDesignSlotTypes.DefaultSlotParams) => any
   header: (params: VxeFormDesignSlotTypes.HeaderSlotParams) => any
+  title: (params: VxeFormDesignSlotTypes.TitleSlotParams) => any
+  titlePrefix: (params: VxeFormDesignSlotTypes.DefaultSlotParams) => any
+  'title-prefix': (params: VxeFormDesignSlotTypes.DefaultSlotParams) => any
+  titleSuffix: (params: VxeFormDesignSlotTypes.DefaultSlotParams) => any
+  'title-suffix': (params: VxeFormDesignSlotTypes.DefaultSlotParams) => any
+
+  /**
+   * 已废弃，请使用 suffix
+   * @deprecated
+   */
   extra: (params: VxeFormDesignSlotTypes.ExtraSlotParams) => any
 }
 

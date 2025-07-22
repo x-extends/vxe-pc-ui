@@ -143,10 +143,11 @@ export interface ListMethods {
 
   /**
    * 如果有滚动条，则滚动到对应的位置
-   * @param scrollLeft 左边距离
-   * @param scrollTop 顶部距离
    */
-  scrollTo(scrollLeft: number | null, scrollTop?: number | null): Promise<void>
+  scrollTo(x: {
+    top?: number | null
+    left?: number | null
+  } | number | null | undefined, y?: number | null): Promise<void>
 
   /**
    * 刷新滚动操作，手动同步滚动相关位置

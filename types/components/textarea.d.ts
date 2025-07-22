@@ -25,7 +25,7 @@ export interface VxeTextareaPrivateRef extends TextareaPrivateRef { }
 
 export namespace VxeTextareaPropTypes {
   export type Size = VxeComponentSizeType
-  export type ModelValue = string | number
+  export type ModelValue = string | number | null
   export type ClassName = string
   export type Immediate = boolean
   export type Name = string
@@ -33,16 +33,16 @@ export namespace VxeTextareaPropTypes {
   export type Editable = boolean
   export type Disabled = boolean
   export type Placeholder = string
-  export type MaxLength = string | number
-  export type Rows = string | number
-  export type Cols = string | number
+  export type MaxLength = string | number | null
+  export type Rows = string | number | null
+  export type Cols = string | number | null
   export type ShowWordCount = boolean
   export type CountMethod = (params: {
     value: string
   }) => number
   export type Autosize = {
-    minRows?: number
-    maxRows?: number
+    minRows?: number | null
+    maxRows?: number | null
   }
   export type Form = string
   export type Resize = string

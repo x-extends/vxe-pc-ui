@@ -1,7 +1,13 @@
 <template>
   <div>
     <vxe-form vertical border title-background title-colon :data="demo1.formData1" @submit="searchEvent" @reset="resetEvent">
-      <vxe-form-item title="名称" field="name" :item-render="{}" titleBold>
+      <vxe-form-item title="名称" field="name" :item-render="{}" titleBold :titlePrefix="{content:'ff'}" :titleSuffix="{content:'xx'}">
+        <template #prefix>
+          222
+        </template>
+        <template #suffix>
+          1111
+        </template>
         <template #default="{ data }">
           <vxe-input v-model="data.name" placeholder="请输入名称" clearable></vxe-input>
         </template>
