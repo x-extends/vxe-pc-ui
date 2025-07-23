@@ -430,13 +430,13 @@ export namespace VxeTablePropTypes {
      */
     mapChildrenField?: string
     /**
-     * 默认展开所有子孙树节点（只会在初始化时被触发一次）
+     * 默认展开所有分组行（只会在初始化时被触发一次）
      */
     expandAll?: boolean
     /**
-     * 默认展开指定树节点（只会在初始化时被触发一次，需要有 row-config.keyField）
+     * 默认展开指定分组行的字段（只会在初始化时被触发一次）
      */
-    expandRowKeys?: string[] | number[]
+    expandGroupFields?: string[]
     /**
      * 分组节点的缩进
      */
@@ -1332,11 +1332,11 @@ export namespace VxeTablePropTypes {
   export interface ExpandConfig<D = any> {
     labelField?: string
     /**
-     * 默认展开所有子孙树节点（只会在初始化时被触发一次）
+     * 默认展开所有行（只会在初始化时被触发一次）
      */
     expandAll?: boolean
     /**
-     * 默认展开指定树节点（只会在初始化时被触发一次，需要有 row-config.keyField）
+     * 默认展开指定行（只会在初始化时被触发一次，需要有 row-config.keyField）
      */
     expandRowKeys?: string[] | number[]
     accordion?: boolean
@@ -4533,6 +4533,12 @@ export interface TableMethods<DT = any> {
    * @param expanded 是否展开
    */
   setRowGroupExpand(rows: any | any[], expanded: boolean): Promise<void>
+  /**
+   * 用于行分组，根据行分组字段设置分组的展开状态，二个参数设置这一行展开与否
+   * @param groupFields 行分组字段
+   * @param expanded 是否展开
+   */
+  setRowGroupExpandByField(groupFields: string | string[], expanded: boolean): Promise<void>
   /**
    * 用于行分组，设置所有行分组的展开状态
    * @param expanded 是否展开
