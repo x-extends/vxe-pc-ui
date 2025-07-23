@@ -62,22 +62,23 @@
 
 * [x] alert 警告提示
 * [x] anchor 锚点
-* [x] anchor-link 锚点-链接
+  * [x] anchor-link 锚点-链接
 * [x] avatar 头像
 * [x] badge 徽标
 * [x] breadcrumb 面包屑
-* [x] breadcrumb-item 面包屑-项
+  * [x] breadcrumb-item 面包屑-项
 * [x] button 按钮
-* [x] button-group 按钮组
+  * [x] button-group 按钮组
 * [x] calendar 日历
 * [x] card 卡片
 * [x] carousel 走马灯
-* [x] carousel-item 走马灯 - 项
+  * [x] carousel-item 走马灯 - 项
 * [x] checkbox 复选框
-* [x] checkbox-group 复选框-组
+  * [x] checkbox-button 复选框-按钮
+  * [x] checkbox-group 复选框-组
 * [x] col 列
 * [x] collapse 展开面板
-* [x] collapse-pane 展开面板-容器
+  * [x] collapse-pane 展开面板-容器
 * [x] color-picker 颜色选择器
 * [x] countdown 倒计时
 * [x] date-picker 日期选择器
@@ -85,45 +86,45 @@
 * [x] drawer 抽屉
 * [x] empty 空数据
 * [x] form 表单
-* [x] form-group 表单-分组
-* [x] form-item 表单-项
+  * [x] form-group 表单-分组
+  * [x] form-item 表单-项
 * [x] icon 图标
 * [x] icon-picker 图标选择
 * [x] image 图片
-* [x] image-group 图片组
-* [x] image-preview 图片预览
+  * [x] image-group 图片组
+  * [x] image-preview 图片预览
 * [x] input 输入框
-* [x] layout-aside 页面布局-左侧
-* [x] layout-body 页面布局-内容
 * [x] layout-container 页面布局-容器
-* [x] layout-footer 页面布局-页尾
-* [x] layout-header 页面布局-页头
+  * [x] layout-aside 页面布局-左侧
+  * [x] layout-body 页面布局-内容
+  * [x] layout-footer 页面布局-页尾
+  * [x] layout-header 页面布局-页头
 * [x] link 链接
 * [x] list 虚拟列表
 * [x] loading 加载中
 * [x] menu 菜单
 * [x] modal 模态窗口
 * [x] number-input 数值输入框
-* [x] optgroup 下拉框-分组项
-* [x] option 下拉框-项
 * [x] pager 分页
 * [x] password-input 密码输入框
 * [x] print 打印
 * [x] print-page-break 分页打印
 * [x] pulldown 下拉容器
 * [x] radio 单选框
-* [x] radio-button 单选框-按钮
-* [x] radio-group 单选框-组
+  * [x] radio-button 单选框-按钮
+  * [x] radio-group 单选框-组
 * [x] rate 评分
 * [x] result 结果
 * [x] row 行
 * [x] select 下拉框
+  * [x] optgroup 下拉框-分组项
+  * [x] option 下拉框-项
 * [x] spilt 分割面板
-* [x] spilt-pane 分割面板-面板
+  * [x] spilt-pane 分割面板-面板
 * [x] slider 滑块
 * [ ] steps 步骤条
 * [x] switch 开关
-* [x] tab-pane 页签-容器
+  * [x] tab-pane 页签-容器
 * [x] tabs 页签
 * [x] text-ellipsis 多行文本溢出
 * [x] table-select 表格下拉框
