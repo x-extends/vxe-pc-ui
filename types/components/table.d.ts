@@ -401,6 +401,14 @@ export namespace VxeTablePropTypes {
      */
     mapChildrenField?: string
     /**
+     * 默认展开所有子孙树节点（只会在初始化时被触发一次）
+     */
+    expandAll?: boolean
+    /**
+     * 默认展开指定树节点（只会在初始化时被触发一次，需要有 row-config.keyField）
+     */
+    expandRowKeys?: string[] | number[]
+    /**
      * 分组节点的缩进
      */
     indent?: number
@@ -1298,7 +1306,13 @@ export namespace VxeTablePropTypes {
    */
   export interface ExpandConfig<D = any> {
     labelField?: string
+    /**
+     * 默认展开所有子孙树节点（只会在初始化时被触发一次）
+     */
     expandAll?: boolean
+    /**
+     * 默认展开指定树节点（只会在初始化时被触发一次，需要有 row-config.keyField）
+     */
     expandRowKeys?: string[] | number[]
     accordion?: boolean
     trigger?: 'default' | 'cell' | 'row' | 'manual' |'' | null
