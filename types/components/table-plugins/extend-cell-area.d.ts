@@ -86,11 +86,11 @@ export interface VxeTableExtendCellAreaPrivateMethods<D = any> {
   /**
    * @private
    */
-  handleHeaderCellAreaEvent(evnt: MouseEvent, params: VxeTableDefines.HeaderCellClickEventParams<D>): void
+  handleHeaderCellAreaModownEvent(evnt: MouseEvent, params: VxeTableDefines.HeaderCellClickEventParams<D>): void
   /**
    * @private
    */
-  triggerCellAreaMousednEvent(evnt: MouseEvent, params: VxeTableDefines.CellClickEventParams<D>): void
+  triggerCellAreaModownEvent(evnt: MouseEvent, params: VxeTableDefines.CellClickEventParams<D>): void
   /**
    * @private
    */
