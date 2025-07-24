@@ -7,6 +7,7 @@ import { hasClass, getAbsolutePos, getEventTargetNode, hasControlKey } from '../
 import { toStringTimeDate, getDateQuarter } from '../../date-panel/src/util'
 import { handleNumber, toFloatValueFixed } from '../../number-input/src/util'
 import { getSlotVNs } from '../../ui/src/vn'
+import { warnLog } from '../../ui/src/log'
 
 import type { VxeInputConstructor, VxeInputEmits, InputReactData, InputMethods, ValueOf, InputInternalData, VxeInputPropTypes, InputPrivateRef, VxeFormConstructor, VxeFormPrivateMethods, VxeFormDefines, VxeDrawerConstructor, VxeDrawerMethods, VxeModalConstructor, VxeModalMethods, VxeDatePanelDefines, VxeSelectConstructor, VxeSelectMethods, VxeTreeSelectConstructor, VxeTreeSelectMethods, VxeComponentStyleType } from '../../../types'
 import type { VxeTableConstructor, VxeTablePrivateMethods } from '../../../types/components/table'
@@ -2705,6 +2706,14 @@ export default defineVxeComponent({
     })
 
     onMounted(() => {
+      const { type } = props
+      if (['date', 'time', 'datetime', 'week', 'month', 'quarter', 'year'].includes(type)) {
+        warnLog('vxe.error.useNew', [`<vxe-input type="${type}" ... />`, `<vxe-date-picker type="${type}" ... />`])
+      } else if (['number', 'integer', 'float'].includes(type)) {
+        warnLog('vxe.error.useNew', [`<vxe-input type="${type}" ... />`, `<vxe-number-input type="${type}" ... />`])
+      } else if (['password'].includes(type)) {
+        warnLog('vxe.error.useNew', [`<vxe-input type="${type}" ... />`, `<vxe-password-input type="${type}" ... />`])
+      }
       globalEvents.on($xeInput, 'mousewheel', handleGlobalMousewheelEvent)
       globalEvents.on($xeInput, 'mousedown', handleGlobalMousedownEvent)
       globalEvents.on($xeInput, 'keydown', handleGlobalKeydownEvent)

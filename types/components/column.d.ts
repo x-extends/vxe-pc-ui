@@ -95,12 +95,14 @@ export namespace VxeColumnPropTypes {
   export type FilterMethod<D = any> = (params: FilterMethodParams<D>) => boolean
 
   interface FilterResetMethodParams<D = any> {
+    $table: VxeTableConstructor<D>
     options: VxeTableDefines.FilterOption[]
     column: VxeTableDefines.ColumnInfo<D>
   }
-  export type FilterResetMethod = (params: FilterResetMethodParams) => void
+  export type FilterResetMethod<D = any> = (params: FilterResetMethodParams<D>) => void
 
   interface FilterRecoverMethodParams<D = any> {
+    $table: VxeTableConstructor<D>
     option: VxeTableDefines.FilterOption
     column: VxeTableDefines.ColumnInfo<D>
   }
