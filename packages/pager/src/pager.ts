@@ -45,7 +45,7 @@ export default defineVxeComponent({
       type: Array as PropType<VxePagerPropTypes.PageSizes>,
       default: () => getConfig().pager.pageSizes || [10, 15, 20, 50, 100]
     },
-    // 列对其方式
+    // 列对齐方式
     align: {
       type: String as PropType<VxePagerPropTypes.Align>,
       default: () => getConfig().pager.align
