@@ -50,7 +50,7 @@ export interface VxeColgroupProps {
    */
   fixed?: VxeColumnPropTypes.Fixed
   /**
-   * 列对其方式
+   * 列对齐方式
    */
   align?: VxeColumnPropTypes.Align
   /**

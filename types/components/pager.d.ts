@@ -80,7 +80,7 @@ export interface VxePagerProps {
    */
   pageSizes?: VxePagerPropTypes.PageSizes
   /**
-   * 列对其方式
+   * 列对齐方式
    */
   align?: VxePagerPropTypes.Align
   /**

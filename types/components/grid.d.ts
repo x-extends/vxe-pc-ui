@@ -5,7 +5,7 @@ import { VxeTableDefines, VxeTableEmits, VxeTableConstructor, VxeTableProps, Tab
 import { VxeColumnPropTypes } from './column'
 import { VxePagerProps, VxePagerDefines, VxePagerSlotTypes } from './pager'
 import { VxeFormProps, VxeFormDefines } from './form'
-import { VxeFormItemProps } from './form-item'
+import { VxeFormItemPropTypes, VxeFormItemProps } from './form-item'
 
 /* eslint-disable no-use-before-define,@typescript-eslint/ban-types,@typescript-eslint/no-unused-vars */
 
@@ -308,6 +308,36 @@ export interface GridMethods<D = any> {
    */
   getFormItems(): VxeFormItemProps[]
   getFormItems(itemIndex?: number): VxeFormItemProps
+  /**
+   * 只对 form-config 有效，重置表单
+   */
+  resetForm(): Promise<any>
+  /**
+   * 只对 form-config 有效，对表单进行校验，返回校验结果 promise
+   */
+  validateForm(): Promise<VxeFormDefines.ValidateErrorMapParams>
+  /**
+   * 只对 form-config 有效，对表单指定项进行校验，返回校验结果 promise
+   * @param field 字段名
+   */
+  validateFormField(field: VxeFormItemPropTypes.Field | VxeFormItemPropTypes.Field[] | VxeFormDefines.ItemInfo | VxeFormDefines.ItemInfo[] | null): Promise<VxeFormDefines.ValidateErrorMapParams>
+  /**
+   * 只对 form-config 有效，手动清除表单校验状态，如果指定 field 则清除指定的项，否则清除整个表单
+   * @param field 字段名
+   */
+  clearFormValidate(field?: VxeFormItemPropTypes.Field | VxeFormItemPropTypes.Field[] | VxeFormDefines.ItemInfo | VxeFormDefines.ItemInfo[] | null): Promise<any>
+  /**
+   * 只对 pager-config 有效，跳转首页
+   */
+  homePage(): Promise<any>
+  /**
+   * 只对 pager-config 有效，跳转末页
+   */
+  endPage(): Promise<any>
+  /**
+   * 只对 pager-config 有效，跳转到指定页面
+   */
+  jumpPage(currentPage: number | string | null | undefined): Promise<any>
   /**
    * 切换表格最大化/还原
    */
