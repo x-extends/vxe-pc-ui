@@ -89,12 +89,14 @@ export namespace VxeColumnPropTypes {
   export type FilterMethod<D = any> = (params: FilterMethodParams<D>) => boolean
 
   interface FilterResetMethodParams<D = any> {
+    $table: VxeTableConstructor<D>
     options: VxeTableDefines.FilterOption[]
     column: VxeTableDefines.ColumnInfo<D>
   }
-  export type FilterResetMethod = (params: FilterResetMethodParams) => void
+  export type FilterResetMethod<D = any> = (params: FilterResetMethodParams<D>) => void
 
   interface FilterRecoverMethodParams<D = any> {
+    $table: VxeTableConstructor<D>
     option: VxeTableDefines.FilterOption
     column: VxeTableDefines.ColumnInfo<D>
   }
@@ -505,6 +507,14 @@ export interface VxeColumnProps<D = any> {
    * 自定义筛选方法
    */
   filterMethod?: VxeColumnPropTypes.FilterMethod<D>
+  /**
+   * 筛选重置方法
+   */
+  filterResetMethod?: VxeColumnPropTypes.FilterResetMethod<D>
+  /**
+   * 筛选复原方法
+   */
+  filterRecoverMethod?: VxeColumnPropTypes.FilterRecoverMethod<D>
   /**
    * 筛选模板配置项
    */

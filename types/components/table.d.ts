@@ -4839,6 +4839,10 @@ export interface TablePrivateMethods<D = any> {
   /**
    * @private
    */
+  handleFilterOptions(column: VxeTableDefines.ColumnInfo): void
+  /**
+   * @private
+   */
   preventEvent(evnt: any, type: any, args?: any, next?: any, end?: any): any
   /**
    * @private
@@ -5254,6 +5258,8 @@ export namespace VxeTableDefines {
     filters: VxeColumnPropTypes.FilterItem[]
     filterMultiple: VxeColumnPropTypes.FilterMultiple
     filterMethod: VxeColumnPropTypes.FilterMethod<D>
+    filterResetMethod: VxeColumnPropTypes.FilterResetMethod<D>
+    filterRecoverMethod: VxeColumnPropTypes.FilterRecoverMethod<D>
     filterRender: VxeColumnPropTypes.FilterRender
     rowGroupNode: VxeColumnPropTypes.RowGroupNode
     treeNode: VxeColumnPropTypes.TreeNode
