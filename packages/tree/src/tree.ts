@@ -1237,6 +1237,16 @@ export default defineVxeComponent({
     const treeMethods: TreeMethods = {
       dispatchEvent,
       getNodeId,
+      getNodeById (nodeid) {
+        const { nodeMaps } = internalData
+        if (nodeid) {
+          const nodeItem = nodeMaps[nodeid]
+          if (nodeItem) {
+            return nodeItem.item
+          }
+        }
+        return null
+      },
       loadData (data) {
         return loadData(data || [])
       },
