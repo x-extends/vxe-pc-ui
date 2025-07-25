@@ -469,39 +469,37 @@ export namespace VxeTablePropTypes {
      */
     maxGroupSize?: number
     /**
+     * 指定哪些列允许拖拽到分组
+     */
+    includeGroupFields?: string[]
+    /**
+     * 排除哪些列允许拖拽到分组
+     */
+    excludeGroupFields?: string[]
+    /**
+     * 指定哪些列允许拖拽到值
+     */
+    includeValuesFields?: string[]
+    /**
+     * 排除哪些列允许拖拽到值
+     */
+    excludeValuesFields?: string[]
+    /**
+     * 自定义列聚合数据的计算方法
+     */
+    calcValuesMethod?:(params: {
+      $table: VxeTableConstructor<D>
+      groupField: VxeColumnPropTypes.Field
+      groupColumn: VxeTableDefines.ColumnInfo<D>
+      column: VxeTableDefines.ColumnInfo<D>
+      groupValue: any
+      childCount: number
+      children: D[]
+    }) => number | string
+    /**
      * 自定义分组统计的方法
      */
     totalMethod?:(params: {
-      $table: VxeTableConstructor<D>
-      groupField: VxeColumnPropTypes.Field
-      groupColumn: VxeTableDefines.ColumnInfo<D>
-      column: VxeTableDefines.ColumnInfo<D>
-      groupValue: any
-      childCount: number
-      children: D[]
-    }) => number | string
-    /**
-     * 聚合数据操作按钮的显示方式
-     */
-    // aggregateVisible?: 'auto' | 'fixed' | '' | null
-    /**
-     * 请使用 contentMethod
-     * @deprecated
-     */
-    aggregateMethod?:(params: {
-      $table: VxeTableConstructor<D>
-      groupField: VxeColumnPropTypes.Field
-      groupColumn: VxeTableDefines.ColumnInfo<D>
-      column: VxeTableDefines.ColumnInfo<D>
-      groupValue: any
-      childCount: number
-      aggValue: any
-      children: D[]
-    }) => number | string
-    /**
-     * 自定义列聚合数据的方法
-     */
-    countMethod?:(params: {
       $table: VxeTableConstructor<D>
       groupField: VxeColumnPropTypes.Field
       groupColumn: VxeTableDefines.ColumnInfo<D>
@@ -526,6 +524,33 @@ export namespace VxeTablePropTypes {
      * @deprecated
      */
     countFields?: string[]
+    /**
+     * 请使用 contentMethod
+     * @deprecated
+     */
+    aggregateMethod?:(params: {
+      $table: VxeTableConstructor<D>
+      groupField: VxeColumnPropTypes.Field
+      groupColumn: VxeTableDefines.ColumnInfo<D>
+      column: VxeTableDefines.ColumnInfo<D>
+      groupValue: any
+      childCount: number
+      aggValue: any
+      children: D[]
+    }) => number | string
+    /**
+     * 已废弃，请使用 calcValuesMethod
+     * @deprecated
+     */
+    countMethod?:(params: {
+      $table: VxeTableConstructor<D>
+      groupField: VxeColumnPropTypes.Field
+      groupColumn: VxeTableDefines.ColumnInfo<D>
+      column: VxeTableDefines.ColumnInfo<D>
+      groupValue: any
+      childCount: number
+      children: D[]
+    }) => number | string
   }
 
   /**
