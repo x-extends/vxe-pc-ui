@@ -329,6 +329,19 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const nodeid = XEUtils.get(node, valueField)
       return XEUtils.eqNull(nodeid) ? '' : encodeURIComponent(nodeid)
     },
+    getNodeById (nodeid: string) {
+      const $xeTree = this
+      const internalData = $xeTree.internalData
+
+      const { nodeMaps } = internalData
+      if (nodeid) {
+        const nodeItem = nodeMaps[nodeid]
+        if (nodeItem) {
+          return nodeItem.item
+        }
+      }
+      return null
+    },
     isExpandByNode (node: any) {
       const $xeTree = this
       const reactData = $xeTree.reactData

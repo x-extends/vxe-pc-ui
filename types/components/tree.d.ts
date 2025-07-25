@@ -265,51 +265,165 @@ export interface TreeInternalData {
 
 export interface TreeMethods<D = any> {
   dispatchEvent(type: ValueOf<VxeTreeEmits>, params: Record<string, any>, evnt: Event | null): void
+  /**
+   * 加载数据
+   */
   loadData(data: any[]): Promise<any>
+  /**
+   * 加载数据并清除所有状态
+   */
   reloadData(data: any[]): Promise<any>
+  /**
+   * 根据节点获取的主键
+   * @param node
+   */
   getNodeId(node: any): string
+  /**
+   * 根据唯一主键获取节点
+   * @param nodeid
+   */
+  getNodeById(nodeid: string): D
+  /**
+   * 获取当前选中节点的主键
+   */
   getCurrentNodeId(): string | number | null
+  /**
+   * 获取当前选中节点
+   */
   getCurrentNode(): any | null
+  /**
+   * 清除当前选中节点
+   */
   clearCurrentNode(): Promise<any>
+  /**
+   * 根据主键设置当前节点是否被选中
+   */
   setCurrentNodeId(nodeKey: string | number): Promise<any>
+  /**
+   * 根据节点设置当前节点是否被选中
+   */
   setCurrentNode(node: any): Promise<any>
+  /**
+   * 只对 show-radio 有效，获取单选框的节点对应的键值
+   */
   getRadioNodeId(): string | number | null
+  /**
+   * 只对 show-radio 有效，获取单选框的节点
+   */
   getRadioNode(): any | null
+  /**
+   * 用于 showRadio，手动清空单选框的
+   */
   clearRadioNode(): Promise<any>
+  /**
+   * 只对 show-radio 有效，通过键值设置节点是否被选中
+   */
   setRadioNodeId(nodeKey: string | number): Promise<any>
+  /**
+   * 用于 showRadio 单选框，设置指定节点为选中状态
+   */
   setRadioNode(node: any): Promise<any>
+  /**
+   * 只对 show-checkbox 有效，获取复选框的节点对应的键值
+   */
   getCheckboxNodeIds(): (string | number)[]
+  /**
+   * 只对 show-checkbox 有效，获取复选框的节点
+   */
   getCheckboxNodes(): D[]
+  /**
+   * 用于 showCheckbox，手动清空复选框的
+   */
   clearCheckboxNode(): Promise<{
     checkNodeKeys: (string | number)[]
   }>
+  /**
+   * 用于 showCheckbox，设置所有节点的选中状态
+   */
   setAllCheckboxNode(checked: boolean): Promise<{
     checkNodeKeys: (string | number)[]
   }>
+  /**
+   * 用于 showCheckbox 复选框，设置指定节点为选中状态，第二个参数为选中与否
+   */
   setCheckboxNode(nodeList: any | any[], checked: boolean): Promise<any>
+  /**
+   * 用于 showCheckbox 复选框，设置指定节点 key 为选中状态，第二个参数为选中与否
+   */
   setCheckboxByNodeId(nodeKeys: any | any[], checked: boolean): Promise<any>
   /**
    * 已废弃，请使用 clearAllExpandNode
    * @deprecated
    */
   clearExpandNode(): Promise<any>
+  /**
+   * 手动清除所有树节点的展开状态
+   */
   clearAllExpandNode(): Promise<any>
+  /**
+   * 设置指定节点 key 为展开状态，第二个参数为选中与否
+   */
   setExpandByNodeId(nodeKeys: any | any[], expanded: boolean): Promise<any>
+  /**
+   * 设置指定节点为展开状态
+   */
   setExpandNode(nodeList: any | any[], expanded: boolean): Promise<any>
+  /**
+   * 根据节点主键切换指定节点为展开状态
+   */
   toggleExpandByNodeId(nodeKeys: any | any[]): Promise<any>
+  /**
+   * 切换指定节点为展开状态
+   */
   toggleExpandNode(nodeList: any | any[]): Promise<any>
+  /**
+   * 设置全部节点为展开状态
+   */
   setAllExpandNode(expanded: boolean): Promise<any>
+  /**
+   * 获取已展开的节点对应的键值
+   */
   getExpandNodeIds(): (string | number)[]
+  /**
+   * 获取已展开的节点
+   */
   getExpandNodes(): D[]
+  /**
+   * 重新懒加载展开节点
+   */
   reloadExpandNode(node: any): Promise<any>
+  /**
+   * 清除指定节点的懒加载状态，恢复成未加载之前状态
+   */
   clearExpandLoaded(node: any): Promise<any>
   loadChildrenNode(node: any, childRecords: any[]): Promise<any>
+  /**
+   * 判断指定节点是否为展开状态
+   */
   isExpandByNode(node: any): boolean
+  /**
+   * 用于 show-radio，根据节点主键判断指定节点是否为选中状态
+   */
   isCheckedByRadioNodeId(nodeKey: any): boolean
+  /**
+   * 用于 show-radio，判断指定节点是否为选中状态
+   */
   isCheckedByRadioNode(node: any): boolean
+  /**
+   * 用于 show-checkbox，根据节点主键判断指定节点是否为选中状态
+   */
   isCheckedByCheckboxNodeId(nodeKey: any): boolean
+  /**
+   * 用于 show-checkbox，判断指定节点是否为半选状态
+   */
   isIndeterminateByCheckboxNode(node: any): boolean
+  /**
+   * 用于 show-checkbox，判断指定节点是否为选中状态
+   */
   isCheckedByCheckboxNode(node: any): boolean
+  /**
+   * 用于 show-checkbox，获取半选状态的节点
+   */
   getCheckboxIndeterminateNodes(): D[]
   /**
    * 重新计算列表
