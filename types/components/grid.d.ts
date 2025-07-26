@@ -458,7 +458,11 @@ export namespace VxeGridDefines {
   export interface FooterCellDblclickEventParams<D = any> extends GridEventParams<D>, VxeTableDefines.FooterCellDblclickEventParams<D> { }
   export interface FooterCellMenuEventParams<D = any> extends GridEventParams<D>, VxeTableDefines.FooterCellMenuEventParams<D> { }
   export interface SortChangeEventParams<D = any> extends GridEventParams<D>, VxeTableDefines.SortChangeEventParams<D> { }
+  export interface ClearSortEventParams<D = any> extends GridEventParams<D>, VxeTableDefines.ClearSortEventParams<D> { }
+  export interface ClearAllSortEventParams<D = any> extends GridEventParams<D>, VxeTableDefines.ClearAllSortEventParams<D> { }
   export interface FilterChangeEventParams<D = any> extends GridEventParams<D>, VxeTableDefines.FilterChangeEventParams<D> { }
+  export interface ClearFilterEventParams<D = any> extends GridEventParams<D>, VxeTableDefines.ClearFilterEventParams<D> { }
+  export interface ClearAllFilterEventParams<D = any> extends GridEventParams<D>, VxeTableDefines.ClearAllFilterEventParams<D> { }
   export interface FilterVisibleEventParams<D = any> extends GridEventParams<D>, VxeTableDefines.FilterVisibleEventParams<D> { }
   export interface ResizableChangeEventParams<D = any> extends GridEventParams<D>, VxeTableDefines.ResizableChangeEventParams<D> { }
   export interface ToggleRowGroupExpandEventParams<D = any> extends GridEventParams<D>, VxeTableDefines.ToggleRowGroupExpandEventParams<D> { }
@@ -545,7 +549,11 @@ export interface VxeGridEventProps<D = any> {
   onFooterCellDblclick?: VxeGridEvents.FooterCellDblclick<D>
   onFooterCellMenu?: VxeGridEvents.FooterCellMenu<D>
   onSortChange?: VxeGridEvents.SortChange<D>
+  onClearSort?: VxeGridEvents.ClearSort<D>
+  onClearAllSort?: VxeGridEvents.ClearAllSort<D>
   onFilterChange?: VxeGridEvents.FilterChange<D>
+  onClearFilter?: VxeGridEvents.ClearFilter<D>
+  onClearAllFilter?: VxeGridEvents.ClearAllFilter<D>
   onFilterVisible?: VxeGridEvents.FilterVisible<D>
   onResizableChange?: VxeGridEvents.ResizableChange<D>
   onToggleRowGroupExpand?: VxeGridEvents.ToggleRowGroupExpand<D>
@@ -617,7 +625,11 @@ export interface VxeGridListeners<D = any> {
   footerCellDblclick?: VxeGridEvents.FooterCellDblclick<D>
   footerCellMenu?: VxeGridEvents.FooterCellMenu<D>
   sortChange?: VxeGridEvents.SortChange<D>
+  clearSort?: VxeGridEvents.ClearSort<D>
+  clearAllSort?: VxeGridEvents.ClearAllSort<D>
   filterChange?: VxeGridEvents.FilterChange<D>
+  clearFilter?: VxeGridEvents.ClearFilter<D>
+  clearAllFilter?: VxeGridEvents.ClearAllFilter<D>
   filterVisible?: VxeGridEvents.FilterVisible<D>
   resizableChange?: VxeGridEvents.ResizableChange<D>
   toggleRowGroupExpand?: VxeGridEvents.ToggleRowGroupExpand<D>
@@ -689,7 +701,11 @@ export namespace VxeGridEvents {
   export type FooterCellDblclick<D = any> = (params: VxeGridDefines.FooterCellDblclickEventParams<D>) => void
   export type FooterCellMenu<D = any> = (params: VxeGridDefines.FooterCellMenuEventParams<D>) => void
   export type SortChange<D = any> = (params: VxeGridDefines.SortChangeEventParams<D>) => void
+  export type ClearSort<D = any> = (params: VxeGridDefines.ClearSortEventParams<D>) => void
+  export type ClearAllSort<D = any> = (params: VxeGridDefines.ClearAllSortEventParams<D>) => void
   export type FilterChange<D = any> = (params: VxeGridDefines.FilterChangeEventParams<D>) => void
+  export type ClearFilter<D = any> = (params: VxeGridDefines.ClearFilterEventParams<D>) => void
+  export type ClearAllFilter<D = any> = (params: VxeGridDefines.ClearAllFilterEventParams<D>) => void
   export type FilterVisible<D = any> = (params: VxeGridDefines.FilterVisibleEventParams<D>) => void
   export type ResizableChange<D = any> = (params: VxeGridDefines.ResizableChangeEventParams<D>) => void
   export type ToggleRowGroupExpand<D = any> = (params: VxeGridDefines.ToggleRowGroupExpandEventParams<D>) => void

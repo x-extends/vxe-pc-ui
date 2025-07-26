@@ -1099,7 +1099,13 @@ export namespace VxeTablePropTypes {
       data: D[]
       sortList: VxeTableDefines.SortCheckedParams[]
     }): any[]
+    /**
+     * 是否使用服务端排序，如果设置为 true 则不会对数据进行处理
+     */
     remote?: boolean
+    /**
+     * 是否允许多列排序
+     */
     multiple?: boolean
     /**
      * 只对 multiple 有效，是否按照先后触发顺序进行排序
@@ -1160,9 +1166,13 @@ export namespace VxeTablePropTypes {
      */
     isEvery?: boolean
     /**
-     * 是否启用远程筛选
+     * 是否使用服务端筛选，如果设置为 true 则不会对数据进行处理
      */
     remote?: boolean
+    /**
+     * 是否允许多列筛选
+     */
+    multiple?: boolean
     /**
      * 是否显示筛选按钮图标
      */
@@ -4460,7 +4470,7 @@ export interface TableMethods<DT = any> {
   /**
    * 区别就是会触发对应的事件
    */
-  setSortByEvent(event: Event, sortConfs: VxeTableDefines.SortConfs | VxeTableDefines.SortConfs[], update?: boolean): Promise<void>
+  setSortByEvent(event: Event, sortConfs: VxeTableDefines.SortConfs | VxeTableDefines.SortConfs[]): Promise<void>
   /**
    * 手动清空排序条件，数据会恢复成未排序的状态
    * @param columnOrField 列对象或字段名
@@ -4490,7 +4500,7 @@ export interface TableMethods<DT = any> {
   /**
    * 区别就是会触发对应的事件
    */
-  setFilterByEvent(event: Event, fieldOrColumn: VxeColumnPropTypes.Field | VxeTableDefines.ColumnInfo<any>, options: VxeColumnPropTypes.Filters, update?: boolean): Promise<void>
+  setFilterByEvent(event: Event, fieldOrColumn: VxeColumnPropTypes.Field | VxeTableDefines.ColumnInfo<any>, options: VxeColumnPropTypes.Filters): Promise<void>
   /**
    * 区别就是会触发对应的事件
    */
@@ -5717,6 +5727,8 @@ export namespace VxeTableDefines {
     sortList: SortCheckedParams[]
   }
   export interface SortChangeEventParams<D = any> extends TableEventParams<D>, SortChangeParams<D> { }
+  export interface ClearSortEventParams<D = any> extends TableEventParams<D>, SortChangeParams<D> { }
+  export interface ClearAllSortEventParams<D = any> extends TableEventParams<D>, SortChangeParams<D> { }
 
   export interface FilterCheckedParams<D = any> {
     column: VxeTableDefines.ColumnInfo<D>
@@ -5733,6 +5745,8 @@ export namespace VxeTableDefines {
     filterList: FilterCheckedParams<D>[]
   }
   export interface FilterChangeEventParams<D = any> extends TableEventParams<D>, FilterChangeParams<D> { }
+  export interface ClearFilterEventParams<D = any> extends TableEventParams<D>, FilterChangeParams<D> { }
+  export interface ClearAllFilterEventParams<D = any> extends TableEventParams<D>, FilterChangeParams<D> { }
 
   export interface FilterVisibleParams<D = any> {
     column: VxeTableDefines.ColumnInfo<D>
@@ -6158,7 +6172,11 @@ export interface VxeTableEventProps<D = any> {
   onFooterCellDblclick?: VxeTableEvents.FooterCellDblclick<D>
   onFooterCellMenu?: VxeTableEvents.FooterCellMenu<D>
   onSortChange?: VxeTableEvents.SortChange<D>
+  onClearSort?: VxeTableEvents.ClearSort<D>
+  onClearAllSort?: VxeTableEvents.ClearAllSort<D>
   onFilterChange?: VxeTableEvents.FilterChange<D>
+  onClearFilter?: VxeTableEvents.ClearFilter<D>
+  onClearAllFilter?: VxeTableEvents.ClearAllFilter<D>
   onFilterVisible?: VxeTableEvents.FilterVisible<D>
   onResizableChange?: VxeTableEvents.ResizableChange<D>
   onToggleRowGroupExpand?: VxeTableEvents.ToggleRowGroupExpand<D>
@@ -6227,7 +6245,11 @@ export interface VxeTableListeners<D = any> {
   footerCellDblclick?: VxeTableEvents.FooterCellDblclick<D>
   footerCellMenu?: VxeTableEvents.FooterCellMenu<D>
   sortChange?: VxeTableEvents.SortChange<D>
+  clearSort?: VxeTableEvents.ClearSort<D>
+  clearAllSort?: VxeTableEvents.ClearAllSort<D>
   filterChange?: VxeTableEvents.FilterChange<D>
+  clearFilter?: VxeTableEvents.ClearFilter<D>
+  clearAllFilter?: VxeTableEvents.ClearAllFilter<D>
   resizableChange?: VxeTableEvents.ResizableChange<D>
   toggleRowGroupExpand?: VxeTableEvents.ToggleRowGroupExpand<D>
   toggleRowExpand?: VxeTableEvents.ToggleRowExpand<D>
@@ -6295,7 +6317,11 @@ export namespace VxeTableEvents {
   export type FooterCellDblclick<D = VxeTablePropTypes.Row> = (params: VxeTableDefines.FooterCellDblclickEventParams<D>) => void
   export type FooterCellMenu<D = VxeTablePropTypes.Row> = (params: VxeTableDefines.FooterCellMenuEventParams<D>) => void
   export type SortChange<D = VxeTablePropTypes.Row> = (params: VxeTableDefines.SortChangeEventParams<D>) => void
+  export type ClearSort<D = VxeTablePropTypes.Row> = (params: VxeTableDefines.ClearSortEventParams<D>) => void
+  export type ClearAllSort<D = VxeTablePropTypes.Row> = (params: VxeTableDefines.ClearAllSortEventParams<D>) => void
   export type FilterChange<D = VxeTablePropTypes.Row> = (params: VxeTableDefines.FilterChangeEventParams<D>) => void
+  export type ClearFilter<D = VxeTablePropTypes.Row> = (params: VxeTableDefines.ClearFilterEventParams<D>) => void
+  export type ClearAllFilter<D = VxeTablePropTypes.Row> = (params: VxeTableDefines.ClearAllFilterEventParams<D>) => void
   export type FilterVisible<D = VxeTablePropTypes.Row> = (params: VxeTableDefines.FilterVisibleEventParams<D>) => void
   export type ResizableChange<D = VxeTablePropTypes.Row> = (params: VxeTableDefines.ResizableChangeEventParams<D>) => void
   export type ToggleRowGroupExpand<D = VxeTablePropTypes.Row> = (params: VxeTableDefines.ToggleRowGroupExpandEventParams<D>) => void
