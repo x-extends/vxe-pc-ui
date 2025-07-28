@@ -2,9 +2,9 @@ import { CreateElement, PropType, VNode } from 'vue'
 import { defineVxeComponent } from '../../ui/src/comp'
 import XEUtils from 'xe-utils'
 import { getIcon, getConfig, getI18n, globalEvents, GLOBAL_EVENT_KEYS, createEvent, globalMixins } from '../../ui'
-import { errLog } from '../../ui/src/log'
+import { warnLog, errLog } from '../../ui/src/log'
 import VxeSelectComponent from '../../select/src/select'
-import VxeInputComponent from '../../input/src/input'
+import VxeNumberInputComponent from '../../number-input/src/number-input'
 
 import type { VxePagerPropTypes, VxePagerEmits, VxeInputDefines, VxeSelectDefines, ValueOf, VxeComponentSizeType, PagerReactData } from '../../../types'
 import type { VxeGridConstructor, VxeGridPrivateMethods } from '../../../types/components/grid'
@@ -159,11 +159,27 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const $xePager = this
       $xePager.$emit(type, createEvent(evnt, { $pager: $xePager }, params))
     },
+    setPageSize (num: number) {
+      const $xePager = this
+
+      $xePager.pageSizeEvent({ value: num } as VxeSelectDefines.ChangeEventParams)
+      return $xePager.$nextTick()
+    },
+    setPageSizeByEvent (evnt: Event, num: number) {
+      const $xePager = this
+
+      $xePager.pageSizeEvent({ value: num, $event: evnt } as VxeSelectDefines.ChangeEventParams)
+    },
     homePage () {
       const $xePager = this
 
       $xePager.handleHomePage()
       return $xePager.$nextTick()
+    },
+    homePageByEvent (evnt: Event) {
+      const $xePager = this
+
+      $xePager.handleHomePage(evnt)
     },
     endPage () {
       const $xePager = this
@@ -171,11 +187,21 @@ export default /* define-vxe-component start */ defineVxeComponent({
       $xePager.handleEndPage()
       return $xePager.$nextTick()
     },
+    endPageByEvent (evnt: Event) {
+      const $xePager = this
+
+      $xePager.handleEndPage(evnt)
+    },
     prevPage () {
       const $xePager = this
 
       $xePager.handlePrevPage()
       return $xePager.$nextTick()
+    },
+    prevPageByEvent (evnt: Event) {
+      const $xePager = this
+
+      $xePager.handlePrevPage(evnt)
     },
     nextPage () {
       const $xePager = this
@@ -183,11 +209,21 @@ export default /* define-vxe-component start */ defineVxeComponent({
       $xePager.handleNextPage()
       return $xePager.$nextTick()
     },
+    nextPageByEvent (evnt: Event) {
+      const $xePager = this
+
+      $xePager.handleNextPage(evnt)
+    },
     prevJump () {
       const $xePager = this
 
       $xePager.handlePrevJump()
       return $xePager.$nextTick()
+    },
+    prevJumpByEvent (evnt: Event) {
+      const $xePager = this
+
+      $xePager.handlePrevJump(evnt)
     },
     nextJump () {
       const $xePager = this
@@ -195,19 +231,42 @@ export default /* define-vxe-component start */ defineVxeComponent({
       $xePager.handleNextJump()
       return $xePager.$nextTick()
     },
-    jumpPage (currentPage: number) {
+    nextJumpByEvent (evnt: Event) {
+      const $xePager = this
+
+      $xePager.handleNextJump(evnt)
+    },
+    setCurrentPage (currentPage: number) {
       const $xePager = this
       const reactData = $xePager.reactData
 
       const current = XEUtils.toNumber(currentPage) || 1
       reactData.inpCurrPage = current
-      $xePager.changeCurrentPage(current)
+      $xePager.handleChangeCurrentPage(current)
       return $xePager.$nextTick()
+    },
+    setCurrentPageByEvent (evnt: Event, currentPage: number) {
+      const $xePager = this
+      const reactData = $xePager.reactData
+
+      const current = XEUtils.toNumber(currentPage) || 1
+      reactData.inpCurrPage = current
+      $xePager.handleChangeCurrentPage(current, evnt)
+    },
+    /**
+     * 已废弃，被 setCurrentPage 替换
+     * @deprecated
+     */
+    jumpPage (currentPage: number) {
+      const $xePager = this
+
+      warnLog('vxe.error.delFunc', ['jumpPage', 'setCurrentPage'])
+      return $xePager.setCurrentPage(currentPage)
     },
     getPageCount  (total: number, size: number) {
       return Math.max(Math.ceil(total / size), 1)
     },
-    jumpPageEvent  (evnt: Event, currentPage: number) {
+    handleJumpPageEvent  (evnt: Event, currentPage: number) {
       const $xePager = this
       const props = $xePager
 
@@ -216,7 +275,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
         $xePager.dispatchEvent('page-change', { type: 'current', pageSize: props.pageSize, currentPage }, evnt)
       }
     },
-    changeCurrentPage  (currentPage: number, evnt?: Event) {
+    handleChangeCurrentPage  (currentPage: number, evnt?: Event) {
       const $xePager = this
       const props = $xePager
 
@@ -237,7 +296,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const currPage = XEUtils.toValueString(current)
       inputElem.value = currPage
       reactData.inpCurrPage = currPage
-      $xePager.changeCurrentPage(current, $event)
+      $xePager.handleChangeCurrentPage(current, $event)
     },
     handleHomePage  (evnt?: Event) {
       const $xePager = this
@@ -245,7 +304,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
 
       const { currentPage } = props
       if (currentPage > 1) {
-        $xePager.changeCurrentPage(1, evnt)
+        $xePager.handleChangeCurrentPage(1, evnt)
       }
     },
     handleEndPage  (evnt?: Event) {
@@ -255,7 +314,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const { currentPage } = props
       const pageCount = $xePager.computePageCount
       if (currentPage < pageCount) {
-        $xePager.changeCurrentPage(pageCount, evnt)
+        $xePager.handleChangeCurrentPage(pageCount, evnt)
       }
     },
     handlePrevPage  (evnt?: Event) {
@@ -265,7 +324,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const { currentPage } = props
       const pageCount = $xePager.computePageCount
       if (currentPage > 1) {
-        $xePager.changeCurrentPage(Math.min(pageCount, Math.max(currentPage - 1, 1)), evnt)
+        $xePager.handleChangeCurrentPage(Math.min(pageCount, Math.max(currentPage - 1, 1)), evnt)
       }
     },
     handleNextPage  (evnt?: Event) {
@@ -275,7 +334,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const { currentPage } = props
       const pageCount = $xePager.computePageCount
       if (currentPage < pageCount) {
-        $xePager.changeCurrentPage(Math.min(pageCount, currentPage + 1), evnt)
+        $xePager.handleChangeCurrentPage(Math.min(pageCount, currentPage + 1), evnt)
       }
     },
     handlePrevJump  (evnt?: Event) {
@@ -283,7 +342,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const props = $xePager
 
       const numList = $xePager.computeNumList
-      $xePager.changeCurrentPage(Math.max(props.currentPage - numList.length, 1), evnt)
+      $xePager.handleChangeCurrentPage(Math.max(props.currentPage - numList.length, 1), evnt)
     },
     handleNextJump  (evnt?: Event) {
       const $xePager = this
@@ -291,13 +350,13 @@ export default /* define-vxe-component start */ defineVxeComponent({
 
       const pageCount = $xePager.computePageCount
       const numList = $xePager.computeNumList
-      $xePager.changeCurrentPage(Math.min(props.currentPage + numList.length, pageCount), evnt)
+      $xePager.handleChangeCurrentPage(Math.min(props.currentPage + numList.length, pageCount), evnt)
     },
     pageSizeEvent (params: VxeSelectDefines.ChangeEventParams) {
       const $xePager = this
       const props = $xePager
 
-      const { value } = params
+      const { value, $event } = params
       const pageSize = XEUtils.toNumber(value)
       const pageCount = $xePager.getPageCount(props.total, pageSize)
       let currentPage = props.currentPage
@@ -306,7 +365,9 @@ export default /* define-vxe-component start */ defineVxeComponent({
         $xePager.$emit('update:currentPage', pageCount)
       }
       $xePager.$emit('update:pageSize', pageSize)
-      $xePager.dispatchEvent('page-change', { type: 'size', pageSize, currentPage }, params.$event)
+      if ($event) {
+        $xePager.dispatchEvent('page-change', { type: 'size', pageSize, currentPage }, $event)
+      }
     },
     jumpKeydownEvent (params: VxeInputDefines.KeydownEventParams) {
       const $xePager = this
@@ -559,7 +620,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
               type: 'button'
             },
             on: {
-              click: (evnt: Event) => $xePager.jumpPageEvent(evnt, 1)
+              click: (evnt: Event) => $xePager.handleJumpPageEvent(evnt, 1)
             }
           }, '1'),
           $xePager.renderPrevJump(h, 'span')
@@ -579,7 +640,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
                 type: 'button'
               },
               on: {
-                click: (evnt: Event) => $xePager.jumpPageEvent(evnt, number)
+                click: (evnt: Event) => $xePager.handleJumpPageEvent(evnt, number)
               }
             }, `${number}`)
           )
@@ -595,7 +656,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
               type: 'button'
             },
             on: {
-              click: (evnt: Event) => $xePager.jumpPageEvent(evnt, pageCount)
+              click: (evnt: Event) => $xePager.handleJumpPageEvent(evnt, pageCount)
             }
           }, pageCount)
         )
@@ -667,7 +728,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
             class: 'vxe-pager--goto-text'
           }, getI18n('vxe.pager.goto'))
           : null,
-        h(VxeInputComponent, {
+        h(VxeNumberInputComponent, {
           class: 'vxe-pager--goto',
           props: {
             value: inpCurrPage,

@@ -125,31 +125,49 @@ export interface PagerReactData {
 export interface PagerMethods {
   dispatchEvent(type: ValueOf<VxePagerEmits>, params: Record<string, any>, evnt: Event | null): void
   /**
+   * 修改每页大小
+   */
+  setPageSize(pageSize: number | string | null | undefined): Promise<any>
+  setPageSizeByEvent(evnt: Event, pageSize: number | string | null | undefined): void
+  /**
    * 首页
    */
   homePage(): Promise<any>
+  homePageByEvent(evnt: Event): void
   /**
    * 末页
    */
   endPage(): Promise<any>
+  endPageByEvent(evnt: Event): void
   /**
    * 上一页
    */
   prevPage(): Promise<any>
+  prevPageByEvent(evnt: Event): void
   /**
    * 下一页
    */
   nextPage(): Promise<any>
+  nextPageByEvent(evnt: Event): void
   /**
    * 向上翻页
    */
   prevJump(): Promise<any>
+  prevJumpByEvent(evnt: Event): void
   /**
    * 向下翻页
    */
   nextJump(): Promise<any>
+  nextJumpByEvent(evnt: Event): void
   /**
-   * 跳转到指定页面
+   * 修改每当前页数
+   */
+  setCurrentPage(currentPage: number | string | null | undefined): Promise<any>
+  setCurrentPageByEvent(evnt: Event, currentPage: number | string | null | undefined): void
+
+  /**
+   * 已废弃，被 setCurrentPage 替换
+   * @deprecated
    */
   jumpPage(currentPage: number | string | null | undefined): Promise<any>
 }
