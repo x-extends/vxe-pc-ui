@@ -331,17 +331,37 @@ export interface GridMethods<D = any> {
    */
   clearFormValidate(field?: VxeFormItemPropTypes.Field | VxeFormItemPropTypes.Field[] | VxeFormDefines.ItemInfo | VxeFormDefines.ItemInfo[] | null): Promise<any>
   /**
+   * 修改每页大小
+   */
+  setPageSize(pageSize: number | string | null | undefined): Promise<any>
+  /**
+   * 修改每页大小，并触发对应的事件
+   */
+  setPageSizeByEvent(evnt: Event, pageSize: number | string | null | undefined): void
+  /**
    * 跳转首页
    */
   homePage(): Promise<any>
+  /**
+   * 跳转首页，并触发对应的事件
+   */
+  homePageByEvent(evnt: Event): void
   /**
    * 跳转末页
    */
   endPage(): Promise<any>
   /**
-   * 跳转到指定页面
+   * 跳转末页，并触发对应的事件
    */
-  jumpPage(currentPage: number | string | null | undefined): Promise<any>
+  endPageByEvent(evnt: Event): void
+  /**
+   * 修改每当前页数
+   */
+  setCurrentPage(currentPage: number | string | null | undefined): Promise<any>
+  /**
+   * 修改每当前页数，并触发对应的事件
+   */
+  setCurrentPageByEvent(evnt: Event, currentPage: number | string | null | undefined): void
   /**
    * 切换表格最大化/还原
    */
@@ -374,6 +394,10 @@ export interface GridMethods<D = any> {
     }
     pendingRecords: D[]
   } | null
+  /**
+   * 获取自定义的 params 属性
+   */
+  getParams (): any
   /**
    * 设置数据代理信息
    */

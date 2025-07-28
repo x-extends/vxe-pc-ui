@@ -2,11 +2,11 @@ import { h, PropType, computed, inject, ref, Ref, reactive, nextTick, watch } fr
 import { defineVxeComponent } from '../../ui/src/comp'
 import XEUtils from 'xe-utils'
 import { getIcon, getConfig, getI18n, globalEvents, GLOBAL_EVENT_KEYS, createEvent, useSize } from '../../ui'
-import { errLog } from '../../ui/src/log'
+import { warnLog, errLog } from '../../ui/src/log'
 import VxeSelectComponent from '../../select/src/select'
-import VxeInputComponent from '../../input/src/input'
+import VxeNumberInputComponent from '../../number-input/src/number-input'
 
-import type { VxePagerPropTypes, VxePagerConstructor, VxePagerEmits, VxeSelectEvents, ValueOf, PagerPrivateRef, PagerMethods, PagerPrivateMethods, VxePagerPrivateMethods, PagerReactData, VxeInputEvents } from '../../../types'
+import type { VxePagerPropTypes, VxePagerConstructor, VxePagerEmits, VxeSelectEvents, ValueOf, PagerPrivateRef, PagerMethods, PagerPrivateMethods, VxePagerPrivateMethods, PagerReactData, VxeInputEvents, VxeSelectDefines } from '../../../types'
 import type { VxeGridConstructor, VxeGridPrivateMethods } from '../../../types/components/grid'
 
 export default defineVxeComponent({
@@ -150,24 +150,25 @@ export default defineVxeComponent({
       getRefMaps: () => refMaps
     } as unknown as VxePagerConstructor & VxePagerPrivateMethods
 
-    let pagerMethods = {} as PagerMethods
-    let pagerPrivateMethods = {} as PagerPrivateMethods
+    const dispatchEvent = (type: ValueOf<VxePagerEmits>, params: Record<string, any>, evnt: Event | null) => {
+      emit(type, createEvent(evnt, { $pager: $xePager }, params))
+    }
 
     const getPageCount = (total: number, size: number) => {
       return Math.max(Math.ceil(total / size), 1)
     }
 
-    const jumpPageEvent = (evnt: Event, currentPage: number) => {
+    const handleJumpPageEvent = (evnt: Event, currentPage: number) => {
       emit('update:currentPage', currentPage)
       if (evnt && currentPage !== props.currentPage) {
-        pagerMethods.dispatchEvent('page-change', { type: 'current', pageSize: props.pageSize, currentPage }, evnt)
+        dispatchEvent('page-change', { type: 'current', pageSize: props.pageSize, currentPage }, evnt)
       }
     }
 
-    const changeCurrentPage = (currentPage: number, evnt?: Event) => {
+    const handleChangeCurrentPage = (currentPage: number, evnt?: Event) => {
       emit('update:currentPage', currentPage)
       if (evnt && currentPage !== props.currentPage) {
-        pagerMethods.dispatchEvent('page-change', { type: 'current', pageSize: props.pageSize, currentPage }, evnt)
+        dispatchEvent('page-change', { type: 'current', pageSize: props.pageSize, currentPage }, evnt)
       }
     }
 
@@ -180,13 +181,13 @@ export default defineVxeComponent({
       const currPage = XEUtils.toValueString(current)
       inputElem.value = currPage
       reactData.inpCurrPage = currPage
-      changeCurrentPage(current, $event)
+      handleChangeCurrentPage(current, $event)
     }
 
     const handleHomePage = (evnt?: Event) => {
       const { currentPage } = props
       if (currentPage > 1) {
-        changeCurrentPage(1, evnt)
+        handleChangeCurrentPage(1, evnt)
       }
     }
 
@@ -194,7 +195,7 @@ export default defineVxeComponent({
       const { currentPage } = props
       const pageCount = computePageCount.value
       if (currentPage < pageCount) {
-        changeCurrentPage(pageCount, evnt)
+        handleChangeCurrentPage(pageCount, evnt)
       }
     }
 
@@ -202,7 +203,7 @@ export default defineVxeComponent({
       const { currentPage } = props
       const pageCount = computePageCount.value
       if (currentPage > 1) {
-        changeCurrentPage(Math.min(pageCount, Math.max(currentPage - 1, 1)), evnt)
+        handleChangeCurrentPage(Math.min(pageCount, Math.max(currentPage - 1, 1)), evnt)
       }
     }
 
@@ -210,23 +211,23 @@ export default defineVxeComponent({
       const { currentPage } = props
       const pageCount = computePageCount.value
       if (currentPage < pageCount) {
-        changeCurrentPage(Math.min(pageCount, currentPage + 1), evnt)
+        handleChangeCurrentPage(Math.min(pageCount, currentPage + 1), evnt)
       }
     }
 
     const handlePrevJump = (evnt?: Event) => {
       const numList = computeNumList.value
-      changeCurrentPage(Math.max(props.currentPage - numList.length, 1), evnt)
+      handleChangeCurrentPage(Math.max(props.currentPage - numList.length, 1), evnt)
     }
 
     const handleNextJump = (evnt?: Event) => {
       const pageCount = computePageCount.value
       const numList = computeNumList.value
-      changeCurrentPage(Math.min(props.currentPage + numList.length, pageCount), evnt)
+      handleChangeCurrentPage(Math.min(props.currentPage + numList.length, pageCount), evnt)
     }
 
     const pageSizeEvent: VxeSelectEvents.Change = (params) => {
-      const { value } = params
+      const { value, $event } = params
       const pageSize = XEUtils.toNumber(value)
       const pageCount = getPageCount(props.total, pageSize)
       let currentPage = props.currentPage
@@ -235,7 +236,9 @@ export default defineVxeComponent({
         emit('update:currentPage', pageCount)
       }
       emit('update:pageSize', pageSize)
-      pagerMethods.dispatchEvent('page-change', { type: 'size', pageSize, currentPage }, params.$event)
+      if ($event) {
+        dispatchEvent('page-change', { type: 'size', pageSize, currentPage }, $event)
+      }
     }
 
     const jumpKeydownEvent: VxeInputEvents.Keydown = (params) => {
@@ -435,7 +438,7 @@ export default defineVxeComponent({
           h('button', {
             class: 'vxe-pager--num-btn',
             type: 'button',
-            onClick: (evnt: Event) => jumpPageEvent(evnt, 1)
+            onClick: (evnt: Event) => handleJumpPageEvent(evnt, 1)
           }, '1'),
           renderPrevJump('span')
         )
@@ -451,7 +454,7 @@ export default defineVxeComponent({
                 'is--active': currentPage === number
               }],
               type: 'button',
-              onClick: (evnt: Event) => jumpPageEvent(evnt, number)
+              onClick: (evnt: Event) => handleJumpPageEvent(evnt, number)
             }, `${number}`)
           )
         }
@@ -463,7 +466,7 @@ export default defineVxeComponent({
           h('button', {
             class: 'vxe-pager--num-btn',
             type: 'button',
-            onClick: (evnt: Event) => jumpPageEvent(evnt, pageCount)
+            onClick: (evnt: Event) => handleJumpPageEvent(evnt, pageCount)
           }, pageCount)
         )
       }
@@ -522,7 +525,7 @@ export default defineVxeComponent({
             class: 'vxe-pager--goto-text'
           }, getI18n('vxe.pager.goto'))
           : null,
-        h(VxeInputComponent, {
+        h(VxeNumberInputComponent, {
           class: 'vxe-pager--goto',
           modelValue: reactData.inpCurrPage,
           placeholder: getI18n('vxe.pager.gotoTitle'),
@@ -585,45 +588,79 @@ export default defineVxeComponent({
       }, getI18n('vxe.pager.total', [total]))
     }
 
-    const dispatchEvent = (type: ValueOf<VxePagerEmits>, params: Record<string, any>, evnt: Event | null) => {
-      emit(type, createEvent(evnt, { $pager: $xePager }, params))
-    }
-
-    pagerMethods = {
+    const pagerMethods: PagerMethods & { jumpPage: any } = {
       dispatchEvent,
+      setPageSize (num) {
+        pageSizeEvent({ value: num } as VxeSelectDefines.ChangeEventParams)
+        return nextTick()
+      },
+      setPageSizeByEvent (evnt, num) {
+        pageSizeEvent({ value: num, $event: evnt } as VxeSelectDefines.ChangeEventParams)
+      },
       homePage () {
         handleHomePage()
         return nextTick()
+      },
+      homePageByEvent (evnt) {
+        handleHomePage(evnt)
       },
       endPage () {
         handleEndPage()
         return nextTick()
       },
+      endPageByEvent (evnt) {
+        handleEndPage(evnt)
+      },
       prevPage () {
         handlePrevPage()
         return nextTick()
+      },
+      prevPageByEvent (evnt) {
+        handlePrevPage(evnt)
       },
       nextPage () {
         handleNextPage()
         return nextTick()
       },
+      nextPageByEvent (evnt) {
+        handleNextPage(evnt)
+      },
       prevJump () {
         handlePrevJump()
         return nextTick()
+      },
+      prevJumpByEvent (evnt) {
+        handlePrevJump(evnt)
       },
       nextJump () {
         handleNextJump()
         return nextTick()
       },
-      jumpPage (currentPage) {
+      nextJumpByEvent (evnt) {
+        handleNextJump(evnt)
+      },
+      setCurrentPage (currentPage) {
         const current = XEUtils.toNumber(currentPage) || 1
         reactData.inpCurrPage = current
-        changeCurrentPage(current)
+        handleChangeCurrentPage(current)
         return nextTick()
+      },
+      setCurrentPageByEvent (evnt, currentPage) {
+        const current = XEUtils.toNumber(currentPage) || 1
+        reactData.inpCurrPage = current
+        handleChangeCurrentPage(current, evnt)
+      },
+      /**
+       * 已废弃，被 setCurrentPage 替换
+       * @deprecated
+       */
+      jumpPage (currentPage: number) {
+        warnLog('vxe.error.delFunc', ['jumpPage', 'setCurrentPage'])
+        return $xePager.setCurrentPage(currentPage)
       }
     }
 
-    pagerPrivateMethods = {
+    const pagerPrivateMethods: PagerPrivateMethods = {
       handlePrevPage,
       handleNextPage,
       handlePrevJump,

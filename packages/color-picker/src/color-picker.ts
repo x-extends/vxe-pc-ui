@@ -7,6 +7,7 @@ import { getLastZIndex, nextZIndex } from '../../ui/src/utils'
 import { parseColor, updateColorAlpha, hexToHsv, rgbToHsv, rgbToHex, hexToRgb, hsvToRgb, toRgb } from './util'
 import VxeButtonComponent from '../../button/src/button'
 import VxeInputComponent from '../../input/src/input'
+import VxeNumberInputComponent from '../../number-input/src/number-input'
 
 import type { ColorPickerReactData, VxeColorPickerPropTypes, VxeColorPickerEmits, ColorPickerInternalData, ColorPickerMethods, ColorPickerPrivateMethods, ValueOf, ColorPickerPrivateRef, VxeColorPickerPrivateComputed, VxeColorPickerConstructor, VxeColorPickerPrivateMethods, VxeModalConstructor, VxeModalMethods, VxeDrawerConstructor, VxeDrawerMethods, VxeFormDefines, VxeFormConstructor, VxeFormPrivateMethods } from '../../../types'
 import type { VxeTableConstructor, VxeTablePrivateMethods } from '../../../types/components/table'
@@ -822,7 +823,7 @@ export default defineVxeComponent({
                 h('div', {
                   class: 'vxe-color-picker--input-wrapper'
                 }, [
-                  h(VxeInputComponent, {
+                  h(VxeNumberInputComponent, {
                     type: 'integer',
                     size: 'mini',
                     align: 'center',
@@ -836,7 +837,7 @@ export default defineVxeComponent({
                     },
                     onChange: handleInputRgbEvent
                   }),
-                  h(VxeInputComponent, {
+                  h(VxeNumberInputComponent, {
                     type: 'integer',
                     size: 'mini',
                     align: 'center',
@@ -850,7 +851,7 @@ export default defineVxeComponent({
                     },
                     onChange: handleInputRgbEvent
                   }),
-                  h(VxeInputComponent, {
+                  h(VxeNumberInputComponent, {
                     type: 'integer',
                     size: 'mini',
                     align: 'center',
@@ -864,7 +865,7 @@ export default defineVxeComponent({
                     },
                     onChange: handleInputRgbEvent
                   }),
-                  h(VxeInputComponent, {
+                  h(VxeNumberInputComponent, {
                     type: 'number',
                     size: 'mini',
                     align: 'center',
