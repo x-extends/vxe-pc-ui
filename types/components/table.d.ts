@@ -1449,9 +1449,9 @@ export namespace VxeTablePropTypes {
      */
     showLine?: boolean
     /**
-     * 树结构序号显示模式，支持层级序号和自增序号（仅支持 transform）
+     * 树结构序号显示模式，支持层级序号和自增序号（仅支持 transform）个固定序号
      */
-    seqMode?: 'default' | 'increasing' | ''
+    seqMode?: 'default' | 'increasing' | 'fixed' | '' | null
     /**
      * 默认展开所有子孙树节点（只会在初始化时被触发一次）
      */
@@ -1467,7 +1467,7 @@ export namespace VxeTablePropTypes {
     /**
      * 触发方式（注：当多种功能重叠时，会同时触发）
      */
-    trigger?: 'default' | 'cell' | 'row' | 'manual' |'' | null
+    trigger?: 'default' | 'cell' | 'row' | 'manual' | '' | null
     /**
      * 是否使用懒加载（启用后只有指定 hasChildField 字段的节点才允许被点击）
      */
@@ -5191,6 +5191,7 @@ export namespace VxeTableDefines {
     $index: number
     _index: number
     treeIndex: number
+    _tIndex: number
     items: any[]
     parent: any
     level: number
