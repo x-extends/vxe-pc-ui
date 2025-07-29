@@ -1424,9 +1424,9 @@ export namespace VxeTablePropTypes {
      */
     showLine?: boolean
     /**
-     * 树结构序号显示模式，支持层级序号和自增序号（仅支持 transform）
+     * 树结构序号显示模式，支持层级序号和自增序号（仅支持 transform）个固定序号
      */
-    seqMode?: 'default' | 'increasing' | ''
+    seqMode?: 'default' | 'increasing' | 'fixed' | '' | null
     /**
      * 默认展开所有子孙树节点（只会在初始化时被触发一次）
      */
@@ -5202,6 +5202,7 @@ export namespace VxeTableDefines {
     $index: number
     _index: number
     treeIndex: number
+    _tIndex: number
     items: any[]
     parent: any
     level: number

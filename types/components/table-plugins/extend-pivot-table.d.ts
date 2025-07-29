@@ -19,7 +19,11 @@ export interface VxeTableExtendPivotTablePrivateMethods<D = any> {
   /**
    * @private
    */
-  getPivotTableAggregateCellAggValue(params: VxeTableDefines.CellRenderBodyParams<D> & { $table: VxeTableConstructor<D> & VxeTablePrivateMethods<D> }): string
+  getPivotTableAggregateCellAggValue(params: {
+    $table: VxeTableConstructor<D> & VxeTablePrivateMethods<D>
+    row: any
+    column: VxeTableDefines.ColumnInfo
+  }): string
   /**
    * @private
    */
