@@ -1558,7 +1558,7 @@ export default defineVxeComponent({
               return $xeTree.setExpandNode(matchObj.nodes, true).then(() => {
                 const itemIndex = XEUtils.findIndexOf(internalData.afterVisibleList, item => getNodeId(item) === nodeid)
                 if (itemIndex > -1) {
-                  const targetTop = (itemIndex + 1) * scrollYStore.rowHeight
+                  const targetTop = Math.max(0, (itemIndex - 1) * scrollYStore.rowHeight)
                   return handleScrollTo(scrollBodyElem.scrollLeft, targetTop)
                 }
               })
