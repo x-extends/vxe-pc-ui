@@ -298,7 +298,7 @@ export interface TreeMethods<D = any> {
   /**
    * 根据主键设置当前节点是否被选中
    */
-  setCurrentNodeId(nodeKey: string | number): Promise<any>
+  setCurrentNodeId(nodeKey: string | number | null): Promise<any>
   /**
    * 根据节点设置当前节点是否被选中
    */
@@ -318,7 +318,7 @@ export interface TreeMethods<D = any> {
   /**
    * 只对 show-radio 有效，通过键值设置节点是否被选中
    */
-  setRadioNodeId(nodeKey: string | number): Promise<any>
+  setRadioNodeId(nodeKey: string | number | null): Promise<any>
   /**
    * 用于 showRadio 单选框，设置指定节点为选中状态
    */
@@ -350,7 +350,7 @@ export interface TreeMethods<D = any> {
   /**
    * 用于 showCheckbox 复选框，设置指定节点 key 为选中状态，第二个参数为选中与否
    */
-  setCheckboxByNodeId(nodeKeys: any | any[], checked: boolean): Promise<any>
+  setCheckboxByNodeId(nodeKeys: string | number | null | (string | number | null)[], checked: boolean): Promise<any>
   /**
    * 已废弃，请使用 clearAllExpandNode
    * @deprecated
@@ -363,7 +363,7 @@ export interface TreeMethods<D = any> {
   /**
    * 设置指定节点 key 为展开状态，第二个参数为选中与否
    */
-  setExpandByNodeId(nodeKeys: any | any[], expanded: boolean): Promise<any>
+  setExpandByNodeId(nodeKeys: string | number | null | (string | number | null)[], expanded: boolean): Promise<any>
   /**
    * 设置指定节点为展开状态
    */
@@ -371,7 +371,7 @@ export interface TreeMethods<D = any> {
   /**
    * 根据节点主键切换指定节点为展开状态
    */
-  toggleExpandByNodeId(nodeKeys: any | any[]): Promise<any>
+  toggleExpandByNodeId(nodeKeys: string | number | null | (string | number | null)[]): Promise<any>
   /**
    * 切换指定节点为展开状态
    */
@@ -404,7 +404,7 @@ export interface TreeMethods<D = any> {
   /**
    * 用于 show-radio，根据节点主键判断指定节点是否为选中状态
    */
-  isCheckedByRadioNodeId(nodeKey: any): boolean
+  isCheckedByRadioNodeId(nodeKey: string | number | null): boolean
   /**
    * 用于 show-radio，判断指定节点是否为选中状态
    */
@@ -412,7 +412,7 @@ export interface TreeMethods<D = any> {
   /**
    * 用于 show-checkbox，根据节点主键判断指定节点是否为选中状态
    */
-  isCheckedByCheckboxNodeId(nodeKey: any): boolean
+  isCheckedByCheckboxNodeId(nodeKey: string | number | null): boolean
   /**
    * 用于 show-checkbox，判断指定节点是否为半选状态
    */
@@ -437,6 +437,14 @@ export interface TreeMethods<D = any> {
     top?: number | null
     left?: number | null
   } | number | null | undefined, y?: number | null): Promise<void>
+  /**
+   * 如果有滚动条，则滚动到指定的节点位置
+   */
+  scrollToNode(node: any): Promise<void>
+  /**
+   * 如果有滚动条，则根据节点主键滚动到对应的节点位置
+   */
+  scrollToNodeId(nodeKey: string | number | null): Promise<void>
 
   /**
    * 手动清除滚动相关信息，还原到初始状态

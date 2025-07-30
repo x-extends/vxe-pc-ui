@@ -8,7 +8,7 @@ import { getSlotVNs } from '../../ui/src/vn'
 import { toCssUnit, isScale, getPaddingTopBottomSize } from '../../ui/src/dom'
 import VxeLoadingComponent from '../../loading/src/loading'
 
-import type { TreeReactData, VxeTreeEmits, VxeTreePropTypes, TreeInternalData, VxeTreeDefines, VxeComponentSizeType, ValueOf } from '../../../types'
+import type { TreeReactData, VxeTreeEmits, VxeTreeConstructor, VxeTreePropTypes, TreeInternalData, VxeTreeDefines, VxeComponentSizeType, ValueOf } from '../../../types'
 
 /**
  * 生成节点的唯一主键
@@ -27,6 +27,36 @@ function handleSetExpand (nodeid: string, expanded: boolean, expandedMaps: Recor
       delete expandedMaps[nodeid]
     }
   }
+}
+
+function handleScrollTo ($xeTree: VxeTreeConstructor, scrollLeft: { top?: number | null; left?: number | null; } | number | null | undefined, scrollTop?: number | null) {
+  const reactData = $xeTree.reactData
+
+  const scrollBodyElem = $xeTree.$refs.refVirtualWrapper as HTMLDivElement
+  if (scrollLeft) {
+    if (!XEUtils.isNumber(scrollLeft)) {
+      scrollTop = scrollLeft.top
+      scrollLeft = scrollLeft.left
+    }
+  }
+  if (scrollBodyElem) {
+    if (XEUtils.isNumber(scrollLeft)) {
+      scrollBodyElem.scrollLeft = scrollLeft
+    }
+    if (XEUtils.isNumber(scrollTop)) {
+      scrollBodyElem.scrollTop = scrollTop
+    }
+  }
+  if (reactData.scrollYLoad) {
+    return new Promise<void>(resolve => {
+      setTimeout(() => {
+        $xeTree.$nextTick(() => {
+          resolve()
+        })
+      }, 50)
+    })
+  }
+  return $xeTree.$nextTick()
 }
 
 export default /* define-vxe-component start */ defineVxeComponent({
@@ -852,33 +882,44 @@ export default /* define-vxe-component start */ defineVxeComponent({
      */
     scrollTo (scrollLeft: { top?: number | null; left?: number | null; } | number | null | undefined, scrollTop?: number | null) {
       const $xeTree = this
-      const reactData = $xeTree.reactData
 
+      return handleScrollTo($xeTree, scrollLeft, scrollTop)
+    },
+    scrollToNode (node: any) {
+      const $xeTree = this
+
+      return $xeTree.scrollToNodeId($xeTree.getNodeId(node))
+    },
+    scrollToNodeId (nodeid: string | number | null) {
+      const $xeTree = this
+      const props = $xeTree
+      const internalData = $xeTree.internalData
+
+      const { transform } = props
+      const { scrollYStore, afterTreeList } = internalData
+      const childrenField = $xeTree.computeChildrenField
+      const mapChildrenField = $xeTree.computeMapChildrenField
       const scrollBodyElem = $xeTree.$refs.refVirtualWrapper as HTMLDivElement
-      if (scrollLeft) {
-        if (!XEUtils.isNumber(scrollLeft)) {
-          scrollTop = scrollLeft.top
-          scrollLeft = scrollLeft.left
-        }
-      }
-      if (scrollBodyElem) {
-        if (XEUtils.isNumber(scrollLeft)) {
-          scrollBodyElem.scrollLeft = scrollLeft
-        }
-        if (XEUtils.isNumber(scrollTop)) {
-          scrollBodyElem.scrollTop = scrollTop
-        }
-      }
-      if (reactData.scrollYLoad) {
-        return new Promise<void>(resolve => {
-          setTimeout(() => {
-            $xeTree.$nextTick(() => {
-              resolve()
+      if (nodeid && scrollBodyElem) {
+        if (transform) {
+          const matchObj = XEUtils.findTree(afterTreeList, item => $xeTree.getNodeId(item) === nodeid, { children: transform ? mapChildrenField : childrenField })
+          if (matchObj) {
+            return $xeTree.setExpandNode(matchObj.nodes, true).then(() => {
+              const itemIndex = XEUtils.findIndexOf(internalData.afterVisibleList, item => $xeTree.getNodeId(item) === nodeid)
+              if (itemIndex > -1) {
+                const targetTop = (itemIndex + 1) * scrollYStore.rowHeight
+                return handleScrollTo($xeTree, scrollBodyElem.scrollLeft, targetTop)
+              }
             })
-          }, 50)
-        })
+          }
+        } else {
+          const itemEl = scrollBodyElem.querySelector<HTMLDivElement>(`.vxe-tree--node-wrapper[nodeid="${nodeid}"]`)
+          if (itemEl) {
+            return handleScrollTo($xeTree, scrollBodyElem.scrollLeft, itemEl.offsetTop)
+          }
+        }
       }
-      return $xeTree.$nextTick()
+      return $xeTree.recalculate()
     },
     /**
      * 刷新滚动条
@@ -1403,13 +1444,13 @@ export default /* define-vxe-component start */ defineVxeComponent({
       }
       return null
     },
-    setCurrentNodeId (nodeKey: any) {
+    setCurrentNodeId (nodeKey: string | number | null) {
       const $xeTree = this
       const reactData = $xeTree.reactData
       const internalData = $xeTree.internalData
 
       const { nodeMaps } = internalData
-      const nodeItem = nodeMaps[nodeKey]
+      const nodeItem = nodeMaps[`${nodeKey}`]
       reactData.currentNode = nodeItem ? nodeItem.item : null
       return $xeTree.$nextTick()
     },
@@ -1448,7 +1489,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       }
       return null
     },
-    setRadioNodeId (nodeKey: any) {
+    setRadioNodeId (nodeKey: string | number | null) {
       const $xeTree = this
       const reactData = $xeTree.reactData
 
@@ -1534,7 +1575,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       $xeTree.handleData()
       return $xeTree.recalculate()
     },
-    setExpandByNodeId (nodeids: any, expanded: boolean) {
+    setExpandByNodeId (nodeids: string | number | (string | number | null)[] | null, expanded: boolean) {
       const $xeTree = this
       const reactData = $xeTree.reactData
       const internalData = $xeTree.internalData
@@ -1544,8 +1585,8 @@ export default /* define-vxe-component start */ defineVxeComponent({
         if (!XEUtils.isArray(nodeids)) {
           nodeids = [nodeids]
         }
-        nodeids.forEach((nodeid: string) => {
-          handleSetExpand(nodeid, expanded, treeExpandedMaps)
+        nodeids.forEach((nodeid) => {
+          handleSetExpand(`${nodeid}`, expanded, treeExpandedMaps)
         })
         reactData.updateExpandedFlag++
       }
@@ -1594,7 +1635,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       $xeTree.handleData()
       return $xeTree.recalculate()
     },
-    toggleExpandByNodeId (nodeids: any) {
+    toggleExpandByNodeId (nodeids: string | number | null | (string | number | null)[]) {
       const $xeTree = this
       const reactData = $xeTree.reactData
       const internalData = $xeTree.internalData
@@ -1604,8 +1645,8 @@ export default /* define-vxe-component start */ defineVxeComponent({
         if (!XEUtils.isArray(nodeids)) {
           nodeids = [nodeids]
         }
-        nodeids.forEach((nodeid: string) => {
-          handleSetExpand(nodeid, !treeExpandedMaps[nodeid], treeExpandedMaps)
+        nodeids.forEach((nodeid) => {
+          handleSetExpand(`${nodeid}`, !treeExpandedMaps[`${nodeid}`], treeExpandedMaps)
         })
         reactData.updateExpandedFlag++
       }

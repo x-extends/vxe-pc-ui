@@ -308,18 +308,34 @@ export default /* define-vxe-component start */ defineVxeComponent({
 
       const { multiple } = props
       const tableCols: VxeTableSelectPropTypes.Columns = []
+      let hasRadioCol = false
+      let hasCheckboxCol = false
+      columns.forEach(column => {
+        if (!hasRadioCol && column.type === 'radio') {
+          hasRadioCol = true
+        } else if (!hasCheckboxCol && column.type === 'checkbox') {
+          hasCheckboxCol = true
+        }
+        tableCols.push(column)
+      })
       if (multiple) {
-        tableCols.push({
+        if (!hasCheckboxCol) {
+          errLog('vxe.error.reqProp', ['{ type: "checkbox" }'])
+        }
+        tableCols.unshift({
           type: 'checkbox',
           width: 70
         })
       } else {
-        tableCols.push({
+        if (!hasRadioCol) {
+          errLog('vxe.error.reqProp', ['{ type: "radio" }'])
+        }
+        tableCols.unshift({
           type: 'radio',
           width: 70
         })
       }
-      reactData.tableColumns = tableCols.concat(columns || [])
+      reactData.tableColumns = tableCols
     },
     cacheDataMap () {
       const $xeTableSelect = this
