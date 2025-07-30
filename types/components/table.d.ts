@@ -907,7 +907,7 @@ export namespace VxeTablePropTypes {
     updateStore?(params: {
       $table: VxeTableConstructor<D>
       id: string
-      type: 'reset' | 'confirm' | 'update:width' | 'update:fixed' | 'update:sort' | 'update:visible' | 'update:rowGroup' | 'update:aggFunc'
+      type: 'reset' | 'confirm' | 'update:width' | 'update:fixed' | 'update:sort' | 'update:visible' | 'update:aggGroup' | 'update:aggFunc'
       storeData: VxeTableDefines.CustomStoreData
     }): Promise<any>
     mode?: 'default' | 'modal' | 'drawer' | 'simple' | 'popup' | '' | null
@@ -5322,7 +5322,7 @@ export namespace VxeTableDefines {
     /**
      * @private
      */
-    parentId: string
+    parentId: string | null
     /**
      * @private
      */
@@ -5338,6 +5338,10 @@ export namespace VxeTableDefines {
     /**
      * @private
      */
+    defaultParentId: string | null
+    /**
+     * @private
+     */
     halfVisible: boolean
     /**
      * @private
@@ -5347,6 +5351,10 @@ export namespace VxeTableDefines {
      * @private
      */
     defaultFixed: VxeColumnPropTypes.Fixed | undefined
+    /**
+     * @private
+     */
+    defaultAggGroup: boolean
     /**
      * @private
      */
@@ -5897,37 +5905,43 @@ export namespace VxeTableDefines {
     oldVisibleMaps: Record<string, boolean>
   }
 
+  export type CustomSortStoreObj = {
+    k: string
+    c?: CustomSortStoreObj[]
+  }
+
   export interface CustomStoreData {
     resizableData?: Record<string, number>
-    sortData?: Record<string, number>
+    sortData?: CustomSortStoreObj[]
     visibleData?: Record<string, boolean>
     fixedData?: Record<string, VxeColumnPropTypes.Fixed>
+    aggGroupData?: Record<string, boolean>
     aggFuncData?: Record<string, VxeColumnPropTypes.AggFunc>
   }
 
   export interface VxeTableCustomStorageObj {
     /**
-     * 显示/隐藏列状态
+     * 保存列可视状态
      */
     visible?: boolean
     /**
-     * 列拖拽调整顺序
+     * 保存列宽调整状态
      */
     resizable?: boolean
     /**
-     * 冻结列状态
+     * 保存列冻结状态
      */
     fixed?: boolean
     /**
-     * 列顺序
+     * 保存列顺序状态
      */
     sort?: boolean
     /**
-     * 聚合分组字段
+     * 保存列的聚合分组状态
      */
-    // rowGroup?: boolean
+    aggGroup?: boolean
     /**
-     * 聚合函数
+     * 保存列聚合函数状态
      */
     aggFunc?: boolean
   }

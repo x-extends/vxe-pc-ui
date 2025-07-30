@@ -1,6 +1,6 @@
 <template>
   <div>
-    <p>
+    <!-- <p>
       <vxe-tree expand-all :data="treeList1" :checkbox-config="{checkStrictly: true}" show-checkbox show-radio></vxe-tree>
     </p>
     <p>
@@ -16,15 +16,19 @@
       :load-method="loadMethod"
       :data="treeList">
     </vxe-tree>
-    </p>
+    </p> -->
 
-    <vxe-tree v-bind="treeOptions2"></vxe-tree>
+    <vxe-button @click="scrollEvent1">定位1</vxe-button>
+    <vxe-button @click="scrollEvent2">定位2</vxe-button>
+    <vxe-tree ref="tree3Ref" v-bind="treeOptions2"></vxe-tree>
   </div>
 </template>
 
 <script lang="ts" setup>
 import { ref, reactive } from 'vue'
-import { VxeTreePropTypes } from '../../../types'
+import { VxeTreePropTypes, VxeTreeInstance } from '../../../types'
+
+const tree3Ref = ref<VxeTreeInstance>()
 
 const treeList1 = ref([
   { title: '22' },
@@ -167,6 +171,20 @@ const treeOptions2 = reactive({
     { title: '节点5', id: '5', parentId: null }
   ]
 })
+
+const scrollEvent1 = () => {
+  const $tree3 = tree3Ref.value
+  if ($tree3) {
+    $tree3.scrollToNodeId('33')
+  }
+}
+
+const scrollEvent2 = () => {
+  const $tree3 = tree3Ref.value
+  if ($tree3) {
+    $tree3.scrollToNodeId('43')
+  }
+}
 
 const treeList = ref<any[]>([
   { title: '节点2', id: '2', hasChild: true },

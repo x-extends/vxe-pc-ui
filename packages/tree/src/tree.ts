@@ -422,7 +422,7 @@ export default defineVxeComponent({
       setCheckboxByNodeId(nodeIds, true)
     }
 
-    const handleSetExpand = (nodeid: string, expanded: boolean, expandedMaps: Record<string, boolean>) => {
+    const handleSetExpand = (nodeid: string | number, expanded: boolean, expandedMaps: Record<string, boolean>) => {
       if (expanded) {
         if (!expandedMaps[nodeid]) {
           expandedMaps[nodeid] = true
@@ -760,7 +760,7 @@ export default defineVxeComponent({
     /**
      * 如果有滚动条，则滚动到对应的位置
      */
-    const scrollTo = (scrollLeft: { top?: number | null; left?: number | null; } | number | null | undefined, scrollTop?: number | null) => {
+    const handleScrollTo = (scrollLeft: { top?: number | null; left?: number | null; } | number | null | undefined, scrollTop?: number | null) => {
       const scrollBodyElem = refVirtualWrapper.value
       if (scrollLeft) {
         if (!XEUtils.isNumber(scrollLeft)) {
@@ -1277,7 +1277,7 @@ export default defineVxeComponent({
       },
       setCurrentNodeId (nodeKey) {
         const { nodeMaps } = internalData
-        const nodeItem = nodeMaps[nodeKey]
+        const nodeItem = nodeMaps[`${nodeKey}`]
         reactData.currentNode = nodeItem ? nodeItem.item : null
         return nextTick()
       },
@@ -1374,8 +1374,8 @@ export default defineVxeComponent({
           if (!XEUtils.isArray(nodeids)) {
             nodeids = [nodeids]
           }
-          nodeids.forEach((nodeid: string) => {
-            handleSetExpand(nodeid, expanded, treeExpandedMaps)
+          nodeids.forEach((nodeid) => {
+            handleSetExpand(`${nodeid}`, expanded, treeExpandedMaps)
           })
           reactData.updateExpandedFlag++
         }
@@ -1420,8 +1420,8 @@ export default defineVxeComponent({
           if (!XEUtils.isArray(nodeids)) {
             nodeids = [nodeids]
           }
-          nodeids.forEach((nodeid: string) => {
-            handleSetExpand(nodeid, !treeExpandedMaps[nodeid], treeExpandedMaps)
+          nodeids.forEach((nodeid) => {
+            handleSetExpand(`${nodeid}`, !treeExpandedMaps[`${nodeid}`], treeExpandedMaps)
           })
           reactData.updateExpandedFlag++
         }
@@ -1541,7 +1541,37 @@ export default defineVxeComponent({
         return list
       },
       recalculate,
-      scrollTo,
+      scrollTo: handleScrollTo,
+      scrollToNode (node) {
+        return $xeTree.scrollToNodeId(getNodeId(node))
+      },
+      scrollToNodeId (nodeid) {
+        const { transform } = props
+        const { scrollYStore, afterTreeList } = internalData
+        const childrenField = computeChildrenField.value
+        const mapChildrenField = computeMapChildrenField.value
+        const scrollBodyElem = refVirtualWrapper.value
+        if (nodeid && scrollBodyElem) {
+          if (transform) {
+            const matchObj = XEUtils.findTree(afterTreeList, item => getNodeId(item) === nodeid, { children: transform ? mapChildrenField : childrenField })
+            if (matchObj) {
+              return $xeTree.setExpandNode(matchObj.nodes, true).then(() => {
+                const itemIndex = XEUtils.findIndexOf(internalData.afterVisibleList, item => getNodeId(item) === nodeid)
+                if (itemIndex > -1) {
+                  const targetTop = (itemIndex + 1) * scrollYStore.rowHeight
+                  return handleScrollTo(scrollBodyElem.scrollLeft, targetTop)
+                }
+              })
+            }
+          } else {
+            const itemEl = scrollBodyElem.querySelector<HTMLDivElement>(`.vxe-tree--node-wrapper[nodeid="${nodeid}"]`)
+            if (itemEl) {
+              return handleScrollTo(scrollBodyElem.scrollLeft, itemEl.offsetTop)
+            }
+          }
+        }
+        return recalculate()
+      },
       clearScroll
     }
 
