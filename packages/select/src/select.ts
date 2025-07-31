@@ -937,7 +937,6 @@ export default /* define-vxe-component start */ defineVxeComponent({
         const isUpArrow = globalEvents.hasKey(evnt, GLOBAL_EVENT_KEYS.ARROW_UP)
         const isDwArrow = globalEvents.hasKey(evnt, GLOBAL_EVENT_KEYS.ARROW_DOWN)
         const isDel = globalEvents.hasKey(evnt, GLOBAL_EVENT_KEYS.DELETE)
-        const isSpacebar = globalEvents.hasKey(evnt, GLOBAL_EVENT_KEYS.SPACEBAR)
         if (isTab) {
           reactData.isActivated = false
         }
@@ -961,10 +960,8 @@ export default /* define-vxe-component start */ defineVxeComponent({
               $xeSelect.setCurrentOption(offsetOption)
               $xeSelect.handleScrollToOption(offsetOption, isDwArrow)
             }
-          } else if (isSpacebar) {
-            evnt.preventDefault()
           }
-        } else if ((isUpArrow || isDwArrow || isEnter || isSpacebar) && reactData.isActivated) {
+        } else if ((isUpArrow || isDwArrow || isEnter) && reactData.isActivated) {
           evnt.preventDefault()
           $xeSelect.showOptionPanel()
         }
@@ -1644,6 +1641,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
                       props: {
                         value: reactData.searchValue,
                         title: selectLabel,
+                        type: 'text',
                         clearable: true,
                         disabled: false,
                         readonly: false,

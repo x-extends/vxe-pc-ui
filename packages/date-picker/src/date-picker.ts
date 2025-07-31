@@ -1,7 +1,7 @@
 import { PropType, CreateElement } from 'vue'
 import { defineVxeComponent } from '../../ui/src/comp'
 import XEUtils from 'xe-utils'
-import { getConfig, getIcon, getI18n, commands, createEvent, globalEvents, globalMixins, renderEmptyElement } from '../../ui'
+import { getConfig, getIcon, getI18n, commands, createEvent, globalEvents, GLOBAL_EVENT_KEYS, globalMixins, renderEmptyElement } from '../../ui'
 import { getFuncText, getLastZIndex, nextZIndex, isEnableConf } from '../../ui/src/utils'
 import { updatePanelPlacement, getEventTargetNode } from '../../ui/src/dom'
 import { getSlotVNs } from '../../ui/src/vn'
@@ -576,6 +576,25 @@ export default /* define-vxe-component start */ defineVxeComponent({
             if ($datePanel) {
               $datePanel.checkValue(reactData.inputLabel)
             }
+          }
+        }
+      }
+    },
+    handleGlobalKeydownEvent (evnt: KeyboardEvent) {
+      const $xeDatePicker = this
+      const reactData = $xeDatePicker.reactData
+
+      const { visiblePanel } = reactData
+      const isDisabled = $xeDatePicker.computeIsDisabled
+      if (!isDisabled) {
+        const isTab = globalEvents.hasKey(evnt, GLOBAL_EVENT_KEYS.TAB)
+        const isEsc = globalEvents.hasKey(evnt, GLOBAL_EVENT_KEYS.ESCAPE)
+        if (isTab) {
+          reactData.isActivated = false
+        }
+        if (visiblePanel) {
+          if (isEsc || isTab) {
+            $xeDatePicker.hidePanel()
           }
         }
       }
@@ -1159,6 +1178,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
     $xeDatePicker.updateModelValue()
     globalEvents.on($xeDatePicker, 'mousewheel', $xeDatePicker.handleGlobalMousewheelEvent)
     globalEvents.on($xeDatePicker, 'mousedown', $xeDatePicker.handleGlobalMousedownEvent)
+    globalEvents.on($xeDatePicker, 'keydown', $xeDatePicker.handleGlobalKeydownEvent)
     globalEvents.on($xeDatePicker, 'blur', $xeDatePicker.handleGlobalBlurEvent)
     globalEvents.on($xeDatePicker, 'resize', $xeDatePicker.handleGlobalResizeEvent)
   },

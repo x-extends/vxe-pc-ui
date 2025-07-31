@@ -1,7 +1,7 @@
 import { PropType, CreateElement } from 'vue'
 import { defineVxeComponent } from '../../ui/src/comp'
 import XEUtils from 'xe-utils'
-import { getConfig, getIcon, getI18n, commands, globalEvents, createEvent, globalMixins, renderEmptyElement } from '../../ui'
+import { getConfig, getIcon, getI18n, commands, globalEvents, createEvent, GLOBAL_EVENT_KEYS, globalMixins, renderEmptyElement } from '../../ui'
 import { getFuncText, getLastZIndex, nextZIndex, isEnableConf } from '../../ui/src/utils'
 import { updatePanelPlacement, getEventTargetNode } from '../../ui/src/dom'
 import { parseDateString, parseDateObj, getRangeDateByCode, handleValueFormat } from '../../date-panel/src/util'
@@ -717,6 +717,25 @@ export default /* define-vxe-component start */ defineVxeComponent({
         }
       }
     },
+    handleGlobalKeydownEvent (evnt: KeyboardEvent) {
+      const $xeDateRangePicker = this
+      const reactData = $xeDateRangePicker.reactData
+
+      const { visiblePanel } = reactData
+      const isDisabled = $xeDateRangePicker.computeIsDisabled
+      if (!isDisabled) {
+        const isTab = globalEvents.hasKey(evnt, GLOBAL_EVENT_KEYS.TAB)
+        const isEsc = globalEvents.hasKey(evnt, GLOBAL_EVENT_KEYS.ESCAPE)
+        if (isTab) {
+          reactData.isActivated = false
+        }
+        if (visiblePanel) {
+          if (isEsc || isTab) {
+            $xeDateRangePicker.hidePanel()
+          }
+        }
+      }
+    },
     handleGlobalMousewheelEvent (evnt: Event) {
       const $xeDateRangePicker = this
       const reactData = $xeDateRangePicker.reactData
@@ -1328,6 +1347,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
 
     globalEvents.on($xeDateRangePicker, 'mousewheel', $xeDateRangePicker.handleGlobalMousewheelEvent)
     globalEvents.on($xeDateRangePicker, 'mousedown', $xeDateRangePicker.handleGlobalMousedownEvent)
+    globalEvents.on($xeDateRangePicker, 'keydown', $xeDateRangePicker.handleGlobalKeydownEvent)
     globalEvents.on($xeDateRangePicker, 'blur', $xeDateRangePicker.handleGlobalBlurEvent)
     globalEvents.on($xeDateRangePicker, 'resize', $xeDateRangePicker.handleGlobalResizeEvent)
   },
