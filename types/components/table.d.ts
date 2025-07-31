@@ -907,7 +907,7 @@ export namespace VxeTablePropTypes {
     updateStore?(params: {
       $table: VxeTableConstructor<D>
       id: string
-      type: 'reset' | 'confirm' | 'update:width' | 'update:fixed' | 'update:sort' | 'update:visible' | 'update:aggGroup' | 'update:aggFunc'
+      type: VxeTableDefines.CustomEventType
       storeData: VxeTableDefines.CustomStoreData
     }): Promise<any>
     mode?: 'default' | 'modal' | 'drawer' | 'simple' | 'popup' | '' | null
@@ -4797,7 +4797,7 @@ export interface TablePrivateMethods<D = any> {
   /**
    * @private
    */
-  saveCustomStore(type: 'confirm' | 'reset' | 'update:width' | 'update:fixed' | 'update:sort' | 'update:visible'): Promise<any>
+  saveCustomStore(type: VxeTableDefines.CustomEventType): Promise<any>
   /**
    * @private
    */
@@ -5909,6 +5909,8 @@ export namespace VxeTableDefines {
     k: string
     c?: CustomSortStoreObj[]
   }
+
+  export type CustomEventType = 'reset' | 'confirm' | 'update:width' | 'update:fixed' | 'update:sort' | 'update:visible' | 'update:aggGroup' | 'update:aggFunc'
 
   export interface CustomStoreData {
     resizableData?: Record<string, number>
