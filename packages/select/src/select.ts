@@ -709,7 +709,6 @@ export default defineVxeComponent({
         const isUpArrow = globalEvents.hasKey(evnt, GLOBAL_EVENT_KEYS.ARROW_UP)
         const isDwArrow = globalEvents.hasKey(evnt, GLOBAL_EVENT_KEYS.ARROW_DOWN)
         const isDel = globalEvents.hasKey(evnt, GLOBAL_EVENT_KEYS.DELETE)
-        const isSpacebar = globalEvents.hasKey(evnt, GLOBAL_EVENT_KEYS.SPACEBAR)
         if (isTab) {
           reactData.isActivated = false
         }
@@ -733,10 +732,8 @@ export default defineVxeComponent({
               setCurrentOption(offsetOption)
               handleScrollToOption(offsetOption, isDwArrow)
             }
-          } else if (isSpacebar) {
-            evnt.preventDefault()
           }
-        } else if ((isUpArrow || isDwArrow || isEnter || isSpacebar) && reactData.isActivated) {
+        } else if ((isUpArrow || isDwArrow || isEnter) && reactData.isActivated) {
           evnt.preventDefault()
           showOptionPanel()
         }
@@ -1384,6 +1381,7 @@ export default defineVxeComponent({
                         ref: refInpSearch,
                         class: 'vxe-select-search--input',
                         modelValue: reactData.searchValue,
+                        type: 'text',
                         clearable: true,
                         disabled: false,
                         readonly: false,

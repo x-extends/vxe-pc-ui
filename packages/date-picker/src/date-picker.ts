@@ -1,7 +1,7 @@
 import { h, Teleport, ref, Ref, computed, provide, reactive, inject, nextTick, watch, PropType, onUnmounted } from 'vue'
 import { defineVxeComponent } from '../../ui/src/comp'
 import XEUtils from 'xe-utils'
-import { getConfig, getIcon, getI18n, commands, createEvent, globalEvents, useSize, renderEmptyElement } from '../../ui'
+import { getConfig, getIcon, getI18n, commands, createEvent, globalEvents, GLOBAL_EVENT_KEYS, useSize, renderEmptyElement } from '../../ui'
 import { getFuncText, getLastZIndex, nextZIndex, isEnableConf } from '../../ui/src/utils'
 import { updatePanelPlacement, getEventTargetNode } from '../../ui/src/dom'
 import { getSlotVNs } from '../../ui/src/vn'
@@ -486,6 +486,23 @@ export default defineVxeComponent({
             if ($datePanel) {
               $datePanel.checkValue(reactData.inputLabel)
             }
+          }
+        }
+      }
+    }
+
+    const handleGlobalKeydownEvent = (evnt: KeyboardEvent) => {
+      const { visiblePanel } = reactData
+      const isDisabled = computeIsDisabled.value
+      if (!isDisabled) {
+        const isTab = globalEvents.hasKey(evnt, GLOBAL_EVENT_KEYS.TAB)
+        const isEsc = globalEvents.hasKey(evnt, GLOBAL_EVENT_KEYS.ESCAPE)
+        if (isTab) {
+          reactData.isActivated = false
+        }
+        if (visiblePanel) {
+          if (isEsc || isTab) {
+            hidePanel()
           }
         }
       }
@@ -985,6 +1002,7 @@ export default defineVxeComponent({
     nextTick(() => {
       globalEvents.on($xeDatePicker, 'mousewheel', handleGlobalMousewheelEvent)
       globalEvents.on($xeDatePicker, 'mousedown', handleGlobalMousedownEvent)
+      globalEvents.on($xeDatePicker, 'keydown', handleGlobalKeydownEvent)
       globalEvents.on($xeDatePicker, 'blur', handleGlobalBlurEvent)
       globalEvents.on($xeDatePicker, 'resize', handleGlobalResizeEvent)
     })

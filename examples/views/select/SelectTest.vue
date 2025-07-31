@@ -190,12 +190,12 @@
     </p> -->
 
     <p>
-      <!-- <vxe-select v-model="demo1.value45" placeholder="加载中" :options="demo1.list45" loading></vxe-select>
+      <vxe-select v-model="demo1.value45" placeholder="加载中" :options="demo1.list45" loading></vxe-select>
       <vxe-select v-model="demo1.value40" placeholder="空数据" :options="demo1.list40"></vxe-select>
-      <vxe-select v-model="demo1.value41" placeholder="分组配置式" :option-groups="demo1.list41"></vxe-select>
+      <vxe-select v-model="demo1.value41" placeholder="分组配置式" :option-groups="demo1.list41" filterable></vxe-select>
       <vxe-select v-model="demo1.value42" placeholder="禁用选项" :options="demo1.list42"></vxe-select>
-      <vxe-select v-model="demo1.value43" placeholder="禁用分组" :option-groups="demo1.list43" transfer></vxe-select>
-      <vxe-select v-model="demo1.value44" placeholder="多选" :options="demo1.list44" multiple clearable transfer></vxe-select> -->
+      <vxe-select v-model="demo1.value43" placeholder="禁用分组" :option-groups="demo1.list43" filterable transfer></vxe-select>
+      <vxe-select v-model="demo1.value44" placeholder="多选" :options="demo1.list44" multiple clearable transfer></vxe-select>
       <vxe-select v-model="demo1.value46" placeholder="自定义模板" :options="demo1.list46" multiple clearable transfer>
         <template #opt3="{ option }">
           <span style="color: red">
