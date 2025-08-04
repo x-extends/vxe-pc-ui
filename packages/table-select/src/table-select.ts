@@ -294,20 +294,18 @@ export default defineVxeComponent({
       })
       if (multiple) {
         if (!hasCheckboxCol) {
-          errLog('vxe.error.reqProp', ['{ type: "checkbox" }'])
+          tableCols.unshift({
+            type: 'checkbox',
+            width: 70
+          })
         }
-        tableCols.unshift({
-          type: 'checkbox',
-          width: 70
-        })
       } else {
         if (!hasRadioCol) {
-          errLog('vxe.error.reqProp', ['{ type: "radio" }'])
+          tableCols.unshift({
+            type: 'radio',
+            width: 70
+          })
         }
-        tableCols.unshift({
-          type: 'radio',
-          width: 70
-        })
       }
       reactData.tableColumns = tableCols
     }
