@@ -48,6 +48,10 @@ export interface VxeCustomPanel {
 
 export interface TableCustomMethods<D = any> {
   /**
+   * 获取个性化列面板显示状态
+   */
+  getCustomVisible(): boolean
+  /**
    * 打开个性化列面板
    */
   openCustom(): Promise<void>
