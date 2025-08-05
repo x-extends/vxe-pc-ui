@@ -1,7 +1,7 @@
 import { ref, h, reactive, PropType, computed, VNode, watch, onUnmounted, nextTick, onMounted } from 'vue'
 import { defineVxeComponent } from '../../ui/src/comp'
 import { getI18n, createEvent, getIcon, getConfig, useSize, globalEvents, globalResize, renderEmptyElement } from '../../ui'
-import { calcTreeLine } from './util'
+import { calcTreeLine, enNodeValue, deNodeValue } from './util'
 import { errLog } from '../../ui/src/log'
 import XEUtils from 'xe-utils'
 import { getSlotVNs } from '../../ui/src/vn'
@@ -164,7 +164,7 @@ export default defineVxeComponent({
       scrollYLoad: false,
       bodyHeight: 0,
       topSpaceHeight: 0,
-      selectRadioKey: props.checkNodeKey,
+      selectRadioKey: enNodeValue(props.checkNodeKey),
       treeList: [],
       updateExpandedFlag: 1,
       updateCheckboxFlag: 1
@@ -307,8 +307,8 @@ export default defineVxeComponent({
 
     const getNodeId = (node: any) => {
       const valueField = computeValueField.value
-      const nodeid = XEUtils.get(node, valueField)
-      return XEUtils.eqNull(nodeid) ? '' : encodeURIComponent(nodeid)
+      const nodeKey = XEUtils.get(node, valueField)
+      return enNodeValue(nodeKey)
     }
 
     const isExpandByNode = (node: any) => {
@@ -355,31 +355,15 @@ export default defineVxeComponent({
       emit('update:checkNodeKey', value)
     }
 
-    const setRadioNode = (node: any) => {
-      if (node) {
-        reactData.selectRadioKey = getNodeId(node)
-      }
-      return nextTick()
-    }
-
-    const setCheckboxNode = (nodeList: any | any[], checked: boolean) => {
-      if (nodeList) {
-        if (!XEUtils.isArray(nodeList)) {
-          nodeList = [nodeList]
-        }
-        handleCheckedCheckboxNode(nodeList, checked)
-      }
-      return nextTick()
-    }
-
-    const setCheckboxByNodeId = (nodeIds: any | any[], checked: boolean) => {
+    const handleSetCheckboxByNodeId = (nodeKeys: any | any[], checked: boolean) => {
       const { nodeMaps } = internalData
-      if (nodeIds) {
-        if (!XEUtils.isArray(nodeIds)) {
-          nodeIds = [nodeIds]
+      if (nodeKeys) {
+        if (!XEUtils.isArray(nodeKeys)) {
+          nodeKeys = [nodeKeys]
         }
         const nodeList: any[] = []
-        nodeIds.forEach((nodeid: string) => {
+        nodeKeys.forEach((nodeKey: string) => {
+          const nodeid = enNodeValue(nodeKey)
           const nodeItem = nodeMaps[nodeid]
           if (nodeItem) {
             nodeList.push(nodeItem.item)
@@ -418,8 +402,9 @@ export default defineVxeComponent({
       updateCheckboxStatus()
     }
 
-    const updateCheckboxChecked = (nodeIds: VxeTreePropTypes.CheckNodeKeys) => {
-      setCheckboxByNodeId(nodeIds, true)
+    const updateCheckboxChecked = (nodeKeys: VxeTreePropTypes.CheckNodeKeys) => {
+      internalData.selectCheckboxMaps = {}
+      handleSetCheckboxByNodeId(nodeKeys, true)
     }
 
     const handleSetExpand = (nodeid: string | number, expanded: boolean, expandedMaps: Record<string, boolean>) => {
@@ -571,7 +556,12 @@ export default defineVxeComponent({
           beforeFilterMethod(bafParams)
         }
         if (transform) {
-          treeList = XEUtils.searchTree(treeFullData, handleSearch, { children: childrenField, mapChildren: mapChildrenField, isEvery: true })
+          treeList = XEUtils.searchTree(treeFullData, handleSearch, {
+            original: true,
+            isEvery: true,
+            children: childrenField,
+            mapChildren: mapChildrenField
+          })
           fullList = treeList
         } else {
           fullList = treeFullData.filter(handleSearch)
@@ -593,7 +583,12 @@ export default defineVxeComponent({
         })
       } else {
         if (transform) {
-          treeList = XEUtils.searchTree(treeFullData, () => true, { children: childrenField, mapChildren: mapChildrenField, isEvery: true })
+          treeList = XEUtils.searchTree(treeFullData, () => true, {
+            original: true,
+            isEvery: true,
+            children: childrenField,
+            mapChildren: mapChildrenField
+          })
           fullList = treeList
           if (lastFilterValue) {
             const bafParams = { $tree: $xeTree, filterValue: filterStr }
@@ -694,7 +689,7 @@ export default defineVxeComponent({
             if (expandAll) {
               $xeTree.setAllExpandNode(true)
             }
-            $xeTree.setCheckboxByNodeId(props.checkNodeKeys || [], true)
+            handleSetCheckboxByNodeId(props.checkNodeKeys || [], true)
           }
         }
         updateHeight()
@@ -1174,7 +1169,8 @@ export default defineVxeComponent({
       }
       reactData.updateCheckboxFlag++
       updateCheckboxStatus()
-      const value = XEUtils.keys(selectCheckboxMaps)
+      const nodeids = XEUtils.keys(selectCheckboxMaps)
+      const value = nodeids.map(deNodeValue)
       emitCheckboxMode(value)
       dispatchEvent('checkbox-change', { node, value, checked: isChecked }, evnt)
     }
@@ -1220,8 +1216,9 @@ export default defineVxeComponent({
         return
       }
       const isChecked = true
-      const value = getNodeId(node)
-      reactData.selectRadioKey = value
+      const nodeid = getNodeId(node)
+      const value = deNodeValue(nodeid)
+      reactData.selectRadioKey = nodeid
       emitRadioMode(value)
       dispatchEvent('radio-change', { node, value, checked: isChecked }, evnt)
     }
@@ -1260,7 +1257,7 @@ export default defineVxeComponent({
       getCurrentNodeId () {
         const { currentNode } = reactData
         if (currentNode) {
-          return getNodeId(currentNode)
+          return deNodeValue(getNodeId(currentNode))
         }
         return null
       },
@@ -1277,7 +1274,7 @@ export default defineVxeComponent({
       },
       setCurrentNodeId (nodeKey) {
         const { nodeMaps } = internalData
-        const nodeItem = nodeMaps[`${nodeKey}`]
+        const nodeItem = nodeMaps[enNodeValue(nodeKey)]
         reactData.currentNode = nodeItem ? nodeItem.item : null
         return nextTick()
       },
@@ -1287,6 +1284,7 @@ export default defineVxeComponent({
       },
       clearRadioNode () {
         reactData.selectRadioKey = null
+        emitRadioMode(null)
         return nextTick()
       },
       getRadioNodeId () {
@@ -1304,15 +1302,42 @@ export default defineVxeComponent({
         return null
       },
       setRadioNodeId (nodeKey) {
-        reactData.selectRadioKey = nodeKey
+        reactData.selectRadioKey = enNodeValue(nodeKey)
+        emitRadioMode(nodeKey)
         return nextTick()
       },
-      setRadioNode,
-      setCheckboxNode,
-      setCheckboxByNodeId,
+      setRadioNode (node) {
+        if (node) {
+          const nodeid = getNodeId(node)
+          reactData.selectRadioKey = nodeid
+          emitRadioMode(deNodeValue(nodeid))
+        } else {
+          emitRadioMode(null)
+        }
+        return nextTick()
+      },
+      setCheckboxNode (nodeList, checked) {
+        if (nodeList) {
+          if (!XEUtils.isArray(nodeList)) {
+            nodeList = [nodeList]
+          }
+          handleCheckedCheckboxNode(nodeList, checked)
+        }
+        emitCheckboxMode($xeTree.getCheckboxNodeIds())
+        return nextTick()
+      },
+      setCheckboxByNodeId (nodeKeys, selected) {
+        handleSetCheckboxByNodeId(nodeKeys, selected)
+        emitCheckboxMode($xeTree.getCheckboxNodeIds())
+        return nextTick()
+      },
       getCheckboxNodeIds () {
         const { selectCheckboxMaps } = internalData
-        return Object.keys(selectCheckboxMaps)
+        const nodeKeys: any[] = []
+        XEUtils.each(selectCheckboxMaps, (item, nodeId) => {
+          nodeKeys.push(deNodeValue(nodeId))
+        })
+        return nodeKeys
       },
       getCheckboxNodes () {
         const { nodeMaps, selectCheckboxMaps } = internalData
@@ -1326,8 +1351,11 @@ export default defineVxeComponent({
         return list
       },
       clearCheckboxNode () {
+        internalData.indeterminateRowMaps = {}
         internalData.selectCheckboxMaps = {}
         reactData.updateCheckboxFlag++
+        emitCheckboxMode([])
+        updateCheckboxStatus()
         return nextTick().then(() => {
           return { checkNodeKeys: [] }
         })
@@ -1345,8 +1373,10 @@ export default defineVxeComponent({
             selectMaps[nodeid] = true
           }, { children: transform ? mapChildrenField : childrenField })
         }
+        internalData.indeterminateRowMaps = {}
         internalData.selectCheckboxMaps = selectMaps
         reactData.updateCheckboxFlag++
+        updateCheckboxStatus()
         return nextTick().then(() => {
           return { checkNodeKeys: checkKeys }
         })
@@ -1368,14 +1398,15 @@ export default defineVxeComponent({
         handleData()
         return recalculate()
       },
-      setExpandByNodeId (nodeids, expanded) {
+      setExpandByNodeId (nodeKeys, expanded) {
         const { treeExpandedMaps } = internalData
-        if (nodeids) {
-          if (!XEUtils.isArray(nodeids)) {
-            nodeids = [nodeids]
+        if (nodeKeys) {
+          if (!XEUtils.isArray(nodeKeys)) {
+            nodeKeys = [nodeKeys]
           }
-          nodeids.forEach((nodeid) => {
-            handleSetExpand(`${nodeid}`, expanded, treeExpandedMaps)
+          nodeKeys.forEach((nodeKey) => {
+            const nodeid = enNodeValue(nodeKey)
+            handleSetExpand(nodeid, expanded, treeExpandedMaps)
           })
           reactData.updateExpandedFlag++
         }
@@ -1385,7 +1416,11 @@ export default defineVxeComponent({
       },
       getExpandNodeIds () {
         const { treeExpandedMaps } = internalData
-        return XEUtils.keys(treeExpandedMaps)
+        const nodeKeys: any[] = []
+        XEUtils.each(treeExpandedMaps, (item, nodeId) => {
+          nodeKeys.push(deNodeValue(nodeId))
+        })
+        return nodeKeys
       },
       getExpandNodes () {
         const { nodeMaps, treeExpandedMaps } = internalData
@@ -1414,14 +1449,15 @@ export default defineVxeComponent({
         handleData()
         return recalculate()
       },
-      toggleExpandByNodeId (nodeids) {
+      toggleExpandByNodeId (nodeKeys) {
         const { treeExpandedMaps } = internalData
-        if (nodeids) {
-          if (!XEUtils.isArray(nodeids)) {
-            nodeids = [nodeids]
+        if (nodeKeys) {
+          if (!XEUtils.isArray(nodeKeys)) {
+            nodeKeys = [nodeKeys]
           }
-          nodeids.forEach((nodeid) => {
-            handleSetExpand(`${nodeid}`, !treeExpandedMaps[`${nodeid}`], treeExpandedMaps)
+          nodeKeys.forEach((nodeKey) => {
+            const nodeid = enNodeValue(nodeKey)
+            handleSetExpand(nodeid, !treeExpandedMaps[`${nodeid}`], treeExpandedMaps)
           })
           reactData.updateExpandedFlag++
         }
@@ -1860,8 +1896,8 @@ export default defineVxeComponent({
       loadData(props.data || [])
     })
 
-    watch(() => props.checkNodeKey, (val) => {
-      reactData.selectRadioKey = val
+    watch(() => props.checkNodeKey, (nodeKey) => {
+      reactData.selectRadioKey = enNodeValue(nodeKey)
     })
 
     const checkboxFlag = ref(0)
