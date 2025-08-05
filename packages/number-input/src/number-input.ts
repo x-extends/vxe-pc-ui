@@ -582,9 +582,9 @@ export default defineVxeComponent({
       if (isUpArrow || isDwArrow) {
         evnt.preventDefault()
         if (isUpArrow) {
-          numberMinusEvent(evnt)
-        } else {
           numberPlusEvent(evnt)
+        } else {
+          numberMinusEvent(evnt)
         }
       }
     }
@@ -706,9 +706,11 @@ export default defineVxeComponent({
           evnt.preventDefault()
           const delta = evnt.deltaY
           if (delta > 0) {
-            numberPlusEvent(evnt)
-          } else if (delta < 0) {
+            // 向下
             numberMinusEvent(evnt)
+          } else if (delta < 0) {
+            // 向上
+            numberPlusEvent(evnt)
           }
         }
       }
@@ -995,9 +997,9 @@ export default defineVxeComponent({
                     renderInput()
                   ]
                 : [
-                    renderMinusBtn(),
+                    renderPlusBtn(),
                     renderInput(),
-                    renderPlusBtn()
+                    renderMinusBtn()
                   ]))
         : [
             renderInput()
