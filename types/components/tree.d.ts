@@ -72,7 +72,7 @@ export namespace VxeTreePropTypes {
     showIcon?: boolean
     trigger?: '' | 'default' | 'node'
   }
-  export type CheckNodeKeys = (string | number)[]
+  export type CheckNodeKeys = (string | number | null)[]
   export type ShowCheckbox = boolean
   export interface CheckboxConfig<D = any> {
     showHeader?: boolean

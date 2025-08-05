@@ -4,6 +4,7 @@ import XEUtils from 'xe-utils'
 import { getConfig, getI18n, getIcon, globalEvents, createEvent, globalMixins, renderEmptyElement } from '../../ui'
 import { getEventTargetNode, updatePanelPlacement, toCssUnit } from '../../ui/src/dom'
 import { getLastZIndex, nextZIndex } from '../../ui/src/utils'
+import { deNodeValue } from '../../tree/src/util'
 import { errLog } from '../../ui/src/log'
 import VxeInputComponent from '../../input/src/input'
 import VxeButtonComponent from '../../button/src/button'
@@ -474,13 +475,14 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const formItemInfo = $xeTreeSelect.formItemInfo
 
       const { fullNodeMaps } = internalData
-      $xeTreeSelect.emitModel(selectValue)
-      if (selectValue !== props.value) {
+      const value = XEUtils.isArray(selectValue) ? selectValue.map(deNodeValue) : deNodeValue(selectValue)
+      $xeTreeSelect.emitModel(value)
+      if (value !== props.value) {
         const cacheItem = fullNodeMaps[selectValue]
-        $xeTreeSelect.dispatchEvent('change', { value: selectValue, option: cacheItem ? cacheItem.item : null }, evnt)
+        $xeTreeSelect.dispatchEvent('change', { value, option: cacheItem ? cacheItem.item : null }, evnt)
         // 自动更新校验状态
         if ($xeForm && formItemInfo) {
-          $xeForm.triggerItemEvent(evnt, formItemInfo.itemConfig.field, selectValue)
+          $xeForm.triggerItemEvent(evnt, formItemInfo.itemConfig.field, value)
         }
       }
     },
