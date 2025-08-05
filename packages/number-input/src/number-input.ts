@@ -687,9 +687,9 @@ export default /* define-vxe-component start */ defineVxeComponent({
       if (isUpArrow || isDwArrow) {
         evnt.preventDefault()
         if (isUpArrow) {
-          $xeNumberInput.numberMinusEvent(evnt)
-        } else {
           $xeNumberInput.numberPlusEvent(evnt)
+        } else {
+          $xeNumberInput.numberMinusEvent(evnt)
         }
       }
     },
@@ -830,9 +830,11 @@ export default /* define-vxe-component start */ defineVxeComponent({
           evnt.preventDefault()
           const delta = evnt.deltaY
           if (delta > 0) {
-            $xeNumberInput.numberPlusEvent(evnt)
-          } else if (delta < 0) {
+            // 向下
             $xeNumberInput.numberMinusEvent(evnt)
+          } else if (delta < 0) {
+            // 向上
+            $xeNumberInput.numberPlusEvent(evnt)
           }
         }
       }
@@ -1140,9 +1142,9 @@ export default /* define-vxe-component start */ defineVxeComponent({
                     $xeNumberInput.renderInput(h)
                   ]
                 : [
-                    $xeNumberInput.renderMinusBtn(h),
+                    $xeNumberInput.renderPlusBtn(h),
                     $xeNumberInput.renderInput(h),
-                    $xeNumberInput.renderPlusBtn(h)
+                    $xeNumberInput.renderMinusBtn(h)
                   ]))
         : [
             $xeNumberInput.renderInput(h)
