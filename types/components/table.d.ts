@@ -4428,7 +4428,7 @@ export interface TableMethods<DT = any> {
   /**
    * 用于 row-config.isCurrent，获取当前行的行数据
    */
-  getCurrentRecord(): DT | null
+  getCurrentRecord(isFull?: boolean): DT | null
   /**
    * 用于 type=radio，获取当已选中的行数据
    */
