@@ -60,6 +60,7 @@ const componentList = [
   'form-gather',
   'form-group',
   'form-item',
+  'gantt',
   'icon',
   'icon-picker',
   'image',

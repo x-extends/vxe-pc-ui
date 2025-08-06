@@ -294,6 +294,11 @@ const routes: Array<RouteRecordRaw> = [
     path: '/component/split',
     name: 'SplitTest',
     component: () => import('../views/split/SplitTest.vue')
+  },
+  {
+    path: '/component/gantt',
+    name: 'GanttTest',
+    component: () => import('../views/gantt/GanttTest.vue')
   }
 ]
 

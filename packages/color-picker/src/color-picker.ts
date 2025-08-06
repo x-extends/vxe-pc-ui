@@ -832,6 +832,9 @@ export default defineVxeComponent({
                     maxLength: 3,
                     placeholder: '',
                     modelValue: rValue,
+                    controlConfig: {
+                      showButton: false
+                    },
                     'onUpdate:modelValue' (val) {
                       reactData.rValue = val
                     },
@@ -846,6 +849,9 @@ export default defineVxeComponent({
                     maxLength: 3,
                     placeholder: '',
                     modelValue: gValue,
+                    controlConfig: {
+                      showButton: false
+                    },
                     'onUpdate:modelValue' (val) {
                       reactData.gValue = val
                     },
@@ -860,6 +866,9 @@ export default defineVxeComponent({
                     maxLength: 3,
                     placeholder: '',
                     modelValue: bValue,
+                    controlConfig: {
+                      showButton: false
+                    },
                     'onUpdate:modelValue' (val) {
                       reactData.bValue = val
                     },
@@ -875,6 +884,9 @@ export default defineVxeComponent({
                     maxLength: 4,
                     placeholder: '',
                     modelValue: aValue,
+                    controlConfig: {
+                      showButton: false
+                    },
                     'onUpdate:modelValue' (val) {
                       reactData.aValue = val
                     },

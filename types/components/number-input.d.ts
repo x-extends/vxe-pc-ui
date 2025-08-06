@@ -60,6 +60,10 @@ export namespace VxeNumberInputPropTypes {
      */
     isWheel?: boolean
     /**
+     * 只对 enabled 启用后有效，是否启用方向键操作
+     */
+    isArrow?: boolean
+    /**
      * 按钮的布局方式
      */
     layout?: 'left' | 'right' | 'default' | ''

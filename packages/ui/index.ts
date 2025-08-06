@@ -157,6 +157,7 @@ setConfig({
   formGroup: {},
   formItem: {},
   formView: {},
+  gantt: {},
   icon: {},
   iconPicker: {
     icons: ['home', 'company', 'comment', 'setting', 'send', 'envelope', 'envelope-open', 'bell', 'search', 'print', 'pc', 'goods', 'chart-line', 'edit', 'delete', 'save', 'folder', 'microphone', 'flag', 'link', 'location', 'sunny', 'rmb', 'usd', 'user', 'add-user', 'add-users', 'star', 'unlock', 'time', 'text', 'feedback', 'calendar', 'association-form', 'cloud-download', 'cloud-upload', 'file', 'subtable', 'chart-bar-x', 'chart-bar-y', 'chart-line', 'chart-pie', 'chart-radar']
@@ -256,7 +257,8 @@ setConfig({
       enabled: true,
       layout: 'right',
       showButton: true,
-      isWheel: true
+      isWheel: true,
+      isArrow: true
     }
   },
   optgroup: {},

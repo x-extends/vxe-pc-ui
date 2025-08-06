@@ -592,7 +592,7 @@ export default defineVxeComponent({
     const keydownEvent = (evnt: KeyboardEvent & { type: 'keydown' }) => {
       const { type, exponential, controls } = props
       const controlOpts = computeControlOpts.value
-      const { showButton } = controlOpts
+      const { isArrow } = controlOpts
       const inputReadonly = computeInputReadonly.value
       const isControlKey = hasControlKey(evnt)
       const isShiftKey = evnt.shiftKey
@@ -609,7 +609,7 @@ export default defineVxeComponent({
       if (isEsc) {
         afterCheckValue()
       } else if (isUpArrow || isDwArrow) {
-        if (isEnableConf(controlOpts) && (controls === false ? controls : showButton) && !inputReadonly) {
+        if (isEnableConf(controlOpts) && (controls === false ? controls : isArrow) && !inputReadonly) {
           numberKeydownEvent(evnt)
         }
       }

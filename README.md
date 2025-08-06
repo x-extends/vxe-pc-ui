@@ -89,6 +89,7 @@
 * [x] form 表单
   * [x] form-group 表单-分组
   * [x] form-item 表单-项
+* [ ] gantt 甘特图
 * [x] icon 图标
 * [x] icon-picker 图标选择
 * [x] image 图片
