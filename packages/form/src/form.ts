@@ -140,6 +140,18 @@ function checkRuleStatus (rule: VxeFormDefines.FormRule, val: any) {
   return true
 }
 
+function createInternalData (): FormInternalData {
+  return {
+    meTimeout: undefined,
+    stTimeout: undefined,
+    tooltipStore: {
+      item: null,
+      visible: false
+    },
+    itemFormatCache: {}
+  }
+}
+
 export default /* define-vxe-component start */ defineVxeComponent({
   name: 'VxeForm',
   mixins: [
@@ -247,15 +259,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       staticItems: [],
       formItems: []
     }
-    const internalData: FormInternalData = {
-      meTimeout: undefined,
-      stTimeout: undefined,
-      tooltipStore: {
-        item: null,
-        visible: false
-      },
-      itemFormatCache: {}
-    }
+    const internalData = createInternalData()
     return {
       xID,
       reactData,
@@ -913,6 +917,12 @@ export default /* define-vxe-component start */ defineVxeComponent({
         errLog('vxe.error.errConflicts', ['custom-layout', 'items'])
       }
     })
+  },
+  destroyed () {
+    const $xeForm = this
+    const internalData = $xeForm.internalData
+
+    XEUtils.assign(internalData, createInternalData())
   },
   render (this: any, h) {
     return this.renderVN(h)

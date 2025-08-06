@@ -19,6 +19,31 @@ function getOptUniqueId () {
   return XEUtils.uniqueId('opt_')
 }
 
+function createInternalData (): SelectInternalData {
+  return {
+    synchData: [],
+    fullData: [],
+    afterVisibleList: [],
+    optAddMaps: {},
+    optGroupKeyMaps: {},
+    optFullValMaps: {},
+    remoteValMaps: {},
+
+    lastScrollLeft: 0,
+    lastScrollTop: 0,
+    scrollYStore: {
+      startIndex: 0,
+      endIndex: 0,
+      visibleSize: 0,
+      offsetSize: 0,
+      rowHeight: 0
+    },
+
+    lastScrollTime: 0,
+    hpTimeout: undefined
+  }
+}
+
 export default /* define-vxe-component start */ defineVxeComponent({
   name: 'VxeSelect',
   mixins: [
@@ -158,28 +183,8 @@ export default /* define-vxe-component start */ defineVxeComponent({
       isAniVisible: false,
       isActivated: false
     }
-    const internalData: SelectInternalData = {
-      synchData: [],
-      fullData: [],
-      afterVisibleList: [],
-      optAddMaps: {},
-      optGroupKeyMaps: {},
-      optFullValMaps: {},
-      remoteValMaps: {},
+    const internalData = createInternalData()
 
-      lastScrollLeft: 0,
-      lastScrollTop: 0,
-      scrollYStore: {
-        startIndex: 0,
-        endIndex: 0,
-        visibleSize: 0,
-        offsetSize: 0,
-        rowHeight: 0
-      },
-
-      lastScrollTime: 0,
-      hpTimeout: undefined
-    }
     return {
       xID,
       reactData,
@@ -1783,6 +1788,12 @@ export default /* define-vxe-component start */ defineVxeComponent({
     globalEvents.off($xeSelect, 'keydown')
     globalEvents.off($xeSelect, 'blur')
     globalEvents.off($xeSelect, 'resize')
+  },
+  destroyed () {
+    const $xeSelect = this
+    const internalData = $xeSelect.internalData
+
+    XEUtils.assign(internalData, createInternalData())
   },
   render (this: any, h) {
     return this.renderVN(h)

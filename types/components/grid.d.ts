@@ -14,6 +14,7 @@ export type VxeGridComponent = DefineVxeComponentOptions<VxeGridProps>
 
 export type VxeGridInstance<D = any> = DefineVxeComponentInstance<{
   reactData: GridReactData<D>
+  internalData: GridInternalData
 }, VxeGridProps<D>, VxeGridPrivateComputed<D>, VxeGridMethods<D>>
 
 export type VxeGridConstructor<D = any> = VxeGridInstance<D>
@@ -287,6 +288,8 @@ export interface GridReactData<D = any> {
     currentPage: number
   }
 }
+
+export interface GridInternalData {}
 
 export interface GridMethods<D = any> {
   dispatchEvent(type: ValueOf<VxeGridEmits>, params: Record<string, any>, evnt: Event | null): void

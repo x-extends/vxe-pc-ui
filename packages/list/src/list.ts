@@ -10,6 +10,22 @@ import type { VxeListPropTypes, VxeListEmits, VxeComponentSizeType, ListReactDat
 
 const browseObj = XEUtils.browse()
 
+function createInternalData (): ListInternalData {
+  return {
+    resizeObserver: undefined,
+    fullData: [],
+    lastScrollLeft: 0,
+    lastScrollTop: 0,
+    scrollYStore: {
+      startIndex: 0,
+      endIndex: 0,
+      visibleSize: 0,
+      offsetSize: 0,
+      rowHeight: 0
+    }
+  }
+}
+
 export default /* define-vxe-component start */ defineVxeComponent({
   name: 'VxeList',
   mixins: [
@@ -44,19 +60,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       topSpaceHeight: 0,
       items: []
     }
-    const internalData: ListInternalData = {
-      resizeObserver: undefined,
-      fullData: [],
-      lastScrollLeft: 0,
-      lastScrollTop: 0,
-      scrollYStore: {
-        startIndex: 0,
-        endIndex: 0,
-        visibleSize: 0,
-        offsetSize: 0,
-        rowHeight: 0
-      }
-    }
+    const internalData = createInternalData()
     return {
       xID,
       reactData,
@@ -474,6 +478,12 @@ export default /* define-vxe-component start */ defineVxeComponent({
       resizeObserver.disconnect()
     }
     globalEvents.off($xeList, 'resize')
+  },
+  destroyed () {
+    const $xeList = this
+    const internalData = $xeList.internalData
+
+    XEUtils.assign(internalData, createInternalData())
   },
   render (this: any, h) {
     return this.renderVN(h)

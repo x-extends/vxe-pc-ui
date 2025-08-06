@@ -59,6 +59,34 @@ function handleScrollTo ($xeTree: VxeTreeConstructor, scrollLeft: { top?: number
   return $xeTree.$nextTick()
 }
 
+function createInternalData (): TreeInternalData {
+  return {
+    // initialized: false,
+    // lastFilterValue: '',
+    treeFullData: [],
+    afterTreeList: [],
+    afterVisibleList: [],
+    nodeMaps: {},
+    selectCheckboxMaps: {},
+    indeterminateRowMaps: {},
+    treeExpandedMaps: {},
+    treeExpandLazyLoadedMaps: {},
+
+    lastScrollLeft: 0,
+    lastScrollTop: 0,
+    scrollYStore: {
+      startIndex: 0,
+      endIndex: 0,
+      visibleSize: 0,
+      offsetSize: 0,
+      rowHeight: 0
+    },
+
+    lastScrollTime: 0
+    // hpTimeout: undefined
+  }
+}
+
 export default /* define-vxe-component start */ defineVxeComponent({
   name: 'VxeTree',
   mixins: [
@@ -190,31 +218,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       updateExpandedFlag: 1,
       updateCheckboxFlag: 1
     }
-    const internalData: TreeInternalData = {
-      // initialized: false,
-      // lastFilterValue: '',
-      treeFullData: [],
-      afterTreeList: [],
-      afterVisibleList: [],
-      nodeMaps: {},
-      selectCheckboxMaps: {},
-      indeterminateRowMaps: {},
-      treeExpandedMaps: {},
-      treeExpandLazyLoadedMaps: {},
-
-      lastScrollLeft: 0,
-      lastScrollTop: 0,
-      scrollYStore: {
-        startIndex: 0,
-        endIndex: 0,
-        visibleSize: 0,
-        offsetSize: 0,
-        rowHeight: 0
-      },
-
-      lastScrollTime: 0
-      // hpTimeout: undefined
-    }
+    const internalData = createInternalData()
     return {
       xID,
       reactData,
@@ -991,13 +995,16 @@ export default /* define-vxe-component start */ defineVxeComponent({
       }
       return $xeTree.$nextTick()
     },
-    loadYData (evnt: Event) {
+    loadYData () {
       const $xeTree = this
       const internalData = $xeTree.internalData
 
       const { scrollYStore } = internalData
       const { startIndex, endIndex, visibleSize, offsetSize, rowHeight } = scrollYStore
-      const scrollBodyElem = evnt.target as HTMLDivElement
+      const scrollBodyElem = $xeTree.$refs.refVirtualWrapper as HTMLDivElement
+      if (!scrollBodyElem) {
+        return
+      }
       const scrollTop = scrollBodyElem.scrollTop
       const toVisibleIndex = Math.floor(scrollTop / rowHeight)
       const offsetStartIndex = Math.max(0, toVisibleIndex - 1 - offsetSize)
@@ -1023,7 +1030,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       internalData.lastScrollTop = scrollTop
       internalData.lastScrollLeft = scrollLeft
       if (reactData.scrollYLoad) {
-        $xeTree.loadYData(evnt)
+        $xeTree.loadYData()
       }
       internalData.lastScrollTime = Date.now()
       $xeTree.dispatchEvent('scroll', { scrollLeft, scrollTop, isX, isY }, evnt)
@@ -1725,7 +1732,8 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const internalData = $xeTree.internalData
 
       const { transform } = props
-      const { treeExpandedMaps } = internalData
+      const { scrollYLoad } = reactData
+      const { scrollYStore, treeExpandedMaps } = internalData
       const childrenField = $xeTree.computeChildrenField
       const mapChildrenField = $xeTree.computeMapChildrenField
       if (expanded) {
@@ -1741,9 +1749,17 @@ export default /* define-vxe-component start */ defineVxeComponent({
         internalData.treeExpandedMaps = {}
       }
       reactData.updateExpandedFlag++
+      reactData.topSpaceHeight = 0
+      scrollYStore.startIndex = 0
+      scrollYStore.endIndex = 1
       $xeTree.handleTreeToList()
       $xeTree.handleData()
-      return $xeTree.recalculate()
+      return $xeTree.recalculate().then(() => {
+        if (scrollYLoad) {
+          $xeTree.loadYData()
+        }
+        return $xeTree.recalculate()
+      })
     },
     reloadExpandNode (node: any) {
       const $xeTree = this
@@ -2210,12 +2226,13 @@ export default /* define-vxe-component start */ defineVxeComponent({
     if (resizeObserver) {
       resizeObserver.disconnect()
     }
-
-    internalData.treeExpandedMaps = {}
-    internalData.indeterminateRowMaps = {}
-    internalData.nodeMaps = {}
-
     globalEvents.off($xeTree, 'resize')
+  },
+  destroyed () {
+    const $xeTree = this
+    const internalData = $xeTree.internalData
+
+    XEUtils.assign(internalData, createInternalData())
   },
   render (this: any, h) {
     return this.renderVN(h)

@@ -17,6 +17,14 @@ function getOptUniqueId () {
   return XEUtils.uniqueId('node_')
 }
 
+function createInternalData (): TreeSelectInternalData {
+  return {
+    // hpTimeout: undefined,
+    fullOptionList: [],
+    fullNodeMaps: {}
+  }
+}
+
 export default /* define-vxe-component start */ defineVxeComponent({
   name: 'VxeTreeSelect',
   mixins: [
@@ -129,11 +137,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       isAniVisible: false,
       isActivated: false
     }
-    const internalData: TreeSelectInternalData = {
-      // hpTimeout: undefined,
-      fullOptionList: [],
-      fullNodeMaps: {}
-    }
+    const internalData = createInternalData()
     return {
       xID,
       reactData,
@@ -1004,6 +1008,12 @@ export default /* define-vxe-component start */ defineVxeComponent({
     globalEvents.off($xeTreeSelect, 'mousedown')
     globalEvents.off($xeTreeSelect, 'blur')
     globalEvents.off($xeTreeSelect, 'resize')
+  },
+  destroyed () {
+    const $xeTreeSelect = this
+    const internalData = $xeTreeSelect.internalData
+
+    XEUtils.assign(internalData, createInternalData())
   },
   render (this: any, h) {
     return this.renderVN(h)
