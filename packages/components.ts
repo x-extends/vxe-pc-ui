@@ -33,6 +33,7 @@ import VxeForm from './form'
 import VxeFormGather from './form-gather'
 import VxeFormGroup from './form-group'
 import VxeFormItem from './form-item'
+import VxeGantt from './gantt'
 import VxeIcon from './icon'
 import VxeIconPicker from './icon-picker'
 import VxeImage from './image'
@@ -118,6 +119,7 @@ const components = [
   VxeFormGather,
   VxeFormGroup,
   VxeFormItem,
+  VxeGantt,
   VxeIcon,
   VxeIconPicker,
   VxeImage,
@@ -224,6 +226,7 @@ export * from './form'
 export * from './form-gather'
 export * from './form-group'
 export * from './form-item'
+export * from './gantt'
 export * from './icon'
 export * from './icon-picker'
 export * from './image'

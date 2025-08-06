@@ -31,6 +31,7 @@ import { VxeFormGatherProps } from '../components/form-gather'
 import { VxeFormGroupProps } from '../components/form-group'
 import { VxeFormItemProps } from '../components/form-item'
 import { VxeFormViewProps } from '../components/form-view'
+import { VxeGanttProps } from '../components/gantt'
 import { VxeIconProps } from '../components/icon'
 import { VxeIconPickerProps } from '../components/icon-picker'
 import { VxeImageProps } from '../components/image'
@@ -125,6 +126,7 @@ declare module '@vxe-ui/core' {
     formGroup?: VxeFormGroupProps
     formItem?: VxeFormItemProps
     formView?: VxeFormViewProps
+    gantt?: VxeGanttProps
     icon?: VxeIconProps
     iconPicker?: VxeIconPickerProps
     image?: VxeImageProps

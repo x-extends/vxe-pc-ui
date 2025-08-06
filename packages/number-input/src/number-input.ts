@@ -699,7 +699,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
 
       const { type, exponential, controls } = props
       const controlOpts = $xeNumberInput.computeControlOpts
-      const { showButton } = controlOpts
+      const { isArrow } = controlOpts
       const inputReadonly = $xeNumberInput.computeInputReadonly
       const isControlKey = hasControlKey(evnt)
       const isShiftKey = evnt.shiftKey
@@ -716,7 +716,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       if (isEsc) {
         $xeNumberInput.afterCheckValue()
       } else if (isUpArrow || isDwArrow) {
-        if (isEnableConf(controlOpts) && (controls === false ? controls : showButton) && !inputReadonly) {
+        if (isEnableConf(controlOpts) && (controls === false ? controls : isArrow) && !inputReadonly) {
           $xeNumberInput.numberKeydownEvent(evnt)
         }
       }
