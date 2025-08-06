@@ -19,6 +19,31 @@ function getOptUniqueId () {
   return XEUtils.uniqueId('opt_')
 }
 
+function createInternalData (): SelectInternalData {
+  return {
+    synchData: [],
+    fullData: [],
+    afterVisibleList: [],
+    optAddMaps: {},
+    optGroupKeyMaps: {},
+    optFullValMaps: {},
+    remoteValMaps: {},
+
+    lastScrollLeft: 0,
+    lastScrollTop: 0,
+    scrollYStore: {
+      startIndex: 0,
+      endIndex: 0,
+      visibleSize: 0,
+      offsetSize: 0,
+      rowHeight: 0
+    },
+
+    lastScrollTime: 0,
+    hpTimeout: undefined
+  }
+}
+
 export default defineVxeComponent({
   name: 'VxeSelect',
   props: {
@@ -157,28 +182,7 @@ export default defineVxeComponent({
       isActivated: false
     })
 
-    const internalData: SelectInternalData = {
-      synchData: [],
-      fullData: [],
-      afterVisibleList: [],
-      optAddMaps: {},
-      optGroupKeyMaps: {},
-      optFullValMaps: {},
-      remoteValMaps: {},
-
-      lastScrollLeft: 0,
-      lastScrollTop: 0,
-      scrollYStore: {
-        startIndex: 0,
-        endIndex: 0,
-        visibleSize: 0,
-        offsetSize: 0,
-        rowHeight: 0
-      },
-
-      lastScrollTime: 0,
-      hpTimeout: undefined
-    }
+    const internalData = createInternalData()
 
     const refMaps: SelectPrivateRef = {
       refElem
@@ -1498,6 +1502,7 @@ export default defineVxeComponent({
       globalEvents.off($xeSelect, 'keydown')
       globalEvents.off($xeSelect, 'blur')
       globalEvents.off($xeSelect, 'resize')
+      XEUtils.assign(internalData, createInternalData())
     })
 
     provide('$xeSelect', $xeSelect)

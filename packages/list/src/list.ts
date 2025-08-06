@@ -7,6 +7,22 @@ import VxeLoadingComponent from '../../loading/src/loading'
 
 import type { VxeListConstructor, VxeListPropTypes, VxeListEmits, ListReactData, ListInternalData, ValueOf, ListMethods, ListPrivateRef, VxeListMethods } from '../../../types'
 
+function createInternalData (): ListInternalData {
+  return {
+    resizeObserver: undefined,
+    fullData: [],
+    lastScrollLeft: 0,
+    lastScrollTop: 0,
+    scrollYStore: {
+      startIndex: 0,
+      endIndex: 0,
+      visibleSize: 0,
+      offsetSize: 0,
+      rowHeight: 0
+    }
+  }
+}
+
 export default defineVxeComponent({
   name: 'VxeList',
   props: {
@@ -49,19 +65,7 @@ export default defineVxeComponent({
       items: []
     })
 
-    const internalData: ListInternalData = {
-      resizeObserver: undefined,
-      fullData: [],
-      lastScrollLeft: 0,
-      lastScrollTop: 0,
-      scrollYStore: {
-        startIndex: 0,
-        endIndex: 0,
-        visibleSize: 0,
-        offsetSize: 0,
-        rowHeight: 0
-      }
-    }
+    const internalData = createInternalData()
 
     const refElem = ref() as Ref<HTMLDivElement>
     const refVirtualWrapper = ref() as Ref<HTMLDivElement>
@@ -322,6 +326,49 @@ export default defineVxeComponent({
 
     Object.assign($xeList, listMethods)
 
+    const renderVN = () => {
+      const { className, loading } = props
+      const { bodyHeight, topSpaceHeight, items } = reactData
+      const defaultSlot = slots.default
+      const vSize = computeSize.value
+      const styles = computeStyles.value
+      return h('div', {
+        ref: refElem,
+        class: ['vxe-list', className ? (XEUtils.isFunction(className) ? className({ $list: $xeList }) : className) : '', {
+          [`size--${vSize}`]: vSize,
+          'is--loading': loading
+        }]
+      }, [
+        h('div', {
+          ref: refVirtualWrapper,
+          class: 'vxe-list--virtual-wrapper',
+          style: styles,
+          onScroll: scrollEvent
+        }, [
+          h('div', {
+            class: 'vxe-list--y-space',
+            style: {
+              height: bodyHeight ? `${bodyHeight}px` : ''
+            }
+          }),
+          h('div', {
+            ref: refVirtualBody,
+            class: 'vxe-list--body',
+            style: {
+              marginTop: topSpaceHeight ? `${topSpaceHeight}px` : ''
+            }
+          }, defaultSlot ? defaultSlot({ items, $list: $xeList }) : [])
+        ]),
+        /**
+         * 加载中
+         */
+        h(VxeLoadingComponent, {
+          class: 'vxe-list--loading',
+          modelValue: loading
+        })
+      ])
+    }
+
     const dataFlag = ref(0)
     watch(() => props.data ? props.data.length : -1, () => {
       dataFlag.value++
@@ -377,50 +424,8 @@ export default defineVxeComponent({
         resizeObserver.disconnect()
       }
       globalEvents.off($xeList, 'resize')
+      XEUtils.assign(internalData, createInternalData())
     })
-
-    const renderVN = () => {
-      const { className, loading } = props
-      const { bodyHeight, topSpaceHeight, items } = reactData
-      const defaultSlot = slots.default
-      const vSize = computeSize.value
-      const styles = computeStyles.value
-      return h('div', {
-        ref: refElem,
-        class: ['vxe-list', className ? (XEUtils.isFunction(className) ? className({ $list: $xeList }) : className) : '', {
-          [`size--${vSize}`]: vSize,
-          'is--loading': loading
-        }]
-      }, [
-        h('div', {
-          ref: refVirtualWrapper,
-          class: 'vxe-list--virtual-wrapper',
-          style: styles,
-          onScroll: scrollEvent
-        }, [
-          h('div', {
-            class: 'vxe-list--y-space',
-            style: {
-              height: bodyHeight ? `${bodyHeight}px` : ''
-            }
-          }),
-          h('div', {
-            ref: refVirtualBody,
-            class: 'vxe-list--body',
-            style: {
-              marginTop: topSpaceHeight ? `${topSpaceHeight}px` : ''
-            }
-          }, defaultSlot ? defaultSlot({ items, $list: $xeList }) : [])
-        ]),
-        /**
-         * 加载中
-         */
-        h(VxeLoadingComponent, {
-          class: 'vxe-list--loading',
-          modelValue: loading
-        })
-      ])
-    }
 
     $xeList.renderVN = renderVN
 

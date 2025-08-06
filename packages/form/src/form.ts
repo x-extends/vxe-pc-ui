@@ -1,4 +1,4 @@
-import { h, ref, Ref, provide, computed, inject, reactive, watch, nextTick, PropType, onMounted } from 'vue'
+import { h, ref, Ref, provide, computed, inject, reactive, watch, nextTick, PropType, onMounted, onUnmounted } from 'vue'
 import { defineVxeComponent } from '../../ui/src/comp'
 import XEUtils from 'xe-utils'
 import { getConfig, validators, renderer, createEvent, useSize } from '../../ui'
@@ -140,6 +140,18 @@ function checkRuleStatus (rule: VxeFormDefines.FormRule, val: any) {
   return true
 }
 
+function createInternalData (): FormInternalData {
+  return {
+    meTimeout: undefined,
+    stTimeout: undefined,
+    tooltipStore: {
+      item: null,
+      visible: false
+    },
+    itemFormatCache: {}
+  }
+}
+
 export default defineVxeComponent({
   name: 'VxeForm',
   props: {
@@ -246,15 +258,7 @@ export default defineVxeComponent({
       formItems: []
     })
 
-    const internalData = reactive<FormInternalData>({
-      meTimeout: undefined,
-      stTimeout: undefined,
-      tooltipStore: {
-        item: null,
-        visible: false
-      },
-      itemFormatCache: {}
-    })
+    const internalData = createInternalData()
 
     const refElem = ref<HTMLFormElement>()
     const refTooltip = ref() as Ref<VxeTooltipInstance>
@@ -868,6 +872,10 @@ export default defineVxeComponent({
           errLog('vxe.error.errConflicts', ['custom-layout', 'items'])
         }
       })
+    })
+
+    onUnmounted(() => {
+      XEUtils.assign(internalData, createInternalData())
     })
 
     if (props.items) {

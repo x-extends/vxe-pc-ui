@@ -18,6 +18,7 @@ export interface VxeGridConstructor<D = any> extends VxeComponentBaseOptions, Vx
   props: VxeGridProps
   context: SetupContext<VxeGridEmits>
   reactData: GridReactData
+  internalData: GridInternalData
   getRefMaps(): GridPrivateRef
   getComputeMaps(): GridPrivateComputed
   renderVN: RenderFunction
@@ -291,6 +292,8 @@ export interface GridReactData<D = any> {
     currentPage: number
   }
 }
+
+export interface GridInternalData {}
 
 export interface GridMethods<D = any> {
   dispatchEvent(type: ValueOf<VxeGridEmits>, params: Record<string, any>, evnt: Event | null): void

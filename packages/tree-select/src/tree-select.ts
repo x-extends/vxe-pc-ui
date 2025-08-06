@@ -17,6 +17,14 @@ function getOptUniqueId () {
   return XEUtils.uniqueId('node_')
 }
 
+function createInternalData (): TreeSelectInternalData {
+  return {
+    // hpTimeout: undefined,
+    fullOptionList: [],
+    fullNodeMaps: {}
+  }
+}
+
 export default defineVxeComponent({
   name: 'VxeTreeSelect',
   props: {
@@ -127,11 +135,7 @@ export default defineVxeComponent({
       isActivated: false
     })
 
-    const internalData: TreeSelectInternalData = {
-      // hpTimeout: undefined,
-      fullOptionList: [],
-      fullNodeMaps: {}
-    }
+    const internalData = createInternalData()
 
     const refMaps: TreeSelectPrivateRef = {
       refElem
@@ -865,6 +869,7 @@ export default defineVxeComponent({
       globalEvents.off($xeTreeSelect, 'mousedown')
       globalEvents.off($xeTreeSelect, 'blur')
       globalEvents.off($xeTreeSelect, 'resize')
+      XEUtils.assign(internalData, createInternalData())
     })
 
     provide('$xeTreeSelect', $xeTreeSelect)
