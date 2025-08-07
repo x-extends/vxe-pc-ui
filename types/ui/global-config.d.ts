@@ -26,12 +26,9 @@ import { VxeDateRangePickerProps } from '../components/date-range-picker'
 import { VxeDrawerProps } from '../components/drawer'
 import { VxeEmptyProps } from '../components/empty'
 import { VxeFormProps } from '../components/form'
-import { VxeFormDesignProps } from '../components/form-design'
 import { VxeFormGatherProps } from '../components/form-gather'
 import { VxeFormGroupProps } from '../components/form-group'
 import { VxeFormItemProps } from '../components/form-item'
-import { VxeFormViewProps } from '../components/form-view'
-import { VxeGanttProps } from '../components/gantt'
 import { VxeIconProps } from '../components/icon'
 import { VxeIconPickerProps } from '../components/icon-picker'
 import { VxeImageProps } from '../components/image'
@@ -44,8 +41,6 @@ import { VxeLayoutContainerProps } from '../components/layout-container'
 import { VxeLayoutFooterProps } from '../components/layout-footer'
 import { VxeLayoutHeaderProps } from '../components/layout-header'
 import { VxeLinkProps } from '../components/link'
-import { VxeListDesignProps } from '../components/list-design'
-import { VxeListViewProps } from '../components/list-view'
 import { VxeListProps } from '../components/list'
 import { VxeLoadingProps } from '../components/loading'
 import { VxeMenuProps } from '../components/menu'
@@ -92,6 +87,17 @@ import { VxeColgroupProps } from '../components/colgroup'
 import { VxeGridProps } from '../components/grid'
 import { VxeToolbarProps } from '../components/toolbar'
 
+// Vxe Design
+import { VxeFormDesignProps } from '../components/form-design'
+import { VxeFormViewProps } from '../components/form-view'
+import { VxeListDesignProps } from '../components/list-design'
+import { VxeListViewProps } from '../components/list-view'
+import { VxeFlowDesignProps } from '../components/flow-design'
+import { VxeFlowViewProps } from '../components/flow-view'
+
+// Vxe Gantt
+import { VxeGanttProps } from '../components/gantt'
+
 declare module '@vxe-ui/core' {
   export interface VxeGlobalConfig {
     alert?: VxeAlertProps
@@ -121,12 +127,9 @@ declare module '@vxe-ui/core' {
     drawer?: VxeDrawerProps
     empty?: VxeEmptyProps
     form?: VxeFormProps
-    formDesign?: VxeFormDesignProps
     formGather?: VxeFormGatherProps
     formGroup?: VxeFormGroupProps
     formItem?: VxeFormItemProps
-    formView?: VxeFormViewProps
-    gantt?: VxeGanttProps
     icon?: VxeIconProps
     iconPicker?: VxeIconPickerProps
     image?: VxeImageProps
@@ -139,8 +142,6 @@ declare module '@vxe-ui/core' {
     layoutFooter?: VxeLayoutFooterProps
     layoutHeader?: VxeLayoutHeaderProps
     link?: VxeLinkProps
-    listDesign?: VxeListDesignProps
-    listView?: VxeListViewProps
     list?: VxeListProps
     loading?: VxeLoadingProps
     menu?: VxeMenuProps
@@ -185,6 +186,15 @@ declare module '@vxe-ui/core' {
     colgroup?: VxeColgroupProps
     grid?: VxeGridProps
     toolbar?: VxeToolbarProps
+
+    formDesign?: VxeFormDesignProps
+    formView?: VxeFormViewProps
+    listDesign?: VxeListDesignProps
+    listView?: VxeListViewProps
+    flowDesign?: VxeFlowDesignProps
+    flowView?: VxeFlowViewProps
+
+    gantt?: VxeGanttProps
 
     /**
      * 无效，已废弃

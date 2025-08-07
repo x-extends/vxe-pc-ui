@@ -4257,6 +4257,11 @@ export interface TableMethods<DT = any> {
    */
   setRowHeight(rowOrId: any | any[], height: number | string): Promise<{ status: boolean }>
   /**
+   * 手动计算单元格高度，只对自定义行高时有效
+   * @param rowOrId 指定单行或多行
+   */
+  recalcRowHeight(rowOrId: any | any[]): Promise<{ status: boolean }>
+  /**
    * 获取指定行的高度
    * @param rowOrId
    */
