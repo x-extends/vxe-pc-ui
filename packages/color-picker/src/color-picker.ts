@@ -959,7 +959,10 @@ export default /* define-vxe-component start */ defineVxeComponent({
                       max: 255,
                       maxLength: 3,
                       placeholder: '',
-                      value: rValue
+                      value: rValue,
+                      controlConfig: {
+                        showButton: false
+                      }
                     },
                     on: {
                       'modelValue' (val: any) {
@@ -977,7 +980,10 @@ export default /* define-vxe-component start */ defineVxeComponent({
                       max: 255,
                       maxLength: 3,
                       placeholder: '',
-                      value: gValue
+                      value: gValue,
+                      controlConfig: {
+                        showButton: false
+                      }
                     },
                     on: {
                       'modelValue' (val: any) {
@@ -995,7 +1001,10 @@ export default /* define-vxe-component start */ defineVxeComponent({
                       max: 255,
                       maxLength: 3,
                       placeholder: '',
-                      value: bValue
+                      value: bValue,
+                      controlConfig: {
+                        showButton: false
+                      }
                     },
                     on: {
                       'modelValue' (val: any) {
@@ -1014,7 +1023,10 @@ export default /* define-vxe-component start */ defineVxeComponent({
                       step: 0.01,
                       maxLength: 4,
                       placeholder: '',
-                      value: aValue
+                      value: aValue,
+                      controlConfig: {
+                        showButton: false
+                      }
                     },
                     on: {
                       'modelValue' (val: any) {
