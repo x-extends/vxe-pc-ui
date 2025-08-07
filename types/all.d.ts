@@ -31,7 +31,6 @@ import VxeForm from './components/form'
 import VxeFormGather from './components/form-gather'
 import VxeFormGroup from './components/form-group'
 import VxeFormItem from './components/form-item'
-import VxeGantt from './components/gantt'
 import VxeIcon from './components/icon'
 import VxeIconPicker from './components/icon-picker'
 import VxeImage from './components/image'
@@ -98,6 +97,9 @@ import VxeFormView from './components/form-view'
 import VxeListDesign from './components/list-design'
 import VxeListView from './components/list-view'
 
+// Vxe Gantt
+import VxeGantt from './components/gantt'
+
 export function install (app: App, options?: VxeGlobalConfig): void
 
 interface AllComponents {
@@ -131,7 +133,6 @@ interface AllComponents {
   VxeFormGather: typeof VxeFormGather
   VxeFormGroup: typeof VxeFormGroup
   VxeFormItem: typeof VxeFormItem
-  VxeGantt: typeof VxeGantt
   VxeIcon: typeof VxeIcon
   VxeIconPicker: typeof VxeIconPicker
   VxeImage: typeof VxeImage
@@ -197,6 +198,9 @@ interface AllComponents {
   VxeFormView: typeof VxeFormView
   VxeListDesign: typeof VxeListDesign
   VxeListView: typeof VxeListView
+
+  // VxeGantt
+  VxeGantt: typeof VxeGantt
 }
 
 declare module '@vue/runtime-core' {
