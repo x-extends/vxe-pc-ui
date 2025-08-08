@@ -33,6 +33,7 @@ const VxeFormConfigItem = defineVxeComponent({
       }
       return h('div', {
         key: item.id,
+        itemid: item.id,
         class: getItemClass($xeForm, item),
         style: XEUtils.isFunction(itemStyle) ? itemStyle(params) : itemStyle
       }, [

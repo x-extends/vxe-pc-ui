@@ -1,7 +1,7 @@
 import { h, ref, Ref, provide, computed, inject, reactive, watch, nextTick, PropType, onMounted, onUnmounted } from 'vue'
 import { defineVxeComponent } from '../../ui/src/comp'
 import XEUtils from 'xe-utils'
-import { getConfig, validators, renderer, createEvent, useSize } from '../../ui'
+import { getConfig, validators, renderer, createEvent, useSize, globalEvents } from '../../ui'
 import { eqEmptyValue, getFuncText, isEnableConf } from '../../ui/src/utils'
 import { scrollToView } from '../../ui/src/dom'
 import { createItem, handleFieldOrItem, isHiddenItem, isActiveItem } from './util'
@@ -255,7 +255,8 @@ export default defineVxeComponent({
     const reactData = reactive<FormReactData>({
       collapseAll: props.collapseStatus,
       staticItems: [],
-      formItems: []
+      formItems: [],
+      itemWidth: 0
     })
 
     const internalData = createInternalData()
@@ -277,6 +278,25 @@ export default defineVxeComponent({
       return Object.assign({}, getConfig().form.collapseConfig, props.collapseConfig)
     })
 
+    const computeAutoItemWidthList = computed(() => {
+      const { titleWidth: allTitleWidth, vertical: allVertical } = props
+      const { formItems } = reactData
+      const itemList: VxeFormDefines.ItemInfo[] = []
+      XEUtils.eachTree(formItems, (item) => {
+        const { titleWidth, vertical } = item
+        if (titleWidth === 'auto') {
+          itemList.push(item)
+        } else {
+          const itemVertical = XEUtils.eqNull(vertical) ? allVertical : vertical
+          const itemTitleWidth = itemVertical ? null : (XEUtils.eqNull(titleWidth) ? allTitleWidth : titleWidth)
+          if (itemTitleWidth === 'auto' && (!item.children || !item.children.length)) {
+            itemList.push(item)
+          }
+        }
+      }, { children: 'children' })
+      return itemList
+    })
+
     const refMaps: FormPrivateRef = {
       refElem
     }
@@ -285,7 +305,8 @@ export default defineVxeComponent({
       computeSize,
       computeValidOpts,
       computeTooltipOpts,
-      computeCollapseOpts
+      computeCollapseOpts,
+      computeAutoItemWidthList
     }
 
     const $xeForm = {
@@ -328,7 +349,9 @@ export default defineVxeComponent({
       }
       reactData.staticItems = XEUtils.mapTree(list, item => createItem($xeForm, item), { children: 'children' })
       internalData.itemFormatCache = {}
-      return nextTick()
+      return nextTick().then(() => {
+        return recalculate()
+      })
     }
 
     const getItems = () => {
@@ -361,6 +384,7 @@ export default defineVxeComponent({
       formMethods.dispatchEvent('toggle-collapse', { status, collapse: status, data: props.data }, evnt)
       formMethods.dispatchEvent('collapse', { status, collapse: status, data: props.data }, evnt)
       nextTick(() => {
+        recalculate()
         if ($xeGrid) {
           $xeGrid.recalculate()
         }
@@ -426,7 +450,8 @@ export default defineVxeComponent({
         })
       }
       internalData.itemFormatCache = {}
-      return clearValidate()
+      clearValidate()
+      return recalculate()
     }
 
     const resetEvent = (evnt: Event) => {
@@ -569,7 +594,7 @@ export default defineVxeComponent({
       })
     }
 
-    const beginValidate = (itemList: VxeFormDefines.ItemInfo[], type?: string, callback?: any): Promise<any> => {
+    const beginValidate = (itemList: VxeFormDefines.ItemInfo[], type?: string, callback?: any): Promise<VxeFormDefines.ValidateErrorMapParams | void> => {
       const { data, rules: formRules } = props
       const validOpts = computeValidOpts.value
       const validRest: any = {}
@@ -635,7 +660,10 @@ export default defineVxeComponent({
       if (readonly) {
         return nextTick()
       }
-      return beginValidate(getItems(), '', callback)
+      return beginValidate(getItems(), '', callback).then((params) => {
+        recalculate()
+        return params
+      })
     }
 
     const validateField = (fieldOrItem: VxeFormItemPropTypes.Field | VxeFormItemPropTypes.Field[] | VxeFormDefines.ItemInfo | VxeFormDefines.ItemInfo[], callback: any) => {
@@ -651,7 +679,10 @@ export default defineVxeComponent({
           fields = [fieldOrItem]
         }
       }
-      return beginValidate(fields.map(field => handleFieldOrItem($xeForm, field) as VxeFormDefines.ItemInfo), '', callback)
+      return beginValidate(fields.map(field => handleFieldOrItem($xeForm, field) as VxeFormDefines.ItemInfo), '', callback).then((params) => {
+        recalculate()
+        return params
+      })
     }
 
     const submitEvent = (evnt: Event) => {
@@ -661,6 +692,7 @@ export default defineVxeComponent({
         clearValidate()
         if (readonly) {
           formMethods.dispatchEvent('submit', { data: props.data }, evnt)
+          recalculate()
           return
         }
         beginValidate(getItems()).then((errMap) => {
@@ -669,6 +701,7 @@ export default defineVxeComponent({
           } else {
             formMethods.dispatchEvent('submit', { data: props.data }, evnt)
           }
+          recalculate()
         })
       }
     }
@@ -758,6 +791,27 @@ export default defineVxeComponent({
       return triggerItemEvent(new Event('change'), field, itemValue)
     }
 
+    const recalculate = () => {
+      const autoItemWidthList = computeAutoItemWidthList.value
+      const el = refElem.value
+      if (el && autoItemWidthList.length) {
+        const itemElList = el.querySelectorAll<HTMLElement>(autoItemWidthList.map(item => `.vxe-form--item-title[itemid="${item.id}"]`).join(','))
+        let maxItemWidth = 0
+        XEUtils.arrayEach(itemElList, itemEl => {
+          itemEl.style.width = ''
+          maxItemWidth = Math.max(maxItemWidth, Math.ceil(itemEl.clientWidth + 2))
+        })
+        XEUtils.arrayEach(itemElList, itemEl => {
+          itemEl.style.width = `${maxItemWidth}px`
+        })
+      }
+      return nextTick()
+    }
+
+    const handleGlobalResizeEvent = () => {
+      recalculate()
+    }
+
     formMethods = {
       dispatchEvent (type, params, evnt) {
         emit(type, createEvent(evnt, { $form: $xeForm, $grid: $xeGrid }, params))
@@ -770,7 +824,8 @@ export default defineVxeComponent({
       toggleCollapse,
       getItems,
       getItemByField,
-      closeTooltip
+      closeTooltip,
+      recalculate
     }
 
     const formPrivateMethods: VxeFormPrivateMethods = {
@@ -786,7 +841,6 @@ export default defineVxeComponent({
     const renderVN = () => {
       const { loading, border, className, data, customLayout } = props
       const { formItems } = reactData
-      // const formItems: any[] = []
       const vSize = computeSize.value
       const tooltipOpts = computeTooltipOpts.value
       const defaultSlot = slots.default
@@ -841,6 +895,9 @@ export default defineVxeComponent({
     })
     watch(staticItemFlag, () => {
       reactData.formItems = reactData.staticItems
+      nextTick().then(() => {
+        recalculate()
+      })
     })
 
     const itemFlag = ref(0)
@@ -872,9 +929,11 @@ export default defineVxeComponent({
           errLog('vxe.error.errConflicts', ['custom-layout', 'items'])
         }
       })
+      globalEvents.on($xeForm, 'resize', handleGlobalResizeEvent)
     })
 
     onUnmounted(() => {
+      globalEvents.off($xeForm, 'resize')
       XEUtils.assign(internalData, createInternalData())
     })
 

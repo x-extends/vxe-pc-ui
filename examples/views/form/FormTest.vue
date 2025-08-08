@@ -1,6 +1,6 @@
 <template>
   <div>
-    <vxe-form vertical border title-background title-colon :data="demo1.formData1" @submit="searchEvent" @reset="resetEvent">
+    <!-- <vxe-form vertical border title-background title-colon :data="demo1.formData1" @submit="searchEvent" @reset="resetEvent">
       <vxe-form-item title="名称" field="name" :item-render="{}" titleBold :titlePrefix="{content:'ff'}" :titleSuffix="{content:'xx'}">
         <template #prefix>
           222
@@ -108,7 +108,7 @@
           <vxe-button type="submit" status="primary" content="超小尺寸"></vxe-button>
         </template>
       </vxe-form-item>
-    </vxe-form>
+    </vxe-form> -->
 
     <p class="tip">表单校验</p>
 
@@ -117,7 +117,7 @@
       title-colon
       ref="xForm"
       title-align="right"
-      title-width="100"
+      title-width="auto"
       :data="demo2.formData2"
       :rules="demo2.formRules2"
       :loading="demo2.loading2"
@@ -169,7 +169,7 @@
 
     <p class="tip">默认渲染方式为配置式，不支持自定义的布局，可以通过设置 custom-layout 切换为自定义布局</p>
 
-    <vxe-form
+    <!-- <vxe-form
       ref="xForm3"
       v-model:collapseStatus="demo3.collapseStatus3"
       :data="demo3.formData3"
@@ -258,7 +258,7 @@
       <template #myaddress="{ data }">
         <vxe-input v-model="data.address" placeholder="自定义插槽模板"></vxe-input>
       </template>
-    </vxe-form>
+    </vxe-form> -->
 
   </div>
 </template>

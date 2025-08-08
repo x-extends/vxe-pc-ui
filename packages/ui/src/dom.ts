@@ -131,6 +131,16 @@ export function getPaddingTopBottomSize (elem: HTMLElement) {
   return 0
 }
 
+export function getPaddingLeftRightSize (elem: HTMLElement) {
+  if (elem) {
+    const computedStyle = getComputedStyle(elem)
+    const paddingLeft = XEUtils.toNumber(computedStyle.paddingLeft)
+    const paddingRight = XEUtils.toNumber(computedStyle.paddingRight)
+    return paddingLeft + paddingRight
+  }
+  return 0
+}
+
 const scrollIntoViewIfNeeded = 'scrollIntoViewIfNeeded'
 const scrollIntoView = 'scrollIntoView'
 

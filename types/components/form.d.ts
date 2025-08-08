@@ -112,6 +112,9 @@ export interface VxeFormProps<D = any> {
   titleBackground?: VxeFormPropTypes.TitleBackground
   titleBold?: VxeFormPropTypes.TitleBold
   titleAlign?: VxeFormPropTypes.TitleAlign
+  /**
+   * 所有标题默认宽度，支持 px,auto
+   */
   titleWidth?: VxeFormPropTypes.TitleWidth
   titleColon?: VxeFormPropTypes.TitleColon
   titleAsterisk?: VxeFormPropTypes.TitleAsterisk
@@ -140,6 +143,7 @@ export interface FormPrivateComputed {
   computeValidOpts: ComputedRef<VxeFormPropTypes.ValidConfig>
   computeTooltipOpts: ComputedRef<VxeFormPropTypes.TooltipConfig>
   computeCollapseOpts: ComputedRef<VxeFormPropTypes.CollapseConfig>
+  computeAutoItemWidthList: ComputedRef<VxeFormDefines.ItemInfo[]>
 }
 export interface VxeFormPrivateComputed extends FormPrivateComputed { }
 
@@ -147,6 +151,7 @@ export interface FormReactData {
   collapseAll: boolean
   staticItems: any[]
   formItems: VxeFormDefines.ItemInfo[]
+  itemWidth: number
 }
 
 export interface FormInternalData {
@@ -175,13 +180,13 @@ export interface FormMethods<D = any> {
    * 对表单进行校验，参数为一个回调函数。该回调函数会在校验结束后被调用 callback(errMap)。若不传入回调函数，则会返回一个 promise
    * @param callback 回调函数
    */
-  validate(callback?: (errMap?: VxeFormDefines.ValidateErrorMapParams) => void): Promise<VxeFormDefines.ValidateErrorMapParams>
+  validate(callback?: (errMap?: VxeFormDefines.ValidateErrorMapParams) => void): Promise<VxeFormDefines.ValidateErrorMapParams | void>
   /**
    * 对表单指定项进行校验，参数为一个回调函数。该回调函数会在校验结束后被调用 callback(errMap)。若不传入回调函数，则会返回一个 promise
    * @param field 字段名
    * @param callback 回调函数
    */
-  validateField(field: VxeFormItemPropTypes.Field | VxeFormItemPropTypes.Field[] | VxeFormDefines.ItemInfo | VxeFormDefines.ItemInfo[] | null, callback?: (errMap?: VxeFormDefines.ValidateErrorMapParams) => void): Promise<VxeFormDefines.ValidateErrorMapParams>
+  validateField(field: VxeFormItemPropTypes.Field | VxeFormItemPropTypes.Field[] | VxeFormDefines.ItemInfo | VxeFormDefines.ItemInfo[] | null, callback?: (errMap?: VxeFormDefines.ValidateErrorMapParams) => void): Promise<VxeFormDefines.ValidateErrorMapParams | void>
   /**
    * 手动清除校验状态，如果指定 field 则清除指定的项，否则清除整个表单
    * @param field 字段名
@@ -216,6 +221,10 @@ export interface FormMethods<D = any> {
    * 手动切换折叠状态
    */
   toggleCollapse(): Promise<any>
+  /**
+   * 重新计算表单
+   */
+  recalculate(): Promise<void>
 }
 export interface VxeFormMethods<D = any> extends FormMethods<D> { }
 
