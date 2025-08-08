@@ -1,7 +1,7 @@
 import { PropType, CreateElement, VNode } from 'vue'
 import { defineVxeComponent } from '../../ui/src/comp'
 import XEUtils from 'xe-utils'
-import { getConfig, validators, renderer, createEvent, globalMixins } from '../../ui'
+import { getConfig, validators, renderer, createEvent, globalMixins, globalEvents } from '../../ui'
 import { eqEmptyValue, getFuncText, isEnableConf } from '../../ui/src/utils'
 import { scrollToView } from '../../ui/src/dom'
 import { createItem, handleFieldOrItem, isHiddenItem, isActiveItem } from './util'
@@ -257,7 +257,8 @@ export default /* define-vxe-component start */ defineVxeComponent({
     const reactData: FormReactData = {
       collapseAll: false,
       staticItems: [],
-      formItems: []
+      formItems: [],
+      itemWidth: 0
     }
     const internalData = createInternalData()
     return {
@@ -288,6 +289,28 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const props = $xeForm
 
       return Object.assign({}, getConfig().form.collapseConfig, props.collapseConfig)
+    },
+    computeAutoItemWidthList () {
+      const $xeForm = this
+      const props = $xeForm
+      const reactData = $xeForm.reactData
+
+      const { titleWidth: allTitleWidth, vertical: allVertical } = props
+      const { formItems } = reactData
+      const itemList: VxeFormDefines.ItemInfo[] = []
+      XEUtils.eachTree(formItems, (item) => {
+        const { titleWidth, vertical } = item
+        if (titleWidth === 'auto') {
+          itemList.push(item)
+        } else {
+          const itemVertical = XEUtils.eqNull(vertical) ? allVertical : vertical
+          const itemTitleWidth = itemVertical ? null : (XEUtils.eqNull(titleWidth) ? allTitleWidth : titleWidth)
+          if (itemTitleWidth === 'auto' && (!item.children || !item.children.length)) {
+            itemList.push(item)
+          }
+        }
+      }, { children: 'children' })
+      return itemList
     }
   },
   methods: {
@@ -333,7 +356,9 @@ export default /* define-vxe-component start */ defineVxeComponent({
       }
       reactData.staticItems = XEUtils.mapTree(list, item => createItem($xeForm, item), { children: 'children' })
       internalData.itemFormatCache = {}
-      return $xeForm.$nextTick()
+      return $xeForm.$nextTick().then(() => {
+        return $xeForm.recalculate()
+      })
     },
     getItems () {
       const $xeForm = this
@@ -377,6 +402,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       $xeForm.dispatchEvent('toggle-collapse', { status, collapse: status, data: props.data }, evnt)
       $xeForm.dispatchEvent('collapse', { status, collapse: status, data: props.data }, evnt)
       $xeForm.$nextTick(() => {
+        $xeForm.recalculate()
         if ($xeGrid) {
           $xeGrid.recalculate()
         }
@@ -449,7 +475,8 @@ export default /* define-vxe-component start */ defineVxeComponent({
         })
       }
       internalData.itemFormatCache = {}
-      return $xeForm.clearValidate()
+      $xeForm.clearValidate()
+      return $xeForm.recalculate()
     },
     resetEvent  (evnt: Event) {
       const $xeForm = this
@@ -598,7 +625,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
         }
       })
     },
-    beginValidate  (itemList: VxeFormDefines.ItemInfo[], type?: string, callback?: any): Promise<any> {
+    beginValidate  (itemList: VxeFormDefines.ItemInfo[], type?: string, callback?: any): Promise<VxeFormDefines.ValidateErrorMapParams | void> {
       const $xeForm = this
       const props = $xeForm
       const internalData = $xeForm.internalData
@@ -670,9 +697,12 @@ export default /* define-vxe-component start */ defineVxeComponent({
       if (readonly) {
         return $xeForm.$nextTick()
       }
-      return $xeForm.beginValidate($xeForm.getItems(), '', callback)
+      return $xeForm.beginValidate($xeForm.getItems(), '', callback).then((params) => {
+        $xeForm.recalculate()
+        return params
+      })
     },
-    validateField  (fieldOrItem: VxeFormItemPropTypes.Field | VxeFormItemPropTypes.Field[] | VxeFormDefines.ItemInfo | VxeFormDefines.ItemInfo[], callback: any) {
+    validateField (fieldOrItem: VxeFormItemPropTypes.Field | VxeFormItemPropTypes.Field[] | VxeFormDefines.ItemInfo | VxeFormDefines.ItemInfo[], callback: any) {
       const $xeForm = this
       const props = $xeForm
 
@@ -688,7 +718,10 @@ export default /* define-vxe-component start */ defineVxeComponent({
           fields = [fieldOrItem]
         }
       }
-      return $xeForm.beginValidate(fields.map(field => handleFieldOrItem($xeForm, field) as VxeFormDefines.ItemInfo), '', callback)
+      return $xeForm.beginValidate(fields.map(field => handleFieldOrItem($xeForm, field) as VxeFormDefines.ItemInfo), '', callback).then((params) => {
+        $xeForm.recalculate()
+        return params
+      })
     },
     submitEvent  (evnt: Event) {
       const $xeForm = this
@@ -700,6 +733,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
         $xeForm.clearValidate()
         if (readonly) {
           $xeForm.dispatchEvent('submit', { data: props.data }, evnt)
+          $xeForm.recalculate()
           return
         }
         $xeForm.beginValidate($xeForm.getItems()).then((errMap) => {
@@ -708,6 +742,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
           } else {
             $xeForm.dispatchEvent('submit', { data: props.data }, evnt)
           }
+          $xeForm.recalculate()
         })
       }
     },
@@ -804,6 +839,29 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const { field } = scope
       return $xeForm.triggerItemEvent(new Event('change'), field, itemValue)
     },
+    recalculate () {
+      const $xeForm = this
+
+      const autoItemWidthList = $xeForm.computeAutoItemWidthList
+      const el = $xeForm.$refs.refElem as HTMLFormElement
+      if (el && autoItemWidthList.length) {
+        const itemElList = el.querySelectorAll<HTMLElement>(autoItemWidthList.map(item => `.vxe-form--item-title[itemid="${item.id}"]`).join(','))
+        let maxItemWidth = 0
+        XEUtils.arrayEach(itemElList, itemEl => {
+          itemEl.style.width = ''
+          maxItemWidth = Math.max(maxItemWidth, Math.ceil(itemEl.clientWidth + 2))
+        })
+        XEUtils.arrayEach(itemElList, itemEl => {
+          itemEl.style.width = `${maxItemWidth}px`
+        })
+      }
+      return $xeForm.$nextTick()
+    },
+    handleGlobalResizeEvent () {
+      const $xeForm = this
+
+      $xeForm.recalculate()
+    },
 
     //
     // Render
@@ -874,6 +932,9 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const reactData = $xeForm.reactData
 
       reactData.formItems = reactData.staticItems
+      $xeForm.$nextTick().then(() => {
+        $xeForm.recalculate()
+      })
     },
     items () {
       const $xeForm = this
@@ -917,11 +978,13 @@ export default /* define-vxe-component start */ defineVxeComponent({
         errLog('vxe.error.errConflicts', ['custom-layout', 'items'])
       }
     })
+    globalEvents.on($xeForm, 'resize', $xeForm.handleGlobalResizeEvent)
   },
   destroyed () {
     const $xeForm = this
     const internalData = $xeForm.internalData
 
+    globalEvents.off($xeForm, 'resize')
     XEUtils.assign(internalData, createInternalData())
   },
   render (this: any, h) {

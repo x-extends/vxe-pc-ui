@@ -8,7 +8,7 @@ import VxeTooltipComponent from '../../tooltip/src/tooltip'
 import VxeIconComponent from '../../icon/src/icon'
 import XEUtils from 'xe-utils'
 
-import type { VxeFormConstructor, VxeFormDefines, VxeFormItemPropTypes, VxeFormPrivateMethods, VxeComponentSlotType } from '../../../types'
+import type { VxeFormConstructor, VxeFormDefines, VxeFormItemPropTypes, VxeFormPrivateMethods, VxeComponentSlotType, VxeComponentStyleType } from '../../../types'
 
 function renderPrefixIcon (h: CreateElement, titlePrefix: VxeFormItemPropTypes.TitlePrefix) {
   return h('span', {
@@ -202,6 +202,14 @@ export function renderTitle (h: CreateElement, $xeForm: VxeFormConstructor & Vxe
         onMouseleave: $xeForm.handleTitleTipLeaveEvent
       }
     : {}
+  const itStyle: VxeComponentStyleType = Object.assign(
+    {},
+    XEUtils.isFunction(itemTitleStyle) ? itemTitleStyle(params) : itemTitleStyle,
+    XEUtils.isFunction(titleStyle) ? titleStyle(params) : titleStyle
+  )
+  if (titleWidth && titleWidth !== 'auto' && showContent !== false) {
+    itStyle.width = toCssUnit(titleWidth)
+  }
 
   return isTitle
     ? h('div', {
@@ -213,17 +221,9 @@ export function renderTitle (h: CreateElement, $xeForm: VxeFormConstructor & Vxe
         itemTitleClassName ? (XEUtils.isFunction(itemTitleClassName) ? itemTitleClassName(params) : itemTitleClassName) : '',
         titleClassName ? (XEUtils.isFunction(titleClassName) ? titleClassName(params) : titleClassName) : ''
       ],
-      style: Object.assign(
-        {},
-        XEUtils.isFunction(itemTitleStyle) ? itemTitleStyle(params) : itemTitleStyle,
-        XEUtils.isFunction(titleStyle) ? titleStyle(params) : titleStyle,
-        titleWidth && showContent !== false
-          ? {
-              width: toCssUnit(titleWidth)
-            }
-          : null
-      ),
+      style: itStyle,
       attrs: {
+        itemid: item.id,
         title: ovTitle ? getFuncText(title) : null
       },
       on: ons

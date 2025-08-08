@@ -51,7 +51,10 @@ const VxeFormConfigItem = defineVxeComponent({
       return h('div', {
         key: item.id,
         class: getItemClass($xeForm, item),
-        style: XEUtils.isFunction(itemStyle) ? itemStyle(params) : (itemStyle || {})
+        style: XEUtils.isFunction(itemStyle) ? itemStyle(params) : (itemStyle || {}),
+        attrs: {
+          itemid: item.id
+        }
       }, [
         renderTitle(h, $xeForm, item),
         showContent === false

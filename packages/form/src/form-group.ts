@@ -67,7 +67,10 @@ export default /* define-vxe-component start */ defineVxeComponent({
         ref: 'refElem',
         key: item.id,
         class: getItemClass($xeForm, item, true),
-        style: XEUtils.isFunction(itemStyle) ? itemStyle(params) : (itemStyle || {})
+        style: XEUtils.isFunction(itemStyle) ? itemStyle(params) : (itemStyle || {}),
+        attrs: {
+          itemid: item.id
+        }
       }, [
         renderTitle(h, $xeForm, item, true),
         h('div', {
