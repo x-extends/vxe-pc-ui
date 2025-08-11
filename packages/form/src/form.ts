@@ -11,6 +11,8 @@ import VxeLoadingComponent from '../../loading/src/loading'
 import { getSlotVNs } from '../../ui/src/vn'
 import { warnLog, errLog } from '../../ui/src/log'
 
+import '../render'
+
 import type { VxeFormConstructor, VxeFormPropTypes, VxeFormEmits, FormReactData, FormMethods, FormPrivateRef, VxeFormPrivateMethods, VxeFormDefines, VxeFormItemPropTypes, VxeTooltipInstance, FormInternalData, VxeFormPrivateComputed } from '../../../types'
 import type { VxeGridConstructor, VxeGridPrivateMethods } from '../../../types/components/grid'
 

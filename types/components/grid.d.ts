@@ -6,6 +6,7 @@ import { VxeColumnPropTypes } from './column'
 import { VxePagerInstance, VxePagerProps, VxePagerDefines, VxePagerSlotTypes } from './pager'
 import { VxeFormInstance, VxeFormProps, VxeFormDefines } from './form'
 import { VxeFormItemPropTypes, VxeFormItemProps } from './form-item'
+import { VxeGanttConstructor } from './gantt'
 
 /* eslint-disable no-use-before-define,@typescript-eslint/ban-types */
 
@@ -26,10 +27,10 @@ export interface VxeGridConstructor<D = any> extends VxeComponentBaseOptions, Vx
 
 export interface GridPrivateRef<D = any> {
   refElem: Ref<HTMLDivElement | undefined>
-  refTable: Ref<VxeTableInstance<D>>
-  refForm: Ref<VxeFormInstance>
-  refToolbar: Ref<VxeToolbarInstance>
-  refPager: Ref<VxePagerInstance>
+  refTable: Ref<VxeTableInstance<D> | undefined>
+  refForm: Ref<VxeFormInstance | undefined>
+  refToolbar: Ref<VxeToolbarInstance | undefined>
+  refPager: Ref<VxePagerInstance | undefined>
 }
 export interface VxeGridPrivateRef<D = any> extends GridPrivateRef<D> { }
 
@@ -79,7 +80,9 @@ export namespace VxeGridPropTypes {
   }
 
   interface ProxyAjaxQueryParams<D = any> {
-    $grid: VxeGridConstructor<D>
+    $table: VxeTableConstructor<D>
+    $grid: VxeGridConstructor<D> | null | undefined
+    $gantt: VxeGanttConstructor<D> | null | undefined
     page: ProxyAjaxQueryPageParams
     sort: ProxyAjaxQuerySortCheckedParams<D>
     sorts: ProxyAjaxQuerySortCheckedParams<D>[]
@@ -91,7 +94,8 @@ export namespace VxeGridPropTypes {
 
   interface ProxyAjaxQueryAllParams<D = any> {
     $table: VxeTableConstructor<D>
-    $grid: VxeGridConstructor<D>
+    $grid: VxeGridConstructor<D> | null | undefined
+    $gantt: VxeGanttConstructor<D> | null | undefined
     sort: ProxyAjaxQuerySortCheckedParams<D>
     sorts: ProxyAjaxQuerySortCheckedParams<D>[]
     filters: VxeTableDefines.FilterCheckedParams[]
@@ -102,14 +106,18 @@ export namespace VxeGridPropTypes {
   }
 
   interface ProxyAjaxDeleteParams<D = any> {
-    $grid: VxeGridConstructor<D>
+    $table: VxeTableConstructor<D>
+    $grid: VxeGridConstructor<D> | null | undefined
+    $gantt: VxeGanttConstructor<D> | null | undefined
     body: {
       removeRecords: D[]
     }
   }
 
   interface ProxyAjaxSaveParams<D = any> {
-    $grid: VxeGridConstructor<D>
+    $table: VxeTableConstructor<D>
+    $grid: VxeGridConstructor<D> | null | undefined
+    $gantt: VxeGanttConstructor<D> | null | undefined
     body: {
       insertRecords: D[]
       updateRecords: D[]
@@ -145,19 +153,27 @@ export namespace VxeGridPropTypes {
     response?: {
       list?: string | null | ((params: {
         data: any
-        $grid: VxeGridConstructor<D>
+        $table: VxeTableConstructor<D>
+        $grid: VxeGridConstructor<D> | null | undefined
+        $gantt: VxeGanttConstructor<D> | null | undefined
       }) => any[])
       result?: string | ((params: {
         data: any
-        $grid: VxeGridConstructor<D>
+        $table: VxeTableConstructor<D>
+        $grid: VxeGridConstructor<D> | null | undefined
+        $gantt: VxeGanttConstructor<D> | null | undefined
       }) => any[])
       total?: string | ((params: {
         data: any
-        $grid: VxeGridConstructor<D>
+        $table: VxeTableConstructor<D>
+        $grid: VxeGridConstructor<D> | null | undefined
+        $gantt: VxeGanttConstructor<D> | null | undefined
       }) => number)
       message?: string | ((params: {
         data: any
-        $grid: VxeGridConstructor<D>
+        $table: VxeTableConstructor<D>
+        $grid: VxeGridConstructor<D> | null | undefined
+        $gantt: VxeGanttConstructor<D> | null | undefined
       }) => string)
     }
     ajax?: {
@@ -268,14 +284,14 @@ export interface VxeGridProps<D = any> extends VxeTableProps<D> {
   zoomConfig?: VxeGridPropTypes.ZoomConfig
 }
 
-export interface GridPrivateComputed {
-  computeProxyOpts: ComputedRef<VxeGridPropTypes.ProxyOpts>
+export interface GridPrivateComputed<D = any> {
+  computeProxyOpts: ComputedRef<VxeGridPropTypes.ProxyConfig<D>>
   computePagerOpts: ComputedRef<VxeGridPropTypes.PagerOpts>
   computeFormOpts: ComputedRef<VxeGridPropTypes.FormOpts>
   computeToolbarOpts: ComputedRef<VxeGridPropTypes.ToolbarOpts>
   computeZoomOpts: ComputedRef<VxeGridPropTypes.ZoomOpts>
 }
-export interface VxeGridPrivateComputed extends GridPrivateComputed { }
+export interface VxeGridPrivateComputed<D = any> extends GridPrivateComputed<D> { }
 
 export interface GridReactData<D = any> {
   tableLoading: boolean
@@ -322,12 +338,12 @@ export interface GridMethods<D = any> {
   /**
    * 对表单进行校验，返回校验结果 promise
    */
-  validateForm(): Promise<VxeFormDefines.ValidateErrorMapParams>
+  validateForm(): Promise<VxeFormDefines.ValidateErrorMapParams | void>
   /**
    * 对表单指定项进行校验，返回校验结果 promise
    * @param field 字段名
    */
-  validateFormField(field: VxeFormItemPropTypes.Field | VxeFormItemPropTypes.Field[] | VxeFormDefines.ItemInfo | VxeFormDefines.ItemInfo[] | null): Promise<VxeFormDefines.ValidateErrorMapParams>
+  validateFormField(field: VxeFormItemPropTypes.Field | VxeFormItemPropTypes.Field[] | VxeFormDefines.ItemInfo | VxeFormDefines.ItemInfo[] | null): Promise<VxeFormDefines.ValidateErrorMapParams | void>
   /**
    * 手动清除表单校验状态，如果指定 field 则清除指定的项，否则清除整个表单
    * @param field 字段名
@@ -457,7 +473,9 @@ export type VxeGridEmits = [
 
 export namespace VxeGridDefines {
   export interface GridEventParams<D = any> extends VxeComponentEventParams {
-    $grid: VxeGridConstructor<D>
+    $table: VxeTableConstructor<D>
+    $grid: VxeGridConstructor<D> | null | undefined
+    $gantt: VxeGanttConstructor<D> | null | undefined
   }
 
   export interface KeydownStartEventParams<D = any> extends GridEventParams<D>, VxeTableDefines.KeydownStartEventParams<D> { }
@@ -781,6 +799,7 @@ export namespace VxeGridSlotTypes {
   export interface DefaultSlotParams<D = any> {
     $table: VxeTableConstructor<D>
     $grid: VxeGridConstructor<D> | null | undefined
+    $gantt: VxeGanttConstructor<D> | null | undefined
     rowid: string
     /**
      * 当前行对象，支持数据双向绑定
@@ -846,6 +865,7 @@ export namespace VxeGridSlotTypes {
   export interface BaseSlotParams<D = any> {
     $table: VxeTableConstructor<D>
     $grid: VxeGridConstructor<D> | null | undefined
+    $gantt: VxeGanttConstructor<D> | null | undefined
   }
   export interface EmptySlotParams<D = any> extends BaseSlotParams<D> {}
   export interface LoadingSlotParams<D = any> extends BaseSlotParams<D> {}

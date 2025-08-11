@@ -8,6 +8,8 @@ import { VxeModalPropTypes } from './modal'
 import { VxeDrawerPropTypes } from './drawer'
 import { VxeToolbarConstructor, VxeToolbarInstance } from './toolbar'
 import { VxeTableCustomPanelConstructor } from './table-module/custom'
+import { VxeGanttConstructor } from './gantt'
+import { VxeGanttViewConstructor, VxeGanttViewInstance, VxeGanttViewPrivateMethods } from './gantt-module/gantt-view'
 
 /* eslint-disable no-use-before-define,@typescript-eslint/ban-types */
 
@@ -25,7 +27,8 @@ export interface VxeTableConstructor<D = any> extends VxeComponentBaseOptions, V
   getComputeMaps(): TablePrivateComputed
   renderVN: RenderFunction
 
-  xeGrid: VxeGridConstructor<D> | null
+  xeGrid: VxeGridConstructor<D> | null | undefined
+  xeGantt: VxeGanttConstructor<D> | null | undefined
 
   /**
    * @deprecated
@@ -2551,6 +2554,10 @@ export namespace VxeTablePropTypes {
        * 滚动条显示位置
        */
       position?: 'top' | 'bottom' | ''
+      /**
+       * 是否显示
+       */
+      visible?: boolean
     }
     /**
      * 纵向滚动条
@@ -2560,6 +2567,10 @@ export namespace VxeTablePropTypes {
        * 滚动条显示位置
        */
       position?: 'left' | 'right' | ''
+      /**
+       * 是否显示
+       */
+      visible?: boolean
     }
   }
 
@@ -3463,9 +3474,14 @@ export interface TableReactData<D = any> {
   /**
    * 行高
    * @deprecated
-   * @property
    */
   rowHeight: number
+  // 表头高度
+  tHeaderHeight: number
+  // 表体高度
+  tBodyHeight: number
+  // 表尾高度
+  tFooterHeight: number
   // 表格父容器的高度
   parentHeight: number
   // 是否使用分组表头
@@ -3727,10 +3743,6 @@ export interface TableInternalData<D = any> {
   tableWidth: number
   // 表格高度
   tableHeight: number
-  // 表头高度
-  headerHeight: number
-  // 表尾高度
-  footerHeight: number
   customHeight: number
   customMinHeight: number
   customMaxHeight: number
@@ -3859,6 +3871,9 @@ export interface TableInternalData<D = any> {
 
   // 展开手风琴
   treeEATime?: undefined | number
+
+  // 甘特图
+  xeGanttView?: VxeGanttViewConstructor & VxeGanttViewPrivateMethods
 
   // 内部属性
   _lastResizeTime?: any
@@ -4737,10 +4752,14 @@ export interface TableMethods<DT = any> {
    */
   updateCellAreas(): Promise<void>
   /**
-   * 连接工具栏
-   * @param toolbar 工具栏组件实例
+   * 已废弃，请使用 connectToolbar
+   * @deprecated
    */
-  connect(toolbar: VxeToolbarConstructor | VxeToolbarInstance): Promise<void>
+  connect($toolbar: VxeToolbarConstructor | VxeToolbarInstance): Promise<void>
+  /**
+   * 连接工具栏
+   */
+  connectToolbar($toolbar: VxeToolbarConstructor | VxeToolbarInstance): Promise<void>
   /**
    * 使表格获取焦点
    */
@@ -5071,9 +5090,13 @@ export interface TablePrivateMethods<D = any> {
    * 已废弃，被 getCellElement 替换
    * @deprecated
    */
-  getCell(row: any, column: VxeTableDefines.ColumnInfo<any>): HTMLTableDataCellElement | null
+  getCell(row: any, column: VxeTableDefines.ColumnInfo<any>): HTMLTableCellElement | null
   findRowIndexOf(list: any[], row: any): number
   eqRow(row1: any, row2: any): boolean
+  /**
+   * @private
+   */
+  handleConnectGanttView($ganttView: VxeGanttViewConstructor | VxeGanttViewInstance): Promise<void>
 }
 export interface VxeTablePrivateMethods<D = any> extends TablePrivateMethods<D> { }
 

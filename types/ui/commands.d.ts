@@ -1,6 +1,7 @@
 import { VxeGridConstructor } from '../components/grid'
 import { VxeToolbarPropTypes } from '../components/toolbar'
 import { VxeTableConstructor } from '../components/table'
+import { VxeGanttConstructor } from '../components/gantt'
 import { VxeDatePickerConstructor, VxeDatePickerDefines } from '../components/date-picker'
 import { VxeDateRangePickerConstructor, VxeDateRangePickerDefines } from '../components/date-range-picker'
 
@@ -46,8 +47,9 @@ declare module '@vxe-ui/core' {
     }
 
     export interface TableCommandMethodParams {
-      $grid: VxeGridConstructor | null | undefined
       $table: VxeTableConstructor
+      $grid: VxeGridConstructor | null | undefined
+      $gantt: VxeGanttConstructor | null | undefined
       button: VxeToolbarPropTypes.ButtonConfig | null | undefined
       code: string | undefined
     }

@@ -1,5 +1,5 @@
 import { RenderFunction, SetupContext, Ref } from 'vue'
-import { VxeComponentBaseOptions } from '@vxe-ui/core'
+import { VxeComponentBaseOptions, DefineVxeComponentInstance } from '@vxe-ui/core'
 import { VxeTableDefines, VxeTableConstructor, VxeTableMethods, VxeTablePrivateMethods } from '../table'
 
 /* eslint-disable no-use-before-define */
@@ -15,6 +15,7 @@ export interface VxeTableCustomPanelConstructor extends VxeComponentBaseOptions,
 
   xeTable: VxeTableConstructor & VxeTableMethods & VxeTablePrivateMethods
 }
+export type VxeTableCustomPanelInstance = DefineVxeComponentInstance<VxeTableCustomPanelProps, VxeTableCustomPanelConstructor>
 
 interface VxeTableCustomPanelProps {
   customStore?: VxeTableDefines.VxeTableCustomStoreObj
