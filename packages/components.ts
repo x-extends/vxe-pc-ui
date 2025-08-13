@@ -1,5 +1,5 @@
 import { App } from 'vue'
-import { setI18n, setLanguage, setTheme, setConfig, VxeGlobalConfig } from '@vxe-ui/core'
+import { VxeUI } from './ui'
 
 import zhCN from './language/zh-CN'
 
@@ -86,6 +86,10 @@ import VxeWatermark, { WatermarkController } from './watermark'
 
 import { saveLocalFile, readLocalFile } from './upload/src/util'
 import { printHtml } from './print/src/util'
+
+import type { VxeGlobalConfig } from '@vxe-ui/core'
+
+const { setI18n, setLanguage, setTheme, setConfig } = VxeUI
 
 const components = [
   VxeAlert,

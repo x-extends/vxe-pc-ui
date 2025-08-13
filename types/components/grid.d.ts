@@ -1,7 +1,7 @@
 import { RenderFunction, SetupContext, Ref, ComputedRef } from 'vue'
 import { DefineVxeComponentApp, DefineVxeComponentOptions, DefineVxeComponentInstance, VxeComponentBaseOptions, VxeComponentEventParams, VxeComponentSizeType, VxeComponentSlotType, ValueOf } from '@vxe-ui/core'
 import { VxeToolbarInstance, VxeToolbarProps, VxeToolbarPropTypes, VxeToolbarSlotTypes } from './toolbar'
-import { VxeTableDefines, VxeTableInstance, VxeTableEmits, VxeTableConstructor, VxeTableProps, TableMethods, VxeTableSlotTypes } from './table'
+import { VxeTableDefines, VxeTablePrivateMethods, VxeTableEmits, VxeTableConstructor, VxeTableProps, TableMethods, VxeTableSlotTypes } from './table'
 import { VxeColumnPropTypes } from './column'
 import { VxePagerInstance, VxePagerProps, VxePagerDefines, VxePagerSlotTypes } from './pager'
 import { VxeFormInstance, VxeFormProps, VxeFormDefines } from './form'
@@ -27,7 +27,7 @@ export interface VxeGridConstructor<D = any> extends VxeComponentBaseOptions, Vx
 
 export interface GridPrivateRef<D = any> {
   refElem: Ref<HTMLDivElement | undefined>
-  refTable: Ref<VxeTableInstance<D> | undefined>
+  refTable: Ref<(VxeTableConstructor & VxeTablePrivateMethods) | undefined>
   refForm: Ref<VxeFormInstance | undefined>
   refToolbar: Ref<VxeToolbarInstance | undefined>
   refPager: Ref<VxePagerInstance | undefined>
