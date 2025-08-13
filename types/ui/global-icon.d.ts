@@ -264,5 +264,11 @@ declare module '@vxe-ui/core' {
     SPLIT_BOTTOM_ACTION?: string
     SPLIT_LEFT_ACTION?: string
     SPLIT_RIGHT_ACTION?: string
+
+    // gantt
+    GANTT_VIEW_LEFT_OPEN?: string
+    GANTT_VIEW_LEFT_CLOSE?: string
+    GANTT_VIEW_RIGHT_OPEN?: string
+    GANTT_VIEW_RIGHT_CLOSE?: string
   }
 }

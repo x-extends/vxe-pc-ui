@@ -46,9 +46,10 @@
 
 ## 在线文档
 
-👉 [组件文档](https://vxeui.com)  
-👉 [表格文档](https://vxetable.cn)  
-👉 [可视化文档](https://design.vxeui.com)  
+👉 [基础库](https://vxeui.com)  
+👉 [表格库](https://vxetable.cn)  
+👉 [甘特图](https://gantt.vxeui.com)  
+👉 [可视化](https://design.vxeui.com)  
 
 ## QQ 交流群
 
@@ -89,7 +90,6 @@
 * [x] form 表单
   * [x] form-group 表单-分组
   * [x] form-item 表单-项
-* [ ] gantt 甘特图
 * [x] icon 图标
 * [x] icon-picker 图标选择
 * [x] image 图片
@@ -145,6 +145,10 @@
   * [x] column 基础表格-标签式-常规列
   * [x] colgroup 基础表格-标签式-分组列
   * [x] toolbar 基础表格-标签式-工具栏
+
+[👀 Vxe Gantt](https://gantt.vxeui.com/)  
+
+* [x] gantt 甘特图
 
 [👀 Vxe Design](https://design.vxeui.com)  
 

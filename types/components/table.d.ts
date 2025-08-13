@@ -3476,12 +3476,6 @@ export interface TableReactData<D = any> {
    * @deprecated
    */
   rowHeight: number
-  // 表头高度
-  tHeaderHeight: number
-  // 表体高度
-  tBodyHeight: number
-  // 表尾高度
-  tFooterHeight: number
   // 表格父容器的高度
   parentHeight: number
   // 是否使用分组表头
@@ -3503,6 +3497,8 @@ export interface TableReactData<D = any> {
   rowGroupColumn: VxeTableDefines.ColumnInfo<D> | null | undefined
   // 展开列信息
   expandColumn: VxeTableDefines.ColumnInfo<D> | null | undefined
+  checkboxColumn: VxeTableDefines.ColumnInfo<D> | null | undefined
+  radioColumn: VxeTableDefines.ColumnInfo<D> | null | undefined
   hasFixedColumn: boolean
   // 树节点列信息
   treeNodeColumn: any
@@ -3874,6 +3870,13 @@ export interface TableInternalData<D = any> {
 
   // 甘特图
   xeGanttView?: VxeGanttViewConstructor & VxeGanttViewPrivateMethods
+
+  // 表头高度
+  tHeaderHeight: number
+  // 表体高度
+  tBodyHeight: number
+  // 表尾高度
+  tFooterHeight: number
 
   // 内部属性
   _lastResizeTime?: any

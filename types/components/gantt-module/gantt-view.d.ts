@@ -1,7 +1,7 @@
 import { RenderFunction, SetupContext, Ref } from 'vue'
 import { VxeComponentBaseOptions, DefineVxeComponentInstance } from '@vxe-ui/core'
 import { VxeTableConstructor, VxeTableMethods, VxeTablePrivateMethods } from '../table'
-import { VxeGanttPropTypes } from '../gantt'
+import { VxeGanttPropTypes, VxeGanttDefines } from '../gantt'
 
 /* eslint-disable no-use-before-define */
 
@@ -49,6 +49,8 @@ export interface GanttViewReactData {
   tableColumn: VxeGanttPropTypes.Column[]
   headerGroups: VxeGanttPropTypes.Column[][]
 
+  viewCellWidth: number
+
   rowHeightStore: {
     large: number
     default: number
@@ -62,6 +64,7 @@ export interface GanttViewInternalData {
   xeTable: (VxeTableConstructor & VxeTableMethods & VxeTablePrivateMethods) | null
   startMaps: Record<string, any>
   endMaps: Record<string, any>
+  chartMaps: Record<string, VxeGanttDefines.RowCacheItem>
   elemStore: {
     [key: string]: Ref<HTMLElement> | null
   }
@@ -155,6 +158,7 @@ export interface VxeGanttViewPrivateMethods {
 }
 
 export interface VxeGanttViewMethods {
+  refreshData(): Promise<void>
   updateViewData(): Promise<void>
   connectUpdate(params: {
     $table: VxeTableConstructor & VxeTableMethods & VxeTablePrivateMethods

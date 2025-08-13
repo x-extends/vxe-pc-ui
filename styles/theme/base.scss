@@ -181,6 +181,8 @@
   --vxe-ui-calendar-notice-selected-background-color: var(--vxe-ui-calendar-selected-color);
 
   /*split*/
-  --vxe-split-handle-bar-width: 0.4em;
-  --vxe-split-handle-bar-height: var(--vxe-split-handle-bar-width);
+  --vxe-ui-split-handle-bar-horizontal-width: 10px;
+  --vxe-ui-split-handle-bar-horizontal-height: 6.8em;
+  --vxe-ui-split-handle-bar-vertical-width: var(--vxe-ui-split-handle-bar-horizontal-height);
+  --vxe-ui-split-handle-bar-vertical-height: var(--vxe-ui-split-handle-bar-horizontal-width);
 }
