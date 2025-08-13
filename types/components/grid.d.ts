@@ -27,8 +27,7 @@ export interface VxeGridPrivateRef<D = any> extends GridPrivateRef<D> { }
 export namespace VxeGridPropTypes {
   export type Size = VxeComponentSizeType
 
-  export type LayoutKey = 'Form' | 'Toolbar' | 'Top' | 'Table' | 'Bottom' | 'Pager'
-  export type Layouts = LayoutKey[] |LayoutKey[][]
+  export type Layouts = VxeGridDefines.LayoutKey[] | VxeGridDefines.LayoutKey[][]
 
   export type Column<D = any> = VxeTableDefines.ColumnOptions<D>
   export type Columns<D = any> = Column<D>[]
@@ -473,6 +472,8 @@ export namespace VxeGridDefines {
     $grid: VxeGridConstructor<D> | null | undefined
     $gantt: VxeGanttConstructor<D> | null | undefined
   }
+
+  export type LayoutKey = 'Form' | 'Toolbar' | 'Top' | 'Table' | 'Bottom' | 'Pager'
 
   export interface KeydownStartEventParams<D = any> extends GridEventParams<D>, VxeTableDefines.KeydownStartEventParams<D> { }
   export interface KeydownEventParams<D = any> extends GridEventParams<D>, VxeTableDefines.KeydownEventParams<D> { }

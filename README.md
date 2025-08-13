@@ -1,7 +1,5 @@
 # vxe-pc-ui
 
-简体中文 | [繁體中文](README.zh-TW.md) | [English](README.en.md)  
-
 [![star](https://gitee.com/x-extends/vxe-pc-ui/badge/star.svg?theme=gvp)](https://gitee.com/x-extends/vxe-pc-ui/stargazers)
 [![npm version](https://img.shields.io/npm/v/vxe-pc-ui.svg?style=flat-square)](https://www.npmjs.com/package/vxe-pc-ui)
 [![NodeJS with Webpack](https://github.com/x-extends/vxe-pc-ui/actions/workflows/webpack.yml/badge.svg)](https://github.com/x-extends/vxe-pc-ui/actions/workflows/webpack.yml)
