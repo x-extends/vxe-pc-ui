@@ -1,12 +1,14 @@
 import { DefineVxeComponentInstance } from '@vxe-ui/core'
 import { VxeTableConstructor, VxeTableMethods, VxeTablePrivateMethods } from '../table'
-import { VxeGanttPropTypes, VxeGanttDefines } from '../gantt'
+import { VxeGanttPropTypes, VxeGanttDefines, VxeGanttConstructor } from '../gantt'
 
 /* eslint-disable no-use-before-define */
 
 export type VxeGanttViewInstance = DefineVxeComponentInstance<{
   reactData: GanttViewReactData
   internalData: GanttViewInternalData
+
+  $xeGantt: VxeGanttConstructor
 }, VxeGanttViewProps, GanttViewPrivateComputed, VxeGanttViewMethods>
 
 export type VxeGanttViewConstructor = VxeGanttViewInstance

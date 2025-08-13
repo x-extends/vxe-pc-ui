@@ -165,6 +165,10 @@ export interface GanttMethods<D = any> extends Omit<GridMethods<D>, 'dispatchEve
 export interface VxeGanttMethods<D = any> extends GanttMethods<D>, Omit<VxeGridMethods<D>, 'dispatchEvent'> { }
 
 export interface GanttPrivateMethods extends GridPrivateMethods {
+  handleTaskCellClickEvent(evnt: MouseEvent, params: VxeGanttDefines.TaskCellClickParams): void
+  handleTaskCellDblclickEvent(evnt: MouseEvent, params: VxeGanttDefines.TaskCellClickParams): void
+  handleTaskBarClickEvent(evnt: MouseEvent, params: VxeGanttDefines.TaskCellClickParams): void
+  handleTaskBarDblclickEvent(evnt: MouseEvent, params: VxeGanttDefines.TaskCellClickParams): void
 }
 export interface VxeGanttPrivateMethods extends GanttPrivateMethods {
   handleTaskClickEvent(evnt: MouseEvent, params: {

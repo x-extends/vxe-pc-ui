@@ -401,7 +401,6 @@ export default /* define-vxe-component start */ defineVxeComponent({
         $xeDrawer.updateZindex()
       }
     },
-
     dragEvent (evnt: MouseEvent) {
       const $xeModal = this
       const reactData = $xeModal.reactData

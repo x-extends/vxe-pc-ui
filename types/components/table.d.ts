@@ -18,7 +18,15 @@ export declare const VxeTable: DefineVxeComponentApp<VxeTableProps, VxeTableEven
 export type VxeTableComponent = DefineVxeComponentOptions<VxeTableProps>
 
 export type VxeTableInstance<D = any> = DefineVxeComponentInstance<{
+  /**
+   * 内部属性，不能被使用
+   * @deprecated
+   */
   reactData: TableReactData<D>
+  /**
+   * 内部属性，不能被使用
+   * @deprecated
+   */
   internalData: TableInternalData<D>
   $xeGrid: VxeGridConstructor<D> | null | undefined
   $xeGantt: VxeGanttConstructor<D> | null | undefined
