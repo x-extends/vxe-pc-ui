@@ -173,8 +173,8 @@ export interface VxeGanttMethods<D = any> extends GanttMethods<D>, Omit<VxeGridM
 export interface GanttPrivateMethods extends GridPrivateMethods {
   handleTaskCellClickEvent(evnt: MouseEvent, params: VxeGanttDefines.TaskCellClickParams): void
   handleTaskCellDblclickEvent(evnt: MouseEvent, params: VxeGanttDefines.TaskCellClickParams): void
-  handleTaskBarClickEvent(evnt: MouseEvent, params: VxeGanttDefines.TaskCellClickParams): void
-  handleTaskBarDblclickEvent(evnt: MouseEvent, params: VxeGanttDefines.TaskCellClickParams): void
+  handleTaskBarClickEvent(evnt: MouseEvent, params: VxeGanttDefines.TaskBarClickParams): void
+  handleTaskBarDblclickEvent(evnt: MouseEvent, params: VxeGanttDefines.TaskBarClickParams): void
 }
 export interface VxeGanttPrivateMethods extends GanttPrivateMethods {}
 
@@ -207,11 +207,15 @@ export namespace VxeGanttDefines {
 
   export interface TaskCellClickParams<D = any> {
     row: D
+    column: VxeGanttPropTypes.Column<D>
+  }
+  export interface TaskBarClickParams<D = any> {
+    row: D
   }
   export interface TaskCellClickEventParams<D = any> extends TaskCellClickParams<D>, GanttEventParams {}
   export interface TaskCellDblClickEventParams<D = any> extends TaskCellClickEventParams<D> {}
-  export interface TaskBarClickEventParams<D = any> extends TaskCellClickEventParams<D> {}
-  export interface TaskBarDblClickEventParams<D = any> extends TaskCellClickEventParams<D> {}
+  export interface TaskBarClickEventParams<D = any> extends TaskBarClickParams<D>, GanttEventParams {}
+  export interface TaskBarDblClickEventParams<D = any> extends TaskBarClickEventParams<D> {}
 }
 
 export interface VxeGanttEventProps<D = any> extends VxeGridEventProps<D> {

@@ -126,6 +126,14 @@ export interface VxeGanttViewPrivateMethods {
   /**
    * @private
    */
+  handleUpdateCurrentRow(row?: any): void
+  /**
+   * @private
+   */
+  handleUpdateHoverRow(row?: any): void
+  /**
+   * @private
+   */
   handleLazyRecalculate(): Promise<void>
   /**
    * @private
