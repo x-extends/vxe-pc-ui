@@ -106,7 +106,7 @@ export namespace VxeGanttPropTypes {
       /**
        * 圆角
        */
-      round?: boolean | number
+      round?: boolean
       /**
        * 任务条的背景颜色
        */
