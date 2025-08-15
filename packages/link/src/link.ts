@@ -118,7 +118,7 @@ export default defineVxeComponent({
         return renderEmptyElement($xeLink)
       }
 
-      if (routerLink) {
+      if (routerLink && !disabled) {
         return h(resolveComponent('router-link'), {
           class: ['vxe-link', {
             [`size--${vSize}`]: vSize,
