@@ -719,7 +719,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       }, 350)
       $xeSelect.dispatchEvent('visible-change', { visible: false }, null)
     },
-    changeEvent (evnt: Event, selectValue: any) {
+    changeEvent (evnt: Event, selectValue: any, option: any) {
       const $xeSelect = this
       const props = $xeSelect
       const $xeForm = $xeSelect.$xeForm
@@ -727,7 +727,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
 
       $xeSelect.emitModel(selectValue)
       if (selectValue !== props.value) {
-        $xeSelect.dispatchEvent('change', { value: selectValue }, evnt)
+        $xeSelect.dispatchEvent('change', { value: selectValue, option }, evnt)
         // 自动更新校验状态
         if ($xeForm && formItemInfo) {
           $xeForm.triggerItemEvent(evnt, formItemInfo.itemConfig.field, selectValue)
@@ -739,7 +739,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const internalData = $xeSelect.internalData
 
       internalData.remoteValMaps = {}
-      $xeSelect.changeEvent(evnt, selectValue)
+      $xeSelect.changeEvent(evnt, selectValue, null)
       $xeSelect.dispatchEvent('clear', { value: selectValue }, evnt)
     },
     clearEvent (params: VxeInputDefines.ClearEventParams) {
@@ -771,7 +771,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
             multipleValue.push(selectValue)
           }
         }
-        $xeSelect.changeEvent($event, multipleValue)
+        $xeSelect.changeEvent($event, multipleValue, optList[0])
         $xeSelect.dispatchEvent('all-change', { value: multipleValue }, $event)
         $xeSelect.hideOptionPanel()
       }
@@ -815,9 +815,9 @@ export default /* define-vxe-component start */ defineVxeComponent({
         } else {
           multipleValue = selectVals.filter((val) => val !== selectValue)
         }
-        $xeSelect.changeEvent(evnt, multipleValue)
+        $xeSelect.changeEvent(evnt, multipleValue, option)
       } else {
-        $xeSelect.changeEvent(evnt, selectValue)
+        $xeSelect.changeEvent(evnt, selectValue, option)
         $xeSelect.hideOptionPanel()
       }
       reactData.reactFlag++

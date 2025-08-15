@@ -335,12 +335,14 @@ export interface TreeMethods<D = any> {
    * 用于 showCheckbox，手动清空复选框的
    */
   clearCheckboxNode(): Promise<{
+    checkNodes: D[]
     checkNodeKeys: (string | number)[]
   }>
   /**
    * 用于 showCheckbox，设置所有节点的选中状态
    */
   setAllCheckboxNode(checked: boolean): Promise<{
+    checkNodes: D[]
     checkNodeKeys: (string | number)[]
   }>
   /**

@@ -10,7 +10,7 @@ import VxeInputComponent from '../../input/src/input'
 import VxeButtonComponent from '../../button/src/button'
 import VxeTreeComponent from '../../tree/src/tree'
 
-import type { TreeSelectReactData, VxeTreeSelectEmits, TreeSelectInternalData, VxeComponentSizeType, VxeButtonDefines, ValueOf, VxeComponentStyleType, VxeTreeSelectPropTypes, VxeFormDefines, VxeDrawerConstructor, VxeDrawerMethods, VxeFormConstructor, VxeFormPrivateMethods, VxeModalConstructor, VxeModalMethods, VxeInputConstructor, VxeTreeConstructor } from '../../../types'
+import type { TreeSelectReactData, VxeTreeSelectEmits, TreeSelectInternalData, VxeComponentSizeType, VxeButtonDefines, VxeTreeDefines, ValueOf, VxeComponentStyleType, VxeTreeSelectPropTypes, VxeFormDefines, VxeDrawerConstructor, VxeDrawerMethods, VxeFormConstructor, VxeFormPrivateMethods, VxeModalConstructor, VxeModalMethods, VxeInputConstructor, VxeTreeConstructor } from '../../../types'
 import type { VxeTableConstructor, VxeTablePrivateMethods } from '../../../types/components/table'
 
 function getOptUniqueId () {
@@ -471,19 +471,16 @@ export default /* define-vxe-component start */ defineVxeComponent({
         reactData.isAniVisible = false
       }, 350)
     },
-    changeEvent (evnt: Event, selectValue: any) {
+    changeEvent (evnt: Event, selectValue: any, node: any) {
       const $xeTreeSelect = this
       const props = $xeTreeSelect
-      const internalData = $xeTreeSelect.internalData
       const $xeForm = $xeTreeSelect.$xeForm
       const formItemInfo = $xeTreeSelect.formItemInfo
 
-      const { fullNodeMaps } = internalData
       const value = XEUtils.isArray(selectValue) ? selectValue.map(deNodeValue) : deNodeValue(selectValue)
       $xeTreeSelect.emitModel(value)
       if (value !== props.value) {
-        const cacheItem = fullNodeMaps[selectValue]
-        $xeTreeSelect.dispatchEvent('change', { value, option: cacheItem ? cacheItem.item : null }, evnt)
+        $xeTreeSelect.dispatchEvent('change', { value, node, option: node }, evnt)
         // 自动更新校验状态
         if ($xeForm && formItemInfo) {
           $xeForm.triggerItemEvent(evnt, formItemInfo.itemConfig.field, value)
@@ -493,7 +490,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
     clearValueEvent  (evnt: Event, selectValue: any) {
       const $xeTreeSelect = this
 
-      $xeTreeSelect.changeEvent(evnt, selectValue)
+      $xeTreeSelect.changeEvent(evnt, selectValue, null)
       $xeTreeSelect.dispatchEvent('clear', { value: selectValue }, evnt)
     },
     clearEvent  (params: any, evnt: Event) {
@@ -511,8 +508,8 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const $tree = $xeTreeSelect.$refs.refTree as VxeTreeConstructor
       if (multiple) {
         if ($tree) {
-          $tree.setAllCheckboxNode(true).then(({ checkNodeKeys }) => {
-            $xeTreeSelect.changeEvent($event, checkNodeKeys)
+          $tree.setAllCheckboxNode(true).then(({ checkNodeKeys, checkNodes }) => {
+            $xeTreeSelect.changeEvent($event, checkNodeKeys, checkNodes[0])
             $xeTreeSelect.dispatchEvent('all-change', { value: checkNodeKeys }, $event)
             if (autoClose) {
               $xeTreeSelect.hideOptionPanel()
@@ -535,7 +532,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
             $xeTreeSelect.hideOptionPanel()
           }
         })
-        $xeTreeSelect.changeEvent($event, value)
+        $xeTreeSelect.changeEvent($event, value, null)
         $xeTreeSelect.dispatchEvent('clear', { value }, $event)
       }
     },
@@ -698,24 +695,24 @@ export default /* define-vxe-component start */ defineVxeComponent({
         }
       }
     },
-    nodeClickEvent  (params: any) {
+    nodeClickEvent  (params: VxeTreeDefines.NodeClickEventParams) {
       const $xeTreeSelect = this
 
       const { $event } = params
       $xeTreeSelect.dispatchEvent('node-click', params, $event)
     },
-    radioChangeEvent  (params: any) {
+    radioChangeEvent  (params: VxeTreeDefines.RadioChangeEventParams) {
       const $xeTreeSelect = this
 
-      const { value, $event } = params
-      $xeTreeSelect.changeEvent($event, value)
+      const { value, $event, node } = params
+      $xeTreeSelect.changeEvent($event, value, node)
       $xeTreeSelect.hideOptionPanel()
     },
-    checkboxChangeEvent (params: any) {
+    checkboxChangeEvent (params: VxeTreeDefines.CheckboxChangeEventParams) {
       const $xeTreeSelect = this
 
-      const { value, $event } = params
-      $xeTreeSelect.changeEvent($event, value)
+      const { value, $event, node } = params
+      $xeTreeSelect.changeEvent($event, value, node)
     },
     loadSuccessEvent () {
       const $xeTreeSelect = this

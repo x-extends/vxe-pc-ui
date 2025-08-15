@@ -454,18 +454,15 @@ export default /* define-vxe-component start */ defineVxeComponent({
         reactData.isAniVisible = false
       }, 350)
     },
-    changeEvent (evnt: Event, selectValue: any) {
+    changeEvent (evnt: Event, selectValue: any, row: any) {
       const $xeTableSelect = this
       const props = $xeTableSelect
-      const reactData = $xeTableSelect.reactData
       const $xeForm = $xeTableSelect.$xeForm
       const formItemInfo = $xeTableSelect.formItemInfo
 
-      const { fullRowMaps } = reactData
       $xeTableSelect.emitModel(selectValue)
       if (selectValue !== props.value) {
-        const cacheItem = fullRowMaps[selectValue]
-        $xeTableSelect.dispatchEvent('change', { value: selectValue, row: cacheItem ? cacheItem.item : null }, evnt)
+        $xeTableSelect.dispatchEvent('change', { value: selectValue, row, option: row }, evnt)
         // 自动更新校验状态
         if ($xeForm && formItemInfo) {
           $xeForm.triggerItemEvent(evnt, formItemInfo.itemConfig.field, selectValue)
@@ -475,7 +472,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
     clearValueEvent (evnt: Event, selectValue: any) {
       const $xeTableSelect = this
 
-      $xeTableSelect.changeEvent(evnt, selectValue)
+      $xeTableSelect.changeEvent(evnt, selectValue, null)
       $xeTableSelect.dispatchEvent('clear', { value: selectValue }, evnt)
     },
     clearEvent (params: any, evnt: Event) {
@@ -594,20 +591,20 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const { $event, row } = params
       const valueField = $xeTableSelect.computeValueField
       const value = row[valueField]
-      $xeTableSelect.changeEvent($event, value)
+      $xeTableSelect.changeEvent($event, value, row)
       $xeTableSelect.hideOptionPanel()
     },
     checkboxChangeEvent (params: VxeGridDefines.CheckboxChangeEventParams) {
       const $xeTableSelect = this
 
-      const { $grid, $event } = params
+      const { $grid, $event, row } = params
       const valueField = $xeTableSelect.computeValueField
       if ($grid) {
         const checkboxRecords = $grid.getCheckboxRecords()
         const value = checkboxRecords.map(row => {
           return row[valueField]
         })
-        $xeTableSelect.changeEvent($event, value)
+        $xeTableSelect.changeEvent($event, value, row)
       }
     },
     checkboxAllEvent (params: VxeGridDefines.CheckboxAllEventParams) {

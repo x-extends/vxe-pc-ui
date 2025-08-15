@@ -1568,7 +1568,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       $xeTree.updateCheckboxStatus()
       $xeTree.emitCheckboxMode([])
       return $xeTree.$nextTick().then(() => {
-        return { checkNodeKeys: [] }
+        return { checkNodeKeys: [], checkNodes: [] }
       })
     },
     setAllCheckboxNode (checked: boolean) {
@@ -1582,10 +1582,12 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const childrenField = $xeTree.computeChildrenField
       const mapChildrenField = $xeTree.computeMapChildrenField
       const checkKeys: string[] = []
+      const checkNodes: any[] = []
       if (checked) {
         XEUtils.eachTree(internalData.afterTreeList, (node) => {
           const nodeid = $xeTree.getNodeId(node)
           checkKeys.push(nodeid)
+          checkNodes.push(node)
           selectMaps[nodeid] = true
         }, { children: transform ? mapChildrenField : childrenField })
       }
@@ -1594,7 +1596,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       reactData.updateCheckboxFlag++
       $xeTree.updateCheckboxStatus()
       return $xeTree.$nextTick().then(() => {
-        return { checkNodeKeys: checkKeys }
+        return { checkNodeKeys: checkKeys, checkNodes }
       })
     },
     clearExpandNode () {
