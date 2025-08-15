@@ -154,11 +154,15 @@ export interface VxeGanttViewPrivateMethods {
   /**
    * @private
    */
-  updateScrollXSpace(): void
+  handleUpdateSXSpace(): void
   /**
    * @private
    */
-  updateScrollYSpace(): void
+  handleUpdateSYSpace(): void
+  /**
+   * @private
+   */
+  handleUpdateSYStatus(scrollYLoad: boolean): void
 }
 
 export interface VxeGanttViewMethods {
