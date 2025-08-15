@@ -77,6 +77,7 @@ export namespace VxeTablePropTypes {
   export type ID<D = any> = string | ((params: {
     $table: VxeTableConstructor<D>
     $grid: VxeGridConstructor<D> | null | undefined
+    $gantt: VxeGanttConstructor | null | undefined
   }) => string | number | null)
 
   export interface Row {
@@ -108,6 +109,7 @@ export namespace VxeTablePropTypes {
   export type FooterMethod<D = any> = (params: {
     $table: VxeTableConstructor<D>
     $grid: VxeGridConstructor<D> | null | undefined
+    $gantt: VxeGanttConstructor<D> | null | undefined
     columns: VxeTableDefines.ColumnInfo<D>[]
     data: D[]
   }) => Array<string | number | null>[] | any[]
@@ -2666,6 +2668,7 @@ export namespace VxeTablePropTypes {
     filename?: string | ((params: {
       $table: VxeTableConstructor
       $grid: VxeGridConstructor | null | undefined
+      $gantt: VxeGanttConstructor | null | undefined
       options: ExportOpts
     }) => string)
     /**
@@ -2674,6 +2677,7 @@ export namespace VxeTablePropTypes {
     sheetName?: string | ((params: {
       $table: VxeTableConstructor
       $grid: VxeGridConstructor | null | undefined
+      $gantt: VxeGanttConstructor | null | undefined
       options: ExportOpts
     }) => string)
     /**
@@ -2742,6 +2746,8 @@ export namespace VxeTablePropTypes {
      */
     columnFilterMethod?(params: {
       $table: VxeTableConstructor
+      $grid: VxeGridConstructor | null | undefined
+      $gantt: VxeGanttConstructor | null | undefined
       column: VxeTableDefines.ColumnInfo
       $columnIndex: number
     }): boolean
@@ -2750,6 +2756,8 @@ export namespace VxeTablePropTypes {
      */
     dataFilterMethod?(params: {
       $table: VxeTableConstructor
+      $grid: VxeGridConstructor | null | undefined
+      $gantt: VxeGanttConstructor | null | undefined
       row: any
       $rowIndex: number
     }): boolean
@@ -2758,6 +2766,8 @@ export namespace VxeTablePropTypes {
      */
     footerFilterMethod?(params: {
       $table: VxeTableConstructor
+      $grid: VxeGridConstructor | null | undefined
+      $gantt: VxeGanttConstructor | null | undefined
       items: any[]
       $rowIndex: number
     }): boolean
@@ -2780,16 +2790,19 @@ export namespace VxeTablePropTypes {
     exportMethod?(params: {
       $table: VxeTableConstructor
       $grid: VxeGridConstructor | null | undefined
+      $gantt: VxeGanttConstructor | null | undefined
       options: ExportHandleOptions
     }): Promise<any>
     beforeExportMethod?(params: {
       $table: VxeTableConstructor
       $grid: VxeGridConstructor | null | undefined
+      $gantt: VxeGanttConstructor | null | undefined
       options: ExportHandleOptions
     }): void
     afterExportMethod?(params: {
       $table: VxeTableConstructor
       $grid: VxeGridConstructor | null | undefined
+      $gantt: VxeGanttConstructor | null | undefined
       status: boolean
       options: ExportHandleOptions
     }): void
@@ -2841,6 +2854,7 @@ export namespace VxeTablePropTypes {
     sheetName?: string | ((params: {
       $table: VxeTableConstructor
       $grid: VxeGridConstructor | null | undefined
+      $gantt: VxeGanttConstructor | null | undefined
       options: ExportOpts
     }) => string)
     /**
@@ -2899,6 +2913,8 @@ export namespace VxeTablePropTypes {
      */
     columnFilterMethod?(params: {
       $table: VxeTableConstructor
+      $grid: VxeGridConstructor | null | undefined
+      $gantt: VxeGanttConstructor | null | undefined
       column: VxeTableDefines.ColumnInfo
       $columnIndex: number
     }): boolean
@@ -2907,6 +2923,8 @@ export namespace VxeTablePropTypes {
      */
     dataFilterMethod?(params: {
       $table: VxeTableConstructor
+      $grid: VxeGridConstructor | null | undefined
+      $gantt: VxeGanttConstructor | null | undefined
       row: any
       $rowIndex: number
     }): boolean
@@ -2915,6 +2933,8 @@ export namespace VxeTablePropTypes {
      */
     footerFilterMethod?(params: {
       $table: VxeTableConstructor
+      $grid: VxeGridConstructor | null | undefined
+      $gantt: VxeGanttConstructor | null | undefined
       items: any[]
       $rowIndex: number
     }): boolean
@@ -2922,7 +2942,9 @@ export namespace VxeTablePropTypes {
      * 打印之前的方法，可以通过返回自定义打印的内容
      */
     beforePrintMethod?(params: {
-      $table: VxeTableConstructor | null
+      $table: VxeTableConstructor
+      $grid: VxeGridConstructor | null | undefined
+      $gantt: VxeGanttConstructor | null | undefined
       html: string
       options: PrintHandleOptions
 
@@ -5493,7 +5515,8 @@ export namespace VxeTableDefines {
 
   export interface CellRenderHeaderParams<D = any> {
     $table: VxeTableConstructor<D>
-    $grid: VxeGridConstructor<D> | null | undefined
+    $grid: VxeGridConstructor | null | undefined
+    $gantt: VxeGanttConstructor | null | undefined
     $rowIndex: number
     column: ColumnInfo<D>
     columnIndex: number
@@ -5511,7 +5534,8 @@ export namespace VxeTableDefines {
 
   export interface CellRenderBodyParams<D = any> {
     $table: VxeTableConstructor<D>
-    $grid: VxeGridConstructor<D> | null | undefined
+    $grid: VxeGridConstructor | null | undefined
+    $gantt: VxeGanttConstructor | null | undefined
     seq: string | number
     rowid: string
     row: D
@@ -5552,7 +5576,8 @@ export namespace VxeTableDefines {
 
   export interface CellRenderFooterParams<D = any> {
     $table: VxeTableConstructor<D>
-    $grid: VxeGridConstructor<D> | null | undefined
+    $grid: VxeGridConstructor | null | undefined
+    $gantt: VxeGanttConstructor | null | undefined
     row: D
     rowIndex: number
     _rowIndex: number

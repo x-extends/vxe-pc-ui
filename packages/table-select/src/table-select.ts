@@ -414,12 +414,10 @@ export default defineVxeComponent({
       }, 350)
     }
 
-    const changeEvent = (evnt: Event, selectValue: any) => {
-      const { fullRowMaps } = reactData
+    const changeEvent = (evnt: Event, selectValue: any, row: any) => {
       emitModel(selectValue)
       if (selectValue !== props.modelValue) {
-        const cacheItem = fullRowMaps[selectValue]
-        dispatchEvent('change', { value: selectValue, row: cacheItem ? cacheItem.item : null }, evnt)
+        dispatchEvent('change', { value: selectValue, row, option: row }, evnt)
         // 自动更新校验状态
         if ($xeForm && formItemInfo) {
           $xeForm.triggerItemEvent(evnt, formItemInfo.itemConfig.field, selectValue)
@@ -428,7 +426,7 @@ export default defineVxeComponent({
     }
 
     const clearValueEvent = (evnt: Event, selectValue: any) => {
-      changeEvent(evnt, selectValue)
+      changeEvent(evnt, selectValue, null)
       dispatchEvent('clear', { value: selectValue }, evnt)
     }
 
@@ -530,19 +528,19 @@ export default defineVxeComponent({
       const { $event, row } = params
       const valueField = computeValueField.value
       const value = row[valueField]
-      changeEvent($event, value)
+      changeEvent($event, value, row)
       hideOptionPanel()
     }
 
     const checkboxChangeEvent: VxeGridEvents.CheckboxChange = (params) => {
-      const { $grid, $event } = params
+      const { $grid, $event, row } = params
       const valueField = computeValueField.value
       if ($grid) {
         const checkboxRecords = $grid.getCheckboxRecords()
         const value = checkboxRecords.map(row => {
           return row[valueField]
         })
-        changeEvent($event, value)
+        changeEvent($event, value, row)
       }
     }
 

@@ -512,10 +512,10 @@ export default defineVxeComponent({
       dispatchEvent('visible-change', { visible: false }, null)
     }
 
-    const changeEvent = (evnt: Event, selectValue: any) => {
+    const changeEvent = (evnt: Event, selectValue: any, option: any) => {
       emitModel(selectValue)
       if (selectValue !== props.modelValue) {
-        dispatchEvent('change', { value: selectValue }, evnt)
+        dispatchEvent('change', { value: selectValue, option }, evnt)
         // 自动更新校验状态
         if ($xeForm && formItemInfo) {
           $xeForm.triggerItemEvent(evnt, formItemInfo.itemConfig.field, selectValue)
@@ -525,7 +525,7 @@ export default defineVxeComponent({
 
     const clearValueEvent = (evnt: Event, selectValue: any) => {
       internalData.remoteValMaps = {}
-      changeEvent(evnt, selectValue)
+      changeEvent(evnt, selectValue, null)
       dispatchEvent('clear', { value: selectValue }, evnt)
     }
 
@@ -559,7 +559,7 @@ export default defineVxeComponent({
             multipleValue.push(selectValue)
           }
         }
-        changeEvent($event, multipleValue)
+        changeEvent($event, multipleValue, optList[0])
         dispatchEvent('all-change', { value: multipleValue }, $event)
         hideOptionPanel()
       }
@@ -598,9 +598,9 @@ export default defineVxeComponent({
         } else {
           multipleValue = selectVals.filter((val) => val !== selectValue)
         }
-        changeEvent(evnt, multipleValue)
+        changeEvent(evnt, multipleValue, option)
       } else {
-        changeEvent(evnt, selectValue)
+        changeEvent(evnt, selectValue, option)
         hideOptionPanel()
       }
       reactData.reactFlag++

@@ -10,7 +10,7 @@ import VxeInputComponent from '../../input/src/input'
 import VxeButtonComponent from '../../button/src/button'
 import VxeTreeComponent from '../../tree/src/tree'
 
-import type { TreeSelectReactData, VxeTreeSelectEmits, TreeSelectInternalData, VxeButtonEvents, ValueOf, VxeComponentStyleType, TreeSelectPrivateRef, TreeSelectPrivateMethods, TreeSelectMethods, VxeTreeSelectPrivateComputed, VxeTreeSelectPropTypes, VxeTreeSelectConstructor, VxeFormDefines, VxeDrawerConstructor, VxeDrawerMethods, VxeTreeSelectPrivateMethods, VxeFormConstructor, VxeFormPrivateMethods, VxeInputConstructor, VxeModalConstructor, VxeModalMethods, VxeTreeConstructor } from '../../../types'
+import type { TreeSelectReactData, VxeTreeSelectEmits, TreeSelectInternalData, VxeButtonEvents, ValueOf, VxeComponentStyleType, TreeSelectPrivateRef, TreeSelectPrivateMethods, TreeSelectMethods, VxeTreeSelectPrivateComputed, VxeTreeSelectPropTypes, VxeTreeSelectConstructor, VxeFormDefines, VxeDrawerConstructor, VxeDrawerMethods, VxeTreeSelectPrivateMethods, VxeFormConstructor, VxeFormPrivateMethods, VxeInputConstructor, VxeModalConstructor, VxeModalMethods, VxeTreeConstructor, VxeTreeEvents } from '../../../types'
 import type { VxeTableConstructor, VxeTablePrivateMethods } from '../../../types/components/table'
 
 function getOptUniqueId () {
@@ -415,13 +415,11 @@ export default defineVxeComponent({
       }, 350)
     }
 
-    const changeEvent = (evnt: Event, selectValue: any) => {
-      const { fullNodeMaps } = internalData
+    const changeEvent = (evnt: Event, selectValue: any, node: any) => {
       const value = XEUtils.isArray(selectValue) ? selectValue.map(deNodeValue) : deNodeValue(selectValue)
       emitModel(value)
       if (value !== props.modelValue) {
-        const cacheItem = fullNodeMaps[selectValue]
-        dispatchEvent('change', { value, option: cacheItem ? cacheItem.item : null }, evnt)
+        dispatchEvent('change', { value, node, option: node }, evnt)
         // 自动更新校验状态
         if ($xeForm && formItemInfo) {
           $xeForm.triggerItemEvent(evnt, formItemInfo.itemConfig.field, value)
@@ -430,7 +428,7 @@ export default defineVxeComponent({
     }
 
     const clearValueEvent = (evnt: Event, selectValue: any) => {
-      changeEvent(evnt, selectValue)
+      changeEvent(evnt, selectValue, null)
       dispatchEvent('clear', { value: selectValue }, evnt)
     }
 
@@ -445,8 +443,8 @@ export default defineVxeComponent({
       const $tree = refTree.value
       if (multiple) {
         if ($tree) {
-          $tree.setAllCheckboxNode(true).then(({ checkNodeKeys }) => {
-            changeEvent($event, checkNodeKeys)
+          $tree.setAllCheckboxNode(true).then(({ checkNodeKeys, checkNodes }) => {
+            changeEvent($event, checkNodeKeys, checkNodes[0])
             dispatchEvent('all-change', { value: checkNodeKeys }, $event)
             if (autoClose) {
               hideOptionPanel()
@@ -467,7 +465,7 @@ export default defineVxeComponent({
             hideOptionPanel()
           }
         })
-        changeEvent($event, value)
+        changeEvent($event, value, null)
         dispatchEvent('clear', { value }, $event)
       }
     }
@@ -607,20 +605,20 @@ export default defineVxeComponent({
       }
     }
 
-    const nodeClickEvent = (params: any) => {
+    const nodeClickEvent: VxeTreeEvents.NodeClick = (params) => {
       const { $event } = params
       dispatchEvent('node-click', params, $event)
     }
 
-    const radioChangeEvent = (params: any) => {
-      const { value, $event } = params
-      changeEvent($event, value)
+    const radioChangeEvent: VxeTreeEvents.RadioChange = (params) => {
+      const { value, $event, node } = params
+      changeEvent($event, value, node)
       hideOptionPanel()
     }
 
-    const checkboxChangeEvent = (params: any) => {
-      const { value, $event } = params
-      changeEvent($event, value)
+    const checkboxChangeEvent: VxeTreeEvents.CheckboxChange = (params) => {
+      const { value, $event, node } = params
+      changeEvent($event, value, node)
     }
 
     const loadSuccessEvent = () => {
