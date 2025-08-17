@@ -4211,9 +4211,13 @@ export interface TableMethods<DT = any> {
    */
   getTreeRowChildren(rowOrRowid: any): DT[]
   /**
+   * 只对 tree-config 有效，用于树形结构，获取指定行的层级
+   */
+  getTreeRowLevel(rowOrRowid: any): DT | null
+  /**
    * 只对 tree-config 有效，用于树形结构，获取指定行的父级
    */
-  getTreeParentRow(rowOrRowid: any): DT | null
+  getTreeParentRow(rowOrRowid: any): number
    /**
     * 已废弃，请使用 getTreeParentRow
     * @deprecated
