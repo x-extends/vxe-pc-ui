@@ -90,7 +90,7 @@ export interface VxeTableExtendCellAreaPrivateMethods<D = any> {
   /**
    * @private
    */
-  triggerCellAreaModownEvent(evnt: MouseEvent, params: VxeTableDefines.CellClickEventParams<D>): void
+  triggerCellAreaModnEvent(evnt: MouseEvent, params: VxeTableDefines.CellClickEventParams<D>): void
   /**
    * @private
    */
