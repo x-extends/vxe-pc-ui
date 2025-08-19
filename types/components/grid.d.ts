@@ -1,4 +1,5 @@
-import { VNode, CreateElement } from 'vue'
+import { CreateElement } from 'vue'
+import { NormalizedScopedSlot } from 'vue/types/vnode'
 import { DefineVxeComponentApp, DefineVxeComponentOptions, DefineVxeComponentInstance, VxeComponentEventParams, VxeComponentSizeType, VxeComponentSlotType, ValueOf } from '@vxe-ui/core'
 import { VxeToolbarProps, VxeToolbarPropTypes, VxeToolbarSlotTypes } from './toolbar'
 import { VxeTableDefines, VxeTableEmits, VxeTableConstructor, VxeTableProps, TableMethods, VxeTableSlotTypes } from './table'
@@ -438,7 +439,7 @@ export interface GridMethods<D = any> {
 export interface VxeGridMethods<D = any> extends GridMethods<D>, Omit<TableMethods<D>, 'dispatchEvent'> { }
 
 export interface GridPrivateMethods {
-  callSlot<T = any>(slotFunc: ((params: T) => VxeComponentSlotType | VxeComponentSlotType[]) | string | null, params: T, h: CreateElement, vNodes?: VNode[]): VxeComponentSlotType[]
+  callSlot<T = any>(slotFunc: NormalizedScopedSlot | ((params: T) => VxeComponentSlotType | VxeComponentSlotType[]) | string | null, params: T, h: CreateElement): VxeComponentSlotType[]
   extendTableMethods<T>(methodKeys: T[]): any
   triggerToolbarCommitEvent(params: VxeToolbarPropTypes.ButtonConfig | VxeToolbarPropTypes.ToolConfig, evnt: Event): Promise<any>
   triggerToolbarBtnEvent(button: VxeToolbarPropTypes.ButtonConfig, evnt: Event): void

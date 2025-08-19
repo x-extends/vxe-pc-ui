@@ -2405,9 +2405,9 @@ export namespace VxeTablePropTypes {
    */
   export interface ScrollY {
     /**
-     * 滚动模式，会在受支持的场景中使用该模式，一般无需设置
+     * 滚动模式，会在受支持的场景中使用该模式，不建议修改
      */
-    mode?: 'default' | 'wheel'
+    mode?: 'default' | 'scroll' | 'wheel' | ''
     /**
      * 指定大于指定行时自动启动纵向虚拟滚动，如果为 0 则总是启用；如果需要关闭，可以设置 enabled 为 false（注：启用纵向虚拟滚动之后将不能支持动态行高）
      */
@@ -2506,7 +2506,7 @@ export namespace VxeTablePropTypes {
      */
     threshold?: string | number
     /**
-     * 滚动模式，会在受支持的场景中使用该模式，一般无需设置
+     * 滚动模式，会在受支持的场景中使用该模式，不建议修改
      */
     mode?: 'default' | 'scroll' | 'wheel' | ''
   }
@@ -3920,6 +3920,8 @@ export interface TableInternalData<D = any> {
   tBodyHeight: number
   // 表尾高度
   tFooterHeight: number
+
+  teleportToWrapperElem: HTMLElement | null
 
   // 内部属性
   _updateStyleFlag?: boolean

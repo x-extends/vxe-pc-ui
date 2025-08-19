@@ -1,4 +1,6 @@
-import { DefineVxeComponentApp, DefineVxeComponentOptions, DefineVxeComponentInstance, VxeComponentEventParams, ValueOf } from '@vxe-ui/core'
+import { CreateElement } from 'vue'
+import { NormalizedScopedSlot } from 'vue/types/vnode'
+import { DefineVxeComponentApp, DefineVxeComponentOptions, DefineVxeComponentInstance, VxeComponentEventParams, ValueOf, VxeComponentSlotType } from '@vxe-ui/core'
 import { GridPrivateRef, VxeGridProps, VxeGridPropTypes, GridPrivateComputed, GridReactData, GridInternalData, GridMethods, GridPrivateMethods, VxeGridEmits, VxeGridSlots, VxeGridListeners, VxeGridEventProps, VxeGridMethods } from './grid'
 import { VxeTablePropTypes } from './table'
 
@@ -46,20 +48,41 @@ export namespace VxeGanttPropTypes {
      * 进度的字段名
      */
     progressField?: string
+    /**
+     * 自定义解析日期的格式
+     */
+    dateFormat?: string
   }
 
   export interface TaskViewConfig<D = any> {
+    mode?: string
     /**
-     * 视图的渲染模式
+     * 日期列头颗粒度配置
      */
-    mode?: 'day' | 'week' | 'month' | 'quarter' | 'year'
+    scales?: VxeGanttDefines.ColumnScaleType[] | VxeGanttDefines.ColumnScaleConfig[]
     /**
      * 表格样式
      */
     tableStyle?: {
+      /**
+       * 边框
+       */
+      border?: VxeTablePropTypes.Border
+      /**
+       * 宽度
+       */
       width?: number | string
       minWidth?: number | string
       maxWidth?: number | string
+    }
+    /**
+     * 任务视图样式
+     */
+    viewStyle?: {
+      /**
+       * 边框
+       */
+      border?: VxeTablePropTypes.Border
     }
   }
 
@@ -161,10 +184,37 @@ export interface GanttMethods<D = any> extends Omit<GridMethods<D>, 'dispatchEve
    * 刷新任务视图
    */
   refreshTaskView(): Promise<any>
+
+  /**
+   * 表格视图是否显示
+   */
+  hasTableViewVisible(): boolean
+  /**
+   * 显示表格视图
+   */
+  showTableView(): Promise<void>
+  /**
+   * 隐藏表格视图
+   */
+  hideTableView(): Promise<void>
+  /**
+   * 任务视图是否显示
+   */
+  hasTaskViewVisible(): boolean
+  /**
+   * 显示任务视图
+   */
+  showTaskView(): Promise<void>
+  /**
+   * 隐藏任务视图
+   */
+  hideTaskView(): Promise<void>
 }
 export interface VxeGanttMethods<D = any> extends GanttMethods<D>, Omit<VxeGridMethods<D>, 'dispatchEvent'> { }
 
 export interface GanttPrivateMethods extends GridPrivateMethods {
+  callSlot<T = any>(slotFunc: NormalizedScopedSlot | ((params: T) => VxeComponentSlotType | VxeComponentSlotType[]) | string | null, params: T, h: CreateElement): VxeComponentSlotType[]
+
   handleTaskCellClickEvent(evnt: MouseEvent, params: VxeGanttDefines.TaskCellClickParams): void
   handleTaskCellDblclickEvent(evnt: MouseEvent, params: VxeGanttDefines.TaskCellClickParams): void
   handleTaskBarClickEvent(evnt: MouseEvent, params: VxeGanttDefines.TaskBarClickParams): void
@@ -194,6 +244,15 @@ export namespace VxeGanttDefines {
 
   export interface GroupHeaderColumn<D = any> extends VxeGanttPropTypes.Column<D> {
     children: VxeGanttPropTypes.Column<D>[]
+  }
+
+  /**
+   * 日期轴类型
+   */
+  export type ColumnScaleType = 'second' | 'minute' | 'hour' | 'day' | 'week' | 'month' | 'quarter' | 'year' | '' | null
+
+  export interface ColumnScaleConfig {
+    type: ColumnScaleType
   }
 
   export interface RowCacheItem<D = any> {
@@ -241,9 +300,18 @@ export namespace VxeGanttSlotTypes {
   export interface DefaultSlotParams<D = any> {
     $gantt: VxeGanttConstructor<D>
   }
+
+  export interface TaskBarSlotParams<D = any> {
+    row: D
+  }
 }
 
 export interface VxeGanttSlots<D = any> extends VxeGridSlots<D> {
+  /**
+   * 自定义任务条模板
+   */
+  taskBar?(params: VxeGanttSlotTypes.TaskBarSlotParams<D>): any
+  'task-bar'?(params: VxeGanttSlotTypes.TaskBarSlotParams<D>): any
 }
 
 export * from './gantt-module'
