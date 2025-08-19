@@ -6455,6 +6455,13 @@ export namespace VxeTableSlotTypes {
   export interface ColumnDragIconSlotParams<D = any> extends BaseSlotParams<D> {
     column: VxeTableDefines.ColumnInfo<D>
   }
+  export interface ColumnGroupContentSlotParams<D = any> extends BaseSlotParams<D> {
+    row: D
+    column: VxeTableDefines.ColumnInfo<D>
+    groupContent: string
+    groupField: string
+    childCount: number
+  }
 }
 
 export interface VxeTableSlots<D = any> {
