@@ -29,7 +29,7 @@ export namespace VxeColumnPropTypes {
   export type ColId = string | number
   export type Type = 'seq' | 'radio' | 'checkbox' | 'expand' | 'html' | null
   export type Field = string
-  export type Title = string
+  export type Title = string | number
   export type Width = number | string
   export type MinWidth = number | string
   export type MaxWidth = number | string

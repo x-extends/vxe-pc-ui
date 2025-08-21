@@ -17,5 +17,10 @@
       <vxe-tag status="warning" content="警告图标颜色" icon="vxe-icon-info-circle"></vxe-tag>
       <vxe-tag status="error" content="危险图标颜色" icon="vxe-icon-info-circle"></vxe-tag>
     </p>
+
+    <p>
+      <vxe-tag status="warning" content="警告图标颜色" icon="vxe-icon-info-circle" round></vxe-tag>
+      <vxe-tag status="error" content="危险图标颜色" icon="vxe-icon-info-circle" round></vxe-tag>
+    </p>
   </div>
 </template>

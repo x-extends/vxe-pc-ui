@@ -1,5 +1,5 @@
 import { RenderFunction, SetupContext, ComputedRef, Ref } from 'vue'
-import { DefineVxeComponentApp, DefineVxeComponentOptions, DefineVxeComponentInstance, VxeComponentBaseOptions, VxeComponentEventParams, ValueOf, VxeComponentSlotType } from '@vxe-ui/core'
+import { DefineVxeComponentApp, DefineVxeComponentOptions, DefineVxeComponentInstance, VxeComponentBaseOptions, VxeComponentEventParams, ValueOf, VxeComponentSlotType, VxeComponentAlignType } from '@vxe-ui/core'
 import { GridPrivateRef, VxeGridProps, VxeGridPropTypes, GridPrivateComputed, GridReactData, GridInternalData, GridMethods, GridPrivateMethods, VxeGridEmits, VxeGridSlots, VxeGridListeners, VxeGridEventProps, VxeGridMethods } from './grid'
 import { VxeTablePropTypes } from './table'
 
@@ -55,13 +55,51 @@ export namespace VxeGanttPropTypes {
      */
     progressField?: string
     /**
-     * 自定义解析日期的格式
+     * 自定义解析日期的格式 yyyy-MM-dd HH:mm:ss
      */
     dateFormat?: string
   }
 
+  export interface TaskViewScaleConfs {
+    /**
+     * 年配置
+     */
+    year?: VxeGanttDefines.ScaleDefaultOptions
+    /**
+     * 季度配置
+     */
+    quarter?: VxeGanttDefines.ScaleDefaultOptions
+    /**
+     * 月配置
+     */
+    month?: VxeGanttDefines.ScaleDefaultOptions
+    /**
+     * 周配置
+     */
+    week?: VxeGanttDefines.ScaleWeekOptions
+    /**
+     * 星期配置
+     */
+    day?: VxeGanttDefines.ScaleDefaultOptions
+    /**
+     * 天配置
+     */
+    date?: VxeGanttDefines.ScaleDefaultOptions
+    /**
+     * 小时配置
+     */
+    hour?: VxeGanttDefines.ScaleDefaultOptions
+    /**
+     * 分钟配置
+     */
+    minute?: VxeGanttDefines.ScaleDefaultOptions
+    /**
+     * 秒配置
+     */
+    second?: VxeGanttDefines.ScaleDefaultOptions
+  }
+
   export interface TaskViewConfig<D = any> {
-    mode?: string
     /**
      * 日期列头颗粒度配置
      */
@@ -155,6 +193,7 @@ export namespace VxeGanttPropTypes {
 export interface VxeGanttProps<D = any> extends Omit<VxeGridProps<D>, 'layouts'> {
   layouts?: VxeGanttPropTypes.Layouts
   taskConfig?: VxeGanttPropTypes.TaskConfig
+  taskViewScaleConfs?: VxeGanttPropTypes.TaskViewScaleConfs
   taskViewConfig?: VxeGanttPropTypes.TaskViewConfig
   taskSplitConfig?: VxeGanttPropTypes.TaskSplitConfig
   taskBarConfig?: VxeGanttPropTypes.TaskBarConfig
@@ -163,8 +202,10 @@ export interface VxeGanttProps<D = any> extends Omit<VxeGridProps<D>, 'layouts'>
 export interface GanttPrivateComputed<D = any> extends GridPrivateComputed<D> {
   computeTaskOpts: ComputedRef<VxeGanttPropTypes.TaskConfig>
   computeTaskViewOpts: ComputedRef<VxeGanttPropTypes.TaskViewConfig>
+  computeTaskViewScaleMapsOpts: ComputedRef<VxeGanttPropTypes.TaskViewScaleConfs>
   computeTaskBarOpts: ComputedRef<VxeGanttPropTypes.TaskBarConfig>
   computeTaskSplitOpts: ComputedRef<VxeGanttPropTypes.TaskSplitConfig>
+  computeTaskScaleConfs: ComputedRef<VxeGanttDefines.ColumnScaleType[] | VxeGanttDefines.ColumnScaleConfig[] | undefined>
   computeTitleField: ComputedRef<string>
   computeStartField: ComputedRef<string>
   computeEndField: ComputedRef<string>
@@ -178,6 +219,7 @@ export interface VxeGanttPrivateComputed<D = any> extends GanttPrivateComputed<D
 export interface GanttReactData<D = any> extends GridReactData<D> {
   showLeftView: boolean
   showRightView: boolean
+  taskScaleList: VxeGanttDefines.ColumnScaleObj[]
 }
 
 export interface GanttInternalData extends GridInternalData {
@@ -244,17 +286,62 @@ export namespace VxeGanttDefines {
 
   export type LayoutKey = 'Form' | 'Toolbar' | 'Top' | 'Gantt' | 'Bottom' | 'Pager'
 
-  export interface GroupHeaderColumn<D = any> extends VxeGanttPropTypes.Column<D> {
-    children: VxeGanttPropTypes.Column<D>[]
+  export interface HeaderColumn<D = any> {
+    scaleItem: ColumnScaleObj
+    columns: ViewColumn<D>[]
+  }
+
+  export interface ViewColumn<D = any> extends VxeGanttPropTypes.Column<D> {
+    childCount?: number
+    children?: ViewColumn<D>[]
+  }
+
+  export interface ScaleDateObj {
+    yy: string
+    M: string
+    d: string
+    H: string
+    m: string
+    s: string
+    q: number
+    W: number
+    e: number
+    E: number
+  }
+
+  export interface ScaleDefaultOptions {
+    /**
+     * 标题
+     */
+    titleMethod?: (params: {
+      title: string | number
+      dateObj: VxeGanttDefines.ScaleDateObj
+      scaleObj: VxeGanttDefines.ColumnScaleObj
+      $rowIndex: number
+    }) => string | number
+  }
+
+  export interface ScaleWeekOptions extends ScaleDefaultOptions {
+    /**
+     * 设置每周的起始日期是星期几
+     */
+    startDay?: 0 | 1 | 2 | 3 | 4 | 5 | 6
   }
 
   /**
    * 日期轴类型
    */
-  export type ColumnScaleType = 'second' | 'minute' | 'hour' | 'day' | 'week' | 'month' | 'quarter' | 'year' | '' | null
+  export type ColumnScaleType = 'second' | 'minute' | 'hour' | 'date' | 'day' | 'week' | 'month' | 'quarter' | 'year'
 
-  export interface ColumnScaleConfig {
+   export interface ColumnScaleConfig {
     type: ColumnScaleType
+    align?: VxeComponentAlignType
+  }
+
+  export interface ColumnScaleObj extends ScaleDefaultOptions, ScaleWeekOptions {
+    type: ColumnScaleType
+    align?: VxeComponentAlignType
+    level: number
   }
 
   export interface RowCacheItem<D = any> {

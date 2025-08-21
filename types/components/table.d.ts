@@ -1607,6 +1607,19 @@ export namespace VxeTablePropTypes {
    */
   export interface AreaConfig<D = any> {
     /**
+     * 是否显示操作提示消息
+     */
+    showActionMsg?: boolean
+    /**
+     * 自定义操作提示消息
+     */
+    customModalMsg?:(params: {
+      $table: VxeTableConstructor<D>
+      type: 'fnr' | 'clip' | 'merge' | 'selected'
+      message: string
+      status: VxeModalPropTypes.Status
+    }) => void
+    /**
      * 只对 mouse-config.area 启用后有效，启用多区域选取功能
      */
     multiple?: boolean
@@ -4876,19 +4889,19 @@ export interface TablePrivateMethods<D = any> {
   /**
    * @private
    */
-  handleColResizeMousedownEvent(evnt: MouseEvent, fixedType: 'left' | 'right' | '', params: (VxeTableDefines.CellRenderHeaderParams | VxeTableDefines.CellRenderBodyParams | VxeTableDefines.CellRenderFooterParams) & { $table: VxeTableConstructor & VxeTablePrivateMethods }): void
+  handleColResizeMousedownEvent(evnt: MouseEvent, fixedType: 'left' | 'right' | '', params: (VxeTableDefines.CellRenderHeaderParams | VxeTableDefines.CellRenderBodyParams | VxeTableDefines.CellRenderFooterParams)): void
   /**
    * @private
    */
-  handleColResizeDblclickEvent(evnt: MouseEvent, params: (VxeTableDefines.CellRenderHeaderParams | VxeTableDefines.CellRenderBodyParams | VxeTableDefines.CellRenderFooterParams) & { $table: VxeTableConstructor & VxeTablePrivateMethods }): void
+  handleColResizeDblclickEvent(evnt: MouseEvent, params: (VxeTableDefines.CellRenderHeaderParams | VxeTableDefines.CellRenderBodyParams | VxeTableDefines.CellRenderFooterParams)): void
   /**
    * @private
    */
-  handleRowResizeMousedownEvent(evnt: MouseEvent, params: VxeTableDefines.CellRenderBodyParams & { $table: VxeTableConstructor & VxeTablePrivateMethods }): void
+  handleRowResizeMousedownEvent(evnt: MouseEvent, params: VxeTableDefines.CellRenderBodyParams): void
   /**
    * @private
    */
-  handleRowResizeDblclickEvent(evnt: MouseEvent, params: VxeTableDefines.CellRenderBodyParams & { $table: VxeTableConstructor & VxeTablePrivateMethods }): void
+  handleRowResizeDblclickEvent(evnt: MouseEvent, params: VxeTableDefines.CellRenderBodyParams): void
   /**
    * @private
    */
