@@ -20,6 +20,7 @@ export namespace VxeTagPropTypes {
   export type Title = string | number
   export type Icon = string
   export type Content = string | number
+  export type Round = boolean
   export type Size = VxeComponentSizeType
 }
 
@@ -28,6 +29,7 @@ export interface VxeTagProps {
   title?: VxeTagPropTypes.Title
   icon?: VxeTagPropTypes.Icon
   content?: VxeTagPropTypes.Content
+  round?: VxeTagPropTypes.Round
   size?: VxeTagPropTypes.Size
 }
 

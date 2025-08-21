@@ -45,6 +45,9 @@ $tagsThemeList: (
       background-color: map.get($item, bgColor);
     }
   }
+  &.is--round {
+    border-radius: 1em;
+  }
   &.size--medium {
     font-size: var(--vxe-ui-font-size-medium);
   }

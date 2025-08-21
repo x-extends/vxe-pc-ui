@@ -17,6 +17,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
     title: [String, Number] as PropType<VxeTagPropTypes.Title>,
     icon: String as PropType<VxeTagPropTypes.Icon>,
     content: [String, Number] as PropType<VxeTagPropTypes.Content>,
+    round: Boolean as PropType<VxeTagPropTypes.Round>,
     size: {
       type: String as PropType<VxeTagPropTypes.Size>,
       default: () => getConfig().tag.size || getConfig().size
@@ -82,13 +83,14 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const $xeTag = this
       const props = $xeTag
 
-      const { status, title } = props
+      const { status, title, round } = props
       const vSize = $xeTag.computeSize
       return h('span', {
         ref: 'refElem',
         class: ['vxe-tag', {
           [`size--${vSize}`]: vSize,
-          [`theme--${status}`]: status
+          [`theme--${status}`]: status,
+          'is--round': round
         }],
         attrs: {
           title

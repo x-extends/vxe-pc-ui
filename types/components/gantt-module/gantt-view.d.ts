@@ -1,6 +1,6 @@
 import { DefineVxeComponentInstance } from '@vxe-ui/core'
 import { VxeTableConstructor, VxeTableMethods, VxeTablePrivateMethods } from '../table'
-import { VxeGanttPropTypes, VxeGanttDefines, VxeGanttConstructor } from '../gantt'
+import { VxeGanttDefines, VxeGanttConstructor } from '../gantt'
 
 /* eslint-disable no-use-before-define */
 
@@ -43,18 +43,10 @@ export interface GanttViewReactData {
   minViewDate: Date | null
   maxViewDate: Date | null
   tableData: any[]
-  tableColumn: VxeGanttPropTypes.Column[]
-  headerGroups: VxeGanttPropTypes.Column[][]
+  tableColumn: VxeGanttDefines.ViewColumn[]
+  headerGroups: VxeGanttDefines.HeaderColumn[]
 
   viewCellWidth: number
-
-  rowHeightStore: {
-    large: number
-    default: number
-    medium: number
-    small: number
-    mini: number
-  }
 }
 
 export interface GanttViewInternalData {
