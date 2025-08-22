@@ -101,7 +101,7 @@ export namespace VxeGanttPropTypes {
 
   export interface TaskViewConfig<D = any> {
     /**
-     * 日期列头颗粒度配置
+     * 日期轴配置项
      */
     scales?: VxeGanttDefines.ColumnScaleType[] | VxeGanttDefines.ColumnScaleConfig[]
     /**
@@ -149,6 +149,25 @@ export namespace VxeGanttPropTypes {
     showCollapseTaskButton?: boolean
   }
 
+  interface BarStyleConfig {
+    /**
+     * 圆角
+     */
+    round?: boolean
+    /**
+     * 任务条的背景颜色
+     */
+    bgColor?: string
+    /**
+     * 任务条的字体颜色
+     */
+    fontColor?: string
+    /**
+     * 已完成部分任务条的背景颜色
+     */
+    completedBgColor?: string
+  }
+
   export interface TaskBarConfig<D = any> {
     /**
      * 是否显示进度条
@@ -169,24 +188,10 @@ export namespace VxeGanttPropTypes {
     /**
      * 任务条样式
      */
-    barStyle?: {
-      /**
-       * 圆角
-       */
-      round?: boolean
-      /**
-       * 任务条的背景颜色
-       */
-      bgColor?: string
-      /**
-       * 任务条的字体颜色
-       */
-      fontColor?: string
-      /**
-       * 已完成部分任务条的背景颜色
-       */
-      completedBgColor?: string
-    }
+    barStyle?: BarStyleConfig | ((params: {
+      $gantt: VxeGanttConstructor<D>
+      row: D
+    }) => BarStyleConfig)
   }
 }
 
@@ -194,16 +199,16 @@ export interface VxeGanttProps<D = any> extends Omit<VxeGridProps<D>, 'layouts'>
   layouts?: VxeGanttPropTypes.Layouts
   taskConfig?: VxeGanttPropTypes.TaskConfig
   taskViewScaleConfs?: VxeGanttPropTypes.TaskViewScaleConfs
-  taskViewConfig?: VxeGanttPropTypes.TaskViewConfig
+  taskViewConfig?: VxeGanttPropTypes.TaskViewConfig<D>
   taskSplitConfig?: VxeGanttPropTypes.TaskSplitConfig
-  taskBarConfig?: VxeGanttPropTypes.TaskBarConfig
+  taskBarConfig?: VxeGanttPropTypes.TaskBarConfig<D>
 }
 
 export interface GanttPrivateComputed<D = any> extends GridPrivateComputed<D> {
   computeTaskOpts: ComputedRef<VxeGanttPropTypes.TaskConfig>
-  computeTaskViewOpts: ComputedRef<VxeGanttPropTypes.TaskViewConfig>
+  computeTaskViewOpts: ComputedRef<VxeGanttPropTypes.TaskViewConfig<D>>
   computeTaskViewScaleMapsOpts: ComputedRef<VxeGanttPropTypes.TaskViewScaleConfs>
-  computeTaskBarOpts: ComputedRef<VxeGanttPropTypes.TaskBarConfig>
+  computeTaskBarOpts: ComputedRef<VxeGanttPropTypes.TaskBarConfig<D>>
   computeTaskSplitOpts: ComputedRef<VxeGanttPropTypes.TaskSplitConfig>
   computeTaskScaleConfs: ComputedRef<VxeGanttDefines.ColumnScaleType[] | VxeGanttDefines.ColumnScaleConfig[] | undefined>
   computeTitleField: ComputedRef<string>
@@ -276,7 +281,9 @@ export type VxeGanttEmits = [
   'task-cell-click',
   'task-cell-dblclick',
   'task-bar-click',
-  'task-bar-dblclick'
+  'task-bar-dblclick',
+  'task-view-cell-click',
+  'task-view-cell-dblclick'
 ]
 
 export namespace VxeGanttDefines {
@@ -286,12 +293,15 @@ export namespace VxeGanttDefines {
 
   export type LayoutKey = 'Form' | 'Toolbar' | 'Top' | 'Gantt' | 'Bottom' | 'Pager'
 
-  export interface HeaderColumn<D = any> {
+  export interface GroupColumn<D = any> {
     scaleItem: ColumnScaleObj
     columns: ViewColumn<D>[]
   }
 
-  export interface ViewColumn<D = any> extends VxeGanttPropTypes.Column<D> {
+  export interface ViewColumn<D = any> {
+    field: string
+    title: string
+    dateObj: VxeGanttDefines.ScaleDateObj
     childCount?: number
     children?: ViewColumn<D>[]
   }
@@ -313,12 +323,16 @@ export namespace VxeGanttDefines {
     /**
      * 标题
      */
-    titleMethod?: (params: {
-      title: string | number
-      dateObj: VxeGanttDefines.ScaleDateObj
-      scaleObj: VxeGanttDefines.ColumnScaleObj
-      $rowIndex: number
-    }) => string | number
+    titleMethod?: (params: VxeGanttSlotTypes.TaskViewCellTitleSlotParams) => string | number
+    /**
+     * 自定义插槽模板
+     */
+    slots?: {
+      /**
+       * 自定义标题
+       */
+      title?: string | ((params: VxeGanttSlotTypes.TaskViewCellTitleSlotParams) => VxeComponentSlotType | VxeComponentSlotType[])
+    }
   }
 
   export interface ScaleWeekOptions extends ScaleDefaultOptions {
@@ -333,7 +347,7 @@ export namespace VxeGanttDefines {
    */
   export type ColumnScaleType = 'second' | 'minute' | 'hour' | 'date' | 'day' | 'week' | 'month' | 'quarter' | 'year'
 
-   export interface ColumnScaleConfig {
+   export interface ColumnScaleConfig extends ScaleDefaultOptions, ScaleWeekOptions {
     type: ColumnScaleType
     align?: VxeComponentAlignType
   }
@@ -362,6 +376,12 @@ export namespace VxeGanttDefines {
   export interface TaskCellDblClickEventParams<D = any> extends TaskCellClickEventParams<D> {}
   export interface TaskBarClickEventParams<D = any> extends TaskBarClickParams<D>, GanttEventParams {}
   export interface TaskBarDblClickEventParams<D = any> extends TaskBarClickEventParams<D> {}
+
+  export interface TaskViewCellClickEventParams<D = any> extends GanttEventParams {
+    row: D
+    column: ViewColumn<D>
+  }
+  export interface TaskViewCellDblClickEventParams<D = any> extends TaskViewCellClickEventParams<D> {}
 }
 
 export interface VxeGanttEventProps<D = any> extends VxeGridEventProps<D> {
@@ -369,6 +389,8 @@ export interface VxeGanttEventProps<D = any> extends VxeGridEventProps<D> {
   onTaskCellDblClick?: VxeGanttEvents.TaskCellDblClick<D>
   onTaskBarClick?: VxeGanttEvents.TaskBarClick<D>
   onTaskBarDblClick?: VxeGanttEvents.TaskBarDblClick<D>
+  onTaskViewCellClick?: VxeGanttEvents.TaskViewCellClick<D>
+  onTaskViewCellDblClick?: VxeGanttEvents.TaskViewCellDblClick<D>
 }
 
 export interface VxeGanttListeners<D = any> extends VxeGridListeners<D> {
@@ -376,6 +398,8 @@ export interface VxeGanttListeners<D = any> extends VxeGridListeners<D> {
   taskCellDblClick?: VxeGanttEvents.TaskCellDblClick<D>
   taskBarClick?: VxeGanttEvents.TaskBarClick<D>
   taskBarDblClick?: VxeGanttEvents.TaskBarDblClick<D>
+  taskViewCellClick?: VxeGanttEvents.TaskViewCellClick<D>
+  taskViewCellDblClick?: VxeGanttEvents.TaskViewCellDblClick<D>
 }
 
 export namespace VxeGanttEvents {
@@ -383,6 +407,8 @@ export namespace VxeGanttEvents {
   export type TaskCellDblClick<D = any> = (params: VxeGanttDefines.TaskCellDblClickEventParams<D>) => void
   export type TaskBarClick<D = any> = (params: VxeGanttDefines.TaskBarClickEventParams<D>) => void
   export type TaskBarDblClick<D = any> = (params: VxeGanttDefines.TaskBarDblClickEventParams<D>) => void
+  export type TaskViewCellClick<D = any> = (params: VxeGanttDefines.TaskViewCellClickEventParams<D>) => void
+  export type TaskViewCellDblClick<D = any> = (params: VxeGanttDefines.TaskViewCellDblClickEventParams<D>) => void
 }
 
 export namespace VxeGanttSlotTypes {
@@ -392,6 +418,13 @@ export namespace VxeGanttSlotTypes {
 
   export interface TaskBarSlotParams<D = any> {
     row: D
+  }
+
+  export interface TaskViewCellTitleSlotParams {
+    title: string | number
+    dateObj: VxeGanttDefines.ScaleDateObj
+    scaleObj: VxeGanttDefines.ColumnScaleObj
+    $rowIndex: number
   }
 }
 
