@@ -44,7 +44,7 @@ export interface GanttViewReactData {
   maxViewDate: Date | null
   tableData: any[]
   tableColumn: VxeGanttDefines.ViewColumn[]
-  headerGroups: VxeGanttDefines.HeaderColumn[]
+  headerGroups: VxeGanttDefines.GroupColumn[]
 
   viewCellWidth: number
 }
