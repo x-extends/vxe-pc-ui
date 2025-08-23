@@ -4,6 +4,9 @@
       <vxe-split-pane>
         <div style="height: 100%;background-color: #d8d8f9;">左侧</div>
       </vxe-split-pane>
+      <vxe-split-pane>
+        <div style="height: 100%;background-color: #d8d8f9;">中</div>
+      </vxe-split-pane>
       <vxe-split-pane showAction>
         <vxe-split border vertical>
           <vxe-split-pane>
@@ -24,6 +27,9 @@
     <vxe-split height="200" border :actionConfig="actionConfig">
       <vxe-split-pane showAction>
         <div style="height: 100%;background-color: #d8d8f9;">左侧</div>
+      </vxe-split-pane>
+      <vxe-split-pane>
+        <div style="height: 100%;background-color: #d8d8f9;">中</div>
       </vxe-split-pane>
       <vxe-split-pane>
         <vxe-split border vertical>

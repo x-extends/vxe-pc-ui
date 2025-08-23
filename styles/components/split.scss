@@ -2,6 +2,7 @@
 @use '../helpers/baseMixin.scss';
 
 .vxe-split {
+  position: relative;
   width: 100%;
   &.is--vertical {
     & > .vxe-split-wrapper {
@@ -32,6 +33,63 @@
     } 
   }
 }
+
+.vxe-split--resizable-split-tip {
+  display: none;
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 7;
+  pointer-events: none;
+  user-select: none;
+  cursor: col-resize;
+  &.is-resize--lazy {
+    &:before {
+      content: "";
+      display: block;
+      height: 100%;
+      background-color: var(--vxe-ui-split-resizable-drag-line-color);
+    }
+  }
+  &.is--horizontal {
+    width: 1px;
+    height: 100%;
+    .vxe-split--resizable-split-number-prev {
+      right: 0;
+    }
+    .vxe-split--resizable-split-number-next {
+      left: 1px;
+    }
+  }
+  &.is--vertical {
+    width: 100%;
+    height: 1px;
+    .vxe-split--resizable-split-number-prev {
+      bottom: 0;
+    }
+    .vxe-split--resizable-split-number-next {
+      top: 1px;
+    }
+  }
+}
+.vxe-split--resizable-split-tip-number {
+  position: absolute;
+  top: 0;
+  left: 0;
+  user-select: none;
+  pointer-events: none;
+}
+.vxe-split--resizable-split-number-prev,
+.vxe-split--resizable-split-number-next {
+  position: absolute;
+  padding: 0.25em 0.25em;
+  font-size: 12px;
+  border-radius: var(--vxe-ui-border-radius);
+  white-space: nowrap;
+  color: #ffffff;
+  background-color: var(--vxe-ui-split-resizable-drag-line-color);
+}
+
 .vxe-split-wrapper {
   height: 100%;
   display: flex;
@@ -65,6 +123,9 @@
 }
 .vxe-split-pane-handle-bar {
   background-color: var(--vxe-ui-split-handle-bar-background-color);
+  &:hover {
+    background-color: var(--vxe-ui-split-handle-bar-hover-background-color);
+  }
 }
 .vxe-split-pane-action-btn {
   position: absolute;
@@ -84,7 +145,8 @@
   cursor: pointer;
   @include baseMixin.createAnimationTransition(transform, 0.1s);
   &:hover {
-    background-color: var(--vxe-ui-font-primary-lighten-color);
+    color: #ffffff;
+    background-color: var(--vxe-ui-font-primary-color);
   }
   &:active {
     transform: translate(-50%, -50%) scale(0.9);
@@ -117,28 +179,42 @@
   }
   &.is--resize {
     &.is--expand {
-      &.is--horizontal {
+      &.is-resize--immediate {
+        &.is--horizontal {
+          & > .vxe-split-pane-handle {
+            .vxe-split-pane-handle-bar {
+              cursor: w-resize;
+            }
+          }
+        }
+        &.is--vertical {
+          & > .vxe-split-pane-handle {
+            .vxe-split-pane-handle-bar {
+              cursor: n-resize;
+            }
+          }
+        }
         & > .vxe-split-pane-handle {
-          .vxe-split-pane-handle-bar {
-            cursor: w-resize;
+          & > .vxe-split-pane-handle-bar {
+            &:active {
+              background-color: var(--vxe-ui-font-primary-color);
+            }
           }
         }
       }
-      &.is--vertical {
-        & > .vxe-split-pane-handle {
-          .vxe-split-pane-handle-bar {
-            cursor: n-resize;
+      &.is-resize--lazy {
+        &.is--horizontal {
+          & > .vxe-split-pane-handle {
+            .vxe-split-pane-handle-bar {
+              cursor: col-resize;
+            }
           }
         }
-      }
-      & > .vxe-split-pane-handle {
-        & > .vxe-split-pane-handle-bar {
-          background-color: var(--vxe-ui-split-handle-bar-background-color);
-          &:hover {
-            background-color: var(--vxe-ui-font-primary-lighten-color);
-          }
-          &:active {
-            background-color: var(--vxe-ui-font-primary-darken-color);
+        &.is--vertical {
+          & > .vxe-split-pane-handle {
+            .vxe-split-pane-handle-bar {
+              cursor: row-resize;
+            }
           }
         }
       }

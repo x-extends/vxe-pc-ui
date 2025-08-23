@@ -311,6 +311,10 @@ setConfig({
     itemConfig: {
       minWidth: 40,
       minHeight: 40
+    },
+    resizeConfig: {
+      // immediate: false,
+      showTip: true
     }
   },
   splitPane: {},

@@ -33,6 +33,7 @@ export default defineVxeComponent({
     items: Array as PropType<VxeSplitPropTypes.Items>,
     itemConfig: Object as PropType<VxeSplitPropTypes.ItemConfig>,
     barConfig: Object as PropType<VxeSplitPropTypes.BarConfig>,
+    resizeConfig: Object as PropType<VxeSplitPropTypes.ResizeConfig>,
     actionConfig: Object as PropType<VxeSplitPropTypes.ActionConfig>
   },
   emits: [
@@ -49,6 +50,7 @@ export default defineVxeComponent({
     const xID = XEUtils.uniqueId()
 
     const refElem = ref<HTMLDivElement>()
+    const refResizableSplitTip = ref<HTMLDivElement>()
 
     const reactData = reactive<SplitReactData>({
       staticItems: [],
@@ -66,6 +68,10 @@ export default defineVxeComponent({
 
     const computeBarOpts = computed(() => {
       return Object.assign({}, getConfig().split.barConfig, props.barConfig)
+    })
+
+    const computeResizeOpts = computed(() => {
+      return Object.assign({}, getConfig().split.resizeConfig, props.resizeConfig)
     })
 
     const computeActionOpts = computed(() => {
@@ -337,78 +343,193 @@ export default defineVxeComponent({
       if (!item.isExpand) {
         return
       }
+      const containerRect = el.getBoundingClientRect()
+      const barRect = barEl.getBoundingClientRect()
+      const rsSplitLineEl = refResizableSplitTip.value
+      const rsSplitTipEl = rsSplitLineEl ? rsSplitLineEl.children[0] as HTMLDivElement : null
       const isFoldNext = computeIsFoldNext.value
       const itemOpts = computeItemOpts.value
+      const resizeOpts = computeResizeOpts.value
+      const { immediate } = resizeOpts
       const allMinWidth = XEUtils.toNumber(itemOpts.minWidth)
       const allMinHeight = XEUtils.toNumber(itemOpts.minHeight)
+
       const targetItem = itemList[itemIndex + (isFoldNext ? 1 : -1)]
-      const targetItemEl = targetItem ? el.querySelector<HTMLDivElement>(`.vxe-split-pane[itemid="${targetItem.id}"]`) : null
-      const currItemEl = item ? el.querySelector<HTMLDivElement>(`.vxe-split-pane[itemid="${item.id}"]`) : null
-      const targetWidth = targetItemEl ? targetItemEl.clientWidth : 0
-      const currWidth = currItemEl ? currItemEl.clientWidth : 0
-      const targetHeight = targetItemEl ? targetItemEl.clientHeight : 0
-      const currHeight = currItemEl ? currItemEl.clientHeight : 0
-      const targetMinWidth = XEUtils.toNumber(targetItem ? getGlobalDefaultConfig(targetItem.minWidth, allMinWidth) : allMinWidth)
-      const currMinWidth = XEUtils.toNumber(getGlobalDefaultConfig(item.minWidth, allMinWidth))
-      const targetMinHeight = XEUtils.toNumber(targetItem ? getGlobalDefaultConfig(targetItem.minHeight, allMinHeight) : allMinHeight)
-      const currMinHeight = XEUtils.toNumber(getGlobalDefaultConfig(item.minHeight, allMinHeight))
-      const disX = evnt.clientX
-      const disY = evnt.clientY
-      addClass(el, 'is--drag')
-      document.onmousemove = (evnt) => {
-        evnt.preventDefault()
+
+      const prevItem = itemList[itemIndex + (isFoldNext ? 0 : -1)]
+      const nextItem = itemList[itemIndex + (isFoldNext ? 1 : 0)]
+      const prevEl = targetItem ? el.querySelector<HTMLDivElement>(`.vxe-split-pane[itemid="${prevItem.id}"]`) : null
+      const nextEl = item ? el.querySelector<HTMLDivElement>(`.vxe-split-pane[itemid="${nextItem.id}"]`) : null
+      if (!prevEl || !nextEl) {
+        return
+      }
+
+      const barOffsetX = Math.ceil(barRect.width - (evnt.clientX - barRect.left))
+      const barOffsetY = Math.ceil(evnt.clientY - barRect.top)
+
+      const prevWidth = prevEl.offsetWidth
+      const nextWidth = nextEl.offsetWidth
+      const prevMinWidth = XEUtils.toNumber(prevItem ? getGlobalDefaultConfig(prevItem.minWidth, allMinWidth) : allMinWidth)
+      const nextMinWidth = XEUtils.toNumber(nextItem ? getGlobalDefaultConfig(nextItem.minWidth, allMinWidth) : allMinWidth)
+      const minOffsetLeft = prevEl.offsetLeft + prevMinWidth - barOffsetX
+      const maxOffsetLeft = nextEl.offsetLeft + nextEl.offsetWidth - nextMinWidth - barOffsetX
+      const startOffsetLeft = evnt.clientX - containerRect.left
+      let targetOffsetWidth = -1
+      let prevResizeWidth = 0
+      let nextResizeWidth = 0
+      let offsetLeft = startOffsetLeft
+
+      const prevHeight = prevEl.offsetHeight
+      const nextHeight = nextEl.offsetHeight
+      const prevMinHeight = XEUtils.toNumber(prevItem ? getGlobalDefaultConfig(prevItem.minHeight, allMinHeight) : allMinHeight)
+      const nextMinHeight = XEUtils.toNumber(nextItem ? getGlobalDefaultConfig(nextItem.minHeight, allMinHeight) : allMinHeight)
+      const minOffsetTop = prevEl.offsetTop + prevMinHeight + barOffsetY
+      const maxOffsetTop = nextEl.offsetTop + nextEl.offsetHeight - nextMinHeight + barOffsetY
+      const startOffsetTop = evnt.clientY - containerRect.top
+      let targetOffsetHeight = -1
+      let prevResizeHeight = 0
+      let nextResizeHeight = 0
+      let offsetTop = startOffsetTop
+
+      const handleReStyle = (evnt: MouseEvent) => {
+        if (!rsSplitLineEl) {
+          return
+        }
+        const rsNumPrevEl = rsSplitTipEl ? rsSplitTipEl.children[0] as HTMLDivElement : null
+        const rsNumNextEl = rsSplitTipEl ? rsSplitTipEl.children[1] as HTMLDivElement : null
         if (vertical) {
-          const offsetTop = isFoldNext ? (disY - evnt.clientY) : (evnt.clientY - disY)
-          if (offsetTop > 0) {
-            if (targetItem) {
-              if (currHeight - offsetTop >= currMinHeight) {
-                const reHeight = currHeight - offsetTop
-                targetItem.resizeHeight = targetHeight + offsetTop
-                item.resizeHeight = reHeight
-                dispatchEvent('resize-drag', { item, name: item.name, offsetHeight: offsetTop, resizeHeight: reHeight, offsetWidth: 0, resizeWidth: 0 }, evnt)
-              }
-            }
-          } else {
-            if (targetItem) {
-              if (targetHeight + offsetTop >= targetMinHeight) {
-                const reHeight = currHeight - offsetTop
-                targetItem.resizeHeight = targetHeight + offsetTop
-                item.resizeHeight = reHeight
-                dispatchEvent('resize-drag', { item, name: item.name, offsetHeight: offsetTop, resizeHeight: reHeight, offsetWidth: 0, resizeWidth: 0 }, evnt)
-              }
+          let tipWidth = 0
+          if (rsNumPrevEl) {
+            if (targetOffsetHeight < 0) {
+              rsNumPrevEl.textContent = `${Math.floor(prevResizeHeight)}px`
+              rsNumPrevEl.style.display = 'block'
+              tipWidth = rsNumPrevEl.offsetWidth
+            } else {
+              rsNumPrevEl.style.display = 'none'
             }
           }
+          if (rsNumNextEl) {
+            if (targetOffsetHeight < 0) {
+              rsNumNextEl.style.display = 'none'
+            } else {
+              rsNumNextEl.textContent = `${Math.floor(nextResizeHeight)}px`
+              rsNumNextEl.style.display = 'block'
+              tipWidth = rsNumNextEl.offsetWidth
+            }
+          }
+          let rsLeft = Math.max(1, evnt.clientX - containerRect.left - tipWidth / 2)
+          if (rsLeft > containerRect.width - tipWidth - 1) {
+            rsLeft = containerRect.width - tipWidth - 1
+          }
+          rsSplitLineEl.style.left = '0'
+          rsSplitLineEl.style.top = `${offsetTop}px`
+          if (rsSplitTipEl) {
+            rsSplitTipEl.style.left = `${rsLeft}px`
+          }
         } else {
-          const offsetLeft = isFoldNext ? (disX - evnt.clientX) : (evnt.clientX - disX)
-          if (offsetLeft > 0) {
-            if (targetItem) {
-              if (currWidth - offsetLeft >= currMinWidth) {
-                const reWidth = currWidth - offsetLeft
-                targetItem.resizeWidth = targetWidth + offsetLeft
-                item.resizeWidth = reWidth
-                dispatchEvent('resize-drag', { item, name: item.name, offsetHeight: 0, resizeHeight: 0, offsetWidth: offsetLeft, resizeWidth: reWidth }, evnt)
-              }
+          let tipHeight = 0
+          if (rsNumPrevEl) {
+            if (targetOffsetWidth < 0) {
+              rsNumPrevEl.textContent = `${Math.floor(prevResizeWidth)}px`
+              rsNumPrevEl.style.display = 'block'
+              tipHeight = rsNumPrevEl.offsetHeight
+            } else {
+              rsNumPrevEl.style.display = 'none'
             }
-          } else {
-            if (targetItem) {
-              if (targetWidth + offsetLeft >= targetMinWidth) {
-                const reWidth = currWidth - offsetLeft
-                targetItem.resizeWidth = targetWidth + offsetLeft
-                item.resizeWidth = reWidth
-                dispatchEvent('resize-drag', { item, name: item.name, offsetHeight: 0, resizeHeight: 0, offsetWidth: offsetLeft, resizeWidth: reWidth }, evnt)
-              }
+          }
+          if (rsNumNextEl) {
+            if (targetOffsetWidth < 0) {
+              rsNumNextEl.style.display = 'none'
+            } else {
+              rsNumNextEl.textContent = `${Math.floor(nextResizeWidth)}px`
+              rsNumNextEl.style.display = 'block'
+              tipHeight = rsNumNextEl.offsetHeight
             }
+          }
+          let rsTop = Math.max(1, evnt.clientY - containerRect.top - tipHeight / 2)
+          if (rsTop > containerRect.height - tipHeight - 1) {
+            rsTop = containerRect.height - tipHeight - 1
+          }
+          rsSplitLineEl.style.top = '0'
+          rsSplitLineEl.style.left = `${offsetLeft}px`
+          if (rsSplitTipEl) {
+            rsSplitTipEl.style.top = `${rsTop}px`
           }
         }
       }
-      document.onmouseup = (evnt: MouseEvent) => {
+
+      const handleUpdate = () => {
+        if (vertical) {
+          prevItem.resizeHeight = prevResizeHeight
+          nextItem.resizeHeight = nextResizeHeight
+        } else {
+          prevItem.resizeWidth = prevResizeWidth
+          nextItem.resizeWidth = nextResizeWidth
+        }
+      }
+
+      const handleDrag = (evnt: MouseEvent) => {
+        if (vertical) {
+          offsetTop = evnt.clientY - containerRect.top
+          if (offsetTop < minOffsetTop) {
+            offsetTop = minOffsetTop
+          }
+          if (offsetTop > maxOffsetTop) {
+            offsetTop = maxOffsetTop
+          }
+          targetOffsetHeight = offsetTop - startOffsetTop
+          prevResizeHeight = prevHeight + targetOffsetHeight
+          nextResizeHeight = nextHeight - targetOffsetHeight
+        } else {
+          offsetLeft = evnt.clientX - containerRect.left
+          if (offsetLeft < minOffsetLeft) {
+            offsetLeft = minOffsetLeft
+          }
+          if (offsetLeft > maxOffsetLeft) {
+            offsetLeft = maxOffsetLeft
+          }
+          targetOffsetWidth = offsetLeft - startOffsetLeft
+          prevResizeWidth = prevWidth + targetOffsetWidth
+          nextResizeWidth = nextWidth - targetOffsetWidth
+        }
+        if (immediate) {
+          if (vertical) {
+            prevEl.style.height = toCssUnit(prevResizeHeight)
+            nextEl.style.height = toCssUnit(nextResizeHeight)
+          } else {
+            prevEl.style.width = toCssUnit(prevResizeWidth)
+            nextEl.style.width = toCssUnit(nextResizeWidth)
+          }
+        }
+        if (rsSplitLineEl) {
+          handleReStyle(evnt)
+        }
+        dispatchEvent('resize-drag', { item, name: item.name, prevItem, nextItem, offsetHeight: targetOffsetHeight, offsetWidth: targetOffsetWidth }, evnt)
+      }
+
+      document.onmousemove = (evnt) => {
+        evnt.preventDefault()
+        handleDrag(evnt)
+      }
+      document.onmouseup = (evnt) => {
         document.onmousemove = null
         document.onmouseup = null
+        if (rsSplitLineEl) {
+          rsSplitLineEl.style.display = ''
+        }
+        handleUpdate()
         removeClass(el, 'is--drag')
-        dispatchEvent('resize-end', { item, name: item.name, resizeHeight: item.resizeHeight, resizeWidth: item.resizeWidth }, evnt)
+        dispatchEvent('resize-end', { item, name: item.name, prevItem, nextItem, offsetHeight: targetOffsetHeight, offsetWidth: targetOffsetWidth }, evnt)
         recalculate()
       }
-      dispatchEvent('resize-start', { item, name: item.name }, evnt)
+
+      if (rsSplitLineEl) {
+        rsSplitLineEl.style.display = 'block'
+        handleReStyle(evnt)
+      }
+      handleDrag(evnt)
+      addClass(el, 'is--drag')
+      dispatchEvent('resize-start', { item, name: item.name, prevItem, nextItem }, evnt)
     }
 
     const handleItemActionEvent = (evnt: MouseEvent) => {
@@ -530,6 +651,8 @@ export default defineVxeComponent({
     const renderItems = () => {
       const { border, padding, resize, vertical } = props
       const { itemList } = reactData
+      const resizeOpts = computeResizeOpts.value
+      const { immediate } = resizeOpts
       const visibleItems = computeVisibleItems.value
       const { autoItems } = computeAutoItems.value
       const isFoldNext = computeIsFoldNext.value
@@ -566,7 +689,7 @@ export default defineVxeComponent({
         itemVNs.push(
           h('div', {
             itemid: id,
-            class: ['vxe-split-pane', vertical ? 'is--vertical' : 'is--horizontal', {
+            class: ['vxe-split-pane', vertical ? 'is--vertical' : 'is--horizontal', immediate ? 'is-resize--immediate' : 'is-resize--lazy', {
               'is--resize': resize,
               'is--padding': padding,
               'is--border': border,
@@ -599,6 +722,8 @@ export default defineVxeComponent({
 
     const renderVN = () => {
       const { vertical, width, height } = props
+      const resizeOpts = computeResizeOpts.value
+      const { immediate, showTip } = resizeOpts
       const defaultSlot = slots.default
       const stys: Record<string, string | number> = {}
       if (height) {
@@ -615,7 +740,24 @@ export default defineVxeComponent({
         h('div', {
           class: 'vxe-split-slots'
         }, defaultSlot ? defaultSlot({}) : []),
-        renderItems()
+        renderItems(),
+        h('div', {
+          ref: refResizableSplitTip,
+          class: ['vxe-split--resizable-split-tip', vertical ? 'is--vertical' : 'is--horizontal', immediate ? 'is-resize--immediate' : 'is-resize--lazy']
+        }, showTip
+          ? [
+              h('div', {
+                class: 'vxe-split--resizable-split-tip-number'
+              }, [
+                h('div', {
+                  class: 'vxe-split--resizable-split-number-prev'
+                }),
+                h('div', {
+                  class: 'vxe-split--resizable-split-number-next'
+                })
+              ])
+            ]
+          : [])
       ])
     }
 
