@@ -30,6 +30,8 @@ export interface GanttViewReactData {
   // 横向滚动条的高度
   scrollbarHeight: number
 
+  // 最后滚动时间戳
+  lastScrollTime: number
   lazScrollLoading: boolean
 
   scrollVMLoading: boolean
@@ -51,6 +53,8 @@ export interface GanttViewReactData {
 
 export interface GanttViewInternalData {
   xeTable: (VxeTableConstructor & VxeTableMethods & VxeTablePrivateMethods) | null
+  // 渲染所有列
+  visibleColumn: VxeGanttDefines.ViewColumn[]
   startMaps: Record<string, any>
   endMaps: Record<string, any>
   chartMaps: Record<string, VxeGanttDefines.RowCacheItem>
@@ -67,17 +71,13 @@ export interface GanttViewInternalData {
     startIndex: number
     endIndex: number
   }
-  // 存放纵向 Y 虚拟滚动相关信息
-  scrollYStore: {
-    adaptive?: boolean
-    preloadSize: number
-    offsetSize: number
-    visibleSize: number
-    visibleStartIndex: number
-    visibleEndIndex: number
-    startIndex: number
-    endIndex: number
-  }
+  // 最后滚动位置
+  lastScrollLeft: number
+  lastScrollTop: number
+
+  // 刷新布局
+  rceTimeout?: undefined | number
+  rceRunTime?: undefined | number
 
   // 滚动属性
   intoRunScroll?: boolean
@@ -134,7 +134,7 @@ export interface VxeGanttViewPrivateMethods {
   /**
    * @private
    */
-  triggerFooterScrollEvent(evnt: Event): void
+  // triggerFooterScrollEvent(evnt: Event): void
   /**
    * @private
    */

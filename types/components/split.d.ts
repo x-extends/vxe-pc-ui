@@ -32,6 +32,16 @@ export namespace VxeSplitPropTypes {
     width?: string | number
     height?: string | number
   }
+  export interface ResizeConfig {
+    /**
+     * 是否实时同步渲染
+     */
+    immediate?: boolean
+    /**
+     * 是否显示拖拽提示
+     */
+    showTip?: boolean
+  }
   export interface ActionConfig {
     /**
      * 是否启用
@@ -94,6 +104,10 @@ export type VxeSplitProps = {
    * 拖动条配置项
    */
   barConfig?: VxeSplitPropTypes.BarConfig
+  /**
+   * 拖拽配置项
+   */
+  resizeConfig?: VxeSplitPropTypes.ResizeConfig
   /**
    * 折叠按钮配置项
    */
