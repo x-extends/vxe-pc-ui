@@ -401,20 +401,20 @@ export default defineVxeComponent({
           let tipWidth = 0
           if (rsNumPrevEl) {
             if (targetOffsetHeight < 0) {
+              rsNumPrevEl.style.display = 'none'
+            } else {
               rsNumPrevEl.textContent = `${Math.floor(prevResizeHeight)}px`
               rsNumPrevEl.style.display = 'block'
               tipWidth = rsNumPrevEl.offsetWidth
-            } else {
-              rsNumPrevEl.style.display = 'none'
             }
           }
           if (rsNumNextEl) {
             if (targetOffsetHeight < 0) {
-              rsNumNextEl.style.display = 'none'
-            } else {
               rsNumNextEl.textContent = `${Math.floor(nextResizeHeight)}px`
               rsNumNextEl.style.display = 'block'
               tipWidth = rsNumNextEl.offsetWidth
+            } else {
+              rsNumNextEl.style.display = 'none'
             }
           }
           let rsLeft = Math.max(1, evnt.clientX - containerRect.left - tipWidth / 2)
@@ -430,20 +430,20 @@ export default defineVxeComponent({
           let tipHeight = 0
           if (rsNumPrevEl) {
             if (targetOffsetWidth < 0) {
+              rsNumPrevEl.style.display = 'none'
+            } else {
               rsNumPrevEl.textContent = `${Math.floor(prevResizeWidth)}px`
               rsNumPrevEl.style.display = 'block'
               tipHeight = rsNumPrevEl.offsetHeight
-            } else {
-              rsNumPrevEl.style.display = 'none'
             }
           }
           if (rsNumNextEl) {
             if (targetOffsetWidth < 0) {
-              rsNumNextEl.style.display = 'none'
-            } else {
               rsNumNextEl.textContent = `${Math.floor(nextResizeWidth)}px`
               rsNumNextEl.style.display = 'block'
               tipHeight = rsNumNextEl.offsetHeight
+            } else {
+              rsNumNextEl.style.display = 'none'
             }
           }
           let rsTop = Math.max(1, evnt.clientY - containerRect.top - tipHeight / 2)
@@ -734,7 +734,7 @@ export default defineVxeComponent({
       }
       return h('div', {
         ref: refElem,
-        class: ['vxe-split', vertical ? 'is--vertical' : 'is--horizontal'],
+        class: ['vxe-split', vertical ? 'is--vertical' : 'is--horizontal', immediate ? 'is-resize--immediate' : 'is-resize--lazy'],
         style: stys
       }, [
         h('div', {

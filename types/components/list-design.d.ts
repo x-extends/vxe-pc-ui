@@ -177,8 +177,13 @@ export interface VxeListDesignListeners { }
 
 export namespace VxeListDesignEvents { }
 
-export namespace VxeListDesignSlotTypes {}
+export namespace VxeListDesignSlotTypes {
+  export interface DefaultSlotParams {}
+  export interface HeaderSlotParams {}
+}
 export interface VxeListDesignSlots {
+  default: (params: VxeListDesignSlotTypes.DefaultSlotParams) => any
+  header: (params: VxeListDesignSlotTypes.HeaderSlotParams) => any
 }
 
 export const ListDesign: typeof VxeListDesign
