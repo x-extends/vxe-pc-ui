@@ -603,7 +603,9 @@ export default /* define-vxe-component start */ defineVxeComponent({
           if (url) {
             const urlObj = XEUtils.parseUrl(url)
             if (!urlObj.searchQuery[nameProp]) {
-              return `${url}${url.indexOf('?') === -1 ? '?' : '&'}${encodeURIComponent(item[nameProp] || '')}`
+              if (url.indexOf('blob:') === -1) {
+                return `${url}${url.indexOf('?') === -1 ? '?' : '&'}${encodeURIComponent(item[nameProp] || '')}`
+              }
             }
           }
           return url
