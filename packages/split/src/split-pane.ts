@@ -15,7 +15,6 @@ export default /* define-vxe-component start */ defineVxeComponent({
     name: [Number, String] as PropType<VxeSplitPanePropTypes.Name>,
     width: [Number, String] as PropType<VxeSplitPanePropTypes.Width>,
     height: [Number, String] as PropType<VxeSplitPanePropTypes.Height>,
-    showAction: Boolean as PropType<VxeSplitPanePropTypes.ShowAction>,
     minWidth: {
       type: [Number, String] as PropType<VxeSplitPanePropTypes.MinWidth>,
       default: () => null
@@ -23,7 +22,10 @@ export default /* define-vxe-component start */ defineVxeComponent({
     minHeight: {
       type: [Number, String] as PropType<VxeSplitPanePropTypes.MinHeight>,
       default: () => null
-    }
+    },
+
+    // 已废弃
+    showAction: Boolean as PropType<VxeSplitPanePropTypes.ShowAction>
   },
   inject: {
     $xeSplit: {
@@ -48,7 +50,6 @@ export default /* define-vxe-component start */ defineVxeComponent({
       minWidth: 0,
       minHeight: 0,
       showAction: false,
-      isVisible: true,
       isExpand: true,
       renderWidth: 0,
       resizeWidth: 0,

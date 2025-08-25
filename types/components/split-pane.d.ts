@@ -21,6 +21,11 @@ export namespace VxeSplitPanePropTypes {
   export type Height = string | number
   export type MinWidth = string | number
   export type MinHeight = string | number
+
+  /**
+   * 已废弃
+   * @deprecated
+   */
   export type ShowAction = boolean
 }
 
@@ -30,11 +35,15 @@ export interface VxeSplitPaneProps {
   height?: VxeSplitPanePropTypes.Height
   minWidth?: VxeSplitPanePropTypes.MinWidth
   minHeight?: VxeSplitPanePropTypes.MinHeight
-  showAction?: VxeSplitPanePropTypes.ShowAction
-
   slots?: {
     default?: string | ((params: VxeSplitPaneSlotTypes.DefaultSlotParams) => VxeComponentSlotType | VxeComponentSlotType[])
   }
+
+  /**
+   * 已废弃
+   * @deprecated
+   */
+  showAction?: VxeSplitPanePropTypes.ShowAction
 }
 
 export interface SplitItemPrivateComputed {
