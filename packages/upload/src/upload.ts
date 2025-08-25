@@ -453,6 +453,10 @@ export default defineVxeComponent({
       emit(type, createEvent(evnt, { $upload: $xeUpload }, params))
     }
 
+    const emitModel = (value: any) => {
+      emit('update:modelValue', value)
+    }
+
     const handleChange = (value: VxeUploadDefines.FileObjItem[]) => {
       const { singleMode, urlMode } = props
       const urlProp = computeUrlProp.value
@@ -464,13 +468,15 @@ export default defineVxeComponent({
           if (url) {
             const urlObj = XEUtils.parseUrl(url)
             if (!urlObj.searchQuery[nameProp]) {
-              return `${url}${url.indexOf('?') === -1 ? '?' : '&'}${nameProp}=${encodeURIComponent(item[nameProp] || '')}`
+              if (url.indexOf('blob:') === -1) {
+                return `${url}${url.indexOf('?') === -1 ? '?' : '&'}${nameProp}=${encodeURIComponent(item[nameProp] || '')}`
+              }
             }
           }
           return url
         })
       }
-      emit('update:modelValue', singleMode ? (restList[0] || null) : restList)
+      emitModel(singleMode ? (restList[0] || null) : restList)
     }
 
     const getThumbnailFileUrl = (item: VxeUploadDefines.FileObjItem) => {

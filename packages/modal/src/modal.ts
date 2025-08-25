@@ -392,7 +392,7 @@ export default defineVxeComponent({
             dispatchEvent('before-hide', params, null)
             setTimeout(() => {
               reactData.visible = false
-              emit('update:modelValue', false)
+              emitModel(false)
               dispatchEvent('hide', params, null)
             }, 200)
             removeBodyLockScroll()
@@ -705,7 +705,7 @@ export default defineVxeComponent({
             }
             const type = ''
             const params = { type }
-            emit('update:modelValue', true)
+            emitModel(true)
             dispatchEvent('show', params, null)
           })
         }, 10)
@@ -1109,6 +1109,10 @@ export default defineVxeComponent({
 
     const dispatchEvent = (type: ValueOf<VxeModalEmits>, params: Record<string, any>, evnt: Event | null) => {
       emit(type, createEvent(evnt, { $modal: $xeModal }, params))
+    }
+
+    const emitModel = (value: any) => {
+      emit('update:modelValue', value)
     }
 
     modalMethods = {

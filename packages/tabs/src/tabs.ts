@@ -292,6 +292,10 @@ export default defineVxeComponent({
       emit(type, createEvent(evnt, { $tabs: $xeTabs }, params))
     }
 
+    const emitModel = (value: any) => {
+      emit('update:modelValue', value)
+    }
+
     const addInitName = (name: VxeTabsPropTypes.ModelValue, evnt: Event | null) => {
       const { initNames } = reactData
       if (name && !initNames.includes(name)) {
@@ -327,7 +331,7 @@ export default defineVxeComponent({
         if (!validVal) {
           activeName = list[0].name
           addInitName(activeName, null)
-          emit('update:modelValue', activeName)
+          emitModel(activeName)
         }
       }
       reactData.activeName = activeName
@@ -350,7 +354,7 @@ export default defineVxeComponent({
         ).then((status) => {
           if (status) {
             reactData.activeName = name
-            emit('update:modelValue', value)
+            emitModel(value)
             addInitName(name, evnt)
             dispatchEvent('change', { value, name, oldName: activeName, newName: name, option: item }, evnt)
             dispatchEvent('tab-change', { value, name, oldName: activeName, newName: name, option: item }, evnt)
@@ -550,7 +554,7 @@ export default defineVxeComponent({
           const name = item.name
           const value = name
           reactData.activeName = name
-          emit('update:modelValue', value)
+          emitModel(value)
           addInitName(name, null)
         }
       }
