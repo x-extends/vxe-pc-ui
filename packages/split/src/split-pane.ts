@@ -12,7 +12,6 @@ export default defineVxeComponent({
     name: [Number, String] as PropType<VxeSplitPanePropTypes.Name>,
     width: [Number, String] as PropType<VxeSplitPanePropTypes.Width>,
     height: [Number, String] as PropType<VxeSplitPanePropTypes.Height>,
-    showAction: Boolean as PropType<VxeSplitPanePropTypes.ShowAction>,
     minWidth: {
       type: [Number, String] as PropType<VxeSplitPanePropTypes.MinWidth>,
       default: () => null
@@ -20,7 +19,10 @@ export default defineVxeComponent({
     minHeight: {
       type: [Number, String] as PropType<VxeSplitPanePropTypes.MinHeight>,
       default: () => null
-    }
+    },
+
+    // 已废弃
+    showAction: Boolean as PropType<VxeSplitPanePropTypes.ShowAction>
   },
   emits: [
   ] as VxeSplitPaneEmits,
@@ -41,7 +43,6 @@ export default defineVxeComponent({
       minWidth: props.minWidth,
       minHeight: props.minHeight,
       showAction: props.showAction,
-      isVisible: true,
       isExpand: true,
       renderWidth: 0,
       resizeWidth: 0,

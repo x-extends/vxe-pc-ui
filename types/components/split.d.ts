@@ -59,10 +59,13 @@ export namespace VxeSplitPropTypes {
      */
     trigger?: 'click' | 'dblclick' | '' | null
     /**
-     * 折叠方向
-     * 支持向前和向后折叠
+     * 显示往向前折叠按钮
      */
-    direction?: 'prev' | 'next' | '' | null
+    showPrevButton?: boolean
+    /**
+     * 显示往向后折叠按钮
+     */
+    showNextButton?: boolean
     /**
      * 自定义展开图标
      */
@@ -71,6 +74,13 @@ export namespace VxeSplitPropTypes {
      * 自定义关闭图标
      */
     closeIcon?: string
+
+    /**
+     * 折叠方向
+     * 支持向前和向后折叠
+     * @deprecated
+     */
+    direction?: 'prev' | 'next' | '' | null
   }
 }
 
@@ -125,13 +135,14 @@ export interface SplitPrivateComputed {
   computeItemOpts: ComputedRef<VxeSplitPropTypes.ItemConfig>
   computeBarOpts: ComputedRef<VxeSplitPropTypes.BarConfig>
   computeActionOpts: ComputedRef<VxeSplitPropTypes.ActionConfig>
-  computeIsFoldNext: ComputedRef<boolean>
 }
 export interface VxeSplitPrivateComputed extends SplitPrivateComputed { }
 
 export interface SplitReactData {
   staticItems: VxeSplitDefines.PaneConfig[]
   itemList: VxeSplitDefines.PaneConfig[]
+  barWidth: number
+  barHeight: number
 }
 
 export interface SplitInternalData {
@@ -179,7 +190,6 @@ export namespace VxeSplitDefines {
 
   export interface PaneConfig extends VxeSplitPaneProps {
     id: string
-    isVisible: boolean
     isExpand: boolean
     renderWidth: number
     foldWidth: number
@@ -190,34 +200,29 @@ export namespace VxeSplitDefines {
   }
 
   export interface ActionClickEventParams extends SplitEventParams {
-    item: PaneConfig
-    name: VxeSplitPanePropTypes.Name
+    prevItem: PaneConfig
+    nextItem: PaneConfig
   }
   export interface ActionDblclickEventParams extends ActionClickEventParams {}
   export interface ToggleExpandEventParams extends SplitEventParams {
-    item: PaneConfig
-    name: VxeSplitPanePropTypes.Name
-    targetItem: PaneConfig
-    targetName: VxeSplitPanePropTypes.Name
+    prevItem: PaneConfig
+    nextItem: PaneConfig
     expanded: boolean
+    item: PaneConfig
   }
   export interface ResizeStartEventParams extends SplitEventParams {
-    item: PaneConfig
-    name: VxeSplitPanePropTypes.Name
+    prevItem: PaneConfig
+    nextItem: PaneConfig
   }
   export interface ResizeDragEventParams extends SplitEventParams {
-    item: PaneConfig
-    name: VxeSplitPanePropTypes.Name
-    offsetHeight: number
-    resizeHeight: number
-    offsetWidth: number
-    resizeWidth: number
+    prevItem: PaneConfig
+    nextItem: PaneConfig
   }
   export interface ResizeEndEventParams extends SplitEventParams {
     item: PaneConfig
     name: VxeSplitPanePropTypes.Name
-    resizeHeight: number
-    resizeWidth: number
+    offsetHeight: number
+    offsetWidth: number
   }
 }
 
@@ -259,7 +264,6 @@ export interface VxeSplitSlots {
    */
   [key: string]: ((params: {
     name: VxeSplitPanePropTypes.Name
-    isVisible: boolean
     isExpand: boolean
   }) => any) | undefined
 

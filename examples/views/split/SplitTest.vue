@@ -4,10 +4,10 @@
       <vxe-split-pane>
         <div style="height: 100%;background-color: #d8d8f9;">左侧</div>
       </vxe-split-pane>
-      <vxe-split-pane>
+      <!-- <vxe-split-pane>
         <div style="height: 100%;background-color: #d8d8f9;">中</div>
-      </vxe-split-pane>
-      <vxe-split-pane showAction>
+      </vxe-split-pane> -->
+      <vxe-split-pane>
         <vxe-split border vertical>
           <vxe-split-pane>
             <div style="height: 100%;background-color: #f3e1e1;">顶部</div>
@@ -25,14 +25,14 @@
     <br>
 
     <vxe-split height="200" border :actionConfig="actionConfig">
-      <vxe-split-pane showAction>
+      <vxe-split-pane>
         <div style="height: 100%;background-color: #d8d8f9;">左侧</div>
       </vxe-split-pane>
-      <vxe-split-pane>
+      <!-- <vxe-split-pane>
         <div style="height: 100%;background-color: #d8d8f9;">中</div>
-      </vxe-split-pane>
+      </vxe-split-pane> -->
       <vxe-split-pane>
-        <vxe-split border vertical>
+        <vxe-split border vertical :actionConfig="actionConfig">
           <vxe-split-pane>
             <div style="height: 100%;background-color: #f3e1e1;">顶部</div>
           </vxe-split-pane>
@@ -52,8 +52,8 @@
       <vxe-split-pane>
         <div style="height: 100%;background-color: #d8d8f9;">左侧</div>
       </vxe-split-pane>
-      <vxe-split-pane showAction>
-        <vxe-split border>
+      <vxe-split-pane>
+        <vxe-split border :actionConfig="actionConfig">
           <vxe-split-pane>
             <div style="height: 100%;background-color: #f3e1e1;">顶部</div>
           </vxe-split-pane>
@@ -70,18 +70,18 @@
     <br>
 
     <vxe-split height="300" border vertical :actionConfig="actionConfig">
-      <vxe-split-pane showAction>
+      <vxe-split-pane>
         <div style="height: 100%;background-color: #d8d8f9;">左侧</div>
       </vxe-split-pane>
       <vxe-split-pane>
         <vxe-split border>
-          <vxe-split-pane showAction>
+          <vxe-split-pane>
             <div style="height: 100%;background-color: #f3e1e1;">顶部</div>
           </vxe-split-pane>
-          <vxe-split-pane showAction>
+          <vxe-split-pane>
             <div style="height: 100%;background-color: #e2f9d8;">中</div>
           </vxe-split-pane>
-          <vxe-split-pane showAction>
+          <vxe-split-pane>
             <div style="height: 100%;background-color: #d8d8f9;">底部</div>
           </vxe-split-pane>
         </vxe-split>
@@ -92,6 +92,7 @@
 
 <script lang="ts" setup>
 const actionConfig = {
-  direction: 'next'
+  showPrevButton: true,
+  showNextButton: true
 }
 </script>

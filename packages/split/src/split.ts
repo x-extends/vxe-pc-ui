@@ -4,7 +4,7 @@ import { getConfig, getIcon, createEvent, globalEvents, globalResize, renderEmpt
 import { getSlotVNs } from '../../ui/src/vn'
 import { toCssUnit, isScale, addClass, removeClass } from '../../ui/src/dom'
 import { getGlobalDefaultConfig } from '../../ui/src/utils'
-import { errLog } from '../../ui/src/log'
+import { warnLog, errLog } from '../../ui/src/log'
 import XEUtils from 'xe-utils'
 
 import type { SplitReactData, SplitPrivateRef, VxeSplitPropTypes, SplitInternalData, SplitMethods, VxeSplitDefines, VxeSplitPaneProps, VxeSplitPrivateComputed, SplitPrivateMethods, VxeSplitEmits, VxeSplitConstructor, ValueOf, VxeSplitPrivateMethods } from '../../../types'
@@ -50,11 +50,14 @@ export default defineVxeComponent({
     const xID = XEUtils.uniqueId()
 
     const refElem = ref<HTMLDivElement>()
+    const refBarInfoElem = ref<HTMLDivElement>()
     const refResizableSplitTip = ref<HTMLDivElement>()
 
     const reactData = reactive<SplitReactData>({
       staticItems: [],
-      itemList: []
+      itemList: [],
+      barWidth: 0,
+      barHeight: 0
     })
 
     const internalData: SplitInternalData = {
@@ -78,13 +81,8 @@ export default defineVxeComponent({
       return Object.assign({}, getConfig().split.actionConfig, props.actionConfig)
     })
 
-    const computeIsFoldNext = computed(() => {
-      const actionOpts = computeActionOpts.value
-      return actionOpts.direction === 'next'
-    })
-
     const computeVisibleItems = computed(() => {
-      return reactData.itemList.filter(item => item.isVisible)
+      return reactData.itemList.filter(item => item.isExpand)
     })
 
     const computeAutoItems = computed(() => {
@@ -94,16 +92,16 @@ export default defineVxeComponent({
       let widthCount = 0
       reactData.itemList.forEach(vertical
         ? item => {
-          const { renderHeight, resizeHeight, foldHeight, isVisible, height } = item
-          const itemHeight = isVisible ? (foldHeight || resizeHeight || renderHeight) : 0
+          const { renderHeight, resizeHeight, foldHeight, isExpand, height } = item
+          const itemHeight = isExpand ? (foldHeight || resizeHeight || renderHeight) : 0
           if (!height) {
             autoItems.push(item)
           }
           heightCount += itemHeight
         }
         : item => {
-          const { renderWidth, resizeWidth, foldWidth, isVisible, width } = item
-          const itemWidth = isVisible ? (foldWidth || resizeWidth || renderWidth) : 0
+          const { renderWidth, resizeWidth, foldWidth, isExpand, width } = item
+          const itemWidth = isExpand ? (foldWidth || resizeWidth || renderWidth) : 0
           if (!width) {
             autoItems.push(item)
           }
@@ -134,8 +132,7 @@ export default defineVxeComponent({
     const computeMaps: VxeSplitPrivateComputed = {
       computeItemOpts,
       computeBarOpts,
-      computeActionOpts,
-      computeIsFoldNext
+      computeActionOpts
     }
 
     const refMaps: SplitPrivateRef = {
@@ -169,32 +166,28 @@ export default defineVxeComponent({
       return []
     }
 
-    const getDefaultActionIcon = (item: VxeSplitDefines.PaneConfig) => {
+    const getActionIcon = (prevItem: VxeSplitDefines.PaneConfig, nextItem: VxeSplitDefines.PaneConfig, isNext: boolean) => {
       const { vertical } = props
-      const { showAction, isExpand } = item
-      const isFoldNext = computeIsFoldNext.value
       const topIcon = 'SPLIT_TOP_ACTION'
       const bottomIcon = 'SPLIT_BOTTOM_ACTION'
       const leftIcon = 'SPLIT_LEFT_ACTION'
       const rightIcon = 'SPLIT_RIGHT_ACTION'
-      if (showAction) {
-        let iconName: 'SPLIT_TOP_ACTION' | 'SPLIT_BOTTOM_ACTION' | 'SPLIT_LEFT_ACTION' | 'SPLIT_RIGHT_ACTION' | '' = ''
-        if (isFoldNext) {
-          if (vertical) {
-            iconName = isExpand ? bottomIcon : topIcon
-          } else {
-            iconName = isExpand ? rightIcon : leftIcon
-          }
+      let iconName: 'SPLIT_TOP_ACTION' | 'SPLIT_BOTTOM_ACTION' | 'SPLIT_LEFT_ACTION' | 'SPLIT_RIGHT_ACTION' | '' = ''
+      if (vertical) {
+        if (isNext) {
+          iconName = nextItem.isExpand ? bottomIcon : topIcon
         } else {
-          if (vertical) {
-            iconName = isExpand ? topIcon : bottomIcon
-          } else {
-            iconName = isExpand ? leftIcon : rightIcon
-          }
+          iconName = prevItem.isExpand ? topIcon : bottomIcon
         }
-        if (iconName) {
-          return getIcon()[iconName]
+      } else {
+        if (isNext) {
+          iconName = nextItem.isExpand ? rightIcon : leftIcon
+        } else {
+          iconName = prevItem.isExpand ? leftIcon : rightIcon
         }
+      }
+      if (iconName) {
+        return getIcon()[iconName]
       }
       return ''
     }
@@ -203,7 +196,6 @@ export default defineVxeComponent({
       const { itemList } = reactData
       itemList.forEach(item => {
         item.isExpand = true
-        item.isVisible = true
         item.foldHeight = 0
         item.foldWidth = 0
         item.resizeHeight = 0
@@ -214,8 +206,9 @@ export default defineVxeComponent({
 
     const handleLoadItem = (list: VxeSplitPaneProps[], isReset: boolean) => {
       const { staticItems } = reactData
+      const actionOpts = computeActionOpts.value
+      const { showPrevButton, showNextButton } = actionOpts
       const itemDef = {
-        isVisible: true,
         isExpand: true,
         renderWidth: 0,
         resizeWidth: 0,
@@ -225,6 +218,9 @@ export default defineVxeComponent({
         foldHeight: 0
       }
       reactData.itemList = list.map(item => {
+        if (item.showAction) {
+          warnLog('vxe.error.removeProp', ['showAction'])
+        }
         if (item.slots) {
           XEUtils.each(item.slots, (func) => {
             if (!XEUtils.isFunction(func)) {
@@ -240,6 +236,9 @@ export default defineVxeComponent({
       })
       if (staticItems.length) {
         errLog('vxe.error.errConflicts', ['<vxe-split-pane ...>', 'items'])
+      }
+      if ((showPrevButton || showNextButton) && reactData.itemList.length > 2) {
+        errLog('vxe.error.errConflicts', ['action-config.showPrevButton | action-config.showNextButton', 'Only supports 2 item'])
       }
       return recalculate()
     }
@@ -257,6 +256,7 @@ export default defineVxeComponent({
         const { vertical } = props
         const { itemList } = reactData
         const el = refElem.value
+        const barInfoElem = refBarInfoElem.value
         if (!el) {
           return
         }
@@ -265,6 +265,12 @@ export default defineVxeComponent({
         if (!wWidth || !wHeight) {
           return
         }
+        if (barInfoElem) {
+          reactData.barWidth = barInfoElem.offsetWidth
+          reactData.barHeight = barInfoElem.offsetHeight
+        }
+        const contentWidth = wWidth - (vertical ? 0 : reactData.barWidth * (itemList.length - 1))
+        const contentHeight = wHeight - (vertical ? reactData.barHeight * (itemList.length - 1) : 0)
         const itemOpts = computeItemOpts.value
         const allMinWidth = XEUtils.toNumber(itemOpts.minWidth)
         const allMinHeight = XEUtils.toNumber(itemOpts.minHeight)
@@ -276,7 +282,7 @@ export default defineVxeComponent({
             let itemHeight = 0
             if (height) {
               if (isScale(height)) {
-                itemHeight = wHeight * XEUtils.toNumber(height) / 100
+                itemHeight = contentHeight * XEUtils.toNumber(height) / 100
               } else {
                 itemHeight = XEUtils.toNumber(height)
               }
@@ -287,7 +293,7 @@ export default defineVxeComponent({
             countHeight += itemHeight
           })
           if (residueItems.length) {
-            const reMeanHeight = (wHeight - countHeight) / residueItems.length
+            const reMeanHeight = (contentHeight - countHeight) / residueItems.length
             residueItems.forEach(item => {
               item.renderHeight = Math.max(XEUtils.toNumber(getGlobalDefaultConfig(item.minHeight, allMinHeight)), reMeanHeight)
             })
@@ -299,7 +305,7 @@ export default defineVxeComponent({
             let itemWidth = 0
             if (width) {
               if (isScale(width)) {
-                itemWidth = wWidth * XEUtils.toNumber(width) / 100
+                itemWidth = contentWidth * XEUtils.toNumber(width) / 100
               } else {
                 itemWidth = XEUtils.toNumber(width)
               }
@@ -310,14 +316,14 @@ export default defineVxeComponent({
             countWidth += itemWidth
           })
           if (residueItems.length) {
-            const reMeanWidth = (wWidth - countWidth) / residueItems.length
+            const reMeanWidth = (contentWidth - countWidth) / residueItems.length
             residueItems.forEach(item => {
               item.renderWidth = Math.max(XEUtils.toNumber(getGlobalDefaultConfig(item.minWidth, allMinWidth)), reMeanWidth)
             })
           }
         }
-        internalData.wrapperWidth = wWidth
-        internalData.wrapperHeight = wHeight
+        internalData.wrapperWidth = contentWidth
+        internalData.wrapperHeight = contentHeight
       })
     }
 
@@ -334,35 +340,27 @@ export default defineVxeComponent({
       if (!el) {
         return
       }
-      const itemId = handleEl.getAttribute('itemid')
-      const itemIndex = XEUtils.findIndexOf(itemList, item => item.id === itemId)
-      const item = itemList[itemIndex]
-      if (!item) {
+      const prevEl = handleEl.previousElementSibling as HTMLDivElement
+      const nextEl = handleEl.nextElementSibling as HTMLDivElement
+      if (!prevEl || !nextEl) {
         return
       }
-      if (!item.isExpand) {
+      const prevId = prevEl.getAttribute('itemid')
+      const nextId = nextEl.getAttribute('itemid')
+      const prevItem = itemList.find(item => item.id === prevId)
+      const nextItem = itemList.find(item => item.id === nextId)
+      if (!prevItem || !nextItem) {
         return
       }
       const containerRect = el.getBoundingClientRect()
       const barRect = barEl.getBoundingClientRect()
       const rsSplitLineEl = refResizableSplitTip.value
       const rsSplitTipEl = rsSplitLineEl ? rsSplitLineEl.children[0] as HTMLDivElement : null
-      const isFoldNext = computeIsFoldNext.value
       const itemOpts = computeItemOpts.value
       const resizeOpts = computeResizeOpts.value
       const { immediate } = resizeOpts
       const allMinWidth = XEUtils.toNumber(itemOpts.minWidth)
       const allMinHeight = XEUtils.toNumber(itemOpts.minHeight)
-
-      const targetItem = itemList[itemIndex + (isFoldNext ? 1 : -1)]
-
-      const prevItem = itemList[itemIndex + (isFoldNext ? 0 : -1)]
-      const nextItem = itemList[itemIndex + (isFoldNext ? 1 : 0)]
-      const prevEl = targetItem ? el.querySelector<HTMLDivElement>(`.vxe-split-pane[itemid="${prevItem.id}"]`) : null
-      const nextEl = item ? el.querySelector<HTMLDivElement>(`.vxe-split-pane[itemid="${nextItem.id}"]`) : null
-      if (!prevEl || !nextEl) {
-        return
-      }
 
       const barOffsetX = Math.ceil(barRect.width - (evnt.clientX - barRect.left))
       const barOffsetY = Math.ceil(evnt.clientY - barRect.top)
@@ -504,7 +502,7 @@ export default defineVxeComponent({
         if (rsSplitLineEl) {
           handleReStyle(evnt)
         }
-        dispatchEvent('resize-drag', { item, name: item.name, prevItem, nextItem, offsetHeight: targetOffsetHeight, offsetWidth: targetOffsetWidth }, evnt)
+        dispatchEvent('resize-drag', { prevItem, nextItem, offsetHeight: targetOffsetHeight, offsetWidth: targetOffsetWidth }, evnt)
       }
 
       document.onmousemove = (evnt) => {
@@ -519,7 +517,7 @@ export default defineVxeComponent({
         }
         handleUpdate()
         removeClass(el, 'is--drag')
-        dispatchEvent('resize-end', { item, name: item.name, prevItem, nextItem, offsetHeight: targetOffsetHeight, offsetWidth: targetOffsetWidth }, evnt)
+        dispatchEvent('resize-end', { prevItem, nextItem, offsetHeight: targetOffsetHeight, offsetWidth: targetOffsetWidth }, evnt)
         recalculate()
       }
 
@@ -529,77 +527,130 @@ export default defineVxeComponent({
       }
       handleDrag(evnt)
       addClass(el, 'is--drag')
-      dispatchEvent('resize-start', { item, name: item.name, prevItem, nextItem }, evnt)
+      dispatchEvent('resize-start', { prevItem, nextItem }, evnt)
     }
 
-    const handleItemActionEvent = (evnt: MouseEvent) => {
-      const el = refElem.value
-      if (!el) {
-        return
-      }
+    const handleItemActionEvent = (evnt: MouseEvent, prevItem: VxeSplitDefines.PaneConfig, nextItem: VxeSplitDefines.PaneConfig, isNext: boolean) => {
       const { vertical } = props
-      const { itemList } = reactData
-      const isFoldNext = computeIsFoldNext.value
-      const btnEl = evnt.currentTarget as HTMLDivElement
-      const handleEl = btnEl.parentElement as HTMLDivElement
-      const itemId = handleEl.getAttribute('itemid')
-      const itemIndex = XEUtils.findIndexOf(itemList, item => item.id === itemId)
-      const item = itemList[itemIndex]
-      const targetItem = itemList[itemIndex + (isFoldNext ? 1 : -1)]
-      if (item) {
-        const { showAction, isExpand } = item
-        if (showAction) {
-          if (vertical) {
-            if (targetItem) {
-              targetItem.isVisible = !isExpand
-              targetItem.foldHeight = 0
-              item.isExpand = !isExpand
-              item.isVisible = true
-              item.foldHeight = isExpand ? (targetItem.resizeHeight || targetItem.renderHeight) + (item.resizeHeight || item.renderHeight) : 0
-            }
-          } else {
-            if (targetItem) {
-              targetItem.isVisible = !isExpand
-              targetItem.foldWidth = 0
-              item.isExpand = !isExpand
-              item.isVisible = true
-              item.foldWidth = isExpand ? (targetItem.resizeWidth || targetItem.renderWidth) + (item.resizeWidth || item.renderWidth) : 0
-            }
-          }
-          dispatchEvent('toggle-expand', { item, name: item.name, targetItem, targetName: targetItem ? targetItem.name : '', expanded: item.isExpand }, evnt)
-          recalculate()
+      let expanded = false
+      let item = prevItem
+      if (isNext) {
+        item = nextItem
+        expanded = !nextItem.isExpand
+        nextItem.isExpand = expanded
+      } else {
+        expanded = !prevItem.isExpand
+        prevItem.isExpand = expanded
+      }
+      if (vertical) {
+        if (prevItem.isExpand && nextItem.isExpand) {
+          prevItem.foldHeight = 0
+          nextItem.foldHeight = 0
+        } else if (prevItem.isExpand) {
+          nextItem.foldHeight = 0
+          prevItem.foldHeight = (prevItem.resizeHeight || prevItem.renderHeight) + (nextItem.resizeHeight || nextItem.renderHeight)
+        } else {
+          prevItem.foldHeight = 0
+          nextItem.foldHeight = (prevItem.resizeHeight || prevItem.renderHeight) + (nextItem.resizeHeight || nextItem.renderHeight)
+        }
+      } else {
+        if (prevItem.isExpand && nextItem.isExpand) {
+          prevItem.foldWidth = 0
+          nextItem.foldWidth = 0
+        } else if (prevItem.isExpand) {
+          nextItem.foldWidth = 0
+          prevItem.foldWidth = (prevItem.resizeWidth || prevItem.renderWidth) + (nextItem.resizeWidth || nextItem.renderWidth)
+        } else {
+          prevItem.foldWidth = 0
+          nextItem.foldWidth = (prevItem.resizeWidth || prevItem.renderWidth) + (nextItem.resizeWidth || nextItem.renderWidth)
         }
       }
+      dispatchEvent('toggle-expand', { prevItem, nextItem, expanded, item }, evnt)
+      recalculate()
     }
 
-    const handleActionDblclickEvent = (evnt: MouseEvent) => {
+    const handlePrevActionDblclickEvent = (evnt: MouseEvent) => {
       const { itemList } = reactData
       const actionOpts = computeActionOpts.value
       const btnEl = evnt.currentTarget as HTMLDivElement
-      const handleEl = btnEl.parentElement as HTMLDivElement
-      const itemId = handleEl.getAttribute('itemid')
-      const itemIndex = XEUtils.findIndexOf(itemList, item => item.id === itemId)
-      const item = itemList[itemIndex]
+      const btnWrapperEl = btnEl.parentElement as HTMLDivElement
+      const handleEl = btnWrapperEl.parentElement as HTMLDivElement
+      const prevEl = handleEl.previousElementSibling as HTMLDivElement
+      const prevId = prevEl.getAttribute('itemid')
+      const prevItem = itemList.find(item => item.id === prevId)
+      const nextEl = handleEl.nextElementSibling as HTMLDivElement
+      const nextId = nextEl.getAttribute('itemid')
+      const nextItem = itemList.find(item => item.id === nextId)
 
       if (actionOpts.trigger === 'dblclick') {
-        handleItemActionEvent(evnt)
+        if (prevItem && nextItem && nextItem.isExpand) {
+          handleItemActionEvent(evnt, prevItem, nextItem, false)
+        }
       }
-      dispatchEvent('action-dblclick', { item, name: item ? item.name : '' }, evnt)
+      dispatchEvent('action-dblclick', { prevItem, nextItem }, evnt)
     }
 
-    const handleActionClickEvent = (evnt: MouseEvent) => {
+    const handlePrevActionClickEvent = (evnt: MouseEvent) => {
       const { itemList } = reactData
       const actionOpts = computeActionOpts.value
       const btnEl = evnt.currentTarget as HTMLDivElement
-      const handleEl = btnEl.parentElement as HTMLDivElement
-      const itemId = handleEl.getAttribute('itemid')
-      const itemIndex = XEUtils.findIndexOf(itemList, item => item.id === itemId)
-      const item = itemList[itemIndex]
+      const btnWrapperEl = btnEl.parentElement as HTMLDivElement
+      const handleEl = btnWrapperEl.parentElement as HTMLDivElement
+      const prevEl = handleEl.previousElementSibling as HTMLDivElement
+      const prevId = prevEl.getAttribute('itemid')
+      const prevItem = itemList.find(item => item.id === prevId)
+      const nextEl = handleEl.nextElementSibling as HTMLDivElement
+      const nextId = nextEl.getAttribute('itemid')
+      const nextItem = itemList.find(item => item.id === nextId)
 
       if (actionOpts.trigger !== 'dblclick') {
-        handleItemActionEvent(evnt)
+        if (prevItem && nextItem && nextItem.isExpand) {
+          handleItemActionEvent(evnt, prevItem, nextItem, false)
+        }
       }
-      dispatchEvent('action-click', { item, name: item ? item.name : '' }, evnt)
+      dispatchEvent('action-click', { prevItem, nextItem }, evnt)
+    }
+
+    const handleNextActionDblclickEvent = (evnt: MouseEvent) => {
+      const { itemList } = reactData
+      const actionOpts = computeActionOpts.value
+      const btnEl = evnt.currentTarget as HTMLDivElement
+      const btnWrapperEl = btnEl.parentElement as HTMLDivElement
+      const handleEl = btnWrapperEl.parentElement as HTMLDivElement
+      const prevEl = handleEl.previousElementSibling as HTMLDivElement
+      const prevId = prevEl.getAttribute('itemid')
+      const prevItem = itemList.find(item => item.id === prevId)
+      const nextEl = handleEl.nextElementSibling as HTMLDivElement
+      const nextId = nextEl.getAttribute('itemid')
+      const nextItem = itemList.find(item => item.id === nextId)
+
+      if (actionOpts.trigger === 'dblclick') {
+        if (prevItem && nextItem && prevItem.isExpand) {
+          handleItemActionEvent(evnt, prevItem, nextItem, true)
+        }
+      }
+      dispatchEvent('action-dblclick', { prevItem, nextItem }, evnt)
+    }
+
+    const handleNextActionClickEvent = (evnt: MouseEvent) => {
+      const { itemList } = reactData
+      const actionOpts = computeActionOpts.value
+      const btnEl = evnt.currentTarget as HTMLDivElement
+      const btnWrapperEl = btnEl.parentElement as HTMLDivElement
+      const handleEl = btnWrapperEl.parentElement as HTMLDivElement
+      const prevEl = handleEl.previousElementSibling as HTMLDivElement
+      const prevId = prevEl.getAttribute('itemid')
+      const prevItem = itemList.find(item => item.id === prevId)
+      const nextEl = handleEl.nextElementSibling as HTMLDivElement
+      const nextId = nextEl.getAttribute('itemid')
+      const nextItem = itemList.find(item => item.id === nextId)
+
+      if (actionOpts.trigger !== 'dblclick') {
+        if (prevItem && nextItem && prevItem.isExpand) {
+          handleItemActionEvent(evnt, prevItem, nextItem, true)
+        }
+      }
+      dispatchEvent('action-click', { prevItem, nextItem }, evnt)
     }
 
     const handleGlobalResizeEvent = () => {
@@ -619,30 +670,53 @@ export default defineVxeComponent({
 
     Object.assign($xeSplit, splitMethods, splitPrivateMethods)
 
-    const renderHandleBar = (item: VxeSplitDefines.PaneConfig) => {
+    const renderHandleBar = (prevItem: VxeSplitDefines.PaneConfig, nextItem: VxeSplitDefines.PaneConfig) => {
+      const { border, resize, vertical } = props
+      const { itemList } = reactData
       const barStyle = computeBarStyle.value
       const actionOpts = computeActionOpts.value
-      const isFoldNext = computeIsFoldNext.value
-      const { id, isExpand, showAction } = item
-
+      const { direction } = actionOpts
+      const showPrevButton = XEUtils.isBoolean(actionOpts.showPrevButton) ? actionOpts.showPrevButton : (itemList.some(item => item.showAction))
+      const showNextButton = XEUtils.isBoolean(actionOpts.showNextButton) ? actionOpts.showNextButton : (direction === 'next' && itemList.some(item => item.showAction))
+      const resizeOpts = computeResizeOpts.value
+      const { immediate } = resizeOpts
       return h('div', {
-        itemid: id,
-        class: ['vxe-split-pane-handle', isFoldNext ? 'to--next' : 'to--prev']
+        class: ['vxe-split-pane-handle', vertical ? 'is--vertical' : 'is--horizontal', immediate ? 'is-resize--immediate' : 'is-resize--lazy', {
+          'is--resize': resize,
+          'is--border': border
+        }]
       }, [
         h('div', {
           class: 'vxe-split-pane-handle-bar',
           style: barStyle,
           onMousedown: dragEvent
         }),
-        showAction
-          ? h('span', {
-            class: 'vxe-split-pane-action-btn',
-            onDblclick: handleActionDblclickEvent,
-            onClick: handleActionClickEvent
+        itemList.length === 2
+          ? h('div', {
+            class: 'vxe-split-pane-action-btn-wrapper'
           }, [
-            h('i', {
-              class: (isExpand ? actionOpts.openIcon : actionOpts.closeIcon) || getDefaultActionIcon(item)
-            })
+            showPrevButton && nextItem.isExpand
+              ? h('div', {
+                class: 'vxe-split-pane-action-btn',
+                onDblclick: handlePrevActionDblclickEvent,
+                onClick: handlePrevActionClickEvent
+              }, [
+                h('i', {
+                  class: getActionIcon(prevItem, nextItem, false)
+                })
+              ])
+              : renderEmptyElement($xeSplit),
+            showNextButton && prevItem.isExpand
+              ? h('div', {
+                class: 'vxe-split-pane-action-btn',
+                onDblclick: handleNextActionDblclickEvent,
+                onClick: handleNextActionClickEvent
+              }, [
+                h('i', {
+                  class: getActionIcon(prevItem, nextItem, true)
+                })
+              ])
+              : renderEmptyElement($xeSplit)
           ])
           : renderEmptyElement($xeSplit)
       ])
@@ -655,34 +729,36 @@ export default defineVxeComponent({
       const { immediate } = resizeOpts
       const visibleItems = computeVisibleItems.value
       const { autoItems } = computeAutoItems.value
-      const isFoldNext = computeIsFoldNext.value
       const itemVNs: VNode[] = []
-      itemList.forEach((item, index) => {
-        const { id, name, slots, renderHeight, resizeHeight, foldHeight, renderWidth, resizeWidth, foldWidth, isVisible, isExpand } = item
+      itemList.forEach((prevItem, index) => {
+        const { id, name, slots, renderHeight, resizeHeight, foldHeight, renderWidth, resizeWidth, foldWidth, isExpand } = prevItem
+        const nextItem = itemList[index + 1]
         const defaultSlot = slots ? slots.default : null
         const stys: Record<string, string | number> = {}
-        let itemWidth = isVisible ? (foldWidth || resizeWidth || renderWidth) : 0
-        let itemHeight = isVisible ? (foldHeight || resizeHeight || renderHeight) : 0
+        let itemWidth = isExpand ? (foldWidth || resizeWidth || renderWidth) : 0
+        let itemHeight = isExpand ? (foldHeight || resizeHeight || renderHeight) : 0
         // 至少存在一个自适应
         if (autoItems.length === 1) {
           if (vertical) {
-            if (!item.height) {
+            if (!prevItem.height) {
               itemHeight = 0
             }
           } else {
-            if (!item.width) {
+            if (!prevItem.width) {
               itemWidth = 0
             }
           }
         }
-        // 当只剩下一个可视区自动占用 100%
+        let isFill = true
         if (vertical) {
-          if (itemHeight) {
-            stys.height = visibleItems.length === 1 ? '100%' : toCssUnit(itemHeight)
+          if (itemHeight && visibleItems.length > 1) {
+            isFill = false
+            stys.height = toCssUnit(itemHeight)
           }
         } else {
-          if (itemWidth) {
-            stys.width = visibleItems.length === 1 ? '100%' : toCssUnit(itemWidth)
+          if (itemWidth && visibleItems.length > 1) {
+            isFill = false
+            stys.width = toCssUnit(itemWidth)
           }
         }
 
@@ -695,25 +771,26 @@ export default defineVxeComponent({
               'is--border': border,
               'is--height': itemHeight,
               'is--width': itemWidth,
-              'is--fill': isVisible && !itemHeight && !itemWidth,
-              'is--handle': index > 0,
-              'is--expand': isExpand,
-              'is--hidden': !isVisible
+              'is--visible': isExpand,
+              'is--hidden': !isExpand,
+              'is--fill': isExpand && isFill
             }],
             style: stys
           }, [
-            index && !isFoldNext ? renderHandleBar(item) : renderEmptyElement($xeSplit),
             h('div', {
               itemid: id,
               class: 'vxe-split-pane--wrapper'
             }, [
               h('div', {
                 class: 'vxe-split-pane--inner'
-              }, defaultSlot ? callSlot(defaultSlot, { name, isVisible, isExpand }) : [])
-            ]),
-            isFoldNext && index < itemList.length - 1 ? renderHandleBar(item) : renderEmptyElement($xeSplit)
+              }, defaultSlot ? callSlot(defaultSlot, { name, isExpand }) : [])
+            ])
           ])
         )
+
+        if (nextItem) {
+          itemVNs.push(renderHandleBar(prevItem, nextItem))
+        }
       })
       return h('div', {
         class: 'vxe-split-wrapper'
@@ -757,7 +834,15 @@ export default defineVxeComponent({
                 })
               ])
             ]
-          : [])
+          : []),
+        h('div', {
+          class: 'vxe-split--render-vars'
+        }, [
+          h('div', {
+            ref: refBarInfoElem,
+            class: 'vxe-split--handle-bar-info'
+          })
+        ])
       ])
     }
 
@@ -773,10 +858,21 @@ export default defineVxeComponent({
     })
 
     watch(() => reactData.staticItems, (val) => {
+      const actionOpts = computeActionOpts.value
+      const { showPrevButton, showNextButton } = actionOpts
       if (props.items && props.items.length) {
         errLog('vxe.error.errConflicts', ['<vxe-split-pane ...>', 'items'])
       }
-      reactData.itemList = val
+      reactData.itemList = val || []
+
+      if ((showPrevButton || showNextButton) && reactData.itemList.length > 2) {
+        errLog('vxe.error.modelConflicts', ['action-config.showPrevButton | action-config.showNextButton', '<vxe-split-pane ...> Only supports 2 panel'])
+      }
+      reactData.itemList.forEach(item => {
+        if (item.showAction) {
+          warnLog('vxe.error.removeProp', ['showAction'])
+        }
+      })
       recalculate()
     })
 
@@ -793,6 +889,11 @@ export default defineVxeComponent({
           recalculate()
         })
         resizeObserver.observe(el)
+      }
+
+      const actionOpts = computeActionOpts.value
+      if (actionOpts.direction) {
+        errLog('vxe.error.delProp', ['action-config.direction', 'action-config.showPrevButton | action-config.showNextButton'])
       }
 
       globalEvents.on($xeSplit, 'resize', handleGlobalResizeEvent)
