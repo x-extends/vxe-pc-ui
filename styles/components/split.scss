@@ -14,6 +14,22 @@
   }
   &.is--drag {
     user-select: none;
+    &.is-resize--immediate {
+      &.is--horizontal {
+        cursor: w-resize;
+      }
+      &.is--vertical {
+        cursor: n-resize;
+      }
+    }
+    &.is-resize--lazy {
+      &.is--horizontal {
+        cursor: col-resize;
+      }
+      &.is--vertical {
+        cursor: row-resize;
+      }
+    }
     & > .vxe-split-wrapper {
       & > .vxe-split-pane {
         & > .vxe-split-pane--wrapper {
