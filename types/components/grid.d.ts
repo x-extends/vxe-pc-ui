@@ -526,6 +526,8 @@ export namespace VxeGridDefines {
   export interface RowDragstartEventParams<D = any> extends GridEventParams<D>, VxeTableDefines.RowDragstartEventParams<D> { }
   export interface RowDragoverEventParams<D = any> extends GridEventParams<D>, VxeTableDefines.RowDragoverEventParams<D> { }
   export interface RowDragendEventParams<D = any> extends GridEventParams<D>, VxeTableDefines.RowDragendEventParams<D> { }
+  export interface RowRemoveDragendEventParams<D = any> extends GridEventParams<D>, VxeTableDefines.RowRemoveDragendEventParams<D> { }
+  export interface RowInsertDragendEventParams<D = any> extends GridEventParams<D>, VxeTableDefines.RowInsertDragendEventParams<D> { }
   export interface ColumnDragstartEventParams<D = any> extends GridEventParams<D>, VxeTableDefines.ColumnDragstartEventParams<D> { }
   export interface ColumnDragoverEventParams<D = any> extends GridEventParams<D>, VxeTableDefines.ColumnDragoverEventParams<D> { }
   export interface ColumnDragendEventParams<D = any> extends GridEventParams<D>, VxeTableDefines.ColumnDragendEventParams<D> { }
@@ -617,6 +619,8 @@ export interface VxeGridEventProps<D = any> {
   onRowDragstart?: VxeGridEvents.RowDragstart<D>
   onRowDragover?: VxeGridEvents.RowDragover<D>
   onRowDragend?: VxeGridEvents.RowDragend<D>
+  onRowRemoveDragend?: VxeGridEvents.RowRemoveDragend<D>
+  onRowInsertDragend?: VxeGridEvents.RowInsertDragend<D>
   onColumnDragstart?: VxeGridEvents.ColumnDragstart<D>
   onColumnDragover?: VxeGridEvents.ColumnDragover<D>
   onColumnDragend?: VxeGridEvents.ColumnDragend<D>
@@ -693,6 +697,8 @@ export interface VxeGridListeners<D = any> {
   rowDragstart?: VxeGridEvents.RowDragstart<D>
   rowDragover?: VxeGridEvents.RowDragover<D>
   rowDragend?: VxeGridEvents.RowDragend<D>
+  rowRemoveDragend?: VxeGridEvents.RowRemoveDragend<D>
+  rowInsertDragend?: VxeGridEvents.RowInsertDragend<D>
   columnDragstart?: VxeGridEvents.ColumnDragstart<D>
   columnDragover?: VxeGridEvents.ColumnDragover<D>
   columnDragend?: VxeGridEvents.ColumnDragend<D>
@@ -769,6 +775,8 @@ export namespace VxeGridEvents {
   export type RowDragstart<D = any> = (params: VxeGridDefines.RowDragstartEventParams<D>) => void
   export type RowDragover<D = any> = (params: VxeGridDefines.RowDragoverEventParams<D>) => void
   export type RowDragend<D = any> = (params: VxeGridDefines.RowDragendEventParams<D>) => void
+  export type RowRemoveDragend<D = any> = (params: VxeGridDefines.RowRemoveDragendEventParams<D>) => void
+  export type RowInsertDragend<D = any> = (params: VxeGridDefines.RowInsertDragendEventParams<D>) => void
   export type ColumnDragstart<D = any> = (params: VxeGridDefines.ColumnDragstartEventParams<D>) => void
   export type ColumnDragover<D = any> = (params: VxeGridDefines.ColumnDragoverEventParams<D>) => void
   export type ColumnDragend<D = any> = (params: VxeGridDefines.ColumnDragendEventParams<D>) => void

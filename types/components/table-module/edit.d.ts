@@ -90,11 +90,31 @@ export interface TableEditMethods<D = any> {
    */
   getActiveRecord(): {
     row: D
-    rowIndex: number
-    $rowIndex: number
     column: VxeTableDefines.ColumnInfo<D>
+    /**
+     * 请使用 getRowIndex(row)
+     * @deprecated
+     */
+    rowIndex: number
+    /**
+     * 请使用 getVMRowIndex(row)
+     * @deprecated
+     */
+    $rowIndex: number
+    /**
+     * 请使用 getColumnIndex(column)
+     * @deprecated
+     */
     columnIndex: number
+    /**
+     * 请使用 getVMColumnIndex(column)
+     * @deprecated
+     */
     $columnIndex: number
+    /**
+     * 已废弃
+     * @deprecated
+     */
     cell: HTMLElement
   }
   /**
@@ -103,11 +123,31 @@ export interface TableEditMethods<D = any> {
    */
   getEditRecord(): {
     row: D
-    rowIndex: number
-    $rowIndex: number
     column: VxeTableDefines.ColumnInfo<D>
+    /**
+     * 请使用 getRowIndex(row)
+     * @deprecated
+     */
+    rowIndex: number
+    /**
+     * 请使用 getVMRowIndex(row)
+     * @deprecated
+     */
+    $rowIndex: number
+    /**
+     * 请使用 getColumnIndex(column)
+     * @deprecated
+     */
     columnIndex: number
+    /**
+     * 请使用 getVMColumnIndex(column)
+     * @deprecated
+     */
     $columnIndex: number
+    /**
+     * 已废弃
+     * @deprecated
+     */
     cell: HTMLElement
   }
   /**
