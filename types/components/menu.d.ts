@@ -38,10 +38,9 @@ export namespace VxeMenuPropTypes {
     permissionCode?: VxeComponentPermissionCodeType
     children?: MenuOption[]
     slots?: {
-      default?: string | ((params: {
-        option: Required<MenuOption>
-        collapsed: boolean
-      }) => VxeComponentSlotType | VxeComponentSlotType[]) | null
+      icon?: string | ((params: VxeMenuSlotTypes.IconSlotParams) => VxeComponentSlotType | VxeComponentSlotType[]) | null
+      title?: string | ((params: VxeMenuSlotTypes.TitleSlotParams) => VxeComponentSlotType | VxeComponentSlotType[]) | null
+      default?: string | ((params: VxeMenuSlotTypes.TitleSlotParams) => VxeComponentSlotType | VxeComponentSlotType[]) | null
     }
   }
 
@@ -133,16 +132,31 @@ export namespace VxeMenuSlotTypes {
     option: Required<VxeMenuPropTypes.MenuOption>
     collapsed: boolean
   }
-  export interface OptionSlotParams extends DefaultSlotParams {}
+  export interface IconSlotParams extends DefaultSlotParams {}
+  export interface TitleSlotParams extends DefaultSlotParams {}
 }
 
 export interface VxeMenuSlots {
   [key: string]: ((params: VxeMenuSlotTypes.DefaultSlotParams) => any) | undefined
 
   /**
-   * 自定义菜单项的模板
+   * 自定义菜单图标模板
    */
-  option?: (params: VxeMenuSlotTypes.OptionSlotParams) => any
+  optionIcon?: (params: VxeMenuSlotTypes.IconSlotParams) => any
+  /**
+   * 自定义菜单图标模板
+   */
+  'option-icon'?: (params: VxeMenuSlotTypes.IconSlotParams) => any
+  /**
+   * 自定义菜单标题模板
+   */
+  optionTitle?: (params: VxeMenuSlotTypes.TitleSlotParams) => any
+  /**
+   * 自定义菜单标题模板
+   */
+  'option-title'?: (params: VxeMenuSlotTypes.TitleSlotParams) => any
+
+  option?: (params: VxeMenuSlotTypes.TitleSlotParams) => any
 }
 
 export const Menu: typeof VxeMenu
