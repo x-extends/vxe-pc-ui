@@ -90,12 +90,32 @@ export interface TableEditMethods<D = any> {
    */
   getActiveRecord(): {
     row: D
-    rowIndex: number
-    $rowIndex: number
     column: VxeTableDefines.ColumnInfo<D>
+    /**
+     * 请使用 getRowIndex(row)
+     * @deprecated
+     */
+    rowIndex: number
+    /**
+     * 请使用 getVMRowIndex(row)
+     * @deprecated
+     */
+    $rowIndex: number
+    /**
+     * 请使用 getColumnIndex(column)
+     * @deprecated
+     */
     columnIndex: number
+    /**
+     * 请使用 getVMColumnIndex(column)
+     * @deprecated
+     */
     $columnIndex: number
-    // cell: HTMLElement
+    /**
+     * 已废弃
+     * @deprecated
+     */
+    cell: HTMLElement
   }
   /**
    * 已废弃，请使用 getEditCell
@@ -103,12 +123,32 @@ export interface TableEditMethods<D = any> {
    */
   getEditRecord(): {
     row: D
-    rowIndex: number
-    $rowIndex: number
     column: VxeTableDefines.ColumnInfo<D>
+    /**
+     * 请使用 getRowIndex(row)
+     * @deprecated
+     */
+    rowIndex: number
+    /**
+     * 请使用 getVMRowIndex(row)
+     * @deprecated
+     */
+    $rowIndex: number
+    /**
+     * 请使用 getColumnIndex(column)
+     * @deprecated
+     */
     columnIndex: number
+    /**
+     * 请使用 getVMColumnIndex(column)
+     * @deprecated
+     */
     $columnIndex: number
-    // cell: HTMLElement
+    /**
+     * 已废弃
+     * @deprecated
+     */
+    cell: HTMLElement
   }
   /**
    * 用于 edit-config，获取已激活编辑的单元格信息

@@ -746,6 +746,10 @@ export namespace VxeTablePropTypes {
      */
     isSelfToChildDrag?: boolean
     /**
+     * 是否允许在不同表格之间进行拖拽
+     */
+    isCrossTableDrag?: boolean
+    /**
      * 是否显示拖拽辅助状态显示
      */
     showGuidesStatus?: boolean
@@ -2570,9 +2574,9 @@ export namespace VxeTablePropTypes {
        */
       position?: 'top' | 'bottom' | ''
       /**
-       * 是否显示
+       * 滚动条显示方式
        */
-      visible?: boolean
+      visible?: 'auto' | 'visible' | 'hidden' | boolean
     }
     /**
      * 纵向滚动条
@@ -2583,9 +2587,9 @@ export namespace VxeTablePropTypes {
        */
       position?: 'left' | 'right' | ''
       /**
-       * 是否显示
+       * 滚动条显示方式
        */
-      visible?: boolean
+      visible?: 'auto' | 'visible' | 'hidden' | boolean
     }
   }
 
@@ -3731,9 +3735,9 @@ export interface TableReactData<D = any> {
 
   isCustomStatus: boolean
 
-  isDragRowMove: Boolean
+  isCrossDragRow: Boolean
   dragRow: any
-  isDragColMove: boolean
+  isCrossDragCol: boolean
   dragCol: VxeTableDefines.ColumnInfo | null
   dragTipText: string
 
@@ -5057,6 +5061,22 @@ export interface TablePrivateMethods<D = any> {
   /**
    * @private
    */
+  handleCrossTableRowDragInsertEvent(evnt: DragEvent): void
+  /**
+   * @private
+   */
+  handleCrossTableRowDragFinishEvent(evnt: DragEvent): void
+  /**
+   * @private
+   */
+  handleCrossTableRowDragoverEmptyEvent(evnt: DragEvent): void
+  /**
+   * @private
+   */
+  hideCrossTableRowDropClearStatus(): void
+  /**
+   * @private
+   */
   handleCellDragMousedownEvent (evnt: MouseEvent, params: {
     row: any
     column: VxeTableDefines.ColumnInfo
@@ -5201,6 +5221,8 @@ export type VxeTableEmits = [
   'row-dragstart',
   'row-dragover',
   'row-dragend',
+  'row-remove-dragend',
+  'row-insert-dragend',
   'column-dragstart',
   'column-dragover',
   'column-dragend',
@@ -5927,6 +5949,19 @@ export namespace VxeTableDefines {
     }
   }
 
+  export interface RowRemoveDragendEventParams<D = any> {
+    row: D
+  }
+
+  export interface RowInsertDragendEventParams<D = any> {
+    newRow: D
+    oldRow: D
+    dragRow: D
+    dragPos: 'top' | 'bottom'
+    dragToChild: boolean
+    offsetIndex: 0 | 1
+  }
+
   export interface RowDragToChildMethod<D = any> extends RowDragendEventParams<D> {}
 
   export interface ColumnDragstartEventParams<D = any> {
@@ -6275,6 +6310,8 @@ export interface VxeTableEventProps<D = any> {
   onRowDragstart?: VxeTableEvents.RowDragstart<D>
   onRowDragover?: VxeTableEvents.RowDragover<D>
   onRowDragend?: VxeTableEvents.RowDragend<D>
+  onRowRemoveDragend?: VxeTableEvents.RowRemoveDragend<D>
+  onRowInsertDragend?: VxeTableEvents.RowInsertDragend<D>
   onColumnDragstart?: VxeTableEvents.ColumnDragstart<D>
   onColumnDragover?: VxeTableEvents.ColumnDragover<D>
   onColumnDragend?: VxeTableEvents.ColumnDragend<D>
@@ -6356,6 +6393,8 @@ export interface VxeTableListeners<D = any> {
   rowDragstart?: VxeTableEvents.RowDragstart<D>
   rowDragover?: VxeTableEvents.RowDragover<D>
   rowDragend?: VxeTableEvents.RowDragend<D>
+  rowRemoveDragend?: VxeTableEvents.RowRemoveDragend<D>
+  rowInsertDragend?: VxeTableEvents.RowInsertDragend<D>
   columnDragstart?: VxeTableEvents.ColumnDragstart<D>
   columnDragover?: VxeTableEvents.ColumnDragover<D>
   columnDragend?: VxeTableEvents.ColumnDragend<D>
@@ -6420,6 +6459,8 @@ export namespace VxeTableEvents {
   export type RowDragstart<D = VxeTablePropTypes.Row> = (params: VxeTableDefines.RowDragstartEventParams<D>) => void
   export type RowDragover<D = VxeTablePropTypes.Row> = (params: VxeTableDefines.RowDragoverEventParams<D>) => void
   export type RowDragend<D = VxeTablePropTypes.Row> = (params: VxeTableDefines.RowDragendEventParams<D>) => void
+  export type RowRemoveDragend<D = VxeTablePropTypes.Row> = (params: VxeTableDefines.RowRemoveDragendEventParams<D>) => void
+  export type RowInsertDragend<D = VxeTablePropTypes.Row> = (params: VxeTableDefines.RowInsertDragendEventParams<D>) => void
   export type ColumnDragstart<D = VxeTablePropTypes.Row> = (params: VxeTableDefines.ColumnDragstartEventParams<D>) => void
   export type ColumnDragover<D = VxeTablePropTypes.Row> = (params: VxeTableDefines.ColumnDragoverEventParams<D>) => void
   export type ColumnDragend<D = VxeTablePropTypes.Row> = (params: VxeTableDefines.ColumnDragendEventParams<D>) => void
