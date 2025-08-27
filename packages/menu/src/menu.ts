@@ -310,33 +310,39 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const $xeMenu = this
       const slots = $xeMenu.$scopedSlots
 
-      const { icon, isExpand, hasChild, slots: itemSlots } = item
-      const optionSlot = itemSlots ? itemSlots.default : slots.option
+      const { icon, isExpand, hasChild } = item
+      const itemSlots = item.slots || {}
+      const optionSlot = itemSlots.default || slots.option
+      const titleSlot = itemSlots.title || slots.optionTitle || slots['option-title']
+      const iconSlot = itemSlots.icon || slots.optionIcon || slots['option-icon']
       const title = $xeMenu.getMenuTitle(item)
       const isCollapsed = $xeMenu.computeIsCollapsed
+      const params = {
+        option: item as any,
+        collapsed: isCollapsed
+      }
       return [
-        h('div', {
-          class: 'vxe-menu--item-link-icon'
-        }, icon
-          ? [
-              h('i', {
-                class: icon
-              })
-            ]
-          : []),
+        optionSlot
+          ? renderEmptyElement($xeMenu)
+          : h('div', {
+            class: 'vxe-menu--item-link-icon'
+          }, iconSlot
+            ? $xeMenu.callSlot(iconSlot, params, h)
+            : (icon
+                ? [h('i', {
+                    class: icon
+                  })]
+                : [])),
         optionSlot
           ? h('div', {
             class: 'vxe-menu--item-custom-title'
-          }, $xeMenu.callSlot(optionSlot, {
-            option: item as any,
-            collapsed: isCollapsed
-          }, h))
+          }, $xeMenu.callSlot(optionSlot, params, h))
           : h('div', {
             class: 'vxe-menu--item-link-title',
             attrs: {
               title
             }
-          }, title),
+          }, titleSlot ? $xeMenu.callSlot(titleSlot, params, h) : title),
         hasChild
           ? h('div', {
             class: 'vxe-menu--item-link-collapse',
