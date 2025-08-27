@@ -61,6 +61,7 @@ export interface GanttViewInternalData {
   startMaps: Record<string, any>
   endMaps: Record<string, any>
   chartMaps: Record<string, VxeGanttDefines.RowCacheItem>
+  todayDateMaps: Record<string, string>
   elemStore: {
     [key: string]: Ref<HTMLElement> | null
   }

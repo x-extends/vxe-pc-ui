@@ -321,9 +321,13 @@ export namespace VxeGanttDefines {
 
   export interface ScaleDefaultOptions {
     /**
-     * 标题
+     * 自定义列头单元格标题
      */
     titleMethod?: (params: VxeGanttSlotTypes.TaskViewCellTitleSlotParams) => string | number
+    /**
+     * 自定义列头单元格样式
+     */
+    headerCellStyle?: CSSStyleDeclaration | ((params: VxeGanttSlotTypes.TaskViewHeaderCellStyleSlotParams) => Partial<CSSStyleDeclaration>)
     /**
      * 自定义插槽模板
      */
@@ -426,6 +430,7 @@ export namespace VxeGanttSlotTypes {
     scaleObj: VxeGanttDefines.ColumnScaleObj
     $rowIndex: number
   }
+  export interface TaskViewHeaderCellStyleSlotParams extends TaskViewCellTitleSlotParams {}
 }
 
 export interface VxeGanttSlots<D = any> extends VxeGridSlots<D> {
