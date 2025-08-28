@@ -101,6 +101,10 @@ export namespace VxeGanttPropTypes {
 
   export interface TaskViewConfig<D = any> {
     /**
+     * 高亮此刻线
+     */
+    showNowLine?: boolean
+    /**
      * 日期轴配置项
      */
     scales?: VxeGanttDefines.ColumnScaleType[] | VxeGanttDefines.ColumnScaleConfig[]
