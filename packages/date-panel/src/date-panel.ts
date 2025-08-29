@@ -81,6 +81,7 @@ export default defineVxeComponent({
       isAniVisible: false,
       isActivated: false,
       inputValue: '',
+      inputLabel: '',
       datetimePanelValue: null,
       datePanelValue: null,
       datePanelLabel: '',
@@ -505,7 +506,9 @@ export default defineVxeComponent({
     const updateModelValue = (modelValue: VxeDatePanelPropTypes.ModelValue | undefined) => {
       const { type } = props
       const dateValueFormat = computeDateValueFormat.value
-      reactData.inputValue = parseDateValue(modelValue, type, { valueFormat: dateValueFormat })
+      const inpDate = parseDateValue(modelValue, type, { valueFormat: dateValueFormat })
+      reactData.inputValue = inpDate
+      reactData.inputLabel = inpDate
       dateOpenPanel()
     }
 
@@ -524,28 +527,28 @@ export default defineVxeComponent({
     }
 
     const dateRevert = () => {
-      reactData.inputValue = props.multiple ? computeDateMultipleLabel.value : reactData.datePanelLabel
+      reactData.inputLabel = props.multiple ? computeDateMultipleLabel.value : reactData.datePanelLabel
     }
 
-    const afterCheckValue = (inputLabel: string) => {
+    const afterCheckValue = (inpVal: string) => {
       const { type } = props
-      const { inputValue, datetimePanelValue } = reactData
+      const { inputLabel, datetimePanelValue } = reactData
       const dateLabelFormat = computeDateLabelFormat.value
-      if (inputLabel) {
-        let inpDateVal: VxeDatePanelPropTypes.ModelValue = parseDate(inputLabel, dateLabelFormat as string)
+      if (inpVal) {
+        let inpDateVal: VxeDatePanelPropTypes.ModelValue = parseDate(inpVal, dateLabelFormat as string)
         if (XEUtils.isValidDate(inpDateVal)) {
           if (type === 'time') {
             inpDateVal = XEUtils.toDateString(inpDateVal, dateLabelFormat)
-            if (inputValue !== inpDateVal) {
+            if (inputLabel !== inpDateVal) {
               handleChange(inpDateVal, { type: 'check' })
             }
-            reactData.inputValue = inpDateVal
+            reactData.inputLabel = inpDateVal
           } else {
             let isChange = false
             const firstDayOfWeek = computeFirstDayOfWeek.value
             if (type === 'datetime') {
               const dateValue = computeDateValue.value
-              if (inputLabel !== XEUtils.toDateString(dateValue, dateLabelFormat) || inputLabel !== XEUtils.toDateString(inpDateVal, dateLabelFormat)) {
+              if (inpVal !== XEUtils.toDateString(dateValue, dateLabelFormat) || inpVal !== XEUtils.toDateString(inpDateVal, dateLabelFormat)) {
                 isChange = true
                 if (datetimePanelValue) {
                   datetimePanelValue.setHours(inpDateVal.getHours())
@@ -556,7 +559,7 @@ export default defineVxeComponent({
             } else {
               isChange = true
             }
-            reactData.inputValue = XEUtils.toDateString(inpDateVal, dateLabelFormat, { firstDay: firstDayOfWeek })
+            reactData.inputLabel = XEUtils.toDateString(inpDateVal, dateLabelFormat, { firstDay: firstDayOfWeek })
             if (isChange) {
               dateChange(inpDateVal)
             }
@@ -569,25 +572,30 @@ export default defineVxeComponent({
       }
     }
 
+    const emitModel = (value: any) => {
+      reactData.inputValue = value
+      emit('update:modelValue', value)
+    }
+
     const handleChange = (value: string, evnt: Event | { type: string }) => {
       const { type, modelValue, valueFormat } = props
       const dateValueFormat = computeDateValueFormat.value
-      reactData.inputValue = value
+      reactData.inputLabel = value
       if (hasTimestampValueType(valueFormat)) {
         const dateVal = parseDateValue(value, type, { valueFormat: dateValueFormat })
         const timeNum = dateVal ? dateVal.getTime() : null
-        emit('update:modelValue', timeNum)
+        emitModel(timeNum)
         if (modelValue !== timeNum) {
           dispatchEvent('change', { value: timeNum }, evnt as Event)
         }
       } else if (hasDateValueType(valueFormat)) {
         const dateVal = parseDateValue(value, type, { valueFormat: dateValueFormat })
-        emit('update:modelValue', dateVal)
+        emitModel(dateVal)
         if (modelValue && dateVal ? XEUtils.toStringDate(modelValue).getTime() !== dateVal.getTime() : modelValue !== dateVal) {
           dispatchEvent('change', { value: dateVal }, evnt as Event)
         }
       } else {
-        emit('update:modelValue', value)
+        emitModel(value)
         if (XEUtils.toValueString(modelValue) !== value) {
           dispatchEvent('change', { value }, evnt as Event)
         }
@@ -623,10 +631,10 @@ export default defineVxeComponent({
      */
     const changeValue = () => {
       const isDatePanelType = computeIsDatePanelType.value
-      const { inputValue } = reactData
+      const { inputLabel } = reactData
       if (isDatePanelType) {
-        dateParseValue(inputValue)
-        reactData.inputValue = props.multiple ? computeDateMultipleLabel.value : reactData.datePanelLabel
+        dateParseValue(inputLabel)
+        reactData.inputLabel = props.multiple ? computeDateMultipleLabel.value : reactData.datePanelLabel
       }
     }
 
@@ -764,9 +772,9 @@ export default defineVxeComponent({
 
     const datePrevEvent = (evnt: Event) => {
       const { type } = props
-      const { datePanelType, selectMonth, inputValue } = reactData
+      const { datePanelType, selectMonth, inputLabel } = reactData
       const { yearSize } = internalData
-      const value = inputValue
+      const value = inputLabel
       const isDisabledPrevDateBtn = computeIsDisabledPrevDateBtn.value
       if (!isDisabledPrevDateBtn) {
         let viewDate
@@ -803,9 +811,9 @@ export default defineVxeComponent({
 
     const dateNextEvent = (evnt: Event) => {
       const { type } = props
-      const { datePanelType, selectMonth, inputValue } = reactData
+      const { datePanelType, selectMonth, inputLabel } = reactData
       const { yearSize } = internalData
-      const value = inputValue
+      const value = inputLabel
       const isDisabledNextDateBtn = computeIsDisabledNextDateBtn.value
       if (!isDisabledNextDateBtn) {
         let viewDate
@@ -1101,8 +1109,8 @@ export default defineVxeComponent({
       getPanelDate () {
         return reactData.selectMonth
       },
-      checkValue (inputLabel) {
-        afterCheckValue(inputLabel)
+      checkValue (value) {
+        afterCheckValue(value)
       },
       confirmByEvent (evnt) {
         dateConfirmEvent(evnt)
@@ -1658,7 +1666,7 @@ export default defineVxeComponent({
     watch(() => props.type, () => {
       // 切换类型是重置内置变量
       Object.assign(reactData, {
-        inputValue: '',
+        inputLabel: '',
         datetimePanelValue: null,
         datePanelValue: null,
         datePanelLabel: '',
@@ -1673,7 +1681,7 @@ export default defineVxeComponent({
       const isDatePanelType = computeIsDatePanelType.value
       if (isDatePanelType) {
         dateParseValue(reactData.datePanelValue)
-        reactData.inputValue = props.multiple ? computeDateMultipleLabel.value : reactData.datePanelLabel
+        reactData.inputLabel = props.multiple ? computeDateMultipleLabel.value : reactData.datePanelLabel
       }
     })
 
