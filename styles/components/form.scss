@@ -122,7 +122,8 @@
 .vxe-form-item--valid-error-tip {
   position: absolute;
   width: 100%;
-  font-size: 12px;
+  font-size: 0.9em;
+  line-height: 1em;
   color: var(--vxe-ui-form-validate-error-color);
   background-color: var(--vxe-ui-form-validate-error-background-color);
   z-index: 1;
@@ -136,7 +137,7 @@
     pointer-events: auto;
   }
   .vxe-form-item--valid-error-theme-beautify {
-    padding: 0.2em 0.6em 0.3em 0.6em;
+    padding: 0.2em 0.6em 0.25em 0.6em;
     color: #fff;
     background-color: var(--vxe-ui-status-error-color);
     .vxe-form-item--valid-error-msg {
@@ -258,6 +259,10 @@
     }
   }
   &.is--error {
+    & > .vxe-form--item-content {
+      padding-top: 0;
+      padding-bottom: 1.3em;
+    }
     .vxe-input,
     .vxe-number-input,
     .vxe-password-input,
@@ -462,39 +467,11 @@
   .vxe-form--item {
     &:not(.is--vertical) {
       .vxe-form--item-title {
-        min-height: calc(var(--vxe-ui-form-item-min-height-default));
+        min-height: var(--vxe-ui-form-item-min-height-default);
       }
     }
     .vxe-form--item-content {
-      min-height: calc(var(--vxe-ui-form-item-min-height-default));
-    }
-  }
-  &.is--border {
-    .vxe-form--item {
-      .vxe-form--item-title {
-        min-height: calc(var(--vxe-ui-form-item-min-height-default));
-      }
-    }
-    &.size--medium {
-      .vxe-form--item {
-        .vxe-form--item-title {
-          min-height: calc(var(--vxe-ui-form-item-min-height-medium) );
-        }
-      }
-    }
-    &.size--small {
-      .vxe-form--item {
-        .vxe-form--item-title {
-          min-height: calc(var(--vxe-ui-form-item-min-height-small));
-        }
-      }
-    }
-    &.size--mini {
-      .vxe-form--item {
-        .vxe-form--item-title {
-          min-height: calc(var(--vxe-ui-form-item-min-height-mini));
-        }
-      }
+      min-height: var(--vxe-ui-form-item-min-height-default);
     }
   }
   &.size--medium {
@@ -513,11 +490,11 @@
     .vxe-form--item {
       &:not(.is--vertical) {
         .vxe-form--item-title {
-          min-height: calc(var(--vxe-ui-form-item-min-height-medium));
+          min-height: var(--vxe-ui-form-item-min-height-medium);
         }
       }
       .vxe-form--item-content {
-        min-height: calc(var(--vxe-ui-form-item-min-height-medium));
+        min-height: var(--vxe-ui-form-item-min-height-medium);
       }
     }
   }
@@ -537,11 +514,11 @@
     .vxe-form--item {
       &:not(.is--vertical) {
         .vxe-form--item-title {
-          min-height: calc(var(--vxe-ui-form-item-min-height-small));
+          min-height: var(--vxe-ui-form-item-min-height-small);
         }
       }
       .vxe-form--item-content {
-        min-height: calc(var(--vxe-ui-form-item-min-height-small));
+        min-height: var(--vxe-ui-form-item-min-height-small);
       }
     }
   }
@@ -561,11 +538,11 @@
     .vxe-form--item {
       &:not(.is--vertical) {
         .vxe-form--item-title {
-          min-height: calc(var(--vxe-ui-form-item-min-height-mini));
+          min-height: var(--vxe-ui-form-item-min-height-mini);
         }
       }
       .vxe-form--item-content {
-        min-height: calc(var(--vxe-ui-form-item-min-height-mini));
+        min-height: var(--vxe-ui-form-item-min-height-mini);
       }
     }
   }

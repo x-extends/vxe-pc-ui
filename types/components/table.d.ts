@@ -204,10 +204,25 @@ export namespace VxeTablePropTypes {
     type: string
   }) => void | null | VxeComponentStyleType)
 
+  export type ShowCustomHeader = boolean
+
+  export type MergeHeaderCells = VxeTableDefines.MergeOptions[]
+  export type MergeCells<D = VxeTablePropTypes.Row> = VxeTableDefines.MergeOptions<D>[]
+  export type MergeFooterCells<D = any> = VxeTableDefines.MergeOptions<D>[]
+
+  /**
+   * @deprecated
+   */
   export type MergeCell<D = VxeTablePropTypes.Row> = VxeTableDefines.MergeOptions<D>
-  export type MergeCells<D = VxeTablePropTypes.Row> = MergeCell<D>[]
+  /**
+   * @deprecated
+   */
   export type MergeFooterItem<D = any> = VxeTableDefines.MergeOptions<D>
-  export type MergeFooterItems<D = any> = MergeFooterItem<D>[]
+  /**
+   * 已废弃，请使用 VxeTablePropTypes.MergeFooterCells
+   * @deprecated
+   */
+  export type MergeFooterItems<D = any> = VxeTableDefines.MergeOptions<D>[]
 
   export type SpanMethod<D = VxeTablePropTypes.Row> = (params: {
     $table: VxeTableConstructor<D>
@@ -3093,12 +3108,21 @@ export interface VxeTableProps<D = any> {
    */
   footerCellStyle?: VxeTablePropTypes.FooterCellStyle<D>
   /**
-   * 临时合并指定的单元格 (不能用于展开行，不建议用于固定列、树形结构)
+   * 用于分组表头，显示为自定义列头，配合 mergeHeaderCells 灵活实现自定义合并
+   */
+  showCustomHeader?: VxeTablePropTypes.ShowCustomHeader
+  /**
+   * 临时合并指定的表头单元格
+   */
+  mergeHeaderCells?: VxeTablePropTypes.MergeHeaderCells
+  /**
+   * 临时合并指定的单元格 (不能用于展开行)
    */
   mergeCells?: VxeTablePropTypes.MergeCells<D>
   /**
-   * 临时合并表尾 (不能用于展开行，不建议用于固定列、树形结构)
+   * 临时合并指定的表尾单元格
    */
+  mergeFooterCells?: VxeTablePropTypes.MergeFooterCells<D>
   mergeFooterItems?: VxeTablePropTypes.MergeFooterItems<D>
   /**
    * 自定义合并函数，返回计算后的值 (不能用于虚拟滚动、展开行，不建议用于固定列、树形结构)
@@ -3738,6 +3762,8 @@ export interface TableReactData<D = any> {
   pendingRowFlag: number
   insertRowFlag: number
   removeRowFlag: number
+
+  mergeHeadFlag: number
   mergeBodyFlag: number
   mergeFootFlag: number
 
@@ -3748,6 +3774,8 @@ export interface TableReactData<D = any> {
   scrollXLeft: number
   scrollXWidth: number
   isScrollXBig: boolean
+
+  lazScrollLoading: boolean
 
   rowExpandHeightFlag: number
   calcCellHeightFlag: number
@@ -3848,16 +3876,22 @@ export interface TableInternalData<D = any> {
   fullColumnIdData: Record<string, VxeTableDefines.ColumnCacheItem<D>>
   fullColumnFieldData: Record<string, VxeTableDefines.ColumnCacheItem<D>>
 
+  // 合并表头单元格的数据
+  mergeHeaderList: VxeTableDefines.MergeItem<D>[]
+  mergeHeaderMaps: Record<string, VxeTableDefines.MergeItem>
+  // 已合并单元格数据集合
+  mergeHeaderCellMaps: Record<string, VxeTableDefines.MergeCacheItem>
   // 合并单元格的数据
   mergeBodyList: VxeTableDefines.MergeItem<D>[]
   mergeBodyMaps: Record<string, VxeTableDefines.MergeItem>
-  // 合并表尾的数据
-  mergeFooterList: VxeTableDefines.MergeItem<D>[]
-  mergeFooterMaps: Record<string, VxeTableDefines.MergeItem>
   // 已合并单元格数据集合
   mergeBodyCellMaps: Record<string, VxeTableDefines.MergeCacheItem>
+  // 合并表尾单元格的数据
+  mergeFooterList: VxeTableDefines.MergeItem<D>[]
+  mergeFooterMaps: Record<string, VxeTableDefines.MergeItem>
   // 已合并表尾数据集合
   mergeFooterCellMaps: Record<string, VxeTableDefines.MergeCacheItem>
+
   // 已展开的行
   rowExpandedMaps: Record<string, D | null>
   // 懒加载中的展开行
@@ -4492,8 +4526,13 @@ export interface TableMethods<DT = any> {
    */
   clearMergeCells(): Promise<any>
   /**
-   * 手动清除临时合并的表尾
+   * 手动清除临时合并的表头单元格
    */
+  clearMergeHeaderCells(): Promise<any>
+  /**
+   * 手动清除临时合并的表尾单元格
+   */
+  clearMergeFooterCells(): Promise<any>
   clearMergeFooterItems(): Promise<any>
   /**
    * 用于 row-config.isCurrent，手动清空当前高亮的状态
@@ -4508,8 +4547,13 @@ export interface TableMethods<DT = any> {
    */
   getMergeCells(): VxeTableDefines.MergeInfo[]
   /**
-   * 获取临时合并的表尾
+   * 获取临时合并的表头单元格
    */
+  getMergeHeaderCells(): VxeTableDefines.MergeInfo[]
+  /**
+   * 获取临时合并的表尾单元格
+   */
+  getMergeFooterCells(): VxeTableDefines.MergeInfo[]
   getMergeFooterItems(): VxeTableDefines.MergeInfo[]
   /**
    * 用于 column-config.isCurrent，获取当前列
@@ -4801,16 +4845,26 @@ export interface TableMethods<DT = any> {
    */
   removeMergeCells(merges: VxeTableDefines.MergeOptions<any> | VxeTableDefines.MergeOptions<any>[]): Promise<VxeTableDefines.MergeInfo[]>
   /**
-   * 取消表尾的临时合并状态，如果为数组，则取消多个合并
+   * 取消表头单元格的临时合并状态，如果为数组，则取消多个合并
    */
+  removeMergeHeaderCells(merges: VxeTableDefines.MergeOptions<any> | VxeTableDefines.MergeOptions<any>[]): Promise<VxeTableDefines.MergeInfo[]>
+  /**
+   * 取消表尾单元格的临时合并状态，如果为数组，则取消多个合并
+   */
+  removeMergeFooterCells(merges: VxeTableDefines.MergeOptions<any> | VxeTableDefines.MergeOptions<any>[]): Promise<VxeTableDefines.MergeInfo[]>
   removeMergeFooterItems(merges: VxeTableDefines.MergeOptions<any> | VxeTableDefines.MergeOptions<any>[]): Promise<VxeTableDefines.MergeInfo[]>
   /**
    * 临时合并单元格，如果为数组则合并多个
    */
   setMergeCells(merges: VxeTableDefines.MergeOptions<any> | VxeTableDefines.MergeOptions<any>[]): Promise<any>
   /**
-   * 临时合并表尾，如果为数组则合并多个
+   * 临时合并表头单元格，如果为数组则合并多个
    */
+  setMergeHeaderCells(merges: VxeTableDefines.MergeOptions<any> | VxeTableDefines.MergeOptions<any>[]): Promise<any>
+  /**
+   * 临时合并表尾单元格，如果为数组则合并多个
+   */
+  setMergeFooterCells(merges: VxeTableDefines.MergeOptions<any> | VxeTableDefines.MergeOptions<any>[]): Promise<any>
   setMergeFooterItems(merges: VxeTableDefines.MergeOptions<any> | VxeTableDefines.MergeOptions<any>[]): Promise<any>
   /**
    * 用于 mouse-config.area，更新已选区域的单元格样式
@@ -4927,6 +4981,10 @@ export interface TablePrivateMethods<D = any> {
    * @private
    */
   handleUpdateBodyMerge(): void
+  /**
+   * @private
+   */
+  handleUpdateHeaderMerge(): void
   /**
    * @private
    */
@@ -5194,6 +5252,10 @@ export type VxeTableEmits = [
   'copy',
   'cut',
 
+  'columns-change',
+  'data-change',
+  'footer-data-change',
+
   'current-change', // 已废弃
 
   'current-row-change',
@@ -5388,6 +5450,7 @@ export namespace VxeTableDefines {
     headerClassName: VxeColumnPropTypes.HeaderClassName
     footerClassName: VxeColumnPropTypes.FooterClassName
     formatter: VxeColumnPropTypes.Formatter<D>
+    headerFormatter: VxeColumnPropTypes.HeaderFormatter
     footerFormatter: VxeColumnPropTypes.FooterFormatter<D>
     padding: VxeColumnPropTypes.Padding
     verticalAlign: VxeColumnPropTypes.VerticalAlign
@@ -5703,6 +5766,21 @@ export namespace VxeTableDefines {
 
   export interface CutParams { }
   export interface CutEventParams<D = any> extends TableEventParams<D>, CutParams { }
+
+  export interface ColumnsChangeEventParams<D = any> extends TableEventParams<D> {
+    visibleColgroups: ColumnInfo<D>[][]
+    visibleColumn: ColumnInfo<D>[]
+  }
+
+  export interface DataChangeEventParams<D = any> extends TableEventParams<D> {
+    visibleColumn: ColumnInfo<D>[]
+    visibleData: D[]
+  }
+
+  export interface FooterDataChangeEventParams<D = any> extends TableEventParams<D> {
+    visibleColumn: ColumnInfo<D>[]
+    footerData: D[][]
+  }
 
   export interface CurrentRowChangeParams<D = any> extends TableBaseCellParams<D> {
     newValue: any
@@ -6284,6 +6362,9 @@ export interface VxeTableEventProps<D = any> {
   onPaste?: VxeTableEvents.Paste<D>
   onCopy?: VxeTableEvents.Copy<D>
   onCut?: VxeTableEvents.Cut<D>
+  onColumnsChange?: VxeTableEvents.ColumnsChange<D>
+  onDataChange?: VxeTableEvents.DataChange<D>
+  onFooterDataChange?: VxeTableEvents.FooterDataChange<D>
   onCurrentRowChange?: VxeTableEvents.CurrentRowChange<D>
   onCurrentRowDisabled?: VxeTableEvents.CurrentRowDisabled<D>
   onCurrentColumnChange?: VxeTableEvents.CurrentColumnChange<D>
@@ -6359,6 +6440,9 @@ export interface VxeTableListeners<D = any> {
   paste?: VxeTableEvents.Paste<D>
   copy?: VxeTableEvents.Copy<D>
   cut?: VxeTableEvents.Cut<D>
+  columnsChange?: VxeTableEvents.ColumnsChange<D>
+  dataChange?: VxeTableEvents.DataChange<D>
+  footerDataChange?: VxeTableEvents.FooterDataChange<D>
   currentRowChange?: VxeTableEvents.CurrentRowChange<D>
   currentRowDisabled?: VxeTableEvents.CurrentRowDisabled<D>
   currentColumnChange?: VxeTableEvents.CurrentColumnChange<D>
@@ -6433,6 +6517,9 @@ export namespace VxeTableEvents {
   export type Paste<D = VxeTablePropTypes.Row> = (params: VxeTableDefines.PasteEventParams<D>) => void
   export type Copy<D = VxeTablePropTypes.Row> = (params: VxeTableDefines.CopyEventParams<D>) => void
   export type Cut<D = VxeTablePropTypes.Row> = (params: VxeTableDefines.CutEventParams<D>) => void
+  export type ColumnsChange<D = VxeTablePropTypes.Row> = (params: VxeTableDefines.ColumnsChangeEventParams<D>) => void
+  export type DataChange<D = VxeTablePropTypes.Row> = (params: VxeTableDefines.DataChangeEventParams<D>) => void
+  export type FooterDataChange<D = VxeTablePropTypes.Row> = (params: VxeTableDefines.FooterDataChangeEventParams<D>) => void
   export type CurrentRowChange<D = VxeTablePropTypes.Row> = (params: VxeTableDefines.CurrentRowChangeEventParams<D>) => void
   export type CurrentRowDisabled<D = VxeTablePropTypes.Row> = (params: VxeTableDefines.CurrentRowDisabledEventParams<D>) => void
   export type CurrentColumnChange<D = VxeTablePropTypes.Row> = (params: VxeTableDefines.CurrentColumnChangeEventParams<D>) => void
