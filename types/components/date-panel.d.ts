@@ -75,6 +75,7 @@ export interface DatePanelReactData {
   isAniVisible: boolean
   isActivated: boolean
   inputValue: any
+  inputLabel: any
   datetimePanelValue: Date | null
   datePanelValue: Date | null
   datePanelLabel: string
