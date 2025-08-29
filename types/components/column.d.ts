@@ -53,6 +53,13 @@ export namespace VxeColumnPropTypes {
     row: D
   }) => string | number) | any[] | string
 
+  export type HeaderFormatter = ((params: {
+    cellValue: any
+    column: VxeTableDefines.ColumnInfo
+    $columnIndex: number
+    _columnIndex: number
+  }) => string | number) | any[] | string
+
   export type FooterFormatter<D = any> = ((params: {
     itemValue: any
     column: VxeTableDefines.ColumnInfo<D>
@@ -482,6 +489,10 @@ export interface VxeColumnProps<D = any> {
    * 格式化显示内容
    */
   formatter?: VxeColumnPropTypes.Formatter<D>
+  /**
+   * 格式化表头显示内容
+   */
+  headerFormatter?: VxeColumnPropTypes.HeaderFormatter
   /**
    * 格式化表尾显示内容
    */
