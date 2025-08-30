@@ -16,6 +16,7 @@ export function getModelEvent (name: string) {
     case 'VxeTreeSelect':
     case 'VxeTableSelect':
     case 'VxeDatePicker':
+    case 'VxeDateRangePicker':
       return 'modelValue'
     case 'select':
       return 'change'
