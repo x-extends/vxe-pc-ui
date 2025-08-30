@@ -119,7 +119,7 @@ export namespace VxeListDesignDefines {
 
   export interface SearchItemObjItem {
     field: string
-    title: string
+    title: string | number
     folding?: boolean
     collapseNode?: boolean
     itemRender: VxeFormItemPropTypes.ItemRender

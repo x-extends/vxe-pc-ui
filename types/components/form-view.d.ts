@@ -93,7 +93,7 @@ export interface FormViewMethods {
   /**
    * 对表单进行校验，返回一个包含校验不通过字段的 promise
    */
-  validate(): Promise<VxeFormDefines.ValidateErrorMapParams>
+  validate(): Promise<VxeFormDefines.ValidateErrorMapParams | void>
   /**
    * 重置表单
    */
@@ -102,7 +102,7 @@ export interface FormViewMethods {
    * 对表单指定控件进行校验，返回一个包含校验不通过字段的 promise
    * @param widget 单个或多个控件
    */
-  validateWidget(widget: VxeFormDesignDefines.WidgetObjItem | VxeFormDesignDefines.WidgetObjItem[]): Promise<VxeFormDefines.ValidateErrorMapParams>
+  validateWidget(widget: VxeFormDesignDefines.WidgetObjItem | VxeFormDesignDefines.WidgetObjItem[]): Promise<VxeFormDefines.ValidateErrorMapParams | void>
   /**
    * 手动清除校验状态，如果指定 field 则清除指定的项，否则清除整个表单
    * @param widget 单个或多个控件
