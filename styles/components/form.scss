@@ -63,7 +63,6 @@
   }
   .vxe-form--item-title-tip-prefix,
   .vxe-form--item-title-tip-suffix {
-    cursor: help;
     vertical-align: middle;
   }
   .vxe-form--item-title-tip-prefix {
@@ -96,13 +95,12 @@
 .vxe-form--item-content {
   display: flex;
   flex-direction: row;
-  align-items: center;
   position: relative;
   flex-grow: 1;
   word-break: break-all;
-}
-.vxe-form--group-content {
-  align-items: flex-start;
+  &:not(.vxe-form--group-content) {
+    align-items: center;
+  }
 }
 
 .vxe-form--item-trigger-node {
@@ -180,7 +178,6 @@
     }
     &:not(.is--vertical) {
       & > .vxe-form--item-title {
-        height: 100%;
         padding: 0.6em;
       }
     }
