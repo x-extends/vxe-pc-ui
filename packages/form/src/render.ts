@@ -94,12 +94,12 @@ export const getItemContentClass = ($xeForm: VxeFormConstructor & VxeFormPrivate
 
   const { data, readonly, disabled, align: allAlign, verticalAlign: allVerticalAlign } = formProps
   const { field, itemRender, contentClassName, children } = item
+  const hasGroup = children && children.length > 0
   const compConf = isEnableConf(itemRender) ? renderer.get(itemRender.name) : null
   const itemContentClassName = compConf ? (compConf.formItemContentClassName || compConf.itemContentClassName) : ''
-  const align = XEUtils.eqNull(item.align) ? allAlign : item.align
-  const verticalAlign = XEUtils.eqNull(item.verticalAlign) ? allVerticalAlign : item.verticalAlign
+  const align = hasGroup ? item.align : (XEUtils.eqNull(item.align) ? allAlign : item.align)
+  const verticalAlign = hasGroup ? item.verticalAlign : (XEUtils.eqNull(item.verticalAlign) ? allVerticalAlign : item.verticalAlign)
   const params = { data, disabled, readonly, field, property: field, item, $form: $xeForm, $grid: $xeGrid }
-  const hasGroup = children && children.length > 0
 
   return [
     isGroup || hasGroup ? 'vxe-form--group-content vxe-form--item-row' : '',
