@@ -70,7 +70,7 @@
 * [x] breadcrumb 面包屑
   * [x] breadcrumb-item 面包屑-项
 * [x] button 按钮
-  * [x] button-group 按钮组
+* [x] button-group 按钮组
 * [x] calendar 日历
 * [x] card 卡片
 * [x] carousel 走马灯
