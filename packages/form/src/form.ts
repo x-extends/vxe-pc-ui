@@ -888,6 +888,19 @@ export default defineVxeComponent({
       ])
     }
 
+    const recalcFlag = ref(0)
+    watch(() => props.vertical, () => {
+      recalcFlag.value++
+    })
+    watch(() => props.titleWidth, () => {
+      recalcFlag.value++
+    })
+    watch(recalcFlag, () => {
+      nextTick().then(() => {
+        recalculate()
+      })
+    })
+
     const staticItemFlag = ref(0)
     watch(() => reactData.staticItems.length, () => {
       staticItemFlag.value++
@@ -897,9 +910,7 @@ export default defineVxeComponent({
     })
     watch(staticItemFlag, () => {
       reactData.formItems = reactData.staticItems
-      nextTick().then(() => {
-        recalculate()
-      })
+      recalcFlag.value++
     })
 
     const itemFlag = ref(0)

@@ -561,7 +561,6 @@ export default defineVxeComponent({
         }
         changeEvent($event, multipleValue, optList[0])
         dispatchEvent('all-change', { value: multipleValue }, $event)
-        hideOptionPanel()
       }
     }
 

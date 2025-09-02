@@ -205,6 +205,7 @@ export namespace VxeFormDesignDefines {
     pcTitleBold: VxeFormPropTypes.TitleBold
     pcTitleColon: boolean
     pcTitleAlign: VxeFormPropTypes.TitleAlign
+    pcTitleAutoWidth: boolean
     pcTitleWidth: VxeFormPropTypes.TitleWidth
     pcTitleWidthUnit: null | '' | 'px' | '%'
     mobileVisible: boolean
@@ -212,6 +213,7 @@ export namespace VxeFormDesignDefines {
     mobileTitleBold: VxeFormPropTypes.TitleBold
     mobileTitleColon: boolean
     mobileTitleAlign: VxeFormPropTypes.TitleAlign
+    mobileTitleAutoWidth: boolean
     mobileTitleWidth: VxeFormPropTypes.TitleWidth
     mobileTitleWidthUnit: null | '' | 'px' | '%'
   }
