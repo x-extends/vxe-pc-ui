@@ -773,7 +773,6 @@ export default /* define-vxe-component start */ defineVxeComponent({
         }
         $xeSelect.changeEvent($event, multipleValue, optList[0])
         $xeSelect.dispatchEvent('all-change', { value: multipleValue }, $event)
-        $xeSelect.hideOptionPanel()
       }
     },
     clearCheckedPanelEvent (params: VxeButtonDefines.ClickEventParams) {

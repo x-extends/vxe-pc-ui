@@ -266,7 +266,9 @@ export default /* define-vxe-component start */ defineVxeComponent({
     return {
       xID,
       reactData,
-      internalData
+      internalData,
+
+      recalcFlag: 0
     }
   },
   computed: {
@@ -929,14 +931,29 @@ export default /* define-vxe-component start */ defineVxeComponent({
     }
   },
   watch: {
+    vertical () {
+      const $xeForm = this
+
+      $xeForm.recalcFlag++
+    },
+    titleWidth () {
+      const $xeForm = this
+
+      $xeForm.recalcFlag++
+    },
+    recalcFlag () {
+      const $xeForm = this
+
+      $xeForm.$nextTick().then(() => {
+        $xeForm.recalculate()
+      })
+    },
     'reactData.staticItems' () {
       const $xeForm = this
       const reactData = $xeForm.reactData
 
       reactData.formItems = reactData.staticItems
-      $xeForm.$nextTick().then(() => {
-        $xeForm.recalculate()
-      })
+      $xeForm.recalcFlag++
     },
     items () {
       const $xeForm = this
