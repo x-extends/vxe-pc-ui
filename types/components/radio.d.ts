@@ -20,6 +20,7 @@ export namespace VxeRadioPropTypes {
   export type Strict = boolean
   export type ModelValue = any
   export type Label = any
+  export type CheckedValue = any
   export type Title = string | number
   export type Content = string | number
   export type Disabled = boolean
@@ -39,7 +40,7 @@ export interface VxeRadioProps {
   /**
    * 值
    */
-  label?: VxeRadioPropTypes.Label
+  checkedValue?: VxeRadioPropTypes.CheckedValue
   /**
    * 原生 title 属性
    */
@@ -56,6 +57,11 @@ export interface VxeRadioProps {
    * 原生 title 属性
    */
   name?: VxeRadioPropTypes.Name
+
+  /**
+   * 已废弃，被 checkedValue 替换
+   */
+  label?: VxeRadioPropTypes.Label
 }
 
 export interface RadioPrivateComputed {
