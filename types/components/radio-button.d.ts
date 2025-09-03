@@ -27,10 +27,15 @@ export namespace VxeRadioButtonPropTypes {
   export type Size = VxeRadioPropTypes.Size
   export type ModelValue = any
   export type Strict = boolean
-  export type Label = VxeRadioPropTypes.Label
+  export type CheckedValue = VxeRadioPropTypes.CheckedValue
   export type Title = string | number
   export type Content = string | number
   export type Disabled = boolean
+
+  /**
+   * 已废弃，被 CheckedValue 替换
+   */
+  export type Label = VxeRadioPropTypes.Label
 }
 
 export interface VxeRadioButtonProps {
@@ -40,10 +45,15 @@ export interface VxeRadioButtonProps {
    * 严格模式，不允许取消
    */
   strict?: VxeRadioButtonPropTypes.Strict
-  label?: VxeRadioButtonPropTypes.Label
+  checkedValue?: VxeRadioButtonPropTypes.CheckedValue
   title?: VxeRadioButtonPropTypes.Title
   content?: VxeRadioButtonPropTypes.Content
   disabled?: VxeRadioButtonPropTypes.Disabled
+
+  /**
+   * 已废弃，被 checkedValue 替换
+   */
+  label?: VxeRadioButtonPropTypes.Label
 }
 
 export interface RadioButtonPrivateComputed {

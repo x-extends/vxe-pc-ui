@@ -28,7 +28,7 @@ export namespace VxeRadioGroupPropTypes {
   export type Size = VxeComponentSizeType
   export type Type = 'button' | 'default' | '' | null
   export type Options = {
-    value?: VxeRadioPropTypes.Label
+    value?: VxeRadioPropTypes.CheckedValue
     label?: VxeRadioPropTypes.Content
 
     [key: string]: any
@@ -70,7 +70,14 @@ export interface RadioGroupMethods {
 export interface VxeRadioGroupMethods extends RadioGroupMethods { }
 
 export interface RadioGroupPrivateMethods {
-  handleChecked(params: { label: any }, evnt: Event): void
+  handleChecked(params: {
+    checkedValue: any
+
+    /**
+     * @deprecated
+     */
+    label: any
+   }, evnt: Event): void
 }
 export interface VxeRadioGroupPrivateMethods extends RadioGroupPrivateMethods { }
 

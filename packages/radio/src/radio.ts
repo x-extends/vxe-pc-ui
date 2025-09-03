@@ -10,9 +10,9 @@ export default defineVxeComponent({
   name: 'VxeRadio',
   props: {
     modelValue: [String, Number, Boolean] as PropType<VxeRadioPropTypes.ModelValue>,
-    label: {
-      type: [String, Number, Boolean] as PropType<VxeRadioPropTypes.Label>,
-      default: null
+    checkedValue: {
+      type: [String, Number, Boolean] as PropType<VxeRadioPropTypes.CheckedValue>,
+      default: undefined
     },
     title: [String, Number] as PropType<VxeRadioPropTypes.Title>,
     content: [String, Number] as PropType<VxeRadioPropTypes.Content>,
@@ -28,6 +28,14 @@ export default defineVxeComponent({
     size: {
       type: String as PropType<VxeRadioPropTypes.Size>,
       default: () => getConfig().radio.size || getConfig().size
+    },
+
+    /**
+     * 已废弃，被 checkedValue 替换
+     */
+    label: {
+      type: [String, Number, Boolean] as PropType<VxeRadioPropTypes.Label>,
+      default: null
     }
   },
   emits: [
@@ -75,19 +83,20 @@ export default defineVxeComponent({
     })
 
     const computeChecked = computed(() => {
-      const { label } = props
-      return $xeRadioGroup ? $xeRadioGroup.props.modelValue === label : props.modelValue === label
+      const { label, checkedValue } = props
+      const radioValue = XEUtils.isUndefined(checkedValue) ? label : checkedValue
+      return $xeRadioGroup ? $xeRadioGroup.props.modelValue === radioValue : props.modelValue === radioValue
     })
 
-    const handleValue = (label: VxeRadioPropTypes.Label, evnt: Event) => {
+    const handleValue = (checkedValue: VxeRadioPropTypes.CheckedValue, evnt: Event) => {
       if ($xeRadioGroup) {
-        $xeRadioGroup.handleChecked({ label }, evnt)
+        $xeRadioGroup.handleChecked({ label: checkedValue, checkedValue }, evnt)
       } else {
-        emit('update:modelValue', label)
-        dispatchEvent('change', { value: label, label }, evnt)
+        emit('update:modelValue', checkedValue)
+        dispatchEvent('change', { value: checkedValue, label: checkedValue, checkedValue }, evnt)
         // 自动更新校验状态
         if ($xeForm && formItemInfo) {
-          $xeForm.triggerItemEvent(evnt, formItemInfo.itemConfig.field, label)
+          $xeForm.triggerItemEvent(evnt, formItemInfo.itemConfig.field, checkedValue)
         }
       }
     }
@@ -95,7 +104,9 @@ export default defineVxeComponent({
     const changeEvent = (evnt: Event) => {
       const isDisabled = computeIsDisabled.value
       if (!isDisabled) {
-        handleValue(props.label, evnt)
+        const { label, checkedValue } = props
+        const radioValue = XEUtils.isUndefined(checkedValue) ? label : checkedValue
+        handleValue(radioValue, evnt)
       }
     }
 
@@ -103,7 +114,9 @@ export default defineVxeComponent({
       const isDisabled = computeIsDisabled.value
       const isStrict = computeStrict.value
       if (!isDisabled && !isStrict) {
-        if (props.label === ($xeRadioGroup ? $xeRadioGroup.props.modelValue : props.modelValue)) {
+        const { label, checkedValue } = props
+        const radioValue = XEUtils.isUndefined(checkedValue) ? label : checkedValue
+        if (radioValue === ($xeRadioGroup ? $xeRadioGroup.props.modelValue : props.modelValue)) {
           handleValue(null, evnt)
         }
       }
@@ -123,13 +136,14 @@ export default defineVxeComponent({
     Object.assign($xeRadio, radioMethods, radioPrivateMethods)
 
     const renderVN = () => {
-      const { label } = props
+      const { label, checkedValue } = props
+      const radioValue = XEUtils.isUndefined(checkedValue) ? label : checkedValue
       const vSize = computeSize.value
       const isDisabled = computeIsDisabled.value
       const name = computeName.value
       const isChecked = computeChecked.value
       return h('label', {
-        key: label,
+        key: radioValue,
         class: ['vxe-radio vxe-radio--default', {
           [`size--${vSize}`]: vSize,
           'is--checked': isChecked,
