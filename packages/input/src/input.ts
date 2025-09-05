@@ -2712,7 +2712,7 @@ export default defineVxeComponent({
       } else if (['number', 'integer', 'float'].includes(type)) {
         warnLog('vxe.error.useNew', [`<vxe-input type="${type}" ... />`, `<vxe-number-input type="${type}" ... />`])
       } else if (['password'].includes(type)) {
-        warnLog('vxe.error.useNew', [`<vxe-input type="${type}" ... />`, `<vxe-password-input type="${type}" ... />`])
+        warnLog('vxe.error.useNew', [`<vxe-input type="${type}" ... />`, '<vxe-password-input ... />'])
       }
       globalEvents.on($xeInput, 'mousewheel', handleGlobalMousewheelEvent)
       globalEvents.on($xeInput, 'mousedown', handleGlobalMousedownEvent)

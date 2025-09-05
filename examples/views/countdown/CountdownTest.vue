@@ -8,6 +8,7 @@
           <span>{{ diffConf.mm }}</span>
           <span>：</span>
           <span>{{ diffConf.ss }}</span>
+          <span>{{ diffConf.done }}</span>
         </template>
       </vxe-countdown>
     </p>

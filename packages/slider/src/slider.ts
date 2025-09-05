@@ -41,7 +41,10 @@ export default defineVxeComponent({
   },
   emits: [
     'update:modelValue',
-    'change'
+    'change',
+    'track-dragstart',
+    'track-dragover',
+    'track-dragend'
   ] as VxeSliderEmits,
   setup (props, context) {
     const { emit } = context
@@ -206,15 +209,18 @@ export default defineVxeComponent({
             } else {
               reactData.startValue = XEUtils.floor(Math.max(minNum, Math.min(maxNum, trackWidth * (maxNum - minNum))))
             }
+            dispatchEvent('track-dragover', { startValue: reactData.startValue, endValue: reactData.endValue }, evnt)
           }
           updateBarStyle()
         }
         document.onmouseup = (evnt: MouseEvent) => {
           document.onmousemove = null
           document.onmouseup = null
+          dispatchEvent('track-dragend', { startValue: reactData.startValue, endValue: reactData.endValue }, evnt)
           changeEvent(evnt)
           updateBarStyle()
         }
+        dispatchEvent('track-dragstart', { startValue: reactData.startValue, endValue: reactData.endValue }, evnt)
       }
     }
 

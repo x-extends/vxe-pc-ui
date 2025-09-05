@@ -68,7 +68,8 @@ export default defineVxeComponent({
 
     const computeDiffConf = computed(() => {
       const { currNum } = reactData
-      return XEUtils.getDateDiff(Date.now(), Date.now() + currNum)
+      const diffRest = XEUtils.getDateDiff(Date.now(), Date.now() + currNum)
+      return Object.assign(diffRest, { done: !(XEUtils.isBoolean(diffRest.status) ? diffRest.status : diffRest.done) })
     })
 
     const computeFormatLabel = computed(() => {
