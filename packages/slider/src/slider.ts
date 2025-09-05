@@ -227,15 +227,18 @@ export default /* define-vxe-component start */ defineVxeComponent({
             } else {
               reactData.startValue = XEUtils.floor(Math.max(minNum, Math.min(maxNum, trackWidth * (maxNum - minNum))))
             }
+            $xeSlider.dispatchEvent('track-dragover', { startValue: reactData.startValue, endValue: reactData.endValue }, evnt)
           }
           $xeSlider.updateBarStyle()
         }
         document.onmouseup = (evnt: MouseEvent) => {
           document.onmousemove = null
           document.onmouseup = null
+          $xeSlider.dispatchEvent('track-dragend', { startValue: reactData.startValue, endValue: reactData.endValue }, evnt)
           $xeSlider.changeEvent(evnt)
           $xeSlider.updateBarStyle()
         }
+        $xeSlider.dispatchEvent('track-dragstart', { startValue: reactData.startValue, endValue: reactData.endValue }, evnt)
       }
     },
     handleStartMousedownEvent (evnt: MouseEvent) {

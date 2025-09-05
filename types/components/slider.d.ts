@@ -59,20 +59,51 @@ export interface VxeSliderPrivateMethods extends SliderPrivateMethods { }
 
 export type VxeSliderEmits = [
   'modelValue',
-  'change'
+  'change',
+  'track-dragstart',
+  'track-dragover',
+  'track-dragend'
 ]
 
 export namespace VxeSliderDefines {
   export interface SliderEventParams extends VxeComponentEventParams {
     $slider: VxeSliderConstructor
   }
+
+  export interface ChangeEventParams extends SliderEventParams {
+    startValue: number
+    endValue: number
+  }
+
+  export interface TrackDragstartEventParams extends SliderEventParams {
+    startValue: number
+    endValue: number
+  }
+  export interface TrackDragoverEventParams extends TrackDragstartEventParams {}
+  export interface TrackDragendEventParams extends TrackDragstartEventParams {}
 }
 
-export type VxeSliderEventProps = {}
+export type VxeSliderEventProps = {
+  onChange?: VxeSliderEvents.Change
+  onTrackDragstart?: VxeSliderEvents.TrackDragstart
+  onTrackDragover?: VxeSliderEvents.TrackDragover
+  onTrackDragend?: VxeSliderEvents.TrackDragend
+}
 
-export interface VxeSliderListeners { }
+export interface VxeSliderListeners {
+  change?: VxeSliderEvents.Change
+  trackDragstart?: VxeSliderEvents.TrackDragstart
+  trackDragover?: VxeSliderEvents.TrackDragover
+  trackDragend?: VxeSliderEvents.TrackDragend
+}
 
-export namespace VxeSliderEvents { }
+export namespace VxeSliderEvents {
+  export type UpdateModelValue = (modelValue: VxeSliderPropTypes.ModelValue) => void
+  export type Change = (params: VxeSliderDefines.ChangeEventParams) => void
+  export type TrackDragstart = (params: VxeSliderDefines.TrackDragstartEventParams) => void
+  export type TrackDragover = (params: VxeSliderDefines.TrackDragoverEventParams) => void
+  export type TrackDragend = (params: VxeSliderDefines.TrackDragendEventParams) => void
+}
 
 export namespace VxeSliderSlotTypes {
   export interface DefaultSlotParams {}

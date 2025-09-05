@@ -68,7 +68,8 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const reactData = $xeCountdown.reactData
 
       const { currNum } = reactData
-      return XEUtils.getDateDiff(Date.now(), Date.now() + currNum)
+      const diffRest = XEUtils.getDateDiff(Date.now(), Date.now() + currNum)
+      return Object.assign(diffRest, { done: !(XEUtils.isBoolean(diffRest.status) ? diffRest.status : diffRest.done) })
     },
     computeFormatLabel () {
       const $xeCountdown = this

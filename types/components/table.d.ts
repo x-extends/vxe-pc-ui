@@ -4692,6 +4692,16 @@ export interface TableMethods<DT = any> {
    */
   setRowGroups (fieldOrColumns: (VxeColumnPropTypes.Field | VxeTableDefines.ColumnInfo)[] | VxeColumnPropTypes.Field | VxeTableDefines.ColumnInfo | null): Promise<void>
   /**
+   * 获取行分组列信息
+   */
+  getRowGroups (): ({
+    field: VxeColumnPropTypes.Field
+  } | VxeTableDefines.ColumnInfo)[]
+  /**
+   * 获取行分组列字段
+   */
+  getRowGroupFields (): VxeColumnPropTypes.Field[]
+  /**
    * 清除行分组
    */
   clearRowGroups (): Promise<void>

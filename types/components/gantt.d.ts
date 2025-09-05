@@ -190,6 +190,46 @@ export namespace VxeGanttPropTypes {
       $gantt: VxeGanttConstructor<D>
       row: D
     }) => BarStyleConfig)
+    /**
+     * 是否启用拖拽移动日期
+     */
+    drag?: boolean
+    /**
+     * 是否启用拖拽调整日期
+     */
+    resize?: boolean
+  }
+  export interface TaskResizeConfig<D = any> {
+    /**
+     * 拖拽开始时是否允许行拖拽调整任务条日期的方法，该方法的返回值用来决定是否允许被拖拽
+     */
+    resizeStartMethod?(params: {
+      $gantt: VxeGanttConstructor<D>
+      row: D
+    }): boolean
+    /**
+     * 拖拽结束时是否允许行拖拽调整任务条日期的方法，该方法的返回值用来决定是否允许被拖拽调整日期范围
+     */
+    resizeEndMethod?(params: {
+      $gantt: VxeGanttConstructor<D>
+      row: D
+    }): Promise<boolean> | boolean
+  }
+  export interface TaskDragConfig<D = any> {
+    /**
+     * 拖拽开始时是否允许行拖拽移动任务条日期的方法，该方法的返回值用来决定是否允许被拖拽
+     */
+    dragStartMethod?(params: {
+      $gantt: VxeGanttConstructor<D>
+      row: D
+    }): boolean
+    /**
+     * 拖拽结束时是否允许行拖拽移动任务条日期的方法，该方法的返回值用来决定是否允许被拖拽移动到指定日期
+     */
+    dragEndMethod?(params: {
+      $gantt: VxeGanttConstructor<D>
+      row: D
+    }): Promise<boolean> | boolean
   }
 }
 
@@ -200,6 +240,8 @@ export interface VxeGanttProps<D = any> extends Omit<VxeGridProps<D>, 'layouts'>
   taskViewConfig?: VxeGanttPropTypes.TaskViewConfig<D>
   taskSplitConfig?: VxeGanttPropTypes.TaskSplitConfig
   taskBarConfig?: VxeGanttPropTypes.TaskBarConfig<D>
+  taskResizeConfig?: VxeGanttPropTypes.TaskResizeConfig<D>
+  taskDragConfig?: VxeGanttPropTypes.TaskDragConfig<D>
 }
 
 export interface GanttPrivateComputed<D = any> extends GridPrivateComputed<D> {
@@ -444,6 +486,7 @@ export interface VxeGanttSlots<D = any> extends VxeGridSlots<D> {
 }
 
 export * from './gantt-module'
+export * from './gantt-plugins'
 
 export const Gantt: typeof VxeGantt
 export default VxeGantt

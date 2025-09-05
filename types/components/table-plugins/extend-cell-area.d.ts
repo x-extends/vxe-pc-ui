@@ -178,6 +178,8 @@ declare module '../table' {
       _r?: boolean
     } | null
 
+    trialElem?: HTMLElement | null
+
     _msTout?: any
     _isCAEd?: boolean
 
