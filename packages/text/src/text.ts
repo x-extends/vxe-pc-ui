@@ -1,8 +1,7 @@
 import { PropType, CreateElement, VNode } from 'vue'
 import { defineVxeComponent } from '../../ui/src/comp'
 import XEUtils from 'xe-utils'
-import { VxeUI, getConfig, getIcon, getI18n, renderEmptyElement, createEvent, globalMixins } from '../../ui'
-import { getSlotVNs } from '../../ui/src/vn'
+import { VxeUI, getConfig, getIcon, getI18n, createEvent, globalMixins } from '../../ui'
 
 import type { VxeTextPropTypes, TextReactData, VxeTextEmits, VxeComponentSizeType, ValueOf } from '../../../types'
 
@@ -16,9 +15,22 @@ export default /* define-vxe-component start */ defineVxeComponent({
     status: String as PropType<VxeTextPropTypes.Status>,
     title: [String, Number] as PropType<VxeTextPropTypes.Title>,
     icon: String as PropType<VxeTextPropTypes.Icon>,
+    prefixIcon: String as PropType<VxeTextPropTypes.PrefixIcon>,
+    suffixIcon: String as PropType<VxeTextPropTypes.SuffixIcon>,
     loading: Boolean as PropType<VxeTextPropTypes.Loading>,
     content: [String, Number] as PropType<VxeTextPropTypes.Content>,
-    clickToCopy: Boolean as PropType<VxeTextPropTypes.ClickToCopy>,
+    clickToCopy: {
+      type: Boolean as PropType<VxeTextPropTypes.ClickToCopy>,
+      default: () => getConfig().text.clickToCopy
+    },
+    copyIcon: {
+      type: String as PropType<VxeTextPropTypes.CopyIcon>,
+      default: () => getConfig().text.copyIcon
+    },
+    copyLayout: {
+      type: String as PropType<VxeTextPropTypes.CopyLayout>,
+      default: () => getConfig().text.copyLayout
+    },
     size: {
       type: String as PropType<VxeTextPropTypes.Size>,
       default: () => getConfig().text.size || getConfig().size
@@ -81,48 +93,115 @@ export default /* define-vxe-component start */ defineVxeComponent({
         $xeText.dispatchEvent('click', {}, evnt)
       }
     },
+    prefixEvent (evnt : MouseEvent) {
+      const $xeText = this
+      const props = $xeText
+
+      const { loading } = props
+      if (!loading) {
+        $xeText.dispatchEvent('prefix-click', {}, evnt)
+      }
+    },
+    suffixEvent (evnt : MouseEvent) {
+      const $xeText = this
+      const props = $xeText
+
+      const { loading } = props
+      if (!loading) {
+        $xeText.dispatchEvent('suffix-click', {}, evnt)
+      }
+    },
 
     //
     // Render
     //
+    renderCopyIcon (h: CreateElement) {
+      const $xeText = this
+      const props = $xeText
+
+      const { copyIcon } = props
+      return h('span', {
+        key: 'ci',
+        class: 'vxe-text--copy-icon',
+        on: {
+          click: $xeText.clickIconEvent
+        }
+      }, [
+        h('i', {
+          class: copyIcon || getIcon().TEXT_COPY
+        })
+      ])
+    },
     renderContent  (h: CreateElement): VNode[] {
       const $xeText = this
       const props = $xeText
       const slots = $xeText.$scopedSlots
 
-      const { loading, icon, content, clickToCopy } = props
+      const { loading, icon, prefixIcon, suffixIcon, clickToCopy, content, copyLayout } = props
       const defaultSlot = slots.default
-      const iconSlot = slots.icon
-      return [
-        loading
-          ? h('span', {
+      const prefixIconSlot = slots.prefixIcon || slots['prefix-icon'] || slots.icon
+      const suffixIconSlot = slots.suffixIcon || slots['suffix-icon']
+      const copyToRight = copyLayout === 'right'
+      const contVNs: VNode[] = []
+      if (loading) {
+        contVNs.push(
+          h('span', {
+            key: 'lg',
             class: 'vxe-text--loading'
           }, [
             h('i', {
               class: getIcon().TEXT_LOADING
             })
           ])
-          : (
-              iconSlot || icon || clickToCopy
-                ? h('span', {
-                  class: 'vxe-text--icon',
-                  on: {
-                    click: $xeText.clickIconEvent
-                  }
-                }, iconSlot
-                  ? getSlotVNs(iconSlot({}))
-                  : [
-                      h('i', {
-                        class: icon || getIcon().TEXT_COPY
-                      })
-                    ])
-                : renderEmptyElement($xeText)
-            ),
+        )
+      } else if (clickToCopy && !copyToRight) {
+        contVNs.push($xeText.renderCopyIcon(h))
+      }
+      if (prefixIcon || icon) {
+        contVNs.push(
+          h('span', {
+            key: 'si',
+            class: 'vxe-text--prefix-icon',
+            on: {
+              click: $xeText.prefixEvent
+            }
+          }, prefixIconSlot
+            ? prefixIconSlot({})
+            : [
+                h('i', {
+                  class: prefixIcon || icon
+                })
+              ])
+        )
+      }
+      contVNs.push(
         h('span', {
+          key: 'ct',
           ref: 'refContentElem',
           class: 'vxe-text--content'
         }, defaultSlot ? defaultSlot({}) : XEUtils.toValueString(content))
-      ]
+      )
+      if (suffixIcon) {
+        contVNs.push(
+          h('span', {
+            key: 'si',
+            class: 'vxe-text--suffix-icon',
+            on: {
+              click: $xeText.suffixEvent
+            }
+          }, suffixIconSlot
+            ? suffixIconSlot({})
+            : [
+                h('i', {
+                  class: suffixIcon
+                })
+              ])
+        )
+      }
+      if (clickToCopy && copyToRight && !loading) {
+        contVNs.push($xeText.renderCopyIcon(h))
+      }
+      return contVNs
     },
     renderVN (h: CreateElement): VNode {
       const $xeText = this

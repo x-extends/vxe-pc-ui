@@ -617,7 +617,7 @@ export type VxeColumnEmits = []
 
 export namespace VxeColumnDefines {
   export interface ColumnEventParams extends VxeComponentEventParams {
-    $column: VxeColumnConstructor
+    $table: VxeTableConstructor
   }
 }
 
@@ -670,6 +670,23 @@ export namespace VxeColumnSlotTypes {
   export interface ValidSlotParams<D = any> extends DefaultSlotParams<D> {
     rule: VxeTableDefines.ValidatorRule<D>
     content: string
+  }
+
+  export interface HeaderTooltipSlotParams<D = any> {
+    $rowIndex: number
+    column: VxeTableDefines.ColumnInfo<D>
+    tooltipContent: string
+  }
+  export interface TooltipSlotParams<D = any> {
+    row: D
+    column: VxeTableDefines.ColumnInfo<D>
+    tooltipContent: string
+  }
+  export interface FooterTooltipSlotParams<D = any> {
+    row: any
+    $rowIndex: number
+    column: VxeTableDefines.ColumnInfo<D>
+    tooltipContent: string
   }
 }
 

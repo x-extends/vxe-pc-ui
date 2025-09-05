@@ -3678,6 +3678,7 @@ export interface TableReactData<D = any> {
     column: any
     content: any
     visible: boolean,
+    type: null | 'header' | 'body' | 'footer'
     currOpts: {
       useHTML?: VxeTooltipPropTypes.UseHTML
       enterable?: VxeTooltipPropTypes.Enterable
@@ -6613,6 +6614,21 @@ export namespace VxeTableSlotTypes {
     groupField: string
     childCount: number
   }
+
+  export interface HeaderTooltipSlotParams<D = any> {
+    column: VxeTableDefines.ColumnInfo<D>
+    tooltipContent: string
+  }
+  export interface TooltipSlotParams<D = any> {
+    row: D
+    column: VxeTableDefines.ColumnInfo<D>
+    tooltipContent: string
+  }
+  export interface FooterTooltipSlotParams<D = any> {
+    row: any
+    column: VxeTableDefines.ColumnInfo<D>
+    tooltipContent: string
+  }
 }
 
 export interface VxeTableSlots<D = any> {
@@ -6653,6 +6669,21 @@ export interface VxeTableSlots<D = any> {
    */
   columnDragIcon?: (params: VxeTableSlotTypes.ColumnDragIconSlotParams<D>) => any
   'column-drag-icon'?: (params: VxeTableSlotTypes.ColumnDragIconSlotParams<D>) => any
+
+  /**
+   * 用于 show-header-overflow=tooltip，自定义表头单元格提示内容模板
+   */
+  headerTooltip?: (params: VxeTableSlotTypes.HeaderTooltipSlotParams<D>) => any
+  'header-tooltip'?: (params: VxeTableSlotTypes.HeaderTooltipSlotParams<D>) => any
+  /**
+   * 用于 show-overflow=tooltip，自定义单元格提示内容模板
+   */
+  tooltip?: (params: VxeTableSlotTypes.TooltipSlotParams<D>) => any
+  /**
+   * 用于 show-footer-overflow=tooltip，自定义表尾单元格提示内容模板
+   */
+  footerTooltip?: (params: VxeTableSlotTypes.FooterTooltipSlotParams<D>) => any
+  'footer-tooltip'?: (params: VxeTableSlotTypes.FooterTooltipSlotParams<D>) => any
 }
 
 export * from './table-module'
