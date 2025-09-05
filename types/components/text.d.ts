@@ -26,19 +26,36 @@ export namespace VxeTextPropTypes {
   export type Status = VxeComponentStatusType
   export type Title = string | number
   export type Icon = string
+  export type PrefixIcon = string
+  export type SuffixIcon = string
   export type Loading = boolean
   export type Content = string | number
+  export type CopyIcon = string
   export type ClickToCopy = boolean
+  export type CopyLayout = 'left' | 'right' | '' | null
   export type Size = VxeComponentSizeType
 }
 
 export type VxeTextProps = {
   status?: VxeTextPropTypes.Status
   title?: VxeTextPropTypes.Title
+  /**
+   * 前缀图标，属于 prefix-icon 的简写
+   */
   icon?: VxeTextPropTypes.Icon
+  /**
+   * 前缀图标
+   */
+  prefixIcon?: VxeTextPropTypes.PrefixIcon
+  /**
+   * 后缀图标
+   */
+  suffixIcon?: VxeTextPropTypes.SuffixIcon
   loading?: VxeTextPropTypes.Loading
   content?: VxeTextPropTypes.Content
+  copyIcon?: VxeTextPropTypes.CopyIcon
   clickToCopy?: VxeTextPropTypes.ClickToCopy
+  copyLayout?: VxeTextPropTypes.CopyLayout
   size?: VxeTextPropTypes.Size
 }
 
@@ -58,7 +75,9 @@ export interface TextPrivateMethods { }
 export interface VxeTextPrivateMethods extends TextPrivateMethods { }
 
 export type VxeTextEmits = [
-  'click'
+  'click',
+  'prefix-click',
+  'suffix-click'
 ]
 
 export namespace VxeTextDefines {

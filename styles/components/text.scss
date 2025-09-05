@@ -62,7 +62,7 @@ $btnThemeList: (
     }
   }
   &.is--copy {
-    & > .vxe-text--icon {
+    & > .vxe-text--copy-icon {
       cursor: pointer;
       &:focus {
         color: var(--vxe-ui-font-darken-color);
@@ -76,12 +76,20 @@ $btnThemeList: (
     }
   }
 }
-.vxe-text--icon {
-  padding: 0 0.1em;
+.vxe-text--loading,
+.vxe-text--prefix-icon,
+.vxe-text--suffix-icon,
+.vxe-text--copy-icon {
   user-select: none;
 }
-.vxe-text--content {
-  padding: 0 0.1em;
+
+.vxe-text {
+  & > span {
+    padding-right: 0.1em;
+    &:last-child {
+      padding-right: 0;
+    }
+  }
 }
 
 .vxe-text {

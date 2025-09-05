@@ -623,7 +623,7 @@ export type VxeColumnEmits = []
 
 export namespace VxeColumnDefines {
   export interface ColumnEventParams extends VxeComponentEventParams {
-    $column: VxeColumnConstructor
+    $table: VxeTableConstructor
   }
 }
 
