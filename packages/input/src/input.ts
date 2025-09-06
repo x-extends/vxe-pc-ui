@@ -1513,10 +1513,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
         }, 500)
       }
     },
-    wheelEvent  (evnt: WheelEvent & {
-      type: 'wheel';
-      wheelDelta: number;
-    }) {
+    wheelEvent (evnt: WheelEvent) {
       const $xeInput = this
       const props = $xeInput
       const reactData = $xeInput.reactData
@@ -1533,7 +1530,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
           evnt.preventDefault()
         }
       }
-      $xeInput.triggerEvent(evnt)
+      $xeInput.triggerEvent(evnt as WheelEvent & { type: 'wheel' })
     },
     // 日期
     dateMonthHandle  (date: Date, offsetMonth: number) {
@@ -3035,7 +3032,6 @@ export default /* define-vxe-component start */ defineVxeComponent({
             on: {
               keydown: $xeInput.keydownEvent,
               keyup: $xeInput.keyupEvent,
-              wheel: $xeInput.wheelEvent,
               click: $xeInput.clickEvent,
               input: $xeInput.inputEvent,
               change: $xeInput.changeEvent,
@@ -3115,6 +3111,11 @@ export default /* define-vxe-component start */ defineVxeComponent({
     } else if (['password'].includes(type)) {
       warnLog('vxe.error.useNew', [`<vxe-input type="${type}" ... />`, '<vxe-password-input ... />'])
     }
+
+    const inputElem = $xeInput.$refs.refInputTarget as HTMLInputElement
+    if (inputElem) {
+      inputElem.addEventListener('wheel', $xeInput.wheelEvent, { passive: false })
+    }
     globalEvents.on($xeInput, 'mousewheel', $xeInput.handleGlobalMousewheelEvent)
     globalEvents.on($xeInput, 'mousedown', $xeInput.handleGlobalMousedownEvent)
     globalEvents.on($xeInput, 'keydown', $xeInput.handleGlobalKeydownEvent)
@@ -3129,6 +3130,10 @@ export default /* define-vxe-component start */ defineVxeComponent({
     }
     $xeInput.numberStopDown()
     $xeInput.afterCheckValue()
+    const inputElem = $xeInput.$refs.refInputTarget as HTMLInputElement
+    if (inputElem) {
+      inputElem.removeEventListener('wheel', $xeInput.wheelEvent)
+    }
     globalEvents.off($xeInput, 'mousewheel')
     globalEvents.off($xeInput, 'mousedown')
     globalEvents.off($xeInput, 'keydown')

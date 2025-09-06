@@ -812,10 +812,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
         }, 500)
       }
     },
-    wheelEvent  (evnt: WheelEvent & {
-      type: 'wheel';
-      wheelDelta: number;
-    }) {
+    wheelEvent  (evnt: WheelEvent) {
       const $xeNumberInput = this
       const props = $xeNumberInput
       const reactData = $xeNumberInput.reactData
@@ -838,7 +835,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
           }
         }
       }
-      $xeNumberInput.triggerEvent(evnt)
+      $xeNumberInput.triggerEvent(evnt as WheelEvent & { type: 'wheel' })
     },
     clickEvent  (evnt: Event & { type: 'click' }) {
       const $xeNumberInput = this
@@ -1015,7 +1012,6 @@ export default /* define-vxe-component start */ defineVxeComponent({
             on: {
               keydown: $xeNumberInput.keydownEvent,
               keyup: $xeNumberInput.keyupEvent,
-              wheel: $xeNumberInput.wheelEvent,
               click: $xeNumberInput.clickEvent,
               input: $xeNumberInput.inputEvent,
               change: $xeNumberInput.changeEvent,
@@ -1184,6 +1180,10 @@ export default /* define-vxe-component start */ defineVxeComponent({
   mounted () {
     const $xeNumberInput = this
 
+    const targetElem = $xeNumberInput.$refs.refInputTarget as HTMLInputElement
+    if (targetElem) {
+      targetElem.addEventListener('wheel', $xeNumberInput.wheelEvent, { passive: false })
+    }
     globalEvents.on($xeNumberInput, 'mousedown', $xeNumberInput.handleGlobalMousedownEvent)
     globalEvents.on($xeNumberInput, 'keydown', $xeNumberInput.handleGlobalKeydownEvent)
     globalEvents.on($xeNumberInput, 'blur', $xeNumberInput.handleGlobalBlurEvent)
@@ -1195,6 +1195,10 @@ export default /* define-vxe-component start */ defineVxeComponent({
     reactData.isFocus = false
     $xeNumberInput.numberStopAll()
     $xeNumberInput.afterCheckValue()
+    const targetElem = $xeNumberInput.$refs.refInputTarget as HTMLInputElement
+    if (targetElem) {
+      targetElem.removeEventListener('wheel', $xeNumberInput.wheelEvent)
+    }
     globalEvents.off($xeNumberInput, 'mousedown')
     globalEvents.off($xeNumberInput, 'keydown')
     globalEvents.off($xeNumberInput, 'blur')

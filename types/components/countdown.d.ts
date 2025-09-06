@@ -81,10 +81,18 @@ export namespace VxeCountdownSlotTypes {
     diffConf: DateDiffResult
     currentValue: number
   }
+
+  export interface PrefixSlotParams {
+    diffConf: DateDiffResult
+    currentValue: number
+  }
+  export interface SuffixSlotParams extends PrefixSlotParams {}
 }
 
 export interface VxeCountdownSlots {
   default?: (params: VxeCountdownSlotTypes.DefaultSlotParams) => any
+  prefix?: (params: VxeCountdownSlotTypes.PrefixSlotParams) => any
+  suffix?: (params: VxeCountdownSlotTypes.SuffixSlotParams) => any
 }
 
 export const Countdown: typeof VxeCountdown

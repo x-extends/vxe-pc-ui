@@ -424,8 +424,10 @@ export default /* define-vxe-component start */ defineVxeComponent({
 
       const delta = evnt.deltaY
       if (delta > 0) {
+        evnt.preventDefault()
         $xeImagePreview.handleZoom(false)
       } else if (delta < 0) {
+        evnt.preventDefault()
         $xeImagePreview.handleZoom(true)
       }
     },
@@ -686,10 +688,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
         ref: 'refElem',
         class: ['vxe-image-preview', {
           'is--pct11': offsetPct11
-        }],
-        on: {
-          wheel: $xeImagePreview.wheelEvent
-        }
+        }]
       }, [
         $xeImagePreview.renderImgWrapper(h),
         $xeImagePreview.renderBtnWrapper(h)
@@ -715,6 +714,10 @@ export default /* define-vxe-component start */ defineVxeComponent({
   mounted () {
     const $xeImagePreview = this
 
+    const elem = $xeImagePreview.$refs.refElem as HTMLDivElement
+    if (elem) {
+      elem.addEventListener('wheel', $xeImagePreview.wheelEvent, { passive: false })
+    }
     globalEvents.on($xeImagePreview, 'keydown', $xeImagePreview.handleGlobalKeydownEvent)
   },
   beforeDestroy () {
@@ -722,6 +725,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
 
     const elem = $xeImagePreview.$refs.refElem as HTMLDivElement
     if (elem) {
+      elem.removeEventListener('wheel', $xeImagePreview.wheelEvent)
       removeClass(elem, 'is--move')
     }
     globalEvents.off($xeImagePreview, 'keydown')
