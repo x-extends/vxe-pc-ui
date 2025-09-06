@@ -30,10 +30,15 @@ export namespace VxeTextPropTypes {
   export type SuffixIcon = string
   export type Loading = boolean
   export type Content = string | number
-  export type CopyIcon = string
   export type ClickToCopy = boolean
-  export type CopyLayout = 'left' | 'right' | '' | null
   export type Size = VxeComponentSizeType
+  export interface CopyConfig {
+    layout?: 'left' | 'right' | '' | null
+    showMessage?: boolean
+    trigger?: 'click' | 'dblclick'
+    icon?: string
+    status?: VxeComponentStatusType
+  }
 }
 
 export type VxeTextProps = {
@@ -53,9 +58,8 @@ export type VxeTextProps = {
   suffixIcon?: VxeTextPropTypes.SuffixIcon
   loading?: VxeTextPropTypes.Loading
   content?: VxeTextPropTypes.Content
-  copyIcon?: VxeTextPropTypes.CopyIcon
   clickToCopy?: VxeTextPropTypes.ClickToCopy
-  copyLayout?: VxeTextPropTypes.CopyLayout
+  copyConfig?: VxeTextPropTypes.CopyConfig
   size?: VxeTextPropTypes.Size
 }
 
@@ -76,8 +80,11 @@ export interface VxeTextPrivateMethods extends TextPrivateMethods { }
 
 export type VxeTextEmits = [
   'click',
+  'dblclick',
   'prefix-click',
-  'suffix-click'
+  'suffix-click',
+  'copy-success',
+  'copy-error'
 ]
 
 export namespace VxeTextDefines {

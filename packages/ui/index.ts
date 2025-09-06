@@ -348,7 +348,11 @@ setConfig({
   textEllipsis: {
     underline: true
   },
-  text: {},
+  text: {
+    copyConfig: {
+      showMessage: true
+    }
+  },
   textarea: {
     resize: 'none'
   },

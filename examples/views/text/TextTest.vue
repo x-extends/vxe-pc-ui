@@ -20,7 +20,7 @@
 
     <p>
       <vxe-text content="复制内容123" click-to-copy></vxe-text>
-      <vxe-text copy-layout="right" click-to-copy>复制内容456</vxe-text>
+      <vxe-text :copy-config="{layout: 'right',status:'primary'}" click-to-copy>复制内容456</vxe-text>
     </p>
 
   </div>

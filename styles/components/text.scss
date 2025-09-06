@@ -61,21 +61,36 @@ $btnThemeList: (
       color: map.get($item, textColor);
     }
   }
-  &.is--copy {
-    & > .vxe-text--copy-icon {
-      cursor: pointer;
+}
+
+.vxe-text--copy-icon {
+  cursor: pointer;
+  &:focus {
+    color: var(--vxe-ui-font-darken-color);
+  }
+  &:hover {
+    color: var(--vxe-ui-font-primary-lighten-color);
+  }
+  &:active {
+    color: var(--vxe-ui-font-primary-darken-color);
+  }
+  @for $index from 0 to list.length($btnThemeList) {
+    $item: list.nth($btnThemeList, $index + 1);
+    &.theme--#{map.get($item, name)} {
+      color: map.get($item, textColor);
       &:focus {
-        color: var(--vxe-ui-font-darken-color);
+        color: map.get($item, btnDarkenColor);
       }
       &:hover {
-        color: var(--vxe-ui-font-primary-lighten-color);
+        color: map.get($item, btnLightenColor);
       }
       &:active {
-        color: var(--vxe-ui-font-primary-darken-color);
+        color: map.get($item, btnDarkenColor);
       }
     }
   }
 }
+
 .vxe-text--loading,
 .vxe-text--prefix-icon,
 .vxe-text--suffix-icon,
