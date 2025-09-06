@@ -23,14 +23,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       type: Boolean as PropType<VxeTextPropTypes.ClickToCopy>,
       default: () => getConfig().text.clickToCopy
     },
-    copyIcon: {
-      type: String as PropType<VxeTextPropTypes.CopyIcon>,
-      default: () => getConfig().text.copyIcon
-    },
-    copyLayout: {
-      type: String as PropType<VxeTextPropTypes.CopyLayout>,
-      default: () => getConfig().text.copyLayout
-    },
+    copyConfig: Object as PropType<VxeTextPropTypes.CopyConfig>,
     size: {
       type: String as PropType<VxeTextPropTypes.Size>,
       default: () => getConfig().text.size || getConfig().size
@@ -47,7 +40,13 @@ export default /* define-vxe-component start */ defineVxeComponent({
   computed: {
     ...({} as {
       computeSize(): VxeComponentSizeType
-    })
+    }),
+    computeCopyOpts () {
+      const $xeText = this
+      const props = $xeText
+
+      return Object.assign({}, getConfig().text.copyConfig, props.copyConfig)
+    }
   },
   methods: {
     //
@@ -57,31 +56,53 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const $xeText = this
       $xeText.$emit(type, createEvent(evnt, { $text: $xeText }, params))
     },
-    clickIconEvent () {
+    handleCopy (evnt: MouseEvent) {
       const $xeText = this
       const props = $xeText
 
-      const { content, clickToCopy } = props
-      if (clickToCopy) {
-        const contentEl = $xeText.$refs.refContentElem as HTMLSpanElement
-        const copyVal = (contentEl ? contentEl.textContent : '') || content
-        if (copyVal) {
-          if (VxeUI.clipboard.copy(copyVal)) {
-            if (VxeUI.modal) {
-              VxeUI.modal.message({
-                content: getI18n('vxe.text.copySuccess'),
-                status: 'success'
-              })
-            }
-          } else {
-            if (VxeUI.modal) {
-              VxeUI.modal.message({
-                content: getI18n('vxe.text.copyError'),
-                status: 'error'
-              })
-            }
+      const { content } = props
+      const copyOpts = $xeText.computeCopyOpts
+      const { showMessage } = copyOpts
+      const contentEl = $xeText.$refs.refContentElem as HTMLSpanElement
+      const copyVal = (contentEl ? contentEl.textContent : '') || content
+      if (copyVal) {
+        if (VxeUI.clipboard.copy(copyVal)) {
+          if (showMessage && VxeUI.modal) {
+            VxeUI.modal.message({
+              content: getI18n('vxe.text.copySuccess'),
+              status: 'success'
+            })
           }
+          $xeText.dispatchEvent('copy-success', {}, evnt)
+        } else {
+          if (showMessage && VxeUI.modal) {
+            VxeUI.modal.message({
+              content: getI18n('vxe.text.copyError'),
+              status: 'error'
+            })
+          }
+          $xeText.dispatchEvent('copy-error', {}, evnt)
         }
+      }
+    },
+    clickIconEvent (evnt: MouseEvent) {
+      const $xeText = this
+      const props = $xeText
+
+      const { clickToCopy } = props
+      const copyOpts = $xeText.computeCopyOpts
+      if (clickToCopy && copyOpts.trigger !== 'dblclick') {
+        $xeText.handleCopy(evnt)
+      }
+    },
+    dblclickIconEvent (evnt: MouseEvent) {
+      const $xeText = this
+      const props = $xeText
+
+      const { clickToCopy } = props
+      const copyOpts = $xeText.computeCopyOpts
+      if (clickToCopy && copyOpts.trigger === 'dblclick') {
+        $xeText.handleCopy(evnt)
       }
     },
     clickEvent  (evnt : MouseEvent) {
@@ -117,18 +138,21 @@ export default /* define-vxe-component start */ defineVxeComponent({
     //
     renderCopyIcon (h: CreateElement) {
       const $xeText = this
-      const props = $xeText
 
-      const { copyIcon } = props
+      const copyOpts = $xeText.computeCopyOpts
+      const { icon, status } = copyOpts
       return h('span', {
         key: 'ci',
-        class: 'vxe-text--copy-icon',
+        class: ['vxe-text--copy-icon', {
+          [`theme--${status}`]: status
+        }],
         on: {
-          click: $xeText.clickIconEvent
+          click: $xeText.clickIconEvent,
+          dblclick: $xeText.dblclickIconEvent
         }
       }, [
         h('i', {
-          class: copyIcon || getIcon().TEXT_COPY
+          class: icon || getIcon().TEXT_COPY
         })
       ])
     },
@@ -137,11 +161,12 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const props = $xeText
       const slots = $xeText.$scopedSlots
 
-      const { loading, icon, prefixIcon, suffixIcon, clickToCopy, content, copyLayout } = props
+      const { loading, icon, prefixIcon, suffixIcon, clickToCopy, content } = props
+      const copyOpts = $xeText.computeCopyOpts
       const defaultSlot = slots.default
       const prefixIconSlot = slots.prefixIcon || slots['prefix-icon'] || slots.icon
       const suffixIconSlot = slots.suffixIcon || slots['suffix-icon']
-      const copyToRight = copyLayout === 'right'
+      const copyToRight = copyOpts.layout === 'right'
       const contVNs: VNode[] = []
       if (loading) {
         contVNs.push(
