@@ -398,8 +398,10 @@ export default defineVxeComponent({
     const wheelEvent = (evnt: WheelEvent) => {
       const delta = evnt.deltaY
       if (delta > 0) {
+        evnt.preventDefault()
         handleZoom(false)
       } else if (delta < 0) {
+        evnt.preventDefault()
         handleZoom(true)
       }
     }
@@ -628,8 +630,7 @@ export default defineVxeComponent({
         ref: refElem,
         class: ['vxe-image-preview', {
           'is--pct11': offsetPct11
-        }],
-        onWheel: wheelEvent
+        }]
       }, [
         renderImgWrapper(),
         renderBtnWrapper()
@@ -642,12 +643,17 @@ export default defineVxeComponent({
     })
 
     onMounted(() => {
+      const elem = refElem.value
+      if (elem) {
+        elem.addEventListener('wheel', wheelEvent, { passive: false })
+      }
       globalEvents.on($xeImagePreview, 'keydown', handleGlobalKeydownEvent)
     })
 
     onBeforeUnmount(() => {
       const elem = refElem.value
       if (elem) {
+        elem.removeEventListener('wheel', wheelEvent)
         removeClass(elem, 'is--move')
       }
     })

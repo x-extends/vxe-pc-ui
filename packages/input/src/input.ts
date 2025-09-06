@@ -1309,7 +1309,7 @@ export default defineVxeComponent({
           evnt.preventDefault()
         }
       }
-      triggerEvent(evnt as any)
+      triggerEvent(evnt as WheelEvent & { type: 'wheel' })
     }
 
     // 日期
@@ -2656,7 +2656,6 @@ export default defineVxeComponent({
             autocomplete: autoComplete || autocomplete,
             onKeydown: keydownEvent,
             onKeyup: keyupEvent,
-            onWheel: wheelEvent,
             onClick: clickEvent,
             onInput: inputEvent,
             onChange: changeEvent,
@@ -2714,6 +2713,11 @@ export default defineVxeComponent({
       } else if (['password'].includes(type)) {
         warnLog('vxe.error.useNew', [`<vxe-input type="${type}" ... />`, '<vxe-password-input ... />'])
       }
+
+      const inputElem = refInputTarget.value
+      if (inputElem) {
+        inputElem.addEventListener('wheel', wheelEvent, { passive: false })
+      }
       globalEvents.on($xeInput, 'mousewheel', handleGlobalMousewheelEvent)
       globalEvents.on($xeInput, 'mousedown', handleGlobalMousedownEvent)
       globalEvents.on($xeInput, 'keydown', handleGlobalKeydownEvent)
@@ -2723,6 +2727,10 @@ export default defineVxeComponent({
     onBeforeUnmount(() => {
       numberStopDown()
       afterCheckValue()
+      const inputElem = refInputTarget.value
+      if (inputElem) {
+        inputElem.removeEventListener('wheel', wheelEvent)
+      }
       globalEvents.off($xeInput, 'mousewheel')
       globalEvents.off($xeInput, 'mousedown')
       globalEvents.off($xeInput, 'keydown')

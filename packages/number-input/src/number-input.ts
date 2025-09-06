@@ -692,10 +692,7 @@ export default defineVxeComponent({
       }
     }
 
-    const wheelEvent = (evnt: WheelEvent & {
-      type: 'wheel';
-      wheelDelta: number;
-    }) => {
+    const wheelEvent = (evnt: WheelEvent) => {
       const { controls } = props
       const controlOpts = computeControlOpts.value
       const { isWheel } = controlOpts
@@ -714,7 +711,7 @@ export default defineVxeComponent({
           }
         }
       }
-      triggerEvent(evnt)
+      triggerEvent(evnt as WheelEvent & { type: 'wheel' })
     }
 
     const clickEvent = (evnt: Event & { type: 'click' }) => {
@@ -890,7 +887,6 @@ export default defineVxeComponent({
             autocomplete: autoComplete || autocomplete,
             onKeydown: keydownEvent,
             onKeyup: keyupEvent,
-            onWheel: wheelEvent,
             onClick: clickEvent,
             onInput: inputEvent,
             onChange: changeEvent,
@@ -1024,6 +1020,10 @@ export default defineVxeComponent({
     })
 
     onMounted(() => {
+      const targetElem = refInputTarget.value
+      if (targetElem) {
+        targetElem.addEventListener('wheel', wheelEvent, { passive: false })
+      }
       globalEvents.on($xeNumberInput, 'mousedown', handleGlobalMousedownEvent)
       globalEvents.on($xeNumberInput, 'keydown', handleGlobalKeydownEvent)
       globalEvents.on($xeNumberInput, 'blur', handleGlobalBlurEvent)
@@ -1033,6 +1033,10 @@ export default defineVxeComponent({
       reactData.isFocus = false
       numberStopAll()
       afterCheckValue()
+      const targetElem = refInputTarget.value
+      if (targetElem) {
+        targetElem.removeEventListener('wheel', wheelEvent)
+      }
       globalEvents.off($xeNumberInput, 'mousedown')
       globalEvents.off($xeNumberInput, 'keydown')
       globalEvents.off($xeNumberInput, 'blur')
