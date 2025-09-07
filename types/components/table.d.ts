@@ -1346,10 +1346,16 @@ export namespace VxeTablePropTypes {
    */
   export interface TooltipConfig<D = VxeTablePropTypes.Row> {
     showAll?: boolean
-    theme?: 'dark' | 'light' | '' | null
-    enterable?: boolean
-    enterDelay?: number
-    leaveDelay?: number
+    theme?: VxeTooltipPropTypes.Theme
+    enterable?: VxeTooltipPropTypes.Enterable
+    enterDelay?: VxeTooltipPropTypes.EnterDelay
+    leaveDelay?: VxeTooltipPropTypes.LeaveDelay
+    width?: VxeTooltipPropTypes.Width
+    height?: VxeTooltipPropTypes.Height
+    minWidth?: VxeTooltipPropTypes.MinWidth
+    minHeight?: VxeTooltipPropTypes.MinHeight
+    maxWidth?: VxeTooltipPropTypes.MaxWidth
+    maxHeight?: VxeTooltipPropTypes.MaxHeight
     contentMethod?(params: {
       $table: VxeTableConstructor<D>
       items: any[]

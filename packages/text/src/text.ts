@@ -105,13 +105,22 @@ export default /* define-vxe-component start */ defineVxeComponent({
         $xeText.handleCopy(evnt)
       }
     },
-    clickEvent  (evnt : MouseEvent) {
+    clickEvent (evnt : MouseEvent) {
       const $xeText = this
       const props = $xeText
 
       const { loading } = props
       if (!loading) {
         $xeText.dispatchEvent('click', {}, evnt)
+      }
+    },
+    dblclickEvent (evnt : MouseEvent) {
+      const $xeText = this
+      const props = $xeText
+
+      const { loading } = props
+      if (!loading) {
+        $xeText.dispatchEvent('dblclick', {}, evnt)
       }
     },
     prefixEvent (evnt : MouseEvent) {
@@ -203,7 +212,11 @@ export default /* define-vxe-component start */ defineVxeComponent({
         h('span', {
           key: 'ct',
           ref: 'refContentElem',
-          class: 'vxe-text--content'
+          class: 'vxe-text--content',
+          on: {
+            click: $xeText.clickEvent,
+            dblclick: $xeText.dblclickEvent
+          }
         }, defaultSlot ? defaultSlot({}) : XEUtils.toValueString(content))
       )
       if (suffixIcon) {
@@ -244,9 +257,6 @@ export default /* define-vxe-component start */ defineVxeComponent({
         }],
         attrs: {
           title
-        },
-        on: {
-          click: $xeText.clickEvent
         }
       }, $xeText.renderContent(h))
     }

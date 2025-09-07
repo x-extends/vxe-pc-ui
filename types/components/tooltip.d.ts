@@ -26,6 +26,12 @@ export namespace VxeTooltipPropTypes {
   export type UseHTML = boolean
   export type ZIndex = string | number
   export type PopupClassName = string | ((params: { $tooltip: VxeTooltipConstructor }) => string)
+  export type Width = string | number
+  export type Height = string | number
+  export type MinWidth = string | number
+  export type MinHeight = string | number
+  export type MaxWidth = string | number
+  export type MaxHeight = string | number
   export type IsArrow = boolean
   export type Enterable = boolean
   export type EnterDelay = number
@@ -35,13 +41,19 @@ export namespace VxeTooltipPropTypes {
 
 export interface VxeTooltipProps {
   size?: VxeTooltipPropTypes.Size
-  value?: VxeTooltipPropTypes.ModelValue
+  modelValue?: VxeTooltipPropTypes.ModelValue
   selector?: VxeTooltipPropTypes.Selector
   trigger?: VxeTooltipPropTypes.Trigger
   theme?: VxeTooltipPropTypes.Theme
   content?: VxeTooltipPropTypes.Content
   useHTML?: VxeTooltipPropTypes.UseHTML
   popupClassName?: VxeTooltipPropTypes.PopupClassName
+  Width?: VxeTooltipPropTypes.Width
+  height?: VxeTooltipPropTypes.Height
+  minWidth?: VxeTooltipPropTypes.MinWidth
+  minHeight?: VxeTooltipPropTypes.MinHeight
+  maxWidth?: VxeTooltipPropTypes.MaxWidth
+  maxHeight?: VxeTooltipPropTypes.MaxHeight
   zIndex?: VxeTooltipPropTypes.ZIndex
   isArrow?: VxeTooltipPropTypes.IsArrow
   enterable?: VxeTooltipPropTypes.Enterable
