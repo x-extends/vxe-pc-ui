@@ -125,6 +125,13 @@ export default defineVxeComponent({
       }
     }
 
+    const dblclickEvent = (evnt : MouseEvent) => {
+      const { loading } = props
+      if (!loading) {
+        dispatchEvent('dblclick', {}, evnt)
+      }
+    }
+
     const prefixEvent = (evnt : MouseEvent) => {
       const { loading } = props
       if (!loading) {
@@ -202,7 +209,9 @@ export default defineVxeComponent({
         h('span', {
           key: 'ct',
           ref: refContentElem,
-          class: 'vxe-text--content'
+          class: 'vxe-text--content',
+          onClick: clickEvent,
+          onDblclick: dblclickEvent
         }, defaultSlot ? defaultSlot({}) : XEUtils.toValueString(content))
       )
       if (suffixIcon) {
@@ -237,8 +246,7 @@ export default defineVxeComponent({
           [`theme--${status}`]: status,
           'is--copy': clickToCopy,
           'is--loading': loading
-        }],
-        onClick: clickEvent
+        }]
       }, renderContent())
     }
 

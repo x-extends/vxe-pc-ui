@@ -4,9 +4,7 @@
   top: -100%;
   left: -100%;
   font-size: 12px;
-  max-width: 600px;
   border-radius: var(--vxe-ui-base-border-radius);
-  padding: 8px 12px;
   white-space: normal;
   word-break: break-word;
   box-shadow: 2px 2px 4px -2px rgba(0,0,0,.2);
@@ -16,7 +14,7 @@
     pointer-events: none;
   }
   &.is--visible {
-    display: block;
+    display: inline-block;
   }
   &.is--arrow {
     .vxe-tooltip--arrow {
@@ -34,7 +32,12 @@
     }
   }
   .vxe-tooltip--content {
+    padding: 8px 12px;
+    max-width: 600px;
+    max-height: 800px;
     white-space: pre-line;
+    border-radius: var(--vxe-ui-base-border-radius);
+    overflow: auto;
   }
   .vxe-tooltip--arrow {
     display: none;
@@ -73,9 +76,9 @@
       }
     }
     .vxe-tooltip--arrow {
-      top: -12px;
+      top: -11px;
       &:before {
-        top: -4px;
+        top: -3px;
       }
     }
   }

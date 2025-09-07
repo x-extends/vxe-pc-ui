@@ -1,12 +1,12 @@
-import { h, ref, Ref, nextTick, onBeforeUnmount, onMounted, reactive, watch, PropType } from 'vue'
+import { h, ref, nextTick, onBeforeUnmount, onMounted, computed, reactive, watch, PropType, VNode } from 'vue'
 import { defineVxeComponent } from '../../ui/src/comp'
 import XEUtils from 'xe-utils'
 import { getConfig, createEvent, useSize } from '../../ui'
 import { getLastZIndex, nextZIndex } from '../../ui/src/utils'
-import { getAbsolutePos, getDomNode } from '../../ui/src/dom'
+import { getAbsolutePos, getDomNode, toCssUnit } from '../../ui/src/dom'
 import { getSlotVNs } from '../../ui/src/vn'
 
-import type { VxeTooltipPropTypes, VxeTooltipConstructor, VxeTooltipEmits, TooltipInternalData, TooltipReactData, TooltipMethods, TooltipPrivateRef } from '../../../types'
+import type { VxeTooltipPropTypes, VxeTooltipConstructor, VxeTooltipEmits, TooltipInternalData, TooltipReactData, TooltipMethods, TooltipPrivateRef, VxeComponentStyleType } from '../../../types'
 
 export default defineVxeComponent({
   name: 'VxeTooltip',
@@ -32,6 +32,30 @@ export default defineVxeComponent({
     useHTML: Boolean as PropType<VxeTooltipPropTypes.UseHTML>,
     zIndex: [String, Number] as PropType<VxeTooltipPropTypes.ZIndex>,
     popupClassName: [String, Function] as PropType<VxeTooltipPropTypes.PopupClassName>,
+    width: {
+      type: [String, Number] as PropType<VxeTooltipPropTypes.Width>,
+      default: () => getConfig().tooltip.Width
+    },
+    height: {
+      type: [String, Number] as PropType<VxeTooltipPropTypes.Height>,
+      default: () => getConfig().tooltip.height
+    },
+    minWidth: {
+      type: [String, Number] as PropType<VxeTooltipPropTypes.MinWidth>,
+      default: () => getConfig().tooltip.minWidth
+    },
+    minHeight: {
+      type: [String, Number] as PropType<VxeTooltipPropTypes.MinHeight>,
+      default: () => getConfig().tooltip.minHeight
+    },
+    maxWidth: {
+      type: [String, Number] as PropType<VxeTooltipPropTypes.MaxWidth>,
+      default: () => getConfig().tooltip.maxWidth
+    },
+    maxHeight: {
+      type: [String, Number] as PropType<VxeTooltipPropTypes.MaxHeight>,
+      default: () => getConfig().tooltip.maxHeight
+    },
     isArrow: {
       type: Boolean as PropType<VxeTooltipPropTypes.IsArrow>,
       default: () => getConfig().tooltip.isArrow
@@ -77,7 +101,32 @@ export default defineVxeComponent({
     const internalData: TooltipInternalData = {
     }
 
-    const refElem = ref() as Ref<HTMLDivElement>
+    const refElem = ref<HTMLDivElement>()
+    const contentWrapperfElem = ref<HTMLDivElement>()
+
+    const computeWrapperStyle = computed(() => {
+      const { width, height, minHeight, minWidth, maxHeight, maxWidth } = props
+      const stys: VxeComponentStyleType = {}
+      if (width) {
+        stys.width = toCssUnit(width)
+      }
+      if (height) {
+        stys.height = toCssUnit(height)
+      }
+      if (minWidth) {
+        stys.minWidth = toCssUnit(minWidth)
+      }
+      if (minHeight) {
+        stys.minHeight = toCssUnit(minHeight)
+      }
+      if (maxWidth) {
+        stys.maxWidth = toCssUnit(maxWidth)
+      }
+      if (maxHeight) {
+        stys.maxHeight = toCssUnit(maxHeight)
+      }
+      return stys
+    })
 
     const refMaps: TooltipPrivateRef = {
       refElem
@@ -100,6 +149,9 @@ export default defineVxeComponent({
         const { scrollTop, scrollLeft, visibleWidth } = getDomNode()
         const { top, left } = getAbsolutePos(tipTarget)
         const el = refElem.value
+        if (!el) {
+          return
+        }
         const marginSize = 6
         const offsetHeight = el.offsetHeight
         const offsetWidth = el.offsetWidth
@@ -276,29 +328,42 @@ export default defineVxeComponent({
       }
     }
 
+    const wheelEvent = (evnt: Event) => {
+      evnt.stopPropagation()
+    }
+
     Object.assign($xeTooltip, tooltipMethods)
 
     const renderContent = () => {
       const { useHTML } = props
       const { tipContent } = reactData
+      const wrapperStyle = computeWrapperStyle.value
       const contentSlot = slots.content
+      const contVNs: VNode[] = []
       if (contentSlot) {
-        return h('div', {
-          key: 1,
-          class: 'vxe-tooltip--content'
-        }, getSlotVNs(contentSlot({})))
-      }
-      if (useHTML) {
-        return h('div', {
-          key: 2,
-          class: 'vxe-tooltip--content',
-          innerHTML: tipContent
-        })
+        contVNs.push(
+          h('div', {
+            key: 1
+          }, getSlotVNs(contentSlot({})))
+        )
+      } else if (useHTML) {
+        contVNs.push(
+          h('div', {
+            key: 2,
+            innerHTML: tipContent
+          })
+        )
+      } else {
+        contVNs.push(h('span', {
+          key: 3
+        }, `${tipContent}`))
       }
       return h('div', {
         key: 3,
-        class: 'vxe-tooltip--content'
-      }, `${tipContent}`)
+        ref: contentWrapperfElem,
+        class: 'vxe-tooltip--content',
+        style: wrapperStyle
+      }, contVNs)
     }
 
     const renderVN = () => {
@@ -355,6 +420,10 @@ export default defineVxeComponent({
     })
 
     onMounted(() => {
+      const contentWrapperfEl = contentWrapperfElem.value
+      if (contentWrapperfEl) {
+        contentWrapperfEl.addEventListener('wheel', wheelEvent, { passive: false })
+      }
       nextTick(() => {
         const { trigger, content } = props
         const wrapperElem = refElem.value
@@ -396,6 +465,10 @@ export default defineVxeComponent({
         target.onmouseenter = null
         target.onmouseleave = null
         target.onclick = null
+      }
+      const contentWrapperfEl = contentWrapperfElem.value
+      if (contentWrapperfEl) {
+        contentWrapperfEl.removeEventListener('wheel', wheelEvent)
       }
       if (wrapperElem) {
         const parentNode = wrapperElem.parentNode
