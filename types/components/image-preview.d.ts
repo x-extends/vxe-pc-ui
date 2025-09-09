@@ -22,6 +22,7 @@ export namespace VxeImagePreviewPropTypes {
   export type UrlField = string
   export type MaskClosable = boolean
   export type MarginSize = string | number
+  export type ZIndex = number
   export type ShowPrintButton = boolean
   export type ShowDownloadButton = boolean
   export interface ToolbarConfig {
@@ -71,6 +72,7 @@ export interface VxeImagePreviewProps {
   urlField?: VxeImagePreviewPropTypes.UrlField
   maskClosable?: VxeImagePreviewPropTypes.MaskClosable
   marginSize?: VxeImagePreviewPropTypes.MarginSize
+  zIndex?: VxeImagePreviewPropTypes.ZIndex
   toolbarConfig?: VxeImagePreviewPropTypes.ToolbarConfig
   showPrintButton?: VxeImagePreviewPropTypes.ShowPrintButton
   showDownloadButton?: VxeImagePreviewPropTypes.ShowDownloadButton

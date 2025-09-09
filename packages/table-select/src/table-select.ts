@@ -48,9 +48,10 @@ export default /* define-vxe-component start */ defineVxeComponent({
     columns: Array as PropType<VxeTableSelectPropTypes.Columns>,
     options: Array as PropType<VxeTableSelectPropTypes.Options>,
     optionProps: Object as PropType<VxeTableSelectPropTypes.OptionProps>,
+    zIndex: Number as PropType<VxeTableSelectPropTypes.ZIndex>,
     size: {
       type: String as PropType<VxeTableSelectPropTypes.Size>,
-      default: () => getConfig().select.size || getConfig().size
+      default: () => getConfig().tableSelect.size || getConfig().size
     },
     popupConfig: Object as PropType<VxeTableSelectPropTypes.PopupConfig>,
     gridConfig: Object as PropType<VxeTableSelectPropTypes.GridConfig>,
@@ -378,9 +379,13 @@ export default /* define-vxe-component start */ defineVxeComponent({
     },
     updateZindex () {
       const $xeTableSelect = this
+      const props = $xeTableSelect
       const reactData = $xeTableSelect.reactData
 
-      if (reactData.panelIndex < getLastZIndex()) {
+      const { zIndex } = props
+      if (zIndex) {
+        reactData.panelIndex = zIndex
+      } else if (reactData.panelIndex < getLastZIndex()) {
         reactData.panelIndex = nextZIndex()
       }
     },

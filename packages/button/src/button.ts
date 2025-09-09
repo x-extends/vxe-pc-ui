@@ -32,6 +32,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       type: String as PropType<VxeButtonPropTypes.Size>,
       default: () => getConfig().button.size || getConfig().size
     },
+    zIndex: Number as PropType<VxeButtonPropTypes.ZIndex>,
     /**
      * 用来标识这一项
      */
@@ -377,9 +378,13 @@ export default /* define-vxe-component start */ defineVxeComponent({
     //
     updateZindex () {
       const $xeButton = this
+      const props = $xeButton
       const reactData = $xeButton.reactData
 
-      if (reactData.panelIndex < getLastZIndex()) {
+      const { zIndex } = props
+      if (zIndex) {
+        reactData.panelIndex = zIndex
+      } else if (reactData.panelIndex < getLastZIndex()) {
         reactData.panelIndex = nextZIndex()
       }
     },

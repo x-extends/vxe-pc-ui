@@ -9,7 +9,7 @@ export const openPreviewImage: VxeImageDefines.PreviewImageFunction = (options) 
     const opts = Object.assign({
       escClosable: true
     }, options)
-    const { urlList, activeIndex } = opts
+    const { urlList, activeIndex, zIndex } = opts
     const { rotate, change } = opts.events || {}
     const modalId = XEUtils.uniqueId('image-preview')
     VxeUI.modal.open({
@@ -21,6 +21,7 @@ export const openPreviewImage: VxeImageDefines.PreviewImageFunction = (options) 
       showFooter: false,
       padding: false,
       escClosable: opts.escClosable,
+      zIndex,
       className: 'vxe-image-preview-popup-wrapper',
       slots: {
         default (params, h) {

@@ -18,6 +18,7 @@ export interface VxeButtonPrivateRef extends ButtonPrivateRef { }
 
 export namespace VxeButtonPropTypes {
   export type Size = VxeComponentSizeType
+  export type ZIndex = number
   export type Type = string
   export type Mode = null | '' | 'button' | 'text'
   export type ClassName = string | ((params: { $button: VxeButtonConstructor }) => string)
@@ -76,6 +77,7 @@ export namespace VxeButtonPropTypes {
 
 export interface VxeButtonProps {
   size?: VxeButtonPropTypes.Size
+  zIndex?: VxeButtonPropTypes.ZIndex
   /**
    * 按钮类型
    */

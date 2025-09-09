@@ -20,6 +20,7 @@ export namespace VxeTreeSelectPropTypes {
   export type Size = VxeComponentSizeType
   export type ModelValue = any
   export type Clearable = boolean
+  export type ZIndex = number
   export type Placeholder = string
   export type Readonly = boolean
   export type Loading = boolean
@@ -115,6 +116,7 @@ export interface VxeTreeSelectProps<D = any> {
   size?: VxeTreeSelectPropTypes.Size
   modelValue?: VxeTreeSelectPropTypes.ModelValue
   clearable?: VxeTreeSelectPropTypes.Clearable
+  zIndex?: VxeTreeSelectPropTypes.ZIndex
   placeholder?: VxeTreeSelectPropTypes.Placeholder
   readonly?: VxeTreeSelectPropTypes.Readonly
   loading?: VxeTreeSelectPropTypes.Loading

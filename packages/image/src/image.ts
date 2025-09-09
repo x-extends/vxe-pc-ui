@@ -20,6 +20,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
     width: [String, Number] as PropType<VxeImagePropTypes.Width>,
     height: [String, Number] as PropType<VxeImagePropTypes.Height>,
     circle: Boolean as PropType<VxeImagePropTypes.Circle>,
+    zIndex: Number as PropType<VxeImagePropTypes.ZIndex>,
     maskClosable: {
       type: Boolean as PropType<VxeImagePropTypes.MaskClosable>,
       default: () => getConfig().image.maskClosable
@@ -136,7 +137,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const props = $xeImage
       const $xeImageGroup = $xeImage.$xeImageGroup
 
-      const { showPreview, toolbarConfig, showPrintButton, showDownloadButton, maskClosable } = props
+      const { showPreview, toolbarConfig, showPrintButton, showDownloadButton, maskClosable, zIndex } = props
       const imgList = $xeImage.computeImgList
       const imgUrl = $xeImage.computeImgUrl
       if ($xeImageGroup) {
@@ -149,6 +150,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
             showPrintButton,
             showDownloadButton,
             maskClosable,
+            zIndex,
             events: {
               change (eventParams) {
                 $xeImage.dispatchEvent('change', eventParams, eventParams.$event)

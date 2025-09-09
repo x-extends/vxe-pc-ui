@@ -20,6 +20,7 @@ export namespace VxeTableSelectPropTypes {
   export type Size = VxeComponentSizeType
   export type ModelValue = any
   export type Clearable = boolean
+  export type ZIndex = number
   export type Placeholder = string
   export type Readonly = boolean
   export type Loading = boolean
@@ -49,6 +50,7 @@ export interface VxeTableSelectProps<D = any> {
   size?: VxeTableSelectPropTypes.Size
   modelValue?: VxeTableSelectPropTypes.ModelValue
   clearable?: VxeTableSelectPropTypes.Clearable
+  zIndex?: VxeTableSelectPropTypes.ZIndex
   placeholder?: VxeTableSelectPropTypes.Placeholder
   readonly?: VxeTableSelectPropTypes.Readonly
   loading?: VxeTableSelectPropTypes.Loading
