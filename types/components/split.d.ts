@@ -1,5 +1,5 @@
 import { RenderFunction, SetupContext, Ref, ComputedRef } from 'vue'
-import { DefineVxeComponentApp, DefineVxeComponentOptions, DefineVxeComponentInstance, VxeComponentBaseOptions, VxeComponentEventParams, ValueOf } from '@vxe-ui/core'
+import { DefineVxeComponentApp, DefineVxeComponentOptions, DefineVxeComponentInstance, VxeComponentBaseOptions, VxeComponentEventParams, ValueOf, VxeComponentSizeType } from '@vxe-ui/core'
 import { VxeSplitPaneProps, VxeSplitPanePropTypes } from './split-pane'
 
 /* eslint-disable no-use-before-define,@typescript-eslint/ban-types */
@@ -24,6 +24,7 @@ export interface SplitPrivateRef {
 export interface VxeSplitPrivateRef extends SplitPrivateRef { }
 
 export namespace VxeSplitPropTypes {
+  export type Size = VxeComponentSizeType
   export type Height = string | number
   export type Width = string | number
   export type Padding = boolean
@@ -85,6 +86,7 @@ export namespace VxeSplitPropTypes {
 }
 
 export type VxeSplitProps = {
+  size?: VxeSplitPropTypes.Size
   /**
    * 高度
    */

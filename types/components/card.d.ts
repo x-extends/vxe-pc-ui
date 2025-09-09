@@ -1,5 +1,5 @@
 import { RenderFunction, SetupContext, Ref } from 'vue'
-import { DefineVxeComponentApp, DefineVxeComponentOptions, DefineVxeComponentInstance, VxeComponentBaseOptions, VxeComponentEventParams, ValueOf } from '@vxe-ui/core'
+import { DefineVxeComponentApp, DefineVxeComponentOptions, DefineVxeComponentInstance, VxeComponentBaseOptions, VxeComponentEventParams, ValueOf, VxeComponentSizeType } from '@vxe-ui/core'
 
 /* eslint-disable no-use-before-define,@typescript-eslint/ban-types */
 
@@ -31,6 +31,7 @@ export namespace VxeCardPropTypes {
   export type Loading = boolean
   export type Shadow = boolean
   export type Padding = boolean
+  export type Size = VxeComponentSizeType
 }
 
 export type VxeCardProps = {
@@ -42,6 +43,7 @@ export type VxeCardProps = {
   loading?: VxeCardPropTypes.Loading
   shadow?: VxeCardPropTypes.Shadow
   padding?: VxeCardPropTypes.Padding
+  size?: VxeCardPropTypes.Size
 }
 
 export interface CardPrivateComputed {

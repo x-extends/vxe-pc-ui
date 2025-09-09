@@ -1,7 +1,7 @@
 import { ref, h, reactive, PropType, computed } from 'vue'
 import { defineVxeComponent } from '../../ui/src/comp'
 import { getSlotVNs } from '../../ui/src/vn'
-import { getConfig, createEvent, renderEmptyElement } from '../../ui'
+import { getConfig, createEvent, useSize, renderEmptyElement } from '../../ui'
 import { toCssUnit } from '../../ui/src/dom'
 import VxeLoadingComponent from '../../loading/src/loading'
 import XEUtils from 'xe-utils'
@@ -30,6 +30,10 @@ export default defineVxeComponent({
     padding: {
       type: Boolean as PropType<VxeCardPropTypes.Padding>,
       default: () => getConfig().card.padding
+    },
+    size: {
+      type: String as PropType<VxeCardPropTypes.Size>,
+      default: () => getConfig().card.size || getConfig().size
     }
   },
   emits: [
@@ -40,6 +44,8 @@ export default defineVxeComponent({
     const xID = XEUtils.uniqueId()
 
     const refElem = ref<HTMLDivElement>()
+
+    const { computeSize } = useSize(props)
 
     const reactData = reactive<CardReactData>({
     })
@@ -61,6 +67,7 @@ export default defineVxeComponent({
     })
 
     const computeMaps: VxeCardPrivateComputed = {
+      computeSize
     }
 
     const $xeCard = {
@@ -95,11 +102,13 @@ export default defineVxeComponent({
       const footerSlot = slots.footer
       const leftSlot = slots.left
       const rightSlot = slots.right
+      const vSize = computeSize.value
       const cardStyle = computeCardStyle.value
 
       return h('div', {
         ref: refElem,
         class: ['vxe-card', {
+          [`size--${vSize}`]: vSize,
           'is--border': border,
           'is--shadow': shadow,
           'is--padding': padding

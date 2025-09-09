@@ -30,7 +30,10 @@
   --vxe-ui-layout-aside-collapse-width: 60px;
 
   /*menu*/
-  --vxe-ui-menu-item-height: 44px;
+  --vxe-ui-menu-item-height-default: 44px;
+  --vxe-ui-menu-item-height-medium: 40px;
+  --vxe-ui-menu-item-height-small: 36px;
+  --vxe-ui-menu-item-height-mini: 32px;
   --vxe-ui-menu-icon-width: 1.5em;
 
   /*button*/
@@ -160,7 +163,10 @@
   --vxe-ui-upload-image-wh-mini: 72px;
 
   /*card*/
-  --vxe-ui-card-padding: 12px;
+  --vxe-ui-card-padding-default: 12px;
+  --vxe-ui-card-padding-medium: 10px;
+  --vxe-ui-card-padding-small: 8px;
+  --vxe-ui-card-padding-mini: 6px;
 
   /*tree*/
   --vxe-ui-tree-node-height: 2em;
@@ -181,7 +187,7 @@
   --vxe-ui-calendar-notice-selected-background-color: var(--vxe-ui-calendar-selected-color);
 
   /*split*/
-  --vxe-ui-split-handle-bar-horizontal-width: 10px;
+  --vxe-ui-split-handle-bar-horizontal-width: 0.68em;
   --vxe-ui-split-handle-bar-horizontal-height: 6.8em;
   --vxe-ui-split-handle-bar-vertical-width: var(--vxe-ui-split-handle-bar-horizontal-height);
   --vxe-ui-split-handle-bar-vertical-height: var(--vxe-ui-split-handle-bar-horizontal-width);

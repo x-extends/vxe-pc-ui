@@ -1,9 +1,10 @@
 <template>
-  <vxe-layout-container vertical>
+  <vxe-layout-container :size="componentsSize" vertical>
     <vxe-layout-header>
       <vxe-button @click="collapsed = !collapsed">折叠</vxe-button>
       <vxe-switch v-model="theme" close-value="light" open-value="dark" @change="changeTheme">主题切换</vxe-switch>
       <vxe-radio-group v-model="language" :options="langOptions" @change="changeLanguage"></vxe-radio-group>
+      <vxe-radio-group class="switch-size" v-model="componentsSize" :options="sizeOptions" type="button" size="mini"></vxe-radio-group>
     </vxe-layout-header>
     <vxe-layout-container>
       <vxe-layout-aside class="page-layout-aside" :collapsed="collapsed">
@@ -26,6 +27,14 @@ import { VxeUI } from '../packages'
 import { VxeMenuPropTypes } from '../types'
 
 const collapsed = ref(false)
+
+const componentsSize = ref('')
+const sizeOptions = ref([
+  { label: '默认', value: '' },
+  { label: '中', value: 'medium' },
+  { label: '小', value: 'small' },
+  { label: '迷你', value: 'mini' }
+])
 
 const navList = ref<VxeMenuPropTypes.Options>([
   { name: 'Home', icon: 'vxe-icon-user-fill', routerLink: { path: '/' } },

@@ -1,6 +1,6 @@
 import { PropType, ref, h, reactive, provide, VNode, computed, watch, nextTick, onMounted, onUnmounted, onActivated } from 'vue'
 import { defineVxeComponent } from '../../ui/src/comp'
-import { getConfig, getIcon, createEvent, globalEvents, globalResize, renderEmptyElement } from '../../ui'
+import { getConfig, getIcon, createEvent, globalEvents, globalResize, useSize, renderEmptyElement } from '../../ui'
 import { getSlotVNs } from '../../ui/src/vn'
 import { toCssUnit, isScale, addClass, removeClass } from '../../ui/src/dom'
 import { getGlobalDefaultConfig } from '../../ui/src/utils'
@@ -34,7 +34,11 @@ export default defineVxeComponent({
     itemConfig: Object as PropType<VxeSplitPropTypes.ItemConfig>,
     barConfig: Object as PropType<VxeSplitPropTypes.BarConfig>,
     resizeConfig: Object as PropType<VxeSplitPropTypes.ResizeConfig>,
-    actionConfig: Object as PropType<VxeSplitPropTypes.ActionConfig>
+    actionConfig: Object as PropType<VxeSplitPropTypes.ActionConfig>,
+    size: {
+      type: String as PropType<VxeSplitPropTypes.Size>,
+      default: () => getConfig().split.size || getConfig().size
+    }
   },
   emits: [
     'action-dblclick',
@@ -52,6 +56,8 @@ export default defineVxeComponent({
     const refElem = ref<HTMLDivElement>()
     const refBarInfoElem = ref<HTMLDivElement>()
     const refResizableSplitTip = ref<HTMLDivElement>()
+
+    const { computeSize } = useSize(props)
 
     const reactData = reactive<SplitReactData>({
       staticItems: [],
@@ -725,6 +731,7 @@ export default defineVxeComponent({
     const renderItems = () => {
       const { border, padding, resize, vertical } = props
       const { itemList } = reactData
+      const vSize = computeSize.value
       const resizeOpts = computeResizeOpts.value
       const { immediate } = resizeOpts
       const visibleItems = computeVisibleItems.value
@@ -766,6 +773,7 @@ export default defineVxeComponent({
           h('div', {
             itemid: id,
             class: ['vxe-split-pane', vertical ? 'is--vertical' : 'is--horizontal', immediate ? 'is-resize--immediate' : 'is-resize--lazy', {
+              [`size--${vSize}`]: vSize,
               'is--resize': resize,
               'is--padding': padding,
               'is--border': border,
@@ -799,6 +807,7 @@ export default defineVxeComponent({
 
     const renderVN = () => {
       const { vertical, width, height } = props
+      const vSize = computeSize.value
       const resizeOpts = computeResizeOpts.value
       const { immediate, showTip } = resizeOpts
       const defaultSlot = slots.default
@@ -811,7 +820,9 @@ export default defineVxeComponent({
       }
       return h('div', {
         ref: refElem,
-        class: ['vxe-split', vertical ? 'is--vertical' : 'is--horizontal', immediate ? 'is-resize--immediate' : 'is-resize--lazy'],
+        class: ['vxe-split', vertical ? 'is--vertical' : 'is--horizontal', immediate ? 'is-resize--immediate' : 'is-resize--lazy', {
+          [`size--${vSize}`]: vSize
+        }],
         style: stys
       }, [
         h('div', {

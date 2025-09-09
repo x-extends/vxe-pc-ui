@@ -1,5 +1,5 @@
 import { RenderFunction, SetupContext, Ref } from 'vue'
-import { DefineVxeComponentApp, DefineVxeComponentOptions, DefineVxeComponentInstance, VxeComponentBaseOptions, VxeComponentEventParams, ValueOf } from '@vxe-ui/core'
+import { DefineVxeComponentApp, DefineVxeComponentOptions, DefineVxeComponentInstance, VxeComponentBaseOptions, VxeComponentEventParams, ValueOf, VxeComponentSizeType } from '@vxe-ui/core'
 import { VxeTabPaneProps, VxeTabPaneDefines, VxeTabPanePropTypes } from './tab-pane'
 
 /* eslint-disable no-use-before-define,@typescript-eslint/ban-types */
@@ -25,6 +25,7 @@ export interface VxeTabsPrivateRef extends TabsPrivateRef { }
 
 export namespace VxeTabsPropTypes {
   export type ModelValue = undefined | null | VxeTabPanePropTypes.Name
+  export type Size = VxeComponentSizeType
   export type Options = VxeTabPaneProps[]
   export type DestroyOnClose = boolean
   export type Width = string | number
@@ -115,6 +116,7 @@ export namespace VxeTabsPropTypes {
 
 export type VxeTabsProps = {
   modelValue?: VxeTabsPropTypes.ModelValue
+  size?: VxeTabsPropTypes.Size
   options?: VxeTabsPropTypes.Options
   destroyOnClose?: VxeTabsPropTypes.DestroyOnClose
   width?: VxeTabsPropTypes.Width

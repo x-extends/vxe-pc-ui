@@ -169,7 +169,7 @@ export function updatePanelPlacement (targetElem: HTMLElement | null | undefined
   teleportTo?: boolean
   marginSize?: number
 }) {
-  const { placement, teleportTo, marginSize } = Object.assign({ teleportTo: false, marginSize: 32 }, options)
+  const { placement, teleportTo, marginSize } = Object.assign({ teleportTo: false, marginSize: 18 }, options)
   let panelPlacement: 'top' | 'bottom' = 'bottom'
   let top: number | '' = ''
   let bottom: number | '' = ''
