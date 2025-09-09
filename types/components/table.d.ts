@@ -3474,7 +3474,7 @@ export interface TablePrivateComputed<D = any> {
   computeHeaderMenu: ComputedRef<VxeTableDefines.MenuFirstOption>
   computeBodyMenu: ComputedRef<VxeTableDefines.MenuFirstOption>
   computeFooterMenu: ComputedRef<VxeTableDefines.MenuFirstOption>
-  computeIsMenu: ComputedRef<boolean>
+  computeIsContentMenu: ComputedRef<boolean>
   computeMenuList: ComputedRef<any[]>
   computeMenuOpts: ComputedRef<VxeTablePropTypes.MenuOpts<D>>
   computeExportOpts: ComputedRef<VxeTablePropTypes.ExportOpts>
@@ -3498,6 +3498,10 @@ export interface TablePrivateComputed<D = any> {
   computeRowGroupFields: ComputedRef<string[] | null | undefined>
   computeRowGroupColumns: ComputedRef<VxeTableDefines.ColumnInfo<D>[]>
 
+  /**
+   * @deprecated
+   */
+  computeIsMenu: ComputedRef<boolean>
   /**
    * @deprecated
    */
