@@ -34,6 +34,7 @@ export namespace VxeDatePickerPropTypes {
   export type Name = string
   export type Type = VxeDatePanelPropTypes.Type
   export type Clearable = boolean
+  export type ZIndex = number
   export type Readonly = boolean
   export type Disabled = boolean
   export type Placeholder = string
@@ -84,6 +85,7 @@ export interface VxeDatePickerProps {
   name?: VxeDatePickerPropTypes.Name
   type?: VxeDatePickerPropTypes.Type
   clearable?: VxeDatePickerPropTypes.Clearable
+  zIndex?: VxeDatePickerPropTypes.ZIndex
   readonly?: VxeDatePickerPropTypes.Readonly
   disabled?: VxeDatePickerPropTypes.Disabled
   placeholder?: VxeDatePickerPropTypes.Placeholder

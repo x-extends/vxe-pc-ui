@@ -31,6 +31,7 @@ export default defineVxeComponent({
       type: Boolean as PropType<VxeImagePreviewPropTypes.ShowDownloadButton>,
       default: () => getConfig().imagePreview.showDownloadButton
     },
+    zIndex: Number as PropType<VxeImagePreviewPropTypes.ZIndex>,
     toolbarConfig: Object as PropType<VxeImagePreviewPropTypes.ToolbarConfig>,
     beforeDownloadMethod: Function as PropType<VxeImagePreviewPropTypes.BeforeDownloadMethod>,
     downloadMethod: Function as PropType<VxeImagePreviewPropTypes.DownloadMethod>

@@ -46,6 +46,7 @@ export default defineVxeComponent({
     },
     form: String as PropType<VxeDatePickerPropTypes.Form>,
     className: String as PropType<VxeDatePickerPropTypes.ClassName>,
+    zIndex: Number as PropType<VxeDatePickerPropTypes.ZIndex>,
     size: {
       type: String as PropType<VxeDatePickerPropTypes.Size>,
       default: () => getConfig().datePicker.size || getConfig().size
@@ -552,7 +553,10 @@ export default defineVxeComponent({
 
     // 弹出面板
     const updateZindex = () => {
-      if (reactData.panelIndex < getLastZIndex()) {
+      const { zIndex } = props
+      if (zIndex) {
+        reactData.panelIndex = zIndex
+      } else if (reactData.panelIndex < getLastZIndex()) {
         reactData.panelIndex = nextZIndex()
       }
     }

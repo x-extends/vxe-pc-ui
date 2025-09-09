@@ -48,6 +48,7 @@ export default defineVxeComponent({
     },
     form: String as PropType<VxeDateRangePickerPropTypes.Form>,
     className: String as PropType<VxeDateRangePickerPropTypes.ClassName>,
+    zIndex: Number as PropType<VxeDateRangePickerPropTypes.ZIndex>,
     size: {
       type: String as PropType<VxeDateRangePickerPropTypes.Size>,
       default: () => getConfig().dateRangePicker.size || getConfig().size
@@ -668,7 +669,10 @@ export default defineVxeComponent({
 
     // 弹出面板
     const updateZindex = () => {
-      if (reactData.panelIndex < getLastZIndex()) {
+      const { zIndex } = props
+      if (zIndex) {
+        reactData.panelIndex = zIndex
+      } else if (reactData.panelIndex < getLastZIndex()) {
         reactData.panelIndex = nextZIndex()
       }
     }

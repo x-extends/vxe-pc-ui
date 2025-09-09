@@ -16,7 +16,11 @@ export default defineVxeComponent({
       default: () => getConfig().imageGroup.showPreview
     },
     imageStyle: Object as PropType<VxeImageGroupPropTypes.ImageStyle>,
-    size: { type: String as PropType<VxeImageGroupPropTypes.Size>, default: () => getConfig().imageGroup.size || getConfig().size },
+    zIndex: Number as PropType<VxeImageGroupPropTypes.ZIndex>,
+    size: {
+      type: String as PropType<VxeImageGroupPropTypes.Size>,
+      default: () => getConfig().imageGroup.size || getConfig().size
+    },
     toolbarConfig: Object as PropType<VxeImageGroupPropTypes.ToolbarConfig>,
     showPrintButton: {
       type: Boolean as PropType<VxeImageGroupPropTypes.ShowPrintButton>,
@@ -87,7 +91,7 @@ export default defineVxeComponent({
 
     const imageGroupPrivateMethods: ImageGroupPrivateMethods = {
       handleClickImgEvent (evnt, params) {
-        const { showPreview, toolbarConfig, showPrintButton, showDownloadButton } = props
+        const { showPreview, toolbarConfig, showPrintButton, showDownloadButton, zIndex } = props
         const { url } = params
         const imgList = computeImgList.value
         if (showPreview && url) {
@@ -97,6 +101,7 @@ export default defineVxeComponent({
             toolbarConfig,
             showPrintButton,
             showDownloadButton,
+            zIndex,
             events: {
               change (eventParams) {
                 $xeImageGroup.dispatchEvent('change', eventParams, eventParams.$event)

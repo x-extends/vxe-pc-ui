@@ -18,7 +18,11 @@ export default defineVxeComponent({
       type: String as PropType<VxePulldownPropTypes.Trigger>,
       default: getConfig().pulldown.trigger
     },
-    size: { type: String as PropType<VxePulldownPropTypes.Size>, default: () => getConfig().size },
+    zIndex: Number as PropType<VxePulldownPropTypes.ZIndex>,
+    size: {
+      type: String as PropType<VxePulldownPropTypes.Size>,
+      default: () => getConfig().pulldown.size || getConfig().size
+    },
     options: Array as PropType<VxePulldownPropTypes.Options>,
     className: {
       type: [String, Function] as PropType<VxePulldownPropTypes.ClassName>,
@@ -103,7 +107,10 @@ export default defineVxeComponent({
     let pulldownMethods = {} as PulldownMethods
 
     const updateZindex = () => {
-      if (reactData.panelIndex < getLastZIndex()) {
+      const { zIndex } = props
+      if (zIndex) {
+        reactData.panelIndex = zIndex
+      } else if (reactData.panelIndex < getLastZIndex()) {
         reactData.panelIndex = nextZIndex()
       }
     }

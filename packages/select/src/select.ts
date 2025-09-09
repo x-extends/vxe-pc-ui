@@ -82,6 +82,7 @@ export default defineVxeComponent({
       type: [String, Number] as PropType<VxeSelectPropTypes.Max>,
       default: null
     },
+    zIndex: Number as PropType<VxeSelectPropTypes.ZIndex>,
     size: {
       type: String as PropType<VxeSelectPropTypes.Size>,
       default: () => getConfig().select.size || getConfig().size
@@ -439,7 +440,10 @@ export default defineVxeComponent({
     }
 
     const updateZIndex = () => {
-      if (reactData.panelIndex < getLastZIndex()) {
+      const { zIndex } = props
+      if (zIndex) {
+        reactData.panelIndex = zIndex
+      } else if (reactData.panelIndex < getLastZIndex()) {
         reactData.panelIndex = nextZIndex()
       }
     }

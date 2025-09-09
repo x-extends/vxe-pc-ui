@@ -27,6 +27,7 @@ export interface VxeImageGroupPrivateRef extends ImageGroupPrivateRef { }
 export namespace VxeImageGroupPropTypes {
   export type Size = VxeComponentSizeType
   export type ShowPreview = boolean
+  export type ZIndex = number
   export type UrlList = string | string[] | {
     url?: string
     alt?: string | number
@@ -44,6 +45,7 @@ export namespace VxeImageGroupPropTypes {
 export type VxeImageGroupProps = {
   size?: VxeImageGroupPropTypes.Size
   showPreview?: VxeImageGroupPropTypes.ShowPreview
+  zIndex?: VxeImageGroupPropTypes.ZIndex
   urlList?: VxeImageGroupPropTypes.UrlList
   imageStyle?: VxeImageGroupPropTypes.ImageStyle
   toolbarConfig?: VxeImageGroupPropTypes.ToolbarConfig

@@ -52,6 +52,7 @@ export default defineVxeComponent({
     placement: String as PropType<VxeTreeSelectPropTypes.Placement>,
     options: Array as PropType<VxeTreeSelectPropTypes.Options>,
     optionProps: Object as PropType<VxeTreeSelectPropTypes.OptionProps>,
+    zIndex: Number as PropType<VxeTreeSelectPropTypes.ZIndex>,
     size: {
       type: String as PropType<VxeTreeSelectPropTypes.Size>,
       default: () => getConfig().treeSelect.size || getConfig().size
@@ -356,7 +357,10 @@ export default defineVxeComponent({
     }
 
     const updateZindex = () => {
-      if (reactData.panelIndex < getLastZIndex()) {
+      const { zIndex } = props
+      if (zIndex) {
+        reactData.panelIndex = zIndex
+      } else if (reactData.panelIndex < getLastZIndex()) {
         reactData.panelIndex = nextZIndex()
       }
     }

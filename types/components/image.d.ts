@@ -39,6 +39,7 @@ export namespace VxeImagePropTypes {
   export type ShowPreview = boolean
   export type ShowPrintButton = boolean
   export type ShowDownloadButton = boolean
+  export type ZIndex = number
   export type Size = VxeComponentSizeType
   export type GetThumbnailUrlMethod = ((params: {
     $image: VxeImageConstructor
@@ -59,6 +60,7 @@ export interface VxeImageProps {
   showPreview?: VxeImagePropTypes.ShowPreview
   showPrintButton?: VxeImagePropTypes.ShowPrintButton
   showDownloadButton?: VxeImagePropTypes.ShowDownloadButton
+  zIndex?: VxeImagePropTypes.ZIndex
   size?: VxeImagePropTypes.Size
   getThumbnailUrlMethod?: VxeImagePropTypes.GetThumbnailUrlMethod
 }

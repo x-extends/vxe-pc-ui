@@ -26,6 +26,7 @@ export namespace VxePulldownPropTypes {
   export type ModelValue = boolean
   export type Size = VxeComponentSizeType
   export type Disabled = boolean
+  export type ZIndex = number
   export type Placement = '' | 'top' | 'bottom'
   export type Trigger = '' | 'manual' | 'click'
   export interface Option {
@@ -48,6 +49,7 @@ export interface VxePulldownProps {
    * 是否禁用
    */
   disabled?: VxePulldownPropTypes.Disabled
+  zIndex?: VxePulldownPropTypes.ZIndex
   options?: VxePulldownPropTypes.Options
   className?: VxePulldownPropTypes.ClassName
   popupClassName?: VxePulldownPropTypes.PopupClassName

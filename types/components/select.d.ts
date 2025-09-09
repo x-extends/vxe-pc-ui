@@ -34,6 +34,7 @@ export namespace VxeSelectPropTypes {
     selectMode?: 'first' | 'last'
   }
   export type Clearable = boolean
+  export type ZIndex = number
   export type Placeholder = string
   export type Readonly = boolean
   export type Loading = boolean
@@ -134,6 +135,7 @@ export interface VxeSelectProps {
   modelValue?: VxeSelectPropTypes.ModelValue
   defaultConfig?: VxeSelectPropTypes.DefaultConfig
   clearable?: VxeSelectPropTypes.Clearable
+  zIndex?: VxeSelectPropTypes.ZIndex
   placeholder?: VxeSelectPropTypes.Placeholder
   readonly?: VxeSelectPropTypes.Readonly
   loading?: VxeSelectPropTypes.Loading

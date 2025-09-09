@@ -28,6 +28,7 @@ const VxeButtonComponent = defineVxeComponent({
       type: String as PropType<VxeButtonPropTypes.Size>,
       default: () => getConfig().button.size || getConfig().size
     },
+    zIndex: Number as PropType<VxeButtonPropTypes.ZIndex>,
     /**
      * 用来标识这一项
      */
@@ -263,7 +264,10 @@ const VxeButtonComponent = defineVxeComponent({
     })
 
     const updateZindex = () => {
-      if (reactData.panelIndex < getLastZIndex()) {
+      const { zIndex } = props
+      if (zIndex) {
+        reactData.panelIndex = zIndex
+      } else if (reactData.panelIndex < getLastZIndex()) {
         reactData.panelIndex = nextZIndex()
       }
     }
