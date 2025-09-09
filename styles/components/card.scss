@@ -10,13 +10,6 @@
   &.is--shadow {
     box-shadow: var(--vxe-ui-base-popup-box-shadow);
   }
-  &.is--padding {
-    .vxe-card--body-content,
-    .vxe-card--body-left,
-    .vxe-card--body-right {
-      padding: var(--vxe-ui-card-padding);
-    }
-  }
   &.is--border {
     border: 1px solid var(--vxe-ui-input-border-color);
     .vxe-card--header {
@@ -34,10 +27,6 @@
 }
 .vxe-card--header {
   flex-shrink: 0;
-}
-.vxe-card--header,
-.vxe-card--footer {
-  padding: var(--vxe-ui-card-padding);
 }
 .vxe-card--body {
   overflow: hidden;
@@ -64,5 +53,70 @@
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
+  }
+}
+
+.vxe-card {
+  font-size: var(--vxe-ui-font-size-default);
+  & > .vxe-card--header,
+  & > .vxe-card--footer {
+    padding: var(--vxe-ui-card-padding-default);
+  }
+  &.is--padding {
+    & > .vxe-card--body {
+      .vxe-card--body-content,
+      .vxe-card--body-left,
+      .vxe-card--body-right {
+        padding: var(--vxe-ui-card-padding-default);
+      }
+    }
+  }
+  &.size--medium {
+    font-size: var(--vxe-ui-font-size-medium);
+    & > .vxe-card--header,
+    & > .vxe-card--footer {
+      padding: var(--vxe-ui-card-padding-medium);
+    }
+    &.is--padding {
+      & > .vxe-card--body {
+        .vxe-card--body-content,
+        .vxe-card--body-left,
+        .vxe-card--body-right {
+          padding: var(--vxe-ui-card-padding-medium);
+        }
+      }
+    }
+  }
+  &.size--small {
+    font-size: var(--vxe-ui-font-size-small);
+    & > .vxe-card--header,
+    & > .vxe-card--footer {
+      padding: var(--vxe-ui-card-padding-small);
+    }
+    &.is--padding {
+      & > .vxe-card--body {
+        .vxe-card--body-content,
+        .vxe-card--body-left,
+        .vxe-card--body-right {
+          padding: var(--vxe-ui-card-padding-small);
+        }
+      }
+    }
+  }
+  &.size--mini {
+    font-size: var(--vxe-ui-font-size-mini);
+    & > .vxe-card--header,
+    & > .vxe-card--footer {
+      padding: var(--vxe-ui-card-padding-mini);
+    }
+    &.is--padding {
+      & > .vxe-card--body {
+        .vxe-card--body-content,
+        .vxe-card--body-left,
+        .vxe-card--body-right {
+          padding: var(--vxe-ui-card-padding-mini);
+        }
+      }
+    }
   }
 }

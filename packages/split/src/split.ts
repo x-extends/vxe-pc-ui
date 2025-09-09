@@ -37,7 +37,11 @@ export default /* define-vxe-component start */ defineVxeComponent({
     itemConfig: Object as PropType<VxeSplitPropTypes.ItemConfig>,
     barConfig: Object as PropType<VxeSplitPropTypes.BarConfig>,
     resizeConfig: Object as PropType<VxeSplitPropTypes.ResizeConfig>,
-    actionConfig: Object as PropType<VxeSplitPropTypes.ActionConfig>
+    actionConfig: Object as PropType<VxeSplitPropTypes.ActionConfig>,
+    size: {
+      type: String as PropType<VxeSplitPropTypes.Size>,
+      default: () => getConfig().split.size || getConfig().size
+    }
   },
   data () {
     const xID = XEUtils.uniqueId()
@@ -779,6 +783,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
 
       const { border, padding, resize, vertical } = props
       const { itemList } = reactData
+      const vSize = $xeSplit.computeSize
       const resizeOpts = $xeSplit.computeResizeOpts
       const { immediate } = resizeOpts
       const visibleItems = $xeSplit.computeVisibleItems
@@ -822,6 +827,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
               itemid: id
             },
             class: ['vxe-split-pane', vertical ? 'is--vertical' : 'is--horizontal', immediate ? 'is-resize--immediate' : 'is-resize--lazy', {
+              [`size--${vSize}`]: vSize,
               'is--resize': resize,
               'is--padding': padding,
               'is--border': border,
@@ -860,6 +866,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const slots = $xeSplit.$scopedSlots
 
       const { vertical, width, height } = props
+      const vSize = $xeSplit.computeSize
       const resizeOpts = $xeSplit.computeResizeOpts
       const { immediate, showTip } = resizeOpts
       const defaultSlot = slots.default
@@ -872,7 +879,9 @@ export default /* define-vxe-component start */ defineVxeComponent({
       }
       return h('div', {
         ref: 'refElem',
-        class: ['vxe-split', vertical ? 'is--vertical' : 'is--horizontal', immediate ? 'is-resize--immediate' : 'is-resize--lazy'],
+        class: ['vxe-split', vertical ? 'is--vertical' : 'is--horizontal', immediate ? 'is-resize--immediate' : 'is-resize--lazy', {
+          [`size--${vSize}`]: vSize
+        }],
         style: stys
       }, [
         h('div', {

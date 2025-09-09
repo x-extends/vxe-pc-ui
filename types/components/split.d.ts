@@ -1,4 +1,4 @@
-import { DefineVxeComponentApp, DefineVxeComponentOptions, DefineVxeComponentInstance, VxeComponentEventParams, ValueOf } from '@vxe-ui/core'
+import { DefineVxeComponentApp, DefineVxeComponentOptions, DefineVxeComponentInstance, VxeComponentEventParams, ValueOf, VxeComponentSizeType } from '@vxe-ui/core'
 import { VxeSplitPaneProps, VxeSplitPanePropTypes } from './split-pane'
 
 /* eslint-disable @typescript-eslint/no-empty-interface,no-use-before-define,@typescript-eslint/ban-types */
@@ -17,6 +17,7 @@ export interface SplitPrivateRef {
 export interface VxeSplitPrivateRef extends SplitPrivateRef { }
 
 export namespace VxeSplitPropTypes {
+  export type Size = VxeComponentSizeType
   export type Height = string | number
   export type Width = string | number
   export type Padding = boolean
@@ -78,6 +79,7 @@ export namespace VxeSplitPropTypes {
 }
 
 export type VxeSplitProps = {
+  size?: VxeSplitPropTypes.Size
   /**
    * 高度
    */

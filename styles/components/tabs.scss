@@ -590,7 +590,6 @@ $scrollbarOffsetSize: 20px;
   }
   &.pos--top,
   &.pos--bottom {
-    height: var(--vxe-ui-tabs-header-height-default);
     .vxe-tabs-header--item-wrapper {
       flex-direction: row;
       width: 100%;
@@ -684,21 +683,6 @@ $scrollbarOffsetSize: 20px;
   }
 }
 
-.vxe-tabs {
-  .vxe-tabs-header--item-inner {
-    height: var(--vxe-ui-tabs-header-height-default);
-  }
-  .vxe-tabs-header--active-line {
-    &.type--card {
-      height: var(--vxe-ui-tabs-header-height-default);
-    }
-    &.type--border-card {
-      height: calc(var(--vxe-ui-tabs-header-height-default) + 1px);
-      line-height: calc(var(--vxe-ui-tabs-header-height-default) + 1px);
-    }
-  }
-}
-
 .vxe-tabs--default,
 .vxe-tabs--card,
 .vxe-tabs--border-card,
@@ -712,9 +696,44 @@ $scrollbarOffsetSize: 20px;
     border-bottom: 2px solid transparent;
   }
 }
-.vxe-tabs--card,
-.vxe-tabs--round-card {
+
+@mixin getTabsSizeStyle ($fontSize, $headHeight) {
+  font-size: $fontSize;
   .vxe-tabs-header--item-inner {
-    height: calc(var(--vxe-ui-tabs-header-height-default) - 1px);
+    height: $headHeight;
+  }
+  .vxe-tabs-header--active-line {
+    &.type--card {
+      height: $headHeight;
+    }
+    &.type--border-card {
+      height: calc($headHeight + 1px);
+      line-height: calc($headHeight + 1px);
+    }
+  }
+  .vxe-tabs-header--wrapper {
+    &.pos--top,
+    &.pos--bottom {
+      height: $headHeight;
+    }
+  }
+  .vxe-tabs--card,
+  .vxe-tabs--round-card {
+    .vxe-tabs-header--item-inner {
+      height: calc($headHeight - 1px);
+    }
+  }
+}
+
+.vxe-tabs {
+  @include getTabsSizeStyle(var(--vxe-ui-font-size-default), var(--vxe-ui-tabs-header-height-default));
+  &.size--medium {
+    @include getTabsSizeStyle(var(--vxe-ui-font-size-medium), var(--vxe-ui-tabs-header-height-medium));
+  }
+  &.size--small {
+    @include getTabsSizeStyle(var(--vxe-ui-font-size-small), var(--vxe-ui-tabs-header-height-small));
+  }
+  &.size--mini {
+    @include getTabsSizeStyle(var(--vxe-ui-font-size-mini), var(--vxe-ui-tabs-header-height-mini));
   }
 }

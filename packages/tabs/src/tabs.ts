@@ -1,7 +1,7 @@
 import { PropType, CreateElement, VNode } from 'vue'
 import { defineVxeComponent } from '../../ui/src/comp'
 import XEUtils from 'xe-utils'
-import { createEvent, getConfig, getIcon, globalEvents, permission, renderEmptyElement } from '../../ui'
+import { createEvent, getConfig, getIcon, globalEvents, globalMixins, permission, renderEmptyElement } from '../../ui'
 import { getSlotVNs } from '../../ui/src/vn'
 import { toCssUnit, addClass, removeClass } from '../../ui/src/dom'
 import { isEnableConf } from '../../ui/src/utils'
@@ -14,6 +14,9 @@ const scrollbarOffsetSize = 20
 
 export default /* define-vxe-component start */ defineVxeComponent({
   name: 'VxeTabs',
+  mixins: [
+    globalMixins.sizeMixin
+  ],
   props: {
     value: [String, Number, Boolean] as PropType<VxeTabsPropTypes.ModelValue>,
     options: Array as PropType<VxeTabsPropTypes.Options>,
@@ -43,6 +46,10 @@ export default /* define-vxe-component start */ defineVxeComponent({
     beforeChangeMethod: Function as PropType<VxeTabsPropTypes.BeforeChangeMethod>,
     closeConfig: Object as PropType<VxeTabsPropTypes.CloseConfig>,
     refreshConfig: Object as PropType<VxeTabsPropTypes.RefreshConfig>,
+    size: {
+      type: String as PropType<VxeTabsPropTypes.Size>,
+      default: () => getConfig().tabs.size || getConfig().size
+    },
     // 已废弃
     beforeCloseMethod: Function as PropType<VxeTabsPropTypes.BeforeCloseMethod>
   },
@@ -844,6 +851,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
 
       const { height, padding, showBody } = props
       const { activeName, cacheTabMaps } = reactData
+      const vSize = $xeTabs.computeSize
       const tabType = $xeTabs.computeTabType
       const tabPosition = $xeTabs.computeTabPosition
       const refreshOpts = $xeTabs.computeRefreshOpts
@@ -869,6 +877,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
           : renderEmptyElement($xeTabs),
         h('div', {
           class: ['vxe-tabs-pane--body', `type--${tabType}`, `pos--${tabPosition}`, {
+            [`size--${vSize}`]: vSize,
             'is--padding': padding,
             'is--height': height
           }]
@@ -896,6 +905,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
 
       const { height, padding, trigger } = props
       const { activeName } = reactData
+      const vSize = $xeTabs.computeSize
       const tabOptions = $xeTabs.computeTabOptions
       const tabStaticOptions = $xeTabs.computeTabStaticOptions
       const tabType = $xeTabs.computeTabType
@@ -926,6 +936,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       return h('div', {
         ref: 'refElem',
         class: ['vxe-tabs', `pos--${tabPosition}`, `vxe-tabs--${tabType}`, `trigger--${trigger === 'manual' ? 'trigger' : 'default'}`, {
+          [`size--${vSize}`]: vSize,
           'is--padding': padding,
           'is--height': height
         }],

@@ -33,6 +33,10 @@ export default /* define-vxe-component start */ defineVxeComponent({
     padding: {
       type: Boolean as PropType<VxeCardPropTypes.Padding>,
       default: () => getConfig().card.padding
+    },
+    size: {
+      type: String as PropType<VxeCardPropTypes.Size>,
+      default: () => getConfig().card.size || getConfig().size
     }
   },
   data () {
@@ -87,11 +91,13 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const footerSlot = slots.footer
       const leftSlot = slots.left
       const rightSlot = slots.right
+      const vSize = $xeCard.computeSize
       const cardStyle = $xeCard.computeCardStyle
 
       return h('div', {
         ref: 'refElem',
         class: ['vxe-card', {
+          [`size--${vSize}`]: vSize,
           'is--border': border,
           'is--shadow': shadow,
           'is--padding': padding
