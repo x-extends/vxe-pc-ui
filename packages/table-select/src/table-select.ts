@@ -5,12 +5,12 @@ import { VxeUI, getConfig, getIcon, globalEvents, getI18n, createEvent, useSize,
 import { getEventTargetNode, updatePanelPlacement, toCssUnit } from '../../ui/src/dom'
 import { getOnName } from '../../ui/src/vn'
 import { getLastZIndex, nextZIndex } from '../../ui/src/utils'
-import { errLog } from '../../ui/src/log'
+import { warnLog, errLog } from '../../ui/src/log'
 import VxeInputComponent from '../../input/src/input'
 
 import type { TableSelectReactData, VxeTableSelectEmits, VxeInputConstructor, TableSelectInternalData, VxeTableSelectPropTypes, VxeFormDefines, VxeModalConstructor, VxeModalMethods, VxeDrawerConstructor, VxeDrawerMethods, TableSelectMethods, TableSelectPrivateMethods, ValueOf, TableSelectPrivateRef, VxeTableSelectPrivateComputed, VxeTableSelectConstructor, VxeTableSelectPrivateMethods, VxeFormConstructor, VxeFormPrivateMethods, VxeComponentStyleType } from '../../../types'
 import type { VxeTableConstructor, VxeTablePrivateMethods } from '../../../types/components/table'
-import type { VxeGridInstance, VxeGridEvents } from '../../../types/components/grid'
+import type { VxeGridInstance, VxeGridEvents, VxeGridPropTypes } from '../../../types/components/grid'
 
 export function getRowUniqueId () {
   return XEUtils.uniqueId('row_')
@@ -177,7 +177,28 @@ export default defineVxeComponent({
     })
 
     const computeGridOpts = computed(() => {
-      return Object.assign({}, getConfig().tableSelect.gridConfig, props.gridConfig, { data: undefined, columns: undefined })
+      const opts = Object.assign({}, getConfig().tableSelect.gridConfig, props.gridConfig, {
+        data: undefined,
+        columns: undefined
+      })
+      const { proxyConfig } = opts
+      const ajaxMethods = proxyConfig && proxyConfig.ajax ? proxyConfig.ajax.query : null
+      if (proxyConfig && ajaxMethods) {
+        const resConfigs = proxyConfig.response || proxyConfig.props || {}
+        opts.proxyConfig = XEUtils.merge({}, proxyConfig, {
+          ajax: {
+            query (params: VxeGridPropTypes.ProxyAjaxQueryParams, ...args: any[]) {
+              return Promise.resolve(ajaxMethods(params, ...args)).then(rest => {
+                const listProp = resConfigs.list
+                const tableData = (listProp ? (XEUtils.isFunction(listProp) ? listProp({ data: rest, $table: null as any, $grid: null, $gantt: null }) : XEUtils.get(rest, listProp)) : rest) || []
+                cacheDataMap(tableData || [])
+                return rest
+              })
+            }
+          }
+        })
+      }
+      return opts
     })
 
     const computeSelectLabel = computed(() => {
@@ -311,7 +332,7 @@ export default defineVxeComponent({
       reactData.tableColumns = tableCols
     }
 
-    const cacheDataMap = () => {
+    const cacheDataMap = (dataList?: any[]) => {
       const { options } = props
       const rowKeyField = computeRowKeyField.value
       const valueField = computeValueField.value
@@ -328,7 +349,7 @@ export default defineVxeComponent({
       if (treeConfig) {
         // x
       } else {
-        XEUtils.arrayEach(options || [], (item, index, items) => {
+        XEUtils.arrayEach(dataList || options || [], (item, index, items) => {
           let rowid = getRowid(item)
           if (!rowid) {
             rowid = getRowUniqueId()
@@ -344,7 +365,7 @@ export default defineVxeComponent({
           rowMaps[value] = { item, index, items, parent: null, nodes: [] }
         })
       }
-      reactData.fullOptionList = options || []
+      reactData.fullOptionList = dataList || options || []
       reactData.fullRowMaps = rowMaps
       updateModel(props.modelValue)
     }
@@ -693,6 +714,15 @@ export default defineVxeComponent({
     cacheDataMap()
 
     onMounted(() => {
+      const { gridConfig } = props
+      if (gridConfig && gridConfig.proxyConfig) {
+        if (gridConfig.proxyConfig.autoLoad !== false) {
+          reactData.initialized = true
+        }
+        if (gridConfig.pagerConfig && gridConfig.pagerConfig.enabled !== false) {
+          warnLog('vxe.error.notProp', ['proxy-config & grid-config.pagerConfig'])
+        }
+      }
       globalEvents.on($xeTableSelect, 'mousewheel', handleGlobalMousewheelEvent)
       globalEvents.on($xeTableSelect, 'mousedown', handleGlobalMousedownEvent)
       globalEvents.on($xeTableSelect, 'blur', handleGlobalBlurEvent)
