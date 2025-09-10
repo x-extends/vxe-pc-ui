@@ -5,12 +5,12 @@ import { VxeUI, getConfig, getIcon, globalEvents, getI18n, createEvent, renderEm
 import { getEventTargetNode, updatePanelPlacement, toCssUnit } from '../../ui/src/dom'
 import { getOnName } from '../../ui/src/vn'
 import { getLastZIndex, nextZIndex } from '../../ui/src/utils'
-import { errLog } from '../../ui/src/log'
+import { warnLog, errLog } from '../../ui/src/log'
 import VxeInputComponent from '../../input/src/input'
 
 import type { TableSelectReactData, VxeTableSelectPropTypes, TableSelectInternalData, VxeTableSelectEmits, VxeInputConstructor, VxeFormDefines, ValueOf, VxeComponentStyleType, VxeComponentSizeType, VxeModalConstructor, VxeModalMethods, VxeDrawerConstructor, VxeDrawerMethods, VxeFormConstructor, VxeFormPrivateMethods } from '../../../types'
 import type { VxeTableConstructor, VxeTablePrivateMethods, VxeTablePropTypes } from '../../../types/components/table'
-import type { VxeGridInstance, VxeGridDefines } from '../../../types/components/grid'
+import type { VxeGridInstance, VxeGridDefines, VxeGridPropTypes } from '../../../types/components/grid'
 
 export function getRowUniqueId () {
   return XEUtils.uniqueId('row_')
@@ -213,7 +213,28 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const $xeTableSelect = this
       const props = $xeTableSelect
 
-      return Object.assign({}, getConfig().tableSelect.gridConfig, props.gridConfig, { data: undefined, columns: undefined }) as VxeTableSelectPropTypes.GridConfig
+      const opts = Object.assign({}, getConfig().tableSelect.gridConfig, props.gridConfig, {
+        data: undefined,
+        columns: undefined
+      })
+      const { proxyConfig } = opts
+      const ajaxMethods = proxyConfig && proxyConfig.ajax ? proxyConfig.ajax.query : null
+      if (proxyConfig && ajaxMethods) {
+        const resConfigs = proxyConfig.response || proxyConfig.props || {}
+        opts.proxyConfig = XEUtils.merge({}, proxyConfig, {
+          ajax: {
+            query (params: VxeGridPropTypes.ProxyAjaxQueryParams, ...args: any[]) {
+              return Promise.resolve(ajaxMethods(params, ...args)).then(rest => {
+                const listProp = resConfigs.list
+                const tableData = (listProp ? (XEUtils.isFunction(listProp) ? listProp({ data: rest, $table: null as any, $grid: null, $gantt: null }) : XEUtils.get(rest, listProp)) : rest) || []
+                ;($xeTableSelect as any).cacheDataMap(tableData || [])
+                return rest
+              })
+            }
+          }
+        })
+      }
+      return opts
     },
     computeSelectLabel () {
       const $xeTableSelect = this
@@ -336,7 +357,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       }
       reactData.tableColumns = tableCols
     },
-    cacheDataMap () {
+    cacheDataMap (dataList?: any[]) {
       const $xeTableSelect = this
       const props = $xeTableSelect
       const reactData = $xeTableSelect.reactData
@@ -357,7 +378,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       if (treeConfig) {
         // x
       } else {
-        XEUtils.arrayEach(options || [], (item, index, items) => {
+        XEUtils.arrayEach(dataList || options || [], (item, index, items) => {
           let rowid = $xeTableSelect.getRowid(item)
           if (!rowid) {
             rowid = getRowUniqueId()
@@ -373,7 +394,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
           rowMaps[value] = { item, index, items, parent: null, nodes: [] }
         })
       }
-      reactData.fullOptionList = options || []
+      reactData.fullOptionList = dataList || options || []
       reactData.fullRowMaps = rowMaps
       $xeTableSelect.updateModel(props.value)
     },
@@ -797,6 +818,8 @@ export default /* define-vxe-component start */ defineVxeComponent({
   },
   mounted () {
     const $xeTableSelect = this
+    const props = $xeTableSelect
+    const reactData = $xeTableSelect.reactData
 
     const VxeTableGridComponent = VxeUI.getComponent('vxe-grid')
     $xeTableSelect.$nextTick(() => {
@@ -805,6 +828,15 @@ export default /* define-vxe-component start */ defineVxeComponent({
       }
     })
 
+    const { gridConfig } = props
+    if (gridConfig && gridConfig.proxyConfig) {
+      if (gridConfig.proxyConfig.autoLoad !== false) {
+        reactData.initialized = true
+      }
+      if (gridConfig.pagerConfig && gridConfig.pagerConfig.enabled !== false) {
+        warnLog('vxe.error.notProp', ['proxy-config & grid-config.pagerConfig'])
+      }
+    }
     globalEvents.on($xeTableSelect, 'mousewheel', $xeTableSelect.handleGlobalMousewheelEvent)
     globalEvents.on($xeTableSelect, 'mousedown', $xeTableSelect.handleGlobalMousedownEvent)
     globalEvents.on($xeTableSelect, 'blur', $xeTableSelect.handleGlobalBlurEvent)
