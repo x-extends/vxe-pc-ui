@@ -1344,7 +1344,7 @@ export namespace VxeTablePropTypes {
   /**
    * 提示信息配置项
    */
-  export interface TooltipConfig<D = VxeTablePropTypes.Row> {
+ export interface TooltipConfig<D = VxeTablePropTypes.Row> {
     showAll?: boolean
     theme?: VxeTooltipPropTypes.Theme
     enterable?: VxeTooltipPropTypes.Enterable
@@ -1367,12 +1367,40 @@ export namespace VxeTablePropTypes {
       columnIndex: number
       $columnIndex: number
       _columnIndex: number
-      type: 'header' | 'body' | 'footer' | '' | null
+      type: 'body'
       cell: HTMLElement
       $event: any
     }): string | null | void
   }
-  export interface TooltipOpts<D = any> extends TooltipConfig<D> { }
+  export interface HeaderTooltipConfig<D = VxeTablePropTypes.Row> extends Omit<TooltipConfig<D>, 'contentMethod'> {
+    contentMethod?(params: {
+      $table: VxeTableConstructor<D>
+      $rowIndex: number
+      column: VxeTableDefines.ColumnInfo<D>
+      columnIndex: number
+      $columnIndex: number
+      _columnIndex: number
+      type: 'header'
+      cell: HTMLElement
+      $event: any
+    }): string | null | void
+  }
+  export interface FooterTooltipConfig<D = VxeTablePropTypes.Row> extends Omit<TooltipConfig<D>, 'contentMethod'> {
+    contentMethod?(params: {
+      $table: VxeTableConstructor<D>
+      items: any[]
+      row: D
+      rowIndex: number
+      $rowIndex: number
+      column: VxeTableDefines.ColumnInfo<D>
+      columnIndex: number
+      $columnIndex: number
+      _columnIndex: number
+      type: 'footer'
+      cell: HTMLElement
+      $event: any
+    }): string | null | void
+  }
 
   /**
    * 展开行配置项
@@ -3245,9 +3273,17 @@ export interface VxeTableProps<D = any> {
    */
   checkboxConfig?: VxeTablePropTypes.CheckboxConfig<D>
   /**
+   * 表头工具提示配置项
+   */
+  headerTooltipConfig?: VxeTablePropTypes.HeaderTooltipConfig<D>
+  /**
    * 工具提示配置项
    */
   tooltipConfig?: VxeTablePropTypes.TooltipConfig<D>
+  /**
+   * 表尾工具提示配置项
+   */
+  footerTooltipConfig?: VxeTablePropTypes.FooterTooltipConfig<D>
   /**
    * 导出配置项
    */
@@ -3440,7 +3476,9 @@ export interface TablePrivateComputed<D = any> {
   computeSeqOpts: VxeTablePropTypes.SeqOpts<D>
   computeRadioOpts: VxeTablePropTypes.RadioOpts<D>
   computeCheckboxOpts: VxeTablePropTypes.CheckboxOpts<D>
-  computeTooltipOpts: VxeTablePropTypes.TooltipOpts<D>
+  computeTooltipOpts: VxeTablePropTypes.TooltipConfig<D>
+  computeHeaderTooltipOpts: VxeTablePropTypes.HeaderTooltipConfig<D>
+  computeFooterTooltipOpts: VxeTablePropTypes.FooterTooltipConfig<D>
   computeTableTipConfig: VxeTablePropTypes.TooltipConfig<D> & {
     useHTML?: VxeTooltipPropTypes.UseHTML
     enterable?: VxeTooltipPropTypes.Enterable
@@ -3488,7 +3526,7 @@ export interface TablePrivateComputed<D = any> {
   seqOpts: VxeTablePropTypes.SeqOpts<D>
   radioOpts: VxeTablePropTypes.RadioOpts<D>
   checkboxOpts: VxeTablePropTypes.CheckboxOpts<D>
-  tooltipOpts: VxeTablePropTypes.TooltipOpts<D>
+  tooltipOpts: VxeTablePropTypes.TooltipConfig<D>
   editOpts: VxeTablePropTypes.EditOpts<D>
   sortOpts: VxeTablePropTypes.SortConfig<D>
   filterOpts: VxeTablePropTypes.FilterOpts<D>
