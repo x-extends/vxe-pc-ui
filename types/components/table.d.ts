@@ -1384,12 +1384,40 @@ export namespace VxeTablePropTypes {
       columnIndex: number
       $columnIndex: number
       _columnIndex: number
-      type: 'header' | 'body' | 'footer' | '' | null
+      type: 'body'
       cell: HTMLElement
       $event: any
     }): string | null | void
   }
-  export interface TooltipOpts<D = any> extends TooltipConfig<D> { }
+  export interface HeaderTooltipConfig<D = VxeTablePropTypes.Row> extends Omit<TooltipConfig<D>, 'contentMethod'> {
+    contentMethod?(params: {
+      $table: VxeTableConstructor<D>
+      $rowIndex: number
+      column: VxeTableDefines.ColumnInfo<D>
+      columnIndex: number
+      $columnIndex: number
+      _columnIndex: number
+      type: 'header'
+      cell: HTMLElement
+      $event: any
+    }): string | null | void
+  }
+  export interface FooterTooltipConfig<D = VxeTablePropTypes.Row> extends Omit<TooltipConfig<D>, 'contentMethod'> {
+    contentMethod?(params: {
+      $table: VxeTableConstructor<D>
+      items: any[]
+      row: D
+      rowIndex: number
+      $rowIndex: number
+      column: VxeTableDefines.ColumnInfo<D>
+      columnIndex: number
+      $columnIndex: number
+      _columnIndex: number
+      type: 'footer'
+      cell: HTMLElement
+      $event: any
+    }): string | null | void
+  }
 
   /**
    * 展开行配置项
@@ -3268,9 +3296,17 @@ export interface VxeTableProps<D = any> {
    */
   checkboxConfig?: VxeTablePropTypes.CheckboxConfig<D>
   /**
+   * 表头工具提示配置项
+   */
+  headerTooltipConfig?: VxeTablePropTypes.HeaderTooltipConfig<D>
+  /**
    * 工具提示配置项
    */
   tooltipConfig?: VxeTablePropTypes.TooltipConfig<D>
+  /**
+   * 表尾工具提示配置项
+   */
+  footerTooltipConfig?: VxeTablePropTypes.FooterTooltipConfig<D>
   /**
    * 导出配置项
    */
@@ -3462,7 +3498,9 @@ export interface TablePrivateComputed<D = any> {
   computeSeqOpts: ComputedRef<VxeTablePropTypes.SeqOpts<D>>
   computeRadioOpts: ComputedRef<VxeTablePropTypes.RadioOpts<D>>
   computeCheckboxOpts: ComputedRef<VxeTablePropTypes.CheckboxOpts<D>>
-  computeTooltipOpts: ComputedRef<VxeTablePropTypes.TooltipOpts<D>>
+  computeTooltipOpts: ComputedRef<VxeTablePropTypes.TooltipConfig<D>>
+  computeHeaderTooltipOpts: ComputedRef<VxeTablePropTypes.HeaderTooltipConfig<D>>
+  computeFooterTooltipOpts: ComputedRef<VxeTablePropTypes.FooterTooltipConfig<D>>
   computeEditOpts: ComputedRef<VxeTablePropTypes.EditOpts<D>>
   computeSortOpts: ComputedRef<VxeTablePropTypes.SortConfig<D>>
   computeFilterOpts: ComputedRef<VxeTablePropTypes.FilterOpts<D>>
