@@ -5,6 +5,7 @@
       <vxe-switch v-model="theme" close-value="light" open-value="dark" @change="changeTheme">主题切换</vxe-switch>
       <vxe-radio-group v-model="language" :options="langOptions" @change="changeLanguage"></vxe-radio-group>
       <vxe-radio-group class="switch-size" v-model="componentsSize" :options="sizeOptions" type="button" size="mini"></vxe-radio-group>
+      <vxe-button @click="showLoading">loading</vxe-button>
     </vxe-layout-header>
     <vxe-layout-container>
       <vxe-layout-aside class="page-layout-aside" :collapsed="collapsed">
@@ -122,9 +123,11 @@ export default Vue.extend({
       localStorage.setItem('VXE_THEME', themeName)
     },
     changeLanguage () {
-      debugger
       VxeUI.setLanguage(this.language)
       localStorage.setItem('VXE_LANGUAGE', this.language)
+    },
+    showLoading () {
+      VxeUI.loading.open()
     }
   }
 })

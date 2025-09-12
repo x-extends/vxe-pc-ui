@@ -54,13 +54,13 @@ export const DynamicApp = Vue.extend({
           })))
           : renderEmptyElement(this),
         globalWatermark
-          ? h(VxeUILoadingComponent, {
+          ? h(VxeUIWatermarkComponent, {
             key: 'gw',
             props: globalWatermark
           })
           : renderEmptyElement(this),
         globalLoading
-          ? h(VxeUIWatermarkComponent, {
+          ? h(VxeUILoadingComponent, {
             key: 'gl',
             props: globalLoading
           })
