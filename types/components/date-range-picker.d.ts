@@ -54,6 +54,7 @@ export namespace VxeDateRangePickerPropTypes {
   export type LabelFormat = string
   export type ValueFormat = string
   export type TimeFormat = string
+  export type ValueType = 'auto' | 'string' | 'array' | '' | null
   export type Editable = boolean
   export type FestivalMethod = VxeDatePanelPropTypes.FestivalMethod
   export type DisabledMethod = VxeDatePanelPropTypes.DisabledMethod
@@ -106,6 +107,10 @@ export interface VxeDateRangePickerProps {
   startDay?: VxeDateRangePickerPropTypes.StartDay
   labelFormat?: VxeDateRangePickerPropTypes.LabelFormat
   valueFormat?: VxeDateRangePickerPropTypes.ValueFormat
+  /**
+   * 绑定值类型，支持字符串和数组，默认自动识别
+   */
+  valueType?: VxeDateRangePickerPropTypes.ValueType
   timeFormat?: VxeDateRangePickerPropTypes.TimeFormat
   editable?: VxeDateRangePickerPropTypes.Editable
   festivalMethod?: VxeDateRangePickerPropTypes.FestivalMethod

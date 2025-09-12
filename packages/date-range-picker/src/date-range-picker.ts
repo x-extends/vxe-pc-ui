@@ -72,6 +72,7 @@ export default defineVxeComponent({
     labelFormat: String as PropType<VxeDateRangePickerPropTypes.LabelFormat>,
     valueFormat: String as PropType<VxeDateRangePickerPropTypes.ValueFormat>,
     timeFormat: String as PropType<VxeDateRangePickerPropTypes.TimeFormat>,
+    valueType: String as PropType<VxeDateRangePickerPropTypes.ValueType>,
     editable: {
       type: Boolean as PropType<VxeDateRangePickerPropTypes.Editable>,
       default: true
@@ -333,8 +334,18 @@ export default defineVxeComponent({
     }
 
     const getRangeValue = (sValue: string, eValue: string) => {
-      const { modelValue } = props
-      const isArr = XEUtils.isArray(modelValue)
+      const { modelValue, valueType } = props
+      let isArr = XEUtils.isArray(modelValue)
+      if (valueType) {
+        switch (valueType) {
+          case 'array':
+            isArr = true
+            break
+          case 'string':
+            isArr = false
+            break
+        }
+      }
       if (sValue || eValue) {
         const rest = [sValue || '', eValue || '']
         if (isArr) {
