@@ -29,6 +29,8 @@ export default defineVxeComponent({
     }
   },
   emits: [
+    'start',
+    'end'
   ] as VxeNoticeBarEmits,
   setup (props, context) {
     const { slots, emit } = context
@@ -43,6 +45,7 @@ export default defineVxeComponent({
     const refContentElem = ref<HTMLDivElement>()
 
     const reactData = reactive<NoticeBarReactData>({
+      animationStatus: false,
       animationDuration: 0
     })
 
@@ -97,11 +100,21 @@ export default defineVxeComponent({
       }
     }
 
+    const animationStartEvent = (evnt: AnimationEvent) => {
+      reactData.animationStatus = true
+      dispatchEvent('start', { status: true }, evnt)
+    }
+
+    const animationEndEvent = (evnt: AnimationEvent) => {
+      reactData.animationStatus = false
+      dispatchEvent('end', { status: false }, evnt)
+    }
+
     Object.assign($xeNoticeBar, noticeBarMethods, noticeBarPrivateMethods)
 
     const renderVN = () => {
-      const { vertical, duration, direction } = props
-      const { animationDuration } = reactData
+      const { vertical, duration, direction, loop } = props
+      const { animationDuration, animationStatus } = reactData
       const vSize = computeSize.value
       const noticeText = computeNoticeText.value
       const defaultSlot = slots.default
@@ -111,7 +124,8 @@ export default defineVxeComponent({
       return h('div', {
         ref: refElem,
         class: ['vxe-notice-bar', `is--${vertical ? 'vertical' : 'horizontal'}`, `dir--${direction || 'left'}`, {
-          [`size--${vSize}`]: vSize
+          [`size--${vSize}`]: vSize,
+          'is--loop': loop
         }]
       }, [
         prefixSlot
@@ -127,10 +141,12 @@ export default defineVxeComponent({
             class: 'vxe-notice-bar--inner'
           }, [
             h('div', {
-              class: 'vxe-notice-bar--wrapper',
+              class: ['vxe-notice-bar--wrapper', `is--${animationStatus ? 'progress' : 'end'}`],
               style: {
                 animationDuration: duration ? toCssUnit(duration, 's') : `${animationDuration}s`
-              }
+              },
+              onAnimationstart: animationStartEvent,
+              onAnimationend: animationEndEvent
             }, defaultSlot ? defaultSlot({}) : noticeText)
           ])
         ]),

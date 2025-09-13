@@ -74,7 +74,9 @@ const formRules = ref<VxeFormPropTypes.Rules<FormDataVO>>({
 })
 
 const validConfig = reactive<VxeFormPropTypes.ValidConfig>({
-  theme: 'beautify'
+  theme: 'beautify',
+  showErrorIcon: true,
+  showErrorMessage: false
 })
 
 const sexOptions = ref([

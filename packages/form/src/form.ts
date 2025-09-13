@@ -404,12 +404,14 @@ export default defineVxeComponent({
             const item = handleFieldOrItem($xeForm, field)
             if (item) {
               item.showError = false
+              item.showIconMsg = false
             }
           }
         })
       } else {
         getItems().forEach((item) => {
           item.showError = false
+          item.showIconMsg = false
         })
       }
       return nextTick()
@@ -835,7 +837,11 @@ export default defineVxeComponent({
       triggerItemEvent,
       toggleCollapseEvent,
       triggerTitleTipEvent,
-      handleTitleTipLeaveEvent
+      handleTitleTipLeaveEvent,
+      handleValidIconEvent (evnt, params) {
+        const { item } = params
+        item.showIconMsg = !item.showIconMsg
+      }
     }
 
     Object.assign($xeForm, formMethods, formPrivateMethods)

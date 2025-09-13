@@ -134,6 +134,7 @@ declare module '@vxe-ui/core' {
     FORM_SUFFIX?: string
     FORM_FOLDING?: string
     FORM_UNFOLDING?: string
+    FORM_VALID_ERROR_ICON?: string
 
     // form-design
     FORM_DESIGN_STYLE_SETTING?: string

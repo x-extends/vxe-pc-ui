@@ -65,6 +65,7 @@ export class ItemInfo {
       params: item.params,
       // 渲染属性
       showError: false,
+      showIconMsg: false,
       errRule: null,
       slots: item.slots,
       children: []

@@ -28,17 +28,29 @@
   animation-play-state: running;
 }
 .vxe-notice-bar {
+  &.is--loop {
+    .vxe-notice-bar--wrapper {
+      animation-iteration-count: infinite;
+    }
+  }
   &.is--horizontal {
     &.dir--left {
       .vxe-notice-bar--wrapper {
-        padding-left: 100%;
         animation-name: scrollLeftText;
       }
     }
     &.dir--right {
       .vxe-notice-bar--wrapper {
-        padding-left: 100%;
         animation-name: scrollRightText;
+      }
+    }
+    &.dir--left,
+    &.dir--right {
+      .vxe-notice-bar--wrapper {
+        padding-left: 100%;
+        &.is--end {
+          padding-left: 0;
+        }
       }
     }
     .vxe-notice-bar--wrapper {

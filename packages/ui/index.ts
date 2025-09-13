@@ -137,7 +137,7 @@ setConfig({
     // size: null,
     // colon: false,
     validConfig: {
-      showMessage: true,
+      showErrorMessage: true,
       autoPos: true,
       theme: 'beautify'
     },
@@ -508,6 +508,7 @@ setIcon({
   FORM_SUFFIX: iconPrefix + 'question-circle-fill',
   FORM_FOLDING: iconPrefix + 'arrow-up rotate180',
   FORM_UNFOLDING: iconPrefix + 'arrow-up',
+  FORM_VALID_ERROR_ICON: iconPrefix + 'warning-circle-fill',
 
   // form-design
   FORM_DESIGN_STYLE_SETTING: iconPrefix + 'layout',

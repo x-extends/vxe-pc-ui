@@ -3,7 +3,7 @@ import { defineVxeComponent } from '../../ui/src/comp'
 import { createItem, watchItem, destroyItem, assembleItem, XEFormItemProvide } from './util'
 import { renderer, renderEmptyElement } from '../../ui'
 import { isEnableConf } from '../../ui/src/utils'
-import { renderTitle, renderItemContent, getItemClass, getItemContentClass } from './render'
+import { renderTitle, renderItemContent, renderItemErrorIcon, getItemClass, getItemContentClass } from './render'
 import XEUtils from 'xe-utils'
 
 import type { VxeFormConstructor, VxeFormDefines, VxeFormItemPropTypes, VxeFormPrivateMethods } from '../../../types'
@@ -114,7 +114,7 @@ export default defineVxeComponent({
       const itemContentStyle = compConf ? (compConf.formItemContentStyle || compConf.itemContentStyle) : null
       const params = { data, disabled, readonly, field, property: field, item, $form: $xeForm, $grid: $xeGrid }
       if (visible === false) {
-        return renderEmptyElement($xeFormitem)
+        return renderEmptyElement($xeFormItem)
       }
       return h('div', {
         ref: refElem,
@@ -125,12 +125,13 @@ export default defineVxeComponent({
       }, [
         renderTitle($xeForm, item),
         showContent === false
-          ? renderEmptyElement($xeFormitem)
+          ? renderEmptyElement($xeFormItem)
           : h('div', {
             class: getItemContentClass($xeForm, item),
             style: Object.assign({}, XEUtils.isFunction(itemContentStyle) ? itemContentStyle(params) : itemContentStyle, XEUtils.isFunction(contentStyle) ? contentStyle(params) : contentStyle)
           }, [
-            renderItemContent($xeForm, item)
+            renderItemContent($xeForm, item),
+            renderItemErrorIcon($xeForm, item)
           ])
       ])
     }
@@ -144,7 +145,7 @@ export default defineVxeComponent({
         })
     }
 
-    const $xeFormitem = {
+    const $xeFormItem = {
       xID,
       formItem,
 
@@ -162,10 +163,10 @@ export default defineVxeComponent({
       destroyItem($xeForm, formItem)
     })
 
-    provide('$xeFormItem', $xeFormitem)
+    provide('$xeFormItem', $xeFormItem)
     provide('$xeFormGroup', null)
 
-    return $xeFormitem
+    return $xeFormItem
   },
   render () {
     return this.renderVN()

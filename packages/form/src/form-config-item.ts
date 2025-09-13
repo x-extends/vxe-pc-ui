@@ -1,8 +1,8 @@
-import { h, inject, provide, PropType, createCommentVNode, VNode } from 'vue'
+import { h, inject, provide, PropType, VNode } from 'vue'
 import { defineVxeComponent } from '../../ui/src/comp'
-import { renderer } from '../../ui'
+import { renderer, renderEmptyElement } from '../../ui'
 import { isEnableConf } from '../../ui/src/utils'
-import { renderTitle, getItemClass, getItemContentClass, renderItemContent } from './render'
+import { renderTitle, getItemClass, getItemContentClass, renderItemContent, renderItemErrorIcon } from './render'
 import XEUtils from 'xe-utils'
 
 import type { VxeFormConstructor, VxeFormDefines, VxeFormPrivateMethods } from '../../../types'
@@ -29,7 +29,7 @@ const VxeFormConfigItem = defineVxeComponent({
       const params = { data, disabled, readonly, field, property: field, item, $form: $xeForm, $grid: $xeGrid }
       const hasGroup = children && children.length > 0
       if (visible === false) {
-        return createCommentVNode()
+        return renderEmptyElement($xeForm)
       }
       return h('div', {
         key: item.id,
@@ -39,14 +39,15 @@ const VxeFormConfigItem = defineVxeComponent({
       }, [
         renderTitle($xeForm, item),
         showContent === false
-          ? createCommentVNode()
+          ? renderEmptyElement($xeForm)
           : h('div', {
             class: getItemContentClass($xeForm, item),
             style: Object.assign({}, XEUtils.isFunction(itemContentStyle) ? itemContentStyle(params) : itemContentStyle, XEUtils.isFunction(contentStyle) ? contentStyle(params) : contentStyle)
           }, hasGroup
             ? children.map((childItem) => renderItem($xeForm, childItem))
             : [
-                renderItemContent($xeForm, item)
+                renderItemContent($xeForm, item),
+                renderItemErrorIcon($xeForm, item)
               ])
       ])
     }

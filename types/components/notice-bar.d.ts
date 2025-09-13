@@ -47,6 +47,7 @@ export interface NoticeBarPrivateComputed {
 export interface VxeNoticeBarPrivateComputed extends NoticeBarPrivateComputed { }
 
 export interface NoticeBarReactData {
+  animationStatus: boolean
   animationDuration: number
 }
 
@@ -59,19 +60,35 @@ export interface NoticeBarPrivateMethods { }
 export interface VxeNoticeBarPrivateMethods extends NoticeBarPrivateMethods { }
 
 export type VxeNoticeBarEmits = [
+  'start',
+  'end'
 ]
 
 export namespace VxeNoticeBarDefines {
   export interface NoticeBarEventParams extends VxeComponentEventParams {
     $noticeBar: VxeNoticeBarConstructor
   }
+
+  export interface StartEventParams {
+    status: boolean
+  }
+  export interface EndEventParams extends StartEventParams {}
 }
 
-export type VxeNoticeBarEventProps = {}
+export type VxeNoticeBarEventProps = {
+  onStart?: VxeNoticeBarEvents.Start
+  onEnd?: VxeNoticeBarEvents.End
+}
 
-export interface VxeNoticeBarListeners { }
+export interface VxeNoticeBarListeners {
+  start?: VxeNoticeBarEvents.Start
+  end?: VxeNoticeBarEvents.End
+}
 
-export namespace VxeNoticeBarEvents { }
+export namespace VxeNoticeBarEvents {
+  export type Start = (params: VxeNoticeBarDefines.StartEventParams) => void
+  export type End = (params: VxeNoticeBarDefines.EndEventParams) => void
+}
 
 export namespace VxeNoticeBarSlotTypes {
   export interface DefaultSlotParams {}
