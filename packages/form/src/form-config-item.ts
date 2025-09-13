@@ -3,7 +3,7 @@ import { defineVxeComponent } from '../../ui/src/comp'
 import XEUtils from 'xe-utils'
 import { renderer, globalMixins, renderEmptyElement } from '../../ui'
 import { isEnableConf } from '../../ui/src/utils'
-import { renderTitle, getItemClass, getItemContentClass, renderItemContent } from './render'
+import { renderTitle, getItemClass, getItemContentClass, renderItemContent, renderItemErrorIcon } from './render'
 
 import type { VxeFormConstructor, VxeFormDefines, VxeFormPrivateMethods, VxeComponentSizeType } from '../../../types'
 
@@ -65,7 +65,8 @@ const VxeFormConfigItem = defineVxeComponent({
           }, hasGroup
             ? children.map((childItem) => $xeFormConfigItem.renderItem(h, $xeForm, childItem))
             : [
-                renderItemContent(h, $xeForm, item)
+                renderItemContent(h, $xeForm, item),
+                renderItemErrorIcon(h, $xeForm, item)
               ])
       ])
     },

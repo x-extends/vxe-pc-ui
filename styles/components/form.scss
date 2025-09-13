@@ -169,21 +169,60 @@
   width: 100%;
 }
 
+.vxe-form-item--valid-error-icon-wrapper {
+  visibility: hidden;
+  position: relative;
+  flex-shrink: 0;
+  padding-left: 0.5em;
+  color: var(--vxe-ui-form-validate-error-color);
+  &.is--hide {
+    .vxe-form-item--valid-error-icon-msg-tip {
+      width: 0;
+      padding: 0;
+    }
+  }
+}
+.vxe-form-item--valid-error-icon-btn {
+  position: relative;
+  user-select: none;
+  z-index: 6;
+  cursor: help;
+}
+.vxe-form-item--valid-error-icon-msg-tip {
+  position: absolute;
+  top: 50%;
+  right: 0.8em;
+  display: block;
+  max-width: 24em;
+  padding: 0.4em;
+  overflow: hidden;
+  z-index: 5;
+  transform: translateY(-50%);
+}
+.vxe-form-item--valid-error-icon-msg {
+  border-radius: var(--vxe-ui-base-border-radius);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  box-shadow: 2px 2px 4px -2px rgba(0,0,0,.5);
+}
+.vxe-form-item--valid-error-icon-theme-beautify {
+  padding: 0.2em 0.6em 0.25em 0.6em;
+  color: #fff;
+  background-color: var(--vxe-ui-status-error-color);
+  .vxe-form-item--valid-error-msg {
+    background: transparent;
+  }
+}
+.vxe-form-item--valid-error-icon-theme-normal {
+  padding: 0 0.6em;
+  color: var(--vxe-ui-table-validate-error-color);
+  border: 1px solid var(--vxe-ui-table-validate-error-color);
+  background-color: var(--vxe-ui-table-validate-error-background-color);
+}
+
 .vxe-form--item {
   &.is--padding {
-    &.is--vertical {
-      & > .vxe-form--item-title {
-        padding: 0 0.6em;
-      }
-    }
-    &:not(.is--vertical) {
-      & > .vxe-form--item-title {
-        padding: 0.6em;
-      }
-    }
-    & > .vxe-form--item-content {
-      padding: 0.6em;
-    }
     & > .vxe-form--group-content {
       padding: 0;
     }
@@ -256,9 +295,16 @@
     }
   }
   &.is--error {
+    &.show--err-msg {
+      & > .vxe-form--item-content {
+        padding-top: 0;
+        padding-bottom: 1.3em;
+      }
+    }
     & > .vxe-form--item-content {
-      padding-top: 0;
-      padding-bottom: 1.3em;
+      & > .vxe-form-item--valid-error-icon-wrapper {
+        visibility: visible;
+      }
     }
     .vxe-input,
     .vxe-number-input,
@@ -424,6 +470,48 @@
         max-width: none;
         flex-shrink: unset;
         flex-grow: 1;
+      }
+    }
+  }
+}
+
+
+.vxe-form--item {
+  &.is--padding {
+    & > .vxe-form--item-title {
+      padding: 0 var(--vxe-ui-form-item-padding-default);
+    }
+    & > .vxe-form--item-content {
+      padding: 0 var(--vxe-ui-form-item-padding-default);
+    }
+  }
+  &.size--medium {
+    &.is--padding {
+      & > .vxe-form--item-title {
+        padding: 0 var(--vxe-ui-form-item-padding-medium);
+      }
+      & > .vxe-form--item-content {
+        padding: 0 var(--vxe-ui-form-item-padding-medium);
+      }
+    }
+  }
+  &.size--small {
+    &.is--padding {
+      & > .vxe-form--item-title {
+        padding: 0 var(--vxe-ui-form-item-padding-small);
+      }
+      & > .vxe-form--item-content {
+        padding: 0 var(--vxe-ui-form-item-padding-small);
+      }
+    }
+  }
+  &.size--mini {
+    &.is--padding {
+      & > .vxe-form--item-title {
+        padding: 0 var(--vxe-ui-form-item-padding-mini);
+      }
+      & > .vxe-form--item-content {
+        padding: 0 var(--vxe-ui-form-item-padding-mini);
       }
     }
   }

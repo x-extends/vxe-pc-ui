@@ -61,11 +61,28 @@ export namespace VxeFormPropTypes {
   export type PreventSubmit = boolean
   export type ValidConfig = {
     autoPos?: boolean
-    showMessage?: boolean
+    /**
+     * 当校验不通过时在对应项显示错误提示
+     */
+    showErrorMessage?: boolean
+    /**
+     * 当校验不通过时在对应项显示错误图标
+     */
+    showErrorIcon?: boolean
+    /**
+     * 自定义错误图标
+     */
+    errorIcon?: boolean
     /**
      * 提示消息主题样式
      */
     theme?: 'normal' | 'beautify' | ''
+
+    /**
+     * 已废弃，被 showErrorMessage 替换
+     * @deprecated
+     */
+    showMessage?: boolean
   }
 
   /**
@@ -229,6 +246,9 @@ export interface FormPrivateMethods {
     item: VxeFormDefines.ItemInfo
   }): void
   handleTitleTipLeaveEvent(): void
+  handleValidIconEvent(evnt: Event, params: {
+    item: VxeFormDefines.ItemInfo
+  }): void
 }
 export interface VxeFormPrivateMethods extends FormPrivateMethods { }
 
@@ -279,6 +299,7 @@ export namespace VxeFormDefines {
     formatter: VxeFormItemPropTypes.Formatter
     // 渲染属性
     showError: boolean
+    showIconMsg: boolean
     errRule: any
     slots: VxeFormItemPropTypes.Slots
     children: ItemInfo[]

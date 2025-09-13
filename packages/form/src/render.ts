@@ -36,7 +36,7 @@ function renderSuffixIcon (h: CreateElement, titleSuffix: VxeFormItemPropTypes.T
   ])
 }
 
-export const getItemClass = ($xeForm: VxeFormConstructor & VxeFormPrivateMethods, item: VxeFormDefines.ItemInfo, isGroup?: boolean) => {
+export function getItemClass ($xeForm: VxeFormConstructor & VxeFormPrivateMethods, item: VxeFormDefines.ItemInfo, isGroup?: boolean) {
   const formProps = $xeForm
   const formReactData = $xeForm.reactData
   const $xeGrid = $xeForm.$xeGrid
@@ -44,6 +44,9 @@ export const getItemClass = ($xeForm: VxeFormConstructor & VxeFormPrivateMethods
   const { data, rules, readonly, disabled, span: allSpan, titleBackground: allTitleBackground, titleBold: allTitleBold, titleColon: allTitleColon, titleAsterisk: allTitleAsterisk, vertical: allVertical, padding: allPadding } = formProps
   const { collapseAll } = formReactData
   const { folding, field, itemRender, showError, className, vertical, padding, children, showContent } = item
+  const vSize = $xeForm.computeSize
+  const validOpts = $xeForm.computeValidOpts
+  const { showErrorMessage, showMessage, showErrorIcon } = validOpts
   const compConf = isEnableConf(itemRender) ? renderer.get(itemRender.name) : null
   const itemClassName = compConf ? (compConf.formItemClassName || compConf.itemClassName) : ''
   const span = item.span || allSpan
@@ -69,9 +72,11 @@ export const getItemClass = ($xeForm: VxeFormConstructor & VxeFormPrivateMethods
     'vxe-form--item',
     item.id,
     span ? `vxe-form--item-col_${span} is--span` : '',
+    `${(XEUtils.isBoolean(showErrorMessage) ? showErrorMessage : showMessage) ? 'show' : 'hide'}--err-msg`,
     className ? (XEUtils.isFunction(className) ? className(params) : className) : '',
     itemClassName ? (XEUtils.isFunction(itemClassName) ? itemClassName(params) : itemClassName) : '',
     {
+      [`size--${vSize}`]: vSize,
       'is--colon': titleColon,
       'is--tbg': titleBackground,
       'is--bold': titleBold,
@@ -83,12 +88,13 @@ export const getItemClass = ($xeForm: VxeFormConstructor & VxeFormPrivateMethods
       'is--required': isRequired,
       'is--hidden': folding && collapseAll,
       'is--active': isActiveItem($xeForm, item),
+      'err--icon': showErrorIcon,
       'is--error': showError
     }
   ]
 }
 
-export const getItemContentClass = ($xeForm: VxeFormConstructor & VxeFormPrivateMethods, item: VxeFormDefines.ItemInfo, isGroup?: boolean) => {
+export function getItemContentClass ($xeForm: VxeFormConstructor & VxeFormPrivateMethods, item: VxeFormDefines.ItemInfo, isGroup?: boolean) {
   const formProps = $xeForm
   const $xeGrid = $xeForm.$xeGrid
 
@@ -238,7 +244,45 @@ export function renderTitle (h: CreateElement, $xeForm: VxeFormConstructor & Vxe
     : renderEmptyElement($xeForm)
 }
 
-export const renderItemContent = (h: CreateElement, $xeForm: VxeFormConstructor & VxeFormPrivateMethods, item: VxeFormDefines.ItemInfo) => {
+export function renderItemErrorIcon (h: CreateElement, $xeForm: VxeFormConstructor & VxeFormPrivateMethods, item: VxeFormDefines.ItemInfo) {
+  const validOpts = $xeForm.computeValidOpts
+  const { showErrorIcon, errorIcon } = validOpts
+  const { errRule, showIconMsg } = item
+  if (!showErrorIcon) {
+    return renderEmptyElement($xeForm)
+  }
+  return h('div', {
+    key: 'emi',
+    class: ['vxe-form-item--valid-error-icon-wrapper', {
+      'is--show': showIconMsg,
+      'is--hide': !showIconMsg
+    }]
+  }, [
+    h('span', {
+      class: 'vxe-form-item--valid-error-icon-btn',
+      on: {
+        click (evnt: MouseEvent) {
+          $xeForm.handleValidIconEvent(evnt, { item })
+        }
+      }
+    }, [
+      h('i', {
+        class: errorIcon || getIcon().FORM_VALID_ERROR_ICON
+      })
+    ]),
+    h('div', {
+      class: 'vxe-form-item--valid-error-icon-msg-tip'
+    }, errRule
+      ? [
+          h('div', {
+            class: `vxe-form-item--valid-error-icon-msg vxe-form-item--valid-error-icon-theme-${validOpts.theme || 'normal'}`
+          }, errRule.content || errRule.message)
+        ]
+      : [])
+  ])
+}
+
+export function renderItemContent (h: CreateElement, $xeForm: VxeFormConstructor & VxeFormPrivateMethods, item: VxeFormDefines.ItemInfo) {
   const formProps = $xeForm
   const formReactData = $xeForm.reactData
   const formInternalData = $xeForm.internalData
@@ -250,8 +294,9 @@ export const renderItemContent = (h: CreateElement, $xeForm: VxeFormConstructor 
   const { slots, field, itemRender, collapseNode, errRule, formatter } = item
   const defaultSlot = slots ? slots.default : null
   const validSlot = slots ? slots.valid : null
-  const validOpts = $xeForm.computeValidOpts
   const collapseOpts = $xeForm.computeCollapseOpts
+  const validOpts = $xeForm.computeValidOpts
+  const { showErrorMessage, showMessage } = validOpts
   const compConf = isEnableConf(itemRender) ? renderer.get(itemRender.name) : null
 
   const itemValue = XEUtils.get(data, field)
@@ -320,7 +365,7 @@ export const renderItemContent = (h: CreateElement, $xeForm: VxeFormConstructor 
       ])
     )
   }
-  if (errRule && validOpts.showMessage) {
+  if (errRule && (XEUtils.isBoolean(showErrorMessage) ? showErrorMessage : showMessage)) {
     const validParams = { ...params, rule: errRule }
     contentVNs.push(
       h('div', {
@@ -346,6 +391,7 @@ export const renderItemContent = (h: CreateElement, $xeForm: VxeFormConstructor 
     )
   }
   return h('div', {
+    key: 'ct',
     class: 'vxe-form--item-inner'
   }, contentVNs)
 }

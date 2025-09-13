@@ -425,12 +425,14 @@ export default /* define-vxe-component start */ defineVxeComponent({
             const item = handleFieldOrItem($xeForm, field)
             if (item) {
               item.showError = false
+              item.showIconMsg = false
             }
           }
         })
       } else {
         $xeForm.getItems().forEach((item) => {
           item.showError = false
+          item.showIconMsg = false
         })
       }
       return $xeForm.$nextTick()
@@ -812,6 +814,12 @@ export default /* define-vxe-component start */ defineVxeComponent({
       } else {
         $xeForm.closeTooltip()
       }
+    },
+    handleValidIconEvent (evnt: Event, params: {
+      item: VxeFormDefines.ItemInfo;
+    }) {
+      const { item } = params
+      item.showIconMsg = !item.showIconMsg
     },
     triggerItemEvent  (evnt: Event, field: string, itemValue?: any) {
       const $xeForm = this

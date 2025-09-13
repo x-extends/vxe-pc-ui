@@ -40,6 +40,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
   data () {
     const xID = XEUtils.uniqueId()
     const reactData: NoticeBarReactData = {
+      animationStatus: false,
       animationDuration: 0
     }
     return {
@@ -91,6 +92,20 @@ export default /* define-vxe-component start */ defineVxeComponent({
         reactData.animationDuration = Math.ceil(contEl.scrollWidth / sRate)
       }
     },
+    animationStartEvent (evnt: AnimationEvent) {
+      const $xeNoticeBar = this
+      const reactData = $xeNoticeBar.reactData
+
+      reactData.animationStatus = true
+      $xeNoticeBar.dispatchEvent('start', { status: true }, evnt)
+    },
+    animationEndEvent (evnt: AnimationEvent) {
+      const $xeNoticeBar = this
+      const reactData = $xeNoticeBar.reactData
+
+      reactData.animationStatus = false
+      $xeNoticeBar.dispatchEvent('end', { status: false }, evnt)
+    },
 
     //
     // Render
@@ -101,8 +116,8 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const slots = $xeNoticeBar.$scopedSlots
       const reactData = $xeNoticeBar.reactData
 
-      const { vertical, duration, direction } = props
-      const { animationDuration } = reactData
+      const { vertical, duration, direction, loop } = props
+      const { animationDuration, animationStatus } = reactData
       const vSize = $xeNoticeBar.computeSize
       const noticeText = $xeNoticeBar.computeNoticeText
       const defaultSlot = slots.default
@@ -111,7 +126,8 @@ export default /* define-vxe-component start */ defineVxeComponent({
       return h('div', {
         ref: 'refElem',
         class: ['vxe-notice-bar', `is--${vertical ? 'vertical' : 'horizontal'}`, `dir--${direction || 'left'}`, {
-          [`size--${vSize}`]: vSize
+          [`size--${vSize}`]: vSize,
+          'is--loop': loop
         }]
       }, [
         prefixSlot
@@ -127,7 +143,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
             class: 'vxe-notice-bar--inner'
           }, [
             h('div', {
-              class: 'vxe-notice-bar--wrapper',
+              class: ['vxe-notice-bar--wrapper', `is--${animationStatus ? 'progress' : 'end'}`],
               style: {
                 animationDuration: duration ? toCssUnit(duration, 's') : `${animationDuration}s`
               }

@@ -4,7 +4,7 @@ import XEUtils from 'xe-utils'
 import { renderer, renderEmptyElement, globalMixins } from '../../ui'
 import { isEnableConf } from '../../ui/src/utils'
 import { createItem, watchItem, destroyItem, assembleItem, XEFormItemProvide } from './util'
-import { renderTitle, renderItemContent, getItemClass, getItemContentClass } from './render'
+import { renderTitle, renderItemContent, renderItemErrorIcon, getItemClass, getItemContentClass } from './render'
 
 import type { VxeFormConstructor, FormItemReactData, VxeFormDefines, VxeFormItemPropTypes, VxeComponentSizeType, VxeFormPrivateMethods } from '../../../types'
 
@@ -152,7 +152,8 @@ export default /* define-vxe-component start */ defineVxeComponent({
             class: getItemContentClass($xeForm, item),
             style: Object.assign({}, XEUtils.isFunction(itemContentStyle) ? itemContentStyle(params) : itemContentStyle, XEUtils.isFunction(contentStyle) ? contentStyle(params) : contentStyle)
           }, [
-            renderItemContent(h, $xeForm, item)
+            renderItemContent(h, $xeForm, item),
+            renderItemErrorIcon(h, $xeForm, item)
           ])
       ])
     },
