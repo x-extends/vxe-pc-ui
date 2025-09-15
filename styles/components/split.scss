@@ -158,7 +158,6 @@
   flex-direction: row;
   align-items: center;
   justify-content: center;
-  font-size: 0.5em;
   border-radius: var(--vxe-ui-base-border-radius);
   color: var(--vxe-ui-layout-background-color);
   background-color: var(--vxe-ui-split-handle-button-background-color);
@@ -171,6 +170,9 @@
   }
   &:active {
     transform: scale(0.9);
+  }
+  & > i {
+    font-size: 0.6em;
   }
 }
 .vxe-split-pane-handle {
