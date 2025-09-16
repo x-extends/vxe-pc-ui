@@ -19,7 +19,10 @@ export default defineVxeComponent({
     options: Array as PropType<VxeTabsPropTypes.Options>,
     width: [String, Number] as PropType<VxeTabsPropTypes.Width>,
     height: [String, Number] as PropType<VxeTabsPropTypes.Height>,
-    destroyOnClose: Boolean as PropType<VxeTabsPropTypes.DestroyOnClose>,
+    destroyOnClose: {
+      type: Boolean as PropType<VxeTabsPropTypes.DestroyOnClose>,
+      default: () => getConfig().tabs.destroyOnClose
+    },
     titleWidth: [String, Number] as PropType<VxeTabsPropTypes.TitleWidth>,
     titleAlign: [String, Number] as PropType<VxeTabsPropTypes.TitleAlign>,
     type: {

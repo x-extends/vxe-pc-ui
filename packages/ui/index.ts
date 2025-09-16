@@ -35,6 +35,7 @@ setConfig({
   breadcrumbItem: {},
   button: {
     trigger: 'hover',
+    // destroyOnClose: false,
     prefixTooltip: {
       enterable: true
     },
@@ -128,6 +129,7 @@ setConfig({
     showTitleOverflow: true,
     showClose: true,
     padding: true,
+    // destroyOnClose: false,
     cancelClosable: true,
     confirmClosable: true
   },
@@ -242,6 +244,7 @@ setConfig({
         left: 32
       }
     },
+    // destroyOnClose: false,
     // remember: false,
     // storage: false,
     storageKey: 'VXE_MODAL_POSITION'
@@ -280,7 +283,7 @@ setConfig({
   },
   printPageBreak: {},
   pulldown: {
-    destroyOnClose: true
+    // destroyOnClose: false
   },
   radio: {
     strict: true
@@ -343,7 +346,9 @@ setConfig({
       }
     }
   },
-  tabs: {},
+  tabs: {
+    // destroyOnClose: false
+  },
   tag: {},
   textEllipsis: {
     underline: true
