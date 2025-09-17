@@ -126,7 +126,7 @@
       </vxe-modal>
 
       <vxe-button content="记忆功能的窗口" @click="demo1.value8 = true"></vxe-button>
-      <vxe-modal v-model="demo1.value8" title="记忆功能的窗口" width="600" height="400" show-zoom resize remember>
+      <vxe-modal id="modalStore1" v-model="demo1.value8" title="记忆功能的窗口" width="80vw" height="80vh" storage show-zoom resize remember>
         <template #default>
           <vxe-form :data="demo1.formData3" :rules="demo1.formRules3" title-align="right" title-width="60">
             <vxe-form-item title="基本信息" span="24" title-align="left" title-width="200px" :title-prefix="{icon: 'fa fa-address-card-o'}"></vxe-form-item>

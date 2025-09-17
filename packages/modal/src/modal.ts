@@ -494,8 +494,8 @@ export default defineVxeComponent({
         posStorageMap[id] = ([
           boxElem.style.left,
           boxElem.style.top,
-          boxElem.style.width,
-          boxElem.style.height
+          boxElem.clientWidth,
+          boxElem.clientHeight
         ] as (string | number)[]).concat(revertLocat
           ? [
               revertLocat.left,

@@ -23,6 +23,7 @@
   display: none;
   position: absolute;
   overflow: auto;
+  background-color: var(--vxe-ui-layout-background-color);
   &.is--collapsed {
     display: block;
     @include baseMixin.createAnimationTransition(all, 0.25s);
