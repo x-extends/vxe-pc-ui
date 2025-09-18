@@ -653,7 +653,7 @@ export default defineVxeComponent({
               break
             }
             default:
-              errLog('vxe.error.notCommands', [code])
+              errLog('vxe.error.notCommands', [`[date-picker] ${code}`])
               break
           }
         }

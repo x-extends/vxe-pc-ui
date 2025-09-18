@@ -1772,10 +1772,10 @@ export default defineVxeComponent({
 
     onMounted(() => {
       if (props.multiple && props.singleMode) {
-        errLog('vxe.error.errConflicts', ['multiple', 'single-mode'])
+        errLog('vxe.error.errConflicts', ['[upload] multiple', 'single-mode'])
       }
       if (props.imageStyle) {
-        warnLog('vxe.error.delProp', ['image-style', 'image-config'])
+        warnLog('vxe.error.delProp', ['[upload] image-style', 'image-config'])
       }
 
       if (props.dragSort) {

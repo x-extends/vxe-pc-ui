@@ -41,6 +41,7 @@ export default defineVxeComponent({
     columns: Array as PropType<VxeTableSelectPropTypes.Columns>,
     options: Array as PropType<VxeTableSelectPropTypes.Options>,
     optionProps: Object as PropType<VxeTableSelectPropTypes.OptionProps>,
+    lazyOptions: Array as PropType<VxeTableSelectPropTypes.LazyOptions>,
     zIndex: Number as PropType<VxeTableSelectPropTypes.ZIndex>,
     size: {
       type: String as PropType<VxeTableSelectPropTypes.Size>,
@@ -178,8 +179,7 @@ export default defineVxeComponent({
 
     const computeGridOpts = computed(() => {
       return Object.assign({}, getConfig().tableSelect.gridConfig, props.gridConfig, {
-        data: undefined,
-        columns: undefined
+        data: undefined
       })
     })
 
@@ -211,12 +211,22 @@ export default defineVxeComponent({
     })
 
     const computeSelectLabel = computed(() => {
-      const { modelValue } = props
+      const { modelValue, lazyOptions } = props
       const { fullRowMaps } = reactData
+      const valueField = computeValueField.value
       const labelField = computeLabelField.value
       return (XEUtils.isArray(modelValue) ? modelValue : [modelValue]).map(val => {
         const cacheItem = fullRowMaps[val]
-        return cacheItem ? cacheItem.item[labelField] : val
+        if (cacheItem) {
+          return cacheItem.item[labelField]
+        }
+        if (lazyOptions) {
+          const lazyItem = lazyOptions.find(item => item[valueField] === val)
+          if (lazyItem) {
+            return lazyItem[labelField]
+          }
+        }
+        return val
       }).join(', ')
     })
 
@@ -310,7 +320,10 @@ export default defineVxeComponent({
       })
     }
 
-    const loadTableColumn = (columns: VxeTableSelectPropTypes.Columns) => {
+    const loadTableColumn = (columns?: VxeTableSelectPropTypes.Columns) => {
+      if (!columns || !columns.length) {
+        return
+      }
       const { multiple } = props
       const tableCols: VxeTableSelectPropTypes.Columns = []
       let hasRadioCol = false
@@ -364,12 +377,12 @@ export default defineVxeComponent({
             rowid = getRowUniqueId()
           }
           if (keyMaps[rowid]) {
-            errLog('vxe.error.repeatKey', [rowKeyField, rowid])
+            errLog('vxe.error.repeatKey', [`[table-select] ${rowKeyField}`, rowid])
           }
           keyMaps[rowid] = true
           const value = item[valueField]
           if (rowMaps[value]) {
-            errLog('vxe.error.repeatKey', [valueField, value])
+            errLog('vxe.error.repeatKey', [`[table-select] ${valueField}`, value])
           }
           rowMaps[value] = { item, index, items, parent: null, nodes: [] }
         })
@@ -681,7 +694,7 @@ export default defineVxeComponent({
                           ref: refGrid,
                           rowConfig: rowOpts,
                           data: options,
-                          columns: tableColumns,
+                          columns: tableColumns.length ? tableColumns : selectGridOpts.columns,
                           height: '100%',
                           autoResize: true,
                           onRadioChange: radioChangeEvent,
@@ -712,14 +725,14 @@ export default defineVxeComponent({
     })
 
     watch(() => props.columns, (val) => {
-      loadTableColumn(val || [])
+      loadTableColumn(val)
     })
 
     watch(() => props.modelValue, (val) => {
       updateModel(val)
     })
 
-    loadTableColumn(props.columns || [])
+    loadTableColumn(props.columns)
     cacheDataMap()
 
     onMounted(() => {
@@ -744,7 +757,7 @@ export default defineVxeComponent({
 
     nextTick(() => {
       if (!VxeTableGridComponent) {
-        errLog('vxe.error.reqComp', ['vxe-grid'])
+        errLog('vxe.error.reqComp', ['[table-select] vxe-grid'])
       }
     })
 

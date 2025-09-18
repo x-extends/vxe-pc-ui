@@ -102,7 +102,7 @@ function getComponentOns (renderOpts: VxeGlobalRendererHandles.RenderFormItemCon
   XEUtils.objectEach(events, (func, key: any) => {
     ons[getOnName(key)] = function (...args: any[]) {
       if (!XEUtils.isFunction(func)) {
-        errLog('vxe.error.errFunc', [func])
+        errLog('vxe.error.errFunc', [`[form] ${func}`])
       }
       func(params, ...args)
     }

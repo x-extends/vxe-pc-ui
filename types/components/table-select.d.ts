@@ -38,6 +38,7 @@ export namespace VxeTableSelectPropTypes {
   export type Placement = 'top' | 'bottom'
   export type Columns<D = any> = VxeGridPropTypes.Columns<D>
   export type Options<D = any> = D[]
+  export type LazyOptions<D = any> = D[]
   export interface OptionProps {
     value?: string
     label?: string
@@ -50,7 +51,7 @@ export namespace VxeTableSelectPropTypes {
     height?: number | string
     className?: string | ((params: { $tableSelect: VxeTableSelectConstructor }) => string)
   }
-  export type GridConfig<D = any> = Omit<VxeGridProps<D>, 'data' | 'columns' | 'height' | 'maxHeight' | 'minHeight' | 'size'>
+  export type GridConfig<D = any> = Omit<VxeGridProps<D>, 'data' | 'height' | 'maxHeight' | 'minHeight' | 'size'>
 }
 
 export interface VxeTableSelectProps<D = any> {
@@ -68,6 +69,7 @@ export interface VxeTableSelectProps<D = any> {
   placement?: VxeTableSelectPropTypes.Placement
   columns?: VxeTableSelectPropTypes.Columns
   options?: VxeTableSelectPropTypes.Options
+  lazyOptions?: VxeTableSelectPropTypes.LazyOptions
   optionProps?: VxeTableSelectPropTypes.OptionProps
   transfer?: VxeTableSelectPropTypes.Transfer
   popupConfig?: VxeTableSelectPropTypes.PopupConfig

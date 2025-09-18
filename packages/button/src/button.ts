@@ -780,7 +780,7 @@ const VxeButtonComponent = defineVxeComponent({
 
     onMounted(() => {
       if (props.type === 'text') {
-        warnLog('vxe.error.delProp', ['type=text', 'mode=text'])
+        warnLog('vxe.error.delProp', ['[button] type=text', 'mode=text'])
       }
 
       globalEvents.on($xeButton, 'mousewheel', handleGlobalMousewheelEvent)

@@ -102,6 +102,7 @@ export default defineVxeComponent({
     // 已废弃
     isHover: Boolean as PropType<VxeTreePropTypes.IsHover>,
     expandAll: Boolean as PropType<VxeTreePropTypes.ExpandAll>,
+    expandNodeKeys: Array as PropType<VxeTreePropTypes.ExpandNodeKeys>,
     showLine: {
       type: Boolean as PropType<VxeTreePropTypes.ShowLine>,
       default: () => getConfig().tree.showLine
@@ -666,7 +667,7 @@ export default defineVxeComponent({
     const triggerSearchEvent = XEUtils.debounce(() => handleData(true), 350, { trailing: true })
 
     const loadData = (list: any[]) => {
-      const { expandAll, transform } = props
+      const { expandAll, expandNodeKeys, transform } = props
       const { initialized, scrollYStore } = internalData
       const keyField = computeKeyField.value
       const parentField = computeParentField.value
@@ -683,7 +684,7 @@ export default defineVxeComponent({
       handleData(true)
       if (sYLoad) {
         if (!(props.height || props.maxHeight)) {
-          errLog('vxe.error.reqProp', ['height | max-height | virtual-y-config.enabled=false'])
+          errLog('vxe.error.reqProp', ['[tree] height | max-height | virtual-y-config.enabled=false'])
         }
       }
       return computeScrollLoad().then(() => {
@@ -692,6 +693,8 @@ export default defineVxeComponent({
             internalData.initialized = true
             if (expandAll) {
               $xeTree.setAllExpandNode(true)
+            } else if (expandNodeKeys && expandNodeKeys.length) {
+              $xeTree.setExpandByNodeId(expandNodeKeys, true)
             }
             handleSetCheckboxByNodeId(props.checkNodeKeys || [], true)
           }
@@ -1558,7 +1561,7 @@ export default defineVxeComponent({
           XEUtils.eachTree(nodeList, (childRow, index, items, path, parent, nodes) => {
             const itemNodeId = getNodeId(childRow)
             nodeMaps[itemNodeId] = {
-              item: node,
+              item: childRow,
               index: -1,
               items,
               parent: parent || parentNodeItem.item,

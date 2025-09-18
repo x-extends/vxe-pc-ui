@@ -655,7 +655,7 @@ export default defineVxeComponent({
        * @deprecated
        */
       jumpPage (currentPage: number) {
-        warnLog('vxe.error.delFunc', ['jumpPage', 'setCurrentPage'])
+        warnLog('vxe.error.delFunc', ['[pager] jumpPage', 'setCurrentPage'])
         return $xePager.setCurrentPage(currentPage)
       }
     }
@@ -731,7 +731,7 @@ export default defineVxeComponent({
         if (renderFn) {
           childNodes.push(renderFn())
         } else {
-          errLog('vxe.error.notProp', [`layouts -> ${name}`])
+          errLog('vxe.error.notProp', [`[pager] layouts -> ${name}`])
         }
       })
       if (slots.right) {

@@ -71,6 +71,7 @@ export default defineVxeComponent({
       default: () => getConfig().select.allowCreate
     },
     placement: String as PropType<VxeSelectPropTypes.Placement>,
+    lazyOptions: Array as PropType<VxeSelectPropTypes.LazyOptions>,
     options: Array as PropType<VxeSelectPropTypes.Options>,
     optionProps: Object as PropType<VxeSelectPropTypes.OptionProps>,
     optionGroups: Array as PropType<VxeSelectPropTypes.OptionGroups>,
@@ -357,18 +358,40 @@ export default defineVxeComponent({
     }
 
     const getRemoteSelectLabel = (value: any) => {
+      const { lazyOptions } = props
       const { remoteValMaps, optFullValMaps } = internalData
+      const valueField = computeValueField.value
       const labelField = computeLabelField.value
       const remoteItem = remoteValMaps[value] || optFullValMaps[value]
       const item = remoteItem ? remoteItem.item : null
-      return XEUtils.toValueString(item ? item[labelField] : value)
+      if (item) {
+        return XEUtils.toValueString(item[labelField])
+      }
+      if (lazyOptions) {
+        const lazyItem = lazyOptions.find(item => item[valueField] === value)
+        if (lazyItem) {
+          return lazyItem[labelField]
+        }
+      }
+      return value
     }
 
     const getSelectLabel = (value: any) => {
+      const { lazyOptions } = props
       const { optFullValMaps } = internalData
+      const valueField = computeValueField.value
       const labelField = computeLabelField.value
       const cacheItem = reactData.reactFlag ? optFullValMaps[value] : null
-      return cacheItem ? cacheItem.item[labelField as 'label'] : XEUtils.toValueString(value)
+      if (cacheItem) {
+        return cacheItem.item[labelField as 'label']
+      }
+      if (lazyOptions) {
+        const lazyItem = lazyOptions.find(item => item[valueField] === value)
+        if (lazyItem) {
+          return lazyItem[labelField]
+        }
+      }
+      return value
     }
 
     const cacheItemMap = (datas: any[]) => {

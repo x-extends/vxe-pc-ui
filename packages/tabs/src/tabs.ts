@@ -580,11 +580,11 @@ export default defineVxeComponent({
         return handlePrevNext(true)
       },
       prevTab () {
-        warnLog('vxe.error.delFunc', ['prevTab', 'prev'])
+        warnLog('vxe.error.delFunc', ['[tabs] prevTab', 'prev'])
         return tabsMethods.prev()
       },
       nextTab () {
-        warnLog('vxe.error.delFunc', ['nextTab', 'next'])
+        warnLog('vxe.error.delFunc', ['[tabs] nextTab', 'next'])
         return tabsMethods.next()
       }
     }

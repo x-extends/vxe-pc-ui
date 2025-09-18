@@ -225,13 +225,13 @@ export default defineVxeComponent({
       }
       reactData.itemList = list.map(item => {
         if (item.showAction) {
-          warnLog('vxe.error.removeProp', ['showAction'])
+          warnLog('vxe.error.removeProp', ['[split] show-action'])
         }
         if (item.slots) {
           XEUtils.each(item.slots, (func) => {
             if (!XEUtils.isFunction(func)) {
               if (!slots[func]) {
-                errLog('vxe.error.notSlot', [func])
+                errLog('vxe.error.notSlot', [`[split] ${func}`])
               }
             }
           })
@@ -877,11 +877,11 @@ export default defineVxeComponent({
       reactData.itemList = val || []
 
       if ((showPrevButton || showNextButton) && reactData.itemList.length > 2) {
-        errLog('vxe.error.modelConflicts', ['action-config.showPrevButton | action-config.showNextButton', '<vxe-split-pane ...> Only supports 2 panel'])
+        errLog('vxe.error.modelConflicts', ['[split] action-config.showPrevButton | action-config.showNextButton', '<vxe-split-pane ...> Only supports 2 panel'])
       }
       reactData.itemList.forEach(item => {
         if (item.showAction) {
-          warnLog('vxe.error.removeProp', ['showAction'])
+          warnLog('vxe.error.removeProp', ['[split] showAction'])
         }
       })
       recalculate()
@@ -904,7 +904,7 @@ export default defineVxeComponent({
 
       const actionOpts = computeActionOpts.value
       if (actionOpts.direction) {
-        errLog('vxe.error.delProp', ['action-config.direction', 'action-config.showPrevButton | action-config.showNextButton'])
+        errLog('vxe.error.delProp', ['[split] action-config.direction', 'action-config.showPrevButton | action-config.showNextButton'])
       }
 
       globalEvents.on($xeSplit, 'resize', handleGlobalResizeEvent)

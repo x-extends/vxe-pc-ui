@@ -50,6 +50,7 @@ export default defineVxeComponent({
     popupClassName: [String, Function] as PropType<VxeTreeSelectPropTypes.PopupClassName>,
     prefixIcon: String as PropType<VxeTreeSelectPropTypes.PrefixIcon>,
     placement: String as PropType<VxeTreeSelectPropTypes.Placement>,
+    lazyOptions: Array as PropType<VxeTreeSelectPropTypes.LazyOptions>,
     options: Array as PropType<VxeTreeSelectPropTypes.Options>,
     optionProps: Object as PropType<VxeTreeSelectPropTypes.OptionProps>,
     zIndex: Number as PropType<VxeTreeSelectPropTypes.ZIndex>,
@@ -257,13 +258,23 @@ export default defineVxeComponent({
     })
 
     const computeSelectLabel = computed(() => {
-      const { modelValue } = props
+      const { modelValue, lazyOptions } = props
       const { fullNodeMaps } = internalData
+      const valueField = computeValueField.value
       const labelField = computeLabelField.value
       const selectVals = XEUtils.eqNull(modelValue) ? [] : (XEUtils.isArray(modelValue) ? modelValue : [modelValue])
       return selectVals.map(val => {
         const cacheItem = fullNodeMaps[val]
-        return cacheItem ? cacheItem.item[labelField] : val
+        if (cacheItem) {
+          return cacheItem.item[labelField]
+        }
+        if (lazyOptions) {
+          const lazyItem = lazyOptions.find(item => item[valueField] === val)
+          if (lazyItem) {
+            return lazyItem[labelField]
+          }
+        }
+        return val
       }).join(', ')
     })
 
@@ -334,12 +345,12 @@ export default defineVxeComponent({
           nodeid = getOptUniqueId()
         }
         if (keyMaps[nodeid]) {
-          errLog('vxe.error.repeatKey', [nodeKeyField, nodeid])
+          errLog('vxe.error.repeatKey', [`[tree-select] ${nodeKeyField}`, nodeid])
         }
         keyMaps[nodeid] = true
         const value = item[valueField]
         if (nodeMaps[value]) {
-          errLog('vxe.error.repeatKey', [valueField, value])
+          errLog('vxe.error.repeatKey', [`[tree-select] ${valueField}`, value])
         }
         nodeMaps[value] = { item, index, items, parent, nodes }
       }
@@ -820,6 +831,7 @@ export default defineVxeComponent({
                         hasChildField: treeOpts.hasChildField || hasChildField,
                         accordion: treeOpts.accordion,
                         expandAll: treeOpts.expandAll,
+                        expandNodeKeys: treeOpts.expandNodeKeys,
                         nodeConfig: treeNodeOpts,
                         lazy: treeOpts.lazy,
                         loadMethod: treeOpts.loadMethod,

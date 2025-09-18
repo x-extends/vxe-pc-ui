@@ -1448,7 +1448,7 @@ export default defineVxeComponent({
       }
       nextTick(() => {
         if (props.storage && !props.id) {
-          errLog('vxe.error.reqProp', ['modal.id'])
+          errLog('vxe.error.reqProp', ['[modal] id'])
         }
         if (props.modelValue) {
           openModal()
