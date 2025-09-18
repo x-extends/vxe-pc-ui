@@ -885,7 +885,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
     const props = $xeButton
 
     if (props.type === 'text') {
-      warnLog('vxe.error.delProp', ['type=text', 'mode=text'])
+      warnLog('vxe.error.delProp', ['[button] type=text', 'mode=text'])
     }
 
     globalEvents.on($xeButton, 'mousewheel', $xeButton.handleGlobalMousewheelEvent)

@@ -9,22 +9,22 @@ export class ItemInfo {
       if (XEUtils.isString(formatter)) {
         const gFormatOpts = formats.get(formatter)
         if (!gFormatOpts || !gFormatOpts.formItemFormatMethod) {
-          errLog('vxe.error.notFormats', [formatter])
+          errLog('vxe.error.notFormats', [`[form] ${formatter}`])
         }
       } else if (XEUtils.isArray(formatter)) {
         const gFormatOpts = formats.get(formatter[0])
         if (!gFormatOpts || !gFormatOpts.formItemFormatMethod) {
-          errLog('vxe.error.notFormats', [formatter[0]])
+          errLog('vxe.error.notFormats', [`[form] ${formatter[0]}`])
         }
       }
     }
 
     if (field && itemRender) {
       if (itemRender.startField && `${itemRender.startField}`.indexOf(field) >= 0) {
-        errLog('vxe.error.modelConflicts', [`field=${field}`, `item-render.startField=${itemRender.startField}`])
+        errLog('vxe.error.modelConflicts', [`[form] field=${field}`, `item-render.startField=${itemRender.startField}`])
       }
       if (itemRender.endField && `${itemRender.endField}`.indexOf(field) >= 0) {
-        errLog('vxe.error.modelConflicts', [`field=${field}`, `item-render.endField=${itemRender.endField}`])
+        errLog('vxe.error.modelConflicts', [`[form] field=${field}`, `item-render.endField=${itemRender.endField}`])
       }
     }
 

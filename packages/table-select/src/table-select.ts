@@ -48,6 +48,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
     columns: Array as PropType<VxeTableSelectPropTypes.Columns>,
     options: Array as PropType<VxeTableSelectPropTypes.Options>,
     optionProps: Object as PropType<VxeTableSelectPropTypes.OptionProps>,
+    lazyOptions: Array as PropType<VxeTableSelectPropTypes.LazyOptions>,
     zIndex: Number as PropType<VxeTableSelectPropTypes.ZIndex>,
     size: {
       type: String as PropType<VxeTableSelectPropTypes.Size>,
@@ -214,8 +215,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const props = $xeTableSelect
 
       return Object.assign({}, getConfig().tableSelect.gridConfig, props.gridConfig, {
-        data: undefined,
-        columns: undefined
+        data: undefined
       })
     },
     computeSelectGridOpts () {
@@ -251,12 +251,22 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const props = $xeTableSelect
       const reactData = ($xeTableSelect as any).reactData as TableSelectReactData
 
-      const { value } = props
+      const { value, lazyOptions } = props
       const { fullRowMaps } = reactData
+      const valueField = $xeTableSelect.computeValueField as string
       const labelField = $xeTableSelect.computeLabelField as string
       return (XEUtils.isArray(value) ? value : [value]).map(val => {
         const cacheItem = fullRowMaps[val]
-        return cacheItem ? cacheItem.item[labelField] : val
+        if (cacheItem) {
+          return cacheItem.item[labelField]
+        }
+        if (lazyOptions) {
+          const lazyItem = lazyOptions.find(item => item[valueField] === val)
+          if (lazyItem) {
+            return lazyItem[labelField]
+          }
+        }
+        return val
       }).join(', ')
     },
     computePopupWrapperStyle () {
@@ -333,11 +343,14 @@ export default /* define-vxe-component start */ defineVxeComponent({
         }
       })
     },
-    loadTableColumn (columns: VxeTableSelectPropTypes.Columns) {
+    loadTableColumn (columns?: VxeTableSelectPropTypes.Columns) {
       const $xeTableSelect = this
       const props = $xeTableSelect
       const reactData = $xeTableSelect.reactData
 
+      if (!columns || !columns.length) {
+        return
+      }
       const { multiple } = props
       const tableCols: VxeTableSelectPropTypes.Columns = []
       let hasRadioCol = false
@@ -394,12 +407,12 @@ export default /* define-vxe-component start */ defineVxeComponent({
             rowid = getRowUniqueId()
           }
           if (keyMaps[rowid]) {
-            errLog('vxe.error.repeatKey', [rowKeyField, rowid])
+            errLog('vxe.error.repeatKey', [`[table-select] ${rowKeyField}`, rowid])
           }
           keyMaps[rowid] = true
           const value = item[valueField]
           if (rowMaps[value]) {
-            errLog('vxe.error.repeatKey', [valueField, value])
+            errLog('vxe.error.repeatKey', [`[table-select] ${valueField}`, value])
           }
           rowMaps[value] = { item, index, items, parent: null, nodes: [] }
         })
@@ -759,7 +772,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
                           ...selectGridOpts,
                           rowConfig: rowOpts,
                           data: options,
-                          columns: tableColumns,
+                          columns: tableColumns.length ? tableColumns : selectGridOpts.columns,
                           height: '100%',
                           autoResize: true
                         },
@@ -798,7 +811,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
     columns (val) {
       const $xeTableSelect = this
 
-      $xeTableSelect.loadTableColumn(val || [])
+      $xeTableSelect.loadTableColumn(val)
     },
     value (val) {
       const $xeTableSelect = this
@@ -823,7 +836,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       }
     })
 
-    $xeTableSelect.loadTableColumn(props.columns || [])
+    $xeTableSelect.loadTableColumn(props.columns)
     $xeTableSelect.cacheDataMap()
   },
   mounted () {
@@ -834,7 +847,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
     const VxeTableGridComponent = VxeUI.getComponent('vxe-grid')
     $xeTableSelect.$nextTick(() => {
       if (!VxeTableGridComponent) {
-        errLog('vxe.error.reqComp', ['vxe-grid'])
+        errLog('vxe.error.reqComp', ['[table-select] vxe-grid'])
       }
     })
 

@@ -260,7 +260,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
     jumpPage (currentPage: number) {
       const $xePager = this
 
-      warnLog('vxe.error.delFunc', ['jumpPage', 'setCurrentPage'])
+      warnLog('vxe.error.delFunc', ['[pager] jumpPage', 'setCurrentPage'])
       return $xePager.setCurrentPage(currentPage)
     },
     getPageCount  (total: number, size: number) {
@@ -864,7 +864,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
         if (renderFn) {
           childNodes.push(renderFn(h))
         } else {
-          errLog('vxe.error.notProp', [`layouts -> ${name}`])
+          errLog('vxe.error.notProp', [`[pager] layouts -> ${name}`])
         }
       })
       if (slots.right) {

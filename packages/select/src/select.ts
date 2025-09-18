@@ -78,6 +78,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       default: () => getConfig().select.allowCreate
     },
     placement: String as PropType<VxeSelectPropTypes.Placement>,
+    lazyOptions: Array as PropType<VxeSelectPropTypes.LazyOptions>,
     options: Array as PropType<VxeSelectPropTypes.Options>,
     optionProps: Object as PropType<VxeSelectPropTypes.OptionProps>,
     optionGroups: Array as PropType<VxeSelectPropTypes.OptionGroups>,
@@ -480,23 +481,47 @@ export default /* define-vxe-component start */ defineVxeComponent({
     },
     getRemoteSelectLabel  (value: any) {
       const $xeSelect = this
+      const props = $xeSelect
       const internalData = $xeSelect.internalData
 
+      const { lazyOptions } = props
       const { remoteValMaps, optFullValMaps } = internalData
+      const valueField = $xeSelect.computeValueField
       const labelField = $xeSelect.computeLabelField
       const remoteItem = remoteValMaps[value] || optFullValMaps[value]
       const item = remoteItem ? remoteItem.item : null
-      return XEUtils.toValueString(item ? item[labelField] : value)
+      if (item) {
+        return XEUtils.toValueString(item[labelField])
+      }
+      if (lazyOptions) {
+        const lazyItem = lazyOptions.find(item => item[valueField] === value)
+        if (lazyItem) {
+          return lazyItem[labelField]
+        }
+      }
+      return value
     },
     getSelectLabel (value: any) {
       const $xeSelect = this
+      const props = $xeSelect
       const reactData = $xeSelect.reactData
       const internalData = $xeSelect.internalData
 
+      const { lazyOptions } = props
       const { optFullValMaps } = internalData
+      const valueField = $xeSelect.computeValueField
       const labelField = $xeSelect.computeLabelField
       const cacheItem = reactData.reactFlag ? optFullValMaps[value] : null
-      return cacheItem ? cacheItem.item[labelField as 'label'] : XEUtils.toValueString(value)
+      if (cacheItem) {
+        return cacheItem.item[labelField as 'label']
+      }
+      if (lazyOptions) {
+        const lazyItem = lazyOptions.find(item => item[valueField] === value)
+        if (lazyItem) {
+          return lazyItem[labelField]
+        }
+      }
+      return value
     },
     getOptkey () {
       const $xeSelect = this

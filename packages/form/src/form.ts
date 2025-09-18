@@ -351,7 +351,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
             XEUtils.each(item.slots, (func) => {
               if (!XEUtils.isFunction(func)) {
                 if (!slots[func]) {
-                  errLog('vxe.error.notSlot', [func])
+                  errLog('vxe.error.notSlot', [`[form] ${func}`])
                 }
               }
             })
@@ -582,10 +582,10 @@ export default /* define-vxe-component start */ defineVxeComponent({
                         if (validatorMethod) {
                           customValid = validatorMethod(validParams)
                         } else {
-                          warnLog('vxe.error.notValidators', [validator])
+                          warnLog('vxe.error.notValidators', [`[form] ${validator}`])
                         }
                       } else {
-                        errLog('vxe.error.notValidators', [validator])
+                        errLog('vxe.error.notValidators', [`[form] ${validator}`])
                       }
                     } else {
                       customValid = validator(validParams)
@@ -1002,7 +1002,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
     }
     $xeForm.$nextTick(() => {
       if (props.customLayout && props.items) {
-        errLog('vxe.error.errConflicts', ['custom-layout', 'items'])
+        errLog('vxe.error.errConflicts', ['[form] custom-layout', 'items'])
       }
     })
     globalEvents.on($xeForm, 'resize', $xeForm.handleGlobalResizeEvent)

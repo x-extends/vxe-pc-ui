@@ -213,13 +213,13 @@ export default /* define-vxe-component start */ defineVxeComponent({
     prevTab () {
       const $xeTabs = this
 
-      warnLog('vxe.error.delFunc', ['prevTab', 'prev'])
+      warnLog('vxe.error.delFunc', ['[tabs] prevTab', 'prev'])
       return $xeTabs.prev()
     },
     nextTab () {
       const $xeTabs = this
 
-      warnLog('vxe.error.delFunc', ['nextTab', 'next'])
+      warnLog('vxe.error.delFunc', ['[tabs] nextTab', 'next'])
       return $xeTabs.next()
     },
     handleFilterTab (item: VxeTabPaneProps | VxeTabPaneDefines.TabConfig) {

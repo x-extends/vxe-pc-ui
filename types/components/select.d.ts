@@ -42,6 +42,7 @@ export namespace VxeSelectPropTypes {
   export type PrefixIcon = string
   export type AllowCreate = boolean
   export type Placement = 'top' | 'bottom' | ''
+  export type LazyOptions = VxeSelectDefines.SelectOptions[]
   export type Options = VxeSelectDefines.SelectOptions[]
   export type OptionProps = {
     value?: string
@@ -143,6 +144,7 @@ export interface VxeSelectProps {
   prefixIcon?: VxeSelectPropTypes.PrefixIcon
   allowCreate?: VxeSelectPropTypes.AllowCreate
   placement?: VxeSelectPropTypes.Placement
+  lazyOptions?: VxeSelectPropTypes.LazyOptions
   options?: VxeSelectPropTypes.Options
   optionProps?: VxeSelectPropTypes.OptionProps
   optionGroups?: VxeSelectPropTypes.OptionGroups

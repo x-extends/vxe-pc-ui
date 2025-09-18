@@ -56,6 +56,7 @@ export namespace VxeTreePropTypes {
   export type ShowLine = boolean
   export type Indent = number
   export type ExpandAll = boolean
+  export type ExpandNodeKeys = string[] | number[]
   export type ShowRadio = boolean
   export type CheckNodeKey = string | number | null
   export interface RadioConfig<D = any> {
@@ -176,7 +177,14 @@ export interface VxeTreeProps<D = any> {
   childrenField?: VxeTreePropTypes.ChildrenField
   hasChildField?: VxeTreePropTypes.HasChildField
   mapChildrenField?: VxeTreePropTypes.MapChildrenField
+  /**
+   * 默认展开所有节点（只会在初始化时被触发一次）
+   */
   expandAll?: VxeTreePropTypes.ExpandAll
+  /**
+   * 默认展开指定节点（只会在初始化时被触发一次）
+   */
+  expandNodeKeys?: VxeTreePropTypes.ExpandNodeKeys
   transform?: VxeTreePropTypes.Transform
   trigger?: VxeTreePropTypes.Trigger
   /**

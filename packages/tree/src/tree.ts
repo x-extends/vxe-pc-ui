@@ -147,6 +147,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
     // 已废弃
     isHover: Boolean as PropType<VxeTreePropTypes.IsHover>,
     expandAll: Boolean as PropType<VxeTreePropTypes.ExpandAll>,
+    expandNodeKeys: Array as PropType<VxeTreePropTypes.ExpandNodeKeys>,
     showLine: {
       type: Boolean as PropType<VxeTreePropTypes.ShowLine>,
       default: () => getConfig().tree.showLine
@@ -806,7 +807,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const props = $xeTree
       const internalData = $xeTree.internalData
 
-      const { expandAll, transform } = props
+      const { expandAll, expandNodeKeys, transform } = props
       const { initialized, scrollYStore } = internalData
       const keyField = $xeTree.computeKeyField
       const parentField = $xeTree.computeParentField
@@ -823,7 +824,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       $xeTree.handleData(true)
       if (sYLoad) {
         if (!(props.height || props.maxHeight)) {
-          errLog('vxe.error.reqProp', ['height | max-height | virtual-y-config.enabled=false'])
+          errLog('vxe.error.reqProp', ['[tree] height | max-height | virtual-y-config.enabled=false'])
         }
       }
       return $xeTree.computeScrollLoad().then(() => {
@@ -832,6 +833,8 @@ export default /* define-vxe-component start */ defineVxeComponent({
             internalData.initialized = true
             if (expandAll) {
               $xeTree.setAllExpandNode(true)
+            } else if (expandNodeKeys && expandNodeKeys.length) {
+              $xeTree.setExpandByNodeId(expandNodeKeys, true)
             }
             $xeTree.handleSetCheckboxByNodeId(props.checkNodeKeys || [], true)
           }
@@ -1811,7 +1814,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
         XEUtils.eachTree(nodeList, (childRow, index, items, path, parent, nodes) => {
           const itemNodeId = $xeTree.getNodeId(childRow)
           nodeMaps[itemNodeId] = {
-            item: node,
+            item: childRow,
             index: -1,
             items,
             parent: parent || parentNodeItem.item,

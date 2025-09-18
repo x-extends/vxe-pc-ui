@@ -926,7 +926,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
               break
             }
             default:
-              errLog('vxe.error.notCommands', [code])
+              errLog('vxe.error.notCommands', [`[date-range-picker] ${code}`])
               break
           }
         }

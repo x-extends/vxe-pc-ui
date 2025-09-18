@@ -7,9 +7,10 @@ import { openPreviewImage } from '../image/src/util'
 export const VxeImagePreview = Object.assign(VxeImagePreviewComponent, {
   install (app: VueConstructor) {
     app.component(VxeImagePreviewComponent.name as string, VxeImagePreviewComponent)
-    VxeUI.previewImage = openPreviewImage
   }
 })
+
+VxeUI.previewImage = openPreviewImage
 
 dynamicApp.use(VxeImagePreview)
 VxeUI.component(VxeImagePreviewComponent)

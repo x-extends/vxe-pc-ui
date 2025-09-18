@@ -48,6 +48,7 @@ export namespace VxeTreeSelectPropTypes {
 
     [key: string]: any
   }
+  export type LazyOptions<D = Option> = D[]
   export type Options<D = Option> = D[]
   export interface OptionProps {
     value?: string
@@ -132,6 +133,7 @@ export interface VxeTreeSelectProps<D = any> {
   placement?: VxeTreeSelectPropTypes.Placement
   filterable?: VxeTreeSelectPropTypes.Filterable
   filterConfig?: VxeTreeSelectPropTypes.FilterConfig
+  lazyOptions?: VxeTreeSelectPropTypes.LazyOptions<D>
   options?: VxeTreeSelectPropTypes.Options<D>
   optionProps?: VxeTreeSelectPropTypes.OptionProps
   remote?: VxeTreeSelectPropTypes.Remote

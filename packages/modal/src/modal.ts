@@ -1621,7 +1621,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
     }
     $xeModal.$nextTick(() => {
       if (props.storage && !props.id) {
-        errLog('vxe.error.reqProp', ['modal.id'])
+        errLog('vxe.error.reqProp', ['[modal] id'])
       }
       if (props.value) {
         $xeModal.openModal()

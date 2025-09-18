@@ -12,6 +12,7 @@ export const VxeUpload = Object.assign({}, VxeUploadComponent, {
 
 dynamicApp.use(VxeUpload)
 VxeUI.component(VxeUploadComponent)
+
 VxeUI.saveFile = saveLocalFile
 VxeUI.readFile = readLocalFile
 
