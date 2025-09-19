@@ -119,7 +119,6 @@
   z-index: 7;
   & > i {
     display: inline-flex;
-    background-color: var(--vxe-ui-layout-background-color);
     @include baseMixin.createAnimationTransition(all, 0.2s);
   }
 }
