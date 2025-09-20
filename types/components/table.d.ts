@@ -1234,6 +1234,7 @@ export namespace VxeTablePropTypes {
       $table: VxeTableConstructor<D>
       column: VxeTableDefines.ColumnInfo<D>
     }): boolean
+    className?: string
     transfer?: boolean
     iconNone?: string
     iconMatch?: string
@@ -1620,6 +1621,8 @@ export namespace VxeTablePropTypes {
      * 菜单面板的 className
      */
     className?: string
+    transfer?: boolean
+    destroyOnClose?: boolean
     /**
      * 该函数的返回值用来决定是否允许显示右键菜单（对于需要对菜单进行权限控制时可能会用到）
      */
@@ -3999,6 +4002,7 @@ export interface TableInternalData<D = any> {
   tFooterHeight: number
 
   teleportToWrapperElem: HTMLElement | null
+  popupToWrapperElem: HTMLElement | null
 
   // 内部属性
   _lastResizeTime?: any

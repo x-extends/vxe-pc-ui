@@ -31,6 +31,7 @@ export interface GridPrivateRef<D = any> {
   refForm: Ref<VxeFormInstance | undefined>
   refToolbar: Ref<VxeToolbarInstance | undefined>
   refPager: Ref<VxePagerInstance | undefined>
+  refPopupContainerElem: Ref<HTMLDivElement | undefined>
 }
 export interface VxeGridPrivateRef<D = any> extends GridPrivateRef<D> { }
 
