@@ -23,7 +23,9 @@ export type VxeGridConstructor<D = any> = VxeGridInstance<D>
 
 export interface GridPrivateRef<D = any> {
 }
-export interface VxeGridPrivateRef<D = any> extends GridPrivateRef<D> { }
+export interface VxeGridPrivateRef<D = any> extends GridPrivateRef<D> {
+  refPopupContainerElem: HTMLDivElement | undefined
+}
 
 export namespace VxeGridPropTypes {
   export type Size = VxeComponentSizeType
