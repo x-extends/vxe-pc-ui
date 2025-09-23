@@ -2294,7 +2294,7 @@ export namespace VxeTablePropTypes {
     /**
      * 自定义可编辑列的状态图标
      */
-    icon?: string
+    icon?: string | ((params: {}) => VxeComponentSlotType[] | VxeComponentSlotType)
     /**
      * 是否显示列头编辑图标
      */
@@ -3639,7 +3639,7 @@ export interface TableReactData<D = any> {
     column: any
     multiple: boolean
     visible: boolean
-    maxHeight: number | null
+    maxHeight: number | string | null
     [key: string]: any
   }
   // 存放列相关的信息
@@ -3661,8 +3661,8 @@ export interface TableReactData<D = any> {
     selected: any
     visible: boolean
     showChild: boolean
-    selectChild: any
-    list: any[][]
+    selectChild: VxeTableDefines.MenuFirstOption | VxeTableDefines.MenuChildOption | null
+    list: VxeTableDefines.MenuFirstOption[][]
     style: any
     [key: string]: any
   }
@@ -6324,25 +6324,17 @@ export namespace VxeTableDefines {
     code?: string
     name?: string
     prefixConfig?: {
-      icon?: string
+      icon?: string | ((params: {}) => VxeComponentSlotType[] | VxeComponentSlotType)
       content?: string
       className?: string
     }
-    /**
-     * 请使用 prefixConfig
-     * @deprecated
-     */
-    prefixIcon?: string
+    prefixIcon?: string | ((params: {}) => VxeComponentSlotType[] | VxeComponentSlotType)
     suffixConfig?: {
-      icon?: string
+      icon?: string | (() => VxeComponentSlotType[] | VxeComponentSlotType)
       content?: string
       className?: string
     }
-    /**
-     * 请使用 suffixConfig
-     * @deprecated
-     */
-    suffixIcon?: string
+    suffixIcon?: string | ((params: {}) => VxeComponentSlotType[] | VxeComponentSlotType)
     className?: string
     visible?: boolean
     disabled?: boolean
@@ -6357,25 +6349,17 @@ export namespace VxeTableDefines {
     code?: string
     name?: string
     prefixConfig?: {
-      icon?: string
+      icon?: string | ((params: {}) => VxeComponentSlotType[] | VxeComponentSlotType)
       content?: string
       className?: string
     }
-    /**
-     * 请使用 prefixConfig
-     * @deprecated
-     */
-    prefixIcon?: string
+    prefixIcon?: string | ((params: {}) => VxeComponentSlotType[] | VxeComponentSlotType)
     suffixConfig?: {
-      icon?: string
+      icon?: string | (() => VxeComponentSlotType[] | VxeComponentSlotType)
       content?: string
       className?: string
     }
-    /**
-     * 请使用 suffixConfig
-     * @deprecated
-     */
-    suffixIcon?: string
+    suffixIcon?: string | ((params: {}) => VxeComponentSlotType[] | VxeComponentSlotType)
     className?: string
     visible?: boolean
     disabled?: boolean

@@ -30,6 +30,10 @@ declare module '@vxe-ui/core' {
      */
     renderTableFilter?(renderOpts: VxeGlobalRendererHandles.RenderTableFilterOptions, renderParams: VxeGlobalRendererHandles.RenderTableFilterParams<any>): VxeComponentSlotType | VxeComponentSlotType[]
     /**
+     * 表格 - 筛选面板自适应表格高度
+     */
+    tableFilterAutoHeight?: boolean
+    /**
      * 表格 - 自定义筛选逻辑方法
      */
     tableFilterMethod?(params: VxeGlobalRendererHandles.TableFilterMethodParams<any>): boolean
