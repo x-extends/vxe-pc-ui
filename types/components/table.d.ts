@@ -1926,6 +1926,10 @@ export namespace VxeTablePropTypes {
      */
     isPaste?: boolean
     /**
+     * 用于 isCopy，当复制单元格时，是否为对应格式化后的值
+     */
+    copyToLabel?: boolean
+    /**
      * 只对 area-config.multiple 有效，对相同列数的跨行选取多区域进行复制粘贴
      */
     isAcrossRow?: boolean

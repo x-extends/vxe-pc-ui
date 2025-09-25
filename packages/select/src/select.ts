@@ -688,6 +688,25 @@ export default /* define-vxe-component start */ defineVxeComponent({
       handleStyle()
       return $xeSelect.$nextTick().then(handleStyle)
     },
+    handleScrollSelect () {
+      const $xeSelect = this
+      const props = $xeSelect
+      const reactData = $xeSelect.reactData
+      const internalData = $xeSelect.internalData
+
+      $xeSelect.$nextTick(() => {
+        const { value: modelValue } = props
+        const { isAniVisible, visiblePanel } = reactData
+        const { optFullValMaps } = internalData
+        const selectVal = XEUtils.isArray(modelValue) ? modelValue[0] : modelValue
+        if (selectVal && isAniVisible && visiblePanel) {
+          const cacheItem = reactData.reactFlag ? optFullValMaps[`${selectVal}`] : null
+          if (cacheItem) {
+            $xeSelect.handleScrollToOption(cacheItem.item)
+          }
+        }
+      })
+    },
     showOptionPanel  () {
       const $xeSelect = this
       const props = $xeSelect
@@ -726,7 +745,10 @@ export default /* define-vxe-component start */ defineVxeComponent({
         setTimeout(() => {
           reactData.visiblePanel = true
           $xeSelect.handleFocusSearch()
-          $xeSelect.recalculate().then(() => $xeSelect.refreshScroll())
+          $xeSelect.recalculate().then(() => {
+            $xeSelect.handleScrollSelect()
+            $xeSelect.refreshScroll()
+          })
         }, 10)
         setTimeout(() => {
           $xeSelect.recalculate().then(() => $xeSelect.refreshScroll())
