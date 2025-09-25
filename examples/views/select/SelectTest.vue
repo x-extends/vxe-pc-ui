@@ -268,7 +268,7 @@ const demo1 = reactive({
       ]
     }
   ],
-  value42: null,
+  value42: '16',
   list42: [
     { label: '1111', value: '1', disabled: true },
     { label: '2222', value: '2', disabled: false },
@@ -280,7 +280,21 @@ const demo1 = reactive({
     { label: '8888', value: '8', disabled: false },
     { label: '9999', value: '9', disabled: false },
     { label: '1010', value: '10', disabled: false },
-    { label: '1111', value: '11', disabled: false }
+    { label: '1111', value: '11', disabled: false },
+    { label: '1112', value: '12', disabled: false },
+    { label: '1113', value: '13', disabled: false },
+    { label: '1114', value: '14', disabled: false },
+    { label: '1115', value: '15', disabled: false },
+    { label: '1116', value: '16', disabled: false },
+    { label: '1117', value: '17', disabled: false },
+    { label: '1118', value: '18', disabled: false },
+    { label: '1119', value: '19', disabled: false },
+    { label: '1120', value: '20', disabled: false },
+    { label: '1121', value: '21', disabled: false },
+    { label: '1122', value: '22', disabled: false },
+    { label: '1123', value: '23', disabled: false },
+    { label: '1124', value: '24', disabled: false },
+    { label: '1125', value: '25', disabled: false }
   ],
   value43: null,
   list43: [
@@ -309,7 +323,7 @@ const demo1 = reactive({
       ]
     }
   ],
-  value44: ['9', '10'],
+  value44: ['9', '16'],
   list44: [
     { label: '1111', value: '1', disabled: true },
     { label: '2222', value: '2', disabled: false },
@@ -321,7 +335,21 @@ const demo1 = reactive({
     { label: '8888', value: '8', disabled: false },
     { label: '9999', value: '9', disabled: false },
     { label: '1010', value: '10', disabled: false },
-    { label: '1111', value: '11', disabled: false }
+    { label: '1111', value: '11', disabled: false },
+    { label: '1112', value: '12', disabled: false },
+    { label: '1113', value: '13', disabled: false },
+    { label: '1114', value: '14', disabled: false },
+    { label: '1115', value: '15', disabled: false },
+    { label: '1116', value: '16', disabled: false },
+    { label: '1117', value: '17', disabled: false },
+    { label: '1118', value: '18', disabled: false },
+    { label: '1119', value: '19', disabled: false },
+    { label: '1120', value: '20', disabled: false },
+    { label: '1121', value: '21', disabled: false },
+    { label: '1122', value: '22', disabled: false },
+    { label: '1123', value: '23', disabled: false },
+    { label: '1124', value: '24', disabled: false },
+    { label: '1125', value: '25', disabled: false }
   ],
   value45: null,
   list45: [],
