@@ -16,6 +16,14 @@ export function getRowUniqueId () {
   return XEUtils.uniqueId('row_')
 }
 
+function createInternalData (): TableSelectInternalData {
+  return {
+    // hpTimeout: undefined,
+    // vpTimeout: undefined,
+    fullRowMaps: {}
+  }
+}
+
 export default defineVxeComponent({
   name: 'VxeTableSelect',
   props: {
@@ -92,7 +100,6 @@ export default defineVxeComponent({
       initialized: false,
       tableColumns: [],
       fullOptionList: [],
-      fullRowMaps: {},
       panelIndex: 0,
       panelStyle: {},
       panelPlacement: null,
@@ -102,10 +109,7 @@ export default defineVxeComponent({
       isActivated: false
     })
 
-    const internalData: TableSelectInternalData = {
-      // hpTimeout: undefined,
-      // vpTimeout: undefined
-    }
+    const internalData: TableSelectInternalData = createInternalData()
 
     const refMaps: TableSelectPrivateRef = {
       refElem
@@ -185,7 +189,7 @@ export default defineVxeComponent({
 
     const computeSelectGridOpts = computed(() => {
       const gridOpts = computeGridOpts.value
-      const { proxyConfig } = gridOpts
+      const { pagerConfig, proxyConfig } = gridOpts
       if (proxyConfig) {
         const proxyAjax = proxyConfig.ajax
         if (proxyAjax && proxyAjax.query) {
@@ -196,8 +200,14 @@ export default defineVxeComponent({
             Object.assign(newProxyConfig.ajax, {
               query (params: VxeGridPropTypes.ProxyAjaxQueryParams, ...args: any[]) {
                 return Promise.resolve(ajaxMethods(params, ...args)).then(rest => {
-                  const listProp = resConfigs.list
-                  const tableData = (listProp ? (XEUtils.isFunction(listProp) ? listProp({ data: rest, $table: null as any, $grid: null, $gantt: null }) : XEUtils.get(rest, listProp)) : rest) || []
+                  let tableData = []
+                  if (pagerConfig) {
+                    const resultProp = resConfigs.result
+                    tableData = (XEUtils.isFunction(resultProp) ? resultProp({ data: rest, $table: null as any, $grid: null, $gantt: null }) : XEUtils.get(rest, resultProp || 'result')) || []
+                  } else {
+                    const listProp = resConfigs.list
+                    tableData = (listProp ? (XEUtils.isFunction(listProp) ? listProp({ data: rest, $table: null as any, $grid: null, $gantt: null }) : XEUtils.get(rest, listProp)) : rest) || []
+                  }
                   cacheDataMap(tableData || [])
                   return rest
                 })
@@ -212,9 +222,13 @@ export default defineVxeComponent({
 
     const computeSelectLabel = computed(() => {
       const { modelValue, lazyOptions } = props
-      const { fullRowMaps } = reactData
+      const { fullOptionList } = reactData
+      const { fullRowMaps } = internalData
       const valueField = computeValueField.value
       const labelField = computeLabelField.value
+      if (!fullOptionList) {
+        return ''
+      }
       return (XEUtils.isArray(modelValue) ? modelValue : [modelValue]).map(val => {
         const cacheItem = fullRowMaps[val]
         if (cacheItem) {
@@ -291,7 +305,7 @@ export default defineVxeComponent({
     }
 
     const getRowsByValue = (modelValue: VxeTableSelectPropTypes.ModelValue) => {
-      const { fullRowMaps } = reactData
+      const { fullRowMaps } = internalData
       const rows: any[] = []
       const vals = XEUtils.eqNull(modelValue) ? [] : (XEUtils.isArray(modelValue) ? modelValue : [modelValue])
       vals.forEach(val => {
@@ -359,7 +373,7 @@ export default defineVxeComponent({
       const rowKeyField = computeRowKeyField.value
       const valueField = computeValueField.value
       const gridOpts = computeGridOpts.value
-      const { treeConfig } = gridOpts
+      const { treeConfig, pagerConfig } = gridOpts
       const rowMaps: Record<string, {
         item: any
         index: number
@@ -388,7 +402,7 @@ export default defineVxeComponent({
         })
       }
       reactData.fullOptionList = dataList || options || []
-      reactData.fullRowMaps = rowMaps
+      internalData.fullRowMaps = pagerConfig ? Object.assign({}, internalData.fullRowMaps, rowMaps) : rowMaps
       updateModel(props.modelValue)
     }
 
@@ -753,6 +767,7 @@ export default defineVxeComponent({
       globalEvents.off($xeTableSelect, 'mousedown')
       globalEvents.off($xeTableSelect, 'blur')
       globalEvents.off($xeTableSelect, 'resize')
+      XEUtils.assign(internalData, createInternalData())
     })
 
     nextTick(() => {

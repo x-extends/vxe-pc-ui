@@ -84,13 +84,6 @@ export interface TableSelectReactData {
   initialized: boolean
   tableColumns: VxeGridPropTypes.Columns
   fullOptionList: any[]
-  fullRowMaps: Record<string, {
-    item: any
-    index: number
-    items: any[]
-    parent: any
-    nodes: any[]
-  }>
   panelIndex: number
   panelStyle: any
   panelPlacement: any
@@ -100,6 +93,13 @@ export interface TableSelectReactData {
   isActivated: boolean
 }
 export interface TableSelectInternalData {
+  fullRowMaps: Record<string, {
+    item: any
+    index: number
+    items: any[]
+    parent: any
+    nodes: any[]
+  }>
   hpTimeout?: undefined | number
   vpTimeout?: undefined | number
 }

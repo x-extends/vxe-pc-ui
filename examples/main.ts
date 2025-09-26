@@ -5,7 +5,7 @@ import router from './router'
 import './styles/index.scss'
 
 // 引入组件库
-import VxeUI from '../packages'
+import VxeUIAll, { VxeUI } from '../packages'
 import enUS from '../packages/language/en-US'
 import '../styles/all.scss'
 
@@ -41,7 +41,7 @@ window.axios.defaults.baseURL = process.env.VUE_APP_SERVE_API_URL
 const app = createApp(App)
 
 app.use(router)
-app.use(VxeUI)
+app.use(VxeUIAll)
 // app.use(VxeUITable)
 
 app.mount('#app')
