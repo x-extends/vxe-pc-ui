@@ -16,6 +16,14 @@ export function getRowUniqueId () {
   return XEUtils.uniqueId('row_')
 }
 
+function createInternalData (): TableSelectInternalData {
+  return {
+    // hpTimeout: undefined,
+    // vpTimeout: undefined,
+    fullRowMaps: {}
+  }
+}
+
 export default /* define-vxe-component start */ defineVxeComponent({
   name: 'VxeTableSelect',
   mixins: [
@@ -91,7 +99,6 @@ export default /* define-vxe-component start */ defineVxeComponent({
       initialized: false,
       tableColumns: [],
       fullOptionList: [],
-      fullRowMaps: {},
       panelIndex: 0,
       panelStyle: {},
       panelPlacement: null,
@@ -101,10 +108,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       isActivated: false
     }
 
-    const internalData: TableSelectInternalData = {
-      // hpTimeout: undefined,
-      // vpTimeout: undefined
-    }
+    const internalData: TableSelectInternalData = createInternalData()
 
     const gridEvents: Record<string, any> = {}
 
@@ -222,7 +226,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const $xeTableSelect = this
 
       const gridOpts = $xeTableSelect.computeGridOpts as VxeTableSelectPropTypes.GridConfig
-      const { proxyConfig } = gridOpts
+      const { pagerConfig, proxyConfig } = gridOpts
       if (proxyConfig) {
         const proxyAjax = proxyConfig.ajax
         if (proxyAjax && proxyAjax.query) {
@@ -233,8 +237,14 @@ export default /* define-vxe-component start */ defineVxeComponent({
             Object.assign(newProxyConfig.ajax, {
               query (params: VxeGridPropTypes.ProxyAjaxQueryParams, ...args: any[]) {
                 return Promise.resolve(ajaxMethods(params, ...args)).then(rest => {
-                  const listProp = resConfigs.list
-                  const tableData = (listProp ? (XEUtils.isFunction(listProp) ? listProp({ data: rest, $table: null as any, $grid: null, $gantt: null }) : XEUtils.get(rest, listProp)) : rest) || []
+                  let tableData = []
+                  if (pagerConfig) {
+                    const resultProp = resConfigs.result
+                    tableData = (XEUtils.isFunction(resultProp) ? resultProp({ data: rest, $table: null as any, $grid: null, $gantt: null }) : XEUtils.get(rest, resultProp || 'result')) || []
+                  } else {
+                    const listProp = resConfigs.list
+                    tableData = (listProp ? (XEUtils.isFunction(listProp) ? listProp({ data: rest, $table: null as any, $grid: null, $gantt: null }) : XEUtils.get(rest, listProp)) : rest) || []
+                  }
                   $xeTableSelect.cacheDataMap(tableData || [])
                   return rest
                 })
@@ -250,11 +260,16 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const $xeTableSelect = this
       const props = $xeTableSelect
       const reactData = ($xeTableSelect as any).reactData as TableSelectReactData
+      const internalData = ($xeTableSelect as any).reactData as TableSelectInternalData
 
       const { value, lazyOptions } = props
-      const { fullRowMaps } = reactData
+      const { fullOptionList } = reactData
+      const { fullRowMaps } = internalData
       const valueField = $xeTableSelect.computeValueField as string
       const labelField = $xeTableSelect.computeLabelField as string
+      if (!fullOptionList) {
+        return ''
+      }
       return (XEUtils.isArray(value) ? value : [value]).map(val => {
         const cacheItem = fullRowMaps[val]
         if (cacheItem) {
@@ -311,9 +326,9 @@ export default /* define-vxe-component start */ defineVxeComponent({
     },
     getRowsByValue (modelValue: VxeTableSelectPropTypes.ModelValue) {
       const $xeTableSelect = this
-      const reactData = $xeTableSelect.reactData
+      const internalData = $xeTableSelect.internalData
 
-      const { fullRowMaps } = reactData
+      const { fullRowMaps } = internalData
       const rows: any[] = []
       const vals = XEUtils.eqNull(modelValue) ? [] : (XEUtils.isArray(modelValue) ? modelValue : [modelValue])
       vals.forEach(val => {
@@ -384,12 +399,13 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const $xeTableSelect = this
       const props = $xeTableSelect
       const reactData = $xeTableSelect.reactData
+      const internalData = $xeTableSelect.internalData
 
       const { options } = props
       const rowKeyField = $xeTableSelect.computeRowKeyField
       const valueField = $xeTableSelect.computeValueField
       const gridOpts = $xeTableSelect.computeGridOpts
-      const { treeConfig } = gridOpts
+      const { treeConfig, pagerConfig } = gridOpts
       const rowMaps: Record<string, {
         item: any
         index: number
@@ -418,7 +434,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
         })
       }
       reactData.fullOptionList = dataList || options || []
-      reactData.fullRowMaps = rowMaps
+      internalData.fullRowMaps = pagerConfig ? Object.assign({}, internalData.fullRowMaps, rowMaps) : rowMaps
       $xeTableSelect.updateModel(props.value)
     },
     updateZindex () {
