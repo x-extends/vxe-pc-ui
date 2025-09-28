@@ -850,6 +850,8 @@ export namespace VxeGridSlotTypes {
      */
     _columnIndex: number
 
+    option: VxeColumnPropTypes.FilterItem
+
     type: string
     fixed: VxeColumnPropTypes.Fixed
     checked?: boolean

@@ -5730,7 +5730,7 @@ export namespace VxeTableDefines {
     type: string
     isHidden: boolean
     hasFilter: boolean
-    option: VxeColumnPropTypes.FilterItem | null
+    option: VxeColumnPropTypes.FilterItem
   }
 
   export interface CellRenderHeaderParams<D = any> {
@@ -5746,7 +5746,7 @@ export namespace VxeTableDefines {
     type: string
     isHidden: boolean
     hasFilter: boolean
-    firstFilterOption: VxeColumnPropTypes.FilterItem | null
+    firstFilterOption: VxeColumnPropTypes.FilterItem
 
     checked?: boolean
     indeterminate?: boolean
