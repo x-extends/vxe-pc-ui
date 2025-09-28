@@ -30,6 +30,14 @@ declare module '@vxe-ui/core' {
      */
     renderTableFilter?(renderOpts: VxeGlobalRendererHandles.RenderTableFilterOptions, renderParams: VxeGlobalRendererHandles.RenderTableFilterParams<any>): VxeComponentSlotType | VxeComponentSlotType[]
     /**
+     * 表格 - 自定义浮动筛选渲染内容
+     */
+    renderTableFloatingFilter?(renderOpts: VxeGlobalRendererHandles.RenderTableFloatingFilterOptions, renderParams: VxeGlobalRendererHandles.RenderTableFloatingFilterParams<any>): VxeComponentSlotType | VxeComponentSlotType[]
+    /**
+     * 表格 - 定义筛选选项数据
+     */
+    createTableFilterOptions?(params: VxeGlobalRendererHandles.CreateTableFilterOptionsParams): VxeColumnPropTypes.FilterItem[]
+    /**
      * 表格 - 筛选面板自适应表格高度
      */
     tableFilterAutoHeight?: boolean
@@ -255,6 +263,12 @@ declare module '@vxe-ui/core' {
      */
     export interface RenderFilterOptions extends RenderTableFilterOptions {}
     export interface RenderTableFilterOptions extends VxeColumnPropTypes.FilterRender {}
+    export interface RenderTableFloatingFilterOptions extends VxeColumnPropTypes.FilterRender {}
+
+    export interface CreateTableFilterOptionsParams<D = any> {
+      $table: VxeTableConstructor<D>
+      column: VxeTableDefines.ColumnInfo<D>
+    }
 
     export interface RenderParams {}
 
@@ -271,6 +285,16 @@ declare module '@vxe-ui/core' {
       columnIndex: number
       $columnIndex: number
       $rowIndex: number
+    }
+
+    export interface RenderTableFloatingFilterParams<D = any> {
+      $table: VxeTableConstructor<D>
+      option: VxeTableDefines.FilterOption
+      column: {
+        filters: VxeTableDefines.FilterOption[]
+      } & VxeTableDefines.ColumnInfo<D>
+      columnIndex: number
+      $columnIndex: number
     }
 
     /**

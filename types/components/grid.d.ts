@@ -350,6 +350,10 @@ export interface GridMethods<D = any> {
    */
   clearFormValidate(field?: VxeFormItemPropTypes.Field | VxeFormItemPropTypes.Field[] | VxeFormDefines.ItemInfo | VxeFormDefines.ItemInfo[] | null): Promise<any>
   /**
+   * 获取每页大小
+   */
+  getPageSize(): number
+  /**
    * 修改每页大小
    */
   setPageSize(pageSize: number | string | null | undefined): Promise<any>
@@ -373,6 +377,10 @@ export interface GridMethods<D = any> {
    * 跳转末页，并触发对应的事件
    */
   endPageByEvent(evnt: Event): void
+  /**
+   * 获取当前页数
+   */
+  getCurrentPage(): number
   /**
    * 修改每当前页数
    */

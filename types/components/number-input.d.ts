@@ -231,6 +231,7 @@ export type VxeNumberInputEmits = [
   'focus',
   'blur',
   'clear',
+  'lazy-change',
   'plus-number',
   'minus-number',
   'prefix-click',

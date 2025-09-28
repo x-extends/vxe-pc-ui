@@ -160,6 +160,7 @@ export default defineVxeComponent({
     'focus',
     'blur',
     'clear',
+    'lazy-change',
     'search-click',
     'toggle-visible',
     'prev-number',
@@ -857,6 +858,7 @@ export default defineVxeComponent({
       if (!inpImmediate) {
         triggerEvent(evnt)
       }
+      $xeInput.dispatchEvent('lazy-change', { value: reactData.inputValue }, evnt)
     }
 
     const blurEvent = (evnt: Event & { type: 'blur' }) => {
@@ -896,7 +898,7 @@ export default defineVxeComponent({
       const isDisabled = computeIsDisabled.value
       if (!isDisabled) {
         const { inputValue } = reactData
-        inputMethods.dispatchEvent('prefix-click', { value: inputValue }, evnt)
+        $xeInput.dispatchEvent('prefix-click', { value: inputValue }, evnt)
       }
     }
 
@@ -923,14 +925,15 @@ export default defineVxeComponent({
         }
       }
       handleChange('', evnt)
-      inputMethods.dispatchEvent('clear', { value }, evnt)
+      $xeInput.dispatchEvent('clear', { value }, evnt)
+      $xeInput.dispatchEvent('lazy-change', { value }, evnt)
     }
 
     const clickSuffixEvent = (evnt: Event) => {
       const isDisabled = computeIsDisabled.value
       if (!isDisabled) {
         const { inputValue } = reactData
-        inputMethods.dispatchEvent('suffix-click', { value: inputValue }, evnt)
+        $xeInput.dispatchEvent('suffix-click', { value: inputValue }, evnt)
       }
     }
 

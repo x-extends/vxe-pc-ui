@@ -58,26 +58,72 @@ export interface TableFilterMethods<D = any> {
    */
   resetFilterPanelByEvent(event: Event): Promise<any>
   /**
+   * 对指定列手动确认筛选
+   */
+  saveFilter(fieldOrColumn?: VxeColumnPropTypes.Field | VxeTableDefines.ColumnInfo | null): Promise<any>
+  /**
+   * 对指定列手动确认筛选并触发 filter-change 事件
+   */
+  saveFilterByEvent(event: Event, fieldOrColumn: VxeColumnPropTypes.Field | VxeTableDefines.ColumnInfo | null): Promise<any>
+  /**
+   * 对指定列手动重置筛选
+   */
+  resetFilter(fieldOrColumn?: VxeColumnPropTypes.Field | VxeTableDefines.ColumnInfo | null): Promise<any>
+  /**
+   * 对指定列手动重置筛选并触发 filter-change 事件
+   */
+  resetFilterByEvent(event: Event, fieldOrColumn: VxeColumnPropTypes.Field | VxeTableDefines.ColumnInfo | null): Promise<any>
+  /**
    * 获取当前筛选的所有列信息
    */
   getCheckedFilters(): VxeTableDefines.FilterCheckedParams<D>[]
   /**
    * 更新筛选选项的状态
    */
-  updateFilterOptionStatus(item: any, checked: boolean): Promise<void>
+  updateFilterOptionStatus(item: VxeTableDefines.FilterOption | VxeColumnPropTypes.FilterItem, checked: boolean): Promise<void>
 }
 
 export interface TableFilterPrivateMethods<D = any> {
+  /**
+   * @private
+   */
   checkFilterOptions(): void
+  /**
+   * @private
+   */
   handleClearFilter(column: any): void
+  /**
+   * @private
+   */
   triggerFilterEvent(evnt: any, column: any, params: any): void
+  /**
+   * @private
+   */
   handleColumnConfirmFilter(column: VxeTableDefines.ColumnInfo, evnt: Event | null): Promise<any>
-  confirmFilterEvent(evnt: Event | null): void
+  /**
+   * @private
+   */
+  confirmFilterEvent(evnt: Event | null, column?: VxeTableDefines.ColumnInfo | null): void
+  /**
+   * @private
+   */
   handleFilterChangeRadioOption (evnt: Event, checked: boolean, item: any): void
+  /**
+   * @private
+   */
   handleFilterChangeMultipleOption (evnt: Event, checked: boolean, item: any): void
+  /**
+   * @private
+   */
   handleFilterChangeOption (evnt: Event, checked: boolean, item: any): void
-  handleFilterConfirmFilter (evnt: Event): void
-  handleFilterResetFilter (evnt: Event | null): void
+  /**
+   * @private
+   */
+  handleFilterConfirmFilter (evnt: Event | null, column: VxeTableDefines.ColumnInfo | null): void
+  /**
+   * @private
+   */
+  handleFilterResetFilter (evnt: Event | null, column: VxeTableDefines.ColumnInfo | null): void
 }
 
 declare module '../grid' {

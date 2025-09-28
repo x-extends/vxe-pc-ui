@@ -1244,6 +1244,17 @@ export namespace VxeTablePropTypes {
   }
   export interface FilterOpts<D = VxeTablePropTypes.Row> extends FilterConfig<D> { }
 
+  export interface FloatingFilterConfig<D = VxeTablePropTypes.Row> {
+    /**
+     * 是否启用
+     */
+    enabled?: boolean
+    /**
+     * 是否启用浮动筛选
+     */
+    floatingFilters?: VxeColumnPropTypes.FloatingFilters
+  }
+
   /**
    * 单选框配置
    */
@@ -3295,6 +3306,10 @@ export interface VxeTableProps<D = any> {
    */
   filterConfig?: VxeTablePropTypes.FilterConfig<D>
   /**
+   * 浮动筛选配置项
+   */
+  floatingFilterConfig?: VxeTablePropTypes.FloatingFilterConfig<D>
+  /**
    * 单选框配置项
    */
   radioConfig?: VxeTablePropTypes.RadioConfig<D>
@@ -3511,6 +3526,7 @@ export interface TablePrivateComputed<D = any> {
   computeEditOpts: ComputedRef<VxeTablePropTypes.EditOpts<D>>
   computeSortOpts: ComputedRef<VxeTablePropTypes.SortConfig<D>>
   computeFilterOpts: ComputedRef<VxeTablePropTypes.FilterOpts<D>>
+  computeFloatingFilterOpts: ComputedRef<VxeTablePropTypes.FloatingFilterConfig<D>>
   computeMouseOpts: ComputedRef<VxeTablePropTypes.MouseOpts>
   computeAreaOpts: ComputedRef<VxeTablePropTypes.AreaOpts>
   computeKeyboardOpts: ComputedRef<VxeTablePropTypes.KeyboardOpts>
@@ -3639,12 +3655,9 @@ export interface TableReactData<D = any> {
     isAllSelected: boolean
     isIndeterminate: boolean
     style: any
-    options: any[]
-    column: any
-    multiple: boolean
+    column: VxeTableDefines.ColumnInfo | null | undefined
     visible: boolean
     maxHeight: number | string | null
-    [key: string]: any
   }
   // 存放列相关的信息
   columnStore: {
@@ -5508,6 +5521,7 @@ export namespace VxeTableDefines {
     filterResetMethod: VxeColumnPropTypes.FilterResetMethod<D>
     filterRecoverMethod: VxeColumnPropTypes.FilterRecoverMethod<D>
     filterRender: VxeColumnPropTypes.FilterRender
+    floatingFilters: VxeColumnPropTypes.FloatingFilters
     rowGroupNode: VxeColumnPropTypes.RowGroupNode
     treeNode: VxeColumnPropTypes.TreeNode
     dragSort: VxeColumnPropTypes.DragSort
@@ -5680,6 +5694,21 @@ export namespace VxeTableDefines {
      * 获取列主键
      */
     getKey(): string
+  }
+
+  export interface CellFloatingFilterParams<D = any> {
+    $table: VxeTableConstructor<D>
+    $grid: VxeGridConstructor | null | undefined
+    $gantt: VxeGanttConstructor | null | undefined
+    column: ColumnInfo<D>
+    columnIndex: number
+    $columnIndex: number
+    _columnIndex: number
+    fixed: VxeColumnPropTypes.Fixed
+    type: string
+    isHidden: boolean
+    hasFilter: boolean
+    option: VxeColumnPropTypes.FilterItem | null
   }
 
   export interface CellRenderHeaderParams<D = any> {

@@ -115,6 +115,7 @@ export default defineVxeComponent({
     'focus',
     'blur',
     'clear',
+    'lazy-change',
     'plus-number',
     'minus-number',
     'prefix-click',
@@ -389,6 +390,7 @@ export default defineVxeComponent({
       if (!inpImmediate) {
         triggerEvent(evnt)
       }
+      $xeNumberInput.dispatchEvent('lazy-change', { value: reactData.inputValue }, evnt)
     }
 
     const focusEvent = (evnt: Event & { type: 'focus' }) => {
@@ -414,6 +416,7 @@ export default defineVxeComponent({
       focus()
       handleChange(null, '', evnt)
       numberInputMethods.dispatchEvent('clear', { value }, evnt)
+      $xeNumberInput.dispatchEvent('lazy-change', { value }, evnt)
     }
 
     const clickSuffixEvent = (evnt: Event) => {
@@ -559,6 +562,7 @@ export default defineVxeComponent({
       }
       reactData.isActivated = true
       numberInputMethods.dispatchEvent('plus-number', { value: reactData.inputValue }, evnt)
+      $xeNumberInput.dispatchEvent('lazy-change', { value: reactData.inputValue }, evnt)
       // 已废弃
       numberInputMethods.dispatchEvent('next-number', { value: reactData.inputValue }, evnt)
     }
@@ -572,6 +576,7 @@ export default defineVxeComponent({
       }
       reactData.isActivated = true
       numberInputMethods.dispatchEvent('minus-number', { value: reactData.inputValue }, evnt)
+      $xeNumberInput.dispatchEvent('lazy-change', { value: reactData.inputValue }, evnt)
       // 已废弃
       numberInputMethods.dispatchEvent('prev-number', { value: reactData.inputValue }, evnt)
     }

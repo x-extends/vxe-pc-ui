@@ -63,7 +63,8 @@ export default defineVxeComponent({
     'click',
     'change',
     'focus',
-    'blur'
+    'blur',
+    'lazy-change'
   ] as VxeTextareaEmits,
   setup (props, context) {
     const { emit } = context
@@ -243,6 +244,7 @@ export default defineVxeComponent({
       } else {
         handleChange(reactData.inputValue, evnt)
       }
+      $xeTextarea.dispatchEvent('lazy-change', { value: reactData.inputValue }, evnt)
     }
 
     const blurEvent = (evnt: Event & { type: 'blur' }) => {

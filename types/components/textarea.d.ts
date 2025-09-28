@@ -151,7 +151,8 @@ export type VxeTextareaEmits = [
   'click',
   'change',
   'focus',
-  'blur'
+  'blur',
+  'lazy-change'
 ]
 
 export namespace VxeTextareaDefines {
@@ -181,6 +182,8 @@ export namespace VxeTextareaDefines {
 
   export interface BlurParams extends InputParams {}
   export interface BlurEventParams extends TextareaEventParams, BlurParams { }
+
+  export interface LazyChangeEventParams extends TextareaEventParams { }
 }
 
 export type VxeTextareaEventProps = {
@@ -192,6 +195,7 @@ export type VxeTextareaEventProps = {
   onClick?: VxeTextareaEvents.Click
   onFocus?: VxeTextareaEvents.Focus
   onBlur?: VxeTextareaEvents.Blur
+  onLazyChange?: VxeTextareaEvents.LazyChange
 }
 
 export interface VxeTextareaListeners {
@@ -203,6 +207,7 @@ export interface VxeTextareaListeners {
   click?: VxeTextareaEvents.Click
   focus?: VxeTextareaEvents.Focus
   blur?: VxeTextareaEvents.Blur
+  lazyChange?: VxeTextareaEvents.LazyChange
 }
 
 export namespace VxeTextareaEvents {
@@ -214,6 +219,7 @@ export namespace VxeTextareaEvents {
   export type Click = (params: VxeTextareaDefines.ClickEventParams) => void
   export type Focus = (params: VxeTextareaDefines.FocusEventParams) => void
   export type Blur = (params: VxeTextareaDefines.BlurEventParams) => void
+  export type LazyChange = (params: VxeTextareaDefines.LazyChangeEventParams) => void
 }
 
 export namespace VxeTextareaSlotTypes {

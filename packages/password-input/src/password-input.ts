@@ -51,6 +51,7 @@ export default defineVxeComponent({
     'focus',
     'blur',
     'clear',
+    'lazy-change',
     'toggle-visible',
     'prefix-click',
     'suffix-click'
@@ -158,10 +159,10 @@ export default defineVxeComponent({
 
     const changeEvent = (evnt: Event & { type: 'change' }) => {
       triggerEvent(evnt)
-      const { inputValue } = reactData
+      $xePasswordInput.dispatchEvent('lazy-change', { value: reactData.inputValue }, evnt)
       // 自动更新校验状态
       if ($xeForm && formItemInfo) {
-        $xeForm.triggerItemEvent(evnt, formItemInfo.itemConfig.field, inputValue)
+        $xeForm.triggerItemEvent(evnt, formItemInfo.itemConfig.field, reactData.inputValue)
       }
     }
 
@@ -173,7 +174,7 @@ export default defineVxeComponent({
     const blurEvent = (evnt: Event & { type: 'blur' }) => {
       const { inputValue } = reactData
       const value = inputValue
-      passwordInputMethods.dispatchEvent('blur', { value }, evnt)
+      $xePasswordInput.dispatchEvent('blur', { value }, evnt)
       // 自动更新校验状态
       if ($xeForm && formItemInfo) {
         $xeForm.triggerItemEvent(evnt, formItemInfo.itemConfig.field, value)
@@ -186,7 +187,7 @@ export default defineVxeComponent({
       if (!disabled && !readonly) {
         reactData.showPwd = !showPwd
       }
-      passwordInputMethods.dispatchEvent('toggle-visible', { visible: reactData.showPwd }, evnt)
+      $xePasswordInput.dispatchEvent('toggle-visible', { visible: reactData.showPwd }, evnt)
     }
 
     const clickEvent = (evnt: Event & { type: 'click' }) => {
@@ -196,14 +197,15 @@ export default defineVxeComponent({
     const clearValueEvent = (evnt: Event, value: VxePasswordInputPropTypes.ModelValue) => {
       focus()
       handleChange('', evnt)
-      passwordInputMethods.dispatchEvent('clear', { value }, evnt)
+      $xePasswordInput.dispatchEvent('clear', { value }, evnt)
+      $xePasswordInput.dispatchEvent('lazy-change', { value: reactData.inputValue }, evnt)
     }
 
     const clickSuffixEvent = (evnt: Event) => {
       const { disabled } = props
       if (!disabled) {
         const { inputValue } = reactData
-        passwordInputMethods.dispatchEvent('suffix-click', { value: inputValue }, evnt)
+        $xePasswordInput.dispatchEvent('suffix-click', { value: inputValue }, evnt)
       }
     }
 
@@ -211,7 +213,7 @@ export default defineVxeComponent({
       const { disabled } = props
       if (!disabled) {
         const { inputValue } = reactData
-        passwordInputMethods.dispatchEvent('prefix-click', { value: inputValue }, evnt)
+        $xePasswordInput.dispatchEvent('prefix-click', { value: inputValue }, evnt)
       }
     }
 
