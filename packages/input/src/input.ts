@@ -1010,11 +1010,13 @@ export default /* define-vxe-component start */ defineVxeComponent({
     },
     changeEvent  (evnt: Event & { type: 'change' }) {
       const $xeInput = this
+      const reactData = $xeInput.reactData
 
       const inpImmediate = $xeInput.computeInpImmediate
       if (!inpImmediate) {
         $xeInput.triggerEvent(evnt)
       }
+      $xeInput.dispatchEvent('lazy-change', { value: reactData.inputValue }, evnt)
     },
     blurEvent  (evnt: Event & { type: 'blur' }) {
       const $xeInput = this
@@ -1097,6 +1099,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       }
       $xeInput.handleChange('', evnt)
       $xeInput.dispatchEvent('clear', { value }, evnt)
+      $xeInput.dispatchEvent('lazy-change', { value }, evnt)
     },
     clickSuffixEvent  (evnt: Event) {
       const $xeInput = this

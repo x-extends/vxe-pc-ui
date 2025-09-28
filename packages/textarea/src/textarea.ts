@@ -302,6 +302,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       } else {
         $xeTextarea.handleChange(reactData.inputValue, evnt)
       }
+      $xeTextarea.dispatchEvent('lazy-change', { value: reactData.inputValue }, evnt)
     },
     blurEvent (evnt: Event & { type: 'blur' }) {
       const $xeTextarea = this

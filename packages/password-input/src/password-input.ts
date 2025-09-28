@@ -218,10 +218,10 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const formItemInfo = $xePasswordInput.formItemInfo
 
       $xePasswordInput.triggerEvent(evnt)
-      const { inputValue } = reactData
+      $xePasswordInput.dispatchEvent('lazy-change', { value: reactData.inputValue }, evnt)
       // 自动更新校验状态
       if ($xeForm && formItemInfo) {
-        $xeForm.triggerItemEvent(evnt, formItemInfo.itemConfig.field, inputValue)
+        $xeForm.triggerItemEvent(evnt, formItemInfo.itemConfig.field, reactData.inputValue)
       }
     },
     focusEvent (evnt: Event & { type: 'focus' }) {
@@ -268,6 +268,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       $xePasswordInput.focus()
       $xePasswordInput.handleChange('', evnt)
       $xePasswordInput.dispatchEvent('clear', { value }, evnt)
+      $xePasswordInput.dispatchEvent('lazy-change', { value }, evnt)
     },
     clickSuffixEvent  (evnt: Event) {
       const $xePasswordInput = this

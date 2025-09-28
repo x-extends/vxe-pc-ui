@@ -146,6 +146,8 @@ export namespace VxeColumnPropTypes {
     cellType?: VxeColumnPropTypes.CellType
   }
 
+  export type FloatingFilters = boolean
+
   /**
    * 设置为分组节点
    */
@@ -378,6 +380,11 @@ export namespace VxeColumnPropTypes {
      */
     filter?: string | ((params: VxeColumnSlotTypes.FilterSlotParams<D>) => VxeComponentSlotType[] | VxeComponentSlotType) | null
     /**
+     * 只对 floating-filters 和 filter-render 启用时有效，自定义浮动筛选模板
+     */
+    floatingFilter?: string | ((params: VxeColumnSlotTypes.FloatingFilterSlotParams<D>) => VxeComponentSlotType[] | VxeComponentSlotType) | null
+    'floating-filter'?: string | ((params: VxeColumnSlotTypes.FloatingFilterSlotParams<D>) => VxeComponentSlotType[] | VxeComponentSlotType) | null
+    /**
      * 只对 edit-render 启用时有效，自定义可编辑组件模板
      */
     edit?: string | ((params: VxeColumnSlotTypes.EditSlotParams<D>) => VxeComponentSlotType[] | VxeComponentSlotType) | null
@@ -528,6 +535,10 @@ export interface VxeColumnProps<D = any> {
    */
   filterRender?: VxeColumnPropTypes.FilterRender
   /**
+   * 是否启用浮动筛选
+   */
+  floatingFilters?: VxeColumnPropTypes.FloatingFilters
+  /**
    * 设置为分组节点
    */
   rowGroupNode?: VxeColumnPropTypes.RowGroupNode
@@ -637,6 +648,7 @@ export namespace VxeColumnSlotTypes {
     $columnIndex: number
     $rowIndex: number
   }
+  export interface FloatingFilterSlotParams<D = any> extends VxeTableDefines.CellFloatingFilterParams<D> { }
 
   export interface EditSlotParams<D = any> extends VxeTableDefines.CellRenderBodyParams<D> { }
 
@@ -723,6 +735,11 @@ export interface VxeColumnSlots<D = any> {
    * 只对 filter-render 启用时有效，自定义筛选模板
    */
   filter?: (params: VxeColumnSlotTypes.FilterSlotParams<D>) => any
+  /**
+   * 只对 floating-filters 和 filter-render 启用时有效，自定义浮动筛选模板
+   */
+  floatingFilter?: (params: VxeColumnSlotTypes.FloatingFilterSlotParams<D>) => any
+  'floating-filter'?: (params: VxeColumnSlotTypes.FloatingFilterSlotParams<D>) => any
   /**
    * 只对 edit-render 启用时有效，自定义可编辑组件模板
    */

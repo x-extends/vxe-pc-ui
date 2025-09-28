@@ -97,6 +97,7 @@ export type VxePasswordInputEmits = [
   'focus',
   'blur',
   'clear',
+  'lazy-change',
   'toggle-visible',
   'prefix-click',
   'suffix-click'

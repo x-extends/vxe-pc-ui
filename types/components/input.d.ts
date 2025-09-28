@@ -218,6 +218,7 @@ export type VxeInputEmits = [
   'focus',
   'blur',
   'clear',
+  'lazy-change',
   'search-click',
   'toggle-visible',
   'prev-number',
@@ -304,6 +305,8 @@ export namespace VxeInputDefines {
   export interface ClearParams extends InputParams {}
   export interface ClearEventParams extends InputKeyboardEventParams, ClearParams { }
 
+  export interface LazyChangeEventParams extends InputKeyboardEventParams { }
+
   export interface SearchClickParams extends InputParams {}
   export interface SearchClickEventParams extends InputKeyboardEventParams, SearchClickParams { }
 
@@ -341,6 +344,7 @@ export type VxeInputEventProps = {
   onFocus?: VxeInputEvents.Focus
   onBlur?: VxeInputEvents.Blur
   onClear?: VxeInputEvents.Clear
+  onLazyChange?: VxeInputEvents.LazyChange
   onSearchClick?: VxeInputEvents.SearchClick
   onToggleVisible?: VxeInputEvents.ToggleVisible
   onPrevNumber?: VxeInputEvents.PrevNumber
@@ -361,6 +365,7 @@ export interface VxeInputListeners {
   focus?: VxeInputEvents.Focus
   blur?: VxeInputEvents.Blur
   clear?: VxeInputEvents.Clear
+  onLazyChange?: VxeInputEvents.LazyChange
   searchClick?: VxeInputEvents.SearchClick
   toggleVisible?: VxeInputEvents.ToggleVisible
   prevNumber?: VxeInputEvents.PrevNumber
@@ -381,6 +386,7 @@ export namespace VxeInputEvents {
   export type Focus = (params: VxeInputDefines.FocusEventParams) => void
   export type Blur = (params: VxeInputDefines.BlurEventParams) => void
   export type Clear = (params: VxeInputDefines.ClearEventParams) => void
+  export type LazyChange = (params: VxeInputDefines.LazyChangeEventParams) => void
   export type SearchClick = (params: VxeInputDefines.SearchClickEventParams) => void
   export type ToggleVisible = (params: VxeInputDefines.ToggleVisibleEventParams) => void
   export type PrevNumber = (params: VxeInputDefines.PrevNumberEventParams) => void
