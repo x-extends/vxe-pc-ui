@@ -653,6 +653,7 @@ export namespace VxeColumnSlotTypes {
     columnIndex: number
     $columnIndex: number
     $rowIndex: number
+    option: VxeColumnPropTypes.FilterItem
   }
   export interface FloatingFilterSlotParams<D = any> extends VxeTableDefines.CellFloatingFilterParams<D> { }
 
