@@ -16,21 +16,33 @@ export interface TagPrivateRef {
 export interface VxeTagPrivateRef extends TagPrivateRef { }
 
 export namespace VxeTagPropTypes {
+  export type Border = boolean
   export type Status = VxeComponentStatusType
+  export type Visible = boolean
   export type Title = string | number
   export type Icon = string
+  export type CloseIcon = string
   export type Content = string | number
   export type Round = boolean
   export type Size = VxeComponentSizeType
+  export type Closable = boolean
+  export type Color = 'gray' | 'orangered' | 'orange' | 'green' | 'blue' | 'purple' | 'pinkpurple' | 'magenta' | 'chocolate' | 'cyan'
+  export type Loading = boolean
 }
 
-export interface VxeTagProps {
+export type VxeTagProps = {
+  border?: VxeTagPropTypes.Border
   status?: VxeTagPropTypes.Status
+  visible?: VxeTagPropTypes.Visible
   title?: VxeTagPropTypes.Title
   icon?: VxeTagPropTypes.Icon
+  closeIcon?: VxeTagPropTypes.CloseIcon
   content?: VxeTagPropTypes.Content
   round?: VxeTagPropTypes.Round
   size?: VxeTagPropTypes.Size
+  closable?: VxeTagPropTypes.Closable
+  color?: VxeTagPropTypes.Color
+  loading?: VxeTagPropTypes.Loading
 }
 
 export interface TagPrivateComputed {
@@ -38,6 +50,7 @@ export interface TagPrivateComputed {
 export interface VxeTagPrivateComputed extends TagPrivateComputed { }
 
 export interface TagReactData {
+  showTag: boolean
 }
 
 export interface TagMethods {
@@ -49,7 +62,10 @@ export interface TagPrivateMethods { }
 export interface VxeTagPrivateMethods extends TagPrivateMethods { }
 
 export type VxeTagEmits = [
-  'click'
+  'click',
+  'dblclick',
+  'close',
+  'update:visible'
 ]
 
 export namespace VxeTagDefines {
@@ -57,21 +73,23 @@ export namespace VxeTagDefines {
     $tag: VxeTagConstructor
   }
 
-  export interface ClickParams {
-  }
-  export interface ClickEventParams extends TagEventParams, ClickParams { }
+  export interface ClickEventParams extends TagEventParams { }
+  export interface CloseEventParams extends TagEventParams { }
 }
 
 export type VxeTagEventProps = {
   onClick?: VxeTagEvents.Click
+  onClose?: VxeTagEvents.Close
 }
 
 export interface VxeTagListeners {
   click?: VxeTagEvents.Click
+  close?: VxeTagEvents.Close
 }
 
 export namespace VxeTagEvents {
   export type Click = (params: VxeTagDefines.ClickEventParams) => void
+  export type Close = (params: VxeTagDefines.CloseEventParams) => void
 }
 
 export namespace VxeTagSlotTypes {
@@ -81,6 +99,8 @@ export namespace VxeTagSlotTypes {
 export interface VxeTagSlots {
   default?: (params: VxeTagSlotTypes.DefaultSlotParams) => any
   icon?: (params: VxeTagSlotTypes.DefaultSlotParams) => any
+  closeIcon?: (params: VxeTagSlotTypes.DefaultSlotParams) => any
+  'close-icon'?: (params: VxeTagSlotTypes.DefaultSlotParams) => any
 }
 
 export const Tag: typeof VxeTag

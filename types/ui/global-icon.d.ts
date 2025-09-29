@@ -229,6 +229,10 @@ declare module '@vxe-ui/core' {
     TEXT_COPY?: string
     TEXT_LOADING?: string
 
+    // tag
+    TAG_CLOSE?: string
+    TAG_LOADING?: string
+
     // carousel
     CAROUSEL_HORIZONTAL_PREVIOUS?: string
     CAROUSEL_HORIZONTAL_NEXT?: string

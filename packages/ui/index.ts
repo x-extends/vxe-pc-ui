@@ -608,6 +608,10 @@ setIcon({
   TEXT_COPY: iconPrefix + 'copy',
   TEXT_LOADING: iconPrefix + 'spinner roll',
 
+  // tag
+  TAG_CLOSE: iconPrefix + 'close',
+  TAG_LOADING: iconPrefix + 'spinner roll',
+
   // carousel
   CAROUSEL_HORIZONTAL_PREVIOUS: iconPrefix + 'arrow-left',
   CAROUSEL_HORIZONTAL_NEXT: iconPrefix + 'arrow-right',
