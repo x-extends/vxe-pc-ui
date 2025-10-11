@@ -1385,6 +1385,7 @@ export namespace VxeTablePropTypes {
     minHeight?: VxeTooltipPropTypes.MinHeight
     maxWidth?: VxeTooltipPropTypes.MaxWidth
     maxHeight?: VxeTooltipPropTypes.MaxHeight
+    useHTML?: VxeTooltipPropTypes.UseHTML
     contentMethod?(params: {
       $table: VxeTableConstructor<D>
       items: any[]
