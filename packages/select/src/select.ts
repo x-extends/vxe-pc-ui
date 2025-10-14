@@ -3,7 +3,7 @@ import { defineVxeComponent } from '../../ui/src/comp'
 import XEUtils from 'xe-utils'
 import { VxeUI, getConfig, getIcon, getI18n, globalEvents, GLOBAL_EVENT_KEYS, createEvent, useSize, renderEmptyElement } from '../../ui'
 import { getEventTargetNode, updatePanelPlacement } from '../../ui/src/dom'
-import { getLastZIndex, nextZIndex, getFuncText } from '../../ui/src/utils'
+import { getLastZIndex, nextZIndex, getFuncText, eqEmptyValue } from '../../ui/src/utils'
 import { getSlotVNs } from '../../ui/src/vn'
 import VxeInputComponent from '../../input/src/input'
 import VxeButtonComponent from '../../button/src/button'
@@ -279,8 +279,8 @@ export default defineVxeComponent({
     })
 
     const computeIsMaximize = computed(() => {
-      const { modelValue } = props
-      return checkMaxLimit(modelValue)
+      const selectVals = computeSelectVals.value
+      return checkMaxLimit(selectVals)
     })
 
     const computeVirtualYOpts = computed(() => {
@@ -299,24 +299,46 @@ export default defineVxeComponent({
       return XEUtils.toNumber(props.multiCharOverflow)
     })
 
+    const computeSelectVals = computed(() => {
+      const { modelValue, multiple } = props
+      let vals: (string | number | boolean)[] = []
+      if (XEUtils.isArray(modelValue)) {
+        vals = modelValue
+      } else {
+        if (multiple) {
+          if (!eqEmptyValue(modelValue)) {
+            vals = `${modelValue}`.indexOf(',') > -1 ? `${modelValue}`.split(',') : [modelValue] as any[]
+          }
+        } else {
+          vals = modelValue === null || modelValue === undefined ? [] : [modelValue]
+        }
+      }
+      return vals
+    })
+
+    const computeFullLabel = computed(() => {
+      const { remote } = props
+      const { reactFlag } = reactData
+      const selectVals = computeSelectVals.value
+      if (remote && reactFlag) {
+        return selectVals.map(val => getRemoteSelectLabel(val)).join(', ')
+      }
+      return selectVals.map((val) => getSelectLabel(val)).join(', ')
+    })
+
     const computeSelectLabel = computed(() => {
-      const { modelValue, remote, multiple } = props
+      const { remote, multiple } = props
       const { reactFlag } = reactData
       const multiMaxCharNum = computeMultiMaxCharNum.value
-      if (XEUtils.eqNull(modelValue)) {
-        return ''
-      }
-      const vals = XEUtils.isArray(modelValue) ? modelValue : [modelValue]
+      const selectVals = computeSelectVals.value
       if (remote && reactFlag) {
-        return vals.map(val => getRemoteSelectLabel(val)).join(', ')
+        return selectVals.map(val => getRemoteSelectLabel(val)).join(', ')
       }
-      return vals.map((val) => {
-        const label = getSelectLabel(val)
-        if (multiple && multiMaxCharNum > 0 && label.length > multiMaxCharNum) {
-          return `${label.substring(0, multiMaxCharNum)}...`
-        }
-        return label
-      }).join(', ')
+      const labels = selectVals.map((val) => getSelectLabel(val))
+      if (multiple && multiMaxCharNum > 0 && labels.length > multiMaxCharNum) {
+        return `${labels.slice(0, multiMaxCharNum)}...`
+      }
+      return labels.join(', ')
     })
 
     const callSlot = <T>(slotFunc: ((params: T) => VxeComponentSlotType | VxeComponentSlotType[]) | string | null, params: T) => {
@@ -349,10 +371,10 @@ export default defineVxeComponent({
       return optid ? encodeURIComponent(optid) : ''
     }
 
-    const checkMaxLimit = (selectVals: VxeSelectPropTypes.ModelValue | undefined) => {
+    const checkMaxLimit = (selectVals: VxeSelectPropTypes.ModelValue[]) => {
       const { multiple, max } = props
       if (multiple && max) {
-        return (XEUtils.isArray(selectVals) ? selectVals.length : (XEUtils.eqNull(selectVals) ? 0 : 1)) >= XEUtils.toNumber(max)
+        return selectVals.length >= XEUtils.toNumber(max)
       }
       return false
     }
@@ -494,12 +516,11 @@ export default defineVxeComponent({
 
     const handleScrollSelect = () => {
       nextTick(() => {
-        const { modelValue } = props
         const { isAniVisible, visiblePanel } = reactData
         const { optFullValMaps } = internalData
-        const selectVal = XEUtils.isArray(modelValue) ? modelValue[0] : modelValue
-        if (selectVal && isAniVisible && visiblePanel) {
-          const cacheItem = reactData.reactFlag ? optFullValMaps[`${selectVal}`] : null
+        const selectVals = computeSelectVals.value
+        if (selectVals.length && isAniVisible && visiblePanel) {
+          const cacheItem = reactData.reactFlag ? optFullValMaps[`${selectVals[0]}`] : null
           if (cacheItem) {
             handleScrollToOption(cacheItem.item)
           }
@@ -582,16 +603,17 @@ export default defineVxeComponent({
 
     const allCheckedPanelEvent: VxeButtonEvents.Click = (params) => {
       const { $event } = params
-      const { modelValue, multiple, max } = props
+      const { multiple, max } = props
       const { optList } = reactData
       const valueField = computeValueField.value
       if (multiple) {
-        const multipleValue: any[] = XEUtils.eqNull(modelValue) ? [] : (XEUtils.isArray(modelValue) ? modelValue : [modelValue])
+        const selectVals = computeSelectVals.value
+        const currVlas = selectVals.slice(0)
         for (let i = 0; i < optList.length; i++) {
           const option = optList[i]
           const selectValue = option[valueField]
           // 检测是否超过最大可选数量
-          if (checkMaxLimit(multipleValue)) {
+          if (checkMaxLimit(currVlas)) {
             if (VxeUI) {
               VxeUI.modal.message({
                 content: getI18n('vxe.select.overSizeErr', [max]),
@@ -600,12 +622,12 @@ export default defineVxeComponent({
             }
             break
           }
-          if (!multipleValue.some(val => val === selectValue)) {
-            multipleValue.push(selectValue)
+          if (!currVlas.some(val => val === selectValue)) {
+            currVlas.push(selectValue)
           }
         }
-        changeEvent($event, multipleValue, optList[0])
-        dispatchEvent('all-change', { value: multipleValue }, $event)
+        changeEvent($event, currVlas, optList[0])
+        dispatchEvent('all-change', { value: currVlas }, $event)
       }
     }
 
@@ -616,7 +638,7 @@ export default defineVxeComponent({
     }
 
     const changeOptionEvent = (evnt: Event, option: any) => {
-      const { modelValue, multiple } = props
+      const { multiple } = props
       const { remoteValMaps } = internalData
       const valueField = computeValueField.value
       const selectValue = option[valueField]
@@ -635,7 +657,7 @@ export default defineVxeComponent({
       }
       if (multiple) {
         let multipleValue: any[] = []
-        const selectVals = XEUtils.eqNull(modelValue) ? [] : (XEUtils.isArray(modelValue) ? modelValue : [modelValue])
+        const selectVals = computeSelectVals.value
         const index = XEUtils.findIndexOf(selectVals, val => val === selectValue)
         if (index === -1) {
           multipleValue = selectVals.concat([selectValue])
@@ -1230,13 +1252,14 @@ export default defineVxeComponent({
     Object.assign($xeSelect, selectMethods)
 
     const renderOption = (list: VxeOptionProps[]) => {
-      const { allowCreate, optionKey, modelValue } = props
+      const { allowCreate, optionKey } = props
       const { currentOption } = reactData
       const { optAddMaps } = internalData
       const optionOpts = computeOptionOpts.value
       const labelField = computeLabelField.value
       const valueField = computeValueField.value
       const groupLabelField = computeGroupLabelField.value
+      const selectVals = computeSelectVals.value
       const { useKey } = optionOpts
       const optionSlot = slots.option
       return list.map((option, cIndex) => {
@@ -1245,7 +1268,7 @@ export default defineVxeComponent({
         const optionValue = option[valueField as 'value']
         const isOptGroup = hasOptGroupById(optid)
         const isAdd = !!(allowCreate && optAddMaps[optid])
-        const isSelected = !isAdd && (XEUtils.isArray(modelValue) ? modelValue.indexOf(optionValue) > -1 : modelValue === optionValue)
+        const isSelected = !isAdd && selectVals.indexOf(optionValue) > -1
         const isVisible = isAdd || (!isOptGroup || isOptionVisible(option))
         const isDisabled = !isAdd && checkOptionDisabled(isSelected, option)
         const defaultSlot = slots ? slots.default : null
@@ -1338,11 +1361,12 @@ export default defineVxeComponent({
     }
 
     const renderVN = () => {
-      const { modelValue, className, popupClassName, multiple, loading, filterable, showTotalButoon, showCheckedButoon, showClearButton } = props
+      const { className, popupClassName, multiple, loading, filterable, showTotalButoon, showCheckedButoon, showClearButton } = props
       const { initialized, isActivated, isAniVisible, optList, visiblePanel, bodyHeight, topSpaceHeight } = reactData
       const vSize = computeSize.value
       const isDisabled = computeIsDisabled.value
       const selectLabel = computeSelectLabel.value
+      const fullLabel = computeFullLabel.value
       const btnTransfer = computeBtnTransfer.value
       const formReadonly = computeFormReadonly.value
       const inpPlaceholder = computeInpPlaceholder.value
@@ -1360,11 +1384,12 @@ export default defineVxeComponent({
             ref: 'hideOption'
           }, defaultSlot ? defaultSlot({}) : []),
           h('span', {
-            class: 'vxe-select-label'
+            class: 'vxe-select-label',
+            title: fullLabel
           }, selectLabel)
         ])
       }
-      const selectVals = XEUtils.eqNull(modelValue) ? [] : (XEUtils.isArray(modelValue) ? modelValue : [modelValue])
+      const selectVals = computeSelectVals.value
       return h('div', {
         ref: refElem,
         class: ['vxe-select', className ? (XEUtils.isFunction(className) ? className({ $select: $xeSelect }) : className) : '', {
@@ -1390,7 +1415,7 @@ export default defineVxeComponent({
           prefixIcon: props.prefixIcon,
           suffixIcon: loading ? getIcon().SELECT_LOADED : (visiblePanel ? getIcon().SELECT_OPEN : getIcon().SELECT_CLOSE),
           autoFocus: false,
-          title: selectLabel,
+          title: fullLabel,
           modelValue: selectLabel,
           onClear: clearEvent,
           onClick: clickEvent,
