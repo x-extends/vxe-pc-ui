@@ -2,7 +2,7 @@ import { PropType, CreateElement, VNode } from 'vue'
 import { defineVxeComponent } from '../../ui/src/comp'
 import XEUtils from 'xe-utils'
 import { getConfig, getIcon, getI18n, globalEvents, GLOBAL_EVENT_KEYS, createEvent, globalMixins, renderEmptyElement } from '../../ui'
-import { getEventTargetNode, updatePanelPlacement } from '../../ui/src/dom'
+import { getEventTargetNode, toCssUnit, updatePanelPlacement } from '../../ui/src/dom'
 import { getLastZIndex, nextZIndex, getFuncText, eqEmptyValue } from '../../ui/src/utils'
 import { getSlotVNs } from '../../ui/src/vn'
 import VxeInputComponent from '../../input/src/input'
@@ -1516,7 +1516,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const valueField = $xeSelect.computeValueField
       const groupLabelField = $xeSelect.computeGroupLabelField
       const selectVals = $xeSelect.computeSelectVals
-      const { useKey } = optionOpts
+      const { useKey, height } = optionOpts
       const optionSlot = slots.option
       return list.map((option, cIndex) => {
         const { slots, className } = option
@@ -1554,6 +1554,11 @@ export default /* define-vxe-component start */ defineVxeComponent({
               optid: optid,
               title: optLabel || null
             },
+            style: height
+              ? {
+                  height: toCssUnit(height)
+                }
+              : undefined,
             on: {
               mousedown: (evnt: MouseEvent) => {
                 const isLeftBtn = evnt.button === 0
