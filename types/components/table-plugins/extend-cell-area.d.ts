@@ -424,6 +424,17 @@ export namespace VxeTableExtendCellAreaDefines {
   }
   export interface CellAreaExtensionEndEventParams<D = any> extends EventParams<D>, CellAreaExtensionEndParams<D> { }
 
+  export interface CellAreaExtensionFillEventParams<D = any> extends EventParams<D> {
+    rows: D[]
+    cols: VxeTableDefines.ColumnInfo<D>[]
+    targetValues: any[][]
+    targetRows: D[]
+    targetCols: VxeTableDefines.ColumnInfo<D>[]
+    extendRows: D[]
+    extendCols: VxeTableDefines.ColumnInfo<D>[]
+    direction: 'up' | 'down' | 'left' | 'right'
+  }
+
   export interface CellAreaSelectionAllStartParams {
   }
   export interface CellAreaSelectionAllStartEventParams<D = any> extends EventParams<D>, CellAreaSelectionAllStartParams { }
@@ -494,6 +505,7 @@ export type VxeTableExtendCellAreaEmits = [
   'cell-area-extension-start',
   'cell-area-extension-drag',
   'cell-area-extension-end',
+  'cell-area-extension-fill',
   'cell-area-selection-all-start',
   'cell-area-selection-all-end',
   'cell-area-arrows-start',
@@ -524,6 +536,7 @@ declare module '../table' {
     onCellAreaExtensionStart?: VxeTableEvents.CellAreaExtensionStart<D>
     onCellAreaExtensionDrag?: VxeTableEvents.CellAreaExtensionDrag<D>
     onCellAreaExtensionEnd?: VxeTableEvents.CellAreaExtensionEnd<D>
+    onCellAreaExtensionFill?: VxeTableEvents.CellAreaExtensionFill<D>
     onCellAreaSelectionAllStart?: VxeTableEvents.CellAreaSelectionAllStart<D>
     onCellAreaSelectionAllEnd?: VxeTableEvents.CellAreaSelectionAllEnd<D>
     onCellAreaArrowsStart?: VxeTableEvents.CellAreaArrowsStart<D>
@@ -570,6 +583,7 @@ declare module '../table' {
     cellAreaExtensionStart?: VxeTableEvents.CellAreaExtensionStart<D>
     cellAreaExtensionDrag?: VxeTableEvents.CellAreaExtensionDrag<D>
     cellAreaExtensionEnd?: VxeTableEvents.CellAreaExtensionEnd<D>
+    cellAreaExtensionFill?: VxeTableEvents.CellAreaExtensionFill<D>
     cellAreaSelectionAllStart?: VxeTableEvents.CellAreaSelectionAllStart<D>
     cellAreaSelectionAllEnd?: VxeTableEvents.CellAreaSelectionAllEnd<D>
     cellAreaArrowsStart?: VxeTableEvents.CellAreaArrowsStart<D>
@@ -598,6 +612,7 @@ declare module '../table' {
     export type CellAreaExtensionStart<D = any> = (params: VxeTableExtendCellAreaDefines.CellAreaExtensionStartEventParams<D>) => void
     export type CellAreaExtensionDrag<D = any> = (params: VxeTableExtendCellAreaDefines.CellAreaExtensionDragEventParams<D>) => void
     export type CellAreaExtensionEnd<D = any> = (params: VxeTableExtendCellAreaDefines.CellAreaExtensionEndEventParams<D>) => void
+    export type CellAreaExtensionFill<D = any> = (params: VxeTableExtendCellAreaDefines.CellAreaExtensionFillEventParams<D>) => void
     export type CellAreaSelectionAllStart<D = any> = (params: VxeTableExtendCellAreaDefines.CellAreaSelectionAllStartEventParams<D>) => void
     export type CellAreaSelectionAllEnd<D = any> = (params: VxeTableExtendCellAreaDefines.CellAreaSelectionAllEndEventParams<D>) => void
     export type CellAreaArrowsStart<D = any> = (params: VxeTableExtendCellAreaDefines.CellAreaArrowsStartEventParams<D>) => void
@@ -629,6 +644,7 @@ declare module '../grid' {
     onCellAreaExtensionStart?: VxeGridEvents.CellAreaExtensionStart<D>
     onCellAreaExtensionDrag?: VxeGridEvents.CellAreaExtensionDrag<D>
     onCellAreaExtensionEnd?: VxeGridEvents.CellAreaExtensionEnd<D>
+    onCellAreaExtensionFill?: VxeGridEvents.CellAreaExtensionFill<D>
     onCellAreaSelectionAllStart?: VxeGridEvents.CellAreaSelectionAllStart<D>
     onCellAreaSelectionAllEnd?: VxeGridEvents.CellAreaSelectionAllEnd<D>
     onCellAreaArrowsStart?: VxeGridEvents.CellAreaArrowsStart<D>
@@ -675,6 +691,7 @@ declare module '../grid' {
     cellAreaExtensionStart?: VxeGridEvents.CellAreaExtensionStart<D>
     cellAreaExtensionDrag?: VxeGridEvents.CellAreaExtensionDrag<D>
     cellAreaExtensionEnd?: VxeGridEvents.CellAreaExtensionEnd<D>
+    cellAreaExtensionFill?: VxeGridEvents.CellAreaExtensionFill<D>
     cellAreaSelectionAllStart?: VxeGridEvents.CellAreaSelectionAllStart<D>
     cellAreaSelectionAllEnd?: VxeGridEvents.CellAreaSelectionAllEnd<D>
     cellAreaArrowsStart?: VxeGridEvents.CellAreaArrowsStart<D>
@@ -703,6 +720,7 @@ declare module '../grid' {
     export type CellAreaExtensionStart<D = any> = (params: VxeTableExtendCellAreaDefines.CellAreaExtensionStartEventParams<D>) => void
     export type CellAreaExtensionDrag<D = any> = (params: VxeTableExtendCellAreaDefines.CellAreaExtensionDragEventParams<D>) => void
     export type CellAreaExtensionEnd<D = any> = (params: VxeTableExtendCellAreaDefines.CellAreaExtensionEndEventParams<D>) => void
+    export type CellAreaExtensionFill<D = any> = (params: VxeTableExtendCellAreaDefines.CellAreaExtensionFillEventParams<D>) => void
     export type CellAreaArrowsStart<D = any> = (params: VxeTableExtendCellAreaDefines.CellAreaArrowsStartEventParams<D>) => void
     export type CellAreaSelectionAllStart<D = any> = (params: VxeTableExtendCellAreaDefines.CellAreaSelectionAllStartEventParams<D>) => void
     export type CellAreaSelectionAllEnd<D = any> = (params: VxeTableExtendCellAreaDefines.CellAreaSelectionAllEndEventParams<D>) => void

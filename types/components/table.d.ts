@@ -5403,6 +5403,7 @@ export type VxeTableEmits = [
   'custom-visible-change',
   'custom-visible-all',
   'custom-fixed-change',
+  'custom-sort-change',
 
   ...VxeTableExtendCellAreaEmits
 ]
