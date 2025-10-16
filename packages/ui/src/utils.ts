@@ -30,11 +30,11 @@ export function getGlobalDefaultConfig (value: any, globalValue: any) {
 }
 
 export function getFuncText (content: string | number | boolean | null | undefined, args?: any) {
-  if (content) {
-    const translate = getConfig().translate
-    return XEUtils.toValueString(translate ? translate('' + content, args) : content)
+  if (XEUtils.eqNull(content)) {
+    return ''
   }
-  return ''
+  const translate = getConfig().translate
+  return `${translate ? translate('' + content, args) : content}`
 }
 
 /**

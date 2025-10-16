@@ -2,7 +2,7 @@ import { h, Teleport, PropType, ref, inject, computed, provide, onUnmounted, rea
 import { defineVxeComponent } from '../../ui/src/comp'
 import XEUtils from 'xe-utils'
 import { VxeUI, getConfig, getIcon, getI18n, globalEvents, GLOBAL_EVENT_KEYS, createEvent, useSize, renderEmptyElement } from '../../ui'
-import { getEventTargetNode, updatePanelPlacement } from '../../ui/src/dom'
+import { getEventTargetNode, toCssUnit, updatePanelPlacement } from '../../ui/src/dom'
 import { getLastZIndex, nextZIndex, getFuncText, eqEmptyValue } from '../../ui/src/utils'
 import { getSlotVNs } from '../../ui/src/vn'
 import VxeInputComponent from '../../input/src/input'
@@ -1260,7 +1260,7 @@ export default defineVxeComponent({
       const valueField = computeValueField.value
       const groupLabelField = computeGroupLabelField.value
       const selectVals = computeSelectVals.value
-      const { useKey } = optionOpts
+      const { useKey, height } = optionOpts
       const optionSlot = slots.option
       return list.map((option, cIndex) => {
         const { slots, className } = option
@@ -1296,6 +1296,11 @@ export default defineVxeComponent({
             }],
             optid: optid,
             title: optLabel || null,
+            style: height
+              ? {
+                  height: toCssUnit(height)
+                }
+              : undefined,
             onMousedown: (evnt: MouseEvent) => {
               const isLeftBtn = evnt.button === 0
               if (isLeftBtn) {

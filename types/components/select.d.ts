@@ -98,6 +98,7 @@ export namespace VxeSelectPropTypes {
   export interface OptionConfig {
     useKey?: boolean
     keyField?: string
+    height?: number | string
   }
   export type EmptyText = string
   export type OptionId = string
