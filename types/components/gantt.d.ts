@@ -314,9 +314,37 @@ export interface VxeGanttMethods<D = any> extends GanttMethods<D>, Omit<VxeGridM
 export interface GanttPrivateMethods extends GridPrivateMethods {
   callSlot<T = any>(slotFunc: ((params: T) => VxeComponentSlotType | VxeComponentSlotType[]) | string | null, params: T): VxeComponentSlotType[]
 
+  /**
+   * @private
+   */
   handleTaskCellClickEvent(evnt: MouseEvent, params: VxeGanttDefines.TaskCellClickParams): void
+  /**
+   * @private
+   */
   handleTaskCellDblclickEvent(evnt: MouseEvent, params: VxeGanttDefines.TaskCellClickParams): void
+  /**
+   * @private
+   */
+  handleTaskHeaderContextmenuEvent(evnt: Event, params: VxeGanttDefines.TaskHeaderContextmenuParams): void
+  /**
+   * @private
+   */
+  handleTaskBodyContextmenuEvent(evnt: Event, params: VxeGanttDefines.TaskBodyContextmenuParams): void
+  /**
+   * @private
+   */
+  handleTaskFooterContextmenuEvent(evnt: Event, params: VxeGanttDefines.TaskFooterContextmenuParams): void
+  /**
+   * @private
+   */
+  handleTaskBarContextmenuEvent(evnt: Event, params: VxeGanttDefines.TaskBarContextmenuParams): void
+  /**
+   * @private
+   */
   handleTaskBarClickEvent(evnt: MouseEvent, params: VxeGanttDefines.TaskBarClickParams): void
+  /**
+   * @private
+   */
   handleTaskBarDblclickEvent(evnt: MouseEvent, params: VxeGanttDefines.TaskBarClickParams): void
 }
 export interface VxeGanttPrivateMethods extends GanttPrivateMethods {}
@@ -426,6 +454,36 @@ export namespace VxeGanttDefines {
   export interface TaskCellDblClickEventParams<D = any> extends TaskCellClickEventParams<D> {}
   export interface TaskBarClickEventParams<D = any> extends TaskBarClickParams<D>, GanttEventParams {}
   export interface TaskBarDblClickEventParams<D = any> extends TaskBarClickEventParams<D> {}
+
+  export interface TaskHeaderContextmenuParams<D = any> {
+    source: string
+    type: string
+    column: ViewColumn<D>
+    $rowIndex: number
+  }
+  export interface TaskBodyContextmenuParams<D = any> {
+    source: string
+    type: string
+    row?: D
+    rowIndex: number
+    $rowIndex: number
+    _rowIndex: number
+    column?: ViewColumn<D>
+  }
+  export interface TaskFooterContextmenuParams<D = any> {
+    source: string
+    type: string
+    column?: ViewColumn<D>
+    $rowIndex: number
+  }
+  export interface TaskBarContextmenuParams<D = any> {
+    source: string
+    type: string
+    row: D
+    rowIndex: number
+    $rowIndex: number
+    _rowIndex: number
+  }
 
   export interface TaskViewCellClickEventParams<D = any> extends GanttEventParams {
     row: D
