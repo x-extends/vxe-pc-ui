@@ -5457,6 +5457,7 @@ export namespace VxeTableDefines {
     resizeHeight: number
     oTop: number
     expandHeight: number
+    lineHeight?: number
     treeLoaded?: boolean
     expandLoaded?: boolean
     formatData?: {
@@ -5729,6 +5730,7 @@ export namespace VxeTableDefines {
     $columnIndex: number
     _columnIndex: number
     fixed: VxeColumnPropTypes.Fixed
+    source: string
     type: string
     isHidden: boolean
     hasFilter: boolean
@@ -5745,6 +5747,7 @@ export namespace VxeTableDefines {
     $columnIndex: number
     _columnIndex: number
     fixed: VxeColumnPropTypes.Fixed
+    source: string
     type: string
     isHidden: boolean
     hasFilter: boolean
@@ -5769,6 +5772,7 @@ export namespace VxeTableDefines {
     $columnIndex: number
     _columnIndex: number
     fixed: VxeColumnPropTypes.Fixed
+    source: string
     type: string
     isHidden: boolean
     isEdit: boolean
@@ -5806,6 +5810,7 @@ export namespace VxeTableDefines {
     $columnIndex: number
     _columnIndex: number
     fixed: VxeColumnPropTypes.Fixed
+    source: string
     type: string
     /**
      * 已废弃
@@ -5824,6 +5829,8 @@ export namespace VxeTableDefines {
   }
 
   interface TableBaseHeaderCellParams<D = any> {
+    source: string
+    type: string
     $rowIndex: number
     column: ColumnInfo<D>
     columnIndex: number
@@ -5831,6 +5838,8 @@ export namespace VxeTableDefines {
   }
 
   interface TableBaseCellParams<D = any> {
+    source: string
+    type: string
     cell: any
     row: D
     rowIndex: number
@@ -5841,6 +5850,8 @@ export namespace VxeTableDefines {
   }
 
   interface TableBaseFooterCellParams<D = any> {
+    source: string
+    type: string
     $rowIndex: number
     column: ColumnInfo<D>
     columnIndex: number
