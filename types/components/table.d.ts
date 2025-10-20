@@ -2621,6 +2621,34 @@ export namespace VxeTablePropTypes {
     mode?: 'default' | 'scroll' | 'wheel' | ''
   }
 
+  export interface ScrollbarXConfig {
+    /**
+     * 滚动条显示位置
+     */
+    position?: 'top' | 'bottom' | ''
+    /**
+     * 滚动条显示方式
+     */
+    visible?: 'auto' | 'visible' | 'hidden' | boolean
+    /**
+     * 滚动行为
+     */
+    overscrollBehavior?: 'contain' | 'none' | ''
+  }
+  export interface ScrollbarYConfig {
+    /**
+     * 滚动条显示位置
+     */
+    position?: 'left' | 'right' | ''
+    /**
+     * 滚动条显示方式
+     */
+    visible?: 'auto' | 'visible' | 'hidden' | boolean
+    /**
+     * 滚动行为
+     */
+    overscrollBehavior?: 'contain' | 'none' | ''
+  }
   /**
    * 滚动条配置项
    */
@@ -2634,31 +2662,17 @@ export namespace VxeTablePropTypes {
      */
     height?: number
     /**
+     * 滚动行为
+     */
+    overscrollBehavior?: 'contain' | 'none' | ''
+    /**
      * 横向滚动条
      */
-    x?: {
-      /**
-       * 滚动条显示位置
-       */
-      position?: 'top' | 'bottom' | ''
-      /**
-       * 滚动条显示方式
-       */
-      visible?: 'auto' | 'visible' | 'hidden' | boolean
-    }
+    x?: ScrollbarXConfig
     /**
      * 纵向滚动条
      */
-    y?: {
-      /**
-       * 滚动条显示位置
-       */
-      position?: 'left' | 'right' | ''
-      /**
-       * 滚动条显示方式
-       */
-      visible?: 'auto' | 'visible' | 'hidden' | boolean
-    }
+    y?: ScrollbarYConfig
   }
 
   export type Params = any
@@ -3495,6 +3509,8 @@ export interface TablePrivateComputed<D = any> {
   computeVirtualXOpts: ComputedRef<VxeTablePropTypes.VirtualXConfig & { gt: number }>
   computeVirtualYOpts: ComputedRef<VxeTablePropTypes.VirtualYConfig & { gt: number }>
   computeScrollbarOpts: ComputedRef<VxeTablePropTypes.ScrollbarConfig>
+  computeScrollbarXOpts: ComputedRef<VxeTablePropTypes.ScrollbarXConfig>
+  computeScrollbarYOpts: ComputedRef<VxeTablePropTypes.ScrollbarYConfig>
   computeScrollbarXToTop: ComputedRef<boolean>
   computeScrollbarYToLeft: ComputedRef<boolean>
   computeColumnOpts: ComputedRef<VxeTablePropTypes.ColumnOpts>
