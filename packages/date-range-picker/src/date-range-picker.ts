@@ -565,8 +565,10 @@ export default /* define-vxe-component start */ defineVxeComponent({
       if (isDatePickerType) {
         $xeDateRangePicker.hidePanel()
       }
-      $xeDateRangePicker.handleChange('', '', evnt)
-      $xeDateRangePicker.dispatchEvent('clear', { value }, evnt)
+      const startValue = ''
+      const endValue = ''
+      $xeDateRangePicker.handleChange(startValue, endValue, evnt)
+      $xeDateRangePicker.dispatchEvent('clear', { value, startValue, endValue }, evnt)
     },
     checkValue () {
       const $xeDateRangePicker = this
@@ -659,6 +661,8 @@ export default /* define-vxe-component start */ defineVxeComponent({
           $startDatePanel.confirmByEvent(evnt)
           $endDatePanel.confirmByEvent(evnt)
         }
+        const value = $xeDateRangePicker.getRangeValue(startValue, endValue)
+        $xeDateRangePicker.dispatchEvent('confirm', { value, startValue, endValue }, evnt)
       }
       $xeDateRangePicker.hidePanel()
     },

@@ -545,7 +545,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       }
       $xeDatePicker.hidePanel()
     },
-    panelChangeEvent (params: any) {
+    panelChangeEvent (params: VxeDatePickerDefines.ChangeEventParams) {
       const $xeDatePicker = this
       const props = $xeDatePicker
 
@@ -558,6 +558,12 @@ export default /* define-vxe-component start */ defineVxeComponent({
           $xeDatePicker.hidePanel()
         }
       }
+    },
+    panelConfirmEvent (params: VxeDatePickerDefines.ConfirmEventParams) {
+      const $xeDatePicker = this
+
+      const $datePanel = $xeDatePicker.$refs.refDatePanel as VxeDatePanelConstructor
+      $datePanel.dispatchEvent('confirm', params, params.$event)
     },
     // 全局事件
     handleGlobalMousedownEvent (evnt: Event) {
@@ -950,7 +956,8 @@ export default /* define-vxe-component start */ defineVxeComponent({
                         selectDay: props.selectDay
                       },
                       on: {
-                        change: $xeDatePicker.panelChangeEvent
+                        change: $xeDatePicker.panelChangeEvent,
+                        confirm: $xeDatePicker.panelConfirmEvent
                       }
                     })
                   ]),

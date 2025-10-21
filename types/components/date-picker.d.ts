@@ -190,6 +190,7 @@ export type VxeDatePickerEmits = [
   'focus',
   'blur',
   'clear',
+  'confirm',
   'prefix-click',
   'suffix-click',
   'date-prev',
@@ -220,6 +221,9 @@ export namespace VxeDatePickerDefines {
   export interface ChangeParams extends DatePickerParams {}
   export interface ChangeEventParams extends DatePickerEventParams, ChangeParams { }
 
+  export interface ClearEventParams extends DatePickerEventParams {}
+  export interface ConfirmEventParams extends DatePickerEventParams {}
+
   export interface ShortcutClickParams {
     $datePicker: VxeDatePickerConstructor
     option: VxeDatePickerDefines.ShortcutOption
@@ -230,18 +234,24 @@ export namespace VxeDatePickerDefines {
 export type VxeDatePickerEventProps = {
   onInput?: VxeDatePickerEvents.Input
   onChange?: VxeDatePickerEvents.Change
+  onClear?: VxeDatePickerEvents.Clear
+  onConfirm?: VxeDatePickerEvents.Confirm
   onShortcutClick?: VxeDatePickerEvents.ShortcutClick
 }
 
 export interface VxeDatePickerListeners {
   input?: VxeDatePickerEvents.Input
   change?: VxeDatePickerEvents.Change
+  clear?: VxeDatePickerEvents.Clear
+  confirm?: VxeDatePickerEvents.Confirm
   shortcutClick?: VxeDatePickerEvents.ShortcutClick
 }
 
 export namespace VxeDatePickerEvents {
   export type Input = (params: VxeDatePickerDefines.InputEventParams) => void
   export type Change = (params: VxeDatePickerDefines.ChangeEventParams) => void
+  export type Clear = (params: VxeDatePickerDefines.ClearEventParams) => void
+  export type Confirm = (params: VxeDatePickerDefines.ConfirmEventParams) => void
   export type ShortcutClick = (params: VxeDatePickerDefines.ShortcutClickEventParams) => void
 }
 

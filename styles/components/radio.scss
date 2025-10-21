@@ -40,7 +40,7 @@
   &:not(.is--disabled) {
     > input {
       &:focus+.vxe-radio--icon {
-        box-shadow: 0 0 0.2em 0 var(--vxe-ui-font-primary-color);
+        color: var(--vxe-ui-font-primary-darken-color);
       }
     }
   }

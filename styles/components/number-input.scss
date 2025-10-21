@@ -150,7 +150,7 @@
 .vxe-number-input--plus-btn {
   border: 0;
   outline: 0;
-  width: 3em;
+  width: 2.8em;
   flex-shrink: 0;
   font-family: inherit;
   color: var(--vxe-ui-font-color);
@@ -192,7 +192,24 @@
   }
 }
 .vxe-number-input {
-  &.control-left {
+  &.is--controls {
+    & > .vxe-number-input--input-wrapper {
+      .vxe-number-input--input {
+        border-radius: 0;
+      }
+    }
+  }
+  &.ctl--default {
+    & > .vxe-number-input--minus-btn {
+      border-right: 1px solid var(--vxe-ui-input-border-color);
+      border-radius: var(--vxe-ui-base-border-radius) 0 0 var(--vxe-ui-base-border-radius);
+    }
+    & > .vxe-number-input--plus-btn {
+      border-left: 1px solid var(--vxe-ui-input-border-color);
+      border-radius: 0 var(--vxe-ui-base-border-radius) var(--vxe-ui-base-border-radius) 0;
+    }
+  }
+  &.ctl--left {
     .vxe-number-input--side-control {
       border-right: 1px solid var(--vxe-ui-input-border-color);
       & > .vxe-number-input--plus-btn {
@@ -203,7 +220,7 @@
       }
     }
   }
-  &.control-right {
+  &.ctl--right {
     .vxe-number-input--side-control {
       border-left: 1px solid var(--vxe-ui-input-border-color);
       & > .vxe-number-input--plus-btn {
@@ -217,15 +234,9 @@
   & > .vxe-number-input--minus-btn,
   & > .vxe-number-input--plus-btn {
     height: 100%;
-    font-size: 0.84em;
-  }
-  & > .vxe-number-input--minus-btn {
-    border-right: 1px solid var(--vxe-ui-input-border-color);
-    border-radius: var(--vxe-ui-base-border-radius) 0 0 var(--vxe-ui-base-border-radius);
-  }
-  & > .vxe-number-input--plus-btn {
-    border-left: 1px solid var(--vxe-ui-input-border-color);
-    border-radius: 0 var(--vxe-ui-base-border-radius) var(--vxe-ui-base-border-radius) 0;
+    i {
+      font-size: 0.84em;
+    }
   }
 }
 
