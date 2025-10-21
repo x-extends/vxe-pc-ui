@@ -23,10 +23,10 @@
 
 * 版本说明
   * **V4**
-    * [x] v4.7 拆分 vxe-design 可视化组件和基础组件库
+    * [x] v4.7 拆分 [vxe-design](https://github.com/x-extends/vxe-design) 可视化组件和基础组件库
     * [x] v4.0 基于 vue3.2~2.7，只支持现代浏览器，不支持 IE
   * **V3**
-    * [x] v3.7 拆分 vxe-design 可视化组件和基础组件库
+    * [x] v3.7 拆分 [vxe-design](https://github.com/x-extends/vxe-design) 可视化组件和基础组件库
     * [x] v3.0 基于 vue2.6~2.7，只支持现代浏览器，不支持 IE
   * **V2**
     * [x] ~~v2.0 基于 vue2.6~2.7，停止维护~~

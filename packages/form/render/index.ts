@@ -133,7 +133,7 @@ function getItemOns (renderOpts: VxeGlobalRendererHandles.RenderFormItemContentO
     // 处理 model 值双向绑定
       XEUtils.set(data, field, value)
     },
-    change (params) {
+    change () {
     // 处理 change 事件相关逻辑
       $form.updateStatus(params)
     }
