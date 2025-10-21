@@ -1,6 +1,6 @@
 # vxe-pc-ui
 
-[![star](https://gitee.com/x-extends/vxe-pc-ui/badge/star.svg?theme=gvp)](https://gitee.com/x-extends/vxe-pc-ui/stargazers)
+[![github star](https://img.shields.io/github/stars/x-extends/vxe-pc-ui.svg)](https://github.com/x-extends/vxe-pc-ui/stargazers)
 [![npm version](https://img.shields.io/npm/v/vxe-pc-ui.svg?style=flat-square)](https://www.npmjs.com/package/vxe-pc-ui)
 [![NodeJS with Webpack](https://github.com/x-extends/vxe-pc-ui/actions/workflows/webpack.yml/badge.svg)](https://github.com/x-extends/vxe-pc-ui/actions/workflows/webpack.yml)
 [![npm downloads](https://img.shields.io/npm/dt/vxe-pc-ui.svg?style=flat-square)](https://npm-stat.com/charts.html?package=vxe-pc-ui)
