@@ -130,6 +130,7 @@ export default defineVxeComponent({
     'focus',
     'blur',
     'clear',
+    'confirm',
     'prefix-click',
     'suffix-click',
     'date-prev',
@@ -460,7 +461,7 @@ export default defineVxeComponent({
       hidePanel()
     }
 
-    const panelChangeEvent = (params: any) => {
+    const panelChangeEvent = (params: VxeDatePickerDefines.ChangeEventParams) => {
       const { multiple, autoClose } = props
       const { value, $event } = params
       const isDateTimeType = computeIsDateTimeType.value
@@ -470,6 +471,10 @@ export default defineVxeComponent({
           hidePanel()
         }
       }
+    }
+
+    const panelConfirmEvent = (params: VxeDatePickerDefines.ConfirmEventParams) => {
+      dispatchEvent('confirm', params, params.$event)
     }
 
     // 全局事件
@@ -816,7 +821,8 @@ export default defineVxeComponent({
                         festivalMethod: props.festivalMethod,
                         disabledMethod: props.disabledMethod,
                         selectDay: props.selectDay,
-                        onChange: panelChangeEvent
+                        onChange: panelChangeEvent,
+                        onConfirm: panelConfirmEvent
                       })
                     ]),
                     h('div', {

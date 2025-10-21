@@ -130,6 +130,7 @@ export default defineVxeComponent({
     'focus',
     'blur',
     'clear',
+    'confirm',
     'prefix-click',
     'suffix-click',
     'date-prev',
@@ -480,8 +481,10 @@ export default defineVxeComponent({
       if (isDatePickerType) {
         hidePanel()
       }
-      handleChange('', '', evnt)
-      dispatchEvent('clear', { value }, evnt)
+      const startValue = ''
+      const endValue = ''
+      handleChange(startValue, endValue, evnt)
+      dispatchEvent('clear', { value, startValue, endValue }, evnt)
     }
 
     const checkValue = () => {
@@ -560,6 +563,8 @@ export default defineVxeComponent({
           $startDatePanel.confirmByEvent(evnt)
           $endDatePanel.confirmByEvent(evnt)
         }
+        const value = getRangeValue(startValue, endValue)
+        dispatchEvent('confirm', { value, startValue, endValue }, evnt)
       }
       hidePanel()
     }

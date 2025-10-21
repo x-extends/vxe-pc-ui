@@ -975,7 +975,7 @@ export default defineVxeComponent({
       const isControls = isEnableConf(controlOpts) && (controls === false ? controls : showButton)
       return h('div', {
         ref: refElem,
-        class: ['vxe-number-input', `type--${type}`, `control-${layout === 'right' || layout === 'left' ? layout : 'default'}`, className, {
+        class: ['vxe-number-input', `type--${type}`, `ctl--${layout === 'right' || layout === 'left' ? layout : 'default'}`, className, {
           [`size--${vSize}`]: vSize,
           [`is--${align}`]: align,
           'is--controls': isControls && !inputReadonly,
@@ -998,9 +998,9 @@ export default defineVxeComponent({
                     renderInput()
                   ]
                 : [
-                    renderPlusBtn(),
+                    renderMinusBtn(),
                     renderInput(),
-                    renderMinusBtn()
+                    renderPlusBtn()
                   ]))
         : [
             renderInput()

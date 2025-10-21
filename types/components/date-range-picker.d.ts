@@ -207,6 +207,7 @@ export type VxeDateRangePickerEmits = [
   'focus',
   'blur',
   'clear',
+  'confirm',
   'prefix-click',
   'suffix-click',
   'date-prev',
@@ -239,6 +240,9 @@ export namespace VxeDateRangePickerDefines {
   export interface ChangeParams extends DateRangePickerParams {}
   export interface ChangeEventParams extends DateRangePickerEventParams, ChangeParams { }
 
+  export interface ClearEventParams extends DateRangePickerEventParams {}
+  export interface ConfirmEventParams extends DateRangePickerEventParams {}
+
   export interface ShortcutClickParams {
     $dateRangePicker: VxeDateRangePickerConstructor
     option: VxeDateRangePickerDefines.ShortcutOption
@@ -252,6 +256,8 @@ export type VxeDateRangePickerEventProps = {
   'onUpdate:endValue'?: VxeDateRangePickerEvents.UpdateEndValueValue
   onInput?: VxeDateRangePickerEvents.Input
   onChange?: VxeDateRangePickerEvents.Change
+  onClear?: VxeDateRangePickerEvents.Clear
+  onConfirm?: VxeDateRangePickerEvents.Confirm
   onShortcutClick?: VxeDateRangePickerEvents.ShortcutClick
 }
 
@@ -261,6 +267,8 @@ export interface VxeDateRangePickerListeners {
   'update:endValue'?: VxeDateRangePickerEvents.UpdateEndValueValue
   input?: VxeDateRangePickerEvents.Input
   change?: VxeDateRangePickerEvents.Change
+  clear?: VxeDateRangePickerEvents.Clear
+  confirm?: VxeDateRangePickerEvents.Confirm
   shortcutClick?: VxeDateRangePickerEvents.ShortcutClick
 }
 
@@ -270,6 +278,8 @@ export namespace VxeDateRangePickerEvents {
   export type UpdateEndValueValue = (modelValue: VxeDateRangePickerPropTypes.EndValue) => void
   export type Input = (params: VxeDateRangePickerDefines.InputEventParams) => void
   export type Change = (params: VxeDateRangePickerDefines.ChangeEventParams) => void
+  export type Clear = (params: VxeDateRangePickerDefines.ClearEventParams) => void
+  export type Confirm = (params: VxeDateRangePickerDefines.ConfirmEventParams) => void
   export type ShortcutClick = (params: VxeDateRangePickerDefines.ShortcutClickEventParams) => void
 }
 

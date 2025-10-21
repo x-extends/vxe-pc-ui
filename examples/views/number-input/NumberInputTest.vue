@@ -61,6 +61,9 @@
       <vxe-number-input v-model="demo1.value903" type="float" :auto-fill="false" :control-config="{isWheel: false}"></vxe-number-input>
     </p>
     <p>
+      <vxe-number-input v-model="demo1.value904" type="float" :control-config="{layout: 'default'}"></vxe-number-input>
+    </p>
+    <p>
       <vxe-number-input v-model="demo1.value904" type="float" :control-config="{layout: 'left'}"></vxe-number-input>
     </p>
     <p>
