@@ -492,6 +492,9 @@ export namespace VxeGridDefines {
   export interface PasteEventParams<D = any> extends GridEventParams<D>, VxeTableDefines.PasteEventParams<D> { }
   export interface CopyEventParams<D = any> extends GridEventParams<D>, VxeTableDefines.CopyEventParams<D> { }
   export interface CutEventParams<D = any> extends GridEventParams<D>, VxeTableDefines.CutEventParams<D> { }
+  export interface ColumnsChangeEventParams<D = any> extends GridEventParams<D>, VxeTableDefines.ColumnsChangeEventParams<D> { }
+  export interface DataChangeEventParams<D = any> extends GridEventParams<D>, VxeTableDefines.DataChangeEventParams<D> { }
+  export interface FooterDataChangeEventParams<D = any> extends GridEventParams<D>, VxeTableDefines.FooterDataChangeEventParams<D> { }
   export interface CurrentRowChangeParams<D = any> extends GridEventParams<D>, VxeTableDefines.CurrentRowChangeEventParams<D> { }
   export interface CurrentRowDisabledParams<D = any> extends GridEventParams<D>, VxeTableDefines.CurrentRowDisabledEventParams<D> { }
   export interface CurrentColumnChangeParams<D = any> extends GridEventParams<D>, VxeTableDefines.CurrentColumnChangeEventParams<D> { }
@@ -585,6 +588,9 @@ export interface VxeGridEventProps<D = any> {
   onPaste?: VxeGridEvents.Paste<D>
   onCopy?: VxeGridEvents.Copy<D>
   onCut?: VxeGridEvents.Cut<D>
+  onColumnsChange?: VxeGridEvents.ColumnsChange<D>
+  onDataChange?: VxeGridEvents.DataChange<D>
+  onFooterDataChange?: VxeGridEvents.FooterDataChange<D>
   onCurrentRowChange?: VxeGridEvents.CurrentRowChange<D>
   onCurrentRowDisabled?: VxeGridEvents.CurrentRowDisabled<D>
   onCurrentColumnChange?: VxeGridEvents.CurrentColumnChange<D>
@@ -663,6 +669,9 @@ export interface VxeGridListeners<D = any> {
   paste?: VxeGridEvents.Paste<D>
   copy?: VxeGridEvents.Copy<D>
   cut?: VxeGridEvents.Cut<D>
+  columnsChange?: VxeGridEvents.ColumnsChange<D>
+  dataChange?: VxeGridEvents.DataChange<D>
+  footerDataChange?: VxeGridEvents.FooterDataChange<D>
   currentRowChange?: VxeGridEvents.CurrentRowChange<D>
   currentRowDisabled?: VxeGridEvents.CurrentRowDisabled<D>
   currentColumnChange?: VxeGridEvents.CurrentColumnChange<D>
@@ -741,6 +750,9 @@ export namespace VxeGridEvents {
   export type Paste<D = any> = (params: VxeGridDefines.PasteEventParams<D>) => void
   export type Copy<D = any> = (params: VxeGridDefines.CopyEventParams<D>) => void
   export type Cut<D = any> = (params: VxeGridDefines.CutEventParams<D>) => void
+  export type ColumnsChange<D = any> = (params: VxeGridDefines.ColumnsChangeEventParams<D>) => void
+  export type DataChange<D = any> = (params: VxeGridDefines.DataChangeEventParams<D>) => void
+  export type FooterDataChange<D = any> = (params: VxeGridDefines.FooterDataChangeEventParams<D>) => void
   export type CurrentRowChange<D = any> = (params: VxeGridDefines.CurrentRowChangeParams<D>) => void
   export type CurrentRowDisabled<D = any> = (params: VxeGridDefines.CurrentRowDisabledParams<D>) => void
   export type CurrentColumnChange<D = any> = (params: VxeGridDefines.CurrentColumnChangeParams<D>) => void

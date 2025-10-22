@@ -4893,12 +4893,32 @@ export interface TableMethods<DT = any> {
   clearTreeExpandReserve(): Promise<void>
   /**
    * 获取表格的滚动状态
+   * @deprecated
    */
   getScroll(): {
     virtualX: boolean
     virtualY: boolean
     scrollTop: number
     scrollLeft: number
+  }
+  /**
+   * 获取表格的滚动数据
+   */
+  getScrollData(): {
+    virtualX: boolean
+    virtualY: boolean
+    isTop: number
+    isBottom: number
+    isLeft: number
+    isRight: number
+    scrollbarHeight: number
+    scrollbarWidth: number
+    scrollTop: number
+    scrollLeft: number
+    scrollHeight: number
+    scrollWidth: number
+    clientHeight: number
+    clientWidth: number
   }
   /**
    * 如果有滚动条，则滚动到对应的位置

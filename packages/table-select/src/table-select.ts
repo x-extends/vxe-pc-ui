@@ -260,7 +260,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const $xeTableSelect = this
       const props = $xeTableSelect
       const reactData = ($xeTableSelect as any).reactData as TableSelectReactData
-      const internalData = ($xeTableSelect as any).reactData as TableSelectInternalData
+      const internalData = ($xeTableSelect as any).internalData as TableSelectInternalData
 
       const { value, lazyOptions } = props
       const { fullOptionList } = reactData
