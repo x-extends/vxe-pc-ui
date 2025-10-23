@@ -30,7 +30,7 @@ npm install vxe-pc-ui
 
 ```javascript
 // ...
-import VxeUIAll from 'vxe-pc-ui'
+import VxeUIBase from 'vxe-pc-ui'
 import 'vxe-pc-ui/lib/style.css'
 
 // import VxeUITable from 'vxe-table'
@@ -41,7 +41,7 @@ import 'vxe-pc-ui/lib/style.css'
 // ...
 
 createApp(App)
-  .use(VxeUIAll)
+  .use(VxeUIBase)
   // .use(VxeUITable)
   // .use(VxeUIDesign)
   .mount('#app')

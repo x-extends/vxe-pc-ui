@@ -381,12 +381,16 @@ export default defineVxeComponent({
     }
 
     const toggleCollapseEvent = (evnt: Event) => {
-      toggleCollapse()
+      const actionRest = toggleCollapse()
       const status = getCollapseStatus()
       formMethods.dispatchEvent('toggle-collapse', { status, collapse: status, data: props.data }, evnt)
       formMethods.dispatchEvent('collapse', { status, collapse: status, data: props.data }, evnt)
-      nextTick(() => {
-        recalculate()
+      actionRest.then(() => {
+        recalculate().then(() => {
+          if ($xeGrid) {
+            $xeGrid.recalculate(true)
+          }
+        })
         if ($xeGrid) {
           $xeGrid.recalculate()
         }
