@@ -28,7 +28,7 @@ npm install vxe-pc-ui@3
 ```javascript
 import Vue from 'vue'
 // ...
-import VxeUIAll from 'vxe-pc-ui'
+import VxeUIBase from 'vxe-pc-ui'
 import 'vxe-pc-ui/lib/style.css'
 
 // import VxeUITable from 'vxe-table'
@@ -38,7 +38,7 @@ import 'vxe-pc-ui/lib/style.css'
 // import 'vxe-design/lib/style.css'
 // ...
 
-Vue.use(VxeUIAll)
+Vue.use(VxeUIBase)
 // Vue.use(VxeUITable)
 // Vue.use(VxeUIDesign)
 ```
