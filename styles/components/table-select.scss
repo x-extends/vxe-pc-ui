@@ -47,6 +47,7 @@
 }
 
 .vxe-table-select--panel {
+  pointer-events: none;
   @include placement.createPlacementPanel();
 }
 
