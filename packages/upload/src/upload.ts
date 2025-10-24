@@ -877,8 +877,6 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const cacheMaps = Object.assign({}, reactData.fileCacheMaps)
       const newFileList = multiple ? fileList : []
       const uploadPromiseRests: any[] = []
-      reactData.fileList = newFileList
-      reactData.fileCacheMaps = cacheMaps
       selectFiles.forEach(file => {
         const { name } = file
         const fileKey = getUniqueKey()
@@ -904,6 +902,10 @@ export default /* define-vxe-component start */ defineVxeComponent({
           )
         }
         newFileList.push(item)
+      })
+      reactData.fileList = newFileList
+      reactData.fileCacheMaps = cacheMaps
+      newFileList.forEach(item => {
         $xeUpload.dispatchEvent('add', { option: item }, evnt)
       })
       Promise.all(urlMode ? uploadPromiseRests : []).then(() => {
