@@ -4888,10 +4888,10 @@ export interface TableMethods<DT = any> {
   getScrollData(): {
     virtualX: boolean
     virtualY: boolean
-    isTop: number
-    isBottom: number
-    isLeft: number
-    isRight: number
+    isTop: boolean
+    isBottom: boolean
+    isLeft: boolean
+    isRight: boolean
     scrollbarHeight: number
     scrollbarWidth: number
     scrollTop: number
