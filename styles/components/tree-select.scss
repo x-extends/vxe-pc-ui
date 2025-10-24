@@ -55,6 +55,7 @@
 }
 
 .vxe-tree-select--panel {
+  pointer-events: none;
   @include placement.createPlacementPanel();
 }
 

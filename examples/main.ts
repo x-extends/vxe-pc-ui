@@ -6,7 +6,7 @@ import i18n from './i18n'
 import './styles/index.scss'
 
 // 引入组件库
-import VxeUI from '../packages'
+import VxeUIBase, { VxeUI } from '../packages'
 import enUS from '../packages/language/en-US'
 import '../styles/all.scss'
 
@@ -39,7 +39,7 @@ VxeUI.setLanguage((localStorage.getItem('VXE_LANGUAGE') as 'zh-CN' | 'en-US') ||
 
 window.axios.defaults.baseURL = process.env.VUE_APP_SERVE_API_URL
 
-Vue.use(VxeUI)
+Vue.use(VxeUIBase)
 // Vue.use(VxeUITable)
 
 Vue.config.productionTip = false
