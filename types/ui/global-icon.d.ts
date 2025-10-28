@@ -264,7 +264,7 @@ declare module '@vxe-ui/core' {
     COLOR_PICKER_TPTY_OPEN?: string
     COLOR_PICKER_TPTY_CLOSE?: string
 
-    // split
+    // splitter
     SPLIT_TOP_ACTION?: string
     SPLIT_BOTTOM_ACTION?: string
     SPLIT_LEFT_ACTION?: string

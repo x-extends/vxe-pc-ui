@@ -7,37 +7,37 @@ import { getGlobalDefaultConfig } from '../../ui/src/utils'
 import { warnLog, errLog } from '../../ui/src/log'
 import XEUtils from 'xe-utils'
 
-import type { SplitReactData, SplitPrivateRef, VxeSplitPropTypes, SplitInternalData, SplitMethods, VxeSplitDefines, VxeSplitPaneProps, VxeSplitPrivateComputed, SplitPrivateMethods, VxeSplitEmits, VxeSplitConstructor, ValueOf, VxeSplitPrivateMethods } from '../../../types'
+import type { SplitterReactData, SplitterPrivateRef, VxeSplitterPropTypes, SplitterInternalData, SplitterMethods, VxeSplitterPanelPropTypes, VxeSplitterDefines, VxeSplitterPanelProps, VxeSplitterPrivateComputed, SplitterPrivateMethods, VxeSplitterEmits, VxeSplitterConstructor, ValueOf, VxeSplitterPrivateMethods } from '../../../types'
 
 export default defineVxeComponent({
-  name: 'VxeSplit',
+  name: 'VxeSplitter',
   props: {
-    width: [Number, String] as PropType<VxeSplitPropTypes.Width>,
-    height: [Number, String] as PropType<VxeSplitPropTypes.Height>,
+    width: [Number, String] as PropType<VxeSplitterPropTypes.Width>,
+    height: [Number, String] as PropType<VxeSplitterPropTypes.Height>,
     vertical: {
-      type: Boolean as PropType<VxeSplitPropTypes.Vertical>,
-      default: () => getConfig().split.vertical
+      type: Boolean as PropType<VxeSplitterPropTypes.Vertical>,
+      default: () => getConfig().splitter.vertical
     },
     border: {
-      type: Boolean as PropType<VxeSplitPropTypes.Border>,
-      default: () => getConfig().split.border
+      type: Boolean as PropType<VxeSplitterPropTypes.Border>,
+      default: () => getConfig().splitter.border
     },
     padding: {
-      type: Boolean as PropType<VxeSplitPropTypes.Padding>,
-      default: () => getConfig().split.padding
+      type: Boolean as PropType<VxeSplitterPropTypes.Padding>,
+      default: () => getConfig().splitter.padding
     },
     resize: {
-      type: Boolean as PropType<VxeSplitPropTypes.Resize>,
-      default: () => getConfig().split.resize
+      type: Boolean as PropType<VxeSplitterPropTypes.Resize>,
+      default: () => getConfig().splitter.resize
     },
-    items: Array as PropType<VxeSplitPropTypes.Items>,
-    itemConfig: Object as PropType<VxeSplitPropTypes.ItemConfig>,
-    barConfig: Object as PropType<VxeSplitPropTypes.BarConfig>,
-    resizeConfig: Object as PropType<VxeSplitPropTypes.ResizeConfig>,
-    actionConfig: Object as PropType<VxeSplitPropTypes.ActionConfig>,
+    items: Array as PropType<VxeSplitterPropTypes.Items>,
+    itemConfig: Object as PropType<VxeSplitterPropTypes.ItemConfig>,
+    barConfig: Object as PropType<VxeSplitterPropTypes.BarConfig>,
+    resizeConfig: Object as PropType<VxeSplitterPropTypes.ResizeConfig>,
+    actionConfig: Object as PropType<VxeSplitterPropTypes.ActionConfig>,
     size: {
-      type: String as PropType<VxeSplitPropTypes.Size>,
-      default: () => getConfig().split.size || getConfig().size
+      type: String as PropType<VxeSplitterPropTypes.Size>,
+      default: () => getConfig().splitter.size || getConfig().size
     }
   },
   emits: [
@@ -47,7 +47,7 @@ export default defineVxeComponent({
     'resize-start',
     'resize-drag',
     'resize-end'
-  ] as VxeSplitEmits,
+  ] as VxeSplitterEmits,
   setup (props, context) {
     const { emit, slots } = context
 
@@ -55,36 +55,36 @@ export default defineVxeComponent({
 
     const refElem = ref<HTMLDivElement>()
     const refBarInfoElem = ref<HTMLDivElement>()
-    const refResizableSplitTip = ref<HTMLDivElement>()
+    const refResizableSplitterTip = ref<HTMLDivElement>()
 
     const { computeSize } = useSize(props)
 
-    const reactData = reactive<SplitReactData>({
+    const reactData = reactive<SplitterReactData>({
       staticItems: [],
       itemList: [],
       barWidth: 0,
       barHeight: 0
     })
 
-    const internalData: SplitInternalData = {
+    const internalData: SplitterInternalData = {
       wrapperWidth: 0,
       wrapperHeight: 0
     }
 
     const computeItemOpts = computed(() => {
-      return Object.assign({}, getConfig().split.itemConfig, props.itemConfig)
+      return Object.assign({}, getConfig().splitter.itemConfig, props.itemConfig)
     })
 
     const computeBarOpts = computed(() => {
-      return Object.assign({}, getConfig().split.barConfig, props.barConfig)
+      return Object.assign({}, getConfig().splitter.barConfig, props.barConfig)
     })
 
     const computeResizeOpts = computed(() => {
-      return Object.assign({}, getConfig().split.resizeConfig, props.resizeConfig)
+      return Object.assign({}, getConfig().splitter.resizeConfig, props.resizeConfig)
     })
 
     const computeActionOpts = computed(() => {
-      return Object.assign({}, getConfig().split.actionConfig, props.actionConfig)
+      return Object.assign({}, getConfig().splitter.actionConfig, props.actionConfig)
     })
 
     const computeVisibleItems = computed(() => {
@@ -93,7 +93,7 @@ export default defineVxeComponent({
 
     const computeAutoItems = computed(() => {
       const { vertical } = props
-      const autoItems: VxeSplitDefines.PaneConfig[] = []
+      const autoItems: VxeSplitterDefines.PaneConfig[] = []
       let heightCount = 0
       let widthCount = 0
       reactData.itemList.forEach(vertical
@@ -135,17 +135,17 @@ export default defineVxeComponent({
       return stys
     })
 
-    const computeMaps: VxeSplitPrivateComputed = {
+    const computeMaps: VxeSplitterPrivateComputed = {
       computeItemOpts,
       computeBarOpts,
       computeActionOpts
     }
 
-    const refMaps: SplitPrivateRef = {
+    const refMaps: SplitterPrivateRef = {
       refElem
     }
 
-    const $xeSplit = {
+    const $xeSplitter = {
       xID,
       props,
       context,
@@ -154,10 +154,10 @@ export default defineVxeComponent({
 
       getRefMaps: () => refMaps,
       getComputeMaps: () => computeMaps
-    } as unknown as VxeSplitConstructor & VxeSplitPrivateMethods
+    } as unknown as VxeSplitterConstructor & VxeSplitterPrivateMethods
 
-    const dispatchEvent = (type: ValueOf<VxeSplitEmits>, params: Record<string, any>, evnt: Event | null) => {
-      emit(type, createEvent(evnt, { $split: $xeSplit }, params))
+    const dispatchEvent = (type: ValueOf<VxeSplitterEmits>, params: Record<string, any>, evnt: Event | null) => {
+      emit(type, createEvent(evnt, { $splitter: $xeSplitter }, params))
     }
 
     const callSlot = (slotFunc: any, params: any) => {
@@ -172,7 +172,7 @@ export default defineVxeComponent({
       return []
     }
 
-    const getActionIcon = (prevItem: VxeSplitDefines.PaneConfig, nextItem: VxeSplitDefines.PaneConfig, isNext: boolean) => {
+    const getActionIcon = (prevItem: VxeSplitterDefines.PaneConfig, nextItem: VxeSplitterDefines.PaneConfig, isNext: boolean) => {
       const { vertical } = props
       const topIcon = 'SPLIT_TOP_ACTION'
       const bottomIcon = 'SPLIT_BOTTOM_ACTION'
@@ -210,7 +210,7 @@ export default defineVxeComponent({
       return nextTick()
     }
 
-    const handleLoadItem = (list: VxeSplitPaneProps[], isReset: boolean) => {
+    const handleLoadItem = (list: VxeSplitterPanelProps[], isReset: boolean) => {
       const { staticItems } = reactData
       const actionOpts = computeActionOpts.value
       const { showPrevButton, showNextButton } = actionOpts
@@ -225,13 +225,13 @@ export default defineVxeComponent({
       }
       reactData.itemList = list.map(item => {
         if (item.showAction) {
-          warnLog('vxe.error.removeProp', ['[split] show-action'])
+          warnLog('vxe.error.removeProp', ['[splitter] show-action'])
         }
         if (item.slots) {
           XEUtils.each(item.slots, (func) => {
             if (!XEUtils.isFunction(func)) {
               if (!slots[func]) {
-                errLog('vxe.error.notSlot', [`[split] ${func}`])
+                errLog('vxe.error.notSlot', [`[splitter] ${func}`])
               }
             }
           })
@@ -241,7 +241,7 @@ export default defineVxeComponent({
         })
       })
       if (staticItems.length) {
-        errLog('vxe.error.errConflicts', ['<vxe-split-pane ...>', 'items'])
+        errLog('vxe.error.errConflicts', ['<vxe-splitter-panel ...>', 'items'])
       }
       if ((showPrevButton || showNextButton) && reactData.itemList.length > 2) {
         errLog('vxe.error.errConflicts', ['action-config.showPrevButton | action-config.showNextButton', 'Only supports 2 item'])
@@ -249,12 +249,79 @@ export default defineVxeComponent({
       return recalculate()
     }
 
-    const loadItem = (list: VxeSplitPaneProps[]) => {
+    const loadItem = (list: VxeSplitterPanelProps[]) => {
       return handleLoadItem(list || [], false)
     }
 
-    const reloadItem = (list: VxeSplitPaneProps[]) => {
+    const reloadItem = (list: VxeSplitterPanelProps[]) => {
       return handleLoadItem(list || [], true)
+    }
+
+    const handleItemByName = (name: VxeSplitterPanelPropTypes.Name) => {
+      const { itemList } = reactData
+      let index = -1
+      let currItem: VxeSplitterDefines.PaneConfig | null = null
+      let prevItem: VxeSplitterDefines.PaneConfig | null = null
+      let nextItem: VxeSplitterDefines.PaneConfig | null = null
+      for (let i = 0; i < itemList.length; i++) {
+        const item = itemList[i]
+        if (item.name === name) {
+          index = i
+          currItem = item
+          prevItem = itemList[i - 1] || null
+          nextItem = itemList[i + 1] || null
+          break
+        }
+      }
+      return {
+        index,
+        currItem,
+        prevItem,
+        nextItem
+      }
+    }
+
+    const setItemExpand = (name: VxeSplitterPanelPropTypes.Name, expanded: boolean) => {
+      const restItem = handleItemByName(name)
+      if (restItem) {
+        const { currItem, prevItem, nextItem } = restItem
+        if (currItem) {
+          if (expanded ? !currItem.isExpand : currItem.isExpand) {
+            if (nextItem) {
+              if (nextItem.isExpand) {
+                handleItemActionEvent(null, currItem, nextItem, false)
+              }
+            } else if (prevItem) {
+              if (prevItem.isExpand) {
+                handleItemActionEvent(null, prevItem, currItem, true)
+              }
+            }
+          }
+        }
+      }
+      return nextTick()
+    }
+
+    const toggleItemExpand = (name: VxeSplitterPanelPropTypes.Name) => {
+      const restItem = handleItemByName(name)
+      if (restItem) {
+        const { currItem } = restItem
+        if (currItem) {
+          return setItemExpand(name, !currItem.isExpand)
+        }
+      }
+      return nextTick()
+    }
+
+    const getItemExpand = (name: VxeSplitterPanelPropTypes.Name) => {
+      const restItem = handleItemByName(name)
+      if (restItem) {
+        const { currItem } = restItem
+        if (currItem) {
+          return currItem.isExpand
+        }
+      }
+      return false
     }
 
     const recalculate = () => {
@@ -280,7 +347,7 @@ export default defineVxeComponent({
         const itemOpts = computeItemOpts.value
         const allMinWidth = XEUtils.toNumber(itemOpts.minWidth)
         const allMinHeight = XEUtils.toNumber(itemOpts.minHeight)
-        const residueItems: VxeSplitDefines.PaneConfig[] = []
+        const residueItems: VxeSplitterDefines.PaneConfig[] = []
         if (vertical) {
           let countHeight = 0
           itemList.forEach(item => {
@@ -360,8 +427,8 @@ export default defineVxeComponent({
       }
       const containerRect = el.getBoundingClientRect()
       const barRect = barEl.getBoundingClientRect()
-      const rsSplitLineEl = refResizableSplitTip.value
-      const rsSplitTipEl = rsSplitLineEl ? rsSplitLineEl.children[0] as HTMLDivElement : null
+      const rsSplitterLineEl = refResizableSplitterTip.value
+      const rsSplitterTipEl = rsSplitterLineEl ? rsSplitterLineEl.children[0] as HTMLDivElement : null
       const itemOpts = computeItemOpts.value
       const resizeOpts = computeResizeOpts.value
       const { immediate } = resizeOpts
@@ -396,11 +463,11 @@ export default defineVxeComponent({
       let offsetTop = startOffsetTop
 
       const handleReStyle = (evnt: MouseEvent) => {
-        if (!rsSplitLineEl) {
+        if (!rsSplitterLineEl) {
           return
         }
-        const rsNumPrevEl = rsSplitTipEl ? rsSplitTipEl.children[0] as HTMLDivElement : null
-        const rsNumNextEl = rsSplitTipEl ? rsSplitTipEl.children[1] as HTMLDivElement : null
+        const rsNumPrevEl = rsSplitterTipEl ? rsSplitterTipEl.children[0] as HTMLDivElement : null
+        const rsNumNextEl = rsSplitterTipEl ? rsSplitterTipEl.children[1] as HTMLDivElement : null
         if (vertical) {
           let tipWidth = 0
           if (rsNumPrevEl) {
@@ -425,10 +492,10 @@ export default defineVxeComponent({
           if (rsLeft > containerRect.width - tipWidth - 1) {
             rsLeft = containerRect.width - tipWidth - 1
           }
-          rsSplitLineEl.style.left = '0'
-          rsSplitLineEl.style.top = `${offsetTop}px`
-          if (rsSplitTipEl) {
-            rsSplitTipEl.style.left = `${rsLeft}px`
+          rsSplitterLineEl.style.left = '0'
+          rsSplitterLineEl.style.top = `${offsetTop}px`
+          if (rsSplitterTipEl) {
+            rsSplitterTipEl.style.left = `${rsLeft}px`
           }
         } else {
           let tipHeight = 0
@@ -454,10 +521,10 @@ export default defineVxeComponent({
           if (rsTop > containerRect.height - tipHeight - 1) {
             rsTop = containerRect.height - tipHeight - 1
           }
-          rsSplitLineEl.style.top = '0'
-          rsSplitLineEl.style.left = `${offsetLeft}px`
-          if (rsSplitTipEl) {
-            rsSplitTipEl.style.top = `${rsTop}px`
+          rsSplitterLineEl.style.top = '0'
+          rsSplitterLineEl.style.left = `${offsetLeft}px`
+          if (rsSplitterTipEl) {
+            rsSplitterTipEl.style.top = `${rsTop}px`
           }
         }
       }
@@ -505,7 +572,7 @@ export default defineVxeComponent({
             nextEl.style.width = toCssUnit(nextResizeWidth)
           }
         }
-        if (rsSplitLineEl) {
+        if (rsSplitterLineEl) {
           handleReStyle(evnt)
         }
         dispatchEvent('resize-drag', { prevItem, nextItem, offsetHeight: targetOffsetHeight, offsetWidth: targetOffsetWidth }, evnt)
@@ -518,8 +585,8 @@ export default defineVxeComponent({
       document.onmouseup = (evnt) => {
         document.onmousemove = null
         document.onmouseup = null
-        if (rsSplitLineEl) {
-          rsSplitLineEl.style.display = ''
+        if (rsSplitterLineEl) {
+          rsSplitterLineEl.style.display = ''
         }
         handleUpdate()
         removeClass(el, 'is--drag')
@@ -527,8 +594,8 @@ export default defineVxeComponent({
         recalculate()
       }
 
-      if (rsSplitLineEl) {
-        rsSplitLineEl.style.display = 'block'
+      if (rsSplitterLineEl) {
+        rsSplitterLineEl.style.display = 'block'
         handleReStyle(evnt)
       }
       handleDrag(evnt)
@@ -536,7 +603,7 @@ export default defineVxeComponent({
       dispatchEvent('resize-start', { prevItem, nextItem }, evnt)
     }
 
-    const handleItemActionEvent = (evnt: MouseEvent, prevItem: VxeSplitDefines.PaneConfig, nextItem: VxeSplitDefines.PaneConfig, isNext: boolean) => {
+    const handleItemActionEvent = (evnt: MouseEvent | null, prevItem: VxeSplitterDefines.PaneConfig, nextItem: VxeSplitterDefines.PaneConfig, isNext: boolean) => {
       const { vertical } = props
       let expanded = false
       let item = prevItem
@@ -571,7 +638,9 @@ export default defineVxeComponent({
           nextItem.foldWidth = (prevItem.resizeWidth || prevItem.renderWidth) + (nextItem.resizeWidth || nextItem.renderWidth)
         }
       }
-      dispatchEvent('toggle-expand', { prevItem, nextItem, expanded, item }, evnt)
+      if (evnt) {
+        dispatchEvent('toggle-expand', { prevItem, nextItem, expanded, item }, evnt)
+      }
       recalculate()
     }
 
@@ -663,20 +732,23 @@ export default defineVxeComponent({
       recalculate()
     }
 
-    const splitMethods: SplitMethods = {
+    const splitterMethods: SplitterMethods = {
       dispatchEvent,
+      setItemExpand,
+      toggleItemExpand,
+      getItemExpand,
       recalculate,
       reset,
       loadItem,
       reloadItem
     }
 
-    const splitPrivateMethods: SplitPrivateMethods = {
+    const splitterPrivateMethods: SplitterPrivateMethods = {
     }
 
-    Object.assign($xeSplit, splitMethods, splitPrivateMethods)
+    Object.assign($xeSplitter, splitterMethods, splitterPrivateMethods)
 
-    const renderHandleBar = (prevItem: VxeSplitDefines.PaneConfig, nextItem: VxeSplitDefines.PaneConfig) => {
+    const renderHandleBar = (prevItem: VxeSplitterDefines.PaneConfig, nextItem: VxeSplitterDefines.PaneConfig) => {
       const { border, resize, vertical } = props
       const { itemList } = reactData
       const barStyle = computeBarStyle.value
@@ -687,23 +759,23 @@ export default defineVxeComponent({
       const resizeOpts = computeResizeOpts.value
       const { immediate } = resizeOpts
       return h('div', {
-        class: ['vxe-split-pane-handle', vertical ? 'is--vertical' : 'is--horizontal', immediate ? 'is-resize--immediate' : 'is-resize--lazy', {
+        class: ['vxe-splitter-panel-handle', vertical ? 'is--vertical' : 'is--horizontal', immediate ? 'is-resize--immediate' : 'is-resize--lazy', {
           'is--resize': resize,
           'is--border': border
         }]
       }, [
         h('div', {
-          class: 'vxe-split-pane-handle-bar',
+          class: 'vxe-splitter-panel-handle-bar',
           style: barStyle,
           onMousedown: dragEvent
         }),
         itemList.length === 2
           ? h('div', {
-            class: 'vxe-split-pane-action-btn-wrapper'
+            class: 'vxe-splitter-panel-action-btn-wrapper'
           }, [
             showPrevButton && nextItem.isExpand
               ? h('div', {
-                class: 'vxe-split-pane-action-btn',
+                class: 'vxe-splitter-panel-action-btn',
                 onDblclick: handlePrevActionDblclickEvent,
                 onClick: handlePrevActionClickEvent
               }, [
@@ -711,10 +783,10 @@ export default defineVxeComponent({
                   class: getActionIcon(prevItem, nextItem, false)
                 })
               ])
-              : renderEmptyElement($xeSplit),
+              : renderEmptyElement($xeSplitter),
             showNextButton && prevItem.isExpand
               ? h('div', {
-                class: 'vxe-split-pane-action-btn',
+                class: 'vxe-splitter-panel-action-btn',
                 onDblclick: handleNextActionDblclickEvent,
                 onClick: handleNextActionClickEvent
               }, [
@@ -722,9 +794,9 @@ export default defineVxeComponent({
                   class: getActionIcon(prevItem, nextItem, true)
                 })
               ])
-              : renderEmptyElement($xeSplit)
+              : renderEmptyElement($xeSplitter)
           ])
-          : renderEmptyElement($xeSplit)
+          : renderEmptyElement($xeSplitter)
       ])
     }
 
@@ -772,7 +844,7 @@ export default defineVxeComponent({
         itemVNs.push(
           h('div', {
             itemid: id,
-            class: ['vxe-split-pane', vertical ? 'is--vertical' : 'is--horizontal', immediate ? 'is-resize--immediate' : 'is-resize--lazy', {
+            class: ['vxe-splitter-panel', vertical ? 'is--vertical' : 'is--horizontal', immediate ? 'is-resize--immediate' : 'is-resize--lazy', {
               [`size--${vSize}`]: vSize,
               'is--resize': resize,
               'is--padding': padding,
@@ -787,10 +859,10 @@ export default defineVxeComponent({
           }, [
             h('div', {
               itemid: id,
-              class: 'vxe-split-pane--wrapper'
+              class: 'vxe-splitter-panel--wrapper'
             }, [
               h('div', {
-                class: 'vxe-split-pane--inner'
+                class: 'vxe-splitter-panel--inner'
               }, defaultSlot ? callSlot(defaultSlot, { name, isExpand }) : [])
             ])
           ])
@@ -801,7 +873,7 @@ export default defineVxeComponent({
         }
       })
       return h('div', {
-        class: 'vxe-split-wrapper'
+        class: 'vxe-splitter-wrapper'
       }, itemVNs)
     }
 
@@ -820,38 +892,38 @@ export default defineVxeComponent({
       }
       return h('div', {
         ref: refElem,
-        class: ['vxe-split', vertical ? 'is--vertical' : 'is--horizontal', immediate ? 'is-resize--immediate' : 'is-resize--lazy', {
+        class: ['vxe-splitter', vertical ? 'is--vertical' : 'is--horizontal', immediate ? 'is-resize--immediate' : 'is-resize--lazy', {
           [`size--${vSize}`]: vSize
         }],
         style: stys
       }, [
         h('div', {
-          class: 'vxe-split-slots'
+          class: 'vxe-splitter-slots'
         }, defaultSlot ? defaultSlot({}) : []),
         renderItems(),
         h('div', {
-          ref: refResizableSplitTip,
-          class: ['vxe-split--resizable-split-tip', vertical ? 'is--vertical' : 'is--horizontal', immediate ? 'is-resize--immediate' : 'is-resize--lazy']
+          ref: refResizableSplitterTip,
+          class: ['vxe-splitter--resizable-splitter-tip', vertical ? 'is--vertical' : 'is--horizontal', immediate ? 'is-resize--immediate' : 'is-resize--lazy']
         }, showTip
           ? [
               h('div', {
-                class: 'vxe-split--resizable-split-tip-number'
+                class: 'vxe-splitter--resizable-splitter-tip-number'
               }, [
                 h('div', {
-                  class: 'vxe-split--resizable-split-number-prev'
+                  class: 'vxe-splitter--resizable-splitter-number-prev'
                 }),
                 h('div', {
-                  class: 'vxe-split--resizable-split-number-next'
+                  class: 'vxe-splitter--resizable-splitter-number-next'
                 })
               ])
             ]
           : []),
         h('div', {
-          class: 'vxe-split--render-vars'
+          class: 'vxe-splitter--render-vars'
         }, [
           h('div', {
             ref: refBarInfoElem,
-            class: 'vxe-split--handle-bar-info'
+            class: 'vxe-splitter--handle-bar-info'
           })
         ])
       ])
@@ -872,16 +944,16 @@ export default defineVxeComponent({
       const actionOpts = computeActionOpts.value
       const { showPrevButton, showNextButton } = actionOpts
       if (props.items && props.items.length) {
-        errLog('vxe.error.errConflicts', ['<vxe-split-pane ...>', 'items'])
+        errLog('vxe.error.errConflicts', ['<vxe-splitter-panel ...>', 'items'])
       }
       reactData.itemList = val || []
 
       if ((showPrevButton || showNextButton) && reactData.itemList.length > 2) {
-        errLog('vxe.error.modelConflicts', ['[split] action-config.showPrevButton | action-config.showNextButton', '<vxe-split-pane ...> Only supports 2 panel'])
+        errLog('vxe.error.modelConflicts', ['[splitter] action-config.showPrevButton | action-config.showNextButton', '<vxe-splitter-panel ...> Only supports 2 panel'])
       }
       reactData.itemList.forEach(item => {
         if (item.showAction) {
-          warnLog('vxe.error.removeProp', ['[split] showAction'])
+          warnLog('vxe.error.removeProp', ['[splitter] showAction'])
         }
       })
       recalculate()
@@ -904,17 +976,17 @@ export default defineVxeComponent({
 
       const actionOpts = computeActionOpts.value
       if (actionOpts.direction) {
-        errLog('vxe.error.delProp', ['[split] action-config.direction', 'action-config.showPrevButton | action-config.showNextButton'])
+        errLog('vxe.error.delProp', ['[splitter] action-config.direction', 'action-config.showPrevButton | action-config.showNextButton'])
       }
 
-      globalEvents.on($xeSplit, 'resize', handleGlobalResizeEvent)
+      globalEvents.on($xeSplitter, 'resize', handleGlobalResizeEvent)
     })
 
     onUnmounted(() => {
       if (resizeObserver) {
         resizeObserver.disconnect()
       }
-      globalEvents.off($xeSplit, 'resize')
+      globalEvents.off($xeSplitter, 'resize')
     })
 
     onActivated(() => {
@@ -925,11 +997,11 @@ export default defineVxeComponent({
       loadItem(props.items)
     }
 
-    provide('$xeSplit', $xeSplit)
+    provide('$xeSplitter', $xeSplitter)
 
-    $xeSplit.renderVN = renderVN
+    $xeSplitter.renderVN = renderVN
 
-    return $xeSplit
+    return $xeSplitter
   },
   render () {
     return this.renderVN()

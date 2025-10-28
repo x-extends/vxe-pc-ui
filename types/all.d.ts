@@ -62,6 +62,8 @@ import VxeRadioGroup from './components/radio-group'
 import VxeResult from './components/result'
 import VxeRow from './components/row'
 import VxeSelect from './components/select'
+import VxeSplitter from './components/splitter'
+import VxeSplitterPanel from './components/splitter-panel'
 import VxeSplit from './components/split'
 import VxeSplitPane from './components/split-pane'
 import VxeSlider from './components/slider'
@@ -165,6 +167,8 @@ interface AllComponents {
   VxeResult: typeof VxeResult
   VxeRow: typeof VxeRow
   VxeSelect: typeof VxeSelect
+  VxeSplitter: typeof VxeSplitter
+  VxeSplitterPanel: typeof VxeSplitterPanel
   VxeSplit: typeof VxeSplit
   VxeSplitPane: typeof VxeSplitPane
   VxeSlider: typeof VxeSlider
@@ -277,6 +281,8 @@ export * from './components/rate'
 export * from './components/result'
 export * from './components/row'
 export * from './components/select'
+export * from './components/splitter'
+export * from './components/splitter-panel'
 export * from './components/split'
 export * from './components/split-pane'
 export * from './components/slider'

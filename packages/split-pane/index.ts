@@ -1,11 +1,11 @@
 import { App } from 'vue'
 import { VxeUI } from '@vxe-ui/core'
-import VxeSplitPaneComponent from '../split/src/split-pane'
+import VxeSplitPaneComponent from '../splitter/src/splitter-panel'
 import { dynamicApp } from '../dynamics'
 
 export const VxeSplitPane = Object.assign({}, VxeSplitPaneComponent, {
   install (app: App) {
-    app.component(VxeSplitPaneComponent.name as string, VxeSplitPaneComponent)
+    app.component('VxeSplitPane', VxeSplitPaneComponent)
     app.component('VxeSplitItem', VxeSplitPaneComponent)
   }
 })

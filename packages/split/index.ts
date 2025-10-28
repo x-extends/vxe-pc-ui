@@ -1,11 +1,11 @@
 import { App } from 'vue'
 import { VxeUI } from '@vxe-ui/core'
-import VxeSplitComponent from './src/split'
+import VxeSplitComponent from '../splitter/src/splitter'
 import { dynamicApp } from '../dynamics'
 
 export const VxeSplit = Object.assign({}, VxeSplitComponent, {
   install (app: App) {
-    app.component(VxeSplitComponent.name as string, VxeSplitComponent)
+    app.component('VxeSplit', VxeSplitComponent)
   }
 })
 

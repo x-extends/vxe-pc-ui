@@ -3,12 +3,18 @@ import { DefineVxeComponentApp, DefineVxeComponentOptions, DefineVxeComponentIns
 import { VxeSplitPaneProps, VxeSplitPanePropTypes } from './split-pane'
 
 /* eslint-disable no-use-before-define,@typescript-eslint/ban-types */
-
+/**
+ * @deprecated
+ */
 export declare const VxeSplit: DefineVxeComponentApp<VxeSplitProps, VxeSplitEventProps, VxeSplitSlots, VxeSplitMethods>
 export type VxeSplitComponent = DefineVxeComponentOptions<VxeSplitProps, VxeSplitEventProps>
-
+/**
+ * @deprecated
+ */
 export type VxeSplitInstance = DefineVxeComponentInstance<VxeSplitProps, VxeSplitConstructor>
-
+/**
+ * @deprecated
+ */
 export interface VxeSplitConstructor extends VxeComponentBaseOptions, VxeSplitMethods {
   props: VxeSplitProps
   context: SetupContext<VxeSplitEmits>
@@ -17,12 +23,16 @@ export interface VxeSplitConstructor extends VxeComponentBaseOptions, VxeSplitMe
   getComputeMaps(): SplitPrivateComputed
   renderVN: RenderFunction
 }
-
+/**
+ * @deprecated
+ */
 export interface SplitPrivateRef {
   refElem: Ref<HTMLDivElement | undefined>
 }
 export interface VxeSplitPrivateRef extends SplitPrivateRef { }
-
+/**
+ * @deprecated
+ */
 export namespace VxeSplitPropTypes {
   export type Size = VxeComponentSizeType
   export type Height = string | number
@@ -84,7 +94,9 @@ export namespace VxeSplitPropTypes {
     direction?: 'prev' | 'next' | '' | null
   }
 }
-
+/**
+ * @deprecated
+ */
 export type VxeSplitProps = {
   size?: VxeSplitPropTypes.Size
   /**
@@ -132,26 +144,34 @@ export type VxeSplitProps = {
    */
   actionConfig?: VxeSplitPropTypes.ActionConfig
 }
-
+/**
+ * @deprecated
+ */
 export interface SplitPrivateComputed {
   computeItemOpts: ComputedRef<VxeSplitPropTypes.ItemConfig>
   computeBarOpts: ComputedRef<VxeSplitPropTypes.BarConfig>
   computeActionOpts: ComputedRef<VxeSplitPropTypes.ActionConfig>
 }
 export interface VxeSplitPrivateComputed extends SplitPrivateComputed { }
-
+/**
+ * @deprecated
+ */
 export interface SplitReactData {
   staticItems: VxeSplitDefines.PaneConfig[]
   itemList: VxeSplitDefines.PaneConfig[]
   barWidth: number
   barHeight: number
 }
-
+/**
+ * @deprecated
+ */
 export interface SplitInternalData {
   wrapperWidth: number
   wrapperHeight: number
 }
-
+/**
+ * @deprecated
+ */
 export interface SplitMethods {
   dispatchEvent(type: ValueOf<VxeSplitEmits>, params: Record<string, any>, evnt: Event | null): void
   /**
@@ -175,7 +195,9 @@ export interface VxeSplitMethods extends SplitMethods { }
 
 export interface SplitPrivateMethods { }
 export interface VxeSplitPrivateMethods extends SplitPrivateMethods { }
-
+/**
+ * @deprecated
+ */
 export type VxeSplitEmits = [
   'action-dblclick',
   'action-click',
@@ -184,7 +206,9 @@ export type VxeSplitEmits = [
   'resize-drag',
   'resize-end'
 ]
-
+/**
+ * @deprecated
+ */
 export namespace VxeSplitDefines {
   export interface SplitEventParams extends VxeComponentEventParams {
     $split: VxeSplitConstructor
@@ -227,7 +251,9 @@ export namespace VxeSplitDefines {
     offsetWidth: number
   }
 }
-
+/**
+ * @deprecated
+ */
 export type VxeSplitEventProps = {
   onActionDblclick?: VxeSplitEvents.ActionDblclick
   onActionClick?: VxeSplitEvents.ActionClick
@@ -236,7 +262,9 @@ export type VxeSplitEventProps = {
   onResizeDrag?: VxeSplitEvents.ResizeDrag
   onResizeEnd?: VxeSplitEvents.ResizeEnd
 }
-
+/**
+ * @deprecated
+ */
 export interface VxeSplitListeners {
   actionDblclick?: VxeSplitEvents.ActionDblclick
   actionClick?: VxeSplitEvents.ActionClick
@@ -245,7 +273,9 @@ export interface VxeSplitListeners {
   resizeDrag?: VxeSplitEvents.ResizeDrag
   resizeEnd?: VxeSplitEvents.ResizeEnd
 }
-
+/**
+ * @deprecated
+ */
 export namespace VxeSplitEvents {
   export type ActionDblclick = (params: VxeSplitDefines.ActionDblclickEventParams) => void
   export type ActionClick = (params: VxeSplitDefines.ActionClickEventParams) => void
@@ -254,12 +284,16 @@ export namespace VxeSplitEvents {
   export type ResizeDrag = (params: VxeSplitDefines.ResizeDragEventParams) => void
   export type ResizeEnd = (params: VxeSplitDefines.ResizeEndEventParams) => void
 }
-
+/**
+ * @deprecated
+ */
 export namespace VxeSplitSlotTypes {
   export interface DefaultSlotParams {
   }
 }
-
+/**
+ * @deprecated
+ */
 export interface VxeSplitSlots {
   /**
    * 自定义插槽模板
@@ -271,6 +305,8 @@ export interface VxeSplitSlots {
 
   default?: (params: VxeSplitSlotTypes.DefaultSlotParams) => any
 }
-
+/**
+ * @deprecated
+ */
 export const Split: typeof VxeSplit
 export default VxeSplit
