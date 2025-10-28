@@ -298,9 +298,9 @@ const routes: Array<RouteConfig> = [
     component: () => import('../views/color-picker/ColorPickerTest.vue')
   },
   {
-    path: '/component/split',
-    name: 'SplitTest',
-    component: () => import('../views/split/SplitTest.vue')
+    path: '/component/splitter',
+    name: 'SplitterTest',
+    component: () => import('../views/splitter/SplitterTest.vue')
   }
 ]
 

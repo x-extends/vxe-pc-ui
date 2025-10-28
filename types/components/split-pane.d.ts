@@ -5,16 +5,24 @@ import { DefineVxeComponentApp, DefineVxeComponentOptions, DefineVxeComponentIns
 export declare const VxeSplitPane: DefineVxeComponentApp<VxeSplitPaneProps, VxeSplitPaneEventProps, VxeSplitPaneSlots, VxeSplitPaneMethods>
 export type VxeSplitPaneComponent = DefineVxeComponentOptions<VxeSplitPaneProps>
 
+/**
+ * @deprecated
+ */
 export type VxeSplitPaneInstance = DefineVxeComponentInstance<{
   reactData: SplitItemReactData
 }, VxeSplitPaneProps, VxeSplitPanePrivateComputed, VxeSplitPaneMethods>
-
+/**
+ * @deprecated
+ */
 export type VxeSplitPaneConstructor = VxeSplitPaneInstance
 
 export interface SplitItemPrivateRef {
 }
 export interface VxeSplitPanePrivateRef extends SplitItemPrivateRef { }
 
+/**
+ * @deprecated
+ */
 export namespace VxeSplitPanePropTypes {
   export type Name = string | number
   export type Width = string | number
@@ -29,6 +37,9 @@ export namespace VxeSplitPanePropTypes {
   export type ShowAction = boolean
 }
 
+/**
+ * @deprecated
+ */
 export interface VxeSplitPaneProps {
   name?: VxeSplitPanePropTypes.Name
   width?: VxeSplitPanePropTypes.Width
@@ -45,43 +56,65 @@ export interface VxeSplitPaneProps {
    */
   showAction?: VxeSplitPanePropTypes.ShowAction
 }
-
+/**
+ * @deprecated
+ */
 export interface SplitItemPrivateComputed {
 }
 export interface VxeSplitPanePrivateComputed extends SplitItemPrivateComputed { }
-
+/**
+ * @deprecated
+ */
 export interface SplitItemReactData {
 }
-
+/**
+ * @deprecated
+ */
 export interface SplitItemInternalData {
 }
-
+/**
+ * @deprecated
+ */
 export interface SplitItemMethods {
   dispatchEvent(type: ValueOf<VxeSplitPaneEmits>, params: Record<string, any>, evnt: Event | null): void
 }
 export interface VxeSplitPaneMethods extends SplitItemMethods { }
-
+/**
+ * @deprecated
+ */
 export interface SplitItemPrivateMethods { }
 export interface VxeSplitPanePrivateMethods extends SplitItemPrivateMethods { }
-
+/**
+ * @deprecated
+ */
 export type VxeSplitPaneEmits = [
 ]
-
+/**
+ * @deprecated
+ */
 export namespace VxeSplitPaneDefines {
   export interface SplitItemEventParams extends VxeComponentEventParams {
     $splitPane: VxeSplitPaneConstructor
   }
 }
-
+/**
+ * @deprecated
+ */
 export type VxeSplitPaneEventProps = {
 }
-
+/**
+ * @deprecated
+ */
 export interface VxeSplitPaneListeners {
 }
-
+/**
+ * @deprecated
+ */
 export namespace VxeSplitPaneEvents {
 }
-
+/**
+ * @deprecated
+ */
 export namespace VxeSplitPaneSlotTypes {
   export interface DefaultSlotParams {
     name: VxeSplitPanePropTypes.Name
@@ -89,10 +122,14 @@ export namespace VxeSplitPaneSlotTypes {
     isExpand: boolean
   }
 }
-
+/**
+ * @deprecated
+ */
 export interface VxeSplitPaneSlots {
   default?: (params: VxeSplitPaneSlotTypes.DefaultSlotParams) => any
 }
-
+/**
+ * @deprecated
+ */
 export const SplitItem: typeof VxeSplitPane
 export default VxeSplitPane

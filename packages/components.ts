@@ -65,6 +65,8 @@ import VxeRate from './rate'
 import VxeResult from './result'
 import VxeRow from './row'
 import VxeSelect from './select'
+import VxeSplitter from './splitter'
+import VxeSplitterPanel from './splitter-panel'
 import VxeSplit from './split'
 import VxeSplitPane from './split-pane'
 import VxeSlider from './slider'
@@ -154,6 +156,8 @@ const components = [
   VxeResult,
   VxeRow,
   VxeSelect,
+  VxeSplitter,
+  VxeSplitterPanel,
   VxeSplit,
   VxeSplitPane,
   VxeSlider,
@@ -260,6 +264,8 @@ export * from './rate'
 export * from './result'
 export * from './row'
 export * from './select'
+export * from './splitter'
+export * from './splitter-panel'
 export * from './split'
 export * from './split-pane'
 export * from './slider'

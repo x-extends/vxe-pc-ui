@@ -309,7 +309,7 @@ setConfig({
       oSize: 2
     }
   },
-  split: {
+  splitter: {
     resize: true,
     itemConfig: {
       minWidth: 40,
@@ -320,7 +320,7 @@ setConfig({
       showTip: true
     }
   },
-  splitPane: {},
+  splitterPanel: {},
   slider: {
     max: 100,
     min: 0
