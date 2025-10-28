@@ -152,6 +152,7 @@
   left: 50%;
   transform: translate(-50%, -50%);
   z-index: 2;
+  pointer-events: none;
 }
 .vxe-splitter-panel-action-btn {
   display: flex;
@@ -163,6 +164,7 @@
   background-color: var(--vxe-ui-splitter-handle-button-background-color);
   border: 1px solid var(--vxe-ui-input-border-color);
   cursor: pointer;
+  pointer-events: all;
   @include baseMixin.createAnimationTransition(transform, 0.1s);
   &:hover {
     color: #ffffff;

@@ -76,24 +76,24 @@
 
     <br>
 
-    <vxe-split height="300" border vertical :actionConfig="actionConfig">
-      <vxe-split-pane>
+    <vxe-splitter height="300" border vertical :actionConfig="actionConfig">
+      <vxe-splitter-panel>
         <div style="height: 100%;background-color: #d8d8f9;">左侧</div>
-      </vxe-split-pane>
-      <vxe-split-pane>
+      </vxe-splitter-panel>
+      <vxe-splitter-panel>
         <vxe-split border>
-          <vxe-split-pane>
+          <vxe-splitter-panel>
             <div style="height: 100%;background-color: #f3e1e1;">顶部</div>
-          </vxe-split-pane>
-          <vxe-split-pane>
+          </vxe-splitter-panel>
+          <vxe-splitter-panel>
             <div style="height: 100%;background-color: #e2f9d8;">中</div>
-          </vxe-split-pane>
-          <vxe-split-pane>
+          </vxe-splitter-panel>
+          <vxe-splitter-panel>
             <div style="height: 100%;background-color: #d8d8f9;">底部</div>
-          </vxe-split-pane>
+          </vxe-splitter-panel>
         </vxe-split>
-      </vxe-split-pane>
-    </vxe-split>
+      </vxe-splitter-panel>
+    </vxe-splitter>
   </div>
 </template>
 

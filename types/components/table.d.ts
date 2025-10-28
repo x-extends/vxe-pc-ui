@@ -1520,6 +1520,10 @@ export namespace VxeTablePropTypes {
      */
     showLine?: boolean
     /**
+     * 只对 showLine 有效，显示树的根节点连接线
+     */
+    showRootLine?: boolean
+    /**
      * 树结构序号显示模式，支持层级序号和自增序号（仅支持 transform）个固定序号
      */
     seqMode?: 'default' | 'increasing' | 'fixed' | '' | null
@@ -5471,6 +5475,7 @@ export namespace VxeTableDefines {
     resizeHeight: number
     oTop: number
     expandHeight: number
+    oHeight?: number
     lineHeight?: number
     treeLoaded?: boolean
     expandLoaded?: boolean
