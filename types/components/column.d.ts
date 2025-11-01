@@ -348,9 +348,13 @@ export namespace VxeColumnPropTypes {
 
   export type Slots<D = any> = {
     /**
-     * 只对 type=checkbox,radio 有效，自定义标题模板
+     * 自定义标题模板
      */
-    title?: string | ((params: VxeColumnSlotTypes.HeaderSlotParams<D>) => VxeComponentSlotType[] | VxeComponentSlotType) | null
+    title?: string | ((params: VxeColumnSlotTypes.TitleSlotParams<D>) => VxeComponentSlotType[] | VxeComponentSlotType) | null
+    /**
+     * 只对 sortable 有效，自定义表头排序的模板
+     */
+    sort?: string | ((params: VxeColumnSlotTypes.SortSlotParams<D>) => VxeComponentSlotType[] | VxeComponentSlotType) | null
     /**
      * 只对 type=radio 有效，自定义单选框模板
      */
@@ -666,6 +670,8 @@ export namespace VxeColumnSlotTypes {
   }
 
   export interface HeaderSlotParams<D = any> extends VxeTableDefines.CellRenderHeaderParams<D> { }
+  export interface TitleSlotParams<D = any> extends HeaderSlotParams<D> { }
+  export interface SortSlotParams<D = any> extends HeaderSlotParams<D> { }
 
   export interface ContentSlotParams<D = any> extends VxeTableDefines.CellRenderBodyParams<D> { }
 
@@ -717,9 +723,13 @@ export interface VxeColumnSlots<D = any> {
    */
   footer?: (params: VxeColumnSlotTypes.FooterSlotParams<D>) => any
   /**
-   * 只对 type=checkbox,radio 有效，自定义标题模板
+   * 自定义标题模板
    */
-  title?: (params: VxeColumnSlotTypes.HeaderSlotParams<D>) => any
+  title?: (params: VxeColumnSlotTypes.TitleSlotParams<D>) => any
+  /**
+   * 只对 sortable 有效，自定义标题模板
+   */
+  sort?: (params: VxeColumnSlotTypes.SortSlotParams<D>) => any
   /**
    * 只对 type=checkbox 有效，自定义复选框模板
    */

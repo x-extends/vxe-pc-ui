@@ -28,6 +28,7 @@ export type VxeTableInstance<D = any> = DefineVxeComponentInstance<{
    * @deprecated
    */
   internalData: TableInternalData<D>
+  $xeParentTable: (VxeTableConstructor<D> & VxeTablePrivateMethods) | null | undefined
   $xeGrid: VxeGridConstructor<D> | null | undefined
   $xeGantt: VxeGanttConstructor<D> | null | undefined
   $xeTabs: (VxeTabsConstructor & VxeTabsPrivateMethods) | null
@@ -3555,9 +3556,13 @@ export interface TablePrivateComputed<D = any> {
   computeAutoWidthColumnList: VxeTableDefines.ColumnInfo<D>[]
   computeLeftFixedWidth: number
   computeRightFixedWidth: number
+  computeBodyMergeCoverFixed: boolean
   computeFixedColumnSize: number
   computeIsMaxFixedColumn: boolean
   computeIsAllCheckboxDisabled: boolean
+  computeIsHeaderRenderOptimize: boolean
+  computeIsBodyRenderOptimize: boolean
+  computeIsFooterRenderOptimize: boolean
 
   tableId: string
   validOpts: VxeTablePropTypes.ValidOpts<D>
