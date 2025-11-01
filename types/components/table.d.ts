@@ -3570,9 +3570,13 @@ export interface TablePrivateComputed<D = any> {
   computeCustomOpts: ComputedRef<VxeTablePropTypes.CustomOpts<D>>
   computeLeftFixedWidth: ComputedRef<number>
   computeRightFixedWidth: ComputedRef<number>
+  computeBodyMergeCoverFixed: ComputedRef<boolean>
   computeFixedColumnSize: ComputedRef<number>
   computeIsMaxFixedColumn: ComputedRef<boolean>
   computeIsAllCheckboxDisabled: ComputedRef<boolean>
+  computeIsHeaderRenderOptimize: ComputedRef<boolean>
+  computeIsBodyRenderOptimize: ComputedRef<boolean>
+  computeIsFooterRenderOptimize: ComputedRef<boolean>
   computeVirtualScrollBars: ComputedRef<{
     x: boolean
     y: boolean
