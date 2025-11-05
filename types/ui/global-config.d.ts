@@ -210,15 +210,20 @@ declare module '@vxe-ui/core' {
      */
     emptyCell?: string
     /**
-     * 还原成老的校验样式
+     * 表格-还原成老的校验样式
      * @deprecated
      */
     cellVaildMode?: 'obsolete'
     /**
-     * 返回老的校验结果
+     * 表格-返回老的校验结果
      * @deprecated
      */
     validToReject?: 'obsolete'
+    /**
+     * 表格-还原虚拟滚动老的定位方式
+     * @deprecated
+     */
+    scrollMarginStyle?: 'obsolete'
     /**
      * 无效，已废弃
      * @deprecated
