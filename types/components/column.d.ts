@@ -1,6 +1,7 @@
 import { RenderFunction, SetupContext, Ref } from 'vue'
 import { DefineVxeComponentApp, DefineVxeComponentOptions, DefineVxeComponentInstance, VxeComponentBaseOptions, VxeComponentEventParams, VxeComponentSlotType, ValueOf } from '@vxe-ui/core'
-import { VxeTableDefines, VxeTablePropTypes, VxeTableConstructor, VxeTableSlotTypes } from './table'
+import { VxeTableDefines, VxeTablePropTypes, VxeTableConstructor, VxeTablePrivateMethods, VxeTableSlotTypes } from './table'
+import { VxeGridConstructor } from './grid'
 import { VxeTooltipDefines } from './tooltip'
 import { VxeGlobalRendererHandles } from '../ui'
 
@@ -350,6 +351,40 @@ export namespace VxeColumnPropTypes {
     props?: P
   }
 
+  export type CopyMethod<D = any> = (params: {
+    $table: VxeTableConstructor<D> & VxeTablePrivateMethods<D>
+    $grid: VxeGridConstructor<D> | null | undefined
+    isCut: boolean
+    row: D
+    column: VxeTableDefines.ColumnInfo<D>
+    cellValue: any
+  }) => string
+
+  export type CutMethod<D = any> = (params: {
+    $table: VxeTableConstructor<D> & VxeTablePrivateMethods<D>
+    $grid: VxeGridConstructor<D> | null | undefined
+    row: D,
+    column: VxeTableDefines.ColumnInfo<D>
+    cellValue: any
+    clipData: {
+      text?: string
+      html?: string
+    }
+  }) => void
+
+  export type PasteMethod<D = any> = (params: {
+    $table: VxeTableConstructor<D> & VxeTablePrivateMethods<D>
+    $grid: VxeGridConstructor<D> | null | undefined
+    isCut: boolean
+    row: D,
+    column: VxeTableDefines.ColumnInfo<D>
+    cellValue: any
+    clipData: {
+      text?: string
+      html?: string
+    }
+  }) => void
+
   export type Params = any
 
   export type Slots<D = any> = {
@@ -613,6 +648,18 @@ export interface VxeColumnProps<D = any> {
    * 内容渲染配置项
    */
   contentRender?: VxeColumnPropTypes.ContentRender
+  /**
+   * 用于 clip-config.isCopy，重写单元格复制取值的方法，将单元格复制到剪贴板
+   */
+  copyMethod?: VxeColumnPropTypes.CopyMethod
+  /**
+   * 用于 clip-config.isCut，重写单元格剪贴值清除的方法，将剪贴单元格的值清除
+   */
+  cutMethod?: VxeColumnPropTypes.CutMethod
+  /**
+   * 用于 clip-config.isPaste，重写单元格粘贴赋值的方法，从剪贴板赋值到单元格
+   */
+  pasteMethod?: VxeColumnPropTypes.PasteMethod
   /**
    * 额外的参数
    */
