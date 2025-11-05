@@ -1999,14 +1999,7 @@ export namespace VxeTablePropTypes {
     /**
      * 重写单元格复制取值的方法，将单元格复制到剪贴板
      */
-    copyMethod?(params: {
-      $table: VxeTableConstructor<DT> & VxeTablePrivateMethods<DT>
-      $grid: VxeGridConstructor<DT> | null | undefined
-      isCut: boolean
-      row: DT
-      column: VxeTableDefines.ColumnInfo<DT>
-      cellValue: any
-    }): string
+    copyMethod?: VxeColumnPropTypes.CopyMethod
     /**
      * 自定义单元格复制取值之前的方法，可以通过返回 false 阻止复制行为
      */
@@ -2029,17 +2022,7 @@ export namespace VxeTablePropTypes {
     /**
      * 重写单元格剪贴值清除的方法，将剪贴单元格的值清除
      */
-    cutMethod?:(params: {
-      $table: VxeTableConstructor<DT> & VxeTablePrivateMethods<DT>
-      $grid: VxeGridConstructor<DT> | null | undefined
-      row: DT,
-      column: VxeTableDefines.ColumnInfo<DT>
-      cellValue: any
-      clipData: {
-        text?: string
-        html?: string
-      }
-    }) => void
+    cutMethod?: VxeColumnPropTypes.CutMethod
     /**
      * 自定义单元格剪贴值清除之前的方法，可以通过返回 false 阻止清除行为
      */
@@ -2066,18 +2049,7 @@ export namespace VxeTablePropTypes {
     /**
      * 重写单元格粘贴赋值的方法，从剪贴板赋值到单元格
      */
-    pasteMethod?(params: {
-      $table: VxeTableConstructor<DT> & VxeTablePrivateMethods<DT>
-      $grid: VxeGridConstructor<DT> | null | undefined
-      isCut: boolean
-      row: DT,
-      column: VxeTableDefines.ColumnInfo<DT>
-      cellValue: any
-      clipData: {
-        text?: string
-        html?: string
-      }
-    }): void
+    pasteMethod?: VxeColumnPropTypes.PasteMethod
     /**
      * 自定义单元格粘贴赋值之前的方法，可以通过返回 false 阻止复制行为
      */
@@ -5603,6 +5575,9 @@ export namespace VxeTableDefines {
     footerExportMethod: VxeColumnPropTypes.FooterExportMethod
 
     aggFunc: VxeColumnPropTypes.AggFunc
+    copyMethod: VxeColumnPropTypes.CopyMethod
+    cutMethod: VxeColumnPropTypes.CutMethod
+    pasteMethod: VxeColumnPropTypes.PasteMethod
 
     /**
      * 已废弃，请使用 titlePrefix
