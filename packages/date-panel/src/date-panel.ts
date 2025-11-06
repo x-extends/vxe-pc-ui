@@ -558,7 +558,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
     //
     dispatchEvent (type: ValueOf<VxeDatePanelEmits>, params: Record<string, any>, evnt: Event | null) {
       const $xeDatePanel = this
-      $xeDatePanel.$emit(type, createEvent(evnt, { $drawer: $xeDatePanel }, params))
+      $xeDatePanel.$emit(type, createEvent(evnt, { $datePanel: $xeDatePanel }, params))
     },
     emitModel (value: any) {
       const $xeDatePanel = this
@@ -579,6 +579,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
 
       const { type } = props
       const dateValueFormat = $xeDatePanel.computeDateValueFormat
+
       const inpDate = parseDateValue(modelValue, type, { valueFormat: dateValueFormat })
       reactData.inputValue = inpDate
       reactData.inputLabel = inpDate

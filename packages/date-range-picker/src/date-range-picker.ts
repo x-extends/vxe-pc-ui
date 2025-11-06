@@ -350,7 +350,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
     //
     dispatchEvent (type: ValueOf<VxeDateRangePickerEmits>, params: Record<string, any>, evnt: Event | null) {
       const $xeDateRangePicker = this
-      $xeDateRangePicker.$emit(type, createEvent(evnt, { $drawer: $xeDateRangePicker }, params))
+      $xeDateRangePicker.$emit(type, createEvent(evnt, { $dateRangePicker: $xeDateRangePicker }, params))
     },
     emitModel (value: any) {
       const $xeDateRangePicker = this

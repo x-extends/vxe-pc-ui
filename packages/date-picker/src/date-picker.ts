@@ -352,7 +352,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
     //
     dispatchEvent (type: ValueOf<VxeDatePickerEmits>, params: Record<string, any>, evnt: Event | null) {
       const $xeDatePicker = this
-      $xeDatePicker.$emit(type, createEvent(evnt, { $drawer: $xeDatePicker }, params))
+      $xeDatePicker.$emit(type, createEvent(evnt, { $datePicker: $xeDatePicker }, params))
     },
     emitModel (value: any) {
       const $xeDatePicker = this
@@ -562,8 +562,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
     panelConfirmEvent (params: VxeDatePickerDefines.ConfirmEventParams) {
       const $xeDatePicker = this
 
-      const $datePanel = $xeDatePicker.$refs.refDatePanel as VxeDatePanelConstructor
-      $datePanel.dispatchEvent('confirm', params, params.$event)
+      $xeDatePicker.dispatchEvent('confirm', params, params.$event)
     },
     // 全局事件
     handleGlobalMousedownEvent (evnt: Event) {
