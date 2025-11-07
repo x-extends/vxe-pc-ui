@@ -55,13 +55,14 @@ export namespace VxeColumnPropTypes {
   }) => string | number) | any[] | string
 
   export type HeaderFormatter = ((params: {
+    cellTitle: any
     cellValue: any
     column: VxeTableDefines.ColumnInfo
-    $columnIndex: number
     _columnIndex: number
   }) => string | number) | any[] | string
 
   export type FooterFormatter<D = any> = ((params: {
+    cellValue: any
     itemValue: any
     column: VxeTableDefines.ColumnInfo<D>
     row: any
