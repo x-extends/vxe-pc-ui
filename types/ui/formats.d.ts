@@ -27,7 +27,6 @@ declare module '@vxe-ui/core' {
     }
 
     export interface FormItemFormatMethodParams {
-      cellValue: any
       itemValue: any
       data: any
       item: VxeFormDefines.ItemInfo
@@ -41,6 +40,7 @@ declare module '@vxe-ui/core' {
     }
 
     export interface TableFooterCellFormatMethodParams {
+      cellValue: any
       itemValue: any
       column: VxeTableDefines.ColumnInfo
       row: any
