@@ -3939,6 +3939,15 @@ export interface TableInternalData<D = any> {
   // 数据集（仅可视）
   visibleDataRowIdData: Record<string, D>
 
+  footerFullDataRowData: Record<string, {
+     formatData?: {
+      [key: string]: {
+        value: any
+        label: any
+      }
+    }
+  }>
+
   sourceDataRowIdData: Record<string, D>
   fullColumnIdData: Record<string, VxeTableDefines.ColumnCacheItem<D>>
   fullColumnFieldData: Record<string, VxeTableDefines.ColumnCacheItem<D>>
@@ -4214,6 +4223,10 @@ export interface TableMethods<DT = any> {
    * 获取单元格显示值
    */
   getCellLabel(row: any, fieldOrColumn: VxeColumnPropTypes.Field | VxeTableDefines.ColumnInfo<any> | null): string | number | null
+  /**
+   * 获取表尾单元格显示值
+   */
+  getFooterCellLabel(row: any, fieldOrColumn: VxeColumnPropTypes.Field | VxeTableDefines.ColumnInfo<any> | null): string | number | null
   /**
    * 用于 edit-config，判断行是否为新增的临时数据
    * @param row 指定行

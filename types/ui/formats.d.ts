@@ -15,6 +15,10 @@ declare module '@vxe-ui/core' {
        */
       tableCellFormatMethod?: (params: TableCellFormatMethodParams, ...args: any[]) => string | number
       /**
+       * 表格 - 自定义表头单元格格式化方法
+       */
+      tableHeaderCellFormatMethod?: (params: TableHeaderCellFormatMethodParams, ...args: any[]) => string | number
+      /**
        * 表格 - 自定义表尾单元格格式化方法
        */
       tableFooterCellFormatMethod?: (params: TableFooterCellFormatMethodParams, ...args: any[]) => string | number
@@ -37,6 +41,13 @@ declare module '@vxe-ui/core' {
       cellValue: any
       row: any
       column: VxeTableDefines.ColumnInfo
+    }
+
+    export interface TableHeaderCellFormatMethodParams {
+      cellValue: any
+      cellTitle: any
+      column: VxeTableDefines.ColumnInfo
+      _columnIndex: number
     }
 
     export interface TableFooterCellFormatMethodParams {
