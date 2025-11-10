@@ -6415,6 +6415,7 @@ export namespace VxeTableDefines {
     }
     suffixIcon?: string | ((params: {}) => VxeComponentSlotType[] | VxeComponentSlotType)
     className?: string
+    loading?: boolean
     visible?: boolean
     disabled?: boolean
     children?: MenuChildOption[]
@@ -6440,6 +6441,7 @@ export namespace VxeTableDefines {
     }
     suffixIcon?: string | ((params: {}) => VxeComponentSlotType[] | VxeComponentSlotType)
     className?: string
+    loading?: boolean
     visible?: boolean
     disabled?: boolean
     params?: any
