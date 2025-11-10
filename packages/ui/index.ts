@@ -414,6 +414,7 @@ setConfig({
     showLimitSize: true,
     showLimitCount: true,
     autoSubmit: true,
+    // urlArgs: false,
     maxSimultaneousUploads: 5
   },
   watermark: {
