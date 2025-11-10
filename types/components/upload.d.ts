@@ -57,6 +57,7 @@ export namespace VxeUploadPropTypes {
   export type PasteToUpload = boolean
   export type KeyField = string
   export type UrlMode = boolean
+  export type UrlArgs = boolean
   export type Multiple = boolean
   export type LimitSize = number | String
   export type ShowLimitSize = boolean
@@ -154,6 +155,7 @@ export interface VxeUploadProps {
   pasteToUpload?: VxeUploadPropTypes.PasteToUpload
   keyField?: VxeUploadPropTypes.KeyField
   urlMode?: VxeUploadPropTypes.UrlMode
+  urlArgs?: VxeUploadPropTypes.UrlArgs
   /**
    * 限制文件大小，单位M
    */

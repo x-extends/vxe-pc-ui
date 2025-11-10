@@ -68,6 +68,10 @@ export default defineVxeComponent({
     keyField: String as PropType<VxeUploadPropTypes.KeyField>,
     singleMode: Boolean as PropType<VxeUploadPropTypes.SingleMode>,
     urlMode: Boolean as PropType<VxeUploadPropTypes.UrlMode>,
+    urlArgs: {
+      type: Boolean as PropType<VxeUploadPropTypes.UrlArgs>,
+      default: () => getConfig().upload.urlArgs
+    },
     multiple: Boolean as PropType<VxeUploadPropTypes.Multiple>,
     limitSize: {
       type: [String, Number] as PropType<VxeUploadPropTypes.LimitSize>,
@@ -458,11 +462,11 @@ export default defineVxeComponent({
     }
 
     const handleChange = (value: VxeUploadDefines.FileObjItem[]) => {
-      const { singleMode, urlMode } = props
+      const { singleMode, urlArgs } = props
       const urlProp = computeUrlProp.value
       const nameProp = computeNameProp.value
       let restList = value ? value.slice(0) : []
-      if (urlMode) {
+      if (urlArgs) {
         restList = restList.map(item => {
           const url = item[urlProp]
           if (url) {
