@@ -74,6 +74,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       default: () => getConfig().datePicker.endDate
     },
     defaultDate: [String, Number, Date] as PropType<VxeDatePickerPropTypes.DefaultDate>,
+    defaultTime: [String, Number, Date] as PropType<VxeDatePickerPropTypes.DefaultTime>,
     minDate: [String, Number, Date] as PropType<VxeDatePickerPropTypes.MinDate>,
     maxDate: [String, Number, Date] as PropType<VxeDatePickerPropTypes.MaxDate>,
     startDay: {
@@ -944,6 +945,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
                         startDate: props.startDate,
                         endDate: props.endDate,
                         defaultDate: props.defaultDate,
+                        defaultTime: props.defaultTime,
                         minDate: props.minDate,
                         maxDate: props.maxDate,
                         startDay: props.startDay,

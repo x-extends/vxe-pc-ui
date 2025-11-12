@@ -42,6 +42,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       default: () => getConfig().datePanel.endDate
     },
     defaultDate: [String, Number, Date] as PropType<VxeDatePanelPropTypes.DefaultDate>,
+    defaultTime: [String, Number, Date] as PropType<VxeDatePanelPropTypes.DefaultTime>,
     minDate: [String, Number, Date] as PropType<VxeDatePanelPropTypes.MinDate>,
     maxDate: [String, Number, Date] as PropType<VxeDatePanelPropTypes.MaxDate>,
     startDay: {
@@ -1201,12 +1202,11 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const props = $xeDatePanel
       const reactData = $xeDatePanel.reactData
 
-      const { type, defaultDate } = props
+      const { type, defaultDate, defaultTime } = props
       const isDateTimeType = $xeDatePanel.computeIsDateTimeType
-      const dateValueFormat = $xeDatePanel.computeDateValueFormat
       const dateValue = $xeDatePanel.computeDateValue
       if (['year', 'quarter', 'month', 'week'].indexOf(type) > -1) {
-        reactData.datePanelType = type as 'year' | 'quarter' | 'month' | 'week'
+        reactData.datePanelType = type as VxeDatePanelDefines.DatePanelType
       } else {
         reactData.datePanelType = 'day'
       }
@@ -1216,7 +1216,8 @@ export default /* define-vxe-component start */ defineVxeComponent({
         $xeDatePanel.dateParseValue(dateValue)
       } else {
         if (defaultDate) {
-          const defDate = $xeDatePanel.parseDate(defaultDate, dateValueFormat)
+          // 面板默认日期仅支持解析 yyyy-MM-dd
+          const defDate = $xeDatePanel.parseDate(defaultDate, 'yyyy-MM-dd')
           if (XEUtils.isValidDate(defDate)) {
             $xeDatePanel.dateMonthHandle(defDate, 0)
           } else {
@@ -1227,7 +1228,19 @@ export default /* define-vxe-component start */ defineVxeComponent({
         }
       }
       if (isDateTimeType) {
-        reactData.datetimePanelValue = reactData.datePanelValue || XEUtils.getWhatDay(Date.now(), 0, 'first')
+        let dtPanelValue = reactData.datePanelValue
+        if (!dtPanelValue) {
+          dtPanelValue = XEUtils.getWhatDay(Date.now(), 0, 'first')
+          if (defaultTime) {
+            const defTime = toStringTimeDate(defaultTime)
+            if (defTime) {
+              dtPanelValue.setHours(defTime.getHours())
+              dtPanelValue.setMinutes(defTime.getMinutes())
+              dtPanelValue.setSeconds(defTime.getSeconds())
+            }
+          }
+        }
+        reactData.datetimePanelValue = dtPanelValue
         $xeDatePanel.$nextTick(() => {
           const timeBodyElem = $xeDatePanel.$refs.refInputTimeBody as HTMLDivElement
           XEUtils.arrayEach(timeBodyElem.querySelectorAll('li.is--selected'), (elem) => {

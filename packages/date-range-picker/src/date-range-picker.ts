@@ -71,7 +71,8 @@ export default /* define-vxe-component start */ defineVxeComponent({
     // },
     minDate: [String, Number, Date] as PropType<VxeDateRangePickerPropTypes.MinDate>,
     maxDate: [String, Number, Date] as PropType<VxeDateRangePickerPropTypes.MaxDate>,
-    defaultDate: [String, Number, Date] as PropType<VxeDateRangePickerPropTypes.DefaultDate>,
+    defaultDate: [String, Number, Date, Array] as PropType<VxeDateRangePickerPropTypes.DefaultDate>,
+    defaultTime: [String, Number, Date, Array] as PropType<VxeDateRangePickerPropTypes.DefaultTime>,
     startDay: {
       type: [String, Number] as PropType<VxeDateRangePickerPropTypes.StartDay>,
       default: () => getConfig().dateRangePicker.startDay
@@ -232,6 +233,32 @@ export default /* define-vxe-component start */ defineVxeComponent({
         return false
       }
       return disabled
+    },
+    computeDefaultDates () {
+      const $xeDateRangePicker = this
+      const props = $xeDateRangePicker
+
+      const { defaultDate } = props
+      if (defaultDate) {
+        if (XEUtils.isArray(defaultDate)) {
+          return defaultDate
+        }
+        return [defaultDate, defaultDate]
+      }
+      return []
+    },
+    computeDefaultTimes () {
+      const $xeDateRangePicker = this
+      const props = $xeDateRangePicker
+
+      const { defaultTime } = props
+      if (defaultTime) {
+        if (XEUtils.isArray(defaultTime)) {
+          return defaultTime
+        }
+        return [defaultTime, defaultTime]
+      }
+      return []
     },
     computeMVal () {
       const $xeDateRangePicker = this
@@ -1031,6 +1058,8 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const panelLabelObj = $xeDateRangePicker.computePanelLabelObj
       const shortcutList = $xeDateRangePicker.computeShortcutList
       const isDateTimeType = $xeDateRangePicker.computeIsDateTimeType
+      const defaultDates = $xeDateRangePicker.computeDefaultDates
+      const defaultTimes = $xeDateRangePicker.computeDefaultTimes
       const { startLabel, endLabel } = panelLabelObj
       const { position } = shortcutOpts
       const headerSlot = slots.header
@@ -1039,6 +1068,8 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const bottomSlot = slots.bottom
       const leftSlot = slots.left
       const rightSlot = slots.right
+      const [sdDate, edDate] = defaultDates
+      const [sdTime, edTime] = defaultTimes
       const hasShortcutBtn = shortcutList.length > 0
       const showConfirmBtn = (showConfirmButton === null ? (isDateTimeType || !autoClose) : showConfirmButton)
       const showClearBtn = (showClearButton === null ? isClearable : showClearButton)
@@ -1103,6 +1134,8 @@ export default /* define-vxe-component start */ defineVxeComponent({
                         labelFormat: props.labelFormat,
                         valueFormat: props.valueFormat,
                         timeFormat: props.timeFormat,
+                        defaultDate: sdDate,
+                        defaultTime: sdTime,
                         festivalMethod: props.festivalMethod,
                         disabledMethod: props.disabledMethod,
                         selectDay: props.selectDay
@@ -1124,6 +1157,8 @@ export default /* define-vxe-component start */ defineVxeComponent({
                         labelFormat: props.labelFormat,
                         valueFormat: props.valueFormat,
                         timeFormat: props.timeFormat,
+                        defaultDate: edDate,
+                        defaultTime: edTime,
                         festivalMethod: props.festivalMethod,
                         disabledMethod: props.disabledMethod,
                         selectDay: props.selectDay
