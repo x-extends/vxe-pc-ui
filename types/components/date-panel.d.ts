@@ -33,6 +33,7 @@ export namespace VxeDatePanelPropTypes {
   export type StartDate = string | number | Date
   export type EndDate = string | number | Date
   export type DefaultDate = string | number | Date
+  export type DefaultTime = string | number | Date
   export type MinDate = string | number | Date
   export type MaxDate = string | number | Date
   export type StartDay = 0 | 1 | 2 | 3 | 4 | 5 | 6
@@ -58,6 +59,7 @@ export interface VxeDatePanelProps {
   startDate?: VxeDatePanelPropTypes.StartDate
   endDate?: VxeDatePanelPropTypes.EndDate
   defaultDate?: VxeDatePanelPropTypes.DefaultDate
+  defaultTime?: VxeDatePanelPropTypes.DefaultTime
   minDate?: VxeDatePanelPropTypes.MinDate
   maxDate?: VxeDatePanelPropTypes.MaxDate
 

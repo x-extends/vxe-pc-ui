@@ -45,7 +45,8 @@ export namespace VxeDateRangePickerPropTypes {
 
   // export type StartDate = string | number | Date
   // export type EndDate = string | number | Date
-  export type DefaultDate = string | number | Date
+  export type DefaultDate = string | number | Date | (string | number | Date)[]
+  export type DefaultTime = string | number | Date | (string | number | Date)[]
   export type MinDate = string | number | Date
   export type MaxDate = string | number | Date
 
@@ -101,6 +102,7 @@ export interface VxeDateRangePickerProps {
   // startDate?: VxeDateRangePickerPropTypes.StartDate
   // endDate?: VxeDateRangePickerPropTypes.EndDate
   defaultDate?: VxeDateRangePickerPropTypes.DefaultDate
+  defaultTime?: VxeDateRangePickerPropTypes.DefaultTime
   minDate?: VxeDateRangePickerPropTypes.MinDate
   maxDate?: VxeDateRangePickerPropTypes.MaxDate
 

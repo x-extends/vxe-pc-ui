@@ -116,6 +116,9 @@
 
       <vxe-date-picker v-model="demo1.val828" placeholder="时:分" type="time" value-format="HH:mm" label-format="HH:mm" clearable></vxe-date-picker>
       <vxe-date-picker v-model="demo1.val829" placeholder="时" type="time" value-format="HH" label-format="HH" clearable></vxe-date-picker>
+
+     <vxe-date-picker v-model="demo1.val829" placeholder="默认值" type="month" default-date="2025-02-01"></vxe-date-picker>
+
     </p>
   </div>
 </template>
