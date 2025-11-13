@@ -1233,7 +1233,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
           dtPanelValue = XEUtils.getWhatDay(Date.now(), 0, 'first')
           if (defaultTime) {
             const defTime = toStringTimeDate(defaultTime)
-            if (defTime) {
+            if (XEUtils.isValidDate(defTime)) {
               dtPanelValue.setHours(defTime.getHours())
               dtPanelValue.setMinutes(defTime.getMinutes())
               dtPanelValue.setSeconds(defTime.getSeconds())
