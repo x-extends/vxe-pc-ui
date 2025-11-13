@@ -235,6 +235,9 @@ export default defineVxeComponent({
         if (XEUtils.isArray(defaultDate)) {
           return defaultDate
         }
+        if (`${defaultDate}`.indexOf(',') > -1) {
+          return `${defaultDate}`.split(',')
+        }
         return [defaultDate, defaultDate]
       }
       return []
@@ -245,6 +248,9 @@ export default defineVxeComponent({
       if (defaultTime) {
         if (XEUtils.isArray(defaultTime)) {
           return defaultTime
+        }
+        if (`${defaultTime}`.indexOf(',') > -1) {
+          return `${defaultTime}`.split(',')
         }
         return [defaultTime, defaultTime]
       }
