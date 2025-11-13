@@ -213,6 +213,7 @@ export interface UploadReactData {
 }
 
 export interface UploadInternalData {
+  moreId: string
   imagePreviewTypes: string[]
   prevDragIndex: number
   prevDragPos?: 'top' | 'bottom' | 'left' | 'right' | ''
@@ -232,6 +233,22 @@ export interface UploadMethods {
    * 用于 auto-upload 模式，手动调用上传附件；如果传 true，这包含未上传和上传失败的都会重新提交
    */
   submit(isFull?: boolean): Promise<void>
+  /**
+   * 获取更多弹窗的可视状态
+   */
+  getMoreVisible(): boolean
+  /**
+   * 打开更多弹窗
+   */
+  openMore(): Promise<void>
+  /**
+   * 区别就是会触发对应的事件
+   */
+  openMoreByEvent(event: Event): Promise<void>
+  /**
+   * 关闭更多弹窗
+   */
+  closeMore(): Promise<void>
 }
 export interface VxeUploadMethods extends UploadMethods { }
 
@@ -247,7 +264,8 @@ export type VxeUploadEmits = [
   'download-fail',
   'upload-success',
   'upload-error',
-  'sort-dragend'
+  'sort-dragend',
+  'more-visible'
 ]
 
 export namespace VxeUploadDefines {
@@ -287,29 +305,38 @@ export namespace VxeUploadDefines {
   }
 
   export interface AddParams {
+    options: VxeUploadDefines.FileObjItem[]
     option: VxeUploadDefines.FileObjItem
   }
   export interface AddEventParams extends UploadEventParams, AddParams { }
 
   export interface RemoveEventParams extends UploadEventParams {
+    options: VxeUploadDefines.FileObjItem[]
     option: VxeUploadDefines.FileObjItem
   }
   export interface RemoveFailEventParams extends RemoveEventParams {}
 
   export interface DownloadEventParams extends UploadEventParams {
+    options: VxeUploadDefines.FileObjItem[]
     option: VxeUploadDefines.FileObjItem
   }
   export interface DownloadFailEventParams extends DownloadEventParams {}
 
   export interface UploadSuccessEventParams extends UploadEventParams {
+    options: VxeUploadDefines.FileObjItem[]
     option: VxeUploadDefines.FileObjItem
     data: any
   }
 
   export interface UploadErrorEventParams extends UploadSuccessEventParams {}
+
+  export interface MoreVisibleEventParams {
+    visible: boolean
+  }
 }
 
 export type VxeUploadEventProps = {
+  'onUpdate:modelValue'?: VxeUploadEvents.UpdateModelValue
   onAdd?: VxeUploadEvents.Add
   onRemove?: VxeUploadEvents.Remove
   onRemoveFail?: VxeUploadEvents.RemoveFail
@@ -317,9 +344,11 @@ export type VxeUploadEventProps = {
   onDownloadFail?: VxeUploadEvents.DownloadFail
   onUploadSuccess?: VxeUploadEvents.UploadSuccess
   onUploadError?: VxeUploadEvents.UploadError
+  onMoreVisible?: VxeUploadEvents.MoreVisible
 }
 
 export interface VxeUploadListeners {
+  'update:modelValue'?: VxeUploadEvents.UpdateModelValue
   add?: VxeUploadEvents.Add
   remove?: VxeUploadEvents.Remove
   removeFail?: VxeUploadEvents.RemoveFail
@@ -327,9 +356,11 @@ export interface VxeUploadListeners {
   downloadFail?: VxeUploadEvents.DownloadFail
   uploadSuccess?: VxeUploadEvents.UploadSuccess
   uploadError?: VxeUploadEvents.UploadError
+  moreVisible?: VxeUploadEvents.MoreVisible
 }
 
 export namespace VxeUploadEvents {
+  export type UpdateModelValue = (modelValue: VxeUploadPropTypes.ModelValue) => void
   export type Add = (params: VxeUploadDefines.AddEventParams) => void
   export type Remove = (params: VxeUploadDefines.RemoveEventParams) => void
   export type RemoveFail = (params: VxeUploadDefines.RemoveFailEventParams) => void
@@ -337,21 +368,44 @@ export namespace VxeUploadEvents {
   export type DownloadFail = (params: VxeUploadDefines.DownloadFailEventParams) => void
   export type UploadSuccess = (params: VxeUploadDefines.UploadSuccessEventParams) => void
   export type UploadError = (params: VxeUploadDefines.UploadErrorEventParams) => void
+  export type MoreVisible = (params: VxeUploadDefines.MoreVisibleEventParams) => void
 }
 
 export namespace VxeUploadSlotTypes {
-  export interface DefaultSlotParams {}
+  export interface DefaultSlotParams {
+    options: VxeUploadDefines.FileObjItem[]
+    isMoreView: boolean
+  }
+  export interface TipSlotParams extends DefaultSlotParams {}
 
-  export interface CornerSlotParams {
+  export interface OptionSlotParams {
+    options: VxeUploadDefines.FileObjItem[]
     option: VxeUploadDefines.FileObjItem
     isMoreView: boolean
+  }
+  export interface ActionSlotParams extends OptionSlotParams {}
+  export interface NameSlotParams extends OptionSlotParams {}
+
+  export interface MoreButtonSlotParams {
+    options: VxeUploadDefines.FileObjItem[]
+  }
+
+  export interface MoreContentSlotParams {
+    options: VxeUploadDefines.FileObjItem[]
   }
 }
 
 export interface VxeUploadSlots {
   default?: (params: VxeUploadSlotTypes.DefaultSlotParams) => any
-  tip?: (params: VxeUploadSlotTypes.DefaultSlotParams) => any
-  corner?: (params: VxeUploadSlotTypes.CornerSlotParams) => any
+  tip?: (params: VxeUploadSlotTypes.TipSlotParams) => any
+  action?: (params: VxeUploadSlotTypes.ActionSlotParams) => any
+  corner?: (params: VxeUploadSlotTypes.ActionSlotParams) => any
+  name?: (params: VxeUploadSlotTypes.NameSlotParams) => any
+  option?: (params: VxeUploadSlotTypes.OptionSlotParams) => any
+  moreButton?: (params: VxeUploadSlotTypes.MoreButtonSlotParams) => any
+  'more-button'?: (params: VxeUploadSlotTypes.MoreButtonSlotParams) => any
+  moreContent?: (params: VxeUploadSlotTypes.MoreContentSlotParams) => any
+  'more-content'?: (params: VxeUploadSlotTypes.MoreContentSlotParams) => any
 }
 
 export const Upload: typeof VxeUpload
