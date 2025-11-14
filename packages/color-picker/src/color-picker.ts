@@ -666,7 +666,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
         } catch (e) {}
       }
     },
-    handleSelectColorMousedownEvent (evnt: MouseEvent) {
+    handleSelectColorByXY (clientX: number, clientY: number) {
       const $xeColorPicker = this
       const props = $xeColorPicker
       const reactData = $xeColorPicker.reactData
@@ -676,19 +676,34 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const colorPanelEl = $xeColorPicker.$refs.refColorPanelElem as HTMLDivElement
       const colorActiveEl = $xeColorPicker.$refs.refColorActiveElem as HTMLDivElement
       if (colorPanelEl && colorActiveEl) {
+        const { clientWidth, clientHeight } = colorPanelEl
         const colorPanelRect = colorPanelEl.getBoundingClientRect()
-        const offsetTop = evnt.clientY - colorPanelRect.y
-        const offsetLeft = evnt.clientX - colorPanelRect.x
+        const offsetTop = Math.min(clientHeight, Math.max(0, clientY - colorPanelRect.y))
+        const offsetLeft = Math.min(clientWidth, Math.max(0, clientX - colorPanelRect.x))
         const colorRest = parseColor(panelColor)
         if (colorRest) {
           const hsvRest = colorRest.type === 'hex' ? hexToHsv(colorRest.hex) : rgbToHsv(colorRest)
           if (hsvRest) {
-            const ragRest = hsvToRgb(hsvRest.h, offsetLeft / colorPanelEl.clientWidth, (1 - offsetTop / colorPanelEl.clientHeight))
+            const ragRest = hsvToRgb(hsvRest.h, offsetLeft / clientWidth, (1 - offsetTop / clientHeight))
             reactData.selectColor = toRgb(ragRest.r, ragRest.g, ragRest.b, showAlpha ? aValue : null)
             $xeColorPicker.handlePanelColor(offsetLeft, offsetTop)
-            $xeColorPicker.updateModelColor()
           }
         }
+        $xeColorPicker.updateModelColor()
+      }
+    },
+    handleSelectColorMousedownEvent (evnt: MouseEvent) {
+      const $xeColorPicker = this
+
+      evnt.stopPropagation()
+      evnt.preventDefault()
+      $xeColorPicker.handleSelectColorByXY(evnt.clientX, evnt.clientY)
+      document.onmousemove = evnt => {
+        $xeColorPicker.handleSelectColorByXY(evnt.clientX, evnt.clientY)
+      }
+      document.onmouseup = () => {
+        document.onmousemove = null
+        document.onmouseup = null
       }
     },
     handleCopyColorEvent () {
