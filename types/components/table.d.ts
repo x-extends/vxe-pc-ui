@@ -5255,6 +5255,10 @@ export interface TablePrivateMethods<D = any> {
   /**
    * @private
    */
+  handleCrossTableRowDragCancelEvent(evnt: DragEvent): void
+  /**
+   * @private
+   */
   handleCrossTableRowDragFinishEvent(evnt: DragEvent): void
   /**
    * @private
