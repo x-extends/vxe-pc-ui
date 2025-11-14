@@ -568,25 +568,39 @@ export default defineVxeComponent({
       }
     }
 
-    const handleSelectColorMousedownEvent = (evnt: MouseEvent) => {
+    const handleSelectColorByXY = (clientX: number, clientY: number) => {
       const { showAlpha } = props
       const { panelColor, aValue } = reactData
       const colorPanelEl = refColorPanelElem.value
       const colorActiveEl = refColorActiveElem.value
       if (colorPanelEl && colorActiveEl) {
+        const { clientWidth, clientHeight } = colorPanelEl
         const colorPanelRect = colorPanelEl.getBoundingClientRect()
-        const offsetTop = evnt.clientY - colorPanelRect.y
-        const offsetLeft = evnt.clientX - colorPanelRect.x
+        const offsetTop = Math.min(clientHeight, Math.max(0, clientY - colorPanelRect.y))
+        const offsetLeft = Math.min(clientWidth, Math.max(0, clientX - colorPanelRect.x))
         const colorRest = parseColor(panelColor)
         if (colorRest) {
           const hsvRest = colorRest.type === 'hex' ? hexToHsv(colorRest.hex) : rgbToHsv(colorRest)
           if (hsvRest) {
-            const ragRest = hsvToRgb(hsvRest.h, offsetLeft / colorPanelEl.clientWidth, (1 - offsetTop / colorPanelEl.clientHeight))
+            const ragRest = hsvToRgb(hsvRest.h, offsetLeft / clientWidth, (1 - offsetTop / clientHeight))
             reactData.selectColor = toRgb(ragRest.r, ragRest.g, ragRest.b, showAlpha ? aValue : null)
-            handlePanelColor(offsetLeft, offsetTop)
             updateModelColor()
           }
         }
+        handlePanelColor(offsetLeft, offsetTop)
+      }
+    }
+
+    const handleSelectColorMousedownEvent = (evnt: MouseEvent) => {
+      evnt.stopPropagation()
+      evnt.preventDefault()
+      handleSelectColorByXY(evnt.clientX, evnt.clientY)
+      document.onmousemove = evnt => {
+        handleSelectColorByXY(evnt.clientX, evnt.clientY)
+      }
+      document.onmouseup = () => {
+        document.onmousemove = null
+        document.onmouseup = null
       }
     }
 
