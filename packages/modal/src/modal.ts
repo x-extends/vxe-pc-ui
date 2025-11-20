@@ -523,6 +523,13 @@ export default /* define-vxe-component start */ defineVxeComponent({
         })
       })
     },
+    removeActiveQueue () {
+      const $xeModal = this
+
+      if (allActiveModals.indexOf($xeModal as VxeModalConstructor) > -1) {
+        XEUtils.remove(allActiveModals, item => item === $xeModal)
+      }
+    },
     removeMsgQueue  () {
       const $xeModal = this
       const props = $xeModal
@@ -554,7 +561,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
             if (!remember) {
               $xeModal.handleRevert()
             }
-            XEUtils.remove(allActiveModals, item => item === $xeModal)
+            $xeModal.removeActiveQueue()
             $xeModal.dispatchEvent('before-hide', params, null)
             setTimeout(() => {
               reactData.visible = false
@@ -1641,6 +1648,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
     }
     globalEvents.off($xeModal, 'keydown')
     $xeModal.removeMsgQueue()
+    $xeModal.removeActiveQueue()
     $xeModal.removeBodyLockScroll()
   },
   render (this: any, h) {

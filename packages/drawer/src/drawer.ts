@@ -270,6 +270,13 @@ export default /* define-vxe-component start */ defineVxeComponent({
         reactData.drawerZIndex = nextZIndex()
       }
     },
+    removeActiveQueue () {
+      const $xeDrawer = this
+
+      if (allActiveDrawers.indexOf($xeDrawer) > -1) {
+        XEUtils.remove(allActiveDrawers, item => item === $xeDrawer)
+      }
+    },
     closeDrawer  (type: DrawerEventTypes) {
       const $xeDrawer = this
       const props = $xeDrawer
@@ -282,7 +289,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
         Promise.resolve(beforeHideMethod ? beforeHideMethod(params) : null).then((rest) => {
           if (!XEUtils.isError(rest)) {
             reactData.contentVisible = false
-            XEUtils.remove(allActiveDrawers, item => item === $xeDrawer)
+            $xeDrawer.removeActiveQueue()
             $xeDrawer.dispatchEvent('before-hide', params, null)
             setTimeout(() => {
               reactData.visible = false
@@ -752,6 +759,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       panelElem.parentNode.removeChild(panelElem)
     }
     globalEvents.off($xeDrawer, 'keydown')
+    $xeDrawer.removeActiveQueue()
   },
   render (this: any, h) {
     return this.renderVN(h)

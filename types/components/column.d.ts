@@ -214,7 +214,7 @@ export namespace VxeColumnPropTypes {
   export type TitlePrefix = VxeTooltipDefines.TooltipHelperOption
   export type TitleSuffix = VxeTooltipDefines.TooltipHelperOption
 
-  export type CellType = 'auto' | 'number' | 'string' | '' | null
+  export type CellType = 'auto' | 'number' | 'string' | 'date' | '' | null
 
   export interface CellRender<D = any, P = Record<string, any>> {
     /**
