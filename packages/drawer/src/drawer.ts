@@ -218,6 +218,12 @@ export default defineVxeComponent({
       }
     }
 
+    const removeActiveQueue = () => {
+      if (allActiveDrawers.indexOf($xeDrawer) > -1) {
+        XEUtils.remove(allActiveDrawers, item => item === $xeDrawer)
+      }
+    }
+
     const closeDrawer = (type: DrawerEventTypes) => {
       const { beforeHideMethod } = props
       const { visible } = reactData
@@ -226,7 +232,7 @@ export default defineVxeComponent({
         Promise.resolve(beforeHideMethod ? beforeHideMethod(params) : null).then((rest) => {
           if (!XEUtils.isError(rest)) {
             reactData.contentVisible = false
-            XEUtils.remove(allActiveDrawers, item => item === $xeDrawer)
+            removeActiveQueue()
             dispatchEvent('before-hide', params, null)
             setTimeout(() => {
               reactData.visible = false
@@ -636,6 +642,7 @@ export default defineVxeComponent({
 
     onUnmounted(() => {
       globalEvents.off($xeDrawer, 'keydown')
+      removeActiveQueue()
     })
 
     provide('$xeDrawer', $xeDrawer)

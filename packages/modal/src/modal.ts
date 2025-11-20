@@ -363,6 +363,12 @@ export default defineVxeComponent({
       })
     }
 
+    const removeActiveQueue = () => {
+      if (allActiveModals.indexOf($xeModal) > -1) {
+        XEUtils.remove(allActiveModals, item => item === $xeModal)
+      }
+    }
+
     const removeMsgQueue = () => {
       const { type } = props
       const queueList = type === 'notification' ? notifyQueue : msgQueue
@@ -388,7 +394,7 @@ export default defineVxeComponent({
             if (!remember) {
               handleRevert()
             }
-            XEUtils.remove(allActiveModals, item => item === $xeModal)
+            removeActiveQueue()
             dispatchEvent('before-hide', params, null)
             setTimeout(() => {
               reactData.visible = false
@@ -1463,8 +1469,8 @@ export default defineVxeComponent({
     onUnmounted(() => {
       globalEvents.off($xeModal, 'keydown')
       removeMsgQueue()
+      removeActiveQueue()
       removeBodyLockScroll()
-      XEUtils.remove(allActiveModals, item => item === $xeModal)
     })
 
     provide('$xeModal', $xeModal)
