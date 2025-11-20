@@ -1464,6 +1464,7 @@ export default defineVxeComponent({
       globalEvents.off($xeModal, 'keydown')
       removeMsgQueue()
       removeBodyLockScroll()
+      XEUtils.remove(allActiveModals, item => item === $xeModal)
     })
 
     provide('$xeModal', $xeModal)
