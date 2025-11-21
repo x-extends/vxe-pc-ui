@@ -780,6 +780,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
         }
         if (visiblePanel) {
           if (isEsc || isTab) {
+            $xeDateRangePicker.checkValue()
             $xeDateRangePicker.hidePanel()
           }
         }
@@ -797,6 +798,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
           if (getEventTargetNode(evnt, panelWrapperElem).flag) {
             $xeDateRangePicker.updatePlacement()
           } else {
+            $xeDateRangePicker.checkValue()
             $xeDateRangePicker.hidePanel()
           }
         }
@@ -808,6 +810,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
 
       const { visiblePanel, isActivated } = reactData
       if (visiblePanel) {
+        $xeDateRangePicker.checkValue()
         $xeDateRangePicker.hidePanel()
       }
       if (isActivated) {
@@ -1185,7 +1188,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
                           h('span', `${separator || ''}`),
                           h('span', endLabel)
                         ]
-                      : []),
+                      : `${separator || ''}`),
                     h('div', {
                       class: 'vxe-date-range-picker--layout-footer-custom'
                     }, footerSlot ? footerSlot({}) : [$xeDateRangePicker.renderShortcutBtn(h, 'footer')]),
