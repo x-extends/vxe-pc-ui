@@ -668,6 +668,7 @@ export default defineVxeComponent({
         }
         if (visiblePanel) {
           if (isEsc || isTab) {
+            checkValue()
             hidePanel()
           }
         }
@@ -683,6 +684,7 @@ export default defineVxeComponent({
           if (getEventTargetNode(evnt, panelWrapperElem).flag) {
             updatePlacement()
           } else {
+            checkValue()
             hidePanel()
           }
         }
@@ -692,6 +694,7 @@ export default defineVxeComponent({
     const handleGlobalBlurEvent = () => {
       const { visiblePanel, isActivated } = reactData
       if (visiblePanel) {
+        checkValue()
         hidePanel()
       }
       if (isActivated) {
@@ -1026,7 +1029,7 @@ export default defineVxeComponent({
                             h('span', `${separator || ''}`),
                             h('span', endLabel)
                           ]
-                        : []),
+                        : `${separator || ''}`),
                       h('div', {
                         class: 'vxe-date-range-picker--layout-footer-custom'
                       }, footerSlot ? footerSlot({}) : [renderShortcutBtn('footer')]),
