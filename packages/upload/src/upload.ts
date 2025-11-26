@@ -61,6 +61,10 @@ export default defineVxeComponent({
       type: Boolean as PropType<VxeUploadPropTypes.DragToUpload>,
       default: () => XEUtils.clone(getConfig().upload.dragToUpload, true)
     },
+    dragPlaceholder: {
+      type: String as PropType<VxeUploadPropTypes.DragPlaceholder>,
+      default: () => getConfig().upload.dragPlaceholder
+    },
     pasteToUpload: {
       type: Boolean as PropType<VxeUploadPropTypes.PasteToUpload>,
       default: () => XEUtils.clone(getConfig().upload.pasteToUpload, true)
@@ -978,7 +982,7 @@ export default defineVxeComponent({
           maskClosable: true,
           slots: {
             default () {
-              const { showErrorStatus, dragToUpload, dragSort } = props
+              const { showErrorStatus, dragToUpload, dragSort, dragPlaceholder } = props
               const { isActivated, isDragMove, isDragUploadStatus, dragIndex } = reactData
               const { fileList } = reactData
               const isDisabled = computeIsDisabled.value
@@ -1043,7 +1047,7 @@ export default defineVxeComponent({
                     isDragUploadStatus
                       ? h('div', {
                         class: 'vxe-upload--drag-placeholder'
-                      }, getI18n('vxe.upload.dragPlaceholder'))
+                      }, dragPlaceholder || getI18n('vxe.upload.dragPlaceholder'))
                       : renderEmptyElement($xeUpload)
                   ])
             }
@@ -1773,7 +1777,7 @@ export default defineVxeComponent({
     }
 
     const renderVN = () => {
-      const { showErrorStatus, dragToUpload, pasteToUpload, dragSort } = props
+      const { showErrorStatus, dragToUpload, pasteToUpload, dragSort, dragPlaceholder } = props
       const { isDragUploadStatus, showMorePopup, isActivated, dragIndex } = reactData
       const vSize = computeSize.value
       const isDisabled = computeIsDisabled.value
@@ -1812,7 +1816,7 @@ export default defineVxeComponent({
         isDragUploadStatus && !showMorePopup
           ? h('div', {
             class: 'vxe-upload--drag-placeholder'
-          }, getI18n('vxe.upload.dragPlaceholder'))
+          }, dragPlaceholder || getI18n('vxe.upload.dragPlaceholder'))
           : renderEmptyElement($xeUpload)
       ])
     }

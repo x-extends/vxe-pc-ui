@@ -91,6 +91,7 @@ export namespace VxeGridPropTypes {
       [key: string]: any
     }
   }
+  interface ProxyAjaxQueryFooterParams<D = any> extends ProxyAjaxQueryParams<D> {}
 
   interface ProxyAjaxQueryAllParams<D = any> {
     $table: VxeTableConstructor<D>
@@ -163,6 +164,12 @@ export namespace VxeGridPropTypes {
         $grid: VxeGridConstructor<D> | null | undefined
         $gantt: VxeGanttConstructor<D> | null | undefined
       }) => any[])
+      footerData?: string | ((params: {
+        data: any
+        $table: VxeTableConstructor<D>
+        $grid: VxeGridConstructor<D> | null | undefined
+        $gantt: VxeGanttConstructor<D> | null | undefined
+      }) => any[])
       total?: string | ((params: {
         data: any
         $table: VxeTableConstructor<D>
@@ -183,6 +190,9 @@ export namespace VxeGridPropTypes {
       queryAll?(params: ProxyAjaxQueryAllParams<D>): Promise<any>
       queryAllSuccess?(params: ProxyAjaxQueryAllParams<D> & ProxyAjaxResponseParams): void
       queryAllError?(params: ProxyAjaxQueryAllParams<D> & ProxyAjaxResponseParams): void
+      queryFooter?(params: ProxyAjaxQueryFooterParams<D>, ...args: any[]): Promise<any>
+      queryFooterSuccess?(params: ProxyAjaxQueryFooterParams<D> & ProxyAjaxResponseParams): void
+      queryFooterError?(params: ProxyAjaxQueryFooterParams<D> & ProxyAjaxResponseParams): void
       delete?(params: ProxyAjaxDeleteParams<D>, ...args: any[]): Promise<any>
       deleteSuccess?(params: ProxyAjaxDeleteParams<D> & ProxyAjaxResponseParams): void
       deleteError?(params: ProxyAjaxDeleteParams<D> & ProxyAjaxResponseParams): void
