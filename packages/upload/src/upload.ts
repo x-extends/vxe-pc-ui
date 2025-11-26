@@ -123,6 +123,10 @@ export default /* define-vxe-component start */ defineVxeComponent({
       type: Boolean as PropType<VxeUploadPropTypes.DragToUpload>,
       default: () => XEUtils.clone(getConfig().upload.dragToUpload, true)
     },
+    dragPlaceholder: {
+      type: String as PropType<VxeUploadPropTypes.DragPlaceholder>,
+      default: () => getConfig().upload.dragPlaceholder
+    },
     pasteToUpload: {
       type: Boolean as PropType<VxeUploadPropTypes.PasteToUpload>,
       default: () => XEUtils.clone(getConfig().upload.pasteToUpload, true)
@@ -1179,7 +1183,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
           maskClosable: true,
           slots: {
             default (params, h) {
-              const { showErrorStatus, dragToUpload, dragSort } = props
+              const { showErrorStatus, dragToUpload, dragSort, dragPlaceholder } = props
               const { isActivated, isDragMove, isDragUploadStatus, dragIndex } = reactData
               const { fileList } = reactData
               const isDisabled = $xeUpload.computeIsDisabled
@@ -1250,7 +1254,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
                     isDragUploadStatus
                       ? h('div', {
                         class: 'vxe-upload--drag-placeholder'
-                      }, getI18n('vxe.upload.dragPlaceholder'))
+                      }, dragPlaceholder || getI18n('vxe.upload.dragPlaceholder'))
                       : renderEmptyElement($xeUpload)
                   ])
             }
@@ -1977,7 +1981,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const props = $xeUpload
       const reactData = $xeUpload.reactData
 
-      const { showErrorStatus, dragToUpload, pasteToUpload, dragSort } = props
+      const { showErrorStatus, dragToUpload, pasteToUpload, dragSort, dragPlaceholder } = props
       const { isDragUploadStatus, showMorePopup, isActivated, dragIndex } = reactData
       const vSize = $xeUpload.computeSize
       const isDisabled = $xeUpload.computeIsDisabled
@@ -2014,7 +2018,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
         isDragUploadStatus && !showMorePopup
           ? h('div', {
             class: 'vxe-upload--drag-placeholder'
-          }, getI18n('vxe.upload.dragPlaceholder'))
+          }, dragPlaceholder || getI18n('vxe.upload.dragPlaceholder'))
           : renderEmptyElement($xeUpload)
       ])
     }

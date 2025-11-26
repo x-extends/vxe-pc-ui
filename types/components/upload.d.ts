@@ -47,6 +47,7 @@ export namespace VxeUploadPropTypes {
   export type SingleMode = boolean
   export type DragSort = boolean
   export type DragToUpload = boolean
+  export type DragPlaceholder = string
   export type PasteToUpload = boolean
   export type KeyField = string
   export type UrlMode = boolean
@@ -145,6 +146,7 @@ export interface VxeUploadProps {
   singleMode?: VxeUploadPropTypes.SingleMode
   dragSort?: VxeUploadPropTypes.DragSort
   dragToUpload?: VxeUploadPropTypes.DragToUpload
+  dragPlaceholder?: VxeUploadPropTypes.DragPlaceholder
   pasteToUpload?: VxeUploadPropTypes.PasteToUpload
   keyField?: VxeUploadPropTypes.KeyField
   urlMode?: VxeUploadPropTypes.UrlMode
