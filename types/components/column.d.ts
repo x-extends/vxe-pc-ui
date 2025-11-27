@@ -48,11 +48,7 @@ export namespace VxeColumnPropTypes {
   export type Padding = boolean
   export type VerticalAlign = '' | 'top' | 'center' | null
 
-  export type Formatter<D = any> = ((params: {
-    cellValue: any
-    column: VxeTableDefines.ColumnInfo<D>
-    row: D
-  }) => string | number) | any[] | string
+  export type Formatter<D = any> = ((params: VxeColumnDefines.CellFormatterParams<D>) => string | number) | any[] | string
 
   export type HeaderFormatter = ((params: {
     cellTitle: any
@@ -352,39 +348,11 @@ export namespace VxeColumnPropTypes {
     props?: P
   }
 
-  export type CopyMethod<D = any> = (params: {
-    $table: VxeTableConstructor<D> & VxeTablePrivateMethods<D>
-    $grid: VxeGridConstructor<D> | null | undefined
-    isCut: boolean
-    row: D
-    column: VxeTableDefines.ColumnInfo<D>
-    cellValue: any
-  }) => string
+  export type CopyMethod<D = any> = (params: VxeColumnDefines.CellCopyParams<D>) => string
 
-  export type CutMethod<D = any> = (params: {
-    $table: VxeTableConstructor<D> & VxeTablePrivateMethods<D>
-    $grid: VxeGridConstructor<D> | null | undefined
-    row: D,
-    column: VxeTableDefines.ColumnInfo<D>
-    cellValue: any
-    clipData: {
-      text?: string
-      html?: string
-    }
-  }) => void
+  export type CutMethod<D = any> = (params: VxeColumnDefines.CellCutParams<D>) => void
 
-  export type PasteMethod<D = any> = (params: {
-    $table: VxeTableConstructor<D> & VxeTablePrivateMethods<D>
-    $grid: VxeGridConstructor<D> | null | undefined
-    isCut: boolean
-    row: D,
-    column: VxeTableDefines.ColumnInfo<D>
-    cellValue: any
-    clipData: {
-      text?: string
-      html?: string
-    }
-  }) => void
+  export type PasteMethod<D = any> = (params: VxeColumnDefines.CellPasteParams<D>) => void
 
   export type Params = any
 
@@ -687,6 +655,46 @@ export type VxeColumnEmits = []
 export namespace VxeColumnDefines {
   export interface ColumnEventParams extends VxeComponentEventParams {
     $table: VxeTableConstructor
+  }
+
+  export interface CellFormatterParams<D = any> {
+    cellValue: any
+    column: VxeTableDefines.ColumnInfo<D>
+    row: D
+  }
+
+  export interface CellCopyParams<D = any> {
+    $table: VxeTableConstructor<D> & VxeTablePrivateMethods<D>
+    $grid: VxeGridConstructor<D> | null | undefined
+    isCut: boolean
+    row: D
+    column: VxeTableDefines.ColumnInfo<D>
+    cellValue: any
+  }
+
+  export interface CellCutParams<D = any> {
+    $table: VxeTableConstructor<D> & VxeTablePrivateMethods<D>
+    $grid: VxeGridConstructor<D> | null | undefined
+    row: D,
+    column: VxeTableDefines.ColumnInfo<D>
+    cellValue: any
+    clipData: {
+      text?: string
+      html?: string
+    }
+  }
+
+  export interface CellPasteParams<D = any> {
+    $table: VxeTableConstructor<D> & VxeTablePrivateMethods<D>
+    $grid: VxeGridConstructor<D> | null | undefined
+    isCut: boolean
+    row: D,
+    column: VxeTableDefines.ColumnInfo<D>
+    cellValue: any
+    clipData: {
+      text?: string
+      html?: string
+    }
   }
 }
 
