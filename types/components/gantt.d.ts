@@ -125,6 +125,54 @@ export namespace VxeGanttPropTypes {
        * 边框
        */
       border?: VxeTablePropTypes.Border
+      /**
+       * 给行附加 className
+       */
+      rowClassName?: string | ((params: {
+        source: string
+        type: string
+        row: D
+        rowIndex: number
+        $rowIndex: number
+        _rowIndex: number
+      }) => void | null | string | { [key: string]: boolean | null | undefined })
+      /**
+       * 行样式
+       */
+      rowStyle?: ((params: {
+        source: string
+        type: string
+        row: D
+        rowIndex: number
+        $rowIndex: number
+        _rowIndex: number
+      }) => Partial<CSSStyleDeclaration>)
+      /**
+       * 给单元格附加 className
+       */
+      cellClassName?: string | ((params: {
+        source: string
+        type: string
+        dateObj: VxeGanttDefines.ScaleDateObj
+        column?: VxeGanttDefines.ViewColumn<D>
+        row: D
+        rowIndex: number
+        $rowIndex: number
+        _rowIndex: number
+      }) => void | null | string | { [key: string]: boolean | null | undefined })
+      /**
+       * 单元格样式
+       */
+      cellStyle?: ((params: {
+        source: string
+        type: string
+        dateObj: VxeGanttDefines.ScaleDateObj
+        column?: VxeGanttDefines.ViewColumn<D>
+        row: D
+        rowIndex: number
+        $rowIndex: number
+        _rowIndex: number
+      }) => Partial<CSSStyleDeclaration>)
     }
   }
 
@@ -393,11 +441,11 @@ export namespace VxeGanttDefines {
 
   export interface ScaleDefaultOptions {
     /**
-     * 自定义列头单元格标题
+     * 自定义时间轴-列头单元格标题
      */
     titleMethod?: (params: VxeGanttSlotTypes.TaskViewCellTitleSlotParams) => string | number
     /**
-     * 自定义列头单元格样式
+     * 自定义时间轴-列头单元格样式
      */
     headerCellStyle?: CSSStyleDeclaration | ((params: VxeGanttSlotTypes.TaskViewHeaderCellStyleSlotParams) => Partial<CSSStyleDeclaration>)
     /**
@@ -533,6 +581,16 @@ export namespace VxeGanttSlotTypes {
     $rowIndex: number
   }
   export interface TaskViewHeaderCellStyleSlotParams extends TaskViewCellTitleSlotParams {}
+
+  export interface TaskViewCellStyleSlotParams<D = any> {
+    source: string
+    type: string
+    row?: D
+    rowIndex: number
+    $rowIndex: number
+    _rowIndex: number
+    column?: VxeGanttDefines.ViewColumn<D>
+  }
 }
 
 export interface VxeGanttSlots<D = any> extends VxeGridSlots<D> {

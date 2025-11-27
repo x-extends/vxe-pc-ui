@@ -3,7 +3,7 @@ import { VxeComponentStyleType, VxeComponentClassNameType, VxeComponentSlotType,
 import { VxeTableConstructor, VxeTablePropTypes, VxeTableDefines } from '../components/table'
 import { VxeFormItemPropTypes, VxeFormItemSlotTypes, FormItemContentRenderParams, FormItemVisibleParams, FormItemResetParams } from '../components/form-item'
 import { VxeGridConstructor, VxeGridPropTypes } from '../components/grid'
-import { VxeColumnPropTypes } from '../components/column'
+import { VxeColumnPropTypes, VxeColumnDefines } from '../components/column'
 import { VxeToolbarPropTypes } from '../components/toolbar'
 import { VxeButtonConstructor, VxeButtonPropTypes } from '../components/button'
 import { VxeIconPickerConstructor, VxeIconPickerDefines } from '../components/icon-picker'
@@ -103,6 +103,22 @@ declare module '@vxe-ui/core' {
      * 表格 - 自定义表尾单元格导出逻辑
      */
     tableFooterExportMethod?(params: VxeGlobalRendererHandles.TableFooterExportMethodParams<any>): string
+    /**
+     * 表格 - 自定义单元格格式化方法
+     */
+    tableCellFormatter?(renderOpts: VxeGlobalRendererHandles.RenderTableDefaultOptions, params: VxeGlobalRendererHandles.TableCellFormatterParams<any>): string
+    /**
+     * 表格 - 自定义单元格复制方法
+     */
+    tableCellCopyMethod?(renderOpts: VxeGlobalRendererHandles.RenderTableDefaultOptions, params: VxeGlobalRendererHandles.TableCellCopyMethodParams<any>): string
+    /**
+     * 表格 - 自定义单元格剪贴方法
+     */
+    tableCellCutMethod?(renderOpts: VxeGlobalRendererHandles.RenderTableDefaultOptions, params: VxeGlobalRendererHandles.TableCellCutMethodParams<any>): void
+    /**
+     * 表格 - 自定义单元格粘贴方法
+     */
+    tableCellPasteMethod?(renderOpts: VxeGlobalRendererHandles.RenderTableDefaultOptions, params: VxeGlobalRendererHandles.TableCellPasteMethodParams<any>): void
 
     /**
      * 表格 - 激活编辑状态时，设置自动聚焦的 class
@@ -404,6 +420,12 @@ declare module '@vxe-ui/core' {
       column: VxeTableDefines.ColumnInfo<D>
       options: VxeTablePropTypes.ExportHandleOptions
     }
+
+    export interface TableCellFormatterParams<D = any> extends VxeColumnDefines.CellFormatterParams<D> {}
+
+    export interface TableCellCopyMethodParams<D = any> extends VxeColumnDefines.CellCopyParams<D> {}
+    export interface TableCellCutMethodParams<D = any> extends VxeColumnDefines.CellCutParams<D> {}
+    export interface TableCellPasteMethodParams<D = any> extends VxeColumnDefines.CellPasteParams<D> {}
 
     /**
      * @deprecated

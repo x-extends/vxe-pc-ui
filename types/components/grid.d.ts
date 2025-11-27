@@ -83,7 +83,16 @@ export namespace VxeGridPropTypes {
       [key: string]: any
     }
   }
-  interface ProxyAjaxQueryFooterParams<D = any> extends ProxyAjaxQueryParams<D> {}
+
+  interface ProxyAjaxQueryFooterParams<D = any> {
+    $table: VxeTableConstructor<D>
+    $grid: VxeGridConstructor<D> | null | undefined
+    $gantt: VxeGanttConstructor<D> | null | undefined
+    filters: VxeTableDefines.FilterCheckedParams[]
+    form: {
+      [key: string]: any
+    }
+  }
 
   interface ProxyAjaxQueryAllParams<D = any> {
     $table: VxeTableConstructor<D>
@@ -143,32 +152,8 @@ export namespace VxeGridPropTypes {
     sort?: boolean
     filter?: boolean
     form?: boolean
-    response?: {
-      list?: string | null | ((params: {
-        data: any
-        $table: VxeTableConstructor<D>
-        $grid: VxeGridConstructor<D> | null | undefined
-        $gantt: VxeGanttConstructor<D> | null | undefined
-      }) => any[])
-      result?: string | ((params: {
-        data: any
-        $table: VxeTableConstructor<D>
-        $grid: VxeGridConstructor<D> | null | undefined
-        $gantt: VxeGanttConstructor<D> | null | undefined
-      }) => any[])
-      total?: string | ((params: {
-        data: any
-        $table: VxeTableConstructor<D>
-        $grid: VxeGridConstructor<D> | null | undefined
-        $gantt: VxeGanttConstructor<D> | null | undefined
-      }) => number)
-      message?: string | ((params: {
-        data: any
-        $table: VxeTableConstructor<D>
-        $grid: VxeGridConstructor<D> | null | undefined
-        $gantt: VxeGanttConstructor<D> | null | undefined
-      }) => string)
-    }
+    footer?: boolean
+    response?: VxeGridDefines.ProxyConfigResponseConfig<D>
     ajax?: {
       query?(params: ProxyAjaxQueryParams<D>, ...args: any[]): Promise<any>
       querySuccess?(params: ProxyAjaxQueryParams<D> & ProxyAjaxResponseParams): void
@@ -303,6 +288,7 @@ export interface GridReactData<D = any> {
   filterData: VxeTableDefines.FilterCheckedParams<D>[]
   formData: any
   sortData: VxeTableDefines.SortCheckedParams<D>[]
+  footerData: any[]
   tZindex: number
   tablePage: {
     total: number
@@ -311,7 +297,9 @@ export interface GridReactData<D = any> {
   }
 }
 
-export interface GridInternalData {}
+export interface GridInternalData {
+  uFoot?: boolean
+}
 
 export interface GridMethods<D = any> {
   dispatchEvent(type: ValueOf<VxeGridEmits>, params: Record<string, any>, evnt: Event | null): void
@@ -583,6 +571,39 @@ export namespace VxeGridDefines {
     type: 'max' | 'revert'
   }
   export interface ZoomEventParams<D = any> extends GridEventParams<D>, ZoomParams { }
+
+  export interface ProxyConfigResponseConfig<D = any> {
+    list?: string | null | ((params: {
+      data: any
+      $table: VxeTableConstructor<D>
+      $grid: VxeGridConstructor<D> | null | undefined
+      $gantt: VxeGanttConstructor<D> | null | undefined
+    }) => any[])
+    result?: string | ((params: {
+      data: any
+      $table: VxeTableConstructor<D>
+      $grid: VxeGridConstructor<D> | null | undefined
+      $gantt: VxeGanttConstructor<D> | null | undefined
+    }) => any[])
+    footerData?: string | ((params: {
+      data: any
+      $table: VxeTableConstructor<D>
+      $grid: VxeGridConstructor<D> | null | undefined
+      $gantt: VxeGanttConstructor<D> | null | undefined
+    }) => any[])
+    total?: string | ((params: {
+      data: any
+      $table: VxeTableConstructor<D>
+      $grid: VxeGridConstructor<D> | null | undefined
+      $gantt: VxeGanttConstructor<D> | null | undefined
+    }) => number)
+    message?: string | ((params: {
+      data: any
+      $table: VxeTableConstructor<D>
+      $grid: VxeGridConstructor<D> | null | undefined
+      $gantt: VxeGanttConstructor<D> | null | undefined
+    }) => string)
+  }
 }
 
 export interface VxeGridEventProps<D = any> {
