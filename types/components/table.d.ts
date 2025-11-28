@@ -470,6 +470,14 @@ export namespace VxeTablePropTypes {
      */
     showIcon?: boolean
     /**
+     * 自定义展开后显示的图标
+     */
+    iconOpen?: string
+    /**
+     * 自定义收起后显示的图标
+     */
+    iconClose?: string
+    /**
      * 是否显示分组的统计
      */
     showTotal?: boolean
