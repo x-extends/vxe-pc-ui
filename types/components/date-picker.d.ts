@@ -64,6 +64,17 @@ export namespace VxeDatePickerPropTypes {
   export type ShowClearButton = boolean | null
   export type ShowConfirmButton = boolean | null
 
+  export interface PopupConfig {
+    /**
+     * 设置弹出面板方向
+     */
+    placement?: 'top' | 'bottom' | '' | null
+    /**
+     * 触发方式
+     */
+    trigger?: 'default' | 'icon' | 'manual' | '' | null
+    transfer?: boolean
+  }
   export interface ShortcutConfig {
     enabled?: boolean
     position?: 'top' | 'bottom' | 'left' | 'right' | 'header' | 'footer' | null
@@ -113,6 +124,7 @@ export interface VxeDatePickerProps {
   festivalMethod?: VxeDatePickerPropTypes.FestivalMethod
   disabledMethod?: VxeDatePickerPropTypes.DisabledMethod
 
+  popupConfig?: VxeDatePickerPropTypes.PopupConfig
   shortcutConfig?: VxeDatePickerPropTypes.ShortcutConfig
   /**
    * 只对 type=date,week,month,quarter,year 有效，选择完日期后自动关闭

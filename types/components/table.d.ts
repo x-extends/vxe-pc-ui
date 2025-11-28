@@ -523,6 +523,19 @@ export namespace VxeTablePropTypes {
       groupValue: any
       childCount: number
       children: D[]
+    }) => number
+    /**
+     * 自定义列聚合数据的显示值
+     */
+    formatValuesMethod?:(params: {
+      $table: VxeTableConstructor<D>
+      groupField: VxeColumnPropTypes.Field
+      groupColumn: VxeTableDefines.ColumnInfo<D>
+      column: VxeTableDefines.ColumnInfo<D>
+      groupValue: any
+      childCount: number
+      children: D[]
+      aggValue: any
     }) => number | string
     /**
      * 自定义分组统计的方法
@@ -553,7 +566,7 @@ export namespace VxeTablePropTypes {
      */
     countFields?: string[]
     /**
-     * 请使用 contentMethod
+     * 请使用 calcValuesMethod
      * @deprecated
      */
     aggregateMethod?:(params: {
@@ -565,7 +578,7 @@ export namespace VxeTablePropTypes {
       childCount: number
       aggValue: any
       children: D[]
-    }) => number | string
+    }) => number
     /**
      * 已废弃，请使用 calcValuesMethod
      * @deprecated
@@ -578,7 +591,7 @@ export namespace VxeTablePropTypes {
       groupValue: any
       childCount: number
       children: D[]
-    }) => number | string
+    }) => number
   }
 
   /**
@@ -3563,6 +3576,7 @@ export interface TablePrivateComputed<D = any> {
   }>
   computeRowGroupFields: ComputedRef<string[] | null | undefined>
   computeRowGroupColumns: ComputedRef<VxeTableDefines.ColumnInfo<D>[]>
+  computeAggFuncColumns: ComputedRef<VxeTableDefines.ColumnInfo<D>[]>
 
   /**
    * @deprecated
@@ -5514,6 +5528,7 @@ export namespace VxeTableDefines {
     aggData: Record<string, {
       type: string
       value: any
+      label: any
     }>
     groupContent: string
     groupField: string
