@@ -503,6 +503,7 @@ export namespace VxeTablePropTypes {
       groupValue: any
       childCount: number
       children: D[]
+      aggValue: number
     }) => number
     /**
      * 自定义列聚合数据的显示值
@@ -515,7 +516,7 @@ export namespace VxeTablePropTypes {
       groupValue: any
       childCount: number
       children: D[]
-      aggValue: any
+      aggValue: number
     }) => number | string
     /**
      * 自定义分组统计的方法
