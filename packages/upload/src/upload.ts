@@ -468,14 +468,14 @@ export default defineVxeComponent({
     }
 
     const handleChange = (value: VxeUploadDefines.FileObjItem[]) => {
-      const { singleMode, urlArgs } = props
+      const { singleMode, urlMode, urlArgs } = props
       const urlProp = computeUrlProp.value
       const nameProp = computeNameProp.value
       let restList = value ? value.slice(0) : []
-      if (urlArgs) {
+      if (urlMode) {
         restList = restList.map(item => {
           const url = item[urlProp]
-          if (url) {
+          if (url && urlArgs) {
             const urlObj = XEUtils.parseUrl(url)
             if (!urlObj.searchQuery[nameProp]) {
               if (url.indexOf('blob:') === -1) {
