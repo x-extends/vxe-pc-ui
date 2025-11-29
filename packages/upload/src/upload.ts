@@ -629,14 +629,14 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const $xeUpload = this
       const props = $xeUpload
 
-      const { singleMode, urlArgs } = props
+      const { singleMode, urlMode, urlArgs } = props
       const urlProp = $xeUpload.computeUrlProp
       const nameProp = $xeUpload.computeNameProp
       let restList = value ? value.slice(0) : []
-      if (urlArgs) {
+      if (urlMode) {
         restList = restList.map(item => {
           const url = item[urlProp]
-          if (url) {
+          if (url && urlArgs) {
             const urlObj = XEUtils.parseUrl(url)
             if (!urlObj.searchQuery[nameProp]) {
               if (url.indexOf('blob:') === -1) {
