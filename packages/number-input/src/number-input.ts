@@ -138,7 +138,7 @@ export default defineVxeComponent({
     const reactData = reactive<NumberInputReactData>({
       isFocus: false,
       isActivated: false,
-      inputValue: props.modelValue
+      inputValue: ''
     })
 
     const internalData: NumberInputInternalData = {
@@ -1025,6 +1025,7 @@ export default defineVxeComponent({
     })
 
     onMounted(() => {
+      updateModel(props.modelValue)
       const targetElem = refInputTarget.value
       if (targetElem) {
         targetElem.addEventListener('wheel', wheelEvent, { passive: false })

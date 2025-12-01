@@ -69,6 +69,9 @@
     <p>
       <vxe-number-input v-model="demo1.value905" type="float" :control-config="{layout: 'right'}" next-icon="vxe-icon-arrow-up" prev-icon="vxe-icon-arrow-down"></vxe-number-input>
     </p>
+    <p>
+      <vxe-number-input v-model="demo1.value908" type="float" auto-fill></vxe-number-input>
+    </p>
   </div>
 </template>
 
@@ -101,8 +104,13 @@ const demo1 = reactive({
   value902: '3.4',
   value903: '3.5',
   value904: '3.6',
-  value905: '3.7'
+  value905: '3.7',
+  value908: 0
 })
+
+// setTimeout(() => {
+//   demo1.value908 = 1
+// }, 3000)
 </script>
 
 <style lang="scss" scoped>

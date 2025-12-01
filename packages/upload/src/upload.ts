@@ -552,9 +552,15 @@ export default defineVxeComponent({
     const handlePreviewImageEvent = (evnt: MouseEvent, item: VxeUploadDefines.FileObjItem, index: number) => {
       const { showDownloadButton } = props
       const { fileList } = reactData
+      const previewFn = props.previewMethod || getConfig().upload.previewMethod
       const beforeDownloadFn = props.beforeDownloadMethod || getConfig().upload.beforeDownloadMethod
       if (props.showPreview) {
-        if (VxeUI.previewImage) {
+        if (previewFn) {
+          previewFn({
+            $upload: $xeUpload,
+            option: item
+          })
+        } else if (VxeUI.previewImage) {
           VxeUI.previewImage({
             urlList: fileList.map(item => getFileUrl(item)),
             activeIndex: index,
