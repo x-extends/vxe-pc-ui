@@ -1177,9 +1177,8 @@ export default /* define-vxe-component start */ defineVxeComponent({
   created () {
     const $xeNumberInput = this
     const props = $xeNumberInput
-    const reactData = $xeNumberInput.reactData
 
-    reactData.inputValue = props.value
+    this.updateModel(props.value)
     $xeNumberInput.initValue()
   },
   mounted () {
