@@ -253,7 +253,15 @@ export namespace VxeGanttPropTypes {
      */
     resize?: boolean
   }
-  export interface TaskResizeConfig<D = any> {
+  export interface TaskBarResizeConfig<D = any> {
+    /**
+     * 是否允许拖拽调整任务条起始日期
+     */
+    allowStart?: boolean
+    /**
+     * 是否允许拖拽调整任务条结束日期
+     */
+    allowEnd?: boolean
     /**
      * 拖拽开始时是否允许行拖拽调整任务条日期的方法，该方法的返回值用来决定是否允许被拖拽
      */
@@ -269,7 +277,7 @@ export namespace VxeGanttPropTypes {
       row: D
     }): Promise<boolean> | boolean
   }
-  export interface TaskDragConfig<D = any> {
+  export interface TaskBarDragConfig<D = any> {
     /**
      * 拖拽开始时是否允许行拖拽移动任务条日期的方法，该方法的返回值用来决定是否允许被拖拽
      */
@@ -294,8 +302,8 @@ export interface VxeGanttProps<D = any> extends Omit<VxeGridProps<D>, 'layouts'>
   taskViewConfig?: VxeGanttPropTypes.TaskViewConfig<D>
   taskSplitConfig?: VxeGanttPropTypes.TaskSplitConfig
   taskBarConfig?: VxeGanttPropTypes.TaskBarConfig<D>
-  taskResizeConfig?: VxeGanttPropTypes.TaskResizeConfig<D>
-  taskDragConfig?: VxeGanttPropTypes.TaskDragConfig<D>
+  taskBarResizeConfig?: VxeGanttPropTypes.TaskBarResizeConfig<D>
+  taskBarDragConfig?: VxeGanttPropTypes.TaskBarDragConfig<D>
 }
 
 export interface GanttPrivateComputed<D = any> extends GridPrivateComputed<D> {
@@ -303,6 +311,8 @@ export interface GanttPrivateComputed<D = any> extends GridPrivateComputed<D> {
   computeTaskViewOpts: ComputedRef<VxeGanttPropTypes.TaskViewConfig<D>>
   computeTaskViewScaleMapsOpts: ComputedRef<VxeGanttPropTypes.TaskViewScaleConfs>
   computeTaskBarOpts: ComputedRef<VxeGanttPropTypes.TaskBarConfig<D>>
+  computeTaskBarDragOpts: ComputedRef<VxeGanttPropTypes.TaskBarDragConfig<D>>
+  computeTaskBarResizeOpts: ComputedRef<VxeGanttPropTypes.TaskBarResizeConfig<D>>
   computeTaskSplitOpts: ComputedRef<VxeGanttPropTypes.TaskSplitConfig>
   computeTaskScaleConfs: ComputedRef<VxeGanttDefines.ColumnScaleType[] | VxeGanttDefines.ColumnScaleConfig[] | undefined>
   computeTitleField: ComputedRef<string>

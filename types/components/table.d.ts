@@ -4837,9 +4837,9 @@ export interface TableMethods<DT = any> {
    */
   getAggregateRowChildren(row: any): DT[]
   /**
-   * 用于数据聚合，更新聚合函数计算值
+   * 用于数据聚合，刷新聚合函数计算值
    */
-  updateAggregateCalcValues(): Promise<void>
+  refreshAggregateCalcValues(): Promise<void>
   /**
    * 用于 tree-config，用于树表格，获取已展开的节点
    * 注意，即使父节点被收起，只要该节点还处于展开状态都能获取到
