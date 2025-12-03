@@ -218,6 +218,7 @@
           </span>
         </template>
       </vxe-select>
+      <vxe-select v-model="demo1.value47" :options="demo1.list47" :default-config="{selectMode: 'all'}" multiple></vxe-select>
     </p>
   </div>
 </template>
@@ -360,6 +361,15 @@ const demo1 = reactive({
     { label: '3333', value: '3', slots: { default: 'opt3' } },
     { label: '4444', value: '4', slots: { default: 'opt4' } },
     { label: '5555', value: '5', slots: { default: 'opt5' } },
+    { label: '6666', value: '6' }
+  ],
+  value47: null,
+  list47: [
+    { label: '1111', value: '1' },
+    { label: '2222', value: '2' },
+    { label: '3333', value: '3' },
+    { label: '4444', value: '4' },
+    { label: '5555', value: '5' },
     { label: '6666', value: '6' }
   ]
 })

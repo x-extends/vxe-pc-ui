@@ -5,6 +5,7 @@ import { VxeUI, getConfig, getIcon, getI18n, globalEvents, GLOBAL_EVENT_KEYS, cr
 import { getEventTargetNode, toCssUnit, updatePanelPlacement } from '../../ui/src/dom'
 import { getLastZIndex, nextZIndex, getFuncText, eqEmptyValue } from '../../ui/src/utils'
 import { getSlotVNs } from '../../ui/src/vn'
+import { errLog } from '../../ui/src/log'
 import VxeInputComponent from '../../input/src/input'
 import VxeButtonComponent from '../../button/src/button'
 
@@ -21,6 +22,7 @@ function getOptUniqueId () {
 
 function createInternalData (): SelectInternalData {
   return {
+    // isLoaded: false,
     synchData: [],
     fullData: [],
     afterVisibleList: [],
@@ -134,6 +136,7 @@ export default defineVxeComponent({
   emits: [
     'update:modelValue',
     'change',
+    'default-change',
     'all-change',
     'clear',
     'blur',
@@ -359,6 +362,11 @@ export default defineVxeComponent({
 
     const emitModel = (value: any) => {
       emit('update:modelValue', value)
+    }
+
+    const emitDefaultValue = (value: any) => {
+      emitModel(value)
+      dispatchEvent('default-change', { value }, null)
     }
 
     const getOptKey = () => {
@@ -1143,6 +1151,7 @@ export default defineVxeComponent({
      */
     const loadData = (datas: any[]) => {
       cacheItemMap(datas || [])
+      const { multiple } = props
       const { isLoaded, fullData, scrollYStore } = internalData
       const defaultOpts = computeDefaultOpts.value
       const virtualYOpts = computeVirtualYOpts.value
@@ -1159,12 +1168,20 @@ export default defineVxeComponent({
       if (!isLoaded) {
         const { selectMode } = defaultOpts
         if (datas.length > 0 && XEUtils.eqNull(props.modelValue)) {
-          if (selectMode === 'first' || selectMode === 'last') {
+          if (selectMode === 'all') {
+            if (multiple) {
+              nextTick(() => {
+                emitDefaultValue(datas.map(item => item[valueField]))
+              })
+            } else {
+              errLog('vxe.error.notConflictProp', ['default-config.selectMode=all', 'multiple=true'])
+            }
+          } else if (selectMode === 'first' || selectMode === 'last') {
             const selectItem = XEUtils[selectMode](datas)
             if (selectItem) {
               nextTick(() => {
                 if (XEUtils.eqNull(props.modelValue)) {
-                  emitModel(selectItem[valueField])
+                  emitDefaultValue(selectItem[valueField])
                 }
               })
             }

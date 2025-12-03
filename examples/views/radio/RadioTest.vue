@@ -56,6 +56,9 @@
         <vxe-radio-button label="3" content="按钮3"></vxe-radio-button>
       </vxe-radio-group>
     </p>
+    <p>
+      <vxe-checkbox-group v-model="demo1.value10" :options="demo1.opts1" :default-config="{selectMode: 'last'}"></vxe-checkbox-group>
+    </p>
   </div>
 </template>
 
@@ -77,6 +80,7 @@ const demo1 = reactive({
     { value: '3', label: 'Javascript' },
     { value: '4', label: 'SASS' },
     { value: '5', label: 'LESS' }
-  ]
+  ],
+  value10: null
 })
 </script>

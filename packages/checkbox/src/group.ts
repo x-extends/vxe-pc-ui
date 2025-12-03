@@ -1,10 +1,16 @@
-import { h, provide, PropType, computed, inject, reactive } from 'vue'
+import { h, provide, PropType, computed, inject, reactive, onUnmounted, watch, onMounted, nextTick } from 'vue'
 import { defineVxeComponent } from '../../ui/src/comp'
 import { getConfig, createEvent, useSize } from '../../ui'
 import XEUtils from 'xe-utils'
 import VxeCheckboxComponent from './checkbox'
 
-import type { VxeCheckboxGroupConstructor, VxeCheckboxGroupEmits, ValueOf, CheckboxGroupReactData, VxeCheckboxGroupPrivateMethods, CheckboxGroupPrivateMethods, CheckboxGroupPrivateComputed, CheckboxGroupMethods, VxeCheckboxGroupPropTypes, VxeFormConstructor, VxeFormPrivateMethods, VxeFormDefines } from '../../../types'
+import type { VxeCheckboxGroupConstructor, CheckboxGroupInternalData, VxeCheckboxGroupEmits, ValueOf, CheckboxGroupReactData, VxeCheckboxGroupPrivateMethods, CheckboxGroupPrivateMethods, CheckboxGroupPrivateComputed, CheckboxGroupMethods, VxeCheckboxGroupPropTypes, VxeFormConstructor, VxeFormPrivateMethods, VxeFormDefines } from '../../../types'
+
+function createInternalData (): CheckboxGroupInternalData {
+  return {
+    // isLoaded: false
+  }
+}
 
 export default defineVxeComponent({
   name: 'VxeCheckboxGroup',
@@ -23,11 +29,13 @@ export default defineVxeComponent({
     size: {
       type: String as PropType<VxeCheckboxGroupPropTypes.Size>,
       default: () => getConfig().checkboxGroup.size || getConfig().size
-    }
+    },
+    defaultConfig: Object as PropType<VxeCheckboxGroupPropTypes.DefaultConfig>
   },
   emits: [
     'update:modelValue',
-    'change'
+    'change',
+    'default-change'
   ] as VxeCheckboxGroupEmits,
   setup (props, context) {
     const { slots, emit } = context
@@ -38,6 +46,8 @@ export default defineVxeComponent({
 
     const reactData: CheckboxGroupReactData = reactive({
     })
+
+    const internalData = createInternalData()
 
     const computeIsDisabled = computed(() => {
       const { disabled } = props
@@ -56,6 +66,10 @@ export default defineVxeComponent({
         return (modelValue ? modelValue.length : 0) >= XEUtils.toNumber(max)
       }
       return false
+    })
+
+    const computeDefaultOpts = computed(() => {
+      return Object.assign({}, props.defaultConfig)
     })
 
     const computePropsOpts = computed(() => {
@@ -97,6 +111,15 @@ export default defineVxeComponent({
       emit(type, createEvent(evnt, { $checkboxGroup: $xeCheckboxGroup }, params))
     }
 
+    const emitModel = (value: any) => {
+      emit('update:modelValue', value)
+    }
+
+    const emitDefaultValue = (value: any) => {
+      emitModel(value)
+      dispatchEvent('default-change', { value }, null)
+    }
+
     const checkboxGroupMethods: CheckboxGroupMethods = {
       dispatchEvent
     }
@@ -113,13 +136,40 @@ export default defineVxeComponent({
         } else {
           checklist.splice(checkIndex, 1)
         }
-        emit('update:modelValue', checklist)
+        emitModel(checklist)
         $xeCheckboxGroup.dispatchEvent('change', Object.assign({ }, params, { checklist, value: checklist }), evnt)
         // 自动更新校验状态
         if ($xeForm && formItemInfo) {
           $xeForm.triggerItemEvent(evnt, formItemInfo.itemConfig.field, checklist)
         }
       }
+    }
+
+    const loadData = (datas: any[]) => {
+      const { isLoaded } = internalData
+      const defaultOpts = computeDefaultOpts.value
+      const valueField = computeValueField.value
+      if (!isLoaded) {
+        const { selectMode } = defaultOpts
+        if (datas.length > 0 && XEUtils.eqNull(props.modelValue)) {
+          if (selectMode === 'all') {
+            nextTick(() => {
+              emitDefaultValue(datas.map(item => item[valueField]))
+            })
+          } else if (selectMode === 'first' || selectMode === 'last') {
+            const selectItem = XEUtils[selectMode](datas)
+            if (selectItem) {
+              nextTick(() => {
+                if (XEUtils.eqNull(props.modelValue)) {
+                  emitDefaultValue([selectItem[valueField]])
+                }
+              })
+            }
+          }
+          internalData.isLoaded = true
+        }
+      }
+      return nextTick()
     }
 
     Object.assign($xeCheckboxGroup, checkboxGroupMethods, checkboxGroupPrivateMethods)
@@ -145,6 +195,23 @@ export default defineVxeComponent({
             })
             : []))
     }
+
+    watch(() => props.options, (val) => {
+      loadData(val || [])
+    })
+
+    onMounted(() => {
+      nextTick(() => {
+        const { options } = props
+        if (options) {
+          loadData(options)
+        }
+      })
+    })
+
+    onUnmounted(() => {
+      XEUtils.assign(internalData, createInternalData())
+    })
 
     provide('$xeCheckboxGroup', $xeCheckboxGroup)
 

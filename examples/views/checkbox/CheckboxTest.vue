@@ -60,6 +60,9 @@
         <vxe-checkbox-button label="3" content="按钮3"></vxe-checkbox-button>
       </vxe-checkbox-group>
     </p>
+    <p>
+      <vxe-checkbox-group v-model="demo1.value25" :options="demo1.opts1" :default-config="{selectMode: 'first'}"></vxe-checkbox-group>
+    </p>
   </div>
 </template>
 
@@ -90,6 +93,7 @@ const demo1 = reactive({
     { value: '3', label: 'Javascript' },
     { value: '4', label: 'SASS' },
     { value: '5', label: 'LESS' }
-  ]
+  ],
+  value25: null
 })
 </script>
