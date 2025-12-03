@@ -24,7 +24,7 @@ export namespace VxeSelectPropTypes {
     /**
      * 默认选择模式，默认选中行为只会在初始化时触发一次
      */
-    selectMode?: 'first' | 'last'
+    selectMode?: 'all' | 'first' | 'last'
   }
   export type Clearable = boolean
   export type ZIndex = number
@@ -287,6 +287,7 @@ export interface VxeSelectPrivateMethods extends SelectPrivateMethods { }
 export type VxeSelectEmits = [
   'input',
   'change',
+  'default-change',
   'all-change',
   'clear',
   'blur',

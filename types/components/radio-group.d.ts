@@ -34,6 +34,12 @@ export namespace VxeRadioGroupPropTypes {
   export type ModelValue = any
   export type Strict = boolean
   export type Disabled = boolean
+  export interface DefaultConfig {
+    /**
+     * 默认选择模式，默认选中行为只会在初始化时触发一次
+     */
+    selectMode?: 'first' | 'last'
+  }
 }
 
 export interface VxeRadioGroupProps {
@@ -47,6 +53,7 @@ export interface VxeRadioGroupProps {
   strict?: VxeRadioGroupPropTypes.Strict
   value?: VxeRadioGroupPropTypes.ModelValue
   disabled?: VxeRadioGroupPropTypes.Disabled
+  defaultConfig?: VxeRadioGroupPropTypes.DefaultConfig
 }
 
 export interface RadioGroupPrivateComputed {
@@ -55,6 +62,9 @@ export interface RadioGroupPrivateComputed {
 export interface VxeRadioGroupPrivateComputed extends RadioGroupPrivateComputed { }
 
 export interface RadioGroupReactData {
+}
+export interface RadioGroupInternalData {
+  isLoaded?: boolean
 }
 
 export interface RadioGroupMethods {
@@ -76,7 +86,8 @@ export interface VxeRadioGroupPrivateMethods extends RadioGroupPrivateMethods { 
 
 export type VxeRadioGroupEmits = [
   'input',
-  'change'
+  'change',
+  'default-change'
 ]
 
 export namespace VxeRadioGroupDefines {

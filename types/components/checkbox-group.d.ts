@@ -18,7 +18,7 @@ export interface VxeCheckboxGroupPrivateRef extends CheckboxGroupPrivateRef { }
 
 export namespace VxeCheckboxGroupPropTypes {
   export type Size = VxeComponentSizeType
-  export type ModelValue = any[]
+  export type ModelValue = any[] | null
   export type Options = {
     value?: VxeCheckboxPropTypes.Label
     label?: VxeCheckboxPropTypes.Content
@@ -32,6 +32,12 @@ export namespace VxeCheckboxGroupPropTypes {
   }
   export type Max = string | number
   export type Disabled = boolean
+  export interface DefaultConfig {
+    /**
+     * 默认选择模式，默认选中行为只会在初始化时触发一次
+     */
+    selectMode?: 'all' | 'first' | 'last'
+  }
 }
 
 export interface VxeCheckboxGroupProps {
@@ -47,6 +53,7 @@ export interface VxeCheckboxGroupProps {
    * 是否禁用
    */
   disabled?: VxeCheckboxGroupPropTypes.Disabled
+  defaultConfig?: VxeCheckboxGroupPropTypes.DefaultConfig
 }
 
 export interface CheckboxGroupPrivateComputed {
@@ -56,6 +63,9 @@ export interface CheckboxGroupPrivateComputed {
 export interface VxeCheckboxGroupPrivateComputed extends CheckboxGroupPrivateComputed { }
 
 export interface CheckboxGroupReactData {
+}
+export interface CheckboxGroupInternalData {
+  isLoaded?: boolean
 }
 
 export interface CheckboxGroupMethods {
@@ -74,7 +84,8 @@ export interface VxeCheckboxGroupPrivateMethods extends CheckboxGroupPrivateMeth
 
 export type VxeCheckboxGroupEmits = [
   'input',
-  'change'
+  'change',
+  'default-change'
 ]
 
 export namespace VxeCheckboxGroupDefines {

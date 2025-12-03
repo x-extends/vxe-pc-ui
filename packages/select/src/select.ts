@@ -5,6 +5,7 @@ import { getConfig, getIcon, getI18n, globalEvents, GLOBAL_EVENT_KEYS, createEve
 import { getEventTargetNode, toCssUnit, updatePanelPlacement } from '../../ui/src/dom'
 import { getLastZIndex, nextZIndex, getFuncText, eqEmptyValue } from '../../ui/src/utils'
 import { getSlotVNs } from '../../ui/src/vn'
+import { errLog } from '../../ui/src/log'
 import VxeInputComponent from '../../input/src/input'
 import VxeButtonComponent from '../../button/src/button'
 
@@ -21,6 +22,7 @@ function getOptUniqueId () {
 
 function createInternalData (): SelectInternalData {
   return {
+    // isLoaded: false,
     synchData: [],
     fullData: [],
     afterVisibleList: [],
@@ -410,6 +412,12 @@ export default /* define-vxe-component start */ defineVxeComponent({
       } else {
         $xeSelect.$emit('model-value', value)
       }
+    },
+    emitDefaultValue (value: any) {
+      const $xeSelect = this
+
+      $xeSelect.emitModel(value)
+      $xeSelect.dispatchEvent('default-change', { value }, null)
     },
     isPanelVisible () {
       const $xeSelect = this
@@ -1436,6 +1444,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const internalData = $xeSelect.internalData
 
       $xeSelect.cacheItemMap(datas || [])
+      const { multiple } = props
       const { isLoaded, fullData, scrollYStore } = internalData
       const defaultOpts = $xeSelect.computeDefaultOpts
       const virtualYOpts = $xeSelect.computeVirtualYOpts
@@ -1452,12 +1461,20 @@ export default /* define-vxe-component start */ defineVxeComponent({
       if (!isLoaded) {
         const { selectMode } = defaultOpts
         if (datas.length > 0 && XEUtils.eqNull(props.value)) {
-          if (selectMode === 'first' || selectMode === 'last') {
+          if (selectMode === 'all') {
+            if (multiple) {
+              $xeSelect.$nextTick(() => {
+                $xeSelect.emitDefaultValue(datas.map(item => item[valueField]))
+              })
+            } else {
+              errLog('vxe.error.notConflictProp', ['default-config.selectMode=all', 'multiple=true'])
+            }
+          } else if (selectMode === 'first' || selectMode === 'last') {
             const selectItem = XEUtils[selectMode](datas)
             if (selectItem) {
               $xeSelect.$nextTick(() => {
                 if (XEUtils.eqNull(props.value)) {
-                  $xeSelect.emitModel(selectItem[valueField])
+                  $xeSelect.emitDefaultValue(selectItem[valueField])
                 }
               })
             }

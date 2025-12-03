@@ -4,7 +4,13 @@ import XEUtils from 'xe-utils'
 import { getConfig, createEvent, globalMixins } from '../../ui'
 import VxeCheckboxComponent from './checkbox'
 
-import type { VxeCheckboxGroupEmits, VxeCheckboxPropTypes, ValueOf, CheckboxGroupReactData, VxeComponentSizeType, VxeCheckboxGroupPropTypes, VxeFormConstructor, VxeFormPrivateMethods, VxeFormDefines } from '../../../types'
+import type { VxeCheckboxGroupEmits, CheckboxGroupInternalData, VxeCheckboxPropTypes, ValueOf, CheckboxGroupReactData, VxeComponentSizeType, VxeCheckboxGroupPropTypes, VxeFormConstructor, VxeFormPrivateMethods, VxeFormDefines } from '../../../types'
+
+function createInternalData (): CheckboxGroupInternalData {
+  return {
+    // isLoaded: false
+  }
+}
 
 export default /* define-vxe-component start */ defineVxeComponent({
   name: 'VxeCheckboxGroup',
@@ -26,7 +32,8 @@ export default /* define-vxe-component start */ defineVxeComponent({
     size: {
       type: String as PropType<VxeCheckboxGroupPropTypes.Size>,
       default: () => getConfig().checkboxGroup.size || getConfig().size
-    }
+    },
+    defaultConfig: Object as PropType<VxeCheckboxGroupPropTypes.DefaultConfig>
   },
   inject: {
     $xeForm: {
@@ -46,9 +53,11 @@ export default /* define-vxe-component start */ defineVxeComponent({
   data () {
     const reactData: CheckboxGroupReactData = {
     }
+    const internalData = createInternalData()
     return {
       xID: XEUtils.uniqueId(),
-      reactData
+      reactData,
+      internalData
     }
   },
   computed: {
@@ -80,6 +89,12 @@ export default /* define-vxe-component start */ defineVxeComponent({
         return (value ? value.length : 0) >= XEUtils.toNumber(max)
       }
       return false
+    },
+    computeDefaultOpts () {
+      const $xeCheckboxGroup = this
+      const props = $xeCheckboxGroup
+
+      return Object.assign({}, props.defaultConfig)
     },
     computePropsOpts () {
       const $xeCheckboxGroup = this
@@ -124,6 +139,42 @@ export default /* define-vxe-component start */ defineVxeComponent({
       } else {
         $xeCheckboxGroup.$emit('model-value', value)
       }
+    },
+    emitDefaultValue (value: any) {
+      const $xeCheckboxGroup = this
+
+      $xeCheckboxGroup.emitModel(value)
+      $xeCheckboxGroup.dispatchEvent('default-change', { value }, null)
+    },
+    loadData (datas: any[]) {
+      const $xeCheckboxGroup = this
+      const props = $xeCheckboxGroup
+      const internalData = $xeCheckboxGroup.internalData
+
+      const { isLoaded } = internalData
+      const defaultOpts = $xeCheckboxGroup.computeDefaultOpts
+      const valueField = $xeCheckboxGroup.computeValueField
+      if (!isLoaded) {
+        const { selectMode } = defaultOpts
+        if (datas.length > 0 && XEUtils.eqNull(props.value)) {
+          if (selectMode === 'all') {
+            $xeCheckboxGroup.$nextTick(() => {
+              $xeCheckboxGroup.emitDefaultValue(datas.map(item => item[valueField]))
+            })
+          } else if (selectMode === 'first' || selectMode === 'last') {
+            const selectItem = XEUtils[selectMode](datas)
+            if (selectItem) {
+              $xeCheckboxGroup.$nextTick(() => {
+                if (XEUtils.eqNull(props.value)) {
+                  $xeCheckboxGroup.emitDefaultValue([selectItem[valueField]])
+                }
+              })
+            }
+          }
+          internalData.isLoaded = true
+        }
+      }
+      return $xeCheckboxGroup.$nextTick()
     },
     handleChecked (params: {
       checked: boolean;
@@ -183,6 +234,24 @@ export default /* define-vxe-component start */ defineVxeComponent({
             })
             : []))
     }
+  },
+  watch: {
+    options (val) {
+      const $xeCheckboxGroup = this
+
+      $xeCheckboxGroup.loadData(val)
+    }
+  },
+  mounted () {
+    const $xeCheckboxGroup = this
+    const props = $xeCheckboxGroup
+
+    $xeCheckboxGroup.$nextTick(() => {
+      const { options } = props
+      if (options) {
+        $xeCheckboxGroup.loadData(options)
+      }
+    })
   },
   render (this: any, h) {
     return this.renderVN(h)
