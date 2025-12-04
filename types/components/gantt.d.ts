@@ -60,7 +60,11 @@ export namespace VxeGanttPropTypes {
     dateFormat?: string
   }
 
-  export interface TaskViewScaleConfs {
+  export interface TaskViewScaleConfig {
+    /**
+     * 日期轴渲染单位，默认是按天 date
+     */
+    scaleUnit?: 'year' | 'quarter' | 'month' | 'week' | 'date' | 'hour' | 'minute' | 'second'
     /**
      * 年配置
      */
@@ -298,7 +302,7 @@ export namespace VxeGanttPropTypes {
 export interface VxeGanttProps<D = any> extends Omit<VxeGridProps<D>, 'layouts'> {
   layouts?: VxeGanttPropTypes.Layouts
   taskConfig?: VxeGanttPropTypes.TaskConfig
-  taskViewScaleConfs?: VxeGanttPropTypes.TaskViewScaleConfs
+  taskViewScaleConfig?: VxeGanttPropTypes.TaskViewScaleConfig
   taskViewConfig?: VxeGanttPropTypes.TaskViewConfig<D>
   taskSplitConfig?: VxeGanttPropTypes.TaskSplitConfig
   taskBarConfig?: VxeGanttPropTypes.TaskBarConfig<D>
@@ -309,7 +313,7 @@ export interface VxeGanttProps<D = any> extends Omit<VxeGridProps<D>, 'layouts'>
 export interface GanttPrivateComputed<D = any> extends GridPrivateComputed<D> {
   computeTaskOpts: ComputedRef<VxeGanttPropTypes.TaskConfig>
   computeTaskViewOpts: ComputedRef<VxeGanttPropTypes.TaskViewConfig<D>>
-  computeTaskViewScaleMapsOpts: ComputedRef<VxeGanttPropTypes.TaskViewScaleConfs>
+  computeTaskViewScaleOpts: ComputedRef<VxeGanttPropTypes.TaskViewScaleConfig>
   computeTaskBarOpts: ComputedRef<VxeGanttPropTypes.TaskBarConfig<D>>
   computeTaskBarDragOpts: ComputedRef<VxeGanttPropTypes.TaskBarDragConfig<D>>
   computeTaskBarResizeOpts: ComputedRef<VxeGanttPropTypes.TaskBarResizeConfig<D>>

@@ -343,6 +343,7 @@ export namespace VxeSelectDefines {
   export interface ChangeEventParams extends SelectEventParams {
     value: any
   }
+  export interface DefaultChangeEventParams extends ChangeEventParams {}
   export interface AllChangeEventParams extends ChangeEventParams {}
 
   export interface ClearEventParams extends SelectEventParams {
@@ -364,6 +365,7 @@ export namespace VxeSelectDefines {
 export type VxeSelectEventProps = {
   'onUpdate:modelValue'?: VxeSelectEvents.UpdateModelValue
   onChange?: VxeSelectEvents.Change
+  onDefaultChange?: VxeSelectEvents.DefaultChange
   onAllChange?: VxeSelectEvents.AllChange
   onClear?: VxeSelectEvents.Clear
   onFocus?: VxeSelectEvents.Focus
@@ -376,6 +378,7 @@ export type VxeSelectEventProps = {
 export interface VxeSelectListeners {
   'update:modelValue'?: VxeSelectEvents.UpdateModelValue
   change?: VxeSelectEvents.Change
+  defaultChange?: VxeSelectEvents.DefaultChange
   allChange?: VxeSelectEvents.AllChange
   clear?: VxeSelectEvents.Clear
   focus?: VxeSelectEvents.Focus
@@ -388,6 +391,7 @@ export interface VxeSelectListeners {
 export namespace VxeSelectEvents {
   export type UpdateModelValue = (modelValue: VxeSelectPropTypes.ModelValue) => void
   export type Change = (params: VxeSelectDefines.ChangeEventParams) => void
+  export type DefaultChange = (params: VxeSelectDefines.DefaultChangeEventParams) => void
   export type AllChange = (params: VxeSelectDefines.AllChangeEventParams) => void
   export type Clear = (params: VxeSelectDefines.ClearEventParams) => void
   export type Focus = (params: VxeSelectDefines.FocusEventParams) => void

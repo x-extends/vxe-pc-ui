@@ -103,24 +103,32 @@ export namespace VxeRadioGroupDefines {
   }
 
   export interface ChangeParams {
+    value: any
     label: any
   }
   export interface ChangeEventParams extends RadioGroupEventParams, ChangeParams { }
+
+  export interface DefaultChangeEventParams {
+    value: any
+  }
 }
 
 export type VxeRadioGroupEventProps = {
   'onUpdate:modelValue'?: VxeRadioGroupEvents.UpdateModelValue
   onChange?: VxeRadioGroupEvents.Change
+  onDefaultChange?: VxeRadioGroupEvents.DefaultChange
 }
 
 export interface VxeRadioGroupListeners {
   'update:modelValue'?: VxeRadioGroupEvents.UpdateModelValue
   change?: VxeRadioGroupEvents.Change
+  defaultChange?: VxeRadioGroupEvents.DefaultChange
 }
 
 export namespace VxeRadioGroupEvents {
   export type UpdateModelValue = (modelValue: VxeRadioGroupPropTypes.ModelValue) => void
   export type Change = (params: VxeRadioGroupDefines.ChangeEventParams) => void
+  export type DefaultChange = (params: VxeRadioGroupDefines.DefaultChangeEventParams) => void
 }
 
 export namespace VxeRadioGroupSlotTypes {
