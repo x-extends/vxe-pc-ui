@@ -73,6 +73,8 @@ export interface CheckboxPrivateMethods { }
 export interface VxeCheckboxPrivateMethods extends CheckboxPrivateMethods { }
 
 export type VxeCheckboxEmits = [
+  'model-value',
+  'modelValue',
   'input',
   'change'
 ]

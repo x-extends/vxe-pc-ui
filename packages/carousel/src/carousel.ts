@@ -101,6 +101,17 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const $xeCarousel = this
       $xeCarousel.$emit(type, createEvent(evnt, { $carousel: $xeCarousel }, params))
     },
+    emitModel (value: any) {
+      const $xeCarousel = this
+
+      const { _events } = $xeCarousel as any
+      $xeCarousel.$emit('input', value)
+      if (_events && _events.modelValue) {
+        $xeCarousel.$emit('modelValue', value)
+      } else {
+        $xeCarousel.$emit('model-value', value)
+      }
+    },
     prev () {
       const $xeCarousel = this
 
@@ -135,7 +146,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
 
       const value = item.name
       reactData.activeName = item.name
-      $xeCarousel.$emit('input', value)
+      $xeCarousel.emitModel(value)
       $xeCarousel.$emit('change', { value }, evnt)
       $xeCarousel.updateStyle()
     },
@@ -155,7 +166,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
         })
         if (!validVal) {
           activeName = list[0].name
-          $xeCarousel.$emit('input', activeName)
+          $xeCarousel.emitModel(activeName)
         }
       }
       reactData.activeName = activeName
@@ -192,7 +203,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
           const name = item.name
           const value = name
           reactData.activeName = name
-          $xeCarousel.$emit('input', value)
+          $xeCarousel.emitModel(value)
           return true
         }
       }

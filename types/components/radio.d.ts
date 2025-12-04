@@ -80,6 +80,8 @@ export interface RadioPrivateMethods { }
 export interface VxeRadioPrivateMethods extends RadioPrivateMethods { }
 
 export type VxeRadioEmits = [
+  'model-value',
+  'modelValue',
   'input',
   'change'
 ]

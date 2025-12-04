@@ -112,6 +112,8 @@ export interface TooltipPrivateMethods { }
 export interface VxeTooltipPrivateMethods extends TooltipPrivateMethods { }
 
 export type VxeTooltipEmits = [
+  'model-value',
+  'modelValue',
   'input'
 ]
 

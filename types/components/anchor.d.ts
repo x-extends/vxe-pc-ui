@@ -53,6 +53,8 @@ export interface AnchorPrivateMethods {
 export interface VxeAnchorPrivateMethods extends AnchorPrivateMethods { }
 
 export type VxeAnchorEmits = [
+  'model-value',
+  'modelValue',
   'input',
   'change',
   'click'

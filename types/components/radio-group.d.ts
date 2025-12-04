@@ -86,6 +86,8 @@ export interface VxeRadioGroupPrivateMethods extends RadioGroupPrivateMethods { 
 
 export type VxeRadioGroupEmits = [
   'input',
+  'model-value',
+  'modelValue',
   'change',
   'default-change'
 ]
@@ -96,21 +98,29 @@ export namespace VxeRadioGroupDefines {
   }
 
   export interface ChangeParams {
+    value: any
     label: any
   }
   export interface ChangeEventParams extends RadioGroupEventParams, ChangeParams { }
+
+  export interface DefaultChangeEventParams {
+    value: any
+  }
 }
 
 export type VxeRadioGroupEventProps = {
   onChange?: VxeRadioGroupEvents.Change
+  onDefaultChange?: VxeRadioGroupEvents.DefaultChange
 }
 
 export interface VxeRadioGroupListeners {
   change?: VxeRadioGroupEvents.Change
+  defaultChange?: VxeRadioGroupEvents.DefaultChange
 }
 
 export namespace VxeRadioGroupEvents {
   export type Change = (params: VxeRadioGroupDefines.ChangeEventParams) => void
+  export type DefaultChange = (params: VxeRadioGroupDefines.DefaultChangeEventParams) => void
 }
 
 export namespace VxeRadioGroupSlotTypes {

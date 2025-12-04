@@ -78,6 +78,8 @@ export interface MenuPrivateMethods { }
 export interface VxeMenuPrivateMethods extends MenuPrivateMethods { }
 
 export type VxeMenuEmits = [
+  'model-value',
+  'modelValue',
   'input',
   'click'
 ]

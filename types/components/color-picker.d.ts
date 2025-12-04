@@ -96,7 +96,8 @@ export interface ColorPickerPrivateMethods { }
 export interface VxeColorPickerPrivateMethods extends ColorPickerPrivateMethods { }
 
 export type VxeColorPickerEmits = [
-  'update:modelValue',
+  'model-value',
+  'modelValue',
   'change',
   'clear',
   'click'

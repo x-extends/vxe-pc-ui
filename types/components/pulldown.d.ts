@@ -108,6 +108,8 @@ export interface PulldownPrivateMethods { }
 export interface VxePulldownPrivateMethods extends PulldownPrivateMethods { }
 
 export type VxePulldownEmits = [
+  'model-value',
+  'modelValue',
   'input',
   'click',
   'option-click',

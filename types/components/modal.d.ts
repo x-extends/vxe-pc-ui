@@ -270,6 +270,8 @@ export interface VxeModalPrivateMethods extends ModalPrivateMethods {
 }
 
 export type VxeModalEmits = [
+  'model-value',
+  'modelValue',
   'input',
   'show',
   'hide',

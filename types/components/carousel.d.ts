@@ -78,6 +78,8 @@ export interface CarouselPrivateMethods { }
 export interface VxeCarouselPrivateMethods extends CarouselPrivateMethods { }
 
 export type VxeCarouselEmits = [
+  'model-value',
+  'modelValue',
   'input',
   'change'
 ]

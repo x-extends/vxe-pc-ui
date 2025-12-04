@@ -195,6 +195,7 @@ export interface DatePickerPrivateMethods { }
 export interface VxeDatePickerPrivateMethods extends DatePickerPrivateMethods { }
 
 export type VxeDatePickerEmits = [
+  'model-value',
   'modelValue',
   'input',
   'change',

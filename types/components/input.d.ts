@@ -208,6 +208,7 @@ export interface InputPrivateMethods { }
 export interface VxeInputPrivateMethods extends InputPrivateMethods { }
 
 export type VxeInputEmits = [
+  'model-value',
   'modelValue',
   'input',
   'change',

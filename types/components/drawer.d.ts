@@ -131,6 +131,8 @@ export interface VxeDrawerPrivateMethods extends DrawerPrivateMethods {
 }
 
 export type VxeDrawerEmits = [
+  'model-value',
+  'modelValue',
   'input',
   'show',
   'hide',

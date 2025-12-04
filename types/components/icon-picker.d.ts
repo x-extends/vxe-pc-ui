@@ -104,6 +104,8 @@ export interface IconPickerPrivateMethods { }
 export interface VxeIconPickerPrivateMethods extends IconPickerPrivateMethods { }
 
 export type VxeIconPickerEmits = [
+  'model-value',
+  'modelValue',
   'input',
   'change',
   'clear',

@@ -195,6 +195,8 @@ export interface TabsPrivateMethods { }
 export interface VxeTabsPrivateMethods extends TabsPrivateMethods { }
 
 export type VxeTabsEmits = [
+  'model-value',
+  'modelValue',
   'input',
   'change',
   'tab-change',

@@ -214,6 +214,7 @@ export interface NumberInputPrivateMethods { }
 export interface VxeNumberInputPrivateMethods extends NumberInputPrivateMethods { }
 
 export type VxeNumberInputEmits = [
+  'model-value',
   'modelValue',
   'input',
   'change',

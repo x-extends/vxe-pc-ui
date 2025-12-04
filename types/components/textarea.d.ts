@@ -136,6 +136,7 @@ export interface TextareaPrivateMethods { }
 export interface VxeTextareaPrivateMethods extends TextareaPrivateMethods { }
 
 export type VxeTextareaEmits = [
+  'model-value',
   'modelValue',
   'input',
   'keydown',

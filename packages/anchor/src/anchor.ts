@@ -75,6 +75,17 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const $xeAnchor = this
       $xeAnchor.$emit(type, createEvent(evnt, { $anchor: $xeAnchor }, params))
     },
+    emitModel (value: any) {
+      const $xeAnchor = this
+
+      const { _events } = $xeAnchor as any
+      $xeAnchor.$emit('input', value)
+      if (_events && _events.modelValue) {
+        $xeAnchor.$emit('modelValue', value)
+      } else {
+        $xeAnchor.$emit('model-value', value)
+      }
+    },
     getContainerElem  () {
       const $xeAnchor = this
       const props = $xeAnchor
@@ -99,7 +110,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
 
       const { _events } = $xeAnchor as any
       reactData.activeHref = value
-      $xeAnchor.$emit('input', value)
+      $xeAnchor.emitModel(value)
       if (_events && _events.modelValue) {
         $xeAnchor.$emit('modelValue', value)
       } else {

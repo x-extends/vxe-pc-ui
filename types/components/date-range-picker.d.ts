@@ -202,6 +202,7 @@ export interface DateRangePickerPrivateMethods { }
 export interface VxeDateRangePickerPrivateMethods extends DateRangePickerPrivateMethods { }
 
 export type VxeDateRangePickerEmits = [
+  'model-value',
   'modelValue',
   'startValue',
   'endValue',

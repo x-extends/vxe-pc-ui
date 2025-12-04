@@ -76,6 +76,8 @@ export interface SwitchPrivateMethods { }
 export interface VxeSwitchPrivateMethods extends SwitchPrivateMethods { }
 
 export type VxeSwitchEmits = [
+  'model-value',
+  'modelValue',
   'input',
   'change',
   'focus',

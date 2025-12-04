@@ -54,7 +54,7 @@ export namespace VxeGanttPropTypes {
     dateFormat?: string
   }
 
-  export interface TaskViewScaleConfs {
+  export interface TaskViewScaleConfig {
     /**
      * 年配置
      */
@@ -99,7 +99,7 @@ export namespace VxeGanttPropTypes {
      */
     showNowLine?: boolean
     /**
-     * 日期轴配置项
+     * 日期轴配置项，可以通过 TaskViewScaleConfig.scaleUnit 指定渲染单位
      */
     scales?: VxeGanttDefines.ColumnScaleType[] | VxeGanttDefines.ColumnScaleConfig[]
     /**
@@ -292,7 +292,7 @@ export namespace VxeGanttPropTypes {
 export interface VxeGanttProps<D = any> extends Omit<VxeGridProps<D>, 'layouts'> {
   layouts?: VxeGanttPropTypes.Layouts
   taskConfig?: VxeGanttPropTypes.TaskConfig
-  taskViewScaleConfs?: VxeGanttPropTypes.TaskViewScaleConfs
+  taskViewScaleConfig?: VxeGanttPropTypes.TaskViewScaleConfig
   taskViewConfig?: VxeGanttPropTypes.TaskViewConfig<D>
   taskSplitConfig?: VxeGanttPropTypes.TaskSplitConfig
   taskBarConfig?: VxeGanttPropTypes.TaskBarConfig<D>
@@ -303,7 +303,7 @@ export interface VxeGanttProps<D = any> extends Omit<VxeGridProps<D>, 'layouts'>
 export interface GanttPrivateComputed<D = any> extends GridPrivateComputed<D> {
   computeTaskOpts: VxeGanttPropTypes.TaskConfig
   computeTaskViewOpts: VxeGanttPropTypes.TaskViewConfig<D>
-  computeTaskViewScaleMapsOpts: VxeGanttPropTypes.TaskViewScaleConfs
+  computeTaskViewScaleOpts: VxeGanttPropTypes.TaskViewScaleConfig
   computeTaskBarOpts: VxeGanttPropTypes.TaskBarConfig<D>
   computeTaskBarDragOpts: VxeGanttPropTypes.TaskBarDragConfig<D>
   computeTaskBarResizeOpts: VxeGanttPropTypes.TaskBarResizeConfig<D>
