@@ -1,4 +1,4 @@
-import { RenderFunction, SetupContext, Ref } from 'vue'
+import { RenderFunction, SetupContext, Ref, ComputedRef } from 'vue'
 import { VxeComponentBaseOptions, DefineVxeComponentInstance } from '@vxe-ui/core'
 import { VxeTableConstructor, VxeTableMethods, VxeTablePrivateMethods } from '../table'
 import { VxeGanttDefines } from '../gantt'
@@ -109,6 +109,7 @@ export interface GanttViewPrivateRef {
 }
 
 export interface GanttViewPrivateComputed {
+  computeScaleDateList: ComputedRef<Date[]>
 }
 
 export interface VxeGanttViewPrivateMethods {

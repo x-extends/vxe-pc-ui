@@ -62,10 +62,6 @@ export namespace VxeGanttPropTypes {
 
   export interface TaskViewScaleConfig {
     /**
-     * 日期轴渲染单位，默认是按天 date
-     */
-    scaleUnit?: 'year' | 'quarter' | 'month' | 'week' | 'date' | 'hour' | 'minute' | 'second'
-    /**
      * 年配置
      */
     year?: VxeGanttDefines.ScaleDefaultOptions
@@ -319,6 +315,9 @@ export interface GanttPrivateComputed<D = any> extends GridPrivateComputed<D> {
   computeTaskBarResizeOpts: ComputedRef<VxeGanttPropTypes.TaskBarResizeConfig<D>>
   computeTaskSplitOpts: ComputedRef<VxeGanttPropTypes.TaskSplitConfig>
   computeTaskScaleConfs: ComputedRef<VxeGanttDefines.ColumnScaleType[] | VxeGanttDefines.ColumnScaleConfig[] | undefined>
+  computeScaleUnit: ComputedRef<VxeGanttDefines.ColumnScaleType>
+  computeMinScale: ComputedRef<VxeGanttDefines.ColumnScaleObj>
+  computeWeekScale: ComputedRef<VxeGanttDefines.ColumnScaleObj | null | undefined>
   computeTitleField: ComputedRef<string>
   computeStartField: ComputedRef<string>
   computeEndField: ComputedRef<string>
@@ -443,6 +442,7 @@ export namespace VxeGanttDefines {
   }
 
   export interface ScaleDateObj {
+    date: Date
     yy: string
     M: string
     d: string
@@ -460,6 +460,10 @@ export namespace VxeGanttDefines {
      * 自定义时间轴-列头单元格标题
      */
     titleMethod?: (params: VxeGanttSlotTypes.TaskViewCellTitleSlotParams) => string | number
+    /**
+     * 自定义时间轴-自定义标题日期格式
+     */
+    titleFormat?: string
     /**
      * 自定义时间轴-列头单元格样式
      */
