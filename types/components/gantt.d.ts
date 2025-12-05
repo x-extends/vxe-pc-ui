@@ -309,6 +309,9 @@ export interface GanttPrivateComputed<D = any> extends GridPrivateComputed<D> {
   computeTaskBarResizeOpts: VxeGanttPropTypes.TaskBarResizeConfig<D>
   computeTaskSplitOpts: VxeGanttPropTypes.TaskSplitConfig
   computeTaskScaleConfs: VxeGanttDefines.ColumnScaleType[] | VxeGanttDefines.ColumnScaleConfig[] | undefined
+  computeScaleUnit: VxeGanttDefines.ColumnScaleType
+  computeMinScale: VxeGanttDefines.ColumnScaleObj
+  computeWeekScale: VxeGanttDefines.ColumnScaleObj | null | undefined
   computeTitleField: string
   computeStartField: string
   computeEndField: string
@@ -437,6 +440,7 @@ export namespace VxeGanttDefines {
   }
 
   export interface ScaleDateObj {
+    date: Date
     yy: string
     M: string
     d: string
@@ -454,6 +458,10 @@ export namespace VxeGanttDefines {
      * 自定义时间轴-列头单元格标题
      */
     titleMethod?: (params: VxeGanttSlotTypes.TaskViewCellTitleSlotParams) => string | number
+    /**
+     * 自定义时间轴-自定义标题日期格式
+     */
+    titleFormat?: string
     /**
      * 自定义时间轴-列头单元格样式
      */
