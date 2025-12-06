@@ -2,6 +2,7 @@ import { RenderFunction, SetupContext, ComputedRef, Ref } from 'vue'
 import { DefineVxeComponentApp, DefineVxeComponentOptions, DefineVxeComponentInstance, VxeComponentBaseOptions, VxeComponentEventParams, ValueOf, VxeComponentSlotType, VxeComponentAlignType } from '@vxe-ui/core'
 import { GridPrivateRef, VxeGridProps, VxeGridPropTypes, GridPrivateComputed, GridReactData, GridInternalData, GridMethods, GridPrivateMethods, VxeGridEmits, VxeGridSlots, VxeGridListeners, VxeGridEventProps, VxeGridMethods } from './grid'
 import { VxeTablePropTypes } from './table'
+import { VxeTooltipPropTypes } from './tooltip'
 
 /* eslint-disable no-use-before-define,@typescript-eslint/ban-types */
 
@@ -230,6 +231,10 @@ export namespace VxeGanttPropTypes {
      */
     showContent?: boolean
     /**
+     * 是否在任务条显示提示信息
+     */
+    showTooltip?: boolean
+    /**
      * 自定义任务条内容方法
      */
     contentMethod?(params: {
@@ -253,6 +258,28 @@ export namespace VxeGanttPropTypes {
      */
     resize?: boolean
   }
+
+  export interface TaskBarTooltipConfig<D = any> {
+    theme?: VxeTooltipPropTypes.Theme
+    enterable?: VxeTooltipPropTypes.Enterable
+    enterDelay?: VxeTooltipPropTypes.EnterDelay
+    leaveDelay?: VxeTooltipPropTypes.LeaveDelay
+    width?: VxeTooltipPropTypes.Width
+    height?: VxeTooltipPropTypes.Height
+    minWidth?: VxeTooltipPropTypes.MinWidth
+    minHeight?: VxeTooltipPropTypes.MinHeight
+    maxWidth?: VxeTooltipPropTypes.MaxWidth
+    maxHeight?: VxeTooltipPropTypes.MaxHeight
+    useHTML?: VxeTooltipPropTypes.UseHTML
+    contentMethod?(params: {
+      $gantt: VxeGanttConstructor<D>
+      row: D
+      rowIndex: number
+      $rowIndex: number
+      _rowIndex: number
+    }): string | null | void
+  }
+
   export interface TaskBarResizeConfig<D = any> {
     /**
      * 是否允许拖拽调整任务条起始日期
@@ -277,6 +304,7 @@ export namespace VxeGanttPropTypes {
       row: D
     }): Promise<boolean> | boolean
   }
+
   export interface TaskBarDragConfig<D = any> {
     /**
      * 拖拽开始时是否允许行拖拽移动任务条日期的方法，该方法的返回值用来决定是否允许被拖拽
@@ -302,6 +330,7 @@ export interface VxeGanttProps<D = any> extends Omit<VxeGridProps<D>, 'layouts'>
   taskViewConfig?: VxeGanttPropTypes.TaskViewConfig<D>
   taskSplitConfig?: VxeGanttPropTypes.TaskSplitConfig
   taskBarConfig?: VxeGanttPropTypes.TaskBarConfig<D>
+  taskBarTooltipConfig?: VxeGanttPropTypes.TaskBarTooltipConfig<D>
   taskBarResizeConfig?: VxeGanttPropTypes.TaskBarResizeConfig<D>
   taskBarDragConfig?: VxeGanttPropTypes.TaskBarDragConfig<D>
 }
@@ -314,7 +343,8 @@ export interface GanttPrivateComputed<D = any> extends GridPrivateComputed<D> {
   computeTaskBarDragOpts: ComputedRef<VxeGanttPropTypes.TaskBarDragConfig<D>>
   computeTaskBarResizeOpts: ComputedRef<VxeGanttPropTypes.TaskBarResizeConfig<D>>
   computeTaskSplitOpts: ComputedRef<VxeGanttPropTypes.TaskSplitConfig>
-  computeTaskScaleConfs: ComputedRef<VxeGanttDefines.ColumnScaleType[] | VxeGanttDefines.ColumnScaleConfig[] | undefined>
+  computeTaskBarTooltipOpts: ComputedRef<VxeGanttPropTypes.TaskBarTooltipConfig>
+  computeTaskViewScales: ComputedRef<VxeGanttDefines.ColumnScaleType[] | VxeGanttDefines.ColumnScaleConfig[] | undefined>
   computeScaleUnit: ComputedRef<VxeGanttDefines.ColumnScaleType>
   computeMinScale: ComputedRef<VxeGanttDefines.ColumnScaleObj>
   computeWeekScale: ComputedRef<VxeGanttDefines.ColumnScaleObj | null | undefined>
@@ -332,10 +362,24 @@ export interface GanttReactData<D = any> extends GridReactData<D> {
   showLeftView: boolean
   showRightView: boolean
   taskScaleList: VxeGanttDefines.ColumnScaleObj[]
+
+  // 存放 bar tooltip 相关信息
+  barTipStore: {
+    row: D | null
+    content: string
+    visible: boolean
+    params?: null | {
+      row: D | null
+      rowIndex: number
+      $rowIndex: number
+      _rowIndex: number
+    }
+  }
 }
 
 export interface GanttInternalData extends GridInternalData {
   resizeTableWidth: number
+  barTipTimeout?: any
 }
 
 export interface GanttMethods<D = any> extends Omit<GridMethods<D>, 'dispatchEvent'> {
@@ -369,6 +413,10 @@ export interface GanttMethods<D = any> extends Omit<GridMethods<D>, 'dispatchEve
    * 隐藏任务视图
    */
   hideTaskView(): Promise<void>
+  /**
+   * 手动关闭任务条提示
+   */
+  closeTaskBarTooltip(): Promise<void>
 }
 export interface VxeGanttMethods<D = any> extends GanttMethods<D>, Omit<VxeGridMethods<D>, 'dispatchEvent'> { }
 
@@ -407,6 +455,14 @@ export interface GanttPrivateMethods extends GridPrivateMethods {
    * @private
    */
   handleTaskBarDblclickEvent(evnt: MouseEvent, params: VxeGanttDefines.TaskBarClickParams): void
+  /**
+   * @private
+   */
+  triggerTaskBarTooltipEvent(evnt: MouseEvent, params: VxeGanttDefines.TaskBarMouseoverParams): void
+  /**
+   * @private
+   */
+  handleTaskBarTooltipLeaveEvent(evnt: MouseEvent, params: VxeGanttDefines.TaskBarMouseoverParams): void
 }
 export interface VxeGanttPrivateMethods extends GanttPrivateMethods {}
 
@@ -415,10 +471,12 @@ export type VxeGanttEmits = [
 
   'task-cell-click',
   'task-cell-dblclick',
+  'task-bar-mouseenter',
+  'task-bar-mouseleave',
   'task-bar-click',
   'task-bar-dblclick',
   'task-view-cell-click',
-  'task-view-cell-dblclick'
+  'task-view-cell-dblclick',
 ]
 
 export namespace VxeGanttDefines {
@@ -521,6 +579,13 @@ export namespace VxeGanttDefines {
   export interface TaskBarClickEventParams<D = any> extends TaskBarClickParams<D>, GanttEventParams {}
   export interface TaskBarDblClickEventParams<D = any> extends TaskBarClickEventParams<D> {}
 
+  export interface TaskBarMouseoverParams<D = any> extends GanttEventParams {
+    row: D
+    rowIndex: number
+    $rowIndex: number
+    _rowIndex: number
+  }
+
   export interface TaskHeaderContextmenuParams<D = any> {
     source: string
     type: string
@@ -601,6 +666,14 @@ export namespace VxeGanttSlotTypes {
     $rowIndex: number
   }
   export interface TaskViewHeaderCellStyleSlotParams extends TaskViewCellTitleSlotParams {}
+
+  export interface TaskBarTooltipSlotParams<D = any> {
+    row: D
+    rowIndex: number
+    $rowIndex: number
+    _rowIndex: number
+    tooltipContent: string
+  }
 }
 
 export interface VxeGanttSlots<D = any> extends VxeGridSlots<D> {
@@ -609,6 +682,11 @@ export interface VxeGanttSlots<D = any> extends VxeGridSlots<D> {
    */
   taskBar?(params: VxeGanttSlotTypes.TaskBarSlotParams<D>): any
   'task-bar'?(params: VxeGanttSlotTypes.TaskBarSlotParams<D>): any
+  /**
+   * 自定义任务条提示模板
+   */
+  taskBarTooltip?(params: VxeGanttSlotTypes.TaskBarTooltipSlotParams<D>): any
+  'task-bar-tooltip'?(params: VxeGanttSlotTypes.TaskBarTooltipSlotParams<D>): any
 }
 
 export * from './gantt-module'

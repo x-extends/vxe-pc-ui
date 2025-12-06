@@ -77,7 +77,13 @@ export interface TooltipReactData {
   target: HTMLElement | null
   isUpdate: boolean
   visible: boolean
-  tipContent: string | number | undefined,
+  tipPos: null | {
+    x: number
+    y: number
+    oLeft: number
+    oTop: number
+  }
+  tipContent: string | number | undefined
   tipActive: boolean
   tipTarget: HTMLElement | null
   tipZindex: number
@@ -96,8 +102,10 @@ export interface TooltipMethods {
   dispatchEvent(type: ValueOf<VxeTooltipEmits>, params: Record<string, any>, evnt: Event | null): void
   /**
    * 显示
-   * @param target 自定义目标元素
-   * @param content 自定义内容
+   */
+  openByEvent(evnt: Event, target?: any, content?: VxeTooltipPropTypes.Content): Promise<void>
+  /**
+   * 显示
    */
   open(target?: any, content?: VxeTooltipPropTypes.Content): Promise<void>
   /**

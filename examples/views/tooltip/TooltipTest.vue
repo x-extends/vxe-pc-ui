@@ -22,6 +22,12 @@
       <vxe-tooltip v-model="demo1.value1" content="自定义提示内容" trigger="manual">
         <vxe-button @mouseenter="demo1.value1 = true" @mouseleave="demo1.value1 = false">手动模式</vxe-button>
       </vxe-tooltip>
+      <vxe-tooltip v-model="demo1.value2" content="自定义提示内容自定义提示内容自定义提示内容自定义提示内容自定义提示内容自定义提示内容自定义提示内容自定义提示内容自定义提示内容自定义提示内容自定义提示内容" trigger="manual" theme="light">
+        <vxe-button @mouseenter="demo1.value2 = true" @mouseleave="demo1.value2 = false">手动模式</vxe-button>
+      </vxe-tooltip>
+      <vxe-tooltip v-model="demo1.value3" content="自定义提示内容" trigger="manual" theme="light">
+        <vxe-button @mouseenter="demo1.value3 = true" @mouseleave="demo1.value3 = false">手动模式手动模式手动模式手动模式手动模式手动模式</vxe-button>
+      </vxe-tooltip>
     </p>
   </div>
 </template>
@@ -30,6 +36,8 @@
 import { reactive } from 'vue'
 
 const demo1 = reactive({
-  value1: false
+  value1: false,
+  value2: false,
+  value3: false
 })
 </script>
