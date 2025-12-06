@@ -132,6 +132,7 @@ export namespace VxeGanttPropTypes {
       rowClassName?: string | ((params: {
         source: string
         type: string
+        scaleType: VxeGanttDefines.ColumnScaleType
         row: D
         rowIndex: number
         $rowIndex: number
@@ -143,6 +144,7 @@ export namespace VxeGanttPropTypes {
       rowStyle?: ((params: {
         source: string
         type: string
+        scaleType: VxeGanttDefines.ColumnScaleType
         row: D
         rowIndex: number
         $rowIndex: number
@@ -154,6 +156,7 @@ export namespace VxeGanttPropTypes {
       cellClassName?: string | ((params: {
         source: string
         type: string
+        scaleType: VxeGanttDefines.ColumnScaleType
         dateObj: VxeGanttDefines.ScaleDateObj
         column?: VxeGanttDefines.ViewColumn<D>
         row: D
@@ -167,6 +170,7 @@ export namespace VxeGanttPropTypes {
       cellStyle?: ((params: {
         source: string
         type: string
+        scaleType: VxeGanttDefines.ColumnScaleType
         dateObj: VxeGanttDefines.ScaleDateObj
         column?: VxeGanttDefines.ViewColumn<D>
         row: D
@@ -232,6 +236,7 @@ export namespace VxeGanttPropTypes {
      * 自定义任务条内容方法
      */
     contentMethod?(params: {
+      scaleType: VxeGanttDefines.ColumnScaleType
       title: string
       progress?: string | number
       row: D
@@ -240,6 +245,7 @@ export namespace VxeGanttPropTypes {
      * 任务条样式
      */
     barStyle?: BarStyleConfig | ((params: {
+      scaleType: VxeGanttDefines.ColumnScaleType
       $gantt: VxeGanttConstructor<D>
       row: D
     }) => BarStyleConfig)
@@ -267,6 +273,7 @@ export namespace VxeGanttPropTypes {
     useHTML?: VxeTooltipPropTypes.UseHTML
     contentMethod?(params: {
       $gantt: VxeGanttConstructor<D>
+      scaleType: VxeGanttDefines.ColumnScaleType
       row: D
       rowIndex: number
       $rowIndex: number
@@ -578,6 +585,7 @@ export namespace VxeGanttDefines {
   export interface TaskBarDblClickEventParams<D = any> extends TaskBarClickEventParams<D> {}
 
   export interface TaskBarMouseoverParams<D = any> extends GanttEventParams {
+    scaleType: VxeGanttDefines.ColumnScaleType
     row: D
     rowIndex: number
     $rowIndex: number

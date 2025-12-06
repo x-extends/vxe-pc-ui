@@ -152,7 +152,7 @@ export namespace VxeTablePropTypes {
     _columnIndex: number
   }) => void | null | string | { [key: string]: boolean | null | undefined })
 
-  export type CellStyle<D = VxeTablePropTypes.Row> = VxeComponentStyleType | ((params: {
+  export type CellStyle<D = VxeTablePropTypes.Row> = Partial<CSSStyleDeclaration> | ((params: {
     row: D
     rowIndex: number
     $rowIndex: number
@@ -161,15 +161,15 @@ export namespace VxeTablePropTypes {
     columnIndex: number
     $columnIndex: number
     _columnIndex: number
-  }) => void | null | VxeComponentStyleType)
+  }) => void | null | Partial<CSSStyleDeclaration> |VxeComponentStyleType)
 
-  export type HeaderCellStyle<D = VxeTablePropTypes.Row> = VxeComponentStyleType | ((params: {
+  export type HeaderCellStyle<D = VxeTablePropTypes.Row> = Partial<CSSStyleDeclaration> | ((params: {
     $table: VxeTableConstructor<D>
     $rowIndex: number
     column: VxeTableDefines.ColumnInfo<D>
     columnIndex: number
     _columnIndex: number
-  }) => void | null | VxeComponentStyleType)
+  }) => void | null | Partial<CSSStyleDeclaration> |VxeComponentStyleType)
 
   export type FooterCellStyle<D = any> = VxeComponentStyleType | ((params: {
     $table: VxeTableConstructor<D>
@@ -179,31 +179,31 @@ export namespace VxeTablePropTypes {
     columnIndex: number
     $columnIndex: number
     _columnIndex: number
-  }) => void | null | VxeComponentStyleType)
+  }) => void | null | Partial<CSSStyleDeclaration> |VxeComponentStyleType)
 
-  export type RowStyle<D = VxeTablePropTypes.Row> = VxeComponentStyleType | ((params: {
+  export type RowStyle<D = VxeTablePropTypes.Row> = Partial<CSSStyleDeclaration> | ((params: {
     $table: VxeTableConstructor<D>
     row: D
     rowIndex: number
     $rowIndex: number
     _rowIndex: number
-  }) => void | null | VxeComponentStyleType)
+  }) => void | null | Partial<CSSStyleDeclaration> |VxeComponentStyleType)
 
-  export type HeaderRowStyle<D = VxeTablePropTypes.Row> = VxeComponentStyleType | ((params: {
+  export type HeaderRowStyle<D = VxeTablePropTypes.Row> = Partial<CSSStyleDeclaration> | ((params: {
     $table: VxeTableConstructor<D>
     $rowIndex: number
     fixed: VxeColumnPropTypes.Fixed
     type: string
-  }) => void | null | VxeComponentStyleType)
+  }) => void | null | Partial<CSSStyleDeclaration> |VxeComponentStyleType)
 
-  export type FooterRowStyle<D = any> = VxeComponentStyleType | ((params: {
+  export type FooterRowStyle<D = any> = Partial<CSSStyleDeclaration> | ((params: {
     $table: VxeTableConstructor<D>
     row: D
     $rowIndex: number
     _rowIndex: number
     fixed: VxeColumnPropTypes.Fixed
     type: string
-  }) => void | null | VxeComponentStyleType)
+  }) => void | null | Partial<CSSStyleDeclaration> | VxeComponentStyleType)
 
   export type ShowCustomHeader = boolean
 
