@@ -902,6 +902,7 @@ export namespace VxeGridSlotTypes {
     field: string
     item: any
     data: any
+    tooltipContent: string
 
     /**
      * @deprecated
