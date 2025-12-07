@@ -313,6 +313,8 @@ export namespace VxeGanttPropTypes {
     dragStartMethod?(params: {
       $gantt: VxeGanttConstructor<D>
       row: D
+      startDate: Date
+      endDate: Date
     }): boolean
     /**
      * 拖拽结束时是否允许行拖拽移动任务条日期的方法，该方法的返回值用来决定是否允许被拖拽移动到指定日期
@@ -320,7 +322,24 @@ export namespace VxeGanttPropTypes {
     dragEndMethod?(params: {
       $gantt: VxeGanttConstructor<D>
       row: D
+      startDate: Date
+      endDate: Date
+      targetStartDate: Date
+      targetEndDate: Date
     }): Promise<boolean> | boolean
+    /**
+     * 自定义拖拽结束时赋值的方法
+     */
+    dragSetMethod?(params: {
+      $gantt: VxeGanttConstructor<D>
+      row: D
+      startDate: Date
+      endDate: Date
+      targetStartDate: Date
+      targetEndDate: Date
+      startValue: any
+      endValue: any
+    }): void
   }
 }
 
@@ -519,6 +538,10 @@ export namespace VxeGanttDefines {
   }
 
   export interface ScaleDefaultOptions {
+    /**
+     * 日期绑定值的格式
+     */
+    valueFormat?: string
     /**
      * 自定义时间轴-列头单元格标题
      */

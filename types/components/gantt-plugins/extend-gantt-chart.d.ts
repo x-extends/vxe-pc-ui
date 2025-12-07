@@ -1,3 +1,5 @@
+import { VxeGanttConstructor, VxeGanttDefines } from '../gantt'
+
 /* eslint-disable @typescript-eslint/no-empty-interface,no-use-before-define,@typescript-eslint/no-unused-vars */
 
 export interface VxeGanttExtendChartMethods<D = any> {
@@ -8,7 +10,9 @@ export interface VxeGanttExtendChartPrivateMethods<D = any> {
    * @private
    */
   handleTaskBarMousedownEvent(evnt: MouseEvent, params: {
-    row: any
+    $gantt: VxeGanttConstructor<D>
+    row: D
+    scaleType: VxeGanttDefines.ColumnScaleType
   }): void
 }
 
