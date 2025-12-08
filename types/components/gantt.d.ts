@@ -119,6 +119,19 @@ export namespace VxeGanttPropTypes {
       maxWidth?: number | string
     }
     /**
+     * 网格样式
+     */
+    gridding?: {
+      /**
+       * 左侧间距多少列
+       */
+      leftSpacing?: number
+      /**
+       * 右侧间距多少列
+       */
+      rightSpacing?: number
+    }
+    /**
      * 任务视图样式
      */
     viewStyle?: {
@@ -400,6 +413,7 @@ export interface GanttReactData<D = any> extends GridReactData<D> {
 export interface GanttInternalData extends GridInternalData {
   resizeTableWidth: number
   barTipTimeout?: any
+  dragBarRow?: any
 }
 
 export interface GanttMethods<D = any> extends Omit<GridMethods<D>, 'dispatchEvent'> {
@@ -526,13 +540,20 @@ export namespace VxeGanttDefines {
   export interface ScaleDateObj {
     date: Date
     yy: string
+    yyyy: string
     M: string
+    MM: string
     d: string
+    dd: string
     H: string
+    HH: string
     m: string
+    mm: string
     s: string
+    ss: string
     q: number
-    W: number
+    W: string
+    WW: string
     e: number
     E: number
   }

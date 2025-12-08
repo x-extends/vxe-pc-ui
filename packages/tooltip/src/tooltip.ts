@@ -201,9 +201,14 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const $xeTooltip = this
       const reactData = $xeTooltip.reactData
 
+      const { visible, tipTarget } = reactData
+      let el = $xeTooltip.$refs.refElem as HTMLElement
+      if (visible && tipTarget && el) {
+        $xeTooltip.updateTipStyle()
+      }
       return $xeTooltip.$nextTick().then(() => {
         const { tipTarget } = reactData
-        const el = $xeTooltip.$refs.refElem as HTMLElement
+        el = $xeTooltip.$refs.refElem as HTMLElement
         if (tipTarget && el) {
           $xeTooltip.updateTipStyle()
           return $xeTooltip.$nextTick().then(() => {
