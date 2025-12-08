@@ -371,9 +371,13 @@ export default defineVxeComponent({
         return handleVisible(target, content)
       },
       updatePlacement () {
+        const { visible, tipTarget } = reactData
+        let el = refElem.value
+        if (visible && tipTarget && el) {
+          updateTipStyle()
+        }
         return nextTick().then(() => {
-          const { tipTarget } = reactData
-          const el = refElem.value
+          el = refElem.value
           if (tipTarget && el) {
             updateTipStyle()
             return nextTick().then(() => {
