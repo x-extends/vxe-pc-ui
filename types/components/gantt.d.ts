@@ -162,7 +162,7 @@ export namespace VxeGanttPropTypes {
       /**
        * 行样式
        */
-      rowStyle?: ((params: {
+      rowStyle?: Partial<CSSStyleDeclaration> | ((params: {
         source: string
         type: string
         scaleType: VxeGanttDefines.ColumnScaleType
@@ -170,7 +170,7 @@ export namespace VxeGanttPropTypes {
         rowIndex: number
         $rowIndex: number
         _rowIndex: number
-      }) => Partial<CSSStyleDeclaration>)
+      }) => void | null | Partial<CSSStyleDeclaration>)
       /**
        * 给单元格附加 className
        */
@@ -188,7 +188,7 @@ export namespace VxeGanttPropTypes {
       /**
        * 单元格样式
        */
-      cellStyle?: ((params: {
+      cellStyle?: Partial<CSSStyleDeclaration> | ((params: {
         source: string
         type: string
         scaleType: VxeGanttDefines.ColumnScaleType
@@ -198,7 +198,7 @@ export namespace VxeGanttPropTypes {
         rowIndex: number
         $rowIndex: number
         _rowIndex: number
-      }) => Partial<CSSStyleDeclaration>)
+      }) => void | null | Partial<CSSStyleDeclaration>)
     }
   }
 
@@ -578,7 +578,7 @@ export namespace VxeGanttDefines {
     /**
      * 自定义时间轴-列头单元格样式
      */
-    headerCellStyle?: CSSStyleDeclaration | ((params: VxeGanttSlotTypes.TaskViewHeaderCellStyleSlotParams) => Partial<CSSStyleDeclaration>)
+    headerCellStyle?: CSSStyleDeclaration | ((params: VxeGanttSlotTypes.TaskViewHeaderCellStyleSlotParams) => void | null | Partial<CSSStyleDeclaration>)
     /**
      * 自定义插槽模板
      */

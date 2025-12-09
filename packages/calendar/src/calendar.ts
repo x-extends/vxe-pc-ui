@@ -49,6 +49,7 @@ export default defineVxeComponent({
       type: Function as PropType<VxeCalendarPropTypes.DisabledMethod>,
       default: () => getConfig().calendar.disabledMethod
     },
+    cellStyle: Function as PropType<VxeCalendarPropTypes.CellStyle>,
 
     // week
     selectDay: {
@@ -836,7 +837,7 @@ export default defineVxeComponent({
     }
 
     const renderDateDayTable = () => {
-      const { multiple } = props
+      const { multiple, cellStyle } = props
       const { datePanelType, datePanelValue } = reactData
       const dateValue = computeDateValue.value
       const dateHeaders = computeDateHeaders.value
@@ -867,6 +868,7 @@ export default defineVxeComponent({
                   'is--selected': multiple ? dateListValue.some(val => XEUtils.isDateSame(val, item.date, matchFormat)) : XEUtils.isDateSame(dateValue, item.date, matchFormat),
                   'is--hover': XEUtils.isDateSame(datePanelValue, item.date, matchFormat)
                 }],
+                style: Object.assign({}, XEUtils.isFunction(cellStyle) ? cellStyle({ type: datePanelType, viewType: datePanelType, date: item.date, $calendar: $xeCalendar }) : cellStyle),
                 onClick: () => dateSelectEvent(item),
                 onMouseenter: () => dateMouseenterEvent(item)
               }, renderDateLabel(item, item.label))
@@ -877,7 +879,7 @@ export default defineVxeComponent({
     }
 
     const renderDateWeekTable = () => {
-      const { multiple } = props
+      const { multiple, cellStyle } = props
       const { datePanelType, datePanelValue } = reactData
       const dateValue = computeDateValue.value
       const weekHeaders = computeWeekHeaders.value
@@ -910,6 +912,7 @@ export default defineVxeComponent({
                   'is--selected': isSelected,
                   'is--hover': isHover
                 }],
+                style: Object.assign({}, XEUtils.isFunction(cellStyle) ? cellStyle({ type: datePanelType, viewType: datePanelType, date: item.date, $calendar: $xeCalendar }) : cellStyle),
                 // event
                 onClick: () => dateSelectEvent(item),
                 onMouseenter: () => dateMouseenterEvent(item)
@@ -921,7 +924,7 @@ export default defineVxeComponent({
     }
 
     const renderDateMonthTable = () => {
-      const { multiple } = props
+      const { multiple, cellStyle } = props
       const { datePanelType, datePanelValue } = reactData
       const dateValue = computeDateValue.value
       const monthDatas = computeMonthDatas.value
@@ -946,6 +949,7 @@ export default defineVxeComponent({
                   'is--selected': multiple ? dateListValue.some(val => XEUtils.isDateSame(val, item.date, matchFormat)) : XEUtils.isDateSame(dateValue, item.date, matchFormat),
                   'is--hover': XEUtils.isDateSame(datePanelValue, item.date, matchFormat)
                 }],
+                style: Object.assign({}, XEUtils.isFunction(cellStyle) ? cellStyle({ type: datePanelType, viewType: datePanelType, date: item.date, $calendar: $xeCalendar }) : cellStyle),
                 onClick: () => dateSelectEvent(item),
                 onMouseenter: () => dateMouseenterEvent(item)
               }, renderDateLabel(item, getI18n(`vxe.input.date.months.m${item.month}`)))
@@ -956,7 +960,7 @@ export default defineVxeComponent({
     }
 
     const renderDateQuarterTable = () => {
-      const { multiple } = props
+      const { multiple, cellStyle } = props
       const { datePanelType, datePanelValue } = reactData
       const dateValue = computeDateValue.value
       const quarterDatas = computeQuarterDatas.value
@@ -981,6 +985,7 @@ export default defineVxeComponent({
                   'is--selected': multiple ? dateListValue.some(val => XEUtils.isDateSame(val, item.date, matchFormat)) : XEUtils.isDateSame(dateValue, item.date, matchFormat),
                   'is--hover': XEUtils.isDateSame(datePanelValue, item.date, matchFormat)
                 }],
+                style: Object.assign({}, XEUtils.isFunction(cellStyle) ? cellStyle({ type: datePanelType, viewType: datePanelType, date: item.date, $calendar: $xeCalendar }) : cellStyle),
                 onClick: () => dateSelectEvent(item),
                 onMouseenter: () => dateMouseenterEvent(item)
               }, renderDateLabel(item, getI18n(`vxe.input.date.quarters.q${item.quarter}`)))
@@ -991,7 +996,7 @@ export default defineVxeComponent({
     }
 
     const renderDateYearTable = () => {
-      const { multiple } = props
+      const { multiple, cellStyle } = props
       const { datePanelType, datePanelValue } = reactData
       const dateValue = computeDateValue.value
       const yearDatas = computeYearDatas.value
@@ -1016,6 +1021,7 @@ export default defineVxeComponent({
                   'is--selected': multiple ? dateListValue.some(val => XEUtils.isDateSame(val, item.date, matchFormat)) : XEUtils.isDateSame(dateValue, item.date, matchFormat),
                   'is--hover': XEUtils.isDateSame(datePanelValue, item.date, matchFormat)
                 }],
+                style: Object.assign({}, XEUtils.isFunction(cellStyle) ? cellStyle({ type: datePanelType, viewType: datePanelType, date: item.date, $calendar: $xeCalendar }) : cellStyle),
                 onClick: () => dateSelectEvent(item),
                 onMouseenter: () => dateMouseenterEvent(item)
               }, renderDateLabel(item, item.year))
