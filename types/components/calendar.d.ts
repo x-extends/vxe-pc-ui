@@ -31,6 +31,7 @@ export namespace VxeCalendarPropTypes {
   export type ValueFormat = string
   export type FestivalMethod = (params: VxeCalendarDefines.DateFestivalParams) => VxeCalendarDefines.DateFestivalInfo | null | void
   export type DisabledMethod = (params: VxeCalendarDefines.DateDisabledParams) => boolean
+  export type CellStyle = (params: VxeCalendarDefines.CellStyleParams) => void | null | Partial<CSSStyleDeclaration>
 }
 
 export type VxeCalendarProps = {
@@ -49,6 +50,7 @@ export type VxeCalendarProps = {
   valueFormat?: VxeCalendarPropTypes.ValueFormat
   festivalMethod?: VxeCalendarPropTypes.FestivalMethod
   disabledMethod?: VxeCalendarPropTypes.DisabledMethod
+  cellStyle?: VxeCalendarPropTypes.CellStyle
 }
 
 export interface CalendarPrivateComputed {
@@ -94,7 +96,7 @@ export namespace VxeCalendarDefines {
     $calendar: VxeCalendarConstructor
   }
 
-  export type DatePanelType = 'year' | 'quarter' | 'month' | 'week' | 'day'
+  export type DatePanelType = 'year' | 'quarter' | 'month' | 'week' | 'day' | 'date'
 
   interface DateFestivalItem {
     /**
@@ -131,6 +133,13 @@ export namespace VxeCalendarDefines {
   }
 
   export interface DateDisabledParams {
+    $calendar: VxeCalendarConstructor
+    type: string
+    viewType: DatePanelType
+    date: Date
+  }
+
+  export interface CellStyleParams {
     $calendar: VxeCalendarConstructor
     type: string
     viewType: DatePanelType
