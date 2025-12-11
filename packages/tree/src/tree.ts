@@ -3,6 +3,7 @@ import { defineVxeComponent } from '../../ui/src/comp'
 import { VxeUI, getI18n, createEvent, getIcon, getConfig, useSize, globalEvents, globalResize, renderEmptyElement } from '../../ui'
 import { calcTreeLine, enNodeValue, deNodeValue } from './util'
 import { errLog } from '../../ui/src/log'
+import { getCrossTreeDragNodeInfo } from './store'
 import XEUtils from 'xe-utils'
 import { getSlotVNs } from '../../ui/src/vn'
 import { toCssUnit, isScale, getPaddingTopBottomSize, addClass, removeClass, getTpImg, hasControlKey, getEventTargetNode } from '../../ui/src/dom'
@@ -49,6 +50,11 @@ function createInternalData (): TreeInternalData {
     // hpTimeout: undefined
   }
 }
+
+// let crossTreeDragNodeObj: {
+//   $oldTree: VxeTreeConstructor & VxeTreePrivateMethods
+//   $newTree: (VxeTreeConstructor & VxeTreePrivateMethods) | null
+// } | null = null
 
 export default defineVxeComponent({
   name: 'VxeTree',
@@ -199,6 +205,8 @@ export default defineVxeComponent({
 
     const refDragNodeLineElem = ref<HTMLDivElement>()
     const refDragTipElem = ref<HTMLDivElement>()
+
+    const crossTreeDragNodeInfo = getCrossTreeDragNodeInfo()
 
     const reactData = reactive<TreeReactData>({
       parentHeight: 0,
@@ -1749,11 +1757,17 @@ export default defineVxeComponent({
       }
     }
 
+    const clearCrossTreeDragStatus = () => {
+      // crossTreeDragNodeObj = null
+      crossTreeDragNodeInfo.node = null
+    }
+
     const clearDragStatus = () => {
       const { dragNode } = reactData
       if (dragNode) {
-        clearNodeDropOrigin()
         hideDropTip()
+        clearNodeDropOrigin()
+        clearCrossTreeDragStatus()
         reactData.dragNode = null
       }
     }
@@ -2093,10 +2107,12 @@ export default defineVxeComponent({
           return errRest
         }).then((rest) => {
           clearNodeDragData()
+          clearCrossTreeDragStatus()
           return rest
         })
       }
       clearNodeDragData()
+      clearCrossTreeDragStatus()
       return Promise.resolve(errRest)
     }
 
@@ -2183,6 +2199,28 @@ export default defineVxeComponent({
           return getNodeId(node1) === getNodeId(node2)
         }
         return false
+      },
+      handleCrossTreeNodeDragCancelEvent () {
+        clearNodeDragData()
+        clearCrossTreeDragStatus()
+      },
+      /**
+       * 处理跨树拖拽完成
+       */
+      handleCrossTreeNodeDragFinishEvent () {
+      },
+      /**
+       * 处理跨树拖至新的空树
+       */
+      handleCrossTreeNodeDragInsertEvent () {
+      },
+      /**
+       * 处理跨树拖插入
+       */
+      handleCrossTreeNodeDragoverEmptyEvent () {
+      },
+      hideCrossTreeNodeDropClearStatus () {
+        hideDropTip()
       }
     }
 
@@ -2614,6 +2652,10 @@ export default defineVxeComponent({
     })
 
     onMounted(() => {
+      const dragOpts = computeDragOpts.value
+      if (dragOpts.isCrossTreeDrag) {
+        errLog('vxe.error.notProp', ['drag-config.isCrossTreeDrag'])
+      }
       if (props.autoResize) {
         const el = refElem.value
         const parentEl = getParentElem()

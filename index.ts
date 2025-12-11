@@ -2,13 +2,13 @@ import * as VxeUIExport from './packages/components'
 import './styles/all.scss'
 
 if (typeof window !== 'undefined') {
-  if ((window as any).VxeUI && !(window as any).VxeUIAll) {
+  if (!(window as any).VxeUIAll) {
     (window as any).VxeUIAll = VxeUIExport
   }
-  if ((window as any).VxeUI && !(window as any).VxeUIBase) {
+  if (!(window as any).VxeUIBase) {
     (window as any).VxeUIBase = VxeUIExport
   }
-  if ((window as any).VxeUIBase && !(window as any).VxeUI) {
+  if (!(window as any).VxeUI) {
     (window as any).VxeUI = VxeUIExport
   }
 }

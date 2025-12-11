@@ -1,3 +1,5 @@
+import { VNode } from 'vue'
+import { VxeComponentStyleType } from '@vxe-ui/core'
 import { VxeGanttConstructor, VxeGanttDefines } from '../gantt'
 
 /* eslint-disable @typescript-eslint/no-empty-interface,no-use-before-define,@typescript-eslint/no-unused-vars */
@@ -14,6 +16,23 @@ export interface VxeGanttExtendChartPrivateMethods<D = any> {
     row: D
     scaleType: VxeGanttDefines.ColumnScaleType
   }): void
+  /**
+   * @private
+   */
+  renderGanttTaskBarContent(params: {
+    $gantt: VxeGanttConstructor<D>
+    source: string
+    type: string
+    scaleType: VxeGanttDefines.ColumnScaleType
+    row: D
+    rowIndex: number
+    $rowIndex: number
+    _rowIndex: number
+  }, renderParams: {
+    title: string
+    vbStyle: VxeComponentStyleType
+    vpStyle: VxeComponentStyleType
+  }): VNode[]
 }
 
 declare module '../gantt' {
