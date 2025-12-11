@@ -266,7 +266,7 @@ export namespace VxeInputDefines {
     extra?: string | DateFestivalItem
   }
 
-  export type DatePanelType = 'year' | 'quarter' | 'month' | 'week' | 'day'
+  export type DatePanelType = 'year' | 'quarter' | 'month' | 'week' | 'date' | 'day'
 
   export interface DateFestivalParams {
     $input: VxeInputConstructor

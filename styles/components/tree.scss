@@ -72,6 +72,122 @@
   }
 }
 
+.vxe-tree--drag-handle {
+  flex-shrink: 0;
+  padding-right: 0.2em;
+  &:not(.is--disabled) {
+    cursor: grab;
+    &:active {
+      cursor: grabbing;
+    }
+    &:hover {
+      color: var(--vxe-ui-font-primary-color);
+    }
+  }
+  &.is--disabled {
+    color: var(--vxe-ui-input-disabled-color);
+    cursor: not-allowed;
+  }
+}
+
+.vxe-tree--node-wrapper {
+  &.row--drag-move {
+    transition: transform 0.5s ease;
+  }
+  &.node--drag-origin {
+    opacity: 0.3;
+  }
+}
+
+/*拖拽行与列*/
+.vxe-tree--drag-node-line {
+  display: none;
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 11;
+  pointer-events: none;
+}
+.vxe-tree--drag-node-line {
+  width: 100%;
+  height: 1px;
+  border: 2px solid transparent;
+  &[drag-pos="top"] {
+    border-top-color: var(--vxe-ui-font-primary-color);
+  }
+  &[drag-pos="bottom"] {
+    border-bottom-color: var(--vxe-ui-font-primary-color);
+  }
+  &[drag-to-child="y"] {
+    border-top-color: transparent;
+    border-bottom-color: transparent;
+    border-left-color: var(--vxe-ui-status-success-color);
+  }
+  &.is--guides {
+    background-color: var(--vxe-ui-tree-drag-over-background-color);
+  }
+}
+.vxe-body--row-list-move {
+  transition-property: transform;
+  transition-duration: 0.35s;
+}
+.vxe-tree--drag-sort-tip {
+  display: none;
+  position: absolute;
+  top: 0;
+  left: 0;
+  padding: 0.6em 1.4em;
+  max-width: 50%;
+  min-width: 100px;
+  border-radius: var(--vxe-ui-border-radius);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  user-select: none;
+  pointer-events: none;
+  background-color: var(--vxe-ui-layout-background-color);
+  box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.2);
+  z-index: 33;
+  &[drag-status="normal"] {
+    .vxe-tree--drag-sort-tip-normal-status {
+      display: block;
+    }
+  }
+  &[drag-status="sub"] {
+    .vxe-tree--drag-sort-tip-sub-status {
+      display: block;
+    }
+  }
+  &[drag-status="disabled"] {
+    .vxe-tree--drag-sort-tip-disabled-status {
+      display: block;
+    }
+  }
+}
+.vxe-tree--drag-sort-tip-wrapper {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+.vxe-tree--drag-sort-tip-status {
+  padding-right: 0.4em;
+}
+.vxe-tree--drag-sort-tip-disabled-status {
+  display: none;
+  flex-shrink: 0;
+  color: var(--vxe-ui-status-error-color)
+}
+.vxe-tree--drag-sort-tip-normal-status,
+.vxe-tree--drag-sort-tip-sub-status {
+  display: none;
+}
+.vxe-tree--drag-sort-tip-content {
+  flex-grow: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
 .vxe-tree--node-line-wrapper {
   position: relative;
   display: block;

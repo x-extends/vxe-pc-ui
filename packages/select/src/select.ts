@@ -9,7 +9,7 @@ import { errLog } from '../../ui/src/log'
 import VxeInputComponent from '../../input/src/input'
 import VxeButtonComponent from '../../button/src/button'
 
-import type { VxeSelectPropTypes, VxeSelectConstructor, SelectInternalData, SelectReactData, VxeSelectDefines, VxeButtonEvents, ValueOf, VxeSelectEmits, VxeComponentSlotType, VxeInputConstructor, SelectMethods, SelectPrivateRef, VxeSelectMethods, VxeOptionProps, VxeDrawerConstructor, VxeDrawerMethods, VxeFormDefines, VxeFormConstructor, VxeFormPrivateMethods, VxeModalConstructor, VxeModalMethods, VxeInputEvents } from '../../../types'
+import type { VxeSelectPropTypes, VxeSelectConstructor, SelectInternalData, SelectReactData, VxeSelectDefines, VxeButtonEvents, ValueOf, VxeSelectEmits, VxeComponentSlotType, VxeInputConstructor, SelectMethods, SelectPrivateRef, VxeSelectMethods, VxeOptionProps, VxeDrawerConstructor, VxeDrawerMethods, VxeFormDefines, VxeFormConstructor, VxeFormPrivateMethods, VxeModalConstructor, VxeModalMethods, VxeInputEvents, VxeComponentStyleType } from '../../../types'
 import type { VxeTableConstructor, VxeTablePrivateMethods } from '../../../types/components/table'
 
 function isOptionVisible (option: any) {
@@ -111,6 +111,7 @@ export default defineVxeComponent({
       type: Boolean as PropType<VxeSelectPropTypes.Transfer>,
       default: null
     },
+    popupConfig: Object as PropType<VxeSelectPropTypes.PopupConfig>,
     virtualYConfig: Object as PropType<VxeSelectPropTypes.VirtualYConfig>,
     scrollY: Object as PropType<VxeSelectPropTypes.ScrollY>,
 
@@ -286,6 +287,10 @@ export default defineVxeComponent({
       return checkMaxLimit(selectVals)
     })
 
+    const computePopupOpts = computed(() => {
+      return Object.assign({}, getConfig().treeSelect.popupConfig, props.popupConfig)
+    })
+
     const computeVirtualYOpts = computed(() => {
       return Object.assign({} as { gt: number }, getConfig().select.virtualYConfig || getConfig().select.scrollY, props.virtualYConfig || props.scrollY)
     })
@@ -300,6 +305,20 @@ export default defineVxeComponent({
 
     const computeMultiMaxCharNum = computed(() => {
       return XEUtils.toNumber(props.multiCharOverflow)
+    })
+
+    const computePopupWrapperStyle = computed(() => {
+      const popupOpts = computePopupOpts.value
+      const { height, width } = popupOpts
+      const stys: VxeComponentStyleType = {}
+      if (width) {
+        stys.width = toCssUnit(width)
+      }
+      if (height) {
+        stys.height = toCssUnit(height)
+        stys.maxHeight = toCssUnit(height)
+      }
+      return stys
     })
 
     const computeSelectVals = computed(() => {
@@ -1383,7 +1402,7 @@ export default defineVxeComponent({
     }
 
     const renderVN = () => {
-      const { className, popupClassName, multiple, loading, filterable, showTotalButoon, showCheckedButoon, showClearButton } = props
+      const { className, multiple, loading, filterable, showTotalButoon, showCheckedButoon, showClearButton } = props
       const { initialized, isActivated, isAniVisible, optList, visiblePanel, bodyHeight, topSpaceHeight } = reactData
       const vSize = computeSize.value
       const isDisabled = computeIsDisabled.value
@@ -1392,6 +1411,9 @@ export default defineVxeComponent({
       const btnTransfer = computeBtnTransfer.value
       const formReadonly = computeFormReadonly.value
       const inpPlaceholder = computeInpPlaceholder.value
+      const popupWrapperStyle = computePopupWrapperStyle.value
+      const popupOpts = computePopupOpts.value
+      const popupClassName = popupOpts.className || props.popupClassName
       const defaultSlot = slots.default
       const headerSlot = slots.header
       const footerSlot = slots.footer
@@ -1466,7 +1488,8 @@ export default defineVxeComponent({
           }, initialized && (visiblePanel || isAniVisible)
             ? [
                 h('div', {
-                  class: 'vxe-select--panel-wrapper'
+                  class: 'vxe-select--panel-wrapper',
+                  style: popupWrapperStyle
                 }, [
                   filterable
                     ? h('div', {

@@ -145,6 +145,10 @@ const treeList2 = ref([
 const treeOptions2 = reactive({
   transform: true,
   height: 200,
+  drag: true,
+  dragConfig: {
+    trigger: 'node'
+  },
   virtualYConfig: {
     gt: 0
   },

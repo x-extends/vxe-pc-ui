@@ -119,6 +119,83 @@ export namespace VxeTreePropTypes {
   export type IconLoaded = string
   export type Size = VxeComponentSizeType
 
+  export type Drag = boolean
+  export interface DragConfig<D = any> {
+    /**
+     * 自定义图标
+     */
+    icon?: string
+    /**
+     * 是否显示拖拽按钮图标
+     */
+    showIcon?: boolean
+    /**
+     * 显示拖拽提示，拖拽过程中显示信息
+     */
+    showDragTip?: boolean
+    /**
+     * 触发拖拽方式
+     */
+    trigger?: 'default' | 'node' | '' | null
+    /**
+     * 是否允许同级行拖拽，用于树结构，启用后允许同层级之间进行拖拽
+     */
+    isPeerDrag?: boolean
+    /**
+     * 是否允许同级/跨层行拖拽，用于树结构，启用后允许跨层级拖拽（除了上级拖到子级）
+     */
+    isCrossDrag?: boolean
+    /**
+     * 需要 isCrossDrag，是否允许拖拽成目标行的子级
+     */
+    isToChildDrag?: boolean
+    /**
+     * 需要 isCrossDrag，是否允许将自己拖拽到子级行中
+     */
+    isSelfToChildDrag?: boolean
+    /**
+     * 是否显示拖拽辅助状态显示
+     */
+    showGuidesStatus?: boolean
+    /**
+     * 是否显示拖拽动画，启用后由数据量的大小来影响渲染性能
+     */
+    animation?: boolean
+    /**
+     * 是否禁用拖拽按钮
+     */
+    disabledMethod?(params: {
+      $tree: VxeTreeConstructor
+      node: D
+    }): boolean
+    /**
+     * 是否显示拖拽按钮
+     */
+    visibleMethod?(params: {
+      $tree: VxeTreeConstructor
+      node: D
+    }): boolean
+    /**
+     * 自定义提示内容
+     */
+    tooltipMethod?(params: {
+      $tree: VxeTreeConstructor
+      node: D
+    }): string | number | null
+    /**
+     * 拖拽开始时是否允许行拖拽调整顺序的方法，该方法的返回值用来决定是否允许被拖拽
+     */
+    dragStartMethod?(params: VxeTreeDefines.NodeDragstartEventParams<D>): boolean
+    /**
+     * 拖拽结束时是否允许行拖拽调整顺序的方法，该方法的返回值用来决定是否允许被拖拽调整顺序
+     */
+    dragEndMethod?(params: Omit<VxeTreeDefines.NodeDragendEventParams<D>, '_index'>): Promise<boolean> | boolean
+    /**
+     * 用于 isToChildDrag，在拖拽完成后，该方法的返回值用于决定是否拖拽成子级
+     */
+    dragToChildMethod?(params: Omit<VxeTreeDefines.NodeDragToChildMethod<D>, '_index'>): boolean
+  }
+
   /**
    * 根据指定值来筛选数据
    */
@@ -221,6 +298,8 @@ export interface VxeTreeProps<D = any> {
      * 该方法用于异步加载子节点
      */
   loadMethod?: VxeTreePropTypes.LoadMethod<D>
+  drag?: VxeTreePropTypes.Drag
+  dragConfig?: VxeTreePropTypes.DragConfig
   showIcon?: VxeTreePropTypes.ShowIcon
   iconOpen?: VxeTreePropTypes.IconOpen
   iconClose?: VxeTreePropTypes.IconClose
@@ -230,11 +309,14 @@ export interface VxeTreeProps<D = any> {
 }
 
 export interface TreePrivateComputed<D = any> {
+  computeKeyField: ComputedRef<string>
+  computeParentField: ComputedRef<string>
   computeChildrenField: ComputedRef<string>
   computeMapChildrenField: ComputedRef<string>
   computeRadioOpts: ComputedRef<VxeTreePropTypes.RadioConfig<D>>
   computeCheckboxOpts: ComputedRef<VxeTreePropTypes.CheckboxConfig<D>>
   computeNodeOpts: ComputedRef<VxeTreePropTypes.NodeConfig<D>>
+  computeDragOpts: ComputedRef<VxeTreePropTypes.DragConfig<D>>
 }
 export interface VxeTreePrivateComputed extends TreePrivateComputed { }
 
@@ -251,6 +333,9 @@ export interface TreeReactData {
   treeList: any[]
   updateExpandedFlag: number
   updateCheckboxFlag: number
+
+  dragNode: any
+  dragTipText: string
 }
 
 export interface TreeInternalData {
@@ -276,6 +361,10 @@ export interface TreeInternalData {
   }
   lastScrollTime: number
   hpTimeout?: undefined | number
+
+  prevDragNode?: any
+  prevDragToChild?: boolean
+  prevDragPos?: 'top' | 'bottom' | ''
 }
 
 export interface TreeMethods<D = any> {
@@ -446,6 +535,10 @@ export interface TreeMethods<D = any> {
    * 重新计算列表
    */
   recalculate(): Promise<void>
+  /**
+   * 获取数据的全量数据
+   */
+  getFullData(): D[]
 
   /**
    * 如果有滚动条，则滚动到对应的位置
@@ -470,7 +563,36 @@ export interface TreeMethods<D = any> {
 }
 export interface VxeTreeMethods<D = any> extends TreeMethods<D> { }
 
-export interface TreePrivateMethods { }
+export interface TreePrivateMethods {
+  /**
+   * @private
+   */
+  handleData(force?: boolean): void
+  /**
+   * @private
+   */
+  cacheNodeMap(): void
+  /**
+   * @private
+   */
+  updateAfterDataIndex(): void
+  /**
+   * @private
+   */
+  updateCheckboxStatus(): void
+  /**
+   * @private
+   */
+  updateYSpace(): void
+  /**
+   * @private
+   */
+  findNodeIndexOf(list: any[], row: any): number
+  /**
+   * @private
+   */
+  eqNode(node1: any, node2: any): boolean
+}
 export interface VxeTreePrivateMethods extends TreePrivateMethods { }
 
 export type VxeTreeEmits = [
@@ -484,7 +606,10 @@ export type VxeTreeEmits = [
   'checkbox-change',
   'load-success',
   'load-error',
-  'scroll'
+  'scroll',
+  'node-dragstart',
+  'node-dragover',
+  'node-dragend'
 ]
 
 export namespace VxeTreeDefines {
@@ -495,6 +620,8 @@ export namespace VxeTreeDefines {
   export interface NodeCacheItem {
     item: any
     index: number
+    $index: number
+    _index: number
     items: any[]
     nodes: any[]
     parent: any
@@ -503,6 +630,33 @@ export namespace VxeTreeDefines {
     lineCount: number
     treeLoaded: boolean
   }
+
+  export interface NodeDragstartEventParams<D = any> {
+    node: D
+  }
+
+  export interface NodeDragoverEventParams<D = any> {
+    oldNode: D
+    targetNode: D
+    dragNode: D
+    dragPos: 'top' | 'bottom'
+    offsetIndex: 0 | 1
+  }
+
+  export interface NodeDragendEventParams<D = any> {
+    newNode: D
+    oldNode: D
+    dragNode: D
+    dragPos: 'top' | 'bottom'
+    dragToChild: boolean
+    offsetIndex: 0 | 1
+    _index: {
+      newIndex: number
+      oldIndex: number
+    }
+  }
+
+  export interface NodeDragToChildMethod<D = any> extends NodeDragendEventParams<D> {}
 
   export interface NodeClickParams<D = any> {
     node: D
@@ -536,14 +690,17 @@ export namespace VxeTreeDefines {
   }
 }
 
-export type VxeTreeEventProps = {
-  onNodeClick?: VxeTreeEvents.NodeClick
-  onNodeDblclick?: VxeTreeEvents.NodeDblclick
-  onCurrentChange?: VxeTreeEvents.CurrentChange
-  onRadioChange?: VxeTreeEvents.RadioChange
-  onCheckboxChange?: VxeTreeEvents.CheckboxChange
-  onLoadSuccess?: VxeTreeEvents.LoadSuccess
-  onLoadError?: VxeTreeEvents.LoadError
+export type VxeTreeEventProps<D = any> = {
+  onNodeClick?: VxeTreeEvents.NodeClick<D>
+  onNodeDblclick?: VxeTreeEvents.NodeDblclick<D>
+  onCurrentChange?: VxeTreeEvents.CurrentChange<D>
+  onRadioChange?: VxeTreeEvents.RadioChange<D>
+  onCheckboxChange?: VxeTreeEvents.CheckboxChange<D>
+  onLoadSuccess?: VxeTreeEvents.LoadSuccess<D>
+  onLoadError?: VxeTreeEvents.LoadError<D>
+  onNodeDragstart?: VxeTreeEvents.NodeDragstart<D>
+  onNodeDragover?: VxeTreeEvents.NodeDragover<D>
+  onNodeDragend?: VxeTreeEvents.NodeDragend<D>
 }
 
 export interface VxeTreeListeners<D = any> {
@@ -554,6 +711,9 @@ export interface VxeTreeListeners<D = any> {
   checkboxChange?: VxeTreeEvents.CheckboxChange<D>
   loadSuccess?: VxeTreeEvents.LoadSuccess<D>
   loadError?: VxeTreeEvents.LoadError<D>
+  nodeDragstart?: VxeTreeEvents.NodeDragstart<D>
+  nodeDragover?: VxeTreeEvents.NodeDragover<D>
+  nodeDragend?: VxeTreeEvents.NodeDragend<D>
 }
 
 export namespace VxeTreeEvents {
@@ -564,6 +724,9 @@ export namespace VxeTreeEvents {
   export type CheckboxChange<D = any> = (params: VxeTreeDefines.CheckboxChangeEventParams<D>) => void
   export type LoadSuccess<D = any> = (params: VxeTreeDefines.LoadSuccessEventParams<D>) => void
   export type LoadError<D = any> = (params: VxeTreeDefines.LoadErrorEventParams<D>) => void
+  export type NodeDragstart<D = any> = (params: VxeTreeDefines.NodeDragstartEventParams<D>) => void
+  export type NodeDragover<D = any> = (params: VxeTreeDefines.NodeDragoverEventParams<D>) => void
+  export type NodeDragend<D = any> = (params: VxeTreeDefines.NodeDragendEventParams<D>) => void
 }
 
 export namespace VxeTreeSlotTypes {

@@ -8,6 +8,9 @@ if (typeof window !== 'undefined') {
   if ((window as any).VxeUI && !(window as any).VxeUIBase) {
     (window as any).VxeUIBase = VxeUIExport
   }
+  if ((window as any).VxeUIBase && !(window as any).VxeUI) {
+    (window as any).VxeUI = VxeUIExport
+  }
 }
 
 export * from './packages/components'

@@ -113,7 +113,8 @@ export default {
       searchEmpty: '未匹配到數據！'
     },
     tree: {
-      searchEmpty: '未匹配到數據！'
+      searchEmpty: '未匹配到數據！',
+      dragTip: '移動：{0}'
     },
     treeSelect: {
       clearChecked: '清除',

@@ -113,7 +113,8 @@ export default {
       searchEmpty: '데이터가 일치하지 않습니다!'
     },
     tree: {
-      searchEmpty: '데이터가 일치하지 않습니다!'
+      searchEmpty: '데이터가 일치하지 않습니다!',
+      dragTip: '移动：{0}'
     },
     treeSelect: {
       clearChecked: '분명한',

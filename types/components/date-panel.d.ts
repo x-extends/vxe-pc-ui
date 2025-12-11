@@ -173,7 +173,7 @@ export namespace VxeDatePanelDefines {
     label: string;
   }
 
-  export type DatePanelType = 'year' | 'quarter' | 'month' | 'week' | 'day'
+  export type DatePanelType = 'year' | 'quarter' | 'month' | 'week' | 'date' | 'day'
 
   interface DateFestivalItem {
     /**
