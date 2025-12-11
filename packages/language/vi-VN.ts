@@ -113,7 +113,8 @@ export default {
       searchEmpty: 'Không có dữ liệu phù hợp!'
     },
     tree: {
-      searchEmpty: 'Không có dữ liệu phù hợp!'
+      searchEmpty: 'Không có dữ liệu phù hợp!',
+      dragTip: '移动：{0}'
     },
     treeSelect: {
       clearChecked: 'Thông thoáng',

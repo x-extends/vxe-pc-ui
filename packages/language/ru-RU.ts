@@ -113,7 +113,8 @@ export default {
       searchEmpty: 'Нет данных!'
     },
     tree: {
-      searchEmpty: 'Нет данных!'
+      searchEmpty: 'Нет данных!',
+      dragTip: '移动：{0}'
     },
     treeSelect: {
       clearChecked: 'Прозрачный',

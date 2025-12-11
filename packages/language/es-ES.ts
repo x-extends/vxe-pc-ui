@@ -113,7 +113,8 @@ export default {
       searchEmpty: '¡No hay datos coincidentes!'
     },
     tree: {
-      searchEmpty: '¡No hay datos coincidentes!'
+      searchEmpty: '¡No hay datos coincidentes!',
+      dragTip: '移动：{0}'
     },
     treeSelect: {
       clearChecked: 'Claro',

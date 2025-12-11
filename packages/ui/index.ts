@@ -378,6 +378,12 @@ setConfig({
     radioConfig: {
       strict: true
     },
+    dragConfig: {
+      showIcon: true,
+      animation: true,
+      showGuidesStatus: true,
+      showDragTip: true
+    },
     virtualYConfig: {
       enabled: true,
       gt: 50,
@@ -585,6 +591,10 @@ setIcon({
   TREE_NODE_OPEN: iconPrefix + 'caret-right rotate90',
   TREE_NODE_CLOSE: iconPrefix + 'caret-right',
   TREE_NODE_LOADED: iconPrefix + 'spinner roll',
+  TREE_DRAG: iconPrefix + 'drag-handle',
+  TREE_DRAG_STATUS_NODE: iconPrefix + 'sort',
+  TREE_DRAG_STATUS_SUB_NODE: iconPrefix + 'add-sub',
+  TREE_DRAG_DISABLED: iconPrefix + 'no-drop',
 
   // tree-select
   TREE_SELECT_LOADED: iconPrefix + 'spinner roll',

@@ -56,6 +56,7 @@
 
 .vxe-select--panel-search {
   display: block;
+  flex-shrink: 0;
   padding: var(--vxe-ui-layout-padding-default);
   .vxe-select-search--input {
     width: 100%;
@@ -63,11 +64,21 @@
 }
 
 .vxe-select--panel-wrapper {
+  display: flex;
+  flex-direction: column;
   position: relative;
+  max-height: 18em;
   border-radius: var(--vxe-ui-base-border-radius);
   border: 1px solid var(--vxe-ui-base-popup-border-color);
   box-shadow: var(--vxe-ui-base-popup-box-shadow);
   background-color: var(--vxe-ui-layout-background-color);
+}
+
+.vxe-select--panel-body {
+  display: flex;
+  flex-direction: row;
+  flex-grow: 1;
+  overflow: hidden;
 }
 
 .vxe-select--header-button {
@@ -99,10 +110,12 @@
 
 .vxe-select--panel-header,
 .vxe-select--panel-footer {
+  flex-shrink: 0;
   padding: 4px 0;
 }
 
 .vxe-select-option--wrapper {
+  flex-grow: 1;
   position: relative;
   overflow-x: hidden;
   overflow-y: auto;
@@ -117,9 +130,6 @@
   margin: 0;
   border: 0;
   outline: 0;
-}
-.vxe-select-option--wrapper {
-  max-height: 18em;
 }
 .vxe-select-option {
   position: relative;

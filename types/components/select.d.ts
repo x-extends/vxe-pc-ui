@@ -97,6 +97,11 @@ export namespace VxeSelectPropTypes {
   export type OptionId = string
   export type OptionKey = boolean
   export type Transfer = boolean
+  export interface PopupConfig {
+    width?: number | string
+    height?: number | string
+    className?: string | ((params: { $select: VxeSelectConstructor }) => string)
+  }
 
   export interface VirtualYConfig {
     /**
@@ -158,6 +163,7 @@ export interface VxeSelectProps {
   remoteConfig?: VxeSelectPropTypes.RemoteConfig
   max?: VxeSelectPropTypes.Max
   transfer?: VxeSelectPropTypes.Transfer
+  popupConfig?: VxeSelectPropTypes.PopupConfig
   virtualYConfig?: VxeSelectPropTypes.VirtualYConfig
 
   /**

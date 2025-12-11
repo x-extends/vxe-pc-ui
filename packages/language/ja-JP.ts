@@ -113,7 +113,8 @@ export default {
       searchEmpty: '一致するデータはありません！'
     },
     tree: {
-      searchEmpty: '一致するデータはありません！'
+      searchEmpty: '一致するデータはありません！',
+      dragTip: '移动：{0}'
     },
     treeSelect: {
       clearChecked: 'クリア',

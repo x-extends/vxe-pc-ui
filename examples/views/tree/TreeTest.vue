@@ -1,7 +1,7 @@
 <template>
   <div>
-    <p>
-      <vxe-tree :data="treeList1" :checkbox-config="{checkStrictly: true}" show-checkbox show-radio></vxe-tree>
+    <!-- <p>
+      <vxe-tree :data="treeList1" :checkbox-config="{checkStrictly: true}" show-checkbox show-radio ></vxe-tree>
     </p>
     <p>
       <vxe-tree :loading="loading" :data="treeList2" trigger="node" :checkbox-check-row-keys.sync="checkboxCheckRowKeys" :radio-check-row-key.sync="checkboxCheckRowKey" checkStrictly is-hover is-current show-checkbox show-radio show-line></vxe-tree>
@@ -16,7 +16,8 @@
       :load-method="loadMethod"
       :data="treeList">
     </vxe-tree>
-    </p>
+    </p> -->
+    <vxe-tree ref="tree3Ref" v-bind="treeOptions2"></vxe-tree>
   </div>
 </template>
 
@@ -144,7 +145,37 @@ export default Vue.extend({
         { title: '节点5', id: '5', hasChild: false }
       ],
       checkboxCheckRowKey: null,
-      checkboxCheckRowKeys: []
+      checkboxCheckRowKeys: [],
+      treeOptions2: {
+        transform: true,
+        height: 200,
+        drag: true,
+        virtualYConfig: {
+          gt: 0
+        },
+        data: [
+          { title: '节点2', id: '2', parentId: null },
+          { title: '节点3', id: '3', parentId: null },
+          { title: '节点3-1', id: '31', parentId: '3' },
+          { title: '节点3-2', id: '32', parentId: '3' },
+          { title: '节点3-2-1', id: '321', parentId: '32' },
+          { title: '节点3-2-2', id: '322', parentId: '32' },
+          { title: '节点3-3', id: '33', parentId: '3' },
+          { title: '节点3-3-1', id: '331', parentId: '33' },
+          { title: '节点3-3-2', id: '332', parentId: '33' },
+          { title: '节点3-3-3', id: '333', parentId: '33' },
+          { title: '节点3-4', id: '34', parentId: '3' },
+          { title: '节点4', id: '4', parentId: null },
+          { title: '节点4-1', id: '41', parentId: '4' },
+          { title: '节点4-1-1', id: '411', parentId: '42' },
+          { title: '节点4-1-2', id: '412', parentId: '42' },
+          { title: '节点4-2', id: '42', parentId: '4' },
+          { title: '节点4-3', id: '43', parentId: '4' },
+          { title: '节点4-3-1', id: '431', parentId: '43' },
+          { title: '节点4-3-2', id: '432', parentId: '43' },
+          { title: '节点5', id: '5', parentId: null }
+        ]
+      }
     }
   },
   methods: {

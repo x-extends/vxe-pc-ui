@@ -9,7 +9,7 @@ import { errLog } from '../../ui/src/log'
 import VxeInputComponent from '../../input/src/input'
 import VxeButtonComponent from '../../button/src/button'
 
-import type { VxeSelectPropTypes, SelectInternalData, ValueOf, VxeComponentSizeType, SelectReactData, VxeSelectEmits, VxeButtonDefines, VxeInputDefines, VxeSelectDefines, VxeOptionProps, VxeDrawerConstructor, VxeDrawerMethods, VxeFormDefines, VxeFormConstructor, VxeFormPrivateMethods, VxeModalConstructor, VxeModalMethods, VxeInputConstructor, VxeComponentSlotType } from '../../../types'
+import type { VxeSelectPropTypes, SelectInternalData, ValueOf, VxeComponentSizeType, SelectReactData, VxeSelectEmits, VxeButtonDefines, VxeInputDefines, VxeSelectDefines, VxeOptionProps, VxeDrawerConstructor, VxeDrawerMethods, VxeFormDefines, VxeFormConstructor, VxeFormPrivateMethods, VxeModalConstructor, VxeModalMethods, VxeInputConstructor, VxeComponentSlotType, VxeComponentStyleType } from '../../../types'
 import type { VxeTableConstructor, VxeTablePrivateMethods } from '../../../types/components/table'
 
 function isOptionVisible (option: any) {
@@ -118,6 +118,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       type: Boolean as PropType<VxeSelectPropTypes.Transfer>,
       default: null
     },
+    popupConfig: Object as PropType<VxeSelectPropTypes.PopupConfig>,
     virtualYConfig: Object as PropType<VxeSelectPropTypes.VirtualYConfig>,
     scrollY: Object as PropType<VxeSelectPropTypes.ScrollY>,
 
@@ -314,6 +315,12 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const selectVals = $xeSelect.computeSelectVals
       return ($xeSelect as any).checkMaxLimit(selectVals) as boolean
     },
+    computePopupOpts () {
+      const $xeSelect = this
+      const props = $xeSelect
+
+      return Object.assign({}, getConfig().treeSelect.popupConfig, props.popupConfig)
+    },
     computeVirtualYOpts () {
       const $xeSelect = this
       const props = $xeSelect
@@ -343,6 +350,21 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const props = $xeSelect
 
       return XEUtils.toNumber(props.multiCharOverflow)
+    },
+    computePopupWrapperStyle () {
+      const $xeSelect = this
+
+      const popupOpts = $xeSelect.computePopupOpts
+      const { height, width } = popupOpts
+      const stys: VxeComponentStyleType = {}
+      if (width) {
+        stys.width = toCssUnit(width)
+      }
+      if (height) {
+        stys.height = toCssUnit(height)
+        stys.maxHeight = toCssUnit(height)
+      }
+      return stys
     },
     computeSelectVals () {
       const $xeSelect = this
@@ -1650,7 +1672,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const slots = $xeSelect.$scopedSlots
       const reactData = $xeSelect.reactData
 
-      const { className, popupClassName, multiple, loading, filterable, showTotalButoon, showCheckedButoon, showClearButton } = props
+      const { className, multiple, loading, filterable, showTotalButoon, showCheckedButoon, showClearButton } = props
       const { initialized, isActivated, isAniVisible, optList, visiblePanel, bodyHeight, topSpaceHeight } = reactData
       const vSize = $xeSelect.computeSize
       const isDisabled = $xeSelect.computeIsDisabled
@@ -1659,6 +1681,9 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const btnTransfer = $xeSelect.computeBtnTransfer
       const formReadonly = $xeSelect.computeFormReadonly
       const inpPlaceholder = $xeSelect.computeInpPlaceholder
+      const popupOpts = $xeSelect.computePopupOpts
+      const popupWrapperStyle = $xeSelect.computePopupWrapperStyle
+      const popupClassName = popupOpts.className || props.popupClassName
       const defaultSlot = slots.default
       const headerSlot = slots.header
       const footerSlot = slots.footer
@@ -1738,7 +1763,8 @@ export default /* define-vxe-component start */ defineVxeComponent({
         }, initialized && (visiblePanel || isAniVisible)
           ? [
               h('div', {
-                class: 'vxe-select--panel-wrapper'
+                class: 'vxe-select--panel-wrapper',
+                style: popupWrapperStyle
               }, [
                 filterable
                   ? h('div', {
