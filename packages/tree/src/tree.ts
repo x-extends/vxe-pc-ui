@@ -5,11 +5,17 @@ import { VxeUI, getI18n, createEvent, getIcon, getConfig, globalEvents, globalRe
 import { calcTreeLine, enNodeValue, deNodeValue } from './util'
 import { errLog } from '../../ui/src/log'
 import { getSlotVNs } from '../../ui/src/vn'
+import { crossTreeDragNodeGlobal, getCrossTreeDragNodeInfo } from './store'
 import { toCssUnit, isScale, getPaddingTopBottomSize, addClass, removeClass, getTpImg, hasControlKey, getEventTargetNode } from '../../ui/src/dom'
 import { moveRowAnimateToTb, clearRowAnimate } from '../../ui/src/anime'
 import VxeLoadingComponent from '../../loading/src/loading'
 
 import type { TreeReactData, VxeTreeEmits, VxeTreeConstructor, VxeTreePropTypes, TreeInternalData, VxeTreeDefines, VxeTreePrivateMethods, VxeComponentSizeType, ValueOf } from '../../../types'
+
+// let crossTreeDragNodeObj: {
+//   $oldTree: VxeTreeConstructor & VxeTreePrivateMethods
+//   $newTree: (VxeTreeConstructor & VxeTreePrivateMethods) | null
+// } | null = null
 
 /**
  * 生成节点的唯一主键
@@ -113,13 +119,21 @@ function hideDropTip ($xeTree: VxeTreeConstructor) {
   }
 }
 
+function clearCrossTreeDragStatus ($xeTree: VxeTreeConstructor) {
+  const crossTreeDragNodeInfo = getCrossTreeDragNodeInfo($xeTree as VxeTreeConstructor & VxeTreePrivateMethods)
+
+  // crossTreeDragNodeObj = null
+  crossTreeDragNodeInfo.node = null
+}
+
 function clearDragStatus ($xeTree: VxeTreeConstructor) {
   const reactData = $xeTree.reactData
 
   const { dragNode } = reactData
   if (dragNode) {
-    clearNodeDropOrigin($xeTree)
     hideDropTip($xeTree)
+    clearNodeDropOrigin($xeTree)
+    clearCrossTreeDragStatus($xeTree)
     reactData.dragNode = null
   }
 }
@@ -443,10 +457,12 @@ function handleNodeDragSwapEvent ($xeTree: VxeTreeConstructor & VxeTreePrivateMe
       return errRest
     }).then((rest) => {
       clearNodeDragData($xeTree)
+      clearCrossTreeDragStatus($xeTree)
       return rest
     })
   }
   clearNodeDragData($xeTree)
+  clearCrossTreeDragStatus($xeTree)
   return Promise.resolve(errRest)
 }
 
@@ -625,7 +641,8 @@ export default /* define-vxe-component start */ defineVxeComponent({
     return {
       xID,
       reactData,
-      internalData
+      internalData,
+      crossTreeDragNodeInfo: crossTreeDragNodeGlobal
     }
   },
   computed: {
@@ -2304,6 +2321,32 @@ export default /* define-vxe-component start */ defineVxeComponent({
       }
       return false
     },
+    handleCrossTreeNodeDragCancelEvent () {
+      const $xeTree = this
+
+      clearNodeDragData($xeTree)
+      clearCrossTreeDragStatus($xeTree)
+    },
+    /**
+       * 处理跨树拖拽完成
+       */
+    handleCrossTreeNodeDragFinishEvent () {
+    },
+    /**
+       * 处理跨树拖至新的空树
+       */
+    handleCrossTreeNodeDragInsertEvent () {
+    },
+    /**
+       * 处理跨树拖插入
+       */
+    handleCrossTreeNodeDragoverEmptyEvent () {
+    },
+    hideCrossTreeNodeDropClearStatus () {
+      const $xeTree = this
+
+      hideDropTip($xeTree)
+    },
     getCheckboxIndeterminateNodes () {
       const $xeTree = this
       const internalData = $xeTree.internalData
@@ -2893,6 +2936,10 @@ export default /* define-vxe-component start */ defineVxeComponent({
     const props = $xeTree
     const internalData = $xeTree.internalData
 
+    const dragOpts = $xeTree.computeDragOpts
+    if (dragOpts.isCrossTreeDrag) {
+      errLog('vxe.error.notProp', ['drag-config.isCrossTreeDrag'])
+    }
     if (props.autoResize) {
       const el = $xeTree.$refs.refElem as HTMLDivElement
       const parentEl = $xeTree.getParentElem()

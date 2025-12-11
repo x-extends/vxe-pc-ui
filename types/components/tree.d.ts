@@ -147,6 +147,10 @@ export namespace VxeTreePropTypes {
      */
     isSelfToChildDrag?: boolean
     /**
+     * 是否允许在不同树之间进行拖拽
+     */
+    isCrossTreeDrag?: boolean
+    /**
      * 是否显示拖拽辅助状态显示
      */
     showGuidesStatus?: boolean
@@ -585,6 +589,26 @@ export interface TreePrivateMethods {
    * @private
    */
   eqNode(node1: any, node2: any): boolean
+  /**
+   * @private
+   */
+  handleCrossTreeNodeDragInsertEvent(evnt: DragEvent): void
+  /**
+   * @private
+   */
+  handleCrossTreeNodeDragCancelEvent(evnt: DragEvent): void
+  /**
+   * @private
+   */
+  handleCrossTreeNodeDragFinishEvent(evnt: DragEvent): void
+  /**
+   * @private
+   */
+  handleCrossTreeNodeDragoverEmptyEvent(evnt: DragEvent): void
+  /**
+   * @private
+   */
+  hideCrossTreeNodeDropClearStatus(): void
 }
 export interface VxeTreePrivateMethods extends TreePrivateMethods { }
 
