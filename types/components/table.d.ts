@@ -5387,6 +5387,10 @@ export interface TablePrivateMethods<D = any> {
 export interface VxeTablePrivateMethods<D = any> extends TablePrivateMethods<D> { }
 
 export type VxeTableEmits = [
+  'ready',
+  'init-rendered',
+  'data-rendered',
+
   'update:data',
   'keydown-start',
   'keydown',
@@ -5923,6 +5927,18 @@ export namespace VxeTableDefines {
     column: ColumnInfo<D>
     columnIndex: number
     $columnIndex: number
+  }
+
+  export interface ReadyEventParams<D = any> extends TableEventParams<D> {
+  }
+  export interface InitRenderedEventParams<D = any> extends TableEventParams<D> {
+    visibleColumn: ColumnInfo<D>[]
+    visibleData: D
+  }
+  export interface DataRenderedEventParams<D = any> extends TableEventParams<D> {
+    isReload: boolean
+    visibleColumn: ColumnInfo<D>[]
+    visibleData: D
   }
 
   export interface KeydownStartParams { }
@@ -6518,6 +6534,9 @@ export namespace VxeTableDefines {
 }
 
 export interface VxeTableEventProps<D = any> {
+  onReady?: VxeTableEvents.Ready<D>
+  onInitRendered?: VxeTableEvents.InitRendered<D>
+  onDataRendered?: VxeTableEvents.DataRendered<D>
   onKeydownStart?: VxeTableEvents.KeydownStart<D>
   onKeydown?: VxeTableEvents.Keydown<D>
   onKeydownEnd?: VxeTableEvents.KeydownEnd<D>
@@ -6587,6 +6606,9 @@ export interface VxeTableEventProps<D = any> {
 }
 
 export interface VxeTableListeners<D = any> {
+  ready?: VxeTableEvents.Ready<D>
+  initRendered?: VxeTableEvents.InitRendered<D>
+  dataRendered?: VxeTableEvents.DataRendered<D>
   /**
    * 当表格被激活且键盘被按下开始时会触发的事件
    */
@@ -6673,6 +6695,9 @@ export interface VxeTableListeners<D = any> {
 }
 
 export namespace VxeTableEvents {
+  export type Ready<D = VxeTablePropTypes.Row> = (params: VxeTableDefines.ReadyEventParams<D>) => void
+  export type InitRendered<D = VxeTablePropTypes.Row> = (params: VxeTableDefines.InitRenderedEventParams<D>) => void
+  export type DataRendered<D = VxeTablePropTypes.Row> = (params: VxeTableDefines.DataRenderedEventParams<D>) => void
   export type KeydownStart<D = VxeTablePropTypes.Row> = (params: VxeTableDefines.KeydownStartEventParams<D>) => void
   export type Keydown<D = VxeTablePropTypes.Row> = (params: VxeTableDefines.KeydownEventParams<D>) => void
   export type KeydownEnd<D = VxeTablePropTypes.Row> = (params: VxeTableDefines.KeydownEndEventParams<D>) => void

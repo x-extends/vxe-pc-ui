@@ -478,6 +478,9 @@ export namespace VxeGridDefines {
 
   export type LayoutKey = 'Form' | 'Toolbar' | 'Top' | 'Table' | 'Bottom' | 'Pager'
 
+  export interface ReadyEventParams<D = any> extends GridEventParams<D>, VxeTableDefines.ReadyEventParams<D> { }
+  export interface InitRenderedEventParams<D = any> extends GridEventParams<D>, VxeTableDefines.InitRenderedEventParams<D> { }
+  export interface DataRenderedEventParams<D = any> extends GridEventParams<D>, VxeTableDefines.DataRenderedEventParams<D> { }
   export interface KeydownStartEventParams<D = any> extends GridEventParams<D>, VxeTableDefines.KeydownStartEventParams<D> { }
   export interface KeydownEventParams<D = any> extends GridEventParams<D>, VxeTableDefines.KeydownEventParams<D> { }
   export interface KeydownEndEventParams<D = any> extends GridEventParams<D>, VxeTableDefines.KeydownEndEventParams<D> { }
@@ -607,6 +610,9 @@ export namespace VxeGridDefines {
 }
 
 export interface VxeGridEventProps<D = any> {
+  onReady?: VxeGridEvents.Ready<D>
+  onInitRendered?: VxeGridEvents.InitRendered<D>
+  onDataRendered?: VxeGridEvents.DataRendered<D>
   onKeydownStart?: VxeGridEvents.KeydownStart<D>
   onKeydown?: VxeGridEvents.Keydown<D>
   onKeydownEnd?: VxeGridEvents.KeydownEnd<D>
@@ -688,6 +694,9 @@ export interface VxeGridEventProps<D = any> {
 }
 
 export interface VxeGridListeners<D = any> {
+  ready?: VxeGridEvents.Ready<D>
+  initRendered?: VxeGridEvents.InitRendered<D>
+  dataRendered?: VxeGridEvents.DataRendered<D>
   keydownStart?: VxeGridEvents.KeydownStart<D>
   keydown?: VxeGridEvents.Keydown<D>
   keydownEnd?: VxeGridEvents.KeydownEnd<D>
@@ -769,6 +778,9 @@ export interface VxeGridListeners<D = any> {
 }
 
 export namespace VxeGridEvents {
+  export type Ready<D = any> = (params: VxeGridDefines.ReadyEventParams<D>) => void
+  export type InitRendered<D = any> = (params: VxeGridDefines.InitRenderedEventParams<D>) => void
+  export type DataRendered<D = any> = (params: VxeGridDefines.DataRenderedEventParams<D>) => void
   export type KeydownStart<D = any> = (params: VxeGridDefines.KeydownStartEventParams<D>) => void
   export type Keydown<D = any> = (params: VxeGridDefines.KeydownEventParams<D>) => void
   export type KeydownEnd<D = any> = (params: VxeGridDefines.KeydownEndEventParams<D>) => void
