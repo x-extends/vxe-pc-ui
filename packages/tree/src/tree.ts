@@ -1872,84 +1872,55 @@ export default defineVxeComponent({
           dragToChild: !!prevDragToChild,
           offsetIndex: dragOffsetIndex as 0 | 1
         }
-        const isDragToChildFlag = isSelfToChildDrag && dragToChildMethod ? dragToChildMethod(dragParams) : prevDragToChild
-        return Promise.resolve(dEndMethod ? dEndMethod(dragParams) : true).then((status) => {
-          if (!status) {
-            return errRest
+
+        const dragNodeid = getNodeId(dragNode)
+        const dragNodeRest = nodeMaps[dragNodeid] || {}
+        const _dragNodeIndex = dragNodeRest._index
+        let dragNodeHeight = 0
+        let dragOffsetTop = -1
+        if (animation) {
+          const prevItemEl = el.querySelector<HTMLElement>(`.vxe-tree--node-wrapper[nodeid="${prevDragNode}"]`)
+          const oldItemEl = el.querySelector<HTMLElement>(`.vxe-tree--node-wrapper[nodeid="${dragNodeid}"]`)
+          const targetItemEl = prevItemEl || oldItemEl
+          if (targetItemEl) {
+            dragNodeHeight = targetItemEl.offsetHeight
           }
-
-          const dragNodeid = getNodeId(dragNode)
-          const dragNodeRest = nodeMaps[dragNodeid] || {}
-          const _dragNodeIndex = dragNodeRest._index
-          let dragNodeHeight = 0
-          let dragOffsetTop = -1
-          if (animation) {
-            const prevItemEl = el.querySelector<HTMLElement>(`.vxe-tree--node-wrapper[nodeid="${prevDragNode}"]`)
-            const oldItemEl = el.querySelector<HTMLElement>(`.vxe-tree--node-wrapper[nodeid="${dragNodeid}"]`)
-            const targetItemEl = prevItemEl || oldItemEl
-            if (targetItemEl) {
-              dragNodeHeight = targetItemEl.offsetHeight
-            }
-            if (oldItemEl) {
-              dragOffsetTop = oldItemEl.offsetTop
-            }
+          if (oldItemEl) {
+            dragOffsetTop = oldItemEl.offsetTop
           }
+        }
 
-          let oafIndex = -1
-          let nafIndex = -1
+        let oafIndex = -1
+        let nafIndex = -1
+        const oldAllMaps: Record<string, any> = {}
+        let isSelfToChildStatus = false
 
-          if (transform) {
-            // 移出源位置
-            const oldRest = dragNodeRest
-            const newNodeid = getNodeId(prevDragNode)
-            const newRest = nodeMaps[newNodeid]
+        const oldRest = dragNodeRest
+        const newNodeid = getNodeId(prevDragNode)
+        const newRest = nodeMaps[newNodeid]
+        if (transform) {
+          if (oldRest && newRest) {
+            const { level: oldLevel } = oldRest
+            const { level: newLevel } = newRest
 
-            if (oldRest && newRest) {
-              const { level: oldLevel } = oldRest
-              const { level: newLevel } = newRest
+            XEUtils.eachTree([dragNode], item => {
+              oldAllMaps[getNodeId(item)] = item
+            }, { children: mapChildrenField })
 
-              const oldAllMaps: Record<string, any> = {}
-              XEUtils.eachTree([dragNode], item => {
-                oldAllMaps[getNodeId(item)] = item
-              }, { children: mapChildrenField })
+            if (oldLevel && newLevel) {
+              // 子到子
 
-              let isSelfToChildStatus = false
-
-              if (oldLevel && newLevel) {
-                // 子到子
-
-                if (isPeerDrag && !isCrossDrag) {
-                  if (oldRest.item[parentField] !== newRest.item[parentField]) {
-                    // 非同级
-                    return errRest
-                  }
-                } else {
-                  if (!isCrossDrag) {
-                    return errRest
-                  }
-                  if (oldAllMaps[newNodeid]) {
-                    isSelfToChildStatus = true
-                    if (!(isCrossDrag && isSelfToChildDrag)) {
-                      if (VxeUI.modal) {
-                        VxeUI.modal.message({
-                          status: 'error',
-                          content: getI18n('vxe.error.treeDragChild')
-                        })
-                      }
-                      return errRest
-                    }
-                  }
-                }
-              } else if (oldLevel) {
-                // 子到根
-
-                if (!isCrossDrag) {
+              if (isPeerDrag && !isCrossDrag) {
+                if (oldRest.item[parentField] !== newRest.item[parentField]) {
+                  // 非同级
+                  clearNodeDragData()
+                  clearCrossTreeDragStatus()
                   return errRest
                 }
-              } else if (newLevel) {
-                // 根到子
-
+              } else {
                 if (!isCrossDrag) {
+                  clearNodeDragData()
+                  clearCrossTreeDragStatus()
                   return errRest
                 }
                 if (oldAllMaps[newNodeid]) {
@@ -1961,13 +1932,57 @@ export default defineVxeComponent({
                         content: getI18n('vxe.error.treeDragChild')
                       })
                     }
+                    clearNodeDragData()
+                    clearCrossTreeDragStatus()
                     return errRest
                   }
                 }
-              } else {
-                // 根到根
               }
+            } else if (oldLevel) {
+              // 子到根
 
+              if (!isCrossDrag) {
+                clearNodeDragData()
+                clearCrossTreeDragStatus()
+                return errRest
+              }
+            } else if (newLevel) {
+              // 根到子
+
+              if (!isCrossDrag) {
+                clearNodeDragData()
+                clearCrossTreeDragStatus()
+                return errRest
+              }
+              if (oldAllMaps[newNodeid]) {
+                isSelfToChildStatus = true
+                if (!(isCrossDrag && isSelfToChildDrag)) {
+                  if (VxeUI.modal) {
+                    VxeUI.modal.message({
+                      status: 'error',
+                      content: getI18n('vxe.error.treeDragChild')
+                    })
+                  }
+                  clearNodeDragData()
+                  clearCrossTreeDragStatus()
+                  return errRest
+                }
+              }
+            } else {
+              // 根到根
+            }
+          }
+        }
+
+        const isDragToChildFlag = isSelfToChildDrag && dragToChildMethod ? dragToChildMethod(dragParams) : prevDragToChild
+        return Promise.resolve(dEndMethod ? dEndMethod(dragParams) : true).then((status) => {
+          if (!status) {
+            return errRest
+          }
+
+          if (transform) {
+            // 移出源位置
+            if (oldRest && newRest) {
               const fullList = XEUtils.toTreeArray(internalData.afterTreeList, {
                 key: keyField,
                 parentKey: parentField,
