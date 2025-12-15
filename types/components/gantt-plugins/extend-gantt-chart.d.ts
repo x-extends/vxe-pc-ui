@@ -1,6 +1,6 @@
 import { VNode } from 'vue'
 import { VxeComponentStyleType } from '@vxe-ui/core'
-import { VxeGanttConstructor, VxeGanttDefines } from '../gantt'
+import { VxeGanttConstructor, VxeGanttDefines, VxeGanttPrivateMethods } from '../gantt'
 
 /* eslint-disable @typescript-eslint/no-empty-interface,no-use-before-define,@typescript-eslint/no-unused-vars */
 
@@ -12,7 +12,7 @@ export interface VxeGanttExtendChartPrivateMethods<D = any> {
    * @private
    */
   handleTaskBarMousedownEvent(evnt: MouseEvent, params: {
-    $gantt: VxeGanttConstructor<D>
+    $gantt: VxeGanttConstructor<D> & VxeGanttPrivateMethods<D>
     row: D
     scaleType: VxeGanttDefines.ColumnScaleType
   }): void
@@ -20,7 +20,7 @@ export interface VxeGanttExtendChartPrivateMethods<D = any> {
    * @private
    */
   renderGanttTaskBarContent(params: {
-    $gantt: VxeGanttConstructor<D>
+    $gantt: VxeGanttConstructor<D> & VxeGanttPrivateMethods<D>
     source: string
     type: string
     scaleType: VxeGanttDefines.ColumnScaleType
@@ -33,6 +33,14 @@ export interface VxeGanttExtendChartPrivateMethods<D = any> {
     vbStyle: VxeComponentStyleType
     vpStyle: VxeComponentStyleType
   }): VNode[]
+  /**
+   * @private
+   */
+  handleTaskBarResizeStartMousedownEvent(evnt: MouseEvent): void
+  /**
+   * @private
+   */
+  handleTaskBarResizeEndMousedownEvent(evnt: MouseEvent): void
 }
 
 declare module '../gantt' {

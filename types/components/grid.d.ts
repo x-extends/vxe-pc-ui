@@ -442,7 +442,7 @@ export interface GridMethods<D = any> {
 }
 export interface VxeGridMethods<D = any> extends GridMethods<D>, Omit<TableMethods<D>, 'dispatchEvent'> { }
 
-export interface GridPrivateMethods {
+export interface GridPrivateMethods<D = any> {
   callSlot<T = any>(slotFunc: ((params: T) => VxeComponentSlotType | VxeComponentSlotType[]) | string | null, params: T): VxeComponentSlotType[]
   extendTableMethods<T>(methodKeys: T[]): any
   triggerToolbarCommitEvent(params: VxeToolbarPropTypes.ButtonConfig | VxeToolbarPropTypes.ToolConfig, evnt: Event): Promise<any>
@@ -452,7 +452,7 @@ export interface GridPrivateMethods {
   getParentHeight(): number
   getExcludeHeight(): number
 }
-export interface VxeGridPrivateMethods extends GridPrivateMethods { }
+export interface VxeGridPrivateMethods<D = any> extends GridPrivateMethods<D> { }
 
 export type VxeGridEmits = [
   ...VxeTableEmits,

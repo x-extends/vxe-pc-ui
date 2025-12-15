@@ -273,7 +273,7 @@ export namespace VxeGanttPropTypes {
     /**
      * 是否启用拖拽移动日期
      */
-    drag?: boolean
+    move?: boolean
     /**
      * 是否启用拖拽调整日期
      */
@@ -316,22 +316,44 @@ export namespace VxeGanttPropTypes {
      */
     resizeStartMethod?(params: {
       $gantt: VxeGanttConstructor<D>
+      resizeType: 'start' | 'end'
       row: D
+      startDate: Date
+      endDate: Date
     }): boolean
     /**
      * 拖拽结束时是否允许行拖拽调整任务条日期的方法，该方法的返回值用来决定是否允许被拖拽调整日期范围
      */
     resizeEndMethod?(params: {
       $gantt: VxeGanttConstructor<D>
+      resizeType: 'start' | 'end'
       row: D
+      startDate: Date
+      endDate: Date
+      targetStartDate: Date
+      targetEndDate: Date
     }): Promise<boolean> | boolean
+    /**
+     * 自定义拖拽结束时赋值的方法
+     */
+    resizeSetMethod?(params: {
+      $gantt: VxeGanttConstructor<D>
+      resizeType: 'start' | 'end'
+      row: D
+      startDate: Date
+      endDate: Date
+      targetStartDate: Date
+      targetEndDate: Date
+      startValue: any
+      endValue: any
+    }): void
   }
 
-  export interface TaskBarDragConfig<D = any> {
+  export interface TaskBarMoveConfig<D = any> {
     /**
      * 拖拽开始时是否允许行拖拽移动任务条日期的方法，该方法的返回值用来决定是否允许被拖拽
      */
-    dragStartMethod?(params: {
+    moveStartMethod?(params: {
       $gantt: VxeGanttConstructor<D>
       row: D
       startDate: Date
@@ -340,7 +362,7 @@ export namespace VxeGanttPropTypes {
     /**
      * 拖拽结束时是否允许行拖拽移动任务条日期的方法，该方法的返回值用来决定是否允许被拖拽移动到指定日期
      */
-    dragEndMethod?(params: {
+    moveEndMethod?(params: {
       $gantt: VxeGanttConstructor<D>
       row: D
       startDate: Date
@@ -351,7 +373,7 @@ export namespace VxeGanttPropTypes {
     /**
      * 自定义拖拽结束时赋值的方法
      */
-    dragSetMethod?(params: {
+    moveSetMethod?(params: {
       $gantt: VxeGanttConstructor<D>
       row: D
       startDate: Date
@@ -373,7 +395,7 @@ export interface VxeGanttProps<D = any> extends Omit<VxeGridProps<D>, 'layouts'>
   taskBarConfig?: VxeGanttPropTypes.TaskBarConfig<D>
   taskBarTooltipConfig?: VxeGanttPropTypes.TaskBarTooltipConfig<D>
   taskBarResizeConfig?: VxeGanttPropTypes.TaskBarResizeConfig<D>
-  taskBarDragConfig?: VxeGanttPropTypes.TaskBarDragConfig<D>
+  taskBarMoveConfig?: VxeGanttPropTypes.TaskBarMoveConfig<D>
 }
 
 export interface GanttPrivateComputed<D = any> extends GridPrivateComputed<D> {
@@ -381,7 +403,7 @@ export interface GanttPrivateComputed<D = any> extends GridPrivateComputed<D> {
   computeTaskViewOpts: ComputedRef<VxeGanttPropTypes.TaskViewConfig<D>>
   computeTaskViewScaleOpts: ComputedRef<VxeGanttPropTypes.TaskViewScaleConfig>
   computeTaskBarOpts: ComputedRef<VxeGanttPropTypes.TaskBarConfig<D>>
-  computeTaskBarDragOpts: ComputedRef<VxeGanttPropTypes.TaskBarDragConfig<D>>
+  computeTaskBarMoveOpts: ComputedRef<VxeGanttPropTypes.TaskBarMoveConfig<D>>
   computeTaskBarResizeOpts: ComputedRef<VxeGanttPropTypes.TaskBarResizeConfig<D>>
   computeTaskSplitOpts: ComputedRef<VxeGanttPropTypes.TaskSplitConfig>
   computeTaskBarTooltipOpts: ComputedRef<VxeGanttPropTypes.TaskBarTooltipConfig>
@@ -462,7 +484,7 @@ export interface GanttMethods<D = any> extends Omit<GridMethods<D>, 'dispatchEve
 }
 export interface VxeGanttMethods<D = any> extends GanttMethods<D>, Omit<VxeGridMethods<D>, 'dispatchEvent'> { }
 
-export interface GanttPrivateMethods extends GridPrivateMethods {
+export interface GanttPrivateMethods<D = any> extends GridPrivateMethods<D> {
   callSlot<T = any>(slotFunc: ((params: T) => VxeComponentSlotType | VxeComponentSlotType[]) | string | null, params: T): VxeComponentSlotType[]
 
   /**
@@ -506,7 +528,7 @@ export interface GanttPrivateMethods extends GridPrivateMethods {
    */
   handleTaskBarTooltipLeaveEvent(evnt: MouseEvent, params: VxeGanttDefines.TaskBarMouseoverParams): void
 }
-export interface VxeGanttPrivateMethods extends GanttPrivateMethods {}
+export interface VxeGanttPrivateMethods<D = any> extends GanttPrivateMethods<D> {}
 
 export type VxeGanttEmits = [
   ...VxeGridEmits,
@@ -519,6 +541,12 @@ export type VxeGanttEmits = [
   'task-bar-dblclick',
   'task-view-cell-click',
   'task-view-cell-dblclick',
+  'task-move-start',
+  'task-move-drag',
+  'task-move-end',
+  'task-resize-start',
+  'task-resize-drag',
+  'task-resize-end'
 ]
 
 export namespace VxeGanttDefines {
@@ -670,11 +698,35 @@ export namespace VxeGanttDefines {
     _rowIndex: number
   }
 
-  export interface TaskViewCellClickEventParams<D = any> extends GanttEventParams {
+  export interface TaskViewCellClickEventParams<D = any> extends GanttEventParams<D> {
     row: D
     column: ViewColumn<D>
   }
   export interface TaskViewCellDblClickEventParams<D = any> extends TaskViewCellClickEventParams<D> {}
+
+  export interface TaskMoveStartEventParams<D = any> extends GanttEventParams<D> {
+    $gantt: VxeGanttConstructor<D>
+    row: D
+    startDate: Date
+    endDate: Date
+  }
+  export interface TaskMoveDragEventParams<D = any> extends TaskMoveStartEventParams<D> {}
+  export interface TaskMoveEndEventParams<D = any> extends TaskMoveStartEventParams<D> {
+    targetStartDate: Date
+    targetEndDate: Date
+  }
+  export interface TaskResizeStartEventParams<D = any> extends GanttEventParams<D> {
+    $gantt: VxeGanttConstructor<D>
+    resizeType: 'start' | 'end'
+    row: D
+    startDate: Date
+    endDate: Date
+  }
+  export interface TaskResizeDragEventParams<D = any> extends TaskResizeStartEventParams<D> {}
+  export interface TaskResizeEndEventParams<D = any> extends TaskResizeStartEventParams<D> {
+    targetStartDate: Date
+    targetEndDate: Date
+  }
 }
 
 export interface VxeGanttEventProps<D = any> extends VxeGridEventProps<D> {
@@ -684,6 +736,12 @@ export interface VxeGanttEventProps<D = any> extends VxeGridEventProps<D> {
   onTaskBarDblClick?: VxeGanttEvents.TaskBarDblClick<D>
   onTaskViewCellClick?: VxeGanttEvents.TaskViewCellClick<D>
   onTaskViewCellDblClick?: VxeGanttEvents.TaskViewCellDblClick<D>
+  onTaskMoveStart?: VxeGanttEvents.TaskMoveStart<D>
+  onTaskMoveDrag?: VxeGanttEvents.TaskMoveDrag<D>
+  onTaskMoveEnd?: VxeGanttEvents.TaskMoveEnd<D>
+  onTaskResizeStart?: VxeGanttEvents.TaskResizeStart<D>
+  onTaskResizeDrag?: VxeGanttEvents.TaskResizeDrag<D>
+  onTaskResizeEnd?: VxeGanttEvents.TaskResizeEnd<D>
 }
 
 export interface VxeGanttListeners<D = any> extends VxeGridListeners<D> {
@@ -693,6 +751,12 @@ export interface VxeGanttListeners<D = any> extends VxeGridListeners<D> {
   taskBarDblClick?: VxeGanttEvents.TaskBarDblClick<D>
   taskViewCellClick?: VxeGanttEvents.TaskViewCellClick<D>
   taskViewCellDblClick?: VxeGanttEvents.TaskViewCellDblClick<D>
+  taskMoveStart?: VxeGanttEvents.TaskMoveStart<D>
+  taskMoveDrag?: VxeGanttEvents.TaskMoveDrag<D>
+  taskMoveEnd?: VxeGanttEvents.TaskMoveEnd<D>
+  taskResizeStart?: VxeGanttEvents.TaskResizeStart<D>
+  taskResizeDrag?: VxeGanttEvents.TaskResizeDrag<D>
+  taskResizeEnd?: VxeGanttEvents.TaskResizeEnd<D>
 }
 
 export namespace VxeGanttEvents {
@@ -702,6 +766,12 @@ export namespace VxeGanttEvents {
   export type TaskBarDblClick<D = any> = (params: VxeGanttDefines.TaskBarDblClickEventParams<D>) => void
   export type TaskViewCellClick<D = any> = (params: VxeGanttDefines.TaskViewCellClickEventParams<D>) => void
   export type TaskViewCellDblClick<D = any> = (params: VxeGanttDefines.TaskViewCellDblClickEventParams<D>) => void
+  export type TaskMoveStart<D = any> = (params: VxeGanttDefines.TaskMoveStartEventParams<D>) => void
+  export type TaskMoveDrag<D = any> = (params: VxeGanttDefines.TaskMoveDragEventParams<D>) => void
+  export type TaskMoveEnd<D = any> = (params: VxeGanttDefines.TaskMoveEndEventParams<D>) => void
+  export type TaskResizeStart<D = any> = (params: VxeGanttDefines.TaskResizeStartEventParams<D>) => void
+  export type TaskResizeDrag<D = any> = (params: VxeGanttDefines.TaskResizeDragEventParams<D>) => void
+  export type TaskResizeEnd<D = any> = (params: VxeGanttDefines.TaskResizeEndEventParams<D>) => void
 }
 
 export namespace VxeGanttSlotTypes {
