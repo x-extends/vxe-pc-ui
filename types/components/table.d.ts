@@ -3,7 +3,7 @@ import { NormalizedScopedSlot } from 'vue/types/vnode'
 import { DefineVxeComponentApp, DefineVxeComponentOptions, DefineVxeComponentInstance, VxeComponentEventParams, VxeComponentSizeType, ValueOf, VxeGlobalConfig, VxeComponentStyleType, VxeComponentSlotType } from '@vxe-ui/core'
 import { VxeColumnPropTypes, VxeColumnProps, VxeColumnSlotTypes } from './column'
 import { VxeTableExtendCellAreaDefines, VxeTableExtendCellAreaEmits } from './table-plugins'
-import { VxeGridConstructor, VxeGridPrivateMethods } from './grid'
+import { VxeGridConstructor } from './grid'
 import { VxeTooltipPropTypes } from './tooltip'
 import { VxeModalPropTypes } from './modal'
 import { VxeDrawerPropTypes } from './drawer'
@@ -29,7 +29,7 @@ export type VxeTableInstance<D = any> = DefineVxeComponentInstance<{
    */
   internalData: TableInternalData<D>
   $xeParentTable: (VxeTableConstructor<D> & VxeTablePrivateMethods) | null | undefined
-  $xeGrid: (VxeGridConstructor<D> & VxeGridPrivateMethods<D>) | null | undefined
+  $xeGrid: VxeGridConstructor<D> | null | undefined
   $xeGantt: VxeTableDefines.InjectGanttType | null | undefined
   $xeTabs: (VxeTabsConstructor & VxeTabsPrivateMethods) | null
 
