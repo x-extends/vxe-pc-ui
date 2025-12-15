@@ -2667,7 +2667,11 @@ export default defineVxeComponent({
     })
 
     onMounted(() => {
+      const { transform, drag } = props
       const dragOpts = computeDragOpts.value
+      if (drag && !transform) {
+        errLog('vxe.error.notSupportProp', ['drag', 'transform=false', 'transform=true'])
+      }
       if (dragOpts.isCrossTreeDrag) {
         errLog('vxe.error.notProp', ['drag-config.isCrossTreeDrag'])
       }

@@ -2,13 +2,13 @@ import { RenderFunction, SetupContext, Ref, ComputedRef, ComponentPublicInstance
 import { DefineVxeComponentApp, DefineVxeComponentOptions, DefineVxeComponentInstance, VxeComponentBaseOptions, VxeComponentEventParams, VxeComponentSizeType, ValueOf, VxeGlobalConfig, VxeComponentStyleType, VxeComponentSlotType, VxeComponentAlignType } from '@vxe-ui/core'
 import { VxeColumnPropTypes, VxeColumnProps, VxeColumnSlotTypes } from './column'
 import { VxeTableExtendCellAreaDefines, VxeTableExtendCellAreaEmits } from './table-plugins'
-import { VxeGridConstructor } from './grid'
+import { VxeGridConstructor, VxeGridPrivateMethods } from './grid'
 import { VxeTooltipInstance, VxeTooltipPropTypes } from './tooltip'
 import { VxeModalPropTypes } from './modal'
 import { VxeDrawerPropTypes } from './drawer'
 import { VxeToolbarConstructor, VxeToolbarInstance } from './toolbar'
 import { VxeTableCustomPanelConstructor } from './table-module/custom'
-import { VxeGanttConstructor } from './gantt'
+import { VxeGanttConstructor, VxeGanttPrivateMethods } from './gantt'
 import { VxeGanttViewConstructor, VxeGanttViewInstance, VxeGanttViewPrivateMethods } from './gantt-module/gantt-view'
 
 /* eslint-disable no-use-before-define,@typescript-eslint/ban-types */
@@ -27,13 +27,13 @@ export interface VxeTableConstructor<D = any> extends VxeComponentBaseOptions, V
   getComputeMaps(): TablePrivateComputed
   renderVN: RenderFunction
 
-  xeGrid: VxeGridConstructor<D> | null | undefined
-  xeGantt: VxeGanttConstructor<D> | null | undefined
+  xeGrid: (VxeGridConstructor<D> & VxeGridPrivateMethods<D>) | null | undefined
+  xeGantt: VxeTableDefines.InjectGanttType | null | undefined
 
   /**
    * @deprecated
    */
-  xegrid: VxeGridConstructor<D> | null | undefined
+  xegrid: (VxeGridConstructor<D> & VxeGridPrivateMethods<D>) | null | undefined
 }
 
 export interface TablePrivateRef {
@@ -5451,6 +5451,8 @@ export type VxeTableEmits = [
 
 export namespace VxeTableDefines {
   export type AggFuncType = 'sum' | 'count' | 'avg' | 'min' | 'max' | 'first' | 'last'
+
+  export type InjectGanttType<D = any> = (VxeGanttConstructor<D> & VxeGanttPrivateMethods<D>)
 
   export interface SortConfs {
     field: string
