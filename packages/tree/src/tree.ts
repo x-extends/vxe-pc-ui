@@ -2950,7 +2950,11 @@ export default /* define-vxe-component start */ defineVxeComponent({
     const props = $xeTree
     const internalData = $xeTree.internalData
 
+    const { transform, drag } = props
     const dragOpts = $xeTree.computeDragOpts
+    if (drag && !transform) {
+      errLog('vxe.error.notSupportProp', ['drag', 'transform=false', 'transform=true'])
+    }
     if (dragOpts.isCrossTreeDrag) {
       errLog('vxe.error.notProp', ['drag-config.isCrossTreeDrag'])
     }
