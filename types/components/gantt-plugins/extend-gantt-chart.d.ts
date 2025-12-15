@@ -1,6 +1,6 @@
 import { CreateElement, VNode } from 'vue'
 import { VxeComponentStyleType } from '@vxe-ui/core'
-import { VxeGanttConstructor, VxeGanttDefines } from '../gantt'
+import { VxeGanttConstructor, VxeGanttDefines, VxeGanttPrivateMethods } from '../gantt'
 
 /* eslint-disable @typescript-eslint/no-empty-interface,no-use-before-define,@typescript-eslint/no-unused-vars */
 
@@ -20,7 +20,7 @@ export interface VxeGanttExtendChartPrivateMethods<D = any> {
    * @private
    */
   renderGanttTaskBarContent(h: CreateElement, params: {
-    $gantt: VxeGanttConstructor<D>
+    $gantt: VxeGanttConstructor<D> & VxeGanttPrivateMethods<D>
     source: string
     type: string
     scaleType: VxeGanttDefines.ColumnScaleType
@@ -33,6 +33,14 @@ export interface VxeGanttExtendChartPrivateMethods<D = any> {
     vbStyle: VxeComponentStyleType
     vpStyle: VxeComponentStyleType
   }): VNode[]
+  /**
+   * @private
+   */
+  handleTaskBarResizeStartMousedownEvent(evnt: MouseEvent): void
+  /**
+   * @private
+   */
+  handleTaskBarResizeEndMousedownEvent(evnt: MouseEvent): void
 }
 
 declare module '../gantt' {
