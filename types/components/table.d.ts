@@ -2,7 +2,7 @@ import { RenderFunction, SetupContext, Ref, ComputedRef, ComponentPublicInstance
 import { DefineVxeComponentApp, DefineVxeComponentOptions, DefineVxeComponentInstance, VxeComponentBaseOptions, VxeComponentEventParams, VxeComponentSizeType, ValueOf, VxeGlobalConfig, VxeComponentStyleType, VxeComponentSlotType, VxeComponentAlignType } from '@vxe-ui/core'
 import { VxeColumnPropTypes, VxeColumnProps, VxeColumnSlotTypes } from './column'
 import { VxeTableExtendCellAreaDefines, VxeTableExtendCellAreaEmits } from './table-plugins'
-import { VxeGridConstructor, VxeGridPrivateMethods } from './grid'
+import { VxeGridConstructor } from './grid'
 import { VxeTooltipInstance, VxeTooltipPropTypes } from './tooltip'
 import { VxeModalPropTypes } from './modal'
 import { VxeDrawerPropTypes } from './drawer'
@@ -27,13 +27,13 @@ export interface VxeTableConstructor<D = any> extends VxeComponentBaseOptions, V
   getComputeMaps(): TablePrivateComputed
   renderVN: RenderFunction
 
-  xeGrid: (VxeGridConstructor<D> & VxeGridPrivateMethods<D>) | null | undefined
-  xeGantt: VxeTableDefines.InjectGanttType | null | undefined
+  xeGrid: VxeGridConstructor<D> | null | undefined
+  xeGantt: VxeTableDefines.InjectGanttType<D> | null | undefined
 
   /**
    * @deprecated
    */
-  xegrid: (VxeGridConstructor<D> & VxeGridPrivateMethods<D>) | null | undefined
+  xegrid: VxeGridConstructor<D> | null | undefined
 }
 
 export interface TablePrivateRef {
