@@ -5373,6 +5373,7 @@ export type VxeTableEmits = [
   'paste',
   'copy',
   'cut',
+  'context-menu',
 
   'columns-change',
   'data-change',
@@ -5940,6 +5941,8 @@ export namespace VxeTableDefines {
 
   export interface CutParams { }
   export interface CutEventParams<D = any> extends TableEventParams<D>, CutParams { }
+
+  export interface ContextMenuEventParams<D = any> extends TableEventParams<D> {}
 
   export interface ColumnsChangeEventParams<D = any> extends TableEventParams<D> {
     visibleColgroups: ColumnInfo<D>[][]
@@ -6522,6 +6525,7 @@ export interface VxeTableEventProps<D = any> {
   onPaste?: VxeTableEvents.Paste<D>
   onCopy?: VxeTableEvents.Copy<D>
   onCut?: VxeTableEvents.Cut<D>
+  onContextMenu?: VxeTableEvents.ContextMenu<D>
   onColumnsChange?: VxeTableEvents.ColumnsChange<D>
   onDataChange?: VxeTableEvents.DataChange<D>
   onFooterDataChange?: VxeTableEvents.FooterDataChange<D>
@@ -6603,6 +6607,7 @@ export interface VxeTableListeners<D = any> {
   paste?: VxeTableEvents.Paste<D>
   copy?: VxeTableEvents.Copy<D>
   cut?: VxeTableEvents.Cut<D>
+  contextMenu?: VxeTableEvents.ContextMenu<D>
   columnsChange?: VxeTableEvents.ColumnsChange<D>
   dataChange?: VxeTableEvents.DataChange<D>
   footerDataChange?: VxeTableEvents.FooterDataChange<D>
@@ -6683,6 +6688,7 @@ export namespace VxeTableEvents {
   export type Paste<D = VxeTablePropTypes.Row> = (params: VxeTableDefines.PasteEventParams<D>) => void
   export type Copy<D = VxeTablePropTypes.Row> = (params: VxeTableDefines.CopyEventParams<D>) => void
   export type Cut<D = VxeTablePropTypes.Row> = (params: VxeTableDefines.CutEventParams<D>) => void
+  export type ContextMenu<D = VxeTablePropTypes.Row> = (params: VxeTableDefines.ContextMenuEventParams<D>) => void
   export type ColumnsChange<D = VxeTablePropTypes.Row> = (params: VxeTableDefines.ColumnsChangeEventParams<D>) => void
   export type DataChange<D = VxeTablePropTypes.Row> = (params: VxeTableDefines.DataChangeEventParams<D>) => void
   export type FooterDataChange<D = VxeTablePropTypes.Row> = (params: VxeTableDefines.FooterDataChangeEventParams<D>) => void

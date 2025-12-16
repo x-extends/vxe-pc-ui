@@ -489,6 +489,7 @@ export namespace VxeGridDefines {
   export interface PasteEventParams<D = any> extends GridEventParams<D>, VxeTableDefines.PasteEventParams<D> { }
   export interface CopyEventParams<D = any> extends GridEventParams<D>, VxeTableDefines.CopyEventParams<D> { }
   export interface CutEventParams<D = any> extends GridEventParams<D>, VxeTableDefines.CutEventParams<D> { }
+  export interface ContextMenuEventParams<D = any> extends GridEventParams<D>, VxeTableDefines.ContextMenuEventParams<D> { }
   export interface ColumnsChangeEventParams<D = any> extends GridEventParams<D>, VxeTableDefines.ColumnsChangeEventParams<D> { }
   export interface DataChangeEventParams<D = any> extends GridEventParams<D>, VxeTableDefines.DataChangeEventParams<D> { }
   export interface FooterDataChangeEventParams<D = any> extends GridEventParams<D>, VxeTableDefines.FooterDataChangeEventParams<D> { }
@@ -621,6 +622,7 @@ export interface VxeGridEventProps<D = any> {
   onPaste?: VxeGridEvents.Paste<D>
   onCopy?: VxeGridEvents.Copy<D>
   onCut?: VxeGridEvents.Cut<D>
+  onContextMenu?: VxeGridEvents.ContextMenu<D>
   onColumnsChange?: VxeGridEvents.ColumnsChange<D>
   onDataChange?: VxeGridEvents.DataChange<D>
   onFooterDataChange?: VxeGridEvents.FooterDataChange<D>
@@ -705,6 +707,7 @@ export interface VxeGridListeners<D = any> {
   paste?: VxeGridEvents.Paste<D>
   copy?: VxeGridEvents.Copy<D>
   cut?: VxeGridEvents.Cut<D>
+  contextMenu?: VxeGridEvents.ContextMenu<D>
   columnsChange?: VxeGridEvents.ColumnsChange<D>
   dataChange?: VxeGridEvents.DataChange<D>
   footerDataChange?: VxeGridEvents.FooterDataChange<D>
@@ -789,6 +792,7 @@ export namespace VxeGridEvents {
   export type Paste<D = any> = (params: VxeGridDefines.PasteEventParams<D>) => void
   export type Copy<D = any> = (params: VxeGridDefines.CopyEventParams<D>) => void
   export type Cut<D = any> = (params: VxeGridDefines.CutEventParams<D>) => void
+  export type ContextMenu<D = any> = (params: VxeGridDefines.ContextMenuEventParams<D>) => void
   export type ColumnsChange<D = any> = (params: VxeGridDefines.ColumnsChangeEventParams<D>) => void
   export type DataChange<D = any> = (params: VxeGridDefines.DataChangeEventParams<D>) => void
   export type FooterDataChange<D = any> = (params: VxeGridDefines.FooterDataChangeEventParams<D>) => void
