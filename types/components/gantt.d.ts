@@ -656,9 +656,9 @@ export namespace VxeGanttDefines {
     row: D
   }
   export interface TaskCellClickEventParams<D = any> extends TaskCellClickParams<D>, GanttEventParams {}
-  export interface TaskCellDblClickEventParams<D = any> extends TaskCellClickEventParams<D> {}
+  export interface TaskCellDblclickEventParams<D = any> extends TaskCellClickEventParams<D> {}
   export interface TaskBarClickEventParams<D = any> extends TaskBarClickParams<D>, GanttEventParams {}
-  export interface TaskBarDblClickEventParams<D = any> extends TaskBarClickEventParams<D> {}
+  export interface TaskBarDblclickEventParams<D = any> extends TaskBarClickEventParams<D> {}
 
   export interface TaskBarMouseoverParams<D = any> extends GanttEventParams {
     scaleType: VxeGanttDefines.ColumnScaleType
@@ -702,7 +702,7 @@ export namespace VxeGanttDefines {
     row: D
     column: ViewColumn<D>
   }
-  export interface TaskViewCellDblClickEventParams<D = any> extends TaskViewCellClickEventParams<D> {}
+  export interface TaskViewCellDblclickEventParams<D = any> extends TaskViewCellClickEventParams<D> {}
 
   export interface TaskMoveStartEventParams<D = any> extends GanttEventParams<D> {
     $gantt: VxeGanttConstructor<D>
@@ -731,11 +731,11 @@ export namespace VxeGanttDefines {
 
 export interface VxeGanttEventProps<D = any> extends VxeGridEventProps<D> {
   onTaskCellClick?: VxeGanttEvents.TaskCellClick<D>
-  onTaskCellDblClick?: VxeGanttEvents.TaskCellDblClick<D>
+  onTaskCellDblclick?: VxeGanttEvents.TaskCellDblclick<D>
   onTaskBarClick?: VxeGanttEvents.TaskBarClick<D>
-  onTaskBarDblClick?: VxeGanttEvents.TaskBarDblClick<D>
+  onTaskBarDblclick?: VxeGanttEvents.TaskBarDblclick<D>
   onTaskViewCellClick?: VxeGanttEvents.TaskViewCellClick<D>
-  onTaskViewCellDblClick?: VxeGanttEvents.TaskViewCellDblClick<D>
+  onTaskViewCellDblclick?: VxeGanttEvents.TaskViewCellDblclick<D>
   onTaskMoveStart?: VxeGanttEvents.TaskMoveStart<D>
   onTaskMoveDrag?: VxeGanttEvents.TaskMoveDrag<D>
   onTaskMoveEnd?: VxeGanttEvents.TaskMoveEnd<D>
@@ -746,11 +746,11 @@ export interface VxeGanttEventProps<D = any> extends VxeGridEventProps<D> {
 
 export interface VxeGanttListeners<D = any> extends VxeGridListeners<D> {
   taskCellClick?: VxeGanttEvents.TaskCellClick<D>
-  taskCellDblClick?: VxeGanttEvents.TaskCellDblClick<D>
+  taskCellDblclick?: VxeGanttEvents.TaskCellDblclick<D>
   taskBarClick?: VxeGanttEvents.TaskBarClick<D>
-  taskBarDblClick?: VxeGanttEvents.TaskBarDblClick<D>
+  taskBarDblclick?: VxeGanttEvents.TaskBarDblclick<D>
   taskViewCellClick?: VxeGanttEvents.TaskViewCellClick<D>
-  taskViewCellDblClick?: VxeGanttEvents.TaskViewCellDblClick<D>
+  taskViewCellDblclick?: VxeGanttEvents.TaskViewCellDblclick<D>
   taskMoveStart?: VxeGanttEvents.TaskMoveStart<D>
   taskMoveDrag?: VxeGanttEvents.TaskMoveDrag<D>
   taskMoveEnd?: VxeGanttEvents.TaskMoveEnd<D>
@@ -761,11 +761,11 @@ export interface VxeGanttListeners<D = any> extends VxeGridListeners<D> {
 
 export namespace VxeGanttEvents {
   export type TaskCellClick<D = any> = (params: VxeGanttDefines.TaskCellClickEventParams<D>) => void
-  export type TaskCellDblClick<D = any> = (params: VxeGanttDefines.TaskCellDblClickEventParams<D>) => void
+  export type TaskCellDblclick<D = any> = (params: VxeGanttDefines.TaskCellDblclickEventParams<D>) => void
   export type TaskBarClick<D = any> = (params: VxeGanttDefines.TaskBarClickEventParams<D>) => void
-  export type TaskBarDblClick<D = any> = (params: VxeGanttDefines.TaskBarDblClickEventParams<D>) => void
+  export type TaskBarDblclick<D = any> = (params: VxeGanttDefines.TaskBarDblclickEventParams<D>) => void
   export type TaskViewCellClick<D = any> = (params: VxeGanttDefines.TaskViewCellClickEventParams<D>) => void
-  export type TaskViewCellDblClick<D = any> = (params: VxeGanttDefines.TaskViewCellDblClickEventParams<D>) => void
+  export type TaskViewCellDblclick<D = any> = (params: VxeGanttDefines.TaskViewCellDblclickEventParams<D>) => void
   export type TaskMoveStart<D = any> = (params: VxeGanttDefines.TaskMoveStartEventParams<D>) => void
   export type TaskMoveDrag<D = any> = (params: VxeGanttDefines.TaskMoveDragEventParams<D>) => void
   export type TaskMoveEnd<D = any> = (params: VxeGanttDefines.TaskMoveEndEventParams<D>) => void
