@@ -645,7 +645,7 @@ export namespace VxeGanttDefines {
     /**
      * 线类型
      */
-    lineTyle?: 'dashed' | 'solid' | 'flowDashed'
+    lineType?: 'dashed' | 'solid' | 'flowDashed'
     /**
      * 显示箭头
      */
