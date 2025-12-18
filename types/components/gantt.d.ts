@@ -1,8 +1,8 @@
 import { RenderFunction, SetupContext, ComputedRef, Ref } from 'vue'
-import { DefineVxeComponentApp, DefineVxeComponentOptions, DefineVxeComponentInstance, VxeComponentBaseOptions, VxeComponentEventParams, ValueOf, VxeComponentSlotType, VxeComponentAlignType } from '@vxe-ui/core'
+import { DefineVxeComponentApp, DefineVxeComponentOptions, DefineVxeComponentInstance, VxeComponentBaseOptions, VxeComponentEventParams, ValueOf, VxeComponentSlotType, VxeComponentAlignType, VxeComponentStatusType } from '@vxe-ui/core'
 import { GridPrivateRef, VxeGridProps, VxeGridPropTypes, GridPrivateComputed, GridReactData, GridInternalData, GridMethods, GridPrivateMethods, VxeGridEmits, VxeGridSlots, VxeGridListeners, VxeGridEventProps, VxeGridMethods } from './grid'
 import { VxeTablePropTypes } from './table'
-import { VxeGanttViewInstance } from './gantt-module/gantt-view'
+import { VxeGanttViewInstance, VxeGanttViewPrivateMethods } from './gantt-module/gantt-view'
 import { VxeTooltipPropTypes } from './tooltip'
 
 /* eslint-disable no-use-before-define,@typescript-eslint/ban-types */
@@ -23,7 +23,7 @@ export interface VxeGanttConstructor<D = any> extends VxeComponentBaseOptions, V
 }
 
 export interface GanttPrivateRef<D = any> extends GridPrivateRef<D> {
-  refGanttView: Ref<VxeGanttViewInstance | undefined>
+  refGanttView: Ref<(VxeGanttViewInstance & VxeGanttViewPrivateMethods) | undefined>
   refGanttContainerElem: Ref<HTMLDivElement | undefined>
   refClassifyWrapperElem: Ref<HTMLDivElement | undefined>
 }
@@ -34,6 +34,21 @@ export namespace VxeGanttPropTypes {
   export type Layouts = VxeGanttDefines.LayoutKey[] | VxeGanttDefines.LayoutKey[][]
   export type Column<D = any> = VxeGridPropTypes.Column<D>
   export type Columns<D = any> = Column<D>[]
+  export interface Link<D = any> extends VxeGanttDefines.LinkStyleConfig {
+    /**
+     * 线类型
+     */
+    type: VxeGanttDependencyType
+    /**
+     * 从指定行
+     */
+    from: D | string | number
+    /**
+     * 到目标行
+     */
+    to: D | string | number
+  }
+  export type Links<D = any> = Link<D>[]
   export interface PagerConfig extends VxeGridPropTypes.PagerConfig {}
   export interface ProxyConfig<D = any> extends VxeGridPropTypes.ProxyConfig<D> {}
   export interface ToolbarConfig extends VxeGridPropTypes.ToolbarConfig {}
@@ -240,6 +255,13 @@ export namespace VxeGanttPropTypes {
     completedBgColor?: string
   }
 
+  export interface TaskLinkConfig extends VxeGanttDefines.LinkStyleConfig {
+    /**
+     * 是否启用
+     */
+    enabled?: boolean
+  }
+
   export interface TaskBarConfig<D = any> {
     /**
      * 是否显示进度条
@@ -387,11 +409,16 @@ export namespace VxeGanttPropTypes {
 }
 
 export interface VxeGanttProps<D = any> extends Omit<VxeGridProps<D>, 'layouts'> {
+  /**
+   * 依赖线
+   */
+  links?: VxeGanttPropTypes.Links<D>
   layouts?: VxeGanttPropTypes.Layouts
   taskConfig?: VxeGanttPropTypes.TaskConfig
   taskViewScaleConfig?: VxeGanttPropTypes.TaskViewScaleConfig
   taskViewConfig?: VxeGanttPropTypes.TaskViewConfig<D>
   taskSplitConfig?: VxeGanttPropTypes.TaskSplitConfig
+  taskLinkConfig?: VxeGanttPropTypes.TaskLinkConfig
   taskBarConfig?: VxeGanttPropTypes.TaskBarConfig<D>
   taskBarTooltipConfig?: VxeGanttPropTypes.TaskBarTooltipConfig<D>
   taskBarResizeConfig?: VxeGanttPropTypes.TaskBarResizeConfig<D>
@@ -407,6 +434,7 @@ export interface GanttPrivateComputed<D = any> extends GridPrivateComputed<D> {
   computeTaskBarResizeOpts: ComputedRef<VxeGanttPropTypes.TaskBarResizeConfig<D>>
   computeTaskSplitOpts: ComputedRef<VxeGanttPropTypes.TaskSplitConfig>
   computeTaskBarTooltipOpts: ComputedRef<VxeGanttPropTypes.TaskBarTooltipConfig>
+  computeTaskLinkOpts: ComputedRef<VxeGanttPropTypes.TaskLinkConfig>
   computeTaskViewScales: ComputedRef<VxeGanttDefines.ColumnScaleType[] | VxeGanttDefines.ColumnScaleConfig[] | undefined>
   computeScaleUnit: ComputedRef<VxeGanttDefines.ColumnScaleType>
   computeMinScale: ComputedRef<VxeGanttDefines.ColumnScaleObj>
@@ -425,6 +453,7 @@ export interface GanttReactData<D = any> extends GridReactData<D> {
   showLeftView: boolean
   showRightView: boolean
   taskScaleList: VxeGanttDefines.ColumnScaleObj[]
+  tableLinks: VxeGanttDefines.LinkConfObj[]
 
   // 存放 bar tooltip 相关信息
   barTipStore: {
@@ -438,9 +467,15 @@ export interface GanttReactData<D = any> extends GridReactData<D> {
       _rowIndex: number
     }
   }
+
+  linkList: VxeGanttDefines.LinkConfObj[]
+  upLinkFlag: number
 }
 
 export interface GanttInternalData extends GridInternalData {
+  linkFromConfMaps: Record<string, VxeGanttDefines.LinkConfObj[]>
+  linkFromKeyMaps: Record<string, VxeGanttDefines.LinkConfObj>
+  linkUniqueMaps: Record<string, VxeGanttDefines.LinkConfObj>
   resizeTableWidth: number
   barTipTimeout?: any
   dragBarRow?: any
@@ -527,6 +562,18 @@ export interface GanttPrivateMethods<D = any> extends GridPrivateMethods<D> {
    * @private
    */
   handleTaskBarTooltipLeaveEvent(evnt: MouseEvent, params: VxeGanttDefines.TaskBarMouseoverParams): void
+  /**
+   * @private
+   */
+  handleTableLinks(): void
+  /**
+   * @private
+   */
+  handleTaskAddLink(item: VxeGanttPropTypes.Link, linkConfs: VxeGanttDefines.LinkConfObj[], fromConfMaps: Record<string, VxeGanttDefines.LinkConfObj[]>, fromKeyMaps: Record<string, VxeGanttDefines.LinkConfObj>, uniqueMaps: Record<string, VxeGanttDefines.LinkConfObj>): void
+  /**
+   * @private
+   */
+  handleTaskUpdateLinks(links: VxeGanttPropTypes.Links): Promise<void>
 }
 export interface VxeGanttPrivateMethods<D = any> extends GanttPrivateMethods<D> {}
 
@@ -549,12 +596,61 @@ export type VxeGanttEmits = [
   'task-resize-end'
 ]
 
+/**
+ * 依赖线枚举类型
+ */
+export enum VxeGanttDependencyType {
+  /**
+   * 结束后才开始，表示一个任务必须在另一个任务开始之前完成
+   */
+  FinishToStart = 0,
+  /**
+   * 开始到结束，表示从某个过程的开始到结束的整个过程
+   */
+  StartToFinish = 1,
+  /**
+   * 开始后才开始，表示一个活动结束了，另一个活动才能开始，它们之间按先后顺序进行
+   */
+  StartToStart = 2,
+  /**
+   * 完成到完成，表示一个任务必须在另一个任务完成之后才能完成
+   */
+  FinishToFinish = 3
+}
+
 export namespace VxeGanttDefines {
   export interface GanttEventParams<D = any> extends VxeComponentEventParams {
     $gantt: VxeGanttConstructor<D>
   }
 
   export type LayoutKey = 'Form' | 'Toolbar' | 'Top' | 'Gantt' | 'Bottom' | 'Pager'
+
+  export interface LinkConfObj<D = any> extends VxeGanttPropTypes.Link<D> {
+    leColorKey?: string
+  }
+
+  export interface LinkStyleConfig {
+    /**
+     * 线颜色
+     */
+    lineColor?: string
+    /**
+     * 线状态颜色,如果需要自定义颜色使用 lineColor
+     */
+    lineStatus?: VxeComponentStatusType
+    /**
+     * 线宽度
+     */
+    lineWidth?: number | string
+    /**
+     * 线类型
+     */
+    lineTyle?: 'dashed' | 'solid' | 'flowDashed'
+    /**
+     * 显示箭头
+     */
+    showArrow?: boolean
+  }
 
   export interface GroupColumn<D = any> {
     scaleItem: ColumnScaleObj
