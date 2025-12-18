@@ -1,10 +1,31 @@
 import { CreateElement, VNode } from 'vue'
 import { VxeComponentStyleType } from '@vxe-ui/core'
-import { VxeGanttConstructor, VxeGanttDefines, VxeGanttPrivateMethods } from '../gantt'
+import { VxeGanttConstructor, VxeGanttPropTypes, VxeGanttDefines, VxeGanttPrivateMethods } from '../gantt'
+import { VxeGanttViewConstructor, VxeGanttViewPrivateMethods } from '../gantt-module/gantt-view'
 
 /* eslint-disable @typescript-eslint/no-empty-interface,no-use-before-define,@typescript-eslint/no-unused-vars */
 
 export interface VxeGanttExtendChartMethods<D = any> {
+  /**
+   * 设置任务依赖线
+   */
+  setTaskLinks(links: VxeGanttPropTypes.Links): Promise<void>
+  /**
+   * 获取任务依赖线
+   */
+  getTaskLinks(): VxeGanttDefines.LinkConfObj<D>[]
+  /**
+   * 清除所有任务依赖线
+   */
+  clearTaskLinks(): Promise<void>
+  /**
+   * 添加任务依赖线
+   */
+  addTaskLink(link: VxeGanttPropTypes.Link | VxeGanttPropTypes.Links): Promise<{ links: VxeGanttDefines.LinkConfObj<D>[] }>
+  /**
+   * 移除任务依赖线
+   */
+  removeTaskLink(fromOrLink: string | number | Partial<VxeGanttPropTypes.Link> | Partial<VxeGanttPropTypes.Link>[]): Promise<{ links: VxeGanttDefines.LinkConfObj<D>[] }>
 }
 
 export interface VxeGanttExtendChartPrivateMethods<D = any> {
@@ -41,6 +62,14 @@ export interface VxeGanttExtendChartPrivateMethods<D = any> {
    * @private
    */
   handleTaskBarResizeEndMousedownEvent(evnt: MouseEvent): void
+  /**
+   * @private
+   */
+  renderGanttTaskLines(h: CreateElement): VNode[]
+  /**
+   * @private
+   */
+  handleUpdateTaskLink($xeGanttView: VxeGanttViewConstructor & VxeGanttViewPrivateMethods): void
 }
 
 declare module '../gantt' {
