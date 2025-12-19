@@ -562,18 +562,6 @@ export interface GanttPrivateMethods<D = any> extends GridPrivateMethods<D> {
    * @private
    */
   handleTaskBarTooltipLeaveEvent(evnt: MouseEvent, params: VxeGanttDefines.TaskBarMouseoverParams): void
-  /**
-   * @private
-   */
-  handleTableLinks(): void
-  /**
-   * @private
-   */
-  handleTaskAddLink(item: VxeGanttPropTypes.Link, linkConfs: VxeGanttDefines.LinkConfObj[], fromConfMaps: Record<string, VxeGanttDefines.LinkConfObj[]>, fromKeyMaps: Record<string, VxeGanttDefines.LinkConfObj>, uniqueMaps: Record<string, VxeGanttDefines.LinkConfObj>): void
-  /**
-   * @private
-   */
-  handleTaskUpdateLinks(links: VxeGanttPropTypes.Links): Promise<void>
 }
 export interface VxeGanttPrivateMethods<D = any> extends GanttPrivateMethods<D> {}
 
