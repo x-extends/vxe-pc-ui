@@ -472,7 +472,7 @@ export type VxeGridEmits = [
 export namespace VxeGridDefines {
   export interface GridEventParams<D = any> extends VxeComponentEventParams {
     $table: VxeTableConstructor<D>
-    $grid: VxeGridConstructor<D> | null | undefined
+    $grid: VxeGridConstructor<D>
     $gantt: VxeGanttConstructor<D> | null | undefined
   }
 
