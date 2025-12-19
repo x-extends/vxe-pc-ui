@@ -70,6 +70,14 @@ export interface VxeGanttExtendChartPrivateMethods<D = any> {
    * @private
    */
   handleUpdateTaskLink($xeGanttView: VxeGanttViewConstructor & VxeGanttViewPrivateMethods): void
+  /**
+   * @private
+   */
+  handleTableLinks(): void
+  /**
+   * @private
+   */
+  handleTaskUpdateLinks(links: VxeGanttPropTypes.Links): Promise<void>
 }
 
 declare module '../gantt' {
