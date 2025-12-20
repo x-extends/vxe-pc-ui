@@ -6799,6 +6799,14 @@ export namespace VxeTableSlotTypes {
     groupField: string
     childCount: number
   }
+  export interface ColumnGroupValuesSlotParams<D = any> extends BaseSlotParams<D> {
+    row: D
+    column: VxeTableDefines.ColumnInfo<D>
+    groupContent: string
+    groupField: string
+    childCount: number
+    aggValue: number
+  }
 
   export interface HeaderTooltipSlotParams<D = any> {
     column: VxeTableDefines.ColumnInfo<D>

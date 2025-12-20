@@ -907,8 +907,8 @@ export namespace VxeGridSlotTypes {
 
     type: string
     fixed: VxeColumnPropTypes.Fixed
-    checked?: boolean
-    indeterminate?: boolean
+    checked: boolean
+    indeterminate: boolean
     seq: string | number
     level: number
     isEdit: boolean
@@ -919,6 +919,11 @@ export namespace VxeGridSlotTypes {
     item: any
     data: any
     tooltipContent: string
+    groupContent: string
+    groupField: string
+    childCount: number
+    groupValues: number
+    aggValue: number
 
     /**
      * @deprecated
@@ -993,12 +998,12 @@ export interface VxeGridSlots<D = any> {
    * 自定义左侧模板
    */
   asideLeft?(params: VxeGridSlotTypes.AsideLeftSlotParams<D>): any
-  'aside-left'?(params: VxeGridSlotTypes.AsideLeftSlotParams<D>): any
+  // 'aside-left'?(params: VxeGridSlotTypes.AsideLeftSlotParams<D>): any
   /**
    * 自定义右侧模板
    */
   asideRight?(params: VxeGridSlotTypes.AsideRightSlotParams<D>): any
-  'aside-right'?(params: VxeGridSlotTypes.AsideRightSlotParams<D>): any
+  // 'aside-right'?(params: VxeGridSlotTypes.AsideRightSlotParams<D>): any
   /**
    * 自定义分页模板
    */
@@ -1008,13 +1013,13 @@ export interface VxeGridSlots<D = any> {
    * 只对 row-config.drag 开启后有效，自定义行拖拽按钮图标
    */
   rowDragIcon?(params: VxeGridSlotTypes.RowDragIconSlotParams<D>): any
-  'row-drag-icon'?(params: VxeGridSlotTypes.RowDragIconSlotParams<D>): any
+  // 'row-drag-icon'?(params: VxeGridSlotTypes.RowDragIconSlotParams<D>): any
 
   /**
    * 只对 column-config.drag 开启后有效，自定义列拖拽按钮图标
    */
   columnDragIcon?(params: VxeGridSlotTypes.RowDragIconSlotParams<D> | VxeGridSlotTypes.ColumnDragIconSlotParams<D>): any
-  'column-drag-icon'?(params: VxeGridSlotTypes.RowDragIconSlotParams<D> | VxeGridSlotTypes.ColumnDragIconSlotParams<D>): any
+  // 'column-drag-icon'?(params: VxeGridSlotTypes.RowDragIconSlotParams<D> | VxeGridSlotTypes.ColumnDragIconSlotParams<D>): any
 }
 
 export const Grid: typeof VxeGrid
