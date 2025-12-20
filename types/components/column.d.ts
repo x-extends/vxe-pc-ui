@@ -417,10 +417,15 @@ export namespace VxeColumnPropTypes {
     columnDragIcon?: string | ((params: VxeTableSlotTypes.ColumnDragIconSlotParams<D>) => VxeComponentSlotType[] | VxeComponentSlotType) | null
     'column-drag-icon'?: string | ((params: VxeTableSlotTypes.ColumnDragIconSlotParams<D>) => VxeComponentSlotType[] | VxeComponentSlotType) | null
     /**
-     * 只对 aggregate-config 开启后有效，自定义分组内容模板
+     * 只对 aggregate-config 开启后有效，自定义分组列内容模板
      */
     groupContent?: string | ((params: VxeTableSlotTypes.ColumnGroupContentSlotParams<D>) => VxeComponentSlotType[] | VxeComponentSlotType) | null
     'group-content'?: string | ((params: VxeTableSlotTypes.ColumnGroupContentSlotParams<D>) => VxeComponentSlotType[] | VxeComponentSlotType) | null
+    /**
+     * 只对 agg-func 开启后有效，自定义分组列聚合数据模板
+     */
+    groupValues?: string | ((params: VxeTableSlotTypes.ColumnGroupValuesSlotParams<D>) => VxeComponentSlotType[] | VxeComponentSlotType) | null
+    'group-values'?: string | ((params: VxeTableSlotTypes.ColumnGroupValuesSlotParams<D>) => VxeComponentSlotType[] | VxeComponentSlotType) | null
 
     /**
      * 已废弃
@@ -815,10 +820,15 @@ export interface VxeColumnSlots<D = any> {
   columnDragIcon?: (params: VxeTableSlotTypes.ColumnDragIconSlotParams<D>) => any
   'column-drag-icon'?: (params: VxeTableSlotTypes.ColumnDragIconSlotParams<D>) => any
   /**
-   * 只对 aggregate-config 开启后有效，自定义分组内容模板
+   * 只对 aggregate-config 开启后有效，自定义分组列内容模板
    */
   groupContent?: (params: VxeTableSlotTypes.ColumnGroupContentSlotParams<D>) => any
   'group-content'?: (params: VxeTableSlotTypes.ColumnGroupContentSlotParams<D>) => any
+  /**
+   * 只对 agg-func 开启后有效，自定义分组列聚合数据模板
+   */
+  groupValues?: (params: VxeTableSlotTypes.ColumnGroupValuesSlotParams<D>) => any
+  'group-values'?: (params: VxeTableSlotTypes.ColumnGroupValuesSlotParams<D>) => any
 
   /**
    * 已废弃
