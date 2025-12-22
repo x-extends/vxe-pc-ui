@@ -601,19 +601,23 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const reactData = $xeSelect.reactData
       const internalData = $xeSelect.internalData
 
-      const { value, filterable, filterMethod } = props
+      const { remote, value, filterable, filterMethod } = props
       const { searchValue } = reactData
       const { fullData, optFullValMaps } = internalData
       const labelField = $xeSelect.computeLabelField
       const valueField = $xeSelect.computeValueField
       const searchStr = `${searchValue || ''}`.toLowerCase()
       let avList: any[] = []
-      if (filterable && filterMethod) {
-        avList = fullData.filter(option => isOptionVisible(option) && filterMethod({ $select: $xeSelect, group: null, option, searchValue, value }))
-      } else if (filterable) {
-        avList = fullData.filter(option => isOptionVisible(option) && (!searchStr || `${option[labelField] || option[valueField]}`.toLowerCase().indexOf(searchStr) > -1))
-      } else {
+      if (remote) {
         avList = fullData.filter(isOptionVisible)
+      } else {
+        if (filterable && filterMethod) {
+          avList = fullData.filter(option => isOptionVisible(option) && filterMethod({ $select: $xeSelect, group: null, option, searchValue, value }))
+        } else if (filterable) {
+          avList = fullData.filter(option => isOptionVisible(option) && (!searchStr || `${option[labelField] || option[valueField]}`.toLowerCase().indexOf(searchStr) > -1))
+        } else {
+          avList = fullData.filter(isOptionVisible)
+        }
       }
       avList.forEach((item, index) => {
         const cacheItem = optFullValMaps[item[valueField]]
