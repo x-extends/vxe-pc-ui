@@ -481,19 +481,23 @@ export default defineVxeComponent({
      * 处理选项，当选项被动态显示/隐藏时可能会用到
      */
     const handleOption = () => {
-      const { modelValue, filterable, filterMethod } = props
+      const { remote, modelValue, filterable, filterMethod } = props
       const { searchValue } = reactData
       const { fullData, optFullValMaps } = internalData
       const labelField = computeLabelField.value
       const valueField = computeValueField.value
       const searchStr = `${searchValue || ''}`.toLowerCase()
       let avList: any[] = []
-      if (filterable && filterMethod) {
-        avList = fullData.filter(option => isOptionVisible(option) && filterMethod({ $select: $xeSelect, group: null, option, searchValue, value: modelValue }))
-      } else if (filterable) {
-        avList = fullData.filter(option => isOptionVisible(option) && (!searchStr || `${option[labelField] || option[valueField]}`.toLowerCase().indexOf(searchStr) > -1))
-      } else {
+      if (remote) {
         avList = fullData.filter(isOptionVisible)
+      } else {
+        if (filterable && filterMethod) {
+          avList = fullData.filter(option => isOptionVisible(option) && filterMethod({ $select: $xeSelect, group: null, option, searchValue, value: modelValue }))
+        } else if (filterable) {
+          avList = fullData.filter(option => isOptionVisible(option) && (!searchStr || `${option[labelField] || option[valueField]}`.toLowerCase().indexOf(searchStr) > -1))
+        } else {
+          avList = fullData.filter(isOptionVisible)
+        }
       }
       avList.forEach((item, index) => {
         const cacheItem = optFullValMaps[item[valueField]]
