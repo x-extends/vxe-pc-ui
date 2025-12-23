@@ -280,5 +280,6 @@ declare module '@vxe-ui/core' {
     GANTT_VIEW_LEFT_CLOSE?: string
     GANTT_VIEW_RIGHT_OPEN?: string
     GANTT_VIEW_RIGHT_CLOSE?: string
+    GANTT_VIEW_TASK_MILESTONE?: string
   }
 }
