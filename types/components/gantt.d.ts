@@ -61,6 +61,10 @@ export namespace VxeGanttPropTypes {
      */
     endField?: string
     /**
+     * 任务类型
+     */
+    typeField?: string
+    /**
      * 进度的字段名
      */
     progressField?: string
@@ -247,11 +251,53 @@ export namespace VxeGanttPropTypes {
     completedBgColor?: string
   }
 
-  export interface TaskLinkConfig extends VxeGanttDefines.LinkStyleConfig {
+  export interface TaskLinkConfig<D = any> extends VxeGanttDefines.LinkStyleConfig {
     /**
      * 是否启用
      */
     enabled?: boolean
+    /**
+     * 当鼠标点击线时，是否要高亮当前线
+     */
+    isCurrent?: boolean
+    /**
+     * 当鼠标移到线时，是否要高亮当前线
+     */
+    isHover?: boolean
+    /**
+     * 是否启用双击删除当前线
+     */
+    isDblclickToRemove?: boolean
+    /**
+     * 删除线之前的方法，该方法的返回值用来决定是否允许被删除
+     */
+    beforeRemoveMethod?(params: {
+      $gantt: VxeGanttConstructor<D>
+    }): Promise<boolean> | boolean
+    /**
+     * 删除线后前的方法
+     */
+    afterRemoveMethod?(params: {
+      $gantt: VxeGanttConstructor<D>
+    }): void
+    /**
+     * 拖拽开始时是否允许依赖线创建的方法，该方法的返回值用来决定是否允许被拖拽
+     */
+    createStartMethod?(params: {
+      $gantt: VxeGanttConstructor<D>
+    }): boolean
+    /**
+     * 拖拽依赖线创建结束时的方法，该方法的返回值用来决定是否允依赖线许被创建
+     */
+    createEndMethod?(params: {
+      $gantt: VxeGanttConstructor<D>
+    }): Promise<boolean> | boolean
+    /**
+     * 自定义拖拽结束时依赖线创建被赋值的方法
+     */
+    createSetMethod?(params: {
+      $gantt: VxeGanttConstructor<D>
+    }): void
   }
 
   export interface TaskBarConfig<D = any> {
@@ -287,11 +333,15 @@ export namespace VxeGanttPropTypes {
     /**
      * 是否启用拖拽移动日期
      */
-    move?: boolean
+    moveable?: boolean
     /**
      * 是否启用拖拽调整日期
      */
-    resize?: boolean
+    resizable?: boolean
+    /**
+     * 是否允许自定义创建依赖线
+     */
+    linkCreatable?: boolean
   }
 
   export interface TaskBarTooltipConfig<D = any> {
@@ -318,7 +368,7 @@ export namespace VxeGanttPropTypes {
 
   export interface TaskBarResizeConfig<D = any> {
     /**
-     * 是否允许拖拽调整任务条起始日期
+     * 是否允许拖拽调整任务起始日期
      */
     allowStart?: boolean
     /**
@@ -326,7 +376,7 @@ export namespace VxeGanttPropTypes {
      */
     allowEnd?: boolean
     /**
-     * 拖拽开始时是否允许行拖拽调整任务条日期的方法，该方法的返回值用来决定是否允许被拖拽
+     * 拖拽开始时是否允许行拖拽调整任务日期的方法，该方法的返回值用来决定是否允许被拖拽
      */
     resizeStartMethod?(params: {
       $gantt: VxeGanttConstructor<D>
@@ -336,7 +386,7 @@ export namespace VxeGanttPropTypes {
       endDate: Date
     }): boolean
     /**
-     * 拖拽结束时是否允许行拖拽调整任务条日期的方法，该方法的返回值用来决定是否允许被拖拽调整日期范围
+     * 拖拽结束时是否允许行拖拽调整任务日期的方法，该方法的返回值用来决定是否允许被拖拽调整日期范围
      */
     resizeEndMethod?(params: {
       $gantt: VxeGanttConstructor<D>
@@ -365,7 +415,7 @@ export namespace VxeGanttPropTypes {
 
   export interface TaskBarMoveConfig<D = any> {
     /**
-     * 拖拽开始时是否允许行拖拽移动任务条日期的方法，该方法的返回值用来决定是否允许被拖拽
+     * 拖拽开始时是否允许行拖拽移动任务日期的方法，该方法的返回值用来决定是否允许被拖拽
      */
     moveStartMethod?(params: {
       $gantt: VxeGanttConstructor<D>
@@ -374,7 +424,7 @@ export namespace VxeGanttPropTypes {
       endDate: Date
     }): boolean
     /**
-     * 拖拽结束时是否允许行拖拽移动任务条日期的方法，该方法的返回值用来决定是否允许被拖拽移动到指定日期
+     * 拖拽移动任务日期结束时的方法，该方法的返回值用来决定是否允许被拖拽移动到指定日期
      */
     moveEndMethod?(params: {
       $gantt: VxeGanttConstructor<D>
@@ -385,7 +435,7 @@ export namespace VxeGanttPropTypes {
       targetEndDate: Date
     }): Promise<boolean> | boolean
     /**
-     * 自定义拖拽结束时赋值的方法
+     * 自定义拖拽结束时任务日期被赋值的方法
      */
     moveSetMethod?(params: {
       $gantt: VxeGanttConstructor<D>
@@ -434,6 +484,7 @@ export interface GanttPrivateComputed<D = any> extends GridPrivateComputed<D> {
   computeTitleField: string
   computeStartField: string
   computeEndField: string
+  computeTypeField: string
   computeProgressField: string
   computeScrollbarOpts: VxeTablePropTypes.ScrollbarConfig
   computeScrollbarXToTop: boolean
@@ -606,6 +657,8 @@ export namespace VxeGanttDefines {
   export interface GanttEventParams<D = any> extends VxeComponentEventParams {
     $gantt: VxeGanttConstructor<D>
   }
+
+  export type TaskRenderType = 'default' | 'milestone'
 
   export type LayoutKey = 'Form' | 'Toolbar' | 'Top' | 'Gantt' | 'Bottom' | 'Pager'
 
