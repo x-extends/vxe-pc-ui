@@ -257,30 +257,6 @@ export namespace VxeGanttPropTypes {
      */
     enabled?: boolean
     /**
-     * 当鼠标点击线时，是否要高亮当前线
-     */
-    isCurrent?: boolean
-    /**
-     * 当鼠标移到线时，是否要高亮当前线
-     */
-    isHover?: boolean
-    /**
-     * 是否启用双击删除当前线
-     */
-    isDblclickToRemove?: boolean
-    /**
-     * 删除线之前的方法，该方法的返回值用来决定是否允许被删除
-     */
-    beforeRemoveMethod?(params: {
-      $gantt: VxeGanttConstructor<D>
-    }): Promise<boolean> | boolean
-    /**
-     * 删除线后前的方法
-     */
-    afterRemoveMethod?(params: {
-      $gantt: VxeGanttConstructor<D>
-    }): void
-    /**
      * 拖拽开始时是否允许依赖线创建的方法，该方法的返回值用来决定是否允许被拖拽
      */
     createStartMethod?(params: {
@@ -342,6 +318,37 @@ export namespace VxeGanttPropTypes {
      * 是否允许自定义创建依赖线
      */
     linkCreatable?: boolean
+  }
+
+  /**
+   * 里程碑配置项
+   */
+  export interface TaskBarMilestoneConfig<D = any> {
+    /**
+     * 自定义图标
+     */
+    icon?: string | ((params: {
+      $gantt: VxeGanttConstructor<D>
+      row: D
+    }) => string)
+    /**
+     * 图标状态颜色
+     */
+    iconStatus?: VxeComponentStatusType | ((params: {
+      $gantt: VxeGanttConstructor<D>
+      row: D
+    }) => VxeComponentStatusType)
+    /**
+     * 自定义图标样式
+     */
+    iconStyle?: CSSStyleDeclaration | ((params: {
+      $gantt: VxeGanttConstructor<D>
+      row: D
+    }) => void | null | Partial<CSSStyleDeclaration>)
+    /**
+     * 是否显示图标
+     */
+    showIcon?: boolean
   }
 
   export interface TaskBarTooltipConfig<D = any> {
@@ -462,6 +469,7 @@ export interface VxeGanttProps<D = any> extends Omit<VxeGridProps<D>, 'layouts'>
   taskSplitConfig?: VxeGanttPropTypes.TaskSplitConfig
   taskLinkConfig?: VxeGanttPropTypes.TaskLinkConfig
   taskBarConfig?: VxeGanttPropTypes.TaskBarConfig<D>
+  taskBarMilestoneConfig?: VxeGanttPropTypes.TaskBarMilestoneConfig<D>
   taskBarTooltipConfig?: VxeGanttPropTypes.TaskBarTooltipConfig<D>
   taskBarResizeConfig?: VxeGanttPropTypes.TaskBarResizeConfig<D>
   taskBarMoveConfig?: VxeGanttPropTypes.TaskBarMoveConfig<D>
@@ -475,6 +483,7 @@ export interface GanttPrivateComputed<D = any> extends GridPrivateComputed<D> {
   computeTaskBarMoveOpts: VxeGanttPropTypes.TaskBarMoveConfig<D>
   computeTaskBarResizeOpts: VxeGanttPropTypes.TaskBarResizeConfig<D>
   computeTaskSplitOpts: VxeGanttPropTypes.TaskSplitConfig
+  computeTaskBarMilestoneOpts: VxeGanttPropTypes.TaskBarMilestoneConfig<D>
   computeTaskBarTooltipOpts: VxeGanttPropTypes.TaskBarTooltipConfig
   computeTaskLinkOpts: VxeGanttPropTypes.TaskLinkConfig
   computeTaskViewScales: VxeGanttDefines.ColumnScaleType[] | VxeGanttDefines.ColumnScaleConfig[] | undefined
