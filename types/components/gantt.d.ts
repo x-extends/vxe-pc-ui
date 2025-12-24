@@ -662,6 +662,16 @@ export enum VxeGanttDependencyType {
   FinishToFinish = 3
 }
 
+/**
+ * 任务类型
+ */
+export enum VxeGanttTaskType {
+  /**
+   * 里程碑
+   */
+  Milestone = 'milestone'
+}
+
 export namespace VxeGanttDefines {
   export interface GanttEventParams<D = any> extends VxeComponentEventParams {
     $gantt: VxeGanttConstructor<D>
