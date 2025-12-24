@@ -106,6 +106,8 @@ export interface GanttViewInternalData {
 
 export interface GanttViewPrivateRef {
   refElem: Ref<HTMLDivElement | undefined>
+  refScrollXHandleElem: Ref<HTMLDivElement | undefined>
+  refScrollYHandleElem: Ref<HTMLDivElement | undefined>
 }
 
 export interface GanttViewPrivateComputed {
