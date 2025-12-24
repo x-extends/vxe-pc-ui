@@ -531,6 +531,8 @@ export interface GanttInternalData extends GridInternalData {
   resizeTableWidth: number
   barTipTimeout?: any
   dragBarRow?: any
+
+  _msTout?: any
 }
 
 export interface GanttMethods<D = any> extends Omit<GridMethods<D>, 'dispatchEvent'> {
