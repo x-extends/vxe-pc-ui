@@ -667,15 +667,11 @@ export enum VxeGanttDependencyType {
 }
 
 /**
- * 任务渲染类型
+ * 任务类型
  */
-export enum TaskRenderType {
+export enum VxeGanttTaskType {
   /**
-   * 默认任务
-   */
-  Task = 'task',
-  /**
-   * 里程碑类型
+   * 里程碑
    */
   Milestone = 'milestone'
 }

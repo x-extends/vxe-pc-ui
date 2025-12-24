@@ -50,6 +50,7 @@ export interface VxeGanttExtendChartPrivateMethods<D = any> {
     $rowIndex: number
     _rowIndex: number
   }, renderParams: {
+    isMilestone: boolean
     title: string
     vbStyle: VxeComponentStyleType
     vpStyle: VxeComponentStyleType
