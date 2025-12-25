@@ -748,6 +748,10 @@ export namespace VxeGanttDefines {
 
   export interface ScaleDefaultOptions {
     /**
+     * 日期跨度间隔
+     */
+    step?: number
+    /**
      * 日期绑定值的格式
      */
     valueFormat?: string
