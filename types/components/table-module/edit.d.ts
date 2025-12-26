@@ -13,38 +13,27 @@ export interface TableEditMethods<D = any> {
    * 如果 row 为空则从插入到顶部，如果为树结构，则插入到目标节点顶部
    * 如果 row 为 -1 则从插入到底部，如果为树结构，则插入到目标节点底部
    * 如果 row 为有效行则插入到该行的位置，如果为树结构，则有插入到效的目标节点该行的位置
-   * @param {Object/Array} records 新的数据
-   * @param {Row} targetRow 指定行
    */
-  insertAt(records: any, targetRow?: any | -1 | null): Promise<{ row: D, rows: D[] }>
+  insertAt(records: any, targetRowOrRowid?: any | -1 | null): Promise<{ row: D, rows: D[] }>
   /**
    * 与 insertAt 行为一致，区别就是会插入指定目标的到下一行
-   * @param records records 新的数据
-   * @param targetRow row 指定行
    */
-  insertNextAt(records: any, targetRow?: any | -1 | null): Promise<{ row: D, rows: D[] }>
+  insertNextAt(records: any, targetRowOrRowid?: any | -1 | null): Promise<{ row: D, rows: D[] }>
   /**
    * 用于树结构，往指定节点插入子级临时数据，从子级的第一行新增一行或多行新数据
-   * @param records 新数据
    */
-  insertChild(records: any, parentRow: any): Promise<{ row: D, rows: D[] }>
+  insertChild(records: any, parentRowOrParentId: any): Promise<{ row: D, rows: D[] }>
   /**
    * 用于树结构，往指定节点插入子级临时数据
    * 如果 row 为空则从插入到顶部，如果为树结构，则插入到目标节点顶部
    * 如果 row 为 -1 则从插入到底部，如果为树结构，则插入到目标节点底部
    * 如果 row 为有效行则插入到该行的位置，如果为树结构，则有插入到效的目标节点该行的位置
-   * @param records 新的数据
-   * @param parentRow 父节点
-   * @param targetRow 指定子节点
    */
-  insertChildAt(records: any, parentRow: any, targetRow: any | -1 | null): Promise<{ row: D, rows: D[] }>
+  insertChildAt(records: any, parentRowOrParentId: any, targetRowOrRowid: any | -1 | null): Promise<{ row: D, rows: D[] }>
   /**
    * 与 insertChildAt 行为一致，区别就是会插入指定目标子级的到下一行
-   * @param records 新的数据
-   * @param parentRow 父节点
-   * @param targetRow 指定子节点
    */
-  insertChildNextAt(records: any, parentRow: any, targetRow: any | -1 | null): Promise<{ row: D, rows: D[] }>
+  insertChildNextAt(records: any, parentRowOrParentId: any, targetRowOrRowid: any | -1 | null): Promise<{ row: D, rows: D[] }>
   /**
    * 删除指定行数据，指定 row 或 [row, ...] 删除多条数据，如果为空则删除所有数据
    * @param rows 指定行
