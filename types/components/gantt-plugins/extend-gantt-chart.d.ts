@@ -95,7 +95,11 @@ export interface VxeGanttExtendChartPrivateMethods<D = any> {
   /**
    * @private
    */
-  handleUpdateTaskLink($xeGanttView: VxeGanttViewConstructor & VxeGanttViewPrivateMethods): void
+  handleUpdateTaskLinkData(): void
+  /**
+   * @private
+   */
+  handleUpdateTaskLinkStyle($xeGanttView: VxeGanttViewConstructor & VxeGanttViewPrivateMethods): void
   /**
    * @private
    */
