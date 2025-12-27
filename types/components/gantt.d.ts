@@ -746,7 +746,12 @@ export namespace VxeGanttDefines {
 
   export interface LinkConfObj<D = any> extends VxeGanttPropTypes.Link<D> {
     key: string
-    leColorKey?: string
+    leColorKey: string
+    leStatus: VxeComponentStatusType | undefined
+    leColor: string | undefined
+    leType: LineType | undefined
+    leWidth: string | number | undefined
+    swArrow: boolean | undefined
   }
 
   export type LineType = 'dashed' | 'solid' | 'flowDashed'
