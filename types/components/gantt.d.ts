@@ -257,22 +257,67 @@ export namespace VxeGanttPropTypes {
      */
     enabled?: boolean
     /**
+     * 当鼠标点击依赖线时，是否要高亮当前依赖线
+     */
+    isCurrent?: boolean
+    /**
+     * 当鼠标移到依赖线时，是否要高亮当前依赖线
+     */
+    isHover?: boolean
+    /**
+     * 是否允许双击依赖线删除
+     */
+    isDblclickToRemove?: boolean
+    /**
+     * 依赖线被删除之前的方法，可以通过返回 false 阻止删除
+     */
+    beforeRemoveMethod?(params: {
+      $gantt: VxeGanttConstructor<D>
+      linkItem: VxeGanttDefines.LinkConfObj
+      fromRow: D
+      toRow: D
+    }): Promise<boolean> | boolean
+    /**
+     * 依赖线删除之后的方法
+     */
+    afterRemoveMethod?(params: {
+      $gantt: VxeGanttConstructor<D>
+      linkItem: VxeGanttDefines.LinkConfObj
+      fromRow: D
+      toRow: D
+    }): void
+    /**
      * 拖拽开始时是否允许依赖线创建的方法，该方法的返回值用来决定是否允许被拖拽
      */
     createStartMethod?(params: {
       $gantt: VxeGanttConstructor<D>
+      fromRow: D
+      fromPoint: 'start' | 'end'
     }): boolean
     /**
      * 拖拽依赖线创建结束时的方法，该方法的返回值用来决定是否允依赖线许被创建
      */
     createEndMethod?(params: {
       $gantt: VxeGanttConstructor<D>
+      fromRow: D
+      fromPoint: 'start' | 'end'
+      toRow: D
+      toPoint: 'start' | 'end'
     }): Promise<boolean> | boolean
     /**
      * 自定义拖拽结束时依赖线创建被赋值的方法
      */
     createSetMethod?(params: {
       $gantt: VxeGanttConstructor<D>
+      fromRow: D
+      fromPoint: 'start' | 'end'
+      toRow: D
+      toPoint: 'start' | 'end'
+      link: {
+        from: string
+        to: string
+        type: VxeGanttDependencyType
+      }
     }): void
   }
 
@@ -520,6 +565,13 @@ export interface GanttReactData<D = any> extends GridReactData<D> {
     }
   }
 
+  dragLinkFromStore: {
+    rowid: string | null
+    type: 0 | 1
+  }
+  activeLink: VxeGanttDefines.LinkConfObj | null
+  activeBarRowid: any
+  isActiveCeLe: boolean
   linkList: VxeGanttDefines.LinkConfObj[]
   upLinkFlag: number
 }
@@ -530,7 +582,13 @@ export interface GanttInternalData extends GridInternalData {
   linkUniqueMaps: Record<string, VxeGanttDefines.LinkConfObj>
   resizeTableWidth: number
   barTipTimeout?: any
+
   dragBarRow?: any
+  dragLineRow?: any
+  dragLinkToStore: {
+    rowid: string | null
+    type: 0 | 1
+  }
 
   _msTout?: any
 }
@@ -639,7 +697,10 @@ export type VxeGanttEmits = [
   'task-move-end',
   'task-resize-start',
   'task-resize-drag',
-  'task-resize-end'
+  'task-resize-end',
+  'task-link-click',
+  'task-link-dblclick',
+  'task-link-remove'
 ]
 
 /**
@@ -684,8 +745,11 @@ export namespace VxeGanttDefines {
   export type LayoutKey = 'Form' | 'Toolbar' | 'Top' | 'Gantt' | 'Bottom' | 'Pager'
 
   export interface LinkConfObj<D = any> extends VxeGanttPropTypes.Link<D> {
+    key: string
     leColorKey?: string
   }
+
+  export type LineType = 'dashed' | 'solid' | 'flowDashed'
 
   export interface LinkStyleConfig {
     /**
@@ -703,7 +767,7 @@ export namespace VxeGanttDefines {
     /**
      * 线类型
      */
-    lineType?: 'dashed' | 'solid' | 'flowDashed'
+    lineType?: LineType
     /**
      * 显示箭头
      */
@@ -885,6 +949,14 @@ export namespace VxeGanttDefines {
     targetStartDate: Date
     targetEndDate: Date
   }
+
+  export interface TaskLinkClickEventParams<D = any> extends GanttEventParams<D> {
+    linkItem: VxeGanttDefines.LinkConfObj
+    fromRow: D
+    toRow: D
+  }
+  export interface TaskLinkDblclickEventParams<D = any> extends TaskLinkClickEventParams<D> {}
+  export interface TaskLinkRemoveEventParams<D = any> extends TaskLinkClickEventParams<D> {}
 }
 
 export interface VxeGanttEventProps<D = any> extends VxeGridEventProps<D> {
@@ -900,6 +972,9 @@ export interface VxeGanttEventProps<D = any> extends VxeGridEventProps<D> {
   onTaskResizeStart?: VxeGanttEvents.TaskResizeStart<D>
   onTaskResizeDrag?: VxeGanttEvents.TaskResizeDrag<D>
   onTaskResizeEnd?: VxeGanttEvents.TaskResizeEnd<D>
+  onTaskLinkClick?: VxeGanttEvents.TaskLinkRemove<D>
+  onTaskLinkDblclick?: VxeGanttEvents.TaskLinkDblclick<D>
+  onTaskLinkRemove?: VxeGanttEvents.TaskLinkRemove<D>
 }
 
 export interface VxeGanttListeners<D = any> extends VxeGridListeners<D> {
@@ -915,6 +990,9 @@ export interface VxeGanttListeners<D = any> extends VxeGridListeners<D> {
   taskResizeStart?: VxeGanttEvents.TaskResizeStart<D>
   taskResizeDrag?: VxeGanttEvents.TaskResizeDrag<D>
   taskResizeEnd?: VxeGanttEvents.TaskResizeEnd<D>
+  taskLinkClick?: VxeGanttEvents.TaskLinkClick<D>
+  taskLinkDblclick?: VxeGanttEvents.TaskLinkDblclick<D>
+  taskLinkRemove?: VxeGanttEvents.TaskLinkRemove<D>
 }
 
 export namespace VxeGanttEvents {
@@ -930,6 +1008,9 @@ export namespace VxeGanttEvents {
   export type TaskResizeStart<D = any> = (params: VxeGanttDefines.TaskResizeStartEventParams<D>) => void
   export type TaskResizeDrag<D = any> = (params: VxeGanttDefines.TaskResizeDragEventParams<D>) => void
   export type TaskResizeEnd<D = any> = (params: VxeGanttDefines.TaskResizeEndEventParams<D>) => void
+  export type TaskLinkClick<D = any> = (params: VxeGanttDefines.TaskLinkClickEventParams<D>) => void
+  export type TaskLinkDblclick<D = any> = (params: VxeGanttDefines.TaskLinkDblclickEventParams<D>) => void
+  export type TaskLinkRemove<D = any> = (params: VxeGanttDefines.TaskLinkRemoveEventParams<D>) => void
 }
 
 export namespace VxeGanttSlotTypes {
