@@ -54,6 +54,11 @@ export interface VxeGanttExtendChartPrivateMethods<D = any> {
     title: string
     vbStyle: VxeComponentStyleType
     vpStyle: VxeComponentStyleType
+    rowid: string
+    ctOns: {
+      onMouseover?: any
+      onMouseleave?: any
+    }
   }): VNode[]
   /**
    * @private
@@ -66,7 +71,27 @@ export interface VxeGanttExtendChartPrivateMethods<D = any> {
   /**
    * @private
    */
-  renderGanttTaskLines(): VNode[]
+  handleTaskCreateLinkStartMousedownEvent(evnt: MouseEvent): void
+  /**
+   * @private
+   */
+  handleTaskCreateLinkEndMousedownEvent(evnt: MouseEvent): void
+  /**
+   * @private
+   */
+  handleTaskCreateLinkPointMouseoverEvent(evnt: MouseEvent): void
+  /**
+   * @private
+   */
+  handleTaskCreateLinkPointMouseoutEvent(evnt: MouseEvent): void
+  /**
+   * @private
+   */
+  renderGanttTaskChartBefores(): VNode[]
+  /**
+   * @private
+   */
+  renderGanttTaskChartAfters(): VNode[]
   /**
    * @private
    */
@@ -78,7 +103,7 @@ export interface VxeGanttExtendChartPrivateMethods<D = any> {
   /**
    * @private
    */
-  handleTaskUpdateLinks(links: VxeGanttPropTypes.Links): Promise<void>
+  handleTaskLoadLinks(links: VxeGanttPropTypes.Links): Promise<void>
 }
 
 declare module '../gantt' {
