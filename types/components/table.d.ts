@@ -1881,6 +1881,10 @@ export namespace VxeTablePropTypes {
      */
     isFNR?: boolean
     /**
+     * 是否开启撤回键回退到一次状态
+     */
+    isUndo?: boolean
+    /**
      * 用于 mouse-config.area & column.type=checkbox|radio，开启空格键切换复选框或单选框状态功能
      */
     isChecked?: boolean
@@ -2427,6 +2431,28 @@ export namespace VxeTablePropTypes {
    */
   export interface EditRules<D = any> {
     [field: string]: VxeTableDefines.ValidatorRule<D>[]
+  }
+
+  /**
+   * 可撤销配置项
+   */
+  export interface UndoHistoryConfig {
+    /**
+     * 撤销的最大次数
+     */
+    maxSize?: number
+    /**
+     * 加载数据可撤销
+     */
+    isUpdateData?: boolean
+    /**
+     * 加载列可撤销
+     */
+    isUpdateColumn?: boolean
+    /**
+     * 编辑行数据可撤销
+     */
+    isEditRow?: boolean
   }
 
   export type ZIndex = number
@@ -3399,6 +3425,10 @@ export interface VxeTableProps<D = any> {
    */
   editRules?: VxeTablePropTypes.EditRules<D>
   /**
+   * 可撤销配置项
+   */
+  undoHistoryConfig?: VxeTablePropTypes.UndoHistoryConfig
+  /**
    * 空数据时显示的内容
    */
   emptyText?: VxeTablePropTypes.EmptyText
@@ -3578,6 +3608,7 @@ export interface TablePrivateComputed<D = any> {
   computeRowGroupFields: ComputedRef<string[] | null | undefined>
   computeRowGroupColumns: ComputedRef<VxeTableDefines.ColumnInfo<D>[]>
   computeAggFuncColumns: ComputedRef<VxeTableDefines.ColumnInfo<D>[]>
+  computeUndoHistoryOpts: ComputedRef<VxeTablePropTypes.UndoHistoryConfig>
 
   /**
    * @deprecated
