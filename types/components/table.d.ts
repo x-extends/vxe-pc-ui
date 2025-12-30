@@ -4964,12 +4964,28 @@ export interface TableMethods<DT = any> {
    * @param row 指定行
    * @param columnOrField 列对象或字段名
    */
-  scrollToRow(row: any, fieldOrColumn?: VxeColumnPropTypes.Field | VxeTableDefines.ColumnInfo<any>): Promise<any>
+  scrollToRow(row: any, fieldOrColumn?: VxeColumnPropTypes.Field | VxeTableDefines.ColumnInfo): Promise<any>
+  /**
+   * 如果有滚动条，则滚动到第一行
+   */
+  scrollToStartRow(fieldOrColumn?: VxeColumnPropTypes.Field | VxeTableDefines.ColumnInfo): Promise<any>
+  /**
+   * 如果有滚动条，则滚动到最后一行
+   */
+  scrollToEndRow(fieldOrColumn?: VxeColumnPropTypes.Field | VxeTableDefines.ColumnInfo): Promise<any>
   /**
    * 如果有滚动条，则滚动到对应的列
    * @param columnOrField 列对象或字段名
    */
-  scrollToColumn(fieldOrColumn: VxeColumnPropTypes.Field | VxeTableDefines.ColumnInfo<any>): Promise<any>
+  scrollToColumn(fieldOrColumn: VxeColumnPropTypes.Field | VxeTableDefines.ColumnInfo): Promise<any>
+  /**
+   * 如果有滚动条，则滚动到第一列
+   */
+  scrollToStartColumn(): Promise<any>
+  /**
+   * 如果有滚动条，则滚动到最后一列
+   */
+  scrollToEndColumn(): Promise<any>
   /**
    * 手动清除滚动相关信息，还原到初始状态
    */
