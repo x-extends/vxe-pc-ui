@@ -97,6 +97,10 @@ export namespace VxeFormItemPropTypes {
     attrs?: Record<string, any>
     events?: Record<string, (itemParams: VxeFormItemSlotTypes.DefaultSlotParams<D>, ...args: any[]) => any>
     /**
+     * 是否在 change 时触发提交
+     */
+    changeToSubmit?: boolean
+    /**
      * 下拉选项列表（需要渲染器支持）
      */
     options?: any[]

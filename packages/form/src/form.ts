@@ -687,30 +687,35 @@ export default defineVxeComponent({
           fields = [fieldOrItem]
         }
       }
-      return beginValidate(fields.map(field => handleFieldOrItem($xeForm, field) as VxeFormDefines.ItemInfo), '', callback).then((params) => {
+      const itemList = fields.map(field => handleFieldOrItem($xeForm, field)) as VxeFormDefines.ItemInfo[]
+      return beginValidate(itemList, '', callback).then((params) => {
         recalculate()
         return params
       })
     }
 
-    const submitEvent = (evnt: Event) => {
+    const handleSubmitEvent = (evnt: Event) => {
       const { readonly } = props
+      clearValidate()
+      if (readonly) {
+        $xeForm.dispatchEvent('submit', { data: props.data }, evnt)
+        recalculate()
+        return
+      }
+      beginValidate(getItems()).then((errMap) => {
+        if (errMap) {
+          $xeForm.dispatchEvent('submit-invalid', { data: props.data, errMap }, evnt)
+        } else {
+          $xeForm.dispatchEvent('submit', { data: props.data }, evnt)
+        }
+        recalculate()
+      })
+    }
+
+    const submitEvent = (evnt: Event) => {
       evnt.preventDefault()
       if (!props.preventSubmit) {
-        clearValidate()
-        if (readonly) {
-          formMethods.dispatchEvent('submit', { data: props.data }, evnt)
-          recalculate()
-          return
-        }
-        beginValidate(getItems()).then((errMap) => {
-          if (errMap) {
-            formMethods.dispatchEvent('submit-invalid', { data: props.data, errMap }, evnt)
-          } else {
-            formMethods.dispatchEvent('submit', { data: props.data }, evnt)
-          }
-          recalculate()
-        })
+        handleSubmitEvent(evnt)
       }
     }
 
@@ -845,7 +850,8 @@ export default defineVxeComponent({
       handleValidIconEvent (evnt, params) {
         const { item } = params
         item.showIconMsg = !item.showIconMsg
-      }
+      },
+      handleSubmitEvent
     }
 
     Object.assign($xeForm, formMethods, formPrivateMethods)
