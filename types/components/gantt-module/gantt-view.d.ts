@@ -167,7 +167,7 @@ export interface VxeGanttViewPrivateMethods {
 
 export interface VxeGanttViewMethods {
   refreshData(): Promise<void>
-  updateViewData(): Promise<void>
+  updateViewData(force?: boolean): Promise<void>
   connectUpdate(params: {
     $table: VxeTableConstructor & VxeTableMethods & VxeTablePrivateMethods
   }): Promise<void>
