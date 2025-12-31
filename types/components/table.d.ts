@@ -3727,14 +3727,7 @@ export interface TableReactData<D = any> {
   customStore: VxeTableDefines.VxeTableCustomStoreObj
   customColumnList: VxeTableDefines.ColumnInfo<D>[]
   // 当前选中的筛选列
-  filterStore: {
-    isAllSelected: boolean
-    isIndeterminate: boolean
-    style: any
-    column: VxeTableDefines.ColumnInfo | null | undefined
-    visible: boolean
-    maxHeight: number | string | null
-  }
+  filterStore: VxeTableDefines.FilterStoreObj
   // 存放列相关的信息
   columnStore: {
     leftList: VxeTableDefines.ColumnInfo<D>[]
@@ -3819,49 +3812,12 @@ export interface TableReactData<D = any> {
     }
   }
   // 导入相关信息
-  importStore: {
-    inited: boolean
-    file: any
-    type: any
-    modeList: any[]
-    typeList: any[]
-    filename: any
-    visible: boolean
-  }
-  importParams: {
-    mode: any
-    types: any
-    message: boolean
-  }
+  importStore: VxeTableDefines.ImportStoreObj
+  importParams: VxeTableDefines.ImportParamsObj
   // 导出相关信息
-  exportStore: {
-    inited: boolean
-    name: any
-    modeList: any[]
-    typeList: any[]
-    columns: any[]
-    isPrint: boolean
-    hasFooter: boolean
-    hasMerge: boolean
-    hasTree: boolean
-    hasColgroup: boolean
-    visible: boolean
-  }
-  exportParams: {
-    filename: any
-    sheetName: any
-    mode: any
-    type: any
-    isColgroup: boolean
-    isMerge: boolean
-    isAllExpand: boolean
-    useStyle: boolean
-    original: boolean
-    message: boolean
-    isHeader: boolean
-    isTitle: boolean
-    isFooter: boolean
-  }
+  exportStore: VxeTableDefines.ExportStoreObj
+  exportParams: VxeTableDefines.ExportParamsObj
+
   rowHeightStore: {
     large: number
     default: number
@@ -4105,6 +4061,8 @@ export interface TableInternalData<D = any> {
 
   teleportToWrapperElem: HTMLElement | null
   popupToWrapperElem: HTMLElement | null
+
+  validRuleErr?: boolean
 
   // 内部属性
   _updateStyleFlag?: boolean
@@ -5523,6 +5481,66 @@ export type VxeTableEmits = [
 ]
 
 export namespace VxeTableDefines {
+  export interface ImportStoreObj {
+    inited: boolean
+    file: any
+    type: any
+    modeList: any[]
+    typeList: any[]
+    filename: string
+    visible: boolean
+  }
+
+  export interface ImportParamsObj {
+    mode: any
+    types: any
+    message: boolean
+    slots?: any
+    params?: any
+  }
+
+  // 导出相关信息
+  export interface ExportStoreObj {
+    inited: boolean
+    name: any
+    modeList: any[]
+    typeList: any[]
+    columns: ColumnInfo[]
+    isPrint: boolean
+    hasFooter: boolean
+    hasMerge: boolean
+    hasTree: boolean
+    hasColgroup: boolean
+    visible: boolean
+  }
+
+  export interface ExportParamsObj {
+    filename: string
+    sheetName: string
+    mode: any
+    type: any
+    isColgroup: boolean
+    isMerge: boolean
+    isAllExpand: boolean
+    useStyle: boolean
+    original: boolean
+    message: boolean
+    isHeader: boolean
+    isTitle: boolean
+    isFooter: boolean
+    slots?: any
+    params?: any
+  }
+
+  export interface FilterStoreObj {
+    isAllSelected: boolean
+    isIndeterminate: boolean
+    style: any
+    column: VxeTableDefines.ColumnInfo | null | undefined
+    visible: boolean
+    maxHeight: number | string | null
+  }
+
   export type AggFuncType = 'sum' | 'count' | 'avg' | 'min' | 'max' | 'first' | 'last'
 
   export type InjectGanttType<D = any> = (VxeGanttConstructor<D> & VxeGanttPrivateMethods<D>)

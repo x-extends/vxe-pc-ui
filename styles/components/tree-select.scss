@@ -69,6 +69,7 @@
 .vxe-tree-select--header-button {
   display: flex;
   flex-direction: row;
+  white-space: nowrap;
 }
 .vxe-tree-select--header-total {
   display: flex;
@@ -86,7 +87,7 @@
 }
 
 .vxe-tree-select--panel-wrapper {
-  display: inline-flex;
+  display: flex;
   flex-direction: column;
   position: relative;
   border-radius: var(--vxe-ui-base-border-radius);
@@ -121,7 +122,6 @@
   position: relative;
   overflow: auto;
   padding: var(--vxe-ui-layout-padding-default);
-  width: 30em;
   outline: 0;
 }
 .vxe-tree-select--tree {

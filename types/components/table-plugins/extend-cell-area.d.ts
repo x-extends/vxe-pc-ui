@@ -89,7 +89,7 @@ export interface VxeTableExtendCellAreaPrivateMethods<D = any> {
   /**
    * @private
    */
-  triggerCellAreaModnEvent(evnt: MouseEvent, params: VxeTableDefines.CellClickEventParams<D>): void
+  triggerClAreaModnEvent(evnt: MouseEvent, params: VxeTableDefines.CellClickEventParams<D>): void
   /**
    * @private
    */
@@ -105,11 +105,11 @@ export interface VxeTableExtendCellAreaPrivateMethods<D = any> {
   /**
    * @private
    */
-  handleCopyCellAreaEvent(evnt: ClipboardEvent): void
+  handleCyClAreaEvent(evnt: ClipboardEvent): void
   /**
    * @private
    */
-  handlePasteCellAreaEvent(evnt: ClipboardEvent): void
+  handlePeClAreaEvent(evnt: ClipboardEvent): void
   /**
    * @private
    */
