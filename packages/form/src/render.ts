@@ -46,7 +46,7 @@ export function getItemClass ($xeForm: VxeFormConstructor & VxeFormPrivateMethod
   const { folding, field, itemRender, showError, className, vertical, padding, children, showContent } = item
   const vSize = $xeForm.computeSize
   const validOpts = $xeForm.computeValidOpts
-  const { showErrorMessage, showMessage, showErrorIcon } = validOpts
+  const { showErrorMessage, showMessage, showErrorBackground, showErrorIcon } = validOpts
   const compConf = isEnableConf(itemRender) ? renderer.get(itemRender.name) : null
   const itemClassName = compConf ? (compConf.formItemClassName || compConf.itemClassName) : ''
   const span = item.span || allSpan
@@ -89,6 +89,7 @@ export function getItemClass ($xeForm: VxeFormConstructor & VxeFormPrivateMethod
       'is--hidden': folding && collapseAll,
       'is--active': isActiveItem($xeForm, item),
       'err--icon': showErrorIcon,
+      'err--bg': showErrorBackground,
       'is--error': showError
     }
   ]

@@ -540,11 +540,12 @@ export default /* define-vxe-component start */ defineVxeComponent({
       reactData.startValue = sValue
       reactData.endValue = eValue
       const value = $xeDateRangePicker.getRangeValue(sValue, eValue)
+      const isFinish = (sValue && eValue) || (!sValue && !eValue)
       $xeDateRangePicker.emitModel(value)
       $xeDateRangePicker.$emit('update:startValue', sValue || '')
       $xeDateRangePicker.$emit('update:endValue', eValue || '')
       if (XEUtils.toValueString(modelValue) !== value) {
-        $xeDateRangePicker.dispatchEvent('change', { value }, evnt as any)
+        $xeDateRangePicker.dispatchEvent('change', { value, startValue: sValue, endValue: eValue, isFinish }, evnt as any)
         // 自动更新校验状态
         if ($xeForm && formItemInfo) {
           $xeForm.triggerItemEvent(evnt, formItemInfo.itemConfig.field, value)

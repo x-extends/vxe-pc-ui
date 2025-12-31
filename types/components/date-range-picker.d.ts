@@ -244,7 +244,9 @@ export namespace VxeDateRangePickerDefines {
   }
   export interface InputEventParams extends DateRangePickerEventParams, DateRangePickerParams { }
 
-  export interface ChangeParams extends DateRangePickerParams {}
+  export interface ChangeParams extends DateRangePickerParams {
+    isFinish: boolean
+  }
   export interface ChangeEventParams extends DateRangePickerEventParams, ChangeParams { }
 
   export interface ClearEventParams extends DateRangePickerEventParams {}

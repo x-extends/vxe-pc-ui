@@ -2376,9 +2376,26 @@ export namespace VxeTablePropTypes {
      */
     autoPos?: boolean
     /**
-     * 是否显示错误显示
+     * 是否显示错误提示内容
      */
-    showMessage?: boolean
+    showErrorMessage?: boolean
+    /**
+     * 是否显示错误单元格背景色
+     */
+    showErrorBackground?: boolean
+    /**
+     * 校验样式
+     */
+    errorStyle?: {
+      /**
+       * 是否显示错误提示内容
+       */
+      showMessage?: boolean
+      /**
+       * 是否显示错误单元格的背景色
+       */
+      showBackground?: boolean
+    },
     /**
      * 校验消息提示方式
      * - single 单个提示
@@ -2402,6 +2419,11 @@ export namespace VxeTablePropTypes {
      */
     className?: string | ((params: VxeColumnSlotTypes.ValidSlotParams<D>) => string)
 
+    /**
+     * 已废弃，被 showErrorMessage 替换
+     * @deprecated
+     */
+    showMessage?: boolean
     /**
      * 不建议使用，已废弃
      * @deprecated

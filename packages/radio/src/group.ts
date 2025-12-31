@@ -170,14 +170,16 @@ export default /* define-vxe-component start */ defineVxeComponent({
     },
     handleChecked (params: {
       checkedValue: any
+      checkedLabel: any
     }, evnt: Event) {
       const $xeRadioGroup = this
       const $xeForm = $xeRadioGroup.$xeForm
       const formItemInfo = $xeRadioGroup.formItemInfo
 
-      const value = params.checkedValue
+      const { checkedValue, checkedLabel } = params
+      const value = checkedValue
       $xeRadioGroup.emitModel(value)
-      $xeRadioGroup.dispatchEvent('change', { value, label: value, checkedValue: value }, evnt)
+      $xeRadioGroup.dispatchEvent('change', { value, label: value, checkedValue, checkedLabel }, evnt)
       // 自动更新校验状态
       if ($xeForm && formItemInfo) {
         $xeForm.triggerItemEvent(evnt, formItemInfo.itemConfig.field, value)
