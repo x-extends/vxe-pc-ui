@@ -404,11 +404,11 @@ renderer.mixin({
               // 处理 model 值双向绑定
               XEUtils.set(data, field, value)
             },
-            change () {
+            change ({ $event, isFinish }) {
               // 处理 change 事件相关逻辑
               $form.updateStatus(params)
-              if (renderOpts.changeToSubmit) {
-                ($form as VxeFormConstructor & VxeFormPrivateMethods).handleSubmitEvent(new Event('change'))
+              if (renderOpts.changeToSubmit && isFinish) {
+                ($form as VxeFormConstructor & VxeFormPrivateMethods).handleSubmitEvent($event)
               }
             }
           }, seOs)

@@ -461,11 +461,12 @@ export default defineVxeComponent({
       reactData.startValue = sValue
       reactData.endValue = eValue
       const value = getRangeValue(sValue, eValue)
+      const isFinish = (sValue && eValue) || (!sValue && !eValue)
       emit('update:modelValue', value)
       emit('update:startValue', sValue || '')
       emit('update:endValue', eValue || '')
       if (XEUtils.toValueString(modelValue) !== value) {
-        dispatchEvent('change', { value }, evnt as any)
+        dispatchEvent('change', { value, startValue: sValue, endValue: eValue, isFinish }, evnt as any)
         // 自动更新校验状态
         if ($xeForm && formItemInfo) {
           $xeForm.triggerItemEvent(evnt, formItemInfo.itemConfig.field, value)

@@ -121,9 +121,10 @@ export default defineVxeComponent({
 
     const radioGroupPrivateMethods: RadioGroupPrivateMethods = {
       handleChecked (params, evnt) {
-        const value = params.checkedValue
+        const { checkedValue, checkedLabel } = params
+        const value = checkedValue
         emitModel(value)
-        dispatchEvent('change', { value, label: value, checkedValue: value }, evnt)
+        dispatchEvent('change', { value, label: value, checkedValue, checkedLabel }, evnt)
         // 自动更新校验状态
         if ($xeForm && formItemInfo) {
           $xeForm.triggerItemEvent(evnt, formItemInfo.itemConfig.field, value)

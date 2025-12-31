@@ -109,6 +109,8 @@
   --vxe-ui-form-item-padding-small: 6px;
   --vxe-ui-form-item-padding-mini: 5px;
   --vxe-ui-form-validate-error-background-color: inherit;
+  --vxe-ui-form-validate-error-theme-normal-background-color: var(--vxe-ui-layout-background-color);
+  --vxe-ui-form-validate-error-item-background-color: rgba(245, 108,108, 0.1);
 
   /*form-design*/
   --vxe-ui-form-design-widget-item-font-size: 0.9em;

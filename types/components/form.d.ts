@@ -73,6 +73,10 @@ export namespace VxeFormPropTypes {
      */
     showErrorMessage?: boolean
     /**
+     * 是否显示错误项背景色
+     */
+    showErrorBackground?: boolean
+    /**
      * 当校验不通过时在对应项显示错误图标
      */
     showErrorIcon?: boolean

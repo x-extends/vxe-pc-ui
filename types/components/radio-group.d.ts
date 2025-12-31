@@ -81,7 +81,8 @@ export interface VxeRadioGroupMethods extends RadioGroupMethods { }
 
 export interface RadioGroupPrivateMethods {
   handleChecked(params: {
-    checkedValue: any
+    checkedValue: VxeRadioPropTypes.CheckedValue
+    checkedLabel: VxeRadioPropTypes.Content | undefined
 
     /**
      * @deprecated

@@ -4,7 +4,7 @@ import XEUtils from 'xe-utils'
 import { getFuncText } from '../../ui/src/utils'
 import { getConfig, createEvent, useSize } from '../../ui'
 
-import type { VxeRadioButtonPropTypes, VxeRadioGroupConstructor, RadioButtonReactData, RadioButtonPrivateMethods, VxeRadioButtonConstructor, VxeRadioButtonEmits, VxeRadioGroupPrivateMethods, RadioButtonMethods, VxeFormConstructor, VxeFormPrivateMethods, VxeFormDefines } from '../../../types'
+import type { VxeRadioButtonPropTypes, VxeRadioGroupConstructor, RadioButtonReactData, RadioButtonPrivateMethods, VxeRadioButtonConstructor, VxeRadioButtonEmits, VxeRadioGroupPrivateMethods, RadioButtonMethods, VxeFormConstructor, VxeFormPrivateMethods, VxeFormDefines, ValueOf } from '../../../types'
 
 export default defineVxeComponent({
   name: 'VxeRadioButton',
@@ -87,10 +87,12 @@ export default defineVxeComponent({
       return $xeRadioGroup ? $xeRadioGroup.props.modelValue === radioValue : props.modelValue === radioValue
     })
 
+    const dispatchEvent = (type: ValueOf<VxeRadioButtonEmits>, params: Record<string, any>, evnt: Event | null) => {
+      emit(type, createEvent(evnt, { $radioGroup: $xeRadioGroup }, params))
+    }
+
     const radioButtonMethods: RadioButtonMethods = {
-      dispatchEvent (type, params, evnt) {
-        emit(type, createEvent(evnt, { $radioButton: $xeRadioButton }, params))
-      }
+      dispatchEvent
     }
 
     const radioButtonPrivateMethods: RadioButtonPrivateMethods = {
@@ -99,11 +101,12 @@ export default defineVxeComponent({
     Object.assign($xeRadioButton, radioButtonMethods, radioButtonPrivateMethods)
 
     const handleValue = (checkedValue: VxeRadioButtonPropTypes.CheckedValue, evnt: Event) => {
+      const { content } = props
       if ($xeRadioGroup) {
-        $xeRadioGroup.handleChecked({ label: checkedValue, checkedValue }, evnt)
+        $xeRadioGroup.handleChecked({ label: checkedValue, checkedValue, checkedLabel: content }, evnt)
       } else {
         emit('update:modelValue', checkedValue)
-        radioButtonMethods.dispatchEvent('change', { value: checkedValue, label: checkedValue }, evnt)
+        dispatchEvent('change', { value: checkedValue, label: checkedValue, checkedValue, checkedLabel: content }, evnt)
         // 自动更新校验状态
         if ($xeForm && formItemInfo) {
           $xeForm.triggerItemEvent(evnt, formItemInfo.itemConfig.field, checkedValue)

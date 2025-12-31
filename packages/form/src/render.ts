@@ -43,7 +43,7 @@ export function getItemClass ($xeForm: VxeFormConstructor & VxeFormPrivateMethod
   const { folding, field, itemRender, showError, className, vertical, padding, children, showContent } = item
   const vSize = computeSize.value
   const validOpts = computeValidOpts.value
-  const { showErrorMessage, showMessage, showErrorIcon } = validOpts
+  const { showErrorMessage, showMessage, showErrorBackground, showErrorIcon } = validOpts
   const compConf = isEnableConf(itemRender) ? renderer.get(itemRender.name) : null
   const itemClassName = compConf ? (compConf.formItemClassName || compConf.itemClassName) : ''
   const span = item.span || allSpan
@@ -64,12 +64,13 @@ export function getItemClass ($xeForm: VxeFormConstructor & VxeFormPrivateMethod
       isRequired = itemRules.some((rule) => rule.required)
     }
   }
+  const showErrMsg = XEUtils.isBoolean(showErrorMessage) ? showErrorMessage : showMessage
   return [
     isGroup || hasGroup ? 'vxe-form--group' : '',
     'vxe-form--item',
     item.id,
     span ? `vxe-form--item-col_${span} is--span` : '',
-    `${(XEUtils.isBoolean(showErrorMessage) ? showErrorMessage : showMessage) ? 'show' : 'hide'}--err-msg`,
+    `${showErrMsg ? 'show' : 'hide'}--err-msg`,
     className ? (XEUtils.isFunction(className) ? className(params) : className) : '',
     itemClassName ? (XEUtils.isFunction(itemClassName) ? itemClassName(params) : itemClassName) : '',
     {
@@ -86,6 +87,7 @@ export function getItemClass ($xeForm: VxeFormConstructor & VxeFormPrivateMethod
       'is--hidden': folding && collapseAll,
       'is--active': isActiveItem($xeForm, item),
       'err--icon': showErrorIcon,
+      'err--bg': showErrorBackground,
       'is--error': showError
     }
   ]

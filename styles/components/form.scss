@@ -144,7 +144,7 @@
   }
   .vxe-form-item--valid-error-theme-normal {
     color: var(--vxe-ui-table-validate-error-color);
-    background-color: var(--vxe-ui-table-validate-error-background-color);
+    background-color: var(--vxe-ui-form-validate-error-theme-normal-background-color);
   }
 }
 
@@ -218,7 +218,7 @@
   padding: 0 0.6em;
   color: var(--vxe-ui-table-validate-error-color);
   border: 1px solid var(--vxe-ui-table-validate-error-color);
-  background-color: var(--vxe-ui-table-validate-error-background-color);
+  background-color: var(--vxe-ui-form-validate-error-theme-normal-background-color);
 }
 
 .vxe-form--item {
@@ -299,6 +299,11 @@
       & > .vxe-form--item-content {
         padding-top: 0;
         padding-bottom: 1.3em;
+      }
+    }
+    &.err--bg {
+      & > .vxe-form--item-content {
+        background-color: var(--vxe-ui-form-validate-error-item-background-color);
       }
     }
     & > .vxe-form--item-content {
