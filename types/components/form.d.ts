@@ -239,13 +239,35 @@ export interface FormMethods<D = any> {
 export interface VxeFormMethods<D = any> extends FormMethods<D> { }
 
 export interface FormPrivateMethods {
+  /**
+   * @private
+   */
   callSlot<T>(slotFunc: ((params: T) => VxeComponentSlotType | VxeComponentSlotType[]) | string | null, params: T, h: CreateElement): VxeComponentSlotType[]
+  /**
+   * @private
+   */
   triggerItemEvent(evnt: Event | { type: string }, field: string, itemValue?: any): Promise<any>
+  /**
+   * @private
+   */
   toggleCollapseEvent(evnt: Event): void
+  /**
+   * @private
+   */
   triggerTitleTipEvent(evnt: MouseEvent, params: {
     item: VxeFormDefines.ItemInfo
   }): void
+  /**
+   * @private
+   */
+  handleSubmitEvent(evnt: Event): void
+  /**
+   * @private
+   */
   handleTitleTipLeaveEvent(): void
+  /**
+   * @private
+   */
   handleValidIconEvent(evnt: Event, params: {
     item: VxeFormDefines.ItemInfo
   }): void

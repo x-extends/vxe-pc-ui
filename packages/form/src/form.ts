@@ -728,32 +728,39 @@ export default /* define-vxe-component start */ defineVxeComponent({
           fields = [fieldOrItem]
         }
       }
-      return $xeForm.beginValidate(fields.map(field => handleFieldOrItem($xeForm, field) as VxeFormDefines.ItemInfo), '', callback).then((params) => {
+      const itemList = fields.map(field => handleFieldOrItem($xeForm, field)) as VxeFormDefines.ItemInfo[]
+      return $xeForm.beginValidate(itemList, '', callback).then((params) => {
         $xeForm.recalculate()
         return params
       })
     },
-    submitEvent  (evnt: Event) {
+    handleSubmitEvent (evnt: Event) {
       const $xeForm = this
       const props = $xeForm
 
       const { readonly } = props
+      $xeForm.clearValidate()
+      if (readonly) {
+        $xeForm.dispatchEvent('submit', { data: props.data }, evnt)
+        $xeForm.recalculate()
+        return
+      }
+      $xeForm.beginValidate($xeForm.getItems()).then((errMap) => {
+        if (errMap) {
+          $xeForm.dispatchEvent('submit-invalid', { data: props.data, errMap }, evnt)
+        } else {
+          $xeForm.dispatchEvent('submit', { data: props.data }, evnt)
+        }
+        $xeForm.recalculate()
+      })
+    },
+    submitEvent (evnt: Event) {
+      const $xeForm = this
+      const props = $xeForm
+
       evnt.preventDefault()
       if (!props.preventSubmit) {
-        $xeForm.clearValidate()
-        if (readonly) {
-          $xeForm.dispatchEvent('submit', { data: props.data }, evnt)
-          $xeForm.recalculate()
-          return
-        }
-        $xeForm.beginValidate($xeForm.getItems()).then((errMap) => {
-          if (errMap) {
-            $xeForm.dispatchEvent('submit-invalid', { data: props.data, errMap }, evnt)
-          } else {
-            $xeForm.dispatchEvent('submit', { data: props.data }, evnt)
-          }
-          $xeForm.recalculate()
-        })
+        $xeForm.handleSubmitEvent(evnt)
       }
     },
     closeTooltip () {
