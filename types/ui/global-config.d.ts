@@ -3,6 +3,7 @@ import { VxeAlertProps } from '../components/alert'
 import { VxeAnchorProps } from '../components/anchor'
 import { VxeAnchorLinkProps } from '../components/anchor-link'
 import { VxeAvatarProps } from '../components/avatar'
+import { VxeBacktopProps } from '../components/backtop'
 import { VxeBadgeProps } from '../components/badge'
 import { VxeBreadcrumbProps } from '../components/breadcrumb'
 import { VxeBreadcrumbItemProps } from '../components/breadcrumb-item'
@@ -12,6 +13,7 @@ import { VxeCalendarProps } from '../components/calendar'
 import { VxeCardProps } from '../components/card'
 import { VxeCarouselProps } from '../components/carousel'
 import { VxeCarouselItemProps } from '../components/carousel-item'
+import { VxeCascaderProps } from '../components/cascader'
 import { VxeCheckboxProps } from '../components/checkbox'
 import { VxeCheckboxButtonProps } from '../components/checkbox-button'
 import { VxeCheckboxGroupProps } from '../components/checkbox-group'
@@ -43,6 +45,7 @@ import { VxeLayoutHeaderProps } from '../components/layout-header'
 import { VxeLinkProps } from '../components/link'
 import { VxeListProps } from '../components/list'
 import { VxeLoadingProps } from '../components/loading'
+import { VxeMentionProps } from '../components/mention'
 import { VxeMenuProps } from '../components/menu'
 import { VxeModalProps } from '../components/modal'
 import { VxeNoticeBarProps } from '../components/notice-bar'
@@ -60,6 +63,7 @@ import { VxeRadioGroupProps } from '../components/radio-group'
 import { VxeRateProps } from '../components/rate'
 import { VxeResultProps } from '../components/result'
 import { VxeRowProps } from '../components/row'
+import { VxeSegmentedProps } from '../components/segmented'
 import { VxeSelectProps } from '../components/select'
 import { VxeSplitterProps } from '../components/splitter'
 import { VxeSplitterPanelProps } from '../components/splitter-panel'
@@ -75,8 +79,11 @@ import { VxeTagProps } from '../components/tag'
 import { VxeTextEllipsisProps } from '../components/text-ellipsis'
 import { VxeTextProps } from '../components/text'
 import { VxeTextareaProps } from '../components/textarea'
+import { VxeTimelineProps } from '../components/timeline'
+import { VxeTimelineItemProps } from '../components/timeline-item'
 import { VxeTipProps } from '../components/tip'
 import { VxeTooltipProps } from '../components/tooltip'
+import { VxeTourProps } from '../components/tour'
 import { VxeTreeProps } from '../components/tree'
 import { VxeTreeSelectProps } from '../components/tree-select'
 import { VxeUploadProps } from '../components/upload'
@@ -106,6 +113,7 @@ declare module '@vxe-ui/core' {
     anchor?: VxeAnchorProps
     anchorLink?: VxeAnchorLinkProps
     avatar?: VxeAvatarProps
+    backtop?: VxeBacktopProps
     badge?: VxeBadgeProps
     breadcrumb?: VxeBreadcrumbProps
     breadcrumbItem?: VxeBreadcrumbItemProps
@@ -115,6 +123,7 @@ declare module '@vxe-ui/core' {
     card?: VxeCardProps
     carousel?: VxeCarouselProps
     carouselItem?: VxeCarouselItemProps
+    cascader?: VxeCascaderProps
     checkbox?: VxeCheckboxProps
     checkboxButton?: VxeCheckboxButtonProps
     checkboxGroup?: VxeCheckboxGroupProps
@@ -146,6 +155,7 @@ declare module '@vxe-ui/core' {
     link?: VxeLinkProps
     list?: VxeListProps
     loading?: VxeLoadingProps
+    mention?: VxeMentionProps
     menu?: VxeMenuProps
     modal?: VxeModalProps
     noticeBar?: VxeNoticeBarProps
@@ -163,6 +173,7 @@ declare module '@vxe-ui/core' {
     rate?: VxeRateProps
     result?: VxeResultProps
     row?: VxeRowProps
+    segmented?: VxeSegmentedProps
     select?: VxeSelectProps
     splitter?: VxeSplitterProps
     splitterPanel?: VxeSplitterPanelProps
@@ -178,8 +189,11 @@ declare module '@vxe-ui/core' {
     textEllipsis?: VxeTextEllipsisProps
     text?: VxeTextProps
     textarea?: VxeTextareaProps
+    timeline?: VxeTimelineProps
+    timelineItem?: VxeTimelineItemProps
     tip?: VxeTipProps
     tooltip?: VxeTooltipProps
+    tour?: VxeTourProps,
     tree?: VxeTreeProps
     treeSelect?: VxeTreeSelectProps
     upload?: VxeUploadProps

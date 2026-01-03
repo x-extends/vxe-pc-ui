@@ -69,6 +69,7 @@
 * [x] anchor 锚点
   * [x] anchor-link 锚点-链接
 * [x] avatar 头像
+* [ ] backtop 回到顶部
 * [x] badge 徽标
 * [x] breadcrumb 面包屑
   * [x] breadcrumb-item 面包屑-项
@@ -78,6 +79,7 @@
 * [x] card 卡片
 * [x] carousel 走马灯
   * [x] carousel-item 走马灯 - 项
+* [ ] cascader 级联选择器
 * [x] checkbox 复选框
   * [x] checkbox-button 复选框-按钮
   * [x] checkbox-group 复选框-组
@@ -107,6 +109,7 @@
 * [x] link 链接
 * [x] list 虚拟列表
 * [x] loading 加载中
+* [ ] mention 提及
 * [x] menu 菜单
 * [x] modal 模态窗口
 * [x] number-input 数值输入框
@@ -121,6 +124,7 @@
 * [x] rate 评分
 * [x] result 结果
 * [x] row 行
+* [ ] segmented 分段控制器
 * [x] select 下拉框
   * [x] optgroup 下拉框-分组项
   * [x] option 下拉框-项
@@ -134,6 +138,8 @@
 * [x] text-ellipsis 多行文本溢出
 * [x] table-select 表格下拉框
 * [x] textarea 文本域
+* [ ] timeline 时间线
+  * [ ] timeline-item 时间线-项
 * [x] tip 提示
 * [x] tooltip 文字提示
 * [x] tree 树形组件

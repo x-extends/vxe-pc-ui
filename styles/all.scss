@@ -4,6 +4,7 @@
 @use './components/anchor.scss';
 @use './components/anchor-link.scss';
 @use './components/avatar.scss';
+@use './components/backtop.scss';
 @use './components/badge.scss';
 @use './components/breadcrumb.scss';
 @use './components/breadcrumb-item.scss';
@@ -13,6 +14,7 @@
 @use './components/card.scss';
 @use './components/carousel.scss';
 @use './components/carousel-item.scss';
+@use './components/cascader.scss';
 @use './components/checkbox.scss';
 @use './components/checkbox-button.scss';
 @use './components/checkbox-group.scss';
@@ -44,6 +46,7 @@
 @use './components/link.scss';
 @use './components/list.scss';
 @use './components/loading.scss';
+@use './components/mention.scss';
 @use './components/menu.scss';
 @use './components/modal.scss';
 @use './components/notice-bar.scss';
@@ -61,6 +64,7 @@
 @use './components/rate.scss';
 @use './components/result.scss';
 @use './components/row.scss';
+@use './components/segmented.scss';
 @use './components/select.scss';
 @use './components/split.scss';
 @use './components/split-pane.scss';
@@ -74,8 +78,11 @@
 @use './components/text-ellipsis.scss';
 @use './components/text.scss';
 @use './components/textarea.scss';
+@use './components/timeline.scss';
+@use './components/timeline-item.scss';
 @use './components/tip.scss';
 @use './components/tooltip.scss';
+@use './components/tour.scss';
 @use './components/tree.scss';
 @use './components/tree-select.scss';
 @use './components/upload.scss';

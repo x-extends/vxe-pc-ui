@@ -5,6 +5,7 @@ import VxeAlert from './components/alert'
 import VxeAnchor from './components/anchor'
 import VxeAnchorLink from './components/anchor-link'
 import VxeAvatar from './components/avatar'
+import VxeBacktop from './components/backtop'
 import VxeBadge from './components/badge'
 import VxeBreadcrumb from './components/breadcrumb'
 import VxeBreadcrumbItem from './components/breadcrumb-item'
@@ -14,6 +15,7 @@ import VxeCalendar from './components/calendar'
 import VxeCard from './components/card'
 import VxeCarousel from './components/carousel'
 import VxeCarouselItem from './components/carousel-item'
+import VxeCascader from './components/cascader'
 import VxeCheckbox from './components/checkbox'
 import VxeCheckboxButton from './components/checkbox-button'
 import VxeCheckboxGroup from './components/checkbox-group'
@@ -45,6 +47,7 @@ import VxeLayoutHeader from './components/layout-header'
 import VxeLink from './components/link'
 import VxeList from './components/list'
 import VxeLoading from './components/loading'
+import VxeMention from './components/mention'
 import VxeMenu from './components/menu'
 import VxeModal from './components/modal'
 import VxeNoticeBar from './components/notice-bar'
@@ -61,6 +64,7 @@ import VxeRadioButton from './components/radio-button'
 import VxeRadioGroup from './components/radio-group'
 import VxeResult from './components/result'
 import VxeRow from './components/row'
+import VxeSegmented from './components/segmented'
 import VxeSelect from './components/select'
 import VxeSplitter from './components/splitter'
 import VxeSplitterPanel from './components/splitter-panel'
@@ -77,8 +81,11 @@ import VxeTag from './components/tag'
 import VxeTextEllipsis from './components/text-ellipsis'
 import VxeText from './components/text'
 import VxeTextarea from './components/textarea'
+import VxeTimeline from './components/timeline'
+import VxeTimelineItem from './components/timeline-item'
 import VxeTip from './components/tip'
 import VxeTooltip from './components/tooltip'
+import VxeTour from './components/tour'
 import VxeTree from './components/tree'
 import VxeTreeSelect from './components/tree-select'
 import VxeUpload from './components/upload'
@@ -109,6 +116,7 @@ interface AllComponents {
   VxeAnchor: typeof VxeAnchor
   VxeAnchorLink: typeof VxeAnchorLink
   VxeAvatar: typeof VxeAvatar
+  VxeBacktop: typeof VxeBacktop
   VxeBadge: typeof VxeBadge
   VxeBreadcrumb: typeof VxeBreadcrumb
   VxeBreadcrumbItem: typeof VxeBreadcrumbItem
@@ -118,6 +126,7 @@ interface AllComponents {
   VxeCard: typeof VxeCard
   VxeCarousel: typeof VxeCarousel
   VxeCarouselItem: typeof VxeCarouselItem
+  VxeCascader: typeof VxeCascader
   VxeCheckbox: typeof VxeCheckbox
   VxeCheckboxButton: typeof VxeCheckboxButton
   VxeCheckboxGroup: typeof VxeCheckboxGroup
@@ -149,6 +158,7 @@ interface AllComponents {
   VxeLink: typeof VxeLink
   VxeList: typeof VxeList
   VxeLoading: typeof VxeLoading
+  VxeMention: typeof VxeMention
   VxeMenu: typeof VxeMenu
   VxeModal: typeof VxeModal
   VxeNoticeBar: typeof VxeNoticeBar
@@ -166,6 +176,7 @@ interface AllComponents {
   VxeRate: typeof VxeRate
   VxeResult: typeof VxeResult
   VxeRow: typeof VxeRow
+  VxeSegmented: typeof VxeSegmented
   VxeSelect: typeof VxeSelect
   VxeSplitter: typeof VxeSplitter
   VxeSplitterPanel: typeof VxeSplitterPanel
@@ -181,8 +192,11 @@ interface AllComponents {
   VxeTextEllipsis: typeof VxeTextEllipsis
   VxeText: typeof VxeText
   VxeTextarea: typeof VxeTextarea
+  VxeTimeline: typeof VxeTimeline
+  VxeTimelineItem: typeof VxeTimelineItem
   VxeTip: typeof VxeTip
   VxeTooltip: typeof VxeTooltip
+  VxeTour: typeof VxeTour
   VxeTree: typeof VxeTree
   VxeTreeSelect: typeof VxeTreeSelect
   VxeUpload: typeof VxeUpload
@@ -222,6 +236,7 @@ export * from './components/alert'
 export * from './components/anchor'
 export * from './components/anchor-link'
 export * from './components/avatar'
+export * from './components/backtop'
 export * from './components/badge'
 export * from './components/breadcrumb'
 export * from './components/breadcrumb-item'
@@ -231,6 +246,7 @@ export * from './components/calendar'
 export * from './components/card'
 export * from './components/carousel'
 export * from './components/carousel-item'
+export * from './components/cascader'
 export * from './components/checkbox'
 export * from './components/checkbox-button'
 export * from './components/checkbox-group'
@@ -263,6 +279,7 @@ export * from './components/layout-header'
 export * from './components/link'
 export * from './components/list'
 export * from './components/loading'
+export * from './components/mention'
 export * from './components/menu'
 export * from './components/modal'
 export * from './components/notice-bar'
@@ -280,6 +297,7 @@ export * from './components/radio-group'
 export * from './components/rate'
 export * from './components/result'
 export * from './components/row'
+export * from './components/segmented'
 export * from './components/select'
 export * from './components/splitter'
 export * from './components/splitter-panel'
@@ -295,8 +313,11 @@ export * from './components/tag'
 export * from './components/text-ellipsis'
 export * from './components/text'
 export * from './components/textarea'
+export * from './components/timeline'
+export * from './components/timeline-item'
 export * from './components/tip'
 export * from './components/tooltip'
+export * from './components/tour'
 export * from './components/tree'
 export * from './components/tree-select'
 export * from './components/upload'

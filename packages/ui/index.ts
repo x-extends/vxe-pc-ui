@@ -28,6 +28,11 @@ setConfig({
   anchor: {},
   anchorLink: {},
   avatar: {},
+  backtop: {
+    showIcon: true,
+    showContent: true,
+    threshold: 20
+  },
   badge: {},
   breadcrumb: {
     separator: '/'
@@ -60,6 +65,9 @@ setConfig({
     interval: 5000
   },
   carouselItem: {},
+  cascader: {
+    autoClose: true
+  },
   checkbox: {},
   checkboxButton: {},
   checkboxGroup: {},
@@ -297,6 +305,7 @@ setConfig({
   rate: {},
   result: {},
   row: {},
+  segmented: {},
   select: {
     multiCharOverflow: 8,
     remoteConfig: {
@@ -361,6 +370,8 @@ setConfig({
   textarea: {
     resize: 'none'
   },
+  timeline: {},
+  timelineItem: {},
   tip: {},
   tooltip: {
     // size: null,
@@ -658,7 +669,10 @@ setIcon({
   SPLIT_TOP_ACTION: iconPrefix + 'arrow-up',
   SPLIT_BOTTOM_ACTION: iconPrefix + 'arrow-down',
   SPLIT_LEFT_ACTION: iconPrefix + 'arrow-left',
-  SPLIT_RIGHT_ACTION: iconPrefix + 'arrow-right'
+  SPLIT_RIGHT_ACTION: iconPrefix + 'arrow-right',
+
+  // backtop
+  BACKTOP_TOP: iconPrefix + 'top'
 })
 
 export * from '@vxe-ui/core'

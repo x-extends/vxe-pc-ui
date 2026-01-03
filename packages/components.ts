@@ -7,6 +7,7 @@ import VxeAlert from './alert'
 import VxeAnchor from './anchor'
 import VxeAnchorLink from './anchor-link'
 import VxeAvatar from './avatar'
+import VxeBacktop from './backtop'
 import VxeBadge from './badge'
 import VxeBreadcrumb from './breadcrumb'
 import VxeBreadcrumbItem from './breadcrumb-item'
@@ -16,6 +17,7 @@ import VxeCalendar from './calendar'
 import VxeCard from './card'
 import VxeCarousel from './carousel'
 import VxeCarouselItem from './carousel-item'
+import VxeCascader from './cascader'
 import VxeCheckbox from './checkbox'
 import VxeCheckboxButton from './checkbox-button'
 import VxeCheckboxGroup from './checkbox-group'
@@ -64,6 +66,7 @@ import VxeRadioGroup from './radio-group'
 import VxeRate from './rate'
 import VxeResult from './result'
 import VxeRow from './row'
+import VxeSegmented from './segmented'
 import VxeSelect from './select'
 import VxeSplitter from './splitter'
 import VxeSplitterPanel from './splitter-panel'
@@ -79,8 +82,11 @@ import VxeTag from './tag'
 import VxeTextEllipsis from './text-ellipsis'
 import VxeText from './text'
 import VxeTextarea from './textarea'
+import VxeTimeline from './timeline'
+import VxeTimelineItem from './timeline-item'
 import VxeTip from './tip'
 import VxeTooltip from './tooltip'
+import VxeTour from './tour'
 import VxeTree from './tree'
 import VxeTreeSelect from './tree-select'
 import VxeUpload from './upload'
@@ -98,6 +104,7 @@ const components = [
   VxeAnchor,
   VxeAnchorLink,
   VxeAvatar,
+  VxeBacktop,
   VxeBadge,
   VxeBreadcrumb,
   VxeBreadcrumbItem,
@@ -107,6 +114,7 @@ const components = [
   VxeCard,
   VxeCarousel,
   VxeCarouselItem,
+  VxeCascader,
   VxeCheckbox,
   VxeCheckboxButton,
   VxeCheckboxGroup,
@@ -155,6 +163,7 @@ const components = [
   VxeRate,
   VxeResult,
   VxeRow,
+  VxeSegmented,
   VxeSelect,
   VxeSplitter,
   VxeSplitterPanel,
@@ -170,8 +179,11 @@ const components = [
   VxeTextEllipsis,
   VxeText,
   VxeTextarea,
+  VxeTimeline,
+  VxeTimelineItem,
   VxeTip,
   VxeTooltip,
+  VxeTour,
   VxeTree,
   VxeTreeSelect,
   VxeUpload,
@@ -206,6 +218,7 @@ export * from './alert'
 export * from './anchor'
 export * from './anchor-link'
 export * from './avatar'
+export * from './backtop'
 export * from './badge'
 export * from './breadcrumb'
 export * from './breadcrumb-item'
@@ -215,6 +228,7 @@ export * from './calendar'
 export * from './card'
 export * from './carousel'
 export * from './carousel-item'
+export * from './cascader'
 export * from './checkbox'
 export * from './checkbox-button'
 export * from './checkbox-group'
@@ -263,6 +277,7 @@ export * from './radio-group'
 export * from './rate'
 export * from './result'
 export * from './row'
+export * from './segmented'
 export * from './select'
 export * from './splitter'
 export * from './splitter-panel'
@@ -278,8 +293,11 @@ export * from './tag'
 export * from './text-ellipsis'
 export * from './text'
 export * from './textarea'
+export * from './timeline'
+export * from './timeline-item'
 export * from './tip'
 export * from './tooltip'
+export * from './tour'
 export * from './tree'
 export * from './tree-select'
 export * from './upload'

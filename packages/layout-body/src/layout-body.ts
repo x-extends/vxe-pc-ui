@@ -1,16 +1,30 @@
-import { ref, h, reactive, PropType } from 'vue'
+import { ref, h, reactive, PropType, computed } from 'vue'
 import { defineVxeComponent } from '../../ui/src/comp'
-import { getConfig, useSize, createEvent } from '../../ui'
-import VxeLoadingComponent from '../../loading/src/loading'
+import { getConfig, useSize, createEvent, renderEmptyElement } from '../../ui'
+import VxeLoadingComponent from '../../loading'
+import VxeUIBacktopComponent from '../../backtop'
 import XEUtils from 'xe-utils'
 
-import type { VxeLayoutBodyPropTypes, LayoutBodyReactData, LayoutBodyPrivateRef, VxeLayoutBodyEmits, LayoutBodyMethods, LayoutBodyPrivateMethods, VxeLayoutBodyPrivateComputed, VxeLayoutBodyConstructor, VxeLayoutBodyPrivateMethods, ValueOf } from '../../../types'
+import type { LayoutBodyInternalData, VxeLayoutBodyPropTypes, LayoutBodyReactData, LayoutBodyPrivateRef, VxeLayoutBodyEmits, LayoutBodyMethods, LayoutBodyPrivateMethods, VxeLayoutBodyPrivateComputed, VxeLayoutBodyConstructor, VxeLayoutBodyPrivateMethods, ValueOf } from '../../../types'
+
+function createInternalData (): LayoutBodyInternalData {
+  return {}
+}
+
+function createReactData (): LayoutBodyReactData {
+  return {}
+}
 
 export default defineVxeComponent({
   name: 'VxeLayoutBody',
   props: {
     loading: Boolean as PropType<VxeLayoutBodyPropTypes.Loading>,
     padding: Boolean as PropType<VxeLayoutBodyPropTypes.Padding>,
+    showBacktop: {
+      type: Boolean as PropType<VxeLayoutBodyPropTypes.ShowBacktop>,
+      default: () => getConfig().layoutBody.showBacktop
+    },
+    backtopConfig: Object as PropType<VxeLayoutBodyPropTypes.BacktopConfig>,
     size: {
       type: String as PropType<VxeLayoutBodyPropTypes.Size>,
       default: () => getConfig().layoutBody.size || getConfig().size
@@ -21,17 +35,24 @@ export default defineVxeComponent({
     const { slots, emit } = context
 
     const xID = XEUtils.uniqueId()
+    const backtopId = `vxe_layout_body_backtop_${xID}`
 
     const refElem = ref<HTMLDivElement>()
 
     const { computeSize } = useSize(props)
 
-    const reactData = reactive<LayoutBodyReactData>({
-    })
+    const internalData = createInternalData()
+    const reactData = reactive(createReactData())
 
     const refMaps: LayoutBodyPrivateRef = {
       refElem
     }
+
+    const computeBacktopOpts = computed(() => {
+      return Object.assign({}, getConfig().layoutBody.backtopConfig, props.backtopConfig, {
+        target: '#' + backtopId
+      })
+    })
 
     const computeMaps: VxeLayoutBodyPrivateComputed = {
       computeSize
@@ -41,6 +62,7 @@ export default defineVxeComponent({
       xID,
       props,
       context,
+      internalData,
       reactData,
 
       getRefMaps: () => refMaps,
@@ -61,10 +83,11 @@ export default defineVxeComponent({
     Object.assign($xeLayoutBody, layoutBodyMethods, layoutBodyPrivateMethods)
 
     const renderVN = () => {
-      const { loading, padding } = props
+      const { loading, padding, showBacktop } = props
+      const backtopOpts = computeBacktopOpts.value
       const vSize = computeSize.value
       const defaultSlot = slots.default
-
+      const backtopSlot = slots.backtop
       return h('div', {
         ref: refElem,
         class: ['vxe-layout-body', {
@@ -74,6 +97,7 @@ export default defineVxeComponent({
         }]
       }, [
         h('div', {
+          id: showBacktop ? backtopId : '',
           class: 'vxe-layout-body--inner'
         }, defaultSlot ? defaultSlot({}) : []),
         /**
@@ -82,7 +106,17 @@ export default defineVxeComponent({
         h(VxeLoadingComponent, {
           class: 'vxe-list-view--loading',
           modelValue: loading
-        })
+        }),
+        /**
+         * 回到顶部
+         */
+        showBacktop
+          ? h(VxeUIBacktopComponent, backtopOpts, backtopSlot
+            ? {
+                default: backtopSlot
+              }
+            : undefined)
+          : renderEmptyElement($xeLayoutBody)
       ])
     }
 
