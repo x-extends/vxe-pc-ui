@@ -301,6 +301,21 @@ const routes: Array<RouteConfig> = [
     path: '/component/splitter',
     name: 'SplitterTest',
     component: () => import('../views/splitter/SplitterTest.vue')
+  },
+  {
+    path: '/component/cascader',
+    name: 'CascaderTest',
+    component: () => import('../views/cascader/CascaderTest.vue')
+  },
+  {
+    path: '/component/segmented',
+    name: 'SegmentedTest',
+    component: () => import('../views/segmented/SegmentedTest.vue')
+  },
+  {
+    path: '/component/backtop',
+    name: 'BacktopTest',
+    component: () => import('../views/backtop/BacktopTest.vue')
   }
 ]
 

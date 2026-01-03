@@ -1,10 +1,19 @@
 import { PropType, CreateElement, VNode } from 'vue'
 import { defineVxeComponent } from '../../ui/src/comp'
-import { getConfig, createEvent, globalMixins } from '../../ui'
-import VxeLoadingComponent from '../../loading/src/loading'
+import { getConfig, createEvent, globalMixins, renderEmptyElement } from '../../ui'
+import VxeLoadingComponent from '../../loading'
+import VxeUIBacktopComponent from '../../backtop'
 import XEUtils from 'xe-utils'
 
-import type { VxeLayoutBodyPropTypes, LayoutBodyReactData, VxeLayoutBodyEmits, VxeComponentSizeType, ValueOf } from '../../../types'
+import type { LayoutBodyInternalData, VxeLayoutBodyPropTypes, LayoutBodyReactData, VxeLayoutBodyEmits, VxeComponentSizeType, ValueOf } from '../../../types'
+
+function createInternalData (): LayoutBodyInternalData {
+  return {}
+}
+
+function createReactData (): LayoutBodyReactData {
+  return {}
+}
 
 export default /* define-vxe-component start */ defineVxeComponent({
   name: 'VxeLayoutBody',
@@ -14,6 +23,11 @@ export default /* define-vxe-component start */ defineVxeComponent({
   props: {
     loading: Boolean as PropType<VxeLayoutBodyPropTypes.Loading>,
     padding: Boolean as PropType<VxeLayoutBodyPropTypes.Padding>,
+    showBacktop: {
+      type: Boolean as PropType<VxeLayoutBodyPropTypes.ShowBacktop>,
+      default: () => getConfig().layoutBody.showBacktop
+    },
+    backtopConfig: Object as PropType<VxeLayoutBodyPropTypes.BacktopConfig>,
     size: {
       type: String as PropType<VxeLayoutBodyPropTypes.Size>,
       default: () => getConfig().layoutBody.size || getConfig().size
@@ -21,17 +35,29 @@ export default /* define-vxe-component start */ defineVxeComponent({
   },
   data () {
     const xID = XEUtils.uniqueId()
-    const reactData: LayoutBodyReactData = {
-    }
+    const backtopId = `vxe_layout_body_backtop_${xID}`
+    const internalData = createInternalData()
+    const reactData = createReactData()
     return {
       xID,
+      backtopId,
+      internalData,
       reactData
     }
   },
   computed: {
     ...({} as {
       computeSize(): VxeComponentSizeType
-    })
+    }),
+    computeBacktopOpts () {
+      const $xeLayoutBody = this
+      const props = $xeLayoutBody
+      const backtopId = ($xeLayoutBody as any).backtopId as string
+
+      return Object.assign({}, getConfig().layoutBody.backtopConfig, props.backtopConfig, {
+        target: '#' + backtopId
+      })
+    }
   },
   methods: {
     //
@@ -46,11 +72,15 @@ export default /* define-vxe-component start */ defineVxeComponent({
     //
     renderVN (h: CreateElement): VNode {
       const $xeLayoutBody = this
+      const props = $xeLayoutBody
       const slots = $xeLayoutBody.$scopedSlots
-      const { loading, padding } = $xeLayoutBody
+      const backtopId = $xeLayoutBody.backtopId
+
+      const { loading, padding, showBacktop } = props
+      const backtopOpts = $xeLayoutBody.computeBacktopOpts
       const vSize = $xeLayoutBody.computeSize
       const defaultSlot = slots.default
-
+      const backtopSlot = slots.backtop
       return h('div', {
         class: ['vxe-layout-body', {
           [`size--${vSize}`]: vSize,
@@ -59,6 +89,9 @@ export default /* define-vxe-component start */ defineVxeComponent({
         }]
       }, [
         h('div', {
+          attrs: {
+            id: showBacktop ? backtopId : ''
+          },
           class: 'vxe-layout-body--inner'
         }, defaultSlot ? defaultSlot({}) : []),
         /**
@@ -69,7 +102,20 @@ export default /* define-vxe-component start */ defineVxeComponent({
           props: {
             value: loading
           }
-        })
+        }),
+        /**
+         * 回到顶部
+         */
+        showBacktop
+          ? h(VxeUIBacktopComponent, {
+            props: backtopOpts,
+            scopedSlots: backtopSlot
+              ? {
+                  default: backtopSlot
+                }
+              : undefined
+          })
+          : renderEmptyElement($xeLayoutBody)
       ])
     }
   },

@@ -17,7 +17,7 @@ export interface VxeRatePrivateRef extends RatePrivateRef { }
 
 export namespace VxeRatePropTypes {
   export type Size = VxeComponentSizeType
-  export type ModelValue = number | string
+  export type ModelValue = undefined | null | number | string
   export type Readonly = boolean
   export type Disabled = boolean
   export type Status = VxeComponentStatusType

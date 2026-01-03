@@ -1,0 +1,111 @@
+@use "sass:map";
+@use "sass:list";
+
+$backtopThemeList: (
+  (
+    name: "primary",
+    fontColot: #fff,
+    bgColor: var(--vxe-ui-font-primary-color)
+  ),
+  (
+    name: "success",
+    fontColot: #fff,
+    bgColor: var(--vxe-ui-status-success-color)
+  ),
+  (
+    name: "info",
+    fontColot: #fff,
+    bgColor: var(--vxe-ui-status-info-color)
+  ),
+  (
+    name: "warning",
+    fontColot: #fff,
+    bgColor: var(--vxe-ui-status-warning-color)
+  ),
+  (
+    name: "danger",
+    fontColot: #fff,
+    bgColor: var(--vxe-ui-status-danger-color)
+  ),
+  (
+    name: "error",
+    fontColot: #fff,
+    bgColor: var(--vxe-ui-status-error-color)
+  )
+);
+
+.vxe-backtop {
+  display: inline-flex;
+  position: absolute;
+  opacity: 0;
+  right: 1.6em;
+  bottom: 1.6em;
+  color: var(--vxe-ui-font-color);
+  font-family: var(--vxe-ui-font-family);
+  background-color: var(--vxe-ui-layout-background-color);
+  border-radius: var(--vxe-ui-base-border-radius);;
+  transition: all 0.3s;
+  cursor: pointer;
+  box-shadow: 0px 0px 6px rgba(0, 0, 0, 0.3);
+  z-index: 9;
+  &.is--visible {
+    opacity: 1;
+  }
+  &.is--circle {
+    border-radius: 50%;
+    .vxe-backtop--inner {
+      border-radius: 50%;
+    }
+  }
+  &.is--fixed {
+    position: fixed;
+  }
+  &.is--absolute {
+    position: absolute;
+  }
+}
+
+.vxe-backtop--inner {
+  min-width: 3em;
+  min-height: 3em;
+  padding: 0.4em;
+  display: flex;
+  text-align: center;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--vxe-ui-base-border-radius);;
+}
+
+.vxe-backtop {
+  &:hover {
+    color: var(--vxe-ui-font-primary-color);
+    .vxe-backtop--inner {
+      background-color: rgba(0, 0, 0, 0.1);
+    }
+  }
+  @for $index from 0 to list.length($backtopThemeList) {
+    $item: list.nth($backtopThemeList, $index + 1);
+    &.theme--#{map.get($item, name)} {
+      color: map.get($item, fontColot);
+      background-color: map.get($item, bgColor);
+    }
+  }
+}
+
+.vxe-backtop--icon {
+  font-size: 1.4em;
+}
+
+.vxe-backtop {
+  font-size: var(--vxe-ui-font-size-default);
+  &.size--medium {
+    font-size: var(--vxe-ui-font-size-medium);
+  }
+  &.size--small {
+    font-size: var(--vxe-ui-font-size-small);
+  }
+  &.size--mini {
+    font-size: var(--vxe-ui-font-size-mini);
+  }
+}

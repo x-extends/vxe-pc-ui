@@ -1,4 +1,5 @@
 import { DefineVxeComponentApp, DefineVxeComponentOptions, DefineVxeComponentInstance, VxeComponentEventParams, ValueOf, VxeComponentSizeType } from '@vxe-ui/core'
+import { VxeBacktopProps } from './backtop'
 
 /* eslint-disable @typescript-eslint/no-empty-interface,no-use-before-define,@typescript-eslint/ban-types */
 
@@ -6,6 +7,7 @@ export declare const VxeLayoutBody: DefineVxeComponentApp<VxeLayoutBodyProps, Vx
 export type VxeLayoutBodyComponent = DefineVxeComponentOptions<VxeLayoutBodyProps>
 
 export type VxeLayoutBodyInstance = DefineVxeComponentInstance<{
+  internalData: LayoutBodyInternalData
   reactData: LayoutBodyReactData
 }, VxeLayoutBodyProps, VxeLayoutBodyPrivateComputed, VxeLayoutBodyMethods>
 
@@ -19,18 +21,24 @@ export namespace VxeLayoutBodyPropTypes {
   export type Size = VxeComponentSizeType
   export type Loading = boolean
   export type Padding = boolean
+  export type ShowBacktop = boolean
+  export interface BacktopConfig extends Omit<VxeBacktopProps, 'target'> {}
 }
 
 export interface VxeLayoutBodyProps {
   size?: VxeLayoutBodyPropTypes.Size
   loading?: VxeLayoutBodyPropTypes.Loading
   padding?: VxeLayoutBodyPropTypes.Padding
+  showBacktop?: VxeLayoutBodyPropTypes.ShowBacktop
+  backtopConfig?: VxeLayoutBodyPropTypes.BacktopConfig
 }
 
 export interface LayoutBodyPrivateComputed {
 }
 export interface VxeLayoutBodyPrivateComputed extends LayoutBodyPrivateComputed { }
 
+export interface LayoutBodyInternalData {
+}
 export interface LayoutBodyReactData {
 }
 
@@ -62,6 +70,7 @@ export namespace VxeLayoutBodySlotTypes {
 
 export interface VxeLayoutBodySlots {
   default: (params: VxeLayoutBodySlotTypes.DefaultSlotParams) => any
+  backtop: (params: VxeLayoutBodySlotTypes.DefaultSlotParams) => any
 }
 
 export const LayoutBody: typeof VxeLayoutBody

@@ -31,7 +31,7 @@ export namespace VxeListPropTypes {
      */
     gt?: number
     /**
-     * 指定每次渲染的数据偏移量，偏移量越大渲染次数就越少，但每次渲染耗时就越久
+     * 指定每次渲染的数据额外数据，额外数据越大渲染次数就越少，但每次渲染耗时就越久
      */
     oSize?: number
     /**
@@ -54,7 +54,7 @@ export namespace VxeListPropTypes {
      */
     gt?: number
     /**
-     * 指定每次渲染的数据偏移量，偏移量越大渲染次数就越少，但每次渲染耗时就越久
+     * 指定每次渲染的数据额外数据，额外数据越大渲染次数就越少，但每次渲染耗时就越久
      */
     oSize?: number
     /**
