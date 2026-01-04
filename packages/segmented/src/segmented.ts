@@ -1,7 +1,7 @@
 import { PropType, CreateElement, VNode } from 'vue'
 import { defineVxeComponent } from '../../ui/src/comp'
 import XEUtils from 'xe-utils'
-import { getConfig, createEvent, globalMixins } from '../../ui'
+import { getConfig, createEvent, globalMixins, renderEmptyElement } from '../../ui'
 import { toCssUnit } from '../../ui/src/dom'
 
 import type { VxeSegmentedPropTypes, SegmentedReactData, VxeSegmentedEmits, VxeComponentSizeType, ValueOf, VxeComponentStyleType } from '../../../types'
@@ -182,7 +182,8 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const defaultSlot = slots.default
       const itemVNs: VNode[] = []
       itemList.forEach((item, i) => {
-        const itemWidth = item.width || optionOpts.width
+        const { icon, width } = item
+        const itemWidth = width || optionOpts.width
         itemVNs.push(
           h('label', {
             key: i,
@@ -210,6 +211,15 @@ export default /* define-vxe-component start */ defineVxeComponent({
             h('div', {
               class: 'vxe-segmented--content'
             }, [
+              icon
+                ? h('div', {
+                  class: 'vxe-segmented--icon'
+                }, [
+                  h('i', {
+                    class: icon
+                  })
+                ])
+                : renderEmptyElement($xeSegmented),
               h('div', {
                 class: 'vxe-segmented--label'
               }, defaultSlot ? defaultSlot({ option: item }) : XEUtils.eqNull(item.label) ? '' : `${item.label}`)
