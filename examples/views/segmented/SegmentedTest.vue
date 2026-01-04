@@ -27,6 +27,6 @@ const optList = [
   { label: '选项4', value: '4' },
   { label: '选项5', value: '5' },
   { label: '选项6', value: '6' },
-  { label: '选项7', value: '7' }
+  { label: '选项7', value: '7', icon: 'vxe-icon-home' }
 ]
 </script>
