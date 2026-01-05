@@ -115,7 +115,7 @@ export namespace VxeTreeSelectPropTypes {
 
 export interface VxeTreeSelectProps<D = any> {
   size?: VxeTreeSelectPropTypes.Size
-  modelValue?: VxeTreeSelectPropTypes.ModelValue
+  value?: VxeTreeSelectPropTypes.ModelValue
   clearable?: VxeTreeSelectPropTypes.Clearable
   zIndex?: VxeTreeSelectPropTypes.ZIndex
   placeholder?: VxeTreeSelectPropTypes.Placeholder

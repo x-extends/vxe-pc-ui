@@ -39,7 +39,7 @@ export namespace VxeDatePanelPropTypes {
 
 export interface VxeDatePanelProps {
   size?: VxeDatePanelPropTypes.Size
-  modelValue?: VxeDatePanelPropTypes.ModelValue
+  value?: VxeDatePanelPropTypes.ModelValue
   className?: VxeDatePanelPropTypes.ClassName
   type?: VxeDatePanelPropTypes.Type
   multiple?: VxeDatePanelPropTypes.Multiple

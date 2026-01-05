@@ -29,7 +29,7 @@ export namespace VxeCheckboxButtonPropTypes {
 
 export interface VxeCheckboxButtonProps {
   size?: VxeCheckboxButtonPropTypes.Size
-  modelValue?: VxeCheckboxButtonPropTypes.ModelValue
+  value?: VxeCheckboxButtonPropTypes.ModelValue
   label?: VxeCheckboxButtonPropTypes.Label
   title?: VxeCheckboxButtonPropTypes.Title
   checkedValue?: VxeCheckboxButtonPropTypes.CheckedValue

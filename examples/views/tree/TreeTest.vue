@@ -1,204 +1,86 @@
 <template>
   <div>
-    <!-- <p>
-      <vxe-tree :data="treeList1" :checkbox-config="{checkStrictly: true}" show-checkbox show-radio ></vxe-tree>
-    </p>
-    <p>
-      <vxe-tree :loading="loading" :data="treeList2" trigger="node" :checkbox-check-row-keys.sync="checkboxCheckRowKeys" :radio-check-row-key.sync="checkboxCheckRowKey" checkStrictly is-hover is-current show-checkbox show-radio show-line></vxe-tree>
-    </p>
-    <p>
-      <vxe-tree
-      is-hover
-      lazy
-      show-checkbox
-      show-line
-      has-child-field="hasChild"
-      :load-method="loadMethod"
-      :data="treeList">
+    <vxe-tree
+      v-bind="treeOptions"
+      @menu-click="menuClickEvent">
     </vxe-tree>
-    </p> -->
-    <vxe-tree ref="tree3Ref" v-bind="treeOptions2"></vxe-tree>
   </div>
 </template>
 
-<script lang="ts">
-import Vue from 'vue'
+<script>
+import { VxeUI } from '../../../packages'
 
-export default Vue.extend({
+export default {
   data () {
-    return {
-      loading: false,
-      treeList1: [
-        { title: '22' },
-        {
-          title: '333',
-          children: [
-            { title: '345' },
-            { title: '456' },
+    const treeOptions = {
+      transform: true,
+      nodeConfig: {
+        isHover: true,
+        isCurrent: true
+      },
+      menuConfig: {
+        options: [
+          [
+            { code: '1', name: '新增' },
+            { code: '2', name: '删除', prefixIcon: 'vxe-icon-delete-fill' },
             {
-              title: '6788',
+              code: '3',
+              name: '审批',
               children: [
-                { title: '4324' },
-                { title: '9808900' }
-              ]
-            }
-          ]
-        },
-        { title: '21343' },
-        {
-          title: '567',
-          children: [
-            { title: '67867' },
-            { title: '789789' },
-            {
-              title: '890980890',
-              children: [
-                { title: '435435' },
-                { title: '56765' }
-              ]
-            }
-          ]
-        },
-        { title: '10567' },
-        { title: '8003425' }
-      ],
-      treeList2: [
-        { title: '22' },
-        {
-          title: '333',
-          children: [
-            { title: '345' },
-            {
-              title: '890890',
-              children: [
-                { title: '3242432' },
-                { title: '456577' }
+                { code: '4', name: '通过', prefixIcon: 'vxe-icon-check' },
+                { code: '5', name: '不通过', prefixIcon: 'vxe-icon-close' }
               ]
             },
-            { title: '456' },
+            { code: '6', name: '查看', prefixIcon: 'vxe-icon-link' }
+          ],
+          [
             {
-              title: '45667',
+              code: '11',
+              name: '更多操作',
               children: [
-                { title: '768768' },
-                { title: '879797987' }
+                { code: '13', name: '编辑', prefixIcon: 'vxe-icon-feedback' },
+                { code: '14', name: '取消' }
               ]
             },
-            {
-              title: '6788',
-              children: [
-                { title: '4324' },
-                { title: '9808900' },
-                {
-                  title: '678456',
-                  children: [
-                    { title: '3245234' },
-                    { title: '123' }
-                  ]
-                }
-              ]
-            }
+            { code: '10', name: '驳回', prefixIcon: 'vxe-icon-undo' }
           ]
-        },
-        { title: '21343' },
-        {
-          title: '567',
-          children: [
-            { title: '67867' },
-            {
-              title: '0980',
-              children: [
-                { title: '126567' },
-                {
-                  title: '678345',
-                  children: [
-                    { title: '67677' },
-                    { title: '234' }
-                  ]
-                },
-                { title: '32477' },
-                {
-                  title: '8970876',
-                  children: [
-                    { title: '456' },
-                    { title: '324234' }
-                  ]
-                }
-              ]
-            },
-            { title: '789789' },
-            {
-              title: '890980890',
-              children: [
-                { title: '435435' },
-                { title: '56765' }
-              ]
-            }
-          ]
-        },
-        { title: '10567' },
-        { title: '8003425' }
-      ],
-      treeList: [
-        { title: '节点2', id: '2', hasChild: true },
-        { title: '节点3', id: '3', hasChild: true },
-        { title: '节点4', id: '4', hasChild: true },
-        { title: '节点5', id: '5', hasChild: false }
-      ],
-      checkboxCheckRowKey: null,
-      checkboxCheckRowKeys: [],
-      treeOptions2: {
-        transform: true,
-        height: 200,
-        drag: true,
-        virtualYConfig: {
-          gt: 0
-        },
-        data: [
-          { title: '节点2', id: '2', parentId: null },
-          { title: '节点3', id: '3', parentId: null },
-          { title: '节点3-1', id: '31', parentId: '3' },
-          { title: '节点3-2', id: '32', parentId: '3' },
-          { title: '节点3-2-1', id: '321', parentId: '32' },
-          { title: '节点3-2-2', id: '322', parentId: '32' },
-          { title: '节点3-3', id: '33', parentId: '3' },
-          { title: '节点3-3-1', id: '331', parentId: '33' },
-          { title: '节点3-3-2', id: '332', parentId: '33' },
-          { title: '节点3-3-3', id: '333', parentId: '33' },
-          { title: '节点3-4', id: '34', parentId: '3' },
-          { title: '节点4', id: '4', parentId: null },
-          { title: '节点4-1', id: '41', parentId: '4' },
-          { title: '节点4-1-1', id: '411', parentId: '42' },
-          { title: '节点4-1-2', id: '412', parentId: '42' },
-          { title: '节点4-2', id: '42', parentId: '4' },
-          { title: '节点4-3', id: '43', parentId: '4' },
-          { title: '节点4-3-1', id: '431', parentId: '43' },
-          { title: '节点4-3-2', id: '432', parentId: '43' },
-          { title: '节点5', id: '5', parentId: null }
         ]
-      }
+      },
+      data: [
+        { title: '节点2', id: '2', parentId: null },
+        { title: '节点3', id: '3', parentId: null },
+        { title: '节点3-1', id: '31', parentId: '3' },
+        { title: '节点3-2', id: '32', parentId: '3' },
+        { title: '节点3-2-1', id: '321', parentId: '32' },
+        { title: '节点3-2-2', id: '322', parentId: '32' },
+        { title: '节点3-3', id: '33', parentId: '3' },
+        { title: '节点3-3-1', id: '331', parentId: '33' },
+        { title: '节点3-3-2', id: '332', parentId: '33' },
+        { title: '节点3-3-3', id: '333', parentId: '33' },
+        { title: '节点3-4', id: '34', parentId: '3' },
+        { title: '节点4', id: '4', parentId: null },
+        { title: '节点4-1', id: '41', parentId: '4' },
+        { title: '节点4-1-1', id: '411', parentId: '42' },
+        { title: '节点4-1-2', id: '412', parentId: '42' },
+        { title: '节点4-2', id: '42', parentId: '4' },
+        { title: '节点4-3', id: '43', parentId: '4' },
+        { title: '节点4-3-1', id: '431', parentId: '43' },
+        { title: '节点4-3-2', id: '432', parentId: '43' },
+        { title: '节点5', id: '5', parentId: null }
+      ]
+    }
+
+    return {
+      treeOptions
     }
   },
   methods: {
-    getNodeListApi (node: any) {
-      return new Promise<any[]>(resolve => {
-        // 模拟后端接口
-        setTimeout(() => {
-          resolve([
-            { title: `${node.title}-1`, id: `${node.id}1`, hasChild: Math.random() * 10 < 6 },
-            { title: `${node.title}-2`, id: `${node.id}2`, hasChild: Math.random() * 10 < 6 }
-          ])
-        }, 500)
+    menuClickEvent ({ node, option }) {
+      VxeUI.modal.message({
+        content: `点击了${node.title} - code=${option.code}`,
+        status: 'success'
       })
-    },
-    loadMethod  ({ node }: any) {
-      return this.getNodeListApi(node)
     }
-  },
-  created () {
-    this.loading = true
-    setTimeout(() => {
-      this.loading = false
-    }, 3000)
   }
-})
+}
 </script>

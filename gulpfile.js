@@ -52,6 +52,7 @@ const componentList = [
   'collapse',
   'collapse-pane',
   'color-picker',
+  'context-menu',
   'countdown',
   'date-panel',
   'date-picker',

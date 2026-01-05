@@ -114,7 +114,8 @@ export default Vue.extend({
         { name: 'SplitterTest', routerLink: { name: 'SplitterTest' } },
         { name: 'CascaderTest', routerLink: { name: 'CascaderTest' } },
         { name: 'SegmentedTest', routerLink: { name: 'SegmentedTest' } },
-        { name: 'BacktopTest', routerLink: { name: 'BacktopTest' } }
+        { name: 'BacktopTest', routerLink: { name: 'BacktopTest' } },
+        { name: 'ContextMenuTest', routerLink: { name: 'ContextMenuTest' } }
       ]
     }
   },

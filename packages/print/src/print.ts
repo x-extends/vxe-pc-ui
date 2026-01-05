@@ -47,6 +47,10 @@ export default /* define-vxe-component start */ defineVxeComponent({
       type: String as PropType<VxePrintPropTypes.CustomStyle>,
       default: () => getConfig().print.customStyle
     },
+    styleUrls: {
+      type: Array as PropType<VxePrintPropTypes.StyleUrls>,
+      default: () => getConfig().print.styleUrls
+    },
     beforeMethod: Function as PropType<VxePrintPropTypes.BeforeMethod>
   },
   provide () {
@@ -77,8 +81,27 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const props = $xePrint
       const reactData = $xePrint.reactData
 
+      const { align, title, headerAlign, footerAlign, showPageNumber, customLayout, pageBreaks, content, headerHtml, footerHtml, leftHtml, rightHtml, showAllPageTitle, pageStyle, customStyle, styleUrls, beforeMethod } = props
       const elem = $xePrint.$refs.refElem as HTMLDivElement
-      return printHtml(Object.assign({}, props, {
+      return printHtml(Object.assign({}, {
+        align,
+        title,
+        headerAlign,
+        footerAlign,
+        showPageNumber,
+        customLayout,
+        pageBreaks,
+        content,
+        headerHtml,
+        footerHtml,
+        leftHtml,
+        rightHtml,
+        showAllPageTitle,
+        pageStyle,
+        customStyle,
+        styleUrls,
+        beforeMethod
+      }, {
         _pageBreaks: !!reactData.staticPageBreaks.length,
         html: trimHtml(elem ? elem.outerHTML : '') || props.html || props.content || ''
       }))

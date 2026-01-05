@@ -132,7 +132,7 @@ export namespace VxeSelectPropTypes {
 
 export interface VxeSelectProps {
   size?: VxeSelectPropTypes.Size
-  modelValue?: VxeSelectPropTypes.ModelValue
+  value?: VxeSelectPropTypes.ModelValue
   defaultConfig?: VxeSelectPropTypes.DefaultConfig
   clearable?: VxeSelectPropTypes.Clearable
   zIndex?: VxeSelectPropTypes.ZIndex

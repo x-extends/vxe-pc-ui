@@ -7,8 +7,9 @@ import { errLog } from '../../ui/src/log'
 import { getSlotVNs } from '../../ui/src/vn'
 import { crossTreeDragNodeGlobal, getCrossTreeDragNodeInfo } from './store'
 import { toCssUnit, isScale, getPaddingTopBottomSize, addClass, removeClass, getTpImg, hasControlKey, getEventTargetNode } from '../../ui/src/dom'
+import { isEnableConf } from '../../ui/src/utils'
 import { moveRowAnimateToTb, clearRowAnimate } from '../../ui/src/anime'
-import VxeLoadingComponent from '../../loading/src/loading'
+import VxeLoadingComponent from '../../loading'
 
 import type { TreeReactData, VxeTreeEmits, VxeTreeConstructor, VxeTreePropTypes, TreeInternalData, VxeTreeDefines, VxeTreePrivateMethods, VxeComponentSizeType, ValueOf } from '../../../types'
 
@@ -512,6 +513,25 @@ function createInternalData (): TreeInternalData {
   }
 }
 
+function createReactData ():TreeReactData {
+  return {
+    parentHeight: 0,
+    customHeight: 0,
+    customMinHeight: 0,
+    customMaxHeight: 0,
+    currentNode: null,
+    scrollYLoad: false,
+    bodyHeight: 0,
+    topSpaceHeight: 0,
+    selectRadioKey: null,
+    treeList: [],
+    updateExpandedFlag: 1,
+    updateCheckboxFlag: 1,
+    dragNode: null,
+    dragTipText: ''
+  }
+}
+
 export default /* define-vxe-component start */ defineVxeComponent({
   name: 'VxeTree',
   mixins: [
@@ -609,6 +629,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       default: () => getConfig().tree.drag
     },
     dragConfig: Object as PropType<VxeTreePropTypes.DragConfig>,
+    menuConfig: Object as PropType<VxeTreePropTypes.MenuConfig>,
     showIcon: {
       type: Boolean as PropType<VxeTreePropTypes.ShowIcon>,
       default: true
@@ -633,24 +654,15 @@ export default /* define-vxe-component start */ defineVxeComponent({
     },
     virtualYConfig: Object as PropType<VxeTreePropTypes.VirtualYConfig>
   },
+  provide () {
+    const $xeTree = this
+    return {
+      $xeTree
+    }
+  },
   data () {
     const xID = XEUtils.uniqueId()
-    const reactData: TreeReactData = {
-      parentHeight: 0,
-      customHeight: 0,
-      customMinHeight: 0,
-      customMaxHeight: 0,
-      currentNode: null,
-      scrollYLoad: false,
-      bodyHeight: 0,
-      topSpaceHeight: 0,
-      selectRadioKey: null,
-      treeList: [],
-      updateExpandedFlag: 1,
-      updateCheckboxFlag: 1,
-      dragNode: null,
-      dragTipText: ''
-    }
+    const reactData = createReactData()
     const internalData = createInternalData()
     return {
       xID,
@@ -763,6 +775,12 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const props = $xeTree
 
       return Object.assign({}, getConfig().tree.dragConfig, props.dragConfig)
+    },
+    computeMenuOpts () {
+      const $xeTree = this
+      const props = $xeTree
+
+      return Object.assign({}, getConfig().tree.menuConfig, props.menuConfig)
     },
     computeTreeStyle () {
       const $xeTree = this
@@ -1572,6 +1590,36 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const $xeTree = this
 
       $xeTree.dispatchEvent('node-dblclick', { node }, evnt)
+    },
+    handleContextmenuEvent (evnt: MouseEvent, node: any) {
+      const $xeTree = this
+      const props = $xeTree
+      const reactData = $xeTree.reactData
+
+      const { menuConfig } = props
+      const isRowCurrent = $xeTree.computeIsRowCurrent
+      const menuOpts = $xeTree.computeMenuOpts
+      if (menuConfig ? isEnableConf(menuOpts) : menuOpts.enabled) {
+        const { options, visibleMethod } = menuOpts
+        if (!visibleMethod || visibleMethod({ $tree: $xeTree, options, node })) {
+          if (isRowCurrent) {
+            $xeTree.changeCurrentEvent(evnt, node)
+          } else if (reactData.currentNode) {
+            reactData.currentNode = null
+          }
+          if (VxeUI.contextMenu) {
+            VxeUI.contextMenu.openByEvent(evnt, {
+              options,
+              events: {
+                optionClick (eventParams) {
+                  $xeTree.dispatchEvent('menu-click', Object.assign({ node }, eventParams), eventParams.$event)
+                }
+              }
+            })
+          }
+        }
+      }
+      $xeTree.dispatchEvent('node-menu', { node }, evnt)
     },
     handleAsyncTreeExpandChilds (node: any) {
       const $xeTree = this
@@ -2642,6 +2690,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
         dragstart?: any
         dragend?: any
         dragover?: any
+        contextmenu?: any
       } = {
         mousedown (evnt: MouseEvent) {
           $xeTree.handleNodeMousedownEvent(evnt, node)
@@ -2652,6 +2701,9 @@ export default /* define-vxe-component start */ defineVxeComponent({
         },
         dblclick (evnt: MouseEvent) {
           $xeTree.handleNodeDblclickEvent(evnt, node)
+        },
+        contextmenu (evnt: MouseEvent) {
+          $xeTree.handleContextmenuEvent(evnt, node)
         }
       }
       // 拖拽行事件
@@ -2942,7 +2994,6 @@ export default /* define-vxe-component start */ defineVxeComponent({
     const reactData = $xeTree.reactData
 
     reactData.selectRadioKey = enNodeValue(props.checkNodeKey)
-
     $xeTree.loadData(props.data || [])
   },
   mounted () {
@@ -2950,13 +3001,17 @@ export default /* define-vxe-component start */ defineVxeComponent({
     const props = $xeTree
     const internalData = $xeTree.internalData
 
-    const { transform, drag } = props
+    const { transform, drag, menuConfig } = props
     const dragOpts = $xeTree.computeDragOpts
     if (drag && !transform) {
       errLog('vxe.error.notSupportProp', ['drag', 'transform=false', 'transform=true'])
     }
     if (dragOpts.isCrossTreeDrag) {
       errLog('vxe.error.notProp', ['drag-config.isCrossTreeDrag'])
+    }
+    const VxeUIContextMenu = VxeUI.getComponent('VxeContextMenu')
+    if (menuConfig && !VxeUIContextMenu) {
+      errLog('vxe.error.reqComp', ['vxe-context-menu'])
     }
     if (props.autoResize) {
       const el = $xeTree.$refs.refElem as HTMLDivElement
@@ -2979,6 +3034,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
   },
   beforeDestroy () {
     const $xeTree = this
+    const reactData = $xeTree.reactData
     const internalData = $xeTree.internalData
 
     const { resizeObserver } = internalData
@@ -2986,11 +3042,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       resizeObserver.disconnect()
     }
     globalEvents.off($xeTree, 'resize')
-  },
-  destroyed () {
-    const $xeTree = this
-    const internalData = $xeTree.internalData
-
+    XEUtils.assign(reactData, createReactData())
     XEUtils.assign(internalData, createInternalData())
   },
   render (this: any, h) {

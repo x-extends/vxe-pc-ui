@@ -1,7 +1,7 @@
 import Vue, { CreateElement } from 'vue'
 import { VxeUI, renderEmptyElement } from '@vxe-ui/core'
 
-import type { VxeModalDefines, VxeDrawerDefines, VxeLoadingProps, VxeWatermarkProps } from '../../types'
+import type { VxeModalDefines, VxeDrawerDefines, VxeLoadingProps, VxeWatermarkProps, VxeContextMenuProps, VxeContextMenuDefines } from '../../types'
 
 let dynamicContainerElem: HTMLElement
 
@@ -21,7 +21,8 @@ export const DynamicApp = Vue.extend({
       modals,
       drawers,
       globalLoading: null as null | VxeLoadingProps,
-      globalWatermark: null as null | VxeWatermarkProps
+      globalWatermark: null as null | VxeWatermarkProps,
+      globalContextMenu: null as null |(VxeContextMenuProps & VxeContextMenuDefines.ContextMenuOpenOptions)
     }
   },
   methods: {
@@ -30,8 +31,39 @@ export const DynamicApp = Vue.extend({
       const VxeUIDrawerComponent = VxeUI.getComponent('vxe-drawer')
       const VxeUILoadingComponent = VxeUI.getComponent('vxe-loading')
       const VxeUIWatermarkComponent = VxeUI.getComponent('vxe-watermark')
+      const VxeUIContextMenuComponent = VxeUI.getComponent('vxe-context-menu')
 
-      const { modals, drawers, globalLoading, globalWatermark } = this
+      const { modals, drawers, globalLoading, globalWatermark, globalContextMenu } = this
+      let cmOns: {
+        show: any
+        hide: any
+        'option-click': any
+      } | undefined
+      if (globalContextMenu) {
+        const events = globalContextMenu.events || {}
+        const { optionClick, show, hide } = events
+        cmOns = {
+          show (params: VxeContextMenuDefines.ShowEventParams) {
+            const { $contextMenu } = params
+            if (show) {
+              show.call($contextMenu, params)
+            }
+          },
+          hide (params: VxeContextMenuDefines.HideEventParams) {
+            const { $contextMenu } = params
+            if (hide) {
+              hide.call($contextMenu, params)
+            }
+            dynamicStore.globalContextMenu = null
+          },
+          'option-click' (params: VxeContextMenuDefines.OptionClickEventParams) {
+            const { $contextMenu } = params
+            if (optionClick) {
+              optionClick.call($contextMenu, params)
+            }
+          }
+        }
+      }
       return h('div', {}, [
         modals.length
           ? h('div', {
@@ -63,6 +95,13 @@ export const DynamicApp = Vue.extend({
           ? h(VxeUILoadingComponent, {
             key: 'gl',
             props: globalLoading
+          })
+          : renderEmptyElement(this),
+        globalContextMenu
+          ? h(VxeUIContextMenuComponent, {
+            key: 'cm',
+            props: globalContextMenu,
+            on: cmOns
           })
           : renderEmptyElement(this)
       ])

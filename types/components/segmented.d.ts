@@ -39,7 +39,7 @@ export namespace VxeSegmentedPropTypes {
 }
 
 export interface VxeSegmentedProps {
-  modelValue?: VxeSegmentedPropTypes.ModelValue
+  value?: VxeSegmentedPropTypes.ModelValue
   size?: VxeSegmentedPropTypes.Size
   type?: VxeSegmentedPropTypes.Type
   disabled?: VxeSegmentedPropTypes.Disabled
@@ -87,12 +87,14 @@ export namespace VxeSegmentedDefines {
 }
 
 export type VxeSegmentedEventProps = {
-  'onUpdate:modelValue'?: VxeSegmentedEvents.UpdateModelValue
+  onInput?: VxeSegmentedEvents.UpdateModelValue
+  onModelValue?: VxeSegmentedEvents.UpdateModelValue
   onChange?: VxeSegmentedEvents.Change
 }
 
 export interface VxeSegmentedListeners {
-  'update:modelValue'?: VxeSegmentedEvents.UpdateModelValue
+  input?: VxeSegmentedEvents.UpdateModelValue
+  modelValue?: VxeSegmentedEvents.UpdateModelValue
   change?: VxeSegmentedEvents.Change
 }
 

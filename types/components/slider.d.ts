@@ -30,7 +30,7 @@ export namespace VxeSliderPropTypes {
 
 export interface VxeSliderProps {
   size?: VxeSliderPropTypes.Size
-  modelValue?: VxeSliderPropTypes.ModelValue
+  value?: VxeSliderPropTypes.ModelValue
   max?: VxeSliderPropTypes.Max
   min?: VxeSliderPropTypes.Min
   vertical?: VxeSliderPropTypes.Vertical

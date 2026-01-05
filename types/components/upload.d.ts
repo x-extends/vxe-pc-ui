@@ -126,7 +126,7 @@ export namespace VxeUploadPropTypes {
 }
 
 export interface VxeUploadProps {
-  modelValue?: VxeUploadPropTypes.ModelValue
+  value?: VxeUploadPropTypes.ModelValue
   size?: VxeUploadPropTypes.Size
   showList?: VxeUploadPropTypes.ShowList
   moreConfig?: VxeUploadPropTypes.MoreConfig

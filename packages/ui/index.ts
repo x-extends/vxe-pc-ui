@@ -46,7 +46,8 @@ setConfig({
     },
     suffixTooltip: {
       enterable: true
-    }
+    },
+    showDropdownIcon: true
   },
   buttonGroup: {},
   calendar: {
@@ -79,6 +80,7 @@ setConfig({
     }
   },
   collapsePane: {},
+  contextMenu: {},
   countdown: {},
   colorPicker: {
     type: 'rgb',
@@ -672,7 +674,11 @@ setIcon({
   SPLIT_RIGHT_ACTION: iconPrefix + 'arrow-right',
 
   // backtop
-  BACKTOP_TOP: iconPrefix + 'top'
+  BACKTOP_TOP: iconPrefix + 'top',
+
+  // context-menu
+  CONTEXT_MENU_OPTION_LOADING: iconPrefix + 'spinner roll',
+  CONTEXT_MENU_CHILDREN: iconPrefix + 'arrow-right'
 })
 
 export * from '@vxe-ui/core'

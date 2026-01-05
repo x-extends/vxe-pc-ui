@@ -49,7 +49,7 @@ export namespace VxeTableSelectPropTypes {
 
 export interface VxeTableSelectProps<D = any> {
   size?: VxeTableSelectPropTypes.Size
-  modelValue?: VxeTableSelectPropTypes.ModelValue
+  value?: VxeTableSelectPropTypes.ModelValue
   clearable?: VxeTableSelectPropTypes.Clearable
   zIndex?: VxeTableSelectPropTypes.ZIndex
   placeholder?: VxeTableSelectPropTypes.Placeholder

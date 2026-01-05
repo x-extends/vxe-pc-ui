@@ -41,7 +41,7 @@ export namespace VxeTooltipPropTypes {
 
 export interface VxeTooltipProps {
   size?: VxeTooltipPropTypes.Size
-  modelValue?: VxeTooltipPropTypes.ModelValue
+  value?: VxeTooltipPropTypes.ModelValue
   selector?: VxeTooltipPropTypes.Selector
   trigger?: VxeTooltipPropTypes.Trigger
   theme?: VxeTooltipPropTypes.Theme

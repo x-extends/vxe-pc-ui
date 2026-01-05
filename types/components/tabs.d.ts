@@ -108,7 +108,7 @@ export namespace VxeTabsPropTypes {
 }
 
 export type VxeTabsProps = {
-  modelValue?: VxeTabsPropTypes.ModelValue
+  value?: VxeTabsPropTypes.ModelValue
   size?: VxeTabsPropTypes.Size
   options?: VxeTabsPropTypes.Options
   destroyOnClose?: VxeTabsPropTypes.DestroyOnClose

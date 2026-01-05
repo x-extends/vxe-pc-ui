@@ -32,7 +32,7 @@ export namespace VxeCollapsePropTypes {
 
 export type VxeCollapseProps = {
   size?: VxeCollapsePropTypes.Size
-  modelValue?: VxeCollapsePropTypes.ModelValue
+  value?: VxeCollapsePropTypes.ModelValue
   options?: VxeCollapsePropTypes.Options
   padding?: VxeCollapsePropTypes.Padding
   expandConfig?: VxeCollapsePropTypes.ExpandConfig

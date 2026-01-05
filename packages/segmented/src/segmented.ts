@@ -126,6 +126,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const $xeSegmented = this
 
       const { _events } = $xeSegmented as any
+      $xeSegmented.$emit('input', value)
       if (_events && _events.modelValue) {
         $xeSegmented.$emit('modelValue', value)
       } else {

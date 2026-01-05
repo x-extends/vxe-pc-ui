@@ -21,6 +21,7 @@ import { VxeColProps } from '../components/col'
 import { VxeCollapseProps } from '../components/collapse'
 import { VxeCollapsePaneProps } from '../components/collapse-pane'
 import { VxeColorPickerProps } from '../components/color-picker'
+import { VxeContextMenuProps } from '../components/context-menu'
 import { VxeCountdownProps } from '../components/countdown'
 import { VxeDatePanelProps } from '../components/date-panel'
 import { VxeDatePickerProps } from '../components/date-picker'
@@ -131,6 +132,7 @@ declare module '@vxe-ui/core' {
     collapse?: VxeCollapseProps
     collapsePane?: VxeCollapsePaneProps
     colorPicker?: VxeColorPickerProps
+    contextMenu?: VxeContextMenuProps
     countdown?: VxeCountdownProps
     datePanel?: VxeDatePanelProps
     datePicker?: VxeDatePickerProps

@@ -284,5 +284,9 @@ declare module '@vxe-ui/core' {
 
     // backtop
     BACKTOP_TOP?: string
+
+    // context-menu
+    CONTEXT_MENU_OPTION_LOADING?: string
+    CONTEXT_MENU_CHILDREN?: string
   }
 }

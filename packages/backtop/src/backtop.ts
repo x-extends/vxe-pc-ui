@@ -258,14 +258,10 @@ export default /* define-vxe-component start */ defineVxeComponent({
   beforeDestroy () {
     const $xeBacktop = this
     const reactData = $xeBacktop.reactData
+    const internalData = $xeBacktop.internalData
 
     $xeBacktop.removeScrollEvent()
     XEUtils.assign(reactData, createReactData())
-  },
-  destroyed () {
-    const $xeBacktop = this
-    const internalData = $xeBacktop.internalData
-
     XEUtils.assign(internalData, createInternalData())
   },
   render (this: any, h) {

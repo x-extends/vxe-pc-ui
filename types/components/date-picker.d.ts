@@ -83,7 +83,7 @@ export namespace VxeDatePickerPropTypes {
 
 export interface VxeDatePickerProps {
   size?: VxeDatePickerPropTypes.Size
-  modelValue?: VxeDatePickerPropTypes.ModelValue
+  value?: VxeDatePickerPropTypes.ModelValue
   className?: VxeDatePickerPropTypes.ClassName
   immediate?: VxeDatePickerPropTypes.Immediate
   name?: VxeDatePickerPropTypes.Name

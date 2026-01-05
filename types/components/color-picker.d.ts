@@ -42,7 +42,7 @@ export interface VxeColorPickerProps {
   /**
    * 绑定值
    */
-  modelValue?: VxeColorPickerPropTypes.ModelValue
+  value?: VxeColorPickerPropTypes.ModelValue
   size?: VxeColorPickerPropTypes.Size
   type?: VxeColorPickerPropTypes.Type
   className?: VxeColorPickerPropTypes.ClassName

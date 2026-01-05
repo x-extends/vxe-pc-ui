@@ -100,7 +100,7 @@ export namespace VxeCascaderPropTypes {
 
 export interface VxeCascaderProps<D = any> {
   size?: VxeCascaderPropTypes.Size
-  modelValue?: VxeCascaderPropTypes.ModelValue
+  value?: VxeCascaderPropTypes.ModelValue
   clearable?: VxeCascaderPropTypes.Clearable
   zIndex?: VxeCascaderPropTypes.ZIndex
   placeholder?: VxeCascaderPropTypes.Placeholder
