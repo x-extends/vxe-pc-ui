@@ -1,84 +1,50 @@
 <template>
   <div>
-    <vxe-tree v-bind="treeOptions" v-on="treeEvents"></vxe-tree>
+    <vxe-button @click="showMenuEvent">显示</vxe-button>
+    <vxe-context-menu v-model="showMenu" v-bind="contextMenuOptions"></vxe-context-menu>
   </div>
 </template>
 
 <script lang="ts" setup>
-import { reactive } from 'vue'
-import { VxeUI } from '../../../packages'
-import { VxeTreeProps, VxeTreeListeners } from '../../../types'
+import { reactive, ref } from 'vue'
+import { VxeButtonEvents } from '../../../types'
 
-interface NodeVO {
-  title: string
-  id: string
-  parentId?: string | null
-}
+const showMenu = ref(false)
 
-const treeOptions = reactive<VxeTreeProps<NodeVO>>({
-  transform: true,
-  nodeConfig: {
-    isHover: true,
-    isCurrent: true
-  },
-  menuConfig: {
-    options: [
-      [
-        { code: '1', name: '新增' },
-        { code: '2', name: '删除', prefixIcon: 'vxe-icon-delete-fill' },
-        {
-          code: '3',
-          name: '审批',
-          children: [
-            { code: '4', name: '通过', prefixIcon: 'vxe-icon-check' },
-            { code: '5', name: '不通过', prefixIcon: 'vxe-icon-close' }
-          ]
-        },
-        { code: '6', name: '查看', prefixIcon: 'vxe-icon-link' }
-      ],
-      [
-        {
-          code: '11',
-          name: '更多操作',
-          children: [
-            { code: '13', name: '编辑', prefixIcon: 'vxe-icon-feedback' },
-            { code: '14', name: '取消' }
-          ]
-        },
-        { code: '10', name: '驳回', prefixIcon: 'vxe-icon-undo' }
-      ]
+const contextMenuOptions = reactive({
+  x: 0,
+  y: 0,
+  options: [
+    [
+      { code: '11', name: '新增' },
+      { code: '22', name: '删除', prefixIcon: 'vxe-icon-delete-fill' },
+      {
+        code: '33',
+        name: '审批',
+        children: [
+          { code: '44', name: '通过', prefixIcon: 'vxe-icon-check' },
+          { code: '55', name: '不通过', prefixIcon: 'vxe-icon-close' }
+        ]
+      },
+      { code: '66', name: '查看', prefixIcon: 'vxe-icon-link' }
+    ],
+    [
+      {
+        code: '111',
+        name: '更多操作',
+        children: [
+          { code: '113', name: '编辑', prefixIcon: 'vxe-icon-feedback' },
+          { code: '114', name: '取消' }
+        ]
+      },
+      { code: '110', name: '驳回', prefixIcon: 'vxe-icon-undo' }
     ]
-  },
-  data: [
-    { title: '节点2', id: '2', parentId: null },
-    { title: '节点3', id: '3', parentId: null },
-    { title: '节点3-1', id: '31', parentId: '3' },
-    { title: '节点3-2', id: '32', parentId: '3' },
-    { title: '节点3-2-1', id: '321', parentId: '32' },
-    { title: '节点3-2-2', id: '322', parentId: '32' },
-    { title: '节点3-3', id: '33', parentId: '3' },
-    { title: '节点3-3-1', id: '331', parentId: '33' },
-    { title: '节点3-3-2', id: '332', parentId: '33' },
-    { title: '节点3-3-3', id: '333', parentId: '33' },
-    { title: '节点3-4', id: '34', parentId: '3' },
-    { title: '节点4', id: '4', parentId: null },
-    { title: '节点4-1', id: '41', parentId: '4' },
-    { title: '节点4-1-1', id: '411', parentId: '42' },
-    { title: '节点4-1-2', id: '412', parentId: '42' },
-    { title: '节点4-2', id: '42', parentId: '4' },
-    { title: '节点4-3', id: '43', parentId: '4' },
-    { title: '节点4-3-1', id: '431', parentId: '43' },
-    { title: '节点4-3-2', id: '432', parentId: '43' },
-    { title: '节点5', id: '5', parentId: null }
   ]
 })
 
-const treeEvents: VxeTreeListeners<NodeVO> = {
-  menuClick ({ node }) {
-    VxeUI.modal.message({
-      content: `点击了${node.title}`,
-      status: 'success'
-    })
-  }
+const showMenuEvent: VxeButtonEvents.Click = ({ $event }) => {
+  showMenu.value = true
+  contextMenuOptions.x = $event.clientX
+  contextMenuOptions.y = $event.clientY
 }
 </script>

@@ -174,12 +174,19 @@ export default defineVxeComponent({
       close
     }
 
-    const handleItemClickEvent = (evnt: MouseEvent, item: VxeContextMenuDefines.MenuFirstOption | VxeContextMenuDefines.MenuChildOption) => {
-      dispatchEvent('option-click', { option: item }, evnt)
-      close()
+    const hasChildMenu = (item: VxeContextMenuDefines.MenuFirstOption | VxeContextMenuDefines.MenuChildOption) => {
+      const { children } = item as VxeContextMenuDefines.MenuFirstOption
+      return children && children.some((child) => child.visible !== false)
     }
 
-    const handleItemMouseenterEvent = (evnt: MouseEvent, item: VxeContextMenuDefines.MenuFirstOption | VxeContextMenuDefines.MenuChildOption, parentitem?: VxeContextMenuDefines.MenuFirstOption) => {
+    const handleItemClickEvent = (evnt: MouseEvent, item: VxeContextMenuDefines.MenuFirstOption | VxeContextMenuDefines.MenuChildOption) => {
+      if (!hasChildMenu(item)) {
+        dispatchEvent('option-click', { option: item }, evnt)
+        close()
+      }
+    }
+
+    const handleItemMouseenterEvent = (evnt: MouseEvent, item: VxeContextMenuDefines.MenuFirstOption | VxeContextMenuDefines.MenuChildOption, parentitem?: VxeContextMenuDefines.MenuFirstOption | null) => {
       reactData.activeOption = parentitem || item
       reactData.activeChildOption = parentitem ? item : null
     }
@@ -204,7 +211,7 @@ export default defineVxeComponent({
 
     Object.assign($xeContextMenu, tagMethods, tagPrivateMethods)
 
-    const renderMenuItem = (item: VxeContextMenuDefines.MenuFirstOption | VxeContextMenuDefines.MenuChildOption, hasChildMenus?: boolean) => {
+    const renderMenuItem = (item: VxeContextMenuDefines.MenuFirstOption | VxeContextMenuDefines.MenuChildOption, parentItem: VxeContextMenuDefines.MenuFirstOption | VxeContextMenuDefines.MenuChildOption | null, hasChildMenus?: boolean) => {
       const { visible, disabled, loading } = item
       if (visible === false) {
         return renderEmptyElement($xeContextMenu)
@@ -218,7 +225,14 @@ export default defineVxeComponent({
         class: ['vxe-context-menu--item-inner', {
           'is--disabled': disabled,
           'is--loading': loading
-        }]
+        }],
+        onClick (evnt) {
+          handleItemClickEvent(evnt, item)
+        },
+        onMouseenter (evnt) {
+          handleItemMouseenterEvent(evnt, item, parentItem)
+        },
+        onMouseleave: handleItemMouseleaveEvent
       }, [
         h('div', {
           class: ['vxe-context-menu--item-prefix', prefixOpts.className || '']
@@ -299,38 +313,24 @@ export default defineVxeComponent({
           moVNs.push(
             h('div', {
               key: `${gIndex}_${i}`,
-              class: ['vxe-context-menu--item-wrapper vxe-context-menu--first-item', {
+              class: ['vxe-context-menu--item-wrapper vxe-context-menu--first-item', firstItem.className || '', {
                 'is--active': activeOption === firstItem
-              }],
-              onClick (evnt) {
-                handleItemClickEvent(evnt, firstItem)
-              },
-              onMouseenter (evnt) {
-                handleItemMouseenterEvent(evnt, firstItem)
-              },
-              onMouseleave: handleItemMouseleaveEvent
+              }]
             }, [
               hasChildMenus
                 ? h('div', {
                   class: 'vxe-context-menu--children-wrapper'
                 }, children.map(twoItem => {
                   return h('div', {
-                    class: ['vxe-context-menu--item-wrapper vxe-context-menu--child-item', {
+                    class: ['vxe-context-menu--item-wrapper vxe-context-menu--child-item', twoItem.className || '', {
                       'is--active': activeChildOption === twoItem
-                    }],
-                    onClick (evnt) {
-                      handleItemClickEvent(evnt, twoItem)
-                    },
-                    onMouseenter (evnt) {
-                      handleItemMouseenterEvent(evnt, twoItem, firstItem)
-                    },
-                    onMouseleave: handleItemMouseleaveEvent
+                    }]
                   }, [
-                    renderMenuItem(twoItem)
+                    renderMenuItem(twoItem, firstItem)
                   ])
                 }))
                 : renderEmptyElement($xeContextMenu),
-              renderMenuItem(firstItem, hasChildMenus)
+              renderMenuItem(firstItem, null, hasChildMenus)
             ])
           )
         })
@@ -350,7 +350,7 @@ export default defineVxeComponent({
       const vSize = computeSize.value
       return h('div', {
         ref: refElem,
-        class: ['vxe-context-menu vxe-context-menu--wrapper', position === 'fixed' ? ('is--' + position) : 'is--absolute', `cp--${childPos === 'left' ? childPos : 'right'}`, className || '', {
+        class: ['vxe-context-menu vxe-context-menu--wrapper', position === 'absolute' ? ('is--' + position) : 'is--fixed', `cp--${childPos === 'left' ? childPos : 'right'}`, className || '', {
           [`size--${vSize}`]: vSize,
           'is--visible': visible
         }],

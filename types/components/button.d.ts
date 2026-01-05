@@ -225,7 +225,7 @@ export namespace VxeButtonDefines {
 
   export interface ClickParams { }
   export interface ClickEventParams extends ButtonEventParams, ClickParams {
-    $event: KeyboardEvent
+    $event: MouseEvent
   }
 
   export interface MouseenterParams { }
