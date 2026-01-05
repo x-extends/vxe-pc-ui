@@ -1143,6 +1143,7 @@ export default defineVxeComponent({
       if (!lazy || !treeExpandLazyLoadedMaps[nodeid]) {
         handleBaseTreeExpand([node], expanded)
       }
+      dispatchEvent('node-expand', { node, expanded }, evnt)
     }
 
     const updateCheckboxStatus = () => {
