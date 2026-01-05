@@ -1759,6 +1759,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       if (!lazy || !treeExpandLazyLoadedMaps[nodeid]) {
         $xeTree.handleBaseTreeExpand([node], expanded)
       }
+      $xeTree.dispatchEvent('node-expand', { node, expanded }, evnt)
     },
     updateCheckboxStatus () {
       const $xeTree = this
