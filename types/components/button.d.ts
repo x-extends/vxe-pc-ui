@@ -79,6 +79,7 @@ export namespace VxeButtonPropTypes {
   export type PrefixTooltip = VxeTooltipDefines.TooltipHelperOption
   export type SuffixTooltip = VxeTooltipDefines.TooltipHelperOption
 
+  export type ShowDropdownIcon = boolean
   export type DestroyOnClose = boolean
   export type Transfer = boolean
 }
@@ -159,6 +160,7 @@ export interface VxeButtonProps {
 
   prefixTooltip?: VxeButtonPropTypes.PrefixTooltip
   suffixTooltip?: VxeButtonPropTypes.SuffixTooltip
+  showDropdownIcon?: VxeButtonPropTypes.ShowDropdownIcon
   /**
    * 在下拉面板关闭时销毁内容
    */

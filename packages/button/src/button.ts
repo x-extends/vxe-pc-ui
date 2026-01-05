@@ -8,7 +8,7 @@ import { getSlotVNs } from '../../ui/src/vn'
 import { warnLog } from '../../ui/src/log'
 import VxeTooltipComponent from '../../tooltip/src/tooltip'
 
-import type { VxeButtonConstructor, VxeButtonPropTypes, VxeButtonEmits, ButtonReactData, ButtonMethods, VxeButtonDefines, ButtonPrivateRef, ButtonInternalData, VxeButtonGroupConstructor, VxeButtonGroupPrivateMethods, VxeDrawerConstructor, VxeDrawerMethods, VxeFormConstructor, VxeFormPrivateMethods, VxeModalConstructor, VxeModalMethods, ValueOf } from '../../../types'
+import type { VxeButtonConstructor, VxeButtonPropTypes, VxeButtonEmits, ButtonReactData, ButtonMethods, VxeButtonDefines, ButtonPrivateRef, ButtonInternalData, VxeButtonGroupConstructor, VxeButtonGroupPrivateMethods, VxeDrawerConstructor, VxeDrawerMethods, VxeFormConstructor, VxeFormPrivateMethods, VxeModalConstructor, VxeModalMethods, ValueOf, VxeTreeConstructor, VxeTreePrivateMethods } from '../../../types'
 import type { VxeTableConstructor, VxeTablePrivateMethods } from '../../../types/components/table'
 
 const VxeButtonComponent = defineVxeComponent({
@@ -93,6 +93,10 @@ const VxeButtonComponent = defineVxeComponent({
     prefixTooltip: Object as PropType<VxeButtonPropTypes.PrefixTooltip>,
     suffixTooltip: Object as PropType<VxeButtonPropTypes.SuffixTooltip>,
     options: Array as PropType<VxeButtonPropTypes.Options>,
+    showDropdownIcon: {
+      type: Boolean,
+      default: () => getConfig().button.showDropdownIcon
+    },
     /**
      * 在下拉面板关闭时销毁内容
      */
@@ -121,6 +125,7 @@ const VxeButtonComponent = defineVxeComponent({
     const $xeModal = inject<(VxeModalConstructor & VxeModalMethods)| null>('$xeModal', null)
     const $xeDrawer = inject<(VxeDrawerConstructor & VxeDrawerMethods) | null>('$xeDrawer', null)
     const $xeTable = inject<(VxeTableConstructor & VxeTablePrivateMethods) | null>('$xeTable', null)
+    const $xeTree = inject<(VxeTreeConstructor & VxeTreePrivateMethods) | null>('$xeTree', null)
     const $xeForm = inject<(VxeFormConstructor & VxeFormPrivateMethods)| null>('$xeForm', null)
     const $xeButtonGroup = inject<(VxeButtonGroupConstructor & VxeButtonGroupPrivateMethods) | null>('$xeButtonGroup', null)
 
@@ -171,7 +176,7 @@ const VxeButtonComponent = defineVxeComponent({
         if (XEUtils.isBoolean(globalTransfer)) {
           return globalTransfer
         }
-        if ($xeTable || $xeModal || $xeDrawer || $xeForm) {
+        if ($xeTable || $xeTree || $xeModal || $xeDrawer || $xeForm) {
           return true
         }
       }
@@ -592,7 +597,7 @@ const VxeButtonComponent = defineVxeComponent({
     Object.assign($xeButton, buttonMethods)
 
     const renderVN = () => {
-      const { className, popupClassName, trigger, title, routerLink, type, destroyOnClose, name, loading } = props
+      const { className, popupClassName, trigger, title, routerLink, type, destroyOnClose, name, loading, showDropdownIcon } = props
       const { initialized, isAniVisible, visiblePanel } = reactData
       const isFormBtn = computeIsFormBtn.value
       const btnMode = computeBtnMode.value
@@ -648,11 +653,13 @@ const VxeButtonComponent = defineVxeComponent({
               ...btnOns
             }, {
               default () {
-                return renderContent().concat([
-                  h('i', {
-                    class: `vxe-button--dropdown-arrow ${getIcon().BUTTON_DROPDOWN}`
-                  })
-                ])
+                return renderContent().concat(showDropdownIcon
+                  ? [
+                      h('i', {
+                        class: `vxe-button--dropdown-arrow ${getIcon().BUTTON_DROPDOWN}`
+                      })
+                    ]
+                  : [])
               }
             })
             : h('button', {
@@ -671,11 +678,13 @@ const VxeButtonComponent = defineVxeComponent({
               disabled: btnDisabled || loading,
               onClick: clickTargetEvent,
               ...btnOns
-            }, renderContent().concat([
-              h('i', {
-                class: `vxe-button--dropdown-arrow ${getIcon().BUTTON_DROPDOWN}`
-              })
-            ])),
+            }, renderContent().concat(showDropdownIcon
+              ? [
+                  h('i', {
+                    class: `vxe-button--dropdown-arrow ${getIcon().BUTTON_DROPDOWN}`
+                  })
+                ]
+              : [])),
           h(Teleport, {
             to: 'body',
             disabled: btnTransfer ? !initialized : true

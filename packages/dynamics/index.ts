@@ -2,7 +2,7 @@ import { h, createApp, reactive, createCommentVNode } from 'vue'
 import { defineVxeComponent } from '../ui/src/comp'
 import { VxeUI } from '@vxe-ui/core'
 
-import type { VxeModalDefines, VxeDrawerDefines, VxeLoadingProps, VxeWatermarkProps } from '../../types'
+import type { VxeModalDefines, VxeDrawerDefines, VxeLoadingProps, VxeWatermarkProps, VxeContextMenuProps, VxeContextMenuDefines, VxeContextMenuEventProps } from '../../types'
 
 let dynamicContainerElem: HTMLElement
 
@@ -11,12 +11,14 @@ export const dynamicStore = reactive<{
   drawers: VxeDrawerDefines.DrawerOptions[]
   globalLoading: null | VxeLoadingProps
   globalWatermark: null | VxeWatermarkProps
-}>({
-  modals: [],
-  drawers: [],
-  globalLoading: null,
-  globalWatermark: null
-})
+  globalContextMenu: null |(VxeContextMenuProps & VxeContextMenuDefines.ContextMenuOpenOptions)
+    }>({
+      modals: [],
+      drawers: [],
+      globalLoading: null,
+      globalWatermark: null,
+      globalContextMenu: null
+    })
 
 /**
  * 动态组件
@@ -27,9 +29,33 @@ const VxeDynamics = defineVxeComponent({
     const VxeUIDrawerComponent = VxeUI.getComponent('vxe-drawer')
     const VxeUILoadingComponent = VxeUI.getComponent('vxe-loading')
     const VxeUIWatermarkComponent = VxeUI.getComponent('vxe-watermark')
+    const VxeUIContextMenuComponent = VxeUI.getComponent('vxe-context-menu')
 
     return () => {
-      const { modals, drawers, globalWatermark, globalLoading } = dynamicStore
+      const { modals, drawers, globalWatermark, globalLoading, globalContextMenu } = dynamicStore
+      let cmOpts: (VxeContextMenuProps & VxeContextMenuEventProps) | null = globalContextMenu
+      if (globalContextMenu) {
+        const events = globalContextMenu.events || {}
+        const { optionClick, show, hide } = events
+        cmOpts = Object.assign({}, globalContextMenu, {
+          onShow (params: VxeContextMenuDefines.ShowEventParams) {
+            if (show) {
+              show(params)
+            }
+          },
+          onHide (params: VxeContextMenuDefines.HideEventParams) {
+            if (hide) {
+              hide(params)
+            }
+            dynamicStore.globalContextMenu = null
+          },
+          onOptionClick (params: VxeContextMenuDefines.OptionClickEventParams) {
+            if (optionClick) {
+              optionClick(params)
+            }
+          }
+        })
+      }
       return [
         modals.length
           ? h('div', {
@@ -44,7 +70,8 @@ const VxeDynamics = defineVxeComponent({
           }, drawers.map((item) => h(VxeUIDrawerComponent, item)))
           : createCommentVNode(),
         globalWatermark ? h(VxeUIWatermarkComponent, globalWatermark) : createCommentVNode(),
-        globalLoading ? h(VxeUILoadingComponent, globalLoading) : createCommentVNode()
+        globalLoading ? h(VxeUILoadingComponent, globalLoading) : createCommentVNode(),
+        globalContextMenu ? h(VxeUIContextMenuComponent, cmOpts) : createCommentVNode()
       ]
     }
   }

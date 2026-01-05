@@ -97,8 +97,15 @@ function parsePageStyle (val?: VxePrintPropTypes.PageStyle) {
   }
 }
 
+function createCssLink (urls?: string[]) {
+  if (urls) {
+    return urls.map(url => `<link rel="stylesheet" href="${url}">`).join('\n')
+  }
+  return ''
+}
+
 function createHtmlPage (opts: VxePrintProps & { _pageBreaks: boolean }, printHtml: string): string {
-  const { pageStyle, customStyle } = opts
+  const { pageStyle, customStyle, styleUrls } = opts
   const pageStyObj = parsePageStyle(pageStyle)
   const headStyOpts = pageStyObj.header
   const titStyOpts = pageStyObj.title
@@ -110,6 +117,7 @@ function createHtmlPage (opts: VxePrintProps & { _pageBreaks: boolean }, printHt
     '<head>',
     '<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no,minimal-ui">',
     `<title>${opts.title || ''}</title>`,
+    createCssLink(styleUrls),
     `<style media="print">@page{size:auto;${isPbMode ? 'margin: 0mm;' : ''}}</style>`,
     `<style>body{font-size:${pageStyObj.fontSize || '14px'};color:${pageStyObj.color || defaultFontColor};text-align:${pageStyObj.textAlign || 'left'};}</style>`,
     '<style>',

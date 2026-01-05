@@ -25,6 +25,7 @@ import VxeCol from './col'
 import VxeCollapse from './collapse'
 import VxeCollapsePane from './collapse-pane'
 import VxeColorPicker from './color-picker'
+import VxeContextMenu from './context-menu'
 import VxeCountdown from './countdown'
 import VxeDatePanel from './date-panel'
 import VxeDatePicker from './date-picker'
@@ -122,6 +123,7 @@ const components = [
   VxeCollapse,
   VxeCollapsePane,
   VxeColorPicker,
+  VxeContextMenu,
   VxeCountdown,
   VxeDatePanel,
   VxeDatePicker,
@@ -236,6 +238,7 @@ export * from './col'
 export * from './collapse'
 export * from './collapse-pane'
 export * from './color-picker'
+export * from './context-menu'
 export * from './countdown'
 export * from './date-panel'
 export * from './date-picker'

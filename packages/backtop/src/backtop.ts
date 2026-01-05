@@ -1,4 +1,4 @@
-import { ref, h, reactive, PropType, watch, onMounted, nextTick, computed, onBeforeUnmount, onUnmounted } from 'vue'
+import { ref, h, reactive, PropType, watch, onMounted, nextTick, computed, onBeforeUnmount } from 'vue'
 import { defineVxeComponent } from '../../ui/src/comp'
 import XEUtils from 'xe-utils'
 import { getConfig, getIcon, createEvent, useSize, renderEmptyElement } from '../../ui'
@@ -248,9 +248,6 @@ export default defineVxeComponent({
     onBeforeUnmount(() => {
       removeScrollEvent()
       XEUtils.assign(reactData, createReactData())
-    })
-
-    onUnmounted(() => {
       XEUtils.assign(internalData, createInternalData())
     })
 

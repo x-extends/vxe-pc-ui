@@ -5189,6 +5189,14 @@ export interface TablePrivateMethods<D = any> {
   /**
    * @private
    */
+  triggerFooterCellClickEvent(evnt: MouseEvent, params: VxeTableDefines.CellRenderFooterParams<any>): void
+  /**
+   * @private
+   */
+  triggerFooterCellDblclickEvent(evnt: MouseEvent, params: VxeTableDefines.CellRenderFooterParams<any>): void
+  /**
+   * @private
+   */
   handleToggleCheckRowEvent(evnt: Event | null, params: { row: any }): void
   /**
    * @private

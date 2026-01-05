@@ -101,7 +101,8 @@ const navList = ref<VxeMenuPropTypes.Options>([
   { name: 'SplitterTest', routerLink: { name: 'SplitterTest' } },
   { name: 'CascaderTest', routerLink: { name: 'CascaderTest' } },
   { name: 'SegmentedTest', routerLink: { name: 'SegmentedTest' } },
-  { name: 'BacktopTest', routerLink: { name: 'BacktopTest' } }
+  { name: 'BacktopTest', routerLink: { name: 'BacktopTest' } },
+  { name: 'ContextMenuTest', routerLink: { name: 'ContextMenuTest' } }
 ])
 
 const theme = ref((localStorage.getItem('VXE_THEME') as 'light' | 'dark') || 'light')

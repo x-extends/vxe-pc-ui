@@ -309,6 +309,11 @@ const routes: Array<RouteRecordRaw> = [
     path: '/component/backtop',
     name: 'BacktopTest',
     component: () => import('../views/backtop/BacktopTest.vue')
+  },
+  {
+    path: '/component/context-menu',
+    name: 'ContextMenuTest',
+    component: () => import('../views/context-menu/ContextMenuTest.vue')
   }
 ]
 

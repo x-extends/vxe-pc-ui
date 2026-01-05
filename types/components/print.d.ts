@@ -61,6 +61,7 @@ export namespace VxePrintPropTypes {
     }
   }
   export type CustomStyle = string
+  export type StyleUrls = string[]
   export type ShowAllPageTitle = boolean
   export type HeaderHtml = string | ((params: VxePrintDefines.PageBreakParams) => string)
   export type FooterHtml = string | ((params: VxePrintDefines.PageBreakParams) => string)
@@ -87,7 +88,14 @@ export interface VxePrintProps {
   showPageNumber?: VxePrintPropTypes.ShowPageNumber
   footerAlign?: VxePrintPropTypes.FooterAlign
   pageStyle?: VxePrintPropTypes.PageStyle
+  /**
+   * 自定义 css 规则
+   */
   customStyle?: VxePrintPropTypes.CustomStyle
+  /**
+   * 引入 css 文件的 url
+   */
+  styleUrls?: VxePrintPropTypes.StyleUrls
   headerHtml?: VxePrintPropTypes.HeaderHtml
   footerHtml?: VxePrintPropTypes.FooterHtml
   leftHtml?: VxePrintPropTypes.LeftHtml

@@ -4,6 +4,7 @@ import { LoadingController } from '../components/loading'
 import { ModalController } from '../components/modal'
 import { DrawerController } from '../components/drawer'
 import { WatermarkController } from '../components/watermark'
+import { ContextMenuController } from '../components/context-menu'
 import { VxePrintDefines } from '../components/print'
 import { VxeUploadDefines } from '../components/upload'
 import { VxeImageDefines } from '../components/image'
@@ -25,6 +26,7 @@ export const loading: LoadingController
 export const modal: ModalController
 export const drawer: DrawerController
 export const watermark: WatermarkController
+export const contextMenu: ContextMenuController
 export const print: VxePrintDefines.PrintFunction
 export const saveFile: VxeUploadDefines.SaveFileFunction
 export const readFile: VxeUploadDefines.ReadFileFunction
@@ -35,6 +37,7 @@ declare module '@vxe-ui/core' {
     modal: ModalController
     drawer: DrawerController
     watermark: WatermarkController
+    contextMenu: ContextMenuController
     dynamicApp: App<Element>
 
     formDesignHandle: FormDesignHandleExport

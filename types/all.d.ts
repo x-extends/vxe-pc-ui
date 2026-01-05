@@ -23,6 +23,7 @@ import VxeCol from './components/col'
 import VxeCollapse from './components/collapse'
 import VxeCollapsePane from './components/collapse-pane'
 import VxeColorPicker from './components/color-picker'
+import VxeContextMenu from './components/context-menu'
 import VxeCountdown from './components/countdown'
 import VxeDatePanel from './components/date-panel'
 import VxeDatePicker from './components/date-picker'
@@ -134,6 +135,7 @@ interface AllComponents {
   VxeCollapse: typeof VxeCollapse
   VxeCollapsePane: typeof VxeCollapsePane
   VxeColorPicker: typeof VxeColorPicker
+  VxeContextMenu: typeof VxeContextMenu
   VxeCountdown: typeof VxeCountdown
   VxeDatePanel: typeof VxeDatePanel
   VxeDatePicker: typeof VxeDatePicker
@@ -254,6 +256,7 @@ export * from './components/col'
 export * from './components/collapse'
 export * from './components/collapse-pane'
 export * from './components/color-picker'
+export * from './components/context-menu'
 export * from './components/countdown'
 export * from './components/date-panel'
 export * from './components/date-picker'

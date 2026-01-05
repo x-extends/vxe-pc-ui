@@ -1,5 +1,6 @@
 import { RenderFunction, SetupContext, Ref, ComputedRef } from 'vue'
 import { DefineVxeComponentApp, DefineVxeComponentOptions, DefineVxeComponentInstance, VxeComponentBaseOptions, VxeComponentEventParams, VxeComponentSizeType, ValueOf } from '@vxe-ui/core'
+import { VxeContextMenuPropTypes, VxeContextMenuDefines } from './context-menu'
 
 /* eslint-disable no-use-before-define,@typescript-eslint/ban-types */
 
@@ -200,6 +201,25 @@ export namespace VxeTreePropTypes {
     dragToChildMethod?(params: Omit<VxeTreeDefines.NodeDragToChildMethod<D>, '_index'>): boolean
   }
 
+  export interface MenuConfig<D = any> {
+    /**
+     * 是否启用
+     */
+    enabled?: boolean
+    /**
+     * 菜单配置
+     */
+    options: VxeContextMenuPropTypes.Options
+    /**
+     * 该函数的返回值用来决定是否允许显示右键菜单（对于需要对菜单进行权限控制时可能会用到）
+     */
+    visibleMethod?(params: {
+      $tree: VxeTreeConstructor
+      options: VxeContextMenuPropTypes.Options
+      node: D
+    }): boolean
+  }
+
   /**
    * 根据指定值来筛选数据
    */
@@ -294,6 +314,7 @@ export interface VxeTreeProps<D = any> {
   checkNodeKeys?: VxeTreePropTypes.CheckNodeKeys
   checkboxConfig?: VxeTreePropTypes.CheckboxConfig<D>
   nodeConfig?: VxeTreePropTypes.NodeConfig<D>
+  menuConfig?: VxeTreePropTypes.MenuConfig<D>
   filterValue?: VxeTreePropTypes.FilterValue
   filterConfig?: VxeTreePropTypes.FilterConfig
   lazy?: VxeTreePropTypes.Lazy
@@ -633,7 +654,10 @@ export type VxeTreeEmits = [
   'scroll',
   'node-dragstart',
   'node-dragover',
-  'node-dragend'
+  'node-dragend',
+  'node-expand',
+  'node-menu',
+  'menu-click'
 ]
 
 export namespace VxeTreeDefines {
@@ -712,6 +736,18 @@ export namespace VxeTreeDefines {
   export interface LoadErrorEventParams<D = any> extends TreeEventParams<D> {
     node: D
   }
+
+  export interface NodeExpandEventParams<D = any> extends NodeClickEventParams<D> {
+    expanded: boolean
+  }
+
+  export interface NodeMenuEventParams<D = any> extends TreeEventParams<D> {
+    node: D
+  }
+  export interface MenuClickEventParams<D = any> extends TreeEventParams<D> {
+    node: D
+    option: VxeContextMenuDefines.MenuFirstOption | VxeContextMenuDefines.MenuChildOption
+  }
 }
 
 export type VxeTreeEventProps<D = any> = {
@@ -725,6 +761,9 @@ export type VxeTreeEventProps<D = any> = {
   onNodeDragstart?: VxeTreeEvents.NodeDragstart<D>
   onNodeDragover?: VxeTreeEvents.NodeDragover<D>
   onNodeDragend?: VxeTreeEvents.NodeDragend<D>
+  onNodeExpand?: VxeTreeEvents.NodeExpand<D>
+  onNodeMenu?: VxeTreeEvents.NodeMenu<D>
+  onMenuClick?: VxeTreeEvents.MenuClick<D>
 }
 
 export interface VxeTreeListeners<D = any> {
@@ -738,6 +777,9 @@ export interface VxeTreeListeners<D = any> {
   nodeDragstart?: VxeTreeEvents.NodeDragstart<D>
   nodeDragover?: VxeTreeEvents.NodeDragover<D>
   nodeDragend?: VxeTreeEvents.NodeDragend<D>
+  nodeExpand?: VxeTreeEvents.NodeExpand<D>
+  nodeMenu?: VxeTreeEvents.NodeMenu<D>
+  menuClick?: VxeTreeEvents.MenuClick<D>
 }
 
 export namespace VxeTreeEvents {
@@ -751,6 +793,9 @@ export namespace VxeTreeEvents {
   export type NodeDragstart<D = any> = (params: VxeTreeDefines.NodeDragstartEventParams<D>) => void
   export type NodeDragover<D = any> = (params: VxeTreeDefines.NodeDragoverEventParams<D>) => void
   export type NodeDragend<D = any> = (params: VxeTreeDefines.NodeDragendEventParams<D>) => void
+  export type NodeExpand<D = any> = (params: VxeTreeDefines.NodeExpandEventParams<D>) => void
+  export type NodeMenu<D = any> = (params: VxeTreeDefines.NodeMenuEventParams<D>) => void
+  export type MenuClick<D = any> = (params: VxeTreeDefines.MenuClickEventParams<D>) => void
 }
 
 export namespace VxeTreeSlotTypes {
