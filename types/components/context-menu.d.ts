@@ -248,10 +248,12 @@ export namespace VxeContextMenuSlotTypes {
   export interface DefaultSlotParams {}
 
   export interface ContentSlotParams {
+    option: VxeContextMenuDefines.MenuFirstOption | VxeContextMenuDefines.MenuChildOption
   }
 }
 
 export interface VxeContextMenuSlots {
+  [key: string]: ((params: VxeContextMenuSlotTypes.DefaultSlotParams) => any) | undefined
 }
 
 /**

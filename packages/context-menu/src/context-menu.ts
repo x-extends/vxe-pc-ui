@@ -27,6 +27,11 @@ function createReactData (): ContextMenuReactData {
   }
 }
 
+function hasChildMenu (item: VxeContextMenuDefines.MenuFirstOption | VxeContextMenuDefines.MenuChildOption) {
+  const { children } = item as VxeContextMenuDefines.MenuFirstOption
+  return children && children.some((child) => child.visible !== false)
+}
+
 export default /* define-vxe-component start */ defineVxeComponent({
   name: 'VxeContextMenu',
   mixins: [
@@ -181,10 +186,12 @@ export default /* define-vxe-component start */ defineVxeComponent({
     handleItemClickEvent (evnt: MouseEvent, item: VxeContextMenuDefines.MenuFirstOption | VxeContextMenuDefines.MenuChildOption) {
       const $xeContextMenu = this
 
-      $xeContextMenu.dispatchEvent('option-click', { option: item }, evnt)
-      $xeContextMenu.close()
+      if (!hasChildMenu(item)) {
+        $xeContextMenu.dispatchEvent('option-click', { option: item }, evnt)
+        $xeContextMenu.close()
+      }
     },
-    handleItemMouseenterEvent (evnt: MouseEvent, item: VxeContextMenuDefines.MenuFirstOption | VxeContextMenuDefines.MenuChildOption, parentitem?: VxeContextMenuDefines.MenuFirstOption) {
+    handleItemMouseenterEvent (evnt: MouseEvent, item: VxeContextMenuDefines.MenuFirstOption | VxeContextMenuDefines.MenuChildOption, parentitem?: VxeContextMenuDefines.MenuFirstOption | null) {
       const $xeContextMenu = this
       const reactData = $xeContextMenu.reactData
 
@@ -214,7 +221,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
     //
     // Render
     //
-    renderMenuItem (h: CreateElement, item: VxeContextMenuDefines.MenuFirstOption | VxeContextMenuDefines.MenuChildOption, hasChildMenus?: boolean) {
+    renderMenuItem (h: CreateElement, item: VxeContextMenuDefines.MenuFirstOption | VxeContextMenuDefines.MenuChildOption, parentItem: VxeContextMenuDefines.MenuFirstOption | VxeContextMenuDefines.MenuChildOption | null, hasChildMenus?: boolean) {
       const $xeContextMenu = this
 
       const { visible, disabled, loading } = item
@@ -230,7 +237,16 @@ export default /* define-vxe-component start */ defineVxeComponent({
         class: ['vxe-context-menu--item-inner', {
           'is--disabled': disabled,
           'is--loading': loading
-        }]
+        }],
+        on: {
+          click (evnt: MouseEvent) {
+            $xeContextMenu.handleItemClickEvent(evnt, item)
+          },
+          mouseenter (evnt: MouseEvent) {
+            $xeContextMenu.handleItemMouseenterEvent(evnt, item, parentItem)
+          },
+          mouseleave: $xeContextMenu.handleItemMouseleaveEvent
+        }
       }, [
         h('div', {
           class: ['vxe-context-menu--item-prefix', prefixOpts.className || '']
@@ -313,42 +329,24 @@ export default /* define-vxe-component start */ defineVxeComponent({
           moVNs.push(
             h('div', {
               key: `${gIndex}_${i}`,
-              class: ['vxe-context-menu--item-wrapper vxe-context-menu--first-item', {
+              class: ['vxe-context-menu--item-wrapper vxe-context-menu--first-item', firstItem.className || '', {
                 'is--active': activeOption === firstItem
-              }],
-              on: {
-                click (evnt: MouseEvent) {
-                  $xeContextMenu.handleItemClickEvent(evnt, firstItem)
-                },
-                mouseenter (evnt: MouseEvent) {
-                  $xeContextMenu.handleItemMouseenterEvent(evnt, firstItem)
-                },
-                mouseleave: $xeContextMenu.handleItemMouseleaveEvent
-              }
+              }]
             }, [
               hasChildMenus
                 ? h('div', {
                   class: 'vxe-context-menu--children-wrapper'
                 }, children.map(twoItem => {
                   return h('div', {
-                    class: ['vxe-context-menu--item-wrapper vxe-context-menu--child-item', {
+                    class: ['vxe-context-menu--item-wrapper vxe-context-menu--child-item', twoItem.className || '', {
                       'is--active': activeChildOption === twoItem
-                    }],
-                    on: {
-                      click (evnt: MouseEvent) {
-                        $xeContextMenu.handleItemClickEvent(evnt, twoItem)
-                      },
-                      mouseenter (evnt: MouseEvent) {
-                        $xeContextMenu.handleItemMouseenterEvent(evnt, twoItem, firstItem)
-                      },
-                      mouseleave: $xeContextMenu.handleItemMouseleaveEvent
-                    }
+                    }]
                   }, [
-                    $xeContextMenu.renderMenuItem(h, twoItem)
+                    $xeContextMenu.renderMenuItem(h, twoItem, firstItem)
                   ])
                 }))
                 : renderEmptyElement($xeContextMenu),
-              $xeContextMenu.renderMenuItem(h, firstItem, hasChildMenus)
+              $xeContextMenu.renderMenuItem(h, firstItem, null, hasChildMenus)
             ])
           )
         })
@@ -371,7 +369,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const vSize = $xeContextMenu.computeSize
       return h('div', {
         ref: 'refElem',
-        class: ['vxe-context-menu vxe-context-menu--wrapper', position === 'fixed' ? ('is--' + position) : 'is--absolute', `cp--${childPos === 'left' ? childPos : 'right'}`, className || '', {
+        class: ['vxe-context-menu vxe-context-menu--wrapper', position === 'absolute' ? ('is--' + position) : 'is--fixed', `cp--${childPos === 'left' ? childPos : 'right'}`, className || '', {
           [`size--${vSize}`]: vSize,
           'is--visible': visible
         }],

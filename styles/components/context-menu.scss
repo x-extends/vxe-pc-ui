@@ -1,19 +1,25 @@
 .vxe-context-menu {
-  position: absolute;
+  display: none;
   top: 0;
   left: 0;
   user-select: none;
+  &.is--visible {
+    display: block;
+  }
   &.is--fixed {
     position: fixed;
   }
+  &.is--absolute {
+    position: absolute;
+  }
   &.cp--left {
     .vxe-context-menu--children-wrapper {
-      left: -100%;
+      left: calc(-100% + 2px);
     }
   }
   &.cp--right {
     .vxe-context-menu--children-wrapper {
-      left: 100%;
+      left: calc(100% - 2px);
     }
   }
 }
@@ -39,6 +45,7 @@
 .vxe-context-menu--children-wrapper {
   display: none;
   position: absolute;
+  transform: translateY(-5px);
 }
 
 .vxe-context-menu--item-wrapper {
@@ -62,7 +69,7 @@
   height: var(--vxe-ui-context-menu-option-height);
   display: flex;
   align-items: center;
-  padding: 0 0.5em;
+  padding: 0 0.8em;
   cursor: pointer;
   &.is--loading {
     opacity: 0.5;
@@ -75,12 +82,13 @@
 }
 
 .vxe-context-menu--item-prefix {
-  width: 1em;
+  min-width: 1em;
   text-align: center;
 }
 .vxe-context-menu--item-prefix,
 .vxe-context-menu--item-suffix {
   flex-shrink: 0;
+  font-size: 0.9em;
 }
 .vxe-context-menu--item-label {
   font-size: 0.9em;
