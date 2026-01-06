@@ -513,6 +513,11 @@ export default /* define-vxe-component start */ defineVxeComponent({
 
       $xeButton.dispatchEvent('mouseleave', {}, evnt)
     },
+    contextmenuEvent (evnt: MouseEvent) {
+      const $xeButton = this
+
+      $xeButton.dispatchEvent('contextmenu', {}, evnt)
+    },
     clickTargetEvent (evnt: MouseEvent) {
       const $xeButton = this
       const props = $xeButton
@@ -709,7 +714,9 @@ export default /* define-vxe-component start */ defineVxeComponent({
         return renderEmptyElement($xeButton)
       }
       if (dropdownsSlot || downBtnList.length) {
-        const btnOns: Record<string, any> = {}
+        const btnOns: Record<string, any> = {
+          contextmenu: $xeButton.contextmenuEvent
+        }
         const panelOns: Record<string, any> = {}
         if (trigger === 'hover') {
         // hover 触发
@@ -865,7 +872,8 @@ export default /* define-vxe-component start */ defineVxeComponent({
           on: {
             click: $xeButton.clickEvent,
             mouseenter: $xeButton.mouseenterEvent,
-            mouseleave: $xeButton.mouseleaveEvent
+            mouseleave: $xeButton.mouseleaveEvent,
+            contextmenu: $xeButton.contextmenuEvent
           }
         }, $xeButton.renderContent(h))
       }
@@ -888,7 +896,8 @@ export default /* define-vxe-component start */ defineVxeComponent({
         on: {
           click: $xeButton.clickEvent,
           mouseenter: $xeButton.mouseenterEvent,
-          mouseleave: $xeButton.mouseleaveEvent
+          mouseleave: $xeButton.mouseleaveEvent,
+          contextmenu: $xeButton.contextmenuEvent
         }
       }, $xeButton.renderContent(h))
     }

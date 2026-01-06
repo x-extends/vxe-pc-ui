@@ -67,7 +67,8 @@ export interface ButtonGroupPrivateMethods {
 export interface VxeButtonGroupPrivateMethods extends ButtonGroupPrivateMethods { }
 
 export type VxeButtonGroupEmits = [
-  'click'
+  'click',
+  'contextmenu'
 ]
 
 export namespace VxeButtonGroupDefines {
@@ -79,18 +80,25 @@ export namespace VxeButtonGroupDefines {
     name: VxeButtonPropTypes.Name
     option: VxeButtonProps & Record<string, any>
   }
+
+  export interface ContextmenuParams extends ButtonGroupEventParams {
+    $event: MouseEvent
+  }
 }
 
 export type VxeButtonGroupEventProps = {
   onClick?: VxeButtonGroupEvents.Click
+  onContextmenu?: VxeButtonGroupEvents.Contextmenu
 }
 
 export interface VxeButtonGroupListeners {
   click?: VxeButtonGroupEvents.Click
+  contextmenu?: VxeButtonGroupEvents.Contextmenu
 }
 
 export namespace VxeButtonGroupEvents {
   export type Click = (params: VxeButtonGroupDefines.ClickEventParams) => void
+  export type Contextmenu = (params: VxeButtonGroupDefines.ContextmenuParams) => void
 }
 
 export namespace VxeButtonGroupSlotTypes {

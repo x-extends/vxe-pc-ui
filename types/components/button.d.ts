@@ -204,7 +204,8 @@ export type VxeButtonEmits = [
   'mouseenter',
   'mouseleave',
   'dropdown-click',
-  'dropdownClick'
+  'dropdownClick',
+  'contextmenu'
 ]
 
 export namespace VxeButtonDefines {
@@ -230,6 +231,10 @@ export namespace VxeButtonDefines {
     option: VxeButtonDefines.DownButtonOption | null
   }
   export interface DropdownClickEventParams extends ButtonEventParams, DropdownClickParams { }
+
+  export interface ContextmenuParams extends ButtonEventParams {
+    $event: MouseEvent
+  }
 }
 
 export type VxeButtonEventProps = {
@@ -237,6 +242,7 @@ export type VxeButtonEventProps = {
   onMouseenter?: VxeButtonEvents.Mouseenter
   onMouseleave?: VxeButtonEvents.Mouseleave
   onDropdownClick?: VxeButtonEvents.DropdownClick
+  onContextmenu?: VxeButtonEvents.Contextmenu
 }
 
 export interface VxeButtonListeners {
@@ -244,6 +250,7 @@ export interface VxeButtonListeners {
   mouseenter?: VxeButtonEvents.Mouseenter
   mouseleave?: VxeButtonEvents.Mouseleave
   dropdownClick?: VxeButtonEvents.DropdownClick
+  contextmenu?: VxeButtonEvents.Contextmenu
 }
 
 export namespace VxeButtonEvents {
@@ -251,6 +258,7 @@ export namespace VxeButtonEvents {
   export type Mouseenter = (params: VxeButtonDefines.MouseenterEventParams) => void
   export type Mouseleave = (params: VxeButtonDefines.MouseleaveEventParams) => void
   export type DropdownClick = (params: VxeButtonDefines.DropdownClickParams) => void
+  export type Contextmenu = (params: VxeButtonDefines.ContextmenuParams) => void
 }
 
 export namespace VxeButtonSlotTypes {

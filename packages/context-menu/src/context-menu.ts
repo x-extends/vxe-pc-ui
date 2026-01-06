@@ -1,7 +1,7 @@
 import { PropType, CreateElement, VNode } from 'vue'
 import { defineVxeComponent } from '../../ui/src/comp'
 import XEUtils from 'xe-utils'
-import { getConfig, getI18n, getIcon, createEvent, globalMixins, globalEvents, renderEmptyElement } from '../../ui'
+import { getConfig, getI18n, getIcon, createEvent, globalMixins, globalEvents, renderEmptyElement, GLOBAL_EVENT_KEYS } from '../../ui'
 import { getLastZIndex, nextSubZIndex, nextZIndex, getFuncText } from '../../ui/src/utils'
 import { getEventTargetNode, toCssUnit } from '../../ui/src/dom'
 import { getSlotVNs } from '../../ui/src/vn'
@@ -30,6 +30,97 @@ function createReactData (): ContextMenuReactData {
 function hasChildMenu (item: VxeContextMenuDefines.MenuFirstOption | VxeContextMenuDefines.MenuChildOption) {
   const { children } = item as VxeContextMenuDefines.MenuFirstOption
   return children && children.some((child) => child.visible !== false)
+}
+
+function hasValidItem (item: VxeContextMenuDefines.MenuFirstOption | VxeContextMenuDefines.MenuChildOption) {
+  return !item.loading && !item.disabled && item.visible !== false
+}
+
+function findNextFirstItem (allFirstList: VxeContextMenuDefines.MenuFirstOption[], firstItem: VxeContextMenuDefines.MenuFirstOption) {
+  for (let i = 0; i < allFirstList.length; i++) {
+    const item = allFirstList[i]
+    if (firstItem === item) {
+      const nextItem = allFirstList[i + 1]
+      if (nextItem) {
+        return nextItem
+      }
+    }
+  }
+  return XEUtils.first(allFirstList)
+}
+
+function findPrevFirstItem (allFirstList: VxeContextMenuDefines.MenuFirstOption[], firstItem: VxeContextMenuDefines.MenuFirstOption) {
+  for (let i = 0; i < allFirstList.length; i++) {
+    const item = allFirstList[i]
+    if (firstItem === item) {
+      if (i > 0) {
+        return allFirstList[i - 1]
+      }
+    }
+  }
+  return XEUtils.last(allFirstList)
+}
+
+function findFirstChildItem (firstItem: VxeContextMenuDefines.MenuFirstOption) {
+  const { children } = firstItem
+  if (children) {
+    for (let i = 0; i < children.length; i++) {
+      const item = children[i]
+      if (hasValidItem(item)) {
+        return item
+      }
+    }
+  }
+  return null
+}
+
+function findPrevChildItem (firstItem: VxeContextMenuDefines.MenuFirstOption, childItem: VxeContextMenuDefines.MenuChildOption) {
+  const { children } = firstItem
+  let prevValidItem = null
+  if (children) {
+    for (let i = 0; i < children.length; i++) {
+      const item = children[i]
+      if (childItem === item) {
+        break
+      }
+      if (hasValidItem(item)) {
+        prevValidItem = item
+      }
+    }
+    if (!prevValidItem) {
+      for (let len = children.length - 1; len >= 0; len--) {
+        const item = children[len]
+        if (hasValidItem(item)) {
+          return item
+        }
+      }
+    }
+  }
+  return prevValidItem
+}
+
+function findNextChildItem (firstItem: VxeContextMenuDefines.MenuFirstOption, childItem: VxeContextMenuDefines.MenuChildOption) {
+  const { children } = firstItem
+  let firstValidItem = null
+  if (children) {
+    let isMetch = false
+    for (let i = 0; i < children.length; i++) {
+      const item = children[i]
+      if (!firstValidItem) {
+        if (hasValidItem(item)) {
+          firstValidItem = item
+        }
+      }
+      if (isMetch) {
+        if (hasValidItem(item)) {
+          return item
+        }
+      } else {
+        isMetch = childItem === item
+      }
+    }
+  }
+  return firstValidItem
 }
 
 export default /* define-vxe-component start */ defineVxeComponent({
@@ -80,6 +171,22 @@ export default /* define-vxe-component start */ defineVxeComponent({
 
       const { options } = props
       return options || []
+    },
+    computeAllFirstMenuList () {
+      const $xeContextMenu = this
+
+      const menuGroups: VxeContextMenuDefines.MenuFirstOption[] = $xeContextMenu.computeMenuGroups
+      const firstList = []
+      for (let i = 0; i < menuGroups.length; i++) {
+        const list = menuGroups[i]
+        for (let j = 0; j < list.length; j++) {
+          const firstItem = list[j]
+          if (hasValidItem(firstItem)) {
+            firstList.push(firstItem)
+          }
+        }
+      }
+      return firstList
     },
     computeTopAndLeft () {
       const $xeContextMenu = this
@@ -183,7 +290,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
         $xeContextMenu.close()
       }
     },
-    handleItemClickEvent (evnt: MouseEvent, item: VxeContextMenuDefines.MenuFirstOption | VxeContextMenuDefines.MenuChildOption) {
+    handleItemClickEvent (evnt: MouseEvent | KeyboardEvent, item: VxeContextMenuDefines.MenuFirstOption | VxeContextMenuDefines.MenuChildOption) {
       const $xeContextMenu = this
 
       if (!hasChildMenu(item)) {
@@ -196,7 +303,17 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const reactData = $xeContextMenu.reactData
 
       reactData.activeOption = parentitem || item
-      reactData.activeChildOption = parentitem ? item : null
+      if (parentitem) {
+        reactData.activeOption = parentitem
+        reactData.activeChildOption = item
+      } else {
+        reactData.activeOption = item
+        if (hasChildMenu(item)) {
+          reactData.activeChildOption = findFirstChildItem(item)
+        } else {
+          reactData.activeChildOption = null
+        }
+      }
     },
     handleItemMouseleaveEvent () {
       const $xeContextMenu = this
@@ -204,6 +321,93 @@ export default /* define-vxe-component start */ defineVxeComponent({
 
       reactData.activeOption = null
       reactData.activeChildOption = null
+    },
+    handleGlobalMousewheelEvent (evnt: MouseEvent) {
+      const $xeContextMenu = this
+      const reactData = $xeContextMenu.reactData
+
+      const { visible } = reactData
+      if (visible) {
+        const el = $xeContextMenu.$refs.refElem as HTMLDivElement
+        if (!getEventTargetNode(evnt, el, '').flag) {
+          close()
+        }
+      }
+    },
+    handleGlobalKeydownEvent (evnt: KeyboardEvent) {
+      const $xeContextMenu = this
+      const reactData = $xeContextMenu.reactData
+
+      const { visible, childPos, activeOption, activeChildOption } = reactData
+      const allFirstMenuList = $xeContextMenu.computeAllFirstMenuList
+      if (visible) {
+        const isLeftArrow = globalEvents.hasKey(evnt, GLOBAL_EVENT_KEYS.ARROW_LEFT)
+        const isUpArrow = globalEvents.hasKey(evnt, GLOBAL_EVENT_KEYS.ARROW_UP)
+        const isRightArrow = globalEvents.hasKey(evnt, GLOBAL_EVENT_KEYS.ARROW_RIGHT)
+        const isDwArrow = globalEvents.hasKey(evnt, GLOBAL_EVENT_KEYS.ARROW_DOWN)
+        const isEnter = globalEvents.hasKey(evnt, GLOBAL_EVENT_KEYS.ENTER)
+        // 回车选中
+        if (isEnter) {
+          if (activeOption || activeChildOption) {
+            evnt.preventDefault()
+            evnt.stopPropagation()
+            if (!activeChildOption && hasChildMenu(activeOption)) {
+              reactData.activeChildOption = findFirstChildItem(activeOption)
+              return
+            }
+            $xeContextMenu.handleItemClickEvent(evnt, activeChildOption || activeOption)
+            return
+          }
+        }
+        // 方向键操作
+        if (activeChildOption) {
+          if (isUpArrow) {
+            evnt.preventDefault()
+            reactData.activeChildOption = findPrevChildItem(activeOption, activeChildOption)
+          } else if (isDwArrow) {
+            evnt.preventDefault()
+            reactData.activeChildOption = findNextChildItem(activeOption, activeChildOption)
+          } else if (isLeftArrow) {
+            evnt.preventDefault()
+            if (childPos === 'left') {
+              // 无操作
+            } else {
+              reactData.activeChildOption = null
+            }
+          } else if (isRightArrow) {
+            evnt.preventDefault()
+            if (childPos === 'left') {
+              reactData.activeChildOption = null
+            } else {
+              // 无操作
+            }
+          }
+        } else if (activeOption) {
+          if (isUpArrow) {
+            evnt.preventDefault()
+            reactData.activeOption = findPrevFirstItem(allFirstMenuList, activeOption)
+          } else if (isDwArrow) {
+            evnt.preventDefault()
+            reactData.activeOption = findNextFirstItem(allFirstMenuList, activeOption)
+          } else {
+            evnt.preventDefault()
+            if (hasChildMenu(activeOption)) {
+              if (childPos === 'left') {
+                if (isLeftArrow) {
+                  reactData.activeChildOption = findFirstChildItem(activeOption)
+                }
+              } else {
+                if (isRightArrow) {
+                  reactData.activeChildOption = findFirstChildItem(activeOption)
+                }
+              }
+            }
+          }
+        } else {
+          evnt.preventDefault()
+          reactData.activeOption = XEUtils.first(allFirstMenuList)
+        }
+      }
     },
     handleGlobalMousedownEvent (evnt: MouseEvent) {
       const $xeContextMenu = this
@@ -215,6 +419,15 @@ export default /* define-vxe-component start */ defineVxeComponent({
         if (!getEventTargetNode(evnt, el, '').flag) {
           $xeContextMenu.close()
         }
+      }
+    },
+    handleGlobalBlurEvent () {
+      const $xeContextMenu = this
+      const reactData = $xeContextMenu.reactData
+
+      const { visible } = reactData
+      if (visible) {
+        close()
       }
     },
 
@@ -326,11 +539,13 @@ export default /* define-vxe-component start */ defineVxeComponent({
         menuList.forEach((firstItem, i) => {
           const { children } = firstItem
           const hasChildMenus = children && children.some((child) => child.visible !== false)
+          const isActiveFirst = activeOption === firstItem
           moVNs.push(
             h('div', {
               key: `${gIndex}_${i}`,
               class: ['vxe-context-menu--item-wrapper vxe-context-menu--first-item', firstItem.className || '', {
-                'is--active': activeOption === firstItem
+                'is--active': isActiveFirst,
+                'is--subactive': isActiveFirst && !!activeChildOption
               }]
             }, [
               hasChildMenus
@@ -393,14 +608,20 @@ export default /* define-vxe-component start */ defineVxeComponent({
     const $xeContextMenu = this
 
     $xeContextMenu.handleVisible()
+    globalEvents.on($xeContextMenu, 'mousewheel', $xeContextMenu.handleGlobalMousewheelEvent)
+    globalEvents.on($xeContextMenu, 'keydown', $xeContextMenu.handleGlobalKeydownEvent)
     globalEvents.on($xeContextMenu, 'mousedown', $xeContextMenu.handleGlobalMousedownEvent)
+    globalEvents.on($xeContextMenu, 'blur', $xeContextMenu.handleGlobalBlurEvent)
   },
   beforeDestroy () {
     const $xeContextMenu = this
     const reactData = $xeContextMenu.reactData
     const internalData = $xeContextMenu.internalData
 
+    globalEvents.off($xeContextMenu, 'mousewheel')
+    globalEvents.off($xeContextMenu, 'keydown')
     globalEvents.off($xeContextMenu, 'mousedown')
+    globalEvents.off($xeContextMenu, 'blur')
     XEUtils.assign(reactData, createReactData())
     XEUtils.assign(internalData, createInternalData())
   },

@@ -67,6 +67,11 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const option = options ? options.find(item => item.name === name) : null
       $xeButtonGroup.dispatchEvent('click', { ...params, option }, evnt)
     },
+    contextmenuEvent (evnt: MouseEvent) {
+      const $xeButtonGroup = this
+
+      $xeButtonGroup.dispatchEvent('contextmenu', {}, evnt)
+    },
 
     //
     // Render
@@ -86,7 +91,10 @@ export default /* define-vxe-component start */ defineVxeComponent({
       return h('div', {
         class: ['vxe-button-group', className ? (XEUtils.isFunction(className) ? className({ $buttonGroup: $xeButtonGroup }) : className) : '', {
           'is--vertical': vertical
-        }]
+        }],
+        on: {
+          contextmenu: $xeButtonGroup.contextmenuEvent
+        }
       }, defaultSlot
         ? defaultSlot({})
         : (options
