@@ -117,7 +117,8 @@ const VxeButtonComponent = defineVxeComponent({
     'mouseenter',
     'mouseleave',
     'dropdown-click',
-    'dropdownClick'
+    'dropdownClick',
+    'contextmenu'
   ] as VxeButtonEmits,
   setup (props, context) {
     const { slots, emit } = context
@@ -378,6 +379,10 @@ const VxeButtonComponent = defineVxeComponent({
       dispatchEvent('mouseleave', {}, evnt)
     }
 
+    const contextmenuEvent = (evnt: MouseEvent) => {
+      dispatchEvent('contextmenu', {}, evnt)
+    }
+
     const clickTargetEvent = (evnt: MouseEvent) => {
       const { loading, trigger } = props
       const btnDisabled = computeBtnDisabled.value
@@ -616,7 +621,9 @@ const VxeButtonComponent = defineVxeComponent({
         return renderEmptyElement($xeButton)
       }
       if (dropdownsSlot || downBtnList.length) {
-        const btnOns: Record<string, any> = {}
+        const btnOns: Record<string, any> = {
+          onContextmenu: contextmenuEvent
+        }
         const panelOns: Record<string, any> = {}
         if (trigger === 'hover') {
           // hover 触发
@@ -758,7 +765,8 @@ const VxeButtonComponent = defineVxeComponent({
           to: routerLink,
           onClick: clickEvent,
           onMouseenter: mouseenterEvent,
-          onMouseleave: mouseleaveEvent
+          onMouseleave: mouseleaveEvent,
+          onContextmenu: contextmenuEvent
         }, {
           default () {
             return renderContent()
@@ -781,7 +789,8 @@ const VxeButtonComponent = defineVxeComponent({
         disabled: btnDisabled || loading,
         onClick: clickEvent,
         onMouseenter: mouseenterEvent,
-        onMouseleave: mouseleaveEvent
+        onMouseleave: mouseleaveEvent,
+        onContextmenu: contextmenuEvent
       }, renderContent())
     }
 

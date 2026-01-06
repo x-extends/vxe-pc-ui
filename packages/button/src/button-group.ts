@@ -4,7 +4,7 @@ import { getConfig, createEvent, useSize, usePermission, renderEmptyElement } fr
 import XEUtils from 'xe-utils'
 import VxeButtonComponent from './button'
 
-import type { VxeButtonGroupPropTypes, VxeButtonGroupEmits, ButtonGroupReactData, VxeButtonGroupConstructor, VxeButtonGroupPrivateMethods, ButtonGroupMethods, ButtonPrivateComputed, ButtonGroupPrivateMethods } from '../../../types'
+import type { VxeButtonGroupPropTypes, VxeButtonGroupEmits, ButtonGroupReactData, VxeButtonGroupConstructor, VxeButtonGroupPrivateMethods, ButtonGroupMethods, ButtonPrivateComputed, ValueOf, ButtonGroupPrivateMethods } from '../../../types'
 
 export default defineVxeComponent({
   name: 'VxeButtonGroup',
@@ -25,7 +25,8 @@ export default defineVxeComponent({
     }
   },
   emits: [
-    'click'
+    'click',
+    'contextmenu'
   ] as VxeButtonGroupEmits,
   setup (props, context) {
     const { slots, emit } = context
@@ -50,10 +51,12 @@ export default defineVxeComponent({
 
     const { computePermissionInfo } = usePermission(props)
 
+    const dispatchEvent = (type: ValueOf<VxeButtonGroupEmits>, params: Record<string, any>, evnt: Event | null) => {
+      emit(type, createEvent(evnt, { $buttonGroup: $xeButtonGroup }, params))
+    }
+
     const buttonGroupMethods: ButtonGroupMethods = {
-      dispatchEvent (type, params, evnt) {
-        emit(type, createEvent(evnt, { $buttonGroup: $xeButtonGroup }, params))
-      }
+      dispatchEvent
     }
 
     const buttonGroupPrivateMethods: ButtonGroupPrivateMethods = {
@@ -63,6 +66,10 @@ export default defineVxeComponent({
         const option = options ? options.find(item => item.name === name) : null
         buttonGroupMethods.dispatchEvent('click', { ...params, option }, evnt)
       }
+    }
+
+    const contextmenuEvent = (evnt: MouseEvent) => {
+      dispatchEvent('contextmenu', {}, evnt)
     }
 
     Object.assign($xeButtonGroup, buttonGroupMethods, buttonGroupPrivateMethods)
@@ -77,7 +84,8 @@ export default defineVxeComponent({
       return h('div', {
         class: ['vxe-button-group', className ? (XEUtils.isFunction(className) ? className({ $buttonGroup: $xeButtonGroup }) : className) : '', {
           'is--vertical': vertical
-        }]
+        }],
+        onContextmenu: contextmenuEvent
       }, defaultSlot
         ? defaultSlot({})
         : (options

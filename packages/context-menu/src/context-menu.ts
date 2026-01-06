@@ -1,7 +1,7 @@
 import { ref, h, reactive, PropType, computed, VNode, watch, onMounted, onBeforeUnmount, nextTick } from 'vue'
 import { defineVxeComponent } from '../../ui/src/comp'
 import XEUtils from 'xe-utils'
-import { getConfig, getIcon, getI18n, createEvent, useSize, globalEvents, renderEmptyElement } from '../../ui'
+import { getConfig, getIcon, getI18n, createEvent, useSize, globalEvents, renderEmptyElement, GLOBAL_EVENT_KEYS } from '../../ui'
 import { getLastZIndex, nextSubZIndex, nextZIndex, getFuncText } from '../../ui/src/utils'
 import { getEventTargetNode, toCssUnit } from '../../ui/src/dom'
 import { getSlotVNs } from '../../ui/src/vn'
@@ -79,6 +79,21 @@ export default defineVxeComponent({
     const computeMenuGroups = computed(() => {
       const { options } = props
       return options || []
+    })
+
+    const computeAllFirstMenuList = computed(() => {
+      const menuGroups: VxeContextMenuDefines.MenuFirstOption[] = computeMenuGroups.value
+      const firstList = []
+      for (let i = 0; i < menuGroups.length; i++) {
+        const list = menuGroups[i]
+        for (let j = 0; j < list.length; j++) {
+          const firstItem = list[j]
+          if (hasValidItem(firstItem)) {
+            firstList.push(firstItem)
+          }
+        }
+      }
+      return firstList
     })
 
     const computeTopAndLeft = computed(() => {
@@ -179,7 +194,7 @@ export default defineVxeComponent({
       return children && children.some((child) => child.visible !== false)
     }
 
-    const handleItemClickEvent = (evnt: MouseEvent, item: VxeContextMenuDefines.MenuFirstOption | VxeContextMenuDefines.MenuChildOption) => {
+    const handleItemClickEvent = (evnt: MouseEvent | KeyboardEvent, item: VxeContextMenuDefines.MenuFirstOption | VxeContextMenuDefines.MenuChildOption) => {
       if (!hasChildMenu(item)) {
         dispatchEvent('option-click', { option: item }, evnt)
         close()
@@ -188,12 +203,194 @@ export default defineVxeComponent({
 
     const handleItemMouseenterEvent = (evnt: MouseEvent, item: VxeContextMenuDefines.MenuFirstOption | VxeContextMenuDefines.MenuChildOption, parentitem?: VxeContextMenuDefines.MenuFirstOption | null) => {
       reactData.activeOption = parentitem || item
-      reactData.activeChildOption = parentitem ? item : null
+      if (parentitem) {
+        reactData.activeOption = parentitem
+        reactData.activeChildOption = item
+      } else {
+        reactData.activeOption = item
+        if (hasChildMenu(item)) {
+          reactData.activeChildOption = findFirstChildItem(item)
+        } else {
+          reactData.activeChildOption = null
+        }
+      }
     }
 
     const handleItemMouseleaveEvent = () => {
       reactData.activeOption = null
       reactData.activeChildOption = null
+    }
+
+    const hasValidItem = (item: VxeContextMenuDefines.MenuFirstOption | VxeContextMenuDefines.MenuChildOption) => {
+      return !item.loading && !item.disabled && item.visible !== false
+    }
+
+    const findNextFirstItem = (allFirstList: VxeContextMenuDefines.MenuFirstOption[], firstItem: VxeContextMenuDefines.MenuFirstOption) => {
+      for (let i = 0; i < allFirstList.length; i++) {
+        const item = allFirstList[i]
+        if (firstItem === item) {
+          const nextItem = allFirstList[i + 1]
+          if (nextItem) {
+            return nextItem
+          }
+        }
+      }
+      return XEUtils.first(allFirstList)
+    }
+
+    const findPrevFirstItem = (allFirstList: VxeContextMenuDefines.MenuFirstOption[], firstItem: VxeContextMenuDefines.MenuFirstOption) => {
+      for (let i = 0; i < allFirstList.length; i++) {
+        const item = allFirstList[i]
+        if (firstItem === item) {
+          if (i > 0) {
+            return allFirstList[i - 1]
+          }
+        }
+      }
+      return XEUtils.last(allFirstList)
+    }
+
+    const findFirstChildItem = (firstItem: VxeContextMenuDefines.MenuFirstOption) => {
+      const { children } = firstItem
+      if (children) {
+        for (let i = 0; i < children.length; i++) {
+          const item = children[i]
+          if (hasValidItem(item)) {
+            return item
+          }
+        }
+      }
+      return null
+    }
+
+    const findPrevChildItem = (firstItem: VxeContextMenuDefines.MenuFirstOption, childItem: VxeContextMenuDefines.MenuChildOption) => {
+      const { children } = firstItem
+      let prevValidItem = null
+      if (children) {
+        for (let i = 0; i < children.length; i++) {
+          const item = children[i]
+          if (childItem === item) {
+            break
+          }
+          if (hasValidItem(item)) {
+            prevValidItem = item
+          }
+        }
+        if (!prevValidItem) {
+          for (let len = children.length - 1; len >= 0; len--) {
+            const item = children[len]
+            if (hasValidItem(item)) {
+              return item
+            }
+          }
+        }
+      }
+      return prevValidItem
+    }
+
+    const findNextChildItem = (firstItem: VxeContextMenuDefines.MenuFirstOption, childItem: VxeContextMenuDefines.MenuChildOption) => {
+      const { children } = firstItem
+      let firstValidItem = null
+      if (children) {
+        let isMetch = false
+        for (let i = 0; i < children.length; i++) {
+          const item = children[i]
+          if (!firstValidItem) {
+            if (hasValidItem(item)) {
+              firstValidItem = item
+            }
+          }
+          if (isMetch) {
+            if (hasValidItem(item)) {
+              return item
+            }
+          } else {
+            isMetch = childItem === item
+          }
+        }
+      }
+      return firstValidItem
+    }
+
+    const handleGlobalMousewheelEvent = (evnt: MouseEvent) => {
+      const { visible } = reactData
+      if (visible) {
+        const el = refElem.value
+        if (!getEventTargetNode(evnt, el, '').flag) {
+          close()
+        }
+      }
+    }
+
+    const handleGlobalKeydownEvent = (evnt: KeyboardEvent) => {
+      const { visible, childPos, activeOption, activeChildOption } = reactData
+      const allFirstMenuList = computeAllFirstMenuList.value
+      if (visible) {
+        const isLeftArrow = globalEvents.hasKey(evnt, GLOBAL_EVENT_KEYS.ARROW_LEFT)
+        const isUpArrow = globalEvents.hasKey(evnt, GLOBAL_EVENT_KEYS.ARROW_UP)
+        const isRightArrow = globalEvents.hasKey(evnt, GLOBAL_EVENT_KEYS.ARROW_RIGHT)
+        const isDwArrow = globalEvents.hasKey(evnt, GLOBAL_EVENT_KEYS.ARROW_DOWN)
+        const isEnter = globalEvents.hasKey(evnt, GLOBAL_EVENT_KEYS.ENTER)
+        // 回车选中
+        if (isEnter) {
+          if (activeOption || activeChildOption) {
+            evnt.preventDefault()
+            evnt.stopPropagation()
+            if (!activeChildOption && hasChildMenu(activeOption)) {
+              reactData.activeChildOption = findFirstChildItem(activeOption)
+              return
+            }
+            handleItemClickEvent(evnt, activeChildOption || activeOption)
+            return
+          }
+        }
+        // 方向键操作
+        if (activeChildOption) {
+          if (isUpArrow) {
+            evnt.preventDefault()
+            reactData.activeChildOption = findPrevChildItem(activeOption, activeChildOption)
+          } else if (isDwArrow) {
+            evnt.preventDefault()
+            reactData.activeChildOption = findNextChildItem(activeOption, activeChildOption)
+          } else if (isLeftArrow) {
+            evnt.preventDefault()
+            if (childPos === 'left') {
+              // 无操作
+            } else {
+              reactData.activeChildOption = null
+            }
+          } else if (isRightArrow) {
+            evnt.preventDefault()
+            if (childPos === 'left') {
+              reactData.activeChildOption = null
+            } else {
+              // 无操作
+            }
+          }
+        } else if (activeOption) {
+          evnt.preventDefault()
+          if (isUpArrow) {
+            reactData.activeOption = findPrevFirstItem(allFirstMenuList, activeOption)
+          } else if (isDwArrow) {
+            reactData.activeOption = findNextFirstItem(allFirstMenuList, activeOption)
+          } else {
+            if (hasChildMenu(activeOption)) {
+              if (childPos === 'left') {
+                if (isLeftArrow) {
+                  reactData.activeChildOption = findFirstChildItem(activeOption)
+                }
+              } else {
+                if (isRightArrow) {
+                  reactData.activeChildOption = findFirstChildItem(activeOption)
+                }
+              }
+            }
+          }
+        } else {
+          evnt.preventDefault()
+          reactData.activeOption = XEUtils.first(allFirstMenuList)
+        }
+      }
     }
 
     const handleGlobalMousedownEvent = (evnt: MouseEvent) => {
@@ -203,6 +400,13 @@ export default defineVxeComponent({
         if (!getEventTargetNode(evnt, el, '').flag) {
           close()
         }
+      }
+    }
+
+    const handleGlobalBlurEvent = () => {
+      const { visible } = reactData
+      if (visible) {
+        close()
       }
     }
 
@@ -310,11 +514,13 @@ export default defineVxeComponent({
         menuList.forEach((firstItem, i) => {
           const { children } = firstItem
           const hasChildMenus = children && children.some((child) => child.visible !== false)
+          const isActiveFirst = activeOption === firstItem
           moVNs.push(
             h('div', {
               key: `${gIndex}_${i}`,
               class: ['vxe-context-menu--item-wrapper vxe-context-menu--first-item', firstItem.className || '', {
-                'is--active': activeOption === firstItem
+                'is--active': isActiveFirst,
+                'is--subactive': isActiveFirst && !!activeChildOption
               }]
             }, [
               hasChildMenus
@@ -369,11 +575,17 @@ export default defineVxeComponent({
     handleVisible()
 
     onMounted(() => {
+      globalEvents.on($xeContextMenu, 'mousewheel', handleGlobalMousewheelEvent)
+      globalEvents.on($xeContextMenu, 'keydown', handleGlobalKeydownEvent)
       globalEvents.on($xeContextMenu, 'mousedown', handleGlobalMousedownEvent)
+      globalEvents.on($xeContextMenu, 'blur', handleGlobalBlurEvent)
     })
 
     onBeforeUnmount(() => {
+      globalEvents.off($xeContextMenu, 'mousewheel')
+      globalEvents.off($xeContextMenu, 'keydown')
       globalEvents.off($xeContextMenu, 'mousedown')
+      globalEvents.off($xeContextMenu, 'blur')
       XEUtils.assign(reactData, createReactData())
       XEUtils.assign(internalData, createInternalData())
     })
