@@ -3,7 +3,7 @@ import { defineVxeComponent } from '../../ui/src/comp'
 import XEUtils from 'xe-utils'
 import { getConfig, getI18n, getIcon, createEvent, globalMixins, globalEvents, renderEmptyElement, GLOBAL_EVENT_KEYS } from '../../ui'
 import { getLastZIndex, nextSubZIndex, nextZIndex, getFuncText } from '../../ui/src/utils'
-import { getEventTargetNode, toCssUnit } from '../../ui/src/dom'
+import { getDomNode, getEventTargetNode, toCssUnit } from '../../ui/src/dom'
 import { getSlotVNs } from '../../ui/src/vn'
 
 import type { ContextMenuInternalData, VxeContextMenuPropTypes, ContextMenuReactData, VxeContextMenuEmits, VxeComponentSizeType, ValueOf, VxeContextMenuDefines } from '../../../types'
@@ -23,7 +23,7 @@ function createReactData (): ContextMenuReactData {
       left: '',
       zIndex: 0
     },
-    childPos: ''
+    childOffsetX: 0
   }
 }
 
@@ -138,6 +138,10 @@ export default /* define-vxe-component start */ defineVxeComponent({
     options: Array as PropType<VxeContextMenuPropTypes.Options>,
     x: [Number, String] as PropType<VxeContextMenuPropTypes.X>,
     y: [Number, String] as PropType<VxeContextMenuPropTypes.Y>,
+    autoLocate: {
+      type: Boolean as PropType<VxeContextMenuPropTypes.AutoLocate>,
+      default: () => getConfig().contextMenu.autoLocate
+    },
     zIndex: [Number, String] as PropType<VxeContextMenuPropTypes.ZIndex>,
     position: {
       type: String as PropType<VxeContextMenuPropTypes.Position>,
@@ -224,7 +228,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const { visible } = reactData
       const value = true
       reactData.visible = value
-      $xeContextMenu.updateLocate()
+      $xeContextMenu.handleLocate()
       $xeContextMenu.updateZindex()
       if (modelValue !== value) {
         $xeContextMenu.emitModel(value)
@@ -233,7 +237,9 @@ export default /* define-vxe-component start */ defineVxeComponent({
       if (visible !== value) {
         $xeContextMenu.dispatchEvent('show', { visible: value }, null)
       }
-      return $xeContextMenu.$nextTick()
+      return $xeContextMenu.$nextTick().then(() => {
+        $xeContextMenu.updateLocate()
+      })
     },
     close () {
       const $xeContextMenu = this
@@ -253,7 +259,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       }
       return $xeContextMenu.$nextTick()
     },
-    updateLocate () {
+    handleLocate () {
       const $xeContextMenu = this
       const props = $xeContextMenu
       const reactData = $xeContextMenu.reactData
@@ -262,6 +268,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const { popupStyle } = reactData
       popupStyle.left = toCssUnit(x || 0)
       popupStyle.top = toCssUnit(y || 0)
+      $xeContextMenu.updateLocate()
     },
     updateZindex () {
       const $xeContextMenu = this
@@ -277,6 +284,65 @@ export default /* define-vxe-component start */ defineVxeComponent({
         if (menuZIndex < getLastZIndex()) {
           popupStyle.zIndex = transfer ? nextSubZIndex() : nextZIndex()
         }
+      }
+    },
+    updateLocate () {
+      const $xeContextMenu = this
+      const props = $xeContextMenu
+      const reactData = $xeContextMenu.reactData
+
+      const { autoLocate, position } = props
+      const { popupStyle } = reactData
+      if (autoLocate) {
+        const wrapperEl = $xeContextMenu.$refs.refElem as HTMLDivElement
+        if (wrapperEl) {
+          const { visibleWidth, visibleHeight } = getDomNode()
+          const wrapperStyle = getComputedStyle(wrapperEl)
+          const offsetTop = XEUtils.toNumber(wrapperStyle.top)
+          const offsetLeft = XEUtils.toNumber(wrapperStyle.left)
+          const wrapperWidth = wrapperEl.offsetWidth
+          const wrapperHeight = wrapperEl.offsetHeight
+          if (position === 'absolute') {
+            //
+          } else {
+            if (offsetTop + wrapperHeight > visibleHeight) {
+              popupStyle.top = `${Math.max(0, offsetTop - wrapperHeight)}px`
+            }
+            if (offsetLeft + wrapperWidth > visibleWidth) {
+              popupStyle.left = `${Math.max(0, offsetLeft - wrapperWidth)}px`
+            }
+          }
+        }
+      }
+      $xeContextMenu.updateChildLocate()
+    },
+    updateChildLocate () {
+      const $xeContextMenu = this
+      const reactData = $xeContextMenu.reactData
+
+      const wrapperEl = $xeContextMenu.$refs.refElem as HTMLDivElement
+      if (wrapperEl) {
+        const { visibleWidth } = getDomNode()
+        const owSize = 2
+
+        const handleStyle = () => {
+          const wrapperStyle = getComputedStyle(wrapperEl)
+          const offsetLeft = XEUtils.toNumber(wrapperStyle.left)
+          const wrapperWidth = wrapperEl.offsetWidth
+          const childEl = wrapperEl.querySelector<HTMLDivElement>('.vxe-context-menu--children-wrapper')
+          const childWidth = childEl ? childEl.offsetWidth : wrapperWidth
+          if ((offsetLeft + wrapperWidth) > (visibleWidth - childWidth)) {
+            // 往左
+            reactData.childOffsetX = -childWidth + owSize
+          } else {
+            // 往右
+            reactData.childOffsetX = wrapperWidth - owSize
+          }
+        }
+        handleStyle()
+        $xeContextMenu.$nextTick(() => {
+          handleStyle()
+        })
       }
     },
     handleVisible () {
@@ -310,6 +376,9 @@ export default /* define-vxe-component start */ defineVxeComponent({
         reactData.activeOption = item
         if (hasChildMenu(item)) {
           reactData.activeChildOption = findFirstChildItem(item)
+          $xeContextMenu.$nextTick(() => {
+            $xeContextMenu.updateChildLocate()
+          })
         } else {
           reactData.activeChildOption = null
         }
@@ -338,7 +407,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const $xeContextMenu = this
       const reactData = $xeContextMenu.reactData
 
-      const { visible, childPos, activeOption, activeChildOption } = reactData
+      const { visible, activeOption, activeChildOption } = reactData
       const allFirstMenuList = $xeContextMenu.computeAllFirstMenuList
       if (visible) {
         const isLeftArrow = globalEvents.hasKey(evnt, GLOBAL_EVENT_KEYS.ARROW_LEFT)
@@ -346,6 +415,11 @@ export default /* define-vxe-component start */ defineVxeComponent({
         const isRightArrow = globalEvents.hasKey(evnt, GLOBAL_EVENT_KEYS.ARROW_RIGHT)
         const isDwArrow = globalEvents.hasKey(evnt, GLOBAL_EVENT_KEYS.ARROW_DOWN)
         const isEnter = globalEvents.hasKey(evnt, GLOBAL_EVENT_KEYS.ENTER)
+        const isEsc = globalEvents.hasKey(evnt, GLOBAL_EVENT_KEYS.ESCAPE)
+        if (isEsc) {
+          close()
+          return
+        }
         // 回车选中
         if (isEnter) {
           if (activeOption || activeChildOption) {
@@ -353,6 +427,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
             evnt.stopPropagation()
             if (!activeChildOption && hasChildMenu(activeOption)) {
               reactData.activeChildOption = findFirstChildItem(activeOption)
+              $xeContextMenu.updateChildLocate()
               return
             }
             $xeContextMenu.handleItemClickEvent(evnt, activeChildOption || activeOption)
@@ -364,42 +439,26 @@ export default /* define-vxe-component start */ defineVxeComponent({
           if (isUpArrow) {
             evnt.preventDefault()
             reactData.activeChildOption = findPrevChildItem(activeOption, activeChildOption)
+            $xeContextMenu.updateChildLocate()
           } else if (isDwArrow) {
             evnt.preventDefault()
             reactData.activeChildOption = findNextChildItem(activeOption, activeChildOption)
+            $xeContextMenu.updateChildLocate()
           } else if (isLeftArrow) {
             evnt.preventDefault()
-            if (childPos === 'left') {
-              // 无操作
-            } else {
-              reactData.activeChildOption = null
-            }
-          } else if (isRightArrow) {
-            evnt.preventDefault()
-            if (childPos === 'left') {
-              reactData.activeChildOption = null
-            } else {
-              // 无操作
-            }
+            reactData.activeChildOption = null
           }
         } else if (activeOption) {
+          evnt.preventDefault()
           if (isUpArrow) {
-            evnt.preventDefault()
             reactData.activeOption = findPrevFirstItem(allFirstMenuList, activeOption)
           } else if (isDwArrow) {
-            evnt.preventDefault()
             reactData.activeOption = findNextFirstItem(allFirstMenuList, activeOption)
           } else {
-            evnt.preventDefault()
             if (hasChildMenu(activeOption)) {
-              if (childPos === 'left') {
-                if (isLeftArrow) {
-                  reactData.activeChildOption = findFirstChildItem(activeOption)
-                }
-              } else {
-                if (isRightArrow) {
-                  reactData.activeChildOption = findFirstChildItem(activeOption)
-                }
+              if (isRightArrow) {
+                reactData.activeChildOption = findFirstChildItem(activeOption)
+                $xeContextMenu.updateChildLocate()
               }
             }
           }
@@ -531,7 +590,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const $xeContextMenu = this
       const reactData = $xeContextMenu.reactData
 
-      const { activeOption, activeChildOption } = reactData
+      const { activeOption, activeChildOption, childOffsetX } = reactData
       const menuGroups = $xeContextMenu.computeMenuGroups
       const mgVNs: VNode[] = []
       menuGroups.forEach((menuList, gIndex) => {
@@ -540,6 +599,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
           const { children } = firstItem
           const hasChildMenus = children && children.some((child) => child.visible !== false)
           const isActiveFirst = activeOption === firstItem
+          const showChild = isActiveFirst && !!activeChildOption
           moVNs.push(
             h('div', {
               key: `${gIndex}_${i}`,
@@ -548,9 +608,12 @@ export default /* define-vxe-component start */ defineVxeComponent({
                 'is--subactive': isActiveFirst && !!activeChildOption
               }]
             }, [
-              hasChildMenus
+              hasChildMenus && showChild
                 ? h('div', {
-                  class: 'vxe-context-menu--children-wrapper'
+                  class: 'vxe-context-menu--children-wrapper',
+                  style: {
+                    transform: `translate(${childOffsetX}px, -5px)`
+                  }
                 }, children.map(twoItem => {
                   return h('div', {
                     class: ['vxe-context-menu--item-wrapper vxe-context-menu--child-item', twoItem.className || '', {
@@ -580,11 +643,11 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const reactData = $xeContextMenu.reactData
 
       const { className, position, destroyOnClose } = props
-      const { visible, popupStyle, childPos } = reactData
+      const { visible, popupStyle } = reactData
       const vSize = $xeContextMenu.computeSize
       return h('div', {
         ref: 'refElem',
-        class: ['vxe-context-menu vxe-context-menu--wrapper', position === 'absolute' ? ('is--' + position) : 'is--fixed', `cp--${childPos === 'left' ? childPos : 'right'}`, className || '', {
+        class: ['vxe-context-menu vxe-context-menu--wrapper', position === 'absolute' ? ('is--' + position) : 'is--fixed', className || '', {
           [`size--${vSize}`]: vSize,
           'is--visible': visible
         }],
@@ -597,11 +660,14 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const $xeContextMenu = this
 
       $xeContextMenu.handleVisible()
+      $xeContextMenu.$nextTick(() => {
+        $xeContextMenu.updateLocate()
+      })
     },
     computeTopAndLeft () {
       const $xeContextMenu = this
 
-      $xeContextMenu.updateLocate()
+      $xeContextMenu.handleLocate()
     }
   },
   created () {

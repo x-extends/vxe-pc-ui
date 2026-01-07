@@ -24,6 +24,7 @@ export namespace VxeContextMenuPropTypes {
   export type Size = VxeComponentSizeType
   export type Options = VxeContextMenuDefines.MenuFirstOption[][]
   export type Position = null | '' | 'absolute' | 'fixed'
+  export type AutoLocate = boolean
   export type ZIndex = string | number
   export type DestroyOnClose = boolean
   export type Transfer = boolean
@@ -37,6 +38,7 @@ export type VxeContextMenuProps = {
   size?: VxeContextMenuPropTypes.Size
   options?: VxeContextMenuPropTypes.Options
   position?: VxeContextMenuPropTypes.Position
+  autoLocate?: VxeContextMenuPropTypes.AutoLocate
   zIndex?: VxeContextMenuPropTypes.ZIndex
   destroyOnClose?: VxeContextMenuPropTypes.DestroyOnClose
   transfer?: VxeContextMenuPropTypes.Transfer
@@ -58,7 +60,7 @@ export interface ContextMenuReactData {
     left: string
     zIndex: number
   }
-  childPos: '' | 'left' | 'right'
+  childOffsetX: number
 }
 
 export interface ContextMenuMethods {
