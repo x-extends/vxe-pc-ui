@@ -54,7 +54,7 @@ const VxeDynamics = defineVxeComponent({
               optionClick(params)
             }
           }
-        })
+        }, { events: undefined })
       }
       return [
         modals.length

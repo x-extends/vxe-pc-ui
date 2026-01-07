@@ -37,8 +37,8 @@ export const ContextMenuController = {
     evnt.preventDefault()
     evnt.stopPropagation()
     const opts = Object.assign({}, options)
-    const x = evnt.clientX
-    const y = evnt.clientY
+    const x = evnt.clientX + 1
+    const y = evnt.clientY + 1
     openMenu(opts, x, y)
   },
   close () {

@@ -99,6 +99,10 @@ export interface TableFilterPrivateMethods<D = any> {
   /**
    * @private
    */
+  handleOpenFilterColumn(evnt: any, btnEl: HTMLElement | null, cellEl: HTMLElement, column: any, params: any): void
+  /**
+   * @private
+   */
   handleColumnConfirmFilter(column: VxeTableDefines.ColumnInfo, evnt: Event | null): Promise<any>
   /**
    * @private

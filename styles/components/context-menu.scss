@@ -12,16 +12,6 @@
   &.is--absolute {
     position: absolute;
   }
-  &.cp--left {
-    .vxe-context-menu--children-wrapper {
-      left: calc(-100% + 2px);
-    }
-  }
-  &.cp--right {
-    .vxe-context-menu--children-wrapper {
-      left: calc(100% - 2px);
-    }
-  }
 }
 
 .vxe-context-menu--group-wrapper {
@@ -45,7 +35,7 @@
 .vxe-context-menu--children-wrapper {
   display: none;
   position: absolute;
-  transform: translateY(-5px);
+  transform: translate(0, -5px);
 }
 
 .vxe-context-menu--item-wrapper {

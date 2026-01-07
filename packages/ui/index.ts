@@ -80,7 +80,9 @@ setConfig({
     }
   },
   collapsePane: {},
-  contextMenu: {},
+  contextMenu: {
+    autoLocate: true
+  },
   countdown: {},
   colorPicker: {
     type: 'rgb',

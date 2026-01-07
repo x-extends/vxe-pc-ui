@@ -3,7 +3,7 @@ import { defineVxeComponent } from '../../ui/src/comp'
 import XEUtils from 'xe-utils'
 import { getConfig, getIcon, getI18n, createEvent, useSize, globalEvents, renderEmptyElement, GLOBAL_EVENT_KEYS } from '../../ui'
 import { getLastZIndex, nextSubZIndex, nextZIndex, getFuncText } from '../../ui/src/utils'
-import { getEventTargetNode, toCssUnit } from '../../ui/src/dom'
+import { getDomNode, getEventTargetNode, toCssUnit } from '../../ui/src/dom'
 import { getSlotVNs } from '../../ui/src/vn'
 
 import type { ContextMenuInternalData, ContextMenuReactData, VxeContextMenuPropTypes, VxeContextMenuDefines, ContextMenuPrivateRef, VxeContextMenuEmits, VxeContextMenuPrivateComputed, ContextMenuMethods, ContextMenuPrivateMethods, VxeContextMenuConstructor, VxeContextMenuPrivateMethods, ValueOf } from '../../../types'
@@ -23,7 +23,7 @@ function createReactData (): ContextMenuReactData {
       left: '',
       zIndex: 0
     },
-    childPos: ''
+    childOffsetX: 0
   }
 }
 
@@ -39,6 +39,10 @@ export default defineVxeComponent({
     options: Array as PropType<VxeContextMenuPropTypes.Options>,
     x: [Number, String] as PropType<VxeContextMenuPropTypes.X>,
     y: [Number, String] as PropType<VxeContextMenuPropTypes.Y>,
+    autoLocate: {
+      type: Boolean as PropType<VxeContextMenuPropTypes.AutoLocate>,
+      default: () => getConfig().contextMenu.autoLocate
+    },
     zIndex: [Number, String] as PropType<VxeContextMenuPropTypes.ZIndex>,
     position: {
       type: String as PropType<VxeContextMenuPropTypes.Position>,
@@ -127,7 +131,7 @@ export default defineVxeComponent({
       const { visible } = reactData
       const value = true
       reactData.visible = value
-      updateLocate()
+      handleLocate()
       updateZindex()
       if (modelValue !== value) {
         emitModel(value)
@@ -136,7 +140,9 @@ export default defineVxeComponent({
       if (visible !== value) {
         dispatchEvent('show', { visible: value }, null)
       }
-      return nextTick()
+      return nextTick().then(() => {
+        updateLocate()
+      })
     }
 
     const close = () => {
@@ -154,11 +160,12 @@ export default defineVxeComponent({
       return nextTick()
     }
 
-    const updateLocate = () => {
+    const handleLocate = () => {
       const { x, y } = props
       const { popupStyle } = reactData
       popupStyle.left = toCssUnit(x || 0)
       popupStyle.top = toCssUnit(y || 0)
+      updateLocate()
     }
 
     const updateZindex = () => {
@@ -171,6 +178,60 @@ export default defineVxeComponent({
         if (menuZIndex < getLastZIndex()) {
           popupStyle.zIndex = transfer ? nextSubZIndex() : nextZIndex()
         }
+      }
+    }
+
+    const updateLocate = () => {
+      const { autoLocate, position } = props
+      const { popupStyle } = reactData
+      if (autoLocate) {
+        const wrapperEl = refElem.value
+        if (wrapperEl) {
+          const { visibleWidth, visibleHeight } = getDomNode()
+          const wrapperStyle = getComputedStyle(wrapperEl)
+          const offsetTop = XEUtils.toNumber(wrapperStyle.top)
+          const offsetLeft = XEUtils.toNumber(wrapperStyle.left)
+          const wrapperWidth = wrapperEl.offsetWidth
+          const wrapperHeight = wrapperEl.offsetHeight
+          if (position === 'absolute') {
+            //
+          } else {
+            if (offsetTop + wrapperHeight > visibleHeight) {
+              popupStyle.top = `${Math.max(0, offsetTop - wrapperHeight)}px`
+            }
+            if (offsetLeft + wrapperWidth > visibleWidth) {
+              popupStyle.left = `${Math.max(0, offsetLeft - wrapperWidth)}px`
+            }
+          }
+        }
+      }
+      updateChildLocate()
+    }
+
+    const updateChildLocate = () => {
+      const wrapperEl = refElem.value
+      if (wrapperEl) {
+        const { visibleWidth } = getDomNode()
+        const owSize = 2
+
+        const handleStyle = () => {
+          const wrapperStyle = getComputedStyle(wrapperEl)
+          const offsetLeft = XEUtils.toNumber(wrapperStyle.left)
+          const wrapperWidth = wrapperEl.offsetWidth
+          const childEl = wrapperEl.querySelector<HTMLDivElement>('.vxe-context-menu--children-wrapper')
+          const childWidth = childEl ? childEl.offsetWidth : wrapperWidth
+          if ((offsetLeft + wrapperWidth) > (visibleWidth - childWidth)) {
+            // 往左
+            reactData.childOffsetX = -childWidth + owSize
+          } else {
+            // 往右
+            reactData.childOffsetX = wrapperWidth - owSize
+          }
+        }
+        handleStyle()
+        nextTick(() => {
+          handleStyle()
+        })
       }
     }
 
@@ -210,6 +271,9 @@ export default defineVxeComponent({
         reactData.activeOption = item
         if (hasChildMenu(item)) {
           reactData.activeChildOption = findFirstChildItem(item)
+          nextTick(() => {
+            updateChildLocate()
+          })
         } else {
           reactData.activeChildOption = null
         }
@@ -323,14 +387,19 @@ export default defineVxeComponent({
     }
 
     const handleGlobalKeydownEvent = (evnt: KeyboardEvent) => {
-      const { visible, childPos, activeOption, activeChildOption } = reactData
+      const { visible, activeOption, activeChildOption } = reactData
       const allFirstMenuList = computeAllFirstMenuList.value
       if (visible) {
-        const isLeftArrow = globalEvents.hasKey(evnt, GLOBAL_EVENT_KEYS.ARROW_LEFT)
         const isUpArrow = globalEvents.hasKey(evnt, GLOBAL_EVENT_KEYS.ARROW_UP)
-        const isRightArrow = globalEvents.hasKey(evnt, GLOBAL_EVENT_KEYS.ARROW_RIGHT)
         const isDwArrow = globalEvents.hasKey(evnt, GLOBAL_EVENT_KEYS.ARROW_DOWN)
+        const isLeftArrow = globalEvents.hasKey(evnt, GLOBAL_EVENT_KEYS.ARROW_LEFT)
+        const isRightArrow = globalEvents.hasKey(evnt, GLOBAL_EVENT_KEYS.ARROW_RIGHT)
         const isEnter = globalEvents.hasKey(evnt, GLOBAL_EVENT_KEYS.ENTER)
+        const isEsc = globalEvents.hasKey(evnt, GLOBAL_EVENT_KEYS.ESCAPE)
+        if (isEsc) {
+          close()
+          return
+        }
         // 回车选中
         if (isEnter) {
           if (activeOption || activeChildOption) {
@@ -338,6 +407,7 @@ export default defineVxeComponent({
             evnt.stopPropagation()
             if (!activeChildOption && hasChildMenu(activeOption)) {
               reactData.activeChildOption = findFirstChildItem(activeOption)
+              updateChildLocate()
               return
             }
             handleItemClickEvent(evnt, activeChildOption || activeOption)
@@ -349,23 +419,14 @@ export default defineVxeComponent({
           if (isUpArrow) {
             evnt.preventDefault()
             reactData.activeChildOption = findPrevChildItem(activeOption, activeChildOption)
+            updateChildLocate()
           } else if (isDwArrow) {
             evnt.preventDefault()
             reactData.activeChildOption = findNextChildItem(activeOption, activeChildOption)
+            updateChildLocate()
           } else if (isLeftArrow) {
             evnt.preventDefault()
-            if (childPos === 'left') {
-              // 无操作
-            } else {
-              reactData.activeChildOption = null
-            }
-          } else if (isRightArrow) {
-            evnt.preventDefault()
-            if (childPos === 'left') {
-              reactData.activeChildOption = null
-            } else {
-              // 无操作
-            }
+            reactData.activeChildOption = null
           }
         } else if (activeOption) {
           evnt.preventDefault()
@@ -375,14 +436,9 @@ export default defineVxeComponent({
             reactData.activeOption = findNextFirstItem(allFirstMenuList, activeOption)
           } else {
             if (hasChildMenu(activeOption)) {
-              if (childPos === 'left') {
-                if (isLeftArrow) {
-                  reactData.activeChildOption = findFirstChildItem(activeOption)
-                }
-              } else {
-                if (isRightArrow) {
-                  reactData.activeChildOption = findFirstChildItem(activeOption)
-                }
+              if (isRightArrow) {
+                reactData.activeChildOption = findFirstChildItem(activeOption)
+                updateChildLocate()
               }
             }
           }
@@ -506,7 +562,7 @@ export default defineVxeComponent({
     }
 
     const renderMenus = () => {
-      const { activeOption, activeChildOption } = reactData
+      const { activeOption, activeChildOption, childOffsetX } = reactData
       const menuGroups = computeMenuGroups.value
       const mgVNs: VNode[] = []
       menuGroups.forEach((menuList, gIndex) => {
@@ -515,6 +571,7 @@ export default defineVxeComponent({
           const { children } = firstItem
           const hasChildMenus = children && children.some((child) => child.visible !== false)
           const isActiveFirst = activeOption === firstItem
+          const showChild = isActiveFirst && !!activeChildOption
           moVNs.push(
             h('div', {
               key: `${gIndex}_${i}`,
@@ -523,9 +580,12 @@ export default defineVxeComponent({
                 'is--subactive': isActiveFirst && !!activeChildOption
               }]
             }, [
-              hasChildMenus
+              hasChildMenus && showChild
                 ? h('div', {
-                  class: 'vxe-context-menu--children-wrapper'
+                  class: 'vxe-context-menu--children-wrapper',
+                  style: {
+                    transform: `translate(${childOffsetX}px, -5px)`
+                  }
                 }, children.map(twoItem => {
                   return h('div', {
                     class: ['vxe-context-menu--item-wrapper vxe-context-menu--child-item', twoItem.className || '', {
@@ -552,11 +612,11 @@ export default defineVxeComponent({
 
     const renderVN = () => {
       const { className, position, destroyOnClose } = props
-      const { visible, popupStyle, childPos } = reactData
+      const { visible, popupStyle } = reactData
       const vSize = computeSize.value
       return h('div', {
         ref: refElem,
-        class: ['vxe-context-menu vxe-context-menu--wrapper', position === 'absolute' ? ('is--' + position) : 'is--fixed', `cp--${childPos === 'left' ? childPos : 'right'}`, className || '', {
+        class: ['vxe-context-menu vxe-context-menu--wrapper', position === 'absolute' ? ('is--' + position) : 'is--fixed', className || '', {
           [`size--${vSize}`]: vSize,
           'is--visible': visible
         }],
@@ -565,7 +625,10 @@ export default defineVxeComponent({
     }
 
     watch(computeTopAndLeft, () => {
-      updateLocate()
+      handleLocate()
+      nextTick(() => {
+        updateLocate()
+      })
     })
 
     watch(() => props.modelValue, () => {
