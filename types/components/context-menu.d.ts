@@ -68,9 +68,26 @@ export interface ContextMenuMethods {
   open(): Promise<void>
   close(): Promise<void>
 }
-export interface VxeContextMenuMethods extends ContextMenuMethods { }
+export interface VxeContextMenuMethods extends ContextMenuMethods {}
 
-export interface ContextMenuPrivateMethods { }
+export interface ContextMenuPrivateMethods {
+  /**
+   * @property
+   */
+  emitModel(value: any): void
+  /**
+   * @property
+   */
+  updateLocate(): void
+  /**
+   * @property
+   */
+  handleLocate(): void
+  /**
+   * @property
+   */
+  updateZindex(): void
+}
 export interface VxeContextMenuPrivateMethods extends ContextMenuPrivateMethods { }
 
 export type VxeContextMenuEmits = [

@@ -800,15 +800,21 @@ export namespace VxeTreeSlotTypes {
     node: any
     isExpand: boolean
   }
+  export interface TitleSlotParams extends DefaultSlotParams {}
+  export interface ExtraSlotParams extends DefaultSlotParams {}
+
+  export interface HeaderSlotParams {}
+  export interface FooterSlotParams {}
+  export interface LoadingSlotParams {}
 }
 
 export interface VxeTreeSlots {
   icon?: (params: VxeTreeSlotTypes.IconSlotParams) => any
-  title?: (params: VxeTreeSlotTypes.DefaultSlotParams) => any
-  extra?: (params: VxeTreeSlotTypes.DefaultSlotParams) => any
-  header?: (params: VxeTreeSlotTypes.DefaultSlotParams) => any
-  footer?: (params: VxeTreeSlotTypes.DefaultSlotParams) => any
-  loading?: (params: {}) => any
+  title?: (params: VxeTreeSlotTypes.TitleSlotParams) => any
+  extra?: (params: VxeTreeSlotTypes.ExtraSlotParams) => any
+  header?: (params: VxeTreeSlotTypes.HeaderSlotParams) => any
+  footer?: (params: VxeTreeSlotTypes.FooterSlotParams) => any
+  loading?: (params: VxeTreeSlotTypes.LoadingSlotParams) => any
 }
 
 export const Tree: typeof VxeTree

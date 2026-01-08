@@ -5,9 +5,9 @@ import { getConfig, validators, renderer, createEvent, globalMixins, globalEvent
 import { eqEmptyValue, getFuncText, isEnableConf } from '../../ui/src/utils'
 import { scrollToView } from '../../ui/src/dom'
 import { createItem, handleFieldOrItem, isHiddenItem, isActiveItem } from './util'
-import VxeTooltipComponent from '../../tooltip/src/tooltip'
+import VxeTooltipComponent from '../../tooltip'
 import VxeFormConfigItem from './form-config-item'
-import VxeLoadingComponent from '../../loading/src/loading'
+import VxeLoadingComponent from '../../loading'
 import { getSlotVNs } from '../../ui/src/vn'
 import { warnLog, errLog } from '../../ui/src/log'
 

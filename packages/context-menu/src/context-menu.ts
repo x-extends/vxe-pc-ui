@@ -6,7 +6,7 @@ import { getLastZIndex, nextSubZIndex, nextZIndex, getFuncText } from '../../ui/
 import { getDomNode, getEventTargetNode, toCssUnit } from '../../ui/src/dom'
 import { getSlotVNs } from '../../ui/src/vn'
 
-import type { ContextMenuInternalData, VxeContextMenuPropTypes, ContextMenuReactData, VxeContextMenuEmits, VxeComponentSizeType, ValueOf, VxeContextMenuDefines } from '../../../types'
+import type { VxeContextMenuConstructor, VxeContextMenuPrivateMethods, ContextMenuInternalData, VxeContextMenuPropTypes, ContextMenuReactData, VxeContextMenuEmits, VxeComponentSizeType, ValueOf, VxeContextMenuDefines } from '../../../types'
 
 function createInternalData (): ContextMenuInternalData {
   return {
@@ -123,6 +123,46 @@ function findNextChildItem (firstItem: VxeContextMenuDefines.MenuFirstOption, ch
   return firstValidItem
 }
 
+function openMenu ($xeContextMenu: VxeContextMenuConstructor & VxeContextMenuPrivateMethods) {
+  const props = $xeContextMenu
+  const reactData = $xeContextMenu.reactData
+
+  const { value: modelValue } = props
+  const { visible } = reactData
+  const value = true
+  reactData.visible = value
+  $xeContextMenu.handleLocate()
+  $xeContextMenu.updateZindex()
+  if (modelValue !== value) {
+    $xeContextMenu.emitModel(value)
+    $xeContextMenu.dispatchEvent('change', { value }, null)
+  }
+  if (visible !== value) {
+    $xeContextMenu.dispatchEvent('show', { visible: value }, null)
+  }
+  return $xeContextMenu.$nextTick().then(() => {
+    $xeContextMenu.updateLocate()
+  })
+}
+
+function closeMenu ($xeContextMenu: VxeContextMenuConstructor & VxeContextMenuPrivateMethods) {
+  const props = $xeContextMenu
+  const reactData = $xeContextMenu.reactData
+
+  const { value: modelValue } = props
+  const { visible } = reactData
+  const value = false
+  reactData.visible = value
+  if (modelValue !== value) {
+    $xeContextMenu.emitModel(value)
+    $xeContextMenu.dispatchEvent('change', { value }, null)
+  }
+  if (visible !== value) {
+    $xeContextMenu.dispatchEvent('hide', { visible: value }, null)
+  }
+  return $xeContextMenu.$nextTick()
+}
+
 export default /* define-vxe-component start */ defineVxeComponent({
   name: 'VxeContextMenu',
   mixins: [
@@ -221,43 +261,13 @@ export default /* define-vxe-component start */ defineVxeComponent({
     },
     open () {
       const $xeContextMenu = this
-      const props = $xeContextMenu
-      const reactData = $xeContextMenu.reactData
 
-      const { value: modelValue } = props
-      const { visible } = reactData
-      const value = true
-      reactData.visible = value
-      $xeContextMenu.handleLocate()
-      $xeContextMenu.updateZindex()
-      if (modelValue !== value) {
-        $xeContextMenu.emitModel(value)
-        $xeContextMenu.dispatchEvent('change', { value }, null)
-      }
-      if (visible !== value) {
-        $xeContextMenu.dispatchEvent('show', { visible: value }, null)
-      }
-      return $xeContextMenu.$nextTick().then(() => {
-        $xeContextMenu.updateLocate()
-      })
+      return openMenu($xeContextMenu)
     },
     close () {
       const $xeContextMenu = this
-      const props = $xeContextMenu
-      const reactData = $xeContextMenu.reactData
 
-      const { value: modelValue } = props
-      const { visible } = reactData
-      const value = false
-      reactData.visible = value
-      if (modelValue !== value) {
-        $xeContextMenu.emitModel(value)
-        $xeContextMenu.dispatchEvent('change', { value }, null)
-      }
-      if (visible !== value) {
-        $xeContextMenu.dispatchEvent('hide', { visible: value }, null)
-      }
-      return $xeContextMenu.$nextTick()
+      return closeMenu($xeContextMenu)
     },
     handleLocate () {
       const $xeContextMenu = this
@@ -351,17 +361,19 @@ export default /* define-vxe-component start */ defineVxeComponent({
 
       const { value: modelValue } = props
       if (modelValue) {
-        $xeContextMenu.open()
+        openMenu($xeContextMenu)
       } else {
-        $xeContextMenu.close()
+        closeMenu($xeContextMenu)
       }
     },
     handleItemClickEvent (evnt: MouseEvent | KeyboardEvent, item: VxeContextMenuDefines.MenuFirstOption | VxeContextMenuDefines.MenuChildOption) {
       const $xeContextMenu = this
 
+      evnt.preventDefault()
+      evnt.stopPropagation()
       if (!hasChildMenu(item)) {
         $xeContextMenu.dispatchEvent('option-click', { option: item }, evnt)
-        $xeContextMenu.close()
+        closeMenu($xeContextMenu)
       }
     },
     handleItemMouseenterEvent (evnt: MouseEvent, item: VxeContextMenuDefines.MenuFirstOption | VxeContextMenuDefines.MenuChildOption, parentitem?: VxeContextMenuDefines.MenuFirstOption | null) {
@@ -399,7 +411,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       if (visible) {
         const el = $xeContextMenu.$refs.refElem as HTMLDivElement
         if (!getEventTargetNode(evnt, el, '').flag) {
-          close()
+          closeMenu($xeContextMenu)
         }
       }
     },
@@ -417,7 +429,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
         const isEnter = globalEvents.hasKey(evnt, GLOBAL_EVENT_KEYS.ENTER)
         const isEsc = globalEvents.hasKey(evnt, GLOBAL_EVENT_KEYS.ESCAPE)
         if (isEsc) {
-          close()
+          closeMenu($xeContextMenu)
           return
         }
         // 回车选中
@@ -476,7 +488,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       if (visible) {
         const el = $xeContextMenu.$refs.refElem as HTMLDivElement
         if (!getEventTargetNode(evnt, el, '').flag) {
-          $xeContextMenu.close()
+          closeMenu($xeContextMenu)
         }
       }
     },
@@ -486,7 +498,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
 
       const { visible } = reactData
       if (visible) {
-        close()
+        closeMenu($xeContextMenu)
       }
     },
 
