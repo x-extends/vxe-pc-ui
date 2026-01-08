@@ -1,6 +1,6 @@
 import { RenderFunction, SetupContext, Ref } from 'vue'
-import { DefineVxeComponentApp, DefineVxeComponentOptions, DefineVxeComponentInstance, VxeComponentBaseOptions, VxeComponentEventParams, VxeComponentSizeType, ValueOf } from '@vxe-ui/core'
-import { VxeTreeProps, VxeTreePropTypes } from './tree'
+import { DefineVxeComponentApp, DefineVxeComponentOptions, DefineVxeComponentInstance, VxeComponentBaseOptions, VxeComponentEventParams, VxeComponentSizeType, ValueOf, VxeComponentSlotType } from '@vxe-ui/core'
+import { VxeTreeProps, VxeTreePropTypes, VxeTreeSlotTypes } from './tree'
 
 /* eslint-disable no-use-before-define,@typescript-eslint/ban-types */
 
@@ -103,7 +103,14 @@ export namespace VxeTreeSelectPropTypes {
     height?: number | string
     className?: string | ((params: { $treeSelect: VxeTreeSelectConstructor }) => string)
   }
-  export type TreeConfig<D = any> = Omit<VxeTreeProps<D>, 'data' | 'size'>
+  export interface TreeConfig<D = any> extends Omit<VxeTreeProps<D>, 'data' | 'size' | 'menuConfig'> {
+    slots?: {
+      icon?: string | ((params: VxeTreeSlotTypes.IconSlotParams) => VxeComponentSlotType | VxeComponentSlotType[])
+      title?: string | ((params: VxeTreeSlotTypes.TitleSlotParams) =>VxeComponentSlotType | VxeComponentSlotType[])
+      extra?: string | ((params: VxeTreeSlotTypes.ExtraSlotParams) => VxeComponentSlotType | VxeComponentSlotType[])
+    }
+  }
+  export interface MenuConfig<D = any> extends VxeTreePropTypes.MenuConfig<D> {}
 
   export interface VirtualYConfig {
     /**
@@ -149,6 +156,7 @@ export interface VxeTreeSelectProps<D = any> {
   transfer?: VxeTreeSelectPropTypes.Transfer
   popupConfig?: VxeTreeSelectPropTypes.PopupConfig
   treeConfig?: VxeTreeSelectPropTypes.TreeConfig<D>
+  menuConfig?: VxeTreeSelectPropTypes.MenuConfig<D>
   virtualYConfig?: VxeTreeSelectPropTypes.VirtualYConfig
 
   /**
@@ -258,11 +266,22 @@ export namespace VxeTreeSelectEvents {
 }
 
 export namespace VxeTreeSelectSlotTypes {
-  export interface DefaultSlotParams {}
+  export interface DefaultSlotParams {
+    node: any
+    isExpand: boolean
+  }
+
+  export interface PrefixSlotParams {}
+  export interface HeaderSlotParams {}
+  export interface FooterSlotParams {}
 }
 
 export interface VxeTreeSelectSlots {
-  default?: (params: VxeTreeSelectSlotTypes.DefaultSlotParams) => any
+  [key: string]: ((params: VxeTreeSelectSlotTypes.DefaultSlotParams) => any) | undefined
+
+  prefix?: (params: VxeTreeSelectSlotTypes.PrefixSlotParams) => any
+  header?: (params: VxeTreeSelectSlotTypes.HeaderSlotParams) => any
+  footer?: (params: VxeTreeSelectSlotTypes.FooterSlotParams) => any
 }
 
 export const TreeSelect: typeof VxeTreeSelect

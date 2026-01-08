@@ -126,7 +126,7 @@ export default defineVxeComponent({
       emit('update:modelValue', value)
     }
 
-    const open = () => {
+    const openMenu = () => {
       const { modelValue } = props
       const { visible } = reactData
       const value = true
@@ -145,7 +145,7 @@ export default defineVxeComponent({
       })
     }
 
-    const close = () => {
+    const closeMenu = () => {
       const { modelValue } = props
       const { visible } = reactData
       const value = false
@@ -238,16 +238,16 @@ export default defineVxeComponent({
     const handleVisible = () => {
       const { modelValue } = props
       if (modelValue) {
-        open()
+        openMenu()
       } else {
-        close()
+        closeMenu()
       }
     }
 
     const tagMethods: ContextMenuMethods = {
       dispatchEvent,
-      open,
-      close
+      open: openMenu,
+      close: closeMenu
     }
 
     const hasChildMenu = (item: VxeContextMenuDefines.MenuFirstOption | VxeContextMenuDefines.MenuChildOption) => {
@@ -256,9 +256,11 @@ export default defineVxeComponent({
     }
 
     const handleItemClickEvent = (evnt: MouseEvent | KeyboardEvent, item: VxeContextMenuDefines.MenuFirstOption | VxeContextMenuDefines.MenuChildOption) => {
+      evnt.preventDefault()
+      evnt.stopPropagation()
       if (!hasChildMenu(item)) {
         dispatchEvent('option-click', { option: item }, evnt)
-        close()
+        closeMenu()
       }
     }
 
@@ -381,7 +383,7 @@ export default defineVxeComponent({
       if (visible) {
         const el = refElem.value
         if (!getEventTargetNode(evnt, el, '').flag) {
-          close()
+          closeMenu()
         }
       }
     }
@@ -397,7 +399,7 @@ export default defineVxeComponent({
         const isEnter = globalEvents.hasKey(evnt, GLOBAL_EVENT_KEYS.ENTER)
         const isEsc = globalEvents.hasKey(evnt, GLOBAL_EVENT_KEYS.ESCAPE)
         if (isEsc) {
-          close()
+          closeMenu()
           return
         }
         // 回车选中
@@ -454,7 +456,7 @@ export default defineVxeComponent({
       if (visible) {
         const el = refElem.value
         if (!getEventTargetNode(evnt, el, '').flag) {
-          close()
+          closeMenu()
         }
       }
     }
@@ -462,7 +464,7 @@ export default defineVxeComponent({
     const handleGlobalBlurEvent = () => {
       const { visible } = reactData
       if (visible) {
-        close()
+        closeMenu()
       }
     }
 

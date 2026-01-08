@@ -957,6 +957,9 @@ export namespace VxeTablePropTypes {
       storeData: VxeTableDefines.CustomStoreData
     }): Promise<any>
     mode?: 'default' | 'modal' | 'drawer' | 'simple' | 'popup' | '' | null
+    /**
+     * 窗口模式配置项，用于 mode='modal'
+     */
     modalOptions?: {
       title?: VxeModalPropTypes.Title
       width?: VxeModalPropTypes.Width
@@ -973,6 +976,9 @@ export namespace VxeTablePropTypes {
       escClosable?: VxeModalPropTypes.EscClosable
       maskClosable?: VxeModalPropTypes.MaskClosable
     }
+    /**
+     * 抽屉模式配置项，用于 mode='drawer'
+     */
     drawerOptions?: {
       title?: VxeDrawerPropTypes.Title
       width?: VxeDrawerPropTypes.Width
@@ -983,6 +989,14 @@ export namespace VxeTablePropTypes {
       resize?: VxeDrawerPropTypes.Resize
       escClosable?: VxeDrawerPropTypes.EscClosable
       maskClosable?: VxeDrawerPropTypes.MaskClosable
+    }
+    /**
+     * 默认模式配置项
+     */
+    popupOptions?: {
+      mode?: 'inside' | 'outside' | 'auto' | '' | null
+      width?: number | string
+      maxHeight?: number | string
     }
     trigger?: 'manual' | 'hover' | 'click' | '' | null
     /**
@@ -3601,6 +3615,7 @@ export interface TablePrivateComputed<D = any> {
   computeLoadingOpts: ComputedRef<VxeTablePropTypes.LoadingOpts>
   computeCellOffsetWidth: ComputedRef<number>
   computeCustomOpts: ComputedRef<VxeTablePropTypes.CustomOpts<D>>
+  computeCustomSimpleMode: ComputedRef<'inside' | 'outside' | 'auto' | '' | null>
   computeLeftFixedWidth: ComputedRef<number>
   computeRightFixedWidth: ComputedRef<number>
   computeBodyMergeCoverFixed: ComputedRef<boolean>
@@ -6362,7 +6377,8 @@ export namespace VxeTableDefines {
     activeBtn: boolean
     activeWrapper: boolean
     visible: boolean
-    maxHeight: number
+    maxHeight: number | string | null
+    popupTop: number
     oldSortMaps: Record<string, number>
     oldFixedMaps: Record<string, VxeColumnPropTypes.Fixed>
     oldVisibleMaps: Record<string, boolean>
