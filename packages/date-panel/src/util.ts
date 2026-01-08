@@ -110,16 +110,15 @@ export function parseDateObj (val: string | number | Date | null | undefined, ty
     // '2024-12-31' 'yyyy-MM-dd W' >> '2024-12-31 1'
     // '2025-01-01' 'yyyy-MM-dd W' >> '2025-01-01 1'
     if (labelFormat && type === 'week') {
-      const weekNum = XEUtils.getYearWeek(dValue, firstDay)
-      const weekDate = XEUtils.getWhatWeek(dValue, 0, weekNum === 1 ? ((6 + firstDay) % 7) as VxeDatePanelPropTypes.StartDay : firstDay, firstDay)
-      const weekFullYear = weekDate.getFullYear()
-      if (weekFullYear !== dValue.getFullYear()) {
-        const yyIndex = labelFormat.indexOf('yyyy')
+      const oldYyyy = dValue.getFullYear()
+      const M = dValue.getMonth() + 1
+      const W = XEUtils.getYearWeek(dValue, firstDay)
+      if (checkWeekOfsetYear(W, M)) {
+        const formatY = 'yyyy'
+        const newYyyy = oldYyyy + 1
+        const yyIndex = labelFormat.indexOf(formatY)
         if (yyIndex > -1) {
-          const yyNum = Number(dLabel.substring(yyIndex, yyIndex + 4))
-          if (yyNum && !isNaN(yyNum)) {
-            dLabel = dLabel.replace(`${yyNum}`, `${weekFullYear}`)
-          }
+          dLabel = dLabel.substring(0, yyIndex) + newYyyy + dLabel.substring(yyIndex + formatY.length)
         }
       }
     }
@@ -235,4 +234,11 @@ export function getRangeDateByCode (code: 'last1' | 'last3' | 'last7' | 'last30'
     startValue,
     endValue
   }
+}
+
+/**
+ * 判断周的年份是否跨年
+ */
+const checkWeekOfsetYear = (W: number | string, M: number | string) => {
+  return `${W}` === '1' && `${M}` === '12'
 }
