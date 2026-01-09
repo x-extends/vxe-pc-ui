@@ -1985,7 +1985,11 @@ export namespace VxeTablePropTypes {
     /**
      * 用于 isCopy，当复制单元格时，是否为对应格式化后的值
      */
-    copyToLabel?: boolean
+    isCopyToContent?: boolean
+    /**
+     * 用于 isCopy，对复制到剪贴板的文本进行修剪，去掉首尾换行符
+     */
+    isTrimCopyContent?: boolean
     /**
      * 只对 area-config.multiple 有效，对相同列数的跨行选取多区域进行复制粘贴
      */
@@ -2147,6 +2151,12 @@ export namespace VxeTablePropTypes {
       pasteCells: string[][]
       insertColumns: VxeTableDefines.ColumnOptions[]
     }): VxeTableDefines.ColumnOptions<DT>[]
+
+    /**
+     * 已废弃，请使用 isCopyToContent
+     * @deprecated
+     */
+    copyToLabel?: boolean
   }
   export interface ClipOpts<D = any> extends ClipConfig<D> { }
 
