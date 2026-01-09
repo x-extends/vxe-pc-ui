@@ -498,7 +498,12 @@ export default /* define-vxe-component start */ defineVxeComponent({
     emitModel  (value: any) {
       const $xeUpload = this
 
-      $xeUpload.$emit('modelValue', value)
+      const { _events } = $xeUpload as any
+      if (_events && _events.modelValue) {
+        $xeUpload.$emit('modelValue', value)
+      } else {
+        $xeUpload.$emit('model-value', value)
+      }
     },
     choose () {
       const $xeUpload = this
