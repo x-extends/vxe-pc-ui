@@ -784,7 +784,11 @@ export default /* define-vxe-component start */ defineVxeComponent({
             cacheItem.percent = 100
             cacheItem.status = 'success'
           }
-          Object.assign(item, res)
+          // 处理动态字段双向绑定问题
+          // Object.assign(item, res)
+          XEUtils.each(res, (val, key) => {
+            $xeUpload.$set(item, key, val)
+          })
           $xeUpload.dispatchEvent('upload-success', { option: item, data: res }, null)
         }).catch((res) => {
           const { fileCacheMaps } = reactData
@@ -793,7 +797,11 @@ export default /* define-vxe-component start */ defineVxeComponent({
             cacheItem.status = 'error'
           }
           if (showErrorStatus) {
-            Object.assign(item, res)
+            // 处理动态字段双向绑定问题
+            // Object.assign(item, res)
+            XEUtils.each(res, (val, key) => {
+              $xeUpload.$set(item, key, val)
+            })
           } else {
             reactData.fileList = reactData.fileList.filter(obj => $xeUpload.getFieldKey(obj) !== fileKey)
           }

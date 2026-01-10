@@ -733,6 +733,11 @@ export default /* define-vxe-component start */ defineVxeComponent({
         }
       }
     },
+    nodeExpandEvent () {
+      const $xeTreeSelect = this
+
+      $xeTreeSelect.updatePlacement()
+    },
     nodeClickEvent  (params: VxeTreeDefines.NodeClickEventParams) {
       const $xeTreeSelect = this
 
@@ -1013,6 +1018,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
                         virtualYConfig: virtualYOpts
                       },
                       on: {
+                        'node-expand': $xeTreeSelect.nodeExpandEvent,
                         'node-click': $xeTreeSelect.nodeClickEvent,
                         'radio-change': $xeTreeSelect.radioChangeEvent,
                         'checkbox-change': $xeTreeSelect.checkboxChangeEvent,
