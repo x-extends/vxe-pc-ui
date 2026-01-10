@@ -132,9 +132,9 @@ export interface VxeFormDesignMethods extends FormDesignMethods { }
 
 export interface FormDesignPrivateMethods {
   validWidgetUnique(widgetName: string): boolean
-  handleClickWidget (evnt: KeyboardEvent, item: VxeFormDesignDefines.WidgetObjItem): void
-  handleCopyWidget (evnt: KeyboardEvent, item: VxeFormDesignDefines.WidgetObjItem): void
-  handleRemoveWidget (evnt: KeyboardEvent, item: VxeFormDesignDefines.WidgetObjItem): void
+  handleClickWidget (evnt: Event, item: VxeFormDesignDefines.WidgetObjItem): void
+  handleCopyWidget (evnt: Event, item: VxeFormDesignDefines.WidgetObjItem): void
+  handleRemoveWidget (evnt: Event, item: VxeFormDesignDefines.WidgetObjItem): void
 }
 export interface VxeFormDesignPrivateMethods extends FormDesignPrivateMethods { }
 
