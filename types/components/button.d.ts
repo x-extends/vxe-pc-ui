@@ -241,7 +241,7 @@ export namespace VxeButtonDefines {
   }
   export interface DropdownClickEventParams extends ButtonEventParams, DropdownClickParams { }
 
-  export interface ContextmenuParams extends ButtonEventParams {
+  export interface ContextmenuEventParams extends ButtonEventParams {
     $event: MouseEvent
   }
 }
@@ -266,8 +266,8 @@ export namespace VxeButtonEvents {
   export type Click = (params: VxeButtonDefines.ClickEventParams) => void
   export type Mouseenter = (params: VxeButtonDefines.MouseenterEventParams) => void
   export type Mouseleave = (params: VxeButtonDefines.MouseleaveEventParams) => void
-  export type DropdownClick = (params: VxeButtonDefines.DropdownClickParams) => void
-  export type Contextmenu = (params: VxeButtonDefines.ContextmenuParams) => void
+  export type DropdownClick = (params: VxeButtonDefines.DropdownClickEventParams) => void
+  export type Contextmenu = (params: VxeButtonDefines.ContextmenuEventParams) => void
 }
 
 export namespace VxeButtonSlotTypes {
