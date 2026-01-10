@@ -638,6 +638,10 @@ export default defineVxeComponent({
       }
     }
 
+    const nodeExpandEvent = () => {
+      updatePlacement()
+    }
+
     const nodeClickEvent: VxeTreeEvents.NodeClick = (params) => {
       const { $event } = params
       dispatchEvent('node-click', params, $event)
@@ -884,6 +888,7 @@ export default defineVxeComponent({
                         filterConfig: filterOpts,
                         menuConfig: menuConfig ? menuOpts : undefined,
                         virtualYConfig: virtualYOpts,
+                        onNodeExpand: nodeExpandEvent,
                         onNodeClick: nodeClickEvent,
                         onRadioChange: radioChangeEvent,
                         onCheckboxChange: checkboxChangeEvent,
