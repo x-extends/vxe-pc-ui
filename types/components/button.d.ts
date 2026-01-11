@@ -36,6 +36,7 @@ export namespace VxeButtonPropTypes {
   export type Placement = '' | 'top' | 'bottom'
   export type Status = VxeComponentStatusType
   export type Title = string
+  export type Shadow = boolean
 
   /**
    * 按钮的前缀图标，属于 prefix-icon 的简写
@@ -99,6 +100,7 @@ export interface VxeButtonProps {
    */
   permissionCode?: VxeButtonPropTypes.PermissionCode
   title?: VxeButtonPropTypes.Title
+  shadow?: VxeButtonPropTypes.Shadow
   /**
    * 按钮内容
    */

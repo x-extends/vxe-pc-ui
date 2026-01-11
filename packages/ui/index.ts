@@ -31,6 +31,9 @@ setConfig({
   backtop: {
     showIcon: true,
     showContent: true,
+    showTop: true,
+    showBottom: true,
+    shadow: true,
     threshold: 20
   },
   badge: {},
@@ -201,7 +204,11 @@ setConfig({
     controls: true
   },
   layoutAside: {},
-  layoutBody: {},
+  layoutBody: {
+    backtopConfig: {
+      position: 'fixed'
+    }
+  },
   layoutContainer: {},
   layoutFooter: {},
   layoutHeader: {},

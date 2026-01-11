@@ -4,6 +4,7 @@ import XEUtils from 'xe-utils'
 import { getConfig, getIcon, createEvent, globalMixins, renderEmptyElement } from '../../ui'
 import { errLog } from '../../ui/src/log'
 import { toCssUnit } from '../../ui/src/dom'
+import VxeButtonComponent from '../../button'
 
 import type { BacktopInternalData, VxeBacktopPropTypes, BacktopReactData, VxeBacktopEmits, VxeComponentSizeType, ValueOf, VxeComponentStyleType } from '../../../types'
 
@@ -61,6 +62,18 @@ export default /* define-vxe-component start */ defineVxeComponent({
     showContent: {
       type: Boolean as PropType<VxeBacktopPropTypes.ShowContent>,
       default: () => getConfig().backtop.showContent
+    },
+    showTop: {
+      type: Boolean as PropType<VxeBacktopPropTypes.ShowTop>,
+      default: () => getConfig().backtop.showTop
+    },
+    showBottom: {
+      type: Boolean as PropType<VxeBacktopPropTypes.ShowBottom>,
+      default: () => getConfig().backtop.showBottom
+    },
+    shadow: {
+      type: Boolean as PropType<VxeBacktopPropTypes.Shadow>,
+      default: () => getConfig().backtop.shadow
     },
     zIndex: {
       type: [String, Number] as PropType<VxeBacktopPropTypes.ZIndex>,
@@ -207,46 +220,51 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const slots = $xeBacktop.$scopedSlots
       const reactData = $xeBacktop.reactData
 
-      const { circle, position, status, icon, showIcon, content, showContent } = props
+      const { circle, position, status, icon, showIcon, content, showContent, showTop, showBottom, shadow } = props
       const { showBtn } = reactData
       const wrapperStyle = $xeBacktop.computeWrapperStyle
       const vSize = $xeBacktop.computeSize
       const defaultSlot = slots.default
+      const topSlot = slots.top
+      const bottomSlot = slots.bottom
       return h('div', {
         ref: 'refElem',
         class: ['vxe-backtop', position === 'fixed' ? ('is--' + position) : 'is--absolute', {
           [`size--${vSize}`]: vSize,
-          [`theme--${status}`]: status,
-          'is--circle': circle,
           'is--visible': showBtn
         }],
-        style: wrapperStyle,
-        on: {
-          click: $xeBacktop.clickEvent
-        }
+        style: wrapperStyle
       }, [
+        showTop && topSlot
+          ? h('div', {
+            class: 'vxe-backtop--top-wrapper'
+          }, topSlot({}))
+          : renderEmptyElement($xeBacktop),
         h('div', {
-          class: 'vxe-backtop--inner'
+          class: 'vxe-backtop--content-wrapper',
+          on: {
+            click: $xeBacktop.clickEvent
+          }
         }, [
           defaultSlot
             ? defaultSlot({})
             : [
-                showIcon
-                  ? h('div', {
-                    class: 'vxe-backtop--icon'
-                  }, [
-                    h('i', {
-                      class: icon || getIcon().BACKTOP_TOP
-                    })
-                  ])
-                  : renderEmptyElement($xeBacktop),
-                showContent
-                  ? h('div', {
-                    class: 'vxe-backtop--content'
-                  }, `${content || ''}`)
-                  : renderEmptyElement($xeBacktop)
+                h(VxeButtonComponent, {
+                  props: {
+                    circle,
+                    status,
+                    shadow,
+                    icon: showIcon ? (icon || getIcon().BACKTOP_TOP) : '',
+                    content: showContent ? content : ''
+                  }
+                })
               ]
-        ])
+        ]),
+        showBottom && bottomSlot
+          ? h('div', {
+            class: 'vxe-backtop--bottom-wrapper'
+          }, bottomSlot({}))
+          : renderEmptyElement($xeBacktop)
       ])
     }
   },

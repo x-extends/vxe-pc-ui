@@ -6,7 +6,7 @@ import { getEventTargetNode, updatePanelPlacement } from '../../ui/src/dom'
 import { getFuncText, getLastZIndex, nextZIndex } from '../../ui/src/utils'
 import { getSlotVNs, getEventCaseName } from '../../ui/src/vn'
 import { warnLog } from '../../ui/src/log'
-import VxeTooltipComponent from '../../tooltip/src/tooltip'
+import VxeTooltipComponent from '../../tooltip'
 
 import type { VxeButtonPropTypes, VxeButtonEmits, ButtonReactData, VxeButtonGroupConstructor, ButtonInternalData, VxeButtonDefines, VxeButtonGroupPrivateMethods, VxeFormConstructor, VxeDrawerConstructor, VxeDrawerMethods, VxeFormPrivateMethods, VxeModalConstructor, VxeModalMethods, VxeComponentPermissionInfo, VxeComponentSizeType, ValueOf, VxeTreeConstructor, VxeTreePrivateMethods } from '../../../types'
 import type { VxeTableConstructor, VxeTablePrivateMethods } from '../../../types/components/table'
@@ -58,6 +58,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
      * 标题
      */
     title: String as PropType<VxeButtonPropTypes.Title>,
+    shadow: Boolean as PropType<VxeButtonPropTypes.Shadow>,
     /**
      * 按钮的前缀图标，属于 prefix-icon 的简写
      */
@@ -695,7 +696,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const slots = $xeButton.$scopedSlots
       const reactData = $xeButton.reactData
 
-      const { className, popupClassName, trigger, title, routerLink, type, destroyOnClose, name, loading, showDropdownIcon } = props
+      const { className, popupClassName, trigger, title, routerLink, type, destroyOnClose, name, loading, shadow, showDropdownIcon } = props
       const { initialized, isAniVisible, visiblePanel } = reactData
       const isFormBtn = $xeButton.computeIsFormBtn
       const btnMode = $xeButton.computeBtnMode
@@ -741,6 +742,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
                 [`theme--${btnStatus}`]: btnStatus,
                 'is--round': btnRound,
                 'is--circle': btnCircle,
+                'is--shadow': shadow,
                 'is--disabled': btnDisabled || loading,
                 'is--loading': loading
               }],
@@ -772,6 +774,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
                 [`theme--${btnStatus}`]: btnStatus,
                 'is--round': btnRound,
                 'is--circle': btnCircle,
+                'is--shadow': shadow,
                 'is--disabled': btnDisabled || loading,
                 'is--loading': loading
               }],
@@ -858,6 +861,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
             [`theme--${btnStatus}`]: btnStatus,
             'is--round': btnRound,
             'is--circle': btnCircle,
+            'is--shadow': shadow,
             'is--disabled': btnDisabled || loading,
             'is--loading': loading
           }],
@@ -884,6 +888,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
           [`theme--${btnStatus}`]: btnStatus,
           'is--round': btnRound,
           'is--circle': btnCircle,
+          'is--shadow': shadow,
           'is--disabled': btnDisabled || loading,
           'is--loading': loading
         }],
