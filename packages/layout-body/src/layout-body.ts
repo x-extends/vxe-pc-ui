@@ -88,6 +88,22 @@ export default defineVxeComponent({
       const vSize = computeSize.value
       const defaultSlot = slots.default
       const backtopSlot = slots.backtop
+      const backtopTopSlot = slots.backtopTop || slots['backtop-top']
+      const backtopBottomSlot = slots.backtopBottom || slots['backtop-bottom']
+      const backtopScopeSlots: {
+        default?: any
+        top?: any
+        bottom?: any
+      } = {}
+      if (backtopSlot) {
+        backtopScopeSlots.default = backtopSlot
+      }
+      if (backtopTopSlot) {
+        backtopScopeSlots.top = backtopTopSlot
+      }
+      if (backtopBottomSlot) {
+        backtopScopeSlots.bottom = backtopBottomSlot
+      }
       return h('div', {
         ref: refElem,
         class: ['vxe-layout-body', {
@@ -111,11 +127,7 @@ export default defineVxeComponent({
          * 回到顶部
          */
         showBacktop
-          ? h(VxeUIBacktopComponent, backtopOpts, backtopSlot
-            ? {
-                default: backtopSlot
-              }
-            : undefined)
+          ? h(VxeUIBacktopComponent, backtopOpts, backtopScopeSlots)
           : renderEmptyElement($xeLayoutBody)
       ])
     }

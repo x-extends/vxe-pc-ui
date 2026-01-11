@@ -6,7 +6,7 @@ import { getEventTargetNode, updatePanelPlacement } from '../../ui/src/dom'
 import { getFuncText, getLastZIndex, nextZIndex } from '../../ui/src/utils'
 import { getSlotVNs } from '../../ui/src/vn'
 import { warnLog } from '../../ui/src/log'
-import VxeTooltipComponent from '../../tooltip/src/tooltip'
+import VxeTooltipComponent from '../../tooltip'
 
 import type { VxeButtonConstructor, VxeButtonPropTypes, VxeButtonEmits, ButtonReactData, ButtonMethods, VxeButtonDefines, ButtonPrivateRef, ButtonInternalData, VxeButtonGroupConstructor, VxeButtonGroupPrivateMethods, VxeDrawerConstructor, VxeDrawerMethods, VxeFormConstructor, VxeFormPrivateMethods, VxeModalConstructor, VxeModalMethods, ValueOf, VxeTreeConstructor, VxeTreePrivateMethods } from '../../../types'
 import type { VxeTableConstructor, VxeTablePrivateMethods } from '../../../types/components/table'
@@ -54,6 +54,7 @@ const VxeButtonComponent = defineVxeComponent({
      * 标题
      */
     title: String as PropType<VxeButtonPropTypes.Title>,
+    shadow: Boolean as PropType<VxeButtonPropTypes.Shadow>,
     /**
      * 按钮的前缀图标，属于 prefix-icon 的简写
      */
@@ -602,7 +603,7 @@ const VxeButtonComponent = defineVxeComponent({
     Object.assign($xeButton, buttonMethods)
 
     const renderVN = () => {
-      const { className, popupClassName, trigger, title, routerLink, type, destroyOnClose, name, loading, showDropdownIcon } = props
+      const { className, popupClassName, trigger, title, routerLink, type, destroyOnClose, name, loading, shadow, showDropdownIcon } = props
       const { initialized, isAniVisible, visiblePanel } = reactData
       const isFormBtn = computeIsFormBtn.value
       const btnMode = computeBtnMode.value
@@ -648,6 +649,7 @@ const VxeButtonComponent = defineVxeComponent({
                 [`theme--${btnStatus}`]: btnStatus,
                 'is--round': btnRound,
                 'is--circle': btnCircle,
+                'is--shadow': shadow,
                 'is--disabled': btnDisabled || loading,
                 'is--loading': loading
               }],
@@ -676,6 +678,7 @@ const VxeButtonComponent = defineVxeComponent({
                 [`theme--${btnStatus}`]: btnStatus,
                 'is--round': btnRound,
                 'is--circle': btnCircle,
+                'is--shadow': shadow,
                 'is--disabled': btnDisabled || loading,
                 'is--loading': loading
               }],
@@ -755,6 +758,7 @@ const VxeButtonComponent = defineVxeComponent({
             [`theme--${btnStatus}`]: btnStatus,
             'is--round': btnRound,
             'is--circle': btnCircle,
+            'is--shadow': shadow,
             'is--disabled': btnDisabled || loading,
             'is--loading': loading
           }],
@@ -780,6 +784,7 @@ const VxeButtonComponent = defineVxeComponent({
           [`theme--${btnStatus}`]: btnStatus,
           'is--round': btnRound,
           'is--circle': btnCircle,
+          'is--shadow': shadow,
           'is--disabled': btnDisabled || loading,
           'is--loading': loading
         }],

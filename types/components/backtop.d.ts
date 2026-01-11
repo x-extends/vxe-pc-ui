@@ -31,8 +31,11 @@ export namespace VxeBacktopPropTypes {
   export type Circle = boolean
   export type Icon = string
   export type ShowIcon = boolean
+  export type ShowTop = boolean
+  export type ShowBottom = boolean
   export type Content = string | number
   export type ShowContent = boolean
+  export type Shadow = boolean
   export type Status = VxeComponentStatusType
   export type ZIndex = string | number
   export type Threshold = string | number
@@ -47,8 +50,11 @@ export interface VxeBacktopProps {
   circle?: VxeBacktopPropTypes.Circle
   icon?: VxeBacktopPropTypes.Icon
   showIcon?: VxeBacktopPropTypes.ShowIcon
+  showTop?: VxeBacktopPropTypes.ShowTop
+  showBottom?: VxeBacktopPropTypes.ShowBottom
   content?: VxeBacktopPropTypes.Content
   showContent?: VxeBacktopPropTypes.ShowContent
+  shadow?: VxeBacktopPropTypes.Shadow
   status?: VxeBacktopPropTypes.Status
   zIndex?: VxeBacktopPropTypes.ZIndex
   threshold?: VxeBacktopPropTypes.Threshold
@@ -101,10 +107,14 @@ export namespace VxeBacktopEvents {
 
 export namespace VxeBacktopSlotTypes {
   export interface DefaultSlotParams {}
+  export interface TopSlotParams {}
+  export interface BottomParams {}
 }
 
 export interface VxeBacktopSlots {
   default?: (params: VxeBacktopSlotTypes.DefaultSlotParams) => any
+  top?: (params: VxeBacktopSlotTypes.TopSlotParams) => any
+  bottom?: (params: VxeBacktopSlotTypes.BottomParams) => any
 }
 
 export const Backtop: typeof VxeBacktop

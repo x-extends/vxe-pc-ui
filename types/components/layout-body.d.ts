@@ -1,6 +1,6 @@
 import { RenderFunction, SetupContext, Ref } from 'vue'
 import { DefineVxeComponentApp, DefineVxeComponentOptions, DefineVxeComponentInstance, VxeComponentBaseOptions, VxeComponentEventParams, ValueOf, VxeComponentSizeType } from '@vxe-ui/core'
-import { VxeBacktopProps } from './backtop'
+import { VxeBacktopProps, VxeBacktopSlotTypes } from './backtop'
 
 /* eslint-disable no-use-before-define,@typescript-eslint/ban-types */
 
@@ -73,11 +73,18 @@ export namespace VxeLayoutBodyEvents { }
 
 export namespace VxeLayoutBodySlotTypes {
   export interface DefaultSlotParams {}
+  export interface BacktopSlotParams extends VxeBacktopSlotTypes.DefaultSlotParams {}
+  export interface BacktopTopSlotParams extends VxeBacktopSlotTypes.TopSlotParams {}
+  export interface BacktopBottomSlotParams extends VxeBacktopSlotTypes.BottomParams {}
 }
 
 export interface VxeLayoutBodySlots {
   default: (params: VxeLayoutBodySlotTypes.DefaultSlotParams) => any
-  backtop: (params: VxeLayoutBodySlotTypes.DefaultSlotParams) => any
+  backtop: (params: VxeLayoutBodySlotTypes.BacktopSlotParams) => any
+  backtopTop: (params: VxeLayoutBodySlotTypes.BacktopTopSlotParams) => any
+  'backtop-top': (params: VxeLayoutBodySlotTypes.BacktopTopSlotParams) => any
+  backtopBottom: (params: VxeLayoutBodySlotTypes.BacktopBottomSlotParams) => any
+  'backtop-bottom': (params: VxeLayoutBodySlotTypes.BacktopBottomSlotParams) => any
 }
 
 export const LayoutBody: typeof VxeLayoutBody

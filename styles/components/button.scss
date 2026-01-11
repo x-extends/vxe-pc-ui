@@ -169,6 +169,9 @@ $btnThemeList: (
       min-width: var(--vxe-ui-button-height-default);
       border-radius: 50%;
     }
+    &.is--shadow {
+      box-shadow: 0px 0px 6px rgba(0, 0, 0, 0.3);
+    }
     &:not(.is--circle) {
       padding: 0 1em;
     }

@@ -45,7 +45,11 @@
         <div>sdfsdtrysf</div>
         <div>sdfsdsf</div>
       </div>
-      <vxe-backtop target="#container111" status="primary"></vxe-backtop>
+      <vxe-backtop target="#container111" status="primary">
+        <template #top>
+          <vxe-button>11</vxe-button>
+        </template>
+      </vxe-backtop>
     </div>
   </div>
 </template>
