@@ -3,6 +3,7 @@ import { defineVxeComponent } from '../../ui/src/comp'
 import XEUtils from 'xe-utils'
 import { getConfig, getIcon, createEvent, useSize, renderEmptyElement } from '../../ui'
 import { errLog } from '../../ui/src/log'
+import { getLastZIndex, nextZIndex } from '../../ui/src/utils'
 import { toCssUnit } from '../../ui/src/dom'
 import VxeButtonComponent from '../../button'
 
@@ -16,7 +17,8 @@ function createInternalData (): BacktopInternalData {
 
 function createReactData (): BacktopReactData {
   return {
-    showBtn: false
+    showBtn: false,
+    backtopZindex: 0
   }
 }
 
@@ -105,7 +107,8 @@ export default defineVxeComponent({
     }
 
     const computeWrapperStyle = computed(() => {
-      const { right, bottom, zIndex } = props
+      const { right, bottom } = props
+      const { backtopZindex } = reactData
       const stys: VxeComponentStyleType = {}
       if (right) {
         stys.right = toCssUnit(right)
@@ -113,8 +116,8 @@ export default defineVxeComponent({
       if (bottom) {
         stys.bottom = toCssUnit(bottom)
       }
-      if (zIndex) {
-        stys.zIndex = zIndex
+      if (backtopZindex) {
+        stys.zIndex = backtopZindex
       }
       return stys
     })
@@ -137,11 +140,33 @@ export default defineVxeComponent({
       emit(type, createEvent(evnt, { $backtop: $xeBacktop }, params))
     }
 
+    const showBacktop = () => {
+      const { position, zIndex } = props
+      const { backtopZindex } = reactData
+      if (zIndex) {
+        reactData.backtopZindex = XEUtils.toNumber(zIndex)
+      } else if (position === 'fixed') {
+        if (backtopZindex < getLastZIndex()) {
+          reactData.backtopZindex = nextZIndex()
+        }
+      }
+      reactData.showBtn = true
+    }
+
+    const hideBacktop = () => {
+      reactData.showBtn = false
+    }
+
     const handleScrollEvent = (evnt: Event) => {
       const { threshold } = props
       const currentEl = evnt.currentTarget as HTMLElement
       const scrollTop = currentEl.scrollTop
-      reactData.showBtn = scrollTop > Math.max(1, XEUtils.toNumber(threshold))
+      const showBtn = scrollTop > Math.max(1, XEUtils.toNumber(threshold))
+      if (showBtn) {
+        showBacktop()
+      } else {
+        hideBacktop()
+      }
     }
 
     const handleToTop = () => {
