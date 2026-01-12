@@ -64,6 +64,7 @@ export interface BacktopInternalData {
 
 export interface BacktopReactData {
   showBtn: boolean
+  backtopZindex: number
 }
 
 export interface BacktopMethods {

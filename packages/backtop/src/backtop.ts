@@ -3,6 +3,7 @@ import { defineVxeComponent } from '../../ui/src/comp'
 import XEUtils from 'xe-utils'
 import { getConfig, getIcon, createEvent, globalMixins, renderEmptyElement } from '../../ui'
 import { errLog } from '../../ui/src/log'
+import { getLastZIndex, nextZIndex } from '../../ui/src/utils'
 import { toCssUnit } from '../../ui/src/dom'
 import VxeButtonComponent from '../../button'
 
@@ -16,7 +17,8 @@ function createInternalData (): BacktopInternalData {
 
 function createReactData (): BacktopReactData {
   return {
-    showBtn: false
+    showBtn: false,
+    backtopZindex: 0
   }
 }
 
@@ -105,8 +107,10 @@ export default /* define-vxe-component start */ defineVxeComponent({
     computeWrapperStyle () {
       const $xeBacktop = this
       const props = $xeBacktop
+      const reactData = $xeBacktop.reactData
 
-      const { right, bottom, zIndex } = props
+      const { right, bottom } = props
+      const { backtopZindex } = reactData
       const stys: VxeComponentStyleType = {}
       if (right) {
         stys.right = toCssUnit(right)
@@ -114,8 +118,8 @@ export default /* define-vxe-component start */ defineVxeComponent({
       if (bottom) {
         stys.bottom = toCssUnit(bottom)
       }
-      if (zIndex) {
-        stys.zIndex = zIndex
+      if (backtopZindex) {
+        stys.zIndex = backtopZindex
       }
       return stys
     }
@@ -134,6 +138,28 @@ export default /* define-vxe-component start */ defineVxeComponent({
     dispatchEvent (type: ValueOf<VxeBacktopEmits>, params: Record<string, any>, evnt: Event | null) {
       const $xeBacktop = this
       $xeBacktop.$emit(type, createEvent(evnt, { $backtop: $xeBacktop }, params))
+    },
+    showBacktop () {
+      const $xeBacktop = this
+      const props = $xeBacktop
+      const reactData = $xeBacktop.reactData
+
+      const { zIndex, position } = props
+      const { backtopZindex } = reactData
+      if (zIndex) {
+        reactData.backtopZindex = XEUtils.toNumber(zIndex)
+      } else if (position === 'fixed') {
+        if (backtopZindex < getLastZIndex()) {
+          reactData.backtopZindex = nextZIndex()
+        }
+      }
+      reactData.showBtn = true
+    },
+    hideBacktop () {
+      const $xeBacktop = this
+      const reactData = $xeBacktop.reactData
+
+      reactData.showBtn = false
     },
     handleScrollEvent (evnt: Event) {
       const $xeBacktop = this
