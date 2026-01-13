@@ -2624,7 +2624,7 @@ export namespace VxeTablePropTypes {
     /**
      * 预加载数量
      */
-    preSize?: Number
+    preSize?: number
     /**
      * 是否启用，支持局部/全局启用
      */
@@ -2655,7 +2655,7 @@ export namespace VxeTablePropTypes {
     /**
      * 预加载数量
      */
-    preSize?: Number
+    preSize?: number
     /**
      * 是否启用，支持局部/全局启用
      */

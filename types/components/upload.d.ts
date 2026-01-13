@@ -60,7 +60,7 @@ export namespace VxeUploadPropTypes {
   export type UrlMode = boolean
   export type UrlArgs = boolean
   export type Multiple = boolean
-  export type LimitSize = number | String
+  export type LimitSize = number | string
   export type ShowLimitSize = boolean
   export type LimitSizeText = number | string | ((params: {
     maxSize: number
