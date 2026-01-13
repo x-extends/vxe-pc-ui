@@ -65,6 +65,23 @@ export namespace VxeSelectPropTypes {
   }) => boolean
   export type Remote = boolean
 
+  export interface FilterConfig {
+    /**
+     * 是否在关闭下拉面板时自动清空筛选条件
+     */
+    clearOnClose?: boolean
+    /**
+     * 自定义筛选方法
+     */
+    filterMethod?: (params: {
+      $select: VxeSelectConstructor
+      group: any
+      option: any
+      searchValue: string
+      value: ModelValue | undefined
+    }) => boolean
+  }
+
   export interface RemoteConfig {
     /**
      * 是否启用
@@ -74,6 +91,10 @@ export namespace VxeSelectPropTypes {
      * 当列表为空时，是否默认自动调用远程方法
      */
     autoLoad?: boolean
+    /**
+     * 是否在关闭下拉面板时自动清空筛选条件
+     */
+    clearOnClose?: boolean
     /**
      * 远程方法
      */
@@ -157,13 +178,36 @@ export interface VxeSelectProps {
   optionGroupProps?: VxeSelectPropTypes.OptionGroupProps
   optionConfig?: VxeSelectPropTypes.OptionConfig
   emptyText?: VxeSelectPropTypes.EmptyText
+  /**
+   * 是否启用本地筛选
+   */
   filterable?: VxeSelectPropTypes.Filterable
+  /**
+   * 已废弃，被 filter-config.filterMethod 替换
+   * @deprecated
+   */
   filterMethod?: VxeSelectPropTypes.FilterMethod
+  /**
+   * 本地筛选配置项
+   */
+  filterConfig?: VxeSelectPropTypes.FilterConfig
+  /**
+   * 是否启用远程筛选
+   */
   remote?: VxeSelectPropTypes.Remote
+  /**
+   * 远程筛选配置项
+   */
   remoteConfig?: VxeSelectPropTypes.RemoteConfig
   max?: VxeSelectPropTypes.Max
   transfer?: VxeSelectPropTypes.Transfer
+  /**
+   * 下拉面板弹出层配置项
+   */
   popupConfig?: VxeSelectPropTypes.PopupConfig
+  /**
+   * 纵向虚拟滚动配置项
+   */
   virtualYConfig?: VxeSelectPropTypes.VirtualYConfig
 
   /**

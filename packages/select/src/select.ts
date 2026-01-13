@@ -98,7 +98,12 @@ export default /* define-vxe-component start */ defineVxeComponent({
       default: () => getConfig().select.size || getConfig().size
     },
     filterable: Boolean as PropType<VxeSelectPropTypes.Filterable>,
+    /**
+     * 已废弃，被 filter-config.filterMethod 替换
+     * @deprecated
+     */
     filterMethod: Function as PropType<VxeSelectPropTypes.FilterMethod>,
+    filterConfig: Object as PropType<VxeSelectPropTypes.FilterConfig>,
     remote: Boolean as PropType<VxeSelectPropTypes.Remote>,
     remoteConfig: Object as PropType<VxeSelectPropTypes.RemoteConfig>,
     emptyText: String as PropType<VxeSelectPropTypes.EmptyText>,
@@ -333,6 +338,12 @@ export default /* define-vxe-component start */ defineVxeComponent({
 
       return Object.assign({}, getConfig().select.remoteConfig, props.remoteConfig)
     },
+    computeFilterOpts  () {
+      const $xeSelect = this
+      const props = $xeSelect
+
+      return Object.assign({}, getConfig().select.filterConfig, props.filterConfig)
+    },
     computeOptionOpts () {
       const $xeSelect = this
       const props = $xeSelect
@@ -535,7 +546,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       }
       return false
     },
-    getRemoteSelectLabel  (value: any) {
+    getRemoteSelectLabel (value: any) {
       const $xeSelect = this
       const props = $xeSelect
       const internalData = $xeSelect.internalData
@@ -586,7 +597,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const optionOpts = $xeSelect.computeOptionOpts
       return optionOpts.keyField || props.optionId || '_X_OPTION_KEY'
     },
-    getOptid  (option: any) {
+    getOptid (option: any) {
       const $xeSelect = this
 
       const optid = option[$xeSelect.getOptkey()]
@@ -595,24 +606,26 @@ export default /* define-vxe-component start */ defineVxeComponent({
     /**
      * 处理选项，当选项被动态显示/隐藏时可能会用到
      */
-    handleOption  () {
+    handleOption () {
       const $xeSelect = this
       const props = $xeSelect
       const reactData = $xeSelect.reactData
       const internalData = $xeSelect.internalData
 
-      const { remote, value, filterable, filterMethod } = props
+      const { remote, value, filterable } = props
       const { searchValue } = reactData
       const { fullData, optFullValMaps } = internalData
       const labelField = $xeSelect.computeLabelField
       const valueField = $xeSelect.computeValueField
+      const filterOpts = $xeSelect.computeFilterOpts
+      const frMethod = filterOpts.filterMethod || props.filterMethod
       const searchStr = `${searchValue || ''}`.toLowerCase()
       let avList: any[] = []
       if (remote) {
         avList = fullData.filter(isOptionVisible)
       } else {
-        if (filterable && filterMethod) {
-          avList = fullData.filter(option => isOptionVisible(option) && filterMethod({ $select: $xeSelect, group: null, option, searchValue, value }))
+        if (filterable && frMethod) {
+          avList = fullData.filter(option => isOptionVisible(option) && frMethod({ $select: $xeSelect, group: null, option, searchValue, value }))
         } else if (filterable) {
           avList = fullData.filter(option => isOptionVisible(option) && (!searchStr || `${option[labelField] || option[valueField]}`.toLowerCase().indexOf(searchStr) > -1))
         } else {
@@ -793,7 +806,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
         reactData.isActivated = true
         reactData.isAniVisible = true
         if (filterable) {
-          if (remote && remoteOpts.enabled && remoteOpts.autoLoad && !fullData.length) {
+          if (remote && remoteOpts.enabled && ((remoteOpts.autoLoad && !fullData.length) || (fullData.length && remoteOpts.clearOnClose))) {
             $xeSelect.handleSearchEvent()
           } else {
             $xeSelect.handleOption()
@@ -818,10 +831,24 @@ export default /* define-vxe-component start */ defineVxeComponent({
     },
     hideOptionPanel () {
       const $xeSelect = this
+      const props = $xeSelect
       const reactData = $xeSelect.reactData
       const internalData = $xeSelect.internalData
 
-      reactData.searchValue = ''
+      const { filterable, remote } = props
+      const filterOpts = $xeSelect.computeFilterOpts
+      const remoteOpts = $xeSelect.computeRemoteOpts
+      if (remote) {
+        if (remoteOpts.clearOnClose) {
+          reactData.searchValue = ''
+        }
+      } else if (filterable) {
+        if (filterOpts.clearOnClose) {
+          reactData.searchValue = ''
+        }
+      } else {
+        reactData.searchValue = ''
+      }
       reactData.searchLoading = false
       reactData.visiblePanel = false
       internalData.hpTimeout = setTimeout(() => {
@@ -1181,14 +1208,14 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const props = $xeSelect
       const reactData = $xeSelect.reactData
 
-      const { value, remote, remoteMethod } = props
+      const { value, remote } = props
       const { searchValue } = reactData
       const remoteOpts = $xeSelect.computeRemoteOpts
-      const queryMethod = remoteOpts.queryMethod || remoteMethod
-      if (remote && queryMethod && remoteOpts.enabled) {
+      const qyMethod = remoteOpts.queryMethod || props.remoteMethod
+      if (remote && qyMethod && remoteOpts.enabled) {
         reactData.searchLoading = true
         Promise.resolve(
-          queryMethod({ $select: $xeSelect, searchValue, value })
+          qyMethod({ $select: $xeSelect, searchValue, value })
         ).then(() => $xeSelect.$nextTick())
           .catch(() => $xeSelect.$nextTick())
           .finally(() => {
