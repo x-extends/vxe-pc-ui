@@ -26,10 +26,18 @@ export interface VxeButtonPrivateRef extends ButtonPrivateRef { }
 
 export namespace VxeButtonPropTypes {
   export type Size = VxeComponentSizeType
+  /**
+   * 已废弃，请使用 PopupConfig.zIndex
+   * @deprecated
+   */
   export type ZIndex = number
   export type Type = string
   export type Mode = null | '' | 'button' | 'text'
   export type ClassName = string | ((params: { $button: VxeButtonConstructor }) => string)
+  /**
+   * 已废弃，请使用 PopupConfig.className
+   * @deprecated
+   */
   export type PopupClassName = string | ((params: { $button: VxeButtonConstructor }) => string)
   export type Name = string | number
   export type RouterLink = {
@@ -82,6 +90,15 @@ export namespace VxeButtonPropTypes {
 
   export type ShowDropdownIcon = boolean
   export type DestroyOnClose = boolean
+  export interface PopupConfig {
+    /**
+     * 设置弹出面板方向
+     */
+    placement?: 'top' | 'bottom' | '' | null
+    transfer?: boolean
+    zIndex?: number | string
+    className?: string | ((params: { $button: VxeButtonConstructor }) => string)
+  }
   export type Transfer = boolean
 }
 
@@ -171,6 +188,7 @@ export interface VxeButtonProps {
    * 是否将弹框容器插入于 body 内
    */
   transfer?: VxeButtonPropTypes.Transfer
+  popupConfig?: VxeButtonPropTypes.PopupConfig
 }
 
 export interface ButtonPrivateComputed {

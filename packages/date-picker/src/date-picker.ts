@@ -116,6 +116,7 @@ export default defineVxeComponent({
       default: null
     },
 
+    popupConfig: Object as PropType<VxeDatePickerPropTypes.PopupConfig>,
     shortcutConfig: Object as PropType<VxeDatePickerPropTypes.ShortcutConfig>,
 
     // 已废弃 startWeek，被 startDay 替换
@@ -191,6 +192,10 @@ export default defineVxeComponent({
 
     const computeBtnTransfer = computed(() => {
       const { transfer } = props
+      const popupOpts = computePopupOpts.value
+      if (XEUtils.isBoolean(popupOpts.transfer)) {
+        return popupOpts.transfer
+      }
       if (transfer === null) {
         const globalTransfer = getConfig().datePicker.transfer
         if (XEUtils.isBoolean(globalTransfer)) {
@@ -260,6 +265,10 @@ export default defineVxeComponent({
     const computeInpImmediate = computed(() => {
       const { immediate } = props
       return immediate
+    })
+
+    const computePopupOpts = computed(() => {
+      return Object.assign({}, getConfig().datePicker.popupConfig, props.popupConfig)
     })
 
     const computeShortcutOpts = computed(() => {
@@ -559,9 +568,10 @@ export default defineVxeComponent({
 
     // 弹出面板
     const updateZindex = () => {
-      const { zIndex } = props
-      if (zIndex) {
-        reactData.panelIndex = zIndex
+      const popupOpts = computePopupOpts.value
+      const customZIndex = popupOpts.zIndex || props.zIndex
+      if (customZIndex) {
+        reactData.panelIndex = XEUtils.toNumber(customZIndex)
       } else if (reactData.panelIndex < getLastZIndex()) {
         reactData.panelIndex = nextZIndex()
       }
@@ -573,9 +583,10 @@ export default defineVxeComponent({
       const targetElem = refInputTarget.value
       const panelElem = refInputPanel.value
       const btnTransfer = computeBtnTransfer.value
+      const popupOpts = computePopupOpts.value
       const handleStyle = () => {
         const ppObj = updatePanelPlacement(targetElem, panelElem, {
-          placement,
+          placement: popupOpts.placement || placement,
           teleportTo: btnTransfer
         })
         const panelStyle: { [key: string]: string | number } = Object.assign(ppObj.style, {
@@ -743,6 +754,7 @@ export default defineVxeComponent({
       const isClearable = computeIsClearable.value
       const isDateTimeType = computeIsDateTimeType.value
       const shortcutList = computeShortcutList.value
+      const popupOpts = computePopupOpts.value
       const { position } = shortcutOpts
       const headerSlot = slots.header
       const footerSlot = slots.footer
@@ -750,6 +762,7 @@ export default defineVxeComponent({
       const bottomSlot = slots.bottom
       const leftSlot = slots.left
       const rightSlot = slots.right
+      const ppClassName = popupOpts.className
       const hasShortcutBtn = shortcutList.length > 0
       const showConfirmBtn = (showConfirmButton === null ? (isDateTimeType || multiple) : showConfirmButton)
       const showClearBtn = (showClearButton === null ? (isClearable && showConfirmBtn && type !== 'time') : showClearButton)
@@ -759,7 +772,7 @@ export default defineVxeComponent({
       }, [
         h('div', {
           ref: refInputPanel,
-          class: ['vxe-table--ignore-clear vxe-date-picker--panel', `type--${type}`, {
+          class: ['vxe-table--ignore-clear vxe-date-picker--panel', `type--${type}`, ppClassName ? (XEUtils.isFunction(ppClassName) ? ppClassName({ $datePicker: $xeDatePicker }) : ppClassName) : '', {
             [`size--${vSize}`]: vSize,
             'is--transfer': btnTransfer,
             'ani--leave': isAniVisible,

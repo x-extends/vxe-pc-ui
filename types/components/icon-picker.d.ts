@@ -27,6 +27,10 @@ export namespace VxeIconPickerPropTypes {
   export type Placeholder = string
   export type Size = VxeComponentSizeType
   export type ClassName = string | ((params: { $iconPicker: VxeIconPickerConstructor }) => string)
+  /**
+   * 已废弃，请使用 PopupConfig.className
+   * @deprecated
+   */
   export type PopupClassName = string | ((params: {$iconPicker: VxeIconPickerConstructor }) => string)
   export type Readonly = boolean
   export type Disabled = boolean
@@ -38,6 +42,21 @@ export namespace VxeIconPickerPropTypes {
   export type Clearable = boolean
   export type ShowIconTitle = boolean
   export type Placement = 'top' | 'bottom' | '' | null
+  export interface PopupConfig {
+    /**
+     * 设置弹出面板方向
+     */
+    placement?: 'top' | 'bottom' | '' | null
+    /**
+     * 触发方式
+     */
+    trigger?: 'default' | 'icon' | 'manual' | '' | null
+    transfer?: boolean
+    width?: number | string
+    height?: number | string
+    zIndex?: number | string
+    className?: string | ((params: { $iconPicker: VxeIconPickerConstructor }) => string)
+  }
   export type Transfer = boolean
 }
 
@@ -49,6 +68,10 @@ export type VxeIconPickerProps = {
   placeholder?: VxeIconPickerPropTypes.Placeholder
   size?: VxeIconPickerPropTypes.Size
   className?: VxeIconPickerPropTypes.ClassName
+  /**
+   * 已废弃，请使用 popup-config.className
+   * @deprecated
+   */
   popupClassName?: VxeIconPickerPropTypes.PopupClassName
   readonly?: VxeIconPickerPropTypes.Readonly
   disabled?: VxeIconPickerPropTypes.Disabled
@@ -56,6 +79,7 @@ export type VxeIconPickerProps = {
   clearable?: VxeIconPickerPropTypes.Clearable
   showIconTitle?: VxeIconPickerPropTypes.ShowIconTitle
   placement?: VxeIconPickerPropTypes.Placement
+  popupConfig?: VxeIconPickerPropTypes.PopupConfig
   transfer?: VxeIconPickerPropTypes.Transfer
 }
 

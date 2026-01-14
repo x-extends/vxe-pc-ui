@@ -80,11 +80,19 @@ export default defineVxeComponent({
     optionGroupProps: Object as PropType<VxeSelectPropTypes.OptionGroupProps>,
     optionConfig: Object as PropType<VxeSelectPropTypes.OptionConfig>,
     className: [String, Function] as PropType<VxeSelectPropTypes.ClassName>,
+    /**
+     * 已废弃，请使用 popupConfig.className
+     * @deprecated
+     */
     popupClassName: [String, Function] as PropType<VxeSelectPropTypes.PopupClassName>,
     max: {
       type: [String, Number] as PropType<VxeSelectPropTypes.Max>,
       default: null
     },
+    /**
+     * 已废弃，请使用 popupConfig.zIndex
+     * @deprecated
+     */
     zIndex: Number as PropType<VxeSelectPropTypes.ZIndex>,
     size: {
       type: String as PropType<VxeSelectPropTypes.Size>,
@@ -232,6 +240,10 @@ export default defineVxeComponent({
 
     const computeBtnTransfer = computed(() => {
       const { transfer } = props
+      const popupOpts = computePopupOpts.value
+      if (XEUtils.isBoolean(popupOpts.transfer)) {
+        return popupOpts.transfer
+      }
       if (transfer === null) {
         const globalTransfer = getConfig().select.transfer
         if (XEUtils.isBoolean(globalTransfer)) {
@@ -293,7 +305,7 @@ export default defineVxeComponent({
     })
 
     const computePopupOpts = computed(() => {
-      return Object.assign({}, getConfig().treeSelect.popupConfig, props.popupConfig)
+      return Object.assign({}, getConfig().select.popupConfig, props.popupConfig)
     })
 
     const computeVirtualYOpts = computed(() => {
@@ -527,9 +539,10 @@ export default defineVxeComponent({
     }
 
     const updateZIndex = () => {
-      const { zIndex } = props
-      if (zIndex) {
-        reactData.panelIndex = zIndex
+      const popupOpts = computePopupOpts.value
+      const customZIndex = popupOpts.zIndex || props.zIndex
+      if (customZIndex) {
+        reactData.panelIndex = XEUtils.toNumber(customZIndex)
       } else if (reactData.panelIndex < getLastZIndex()) {
         reactData.panelIndex = nextZIndex()
       }
@@ -541,9 +554,10 @@ export default defineVxeComponent({
       const targetElem = refElem.value
       const panelElem = refOptionPanel.value
       const btnTransfer = computeBtnTransfer.value
+      const popupOpts = computePopupOpts.value
       const handleStyle = () => {
         const ppObj = updatePanelPlacement(targetElem, panelElem, {
-          placement,
+          placement: popupOpts.placement || placement,
           teleportTo: btnTransfer
         })
         const panelStyle: { [key: string]: string | number } = Object.assign(ppObj.style, {
@@ -1441,11 +1455,11 @@ export default defineVxeComponent({
       const inpPlaceholder = computeInpPlaceholder.value
       const popupWrapperStyle = computePopupWrapperStyle.value
       const popupOpts = computePopupOpts.value
-      const popupClassName = popupOpts.className || props.popupClassName
       const defaultSlot = slots.default
       const headerSlot = slots.header
       const footerSlot = slots.footer
       const prefixSlot = slots.prefix
+      const ppClassName = popupOpts.className || props.popupClassName
       if (formReadonly) {
         return h('div', {
           ref: refElem,
@@ -1505,7 +1519,7 @@ export default defineVxeComponent({
         }, [
           h('div', {
             ref: refOptionPanel,
-            class: ['vxe-table--ignore-clear vxe-select--panel', popupClassName ? (XEUtils.isFunction(popupClassName) ? popupClassName({ $select: $xeSelect }) : popupClassName) : '', {
+            class: ['vxe-table--ignore-clear vxe-select--panel', ppClassName ? (XEUtils.isFunction(ppClassName) ? ppClassName({ $select: $xeSelect }) : ppClassName) : '', {
               [`size--${vSize}`]: vSize,
               'is--transfer': btnTransfer,
               'ani--leave': !loading && isAniVisible,

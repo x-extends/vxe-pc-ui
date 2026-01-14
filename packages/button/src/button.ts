@@ -105,6 +105,7 @@ const VxeButtonComponent = defineVxeComponent({
       type: Boolean as PropType<VxeButtonPropTypes.DestroyOnClose>,
       default: () => getConfig().button.destroyOnClose
     },
+    popupConfig: Object as PropType<VxeButtonPropTypes.PopupConfig>,
     /**
      * 是否将弹框容器插入于 body 内
      */
@@ -173,6 +174,10 @@ const VxeButtonComponent = defineVxeComponent({
 
     const computeBtnTransfer = computed(() => {
       const { transfer } = props
+      const popupOpts = computePopupOpts.value
+      if (XEUtils.isBoolean(popupOpts.transfer)) {
+        return popupOpts.transfer
+      }
       if (transfer === null) {
         const globalTransfer = getConfig().button.transfer
         if (XEUtils.isBoolean(globalTransfer)) {
@@ -262,6 +267,10 @@ const VxeButtonComponent = defineVxeComponent({
       return []
     })
 
+    const computePopupOpts = computed(() => {
+      return Object.assign({}, getConfig().button.popupConfig, props.popupConfig)
+    })
+
     const computePrefixTipOpts = computed(() => {
       return Object.assign({}, getConfig().button.prefixTooltip, props.prefixTooltip)
     })
@@ -271,9 +280,10 @@ const VxeButtonComponent = defineVxeComponent({
     })
 
     const updateZindex = () => {
-      const { zIndex } = props
-      if (zIndex) {
-        reactData.panelIndex = zIndex
+      const popupOpts = computePopupOpts.value
+      const customZIndex = popupOpts.zIndex || props.zIndex
+      if (customZIndex) {
+        reactData.panelIndex = XEUtils.toNumber(customZIndex)
       } else if (reactData.panelIndex < getLastZIndex()) {
         reactData.panelIndex = nextZIndex()
       }
@@ -285,9 +295,10 @@ const VxeButtonComponent = defineVxeComponent({
       const targetElem = refButton.value
       const panelElem = refBtnPanel.value
       const btnTransfer = computeBtnTransfer.value
+      const popupOpts = computePopupOpts.value
       const handleStyle = () => {
         const ppObj = updatePanelPlacement(targetElem, panelElem, {
-          placement,
+          placement: popupOpts.placement || placement,
           teleportTo: btnTransfer
         })
         const panelStyle: { [key: string]: string | number } = Object.assign(ppObj.style, {
@@ -603,7 +614,7 @@ const VxeButtonComponent = defineVxeComponent({
     Object.assign($xeButton, buttonMethods)
 
     const renderVN = () => {
-      const { className, popupClassName, trigger, title, routerLink, type, destroyOnClose, name, loading, shadow, showDropdownIcon } = props
+      const { className, trigger, title, routerLink, type, destroyOnClose, name, loading, shadow, showDropdownIcon } = props
       const { initialized, isAniVisible, visiblePanel } = reactData
       const isFormBtn = computeIsFormBtn.value
       const btnMode = computeBtnMode.value
@@ -615,8 +626,10 @@ const VxeButtonComponent = defineVxeComponent({
       const btnDisabled = computeBtnDisabled.value
       const permissionInfo = computePermissionInfo.value
       const downBtnList = computeDownBtnList.value
+      const popupOpts = computePopupOpts.value
       const vSize = computeSize.value
       const dropdownsSlot = slots.dropdowns
+      const ppClassName = popupOpts.className || props.popupClassName
 
       if (!permissionInfo.visible) {
         return renderEmptyElement($xeButton)
@@ -701,7 +714,7 @@ const VxeButtonComponent = defineVxeComponent({
           }, [
             h('div', {
               ref: refBtnPanel,
-              class: ['vxe-button--dropdown-panel', popupClassName ? (XEUtils.isFunction(popupClassName) ? popupClassName({ $button: $xeButton }) : popupClassName) : '', {
+              class: ['vxe-button--dropdown-panel', ppClassName ? (XEUtils.isFunction(ppClassName) ? ppClassName({ $button: $xeButton }) : ppClassName) : '', {
                 [`size--${vSize}`]: vSize,
                 'is--transfer': btnTransfer,
                 'ani--leave': isAniVisible,

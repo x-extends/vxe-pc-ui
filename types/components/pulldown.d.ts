@@ -26,6 +26,10 @@ export namespace VxePulldownPropTypes {
   export type ModelValue = boolean
   export type Size = VxeComponentSizeType
   export type Disabled = boolean
+  /**
+   * 已废弃，请使用 PopupConfig.zIndex
+   * @deprecated
+   */
   export type ZIndex = number
   export type Placement = '' | 'top' | 'bottom'
   export type Trigger = '' | 'manual' | 'click'
@@ -36,7 +40,22 @@ export namespace VxePulldownPropTypes {
   }
   export type Options = Option[]
   export type ClassName = string | ((params: { $pulldown: VxePulldownConstructor }) => string)
+  /**
+   * 已废弃，请使用 PopupConfig.className
+   * @deprecated
+   */
   export type PopupClassName = string | ((params: { $pulldown: VxePulldownConstructor }) => string)
+  export interface PopupConfig {
+    /**
+     * 设置弹出面板方向
+     */
+    placement?: 'top' | 'bottom' | '' | null
+    transfer?: boolean
+    width?: number | string
+    height?: number | string
+    zIndex?: number | string
+    className?: string | ((params: { $pulldown: VxePulldownConstructor }) => string)
+  }
   export type ShowPopupShadow = boolean
   export type DestroyOnClose = boolean
   export type Transfer = boolean
@@ -49,15 +68,24 @@ export interface VxePulldownProps {
    * 是否禁用
    */
   disabled?: VxePulldownPropTypes.Disabled
+  /**
+   * 已废弃，请使用 popup-config.zIndex
+   * @deprecated
+   */
   zIndex?: VxePulldownPropTypes.ZIndex
   options?: VxePulldownPropTypes.Options
   className?: VxePulldownPropTypes.ClassName
+  /**
+   * 已废弃，请使用 popup-config.className
+   * @deprecated
+   */
   popupClassName?: VxePulldownPropTypes.PopupClassName
   /**
    * 固定显示下拉面板的方向
    */
   placement?: VxePulldownPropTypes.Placement
   trigger?: VxePulldownPropTypes.Trigger
+  popupConfig?: VxePulldownPropTypes.PopupConfig
   showPopupShadow?: VxePulldownPropTypes.ShowPopupShadow
   /**
    * 在下拉容器关闭时销毁内容

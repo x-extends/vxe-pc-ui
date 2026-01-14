@@ -47,8 +47,18 @@ export namespace VxeTableSelectPropTypes {
   }
   export type Transfer = boolean
   export interface PopupConfig {
+    /**
+     * 设置弹出面板方向
+     */
+    placement?: 'top' | 'bottom' | '' | null
+    /**
+     * 触发方式
+     */
+    trigger?: 'default' | 'icon' | 'manual' | '' | null
+    transfer?: boolean
     width?: number | string
     height?: number | string
+    zIndex?: number | string
     className?: string | ((params: { $tableSelect: VxeTableSelectConstructor }) => string)
   }
   export type GridConfig<D = any> = Omit<VxeGridProps<D>, 'data' | 'height' | 'maxHeight' | 'minHeight' | 'size'>
@@ -58,7 +68,6 @@ export interface VxeTableSelectProps<D = any> {
   size?: VxeTableSelectPropTypes.Size
   modelValue?: VxeTableSelectPropTypes.ModelValue
   clearable?: VxeTableSelectPropTypes.Clearable
-  zIndex?: VxeTableSelectPropTypes.ZIndex
   placeholder?: VxeTableSelectPropTypes.Placeholder
   readonly?: VxeTableSelectPropTypes.Readonly
   loading?: VxeTableSelectPropTypes.Loading
@@ -74,6 +83,12 @@ export interface VxeTableSelectProps<D = any> {
   transfer?: VxeTableSelectPropTypes.Transfer
   popupConfig?: VxeTableSelectPropTypes.PopupConfig
   gridConfig?: VxeTableSelectPropTypes.GridConfig<D>
+
+  /**
+   * 已废弃，请使用 popup-config.zIndex
+   * @deprecated
+   */
+  zIndex?: VxeTableSelectPropTypes.ZIndex
 }
 
 export interface TableSelectPrivateComputed {

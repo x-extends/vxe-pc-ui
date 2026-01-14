@@ -27,6 +27,10 @@ export namespace VxeTreeSelectPropTypes {
   export type Size = VxeComponentSizeType
   export type ModelValue = any
   export type Clearable = boolean
+  /**
+   * 已废弃，请使用 PopupConfig.zIndex
+   * @deprecated
+   */
   export type ZIndex = number
   export type Placeholder = string
   export type Readonly = boolean
@@ -39,7 +43,7 @@ export namespace VxeTreeSelectPropTypes {
   export type ShowClearButton = boolean
   export type ClassName = string | ((params: { $treeSelect: VxeTreeSelectConstructor }) => string)
   /**
-   * 已废弃，请使用 VxeTreeSelectPropTypes.PopupConfig
+   * 已废弃，请使用 PopupConfig.className
    * @deprecated
    */
   export type PopupClassName = string | ((params: { $treeSelect: VxeTreeSelectConstructor }) => string)
@@ -99,8 +103,18 @@ export namespace VxeTreeSelectPropTypes {
 
   export type Transfer = boolean
   export interface PopupConfig {
+    /**
+     * 设置弹出面板方向
+     */
+    placement?: 'top' | 'bottom' | '' | null
+    /**
+     * 触发方式
+     */
+    trigger?: 'default' | 'icon' | 'manual' | '' | null
+    transfer?: boolean
     width?: number | string
     height?: number | string
+    zIndex?: number | string
     className?: string | ((params: { $treeSelect: VxeTreeSelectConstructor }) => string)
   }
   export interface TreeConfig<D = any> extends Omit<VxeTreeProps<D>, 'data' | 'size' | 'menuConfig'> {
@@ -132,7 +146,6 @@ export interface VxeTreeSelectProps<D = any> {
   size?: VxeTreeSelectPropTypes.Size
   modelValue?: VxeTreeSelectPropTypes.ModelValue
   clearable?: VxeTreeSelectPropTypes.Clearable
-  zIndex?: VxeTreeSelectPropTypes.ZIndex
   placeholder?: VxeTreeSelectPropTypes.Placeholder
   readonly?: VxeTreeSelectPropTypes.Readonly
   loading?: VxeTreeSelectPropTypes.Loading
@@ -159,6 +172,11 @@ export interface VxeTreeSelectProps<D = any> {
   menuConfig?: VxeTreeSelectPropTypes.MenuConfig<D>
   virtualYConfig?: VxeTreeSelectPropTypes.VirtualYConfig
 
+  /**
+   * 已废弃，请使用 popup-config.zIndex
+   * @deprecated
+   */
+  zIndex?: VxeTreeSelectPropTypes.ZIndex
   /**
    * 已废弃，被 remote-config.queryMethod 替换
    * @deprecated

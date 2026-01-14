@@ -18,6 +18,10 @@ export default defineVxeComponent({
       type: String as PropType<VxePulldownPropTypes.Trigger>,
       default: getConfig().pulldown.trigger
     },
+    /**
+     * 已废弃，请使用 popupConfig.zIndex
+     * @deprecated
+     */
     zIndex: Number as PropType<VxePulldownPropTypes.ZIndex>,
     size: {
       type: String as PropType<VxePulldownPropTypes.Size>,
@@ -28,8 +32,13 @@ export default defineVxeComponent({
       type: [String, Function] as PropType<VxePulldownPropTypes.ClassName>,
       default: getConfig().pulldown.className
     },
+    /**
+     * 已废弃，请使用 popupConfig.className
+     * @deprecated
+     */
     popupClassName: [String, Function] as PropType<VxePulldownPropTypes.PopupClassName>,
     showPopupShadow: Boolean as PropType<VxePulldownPropTypes.ShowPopupShadow>,
+    popupConfig: Object as PropType<VxePulldownPropTypes.PopupConfig>,
     destroyOnClose: {
       type: Boolean as PropType<VxePulldownPropTypes.DestroyOnClose>,
       default: getConfig().pulldown.destroyOnClose
@@ -79,6 +88,10 @@ export default defineVxeComponent({
 
     const computeBtnTransfer = computed(() => {
       const { transfer } = props
+      const popupOpts = computePopupOpts.value
+      if (XEUtils.isBoolean(popupOpts.transfer)) {
+        return popupOpts.transfer
+      }
       if (transfer === null) {
         const globalTransfer = getConfig().pulldown.transfer
         if (XEUtils.isBoolean(globalTransfer)) {
@@ -89,6 +102,10 @@ export default defineVxeComponent({
         }
       }
       return transfer
+    })
+
+    const computePopupOpts = computed(() => {
+      return Object.assign({}, getConfig().pulldown.popupConfig, props.popupConfig)
     })
 
     const refMaps: PulldownPrivateRef = {
@@ -107,9 +124,10 @@ export default defineVxeComponent({
     let pulldownMethods = {} as PulldownMethods
 
     const updateZindex = () => {
-      const { zIndex } = props
-      if (zIndex) {
-        reactData.panelIndex = zIndex
+      const popupOpts = computePopupOpts.value
+      const customZIndex = popupOpts.zIndex || props.zIndex
+      if (customZIndex) {
+        reactData.panelIndex = XEUtils.toNumber(customZIndex)
       } else if (reactData.panelIndex < getLastZIndex()) {
         reactData.panelIndex = nextZIndex()
       }
@@ -128,9 +146,10 @@ export default defineVxeComponent({
       const targetElem = refPulldownContent.value
       const panelElem = refPulldownPanel.value
       const btnTransfer = computeBtnTransfer.value
+      const popupOpts = computePopupOpts.value
       const handleStyle = () => {
         const ppObj = updatePanelPlacement(targetElem, panelElem, {
-          placement,
+          placement: popupOpts.placement || placement,
           teleportTo: btnTransfer
         })
         const panelStyle: { [key: string]: string | number } = Object.assign(ppObj.style, {
@@ -338,14 +357,16 @@ export default defineVxeComponent({
     }
 
     const renderVN = () => {
-      const { className, options, popupClassName, showPopupShadow, destroyOnClose, disabled } = props
+      const { className, options, showPopupShadow, destroyOnClose, disabled } = props
       const { initialized, isActivated, isAniVisible, visiblePanel, panelStyle, panelPlacement } = reactData
       const btnTransfer = computeBtnTransfer.value
       const vSize = computeSize.value
+      const popupOpts = computePopupOpts.value
       const defaultSlot = slots.default
       const headerSlot = slots.header
       const footerSlot = slots.footer
       const dropdownSlot = slots.dropdown
+      const ppClassName = popupOpts.className || props.popupClassName
 
       return h('div', {
         ref: refElem,
@@ -367,7 +388,7 @@ export default defineVxeComponent({
         }, [
           h('div', {
             ref: refPulldownPanel,
-            class: ['vxe-table--ignore-clear vxe-pulldown--panel', popupClassName ? (XEUtils.isFunction(popupClassName) ? popupClassName({ $pulldown: $xePulldown }) : popupClassName) : '', {
+            class: ['vxe-table--ignore-clear vxe-pulldown--panel', ppClassName ? (XEUtils.isFunction(ppClassName) ? ppClassName({ $pulldown: $xePulldown }) : ppClassName) : '', {
               [`size--${vSize}`]: vSize,
               'is--transfer': btnTransfer,
               'ani--leave': isAniVisible,

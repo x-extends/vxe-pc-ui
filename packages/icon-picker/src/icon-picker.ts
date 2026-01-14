@@ -2,7 +2,7 @@ import { h, Teleport, PropType, ref, inject, watch, computed, provide, onUnmount
 import { defineVxeComponent } from '../../ui/src/comp'
 import XEUtils from 'xe-utils'
 import { getConfig, getIcon, getI18n, globalEvents, createEvent, renderer, useSize, GLOBAL_EVENT_KEYS, renderEmptyElement } from '../../ui'
-import { getEventTargetNode, getAbsolutePos } from '../../ui/src/dom'
+import { getEventTargetNode, updatePanelPlacement } from '../../ui/src/dom'
 import { getLastZIndex, nextZIndex, getFuncText } from '../../ui/src/utils'
 import { getSlotVNs } from '../../ui/src/vn'
 
@@ -20,6 +20,10 @@ export default defineVxeComponent({
       default: () => getConfig().iconPicker.size || getConfig().size
     },
     className: [String, Function] as PropType<VxeIconPickerPropTypes.ClassName>,
+    /**
+     * 已废弃，请使用 popupConfig.className
+     * @deprecated
+     */
     popupClassName: [String, Function] as PropType<VxeIconPickerPropTypes.PopupClassName>,
     showIconTitle: {
       type: Boolean as PropType<VxeIconPickerPropTypes.ShowIconTitle>,
@@ -35,6 +39,7 @@ export default defineVxeComponent({
     },
     icons: Array as PropType<VxeIconPickerPropTypes.Icons>,
     placement: String as PropType<VxeIconPickerPropTypes.Placement>,
+    popupConfig: Object as PropType<VxeIconPickerPropTypes.PopupConfig>,
     transfer: {
       type: Boolean as PropType<VxeIconPickerPropTypes.Transfer>,
       default: null
@@ -116,6 +121,10 @@ export default defineVxeComponent({
 
     const computeBtnTransfer = computed(() => {
       const { transfer } = props
+      const popupOpts = computePopupOpts.value
+      if (XEUtils.isBoolean(popupOpts.transfer)) {
+        return popupOpts.transfer
+      }
       if (transfer === null) {
         const globalTransfer = getConfig().iconPicker.transfer
         if (XEUtils.isBoolean(globalTransfer)) {
@@ -160,6 +169,10 @@ export default defineVxeComponent({
       })
     })
 
+    const computePopupOpts = computed(() => {
+      return Object.assign({}, getConfig().iconPicker.popupConfig, props.popupConfig)
+    })
+
     const computeIconGroupList = computed(() => {
       const iconList = computeIconList.value
       return XEUtils.chunk(iconList, 4)
@@ -178,74 +191,25 @@ export default defineVxeComponent({
     }
 
     const updatePlacement = () => {
-      return nextTick().then(() => {
-        const { placement } = props
-        const { panelIndex } = reactData
-        const el = refElem.value
-        const panelElem = refOptionPanel.value
-        const btnTransfer = computeBtnTransfer.value
-        if (panelElem && el) {
-          const targetHeight = el.offsetHeight
-          const targetWidth = el.offsetWidth
-          const panelHeight = panelElem.offsetHeight
-          const panelWidth = panelElem.offsetWidth
-          const marginSize = 5
-          const panelStyle: { [key: string]: any } = {
-            zIndex: panelIndex
-          }
-          const { boundingTop, boundingLeft, visibleHeight, visibleWidth } = getAbsolutePos(el)
-          let panelPlacement = 'bottom'
-          if (btnTransfer) {
-            let left = boundingLeft
-            let top = boundingTop + targetHeight
-            if (placement === 'top') {
-              panelPlacement = 'top'
-              top = boundingTop - panelHeight
-            } else if (!placement) {
-              // 如果下面不够放，则向上
-              if (top + panelHeight + marginSize > visibleHeight) {
-                panelPlacement = 'top'
-                top = boundingTop - panelHeight
-              }
-              // 如果上面不够放，则向下（优先）
-              if (top < marginSize) {
-                panelPlacement = 'bottom'
-                top = boundingTop + targetHeight
-              }
-            }
-            // 如果溢出右边
-            if (left + panelWidth + marginSize > visibleWidth) {
-              left -= left + panelWidth + marginSize - visibleWidth
-            }
-            // 如果溢出左边
-            if (left < marginSize) {
-              left = marginSize
-            }
-            Object.assign(panelStyle, {
-              left: `${left}px`,
-              top: `${top}px`,
-              minWidth: `${targetWidth}px`
-            })
-          } else {
-            if (placement === 'top') {
-              panelPlacement = 'top'
-              panelStyle.bottom = `${targetHeight}px`
-            } else if (!placement) {
-              // 如果下面不够放，则向上
-              if (boundingTop + targetHeight + panelHeight > visibleHeight) {
-                // 如果上面不够放，则向下（优先）
-                if (boundingTop - targetHeight - panelHeight > marginSize) {
-                  panelPlacement = 'top'
-                  panelStyle.bottom = `${targetHeight}px`
-                }
-              }
-            }
-          }
-          reactData.panelStyle = panelStyle
-          reactData.panelPlacement = panelPlacement
-          return nextTick()
-        }
-      })
+      const { placement } = props
+      const { panelIndex } = reactData
+      const targetElem = refElem.value
+      const panelElem = refOptionPanel.value
+      const btnTransfer = computeBtnTransfer.value
+      const popupOpts = computePopupOpts.value
+      const handleStyle = () => {
+        const ppObj = updatePanelPlacement(targetElem, panelElem, {
+          placement: popupOpts.placement || placement,
+          teleportTo: btnTransfer
+        })
+        const panelStyle: { [key: string]: string | number } = Object.assign(ppObj.style, {
+          zIndex: panelIndex
+        })
+        reactData.panelStyle = panelStyle
+        reactData.panelPlacement = ppObj.placement
+      }
+      handleStyle()
+      return nextTick().then(handleStyle)
     }
 
     const showOptionPanel = () => {
@@ -535,13 +499,15 @@ export default defineVxeComponent({
     }
 
     const renderVN = () => {
-      const { className, popupClassName, clearable } = props
+      const { className, clearable } = props
       const { initialized, isActivated, isAniVisible, visiblePanel, selectIcon } = reactData
       const vSize = computeSize.value
       const isDisabled = computeIsDisabled.value
       const btnTransfer = computeBtnTransfer.value
       const formReadonly = computeFormReadonly.value
       const inpPlaceholder = computeInpPlaceholder.value
+      const popupOpts = computePopupOpts.value
+      const ppClassName = popupOpts.className || props.popupClassName
 
       if (formReadonly) {
         return h('div', {
@@ -604,7 +570,7 @@ export default defineVxeComponent({
         }, [
           h('div', {
             ref: refOptionPanel,
-            class: ['vxe-table--ignore-clear vxe-ico-picker--panel', popupClassName ? (XEUtils.isFunction(popupClassName) ? popupClassName({ $iconPicker: $xeIconPicker }) : popupClassName) : '', {
+            class: ['vxe-table--ignore-clear vxe-ico-picker--panel', ppClassName ? (XEUtils.isFunction(ppClassName) ? ppClassName({ $iconPicker: $xeIconPicker }) : ppClassName) : '', {
               [`size--${vSize}`]: vSize,
               'is--transfer': btnTransfer,
               'ani--leave': isAniVisible,

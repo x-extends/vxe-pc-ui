@@ -34,6 +34,10 @@ export namespace VxeDatePickerPropTypes {
   export type Name = string
   export type Type = VxeDatePanelPropTypes.Type
   export type Clearable = boolean
+  /**
+   * 已废弃，请使用 PopupConfig.zIndex
+   * @deprecated
+   */
   export type ZIndex = number
   export type Readonly = boolean
   export type Disabled = boolean
@@ -74,6 +78,10 @@ export namespace VxeDatePickerPropTypes {
      */
     trigger?: 'default' | 'icon' | 'manual' | '' | null
     transfer?: boolean
+    width?: number | string
+    height?: number | string
+    zIndex?: number | string
+    className?: string | ((params: { $datePicker: VxeDatePickerConstructor }) => string)
   }
   export interface ShortcutConfig {
     enabled?: boolean
