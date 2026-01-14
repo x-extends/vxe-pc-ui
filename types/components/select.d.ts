@@ -27,6 +27,10 @@ export namespace VxeSelectPropTypes {
     selectMode?: 'all' | 'first' | 'last'
   }
   export type Clearable = boolean
+  /**
+   * 已废弃，请使用 PopupConfig.zIndex
+   * @deprecated
+   */
   export type ZIndex = number
   export type Placeholder = string
   export type Readonly = boolean
@@ -36,6 +40,10 @@ export namespace VxeSelectPropTypes {
   export type ShowCheckedButoon = boolean
   export type ShowClearButton = boolean
   export type ClassName = string | ((params: { $select: VxeSelectConstructor }) => string)
+  /**
+   * 已废弃，请使用 PopupConfig.className
+   * @deprecated
+   */
   export type PopupClassName = string | ((params: { $select: VxeSelectConstructor }) => string)
   export type Multiple = boolean
   export type MultiCharOverflow = number | string
@@ -119,8 +127,18 @@ export namespace VxeSelectPropTypes {
   export type OptionKey = boolean
   export type Transfer = boolean
   export interface PopupConfig {
+    /**
+     * 设置弹出面板方向
+     */
+    placement?: 'top' | 'bottom' | '' | null
+    /**
+     * 触发方式
+     */
+    trigger?: 'default' | 'icon' | 'manual' | '' | null
+    transfer?: boolean
     width?: number | string
     height?: number | string
+    zIndex?: number | string
     className?: string | ((params: { $select: VxeSelectConstructor }) => string)
   }
 
@@ -156,6 +174,10 @@ export interface VxeSelectProps {
   value?: VxeSelectPropTypes.ModelValue
   defaultConfig?: VxeSelectPropTypes.DefaultConfig
   clearable?: VxeSelectPropTypes.Clearable
+  /**
+   * 已废弃，请使用 popup-config.zIndex
+   * @deprecated
+   */
   zIndex?: VxeSelectPropTypes.ZIndex
   placeholder?: VxeSelectPropTypes.Placeholder
   readonly?: VxeSelectPropTypes.Readonly
@@ -165,6 +187,10 @@ export interface VxeSelectProps {
   showCheckedButoon?: VxeSelectPropTypes.ShowCheckedButoon
   showClearButton?: VxeSelectPropTypes.ShowClearButton
   className?: VxeSelectPropTypes.ClassName
+  /**
+   * 已废弃，请使用 popup-config.className
+   * @deprecated
+   */
   popupClassName?: VxeSelectPropTypes.PopupClassName
   multiple?: VxeSelectPropTypes.Multiple
   multiCharOverflow?: VxeSelectPropTypes.MultiCharOverflow

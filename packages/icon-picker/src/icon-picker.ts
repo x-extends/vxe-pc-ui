@@ -2,7 +2,7 @@ import { PropType, CreateElement, VNode } from 'vue'
 import { defineVxeComponent } from '../../ui/src/comp'
 import XEUtils from 'xe-utils'
 import { getConfig, getIcon, getI18n, globalEvents, renderer, createEvent, globalMixins, GLOBAL_EVENT_KEYS, renderEmptyElement } from '../../ui'
-import { getEventTargetNode, getAbsolutePos } from '../../ui/src/dom'
+import { getEventTargetNode, updatePanelPlacement } from '../../ui/src/dom'
 import { getLastZIndex, nextZIndex, getFuncText } from '../../ui/src/utils'
 import { getSlotVNs } from '../../ui/src/vn'
 
@@ -27,6 +27,10 @@ export default /* define-vxe-component start */ defineVxeComponent({
       default: () => getConfig().iconPicker.size || getConfig().size
     },
     className: [String, Function] as PropType<VxeIconPickerPropTypes.ClassName>,
+    /**
+     * 已废弃，请使用 popupConfig.className
+     * @deprecated
+     */
     popupClassName: [String, Function] as PropType<VxeIconPickerPropTypes.PopupClassName>,
     showIconTitle: {
       type: Boolean as PropType<VxeIconPickerPropTypes.ShowIconTitle>,
@@ -42,6 +46,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
     },
     icons: Array as PropType<VxeIconPickerPropTypes.Icons>,
     placement: String as PropType<VxeIconPickerPropTypes.Placement>,
+    popupConfig: Object as PropType<VxeIconPickerPropTypes.PopupConfig>,
     transfer: {
       type: Boolean as PropType<VxeIconPickerPropTypes.Transfer>,
       default: null
@@ -137,6 +142,10 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const $xeForm = $xeIconPicker.$xeForm
 
       const { transfer } = props
+      const popupOpts = $xeIconPicker.computePopupOpts as VxeIconPickerPropTypes.PopupConfig
+      if (XEUtils.isBoolean(popupOpts.transfer)) {
+        return popupOpts.transfer
+      }
       if (transfer === null) {
         const globalTransfer = getConfig().iconPicker.transfer
         if (XEUtils.isBoolean(globalTransfer)) {
@@ -183,6 +192,12 @@ export default /* define-vxe-component start */ defineVxeComponent({
           iconRender: item.iconRender
         }
       })
+    },
+    computePopupOpts () {
+      const $xeIconPicker = this
+      const props = $xeIconPicker
+
+      return Object.assign({}, getConfig().iconPicker.popupConfig, props.popupConfig)
     },
     computeIconGroupList () {
       const $xeIconPicker = this
@@ -291,74 +306,25 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const props = $xeIconPicker
       const reactData = $xeIconPicker.reactData
 
-      return $xeIconPicker.$nextTick().then(() => {
-        const { placement } = props
-        const { panelIndex } = reactData
-        const el = $xeIconPicker.$refs.refElem as HTMLElement
-        const panelElem = $xeIconPicker.$refs.refOptionPanel as HTMLElement
-        const btnTransfer = $xeIconPicker.computeBtnTransfer
-        if (panelElem && el) {
-          const targetHeight = el.offsetHeight
-          const targetWidth = el.offsetWidth
-          const panelHeight = panelElem.offsetHeight
-          const panelWidth = panelElem.offsetWidth
-          const marginSize = 5
-          const panelStyle: { [key: string]: any } = {
-            zIndex: panelIndex
-          }
-          const { boundingTop, boundingLeft, visibleHeight, visibleWidth } = getAbsolutePos(el)
-          let panelPlacement = 'bottom'
-          if (btnTransfer) {
-            let left = boundingLeft
-            let top = boundingTop + targetHeight
-            if (placement === 'top') {
-              panelPlacement = 'top'
-              top = boundingTop - panelHeight
-            } else if (!placement) {
-              // 如果下面不够放，则向上
-              if (top + panelHeight + marginSize > visibleHeight) {
-                panelPlacement = 'top'
-                top = boundingTop - panelHeight
-              }
-              // 如果上面不够放，则向下（优先）
-              if (top < marginSize) {
-                panelPlacement = 'bottom'
-                top = boundingTop + targetHeight
-              }
-            }
-            // 如果溢出右边
-            if (left + panelWidth + marginSize > visibleWidth) {
-              left -= left + panelWidth + marginSize - visibleWidth
-            }
-            // 如果溢出左边
-            if (left < marginSize) {
-              left = marginSize
-            }
-            Object.assign(panelStyle, {
-              left: `${left}px`,
-              top: `${top}px`,
-              minWidth: `${targetWidth}px`
-            })
-          } else {
-            if (placement === 'top') {
-              panelPlacement = 'top'
-              panelStyle.bottom = `${targetHeight}px`
-            } else if (!placement) {
-              // 如果下面不够放，则向上
-              if (boundingTop + targetHeight + panelHeight > visibleHeight) {
-                // 如果上面不够放，则向下（优先）
-                if (boundingTop - targetHeight - panelHeight > marginSize) {
-                  panelPlacement = 'top'
-                  panelStyle.bottom = `${targetHeight}px`
-                }
-              }
-            }
-          }
-          reactData.panelStyle = panelStyle
-          reactData.panelPlacement = panelPlacement
-          return $xeIconPicker.$nextTick()
-        }
-      })
+      const { placement } = props
+      const { panelIndex } = reactData
+      const targetElem = $xeIconPicker.$refs.refElem as HTMLElement
+      const panelElem = $xeIconPicker.$refs.refOptionPanel as HTMLDivElement
+      const btnTransfer = $xeIconPicker.computeBtnTransfer
+      const popupOpts = $xeIconPicker.computePopupOpts
+      const handleStyle = () => {
+        const ppObj = updatePanelPlacement(targetElem, panelElem, {
+          placement: popupOpts.placement || placement,
+          teleportTo: btnTransfer
+        })
+        const panelStyle: { [key: string]: string | number } = Object.assign(ppObj.style, {
+          zIndex: panelIndex
+        })
+        reactData.panelStyle = panelStyle
+        reactData.panelPlacement = ppObj.placement
+      }
+      handleStyle()
+      return $xeIconPicker.$nextTick().then(handleStyle)
     },
     showOptionPanel () {
       const $xeIconPicker = this
@@ -649,13 +615,15 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const props = $xeIconPicker
       const reactData = $xeIconPicker.reactData
 
-      const { className, popupClassName, clearable } = props
+      const { className, clearable } = props
       const { initialized, isActivated, isAniVisible, visiblePanel, selectIcon } = reactData
       const vSize = $xeIconPicker.computeSize
       const isDisabled = $xeIconPicker.computeIsDisabled
       const btnTransfer = $xeIconPicker.computeBtnTransfer
       const formReadonly = $xeIconPicker.computeFormReadonly
       const inpPlaceholder = $xeIconPicker.computeInpPlaceholder
+      const popupOpts = $xeIconPicker.computePopupOpts
+      const ppClassName = popupOpts.className || props.popupClassName
 
       if (formReadonly) {
         return h('div', {
@@ -720,7 +688,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
         ]),
         h('div', {
           ref: 'refOptionPanel',
-          class: ['vxe-table--ignore-clear vxe-ico-picker--panel', popupClassName ? (XEUtils.isFunction(popupClassName) ? popupClassName({ $iconPicker: $xeIconPicker }) : popupClassName) : '', {
+          class: ['vxe-table--ignore-clear vxe-ico-picker--panel', ppClassName ? (XEUtils.isFunction(ppClassName) ? ppClassName({ $iconPicker: $xeIconPicker }) : ppClassName) : '', {
             [`size--${vSize}`]: vSize,
             'is--transfer': btnTransfer,
             'ani--leave': isAniVisible,

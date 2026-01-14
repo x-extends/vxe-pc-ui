@@ -123,6 +123,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       default: null
     },
 
+    popupConfig: Object as PropType<VxeDatePickerPropTypes.PopupConfig>,
     shortcutConfig: Object as PropType<VxeDatePickerPropTypes.ShortcutConfig>,
 
     // 已废弃 startWeek，被 startDay 替换
@@ -196,6 +197,10 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const $xeForm = $xeDatePicker.$xeForm
 
       const { transfer } = props
+      const popupOpts = $xeDatePicker.computePopupOpts as VxeDatePickerPropTypes.PopupConfig
+      if (XEUtils.isBoolean(popupOpts.transfer)) {
+        return popupOpts.transfer
+      }
       if (transfer === null) {
         const globalTransfer = getConfig().datePicker.transfer
         if (XEUtils.isBoolean(globalTransfer)) {
@@ -283,6 +288,12 @@ export default /* define-vxe-component start */ defineVxeComponent({
 
       const { immediate } = props
       return immediate
+    },
+    computePopupOpts () {
+      const $xeDatePicker = this
+      const props = $xeDatePicker
+
+      return Object.assign({}, getConfig().datePicker.popupConfig, props.popupConfig)
     },
     computeShortcutOpts () {
       const $xeDatePicker = this
@@ -660,9 +671,10 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const props = $xeDatePicker
       const reactData = $xeDatePicker.reactData
 
-      const { zIndex } = props
-      if (zIndex) {
-        reactData.panelIndex = zIndex
+      const popupOpts = $xeDatePicker.computePopupOpts
+      const customZIndex = popupOpts.zIndex || props.zIndex
+      if (customZIndex) {
+        reactData.panelIndex = XEUtils.toNumber(customZIndex)
       } else if (reactData.panelIndex < getLastZIndex()) {
         reactData.panelIndex = nextZIndex()
       }
@@ -677,9 +689,10 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const targetElem = $xeDatePicker.$refs.refInputTarget as HTMLInputElement
       const panelElem = $xeDatePicker.$refs.refInputPanel as HTMLDivElement
       const btnTransfer = $xeDatePicker.computeBtnTransfer
+      const popupOpts = $xeDatePicker.computePopupOpts
       const handleStyle = () => {
         const ppObj = updatePanelPlacement(targetElem, panelElem, {
-          placement,
+          placement: popupOpts.placement || placement,
           teleportTo: btnTransfer
         })
         const panelStyle: { [key: string]: string | number } = Object.assign(ppObj.style, {
@@ -876,6 +889,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const isClearable = $xeDatePicker.computeIsClearable
       const isDateTimeType = $xeDatePicker.computeIsDateTimeType
       const shortcutList = $xeDatePicker.computeShortcutList
+      const popupOpts = $xeDatePicker.computePopupOpts
       const { position } = shortcutOpts
       const headerSlot = slots.header
       const footerSlot = slots.footer
@@ -883,6 +897,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const bottomSlot = slots.bottom
       const leftSlot = slots.left
       const rightSlot = slots.right
+      const ppClassName = popupOpts.className
       const hasShortcutBtn = shortcutList.length > 0
       const showConfirmBtn = (showConfirmButton === null ? (isDateTimeType || multiple) : showConfirmButton)
       const showClearBtn = (showClearButton === null ? (isClearable && showConfirmBtn && type !== 'time') : showClearButton)
@@ -906,7 +921,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
         ? [
             h('div', {
               ref: 'refPanelWrapper',
-              class: ['vxe-date-picker--layout-all-wrapper', `type--${type}`, {
+              class: ['vxe-date-picker--layout-all-wrapper', `type--${type}`, ppClassName ? (XEUtils.isFunction(ppClassName) ? ppClassName({ $datePicker: $xeDatePicker }) : ppClassName) : '', {
                 [`size--${vSize}`]: vSize
               }]
             }, [

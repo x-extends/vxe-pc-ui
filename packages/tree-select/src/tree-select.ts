@@ -55,12 +55,20 @@ export default /* define-vxe-component start */ defineVxeComponent({
     filterConfig: Object as PropType<VxeTreeSelectPropTypes.FilterConfig>,
     multiple: Boolean as PropType<VxeTreeSelectPropTypes.Multiple>,
     className: [String, Function] as PropType<VxeTreeSelectPropTypes.ClassName>,
+    /**
+     * 已废弃，请使用 popupConfig.className
+     * @deprecated
+     */
     popupClassName: [String, Function] as PropType<VxeTreeSelectPropTypes.PopupClassName>,
     prefixIcon: String as PropType<VxeTreeSelectPropTypes.PrefixIcon>,
     placement: String as PropType<VxeTreeSelectPropTypes.Placement>,
     lazyOptions: Array as PropType<VxeTreeSelectPropTypes.LazyOptions>,
     options: Array as PropType<VxeTreeSelectPropTypes.Options>,
     optionProps: Object as PropType<VxeTreeSelectPropTypes.OptionProps>,
+    /**
+     * 已废弃，请使用 popupConfig.zIndex
+     * @deprecated
+     */
     zIndex: Number as PropType<VxeTreeSelectPropTypes.ZIndex>,
     size: {
       type: String as PropType<VxeTreeSelectPropTypes.Size>,
@@ -194,6 +202,10 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const $xeForm = $xeTreeSelect.$xeForm
 
       const { transfer } = props
+      const popupOpts = $xeTreeSelect.computePopupOpts as VxeTreeSelectPropTypes.PopupConfig
+      if (XEUtils.isBoolean(popupOpts.transfer)) {
+        return popupOpts.transfer
+      }
       if (transfer === null) {
         const globalTransfer = getConfig().treeSelect.transfer
         if (XEUtils.isBoolean(globalTransfer)) {
@@ -429,9 +441,10 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const props = $xeTreeSelect
       const reactData = $xeTreeSelect.reactData
 
-      const { zIndex } = props
-      if (zIndex) {
-        reactData.panelIndex = zIndex
+      const popupOpts = $xeTreeSelect.computePopupOpts
+      const customZIndex = popupOpts.zIndex || props.zIndex
+      if (customZIndex) {
+        reactData.panelIndex = XEUtils.toNumber(customZIndex)
       } else if (reactData.panelIndex < getLastZIndex()) {
         reactData.panelIndex = nextZIndex()
       }
@@ -446,9 +459,10 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const targetElem = $xeTreeSelect.$refs.refElem as HTMLElement
       const panelElem = $xeTreeSelect.$refs.refOptionPanel as HTMLDivElement
       const btnTransfer = $xeTreeSelect.computeBtnTransfer
+      const popupOpts = $xeTreeSelect.computePopupOpts
       const handleStyle = () => {
         const ppObj = updatePanelPlacement(targetElem, panelElem, {
-          placement,
+          placement: popupOpts.placement || placement,
           teleportTo: btnTransfer
         })
         const panelStyle: { [key: string]: string | number } = Object.assign(ppObj.style, {
@@ -784,7 +798,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const footerSlot = slots.footer
       const prefixSlot = slots.prefix
       const popupOpts = $xeTreeSelect.computePopupOpts
-      const popupClassName = popupOpts.className || props.popupClassName
+      const ppClassName = popupOpts.className || props.popupClassName
       if (formReadonly) {
         return h('div', {
           ref: 'refElem',
@@ -866,7 +880,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
         }),
         h('div', {
           ref: 'refOptionPanel',
-          class: ['vxe-table--ignore-clear vxe-tree-select--panel', popupClassName ? (XEUtils.isFunction(popupClassName) ? popupClassName({ $treeSelect: $xeTreeSelect }) : popupClassName) : '', {
+          class: ['vxe-table--ignore-clear vxe-tree-select--panel', ppClassName ? (XEUtils.isFunction(ppClassName) ? ppClassName({ $treeSelect: $xeTreeSelect }) : ppClassName) : '', {
             [`size--${vSize}`]: vSize,
             'is--transfer': btnTransfer,
             'ani--leave': !loading && isAniVisible,

@@ -87,11 +87,19 @@ export default /* define-vxe-component start */ defineVxeComponent({
     optionGroupProps: Object as PropType<VxeSelectPropTypes.OptionGroupProps>,
     optionConfig: Object as PropType<VxeSelectPropTypes.OptionConfig>,
     className: [String, Function] as PropType<VxeSelectPropTypes.ClassName>,
+    /**
+     * 已废弃，请使用 popupConfig.className
+     * @deprecated
+     */
     popupClassName: [String, Function] as PropType<VxeSelectPropTypes.PopupClassName>,
     max: {
       type: [String, Number] as PropType<VxeSelectPropTypes.Max>,
       default: null
     },
+    /**
+     * 已废弃，请使用 popupConfig.zIndex
+     * @deprecated
+     */
     zIndex: Number as PropType<VxeSelectPropTypes.ZIndex>,
     size: {
       type: String as PropType<VxeSelectPropTypes.Size>,
@@ -247,6 +255,10 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const $xeForm = $xeSelect.$xeForm
 
       const { transfer } = props
+      const popupOpts = $xeSelect.computePopupOpts as VxeSelectPropTypes.PopupConfig
+      if (XEUtils.isBoolean(popupOpts.transfer)) {
+        return popupOpts.transfer
+      }
       if (transfer === null) {
         const globalTransfer = getConfig().select.transfer
         if (XEUtils.isBoolean(globalTransfer)) {
@@ -324,7 +336,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const $xeSelect = this
       const props = $xeSelect
 
-      return Object.assign({}, getConfig().treeSelect.popupConfig, props.popupConfig)
+      return Object.assign({}, getConfig().select.popupConfig, props.popupConfig)
     },
     computeVirtualYOpts () {
       const $xeSelect = this
@@ -722,9 +734,10 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const props = $xeSelect
       const reactData = $xeSelect.reactData
 
-      const { zIndex } = props
-      if (zIndex) {
-        reactData.panelIndex = zIndex
+      const popupOpts = $xeSelect.computePopupOpts
+      const customZIndex = popupOpts.zIndex || props.zIndex
+      if (customZIndex) {
+        reactData.panelIndex = XEUtils.toNumber(customZIndex)
       } else if (reactData.panelIndex < getLastZIndex()) {
         reactData.panelIndex = nextZIndex()
       }
@@ -747,9 +760,10 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const targetElem = $xeSelect.$refs.refElem as HTMLElement
       const panelElem = $xeSelect.$refs.refOptionPanel as HTMLDivElement
       const btnTransfer = $xeSelect.computeBtnTransfer
+      const popupOpts = $xeSelect.computePopupOpts
       const handleStyle = () => {
         const ppObj = updatePanelPlacement(targetElem, panelElem, {
-          placement,
+          placement: popupOpts.placement || placement,
           teleportTo: btnTransfer
         })
         const panelStyle: { [key: string]: string | number } = Object.assign(ppObj.style, {
@@ -1714,11 +1728,11 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const inpPlaceholder = $xeSelect.computeInpPlaceholder
       const popupOpts = $xeSelect.computePopupOpts
       const popupWrapperStyle = $xeSelect.computePopupWrapperStyle
-      const popupClassName = popupOpts.className || props.popupClassName
       const defaultSlot = slots.default
       const headerSlot = slots.header
       const footerSlot = slots.footer
       const prefixSlot = slots.prefix
+      const ppClassName = popupOpts.className || props.popupClassName
       if (formReadonly) {
         return h('div', {
           ref: 'refElem',
@@ -1781,7 +1795,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
         }),
         h('div', {
           ref: 'refOptionPanel',
-          class: ['vxe-table--ignore-clear vxe-select--panel', popupClassName ? (XEUtils.isFunction(popupClassName) ? popupClassName({ $select: $xeSelect }) : popupClassName) : '', {
+          class: ['vxe-table--ignore-clear vxe-select--panel', ppClassName ? (XEUtils.isFunction(ppClassName) ? ppClassName({ $select: $xeSelect }) : ppClassName) : '', {
             [`size--${vSize}`]: vSize,
             'is--transfer': btnTransfer,
             'ani--leave': !loading && isAniVisible,

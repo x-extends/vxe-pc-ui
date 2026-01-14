@@ -124,6 +124,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       default: null
     },
 
+    popupConfig: Object as PropType<VxeDateRangePickerPropTypes.PopupConfig>,
     shortcutConfig: Object as PropType<VxeDateRangePickerPropTypes.ShortcutConfig>
   },
   inject: {
@@ -195,6 +196,10 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const $xeForm = $xeDateRangePicker.$xeForm
 
       const { transfer } = props
+      const popupOpts = $xeDateRangePicker.computePopupOpts as VxeDateRangePickerPropTypes.PopupConfig
+      if (XEUtils.isBoolean(popupOpts.transfer)) {
+        return popupOpts.transfer
+      }
       if (transfer === null) {
         const globalTransfer = getConfig().dateRangePicker.transfer
         if (XEUtils.isBoolean(globalTransfer)) {
@@ -312,6 +317,12 @@ export default /* define-vxe-component start */ defineVxeComponent({
 
       const { immediate } = props
       return immediate
+    },
+    computePopupOpts () {
+      const $xeDateRangePicker = this
+      const props = $xeDateRangePicker
+
+      return Object.assign({}, getConfig().dateRangePicker.popupConfig, props.popupConfig)
     },
     computeShortcutOpts () {
       const $xeDateRangePicker = this
@@ -839,9 +850,10 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const props = $xeDateRangePicker
       const reactData = $xeDateRangePicker.reactData
 
-      const { zIndex } = props
-      if (zIndex) {
-        reactData.panelIndex = zIndex
+      const popupOpts = $xeDateRangePicker.computePopupOpts
+      const customZIndex = popupOpts.zIndex || props.zIndex
+      if (customZIndex) {
+        reactData.panelIndex = XEUtils.toNumber(customZIndex)
       } else if (reactData.panelIndex < getLastZIndex()) {
         reactData.panelIndex = nextZIndex()
       }
@@ -856,9 +868,10 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const targetElem = $xeDateRangePicker.$refs.refInputTarget as HTMLInputElement
       const panelElem = $xeDateRangePicker.$refs.refInputPanel as HTMLDivElement
       const btnTransfer = $xeDateRangePicker.computeBtnTransfer
+      const popupOpts = $xeDateRangePicker.computePopupOpts
       const handleStyle = () => {
         const ppObj = updatePanelPlacement(targetElem, panelElem, {
-          placement,
+          placement: popupOpts.placement || placement,
           teleportTo: btnTransfer
         })
         const panelStyle: { [key: string]: string | number } = Object.assign(ppObj.style, {
@@ -1070,6 +1083,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const isDateTimeType = $xeDateRangePicker.computeIsDateTimeType
       const defaultDates = $xeDateRangePicker.computeDefaultDates
       const defaultTimes = $xeDateRangePicker.computeDefaultTimes
+      const popupOpts = $xeDateRangePicker.computePopupOpts
       const { startLabel, endLabel } = panelLabelObj
       const { position } = shortcutOpts
       const headerSlot = slots.header
@@ -1078,6 +1092,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const bottomSlot = slots.bottom
       const leftSlot = slots.left
       const rightSlot = slots.right
+      const ppClassName = popupOpts.className
       const [sdDate, edDate] = defaultDates
       const [sdTime, edTime] = defaultTimes
       const hasShortcutBtn = shortcutList.length > 0
@@ -1085,7 +1100,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const showClearBtn = (showClearButton === null ? isClearable : showClearButton)
       return h('div', {
         ref: 'refInputPanel',
-        class: ['vxe-table--ignore-clear vxe-date-range-picker--panel', `type--${type}`, {
+        class: ['vxe-table--ignore-clear vxe-date-range-picker--panel', `type--${type}`, ppClassName ? (XEUtils.isFunction(ppClassName) ? ppClassName({ $dateRangePicker: $xeDateRangePicker }) : ppClassName) : '', {
           [`size--${vSize}`]: vSize,
           'is--transfer': btnTransfer,
           'ani--leave': isAniVisible,
