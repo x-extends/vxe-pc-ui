@@ -1,6 +1,7 @@
 import { RenderFunction, SetupContext, Ref } from 'vue'
 import { DefineVxeComponentApp, DefineVxeComponentOptions, DefineVxeComponentInstance, VxeComponentSlotType, VxeComponentStyleType, VxeComponentBaseOptions, VxeComponentEventParams, ValueOf, VxeComponentSizeType, VxeComponentPermissionCodeType } from '@vxe-ui/core'
 import { VxeLinkPropTypes } from './link'
+import { VxeContextMenuPropTypes, VxeContextMenuDefines } from './context-menu'
 
 /* eslint-disable no-use-before-define,@typescript-eslint/ban-types */
 
@@ -48,6 +49,24 @@ export namespace VxeMenuPropTypes {
   export type CollapseFixed = boolean
   export type ExpandAll = boolean
   export type Options = MenuOption[]
+  export interface MenuConfig {
+    /**
+     * 是否启用
+     */
+    enabled?: boolean
+    /**
+     * 菜单配置
+     */
+    options: VxeContextMenuPropTypes.Options
+    /**
+     * 该函数的返回值用来决定是否允许显示右键菜单（对于需要对菜单进行权限控制时可能会用到）
+     */
+    visibleMethod?(params: {
+      $menu: VxeMenuConstructor
+      options: VxeContextMenuPropTypes.Options
+      currentMenu: VxeMenuDefines.MenuItem
+    }): boolean
+  }
 }
 
 export interface VxeMenuProps {
@@ -59,6 +78,7 @@ export interface VxeMenuProps {
   CollapseFixed?: VxeMenuPropTypes.CollapseFixed
   expandAll?: VxeMenuPropTypes.ExpandAll
   options?: VxeMenuPropTypes.Options
+  menuConfig?: VxeMenuPropTypes.MenuConfig
 }
 
 export interface MenuPrivateComputed {
@@ -85,7 +105,9 @@ export interface VxeMenuPrivateMethods extends MenuPrivateMethods { }
 
 export type VxeMenuEmits = [
   'update:modelValue',
-  'click'
+  'click',
+  'option-menu',
+  'menu-click'
 ]
 
 export namespace VxeMenuDefines {
@@ -107,30 +129,56 @@ export namespace VxeMenuDefines {
   }
 
   export interface ClickParams {
+    currentMenu: VxeMenuDefines.MenuItem
+
+    /**
+     * 已废弃，请使用 currentMenu
+     * @deprecated
+     */
     menu: VxeMenuDefines.MenuItem
   }
   export interface ClickEventParams extends MenuEventParams, ClickParams { }
+
+  export interface OptionMenuEventParams extends MenuEventParams {
+    currentMenu: VxeMenuDefines.MenuItem
+  }
+  export interface MenuClickEventParams extends MenuEventParams {
+    currentMenu: VxeMenuDefines.MenuItem
+    option: VxeContextMenuDefines.MenuFirstOption | VxeContextMenuDefines.MenuChildOption
+  }
 }
 
 export type VxeMenuEventProps = {
   'onUpdate:modelValue'?: VxeMenuEvents.UpdateModelValue
   onClick?: VxeMenuEvents.Click
+  onOptionMenu?: VxeMenuEvents.OptionMenu
+  onMenuClick?: VxeMenuEvents.MenuClick
 }
 
 export interface VxeMenuListeners {
   'update:modelValue'?: VxeMenuEvents.UpdateModelValue
   click?: VxeMenuEvents.Click
+  optioMenu?: VxeMenuEvents.OptionMenu
+  menuClick?: VxeMenuEvents.MenuClick
 }
 
 export namespace VxeMenuEvents {
   export type UpdateModelValue = (modelValue: VxeMenuPropTypes.ModelValue) => void
   export type Click = (params: VxeMenuDefines.ClickEventParams) => void
+  export type OptionMenu = (params: VxeMenuDefines.OptionMenuEventParams) => void
+  export type MenuClick = (params: VxeMenuDefines.MenuClickEventParams) => void
 }
 
 export namespace VxeMenuSlotTypes {
   export interface DefaultSlotParams {
-    option: Required<VxeMenuPropTypes.MenuOption>
+    currentMenu: Required<VxeMenuPropTypes.MenuOption>
     collapsed: boolean
+
+    /**
+     * 已废弃，请使用 currentMenu
+     * @deprecated
+     */
+    option: Required<VxeMenuPropTypes.MenuOption>
   }
   export interface IconSlotParams extends DefaultSlotParams {}
   export interface TitleSlotParams extends DefaultSlotParams {}

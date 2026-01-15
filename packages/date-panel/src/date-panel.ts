@@ -1147,7 +1147,9 @@ export default defineVxeComponent({
             }]
           }, extraItem && extraItem.label
             ? [
-                h('div', `${label}`),
+                h('div', {
+                  class: 'vxe-date-panel--label--number'
+                }, `${label}`),
                 h('div', {
                   class: ['vxe-date-panel--label--extra', extraItem.important ? 'is-important' : '', extraItem.className],
                   style: extraItem.style

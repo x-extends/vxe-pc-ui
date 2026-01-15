@@ -1,5 +1,6 @@
 import { RenderFunction, SetupContext, Ref } from 'vue'
 import { DefineVxeComponentApp, DefineVxeComponentOptions, DefineVxeComponentInstance, VxeComponentBaseOptions, VxeComponentEventParams, ValueOf, VxeComponentStyleType, VxeComponentSizeType } from '@vxe-ui/core'
+import { VxeContextMenuPropTypes, VxeContextMenuDefines } from './context-menu'
 
 /* eslint-disable no-use-before-define,@typescript-eslint/ban-types */
 
@@ -39,6 +40,27 @@ export namespace VxeCalendarPropTypes {
   export type FestivalMethod = (params: VxeCalendarDefines.DateFestivalParams) => VxeCalendarDefines.DateFestivalInfo | null | void
   export type DisabledMethod = (params: VxeCalendarDefines.DateDisabledParams) => boolean
   export type CellStyle = (params: VxeCalendarDefines.CellStyleParams) => void | null | Partial<CSSStyleDeclaration>
+
+  export interface MenuConfig {
+    /**
+     * 是否启用
+     */
+    enabled?: boolean
+    /**
+     * 菜单配置
+     */
+    options: VxeContextMenuPropTypes.Options
+    /**
+     * 该函数的返回值用来决定是否允许显示右键菜单（对于需要对菜单进行权限控制时可能会用到）
+     */
+    visibleMethod?(params: {
+      $calendar: VxeCalendarConstructor
+      options: VxeContextMenuPropTypes.Options
+      date: Date
+      type: string
+      viewType: VxeCalendarDefines.DatePanelType
+    }): boolean
+  }
 }
 
 export type VxeCalendarProps = {
@@ -58,6 +80,7 @@ export type VxeCalendarProps = {
   festivalMethod?: VxeCalendarPropTypes.FestivalMethod
   disabledMethod?: VxeCalendarPropTypes.DisabledMethod
   cellStyle?: VxeCalendarPropTypes.CellStyle
+  menuConfig?: VxeCalendarPropTypes.MenuConfig
 }
 
 export interface CalendarPrivateComputed {
@@ -91,11 +114,13 @@ export interface VxeCalendarPrivateMethods extends CalendarPrivateMethods { }
 export type VxeCalendarEmits = [
   'update:modelValue',
   'change',
-  'click',
+  'cell-click',
   'date-prev',
   'date-today',
   'date-next',
-  'view-change'
+  'view-change',
+  'cell-menu',
+  'menu-click'
 ]
 
 export namespace VxeCalendarDefines {
@@ -159,7 +184,11 @@ export namespace VxeCalendarDefines {
   export interface ChangeEventParams extends CalendarEventParams {
     value: string
   }
-  export interface ClickEventParams extends CalendarEventParams { }
+  export interface ClickEventParams extends CalendarEventParams {
+    type: string
+    viewType: DatePanelType
+    date: Date
+  }
   export interface DatePrevEventParams extends CalendarEventParams {
     type: DatePanelType
    }
@@ -173,6 +202,15 @@ export namespace VxeCalendarDefines {
     viewType: DatePanelType
     viewDates: Date[]
   }
+  export interface CellMemuEventParams extends CalendarEventParams {
+    type: string
+    viewType: DatePanelType
+    date: Date
+  }
+  export interface MenuClickEventParams extends CellMemuEventParams {
+    date: Date
+    option: VxeContextMenuDefines.MenuFirstOption | VxeContextMenuDefines.MenuChildOption
+  }
 }
 
 export type VxeCalendarEventProps = {
@@ -184,6 +222,8 @@ export type VxeCalendarEventProps = {
   onDateToday?: VxeCalendarEvents.DateToday
   onDateNext?: VxeCalendarEvents.DateNext
   onViewChange?: VxeCalendarEvents.ViewChange
+  onCellMemu?: VxeCalendarEvents.CellMemu
+  onMenuClick?: VxeCalendarEvents.MenuClick
 }
 
 export interface VxeCalendarListeners {
@@ -195,6 +235,8 @@ export interface VxeCalendarListeners {
   dateToday?: VxeCalendarEvents.DateToday
   dateNext?: VxeCalendarEvents.DateNext
   viewChange?: VxeCalendarEvents.ViewChange
+  cellMenu?: VxeCalendarEvents.CellMemu
+  memuClick?: VxeCalendarEvents.MenuClick
 }
 
 export namespace VxeCalendarEvents {
@@ -206,6 +248,8 @@ export namespace VxeCalendarEvents {
   export type DateToday = (params: VxeCalendarDefines.DateTodayEventParams) => void
   export type DateNext = (params: VxeCalendarDefines.DateNextEventParams) => void
   export type ViewChange = (params: VxeCalendarDefines.ViewChangeEventParams) => void
+  export type CellMemu = (params: VxeCalendarDefines.CellMemuEventParams) => void
+  export type MenuClick = (params: VxeCalendarDefines.MenuClickEventParams) => void
 }
 
 export namespace VxeCalendarSlotTypes {

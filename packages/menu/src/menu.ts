@@ -1,13 +1,16 @@
 import { ref, h, reactive, PropType, inject, resolveComponent, watch, VNode, computed, nextTick, onBeforeUnmount, onMounted } from 'vue'
 import { defineVxeComponent } from '../../ui/src/comp'
 import XEUtils from 'xe-utils'
-import { getConfig, getIcon, createEvent, permission, useSize, globalEvents, renderEmptyElement } from '../../ui'
+import { VxeUI, createEvent, permission, useSize, globalEvents, renderEmptyElement } from '../../ui'
 import { toCssUnit } from '../../ui/src/dom'
-import { getLastZIndex, nextZIndex } from '../../ui/src/utils'
+import { getLastZIndex, nextZIndex, isEnableConf } from '../../ui/src/utils'
 import { getSlotVNs } from '../../ui/src/vn'
-import VxeLoadingComponent from '../../loading/src/loading'
+import { errLog } from '../../ui/src/log'
+import VxeLoadingComponent from '../../loading'
 
 import type { VxeMenuDefines, VxeMenuPropTypes, MenuReactData, VxeMenuEmits, MenuMethods, VxeComponentSlotType, VxeLayoutAsidePropTypes, MenuPrivateMethods, MenuPrivateRef, VxeMenuPrivateComputed, VxeMenuConstructor, VxeMenuPrivateMethods, ValueOf, VxeLayoutAsideConstructor, VxeLayoutAsidePrivateMethods } from '../../../types'
+
+const { menus, getConfig, getIcon } = VxeUI
 
 export default defineVxeComponent({
   name: 'VxeMenu',
@@ -31,11 +34,14 @@ export default defineVxeComponent({
     size: {
       type: String as PropType<VxeMenuPropTypes.Size>,
       default: () => getConfig().menu.size || getConfig().size
-    }
+    },
+    menuConfig: Object as PropType<VxeMenuPropTypes.MenuConfig>
   },
   emits: [
     'update:modelValue',
-    'click'
+    'click',
+    'option-menu',
+    'menu-click'
   ] as VxeMenuEmits,
   setup (props, context) {
     const { emit, slots } = context
@@ -62,6 +68,10 @@ export default defineVxeComponent({
     const refMaps: MenuPrivateRef = {
       refElem
     }
+
+    const computeMenuOpts = computed(() => {
+      return Object.assign({}, getConfig().menu.menuConfig, props.menuConfig)
+    })
 
     const computeIsCollapsed = computed(() => {
       const { collapsed } = props
@@ -197,7 +207,7 @@ export default defineVxeComponent({
       }
     }
 
-    const handleClickIconCollapse = (evnt: KeyboardEvent, item: VxeMenuDefines.MenuItem, itemList: VxeMenuDefines.MenuItem[]) => {
+    const handleClickIconCollapse = (evnt: MouseEvent, item: VxeMenuDefines.MenuItem, itemList: VxeMenuDefines.MenuItem[]) => {
       const { accordion } = props
       const { hasChild, isExpand } = item
       if (hasChild) {
@@ -219,7 +229,35 @@ export default defineVxeComponent({
       emit('update:modelValue', value)
     }
 
-    const handleClickMenu = (evnt: KeyboardEvent, item: VxeMenuDefines.MenuItem, itemList: VxeMenuDefines.MenuItem[]) => {
+    const handleContextmenuEvent = (evnt: MouseEvent, item: VxeMenuDefines.MenuItem) => {
+      const { menuConfig } = props
+      const menuOpts = computeMenuOpts.value
+      if (menuConfig ? isEnableConf(menuOpts) : menuOpts.enabled) {
+        const { options, visibleMethod } = menuOpts
+        if (!visibleMethod || visibleMethod({ $menu: $xeMenu, options, currentMenu: item })) {
+          if (VxeUI.contextMenu) {
+            VxeUI.contextMenu.openByEvent(evnt, {
+              options,
+              events: {
+                optionClick (eventParams) {
+                  const { option } = eventParams
+                  const gMenuOpts = menus.get(option.code)
+                  const mmMethod = gMenuOpts ? gMenuOpts.menuMenuMethod : null
+                  const params = { menu: option, currentMenu: item, $event: evnt, $menu: $xeMenu }
+                  if (mmMethod) {
+                    mmMethod(params, evnt)
+                  }
+                  dispatchEvent('menu-click', params, eventParams.$event)
+                }
+              }
+            })
+          }
+        }
+      }
+      dispatchEvent('option-menu', { currentMenu: item }, evnt)
+    }
+
+    const handleClickMenu = (evnt: MouseEvent, item: VxeMenuDefines.MenuItem, itemList: VxeMenuDefines.MenuItem[]) => {
       const { itemKey, routerLink, hasChild } = item
       if (routerLink) {
         emitModel(itemKey)
@@ -232,7 +270,13 @@ export default defineVxeComponent({
           handleMenuMouseleave()
         }
       }
-      dispatchEvent('click', { menu: item }, evnt)
+      const params = {
+        currentMenu: item,
+
+        // 已废弃
+        menu: item
+      }
+      dispatchEvent('click', params, evnt)
     }
 
     const handleMenuMouseenter = () => {
@@ -294,8 +338,11 @@ export default defineVxeComponent({
       const title = getMenuTitle(item)
       const isCollapsed = computeIsCollapsed.value
       const params = {
-        option: item as any,
-        collapsed: isCollapsed
+        currentMenu: item as Required<VxeMenuDefines.MenuItem>,
+        collapsed: isCollapsed,
+
+        // 已废弃
+        option: item as Required<VxeMenuPropTypes.MenuOption>
       }
       return [
         optionSlot
@@ -320,7 +367,7 @@ export default defineVxeComponent({
         hasChild
           ? h('div', {
             class: 'vxe-menu--item-link-collapse',
-            onClick (evnt: KeyboardEvent) {
+            onClick (evnt: MouseEvent) {
               handleClickIconCollapse(evnt, item, itemList)
             }
           }, [
@@ -353,7 +400,10 @@ export default defineVxeComponent({
           ? h(resolveComponent('router-link'), {
             class: 'vxe-menu--item-link',
             to: routerLink,
-            onClick (evnt: KeyboardEvent) {
+            onContextmenu (evnt: MouseEvent) {
+              handleContextmenuEvent(evnt, item)
+            },
+            onClick (evnt: MouseEvent) {
               handleClickMenu(evnt, item, itemList)
             }
           }, {
@@ -361,7 +411,10 @@ export default defineVxeComponent({
           })
           : h('div', {
             class: 'vxe-menu--item-link',
-            onClick (evnt: KeyboardEvent) {
+            onContextmenu (evnt: MouseEvent) {
+              handleContextmenuEvent(evnt, item)
+            },
+            onClick (evnt: MouseEvent) {
               handleClickMenu(evnt, item, itemList)
             }
           }, renderMenuTitle(item, itemList)),
@@ -391,7 +444,10 @@ export default defineVxeComponent({
           ? h(resolveComponent('router-link'), {
             class: 'vxe-menu--item-link',
             to: routerLink,
-            onClick (evnt: KeyboardEvent) {
+            onContextmenu (evnt: MouseEvent) {
+              handleContextmenuEvent(evnt, item)
+            },
+            onClick (evnt: MouseEvent) {
               handleClickMenu(evnt, item, itemList)
             }
           }, {
@@ -399,7 +455,10 @@ export default defineVxeComponent({
           })
           : h('div', {
             class: 'vxe-menu--item-link',
-            onClick (evnt: KeyboardEvent) {
+            onContextmenu (evnt: MouseEvent) {
+              handleContextmenuEvent(evnt, item)
+            },
+            onClick (evnt: MouseEvent) {
               handleClickMenu(evnt, item, itemList)
             }
           }, renderMenuTitle(item, itemList)),
@@ -489,6 +548,11 @@ export default defineVxeComponent({
     })
 
     onMounted(() => {
+      const { menuConfig } = props
+      const VxeUIContextMenu = VxeUI.getComponent('VxeContextMenu')
+      if (menuConfig && !VxeUIContextMenu) {
+        errLog('vxe.error.reqComp', ['vxe-context-menu'])
+      }
       globalEvents.on($xeMenu, 'resize', updateCollapseStyle)
       updateCollapseStyle()
     })
