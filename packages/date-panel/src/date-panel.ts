@@ -296,16 +296,16 @@ export default /* define-vxe-component start */ defineVxeComponent({
           month = selectMonth.getMonth() + 1
         }
         if (datePanelType === 'quarter' || datePanelType === 'month') {
-          y = getI18n('vxe.datePicker.yearTitle', [year])
+          y = `${year}`
         } else if (datePanelType === 'year') {
           y = yearList.length ? `${yearList[0].year} - ${yearList[yearList.length - 1].year}` : ''
         } else {
-          y = getI18n('vxe.datePicker.yearTitle', [year])
-          m = month ? getI18n(`vxe.input.date.m${month}`) : '-'
+          y = `${year}`
+          m = month ? getI18n('vxe.calendar.monthLabel', [month]) : '-'
         }
       }
       return {
-        y,
+        y: getI18n('vxe.calendar.yearLabel', [y]),
         m
       }
     },
@@ -1301,7 +1301,9 @@ export default /* define-vxe-component start */ defineVxeComponent({
             }]
           }, extraItem && extraItem.label
             ? [
-                h('div', `${label}`),
+                h('div', {
+                  class: 'vxe-date-panel--label--number'
+                }, `${label}`),
                 h('div', {
                   class: ['vxe-date-panel--label--extra', extraItem.important ? 'is-important' : '', extraItem.className],
                   style: extraItem.style

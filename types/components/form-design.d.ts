@@ -1,5 +1,6 @@
 import { DefineVxeComponentApp, DefineVxeComponentOptions, DefineVxeComponentInstance, VxeComponentEventParams, VxeComponentSizeType, ValueOf } from '@vxe-ui/core'
 import { VxeFormPropTypes } from '../components/form'
+import { VxeContextMenuPropTypes, VxeContextMenuDefines } from './context-menu'
 
 /* eslint-disable @typescript-eslint/no-empty-interface,no-use-before-define,@typescript-eslint/ban-types */
 
@@ -36,6 +37,24 @@ export namespace VxeFormDesignPropTypes {
   export interface FormRender {
     name?: string
   }
+  export interface MenuConfig<D = any> {
+    /**
+     * 是否启用
+     */
+    enabled?: boolean
+    /**
+     * 菜单配置
+     */
+    options: VxeContextMenuPropTypes.Options
+    /**
+     * 该函数的返回值用来决定是否允许显示右键菜单（对于需要对菜单进行权限控制时可能会用到）
+     */
+    visibleMethod?(params: {
+      $formDesign: VxeFormDesignConstructor
+      options: VxeContextMenuPropTypes.Options
+      widget: VxeFormDesignDefines.WidgetObjItem<D>
+    }): boolean
+  }
 }
 
 export interface VxeFormDesignProps {
@@ -48,6 +67,7 @@ export interface VxeFormDesignProps {
   showMobile?: VxeFormDesignPropTypes.ShowMobile
   formData?: VxeFormDesignPropTypes.FormData
   formRender?: VxeFormDesignPropTypes.FormRender
+  menuConfig?: VxeFormDesignPropTypes.MenuConfig
 }
 
 export interface FormDesignPrivateComputed {
@@ -132,6 +152,7 @@ export interface VxeFormDesignMethods extends FormDesignMethods { }
 
 export interface FormDesignPrivateMethods {
   validWidgetUnique(widgetName: string): boolean
+  handleContextmenuWidget (evnt: MouseEvent, item: VxeFormDesignDefines.WidgetObjItem): void
   handleClickWidget (evnt: Event, item: VxeFormDesignDefines.WidgetObjItem): void
   handleCopyWidget (evnt: Event, item: VxeFormDesignDefines.WidgetObjItem): void
   handleRemoveWidget (evnt: Event, item: VxeFormDesignDefines.WidgetObjItem): void
@@ -139,6 +160,14 @@ export interface FormDesignPrivateMethods {
 export interface VxeFormDesignPrivateMethods extends FormDesignPrivateMethods { }
 
 export type VxeFormDesignEmits = [
+  'widget-click',
+  'widget-add',
+  'widget-copy',
+  'widget-remove',
+  'widget-drag',
+  'widget-menu',
+  'menu-click',
+
   'click-widget',
   'add-widget',
   'copy-widget',
@@ -206,49 +235,105 @@ export namespace VxeFormDesignDefines {
     mobileTitleWidthUnit: null | '' | 'px' | '%'
   }
 
-  export interface ClickWidgetParams<D = any> {
+  export interface WidgetClickParams<D = any> {
     widget: VxeFormDesignDefines.WidgetObjItem<D>
   }
-  export interface ClickWidgetEventParams<D = any> extends FormDesignEventParams, ClickWidgetParams<D> { }
+  export interface WidgetClickEventParams<D = any> extends FormDesignEventParams, WidgetClickParams<D> { }
 
-  export interface AddWidgetEventParams<D = any> extends FormDesignEventParams {
+  export interface WidgetAddEventParams<D = any> extends FormDesignEventParams {
     newWidget: VxeFormDesignDefines.WidgetObjItem<D>
   }
-  export interface CopyWidgetEventParams<D = any> extends FormDesignEventParams {
+  export interface WidgetCopyEventParams<D = any> extends FormDesignEventParams {
     widget: VxeFormDesignDefines.WidgetObjItem<D>
     newWidget: VxeFormDesignDefines.WidgetObjItem<D>
   }
-  export interface RemoveWidgetEventParams<D = any> extends FormDesignEventParams {
+  export interface WidgetRemoveEventParams<D = any> extends FormDesignEventParams {
     widget: VxeFormDesignDefines.WidgetObjItem<D>
   }
 
-  export interface DragWidgetEventParams<D = any> extends FormDesignEventParams {
+  export interface WidgetDragEventParams<D = any> extends FormDesignEventParams {
     widget: VxeFormDesignDefines.WidgetObjItem<D>
+  }
+
+  export interface WidgetMenuEventParams<D = any> extends FormDesignEventParams {
+    widget: VxeFormDesignDefines.WidgetObjItem<D>
+  }
+  export interface MenuClickEventParams<D = any> extends FormDesignEventParams {
+    widget: VxeFormDesignDefines.WidgetObjItem<D>
+    option: VxeContextMenuDefines.MenuFirstOption | VxeContextMenuDefines.MenuChildOption
   }
 }
 
 export type VxeFormDesignEventProps = {
-  onClickWidget?: VxeFormDesignEvents.ClickWidget
-  onAddWidget?: VxeFormDesignEvents.AddWidget
-  onCopyWidget?: VxeFormDesignEvents.CopyWidget
-  onRemoveWidget?: VxeFormDesignEvents.RemoveWidget
-  onDragWidget?: VxeFormDesignEvents.DragWidget
+  onWidgetClick?: VxeFormDesignEvents.WidgetClick
+  onWidgetAdd?: VxeFormDesignEvents.WidgetAdd
+  onWidgetCopy?: VxeFormDesignEvents.WidgetCopy
+  onWidgetRemove?: VxeFormDesignEvents.WidgetRemove
+  onWidgetDrag?: VxeFormDesignEvents.WidgetDrag
+  onWidgetMenu?: VxeFormDesignEvents.WidgetMenu
+  onMenuClick?: VxeFormDesignEvents.MenuClick
+
+  /**
+   * @deprecated
+   */
+  onClickWidget?: VxeFormDesignEvents.WidgetClick
+  /**
+   * @deprecated
+   */
+  onAddWidget?: VxeFormDesignEvents.WidgetAdd
+  /**
+   * @deprecated
+   */
+  onCopyWidget?: VxeFormDesignEvents.WidgetCopy
+  /**
+   * @deprecated
+   */
+  onRemoveWidget?: VxeFormDesignEvents.WidgetRemove
+  /**
+   * @deprecated
+   */
+  onDragWidget?: VxeFormDesignEvents.WidgetDrag
 }
 
 export interface VxeFormDesignListeners {
-  clickWidget?: VxeFormDesignEvents.ClickWidget
-  addWidget?: VxeFormDesignEvents.AddWidget
-  copyWidget?: VxeFormDesignEvents.CopyWidget
-  removeWidget?: VxeFormDesignEvents.RemoveWidget
-  dragWidget?: VxeFormDesignEvents.DragWidget
+  widgetClick?: VxeFormDesignEvents.WidgetClick
+  widgetAdd?: VxeFormDesignEvents.WidgetAdd
+  widgetCopy?: VxeFormDesignEvents.WidgetCopy
+  widgetRemove?: VxeFormDesignEvents.WidgetRemove
+  widgetDrag?: VxeFormDesignEvents.WidgetDrag
+  widgetMenu?: VxeFormDesignEvents.WidgetMenu
+  menuClick?: VxeFormDesignEvents.MenuClick
+
+  /**
+   * @deprecated
+   */
+  clickWidget?: VxeFormDesignEvents.WidgetClick
+  /**
+   * @deprecated
+   */
+  addWidget?: VxeFormDesignEvents.WidgetAdd
+  /**
+   * @deprecated
+   */
+  copyWidget?: VxeFormDesignEvents.WidgetCopy
+  /**
+   * @deprecated
+   */
+  removeWidget?: VxeFormDesignEvents.WidgetRemove
+  /**
+   * @deprecated
+   */
+  dragWidget?: VxeFormDesignEvents.WidgetDrag
 }
 
 export namespace VxeFormDesignEvents {
-  export type ClickWidget<D = any> = (params: VxeFormDesignDefines.ClickWidgetEventParams<D>) => void
-  export type AddWidget<D = any> = (params: VxeFormDesignDefines.AddWidgetEventParams<D>) => void
-  export type CopyWidget<D = any> = (params: VxeFormDesignDefines.CopyWidgetEventParams<D>) => void
-  export type RemoveWidget<D = any> = (params: VxeFormDesignDefines.RemoveWidgetEventParams<D>) => void
-  export type DragWidget<D = any> = (params: VxeFormDesignDefines.DragWidgetEventParams<D>) => void
+  export type WidgetClick<D = any> = (params: VxeFormDesignDefines.WidgetClickEventParams<D>) => void
+  export type WidgetAdd<D = any> = (params: VxeFormDesignDefines.WidgetAddEventParams<D>) => void
+  export type WidgetCopy<D = any> = (params: VxeFormDesignDefines.WidgetCopyEventParams<D>) => void
+  export type WidgetRemove<D = any> = (params: VxeFormDesignDefines.WidgetRemoveEventParams<D>) => void
+  export type WidgetDrag<D = any> = (params: VxeFormDesignDefines.WidgetDragEventParams<D>) => void
+  export type WidgetMenu = (params: VxeFormDesignDefines.WidgetMenuEventParams) => void
+  export type MenuClick = (params: VxeFormDesignDefines.MenuClickEventParams) => void
  }
 
 export namespace VxeFormDesignSlotTypes {

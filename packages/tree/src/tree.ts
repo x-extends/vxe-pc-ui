@@ -1,7 +1,7 @@
 import { PropType, CreateElement, VNode } from 'vue'
 import { defineVxeComponent } from '../../ui/src/comp'
 import XEUtils from 'xe-utils'
-import { VxeUI, getI18n, createEvent, getIcon, getConfig, globalEvents, globalResize, renderEmptyElement, globalMixins } from '../../ui'
+import { VxeUI, createEvent, globalEvents, globalResize, renderEmptyElement, globalMixins } from '../../ui'
 import { calcTreeLine, enNodeValue, deNodeValue } from './util'
 import { errLog } from '../../ui/src/log'
 import { getSlotVNs } from '../../ui/src/vn'
@@ -12,6 +12,8 @@ import { moveRowAnimateToTb, clearRowAnimate } from '../../ui/src/anime'
 import VxeLoadingComponent from '../../loading'
 
 import type { TreeReactData, VxeTreeEmits, VxeTreeConstructor, VxeTreePropTypes, TreeInternalData, VxeTreeDefines, VxeTreePrivateMethods, VxeComponentSizeType, ValueOf } from '../../../types'
+
+const { menus, getConfig, getI18n, getIcon } = VxeUI
 
 // let crossTreeDragNodeObj: {
 //   $oldTree: VxeTreeConstructor & VxeTreePrivateMethods
@@ -1612,7 +1614,14 @@ export default /* define-vxe-component start */ defineVxeComponent({
               options,
               events: {
                 optionClick (eventParams) {
-                  $xeTree.dispatchEvent('menu-click', Object.assign({ node }, eventParams), eventParams.$event)
+                  const { option } = eventParams
+                  const gMenuOpts = menus.get(option.code)
+                  const tmMethod = gMenuOpts ? gMenuOpts.treeMenuMethod : null
+                  const params = { menu: option, node, $event: evnt, $tree: $xeTree }
+                  if (tmMethod) {
+                    tmMethod(params, evnt)
+                  }
+                  $xeTree.dispatchEvent('menu-click', params, eventParams.$event)
                 }
               }
             })

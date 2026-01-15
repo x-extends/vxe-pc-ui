@@ -1,12 +1,16 @@
 import { PropType, CreateElement, VNode } from 'vue'
 import { defineVxeComponent } from '../../ui/src/comp'
 import XEUtils from 'xe-utils'
-import { getConfig, getI18n, createEvent, globalMixins, renderEmptyElement } from '../../ui'
+import { VxeUI, createEvent, globalMixins, renderEmptyElement } from '../../ui'
 import { getDateQuarter } from '../../date-panel/src/util'
 import { toCssUnit } from '../../ui/src/dom'
+import { isEnableConf } from '../../ui/src/utils'
+import { errLog } from '../../ui/src/log'
 import VxeButtonComponent from '../../button/src/button'
 
 import type { VxeCalendarEmits, CalendarInternalData, CalendarReactData, ValueOf, VxeCalendarPropTypes, VxeComponentSizeType, VxeDatePanelDefines, VxeCalendarConstructor } from '../../../types'
+
+const { menus, getConfig, getI18n } = VxeUI
 
 export default /* define-vxe-component start */ defineVxeComponent({
   name: 'VxeCalendar',
@@ -52,7 +56,8 @@ export default /* define-vxe-component start */ defineVxeComponent({
       type: Function as PropType<VxeCalendarPropTypes.DisabledMethod>,
       default: () => getConfig().calendar.disabledMethod
     },
-    cellStyle: Function as PropType<VxeCalendarPropTypes.CellStyle>,
+    cellStyle: [Object, Function] as PropType<VxeCalendarPropTypes.CellStyle>,
+    menuConfig: Object as PropType<VxeCalendarPropTypes.MenuConfig>,
 
     // week
     selectDay: {
@@ -126,6 +131,12 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const props = $xeCalendar
 
       return ['date', 'week', 'month', 'quarter', 'year'].indexOf(props.type) > -1
+    },
+    computeMenuOpts () {
+      const $xeCalendar = this
+      const props = $xeCalendar
+
+      return Object.assign({}, getConfig().calendar.menuConfig, props.menuConfig)
     },
     computeDateListValue (this: any) {
       const $xeCalendar = this
@@ -803,12 +814,52 @@ export default /* define-vxe-component start */ defineVxeComponent({
         }
       }
     },
-    dateSelectEvent  (item: VxeDatePanelDefines.DateYearItem | VxeDatePanelDefines.DateQuarterItem | VxeDatePanelDefines.DateMonthItem | VxeDatePanelDefines.DateDayItem) {
+    dateClickEvent (evnt: MouseEvent, item: VxeDatePanelDefines.DateYearItem | VxeDatePanelDefines.DateQuarterItem | VxeDatePanelDefines.DateMonthItem | VxeDatePanelDefines.DateDayItem) {
       const $xeCalendar = this
+      const props = $xeCalendar
+      const reactData = $xeCalendar.reactData
 
+      const { type } = props
+      const { datePanelType } = reactData
+      const { date } = item
       if (!$xeCalendar.isDateDisabled(item)) {
-        $xeCalendar.dateSelectItem(item.date)
+        $xeCalendar.dateSelectItem(date)
+        $xeCalendar.dispatchEvent('cell-click', { date, type, viewType: datePanelType }, evnt)
       }
+    },
+    datContextmenuEvent (evnt: MouseEvent, item: VxeDatePanelDefines.DateYearItem | VxeDatePanelDefines.DateQuarterItem | VxeDatePanelDefines.DateMonthItem | VxeDatePanelDefines.DateDayItem) {
+      const $xeCalendar = this
+      const props = $xeCalendar
+      const reactData = $xeCalendar.reactData
+
+      const { type } = props
+      const { datePanelType } = reactData
+      const { menuConfig } = props
+      const menuOpts = $xeCalendar.computeMenuOpts
+      if (menuConfig ? isEnableConf(menuOpts) : menuOpts.enabled) {
+        const { options, visibleMethod } = menuOpts
+        const { date } = item
+        if (!visibleMethod || visibleMethod({ $calendar: $xeCalendar as VxeCalendarConstructor, options, date, type, viewType: datePanelType })) {
+          if (VxeUI.contextMenu) {
+            VxeUI.contextMenu.openByEvent(evnt, {
+              options,
+              events: {
+                optionClick (eventParams) {
+                  const { option } = eventParams
+                  const gMenuOpts = menus.get(option.code)
+                  const cmMethod = gMenuOpts ? gMenuOpts.calendarMenuMethod : null
+                  const params = { menu: option, date, type, viewType: datePanelType, $event: evnt, $calendar: $xeCalendar as VxeCalendarConstructor }
+                  if (cmMethod) {
+                    cmMethod(params, evnt)
+                  }
+                  $xeCalendar.dispatchEvent('menu-click', params, eventParams.$event)
+                }
+              }
+            })
+          }
+        }
+      }
+      $xeCalendar.dispatchEvent('cell-menu', { date: item.date, type, viewType: datePanelType }, evnt)
     },
     dateMoveDay  (offsetDay: Date) {
       const $xeCalendar = this
@@ -871,6 +922,12 @@ export default /* define-vxe-component start */ defineVxeComponent({
         }
       }
     },
+    dateMouseleaveEvent () {
+      const $xeCalendar = this
+      const reactData = $xeCalendar.reactData
+
+      reactData.datePanelValue = null
+    },
     dateConfirmEvent  () {
     },
     dateOpenPanel  () {
@@ -910,14 +967,16 @@ export default /* define-vxe-component start */ defineVxeComponent({
         const extraItem = festivalItem.extra ? (XEUtils.isString(festivalItem.extra) ? { label: festivalItem.extra } : festivalItem.extra) : null
         const labels = [
           h('span', {
-            class: ['vxe-calendar--date-label', {
+            class: ['vxe-calendar--label', {
               'is-notice': festivalItem.notice
             }]
           }, extraItem && extraItem.label
             ? [
-                h('span', `${label || ''}`),
                 h('span', {
-                  class: ['vxe-calendar--date-label--extra', extraItem.important ? 'is-important' : '', extraItem.className],
+                  class: 'vxe-calendar--label--number'
+                }, `${label || ''}`),
+                h('span', {
+                  class: ['vxe-calendar--label--extra', extraItem.important ? 'is-important' : '', extraItem.className],
                   style: extraItem.style
                 }, XEUtils.toValueString(extraItem.label))
               ]
@@ -929,15 +988,15 @@ export default /* define-vxe-component start */ defineVxeComponent({
           const festivalLabels = XEUtils.toValueString(festivalLabel).split(',')
           labels.push(
             h('span', {
-              class: ['vxe-calendar--date-festival', festivalItem.important ? 'is-important' : '', festivalItem.className],
+              class: ['vxe-calendar--festival', festivalItem.important ? 'is-important' : '', festivalItem.className],
               style: festivalItem.style
             }, [
               festivalLabels.length > 1
                 ? h('span', {
-                  class: ['vxe-calendar--date-festival--overlap', `overlap--${festivalLabels.length}`]
+                  class: ['vxe-calendar--festival--overlap', `overlap--${festivalLabels.length}`]
                 }, festivalLabels.map(label => h('span', label.substring(0, 3))))
                 : h('span', {
-                  class: 'vxe-calendar--date-festival--label'
+                  class: 'vxe-calendar--festival--label'
                 }, festivalLabels[0].substring(0, 3))
             ])
           )
@@ -959,39 +1018,70 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const dateListValue = $xeCalendar.computeDateListValue
       const matchFormat = 'yyyyMMdd'
       return [
-        h('table', {
-          class: `vxe-calendar--date-${datePanelType}-view`,
-          attrs: {
-            cellspacing: 0,
-            cellpadding: 0,
-            border: 0
-          }
+        h('div', {
+          class: ['vxe-calendar--view-wrapper', `type--${datePanelType}`]
         }, [
-          h('tr', dateHeaders.map((item) => {
-            return h('th', {
-              class: 'vxe-calendar--view-th'
-            }, item.label)
-          })),
-          ...dayDatas.map((rows) => {
-            return h('tr', rows.map((item) => {
-              return h('td', {
-                class: ['vxe-calendar--view-td', {
+          h('div', {
+            class: 'vxe-calendar--view-header',
+            style: {
+              height: `${100 / (dayDatas.length + 1)}%`
+            }
+          }, [
+            h('div', {
+              class: 'vxe-calendar--view-row'
+            }, dateHeaders.map((item) => {
+              return h('div', {
+                class: 'vxe-calendar--view-item',
+                style: {
+                  width: `${100 / dateHeaders.length}%`
+                }
+              }, [
+                h('div', {
+                  class: 'vxe-calendar--view-item-inner'
+                }, [
+                  h('div', {
+                    class: 'vxe-calendar--view-item-label'
+                  }, item.label)
+                ])
+              ])
+            }))
+          ]),
+          h('div', {
+            class: 'vxe-calendar--view-body'
+          }, dayDatas.map((rows) => {
+            return h('div', {
+              class: 'vxe-calendar--view-row',
+              style: {
+                height: `${100 / dayDatas.length}%`
+              }
+            }, rows.map((item) => {
+              const isSelected = multiple ? dateListValue.some(val => XEUtils.isDateSame(val, item.date, matchFormat)) : XEUtils.isDateSame(dateValue, item.date, matchFormat)
+              return h('div', {
+                class: ['vxe-calendar--view-item', {
                   'is--prev': item.isPrev,
                   'is--current': item.isCurrent,
                   'is--now': item.isNow,
                   'is--next': item.isNext,
                   'is--disabled': $xeCalendar.isDateDisabled(item),
-                  'is--selected': multiple ? dateListValue.some(val => XEUtils.isDateSame(val, item.date, matchFormat)) : XEUtils.isDateSame(dateValue, item.date, matchFormat),
+                  'is--selected': isSelected,
                   'is--hover': XEUtils.isDateSame(datePanelValue, item.date, matchFormat)
                 }],
+                style: Object.assign({}, XEUtils.isFunction(cellStyle) ? cellStyle({ type: datePanelType, viewType: datePanelType, date: item.date, $calendar: $xeCalendar as VxeCalendarConstructor }) : cellStyle, {
+                  width: `${100 / rows.length}%`
+                }),
                 on: {
-                  click: () => $xeCalendar.dateSelectEvent(item),
-                  mouseenter: () => $xeCalendar.dateMouseenterEvent(item)
-                },
-                style: Object.assign({}, XEUtils.isFunction(cellStyle) ? cellStyle({ type: datePanelType, viewType: datePanelType, date: item.date, $calendar: $xeCalendar as VxeCalendarConstructor }) : cellStyle)
-              }, $xeCalendar.renderDateLabel(h, item, item.label))
+                  click: (evnt: MouseEvent) => $xeCalendar.dateClickEvent(evnt, item),
+                  contextmenu: (evnt: MouseEvent) => $xeCalendar.datContextmenuEvent(evnt, item),
+                  mouseenter: () => $xeCalendar.dateMouseenterEvent(item),
+                  mouseleave: $xeCalendar.dateMouseleaveEvent
+                }
+              }, [
+                h('div', {
+                  class: 'vxe-calendar--view-item-inner'
+                }, $xeCalendar.renderDateLabel(h, item, item.label))
+              ])
             }))
-          })
+          }))
         ])
       ]
     },
@@ -1008,41 +1098,72 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const dateListValue = $xeCalendar.computeDateListValue
       const matchFormat = 'yyyyMMdd'
       return [
-        h('table', {
-          class: `vxe-calendar--date-${datePanelType}-view`,
-          attrs: {
-            cellspacing: 0,
-            cellpadding: 0,
-            border: 0
-          }
+        h('div', {
+          class: ['vxe-calendar--view-wrapper', `type--${datePanelType}`]
         }, [
-          h('tr', weekHeaders.map((item) => {
-            return h('td', {
-              class: 'vxe-calendar--view-th'
-            }, item.label)
-          })),
-          ...weekDates.map((rows) => {
+          h('div', {
+            class: 'vxe-calendar--view-header',
+            style: {
+              height: `${100 / (weekDates.length + 1)}%`
+            }
+          }, [
+            h('div', {
+              class: 'vxe-calendar--view-row'
+            }, weekHeaders.map((item, rIndex) => {
+              return h('div', {
+                class: 'vxe-calendar--view-item',
+                style: {
+                  width: `${rIndex ? 13 : 9}%`
+                }
+              }, [
+                h('div', {
+                  class: 'vxe-calendar--view-item-inner'
+                }, [
+                  h('div', {
+                    class: 'vxe-calendar--view-item-label'
+                  }, item.label)
+                ])
+              ])
+            }))
+          ]),
+          h('div', {
+            class: 'vxe-calendar--view-body'
+          }, weekDates.map((rows) => {
             const isSelected = multiple ? rows.some((item) => dateListValue.some(val => XEUtils.isDateSame(val, item.date, matchFormat))) : rows.some((item) => XEUtils.isDateSame(dateValue, item.date, matchFormat))
             const isHover = rows.some((item) => XEUtils.isDateSame(datePanelValue, item.date, matchFormat))
-            return h('tr', rows.map((item) => {
-              return h('td', {
-                class: ['vxe-calendar--view-td', {
+            const isNowWeek = rows.some(item => item.isNow)
+            return h('div', {
+              class: 'vxe-calendar--view-row',
+              style: {
+                height: `${100 / weekDates.length}%`
+              }
+            }, rows.map((item, rIndex) => {
+              return h('div', {
+                class: ['vxe-calendar--view-item', {
                   'is--prev': item.isPrev,
                   'is--current': item.isCurrent,
-                  'is--now': item.isNow,
+                  'is--now': rIndex ? item.isNow : isNowWeek,
                   'is--next': item.isNext,
                   'is--disabled': $xeCalendar.isDateDisabled(item),
                   'is--selected': isSelected,
                   'is--hover': isHover
                 }],
+                style: Object.assign({}, XEUtils.isFunction(cellStyle) ? cellStyle({ type: datePanelType, viewType: datePanelType, date: item.date, $calendar: $xeCalendar as VxeCalendarConstructor }) : cellStyle, {
+                  width: `${rIndex ? 13 : 9}%`
+                }),
                 on: {
-                  click: () => $xeCalendar.dateSelectEvent(item),
-                  mouseenter: () => $xeCalendar.dateMouseenterEvent(item)
-                },
-                style: Object.assign({}, XEUtils.isFunction(cellStyle) ? cellStyle({ type: datePanelType, viewType: datePanelType, date: item.date, $calendar: $xeCalendar as VxeCalendarConstructor }) : cellStyle)
-              }, $xeCalendar.renderDateLabel(h, item, item.label))
+                  click: (evnt: MouseEvent) => $xeCalendar.dateClickEvent(evnt, item),
+                  contextmenu: (evnt: MouseEvent) => $xeCalendar.datContextmenuEvent(evnt, item),
+                  mouseenter: () => $xeCalendar.dateMouseenterEvent(item),
+                  mouseleave: $xeCalendar.dateMouseleaveEvent
+                }
+              }, [
+                h('div', {
+                  class: 'vxe-calendar--view-item-inner'
+                }, $xeCalendar.renderDateLabel(h, item, item.label))
+              ])
             }))
-          })
+          }))
         ])
       ]
     },
@@ -1058,32 +1179,43 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const dateListValue = $xeCalendar.computeDateListValue
       const matchFormat = 'yyyyMM'
       return [
-        h('table', {
-          class: `vxe-calendar--date-${datePanelType}-view`,
-          attrs: {
-            cellspacing: 0,
-            cellpadding: 0,
-            border: 0
-          }
+        h('div', {
+          class: ['vxe-calendar--view-wrapper', `type--${datePanelType}`]
         }, [
-          h('tbody', monthDatas.map((rows) => {
-            return h('tr', rows.map((item) => {
-              return h('td', {
-                class: ['vxe-calendar--view-td', {
+          h('div', {
+            class: 'vxe-calendar--view-body'
+          }, monthDatas.map((rows) => {
+            return h('div', {
+              class: 'vxe-calendar--view-row',
+              style: {
+                height: `${100 / monthDatas.length}%`
+              }
+            }, rows.map((item) => {
+              const isSelected = multiple ? dateListValue.some(val => XEUtils.isDateSame(val, item.date, matchFormat)) : XEUtils.isDateSame(dateValue, item.date, matchFormat)
+              return h('div', {
+                class: ['vxe-calendar--view-item', {
                   'is--prev': item.isPrev,
                   'is--current': item.isCurrent,
                   'is--now': item.isNow,
                   'is--next': item.isNext,
                   'is--disabled': $xeCalendar.isDateDisabled(item),
-                  'is--selected': multiple ? dateListValue.some(val => XEUtils.isDateSame(val, item.date, matchFormat)) : XEUtils.isDateSame(dateValue, item.date, matchFormat),
+                  'is--selected': isSelected,
                   'is--hover': XEUtils.isDateSame(datePanelValue, item.date, matchFormat)
                 }],
+                style: Object.assign({}, XEUtils.isFunction(cellStyle) ? cellStyle({ type: datePanelType, viewType: datePanelType, date: item.date, $calendar: $xeCalendar as VxeCalendarConstructor }) : cellStyle, {
+                  width: `${100 / rows.length}%`
+                }),
                 on: {
-                  click: () => $xeCalendar.dateSelectEvent(item),
-                  mouseenter: () => $xeCalendar.dateMouseenterEvent(item)
-                },
-                style: Object.assign({}, XEUtils.isFunction(cellStyle) ? cellStyle({ type: datePanelType, viewType: datePanelType, date: item.date, $calendar: $xeCalendar as VxeCalendarConstructor }) : cellStyle)
-              }, $xeCalendar.renderDateLabel(h, item, getI18n(`vxe.input.date.months.m${item.month}`)))
+                  click: (evnt: MouseEvent) => $xeCalendar.dateClickEvent(evnt, item),
+                  contextmenu: (evnt: MouseEvent) => $xeCalendar.datContextmenuEvent(evnt, item),
+                  mouseenter: () => $xeCalendar.dateMouseenterEvent(item),
+                  mouseleave: $xeCalendar.dateMouseleaveEvent
+                }
+              }, [
+                h('div', {
+                  class: 'vxe-calendar--view-item-inner'
+                }, $xeCalendar.renderDateLabel(h, item, getI18n(`vxe.input.date.months.m${item.month}`)))
+              ])
             }))
           }))
         ])
@@ -1101,32 +1233,43 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const dateListValue = $xeCalendar.computeDateListValue
       const matchFormat = 'yyyyq'
       return [
-        h('table', {
-          class: `vxe-calendar--date-${datePanelType}-view`,
-          attrs: {
-            cellspacing: 0,
-            cellpadding: 0,
-            border: 0
-          }
+        h('div', {
+          class: ['vxe-calendar--view-wrapper', `type--${datePanelType}`]
         }, [
-          h('tbody', quarterDatas.map((rows) => {
-            return h('tr', rows.map((item) => {
-              return h('td', {
-                class: ['vxe-calendar--view-td', {
+          h('div', {
+            class: 'vxe-calendar--view-body'
+          }, quarterDatas.map((rows) => {
+            return h('div', {
+              class: 'vxe-calendar--view-row',
+              style: {
+                height: `${100 / quarterDatas.length}%`
+              }
+            }, rows.map((item) => {
+              const isSelected = multiple ? dateListValue.some(val => XEUtils.isDateSame(val, item.date, matchFormat)) : XEUtils.isDateSame(dateValue, item.date, matchFormat)
+              return h('div', {
+                class: ['vxe-calendar--view-item', {
                   'is--prev': item.isPrev,
                   'is--current': item.isCurrent,
                   'is--now': item.isNow,
                   'is--next': item.isNext,
                   'is--disabled': $xeCalendar.isDateDisabled(item),
-                  'is--selected': multiple ? dateListValue.some(val => XEUtils.isDateSame(val, item.date, matchFormat)) : XEUtils.isDateSame(dateValue, item.date, matchFormat),
+                  'is--selected': isSelected,
                   'is--hover': XEUtils.isDateSame(datePanelValue, item.date, matchFormat)
                 }],
+                style: Object.assign({}, XEUtils.isFunction(cellStyle) ? cellStyle({ type: datePanelType, viewType: datePanelType, date: item.date, $calendar: $xeCalendar as VxeCalendarConstructor }) : cellStyle, {
+                  width: `${100 / rows.length}%`
+                }),
                 on: {
-                  click: () => $xeCalendar.dateSelectEvent(item),
-                  mouseenter: () => $xeCalendar.dateMouseenterEvent(item)
-                },
-                style: Object.assign({}, XEUtils.isFunction(cellStyle) ? cellStyle({ type: datePanelType, viewType: datePanelType, date: item.date, $calendar: $xeCalendar as VxeCalendarConstructor }) : cellStyle)
-              }, $xeCalendar.renderDateLabel(h, item, getI18n(`vxe.input.date.quarters.q${item.quarter}`)))
+                  click: (evnt: MouseEvent) => $xeCalendar.dateClickEvent(evnt, item),
+                  contextmenu: (evnt: MouseEvent) => $xeCalendar.datContextmenuEvent(evnt, item),
+                  mouseenter: () => $xeCalendar.dateMouseenterEvent(item),
+                  mouseleave: $xeCalendar.dateMouseleaveEvent
+                }
+              }, [
+                h('div', {
+                  class: 'vxe-calendar--view-item-inner'
+                }, $xeCalendar.renderDateLabel(h, item, getI18n(`vxe.input.date.quarters.q${item.quarter}`)))
+              ])
             }))
           }))
         ])
@@ -1144,32 +1287,43 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const dateListValue = $xeCalendar.computeDateListValue
       const matchFormat = 'yyyy'
       return [
-        h('table', {
-          class: `vxe-calendar--date-${datePanelType}-view`,
-          attrs: {
-            cellspacing: 0,
-            cellpadding: 0,
-            border: 0
-          }
+        h('div', {
+          class: ['vxe-calendar--view-wrapper', `type--${datePanelType}`]
         }, [
-          h('tbody', yearDatas.map((rows) => {
-            return h('tr', rows.map((item) => {
-              return h('td', {
-                class: ['vxe-calendar--view-td', {
+          h('div', {
+            class: 'vxe-calendar--view-body'
+          }, yearDatas.map((rows) => {
+            return h('div', {
+              class: 'vxe-calendar--view-row',
+              style: {
+                height: `${100 / yearDatas.length}%`
+              }
+            }, rows.map((item) => {
+              const isSelected = multiple ? dateListValue.some(val => XEUtils.isDateSame(val, item.date, matchFormat)) : XEUtils.isDateSame(dateValue, item.date, matchFormat)
+              return h('div', {
+                class: ['vxe-calendar--view-item', {
                   'is--prev': item.isPrev,
                   'is--current': item.isCurrent,
                   'is--now': item.isNow,
                   'is--next': item.isNext,
                   'is--disabled': $xeCalendar.isDateDisabled(item),
-                  'is--selected': multiple ? dateListValue.some(val => XEUtils.isDateSame(val, item.date, matchFormat)) : XEUtils.isDateSame(dateValue, item.date, matchFormat),
+                  'is--selected': isSelected,
                   'is--hover': XEUtils.isDateSame(datePanelValue, item.date, matchFormat)
                 }],
+                style: Object.assign({}, XEUtils.isFunction(cellStyle) ? cellStyle({ type: datePanelType, viewType: datePanelType, date: item.date, $calendar: $xeCalendar as VxeCalendarConstructor }) : cellStyle, {
+                  width: `${100 / rows.length}%`
+                }),
                 on: {
-                  click: () => $xeCalendar.dateSelectEvent(item),
-                  mouseenter: () => $xeCalendar.dateMouseenterEvent(item)
-                },
-                style: Object.assign({}, XEUtils.isFunction(cellStyle) ? cellStyle({ type: datePanelType, viewType: datePanelType, date: item.date, $calendar: $xeCalendar as VxeCalendarConstructor }) : cellStyle)
-              }, $xeCalendar.renderDateLabel(h, item, item.year))
+                  click: (evnt: MouseEvent) => $xeCalendar.dateClickEvent(evnt, item),
+                  contextmenu: (evnt: MouseEvent) => $xeCalendar.datContextmenuEvent(evnt, item),
+                  mouseenter: () => $xeCalendar.dateMouseenterEvent(item),
+                  mouseleave: $xeCalendar.dateMouseleaveEvent
+                }
+              }, [
+                h('div', {
+                  class: 'vxe-calendar--view-item-inner'
+                }, $xeCalendar.renderDateLabel(h, item, item.year))
+              ])
             }))
           }))
         ])
@@ -1358,7 +1512,13 @@ export default /* define-vxe-component start */ defineVxeComponent({
   },
   mounted () {
     const $xeCalendar = this
+    const props = $xeCalendar
 
+    const { menuConfig } = props
+    const VxeUIContextMenu = VxeUI.getComponent('VxeContextMenu')
+    if (menuConfig && !VxeUIContextMenu) {
+      errLog('vxe.error.reqComp', ['vxe-context-menu'])
+    }
     $xeCalendar.dateOpenPanel()
   },
   render (this: any, h) {

@@ -1,13 +1,16 @@
 import { PropType, CreateElement, VNode } from 'vue'
 import { defineVxeComponent } from '../../ui/src/comp'
 import XEUtils from 'xe-utils'
-import { getConfig, getIcon, createEvent, permission, globalMixins, globalEvents, renderEmptyElement } from '../../ui'
+import { VxeUI, createEvent, permission, globalMixins, globalEvents, renderEmptyElement } from '../../ui'
 import { toCssUnit } from '../../ui/src/dom'
-import { getLastZIndex, nextZIndex } from '../../ui/src/utils'
+import { getLastZIndex, nextZIndex, isEnableConf } from '../../ui/src/utils'
 import { getSlotVNs } from '../../ui/src/vn'
-import VxeLoadingComponent from '../../loading/index'
+import { errLog } from '../../ui/src/log'
+import VxeLoadingComponent from '../../loading'
 
 import type { VxeMenuDefines, MenuReactData, VxeMenuPropTypes, VxeLayoutAsideConstructor, VxeMenuEmits, VxeLayoutAsidePropTypes, VxeComponentPermissionInfo, VxeComponentSizeType, ValueOf } from '../../../types'
+
+const { menus, getConfig, getIcon } = VxeUI
 
 export default /* define-vxe-component start */ defineVxeComponent({
   name: 'VxeMenu',
@@ -35,7 +38,8 @@ export default /* define-vxe-component start */ defineVxeComponent({
     size: {
       type: String as PropType<VxeMenuPropTypes.Size>,
       default: () => getConfig().menu.size || getConfig().size
-    }
+    },
+    menuConfig: Object as PropType<VxeMenuPropTypes.MenuConfig>
   },
   inject: {
     $xeLayoutAside: {
@@ -63,6 +67,12 @@ export default /* define-vxe-component start */ defineVxeComponent({
       computeSize(): VxeComponentSizeType
       $xeLayoutAside(): VxeLayoutAsideConstructor | null
     }),
+    computeMenuOpts () {
+      const $xeMenu = this
+      const props = $xeMenu
+
+      return Object.assign({}, getConfig().tree.menuConfig, props.menuConfig)
+    },
     computeIsCollapsed  () {
       const $xeMenu = this
       const $xeLayoutAside = $xeMenu.$xeLayoutAside
@@ -236,7 +246,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
         $xeMenu.updateCollapseStyle()
       }
     },
-    handleClickIconCollapse  (evnt: KeyboardEvent, item: VxeMenuDefines.MenuItem, itemList: VxeMenuDefines.MenuItem[]) {
+    handleClickIconCollapse  (evnt: MouseEvent, item: VxeMenuDefines.MenuItem, itemList: VxeMenuDefines.MenuItem[]) {
       const $xeMenu = this
       const props = $xeMenu
 
@@ -255,7 +265,37 @@ export default /* define-vxe-component start */ defineVxeComponent({
         item.isExpand = !isExpand
       }
     },
-    handleClickMenu (evnt: KeyboardEvent, item: VxeMenuDefines.MenuItem, itemList: VxeMenuDefines.MenuItem[]) {
+    handleContextmenuEvent (evnt: MouseEvent, item: VxeMenuDefines.MenuItem) {
+      const $xeMenu = this
+      const props = $xeMenu
+
+      const { menuConfig } = props
+      const menuOpts = $xeMenu.computeMenuOpts
+      if (menuConfig ? isEnableConf(menuOpts) : menuOpts.enabled) {
+        const { options, visibleMethod } = menuOpts
+        if (!visibleMethod || visibleMethod({ $menu: $xeMenu, options, currentMenu: item })) {
+          if (VxeUI.contextMenu) {
+            VxeUI.contextMenu.openByEvent(evnt, {
+              options,
+              events: {
+                optionClick (eventParams) {
+                  const { option } = eventParams
+                  const gMenuOpts = menus.get(option.code)
+                  const mmMethod = gMenuOpts ? gMenuOpts.menuMenuMethod : null
+                  const params = { menu: option, currentMenu: item, $event: evnt, $menu: $xeMenu }
+                  if (mmMethod) {
+                    mmMethod(params, evnt)
+                  }
+                  $xeMenu.dispatchEvent('menu-click', params, eventParams.$event)
+                }
+              }
+            })
+          }
+        }
+      }
+      $xeMenu.dispatchEvent('option-menu', { currentMenu: item }, evnt)
+    },
+    handleClickMenu (evnt: MouseEvent, item: VxeMenuDefines.MenuItem, itemList: VxeMenuDefines.MenuItem[]) {
       const $xeMenu = this
 
       const { itemKey, routerLink, hasChild } = item
@@ -268,7 +308,13 @@ export default /* define-vxe-component start */ defineVxeComponent({
           $xeMenu.emitModel(itemKey)
         }
       }
-      $xeMenu.dispatchEvent('click', { menu: item }, evnt)
+      const params = {
+        currentMenu: item,
+
+        // 已废弃
+        menu: item
+      }
+      $xeMenu.dispatchEvent('click', params, evnt)
     },
     handleMenuMouseenter  () {
       const $xeMenu = this
@@ -318,8 +364,11 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const title = $xeMenu.getMenuTitle(item)
       const isCollapsed = $xeMenu.computeIsCollapsed
       const params = {
-        option: item as any,
-        collapsed: isCollapsed
+        currentMenu: item as Required<VxeMenuDefines.MenuItem>,
+        collapsed: isCollapsed,
+
+        // 已废弃
+        option: item as Required<VxeMenuDefines.MenuItem>
       }
       return [
         optionSlot
@@ -347,7 +396,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
           ? h('div', {
             class: 'vxe-menu--item-link-collapse',
             on: {
-              click (evnt: KeyboardEvent) {
+              click (evnt: MouseEvent) {
                 $xeMenu.handleClickIconCollapse(evnt, item, itemList)
               }
             }
@@ -387,7 +436,10 @@ export default /* define-vxe-component start */ defineVxeComponent({
               to: routerLink
             },
             on: {
-              click (evnt: KeyboardEvent) {
+              contextmenu (evnt: MouseEvent) {
+                $xeMenu.handleContextmenuEvent(evnt, item)
+              },
+              click (evnt: MouseEvent) {
                 $xeMenu.handleClickMenu(evnt, item, itemList)
               }
             }
@@ -395,7 +447,10 @@ export default /* define-vxe-component start */ defineVxeComponent({
           : h('div', {
             class: 'vxe-menu--item-link',
             on: {
-              click (evnt: KeyboardEvent) {
+              contextmenu (evnt: MouseEvent) {
+                $xeMenu.handleContextmenuEvent(evnt, item)
+              },
+              click (evnt: MouseEvent) {
                 $xeMenu.handleClickMenu(evnt, item, itemList)
               }
             }
@@ -431,7 +486,10 @@ export default /* define-vxe-component start */ defineVxeComponent({
               to: routerLink
             },
             on: {
-              click (evnt: KeyboardEvent) {
+              contextmenu (evnt: MouseEvent) {
+                $xeMenu.handleContextmenuEvent(evnt, item)
+              },
+              click (evnt: MouseEvent) {
                 $xeMenu.handleClickMenu(evnt, item, itemList)
               }
             }
@@ -439,7 +497,10 @@ export default /* define-vxe-component start */ defineVxeComponent({
           : h('div', {
             class: 'vxe-menu--item-link',
             on: {
-              click (evnt: KeyboardEvent) {
+              contextmenu (evnt: MouseEvent) {
+                $xeMenu.handleContextmenuEvent(evnt, item)
+              },
+              click (evnt: MouseEvent) {
                 $xeMenu.handleClickMenu(evnt, item, itemList)
               }
             }
@@ -533,7 +594,13 @@ export default /* define-vxe-component start */ defineVxeComponent({
   },
   mounted () {
     const $xeMenu = this
+    const props = $xeMenu
 
+    const { menuConfig } = props
+    const VxeUIContextMenu = VxeUI.getComponent('VxeContextMenu')
+    if (menuConfig && !VxeUIContextMenu) {
+      errLog('vxe.error.reqComp', ['vxe-context-menu'])
+    }
     globalEvents.on($xeMenu, 'resize', $xeMenu.updateCollapseStyle)
     $xeMenu.updateCollapseStyle()
   },

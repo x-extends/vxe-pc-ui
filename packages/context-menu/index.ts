@@ -34,9 +34,11 @@ export const ContextMenuController = {
     openMenu(opts, opts.x, opts.y)
   },
   openByEvent (evnt: MouseEvent, options: VxeContextMenuDefines.ContextMenuEventOpenOptions) {
+    evnt.preventDefault()
+    evnt.stopPropagation()
     const opts = Object.assign({}, options)
-    const x = evnt.clientX
-    const y = evnt.clientY
+    const x = evnt.clientX + 1
+    const y = evnt.clientY + 1
     openMenu(opts, x, y)
   },
   close () {
