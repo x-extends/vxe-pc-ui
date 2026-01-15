@@ -4,9 +4,13 @@ import { VxeFormDesignDefines } from '../components/form-design'
 import { VxeTableDefines } from '../components/table'
 
 export interface FormDesignHandleExport {
+  useFormView <F = VxeFormDesignDefines.DefaultSettingFormDataObjVO> (props: {
+    renderOpts: VxeGlobalRendererHandles.RenderFormDesignSettingFormViewParams
+    renderParams: VxeGlobalRendererHandles.RenderFormDesignSettingFormViewParams<F>
+  }): VxeGlobalRendererHandles.RenderFormDesignSettingFormViewParams<F>
   useWidgetView<P = any>(props: {
     renderOpts: VxeGlobalRendererHandles.RenderFormDesignWidgetViewOptions | VxeGlobalRendererHandles.RenderFormDesignWidgetFormViewOptions
-  renderParams: VxeGlobalRendererHandles.RenderFormDesignWidgetViewParams | VxeGlobalRendererHandles.RenderFormDesignWidgetFormViewParams
+    renderParams: VxeGlobalRendererHandles.RenderFormDesignWidgetViewParams | VxeGlobalRendererHandles.RenderFormDesignWidgetFormViewParams
   }): {
     currWidget: ComputedRef<VxeFormDesignDefines.WidgetObjItem<P>>
     widgetOptions: ComputedRef<P>
