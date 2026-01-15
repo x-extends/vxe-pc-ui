@@ -940,8 +940,9 @@ declare module '@vxe-ui/core' {
     }
     export interface RenderFormDesignWidgetEditParams<D = any> extends RenderFormDesignWidgetViewParams<D> {}
     export interface RenderFormDesignSettingFormViewOptions {}
-    export interface RenderFormDesignSettingFormViewParams {
+    export interface RenderFormDesignSettingFormViewParams<D = any> {
       $formDesign: VxeFormDesignConstructor
+      formConfig: D & VxeFormDesignDefines.DefaultSettingFormDataObjVO
     }
 
     export interface RenderFormDesignStyleFormViewOptions {}
