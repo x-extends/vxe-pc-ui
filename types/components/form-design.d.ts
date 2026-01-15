@@ -34,6 +34,7 @@ export namespace VxeFormDesignPropTypes {
 
   export type ShowPc = boolean
   export type ShowMobile = boolean
+  export type ShowStyleSetting = boolean
   export interface FormRender {
     name?: string
   }
@@ -65,6 +66,7 @@ export interface VxeFormDesignProps {
   showHeader?: VxeFormDesignPropTypes.ShowHeader
   showPc?: VxeFormDesignPropTypes.ShowPc
   showMobile?: VxeFormDesignPropTypes.ShowMobile
+  showStyleSetting?: VxeFormDesignPropTypes.ShowStyleSetting
   formData?: VxeFormDesignPropTypes.FormData
   formRender?: VxeFormDesignPropTypes.FormRender
   menuConfig?: VxeFormDesignPropTypes.MenuConfig
