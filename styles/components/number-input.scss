@@ -94,6 +94,18 @@
   flex-shrink: 0;
   background-color: var(--vxe-ui-layout-background-color);
 }
+.vxe-number-input--prefix {
+  border-radius: var(--vxe-ui-base-border-radius) 0 0 var(--vxe-ui-base-border-radius);
+}
+.vxe-number-input--suffix {
+  border-radius: 0 var(--vxe-ui-base-border-radius) var(--vxe-ui-base-border-radius) 0;
+}
+.vxe-number-input--prefix-icon,
+.vxe-number-input--suffix-icon,
+.vxe-number-input--clear-icon,
+.vxe-number-input--control-icon {
+  color: var(--vxe-ui-input-placeholder-color);
+}
 .vxe-number-input--prefix-icon {
   padding-left: 0.5em;
 }
@@ -103,7 +115,6 @@
 }
 .vxe-number-input--clear-icon {
   height: 100%;
-  color: var(--vxe-ui-input-placeholder-color);
   cursor: pointer;
 }
 .vxe-number-input--clear-icon {

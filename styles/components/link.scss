@@ -99,6 +99,10 @@ $btnThemeList: (
   padding: 0 0.1em;
 }
 
+.vxe-checkbox+.vxe-link {
+  vertical-align: middle;
+}
+
 .vxe-link {
   &.size--medium {
     font-size: var(--vxe-ui-font-size-medium);

@@ -1148,7 +1148,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
               })
             }
           : (item: any) => {
-              return String(item[titleField]).toLowerCase().indexOf(filterStr) > -1
+              return String(item[titleField]).toLowerCase().indexOf(filterStr.toLowerCase()) > -1
             }
         const bafParams = { $tree: $xeTree, filterValue: filterStr }
         if (beforeFilterMethod) {

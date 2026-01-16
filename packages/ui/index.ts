@@ -206,7 +206,6 @@ setConfig({
   layoutAside: {},
   layoutBody: {
     backtopConfig: {
-      position: 'fixed'
     }
   },
   layoutContainer: {},
