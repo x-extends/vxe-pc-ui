@@ -107,6 +107,10 @@ $btnThemeList: (
   }
 }
 
+.vxe-checkbox+.vxe-text {
+  vertical-align: middle;
+}
+
 .vxe-text {
   &.size--medium {
     font-size: var(--vxe-ui-font-size-medium);

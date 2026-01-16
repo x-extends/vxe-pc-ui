@@ -8,8 +8,8 @@
     </p>
 
     <p>
-      <vxe-password-input v-model="demo1.value104" placeholder="密码类型" type="password"></vxe-password-input>
-      <vxe-password-input v-model="demo1.value105" placeholder="可清除" type="password" clearable></vxe-password-input>
+      <vxe-password-input v-model="demo1.value104" placeholder="密码类型" type="password"  prefix-icon="vxe-icon-user"></vxe-password-input>
+      <vxe-password-input v-model="demo1.value105" placeholder="可清除" type="password" prefix-icon="vxe-icon-user" clearable></vxe-password-input>
     </p>
   </div>
 </template>

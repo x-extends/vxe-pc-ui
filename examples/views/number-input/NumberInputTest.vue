@@ -67,7 +67,7 @@
       <vxe-number-input v-model="demo1.value904" type="float" :control-config="{layout: 'left'}"></vxe-number-input>
     </p>
     <p>
-      <vxe-number-input v-model="demo1.value905" type="float" :control-config="{layout: 'right'}" next-icon="vxe-icon-arrow-up" prev-icon="vxe-icon-arrow-down"></vxe-number-input>
+      <vxe-number-input v-model="demo1.value905" type="float" :control-config="{layout: 'right'}" prefix-icon="vxe-icon-user" next-icon="vxe-icon-arrow-up" prev-icon="vxe-icon-arrow-down"></vxe-number-input>
     </p>
     <p>
       <vxe-number-input v-model="demo1.value908" type="float" auto-fill></vxe-number-input>
