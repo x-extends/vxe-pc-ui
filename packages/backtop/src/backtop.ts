@@ -140,7 +140,7 @@ export default defineVxeComponent({
       emit(type, createEvent(evnt, { $backtop: $xeBacktop }, params))
     }
 
-    const showBacktop = () => {
+    const updateZIndex = () => {
       const { position, zIndex } = props
       const { backtopZindex } = reactData
       if (zIndex) {
@@ -150,6 +150,10 @@ export default defineVxeComponent({
           reactData.backtopZindex = nextZIndex()
         }
       }
+    }
+
+    const showBacktop = () => {
+      updateZIndex()
       reactData.showBtn = true
     }
 
@@ -278,11 +282,19 @@ export default defineVxeComponent({
       ])
     }
 
+    watch(() => props.position, () => {
+      updateZIndex()
+    })
+
     watch(() => props.target, () => {
       handleTargetElement()
     })
 
     onMounted(() => {
+      const { showTop } = props
+      if (showTop) {
+        updateZIndex()
+      }
       handleTargetElement()
     })
 

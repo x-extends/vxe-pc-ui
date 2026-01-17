@@ -1,4 +1,4 @@
-import { ref, h, reactive, watch, computed, TransitionGroup, PropType, inject, onUnmounted, onMounted, nextTick } from 'vue'
+import { ref, h, reactive, watch, computed, TransitionGroup, PropType, inject, onBeforeUnmount, onMounted, nextTick } from 'vue'
 import { defineVxeComponent } from '../../ui/src/comp'
 import XEUtils from 'xe-utils'
 import { VxeUI, getConfig, getI18n, getIcon, useSize, createEvent, globalEvents, renderEmptyElement } from '../../ui'
@@ -10,6 +10,28 @@ import VxeButtonComponent from '../../button/src/button'
 
 import type { VxeUploadDefines, VxeUploadPropTypes, UploadReactData, UploadInternalData, UploadPrivateMethods, UploadMethods, VxeUploadEmits, UploadPrivateRef, VxeUploadPrivateComputed, VxeUploadConstructor, VxeUploadPrivateMethods, VxeFormDefines, VxeFormConstructor, VxeFormPrivateMethods, ValueOf, VxeComponentEventParams } from '../../../types'
 import type { VxeTableConstructor, VxeTablePrivateMethods } from '../../../types/components/table'
+
+function createReactData (): UploadReactData {
+  return {
+    isDragUploadStatus: false,
+    showMorePopup: false,
+    isActivated: false,
+    fileList: [],
+    fileCacheMaps: {},
+    isDragMove: false,
+    dragIndex: -1,
+    dragTipText: ''
+  }
+}
+
+function createInternalData (): UploadInternalData {
+  return {
+    moreId: XEUtils.uniqueId('upload'),
+    imagePreviewTypes: ['jpg', 'jpeg', 'png', 'gif'],
+    prevDragIndex: -1
+    // prevDragPos: ''
+  }
+}
 
 export default defineVxeComponent({
   name: 'VxeUpload',
@@ -217,23 +239,9 @@ export default defineVxeComponent({
     const refDragLineElem = ref<HTMLDivElement>()
     const refModalDragLineElem = ref<HTMLDivElement>()
 
-    const reactData = reactive<UploadReactData>({
-      isDragUploadStatus: false,
-      showMorePopup: false,
-      isActivated: false,
-      fileList: [],
-      fileCacheMaps: {},
-      isDragMove: false,
-      dragIndex: -1,
-      dragTipText: ''
-    })
+    const reactData = reactive(createReactData())
 
-    const internalData: UploadInternalData = {
-      moreId: XEUtils.uniqueId('upload'),
-      imagePreviewTypes: ['jpg', 'jpeg', 'png', 'gif'],
-      prevDragIndex: -1
-      // prevDragPos: ''
-    }
+    const internalData = createInternalData()
 
     const refMaps: UploadPrivateRef = {
       refElem
@@ -1854,11 +1862,13 @@ export default defineVxeComponent({
       globalEvents.on($xeUpload, 'blur', handleGlobalBlurEvent)
     })
 
-    onUnmounted(() => {
+    onBeforeUnmount(() => {
       reactData.isDragUploadStatus = false
       globalEvents.off($xeUpload, 'paste')
       globalEvents.off($xeUpload, 'mousedown')
       globalEvents.off($xeUpload, 'blur')
+      XEUtils.assign(reactData, createReactData())
+      XEUtils.assign(internalData, createInternalData())
     })
 
     updateFileList()

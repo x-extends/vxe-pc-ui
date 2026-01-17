@@ -1,4 +1,4 @@
-import { h, PropType, ref, Ref, computed, onUnmounted, watch, reactive, nextTick, onActivated, onMounted } from 'vue'
+import { h, PropType, ref, Ref, computed, onBeforeUnmount, watch, reactive, nextTick, onActivated, onMounted } from 'vue'
 import { defineVxeComponent } from '../../ui/src/comp'
 import XEUtils from 'xe-utils'
 import { getConfig, globalEvents, globalResize, createEvent, useSize } from '../../ui'
@@ -6,6 +6,18 @@ import { isScale } from '../../ui/src/dom'
 import VxeLoadingComponent from '../../loading/src/loading'
 
 import type { VxeListConstructor, VxeListPropTypes, VxeListEmits, ListReactData, ListInternalData, ValueOf, ListMethods, ListPrivateRef, VxeListMethods } from '../../../types'
+
+function createReactData (): ListReactData {
+  return {
+    scrollYLoad: false,
+    bodyHeight: 0,
+    customHeight: 0,
+    customMaxHeight: 0,
+    parentHeight: 0,
+    topSpaceHeight: 0,
+    items: []
+  }
+}
 
 function createInternalData (): ListInternalData {
   return {
@@ -55,15 +67,7 @@ export default defineVxeComponent({
 
     const { computeSize } = useSize(props)
 
-    const reactData = reactive<ListReactData>({
-      scrollYLoad: false,
-      bodyHeight: 0,
-      customHeight: 0,
-      customMaxHeight: 0,
-      parentHeight: 0,
-      topSpaceHeight: 0,
-      items: []
-    })
+    const reactData = reactive(createReactData())
 
     const internalData = createInternalData()
 
@@ -418,12 +422,13 @@ export default defineVxeComponent({
       globalEvents.on($xeList, 'resize', recalculate)
     })
 
-    onUnmounted(() => {
+    onBeforeUnmount(() => {
       const { resizeObserver } = internalData
       if (resizeObserver) {
         resizeObserver.disconnect()
       }
       globalEvents.off($xeList, 'resize')
+      XEUtils.assign(reactData, createReactData())
       XEUtils.assign(internalData, createInternalData())
     })
 

@@ -1,4 +1,4 @@
-import { ref, computed, h, PropType, nextTick, inject, provide, reactive, Teleport, onMounted, onUnmounted, watch, VNode } from 'vue'
+import { ref, computed, h, PropType, nextTick, inject, provide, reactive, Teleport, onMounted, onBeforeUnmount, watch, VNode } from 'vue'
 import { defineVxeComponent } from '../../ui/src/comp'
 import { getConfig, getI18n, getIcon, globalEvents, createEvent, useSize, renderEmptyElement } from '../../ui'
 import { getEventTargetNode, updatePanelPlacement, toCssUnit } from '../../ui/src/dom'
@@ -16,6 +16,21 @@ import type { VxeTableConstructor, VxeTablePrivateMethods } from '../../../types
 
 function getOptUniqueId () {
   return XEUtils.uniqueId('node_')
+}
+
+function createReactData (): TreeSelectReactData {
+  return {
+    initialized: false,
+    searchValue: '',
+    searchLoading: false,
+    panelIndex: 0,
+    panelStyle: {},
+    panelPlacement: null,
+    triggerFocusPanel: false,
+    visiblePanel: false,
+    isAniVisible: false,
+    isActivated: false
+  }
 }
 
 function createInternalData (): TreeSelectInternalData {
@@ -134,18 +149,7 @@ export default defineVxeComponent({
     const refOptionPanel = ref<HTMLDivElement>()
     const refTree = ref<VxeTreeConstructor>()
 
-    const reactData = reactive<TreeSelectReactData>({
-      initialized: false,
-      searchValue: '',
-      searchLoading: false,
-      panelIndex: 0,
-      panelStyle: {},
-      panelPlacement: null,
-      triggerFocusPanel: false,
-      visiblePanel: false,
-      isAniVisible: false,
-      isActivated: false
-    })
+    const reactData = reactive(createReactData())
 
     const internalData = createInternalData()
 
@@ -935,11 +939,12 @@ export default defineVxeComponent({
       globalEvents.on($xeTreeSelect, 'resize', handleGlobalResizeEvent)
     })
 
-    onUnmounted(() => {
+    onBeforeUnmount(() => {
       globalEvents.off($xeTreeSelect, 'mousewheel')
       globalEvents.off($xeTreeSelect, 'mousedown')
       globalEvents.off($xeTreeSelect, 'blur')
       globalEvents.off($xeTreeSelect, 'resize')
+      XEUtils.assign(reactData, createReactData())
       XEUtils.assign(internalData, createInternalData())
     })
 
