@@ -66,6 +66,28 @@ function hideDropTip ($xeUpload: VxeUploadConstructor) {
   }
 }
 
+function createReactData (): UploadReactData {
+  return {
+    isDragUploadStatus: false,
+    showMorePopup: false,
+    isActivated: false,
+    fileList: [],
+    fileCacheMaps: {},
+    isDragMove: false,
+    dragIndex: -1,
+    dragTipText: ''
+  }
+}
+
+function createInternalData (): UploadInternalData {
+  return {
+    moreId: XEUtils.uniqueId('upload'),
+    imagePreviewTypes: ['jpg', 'jpeg', 'png', 'gif'],
+    prevDragIndex: -1
+    // prevDragPos: ''
+  }
+}
+
 export default /* define-vxe-component start */ defineVxeComponent({
   name: 'VxeUpload',
   model: {
@@ -265,22 +287,8 @@ export default /* define-vxe-component start */ defineVxeComponent({
   },
   data () {
     const xID = XEUtils.uniqueId()
-    const reactData: UploadReactData = {
-      isDragUploadStatus: false,
-      showMorePopup: false,
-      isActivated: false,
-      fileList: [],
-      fileCacheMaps: {},
-      isDragMove: false,
-      dragIndex: -1,
-      dragTipText: ''
-    }
-    const internalData: UploadInternalData = {
-      moreId: XEUtils.uniqueId('upload'),
-      imagePreviewTypes: ['jpg', 'jpeg', 'png', 'gif'],
-      prevDragIndex: -1
-      // prevDragPos: ''
-    }
+    const reactData = createReactData()
+    const internalData = createInternalData()
     return {
       xID,
       reactData,
@@ -2068,11 +2076,14 @@ export default /* define-vxe-component start */ defineVxeComponent({
   beforeDestroy () {
     const $xeUpload = this
     const reactData = $xeUpload.reactData
+    const internalData = $xeUpload.internalData
 
     reactData.isDragUploadStatus = false
     globalEvents.off($xeUpload, 'paste')
     globalEvents.off($xeUpload, 'mousedown')
     globalEvents.off($xeUpload, 'blur')
+    XEUtils.assign(reactData, createReactData())
+    XEUtils.assign(internalData, createInternalData())
   },
   render (this: any, h) {
     return this.renderVN(h)

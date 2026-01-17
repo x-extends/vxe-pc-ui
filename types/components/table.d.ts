@@ -1258,9 +1258,22 @@ export namespace VxeTablePropTypes {
     transfer?: boolean
     iconNone?: string
     iconMatch?: string
+    /**
+     * 弹出层在关闭时是否销毁
+     */
     destroyOnClose?: boolean
+    /**
+     * 自定义确认按钮内容
+     */
     confirmButtonText?: string
+    /**
+     * 自定义重置按钮内容
+     */
     resetButtonText?: string
+    /**
+     * 是否显示底部按钮
+     */
+    showFooter?: boolean
   }
   export interface FilterOpts<D = VxeTablePropTypes.Row> extends FilterConfig<D> { }
 

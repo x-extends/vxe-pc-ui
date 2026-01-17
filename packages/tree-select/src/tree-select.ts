@@ -18,6 +18,21 @@ function getOptUniqueId () {
   return XEUtils.uniqueId('node_')
 }
 
+function createReactData (): TreeSelectReactData {
+  return {
+    initialized: false,
+    searchValue: '',
+    searchLoading: false,
+    panelIndex: 0,
+    panelStyle: {},
+    panelPlacement: null,
+    triggerFocusPanel: false,
+    visiblePanel: false,
+    isAniVisible: false,
+    isActivated: false
+  }
+}
+
 function createInternalData (): TreeSelectInternalData {
   return {
     // hpTimeout: undefined,
@@ -137,18 +152,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
   },
   data () {
     const xID = XEUtils.uniqueId()
-    const reactData: TreeSelectReactData = {
-      initialized: false,
-      searchValue: '',
-      searchLoading: false,
-      panelIndex: 0,
-      panelStyle: {},
-      panelPlacement: null,
-      triggerFocusPanel: false,
-      visiblePanel: false,
-      isAniVisible: false,
-      isActivated: false
-    }
+    const reactData = createReactData()
     const internalData = createInternalData()
     return {
       xID,
@@ -1075,6 +1079,8 @@ export default /* define-vxe-component start */ defineVxeComponent({
   },
   beforeDestroy () {
     const $xeTreeSelect = this
+    const reactData = $xeTreeSelect.reactData
+    const internalData = $xeTreeSelect.internalData
 
     const panelElem = $xeTreeSelect.$refs.refOptionPanel as HTMLElement | undefined
     if (panelElem && panelElem.parentNode) {
@@ -1084,11 +1090,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
     globalEvents.off($xeTreeSelect, 'mousedown')
     globalEvents.off($xeTreeSelect, 'blur')
     globalEvents.off($xeTreeSelect, 'resize')
-  },
-  destroyed () {
-    const $xeTreeSelect = this
-    const internalData = $xeTreeSelect.internalData
-
+    XEUtils.assign(reactData, createReactData())
     XEUtils.assign(internalData, createInternalData())
   },
   render (this: any, h) {

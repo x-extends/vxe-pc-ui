@@ -10,6 +10,18 @@ import type { VxeListPropTypes, VxeListEmits, VxeComponentSizeType, ListReactDat
 
 const browseObj = XEUtils.browse()
 
+function createReactData (): ListReactData {
+  return {
+    scrollYLoad: false,
+    bodyHeight: 0,
+    customHeight: 0,
+    customMaxHeight: 0,
+    parentHeight: 0,
+    topSpaceHeight: 0,
+    items: []
+  }
+}
+
 function createInternalData (): ListInternalData {
   return {
     resizeObserver: undefined,
@@ -51,15 +63,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
   },
   data () {
     const xID = XEUtils.uniqueId()
-    const reactData: ListReactData = {
-      scrollYLoad: false,
-      bodyHeight: 0,
-      customHeight: 0,
-      customMaxHeight: 0,
-      parentHeight: 0,
-      topSpaceHeight: 0,
-      items: []
-    }
+    const reactData = createReactData()
     const internalData = createInternalData()
     return {
       xID,
@@ -471,6 +475,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
   },
   beforeDestroy () {
     const $xeList = this
+    const reactData = $xeList.reactData
     const internalData = $xeList.internalData
 
     const { resizeObserver } = internalData
@@ -478,11 +483,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       resizeObserver.disconnect()
     }
     globalEvents.off($xeList, 'resize')
-  },
-  destroyed () {
-    const $xeList = this
-    const internalData = $xeList.internalData
-
+    XEUtils.assign(reactData, createReactData())
     XEUtils.assign(internalData, createInternalData())
   },
   render (this: any, h) {

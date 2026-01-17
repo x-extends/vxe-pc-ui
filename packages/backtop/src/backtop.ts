@@ -125,6 +125,11 @@ export default /* define-vxe-component start */ defineVxeComponent({
     }
   },
   watch: {
+    position () {
+      const $xeBacktop = this
+
+      $xeBacktop.updateZIndex()
+    },
     target () {
       const $xeBacktop = this
 
@@ -139,12 +144,12 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const $xeBacktop = this
       $xeBacktop.$emit(type, createEvent(evnt, { $backtop: $xeBacktop }, params))
     },
-    showBacktop () {
+    updateZIndex () {
       const $xeBacktop = this
       const props = $xeBacktop
       const reactData = $xeBacktop.reactData
 
-      const { zIndex, position } = props
+      const { position, zIndex } = props
       const { backtopZindex } = reactData
       if (zIndex) {
         reactData.backtopZindex = XEUtils.toNumber(zIndex)
@@ -153,6 +158,12 @@ export default /* define-vxe-component start */ defineVxeComponent({
           reactData.backtopZindex = nextZIndex()
         }
       }
+    },
+    showBacktop () {
+      const $xeBacktop = this
+      const reactData = $xeBacktop.reactData
+
+      $xeBacktop.updateZIndex()
       reactData.showBtn = true
     },
     hideBacktop () {
@@ -296,7 +307,12 @@ export default /* define-vxe-component start */ defineVxeComponent({
   },
   mounted () {
     const $xeBacktop = this
+    const props = $xeBacktop
 
+    const { showTop } = props
+    if (showTop) {
+      $xeBacktop.updateZIndex()
+    }
     $xeBacktop.handleTargetElement()
   },
   beforeDestroy () {
