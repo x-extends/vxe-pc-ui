@@ -746,6 +746,11 @@ export namespace VxeTreeDefines {
   }
   export interface MenuClickEventParams<D = any> extends TreeEventParams<D> {
     node: D
+    menu: VxeContextMenuDefines.MenuFirstOption | VxeContextMenuDefines.MenuChildOption
+
+    /**
+     * @deprecated
+     */
     option: VxeContextMenuDefines.MenuFirstOption | VxeContextMenuDefines.MenuChildOption
   }
 }

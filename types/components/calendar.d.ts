@@ -209,7 +209,7 @@ export namespace VxeCalendarDefines {
   }
   export interface MenuClickEventParams extends CellMemuEventParams {
     date: Date
-    option: VxeContextMenuDefines.MenuFirstOption | VxeContextMenuDefines.MenuChildOption
+    menu: VxeContextMenuDefines.MenuFirstOption | VxeContextMenuDefines.MenuChildOption
   }
 }
 

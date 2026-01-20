@@ -144,7 +144,7 @@ export namespace VxeMenuDefines {
   }
   export interface MenuClickEventParams extends MenuEventParams {
     currentMenu: VxeMenuDefines.MenuItem
-    option: VxeContextMenuDefines.MenuFirstOption | VxeContextMenuDefines.MenuChildOption
+    menu: VxeContextMenuDefines.MenuFirstOption | VxeContextMenuDefines.MenuChildOption
   }
 }
 
