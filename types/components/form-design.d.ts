@@ -262,7 +262,7 @@ export namespace VxeFormDesignDefines {
   }
   export interface MenuClickEventParams<D = any> extends FormDesignEventParams {
     widget: VxeFormDesignDefines.WidgetObjItem<D>
-    option: VxeContextMenuDefines.MenuFirstOption | VxeContextMenuDefines.MenuChildOption
+    menu: VxeContextMenuDefines.MenuFirstOption | VxeContextMenuDefines.MenuChildOption
   }
 }
 

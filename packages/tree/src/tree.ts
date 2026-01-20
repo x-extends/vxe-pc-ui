@@ -1617,7 +1617,17 @@ export default /* define-vxe-component start */ defineVxeComponent({
                   const { option } = eventParams
                   const gMenuOpts = menus.get(option.code)
                   const tmMethod = gMenuOpts ? gMenuOpts.treeMenuMethod : null
-                  const params = { menu: option, node, $event: evnt, $tree: $xeTree }
+                  const params = {
+                    menu: option,
+                    node,
+                    $event: evnt,
+                    $tree: $xeTree,
+
+                    /**
+                     * @@deprecated
+                     */
+                    option
+                  }
                   if (tmMethod) {
                     tmMethod(params, evnt)
                   }
