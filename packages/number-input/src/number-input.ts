@@ -233,9 +233,17 @@ export default defineVxeComponent({
     })
 
     const computeInpMaxLength = computed(() => {
-      const { maxLength, maxlength } = props
-      // 数值最大长度限制 16 位，包含小数
-      return XEUtils.toNumber(maxLength || maxlength) || 16
+      const { type, maxLength, maxlength, min, max } = props
+      const digitsValue = computeDigitsValue.value
+      // 数值最大长度默认限制 16 位，包含小数
+      const maxDefLen = 16
+      if (!eqEmptyValue(min) && !eqEmptyValue(max)) {
+        return `${max}`.length + (type === 'integer' ? 0 : (digitsValue + 1)) + (XEUtils.toNumber(min) >= 0 ? 0 : 1)
+      }
+      if (maxLength || maxlength) {
+        return XEUtils.toNumber(maxLength || maxlength)
+      }
+      return maxDefLen
     })
 
     const computeInpImmediate = computed(() => {
