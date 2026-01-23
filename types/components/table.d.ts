@@ -2421,6 +2421,20 @@ export namespace VxeTablePropTypes {
   export interface EditOpts<D = any> extends EditConfig<D> { }
 
   /**
+   * 数据状态监听配置项
+   */
+  export interface EditDirtyConfig {
+    /**
+     * 监听数据指定列的变量
+     */
+    includeFields?: string[]
+    /**
+     * 排除监听数据指定列的变量
+     */
+    excludeFields?: string[]
+  }
+
+  /**
    * 校验配置项
    */
   export interface ValidConfig<D = any> {
@@ -2907,7 +2921,7 @@ export namespace VxeTablePropTypes {
      */
     includeFields?: string[]
     /**
-     * 排序列
+     * 排除列
      */
     excludeFields?: string[]
     /**
@@ -3074,7 +3088,7 @@ export namespace VxeTablePropTypes {
      */
     includeFields?: string[]
     /**
-     * 排序列
+     * 排除列
      */
     excludeFields?: string[]
     /**
@@ -3463,6 +3477,10 @@ export interface VxeTableProps<D = any> {
    */
   editConfig?: VxeTablePropTypes.EditConfig<D>
   /**
+   * 数据状态监听配置项
+   */
+  editDirtyConfig?: VxeTablePropTypes.EditDirtyConfig
+  /**
    * 校验配置项
    */
   validConfig?: VxeTablePropTypes.ValidConfig<D>
@@ -3579,6 +3597,7 @@ export interface TablePrivateComputed<D = any> {
   computeSize: ComputedRef<VxeTablePropTypes.Size>
   computeTableId: ComputedRef<string>
   computeRowField: ComputedRef<string>
+  computeEditDirtyOpts: ComputedRef<VxeTablePropTypes.EditDirtyConfig>
   computeValidOpts: ComputedRef<VxeTablePropTypes.ValidOpts<D>>
   computeVirtualXOpts: ComputedRef<VxeTablePropTypes.VirtualXConfig & { gt: number }>
   computeVirtualYOpts: ComputedRef<VxeTablePropTypes.VirtualYConfig & { gt: number }>
@@ -3644,6 +3663,7 @@ export interface TablePrivateComputed<D = any> {
   computeBodyMergeCoverFixed: ComputedRef<boolean>
   computeFixedColumnSize: ComputedRef<number>
   computeIsMaxFixedColumn: ComputedRef<boolean>
+  computeKeepFields: ComputedRef<string[]>
   computeIsAllCheckboxDisabled: ComputedRef<boolean>
   computeIsHeaderRenderOptimize: ComputedRef<boolean>
   computeIsBodyRenderOptimize: ComputedRef<boolean>
@@ -3681,6 +3701,7 @@ export interface TablePrivateComputed<D = any> {
 export interface VxeTablePrivateComputed extends TablePrivateComputed { }
 
 export interface TableReactData<D = any> {
+  updateColFlag: number
   // 低性能的静态列
   staticColumns: any[]
   // 渲染的列分组
@@ -3980,6 +4001,8 @@ export interface TableInternalData<D = any> {
       }
     }
   }>
+
+  keepUpdateFieldMaps: Record<string, number>
 
   sourceDataRowIdData: Record<string, D>
   fullColumnIdData: Record<string, VxeTableDefines.ColumnCacheItem<D>>

@@ -1,5 +1,6 @@
 import XEUtils from 'xe-utils'
 import { toCssUnit } from '../../ui/src/dom'
+import { warnLog } from '../../ui/src/log'
 
 import type { VxePrintProps, VxePrintPropTypes, VxePrintDefines, VxePrintConstructor, VxePrintPrivateMethods } from '../../../types'
 
@@ -150,7 +151,14 @@ function createHtmlPage (opts: VxePrintProps & { _pageBreaks: boolean }, printHt
 }
 
 function handlePrint (opts: VxePrintProps & { _pageBreaks: boolean }, printHtml = '') {
-  const { beforeMethod } = opts
+  const { beforeMethod, styleUrls } = opts
+  if (styleUrls && styleUrls.length) {
+    styleUrls.forEach(url => {
+      if (!/.css$/.test(url)) {
+        warnLog('vxe.error.errProp', [url, `${url}.css`])
+      }
+    })
+  }
   if (beforeMethod) {
     printHtml = beforeMethod({ content: printHtml, html: printHtml, options: opts }) || ''
   }
