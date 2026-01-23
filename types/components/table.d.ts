@@ -1934,6 +1934,10 @@ export namespace VxeTablePropTypes {
      */
     isLastEnterAppendRow?: boolean
     /**
+     * 当在最后一行的最后一列按下Tab键时，自动插入新行
+     */
+    isLastTabAppendRow?: boolean
+    /**
      * 只对 isEnter=true 有效，用于回车键执行之前的方法，返回 false 可以阻止默认行为
      */
     beforeEnterMethod?(params: {
@@ -1951,6 +1955,34 @@ export namespace VxeTablePropTypes {
      * 只对 isEnter=true 有效，用于重写回车键的方法
      */
     enterMethod?(params: {
+      $table: VxeTableConstructor<D>
+      row: D
+      rowIndex: number
+      $rowIndex: number
+      _rowIndex: number
+      column: VxeTableDefines.ColumnInfo<D>
+      columnIndex: number
+      $columnIndex: number
+      _columnIndex: number
+    }): void
+    /**
+     * 只对 isEnter=true 有效，用于Tab键执行之前的方法，返回 false 可以阻止默认行为
+     */
+    beforeTabMethod?(params: {
+      $table: VxeTableConstructor<D>
+      row: D
+      rowIndex: number
+      $rowIndex: number
+      _rowIndex: number
+      column: VxeTableDefines.ColumnInfo<D>
+      columnIndex: number
+      $columnIndex: number
+      _columnIndex: number
+    }): boolean
+    /**
+     * 只对 isEnter=true 有效，用于重写Tab键的方法
+     */
+    tabMethod?(params: {
       $table: VxeTableConstructor<D>
       row: D
       rowIndex: number
@@ -5516,6 +5548,7 @@ export type VxeTableEmits = [
   'column-dragover',
   'column-dragend',
   'enter-append-row',
+  'tab-append-row',
 
   'edit-actived', // 已废弃
 
@@ -6416,6 +6449,17 @@ export namespace VxeTableDefines {
     _columnIndex: number
   }
 
+  export interface TabAppendRowEventParams<D = any> {
+    row: D
+    rowIndex: number
+    $rowIndex: number
+    _rowIndex: number
+    column: VxeTableDefines.ColumnInfo<D>
+    columnIndex: number
+    $columnIndex: number
+    _columnIndex: number
+  }
+
   export interface VxeTableCustomStoreObj {
     btnEl: HTMLDivElement | null
     isAll: boolean
@@ -6724,6 +6768,7 @@ export interface VxeTableEventProps<D = any> {
   onColumnDragover?: VxeTableEvents.ColumnDragover<D>
   onColumnDragend?: VxeTableEvents.ColumnDragend<D>
   onEnterAppendRow?: VxeTableEvents.EnterAppendRow<D>
+  onTabAppendRow?: VxeTableEvents.TabAppendRow<D>
 
   /**
    * 已废弃，请使用 onEditActivated
@@ -6814,6 +6859,7 @@ export interface VxeTableListeners<D = any> {
   columnDragover?: VxeTableEvents.ColumnDragover<D>
   columnDragend?: VxeTableEvents.ColumnDragend<D>
   enterAppendRow?: VxeTableEvents.EnterAppendRow<D>
+  tabAppendRow?: VxeTableEvents.TabAppendRow<D>
 
   /**
    * 已废弃，请使用 editActivated
@@ -6887,6 +6933,7 @@ export namespace VxeTableEvents {
   export type ColumnDragover<D = VxeTablePropTypes.Row> = (params: VxeTableDefines.ColumnDragoverEventParams<D>) => void
   export type ColumnDragend<D = VxeTablePropTypes.Row> = (params: VxeTableDefines.ColumnDragendEventParams<D>) => void
   export type EnterAppendRow<D = VxeTablePropTypes.Row> = (params: VxeTableDefines.EnterAppendRowEventParams<D>) => void
+  export type TabAppendRow<D = VxeTablePropTypes.Row> = (params: VxeTableDefines.TabAppendRowEventParams<D>) => void
 
   /**
    * 已废弃，请使用 EditActivated

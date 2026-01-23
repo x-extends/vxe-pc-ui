@@ -543,6 +543,7 @@ export namespace VxeGridDefines {
   export interface ColumnDragoverEventParams<D = any> extends GridEventParams<D>, VxeTableDefines.ColumnDragoverEventParams<D> { }
   export interface ColumnDragendEventParams<D = any> extends GridEventParams<D>, VxeTableDefines.ColumnDragendEventParams<D> { }
   export interface EnterAppendRowEventParams<D = any> extends GridEventParams<D>, VxeTableDefines.EnterAppendRowEventParams<D> { }
+  export interface TabAppendRowEventParams<D = any> extends GridEventParams<D>, VxeTableDefines.TabAppendRowEventParams<D> { }
 
   export interface ProxyQueryEventParams<D = any> extends GridEventParams<D> {
     status: boolean
@@ -676,6 +677,7 @@ export interface VxeGridEventProps<D = any> {
   onColumnDragover?: VxeGridEvents.ColumnDragover<D>
   onColumnDragend?: VxeGridEvents.ColumnDragend<D>
   onEnterAppendRow?: VxeGridEvents.EnterAppendRow<D>
+  onTabAppendRow?: VxeGridEvents.TabAppendRow<D>
 
   // grid
   onProxyQuery?: VxeGridEvents.ProxyQuery<D>
@@ -761,6 +763,7 @@ export interface VxeGridListeners<D = any> {
   columnDragover?: VxeGridEvents.ColumnDragover<D>
   columnDragend?: VxeGridEvents.ColumnDragend<D>
   enterAppendRow?: VxeGridEvents.EnterAppendRow<D>
+  tabAppendRow?: VxeGridEvents.TabAppendRow<D>
 
   // grid
   proxyQuery?: VxeGridEvents.ProxyQuery<D>
@@ -846,6 +849,7 @@ export namespace VxeGridEvents {
   export type ColumnDragover<D = any> = (params: VxeGridDefines.ColumnDragoverEventParams<D>) => void
   export type ColumnDragend<D = any> = (params: VxeGridDefines.ColumnDragendEventParams<D>) => void
   export type EnterAppendRow<D = any> = (params: VxeGridDefines.EnterAppendRowEventParams<D>) => void
+  export type TabAppendRow<D = any> = (params: VxeGridDefines.TabAppendRowEventParams<D>) => void
 
   export type ProxyQuery<D = any> = (params: VxeGridDefines.ProxyQueryEventParams<D>) => void
   export type ProxyDelete<D = any> = (params: VxeGridDefines.ProxyDeleteEventParams<D>) => void
