@@ -1467,7 +1467,7 @@ export default defineVxeComponent({
       ])
     }
 
-    const renderAllMode = () => {
+    const rendeFileMode = () => {
       const { showList, moreConfig, dragSort } = props
       const { fileList, isDragMove } = reactData
       const moreOpts = computeMoreOpts.value
@@ -1494,46 +1494,44 @@ export default defineVxeComponent({
             showMoreButton && moreConfig && isHorizontal
               ? renderEmptyElement($xeUpload)
               : renderFileAction(true),
-            isMoreMax || (showMoreButton && isHorizontal)
-              ? h('div', {
-                class: ['vxe-upload--file-list-wrapper', {
-                  'is--horizontal': isHorizontal
-                }]
-              }, [
-                currList.length
-                  ? (
-                      dragSort
-                        ? h(TransitionGroup, {
-                          name: `vxe-upload--drag-list${isDragMove ? '' : '-disabled'}`,
-                          tag: 'div',
-                          class: 'vxe-upload--file-list'
-                        }, {
-                          default: () => renderFileItemList(currList, false)
-                        })
-                        : h('div', {
-                          class: 'vxe-upload--file-list'
-                        }, renderFileItemList(currList, false))
-                    )
-                  : renderEmptyElement($xeUpload),
-                showMoreButton && overMaxNum
-                  ? h('div', {
-                    class: 'vxe-upload--file-over-more'
-                  }, moreBtnSlot
-                    ? getSlotVNs(moreBtnSlot({ options: fileList }))
-                    : [
-                        h(VxeButtonComponent, {
-                          mode: 'text',
-                          content: getI18n(isMoreMax && isMiniMore ? 'vxe.upload.moreFileBtnText' : 'vxe.upload.moreBtnText', [fileList.length]),
-                          status: 'primary',
-                          onClick: handleMoreEvent
-                        })
-                      ])
-                  : renderEmptyElement($xeUpload),
-                showMoreButton && moreConfig && isHorizontal
-                  ? renderFileAction(false)
-                  : renderEmptyElement($xeUpload)
-              ])
-              : renderEmptyElement($xeUpload)
+            h('div', {
+              class: ['vxe-upload--file-list-wrapper', {
+                'is--horizontal': isHorizontal
+              }]
+            }, [
+              currList.length
+                ? (
+                    dragSort
+                      ? h(TransitionGroup, {
+                        name: `vxe-upload--drag-list${isDragMove ? '' : '-disabled'}`,
+                        tag: 'div',
+                        class: 'vxe-upload--file-list'
+                      }, {
+                        default: () => renderFileItemList(currList, false)
+                      })
+                      : h('div', {
+                        class: 'vxe-upload--file-list'
+                      }, renderFileItemList(currList, false))
+                  )
+                : renderEmptyElement($xeUpload),
+              showMoreButton && overMaxNum
+                ? h('div', {
+                  class: 'vxe-upload--file-over-more'
+                }, moreBtnSlot
+                  ? getSlotVNs(moreBtnSlot({ options: fileList }))
+                  : [
+                      h(VxeButtonComponent, {
+                        mode: 'text',
+                        content: getI18n(isMoreMax && isMiniMore ? 'vxe.upload.moreFileBtnText' : 'vxe.upload.moreBtnText', [fileList.length]),
+                        status: 'primary',
+                        onClick: handleMoreEvent
+                      })
+                    ])
+                : renderEmptyElement($xeUpload),
+              showMoreButton && moreConfig && isHorizontal
+                ? renderFileAction(false)
+                : renderEmptyElement($xeUpload)
+            ])
           ]
         : [
             renderFileAction(false)
@@ -1828,7 +1826,7 @@ export default defineVxeComponent({
         }],
         ...ons
       }, [
-        isImage ? renderImageMode() : renderAllMode(),
+        isImage ? renderImageMode() : rendeFileMode(),
         dragSort
           ? h('div', {
             ref: refDragLineElem,
