@@ -1636,7 +1636,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
           : renderEmptyElement($xeUpload)
       ])
     },
-    renderAllMode  (h: CreateElement) {
+    rendeFileMode  (h: CreateElement) {
       const $xeUpload = this
       const props = $xeUpload
       const slots = $xeUpload.$scopedSlots
@@ -1668,50 +1668,48 @@ export default /* define-vxe-component start */ defineVxeComponent({
             showMoreButton && moreConfig && isHorizontal
               ? renderEmptyElement($xeUpload)
               : $xeUpload.renderFileAction(h, true),
-            isMoreMax || (showMoreButton && isHorizontal)
-              ? h('div', {
-                class: ['vxe-upload--file-list-wrapper', {
-                  'is--horizontal': isHorizontal
-                }]
-              }, [
-                currList.length
-                  ? (
-                      dragSort
-                        ? h('transition-group', {
-                          attrs: {
-                            name: `vxe-upload--drag-list${isDragMove ? '' : '-disabled'}`,
-                            tag: 'div'
-                          },
-                          class: 'vxe-upload--file-list'
-                        }, $xeUpload.renderFileItemList(h, currList, false))
-                        : h('div', {
-                          class: 'vxe-upload--file-list'
-                        }, $xeUpload.renderFileItemList(h, currList, false))
-                    )
-                  : renderEmptyElement($xeUpload),
-                showMoreButton && overMaxNum
-                  ? h('div', {
-                    class: 'vxe-upload--file-over-more'
-                  }, moreBtnSlot
-                    ? getSlotVNs(moreBtnSlot({ options: fileList }))
-                    : [
-                        h(VxeButtonComponent, {
-                          props: {
-                            mode: 'text',
-                            content: getI18n(isMoreMax && isMiniMore ? 'vxe.upload.moreFileBtnText' : 'vxe.upload.moreBtnText', [fileList.length]),
-                            status: 'primary'
-                          },
-                          on: {
-                            click: $xeUpload.handleMoreEvent
-                          }
-                        })
-                      ])
-                  : renderEmptyElement($xeUpload),
-                showMoreButton && moreConfig && isHorizontal
-                  ? $xeUpload.renderFileAction(h, false)
-                  : renderEmptyElement($xeUpload)
-              ])
-              : renderEmptyElement($xeUpload)
+            h('div', {
+              class: ['vxe-upload--file-list-wrapper', {
+                'is--horizontal': isHorizontal
+              }]
+            }, [
+              currList.length
+                ? (
+                    dragSort
+                      ? h('transition-group', {
+                        attrs: {
+                          name: `vxe-upload--drag-list${isDragMove ? '' : '-disabled'}`,
+                          tag: 'div'
+                        },
+                        class: 'vxe-upload--file-list'
+                      }, $xeUpload.renderFileItemList(h, currList, false))
+                      : h('div', {
+                        class: 'vxe-upload--file-list'
+                      }, $xeUpload.renderFileItemList(h, currList, false))
+                  )
+                : renderEmptyElement($xeUpload),
+              showMoreButton && overMaxNum
+                ? h('div', {
+                  class: 'vxe-upload--file-over-more'
+                }, moreBtnSlot
+                  ? getSlotVNs(moreBtnSlot({ options: fileList }))
+                  : [
+                      h(VxeButtonComponent, {
+                        props: {
+                          mode: 'text',
+                          content: getI18n(isMoreMax && isMiniMore ? 'vxe.upload.moreFileBtnText' : 'vxe.upload.moreBtnText', [fileList.length]),
+                          status: 'primary'
+                        },
+                        on: {
+                          click: $xeUpload.handleMoreEvent
+                        }
+                      })
+                    ])
+                : renderEmptyElement($xeUpload),
+              showMoreButton && moreConfig && isHorizontal
+                ? $xeUpload.renderFileAction(h, false)
+                : renderEmptyElement($xeUpload)
+            ])
           ]
         : [
             $xeUpload.renderFileAction(h, false)
@@ -2043,7 +2041,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
         }],
         on: ons
       }, [
-        isImage ? $xeUpload.renderImageMode(h) : $xeUpload.renderAllMode(h),
+        isImage ? $xeUpload.renderImageMode(h) : $xeUpload.rendeFileMode(h),
         dragSort
           ? h('div', {
             ref: 'refDragLineElem',
