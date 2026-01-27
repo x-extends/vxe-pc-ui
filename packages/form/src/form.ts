@@ -122,19 +122,20 @@ function validRuleValue (rule: VxeFormDefines.FormRule, val: any, required: bool
   return true
 }
 
-function checkRuleStatus (rule: VxeFormDefines.FormRule, val: any) {
-  const { required } = rule
-  const isEmptyVal = XEUtils.isArray(val) ? !val.length : eqEmptyValue(val)
+function checkRuleStatus (rule: VxeFormDefines.FormRule, data: any, val: any) {
+  const { required, to } = rule
+  const currVal = to ? XEUtils.get(data, to) : val
+  const isEmptyVal = XEUtils.isArray(currVal) ? !currVal.length : eqEmptyValue(currVal)
   if (required) {
     if (isEmptyVal) {
       return false
     }
-    if (!validRuleValue(rule, val, required)) {
+    if (!validRuleValue(rule, currVal, required)) {
       return false
     }
   } else {
     if (!isEmptyVal) {
-      if (!validRuleValue(rule, val, required)) {
+      if (!validRuleValue(rule, currVal, required)) {
         return false
       }
     }
@@ -607,7 +608,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
                       }
                     }
                   } else {
-                    if (!checkRuleStatus(rule, itemValue)) {
+                    if (!checkRuleStatus(rule, data, itemValue)) {
                       errorRules.push(new Rule(rule))
                     }
                   }

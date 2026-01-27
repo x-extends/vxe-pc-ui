@@ -1645,7 +1645,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const { showList, moreConfig, dragSort } = props
       const { fileList, isDragMove } = reactData
       const moreOpts = $xeUpload.computeMoreOpts
-      const { maxCount, showMoreButton, layout } = moreOpts
+      const { maxCount, showMoreButton, layout, moreButtonText } = moreOpts
       const isHorizontal = layout === 'horizontal'
       const moreBtnSlot = slots.moreButton || slots['more-button']
 
@@ -1697,7 +1697,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
                       h(VxeButtonComponent, {
                         props: {
                           mode: 'text',
-                          content: getI18n(isMoreMax && isMiniMore ? 'vxe.upload.moreFileBtnText' : 'vxe.upload.moreBtnText', [fileList.length]),
+                          content: moreButtonText ? (XEUtils.isFunction(moreButtonText) ? moreButtonText({ $upload: $xeUpload, options: fileList }) : XEUtils.toFormatString(moreButtonText, [fileList.length])) : getI18n(isMoreMax && isMiniMore ? 'vxe.upload.moreFileBtnText' : 'vxe.upload.moreBtnText', [fileList.length]),
                           status: 'primary'
                         },
                         on: {
@@ -1931,7 +1931,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const moreOpts = $xeUpload.computeMoreOpts
       const moreBtnSlot = slots.moreButton || slots['more-button']
 
-      const { maxCount, showMoreButton } = moreOpts
+      const { maxCount, showMoreButton, moreButtonText } = moreOpts
       let currList = fileList
       let overMaxNum = 0
       let isMoreMax = false
@@ -1966,7 +1966,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
                         h(VxeButtonComponent, {
                           props: {
                             mode: 'text',
-                            content: getI18n(isMoreMax && isMiniMore ? 'vxe.upload.moreImgBtnText' : 'vxe.upload.moreBtnText', [fileList.length]),
+                            content: moreButtonText ? (XEUtils.isFunction(moreButtonText) ? moreButtonText({ $upload: $xeUpload, options: fileList }) : XEUtils.toFormatString(moreButtonText, [fileList.length])) : getI18n(isMoreMax && isMiniMore ? 'vxe.upload.moreImgBtnText' : 'vxe.upload.moreBtnText', [fileList.length]),
                             status: 'primary'
                           },
                           on: {
@@ -1989,7 +1989,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
                         h(VxeButtonComponent, {
                           props: {
                             mode: 'text',
-                            content: getI18n(isMoreMax && isMiniMore ? 'vxe.upload.moreImgBtnText' : 'vxe.upload.moreBtnText', [fileList.length]),
+                            content: moreButtonText ? (XEUtils.isFunction(moreButtonText) ? moreButtonText({ $upload: $xeUpload, options: fileList }) : XEUtils.toFormatString(moreButtonText, [fileList.length])) : getI18n(isMoreMax && isMiniMore ? 'vxe.upload.moreImgBtnText' : 'vxe.upload.moreBtnText', [fileList.length]),
                             status: 'primary'
                           },
                           on: {

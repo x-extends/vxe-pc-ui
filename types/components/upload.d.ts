@@ -24,6 +24,10 @@ export namespace VxeUploadPropTypes {
     maxCount?: number
     showMoreButton?: boolean
     layout?: '' | 'vertical' | 'horizontal'
+    moreButtonText?: string | ((params: {
+      $upload: VxeUploadConstructor
+      options: VxeUploadDefines.FileObjItem[]
+    }) => string | number)
   }
   export type Mode = null | '' | 'all' | 'image'
   export type Readonly = boolean
