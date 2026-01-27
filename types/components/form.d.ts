@@ -350,6 +350,10 @@ export namespace VxeFormDefines {
      */
     max?: number
     /**
+     * 指定字段
+     */
+    to?: string
+    /**
      * 数据类型
      */
     type?: 'number' | 'string' | 'array' | '' | null

@@ -6586,6 +6586,10 @@ export namespace VxeTableDefines {
      */
     max?: number | string
     /**
+     * 指定字段
+     */
+    to?: string
+    /**
      * 数据类型
      */
     type?: 'number' | 'string' | 'array' | '' | null
