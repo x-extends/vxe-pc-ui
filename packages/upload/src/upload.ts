@@ -1651,7 +1651,11 @@ export default /* define-vxe-component start */ defineVxeComponent({
 
       let currList = fileList
       let overMaxNum = 0
-      if (maxCount && fileList.length > maxCount) {
+      let isMoreMax = false
+      let isMiniMore = false
+      if (XEUtils.isNumber(maxCount) && fileList.length > maxCount) {
+        isMoreMax = true
+        isMiniMore = maxCount === 0
         overMaxNum = fileList.length - maxCount
         currList = fileList.slice(0, maxCount)
       }
@@ -1664,7 +1668,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
             showMoreButton && moreConfig && isHorizontal
               ? renderEmptyElement($xeUpload)
               : $xeUpload.renderFileAction(h, true),
-            currList.length || (showMoreButton && isHorizontal)
+            isMoreMax || (showMoreButton && isHorizontal)
               ? h('div', {
                 class: ['vxe-upload--file-list-wrapper', {
                   'is--horizontal': isHorizontal
@@ -1694,7 +1698,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
                         h(VxeButtonComponent, {
                           props: {
                             mode: 'text',
-                            content: getI18n('vxe.upload.moreBtnText', [fileList.length]),
+                            content: getI18n(isMoreMax && isMiniMore ? 'vxe.upload.moreFileBtnText' : 'vxe.upload.moreBtnText', [fileList.length]),
                             status: 'primary'
                           },
                           on: {
@@ -1932,7 +1936,11 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const { maxCount, showMoreButton } = moreOpts
       let currList = fileList
       let overMaxNum = 0
-      if (maxCount && fileList.length > maxCount) {
+      let isMoreMax = false
+      let isMiniMore = false
+      if (XEUtils.isNumber(maxCount) && fileList.length > maxCount) {
+        isMoreMax = true
+        isMiniMore = maxCount === 0
         overMaxNum = fileList.length - maxCount
         currList = fileList.slice(0, maxCount)
       }
@@ -1960,7 +1968,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
                         h(VxeButtonComponent, {
                           props: {
                             mode: 'text',
-                            content: getI18n('vxe.upload.moreBtnText', [fileList.length]),
+                            content: getI18n(isMoreMax && isMiniMore ? 'vxe.upload.moreImgBtnText' : 'vxe.upload.moreBtnText', [fileList.length]),
                             status: 'primary'
                           },
                           on: {
@@ -1983,7 +1991,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
                         h(VxeButtonComponent, {
                           props: {
                             mode: 'text',
-                            content: getI18n('vxe.upload.moreBtnText', [fileList.length]),
+                            content: getI18n(isMoreMax && isMiniMore ? 'vxe.upload.moreImgBtnText' : 'vxe.upload.moreBtnText', [fileList.length]),
                             status: 'primary'
                           },
                           on: {
