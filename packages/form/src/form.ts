@@ -123,8 +123,8 @@ function validRuleValue (rule: VxeFormDefines.FormRule, val: any, required: bool
 }
 
 function checkRuleStatus (rule: VxeFormDefines.FormRule, data: any, val: any) {
-  const { required, to } = rule
-  const currVal = to ? XEUtils.get(data, to) : val
+  const { required, field } = rule
+  const currVal = field ? XEUtils.get(data, field) : val
   const isEmptyVal = XEUtils.isArray(currVal) ? !currVal.length : eqEmptyValue(currVal)
   if (required) {
     if (isEmptyVal) {
