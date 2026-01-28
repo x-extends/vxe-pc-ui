@@ -61,6 +61,8 @@ export default /* define-vxe-component start */ defineVxeComponent({
       default: () => getConfig().datePanel.disabledMethod
     },
 
+    timeConfig: Object as PropType<VxeDatePanelPropTypes.TimeConfig>,
+
     // week
     selectDay: {
       type: [String, Number] as PropType<VxeDatePanelPropTypes.SelectDay>,
@@ -183,6 +185,12 @@ export default /* define-vxe-component start */ defineVxeComponent({
 
       const { type, valueFormat } = props
       return handleValueFormat(type, valueFormat)
+    },
+    computeTimeOpts () {
+      const $xeDatePanel = this
+      const props = $xeDatePanel
+
+      return Object.assign({}, getConfig().datePanel.timeConfig, props.timeConfig)
     },
     computeDateValue () {
       const $xeDatePanel = this
@@ -503,14 +511,38 @@ export default /* define-vxe-component start */ defineVxeComponent({
     computeHourList () {
       const $xeDatePanel = this
 
+      const timeOpts = $xeDatePanel.computeTimeOpts
+      const { hours: hourOptions, hourDisabledMethod } = timeOpts
       const list: VxeDatePanelDefines.DateHourMinuteSecondItem[] = []
       const isDateTimeType = $xeDatePanel.computeIsDateTimeType
       if (isDateTimeType) {
-        for (let index = 0; index < 24; index++) {
-          list.push({
-            value: index,
-            label: ('' + index).padStart(2, '0')
+        if (hourOptions && hourOptions.length) {
+          hourOptions.forEach(item => {
+            if (XEUtils.isNumber(item) || XEUtils.isString(item)) {
+              const hour = XEUtils.toNumber(item)
+              list.push({
+                value: hour,
+                label: ('' + hour).padStart(2, '0'),
+                disabled: !!(hourDisabledMethod && hourDisabledMethod({ hour }))
+              })
+            } else if (item) {
+              const hour = XEUtils.toNumber(item.value)
+              list.push({
+                value: hour,
+                label: ('' + (item.label || hour)).padStart(2, '0'),
+                disabled: XEUtils.isBoolean(item.disabled) ? item.disabled : !!(hourDisabledMethod && hourDisabledMethod({ hour }))
+              })
+            }
           })
+        } else {
+          for (let index = 0; index < 24; index++) {
+            const hour = index
+            list.push({
+              value: hour,
+              label: ('' + hour).padStart(2, '0'),
+              disabled: !!(hourDisabledMethod && hourDisabledMethod({ hour }))
+            })
+          }
         }
       }
       return list
@@ -518,14 +550,38 @@ export default /* define-vxe-component start */ defineVxeComponent({
     computeMinuteList () {
       const $xeDatePanel = this
 
+      const timeOpts = $xeDatePanel.computeTimeOpts
+      const { minutes: minuteOptions, minuteDisabledMethod } = timeOpts
       const list: VxeDatePanelDefines.DateHourMinuteSecondItem[] = []
       const isDateTimeType = $xeDatePanel.computeIsDateTimeType
       if (isDateTimeType) {
-        for (let index = 0; index < 60; index++) {
-          list.push({
-            value: index,
-            label: ('' + index).padStart(2, '0')
+        if (minuteOptions && minuteOptions.length) {
+          minuteOptions.forEach(item => {
+            if (XEUtils.isNumber(item) || XEUtils.isString(item)) {
+              const minute = XEUtils.toNumber(item)
+              list.push({
+                value: minute,
+                label: ('' + minute).padStart(2, '0'),
+                disabled: !!(minuteDisabledMethod && minuteDisabledMethod({ minute }))
+              })
+            } else if (item) {
+              const minute = XEUtils.toNumber(item.value)
+              list.push({
+                value: minute,
+                label: ('' + (item.label || minute)).padStart(2, '0'),
+                disabled: XEUtils.isBoolean(item.disabled) ? item.disabled : !!(minuteDisabledMethod && minuteDisabledMethod({ minute }))
+              })
+            }
           })
+        } else {
+          for (let index = 0; index < 60; index++) {
+            const minute = index
+            list.push({
+              value: minute,
+              label: ('' + minute).padStart(2, '0'),
+              disabled: !!(minuteDisabledMethod && minuteDisabledMethod({ minute }))
+            })
+          }
         }
       }
       return list
@@ -549,8 +605,41 @@ export default /* define-vxe-component start */ defineVxeComponent({
     computeSecondList () {
       const $xeDatePanel = this
 
-      const minuteList = $xeDatePanel.computeMinuteList
-      return minuteList
+      const timeOpts = $xeDatePanel.computeTimeOpts
+      const { seconds: secondOptions, secondDisabledMethod } = timeOpts
+      const list: VxeDatePanelDefines.DateHourMinuteSecondItem[] = []
+      const isDateTimeType = $xeDatePanel.computeIsDateTimeType
+      if (isDateTimeType) {
+        if (secondOptions && secondOptions.length) {
+          secondOptions.forEach(item => {
+            if (XEUtils.isNumber(item) || XEUtils.isString(item)) {
+              const second = XEUtils.toNumber(item)
+              list.push({
+                value: second,
+                label: ('' + second).padStart(2, '0'),
+                disabled: !!(secondDisabledMethod && secondDisabledMethod({ second }))
+              })
+            } else if (item) {
+              const second = XEUtils.toNumber(item.value)
+              list.push({
+                value: second,
+                label: ('' + (item.label || second)).padStart(2, '0'),
+                disabled: XEUtils.isBoolean(item.disabled) ? item.disabled : !!(secondDisabledMethod && secondDisabledMethod({ second }))
+              })
+            }
+          })
+        } else {
+          for (let index = 0; index < 60; index++) {
+            const second = index
+            list.push({
+              value: second,
+              label: ('' + second).padStart(2, '0'),
+              disabled: !!(secondDisabledMethod && secondDisabledMethod({ second }))
+            })
+          }
+        }
+      }
+      return list
     }
   },
   methods: {
@@ -1132,10 +1221,12 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const reactData = $xeDatePanel.reactData
 
       const { datetimePanelValue } = reactData
-      if (datetimePanelValue) {
-        datetimePanelValue.setHours(item.value)
+      if (!item.disabled) {
+        if (datetimePanelValue) {
+          datetimePanelValue.setHours(item.value)
+        }
+        $xeDatePanel.dateTimeChangeEvent(evnt)
       }
-      $xeDatePanel.dateTimeChangeEvent(evnt)
     },
     dateConfirmEvent (evnt: Event) {
       const $xeDatePanel = this
@@ -1182,20 +1273,24 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const reactData = $xeDatePanel.reactData
 
       const { datetimePanelValue } = reactData
-      if (datetimePanelValue) {
-        datetimePanelValue.setMinutes(item.value)
+      if (!item.disabled) {
+        if (datetimePanelValue) {
+          datetimePanelValue.setMinutes(item.value)
+        }
+        $xeDatePanel.dateTimeChangeEvent(evnt)
       }
-      $xeDatePanel.dateTimeChangeEvent(evnt)
     },
     dateSecondEvent (evnt: MouseEvent, item: VxeDatePanelDefines.DateHourMinuteSecondItem) {
       const $xeDatePanel = this
       const reactData = $xeDatePanel.reactData
 
       const { datetimePanelValue } = reactData
-      if (datetimePanelValue) {
-        datetimePanelValue.setSeconds(item.value)
+      if (!item.disabled) {
+        if (datetimePanelValue) {
+          datetimePanelValue.setSeconds(item.value)
+        }
+        $xeDatePanel.dateTimeChangeEvent(evnt)
       }
-      $xeDatePanel.dateTimeChangeEvent(evnt)
     },
     dateOpenPanel () {
       const $xeDatePanel = this
@@ -1793,6 +1888,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
             return h('li', {
               key: index,
               class: {
+                'is--disabled': item.disabled,
                 'is--selected': datetimePanelValue && datetimePanelValue.getHours() === item.value
               },
               on: {
@@ -1807,6 +1903,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
               return h('li', {
                 key: index,
                 class: {
+                  'is--disabled': item.disabled,
                   'is--selected': datetimePanelValue && datetimePanelValue.getMinutes() === item.value
                 },
                 on: {
@@ -1822,6 +1919,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
               return h('li', {
                 key: index,
                 class: {
+                  'is--disabled': item.disabled,
                   'is--selected': datetimePanelValue && datetimePanelValue.getSeconds() === item.value
                 },
                 on: {

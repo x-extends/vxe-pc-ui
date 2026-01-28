@@ -453,13 +453,19 @@
       height: 2em;
       line-height: 2em;
       padding-left: 0.4em;
-      &:hover {
-        background-color: var(--vxe-ui-input-date-picker-hover-background-color);
-        cursor: pointer;
+      &:not(.is--disabled) {
+        &:hover {
+          background-color: var(--vxe-ui-input-date-picker-hover-background-color);
+          cursor: pointer;
+        }
       }
       &.is--selected {
         font-weight: 700;
         color: var(--vxe-ui-font-primary-color);
+      }
+      &.is--disabled {
+        color: var(--vxe-ui-font-disabled-color);
+        cursor: no-drop;
       }
     }
   }

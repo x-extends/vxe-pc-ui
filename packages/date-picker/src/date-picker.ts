@@ -123,6 +123,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       default: null
     },
 
+    timeConfig: Object as PropType<VxeDatePickerPropTypes.TimeConfig>,
     popupConfig: Object as PropType<VxeDatePickerPropTypes.PopupConfig>,
     shortcutConfig: Object as PropType<VxeDatePickerPropTypes.ShortcutConfig>,
 
@@ -288,6 +289,12 @@ export default /* define-vxe-component start */ defineVxeComponent({
 
       const { immediate } = props
       return immediate
+    },
+    computeTimeOpts () {
+      const $xeDatePicker = this
+      const props = $xeDatePicker
+
+      return Object.assign({}, getConfig().datePicker.timeConfig, props.timeConfig)
     },
     computePopupOpts () {
       const $xeDatePicker = this
@@ -730,6 +737,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
         reactData.isAniVisible = true
         setTimeout(() => {
           reactData.visiblePanel = true
+          $xeDatePicker.updatePlacement()
         }, 10)
         $xeDatePicker.updateZindex()
         return $xeDatePicker.updatePlacement()
@@ -889,6 +897,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const isClearable = $xeDatePicker.computeIsClearable
       const isDateTimeType = $xeDatePicker.computeIsDateTimeType
       const shortcutList = $xeDatePicker.computeShortcutList
+      const timeOpts = $xeDatePicker.computeTimeOpts
       const popupOpts = $xeDatePicker.computePopupOpts
       const { position } = shortcutOpts
       const headerSlot = slots.header
@@ -967,6 +976,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
                         labelFormat: props.labelFormat,
                         valueFormat: props.valueFormat,
                         timeFormat: props.timeFormat,
+                        timeConfig: timeOpts,
                         festivalMethod: props.festivalMethod,
                         disabledMethod: props.disabledMethod,
                         selectDay: props.selectDay

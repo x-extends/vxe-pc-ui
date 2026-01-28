@@ -834,6 +834,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
             $xeSelect.handleScrollSelect()
             $xeSelect.refreshScroll()
           })
+          $xeSelect.updatePlacement()
         }, 10)
         setTimeout(() => {
           $xeSelect.recalculate().then(() => $xeSelect.refreshScroll())

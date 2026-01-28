@@ -352,6 +352,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
         reactData.isAniVisible = true
         setTimeout(() => {
           reactData.visiblePanel = true
+          $xeIconPicker.updatePlacement()
         }, 10)
         $xeIconPicker.updateZindex()
         $xeIconPicker.updatePlacement()

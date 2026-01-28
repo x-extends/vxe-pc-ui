@@ -754,7 +754,8 @@ export default /* define-vxe-component start */ defineVxeComponent({
         for (let index = 0; index < 24; index++) {
           list.push({
             value: index,
-            label: ('' + index).padStart(2, '0')
+            label: ('' + index).padStart(2, '0'),
+            disabled: false
           })
         }
       }
@@ -769,7 +770,8 @@ export default /* define-vxe-component start */ defineVxeComponent({
         for (let index = 0; index < 60; index++) {
           list.push({
             value: index,
-            label: ('' + index).padStart(2, '0')
+            label: ('' + index).padStart(2, '0'),
+            disabled: false
           })
         }
       }

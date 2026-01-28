@@ -510,6 +510,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
           reactData.visiblePanel = true
           $xeTableSelect.updateModel(props.value)
           internalData.vpTimeout = undefined
+          $xeTableSelect.updatePlacement()
         }, 10)
         $xeTableSelect.updateZindex()
         $xeTableSelect.updatePlacement()

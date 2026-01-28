@@ -64,6 +64,8 @@ export namespace VxeDateRangePickerPropTypes {
   export type ShowClearButton = boolean | null
   export type ShowConfirmButton = boolean | null
 
+  export interface TimeConfig extends VxeDatePanelPropTypes.TimeConfig {}
+
   export interface PopupConfig {
     /**
      * 设置弹出面板方向
@@ -130,6 +132,9 @@ export interface VxeDateRangePickerProps {
   disabledMethod?: VxeDateRangePickerPropTypes.DisabledMethod
 
   separator?: VxeDateRangePickerPropTypes.Separator
+
+  timeConfig?: VxeDateRangePickerPropTypes.TimeConfig
+
   /**
    * 只对 type=date,week,month,quarter,year 有效，选择完日期后自动关闭
    */

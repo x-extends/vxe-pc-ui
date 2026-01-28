@@ -512,6 +512,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
         setTimeout(() => {
           reactData.visiblePanel = true
           $xeTreeSelect.handleFocusSearch()
+          $xeTreeSelect.updatePlacement()
         }, 10)
         $xeTreeSelect.updateZindex()
         $xeTreeSelect.updatePlacement()

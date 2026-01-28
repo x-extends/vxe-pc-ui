@@ -35,6 +35,33 @@ export namespace VxeDatePanelPropTypes {
   export type TimeFormat = string
   export type FestivalMethod = (params: VxeDatePanelDefines.DateFestivalParams) => VxeDatePanelDefines.DateFestivalInfo | null | void
   export type DisabledMethod = (params: VxeDatePanelDefines.DateDisabledParams) => boolean
+
+  export interface TimeConfig {
+    hours?: number[] | string[] | {
+      label?: string | number
+      value: string | number
+      disabled?: boolean
+    }[]
+    hourDisabledMethod?(params: {
+      hour: number
+    }): boolean
+    minutes?: number[] | string[] | {
+      label?: string | number
+      value: string | number
+      disabled?: boolean
+    }[]
+    minuteDisabledMethod?(params: {
+      minute: number
+    }): boolean
+    seconds?: number[] | string[] | {
+      label?: string | number
+      value: string | number
+      disabled?: boolean
+    }[]
+    secondDisabledMethod?(params: {
+      second: number
+    }): boolean
+  }
 }
 
 export interface VxeDatePanelProps {
@@ -61,6 +88,8 @@ export interface VxeDatePanelProps {
   timeFormat?: VxeDatePanelPropTypes.TimeFormat
   festivalMethod?: VxeDatePanelPropTypes.FestivalMethod
   disabledMethod?: VxeDatePanelPropTypes.DisabledMethod
+
+  timeConfig?: VxeDatePanelPropTypes.TimeConfig
 
   /**
    * 只对 type=week 有效，选中日期后指定为一周的哪一天
@@ -161,8 +190,9 @@ export namespace VxeDatePanelDefines {
   }
 
   export interface DateHourMinuteSecondItem {
-    value: number;
-    label: string;
+    value: number
+    label: string
+    disabled: boolean
   }
 
   export type DatePanelType = 'year' | 'quarter' | 'month' | 'week' | 'date' | 'day'

@@ -124,6 +124,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       default: null
     },
 
+    timeConfig: Object as PropType<VxeDateRangePickerPropTypes.TimeConfig>,
     popupConfig: Object as PropType<VxeDateRangePickerPropTypes.PopupConfig>,
     shortcutConfig: Object as PropType<VxeDateRangePickerPropTypes.ShortcutConfig>
   },
@@ -317,6 +318,12 @@ export default /* define-vxe-component start */ defineVxeComponent({
 
       const { immediate } = props
       return immediate
+    },
+    computeTimeOpts () {
+      const $xeDatePicker = this
+      const props = $xeDatePicker
+
+      return Object.assign({}, getConfig().dateRangePicker.timeConfig, props.timeConfig)
     },
     computePopupOpts () {
       const $xeDateRangePicker = this
@@ -910,6 +917,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
         reactData.isAniVisible = true
         setTimeout(() => {
           reactData.visiblePanel = true
+          $xeDateRangePicker.updatePlacement()
         }, 10)
         $xeDateRangePicker.updateZindex()
         return $xeDateRangePicker.updatePlacement()
@@ -1083,6 +1091,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const isDateTimeType = $xeDateRangePicker.computeIsDateTimeType
       const defaultDates = $xeDateRangePicker.computeDefaultDates
       const defaultTimes = $xeDateRangePicker.computeDefaultTimes
+      const timeOpts = $xeDateRangePicker.computeTimeOpts
       const popupOpts = $xeDateRangePicker.computePopupOpts
       const { startLabel, endLabel } = panelLabelObj
       const { position } = shortcutOpts
@@ -1161,6 +1170,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
                         timeFormat: props.timeFormat,
                         defaultDate: sdDate,
                         defaultTime: sdTime,
+                        timeConfig: timeOpts,
                         festivalMethod: props.festivalMethod,
                         disabledMethod: props.disabledMethod,
                         selectDay: props.selectDay
@@ -1184,6 +1194,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
                         timeFormat: props.timeFormat,
                         defaultDate: edDate,
                         defaultTime: edTime,
+                        timeConfig: timeOpts,
                         festivalMethod: props.festivalMethod,
                         disabledMethod: props.disabledMethod,
                         selectDay: props.selectDay
