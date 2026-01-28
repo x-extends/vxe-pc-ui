@@ -996,12 +996,16 @@ export default /* define-vxe-component start */ defineVxeComponent({
 
       const { visiblePanel } = reactData
       const isDisabled = $xeSelect.computeIsDisabled
+      const popupOpts = $xeSelect.computePopupOpts
+      const { trigger } = popupOpts
       if (!isDisabled) {
         const el = $xeSelect.$refs.refElem as HTMLDivElement
         const panelElem = $xeSelect.$refs.refOptionPanel as HTMLDivElement
         reactData.isActivated = getEventTargetNode(evnt, el).flag || getEventTargetNode(evnt, panelElem).flag
         if (visiblePanel && !reactData.isActivated) {
-          $xeSelect.hideOptionPanel()
+          if (trigger !== 'manual') {
+            $xeSelect.hideOptionPanel()
+          }
         }
       }
     },
@@ -1086,6 +1090,8 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const { clearable } = props
       const { visiblePanel, currentOption } = reactData
       const isDisabled = $xeSelect.computeIsDisabled
+      const popupOpts = $xeSelect.computePopupOpts
+      const { trigger } = popupOpts
       if (!isDisabled) {
         const isTab = globalEvents.hasKey(evnt, GLOBAL_EVENT_KEYS.TAB)
         const isEnter = globalEvents.hasKey(evnt, GLOBAL_EVENT_KEYS.ENTER)
@@ -1098,7 +1104,9 @@ export default /* define-vxe-component start */ defineVxeComponent({
         }
         if (visiblePanel) {
           if (isEsc || isTab) {
-            $xeSelect.hideOptionPanel()
+            if (trigger !== 'manual') {
+              $xeSelect.hideOptionPanel()
+            }
           } else if (isEnter) {
             if (currentOption) {
               evnt.preventDefault()
@@ -1133,8 +1141,12 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const reactData = $xeSelect.reactData
 
       const { visiblePanel, isActivated } = reactData
+      const popupOpts = $xeSelect.computePopupOpts
+      const { trigger } = popupOpts
       if (visiblePanel) {
-        $xeSelect.hideOptionPanel()
+        if (trigger !== 'manual') {
+          $xeSelect.hideOptionPanel()
+        }
       }
       if (isActivated) {
         reactData.isActivated = false
@@ -1173,13 +1185,17 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const reactData = $xeSelect.reactData
 
       const isDisabled = $xeSelect.computeIsDisabled
+      const popupOpts = $xeSelect.computePopupOpts
+      const { trigger } = popupOpts
       if (!isDisabled) {
         if (!reactData.visiblePanel) {
-          reactData.triggerFocusPanel = true
-          $xeSelect.showOptionPanel()
-          setTimeout(() => {
-            reactData.triggerFocusPanel = false
-          }, 500)
+          if (!trigger || trigger === 'default') {
+            reactData.triggerFocusPanel = true
+            $xeSelect.showOptionPanel()
+            setTimeout(() => {
+              reactData.triggerFocusPanel = false
+            }, 500)
+          }
         }
       }
       $xeSelect.dispatchEvent('focus', {}, evnt)
@@ -1188,7 +1204,11 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const $xeSelect = this
       const reactData = $xeSelect.reactData
 
-      $xeSelect.togglePanelEvent(evnt)
+      const popupOpts = $xeSelect.computePopupOpts
+      const { trigger } = popupOpts
+      if (!trigger || trigger === 'default') {
+        $xeSelect.togglePanelEvent(evnt)
+      }
       $xeSelect.dispatchEvent('click', { triggerButton: false, visible: reactData.visiblePanel }, evnt)
     },
     blurEvent  (evnt: FocusEvent) {
@@ -1202,7 +1222,11 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const $xeSelect = this
       const reactData = $xeSelect.reactData
 
-      $xeSelect.togglePanelEvent(evnt)
+      const popupOpts = $xeSelect.computePopupOpts
+      const { trigger } = popupOpts
+      if (!trigger || trigger === 'default' || trigger === 'icon') {
+        $xeSelect.togglePanelEvent(evnt)
+      }
       $xeSelect.dispatchEvent('click', { triggerButton: true, visible: reactData.visiblePanel }, evnt)
     },
     modelSearchEvent (value: string) {

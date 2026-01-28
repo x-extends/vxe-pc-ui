@@ -865,7 +865,9 @@ declare module '@vxe-ui/core' {
       /**
        * 控件图标
        */
-      icon?: string
+      icon?: string | ((params: {
+        widget: VxeGlobalRendererHandles.CreateFormDesignWidgetConfigObj
+      }) => VxeComponentSlotType | VxeComponentSlotType[])
       /**
        * 控件参数
        */
