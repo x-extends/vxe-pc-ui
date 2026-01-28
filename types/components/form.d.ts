@@ -352,7 +352,7 @@ export namespace VxeFormDefines {
     /**
      * 指定字段
      */
-    to?: string
+    field?: string
     /**
      * 数据类型
      */
