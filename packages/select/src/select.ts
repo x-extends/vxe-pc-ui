@@ -759,12 +759,16 @@ export default defineVxeComponent({
     const handleGlobalMousedownEvent = (evnt: MouseEvent) => {
       const { visiblePanel } = reactData
       const isDisabled = computeIsDisabled.value
+      const popupOpts = computePopupOpts.value
+      const { trigger } = popupOpts
       if (!isDisabled) {
         const el = refElem.value
         const panelElem = refOptionPanel.value
         reactData.isActivated = getEventTargetNode(evnt, el).flag || getEventTargetNode(evnt, panelElem).flag
         if (visiblePanel && !reactData.isActivated) {
-          hideOptionPanel()
+          if (trigger !== 'manual') {
+            hideOptionPanel()
+          }
         }
       }
     }
@@ -841,6 +845,8 @@ export default defineVxeComponent({
       const { clearable } = props
       const { visiblePanel, currentOption } = reactData
       const isDisabled = computeIsDisabled.value
+      const popupOpts = computePopupOpts.value
+      const { trigger } = popupOpts
       if (!isDisabled) {
         const isTab = globalEvents.hasKey(evnt, GLOBAL_EVENT_KEYS.TAB)
         const isEnter = globalEvents.hasKey(evnt, GLOBAL_EVENT_KEYS.ENTER)
@@ -853,7 +859,9 @@ export default defineVxeComponent({
         }
         if (visiblePanel) {
           if (isEsc || isTab) {
-            hideOptionPanel()
+            if (trigger !== 'manual') {
+              hideOptionPanel()
+            }
           } else if (isEnter) {
             if (currentOption) {
               evnt.preventDefault()
@@ -886,8 +894,12 @@ export default defineVxeComponent({
 
     const handleGlobalBlurEvent = () => {
       const { visiblePanel, isActivated } = reactData
+      const popupOpts = computePopupOpts.value
+      const { trigger } = popupOpts
       if (visiblePanel) {
-        hideOptionPanel()
+        if (trigger !== 'manual') {
+          hideOptionPanel()
+        }
       }
       if (isActivated) {
         reactData.isActivated = false
@@ -920,20 +932,28 @@ export default defineVxeComponent({
 
     const focusEvent = (evnt: FocusEvent) => {
       const isDisabled = computeIsDisabled.value
+      const popupOpts = computePopupOpts.value
+      const { trigger } = popupOpts
       if (!isDisabled) {
         if (!reactData.visiblePanel) {
-          reactData.triggerFocusPanel = true
-          showOptionPanel()
-          setTimeout(() => {
-            reactData.triggerFocusPanel = false
-          }, 500)
+          if (!trigger || trigger === 'default') {
+            reactData.triggerFocusPanel = true
+            showOptionPanel()
+            setTimeout(() => {
+              reactData.triggerFocusPanel = false
+            }, 500)
+          }
         }
       }
       dispatchEvent('focus', {}, evnt)
     }
 
     const clickEvent = (evnt: MouseEvent) => {
-      togglePanelEvent(evnt)
+      const popupOpts = computePopupOpts.value
+      const { trigger } = popupOpts
+      if (!trigger || trigger === 'default') {
+        togglePanelEvent(evnt)
+      }
       dispatchEvent('click', { triggerButton: false, visible: reactData.visiblePanel }, evnt)
     }
 
@@ -943,7 +963,11 @@ export default defineVxeComponent({
     }
 
     const suffixClickEvent = (evnt: MouseEvent) => {
-      togglePanelEvent(evnt)
+      const popupOpts = computePopupOpts.value
+      const { trigger } = popupOpts
+      if (!trigger || trigger === 'default' || trigger === 'icon') {
+        togglePanelEvent(evnt)
+      }
       dispatchEvent('click', { triggerButton: true, visible: reactData.visiblePanel }, evnt)
     }
 
