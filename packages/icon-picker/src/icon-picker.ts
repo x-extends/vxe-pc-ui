@@ -227,6 +227,7 @@ export default defineVxeComponent({
         reactData.isAniVisible = true
         setTimeout(() => {
           reactData.visiblePanel = true
+          updatePlacement()
         }, 10)
         updateZindex()
         updatePlacement()

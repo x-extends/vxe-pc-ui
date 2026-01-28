@@ -116,6 +116,7 @@ export default defineVxeComponent({
       default: null
     },
 
+    timeConfig: Object as PropType<VxeDatePickerPropTypes.TimeConfig>,
     popupConfig: Object as PropType<VxeDatePickerPropTypes.PopupConfig>,
     shortcutConfig: Object as PropType<VxeDatePickerPropTypes.ShortcutConfig>,
 
@@ -265,6 +266,10 @@ export default defineVxeComponent({
     const computeInpImmediate = computed(() => {
       const { immediate } = props
       return immediate
+    })
+
+    const computeTimeOpts = computed(() => {
+      return Object.assign({}, getConfig().datePicker.timeConfig, props.timeConfig)
     })
 
     const computePopupOpts = computed(() => {
@@ -614,6 +619,7 @@ export default defineVxeComponent({
         reactData.isAniVisible = true
         setTimeout(() => {
           reactData.visiblePanel = true
+          updatePlacement()
         }, 10)
         updateZindex()
         return updatePlacement()
@@ -754,6 +760,7 @@ export default defineVxeComponent({
       const isClearable = computeIsClearable.value
       const isDateTimeType = computeIsDateTimeType.value
       const shortcutList = computeShortcutList.value
+      const timeOpts = computeTimeOpts.value
       const popupOpts = computePopupOpts.value
       const { position } = shortcutOpts
       const headerSlot = slots.header
@@ -833,6 +840,7 @@ export default defineVxeComponent({
                         labelFormat: props.labelFormat,
                         valueFormat: props.valueFormat,
                         timeFormat: props.timeFormat,
+                        timeConfig: timeOpts,
                         festivalMethod: props.festivalMethod,
                         disabledMethod: props.disabledMethod,
                         selectDay: props.selectDay,

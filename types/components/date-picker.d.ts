@@ -68,6 +68,8 @@ export namespace VxeDatePickerPropTypes {
   export type ShowClearButton = boolean | null
   export type ShowConfirmButton = boolean | null
 
+  export interface TimeConfig extends VxeDatePanelPropTypes.TimeConfig {}
+
   export interface PopupConfig {
     /**
      * 设置弹出面板方向
@@ -131,6 +133,8 @@ export interface VxeDatePickerProps {
   editable?: VxeDatePickerPropTypes.Editable
   festivalMethod?: VxeDatePickerPropTypes.FestivalMethod
   disabledMethod?: VxeDatePickerPropTypes.DisabledMethod
+
+  timeConfig?: VxeDatePickerPropTypes.TimeConfig
 
   popupConfig?: VxeDatePickerPropTypes.PopupConfig
   shortcutConfig?: VxeDatePickerPropTypes.ShortcutConfig

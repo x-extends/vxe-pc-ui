@@ -614,6 +614,7 @@ export default defineVxeComponent({
             handleScrollSelect()
             refreshScroll()
           })
+          updatePlacement()
         }, 10)
         setTimeout(() => {
           recalculate().then(() => refreshScroll())

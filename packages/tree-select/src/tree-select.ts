@@ -453,6 +453,7 @@ export default defineVxeComponent({
         setTimeout(() => {
           reactData.visiblePanel = true
           handleFocusSearch()
+          updatePlacement()
         }, 10)
         updateZindex()
         updatePlacement()

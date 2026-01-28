@@ -222,7 +222,7 @@ export function updatePanelPlacement (targetElem: HTMLElement | null | undefined
       } else if (!placement) {
         // 如果下面不够放，则向上
         top = targetHeight
-        if (targetRect.top + targetRect.height + marginSize > visibleHeight) {
+        if (targetRect.top + targetHeight + panelHeight + marginSize > visibleHeight) {
           // 如果上面不够放，则向下（优先）
           if (targetRect.top - targetHeight - panelHeight > marginSize) {
             panelPlacement = 'top'

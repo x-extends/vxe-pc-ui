@@ -465,6 +465,7 @@ export default defineVxeComponent({
           reactData.visiblePanel = true
           updateModel(props.modelValue)
           internalData.vpTimeout = undefined
+          updatePlacement()
         }, 10)
         updateZindex()
         updatePlacement()

@@ -117,6 +117,7 @@ export default defineVxeComponent({
       default: null
     },
 
+    timeConfig: Object as PropType<VxeDateRangePickerPropTypes.TimeConfig>,
     popupConfig: Object as PropType<VxeDateRangePickerPropTypes.PopupConfig>,
     shortcutConfig: Object as PropType<VxeDateRangePickerPropTypes.ShortcutConfig>
   },
@@ -295,6 +296,10 @@ export default defineVxeComponent({
     const computeInpImmediate = computed(() => {
       const { immediate } = props
       return immediate
+    })
+
+    const computeTimeOpts = computed(() => {
+      return Object.assign({}, getConfig().dateRangePicker.timeConfig, props.timeConfig)
     })
 
     const computePopupOpts = computed(() => {
@@ -774,6 +779,7 @@ export default defineVxeComponent({
         reactData.isAniVisible = true
         setTimeout(() => {
           reactData.visiblePanel = true
+          updatePlacement()
         }, 10)
         updateZindex()
         return updatePlacement()
@@ -928,6 +934,7 @@ export default defineVxeComponent({
       const isDateTimeType = computeIsDateTimeType.value
       const defaultDates = computeDefaultDates.value
       const defaultTimes = computeDefaultTimes.value
+      const timeOpts = computeTimeOpts.value
       const popupOpts = computePopupOpts.value
       const { startLabel, endLabel } = panelLabelObj
       const { position } = shortcutOpts
@@ -1007,6 +1014,7 @@ export default defineVxeComponent({
                         timeFormat: props.timeFormat,
                         defaultDate: sdDate,
                         defaultTime: sdTime,
+                        timeConfig: timeOpts,
                         festivalMethod: props.festivalMethod,
                         disabledMethod: props.disabledMethod,
                         selectDay: props.selectDay,
@@ -1026,6 +1034,7 @@ export default defineVxeComponent({
                         timeFormat: props.timeFormat,
                         defaultDate: edDate,
                         defaultTime: edTime,
+                        timeConfig: timeOpts,
                         festivalMethod: props.festivalMethod,
                         disabledMethod: props.disabledMethod,
                         selectDay: props.selectDay,
