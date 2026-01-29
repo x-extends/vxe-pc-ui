@@ -34,6 +34,7 @@ export namespace VxeTextareaPropTypes {
   export type Disabled = boolean
   export type Placeholder = string
   export type MaxLength = string | number | null
+  export type Trim = boolean
   export type Rows = string | number | null
   export type Cols = string | number | null
   export type ShowWordCount = boolean
@@ -83,6 +84,10 @@ export type VxeTextareaProps = {
    * 最大长度
    */
   maxLength?: VxeTextareaPropTypes.MaxLength
+  /**
+   * 自动去掉左右空格
+   */
+  trim?: VxeTextareaPropTypes.Trim
   /**
    * 原生 rows 属性
    */

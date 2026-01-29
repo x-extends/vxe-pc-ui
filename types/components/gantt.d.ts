@@ -374,7 +374,7 @@ export namespace VxeGanttPropTypes {
   }
 
   /**
-   * 里程碑配置项
+   * 里程碑类型配置项
    */
   export interface TaskBarMilestoneConfig<D = any> {
     /**
@@ -402,6 +402,16 @@ export namespace VxeGanttPropTypes {
      * 是否显示图标
      */
     showIcon?: boolean
+  }
+
+  /**
+   * 子视图类型配置项
+   */
+  export interface TaskBarSubviewConfig<D = any> {
+    /**
+     * 是否启用
+     */
+    enabled?: boolean
   }
 
   export interface TaskBarTooltipConfig<D = any> {
@@ -523,6 +533,7 @@ export interface VxeGanttProps<D = any> extends Omit<VxeGridProps<D>, 'layouts'>
   taskLinkConfig?: VxeGanttPropTypes.TaskLinkConfig
   taskBarConfig?: VxeGanttPropTypes.TaskBarConfig<D>
   taskBarMilestoneConfig?: VxeGanttPropTypes.TaskBarMilestoneConfig<D>
+  taskBarSubviewConfig?: VxeGanttPropTypes.TaskBarSubviewConfig<D>
   taskBarTooltipConfig?: VxeGanttPropTypes.TaskBarTooltipConfig<D>
   taskBarResizeConfig?: VxeGanttPropTypes.TaskBarResizeConfig<D>
   taskBarMoveConfig?: VxeGanttPropTypes.TaskBarMoveConfig<D>
@@ -537,6 +548,7 @@ export interface GanttPrivateComputed<D = any> extends GridPrivateComputed<D> {
   computeTaskBarResizeOpts: ComputedRef<VxeGanttPropTypes.TaskBarResizeConfig<D>>
   computeTaskSplitOpts: ComputedRef<VxeGanttPropTypes.TaskSplitConfig>
   computeTaskBarMilestoneOpts: ComputedRef<VxeGanttPropTypes.TaskBarMilestoneConfig<D>>
+  computeTaskBarSubviewOpts: ComputedRef<VxeGanttPropTypes.TaskBarSubviewConfig<D>>
   computeTaskBarTooltipOpts: ComputedRef<VxeGanttPropTypes.TaskBarTooltipConfig>
   computeTaskLinkOpts: ComputedRef<VxeGanttPropTypes.TaskLinkConfig>
   computeTaskViewScales: ComputedRef<VxeGanttDefines.ColumnScaleType[] | VxeGanttDefines.ColumnScaleConfig[] | undefined>
@@ -730,13 +742,17 @@ export enum VxeGanttDependencyType {
 }
 
 /**
- * 任务类型
+ * 任务渲染类型
  */
 export enum VxeGanttTaskType {
   /**
-   * 里程碑
+   * 里程碑类型，该类型节点不需要结束日期
    */
-  Milestone = 'milestone'
+  Milestone = 'milestone',
+  /**
+   * 子视图类型，该类型会将子任务渲染到一行，无需开始日期和结束日期
+   */
+  Subview = 'subview'
 }
 
 export namespace VxeGanttDefines {

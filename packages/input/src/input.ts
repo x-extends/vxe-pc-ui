@@ -258,14 +258,13 @@ export default defineVxeComponent({
     })
 
     const computeFormReadonly = computed(() => {
-      if ($xeForm) {
-        return $xeForm.props.readonly
-      }
-      return false
-    })
-
-    const computeIsReadonly = computed(() => {
       const { readonly } = props
+      if (readonly === null) {
+        if ($xeForm) {
+          return $xeForm.props.readonly
+        }
+        return false
+      }
       return readonly
     })
 
@@ -727,9 +726,8 @@ export default defineVxeComponent({
     })
 
     const computeInputReadonly = computed(() => {
-      const { type, editable, multiple } = props
-      const isReadonly = computeIsReadonly.value
-      return isReadonly || multiple || !editable || type === 'week' || type === 'quarter'
+      const { type, editable, multiple, readonly } = props
+      return readonly || multiple || !editable || type === 'week' || type === 'quarter'
     })
 
     const computeInputType = computed(() => {
@@ -1160,8 +1158,8 @@ export default defineVxeComponent({
     const passwordToggleEvent = (evnt: Event) => {
       const { showPwd } = reactData
       const isDisabled = computeIsDisabled.value
-      const isReadonly = computeIsReadonly.value
-      if (!isDisabled && !isReadonly) {
+      const inputReadonly = computeInputReadonly.value
+      if (!isDisabled && !inputReadonly) {
         reactData.showPwd = !showPwd
       }
       inputMethods.dispatchEvent('toggle-visible', { visible: reactData.showPwd }, evnt)
@@ -1194,10 +1192,10 @@ export default defineVxeComponent({
 
     const numberNextEvent = (evnt: Event) => {
       const isDisabled = computeIsDisabled.value
-      const isReadonly = computeIsReadonly.value
+      const inputReadonly = computeInputReadonly.value
       const isDisabledSubtractNumber = computeIsDisabledSubtractNumber.value
       numberStopDown()
-      if (!isDisabled && !isReadonly && !isDisabledSubtractNumber) {
+      if (!isDisabled && !inputReadonly && !isDisabledSubtractNumber) {
         numberChange(false, evnt)
       }
       inputMethods.dispatchEvent('next-number', { value: reactData.inputValue }, evnt)
@@ -1212,10 +1210,10 @@ export default defineVxeComponent({
 
     const numberPrevEvent = (evnt: Event) => {
       const isDisabled = computeIsDisabled.value
-      const isReadonly = computeIsReadonly.value
+      const inputReadonly = computeInputReadonly.value
       const isDisabledAddNumber = computeIsDisabledAddNumber.value
       numberStopDown()
-      if (!isDisabled && !isReadonly && !isDisabledAddNumber) {
+      if (!isDisabled && !inputReadonly && !isDisabledAddNumber) {
         numberChange(true, evnt)
       }
       inputMethods.dispatchEvent('prev-number', { value: reactData.inputValue }, evnt)
@@ -1815,8 +1813,8 @@ export default defineVxeComponent({
     }
 
     const datePickerOpenEvent = (evnt: Event) => {
-      const isReadonly = computeIsReadonly.value
-      if (!isReadonly) {
+      const inputReadonly = computeInputReadonly.value
+      if (!inputReadonly) {
         evnt.preventDefault()
         showPanel()
       }

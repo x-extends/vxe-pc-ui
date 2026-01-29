@@ -32,6 +32,10 @@ export default defineVxeComponent({
     },
     placeholder: String as PropType<VxeTextareaPropTypes.Placeholder>,
     maxLength: [String, Number] as PropType<VxeTextareaPropTypes.MaxLength>,
+    trim: {
+      type: Boolean as PropType<VxeTextareaPropTypes.Trim>,
+      default: () => getConfig().textarea.trim
+    },
     rows: {
       type: [String, Number] as PropType<VxeTextareaPropTypes.Rows>,
       default: null
@@ -120,9 +124,8 @@ export default defineVxeComponent({
     })
 
     const computeInputReadonly = computed(() => {
-      const { editable } = props
-      const formReadonly = computeFormReadonly.value
-      return formReadonly || !editable
+      const { editable, readonly } = props
+      return readonly || !editable
     })
 
     const computeInpPlaceholder = computed(() => {
@@ -214,6 +217,9 @@ export default defineVxeComponent({
     }
 
     const handleChange = (value: string, evnt: Event) => {
+      if (props.trim) {
+        value = `${value || ''}`.trim()
+      }
       reactData.inputValue = value
       emit('update:modelValue', value)
       if (XEUtils.toValueString(props.modelValue) !== value) {
