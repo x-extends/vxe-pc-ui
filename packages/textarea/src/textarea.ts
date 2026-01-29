@@ -39,6 +39,10 @@ export default /* define-vxe-component start */ defineVxeComponent({
     },
     placeholder: String as PropType<VxeTextareaPropTypes.Placeholder>,
     maxLength: [String, Number] as PropType<VxeTextareaPropTypes.MaxLength>,
+    trim: {
+      type: Boolean as PropType<VxeTextareaPropTypes.Trim>,
+      default: () => getConfig().textarea.trim
+    },
     rows: {
       type: [String, Number] as PropType<VxeTextareaPropTypes.Rows>,
       default: null
@@ -118,9 +122,8 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const $xeTextarea = this
       const props = $xeTextarea
 
-      const { editable } = props
-      const formReadonly = $xeTextarea.computeFormReadonly
-      return formReadonly || !editable
+      const { editable, readonly } = props
+      return readonly || !editable
     },
     computeInpPlaceholder () {
       const $xeTextarea = this
@@ -266,6 +269,9 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const $xeForm = $xeTextarea.$xeForm
       const formItemInfo = $xeTextarea.formItemInfo
 
+      if (props.trim) {
+        value = `${value || ''}`.trim()
+      }
       reactData.inputValue = value
       $xeTextarea.emitModel(value)
       if (XEUtils.toValueString(props.value) !== value) {
