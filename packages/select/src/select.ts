@@ -1520,7 +1520,7 @@ export default defineVxeComponent({
           ref: refInput,
           clearable: props.clearable,
           placeholder: inpPlaceholder,
-          readonly: true,
+          editable: false,
           disabled: isDisabled,
           type: 'text',
           prefixIcon: props.prefixIcon,

@@ -758,7 +758,7 @@ export default defineVxeComponent({
           ref: refInput,
           clearable: props.clearable,
           placeholder: loading ? getI18n('vxe.select.loadingText') : props.placeholder,
-          readonly: true,
+          editable: false,
           disabled: isDisabled,
           type: 'text',
           prefixIcon: props.prefixIcon,
