@@ -249,6 +249,10 @@ export namespace VxeGanttPropTypes {
      * 已完成部分任务条的背景颜色
      */
     completedBgColor?: string
+    /**
+     * 子任务视图概况任务条的背景颜色
+     */
+    overviewBgColor?: string
   }
 
   export interface TaskLinkConfig<D = any> extends VxeGanttDefines.LinkStyleConfig {
@@ -404,6 +408,10 @@ export namespace VxeGanttPropTypes {
      * 是否启用
      */
     enabled?: boolean
+    /**
+     * 是否显示任务总览
+     */
+    showOverview?: boolean
   }
 
   export interface TaskBarTooltipConfig<D = any> {
