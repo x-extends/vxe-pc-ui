@@ -1399,7 +1399,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
               name,
               type: 'text',
               placeholder: inpPlaceholder,
-              readonly: true,
+              editable: false,
               disabled: isDisabled,
               autocomplete: autoComplete
             },

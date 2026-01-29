@@ -1796,7 +1796,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
           props: {
             clearable: props.clearable,
             placeholder: inpPlaceholder,
-            readonly: true,
+            editable: false,
             disabled: isDisabled,
             type: 'text',
             prefixIcon: props.prefixIcon,
