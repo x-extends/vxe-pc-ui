@@ -226,11 +226,6 @@
 }
 
 .vxe-form--item {
-  &.is--padding {
-    & > .vxe-form--group-content {
-      padding: 0;
-    }
-  }
   &.is--bold {
     & > .vxe-form--item-title {
       font-weight: bold;
@@ -495,6 +490,9 @@
     & > .vxe-form--item-title {
       padding: var(--vxe-ui-form-item-padding-default);
     }
+    & > .vxe-form--item-content {
+      padding: var(--vxe-ui-form-item-padding-default);
+    }
   }
   &.size--medium {
     &.is--padding {
@@ -504,6 +502,9 @@
         }
       }
       & > .vxe-form--item-title {
+        padding: var(--vxe-ui-form-item-padding-medium);
+      }
+      & > .vxe-form--item-content {
         padding: var(--vxe-ui-form-item-padding-medium);
       }
     }
@@ -518,6 +519,9 @@
       & > .vxe-form--item-title {
         padding: var(--vxe-ui-form-item-padding-small);
       }
+      & > .vxe-form--item-content {
+        padding: var(--vxe-ui-form-item-padding-small);
+      }
     }
   }
   &.size--mini {
@@ -529,6 +533,19 @@
       }
       & > .vxe-form--item-title {
         padding: var(--vxe-ui-form-item-padding-mini);
+      }
+      & > .vxe-form--item-content {
+        padding: var(--vxe-ui-form-item-padding-mini);
+      }
+    }
+  }
+}
+
+.vxe-form--item {
+  &.is--padding {
+    & > .vxe-form--group-content {
+      &.vxe-form--item-content {
+        padding: 0;
       }
     }
   }
