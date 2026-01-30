@@ -98,6 +98,10 @@ export namespace VxeUploadPropTypes {
     $upload: VxeUploadConstructor
     option: VxeUploadDefines.FileObjItem
   }) => Promise<any>)
+ export type BeforeSelectMethod = undefined | ((params: {
+    $upload: VxeUploadConstructor
+    file: File,
+  }) => boolean)
   export type UploadMethod = undefined | ((params: {
     $upload: VxeUploadConstructor
     file: File,
@@ -195,6 +199,7 @@ export interface VxeUploadProps {
    */
   maxSimultaneousUploads?: VxeUploadPropTypes.MaxSimultaneousUploads
   previewMethod?: VxeUploadPropTypes.PreviewMethod
+  beforeSelectMethod?: VxeUploadPropTypes.BeforeSelectMethod
   uploadMethod?: VxeUploadPropTypes.UploadMethod
   beforeRemoveMethod?: VxeUploadPropTypes.BeforeRemoveMethod
   removeMethod?: VxeUploadPropTypes.RemoveMethod

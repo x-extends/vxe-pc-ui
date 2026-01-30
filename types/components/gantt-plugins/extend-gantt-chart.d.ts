@@ -1,7 +1,7 @@
 import { VNode } from 'vue'
-import { VxeComponentStyleType } from '@vxe-ui/core'
 import { VxeGanttConstructor, VxeGanttPropTypes, VxeGanttDefines, VxeGanttPrivateMethods } from '../gantt'
 import { VxeGanttViewConstructor, VxeGanttViewPrivateMethods } from '../gantt-module/gantt-view'
+import { VxeTableConstructor, VxeTablePrivateMethods } from '../table'
 
 /* eslint-disable @typescript-eslint/no-empty-interface,no-use-before-define,@typescript-eslint/no-unused-vars */
 
@@ -50,15 +50,9 @@ export interface VxeGanttExtendChartPrivateMethods<D = any> {
     $rowIndex: number
     _rowIndex: number
   }, renderParams: {
-    isMilestone: boolean
-    title: string
-    vbStyle: VxeComponentStyleType
-    vpStyle: VxeComponentStyleType
+    $gantt: VxeGanttConstructor<D> & VxeGanttPrivateMethods<D>
+    $table: VxeTableConstructor<D> & VxeTablePrivateMethods<D>
     rowid: string
-    ctOns: {
-      onMouseover?: any
-      onMouseleave?: any
-    }
   }): VNode[]
   /**
    * @private
