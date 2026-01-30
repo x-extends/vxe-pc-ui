@@ -261,6 +261,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
     tipText: [String, Number, Function] as PropType<VxeUploadPropTypes.TipText>,
     hintText: String as PropType<VxeUploadPropTypes.HintText>,
     previewMethod: Function as PropType<VxeUploadPropTypes.PreviewMethod>,
+    beforeSelectMethod: Function as PropType<VxeUploadPropTypes.BeforeSelectMethod>,
     uploadMethod: Function as PropType<VxeUploadPropTypes.UploadMethod>,
     beforeRemoveMethod: Function as PropType<VxeUploadPropTypes.BeforeRemoveMethod>,
     removeMethod: Function as PropType<VxeUploadPropTypes.RemoveMethod>,
@@ -861,6 +862,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
 
       const { multiple, urlMode, showLimitSize, limitSizeText, showLimitCount, limitCountText, autoSubmit } = props
       const { fileList } = reactData
+      const beforeSelectFn = props.beforeSelectMethod || getConfig().upload.beforeSelectMethod
       const uploadFn = props.uploadMethod || getConfig().upload.uploadMethod
       const keyField = $xeUpload.computeKeyField
       const nameProp = $xeUpload.computeNameProp
@@ -959,12 +961,14 @@ export default /* define-vxe-component start */ defineVxeComponent({
           }
         }
         const item = fileObj
-        if (uploadFn && autoSubmit) {
-          uploadPromiseRests.push(
-            $xeUpload.handleUploadResult(item, file)
-          )
+        if (!beforeSelectFn || beforeSelectFn({ $upload: $xeUpload, file })) {
+          if (uploadFn && autoSubmit) {
+            uploadPromiseRests.push(
+              $xeUpload.handleUploadResult(item, file)
+            )
+          }
+          newFileList.push(item)
         }
-        newFileList.push(item)
       })
       reactData.fileList = newFileList
       reactData.fileCacheMaps = cacheMaps

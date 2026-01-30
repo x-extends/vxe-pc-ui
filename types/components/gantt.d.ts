@@ -232,29 +232,6 @@ export namespace VxeGanttPropTypes {
     showCollapseTaskButton?: boolean
   }
 
-  interface BarStyleConfig {
-    /**
-     * 圆角
-     */
-    round?: boolean
-    /**
-     * 任务条的背景颜色
-     */
-    bgColor?: string
-    /**
-     * 任务条的字体颜色
-     */
-    fontColor?: string
-    /**
-     * 已完成部分任务条的背景颜色
-     */
-    completedBgColor?: string
-    /**
-     * 子任务视图概况任务条的背景颜色
-     */
-    overviewBgColor?: string
-  }
-
   export interface TaskLinkConfig<D = any> extends VxeGanttDefines.LinkStyleConfig {
     /**
      * 是否启用
@@ -350,11 +327,11 @@ export namespace VxeGanttPropTypes {
     /**
      * 任务条样式
      */
-    barStyle?: BarStyleConfig | ((params: {
+    barStyle?: VxeGanttDefines.BarStyleConfig | ((params: {
       scaleType: VxeGanttDefines.ColumnScaleType
       $gantt: VxeGanttConstructor<D>
       row: D
-    }) => BarStyleConfig)
+    }) => VxeGanttDefines.BarStyleConfig)
     /**
      * 是否启用拖拽移动日期
      */
@@ -801,6 +778,29 @@ export namespace VxeGanttDefines {
      * 显示箭头
      */
     showArrow?: boolean
+  }
+
+  export interface BarStyleConfig {
+    /**
+     * 圆角
+     */
+    round?: boolean
+    /**
+     * 任务条的背景颜色
+     */
+    bgColor?: string
+    /**
+     * 任务条的字体颜色
+     */
+    fontColor?: string
+    /**
+     * 已完成部分任务条的背景颜色
+     */
+    completedBgColor?: string
+    /**
+     * 子任务视图概况任务条的背景颜色
+     */
+    overviewBgColor?: string
   }
 
   export interface GroupColumn<D = any> {
