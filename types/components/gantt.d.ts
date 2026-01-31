@@ -1053,6 +1053,10 @@ export namespace VxeGanttSlotTypes {
     row: D
   }
 
+  export interface TaskBarOverviewSlotParams<D = any> {
+    row: D
+  }
+
   export interface TaskViewCellTitleSlotParams {
     title: string | number
     dateObj: VxeGanttDefines.ScaleDateObj
@@ -1072,12 +1076,17 @@ export namespace VxeGanttSlotTypes {
 
 export interface VxeGanttSlots<D = any> extends VxeGridSlots<D> {
   /**
-   * 自定义任务条模板
+   * 自定义任务模板
    */
   taskBar?(params: VxeGanttSlotTypes.TaskBarSlotParams<D>): any
   'task-bar'?(params: VxeGanttSlotTypes.TaskBarSlotParams<D>): any
   /**
-   * 自定义任务条提示模板
+   * 自定义任务总览模板
+   */
+  taskBarOverview?(params: VxeGanttSlotTypes.TaskBarOverviewSlotParams<D>): any
+  'task-bar-overview'?(params: VxeGanttSlotTypes.TaskBarOverviewSlotParams<D>): any
+  /**
+   * 自定义任务提示模板
    */
   taskBarTooltip?(params: VxeGanttSlotTypes.TaskBarTooltipSlotParams<D>): any
   'task-bar-tooltip'?(params: VxeGanttSlotTypes.TaskBarTooltipSlotParams<D>): any
