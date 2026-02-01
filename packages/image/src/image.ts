@@ -5,7 +5,19 @@ import { getConfig, createEvent, globalMixins } from '../../ui'
 import { toCssUnit } from '../../ui/src/dom'
 import { openPreviewImage } from './util'
 
-import type { VxeImagePropTypes, ImageReactData, VxeImageEmits, VxeImageGroupConstructor, VxeImageConstructor, VxeImageGroupPrivateMethods, ValueOf, VxeComponentSizeType } from '../../../types'
+import type { VxeImagePropTypes, ImageReactData, ImageInternalData, VxeImageEmits, VxeImageGroupConstructor, VxeImageConstructor, VxeImageGroupPrivateMethods, ValueOf, VxeComponentSizeType } from '../../../types'
+
+function createInternalData (): ImageInternalData {
+  return {
+    // dgTime: 0,
+    // mdTime: 0
+  }
+}
+
+function createReactData (): ImageReactData {
+  return {
+  }
+}
 
 export default /* define-vxe-component start */ defineVxeComponent({
   name: 'VxeImage',
@@ -20,6 +32,10 @@ export default /* define-vxe-component start */ defineVxeComponent({
     width: [String, Number] as PropType<VxeImagePropTypes.Width>,
     height: [String, Number] as PropType<VxeImagePropTypes.Height>,
     circle: Boolean as PropType<VxeImagePropTypes.Circle>,
+    draggable: {
+      type: Boolean as PropType<VxeImagePropTypes.Draggable>,
+      default: () => getConfig().image.draggable
+    },
     zIndex: Number as PropType<VxeImagePropTypes.ZIndex>,
     maskClosable: {
       type: Boolean as PropType<VxeImagePropTypes.MaskClosable>,
@@ -45,11 +61,12 @@ export default /* define-vxe-component start */ defineVxeComponent({
     getThumbnailUrlMethod: Function as PropType<VxeImagePropTypes.GetThumbnailUrlMethod>
   },
   data () {
-    const reactData: ImageReactData = {
-    }
+    const internalData = createInternalData()
+    const reactData = createReactData()
     return {
       xID: XEUtils.uniqueId(),
-      reactData
+      reactData,
+      internalData
     }
   },
   computed: {
@@ -157,9 +174,14 @@ export default /* define-vxe-component start */ defineVxeComponent({
     clickEvent  (evnt: MouseEvent) {
       const $xeImage = this
       const props = $xeImage
+      const internalData = $xeImage.internalData
       const $xeImageGroup = $xeImage.$xeImageGroup
 
       const { showPreview, toolbarConfig, showPrintButton, showDownloadButton, maskClosable, zIndex } = props
+      const { mdTime, dgTime } = internalData
+      if (mdTime && dgTime && dgTime > mdTime) {
+        return
+      }
       const imgList = $xeImage.computeImgList
       const imgUrl = $xeImage.computeImgUrl
       if ($xeImageGroup) {
@@ -186,6 +208,24 @@ export default /* define-vxe-component start */ defineVxeComponent({
         $xeImage.dispatchEvent('click', { url: imgUrl }, evnt)
       }
     },
+    mousedownEvent () {
+      const $xeImage = this
+      const internalData = $xeImage.internalData
+
+      internalData.mdTime = Date.now()
+    },
+    handleDragstartEvent (evnt: DragEvent) {
+      const $xeImage = this
+      const internalData = $xeImage.internalData
+
+      internalData.dgTime = Date.now()
+      $xeImage.dispatchEvent('dragstart', {}, evnt)
+    },
+    handleDragEvent (evnt: DragEvent) {
+      const $xeImage = this
+
+      $xeImage.dispatchEvent(evnt.type as 'dragstart' | 'drag' | 'dragend', {}, evnt)
+    },
 
     //
     // Render
@@ -194,12 +234,16 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const $xeImage = this
       const props = $xeImage
 
-      const { alt, loading, circle } = props
+      const { alt, loading, circle, draggable } = props
       const wrapperStyle = $xeImage.computeWrapperStyle
       const imgStyle = $xeImage.computeImgStyle
       const imgUrl = $xeImage.computeImgUrl
       const imgThumbnailUrl = $xeImage.computeImgThumbnailUrl
       const vSize = $xeImage.computeSize
+      let imgDrag
+      if (!XEUtils.eqNull(draggable)) {
+        imgDrag = !!(draggable === true || draggable === 'true')
+      }
       return h('div', {
         class: ['vxe-image', {
           [`size--${vSize}`]: vSize,
@@ -214,14 +258,27 @@ export default /* define-vxe-component start */ defineVxeComponent({
           attrs: {
             src: imgThumbnailUrl || imgUrl,
             alt,
-            loading
+            loading,
+            draggable: imgDrag
           },
           on: {
-            click: $xeImage.clickEvent
+            mousedown: $xeImage.mousedownEvent,
+            click: $xeImage.clickEvent,
+            dragstart: $xeImage.handleDragstartEvent,
+            drag: $xeImage.handleDragEvent,
+            dragend: $xeImage.handleDragEvent
           }
         })
       ])
     }
+  },
+  beforeDestroy () {
+    const $xeImage = this
+    const reactData = $xeImage.reactData
+    const internalData = $xeImage.internalData
+
+    XEUtils.assign(reactData, createReactData())
+    XEUtils.assign(internalData, createInternalData())
   },
   render (this: any, h) {
     return this.renderVN(h)

@@ -8,6 +8,7 @@ export type VxeImageComponent = DefineVxeComponentOptions<VxeImageProps>
 
 export type VxeImageInstance = DefineVxeComponentInstance<{
   reactData: ImageReactData
+  internalData: ImageInternalData
 }, VxeImageProps, VxeImagePrivateComputed, VxeImageMethods>
 
 export type VxeImageConstructor = VxeImageInstance
@@ -32,6 +33,7 @@ export namespace VxeImagePropTypes {
   export type ShowPreview = boolean
   export type ShowPrintButton = boolean
   export type ShowDownloadButton = boolean
+  export type Draggable = boolean | string | null
   export type ZIndex = number
   export type Size = VxeComponentSizeType
   export type GetThumbnailUrlMethod = ((params: {
@@ -53,6 +55,7 @@ export interface VxeImageProps {
   showPreview?: VxeImagePropTypes.ShowPreview
   showPrintButton?: VxeImagePropTypes.ShowPrintButton
   showDownloadButton?: VxeImagePropTypes.ShowDownloadButton
+  draggable?: VxeImagePropTypes.Draggable
   zIndex?: VxeImagePropTypes.ZIndex
   size?: VxeImagePropTypes.Size
   getThumbnailUrlMethod?: VxeImagePropTypes.GetThumbnailUrlMethod
@@ -63,6 +66,10 @@ export interface ImagePrivateComputed {
 export interface VxeImagePrivateComputed extends ImagePrivateComputed { }
 
 export interface ImageReactData {
+}
+export interface ImageInternalData {
+ dgTime?: number
+ mdTime?: number
 }
 
 export interface ImageMethods {
@@ -76,7 +83,10 @@ export interface VxeImagePrivateMethods extends ImagePrivateMethods { }
 export type VxeImageEmits = [
   'click',
   'change',
-  'rotate'
+  'rotate',
+  'dragstart',
+  'drag',
+  'dragend'
 ]
 
 export namespace VxeImageDefines {
@@ -98,6 +108,10 @@ export namespace VxeImageDefines {
     rotateValue: number
   }
 
+  export interface DragstartEventParams extends ImageEventParams {}
+  export interface DragEventParams extends ImageEventParams {}
+  export interface DragendEventParams extends ImageEventParams {}
+
   export type PreviewImageFunction = (options: VxeImagePreviewProps & {
     activeIndex?: VxeImagePreviewPropTypes.ModelValue
     escClosable?: boolean
@@ -109,18 +123,27 @@ export type VxeImageEventProps = {
   onClick?: VxeImageEvents.Click
   onChange?: VxeImageEvents.Change
   onRotate?: VxeImageEvents.Rotate
+  onDragstart?: VxeImageEvents.Dragstart
+  onDrag?: VxeImageEvents.Drag
+  onDragend?: VxeImageEvents.Dragend
 }
 
 export interface VxeImageListeners {
   click?: VxeImageEvents.Click
   change?: VxeImageEvents.Change
   rotate?: VxeImageEvents.Rotate
+  dragstart?: VxeImageEvents.Dragstart
+  drag?: VxeImageEvents.Drag
+  dragend?: VxeImageEvents.Dragend
 }
 
 export namespace VxeImageEvents {
   export type Click = (params: VxeImageDefines.ClickEventParams) => void
   export type Change = (params: VxeImageDefines.ChangeEventParams) => void
   export type Rotate = (params: VxeImageDefines.RotateEventParams) => void
+  export type Dragstart = (params: VxeImageDefines.DragstartEventParams) => void
+  export type Drag = (params: VxeImageDefines.DragEventParams) => void
+  export type Dragend = (params: VxeImageDefines.DragendEventParams) => void
 }
 
 export namespace VxeImageSlotTypes {
