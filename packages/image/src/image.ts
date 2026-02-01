@@ -64,21 +64,45 @@ export default defineVxeComponent({
       refElem
     }
 
-    const computeImgStyle = computed(() => {
-      const { width, height } = props
-      const style: Record<string, string> = {}
-      if (width && height) {
-        style.maxWidth = toCssUnit(width)
-        style.maxHeight = toCssUnit(height)
+    const computeWrapperStyle = computed(() => {
+      const { width, height, circle } = props
+      const stys: Record<string, string> = {}
+      if (width) {
+        stys.width = toCssUnit(width)
       } else {
-        if (width) {
-          style.width = toCssUnit(width)
-        }
-        if (height) {
-          style.height = toCssUnit(height)
+        if (circle) {
+          if (height) {
+            stys.width = toCssUnit(height)
+          }
         }
       }
-      return style
+      if (height) {
+        stys.height = toCssUnit(height)
+      } else {
+        if (circle) {
+          if (width) {
+            stys.height = toCssUnit(width)
+          }
+        }
+      }
+      return stys
+    })
+
+    const computeImgStyle = computed(() => {
+      const { width, height } = props
+      const stys: Record<string, string> = {}
+      if (width && height) {
+        stys.maxWidth = toCssUnit(width)
+        stys.maxHeight = toCssUnit(height)
+      } else {
+        if (width) {
+          stys.width = toCssUnit(width)
+        }
+        if (height) {
+          stys.height = toCssUnit(height)
+        }
+      }
+      return stys
     })
 
     const computeImgList = computed(() => {
@@ -172,22 +196,28 @@ export default defineVxeComponent({
 
     const renderVN = () => {
       const { alt, loading, circle } = props
+      const wrapperStyle = computeWrapperStyle.value
       const imgStyle = computeImgStyle.value
       const imgUrl = computeImgUrl.value
       const imgThumbnailUrl = computeImgThumbnailUrl.value
       const vSize = computeSize.value
-      return h('img', {
-        ref: refElem,
+      return h('div', {
         class: ['vxe-image', {
           [`size--${vSize}`]: vSize,
           'is--circle': circle
         }],
-        src: imgThumbnailUrl || imgUrl,
-        alt,
-        loading,
-        style: imgStyle,
-        onClick: clickEvent
-      })
+        style: wrapperStyle
+      }, [
+        h('img', {
+          ref: refElem,
+          class: 'vxe-image-img',
+          src: imgThumbnailUrl || imgUrl,
+          alt,
+          loading,
+          style: imgStyle,
+          onClick: clickEvent
+        })
+      ])
     }
 
     $xeImage.renderVN = renderVN
