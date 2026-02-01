@@ -1,11 +1,23 @@
-import { ref, h, inject, reactive, PropType, computed } from 'vue'
+import { ref, h, inject, reactive, PropType, computed, onBeforeUnmount } from 'vue'
 import { defineVxeComponent } from '../../ui/src/comp'
 import { getConfig, createEvent, useSize } from '../../ui'
 import XEUtils from 'xe-utils'
 import { toCssUnit } from '../../ui/src/dom'
 import { openPreviewImage } from './util'
 
-import type { VxeImagePropTypes, ImageReactData, VxeImageEmits, ImagePrivateRef, VxeImagePrivateComputed, VxeImageConstructor, VxeImagePrivateMethods, ImageMethods, ImagePrivateMethods, VxeImageGroupConstructor, VxeImageGroupPrivateMethods } from '../../../types'
+import type { VxeImagePropTypes, ImageReactData, ImageInternalData, VxeImageEmits, ImagePrivateRef, VxeImagePrivateComputed, VxeImageConstructor, VxeImagePrivateMethods, ImageMethods, ImagePrivateMethods, VxeImageGroupConstructor, VxeImageGroupPrivateMethods, ValueOf } from '../../../types'
+
+function createInternalData (): ImageInternalData {
+  return {
+    // dgTime: 0,
+    // mdTime: 0
+  }
+}
+
+function createReactData (): ImageReactData {
+  return {
+  }
+}
 
 export default defineVxeComponent({
   name: 'VxeImage',
@@ -17,6 +29,10 @@ export default defineVxeComponent({
     width: [String, Number] as PropType<VxeImagePropTypes.Width>,
     height: [String, Number] as PropType<VxeImagePropTypes.Height>,
     circle: Boolean as PropType<VxeImagePropTypes.Circle>,
+    draggable: {
+      type: Boolean as PropType<VxeImagePropTypes.Draggable>,
+      default: () => getConfig().image.draggable
+    },
     zIndex: Number as PropType<VxeImagePropTypes.ZIndex>,
     maskClosable: {
       type: Boolean as PropType<VxeImagePropTypes.MaskClosable>,
@@ -44,7 +60,10 @@ export default defineVxeComponent({
   emits: [
     'click',
     'change',
-    'rotate'
+    'rotate',
+    'dragstart',
+    'drag',
+    'dragend'
   ] as VxeImageEmits,
   setup (props, context) {
     const { emit } = context
@@ -57,8 +76,8 @@ export default defineVxeComponent({
 
     const { computeSize } = useSize(props)
 
-    const reactData = reactive<ImageReactData>({
-    })
+    const internalData = createInternalData()
+    const reactData = reactive(createReactData())
 
     const refMaps: ImagePrivateRef = {
       refElem
@@ -149,19 +168,26 @@ export default defineVxeComponent({
       props,
       context,
       reactData,
+      internalData,
 
       getRefMaps: () => refMaps,
       getComputeMaps: () => computeMaps
     } as unknown as VxeImageConstructor & VxeImagePrivateMethods
 
+    const dispatchEvent = (type: ValueOf<VxeImageEmits>, params: Record<string, any>, evnt: Event | null) => {
+      emit(type, createEvent(evnt, { $image: $xeImage }, params))
+    }
+
     const imageMethods: ImageMethods = {
-      dispatchEvent (type, params, evnt) {
-        emit(type, createEvent(evnt, { $image: $xeImage }, params))
-      }
+      dispatchEvent
     }
 
     const clickEvent = (evnt: MouseEvent) => {
       const { showPreview, toolbarConfig, showPrintButton, showDownloadButton, maskClosable, zIndex } = props
+      const { mdTime, dgTime } = internalData
+      if (mdTime && dgTime && dgTime > mdTime) {
+        return
+      }
       const imgList = computeImgList.value
       const imgUrl = computeImgUrl.value
       if ($xeImageGroup) {
@@ -177,16 +203,29 @@ export default defineVxeComponent({
             zIndex,
             events: {
               change (eventParams) {
-                $xeImage.dispatchEvent('change', eventParams, eventParams.$event)
+                dispatchEvent('change', eventParams, eventParams.$event)
               },
               rotate (eventParams) {
-                $xeImage.dispatchEvent('rotate', eventParams, eventParams.$event)
+                dispatchEvent('rotate', eventParams, eventParams.$event)
               }
             }
           })
         }
-        $xeImage.dispatchEvent('click', { url: imgUrl }, evnt)
+        dispatchEvent('click', { url: imgUrl }, evnt)
       }
+    }
+
+    const mousedownEvent = () => {
+      internalData.mdTime = Date.now()
+    }
+
+    const handleDragstartEvent = (evnt: DragEvent) => {
+      internalData.dgTime = Date.now()
+      dispatchEvent('dragstart', {}, evnt)
+    }
+
+    const handleDragEvent = (evnt: DragEvent) => {
+      dispatchEvent(evnt.type as 'dragstart' | 'drag' | 'dragend', {}, evnt)
     }
 
     const imagePrivateMethods: ImagePrivateMethods = {
@@ -195,12 +234,16 @@ export default defineVxeComponent({
     Object.assign($xeImage, imageMethods, imagePrivateMethods)
 
     const renderVN = () => {
-      const { alt, loading, circle } = props
+      const { alt, loading, circle, draggable } = props
       const wrapperStyle = computeWrapperStyle.value
       const imgStyle = computeImgStyle.value
       const imgUrl = computeImgUrl.value
       const imgThumbnailUrl = computeImgThumbnailUrl.value
       const vSize = computeSize.value
+      let imgDrag
+      if (!XEUtils.eqNull(draggable)) {
+        imgDrag = !!(draggable === true || draggable === 'true')
+      }
       return h('div', {
         class: ['vxe-image', {
           [`size--${vSize}`]: vSize,
@@ -214,11 +257,21 @@ export default defineVxeComponent({
           src: imgThumbnailUrl || imgUrl,
           alt,
           loading,
+          draggable: imgDrag,
           style: imgStyle,
-          onClick: clickEvent
+          onMousedown: mousedownEvent,
+          onClick: clickEvent,
+          onDragstart: handleDragstartEvent,
+          onDrag: handleDragEvent,
+          onDragend: handleDragEvent
         })
       ])
     }
+
+    onBeforeUnmount(() => {
+      XEUtils.assign(reactData, createReactData())
+      XEUtils.assign(internalData, createInternalData())
+    })
 
     $xeImage.renderVN = renderVN
 
