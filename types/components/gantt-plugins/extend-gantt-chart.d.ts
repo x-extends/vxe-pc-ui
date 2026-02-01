@@ -89,7 +89,7 @@ export interface VxeGanttExtendChartPrivateMethods<D = any> {
   /**
    * @private
    */
-  handleUpdateTkLinkData(): void
+  handleUpdateTaskLinkData(): void
   /**
    * @private
    */
