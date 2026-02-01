@@ -57,24 +57,46 @@ export default /* define-vxe-component start */ defineVxeComponent({
       computeSize(): VxeComponentSizeType
       $xeImageGroup(): (VxeImageGroupConstructor & VxeImageGroupPrivateMethods) | null
     }),
+    computeWrapperStyle () {
+      const $xeImage = this
+      const props = $xeImage
+
+      const { width, height, circle } = props
+      const stys: Record<string, string> = {}
+      if (width) {
+        stys.width = toCssUnit(width)
+      } else if (circle) {
+        if (height) {
+          stys.width = toCssUnit(height)
+        }
+      }
+      if (height) {
+        stys.height = toCssUnit(height)
+      } else if (circle) {
+        if (width) {
+          stys.height = toCssUnit(width)
+        }
+      }
+      return stys
+    },
     computeImgStyle () {
       const $xeImage = this
       const props = $xeImage
 
       const { width, height } = props
-      const style: Record<string, string> = {}
+      const stys: Record<string, string> = {}
       if (width && height) {
-        style.maxWidth = toCssUnit(width)
-        style.maxHeight = toCssUnit(height)
+        stys.maxWidth = toCssUnit(width)
+        stys.maxHeight = toCssUnit(height)
       } else {
         if (width) {
-          style.width = toCssUnit(width)
+          stys.width = toCssUnit(width)
         }
         if (height) {
-          style.height = toCssUnit(height)
+          stys.height = toCssUnit(height)
         }
       }
-      return style
+      return stys
     },
     computeImgList  () {
       const $xeImage = this
@@ -173,26 +195,32 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const props = $xeImage
 
       const { alt, loading, circle } = props
+      const wrapperStyle = $xeImage.computeWrapperStyle
       const imgStyle = $xeImage.computeImgStyle
       const imgUrl = $xeImage.computeImgUrl
       const imgThumbnailUrl = $xeImage.computeImgThumbnailUrl
       const vSize = $xeImage.computeSize
-      return h('img', {
-        ref: 'refElem',
+      return h('div', {
         class: ['vxe-image', {
           [`size--${vSize}`]: vSize,
           'is--circle': circle
         }],
-        style: imgStyle,
-        attrs: {
-          src: imgThumbnailUrl || imgUrl,
-          alt,
-          loading
-        },
-        on: {
-          click: $xeImage.clickEvent
-        }
-      })
+        style: wrapperStyle
+      }, [
+        h('img', {
+          ref: 'refElem',
+          class: 'vxe-image-img',
+          style: imgStyle,
+          attrs: {
+            src: imgThumbnailUrl || imgUrl,
+            alt,
+            loading
+          },
+          on: {
+            click: $xeImage.clickEvent
+          }
+        })
+      ])
     }
   },
   render (this: any, h) {

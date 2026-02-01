@@ -1,7 +1,17 @@
 .vxe-image {
+  display: inline-flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
   vertical-align: middle;
-  border-style: none;
   &.is--circle {
     border-radius: 50%;
+    .vxe-image-img {
+      border-radius: 50%;
+    }
   }
+}
+
+.vxe-image-img {
+  border-style: none;
 }
