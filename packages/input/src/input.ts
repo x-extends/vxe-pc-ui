@@ -258,6 +258,12 @@ export default defineVxeComponent({
     })
 
     const computeFormReadonly = computed(() => {
+      if (getConfig().inputReadonly === 'obsolete') {
+        if ($xeForm) {
+          return $xeForm.props.readonly
+        }
+        return false
+      }
       const { readonly } = props
       if (readonly === null) {
         if ($xeForm) {
