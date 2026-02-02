@@ -241,6 +241,10 @@ declare module '@vxe-ui/core' {
      */
     scrollMarginStyle?: 'obsolete'
     /**
+     *输入框-还原 readonly 为不可编辑模式，被 editable 替换
+     */
+    inputReadonly?: 'obsolete'
+    /**
      * 无效，已废弃
      * @deprecated
      */

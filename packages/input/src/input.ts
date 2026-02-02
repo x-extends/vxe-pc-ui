@@ -249,6 +249,12 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const props = $xeInput
       const $xeForm = $xeInput.$xeForm
 
+      if (getConfig().inputReadonly === 'obsolete') {
+        if ($xeForm) {
+          return $xeForm.readonly
+        }
+        return false
+      }
       const { readonly } = props
       if (readonly === null) {
         if ($xeForm) {
