@@ -401,8 +401,8 @@ export namespace VxeTableExtendCellAreaDefines {
 
   export interface CellAreaExtensionStartParams<D = any> {
     fixed: VxeColumnPropTypes.Fixed
-    targetRows: D[]
-    targetCols: VxeTableDefines.ColumnInfo<D>[]
+    rows: D[]
+    cols: VxeTableDefines.ColumnInfo<D>[]
   }
   export interface CellAreaExtensionStartEventParams<D = any> extends EventParams<D>, CellAreaExtensionStartParams<D> { }
 

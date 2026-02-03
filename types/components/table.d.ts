@@ -363,6 +363,13 @@ export namespace VxeTablePropTypes {
      */
     keyField?: string
     /**
+     * 自定义行主键生成的方法
+     */
+    createKeyMethod?(params: {
+      row: D
+      keyField: string
+    }): string | number
+    /**
      * 当鼠标点击行时，是否要高亮当前行
      */
     isCurrent?: boolean
