@@ -2043,6 +2043,7 @@ export default defineVxeComponent({
             // 移出源位置
             if (oldRest && newRest) {
               const fullList = XEUtils.toTreeArray(internalData.afterTreeList, {
+                updated: false,
                 key: keyField,
                 parentKey: parentField,
                 children: mapChildrenField
