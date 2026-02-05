@@ -144,7 +144,9 @@ export default /* define-vxe-component start */ defineVxeComponent({
     },
 
     prefixIcon: String as PropType<VxeInputPropTypes.PrefixIcon>,
+    prefixConfig: Object as PropType<VxeInputPropTypes.PrefixConfig>,
     suffixIcon: String as PropType<VxeInputPropTypes.SuffixIcon>,
+    suffixConfig: Object as PropType<VxeInputPropTypes.SuffixConfig>,
     placement: String as PropType<VxeInputPropTypes.Placement>,
     transfer: {
       type: Boolean as PropType<VxeInputPropTypes.Transfer>,
@@ -224,6 +226,18 @@ export default /* define-vxe-component start */ defineVxeComponent({
       $xeForm(): (VxeFormConstructor & VxeFormPrivateMethods) | null
       formItemInfo(): VxeFormDefines.ProvideItemInfo | null
     }),
+    computePrefixOpts () {
+      const $xeInput = this
+      const props = $xeInput
+
+      return Object.assign({}, getConfig().input.prefixConfig, props.prefixConfig)
+    },
+    computeSuffixOpts () {
+      const $xeInput = this
+      const props = $xeInput
+
+      return Object.assign({}, getConfig().input.suffixConfig, props.suffixConfig)
+    },
     computeBtnTransfer () {
       const $xeInput = this
       const props = $xeInput
@@ -2872,8 +2886,11 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const slots = $xeInput.$scopedSlots
 
       const { prefixIcon } = props
+      const prefixOpts = $xeInput.computePrefixOpts
       const prefixSlot = slots.prefix
-      return prefixSlot || prefixIcon
+      const preIcon = prefixIcon || prefixOpts.icon
+      const sufContent = prefixOpts.content
+      return prefixSlot || preIcon || sufContent
         ? h('div', {
           class: 'vxe-input--prefix',
           on: {
@@ -2885,9 +2902,16 @@ export default /* define-vxe-component start */ defineVxeComponent({
           }, prefixSlot
             ? getSlotVNs(prefixSlot({}))
             : [
-                h('i', {
-                  class: prefixIcon
-                })
+                preIcon
+                  ? h('i', {
+                    class: preIcon
+                  })
+                  : renderEmptyElement($xeInput),
+                sufContent
+                  ? h('span', {
+                    class: 'vxe-input--prefix-text'
+                  }, `${sufContent}`)
+                  : renderEmptyElement($xeInput)
               ])
         ])
         : null
@@ -2901,6 +2925,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const { suffixIcon } = props
       const { inputValue } = reactData
       const suffixSlot = slots.suffix
+      const suffixOpts = $xeInput.computeSuffixOpts
       const isDisabled = $xeInput.computeIsDisabled
       const isNumType = $xeInput.computeIsNumType
       const isDatePickerType = $xeInput.computeIsDatePickerType
@@ -2908,7 +2933,9 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const isSearchType = $xeInput.computeIsSearchType
       const isClearable = $xeInput.computeIsClearable
       const isExtraBtn = isPawdType || isNumType || isDatePickerType || isSearchType
-      return isClearable || suffixSlot || suffixIcon || isExtraBtn
+      const sufIcon = suffixIcon || suffixOpts.icon
+      const sufContent = suffixOpts.content
+      return isClearable || suffixSlot || sufIcon || sufContent || isExtraBtn
         ? h('div', {
           class: ['vxe-input--suffix', {
             'is--clear': isClearable && !isDisabled && !(inputValue === '' || XEUtils.eqNull(inputValue))
@@ -2927,7 +2954,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
             ])
             : renderEmptyElement($xeInput),
           isExtraBtn ? $xeInput.renderExtraSuffixIcon(h) : renderEmptyElement($xeInput),
-          suffixSlot || suffixIcon
+          suffixSlot || sufIcon || sufContent
             ? h('div', {
               class: 'vxe-input--suffix-icon',
               on: {
@@ -2936,9 +2963,16 @@ export default /* define-vxe-component start */ defineVxeComponent({
             }, suffixSlot
               ? getSlotVNs(suffixSlot({}))
               : [
-                  h('i', {
-                    class: suffixIcon
-                  })
+                  sufIcon
+                    ? h('i', {
+                      class: sufIcon
+                    })
+                    : renderEmptyElement($xeInput),
+                  sufContent
+                    ? h('span', {
+                      class: 'vxe-input--suffix-text'
+                    }, `${sufContent}`)
+                    : renderEmptyElement($xeInput)
                 ])
             : renderEmptyElement($xeInput)
         ])

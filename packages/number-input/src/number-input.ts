@@ -106,7 +106,9 @@ export default /* define-vxe-component start */ defineVxeComponent({
     plusIcon: String as PropType<VxeNumberInputPropTypes.PlusIcon>,
     minusIcon: String as PropType<VxeNumberInputPropTypes.MinusIcon>,
     prefixIcon: String as PropType<VxeNumberInputPropTypes.PrefixIcon>,
+    prefixConfig: Object as PropType<VxeNumberInputPropTypes.PrefixConfig>,
     suffixIcon: String as PropType<VxeNumberInputPropTypes.SuffixIcon>,
+    suffixConfig: Object as PropType<VxeNumberInputPropTypes.SuffixConfig>,
 
     // 已废弃
     controls: {
@@ -201,6 +203,18 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const props = $xeNumberInput
 
       return Object.assign({}, getConfig().numberInput.controlConfig, props.controlConfig)
+    },
+    computePrefixOpts () {
+      const $xeNumberInput = this
+      const props = $xeNumberInput
+
+      return Object.assign({}, getConfig().numberInput.prefixConfig, props.prefixConfig)
+    },
+    computeSuffixOpts () {
+      const $xeNumberInput = this
+      const props = $xeNumberInput
+
+      return Object.assign({}, getConfig().numberInput.suffixConfig, props.suffixConfig)
     },
     computeDecimalsType () {
       const $xeNumberInput = this
@@ -923,8 +937,11 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const slots = $xeNumberInput.$scopedSlots
 
       const { prefixIcon } = props
+      const prefixOpts = $xeNumberInput.computePrefixOpts
       const prefixSlot = slots.prefix
-      return prefixSlot || prefixIcon
+      const preIcon = prefixIcon || prefixOpts.icon
+      const sufContent = prefixOpts.content
+      return prefixSlot || preIcon || sufContent
         ? h('div', {
           class: 'vxe-number-input--prefix',
           on: {
@@ -936,9 +953,16 @@ export default /* define-vxe-component start */ defineVxeComponent({
           }, prefixSlot
             ? getSlotVNs(prefixSlot({}))
             : [
-                h('i', {
-                  class: prefixIcon
-                })
+                preIcon
+                  ? h('i', {
+                    class: preIcon
+                  })
+                  : renderEmptyElement($xeNumberInput),
+                sufContent
+                  ? h('span', {
+                    class: 'vxe-prefix-input--suffix-text'
+                  }, `${sufContent}`)
+                  : renderEmptyElement($xeNumberInput)
               ])
         ])
         : renderEmptyElement($xeNumberInput)
@@ -952,8 +976,11 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const { suffixIcon } = props
       const { inputValue } = reactData
       const suffixSlot = slots.suffix
+      const suffixOpts = $xeNumberInput.computeSuffixOpts
       const isDisabled = $xeNumberInput.computeIsDisabled
       const isClearable = $xeNumberInput.computeIsClearable
+      const sufIcon = suffixIcon || suffixOpts.icon
+      const sufContent = suffixOpts.content
       return h('div', {
         class: ['vxe-number-input--suffix', {
           'is--clear': isClearable && !isDisabled && !(inputValue === '' || XEUtils.eqNull(inputValue))
@@ -971,7 +998,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
             })
           ])
           : renderEmptyElement($xeNumberInput),
-        suffixSlot || suffixIcon
+        suffixSlot || sufIcon || sufContent
           ? h('div', {
             class: 'vxe-number-input--suffix-icon',
             on: {
@@ -980,9 +1007,16 @@ export default /* define-vxe-component start */ defineVxeComponent({
           }, suffixSlot
             ? getSlotVNs(suffixSlot({}))
             : [
-                h('i', {
-                  class: suffixIcon
-                })
+                sufIcon
+                  ? h('i', {
+                    class: sufIcon
+                  })
+                  : renderEmptyElement($xeNumberInput),
+                sufContent
+                  ? h('span', {
+                    class: 'vxe-number-input--suffix-text'
+                  }, `${sufContent}`)
+                  : renderEmptyElement($xeNumberInput)
               ])
           : renderEmptyElement($xeNumberInput)
       ])
