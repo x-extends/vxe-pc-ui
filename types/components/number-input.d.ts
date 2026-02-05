@@ -74,7 +74,17 @@ export namespace VxeNumberInputPropTypes {
   export type PlusIcon = string
   export type MinusIcon = string
   export type PrefixIcon = string
+  export interface PrefixConfig {
+    icon?: string
+    content?: string
+    status?: VxeComponentSizeType
+  }
   export type SuffixIcon = string
+  export interface SuffixConfig {
+    icon?: string
+    content?: string
+    status?: VxeComponentSizeType
+  }
 
   export type ShowCurrency = boolean
   export type CurrencySymbol = string | null
@@ -159,7 +169,9 @@ export interface VxeNumberInputProps {
   minusIcon?: VxeNumberInputPropTypes.MinusIcon
 
   prefixIcon?: VxeNumberInputPropTypes.PrefixIcon
+  prefixConfig?: VxeNumberInputPropTypes.PrefixConfig
   suffixIcon?: VxeNumberInputPropTypes.SuffixIcon
+  suffixConfig?: VxeNumberInputPropTypes.SuffixConfig
 
   /**
    * 只对 type=amount 有效，是否显示前缀货币符号

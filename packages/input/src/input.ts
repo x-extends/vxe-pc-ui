@@ -137,7 +137,9 @@ export default defineVxeComponent({
     },
 
     prefixIcon: String as PropType<VxeInputPropTypes.PrefixIcon>,
+    prefixConfig: Object as PropType<VxeInputPropTypes.PrefixConfig>,
     suffixIcon: String as PropType<VxeInputPropTypes.SuffixIcon>,
+    suffixConfig: Object as PropType<VxeInputPropTypes.SuffixConfig>,
     placement: String as PropType<VxeInputPropTypes.Placement>,
     transfer: {
       type: Boolean as PropType<VxeInputPropTypes.Transfer>,
@@ -242,6 +244,14 @@ export default defineVxeComponent({
       }
       return XEUtils.toStringDate(value, format)
     }
+
+    const computePrefixOpts = computed(() => {
+      return Object.assign({}, getConfig().input.prefixConfig, props.prefixConfig)
+    })
+
+    const computeSuffixOpts = computed(() => {
+      return Object.assign({}, getConfig().input.suffixConfig, props.suffixConfig)
+    })
 
     const computeBtnTransfer = computed(() => {
       const { transfer } = props
@@ -2491,8 +2501,11 @@ export default defineVxeComponent({
 
     const renderPrefixIcon = () => {
       const { prefixIcon } = props
+      const prefixOpts = computePrefixOpts.value
       const prefixSlot = slots.prefix
-      return prefixSlot || prefixIcon
+      const preIcon = prefixIcon || prefixOpts.icon
+      const sufContent = prefixOpts.content
+      return prefixSlot || preIcon || sufContent
         ? h('div', {
           class: 'vxe-input--prefix',
           onClick: clickPrefixEvent
@@ -2502,18 +2515,26 @@ export default defineVxeComponent({
           }, prefixSlot
             ? getSlotVNs(prefixSlot({}))
             : [
-                h('i', {
-                  class: prefixIcon
-                })
+                preIcon
+                  ? h('i', {
+                    class: preIcon
+                  })
+                  : renderEmptyElement($xeInput),
+                sufContent
+                  ? h('span', {
+                    class: 'vxe-input--prefix-text'
+                  }, `${sufContent}`)
+                  : renderEmptyElement($xeInput)
               ])
         ])
-        : null
+        : renderEmptyElement($xeInput)
     }
 
     const renderSuffixIcon = () => {
       const { suffixIcon } = props
       const { inputValue } = reactData
       const suffixSlot = slots.suffix
+      const suffixOpts = computeSuffixOpts.value
       const isDisabled = computeIsDisabled.value
       const isNumType = computeIsNumType.value
       const isDatePickerType = computeIsDatePickerType.value
@@ -2521,7 +2542,9 @@ export default defineVxeComponent({
       const isSearchType = computeIsSearchType.value
       const isClearable = computeIsClearable.value
       const isExtraBtn = isPawdType || isNumType || isDatePickerType || isSearchType
-      return isClearable || suffixSlot || suffixIcon || isExtraBtn
+      const sufIcon = suffixIcon || suffixOpts.icon
+      const sufContent = suffixOpts.content
+      return isClearable || suffixSlot || sufIcon || sufContent || isExtraBtn
         ? h('div', {
           class: ['vxe-input--suffix', {
             'is--clear': isClearable && !isDisabled && !(inputValue === '' || XEUtils.eqNull(inputValue))
@@ -2536,22 +2559,29 @@ export default defineVxeComponent({
                 class: getIcon().INPUT_CLEAR
               })
             ])
-            : createCommentVNode(),
-          isExtraBtn ? renderExtraSuffixIcon() : createCommentVNode(),
-          suffixSlot || suffixIcon
+            : renderEmptyElement($xeInput),
+          isExtraBtn ? renderExtraSuffixIcon() : renderEmptyElement($xeInput),
+          suffixSlot || sufIcon || sufContent
             ? h('div', {
               class: 'vxe-input--suffix-icon',
               onClick: clickSuffixEvent
             }, suffixSlot
               ? getSlotVNs(suffixSlot({}))
               : [
-                  h('i', {
-                    class: suffixIcon
-                  })
+                  sufIcon
+                    ? h('i', {
+                      class: sufIcon
+                    })
+                    : renderEmptyElement($xeInput),
+                  sufContent
+                    ? h('span', {
+                      class: 'vxe-input--suffix-text'
+                    }, `${sufContent}`)
+                    : renderEmptyElement($xeInput)
                 ])
-            : createCommentVNode()
+            : renderEmptyElement($xeInput)
         ])
-        : null
+        : renderEmptyElement($xeInput)
     }
 
     const renderExtraSuffixIcon = () => {

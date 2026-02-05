@@ -120,6 +120,10 @@
   align-items: center;
   color: var(--vxe-ui-input-placeholder-color);
 }
+.vxe-input--prefix-text,
+.vxe-input--suffix-text {
+  padding: 0 0.5em;
+}
 .vxe-input--clear-icon,
 .vxe-input--control-icon {
   height: 100%;

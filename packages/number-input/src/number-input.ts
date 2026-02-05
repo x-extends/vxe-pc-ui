@@ -92,7 +92,9 @@ export default defineVxeComponent({
     plusIcon: String as PropType<VxeNumberInputPropTypes.PlusIcon>,
     minusIcon: String as PropType<VxeNumberInputPropTypes.MinusIcon>,
     prefixIcon: String as PropType<VxeNumberInputPropTypes.PrefixIcon>,
+    prefixConfig: Object as PropType<VxeNumberInputPropTypes.PrefixConfig>,
     suffixIcon: String as PropType<VxeNumberInputPropTypes.SuffixIcon>,
+    suffixConfig: Object as PropType<VxeNumberInputPropTypes.SuffixConfig>,
 
     // 已废弃
     controls: {
@@ -190,6 +192,14 @@ export default defineVxeComponent({
 
     const computeControlOpts = computed(() => {
       return Object.assign({}, getConfig().numberInput.controlConfig, props.controlConfig)
+    })
+
+    const computePrefixOpts = computed(() => {
+      return Object.assign({}, getConfig().numberInput.prefixConfig, props.prefixConfig)
+    })
+
+    const computeSuffixOpts = computed(() => {
+      return Object.assign({}, getConfig().numberInput.suffixConfig, props.suffixConfig)
     })
 
     const computeDecimalsType = computed(() => {
@@ -816,8 +826,11 @@ export default defineVxeComponent({
 
     const renderPrefixIcon = () => {
       const { prefixIcon } = props
+      const prefixOpts = computePrefixOpts.value
       const prefixSlot = slots.prefix
-      return prefixSlot || prefixIcon
+      const preIcon = prefixIcon || prefixOpts.icon
+      const sufContent = prefixOpts.content
+      return prefixSlot || preIcon || sufContent
         ? h('div', {
           class: 'vxe-number-input--prefix',
           onClick: clickPrefixEvent
@@ -827,9 +840,16 @@ export default defineVxeComponent({
           }, prefixSlot
             ? getSlotVNs(prefixSlot({}))
             : [
-                h('i', {
-                  class: prefixIcon
-                })
+                preIcon
+                  ? h('i', {
+                    class: preIcon
+                  })
+                  : renderEmptyElement($xeNumberInput),
+                sufContent
+                  ? h('span', {
+                    class: 'vxe-prefix-input--suffix-text'
+                  }, `${sufContent}`)
+                  : renderEmptyElement($xeNumberInput)
               ])
         ])
         : renderEmptyElement($xeNumberInput)
@@ -839,8 +859,11 @@ export default defineVxeComponent({
       const { suffixIcon } = props
       const { inputValue } = reactData
       const suffixSlot = slots.suffix
+      const suffixOpts = computeSuffixOpts.value
       const isDisabled = computeIsDisabled.value
       const isClearable = computeIsClearable.value
+      const sufIcon = suffixIcon || suffixOpts.icon
+      const sufContent = suffixOpts.content
       return h('div', {
         class: ['vxe-number-input--suffix', {
           'is--clear': isClearable && !isDisabled && !(inputValue === '' || XEUtils.eqNull(inputValue))
@@ -856,16 +879,23 @@ export default defineVxeComponent({
             })
           ])
           : renderEmptyElement($xeNumberInput),
-        suffixSlot || suffixIcon
+        suffixSlot || sufIcon || sufContent
           ? h('div', {
             class: 'vxe-number-input--suffix-icon',
             onClick: clickSuffixEvent
           }, suffixSlot
             ? getSlotVNs(suffixSlot({}))
             : [
-                h('i', {
-                  class: suffixIcon
-                })
+                sufIcon
+                  ? h('i', {
+                    class: sufIcon
+                  })
+                  : renderEmptyElement($xeNumberInput),
+                sufContent
+                  ? h('span', {
+                    class: 'vxe-number-input--suffix-text'
+                  }, `${sufContent}`)
+                  : renderEmptyElement($xeNumberInput)
               ])
           : renderEmptyElement($xeNumberInput)
       ])

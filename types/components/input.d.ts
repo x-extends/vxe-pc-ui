@@ -64,7 +64,17 @@ export namespace VxeInputPropTypes {
   export type FestivalMethod = (params: VxeInputDefines.DateFestivalParams) => VxeInputDefines.DateFestivalInfo | null | void
   export type DisabledMethod = (params: VxeInputDefines.DateDisabledParams) => boolean
   export type PrefixIcon = string
+  export interface PrefixConfig {
+    icon?: string
+    content?: string
+    status?: VxeComponentSizeType
+  }
   export type SuffixIcon = string
+  export interface SuffixConfig {
+    icon?: string
+    content?: string
+    status?: VxeComponentSizeType
+  }
   export type Placement = 'top' | 'bottom' | '' | null
   export type Transfer = boolean
 
@@ -140,7 +150,9 @@ export interface VxeInputProps {
   selectDay?: VxeInputPropTypes.SelectDay
 
   prefixIcon?: VxeInputPropTypes.PrefixIcon
+  prefixConfig?: VxeInputPropTypes.PrefixConfig
   suffixIcon?: VxeInputPropTypes.SuffixIcon
+  suffixConfig?: VxeInputPropTypes.SuffixConfig
   placement?: VxeInputPropTypes.Placement
   transfer?: VxeInputPropTypes.Transfer
 
