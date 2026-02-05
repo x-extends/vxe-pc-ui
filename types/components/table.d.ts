@@ -5062,31 +5062,28 @@ export interface TableMethods<DT = any> {
   } | number | null | undefined, y?: number | null): Promise<void>
   /**
    * 如果有滚动条，则滚动到对应的行
-   * @param row 指定行
-   * @param columnOrField 列对象或字段名
    */
-  scrollToRow(row: any, fieldOrColumn?: VxeColumnPropTypes.Field | VxeTableDefines.ColumnInfo): Promise<any>
+  scrollToRow(row: any, fieldOrColumn?: VxeColumnPropTypes.Field | VxeTableDefines.ColumnInfo | null, options?: VxeTableDefines.ScrollToColumnConfig): Promise<any>
   /**
    * 如果有滚动条，则滚动到第一行
    */
-  scrollToStartRow(fieldOrColumn?: VxeColumnPropTypes.Field | VxeTableDefines.ColumnInfo): Promise<any>
+  scrollToStartRow(fieldOrColumn?: VxeColumnPropTypes.Field | VxeTableDefines.ColumnInfo | null, options?: VxeTableDefines.ScrollToColumnConfig): Promise<any>
   /**
    * 如果有滚动条，则滚动到最后一行
    */
-  scrollToEndRow(fieldOrColumn?: VxeColumnPropTypes.Field | VxeTableDefines.ColumnInfo): Promise<any>
+  scrollToEndRow(fieldOrColumn?: VxeColumnPropTypes.Field | VxeTableDefines.ColumnInfo | null, options?: VxeTableDefines.ScrollToColumnConfig): Promise<any>
   /**
    * 如果有滚动条，则滚动到对应的列
-   * @param columnOrField 列对象或字段名
    */
-  scrollToColumn(fieldOrColumn: VxeColumnPropTypes.Field | VxeTableDefines.ColumnInfo): Promise<any>
+  scrollToColumn(fieldOrColumn: VxeColumnPropTypes.Field | VxeTableDefines.ColumnInfo, options?: VxeTableDefines.ScrollToColumnConfig): Promise<any>
   /**
    * 如果有滚动条，则滚动到第一列
    */
-  scrollToStartColumn(): Promise<any>
+  scrollToStartColumn(options?: VxeTableDefines.ScrollToColumnConfig): Promise<any>
   /**
    * 如果有滚动条，则滚动到最后一列
    */
-  scrollToEndColumn(): Promise<any>
+  scrollToEndColumn(options?: VxeTableDefines.ScrollToColumnConfig): Promise<any>
   /**
    * 手动清除滚动相关信息，还原到初始状态
    */
@@ -5612,6 +5609,19 @@ export type VxeTableEmits = [
 ]
 
 export namespace VxeTableDefines {
+  export interface ScrollToRowConfig extends ScrollToColumnConfig {
+    /**
+     * 是否强制定位到行
+     */
+    rowAlign?: boolean
+  }
+  export interface ScrollToColumnConfig {
+    /**
+     * 是否强制定位到列
+     */
+    colAlign?: boolean
+  }
+
   export interface ImportStoreObj {
     inited: boolean
     file: any
