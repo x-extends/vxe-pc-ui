@@ -25,6 +25,10 @@ export namespace VxePulldownPropTypes {
    */
   export type ZIndex = number
   export type Placement = '' | 'top' | 'bottom'
+  /**
+   * 已废弃，请使用 PopupConfig.trigger
+   * @deprecated
+   */
   export type Trigger = '' | 'manual' | 'click'
   export interface Option {
     label?: string | number
@@ -43,6 +47,10 @@ export namespace VxePulldownPropTypes {
      * 设置弹出面板方向
      */
     placement?: 'top' | 'bottom' | '' | null
+    /**
+     * 触发方式
+     */
+    trigger?: 'click' | 'manual' | 'default' | '' | null
     transfer?: boolean
     width?: number | string
     height?: number | string
@@ -77,6 +85,10 @@ export interface VxePulldownProps {
    * 固定显示下拉面板的方向
    */
   placement?: VxePulldownPropTypes.Placement
+  /**
+   * 已废弃，请使用 popup-config.trigger
+   * @deprecated
+   */
   trigger?: VxePulldownPropTypes.Trigger
   popupConfig?: VxePulldownPropTypes.PopupConfig
   showPopupShadow?: VxePulldownPropTypes.ShowPopupShadow

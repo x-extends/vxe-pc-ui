@@ -22,6 +22,10 @@ export default /* define-vxe-component start */ defineVxeComponent({
     value: Boolean as PropType<VxePulldownPropTypes.ModelValue>,
     disabled: Boolean as PropType<VxePulldownPropTypes.Disabled>,
     placement: String as PropType<VxePulldownPropTypes.Placement>,
+    /**
+     * 已废弃，请使用 popup-config.trigger
+     * @deprecated
+     */
     trigger: {
       type: String as PropType<VxePulldownPropTypes.Trigger>,
       default: getConfig().pulldown.trigger
@@ -298,7 +302,9 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const reactData = $xePulldown.reactData
 
       const { trigger } = props
-      if (trigger === 'click') {
+      const popupOpts = $xePulldown.computePopupOpts
+      const currTrigger = trigger || popupOpts.trigger
+      if (currTrigger === 'click') {
         if (reactData.visiblePanel) {
           $xePulldown.hideOptionPanel()
           $xePulldown.dispatchEvent('hide-panel', {}, evnt)
@@ -314,16 +320,20 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const props = $xePulldown
       const reactData = $xePulldown.reactData
 
-      const { disabled } = props
+      const { trigger, disabled } = props
       const { visiblePanel } = reactData
+      const popupOpts = $xePulldown.computePopupOpts
+      const currTrigger = trigger || popupOpts.trigger
       const panelElem = $xePulldown.$refs.refPulldownPanel as HTMLElement
       if (!disabled) {
         if (visiblePanel) {
           if (getEventTargetNode(evnt, panelElem).flag) {
             $xePulldown.updatePlacement()
           } else {
-            $xePulldown.hideOptionPanel()
-            $xePulldown.dispatchEvent('hide-panel', {}, evnt)
+            if (currTrigger !== 'manual') {
+              $xePulldown.hideOptionPanel()
+              $xePulldown.dispatchEvent('hide-panel', {}, evnt)
+            }
           }
         }
       }
@@ -333,26 +343,36 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const props = $xePulldown
       const reactData = $xePulldown.reactData
 
-      const { disabled } = props
+      const { trigger, disabled } = props
       const { visiblePanel } = reactData
+      const popupOpts = $xePulldown.computePopupOpts
+      const currTrigger = trigger || popupOpts.trigger
       const el = $xePulldown.$refs.refElem as HTMLElement
       const panelElem = $xePulldown.$refs.refPulldownPanel as HTMLElement
       if (!disabled) {
         reactData.isActivated = getEventTargetNode(evnt, el).flag || getEventTargetNode(evnt, panelElem).flag
         if (visiblePanel && !reactData.isActivated) {
-          $xePulldown.hideOptionPanel()
-          $xePulldown.dispatchEvent('hide-panel', {}, evnt)
+          if (currTrigger !== 'manual') {
+            $xePulldown.hideOptionPanel()
+            $xePulldown.dispatchEvent('hide-panel', {}, evnt)
+          }
         }
       }
     },
     handleGlobalBlurEvent  (evnt: Event) {
       const $xePulldown = this
+      const props = $xePulldown
       const reactData = $xePulldown.reactData
 
+      const { trigger } = props
       const { visiblePanel, isActivated } = reactData
+      const popupOpts = $xePulldown.computePopupOpts
+      const currTrigger = trigger || popupOpts.trigger
       if (visiblePanel) {
-        $xePulldown.hideOptionPanel()
-        $xePulldown.dispatchEvent('hide-panel', {}, evnt)
+        if (currTrigger !== 'manual') {
+          $xePulldown.hideOptionPanel()
+          $xePulldown.dispatchEvent('hide-panel', {}, evnt)
+        }
       }
       if (isActivated) {
         reactData.isActivated = false
