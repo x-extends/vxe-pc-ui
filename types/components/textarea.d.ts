@@ -174,13 +174,19 @@ export namespace VxeTextareaDefines {
   export interface ChangeEventParams extends TextareaEventParams, ChangeParams { }
 
   export interface KeyupParams extends InputParams {}
-  export interface KeyupEventParams extends TextareaEventParams, KeyupParams { }
+  export interface KeyupEventParams extends TextareaEventParams, KeyupParams {
+    $event: KeyboardEvent
+  }
 
   export interface KeydownParams extends InputParams {}
-  export interface KeydownEventParams extends TextareaEventParams, KeydownParams { }
+  export interface KeydownEventParams extends TextareaEventParams, KeydownParams {
+    $event: KeyboardEvent
+  }
 
   export interface ClickParams extends InputParams {}
-  export interface ClickEventParams extends TextareaEventParams, ClickParams { }
+  export interface ClickEventParams extends TextareaEventParams, ClickParams {
+    $event: MouseEvent
+  }
 
   export interface FocusParams extends InputParams {}
   export interface FocusEventParams extends TextareaEventParams, FocusParams { }

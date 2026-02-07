@@ -14,6 +14,10 @@ export default defineVxeComponent({
     modelValue: Boolean as PropType<VxePulldownPropTypes.ModelValue>,
     disabled: Boolean as PropType<VxePulldownPropTypes.Disabled>,
     placement: String as PropType<VxePulldownPropTypes.Placement>,
+    /**
+     * 已废弃，请使用 popup-config.trigger
+     * @deprecated
+     */
     trigger: {
       type: String as PropType<VxePulldownPropTypes.Trigger>,
       default: getConfig().pulldown.trigger
@@ -239,7 +243,9 @@ export default defineVxeComponent({
 
     const clickTargetEvent = (evnt: MouseEvent) => {
       const { trigger } = props
-      if (trigger === 'click') {
+      const popupOpts = computePopupOpts.value
+      const currTrigger = trigger || popupOpts.trigger
+      if (currTrigger === 'click') {
         if (reactData.visiblePanel) {
           hideOptionPanel()
           dispatchEvent('hide-panel', {}, evnt)
@@ -252,14 +258,36 @@ export default defineVxeComponent({
     }
 
     const handleGlobalMousewheelEvent = (evnt: Event) => {
-      const { disabled } = props
+      const { trigger, disabled } = props
       const { visiblePanel } = reactData
       const panelElem = refPulldownPanel.value
+      const popupOpts = computePopupOpts.value
+      const currTrigger = trigger || popupOpts.trigger
       if (!disabled) {
         if (visiblePanel) {
           if (getEventTargetNode(evnt, panelElem).flag) {
             updatePlacement()
           } else {
+            if (currTrigger !== 'manual') {
+              hideOptionPanel()
+              dispatchEvent('hide-panel', {}, evnt)
+            }
+          }
+        }
+      }
+    }
+
+    const handleGlobalMousedownEvent = (evnt: Event) => {
+      const { trigger, disabled } = props
+      const { visiblePanel } = reactData
+      const popupOpts = computePopupOpts.value
+      const currTrigger = trigger || popupOpts.trigger
+      const el = refElem.value
+      const panelElem = refPulldownPanel.value
+      if (!disabled) {
+        reactData.isActivated = getEventTargetNode(evnt, el).flag || getEventTargetNode(evnt, panelElem).flag
+        if (visiblePanel && !reactData.isActivated) {
+          if (currTrigger !== 'manual') {
             hideOptionPanel()
             dispatchEvent('hide-panel', {}, evnt)
           }
@@ -267,25 +295,16 @@ export default defineVxeComponent({
       }
     }
 
-    const handleGlobalMousedownEvent = (evnt: Event) => {
-      const { disabled } = props
-      const { visiblePanel } = reactData
-      const el = refElem.value
-      const panelElem = refPulldownPanel.value
-      if (!disabled) {
-        reactData.isActivated = getEventTargetNode(evnt, el).flag || getEventTargetNode(evnt, panelElem).flag
-        if (visiblePanel && !reactData.isActivated) {
+    const handleGlobalBlurEvent = (evnt: Event) => {
+      const { trigger } = props
+      const { visiblePanel, isActivated } = reactData
+      const popupOpts = computePopupOpts.value
+      const currTrigger = trigger || popupOpts.trigger
+      if (visiblePanel) {
+        if (currTrigger !== 'manual') {
           hideOptionPanel()
           dispatchEvent('hide-panel', {}, evnt)
         }
-      }
-    }
-
-    const handleGlobalBlurEvent = (evnt: Event) => {
-      const { visiblePanel, isActivated } = reactData
-      if (visiblePanel) {
-        hideOptionPanel()
-        dispatchEvent('hide-panel', {}, evnt)
       }
       if (isActivated) {
         reactData.isActivated = false
