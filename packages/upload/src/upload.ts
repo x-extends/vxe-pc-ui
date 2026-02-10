@@ -151,6 +151,7 @@ export default defineVxeComponent({
       type: [String, Number, Function] as PropType<VxeUploadPropTypes.ProgressText>,
       default: () => getConfig().upload.progressText
     },
+    previewImageConfig: Object as PropType<VxeUploadPropTypes.PreviewImageConfig>,
     showSubmitButton: Boolean as PropType<VxeUploadPropTypes.ShowSubmitButton>,
     autoHiddenButton: {
       type: Boolean as PropType<VxeUploadPropTypes.AutoHiddenButton>,
@@ -300,6 +301,13 @@ export default defineVxeComponent({
 
     const computeLimitMaxCount = computed(() => {
       return props.multiple ? XEUtils.toNumber(props.limitCount) : 1
+    })
+
+    const computePreviewImageOpts = computed(() => {
+      const { showDownloadButton } = props
+      return Object.assign({
+        showDownloadButton
+      }, getConfig().upload.previewImageConfig, props.previewImageConfig)
     })
 
     const computeOverCount = computed(() => {
@@ -523,12 +531,14 @@ export default defineVxeComponent({
     const handleDefaultFilePreview = (item: VxeUploadDefines.FileObjItem) => {
       const { imageTypes, showDownloadButton } = props
       const typeProp = computeTypeProp.value
+      const previewImageOpts = computePreviewImageOpts.value
       const beforeDownloadFn = props.beforeDownloadMethod || getConfig().upload.beforeDownloadMethod
       const { imagePreviewTypes } = internalData
       // 如果是预览图片
       if (imagePreviewTypes.concat(imageTypes || []).some(type => `${type}`.toLowerCase() === `${item[typeProp]}`.toLowerCase())) {
         if (VxeUI.previewImage) {
           VxeUI.previewImage({
+            ...previewImageOpts,
             urlList: [getFileUrl(item)],
             showDownloadButton,
             beforeDownloadMethod: beforeDownloadFn
@@ -561,6 +571,7 @@ export default defineVxeComponent({
     const handlePreviewImageEvent = (evnt: MouseEvent, item: VxeUploadDefines.FileObjItem, index: number) => {
       const { showDownloadButton } = props
       const { fileList } = reactData
+      const previewImageOpts = computePreviewImageOpts.value
       const previewFn = props.previewMethod || getConfig().upload.previewMethod
       const beforeDownloadFn = props.beforeDownloadMethod || getConfig().upload.beforeDownloadMethod
       if (props.showPreview) {
@@ -571,6 +582,7 @@ export default defineVxeComponent({
           })
         } else if (VxeUI.previewImage) {
           VxeUI.previewImage({
+            ...previewImageOpts,
             urlList: fileList.map(item => getFileUrl(item)),
             activeIndex: index,
             showDownloadButton,

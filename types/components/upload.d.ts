@@ -1,6 +1,7 @@
 import { RenderFunction, SetupContext, Ref } from 'vue'
 import { DefineVxeComponentApp, DefineVxeComponentOptions, DefineVxeComponentInstance, VxeComponentBaseOptions, VxeComponentEventParams, ValueOf, VxeComponentSizeType } from '@vxe-ui/core'
 import { VxeImagePropTypes } from './image'
+import { VxeImagePreviewProps } from './image-preview'
 
 /* eslint-disable no-use-before-define,@typescript-eslint/ban-types */
 
@@ -94,6 +95,7 @@ export namespace VxeUploadPropTypes {
   export type ShowSubmitButton = boolean
   export type AutoHiddenButton = boolean
   export type ShowUploadButton = boolean
+  export interface PreviewImageConfig extends Omit<VxeImagePreviewProps, 'modelValue' | 'urlList' | 'urlField'> {}
   export type PreviewMethod = undefined | ((params: {
     $upload: VxeUploadConstructor
     option: VxeUploadDefines.FileObjItem
@@ -187,6 +189,7 @@ export interface VxeUploadProps {
   showRemoveButton?: VxeUploadPropTypes.ShowRemoveButton
   showDownloadButton?: VxeUploadPropTypes.ShowDownloadButton
   showPreview?: VxeUploadPropTypes.ShowPreview
+  previewImageConfig?: VxeUploadPropTypes.PreviewImageConfig
   showErrorStatus?: VxeUploadPropTypes.ShowErrorStatus
   showProgress?: VxeUploadPropTypes.ShowProgress
   progressText?: VxeUploadPropTypes.ProgressText

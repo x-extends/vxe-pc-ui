@@ -181,15 +181,15 @@ setConfig({
   image: {
     draggable: null,
     showPreview: true,
-    showPrintButton: true,
-    maskClosable: true
+    showPrintButton: true
   },
   imageGroup: {
     showPreview: true,
     showPrintButton: true
   },
   imagePreview: {
-    showPrintButton: true
+    showPrintButton: true,
+    maskClosable: true
   },
   input: {
     // size: null,
@@ -443,7 +443,8 @@ setConfig({
     showLimitCount: true,
     autoSubmit: true,
     // urlArgs: false,
-    maxSimultaneousUploads: 5
+    maxSimultaneousUploads: 5,
+    previewImageConfig: {}
   },
   watermark: {
     rotate: -30,
