@@ -213,6 +213,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       type: [String, Number, Function] as PropType<VxeUploadPropTypes.ProgressText>,
       default: () => getConfig().upload.progressText
     },
+    previewImageConfig: Object as PropType<VxeUploadPropTypes.PreviewImageConfig>,
     showSubmitButton: Boolean as PropType<VxeUploadPropTypes.ShowSubmitButton>,
     autoHiddenButton: {
       type: Boolean as PropType<VxeUploadPropTypes.AutoHiddenButton>,
@@ -378,6 +379,15 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const props = $xeUpload
 
       return props.multiple ? XEUtils.toNumber(props.limitCount) : 1
+    },
+    computePreviewImageOpts () {
+      const $xeUpload = this
+      const props = $xeUpload
+
+      const { showDownloadButton } = props
+      return Object.assign({
+        showDownloadButton
+      }, getConfig().upload.previewImageConfig, props.previewImageConfig)
     },
     computeOverCount () {
       const $xeUpload = this
@@ -694,16 +704,17 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const props = $xeUpload
       const internalData = $xeUpload.internalData
 
-      const { imageTypes, showDownloadButton } = props
+      const { imageTypes } = props
       const typeProp = $xeUpload.computeTypeProp
+      const previewImageOpts = $xeUpload.computePreviewImageOpts
       const beforeDownloadFn = props.beforeDownloadMethod || getConfig().upload.beforeDownloadMethod
       const { imagePreviewTypes } = internalData
       // 如果是预览图片
       if (imagePreviewTypes.concat(imageTypes || []).some(type => `${type}`.toLowerCase() === `${item[typeProp]}`.toLowerCase())) {
         if (VxeUI.previewImage) {
           VxeUI.previewImage({
+            ...previewImageOpts,
             urlList: [$xeUpload.getFileUrl(item)],
-            showDownloadButton,
             beforeDownloadMethod: beforeDownloadFn
               ? () => {
                   return beforeDownloadFn({
@@ -737,8 +748,8 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const props = $xeUpload
       const reactData = $xeUpload.reactData
 
-      const { showDownloadButton } = props
       const { fileList } = reactData
+      const previewImageOpts = $xeUpload.computePreviewImageOpts
       const previewFn = props.previewMethod || getConfig().upload.previewMethod
       const beforeDownloadFn = props.beforeDownloadMethod || getConfig().upload.beforeDownloadMethod
       if (props.showPreview) {
@@ -749,9 +760,9 @@ export default /* define-vxe-component start */ defineVxeComponent({
           })
         } else if (VxeUI.previewImage) {
           VxeUI.previewImage({
+            ...previewImageOpts,
             urlList: fileList.map(item => $xeUpload.getFileUrl(item)),
             activeIndex: index,
-            showDownloadButton,
             beforeDownloadMethod: beforeDownloadFn
               ? ({ index }) => {
                   return beforeDownloadFn({

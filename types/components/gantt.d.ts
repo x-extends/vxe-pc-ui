@@ -389,6 +389,17 @@ export namespace VxeGanttPropTypes {
      * 是否显示任务总览
      */
     showOverview?: boolean
+    /**
+     * 子视图任务条样式
+     */
+    barStyle?: CSSStyleDeclaration | ((params: {
+      $gantt: VxeGanttConstructor<D>
+      scaleType: VxeGanttDefines.ColumnScaleType
+      row: D
+      rowIndex: number
+      $rowIndex: number
+      _rowIndex: number
+    }) => void | null | Partial<CSSStyleDeclaration>)
   }
 
   export interface TaskBarTooltipConfig<D = any> {
