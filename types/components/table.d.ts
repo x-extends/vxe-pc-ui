@@ -603,6 +603,13 @@ export namespace VxeTablePropTypes {
   }
 
   /**
+   * 聚合函数计算精度配置项
+   */
+  export interface AggregateAccuracyConfig<D = any> {
+    [key: string]: VxeTableDefines.AggregateAccuracyObj<D>
+  }
+
+  /**
    * 已废弃，请使用 AggregateConfig
    * @deprecated
    */
@@ -1049,6 +1056,14 @@ export namespace VxeTablePropTypes {
      * 允许自定义聚合函数配置
      */
     allowValues?: boolean
+    /**
+     * 允许自定义聚合函数小数精度配置
+     */
+    allowValueDigits?: boolean
+    /**
+     * 允许自定义聚合函数格式化配置
+     */
+    allowValueFormat?: boolean
     /**
      * 当拖拽数据分组或聚合列时，自动更新列可视状态
      */
@@ -3393,6 +3408,10 @@ export interface VxeTableProps<D = any> {
    */
   aggregateConfig?: VxeTablePropTypes.AggregateConfig<D>
   /**
+   * 聚合函数计算精度配置项
+   */
+  aggregateAccuracyConfig?: VxeTablePropTypes.AggregateAccuracyConfig<D>
+  /**
    * 已废弃，请使用 aggregateConfig
    * @deprecated
    */
@@ -3661,6 +3680,7 @@ export interface TablePrivateComputed<D = any> {
   computeFooterCellOpts: ComputedRef<VxeTablePropTypes.FooterCellConfig>
   computeRowOpts: ComputedRef<VxeTablePropTypes.RowOpts>
   computeAggregateOpts: ComputedRef<VxeTablePropTypes.AggregateConfig>
+  computeAggregateAccuracyOpts: ComputedRef<VxeTablePropTypes.AggregateAccuracyConfig>
   computeCurrentRowOpts: ComputedRef<VxeTablePropTypes.CurrentRowConfig>
   computeRowDragOpts: ComputedRef<VxeTablePropTypes.RowDragConfig>
   computeColumnDragOpts: ComputedRef<VxeTablePropTypes.ColumnDragConfig>
@@ -5742,6 +5762,26 @@ export namespace VxeTableDefines {
     [key: string]: any
   }
 
+  export interface AggregateAccuracyObj<D = any> {
+    /**
+     * 小数保留位数
+     */
+    digits?: number | null
+    /**
+     * 小数处理方式，支持：四舍五入，向下取整，向上取整
+     */
+    format?: 'round' | 'ceil' | 'floor' | '' | null | ((params: {
+      $table: VxeTableConstructor<D>
+      groupField: VxeColumnPropTypes.Field
+      groupColumn: VxeTableDefines.ColumnInfo<D>
+      column: VxeTableDefines.ColumnInfo<D>
+      groupValue: any
+      childCount: number
+      children: D[]
+      aggValue: number
+    }) => number)
+  }
+
   /**
    * 列对象
    */
@@ -5926,6 +5966,24 @@ export namespace VxeTableDefines {
      * @private
      */
     renderAggFn: VxeColumnPropTypes.AggFunc
+
+    /**
+     * @private
+     */
+    renderAggDigits: number | null
+    /**
+     * @private
+     */
+    renderAggFormat: 'round' | 'ceil' | 'floor' | '' | null | ((params: {
+      $table: VxeTableConstructor<D>
+      groupField: VxeColumnPropTypes.Field
+      groupColumn: VxeTableDefines.ColumnInfo<D>
+      column: VxeTableDefines.ColumnInfo<D>
+      groupValue: any
+      childCount: number
+      children: D[]
+      aggValue: number
+    }) => number)
 
     /**
      * @private
