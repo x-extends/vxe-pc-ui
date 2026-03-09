@@ -604,6 +604,10 @@ export namespace VxeTablePropTypes {
      */
     trigger?: 'default' | 'row' | 'manual' | '' | null
     /**
+     * 严格模式，选中后不能取消
+     */
+    strict?: boolean
+    /**
      * 只对 mouse-config.selected 启用有效，是否跟随单元格选中而移动高亮行
      */
     isFollowSelected?: boolean
@@ -613,6 +617,7 @@ export namespace VxeTablePropTypes {
     beforeSelectMethod?(params: {
       $table: VxeTableConstructor<D>
       row: D
+      selected: boolean
     }): boolean
   }
 
@@ -625,6 +630,10 @@ export namespace VxeTablePropTypes {
      */
     trigger?: 'default' | 'header' | 'cell' | 'manual' | '' | null
     /**
+     * 严格模式，选中后不能取消
+     */
+    strict?: boolean
+    /**
      * 只对 mouse-config.selected 启用有效，是否跟随单元格选中而移动高亮列
      */
     isFollowSelected?: boolean
@@ -634,6 +643,7 @@ export namespace VxeTablePropTypes {
     beforeSelectMethod?(params: {
       $table: VxeTableConstructor<D>
       column: VxeTableDefines.ColumnInfo<D>
+      selected: boolean
     }): boolean
   }
 
@@ -1327,6 +1337,9 @@ export namespace VxeTablePropTypes {
     }): boolean
     trigger?: 'default' | 'cell' | 'row' | 'manual' | '' | null
     highlight?: boolean
+    /**
+     * 严格模式，选中后不能取消
+     */
     strict?: boolean
   }
   export interface RadioOpts<D = VxeTablePropTypes.Row> extends RadioConfig<D> { }
