@@ -6226,6 +6226,7 @@ export namespace VxeTableDefines {
   export interface CurrentRowChangeParams<D = any> extends TableBaseCellParams<D> {
     newValue: any
     oldValue: any
+    selected: boolean
   }
   export interface CurrentRowChangeEventParams<D = any> extends TableEventParams<D>, CurrentRowChangeParams<D> { }
 
@@ -6236,6 +6237,7 @@ export namespace VxeTableDefines {
   export interface CurrentColumnChangeParams<D = any> extends TableBaseCellParams<D> {
     newValue: ColumnInfo<D>
     oldValue: ColumnInfo<D>
+    selected: boolean
   }
   export interface CurrentColumnChangeEventParams<D = any> extends TableEventParams<D>, CurrentColumnChangeParams<D> { }
 
@@ -6246,6 +6248,7 @@ export namespace VxeTableDefines {
   export interface RadioChangeParams<D = any> extends TableBaseCellParams<D> {
     newValue: any
     oldValue: any
+    selected: boolean
   }
   export interface RadioChangeEventParams<D = any> extends TableEventParams<D>, RadioChangeParams<D> { }
 
