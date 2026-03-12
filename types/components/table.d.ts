@@ -3832,8 +3832,6 @@ export interface TableReactData<D = any> {
   scrollbarWidth: number
   // 横向滚动条的高度
   scrollbarHeight: number
-  // 最后滚动时间戳
-  lastScrollTime: number
   /**
    * 行高
    * @deprecated
@@ -4218,6 +4216,9 @@ export interface TableInternalData<D = any> {
   popupToWrapperElem: HTMLElement | null
 
   validRuleErr?: boolean
+
+  // 最后滚动时间戳
+  lastSTime: number
 
   // 内部属性
   _updateStyleFlag?: boolean
