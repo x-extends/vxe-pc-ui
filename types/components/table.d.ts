@@ -1291,6 +1291,10 @@ export namespace VxeTablePropTypes {
     iconNone?: string
     iconMatch?: string
     /**
+     * 筛选面板最大高度
+     */
+    maxHeight?: number
+    /**
      * 弹出层在关闭时是否销毁
      */
     destroyOnClose?: boolean
@@ -2142,7 +2146,7 @@ export namespace VxeTablePropTypes {
       $grid: VxeGridConstructor<DT> | null | undefined
       isCut: boolean
       targetAreas: VxeTableExtendCellAreaDefines.CellAreaParams<DT>[]
-    }): boolean
+    }): void
     /**
      * 重写单元格剪贴值清除的方法，将剪贴单元格的值清除
      */
