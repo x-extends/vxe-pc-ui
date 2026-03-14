@@ -1253,6 +1253,18 @@ export default defineVxeComponent({
       choose () {
         return handleChoose(null)
       },
+      getPendingFiles () {
+        const { fileList, fileCacheMaps } = reactData
+        const pendingFiles: File[] = []
+        fileList.forEach(item => {
+          const fileKey = getFieldKey(item)
+          const cacheItem = fileCacheMaps[fileKey]
+          if (cacheItem && cacheItem.status === 'pending') {
+            pendingFiles.push(cacheItem.file)
+          }
+        })
+        return pendingFiles
+      },
       submit (isFull) {
         const { maxSimultaneousUploads } = props
         const msNum = XEUtils.toNumber(maxSimultaneousUploads || 1) || 1

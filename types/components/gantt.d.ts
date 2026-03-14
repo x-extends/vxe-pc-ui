@@ -167,6 +167,10 @@ export namespace VxeGanttPropTypes {
        */
       border?: VxeTablePropTypes.Border
       /**
+       * 单元格宽度
+       */
+      cellWidth?: number | string
+      /**
        * 给行附加 className
        */
       rowClassName?: string | ((params: {
