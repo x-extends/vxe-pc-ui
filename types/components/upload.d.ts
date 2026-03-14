@@ -244,6 +244,10 @@ export interface UploadMethods {
     file: File | null
   }>
   /**
+   * 获取未上传的文件对象
+   */
+  getPendingFiles (): File[]
+  /**
    * 用于 auto-upload 模式，手动调用上传附件；如果传 true，这包含未上传和上传失败的都会重新提交
    */
   submit(isFull?: boolean): Promise<void>

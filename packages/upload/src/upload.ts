@@ -528,6 +528,21 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const $xeUpload = this
       return $xeUpload.handleChoose(null)
     },
+    getPendingFiles () {
+      const $xeUpload = this
+      const reactData = $xeUpload.reactData
+
+      const { fileList, fileCacheMaps } = reactData
+      const pendingFiles: File[] = []
+      fileList.forEach(item => {
+        const fileKey = $xeUpload.getFieldKey(item)
+        const cacheItem = fileCacheMaps[fileKey]
+        if (cacheItem && cacheItem.status === 'pending') {
+          pendingFiles.push(cacheItem.file)
+        }
+      })
+      return pendingFiles
+    },
     submit (isFull?: boolean) {
       const $xeUpload = this
       const props = $xeUpload
