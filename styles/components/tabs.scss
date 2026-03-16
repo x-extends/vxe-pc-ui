@@ -723,6 +723,13 @@ $scrollbarOffsetSize: 20px;
       height: calc($headHeight - 1px);
     }
   }
+  .vxe-tabs-header--prefix,
+  .vxe-tabs-header--suffix {
+    &.pos--top,
+    &.pos--bottom {
+      height: $headHeight;
+    }
+  }
 }
 
 .vxe-tabs {

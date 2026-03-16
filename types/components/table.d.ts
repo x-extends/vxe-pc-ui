@@ -4069,14 +4069,7 @@ export interface TableInternalData<D = any> {
   // 数据集（仅可视）
   visibleDataRowIdData: Record<string, D>
 
-  footerFullDataRowData: Record<string, {
-     formatData?: {
-      [key: string]: {
-        value: any
-        label: any
-      }
-    }
-  }>
+  footerFullDataRowData: Record<string, VxeTableDefines.FooterRowCacheItem>
 
   keepUpdateFieldMaps: Record<string, number>
 
@@ -4360,9 +4353,25 @@ export interface TableMethods<DT = any> {
    */
   getCellLabel(row: any, fieldOrColumn: VxeColumnPropTypes.Field | VxeTableDefines.ColumnInfo<any> | null): string | number | null
   /**
+   * 更新单元格显示值
+   */
+  updateCellLabel(row: any, fieldOrColumn: VxeColumnPropTypes.Field | VxeTableDefines.ColumnInfo<any> | null): string | number | null
+  /**
+   * 清除单元格格式化缓存
+   */
+  clearFormatterCache(isUpdate?: boolean): Promise<void>
+  /**
    * 获取表尾单元格显示值
    */
   getFooterCellLabel(row: any, fieldOrColumn: VxeColumnPropTypes.Field | VxeTableDefines.ColumnInfo<any> | null): string | number | null
+  /**
+   * 更新表尾单元格显示值
+   */
+  updateFooterCellLabel(row: any, fieldOrColumn: VxeColumnPropTypes.Field | VxeTableDefines.ColumnInfo<any> | null): string | number | null
+  /**
+   * 清除表尾单元格格式化缓存
+   */
+  clearFooterFormatterCache(isUpdate?: boolean): Promise<void>
   /**
    * 用于 edit-config，判断行是否为新增的临时数据
    * @param row 指定行
@@ -5719,6 +5728,11 @@ export namespace VxeTableDefines {
     slots?: VxeColumnPropTypes.Slots<D>
   }
 
+  export interface RowCacheFormatObj {
+    value: any
+    label: any
+  }
+
   export interface RowCacheItem<D = any> {
     row: D
     rowid: string
@@ -5739,12 +5753,11 @@ export namespace VxeTableDefines {
     lineHeight?: number
     treeLoaded?: boolean
     expandLoaded?: boolean
-    formatData?: {
-      [key: string]: {
-        value: any
-        label: any
-      }
-    }
+    formatData?: Record<string, RowCacheFormatObj>
+  }
+
+  export interface FooterRowCacheItem {
+    formatData?: Record<string, RowCacheFormatObj>
   }
 
   export interface ColumnCacheItem<D = any> {
