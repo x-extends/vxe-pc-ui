@@ -1303,6 +1303,7 @@ export namespace VxeTablePropTypes {
       column: VxeTableDefines.ColumnInfo<D>
     }): boolean
     className?: string
+    zIndex?: number
     transfer?: boolean
     iconNone?: string
     iconMatch?: string
@@ -1725,6 +1726,7 @@ export namespace VxeTablePropTypes {
      * 菜单面板的 className
      */
     className?: string
+    zIndex?: number
     transfer?: boolean
     destroyOnClose?: boolean
     /**
