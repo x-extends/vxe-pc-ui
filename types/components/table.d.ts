@@ -6255,8 +6255,8 @@ export namespace VxeTableDefines {
   }
 
   export interface CurrentColumnChangeParams<D = any> extends TableBaseCellParams<D> {
-    newValue: ColumnInfo<D>
-    oldValue: ColumnInfo<D>
+    newValue: ColumnInfo<D> | null
+    oldValue: ColumnInfo<D> | null
     selected: boolean
   }
   export interface CurrentColumnChangeEventParams<D = any> extends TableEventParams<D>, CurrentColumnChangeParams<D> { }
