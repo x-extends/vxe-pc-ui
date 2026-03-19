@@ -436,6 +436,7 @@ export default defineVxeComponent({
 
     const renderIconWrapper = () => {
       const { showIconTitle } = props
+      const { selectIcon } = reactData
       const iconGroupList = computeIconGroupList.value
       const isDisabled = computeIsDisabled.value
 
@@ -449,7 +450,9 @@ export default defineVxeComponent({
           const compConf = iconRender ? renderer.get(iconRender.name) : null
           const oIconMethod = compConf ? compConf.renderIconPickerOptionIcon : null
           return h('div', {
-            class: 'vxe-ico-picker--item',
+            class: ['vxe-ico-picker--item', {
+              'is--selected': selectIcon === item.icon
+            }],
             onClick (evnt) {
               if (!isDisabled) {
                 handleClickIconEvent(evnt, item)
