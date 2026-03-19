@@ -543,8 +543,10 @@ export default /* define-vxe-component start */ defineVxeComponent({
     renderIconWrapper (h: CreateElement) {
       const $xeIconPicker = this
       const props = $xeIconPicker
+      const reactData = $xeIconPicker.reactData
 
       const { showIconTitle } = props
+      const { selectIcon } = reactData
       const iconGroupList = $xeIconPicker.computeIconGroupList
       const isDisabled = $xeIconPicker.computeIsDisabled
 
@@ -558,7 +560,9 @@ export default /* define-vxe-component start */ defineVxeComponent({
           const compConf = iconRender ? renderer.get(iconRender.name) : null
           const oIconMethod = compConf ? compConf.renderIconPickerOptionIcon : null
           return h('div', {
-            class: 'vxe-ico-picker--item',
+            class: ['vxe-ico-picker--item', {
+              'is--selected': selectIcon === item.icon
+            }],
             on: {
               click (evnt: MouseEvent) {
                 if (!isDisabled) {
