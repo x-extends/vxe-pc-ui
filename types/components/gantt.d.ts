@@ -586,6 +586,9 @@ export interface GanttReactData<D = any> extends GridReactData<D> {
   isActiveCeLe: boolean
   linkList: VxeGanttDefines.LinkConfObj[]
   upLinkFlag: number
+
+  currLeftSpacing: number
+  currRightSpacing: number
 }
 
 export interface GanttInternalData extends GridInternalData {
