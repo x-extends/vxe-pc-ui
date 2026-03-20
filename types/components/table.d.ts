@@ -4220,6 +4220,7 @@ export interface TableInternalData<D = any> {
   lastSTime: number
 
   // 内部属性
+  _sToTime?: any
   _updateStyleFlag?: boolean
   _lastResizeTime?: any
   _keyCtx?: any

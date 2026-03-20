@@ -931,59 +931,62 @@ export default /* define-vxe-component start */ defineVxeComponent({
                         h('div', {
                           class: 'vxe-tree-select--header-button'
                         }, [
-                          showTotalButoon
+                          showCheckedButoon && showClearButton
                             ? h('div', {
-                              class: 'vxe-tree-select--header-total'
-                            }, getI18n('vxe.treeSelect.total', [selectVals.length]))
+                              class: 'vxe-tree-select--selected-btns'
+                            }, [
+                              (showCheckedButoon && multiple)
+                                ? h(VxeButtonComponent, {
+                                  props: {
+                                    content: getI18n('vxe.treeSelect.allChecked'),
+                                    mode: 'text'
+                                  },
+                                  on: {
+                                    click: $xeTreeSelect.allCheckedPanelEvent
+                                  }
+                                })
+                                : renderEmptyElement($xeTreeSelect),
+                              showClearButton
+                                ? h(VxeButtonComponent, {
+                                  props: {
+                                    content: getI18n('vxe.treeSelect.clearChecked'),
+                                    mode: 'text'
+                                  },
+                                  on: {
+                                    click: $xeTreeSelect.clearCheckedPanelEvent
+                                  }
+                                })
+                                : renderEmptyElement($xeTreeSelect)
+                            ])
                             : renderEmptyElement($xeTreeSelect),
-                          h('div', {
-                            class: 'vxe-tree-select--header-btns'
-                          }, [
-                            (showCheckedButoon && multiple)
-                              ? h(VxeButtonComponent, {
-                                props: {
-                                  content: getI18n('vxe.treeSelect.allChecked'),
-                                  mode: 'text'
-                                },
-                                on: {
-                                  click: $xeTreeSelect.allCheckedPanelEvent
-                                }
-                              })
-                              : renderEmptyElement($xeTreeSelect),
-                            showClearButton
-                              ? h(VxeButtonComponent, {
-                                props: {
-                                  content: getI18n('vxe.treeSelect.clearChecked'),
-                                  mode: 'text'
-                                },
-                                on: {
-                                  click: $xeTreeSelect.clearCheckedPanelEvent
-                                }
-                              })
-                              : renderEmptyElement($xeTreeSelect),
-                            showExpandButton
-                              ? h(VxeButtonComponent, {
-                                props: {
-                                  content: getI18n('vxe.treeSelect.allExpand'),
-                                  mode: 'text'
-                                },
-                                on: {
-                                  click: $xeTreeSelect.allExpandPanelEvent
-                                }
-                              })
-                              : renderEmptyElement($xeTreeSelect),
-                            showExpandButton
-                              ? h(VxeButtonComponent, {
-                                props: {
-                                  content: getI18n('vxe.treeSelect.clearExpand'),
-                                  mode: 'text'
-                                },
-                                on: {
-                                  click: $xeTreeSelect.clearExpandPanelEvent
-                                }
-                              })
-                              : renderEmptyElement($xeTreeSelect)
-                          ])
+                          showExpandButton && showExpandButton
+                            ? h('div', {
+                              class: 'vxe-tree-select--expand-btns'
+                            }, [
+                              showExpandButton
+                                ? h(VxeButtonComponent, {
+                                  props: {
+                                    content: getI18n('vxe.treeSelect.allExpand'),
+                                    mode: 'text'
+                                  },
+                                  on: {
+                                    click: $xeTreeSelect.allExpandPanelEvent
+                                  }
+                                })
+                                : renderEmptyElement($xeTreeSelect),
+                              showExpandButton
+                                ? h(VxeButtonComponent, {
+                                  props: {
+                                    content: getI18n('vxe.treeSelect.clearExpand'),
+                                    mode: 'text'
+                                  },
+                                  on: {
+                                    click: $xeTreeSelect.clearExpandPanelEvent
+                                  }
+                                })
+                                : renderEmptyElement($xeTreeSelect)
+                            ])
+                            : renderEmptyElement($xeTreeSelect)
                         ])
                       ])
                   : renderEmptyElement($xeTreeSelect),
@@ -1047,10 +1050,22 @@ export default /* define-vxe-component start */ defineVxeComponent({
                     })
                   ])
                 ]),
-                footerSlot
+                footerSlot || showTotalButoon
                   ? h('div', {
                     class: 'vxe-tree-select--panel-footer'
-                  }, footerSlot({}))
+                  }, footerSlot
+                    ? footerSlot({})
+                    : [
+                        h('div', {
+                          class: 'vxe-tree-select--footer-button'
+                        }, [
+                          showTotalButoon
+                            ? h('div', {
+                              class: 'vxe-tree-select--total-btns'
+                            }, getI18n('vxe.treeSelect.total', [selectVals.length]))
+                            : renderEmptyElement($xeTreeSelect)
+                        ])
+                      ])
                   : renderEmptyElement($xeTreeSelect)
               ])
             ]

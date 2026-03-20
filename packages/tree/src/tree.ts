@@ -787,8 +787,10 @@ export default /* define-vxe-component start */ defineVxeComponent({
     },
     computeTreeStyle () {
       const $xeTree = this
+      const props = $xeTree
       const reactData = $xeTree.reactData
 
+      const { indent } = props
       const { customHeight, customMinHeight, customMaxHeight } = reactData
       const stys: Record<string, string> = {}
       if (customHeight) {
@@ -799,6 +801,9 @@ export default /* define-vxe-component start */ defineVxeComponent({
       }
       if (customMaxHeight) {
         stys.maxHeight = toCssUnit(customMaxHeight)
+      }
+      if (indent) {
+        stys['--vxe-ui-tree-node-indent'] = toCssUnit(indent)
       }
       return stys
     },
@@ -2165,6 +2170,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const reactData = $xeTree.reactData
       const internalData = $xeTree.internalData
 
+      const { scrollYLoad } = reactData
       const { nodeMaps, scrollYStore } = internalData
       XEUtils.each(nodeMaps, (nodeItem: VxeTreeDefines.NodeCacheItem) => {
         nodeItem.treeLoaded = false
@@ -2176,7 +2182,12 @@ export default /* define-vxe-component start */ defineVxeComponent({
       scrollYStore.endIndex = 1
       $xeTree.handleTreeToList()
       $xeTree.handleData()
-      return $xeTree.recalculate()
+      return $xeTree.recalculate().then(() => {
+        if (scrollYLoad) {
+          $xeTree.loadYData()
+        }
+        return $xeTree.recalculate()
+      })
     },
     setExpandByNodeId (nodeKeys: string | number | (string | number | null)[] | null, expanded: boolean) {
       const $xeTree = this
@@ -2666,7 +2677,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const reactData = $xeTree.reactData
       const internalData = $xeTree.internalData
 
-      const { lazy, drag, transform, showRadio, showCheckbox, showLine, indent, iconOpen, iconClose, iconLoaded, showIcon } = props
+      const { lazy, drag, transform, showRadio, showCheckbox, showLine, iconOpen, iconClose, iconLoaded, showIcon } = props
       const { currentNode, selectRadioKey, updateExpandedFlag } = reactData
       const { afterTreeList, nodeMaps, treeExpandedMaps, treeExpandLazyLoadedMaps } = internalData
       const childrenField = $xeTree.computeChildrenField
@@ -2746,10 +2757,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
             'is--current': currentNode && nodeid === $xeTree.getNodeId(currentNode),
             'is-radio--checked': isRadioChecked,
             'is-checkbox--checked': isCheckboxChecked
-          }],
-          style: {
-            paddingLeft: `${nLevel * (indent || 1)}px`
-          }
+          }]
         }, [
           showLine
             ? h('div', {
