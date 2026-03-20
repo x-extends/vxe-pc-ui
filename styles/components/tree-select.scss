@@ -66,24 +66,26 @@
   }
 }
 
-.vxe-tree-select--header-button {
+.vxe-tree-select--header-button,
+.vxe-tree-select--footer-button {
   display: flex;
   flex-direction: row;
   white-space: nowrap;
 }
-.vxe-tree-select--header-total {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
-  padding-left: 0.8em;
+.vxe-tree-select--total-btns {
+  padding-left: var(--vxe-ui-current-padding);
 }
-.vxe-tree-select--header-btns {
+.vxe-tree-select--footer-button,
+.vxe-tree-select--selected-btns,
+.vxe-tree-select--expand-btns {
   display: flex;
   flex-direction: row;
   flex-grow: 1;
-  justify-content: right;
+}
+.vxe-tree-select--selected-btns {
+  & + .vxe-tree-select--expand-btns {
+    padding-left: 2.2em;
+  }
 }
 
 .vxe-tree-select--panel-wrapper {
@@ -99,7 +101,7 @@
 
 .vxe-tree-select--panel-search {
   display: block;
-  padding: var(--vxe-ui-layout-padding-default);
+  padding: var(--vxe-ui-current-padding);
   .vxe-tree-select-search--input {
     width: 100%;
   }
@@ -121,7 +123,7 @@
 .vxe-tree-select-tree--wrapper {
   position: relative;
   overflow: auto;
-  padding: var(--vxe-ui-layout-padding-default);
+  padding: var(--vxe-ui-current-padding) 0;
   outline: 0;
 }
 .vxe-tree-select--tree {
@@ -136,6 +138,16 @@
   }
   .vxe-tree--node-item-inner {
     cursor: pointer;
+  }
+}
+
+.vxe-tree-select,
+.vxe-tree-select--panel {
+  --vxe-ui-current-padding: var(--vxe-ui-layout-padding-default);
+  --vxe-ui-tree-node-root-indent: var(--vxe-ui-current-padding);
+  &.size--small,
+  &.size--mini {
+    --vxe-ui-current-padding: var(--vxe-ui-layout-padding-half);
   }
 }
 

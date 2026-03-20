@@ -11,7 +11,7 @@ import { isEnableConf } from '../../ui/src/utils'
 import { moveRowAnimateToTb, clearRowAnimate } from '../../ui/src/anime'
 import VxeLoadingComponent from '../../loading'
 
-import type { TreeReactData, VxeTreeEmits, VxeTreePropTypes, TreeInternalData, TreePrivateRef, VxeTreeDefines, VxeTreePrivateComputed, TreePrivateMethods, TreeMethods, ValueOf, VxeTreeConstructor, VxeTreePrivateMethods } from '../../../types'
+import type { TreeReactData, VxeTreeEmits, VxeTreePropTypes, TreeInternalData, TreePrivateRef, VxeTreeDefines, VxeTreePrivateComputed, TreePrivateMethods, TreeMethods, ValueOf, VxeTreeConstructor, VxeTreePrivateMethods, VxeComponentStyleType } from '../../../types'
 
 const { menus, getConfig, getI18n, getIcon } = VxeUI
 
@@ -317,8 +317,9 @@ export default defineVxeComponent({
     })
 
     const computeTreeStyle = computed(() => {
+      const { indent } = props
       const { customHeight, customMinHeight, customMaxHeight } = reactData
-      const stys: Record<string, string> = {}
+      const stys: VxeComponentStyleType = {}
       if (customHeight) {
         stys.height = toCssUnit(customHeight)
       }
@@ -327,6 +328,9 @@ export default defineVxeComponent({
       }
       if (customMaxHeight) {
         stys.maxHeight = toCssUnit(customMaxHeight)
+      }
+      if (indent) {
+        stys['--vxe-ui-tree-node-indent'] = toCssUnit(indent)
       }
       return stys
     })
@@ -1524,6 +1528,7 @@ export default defineVxeComponent({
         return treeMethods.clearAllExpandNode()
       },
       clearAllExpandNode () {
+        const { scrollYLoad } = reactData
         const { nodeMaps, scrollYStore } = internalData
         XEUtils.each(nodeMaps, (nodeItem: VxeTreeDefines.NodeCacheItem) => {
           nodeItem.treeLoaded = false
@@ -1535,7 +1540,12 @@ export default defineVxeComponent({
         scrollYStore.endIndex = 1
         handleTreeToList()
         handleData()
-        return recalculate()
+        return recalculate().then(() => {
+          if (scrollYLoad) {
+            loadYData()
+          }
+          return recalculate()
+        })
       },
       setExpandByNodeId (nodeKeys, expanded) {
         const { treeExpandedMaps } = internalData
@@ -2401,7 +2411,7 @@ export default defineVxeComponent({
     }
 
     const renderNode = (node: any, nodeid: string) => {
-      const { lazy, drag, transform, showRadio, showCheckbox, showLine, indent, iconOpen, iconClose, iconLoaded, showIcon } = props
+      const { lazy, drag, transform, showRadio, showCheckbox, showLine, iconOpen, iconClose, iconLoaded, showIcon } = props
       const { currentNode, selectRadioKey, updateExpandedFlag } = reactData
       const { afterTreeList, nodeMaps, treeExpandedMaps, treeExpandLazyLoadedMaps } = internalData
       const childrenField = computeChildrenField.value
@@ -2479,10 +2489,7 @@ export default defineVxeComponent({
             'is--current': currentNode && nodeid === getNodeId(currentNode),
             'is-radio--checked': isRadioChecked,
             'is-checkbox--checked': isCheckboxChecked
-          }],
-          style: {
-            paddingLeft: `${nLevel * (indent || 1)}px`
-          }
+          }]
         }, [
           showLine
             ? h('div', {
