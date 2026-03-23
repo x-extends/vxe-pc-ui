@@ -21,7 +21,15 @@ export type VxeTableInstance<D = any> = DefineVxeComponentInstance<VxeTableProps
 export interface VxeTableConstructor<D = any> extends VxeComponentBaseOptions, VxeTableMethods {
   props: VxeTableProps
   context: SetupContext<VxeTableEmits>
+  /**
+   * 组件内部属性
+   * @private
+   */
   reactData: TableReactData
+  /**
+   * 组件内部属性
+   * @private
+   */
   internalData: TableInternalData<D>
   getRefMaps(): TablePrivateRef
   getComputeMaps(): TablePrivateComputed
@@ -4082,14 +4090,20 @@ export interface TableInternalData<D = any> {
   mergeHeaderMaps: Record<string, VxeTableDefines.MergeItem>
   // 已合并单元格数据集合
   mergeHeaderCellMaps: Record<string, VxeTableDefines.MergeCacheItem>
+  mergeHeaderRowMaps: Record<string, VxeTableDefines.MergeCacheRow>
+  mergeHeaderColMaps: Record<string, VxeTableDefines.MergeCacheCol>
   // 合并单元格的数据
   mergeBodyList: VxeTableDefines.MergeItem<D>[]
   mergeBodyMaps: Record<string, VxeTableDefines.MergeItem>
   // 已合并单元格数据集合
   mergeBodyCellMaps: Record<string, VxeTableDefines.MergeCacheItem>
+  mergeBodyRowMaps: Record<string, VxeTableDefines.MergeCacheRow>
+  mergeBodyColMaps: Record<string, VxeTableDefines.MergeCacheCol>
   // 合并表尾单元格的数据
   mergeFooterList: VxeTableDefines.MergeItem<D>[]
   mergeFooterMaps: Record<string, VxeTableDefines.MergeItem>
+  mergeFooterRowMaps: Record<string, VxeTableDefines.MergeCacheRow>
+  mergeFooterColMaps: Record<string, VxeTableDefines.MergeCacheCol>
   // 已合并表尾数据集合
   mergeFooterCellMaps: Record<string, VxeTableDefines.MergeCacheItem>
 
@@ -5780,6 +5794,16 @@ export namespace VxeTableDefines {
   export interface MergeCacheItem {
     rowspan: number
     colspan: number
+  }
+
+  export interface MergeCacheRow {
+    startIndex: number
+    endIndex: number
+  }
+
+  export interface MergeCacheCol {
+    startIndex: number
+    endIndex: number
   }
 
   export interface AggregateRowInfo {
