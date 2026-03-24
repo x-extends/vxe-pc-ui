@@ -10,6 +10,7 @@ import type { VxeContextMenuConstructor, VxeContextMenuPrivateMethods, ContextMe
 
 function createInternalData (): ContextMenuInternalData {
   return {
+    // leaveTime: null
   }
 }
 
@@ -379,7 +380,12 @@ export default /* define-vxe-component start */ defineVxeComponent({
     handleItemMouseenterEvent (evnt: MouseEvent, item: VxeContextMenuDefines.MenuFirstOption | VxeContextMenuDefines.MenuChildOption, parentitem?: VxeContextMenuDefines.MenuFirstOption | null) {
       const $xeContextMenu = this
       const reactData = $xeContextMenu.reactData
+      const internalData = $xeContextMenu.internalData
 
+      const { leaveTime } = internalData
+      if (leaveTime) {
+        clearTimeout(leaveTime)
+      }
       reactData.activeOption = parentitem || item
       if (parentitem) {
         reactData.activeOption = parentitem
@@ -399,9 +405,17 @@ export default /* define-vxe-component start */ defineVxeComponent({
     handleItemMouseleaveEvent () {
       const $xeContextMenu = this
       const reactData = $xeContextMenu.reactData
+      const internalData = $xeContextMenu.internalData
 
-      reactData.activeOption = null
-      reactData.activeChildOption = null
+      const { leaveTime } = internalData
+      if (leaveTime) {
+        clearTimeout(leaveTime)
+      }
+      internalData.leaveTime = setTimeout(() => {
+        internalData.leaveTime = null
+        reactData.activeOption = null
+        reactData.activeChildOption = null
+      }, 300)
     },
     handleGlobalMousewheelEvent (evnt: MouseEvent) {
       const $xeContextMenu = this
@@ -696,6 +710,10 @@ export default /* define-vxe-component start */ defineVxeComponent({
     const reactData = $xeContextMenu.reactData
     const internalData = $xeContextMenu.internalData
 
+    const { leaveTime } = internalData
+    if (leaveTime) {
+      clearTimeout(leaveTime)
+    }
     globalEvents.off($xeContextMenu, 'mousewheel')
     globalEvents.off($xeContextMenu, 'keydown')
     globalEvents.off($xeContextMenu, 'mousedown')
