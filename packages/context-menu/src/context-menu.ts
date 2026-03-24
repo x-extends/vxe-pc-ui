@@ -10,6 +10,7 @@ import type { ContextMenuInternalData, ContextMenuReactData, VxeContextMenuPropT
 
 function createInternalData (): ContextMenuInternalData {
   return {
+    // leaveTime: null
   }
 }
 
@@ -265,6 +266,10 @@ export default defineVxeComponent({
     }
 
     const handleItemMouseenterEvent = (evnt: MouseEvent, item: VxeContextMenuDefines.MenuFirstOption | VxeContextMenuDefines.MenuChildOption, parentitem?: VxeContextMenuDefines.MenuFirstOption | null) => {
+      const { leaveTime } = internalData
+      if (leaveTime) {
+        clearTimeout(leaveTime)
+      }
       reactData.activeOption = parentitem || item
       if (parentitem) {
         reactData.activeOption = parentitem
@@ -283,8 +288,15 @@ export default defineVxeComponent({
     }
 
     const handleItemMouseleaveEvent = () => {
-      reactData.activeOption = null
-      reactData.activeChildOption = null
+      const { leaveTime } = internalData
+      if (leaveTime) {
+        clearTimeout(leaveTime)
+      }
+      internalData.leaveTime = setTimeout(() => {
+        internalData.leaveTime = null
+        reactData.activeOption = null
+        reactData.activeChildOption = null
+      }, 300)
     }
 
     const hasValidItem = (item: VxeContextMenuDefines.MenuFirstOption | VxeContextMenuDefines.MenuChildOption) => {
@@ -647,6 +659,10 @@ export default defineVxeComponent({
     })
 
     onBeforeUnmount(() => {
+      const { leaveTime } = internalData
+      if (leaveTime) {
+        clearTimeout(leaveTime)
+      }
       globalEvents.off($xeContextMenu, 'mousewheel')
       globalEvents.off($xeContextMenu, 'keydown')
       globalEvents.off($xeContextMenu, 'mousedown')

@@ -56,6 +56,7 @@ export interface ContextMenuPrivateComputed {
 export interface VxeContextMenuPrivateComputed extends ContextMenuPrivateComputed { }
 
 export interface ContextMenuInternalData {
+  leaveTime?: any
 }
 
 export interface ContextMenuReactData {
