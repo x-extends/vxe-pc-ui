@@ -212,7 +212,7 @@ export default defineVxeComponent({
       const wrapperEl = refElem.value
       if (wrapperEl) {
         const { visibleWidth } = getDomNode()
-        const owSize = 2
+        const owSize = 4
 
         const handleStyle = () => {
           const wrapperStyle = getComputedStyle(wrapperEl)
@@ -258,7 +258,7 @@ export default defineVxeComponent({
     const handleItemClickEvent = (evnt: MouseEvent | KeyboardEvent, item: VxeContextMenuDefines.MenuFirstOption | VxeContextMenuDefines.MenuChildOption) => {
       evnt.preventDefault()
       evnt.stopPropagation()
-      if (!hasChildMenu(item)) {
+      if (!item.disabled && !item.loading && !hasChildMenu(item)) {
         dispatchEvent('option-click', { option: item }, evnt)
         closeMenu()
       }
@@ -586,7 +586,7 @@ export default defineVxeComponent({
                 ? h('div', {
                   class: 'vxe-context-menu--children-wrapper',
                   style: {
-                    transform: `translate(${childOffsetX}px, -5px)`
+                    transform: `translate(${childOffsetX}px, -2px)`
                   }
                 }, children.map(twoItem => {
                   return h('div', {
