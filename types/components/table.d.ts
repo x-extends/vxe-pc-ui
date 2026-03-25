@@ -1246,6 +1246,10 @@ export namespace VxeTablePropTypes {
     allowBtn?: boolean
     trigger?: 'default' | 'cell'
     /**
+     * 只对 tree-config.transform 有效，是否允许同时排序子孙层级
+     */
+    isDeep?: boolean
+    /**
      * 是否显示排序按钮图标
      */
     showIcon?: boolean
@@ -1302,6 +1306,10 @@ export namespace VxeTablePropTypes {
      * 是否显示筛选按钮图标
      */
     showIcon?: boolean
+    /**
+     * 只对 tree-config.transform 有效，是否允许同时筛选子孙层级
+     */
+    isDeep?: boolean
     /**
      * 筛选按钮图标的显示方法，该方法的返回值用于决定该列是否显示筛选按钮图标
      * @param params
