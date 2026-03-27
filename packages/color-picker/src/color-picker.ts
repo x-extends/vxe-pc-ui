@@ -81,7 +81,8 @@ export default /* define-vxe-component start */ defineVxeComponent({
     transfer: {
       type: Boolean as PropType<VxeColorPickerPropTypes.Transfer>,
       default: null
-    }
+    },
+    popupConfig: Object as PropType<VxeColorPickerPropTypes.PopupConfig>
   },
   inject: {
     $xeModal: {
@@ -214,6 +215,12 @@ export default /* define-vxe-component start */ defineVxeComponent({
       }
       return []
     },
+    computePopupOpts () {
+      const $xeColorPicker = this
+      const props = $xeColorPicker
+
+      return Object.assign({}, getConfig().colorPicker.popupConfig, props.popupConfig)
+    },
     computeIsRgb () {
       const $xeColorPicker = this
       const reactData = ($xeColorPicker as any).reactData
@@ -336,9 +343,11 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const targetElem = $xeColorPicker.$refs.refElem as HTMLElement
       const panelElem = $xeColorPicker.$refs.refOptionPanel as HTMLDivElement
       const btnTransfer = $xeColorPicker.computeBtnTransfer
+      const popupOpts = $xeColorPicker.computePopupOpts
       const handleStyle = () => {
         const ppObj = updatePanelPlacement(targetElem, panelElem, {
-          placement,
+          placement: popupOpts.placement || placement,
+          defaultPlacement: popupOpts.defaultPlacement,
           teleportTo: btnTransfer
         })
         const panelStyle: { [key: string]: string | number } = Object.assign(ppObj.style, {

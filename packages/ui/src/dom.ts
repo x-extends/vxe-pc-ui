@@ -166,10 +166,11 @@ export function isNodeElement (elem: any): elem is HTMLElement {
 
 export function updatePanelPlacement (targetElem: HTMLElement | null | undefined, panelElem: HTMLElement | null | undefined, options: {
   placement?: '' | 'top' | 'bottom' | null
+  defaultPlacement?: '' | 'top' | 'bottom' | null
   teleportTo?: boolean
   marginSize?: number
 }) {
-  const { placement, teleportTo, marginSize } = Object.assign({ teleportTo: false, marginSize: 18 }, options)
+  const { placement, defaultPlacement, teleportTo, marginSize } = Object.assign({ teleportTo: false, marginSize: 18 }, options)
   let panelPlacement: 'top' | 'bottom' = 'bottom'
   let top: number | '' = ''
   let bottom: number | '' = ''
@@ -196,15 +197,30 @@ export function updatePanelPlacement (targetElem: HTMLElement | null | undefined
         panelPlacement = 'top'
         top = targetRect.top - panelHeight
       } else if (!placement) {
-        // 如果下面不够放，则向上
-        if (top + panelHeight + marginSize > visibleHeight) {
+        if (defaultPlacement === 'top') {
           panelPlacement = 'top'
           top = targetRect.top - panelHeight
-        }
-        // 如果上面不够放，则向下（优先）
-        if (top < marginSize) {
-          panelPlacement = 'bottom'
-          top = targetRect.top + targetHeight
+          // 如果上面不够放，则向下
+          if (top < marginSize) {
+            panelPlacement = 'bottom'
+            top = targetRect.top + targetHeight
+          }
+          // 如果下面不够放，则向上（优先）
+          if (top + panelHeight + marginSize > visibleHeight) {
+            panelPlacement = 'top'
+            top = targetRect.top - panelHeight
+          }
+        } else {
+          // 如果下面不够放，则向上
+          if (top + panelHeight + marginSize > visibleHeight) {
+            panelPlacement = 'top'
+            top = targetRect.top - panelHeight
+          }
+          // 如果上面不够放，则向下（优先）
+          if (top < marginSize) {
+            panelPlacement = 'bottom'
+            top = targetRect.top + targetHeight
+          }
         }
       }
       // 如果溢出右边

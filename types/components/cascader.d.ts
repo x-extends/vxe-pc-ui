@@ -91,6 +91,14 @@ export namespace VxeCascaderPropTypes {
   }
   export type Transfer = boolean
   export interface PopupConfig {
+    /**
+     * 设置弹出面板方向
+     */
+    placement?: 'top' | 'bottom' | '' | null
+    /**
+     * 默认弹出面板方向
+     */
+    defaultPlacement?: 'top' | 'bottom' | '' | null
     width?: number | string
     height?: number | string
     className?: string | ((params: { $cascader: VxeCascaderConstructor }) => string)
