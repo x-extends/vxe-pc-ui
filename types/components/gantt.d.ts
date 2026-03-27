@@ -115,9 +115,17 @@ export namespace VxeGanttPropTypes {
 
   export interface TaskNowLineConfig {
     /**
-     * 此刻线的显示方式：start（显示到左侧），progress（显示实际进度）,end（显示到右侧）
+     * 此刻线的显示方式：start（显示到左侧）,center（显示居中），end（显示到右侧），progress（显示实际进度）
      */
-    mode: 'start' | 'progress' | 'end'
+    mode?: 'start' | 'progress' | 'center' | 'end'
+    /**
+     * 字体颜色
+     */
+    fontColor?: string
+    /**
+     * 线背景颜色
+     */
+    bgColor?: string
   }
 
   export interface TaskViewConfig<D = any> {
@@ -1112,6 +1120,9 @@ export namespace VxeGanttSlotTypes {
     _rowIndex: number
     tooltipContent: string
   }
+
+  export interface TaskTaskNowLineSlotParams {
+  }
 }
 
 export interface VxeGanttSlots<D = any> extends VxeGridSlots<D> {
@@ -1130,6 +1141,11 @@ export interface VxeGanttSlots<D = any> extends VxeGridSlots<D> {
    */
   taskBarTooltip?(params: VxeGanttSlotTypes.TaskBarTooltipSlotParams<D>): any
   'task-bar-tooltip'?(params: VxeGanttSlotTypes.TaskBarTooltipSlotParams<D>): any
+  /**
+   * 自定义任务此刻线模板
+   */
+  taskNowLine?(params: VxeGanttSlotTypes.TaskTaskNowLineSlotParams): any
+  'task-now-line'?(params: VxeGanttSlotTypes.TaskTaskNowLineSlotParams): any
 }
 
 export * from './gantt-module'
