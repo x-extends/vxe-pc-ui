@@ -5101,7 +5101,7 @@ export interface TableMethods<DT = any> {
   /**
    * 如果有滚动条，则滚动到对应的行
    */
-  scrollToRow(row: any, fieldOrColumn?: VxeColumnPropTypes.Field | VxeTableDefines.ColumnInfo | null, options?: VxeTableDefines.ScrollToRowConfig): Promise<any>
+  scrollToRow(rowOrRowid: any, fieldOrColumn?: VxeColumnPropTypes.Field | VxeTableDefines.ColumnInfo | null, options?: VxeTableDefines.ScrollToRowConfig): Promise<any>
   /**
    * 如果有滚动条，则滚动到第一行
    */
