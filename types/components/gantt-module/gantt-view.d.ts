@@ -106,6 +106,7 @@ export interface GanttViewPrivateRef {
 
 export interface GanttViewPrivateComputed {
   computeScaleDateList: Date[]
+  computeNowLineLeft: number
 }
 
 export interface VxeGanttViewPrivateMethods {

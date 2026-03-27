@@ -113,6 +113,13 @@ export namespace VxeGanttPropTypes {
     second?: VxeGanttDefines.ScaleDefaultOptions
   }
 
+  export interface TaskNowLineConfig {
+    /**
+     * 此刻线的显示方式：start（显示到左侧），progress（显示实际进度）,end（显示到右侧）
+     */
+    mode: 'start' | 'progress' | 'end'
+  }
+
   export interface TaskViewConfig<D = any> {
     /**
      * 高亮此刻线
@@ -520,6 +527,7 @@ export interface VxeGanttProps<D = any> extends Omit<VxeGridProps<D>, 'layouts'>
   layouts?: VxeGanttPropTypes.Layouts
   taskConfig?: VxeGanttPropTypes.TaskConfig
   taskViewScaleConfig?: VxeGanttPropTypes.TaskViewScaleConfig
+  taskNowLineConfig?: VxeGanttPropTypes.TaskNowLineConfig
   taskViewConfig?: VxeGanttPropTypes.TaskViewConfig<D>
   taskSplitConfig?: VxeGanttPropTypes.TaskSplitConfig
   taskLinkConfig?: VxeGanttPropTypes.TaskLinkConfig
@@ -534,6 +542,7 @@ export interface VxeGanttProps<D = any> extends Omit<VxeGridProps<D>, 'layouts'>
 export interface GanttPrivateComputed<D = any> extends GridPrivateComputed<D> {
   computeTaskOpts: VxeGanttPropTypes.TaskConfig
   computeTaskViewOpts: VxeGanttPropTypes.TaskViewConfig<D>
+  computeTaskNowLineOpts: VxeGanttPropTypes.TaskNowLineConfig
   computeTaskViewScaleOpts: VxeGanttPropTypes.TaskViewScaleConfig
   computeTaskBarOpts: VxeGanttPropTypes.TaskBarConfig<D>
   computeTaskBarMoveOpts: VxeGanttPropTypes.TaskBarMoveConfig<D>
@@ -587,6 +596,7 @@ export interface GanttReactData<D = any> extends GridReactData<D> {
   linkList: VxeGanttDefines.LinkConfObj[]
   upLinkFlag: number
 
+  nowTime: number
   currLeftSpacing: number
   currRightSpacing: number
 }
@@ -646,7 +656,7 @@ export interface GanttMethods<D = any> extends Omit<GridMethods<D>, 'dispatchEve
   /**
    * 如果有滚动条，则滚动到对应的任务视图
    */
-  scrollToTaskView(row: any): Promise<any>
+  scrollToTaskView(rowOrRowid: any): Promise<any>
 }
 export interface VxeGanttMethods<D = any> extends GanttMethods<D>, Omit<VxeGridMethods<D>, 'dispatchEvent'> { }
 
