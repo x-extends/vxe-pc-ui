@@ -1491,6 +1491,9 @@ export namespace VxeTablePropTypes {
     maxWidth?: VxeTooltipPropTypes.MaxWidth
     maxHeight?: VxeTooltipPropTypes.MaxHeight
     useHTML?: VxeTooltipPropTypes.UseHTML
+    placement?: VxeTooltipPropTypes.Placement
+    defaultPlacement?: VxeTooltipPropTypes.DefaultPlacement
+    popupClassName?: VxeTooltipPropTypes.PopupClassName
     contentMethod?(params: {
       $table: VxeTableConstructor<D>
       items: any[]

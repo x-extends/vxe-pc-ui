@@ -108,6 +108,10 @@ export namespace VxeTreeSelectPropTypes {
      */
     placement?: 'top' | 'bottom' | '' | null
     /**
+     * 默认弹出面板方向
+     */
+    defaultPlacement?: 'top' | 'bottom' | '' | null
+    /**
      * 触发方式
      */
     trigger?: 'default' | 'icon' | 'manual' | '' | null

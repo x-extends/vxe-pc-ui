@@ -63,7 +63,15 @@ export namespace VxeDatePickerPropTypes {
   export type AutoClose = boolean
   export type PrefixIcon = string
   export type SuffixIcon = string
+  /**
+   * 已废弃，请使用 PopupConfig.placement
+   * @deprecated
+   */
   export type Placement = 'top' | 'bottom' | '' | null
+  /**
+   * 已废弃，请使用 PopupConfig.transfer
+   * @deprecated
+   */
   export type Transfer = boolean
   export type ShowClearButton = boolean | null
   export type ShowConfirmButton = boolean | null
@@ -75,6 +83,10 @@ export namespace VxeDatePickerPropTypes {
      * 设置弹出面板方向
      */
     placement?: 'top' | 'bottom' | '' | null
+    /**
+     * 默认弹出面板方向
+     */
+    defaultPlacement?: 'top' | 'bottom' | '' | null
     /**
      * 触发方式
      */
@@ -150,7 +162,15 @@ export interface VxeDatePickerProps {
 
   prefixIcon?: VxeDatePickerPropTypes.PrefixIcon
   suffixIcon?: VxeDatePickerPropTypes.SuffixIcon
+  /**
+   * 已废弃，请使用 popupConfig.placement
+   * @deprecated
+   */
   placement?: VxeDatePickerPropTypes.Placement
+  /**
+   * 已废弃，请使用 popupConfig.transfer
+   * @deprecated
+   */
   transfer?: VxeDatePickerPropTypes.Transfer
 
   showClearButton?: VxeDatePickerPropTypes.ShowClearButton

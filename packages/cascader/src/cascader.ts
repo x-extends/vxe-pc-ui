@@ -327,9 +327,11 @@ export default defineVxeComponent({
       const targetElem = refElem.value
       const panelElem = refOptionPanel.value
       const btnTransfer = computeBtnTransfer.value
+      const popupOpts = computePopupOpts.value
       const handleStyle = () => {
         const ppObj = updatePanelPlacement(targetElem, panelElem, {
-          placement,
+          placement: popupOpts.placement || placement,
+          defaultPlacement: popupOpts.defaultPlacement,
           teleportTo: btnTransfer
         })
         const panelStyle: { [key: string]: string | number } = Object.assign(ppObj.style, {

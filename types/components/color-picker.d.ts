@@ -41,8 +41,36 @@ export namespace VxeColorPickerPropTypes {
   export type Placeholder = string
   export type ClickToCopy = boolean
   export type Clearable = boolean
+  /**
+   * 已废弃，请使用 PopupConfig.placement
+   * @deprecated
+   */
   export type Placement = 'top' | 'bottom' | '' | null
+  /**
+   * 已废弃，请使用 PopupConfig.transfer
+   * @deprecated
+   */
   export type Transfer = boolean
+
+  export interface PopupConfig {
+    /**
+     * 设置弹出面板方向
+     */
+    placement?: 'top' | 'bottom' | '' | null
+    /**
+     * 默认弹出面板方向
+     */
+    defaultPlacement?: 'top' | 'bottom' | '' | null
+    /**
+     * 触发方式
+     */
+    trigger?: 'default' | 'icon' | 'manual' | '' | null
+    transfer?: boolean
+    width?: number | string
+    height?: number | string
+    zIndex?: number | string
+    className?: string | ((params: { $colorPicker: VxeColorPickerConstructor }) => string)
+  }
 }
 
 export interface VxeColorPickerProps {
@@ -64,8 +92,17 @@ export interface VxeColorPickerProps {
   placeholder?: VxeColorPickerPropTypes.Placeholder
   clickToCopy?: VxeColorPickerPropTypes.ClickToCopy
   clearable?: VxeColorPickerPropTypes.Clearable
+  /**
+   * 已废弃，请使用 popupConfig.placement
+   * @deprecated
+   */
   placement?: VxeColorPickerPropTypes.Placement
+  /**
+   * 已废弃，请使用 popupConfig.transfer
+   * @deprecated
+   */
   transfer?: VxeColorPickerPropTypes.Transfer
+  popupConfig?: VxeColorPickerPropTypes.PopupConfig
 }
 
 export interface ColorPickerPrivateComputed {

@@ -39,6 +39,8 @@ export namespace VxeTooltipPropTypes {
   export type MinHeight = string | number
   export type MaxWidth = string | number
   export type MaxHeight = string | number
+  export type Placement = 'top' | 'bottom' | ''
+  export type DefaultPlacement = 'top' | 'bottom' | ''
   export type IsArrow = boolean
   export type Enterable = boolean
   export type EnterDelay = number
@@ -62,6 +64,8 @@ export interface VxeTooltipProps {
   maxWidth?: VxeTooltipPropTypes.MaxWidth
   maxHeight?: VxeTooltipPropTypes.MaxHeight
   zIndex?: VxeTooltipPropTypes.ZIndex
+  placement?: VxeTooltipPropTypes.Placement
+  defaultPlacement?: VxeTooltipPropTypes.DefaultPlacement
   isArrow?: VxeTooltipPropTypes.IsArrow
   enterable?: VxeTooltipPropTypes.Enterable
   enterDelay?: VxeTooltipPropTypes.EnterDelay

@@ -56,6 +56,14 @@ export default defineVxeComponent({
       type: [String, Number] as PropType<VxeTooltipPropTypes.MaxHeight>,
       default: () => getConfig().tooltip.maxHeight
     },
+    placement: {
+      type: String as PropType<VxeTooltipPropTypes.Placement>,
+      default: () => getConfig().tooltip.placement
+    },
+    defaultPlacement: {
+      type: String as PropType<VxeTooltipPropTypes.DefaultPlacement>,
+      default: () => getConfig().tooltip.defaultPlacement
+    },
     isArrow: {
       type: Boolean as PropType<VxeTooltipPropTypes.IsArrow>,
       default: () => getConfig().tooltip.isArrow
@@ -145,7 +153,7 @@ export default defineVxeComponent({
     let tooltipMethods = {} as TooltipMethods
 
     const updateTipStyle = () => {
-      const { isArrow } = props
+      const { isArrow, placement, defaultPlacement } = props
       const { tipTarget: targetElem, tipStore, tipPos } = reactData
       let top: number | '' = ''
       let left: number | '' = ''
@@ -165,9 +173,9 @@ export default defineVxeComponent({
         const visibleWidth = documentElement.clientWidth || bodyElem.clientWidth
 
         const marginSize = 6
-        top = targetRect.top + targetHeight
         left = targetRect.left
-        if (tipPos && (tipPos.x && tipPos.y)) {
+        top = targetRect.top + targetHeight
+        if (tipPos && (tipPos.oLeft || tipPos.oTop)) {
           if (isArrow) {
             left = left + Math.max(8, Math.min(targetWidth - 8, tipPos.oLeft)) - panelWidth / 2
           } else {
@@ -177,15 +185,35 @@ export default defineVxeComponent({
         } else {
           left = targetRect.left + (targetWidth - panelWidth) / 2
         }
-        // 如果下面不够放，则向上
-        if (top + panelHeight + marginSize > visibleHeight) {
+        if (placement === 'top') {
           panelPlacement = 'top'
           top = targetRect.top - panelHeight
-        }
-        // 如果上面不够放，则向下（优先）
-        if (top < marginSize) {
-          panelPlacement = 'bottom'
-          top = targetRect.top + targetHeight
+        } else if (!placement) {
+          if (defaultPlacement === 'top') {
+            panelPlacement = 'top'
+            top = targetRect.top - panelHeight
+            // 如果上面不够放，则向下
+            if (top < marginSize) {
+              panelPlacement = 'bottom'
+              top = targetRect.top + targetHeight
+            }
+            // 如果下面不够放，则向上（优先）
+            if (top + panelHeight + marginSize > visibleHeight) {
+              panelPlacement = 'top'
+              top = targetRect.top - panelHeight
+            }
+          } else {
+            // 如果下面不够放，则向上
+            if (top + panelHeight + marginSize > visibleHeight) {
+              panelPlacement = 'top'
+              top = targetRect.top - panelHeight
+            }
+            // 如果上面不够放，则向下（优先）
+            if (top < marginSize) {
+              panelPlacement = 'bottom'
+              top = targetRect.top + targetHeight
+            }
+          }
         }
         // 如果溢出右边
         if (left + panelWidth + marginSize > visibleWidth) {

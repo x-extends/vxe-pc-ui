@@ -299,6 +299,7 @@ const VxeButtonComponent = defineVxeComponent({
       const handleStyle = () => {
         const ppObj = updatePanelPlacement(targetElem, panelElem, {
           placement: popupOpts.placement || placement,
+          defaultPlacement: (popupOpts as any).defaultPlacement,
           teleportTo: btnTransfer
         })
         const panelStyle: { [key: string]: string | number } = Object.assign(ppObj.style, {
