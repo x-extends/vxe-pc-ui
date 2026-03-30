@@ -126,6 +126,10 @@ export namespace VxeGanttPropTypes {
      * 线背景颜色
      */
     bgColor?: string
+    /**
+     * 线宽度
+     */
+    width?: number | string
   }
 
   export interface TaskViewConfig<D = any> {
