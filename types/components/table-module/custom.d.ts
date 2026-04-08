@@ -24,7 +24,7 @@ interface VxeTableCustomPanelProps {
 export interface TableCustomPanelReactData {
   dragCol: VxeTableDefines.ColumnInfo | null
   dragGroupField: string | null | undefined
-  dragAggFnCol?: VxeTableDefines.ColumnInfo | null
+  dragAggFnCol: VxeTableDefines.ColumnInfo | null
   dragTipText: string
 }
 
@@ -34,6 +34,8 @@ export interface TableCustomPanelInternalData {
   prevDragAggFnColid?: string | null | undefined
   prevDragToChild?: boolean
   prevDragPos?: any
+
+  customDragTime?: number
 }
 
 export interface TableCustomPanelPrivateRef {
@@ -108,6 +110,7 @@ export interface TableCustomPrivateMethods<D = any> {
   customOpenEvent (evnt: Event): void
   customCloseEvent (evnt: Event): void
   handleUpdateCustomColumn(): void
+  handleCustomStyle(): Promise<any>
 }
 
 declare module '../grid' {
