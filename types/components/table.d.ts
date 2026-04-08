@@ -1005,6 +1005,7 @@ export namespace VxeTablePropTypes {
       mode?: 'inside' | 'outside' | 'auto' | '' | null
       width?: number | string
       maxHeight?: number | string
+      transfer?: boolean
     }
     trigger?: 'manual' | 'hover' | 'click' | '' | null
     /**
@@ -3863,8 +3864,6 @@ export interface TableReactData<D = any> {
   isAllSelected: boolean
   // 复选框属性，有选中且非全选状态
   isIndeterminate: boolean
-  // 当前行
-  currentRow: D | null
   // 单选框属性，选中列
   currentColumn: any
   // 单选框属性，选中行
@@ -4029,6 +4028,8 @@ export interface TableReactData<D = any> {
   resizeWidthFlag: number
 
   isCustomStatus: boolean
+  isCustomDragStatus: boolean
+  ctPopupFlag: number
 
   isCrossDragRow: Boolean
   dragRow: any
@@ -4125,6 +4126,9 @@ export interface TableInternalData<D = any> {
   sourceDataRowIdData: Record<string, D>
   fullColumnIdData: Record<string, VxeTableDefines.ColumnCacheItem<D>>
   fullColumnFieldData: Record<string, VxeTableDefines.ColumnCacheItem<D>>
+
+  // 当前行
+  currentRow: D | null
 
   // 合并表头单元格的数据
   mergeHeaderList: VxeTableDefines.MergeItem<D>[]
@@ -4230,6 +4234,7 @@ export interface TableInternalData<D = any> {
 
   teleportToWrapperElem: HTMLElement | null
   popupToWrapperElem: HTMLElement | null
+  customPopupToElem: HTMLElement | null
 
   validRuleErr?: boolean
 
@@ -6645,7 +6650,7 @@ export namespace VxeTableDefines {
     activeWrapper: boolean
     visible: boolean
     maxHeight: number | string | null
-    popupTop: number
+    popupStyle: VxeComponentStyleType
     oldSortMaps: Record<string, number>
     oldFixedMaps: Record<string, VxeColumnPropTypes.Fixed>
     oldVisibleMaps: Record<string, boolean>
