@@ -7,7 +7,7 @@ import { renderTitle, getItemClass, getItemContentClass, renderItemContent, rend
 
 import type { VxeFormConstructor, VxeFormDefines, VxeFormPrivateMethods, VxeComponentSizeType } from '../../../types'
 
-const VxeFormConfigItem = defineVxeComponent({
+export default /* define-vxe-component start */ defineVxeComponent({
   name: 'VxeFormConfigItem',
   mixins: [
     globalMixins.sizeMixin
@@ -81,6 +81,4 @@ const VxeFormConfigItem = defineVxeComponent({
   render (this: any, h) {
     return this.renderVN(h)
   }
-})
-
-export default VxeFormConfigItem
+}) /* define-vxe-component end */
