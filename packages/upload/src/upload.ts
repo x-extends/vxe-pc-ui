@@ -1232,7 +1232,7 @@ export default defineVxeComponent({
       }
     }
 
-    const handleGlobalMousedownEvent = (evnt: MouseEvent) => {
+    const handleGlobalClickEvent = (evnt: MouseEvent) => {
       const el = refElem.value
       const popupEl = refPopupElem.value
       let isActivated = getEventTargetNode(evnt, el).flag
@@ -1892,14 +1892,14 @@ export default defineVxeComponent({
         initTpImg()
       }
       globalEvents.on($xeUpload, 'paste', handleGlobalPasteEvent)
-      globalEvents.on($xeUpload, 'mousedown', handleGlobalMousedownEvent)
+      globalEvents.on($xeUpload, 'click', handleGlobalClickEvent)
       globalEvents.on($xeUpload, 'blur', handleGlobalBlurEvent)
     })
 
     onBeforeUnmount(() => {
       reactData.isDragUploadStatus = false
       globalEvents.off($xeUpload, 'paste')
-      globalEvents.off($xeUpload, 'mousedown')
+      globalEvents.off($xeUpload, 'click')
       globalEvents.off($xeUpload, 'blur')
       XEUtils.assign(reactData, createReactData())
       XEUtils.assign(internalData, createInternalData())
