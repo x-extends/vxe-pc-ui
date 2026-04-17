@@ -1447,7 +1447,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
         $xeUpload.uploadTransferFileEvent(evnt, files)
       }
     },
-    handleGlobalMousedownEvent (evnt: MouseEvent) {
+    handleGlobalClickEvent (evnt: MouseEvent) {
       const $xeUpload = this
       const reactData = $xeUpload.reactData
 
@@ -2106,7 +2106,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       initTpImg()
     }
     globalEvents.on($xeUpload, 'paste', $xeUpload.handleGlobalPasteEvent)
-    globalEvents.on($xeUpload, 'mousedown', $xeUpload.handleGlobalMousedownEvent)
+    globalEvents.on($xeUpload, 'click', $xeUpload.handleGlobalClickEvent)
     globalEvents.on($xeUpload, 'blur', $xeUpload.handleGlobalBlurEvent)
   },
   beforeDestroy () {
@@ -2116,7 +2116,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
 
     reactData.isDragUploadStatus = false
     globalEvents.off($xeUpload, 'paste')
-    globalEvents.off($xeUpload, 'mousedown')
+    globalEvents.off($xeUpload, 'click')
     globalEvents.off($xeUpload, 'blur')
     XEUtils.assign(reactData, createReactData())
     XEUtils.assign(internalData, createInternalData())
