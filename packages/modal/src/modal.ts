@@ -118,8 +118,14 @@ export default /* define-vxe-component start */ defineVxeComponent({
       type: Boolean as PropType<VxeModalPropTypes.DblclickZoom>,
       default: () => getConfig().modal.dblclickZoom
     },
-    width: [Number, String] as PropType<VxeModalPropTypes.Width>,
-    height: [Number, String] as PropType<VxeModalPropTypes.Height>,
+    width: {
+      type: [Number, String] as PropType<VxeModalPropTypes.Width>,
+      default: () => getConfig().modal.width
+    },
+    height: {
+      type: [Number, String] as PropType<VxeModalPropTypes.Height>,
+      default: () => getConfig().modal.height
+    },
     minWidth: {
       type: [Number, String] as PropType<VxeModalPropTypes.MinWidth>,
       default: () => getConfig().modal.minWidth
@@ -438,15 +444,18 @@ export default /* define-vxe-component start */ defineVxeComponent({
       }
       return $xeModal.handleRevert()
     },
-    recalculate  () {
+    recalculate () {
       const $xeModal = this
       const props = $xeModal
 
-      const { width, height } = props
+      const { width, height, minWidth, minHeight } = props
+      const isMsg = $xeModal.computeIsMsg
       const boxElem = $xeModal.getBox()
       if (boxElem) {
         boxElem.style.width = width ? toCssUnit(width) : ''
         boxElem.style.height = height ? toCssUnit(height) : ''
+        boxElem.style.minWidth = !isMsg && minWidth ? toCssUnit(minWidth) : ''
+        boxElem.style.minHeight = !isMsg && minHeight ? toCssUnit(minHeight) : ''
       }
       return $xeModal.$nextTick()
     },
@@ -898,6 +907,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
         $xeModal.updateZindex()
         allActiveModals.push($xeModal as VxeModalConstructor)
         setTimeout(() => {
+          $xeModal.recalculate()
           reactData.contentVisible = true
           $xeModal.$nextTick(() => {
             if (showFooter) {

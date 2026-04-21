@@ -237,6 +237,8 @@ setConfig({
     // size: null,
     top: 16,
     showHeader: true,
+    // width: null,
+    // height: null,
     minWidth: 340,
     minHeight: 140,
     lockView: true,
