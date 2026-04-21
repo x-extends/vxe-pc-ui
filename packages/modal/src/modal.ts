@@ -114,8 +114,14 @@ export default defineVxeComponent({
       type: Boolean as PropType<VxeModalPropTypes.DblclickZoom>,
       default: () => getConfig().modal.dblclickZoom
     },
-    width: [Number, String] as PropType<VxeModalPropTypes.Width>,
-    height: [Number, String] as PropType<VxeModalPropTypes.Height>,
+    width: {
+      type: [Number, String] as PropType<VxeModalPropTypes.Width>,
+      default: () => getConfig().modal.width
+    },
+    height: {
+      type: [Number, String] as PropType<VxeModalPropTypes.Height>,
+      default: () => getConfig().modal.height
+    },
     minWidth: {
       type: [Number, String] as PropType<VxeModalPropTypes.MinWidth>,
       default: () => getConfig().modal.minWidth
@@ -288,11 +294,14 @@ export default defineVxeComponent({
     }
 
     const recalculate = () => {
-      const { width, height } = props
+      const { width, height, minWidth, minHeight } = props
+      const isMsg = computeIsMsg.value
       const boxElem = getBox()
       if (boxElem) {
         boxElem.style.width = width ? toCssUnit(width) : ''
         boxElem.style.height = height ? toCssUnit(height) : ''
+        boxElem.style.minWidth = !isMsg && minWidth ? toCssUnit(minWidth) : ''
+        boxElem.style.minHeight = !isMsg && minHeight ? toCssUnit(minHeight) : ''
       }
       return nextTick()
     }
@@ -699,6 +708,7 @@ export default defineVxeComponent({
         updateZindex()
         allActiveModals.push($xeModal)
         setTimeout(() => {
+          recalculate()
           reactData.contentVisible = true
           nextTick(() => {
             if (showFooter) {
