@@ -2224,7 +2224,7 @@ export namespace VxeTablePropTypes {
       pasteCells: string[][]
       insertRows: DT[]
       insertColumns: VxeTableDefines.ColumnInfo<DT>[]
-    }): boolean
+    }): void
     /**
      * 只对 isRowIncrement 有效，自定义创建自增行数据的方法
      */
