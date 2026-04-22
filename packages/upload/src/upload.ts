@@ -636,6 +636,7 @@ export default defineVxeComponent({
             Object.assign(item, res)
           } else {
             reactData.fileList = reactData.fileList.filter(obj => getFieldKey(obj) !== fileKey)
+            delete fileCacheMaps[fileKey]
           }
           dispatchEvent('upload-error', { option: item, data: res }, null)
         }).finally(() => {
@@ -791,10 +792,11 @@ export default defineVxeComponent({
         dispatchEvent('add', { option: item }, evnt)
       })
       Promise.all(urlMode ? uploadPromiseRests : []).then(() => {
-        handleChange(newFileList)
+        const restFileList = reactData.fileList
+        handleChange(restFileList)
         // 自动更新校验状态
         if ($xeForm && formItemInfo) {
-          $xeForm.triggerItemEvent(evnt as any, formItemInfo.itemConfig.field, newFileList)
+          $xeForm.triggerItemEvent(evnt as any, formItemInfo.itemConfig.field, restFileList)
         }
       })
     }

@@ -202,7 +202,13 @@ declare module '../grid' {
 
 export namespace VxeTableExtendCellAreaDefines {
   export interface CellAreaParams<D = any> {
+    /**
+     * 对应的列数组
+     */
     cols: VxeTableDefines.ColumnInfo<D>[]
+    /**
+     * 对应的行数组
+     */
     rows: D[]
   }
 
