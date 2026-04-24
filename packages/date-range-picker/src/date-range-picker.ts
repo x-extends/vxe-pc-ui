@@ -582,8 +582,12 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const $xeDateRangePicker = this
       const reactData = $xeDateRangePicker.reactData
 
+      const popupOpts = $xeDateRangePicker.computePopupOpts
+      const { trigger } = popupOpts
       reactData.isActivated = true
-      $xeDateRangePicker.dateRangePickerOpenEvent(evnt)
+      if (!trigger || trigger === 'default') {
+        $xeDateRangePicker.dateRangePickerOpenEvent(evnt)
+      }
       $xeDateRangePicker.triggerEvent(evnt)
     },
     clickPrefixEvent (evnt: Event) {
@@ -932,6 +936,15 @@ export default /* define-vxe-component start */ defineVxeComponent({
       if (!formReadonly) {
         evnt.preventDefault()
         $xeDateRangePicker.showPanel()
+      }
+    },
+    clickIconEvent (evnt: MouseEvent) {
+      const $xeDateRangePicker = this
+
+      const popupOpts = $xeDateRangePicker.computePopupOpts
+      const { trigger } = popupOpts
+      if (!trigger || trigger === 'default' || trigger === 'icon') {
+        $xeDateRangePicker.dateRangePickerOpenEvent(evnt)
       }
     },
     clickEvent (evnt: Event & { type: 'click' }) {

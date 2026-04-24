@@ -907,9 +907,11 @@ export default /* define-vxe-component start */ defineVxeComponent({
         $xeModal.updateZindex()
         allActiveModals.push($xeModal as VxeModalConstructor)
         setTimeout(() => {
-          $xeModal.recalculate()
           reactData.contentVisible = true
           $xeModal.$nextTick(() => {
+            if (!props.fullscreen) {
+              $xeModal.recalculate()
+            }
             if (showFooter) {
               const confirmBtn = $xeModal.$refs.refConfirmBtn as unknown as VxeButtonConstructor
               const cancelBtn = $xeModal.$refs.refCancelBtn as unknown as VxeButtonConstructor
@@ -929,14 +931,13 @@ export default /* define-vxe-component start */ defineVxeComponent({
           $xeModal.handleMsgAutoClose()
         } else {
           $xeModal.$nextTick(() => {
-            const { fullscreen } = props
             const { firstOpen } = reactData
             if (firstOpen) {
               reactData.firstOpen = false
               if ($xeModal.hasPosStorage()) {
                 $xeModal.restorePosStorage()
               } else {
-                if (fullscreen) {
+                if (props.fullscreen) {
                   $xeModal.$nextTick(() => $xeModal.handleMaximize())
                 } else {
                   $xeModal.recalculate()

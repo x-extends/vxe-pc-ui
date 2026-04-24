@@ -469,9 +469,10 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const $xeDatePicker = this
       const reactData = $xeDatePicker.reactData
 
+      const popupOpts = $xeDatePicker.computePopupOpts
+      const { trigger } = popupOpts
       reactData.isActivated = true
-      const isDatePickerType = $xeDatePicker.computeIsDatePickerType
-      if (isDatePickerType) {
+      if (!trigger || trigger === 'default') {
         $xeDatePicker.datePickerOpenEvent(evnt)
       }
       $xeDatePicker.triggerEvent(evnt)
@@ -752,6 +753,15 @@ export default /* define-vxe-component start */ defineVxeComponent({
       if (!formReadonly) {
         evnt.preventDefault()
         $xeDatePicker.showPanel()
+      }
+    },
+    clickIconEvent (evnt: MouseEvent) {
+      const $xeDatePicker = this
+
+      const popupOpts = $xeDatePicker.computePopupOpts
+      const { trigger } = popupOpts
+      if (!trigger || trigger === 'default' || trigger === 'icon') {
+        $xeDatePicker.datePickerOpenEvent(evnt)
       }
     },
     clickEvent (evnt: Event & { type: 'click' }) {
@@ -1118,7 +1128,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       return h('div', {
         class: 'vxe-date-picker--control-icon',
         on: {
-          click: $xeDatePicker.datePickerOpenEvent
+          click: $xeDatePicker.clickIconEvent
         }
       }, [
         h('i', {
