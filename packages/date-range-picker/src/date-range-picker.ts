@@ -496,8 +496,12 @@ export default defineVxeComponent({
     }
 
     const focusEvent = (evnt: Event & { type: 'focus' }) => {
+      const popupOpts = computePopupOpts.value
+      const { trigger } = popupOpts
       reactData.isActivated = true
-      dateRangePickerOpenEvent(evnt)
+      if (!trigger || trigger === 'default') {
+        dateRangePickerOpenEvent(evnt)
+      }
       triggerEvent(evnt)
     }
 
@@ -793,6 +797,14 @@ export default defineVxeComponent({
       if (!formReadonly) {
         evnt.preventDefault()
         showPanel()
+      }
+    }
+
+    const clickIconEvent = (evnt: MouseEvent) => {
+      const popupOpts = computePopupOpts.value
+      const { trigger } = popupOpts
+      if (!trigger || trigger === 'default' || trigger === 'icon') {
+        dateRangePickerOpenEvent(evnt)
       }
     }
 
@@ -1157,7 +1169,7 @@ export default defineVxeComponent({
     const renderExtraSuffixIcon = () => {
       return h('div', {
         class: 'vxe-date-range-picker--control-icon',
-        onClick: dateRangePickerOpenEvent
+        onClick: clickIconEvent
       }, [
         h('i', {
           class: ['vxe-date-range-picker--date-picker-icon', getIcon().DATE_PICKER_DATE]

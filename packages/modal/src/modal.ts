@@ -708,9 +708,11 @@ export default defineVxeComponent({
         updateZindex()
         allActiveModals.push($xeModal)
         setTimeout(() => {
-          recalculate()
           reactData.contentVisible = true
           nextTick(() => {
+            if (!props.fullscreen) {
+              recalculate()
+            }
             if (showFooter) {
               const confirmBtn = refConfirmBtn.value
               const cancelBtn = refCancelBtn.value
@@ -730,14 +732,13 @@ export default defineVxeComponent({
           handleMsgAutoClose()
         } else {
           nextTick(() => {
-            const { fullscreen } = props
             const { firstOpen } = reactData
             if (firstOpen) {
               reactData.firstOpen = false
               if (hasPosStorage()) {
                 restorePosStorage()
               } else {
-                if (fullscreen) {
+                if (props.fullscreen) {
                   nextTick(() => handleMaximize())
                 } else {
                   recalculate()
