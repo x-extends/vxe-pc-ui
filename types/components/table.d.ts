@@ -1923,6 +1923,8 @@ export namespace VxeTablePropTypes {
   export interface KeyboardConfig<D = any> {
     /**
      * 是否启用全选
+     * Window/Linux对应按键: Ctrl+A
+     * MacOS对应按键: Command+A
      */
     isAll?: boolean
     /**
@@ -1963,16 +1965,25 @@ export namespace VxeTablePropTypes {
     isMerge?: boolean
     /**
      * 用于 mouse-config.area，开启复制/剪贴/粘贴功能
+     * Window/Linux对应按键: Ctrl+X, Ctrl+C, Ctrl+V
+     * MacOS对应按键: Command+C Command+C, Command+V
      */
     isClip?: boolean
     /**
      * 如果功能被支持，用于 mouse-config.area，开启查找和替换功能
+     * Window/Linux对应按键: Ctrl+F, Ctrl+H
+     * MacOS对应按键: Command+F, Command+H
      */
     isFNR?: boolean
     /**
-     * 是否开启撤回键回退到一次状态
+     * 是否开启撤销功能
+     * Window/Linux对应按键: Ctrl+Z
+     * MacOS对应按键: Command+Z
+     * 恢复/重做功能
+     * Window/Linux对应按键: Ctrl+Y, Ctrl+Shift+Y
+     * MacOS对应按键: Command+Shift+Y
      */
-    isUndo?: boolean
+    isUndoRedo?: boolean
     /**
      * 用于 mouse-config.area & column.type=checkbox|radio，开启空格键切换复选框或单选框状态功能
      */
@@ -2588,25 +2599,13 @@ export namespace VxeTablePropTypes {
   }
 
   /**
-   * 可撤销配置项
+   * 撤销/恢复历史配置项
    */
-  export interface UndoHistoryConfig {
+  export interface UndoRedoHistoryConfig {
     /**
-     * 撤销的最大次数
+     * 撤销栈的最大步数，最多保留多少步‌撤销操作 ‌‌
      */
-    maxSize?: number
-    /**
-     * 加载数据可撤销
-     */
-    isUpdateData?: boolean
-    /**
-     * 加载列可撤销
-     */
-    isUpdateColumn?: boolean
-    /**
-     * 编辑行数据可撤销
-     */
-    isEditRow?: boolean
+    stackSize?: number
   }
 
   export type ZIndex = number
@@ -3587,9 +3586,9 @@ export interface VxeTableProps<D = any> {
    */
   editRules?: VxeTablePropTypes.EditRules<D>
   /**
-   * 可撤销配置项
+   * 撤销/恢复历史配置项
    */
-  undoHistoryConfig?: VxeTablePropTypes.UndoHistoryConfig
+  undoRedoHistoryConfig?: VxeTablePropTypes.UndoRedoHistoryConfig
   /**
    * 空数据时显示的内容
    */
@@ -3628,6 +3627,8 @@ export interface VxeTableProps<D = any> {
    * 自定义参数（可以用来存放一些自定义的数据）
    */
   params?: VxeTablePropTypes.Params
+
+  zIndex?: VxeTablePropTypes.ZIndex
 
   /**
    * 已废弃，不建议使用，被 column-config.resizable 替换
@@ -3774,7 +3775,7 @@ export interface TablePrivateComputed<D = any> {
   computeRowGroupFields: ComputedRef<string[] | null | undefined>
   computeRowGroupColumns: ComputedRef<VxeTableDefines.ColumnInfo<D>[]>
   computeAggFuncColumns: ComputedRef<VxeTableDefines.ColumnInfo<D>[]>
-  computeUndoHistoryOpts: ComputedRef<VxeTablePropTypes.UndoHistoryConfig>
+  computeUndoRedoHistoryOpts: ComputedRef<VxeTablePropTypes.UndoRedoHistoryConfig>
 
   /**
    * @deprecated
@@ -3893,42 +3894,42 @@ export interface TableReactData<D = any> {
   // 存放可编辑相关信息
   editStore: {
     indexs: {
-      columns: any[]
+      columns: VxeTableDefines.ColumnInfo[]
     }
     titles: {
-      columns: any[]
+      columns: VxeTableDefines.ColumnInfo[]
     }
     // 选中源
     selected: {
       row: D | null
-      column: any
+      column: VxeTableDefines.ColumnInfo | null
       [key: string]: any
     }
     // 已复制源
     copyed: {
       cut: boolean
       rows: D[]
-      columns: any[]
+      columns: VxeTableDefines.ColumnInfo[]
       [key: string]: any
     }
     // 激活
     actived: {
       row: D | null
-      column: any
+      column: VxeTableDefines.ColumnInfo | null
       [key: string]: any
     }
     // 当前被强制聚焦单元格，只会在鼠标点击后算聚焦
     focused: {
       row: D | null
-      column: any
+      column: VxeTableDefines.ColumnInfo | null
       [key: string]: any
     }
   }
   // 存放 tooltip 相关信息
   tooltipStore: {
     row: D | null
-    column: any
-    content: any
+    column: VxeTableDefines.ColumnInfo | null
+    content: string
     visible: boolean,
     type: null | 'header' | 'body' | 'footer'
     currOpts: {
@@ -3943,10 +3944,10 @@ export interface TableReactData<D = any> {
   }
   validErrorMaps: {
     [key: string]: {
-      row: D | null
-      column: any
+      row: D
+      column: VxeTableDefines.ColumnInfo
       rule: any
-      content: any
+      content: string
     }
   }
   // 导入相关信息
@@ -4203,6 +4204,11 @@ export interface TableInternalData<D = any> {
   // 表尾高度
   tFooterHeight: number
 
+  stackHistoryStore: {
+    undoStacks: VxeTableDefines.HistoryStackObj<D>[]
+    redoStacks: VxeTableDefines.HistoryStackObj<D>[]
+  }
+
   teleportToWrapperElem: HTMLElement | null
   popupToWrapperElem: HTMLElement | null
   customPopupToElem: HTMLElement | null
@@ -4335,17 +4341,17 @@ export interface TableMethods<DT = any> {
    * 根据 column 获取相对于 columns 中的索引
    * @param column 列对象
    */
-  getColumnIndex(column: VxeTableDefines.ColumnInfo<any>): number
+  getColumnIndex(column: VxeTableDefines.ColumnInfo<any> | null): number
   /**
    * 根据 column 获取相对于当前表格列中的索引
    * @param column 列对象
    */
-  getVTColumnIndex(column: VxeTableDefines.ColumnInfo<any>): number
+  getVTColumnIndex(column: VxeTableDefines.ColumnInfo<any> | null): number
   /**
    * 根据 column 获取渲染中的虚拟索引
    * @param column 列对象
    */
-  getVMColumnIndex(column: VxeTableDefines.ColumnInfo<any>): number
+  getVMColumnIndex(column: VxeTableDefines.ColumnInfo<any> | null): number
   /**
    * 创建 data 对象
    * 对于某些特殊场景可能会用到，会自动对数据的字段名进行检测，如果不存在就自动定义
@@ -4379,7 +4385,7 @@ export interface TableMethods<DT = any> {
   /**
    * 获取单元格 td 元素
    */
-  getCellElement(row: any, fieldOrColumn: VxeColumnPropTypes.Field | VxeTableDefines.ColumnInfo<any> | null): HTMLTableDataCellElement | null
+  getCellElement(row: any, fieldOrColumn: VxeColumnPropTypes.Field | VxeTableDefines.ColumnInfo<any> | null): HTMLTableCellElement | null
   /**
    * 获取单元格显示值
    */
@@ -5181,6 +5187,14 @@ export interface TableMethods<DT = any> {
    */
   updateCellAreas(): Promise<void>
   /**
+   * 撤销
+   */
+  undo(): Promise<{status: boolean}>
+  /**
+   * 重做
+   */
+  redo(): Promise<{status: boolean}>
+  /**
    * 已废弃，请使用 connectToolbar
    * @deprecated
    */
@@ -5207,23 +5221,28 @@ export interface VxeTableMethods<D = any> extends TableMethods<D> { }
 
 export interface TablePrivateMethods<D = any> {
   /**
+   * 内部方法
    * @deprecated
    */
   getSetupOptions(): Required<VxeGlobalConfig>
   /**
+   * 内部方法
    * @private
    */
   updateAfterDataIndex(): void
   /**
+   * 内部方法
    * @private
    */
   callSlot<T>(slotFunc: ((params: T) => VxeComponentSlotType | VxeComponentSlotType[]) | string | null, params: T): VxeComponentSlotType[]
 
   /**
+   * 内部方法
    * @private
    */
   getParentElem(): Element | null
   /**
+   * 内部方法
    * @private
    */
   getParentHeight(): number
@@ -5232,169 +5251,210 @@ export interface TablePrivateMethods<D = any> {
    */
   getExcludeHeight(): number
   /**
+   * 内部方法
    * @private
    */
   defineField(records: any[]): any[]
   /**
+   * 内部方法
    * @private
    */
   handleTableData(force?: boolean): Promise<any>
   /**
+   * 内部方法
    * @private
    */
   cacheRowMap(isReset: boolean): void
   /**
+   * 内部方法
    * @private
    */
   cacheSourceMap(fullData: any[]): void
   /**
+   * 内部方法
    * @private
    */
   saveCustomStore(type: VxeTableDefines.CustomEventType): Promise<any>
   /**
+   * 内部方法
    * @private
    */
   analyColumnWidth(): void
   /**
+   * 内部方法
    * @private
    */
   updateCheckboxStatus(): void
   /**
+   * 内部方法
    * @private
    */
   updateAllCheckboxStatus(): void
   /**
+   * 内部方法
    * @private
    */
   checkSelectionStatus(): void
   /**
+   * 内部方法
    * @private
    */
   handleBatchSelectRows(rows: any[], value: any, isForce?: boolean): void
   /**
+   * 内部方法
    * @private
    */
   handleColResizeMousedownEvent(evnt: MouseEvent, fixedType: 'left' | 'right' | '', params: (VxeTableDefines.CellRenderHeaderParams | VxeTableDefines.CellRenderBodyParams | VxeTableDefines.CellRenderFooterParams)): void
   /**
+   * 内部方法
    * @private
    */
   handleColResizeDblclickEvent(evnt: MouseEvent, params: (VxeTableDefines.CellRenderHeaderParams | VxeTableDefines.CellRenderBodyParams | VxeTableDefines.CellRenderFooterParams)): void
   /**
+   * 内部方法
    * @private
    */
   handleRowResizeMousedownEvent(evnt: MouseEvent, params: VxeTableDefines.CellRenderBodyParams): void
   /**
+   * 内部方法
    * @private
    */
   handleRowResizeDblclickEvent(evnt: MouseEvent, params: VxeTableDefines.CellRenderBodyParams): void
   /**
+   * 内部方法
    * @private
    */
   handleUpdateBodyMerge(): void
   /**
+   * 内部方法
    * @private
    */
   handleUpdateHeaderMerge(): void
   /**
+   * 内部方法
    * @private
    */
   handleUpdateFooterMerge(): void
   /**
+   * 内部方法
    * @private
    */
   handleAggregateSummaryData(): void
   /**
+   * 内部方法
    * use handleBatchSelectRows
    * @deprecated
    */
   handleSelectRow(params: any, value: any, isForce?: boolean): void
   /**
+   * 内部方法
    * @private
    */
   handleCustom(): Promise<void>
   /**
+   * 内部方法
    * @private
    */
   handleUpdateDataQueue(): void
   /**
+   * 内部方法
    * @private
    */
   handleRefreshColumnQueue(): void
   /**
+   * 内部方法
    * @private
    */
   handleFilterOptions(column: VxeTableDefines.ColumnInfo): void
   /**
+   * 内部方法
    * @private
    */
   preventEvent(evnt: any, type: any, args?: any, next?: any, end?: any): any
   /**
+   * 内部方法
    * @private
    */
   triggerHeaderTitleEvent(evnt: MouseEvent, iconParams: VxeColumnPropTypes.TitlePrefix | VxeColumnPropTypes.TitleSuffix, params: VxeTableDefines.CellRenderHeaderParams<any>): void
   /**
+   * 内部方法
    * @private
    */
   triggerHeaderTooltipEvent(evnt: MouseEvent, params: VxeTableDefines.CellRenderHeaderParams<any>): void
   /**
+   * 内部方法
    * @private
    */
   triggerBodyTooltipEvent(evnt: MouseEvent, params: VxeTableDefines.CellRenderBodyParams<any>): void
   /**
+   * 内部方法
    * @private
    */
   triggerFooterTooltipEvent(evnt: MouseEvent, params: VxeTableDefines.CellRenderFooterParams<any>): void
   /**
+   * 内部方法
    * @private
    */
   handleTargetLeaveEvent(evnt: MouseEvent): void
   /**
+   * 内部方法
    * @private
    */
   triggerHeaderCellClickEvent(evnt: MouseEvent, params: VxeTableDefines.CellRenderHeaderParams<any>): void
   /**
+   * 内部方法
    * @private
    */
   triggerHeaderCellDblclickEvent(evnt: MouseEvent, params: VxeTableDefines.CellRenderHeaderParams<any>): void
   /**
+   * 内部方法
    * @private
    */
   triggerCellClickEvent(evnt: MouseEvent, params: VxeTableDefines.CellRenderBodyParams<any>): void
   /**
+   * 内部方法
    * @private
    */
   triggerCellDblclickEvent(evnt: MouseEvent, params: VxeTableDefines.CellRenderBodyParams<any>): void
   /**
+   * 内部方法
    * @private
    */
   triggerFooterCellClickEvent(evnt: MouseEvent, params: VxeTableDefines.CellRenderFooterParams<any>): void
   /**
+   * 内部方法
    * @private
    */
   triggerFooterCellDblclickEvent(evnt: MouseEvent, params: VxeTableDefines.CellRenderFooterParams<any>): void
   /**
+   * 内部方法
    * @private
    */
   handleToggleCheckRowEvent(evnt: Event | null, params: { row: any }): void
   /**
+   * 内部方法
    * @private
    */
   triggerCheckRowEvent(evnt: Event, params: { row: any }, value: boolean): void
   /**
+   * 内部方法
    * @private
    */
   triggerCheckAllEvent(evnt: MouseEvent | null, value: boolean): void
   /**
+   * 内部方法
    * @private
    */
   triggerRadioRowEvent(evnt: Event, params: { row: any }): void
   /**
+   * 内部方法
    * @private
    */
   triggerCurrentColumnEvent(evnt: Event, params: {
     column: VxeTableDefines.ColumnInfo<any>
   }): void
   /**
+   * 内部方法
    * @private
    */
   triggerCurrentRowEvent(evnt: Event, params: {
@@ -5404,74 +5464,92 @@ export interface TablePrivateMethods<D = any> {
     $rowIndex: number
   }): void
   /**
+   * 内部方法
    * @private
    */
   triggerRowExpandEvent(evnt: Event, params: VxeTableDefines.CellRenderBodyParams<any>): void
   /**
+   * 内部方法
    * @private
    */
   triggerRowGroupExpandEvent(evnt: Event, params: VxeTableDefines.CellRenderBodyParams<any>): void
   /**
+   * 内部方法
    * @private
    */
   triggerTreeExpandEvent(evnt: Event, params: VxeTableDefines.CellRenderBodyParams<any>): void
   /**
+   * 内部方法
    * @private
    */
   handleColumnSortEvent(evnt: Event, column: VxeTableDefines.ColumnInfo): void
   /**
+   * 内部方法
    * @private
    */
   triggerSortEvent(evnt: Event, column: VxeTableDefines.ColumnInfo<any>, order: VxeTablePropTypes.SortOrder): void
   /**
+   * 内部方法
    * @private
    */
   triggerHeaderCellMousedownEvent(evnt: any, params: any): void
   /**
+   * 内部方法
    * @private
    */
   triggerCellMousedownEvent(evnt: MouseEvent, params: any): void
   /**
+   * 内部方法
    * @private
    */
   triggerCellMouseupEvent(evnt: MouseEvent): void
   /**
+   * 内部方法
    * @private
    */
   handleRowDragSwapEvent (evnt: DragEvent | null, isSyncRow: boolean | undefined, dragRow: any, prevDragRow: any, prevDragPos: '' | 'top' | 'bottom' | 'left' | 'right' | undefined, prevDragToChild: boolean | undefined): Promise<{ status: boolean }>
   /**
+   * 内部方法
    * @private
    */
   handleRowDragDragstartEvent (evnt: DragEvent): void
   /**
+   * 内部方法
    * @private
    */
   handleRowDragDragendEvent(evnt: DragEvent): void
   /**
+   * 内部方法
    * @private
    */
   handleRowDragDragoverEvent(evnt: DragEvent): void
   /**
+   * 内部方法
    * @private
    */
   handleCrossTableRowDragInsertEvent(evnt: DragEvent): void
   /**
+   * 内部方法
    * @private
    */
   handleCrossTableRowDragCancelEvent(evnt: DragEvent): void
   /**
+   * 内部方法
    * @private
    */
   handleCrossTableRowDragFinishEvent(evnt: DragEvent): void
   /**
+   * 内部方法
    * @private
    */
   handleCrossTableRowDragoverEmptyEvent(evnt: DragEvent): void
   /**
+   * 内部方法
    * @private
    */
   hideCrossTableRowDropClearStatus(): void
   /**
+   * 内部方法
    * @private
    */
   handleCellDragMousedownEvent (evnt: MouseEvent, params: {
@@ -5479,40 +5557,49 @@ export interface TablePrivateMethods<D = any> {
     column: VxeTableDefines.ColumnInfo
   }): void
   /**
+   * 内部方法
    * @private
    */
   handleCellDragMouseupEvent (evnt: MouseEvent): void
   /**
+   * 内部方法
    * @private
    */
   handleHeaderCellDragDragstartEvent (evnt: DragEvent): void
   /**
+   * 内部方法
    * @private
    */
   handleColDragSwapColumn(): void
   /**
+   * 内部方法
    * @private
    */
   handleColDragSwapEvent (evnt: DragEvent | null, isSyncColumn: boolean | undefined, dragCol: VxeTableDefines.ColumnInfo | null | undefined, prevDragCol: VxeTableDefines.ColumnInfo | null | undefined, prevDragPos: '' | 'top' | 'bottom' | 'left' | 'right' | undefined, prevDragToChild: boolean | undefined): Promise<{ status: boolean }>
   /**
+   * 内部方法
    * @private
    */
   handleHeaderCellDragDragendEvent(evnt: DragEvent): void
   /**
+   * 内部方法
    * @private
    */
   handleHeaderCellDragDragoverEvent(evnt: DragEvent,): void
   /**
+   * 内部方法
    * @private
    */
   handleHeaderCellDragMousedownEvent (evnt: MouseEvent, params: {
     column: VxeTableDefines.ColumnInfo
   }): void
   /**
+   * 内部方法
    * @private
    */
   handleHeaderCellDragMouseupEvent (evnt: MouseEvent): void
   /**
+   * 内部方法
    * @private
    */
   handleScrollEvent(evnt: Event, isRollY: boolean, isRollX: boolean, scrollTop: number, scrollLeft: number, params: {
@@ -5520,41 +5607,155 @@ export interface TablePrivateMethods<D = any> {
     fixed: VxeColumnPropTypes.Fixed
   }): void
   /**
+   * 内部方法
    * @private
    */
   handleCellRuleUpdateStatus(type: 'change' | 'blur', cellParams: {
     row: any
     column: VxeTableDefines.ColumnInfo<any>
   }, cellValue?: any): Promise<any>
+  /**
+   * 内部方法
+   * @private
+   */
+  handlePushStack(): void
+  /**
+   * 内部方法
+   * @private
+   */
+  handleUndoStackEvent(evnt: KeyboardEvent | null): Promise<{status: boolean}>
+  /**
+   * 内部方法
+   * @private
+   */
+  handleRedoStackEvent(evnt: KeyboardEvent | null): Promise<{status: boolean}>
+  /**
+   * 内部方法
+   * @private
+   */
+  handleClearStack(): void
+  /**
+   * 内部方法
+   * @private
+   */
   triggerScrollXEvent(evnt: Event): void
+  /**
+   * 内部方法
+   * @private
+   */
   triggerScrollYEvent(evnt: Event): void
+  /**
+   * 内部方法
+   * @private
+   */
   triggerHeaderScrollEvent(evnt: Event, fixedType: 'right' | 'left' | ''): void
+  /**
+   * 内部方法
+   * @private
+   */
   triggerBodyScrollEvent(evnt: Event, fixedType: 'right' | 'left' | ''): void
+  /**
+   * 内部方法
+   * @private
+   */
   triggerFooterScrollEvent(evnt: Event, fixedType: 'right' | 'left' | ''): void
+  /**
+   * 内部方法
+   * @private
+   */
   triggerBodyWheelEvent(evnt: WheelEvent): void
+  /**
+   * 内部方法
+   * @private
+   */
   triggerVirtualScrollXEvent(evnt: Event): void
+  /**
+   * 内部方法
+   * @private
+   */
   triggerVirtualScrollYEvent(evnt: Event): void
+  /**
+   * 内部方法
+   * @private
+   */
   scrollToTreeRow(row: any): Promise<any>
+  /**
+   * 内部方法
+   * @private
+   */
   updateScrollYStatus(fullData?: any[]): boolean
+  /**
+   * 内部方法
+   * @private
+   */
   updateScrollXSpace(): void
+  /**
+   * 内部方法
+   * @private
+   */
   updateScrollYSpace(): void
+  /**
+   * 内部方法
+   * @private
+   */
   updateScrollXData(): Promise<any>
+  /**
+   * 内部方法
+   * @private
+   */
   updateScrollYData(): Promise<any>
+  /**
+   * 内部方法
+   * @private
+   */
   checkScrolling(): void
+  /**
+   * 内部方法
+   * @private
+   */
   updateZindex(): void
+  /**
+   * 内部方法
+   * @private
+   */
   handleUpdateAggData(): Promise<any>
+  /**
+   * 内部方法
+   * @private
+   */
   handleCheckedCheckboxRow(rows: any, value: boolean, isForce?: boolean): Promise<any>
+  /**
+   * 内部方法
+   * @private
+   */
   triggerHoverEvent(evnt: any, params: any): void
+  /**
+   * 内部方法
+   * @private
+   */
   setHoverRow(row: any): void
+  /**
+   * 内部方法
+   * @private
+   */
   clearHoverRow(): void
   /**
    * 已废弃，被 getCellElement 替换
    * @deprecated
    */
   getCell(row: any, column: VxeTableDefines.ColumnInfo<any>): HTMLTableCellElement | null
+  /**
+   * 内部方法
+   * @private
+   */
   findRowIndexOf(list: any[], row: any): number
+  /**
+   * 内部方法
+   * @private
+   */
   eqRow(row1: any, row2: any): boolean
   /**
+   * 内部方法
    * @private
    */
   handleConnectGanttView($ganttView: VxeGanttViewConstructor | VxeGanttViewInstance): Promise<void>
@@ -5573,6 +5774,8 @@ export type VxeTableEmits = [
   'paste',
   'copy',
   'cut',
+  'undo',
+  'redo',
   'context-menu',
 
   'columns-change',
@@ -5723,6 +5926,29 @@ export namespace VxeTableDefines {
     column: VxeTableDefines.ColumnInfo | null | undefined
     visible: boolean
     maxHeight: number | string | null
+  }
+
+  export interface HistoryStackObj<D = any> {
+    selectActiveArea?: {
+      areaIndex: number
+      rowid: string
+      colid: string
+    } | null
+    selectCellAreas?: {
+      type: VxeTableExtendCellAreaDefines.CELL_AREA_TYPE
+      rowIds: string[]
+      colIds: string[]
+    }[]
+    selectActiveInfo?: {
+      rowid: string
+      colid: string
+    }
+    editActiveInfo?: {
+      rowid: string
+      colid: string
+    }
+    visibleData: D[]
+    visibleColumn: VxeTableDefines.ColumnInfo<D>[]
   }
 
   export type AggFuncType = 'sum' | 'count' | 'avg' | 'min' | 'max' | 'first' | 'last'
@@ -6267,6 +6493,9 @@ export namespace VxeTableDefines {
 
   export interface CutParams { }
   export interface CutEventParams<D = any> extends TableEventParams<D>, CutParams { }
+
+  export interface UndoEventParams<D = any> {}
+  export interface RedoEventParams<D = any> {}
 
   export interface ContextMenuEventParams<D = any> extends TableEventParams<D> {}
 
@@ -6870,6 +7099,8 @@ export interface VxeTableEventProps<D = any> {
   onPaste?: VxeTableEvents.Paste<D>
   onCopy?: VxeTableEvents.Copy<D>
   onCut?: VxeTableEvents.Cut<D>
+  onUndo?: VxeTableEvents.Undo<D>
+  onRedo?: VxeTableEvents.Redo<D>
   onContextMenu?: VxeTableEvents.ContextMenu<D>
   onColumnsChange?: VxeTableEvents.ColumnsChange<D>
   onDataChange?: VxeTableEvents.DataChange<D>
@@ -6953,6 +7184,8 @@ export interface VxeTableListeners<D = any> {
   paste?: VxeTableEvents.Paste<D>
   copy?: VxeTableEvents.Copy<D>
   cut?: VxeTableEvents.Cut<D>
+  undo?: VxeTableEvents.Undo<D>
+  redo?: VxeTableEvents.Redo<D>
   contextMenu?: VxeTableEvents.ContextMenu<D>
   columnsChange?: VxeTableEvents.ColumnsChange<D>
   dataChange?: VxeTableEvents.DataChange<D>
@@ -7035,6 +7268,8 @@ export namespace VxeTableEvents {
   export type Paste<D = VxeTablePropTypes.Row> = (params: VxeTableDefines.PasteEventParams<D>) => void
   export type Copy<D = VxeTablePropTypes.Row> = (params: VxeTableDefines.CopyEventParams<D>) => void
   export type Cut<D = VxeTablePropTypes.Row> = (params: VxeTableDefines.CutEventParams<D>) => void
+  export type Undo<D = VxeTablePropTypes.Row> = (params: VxeTableDefines.UndoEventParams<D>) => void
+  export type Redo<D = VxeTablePropTypes.Row> = (params: VxeTableDefines.RedoEventParams<D>) => void
   export type ContextMenu<D = VxeTablePropTypes.Row> = (params: VxeTableDefines.ContextMenuEventParams<D>) => void
   export type ColumnsChange<D = VxeTablePropTypes.Row> = (params: VxeTableDefines.ColumnsChangeEventParams<D>) => void
   export type DataChange<D = VxeTablePropTypes.Row> = (params: VxeTableDefines.DataChangeEventParams<D>) => void

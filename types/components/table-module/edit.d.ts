@@ -181,9 +181,10 @@ export interface TableEditMethods<D = any> {
   setActiveRow(row: any): Promise<void>
   /**
    * 用于 edit-config，激活行编辑并默认激活第一个列，也可以指定列；如果第二个参数为 true，则默认自动激活第一个可编辑列；也可以传指定列
-   * @param row 指定行
    */
-  setEditRow(row: any, fieldOrColumn?: boolean | string | VxeTableDefines.ColumnInfo<any>): Promise<void>
+  setEditRow(row: any, fieldOrColumn?: boolean | string | VxeTableDefines.ColumnInfo<any> | null, options?: {
+    isClear?: boolean
+  }): Promise<void>
   /**
    * 请使用 setEditCell
    * @deprecated
@@ -191,14 +192,12 @@ export interface TableEditMethods<D = any> {
   setActiveCell(row: any, fieldOrColumn: string | VxeTableDefines.ColumnInfo<any>): Promise<void>
   /**
    * 用于 edit-config，激活单元格编辑
-   * @param row 指定行
-   * @param field 字段名
    */
-  setEditCell(row: any, fieldOrColumn: string | VxeTableDefines.ColumnInfo<any>): Promise<void>
+  setEditCell(row: any, fieldOrColumn: string | VxeTableDefines.ColumnInfo<any> | null, options?: {
+    isClear?: boolean
+  }): Promise<void>
   /**
    * 用于 mouse-config.mouse-config，选中某个单元格
-   * @param row 指定行
-   * @param field 字段名
    */
   setSelectCell(row: any, fieldOrColumn: string | VxeTableDefines.ColumnInfo<any>): Promise<void>
 }
@@ -207,7 +206,9 @@ export interface TableEditPrivateMethods<D = any> {
   /**
    * @private
    */
-  handleEdit(params: any, evnt?: any): Promise<any>
+  handleEdit(params: any, evnt: any, options?: {
+    isClear?: boolean
+  }): Promise<any>
   /**
    * @private
    */
