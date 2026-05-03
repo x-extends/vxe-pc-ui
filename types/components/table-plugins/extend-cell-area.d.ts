@@ -79,77 +79,105 @@ export interface VxeTableExtendCellAreaMethods<D = any> {
 }
 export interface VxeTableExtendCellAreaPrivateMethods<D = any> {
   /**
+   * 内部方法
    * @private
    */
   handleKeyboardCellAreaEvent(evnt: KeyboardEvent): void
   /**
+   * 内部方法
    * @private
    */
   handleHeaderCellAreaMouseDnEvent(evnt: MouseEvent, params: VxeTableDefines.HeaderCellClickEventParams<D>): void
   /**
+   * 内部方法
    * @private
    */
-  triggerClAreaModnEvent(evnt: MouseEvent, params: VxeTableDefines.CellClickEventParams<D>): void
+  triggerCelllAreaMnEvent(evnt: MouseEvent, params: VxeTableDefines.CellClickEventParams<D>): void
   /**
+   * 内部方法
    * @private
    */
   handleFilterEvent(evnt: Event, params: VxeTableDefines.FilterChangeEventParams<D>): any
   /**
+   * 内部方法
    * @private
    */
   handleSortEvent(evnt: Event, params: VxeTableDefines.SortChangeEventParams<D>): any
   /**
+   * 内部方法
    * @private
    */
   handleRecalculateCellAreaEvent(): any
   /**
+   * 内部方法
    * @private
    */
   handleCyClAreaEvent(evnt: ClipboardEvent): void
   /**
+   * 内部方法
    * @private
    */
   handlePeClAreaEvent(evnt: ClipboardEvent): void
   /**
+   * 内部方法
    * @private
    */
   handleCutCellAreaEvent(evnt: ClipboardEvent): void
   /**
+   * 内部方法
    * @private
    */
   handleColResizeCellAreaEvent(evnt: MouseEvent, params: any): void
   /**
+   * 内部方法
    * @private
    */
   handleColResizeDblclickCellAreaEvent(evnt: MouseEvent, params: any): void
   /**
+   * 内部方法
    * @private
    */
   handleRowResizeCellAreaEvent(evnt: MouseEvent, params: any): void
   /**
+   * 内部方法
    * @private
    */
   handleRowResizeDblclickCellAreaEvent(evnt: MouseEvent, params: any): void
   /**
+   * 内部方法
    * @private
    */
   triggerCellAreaExtendMousedownEvent(evnt: MouseEvent, params: any): void
   /**
+   * 内部方法
    * @private
    */
   triggerCopyCellAreaEvent(evnt: MouseEvent): void
   /**
+   * 内部方法
    * @private
    */
   triggerCutCellAreaEvent(evnt: MouseEvent): void
   /**
+   * 内部方法
    * @private
    */
   triggerPasteCellAreaEvent(evnt: MouseEvent): void
   /**
+   * 内部方法
    * @private
    */
   triggerFNROpenEvent(evnt: MouseEvent, tab: 'find' | 'replace'): void
+  /**
+   * 内部方法
+   * @private
+   */
+  getCellAreaPushStackObj(stackObj: VxeTableDefines.HistoryStackObj): VxeTableDefines.HistoryStackObj
+  /**
+   * 内部方法
+   * @private
+   */
+  handleCellAreaSnapshotStackData(stackObj: VxeTableDefines.HistoryStackObj): void
 }
 declare module '../table' {
   export interface TableInternalData<D = any> {
