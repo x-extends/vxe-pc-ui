@@ -31,6 +31,10 @@ export default /* define-vxe-component start */ defineVxeComponent({
     title: [String, Number] as PropType<VxeImagePropTypes.Title>,
     width: [String, Number] as PropType<VxeImagePropTypes.Width>,
     height: [String, Number] as PropType<VxeImagePropTypes.Height>,
+    minWidth: [String, Number] as PropType<VxeImagePropTypes.MinWidth>,
+    minHeight: [String, Number] as PropType<VxeImagePropTypes.MinHeight>,
+    maxWidth: [String, Number] as PropType<VxeImagePropTypes.MaxWidth>,
+    maxHeight: [String, Number] as PropType<VxeImagePropTypes.MaxHeight>,
     circle: Boolean as PropType<VxeImagePropTypes.Circle>,
     draggable: {
       type: Boolean as PropType<VxeImagePropTypes.Draggable>,
@@ -78,20 +82,33 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const $xeImage = this
       const props = $xeImage
 
-      const { width, height, circle } = props
+      const { width, height, minWidth, minHeight, maxWidth, maxHeight, circle } = props
       const stys: Record<string, string> = {}
-      if (width) {
-        stys.width = toCssUnit(width)
-      } else if (circle) {
-        if (height) {
-          stys.width = toCssUnit(height)
-        }
+      if (minWidth) {
+        stys.minWidth = toCssUnit(minWidth)
       }
-      if (height) {
-        stys.height = toCssUnit(height)
-      } else if (circle) {
+      if (minHeight) {
+        stys.minHeight = toCssUnit(minHeight)
+      }
+      if (maxWidth) {
+        stys.maxWidth = toCssUnit(maxWidth)
+      }
+      if (maxHeight) {
+        stys.maxHeight = toCssUnit(maxHeight)
+      }
+      if (circle) {
+        // 圆形只能生效一个
         if (width) {
           stys.height = toCssUnit(width)
+        } else if (height) {
+          stys.width = toCssUnit(height)
+        }
+      } else {
+        if (width) {
+          stys.width = toCssUnit(width)
+        }
+        if (height) {
+          stys.height = toCssUnit(height)
         }
       }
       return stys

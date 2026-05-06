@@ -27,6 +27,10 @@ export namespace VxeImagePropTypes {
   export type Title = number | string
   export type Width = number | string
   export type Height = number | string
+  export type MinWidth = number | string
+  export type MinHeight = number | string
+  export type MaxWidth = number | string
+  export type MaxHeight = number | string
   export type Circle = boolean
   export type MaskClosable = boolean
   export type ToolbarConfig = VxeImagePreviewPropTypes.ToolbarConfig
@@ -49,6 +53,10 @@ export interface VxeImageProps {
   title?: VxeImagePropTypes.Title
   width?: VxeImagePropTypes.Width
   height?: VxeImagePropTypes.Height
+  minWidth?: VxeImagePropTypes.MinWidth
+  minHeight?: VxeImagePropTypes.MinHeight
+  maxWidth?: VxeImagePropTypes.MaxWidth
+  maxHeight?: VxeImagePropTypes.MaxHeight
   circle?: VxeImagePropTypes.Circle
   maskClosable?: VxeImagePropTypes.MaskClosable
   toolbarConfig?: VxeImagePropTypes.ToolbarConfig

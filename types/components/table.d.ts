@@ -1951,10 +1951,10 @@ export namespace VxeTablePropTypes {
      */
     isFNR?: boolean
     /**
-     * 是否开启撤销功能
+     * 是否开启撤销/重做功能
      * Window/Linux对应按键: Ctrl+Z
      * MacOS对应按键: Command+Z
-     * 恢复/重做功能
+     * 重做功能
      * Window/Linux对应按键: Ctrl+Y, Ctrl+Shift+Y
      * MacOS对应按键: Command+Shift+Y
      */
@@ -2587,7 +2587,7 @@ export namespace VxeTablePropTypes {
   }
 
   /**
-   * 撤销/恢复历史配置项
+   * 撤销/重做历史配置项
    */
   export interface UndoRedoHistoryConfig {
     /**
@@ -3568,7 +3568,7 @@ export interface VxeTableProps<D = any> {
    */
   editRules?: VxeTablePropTypes.EditRules<D>
   /**
-   * 撤销/恢复历史配置项
+   * 撤销/重做历史配置项
    */
   undoRedoHistoryConfig?: VxeTablePropTypes.UndoRedoHistoryConfig
   /**
@@ -5978,6 +5978,10 @@ export namespace VxeTableDefines {
     editActiveInfo?: {
       rowid: string
       colid: string
+    }
+    scrollInfo: {
+      top: number
+      left: number
     }
     visibleData: D[]
     visibleColumn: VxeTableDefines.ColumnInfo<D>[]

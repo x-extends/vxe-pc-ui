@@ -27,13 +27,15 @@ export const DynamicApp = Vue.extend({
   },
   methods: {
     renderVN (h: CreateElement) {
+      const $xeDynamicApp = this
+
       const VxeUIModalComponent = VxeUI.getComponent('vxe-modal')
       const VxeUIDrawerComponent = VxeUI.getComponent('vxe-drawer')
       const VxeUILoadingComponent = VxeUI.getComponent('vxe-loading')
       const VxeUIWatermarkComponent = VxeUI.getComponent('vxe-watermark')
       const VxeUIContextMenuComponent = VxeUI.getComponent('vxe-context-menu')
 
-      const { modals, drawers, globalLoading, globalWatermark, globalContextMenu } = this
+      const { modals, drawers, globalLoading, globalWatermark, globalContextMenu } = $xeDynamicApp
       let cmOns: {
         show: any
         hide: any
@@ -74,7 +76,7 @@ export const DynamicApp = Vue.extend({
             props: item.props,
             on: item.on
           })))
-          : renderEmptyElement(this),
+          : renderEmptyElement($xeDynamicApp),
         drawers.length
           ? h('div', {
             key: 2,
@@ -84,26 +86,26 @@ export const DynamicApp = Vue.extend({
             props: item.props,
             on: item.on
           })))
-          : renderEmptyElement(this),
+          : renderEmptyElement($xeDynamicApp),
         globalWatermark
           ? h(VxeUIWatermarkComponent, {
             key: 'gw',
             props: globalWatermark
           })
-          : renderEmptyElement(this),
+          : renderEmptyElement($xeDynamicApp),
         globalLoading
           ? h(VxeUILoadingComponent, {
             key: 'gl',
             props: globalLoading
           })
-          : renderEmptyElement(this),
+          : renderEmptyElement($xeDynamicApp),
         globalContextMenu
           ? h(VxeUIContextMenuComponent, {
             key: 'cm',
             props: globalContextMenu,
             on: cmOns
           })
-          : renderEmptyElement(this)
+          : renderEmptyElement($xeDynamicApp)
       ])
     }
   },
