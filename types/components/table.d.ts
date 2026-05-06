@@ -5947,6 +5947,10 @@ export namespace VxeTableDefines {
       rowid: string
       colid: string
     }
+    scrollInfo: {
+      top: number
+      left: number
+    }
     visibleData: D[]
     visibleColumn: VxeTableDefines.ColumnInfo<D>[]
   }
