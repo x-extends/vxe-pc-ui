@@ -512,6 +512,12 @@ export namespace VxeGanttPropTypes {
       row: D
       startDate: Date
       endDate: Date
+      linkInfo: {
+        toLinks: VxeGanttPropTypes.Link[]
+        fromLinks: VxeGanttPropTypes.Link[]
+        toRows: D[]
+        fromRows: D[]
+      }
     }): boolean
     /**
      * 拖拽移动任务日期结束时的方法，该方法的返回值用来决定是否允许被拖拽移动到指定日期
@@ -523,6 +529,13 @@ export namespace VxeGanttPropTypes {
       endDate: Date
       targetStartDate: Date
       targetEndDate: Date
+      offsetSize: number
+      linkInfo: {
+        toLinks: VxeGanttPropTypes.Link[]
+        fromLinks: VxeGanttPropTypes.Link[]
+        toRows: D[]
+        fromRows: D[]
+      }
     }): Promise<boolean> | boolean
     /**
      * 自定义拖拽结束时任务日期被赋值的方法
@@ -536,6 +549,13 @@ export namespace VxeGanttPropTypes {
       targetEndDate: Date
       startValue: any
       endValue: any
+      offsetSize: number
+      linkInfo: {
+        toLinks: VxeGanttPropTypes.Link[]
+        fromLinks: VxeGanttPropTypes.Link[]
+        toRows: D[]
+        fromRows: D[]
+      }
     }): void
   }
 }
@@ -624,7 +644,7 @@ export interface GanttReactData<D = any> extends GridReactData<D> {
 
 export interface GanttInternalData extends GridInternalData {
   linkFromConfMaps: Record<string, VxeGanttDefines.LinkConfObj[]>
-  linkFromKeyMaps: Record<string, VxeGanttDefines.LinkConfObj>
+  linkToConfMaps: Record<string, VxeGanttDefines.LinkConfObj[]>
   linkUniqueMaps: Record<string, VxeGanttDefines.LinkConfObj>
   resizeTableWidth: number
   barTipTimeout?: any

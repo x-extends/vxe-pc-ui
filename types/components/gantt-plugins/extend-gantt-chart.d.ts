@@ -26,6 +26,15 @@ export interface VxeGanttExtendChartMethods<D = any> {
    * 移除任务依赖线
    */
   removeTaskLink(fromOrLink: string | number | Partial<VxeGanttPropTypes.Link> | Partial<VxeGanttPropTypes.Link>[]): Promise<{ links: VxeGanttDefines.LinkConfObj<D>[] }>
+  /**
+   * 获取该任务已关联依赖线的任务关系信息
+   */
+  getTaskLinkInfo (rowOrRowid: any): {
+    toLinks: VxeGanttPropTypes.Link[]
+    fromLinks: VxeGanttPropTypes.Link[]
+    toRows: D[]
+    fromRows: D[]
+  }
 }
 
 export interface VxeGanttExtendChartPrivateMethods<D = any> {
