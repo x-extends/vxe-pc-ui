@@ -503,12 +503,7 @@ export namespace VxeGanttPropTypes {
       row: D
       startDate: Date
       endDate: Date
-      linkInfo: {
-        toLinks: VxeGanttPropTypes.Link[]
-        fromLinks: VxeGanttPropTypes.Link[]
-        toRows: D[]
-        fromRows: D[]
-      }
+      linkInfo: VxeGanttDefines.LinkInfoObj<D>
     }): boolean
     /**
      * 拖拽移动任务日期结束时的方法，该方法的返回值用来决定是否允许被拖拽移动到指定日期
@@ -521,12 +516,7 @@ export namespace VxeGanttPropTypes {
       targetStartDate: Date
       targetEndDate: Date
       offsetSize: number
-      linkInfo: {
-        toLinks: VxeGanttPropTypes.Link[]
-        fromLinks: VxeGanttPropTypes.Link[]
-        toRows: D[]
-        fromRows: D[]
-      }
+      linkInfo: VxeGanttDefines.LinkInfoObj<D>
     }): Promise<boolean> | boolean
     /**
      * 自定义拖拽结束时任务日期被赋值的方法
@@ -541,12 +531,7 @@ export namespace VxeGanttPropTypes {
       startValue: any
       endValue: any
       offsetSize: number
-      linkInfo: {
-        toLinks: VxeGanttPropTypes.Link[]
-        fromLinks: VxeGanttPropTypes.Link[]
-        toRows: D[]
-        fromRows: D[]
-      }
+      linkInfo: VxeGanttDefines.LinkInfoObj<D>
     }): void
   }
 }
@@ -842,6 +827,34 @@ export namespace VxeGanttDefines {
      * 显示箭头
      */
     showArrow?: boolean
+  }
+
+  export interface LinkInfoObj<D = any> {
+    row: D
+    rowLinks: VxeGanttPropTypes.Link[]
+    allLinks: VxeGanttPropTypes.Link[]
+    allRows: D[]
+
+    /**
+     * 已废弃
+     * @deprecated
+     */
+    toLinks: VxeGanttPropTypes.Link[]
+    /**
+     * 已废弃
+     * @deprecated
+     */
+    fromLinks: VxeGanttPropTypes.Link[]
+    /**
+     * 已废弃
+     * @deprecated
+     */
+    toRows: D[]
+    /**
+     * 已废弃
+     * @deprecated
+     */
+    fromRows: D[]
   }
 
   export interface BarStyleConfig {
