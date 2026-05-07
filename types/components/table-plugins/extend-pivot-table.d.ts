@@ -9,14 +9,17 @@ export interface VxeTableExtendPivotTableMethods<D = any> {
 
 export interface VxeTableExtendPivotTablePrivateMethods<D = any> {
   /**
+   * 内部方法
    * @private
    */
   getPivotTableAggregateRenderColTitles(column: VxeTableDefines.ColumnInfo, titleVN: VNode): VNode[]
   /**
+   * 内部方法
    * @private
    */
   handlePivotTableAggregateData(aggList: VxeTableDefines.AggregateRowInfo[]): void
   /**
+   * 内部方法
    * @private
    */
   getPivotTableAggregateCellAggValue(params: {
@@ -31,12 +34,14 @@ export interface VxeTableExtendPivotTablePrivateMethods<D = any> {
     customStore: VxeTableDefines.VxeTableCustomStoreObj
   }, object>
   /**
+   * 内部方法
    * @private
    */
   getPivotTableAggregatePopupPanel(): DefineVxeComponentOptions<{
     customStore: VxeTableDefines.VxeTableCustomStoreObj
   }, object>
   /**
+   * 内部方法
    * @private
    */
   handlePivotTableAggregatePanelDragendEvent(evnt: DragEvent): void
