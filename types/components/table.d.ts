@@ -1063,6 +1063,18 @@ export namespace VxeTablePropTypes {
      * 当拖拽数据分组或聚合列时，自动更新列可视状态
      */
     autoAggGroupValues?: boolean
+    /**
+     * 显示排序拖拽按钮
+     */
+    showSortDragButton?: boolean
+    /**
+     * 显示上移/下移排序按钮
+     */
+    showSortMoveButton?: boolean
+    /**
+     * 显示置顶/置尾排序按钮
+     */
+    showSortPutButton?: boolean
     showFooter?: boolean
     icon?: string
     resetButtonText?: string
@@ -5220,6 +5232,10 @@ export interface TableMethods<DT = any> {
    */
   redo(): Promise<{status: boolean}>
   /**
+   * 清除历史记录，清除后不可撤销和重做
+   */
+  clearHistory(): Promise<void>
+  /**
    * 已废弃，请使用 connectToolbar
    * @deprecated
    */
@@ -5665,7 +5681,7 @@ export interface TablePrivateMethods<D = any> {
    * 内部方法
    * @private
    */
-  handleClearStack(): void
+  handleClearStack(): Promise<void>
   /**
    * 内部方法
    * @private

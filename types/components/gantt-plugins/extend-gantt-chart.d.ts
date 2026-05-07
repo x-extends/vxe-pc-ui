@@ -39,6 +39,7 @@ export interface VxeGanttExtendChartMethods<D = any> {
 
 export interface VxeGanttExtendChartPrivateMethods<D = any> {
   /**
+   * 内部方法
    * @private
    */
   handleTaskBarMousedownEvent(evnt: MouseEvent, params: {
@@ -47,6 +48,7 @@ export interface VxeGanttExtendChartPrivateMethods<D = any> {
     scaleType: VxeGanttDefines.ColumnScaleType
   }): void
   /**
+   * 内部方法
    * @private
    */
   renderGanttTaskBarContent(h: CreateElement, params: {
@@ -64,50 +66,62 @@ export interface VxeGanttExtendChartPrivateMethods<D = any> {
     rowid: string
   }): VNode[]
   /**
+   * 内部方法
    * @private
    */
   handleTaskBarResizeStartMousedownEvent(evnt: MouseEvent): void
   /**
+   * 内部方法
    * @private
    */
   handleTaskBarResizeEndMousedownEvent(evnt: MouseEvent): void
   /**
+   * 内部方法
    * @private
    */
   handleTaskCreateLinkStartMousedownEvent(evnt: MouseEvent): void
   /**
+   * 内部方法
    * @private
    */
   handleTaskCreateLinkEndMousedownEvent(evnt: MouseEvent): void
   /**
+   * 内部方法
    * @private
    */
   handleTaskCreateLinkPointMouseoverEvent(evnt: MouseEvent): void
   /**
+   * 内部方法
    * @private
    */
   handleTaskCreateLinkPointMouseoutEvent(evnt: MouseEvent): void
   /**
+   * 内部方法
    * @private
    */
   renderGanttTaskChartBefores(h: CreateElement): VNode[]
   /**
+   * 内部方法
    * @private
    */
   renderGanttTaskChartAfters(h: CreateElement): VNode[]
   /**
+   * 内部方法
    * @private
    */
   handleUpdateTaskLinkData(): void
   /**
+   * 内部方法
    * @private
    */
   handleUpdateTaskLinkStyle($xeGanttView: VxeGanttViewConstructor & VxeGanttViewPrivateMethods): void
   /**
+   * 内部方法
    * @private
    */
   handleTableLinks(): void
   /**
+   * 内部方法
    * @private
    */
   handleTaskLoadLinks(links: VxeGanttPropTypes.Links): Promise<void>

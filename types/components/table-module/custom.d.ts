@@ -102,6 +102,7 @@ export interface TableCustomPrivateMethods<D = any> {
   customOpenEvent (evnt: Event): void
   handleUpdateCustomColumn (): void
   handleCustomStyle(): Promise<any>
+  clearDragAnimateStatus(): void
 }
 
 declare module '../grid' {
