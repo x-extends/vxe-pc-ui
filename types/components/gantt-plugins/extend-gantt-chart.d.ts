@@ -29,12 +29,7 @@ export interface VxeGanttExtendChartMethods<D = any> {
   /**
    * 获取该任务已关联依赖线的任务关系信息
    */
-  getTaskLinkInfo (rowOrRowid: any): {
-    toLinks: VxeGanttPropTypes.Link[]
-    fromLinks: VxeGanttPropTypes.Link[]
-    toRows: D[]
-    fromRows: D[]
-  }
+  getTaskLinkInfo (rowOrRowid: any): VxeGanttDefines.LinkInfoObj<D>
 }
 
 export interface VxeGanttExtendChartPrivateMethods<D = any> {
