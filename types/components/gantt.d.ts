@@ -474,6 +474,7 @@ export namespace VxeGanttPropTypes {
       row: D
       startDate: Date
       endDate: Date
+      linkInfo: VxeGanttDefines.LinkInfoObj<D>
     }): boolean
     /**
      * 拖拽结束时是否允许行拖拽调整任务日期的方法，该方法的返回值用来决定是否允许被拖拽调整日期范围
@@ -486,6 +487,8 @@ export namespace VxeGanttPropTypes {
       endDate: Date
       targetStartDate: Date
       targetEndDate: Date
+      offsetSize: number
+      linkInfo: VxeGanttDefines.LinkInfoObj<D>
     }): Promise<boolean> | boolean
     /**
      * 自定义拖拽结束时赋值的方法
@@ -500,10 +503,16 @@ export namespace VxeGanttPropTypes {
       targetEndDate: Date
       startValue: any
       endValue: any
+      offsetSize: number
+      linkInfo: VxeGanttDefines.LinkInfoObj<D>
     }): void
   }
 
   export interface TaskBarMoveConfig<D = any> {
+    /**
+     * 拖拽移动任务后自动更新依赖线关联任务的日期
+     */
+    isSyncLinkTask?: boolean
     /**
      * 拖拽开始时是否允许行拖拽移动任务日期的方法，该方法的返回值用来决定是否允许被拖拽
      */
