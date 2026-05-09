@@ -189,6 +189,14 @@ export default defineVxeComponent({
       type: String as PropType<VxeTreePropTypes.IconLoaded>,
       default: () => getConfig().tree.iconLoaded
     },
+    rootParentValue: {
+      type: [String, Number] as PropType<VxeTreePropTypes.RootParentValue>,
+      default: () => getConfig().tree.rootParentValue
+    },
+    rootValues: {
+      type: Array as PropType<VxeTreePropTypes.RootValues>,
+      default: () => getConfig().tree.rootValues
+    },
     filterValue: [String, Number] as PropType<VxeTreePropTypes.FilterValue>,
     filterConfig: Object as PropType<VxeTreePropTypes.FilterConfig>,
     size: {
@@ -732,12 +740,20 @@ export default defineVxeComponent({
     const triggerSearchEvent = XEUtils.debounce(() => handleData(true), 350, { trailing: true })
 
     const loadData = (list: any[]) => {
-      const { expandAll, expandNodeKeys, transform } = props
+      const { expandAll, expandNodeKeys, transform, rootParentValue, rootValues } = props
       const { initialized, scrollYStore } = internalData
       const keyField = computeKeyField.value
       const parentField = computeParentField.value
       const childrenField = computeChildrenField.value
-      const fullData = transform ? XEUtils.toArrayTree(list, { key: keyField, parentKey: parentField, mapChildren: childrenField }) : list ? list.slice(0) : []
+      const fullData = transform
+        ? XEUtils.toArrayTree(list, {
+          key: keyField,
+          parentKey: parentField,
+          mapChildren: childrenField,
+          rootParentValue,
+          rootValues
+        })
+        : list ? list.slice(0) : []
       internalData.treeFullData = fullData
       Object.assign(scrollYStore, {
         startIndex: 0,
@@ -2735,6 +2751,20 @@ export default defineVxeComponent({
     })
     watch(hFlag, () => {
       recalculate()
+    })
+
+    const rootConf = ref(0)
+    watch(() => props.rootParentValue, () => {
+      rootConf.value++
+    })
+    watch(() => props.rootValues ? props.rootValues.length : 0, () => {
+      rootConf.value++
+    })
+    watch(() => props.rootValues, () => {
+      rootConf.value++
+    })
+    watch(rootConf, () => {
+      loadData(props.data || [])
     })
 
     onMounted(() => {

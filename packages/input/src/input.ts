@@ -305,7 +305,7 @@ export default defineVxeComponent({
           return 16
         }
       }
-      return maxLen
+      return maxLen as number
     })
 
     const computeIsDateTimeType = computed(() => {
