@@ -649,6 +649,14 @@ export default /* define-vxe-component start */ defineVxeComponent({
       type: String as PropType<VxeTreePropTypes.IconLoaded>,
       default: () => getConfig().tree.iconLoaded
     },
+    rootParentValue: {
+      type: [String, Number] as PropType<VxeTreePropTypes.RootParentValue>,
+      default: () => getConfig().tree.rootParentValue
+    },
+    rootValues: {
+      type: Array as PropType<VxeTreePropTypes.RootValues>,
+      default: () => getConfig().tree.rootValues
+    },
     filterValue: [String, Number] as PropType<VxeTreePropTypes.FilterValue>,
     filterConfig: Object as PropType<VxeTreePropTypes.FilterConfig>,
     size: {
@@ -671,7 +679,10 @@ export default /* define-vxe-component start */ defineVxeComponent({
       xID,
       reactData,
       internalData,
-      crossTreeDragNodeInfo: crossTreeDragNodeGlobal
+      crossTreeDragNodeInfo: crossTreeDragNodeGlobal,
+
+      hFlag: 0,
+      rootConf: 0
     }
   },
   computed: {
@@ -1286,12 +1297,20 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const props = $xeTree
       const internalData = $xeTree.internalData
 
-      const { expandAll, expandNodeKeys, transform } = props
+      const { expandAll, expandNodeKeys, transform, rootParentValue, rootValues } = props
       const { initialized, scrollYStore } = internalData
       const keyField = $xeTree.computeKeyField
       const parentField = $xeTree.computeParentField
       const childrenField = $xeTree.computeChildrenField
-      const fullData = transform ? XEUtils.toArrayTree(list, { key: keyField, parentKey: parentField, mapChildren: childrenField }) : list ? list.slice(0) : []
+      const fullData = transform
+        ? XEUtils.toArrayTree(list, {
+          key: keyField,
+          parentKey: parentField,
+          mapChildren: childrenField,
+          rootParentValue,
+          rootValues
+        })
+        : list ? list.slice(0) : []
       internalData.treeFullData = fullData
       Object.assign(scrollYStore, {
         startIndex: 0,
@@ -3001,20 +3020,43 @@ export default /* define-vxe-component start */ defineVxeComponent({
 
       $xeTree.triggerSearchEvent(new Event('filter'))
     },
+
     height () {
       const $xeTree = this
 
-      $xeTree.recalculate()
+      $xeTree.hFlag++
     },
     minHeight () {
       const $xeTree = this
 
-      $xeTree.recalculate()
+      $xeTree.hFlag++
     },
     maxHeight () {
       const $xeTree = this
 
+      $xeTree.hFlag++
+    },
+    hFlag () {
+      const $xeTree = this
+
       $xeTree.recalculate()
+    },
+
+    rootParentValue () {
+      const $xeTree = this
+
+      $xeTree.rootConf++
+    },
+    rootValues () {
+      const $xeTree = this
+
+      $xeTree.rootConf++
+    },
+    rootConf () {
+      const $xeTree = this
+      const props = $xeTree
+
+      $xeTree.loadData(props.data || [])
     }
   },
   created () {

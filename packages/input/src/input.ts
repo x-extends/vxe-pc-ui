@@ -305,7 +305,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
           return 16
         }
       }
-      return maxLen
+      return maxLen as number
     },
     computeIsDateTimeType () {
       const $xeInput = this

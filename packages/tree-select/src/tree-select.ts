@@ -1029,6 +1029,8 @@ export default /* define-vxe-component start */ defineVxeComponent({
                         loadMethod: treeOpts.loadMethod,
                         toggleMethod: treeOpts.toggleMethod,
                         transform: treeOpts.transform,
+                        rootParentValue: treeOpts.rootParentValue,
+                        rootValues: treeOpts.rootValues,
                         trigger: treeOpts.trigger,
                         showIcon: treeOpts.showIcon,
                         showLine: treeOpts.showLine,
