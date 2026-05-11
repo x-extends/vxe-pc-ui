@@ -2,7 +2,7 @@ import { h, computed, reactive, inject, PropType } from 'vue'
 import { defineVxeComponent } from '../../ui/src/comp'
 import XEUtils from 'xe-utils'
 import { getFuncText } from '../../ui/src/utils'
-import { getConfig, createEvent, useSize } from '../../ui'
+import { getConfig, createEvent, useSize, renderEmptyElement } from '../../ui'
 
 import type { VxeCheckboxButtonPropTypes, VxeCheckboxGroupConstructor, CheckboxButtonReactData, CheckboxButtonPrivateMethods, VxeCheckboxButtonConstructor, VxeCheckboxButtonEmits, VxeCheckboxGroupPrivateMethods, CheckboxButtonMethods, VxeFormConstructor, VxeFormPrivateMethods, VxeFormDefines } from '../../../types'
 
@@ -70,10 +70,11 @@ export default defineVxeComponent({
       const isChecked = computeIsChecked.value
       if (disabled === null) {
         if ($xeCheckboxGroup) {
-          const { computeIsDisabled: computeIsGroupDisabled, computeIsMaximize: computeIsGroupMaximize } = $xeCheckboxGroup.getComputeMaps()
+          const { computeIsDisabled: computeIsGroupDisabled, computeIsReadonly: computeIsGroupReadonly, computeIsMaximize: computeIsGroupMaximize } = $xeCheckboxGroup.getComputeMaps()
           const isGroupDisabled = computeIsGroupDisabled.value
+          const isGroupReadonly = computeIsGroupReadonly.value
           const isGroupMaximize = computeIsGroupMaximize.value
-          return isGroupDisabled || (isGroupMaximize && !isChecked)
+          return isGroupDisabled || isGroupReadonly || (isGroupMaximize && !isChecked)
         }
       }
       return disabled
@@ -111,11 +112,31 @@ export default defineVxeComponent({
     Object.assign($xeCheckboxButton, checkboxButtonMethods, checkboxButtonPrivateMethods)
 
     const renderVN = () => {
-      const { label } = props
+      const { label, content } = props
       const vSize = computeSize.value
       const isDisabled = computeIsDisabled.value
       const isChecked = computeIsChecked.value
+      const defaultSlot = slots.default
 
+      if ($xeCheckboxGroup) {
+        const { computeIsReadonly: computeIsGroupReadonly } = $xeCheckboxGroup.getComputeMaps()
+        const isGroupReadonly = computeIsGroupReadonly.value
+        if (isGroupReadonly) {
+          if (isChecked) {
+            return h('label', {
+              class: ['vxe-checkbox vxe-checkbox--button-view', {
+                [`size--${vSize}`]: vSize,
+                'is--readonly': isGroupReadonly
+              }]
+            }, [
+              h('span', {
+                class: 'vxe-checkbox--label'
+              }, defaultSlot ? defaultSlot({}) : getFuncText(content))
+            ])
+          }
+          return renderEmptyElement($xeCheckboxButton)
+        }
+      }
       return h('label', {
         key: label,
         class: ['vxe-checkbox vxe-checkbox--button', {
@@ -133,7 +154,7 @@ export default defineVxeComponent({
         }),
         h('span', {
           class: 'vxe-checkbox--label'
-        }, slots.default ? slots.default({}) : getFuncText(props.content))
+        }, slots.default ? slots.default({}) : getFuncText(content))
       ])
     }
 

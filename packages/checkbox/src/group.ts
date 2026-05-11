@@ -18,6 +18,10 @@ export default defineVxeComponent({
     modelValue: Array as PropType<VxeCheckboxGroupPropTypes.ModelValue>,
     options: Array as PropType<VxeCheckboxGroupPropTypes.Options>,
     optionProps: Object as PropType<VxeCheckboxGroupPropTypes.OptionProps>,
+    readonly: {
+      type: Boolean as PropType<VxeCheckboxGroupPropTypes.Readonly>,
+      default: null
+    },
     disabled: {
       type: Boolean as PropType<VxeCheckboxGroupPropTypes.Disabled>,
       default: null
@@ -49,11 +53,22 @@ export default defineVxeComponent({
 
     const internalData = createInternalData()
 
+    const computeIsReadonly = computed(() => {
+      const { readonly } = props
+      if (readonly === null) {
+        if ($xeForm) {
+          return $xeForm.props.readonly
+        }
+        return false
+      }
+      return readonly
+    })
+
     const computeIsDisabled = computed(() => {
       const { disabled } = props
       if (disabled === null) {
         if ($xeForm) {
-          return $xeForm.props.readonly || $xeForm.props.disabled
+          return $xeForm.props.disabled
         }
         return false
       }
@@ -93,7 +108,8 @@ export default defineVxeComponent({
 
     const computeMaps: CheckboxGroupPrivateComputed = {
       computeIsMaximize,
-      computeIsDisabled
+      computeIsDisabled,
+      computeIsReadonly
     }
 
     const $xeCheckboxGroup = {
@@ -180,8 +196,13 @@ export default defineVxeComponent({
       const valueField = computeValueField.value as 'value'
       const labelField = computeLabelField.value as 'label'
       const disabledField = computeDisabledField.value as 'disabled'
+      const isReadonly = computeIsReadonly.value
+      const isDisabled = computeIsDisabled.value
       return h('div', {
-        class: 'vxe-checkbox-group'
+        class: ['vxe-checkbox-group', {
+          'is--readonly': isReadonly,
+          'is--disabled': isDisabled
+        }]
       }, defaultSlot
         ? defaultSlot({})
         : (options

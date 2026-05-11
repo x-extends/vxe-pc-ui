@@ -21,6 +21,10 @@ export default defineVxeComponent({
       type: Boolean as PropType<VxeRadioGroupPropTypes.Disabled>,
       default: null
     },
+    readonly: {
+      type: Boolean as PropType<VxeRadioGroupPropTypes.Readonly>,
+      default: null
+    },
     type: String as PropType<VxeRadioGroupPropTypes.Type>,
     options: Array as PropType<VxeRadioGroupPropTypes.Options>,
     optionProps: Object as PropType<VxeRadioGroupPropTypes.OptionProps>,
@@ -54,11 +58,22 @@ export default defineVxeComponent({
 
     const internalData = createInternalData()
 
+    const computeIsReadonly = computed(() => {
+      const { readonly } = props
+      if (readonly === null) {
+        if ($xeForm) {
+          return $xeForm.props.readonly
+        }
+        return false
+      }
+      return readonly
+    })
+
     const computeIsDisabled = computed(() => {
       const { disabled } = props
       if (disabled === null) {
         if ($xeForm) {
-          return $xeForm.props.readonly || $xeForm.props.disabled
+          return $xeForm.props.disabled
         }
         return false
       }
@@ -70,7 +85,8 @@ export default defineVxeComponent({
     })
 
     const computeMaps: RadioGroupPrivateComputed = {
-      computeIsDisabled
+      computeIsDisabled,
+      computeIsReadonly
     }
 
     const $xeRadioGroup = {

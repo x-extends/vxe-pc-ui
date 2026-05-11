@@ -3,6 +3,9 @@
 }
 
 @mixin createCheckboxIcon {
+  & {
+    cursor: pointer;
+  }
   .vxe-checkbox--icon {
     font-size: 1.22em;
   }
@@ -20,7 +23,6 @@
     }
   }
   &:not(.is--disabled) {
-    cursor: pointer;
     &:hover {
       .vxe-checkbox--icon {
         color: var(--vxe-ui-font-primary-color);
@@ -29,6 +31,9 @@
   }
   &.is--hidden {
     cursor: default;
+  }
+  &.is--readonly {
+    cursor: auto;
   }
   &.is--disabled {
     color: var(--vxe-ui-font-disabled-color);
@@ -44,7 +49,9 @@
 }
 
 @mixin createRadioIcon {
-  cursor: pointer;
+  & {
+    cursor: pointer;
+  }
   .vxe-radio--icon {
     font-size: 1.26em;
   }
@@ -62,12 +69,14 @@
     }
   }
   &:not(.is--disabled) {
-    cursor: pointer;
     &:hover {
       .vxe-radio--icon {
         color: var(--vxe-ui-font-primary-color);
       }
     }
+  }
+  &.is--readonly {
+    cursor: auto;
   }
   &.is--disabled {
     color: var(--vxe-ui-font-disabled-color);

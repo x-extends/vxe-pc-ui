@@ -1,7 +1,7 @@
 import { h, ref, Ref, computed, reactive, nextTick, PropType, inject } from 'vue'
 import { defineVxeComponent } from '../../ui/src/comp'
 import XEUtils from 'xe-utils'
-import { getConfig, createEvent, useSize, renderEmptyElement } from '../../ui'
+import { getConfig, getI18n, createEvent, useSize, renderEmptyElement } from '../../ui'
 import { getFuncText } from '../../ui/src/utils'
 
 import type { VxeSwitchPropTypes, VxeSwitchConstructor, VxeSwitchEmits, SwitchInternalData, ValueOf, SwitchReactData, SwitchMethods, VxeFormConstructor, VxeFormPrivateMethods, VxeFormDefines } from '../../../types'
@@ -73,26 +73,26 @@ export default defineVxeComponent({
 
     let switchMethods = {} as SwitchMethods
 
-    const computeIsDisabled = computed(() => {
-      const { disabled } = props
-      if (disabled === null) {
-        if ($xeForm) {
-          return $xeForm.props.readonly || $xeForm.props.disabled
-        }
-        return false
-      }
-      return disabled
-    })
-
     const computeIsReadonly = computed(() => {
       const { readonly } = props
       if (readonly === null) {
         if ($xeForm) {
-          return $xeForm.props.readonly || $xeForm.props.disabled
+          return $xeForm.props.readonly
         }
         return false
       }
       return readonly
+    })
+
+    const computeIsDisabled = computed(() => {
+      const { disabled } = props
+      if (disabled === null) {
+        if ($xeForm) {
+          return $xeForm.props.disabled
+        }
+        return false
+      }
+      return disabled
     })
 
     const computeOnShowLabel = computed(() => {
@@ -177,6 +177,14 @@ export default defineVxeComponent({
       const isDisabled = computeIsDisabled.value
       const isReadonly = computeIsReadonly.value
 
+      if (isReadonly) {
+        return h('div', {
+          class: ['vxe-switch', isChecked ? 'is--on' : 'is--off', {
+            [`size--${vSize}`]: vSize,
+            'is--readonly': isReadonly
+          }]
+        }, isChecked ? (onShowLabel || getI18n('vxe.switch.onText')) : offShowLabel || getI18n('vxe.switch.offText'))
+      }
       return h('div', {
         class: ['vxe-switch', isChecked ? 'is--on' : 'is--off', {
           [`size--${vSize}`]: vSize,
