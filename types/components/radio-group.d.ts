@@ -34,6 +34,7 @@ export namespace VxeRadioGroupPropTypes {
   export type ModelValue = any
   export type Strict = boolean
   export type Disabled = boolean
+  export type Readonly = boolean
   export interface DefaultConfig {
     /**
      * 默认选择模式，默认选中行为只会在初始化时触发一次
@@ -53,11 +54,13 @@ export interface VxeRadioGroupProps {
   strict?: VxeRadioGroupPropTypes.Strict
   value?: VxeRadioGroupPropTypes.ModelValue
   disabled?: VxeRadioGroupPropTypes.Disabled
+  readonly?: VxeRadioGroupPropTypes.Readonly
   defaultConfig?: VxeRadioGroupPropTypes.DefaultConfig
 }
 
 export interface RadioGroupPrivateComputed {
   computeIsDisabled: boolean | undefined
+  computeIsReadonly: boolean | undefined
 }
 export interface VxeRadioGroupPrivateComputed extends RadioGroupPrivateComputed { }
 

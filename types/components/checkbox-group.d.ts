@@ -32,6 +32,7 @@ export namespace VxeCheckboxGroupPropTypes {
   }
   export type Max = string | number
   export type Disabled = boolean
+  export type Readonly = boolean
   export interface DefaultConfig {
     /**
      * 默认选择模式，默认选中行为只会在初始化时触发一次
@@ -53,12 +54,14 @@ export interface VxeCheckboxGroupProps {
    * 是否禁用
    */
   disabled?: VxeCheckboxGroupPropTypes.Disabled
+  readonly?: VxeCheckboxGroupPropTypes.Readonly
   defaultConfig?: VxeCheckboxGroupPropTypes.DefaultConfig
 }
 
 export interface CheckboxGroupPrivateComputed {
   computeIsMaximize: boolean
   computeIsDisabled: boolean | undefined
+  computeIsReadonly: boolean | undefined
 }
 export interface VxeCheckboxGroupPrivateComputed extends CheckboxGroupPrivateComputed { }
 

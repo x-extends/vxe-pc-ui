@@ -2,7 +2,7 @@ import { PropType, CreateElement, VNode } from 'vue'
 import { defineVxeComponent } from '../../ui/src/comp'
 import XEUtils from 'xe-utils'
 import { getFuncText } from '../../ui/src/utils'
-import { getConfig, createEvent, globalMixins } from '../../ui'
+import { getConfig, createEvent, globalMixins, renderEmptyElement } from '../../ui'
 
 import type { VxeRadioButtonPropTypes, RadioButtonReactData, RadioGroupPrivateComputed, VxeRadioGroupConstructor, ValueOf, VxeRadioButtonEmits, VxeRadioGroupPrivateMethods, VxeFormConstructor, VxeComponentPermissionInfo, VxeComponentSizeType, VxeFormPrivateMethods, VxeFormDefines } from '../../../types'
 
@@ -75,8 +75,9 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const { disabled } = $xeRadioButton
       if (disabled === null) {
         if ($xeRadioGroup) {
-          const isDisabled = $xeRadioGroup.computeIsDisabled
-          return isDisabled
+          const isGroupDisabled = $xeRadioGroup.computeIsDisabled
+          const isGroupReadonly = $xeRadioGroup.computeIsReadonly
+          return isGroupDisabled || isGroupReadonly
         }
       }
       return disabled
@@ -176,14 +177,34 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const $xeRadioButton = this
       const props = $xeRadioButton
       const slots = $xeRadioButton.$scopedSlots
+      const $xeRadioGroup = $xeRadioButton.$xeRadioGroup
 
-      const { label, checkedValue } = props
+      const { label, content, checkedValue } = props
       const radioValue = XEUtils.isUndefined(checkedValue) ? label : checkedValue
       const vSize = $xeRadioButton.computeSize
       const isDisabled = $xeRadioButton.computeIsDisabled
       const name = $xeRadioButton.computeName
       const isChecked = $xeRadioButton.computeChecked
+      const defaultSlot = slots.default
 
+      if ($xeRadioGroup) {
+        const isGroupReadonly = $xeRadioGroup.computeIsReadonly
+        if (isGroupReadonly) {
+          if (isChecked) {
+            return h('label', {
+              class: ['vxe-radio vxe-radio--button-view', {
+                [`size--${vSize}`]: vSize,
+                'is--readonly': isGroupReadonly
+              }]
+            }, [
+              h('span', {
+                class: 'vxe-checkbox--label'
+              }, defaultSlot ? defaultSlot({}) : getFuncText(content))
+            ])
+          }
+          return renderEmptyElement($xeRadioButton)
+        }
+      }
       return h('label', {
         key: radioValue,
         class: ['vxe-radio vxe-radio--button', {
@@ -211,7 +232,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
         }),
         h('span', {
           class: 'vxe-radio--label'
-        }, slots.default ? slots.default({}) : getFuncText(props.content))
+        }, defaultSlot ? defaultSlot({}) : getFuncText(content))
       ])
     }
   },

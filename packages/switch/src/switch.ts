@@ -1,7 +1,7 @@
 import { PropType, CreateElement, VNode } from 'vue'
 import { defineVxeComponent } from '../../ui/src/comp'
 import XEUtils from 'xe-utils'
-import { getConfig, createEvent, globalMixins, renderEmptyElement } from '../../ui'
+import { getConfig, getI18n, createEvent, globalMixins, renderEmptyElement } from '../../ui'
 import { getFuncText } from '../../ui/src/utils'
 
 import type { VxeSwitchPropTypes, VxeSwitchEmits, VxeFormConstructor, VxeFormPrivateMethods, VxeFormDefines, SwitchReactData, SwitchInternalData, VxeComponentPermissionInfo, VxeComponentSizeType, ValueOf } from '../../../types'
@@ -71,20 +71,6 @@ export default /* define-vxe-component start */ defineVxeComponent({
       $xeForm(): (VxeFormConstructor & VxeFormPrivateMethods) | null
       formItemInfo(): VxeFormDefines.ProvideItemInfo | null
     }),
-    computeIsDisabled () {
-      const $xeSwitch = this
-      const props = $xeSwitch
-      const $xeForm = $xeSwitch.$xeForm
-
-      const { disabled } = props
-      if (disabled === null) {
-        if ($xeForm) {
-          return $xeForm.readonly || $xeForm.disabled
-        }
-        return false
-      }
-      return disabled
-    },
     computeIsReadonly () {
       const $xeSwitch = this
       const props = $xeSwitch
@@ -93,11 +79,25 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const { readonly } = props
       if (readonly === null) {
         if ($xeForm) {
-          return $xeForm.readonly || $xeForm.disabled
+          return $xeForm.readonly
         }
         return false
       }
       return readonly
+    },
+    computeIsDisabled () {
+      const $xeSwitch = this
+      const props = $xeSwitch
+      const $xeForm = $xeSwitch.$xeForm
+
+      const { disabled } = props
+      if (disabled === null) {
+        if ($xeForm) {
+          return $xeForm.disabled
+        }
+        return false
+      }
+      return disabled
     },
     computeOnShowLabel () {
       const $xeSwitch = this
@@ -219,6 +219,14 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const isDisabled = $xeSwitch.computeIsDisabled
       const isReadonly = $xeSwitch.computeIsReadonly
 
+      if (isReadonly) {
+        return h('div', {
+          class: ['vxe-switch', isChecked ? 'is--on' : 'is--off', {
+            [`size--${vSize}`]: vSize,
+            'is--readonly': isReadonly
+          }]
+        }, isChecked ? (onShowLabel || getI18n('vxe.switch.onText')) : offShowLabel || getI18n('vxe.switch.offText'))
+      }
       return h('div', {
         class: ['vxe-switch', isChecked ? 'is--on' : 'is--off', {
           [`size--${vSize}`]: vSize,

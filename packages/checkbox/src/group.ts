@@ -21,6 +21,10 @@ export default /* define-vxe-component start */ defineVxeComponent({
     value: Array as PropType<VxeCheckboxGroupPropTypes.ModelValue>,
     options: Array as PropType<VxeCheckboxGroupPropTypes.Options>,
     optionProps: Object as PropType<VxeCheckboxGroupPropTypes.OptionProps>,
+    readonly: {
+      type: Boolean as PropType<VxeCheckboxGroupPropTypes.Readonly>,
+      default: null
+    },
     disabled: {
       type: Boolean as PropType<VxeCheckboxGroupPropTypes.Disabled>,
       default: null
@@ -66,6 +70,20 @@ export default /* define-vxe-component start */ defineVxeComponent({
       $xeForm(): (VxeFormConstructor & VxeFormPrivateMethods) | null
       formItemInfo(): VxeFormDefines.ProvideItemInfo | null
     }),
+    computeIsReadonly () {
+      const $xeCheckboxGroup = this
+      const props = $xeCheckboxGroup
+      const $xeForm = $xeCheckboxGroup.$xeForm
+
+      const { readonly } = props
+      if (readonly === null) {
+        if ($xeForm) {
+          return $xeForm.readonly
+        }
+        return false
+      }
+      return readonly
+    },
     computeIsDisabled () {
       const $xeCheckboxGroup = this
       const props = $xeCheckboxGroup
@@ -74,7 +92,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const { disabled } = props
       if (disabled === null) {
         if ($xeForm) {
-          return $xeForm.readonly || $xeForm.disabled
+          return $xeForm.disabled
         }
         return false
       }
@@ -217,8 +235,13 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const valueField = $xeCheckboxGroup.computeValueField as 'value'
       const labelField = $xeCheckboxGroup.computeLabelField as 'label'
       const disabledField = $xeCheckboxGroup.computeDisabledField as 'disabled'
+      const isReadonly = $xeCheckboxGroup.computeIsReadonly
+      const isDisabled = $xeCheckboxGroup.computeIsDisabled
       return h('div', {
-        class: 'vxe-checkbox-group'
+        class: ['vxe-checkbox-group', {
+          'is--readonly': isReadonly,
+          'is--disabled': isDisabled
+        }]
       }, defaultSlot
         ? defaultSlot({})
         : (options

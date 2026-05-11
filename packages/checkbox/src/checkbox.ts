@@ -2,7 +2,7 @@ import { PropType, CreateElement, VNode } from 'vue'
 import { defineVxeComponent } from '../../ui/src/comp'
 import XEUtils from 'xe-utils'
 import { getFuncText } from '../../ui/src/utils'
-import { getConfig, createEvent, globalMixins, getIcon } from '../../ui'
+import { getConfig, createEvent, globalMixins, getIcon, renderEmptyElement } from '../../ui'
 
 import type { VxeCheckboxGroupConstructor, VxeCheckboxEmits, ValueOf, CheckboxReactData, VxeComponentSizeType, VxeCheckboxGroupPrivateMethods, VxeCheckboxPropTypes, VxeFormConstructor, VxeFormPrivateMethods, VxeFormDefines } from '../../../types'
 
@@ -84,8 +84,9 @@ export default /* define-vxe-component start */ defineVxeComponent({
       if (disabled === null) {
         if ($xeCheckboxGroup) {
           const isGroupDisabled = $xeCheckboxGroup.computeIsDisabled
+          const isGroupReadonly = $xeCheckboxGroup.computeIsReadonly
           const isGroupMaximize = $xeCheckboxGroup.computeIsMaximize
-          return isGroupDisabled || (isGroupMaximize && !isChecked)
+          return isGroupDisabled || isGroupReadonly || (isGroupMaximize && !isChecked)
         }
       }
       return disabled
@@ -143,12 +144,33 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const $xeCheckbox = this
       const props = $xeCheckbox
       const slots = $xeCheckbox.$scopedSlots
+      const $xeCheckboxGroup = $xeCheckbox.$xeCheckboxGroup
 
-      const { label } = props
+      const { label, content } = props
       const vSize = $xeCheckbox.computeSize
       const isDisabled = $xeCheckbox.computeIsDisabled
       const isChecked = $xeCheckbox.computeIsChecked
       const indeterminate = !isChecked && props.indeterminate
+      const defaultSlot = slots.default
+
+      if ($xeCheckboxGroup) {
+        const isGroupReadonly = $xeCheckboxGroup.computeIsReadonly
+        if (isGroupReadonly) {
+          if (isChecked) {
+            return h('label', {
+              class: ['vxe-checkbox vxe-checkbox--view', {
+                [`size--${vSize}`]: vSize,
+                'is--readonly': isGroupReadonly
+              }]
+            }, [
+              h('span', {
+                class: 'vxe-checkbox--label'
+              }, defaultSlot ? defaultSlot({}) : getFuncText(content))
+            ])
+          }
+          return renderEmptyElement($xeCheckbox)
+        }
+      }
       return h('label', {
         key: label,
         class: ['vxe-checkbox vxe-checkbox--default', {
@@ -179,7 +201,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
         }),
         h('span', {
           class: 'vxe-checkbox--label'
-        }, slots.default ? slots.default({}) : getFuncText(props.content))
+        }, defaultSlot ? defaultSlot({}) : getFuncText(content))
       ])
     }
   },

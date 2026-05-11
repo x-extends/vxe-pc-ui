@@ -25,6 +25,10 @@ export default /* define-vxe-component start */ defineVxeComponent({
       type: Boolean as PropType<VxeRadioGroupPropTypes.Disabled>,
       default: null
     },
+    readonly: {
+      type: Boolean as PropType<VxeRadioGroupPropTypes.Readonly>,
+      default: null
+    },
     type: String as PropType<VxeRadioGroupPropTypes.Type>,
     options: Array as PropType<VxeRadioGroupPropTypes.Options>,
     optionProps: Object as PropType<VxeRadioGroupPropTypes.OptionProps>,
@@ -71,6 +75,20 @@ export default /* define-vxe-component start */ defineVxeComponent({
       $xeForm(): (VxeFormConstructor & VxeFormPrivateMethods) | null
       formItemInfo(): VxeFormDefines.ProvideItemInfo | null
     }),
+    computeIsReadonly () {
+      const $xeRadioGroup = this
+      const props = $xeRadioGroup
+      const $xeForm = $xeRadioGroup.$xeForm
+
+      const { readonly } = props
+      if (readonly === null) {
+        if ($xeForm) {
+          return $xeForm.readonly
+        }
+        return false
+      }
+      return readonly
+    },
     computeIsDisabled () {
       const $xeRadioGroup = this
       const props = $xeRadioGroup
@@ -79,7 +97,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const { disabled } = props
       if (disabled === null) {
         if ($xeForm) {
-          return $xeForm.readonly || $xeForm.disabled
+          return $xeForm.disabled
         }
         return false
       }
