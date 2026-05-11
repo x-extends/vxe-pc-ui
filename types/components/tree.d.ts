@@ -50,6 +50,8 @@ export namespace VxeTreePropTypes {
   export type HasChildField = string
   export type MapChildrenField = string
   export type Transform = boolean
+  export type RootParentValue = string | number | null
+  export type RootValues = (string | number)[]
   export type Trigger = '' | 'default' | 'node'
   /**
    * 已废弃，请使用 nodeConfig.isCurrent
@@ -294,6 +296,14 @@ export interface VxeTreeProps<D = any> {
    */
   expandNodeKeys?: VxeTreePropTypes.ExpandNodeKeys
   transform?: VxeTreePropTypes.Transform
+  /**
+   * 用于 transform 模式，指定根节点的父级节点值
+   */
+  rootParentValue?: VxeTreePropTypes.RootParentValue
+  /**
+   * 用于 transform 模式，指定根节点的值
+   */
+  rootValues?: VxeTreePropTypes.RootValues
   trigger?: VxeTreePropTypes.Trigger
   /**
    * 已废弃，请使用 nodeConfig.isCurrent
