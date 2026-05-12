@@ -5967,7 +5967,10 @@ export namespace VxeTableDefines {
       top: number
       left: number
     }
+    insertData: D[]
+    removeData: D[]
     visibleData: D[]
+    visibleTreeData: D[]
     visibleColumn: VxeTableDefines.ColumnInfo<D>[]
   }
 
