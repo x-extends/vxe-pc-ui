@@ -803,6 +803,8 @@ export default /* define-vxe-component start */ defineVxeComponent({
 
       const { indent } = props
       const { customHeight, customMinHeight, customMaxHeight } = reactData
+      const checkboxOpts = $xeTree.computeCheckboxOpts
+      const { nodeStyle } = checkboxOpts
       const stys: Record<string, string> = {}
       if (customHeight) {
         stys.height = toCssUnit(customHeight)
@@ -815,6 +817,15 @@ export default /* define-vxe-component start */ defineVxeComponent({
       }
       if (indent) {
         stys['--vxe-ui-tree-node-indent'] = toCssUnit(indent)
+      }
+      if (nodeStyle) {
+        const { indeterminateColor, checkedColor } = nodeStyle
+        if (indeterminateColor) {
+          stys['--vxe-ui-tree-node-checkbox-indeterminate-color'] = indeterminateColor
+        }
+        if (checkedColor) {
+          stys['--vxe-ui-tree-node-checkbox-checked-color'] = checkedColor
+        }
       }
       return stys
     },
@@ -2654,14 +2665,13 @@ export default /* define-vxe-component start */ defineVxeComponent({
       }
       return renderEmptyElement($xeTree)
     },
-    renderCheckbox  (h: CreateElement, node: any, nodeid: string, isChecked: boolean) {
+    renderCheckbox  (h: CreateElement, node: any, nodeid: string, isChecked: boolean, isIndeterminate: boolean) {
       const $xeTree = this
       const props = $xeTree
 
       const { showCheckbox } = props
       const checkboxOpts = $xeTree.computeCheckboxOpts
       const { showIcon, checkMethod, visibleMethod } = checkboxOpts
-      const isIndeterminate = $xeTree.isIndeterminateByCheckboxNodeid(nodeid)
       const isVisible = !visibleMethod || visibleMethod({ $tree: $xeTree, node })
       let isDisabled = !!checkMethod
       if (showCheckbox && showIcon && isVisible) {
@@ -2718,8 +2728,10 @@ export default /* define-vxe-component start */ defineVxeComponent({
       }
 
       let isCheckboxChecked = false
+      let isIndeterminate = false
       if (showCheckbox) {
         isCheckboxChecked = $xeTree.isCheckedByCheckboxNodeId(nodeid)
+        isIndeterminate = $xeTree.isIndeterminateByCheckboxNodeid(nodeid)
       }
 
       let hasLazyChilds = false
@@ -2775,7 +2787,8 @@ export default /* define-vxe-component start */ defineVxeComponent({
           class: ['vxe-tree--node-item', {
             'is--current': currentNode && nodeid === $xeTree.getNodeId(currentNode),
             'is-radio--checked': isRadioChecked,
-            'is-checkbox--checked': isCheckboxChecked
+            'is-checkbox--checked': isCheckboxChecked,
+            'is-checkbox--indeterminate': isIndeterminate
           }]
         }, [
           showLine
@@ -2812,7 +2825,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
             : []),
           $xeTree.renderDragIcon(h, node, nodeid),
           $xeTree.renderRadio(h, node, nodeid, isRadioChecked),
-          $xeTree.renderCheckbox(h, node, nodeid, isCheckboxChecked),
+          $xeTree.renderCheckbox(h, node, nodeid, isCheckboxChecked, isIndeterminate),
           h('div', {
             class: 'vxe-tree--node-item-inner'
           }, [

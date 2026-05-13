@@ -551,6 +551,11 @@ export default /* define-vxe-component start */ defineVxeComponent({
     clearEvent (params: any, evnt: Event) {
       const $xeTableSelect = this
 
+      const $grid = $xeTableSelect.$refs.refGrid as VxeGridInstance
+      if ($grid) {
+        $grid.clearRadioRow()
+        $grid.clearCheckboxRow()
+      }
       $xeTableSelect.clearValueEvent(evnt, null)
       $xeTableSelect.hideOptionPanel()
     },
