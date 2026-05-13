@@ -327,6 +327,8 @@ export default defineVxeComponent({
     const computeTreeStyle = computed(() => {
       const { indent } = props
       const { customHeight, customMinHeight, customMaxHeight } = reactData
+      const checkboxOpts = computeCheckboxOpts.value
+      const { nodeStyle } = checkboxOpts
       const stys: VxeComponentStyleType = {}
       if (customHeight) {
         stys.height = toCssUnit(customHeight)
@@ -339,6 +341,15 @@ export default defineVxeComponent({
       }
       if (indent) {
         stys['--vxe-ui-tree-node-indent'] = toCssUnit(indent)
+      }
+      if (nodeStyle) {
+        const { indeterminateColor, checkedColor } = nodeStyle
+        if (indeterminateColor) {
+          stys['--vxe-ui-tree-node-checkbox-indeterminate-color'] = indeterminateColor
+        }
+        if (checkedColor) {
+          stys['--vxe-ui-tree-node-checkbox-checked-color'] = checkedColor
+        }
       }
       return stys
     })
@@ -2395,11 +2406,10 @@ export default defineVxeComponent({
       return renderEmptyElement($xeTree)
     }
 
-    const renderCheckbox = (node: any, nodeid: string, isChecked: boolean) => {
+    const renderCheckbox = (node: any, nodeid: string, isChecked: boolean, isIndeterminate: boolean) => {
       const { showCheckbox } = props
       const checkboxOpts = computeCheckboxOpts.value
       const { showIcon, checkMethod, visibleMethod } = checkboxOpts
-      const isIndeterminate = isIndeterminateByCheckboxNodeid(nodeid)
       const isVisible = !visibleMethod || visibleMethod({ $tree: $xeTree, node })
       let isDisabled = !!checkMethod
       if (showCheckbox && showIcon && isVisible) {
@@ -2449,8 +2459,10 @@ export default defineVxeComponent({
       }
 
       let isCheckboxChecked = false
+      let isIndeterminate = false
       if (showCheckbox) {
         isCheckboxChecked = isCheckedByCheckboxNodeId(nodeid)
+        isIndeterminate = isIndeterminateByCheckboxNodeid(nodeid)
       }
 
       let hasLazyChilds = false
@@ -2504,7 +2516,8 @@ export default defineVxeComponent({
           class: ['vxe-tree--node-item', {
             'is--current': currentNode && nodeid === getNodeId(currentNode),
             'is-radio--checked': isRadioChecked,
-            'is-checkbox--checked': isCheckboxChecked
+            'is-checkbox--checked': isCheckboxChecked,
+            'is-checkbox--indeterminate': isIndeterminate
           }]
         }, [
           showLine
@@ -2539,7 +2552,7 @@ export default defineVxeComponent({
             : []),
           renderDragIcon(node, nodeid),
           renderRadio(node, nodeid, isRadioChecked),
-          renderCheckbox(node, nodeid, isCheckboxChecked),
+          renderCheckbox(node, nodeid, isCheckboxChecked, isIndeterminate),
           h('div', {
             class: 'vxe-tree--node-item-inner'
           }, [

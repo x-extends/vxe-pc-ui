@@ -504,6 +504,11 @@ export default defineVxeComponent({
     }
 
     const clearEvent = (params: any, evnt: Event) => {
+      const $grid = refGrid.value
+      if ($grid) {
+        $grid.clearRadioRow()
+        $grid.clearCheckboxRow()
+      }
       clearValueEvent(evnt, null)
       hideOptionPanel()
     }

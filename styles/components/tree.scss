@@ -224,6 +224,16 @@
   flex-direction: row;
   height: var(--vxe-ui-tree-node-height);
   line-height: var(--vxe-ui-tree-node-height);
+  &.is-checkbox--indeterminate {
+    & > .vxe-tree--node-item-inner {
+      color: var(--vxe-ui-tree-node-checkbox-indeterminate-color);
+    }
+  }
+  &.is-checkbox--checked {
+    & > .vxe-tree--node-item-inner {
+      color: var(--vxe-ui-tree-node-checkbox-checked-color);
+    }
+  }
 }
 .vxe-tree--node-item-switcher {
   position: relative;

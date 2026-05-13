@@ -99,6 +99,10 @@ export namespace VxeTreePropTypes {
     }) => boolean
     showIcon?: boolean
     trigger?: '' | 'default' | 'node'
+    nodeStyle?: {
+      indeterminateColor?: string
+      checkedColor?: string
+    }
   }
   export interface NodeConfig<D = any> {
     isHover?: boolean
