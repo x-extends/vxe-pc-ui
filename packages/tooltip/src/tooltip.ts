@@ -514,7 +514,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
         contVNs.push(
           h('div', {
             key: 'ch',
-            props: {
+            domProps: {
               innerHTML: tipContent
             }
           })

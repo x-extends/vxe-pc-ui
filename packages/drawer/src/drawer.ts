@@ -572,7 +572,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
             ? h('div', {
               key: 'hc',
               class: 'vxe-drawer--content',
-              props: {
+              domProps: {
                 innerHTML: getFuncText(content)
               }
             })

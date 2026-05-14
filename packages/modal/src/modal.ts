@@ -1445,7 +1445,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
           ? h('div', {
             key: 'hc',
             class: 'vxe-modal--content',
-            props: {
+            domProps: {
               innerHTML: getFuncText(content)
             }
           })
