@@ -436,7 +436,7 @@ export namespace VxeGanttPropTypes {
     minHeight?: VxeTooltipPropTypes.MinHeight
     maxWidth?: VxeTooltipPropTypes.MaxWidth
     maxHeight?: VxeTooltipPropTypes.MaxHeight
-    useHTML?: VxeTooltipPropTypes.UseHTML
+    useHtml?: VxeTooltipPropTypes.UseHtml
     contentMethod?(params: {
       $gantt: VxeGanttConstructor<D>
       scaleType: VxeGanttDefines.ColumnScaleType
@@ -445,6 +445,11 @@ export namespace VxeGanttPropTypes {
       $rowIndex: number
       _rowIndex: number
     }): string | null | void
+    /**
+     * 已废弃，请使用 useHtml
+     * @deprecated
+     */
+    useHTML?: VxeTooltipPropTypes.UseHTML
   }
 
   export interface TaskBarResizeConfig<D = any> {

@@ -50,6 +50,7 @@ export namespace VxeModalPropTypes {
   export type Title = string | number
   export type Duration = number | string
   export type Content = number | string | null
+  export type UseHtml = boolean
   /**
    * 请使用 content
    * @deprecated
@@ -130,6 +131,7 @@ export interface VxeModalProps {
   title?: VxeModalPropTypes.Title
   duration?: VxeModalPropTypes.Duration
   content?: VxeModalPropTypes.Content
+  useHtml?: VxeModalPropTypes.UseHtml
   showCancelButton?: VxeModalPropTypes.ShowCancelButton
   cancelButtonText?: VxeModalPropTypes.CancelButtonText
   showConfirmButton?: VxeModalPropTypes.ShowConfirmButton

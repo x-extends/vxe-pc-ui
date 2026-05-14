@@ -23,7 +23,7 @@ export namespace VxeTooltipPropTypes {
   export type Trigger = 'hover' | 'click' | 'manual' | '' | null
   export type Theme = '' | 'light' | 'dark'
   export type Content = string | number
-  export type UseHTML = boolean
+  export type UseHtml = boolean
   export type ZIndex = string | number
   export type PopupClassName = string | ((params: { $tooltip: VxeTooltipConstructor }) => string)
   export type Width = string | number
@@ -39,6 +39,12 @@ export namespace VxeTooltipPropTypes {
   export type EnterDelay = number
   export type LeaveDelay = number
   export type LeaveMethod = (params: { $event: MouseEvent }) => boolean
+
+  /**
+   * 已废弃，请使用 UseHtml
+   * @deprecated
+   */
+  export type UseHTML = boolean
 }
 
 export interface VxeTooltipProps {
@@ -48,6 +54,11 @@ export interface VxeTooltipProps {
   trigger?: VxeTooltipPropTypes.Trigger
   theme?: VxeTooltipPropTypes.Theme
   content?: VxeTooltipPropTypes.Content
+  useHtml?: VxeTooltipPropTypes.UseHtml
+  /**
+   * 已废弃，请使用 useHtml
+   * @deprecated
+   */
   useHTML?: VxeTooltipPropTypes.UseHTML
   popupClassName?: VxeTooltipPropTypes.PopupClassName
   Width?: VxeTooltipPropTypes.Width
@@ -135,7 +146,7 @@ export namespace VxeTooltipDefines {
   }
 
   export interface TooltipHelperOption {
-    useHTML?: VxeTooltipPropTypes.UseHTML
+    useHtml?: VxeTooltipPropTypes.UseHtml
     content?: VxeTooltipPropTypes.Content
     enterable?: VxeTooltipPropTypes.Enterable
     theme?: VxeTooltipPropTypes.Theme
@@ -147,6 +158,11 @@ export namespace VxeTooltipDefines {
      * @deprecated
      */
     message?: string
+    /**
+     * 已废弃，请使用 useHtml
+     * @deprecated
+     */
+    useHTML?: VxeTooltipPropTypes.UseHTML
   }
 }
 

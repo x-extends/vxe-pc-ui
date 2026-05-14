@@ -70,6 +70,10 @@ export default /* define-vxe-component start */ defineVxeComponent({
       default: () => getConfig().drawer.showClose
     },
     content: [Number, String] as PropType<VxeDrawerPropTypes.Content>,
+    useHtml: {
+      type: Boolean as PropType<VxeDrawerPropTypes.UseHtml>,
+      default: () => getConfig().drawer.useHtml
+    },
     showCancelButton: {
       type: Boolean as PropType<VxeDrawerPropTypes.ShowCancelButton>,
       default: null
@@ -549,7 +553,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const props = $xeDrawer
       const slots = $xeDrawer.$scopedSlots
 
-      const { slots: propSlots = {}, content } = props
+      const { slots: propSlots = {}, content, useHtml } = props
       const defaultSlot = slots.default || propSlots.default
       const leftSlot = slots.left || propSlots.left
       const rightSlot = slots.right || propSlots.right
@@ -564,9 +568,17 @@ export default /* define-vxe-component start */ defineVxeComponent({
         h('div', {
           class: 'vxe-drawer--body-default'
         }, [
-          h('div', {
-            class: 'vxe-drawer--content'
-          }, defaultSlot ? $xeDrawer.callSlot(defaultSlot, { $drawer: $xeDrawer }, h) : getFuncText(content))
+          useHtml && !defaultSlot
+            ? h('div', {
+              key: 'hc',
+              class: 'vxe-drawer--content',
+              props: {
+                innerHTML: getFuncText(content)
+              }
+            })
+            : h('div', {
+              class: 'vxe-drawer--content'
+            }, defaultSlot ? $xeDrawer.callSlot(defaultSlot, { $drawer: $xeDrawer }, h) : getFuncText(content))
         ]),
         rightSlot
           ? h('div', {

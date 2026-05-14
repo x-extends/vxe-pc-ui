@@ -597,7 +597,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
     renderTooltipIcon (h: CreateElement, tipOpts: VxeButtonPropTypes.PrefixTooltip | VxeButtonPropTypes.SuffixTooltip, type: 'prefix' | 'suffix') {
       return h(VxeTooltipComponent, {
         props: {
-          useHTML: tipOpts.useHTML,
+          useHtml: XEUtils.isBoolean(tipOpts.useHtml) ? tipOpts.useHtml : tipOpts.useHTML,
           content: tipOpts.content,
           enterable: tipOpts.enterable,
           theme: tipOpts.theme

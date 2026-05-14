@@ -35,6 +35,7 @@ export namespace VxeDrawerPropTypes {
   export type Position = DrawerPosition
   export type Title = string | number
   export type Content = number | string | null
+  export type UseHtml = boolean
   export type ShowCancelButton = boolean | null
   export type CancelButtonText = string
   export type ShowConfirmButton = boolean | null
@@ -70,6 +71,7 @@ export interface VxeDrawerProps {
   position?: VxeDrawerPropTypes.Position
   title?: VxeDrawerPropTypes.Title
   content?: VxeDrawerPropTypes.Content
+  useHtml?: VxeDrawerPropTypes.UseHtml
   showCancelButton?: VxeDrawerPropTypes.ShowCancelButton
   cancelButtonText?: VxeDrawerPropTypes.CancelButtonText
   showConfirmButton?: VxeDrawerPropTypes.ShowConfirmButton
