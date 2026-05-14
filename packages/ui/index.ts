@@ -137,6 +137,7 @@ setConfig({
   },
   drawer: {
     // size: null,
+    // useHtml: false,
     position: 'right',
     showHeader: true,
     lockView: true,
@@ -237,6 +238,7 @@ setConfig({
     // size: null,
     top: 16,
     showHeader: true,
+    // useHtml: false,
     // width: null,
     // height: null,
     minWidth: 340,

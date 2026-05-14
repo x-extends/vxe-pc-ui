@@ -458,7 +458,7 @@ const VxeButtonComponent = defineVxeComponent({
 
     const renderTooltipIcon = (tipOpts: VxeButtonPropTypes.PrefixTooltip | VxeButtonPropTypes.SuffixTooltip, type: 'prefix' | 'suffix') => {
       return h(VxeTooltipComponent, {
-        useHTML: tipOpts.useHTML,
+        useHtml: XEUtils.isBoolean(tipOpts.useHtml) ? tipOpts.useHtml : tipOpts.useHTML,
         content: tipOpts.content,
         enterable: tipOpts.enterable,
         theme: tipOpts.theme

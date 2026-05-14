@@ -46,6 +46,10 @@ export default defineVxeComponent({
       default: () => getConfig().modal.duration
     },
     content: [Number, String] as PropType<VxeModalPropTypes.Content>,
+    useHtml: {
+      type: Boolean as PropType<VxeModalPropTypes.UseHtml>,
+      default: () => getConfig().modal.useHtml
+    },
     showCancelButton: {
       type: Boolean as PropType<VxeModalPropTypes.ShowCancelButton>,
       default: null
@@ -1259,7 +1263,7 @@ export default defineVxeComponent({
     }
 
     const renderBody = () => {
-      const { slots: propSlots = {}, status, message, iconStatus } = props
+      const { slots: propSlots = {}, status, message, iconStatus, useHtml } = props
       const content = props.content || message
       const isMsg = computeIsMsg.value
       const defaultSlot = slots.default || propSlots.default
@@ -1278,9 +1282,16 @@ export default defineVxeComponent({
         )
       }
       contVNs.push(
-        h('div', {
-          class: 'vxe-modal--content'
-        }, defaultSlot ? getSlotVNs(defaultSlot({ $modal: $xeModal })) : getFuncText(content))
+        useHtml && !defaultSlot
+          ? h('div', {
+            key: 'hc',
+            class: 'vxe-modal--content',
+            innerHTML: getFuncText(content)
+          })
+          : h('div', {
+            key: 'dc',
+            class: 'vxe-modal--content'
+          }, defaultSlot ? getSlotVNs(defaultSlot({ $modal: $xeModal })) : getFuncText(content))
       )
       return h('div', {
         class: 'vxe-modal--body'

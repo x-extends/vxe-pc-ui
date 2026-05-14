@@ -29,7 +29,15 @@ export default defineVxeComponent({
       type: [String, Number] as PropType<VxeTooltipPropTypes.Content>,
       default: null
     },
-    useHTML: Boolean as PropType<VxeTooltipPropTypes.UseHTML>,
+    useHtml: {
+      type: Boolean as PropType<VxeTooltipPropTypes.UseHtml>,
+      default: () => XEUtils.isBoolean(getConfig().tooltip.useHtml) ? getConfig().tooltip.useHtml : null
+    },
+    // 已废弃，请使用 useHtml
+    useHTML: {
+      type: Boolean as PropType<VxeTooltipPropTypes.UseHTML>,
+      default: () => getConfig().tooltip.useHTML
+    },
     zIndex: [String, Number] as PropType<VxeTooltipPropTypes.ZIndex>,
     popupClassName: [String, Function] as PropType<VxeTooltipPropTypes.PopupClassName>,
     width: {
@@ -429,7 +437,7 @@ export default defineVxeComponent({
     Object.assign($xeTooltip, tooltipMethods)
 
     const renderContent = () => {
-      const { useHTML } = props
+      const { useHtml, useHTML } = props
       const { tipContent } = reactData
       const wrapperStyle = computeWrapperStyle.value
       const contentSlot = slots.content
@@ -437,19 +445,19 @@ export default defineVxeComponent({
       if (contentSlot) {
         contVNs.push(
           h('div', {
-            key: 1
+            key: 'ct'
           }, getSlotVNs(contentSlot({})))
         )
-      } else if (useHTML) {
+      } else if (XEUtils.isBoolean(useHtml) ? useHtml : useHTML) {
         contVNs.push(
           h('div', {
-            key: 2,
+            key: 'ch',
             innerHTML: tipContent
           })
         )
       } else {
         contVNs.push(h('span', {
-          key: 3
+          key: 'cd'
         }, `${tipContent}`))
       }
       return h('div', {

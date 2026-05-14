@@ -1504,7 +1504,7 @@ export namespace VxeTablePropTypes {
     minHeight?: VxeTooltipPropTypes.MinHeight
     maxWidth?: VxeTooltipPropTypes.MaxWidth
     maxHeight?: VxeTooltipPropTypes.MaxHeight
-    useHTML?: VxeTooltipPropTypes.UseHTML
+    useHtml?: VxeTooltipPropTypes.UseHtml
     placement?: VxeTooltipPropTypes.Placement
     defaultPlacement?: VxeTooltipPropTypes.DefaultPlacement
     popupClassName?: VxeTooltipPropTypes.PopupClassName
@@ -1523,6 +1523,11 @@ export namespace VxeTablePropTypes {
       cell: HTMLElement
       $event: any
     }): string | null | void
+    /**
+     * 请使用 useHtml
+     * @deprecated
+     */
+    useHTML?: VxeTooltipPropTypes.UseHTML
   }
   export interface HeaderTooltipConfig<D = VxeTablePropTypes.Row> extends Omit<TooltipConfig<D>, 'contentMethod'> {
     contentMethod?(params: {
@@ -3945,6 +3950,11 @@ export interface TableReactData<D = any> {
     visible: boolean,
     type: null | 'header' | 'body' | 'footer'
     currOpts: {
+      useHtml?: VxeTooltipPropTypes.UseHtml
+      /**
+       * 请使用 useHtml
+       * @deprecated
+       */
       useHTML?: VxeTooltipPropTypes.UseHTML
       enterable?: VxeTooltipPropTypes.Enterable
       theme?: VxeTooltipPropTypes.Theme
