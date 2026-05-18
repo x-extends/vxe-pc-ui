@@ -168,7 +168,7 @@ export interface VxeTableExtendCellAreaPrivateMethods<D = any> {
    * 内部方法
    * @private
    */
-  triggerFNROpenEvent(evnt: MouseEvent, tab: 'find' | 'replace'): void
+  triggerFnrOpenEvent(evnt: MouseEvent, tab: 'find' | 'replace'): void
   /**
    * 内部方法
    * @private
