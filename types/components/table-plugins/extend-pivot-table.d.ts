@@ -17,7 +17,7 @@ export interface VxeTableExtendPivotTablePrivateMethods<D = any> {
    * 内部方法
    * @private
    */
-  handlePivotTableAggregateData(aggList: VxeTableDefines.AggregateRowInfo[]): void
+  handlePivotTableAggData(aggList: VxeTableDefines.AggregateRowInfo[]): void
   /**
    * 内部方法
    * @private
