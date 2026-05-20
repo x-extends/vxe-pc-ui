@@ -454,12 +454,13 @@ export default /* define-vxe-component start */ defineVxeComponent({
 
       const { width, height, minWidth, minHeight } = props
       const isMsg = $xeModal.computeIsMsg
+      const isMinimizeStatus = $xeModal.computeIsMinimizeStatus
       const boxElem = $xeModal.getBox()
       if (boxElem) {
         boxElem.style.width = width ? toCssUnit(width) : ''
         boxElem.style.height = height ? toCssUnit(height) : ''
-        boxElem.style.minWidth = !isMsg && minWidth ? toCssUnit(minWidth) : ''
-        boxElem.style.minHeight = !isMsg && minHeight ? toCssUnit(minHeight) : ''
+        boxElem.style.minWidth = !isMsg && !isMinimizeStatus && minWidth ? toCssUnit(minWidth) : ''
+        boxElem.style.minHeight = !isMsg && !isMinimizeStatus && minHeight ? toCssUnit(minHeight) : ''
       }
       return $xeModal.$nextTick()
     },
@@ -802,7 +803,9 @@ export default /* define-vxe-component start */ defineVxeComponent({
           top: `${targetTop}px`,
           left: `${targetLeft}px`,
           width: '200px',
-          height: `${headerEl.offsetHeight}px`
+          height: `${headerEl.offsetHeight}px`,
+          minHeight: '',
+          minWidth: ''
         })
         $xeModal.savePosStorage()
         return {
@@ -837,7 +840,9 @@ export default /* define-vxe-component start */ defineVxeComponent({
             top: '0',
             left: '0',
             width: '100%',
-            height: '100%'
+            height: '100%',
+            minHeight: '',
+            minWidth: ''
           })
         }
         $xeModal.savePosStorage()

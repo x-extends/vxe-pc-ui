@@ -788,6 +788,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
         if (selectVals.length && isAniVisible && visiblePanel) {
           const cacheItem = reactData.reactFlag ? optFullValMaps[`${selectVals[0]}`] : null
           if (cacheItem) {
+            reactData.currentOption = cacheItem.item
             $xeSelect.handleScrollToOption(cacheItem.item)
           }
         }
@@ -803,6 +804,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const { fullData, hpTimeout } = internalData
       const isDisabled = $xeSelect.computeIsDisabled
       const remoteOpts = $xeSelect.computeRemoteOpts
+      const selectVals = $xeSelect.computeSelectVals
       if (!loading && !isDisabled) {
         if (hpTimeout) {
           clearTimeout(hpTimeout)
@@ -832,8 +834,11 @@ export default /* define-vxe-component start */ defineVxeComponent({
           reactData.visiblePanel = true
           $xeSelect.handleFocusSearch()
           $xeSelect.recalculate().then(() => {
-            $xeSelect.handleScrollSelect()
-            $xeSelect.refreshScroll()
+            if (selectVals && selectVals.length) {
+              $xeSelect.handleScrollSelect()
+            } else {
+              $xeSelect.refreshScroll()
+            }
           })
           $xeSelect.updatePlacement()
         }, 10)
@@ -1381,10 +1386,8 @@ export default /* define-vxe-component start */ defineVxeComponent({
     },
     handleScrollToOption (option: any, isDwArrow?: boolean) {
       const $xeSelect = this
-      const reactData = $xeSelect.reactData
       const internalData = $xeSelect.internalData
 
-      const { scrollYLoad } = reactData
       const { optFullValMaps, scrollYStore } = internalData
       const valueField = $xeSelect.computeValueField
       const cacheItem = optFullValMaps[option[valueField]]
@@ -1400,7 +1403,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
               const wrapperHeight = optWrapperElem.offsetHeight
               const offsetPadding = 1
               if (isDwArrow) {
-                if (optElem.offsetTop + optElem.offsetHeight - optWrapperElem.scrollTop > wrapperHeight) {
+                if (Math.ceil(optElem.offsetTop + optElem.offsetHeight - optWrapperElem.scrollTop) >= wrapperHeight) {
                   optWrapperElem.scrollTop = optElem.offsetTop + optElem.offsetHeight - wrapperHeight
                 } else if (optElem.offsetTop + offsetPadding < optWrapperElem.scrollTop || optElem.offsetTop + offsetPadding > optWrapperElem.scrollTop + optWrapperElem.clientHeight) {
                   optWrapperElem.scrollTop = optElem.offsetTop - offsetPadding
@@ -1412,7 +1415,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
                   optWrapperElem.scrollTop = optElem.offsetTop + optElem.offsetHeight - wrapperHeight
                 }
               }
-            } else if (scrollYLoad) {
+            } else {
               if (isDwArrow) {
                 optWrapperElem.scrollTop = avIndex * scrollYStore.rowHeight - optWrapperElem.clientHeight + scrollYStore.rowHeight
               } else {
