@@ -579,6 +579,7 @@ export default defineVxeComponent({
         if (selectVals.length && isAniVisible && visiblePanel) {
           const cacheItem = reactData.reactFlag ? optFullValMaps[`${selectVals[0]}`] : null
           if (cacheItem) {
+            reactData.currentOption = cacheItem.item
             handleScrollToOption(cacheItem.item)
           }
         }
@@ -590,6 +591,7 @@ export default defineVxeComponent({
       const { fullData, hpTimeout } = internalData
       const isDisabled = computeIsDisabled.value
       const remoteOpts = computeRemoteOpts.value
+      const selectVals = computeSelectVals.value
       if (!loading && !isDisabled) {
         if (hpTimeout) {
           clearTimeout(hpTimeout)
@@ -612,8 +614,11 @@ export default defineVxeComponent({
           reactData.visiblePanel = true
           handleFocusSearch()
           recalculate().then(() => {
-            handleScrollSelect()
-            refreshScroll()
+            if (selectVals && selectVals.length) {
+              handleScrollSelect()
+            } else {
+              refreshScroll()
+            }
           })
           updatePlacement()
         }, 10)
@@ -1098,7 +1103,6 @@ export default defineVxeComponent({
     }
 
     const handleScrollToOption = (option: any, isDwArrow?: boolean) => {
-      const { scrollYLoad } = reactData
       const { optFullValMaps, scrollYStore } = internalData
       const valueField = computeValueField.value
       const cacheItem = optFullValMaps[option[valueField]]
@@ -1117,7 +1121,7 @@ export default defineVxeComponent({
               const wrapperHeight = optWrapperElem.offsetHeight
               const offsetPadding = 1
               if (isDwArrow) {
-                if (optElem.offsetTop + optElem.offsetHeight - optWrapperElem.scrollTop > wrapperHeight) {
+                if (Math.ceil(optElem.offsetTop + optElem.offsetHeight - optWrapperElem.scrollTop) >= wrapperHeight) {
                   optWrapperElem.scrollTop = optElem.offsetTop + optElem.offsetHeight - wrapperHeight
                 } else if (optElem.offsetTop + offsetPadding < optWrapperElem.scrollTop || optElem.offsetTop + offsetPadding > optWrapperElem.scrollTop + optWrapperElem.clientHeight) {
                   optWrapperElem.scrollTop = optElem.offsetTop - offsetPadding
@@ -1129,7 +1133,7 @@ export default defineVxeComponent({
                   optWrapperElem.scrollTop = optElem.offsetTop + optElem.offsetHeight - wrapperHeight
                 }
               }
-            } else if (scrollYLoad) {
+            } else {
               if (isDwArrow) {
                 optWrapperElem.scrollTop = avIndex * scrollYStore.rowHeight - optWrapperElem.clientHeight + scrollYStore.rowHeight
               } else {
@@ -1633,7 +1637,7 @@ export default defineVxeComponent({
                         ref: refVirtualBody,
                         class: 'vxe-select--body',
                         style: {
-                          transform: `translateY(${topSpaceHeight}px)`
+                          marginTop: `${topSpaceHeight}px`
                         }
                       }, renderOpts())
                     ])

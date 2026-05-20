@@ -300,12 +300,13 @@ export default defineVxeComponent({
     const recalculate = () => {
       const { width, height, minWidth, minHeight } = props
       const isMsg = computeIsMsg.value
+      const isMinimizeStatus = computeIsMinimizeStatus.value
       const boxElem = getBox()
       if (boxElem) {
         boxElem.style.width = width ? toCssUnit(width) : ''
         boxElem.style.height = height ? toCssUnit(height) : ''
-        boxElem.style.minWidth = !isMsg && minWidth ? toCssUnit(minWidth) : ''
-        boxElem.style.minHeight = !isMsg && minHeight ? toCssUnit(minHeight) : ''
+        boxElem.style.minWidth = !isMsg && !isMinimizeStatus && minWidth ? toCssUnit(minWidth) : ''
+        boxElem.style.minHeight = !isMsg && !isMinimizeStatus && minHeight ? toCssUnit(minHeight) : ''
       }
       return nextTick()
     }
@@ -619,7 +620,9 @@ export default defineVxeComponent({
           top: `${targetTop}px`,
           left: `${targetLeft}px`,
           width: '200px',
-          height: `${headerEl.offsetHeight}px`
+          height: `${headerEl.offsetHeight}px`,
+          minHeight: '',
+          minWidth: ''
         })
         savePosStorage()
         return {
@@ -651,7 +654,9 @@ export default defineVxeComponent({
             top: '0',
             left: '0',
             width: '100%',
-            height: '100%'
+            height: '100%',
+            minHeight: '',
+            minWidth: ''
           })
         }
         savePosStorage()
