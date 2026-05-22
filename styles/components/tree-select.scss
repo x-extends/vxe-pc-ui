@@ -74,10 +74,13 @@
 }
 .vxe-tree-select--total-btns {
   padding-left: var(--vxe-ui-current-padding);
-  flex-grow: 1;
-  }
-.vxe-tree-select--oper-btns {
   flex-shrink: 0;
+}
+.vxe-tree-select--oper-btns {
+  display: flex;
+  flex-direction: row;
+  flex-grow: 1;
+  justify-content: right;
 }
 .vxe-tree-select--footer-button,
 .vxe-tree-select--selected-btns,

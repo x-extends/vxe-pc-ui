@@ -438,6 +438,10 @@ export namespace VxeTablePropTypes {
      */
     mode?: 'column' | 'default' | '' | null
     /**
+     * 显示位置
+     */
+    placement?: 'left' | 'right' | 'top' | 'bottom' | 'default' | '' | null
+    /**
      * 按指定字段对数据进行分组
      */
     groupFields?: string[]
