@@ -85,20 +85,25 @@
   display: flex;
   flex-direction: row;
 }
-.vxe-select--header-total {
+
+.vxe-select--header-button,
+.vxe-select--footer-button {
   display: flex;
   flex-direction: row;
-  align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
-  padding-left: 0.8em;
+  white-space: nowrap;
 }
-.vxe-select--header-btns {
-  display: flex;
-  flex-direction: row;
+.vxe-select--total-btns {
+  padding-left: var(--vxe-ui-current-padding);
   flex-grow: 1;
-  justify-content: right;
 }
+.vxe-select--oper-btns {
+  flex-shrink: 0;
+}
+.vxe-select--footer-button {
+  display: flex;
+  flex-direction: row;
+}
+
 
 .vxe-select--panel-header {
   border-bottom: 1px solid var(--vxe-ui-base-popup-border-color);
@@ -133,11 +138,9 @@
 }
 .vxe-select-option {
   position: relative;
+  flex-direction: row;
+  display: flex;
   padding: 0 0.6em;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
   user-select: none;
   cursor: pointer;
   &.is--add {
@@ -156,7 +159,7 @@
   }
   &:not(.is--disabled) {
     &.is--hover {
-      background-color: var(--vxe-ui-base-hover-background-color);
+      background-color: var(--vxe-ui-select-option-hover-background-color);
     }
   }
   &.is--disabled {
@@ -170,11 +173,26 @@
   cursor: default;
 }
 
+.vxe-select-option--label {
+  flex-grow: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
 .vxe-select-option--add-icon {
   display: none;
   position: absolute;
   top: 0;
   right: 0.6em;
+}
+
+.vxe-select-option--checkbox {
+  padding-right: 0.4em;
+  @include baseMixin.createCheckboxIcon();
+}
+.vxe-select-option--radio {
+  padding-right: 0.4em;
+  @include baseMixin.createRadioIcon();
 }
 
 .vxe-select--search-icon {
@@ -199,6 +217,15 @@
   }
   &.size--mini {
     font-size: var(--vxe-ui-font-size-mini);
+  }
+}
+
+.vxe-select,
+.vxe-select--panel {
+  --vxe-ui-current-padding: var(--vxe-ui-layout-padding-default);
+  &.size--small,
+  &.size--mini {
+    --vxe-ui-current-padding: var(--vxe-ui-layout-padding-half);
   }
 }
 

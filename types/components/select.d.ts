@@ -43,6 +43,9 @@ export namespace VxeSelectPropTypes {
   export type Readonly = boolean
   export type Loading = boolean
   export type Disabled = boolean
+  export type CheckedClosable = boolean
+  export type ClearClosable = boolean
+  export type ShowCloseButton = boolean
   export type ShowTotalButoon = boolean
   export type ShowCheckedButoon = boolean
   export type ShowClearButton = boolean
@@ -69,6 +72,16 @@ export namespace VxeSelectPropTypes {
     options?: string
     label?: string
     key?: string
+  }
+  export type ShowRadio = boolean
+  export interface RadioConfig {
+    showIcon?: boolean
+    trigger?: '' | 'default' | 'icon' | 'option'
+  }
+  export type ShowCheckbox = boolean
+  export interface CheckboxConfig {
+    showIcon?: boolean
+    trigger?: '' | 'default' | 'icon' | 'option'
   }
   export type Filterable = boolean
   export type FilterMethod = (params: {
@@ -194,6 +207,9 @@ export interface VxeSelectProps {
   readonly?: VxeSelectPropTypes.Readonly
   loading?: VxeSelectPropTypes.Loading
   disabled?: VxeSelectPropTypes.Disabled
+  checkedClosable?: VxeSelectPropTypes.CheckedClosable
+  clearClosable?: VxeSelectPropTypes.ClearClosable
+  showCloseButton?: VxeSelectPropTypes.ShowCloseButton
   showTotalButoon?: VxeSelectPropTypes.ShowTotalButoon
   showCheckedButoon?: VxeSelectPropTypes.ShowCheckedButoon
   showClearButton?: VxeSelectPropTypes.ShowClearButton
@@ -215,6 +231,10 @@ export interface VxeSelectProps {
   optionGroupProps?: VxeSelectPropTypes.OptionGroupProps
   optionConfig?: VxeSelectPropTypes.OptionConfig
   emptyText?: VxeSelectPropTypes.EmptyText
+  showRadio?: VxeSelectPropTypes.ShowRadio
+  radioConfig?: VxeSelectPropTypes.RadioConfig
+  showCheckbox?: VxeSelectPropTypes.ShowCheckbox
+  checkboxConfig?: VxeSelectPropTypes.CheckboxConfig
   /**
    * 是否启用本地筛选
    */

@@ -89,6 +89,16 @@ export default defineVxeComponent({
       type: [String, Number] as PropType<VxeSelectPropTypes.Max>,
       default: null
     },
+    showRadio: {
+      type: Boolean as PropType<VxeSelectPropTypes.ShowCloseButton>,
+      default: () => getConfig().select.showRadio
+    },
+    radioConfig: Object as PropType<VxeSelectPropTypes.RadioConfig>,
+    showCheckbox: {
+      type: Boolean as PropType<VxeSelectPropTypes.ShowCloseButton>,
+      default: () => getConfig().select.showCheckedButoon
+    },
+    checkboxConfig: Object as PropType<VxeSelectPropTypes.CheckboxConfig>,
     /**
      * 已废弃，请使用 popupConfig.zIndex
      * @deprecated
@@ -108,6 +118,18 @@ export default defineVxeComponent({
     remote: Boolean as PropType<VxeSelectPropTypes.Remote>,
     remoteConfig: Object as PropType<VxeSelectPropTypes.RemoteConfig>,
     emptyText: String as PropType<VxeSelectPropTypes.EmptyText>,
+    checkedClosable: {
+      type: Boolean as PropType<VxeSelectPropTypes.CheckedClosable>,
+      default: () => getConfig().select.checkedClosable
+    },
+    clearClosable: {
+      type: Boolean as PropType<VxeSelectPropTypes.ClearClosable>,
+      default: () => getConfig().select.clearClosable
+    },
+    showCloseButton: {
+      type: Boolean as PropType<VxeSelectPropTypes.ShowCloseButton>,
+      default: () => getConfig().select.showCloseButton
+    },
     showTotalButoon: {
       type: Boolean as PropType<VxeSelectPropTypes.ShowTotalButoon>,
       default: () => getConfig().select.showTotalButoon
@@ -322,6 +344,14 @@ export default defineVxeComponent({
 
     const computeOptionOpts = computed(() => {
       return Object.assign({}, getConfig().select.optionConfig, props.optionConfig)
+    })
+
+    const computeRadioOpts = computed(() => {
+      return Object.assign({}, getConfig().select.radioConfig, props.radioConfig)
+    })
+
+    const computeCheckboxOpts = computed(() => {
+      return Object.assign({}, getConfig().select.checkboxConfig, props.checkboxConfig)
     })
 
     const computeMultiMaxCharNum = computed(() => {
@@ -631,7 +661,7 @@ export default defineVxeComponent({
       }
     }
 
-    const hideOptionPanel = () => {
+    const hideOptionPanel = (evnt?: Event) => {
       const { filterable, remote } = props
       const filterOpts = computeFilterOpts.value
       const remoteOpts = computeRemoteOpts.value
@@ -651,7 +681,7 @@ export default defineVxeComponent({
       internalData.hpTimeout = setTimeout(() => {
         reactData.isAniVisible = false
       }, 350)
-      dispatchEvent('visible-change', { visible: false }, null)
+      dispatchEvent('visible-change', { visible: false }, evnt || null)
     }
 
     const changeEvent = (evnt: Event, selectValue: any, option: any) => {
@@ -674,12 +704,12 @@ export default defineVxeComponent({
     const clearEvent: VxeInputEvents.Clear = (params) => {
       const { $event } = params
       clearValueEvent($event, null)
-      hideOptionPanel()
+      hideOptionPanel($event)
     }
 
     const allCheckedPanelEvent: VxeButtonEvents.Click = (params) => {
       const { $event } = params
-      const { multiple, max } = props
+      const { multiple, max, checkedClosable } = props
       const { optList } = reactData
       const valueField = computeValueField.value
       if (multiple) {
@@ -703,14 +733,25 @@ export default defineVxeComponent({
           }
         }
         changeEvent($event, currVlas, optList[0])
+        if (checkedClosable) {
+          hideOptionPanel($event)
+        }
         dispatchEvent('all-change', { value: currVlas }, $event)
       }
     }
 
     const clearCheckedPanelEvent: VxeButtonEvents.Click = (params) => {
+      const { clearClosable } = props
       const { $event } = params
       clearValueEvent($event, null)
-      hideOptionPanel()
+      if (clearClosable) {
+        hideOptionPanel($event)
+      }
+    }
+
+    const closePanelEvent: VxeButtonEvents.Click = (params) => {
+      const { $event } = params
+      hideOptionPanel($event)
     }
 
     const changeOptionEvent = (evnt: Event, option: any) => {
@@ -743,7 +784,7 @@ export default defineVxeComponent({
         changeEvent(evnt, multipleValue, option)
       } else {
         changeEvent(evnt, selectValue, option)
-        hideOptionPanel()
+        hideOptionPanel(evnt)
       }
       reactData.reactFlag++
     }
@@ -757,7 +798,7 @@ export default defineVxeComponent({
           if (getEventTargetNode(evnt, panelElem).flag) {
             updatePlacement()
           } else {
-            hideOptionPanel()
+            hideOptionPanel(evnt)
           }
         }
       }
@@ -774,7 +815,7 @@ export default defineVxeComponent({
         reactData.isActivated = getEventTargetNode(evnt, el).flag || getEventTargetNode(evnt, panelElem).flag
         if (visiblePanel && !reactData.isActivated) {
           if (trigger !== 'manual') {
-            hideOptionPanel()
+            hideOptionPanel(evnt)
           }
         }
       }
@@ -867,7 +908,7 @@ export default defineVxeComponent({
         if (visiblePanel) {
           if (isEsc || isTab) {
             if (trigger !== 'manual') {
-              hideOptionPanel()
+              hideOptionPanel(evnt)
             }
           } else if (isEnter) {
             if (currentOption) {
@@ -899,13 +940,13 @@ export default defineVxeComponent({
       }
     }
 
-    const handleGlobalBlurEvent = () => {
+    const handleGlobalBlurEvent = (evnt: Event) => {
       const { visiblePanel, isActivated } = reactData
       const popupOpts = computePopupOpts.value
       const { trigger } = popupOpts
       if (visiblePanel) {
         if (trigger !== 'manual') {
-          hideOptionPanel()
+          hideOptionPanel(evnt)
         }
       }
       if (isActivated) {
@@ -1017,7 +1058,7 @@ export default defineVxeComponent({
         reactData.triggerFocusPanel = false
       } else {
         if (reactData.visiblePanel) {
-          hideOptionPanel()
+          hideOptionPanel($event)
         } else {
           showOptionPanel()
         }
@@ -1359,8 +1400,68 @@ export default defineVxeComponent({
 
     Object.assign($xeSelect, selectMethods)
 
+    const renderRadio = (option: VxeOptionProps, isOptGroup: boolean, isChecked: boolean, isDisabled: boolean) => {
+      const radioOpts = computeRadioOpts.value
+      const { showIcon, trigger } = radioOpts
+      if (isOptGroup || showIcon === false) {
+        return renderEmptyElement($xeSelect)
+      }
+      const ons: {
+        onClick?(evnt: MouseEvent): void
+      } = {}
+      if (!trigger || trigger === 'default') {
+        ons.onClick = (evnt) => {
+          if (!isDisabled && !isOptGroup) {
+            changeOptionEvent(evnt, option)
+          }
+        }
+      }
+      return h('div', {
+        key: 2,
+        class: ['vxe-select-option--radio', {
+          'is--checked': isChecked,
+          'is--disabled': isDisabled
+        }],
+        ...ons
+      }, [
+        h('span', {
+          class: ['vxe-radio--icon', isChecked ? getIcon().RADIO_CHECKED : getIcon().RADIO_UNCHECKED]
+        })
+      ])
+    }
+
+    const renderCheckbox = (option: VxeOptionProps, isOptGroup: boolean, isChecked: boolean, isDisabled: boolean) => {
+      const checkboxOpts = computeCheckboxOpts.value
+      const { showIcon, trigger } = checkboxOpts
+      if (isOptGroup || showIcon === false) {
+        return renderEmptyElement($xeSelect)
+      }
+      const ons: {
+        onClick?(evnt: MouseEvent): void
+      } = {}
+      if (!trigger || trigger === 'default') {
+        ons.onClick = (evnt) => {
+          if (!isDisabled && !isOptGroup) {
+            changeOptionEvent(evnt, option)
+          }
+        }
+      }
+      return h('div', {
+        key: 3,
+        class: ['vxe-select-option--checkbox', {
+          'is--checked': isChecked,
+          'is--disabled': isDisabled
+        }],
+        ...ons
+      }, [
+        h('span', {
+          class: ['vxe-checkbox--icon', isChecked ? getIcon().CHECKBOX_CHECKED : getIcon().CHECKBOX_UNCHECKED]
+        })
+      ])
+    }
+
     const renderOption = (list: VxeOptionProps[]) => {
-      const { allowCreate, optionKey } = props
+      const { allowCreate, optionKey, multiple, showRadio, showCheckbox } = props
       const { currentOption } = reactData
       const { optAddMaps } = internalData
       const optionOpts = computeOptionOpts.value
@@ -1368,8 +1469,12 @@ export default defineVxeComponent({
       const valueField = computeValueField.value
       const groupLabelField = computeGroupLabelField.value
       const selectVals = computeSelectVals.value
+      const radioOpts = computeRadioOpts.value
+      const checkboxOpts = computeCheckboxOpts.value
       const { useKey, height } = optionOpts
       const optionSlot = slots.option
+      const isCheckboxMode = showCheckbox && multiple
+      const isRadioMode = showRadio && !multiple
       return list.map((option, cIndex) => {
         const { slots, className } = option
         const optid = getOptId(option)
@@ -1380,16 +1485,53 @@ export default defineVxeComponent({
         const isVisible = isAdd || (!isOptGroup || isOptionVisible(option))
         const isDisabled = !isAdd && checkOptionDisabled(isSelected, option)
         const defaultSlot = slots ? slots.default : null
+        const optSlot = defaultSlot || optionSlot
         const optParams = { option, group: isOptGroup ? option : null, $select: $xeSelect }
         let optLabel = ''
-        let optVNs: string | VxeComponentSlotType[] = []
-        if (optionSlot) {
-          optVNs = callSlot(optionSlot, optParams)
-        } else if (defaultSlot) {
-          optVNs = callSlot(defaultSlot, optParams)
+        const optVNs: VxeComponentSlotType[] = []
+        if (isCheckboxMode) {
+          optVNs.push(renderCheckbox(option, isOptGroup, isSelected, isDisabled))
+        } else if (isRadioMode) {
+          optVNs.push(renderRadio(option, isOptGroup, isSelected, isDisabled))
+        }
+        let otlbVNs: string | VxeComponentSlotType[] = []
+        if (optSlot) {
+          otlbVNs = callSlot(optSlot, optParams)
         } else {
           optLabel = getFuncText(option[(isOptGroup ? groupLabelField : labelField) as 'label'] || optionValue)
-          optVNs = optLabel
+          otlbVNs = [optLabel]
+        }
+        optVNs.push(
+          h('div', {
+            key: 1,
+            class: 'vxe-select-option--label'
+          }, otlbVNs)
+        )
+
+        const ons: {
+          onMousedown(evnt: MouseEvent): void
+          onMouseenter(evnt: MouseEvent): void
+          onClick?(evnt: MouseEvent): void
+        } = {
+          onMousedown: (evnt) => {
+            const isLeftBtn = evnt.button === 0
+            if (isLeftBtn) {
+              evnt.stopPropagation()
+            }
+          },
+          onMouseenter: () => {
+            if (!isDisabled && !isOptGroup && !isVMScrollProcess()) {
+              setCurrentOption(option)
+            }
+          }
+        }
+
+        if (isCheckboxMode ? checkboxOpts.trigger === 'option' : (isRadioMode ? radioOpts.trigger === 'option' : true)) {
+          ons.onClick = (evnt) => {
+            if (!isDisabled && !isOptGroup) {
+              changeOptionEvent(evnt, option)
+            }
+          }
         }
 
         return isVisible
@@ -1409,30 +1551,15 @@ export default defineVxeComponent({
                   height: toCssUnit(height)
                 }
               : undefined,
-            onMousedown: (evnt: MouseEvent) => {
-              const isLeftBtn = evnt.button === 0
-              if (isLeftBtn) {
-                evnt.stopPropagation()
-              }
-            },
-            onClick: (evnt: MouseEvent) => {
-              if (!isDisabled && !isOptGroup) {
-                changeOptionEvent(evnt, option)
-              }
-            },
-            onMouseenter: () => {
-              if (!isDisabled && !isOptGroup && !isVMScrollProcess()) {
-                setCurrentOption(option)
-              }
-            }
+            ...ons
           }, allowCreate
             ? [
-                h('span', {
+                h('div', {
                   key: 1,
-                  class: 'vxe-select-option--label'
+                  class: 'vxe-select-option--add-label'
                 }, optVNs),
                 isAdd
-                  ? h('span', {
+                  ? h('div', {
                     key: 2,
                     class: 'vxe-select-option--add-icon'
                   }, [
@@ -1474,7 +1601,7 @@ export default defineVxeComponent({
     }
 
     const renderVN = () => {
-      const { className, multiple, loading, filterable, showTotalButoon, showCheckedButoon, showClearButton } = props
+      const { className, multiple, loading, filterable, showTotalButoon, showCheckedButoon, showClearButton, showCloseButton } = props
       const { initialized, isActivated, isAniVisible, optList, visiblePanel, bodyHeight, topSpaceHeight } = reactData
       const vSize = computeSize.value
       const isDisabled = computeIsDisabled.value
@@ -1584,7 +1711,7 @@ export default defineVxeComponent({
                       })
                     ])
                     : renderEmptyElement($xeSelect),
-                  showTotalButoon || (showCheckedButoon && multiple) || showClearButton || headerSlot
+                  (showCheckedButoon && multiple) || showClearButton || headerSlot
                     ? h('div', {
                       class: 'vxe-select--panel-header'
                     }, headerSlot
@@ -1593,11 +1720,6 @@ export default defineVxeComponent({
                           h('div', {
                             class: 'vxe-select--header-button'
                           }, [
-                            showTotalButoon
-                              ? h('div', {
-                                class: 'vxe-select--header-total'
-                              }, getI18n('vxe.select.total', [selectVals.length, optList.length]))
-                              : renderEmptyElement($xeSelect),
                             h('div', {
                               class: 'vxe-select--header-btns'
                             }, [
@@ -1642,10 +1764,33 @@ export default defineVxeComponent({
                       }, renderOpts())
                     ])
                   ]),
-                  footerSlot
+                  footerSlot || showTotalButoon || (showCloseButton && multiple)
                     ? h('div', {
                       class: 'vxe-select--panel-footer'
-                    }, callSlot(footerSlot, {}))
+                    }, footerSlot
+                      ? callSlot(footerSlot, {})
+                      : [
+                          h('div', {
+                            class: 'vxe-select--footer-button'
+                          }, [
+                            showTotalButoon
+                              ? h('div', {
+                                class: 'vxe-select--total-btns'
+                              }, getI18n('vxe.select.total', [selectVals.length, optList.length]))
+                              : renderEmptyElement($xeSelect),
+                            showCloseButton && multiple
+                              ? h('div', {
+                                class: 'vxe-select--oper-btns'
+                              }, [
+                                h(VxeButtonComponent, {
+                                  content: getI18n('vxe.select.close'),
+                                  mode: 'text',
+                                  onClick: closePanelEvent
+                                })
+                              ])
+                              : renderEmptyElement($xeSelect)
+                          ])
+                        ])
                     : renderEmptyElement($xeSelect)
                 ])
               ]

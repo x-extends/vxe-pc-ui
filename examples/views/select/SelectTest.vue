@@ -189,10 +189,10 @@
       </vxe-select>
     </p> -->
 
-    <p>
+    <div>
       <vxe-select v-model="demo1.value45" placeholder="加载中" :options="demo1.list45" loading></vxe-select>
       <vxe-select v-model="demo1.value40" placeholder="空数据" :options="demo1.list40"></vxe-select>
-      <vxe-select v-model="demo1.value41" placeholder="分组配置式" :option-groups="demo1.list41" filterable></vxe-select>
+      <vxe-select v-model="demo1.value41" placeholder="分组配置式" :option-groups="demo1.list41" filterable  allow-create></vxe-select>
       <vxe-select v-model="demo1.value42" placeholder="禁用选项" :options="demo1.list42"></vxe-select>
       <vxe-select v-model="demo1.value43" placeholder="禁用分组" :option-groups="demo1.list43" filterable transfer></vxe-select>
       <vxe-select v-model="demo1.value44" placeholder="多选" :options="demo1.list44" multiple clearable transfer></vxe-select>
@@ -219,7 +219,11 @@
         </template>
       </vxe-select>
       <vxe-select v-model="demo1.value47" :options="demo1.list47" :default-config="{selectMode: 'all'}" multiple></vxe-select>
-    </p>
+    </div>
+    <div>
+      <vxe-select v-model="demo1.value48" :options="demo1.list47" show-radio></vxe-select>
+      <vxe-select v-model="demo1.value49" :options="demo1.list47" multiple show-checkbox showTotalButoon showCheckedButoon showClearButton show-close-button></vxe-select>
+    </div>
   </div>
 </template>
 
@@ -371,7 +375,9 @@ const demo1 = reactive({
     { label: '4444', value: '4' },
     { label: '5555', value: '5' },
     { label: '6666', value: '6' }
-  ]
+  ],
+  value48: null,
+  value49: []
 })
 
 const remoteMethod24 = ({ searchValue }: any): Promise<void> => {

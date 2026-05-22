@@ -36,7 +36,14 @@ export namespace VxeTreeSelectPropTypes {
   export type Readonly = boolean
   export type Loading = boolean
   export type Disabled = boolean
+  /**
+   * 已废弃，被 CheckedClosable, ClearClosable 替换
+   * @deprecated
+   */
   export type AutoClose = boolean
+  export type CheckedClosable = boolean
+  export type ClearClosable = boolean
+  export type ShowCloseButton = boolean
   export type ShowTotalButoon = boolean
   export type ShowCheckedButoon = boolean
   export type ShowExpandButton = boolean
@@ -154,7 +161,14 @@ export interface VxeTreeSelectProps<D = any> {
   readonly?: VxeTreeSelectPropTypes.Readonly
   loading?: VxeTreeSelectPropTypes.Loading
   disabled?: VxeTreeSelectPropTypes.Disabled
+  /**
+   * 已废弃，被 checked-closable, clear-closable 替换
+   * @deprecated
+   */
   autoClose?: VxeTreeSelectPropTypes.AutoClose
+  checkedClosable?: VxeTreeSelectPropTypes.CheckedClosable
+  clearClosable?: VxeTreeSelectPropTypes.ClearClosable
+  showCloseButton?: VxeTreeSelectPropTypes.ShowCloseButton
   showTotalButoon?: VxeTreeSelectPropTypes.ShowTotalButoon
   showCheckedButoon?: VxeTreeSelectPropTypes.ShowCheckedButoon
   showClearButton?: VxeTreeSelectPropTypes.ShowClearButton
@@ -238,7 +252,8 @@ export type VxeTreeSelectEmits = [
   'blur',
   'focus',
   'click',
-  'node-click'
+  'node-click',
+  'visible-change'
 ]
 
 export namespace VxeTreeSelectDefines {
@@ -258,6 +273,9 @@ export namespace VxeTreeSelectDefines {
   export interface FocusEventParams extends TreeSelectEventParams { }
   export interface BlurEventParams extends TreeSelectEventParams { }
   export interface ClickEventParams extends TreeSelectEventParams { }
+  export interface VisibleChangeEventParams extends TreeSelectEventParams {
+    visible: boolean
+  }
 }
 
 export interface VxeTreeSelectEventProps<D = any> {
@@ -267,6 +285,7 @@ export interface VxeTreeSelectEventProps<D = any> {
   onFocus?: VxeTreeSelectEvents.Focus
   onBlur?: VxeTreeSelectEvents.Blur
   onClick?: VxeTreeSelectEvents.Click
+  onVisibleChange?: VxeTreeSelectEvents.VisibleChange
 }
 
 export interface VxeTreeSelectListeners<D = any> {
@@ -276,6 +295,7 @@ export interface VxeTreeSelectListeners<D = any> {
   focus?: VxeTreeSelectEvents.Focus
   blur?: VxeTreeSelectEvents.Blur
   click?: VxeTreeSelectEvents.Click
+  visibleChange?: VxeTreeSelectEvents.VisibleChange
 }
 
 export namespace VxeTreeSelectEvents {
@@ -285,6 +305,7 @@ export namespace VxeTreeSelectEvents {
   export type Focus = (params: VxeTreeSelectDefines.FocusEventParams) => void
   export type Blur = (params: VxeTreeSelectDefines.BlurEventParams) => void
   export type Click = (params: VxeTreeSelectDefines.ClickEventParams) => void
+  export type VisibleChange = (params: VxeTreeSelectDefines.VisibleChangeEventParams) => void
 }
 
 export namespace VxeTreeSelectSlotTypes {

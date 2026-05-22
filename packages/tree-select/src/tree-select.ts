@@ -4,14 +4,14 @@ import { getConfig, getI18n, getIcon, globalEvents, createEvent, useSize, render
 import { getEventTargetNode, updatePanelPlacement, toCssUnit } from '../../ui/src/dom'
 import { getLastZIndex, nextZIndex } from '../../ui/src/utils'
 import { deNodeValue } from '../../tree/src/util'
-import { errLog } from '../../ui/src/log'
+import { warnLog, errLog } from '../../ui/src/log'
 import XEUtils from 'xe-utils'
 import VxeInputComponent from '../../input'
 import VxeButtonComponent from '../../button'
 import VxeTreeComponent from '../../tree'
 import { getSlotVNs } from '../../ui/src/vn'
 
-import type { TreeSelectReactData, VxeTreeSelectEmits, TreeSelectInternalData, VxeButtonEvents, ValueOf, VxeComponentStyleType, TreeSelectPrivateRef, TreeSelectPrivateMethods, TreeSelectMethods, VxeTreeSelectPrivateComputed, VxeTreeSelectPropTypes, VxeTreeSelectConstructor, VxeFormDefines, VxeDrawerConstructor, VxeDrawerMethods, VxeTreeSelectPrivateMethods, VxeFormConstructor, VxeFormPrivateMethods, VxeInputConstructor, VxeModalConstructor, VxeModalMethods, VxeTreeConstructor, VxeTreeEvents } from '../../../types'
+import type { TreeSelectReactData, VxeTreeSelectEmits, TreeSelectInternalData, VxeButtonEvents, VxeInputEvents, ValueOf, VxeComponentStyleType, TreeSelectPrivateRef, TreeSelectPrivateMethods, TreeSelectMethods, VxeTreeSelectPrivateComputed, VxeTreeSelectPropTypes, VxeTreeSelectConstructor, VxeFormDefines, VxeDrawerConstructor, VxeDrawerMethods, VxeTreeSelectPrivateMethods, VxeFormConstructor, VxeFormPrivateMethods, VxeInputConstructor, VxeModalConstructor, VxeModalMethods, VxeTreeConstructor, VxeTreeEvents } from '../../../types'
 import type { VxeTableConstructor, VxeTablePrivateMethods } from '../../../types/components/table'
 
 function getOptUniqueId () {
@@ -88,9 +88,25 @@ export default defineVxeComponent({
     treeConfig: Object as PropType<VxeTreeSelectPropTypes.TreeConfig>,
     menuConfig: Object as PropType<VxeTreeSelectPropTypes.MenuConfig>,
     virtualYConfig: Object as PropType<VxeTreeSelectPropTypes.VirtualYConfig>,
+    /**
+     * 已废弃，被 checked-closable, clear-closable 替换
+     * @deprecated
+     */
     autoClose: {
       type: Boolean as PropType<VxeTreeSelectPropTypes.AutoClose>,
       default: () => getConfig().treeSelect.autoClose
+    },
+    checkedClosable: {
+      type: Boolean as PropType<VxeTreeSelectPropTypes.CheckedClosable>,
+      default: () => getConfig().treeSelect.checkedClosable
+    },
+    clearClosable: {
+      type: Boolean as PropType<VxeTreeSelectPropTypes.ClearClosable>,
+      default: () => getConfig().treeSelect.clearClosable
+    },
+    showCloseButton: {
+      type: Boolean as PropType<VxeTreeSelectPropTypes.ShowCloseButton>,
+      default: () => getConfig().treeSelect.showCloseButton
     },
     showTotalButoon: {
       type: Boolean as PropType<VxeTreeSelectPropTypes.ShowTotalButoon>,
@@ -127,7 +143,8 @@ export default defineVxeComponent({
     'blur',
     'focus',
     'click',
-    'node-click'
+    'node-click',
+    'visible-change'
   ] as VxeTreeSelectEmits,
   setup (props, context) {
     const { emit, slots } = context
@@ -458,14 +475,16 @@ export default defineVxeComponent({
         }, 10)
         updateZindex()
         updatePlacement()
+        dispatchEvent('visible-change', { visible: true }, null)
       }
     }
 
-    const hideOptionPanel = () => {
+    const hideOptionPanel = (evnt?: Event) => {
       reactData.visiblePanel = false
       internalData.hpTimeout = setTimeout(() => {
         reactData.isAniVisible = false
       }, 350)
+      dispatchEvent('visible-change', { visible: false }, evnt || null)
     }
 
     const changeEvent = (evnt: Event, selectValue: any, node: any) => {
@@ -485,22 +504,23 @@ export default defineVxeComponent({
       dispatchEvent('clear', { value: selectValue }, evnt)
     }
 
-    const clearEvent = (params: any, evnt: Event) => {
-      clearValueEvent(evnt, null)
-      hideOptionPanel()
+    const clearEvent: VxeInputEvents.Clear = (params) => {
+      const { $event } = params
+      clearValueEvent($event, null)
+      hideOptionPanel($event)
     }
 
     const allCheckedPanelEvent: VxeButtonEvents.Click = (params) => {
       const { $event } = params
-      const { multiple, autoClose } = props
+      const { multiple, autoClose, checkedClosable } = props
       const $tree = refTree.value
       if (multiple) {
         if ($tree) {
           $tree.setAllCheckboxNode(true).then(({ checkNodeKeys, checkNodes }) => {
             changeEvent($event, checkNodeKeys, checkNodes[0])
             dispatchEvent('all-change', { value: checkNodeKeys }, $event)
-            if (autoClose) {
-              hideOptionPanel()
+            if (XEUtils.isBoolean(autoClose) ? autoClose : checkedClosable) {
+              hideOptionPanel($event)
             }
           })
         }
@@ -509,18 +529,23 @@ export default defineVxeComponent({
 
     const clearCheckedPanelEvent: VxeButtonEvents.Click = (params) => {
       const { $event } = params
-      const { multiple, autoClose } = props
+      const { multiple, autoClose, clearClosable } = props
       const $tree = refTree.value
       if ($tree) {
         const value = multiple ? [] : null
         $tree.clearCheckboxNode().then(() => {
-          if (autoClose) {
-            hideOptionPanel()
+          if (XEUtils.isBoolean(autoClose) ? autoClose : clearClosable) {
+            hideOptionPanel($event)
           }
         })
         changeEvent($event, value, null)
         dispatchEvent('clear', { value }, $event)
       }
+    }
+
+    const closePanelEvent: VxeButtonEvents.Click = (params) => {
+      const { $event } = params
+      hideOptionPanel($event)
     }
 
     const allExpandPanelEvent: VxeButtonEvents.Click = () => {
@@ -546,7 +571,7 @@ export default defineVxeComponent({
           if (getEventTargetNode(evnt, panelElem).flag) {
             updatePlacement()
           } else {
-            hideOptionPanel()
+            hideOptionPanel(evnt)
           }
         }
       }
@@ -560,15 +585,15 @@ export default defineVxeComponent({
         const panelElem = refOptionPanel.value
         reactData.isActivated = getEventTargetNode(evnt, el).flag || getEventTargetNode(evnt, panelElem).flag
         if (visiblePanel && !reactData.isActivated) {
-          hideOptionPanel()
+          hideOptionPanel(evnt)
         }
       }
     }
 
-    const handleGlobalBlurEvent = () => {
+    const handleGlobalBlurEvent = (evnt: Event) => {
       const { visiblePanel, isActivated } = reactData
       if (visiblePanel) {
-        hideOptionPanel()
+        hideOptionPanel(evnt)
       }
       if (isActivated) {
         reactData.isActivated = false
@@ -651,7 +676,7 @@ export default defineVxeComponent({
         reactData.triggerFocusPanel = false
       } else {
         if (reactData.visiblePanel) {
-          hideOptionPanel()
+          hideOptionPanel($event)
         } else {
           showOptionPanel()
         }
@@ -670,7 +695,7 @@ export default defineVxeComponent({
     const radioChangeEvent: VxeTreeEvents.RadioChange = (params) => {
       const { value, $event, node } = params
       changeEvent($event, value, node)
-      hideOptionPanel()
+      hideOptionPanel($event)
     }
 
     const checkboxChangeEvent: VxeTreeEvents.CheckboxChange = (params) => {
@@ -688,7 +713,7 @@ export default defineVxeComponent({
     Object.assign($xeTreeSelect, treeSelectMethods, treeSelectPrivateMethods)
 
     const renderVN = () => {
-      const { className, modelValue, multiple, options, loading, menuConfig, filterable, showTotalButoon, showCheckedButoon, showClearButton, showExpandButton } = props
+      const { className, modelValue, multiple, options, loading, menuConfig, filterable, showTotalButoon, showCheckedButoon, showClearButton, showExpandButton, showCloseButton } = props
       const { initialized, isActivated, isAniVisible, visiblePanel, searchValue } = reactData
       const vSize = computeSize.value
       const isDisabled = computeIsDisabled.value
@@ -812,7 +837,7 @@ export default defineVxeComponent({
                       })
                     ])
                     : renderEmptyElement($xeTreeSelect),
-                  showTotalButoon || (showCheckedButoon && multiple) || showClearButton || showExpandButton || headerSlot
+                  (showCheckedButoon && multiple) || showClearButton || showExpandButton || headerSlot
                     ? h('div', {
                       class: 'vxe-tree-select--panel-header'
                     }, headerSlot
@@ -921,7 +946,7 @@ export default defineVxeComponent({
                       }, treeScopedSlots)
                     ])
                   ]),
-                  footerSlot || showTotalButoon
+                  footerSlot || showTotalButoon || (showCloseButton && multiple)
                     ? h('div', {
                       class: 'vxe-tree-select--panel-footer'
                     }, footerSlot
@@ -934,6 +959,17 @@ export default defineVxeComponent({
                               ? h('div', {
                                 class: 'vxe-tree-select--total-btns'
                               }, getI18n('vxe.treeSelect.total', [selectVals.length]))
+                              : renderEmptyElement($xeTreeSelect),
+                            showCloseButton && multiple
+                              ? h('div', {
+                                class: 'vxe-tree-select--oper-btns'
+                              }, [
+                                h(VxeButtonComponent, {
+                                  content: getI18n('vxe.select.close'),
+                                  mode: 'text',
+                                  onClick: closePanelEvent
+                                })
+                              ])
                               : renderEmptyElement($xeTreeSelect)
                           ])
                         ])
@@ -952,6 +988,9 @@ export default defineVxeComponent({
     cacheDataMap()
 
     onMounted(() => {
+      if (XEUtils.isBoolean(props.autoClose)) {
+        warnLog('vxe.error.delProp', ['auto-close', 'checked-closable | clear-closable'])
+      }
       globalEvents.on($xeTreeSelect, 'mousewheel', handleGlobalMousewheelEvent)
       globalEvents.on($xeTreeSelect, 'mousedown', handleGlobalMousedownEvent)
       globalEvents.on($xeTreeSelect, 'blur', handleGlobalBlurEvent)

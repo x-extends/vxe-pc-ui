@@ -323,6 +323,14 @@ setConfig({
   segmented: {},
   select: {
     multiCharOverflow: 8,
+    radioConfig: {
+      showIcon: true,
+      trigger: 'option'
+    },
+    checkboxConfig: {
+      showIcon: true,
+      trigger: 'option'
+    },
     remoteConfig: {
       enabled: true,
       autoLoad: true
@@ -417,7 +425,7 @@ setConfig({
     }
   },
   treeSelect: {
-    autoClose: true,
+    autoClose: null as any,
     virtualYConfig: {
       enabled: true,
       gt: 0,
