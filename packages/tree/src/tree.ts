@@ -484,6 +484,18 @@ function handleNodeDragSwapEvent ($xeTree: VxeTreeConstructor & VxeTreePrivateMe
   return Promise.resolve(errRest)
 }
 
+function handleVisibleOrCheckMode (mode: '' | 'all' | 'first' | 'last' | null | undefined, isExistChild: boolean, nLevel: number) {
+  if (mode) {
+    if (mode === 'first') {
+      return !nLevel
+    }
+    if (mode === 'last') {
+      return !isExistChild
+    }
+  }
+  return true
+}
+
 function createInternalData (): TreeInternalData {
   return {
     // initialized: false,
@@ -2632,19 +2644,16 @@ export default /* define-vxe-component start */ defineVxeComponent({
       }
       return renderEmptyElement($xeTree)
     },
-    renderRadio (h: CreateElement, node: any, nodeid: string, isChecked: boolean) {
+    renderRadio (h: CreateElement, node: any, nodeid: string, isExistChild: boolean, nLevel: number, isChecked: boolean) {
       const $xeTree = this
       const props = $xeTree
 
       const { showRadio } = props
       const radioOpts = $xeTree.computeRadioOpts
-      const { showIcon, checkMethod, visibleMethod } = radioOpts
-      const isVisible = !visibleMethod || visibleMethod({ $tree: $xeTree, node })
-      let isDisabled = !!checkMethod
+      const { showIcon, checkMode, checkMethod, visibleMode, visibleMethod } = radioOpts
+      const isVisible = visibleMethod ? visibleMethod({ $tree: $xeTree, node }) : handleVisibleOrCheckMode(visibleMode, isExistChild, nLevel)
       if (showRadio && showIcon && isVisible) {
-        if (checkMethod) {
-          isDisabled = !checkMethod({ $tree: $xeTree, node })
-        }
+        const isDisabled = checkMethod ? !checkMethod({ $tree: $xeTree, node }) : !handleVisibleOrCheckMode(checkMode, isExistChild, nLevel)
         return h('div', {
           class: ['vxe-tree--radio-option', {
             'is--checked': isChecked,
@@ -2665,19 +2674,16 @@ export default /* define-vxe-component start */ defineVxeComponent({
       }
       return renderEmptyElement($xeTree)
     },
-    renderCheckbox  (h: CreateElement, node: any, nodeid: string, isChecked: boolean, isIndeterminate: boolean) {
+    renderCheckbox  (h: CreateElement, node: any, nodeid: string, isExistChild: boolean, nLevel: number, isChecked: boolean, isIndeterminate: boolean) {
       const $xeTree = this
       const props = $xeTree
 
       const { showCheckbox } = props
       const checkboxOpts = $xeTree.computeCheckboxOpts
-      const { showIcon, checkMethod, visibleMethod } = checkboxOpts
-      const isVisible = !visibleMethod || visibleMethod({ $tree: $xeTree, node })
-      let isDisabled = !!checkMethod
+      const { showIcon, checkMode, checkMethod, visibleMode, visibleMethod } = checkboxOpts
+      const isVisible = visibleMethod ? visibleMethod({ $tree: $xeTree, node }) : handleVisibleOrCheckMode(visibleMode, isExistChild, nLevel)
       if (showCheckbox && showIcon && isVisible) {
-        if (checkMethod) {
-          isDisabled = !checkMethod({ $tree: $xeTree, node })
-        }
+        const isDisabled = checkMethod ? !checkMethod({ $tree: $xeTree, node }) : !handleVisibleOrCheckMode(checkMode, isExistChild, nLevel)
         return h('div', {
           class: ['vxe-tree--checkbox-option', {
             'is--checked': isChecked,
@@ -2713,12 +2719,12 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const titleField = $xeTree.computeTitleField
       const hasChildField = $xeTree.computeHasChildField
       const childList: any[] = XEUtils.get(node, childrenField)
-      const hasChild = childList && childList.length
+      const isExistChild = childList && childList.length > 0
       const iconSlot = slots.icon
       const titleSlot = slots.title
       const extraSlot = slots.extra
       const isExpand = updateExpandedFlag && treeExpandedMaps[nodeid]
-      const nodeItem = nodeMaps[nodeid]
+      const nodeItem = nodeMaps[nodeid] || {}
       const nodeValue = XEUtils.get(node, titleField)
       const nLevel = nodeItem.level
 
@@ -2805,7 +2811,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
             : renderEmptyElement($xeTree),
           h('div', {
             class: 'vxe-tree--node-item-switcher'
-          }, showIcon && (lazy ? (isLazyLoaded ? hasChild : hasLazyChilds) : hasChild)
+          }, showIcon && (lazy ? (isLazyLoaded ? isExistChild : hasLazyChilds) : isExistChild)
             ? [
                 h('div', {
                   class: 'vxe-tree--node-item-icon',
@@ -2824,8 +2830,8 @@ export default /* define-vxe-component start */ defineVxeComponent({
               ]
             : []),
           $xeTree.renderDragIcon(h, node, nodeid),
-          $xeTree.renderRadio(h, node, nodeid, isRadioChecked),
-          $xeTree.renderCheckbox(h, node, nodeid, isCheckboxChecked, isIndeterminate),
+          $xeTree.renderRadio(h, node, nodeid, isExistChild, nLevel, isRadioChecked),
+          $xeTree.renderCheckbox(h, node, nodeid, isExistChild, nLevel, isCheckboxChecked, isIndeterminate),
           h('div', {
             class: 'vxe-tree--node-item-inner'
           }, [
