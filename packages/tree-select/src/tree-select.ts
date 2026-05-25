@@ -11,7 +11,7 @@ import VxeButtonComponent from '../../button'
 import VxeTreeComponent from '../../tree'
 import { getSlotVNs } from '../../ui/src/vn'
 
-import type { TreeSelectReactData, VxeTreeSelectEmits, TreeSelectInternalData, VxeComponentSizeType, VxeButtonDefines, VxeInputDefines, VxeTreeDefines, ValueOf, VxeComponentStyleType, VxeTreeSelectPropTypes, VxeFormDefines, VxeDrawerConstructor, VxeDrawerMethods, VxeFormConstructor, VxeFormPrivateMethods, VxeModalConstructor, VxeModalMethods, VxeInputConstructor, VxeTreeConstructor } from '../../../types'
+import type { TreeSelectReactData, VxeTreeSelectEmits, TreeSelectInternalData, VxeComponentSizeType, VxeButtonDefines, VxeInputDefines, VxeTreeDefines, ValueOf, VxeComponentStyleType, VxeTreeSelectPropTypes, VxeFormDefines, VxeDrawerConstructor, VxeDrawerMethods, VxeFormConstructor, VxeFormPrivateMethods, VxeModalConstructor, VxeModalMethods, VxeInputConstructor, VxeTreeConstructor, VxeTreeSelectDefines } from '../../../types'
 import type { VxeTableConstructor, VxeTablePrivateMethods } from '../../../types/components/table'
 
 function getOptUniqueId () {
@@ -29,7 +29,9 @@ function createReactData (): TreeSelectReactData {
     triggerFocusPanel: false,
     visiblePanel: false,
     isAniVisible: false,
-    isActivated: false
+    isActivated: false,
+    fullOptFlag: 1,
+    lazyOptFlag: 1
   }
 }
 
@@ -37,7 +39,8 @@ function createInternalData (): TreeSelectInternalData {
   return {
     // hpTimeout: undefined,
     fullOptionList: [],
-    fullNodeMaps: {}
+    fullNodeMaps: {},
+    lazyNodeMaps: {}
   }
 }
 
@@ -65,6 +68,14 @@ export default /* define-vxe-component start */ defineVxeComponent({
     disabled: {
       type: Boolean as PropType<VxeTreeSelectPropTypes.Disabled>,
       default: null
+    },
+    showFullLabel: {
+      type: Boolean as PropType<VxeTreeSelectPropTypes.ShowFullLabel>,
+      default: getConfig().treeSelect.showFullLabel
+    },
+    separator: {
+      type: String as PropType<VxeTreeSelectPropTypes.Separator>,
+      default: getConfig().treeSelect.separator
     },
     filterable: Boolean as PropType<VxeTreeSelectPropTypes.Filterable>,
     filterConfig: Object as PropType<VxeTreeSelectPropTypes.FilterConfig>,
@@ -345,22 +356,23 @@ export default /* define-vxe-component start */ defineVxeComponent({
     computeSelectLabel () {
       const $xeTreeSelect = this
       const props = $xeTreeSelect
+      const reactData = ($xeTreeSelect as any).reactData as TreeSelectReactData
       const internalData = ($xeTreeSelect as any).internalData as TreeSelectInternalData
 
-      const { value: modelValue, lazyOptions } = props
-      const { fullNodeMaps } = internalData
-      const valueField = $xeTreeSelect.computeValueField as string
+      const { value: modelValue, showFullLabel } = props
+      const { fullOptFlag, lazyOptFlag } = reactData
+      const { fullNodeMaps, lazyNodeMaps } = internalData
       const labelField = $xeTreeSelect.computeLabelField as string
       const selectVals = XEUtils.eqNull(modelValue) ? [] : (XEUtils.isArray(modelValue) ? modelValue : [modelValue])
       return selectVals.map(val => {
         const cacheItem = fullNodeMaps[val]
-        if (cacheItem) {
-          return cacheItem.item[labelField]
+        if (fullOptFlag && cacheItem) {
+          return showFullLabel ? cacheItem.fullLabel : cacheItem.item[labelField]
         }
-        if (lazyOptions) {
-          const lazyItem = lazyOptions.find(item => item[valueField] === val)
-          if (lazyItem) {
-            return lazyItem[labelField]
+        if (lazyOptFlag) {
+          const lazyCacheItem = lazyNodeMaps[val]
+          if (lazyCacheItem) {
+            return showFullLabel ? lazyCacheItem.fullLabel : lazyCacheItem.item[labelField]
           }
         }
         return val
@@ -421,24 +433,20 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const nodeid = option[nodeKeyField]
       return nodeid ? encodeURIComponent(nodeid) : ''
     },
-    cacheDataMap  () {
+    handleCacheMap (optList: VxeTreeSelectPropTypes.Options) {
       const $xeTreeSelect = this
       const props = $xeTreeSelect
-      const internalData = $xeTreeSelect.internalData
 
-      const { options } = props
+      const { separator } = props
+      const treeOpts = $xeTreeSelect.computeTreeOpts
       const nodeKeyField = $xeTreeSelect.computeNodeKeyField
       const childrenField = $xeTreeSelect.computeChildrenField
       const valueField = $xeTreeSelect.computeValueField
-      const nodeMaps: Record<string, {
-        item: any
-        index: number
-        items: any[]
-        parent: any
-        nodes: any[]
-      }> = {}
+      const labelField = $xeTreeSelect.computeLabelField
+      const { transform } = treeOpts
+      const nodeMaps: Record<string, VxeTreeSelectDefines.NodeCacheObj> = {}
       const keyMaps: Record<string, boolean> = {}
-      XEUtils.eachTree(options, (item, index, items, path, parent, nodes) => {
+      const handleOptNode = (item: any, index: number, items: any[], path: string[], parentItem: any, nodes: any[]) => {
         let nodeid = $xeTreeSelect.getNodeid(item)
         if (!nodeid) {
           nodeid = getOptUniqueId()
@@ -451,10 +459,46 @@ export default /* define-vxe-component start */ defineVxeComponent({
         if (nodeMaps[value]) {
           errLog('vxe.error.repeatKey', [`[tree-select] ${valueField}`, value])
         }
-        nodeMaps[value] = { item, index, items, parent, nodes }
-      }, { children: childrenField })
+        nodeMaps[value] = {
+          item,
+          index,
+          items,
+          parent: parentItem,
+          nodes,
+          fullLabel: nodes.map(item => item[labelField]).join((separator || '/') + ' ')
+        }
+      }
+      if (optList) {
+        if (transform) {
+          optList.forEach((item, index, items) => {
+            handleOptNode(item, index, items, [], null, [])
+          })
+        } else {
+          XEUtils.eachTree(optList, handleOptNode, { children: childrenField })
+        }
+      }
+      return nodeMaps
+    },
+    cacheDataMap () {
+      const $xeTreeSelect = this
+      const props = $xeTreeSelect
+      const reactData = $xeTreeSelect.reactData
+      const internalData = $xeTreeSelect.internalData
+
+      const { options } = props
+      internalData.fullNodeMaps = $xeTreeSelect.handleCacheMap(options || [])
       internalData.fullOptionList = options || []
-      internalData.fullNodeMaps = nodeMaps
+      reactData.fullOptFlag++
+    },
+    cacheLazyDataMap () {
+      const $xeTreeSelect = this
+      const props = $xeTreeSelect
+      const reactData = $xeTreeSelect.reactData
+      const internalData = $xeTreeSelect.internalData
+
+      const { lazyOptions } = props
+      internalData.lazyNodeMaps = $xeTreeSelect.handleCacheMap(lazyOptions || [])
+      reactData.lazyOptFlag++
     },
     updateZindex () {
       const $xeTreeSelect = this
@@ -1121,12 +1165,18 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const $xeTreeSelect = this
 
       $xeTreeSelect.cacheDataMap()
+    },
+    lazyOptions () {
+      const $xeTreeSelect = this
+
+      $xeTreeSelect.cacheLazyDataMap()
     }
   },
   created () {
     const $xeTreeSelect = this
 
     $xeTreeSelect.cacheDataMap()
+    $xeTreeSelect.cacheLazyDataMap()
   },
   mounted () {
     const $xeTreeSelect = this
