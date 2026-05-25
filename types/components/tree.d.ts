@@ -71,10 +71,12 @@ export namespace VxeTreePropTypes {
   export type CheckNodeKey = string | number | null
   export interface RadioConfig<D = any> {
     strict?: boolean
+    visibleMode?: 'all' | 'first' | 'last' | '' | null
     visibleMethod?: (params: {
       $tree: VxeTreeConstructor
       node: D
      }) => boolean
+    checkMode?: 'all' | 'first' | 'last' | '' | null
     checkMethod?: (params: {
       $tree: VxeTreeConstructor
       node: D
@@ -89,10 +91,12 @@ export namespace VxeTreePropTypes {
     showHeader?: boolean
     checkStrictly?: boolean
     highlight?: boolean
+    visibleMode?: 'all' | 'first' | 'last' | '' | null
     visibleMethod?: (params: {
       $tree: VxeTreeConstructor
       node: D
      }) => boolean
+    checkMode?: 'all' | 'first' | 'last' | '' | null
     checkMethod?: (params: {
       $tree: VxeTreeConstructor
       node: D
