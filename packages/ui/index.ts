@@ -426,6 +426,7 @@ setConfig({
   },
   treeSelect: {
     autoClose: null as any,
+    // separator: '/',
     virtualYConfig: {
       enabled: true,
       gt: 0,

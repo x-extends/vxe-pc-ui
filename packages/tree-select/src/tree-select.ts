@@ -11,7 +11,7 @@ import VxeButtonComponent from '../../button'
 import VxeTreeComponent from '../../tree'
 import { getSlotVNs } from '../../ui/src/vn'
 
-import type { TreeSelectReactData, VxeTreeSelectEmits, TreeSelectInternalData, VxeButtonEvents, VxeInputEvents, ValueOf, VxeComponentStyleType, TreeSelectPrivateRef, TreeSelectPrivateMethods, TreeSelectMethods, VxeTreeSelectPrivateComputed, VxeTreeSelectPropTypes, VxeTreeSelectConstructor, VxeFormDefines, VxeDrawerConstructor, VxeDrawerMethods, VxeTreeSelectPrivateMethods, VxeFormConstructor, VxeFormPrivateMethods, VxeInputConstructor, VxeModalConstructor, VxeModalMethods, VxeTreeConstructor, VxeTreeEvents } from '../../../types'
+import type { TreeSelectReactData, VxeTreeSelectEmits, TreeSelectInternalData, VxeButtonEvents, VxeInputEvents, ValueOf, VxeComponentStyleType, TreeSelectPrivateRef, TreeSelectPrivateMethods, TreeSelectMethods, VxeTreeSelectPrivateComputed, VxeTreeSelectPropTypes, VxeTreeSelectConstructor, VxeFormDefines, VxeDrawerConstructor, VxeDrawerMethods, VxeTreeSelectPrivateMethods, VxeFormConstructor, VxeFormPrivateMethods, VxeInputConstructor, VxeModalConstructor, VxeModalMethods, VxeTreeConstructor, VxeTreeEvents, VxeTreeSelectDefines } from '../../../types'
 import type { VxeTableConstructor, VxeTablePrivateMethods } from '../../../types/components/table'
 
 function getOptUniqueId () {
@@ -29,7 +29,9 @@ function createReactData (): TreeSelectReactData {
     triggerFocusPanel: false,
     visiblePanel: false,
     isAniVisible: false,
-    isActivated: false
+    isActivated: false,
+    fullOptFlag: 1,
+    lazyOptFlag: 1
   }
 }
 
@@ -37,7 +39,8 @@ function createInternalData (): TreeSelectInternalData {
   return {
     // hpTimeout: undefined,
     fullOptionList: [],
-    fullNodeMaps: {}
+    fullNodeMaps: {},
+    lazyNodeMaps: {}
   }
 }
 
@@ -58,6 +61,14 @@ export default defineVxeComponent({
     disabled: {
       type: Boolean as PropType<VxeTreeSelectPropTypes.Disabled>,
       default: null
+    },
+    showFullLabel: {
+      type: Boolean as PropType<VxeTreeSelectPropTypes.ShowFullLabel>,
+      default: getConfig().treeSelect.showFullLabel
+    },
+    separator: {
+      type: String as PropType<VxeTreeSelectPropTypes.Separator>,
+      default: getConfig().treeSelect.separator
     },
     filterable: Boolean as PropType<VxeTreeSelectPropTypes.Filterable>,
     filterConfig: Object as PropType<VxeTreeSelectPropTypes.FilterConfig>,
@@ -297,20 +308,20 @@ export default defineVxeComponent({
     })
 
     const computeSelectLabel = computed(() => {
-      const { modelValue, lazyOptions } = props
-      const { fullNodeMaps } = internalData
-      const valueField = computeValueField.value
+      const { modelValue, showFullLabel } = props
+      const { fullOptFlag, lazyOptFlag } = reactData
+      const { fullNodeMaps, lazyNodeMaps } = internalData
       const labelField = computeLabelField.value
       const selectVals = XEUtils.eqNull(modelValue) ? [] : (XEUtils.isArray(modelValue) ? modelValue : [modelValue])
       return selectVals.map(val => {
         const cacheItem = fullNodeMaps[val]
-        if (cacheItem) {
-          return cacheItem.item[labelField]
+        if (fullOptFlag && cacheItem) {
+          return showFullLabel ? cacheItem.fullLabel : cacheItem.item[labelField]
         }
-        if (lazyOptions) {
-          const lazyItem = lazyOptions.find(item => item[valueField] === val)
-          if (lazyItem) {
-            return lazyItem[labelField]
+        if (lazyOptFlag) {
+          const lazyCacheItem = lazyNodeMaps[val]
+          if (lazyCacheItem) {
+            return showFullLabel ? lazyCacheItem.fullLabel : lazyCacheItem.item[labelField]
           }
         }
         return val
@@ -375,22 +386,17 @@ export default defineVxeComponent({
       return nodeid ? encodeURIComponent(nodeid) : ''
     }
 
-    const cacheDataMap = () => {
-      const { options } = props
+    const handleCacheMap = (optList: VxeTreeSelectPropTypes.Options) => {
+      const { separator } = props
       const treeOpts = computeTreeOpts.value
       const nodeKeyField = computeNodeKeyField.value
       const childrenField = computeChildrenField.value
       const valueField = computeValueField.value
+      const labelField = computeLabelField.value
       const { transform } = treeOpts
-      const nodeMaps: Record<string, {
-        item: any
-        index: number
-        items: any[]
-        parent: any
-        nodes: any[]
-      }> = {}
+      const nodeMaps: Record<string, VxeTreeSelectDefines.NodeCacheObj> = {}
       const keyMaps: Record<string, boolean> = {}
-      const handleOptNode = (item: any, index: number, items: any[], path: string[], parent: any, nodes: any[]) => {
+      const handleOptNode = (item: any, index: number, items: any[], path: string[], parentItem: any, nodes: any[]) => {
         let nodeid = getNodeid(item)
         if (!nodeid) {
           nodeid = getOptUniqueId()
@@ -403,19 +409,38 @@ export default defineVxeComponent({
         if (nodeMaps[value]) {
           errLog('vxe.error.repeatKey', [`[tree-select] ${valueField}`, value])
         }
-        nodeMaps[value] = { item, index, items, parent, nodes }
+        nodeMaps[value] = {
+          item,
+          index,
+          items,
+          parent: parentItem,
+          nodes,
+          fullLabel: nodes.map(item => item[labelField]).join((separator || '/') + ' ')
+        }
       }
-      if (options) {
+      if (optList) {
         if (transform) {
-          options.forEach((item, index, items) => {
+          optList.forEach((item, index, items) => {
             handleOptNode(item, index, items, [], null, [])
           })
         } else {
-          XEUtils.eachTree(options, handleOptNode, { children: childrenField })
+          XEUtils.eachTree(optList, handleOptNode, { children: childrenField })
         }
       }
+      return nodeMaps
+    }
+
+    const cacheDataMap = () => {
+      const { options } = props
+      internalData.fullNodeMaps = handleCacheMap(options || [])
       internalData.fullOptionList = options || []
-      internalData.fullNodeMaps = nodeMaps
+      reactData.fullOptFlag++
+    }
+
+    const cacheLazyDataMap = () => {
+      const { lazyOptions } = props
+      internalData.lazyNodeMaps = handleCacheMap(lazyOptions || [])
+      reactData.lazyOptFlag++
     }
 
     const updateZindex = () => {
@@ -981,11 +1006,30 @@ export default defineVxeComponent({
       ])
     }
 
+    const optFlag = ref(0)
+    watch(() => props.options ? props.options.length : -1, () => {
+      optFlag.value++
+    })
     watch(() => props.options, () => {
+      optFlag.value++
+    })
+    watch(optFlag, () => {
       cacheDataMap()
     })
 
+    const lazyOptFlag = ref(0)
+    watch(() => props.lazyOptions ? props.lazyOptions.length : -1, () => {
+      lazyOptFlag.value++
+    })
+    watch(() => props.lazyOptions, () => {
+      lazyOptFlag.value++
+    })
+    watch(lazyOptFlag, () => {
+      cacheLazyDataMap()
+    })
+
     cacheDataMap()
+    cacheLazyDataMap()
 
     onMounted(() => {
       if (XEUtils.isBoolean(props.autoClose)) {

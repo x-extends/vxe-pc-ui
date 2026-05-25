@@ -36,6 +36,8 @@ export namespace VxeTreeSelectPropTypes {
   export type Readonly = boolean
   export type Loading = boolean
   export type Disabled = boolean
+  export type ShowFullLabel = boolean
+  export type Separator = string
   /**
    * 已废弃，被 CheckedClosable, ClearClosable 替换
    * @deprecated
@@ -161,6 +163,8 @@ export interface VxeTreeSelectProps<D = any> {
   readonly?: VxeTreeSelectPropTypes.Readonly
   loading?: VxeTreeSelectPropTypes.Loading
   disabled?: VxeTreeSelectPropTypes.Disabled
+  showFullLabel?: VxeTreeSelectPropTypes.ShowFullLabel
+  separator?: VxeTreeSelectPropTypes.Separator
   /**
    * 已废弃，被 checked-closable, clear-closable 替换
    * @deprecated
@@ -222,18 +226,16 @@ export interface TreeSelectReactData {
   visiblePanel: boolean
   isAniVisible: boolean
   isActivated: boolean
+
+  fullOptFlag: number
+  lazyOptFlag: number
 }
 
 export interface TreeSelectInternalData {
   hpTimeout?: undefined | number
   fullOptionList: any[]
-  fullNodeMaps: Record<string, {
-    item: any
-    index: number
-    items: any[]
-    parent: any
-    nodes: any[]
-  }>
+  fullNodeMaps: Record<string, VxeTreeSelectDefines.NodeCacheObj>
+  lazyNodeMaps: Record<string, VxeTreeSelectDefines.NodeCacheObj>
 }
 
 export interface TreeSelectMethods {
@@ -257,6 +259,15 @@ export type VxeTreeSelectEmits = [
 ]
 
 export namespace VxeTreeSelectDefines {
+  export interface NodeCacheObj {
+    item: any
+    index: number
+    items: any[]
+    parent: any
+    nodes: any[]
+    fullLabel: string
+  }
+
   export interface TreeSelectEventParams extends VxeComponentEventParams {
     $treeSelect: VxeTreeSelectConstructor
   }
