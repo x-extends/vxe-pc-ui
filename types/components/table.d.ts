@@ -405,13 +405,17 @@ export namespace VxeTablePropTypes {
    */
   export interface AggregateConfig<D = any> {
     /**
-     * 分组列展示方式
+     * 分组列展示方式，column独立列展示，combined 将多个分组字段合并为一组进行展示
      */
-    mode?: 'column' | 'default' | '' | null
+    mode?: 'column' | 'combined' | 'default' | '' | null
     /**
      * 显示位置
      */
     placement?: 'left' | 'right' | 'top' | 'bottom' | 'default' | '' | null
+    /**
+     * 用于 mode=combined 有效，分组字段合并内容的分隔符
+     */
+    separator?: string
     /**
      * 按指定字段对数据进行分组
      */
@@ -2999,6 +3003,14 @@ export namespace VxeTablePropTypes {
     isMerge?: boolean
     isColgroup?: boolean
     /**
+     * 是否展开所有树层级
+     */
+    isTreeAllExpanded?: boolean
+    /**
+     * 是否展开所有分组层级
+     */
+    isRowGroupAllExpanded?: boolean
+    /**
      * 是否马上下载，如果设置为 false 则通过返回结果为内容的 Promise
      */
     download?: boolean
@@ -3102,11 +3114,6 @@ export namespace VxeTablePropTypes {
     data: any[]
     columns: VxeTableDefines.ColumnInfo[]
     colgroups: VxeTableDefines.ColumnInfo[][]
-
-    /**
-     * @private
-     */
-    isAllExpand?: boolean
     /**
      * @private
      */
@@ -5959,6 +5966,7 @@ export namespace VxeTableDefines {
     hasFooter: boolean
     hasMerge: boolean
     hasTree: boolean
+    hasRowGroup: boolean
     hasColgroup: boolean
     visible: boolean
   }
@@ -5970,7 +5978,19 @@ export namespace VxeTableDefines {
     type: any
     isColgroup: boolean
     isMerge: boolean
-    isAllExpand: boolean
+    /**
+     * 已废弃，被 isTreeAllExpanded 替换
+     * @deprecated
+     */
+    isAllExpand?: boolean
+    /**
+     * 是否展开所有树层级
+     */
+    isTreeAllExpanded: boolean
+    /**
+     * 是否展开所有分组层级
+     */
+    isRowGroupAllExpanded: boolean
     useStyle: boolean
     original: boolean
     message: boolean
@@ -6126,6 +6146,7 @@ export namespace VxeTableDefines {
       label: any
     }>
     groupContent: string
+    groupCombineds: string[]
     groupField: string
     childCount: number
 
