@@ -6197,6 +6197,7 @@ export namespace VxeTableDefines {
     filterRecoverMethod: VxeColumnPropTypes.FilterRecoverMethod<D>
     filterRender: VxeColumnPropTypes.FilterRender
     floatingFilters: VxeColumnPropTypes.FloatingFilters
+    rules: VxeColumnPropTypes.Rules<D>
     rowGroupNode: VxeColumnPropTypes.RowGroupNode
     treeNode: VxeColumnPropTypes.TreeNode
     dragSort: VxeColumnPropTypes.DragSort

@@ -150,7 +150,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
         stys.width = toCssUnit(width)
       }
       if (height) {
-        stys.height = toCssUnit(height)
+        stys.height = height === 'auto' ? '100%' : toCssUnit(height)
       }
       return stys
     },

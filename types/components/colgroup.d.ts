@@ -1,5 +1,5 @@
 import { DefineVxeComponentApp, DefineVxeComponentOptions, DefineVxeComponentInstance, VxeComponentEventParams, ValueOf } from '@vxe-ui/core'
-import { VxeColumnPropTypes, VxeColumnSlotTypes } from './column'
+import { VxeColumnProps, VxeColumnSlots } from './column'
 
 /* eslint-disable @typescript-eslint/no-empty-interface,no-use-before-define,@typescript-eslint/ban-types */
 
@@ -20,67 +20,7 @@ export interface VxeColgroupPrivateRef extends ColgroupPrivateRef { }
 export namespace VxeColgroupPropTypes {
 }
 
-export interface VxeColgroupProps {
-  /**
-   * 渲染类型
-   */
-  type?: VxeColumnPropTypes.Type
-  /**
-   * 列字段名
-   */
-  field?: VxeColumnPropTypes.Field
-  /**
-   * 列标题
-   */
-  title?: VxeColumnPropTypes.Title
-  /**
-   * 列宽度
-   */
-  width?: VxeColumnPropTypes.Width
-  /**
-   * 列最小宽度，把剩余宽度按比例分配
-   */
-  minWidth?: VxeColumnPropTypes.MinWidth
-  /**
-   * 是否允许拖动列宽调整大小
-   */
-  resizable?: VxeColumnPropTypes.Resizable
-  /**
-   * 将列固定在左侧或者右侧
-   */
-  fixed?: VxeColumnPropTypes.Fixed
-  /**
-   * 列对齐方式
-   */
-  align?: VxeColumnPropTypes.Align
-  /**
-   * 表头对齐方式
-   */
-  headerAlign?: VxeColumnPropTypes.HeaderAlign
-  /**
-   * 当内容过长时显示为省略号
-   */
-  showOverflow?: VxeColumnPropTypes.ShowOverflow
-  /**
-   * 当表头内容过长时显示为省略号
-   */
-  showHeaderOverflow?: VxeColumnPropTypes.ShowHeaderOverflow
-  /**
-   * 给单元格附加 className
-   */
-  className?: VxeColumnPropTypes.ClassName
-  /**
-   * 给表头单元格附加 className
-   */
-  headerClassName?: VxeColumnPropTypes.HeaderClassName
-  /**
-   * 是否可视
-   */
-  visible?: VxeColumnPropTypes.Visible
-  /**
-   * 额外的参数
-   */
-  params?: VxeColumnPropTypes.Params
+export interface VxeColgroupProps extends VxeColumnProps {
 }
 
 export interface ColgroupPrivateComputed {
@@ -116,15 +56,7 @@ export namespace VxeColgroupSlotTypes {
   export interface DefaultSlotParams {}
 }
 
-export interface VxeColgroupSlots<D = any> {
-  /**
-   * 自定义表头内容的模板
-   */
-  header?: (params: VxeColumnSlotTypes.HeaderSlotParams<D>) => any
-  /**
-   * 只对 type=checkbox,radio 有效，自定义标题模板
-   */
-  title?: (params: VxeColumnSlotTypes.HeaderSlotParams<D>) => any
+export interface VxeColgroupSlots<D = any> extends VxeColumnSlots<D> {
 }
 
 export const Colgroup: typeof VxeColgroup
