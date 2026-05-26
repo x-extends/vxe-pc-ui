@@ -529,7 +529,8 @@ export default defineVxeComponent({
           const errorRules: Rule[] = []
           const syncVailds: Promise<any>[] = []
           if (property && formRules) {
-            const rules = XEUtils.get(formRules, property)
+            const item = getItemByField(property)
+            const rules = item && item.rules ? item.rules : XEUtils.get(formRules, property)
             if (rules) {
               const itemValue = XEUtils.isUndefined(val) ? XEUtils.get(data, property) : val
               rules.forEach((rule) => {

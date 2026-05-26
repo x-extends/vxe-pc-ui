@@ -48,6 +48,8 @@ export namespace VxeColumnPropTypes {
   export type Padding = boolean
   export type VerticalAlign = '' | 'top' | 'center' | null
 
+  export type Rules<D = any> = VxeTableDefines.ValidatorRule<D>[]
+
   export type Formatter<D = any> = ((params: VxeColumnDefines.CellFormatterParams<D>) => string | number) | any[] | string
 
   export type HeaderFormatter = ((params: {
@@ -557,6 +559,10 @@ export interface VxeColumnProps<D = any> {
    * 是否启用浮动筛选
    */
   floatingFilters?: VxeColumnPropTypes.FloatingFilters
+  /**
+   * 列的校验规则
+   */
+  rules?: VxeColumnPropTypes.Rules<D>
   /**
    * 设置为分组节点
    */

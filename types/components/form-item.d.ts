@@ -277,7 +277,7 @@ export interface VxeFormItemProps<D = any> {
    * 项渲染配置项
    */
   itemRender?: VxeFormItemPropTypes.ItemRender
-  Rules?: VxeFormItemPropTypes.Rules<D>
+  rules?: VxeFormItemPropTypes.Rules<D>
   slots?: VxeFormItemPropTypes.Slots
   children?: VxeFormItemProps<D>[]
 

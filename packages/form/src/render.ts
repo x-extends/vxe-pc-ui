@@ -58,7 +58,7 @@ export function getItemClass ($xeForm: VxeFormConstructor & VxeFormPrivateMethod
   let isRequired = false
   let isValid = false
   if (!readonly && rules) {
-    const itemRules = rules[field]
+    const itemRules = item.rules ? item.rules : rules[field]
     if (itemRules && itemRules.length) {
       isValid = true
       isRequired = itemRules.some((rule) => rule.required)

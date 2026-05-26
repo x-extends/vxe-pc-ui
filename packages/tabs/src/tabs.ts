@@ -130,10 +130,13 @@ export default defineVxeComponent({
     })
 
     const computeWrapperStyle = computed(() => {
-      const { width } = props
+      const { width, height } = props
       const stys: VxeComponentStyleType = {}
       if (width) {
         stys.width = toCssUnit(width)
+      }
+      if (height) {
+        stys.height = height === 'auto' ? '100%' : toCssUnit(height)
       }
       return stys
     })
