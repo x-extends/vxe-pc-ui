@@ -70,7 +70,8 @@ export default defineVxeComponent({
     'date-prev',
     'date-today',
     'date-next',
-    'confirm'
+    'confirm',
+    'revert'
   ] as VxeDatePanelEmits,
   setup (props, context) {
     const { emit } = context
@@ -615,7 +616,9 @@ export default defineVxeComponent({
     }
 
     const dateRevert = () => {
-      reactData.inputLabel = props.multiple ? computeDateMultipleLabel.value : reactData.datePanelLabel
+      const label = props.multiple ? computeDateMultipleLabel.value : reactData.datePanelLabel
+      reactData.inputLabel = label
+      dispatchEvent('revert', { label }, null)
     }
 
     const afterCheckValue = (inpVal: string) => {

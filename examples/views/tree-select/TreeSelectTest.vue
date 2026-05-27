@@ -8,7 +8,7 @@
 
 <script lang="ts" setup>
 import { ref, reactive } from 'vue'
-import { VxeTreeSelectProps } from 'vxe-pc-ui'
+import { VxeTreeSelectProps } from '../../../types'
 
 interface NodeVO {
   name: string

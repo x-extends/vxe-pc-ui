@@ -1301,19 +1301,20 @@ export default defineVxeComponent({
       evnt.preventDefault()
       evnt.stopPropagation()
       const { transform } = props
-      const { selectCheckboxMaps } = internalData
+      const { selectCheckboxMaps, nodeMaps } = internalData
       const childrenField = computeChildrenField.value
       const mapChildrenField = computeMapChildrenField.value
       const checkboxOpts = computeCheckboxOpts.value
-      const { checkStrictly, checkMethod } = checkboxOpts
-      let isDisabled = !!checkMethod
-      if (checkMethod) {
-        isDisabled = !checkMethod({ $tree: $xeTree, node })
-      }
+      const { checkStrictly, checkMode, checkMethod } = checkboxOpts
+      const nodeid = getNodeId(node)
+      const childList: any[] = XEUtils.get(node, childrenField)
+      const isExistChild = childList && childList.length > 0
+      const nodeItem = nodeMaps[nodeid] || {}
+      const nLevel = nodeItem.level
+      const isDisabled = checkMethod ? !checkMethod({ $tree: $xeTree, node }) : !handleVisibleOrCheckMode(checkMode, isExistChild, nLevel)
       if (isDisabled) {
         return
       }
-      const nodeid = getNodeId(node)
       let isChecked = false
       if (selectCheckboxMaps[nodeid]) {
         delete selectCheckboxMaps[nodeid]
@@ -1374,17 +1375,20 @@ export default defineVxeComponent({
     const changeRadioEvent = (evnt: MouseEvent, node: any) => {
       evnt.preventDefault()
       evnt.stopPropagation()
+      const { nodeMaps } = internalData
       const radioOpts = computeRadioOpts.value
-      const { checkMethod } = radioOpts
-      let isDisabled = !!checkMethod
-      if (checkMethod) {
-        isDisabled = !checkMethod({ $tree: $xeTree, node })
-      }
+      const childrenField = computeChildrenField.value
+      const { checkMode, checkMethod } = radioOpts
+      const nodeid = getNodeId(node)
+      const childList: any[] = XEUtils.get(node, childrenField)
+      const isExistChild = childList && childList.length > 0
+      const nodeItem = nodeMaps[nodeid] || {}
+      const nLevel = nodeItem.level
+      const isDisabled = checkMethod ? !checkMethod({ $tree: $xeTree, node }) : !handleVisibleOrCheckMode(checkMode, isExistChild, nLevel)
       if (isDisabled) {
         return
       }
       const isChecked = true
-      const nodeid = getNodeId(node)
       const value = deNodeValue(nodeid)
       reactData.selectRadioKey = nodeid
       emitRadioMode(value)

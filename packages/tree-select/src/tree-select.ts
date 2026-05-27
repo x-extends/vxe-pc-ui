@@ -284,9 +284,10 @@ export default defineVxeComponent({
       return propsOpts.children || 'children'
     })
 
-    const computeParentField = computed(() => {
+    const computeNodeParentField = computed(() => {
       const propsOpts = computePropsOpts.value
-      return propsOpts.parent || 'parentField'
+      const treeOpts = computeTreeOpts.value
+      return propsOpts.parent || treeOpts.parentField || 'parentId'
     })
 
     const computeHasChildField = computed(() => {
@@ -390,6 +391,7 @@ export default defineVxeComponent({
       const { separator } = props
       const treeOpts = computeTreeOpts.value
       const nodeKeyField = computeNodeKeyField.value
+      const nodeParentField = computeNodeParentField.value
       const childrenField = computeChildrenField.value
       const valueField = computeValueField.value
       const labelField = computeLabelField.value
@@ -420,9 +422,20 @@ export default defineVxeComponent({
       }
       if (optList) {
         if (transform) {
-          optList.forEach((item, index, items) => {
-            handleOptNode(item, index, items, [], null, [])
+          // if (showFullLabel) {
+          const treeList = XEUtils.toArrayTree(optList, {
+            key: nodeKeyField,
+            parentKey: nodeParentField,
+            mapChildren: childrenField,
+            rootParentValue: treeOpts.rootParentValue,
+            rootValues: treeOpts.rootValues
           })
+          XEUtils.eachTree(treeList, handleOptNode, { children: childrenField })
+          // } else {
+          //   optList.forEach((item, index, items) => {
+          //     handleOptNode(item, index, items, [], null, [])
+          //   })
+          // }
         } else {
           XEUtils.eachTree(optList, handleOptNode, { children: childrenField })
         }
@@ -771,7 +784,7 @@ export default defineVxeComponent({
       const labelField = computeLabelField.value
       const valueField = computeValueField.value
       const childrenField = computeChildrenField.value
-      const parentField = computeParentField.value
+      const nodeParentField = computeNodeParentField.value
       const hasChildField = computeHasChildField.value
       const virtualYOpts = computeVirtualYOpts.value
       const filterOpts = computeFilterOpts.value
@@ -941,7 +954,7 @@ export default defineVxeComponent({
                         valueField: valueField,
                         keyField: nodeKeyField,
                         childrenField: treeOpts.childrenField || childrenField,
-                        parentField: treeOpts.parentField || parentField,
+                        parentField: nodeParentField,
                         hasChildField: treeOpts.hasChildField || hasChildField,
                         accordion: treeOpts.accordion,
                         expandAll: treeOpts.expandAll,

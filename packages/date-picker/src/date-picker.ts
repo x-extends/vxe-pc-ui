@@ -11,7 +11,7 @@ import VxeDatePanelComponent from '../../date-panel/src/date-panel'
 import VxeButtonComponent from '../../button/src/button'
 import VxeButtonGroupComponent from '../../button/src/button-group'
 
-import type { VxeDatePickerConstructor, VxeDatePickerEmits, DatePickerInternalData, DatePickerReactData, DatePickerMethods, VxeDatePickerPropTypes, DatePickerPrivateRef, VxeFormConstructor, VxeFormPrivateMethods, VxeFormDefines, ValueOf, VxeModalConstructor, VxeDrawerConstructor, VxeModalMethods, VxeDrawerMethods, VxeDatePickerDefines, VxeButtonGroupEvents, VxeDatePanelConstructor } from '../../../types'
+import type { VxeDatePickerConstructor, VxeDatePickerEmits, DatePickerInternalData, DatePickerReactData, DatePickerMethods, VxeDatePanelDefines, VxeDatePickerPropTypes, DatePickerPrivateRef, VxeFormConstructor, VxeFormPrivateMethods, VxeFormDefines, ValueOf, VxeModalConstructor, VxeDrawerConstructor, VxeModalMethods, VxeDrawerMethods, VxeDatePickerDefines, VxeButtonGroupEvents, VxeDatePanelConstructor } from '../../../types'
 import type { VxeTableConstructor, VxeTablePrivateMethods } from '../../../types/components/table'
 
 export default defineVxeComponent({
@@ -489,8 +489,12 @@ export default defineVxeComponent({
       }
     }
 
-    const panelConfirmEvent = (params: VxeDatePickerDefines.ConfirmEventParams) => {
+    const panelConfirmEvent = (params: VxeDatePanelDefines.ConfirmEventParams) => {
       dispatchEvent('confirm', params, params.$event)
+    }
+
+    const panelRevertEvent = (params: VxeDatePanelDefines.RevertEventParams) => {
+      reactData.inputLabel = params.label
     }
 
     // 全局事件
@@ -855,7 +859,8 @@ export default defineVxeComponent({
                         disabledMethod: props.disabledMethod,
                         selectDay: props.selectDay,
                         onChange: panelChangeEvent,
-                        onConfirm: panelConfirmEvent
+                        onConfirm: panelConfirmEvent,
+                        onRevert: panelRevertEvent
                       })
                     ]),
                     h('div', {
