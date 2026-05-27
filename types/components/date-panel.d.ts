@@ -137,14 +137,16 @@ export interface DatePanelPrivateMethods { }
 export interface VxeDatePanelPrivateMethods extends DatePanelPrivateMethods { }
 
 export type VxeDatePanelEmits = [
-  'update:modelValue',
+  'model-value',
+  'modelValue',
   'change',
   'click',
   'clear',
   'date-prev',
   'date-today',
   'date-next',
-  'confirm'
+  'confirm',
+  'revert'
 ]
 
 export namespace VxeDatePanelDefines {
@@ -243,18 +245,29 @@ export namespace VxeDatePanelDefines {
   }
 
   export interface ChangeEventParams extends DatePanelEventParams, DatePanelParams { }
+
+  export interface ConfirmEventParams extends DatePanelEventParams {}
+  export interface RevertEventParams extends DatePanelEventParams {
+    label: string
+  }
 }
 
 export type VxeDatePanelEventProps = {
   onChange?: VxeDatePanelEvents.Change
+  onConfirm?: VxeDatePanelEvents.Confirm
+  onRevert?: VxeDatePanelEvents.Revert
 }
 
 export interface VxeDatePanelListeners {
   change?: VxeDatePanelEvents.Change
+  confirm?: VxeDatePanelEvents.Confirm
+  revert?: VxeDatePanelEvents.Revert
 }
 
 export namespace VxeDatePanelEvents {
   export type Change = (params: VxeDatePanelDefines.ChangeEventParams) => void
+  export type Confirm = (params: VxeDatePanelDefines.ConfirmEventParams) => void
+  export type Revert = (params: VxeDatePanelDefines.RevertEventParams) => void
 }
 
 export namespace VxeDatePanelSlotTypes {

@@ -696,7 +696,9 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const props = $xeDatePanel
       const reactData = $xeDatePanel.reactData
 
-      reactData.inputLabel = props.multiple ? $xeDatePanel.computeDateMultipleLabel : reactData.datePanelLabel
+      const label = props.multiple ? $xeDatePanel.computeDateMultipleLabel : reactData.datePanelLabel
+      reactData.inputLabel = label
+      $xeDatePanel.dispatchEvent('revert', { label }, null)
     },
     afterCheckValue (inpVal: string) {
       const $xeDatePanel = this

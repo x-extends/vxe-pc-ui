@@ -322,11 +322,12 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const propsOpts = $xeTreeSelect.computePropsOpts as VxeTreeSelectPropTypes.OptionProps
       return propsOpts.children || 'children'
     },
-    computeParentField () {
+    computeNodeParentField () {
       const $xeTreeSelect = this
 
       const propsOpts = $xeTreeSelect.computePropsOpts as VxeTreeSelectPropTypes.OptionProps
-      return propsOpts.parent || 'parentField'
+      const treeOpts = $xeTreeSelect.computeTreeOpts as VxeTreeSelectPropTypes.TreeConfig
+      return propsOpts.parent || treeOpts.parentField || 'parentId'
     },
     computeHasChildField () {
       const $xeTreeSelect = this
@@ -440,6 +441,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const { separator } = props
       const treeOpts = $xeTreeSelect.computeTreeOpts
       const nodeKeyField = $xeTreeSelect.computeNodeKeyField
+      const nodeParentField = $xeTreeSelect.computeNodeParentField
       const childrenField = $xeTreeSelect.computeChildrenField
       const valueField = $xeTreeSelect.computeValueField
       const labelField = $xeTreeSelect.computeLabelField
@@ -470,9 +472,20 @@ export default /* define-vxe-component start */ defineVxeComponent({
       }
       if (optList) {
         if (transform) {
-          optList.forEach((item, index, items) => {
-            handleOptNode(item, index, items, [], null, [])
+          // if (showFullLabel) {
+          const treeList = XEUtils.toArrayTree(optList, {
+            key: nodeKeyField,
+            parentKey: nodeParentField,
+            mapChildren: childrenField,
+            rootParentValue: treeOpts.rootParentValue,
+            rootValues: treeOpts.rootValues
           })
+          XEUtils.eachTree(treeList, handleOptNode, { children: childrenField })
+          // } else {
+          //   optList.forEach((item, index, items) => {
+          //     handleOptNode(item, index, items, [], null, [])
+          //   })
+          // }
         } else {
           XEUtils.eachTree(optList, handleOptNode, { children: childrenField })
         }
@@ -893,7 +906,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const labelField = $xeTreeSelect.computeLabelField
       const valueField = $xeTreeSelect.computeValueField
       const childrenField = $xeTreeSelect.computeChildrenField
-      const parentField = $xeTreeSelect.computeParentField
+      const nodeParentField = $xeTreeSelect.computeNodeParentField
       const hasChildField = $xeTreeSelect.computeHasChildField
       const virtualYOpts = $xeTreeSelect.computeVirtualYOpts
       const filterOpts = $xeTreeSelect.computeFilterOpts
@@ -1088,7 +1101,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
                         valueField: valueField,
                         keyField: nodeKeyField,
                         childrenField: treeOpts.childrenField || childrenField,
-                        parentField: treeOpts.parentField || parentField,
+                        parentField: nodeParentField,
                         hasChildField: treeOpts.hasChildField || hasChildField,
                         accordion: treeOpts.accordion,
                         expandAll: treeOpts.expandAll,

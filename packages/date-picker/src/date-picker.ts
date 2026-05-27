@@ -11,7 +11,7 @@ import VxeDatePanelComponent from '../../date-panel/src/date-panel'
 import VxeButtonComponent from '../../button/src/button'
 import VxeButtonGroupComponent from '../../button/src/button-group'
 
-import type { VxeDatePickerConstructor, VxeDatePickerEmits, DatePickerInternalData, DatePickerReactData, VxeButtonGroupDefines, VxeComponentSizeType, VxeDatePickerPropTypes, VxeFormConstructor, VxeFormPrivateMethods, VxeFormDefines, ValueOf, VxeModalConstructor, VxeDrawerConstructor, VxeModalMethods, VxeDrawerMethods, VxeDatePickerDefines, VxeDatePanelConstructor } from '../../../types'
+import type { VxeDatePickerConstructor, VxeDatePickerEmits, DatePickerInternalData, DatePickerReactData, VxeButtonGroupDefines, VxeComponentSizeType, VxeDatePanelDefines, VxeDatePickerPropTypes, VxeFormConstructor, VxeFormPrivateMethods, VxeFormDefines, ValueOf, VxeModalConstructor, VxeDrawerConstructor, VxeModalMethods, VxeDrawerMethods, VxeDatePickerDefines, VxeDatePanelConstructor } from '../../../types'
 import type { VxeTableConstructor, VxeTablePrivateMethods } from '../../../types/components/table'
 
 export default /* define-vxe-component start */ defineVxeComponent({
@@ -579,10 +579,16 @@ export default /* define-vxe-component start */ defineVxeComponent({
         }
       }
     },
-    panelConfirmEvent (params: VxeDatePickerDefines.ConfirmEventParams) {
+    panelConfirmEvent (params: VxeDatePanelDefines.ConfirmEventParams) {
       const $xeDatePicker = this
 
       $xeDatePicker.dispatchEvent('confirm', params, params.$event)
+    },
+    panelRevertEvent (params: VxeDatePanelDefines.RevertEventParams) {
+      const $xeDatePicker = this
+      const reactData = $xeDatePicker.reactData
+
+      reactData.inputLabel = params.label
     },
     // 全局事件
     handleGlobalMousedownEvent (evnt: Event) {
@@ -994,7 +1000,8 @@ export default /* define-vxe-component start */ defineVxeComponent({
                       },
                       on: {
                         change: $xeDatePicker.panelChangeEvent,
-                        confirm: $xeDatePicker.panelConfirmEvent
+                        confirm: $xeDatePicker.panelConfirmEvent,
+                        revert: $xeDatePicker.panelRevertEvent
                       }
                     })
                   ]),

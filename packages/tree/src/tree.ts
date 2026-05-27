@@ -1942,19 +1942,20 @@ export default /* define-vxe-component start */ defineVxeComponent({
       evnt.preventDefault()
       evnt.stopPropagation()
       const { transform } = props
-      const { selectCheckboxMaps } = internalData
+      const { selectCheckboxMaps, nodeMaps } = internalData
       const childrenField = $xeTree.computeChildrenField
       const mapChildrenField = $xeTree.computeMapChildrenField
       const checkboxOpts = $xeTree.computeCheckboxOpts
-      const { checkStrictly, checkMethod } = checkboxOpts
-      let isDisabled = !!checkMethod
-      if (checkMethod) {
-        isDisabled = !checkMethod({ $tree: $xeTree, node })
-      }
+      const { checkStrictly, checkMode, checkMethod } = checkboxOpts
+      const nodeid = $xeTree.getNodeId(node)
+      const childList: any[] = XEUtils.get(node, childrenField)
+      const isExistChild = childList && childList.length > 0
+      const nodeItem = nodeMaps[nodeid] || {}
+      const nLevel = nodeItem.level
+      const isDisabled = checkMethod ? !checkMethod({ $tree: $xeTree, node }) : !handleVisibleOrCheckMode(checkMode, isExistChild, nLevel)
       if (isDisabled) {
         return
       }
-      const nodeid = $xeTree.getNodeId(node)
       let isChecked = false
       if (selectCheckboxMaps[nodeid]) {
         delete selectCheckboxMaps[nodeid]
@@ -2016,20 +2017,24 @@ export default /* define-vxe-component start */ defineVxeComponent({
     changeRadioEvent (evnt: MouseEvent, node: any) {
       const $xeTree = this
       const reactData = $xeTree.reactData
+      const internalData = $xeTree.internalData
 
       evnt.preventDefault()
       evnt.stopPropagation()
+      const { nodeMaps } = internalData
       const radioOpts = $xeTree.computeRadioOpts
-      const { checkMethod } = radioOpts
-      let isDisabled = !!checkMethod
-      if (checkMethod) {
-        isDisabled = !checkMethod({ $tree: $xeTree, node })
-      }
+      const childrenField = $xeTree.computeChildrenField
+      const { checkMode, checkMethod } = radioOpts
+      const nodeid = $xeTree.getNodeId(node)
+      const childList: any[] = XEUtils.get(node, childrenField)
+      const isExistChild = childList && childList.length > 0
+      const nodeItem = nodeMaps[nodeid] || {}
+      const nLevel = nodeItem.level
+      const isDisabled = checkMethod ? !checkMethod({ $tree: $xeTree, node }) : !handleVisibleOrCheckMode(checkMode, isExistChild, nLevel)
       if (isDisabled) {
         return
       }
       const isChecked = true
-      const nodeid = $xeTree.getNodeId(node)
       const value = deNodeValue(nodeid)
       reactData.selectRadioKey = nodeid
       $xeTree.emitRadioMode(value)
