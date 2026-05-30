@@ -4124,6 +4124,7 @@ export interface TableInternalData<D = any> {
   // 数据集（仅可视）
   visibleDataRowIdData: Record<string, D>
 
+  headerFullDataColData: Record<string, VxeTableDefines.HeaderColCacheItem>
   footerFullDataRowData: Record<string, VxeTableDefines.FooterRowCacheItem>
 
   keepUpdateFieldMaps: Record<string, number>
@@ -4431,6 +4432,18 @@ export interface TableMethods<DT = any> {
    * 清除单元格格式化缓存
    */
   clearFormatterCache(isUpdate?: boolean): Promise<void>
+  /**
+   * 获取表头单元格显示值
+   */
+  getHeaderCellLabel(fieldOrColumn: VxeColumnPropTypes.Field | VxeTableDefines.ColumnInfo<any> | null): string
+  /**
+   * 更新表头单元格显示值
+   */
+  updateHeaderCellLabel(fieldOrColumn: VxeColumnPropTypes.Field | VxeTableDefines.ColumnInfo<any> | null): string
+  /**
+   * 清除表头单元格格式化缓存
+   */
+  clearHeaderFormatterCache(isUpdate?: boolean): Promise<void>
   /**
    * 获取表尾单元格显示值
    */
@@ -6071,6 +6084,9 @@ export namespace VxeTableDefines {
     formatData?: Record<string, RowCacheFormatObj>
   }
 
+  export interface HeaderColCacheItem {
+    formatObj?: RowCacheFormatObj
+  }
   export interface FooterRowCacheItem {
     formatData?: Record<string, RowCacheFormatObj>
   }

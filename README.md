@@ -279,21 +279,19 @@ createApp(App)
 ```html
 <template>
   <div>
-    <vxe-form
-      :data="formData"
-      @submit="submitEvent">
+    <vxe-form :data="formData" @submit="submitEvent">
       <vxe-form-item title="名称" field="name" span="12" :item-render="{}">
-        <template #default="params">
+        <template #default>
           <vxe-input v-model="formData.name"></vxe-input>
         </template>
       </vxe-form-item>
       <vxe-form-item title="角色" field="role" span="12" :item-render="{}">
-        <template #default="params">
+        <template #default>
           <vxe-input v-model="formData.role"></vxe-input>
         </template>
       </vxe-form-item>
       <vxe-form-item title="年龄" field="age" span="12" :item-render="{}">
-        <template #default="params">
+        <template #default>
           <vxe-input v-model="formData.age"></vxe-input>
         </template>
       </vxe-form-item>
@@ -310,18 +308,20 @@ createApp(App)
 <script>
 export default {
   data() {
+    const formData: {
+      name: '',
+      nickname: '',
+      sex: '',
+      role: '',
+      age: ''
+    }
     return {
-      formData: {
-        name: '',
-        nickname: '',
-        sex: '',
-        role: ''
-      }
+      formData
     }
   },
   methods: {
     submitEvent () {
-      VxeUI.modal.message({ content: '保存成功', status: 'success' })
+      console.log('保存成功')
     }
   }
 }
@@ -340,6 +340,12 @@ npm run update
 
 ```shell
 npm run serve
+```
+
+将 zh-CN 语言的改动点同步到其他语言文件中
+
+```shell
+npm run sync:i18n
 ```
 
 编译打包，生成编译后的目录：es,lib
