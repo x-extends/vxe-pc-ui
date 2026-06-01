@@ -231,6 +231,7 @@ export namespace VxeColumnPropTypes {
      * 多目标渲染
      */
     children?: any[]
+    enabled?: boolean
 
     startField?: string
     endField?: string

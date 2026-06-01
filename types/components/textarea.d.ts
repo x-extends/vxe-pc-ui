@@ -33,7 +33,23 @@ export namespace VxeTextareaPropTypes {
   export type CountMethod = (params: {
     value: string
   }) => number
+  /**
+   * 已废弃，被 AutoSize 替换
+     * @deprecated
+   */
   export type Autosize = {
+    /**
+     * 已废弃，被 autoSize.minRows 替换
+     * @deprecated
+     */
+    minRows?: number | null
+    /**
+     * 已废弃，被 autoSize.maxRows 替换
+     * @deprecated
+     */
+    maxRows?: number | null
+  }
+  export type AutoSize = {
     minRows?: number | null
     maxRows?: number | null
   }
@@ -100,6 +116,10 @@ export interface VxeTextareaProps {
    * 自适应文本高度
    */
   autosize?: VxeTextareaPropTypes.Autosize
+  /**
+   * 自适应文本高度
+   */
+  autoSize?: VxeTextareaPropTypes.AutoSize
   /**
    * 原生 form 属性
    */

@@ -498,6 +498,10 @@ export namespace VxeTableExtendCellAreaDefines {
   }
   export interface CellAreaArrowsEndEventParams<D = any> extends EventParams<D>, CellAreaArrowsEndParams<D> { }
 
+  export interface CellAreaFillCopyEventParams<D = any> extends EventParams<D> {
+    cellAreas: VxeTableExtendCellAreaDefines.MouseCellArea<D>[]
+  }
+
   export interface ActiveCellChangeStartParams<D = any> {
     activeArea: VxeTableExtendCellAreaDefines.MouseActiveCellArea
     row: D
@@ -547,6 +551,7 @@ export type VxeTableExtendCellAreaEmits = [
   'cell-area-selection-all-end',
   'cell-area-arrows-start',
   'cell-area-arrows-end',
+  'cell-area-fill-copy',
   'active-cell-change-start',
   'active-cell-change-end'
 ]
@@ -578,6 +583,7 @@ declare module '../table' {
     onCellAreaSelectionAllEnd?: VxeTableEvents.CellAreaSelectionAllEnd<D>
     onCellAreaArrowsStart?: VxeTableEvents.CellAreaArrowsStart<D>
     onCellAreaArrowsEnd?: VxeTableEvents.CellAreaArrowsEnd<D>
+    onCellAreaFillCopy?: VxeTableEvents.CellAreaFillCopy<D>
     onActiveCellChangeStart?: VxeTableEvents.ActiveCellChangeStart<D>
     onActiveCellChangeEnd?: VxeTableEvents.ActiveCellChangeEnd<D>
   }
@@ -625,6 +631,7 @@ declare module '../table' {
     cellAreaSelectionAllEnd?: VxeTableEvents.CellAreaSelectionAllEnd<D>
     cellAreaArrowsStart?: VxeTableEvents.CellAreaArrowsStart<D>
     cellAreaArrowsEnd?: VxeTableEvents.CellAreaArrowsEnd<D>
+    cellAreaFillCopy?: VxeTableEvents.CellAreaFillCopy<D>
     activeCellChangeStart?: VxeTableEvents.ActiveCellChangeStart<D>
     activeCellChangeEnd?: VxeTableEvents.ActiveCellChangeEnd<D>
   }
@@ -654,6 +661,7 @@ declare module '../table' {
     export type CellAreaSelectionAllEnd<D = any> = (params: VxeTableExtendCellAreaDefines.CellAreaSelectionAllEndEventParams<D>) => void
     export type CellAreaArrowsStart<D = any> = (params: VxeTableExtendCellAreaDefines.CellAreaArrowsStartEventParams<D>) => void
     export type CellAreaArrowsEnd<D = any> = (params: VxeTableExtendCellAreaDefines.CellAreaArrowsEndEventParams<D>) => void
+    export type CellAreaFillCopy<D = any> = (params: VxeTableExtendCellAreaDefines.CellAreaFillCopyEventParams<D>) => void
     export type ActiveCellChangeStart<D = any> = (params: VxeTableExtendCellAreaDefines.ActiveCellChangeStartEventParams<D>) => void
     export type ActiveCellChangeEnd<D = any> = (params: VxeTableExtendCellAreaDefines.ActiveCellChangeEndEventParams<D>) => void
   }
@@ -686,6 +694,7 @@ declare module '../grid' {
     onCellAreaSelectionAllEnd?: VxeGridEvents.CellAreaSelectionAllEnd<D>
     onCellAreaArrowsStart?: VxeGridEvents.CellAreaArrowsStart<D>
     onCellAreaArrowsEnd?: VxeGridEvents.CellAreaArrowsEnd<D>
+    onCellAreaFillCopy?: VxeGridEvents.CellAreaFillCopy<D>
     onActiveCellChangeStart?: VxeGridEvents.ActiveCellChangeStart<D>
     onActiveCellChangeEnd?: VxeGridEvents.ActiveCellChangeEnd<D>
   }
@@ -733,6 +742,7 @@ declare module '../grid' {
     cellAreaSelectionAllEnd?: VxeGridEvents.CellAreaSelectionAllEnd<D>
     cellAreaArrowsStart?: VxeGridEvents.CellAreaArrowsStart<D>
     cellAreaArrowsEnd?: VxeGridEvents.CellAreaArrowsEnd<D>
+    cellAreaFillCopy?: VxeGridEvents.CellAreaFillCopy<D>
     activeCellChangeStart?: VxeGridEvents.ActiveCellChangeStart<D>
     activeCellChangeEnd?: VxeGridEvents.ActiveCellChangeEnd<D>
   }
@@ -762,6 +772,7 @@ declare module '../grid' {
     export type CellAreaSelectionAllStart<D = any> = (params: VxeTableExtendCellAreaDefines.CellAreaSelectionAllStartEventParams<D>) => void
     export type CellAreaSelectionAllEnd<D = any> = (params: VxeTableExtendCellAreaDefines.CellAreaSelectionAllEndEventParams<D>) => void
     export type CellAreaArrowsEnd<D = any> = (params: VxeTableExtendCellAreaDefines.CellAreaArrowsEndEventParams<D>) => void
+    export type CellAreaFillCopy<D = any> = (params: VxeTableExtendCellAreaDefines.CellAreaFillCopyEventParams<D>) => void
     export type ActiveCellChangeStart<D = any> = (params: VxeTableExtendCellAreaDefines.ActiveCellChangeStartEventParams<D>) => void
     export type ActiveCellChangeEnd<D = any> = (params: VxeTableExtendCellAreaDefines.ActiveCellChangeEndEventParams<D>) => void
   }

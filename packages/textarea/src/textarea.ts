@@ -3,6 +3,7 @@ import { defineVxeComponent } from '../../ui/src/comp'
 import XEUtils from 'xe-utils'
 import { getConfig, getI18n, createEvent, globalMixins } from '../../ui'
 import { getFuncText } from '../../ui/src/utils'
+import { warnLog } from '../../ui/src/log'
 
 import type { VxeTextareaPropTypes, TextareaReactData, VxeComponentSizeType, VxeTextareaEmits, VxeFormConstructor, VxeFormPrivateMethods, VxeFormDefines, ValueOf } from '../../../types'
 
@@ -53,7 +54,18 @@ export default /* define-vxe-component start */ defineVxeComponent({
     },
     showWordCount: Boolean as PropType<VxeTextareaPropTypes.ShowWordCount>,
     countMethod: Function as PropType<VxeTextareaPropTypes.CountMethod>,
-    autosize: [Boolean, Object] as PropType<VxeTextareaPropTypes.Autosize>,
+    /**
+     * 已废弃，被 auto-size 替换
+     * @deprecated
+     */
+    autosize: {
+      type: [Boolean, Object] as PropType<VxeTextareaPropTypes.Autosize>,
+      default: null
+    },
+    autoSize: {
+      type: [Boolean, Object] as PropType<VxeTextareaPropTypes.AutoSize>,
+      default: null
+    },
     form: String as PropType<VxeTextareaPropTypes.Form>,
     resize: {
       type: String as PropType<VxeTextareaPropTypes.Resize>,
@@ -81,7 +93,9 @@ export default /* define-vxe-component start */ defineVxeComponent({
     }
     return {
       xID: XEUtils.uniqueId(),
-      reactData
+      reactData,
+
+      reFlag: 0
     }
   },
   computed: {
@@ -163,7 +177,11 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const $xeTextarea = this
       const props = $xeTextarea
 
-      return Object.assign({ minRows: 1, maxRows: 10 }, getConfig().textarea.autosize, props.autosize)
+      const { autosize, autoSize } = props
+      if (autosize || getConfig().textarea.autosize) {
+        return Object.assign({ minRows: 1, maxRows: 10 }, getConfig().textarea.autosize, autosize)
+      }
+      return Object.assign({ minRows: 1, maxRows: 10 }, getConfig().textarea.autoSize, autoSize)
     }
   },
   methods: {
@@ -203,16 +221,22 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const props = $xeTextarea
       const reactData = $xeTextarea.reactData
 
-      const { size, autosize } = props
+      const { size, autosize, autoSize } = props
       const { inputValue } = reactData
-      if (autosize) {
+      if (autosize || autoSize) {
+        const formReadonly = $xeTextarea.computeFormReadonly
         if (!autoTxtElem) {
           autoTxtElem = document.createElement('div')
         }
         if (!autoTxtElem.parentNode) {
           document.body.appendChild(autoTxtElem)
         }
-        const textElem = $xeTextarea.$refs.refTextarea as HTMLTextAreaElement
+        const taElem = $xeTextarea.$refs.refTextarea as HTMLTextAreaElement
+        const ctElem = $xeTextarea.$refs.refContent as HTMLDivElement
+        const textElem = formReadonly ? ctElem : taElem
+        if (!textElem) {
+          return
+        }
         if (!textElem) {
           return
         }
@@ -227,11 +251,15 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const $xeTextarea = this
       const props = $xeTextarea
 
-      if (props.autosize) {
+      const { autosize, autoSize } = props
+      if (autosize || autoSize) {
         $xeTextarea.$nextTick(() => {
           const sizeOpts = $xeTextarea.computeSizeOpts
+          const formReadonly = $xeTextarea.computeFormReadonly
           const { minRows, maxRows } = sizeOpts
-          const textElem = $xeTextarea.$refs.refTextarea as HTMLTextAreaElement
+          const taElem = $xeTextarea.$refs.refTextarea as HTMLTextAreaElement
+          const ctElem = $xeTextarea.$refs.refContent as HTMLDivElement
+          const textElem = formReadonly ? ctElem : taElem
           if (!textElem) {
             return
           }
@@ -331,7 +359,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const props = $xeTextarea
       const reactData = $xeTextarea.reactData
 
-      const { className, resize, autosize, showWordCount, countMethod, rows, cols } = props
+      const { className, resize, autosize, autoSize, showWordCount, countMethod, rows, cols } = props
       const { inputValue } = reactData
       const vSize = $xeTextarea.computeSize
       const isDisabled = $xeTextarea.computeIsDisabled
@@ -345,13 +373,18 @@ export default /* define-vxe-component start */ defineVxeComponent({
         return h('div', {
           ref: 'refElem',
           class: ['vxe-textarea--readonly', className]
-        }, inputValue)
+        }, [
+          h('div', {
+            ref: 'refContent',
+            class: 'vxe-textarea--content'
+          }, inputValue)
+        ])
       }
       return h('div', {
         ref: 'refElem',
         class: ['vxe-textarea', className, {
           [`size--${vSize}`]: vSize,
-          'is--autosize': autosize,
+          'is--autosize': autosize || autoSize,
           'is--count': showWordCount,
           'is--disabled': isDisabled,
           'is--rows': !XEUtils.eqNull(rows),
@@ -409,7 +442,27 @@ export default /* define-vxe-component start */ defineVxeComponent({
       reactData.inputValue = val
       $xeTextarea.updateAutoTxt()
     },
+    computeFormReadonly () {
+      const $xeTextarea = this
+
+      $xeTextarea.reFlag++
+    },
     computeSizeOpts () {
+      const $xeTextarea = this
+
+      $xeTextarea.reFlag++
+    },
+    autoSize () {
+      const $xeTextarea = this
+
+      $xeTextarea.reFlag++
+    },
+    autosize () {
+      const $xeTextarea = this
+
+      $xeTextarea.reFlag++
+    },
+    reFlag () {
       const $xeTextarea = this
 
       $xeTextarea.updateAutoTxt()
@@ -423,8 +476,11 @@ export default /* define-vxe-component start */ defineVxeComponent({
 
     reactData.inputValue = props.value
     $xeTextarea.$nextTick(() => {
-      const { autosize } = props
+      const { autosize, autoSize } = props
       if (autosize) {
+        warnLog('vxe.error.delProp', ['autosize', 'auto-size'])
+      }
+      if (autosize || autoSize) {
         $xeTextarea.updateAutoTxt()
         $xeTextarea.handleResize()
       }
