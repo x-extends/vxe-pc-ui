@@ -3,6 +3,7 @@ import { defineVxeComponent } from '../../ui/src/comp'
 import XEUtils from 'xe-utils'
 import { getConfig, getI18n, createEvent, useSize } from '../../ui'
 import { getFuncText } from '../../ui/src/utils'
+import { warnLog } from '../../ui/src/log'
 
 import type { VxeTextareaPropTypes, TextareaReactData, TextareaMethods, VxeTextareaConstructor, VxeTextareaEmits, TextareaPrivateRef, VxeFormConstructor, VxeFormPrivateMethods, VxeFormDefines } from '../../../types'
 
@@ -46,7 +47,18 @@ export default defineVxeComponent({
     },
     showWordCount: Boolean as PropType<VxeTextareaPropTypes.ShowWordCount>,
     countMethod: Function as PropType<VxeTextareaPropTypes.CountMethod>,
-    autosize: [Boolean, Object] as PropType<VxeTextareaPropTypes.Autosize>,
+    /**
+     * 已废弃，被 auto-size 替换
+     * @deprecated
+     */
+    autosize: {
+      type: [Boolean, Object] as PropType<VxeTextareaPropTypes.Autosize>,
+      default: null
+    },
+    autoSize: {
+      type: [Boolean, Object] as PropType<VxeTextareaPropTypes.AutoSize>,
+      default: null
+    },
     form: String as PropType<VxeTextareaPropTypes.Form>,
     resize: {
       type: String as PropType<VxeTextareaPropTypes.Resize>,
@@ -85,6 +97,7 @@ export default defineVxeComponent({
 
     const refElem = ref() as Ref<HTMLDivElement>
     const refTextarea = ref() as Ref<HTMLTextAreaElement>
+    const refContent = ref() as Ref<HTMLDivElement>
 
     const refMaps: TextareaPrivateRef = {
       refElem,
@@ -156,20 +169,27 @@ export default defineVxeComponent({
     })
 
     const computeSizeOpts = computed(() => {
-      return Object.assign({ minRows: 1, maxRows: 10 }, getConfig().textarea.autosize, props.autosize)
+      const { autosize, autoSize } = props
+      if (autosize || getConfig().textarea.autosize) {
+        return Object.assign({ minRows: 1, maxRows: 10 }, getConfig().textarea.autosize, autosize)
+      }
+      return Object.assign({ minRows: 1, maxRows: 10 }, getConfig().textarea.autoSize, autoSize)
     })
 
     const updateAutoTxt = () => {
-      const { size, autosize } = props
+      const { size, autosize, autoSize } = props
       const { inputValue } = reactData
-      if (autosize) {
+      if (autosize || autoSize) {
+        const formReadonly = computeFormReadonly.value
         if (!autoTxtElem) {
           autoTxtElem = document.createElement('div')
         }
         if (!autoTxtElem.parentNode) {
           document.body.appendChild(autoTxtElem)
         }
-        const textElem = refTextarea.value
+        const taElem = refTextarea.value
+        const ctElem = refContent.value
+        const textElem = formReadonly ? ctElem : taElem
         if (!textElem) {
           return
         }
@@ -182,11 +202,15 @@ export default defineVxeComponent({
     }
 
     const handleResize = () => {
-      if (props.autosize) {
+      const { autosize, autoSize } = props
+      if (autosize || autoSize) {
         nextTick(() => {
           const sizeOpts = computeSizeOpts.value
+          const formReadonly = computeFormReadonly.value
           const { minRows, maxRows } = sizeOpts
-          const textElem = refTextarea.value
+          const taElem = refTextarea.value
+          const ctElem = refContent.value
+          const textElem = formReadonly ? ctElem : taElem
           if (!textElem) {
             return
           }
@@ -282,26 +306,8 @@ export default defineVxeComponent({
 
     Object.assign($xeTextarea, textareaMethods)
 
-    watch(() => props.modelValue, (val) => {
-      reactData.inputValue = val
-      updateAutoTxt()
-    })
-
-    watch(computeSizeOpts, () => {
-      updateAutoTxt()
-      handleResize()
-    })
-
-    nextTick(() => {
-      const { autosize } = props
-      if (autosize) {
-        updateAutoTxt()
-        handleResize()
-      }
-    })
-
     const renderVN = () => {
-      const { className, resize, autosize, showWordCount, countMethod, rows, cols } = props
+      const { className, resize, autosize, autoSize, showWordCount, countMethod, rows, cols } = props
       const { inputValue } = reactData
       const vSize = computeSize.value
       const isDisabled = computeIsDisabled.value
@@ -315,13 +321,18 @@ export default defineVxeComponent({
         return h('div', {
           ref: refElem,
           class: ['vxe-textarea--readonly', className]
-        }, inputValue)
+        }, [
+          h('div', {
+            ref: refContent,
+            class: 'vxe-textarea--content'
+          }, inputValue)
+        ])
       }
       return h('div', {
         ref: refElem,
         class: ['vxe-textarea', className, {
           [`size--${vSize}`]: vSize,
-          'is--autosize': autosize,
+          'is--autosize': autosize || autoSize,
           'is--count': showWordCount,
           'is--disabled': isDisabled,
           'is--rows': !XEUtils.eqNull(rows),
@@ -362,6 +373,40 @@ export default defineVxeComponent({
           : null
       ])
     }
+
+    watch(() => props.modelValue, (val) => {
+      reactData.inputValue = val
+      updateAutoTxt()
+    })
+
+    const reFlag = ref(0)
+    watch(computeFormReadonly, () => {
+      reFlag.value++
+    })
+    watch(computeSizeOpts, () => {
+      reFlag.value++
+    })
+    watch(() => props.autoSize, () => {
+      reFlag.value++
+    })
+    watch(() => props.autosize, () => {
+      reFlag.value++
+    })
+    watch(reFlag, () => {
+      updateAutoTxt()
+      handleResize()
+    })
+
+    nextTick(() => {
+      const { autosize, autoSize } = props
+      if (autosize) {
+        warnLog('vxe.error.delProp', ['autosize', 'auto-size'])
+      }
+      if (autosize || autoSize) {
+        updateAutoTxt()
+        handleResize()
+      }
+    })
 
     $xeTextarea.renderVN = renderVN
 

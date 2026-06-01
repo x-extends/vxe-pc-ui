@@ -1869,6 +1869,10 @@ export namespace VxeTablePropTypes {
      */
     showRowStatus?: boolean
     /**
+     * 是否启用选中复制填充功能，自动把上面的单元格内容填到下面
+     */
+    isFillByCopy?: boolean
+    /**
      * 只对 mouse-config.extension 启用后有效，将被选取区域的值复制到扩展区域中
      */
     extendByCopy?: boolean
