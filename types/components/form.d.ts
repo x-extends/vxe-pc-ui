@@ -161,7 +161,7 @@ export interface FormPrivateComputed {
 }
 export interface VxeFormPrivateComputed extends FormPrivateComputed { }
 
-export interface FormReactData {
+export interface FormReactData<D = any> {
   collapseAll: boolean
   staticItems: any[]
   formItems: VxeFormDefines.ItemInfo[]
@@ -182,6 +182,8 @@ export interface FormInternalData {
       label?: any
     }
   }>
+  fullItemIdData: Record<string, VxeFormDefines.ItemCacheItem>
+  fullItemFieldData: Record<string, VxeFormDefines.ItemCacheItem>
 }
 
 export interface FormMethods<D = any> {
@@ -222,13 +224,25 @@ export interface FormMethods<D = any> {
    */
   getItems(): VxeFormDefines.ItemInfo[]
   /**
+   * 加载表单项
+   */
+  loadItems(items: VxeFormPropTypes.Items | VxeFormDefines.ItemInfo[]): Promise<any>
+  /**
+   * 隐藏指定项
+   */
+  hideItem(fieldOrItems?: VxeFormItemPropTypes.Field | VxeFormItemPropTypes.Field[] | VxeFormDefines.ItemInfo | VxeFormDefines.ItemInfo[] | null): Promise<void>
+  /**
+   * 显示指定项
+   */
+  showItem(fieldOrItems?: VxeFormItemPropTypes.Field | VxeFormItemPropTypes.Field[] | VxeFormDefines.ItemInfo | VxeFormDefines.ItemInfo[] | null): Promise<void>
+  /**
    * 根据列的字段名获取表单项
    * @param field 字段名
    *
    */
   getItemByField(field: VxeFormItemPropTypes.Field): VxeFormDefines.ItemInfo | null
   /**
-   * 关闭 tooltip 提示
+   * 手动关闭 tooltip 提示
    */
   closeTooltip(): Promise<any>
   /**
@@ -288,6 +302,11 @@ export type VxeFormEmits = [
 ]
 
 export namespace VxeFormDefines {
+  export interface ItemCacheItem {
+    item: ItemInfo
+    index: number
+    items: ItemInfo[]
+  }
   export class ItemInfo {
     id: string
 

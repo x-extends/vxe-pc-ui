@@ -17,7 +17,7 @@ export function createItem ($xeForm: VxeFormConstructor, _vm: any) {
   return isFormItem(_vm) ? _vm : new ItemInfo($xeForm, _vm)
 }
 
-export function handleFieldOrItem ($xeForm: VxeFormConstructor, fieldOrItem: string | VxeFormDefines.ItemInfo) {
+export function handleFieldOrItem ($xeForm: VxeFormConstructor, fieldOrItem: string | VxeFormDefines.ItemInfo | null | undefined) {
   if (fieldOrItem) {
     return XEUtils.isString(fieldOrItem) ? $xeForm.getItemByField(fieldOrItem) : fieldOrItem
   }

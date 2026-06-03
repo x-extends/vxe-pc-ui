@@ -85,10 +85,14 @@ export namespace VxeNoticeBarEvents {
 
 export namespace VxeNoticeBarSlotTypes {
   export interface DefaultSlotParams {}
+  export interface PrefixSlotParams {}
+  export interface SuffixSlotParams {}
 }
 
 export interface VxeNoticeBarSlots {
   default?: (params: VxeNoticeBarSlotTypes.DefaultSlotParams) => any
+  prefix?: (params: VxeNoticeBarSlotTypes.PrefixSlotParams) => any
+  suffix?: (params: VxeNoticeBarSlotTypes.SuffixSlotParams) => any
 }
 
 export const NoticeBar: typeof VxeNoticeBar
