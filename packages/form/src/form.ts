@@ -143,6 +143,15 @@ function checkRuleStatus (rule: VxeFormDefines.FormRule, data: any, val: any) {
   return true
 }
 
+export function createReactData (): FormReactData {
+  return {
+    collapseAll: false,
+    staticItems: [],
+    formItems: [],
+    itemWidth: 0
+  }
+}
+
 function createInternalData (): FormInternalData {
   return {
     meTimeout: undefined,
@@ -151,7 +160,9 @@ function createInternalData (): FormInternalData {
       item: null,
       visible: false
     },
-    itemFormatCache: {}
+    itemFormatCache: {},
+    fullItemIdData: {},
+    fullItemFieldData: {}
   }
 }
 
@@ -255,12 +266,7 @@ export default defineVxeComponent({
 
     const { computeSize } = useSize(props)
 
-    const reactData = reactive<FormReactData>({
-      collapseAll: props.collapseStatus,
-      staticItems: [],
-      formItems: [],
-      itemWidth: 0
-    })
+    const reactData = reactive(createReactData())
 
     const internalData = createInternalData()
 
@@ -336,7 +342,7 @@ export default defineVxeComponent({
       return []
     }
 
-    const loadItem = (list: VxeFormPropTypes.Items) => {
+    const loadItems = (list: VxeFormPropTypes.Items) => {
       if (list.length) {
         list.forEach((item) => {
           if (item.slots) {
@@ -366,8 +372,9 @@ export default defineVxeComponent({
     }
 
     const getItemByField = (field: string) => {
-      const rest = XEUtils.findTree(reactData.formItems, item => item.field === field, { children: 'children' })
-      return rest ? rest.item : null
+      const { fullItemFieldData } = internalData
+      const itemRest = fullItemFieldData[field]
+      return itemRest ? itemRest.item : null
     }
 
     const getCollapseStatus = () => {
@@ -433,6 +440,24 @@ export default defineVxeComponent({
         }
       }
       return resetValue
+    }
+
+    const cacheItem = () => {
+      const { formItems } = reactData
+      const itemIdData: Record<string, VxeFormDefines.ItemCacheItem> = {}
+      const itemFieldData: Record<string, VxeFormDefines.ItemCacheItem> = {}
+      XEUtils.eachTree(formItems, (item, index, items) => {
+        const { id, field } = item
+        const itemRest = { item, items, index }
+        if (id) {
+          itemIdData[id] = itemRest
+        }
+        if (field) {
+          itemFieldData[field] = itemRest
+        }
+      }, { children: 'children' })
+      internalData.fullItemFieldData = itemFieldData
+      internalData.fullItemIdData = itemIdData
     }
 
     const reset = () => {
@@ -827,10 +852,26 @@ export default defineVxeComponent({
       recalculate()
     }
 
+    const handleItemVisible = (visible: boolean) => {
+      return function (fieldOrItems?: VxeFormItemPropTypes.Field | VxeFormItemPropTypes.Field[] | VxeFormDefines.ItemInfo | VxeFormDefines.ItemInfo[] | null) {
+        const objs = XEUtils.isArray(fieldOrItems) ? fieldOrItems : [fieldOrItems]
+        objs.forEach(obj => {
+          const item = handleFieldOrItem($xeForm, obj)
+          if (item) {
+            item.visible = visible
+          }
+        })
+        return nextTick()
+      }
+    }
+
     formMethods = {
       dispatchEvent (type, params, evnt) {
         emit(type, createEvent(evnt, { $form: $xeForm, $grid: $xeGrid }, params))
       },
+      loadItems,
+      showItem: handleItemVisible(true),
+      hideItem: handleItemVisible(false),
       reset,
       validate,
       validateField,
@@ -882,12 +923,12 @@ export default defineVxeComponent({
           : formItems.map((item, index) => {
             return h(VxeFormConfigItem, {
               key: index,
-              itemConfig: item
+              itemConfig: item,
+              visible: item.visible
             })
           })),
         h('div', {
-          class: 'vxe-form-slots',
-          ref: 'hideItem'
+          class: 'vxe-form-slots'
         }, customLayout ? [] : (defaultSlot ? defaultSlot({}) : [])),
         /**
          * 加载中
@@ -929,6 +970,7 @@ export default defineVxeComponent({
     watch(staticItemFlag, () => {
       reactData.formItems = reactData.staticItems
       recalcFlag.value++
+      cacheItem()
     })
 
     const itemFlag = ref(0)
@@ -939,7 +981,7 @@ export default defineVxeComponent({
       itemFlag.value++
     })
     watch(itemFlag, () => {
-      loadItem(props.items || [])
+      loadItems(props.items || [])
     })
 
     watch(() => props.collapseStatus, (value) => {
@@ -968,8 +1010,9 @@ export default defineVxeComponent({
       XEUtils.assign(internalData, createInternalData())
     })
 
+    reactData.collapseAll = !!props.collapseStatus
     if (props.items) {
-      loadItem(props.items)
+      loadItems(props.items)
     }
 
     provide('xeFormItemInfo', null)

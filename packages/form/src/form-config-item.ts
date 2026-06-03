@@ -1,7 +1,8 @@
-import { h, inject, provide, PropType, VNode } from 'vue'
+import { h, inject, provide, PropType, VNode, computed } from 'vue'
 import { defineVxeComponent } from '../../ui/src/comp'
 import { renderer, renderEmptyElement } from '../../ui'
 import { isEnableConf } from '../../ui/src/utils'
+import { formItemProps } from './form-item'
 import { renderTitle, getItemClass, getItemContentClass, renderItemContent, renderItemErrorIcon } from './render'
 import XEUtils from 'xe-utils'
 
@@ -10,25 +11,32 @@ import type { VxeFormConstructor, VxeFormDefines, VxeFormPrivateMethods } from '
 const VxeFormConfigItem = defineVxeComponent({
   name: 'VxeFormConfigItem',
   props: {
-    itemConfig: Object as PropType<VxeFormDefines.ItemInfo>
+    itemConfig: Object as PropType<VxeFormDefines.ItemInfo>,
+    ...formItemProps
   },
   setup (props) {
     const $xeForm = inject('$xeForm', {} as VxeFormConstructor & VxeFormPrivateMethods)
     const xeformiteminfo = { itemConfig: props.itemConfig }
     provide('xeFormItemInfo', xeformiteminfo)
 
+    const computeItemVisible = computed(() => {
+      const { visible } = props.itemConfig as VxeFormDefines.ItemInfo
+      return visible
+    })
+
     const renderItem = ($xeForm: VxeFormConstructor & VxeFormPrivateMethods, item: VxeFormDefines.ItemInfo): VNode => {
       const formProps = $xeForm.props
       const $xeGrid = $xeForm.xeGrid
 
       const { data, readonly, disabled } = formProps
-      const { visible, field, itemRender, contentStyle, children, showContent } = item
+      const { field, itemRender, contentStyle, children, showContent } = item
+      const itemVisible = computeItemVisible.value
       const compConf = isEnableConf(itemRender) ? renderer.get(itemRender.name) : null
       const itemStyle = compConf ? (compConf.formItemStyle || compConf.itemStyle) : null
       const itemContentStyle = compConf ? (compConf.formItemContentStyle || compConf.itemContentStyle) : null
       const params = { data, disabled, readonly, field, property: field, item, $form: $xeForm, $grid: $xeGrid }
       const hasGroup = children && children.length > 0
-      if (visible === false) {
+      if (itemVisible === false) {
         return renderEmptyElement($xeForm)
       }
       return h('div', {

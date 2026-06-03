@@ -2,7 +2,7 @@
 
 /*radio-group*/
 .vxe-radio-group {
-  display: inline-block;
+  display: inline-flex;
   vertical-align: middle;
   line-height: 1;
   font-size: 0;
@@ -15,7 +15,7 @@
 
 /*radio*/
 .vxe-radio {
-  display: inline-block;
+  display: inline-flex;
   vertical-align: middle;
   white-space: nowrap;
   line-height: 1;
