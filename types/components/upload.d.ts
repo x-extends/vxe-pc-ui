@@ -212,6 +212,7 @@ export interface VxeUploadProps {
 }
 
 export interface UploadPrivateComputed {
+  computeUrlProp: string
 }
 export interface VxeUploadPrivateComputed extends UploadPrivateComputed { }
 
@@ -252,6 +253,20 @@ export interface UploadMethods {
    */
   submit(isFull?: boolean): Promise<void>
   /**
+   * 清除所有文件
+   */
+  clear(): Promise<{
+    url: string
+    status: boolean
+  }[]>
+  /**
+   * 区别就是会触发对应的事件
+   */
+  clearByEvent(event: Event): Promise<{
+    url: string
+    status: boolean
+  }[]>
+  /**
    * 获取更多弹窗的可视状态
    */
   getMoreVisible(): boolean
@@ -267,8 +282,28 @@ export interface UploadMethods {
    * 关闭更多弹窗
    */
   closeMore(): Promise<void>
+  /**
+   * 删除指定文件
+   */
+  remove(urlOrItem: string | VxeUploadDefines.FileObjItem | string[] | VxeUploadDefines.FileObjItem[] | null): Promise<{
+    url: string
+    status: boolean
+  }[]>
+  /**
+   * 区别就是会触发对应的事件
+   */
+  removeByEvent(event: Event, urlOrItem: string | VxeUploadDefines.FileObjItem | string[] | VxeUploadDefines.FileObjItem[] | null): Promise<{
+    url: string
+    status: boolean
+  }[]>
 }
-export interface VxeUploadMethods extends UploadMethods { }
+export interface VxeUploadMethods extends UploadMethods {
+  /**
+   * 内部方法
+   * @private
+   */
+  removeFileEvent(evnt: Event | null, item: VxeUploadDefines.FileObjItem, index: number): Promise<any>
+}
 
 export interface UploadPrivateMethods { }
 export interface VxeUploadPrivateMethods extends UploadPrivateMethods { }

@@ -639,6 +639,22 @@ export default /* define-vxe-component start */ defineVxeComponent({
         }
       }
     },
+    panelCellClassName ({ date }: { date: Date }) {
+      const $xeDateRangePicker = this
+      const reactData = $xeDateRangePicker.reactData
+
+      const startValue = reactData.startValue
+      const endValue = reactData.endValue
+      if (startValue && endValue) {
+        const currTime = date.getTime()
+        const startTime = XEUtils.toStringDate(startValue).getTime()
+        const endTime = XEUtils.toStringDate(endValue).getTime()
+        if (currTime >= startTime && currTime <= endTime) {
+          return 'is--range-selected'
+        }
+      }
+      return ''
+    },
     handleSelectClose () {
       const $xeDateRangePicker = this
       const props = $xeDateRangePicker
@@ -1187,6 +1203,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
                         timeConfig: timeOpts,
                         festivalMethod: props.festivalMethod,
                         disabledMethod: props.disabledMethod,
+                        cellClassName: $xeDateRangePicker.panelCellClassName,
                         selectDay: props.selectDay
                       },
                       on: {
@@ -1211,6 +1228,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
                         timeConfig: timeOpts,
                         festivalMethod: props.festivalMethod,
                         disabledMethod: props.disabledMethod,
+                        cellClassName: $xeDateRangePicker.panelCellClassName,
                         selectDay: props.selectDay
                       },
                       on: {

@@ -35,7 +35,10 @@ export default /* define-vxe-component start */ defineVxeComponent({
   },
   props: {
     value: [String, Number, Array] as PropType<VxeTableSelectPropTypes.ModelValue>,
-    clearable: Boolean as PropType<VxeTableSelectPropTypes.Clearable>,
+    clearable: {
+      type: Boolean as PropType<VxeTableSelectPropTypes.Clearable>,
+      default: getConfig().tableSelect.clearable
+    },
     placeholder: {
       type: String as PropType<VxeTableSelectPropTypes.Placeholder>,
       default: () => XEUtils.eqNull(getConfig().tableSelect.placeholder) ? getI18n('vxe.base.pleaseSelect') : getConfig().tableSelect.placeholder

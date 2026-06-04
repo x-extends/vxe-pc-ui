@@ -66,6 +66,51 @@ function hideDropTip ($xeUpload: VxeUploadConstructor) {
   }
 }
 
+const handleClearFile = ($xeUpload: VxeUploadConstructor, evnt: Event | null) => {
+  const reactData = $xeUpload.reactData
+
+  const { fileList } = reactData
+  const urlProp = $xeUpload.computeUrlProp
+  const rest: Promise<{
+    url: string
+    status: boolean
+  }>[] = []
+  XEUtils.lastEach(fileList, (item, index) => {
+    rest.push(
+      $xeUpload.removeFileEvent(evnt, item, index).then(status => {
+        return { url: item[urlProp], status }
+      })
+    )
+  })
+  return Promise.all(rest)
+}
+
+function handleRemoveFile ($xeUpload: VxeUploadConstructor, evnt: Event | null, urlOrItem: string | VxeUploadDefines.FileObjItem | string[] | VxeUploadDefines.FileObjItem[] | null) {
+  const reactData = $xeUpload.reactData
+
+  const { fileList } = reactData
+  const urlProp = $xeUpload.computeUrlProp
+  const urls = (XEUtils.isArray(urlOrItem) ? urlOrItem : [urlOrItem])
+  const rest: Promise<{
+    url: string
+    status: boolean
+  }>[] = []
+  urls.forEach((obj: any) => {
+    if (obj) {
+      const url = XEUtils.isString(obj) ? obj : obj[urlProp]
+      const index = XEUtils.findIndexOf(fileList, fileItem => fileItem[urlProp] === url)
+      if (index > -1) {
+        rest.push(
+          $xeUpload.removeFileEvent(evnt, fileList[index], index).then(status => {
+            return { url: url, status }
+          })
+        )
+      }
+    }
+  })
+  return Promise.all(rest)
+}
+
 function createReactData (): UploadReactData {
   return {
     isDragUploadStatus: false,
@@ -528,6 +573,16 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const $xeUpload = this
       return $xeUpload.handleChoose(null)
     },
+    clear () {
+      const $xeUpload = this
+
+      return handleClearFile($xeUpload, null)
+    },
+    clearByEvent (evnt: Event) {
+      const $xeUpload = this
+
+      return handleClearFile($xeUpload, evnt)
+    },
     getPendingFiles () {
       const $xeUpload = this
       const reactData = $xeUpload.reactData
@@ -610,6 +665,16 @@ export default /* define-vxe-component start */ defineVxeComponent({
         VxeUI.modal.close(internalData.moreId)
       }
       return $xeUpload.$nextTick()
+    },
+    remove (urlOrItem: string | string[] | VxeUploadDefines.FileObjItem | VxeUploadDefines.FileObjItem[] | null) {
+      const $xeUpload = this
+
+      return handleRemoveFile($xeUpload, null, urlOrItem)
+    },
+    removeByEvent (evnt: Event, urlOrItem: string | string[] | VxeUploadDefines.FileObjItem | VxeUploadDefines.FileObjItem[] | null) {
+      const $xeUpload = this
+
+      return handleRemoveFile($xeUpload, evnt, urlOrItem)
     },
     getFieldKey  (item: VxeUploadDefines.FileObjItem) {
       const $xeUpload = this
@@ -1040,7 +1105,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
         // 错误文件类型
       })
     },
-    handleRemoveEvent  (evnt: MouseEvent, item: VxeUploadDefines.FileObjItem, index: number) {
+    handleRemoveEvent  (evnt: Event | null, item: VxeUploadDefines.FileObjItem, index: number) {
       const $xeUpload = this
       const reactData = $xeUpload.reactData
       const $xeForm = $xeUpload.$xeForm
@@ -1051,17 +1116,19 @@ export default /* define-vxe-component start */ defineVxeComponent({
       $xeUpload.handleChange(fileList)
       // 自动更新校验状态
       if ($xeForm && formItemInfo) {
-        $xeForm.triggerItemEvent(evnt, formItemInfo.itemConfig.field, fileList)
+        $xeForm.triggerItemEvent(evnt || { type: 'remove' }, formItemInfo.itemConfig.field, fileList)
       }
-      $xeUpload.dispatchEvent('remove', { option: item }, evnt)
+      if (evnt) {
+        $xeUpload.dispatchEvent('remove', { option: item }, evnt)
+      }
     },
-    removeFileEvent  (evnt: MouseEvent, item: VxeUploadDefines.FileObjItem, index: number) {
+    removeFileEvent  (evnt: Event | null, item: VxeUploadDefines.FileObjItem, index: number) {
       const $xeUpload = this
       const props = $xeUpload
 
       const beforeRemoveFn = props.beforeRemoveMethod || getConfig().upload.beforeRemoveMethod
       const removeFn = props.removeMethod || getConfig().upload.removeMethod
-      Promise.resolve(
+      return Promise.resolve(
         beforeRemoveFn
           ? beforeRemoveFn({
             $upload: $xeUpload,
@@ -1085,6 +1152,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
         } else {
           $xeUpload.dispatchEvent('remove-fail', { option: item }, evnt)
         }
+        return status
       })
     },
     handleDownloadEvent  (evnt: MouseEvent, item: VxeUploadDefines.FileObjItem) {

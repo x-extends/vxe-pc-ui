@@ -187,6 +187,7 @@
   flex-direction: row;
 }
 .vxe-date-panel--view-item {
+  position: relative;
   padding: 0.2em;
   &.is--prev,
   &.is--next {
@@ -245,6 +246,9 @@
         }
       }
     }
+  }
+  &.is--range-selected {
+    background-color: var(--vxe-ui-font-primary-tinge-color);
   }
   &.is--range-disabled {
     .vxe-date-panel--view-item-inner {

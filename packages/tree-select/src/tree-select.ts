@@ -55,7 +55,10 @@ export default /* define-vxe-component start */ defineVxeComponent({
   },
   props: {
     value: [String, Number, Array] as PropType<VxeTreeSelectPropTypes.ModelValue>,
-    clearable: Boolean as PropType<VxeTreeSelectPropTypes.Clearable>,
+    clearable: {
+      type: Boolean as PropType<VxeTreeSelectPropTypes.Clearable>,
+      default: getConfig().treeSelect.clearable
+    },
     placeholder: {
       type: String as PropType<VxeTreeSelectPropTypes.Placeholder>,
       default: () => XEUtils.eqNull(getConfig().treeSelect.placeholder) ? getI18n('vxe.base.pleaseSelect') : getConfig().treeSelect.placeholder

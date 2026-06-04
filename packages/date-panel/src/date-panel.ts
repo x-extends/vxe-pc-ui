@@ -22,6 +22,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       default: 'date' as VxeDatePanelPropTypes.Type
     },
     className: String as PropType<VxeDatePanelPropTypes.ClassName>,
+    cellClassName: [String, Function] as PropType<VxeDatePanelPropTypes.CellClassName>,
     size: {
       type: String as PropType<VxeDatePanelPropTypes.Size>,
       default: () => getConfig().datePanel.size || getConfig().size
@@ -1435,7 +1436,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const props = $xeDatePanel
       const reactData = $xeDatePanel.reactData
 
-      const { multiple } = props
+      const { type, multiple, cellClassName } = props
       const { datePanelType, datePanelValue } = reactData
       const dateValue = $xeDatePanel.computeDateValue
       const dateHeaders = $xeDatePanel.computeDateHeaders
@@ -1480,7 +1481,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
             }, rows.map((item) => {
               const isSelected = multiple ? dateListValue.some(val => XEUtils.isDateSame(val, item.date, matchFormat)) : XEUtils.isDateSame(dateValue, item.date, matchFormat)
               return h('div', {
-                class: ['vxe-date-panel--view-item', {
+                class: ['vxe-date-panel--view-item', cellClassName ? (XEUtils.isFunction(cellClassName) ? `${cellClassName({ $datePanel: $xeDatePanel, type, viewType: datePanelType, date: item.date }) || ''}` : `${cellClassName || ''}`) : '', {
                   'is--prev': item.isPrev,
                   'is--current': item.isCurrent,
                   'is--now': item.isNow,
@@ -1514,7 +1515,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const props = $xeDatePanel
       const reactData = $xeDatePanel.reactData
 
-      const { multiple } = props
+      const { type, multiple, cellClassName } = props
       const { datePanelType, datePanelValue } = reactData
       const dateValue = $xeDatePanel.computeDateValue
       const weekHeaders = $xeDatePanel.computeWeekHeaders
@@ -1561,7 +1562,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
               }
             }, rows.map((item, rIndex) => {
               return h('div', {
-                class: ['vxe-date-panel--view-item', {
+                class: ['vxe-date-panel--view-item', cellClassName ? (XEUtils.isFunction(cellClassName) ? `${cellClassName({ $datePanel: $xeDatePanel, type, viewType: datePanelType, date: item.date }) || ''}` : `${cellClassName || ''}`) : '', {
                   'is--prev': item.isPrev,
                   'is--current': item.isCurrent,
                   'is--now': rIndex ? item.isNow : isNowWeek,
@@ -1595,7 +1596,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const props = $xeDatePanel
       const reactData = $xeDatePanel.reactData
 
-      const { multiple } = props
+      const { type, multiple, cellClassName } = props
       const { datePanelType, datePanelValue } = reactData
       const dateValue = $xeDatePanel.computeDateValue
       const monthDatas = $xeDatePanel.computeMonthDatas
@@ -1617,7 +1618,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
             }, rows.map((item) => {
               const isSelected = multiple ? dateListValue.some(val => XEUtils.isDateSame(val, item.date, matchFormat)) : XEUtils.isDateSame(dateValue, item.date, matchFormat)
               return h('div', {
-                class: ['vxe-date-panel--view-item', {
+                class: ['vxe-date-panel--view-item', cellClassName ? (XEUtils.isFunction(cellClassName) ? `${cellClassName({ $datePanel: $xeDatePanel, type, viewType: datePanelType, date: item.date }) || ''}` : `${cellClassName || ''}`) : '', {
                   'is--prev': item.isPrev,
                   'is--current': item.isCurrent,
                   'is--now': item.isNow,
@@ -1651,7 +1652,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const props = $xeDatePanel
       const reactData = $xeDatePanel.reactData
 
-      const { multiple } = props
+      const { type, multiple, cellClassName } = props
       const { datePanelType, datePanelValue } = reactData
       const dateValue = $xeDatePanel.computeDateValue
       const quarterDatas = $xeDatePanel.computeQuarterDatas
@@ -1673,7 +1674,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
             }, rows.map((item) => {
               const isSelected = multiple ? dateListValue.some(val => XEUtils.isDateSame(val, item.date, matchFormat)) : XEUtils.isDateSame(dateValue, item.date, matchFormat)
               return h('div', {
-                class: ['vxe-date-panel--view-item', {
+                class: ['vxe-date-panel--view-item', cellClassName ? (XEUtils.isFunction(cellClassName) ? `${cellClassName({ $datePanel: $xeDatePanel, type, viewType: datePanelType, date: item.date }) || ''}` : `${cellClassName || ''}`) : '', {
                   'is--prev': item.isPrev,
                   'is--current': item.isCurrent,
                   'is--now': item.isNow,
@@ -1707,7 +1708,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const props = $xeDatePanel
       const reactData = $xeDatePanel.reactData
 
-      const { multiple } = props
+      const { type, multiple, cellClassName } = props
       const { datePanelType, datePanelValue } = reactData
       const dateValue = $xeDatePanel.computeDateValue
       const yearDatas = $xeDatePanel.computeYearDatas
@@ -1729,7 +1730,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
             }, rows.map((item) => {
               const isSelected = multiple ? dateListValue.some(val => XEUtils.isDateSame(val, item.date, matchFormat)) : XEUtils.isDateSame(dateValue, item.date, matchFormat)
               return h('div', {
-                class: ['vxe-date-panel--view-item', {
+                class: ['vxe-date-panel--view-item', cellClassName ? (XEUtils.isFunction(cellClassName) ? `${cellClassName({ $datePanel: $xeDatePanel, type, viewType: datePanelType, date: item.date }) || ''}` : `${cellClassName || ''}`) : '', {
                   'is--prev': item.isPrev,
                   'is--current': item.isCurrent,
                   'is--now': item.isNow,
