@@ -27,6 +27,12 @@ export namespace VxeDatePanelPropTypes {
   export type Size = VxeComponentSizeType
   export type ModelValue = string | number | Date | null
   export type ClassName = string
+  export type CellClassName = string | ((params: {
+    $datePanel: VxeDatePanelConstructor
+    type: string
+    viewType: VxeDatePanelDefines.DatePanelType
+    date: Date
+  }) => string)
   export type Type = 'date' | 'time' | 'datetime' | 'week' | 'month' | 'quarter' | 'year'
   export type Multiple = boolean
   export type LimitCount = string | number
@@ -76,6 +82,7 @@ export interface VxeDatePanelProps {
   size?: VxeDatePanelPropTypes.Size
   modelValue?: VxeDatePanelPropTypes.ModelValue
   className?: VxeDatePanelPropTypes.ClassName
+  cellClassName?: VxeDatePanelPropTypes.CellClassName
   type?: VxeDatePanelPropTypes.Type
   multiple?: VxeDatePanelPropTypes.Multiple
   limitCount?: VxeDatePanelPropTypes.LimitCount

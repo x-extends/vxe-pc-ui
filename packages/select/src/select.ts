@@ -51,7 +51,10 @@ export default defineVxeComponent({
   props: {
     modelValue: [String, Number, Boolean, Array] as PropType<VxeSelectPropTypes.ModelValue>,
     defaultConfig: Object as PropType<VxeSelectPropTypes.DefaultConfig>,
-    clearable: Boolean as PropType<VxeSelectPropTypes.Clearable>,
+    clearable: {
+      type: Boolean as PropType<VxeSelectPropTypes.Clearable>,
+      default: () => getConfig().select.clearable
+    },
     placeholder: String as PropType<VxeSelectPropTypes.Placeholder>,
     readonly: {
       type: Boolean as PropType<VxeSelectPropTypes.Readonly>,

@@ -407,6 +407,7 @@ export default defineVxeComponent({
     })
 
     const computeMaps: VxeUploadPrivateComputed = {
+      computeUrlProp
     }
 
     const $xeUpload = {
@@ -827,21 +828,23 @@ export default defineVxeComponent({
       })
     }
 
-    const handleRemoveEvent = (evnt: MouseEvent, item: VxeUploadDefines.FileObjItem, index: number) => {
+    const handleRemoveEvent = (evnt: Event | null, item: VxeUploadDefines.FileObjItem, index: number) => {
       const { fileList } = reactData
       fileList.splice(index, 1)
       handleChange(fileList)
       // 自动更新校验状态
       if ($xeForm && formItemInfo) {
-        $xeForm.triggerItemEvent(evnt, formItemInfo.itemConfig.field, fileList)
+        $xeForm.triggerItemEvent(evnt || { type: 'remove' }, formItemInfo.itemConfig.field, fileList)
       }
-      dispatchEvent('remove', { option: item }, evnt)
+      if (evnt) {
+        dispatchEvent('remove', { option: item }, evnt)
+      }
     }
 
-    const removeFileEvent = (evnt: MouseEvent, item: VxeUploadDefines.FileObjItem, index: number) => {
+    const removeFileEvent = (evnt: Event | null, item: VxeUploadDefines.FileObjItem, index: number) => {
       const beforeRemoveFn = props.beforeRemoveMethod || getConfig().upload.beforeRemoveMethod
       const removeFn = props.removeMethod || getConfig().upload.removeMethod
-      Promise.resolve(
+      return Promise.resolve(
         beforeRemoveFn
           ? beforeRemoveFn({
             $upload: $xeUpload,
@@ -863,8 +866,11 @@ export default defineVxeComponent({
             handleRemoveEvent(evnt, item, index)
           }
         } else {
-          dispatchEvent('remove-fail', { option: item }, evnt)
+          if (evnt) {
+            dispatchEvent('remove-fail', { option: item }, evnt)
+          }
         }
+        return status
       })
     }
 
@@ -1250,10 +1256,57 @@ export default defineVxeComponent({
       reactData.isActivated = false
     }
 
+    const handleClearFile = (evnt: Event | null) => {
+      const { fileList } = reactData
+      const urlProp = computeUrlProp.value
+      const rest: Promise<{
+        url: string
+        status: boolean
+      }>[] = []
+      XEUtils.lastEach(fileList, (item, index) => {
+        rest.push(
+          removeFileEvent(evnt, item, index).then((status) => {
+            return { url: item[urlProp], status }
+          })
+        )
+      })
+      return Promise.all(rest)
+    }
+
+    const handleRemoveFile = (evnt: Event | null, urlOrItem: string | VxeUploadDefines.FileObjItem | string[] | VxeUploadDefines.FileObjItem[] | null) => {
+      const { fileList } = reactData
+      const urlProp = computeUrlProp.value
+      const urls = (XEUtils.isArray(urlOrItem) ? urlOrItem : [urlOrItem])
+      const rest: Promise<{
+        url: string
+        status: boolean
+      }>[] = []
+      urls.forEach((obj) => {
+        if (obj) {
+          const url = XEUtils.isString(obj) ? obj : obj[urlProp]
+          const index = XEUtils.findIndexOf(fileList, fileItem => fileItem[urlProp] === url)
+          if (index > -1) {
+            rest.push(
+              removeFileEvent(evnt, fileList[index], index).then(status => {
+                return { url, status }
+              })
+            )
+          }
+        }
+      })
+      return Promise.all(rest)
+    }
+
     const uploadMethods: UploadMethods = {
       dispatchEvent,
       choose () {
         return handleChoose(null)
+      },
+      clear () {
+        return handleClearFile(null)
+      },
+      clearByEvent (evnt) {
+        return handleClearFile(evnt)
       },
       getPendingFiles () {
         const { fileList, fileCacheMaps } = reactData
@@ -1320,10 +1373,17 @@ export default defineVxeComponent({
           VxeUI.modal.close(internalData.moreId)
         }
         return nextTick()
+      },
+      remove (urlOrItem) {
+        return handleRemoveFile(null, urlOrItem)
+      },
+      removeByEvent (evnt, urlOrItem) {
+        return handleRemoveFile(evnt, urlOrItem)
       }
     }
 
     const uploadPrivateMethods: UploadPrivateMethods = {
+      removeFileEvent
     }
 
     Object.assign($xeUpload, uploadMethods, uploadPrivateMethods)

@@ -11,7 +11,7 @@ import VxeDatePanelComponent from '../../date-panel/src/date-panel'
 import VxeButtonComponent from '../../button/src/button'
 import VxeButtonGroupComponent from '../../button/src/button-group'
 
-import type { VxeDateRangePickerConstructor, VxeDateRangePickerEmits, DateRangePickerInternalData, DateRangePickerReactData, DateRangePickerMethods, VxeDateRangePickerPropTypes, DateRangePickerPrivateRef, VxeFormConstructor, VxeFormPrivateMethods, VxeFormDefines, ValueOf, VxeModalConstructor, VxeDrawerConstructor, VxeModalMethods, VxeDrawerMethods, VxeDateRangePickerDefines, VxeButtonGroupEvents, VxeDatePanelConstructor } from '../../../types'
+import type { VxeDateRangePickerConstructor, VxeDateRangePickerEmits, DateRangePickerInternalData, DateRangePickerReactData, DateRangePickerMethods, VxeDateRangePickerPropTypes, DateRangePickerPrivateRef, VxeFormConstructor, VxeFormPrivateMethods, VxeFormDefines, ValueOf, VxeModalConstructor, VxeDatePanelPropTypes, VxeDrawerConstructor, VxeModalMethods, VxeDrawerMethods, VxeDateRangePickerDefines, VxeButtonGroupEvents, VxeDatePanelConstructor } from '../../../types'
 import type { VxeTableConstructor, VxeTablePrivateMethods } from '../../../types/components/table'
 
 export default defineVxeComponent({
@@ -547,6 +547,20 @@ export default defineVxeComponent({
       }
     }
 
+    const panelCellClassName: VxeDatePanelPropTypes.CellClassName = ({ date }) => {
+      const startValue = reactData.startValue
+      const endValue = reactData.endValue
+      if (startValue && endValue) {
+        const currTime = date.getTime()
+        const startTime = XEUtils.toStringDate(startValue).getTime()
+        const endTime = XEUtils.toStringDate(endValue).getTime()
+        if (currTime >= startTime && currTime <= endTime) {
+          return 'is--range-selected'
+        }
+      }
+      return ''
+    }
+
     const handleSelectClose = () => {
       const { autoClose } = props
       const { startValue, endValue } = reactData
@@ -1031,6 +1045,7 @@ export default defineVxeComponent({
                         festivalMethod: props.festivalMethod,
                         disabledMethod: props.disabledMethod,
                         selectDay: props.selectDay,
+                        cellClassName: panelCellClassName,
                         onChange: startPanelChangeEvent
                       }),
                       h(VxeDatePanelComponent, {
@@ -1051,6 +1066,7 @@ export default defineVxeComponent({
                         festivalMethod: props.festivalMethod,
                         disabledMethod: props.disabledMethod,
                         selectDay: props.selectDay,
+                        cellClassName: panelCellClassName,
                         onChange: endPanelChangeEvent
                       })
                     ]),
