@@ -4136,6 +4136,7 @@ export interface TableInternalData<D = any> {
   sourceDataRowIdData: Record<string, D>
   fullColumnIdData: Record<string, VxeTableDefines.ColumnCacheItem<D>>
   fullColumnFieldData: Record<string, VxeTableDefines.ColumnCacheItem<D>>
+  fullCellHeightMaps: Record<string, Record<string, number>>
 
   // 当前行
   currentRow: D | null
