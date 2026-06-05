@@ -71,17 +71,6 @@ function calcContentWH (contList: VxeWatermarkDefines.ContentObj[]) {
   }
 }
 
-function calcCanvasWH (contentWidth: number, opts: ContentMarkOptions) {
-  const { gap } = opts
-  const [gapX = 0, gapY = 0] = gap ? ((XEUtils.isArray(gap) ? gap : [gap, gap])) : []
-  const canvasWidth = contentWidth + XEUtils.toNumber(gapX)
-  const canvasHeight = contentWidth + XEUtils.toNumber(gapY)
-  return {
-    canvasWidth,
-    canvasHeight
-  }
-}
-
 function getFontConf (item: VxeWatermarkDefines.ContentObj | VxeWatermarkDefines.ContentConf, key: keyof VxeWatermarkPropTypes.Font, opts: ContentMarkOptions) {
   return (item.font ? item.font[key] : '') || (opts.font ? opts.font[key] : '')
 }
@@ -139,31 +128,46 @@ export function getContentUrl (content: VxeWatermarkPropTypes.Content, defaultFo
     }
     const ctx = canvasEl.getContext('2d')
     if (ctx && contList.length) {
-      const { contentWidth, contentHeight } = calcContentWH(contList)
-      const { canvasWidth, canvasHeight } = calcCanvasWH(contentWidth, opts)
+      const { gap } = opts
+      const gapList = gap ? ((XEUtils.isArray(gap) ? gap : [gap, gap])) : []
+      const gapX = XEUtils.toNumber(gapList[0])
+      const gapY = XEUtils.toNumber(gapList[1])
+
+      const { contentWidth } = calcContentWH(contList)
+      const canvasWidth = contentWidth * 2 + gapX * 2 + (gapX / 2)
+      const canvasHeight = contentWidth * 2 + gapY
 
       canvasEl.width = canvasWidth
       canvasEl.height = canvasHeight
 
-      const x = (canvasWidth - contentWidth) / 2
-      const y = (canvasHeight - contentHeight) / 2
-
-      const drayX = x + (contentWidth / 2)
-      const drayY = y + (contentHeight / 2)
+      const drayX = (gapX / 2)
+      const drayY = contentWidth + (gapY / 2)
 
       ctx.save()
       ctx.translate(drayX, drayY)
       ctx.rotate(deg * Math.PI / 180)
       ctx.translate(-drayX, -drayY)
 
-      let offsetHeight = 0
+      let txtOffsetY = 0
       contList.forEach((item) => {
-        const align = getFontConf(item, 'align', opts)
         drayFont(ctx, item, opts)
-        ctx.fillText(item.text, x + (align === 'center' ? (contentWidth - item.width) / 2 : 0), y + (contentHeight + contentHeight) / 2 + offsetHeight, contentWidth)
-        offsetHeight += item.height
+        const txtX = drayX
+        const txtY = drayY + txtOffsetY
+        ctx.fillText(item.text, txtX, txtY, contentWidth)
+        txtOffsetY += item.height
       })
 
+      const offsetX = gapX
+      const offsetY = gapY + contentWidth
+
+      txtOffsetY = 0
+      contList.forEach((item) => {
+        drayFont(ctx, item, opts)
+        const txtX = drayX + offsetX
+        const txtY = drayY + txtOffsetY + offsetY
+        ctx.fillText(item.text, txtX, txtY, contentWidth)
+        txtOffsetY += item.height
+      })
       ctx.restore()
 
       resolve(canvasEl.toDataURL())
