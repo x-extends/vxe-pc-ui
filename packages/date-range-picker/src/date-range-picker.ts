@@ -11,7 +11,7 @@ import VxeDatePanelComponent from '../../date-panel/src/date-panel'
 import VxeButtonComponent from '../../button/src/button'
 import VxeButtonGroupComponent from '../../button/src/button-group'
 
-import type { VxeDateRangePickerConstructor, VxeDateRangePickerEmits, DateRangePickerInternalData, DateRangePickerReactData, DateRangePickerMethods, VxeDateRangePickerPropTypes, DateRangePickerPrivateRef, VxeFormConstructor, VxeFormPrivateMethods, VxeFormDefines, ValueOf, VxeModalConstructor, VxeDatePanelPropTypes, VxeDrawerConstructor, VxeModalMethods, VxeDrawerMethods, VxeDateRangePickerDefines, VxeButtonGroupEvents, VxeDatePanelConstructor } from '../../../types'
+import type { VxeDateRangePickerConstructor, VxeDateRangePickerEmits, DateRangePickerInternalData, DateRangePickerReactData, DateRangePickerMethods, VxeDateRangePickerPropTypes, DateRangePickerPrivateRef, VxeFormConstructor, VxeFormPrivateMethods, VxeFormDefines, ValueOf, VxeModalConstructor, VxeDatePanelPropTypes, VxeDrawerConstructor, VxeModalMethods, VxeDrawerMethods, VxeDatePanelEvents, VxeDateRangePickerDefines, VxeButtonGroupEvents, VxeDatePanelConstructor } from '../../../types'
 import type { VxeTableConstructor, VxeTablePrivateMethods } from '../../../types/components/table'
 
 export default defineVxeComponent({
@@ -32,6 +32,10 @@ export default defineVxeComponent({
     clearable: {
       type: Boolean as PropType<VxeDateRangePickerPropTypes.Clearable>,
       default: () => getConfig().dateRangePicker.clearable
+    },
+    linkedPanels: {
+      type: Boolean as PropType<VxeDateRangePickerPropTypes.LinkedPanels>,
+      default: () => getConfig().dateRangePicker.linkedPanels
     },
     readonly: {
       type: Boolean as PropType<VxeDateRangePickerPropTypes.Readonly>,
@@ -597,6 +601,7 @@ export default defineVxeComponent({
       }
       if (!reactData.visiblePanel) {
         reactData.isActivated = false
+        checkValue()
       }
       dispatchEvent('blur', { value, startValue, endValue }, evnt)
       // 自动更新校验状态
@@ -671,6 +676,70 @@ export default defineVxeComponent({
           }
         }
       })
+    }
+
+    const startPanelDateBtnChangeEvent: VxeDatePanelEvents.DateToday = (params) => {
+      const { linkedPanels } = props
+      if (linkedPanels) {
+        const { viewType } = params
+        const $startDatePanel = refStartDatePanel.value
+        const $endDatePanel = refEndDatePanel.value
+        if (!$startDatePanel || !$endDatePanel) {
+          return
+        }
+        const startPanelDate = $startDatePanel.getPanelDate()
+        if (!startPanelDate) {
+          return
+        }
+        const endYear = startPanelDate.getFullYear()
+        const endMonth = startPanelDate.getMonth()
+        switch (viewType) {
+          case 'day':
+          case 'date':
+          case 'week': {
+            if (endMonth < 11) {
+              startPanelDate.setMonth(endMonth + 1)
+            } else {
+              startPanelDate.setFullYear(endYear + 1)
+              startPanelDate.setMonth(0)
+            }
+            $endDatePanel.setPanelDate(startPanelDate)
+            break
+          }
+        }
+      }
+    }
+
+    const endPanelDateBtnChangeEvent: VxeDatePanelEvents.DateToday = (params) => {
+      const { linkedPanels } = props
+      if (linkedPanels) {
+        const { viewType } = params
+        const $startDatePanel = refStartDatePanel.value
+        const $endDatePanel = refEndDatePanel.value
+        if (!$startDatePanel || !$endDatePanel) {
+          return
+        }
+        const endPanelDate = $endDatePanel.getPanelDate()
+        if (!endPanelDate) {
+          return
+        }
+        const endYear = endPanelDate.getFullYear()
+        const endMonth = endPanelDate.getMonth()
+        switch (viewType) {
+          case 'day':
+          case 'date':
+          case 'week': {
+            if (endMonth) {
+              endPanelDate.setMonth(endMonth - 1)
+            } else {
+              endPanelDate.setFullYear(endYear - 1)
+              endPanelDate.setMonth(11)
+            }
+            $startDatePanel.setPanelDate(endPanelDate)
+            break
+          }
+        }
+      }
     }
 
     // 全局事件
@@ -1046,7 +1115,10 @@ export default defineVxeComponent({
                         disabledMethod: props.disabledMethod,
                         selectDay: props.selectDay,
                         cellClassName: panelCellClassName,
-                        onChange: startPanelChangeEvent
+                        onChange: startPanelChangeEvent,
+                        onDatePrev: startPanelDateBtnChangeEvent,
+                        onDateToday: startPanelDateBtnChangeEvent,
+                        onDateNext: startPanelDateBtnChangeEvent
                       }),
                       h(VxeDatePanelComponent, {
                         ref: refEndDatePanel,
@@ -1067,7 +1139,10 @@ export default defineVxeComponent({
                         disabledMethod: props.disabledMethod,
                         selectDay: props.selectDay,
                         cellClassName: panelCellClassName,
-                        onChange: endPanelChangeEvent
+                        onChange: endPanelChangeEvent,
+                        onDatePrev: endPanelDateBtnChangeEvent,
+                        onDateToday: endPanelDateBtnChangeEvent,
+                        onDateNext: endPanelDateBtnChangeEvent
                       })
                     ]),
                     h('div', {

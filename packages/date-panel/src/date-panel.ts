@@ -276,7 +276,7 @@ export default defineVxeComponent({
       if (isDatePanelType) {
         const { datePanelType, selectMonth } = reactData
         const yearList = computeYearList.value
-        let year = ''
+        let year: string | number = ''
         let month
         if (selectMonth) {
           year = selectMonth.getFullYear()
@@ -871,20 +871,20 @@ export default defineVxeComponent({
       if (!isDisabledPrevDateBtn) {
         let viewDate
         if (type === 'year') {
-          viewDate = XEUtils.getWhatYear(selectMonth, -yearSize, 'first')
+          viewDate = XEUtils.getWhatYear(selectMonth as Date, -yearSize, 'first')
         } else if (type === 'month' || type === 'quarter') {
           if (datePanelType === 'year') {
-            viewDate = XEUtils.getWhatYear(selectMonth, -yearSize, 'first')
+            viewDate = XEUtils.getWhatYear(selectMonth as Date, -yearSize, 'first')
           } else {
-            viewDate = XEUtils.getWhatYear(selectMonth, -1, 'first')
+            viewDate = XEUtils.getWhatYear(selectMonth as Date, -1, 'first')
           }
         } else {
           if (datePanelType === 'year') {
-            viewDate = XEUtils.getWhatYear(selectMonth, -yearSize, 'first')
+            viewDate = XEUtils.getWhatYear(selectMonth as Date, -yearSize, 'first')
           } else if (datePanelType === 'month') {
-            viewDate = XEUtils.getWhatYear(selectMonth, -1, 'first')
+            viewDate = XEUtils.getWhatYear(selectMonth as Date, -1, 'first')
           } else {
-            viewDate = XEUtils.getWhatMonth(selectMonth, -1, 'first')
+            viewDate = XEUtils.getWhatMonth(selectMonth as Date, -1, 'first')
           }
         }
         reactData.selectMonth = viewDate
@@ -894,11 +894,11 @@ export default defineVxeComponent({
 
     const dateTodayMonthEvent = (evnt: Event) => {
       dateNowHandle()
-      dateChange(reactData.currentDate, true)
+      dateChange(reactData.currentDate as Date, true)
       if (!props.multiple) {
         hidePanel()
       }
-      dispatchEvent('date-today', { type: props.type }, evnt)
+      dispatchEvent('date-today', { viewType: reactData.datePanelType, type: props.type, viewDate: reactData.selectMonth }, evnt)
     }
 
     const dateNextEvent = (evnt: Event) => {
@@ -910,24 +910,24 @@ export default defineVxeComponent({
       if (!isDisabledNextDateBtn) {
         let viewDate
         if (type === 'year') {
-          viewDate = XEUtils.getWhatYear(selectMonth, yearSize, 'first')
+          viewDate = XEUtils.getWhatYear(selectMonth as Date, yearSize, 'first')
         } else if (type === 'month' || type === 'quarter') {
           if (datePanelType === 'year') {
-            viewDate = XEUtils.getWhatYear(selectMonth, yearSize, 'first')
+            viewDate = XEUtils.getWhatYear(selectMonth as Date, yearSize, 'first')
           } else {
-            viewDate = XEUtils.getWhatYear(selectMonth, 1, 'first')
+            viewDate = XEUtils.getWhatYear(selectMonth as Date, 1, 'first')
           }
         } else {
           if (datePanelType === 'year') {
-            viewDate = XEUtils.getWhatYear(selectMonth, yearSize, 'first')
+            viewDate = XEUtils.getWhatYear(selectMonth as Date, yearSize, 'first')
           } else if (datePanelType === 'month') {
-            viewDate = XEUtils.getWhatYear(selectMonth, 1, 'first')
+            viewDate = XEUtils.getWhatYear(selectMonth as Date, 1, 'first')
           } else {
-            viewDate = XEUtils.getWhatMonth(selectMonth, 1, 'first')
+            viewDate = XEUtils.getWhatMonth(selectMonth as Date, 1, 'first')
           }
         }
         reactData.selectMonth = viewDate
-        dispatchEvent('date-next', { viewType: datePanelType, value, type }, evnt)
+        dispatchEvent('date-next', { viewType: datePanelType, value, type, viewDate }, evnt)
       }
     }
 
@@ -1125,7 +1125,7 @@ export default defineVxeComponent({
             handleChange(dateMultipleValue.join(','), { type: 'update' })
           }
         } else {
-          dateChange(dateValue || reactData.currentDate)
+          dateChange(dateValue || reactData.currentDate as Date)
         }
       }
       hidePanel()
@@ -1217,7 +1217,8 @@ export default defineVxeComponent({
         }
       },
       getPanelDate () {
-        return reactData.selectMonth
+        const { selectMonth } = reactData
+        return selectMonth ? new Date(selectMonth.getTime()) : new Date()
       },
       checkValue (value) {
         afterCheckValue(value)

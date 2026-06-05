@@ -126,8 +126,8 @@ export interface DatePanelReactData {
   datePanelValue: Date | null
   datePanelLabel: string
   datePanelType: VxeDatePanelDefines.DatePanelType
-  selectMonth: any
-  currentDate: any
+  selectMonth: Date | null
+  currentDate: Date | null
 }
 
 export interface DatePanelInternalData {
@@ -264,6 +264,14 @@ export namespace VxeDatePanelDefines {
   export interface RevertEventParams extends DatePanelEventParams {
     label: string
   }
+
+  export interface DateTodayEventParams {
+    type: string
+    viewType: DatePanelType
+    viewDate: string
+  }
+  export interface DatePrevEventParams extends DateTodayEventParams {}
+  export interface DateNextEventParams extends DateTodayEventParams {}
 }
 
 export type VxeDatePanelEventProps = {
@@ -271,6 +279,9 @@ export type VxeDatePanelEventProps = {
   onChange?: VxeDatePanelEvents.Change
   onConfirm?: VxeDatePanelEvents.Confirm
   onRevert?: VxeDatePanelEvents.Revert
+  onDatePrev?: VxeDatePanelEvents.DatePrev
+  onDateToday?: VxeDatePanelEvents.DateToday
+  onDateNext?: VxeDatePanelEvents.DateNext
 }
 
 export interface VxeDatePanelListeners {
@@ -278,6 +289,9 @@ export interface VxeDatePanelListeners {
   change?: VxeDatePanelEvents.Change
   confirm?: VxeDatePanelEvents.Confirm
   revert?: VxeDatePanelEvents.Revert
+  datePrev?: VxeDatePanelEvents.DatePrev
+  dateToday?: VxeDatePanelEvents.DateToday
+  dateNext?: VxeDatePanelEvents.DateNext
 }
 
 export namespace VxeDatePanelEvents {
@@ -285,6 +299,9 @@ export namespace VxeDatePanelEvents {
   export type Change = (params: VxeDatePanelDefines.ChangeEventParams) => void
   export type Confirm = (params: VxeDatePanelDefines.ConfirmEventParams) => void
   export type Revert = (params: VxeDatePanelDefines.RevertEventParams) => void
+  export type DatePrev = (params: VxeDatePanelDefines.DatePrevEventParams) => void
+  export type DateToday = (params: VxeDatePanelDefines.DateTodayEventParams) => void
+  export type DateNext = (params: VxeDatePanelDefines.DateNextEventParams) => void
 }
 
 export namespace VxeDatePanelSlotTypes {
