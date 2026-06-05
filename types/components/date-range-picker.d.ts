@@ -28,6 +28,7 @@ export namespace VxeDateRangePickerPropTypes {
   export type Name = string
   export type Type = VxeDatePanelPropTypes.Type
   export type Clearable = boolean
+  export type LinkedPanels = boolean
   /**
    * 已废弃，请使用 PopupConfig.zIndex
    * @deprecated
@@ -117,6 +118,7 @@ export interface VxeDateRangePickerProps {
   name?: VxeDateRangePickerPropTypes.Name
   type?: VxeDateRangePickerPropTypes.Type
   clearable?: VxeDateRangePickerPropTypes.Clearable
+  linkedPanels?: VxeDateRangePickerPropTypes.LinkedPanels
   zIndex?: VxeDateRangePickerPropTypes.ZIndex
   readonly?: VxeDateRangePickerPropTypes.Readonly
   disabled?: VxeDateRangePickerPropTypes.Disabled

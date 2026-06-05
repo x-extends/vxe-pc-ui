@@ -688,6 +688,10 @@ export interface GanttMethods<D = any> extends Omit<GridMethods<D>, 'dispatchEve
    * 如果有滚动条，则滚动到对应的任务视图
    */
   scrollToTaskView(rowOrRowid: any): Promise<any>
+  /**
+   * 如果任务视图有横向滚动条，则滚动到任务视图对应的日期
+   */
+  scrollToDateView(colDate: string | Date | number): Promise<any>
 }
 export interface VxeGanttMethods<D = any> extends GanttMethods<D>, Omit<VxeGridMethods<D>, 'dispatchEvent'> { }
 
