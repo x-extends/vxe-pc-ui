@@ -4203,6 +4203,7 @@ export interface TableInternalData<D = any> {
   // 刷新布局
   rceTimeout?: undefined | number
   rceRunTime?: undefined | number
+  rceDelay: number
 
   // 滚动属性
   intoRunScroll?: boolean
@@ -5266,9 +5267,12 @@ export interface TableMethods<DT = any> {
    * 使表格失去焦点
    */
   blur(): Promise<void>
-
   /**
-   * 用于 custom-config，用于获取自定义列设置信息，用于服务端保持
+   * 用于 custom-config，用于手动恢复自定义列设置信息，恢复为初始状态
+   */
+  setCustomStoreData(storeData: VxeTableDefines.CustomStoreData | null): Promise<void>
+  /**
+   * 用于 custom-config，用于获取自定义列设置信息，用于自定义保持
    */
   getCustomStoreData(): VxeTableDefines.CustomStoreData
 }
