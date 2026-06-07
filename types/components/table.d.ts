@@ -2517,6 +2517,10 @@ export namespace VxeTablePropTypes {
      */
     autoClear?: boolean
     /**
+     * 是否启用缓存，启用后渲染性能的大幅提升，数据越大提升越好
+     */
+    cache?: boolean
+    /**
      * 自定义编辑之前逻辑，该方法的返回值用来决定该单元格是否允许编辑
      */
     beforeEditMethod?(params: {
@@ -4138,6 +4142,11 @@ export interface TableInternalData<D = any> {
   fullColumnFieldData: Record<string, VxeTableDefines.ColumnCacheItem<D>>
   fullCellHeightMaps: Record<string, Record<string, number>>
 
+  fullCellStoreMaps: Record<string, Record<string, {
+    value: any
+    result: Record<string, any>
+  }>>
+
   // 当前行
   currentRow: D | null
 
@@ -4422,6 +4431,10 @@ export interface TableMethods<DT = any> {
    * @param field 字段名
    */
   clearData(rows?: any | any[], field?: string): Promise<any>
+  /**
+   * 处理单元格数据，会自动在值发生改变时执行（当需要对运算量较大的数据进行缓存时可能会用到）
+   */
+  effectCellData(row: any, column: VxeTableDefines.ColumnInfo, options: VxeTableDefines.CellCacheHandleOptions): VxeTableDefines.CellCacheResultObj
   /**
    * 获取单元格 td 元素
    */
@@ -6164,6 +6177,27 @@ export namespace VxeTableDefines {
       children: D[]
       aggValue: number
     }) => number)
+  }
+
+  export interface CellCacheHandleOptions {
+    key: string
+    isChanged?(params: CellCacheHandleParams): boolean
+    setValue?(params: CellCacheHandleParams): any
+    getResult?(params: CellCacheHandleParams): any
+  }
+
+  export interface CellCacheHandleParams {
+    $table: VxeTableConstructor
+    row: any
+    rowid: string
+    column: VxeTableDefines.ColumnInfo
+    colid: string
+    cellValue: any
+    oldValue: any
+  }
+
+  export interface CellCacheResultObj extends CellCacheHandleParams {
+    cellResult: any
   }
 
   /**
