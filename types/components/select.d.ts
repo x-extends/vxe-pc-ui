@@ -46,8 +46,8 @@ export namespace VxeSelectPropTypes {
   export type CheckedClosable = boolean
   export type ClearClosable = boolean
   export type ShowCloseButton = boolean
-  export type ShowTotalButoon = boolean
-  export type ShowCheckedButoon = boolean
+  export type ShowTotalButton = boolean
+  export type ShowCheckedButton = boolean
   export type ShowClearButton = boolean
   export type ClassName = string | ((params: { $select: VxeSelectConstructor }) => string)
   /**
@@ -210,8 +210,8 @@ export interface VxeSelectProps {
   checkedClosable?: VxeSelectPropTypes.CheckedClosable
   clearClosable?: VxeSelectPropTypes.ClearClosable
   showCloseButton?: VxeSelectPropTypes.ShowCloseButton
-  showTotalButoon?: VxeSelectPropTypes.ShowTotalButoon
-  showCheckedButoon?: VxeSelectPropTypes.ShowCheckedButoon
+  showTotalButton?: VxeSelectPropTypes.ShowTotalButton
+  showCheckedButton?: VxeSelectPropTypes.ShowCheckedButton
   showClearButton?: VxeSelectPropTypes.ShowClearButton
   className?: VxeSelectPropTypes.ClassName
   /**

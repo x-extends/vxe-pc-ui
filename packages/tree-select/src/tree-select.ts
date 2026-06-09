@@ -122,13 +122,13 @@ export default defineVxeComponent({
       type: Boolean as PropType<VxeTreeSelectPropTypes.ShowCloseButton>,
       default: () => getConfig().treeSelect.showCloseButton
     },
-    showTotalButoon: {
-      type: Boolean as PropType<VxeTreeSelectPropTypes.ShowTotalButoon>,
-      default: () => getConfig().treeSelect.showTotalButoon
+    showTotalButton: {
+      type: Boolean as PropType<VxeTreeSelectPropTypes.ShowTotalButton>,
+      default: () => getConfig().treeSelect.showTotalButton
     },
-    showCheckedButoon: {
-      type: Boolean as PropType<VxeTreeSelectPropTypes.ShowCheckedButoon>,
-      default: () => getConfig().treeSelect.showCheckedButoon
+    showCheckedButton: {
+      type: Boolean as PropType<VxeTreeSelectPropTypes.ShowCheckedButton>,
+      default: () => getConfig().treeSelect.showCheckedButton
     },
     showClearButton: {
       type: Boolean as PropType<VxeTreeSelectPropTypes.ShowClearButton>,
@@ -754,7 +754,7 @@ export default defineVxeComponent({
     Object.assign($xeTreeSelect, treeSelectMethods, treeSelectPrivateMethods)
 
     const renderVN = () => {
-      const { className, modelValue, multiple, options, loading, menuConfig, filterable, showTotalButoon, showCheckedButoon, showClearButton, showExpandButton, showCloseButton } = props
+      const { className, modelValue, multiple, options, loading, menuConfig, filterable, showTotalButton, showCheckedButton, showClearButton, showExpandButton, showCloseButton } = props
       const { initialized, isActivated, isAniVisible, visiblePanel, searchValue } = reactData
       const vSize = computeSize.value
       const isDisabled = computeIsDisabled.value
@@ -878,7 +878,7 @@ export default defineVxeComponent({
                       })
                     ])
                     : renderEmptyElement($xeTreeSelect),
-                  (showCheckedButoon && multiple) || showClearButton || showExpandButton || headerSlot
+                  (showCheckedButton && multiple) || showClearButton || showExpandButton || headerSlot
                     ? h('div', {
                       class: 'vxe-tree-select--panel-header'
                     }, headerSlot
@@ -887,11 +887,11 @@ export default defineVxeComponent({
                           h('div', {
                             class: 'vxe-tree-select--header-button'
                           }, [
-                            showCheckedButoon && showClearButton
+                            showCheckedButton && showClearButton
                               ? h('div', {
                                 class: 'vxe-tree-select--selected-btns'
                               }, [
-                                (showCheckedButoon && multiple)
+                                (showCheckedButton && multiple)
                                   ? h(VxeButtonComponent, {
                                     content: getI18n('vxe.treeSelect.allChecked'),
                                     mode: 'text',
@@ -987,7 +987,7 @@ export default defineVxeComponent({
                       }, treeScopedSlots)
                     ])
                   ]),
-                  footerSlot || showTotalButoon || (showCloseButton && multiple)
+                  footerSlot || showTotalButton || (showCloseButton && multiple)
                     ? h('div', {
                       class: 'vxe-tree-select--panel-footer'
                     }, footerSlot
@@ -996,7 +996,7 @@ export default defineVxeComponent({
                           h('div', {
                             class: 'vxe-tree-select--footer-button'
                           }, [
-                            showTotalButoon
+                            showTotalButton
                               ? h('div', {
                                 class: 'vxe-tree-select--total-btns'
                               }, getI18n('vxe.treeSelect.total', [selectVals.length]))

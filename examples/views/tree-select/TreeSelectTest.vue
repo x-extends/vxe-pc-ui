@@ -57,8 +57,8 @@ const val2 = ref()
 const treeSelectOptions2 = reactive<VxeTreeSelectProps<NodeVO>>({
   multiple: true,
   filterable: true,
-  showTotalButoon: true,
-  showCheckedButoon: true,
+  showTotalButton: true,
+  showCheckedButton: true,
   showClearButton: true,
   showExpandButton: true,
   optionProps: {

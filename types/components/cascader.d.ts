@@ -33,8 +33,8 @@ export namespace VxeCascaderPropTypes {
   export type Loading = boolean
   export type Disabled = boolean
   export type AutoClose = boolean
-  export type ShowTotalButoon = boolean
-  export type ShowCheckedButoon = boolean
+  export type ShowTotalButton = boolean
+  export type ShowCheckedButton = boolean
   export type ShowClearButton = boolean
   export type ClassName = string | ((params: { $cascader: VxeCascaderConstructor }) => string)
   /**
@@ -126,8 +126,8 @@ export interface VxeCascaderProps<D = any> {
   loading?: VxeCascaderPropTypes.Loading
   disabled?: VxeCascaderPropTypes.Disabled
   autoClose?: VxeCascaderPropTypes.AutoClose
-  showTotalButoon?: VxeCascaderPropTypes.ShowTotalButoon
-  showCheckedButoon?: VxeCascaderPropTypes.ShowCheckedButoon
+  showTotalButton?: VxeCascaderPropTypes.ShowTotalButton
+  showCheckedButton?: VxeCascaderPropTypes.ShowCheckedButton
   showClearButton?: VxeCascaderPropTypes.ShowClearButton
   className?: VxeCascaderPropTypes.ClassName
   multiple?: VxeCascaderPropTypes.Multiple

@@ -64,13 +64,13 @@ export default defineVxeComponent({
       type: Boolean as PropType<VxeCascaderPropTypes.AutoClose>,
       default: () => getConfig().cascader.autoClose
     },
-    showTotalButoon: {
-      type: Boolean as PropType<VxeCascaderPropTypes.ShowTotalButoon>,
-      default: () => getConfig().cascader.showTotalButoon
+    showTotalButton: {
+      type: Boolean as PropType<VxeCascaderPropTypes.ShowTotalButton>,
+      default: () => getConfig().cascader.showTotalButton
     },
-    showCheckedButoon: {
-      type: Boolean as PropType<VxeCascaderPropTypes.ShowCheckedButoon>,
-      default: () => getConfig().cascader.showCheckedButoon
+    showCheckedButton: {
+      type: Boolean as PropType<VxeCascaderPropTypes.ShowCheckedButton>,
+      default: () => getConfig().cascader.showCheckedButton
     },
     showClearButton: {
       type: Boolean as PropType<VxeCascaderPropTypes.ShowClearButton>,
@@ -559,7 +559,7 @@ export default defineVxeComponent({
     Object.assign($xeCascader, cascaderMethods, cascaderPrivateMethods)
 
     const renderVN = () => {
-      const { className, modelValue, multiple, loading, filterable, showTotalButoon, showCheckedButoon, showClearButton } = props
+      const { className, modelValue, multiple, loading, filterable, showTotalButton, showCheckedButton, showClearButton } = props
       const { initialized, isActivated, isAniVisible, visiblePanel, searchValue } = reactData
       const vSize = computeSize.value
       const isDisabled = computeIsDisabled.value
@@ -652,7 +652,7 @@ export default defineVxeComponent({
                       })
                     ])
                     : renderEmptyElement($xeCascader),
-                  showTotalButoon || (showCheckedButoon && multiple) || showClearButton || headerSlot
+                  showTotalButton || (showCheckedButton && multiple) || showClearButton || headerSlot
                     ? h('div', {
                       class: 'vxe-cascader--panel-header'
                     }, headerSlot
@@ -661,7 +661,7 @@ export default defineVxeComponent({
                           h('div', {
                             class: 'vxe-cascader--header-button'
                           }, [
-                            showTotalButoon
+                            showTotalButton
                               ? h('div', {
                                 class: 'vxe-cascader--header-total'
                               }, getI18n('vxe.cascader.total', [selectVals.length]))
@@ -669,7 +669,7 @@ export default defineVxeComponent({
                             h('div', {
                               class: 'vxe-cascader--header-btns'
                             }, [
-                              (showCheckedButoon && multiple)
+                              (showCheckedButton && multiple)
                                 ? h(VxeButtonComponent, {
                                   content: getI18n('vxe.cascader.allChecked'),
                                   mode: 'text',

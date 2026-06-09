@@ -46,8 +46,8 @@ export namespace VxeTreeSelectPropTypes {
   export type CheckedClosable = boolean
   export type ClearClosable = boolean
   export type ShowCloseButton = boolean
-  export type ShowTotalButoon = boolean
-  export type ShowCheckedButoon = boolean
+  export type ShowTotalButton = boolean
+  export type ShowCheckedButton = boolean
   export type ShowExpandButton = boolean
   export type ShowClearButton = boolean
   export type ClassName = string | ((params: { $treeSelect: VxeTreeSelectConstructor }) => string)
@@ -173,8 +173,8 @@ export interface VxeTreeSelectProps<D = any> {
   checkedClosable?: VxeTreeSelectPropTypes.CheckedClosable
   clearClosable?: VxeTreeSelectPropTypes.ClearClosable
   showCloseButton?: VxeTreeSelectPropTypes.ShowCloseButton
-  showTotalButoon?: VxeTreeSelectPropTypes.ShowTotalButoon
-  showCheckedButoon?: VxeTreeSelectPropTypes.ShowCheckedButoon
+  showTotalButton?: VxeTreeSelectPropTypes.ShowTotalButton
+  showCheckedButton?: VxeTreeSelectPropTypes.ShowCheckedButton
   showClearButton?: VxeTreeSelectPropTypes.ShowClearButton
   showExpandButton?: VxeTreeSelectPropTypes.ShowExpandButton
   className?: VxeTreeSelectPropTypes.ClassName
