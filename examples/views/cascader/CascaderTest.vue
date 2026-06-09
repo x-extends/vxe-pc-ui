@@ -6,8 +6,8 @@
     </div>
 
     <div>
-      <vxe-cascader v-model="val3" :options="treeList2" :option-props="{label: 'title', value: 'id'}" :tree-config="treeConfig" filterable showCheckedButoon showClearButton showExpandButton></vxe-cascader>
-      <vxe-cascader v-model="val4" :options="treeList2" :option-props="{label: 'title', value: 'id'}" :tree-config="treeConfig" multiple filterable showCheckedButoon showClearButton showExpandButton></vxe-cascader>
+      <vxe-cascader v-model="val3" :options="treeList2" :option-props="{label: 'title', value: 'id'}" :tree-config="treeConfig" filterable showCheckedButton showClearButton showExpandButton></vxe-cascader>
+      <vxe-cascader v-model="val4" :options="treeList2" :option-props="{label: 'title', value: 'id'}" :tree-config="treeConfig" multiple filterable showCheckedButton showClearButton showExpandButton></vxe-cascader>
     </div>
   </div>
 </template>

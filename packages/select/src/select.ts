@@ -106,7 +106,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
     radioConfig: Object as PropType<VxeSelectPropTypes.RadioConfig>,
     showCheckbox: {
       type: Boolean as PropType<VxeSelectPropTypes.ShowCloseButton>,
-      default: () => getConfig().select.showCheckedButoon
+      default: () => getConfig().select.showCheckedButton
     },
     checkboxConfig: Object as PropType<VxeSelectPropTypes.CheckboxConfig>,
     /**
@@ -140,13 +140,13 @@ export default /* define-vxe-component start */ defineVxeComponent({
       type: Boolean as PropType<VxeSelectPropTypes.ShowCloseButton>,
       default: () => getConfig().select.showCloseButton
     },
-    showTotalButoon: {
-      type: Boolean as PropType<VxeSelectPropTypes.ShowTotalButoon>,
-      default: () => getConfig().select.showTotalButoon
+    showTotalButton: {
+      type: Boolean as PropType<VxeSelectPropTypes.ShowTotalButton>,
+      default: () => getConfig().select.showTotalButton
     },
-    showCheckedButoon: {
-      type: Boolean as PropType<VxeSelectPropTypes.ShowCheckedButoon>,
-      default: () => getConfig().select.showCheckedButoon
+    showCheckedButton: {
+      type: Boolean as PropType<VxeSelectPropTypes.ShowCheckedButton>,
+      default: () => getConfig().select.showCheckedButton
     },
     showClearButton: {
       type: Boolean as PropType<VxeSelectPropTypes.ShowClearButton>,
@@ -1888,7 +1888,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const slots = $xeSelect.$scopedSlots
       const reactData = $xeSelect.reactData
 
-      const { className, multiple, loading, filterable, showTotalButoon, showCheckedButoon, showClearButton, showCloseButton } = props
+      const { className, multiple, loading, filterable, showTotalButton, showCheckedButton, showClearButton, showCloseButton } = props
       const { initialized, isActivated, isAniVisible, optList, visiblePanel, bodyHeight, topSpaceHeight } = reactData
       const vSize = $xeSelect.computeSize
       const isDisabled = $xeSelect.computeIsDisabled
@@ -2007,7 +2007,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
                     })
                   ])
                   : renderEmptyElement($xeSelect),
-                (showCheckedButoon && multiple) || showClearButton || headerSlot
+                (showCheckedButton && multiple) || showClearButton || headerSlot
                   ? h('div', {
                     class: 'vxe-select--panel-header'
                   }, headerSlot
@@ -2019,7 +2019,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
                           h('div', {
                             class: 'vxe-tree-select--header-btns'
                           }, [
-                            (showCheckedButoon && multiple)
+                            (showCheckedButton && multiple)
                               ? h(VxeButtonComponent, {
                                 props: {
                                   content: getI18n('vxe.select.allChecked'),
@@ -2070,7 +2070,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
                     }, $xeSelect.renderOpts(h))
                   ])
                 ]),
-                footerSlot || showTotalButoon || (showCloseButton && multiple)
+                footerSlot || showTotalButton || (showCloseButton && multiple)
                   ? h('div', {
                     class: 'vxe-select--panel-footer'
                   }, footerSlot
@@ -2079,7 +2079,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
                         h('div', {
                           class: 'vxe-select--footer-button'
                         }, [
-                          showTotalButoon
+                          showTotalButton
                             ? h('div', {
                               class: 'vxe-select--total-btns'
                             }, getI18n('vxe.select.total', [selectVals.length, optList.length]))
