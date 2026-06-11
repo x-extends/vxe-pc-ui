@@ -3410,11 +3410,11 @@ export interface VxeTableProps<D = any> {
   mergeFooterCells?: VxeTablePropTypes.MergeFooterCells<D>
   mergeFooterItems?: VxeTablePropTypes.MergeFooterItems<D>
   /**
-   * 自定义合并函数，返回计算后的值 (不能用于虚拟滚动、展开行，不建议用于固定列、树形结构)
+   * 自定义合并函数，返回计算后的值（如果是虚拟滚动、展开行，不建议用于固定列、树形结构的场景，不能同时跨行与跨列）
    */
   spanMethod?: VxeTablePropTypes.SpanMethod<D>
   /**
-   * 表尾合并行或列，返回计算后的值 (不能用于虚拟滚动、展开行，不建议用于固定列、树形结构)
+   * 表尾合并行或列，返回计算后的值（如果是虚拟滚动、展开行，不建议用于固定列、树形结构的场景，不能同时跨行与跨列）
    */
   footerSpanMethod?: VxeTablePropTypes.FooterSpanMethod<D>
   /**
@@ -4397,7 +4397,7 @@ export interface TableMethods<DT = any> {
     parent?: VxeTableDefines.ColumnInfo<DT> | null
   } | null
   /**
-   * 根据 row 获取行的序号
+   * 根据 row 获取表格内置的序号
    * @param row 行对象
    */
   getRowSeq(row: any): string | number

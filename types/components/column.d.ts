@@ -550,6 +550,8 @@ export interface VxeColumnProps<D = any> {
    * 筛选模板配置项
    */
   filterRender?: VxeColumnPropTypes.FilterRender
+  filterResetMethod?: VxeColumnPropTypes.FilterResetMethod
+  filterRecoverMethod?: VxeColumnPropTypes.FilterRecoverMethod
   /**
    * 是否启用浮动筛选
    */

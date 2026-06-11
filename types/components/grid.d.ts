@@ -171,6 +171,12 @@ export namespace VxeGridPropTypes {
       saveSuccess?(params: ProxyAjaxSaveParams<D> & ProxyAjaxResponseParams): void
       saveError?(params: ProxyAjaxSaveParams<D> & ProxyAjaxResponseParams): void
     }
+    beforeColumn?(params: {
+      $table: VxeTableConstructor<D>
+      $grid: VxeGridConstructor<D> | null | undefined
+      $gantt: VxeGanttConstructor<D> | null | undefined
+      column: VxeTableDefines.ColumnInfo<D>
+    }): void
     [key: string]: any
 
     /**
