@@ -18,6 +18,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
     collapseWidth: [String, Number] as PropType<VxeLayoutAsidePropTypes.CollapseWidth>,
     loading: Boolean as PropType<VxeLayoutAsidePropTypes.Loading>,
     padding: Boolean as PropType<VxeLayoutAsidePropTypes.Padding>,
+    collapseConfig: Object as PropType<VxeLayoutAsidePropTypes.CollapseConfig>,
     size: {
       type: String as PropType<VxeLayoutAsidePropTypes.Size>,
       default: () => getConfig().layoutAside.size || getConfig().size
@@ -42,6 +43,12 @@ export default /* define-vxe-component start */ defineVxeComponent({
     ...({} as {
       computeSize(): VxeComponentSizeType
     }),
+    computeCollapseOpts () {
+      const $xeLayoutAside = this
+      const props = $xeLayoutAside
+
+      return Object.assign({}, getConfig().layoutAside.collapseConfig, props.collapseConfig)
+    },
     computeWrapperWidth () {
       const $xeLayoutAside = this
       const props = $xeLayoutAside
@@ -78,11 +85,13 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const { width, collapsed, loading, padding } = props
       const wrapperWidth = $xeLayoutAside.computeWrapperWidth
       const vSize = $xeLayoutAside.computeSize
+      const collapseOpts = $xeLayoutAside.computeCollapseOpts
       const defaultSlot = slots.default
 
       return h('aside', {
         class: ['vxe-layout-aside', {
           [`size--${vSize}`]: vSize,
+          'is--animat': collapseOpts.animation !== false,
           'is--padding': padding,
           'is--default-width': !width,
           'is--collapse': collapsed,
