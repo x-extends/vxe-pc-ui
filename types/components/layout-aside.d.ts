@@ -29,6 +29,12 @@ export namespace VxeLayoutAsidePropTypes {
   export type Loading = boolean
   export type Padding = boolean
   export type Size = VxeComponentSizeType
+  export interface CollapseConfig {
+    /**
+     * 是否显示折叠动画
+     */
+    animation?: boolean
+  }
 }
 
 export interface VxeLayoutAsideProps {
@@ -38,6 +44,7 @@ export interface VxeLayoutAsideProps {
   loading?: VxeLayoutAsidePropTypes.Loading
   padding?: VxeLayoutAsidePropTypes.Padding
   size?: VxeLayoutAsidePropTypes.Size
+  collapseConfig?: VxeLayoutAsidePropTypes.CollapseConfig
 }
 
 export interface LayoutAsidePrivateComputed {

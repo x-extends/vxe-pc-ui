@@ -2563,11 +2563,15 @@ export namespace VxeTablePropTypes {
    */
   export interface EditDirtyConfig {
     /**
-     * 监听数据指定列的变量
+     * 监听数据额外的列的字段，如果同时指定 includeFields 则会被覆盖
+     */
+    extraFields?: string[]
+    /**
+     * 监听数据指定列字段
      */
     includeFields?: string[]
     /**
-     * 排除监听数据指定列的变量
+     * 排除监听数据指定列字段
      */
     excludeFields?: string[]
   }
@@ -4213,6 +4217,8 @@ export interface TableInternalData<D = any> {
   rceTimeout?: undefined | number
   rceRunTime?: undefined | number
   rceDelay: number
+
+  rsePending?: boolean
 
   // 滚动属性
   intoRunScroll?: boolean
@@ -6086,6 +6092,7 @@ export namespace VxeTableDefines {
   export interface RowCacheItem<D = any> {
     row: D
     rowid: string
+    _seq: number
     seq: string | number
     index: number
     $index: number
