@@ -253,6 +253,10 @@ export namespace VxeGanttPropTypes {
      * 是否显示右侧任务的折叠按钮
      */
     showCollapseTaskButton?: boolean
+    /**
+     * 是否显示折叠动画
+     */
+    animation?: boolean
   }
 
   export interface TaskLinkConfig<D = any> extends VxeGanttDefines.LinkStyleConfig {
@@ -627,6 +631,8 @@ export interface GanttReactData<D = any> extends GridReactData<D> {
   linkList: VxeGanttDefines.LinkConfObj[]
   upLinkFlag: number
 
+  showSplitAnimat: boolean
+
   nowTime: number
   currLeftSpacing: number
   currRightSpacing: number
@@ -646,6 +652,7 @@ export interface GanttInternalData extends GridInternalData {
     type: 0 | 1
   }
 
+  _taTime?: any
   _msTout?: any
 }
 
