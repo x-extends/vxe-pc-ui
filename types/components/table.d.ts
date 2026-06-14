@@ -2968,13 +2968,7 @@ export namespace VxeTablePropTypes {
     field?: string
   }
 
-  /**
-   * 导出参数
-   */
-  export interface ExportConfig {
-    // 内置属性
-    _typeMaps?: Record<string, number>
-
+  interface ExportAndPrintConfig {
     /**
      * 文件名
      */
@@ -2993,14 +2987,6 @@ export namespace VxeTablePropTypes {
       $gantt: VxeGanttConstructor | null | undefined
       options: ExportOpts
     }) => string)
-    /**
-     * 文件类型
-     */
-    type?: string
-    /**
-     * 可选文件类型列表
-     */
-    types?: string[]
     /**
      * 导出数据的方式
      */
@@ -3093,6 +3079,37 @@ export namespace VxeTablePropTypes {
       $rowIndex: number
     }): boolean
     /**
+     * 自定义参数
+     */
+    params?: Record<string, any>
+
+    /**
+     * 自定义高级导出窗口的插槽模板
+     */
+    slots?: {
+      top?: string | ((params: VxeTableDefines.ExtortSlotParams) => VxeComponentSlotType | VxeComponentSlotType[])
+      bottom?: string | ((params: VxeTableDefines.ExtortSlotParams) => VxeComponentSlotType | VxeComponentSlotType[])
+      default?: string | ((params: VxeTableDefines.ExtortSlotParams) => VxeComponentSlotType | VxeComponentSlotType[])
+      footer?: string | ((params: VxeTableDefines.ExtortSlotParams) => VxeComponentSlotType | VxeComponentSlotType[])
+      parameter?: string | ((params: VxeTableDefines.ExtortSlotParams) => VxeComponentSlotType | VxeComponentSlotType[])
+    }
+  }
+
+  /**
+   * 导出参数
+   */
+  export interface ExportConfig extends ExportAndPrintConfig {
+    // 内置属性
+    _typeMaps?: Record<string, number>
+    /**
+     * 文件类型
+     */
+    type?: string
+    /**
+     * 可选文件类型列表
+     */
+    types?: string[]
+    /**
      * 是否服务端导出
      */
     remote?: boolean
@@ -3101,10 +3118,6 @@ export namespace VxeTablePropTypes {
      */
     useStyle?: boolean
     sheetMethod?(params: VxeTableDefines.ExtortSheetMethodParams): void
-    /**
-     * 自定义参数
-     */
-    params?: Record<string, any>
     /**
      * 只对 remote=true 有效，用于自定义导出逻辑
      */
@@ -3127,17 +3140,6 @@ export namespace VxeTablePropTypes {
       status: boolean
       options: ExportHandleOptions
     }): void
-
-    /**
-     * 自定义高级导出窗口的插槽模板
-     */
-    slots?: {
-      top?: string | ((params: VxeTableDefines.ExtortSlotParams) => VxeComponentSlotType | VxeComponentSlotType[])
-      bottom?: string | ((params: VxeTableDefines.ExtortSlotParams) => VxeComponentSlotType | VxeComponentSlotType[])
-      default?: string | ((params: VxeTableDefines.ExtortSlotParams) => VxeComponentSlotType | VxeComponentSlotType[])
-      footer?: string | ((params: VxeTableDefines.ExtortSlotParams) => VxeComponentSlotType | VxeComponentSlotType[])
-      parameter?: string | ((params: VxeTableDefines.ExtortSlotParams) => VxeComponentSlotType | VxeComponentSlotType[])
-    }
   }
   export interface ExportOpts extends ExportConfig { }
   export interface ExportHandleOptions extends Exclude<ExportConfig, 'filename' | 'sheetName'> {
@@ -3163,47 +3165,7 @@ export namespace VxeTablePropTypes {
   /**
    * 打印参数
    */
-  export interface PrintConfig {
-    /**
-     * 表名
-     */
-    sheetName?: string | ((params: {
-      $table: VxeTableConstructor
-      $grid: VxeGridConstructor | null | undefined
-      $gantt: VxeGanttConstructor | null | undefined
-      options: ExportOpts
-    }) => string)
-    /**
-     * 导出数据的方式
-     */
-    mode?: string
-    /**
-     * 导出数据的方式列表
-     */
-    modes?: (string | {
-      label?: string | number
-      value: string | number
-    })[]
-    /**
-     * 是否为源数据
-     */
-    original?: boolean
-    /**
-     * 是否需要表头
-     */
-    isHeader?: boolean
-    /**
-     * 是否需要表尾
-     */
-    isFooter?: boolean
-    /**
-     * 自定义数据
-     */
-    data?: any[]
-    /**
-     * 自定义列
-     */
-    columns?: VxeTableDefines.ColumnInfo[] | ExportOrPrintColumnOption[]
+  export interface PrintConfig extends ExportAndPrintConfig {
     /**
      * 打印样式
      */
@@ -3212,48 +3174,6 @@ export namespace VxeTablePropTypes {
      * 自定义打印内容
      */
     html?: string
-    /**
-     * 自定义参数
-     */
-    params?: Record<string, any>
-    /**
-     * 指定列
-     */
-    includeFields?: string[]
-    /**
-     * 排除列
-     */
-    excludeFields?: string[]
-    /**
-     * 列过滤方法
-     */
-    columnFilterMethod?(params: {
-      $table: VxeTableConstructor
-      $grid: VxeGridConstructor | null | undefined
-      $gantt: VxeGanttConstructor | null | undefined
-      column: VxeTableDefines.ColumnInfo
-      $columnIndex: number
-    }): boolean
-    /**
-     * 数据过滤方法
-     */
-    dataFilterMethod?(params: {
-      $table: VxeTableConstructor
-      $grid: VxeGridConstructor | null | undefined
-      $gantt: VxeGanttConstructor | null | undefined
-      row: any
-      $rowIndex: number
-    }): boolean
-    /**
-     * 表尾过滤方法
-     */
-    footerFilterMethod?(params: {
-      $table: VxeTableConstructor
-      $grid: VxeGridConstructor | null | undefined
-      $gantt: VxeGanttConstructor | null | undefined
-      items: any[]
-      $rowIndex: number
-    }): boolean
     /**
      * 打印之前的方法，可以通过返回自定义打印的内容
      */
@@ -3270,17 +3190,6 @@ export namespace VxeTablePropTypes {
        */
       content: string
     }): string
-
-    /**
-     * 自定义高级导出窗口的插槽模板
-     */
-    slots?: {
-      top?: string | ((params: VxeTableDefines.PrintSlotParams) => VxeComponentSlotType | VxeComponentSlotType[])
-      bottom?: string | ((params: VxeTableDefines.PrintSlotParams) => VxeComponentSlotType | VxeComponentSlotType[])
-      default?: string | ((params: VxeTableDefines.PrintSlotParams) => VxeComponentSlotType | VxeComponentSlotType[])
-      footer?: string | ((params: VxeTableDefines.PrintSlotParams) => VxeComponentSlotType | VxeComponentSlotType[])
-      parameter?: string | ((params: VxeTableDefines.PrintSlotParams) => VxeComponentSlotType | VxeComponentSlotType[])
-    }
 
     /**
      * 已被 html 替换
