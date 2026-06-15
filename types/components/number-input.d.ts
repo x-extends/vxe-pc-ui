@@ -61,6 +61,13 @@ export namespace VxeNumberInputPropTypes {
      */
     layout?: 'left' | 'right' | 'default' | ''
   }
+  /**
+   * 小数位数处理时的舍入方式
+   */
+  export type RoundingMode = 'round' | 'ceil' | 'floor' | 'default' | '' | null
+  /**
+   * 保留小数位数
+   */
   export type Digits = string | number | null
   export type AutoFill = boolean
   export type Editable = boolean
@@ -139,7 +146,11 @@ export interface VxeNumberInputProps {
   controlConfig?: VxeNumberInputPropTypes.ControlConfig
 
   /**
-   * 小数位数
+   * 小数位数处理时的舍入方式
+   */
+  roundingMode?: VxeNumberInputPropTypes.RoundingMode
+  /**
+   * 保留小数位数
    */
   digits?: VxeNumberInputPropTypes.Digits
   /**

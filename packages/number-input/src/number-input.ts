@@ -1,6 +1,6 @@
 import { CreateElement, PropType, VNode } from 'vue'
 import { defineVxeComponent } from '../../ui/src/comp'
-import XEUtils from 'xe-utils'
+import XEUtils, { CommafyOptions } from 'xe-utils'
 import { getConfig, getIcon, getI18n, globalEvents, GLOBAL_EVENT_KEYS, createEvent, globalMixins, renderEmptyElement } from '../../ui'
 import { getFuncText, eqEmptyValue, isEnableConf } from '../../ui/src/utils'
 import { hasClass, getEventTargetNode, hasControlKey } from '../../ui/src/dom'
@@ -89,6 +89,11 @@ export default /* define-vxe-component start */ defineVxeComponent({
     },
     controlConfig: Object as PropType<VxeNumberInputPropTypes.ControlConfig>,
 
+    // float
+    roundingMode: {
+      type: String as PropType<VxeNumberInputPropTypes.RoundingMode>,
+      default: null
+    },
     // float
     digits: {
       type: [String, Number] as PropType<VxeNumberInputPropTypes.Digits>,
@@ -303,12 +308,20 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const props = $xeNumberInput
       const reactData = $xeNumberInput.reactData
 
-      const { type, showCurrency, currencySymbol, autoFill } = props
+      const { type, roundingMode, showCurrency, currencySymbol, autoFill } = props
       const { inputValue } = reactData
       const digitsValue = $xeNumberInput.computeDigitsValue
       if (type === 'amount') {
         const num = XEUtils.toNumber(inputValue)
-        let amountLabel = XEUtils.commafy(num, { digits: digitsValue })
+        const cfyOpts: CommafyOptions = { digits: digitsValue }
+        if (roundingMode === 'floor') {
+          cfyOpts.floor = true
+        } else if (roundingMode === 'ceil') {
+          cfyOpts.ceil = true
+        } else {
+          cfyOpts.round = true
+        }
+        let amountLabel = XEUtils.commafy(num, cfyOpts)
         if (!autoFill) {
           const [iStr, dStr] = amountLabel.split('.')
           if (dStr) {
@@ -404,13 +417,13 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const $xeNumberInput = this
       const props = $xeNumberInput
 
-      const { exponential, autoFill } = props
+      const { exponential, roundingMode, autoFill } = props
       const inpMaxLength = $xeNumberInput.computeInpMaxLength
       const digitsValue = $xeNumberInput.computeDigitsValue
       const decimalsType = $xeNumberInput.computeDecimalsType
       let restVal = ''
       if (decimalsType) {
-        restVal = toFloatValueFixed(val, digitsValue)
+        restVal = toFloatValueFixed(val, digitsValue, roundingMode)
         if (!autoFill) {
           restVal = handleNumberString(XEUtils.toNumber(restVal))
         }
@@ -533,18 +546,18 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const props = $xeNumberInput
       const reactData = $xeNumberInput.reactData
 
-      const { autoFill } = props
+      const { roundingMode, autoFill } = props
       const { inputValue } = reactData
       const digitsValue = $xeNumberInput.computeDigitsValue
       const decimalsType = $xeNumberInput.computeDecimalsType
       if (eqEmptyValue(val)) {
         reactData.inputValue = ''
       } else {
-        let textValue = `${val}`
+        let textValue = '' + val
         if (decimalsType) {
-          textValue = toFloatValueFixed(val, digitsValue)
+          textValue = toFloatValueFixed(val, digitsValue, roundingMode)
           if (!autoFill) {
-            textValue = `${XEUtils.toNumber(textValue)}`
+            textValue = '' + XEUtils.toNumber(textValue)
           }
         }
         if (textValue !== inputValue) {
@@ -560,7 +573,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const props = $xeNumberInput
       const reactData = $xeNumberInput.reactData
 
-      const { autoFill } = props
+      const { roundingMode, autoFill } = props
       const { inputValue } = reactData
       const digitsValue = $xeNumberInput.computeDigitsValue
       const decimalsType = $xeNumberInput.computeDecimalsType
@@ -569,7 +582,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
           let textValue = ''
           let validValue: number | null = null
           if (inputValue) {
-            textValue = toFloatValueFixed(inputValue, digitsValue)
+            textValue = toFloatValueFixed(inputValue, digitsValue, roundingMode)
             validValue = XEUtils.toNumber(textValue)
             if (!autoFill) {
               textValue = `${validValue}`
