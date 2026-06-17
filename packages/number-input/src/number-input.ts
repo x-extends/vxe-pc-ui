@@ -78,7 +78,7 @@ export default defineVxeComponent({
     // float
     roundingMode: {
       type: String as PropType<VxeNumberInputPropTypes.RoundingMode>,
-      default: null
+      default: () => getConfig().numberInput.roundingMode
     },
     // float
     digits: {
@@ -353,13 +353,13 @@ export default defineVxeComponent({
     }
 
     const getNumberValue = (val: any) => {
-      const { exponential, roundingMode, autoFill } = props
+      const { type, exponential, roundingMode, autoFill } = props
       const inpMaxLength = computeInpMaxLength.value
       const digitsValue = computeDigitsValue.value
       const decimalsType = computeDecimalsType.value
       let restVal = ''
       if (decimalsType) {
-        restVal = toFloatValueFixed(val, digitsValue, roundingMode)
+        restVal = toFloatValueFixed(val, type, digitsValue, roundingMode)
         if (!autoFill) {
           restVal = handleNumberString(XEUtils.toNumber(restVal))
         }
@@ -459,7 +459,7 @@ export default defineVxeComponent({
     }
 
     const updateModel = (val: any) => {
-      const { roundingMode, autoFill } = props
+      const { type, roundingMode, autoFill } = props
       const { inputValue } = reactData
       const digitsValue = computeDigitsValue.value
       const decimalsType = computeDecimalsType.value
@@ -468,7 +468,7 @@ export default defineVxeComponent({
       } else {
         let textValue = '' + val
         if (decimalsType) {
-          textValue = toFloatValueFixed(val, digitsValue, roundingMode)
+          textValue = toFloatValueFixed(val, type, digitsValue, roundingMode)
           if (!autoFill) {
             textValue = '' + XEUtils.toNumber(textValue)
           }
@@ -483,7 +483,7 @@ export default defineVxeComponent({
      * 检查初始值
      */
     const initValue = () => {
-      const { roundingMode, autoFill } = props
+      const { type, roundingMode, autoFill } = props
       const { inputValue } = reactData
       const digitsValue = computeDigitsValue.value
       const decimalsType = computeDecimalsType.value
@@ -492,7 +492,7 @@ export default defineVxeComponent({
           let textValue = ''
           let validValue: number | null = null
           if (inputValue) {
-            textValue = toFloatValueFixed(inputValue, digitsValue, roundingMode)
+            textValue = toFloatValueFixed(inputValue, type, digitsValue, roundingMode)
             validValue = XEUtils.toNumber(textValue)
             if (!autoFill) {
               textValue = `${validValue}`

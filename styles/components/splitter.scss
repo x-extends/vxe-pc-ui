@@ -280,7 +280,9 @@
   &.is--hidden,
   &.is--width, 
   &.is--height {
-    flex-shrink: 0;
+    &:not(.is--fill) {
+      flex-shrink: 0;
+    }
   }
   &.is--border {
     & > .vxe-splitter-panel--wrapper {

@@ -214,4 +214,11 @@
   /*backtop*/
   --vxe-ui-backtop-right: 2em;
   --vxe-ui-backtop-bottom: 2em;
+
+  /*cascader*/
+  --vxe-ui-cascader-chunk-height: 12em;
+  --vxe-ui-cascader-node-width: 12em;
+  --vxe-ui-cascader-node-height: 2em;
+  --vxe-ui-cascader-node-checkbox-indeterminate-color: inherit;
+  --vxe-ui-cascader-node-checkbox-checked-color: var(--vxe-ui-font-primary-color);
 }

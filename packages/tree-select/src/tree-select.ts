@@ -211,12 +211,12 @@ export default defineVxeComponent({
     })
 
     const computeBtnTransfer = computed(() => {
-      const { transfer } = props
       const popupOpts = computePopupOpts.value
-      if (XEUtils.isBoolean(popupOpts.transfer)) {
-        return popupOpts.transfer
+      const { transfer } = popupOpts
+      if (XEUtils.isBoolean(transfer)) {
+        return transfer
       }
-      if (transfer === null) {
+      if (props.transfer === null) {
         const globalTransfer = getConfig().treeSelect.transfer
         if (XEUtils.isBoolean(globalTransfer)) {
           return globalTransfer
@@ -225,7 +225,7 @@ export default defineVxeComponent({
           return true
         }
       }
-      return transfer
+      return props.transfer
     })
 
     const computePopupOpts = computed(() => {
@@ -311,12 +311,17 @@ export default defineVxeComponent({
       return Object.assign({}, treeOpts.filterConfig, props.filterConfig)
     })
 
+    const computeSelectVals = computed(() => {
+      const { modelValue } = props
+      return XEUtils.eqNull(modelValue) ? [] : (XEUtils.isArray(modelValue) ? modelValue : [modelValue])
+    })
+
     const computeSelectLabel = computed(() => {
-      const { modelValue, showFullLabel } = props
+      const { showFullLabel } = props
       const { fullOptFlag, lazyOptFlag } = reactData
       const { fullNodeMaps, lazyNodeMaps } = internalData
       const labelField = computeLabelField.value
-      const selectVals = XEUtils.eqNull(modelValue) ? [] : (XEUtils.isArray(modelValue) ? modelValue : [modelValue])
+      const selectVals = computeSelectVals.value
       return selectVals.map(val => {
         const cacheItem = fullNodeMaps[val]
         if (fullOptFlag && cacheItem) {
@@ -407,12 +412,12 @@ export default defineVxeComponent({
           nodeid = getOptUniqueId()
         }
         if (keyMaps[nodeid]) {
-          errLog('vxe.error.repeatKey', [`[tree-select] ${nodeKeyField}`, nodeid])
+          errLog('vxe.error.repeatKey', [nodeKeyField, nodeid])
         }
         keyMaps[nodeid] = true
         const value = item[valueField]
         if (nodeMaps[value]) {
-          errLog('vxe.error.repeatKey', [`[tree-select] ${valueField}`, value])
+          errLog('vxe.error.repeatKey', [valueField, value])
         }
         nodeMaps[value] = {
           item,
@@ -420,7 +425,7 @@ export default defineVxeComponent({
           items,
           parent: parentItem,
           nodes,
-          fullLabel: nodes.map(item => item[labelField]).join((separator || '/') + ' ')
+          fullLabel: nodes.map(item => item[labelField]).join((separator || ' / '))
         }
       }
       if (optList) {
@@ -492,7 +497,7 @@ export default defineVxeComponent({
       return nextTick().then(handleStyle)
     }
 
-    const showOptionPanel = () => {
+    const showOptionPanel = (evnt?: Event) => {
       const { loading, remote, filterable } = props
       const { fullOptionList } = internalData
       const isDisabled = computeIsDisabled.value
@@ -516,7 +521,7 @@ export default defineVxeComponent({
         }, 10)
         updateZindex()
         updatePlacement()
-        dispatchEvent('visible-change', { visible: true }, null)
+        dispatchEvent('visible-change', { visible: true }, evnt || null)
       }
     }
 
@@ -560,7 +565,7 @@ export default defineVxeComponent({
           $tree.setAllCheckboxNode(true).then(({ checkNodeKeys, checkNodes }) => {
             changeEvent($event, checkNodeKeys, checkNodes[0])
             dispatchEvent('all-change', { value: checkNodeKeys }, $event)
-            if (XEUtils.isBoolean(autoClose) ? autoClose : checkedClosable) {
+            if (XEUtils.isBoolean(checkedClosable) ? checkedClosable : autoClose) {
               hideOptionPanel($event)
             }
           })
@@ -575,7 +580,7 @@ export default defineVxeComponent({
       if ($tree) {
         const value = multiple ? [] : null
         $tree.clearCheckboxNode().then(() => {
-          if (XEUtils.isBoolean(autoClose) ? autoClose : clearClosable) {
+          if (XEUtils.isBoolean(clearClosable) ? clearClosable : autoClose) {
             hideOptionPanel($event)
           }
         })
@@ -670,7 +675,7 @@ export default defineVxeComponent({
       if (!isDisabled) {
         if (!reactData.visiblePanel) {
           reactData.triggerFocusPanel = true
-          showOptionPanel()
+          showOptionPanel(evnt)
           setTimeout(() => {
             reactData.triggerFocusPanel = false
           }, 150)
@@ -719,7 +724,7 @@ export default defineVxeComponent({
         if (reactData.visiblePanel) {
           hideOptionPanel($event)
         } else {
-          showOptionPanel()
+          showOptionPanel($event)
         }
       }
     }

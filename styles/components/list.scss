@@ -7,7 +7,8 @@
   direction: ltr;
   .vxe-list--virtual-wrapper {
     position: relative;
-    overflow: auto;
+    overflow-x: auto;
+    overflow-y: auto;
     outline: 0;
   }
   .vxe-list--y-space {

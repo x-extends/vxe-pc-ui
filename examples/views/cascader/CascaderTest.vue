@@ -1,50 +1,58 @@
 <template>
   <div>
-    <vxe-cascader v-model="val1" :options="treeList" :lazy-options="lazyList" :treeConfig="treeConfig" multiple clearable></vxe-cascader>
+    <vxe-cascader v-model="val1" :options="treeList" :radio-config="{showIcon: true}" filterable clearable></vxe-cascader>
+    <vxe-cascader v-model="val2" :options="treeList" :checkbox-config="{showIcon: true}" :popup-config="{transfer: true}" multiple clearable></vxe-cascader>
   </div>
 </template>
 
 <script lang="ts" setup>
-import { ref, reactive } from 'vue'
-import { VxeTreeSelectPropTypes } from '../../../types'
+import { ref } from 'vue'
 
 interface NodeVO {
   label: string
   value: string
-  hasChild?: boolean
+  children?: NodeVO[]
 }
 
-const val1 = ref(['4-2'])
+const val1 = ref('331')
+const val2 = ref(['331'])
 
-const treeConfig = reactive<VxeTreeSelectPropTypes.TreeConfig>({
-  lazy: true,
-  loadMethod ({ node }) {
-    return getNodeListApi(node)
-  }
-})
-
-const treeList = ref<VxeTreeSelectPropTypes.Options>([
-  { label: '节点2', value: '2', hasChild: true },
-  { label: '节点3', value: '3', hasChild: true },
-  { label: '节点4', value: '4', hasChild: true },
-  { label: '节点5', value: '5', hasChild: false }
+const treeList = ref<NodeVO[]>([
+  { label: '节点2', value: '2' },
+  {
+    label: '节点3',
+    value: '3',
+    children: [
+      { label: '节点3-1', value: '31' },
+      { label: '节点3-2', value: '32' },
+      {
+        label: '节点3-3',
+        value: '33',
+        children: [
+          { label: '节点3-3-1', value: '331' },
+          { label: '节点3-3-2', value: '332' },
+          { label: '节点3-3-3', value: '333' }
+        ]
+      },
+      { label: '节点3-4', value: '34' }
+    ]
+  },
+  {
+    label: '节点4',
+    value: '4',
+    children: [
+      { label: '节点4-1', value: '41' },
+      { label: '节点4-2', value: '42' },
+      {
+        label: '节点4-3',
+        value: '43',
+        children: [
+          { label: '节点4-3-1', value: '431' },
+          { label: '节点4-3-2', value: '432' }
+        ]
+      }
+    ]
+  },
+  { label: '节点5', value: '5' }
 ])
-
-const lazyList = ref<VxeTreeSelectPropTypes.Options>([
-  { label: '节点4-2', value: '4-2' }
-])
-
-let treeKey = 1
-const getNodeListApi = (node: any) => {
-  return new Promise<NodeVO[]>(resolve => {
-    // 模拟后端接口
-    setTimeout(() => {
-      resolve([
-        { label: `节点${node.value}-${treeKey}`, value: `${node.value}-${treeKey}`, hasChild: Math.random() * 10 < 6 },
-        { label: `节点${node.value}-${treeKey + 1}`, value: `${node.value}-${treeKey + 1}`, hasChild: Math.random() * 10 < 6 }
-      ])
-      treeKey += 2
-    }, 500)
-  })
-}
 </script>

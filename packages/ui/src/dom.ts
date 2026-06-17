@@ -169,8 +169,9 @@ export function updatePanelPlacement (targetElem: HTMLElement | null | undefined
   defaultPlacement?: '' | 'top' | 'bottom' | null
   teleportTo?: boolean
   marginSize?: number
+  isMinWidth?: boolean
 }) {
-  const { placement, defaultPlacement, teleportTo, marginSize } = Object.assign({ teleportTo: false, marginSize: 18 }, options)
+  const { placement, defaultPlacement, teleportTo, marginSize, isMinWidth } = Object.assign({ teleportTo: false, marginSize: 18, isMinWidth: true }, options)
   let panelPlacement: 'top' | 'bottom' = 'bottom'
   let top: number | '' = ''
   let bottom: number | '' = ''
@@ -264,7 +265,7 @@ export function updatePanelPlacement (targetElem: HTMLElement | null | undefined
     if (XEUtils.isNumber(right)) {
       stys.right = toCssUnit(right)
     }
-    if (XEUtils.isNumber(minWidth)) {
+    if (isMinWidth && XEUtils.isNumber(minWidth)) {
       stys.minWidth = toCssUnit(minWidth)
     }
   }

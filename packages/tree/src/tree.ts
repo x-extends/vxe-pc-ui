@@ -381,6 +381,9 @@ export default defineVxeComponent({
     } as unknown as VxeTreeConstructor & VxeTreePrivateMethods
 
     const getNodeId = (node: any) => {
+      if (!node) {
+        return ''
+      }
       const valueField = computeValueField.value
       const nodeKey = XEUtils.get(node, valueField)
       return enNodeValue(nodeKey)
@@ -553,7 +556,7 @@ export default defineVxeComponent({
       const valueField = computeValueField.value
       const childrenField = computeChildrenField.value
       const keyMaps: Record<string, VxeTreeDefines.NodeCacheItem> = {}
-      XEUtils.eachTree(treeFullData, (item, index, items, path, parent, nodes) => {
+      XEUtils.eachTree(treeFullData, (item, index, items, path, parenItem, nodes) => {
         let nodeid = getNodeId(item)
         if (!nodeid) {
           nodeid = getNodeUniqueId()
@@ -565,7 +568,7 @@ export default defineVxeComponent({
           $index: -1,
           _index: -1,
           items,
-          parent,
+          parent: parenItem,
           nodes,
           level: nodes.length - 1,
           treeIndex: index,
@@ -582,7 +585,7 @@ export default defineVxeComponent({
       const childrenField = computeChildrenField.value
       const mapChildrenField = computeMapChildrenField.value
       let vtIndex = 0
-      XEUtils.eachTree(afterTreeList, (item, index, items) => {
+      XEUtils.eachTree(afterTreeList, (item, index, items, path, parenItem, nodes) => {
         const nodeid = getNodeId(item)
         const nodeItem = nodeMaps[nodeid]
         if (nodeItem) {
@@ -596,9 +599,9 @@ export default defineVxeComponent({
             $index: -1,
             _index: vtIndex,
             items,
-            parent,
-            nodes: [],
-            level: 0,
+            parent: parenItem,
+            nodes,
+            level: nodes.length - 1,
             treeIndex: index,
             lineCount: 0,
             treeLoaded: false
@@ -2460,7 +2463,7 @@ export default defineVxeComponent({
       const extraSlot = slots.extra
       const isExpand = updateExpandedFlag && treeExpandedMaps[nodeid]
       const nodeItem = nodeMaps[nodeid] || {}
-      const nodeValue = XEUtils.get(node, titleField)
+      const nodeTitle = XEUtils.get(node, titleField)
       const nLevel = nodeItem.level
 
       let isRadioChecked = false
@@ -2568,7 +2571,7 @@ export default defineVxeComponent({
           }, [
             h('div', {
               class: 'vxe-tree--node-item-title'
-            }, titleSlot ? getSlotVNs(titleSlot(nParams)) : `${nodeValue}`),
+            }, titleSlot ? getSlotVNs(titleSlot(nParams)) : `${nodeTitle}`),
             extraSlot
               ? h('div', {
                 class: 'vxe-tree--node-item-extra'
@@ -2739,6 +2742,15 @@ export default defineVxeComponent({
     watch(() => props.data, () => {
       dataFlag.value++
     })
+    watch(() => props.rootParentValue, () => {
+      dataFlag.value++
+    })
+    watch(() => props.rootValues ? props.rootValues.length : 0, () => {
+      dataFlag.value++
+    })
+    watch(() => props.rootValues, () => {
+      dataFlag.value++
+    })
     watch(dataFlag, () => {
       loadData(props.data || [])
     })
@@ -2776,20 +2788,6 @@ export default defineVxeComponent({
       recalculate()
     })
 
-    const rootConf = ref(0)
-    watch(() => props.rootParentValue, () => {
-      rootConf.value++
-    })
-    watch(() => props.rootValues ? props.rootValues.length : 0, () => {
-      rootConf.value++
-    })
-    watch(() => props.rootValues, () => {
-      rootConf.value++
-    })
-    watch(rootConf, () => {
-      loadData(props.data || [])
-    })
-
     onMounted(() => {
       const { transform, drag, menuConfig } = props
       const dragOpts = computeDragOpts.value
@@ -2799,6 +2797,9 @@ export default defineVxeComponent({
       if (dragOpts.isCrossTreeDrag) {
         errLog('vxe.error.notProp', ['drag-config.isCrossTreeDrag'])
       }
+      // if (valueField) {
+      //   errLog('vxe.error.delProp', ['value-field', 'value-field'])
+      // }
       const VxeUIContextMenu = VxeUI.getComponent('VxeContextMenu')
       if (menuConfig && !VxeUIContextMenu) {
         errLog('vxe.error.reqComp', ['vxe-context-menu'])

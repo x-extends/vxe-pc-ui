@@ -6,8 +6,8 @@ export function handleNumber (val: string | number | null | undefined) {
   return XEUtils.isString(val) ? val.replace(/[^0-9e.-]/g, '') : val
 }
 
-export function toFloatValueFixed (inputValue: string | number, digitsValue: number, roundingMode: VxeNumberInputPropTypes.RoundingMode) {
-  if (!roundingMode || roundingMode === 'default') {
+export function toFloatValueFixed (inputValue: string | number, type: VxeNumberInputPropTypes.Type, digitsValue: number, roundingMode: VxeNumberInputPropTypes.RoundingMode) {
+  if (type !== 'integer' && (!roundingMode || roundingMode === 'default')) {
     // 默认截取忽略
     if (/^-/.test('' + inputValue)) {
       return XEUtils.toFixed(XEUtils.ceil(inputValue, digitsValue), digitsValue)

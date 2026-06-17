@@ -1,26 +1,62 @@
 import { ref, computed, h, PropType, nextTick, inject, provide, reactive, Teleport, onMounted, onUnmounted, watch } from 'vue'
 import { defineVxeComponent } from '../../ui/src/comp'
-import { getConfig, getI18n, getIcon, globalEvents, createEvent, useSize, renderEmptyElement } from '../../ui'
+import { getConfig, getI18n, getIcon, globalEvents, createEvent, useSize, renderEmptyElement, getSlotVNs } from '../../ui'
 import { getEventTargetNode, updatePanelPlacement, toCssUnit } from '../../ui/src/dom'
 import { getLastZIndex, nextZIndex } from '../../ui/src/utils'
-import { deNodeValue } from '../../tree/src/util'
+import { enNodeValue, deNodeValue } from './util'
 import { errLog } from '../../ui/src/log'
 import XEUtils from 'xe-utils'
+import VxeListComponent from '../../list/src/list'
 import VxeInputComponent from '../../input/src/input'
 import VxeButtonComponent from '../../button/src/button'
 
-import type { CascaderReactData, VxeCascaderEmits, CascaderInternalData, VxeButtonEvents, ValueOf, VxeComponentStyleType, CascaderPrivateRef, CascaderPrivateMethods, CascaderMethods, VxeCascaderPrivateComputed, VxeCascaderPropTypes, VxeCascaderConstructor, VxeFormDefines, VxeDrawerConstructor, VxeDrawerMethods, VxeCascaderPrivateMethods, VxeFormConstructor, VxeFormPrivateMethods, VxeInputConstructor, VxeModalConstructor, VxeModalMethods, VxeTreeConstructor } from '../../../types'
+import type { CascaderReactData, VxeCascaderEmits, CascaderInternalData, VxeButtonEvents, ValueOf, VxeComponentStyleType, VxeCascaderDefines, CascaderPrivateRef, CascaderPrivateMethods, CascaderMethods, VxeCascaderPrivateComputed, VxeCascaderPropTypes, VxeCascaderConstructor, VxeListSlotTypes, VxeFormDefines, VxeDrawerConstructor, VxeDrawerMethods, VxeCascaderPrivateMethods, VxeFormConstructor, VxeFormPrivateMethods, VxeInputConstructor, VxeModalConstructor, VxeModalMethods } from '../../../types'
 import type { VxeTableConstructor, VxeTablePrivateMethods } from '../../../types/components/table'
 
-function getOptUniqueId () {
+/**
+ * 生成节点的唯一主键
+ */
+function getNodeUniqueId () {
   return XEUtils.uniqueId('node_')
+}
+
+function createReactData (): CascaderReactData {
+  return {
+    initialized: false,
+    searchValue: '',
+    searchLoading: false,
+    currentCunkList: [],
+    currentItems: [],
+    currentNode: null,
+    panelIndex: 0,
+    panelStyle: {},
+    panelPlacement: null,
+    triggerFocusPanel: false,
+    visiblePanel: false,
+    isAniVisible: false,
+    isActivated: false,
+    selectRadioKey: null,
+    treeList: [],
+    updateExpandedFlag: 1,
+    updateCheckboxFlag: 1,
+    fullOptFlag: 1,
+    lazyOptFlag: 1
+  }
 }
 
 function createInternalData (): CascaderInternalData {
   return {
     // hpTimeout: undefined,
-    fullOptionList: [],
-    fullNodeMaps: {}
+    afterTreeList: [],
+    treeFullData: [],
+    afterVisibleList: [],
+    nodeMaps: {},
+    fullNodeMaps: {},
+    lazyNodeMaps: {},
+    indeterminateRowMaps: {},
+    selectCheckboxMaps: {},
+    treeExpandedMaps: {},
+    treeExpandLazyLoadedMaps: {}
   }
 }
 
@@ -44,25 +80,41 @@ export default defineVxeComponent({
     },
     filterable: Boolean as PropType<VxeCascaderPropTypes.Filterable>,
     filterConfig: Object as PropType<VxeCascaderPropTypes.FilterConfig>,
+    showFullLabel: {
+      type: Boolean as PropType<VxeCascaderPropTypes.ShowFullLabel>,
+      default: getConfig().cascader.showFullLabel
+    },
+    separator: {
+      type: String as PropType<VxeCascaderPropTypes.Separator>,
+      default: getConfig().cascader.separator
+    },
     multiple: Boolean as PropType<VxeCascaderPropTypes.Multiple>,
     className: [String, Function] as PropType<VxeCascaderPropTypes.ClassName>,
     prefixIcon: String as PropType<VxeCascaderPropTypes.PrefixIcon>,
-    placement: String as PropType<VxeCascaderPropTypes.Placement>,
-    transform: Boolean as PropType<VxeCascaderPropTypes.Transform>,
     lazyOptions: Array as PropType<VxeCascaderPropTypes.LazyOptions>,
     options: Array as PropType<VxeCascaderPropTypes.Options>,
     optionProps: Object as PropType<VxeCascaderPropTypes.OptionProps>,
-    zIndex: Number as PropType<VxeCascaderPropTypes.ZIndex>,
     size: {
       type: String as PropType<VxeCascaderPropTypes.Size>,
       default: () => getConfig().cascader.size || getConfig().size
     },
+    treeConfig: Object as PropType<VxeCascaderPropTypes.TreeConfig>,
+    radioConfig: Object as PropType<VxeCascaderPropTypes.RadioConfig>,
+    checkboxConfig: Object as PropType<VxeCascaderPropTypes.CheckboxConfig>,
     remote: Boolean as PropType<VxeCascaderPropTypes.Remote>,
     remoteConfig: Function as PropType<VxeCascaderPropTypes.RemoteConfig>,
     popupConfig: Object as PropType<VxeCascaderPropTypes.PopupConfig>,
-    autoClose: {
-      type: Boolean as PropType<VxeCascaderPropTypes.AutoClose>,
-      default: () => getConfig().cascader.autoClose
+    checkedClosable: {
+      type: Boolean as PropType<VxeCascaderPropTypes.CheckedClosable>,
+      default: () => getConfig().cascader.checkedClosable
+    },
+    clearClosable: {
+      type: Boolean as PropType<VxeCascaderPropTypes.ClearClosable>,
+      default: () => getConfig().cascader.clearClosable
+    },
+    showCloseButton: {
+      type: Boolean as PropType<VxeCascaderPropTypes.ShowCloseButton>,
+      default: () => getConfig().cascader.showCloseButton
     },
     showTotalButton: {
       type: Boolean as PropType<VxeCascaderPropTypes.ShowTotalButton>,
@@ -75,17 +127,7 @@ export default defineVxeComponent({
     showClearButton: {
       type: Boolean as PropType<VxeCascaderPropTypes.ShowClearButton>,
       default: () => getConfig().cascader.showClearButton
-    },
-    transfer: {
-      type: Boolean as PropType<VxeCascaderPropTypes.Transfer>,
-      default: null
-    },
-
-    /**
-     * 已废弃，被 remote-config.queryMethod 替换
-     * @deprecated
-     */
-    remoteMethod: Function as PropType<VxeCascaderPropTypes.RemoteMethod>
+    }
   },
   emits: [
     'update:modelValue',
@@ -95,7 +137,14 @@ export default defineVxeComponent({
     'blur',
     'focus',
     'click',
-    'node-click'
+    'node-click',
+    'node-expand',
+    'current-change',
+    'radio-change',
+    'checkbox-change',
+    'load-success',
+    'load-error',
+    'visible-change'
   ] as VxeCascaderEmits,
   setup (props, context) {
     const { emit, slots } = context
@@ -113,23 +162,10 @@ export default defineVxeComponent({
     const refElem = ref<HTMLDivElement>()
     const refInput = ref<VxeInputConstructor>()
     const refInpSearch = ref<VxeInputConstructor>()
-    const refTreeWrapper = ref<HTMLDivElement>()
+    const refChunkWrapper = ref<HTMLDivElement>()
     const refOptionPanel = ref<HTMLDivElement>()
-    const refTree = ref<VxeTreeConstructor>()
 
-    const reactData = reactive<CascaderReactData>({
-      initialized: false,
-      searchValue: '',
-      searchLoading: false,
-      panelIndex: 0,
-      panelStyle: {},
-      panelPlacement: null,
-      triggerFocusPanel: false,
-      visiblePanel: false,
-      isAniVisible: false,
-      isActivated: false
-    })
-
+    const reactData = reactive(createReactData())
     const internalData = createInternalData()
 
     const refMaps: CascaderPrivateRef = {
@@ -159,17 +195,27 @@ export default defineVxeComponent({
     })
 
     const computeBtnTransfer = computed(() => {
-      const { transfer } = props
-      if (transfer === null) {
-        const globalTransfer = getConfig().select.transfer
-        if (XEUtils.isBoolean(globalTransfer)) {
-          return globalTransfer
-        }
-        if ($xeTable || $xeModal || $xeDrawer || $xeForm) {
-          return true
-        }
+      const popupOpts = computePopupOpts.value
+      const { transfer } = popupOpts
+      if (XEUtils.isBoolean(transfer)) {
+        return transfer
       }
-      return transfer
+      if ($xeTable || $xeModal || $xeDrawer || $xeForm) {
+        return true
+      }
+      return false
+    })
+
+    const computeTreeOpts = computed(() => {
+      return Object.assign({}, getConfig().cascader.treeConfig, props.treeConfig)
+    })
+
+    const computeRadioOpts = computed(() => {
+      return Object.assign({}, getConfig().cascader.radioConfig, props.radioConfig)
+    })
+
+    const computeCheckboxOpts = computed(() => {
+      return Object.assign({}, getConfig().cascader.checkboxConfig, props.checkboxConfig)
     })
 
     const computePopupOpts = computed(() => {
@@ -178,11 +224,6 @@ export default defineVxeComponent({
 
     const computePropsOpts = computed(() => {
       return props.optionProps || {}
-    })
-
-    const computeNodeKeyField = computed(() => {
-      const valueField = computeValueField.value
-      return valueField
     })
 
     const computeLabelField = computed(() => {
@@ -195,30 +236,55 @@ export default defineVxeComponent({
       return propsOpts.value || 'value'
     })
 
+    const computeKeyField = computed(() => {
+      const treeOpts = computeTreeOpts.value
+      return treeOpts.keyField || 'id'
+    })
+
+    const computeParentField = computed(() => {
+      const treeOpts = computeTreeOpts.value
+      return treeOpts.parentField || 'parentId'
+    })
+
     const computeChildrenField = computed(() => {
-      const propsOpts = computePropsOpts.value
-      return propsOpts.children || 'children'
+      const treeOpts = computeTreeOpts.value
+      return treeOpts.childrenField || 'children'
+    })
+
+    const computeMapChildrenField = computed(() => {
+      const treeOpts = computeTreeOpts.value
+      return treeOpts.mapChildrenField || 'mapChildren'
+    })
+
+    const computeHasChildField = computed(() => {
+      const treeOpts = computeTreeOpts.value
+      return treeOpts.hasChildField || 'hasChild'
     })
 
     const computeRemoteOpts = computed(() => {
       return Object.assign({}, getConfig().cascader.remoteConfig, props.remoteConfig)
     })
 
+    const computeSelectVals = computed(() => {
+      const { modelValue } = props
+      return XEUtils.eqNull(modelValue) ? [] : (XEUtils.isArray(modelValue) ? modelValue : [modelValue])
+    })
+
     const computeSelectLabel = computed(() => {
-      const { modelValue, lazyOptions } = props
-      const { fullNodeMaps } = internalData
-      const valueField = computeValueField.value
+      const { showFullLabel } = props
+      const { fullOptFlag, lazyOptFlag } = reactData
+      const { fullNodeMaps, lazyNodeMaps } = internalData
       const labelField = computeLabelField.value
-      const selectVals = XEUtils.eqNull(modelValue) ? [] : (XEUtils.isArray(modelValue) ? modelValue : [modelValue])
+      const selectVals = computeSelectVals.value
       return selectVals.map(val => {
         const cacheItem = fullNodeMaps[val]
-        if (cacheItem) {
-          return cacheItem.item[labelField]
+        if (fullOptFlag && cacheItem) {
+          return showFullLabel ? cacheItem.fullLabel : cacheItem.item[labelField]
         }
-        if (lazyOptions) {
-          const lazyItem = lazyOptions.find(item => item[valueField] === val)
-          if (lazyItem) {
-            return lazyItem[labelField]
+        if (lazyOptFlag) {
+          const lazyCacheItem = lazyNodeMaps[val]
+          if (lazyCacheItem) {
+            return showFullLabel ? lazyCacheItem.fullLabel : lazyCacheItem.item[labelField]
           }
         }
         return val
@@ -226,17 +292,27 @@ export default defineVxeComponent({
     })
 
     const computePopupWrapperStyle = computed(() => {
+      const { currentCunkList, panelStyle } = reactData
       const popupOpts = computePopupOpts.value
-      const { height, width } = popupOpts
-      const stys: VxeComponentStyleType = {}
-      if (width) {
-        stys.width = toCssUnit(width)
+      const { height, nodeWidth, nodeHeight } = popupOpts
+      const stys: VxeComponentStyleType = {
+        ...panelStyle,
+        '--vxe-ui-cascader-chunk-size': currentCunkList.length
       }
       if (height) {
-        stys.height = toCssUnit(height)
-        stys.maxHeight = toCssUnit(height)
+        stys['--vxe-ui-cascader-chunk-height'] = toCssUnit(height)
+      }
+      if (nodeWidth) {
+        stys['--vxe-ui-cascader-node-width'] = toCssUnit(nodeWidth)
+      }
+      if (nodeHeight) {
+        stys['--vxe-ui-cascader-node-height'] = toCssUnit(nodeHeight)
       }
       return stys
+    })
+
+    const computeFilterOpts = computed(() => {
+      return Object.assign({}, getConfig().cascader.filterConfig, props.filterConfig)
     })
 
     const computeMaps: VxeCascaderPrivateComputed = {
@@ -265,55 +341,335 @@ export default defineVxeComponent({
       dispatchEvent
     }
 
-    const getNodeid = (option: any) => {
-      const nodeKeyField = computeNodeKeyField.value
-      const nodeid = option[nodeKeyField]
-      return nodeid ? encodeURIComponent(nodeid) : ''
+    const getNodeId = (node: any) => {
+      if (!node) {
+        return ''
+      }
+      const valueField = computeValueField.value
+      const nodeKey = node[valueField]
+      return enNodeValue(nodeKey)
     }
 
-    const cacheDataMap = () => {
-      const { transform, options } = props
-      const nodeKeyField = computeNodeKeyField.value
+    const isCheckedByCheckboxNodeId = (nodeid: any) => {
+      const { updateCheckboxFlag } = reactData
+      const { selectCheckboxMaps } = internalData
+      return !!(updateCheckboxFlag && selectCheckboxMaps[nodeid])
+    }
+
+    const handleCheckedCheckboxNode = (nodeList: any[], checked: boolean) => {
+      const { selectCheckboxMaps } = internalData
+      const mapChildrenField = computeMapChildrenField.value
       const childrenField = computeChildrenField.value
-      const valueField = computeValueField.value
-      const nodeMaps: Record<string, {
-        item: any
-        index: number
-        items: any[]
-        parent: any
-        nodes: any[]
-      }> = {}
-      const keyMaps: Record<string, boolean> = {}
-      const handleOptNode = (item: any, index: number, items: any[], path: string[], parent: any, nodes: any[]) => {
-        let nodeid = getNodeid(item)
-        if (!nodeid) {
-          nodeid = getOptUniqueId()
-        }
-        if (keyMaps[nodeid]) {
-          errLog('vxe.error.repeatKey', [`[tree-select] ${nodeKeyField}`, nodeid])
-        }
-        keyMaps[nodeid] = true
-        const value = item[valueField]
-        if (nodeMaps[value]) {
-          errLog('vxe.error.repeatKey', [`[tree-select] ${valueField}`, value])
-        }
-        nodeMaps[value] = { item, index, items, parent, nodes }
-      }
-      if (options) {
-        if (transform) {
-          options.forEach((item, index, items) => {
-            handleOptNode(item, index, items, [], null, [])
-          })
+      const checkboxOpts = computeCheckboxOpts.value
+      const { checkStrictly } = checkboxOpts
+      const treeOpts = computeTreeOpts.value
+      const { transform } = treeOpts
+      const handleSelect = (node: any) => {
+        const nodeid = getNodeId(node)
+        if (checked) {
+          if (!selectCheckboxMaps[nodeid]) {
+            selectCheckboxMaps[nodeid] = node
+          }
         } else {
-          XEUtils.eachTree(options, handleOptNode, { children: childrenField })
+          if (selectCheckboxMaps[nodeid]) {
+            delete selectCheckboxMaps[nodeid]
+          }
         }
       }
-      internalData.fullOptionList = options || []
-      internalData.fullNodeMaps = nodeMaps
+      if (checkStrictly) {
+        nodeList.forEach(handleSelect)
+      } else {
+        XEUtils.eachTree(nodeList, handleSelect, { children: transform ? mapChildrenField : childrenField })
+      }
+      reactData.updateCheckboxFlag++
+      updateCheckboxStatus()
+    }
+
+    const createNode = (records: any[]) => {
+      const valueField = computeValueField.value
+      return Promise.resolve(
+        records.map(obj => {
+          const item = { ...obj }
+          let nodeid = getNodeId(item)
+          if (!nodeid) {
+            nodeid = getNodeUniqueId()
+            XEUtils.set(item, valueField, nodeid)
+          }
+          return item
+        })
+      )
+    }
+
+    const cacheNodeMap = () => {
+      const { separator } = props
+      const { treeFullData } = internalData
+      const valueField = computeValueField.value
+      const labelField = computeLabelField.value
+      const childrenField = computeChildrenField.value
+      const keyMaps: Record<string, VxeCascaderDefines.NodeCacheItem> = {}
+      const fullMaps: Record<string, VxeCascaderDefines.NodeCacheItem> = {}
+      XEUtils.eachTree(treeFullData, (item, index, items, path, parenItem, nodes) => {
+        let nodeid = getNodeId(item)
+        if (!nodeid) {
+          nodeid = getNodeUniqueId()
+          item[valueField] = nodeid
+        }
+        const nodeVal = item[valueField]
+        const itemRest = {
+          item,
+          index,
+          $index: -1,
+          _index: -1,
+          items,
+          parent: parenItem,
+          nodes,
+          level: nodes.length - 1,
+          treeIndex: index,
+          lineCount: 0,
+          treeLoaded: false,
+          fullLabel: nodes.map(item => item[labelField]).join((separator || ' / '))
+        }
+        keyMaps[nodeid] = itemRest
+        fullMaps[nodeVal] = itemRest
+      }, { children: childrenField })
+      internalData.nodeMaps = keyMaps
+      internalData.fullNodeMaps = fullMaps
+      reactData.fullOptFlag++
+    }
+
+    const updateAfterDataIndex = () => {
+      const { separator } = props
+      const { afterTreeList, nodeMaps } = internalData
+      const labelField = computeLabelField.value
+      const childrenField = computeChildrenField.value
+      const mapChildrenField = computeMapChildrenField.value
+      const treeOpts = computeTreeOpts.value
+      const { transform } = treeOpts
+      let vtIndex = 0
+      XEUtils.eachTree(afterTreeList, (item, index, items, path, parenItem, nodes) => {
+        const nodeid = getNodeId(item)
+        const nodeItem = nodeMaps[nodeid]
+        if (nodeItem) {
+          nodeItem.items = items
+          nodeItem.treeIndex = index
+          nodeItem._index = vtIndex
+        } else {
+          const rest = {
+            item,
+            index,
+            $index: -1,
+            _index: vtIndex,
+            items,
+            parent: parenItem,
+            nodes,
+            level: nodes.length - 1,
+            treeIndex: index,
+            lineCount: 0,
+            treeLoaded: false,
+            fullLabel: nodes.map(item => item[labelField]).join((separator || ' / '))
+          }
+          nodeMaps[nodeid] = rest
+        }
+        vtIndex++
+      }, { children: transform ? mapChildrenField : childrenField })
+    }
+
+    const updateAfterFullData = () => {
+      const { searchValue } = reactData
+      const { treeFullData, lastFilterValue } = internalData
+      const labelField = computeLabelField.value
+      const childrenField = computeChildrenField.value
+      const mapChildrenField = computeMapChildrenField.value
+      const treeOpts = computeTreeOpts.value
+      const { transform } = treeOpts
+      const filterOpts = computeFilterOpts.value
+      const { beforeFilterMethod, filterMethod, afterFilterMethod } = filterOpts
+      let fullList = treeFullData
+      let treeList = fullList
+      let filterStr = ''
+      if (searchValue) {
+        filterStr = `${searchValue}`
+        const handleSearch = filterMethod
+          ? (item: any) => {
+              return filterMethod({
+                $cascader: $xeCascader,
+                node: item,
+                filterValue: filterStr
+              })
+            }
+          : (item: any) => {
+              return String(item[labelField]).toLowerCase().indexOf(filterStr.toLowerCase()) > -1
+            }
+        const bafParams = { $cascader: $xeCascader, filterValue: filterStr }
+        if (beforeFilterMethod) {
+          beforeFilterMethod(bafParams)
+        }
+        if (transform) {
+          treeList = XEUtils.searchTree(treeFullData, handleSearch, {
+            original: true,
+            isEvery: true,
+            children: childrenField,
+            mapChildren: mapChildrenField
+          })
+          fullList = treeList
+        } else {
+          fullList = treeFullData.filter(handleSearch)
+        }
+        internalData.lastFilterValue = filterStr
+        nextTick(() => {
+          if (afterFilterMethod) {
+            afterFilterMethod(bafParams)
+          }
+        })
+      } else {
+        if (transform) {
+          treeList = XEUtils.searchTree(treeFullData, () => true, {
+            original: true,
+            isEvery: true,
+            children: childrenField,
+            mapChildren: mapChildrenField
+          })
+          fullList = treeList
+          if (lastFilterValue) {
+            const bafParams = { $cascader: $xeCascader, filterValue: filterStr }
+            if (beforeFilterMethod) {
+              beforeFilterMethod(bafParams)
+            }
+            // 取消筛选时自动收起
+            nextTick(() => {
+              if (afterFilterMethod) {
+                afterFilterMethod(bafParams)
+              }
+            })
+          }
+        }
+        internalData.lastFilterValue = ''
+      }
+      internalData.afterVisibleList = fullList
+      internalData.afterTreeList = treeList
+      updateAfterDataIndex()
+    }
+
+    /**
+     * 如果为虚拟树、则将树结构拍平
+     */
+    const handleTreeToList = () => {
+      const { afterTreeList, treeExpandedMaps } = internalData
+      const mapChildrenField = computeMapChildrenField.value
+      const treeOpts = computeTreeOpts.value
+      const { transform } = treeOpts
+      const expandMaps: {
+        [key: string]: number
+      } = {}
+      if (transform) {
+        const fullData: any[] = []
+        XEUtils.eachTree(afterTreeList, (item, index, items, path, parentRow) => {
+          const nodeid = getNodeId(item)
+          const parentNodeid = getNodeId(parentRow)
+          if (!parentRow || (expandMaps[parentNodeid] && treeExpandedMaps[parentNodeid])) {
+            expandMaps[nodeid] = 1
+            fullData.push(item)
+          }
+        }, { children: mapChildrenField })
+        internalData.afterVisibleList = fullData
+        return fullData
+      }
+      return internalData.afterVisibleList
+    }
+
+    const handleData = (force?: boolean) => {
+      const { nodeMaps } = internalData
+      let fullList: any[] = internalData.afterVisibleList
+      if (force) {
+        // 更新数据，处理筛选和排序
+        updateAfterFullData()
+        // 如果为虚拟树，将树结构拍平
+        fullList = handleTreeToList()
+      }
+      const treeList = fullList.slice(0)
+      treeList.forEach((item, $index) => {
+        const nodeid = getNodeId(item)
+        const itemRest = nodeMaps[nodeid]
+        if (itemRest) {
+          itemRest.$index = $index
+        }
+      })
+      reactData.treeList = treeList
+    }
+
+    const triggerSearchEvent = XEUtils.debounce(() => handleData(true), 350, { trailing: true })
+
+    const loadData = (list: any[]) => {
+      const treeOpts = computeTreeOpts.value
+      const keyField = computeKeyField.value
+      const parentField = computeParentField.value
+      const childrenField = computeChildrenField.value
+      const { rootParentValue, rootValues } = treeOpts
+      const { transform } = treeOpts
+      const fullData = transform
+        ? XEUtils.toArrayTree(list, {
+          key: keyField,
+          parentKey: parentField,
+          mapChildren: childrenField,
+          rootParentValue,
+          rootValues
+        })
+        : list ? list.slice(0) : []
+      internalData.treeFullData = fullData
+      cacheNodeMap()
+      handleData(true)
+      handleCurrentItems()
+      updateCurrentChunk()
+      return nextTick()
+    }
+
+    const updateCurrentChunk = () => {
+      const { currentItems } = reactData
+      const { treeFullData } = internalData
+      const childrenField = computeChildrenField.value
+      const currentCunkList: any[][] = [treeFullData]
+      if (currentItems.length) {
+        let chunkIndex = 0
+        let stNodeid = currentItems[chunkIndex]
+        let optList = treeFullData
+        while (stNodeid && optList && optList.length) {
+          stNodeid = currentItems[chunkIndex++]
+          const currOption = optList.find(item => stNodeid === getNodeId(item))
+          optList = currOption ? currOption[childrenField] : []
+          if (!optList || !optList.length) {
+            break
+          }
+          currentCunkList.push(optList)
+        }
+      }
+      reactData.currentCunkList = currentCunkList
+    }
+
+    const handleCurrentItems = () => {
+      const { treeFullData } = internalData
+      const selectVals = computeSelectVals.value
+      const childrenField = computeChildrenField.value
+      const stItems: string[] = []
+      const expandedMaps: Record<string, boolean> = {}
+      if (selectVals.length) {
+        const lastVal = XEUtils.last(selectVals)
+        const stRest = XEUtils.findTree(treeFullData, (item) => lastVal === getNodeId(item), { children: childrenField })
+        if (stRest) {
+          const { nodes } = stRest
+          nodes.forEach(item => {
+            const nodeid = getNodeId(item)
+            expandedMaps[nodeid] = true
+            stItems.push(nodeid)
+          })
+        }
+      }
+      internalData.treeExpandedMaps = expandedMaps
+      reactData.currentItems = stItems
     }
 
     const updateZindex = () => {
-      const { zIndex } = props
+      const popupOpts = computePopupOpts.value
+      const { zIndex } = popupOpts
       if (zIndex) {
         reactData.panelIndex = zIndex
       } else if (reactData.panelIndex < getLastZIndex()) {
@@ -322,7 +678,6 @@ export default defineVxeComponent({
     }
 
     const updatePlacement = () => {
-      const { placement } = props
       const { panelIndex } = reactData
       const targetElem = refElem.value
       const panelElem = refOptionPanel.value
@@ -330,9 +685,10 @@ export default defineVxeComponent({
       const popupOpts = computePopupOpts.value
       const handleStyle = () => {
         const ppObj = updatePanelPlacement(targetElem, panelElem, {
-          placement: popupOpts.placement || placement,
+          placement: popupOpts.placement,
           defaultPlacement: popupOpts.defaultPlacement,
-          teleportTo: btnTransfer
+          teleportTo: btnTransfer,
+          isMinWidth: false
         })
         const panelStyle: { [key: string]: string | number } = Object.assign(ppObj.style, {
           zIndex: panelIndex
@@ -344,9 +700,9 @@ export default defineVxeComponent({
       return nextTick().then(handleStyle)
     }
 
-    const showOptionPanel = () => {
+    const showOptionPanel = (evnt?: Event) => {
       const { loading, remote, filterable } = props
-      const { fullOptionList } = internalData
+      const { treeFullData } = internalData
       const isDisabled = computeIsDisabled.value
       const remoteOpts = computeRemoteOpts.value
       if (!loading && !isDisabled) {
@@ -357,7 +713,7 @@ export default defineVxeComponent({
         reactData.isActivated = true
         reactData.isAniVisible = true
         if (filterable) {
-          if (remote && remoteOpts.enabled && remoteOpts.autoLoad && !fullOptionList.length) {
+          if (remote && remoteOpts.enabled && remoteOpts.autoLoad && !treeFullData.length) {
             handleSearchEvent()
           }
         }
@@ -367,14 +723,56 @@ export default defineVxeComponent({
         }, 10)
         updateZindex()
         updatePlacement()
+        dispatchEvent('visible-change', { visible: true }, evnt || null)
       }
     }
 
-    const hideOptionPanel = () => {
+    const hideOptionPanel = (evnt?: Event) => {
       reactData.visiblePanel = false
       internalData.hpTimeout = setTimeout(() => {
         reactData.isAniVisible = false
       }, 350)
+      dispatchEvent('visible-change', { visible: false }, evnt || null)
+    }
+
+    const setCurrentNode = (node: any) => {
+      reactData.currentNode = node
+      return nextTick()
+    }
+
+    const setAllCheckboxNode = (checked: boolean) => {
+      const selectMaps: Record<string, boolean> = {}
+      const childrenField = computeChildrenField.value
+      const mapChildrenField = computeMapChildrenField.value
+      const treeOpts = computeTreeOpts.value
+      const { transform } = treeOpts
+      const checkKeys: string[] = []
+      const checkNodes: any[] = []
+      if (checked) {
+        XEUtils.eachTree(internalData.afterTreeList, (node) => {
+          const nodeid = getNodeId(node)
+          checkKeys.push(nodeid)
+          checkNodes.push(node)
+          selectMaps[nodeid] = true
+        }, { children: transform ? mapChildrenField : childrenField })
+      }
+      internalData.indeterminateRowMaps = {}
+      internalData.selectCheckboxMaps = selectMaps
+      reactData.updateCheckboxFlag++
+      updateCheckboxStatus()
+      return nextTick().then(() => {
+        return { checkNodeKeys: checkKeys, checkNodes }
+      })
+    }
+
+    const clearCheckboxNode = () => {
+      internalData.indeterminateRowMaps = {}
+      internalData.selectCheckboxMaps = {}
+      reactData.updateCheckboxFlag++
+      updateCheckboxStatus()
+      return nextTick().then(() => {
+        return { checkNodeKeys: [], checkNodes: [] }
+      })
     }
 
     const changeEvent = (evnt: Event, selectValue: any, node: any) => {
@@ -396,40 +794,39 @@ export default defineVxeComponent({
 
     const clearEvent = (params: any, evnt: Event) => {
       clearValueEvent(evnt, null)
-      hideOptionPanel()
+      hideOptionPanel(evnt)
     }
 
     const allCheckedPanelEvent: VxeButtonEvents.Click = (params) => {
       const { $event } = params
-      const { multiple, autoClose } = props
-      const $tree = refTree.value
+      const { multiple, checkedClosable } = props
       if (multiple) {
-        if ($tree) {
-          $tree.setAllCheckboxNode(true).then(({ checkNodeKeys, checkNodes }) => {
-            changeEvent($event, checkNodeKeys, checkNodes[0])
-            dispatchEvent('all-change', { value: checkNodeKeys }, $event)
-            if (autoClose) {
-              hideOptionPanel()
-            }
-          })
-        }
+        setAllCheckboxNode(true).then(({ checkNodeKeys, checkNodes }) => {
+          changeEvent($event, checkNodeKeys, checkNodes[0])
+          dispatchEvent('all-change', { value: checkNodeKeys }, $event)
+          if (checkedClosable) {
+            hideOptionPanel($event)
+          }
+        })
       }
     }
 
     const clearCheckedPanelEvent: VxeButtonEvents.Click = (params) => {
       const { $event } = params
-      const { multiple, autoClose } = props
-      const $tree = refTree.value
-      if ($tree) {
-        const value = multiple ? [] : null
-        $tree.clearCheckboxNode().then(() => {
-          if (autoClose) {
-            hideOptionPanel()
-          }
-        })
-        changeEvent($event, value, null)
-        dispatchEvent('clear', { value }, $event)
-      }
+      const { multiple, checkedClosable } = props
+      const value = multiple ? [] : null
+      clearCheckboxNode().then(() => {
+        if (checkedClosable) {
+          hideOptionPanel($event)
+        }
+      })
+      changeEvent($event, value, null)
+      dispatchEvent('clear', { value }, $event)
+    }
+
+    const closePanelEvent: VxeButtonEvents.Click = (params) => {
+      const { $event } = params
+      hideOptionPanel($event)
     }
 
     const handleGlobalMousewheelEvent = (evnt: MouseEvent) => {
@@ -441,7 +838,7 @@ export default defineVxeComponent({
           if (getEventTargetNode(evnt, panelElem).flag) {
             updatePlacement()
           } else {
-            hideOptionPanel()
+            hideOptionPanel(evnt)
           }
         }
       }
@@ -455,15 +852,15 @@ export default defineVxeComponent({
         const panelElem = refOptionPanel.value
         reactData.isActivated = getEventTargetNode(evnt, el).flag || getEventTargetNode(evnt, panelElem).flag
         if (visiblePanel && !reactData.isActivated) {
-          hideOptionPanel()
+          hideOptionPanel(evnt)
         }
       }
     }
 
-    const handleGlobalBlurEvent = () => {
+    const handleGlobalBlurEvent = (evnt: Event) => {
       const { visiblePanel, isActivated } = reactData
       if (visiblePanel) {
-        hideOptionPanel()
+        hideOptionPanel(evnt)
       }
       if (isActivated) {
         reactData.isActivated = false
@@ -494,12 +891,360 @@ export default defineVxeComponent({
       }
     }
 
+    const changeCurrentEvent = (evnt: MouseEvent, node: any) => {
+      evnt.preventDefault()
+      const isChecked = true
+      reactData.currentNode = node
+      dispatchEvent('current-change', { node, checked: isChecked }, evnt)
+    }
+
+    const changeRadioEvent = (evnt: Event, node: any) => {
+      evnt.preventDefault()
+      evnt.stopPropagation()
+      const { nodeMaps } = internalData
+      const radioOpts = computeRadioOpts.value
+      const childrenField = computeChildrenField.value
+      const { checkMode, checkMethod } = radioOpts
+      const nodeid = getNodeId(node)
+      const childList: any[] = node[childrenField]
+      const isExistChild = childList && childList.length > 0
+      const nodeItem = nodeMaps[nodeid] || {}
+      const nLevel = nodeItem.level
+      const isDisabled = checkMethod ? !checkMethod({ $cascader: $xeCascader, node }) : !handleVisibleOrCheckMode(checkMode, isExistChild, nLevel)
+      if (isDisabled) {
+        return
+      }
+      const value = nodeid
+      reactData.selectRadioKey = value
+      changeEvent(evnt, value, node)
+      hideOptionPanel(evnt)
+    }
+
+    const handleAsyncTreeExpandChilds = (node: any) => {
+      const checkboxOpts = computeCheckboxOpts.value
+      const treeOpts = computeTreeOpts.value
+      const { loadMethod } = treeOpts
+      const { checkStrictly } = checkboxOpts
+      return new Promise<void>(resolve => {
+        if (loadMethod) {
+          const { nodeMaps } = internalData
+          const nodeid = getNodeId(node)
+          const nodeItem = nodeMaps[nodeid]
+          internalData.treeExpandLazyLoadedMaps[nodeid] = true
+          Promise.resolve(
+            loadMethod({ $cascader: $xeCascader, node })
+          ).then((childRecords: any) => {
+            const { treeExpandLazyLoadedMaps } = internalData
+            nodeItem.treeLoaded = true
+            if (treeExpandLazyLoadedMaps[nodeid]) {
+              treeExpandLazyLoadedMaps[nodeid] = false
+            }
+            if (!XEUtils.isArray(childRecords)) {
+              childRecords = []
+            }
+            if (childRecords) {
+              return $xeCascader.loadChildrenNode(node, childRecords).then(childRows => {
+                const { treeExpandedMaps } = internalData
+                if (childRows.length && !treeExpandedMaps[nodeid]) {
+                  treeExpandedMaps[nodeid] = true
+                }
+                reactData.updateExpandedFlag++
+                // 如果当前节点已选中，则展开后子节点也被选中
+                if (!checkStrictly && $xeCascader.isCheckedByCheckboxNodeId(nodeid)) {
+                  handleCheckedCheckboxNode(childRows, true)
+                }
+                dispatchEvent('load-success', { node, data: childRecords }, new Event('load-success'))
+                return nextTick()
+              })
+            } else {
+              dispatchEvent('load-success', { node, data: childRecords }, new Event('load-success'))
+            }
+          }).catch((e) => {
+            const { treeExpandLazyLoadedMaps } = internalData
+            nodeItem.treeLoaded = false
+            if (treeExpandLazyLoadedMaps[nodeid]) {
+              treeExpandLazyLoadedMaps[nodeid] = false
+            }
+            dispatchEvent('load-error', { node, data: e }, new Event('load-error'))
+          }).finally(() => {
+            handleTreeToList()
+            handleData()
+          })
+        } else {
+          resolve()
+        }
+      })
+    }
+
+    /**
+     * 展开与收起树节点
+     * @param nodeList
+     * @param expanded
+     * @returns
+     */
+    const handleBaseTreeExpand = (nodeList: any[], expanded: boolean) => {
+      const { treeExpandLazyLoadedMaps, treeExpandedMaps } = internalData
+      const { nodeMaps } = internalData
+      const childrenField = computeChildrenField.value
+      const hasChildField = computeHasChildField.value
+      const treeOpts = computeTreeOpts.value
+      const { lazy, toggleMethod } = treeOpts
+      const result: any[] = []
+      let validNodes = toggleMethod ? nodeList.filter((node: any) => toggleMethod({ $cascader: $xeCascader, expanded, node })) : nodeList
+
+      validNodes = validNodes.length ? [validNodes[validNodes.length - 1]] : []
+      // 同一级只能展开一个
+      const nodeid = getNodeId(validNodes[0])
+      const nodeItem = nodeMaps[nodeid]
+      if (nodeItem) {
+        nodeItem.items.forEach(item => {
+          const itemNodeId = getNodeId(item)
+          if (treeExpandedMaps[itemNodeId]) {
+            delete treeExpandedMaps[itemNodeId]
+          }
+        })
+      }
+
+      const expandNodes: any[] = []
+      if (expanded) {
+        validNodes.forEach((item) => {
+          const itemNodeId = getNodeId(item)
+          if (!treeExpandedMaps[itemNodeId]) {
+            const nodeItem = nodeMaps[itemNodeId]
+            const isLoad = lazy && item[hasChildField] && !nodeItem.treeLoaded && !treeExpandLazyLoadedMaps[itemNodeId]
+            // 是否使用懒加载
+            if (isLoad) {
+              result.push(handleAsyncTreeExpandChilds(item))
+            } else {
+              if (item[childrenField] && item[childrenField].length) {
+                treeExpandedMaps[itemNodeId] = true
+                expandNodes.push(item)
+              }
+            }
+          }
+        })
+      } else {
+        validNodes.forEach(item => {
+          const itemNodeId = getNodeId(item)
+          if (treeExpandedMaps[itemNodeId]) {
+            delete treeExpandedMaps[itemNodeId]
+            expandNodes.push(item)
+          }
+        })
+      }
+      reactData.updateExpandedFlag++
+      handleTreeToList()
+      handleData()
+      return Promise.all(result)
+    }
+
+    const toggleExpandEvent = (evnt: MouseEvent, node: any, chunks: any[], chunkIndex: number) => {
+      const { currentItems } = reactData
+      const { treeExpandLazyLoadedMaps } = internalData
+      const treeOpts = computeTreeOpts.value
+      const { lazy } = treeOpts
+      const stItems = currentItems.slice(0, chunkIndex)
+      const nodeid = getNodeId(node)
+      const expanded = true
+      evnt.stopPropagation()
+      stItems.push(nodeid)
+      reactData.currentItems = stItems
+      if (!lazy || !treeExpandLazyLoadedMaps[nodeid]) {
+        handleBaseTreeExpand([node], expanded)
+      }
+      setCurrentNode(node)
+      updateCurrentChunk()
+      dispatchEvent('node-expand', { node, expanded }, evnt)
+    }
+
+    const updateCheckboxStatus = () => {
+      const { selectCheckboxMaps, indeterminateRowMaps, afterTreeList } = internalData
+      const childrenField = computeChildrenField.value
+      const mapChildrenField = computeMapChildrenField.value
+      const checkboxOpts = computeCheckboxOpts.value
+      const { checkStrictly, checkMethod } = checkboxOpts
+      const treeOpts = computeTreeOpts.value
+      const { transform } = treeOpts
+      if (!checkStrictly) {
+        const childRowMaps: Record<string, number> = {}
+        const childRowList: any[][] = []
+        XEUtils.eachTree(afterTreeList, (node) => {
+          const nodeid = getNodeId(node)
+          const childList = node[childrenField]
+          if (childList && childList.length && !childRowMaps[nodeid]) {
+            childRowMaps[nodeid] = 1
+            childRowList.unshift([node, nodeid, childList])
+          }
+        }, { children: transform ? mapChildrenField : childrenField })
+
+        childRowList.forEach(vals => {
+          const node: string = vals[0]
+          const nodeid: string = vals[1]
+          const childList: any[] = vals[2]
+          let sLen = 0 // 已选
+          let hLen = 0 // 半选
+          let vLen = 0 // 有效子行
+          const cLen = childList.length // 子行
+          childList.forEach(
+            checkMethod
+              ? (item) => {
+                  const childNodeid = getNodeId(item)
+                  const isSelect = selectCheckboxMaps[childNodeid]
+                  if (checkMethod({ $cascader: $xeCascader, node: item })) {
+                    if (isSelect) {
+                      sLen++
+                    } else if (indeterminateRowMaps[childNodeid]) {
+                      hLen++
+                    }
+                    vLen++
+                  } else {
+                    if (isSelect) {
+                      sLen++
+                    } else if (indeterminateRowMaps[childNodeid]) {
+                      hLen++
+                    }
+                  }
+                }
+              : item => {
+                const childNodeid = getNodeId(item)
+                const isSelect = selectCheckboxMaps[childNodeid]
+                if (isSelect) {
+                  sLen++
+                } else if (indeterminateRowMaps[childNodeid]) {
+                  hLen++
+                }
+                vLen++
+              }
+          )
+
+          let isSelected = false
+          if (cLen > 0) {
+            if (vLen > 0) {
+              isSelected = (sLen > 0 || hLen > 0) && sLen >= vLen
+            } else {
+            // 如果存在子项禁用
+              if ((sLen > 0 && sLen >= vLen)) {
+                isSelected = true
+              } else if (selectCheckboxMaps[nodeid]) {
+                isSelected = true
+              } else {
+                isSelected = false
+              }
+            }
+          } else {
+          // 如果无子项
+            isSelected = selectCheckboxMaps[nodeid]
+          }
+          const halfSelect = !isSelected && (sLen > 0 || hLen > 0)
+
+          if (isSelected) {
+            selectCheckboxMaps[nodeid] = node
+            if (indeterminateRowMaps[nodeid]) {
+              delete indeterminateRowMaps[nodeid]
+            }
+          } else {
+            if (selectCheckboxMaps[nodeid]) {
+              delete selectCheckboxMaps[nodeid]
+            }
+            if (halfSelect) {
+              indeterminateRowMaps[nodeid] = node
+            } else {
+              if (indeterminateRowMaps[nodeid]) {
+                delete indeterminateRowMaps[nodeid]
+              }
+            }
+          }
+        })
+        reactData.updateCheckboxFlag++
+      }
+    }
+
+    const changeCheckboxEvent = (evnt: Event, node: any) => {
+      evnt.preventDefault()
+      evnt.stopPropagation()
+      const { selectCheckboxMaps, nodeMaps } = internalData
+      const childrenField = computeChildrenField.value
+      const mapChildrenField = computeMapChildrenField.value
+      const checkboxOpts = computeCheckboxOpts.value
+      const { checkStrictly, checkMode, checkMethod } = checkboxOpts
+      const treeOpts = computeTreeOpts.value
+      const { transform } = treeOpts
+      const nodeid = getNodeId(node)
+      const childList: any[] = node[childrenField]
+      const isExistChild = childList && childList.length > 0
+      const nodeItem = nodeMaps[nodeid] || {}
+      const nLevel = nodeItem.level
+      const isDisabled = checkMethod ? !checkMethod({ $cascader: $xeCascader, node }) : !handleVisibleOrCheckMode(checkMode, isExistChild, nLevel)
+      if (isDisabled) {
+        return
+      }
+      let isChecked = false
+      if (selectCheckboxMaps[nodeid]) {
+        delete selectCheckboxMaps[nodeid]
+      } else {
+        isChecked = true
+        selectCheckboxMaps[nodeid] = node
+      }
+      if (!checkStrictly) {
+        XEUtils.eachTree(XEUtils.get(node, transform ? mapChildrenField : childrenField), (childNode) => {
+          const childNodeid = getNodeId(childNode)
+          if (isChecked) {
+            if (!selectCheckboxMaps[childNodeid]) {
+              selectCheckboxMaps[childNodeid] = true
+            }
+          } else {
+            if (selectCheckboxMaps[childNodeid]) {
+              delete selectCheckboxMaps[childNodeid]
+            }
+          }
+        }, { children: transform ? mapChildrenField : childrenField })
+      }
+      reactData.updateCheckboxFlag++
+      updateCheckboxStatus()
+      const nodeids = XEUtils.keys(selectCheckboxMaps)
+      const value = nodeids
+      changeEvent(evnt, value, node)
+    }
+
+    const handleNodeClickEvent = (evnt: MouseEvent, node: any, chunks: any[], chunkIndex: number) => {
+      const { multiple } = props
+      const treeOpts = computeTreeOpts.value
+      const radioOpts = computeRadioOpts.value
+      const checkboxOpts = computeCheckboxOpts.value
+      const childrenField = computeChildrenField.value
+      const mapChildrenField = computeMapChildrenField.value
+      const { transform, trigger } = treeOpts
+      const childList: any[] = node[transform ? mapChildrenField : childrenField]
+      let triggerCurrent = false
+      let triggerRadio = false
+      let triggerCheckbox = false
+      let triggerExpand = false
+      triggerCurrent = true
+      changeCurrentEvent(evnt, node)
+      if (trigger !== 'icon') {
+        triggerExpand = true
+        toggleExpandEvent(evnt, node, chunks, chunkIndex)
+      }
+      if (multiple) {
+        if (checkboxOpts.trigger === 'node' || (!checkboxOpts.showIcon && (!childList || !childList.length))) {
+          triggerCheckbox = true
+          changeCheckboxEvent(evnt, node)
+        }
+      } else {
+        if (radioOpts.trigger === 'node' || (!radioOpts.showIcon && (!childList || !childList.length))) {
+          triggerRadio = true
+          changeRadioEvent(evnt, node)
+        }
+      }
+      dispatchEvent('node-click', { node, triggerCurrent, triggerRadio, triggerCheckbox, triggerExpand }, evnt)
+    }
+
     const focusEvent = (evnt: FocusEvent) => {
       const isDisabled = computeIsDisabled.value
       if (!isDisabled) {
         if (!reactData.visiblePanel) {
           reactData.triggerFocusPanel = true
-          showOptionPanel()
+          showOptionPanel(evnt)
           setTimeout(() => {
             reactData.triggerFocusPanel = false
           }, 150)
@@ -509,7 +1254,14 @@ export default defineVxeComponent({
     }
 
     const clickEvent = (evnt: MouseEvent) => {
-      togglePanelEvent(evnt)
+      evnt.preventDefault()
+      if (reactData.triggerFocusPanel) {
+        reactData.triggerFocusPanel = false
+      } else {
+        if (!reactData.visiblePanel) {
+          showOptionPanel(evnt)
+        }
+      }
       dispatchEvent('click', {}, evnt)
     }
 
@@ -520,13 +1272,14 @@ export default defineVxeComponent({
 
     const modelSearchEvent = (value: string) => {
       reactData.searchValue = value
+      triggerSearchEvent(new Event('filter'))
     }
 
     const handleSearchEvent = () => {
-      const { modelValue, remote, remoteMethod } = props
+      const { modelValue, remote } = props
       const { searchValue } = reactData
       const remoteOpts = computeRemoteOpts.value
-      const queryMethod = remoteOpts.queryMethod || remoteMethod
+      const queryMethod = remoteOpts.queryMethod
       if (remote && queryMethod && remoteOpts.enabled) {
         reactData.searchLoading = true
         Promise.resolve(
@@ -546,21 +1299,220 @@ export default defineVxeComponent({
         reactData.triggerFocusPanel = false
       } else {
         if (reactData.visiblePanel) {
-          hideOptionPanel()
+          hideOptionPanel($event)
         } else {
-          showOptionPanel()
+          showOptionPanel($event)
         }
       }
     }
 
     const cascaderPrivateMethods: CascaderPrivateMethods = {
+      isCheckedByCheckboxNodeId,
+      /**
+       * 用于树结构，给行数据加载子节点
+       */
+      loadChildrenNode (node, childRecords) {
+        const { separator } = props
+        const { nodeMaps } = internalData
+        const treeOpts = computeTreeOpts.value
+        const labelField = computeLabelField.value
+        const { lazy, transform } = treeOpts
+        if (!lazy) {
+          return Promise.resolve([])
+        }
+        const childrenField = computeChildrenField.value
+        const mapChildrenField = computeMapChildrenField.value
+        const parentNodeItem = nodeMaps[getNodeId(node)]
+        const parentLevel = parentNodeItem ? parentNodeItem.level : 0
+        const parentNodes = parentNodeItem ? parentNodeItem.nodes : []
+        return createNode(childRecords).then((nodeList) => {
+          XEUtils.eachTree(nodeList, (childRow, index, items, path, parent, nodes) => {
+            const itemNodeId = getNodeId(childRow)
+            nodeMaps[itemNodeId] = {
+              item: childRow,
+              index: -1,
+              $index: -1,
+              _index: -1,
+              items,
+              parent: parent || parentNodeItem.item,
+              nodes: parentNodes.concat(nodes),
+              level: parentLevel + nodes.length,
+              treeIndex: -1,
+              lineCount: 0,
+              treeLoaded: false,
+              fullLabel: nodes.map(item => item[labelField]).join((separator || ' / '))
+            }
+          }, { children: childrenField })
+          node[childrenField] = nodeList
+          if (transform) {
+            node[mapChildrenField] = nodeList
+          }
+          updateAfterDataIndex()
+          return nodeList
+        })
+      }
     }
 
     Object.assign($xeCascader, cascaderMethods, cascaderPrivateMethods)
 
+    const handleVisibleOrCheckMode = (mode: '' | 'all' | 'first' | 'last' | null | undefined, isExistChild: boolean, nLevel: number) => {
+      if (mode) {
+        if (mode === 'first') {
+          return !nLevel
+        }
+        if (mode === 'last') {
+          return !isExistChild
+        }
+      }
+      return true
+    }
+
+    const renderRadio = (node: any, isExistChild: boolean, nLevel: number, isChecked: boolean) => {
+      const radioOpts = computeRadioOpts.value
+      const { showIcon, checkMode, checkMethod, visibleMode, visibleMethod } = radioOpts
+      const isVisible = visibleMethod ? visibleMethod({ $cascader: $xeCascader, node }) : handleVisibleOrCheckMode(visibleMode, isExistChild, nLevel)
+      if (showIcon && isVisible) {
+        const isDisabled = checkMethod ? !checkMethod({ $cascader: $xeCascader, node }) : !handleVisibleOrCheckMode(checkMode, isExistChild, nLevel)
+        return h('div', {
+          class: ['vxe-tree--radio-option', {
+            'is--checked': isChecked,
+            'is--disabled': isDisabled
+          }],
+          onClick: (evnt) => {
+            if (!isDisabled) {
+              changeRadioEvent(evnt, node)
+            }
+          }
+        }, [
+          h('span', {
+            class: ['vxe-radio--icon', isChecked ? getIcon().RADIO_CHECKED : getIcon().RADIO_UNCHECKED]
+          })
+        ])
+      }
+      return renderEmptyElement($xeCascader)
+    }
+
+    const renderCheckbox = (node: any, isExistChild: boolean, nLevel: number, isChecked: boolean, isIndeterminate: boolean) => {
+      const checkboxOpts = computeCheckboxOpts.value
+      const { showIcon, checkMode, checkMethod, visibleMode, visibleMethod } = checkboxOpts
+      const isVisible = visibleMethod ? visibleMethod({ $cascader: $xeCascader, node }) : handleVisibleOrCheckMode(visibleMode, isExistChild, nLevel)
+      if (showIcon && isVisible) {
+        const isDisabled = checkMethod ? !checkMethod({ $cascader: $xeCascader, node }) : !handleVisibleOrCheckMode(checkMode, isExistChild, nLevel)
+        return h('div', {
+          class: ['vxe-cascader--checkbox-option', {
+            'is--checked': isChecked,
+            'is--indeterminate': isIndeterminate,
+            'is--disabled': isDisabled
+          }],
+          onClick: (evnt) => {
+            if (!isDisabled) {
+              changeCheckboxEvent(evnt, node)
+            }
+          }
+        }, [
+          h('span', {
+            class: ['vxe-checkbox--icon', isIndeterminate ? getIcon().CHECKBOX_INDETERMINATE : (isChecked ? getIcon().CHECKBOX_CHECKED : getIcon().CHECKBOX_UNCHECKED)]
+          })
+        ])
+      }
+      return renderEmptyElement($xeCascader)
+    }
+
+    const renderNode = (node: any, nodeid: string, nodeIndex: number, chunks: any[], chunkIndex: number) => {
+      const { multiple } = props
+      const { currentNode, selectRadioKey, updateCheckboxFlag, updateExpandedFlag } = reactData
+      const { nodeMaps, selectCheckboxMaps, indeterminateRowMaps, treeExpandedMaps, treeExpandLazyLoadedMaps } = internalData
+      const treeOpts = computeTreeOpts.value
+      const { lazy, iconLoaded, iconOpen, iconClose } = treeOpts
+      const childrenField = computeChildrenField.value
+      const labelField = computeLabelField.value
+      const hasChildField = computeHasChildField.value
+      const childList: any[] = node[childrenField]
+      const isExistChild = childList && childList.length > 0
+      const iconSlot = slots.icon
+      const titleSlot = slots.title
+      const isExpand = updateExpandedFlag && treeExpandedMaps[nodeid]
+      const nodeItem = nodeMaps[nodeid] || {}
+      const nodeTitle = node[labelField]
+      const nLevel = nodeItem.level
+
+      let isRadioChecked = false
+      if (!multiple) {
+        isRadioChecked = nodeid === selectRadioKey
+      }
+
+      let isCheckboxChecked = false
+      let isIndeterminate = false
+      if (multiple) {
+        isCheckboxChecked = !!(updateCheckboxFlag && selectCheckboxMaps[nodeid])
+        isIndeterminate = !!(updateCheckboxFlag && indeterminateRowMaps[nodeid])
+      }
+
+      let hasLazyChilds = false
+      let isLazyLoading = false
+      let isLazyLoaded = false
+      if (lazy) {
+        isLazyLoading = !!treeExpandLazyLoadedMaps[nodeid]
+        hasLazyChilds = node[hasChildField]
+        isLazyLoaded = !!nodeItem.treeLoaded
+      }
+      const nParams = { node }
+      return h('div', {
+        key: `${chunkIndex}_${nodeIndex}`,
+        class: ['vxe-cascader-chunk--node-item', {
+          'is--current': currentNode && (currentNode === node || getNodeId(currentNode) === nodeid),
+          'is-radio--checked': isRadioChecked,
+          'is-checkbox--checked': isCheckboxChecked,
+          'is-checkbox--indeterminate': isIndeterminate,
+          'is--expand': isExpand
+        }],
+        title: nodeTitle,
+        onMousedown: (evnt) => {
+          const isLeftBtn = evnt.button === 0
+          if (isLeftBtn) {
+            evnt.stopPropagation()
+          }
+        },
+        onClick (evnt) {
+          handleNodeClickEvent(evnt, node, chunks, chunkIndex)
+        }
+      }, [
+        multiple ? renderCheckbox(node, isExistChild, nLevel, isCheckboxChecked, isIndeterminate) : renderRadio(node, isExistChild, nLevel, isRadioChecked),
+        h('div', {
+          class: 'vxe-cascader-chunk--node-item-inner'
+        }, [
+          h('div', {
+            class: 'vxe-cascader-chunk--node-item-title'
+          }, titleSlot ? getSlotVNs(titleSlot(nParams)) : nodeTitle)
+        ]),
+        treeOpts.showIcon && (lazy ? (isLazyLoaded ? isExistChild : hasLazyChilds) : isExistChild)
+          ? h('div', {
+            class: 'vxe-cascader-chunk--node-item-switcher'
+          }, [
+            [
+              h('div', {
+                class: 'vxe-cascader--node-item-icon',
+                onClick (evnt) {
+                  if (treeOpts.trigger === 'icon') {
+                    toggleExpandEvent(evnt, node, chunks, chunkIndex)
+                  }
+                }
+              }, iconSlot
+                ? getSlotVNs(iconSlot(nParams))
+                : [
+                    h('i', {
+                      class: isLazyLoading ? (iconLoaded || getIcon().CASCADER_NODE_LOADED) : (isExpand ? (iconOpen || getIcon().CASCADER_NODE_OPEN) : (iconClose || getIcon().CASCADER_NODE_CLOSE))
+                    })
+                  ])
+            ]
+          ])
+          : renderEmptyElement($xeCascader)
+      ])
+    }
+
     const renderVN = () => {
-      const { className, modelValue, multiple, loading, filterable, showTotalButton, showCheckedButton, showClearButton } = props
-      const { initialized, isActivated, isAniVisible, visiblePanel, searchValue } = reactData
+      const { className, modelValue, multiple, loading, filterable, showTotalButton, showCheckedButton, showClearButton, showCloseButton } = props
+      const { initialized, isActivated, isAniVisible, visiblePanel, searchValue, currentCunkList } = reactData
       const vSize = computeSize.value
       const isDisabled = computeIsDisabled.value
       const selectLabel = computeSelectLabel.value
@@ -629,7 +1581,7 @@ export default defineVxeComponent({
               'ani--enter': !loading && visiblePanel
             }],
             placement: reactData.panelPlacement,
-            style: reactData.panelStyle
+            style: popupWrapperStyle
           }, initialized
             ? [
                 h('div', {
@@ -652,38 +1604,35 @@ export default defineVxeComponent({
                       })
                     ])
                     : renderEmptyElement($xeCascader),
-                  showTotalButton || (showCheckedButton && multiple) || showClearButton || headerSlot
+                  (showCheckedButton && multiple) || showClearButton || headerSlot
                     ? h('div', {
-                      class: 'vxe-cascader--panel-header'
+                      class: 'vxe-tree-select--panel-header'
                     }, headerSlot
                       ? headerSlot({})
                       : [
                           h('div', {
-                            class: 'vxe-cascader--header-button'
+                            class: 'vxe-tree-select--header-button'
                           }, [
-                            showTotalButton
+                            showCheckedButton && showClearButton
                               ? h('div', {
-                                class: 'vxe-cascader--header-total'
-                              }, getI18n('vxe.cascader.total', [selectVals.length]))
-                              : renderEmptyElement($xeCascader),
-                            h('div', {
-                              class: 'vxe-cascader--header-btns'
-                            }, [
-                              (showCheckedButton && multiple)
-                                ? h(VxeButtonComponent, {
-                                  content: getI18n('vxe.cascader.allChecked'),
-                                  mode: 'text',
-                                  onClick: allCheckedPanelEvent
-                                })
-                                : renderEmptyElement($xeCascader),
-                              showClearButton
-                                ? h(VxeButtonComponent, {
-                                  content: getI18n('vxe.cascader.clearChecked'),
-                                  mode: 'text',
-                                  onClick: clearCheckedPanelEvent
-                                })
-                                : renderEmptyElement($xeCascader)
-                            ])
+                                class: 'vxe-tree-select--selected-btns'
+                              }, [
+                                (showCheckedButton && multiple)
+                                  ? h(VxeButtonComponent, {
+                                    content: getI18n('vxe.treeSelect.allChecked'),
+                                    mode: 'text',
+                                    onClick: allCheckedPanelEvent
+                                  })
+                                  : renderEmptyElement($xeCascader),
+                                showClearButton
+                                  ? h(VxeButtonComponent, {
+                                    content: getI18n('vxe.treeSelect.clearChecked'),
+                                    mode: 'text',
+                                    onClick: clearCheckedPanelEvent
+                                  })
+                                  : renderEmptyElement($xeCascader)
+                              ])
+                              : renderEmptyElement($xeCascader)
                           ])
                         ])
                     : renderEmptyElement($xeCascader),
@@ -691,15 +1640,56 @@ export default defineVxeComponent({
                     class: 'vxe-cascader--panel-body'
                   }, [
                     h('div', {
-                      ref: refTreeWrapper,
-                      class: 'vxe-cascader-tree--wrapper',
-                      style: popupWrapperStyle
-                    }, [])
+                      ref: refChunkWrapper,
+                      class: 'vxe-cascader-chunk--wrapper'
+                    }, [
+                      currentCunkList.map((chunks, chunkIndex) => {
+                        return h('div', {
+                          key: chunkIndex,
+                          class: 'vxe-cascader-chunk--item-wrapper'
+                        }, [
+                          h(VxeListComponent, {
+                            data: chunks
+                          }, {
+                            default (slotParams: VxeListSlotTypes.DefaultSlotParams) {
+                              const { items } = slotParams
+                              return items.map((node, nodeIndex) => {
+                                const nodeid = getNodeId(node)
+                                return renderNode(node, nodeid, nodeIndex, chunks, chunkIndex)
+                              })
+                            }
+                          })
+                        ])
+                      })
+                    ])
                   ]),
-                  footerSlot
+                  footerSlot || showTotalButton || (showCloseButton && multiple)
                     ? h('div', {
                       class: 'vxe-cascader--panel-footer'
-                    }, footerSlot({}))
+                    }, footerSlot
+                      ? footerSlot({})
+                      : [
+                          h('div', {
+                            class: 'vxe-cascader--footer-button'
+                          }, [
+                            showTotalButton
+                              ? h('div', {
+                                class: 'vxe-cascader--total-btns'
+                              }, getI18n('vxe.treeSelect.total', [selectVals.length]))
+                              : renderEmptyElement($xeCascader),
+                            showCloseButton && multiple
+                              ? h('div', {
+                                class: 'vxe-cascader--oper-btns'
+                              }, [
+                                h(VxeButtonComponent, {
+                                  content: getI18n('vxe.select.close'),
+                                  mode: 'text',
+                                  onClick: closePanelEvent
+                                })
+                              ])
+                              : renderEmptyElement($xeCascader)
+                          ])
+                        ])
                     : renderEmptyElement($xeCascader)
                 ])
               ]
@@ -708,13 +1698,34 @@ export default defineVxeComponent({
       ])
     }
 
-    watch(() => props.options, () => {
-      cacheDataMap()
+    watch(() => props.modelValue, () => {
+      if (!reactData.visiblePanel) {
+        handleCurrentItems()
+        updateCurrentChunk()
+      }
     })
 
-    cacheDataMap()
+    watch(() => props.options, () => {
+      cacheNodeMap()
+    })
+
+    const dataFlag = ref(0)
+    watch(() => props.options ? props.options.length : 0, () => {
+      dataFlag.value++
+    })
+    watch(() => props.options, () => {
+      dataFlag.value++
+    })
+    watch(dataFlag, () => {
+      loadData(props.options || [])
+    })
+
+    loadData(props.options || [])
 
     onMounted(() => {
+      if (props.filterable) {
+        errLog('vxe.error.notProp', ['filterable'])
+      }
       globalEvents.on($xeCascader, 'mousewheel', handleGlobalMousewheelEvent)
       globalEvents.on($xeCascader, 'mousedown', handleGlobalMousedownEvent)
       globalEvents.on($xeCascader, 'blur', handleGlobalBlurEvent)

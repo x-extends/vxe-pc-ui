@@ -7,13 +7,14 @@
   width: 180px;
   color: var(--vxe-ui-font-color);
   text-align: left;
+  --vxe-ui-cascader-chunk-size: 1;
   & > .vxe-input {
     .vxe-input--inner {
       cursor: pointer;
     }
   }
   &.is--filterable {
-    .vxe-cascader-tree--wrapper {
+    .vxe-cascader-chunk--wrapper {
       padding-top: 0;
     }
     .vxe-cascader--panel-header {
@@ -56,34 +57,45 @@
 
 .vxe-cascader--panel {
   pointer-events: none;
-  @include placement.createPlacementPanel();
+  @include placement.createPlacementPanel(var(--vxe-ui-cascader-node-width));
 }
 
 .vxe-cascader--panel-search {
   display: block;
+  padding: var(--vxe-ui-current-padding);
+  width: calc(var(--vxe-ui-cascader-node-width) * var(--vxe-ui-cascader-chunk-size));
   .vxe-cascader-search--input {
     width: 100%;
   }
 }
 
-.vxe-cascader--header-button {
+.vxe-cascader--header-button,
+.vxe-cascader--footer-button {
   display: flex;
   flex-direction: row;
   white-space: nowrap;
 }
-.vxe-cascader--header-total {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: center;
+.vxe-cascader--total-btns {
+  padding-left: var(--vxe-ui-current-padding);
   flex-shrink: 0;
-  padding-left: 0.8em;
 }
-.vxe-cascader--header-btns {
+.vxe-cascader--oper-btns {
   display: flex;
   flex-direction: row;
   flex-grow: 1;
   justify-content: right;
+}
+.vxe-cascader--footer-button,
+.vxe-cascader--selected-btns,
+.vxe-cascader--expand-btns {
+  display: flex;
+  flex-direction: row;
+  flex-grow: 1;
+}
+.vxe-cascader--selected-btns {
+  & + .vxe-cascader--expand-btns {
+    padding-left: 2.2em;
+  }
 }
 
 .vxe-cascader--panel-wrapper {
@@ -95,14 +107,6 @@
   box-shadow: var(--vxe-ui-base-popup-box-shadow);
   background-color: var(--vxe-ui-layout-background-color);
   pointer-events: auto;
-}
-
-.vxe-cascader--panel-search {
-  display: block;
-  padding: var(--vxe-ui-layout-padding-default);
-  .vxe-cascader-search--input {
-    width: 100%;
-  }
 }
 
 .vxe-cascader--panel-header {
@@ -118,11 +122,102 @@
   padding: 4px 0;
 }
 
-.vxe-cascader-tree--wrapper {
+.vxe-cascader--checkbox-option {
+  padding-right: 0.4em;
+  @include baseMixin.createCheckboxIcon();
+}
+.vxe-cascader--radio-option {
+  padding-right: 0.4em;
+  @include baseMixin.createRadioIcon();
+}
+
+.vxe-cascader--panel-body {
+  border-top: 1px solid var(--vxe-ui-base-popup-border-color)
+}
+
+.vxe-cascader-chunk--wrapper {
   position: relative;
-  overflow: auto;
-  padding: var(--vxe-ui-layout-padding-default);
+  display: flex;
+  flex-direction: row;
   outline: 0;
+}
+.vxe-cascader-chunk--item-wrapper {
+  flex-shrink: 0;
+  border-left: 1px solid var(--vxe-ui-base-popup-border-color);
+  padding: var(--vxe-ui-current-padding) 0;
+  &:first-child {
+    border-left: 0;
+  }
+  .vxe-list {
+    .vxe-list--virtual-wrapper {
+      height: var(--vxe-ui-cascader-chunk-height);
+      width: var(--vxe-ui-cascader-node-width);
+      overflow-x: hidden;
+      overflow-y: hidden;
+      &:hover {
+        overflow-y: auto;
+      }
+    }
+    .vxe-list--body {
+      width: var(--vxe-ui-cascader-node-width);
+    }
+  }
+}
+.vxe-cascader-chunk--node-item {
+  display: flex;
+  flex-direction: row;
+  height: var(--vxe-ui-cascader-node-height);
+  line-height: var(--vxe-ui-cascader-node-height);
+  padding: 0 calc(var(--vxe-ui-current-padding) + 18px) 0 var(--vxe-ui-current-padding);
+  cursor: pointer;
+  &:hover {
+    background-color: var(--vxe-ui-cascader-node-hover-background-color);
+  }
+  &.is--current,
+  &.is--expand {
+    font-weight: 700;
+  }
+  &.is--current {
+    background-color: var(--vxe-ui-cascader-node-current-background-color);
+  }
+  &.is-checkbox--indeterminate {
+    color: var(--vxe-ui-cascader-node-checkbox-indeterminate-color);
+  }
+  &.is-radio--checked,
+  &.is-checkbox--checked {
+    color: var(--vxe-ui-cascader-node-checkbox-checked-color);
+  }
+}
+.vxe-cascader-chunk--node-item-inner {
+  display: flex;
+  flex-direction: row;
+  overflow: hidden;
+  flex-grow: 1;
+}
+.vxe-cascader-chunk--node-item-title {
+  flex-grow: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.vxe-cascader-chunk--node-item-switcher {
+  user-select: none;
+  flex-shrink: 0;
+  width: 1em;
+  position: relative;
+  .vxe-cascader--node-item-icon > i {
+    display: inline-block;
+    @include baseMixin.createAnimationTransition(transform, .2s);
+  }
+}
+
+.vxe-cascader,
+.vxe-cascader--panel {
+  --vxe-ui-current-padding: var(--vxe-ui-layout-padding-default);
+  &.size--small,
+  &.size--mini {
+    --vxe-ui-current-padding: var(--vxe-ui-layout-padding-half);
+  }
 }
 
 .vxe-cascader,
