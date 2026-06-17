@@ -47,6 +47,10 @@ function createReactData (): CascaderReactData {
 function createInternalData (): CascaderInternalData {
   return {
     // hpTimeout: undefined,
+    listVirtualYOpts: {
+      enabled: true,
+      gt: 20
+    },
     afterTreeList: [],
     treeFullData: [],
     afterVisibleList: [],
@@ -99,7 +103,15 @@ export default defineVxeComponent({
       default: () => getConfig().cascader.size || getConfig().size
     },
     treeConfig: Object as PropType<VxeCascaderPropTypes.TreeConfig>,
+    showRadio: {
+      type: Boolean as PropType<VxeCascaderPropTypes.ShowRadio>,
+      default: () => getConfig().cascader.showRadio
+    },
     radioConfig: Object as PropType<VxeCascaderPropTypes.RadioConfig>,
+    showCheckbox: {
+      type: Boolean as PropType<VxeCascaderPropTypes.ShowCheckbox>,
+      default: () => getConfig().cascader.showCheckbox
+    },
     checkboxConfig: Object as PropType<VxeCascaderPropTypes.CheckboxConfig>,
     remote: Boolean as PropType<VxeCascaderPropTypes.Remote>,
     remoteConfig: Function as PropType<VxeCascaderPropTypes.RemoteConfig>,
@@ -400,6 +412,53 @@ export default defineVxeComponent({
       )
     }
 
+    const handleSetCheckboxByNodeId = (nodeKeys: any | any[], checked: boolean) => {
+      const { nodeMaps } = internalData
+      if (nodeKeys) {
+        if (!XEUtils.isArray(nodeKeys)) {
+          nodeKeys = [nodeKeys]
+        }
+        const nodeList: any[] = []
+        nodeKeys.forEach((nodeKey: string) => {
+          const nodeid = enNodeValue(nodeKey)
+          const nodeItem = nodeMaps[nodeid]
+          if (nodeItem) {
+            nodeList.push(nodeItem.item)
+          }
+        })
+        handleCheckedCheckboxNode(nodeList, checked)
+      }
+      return nextTick()
+    }
+
+    const updateCheckboxChecked = (nodeKeys: any[]) => {
+      internalData.selectCheckboxMaps = {}
+      handleSetCheckboxByNodeId(nodeKeys, true)
+    }
+
+    const updateModelChecked = () => {
+      const { modelValue } = props
+      const { nodeMaps } = internalData
+      const expandedMaps: Record<string, boolean> = {}
+      if (props.multiple) {
+        if (modelValue && modelValue.length) {
+          updateCheckboxChecked(modelValue)
+        }
+      } else {
+        if (modelValue) {
+          const nodeid = enNodeValue(XEUtils.isArray(modelValue) ? modelValue[0] : modelValue)
+          const itemRest = nodeMaps[nodeid]
+          if (itemRest) {
+            itemRest.nodes.forEach(item => {
+              expandedMaps[getNodeId(item)] = true
+            })
+            reactData.selectRadioKey = nodeid
+          }
+        }
+      }
+      internalData.treeExpandedMaps = expandedMaps
+    }
+
     const cacheNodeMap = () => {
       const { separator } = props
       const { treeFullData } = internalData
@@ -618,6 +677,7 @@ export default defineVxeComponent({
       internalData.treeFullData = fullData
       cacheNodeMap()
       handleData(true)
+      updateModelChecked()
       handleCurrentItems()
       updateCurrentChunk()
       return nextTick()
@@ -649,11 +709,14 @@ export default defineVxeComponent({
       const { treeFullData } = internalData
       const selectVals = computeSelectVals.value
       const childrenField = computeChildrenField.value
+      const mapChildrenField = computeMapChildrenField.value
+      const treeOpts = computeTreeOpts.value
+      const { transform } = treeOpts
       const stItems: string[] = []
       const expandedMaps: Record<string, boolean> = {}
       if (selectVals.length) {
-        const lastVal = XEUtils.last(selectVals)
-        const stRest = XEUtils.findTree(treeFullData, (item) => lastVal === getNodeId(item), { children: childrenField })
+        const lastVal = enNodeValue(XEUtils.last(selectVals))
+        const stRest = XEUtils.findTree(treeFullData, (item) => lastVal === getNodeId(item), { children: transform ? mapChildrenField : childrenField })
         if (stRest) {
           const { nodes } = stRest
           nodes.forEach(item => {
@@ -1207,7 +1270,7 @@ export default defineVxeComponent({
     }
 
     const handleNodeClickEvent = (evnt: MouseEvent, node: any, chunks: any[], chunkIndex: number) => {
-      const { multiple } = props
+      const { multiple, showCheckbox, showRadio } = props
       const treeOpts = computeTreeOpts.value
       const radioOpts = computeRadioOpts.value
       const checkboxOpts = computeCheckboxOpts.value
@@ -1226,12 +1289,12 @@ export default defineVxeComponent({
         toggleExpandEvent(evnt, node, chunks, chunkIndex)
       }
       if (multiple) {
-        if (checkboxOpts.trigger === 'node' || (!checkboxOpts.showIcon && (!childList || !childList.length))) {
+        if (checkboxOpts.trigger === 'node' || (!showCheckbox && (!childList || !childList.length))) {
           triggerCheckbox = true
           changeCheckboxEvent(evnt, node)
         }
       } else {
-        if (radioOpts.trigger === 'node' || (!radioOpts.showIcon && (!childList || !childList.length))) {
+        if (radioOpts.trigger === 'node' || (!showRadio && (!childList || !childList.length))) {
           triggerRadio = true
           changeRadioEvent(evnt, node)
         }
@@ -1368,10 +1431,11 @@ export default defineVxeComponent({
     }
 
     const renderRadio = (node: any, isExistChild: boolean, nLevel: number, isChecked: boolean) => {
+      const { showRadio } = props
       const radioOpts = computeRadioOpts.value
-      const { showIcon, checkMode, checkMethod, visibleMode, visibleMethod } = radioOpts
+      const { checkMode, checkMethod, visibleMode, visibleMethod } = radioOpts
       const isVisible = visibleMethod ? visibleMethod({ $cascader: $xeCascader, node }) : handleVisibleOrCheckMode(visibleMode, isExistChild, nLevel)
-      if (showIcon && isVisible) {
+      if (showRadio && isVisible) {
         const isDisabled = checkMethod ? !checkMethod({ $cascader: $xeCascader, node }) : !handleVisibleOrCheckMode(checkMode, isExistChild, nLevel)
         return h('div', {
           class: ['vxe-tree--radio-option', {
@@ -1393,10 +1457,11 @@ export default defineVxeComponent({
     }
 
     const renderCheckbox = (node: any, isExistChild: boolean, nLevel: number, isChecked: boolean, isIndeterminate: boolean) => {
+      const { showCheckbox } = props
       const checkboxOpts = computeCheckboxOpts.value
-      const { showIcon, checkMode, checkMethod, visibleMode, visibleMethod } = checkboxOpts
+      const { checkMode, checkMethod, visibleMode, visibleMethod } = checkboxOpts
       const isVisible = visibleMethod ? visibleMethod({ $cascader: $xeCascader, node }) : handleVisibleOrCheckMode(visibleMode, isExistChild, nLevel)
-      if (showIcon && isVisible) {
+      if (showCheckbox && isVisible) {
         const isDisabled = checkMethod ? !checkMethod({ $cascader: $xeCascader, node }) : !handleVisibleOrCheckMode(checkMode, isExistChild, nLevel)
         return h('div', {
           class: ['vxe-cascader--checkbox-option', {
@@ -1513,6 +1578,7 @@ export default defineVxeComponent({
     const renderVN = () => {
       const { className, modelValue, multiple, loading, filterable, showTotalButton, showCheckedButton, showClearButton, showCloseButton } = props
       const { initialized, isActivated, isAniVisible, visiblePanel, searchValue, currentCunkList } = reactData
+      const { listVirtualYOpts } = internalData
       const vSize = computeSize.value
       const isDisabled = computeIsDisabled.value
       const selectLabel = computeSelectLabel.value
@@ -1649,7 +1715,8 @@ export default defineVxeComponent({
                           class: 'vxe-cascader-chunk--item-wrapper'
                         }, [
                           h(VxeListComponent, {
-                            data: chunks
+                            data: chunks,
+                            virtualYConfig: listVirtualYOpts
                           }, {
                             default (slotParams: VxeListSlotTypes.DefaultSlotParams) {
                               const { items } = slotParams
@@ -1700,6 +1767,7 @@ export default defineVxeComponent({
 
     watch(() => props.modelValue, () => {
       if (!reactData.visiblePanel) {
+        updateModelChecked()
         handleCurrentItems()
         updateCurrentChunk()
       }

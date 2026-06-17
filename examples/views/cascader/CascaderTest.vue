@@ -1,7 +1,7 @@
 <template>
   <div>
-    <vxe-cascader v-model="val1" :options="treeList" :radio-config="{showIcon: true}" filterable clearable></vxe-cascader>
-    <vxe-cascader v-model="val2" :options="treeList" :checkbox-config="{showIcon: true}" :popup-config="{transfer: true}" multiple clearable></vxe-cascader>
+    <vxe-cascader v-model="val1" :options="treeList" filterable clearable></vxe-cascader>
+    <vxe-cascader v-model="val2" :options="treeList" :popup-config="{transfer: true}" multiple clearable></vxe-cascader>
   </div>
 </template>
 

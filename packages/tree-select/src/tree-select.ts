@@ -98,6 +98,14 @@ export default defineVxeComponent({
     },
     remote: Boolean as PropType<VxeTreeSelectPropTypes.Remote>,
     remoteConfig: Function as PropType<VxeTreeSelectPropTypes.RemoteConfig>,
+    showRadio: {
+      type: Boolean as PropType<VxeTreeSelectPropTypes.ShowRadio>,
+      default: () => getConfig().treeSelect.showRadio
+    },
+    showCheckbox: {
+      type: Boolean as PropType<VxeTreeSelectPropTypes.ShowCheckbox>,
+      default: () => getConfig().treeSelect.showCheckbox
+    },
     popupConfig: Object as PropType<VxeTreeSelectPropTypes.PopupConfig>,
     treeConfig: Object as PropType<VxeTreeSelectPropTypes.TreeConfig>,
     menuConfig: Object as PropType<VxeTreeSelectPropTypes.MenuConfig>,
@@ -246,18 +254,20 @@ export default defineVxeComponent({
     })
 
     const computeTreeCheckboxOpts = computed(() => {
+      const { showCheckbox } = props
       const treeOpts = computeTreeOpts.value
       return Object.assign({
-        showIcon: !!treeOpts.showCheckbox
+        showIcon: XEUtils.isBoolean(showCheckbox) ? showCheckbox : !!treeOpts.showCheckbox
       }, treeOpts.checkboxConfig, {
         trigger: 'node'
       })
     })
 
     const computeTreeRadioOpts = computed(() => {
+      const { showRadio } = props
       const treeOpts = computeTreeOpts.value
       return Object.assign({
-        showIcon: !!treeOpts.showRadio
+        showIcon: XEUtils.isBoolean(showRadio) ? showRadio : !!treeOpts.showRadio
       }, treeOpts.radioConfig, {
         trigger: 'node'
       })

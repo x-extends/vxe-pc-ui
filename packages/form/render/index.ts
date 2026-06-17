@@ -334,15 +334,15 @@ function oldFormItemRadioAndCheckboxRender (renderOpts: VxeGlobalRendererHandles
  */
 renderer.mixin({
   input: {
-    formItemAutoFocus: 'input',
+    formItemAutoFocus: true,
     renderFormItemContent: nativeItemRender
   },
   textarea: {
-    formItemAutoFocus: 'textarea',
+    formItemAutoFocus: true,
     renderFormItemContent: nativeItemRender
   },
   select: {
-    formItemAutoFocus: 'input',
+    formItemAutoFocus: true,
     renderFormItemContent (renderOpts: VxeGlobalRendererHandles.RenderFormItemContentOptions, params: VxeGlobalRendererHandles.RenderFormItemContentParams) {
       return [
         h('select', {
@@ -355,27 +355,27 @@ renderer.mixin({
     }
   },
   VxeInput: {
-    formItemAutoFocus: 'input',
+    formItemAutoFocus: true,
     renderFormItemContent: defaultItemRender
   },
   VxeNumberInput: {
-    formItemAutoFocus: 'input',
+    formItemAutoFocus: true,
     renderFormItemContent: defaultItemRender
   },
   VxePasswordInput: {
-    formItemAutoFocus: 'input',
+    formItemAutoFocus: true,
     renderFormItemContent: defaultItemRender
   },
   VxeTextarea: {
-    formItemAutoFocus: 'textarea',
+    formItemAutoFocus: true,
     renderFormItemContent: defaultItemRender
   },
   VxeDatePicker: {
-    formItemAutoFocus: 'input',
+    formItemAutoFocus: true,
     renderFormItemContent: defaultItemRender
   },
   VxeDateRangePicker: {
-    formItemAutoFocus: 'input',
+    formItemAutoFocus: true,
     renderFormItemContent (renderOpts, params) {
       const { startField, endField } = renderOpts
       const { $form, data, field } = params
@@ -434,7 +434,7 @@ renderer.mixin({
     }
   },
   VxeSelect: {
-    formItemAutoFocus: 'input',
+    formItemAutoFocus: true,
     renderFormItemContent (renderOpts, params) {
       const { data, field } = params
       const { options, optionProps, optionGroups, optionGroupProps } = renderOpts
@@ -448,7 +448,21 @@ renderer.mixin({
     }
   },
   VxeTreeSelect: {
-    formItemAutoFocus: 'input',
+    formItemAutoFocus: true,
+    renderFormItemContent (renderOpts: VxeGlobalRendererHandles.RenderFormItemContentOptions, params: VxeGlobalRendererHandles.RenderFormItemContentParams) {
+      const { data, field } = params
+      const { options, optionProps } = renderOpts
+      const itemValue = XEUtils.get(data, field)
+      return [
+        h(getDefaultComponent(renderOpts), {
+          ...getComponentFormItemProps(renderOpts, params, itemValue, { options, optionProps }),
+          ...getItemOns(renderOpts, params)
+        })
+      ]
+    }
+  },
+  VxeCascader: {
+    formItemAutoFocus: true,
     renderFormItemContent (renderOpts: VxeGlobalRendererHandles.RenderFormItemContentOptions, params: VxeGlobalRendererHandles.RenderFormItemContentParams) {
       const { data, field } = params
       const { options, optionProps } = renderOpts
@@ -462,7 +476,7 @@ renderer.mixin({
     }
   },
   VxeTableSelect: {
-    formItemAutoFocus: 'input',
+    formItemAutoFocus: true,
     renderFormItemContent (renderOpts: VxeGlobalRendererHandles.RenderFormItemContentOptions, params: VxeGlobalRendererHandles.RenderFormItemContentParams) {
       const { data, field } = params
       const { options, optionProps } = renderOpts
@@ -476,7 +490,7 @@ renderer.mixin({
     }
   },
   VxeColorPicker: {
-    formItemAutoFocus: 'input',
+    formItemAutoFocus: true,
     renderFormItemContent (renderOpts: VxeGlobalRendererHandles.RenderFormItemContentOptions, params: VxeGlobalRendererHandles.RenderFormItemContentParams) {
       const { data, field } = params
       const { options } = renderOpts
@@ -490,7 +504,7 @@ renderer.mixin({
     }
   },
   VxeIconPicker: {
-    formItemAutoFocus: 'input',
+    formItemAutoFocus: true,
     renderFormItemContent (renderOpts: VxeGlobalRendererHandles.RenderFormItemContentOptions, params: VxeGlobalRendererHandles.RenderFormItemContentParams) {
       const { data, field } = params
       const { options } = renderOpts

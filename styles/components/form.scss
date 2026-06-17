@@ -289,7 +289,8 @@
     .vxe-select,
     .vxe-tree-select,
     .vxe-table-select,
-    .vxe-ico-picker {
+    .vxe-ico-picker,
+    .vxe-cascader {
       width: 100%;
     }
   }
@@ -324,7 +325,8 @@
     .vxe-default-input,
     .vxe-default-textarea,
     .vxe-default-select,
-    .vxe-ico-picker {
+    .vxe-ico-picker,
+    .vxe-cascader {
       border-color: var(--vxe-ui-form-validate-error-color);
     }
     .vxe-input,
