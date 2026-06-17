@@ -59,6 +59,10 @@ function createReactData (): CascaderReactData {
 function createInternalData (): CascaderInternalData {
   return {
     // hpTimeout: undefined,
+    listVirtualYOpts: {
+      enabled: true,
+      gt: 20
+    },
     afterTreeList: [],
     treeFullData: [],
     afterVisibleList: [],
@@ -118,7 +122,15 @@ export default /* define-vxe-component start */ defineVxeComponent({
       default: () => getConfig().cascader.size || getConfig().size
     },
     treeConfig: Object as PropType<VxeCascaderPropTypes.TreeConfig>,
+    showRadio: {
+      type: Boolean as PropType<VxeCascaderPropTypes.ShowRadio>,
+      default: () => getConfig().cascader.showRadio
+    },
     radioConfig: Object as PropType<VxeCascaderPropTypes.RadioConfig>,
+    showCheckbox: {
+      type: Boolean as PropType<VxeCascaderPropTypes.ShowCheckbox>,
+      default: () => getConfig().cascader.showCheckbox
+    },
     checkboxConfig: Object as PropType<VxeCascaderPropTypes.CheckboxConfig>,
     remote: Boolean as PropType<VxeCascaderPropTypes.Remote>,
     remoteConfig: Function as PropType<VxeCascaderPropTypes.RemoteConfig>,
@@ -460,6 +472,61 @@ export default /* define-vxe-component start */ defineVxeComponent({
         })
       )
     },
+    handleSetCheckboxByNodeId (nodeKeys: any | any[], checked: boolean) {
+      const $xeCascader = this
+      const internalData = $xeCascader.internalData
+
+      const { nodeMaps } = internalData
+      if (nodeKeys) {
+        if (!XEUtils.isArray(nodeKeys)) {
+          nodeKeys = [nodeKeys]
+        }
+        const nodeList: any[] = []
+        nodeKeys.forEach((nodeKey: string) => {
+          const nodeid = enNodeValue(nodeKey)
+          const nodeItem = nodeMaps[nodeid]
+          if (nodeItem) {
+            nodeList.push(nodeItem.item)
+          }
+        })
+        $xeCascader.handleCheckedCheckboxNode(nodeList, checked)
+      }
+      return $xeCascader.$nextTick()
+    },
+    updateCheckboxChecked (nodeKeys: any[]) {
+      const $xeCascader = this
+      const internalData = $xeCascader.internalData
+
+      internalData.selectCheckboxMaps = {}
+      $xeCascader.handleSetCheckboxByNodeId(nodeKeys, true)
+    },
+    updateModelChecked () {
+      const $xeCascader = this
+      const props = $xeCascader
+      const reactData = $xeCascader.reactData
+      const internalData = $xeCascader.internalData
+
+      const { value: modelValue } = props
+      const { nodeMaps } = internalData
+      const expandedMaps: Record<string, boolean> = {}
+      if (props.multiple) {
+        if (modelValue && modelValue.length) {
+          $xeCascader.updateCheckboxChecked(modelValue)
+        }
+      } else {
+        if (modelValue) {
+          const nodeid = enNodeValue(XEUtils.isArray(modelValue) ? modelValue[0] : modelValue)
+          const itemRest = nodeMaps[nodeid]
+          if (itemRest) {
+            itemRest.nodes.forEach(item => {
+              expandedMaps[$xeCascader.getNodeId(item)] = true
+            })
+            reactData.selectRadioKey = nodeid
+          }
+        }
+      }
+      internalData.treeExpandedMaps = expandedMaps
+    },
     cacheNodeMap () {
       const $xeCascader = this
       const props = $xeCascader
@@ -699,6 +766,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       internalData.treeFullData = fullData
       $xeCascader.cacheNodeMap()
       $xeCascader.handleData(true)
+      $xeCascader.updateModelChecked()
       $xeCascader.handleCurrentItems()
       $xeCascader.updateCurrentChunk()
       return $xeCascader.$nextTick()
@@ -736,11 +804,14 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const { treeFullData } = internalData
       const selectVals = $xeCascader.computeSelectVals
       const childrenField = $xeCascader.computeChildrenField
+      const mapChildrenField = $xeCascader.computeMapChildrenField
+      const treeOpts = $xeCascader.computeTreeOpts
+      const { transform } = treeOpts
       const stItems: string[] = []
       const expandedMaps: Record<string, boolean> = {}
       if (selectVals.length) {
-        const lastVal = XEUtils.last(selectVals)
-        const stRest = XEUtils.findTree(treeFullData, (item) => lastVal === $xeCascader.getNodeId(item), { children: childrenField })
+        const lastVal = enNodeValue(XEUtils.last(selectVals))
+        const stRest = XEUtils.findTree(treeFullData, (item) => lastVal === $xeCascader.getNodeId(item), { children: transform ? mapChildrenField : childrenField })
         if (stRest) {
           const { nodes } = stRest
           nodes.forEach(item => {
@@ -1363,7 +1434,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const $xeCascader = this
       const props = $xeCascader
 
-      const { multiple } = props
+      const { multiple, showCheckbox, showRadio } = props
       const treeOpts = $xeCascader.computeTreeOpts
       const radioOpts = $xeCascader.computeRadioOpts
       const checkboxOpts = $xeCascader.computeCheckboxOpts
@@ -1382,12 +1453,12 @@ export default /* define-vxe-component start */ defineVxeComponent({
         $xeCascader.toggleExpandEvent(evnt, node, chunks, chunkIndex)
       }
       if (multiple) {
-        if (checkboxOpts.trigger === 'node' || (!checkboxOpts.showIcon && (!childList || !childList.length))) {
+        if (checkboxOpts.trigger === 'node' || (!showCheckbox && (!childList || !childList.length))) {
           triggerCheckbox = true
           $xeCascader.changeCheckboxEvent(evnt, node)
         }
       } else {
-        if (radioOpts.trigger === 'node' || (!radioOpts.showIcon && (!childList || !childList.length))) {
+        if (radioOpts.trigger === 'node' || (!showRadio && (!childList || !childList.length))) {
           triggerRadio = true
           $xeCascader.changeRadioEvent(evnt, node)
         }
@@ -1527,11 +1598,13 @@ export default /* define-vxe-component start */ defineVxeComponent({
     //
     renderRadio (h: CreateElement, node: any, isExistChild: boolean, nLevel: number, isChecked: boolean) {
       const $xeCascader = this
+      const props = $xeCascader
 
+      const { showRadio } = props
       const radioOpts = $xeCascader.computeRadioOpts
-      const { showIcon, checkMode, checkMethod, visibleMode, visibleMethod } = radioOpts
+      const { checkMode, checkMethod, visibleMode, visibleMethod } = radioOpts
       const isVisible = visibleMethod ? visibleMethod({ $cascader: $xeCascader, node }) : handleVisibleOrCheckMode(visibleMode, isExistChild, nLevel)
-      if (showIcon && isVisible) {
+      if (showRadio && isVisible) {
         const isDisabled = checkMethod ? !checkMethod({ $cascader: $xeCascader, node }) : !handleVisibleOrCheckMode(checkMode, isExistChild, nLevel)
         return h('div', {
           class: ['vxe-tree--radio-option', {
@@ -1555,11 +1628,13 @@ export default /* define-vxe-component start */ defineVxeComponent({
     },
     renderCheckbox (h: CreateElement, node: any, isExistChild: boolean, nLevel: number, isChecked: boolean, isIndeterminate: boolean) {
       const $xeCascader = this
+      const props = $xeCascader
 
+      const { showCheckbox } = props
       const checkboxOpts = $xeCascader.computeCheckboxOpts
-      const { showIcon, checkMode, checkMethod, visibleMode, visibleMethod } = checkboxOpts
+      const { checkMode, checkMethod, visibleMode, visibleMethod } = checkboxOpts
       const isVisible = visibleMethod ? visibleMethod({ $cascader: $xeCascader, node }) : handleVisibleOrCheckMode(visibleMode, isExistChild, nLevel)
-      if (showIcon && isVisible) {
+      if (showCheckbox && isVisible) {
         const isDisabled = checkMethod ? !checkMethod({ $cascader: $xeCascader, node }) : !handleVisibleOrCheckMode(checkMode, isExistChild, nLevel)
         return h('div', {
           class: ['vxe-cascader--checkbox-option', {
@@ -1689,10 +1764,12 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const $xeCascader = this
       const props = $xeCascader
       const reactData = $xeCascader.reactData
+      const internalData = $xeCascader.internalData
       const slots = $xeCascader.$scopedSlots
 
       const { className, value: modelValue, multiple, loading, filterable, showTotalButton, showCheckedButton, showClearButton, showCloseButton } = props
       const { initialized, isActivated, isAniVisible, visiblePanel, searchValue, currentCunkList } = reactData
+      const { listVirtualYOpts } = internalData
       const vSize = $xeCascader.computeSize
       const isDisabled = $xeCascader.computeIsDisabled
       const selectLabel = $xeCascader.computeSelectLabel
@@ -1845,7 +1922,8 @@ export default /* define-vxe-component start */ defineVxeComponent({
                       }, [
                         h(VxeListComponent, {
                           props: {
-                            data: chunks
+                            data: chunks,
+                            virtualYConfig: listVirtualYOpts
                           },
                           scopedSlots: {
                             default (slotParams: VxeListSlotTypes.DefaultSlotParams) {
@@ -1905,6 +1983,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const reactData = $xeCascader.reactData
 
       if (!reactData.visiblePanel) {
+        $xeCascader.updateModelChecked()
         $xeCascader.handleCurrentItems()
         $xeCascader.updateCurrentChunk()
       }
@@ -1919,7 +1998,11 @@ export default /* define-vxe-component start */ defineVxeComponent({
   created () {
     const $xeCascader = this
     const props = $xeCascader
+    const reactData = $xeCascader.reactData
 
+    if (!props.multiple) {
+      reactData.selectRadioKey = enNodeValue(props.value)
+    }
     $xeCascader.loadData(props.options || [])
   },
   mounted () {

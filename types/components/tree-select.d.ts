@@ -102,6 +102,10 @@ export namespace VxeTreeSelectPropTypes {
       value: ModelValue | undefined
     }): Promise<void> | void
   }
+
+  export type ShowRadio = boolean
+  export type ShowCheckbox = boolean
+
   export type Transfer = boolean
   export interface PopupConfig {
     /**
@@ -122,7 +126,20 @@ export namespace VxeTreeSelectPropTypes {
     zIndex?: number | string
     className?: string | ((params: { $treeSelect: VxeTreeSelectConstructor }) => string)
   }
-  export interface TreeConfig<D = any> extends Omit<VxeTreeProps<D>, 'data' | 'size' | 'menuConfig'> {
+  export interface TreeConfig<D = any> extends Omit<VxeTreeProps<D>, 'data' | 'size' | 'menuConfig' | 'showRadio' | 'showCheckbox'> {
+    /**
+     * 已废弃，请使用 showRadio
+     * @deprecated
+     */
+    showRadio?: boolean
+    /**
+     * 已废弃，请使用 showCheckbox
+     * @deprecated
+     */
+    showCheckbox?: boolean
+    /**
+     * 自定义插槽模板
+     */
     slots?: {
       icon?: string | ((params: VxeTreeSlotTypes.IconSlotParams) => VxeComponentSlotType | VxeComponentSlotType[])
       title?: string | ((params: VxeTreeSlotTypes.TitleSlotParams) =>VxeComponentSlotType | VxeComponentSlotType[])
@@ -180,6 +197,8 @@ export interface VxeTreeSelectProps<D = any> {
   optionProps?: VxeTreeSelectPropTypes.OptionProps
   remote?: VxeTreeSelectPropTypes.Remote
   remoteConfig?: VxeTreeSelectPropTypes.RemoteConfig
+  showRadio?: VxeTreeSelectPropTypes.ShowRadio
+  showCheckbox?: VxeTreeSelectPropTypes.ShowCheckbox
   transfer?: VxeTreeSelectPropTypes.Transfer
   popupConfig?: VxeTreeSelectPropTypes.PopupConfig
   treeConfig?: VxeTreeSelectPropTypes.TreeConfig<D>

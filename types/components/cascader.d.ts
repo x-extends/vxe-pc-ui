@@ -1,4 +1,5 @@
 import { DefineVxeComponentApp, DefineVxeComponentOptions, DefineVxeComponentInstance, VxeComponentEventParams, VxeComponentSizeType, ValueOf } from '@vxe-ui/core'
+import { VxeListPropTypes } from './list'
 
 /* eslint-disable @typescript-eslint/no-empty-interface,no-use-before-define,@typescript-eslint/ban-types */
 
@@ -79,6 +80,7 @@ export namespace VxeCascaderPropTypes {
     disabled?: string
   }
   export type Remote = boolean
+  export type ShowRadio = boolean
   export interface RadioConfig<D = any> {
     strict?: boolean
     visibleMode?: 'all' | 'first' | 'last' | '' | null
@@ -91,9 +93,9 @@ export namespace VxeCascaderPropTypes {
       $cascader: VxeCascaderConstructor
       node: D
     }) => boolean
-    showIcon?: boolean
     trigger?: '' | 'default' | 'node'
   }
+  export type ShowCheckbox = boolean
   export interface CheckboxConfig<D = any> {
     checkStrictly?: boolean
     visibleMode?: 'all' | 'first' | 'last' | '' | null
@@ -106,7 +108,6 @@ export namespace VxeCascaderPropTypes {
       $cascader: VxeCascaderConstructor
       node: D
     }) => boolean
-    showIcon?: boolean
     trigger?: '' | 'default' | 'node'
   }
   export interface RemoteConfig {
@@ -196,7 +197,9 @@ export interface VxeCascaderProps<D = any> {
   options?: VxeCascaderPropTypes.Options<D>
   optionProps?: VxeCascaderPropTypes.OptionProps
   remote?: VxeCascaderPropTypes.Remote
+  showRadio?: VxeCascaderPropTypes.ShowRadio
   radioConfig?: VxeCascaderPropTypes.RadioConfig
+  showCheckbox?: VxeCascaderPropTypes.ShowCheckbox
   checkboxConfig?: VxeCascaderPropTypes.CheckboxConfig
   remoteConfig?: VxeCascaderPropTypes.RemoteConfig
   popupConfig?: VxeCascaderPropTypes.PopupConfig
@@ -231,6 +234,7 @@ export interface CascaderReactData {
 
 export interface CascaderInternalData {
   hpTimeout?: undefined | number
+  listVirtualYOpts: VxeListPropTypes.VirtualYConfig
   afterTreeList: any[]
   treeFullData: any[]
   afterVisibleList: any[]
