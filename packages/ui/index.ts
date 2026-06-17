@@ -70,7 +70,10 @@ setConfig({
   },
   carouselItem: {},
   cascader: {
-    autoClose: true
+    showFullLabel: true,
+    treeConfig: {
+      showIcon: true
+    }
   },
   checkbox: {},
   checkboxButton: {},
@@ -425,7 +428,6 @@ setConfig({
     }
   },
   treeSelect: {
-    autoClose: null as any,
     // separator: '/',
     virtualYConfig: {
       enabled: true,
@@ -701,7 +703,12 @@ setIcon({
 
   // context-menu
   CONTEXT_MENU_OPTION_LOADING: iconPrefix + 'spinner roll',
-  CONTEXT_MENU_CHILDREN: iconPrefix + 'arrow-right'
+  CONTEXT_MENU_CHILDREN: iconPrefix + 'arrow-right',
+
+  // cascader
+  CASCADER_NODE_OPEN: iconPrefix + 'arrow-right',
+  CASCADER_NODE_CLOSE: iconPrefix + 'arrow-right',
+  CASCADER_NODE_LOADED: iconPrefix + 'spinner roll'
 })
 
 export * from '@vxe-ui/core'

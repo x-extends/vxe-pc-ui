@@ -694,7 +694,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       crossTreeDragNodeInfo: crossTreeDragNodeGlobal,
 
       hFlag: 0,
-      rootConf: 0
+      dataFlag: 0
     }
   },
   computed: {
@@ -859,6 +859,9 @@ export default /* define-vxe-component start */ defineVxeComponent({
     getNodeId (node: any) {
       const $xeTree = this
 
+      if (!node) {
+        return ''
+      }
       const valueField = $xeTree.computeValueField
       const nodeKey = XEUtils.get(node, valueField)
       return enNodeValue(nodeKey)
@@ -1104,7 +1107,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const valueField = $xeTree.computeValueField
       const childrenField = $xeTree.computeChildrenField
       const keyMaps: Record<string, VxeTreeDefines.NodeCacheItem> = {}
-      XEUtils.eachTree(treeFullData, (item, index, items, path, parent, nodes) => {
+      XEUtils.eachTree(treeFullData, (item, index, items, path, parenItem, nodes) => {
         let nodeid = $xeTree.getNodeId(item)
         if (!nodeid) {
           nodeid = getNodeUniqueId()
@@ -1116,7 +1119,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
           $index: -1,
           _index: -1,
           items,
-          parent,
+          parent: parenItem,
           nodes,
           level: nodes.length - 1,
           treeIndex: index,
@@ -1136,7 +1139,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const childrenField = $xeTree.computeChildrenField
       const mapChildrenField = $xeTree.computeMapChildrenField
       let vtIndex = 0
-      XEUtils.eachTree(afterTreeList, (item, index, items) => {
+      XEUtils.eachTree(afterTreeList, (item, index, items, path, parenItem, nodes) => {
         const nodeid = $xeTree.getNodeId(item)
         const nodeItem = nodeMaps[nodeid]
         if (nodeItem) {
@@ -1150,9 +1153,9 @@ export default /* define-vxe-component start */ defineVxeComponent({
             $index: -1,
             _index: vtIndex,
             items,
-            parent,
-            nodes: [],
-            level: 0,
+            parent: parenItem,
+            nodes,
+            level: nodes.length - 1,
             treeIndex: index,
             lineCount: 0,
             treeLoaded: false
@@ -2730,7 +2733,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const extraSlot = slots.extra
       const isExpand = updateExpandedFlag && treeExpandedMaps[nodeid]
       const nodeItem = nodeMaps[nodeid] || {}
-      const nodeValue = XEUtils.get(node, titleField)
+      const nodeTitle = XEUtils.get(node, titleField)
       const nLevel = nodeItem.level
 
       let isRadioChecked = false
@@ -2842,7 +2845,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
           }, [
             h('div', {
               class: 'vxe-tree--node-item-title'
-            }, titleSlot ? getSlotVNs(titleSlot(nParams)) : `${nodeValue}`),
+            }, titleSlot ? getSlotVNs(titleSlot(nParams)) : `${nodeTitle}`),
             extraSlot
               ? h('div', {
                 class: 'vxe-tree--node-item-extra'
@@ -3022,10 +3025,26 @@ export default /* define-vxe-component start */ defineVxeComponent({
     }
   },
   watch: {
-    data (val) {
+    data () {
       const $xeTree = this
 
-      $xeTree.loadData(val || [])
+      $xeTree.dataFlag++
+    },
+    rootParentValue () {
+      const $xeTree = this
+
+      $xeTree.dataFlag++
+    },
+    rootValues () {
+      const $xeTree = this
+
+      $xeTree.dataFlag++
+    },
+    dataFlag () {
+      const $xeTree = this
+      const props = $xeTree
+
+      $xeTree.loadData(props.data || [])
     },
     checkNodeKey (nodeKey) {
       const $xeTree = this
@@ -3064,23 +3083,6 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const $xeTree = this
 
       $xeTree.recalculate()
-    },
-
-    rootParentValue () {
-      const $xeTree = this
-
-      $xeTree.rootConf++
-    },
-    rootValues () {
-      const $xeTree = this
-
-      $xeTree.rootConf++
-    },
-    rootConf () {
-      const $xeTree = this
-      const props = $xeTree
-
-      $xeTree.loadData(props.data || [])
     }
   },
   created () {
@@ -3104,6 +3106,9 @@ export default /* define-vxe-component start */ defineVxeComponent({
     if (dragOpts.isCrossTreeDrag) {
       errLog('vxe.error.notProp', ['drag-config.isCrossTreeDrag'])
     }
+    // if (valueField) {
+    //   errLog('vxe.error.delProp', ['value-field', 'value-field'])
+    // }
     const VxeUIContextMenu = VxeUI.getComponent('VxeContextMenu')
     if (menuConfig && !VxeUIContextMenu) {
       errLog('vxe.error.reqComp', ['vxe-context-menu'])

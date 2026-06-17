@@ -118,4 +118,13 @@
   --vxe-ui-splitter-handle-button-background-color: #{light_variable.$vxe-ui-splitter-handle-button-background-color};
   --vxe-ui-splitter-handle-bar-background-color: #{light_variable.$vxe-ui-splitter-handle-bar-background-color};
   --vxe-ui-splitter-handle-bar-hover-background-color: #{light_variable.$vxe-ui-splitter-handle-bar-hover-background-color};
+
+  /*cascader*/
+  --vxe-ui-cascader-node-hover-background-color: #{light_variable.$vxe-ui-cascader-node-hover-background-color};
+  --vxe-ui-cascader-node-radio-checked-background-color: #{light_variable.$vxe-ui-cascader-node-radio-checked-background-color};
+  --vxe-ui-cascader-node-hover-radio-checked-background-color: #{light_variable.$vxe-ui-cascader-node-hover-radio-checked-background-color};
+  --vxe-ui-cascader-node-checkbox-checked-background-color: #{light_variable.$vxe-ui-cascader-node-checkbox-checked-background-color};
+  --vxe-ui-cascader-node-hover-checkbox-checked-background-color: #{light_variable.$vxe-ui-cascader-node-hover-checkbox-checked-background-color};
+  --vxe-ui-cascader-node-current-background-color: #{light_variable.$vxe-ui-cascader-node-current-background-color};
+  --vxe-ui-cascader-node-hover-current-background-color: #{light_variable.$vxe-ui-cascader-node-hover-current-background-color};
 }

@@ -967,7 +967,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const { type, exponential } = props
       const inpMaxLength = $xeInput.computeInpMaxLength
       const digitsValue = $xeInput.computeDigitsValue
-      const restVal = (type === 'float' ? toFloatValueFixed(val, digitsValue, '') : XEUtils.toValueString(val))
+      const restVal = (type === 'float' ? toFloatValueFixed(val, type, digitsValue, '') : XEUtils.toValueString(val))
       if (exponential && (val === restVal || XEUtils.toValueString(val).toLowerCase() === XEUtils.toNumber(restVal).toExponential())) {
         return val
       }
@@ -1200,7 +1200,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
         $xeInput.changeValue()
       } else if (type === 'float') {
         if (inputValue) {
-          const validValue = toFloatValueFixed(inputValue, digitsValue, '')
+          const validValue = toFloatValueFixed(inputValue, type, digitsValue, '')
           if (inputValue !== validValue) {
             $xeInput.handleChange(validValue, { type: 'init' })
           }

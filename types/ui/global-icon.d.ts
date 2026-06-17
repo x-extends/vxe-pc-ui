@@ -288,5 +288,10 @@ declare module '@vxe-ui/core' {
     // context-menu
     CONTEXT_MENU_OPTION_LOADING?: string
     CONTEXT_MENU_CHILDREN?: string
+
+     // cascader
+    CASCADER_NODE_OPEN?: string
+    CASCADER_NODE_CLOSE?: string
+    CASCADER_NODE_LOADED?: string
   }
 }

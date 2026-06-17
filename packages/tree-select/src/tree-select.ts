@@ -235,12 +235,12 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const $xeDrawer = $xeTreeSelect.$xeDrawer
       const $xeForm = $xeTreeSelect.$xeForm
 
-      const { transfer } = props
       const popupOpts = $xeTreeSelect.computePopupOpts as VxeTreeSelectPropTypes.PopupConfig
-      if (XEUtils.isBoolean(popupOpts.transfer)) {
-        return popupOpts.transfer
+      const { transfer } = popupOpts
+      if (XEUtils.isBoolean(transfer)) {
+        return transfer
       }
-      if (transfer === null) {
+      if (props.transfer === null) {
         const globalTransfer = getConfig().treeSelect.transfer
         if (XEUtils.isBoolean(globalTransfer)) {
           return globalTransfer
@@ -249,7 +249,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
           return true
         }
       }
-      return transfer
+      return props.transfer
     },
     computePopupOpts () {
       const $xeTreeSelect = this
@@ -357,17 +357,24 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const treeOpts = $xeTreeSelect.computeTreeOpts as VxeTreeSelectPropTypes.TreeConfig
       return Object.assign({}, treeOpts.filterConfig, props.filterConfig)
     },
+    computeSelectVals () {
+      const $xeTreeSelect = this
+      const props = $xeTreeSelect
+
+      const { value: modelValue } = props
+      return XEUtils.eqNull(modelValue) ? [] : (XEUtils.isArray(modelValue) ? modelValue : [modelValue])
+    },
     computeSelectLabel () {
       const $xeTreeSelect = this
       const props = $xeTreeSelect
       const reactData = ($xeTreeSelect as any).reactData as TreeSelectReactData
       const internalData = ($xeTreeSelect as any).internalData as TreeSelectInternalData
 
-      const { value: modelValue, showFullLabel } = props
+      const { showFullLabel } = props
       const { fullOptFlag, lazyOptFlag } = reactData
       const { fullNodeMaps, lazyNodeMaps } = internalData
       const labelField = $xeTreeSelect.computeLabelField as string
-      const selectVals = XEUtils.eqNull(modelValue) ? [] : (XEUtils.isArray(modelValue) ? modelValue : [modelValue])
+      const selectVals = $xeTreeSelect.computeSelectVals as any[]
       return selectVals.map(val => {
         const cacheItem = fullNodeMaps[val]
         if (fullOptFlag && cacheItem) {
@@ -457,12 +464,12 @@ export default /* define-vxe-component start */ defineVxeComponent({
           nodeid = getOptUniqueId()
         }
         if (keyMaps[nodeid]) {
-          errLog('vxe.error.repeatKey', [`[tree-select] ${nodeKeyField}`, nodeid])
+          errLog('vxe.error.repeatKey', [nodeKeyField, nodeid])
         }
         keyMaps[nodeid] = true
         const value = item[valueField]
         if (nodeMaps[value]) {
-          errLog('vxe.error.repeatKey', [`[tree-select] ${valueField}`, value])
+          errLog('vxe.error.repeatKey', [valueField, value])
         }
         nodeMaps[value] = {
           item,
@@ -470,7 +477,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
           items,
           parent: parentItem,
           nodes,
-          fullLabel: nodes.map(item => item[labelField]).join((separator || '/') + ' ')
+          fullLabel: nodes.map(item => item[labelField]).join((separator || ' / '))
         }
       }
       if (optList) {
@@ -555,7 +562,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       handleStyle()
       return $xeTreeSelect.$nextTick().then(handleStyle)
     },
-    showOptionPanel  () {
+    showOptionPanel (evnt?: Event) {
       const $xeTreeSelect = this
       const props = $xeTreeSelect
       const reactData = $xeTreeSelect.reactData
@@ -593,7 +600,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
         }, 10)
         $xeTreeSelect.updateZindex()
         $xeTreeSelect.updatePlacement()
-        $xeTreeSelect.dispatchEvent('visible-change', { visible: true }, null)
+        $xeTreeSelect.dispatchEvent('visible-change', { visible: true }, evnt || null)
       }
     },
     hideOptionPanel (evnt?: Event) {
@@ -648,7 +655,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
           $tree.setAllCheckboxNode(true).then(({ checkNodeKeys, checkNodes }) => {
             $xeTreeSelect.changeEvent($event, checkNodeKeys, checkNodes[0])
             $xeTreeSelect.dispatchEvent('all-change', { value: checkNodeKeys }, $event)
-            if (XEUtils.isBoolean(autoClose) ? autoClose : checkedClosable) {
+            if (XEUtils.isBoolean(checkedClosable) ? checkedClosable : autoClose) {
               $xeTreeSelect.hideOptionPanel($event)
             }
           })
@@ -665,7 +672,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       if ($tree) {
         const value = multiple ? [] : null
         $tree.clearCheckboxNode().then(() => {
-          if (XEUtils.isBoolean(autoClose) ? autoClose : clearClosable) {
+          if (XEUtils.isBoolean(clearClosable) ? clearClosable : autoClose) {
             $xeTreeSelect.hideOptionPanel($event)
           }
         })
@@ -775,7 +782,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       if (!isDisabled) {
         if (!reactData.visiblePanel) {
           reactData.triggerFocusPanel = true
-          $xeTreeSelect.showOptionPanel()
+          $xeTreeSelect.showOptionPanel(evnt)
           setTimeout(() => {
             reactData.triggerFocusPanel = false
           }, 150)
@@ -834,7 +841,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
         if (reactData.visiblePanel) {
           $xeTreeSelect.hideOptionPanel($event)
         } else {
-          $xeTreeSelect.showOptionPanel()
+          $xeTreeSelect.showOptionPanel($event)
         }
       }
     },

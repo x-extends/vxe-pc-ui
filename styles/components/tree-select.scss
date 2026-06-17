@@ -61,6 +61,7 @@
 
 .vxe-tree-select--panel-search {
   display: block;
+  padding: var(--vxe-ui-current-padding);
   .vxe-tree-select-search--input {
     width: 100%;
   }
@@ -104,14 +105,6 @@
   box-shadow: var(--vxe-ui-base-popup-box-shadow);
   background-color: var(--vxe-ui-layout-background-color);
   pointer-events: auto;
-}
-
-.vxe-tree-select--panel-search {
-  display: block;
-  padding: var(--vxe-ui-current-padding);
-  .vxe-tree-select-search--input {
-    width: 100%;
-  }
 }
 
 .vxe-tree-select--panel-header {

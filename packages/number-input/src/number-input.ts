@@ -34,7 +34,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
     name: String as PropType<VxeNumberInputPropTypes.Name>,
     type: {
       type: String as PropType<VxeNumberInputPropTypes.Type>,
-      default: 'number'
+      default: 'number' as VxeNumberInputPropTypes.Type
     },
     clearable: {
       type: Boolean as PropType<VxeNumberInputPropTypes.Clearable>,
@@ -92,7 +92,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
     // float
     roundingMode: {
       type: String as PropType<VxeNumberInputPropTypes.RoundingMode>,
-      default: null
+      default: () => getConfig().numberInput.roundingMode
     },
     // float
     digits: {
@@ -417,13 +417,13 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const $xeNumberInput = this
       const props = $xeNumberInput
 
-      const { exponential, roundingMode, autoFill } = props
+      const { type, exponential, roundingMode, autoFill } = props
       const inpMaxLength = $xeNumberInput.computeInpMaxLength
       const digitsValue = $xeNumberInput.computeDigitsValue
       const decimalsType = $xeNumberInput.computeDecimalsType
       let restVal = ''
       if (decimalsType) {
-        restVal = toFloatValueFixed(val, digitsValue, roundingMode)
+        restVal = toFloatValueFixed(val, type, digitsValue, roundingMode)
         if (!autoFill) {
           restVal = handleNumberString(XEUtils.toNumber(restVal))
         }
@@ -546,7 +546,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const props = $xeNumberInput
       const reactData = $xeNumberInput.reactData
 
-      const { roundingMode, autoFill } = props
+      const { type, roundingMode, autoFill } = props
       const { inputValue } = reactData
       const digitsValue = $xeNumberInput.computeDigitsValue
       const decimalsType = $xeNumberInput.computeDecimalsType
@@ -555,7 +555,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       } else {
         let textValue = '' + val
         if (decimalsType) {
-          textValue = toFloatValueFixed(val, digitsValue, roundingMode)
+          textValue = toFloatValueFixed(val, type, digitsValue, roundingMode)
           if (!autoFill) {
             textValue = '' + XEUtils.toNumber(textValue)
           }
@@ -573,7 +573,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const props = $xeNumberInput
       const reactData = $xeNumberInput.reactData
 
-      const { roundingMode, autoFill } = props
+      const { type, roundingMode, autoFill } = props
       const { inputValue } = reactData
       const digitsValue = $xeNumberInput.computeDigitsValue
       const decimalsType = $xeNumberInput.computeDecimalsType
@@ -582,7 +582,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
           let textValue = ''
           let validValue: number | null = null
           if (inputValue) {
-            textValue = toFloatValueFixed(inputValue, digitsValue, roundingMode)
+            textValue = toFloatValueFixed(inputValue, type, digitsValue, roundingMode)
             validValue = XEUtils.toNumber(textValue)
             if (!autoFill) {
               textValue = `${validValue}`

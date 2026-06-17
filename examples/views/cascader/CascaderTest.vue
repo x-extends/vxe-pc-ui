@@ -1,100 +1,67 @@
 <template>
   <div>
-    <div>
-      <vxe-cascader v-model="val1" :options="treeList1"></vxe-cascader>
-      <vxe-cascader v-model="val2" :options="treeList1" multiple></vxe-cascader>
-    </div>
-
-    <div>
-      <vxe-cascader v-model="val3" :options="treeList2" :option-props="{label: 'title', value: 'id'}" :tree-config="treeConfig" filterable showCheckedButton showClearButton showExpandButton></vxe-cascader>
-      <vxe-cascader v-model="val4" :options="treeList2" :option-props="{label: 'title', value: 'id'}" :tree-config="treeConfig" multiple filterable showCheckedButton showClearButton showExpandButton></vxe-cascader>
-    </div>
+    <vxe-cascader v-model="val1" :options="treeList" :radio-config="{showIcon: true}" filterable clearable></vxe-cascader>
+    <vxe-cascader v-model="val2" :options="treeList" :checkbox-config="{showIcon: true}" :popup-config="{transfer: true}" multiple clearable t></vxe-cascader>
   </div>
 </template>
 
 <script lang="ts">
 import Vue from 'vue'
-import { VxeCascaderPropTypes } from '../../../types'
+
+interface NodeVO {
+  label: string
+  value: string
+  children?: NodeVO[]
+}
 
 export default Vue.extend({
   data () {
-    const val3 = null
-    const val4: any[] = []
+    const val1 = '331'
+    const val2 = ['331']
 
-    const treeConfig: VxeCascaderPropTypes.TreeConfig = {
-      transform: true,
-      keyField: 'id',
-      parentField: 'parentId'
-    }
-
-    const treeList2 = [
-      { title: '节点2', id: '2', parentId: null },
-      { title: '节点3', id: '3', parentId: null },
-      { title: '节点3-1', id: '31', parentId: '3' },
-      { title: '节点3-2', id: '32', parentId: '3' },
-      { title: '节点3-2-1', id: '321', parentId: '32' },
-      { title: '节点3-2-2', id: '322', parentId: '32' },
-      { title: '节点3-3', id: '33', parentId: '3' },
-      { title: '节点3-3-1', id: '331', parentId: '33' },
-      { title: '节点3-3-2', id: '332', parentId: '33' },
-      { title: '节点3-3-3', id: '333', parentId: '33' },
-      { title: '节点3-4', id: '34', parentId: '3' },
-      { title: '节点4', id: '4', parentId: null },
-      { title: '节点4-1', id: '41', parentId: '4' },
-      { title: '节点4-1-1', id: '411', parentId: '42' },
-      { title: '节点4-1-2', id: '412', parentId: '42' },
-      { title: '节点4-2', id: '42', parentId: '4' },
-      { title: '节点4-3', id: '43', parentId: '4' },
-      { title: '节点4-3-1', id: '431', parentId: '43' },
-      { title: '节点4-3-2', id: '432', parentId: '43' },
-      { title: '节点5', id: '5', parentId: null }
+    const treeList: NodeVO[] = [
+      { label: '节点2', value: '2' },
+      {
+        label: '节点3',
+        value: '3',
+        children: [
+          { label: '节点3-1', value: '31' },
+          { label: '节点3-2', value: '32' },
+          {
+            label: '节点3-3',
+            value: '33',
+            children: [
+              { label: '节点3-3-1', value: '331' },
+              { label: '节点3-3-2', value: '332' },
+              { label: '节点3-3-3', value: '333' }
+            ]
+          },
+          { label: '节点3-4', value: '34' }
+        ]
+      },
+      {
+        label: '节点4',
+        value: '4',
+        children: [
+          { label: '节点4-1', value: '41' },
+          { label: '节点4-2', value: '42' },
+          {
+            label: '节点4-3',
+            value: '43',
+            children: [
+              { label: '节点4-3-1', value: '431' },
+              { label: '节点4-3-2', value: '432' }
+            ]
+          }
+        ]
+      },
+      { label: '节点5', value: '5' }
     ]
 
     return {
-      val1: null,
-      val2: [],
-      treeList1: [
-        { label: '==22', value: 22 },
-        {
-          label: '=333',
-          value: 333,
-          children: [
-            { label: '345', value: 345 },
-            { label: '456', value: 456 },
-            {
-              label: '6788',
-              value: 6788,
-              children: [
-                { label: '4324', value: 4324 },
-                { label: '==9808900', value: 9808900 }
-              ]
-            }
-          ]
-        },
-        { label: '============21343', value: 21343 },
-        {
-          label: '==567',
-          value: 567,
-          children: [
-            { label: '=========67867', value: 67867 },
-            { label: '789789', value: 789789 },
-            {
-              label: '======890980890',
-              value: 890980890,
-              children: [
-                { label: '==435435', value: 435435 },
-                { label: '56765', value: 56765 }
-              ]
-            }
-          ]
-        },
-        { label: '=10567', value: 10567 },
-        { label: '==8003425', value: 8003425 }
-      ],
-      val3,
-      val4,
-      treeConfig,
-      treeList2
+      val1,
+      val2,
+      treeList
     }
   }
 })

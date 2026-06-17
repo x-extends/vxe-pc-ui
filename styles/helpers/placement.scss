@@ -1,6 +1,6 @@
 @use './baseMixin.scss';
 
-@mixin createPlacementPanel {
+@mixin createPlacementPanel($minWidth: 100%) {
   display: none;
   position: absolute;
   left: 0;
@@ -8,7 +8,7 @@
   color: var(--vxe-ui-font-color);
   text-align: left;
   &:not(.is--transfer) {
-    min-width: 100%;
+    min-width: $minWidth;
   }
   &.is--transfer {
     position: fixed;
