@@ -64,8 +64,6 @@ export default /* define-vxe-component start */ defineVxeComponent({
       type: String as PropType<VxeNumberInputPropTypes.Size>,
       default: () => getConfig().numberInput.size || getConfig().size
     },
-
-    // number、integer、float
     min: {
       type: [String, Number] as PropType<VxeNumberInputPropTypes.Min>,
       default: null
@@ -88,13 +86,12 @@ export default /* define-vxe-component start */ defineVxeComponent({
       default: () => getConfig().numberInput.currencySymbol
     },
     controlConfig: Object as PropType<VxeNumberInputPropTypes.ControlConfig>,
-
-    // float
+    // number、float、amount
     roundingMode: {
       type: String as PropType<VxeNumberInputPropTypes.RoundingMode>,
       default: () => getConfig().numberInput.roundingMode
     },
-    // float
+    // float、amount
     digits: {
       type: [String, Number] as PropType<VxeNumberInputPropTypes.Digits>,
       default: null
@@ -107,7 +104,6 @@ export default /* define-vxe-component start */ defineVxeComponent({
       type: Boolean as PropType<VxeNumberInputPropTypes.Editable>,
       default: true
     },
-
     plusIcon: String as PropType<VxeNumberInputPropTypes.PlusIcon>,
     minusIcon: String as PropType<VxeNumberInputPropTypes.MinusIcon>,
     prefixIcon: String as PropType<VxeNumberInputPropTypes.PrefixIcon>,

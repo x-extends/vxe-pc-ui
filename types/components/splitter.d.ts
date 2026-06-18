@@ -139,6 +139,7 @@ export interface SplitterReactData {
   itemList: VxeSplitterDefines.PaneConfig[]
   barWidth: number
   barHeight: number
+  resizeFlag: number
 }
 
 export interface SplitterInternalData {

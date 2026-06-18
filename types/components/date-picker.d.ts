@@ -49,12 +49,23 @@ export namespace VxeDatePickerPropTypes {
   export type LabelFormat = string
   export type ValueFormat = string
   export type TimeFormat = string
+  export type InputFormat = string
   export type Editable = boolean
   export type FestivalMethod = VxeDatePanelPropTypes.FestivalMethod
   export type DisabledMethod = VxeDatePanelPropTypes.DisabledMethod
   export type AutoClose = boolean
   export type PrefixIcon = string
   export type SuffixIcon = string
+  export interface ControlConfig {
+    /**
+     * 是否启用，支持局部/全局启用
+     */
+    enabled?: boolean
+    /**
+     * 只对 enabled 启用后有效，是否启用方向键操作
+     */
+    isArrow?: boolean
+  }
   /**
    * 已废弃，请使用 PopupConfig.placement
    * @deprecated
@@ -71,6 +82,10 @@ export namespace VxeDatePickerPropTypes {
   export interface TimeConfig extends VxeDatePanelPropTypes.TimeConfig {}
 
   export interface PopupConfig {
+    /**
+     * 是否启用，支持局部/全局启用
+     */
+    enabled?: boolean
     /**
      * 设置弹出面板方向
      */
@@ -134,6 +149,7 @@ export interface VxeDatePickerProps {
   labelFormat?: VxeDatePickerPropTypes.LabelFormat
   valueFormat?: VxeDatePickerPropTypes.ValueFormat
   timeFormat?: VxeDatePickerPropTypes.TimeFormat
+  inputFormat?: VxeDatePickerPropTypes.InputFormat
   editable?: VxeDatePickerPropTypes.Editable
   festivalMethod?: VxeDatePickerPropTypes.FestivalMethod
   disabledMethod?: VxeDatePickerPropTypes.DisabledMethod
@@ -146,6 +162,7 @@ export interface VxeDatePickerProps {
    * 只对 type=date,week,month,quarter,year 有效，选择完日期后自动关闭
    */
   autoClose?: VxeDatePickerPropTypes.AutoClose
+  controlConfig?: VxeDatePickerPropTypes.ControlConfig
 
   /**
    * 只对 type=week 有效，选中日期后指定为一周的哪一天
@@ -187,6 +204,7 @@ export interface DatePickerReactData {
 
 export interface DatePickerInternalData {
   hpTimeout?: undefined | number
+  parseInputKayMaps: Record<string, (evnt: KeyboardEvent, targetElem: HTMLInputElement, isUpArrow: boolean) => void>
 }
 
 export interface DatePickerMethods {

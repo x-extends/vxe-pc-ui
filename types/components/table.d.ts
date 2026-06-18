@@ -5,10 +5,11 @@ import { VxeColumnPropTypes, VxeColumnProps, VxeColumnSlotTypes } from './column
 import { VxeTableExtendCellAreaDefines, VxeTableExtendCellAreaEmits } from './table-plugins'
 import { VxeGridConstructor } from './grid'
 import { VxeTooltipPropTypes } from './tooltip'
-import { VxeModalPropTypes } from './modal'
+import { VxeModalConstructor, VxeModalPrivateMethods, VxeModalPropTypes } from './modal'
 import { VxeDrawerPropTypes } from './drawer'
 import { VxeToolbarConstructor, VxeToolbarInstance } from './toolbar'
 import { VxeTabsConstructor, VxeTabsPrivateMethods } from './tabs'
+import { VxeSplitterConstructor, VxeSplitterMethods } from './splitter'
 import { VxeGanttConstructor, VxeGanttPrivateMethods } from './gantt'
 import { VxeGanttViewConstructor, VxeGanttViewInstance, VxeGanttViewPrivateMethods } from './gantt-module/gantt-view'
 
@@ -32,6 +33,8 @@ export type VxeTableInstance<D = any> = DefineVxeComponentInstance<{
   $xeGrid: VxeGridConstructor<D> | null | undefined
   $xeGantt: VxeTableDefines.InjectGanttType | null | undefined
   $xeTabs: (VxeTabsConstructor & VxeTabsPrivateMethods) | null
+  $xeModal: (VxeModalConstructor & VxeModalPrivateMethods) | null
+  $xeSplitter: (VxeSplitterConstructor & VxeSplitterMethods) | null
 
   /**
    * @deprecated
@@ -1352,6 +1355,8 @@ export namespace VxeTablePropTypes {
      * 是否启用浮动筛选
      */
     floatingFilters?: VxeColumnPropTypes.FloatingFilters
+    rowClassName?: string
+    cellClassName?: string
   }
 
   /**
@@ -1476,8 +1481,14 @@ export namespace VxeTablePropTypes {
    * 提示信息配置项
    */
  export interface TooltipConfig<D = VxeTablePropTypes.Row> {
+    /**
+     * 所有单元格开启工具提示
+     */
     showAll?: boolean
     theme?: VxeTooltipPropTypes.Theme
+    /**
+     * 鼠标是否可进入到工具提示中
+     */
     enterable?: VxeTooltipPropTypes.Enterable
     enterDelay?: VxeTooltipPropTypes.EnterDelay
     leaveDelay?: VxeTooltipPropTypes.LeaveDelay
@@ -1487,10 +1498,22 @@ export namespace VxeTablePropTypes {
     minHeight?: VxeTooltipPropTypes.MinHeight
     maxWidth?: VxeTooltipPropTypes.MaxWidth
     maxHeight?: VxeTooltipPropTypes.MaxHeight
+    /**
+     * 显示为 HTML 标签
+     */
     useHtml?: VxeTooltipPropTypes.UseHtml
+    /**
+     * 固定方向
+     */
     placement?: VxeTooltipPropTypes.Placement
+    /**
+     * 默认方向
+     */
     defaultPlacement?: VxeTooltipPropTypes.DefaultPlacement
     popupClassName?: VxeTooltipPropTypes.PopupClassName
+    /**
+     * 该方法可以通过返回值来重写默认的提示内容，可以返回 null 使用默认的提示内容，可以返回空内容去掉指定单元格的提示内容
+     */
     contentMethod?(params: {
       $table: VxeTableConstructor<D>
       items: any[]
@@ -1505,7 +1528,7 @@ export namespace VxeTablePropTypes {
       type: 'body'
       cell: HTMLElement
       $event: any
-    }): string | null | void
+    }): string | boolean | null | void
     /**
      * 请使用 useHtml
      * @deprecated
@@ -1513,6 +1536,9 @@ export namespace VxeTablePropTypes {
     useHTML?: VxeTooltipPropTypes.UseHTML
   }
   export interface HeaderTooltipConfig<D = VxeTablePropTypes.Row> extends Omit<TooltipConfig<D>, 'contentMethod'> {
+    /**
+     * 该方法可以通过返回值来重写默认的提示内容，可以返回 null 使用默认的提示内容，可以返回空内容去掉指定单元格的提示内容
+     */
     contentMethod?(params: {
       $table: VxeTableConstructor<D>
       $rowIndex: number
@@ -1523,9 +1549,12 @@ export namespace VxeTablePropTypes {
       type: 'header'
       cell: HTMLElement
       $event: any
-    }): string | null | void
+    }): string | boolean | null | void
   }
   export interface FooterTooltipConfig<D = VxeTablePropTypes.Row> extends Omit<TooltipConfig<D>, 'contentMethod'> {
+    /**
+     * 该方法可以通过返回值来重写默认的提示内容，可以返回 null 使用默认的提示内容，可以返回空内容去掉指定单元格的提示内容
+     */
     contentMethod?(params: {
       $table: VxeTableConstructor<D>
       items: any[]
@@ -1539,7 +1568,7 @@ export namespace VxeTablePropTypes {
       type: 'footer'
       cell: HTMLElement
       $event: any
-    }): string | null | void
+    }): string | boolean | null | void
   }
 
   /**

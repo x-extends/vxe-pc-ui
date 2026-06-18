@@ -25,6 +25,19 @@ export function handleValueFormat (type: string, valueFormat?: string) {
   return 'yyyy-MM-dd'
 }
 
+export function handleInputFormat (type: string, inputFormat?: string) {
+  if (inputFormat) {
+    return inputFormat
+  }
+  if (type === 'time') {
+    return 'HH:mm:ss'
+  }
+  if (type === 'datetime') {
+    return 'yyyy-MM-dd HH:mm:ss'
+  }
+  return 'yyyy-MM-dd'
+}
+
 export function toStringTimeDate (str: string | number | Date | null | undefined) {
   const rest = new Date(2e3, 0, 1)
   if (str) {

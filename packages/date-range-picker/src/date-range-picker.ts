@@ -591,6 +591,8 @@ export default /* define-vxe-component start */ defineVxeComponent({
       reactData.isActivated = true
       if (!trigger || trigger === 'default') {
         $xeDateRangePicker.dateRangePickerOpenEvent(evnt)
+      } else if (trigger === 'icon') {
+        $xeDateRangePicker.hidePanel()
       }
       $xeDateRangePicker.triggerEvent(evnt)
     },
@@ -966,6 +968,9 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const { panelIndex } = reactData
       const targetElem = $xeDateRangePicker.$refs.refInputTarget as HTMLInputElement
       const panelElem = $xeDateRangePicker.$refs.refInputPanel as HTMLDivElement
+      if (!panelElem) {
+        return $xeDateRangePicker.$nextTick()
+      }
       const btnTransfer = $xeDateRangePicker.computeBtnTransfer
       const popupOpts = $xeDateRangePicker.computePopupOpts
       const handleStyle = () => {
@@ -993,13 +998,9 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const btnTransfer = $xeDateRangePicker.computeBtnTransfer
       const panelElem = $xeDateRangePicker.$refs.refInputPanel as HTMLElement
       if (!isDisabled && !visiblePanel) {
-        if (!reactData.initialized) {
+        if (!reactData.initialized && btnTransfer && panelElem) {
           reactData.initialized = true
-          if (btnTransfer) {
-            if (panelElem) {
-              document.body.appendChild(panelElem)
-            }
-          }
+          document.body.appendChild(panelElem)
         }
         if (internalData.hpTimeout) {
           clearTimeout(internalData.hpTimeout)
@@ -1028,11 +1029,17 @@ export default /* define-vxe-component start */ defineVxeComponent({
     },
     clickIconEvent (evnt: MouseEvent) {
       const $xeDateRangePicker = this
+      const reactData = $xeDateRangePicker.reactData
 
+      const { visiblePanel } = reactData
       const popupOpts = $xeDateRangePicker.computePopupOpts
       const { trigger } = popupOpts
       if (!trigger || trigger === 'default' || trigger === 'icon') {
-        $xeDateRangePicker.dateRangePickerOpenEvent(evnt)
+        if (visiblePanel) {
+          $xeDateRangePicker.hidePanel()
+        } else {
+          $xeDateRangePicker.dateRangePickerOpenEvent(evnt)
+        }
       }
     },
     clickEvent (evnt: Event & { type: 'click' }) {
@@ -1182,6 +1189,10 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const slots = $xeDateRangePicker.$scopedSlots
       const reactData = $xeDateRangePicker.reactData
 
+      const popupOpts = $xeDateRangePicker.computePopupOpts
+      if (popupOpts.enabled === false) {
+        return renderEmptyElement($xeDateRangePicker)
+      }
       const { type, separator, autoClose, showConfirmButton, showClearButton } = props
       const { initialized, isAniVisible, visiblePanel, panelPlacement, panelStyle, startValue, endValue } = reactData
       const vSize = $xeDateRangePicker.computeSize
@@ -1194,7 +1205,6 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const defaultDates = $xeDateRangePicker.computeDefaultDates
       const defaultTimes = $xeDateRangePicker.computeDefaultTimes
       const timeOpts = $xeDateRangePicker.computeTimeOpts
-      const popupOpts = $xeDateRangePicker.computePopupOpts
       const { startLabel, endLabel } = panelLabelObj
       const { position } = shortcutOpts
       const headerSlot = slots.header

@@ -49,7 +49,8 @@ export default /* define-vxe-component start */ defineVxeComponent({
       staticItems: [],
       itemList: [],
       barWidth: 0,
-      barHeight: 0
+      barHeight: 0,
+      resizeFlag: 0
     }
     const internalData: SplitterInternalData = {
       wrapperWidth: 0,
@@ -596,6 +597,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       document.onmousemove = (evnt) => {
         evnt.preventDefault()
         handleDrag(evnt)
+        reactData.resizeFlag++
       }
       document.onmouseup = (evnt) => {
         document.onmousemove = null
@@ -607,6 +609,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
         removeClass(el, 'is--drag')
         $xeSplitter.dispatchEvent('resize-end', { prevItem, nextItem, offsetHeight: targetOffsetHeight, offsetWidth: targetOffsetWidth }, evnt)
         $xeSplitter.recalculate()
+        reactData.resizeFlag++
       }
 
       if (rsSplitterLineEl) {
@@ -620,6 +623,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
     handleItemActionEvent (evnt: MouseEvent | null, prevItem: VxeSplitterDefines.PaneConfig, nextItem: VxeSplitterDefines.PaneConfig, isNext: boolean) {
       const $xeSplitter = this
       const props = $xeSplitter
+      const reactData = $xeSplitter.reactData
 
       const { vertical } = props
       let expanded = false
@@ -659,6 +663,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
         $xeSplitter.dispatchEvent('toggle-expand', { prevItem, nextItem, expanded, item }, evnt)
       }
       $xeSplitter.recalculate()
+      reactData.resizeFlag++
     },
     handlePrevActionDblclickEvent (evnt: MouseEvent) {
       const $xeSplitter = this

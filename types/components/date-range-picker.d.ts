@@ -77,6 +77,10 @@ export namespace VxeDateRangePickerPropTypes {
 
   export interface PopupConfig {
     /**
+     * 是否启用，支持局部/全局启用
+     */
+    enabled?: boolean
+    /**
      * 设置弹出面板方向
      */
     placement?: 'top' | 'bottom' | '' | null
