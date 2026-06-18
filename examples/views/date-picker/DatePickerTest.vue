@@ -120,6 +120,12 @@
      <vxe-date-picker v-model="demo1.val829" placeholder="默认值" type="month" default-date="2025-02-01"></vxe-date-picker>
 
     </p>
+    <p>
+        <vxe-date-picker v-model="demo1.val910" :popup-config="{enabled:false}"></vxe-date-picker>
+        <vxe-date-picker v-model="demo1.val911" :popup-config="{trigger:'icon'}"></vxe-date-picker>
+        <vxe-date-picker v-model="demo1.val912" :control-config="{isArrow:true}"></vxe-date-picker>
+
+    </p>
   </div>
 </template>
 
@@ -191,7 +197,10 @@ const demo1 = reactive({
   value805: '',
   value900: '11111111',
   val828: '',
-  val829: ''
+  val829: '',
+  val910: '',
+  val911: '',
+  val912: ''
 })
 
 const shortcutConfig1 = ref<VxeDatePickerPropTypes.ShortcutConfig>({

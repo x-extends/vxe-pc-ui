@@ -1,11 +1,11 @@
-import { h, Teleport, ref, Ref, computed, provide, reactive, inject, nextTick, watch, PropType, onUnmounted } from 'vue'
+import { h, Teleport, ref, Ref, computed, provide, reactive, inject, nextTick, watch, PropType, onUnmounted, onMounted } from 'vue'
 import { defineVxeComponent } from '../../ui/src/comp'
 import XEUtils from 'xe-utils'
 import { getConfig, getIcon, getI18n, commands, createEvent, globalEvents, GLOBAL_EVENT_KEYS, useSize, renderEmptyElement } from '../../ui'
 import { getFuncText, getLastZIndex, nextZIndex, isEnableConf } from '../../ui/src/utils'
 import { updatePanelPlacement, getEventTargetNode } from '../../ui/src/dom'
 import { getSlotVNs } from '../../ui/src/vn'
-import { parseDateObj, parseDateValue, getDateByCode, handleValueFormat, hasDateValueType, hasTimestampValueType } from '../../date-panel/src/util'
+import { parseDateObj, parseDateValue, getDateByCode, handleValueFormat, handleInputFormat, hasDateValueType, hasTimestampValueType } from '../../date-panel/src/util'
 import { errLog } from '../../ui/src/log'
 import VxeDatePanelComponent from '../../date-panel/src/date-panel'
 import VxeButtonComponent from '../../button/src/button'
@@ -77,6 +77,7 @@ export default defineVxeComponent({
     labelFormat: String as PropType<VxeDatePickerPropTypes.LabelFormat>,
     valueFormat: String as PropType<VxeDatePickerPropTypes.ValueFormat>,
     timeFormat: String as PropType<VxeDatePickerPropTypes.TimeFormat>,
+    inputFormat: String as PropType<VxeDatePickerPropTypes.InputFormat>,
     editable: {
       type: Boolean as PropType<VxeDatePickerPropTypes.Editable>,
       default: true
@@ -107,6 +108,7 @@ export default defineVxeComponent({
       type: Boolean as PropType<VxeDatePickerPropTypes.AutoClose>,
       default: () => getConfig().datePicker.autoClose
     },
+    controlConfig: Object as PropType<VxeDatePickerPropTypes.ControlConfig>,
 
     prefixIcon: String as PropType<VxeDatePickerPropTypes.PrefixIcon>,
     suffixIcon: String as PropType<VxeDatePickerPropTypes.SuffixIcon>,
@@ -167,7 +169,8 @@ export default defineVxeComponent({
     })
 
     const internalData: DatePickerInternalData = {
-      hpTimeout: undefined
+      // hpTimeout: undefined,
+      parseInputKayMaps: {}
     }
 
     const refElem = ref() as Ref<HTMLDivElement>
@@ -303,6 +306,11 @@ export default defineVxeComponent({
       return handleValueFormat(type, valueFormat)
     })
 
+    const computeDateInputFormat = computed(() => {
+      const { type, inputFormat } = props
+      return handleInputFormat(type, inputFormat)
+    })
+
     const computeFirstDayOfWeek = computed(() => {
       const { startDay } = props
       return XEUtils.toNumber(startDay) as VxeDatePickerPropTypes.StartDay
@@ -323,6 +331,10 @@ export default defineVxeComponent({
         })
         return dateObj.label
       }).join(', ')
+    })
+
+    const computeControlOpts = computed(() => {
+      return Object.assign({}, getConfig().datePicker.controlConfig, props.controlConfig)
     })
 
     const updateModelValue = () => {
@@ -400,6 +412,8 @@ export default defineVxeComponent({
       reactData.isActivated = true
       if (!trigger || trigger === 'default') {
         datePickerOpenEvent(evnt)
+      } else if (trigger === 'icon') {
+        hidePanel()
       }
       triggerEvent(evnt)
     }
@@ -439,6 +453,32 @@ export default defineVxeComponent({
       }
     }
 
+    const handleArrowInputDate = (evnt: KeyboardEvent, isUpArrow: boolean) => {
+      const { multiple } = props
+      if (multiple) {
+        return
+      }
+      const { inputValue } = reactData
+      if (!inputValue) {
+        return
+      }
+      const targetElem = refInputTarget.value
+      if (!targetElem) {
+        return
+      }
+      const { parseInputKayMaps } = internalData
+      const inputFormat = computeDateInputFormat.value
+      const selectionStart = targetElem.selectionStart || 0
+      let selectKey = inputFormat[selectionStart]
+      if (!parseInputKayMaps[selectKey]) {
+        selectKey = inputFormat[selectionStart - 1]
+      }
+      const inputPaesrFn = parseInputKayMaps[selectKey]
+      if (inputPaesrFn) {
+        inputPaesrFn(evnt, targetElem, isUpArrow)
+      }
+    }
+
     const blurEvent = (evnt: Event & { type: 'blur' }) => {
       const $datePanel = refDatePanel.value
       const { inputValue } = reactData
@@ -462,6 +502,13 @@ export default defineVxeComponent({
     }
 
     const keydownEvent = (evnt: KeyboardEvent & { type: 'keydown' }) => {
+      const { controlConfig } = props
+      const controlOpts = computeControlOpts.value
+      const isUpArrow = globalEvents.hasKey(evnt, GLOBAL_EVENT_KEYS.ARROW_UP)
+      const isDwArrow = globalEvents.hasKey(evnt, GLOBAL_EVENT_KEYS.ARROW_DOWN)
+      if ((isUpArrow || isDwArrow) && controlOpts.isArrow && (controlConfig || controlOpts.enabled)) {
+        handleArrowInputDate(evnt, isUpArrow)
+      }
       triggerEvent(evnt)
     }
 
@@ -592,6 +639,9 @@ export default defineVxeComponent({
       const { panelIndex } = reactData
       const targetElem = refInputTarget.value
       const panelElem = refInputPanel.value
+      if (!panelElem) {
+        return nextTick()
+      }
       const btnTransfer = computeBtnTransfer.value
       const popupOpts = computePopupOpts.value
       const handleStyle = () => {
@@ -642,10 +692,15 @@ export default defineVxeComponent({
     }
 
     const clickIconEvent = (evnt: MouseEvent) => {
+      const { visiblePanel } = reactData
       const popupOpts = computePopupOpts.value
       const { trigger } = popupOpts
       if (!trigger || trigger === 'default' || trigger === 'icon') {
-        datePickerOpenEvent(evnt)
+        if (visiblePanel) {
+          hidePanel()
+        } else {
+          datePickerOpenEvent(evnt)
+        }
       }
     }
 
@@ -766,6 +821,10 @@ export default defineVxeComponent({
     }
 
     const renderPanel = () => {
+      const popupOpts = computePopupOpts.value
+      if (popupOpts.enabled === false) {
+        return renderEmptyElement($xeDatePicker)
+      }
       const { type, multiple, showClearButton, showConfirmButton } = props
       const { initialized, isAniVisible, visiblePanel, panelPlacement, panelStyle, inputValue } = reactData
       const vSize = computeSize.value
@@ -775,7 +834,6 @@ export default defineVxeComponent({
       const isDateTimeType = computeIsDateTimeType.value
       const shortcutList = computeShortcutList.value
       const timeOpts = computeTimeOpts.value
-      const popupOpts = computePopupOpts.value
       const { position } = shortcutOpts
       const headerSlot = slots.header
       const footerSlot = slots.footer
@@ -1053,6 +1111,16 @@ export default defineVxeComponent({
       globalEvents.on($xeDatePicker, 'keydown', handleGlobalKeydownEvent)
       globalEvents.on($xeDatePicker, 'blur', handleGlobalBlurEvent)
       globalEvents.on($xeDatePicker, 'resize', handleGlobalResizeEvent)
+    })
+
+    onMounted(() => {
+      const { parseInputKayMaps } = internalData
+      const inputKeys = ['y', 'M', 'd', 'H', 'm', 'n']
+      inputKeys.forEach(key => {
+        parseInputKayMaps[key] = (evnt: KeyboardEvent) => {
+          evnt.preventDefault()
+        }
+      })
     })
 
     onUnmounted(() => {

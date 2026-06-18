@@ -505,6 +505,8 @@ export default defineVxeComponent({
       reactData.isActivated = true
       if (!trigger || trigger === 'default') {
         dateRangePickerOpenEvent(evnt)
+      } else if (trigger === 'icon') {
+        hidePanel()
       }
       triggerEvent(evnt)
     }
@@ -833,6 +835,9 @@ export default defineVxeComponent({
       const { panelIndex } = reactData
       const targetElem = refInputTarget.value
       const panelElem = refInputPanel.value
+      if (!panelElem) {
+        return nextTick()
+      }
       const btnTransfer = computeBtnTransfer.value
       const popupOpts = computePopupOpts.value
       const handleStyle = () => {
@@ -884,10 +889,15 @@ export default defineVxeComponent({
     }
 
     const clickIconEvent = (evnt: MouseEvent) => {
+      const { visiblePanel } = reactData
       const popupOpts = computePopupOpts.value
       const { trigger } = popupOpts
       if (!trigger || trigger === 'default' || trigger === 'icon') {
-        dateRangePickerOpenEvent(evnt)
+        if (visiblePanel) {
+          hidePanel()
+        } else {
+          dateRangePickerOpenEvent(evnt)
+        }
       }
     }
 
@@ -1019,6 +1029,10 @@ export default defineVxeComponent({
     }
 
     const renderPanel = () => {
+      const popupOpts = computePopupOpts.value
+      if (popupOpts.enabled === false) {
+        return renderEmptyElement($xeDateRangePicker)
+      }
       const { type, separator, autoClose, showConfirmButton, showClearButton } = props
       const { initialized, isAniVisible, visiblePanel, panelPlacement, panelStyle, startValue, endValue } = reactData
       const vSize = computeSize.value
@@ -1031,7 +1045,6 @@ export default defineVxeComponent({
       const defaultDates = computeDefaultDates.value
       const defaultTimes = computeDefaultTimes.value
       const timeOpts = computeTimeOpts.value
-      const popupOpts = computePopupOpts.value
       const { startLabel, endLabel } = panelLabelObj
       const { position } = shortcutOpts
       const headerSlot = slots.header
