@@ -6,6 +6,10 @@ import VxeCheckboxComponent from './checkbox'
 
 import type { VxeCheckboxGroupEmits, CheckboxGroupInternalData, VxeCheckboxPropTypes, ValueOf, CheckboxGroupReactData, VxeComponentSizeType, VxeCheckboxGroupPropTypes, VxeFormConstructor, VxeFormPrivateMethods, VxeFormDefines } from '../../../types'
 
+function createReactData (): CheckboxGroupReactData {
+  return {}
+}
+
 function createInternalData (): CheckboxGroupInternalData {
   return {
     // isLoaded: false
@@ -55,13 +59,13 @@ export default /* define-vxe-component start */ defineVxeComponent({
     }
   },
   data () {
-    const reactData: CheckboxGroupReactData = {
-    }
-    const internalData = createInternalData()
+    const reactData: CheckboxGroupReactData = createReactData()
     return {
+      ...({} as {
+        internalData: CheckboxGroupInternalData
+      }),
       xID: XEUtils.uniqueId(),
-      reactData,
-      internalData
+      reactData
     }
   },
   computed: {
@@ -265,6 +269,11 @@ export default /* define-vxe-component start */ defineVxeComponent({
       $xeCheckboxGroup.loadData(val)
     }
   },
+  created () {
+    const $xeCheckboxGroup = this
+
+    $xeCheckboxGroup.internalData = createInternalData()
+  },
   mounted () {
     const $xeCheckboxGroup = this
     const props = $xeCheckboxGroup
@@ -275,6 +284,14 @@ export default /* define-vxe-component start */ defineVxeComponent({
         $xeCheckboxGroup.loadData(options)
       }
     })
+  },
+  beforeDestroy () {
+    const $xeCheckboxGroup = this
+    const reactData = $xeCheckboxGroup.reactData
+    const internalData = $xeCheckboxGroup.internalData
+
+    XEUtils.assign(reactData, createReactData())
+    XEUtils.assign(internalData, createInternalData())
   },
   render (this: any, h) {
     return this.renderVN(h)

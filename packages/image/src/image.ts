@@ -65,12 +65,13 @@ export default /* define-vxe-component start */ defineVxeComponent({
     getThumbnailUrlMethod: Function as PropType<VxeImagePropTypes.GetThumbnailUrlMethod>
   },
   data () {
-    const internalData = createInternalData()
     const reactData = createReactData()
     return {
+      ...({} as {
+        internalData: ImageInternalData
+      }),
       xID: XEUtils.uniqueId(),
-      reactData,
-      internalData
+      reactData
     }
   },
   computed: {
@@ -288,6 +289,11 @@ export default /* define-vxe-component start */ defineVxeComponent({
         })
       ])
     }
+  },
+  created () {
+    const $xeImage = this
+
+    $xeImage.internalData = createInternalData()
   },
   beforeDestroy () {
     const $xeImage = this

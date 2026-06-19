@@ -5,12 +5,14 @@ import { VxeUI, getConfig, getIcon, getI18n, globalEvents, GLOBAL_EVENT_KEYS, cr
 import { getEventTargetNode, toCssUnit, updatePanelPlacement } from '../../ui/src/dom'
 import { getLastZIndex, nextZIndex, getFuncText, eqEmptyValue } from '../../ui/src/utils'
 import { getSlotVNs } from '../../ui/src/vn'
-import { errLog } from '../../ui/src/log'
+import { createComponentLog } from '../../ui/src/log'
 import VxeInputComponent from '../../input/src/input'
 import VxeButtonComponent from '../../button/src/button'
 
 import type { VxeSelectPropTypes, SelectInternalData, ValueOf, VxeComponentSizeType, SelectReactData, VxeSelectEmits, VxeButtonDefines, VxeInputDefines, VxeSelectDefines, VxeOptionProps, VxeDrawerConstructor, VxeDrawerMethods, VxeFormDefines, VxeFormConstructor, VxeFormPrivateMethods, VxeModalConstructor, VxeModalMethods, VxeInputConstructor, VxeComponentSlotType, VxeComponentStyleType } from '../../../types'
 import type { VxeTableConstructor, VxeTablePrivateMethods } from '../../../types/components/table'
+
+const { errLog } = createComponentLog('select')
 
 function isOptionVisible (option: any) {
   return option.visible !== false
@@ -18,6 +20,30 @@ function isOptionVisible (option: any) {
 
 function getOptUniqueId () {
   return XEUtils.uniqueId('opt_')
+}
+
+function createReactData (): SelectReactData {
+  return {
+    initialized: false,
+    scrollYLoad: false,
+    bodyHeight: 0,
+    topSpaceHeight: 0,
+    optList: [],
+    staticOptions: [],
+    reactFlag: 0,
+
+    currentOption: null,
+    searchValue: '',
+    searchLoading: false,
+
+    panelIndex: 0,
+    panelStyle: {},
+    panelPlacement: null,
+    triggerFocusPanel: false,
+    visiblePanel: false,
+    isAniVisible: false,
+    isActivated: false
+  }
 }
 
 function createInternalData (): SelectInternalData {
@@ -205,33 +231,14 @@ export default /* define-vxe-component start */ defineVxeComponent({
   },
   data () {
     const xID = XEUtils.uniqueId()
-    const reactData: SelectReactData = {
-      initialized: false,
-      scrollYLoad: false,
-      bodyHeight: 0,
-      topSpaceHeight: 0,
-      optList: [],
-      staticOptions: [],
-      reactFlag: 1,
-
-      currentOption: null,
-      searchValue: '',
-      searchLoading: false,
-
-      panelIndex: 0,
-      panelStyle: {},
-      panelPlacement: null,
-      triggerFocusPanel: false,
-      visiblePanel: false,
-      isAniVisible: false,
-      isActivated: false
-    }
-    const internalData = createInternalData()
+    const reactData = createReactData()
 
     return {
+      ...({} as {
+        internalData: SelectInternalData
+      }),
       xID,
-      reactData,
-      internalData
+      reactData
     }
   },
   computed: {
@@ -851,10 +858,8 @@ export default /* define-vxe-component start */ defineVxeComponent({
           reactData.initialized = true
           const btnTransfer = $xeSelect.computeBtnTransfer
           const panelElem = $xeSelect.$refs.refOptionPanel as HTMLElement
-          if (btnTransfer) {
-            if (panelElem) {
-              document.body.appendChild(panelElem)
-            }
+          if (btnTransfer && panelElem) {
+            document.body.appendChild(panelElem)
           }
         }
         reactData.isActivated = true
@@ -2125,6 +2130,11 @@ export default /* define-vxe-component start */ defineVxeComponent({
       $xeSelect.loadData(val)
     }
   },
+  created () {
+    const $xeSelect = this
+
+    $xeSelect.internalData = createInternalData()
+  },
   mounted () {
     const $xeSelect = this
     const props = $xeSelect
@@ -2158,8 +2168,10 @@ export default /* define-vxe-component start */ defineVxeComponent({
   },
   destroyed () {
     const $xeSelect = this
+    const reactData = $xeSelect.reactData
     const internalData = $xeSelect.internalData
 
+    XEUtils.assign(reactData, createReactData())
     XEUtils.assign(internalData, createInternalData())
   },
   render (this: any, h) {

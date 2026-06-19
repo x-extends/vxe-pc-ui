@@ -4,7 +4,7 @@ import { getConfig, getI18n, getIcon, globalEvents, createEvent, renderEmptyElem
 import { getEventTargetNode, updatePanelPlacement, toCssUnit } from '../../ui/src/dom'
 import { getLastZIndex, nextZIndex } from '../../ui/src/utils'
 import { enNodeValue, deNodeValue } from './util'
-import { errLog } from '../../ui/src/log'
+import { createComponentLog } from '../../ui/src/log'
 import XEUtils from 'xe-utils'
 import VxeListComponent from '../../list/src/list'
 import VxeInputComponent from '../../input/src/input'
@@ -12,6 +12,8 @@ import VxeButtonComponent from '../../button/src/button'
 
 import type { CascaderReactData, VxeCascaderEmits, CascaderInternalData, VxeComponentSizeType, VxeButtonDefines, VxeCascaderDefines, VxeListSlotTypes, ValueOf, VxeInputConstructor, VxeComponentStyleType, VxeCascaderPropTypes, VxeFormDefines, VxeDrawerConstructor, VxeDrawerMethods, VxeFormConstructor, VxeFormPrivateMethods, VxeModalConstructor, VxeModalMethods } from '../../../types'
 import type { VxeTableConstructor, VxeTablePrivateMethods } from '../../../types/components/table'
+
+const { errLog } = createComponentLog('cascader')
 
 /**
  * 生成节点的唯一主键
@@ -187,11 +189,12 @@ export default /* define-vxe-component start */ defineVxeComponent({
   data () {
     const xID = XEUtils.uniqueId()
     const reactData = createReactData()
-    const internalData = createInternalData()
     return {
+      ...({} as {
+        internalData: CascaderInternalData
+      }),
       xID,
-      reactData,
-      internalData
+      reactData
     }
   },
   computed: {
@@ -1999,6 +2002,8 @@ export default /* define-vxe-component start */ defineVxeComponent({
     const $xeCascader = this
     const props = $xeCascader
     const reactData = $xeCascader.reactData
+
+    $xeCascader.internalData = createInternalData()
 
     if (!props.multiple) {
       reactData.selectRadioKey = enNodeValue(props.value)

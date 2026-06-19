@@ -6,13 +6,15 @@ import { getFuncText, getLastZIndex, nextZIndex, isEnableConf } from '../../ui/s
 import { updatePanelPlacement, getEventTargetNode } from '../../ui/src/dom'
 import { parseDateString, parseDateObj, getRangeDateByCode, handleValueFormat } from '../../date-panel/src/util'
 import { getSlotVNs } from '../../ui/src/vn'
-import { errLog } from '../../ui/src/log'
+import { createComponentLog } from '../../ui/src/log'
 import VxeDatePanelComponent from '../../date-panel/src/date-panel'
 import VxeButtonComponent from '../../button/src/button'
 import VxeButtonGroupComponent from '../../button/src/button-group'
 
 import type { VxeDateRangePickerConstructor, VxeDateRangePickerEmits, DateRangePickerReactData, DateRangePickerInternalData, VxeButtonGroupDefines, VxeComponentSizeType, VxeDateRangePickerPropTypes, VxeFormConstructor, VxeFormPrivateMethods, VxeDatePanelDefines, VxeFormDefines, ValueOf, VxeModalConstructor, VxeDrawerConstructor, VxeModalMethods, VxeDrawerMethods, VxeDateRangePickerDefines, VxeDatePanelConstructor } from '../../../types'
 import type { VxeTableConstructor, VxeTablePrivateMethods } from '../../../types/components/table'
+
+const { errLog } = createComponentLog('date-range-picker')
 
 export default /* define-vxe-component start */ defineVxeComponent({
   name: 'VxeDateRangePicker',
@@ -998,9 +1000,11 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const btnTransfer = $xeDateRangePicker.computeBtnTransfer
       const panelElem = $xeDateRangePicker.$refs.refInputPanel as HTMLElement
       if (!isDisabled && !visiblePanel) {
-        if (!reactData.initialized && btnTransfer && panelElem) {
+        if (!reactData.initialized) {
           reactData.initialized = true
-          document.body.appendChild(panelElem)
+          if (btnTransfer && panelElem) {
+            document.body.appendChild(panelElem)
+          }
         }
         if (internalData.hpTimeout) {
           clearTimeout(internalData.hpTimeout)
@@ -1097,7 +1101,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
               break
             }
             default:
-              errLog('vxe.error.notCommands', [`[date-range-picker] ${code}`])
+              errLog('vxe.error.notCommands', [code])
               break
           }
         }

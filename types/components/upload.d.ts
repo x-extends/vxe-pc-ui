@@ -317,8 +317,12 @@ export type VxeUploadEmits = [
   'remove-fail',
   'download',
   'download-fail',
+  'upload-start',
   'upload-success',
   'upload-error',
+  'upload-end',
+  'upload-queue-start',
+  'upload-queue-end',
   'sort-dragend',
   'more-visible'
 ]
@@ -382,8 +386,19 @@ export namespace VxeUploadDefines {
     option: VxeUploadDefines.FileObjItem
     data: any
   }
-
   export interface UploadErrorEventParams extends UploadSuccessEventParams {}
+
+  export interface UploadStartEventParams extends UploadSuccessEventParams {
+    option: VxeUploadDefines.FileObjItem
+  }
+  export interface UploadEndEventParams extends UploadStartEventParams {}
+
+  export interface UploadQueueStartEventParams extends UploadSuccessEventParams {
+    files: File[]
+  }
+  export interface UploadQueueEndEventParams extends UploadQueueStartEventParams {
+    options: VxeUploadDefines.FileObjItem[]
+  }
 
   export interface MoreVisibleEventParams {
     visible: boolean
@@ -399,6 +414,10 @@ export type VxeUploadEventProps = {
   onDownloadFail?: VxeUploadEvents.DownloadFail
   onUploadSuccess?: VxeUploadEvents.UploadSuccess
   onUploadError?: VxeUploadEvents.UploadError
+  onUploadStart?: VxeUploadEvents.UploadStart
+  onUploadEnd?: VxeUploadEvents.UploadEnd
+  onUploadQueueStart?: VxeUploadEvents.UploadQueueStart
+  onUploadQueueEnd?: VxeUploadEvents.UploadQueueEnd
   onMoreVisible?: VxeUploadEvents.MoreVisible
 }
 
@@ -411,6 +430,10 @@ export interface VxeUploadListeners {
   downloadFail?: VxeUploadEvents.DownloadFail
   uploadSuccess?: VxeUploadEvents.UploadSuccess
   uploadError?: VxeUploadEvents.UploadError
+  uploadStart?: VxeUploadEvents.UploadStart
+  uploadEnd?: VxeUploadEvents.UploadEnd
+  uploadQueueStart?: VxeUploadEvents.UploadQueueStart
+  uploadQueueEnd?: VxeUploadEvents.UploadQueueEnd
   moreVisible?: VxeUploadEvents.MoreVisible
 }
 
@@ -423,6 +446,10 @@ export namespace VxeUploadEvents {
   export type DownloadFail = (params: VxeUploadDefines.DownloadFailEventParams) => void
   export type UploadSuccess = (params: VxeUploadDefines.UploadSuccessEventParams) => void
   export type UploadError = (params: VxeUploadDefines.UploadErrorEventParams) => void
+  export type UploadStart = (params: VxeUploadDefines.UploadStartEventParams) => void
+  export type UploadEnd = (params: VxeUploadDefines.UploadEndEventParams) => void
+  export type UploadQueueStart = (params: VxeUploadDefines.UploadQueueStartEventParams) => void
+  export type UploadQueueEnd = (params: VxeUploadDefines.UploadQueueEndEventParams) => void
   export type MoreVisible = (params: VxeUploadDefines.MoreVisibleEventParams) => void
 }
 

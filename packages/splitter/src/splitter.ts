@@ -5,9 +5,11 @@ import { getConfig, getIcon, createEvent, globalEvents, globalMixins, globalResi
 import { getSlotVNs } from '../../ui/src/vn'
 import { toCssUnit, isScale, addClass, removeClass } from '../../ui/src/dom'
 import { getGlobalDefaultConfig } from '../../ui/src/utils'
-import { warnLog, errLog } from '../../ui/src/log'
+import { createComponentLog } from '../../ui/src/log'
 
 import type { SplitterReactData, VxeSplitterPropTypes, VxeComponentSizeType, SplitterInternalData, VxeSplitterEmits, VxeSplitterPanelPropTypes, ValueOf, VxeSplitterPanelProps, VxeSplitterDefines } from '../../../types'
+
+const { warnLog, errLog } = createComponentLog('splitter')
 
 export default /* define-vxe-component start */ defineVxeComponent({
   name: 'VxeSplitter',
@@ -170,11 +172,11 @@ export default /* define-vxe-component start */ defineVxeComponent({
       }
       reactData.itemList = reactData.staticItems || []
       if ((showPrevButton || showNextButton) && reactData.itemList.length > 2) {
-        errLog('vxe.error.modelConflicts', ['[splitter] action-config.showPrevButton | action-config.showNextButton', '<vxe-splitter-panel ...> Only supports 2 panel'])
+        errLog('vxe.error.modelConflicts', ['action-config.showPrevButton | action-config.showNextButton', '<vxe-splitter-panel ...> Only supports 2 panel'])
       }
       reactData.itemList.forEach(item => {
         if (item.showAction) {
-          warnLog('vxe.error.removeProp', ['[splitter] show-action'])
+          warnLog('vxe.error.removeProp', ['show-action'])
         }
       })
       $xeSplitter.recalculate()
@@ -236,7 +238,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
           XEUtils.each(item.slots, (func) => {
             if (!XEUtils.isFunction(func)) {
               if (!slots[func]) {
-                errLog('vxe.error.notSlot', [`[splitter] ${func}`])
+                errLog('vxe.error.notSlot', [func])
               }
             }
           })
@@ -1017,7 +1019,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
     }
     const actionOpts = $xeSplitter.computeActionOpts
     if (actionOpts.direction) {
-      errLog('vxe.error.delProp', ['[splitter] action-config.direction', 'action-config.showPrevButton | action-config.showNextButton'])
+      errLog('vxe.error.delProp', ['action-config.direction', 'action-config.showPrevButton | action-config.showNextButton'])
     }
     $xeSplitter.$nextTick(() => {
       $xeSplitter.recalculate()

@@ -36,12 +36,13 @@ export default /* define-vxe-component start */ defineVxeComponent({
   data () {
     const xID = XEUtils.uniqueId()
     const backtopId = `vxe_layout_body_backtop_${xID}`
-    const internalData = createInternalData()
     const reactData = createReactData()
     return {
+      ...({} as {
+        internalData: LayoutBodyInternalData
+      }),
       xID,
       backtopId,
-      internalData,
       reactData
     }
   },
@@ -130,6 +131,19 @@ export default /* define-vxe-component start */ defineVxeComponent({
           : renderEmptyElement($xeLayoutBody)
       ])
     }
+  },
+  created () {
+    const $xeLayoutBody = this
+
+    $xeLayoutBody.internalData = createInternalData()
+  },
+  beforeDestroy () {
+    const $xeLayoutBody = this
+    const reactData = $xeLayoutBody.reactData
+    const internalData = $xeLayoutBody.internalData
+
+    XEUtils.assign(reactData, createReactData())
+    XEUtils.assign(internalData, createInternalData())
   },
   render (this: any, h) {
     return this.renderVN(h)

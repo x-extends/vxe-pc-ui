@@ -2,12 +2,14 @@ import { CreateElement, PropType, VNode } from 'vue'
 import { defineVxeComponent } from '../../ui/src/comp'
 import XEUtils from 'xe-utils'
 import { getIcon, getConfig, getI18n, globalEvents, GLOBAL_EVENT_KEYS, createEvent, globalMixins } from '../../ui'
-import { warnLog, errLog } from '../../ui/src/log'
+import { createComponentLog } from '../../ui/src/log'
 import VxeSelectComponent from '../../select/src/select'
 import VxeNumberInputComponent from '../../number-input/src/number-input'
 
 import type { VxePagerPropTypes, VxePagerEmits, VxeInputDefines, VxeSelectDefines, ValueOf, VxeComponentSizeType, PagerReactData } from '../../../types'
 import type { VxeGridConstructor, VxeGridPrivateMethods } from '../../../types/components/grid'
+
+const { warnLog, errLog } = createComponentLog('pager')
 
 export default /* define-vxe-component start */ defineVxeComponent({
   name: 'VxePager',
@@ -260,7 +262,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
     jumpPage (currentPage: number) {
       const $xePager = this
 
-      warnLog('vxe.error.delFunc', ['[pager] jumpPage', 'setCurrentPage'])
+      warnLog('vxe.error.delFunc', ['jumpPage', 'setCurrentPage'])
       return $xePager.setCurrentPage(currentPage)
     },
     getPageCount  (total: number, size: number) {
@@ -864,7 +866,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
         if (renderFn) {
           childNodes.push(renderFn(h))
         } else {
-          errLog('vxe.error.notProp', [`[pager] layouts -> ${name}`])
+          errLog('vxe.error.notProp', [`layouts -> ${name}`])
         }
       })
       if (slots.right) {

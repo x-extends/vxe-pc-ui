@@ -5,11 +5,13 @@ import { defineVxeComponent } from '../../ui/src/comp'
 import { getEventTargetNode, updatePanelPlacement } from '../../ui/src/dom'
 import { getFuncText, getLastZIndex, nextZIndex } from '../../ui/src/utils'
 import { getSlotVNs, getEventCaseName } from '../../ui/src/vn'
-import { warnLog } from '../../ui/src/log'
+import { createComponentLog } from '../../ui/src/log'
 import VxeTooltipComponent from '../../tooltip'
 
 import type { VxeButtonPropTypes, VxeButtonEmits, ButtonReactData, VxeButtonGroupConstructor, ButtonInternalData, VxeButtonDefines, VxeButtonGroupPrivateMethods, VxeFormConstructor, VxeDrawerConstructor, VxeDrawerMethods, VxeFormPrivateMethods, VxeModalConstructor, VxeModalMethods, VxeComponentPermissionInfo, VxeComponentSizeType, ValueOf, VxeTreeConstructor, VxeTreePrivateMethods } from '../../../types'
 import type { VxeTableConstructor, VxeTablePrivateMethods } from '../../../types/components/table'
+
+const { warnLog } = createComponentLog('button')
 
 export default /* define-vxe-component start */ defineVxeComponent({
   name: 'VxeButton',
@@ -928,7 +930,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
     const props = $xeButton
 
     if (props.type === 'text') {
-      warnLog('vxe.error.delProp', ['[button] type=text', 'mode=text'])
+      warnLog('vxe.error.delProp', ['type=text', 'mode=text'])
     }
 
     globalEvents.on($xeButton, 'mousewheel', $xeButton.handleGlobalMousewheelEvent)

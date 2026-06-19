@@ -7,6 +7,10 @@ import VxeRadioButtonComponent from './button'
 
 import type { VxeRadioGroupPropTypes, RadioGroupInternalData, VxeRadioGroupEmits, VxeFormDefines, VxeFormConstructor, VxeFormPrivateMethods, VxeComponentPermissionInfo, VxeComponentSizeType, RadioGroupReactData, ValueOf } from '../../../types'
 
+function createReactData (): RadioGroupReactData {
+  return {}
+}
+
 function createInternalData (): RadioGroupInternalData {
   return {
     // isLoaded: false
@@ -58,14 +62,14 @@ export default /* define-vxe-component start */ defineVxeComponent({
     }
   },
   data () {
-    const reactData: RadioGroupReactData = {
-    }
-    const internalData = createInternalData()
+    const reactData: RadioGroupReactData = createReactData()
     return {
+      ...({} as {
+        internalData: RadioGroupInternalData
+      }),
       xID: XEUtils.uniqueId(),
       name: XEUtils.uniqueId('xe_group_'),
-      reactData,
-      internalData
+      reactData
     }
   },
   computed: {
@@ -247,6 +251,11 @@ export default /* define-vxe-component start */ defineVxeComponent({
       $xeRadioGroup.loadData(val)
     }
   },
+  created () {
+    const $xeRadioGroup = this
+
+    $xeRadioGroup.internalData = createInternalData()
+  },
   mounted () {
     const $xeRadioGroup = this
     const props = $xeRadioGroup
@@ -260,9 +269,11 @@ export default /* define-vxe-component start */ defineVxeComponent({
   },
   beforeDestroy () {
     const $xeRadioGroup = this
+    const reactData = $xeRadioGroup.reactData
     const internalData = $xeRadioGroup.internalData
 
     XEUtils.assign(internalData, createInternalData())
+    XEUtils.assign(reactData, createReactData())
   },
   render (this: any, h) {
     return this.renderVN(h)

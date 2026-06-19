@@ -5,10 +5,12 @@ import { createEvent, getConfig, getIcon, globalEvents, globalMixins, permission
 import { getSlotVNs } from '../../ui/src/vn'
 import { toCssUnit, addClass, removeClass } from '../../ui/src/dom'
 import { isEnableConf } from '../../ui/src/utils'
-import { warnLog, errLog } from '../../ui/src/log'
+import { createComponentLog } from '../../ui/src/log'
 import VxeLoadingComponent from '../../loading/src/loading'
 
 import type { VxeTabsPropTypes, VxeTabPaneProps, VxeTabsEmits, TabsInternalData, TabsReactData, VxeComponentSizeType, VxeTabsConstructor, VxeTabsPrivateMethods, VxeTabPaneDefines, ValueOf, VxeComponentStyleType } from '../../../types'
+
+const { warnLog, errLog } = createComponentLog('tabs')
 
 const scrollbarOffsetSize = 20
 
@@ -213,13 +215,13 @@ export default /* define-vxe-component start */ defineVxeComponent({
     prevTab () {
       const $xeTabs = this
 
-      warnLog('vxe.error.delFunc', ['[tabs] prevTab', 'prev'])
+      warnLog('vxe.error.delFunc', ['prevTab', 'prev'])
       return $xeTabs.prev()
     },
     nextTab () {
       const $xeTabs = this
 
-      warnLog('vxe.error.delFunc', ['[tabs] nextTab', 'next'])
+      warnLog('vxe.error.delFunc', ['nextTab', 'next'])
       return $xeTabs.next()
     },
     handleFilterTab (item: VxeTabPaneProps | VxeTabPaneDefines.TabConfig) {

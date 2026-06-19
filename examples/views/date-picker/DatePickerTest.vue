@@ -1,6 +1,6 @@
 <template>
   <div>
-    <p>
+    <!-- <p>
       <vxe-date-picker v-model="demo1.value100" placeholder="默认尺寸"></vxe-date-picker>
       <vxe-date-picker v-model="demo1.value101" placeholder="中等尺寸" size="medium"></vxe-date-picker>
       <vxe-date-picker v-model="demo1.value102" placeholder="小型尺寸" size="small"></vxe-date-picker>
@@ -116,6 +116,13 @@
 
       <vxe-date-picker v-model="demo1.val828" placeholder="时:分" type="time" value-format="HH:mm" label-format="HH:mm" clearable></vxe-date-picker>
       <vxe-date-picker v-model="demo1.val829" placeholder="时" type="time" value-format="HH" label-format="HH" clearable></vxe-date-picker>
+    </p> -->
+    <p>
+        <!-- <vxe-date-picker v-model="demo1.val910" :popup-config="{enabled:false}"></vxe-date-picker>
+        <vxe-date-picker v-model="demo1.val911" :popup-config="{trigger:'icon'}"></vxe-date-picker> -->
+        <vxe-date-picker v-model="demo1.val912" :popup-config="{trigger:'icon'}" :masked-config="{isArrow:true,isMasked:true}"></vxe-date-picker>
+        <!-- <vxe-date-picker v-model="demo1.val913" :masked-config="{isArrow:true,isMasked:true}"></vxe-date-picker> -->
+
     </p>
   </div>
 </template>
@@ -191,7 +198,11 @@ export default Vue.extend({
         value805: '',
         value900: '11111111',
         val828: '',
-        val829: ''
+        val829: '',
+        val910: '',
+        val911: '',
+        val912: '',
+        val913: ''
       },
       // 渲染日期小圆点
       noticeMaps: {

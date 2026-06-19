@@ -2,12 +2,14 @@ import { PropType, CreateElement, VNode } from 'vue'
 import { defineVxeComponent } from '../../ui/src/comp'
 import XEUtils from 'xe-utils'
 import { getConfig, getIcon, createEvent, globalMixins, renderEmptyElement } from '../../ui'
-import { errLog } from '../../ui/src/log'
+import { createComponentLog } from '../../ui/src/log'
 import { getLastZIndex, nextZIndex } from '../../ui/src/utils'
 import { toCssUnit } from '../../ui/src/dom'
 import VxeButtonComponent from '../../button'
 
 import type { BacktopInternalData, VxeBacktopPropTypes, BacktopReactData, VxeBacktopEmits, VxeComponentSizeType, ValueOf, VxeComponentStyleType } from '../../../types'
+
+const { errLog } = createComponentLog('backtop')
 
 function createInternalData (): BacktopInternalData {
   return {
@@ -92,11 +94,12 @@ export default /* define-vxe-component start */ defineVxeComponent({
   },
   data () {
     const xID = XEUtils.uniqueId()
-    const internalData = createInternalData()
     const reactData = createReactData()
     return {
+      ...({} as {
+        internalData: BacktopInternalData
+      }),
       xID,
-      internalData,
       reactData
     }
   },
@@ -304,6 +307,11 @@ export default /* define-vxe-component start */ defineVxeComponent({
           : renderEmptyElement($xeBacktop)
       ])
     }
+  },
+  created () {
+    const $xeBacktop = this
+
+    $xeBacktop.internalData = createInternalData()
   },
   mounted () {
     const $xeBacktop = this

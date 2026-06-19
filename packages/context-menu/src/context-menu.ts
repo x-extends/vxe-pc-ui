@@ -198,11 +198,12 @@ export default /* define-vxe-component start */ defineVxeComponent({
     }
   },
   data () {
-    const internalData = createInternalData()
     const reactData = createReactData()
     return {
+      ...({} as {
+        internalData: ContextMenuInternalData
+      }),
       xID: XEUtils.uniqueId(),
-      internalData,
       reactData
     }
   },
@@ -698,6 +699,8 @@ export default /* define-vxe-component start */ defineVxeComponent({
   },
   created () {
     const $xeContextMenu = this
+
+    $xeContextMenu.internalData = createInternalData()
 
     $xeContextMenu.handleVisible()
     globalEvents.on($xeContextMenu, 'mousewheel', $xeContextMenu.handleGlobalMousewheelEvent)

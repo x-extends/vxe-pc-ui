@@ -3,13 +3,15 @@ import { defineVxeComponent } from '../../ui/src/comp'
 import XEUtils from 'xe-utils'
 import { VxeUI, getConfig, getI18n, getIcon, globalMixins, createEvent, globalEvents, renderEmptyElement } from '../../ui'
 import { getSlotVNs } from '../../ui/src/vn'
-import { errLog, warnLog } from '../../ui/src/log'
+import { createComponentLog } from '../../ui/src/log'
 import { initTpImg, getTpImg, getEventTargetNode, toCssUnit } from '../../ui/src/dom'
 import { readLocalFile } from './util'
 import VxeButtonComponent from '../../button/src/button'
 
 import type { VxeUploadDefines, VxeUploadConstructor, VxeUploadPropTypes, UploadReactData, UploadInternalData, VxeUploadEmits, VxeComponentSizeType, VxeFormDefines, VxeFormConstructor, VxeFormPrivateMethods, ValueOf, VxeComponentEventParams } from '../../../types'
 import type { VxeTableConstructor, VxeTablePrivateMethods } from '../../../types/components/table'
+
+const { warnLog, errLog } = createComponentLog('upload')
 
 function getUniqueKey () {
   return XEUtils.uniqueId()
@@ -335,11 +337,12 @@ export default /* define-vxe-component start */ defineVxeComponent({
   data () {
     const xID = XEUtils.uniqueId()
     const reactData = createReactData()
-    const internalData = createInternalData()
     return {
+      ...({} as {
+        internalData: UploadInternalData
+      }),
       xID,
-      reactData,
-      internalData
+      reactData
     }
   },
   computed: {
@@ -864,6 +867,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const fileKey = $xeUpload.getFieldKey(item)
       const uploadFn = props.uploadMethod || getConfig().upload.uploadMethod
       if (uploadFn) {
+        $xeUpload.dispatchEvent('upload-start', { option: item }, null)
         return Promise.resolve(
           uploadFn({
             $upload: $xeUpload,
@@ -913,6 +917,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
           if (cacheItem) {
             cacheItem.loading = false
           }
+          $xeUpload.dispatchEvent('upload-end', { option: item }, null)
         })
       } else {
         const { fileCacheMaps } = reactData
@@ -1031,6 +1036,8 @@ export default /* define-vxe-component start */ defineVxeComponent({
         }
       }
 
+      $xeUpload.dispatchEvent('upload-queue-start', { files: selectFiles }, evnt)
+
       const cacheMaps = Object.assign({}, reactData.fileCacheMaps)
       const newFileList = multiple ? fileList : []
       const uploadPromiseRests: any[] = []
@@ -1069,6 +1076,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       })
       Promise.all(urlMode ? uploadPromiseRests : []).then(() => {
         const restFileList = reactData.fileList
+        $xeUpload.dispatchEvent('upload-queue-end', { options: restFileList, files: selectFiles }, evnt)
         $xeUpload.handleChange(restFileList)
         // 自动更新校验状态
         if ($xeForm && formItemInfo) {
@@ -2159,6 +2167,8 @@ export default /* define-vxe-component start */ defineVxeComponent({
   created () {
     const $xeUpload = this
 
+    $xeUpload.internalData = createInternalData()
+
     $xeUpload.updateFileList()
   },
   mounted () {
@@ -2166,10 +2176,10 @@ export default /* define-vxe-component start */ defineVxeComponent({
     const props = $xeUpload
 
     if (props.multiple && props.singleMode) {
-      errLog('vxe.error.errConflicts', ['[upload] multiple', 'single-mode'])
+      errLog('vxe.error.errConflicts', ['multiple', 'single-mode'])
     }
     if (props.imageStyle) {
-      warnLog('vxe.error.delProp', ['[upload] image-style', 'image-config'])
+      warnLog('vxe.error.delProp', ['image-style', 'image-config'])
     }
 
     if (props.dragSort) {

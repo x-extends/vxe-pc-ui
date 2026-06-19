@@ -3,16 +3,47 @@ import { defineVxeComponent } from '../../ui/src/comp'
 import XEUtils from 'xe-utils'
 import { getConfig, getIcon, getI18n, commands, createEvent, globalEvents, GLOBAL_EVENT_KEYS, globalMixins, renderEmptyElement } from '../../ui'
 import { getFuncText, getLastZIndex, nextZIndex, isEnableConf } from '../../ui/src/utils'
-import { updatePanelPlacement, getEventTargetNode } from '../../ui/src/dom'
+import { updatePanelPlacement, getEventTargetNode, hasControlKey } from '../../ui/src/dom'
 import { getSlotVNs } from '../../ui/src/vn'
-import { parseDateObj, parseDateValue, getDateByCode, handleValueFormat, handleInputFormat, hasDateValueType, hasTimestampValueType } from '../../date-panel/src/util'
-import { errLog } from '../../ui/src/log'
+import { parseDateObj, parseDateValue, getDateByCode, handleValueFormat, hasDateValueType, hasTimestampValueType, isAllSameChar, getChunkDefaultNum } from '../../date-panel/src/util'
+import { createComponentLog } from '../../ui/src/log'
 import VxeDatePanelComponent from '../../date-panel/src/date-panel'
 import VxeButtonComponent from '../../button/src/button'
 import VxeButtonGroupComponent from '../../button/src/button-group'
 
 import type { VxeDatePickerConstructor, VxeDatePickerEmits, DatePickerInternalData, DatePickerReactData, VxeButtonGroupDefines, VxeComponentSizeType, VxeDatePanelDefines, VxeDatePickerPropTypes, VxeFormConstructor, VxeFormPrivateMethods, VxeFormDefines, ValueOf, VxeModalConstructor, VxeDrawerConstructor, VxeModalMethods, VxeDrawerMethods, VxeDatePickerDefines, VxeDatePanelConstructor } from '../../../types'
 import type { VxeTableConstructor, VxeTablePrivateMethods } from '../../../types/components/table'
+
+const { warnLog, errLog } = createComponentLog('date-picker')
+
+const maskedTypes = ['year', 'month', 'date', 'datetime', 'time']
+const inputMaskedKeys = ['y', 'M', 'd', 'H', 'm', 'n', 's']
+const parseInputKayMaps: Record<string, boolean> = {}
+inputMaskedKeys.forEach(key => {
+  parseInputKayMaps[key] = true
+})
+
+function createReactData (): DatePickerReactData {
+  return {
+    initialized: false,
+    panelIndex: 0,
+    visiblePanel: false,
+    isAniVisible: false,
+    panelStyle: {},
+    panelPlacement: '',
+    isActivated: false,
+    inputValue: '',
+    labelFlag: 0
+  }
+}
+
+function createInternalData (): DatePickerInternalData {
+  return {
+    // hpTimeout: undefined,
+    inputLabel: '',
+    laseFocusMasked: 0
+  }
+}
 
 export default /* define-vxe-component start */ defineVxeComponent({
   name: 'VxeDatePicker',
@@ -84,7 +115,6 @@ export default /* define-vxe-component start */ defineVxeComponent({
     labelFormat: String as PropType<VxeDatePickerPropTypes.LabelFormat>,
     valueFormat: String as PropType<VxeDatePickerPropTypes.ValueFormat>,
     timeFormat: String as PropType<VxeDatePickerPropTypes.TimeFormat>,
-    inputFormat: String as PropType<VxeDatePickerPropTypes.InputFormat>,
     editable: {
       type: Boolean as PropType<VxeDatePickerPropTypes.Editable>,
       default: true
@@ -115,7 +145,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       type: Boolean as PropType<VxeDatePickerPropTypes.AutoClose>,
       default: () => getConfig().datePicker.autoClose
     },
-    controlConfig: Object as PropType<VxeDatePickerPropTypes.ControlConfig>,
+    maskedConfig: Object as PropType<VxeDatePickerPropTypes.MaskedConfig>,
 
     prefixIcon: String as PropType<VxeDatePickerPropTypes.PrefixIcon>,
     suffixIcon: String as PropType<VxeDatePickerPropTypes.SuffixIcon>,
@@ -159,28 +189,13 @@ export default /* define-vxe-component start */ defineVxeComponent({
   },
   data () {
     const xID = XEUtils.uniqueId()
-
-    const reactData: DatePickerReactData = {
-      initialized: false,
-      panelIndex: 0,
-      visiblePanel: false,
-      isAniVisible: false,
-      panelStyle: {},
-      panelPlacement: '',
-      isActivated: false,
-      inputValue: '',
-      inputLabel: ''
-    }
-
-    const internalData: DatePickerInternalData = {
-      // hpTimeout: undefined,
-      parseInputKayMaps: {}
-    }
-
+    const reactData = createReactData()
     return {
+      ...({} as {
+        internalData: DatePickerInternalData
+      }),
       xID,
-      reactData,
-      internalData
+      reactData
     }
   },
   computed: {
@@ -264,6 +279,58 @@ export default /* define-vxe-component start */ defineVxeComponent({
 
       return props.clearable
     },
+    computeIsDatePanelType () {
+      const $xeDatePicker = this
+      const props = $xeDatePicker
+
+      const isDateTimeType = $xeDatePicker.computeIsDateTimeType
+      return isDateTimeType || ['date', 'week', 'month', 'quarter', 'year'].indexOf(props.type) > -1
+    },
+    computeDateListValue () {
+      const $xeDatePicker = this
+      const props = $xeDatePicker
+
+      const { value: modelValue, type, multiple } = props
+      const isDatePanelType = $xeDatePicker.computeIsDatePanelType
+      const dateValueFormat = $xeDatePicker.computeDateValueFormat as string
+      if (multiple && modelValue && isDatePanelType) {
+        return XEUtils.toValueString(modelValue).split(',').map(item => {
+          const date = parseDateValue(item, type, {
+            valueFormat: dateValueFormat
+          })
+          if (XEUtils.isValidDate(date)) {
+            return date
+          }
+          return date
+        })
+      }
+      return []
+    },
+    computeLimitMaxCount () {
+      const $xeDatePicker = this
+      const props = $xeDatePicker
+
+      return props.multiple ? XEUtils.toNumber(props.limitCount) : 0
+    },
+    computeDateMultipleValue () {
+      const $xeDatePicker = this
+
+      const dateListValue = $xeDatePicker.computeDateListValue as Date[]
+      const dateValueFormat = $xeDatePicker.computeDateValueFormat as string
+      return dateListValue.map(date => XEUtils.toDateString(date, dateValueFormat))
+    },
+    computeOverCount () {
+      const $xeDatePicker = this
+      const props = $xeDatePicker
+
+      const { multiple } = props
+      const limitMaxCount = $xeDatePicker.computeLimitMaxCount as number
+      const dateMultipleValue = $xeDatePicker.computeDateMultipleValue as string[]
+      if (multiple && limitMaxCount) {
+        return dateMultipleValue.length >= limitMaxCount
+      }
+      return false
+    },
     computeInputReadonly () {
       const $xeDatePicker = this
       const props = $xeDatePicker
@@ -339,12 +406,11 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const { type, valueFormat } = props
       return handleValueFormat(type, valueFormat)
     },
-    computeDateInputFormat () {
+    computeDateMaskedFormat () {
       const $xeDatePicker = this
-      const props = $xeDatePicker
 
-      const { type, inputFormat } = props
-      return handleInputFormat(type, inputFormat)
+      const dateLabelFormat = $xeDatePicker.computeDateLabelFormat as string
+      return dateLabelFormat
     },
     computeFirstDayOfWeek () {
       const $xeDatePicker = this
@@ -373,11 +439,18 @@ export default /* define-vxe-component start */ defineVxeComponent({
         return dateObj.label
       }).join(', ')
     },
-    computeControlOpts () {
+    computeMaskedOpts () {
       const $xeDatePicker = this
       const props = $xeDatePicker
 
-      return Object.assign({}, getConfig().datePicker.controlConfig, props.controlConfig)
+      return Object.assign({}, getConfig().datePicker.maskedConfig, props.maskedConfig)
+    },
+    computeMaskChar () {
+      const $xeDatePicker = this
+
+      const maskedOpts = $xeDatePicker.computeMaskedOpts as VxeDatePickerPropTypes.MaskedConfig
+      const { maskPlaceholder } = maskedOpts
+      return (maskPlaceholder ? ('' + maskPlaceholder)[0] : '') || '*'
     }
   },
   methods: {
@@ -414,6 +487,16 @@ export default /* define-vxe-component start */ defineVxeComponent({
         }
       }
       reactData.inputValue = val
+    },
+    handleInputLabel (text: string, isUpdate?: boolean) {
+      const $xeDatePicker = this
+      const reactData = $xeDatePicker.reactData
+      const internalData = $xeDatePicker.internalData
+
+      internalData.inputLabel = text
+      if (isUpdate) {
+        reactData.labelFlag++
+      }
     },
     triggerEvent (evnt: Event & { type: 'input' | 'change' | 'keydown' | 'keyup' | 'click' | 'focus' | 'blur' }) {
       const $xeDatePicker = this
@@ -466,11 +549,10 @@ export default /* define-vxe-component start */ defineVxeComponent({
     },
     inputEvent (evnt: Event & { type: 'input' }) {
       const $xeDatePicker = this
-      const reactData = $xeDatePicker.reactData
 
       const inputElem = evnt.target as HTMLInputElement
       const value = inputElem.value
-      reactData.inputLabel = value
+      $xeDatePicker.handleInputLabel(value, true)
       $xeDatePicker.dispatchEvent('input', { value }, evnt)
     },
     changeEvent (evnt: Event & { type: 'change' }) {
@@ -480,20 +562,6 @@ export default /* define-vxe-component start */ defineVxeComponent({
       if (!inpImmediate) {
         $xeDatePicker.triggerEvent(evnt)
       }
-    },
-    focusEvent (evnt: Event & { type: 'focus' }) {
-      const $xeDatePicker = this
-      const reactData = $xeDatePicker.reactData
-
-      const popupOpts = $xeDatePicker.computePopupOpts
-      const { trigger } = popupOpts
-      reactData.isActivated = true
-      if (!trigger || trigger === 'default') {
-        $xeDatePicker.datePickerOpenEvent(evnt)
-      } else if (trigger === 'icon') {
-        $xeDatePicker.hidePanel()
-      }
-      $xeDatePicker.triggerEvent(evnt)
     },
     clickPrefixEvent (evnt: Event) {
       const $xeDatePicker = this
@@ -509,7 +577,6 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const $xeDatePicker = this
       const reactData = $xeDatePicker.reactData
       const internalData = $xeDatePicker.internalData
-
       return new Promise<void>(resolve => {
         reactData.visiblePanel = false
         internalData.hpTimeout = setTimeout(() => {
@@ -517,6 +584,112 @@ export default /* define-vxe-component start */ defineVxeComponent({
           resolve()
         }, 350)
       })
+    },
+    dateChange (date: Date, isReload?: boolean) {
+      const $xeDatePicker = this
+      const props = $xeDatePicker
+
+      const { value: modelValue, multiple } = props
+      const isDateTimeType = $xeDatePicker.computeIsDateTimeType
+      const dateValueFormat = $xeDatePicker.computeDateValueFormat
+      const firstDayOfWeek = $xeDatePicker.computeFirstDayOfWeek
+      if (props.type === 'week') {
+        const sWeek = XEUtils.toNumber(props.selectDay) as VxeDatePickerPropTypes.SelectDay
+        date = XEUtils.getWhatWeek(date, 0, sWeek, firstDayOfWeek)
+      }
+      const inpVal = XEUtils.toDateString(date, dateValueFormat, { firstDay: firstDayOfWeek })
+      if (multiple) {
+        const overCount = $xeDatePicker.computeOverCount
+        // 如果为多选
+        if (isDateTimeType) {
+          // 如果是datetime特殊类型
+          const dateListValue = isReload ? [] : [...$xeDatePicker.computeDateListValue]
+          const datetimeRest: Date[] = []
+          const eqIndex = XEUtils.findIndexOf(dateListValue, val => XEUtils.isDateSame(date, val, 'yyyyMMdd'))
+          if (eqIndex === -1) {
+            if (overCount) {
+              // 如果超出最大多选数量
+              return
+            }
+            dateListValue.push(date)
+          } else {
+            dateListValue.splice(eqIndex, 1)
+          }
+          dateListValue.forEach(item => {
+            if (item) {
+              datetimeRest.push(item)
+            }
+          })
+          $xeDatePicker.handleChange(datetimeRest.map(date => XEUtils.toDateString(date, dateValueFormat)).join(','), { type: 'update' })
+        } else {
+          const dateMultipleValue = isReload ? [] : $xeDatePicker.computeDateMultipleValue
+          // 如果是日期类型
+          if (dateMultipleValue.some(val => XEUtils.isEqual(val, inpVal))) {
+            $xeDatePicker.handleChange(dateMultipleValue.filter(val => !XEUtils.isEqual(val, inpVal)).join(','), { type: 'update' })
+          } else {
+            if (overCount) {
+              // 如果超出最大多选数量
+              return
+            }
+            $xeDatePicker.handleChange(dateMultipleValue.concat([inpVal]).join(','), { type: 'update' })
+          }
+        }
+      } else {
+        // 如果为单选
+        if (!XEUtils.isEqual(modelValue, inpVal)) {
+          $xeDatePicker.handleChange(inpVal, { type: 'update' })
+        }
+      }
+    },
+    dateRevert () {
+      const $xeDatePicker = this
+
+      const panelLabel = $xeDatePicker.computePanelLabel
+      $xeDatePicker.handleInputLabel(panelLabel, true)
+    },
+    afterCheckValue (inpVal: string) {
+      const $xeDatePicker = this
+      const props = $xeDatePicker
+      const reactData = $xeDatePicker.reactData
+      const internalData = $xeDatePicker.internalData
+
+      const { type } = props
+      const { inputLabel } = internalData
+      const dateLabelFormat = $xeDatePicker.computeDateLabelFormat
+      if (!inpVal) {
+        $xeDatePicker.handleChange('', { type: 'check' })
+        return
+      }
+      let inpDateVal: VxeDatePickerPropTypes.ModelValue = parseDateValue(inpVal, type, {
+        valueFormat: dateLabelFormat
+      })
+      if (!XEUtils.isValidDate(inpDateVal)) {
+        $xeDatePicker.dateRevert()
+        return
+      }
+      if (type === 'time') {
+        inpDateVal = XEUtils.toDateString(inpDateVal, dateLabelFormat)
+        if (inputLabel !== inpDateVal) {
+          $xeDatePicker.handleChange(inpDateVal, { type: 'check' })
+        }
+        $xeDatePicker.handleInputLabel(inpDateVal, true)
+        return
+      }
+      let isChange = false
+      const firstDayOfWeek = $xeDatePicker.computeFirstDayOfWeek
+      if (type === 'datetime') {
+        const dateValue = reactData.inputValue
+        if (inpVal !== XEUtils.toDateString(dateValue, dateLabelFormat) || inpVal !== XEUtils.toDateString(inpDateVal, dateLabelFormat)) {
+          isChange = true
+        }
+      } else {
+        isChange = true
+      }
+      const label = XEUtils.toDateString(inpDateVal, dateLabelFormat, { firstDay: firstDayOfWeek })
+      $xeDatePicker.handleInputLabel(label, true)
+      if (isChange) {
+        $xeDatePicker.dateChange(inpDateVal)
+      }
     },
     clearValueEvent (evnt: Event, value: VxeDatePickerPropTypes.ModelValue) {
       const $xeDatePicker = this
@@ -538,39 +711,320 @@ export default /* define-vxe-component start */ defineVxeComponent({
         $xeDatePicker.dispatchEvent('suffix-click', { value: inputValue }, evnt)
       }
     },
-    handleArrowInputDate (evnt: KeyboardEvent, isUpArrow: boolean) {
+    handleArrowInputDate (evnt: KeyboardEvent, isUpArrow: boolean, isDwArrow: boolean, isLtArrow: boolean, isRtArrow: boolean) {
       const $xeDatePicker = this
       const props = $xeDatePicker
-      const reactData = $xeDatePicker.reactData
       const internalData = $xeDatePicker.internalData
 
-      const { multiple } = props
+      const { type, multiple } = props
       if (multiple) {
-        return
-      }
-      const { inputValue } = reactData
-      if (!inputValue) {
         return
       }
       const targetElem = $xeDatePicker.$refs.refInputTarget as HTMLInputElement
       if (!targetElem) {
         return
       }
-      const { parseInputKayMaps } = internalData
-      const inputFormat = $xeDatePicker.computeDateInputFormat
-      const selectionStart = targetElem.selectionStart || 0
-      let selectKey = inputFormat[selectionStart]
-      if (!parseInputKayMaps[selectKey]) {
-        selectKey = inputFormat[selectionStart - 1]
+      const inpValue = targetElem.value
+      if (!inpValue) {
+        return
       }
-      const inputPaesrFn = parseInputKayMaps[selectKey]
-      if (inputPaesrFn) {
-        inputPaesrFn(evnt, targetElem, isUpArrow)
+      const dateMaskedFormat = $xeDatePicker.computeDateMaskedFormat
+      const dateLabelFormat = $xeDatePicker.computeDateLabelFormat
+      const firstDayOfWeek = $xeDatePicker.computeFirstDayOfWeek
+      const maskChar = $xeDatePicker.computeMaskChar
+      const selectionStart = targetElem.selectionStart || 0
+      let selectKey = dateMaskedFormat[selectionStart]
+      if (!parseInputKayMaps[selectKey]) {
+        selectKey = dateMaskedFormat[selectionStart - 1]
+      }
+      const skRest = dateMaskedFormat.match(new RegExp(selectKey + '+'))
+      if (!skRest) {
+        return
+      }
+      if (isUpArrow || isDwArrow) {
+        const chunkFormat = skRest[0] || ''
+        const chunkStartIndex = skRest.index || 0
+        const chunkEndIndex = chunkStartIndex + chunkFormat.length
+        const chunkValue = inpValue.slice(chunkStartIndex, chunkEndIndex)
+        if (parseInputKayMaps[selectKey]) {
+          const chunkNum = (isAllSameChar(chunkValue, maskChar) ? getChunkDefaultNum(selectKey) : XEUtils.toNumber(chunkValue)) + (isUpArrow ? 1 : -1)
+          const restValue = inpValue.slice(0, chunkStartIndex) + XEUtils.padStart(chunkNum, chunkFormat.length, '0') + inpValue.slice(chunkEndIndex)
+          evnt.preventDefault()
+          if (restValue.indexOf(maskChar) === -1) {
+            // 解析日期
+            const inpDateVal: VxeDatePickerPropTypes.ModelValue = parseDateValue(restValue, type, {
+              valueFormat: dateLabelFormat
+            })
+            if (XEUtils.isValidDate(inpDateVal)) {
+              const label = XEUtils.toDateString(inpDateVal, dateLabelFormat, { firstDay: firstDayOfWeek })
+              targetElem.value = label
+              $xeDatePicker.handleInputLabel(label, false)
+            }
+          } else {
+            targetElem.value = restValue
+            $xeDatePicker.handleInputLabel(restValue, false)
+          }
+        }
+        targetElem.setSelectionRange(chunkStartIndex, chunkEndIndex)
+      } else if (isLtArrow || isRtArrow) {
+        const currKeyIndex = inputMaskedKeys.indexOf(selectKey)
+        if (currKeyIndex > -1) {
+          const allMaskedKeys = XEUtils.map(dateMaskedFormat.match(new RegExp(`(${inputMaskedKeys.join('|')})+`, 'g')) || [], fullKey => fullKey[0])
+          const currIndex = XEUtils.findIndexOf(allMaskedKeys, key => selectKey === key[0])
+          const targetFormatKey = isLtArrow ? (allMaskedKeys[currIndex - 1] || allMaskedKeys[0]) : (allMaskedKeys[currIndex + 1] || allMaskedKeys[allMaskedKeys.length - 1])
+
+          const targetKey = targetFormatKey ? targetFormatKey[0] : ''
+          const sktRest = dateMaskedFormat.match(new RegExp(targetKey + '+'))
+          if (sktRest) {
+            evnt.preventDefault()
+            const mtStartIndex = sktRest.index || 0
+            const mtEndIndex = mtStartIndex + sktRest[0].length
+            targetElem.setSelectionRange(mtStartIndex, mtEndIndex)
+          }
+        }
+      }
+      internalData.isTriggerMasked = true
+    },
+    handleMaskedInputDate (evnt: KeyboardEvent) {
+      const $xeDatePicker = this
+      const props = $xeDatePicker
+      const internalData = $xeDatePicker.internalData
+
+      const { multiple } = props
+      if (multiple) {
+        return
+      }
+      const targetElem = $xeDatePicker.$refs.refInputTarget as HTMLInputElement
+      if (!targetElem) {
+        return
+      }
+      const isControlKey = hasControlKey(evnt)
+      if (isControlKey) {
+        return
+      }
+      evnt.preventDefault()
+      const eKey = evnt.key
+      const isDeleleKey = globalEvents.hasKey(evnt, GLOBAL_EVENT_KEYS.DELETE)
+      const isBackspaceKey = globalEvents.hasKey(evnt, GLOBAL_EVENT_KEYS.BACKSPACE)
+      const isNumKey = eKey >= '0' && eKey <= '9'
+      const numKey = isNumKey ? evnt.key : ''
+      if (!(isDeleleKey || isBackspaceKey || isNumKey)) {
+        return
+      }
+      const { isTriggerMasked } = internalData
+      const dateMaskedFormat = $xeDatePicker.computeDateMaskedFormat
+      const maskChar = $xeDatePicker.computeMaskChar
+      let inpValue = targetElem.value || dateMaskedFormat
+      const selectionStart = targetElem.selectionStart || 0
+      const selectionEnd = targetElem.selectionEnd || 0
+      let selectKey = dateMaskedFormat[selectionStart]
+      if (!parseInputKayMaps[selectKey]) {
+        selectKey = dateMaskedFormat[selectionStart - 1]
+      }
+      const skRest = dateMaskedFormat.match(new RegExp(selectKey + '+'))
+      if (!skRest) {
+        return
+      }
+      const allMaskedKeys = XEUtils.map(dateMaskedFormat.match(new RegExp(`(${inputMaskedKeys.join('|')})+`, 'g')) || [], fullKey => fullKey[0])
+      const chunkFormat = skRest[0] || ''
+      const chunkStartIndex = skRest.index || 0
+      const chunkEndIndex = chunkStartIndex + chunkFormat.length
+      const currKeyIndex = allMaskedKeys.indexOf(selectKey)
+      // 全选 | 如果无效字符
+      const isAllSelected = !selectionStart && selectionEnd === inpValue.length
+      const isNotMasked = inpValue && inpValue.length !== dateMaskedFormat.length
+      if (isAllSelected || isNotMasked) {
+        inpValue = dateMaskedFormat
+      }
+      let chunkValue = isDeleleKey ? '' : inpValue.slice(chunkStartIndex, chunkEndIndex)
+      const chunkNums = (chunkValue.match(/\d/g) || [])
+      const chunkNumList: string[] = isTriggerMasked && !isBackspaceKey ? [] : chunkNums.slice(0)
+
+      if (isNumKey) {
+        chunkNumList.push(numKey)
+      } else if (isBackspaceKey) {
+        chunkNumList.pop()
+      }
+      chunkValue = chunkNumList.join('').padEnd(chunkFormat.length, maskChar)
+      let restValue = inpValue.slice(0, chunkStartIndex) + chunkValue + inpValue.slice(chunkEndIndex)
+      restValue = restValue.replace(new RegExp(`(${inputMaskedKeys.join('|')})`, 'g'), maskChar)
+
+      targetElem.value = restValue
+      $xeDatePicker.handleInputLabel(restValue, false)
+
+      // 如果是全选/删除
+      if (isAllSelected) {
+        if (isBackspaceKey || isDeleleKey) {
+          const firstMaskedKeys = allMaskedKeys[0]
+          const firstSkRest = dateMaskedFormat.match(new RegExp(`${firstMaskedKeys}+`))
+          if (firstSkRest) {
+            const firstChunkFormat = firstSkRest[0]
+            targetElem.setSelectionRange(0, firstChunkFormat.length)
+            internalData.isTriggerMasked = true
+            return
+          }
+        }
+      } else {
+        if (isBackspaceKey && !chunkNums.length) {
+          // 回退到上一个数字块
+          for (let i = currKeyIndex - 1; i >= 0; i--) {
+            const prveChunkKey = allMaskedKeys[i]
+            const prveSkRest = dateMaskedFormat.match(new RegExp(`${prveChunkKey}+`))
+            if (prveSkRest) {
+              const prveChunkFormat = prveSkRest[0]
+              const prveChunkStartIndex = prveSkRest.index || 0
+              const prveChunkEndIndex = prveChunkStartIndex + prveChunkFormat.length
+              let prveChunkValue = restValue.slice(prveChunkStartIndex, prveChunkEndIndex)
+              const prveChunkNums = (prveChunkValue.match(/\d/g) || [])
+              if (prveChunkNums.length) {
+                prveChunkNums.pop()
+                prveChunkValue = prveChunkNums.join('').padEnd(prveChunkFormat.length, maskChar)
+                restValue = restValue.slice(0, prveChunkStartIndex) + prveChunkValue + restValue.slice(prveChunkEndIndex)
+
+                targetElem.value = restValue
+                $xeDatePicker.handleInputLabel(restValue, false)
+                targetElem.setSelectionRange(prveChunkStartIndex, prveChunkEndIndex)
+                return
+              }
+            }
+          }
+          const firstMaskedKeys = allMaskedKeys[0]
+          const firstSkRest = dateMaskedFormat.match(new RegExp(`${firstMaskedKeys}+`))
+          if (firstSkRest) {
+            const firstChunkFormat = firstSkRest[0]
+            restValue = dateMaskedFormat.replace(new RegExp(`(${inputMaskedKeys.join('|')})`, 'g'), maskChar)
+            targetElem.value = restValue
+            $xeDatePicker.handleInputLabel(restValue, false)
+            targetElem.setSelectionRange(0, firstChunkFormat.length)
+            internalData.isTriggerMasked = true
+            return
+          }
+          return
+        }
+      }
+
+      let maskStartIndex = skRest.index || 0
+      let maskEndIndex = maskStartIndex + skRest[0].length
+      // 如果输入完成，跳转下一个
+      if (chunkNumList.length >= chunkValue.length) {
+        const nextKeys = allMaskedKeys.slice(currKeyIndex + 1)
+        if (currKeyIndex > -1) {
+          const nextRest = nextKeys.length ? dateMaskedFormat.match(new RegExp(`(${nextKeys.join('|')})+`)) : null
+          // 如果当前数字块已输入，则跳转下一个数字块
+          if (nextRest) {
+            maskStartIndex = nextRest.index || 0
+            maskEndIndex = maskStartIndex + nextRest[0].length
+            targetElem.setSelectionRange(maskStartIndex, maskEndIndex)
+          } else {
+            targetElem.setSelectionRange(maskStartIndex, maskEndIndex)
+          }
+        }
+        internalData.isTriggerMasked = true
+        return
+      }
+      targetElem.setSelectionRange(maskStartIndex, maskEndIndex)
+      internalData.isTriggerMasked = false
+    },
+    handleMaskedSelectedDate (evnt: Event, isFocus?: boolean) {
+      const $xeDatePicker = this
+      const props = $xeDatePicker
+      const internalData = $xeDatePicker.internalData
+
+      const { type, multiple, value: modelValue } = props
+      if (multiple) {
+        return
+      }
+      if (!maskedTypes.includes(type)) {
+        return
+      }
+      const targetElem = $xeDatePicker.$refs.refInputTarget as HTMLInputElement
+      if (!targetElem) {
+        return
+      }
+      const { laseFocusMasked } = internalData
+      if (laseFocusMasked && Date.now() - laseFocusMasked < 100) {
+        return
+      }
+      const dateMaskedFormat = $xeDatePicker.computeDateMaskedFormat
+      const maskChar = $xeDatePicker.computeMaskChar
+      const selectionStart = targetElem.selectionStart || 0
+      const selectionEnd = targetElem.selectionEnd || 0
+      const inpValue = targetElem.value
+      const allMaskedKeys = XEUtils.map(dateMaskedFormat.match(new RegExp(`(${inputMaskedKeys.join('|')})+`, 'g')) || [], fullKey => fullKey[0])
+
+      // 如果为空
+      if (!inpValue) {
+        let restValue = dateMaskedFormat.replace(new RegExp(`(${inputMaskedKeys.join('|')})`, 'g'), maskChar)
+
+        // 还原值
+        if (isFocus && modelValue) {
+          const chunkNums = (('' + XEUtils.toNumber(modelValue)).match(/\d/g) || [])
+          let useNumIndex = 0
+          restValue = dateMaskedFormat.replace(new RegExp(`(${inputMaskedKeys.join('|')})`, 'g'), (txt) => chunkNums[useNumIndex++] || txt)
+        }
+
+        const firstMaskedKeys = allMaskedKeys[0]
+        const firstSkRest = dateMaskedFormat.match(new RegExp(`${firstMaskedKeys}+`))
+        if (firstSkRest) {
+          evnt.preventDefault()
+          const firstChunkFormat = firstSkRest[0]
+          targetElem.value = restValue
+          $xeDatePicker.handleInputLabel(restValue, false)
+          targetElem.setSelectionRange(0, firstChunkFormat.length)
+          internalData.laseFocusMasked = Date.now()
+          return
+        }
+      }
+
+      // 全选 | 如果无效字符
+      const isAllSelected = !selectionStart && selectionEnd === inpValue.length
+      const isNotMasked = inpValue && inpValue.length !== dateMaskedFormat.length
+      if (isAllSelected || isNotMasked) {
+        let restValue = ''
+        // 还原值
+        if (isNotMasked && inpValue) {
+          const chunkNums = inpValue.match(/\d/g) || []
+          let useNumIndex = 0
+          restValue = dateMaskedFormat.replace(new RegExp(`(${inputMaskedKeys.join('|')})`, 'g'), () => chunkNums[useNumIndex++] || maskChar)
+        } else {
+          dateMaskedFormat.replace(new RegExp(`(${inputMaskedKeys.join('|')})`, 'g'), maskChar)
+        }
+
+        const firstMaskedKeys = allMaskedKeys[0]
+        const firstSkRest = dateMaskedFormat.match(new RegExp(`${firstMaskedKeys}+`))
+        if (firstSkRest) {
+          evnt.preventDefault()
+          const firstChunkFormat = firstSkRest[0]
+          targetElem.value = restValue
+          $xeDatePicker.handleInputLabel(restValue, false)
+          targetElem.setSelectionRange(0, firstChunkFormat.length)
+          internalData.laseFocusMasked = Date.now()
+          return
+        }
+      }
+
+      // 是否选择数字块
+      let selectKey = dateMaskedFormat[selectionStart]
+      if (!parseInputKayMaps[selectKey]) {
+        selectKey = dateMaskedFormat[selectionStart - 1]
+      }
+      if (selectKey) {
+        evnt.preventDefault()
+        const skRest = dateMaskedFormat.match(new RegExp(selectKey + '+'))
+        if (skRest) {
+          const chunkFormat = skRest[0] || ''
+          const chunkStartIndex = skRest.index || 0
+          const chunkEndIndex = chunkStartIndex + chunkFormat.length
+          targetElem.setSelectionRange(chunkStartIndex, chunkEndIndex)
+          internalData.isTriggerMasked = true
+          internalData.laseFocusMasked = Date.now()
+        }
       }
     },
     blurEvent (evnt: Event & { type: 'blur' }) {
       const $xeDatePicker = this
       const reactData = $xeDatePicker.reactData
+      const internalData = $xeDatePicker.internalData
       const $xeForm = $xeDatePicker.$xeForm
       const formItemInfo = $xeDatePicker.formItemInfo
 
@@ -582,10 +1036,13 @@ export default /* define-vxe-component start */ defineVxeComponent({
         $xeDatePicker.handleChange(value, evnt)
       }
       if (!reactData.visiblePanel) {
+        const { inputLabel } = internalData
         reactData.isActivated = false
         // 未打开面板时才校验
         if ($datePanel) {
-          $datePanel.checkValue(reactData.inputLabel)
+          $datePanel.checkValue(inputLabel)
+        } else {
+          $xeDatePicker.afterCheckValue(inputLabel)
         }
       }
       $xeDatePicker.dispatchEvent('blur', { value }, evnt)
@@ -594,16 +1051,87 @@ export default /* define-vxe-component start */ defineVxeComponent({
         $xeForm.triggerItemEvent(evnt, formItemInfo.itemConfig.field, value)
       }
     },
-    keydownEvent (evnt: KeyboardEvent & { type: 'keydown' }) {
+    focusEvent (evnt: KeyboardEvent & { type: 'focus' }) {
+      const $xeDatePicker = this
+      const props = $xeDatePicker
+      const reactData = $xeDatePicker.reactData
+
+      const { multiple, editable, maskedConfig } = props
+      const maskedOpts = $xeDatePicker.computeMaskedOpts
+      const popupOpts = $xeDatePicker.computePopupOpts
+      const { trigger } = popupOpts
+      reactData.isActivated = true
+      if (!trigger || trigger === 'default') {
+        $xeDatePicker.datePickerOpenEvent(evnt)
+        setTimeout(() => {
+          if (editable && !multiple && (isEnableConf(maskedConfig) || maskedOpts.enabled)) {
+            $xeDatePicker.handleMaskedSelectedDate(evnt, true)
+          }
+        }, 15)
+      } else if (trigger === 'icon') {
+        $xeDatePicker.hidePanel()
+        setTimeout(() => {
+          if (editable && !multiple && (isEnableConf(maskedConfig) || maskedOpts.enabled)) {
+            $xeDatePicker.handleMaskedSelectedDate(evnt, true)
+          }
+        }, 15)
+      } else {
+        if (editable && !multiple && (isEnableConf(maskedConfig) || maskedOpts.enabled)) {
+          $xeDatePicker.handleMaskedSelectedDate(evnt, true)
+        }
+      }
+      $xeDatePicker.triggerEvent(evnt)
+    },
+    clickEvent (evnt: MouseEvent & { type: 'click' }) {
       const $xeDatePicker = this
       const props = $xeDatePicker
 
-      const { controlConfig } = props
-      const controlOpts = $xeDatePicker.computeControlOpts
+      const { editable, maskedConfig } = props
+      const maskedOpts = $xeDatePicker.computeMaskedOpts
+      if (editable && (isEnableConf(maskedConfig) || maskedOpts.enabled)) {
+        $xeDatePicker.handleMaskedSelectedDate(evnt)
+      }
+      $xeDatePicker.triggerEvent(evnt)
+    },
+    keydownEvent (evnt: KeyboardEvent & { type: 'keydown' }) {
+      const $xeDatePicker = this
+      const props = $xeDatePicker
+      const reactData = $xeDatePicker.reactData
+      const internalData = $xeDatePicker.internalData
+
+      const { type, editable, maskedConfig } = props
+      const { visiblePanel } = reactData
+      const maskedOpts = $xeDatePicker.computeMaskedOpts
       const isUpArrow = globalEvents.hasKey(evnt, GLOBAL_EVENT_KEYS.ARROW_UP)
       const isDwArrow = globalEvents.hasKey(evnt, GLOBAL_EVENT_KEYS.ARROW_DOWN)
-      if ((isUpArrow || isDwArrow) && controlOpts.isArrow && (controlConfig || controlOpts.enabled)) {
-        $xeDatePicker.handleArrowInputDate(evnt, isUpArrow)
+      const isLtArrow = globalEvents.hasKey(evnt, GLOBAL_EVENT_KEYS.ARROW_LEFT)
+      const isRtArrow = globalEvents.hasKey(evnt, GLOBAL_EVENT_KEYS.ARROW_RIGHT)
+      const isEnter = globalEvents.hasKey(evnt, GLOBAL_EVENT_KEYS.ENTER)
+      if (editable) {
+        if (isEnter) {
+          const $datePanel = $xeDatePicker.$refs.refDatePanel as VxeDatePanelConstructor
+          const { inputLabel } = internalData
+          const targetElem = $xeDatePicker.$refs.refInputTarget as HTMLInputElement
+          if (visiblePanel) {
+            $xeDatePicker.hidePanel()
+          }
+          if ($datePanel) {
+            $datePanel.checkValue(inputLabel)
+          } else {
+            $xeDatePicker.afterCheckValue(inputLabel)
+          }
+          if (targetElem) {
+            targetElem.blur()
+          }
+        } else if (maskedTypes.includes(type)) {
+          if (isEnableConf(maskedConfig) || maskedOpts.enabled) {
+            if (maskedOpts.isArrow && (isUpArrow || isDwArrow || isLtArrow || isRtArrow)) {
+              $xeDatePicker.handleArrowInputDate(evnt, isUpArrow, isDwArrow, isLtArrow, isRtArrow)
+            } else if (maskedOpts.isMasked) {
+              $xeDatePicker.handleMaskedInputDate(evnt)
+            }
+          }
+        }
       }
       $xeDatePicker.triggerEvent(evnt)
     },
@@ -642,14 +1170,14 @@ export default /* define-vxe-component start */ defineVxeComponent({
     },
     panelRevertEvent (params: VxeDatePanelDefines.RevertEventParams) {
       const $xeDatePicker = this
-      const reactData = $xeDatePicker.reactData
 
-      reactData.inputLabel = params.label
+      $xeDatePicker.handleInputLabel(params.label, true)
     },
     // 全局事件
     handleGlobalMousedownEvent (evnt: Event) {
       const $xeDatePicker = this
       const reactData = $xeDatePicker.reactData
+      const internalData = $xeDatePicker.internalData
 
       const $datePanel = $xeDatePicker.$refs.refDatePanel as VxeDatePanelConstructor
       const { visiblePanel, isActivated } = reactData
@@ -657,12 +1185,18 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const panelWrapperElem = $xeDatePicker.$refs.refPanelWrapper as HTMLDivElement
       const isDisabled = $xeDatePicker.computeIsDisabled
       if (!isDisabled && isActivated) {
-        reactData.isActivated = getEventTargetNode(evnt, el).flag || getEventTargetNode(evnt, panelWrapperElem).flag
-        if (!reactData.isActivated) {
+        const currActivated = getEventTargetNode(evnt, el).flag || getEventTargetNode(evnt, panelWrapperElem).flag
+        if (currActivated !== isActivated) {
+          reactData.isActivated = currActivated
+        }
+        if (!currActivated) {
           if (visiblePanel) {
             $xeDatePicker.hidePanel()
+            const { inputLabel } = internalData
             if ($datePanel) {
-              $datePanel.checkValue(reactData.inputLabel)
+              $datePanel.checkValue(inputLabel)
+            } else {
+              $xeDatePicker.afterCheckValue(inputLabel)
             }
           }
         }
@@ -707,6 +1241,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
     handleGlobalBlurEvent () {
       const $xeDatePicker = this
       const reactData = $xeDatePicker.reactData
+      const internalData = $xeDatePicker.internalData
 
       const $datePanel = $xeDatePicker.$refs.refDatePanel as VxeDatePanelConstructor
       const { isActivated, visiblePanel } = reactData
@@ -718,7 +1253,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       }
       if (visiblePanel || isActivated) {
         if ($datePanel) {
-          $datePanel.checkValue(reactData.inputLabel)
+          $datePanel.checkValue(internalData.inputLabel)
         }
         const targetElem = $xeDatePicker.$refs.refInputTarget as HTMLInputElement
         if (targetElem) {
@@ -788,9 +1323,11 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const btnTransfer = $xeDatePicker.computeBtnTransfer
       const panelElem = $xeDatePicker.$refs.refInputPanel as HTMLElement
       if (!isDisabled && !visiblePanel) {
-        if (!reactData.initialized && btnTransfer && panelElem) {
+        if (!reactData.initialized) {
           reactData.initialized = true
-          document.body.appendChild(panelElem)
+          if (btnTransfer && panelElem) {
+            document.body.appendChild(panelElem)
+          }
         }
         if (internalData.hpTimeout) {
           clearTimeout(internalData.hpTimeout)
@@ -830,11 +1367,6 @@ export default /* define-vxe-component start */ defineVxeComponent({
           $xeDatePicker.datePickerOpenEvent(evnt)
         }
       }
-    },
-    clickEvent (evnt: Event & { type: 'click' }) {
-      const $xeDatePicker = this
-
-      $xeDatePicker.triggerEvent(evnt)
     },
     handleShortcutEvent ({ option, $event }: VxeButtonGroupDefines.ClickEventParams) {
       const $xeDatePicker = this
@@ -877,7 +1409,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
               break
             }
             default:
-              errLog('vxe.error.notCommands', [`[date-picker] ${code}`])
+              errLog('vxe.error.notCommands', [code])
               break
           }
         }
@@ -1211,9 +1743,11 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const $xeDatePicker = this
       const props = $xeDatePicker
       const reactData = $xeDatePicker.reactData
+      const internalData = $xeDatePicker.internalData
 
       const { className, type, name, autoComplete } = props
-      const { inputValue, inputLabel, visiblePanel, isActivated } = reactData
+      const { inputValue, visiblePanel, isActivated, labelFlag } = reactData
+      const { inputLabel } = internalData
       const vSize = $xeDatePicker.computeSize
       const isDisabled = $xeDatePicker.computeIsDisabled
       const formReadonly = $xeDatePicker.computeFormReadonly
@@ -1252,7 +1786,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
             ref: 'refInputTarget',
             class: 'vxe-date-picker--inner',
             domProps: {
-              value: inputLabel
+              value: labelFlag ? inputLabel : ''
             },
             attrs: {
               name,
@@ -1282,9 +1816,8 @@ export default /* define-vxe-component start */ defineVxeComponent({
   watch: {
     computePanelLabel (val) {
       const $xeDatePicker = this
-      const reactData = $xeDatePicker.reactData
 
-      reactData.inputLabel = val
+      $xeDatePicker.handleInputLabel(val, true)
     },
     value () {
       const $xeDatePicker = this
@@ -1294,15 +1827,19 @@ export default /* define-vxe-component start */ defineVxeComponent({
   },
   created () {
     const $xeDatePicker = this
-    const internalData = $xeDatePicker.internalData
+    const props = $xeDatePicker
 
-    const { parseInputKayMaps } = internalData
-    const inputKeys = ['y', 'M', 'd', 'H', 'm', 'n']
-    inputKeys.forEach(key => {
-      parseInputKayMaps[key] = (evnt: KeyboardEvent) => {
-        evnt.preventDefault()
+    $xeDatePicker.internalData = createInternalData()
+
+    const { type, multiple, maskedConfig } = props
+    if (isEnableConf(maskedConfig)) {
+      if (multiple) {
+        errLog('vxe.error.notSupportProp', ['multiple', 'control-config.enabled=true', 'control-config.enabled=false'])
       }
-    })
+      if (!maskedTypes.includes(type)) {
+        warnLog('vxe.error.notSupportProp', ['control-config.enabled=true', `type=${type}`, `type=${maskedTypes.join('|')}`])
+      }
+    }
     $xeDatePicker.updateModelValue()
     globalEvents.on($xeDatePicker, 'mousewheel', $xeDatePicker.handleGlobalMousewheelEvent)
     globalEvents.on($xeDatePicker, 'mousedown', $xeDatePicker.handleGlobalMousedownEvent)
@@ -1312,6 +1849,8 @@ export default /* define-vxe-component start */ defineVxeComponent({
   },
   beforeDestroy () {
     const $xeDatePicker = this
+    const reactData = $xeDatePicker.reactData
+    const internalData = $xeDatePicker.internalData
 
     const panelElem = $xeDatePicker.$refs.refInputPanel as HTMLElement | undefined
     if (panelElem && panelElem.parentNode) {
@@ -1321,6 +1860,8 @@ export default /* define-vxe-component start */ defineVxeComponent({
     globalEvents.off($xeDatePicker, 'mousedown')
     globalEvents.off($xeDatePicker, 'blur')
     globalEvents.off($xeDatePicker, 'resize')
+    XEUtils.assign(reactData, createReactData())
+    XEUtils.assign(internalData, createInternalData())
   },
   render (this: any, h) {
     return this.renderVN(h)

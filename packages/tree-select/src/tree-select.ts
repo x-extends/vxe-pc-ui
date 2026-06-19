@@ -5,7 +5,7 @@ import { getConfig, getI18n, getIcon, globalEvents, createEvent, globalMixins, r
 import { getEventTargetNode, updatePanelPlacement, toCssUnit } from '../../ui/src/dom'
 import { getLastZIndex, nextZIndex } from '../../ui/src/utils'
 import { deNodeValue } from '../../tree/src/util'
-import { warnLog, errLog } from '../../ui/src/log'
+import { createComponentLog } from '../../ui/src/log'
 import VxeInputComponent from '../../input'
 import VxeButtonComponent from '../../button'
 import VxeTreeComponent from '../../tree'
@@ -13,6 +13,8 @@ import { getSlotVNs } from '../../ui/src/vn'
 
 import type { TreeSelectReactData, VxeTreeSelectEmits, TreeSelectInternalData, VxeComponentSizeType, VxeButtonDefines, VxeInputDefines, VxeTreeDefines, ValueOf, VxeComponentStyleType, VxeTreeSelectPropTypes, VxeFormDefines, VxeDrawerConstructor, VxeDrawerMethods, VxeFormConstructor, VxeFormPrivateMethods, VxeModalConstructor, VxeModalMethods, VxeInputConstructor, VxeTreeConstructor, VxeTreeSelectDefines } from '../../../types'
 import type { VxeTableConstructor, VxeTablePrivateMethods } from '../../../types/components/table'
+
+const { warnLog, errLog } = createComponentLog('tree-select')
 
 function getOptUniqueId () {
   return XEUtils.uniqueId('node_')
@@ -191,11 +193,12 @@ export default /* define-vxe-component start */ defineVxeComponent({
   data () {
     const xID = XEUtils.uniqueId()
     const reactData = createReactData()
-    const internalData = createInternalData()
     return {
+      ...({} as {
+        internalData: TreeSelectInternalData
+      }),
       xID,
-      reactData,
-      internalData
+      reactData
     }
   },
   computed: {
@@ -1209,6 +1212,8 @@ export default /* define-vxe-component start */ defineVxeComponent({
   },
   created () {
     const $xeTreeSelect = this
+
+    $xeTreeSelect.internalData = createInternalData()
 
     $xeTreeSelect.cacheDataMap()
     $xeTreeSelect.cacheLazyDataMap()

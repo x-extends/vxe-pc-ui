@@ -5,15 +5,32 @@ import { VxeUI, getConfig, getIcon, globalEvents, getI18n, createEvent, renderEm
 import { getEventTargetNode, updatePanelPlacement, toCssUnit } from '../../ui/src/dom'
 import { getOnName } from '../../ui/src/vn'
 import { getLastZIndex, nextZIndex } from '../../ui/src/utils'
-import { errLog } from '../../ui/src/log'
+import { createComponentLog } from '../../ui/src/log'
 import VxeInputComponent from '../../input/src/input'
 
 import type { TableSelectReactData, VxeTableSelectPropTypes, TableSelectInternalData, VxeTableSelectEmits, VxeInputConstructor, VxeFormDefines, ValueOf, VxeComponentStyleType, VxeComponentSizeType, VxeModalConstructor, VxeModalMethods, VxeDrawerConstructor, VxeDrawerMethods, VxeFormConstructor, VxeFormPrivateMethods } from '../../../types'
 import type { VxeTableConstructor, VxeTablePrivateMethods, VxeTablePropTypes } from '../../../types/components/table'
 import type { VxeGridInstance, VxeGridDefines, VxeGridPropTypes } from '../../../types/components/grid'
 
+const { errLog } = createComponentLog('table-select')
+
 export function getRowUniqueId () {
   return XEUtils.uniqueId('row_')
+}
+
+function createReactData (): TableSelectReactData {
+  return {
+    initialized: false,
+    tableColumns: [],
+    fullOptionList: [],
+    panelIndex: 0,
+    panelStyle: {},
+    panelPlacement: null,
+    triggerFocusPanel: false,
+    visiblePanel: false,
+    isAniVisible: false,
+    isActivated: false
+  }
 }
 
 function createInternalData (): TableSelectInternalData {
@@ -98,27 +115,15 @@ export default /* define-vxe-component start */ defineVxeComponent({
   },
   data () {
     const xID = XEUtils.uniqueId()
-    const reactData: TableSelectReactData = {
-      initialized: false,
-      tableColumns: [],
-      fullOptionList: [],
-      panelIndex: 0,
-      panelStyle: {},
-      panelPlacement: null,
-      triggerFocusPanel: false,
-      visiblePanel: false,
-      isAniVisible: false,
-      isActivated: false
-    }
-
-    const internalData: TableSelectInternalData = createInternalData()
-
+    const reactData = createReactData()
     const gridEvents: Record<string, any> = {}
 
     return {
+      ...({} as {
+        internalData: TableSelectInternalData
+      }),
       xID,
       reactData,
-      internalData,
       gridEvents
     }
   },
@@ -430,12 +435,12 @@ export default /* define-vxe-component start */ defineVxeComponent({
             rowid = getRowUniqueId()
           }
           if (keyMaps[rowid]) {
-            errLog('vxe.error.repeatKey', [`[table-select] ${rowKeyField}`, rowid])
+            errLog('vxe.error.repeatKey', [rowKeyField, rowid])
           }
           keyMaps[rowid] = true
           const value = item[valueField]
           if (rowMaps[value]) {
-            errLog('vxe.error.repeatKey', [`[table-select] ${valueField}`, value])
+            errLog('vxe.error.repeatKey', [valueField, value])
           }
           rowMaps[value] = { item, index, items, parent: null, nodes: [] }
         })
@@ -855,6 +860,8 @@ export default /* define-vxe-component start */ defineVxeComponent({
     const $xeTableSelect = this
     const props = $xeTableSelect
 
+    $xeTableSelect.internalData = createInternalData()
+
     const gridEventKeys: ValueOf<VxeTableSelectEmits>[] = [
       'form-submit',
       'form-reset',
@@ -879,7 +886,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
     const VxeTableGridComponent = VxeUI.getComponent('vxe-grid')
     $xeTableSelect.$nextTick(() => {
       if (!VxeTableGridComponent) {
-        errLog('vxe.error.reqComp', ['[table-select] vxe-grid'])
+        errLog('vxe.error.reqComp', ['vxe-grid'])
       }
     })
 
@@ -896,6 +903,8 @@ export default /* define-vxe-component start */ defineVxeComponent({
   },
   beforeDestroy () {
     const $xeTableSelect = this
+    const reactData = $xeTableSelect.reactData
+    const internalData = $xeTableSelect.internalData
 
     const panelElem = $xeTableSelect.$refs.refOptionPanel as HTMLElement | undefined
     if (panelElem && panelElem.parentNode) {
@@ -905,6 +914,8 @@ export default /* define-vxe-component start */ defineVxeComponent({
     globalEvents.off($xeTableSelect, 'mousedown')
     globalEvents.off($xeTableSelect, 'blur')
     globalEvents.off($xeTableSelect, 'resize')
+    XEUtils.assign(reactData, createReactData())
+    XEUtils.assign(internalData, createInternalData())
   },
   render (this: any, h) {
     return this.renderVN(h)

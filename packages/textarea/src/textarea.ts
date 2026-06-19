@@ -3,9 +3,11 @@ import { defineVxeComponent } from '../../ui/src/comp'
 import XEUtils from 'xe-utils'
 import { getConfig, getI18n, createEvent, globalMixins } from '../../ui'
 import { getFuncText } from '../../ui/src/utils'
-import { warnLog } from '../../ui/src/log'
+import { createComponentLog } from '../../ui/src/log'
 
 import type { VxeTextareaPropTypes, TextareaReactData, VxeComponentSizeType, VxeTextareaEmits, VxeFormConstructor, VxeFormPrivateMethods, VxeFormDefines, ValueOf } from '../../../types'
+
+const { warnLog } = createComponentLog('textarea')
 
 let autoTxtElem: HTMLDivElement
 

@@ -3,7 +3,7 @@ import { defineVxeComponent } from '../../ui/src/comp'
 import XEUtils from 'xe-utils'
 import { VxeUI, createEvent, globalEvents, globalResize, renderEmptyElement, globalMixins } from '../../ui'
 import { calcTreeLine, enNodeValue, deNodeValue } from './util'
-import { errLog } from '../../ui/src/log'
+import { createComponentLog } from '../../ui/src/log'
 import { getSlotVNs } from '../../ui/src/vn'
 import { crossTreeDragNodeGlobal, getCrossTreeDragNodeInfo } from './store'
 import { toCssUnit, isScale, getPaddingTopBottomSize, addClass, removeClass, getTpImg, hasControlKey, getEventTargetNode } from '../../ui/src/dom'
@@ -12,6 +12,8 @@ import { moveRowAnimateToTb, clearRowAnimate } from '../../ui/src/anime'
 import VxeLoadingComponent from '../../loading'
 
 import type { TreeReactData, VxeTreeEmits, VxeTreeConstructor, VxeTreePropTypes, TreeInternalData, VxeTreeDefines, VxeTreePrivateMethods, VxeComponentSizeType, ValueOf } from '../../../types'
+
+const { errLog } = createComponentLog('tree')
 
 const { menus, getConfig, getI18n, getIcon } = VxeUI
 
@@ -686,11 +688,12 @@ export default /* define-vxe-component start */ defineVxeComponent({
   data () {
     const xID = XEUtils.uniqueId()
     const reactData = createReactData()
-    const internalData = createInternalData()
     return {
+      ...({} as {
+        internalData: TreeInternalData
+      }),
       xID,
       reactData,
-      internalData,
       crossTreeDragNodeInfo: crossTreeDragNodeGlobal,
 
       hFlag: 0,
@@ -1348,7 +1351,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       $xeTree.handleData(true)
       if (sYLoad) {
         if (!(props.height || props.maxHeight)) {
-          errLog('vxe.error.reqProp', ['[tree] height | max-height | virtual-y-config.enabled=false'])
+          errLog('vxe.error.reqProp', ['height | max-height | virtual-y-config.enabled=false'])
         }
       }
       return $xeTree.computeScrollLoad().then(() => {
@@ -3089,6 +3092,8 @@ export default /* define-vxe-component start */ defineVxeComponent({
     const $xeTree = this
     const props = $xeTree
     const reactData = $xeTree.reactData
+
+    $xeTree.internalData = createInternalData()
 
     reactData.selectRadioKey = enNodeValue(props.checkNodeKey)
     $xeTree.loadData(props.data || [])

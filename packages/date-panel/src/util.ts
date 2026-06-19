@@ -2,6 +2,19 @@ import XEUtils from 'xe-utils'
 
 import type { VxeDatePanelPropTypes } from '../../../types'
 
+export function getChunkDefaultNum (selectKey: string) {
+  const currDate = new Date()
+  switch (selectKey) {
+    case 'y': return currDate.getFullYear()
+    case 'M': return currDate.getMonth() + 1
+    case 'd': return currDate.getDate()
+    case 'H': return currDate.getHours()
+    case 'm': return currDate.getMinutes()
+    case 's': return currDate.getSeconds()
+  }
+  return 0
+}
+
 export function hasTimestampValueType (valueFormat?: string) {
   return valueFormat === 'timestamp'
 }
@@ -15,19 +28,6 @@ export function handleValueFormat (type: string, valueFormat?: string) {
     if (!(hasDateValueType(valueFormat) || hasTimestampValueType(valueFormat))) {
       return valueFormat
     }
-  }
-  if (type === 'time') {
-    return 'HH:mm:ss'
-  }
-  if (type === 'datetime') {
-    return 'yyyy-MM-dd HH:mm:ss'
-  }
-  return 'yyyy-MM-dd'
-}
-
-export function handleInputFormat (type: string, inputFormat?: string) {
-  if (inputFormat) {
-    return inputFormat
   }
   if (type === 'time') {
     return 'HH:mm:ss'
@@ -99,9 +99,9 @@ export const parseDateValue = (val: string | number | Date | null | undefined, t
   return null
 }
 
-export const parseDateString = (val: string | number | Date | null | undefined, type: VxeDatePanelPropTypes.Type, options: {
+export function parseDateString (val: string | number | Date | null | undefined, type: VxeDatePanelPropTypes.Type, options: {
   valueFormat: string
-}) => {
+}) {
   const dValue = parseDateValue(val, type, options)
   return dValue ? XEUtils.toDateString(dValue, options.valueFormat) : ''
 }
@@ -252,6 +252,18 @@ export function getRangeDateByCode (code: 'last1' | 'last3' | 'last7' | 'last30'
 /**
  * 判断周的年份是否跨年
  */
-const checkWeekOfsetYear = (W: number | string, M: number | string) => {
+function checkWeekOfsetYear (W: number | string, M: number | string) {
   return `${W}` === '1' && `${M}` === '12'
+}
+
+export function isAllSameChar (str: string, char: string) {
+  if (str.length === 0) {
+    return false
+  }
+  for (let i = 0; i < str.length; i++) {
+    if (str[i] !== char) {
+      return false
+    }
+  }
+  return true
 }

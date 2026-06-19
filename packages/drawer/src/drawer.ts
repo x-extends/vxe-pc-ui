@@ -98,6 +98,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       type: Boolean as PropType<VxeDrawerPropTypes.ShowTitleOverflow>,
       default: () => getConfig().drawer.showTitleOverflow
     },
+    preload: Boolean as PropType<VxeDrawerPropTypes.Preload>,
     width: [Number, String] as PropType<VxeDrawerPropTypes.Width>,
     height: [Number, String] as PropType<VxeDrawerPropTypes.Height>,
     resize: {
@@ -753,7 +754,9 @@ export default /* define-vxe-component start */ defineVxeComponent({
   mounted () {
     const $xeDrawer = this
     const props = $xeDrawer
+    const reactData = $xeDrawer.reactData
 
+    reactData.initialized = !!props.preload
     $xeDrawer.$nextTick(() => {
       if (props.value) {
         $xeDrawer.openDrawer()

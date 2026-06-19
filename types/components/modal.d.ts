@@ -71,6 +71,7 @@ export namespace VxeModalPropTypes {
   export type ShowHeader = boolean
   export type ShowFooter = boolean
   export type ShowZoom = boolean
+  export type Preload = boolean
   export interface ZoomConfig {
     minimizeLayout?: null | '' | 'vertical' | 'horizontal'
     minimizeMaxSize?: number
@@ -147,6 +148,7 @@ export interface VxeModalProps {
   showHeader?: VxeModalPropTypes.ShowHeader
   showFooter?: VxeModalPropTypes.ShowFooter
   showZoom?: VxeModalPropTypes.ShowZoom
+  preload?: VxeModalPropTypes.Preload
   zoomConfig?: VxeModalPropTypes.ZoomConfig
   showMaximize?: VxeModalPropTypes.ShowMaximize
   showMinimize?: VxeModalPropTypes.ShowMinimize

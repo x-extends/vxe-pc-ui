@@ -2,9 +2,11 @@ import { CreateElement } from 'vue'
 import XEUtils from 'xe-utils'
 import { renderer, getComponent } from '../../ui'
 import { getOnName, getModelEvent, getChangeEvent } from '../../ui/src/vn'
-import { errLog } from '../../ui/src/log'
+import { createComponentLog } from '../../ui/src/log'
 
 import type { VxeGlobalRendererHandles, VxeFormConstructor, VxeFormPrivateMethods } from '../../../types'
+
+const { errLog } = createComponentLog('form')
 
 const componentDefaultModelProp = 'value'
 
@@ -101,7 +103,7 @@ function getComponentOns (renderOpts: VxeGlobalRendererHandles.RenderFormItemCon
   XEUtils.objectEach(events, (func, key: any) => {
     ons[getOnName(key)] = function (...args: any[]) {
       if (!XEUtils.isFunction(func)) {
-        errLog('vxe.error.errFunc', [`[form] ${func}`])
+        errLog('vxe.error.errFunc', [func])
       }
       func(params, ...args)
     }

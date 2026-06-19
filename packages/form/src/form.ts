@@ -9,12 +9,14 @@ import VxeTooltipComponent from '../../tooltip'
 import VxeFormConfigItem from './form-config-item'
 import VxeLoadingComponent from '../../loading'
 import { getSlotVNs } from '../../ui/src/vn'
-import { warnLog, errLog } from '../../ui/src/log'
+import { createComponentLog } from '../../ui/src/log'
 
 import '../render'
 
 import type { VxeFormPropTypes, VxeFormEmits, VxeComponentSizeType, VxeFormConstructor, VxeFormPrivateMethods, ValueOf, FormReactData, VxeFormDefines, VxeFormItemPropTypes, FormInternalData, VxeTooltipConstructor } from '../../../types'
 import type { VxeGridConstructor, VxeGridPrivateMethods } from '../../../types/components/grid'
+
+const { warnLog, errLog } = createComponentLog('form')
 
 class Rule {
   constructor (rule: any) {
@@ -284,11 +286,12 @@ export default /* define-vxe-component start */ defineVxeComponent({
   data () {
     const xID = XEUtils.uniqueId()
     const reactData: FormReactData = createReactData()
-    const internalData = createInternalData()
     return {
+      ...({} as {
+        internalData: FormInternalData
+      }),
       xID,
       reactData,
-      internalData,
 
       recalcFlag: 0
     }
@@ -373,7 +376,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
             XEUtils.each(item.slots, (func) => {
               if (!XEUtils.isFunction(func)) {
                 if (!slots[func]) {
-                  errLog('vxe.error.notSlot', [`[form] ${func}`])
+                  errLog('vxe.error.notSlot', [func])
                 }
               }
             })
@@ -633,10 +636,10 @@ export default /* define-vxe-component start */ defineVxeComponent({
                         if (validatorMethod) {
                           customValid = validatorMethod(validParams)
                         } else {
-                          warnLog('vxe.error.notValidators', [`[form] ${validator}`])
+                          warnLog('vxe.error.notValidators', [validator])
                         }
                       } else {
-                        errLog('vxe.error.notValidators', [`[form] ${validator}`])
+                        errLog('vxe.error.notValidators', [validator])
                       }
                     } else {
                       customValid = validator(validParams)
@@ -1049,6 +1052,8 @@ export default /* define-vxe-component start */ defineVxeComponent({
     const props = $xeForm
     const reactData = $xeForm.reactData
 
+    $xeForm.internalData = createInternalData()
+
     reactData.collapseAll = !!props.collapseStatus
   },
   mounted () {
@@ -1060,16 +1065,18 @@ export default /* define-vxe-component start */ defineVxeComponent({
     }
     $xeForm.$nextTick(() => {
       if (props.customLayout && props.items) {
-        errLog('vxe.error.errConflicts', ['[form] custom-layout', 'items'])
+        errLog('vxe.error.errConflicts', ['custom-layout', 'items'])
       }
     })
     globalEvents.on($xeForm, 'resize', $xeForm.handleGlobalResizeEvent)
   },
   destroyed () {
     const $xeForm = this
+    const reactData = $xeForm.reactData
     const internalData = $xeForm.internalData
 
     globalEvents.off($xeForm, 'resize')
+    XEUtils.assign(reactData, createReactData())
     XEUtils.assign(internalData, createInternalData())
   },
   render (this: any, h) {

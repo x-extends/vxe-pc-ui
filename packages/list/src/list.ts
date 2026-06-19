@@ -64,11 +64,12 @@ export default /* define-vxe-component start */ defineVxeComponent({
   data () {
     const xID = XEUtils.uniqueId()
     const reactData = createReactData()
-    const internalData = createInternalData()
     return {
+      ...({} as {
+        internalData: ListInternalData
+      }),
       xID,
-      reactData,
-      internalData
+      reactData
     }
   },
   computed: {
@@ -448,6 +449,8 @@ export default /* define-vxe-component start */ defineVxeComponent({
   created () {
     const $xeList = this
     const props = $xeList
+
+    $xeList.internalData = createInternalData()
 
     $xeList.loadData(props.data || [])
   },
