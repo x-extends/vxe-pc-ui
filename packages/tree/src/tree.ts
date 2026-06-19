@@ -2,7 +2,7 @@ import { ref, h, reactive, PropType, computed, VNode, watch, onBeforeUnmount, ne
 import { defineVxeComponent } from '../../ui/src/comp'
 import { VxeUI, createEvent, useSize, globalEvents, globalResize, renderEmptyElement } from '../../ui'
 import { calcTreeLine, enNodeValue, deNodeValue } from './util'
-import { errLog } from '../../ui/src/log'
+import { createComponentLog } from '../../ui/src/log'
 import { getCrossTreeDragNodeInfo } from './store'
 import XEUtils from 'xe-utils'
 import { getSlotVNs } from '../../ui/src/vn'
@@ -12,6 +12,8 @@ import { moveRowAnimateToTb, clearRowAnimate } from '../../ui/src/anime'
 import VxeLoadingComponent from '../../loading'
 
 import type { TreeReactData, VxeTreeEmits, VxeTreePropTypes, TreeInternalData, TreePrivateRef, VxeTreeDefines, VxeTreePrivateComputed, TreePrivateMethods, TreeMethods, ValueOf, VxeTreeConstructor, VxeTreePrivateMethods, VxeComponentStyleType } from '../../../types'
+
+const { errLog } = createComponentLog('tree')
 
 const { menus, getConfig, getI18n, getIcon } = VxeUI
 
@@ -779,7 +781,7 @@ export default defineVxeComponent({
       handleData(true)
       if (sYLoad) {
         if (!(props.height || props.maxHeight)) {
-          errLog('vxe.error.reqProp', ['[tree] height | max-height | virtual-y-config.enabled=false'])
+          errLog('vxe.error.reqProp', ['height | max-height | virtual-y-config.enabled=false'])
         }
       }
       return computeScrollLoad().then(() => {

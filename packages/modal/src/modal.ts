@@ -7,10 +7,12 @@ import { VxeUI, getConfig, getIcon, getI18n, globalEvents, GLOBAL_EVENT_KEYS, cr
 import VxeButtonComponent from '../../button/src/button'
 import VxeLoadingComponent from '../../loading/index'
 import { getSlotVNs } from '../../ui/src/vn'
-import { warnLog, errLog } from '../../ui/src/log'
+import { createComponentLog } from '../../ui/src/log'
 
 import type { VxeModalConstructor, VxeModalPropTypes, ModalReactData, ModalInternalData, VxeModalEmits, VxeModalPrivateComputed, ModalEventTypes, VxeButtonInstance, ModalMethods, ModalPrivateRef, VxeModalMethods, ValueOf, VxeDrawerConstructor, VxeDrawerMethods, VxeFormConstructor, VxeFormPrivateMethods } from '../../../types'
 import type { VxeTableConstructor, VxeTablePrivateMethods } from '../../../types/components/table'
+
+const { warnLog, errLog } = createComponentLog('modal')
 
 export const allActiveModals: VxeModalConstructor[] = []
 const msgQueue: VxeModalConstructor[] = []
@@ -100,6 +102,7 @@ export default defineVxeComponent({
       type: Boolean as PropType<VxeModalPropTypes.ShowFooter>,
       default: () => getConfig().modal.showFooter
     },
+    preload: Boolean as PropType<VxeModalPropTypes.Preload>,
     showZoom: Boolean as PropType<VxeModalPropTypes.ShowZoom>,
     zoomConfig: Object as PropType<VxeModalPropTypes.ZoomConfig>,
     showMaximize: {
@@ -1479,9 +1482,10 @@ export default defineVxeComponent({
       if (props.type === 'modal' && props.showFooter && !(props.showConfirmButton || props.showCancelButton || slots.footer)) {
         warnLog('vxe.modal.footPropErr')
       }
+      reactData.initialized = !!props.preload
       nextTick(() => {
         if (props.storage && !props.id) {
-          errLog('vxe.error.reqProp', ['[modal] id'])
+          errLog('vxe.error.reqProp', ['id'])
         }
         if (props.modelValue) {
           openModal()

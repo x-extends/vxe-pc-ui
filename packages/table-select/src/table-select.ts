@@ -5,15 +5,32 @@ import { VxeUI, getConfig, getIcon, globalEvents, getI18n, createEvent, useSize,
 import { getEventTargetNode, updatePanelPlacement, toCssUnit } from '../../ui/src/dom'
 import { getOnName } from '../../ui/src/vn'
 import { getLastZIndex, nextZIndex } from '../../ui/src/utils'
-import { errLog } from '../../ui/src/log'
+import { createComponentLog } from '../../ui/src/log'
 import VxeInputComponent from '../../input/src/input'
 
 import type { TableSelectReactData, VxeTableSelectEmits, VxeInputConstructor, TableSelectInternalData, VxeTableSelectPropTypes, VxeFormDefines, VxeModalConstructor, VxeModalMethods, VxeDrawerConstructor, VxeDrawerMethods, TableSelectMethods, TableSelectPrivateMethods, ValueOf, TableSelectPrivateRef, VxeTableSelectPrivateComputed, VxeTableSelectConstructor, VxeTableSelectPrivateMethods, VxeFormConstructor, VxeFormPrivateMethods, VxeComponentStyleType } from '../../../types'
 import type { VxeTableConstructor, VxeTablePrivateMethods } from '../../../types/components/table'
 import type { VxeGridInstance, VxeGridEvents, VxeGridPropTypes } from '../../../types/components/grid'
 
+const { errLog } = createComponentLog('table-select')
+
 export function getRowUniqueId () {
   return XEUtils.uniqueId('row_')
+}
+
+function createReactData (): TableSelectReactData {
+  return {
+    initialized: false,
+    tableColumns: [],
+    fullOptionList: [],
+    panelIndex: 0,
+    panelStyle: {},
+    panelPlacement: null,
+    triggerFocusPanel: false,
+    visiblePanel: false,
+    isAniVisible: false,
+    isActivated: false
+  }
 }
 
 function createInternalData (): TableSelectInternalData {
@@ -103,20 +120,9 @@ export default defineVxeComponent({
     const refOptionPanel = ref<HTMLDivElement>()
     const refGrid = ref<VxeGridInstance>()
 
-    const reactData = reactive<TableSelectReactData>({
-      initialized: false,
-      tableColumns: [],
-      fullOptionList: [],
-      panelIndex: 0,
-      panelStyle: {},
-      panelPlacement: null,
-      triggerFocusPanel: false,
-      visiblePanel: false,
-      isAniVisible: false,
-      isActivated: false
-    })
+    const reactData = reactive(createReactData())
 
-    const internalData: TableSelectInternalData = createInternalData()
+    const internalData = createInternalData()
 
     const refMaps: TableSelectPrivateRef = {
       refElem
@@ -402,12 +408,12 @@ export default defineVxeComponent({
             rowid = getRowUniqueId()
           }
           if (keyMaps[rowid]) {
-            errLog('vxe.error.repeatKey', [`[table-select] ${rowKeyField}`, rowid])
+            errLog('vxe.error.repeatKey', [rowKeyField, rowid])
           }
           keyMaps[rowid] = true
           const value = item[valueField]
           if (rowMaps[value]) {
-            errLog('vxe.error.repeatKey', [`[table-select] ${valueField}`, value])
+            errLog('vxe.error.repeatKey', [valueField, value])
           }
           rowMaps[value] = { item, index, items, parent: null, nodes: [] }
         })
@@ -787,12 +793,13 @@ export default defineVxeComponent({
       globalEvents.off($xeTableSelect, 'mousedown')
       globalEvents.off($xeTableSelect, 'blur')
       globalEvents.off($xeTableSelect, 'resize')
+      XEUtils.assign(reactData, createReactData())
       XEUtils.assign(internalData, createInternalData())
     })
 
     nextTick(() => {
       if (!VxeTableGridComponent) {
-        errLog('vxe.error.reqComp', ['[table-select] vxe-grid'])
+        errLog('vxe.error.reqComp', ['vxe-grid'])
       }
     })
 

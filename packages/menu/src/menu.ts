@@ -5,10 +5,12 @@ import { VxeUI, createEvent, permission, useSize, globalEvents, renderEmptyEleme
 import { toCssUnit } from '../../ui/src/dom'
 import { getLastZIndex, nextZIndex, isEnableConf } from '../../ui/src/utils'
 import { getSlotVNs } from '../../ui/src/vn'
-import { errLog } from '../../ui/src/log'
+import { createComponentLog } from '../../ui/src/log'
 import VxeLoadingComponent from '../../loading'
 
 import type { VxeMenuDefines, VxeMenuPropTypes, MenuReactData, VxeMenuEmits, MenuMethods, VxeComponentSlotType, VxeLayoutAsidePropTypes, MenuPrivateMethods, MenuPrivateRef, VxeMenuPrivateComputed, VxeMenuConstructor, VxeMenuPrivateMethods, ValueOf, VxeLayoutAsideConstructor, VxeLayoutAsidePrivateMethods } from '../../../types'
+
+const { errLog } = createComponentLog('menu')
 
 const { menus, getConfig, getIcon } = VxeUI
 

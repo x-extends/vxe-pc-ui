@@ -4,11 +4,13 @@ import { VxeUI, createEvent, useSize, renderEmptyElement } from '../../ui'
 import { getDateQuarter } from '../../date-panel/src/util'
 import { toCssUnit } from '../../ui/src/dom'
 import { isEnableConf } from '../../ui/src/utils'
-import { errLog } from '../../ui/src/log'
+import { createComponentLog } from '../../ui/src/log'
 import VxeButtonComponent from '../../button/src/button'
 import XEUtils from 'xe-utils'
 
 import type { VxeCalendarConstructor, VxeCalendarEmits, CalendarInternalData, CalendarReactData, CalendarMethods, VxeCalendarPropTypes, CalendarPrivateRef, VxeDatePanelDefines, ValueOf } from '../../../types'
+
+const { errLog } = createComponentLog('calendar')
 
 const { menus, getConfig, getI18n } = VxeUI
 

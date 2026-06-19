@@ -6,13 +6,15 @@ import { getFuncText, getLastZIndex, nextZIndex, isEnableConf } from '../../ui/s
 import { updatePanelPlacement, getEventTargetNode } from '../../ui/src/dom'
 import { parseDateString, parseDateObj, getRangeDateByCode, handleValueFormat } from '../../date-panel/src/util'
 import { getSlotVNs } from '../../ui/src/vn'
-import { errLog } from '../../ui/src/log'
+import { createComponentLog } from '../../ui/src/log'
 import VxeDatePanelComponent from '../../date-panel/src/date-panel'
 import VxeButtonComponent from '../../button/src/button'
 import VxeButtonGroupComponent from '../../button/src/button-group'
 
 import type { VxeDateRangePickerConstructor, VxeDateRangePickerEmits, DateRangePickerInternalData, DateRangePickerReactData, DateRangePickerMethods, VxeDateRangePickerPropTypes, DateRangePickerPrivateRef, VxeFormConstructor, VxeFormPrivateMethods, VxeFormDefines, ValueOf, VxeModalConstructor, VxeDatePanelPropTypes, VxeDrawerConstructor, VxeModalMethods, VxeDrawerMethods, VxeDatePanelEvents, VxeDateRangePickerDefines, VxeButtonGroupEvents, VxeDatePanelConstructor } from '../../../types'
 import type { VxeTableConstructor, VxeTablePrivateMethods } from '../../../types/components/table'
+
+const { errLog } = createComponentLog('date-range-picker')
 
 export default defineVxeComponent({
   name: 'VxeDateRangePicker',
@@ -951,7 +953,7 @@ export default defineVxeComponent({
               break
             }
             default:
-              errLog('vxe.error.notCommands', [`[date-range-picker] ${code}`])
+              errLog('vxe.error.notCommands', [code])
               break
           }
         }

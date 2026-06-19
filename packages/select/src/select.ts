@@ -5,12 +5,14 @@ import { VxeUI, getConfig, getIcon, getI18n, globalEvents, GLOBAL_EVENT_KEYS, cr
 import { getEventTargetNode, toCssUnit, updatePanelPlacement } from '../../ui/src/dom'
 import { getLastZIndex, nextZIndex, getFuncText, eqEmptyValue } from '../../ui/src/utils'
 import { getSlotVNs } from '../../ui/src/vn'
-import { errLog } from '../../ui/src/log'
+import { createComponentLog } from '../../ui/src/log'
 import VxeInputComponent from '../../input/src/input'
 import VxeButtonComponent from '../../button/src/button'
 
 import type { VxeSelectPropTypes, VxeSelectConstructor, SelectInternalData, SelectReactData, VxeSelectDefines, VxeButtonEvents, ValueOf, VxeSelectEmits, VxeComponentSlotType, VxeInputConstructor, SelectMethods, SelectPrivateRef, VxeSelectMethods, VxeOptionProps, VxeDrawerConstructor, VxeDrawerMethods, VxeFormDefines, VxeFormConstructor, VxeFormPrivateMethods, VxeModalConstructor, VxeModalMethods, VxeInputEvents, VxeComponentStyleType } from '../../../types'
 import type { VxeTableConstructor, VxeTablePrivateMethods } from '../../../types/components/table'
+
+const { errLog } = createComponentLog('select')
 
 function isOptionVisible (option: any) {
   return option.visible !== false
@@ -18,6 +20,30 @@ function isOptionVisible (option: any) {
 
 function getOptUniqueId () {
   return XEUtils.uniqueId('opt_')
+}
+
+function createReactData (): SelectReactData {
+  return {
+    initialized: false,
+    scrollYLoad: false,
+    bodyHeight: 0,
+    topSpaceHeight: 0,
+    optList: [],
+    staticOptions: [],
+    reactFlag: 0,
+
+    currentOption: null,
+    searchValue: '',
+    searchLoading: false,
+
+    panelIndex: 0,
+    panelStyle: {},
+    panelPlacement: null,
+    triggerFocusPanel: false,
+    visiblePanel: false,
+    isAniVisible: false,
+    isActivated: false
+  }
 }
 
 function createInternalData (): SelectInternalData {
@@ -204,27 +230,7 @@ export default defineVxeComponent({
 
     const { computeSize } = useSize(props)
 
-    const reactData = reactive<SelectReactData>({
-      initialized: false,
-      scrollYLoad: false,
-      bodyHeight: 0,
-      topSpaceHeight: 0,
-      optList: [],
-      staticOptions: [],
-      reactFlag: 0,
-
-      currentOption: null,
-      searchValue: '',
-      searchLoading: false,
-
-      panelIndex: 0,
-      panelStyle: {},
-      panelPlacement: null,
-      triggerFocusPanel: false,
-      visiblePanel: false,
-      isAniVisible: false,
-      isActivated: false
-    })
+    const reactData = reactive(createReactData())
 
     const internalData = createInternalData()
 
@@ -1836,6 +1842,7 @@ export default defineVxeComponent({
       globalEvents.off($xeSelect, 'keydown')
       globalEvents.off($xeSelect, 'blur')
       globalEvents.off($xeSelect, 'resize')
+      XEUtils.assign(reactData, createReactData())
       XEUtils.assign(internalData, createInternalData())
     })
 

@@ -6,6 +6,10 @@ import VxeCheckboxComponent from './checkbox'
 
 import type { VxeCheckboxGroupConstructor, CheckboxGroupInternalData, VxeCheckboxGroupEmits, ValueOf, CheckboxGroupReactData, VxeCheckboxGroupPrivateMethods, CheckboxGroupPrivateMethods, CheckboxGroupPrivateComputed, CheckboxGroupMethods, VxeCheckboxGroupPropTypes, VxeFormConstructor, VxeFormPrivateMethods, VxeFormDefines } from '../../../types'
 
+function createReactData (): CheckboxGroupReactData {
+  return {}
+}
+
 function createInternalData (): CheckboxGroupInternalData {
   return {
     // isLoaded: false
@@ -48,8 +52,7 @@ export default defineVxeComponent({
 
     const xID = XEUtils.uniqueId()
 
-    const reactData: CheckboxGroupReactData = reactive({
-    })
+    const reactData: CheckboxGroupReactData = reactive(createReactData())
 
     const internalData = createInternalData()
 
@@ -231,6 +234,7 @@ export default defineVxeComponent({
     })
 
     onUnmounted(() => {
+      XEUtils.assign(reactData, createReactData())
       XEUtils.assign(internalData, createInternalData())
     })
 

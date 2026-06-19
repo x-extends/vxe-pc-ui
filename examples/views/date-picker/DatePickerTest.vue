@@ -121,10 +121,19 @@
 
     </p>
     <p>
-        <vxe-date-picker v-model="demo1.val910" :popup-config="{enabled:false}"></vxe-date-picker>
-        <vxe-date-picker v-model="demo1.val911" :popup-config="{trigger:'icon'}"></vxe-date-picker>
-        <vxe-date-picker v-model="demo1.val912" :control-config="{isArrow:true}"></vxe-date-picker>
+        <vxe-date-picker v-model="demo1.val910" :popup-config="{enabled:false}" :masked-config="{isArrow:true,isMasked:true}"></vxe-date-picker>
+        <vxe-date-picker v-model="demo1.val911" :popup-config="{trigger:'icon'}" :masked-config="{isArrow:true,isMasked:true}"></vxe-date-picker>
+        <vxe-date-picker v-model="demo1.val912" :popup-config="{trigger:'icon'}" :masked-config="{isArrow:true,isMasked:true}"></vxe-date-picker>
+        <vxe-date-picker v-model="demo1.val913" :masked-config="{isArrow:true,isMasked:true}" label-format="dd/MM/yyyy"></vxe-date-picker>
 
+    </p>
+    <p>
+        <vxe-date-picker v-model="demo1.val921" type="time" :masked-config="{isArrow:true,isMasked:true}"></vxe-date-picker>
+        <vxe-date-picker v-model="demo1.val922" type="datetime" :masked-config="{isArrow:true,isMasked:true}"></vxe-date-picker>
+        <vxe-date-picker v-model="demo1.val923" type="year" :masked-config="{isArrow:true,isMasked:true}"></vxe-date-picker>
+        <vxe-date-picker v-model="demo1.val924" type="month" :masked-config="{isArrow:true,isMasked:true}"></vxe-date-picker>
+        <vxe-date-picker v-model="demo1.val925" type="week" :masked-config="{isArrow:true,isMasked:true}"></vxe-date-picker>
+        <vxe-date-picker v-model="demo1.val926" type="quarter" :masked-config="{isArrow:true,isMasked:true}"></vxe-date-picker>
     </p>
   </div>
 </template>
@@ -200,7 +209,14 @@ const demo1 = reactive({
   val829: '',
   val910: '',
   val911: '',
-  val912: ''
+  val912: '',
+  val913: '',
+  val921: '',
+  val922: '',
+  val923: '',
+  val924: '',
+  val925: '',
+  val926: ''
 })
 
 const shortcutConfig1 = ref<VxeDatePickerPropTypes.ShortcutConfig>({

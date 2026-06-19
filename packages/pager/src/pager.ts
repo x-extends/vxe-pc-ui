@@ -2,12 +2,14 @@ import { h, PropType, computed, inject, ref, Ref, reactive, nextTick, watch } fr
 import { defineVxeComponent } from '../../ui/src/comp'
 import XEUtils from 'xe-utils'
 import { getIcon, getConfig, getI18n, globalEvents, GLOBAL_EVENT_KEYS, createEvent, useSize } from '../../ui'
-import { warnLog, errLog } from '../../ui/src/log'
+import { createComponentLog } from '../../ui/src/log'
 import VxeSelectComponent from '../../select/src/select'
 import VxeNumberInputComponent from '../../number-input/src/number-input'
 
 import type { VxePagerPropTypes, VxePagerConstructor, VxePagerEmits, VxeSelectEvents, ValueOf, PagerPrivateRef, PagerMethods, PagerPrivateMethods, VxePagerPrivateMethods, PagerReactData, VxeInputEvents, VxeSelectDefines } from '../../../types'
 import type { VxeGridConstructor, VxeGridPrivateMethods } from '../../../types/components/grid'
+
+const { warnLog, errLog } = createComponentLog('pager')
 
 export default defineVxeComponent({
   name: 'VxePager',
@@ -655,7 +657,7 @@ export default defineVxeComponent({
        * @deprecated
        */
       jumpPage (currentPage: number) {
-        warnLog('vxe.error.delFunc', ['[pager] jumpPage', 'setCurrentPage'])
+        warnLog('vxe.error.delFunc', ['jumpPage', 'setCurrentPage'])
         return $xePager.setCurrentPage(currentPage)
       }
     }
@@ -731,7 +733,7 @@ export default defineVxeComponent({
         if (renderFn) {
           childNodes.push(renderFn())
         } else {
-          errLog('vxe.error.notProp', [`[pager] layouts -> ${name}`])
+          errLog('vxe.error.notProp', [`layouts -> ${name}`])
         }
       })
       if (slots.right) {

@@ -56,6 +56,7 @@ export namespace VxeDrawerPropTypes {
   export type ShowHeader = boolean
   export type ShowFooter = boolean
   export type ShowClose = boolean
+  export type Preload = boolean
   export type Width = number | string
   export type Height = number | string
   export type Resize = boolean
@@ -92,6 +93,7 @@ export interface VxeDrawerProps {
   showHeader?: VxeDrawerPropTypes.ShowHeader
   showFooter?: VxeDrawerPropTypes.ShowFooter
   showClose?: VxeDrawerPropTypes.ShowClose
+  preload?: VxeDrawerPropTypes.Preload
   width?: VxeDrawerPropTypes.Width
   height?: VxeDrawerPropTypes.Height
   resize?: VxeDrawerPropTypes.Resize

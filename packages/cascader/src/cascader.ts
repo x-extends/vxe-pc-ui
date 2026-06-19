@@ -4,7 +4,7 @@ import { getConfig, getI18n, getIcon, globalEvents, createEvent, useSize, render
 import { getEventTargetNode, updatePanelPlacement, toCssUnit } from '../../ui/src/dom'
 import { getLastZIndex, nextZIndex } from '../../ui/src/utils'
 import { enNodeValue, deNodeValue } from './util'
-import { errLog } from '../../ui/src/log'
+import { createComponentLog } from '../../ui/src/log'
 import XEUtils from 'xe-utils'
 import VxeListComponent from '../../list/src/list'
 import VxeInputComponent from '../../input/src/input'
@@ -12,6 +12,8 @@ import VxeButtonComponent from '../../button/src/button'
 
 import type { CascaderReactData, VxeCascaderEmits, CascaderInternalData, VxeButtonEvents, ValueOf, VxeComponentStyleType, VxeCascaderDefines, CascaderPrivateRef, CascaderPrivateMethods, CascaderMethods, VxeCascaderPrivateComputed, VxeCascaderPropTypes, VxeCascaderConstructor, VxeListSlotTypes, VxeFormDefines, VxeDrawerConstructor, VxeDrawerMethods, VxeCascaderPrivateMethods, VxeFormConstructor, VxeFormPrivateMethods, VxeInputConstructor, VxeModalConstructor, VxeModalMethods } from '../../../types'
 import type { VxeTableConstructor, VxeTablePrivateMethods } from '../../../types/components/table'
+
+const { errLog } = createComponentLog('cascader')
 
 /**
  * 生成节点的唯一主键

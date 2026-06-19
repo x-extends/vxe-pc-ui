@@ -4,10 +4,12 @@ import { getConfig, getIcon, createEvent, globalEvents, globalResize, useSize, r
 import { getSlotVNs } from '../../ui/src/vn'
 import { toCssUnit, isScale, addClass, removeClass } from '../../ui/src/dom'
 import { getGlobalDefaultConfig } from '../../ui/src/utils'
-import { warnLog, errLog } from '../../ui/src/log'
+import { createComponentLog } from '../../ui/src/log'
 import XEUtils from 'xe-utils'
 
 import type { SplitterReactData, SplitterPrivateRef, VxeSplitterPropTypes, SplitterInternalData, SplitterMethods, VxeSplitterPanelPropTypes, VxeSplitterDefines, VxeSplitterPanelProps, VxeSplitterPrivateComputed, SplitterPrivateMethods, VxeSplitterEmits, VxeSplitterConstructor, ValueOf, VxeSplitterPrivateMethods } from '../../../types'
+
+const { warnLog, errLog } = createComponentLog('splitter')
 
 export default defineVxeComponent({
   name: 'VxeSplitter',
@@ -226,13 +228,13 @@ export default defineVxeComponent({
       }
       reactData.itemList = list.map(item => {
         if (item.showAction) {
-          warnLog('vxe.error.removeProp', ['[splitter] show-action'])
+          warnLog('vxe.error.removeProp', ['show-action'])
         }
         if (item.slots) {
           XEUtils.each(item.slots, (func) => {
             if (!XEUtils.isFunction(func)) {
               if (!slots[func]) {
-                errLog('vxe.error.notSlot', [`[splitter] ${func}`])
+                errLog('vxe.error.notSlot', [func])
               }
             }
           })
@@ -953,11 +955,11 @@ export default defineVxeComponent({
       reactData.itemList = val || []
 
       if ((showPrevButton || showNextButton) && reactData.itemList.length > 2) {
-        errLog('vxe.error.modelConflicts', ['[splitter] action-config.showPrevButton | action-config.showNextButton', '<vxe-splitter-panel ...> Only supports 2 panel'])
+        errLog('vxe.error.modelConflicts', ['action-config.showPrevButton | action-config.showNextButton', '<vxe-splitter-panel ...> Only supports 2 panel'])
       }
       reactData.itemList.forEach(item => {
         if (item.showAction) {
-          warnLog('vxe.error.removeProp', ['[splitter] showAction'])
+          warnLog('vxe.error.removeProp', ['showAction'])
         }
       })
       recalculate()
@@ -980,7 +982,7 @@ export default defineVxeComponent({
 
       const actionOpts = computeActionOpts.value
       if (actionOpts.direction) {
-        errLog('vxe.error.delProp', ['[splitter] action-config.direction', 'action-config.showPrevButton | action-config.showNextButton'])
+        errLog('vxe.error.delProp', ['action-config.direction', 'action-config.showPrevButton | action-config.showNextButton'])
       }
 
       globalEvents.on($xeSplitter, 'resize', handleGlobalResizeEvent)

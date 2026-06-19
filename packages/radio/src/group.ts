@@ -7,6 +7,10 @@ import VxeRadioButtonComponent from './button'
 
 import type { VxeRadioGroupPropTypes, RadioGroupInternalData, VxeRadioGroupConstructor, RadioGroupReactData, VxeRadioGroupEmits, VxeRadioGroupPrivateMethods, RadioGroupPrivateMethods, RadioGroupPrivateComputed, RadioGroupMethods, VxeFormConstructor, VxeFormPrivateMethods, VxeFormDefines, ValueOf } from '../../../types'
 
+function createReactData (): RadioGroupReactData {
+  return {}
+}
+
 function createInternalData (): RadioGroupInternalData {
   return {
     // isLoaded: false
@@ -53,8 +57,7 @@ export default defineVxeComponent({
 
     const { computeSize } = useSize(props)
 
-    const reactData = reactive<RadioGroupReactData>({
-    })
+    const reactData = reactive(createReactData())
 
     const internalData = createInternalData()
 
@@ -214,6 +217,7 @@ export default defineVxeComponent({
     })
 
     onUnmounted(() => {
+      XEUtils.assign(reactData, createReactData())
       XEUtils.assign(internalData, createInternalData())
     })
 

@@ -3,13 +3,15 @@ import { defineVxeComponent } from '../../ui/src/comp'
 import XEUtils from 'xe-utils'
 import { VxeUI, getConfig, getI18n, getIcon, useSize, createEvent, globalEvents, renderEmptyElement } from '../../ui'
 import { getSlotVNs } from '../../ui/src/vn'
-import { errLog, warnLog } from '../../ui/src/log'
+import { createComponentLog } from '../../ui/src/log'
 import { initTpImg, getTpImg, getEventTargetNode, toCssUnit } from '../../ui/src/dom'
 import { readLocalFile } from './util'
 import VxeButtonComponent from '../../button/src/button'
 
 import type { VxeUploadDefines, VxeUploadPropTypes, UploadReactData, UploadInternalData, UploadPrivateMethods, UploadMethods, VxeUploadEmits, UploadPrivateRef, VxeUploadPrivateComputed, VxeUploadConstructor, VxeUploadPrivateMethods, VxeFormDefines, VxeFormConstructor, VxeFormPrivateMethods, ValueOf, VxeComponentEventParams } from '../../../types'
 import type { VxeTableConstructor, VxeTablePrivateMethods } from '../../../types/components/table'
+
+const { warnLog, errLog } = createComponentLog('upload')
 
 function createReactData (): UploadReactData {
   return {
@@ -220,8 +222,12 @@ export default defineVxeComponent({
     'remove-fail',
     'download',
     'download-fail',
+    'upload-start',
     'upload-success',
     'upload-error',
+    'upload-end',
+    'upload-queue-start',
+    'upload-queue-end',
     'sort-dragend',
     'more-visible'
   ] as VxeUploadEmits,
@@ -605,6 +611,7 @@ export default defineVxeComponent({
       const fileKey = getFieldKey(item)
       const uploadFn = props.uploadMethod || getConfig().upload.uploadMethod
       if (uploadFn) {
+        dispatchEvent('upload-start', { option: item }, null)
         return Promise.resolve(
           uploadFn({
             $upload: $xeUpload,
@@ -646,6 +653,7 @@ export default defineVxeComponent({
           if (cacheItem) {
             cacheItem.loading = false
           }
+          dispatchEvent('upload-end', { option: item }, null)
         })
       } else {
         const { fileCacheMaps } = reactData
@@ -756,6 +764,8 @@ export default defineVxeComponent({
         }
       }
 
+      dispatchEvent('upload-queue-start', { files: selectFiles }, evnt)
+
       const cacheMaps = Object.assign({}, reactData.fileCacheMaps)
       const newFileList = multiple ? fileList : []
       const uploadPromiseRests: any[] = []
@@ -794,6 +804,7 @@ export default defineVxeComponent({
       })
       Promise.all(urlMode ? uploadPromiseRests : []).then(() => {
         const restFileList = reactData.fileList
+        dispatchEvent('upload-queue-end', { options: restFileList, files: selectFiles }, evnt)
         handleChange(restFileList)
         // 自动更新校验状态
         if ($xeForm && formItemInfo) {
@@ -1944,10 +1955,10 @@ export default defineVxeComponent({
 
     onMounted(() => {
       if (props.multiple && props.singleMode) {
-        errLog('vxe.error.errConflicts', ['[upload] multiple', 'single-mode'])
+        errLog('vxe.error.errConflicts', ['multiple', 'single-mode'])
       }
       if (props.imageStyle) {
-        warnLog('vxe.error.delProp', ['[upload] image-style', 'image-config'])
+        warnLog('vxe.error.delProp', ['image-style', 'image-config'])
       }
 
       if (props.dragSort) {

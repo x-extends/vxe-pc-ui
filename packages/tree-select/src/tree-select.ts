@@ -4,7 +4,7 @@ import { getConfig, getI18n, getIcon, globalEvents, createEvent, useSize, render
 import { getEventTargetNode, updatePanelPlacement, toCssUnit } from '../../ui/src/dom'
 import { getLastZIndex, nextZIndex } from '../../ui/src/utils'
 import { deNodeValue } from '../../tree/src/util'
-import { warnLog, errLog } from '../../ui/src/log'
+import { createComponentLog } from '../../ui/src/log'
 import XEUtils from 'xe-utils'
 import VxeInputComponent from '../../input'
 import VxeButtonComponent from '../../button'
@@ -13,6 +13,8 @@ import { getSlotVNs } from '../../ui/src/vn'
 
 import type { TreeSelectReactData, VxeTreeSelectEmits, TreeSelectInternalData, VxeButtonEvents, VxeInputEvents, ValueOf, VxeComponentStyleType, TreeSelectPrivateRef, TreeSelectPrivateMethods, TreeSelectMethods, VxeTreeSelectPrivateComputed, VxeTreeSelectPropTypes, VxeTreeSelectConstructor, VxeFormDefines, VxeDrawerConstructor, VxeDrawerMethods, VxeTreeSelectPrivateMethods, VxeFormConstructor, VxeFormPrivateMethods, VxeInputConstructor, VxeModalConstructor, VxeModalMethods, VxeTreeConstructor, VxeTreeEvents, VxeTreeSelectDefines } from '../../../types'
 import type { VxeTableConstructor, VxeTablePrivateMethods } from '../../../types/components/table'
+
+const { warnLog, errLog } = createComponentLog('tree-select')
 
 function getOptUniqueId () {
   return XEUtils.uniqueId('node_')

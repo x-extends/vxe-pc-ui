@@ -9,12 +9,14 @@ import VxeTooltipComponent from '../../tooltip'
 import VxeFormConfigItem from './form-config-item'
 import VxeLoadingComponent from '../../loading'
 import { getSlotVNs } from '../../ui/src/vn'
-import { warnLog, errLog } from '../../ui/src/log'
+import { createComponentLog } from '../../ui/src/log'
 
 import '../render'
 
 import type { VxeFormConstructor, VxeFormPropTypes, VxeFormEmits, FormReactData, FormMethods, FormPrivateRef, VxeFormPrivateMethods, VxeFormDefines, VxeFormItemPropTypes, VxeTooltipInstance, FormInternalData, VxeFormPrivateComputed } from '../../../types'
 import type { VxeGridConstructor, VxeGridPrivateMethods } from '../../../types/components/grid'
+
+const { warnLog, errLog } = createComponentLog('form')
 
 class Rule {
   constructor (rule: any) {
@@ -349,7 +351,7 @@ export default defineVxeComponent({
             XEUtils.each(item.slots, (func) => {
               if (!XEUtils.isFunction(func)) {
                 if (!slots[func]) {
-                  errLog('vxe.error.notSlot', [`[form] ${func}`])
+                  errLog('vxe.error.notSlot', [func])
                 }
               }
             })
@@ -579,10 +581,10 @@ export default defineVxeComponent({
                         if (validatorMethod) {
                           customValid = validatorMethod(validParams)
                         } else {
-                          warnLog('vxe.error.notValidators', [`[form] ${validator}`])
+                          warnLog('vxe.error.notValidators', [validator])
                         }
                       } else {
-                        errLog('vxe.error.notValidators', [`[form] ${validator}`])
+                        errLog('vxe.error.notValidators', [validator])
                       }
                     } else {
                       customValid = validator(validParams)
@@ -999,7 +1001,7 @@ export default defineVxeComponent({
     onMounted(() => {
       nextTick(() => {
         if (props.customLayout && props.items) {
-          errLog('vxe.error.errConflicts', ['[form] custom-layout', 'items'])
+          errLog('vxe.error.errConflicts', ['custom-layout', 'items'])
         }
       })
       globalEvents.on($xeForm, 'resize', handleGlobalResizeEvent)

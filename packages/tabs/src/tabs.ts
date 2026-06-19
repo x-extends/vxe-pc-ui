@@ -4,11 +4,13 @@ import { createEvent, getConfig, getIcon, globalEvents, permission, useSize, ren
 import { getSlotVNs } from '../../ui/src/vn'
 import { toCssUnit, addClass, removeClass } from '../../ui/src/dom'
 import { isEnableConf } from '../../ui/src/utils'
-import { warnLog, errLog } from '../../ui/src/log'
+import { createComponentLog } from '../../ui/src/log'
 import XEUtils from 'xe-utils'
 import VxeLoadingComponent from '../../loading/src/loading'
 
 import type { VxeTabsPropTypes, VxeTabPaneProps, VxeTabsEmits, TabsInternalData, TabsReactData, TabsPrivateRef, VxeTabsPrivateComputed, VxeTabsConstructor, VxeTabsPrivateMethods, VxeTabPaneDefines, ValueOf, TabsMethods, TabsPrivateMethods, VxeComponentStyleType } from '../../../types'
+
+const { warnLog, errLog } = createComponentLog('tabs')
 
 const scrollbarOffsetSize = 20
 
@@ -580,11 +582,11 @@ export default defineVxeComponent({
         return handlePrevNext(true)
       },
       prevTab () {
-        warnLog('vxe.error.delFunc', ['[tabs] prevTab', 'prev'])
+        warnLog('vxe.error.delFunc', ['prevTab', 'prev'])
         return tabsMethods.prev()
       },
       nextTab () {
-        warnLog('vxe.error.delFunc', ['[tabs] nextTab', 'next'])
+        warnLog('vxe.error.delFunc', ['nextTab', 'next'])
         return tabsMethods.next()
       }
     }
