@@ -47,7 +47,7 @@ export namespace VxeCascaderPropTypes {
   type FilterValue = string | number | null | undefined
   export interface FilterConfig<D = any> {
     /**
-     * 过滤后是否自动展开第一个节点
+     * 过滤后是否自动展开节点的方式
      */
     autoExpandMode?: 'first' | 'last' | ''
     /**
