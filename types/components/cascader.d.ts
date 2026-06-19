@@ -40,6 +40,10 @@ export namespace VxeCascaderPropTypes {
   type FilterValue = string | number | null | undefined
   export interface FilterConfig<D = any> {
     /**
+     * 过滤后是否自动展开第一个节点
+     */
+    autoExpandMode?: 'first' | 'last' | ''
+    /**
      * 过滤之前的方法
      */
     beforeFilterMethod?(params: {

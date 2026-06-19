@@ -1039,7 +1039,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
                         h('div', {
                           class: 'vxe-tree-select--header-button'
                         }, [
-                          showCheckedButton && showClearButton
+                          (showCheckedButton && multiple) || showClearButton
                             ? h('div', {
                               class: 'vxe-tree-select--selected-btns'
                             }, [
@@ -1067,32 +1067,28 @@ export default /* define-vxe-component start */ defineVxeComponent({
                                 : renderEmptyElement($xeTreeSelect)
                             ])
                             : renderEmptyElement($xeTreeSelect),
-                          showExpandButton && showExpandButton
+                          showExpandButton
                             ? h('div', {
                               class: 'vxe-tree-select--expand-btns'
                             }, [
-                              showExpandButton
-                                ? h(VxeButtonComponent, {
-                                  props: {
-                                    content: getI18n('vxe.treeSelect.allExpand'),
-                                    mode: 'text'
-                                  },
-                                  on: {
-                                    click: $xeTreeSelect.allExpandPanelEvent
-                                  }
-                                })
-                                : renderEmptyElement($xeTreeSelect),
-                              showExpandButton
-                                ? h(VxeButtonComponent, {
-                                  props: {
-                                    content: getI18n('vxe.treeSelect.clearExpand'),
-                                    mode: 'text'
-                                  },
-                                  on: {
-                                    click: $xeTreeSelect.clearExpandPanelEvent
-                                  }
-                                })
-                                : renderEmptyElement($xeTreeSelect)
+                              h(VxeButtonComponent, {
+                                props: {
+                                  content: getI18n('vxe.treeSelect.allExpand'),
+                                  mode: 'text'
+                                },
+                                on: {
+                                  click: $xeTreeSelect.allExpandPanelEvent
+                                }
+                              }),
+                              h(VxeButtonComponent, {
+                                props: {
+                                  content: getI18n('vxe.treeSelect.clearExpand'),
+                                  mode: 'text'
+                                },
+                                on: {
+                                  click: $xeTreeSelect.clearExpandPanelEvent
+                                }
+                              })
                             ])
                             : renderEmptyElement($xeTreeSelect)
                         ])
@@ -1160,7 +1156,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
                     })
                   ])
                 ]),
-                footerSlot || showTotalButton || (showCloseButton && multiple)
+                footerSlot || showTotalButton || showCloseButton
                   ? h('div', {
                     class: 'vxe-tree-select--panel-footer'
                   }, footerSlot
@@ -1174,7 +1170,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
                               class: 'vxe-tree-select--total-btns'
                             }, getI18n('vxe.treeSelect.total', [selectVals.length]))
                             : renderEmptyElement($xeTreeSelect),
-                          showCloseButton && multiple
+                          showCloseButton
                             ? h('div', {
                               class: 'vxe-tree-select--oper-btns'
                             }, [
