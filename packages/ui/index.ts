@@ -73,6 +73,9 @@ setConfig({
     showFullLabel: true,
     treeConfig: {
       showIcon: true
+    },
+    filterConfig: {
+      autoExpandMode: 'first'
     }
   },
   checkbox: {},
