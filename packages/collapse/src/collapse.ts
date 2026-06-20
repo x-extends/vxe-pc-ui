@@ -29,7 +29,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
     globalMixins.permissionMixin
   ],
   props: {
-    modelValue: Array as PropType<VxeCollapsePropTypes.ModelValue>,
+    value: Array as PropType<VxeCollapsePropTypes.ModelValue>,
     options: Array as PropType<VxeCollapsePropTypes.Options>,
     padding: {
       type: Boolean as PropType<VxeCollapsePropTypes.Padding>,
@@ -76,16 +76,22 @@ export default /* define-vxe-component start */ defineVxeComponent({
     },
     computeItemStaticOptions (this: any) {
       const $xeCollapse = this
-      const reactData = $xeCollapse.reactData
+      const reactData = $xeCollapse.reactData as CollapseReactData
 
       const { staticPanes } = reactData
-      return staticPanes.filter((item: any) => $xeCollapse.handleFilterItem(item))
+      return staticPanes.filter((item) => $xeCollapse.handleFilterItem(item))
     },
     computeExpandOpts () {
       const $xeCollapse = this
       const props = $xeCollapse
 
       return Object.assign({}, getConfig().collapse.expandConfig, props.expandConfig)
+    },
+    computeSpFlag () {
+      const $xeCollapse = this
+      const reactData = $xeCollapse.reactData as CollapseReactData
+
+      return reactData.staticPanes
     }
   },
   methods: {
@@ -260,7 +266,8 @@ export default /* define-vxe-component start */ defineVxeComponent({
           ]),
           h('div', {
             class: ['vxe-collapse--item-content', {
-              'is--visible': isActive
+              'is--visible': isActive,
+              'is--hidden': !isActive
             }]
           }, [
             name && initNames.includes(name)
@@ -301,10 +308,34 @@ export default /* define-vxe-component start */ defineVxeComponent({
       ])
     }
   },
+  watch: {
+    value (val) {
+      const $xeCollapse = this
+      const reactData = $xeCollapse.reactData
+
+      reactData.activeNames = val || []
+    },
+    options () {
+      const $xeCollapse = this
+      const props = $xeCollapse
+
+      $xeCollapse.initDefaultName(props.options)
+    },
+    computeSpFlag () {
+      const $xeCollapse = this
+      const reactData = $xeCollapse.reactData
+
+      $xeCollapse.initDefaultName(reactData.staticPanes)
+    }
+  },
   created () {
     const $xeCollapse = this
+    const props = $xeCollapse
+    const reactData = $xeCollapse.reactData
 
     $xeCollapse.internalData = createInternalData()
+    reactData.activeNames = props.value || []
+    $xeCollapse.initDefaultName(reactData.staticPanes.length ? reactData.staticPanes : props.options)
   },
   destroyed () {
     const $xeCollapse = this
