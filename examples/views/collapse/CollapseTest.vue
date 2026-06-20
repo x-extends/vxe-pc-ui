@@ -1,6 +1,6 @@
 <template>
   <div>
-    <vxe-collapse>
+    <vxe-collapse border>
       <vxe-collapse-pane title="分组11" name="1">
         <template #default>
           <div>dsfd111sf</div>

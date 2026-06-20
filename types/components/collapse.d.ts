@@ -13,6 +13,7 @@ export interface VxeCollapseConstructor extends VxeComponentBaseOptions, VxeColl
   props: VxeCollapseProps
   context: SetupContext<VxeCollapseEmits>
   reactData: CollapseReactData
+  internalData: CollapseInternalData
   getRefMaps(): CollapsePrivateRef
   getComputeMaps(): CollapsePrivateComputed
   renderVN: RenderFunction
@@ -28,6 +29,7 @@ export namespace VxeCollapsePropTypes {
   export type ModelValue = VxeCollapsePanePropTypes.Name[]
   export type Options = VxeCollapsePaneProps[]
   export type Padding = boolean
+  export type Border = boolean
   export interface ExpandConfig {
     accordion?: boolean
     padding?: boolean
@@ -42,6 +44,7 @@ export type VxeCollapseProps = {
   modelValue?: VxeCollapsePropTypes.ModelValue
   options?: VxeCollapsePropTypes.Options
   padding?: VxeCollapsePropTypes.Padding
+  border?: VxeCollapsePropTypes.Border
   expandConfig?: VxeCollapsePropTypes.ExpandConfig
 }
 
@@ -53,9 +56,11 @@ export interface CollapseReactData {
   staticPanes: VxeCollapsePaneDefines.CollapseConfig[]
   activeNames: VxeCollapsePanePropTypes.Name[]
   initNames: VxeCollapsePanePropTypes.Name[]
-  cachePaneMaps: Record<string, {
-    loading: boolean
-  }>
+  cachePaneMaps: Record<string, VxeCollapseDefines.CacheItemObj>
+}
+
+export interface CollapseInternalData {
+  esTime?: any
 }
 
 export interface CollapseMethods {
@@ -73,6 +78,11 @@ export type VxeCollapseEmits = [
 ]
 
 export namespace VxeCollapseDefines {
+
+  export interface CacheItemObj {
+    height: number
+    loading: boolean
+  }
   export interface CollapseEventParams extends VxeComponentEventParams {
     $collapse: VxeCollapseConstructor
   }

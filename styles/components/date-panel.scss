@@ -215,7 +215,7 @@
   }
   &.is--hover {
     .vxe-date-panel--view-item-inner {
-      background-color: var(--vxe-ui-font-primary-tinge-color);
+      background-color: var(--vxe-ui-base-hover-background-color);
     }
   }
   &.is--selected {

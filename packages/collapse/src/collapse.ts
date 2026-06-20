@@ -1,10 +1,26 @@
-import { ref, h, reactive, provide, computed, PropType, watch } from 'vue'
+import { ref, h, reactive, provide, computed, PropType, watch, nextTick, onUnmounted } from 'vue'
 import { defineVxeComponent } from '../../ui/src/comp'
 import { getConfig, getIcon, createEvent, permission, renderEmptyElement, useSize } from '../../ui'
+import { toCssUnit } from '../../ui/src/dom'
 import { getSlotVNs } from '../../ui/src/vn'
 import XEUtils from 'xe-utils'
 
-import type { CollapseReactData, VxeCollapseEmits, CollapsePrivateRef, VxeCollapsePropTypes, VxeCollapsePanePropTypes, VxeCollapsePaneProps, VxeCollapsePaneDefines, ValueOf, CollapseMethods, CollapsePrivateMethods, VxeCollapsePrivateComputed, VxeCollapseConstructor, VxeCollapsePrivateMethods } from '../../../types'
+import type { CollapseReactData, CollapseInternalData, VxeCollapseEmits, CollapsePrivateRef, VxeCollapsePropTypes, VxeCollapsePanePropTypes, VxeCollapseDefines, VxeCollapsePaneProps, VxeCollapsePaneDefines, ValueOf, CollapseMethods, CollapsePrivateMethods, VxeCollapsePrivateComputed, VxeCollapseConstructor, VxeCollapsePrivateMethods } from '../../../types'
+
+function createReactData (): CollapseReactData {
+  return {
+    staticPanes: [],
+    activeNames: [],
+    initNames: [],
+    cachePaneMaps: {}
+  }
+}
+
+function createInternalData (): CollapseInternalData {
+  return {
+    // esTime: null
+  }
+}
 
 export default defineVxeComponent({
   name: 'VxeCollapse',
@@ -14,6 +30,10 @@ export default defineVxeComponent({
     padding: {
       type: Boolean as PropType<VxeCollapsePropTypes.Padding>,
       default: () => getConfig().collapse.padding
+    },
+    border: {
+      type: Boolean as PropType<VxeCollapsePropTypes.Border>,
+      default: () => getConfig().collapse.border
     },
     expandConfig: Object as PropType<VxeCollapsePropTypes.ExpandConfig>,
     size: {
@@ -36,12 +56,9 @@ export default defineVxeComponent({
 
     const refElem = ref<HTMLDivElement>()
 
-    const reactData = reactive<CollapseReactData>({
-      staticPanes: [],
-      activeNames: [],
-      initNames: [],
-      cachePaneMaps: {}
-    })
+    const reactData = reactive(createReactData())
+
+    const internalData = createInternalData()
 
     const refMaps: CollapsePrivateRef = {
       refElem
@@ -69,6 +86,7 @@ export default defineVxeComponent({
       props,
       context,
       reactData,
+      internalData,
 
       getRefMaps: () => refMaps,
       getComputeMaps: () => computeMaps
@@ -96,15 +114,14 @@ export default defineVxeComponent({
 
     const initDefaultName = (list?: VxeCollapsePropTypes.Options | VxeCollapsePaneDefines.CollapseConfig[]) => {
       const { activeNames } = reactData
-      const nameMaps: Record<string, {
-        loading: boolean
-      }> = {}
+      const nameMaps: Record<string, VxeCollapseDefines.CacheItemObj> = {}
       if (list && list.length) {
         list.forEach((item) => {
           const { name, preload } = item || {}
           if (name) {
             const isActive = activeNames.includes(name)
             nameMaps[`${name}`] = {
+              height: 0,
               loading: false
             }
             if (isActive) {
@@ -144,8 +161,14 @@ export default defineVxeComponent({
 
     const handleClickEvent = (evnt: MouseEvent, item: VxeCollapsePaneDefines.CollapseConfig | VxeCollapsePaneProps) => {
       const { activeNames } = reactData
+      const { esTime } = internalData
       const { name } = item
+      if (esTime) {
+        clearTimeout(esTime)
+      }
       if (name) {
+        const headEl = evnt.currentTarget as HTMLDivElement
+        const bodyEl = headEl.nextElementSibling as HTMLDivElement
         const aIndex = activeNames.indexOf(name)
         let expanded = false
         if (aIndex === -1) {
@@ -153,6 +176,33 @@ export default defineVxeComponent({
           activeNames.push(name)
         } else {
           activeNames.splice(aIndex, 1)
+        }
+        const startAnimation = () => {
+          const itemEl = bodyEl.firstElementChild as HTMLDivElement
+          if (itemEl) {
+            bodyEl.style.height = toCssUnit(itemEl.scrollHeight)
+            if (expanded) {
+              internalData.esTime = setTimeout(() => {
+                bodyEl.style.height = ''
+                internalData.esTime = undefined
+              }, 200)
+            } else {
+              nextTick(() => {
+                requestAnimationFrame(() => {
+                  bodyEl.style.height = ''
+                })
+              })
+            }
+          }
+        }
+        if (bodyEl) {
+          const itemEl = bodyEl.firstElementChild as HTMLDivElement
+          if (itemEl) {
+            startAnimation()
+          } else {
+            bodyEl.style.height = '0'
+            nextTick(startAnimation)
+          }
         }
         addInitName(name)
         dispatchEvent('change', { value: activeNames, name }, evnt)
@@ -206,7 +256,8 @@ export default defineVxeComponent({
           ]),
           h('div', {
             class: ['vxe-collapse--item-content', {
-              'is--visible': isActive
+              'is--visible': isActive,
+              'is--hidden': !isActive
             }]
           }, [
             name && initNames.includes(name)
@@ -222,7 +273,7 @@ export default defineVxeComponent({
     }
 
     const renderVN = () => {
-      const { padding } = props
+      const { padding, border } = props
       const vSize = computeSize.value
       const itemOptions = computeItemOptions.value
       const itemStaticOptions = computeItemStaticOptions.value
@@ -233,7 +284,8 @@ export default defineVxeComponent({
         ref: refElem,
         class: ['vxe-collapse', {
           [`size--${vSize}`]: vSize,
-          'is--padding': padding
+          'is--padding': padding,
+          'is--border': border
         }]
       }, [
         h('div', {
@@ -271,6 +323,15 @@ export default defineVxeComponent({
 
     reactData.activeNames = props.modelValue || []
     initDefaultName(reactData.staticPanes.length ? reactData.staticPanes : props.options)
+
+    onUnmounted(() => {
+      const { esTime } = internalData
+      if (esTime) {
+        clearTimeout(esTime)
+      }
+      XEUtils.assign(reactData, createReactData())
+      XEUtils.assign(internalData, createInternalData())
+    })
 
     provide('$xeCollapse', $xeCollapse)
 

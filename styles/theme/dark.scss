@@ -4,7 +4,7 @@
   color-scheme: dark;
 
   /*font color*/
-  --vxe-ui-font-color: #a0a3a7;
+  --vxe-ui-font-color: rgba(255, 255, 255, 0.6);
   --vxe-ui-font-tinge-color: #33353b;
   --vxe-ui-font-lighten-color: #797b80;
   --vxe-ui-font-darken-color: #47494c;
@@ -53,7 +53,7 @@
   --vxe-ui-base-popup-box-shadow: 0px 12px 30px 8px rgba(0, 0, 0, 0.5);
   --vxe-ui-base-drag-background-color: #2e3741;
   --vxe-ui-base-active-background-color: #303030;
-  --vxe-ui-base-hover-background-color: #222222;
+  --vxe-ui-base-hover-background-color: rgba(255, 255, 255, 0.06);
 
   /*layout*/
   --vxe-ui-layout-background-color: #121212;
@@ -75,7 +75,6 @@
   --vxe-ui-tabs-bar-scrolling-box-shadow-color: rgba(0, 0, 0, 0.8);
 
   /*menu*/
-  --vxe-ui-menu-item-hover-color: var(--vxe-ui-font-primary-color);
   --vxe-ui-menu-collapse-wrapper-box-shadow: var(--vxe-ui-base-popup-box-shadow);
   
   /*loading*/
@@ -128,4 +127,7 @@
   --vxe-ui-cascader-node-hover-checkbox-checked-background-color: #6e5326;
   --vxe-ui-cascader-node-current-background-color: #18222c;
   --vxe-ui-cascader-node-hover-current-background-color: #262727;
+
+  /*collapse*/
+  --vxe-ui-collapse-border-color: #363637;
 }

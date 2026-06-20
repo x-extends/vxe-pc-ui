@@ -35,6 +35,7 @@
   --vxe-ui-menu-item-height-small: 36px;
   --vxe-ui-menu-item-height-mini: 32px;
   --vxe-ui-menu-icon-width: 1.5em;
+  --vxe-ui-menu-item-hover-color: initial;
 
   /*button*/
   --vxe-ui-button-max-width: 500px;
@@ -221,4 +222,10 @@
   --vxe-ui-cascader-node-height: 2em;
   --vxe-ui-cascader-node-checkbox-indeterminate-color: inherit;
   --vxe-ui-cascader-node-checkbox-checked-color: var(--vxe-ui-font-primary-color);
+
+  /*collapse*/
+  --vxe-ui-collapse-min-height-default: 40px;
+  --vxe-ui-collapse-min-height-medium: 38px;
+  --vxe-ui-collapse-min-height-small: 36px;
+  --vxe-ui-collapse-min-height-mini: 32px;
 }
