@@ -74,7 +74,6 @@
   --vxe-ui-tabs-bar-scrolling-box-shadow-color: #{light_variable.$vxe-ui-tabs-bar-scrolling-box-shadow-color};
 
   /*menu*/
-  --vxe-ui-menu-item-hover-color: #{light_variable.$vxe-ui-menu-item-hover-color};
   --vxe-ui-menu-collapse-wrapper-box-shadow: var(--vxe-ui-base-popup-box-shadow);
 
   /*loading*/
@@ -127,4 +126,7 @@
   --vxe-ui-cascader-node-hover-checkbox-checked-background-color: #{light_variable.$vxe-ui-cascader-node-hover-checkbox-checked-background-color};
   --vxe-ui-cascader-node-current-background-color: #{light_variable.$vxe-ui-cascader-node-current-background-color};
   --vxe-ui-cascader-node-hover-current-background-color: #{light_variable.$vxe-ui-cascader-node-hover-current-background-color};
+
+  /*collapse*/
+  --vxe-ui-collapse-border-color: #{light_variable.$vxe-ui-collapse-border-color};
 }
