@@ -113,6 +113,8 @@ setConfig({
   datePicker: {
     // size: null,
     // transfer: false,
+    startDate: new Date(1900, 0, 1),
+    endDate: new Date(2100, 0, 1),
     shortcutConfig: {
       // position: 'left',
       align: 'left',

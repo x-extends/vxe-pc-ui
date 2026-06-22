@@ -47,7 +47,7 @@ export default defineVxeComponent({
     modelValue: [String, Number, Array] as PropType<VxeTableSelectPropTypes.ModelValue>,
     clearable: {
       type: Boolean as PropType<VxeTableSelectPropTypes.Clearable>,
-      default: getConfig().tableSelect.clearable
+      default: () => getConfig().tableSelect.clearable
     },
     placeholder: {
       type: String as PropType<VxeTableSelectPropTypes.Placeholder>,

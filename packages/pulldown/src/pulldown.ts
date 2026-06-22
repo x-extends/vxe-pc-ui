@@ -20,7 +20,7 @@ export default defineVxeComponent({
      */
     trigger: {
       type: String as PropType<VxePulldownPropTypes.Trigger>,
-      default: getConfig().pulldown.trigger
+      default: () => getConfig().pulldown.trigger
     },
     /**
      * 已废弃，请使用 popupConfig.zIndex
@@ -34,7 +34,7 @@ export default defineVxeComponent({
     options: Array as PropType<VxePulldownPropTypes.Options>,
     className: {
       type: [String, Function] as PropType<VxePulldownPropTypes.ClassName>,
-      default: getConfig().pulldown.className
+      default: () => getConfig().pulldown.className
     },
     /**
      * 已废弃，请使用 popupConfig.className
@@ -45,7 +45,7 @@ export default defineVxeComponent({
     popupConfig: Object as PropType<VxePulldownPropTypes.PopupConfig>,
     destroyOnClose: {
       type: Boolean as PropType<VxePulldownPropTypes.DestroyOnClose>,
-      default: getConfig().pulldown.destroyOnClose
+      default: () => getConfig().pulldown.destroyOnClose
     },
     transfer: {
       type: Boolean as PropType<VxePulldownPropTypes.Transfer>,

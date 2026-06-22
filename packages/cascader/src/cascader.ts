@@ -85,11 +85,11 @@ export default defineVxeComponent({
     filterConfig: Object as PropType<VxeCascaderPropTypes.FilterConfig>,
     showFullLabel: {
       type: Boolean as PropType<VxeCascaderPropTypes.ShowFullLabel>,
-      default: getConfig().cascader.showFullLabel
+      default: () => getConfig().cascader.showFullLabel
     },
     separator: {
       type: String as PropType<VxeCascaderPropTypes.Separator>,
-      default: getConfig().cascader.separator
+      default: () => getConfig().cascader.separator
     },
     multiple: Boolean as PropType<VxeCascaderPropTypes.Multiple>,
     className: [String, Function] as PropType<VxeCascaderPropTypes.ClassName>,

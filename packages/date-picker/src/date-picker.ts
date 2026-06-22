@@ -5,7 +5,7 @@ import { getConfig, getIcon, getI18n, commands, createEvent, globalEvents, GLOBA
 import { getFuncText, getLastZIndex, nextZIndex, isEnableConf } from '../../ui/src/utils'
 import { updatePanelPlacement, getEventTargetNode, hasControlKey } from '../../ui/src/dom'
 import { getSlotVNs } from '../../ui/src/vn'
-import { parseDateObj, parseDateValue, getDateByCode, handleValueFormat, hasDateValueType, hasTimestampValueType, isAllSameChar, getChunkDefaultNum } from '../../date-panel/src/util'
+import { parseDateObj, parseDateValue, getDateByCode, handleValueFormat, hasDateValueType, hasTimestampValueType, isAllSameChar, getChunkDefaultNum, checkDateFormat } from '../../date-panel/src/util'
 import { createComponentLog } from '../../ui/src/log'
 import VxeDatePanelComponent from '../../date-panel/src/date-panel'
 import VxeButtonComponent from '../../button/src/button'
@@ -287,6 +287,14 @@ export default defineVxeComponent({
       return []
     })
 
+    const computeDateStartDate = computed(() => {
+      return props.startDate ? XEUtils.toStringDate(props.startDate) : null
+    })
+
+    const computeDateEndDate = computed(() => {
+      return props.endDate ? XEUtils.toStringDate(props.endDate) : null
+    })
+
     const computeLimitMaxCount = computed(() => {
       return props.multiple ? XEUtils.toNumber(props.limitCount) : 0
     })
@@ -556,13 +564,38 @@ export default defineVxeComponent({
     }
 
     const afterCheckValue = (inpVal: string) => {
-      const { type } = props
+      const { type, editable, multiple, maskedConfig } = props
       const { inputLabel } = internalData
       const dateLabelFormat = computeDateLabelFormat.value
+      const maskedOpts = computeMaskedOpts.value
       if (!inpVal) {
         handleChange('', { type: 'check' })
         return
       }
+
+      // 掩码格式处理
+      if (editable && !multiple && (isEnableConf(maskedConfig) || maskedOpts.enabled)) {
+        const allMaskedKeys = dateLabelFormat.match(new RegExp(`(${inputMaskedKeys.join('|')})+`, 'g'))
+        if (allMaskedKeys) {
+          allMaskedKeys.forEach(formatKey => {
+            const fkIndex = dateLabelFormat.indexOf(formatKey)
+            if (fkIndex > -1) {
+              let val = XEUtils.toNumber(inpVal.slice(fkIndex, formatKey.length).replace(/\D/g, ''))
+              // 自动纠错最小值
+              if (!val && ['MM', 'dd'].includes(formatKey)) {
+                val = 1
+              }
+              inpVal = inpVal.slice(0, fkIndex) + XEUtils.padStart(checkDateFormat(val, formatKey), formatKey.length, '0') + inpVal.slice(fkIndex + formatKey.length)
+            }
+          })
+        }
+      }
+
+      const $datePanel = refDatePanel.value
+      if ($datePanel) {
+        return $datePanel.checkValue(inpVal)
+      }
+
       let inpDateVal: VxeDatePickerPropTypes.ModelValue = parseDateValue(inpVal, type, {
         valueFormat: dateLabelFormat
       })
@@ -612,6 +645,17 @@ export default defineVxeComponent({
       }
     }
 
+    const checkMaskedInputValue = (numStr: string | number, chunkFormat: string, isFull: boolean) => {
+      const maskedOpts = computeMaskedOpts.value
+      const { align } = maskedOpts
+      const maskChar = computeMaskChar.value
+      const restVal = checkDateFormat(XEUtils.toNumber(numStr), chunkFormat)
+      if (isFull) {
+        return XEUtils.padStart(restVal, chunkFormat.length, '0')
+      }
+      return XEUtils[align === 'right' ? 'padStart' : 'padEnd'](restVal, chunkFormat.length, maskChar)
+    }
+
     const handleArrowInputDate = (evnt: KeyboardEvent, isUpArrow: boolean, isDwArrow: boolean, isLtArrow: boolean, isRtArrow: boolean) => {
       const { type, multiple } = props
       if (multiple) {
@@ -645,7 +689,7 @@ export default defineVxeComponent({
         const chunkValue = inpValue.slice(chunkStartIndex, chunkEndIndex)
         if (parseInputKayMaps[selectKey]) {
           const chunkNum = (isAllSameChar(chunkValue, maskChar) ? getChunkDefaultNum(selectKey) : XEUtils.toNumber(chunkValue)) + (isUpArrow ? 1 : -1)
-          const restValue = inpValue.slice(0, chunkStartIndex) + XEUtils.padStart(chunkNum, chunkFormat.length, '0') + inpValue.slice(chunkEndIndex)
+          const restValue = inpValue.slice(0, chunkStartIndex) + checkMaskedInputValue(chunkNum, chunkFormat, true) + inpValue.slice(chunkEndIndex)
           evnt.preventDefault()
           if (restValue.indexOf(maskChar) === -1) {
             // 解析日期
@@ -706,6 +750,8 @@ export default defineVxeComponent({
         return
       }
       const { isTriggerMasked } = internalData
+      const maskedOpts = computeMaskedOpts.value
+      const { align } = maskedOpts
       const dateMaskedFormat = computeDateMaskedFormat.value
       const maskChar = computeMaskChar.value
       let inpValue = targetElem.value || dateMaskedFormat
@@ -725,7 +771,7 @@ export default defineVxeComponent({
       const chunkEndIndex = chunkStartIndex + chunkFormat.length
       const currKeyIndex = allMaskedKeys.indexOf(selectKey)
       // 全选 | 如果无效字符
-      const isAllSelected = !selectionStart && selectionEnd === inpValue.length
+      const isAllSelected = !selectionStart && selectionEnd === inpValue.length && allMaskedKeys.length > 1
       const isNotMasked = inpValue && inpValue.length !== dateMaskedFormat.length
       if (isAllSelected || isNotMasked) {
         inpValue = dateMaskedFormat
@@ -736,10 +782,11 @@ export default defineVxeComponent({
 
       if (isNumKey) {
         chunkNumList.push(numKey)
+        chunkValue = checkMaskedInputValue(chunkNumList.join(''), chunkFormat, false)
       } else if (isBackspaceKey) {
         chunkNumList.pop()
+        chunkValue = XEUtils[align === 'right' ? 'padStart' : 'padEnd'](chunkNumList.join(''), chunkFormat.length, maskChar)
       }
-      chunkValue = chunkNumList.join('').padEnd(chunkFormat.length, maskChar)
       let restValue = inpValue.slice(0, chunkStartIndex) + chunkValue + inpValue.slice(chunkEndIndex)
       restValue = restValue.replace(new RegExp(`(${inputMaskedKeys.join('|')})`, 'g'), maskChar)
 
@@ -772,7 +819,7 @@ export default defineVxeComponent({
               const prveChunkNums = (prveChunkValue.match(/\d/g) || [])
               if (prveChunkNums.length) {
                 prveChunkNums.pop()
-                prveChunkValue = prveChunkNums.join('').padEnd(prveChunkFormat.length, maskChar)
+                prveChunkValue = XEUtils[align === 'right' ? 'padStart' : 'padEnd'](prveChunkNums.join(''), prveChunkFormat.length, maskChar)
                 restValue = restValue.slice(0, prveChunkStartIndex) + prveChunkValue + restValue.slice(prveChunkEndIndex)
 
                 targetElem.value = restValue
@@ -868,7 +915,7 @@ export default defineVxeComponent({
       }
 
       // 全选 | 如果无效字符
-      const isAllSelected = !selectionStart && selectionEnd === inpValue.length
+      const isAllSelected = !selectionStart && selectionEnd === inpValue.length && allMaskedKeys.length > 1
       const isNotMasked = inpValue && inpValue.length !== dateMaskedFormat.length
       if (isAllSelected || isNotMasked) {
         let restValue = ''
@@ -914,7 +961,6 @@ export default defineVxeComponent({
     }
 
     const blurEvent = (evnt: Event & { type: 'blur' }) => {
-      const $datePanel = refDatePanel.value
       const { inputValue } = reactData
       const inpImmediate = computeInpImmediate.value
       const value = inputValue
@@ -925,11 +971,7 @@ export default defineVxeComponent({
         const { inputLabel } = internalData
         reactData.isActivated = false
         // 未打开面板时才校验
-        if ($datePanel) {
-          $datePanel.checkValue(inputLabel)
-        } else {
-          afterCheckValue(inputLabel)
-        }
+        afterCheckValue(inputLabel)
       }
       dispatchEvent('blur', { value }, evnt)
       // 自动更新校验状态
@@ -986,17 +1028,12 @@ export default defineVxeComponent({
       const isEnter = globalEvents.hasKey(evnt, GLOBAL_EVENT_KEYS.ENTER)
       if (editable) {
         if (isEnter) {
-          const $datePanel = refDatePanel.value
           const { inputLabel } = internalData
           const targetElem = refInputTarget.value
           if (visiblePanel) {
             hidePanel()
           }
-          if ($datePanel) {
-            $datePanel.checkValue(inputLabel)
-          } else {
-            afterCheckValue(inputLabel)
-          }
+          afterCheckValue(inputLabel)
           if (targetElem) {
             targetElem.blur()
           }
@@ -1047,7 +1084,6 @@ export default defineVxeComponent({
 
     // 全局事件
     const handleGlobalMousedownEvent = (evnt: Event) => {
-      const $datePanel = refDatePanel.value
       const { visiblePanel, isActivated } = reactData
       const el = refElem.value
       const panelWrapperElem = refPanelWrapper.value
@@ -1061,11 +1097,7 @@ export default defineVxeComponent({
           if (visiblePanel) {
             hidePanel()
             const { inputLabel } = internalData
-            if ($datePanel) {
-              $datePanel.checkValue(inputLabel)
-            } else {
-              afterCheckValue(inputLabel)
-            }
+            afterCheckValue(inputLabel)
           }
         }
       }
@@ -1106,7 +1138,6 @@ export default defineVxeComponent({
     }
 
     const handleGlobalBlurEvent = () => {
-      const $datePanel = refDatePanel.value
       const { isActivated, visiblePanel } = reactData
       if (visiblePanel) {
         hidePanel()
@@ -1115,9 +1146,7 @@ export default defineVxeComponent({
         reactData.isActivated = false
       }
       if (visiblePanel || isActivated) {
-        if ($datePanel) {
-          $datePanel.checkValue(internalData.inputLabel)
-        }
+        afterCheckValue(internalData.inputLabel)
         const targetElem = refInputTarget.value
         if (targetElem) {
           targetElem.blur()
@@ -1339,6 +1368,8 @@ export default defineVxeComponent({
       const isDateTimeType = computeIsDateTimeType.value
       const shortcutList = computeShortcutList.value
       const timeOpts = computeTimeOpts.value
+      const dateStartDate = computeDateStartDate.value
+      const dateEndDate = computeDateEndDate.value
       const { position } = shortcutOpts
       const headerSlot = slots.header
       const footerSlot = slots.footer
@@ -1407,8 +1438,8 @@ export default defineVxeComponent({
                         className: props.className,
                         multiple: props.multiple,
                         limitCount: props.limitCount,
-                        startDate: props.startDate,
-                        endDate: props.endDate,
+                        startDate: dateStartDate,
+                        endDate: dateEndDate,
                         defaultDate: props.defaultDate,
                         defaultTime: props.defaultTime,
                         minDate: props.minDate,

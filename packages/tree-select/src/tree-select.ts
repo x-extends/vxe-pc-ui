@@ -52,7 +52,7 @@ export default defineVxeComponent({
     modelValue: [String, Number, Array] as PropType<VxeTreeSelectPropTypes.ModelValue>,
     clearable: {
       type: Boolean as PropType<VxeTreeSelectPropTypes.Clearable>,
-      default: getConfig().treeSelect.clearable
+      default: () => getConfig().treeSelect.clearable
     },
     placeholder: {
       type: String as PropType<VxeTreeSelectPropTypes.Placeholder>,
@@ -69,11 +69,11 @@ export default defineVxeComponent({
     },
     showFullLabel: {
       type: Boolean as PropType<VxeTreeSelectPropTypes.ShowFullLabel>,
-      default: getConfig().treeSelect.showFullLabel
+      default: () => getConfig().treeSelect.showFullLabel
     },
     separator: {
       type: String as PropType<VxeTreeSelectPropTypes.Separator>,
-      default: getConfig().treeSelect.separator
+      default: () => getConfig().treeSelect.separator
     },
     filterable: Boolean as PropType<VxeTreeSelectPropTypes.Filterable>,
     filterConfig: Object as PropType<VxeTreeSelectPropTypes.FilterConfig>,

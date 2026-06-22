@@ -124,7 +124,7 @@
         <vxe-date-picker v-model="demo1.val910" :popup-config="{enabled:false}" :masked-config="{isArrow:true,isMasked:true}"></vxe-date-picker>
         <vxe-date-picker v-model="demo1.val911" :popup-config="{trigger:'icon'}" :masked-config="{isArrow:true,isMasked:true}"></vxe-date-picker>
         <vxe-date-picker v-model="demo1.val912" :popup-config="{trigger:'icon'}" :masked-config="{isArrow:true,isMasked:true}"></vxe-date-picker>
-        <vxe-date-picker v-model="demo1.val913" :masked-config="{isArrow:true,isMasked:true}" label-format="dd/MM/yyyy"></vxe-date-picker>
+        <vxe-date-picker v-model="demo1.val913" :masked-config="{isArrow:true,isMasked:true,align:'left'}" label-format="dd/MM/yyyy"></vxe-date-picker>
 
     </p>
     <p>
