@@ -684,7 +684,7 @@ export default defineVxeComponent({
       }
     }
     const handleUploadFile = (files: File[], evnt: Event | null) => {
-      const { multiple, urlMode, showLimitSize, limitSizeText, showLimitCount, limitCountText, autoSubmit } = props
+      const { multiple, showLimitSize, limitSizeText, showLimitCount, limitCountText, autoSubmit } = props
       const { fileList } = reactData
       const beforeSelectFn = props.beforeSelectMethod || getConfig().upload.beforeSelectMethod
       const uploadFn = props.uploadMethod || getConfig().upload.uploadMethod
@@ -802,7 +802,7 @@ export default defineVxeComponent({
       newFileList.forEach(item => {
         dispatchEvent('add', { option: item }, evnt)
       })
-      Promise.all(urlMode ? uploadPromiseRests : []).then(() => {
+      Promise.all(uploadPromiseRests).then(() => {
         const restFileList = reactData.fileList
         dispatchEvent('upload-queue-end', { options: restFileList, files: selectFiles }, evnt)
         handleChange(restFileList)
