@@ -588,6 +588,7 @@ export interface GanttPrivateComputed<D = any> extends GridPrivateComputed<D> {
   computeTaskBarTooltipOpts: VxeGanttPropTypes.TaskBarTooltipConfig
   computeTaskLinkOpts: VxeGanttPropTypes.TaskLinkConfig
   computeTaskViewScales: VxeGanttDefines.ColumnScaleType[] | VxeGanttDefines.ColumnScaleConfig[] | undefined
+  computeDateFormat: string
   computeScaleUnit: VxeGanttDefines.ColumnScaleType
   computeMinScale: VxeGanttDefines.ColumnScaleObj
   computeWeekScale: VxeGanttDefines.ColumnScaleObj | null | undefined

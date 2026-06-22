@@ -957,7 +957,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const $xeForm = $xeUpload.$xeForm
       const formItemInfo = $xeUpload.formItemInfo
 
-      const { multiple, urlMode, showLimitSize, limitSizeText, showLimitCount, limitCountText, autoSubmit } = props
+      const { multiple, showLimitSize, limitSizeText, showLimitCount, limitCountText, autoSubmit } = props
       const { fileList } = reactData
       const beforeSelectFn = props.beforeSelectMethod || getConfig().upload.beforeSelectMethod
       const uploadFn = props.uploadMethod || getConfig().upload.uploadMethod
@@ -1074,7 +1074,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       newFileList.forEach(item => {
         $xeUpload.dispatchEvent('add', { option: item }, evnt)
       })
-      Promise.all(urlMode ? uploadPromiseRests : []).then(() => {
+      Promise.all(uploadPromiseRests).then(() => {
         const restFileList = reactData.fileList
         $xeUpload.dispatchEvent('upload-queue-end', { options: restFileList, files: selectFiles }, evnt)
         $xeUpload.handleChange(restFileList)
