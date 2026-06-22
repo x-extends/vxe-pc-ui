@@ -268,7 +268,7 @@ export function isAllSameChar (str: string, char: string) {
   return true
 }
 
-export function checkDateFormat (numStr:number, formatKey: string) {
+export function checkDateInputFormat (numStr: number, formatKey: string) {
   const numVal = XEUtils.toNumber(numStr)
   switch (formatKey) {
     case 'yyyy':

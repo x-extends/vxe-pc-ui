@@ -130,7 +130,7 @@
     <p>
         <vxe-date-picker v-model="demo1.val921" type="time" :masked-config="{isArrow:true,isMasked:true}"></vxe-date-picker>
         <vxe-date-picker v-model="demo1.val922" type="datetime" :masked-config="{isArrow:true,isMasked:true}"></vxe-date-picker>
-        <vxe-date-picker v-model="demo1.val923" type="year" :masked-config="{isArrow:true,isMasked:true}"></vxe-date-picker>
+        <vxe-date-picker v-model="demo1.val923" placeholder="year" type="year" :masked-config="{isArrow:false,isMasked:true}"></vxe-date-picker>
         <vxe-date-picker v-model="demo1.val924" type="month" :masked-config="{isArrow:true,isMasked:true}"></vxe-date-picker>
         <vxe-date-picker v-model="demo1.val925" type="week" :masked-config="{isArrow:true,isMasked:true}"></vxe-date-picker>
         <vxe-date-picker v-model="demo1.val926" type="quarter" :masked-config="{isArrow:true,isMasked:true}"></vxe-date-picker>

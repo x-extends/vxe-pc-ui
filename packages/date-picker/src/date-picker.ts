@@ -5,7 +5,7 @@ import { getConfig, getIcon, getI18n, commands, createEvent, globalEvents, GLOBA
 import { getFuncText, getLastZIndex, nextZIndex, isEnableConf } from '../../ui/src/utils'
 import { updatePanelPlacement, getEventTargetNode, hasControlKey } from '../../ui/src/dom'
 import { getSlotVNs } from '../../ui/src/vn'
-import { parseDateObj, parseDateValue, getDateByCode, handleValueFormat, hasDateValueType, hasTimestampValueType, isAllSameChar, getChunkDefaultNum, checkDateFormat } from '../../date-panel/src/util'
+import { parseDateObj, parseDateValue, getDateByCode, handleValueFormat, hasDateValueType, hasTimestampValueType, isAllSameChar, getChunkDefaultNum, checkDateInputFormat } from '../../date-panel/src/util'
 import { createComponentLog } from '../../ui/src/log'
 import VxeDatePanelComponent from '../../date-panel/src/date-panel'
 import VxeButtonComponent from '../../button/src/button'
@@ -16,6 +16,7 @@ import type { VxeTableConstructor, VxeTablePrivateMethods } from '../../../types
 
 const { warnLog, errLog } = createComponentLog('date-picker')
 
+const defaultMaskPlaceholder = '*'
 const maskedTypes = ['year', 'month', 'date', 'datetime', 'time']
 const inputMaskedKeys = ['y', 'M', 'd', 'H', 'm', 'n', 's']
 const parseInputKayMaps: Record<string, boolean> = {}
@@ -40,6 +41,7 @@ function createReactData (): DatePickerReactData {
 function createInternalData (): DatePickerInternalData {
   return {
     // hpTimeout: undefined,
+    // fsTimeout: undefined,
     inputLabel: '',
     laseFocusMasked: 0
   }
@@ -407,7 +409,7 @@ export default defineVxeComponent({
     const computeMaskChar = computed(() => {
       const maskedOpts = computeMaskedOpts.value
       const { maskPlaceholder } = maskedOpts
-      return (maskPlaceholder ? ('' + maskPlaceholder)[0] : '') || '*'
+      return (maskPlaceholder ? ('' + maskPlaceholder)[0] : '') || defaultMaskPlaceholder
     })
 
     const updateModelValue = () => {
@@ -568,11 +570,12 @@ export default defineVxeComponent({
       const { inputLabel } = internalData
       const dateLabelFormat = computeDateLabelFormat.value
       const maskedOpts = computeMaskedOpts.value
+      const dateStartDate = computeDateStartDate.value
+      const dateEndDate = computeDateEndDate.value
       if (!inpVal) {
         handleChange('', { type: 'check' })
         return
       }
-
       // 掩码格式处理
       if (editable && !multiple && (isEnableConf(maskedConfig) || maskedOpts.enabled)) {
         const allMaskedKeys = dateLabelFormat.match(new RegExp(`(${inputMaskedKeys.join('|')})+`, 'g'))
@@ -580,12 +583,16 @@ export default defineVxeComponent({
           allMaskedKeys.forEach(formatKey => {
             const fkIndex = dateLabelFormat.indexOf(formatKey)
             if (fkIndex > -1) {
-              let val = XEUtils.toNumber(inpVal.slice(fkIndex, formatKey.length).replace(/\D/g, ''))
-              // 自动纠错最小值
-              if (!val && ['MM', 'dd'].includes(formatKey)) {
-                val = 1
+              const valStr = inpVal.slice(fkIndex, fkIndex + formatKey.length).replace(/\D/g, '')
+              if (!valStr) {
+                return
               }
-              inpVal = inpVal.slice(0, fkIndex) + XEUtils.padStart(checkDateFormat(val, formatKey), formatKey.length, '0') + inpVal.slice(fkIndex + formatKey.length)
+              let valNum = XEUtils.toNumber(valStr)
+              // 自动纠错最小值
+              if (!valNum && ['MM', 'dd'].includes(formatKey)) {
+                valNum = 1
+              }
+              inpVal = inpVal.slice(0, fkIndex) + XEUtils.padStart(checkDateInputFormat(valNum, formatKey), formatKey.length, '0') + inpVal.slice(fkIndex + formatKey.length)
             }
           })
         }
@@ -610,6 +617,12 @@ export default defineVxeComponent({
         }
         handleInputLabel(inpDateVal, true)
         return
+      }
+      if (dateEndDate && inpDateVal > dateEndDate) {
+        inpDateVal = dateEndDate
+      }
+      if (dateStartDate && inpDateVal < dateStartDate) {
+        inpDateVal = dateStartDate
       }
       let isChange = false
       const firstDayOfWeek = computeFirstDayOfWeek.value
@@ -645,15 +658,26 @@ export default defineVxeComponent({
       }
     }
 
-    const checkMaskedInputValue = (numStr: string | number, chunkFormat: string, isFull: boolean) => {
+    const checkMaskedInputValue = (numStr: string, chunkFormat: string, isFull: boolean) => {
       const maskedOpts = computeMaskedOpts.value
       const { align } = maskedOpts
       const maskChar = computeMaskChar.value
-      const restVal = checkDateFormat(XEUtils.toNumber(numStr), chunkFormat)
+      const numVal = XEUtils.toNumber(numStr)
+      let restVal = checkDateInputFormat(numVal, chunkFormat)
       if (isFull) {
-        return XEUtils.padStart(restVal, chunkFormat.length, '0')
+        // 自动纠错最小值
+        if (!restVal && ['MM', 'dd'].includes(chunkFormat)) {
+          restVal = 1
+        }
       }
-      return XEUtils[align === 'right' ? 'padStart' : 'padEnd'](restVal, chunkFormat.length, maskChar)
+      let restStr = '' + restVal
+      if (numStr.length > restStr.length) {
+        restStr = restStr.padStart(numStr.length, '0')
+      }
+      if (isFull) {
+        return XEUtils.padStart(restStr, chunkFormat.length, '0')
+      }
+      return XEUtils[align === 'right' ? 'padStart' : 'padEnd'](restStr, chunkFormat.length, maskChar)
     }
 
     const handleArrowInputDate = (evnt: KeyboardEvent, isUpArrow: boolean, isDwArrow: boolean, isLtArrow: boolean, isRtArrow: boolean) => {
@@ -689,7 +713,7 @@ export default defineVxeComponent({
         const chunkValue = inpValue.slice(chunkStartIndex, chunkEndIndex)
         if (parseInputKayMaps[selectKey]) {
           const chunkNum = (isAllSameChar(chunkValue, maskChar) ? getChunkDefaultNum(selectKey) : XEUtils.toNumber(chunkValue)) + (isUpArrow ? 1 : -1)
-          const restValue = inpValue.slice(0, chunkStartIndex) + checkMaskedInputValue(chunkNum, chunkFormat, true) + inpValue.slice(chunkEndIndex)
+          const restValue = inpValue.slice(0, chunkStartIndex) + checkMaskedInputValue('' + chunkNum, chunkFormat, true) + inpValue.slice(chunkEndIndex)
           evnt.preventDefault()
           if (restValue.indexOf(maskChar) === -1) {
             // 解析日期
@@ -843,9 +867,9 @@ export default defineVxeComponent({
           return
         }
       }
-
       let maskStartIndex = skRest.index || 0
       let maskEndIndex = maskStartIndex + skRest[0].length
+
       // 如果输入完成，跳转下一个
       if (chunkNumList.length >= chunkValue.length) {
         const nextKeys = allMaskedKeys.slice(currKeyIndex + 1)
@@ -868,6 +892,7 @@ export default defineVxeComponent({
     }
 
     const handleMaskedSelectedDate = (evnt: Event, isFocus?: boolean) => {
+      internalData.fsTimeout = undefined
       const { type, multiple, modelValue } = props
       if (multiple) {
         return
@@ -947,7 +972,7 @@ export default defineVxeComponent({
         selectKey = dateMaskedFormat[selectionStart - 1]
       }
       if (selectKey) {
-        evnt.preventDefault()
+        evnt.stopPropagation()
         const skRest = dateMaskedFormat.match(new RegExp(selectKey + '+'))
         if (skRest) {
           const chunkFormat = skRest[0] || ''
@@ -982,37 +1007,38 @@ export default defineVxeComponent({
 
     const focusEvent = (evnt: KeyboardEvent & { type: 'focus' }) => {
       const { multiple, editable, maskedConfig } = props
+      const { fsTimeout } = internalData
       const maskedOpts = computeMaskedOpts.value
       const popupOpts = computePopupOpts.value
       const { trigger } = popupOpts
       reactData.isActivated = true
+      if (fsTimeout) {
+        clearTimeout(fsTimeout)
+      }
       if (!trigger || trigger === 'default') {
         datePickerOpenEvent(evnt)
-        setTimeout(() => {
-          if (editable && !multiple && (isEnableConf(maskedConfig) || maskedOpts.enabled)) {
-            handleMaskedSelectedDate(evnt, true)
-          }
-        }, 15)
       } else if (trigger === 'icon') {
         hidePanel()
-        setTimeout(() => {
-          if (editable && !multiple && (isEnableConf(maskedConfig) || maskedOpts.enabled)) {
-            handleMaskedSelectedDate(evnt, true)
-          }
-        }, 15)
-      } else {
-        if (editable && !multiple && (isEnableConf(maskedConfig) || maskedOpts.enabled)) {
+      }
+      if (editable && !multiple && (isEnableConf(maskedConfig) || maskedOpts.enabled)) {
+        internalData.fsTimeout = setTimeout(() => {
           handleMaskedSelectedDate(evnt, true)
-        }
+        }, 20)
       }
       triggerEvent(evnt)
     }
 
     const clickEvent = (evnt: MouseEvent & { type: 'click' }) => {
-      const { editable, maskedConfig } = props
+      const { multiple, editable, maskedConfig } = props
+      const { fsTimeout } = internalData
       const maskedOpts = computeMaskedOpts.value
-      if (editable && (isEnableConf(maskedConfig) || maskedOpts.enabled)) {
-        handleMaskedSelectedDate(evnt)
+      if (fsTimeout) {
+        clearTimeout(fsTimeout)
+      }
+      if (editable && !multiple && (isEnableConf(maskedConfig) || maskedOpts.enabled)) {
+        internalData.fsTimeout = setTimeout(() => {
+          handleMaskedSelectedDate(evnt)
+        }, 10)
       }
       triggerEvent(evnt)
     }

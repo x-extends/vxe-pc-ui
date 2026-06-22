@@ -129,11 +129,11 @@ export default defineVxeComponent({
       return isDateTimeType || ['date', 'week', 'month', 'quarter', 'year'].indexOf(props.type) > -1
     })
 
-    const computeDateStartTime = computed(() => {
+    const computeDateStartDate = computed(() => {
       return props.startDate ? XEUtils.toStringDate(props.startDate) : null
     })
 
-    const computeDateEndTime = computed(() => {
+    const computeDateEndDate = computed(() => {
       return props.endDate ? XEUtils.toStringDate(props.endDate) : null
     })
 
@@ -203,7 +203,7 @@ export default defineVxeComponent({
     })
 
     const computeIsDisabledPrevDateBtn = computed(() => {
-      const dateStartTime = computeDateStartTime.value
+      const dateStartTime = computeDateStartDate.value
       const { selectMonth } = reactData
       if (selectMonth && dateStartTime) {
         return selectMonth <= dateStartTime
@@ -212,7 +212,7 @@ export default defineVxeComponent({
     })
 
     const computeIsDisabledNextDateBtn = computed(() => {
-      const dateEndTime = computeDateEndTime.value
+      const dateEndTime = computeDateEndDate.value
       const { selectMonth } = reactData
       if (selectMonth && dateEndTime) {
         return XEUtils.getWhatMonth(selectMonth, 0, 'last') >= dateEndTime
@@ -626,6 +626,8 @@ export default defineVxeComponent({
       const { type } = props
       const { inputLabel, datetimePanelValue } = reactData
       const dateLabelFormat = computeDateLabelFormat.value
+      const dateStartDate = computeDateStartDate.value
+      const dateEndDate = computeDateEndDate.value
       if (inpVal) {
         let inpDateVal: VxeDatePanelPropTypes.ModelValue = parseDate(inpVal, dateLabelFormat as string)
         if (XEUtils.isValidDate(inpDateVal)) {
@@ -636,6 +638,12 @@ export default defineVxeComponent({
             }
             reactData.inputLabel = inpDateVal
           } else {
+            if (dateEndDate && inpDateVal > dateEndDate) {
+              inpDateVal = dateEndDate
+            }
+            if (dateStartDate && inpDateVal < dateStartDate) {
+              inpDateVal = dateStartDate
+            }
             let isChange = false
             const firstDayOfWeek = computeFirstDayOfWeek.value
             if (type === 'datetime') {
@@ -932,8 +940,8 @@ export default defineVxeComponent({
     }
 
     const isRangeDisabled = (item: { date: Date }) => {
-      const dateStartTime = computeDateStartTime.value
-      const dateEndTime = computeDateEndTime.value
+      const dateStartTime = computeDateStartDate.value
+      const dateEndTime = computeDateEndDate.value
       const { date } = item
       if (dateStartTime && dateStartTime.getTime() > date.getTime()) {
         return true
