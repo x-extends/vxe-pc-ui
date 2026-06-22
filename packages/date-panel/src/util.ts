@@ -267,3 +267,21 @@ export function isAllSameChar (str: string, char: string) {
   }
   return true
 }
+
+export function checkDateFormat (numStr:number, formatKey: string) {
+  const numVal = XEUtils.toNumber(numStr)
+  switch (formatKey) {
+    case 'yyyy':
+      return (numVal >= 9999 ? 9999 : (numVal <= 0 ? 0 : numVal))
+    case 'MM':
+      return (numVal >= 12 ? 12 : (numVal <= 0 ? 0 : numVal))
+    case 'dd':
+      return (numVal >= 31 ? 31 : (numVal <= 0 ? 0 : numVal))
+
+    case 'HH':
+    case 'mm':
+    case 'ss':
+      return (numVal >= 59 ? 59 : (numVal <= 0 ? 0 : numVal))
+  }
+  return numVal
+}

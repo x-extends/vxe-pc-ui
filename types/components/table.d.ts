@@ -1149,9 +1149,11 @@ export namespace VxeTablePropTypes {
       $table: VxeTableConstructor<D>
       column: VxeTableDefines.ColumnInfo<D>
       columnIndex: number
+      _columnIndex: number
       $columnIndex: number
-      $rowIndex: number
       rowIndex: number
+      _rowIndex: number
+      $rowIndex: number
       row: any
     }) => number | string)
     /**
@@ -1161,9 +1163,11 @@ export namespace VxeTablePropTypes {
       $table: VxeTableConstructor<D>
       column: VxeTableDefines.ColumnInfo<D>
       columnIndex: number
+      _columnIndex: number
       $columnIndex: number
-      $rowIndex: number
       rowIndex: number
+      _rowIndex: number
+      $rowIndex: number
       row: any
     }) => number | string)
     /**
@@ -1173,7 +1177,10 @@ export namespace VxeTablePropTypes {
       $table: VxeTableConstructor<D>
       column: VxeTableDefines.ColumnInfo<D>
       columnIndex: number
+      _columnIndex: number
       $columnIndex: number
+      rowIndex: number
+      _rowIndex: number
       $rowIndex: number
       cell?: HTMLElement
     }) => number | string)
@@ -1184,7 +1191,10 @@ export namespace VxeTablePropTypes {
       $table: VxeTableConstructor<D>
       column: VxeTableDefines.ColumnInfo<D>
       columnIndex: number
+      _columnIndex: number
       $columnIndex: number
+      rowIndex: number
+      _rowIndex: number
       $rowIndex: number
       cell?: HTMLElement
     }) => number | string)
@@ -1200,9 +1210,11 @@ export namespace VxeTablePropTypes {
       $table: VxeTableConstructor<D>
       column: VxeTableDefines.ColumnInfo<D>
       columnIndex: number
+      _columnIndex: number
       $columnIndex: number
       row: D
       rowIndex: number
+      _rowIndex: number
       $rowIndex: number
     }): number | string
   }
@@ -6438,6 +6450,8 @@ export namespace VxeTableDefines {
     $table: VxeTableConstructor<D>
     $grid: VxeGridConstructor | null | undefined
     $gantt: VxeGanttConstructor | null | undefined
+    rowIndex: number
+    _rowIndex: number
     $rowIndex: number
     column: ColumnInfo<D>
     columnIndex: number

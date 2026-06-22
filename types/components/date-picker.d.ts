@@ -72,6 +72,10 @@ export namespace VxeDatePickerPropTypes {
      * 掩码占位符
      */
     maskPlaceholder?: string
+    /**
+     * 对齐方式
+     */
+    align?: 'left' | 'right' | '' | null
   }
   /**
    * 已废弃，请使用 PopupConfig.placement
