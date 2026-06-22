@@ -214,6 +214,7 @@ export interface DatePickerReactData {
 
 export interface DatePickerInternalData {
   hpTimeout?: undefined | number
+  fsTimeout?: undefined | number
   inputLabel: string
   isTriggerMasked?: boolean
   laseFocusMasked: number

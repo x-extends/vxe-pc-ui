@@ -5,7 +5,7 @@ import { getConfig, getIcon, getI18n, commands, createEvent, globalEvents, GLOBA
 import { getFuncText, getLastZIndex, nextZIndex, isEnableConf } from '../../ui/src/utils'
 import { updatePanelPlacement, getEventTargetNode, hasControlKey } from '../../ui/src/dom'
 import { getSlotVNs } from '../../ui/src/vn'
-import { parseDateObj, parseDateValue, getDateByCode, handleValueFormat, hasDateValueType, hasTimestampValueType, isAllSameChar, getChunkDefaultNum, checkDateFormat } from '../../date-panel/src/util'
+import { parseDateObj, parseDateValue, getDateByCode, handleValueFormat, hasDateValueType, hasTimestampValueType, isAllSameChar, getChunkDefaultNum, checkDateInputFormat } from '../../date-panel/src/util'
 import { createComponentLog } from '../../ui/src/log'
 import VxeDatePanelComponent from '../../date-panel/src/date-panel'
 import VxeButtonComponent from '../../button/src/button'
@@ -16,6 +16,7 @@ import type { VxeTableConstructor, VxeTablePrivateMethods } from '../../../types
 
 const { warnLog, errLog } = createComponentLog('date-picker')
 
+const defaultMaskPlaceholder = '*'
 const maskedTypes = ['year', 'month', 'date', 'datetime', 'time']
 const inputMaskedKeys = ['y', 'M', 'd', 'H', 'm', 'n', 's']
 const parseInputKayMaps: Record<string, boolean> = {}
@@ -40,6 +41,7 @@ function createReactData (): DatePickerReactData {
 function createInternalData (): DatePickerInternalData {
   return {
     // hpTimeout: undefined,
+    // fsTimeout: undefined,
     inputLabel: '',
     laseFocusMasked: 0
   }
@@ -462,7 +464,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
 
       const maskedOpts = $xeDatePicker.computeMaskedOpts as VxeDatePickerPropTypes.MaskedConfig
       const { maskPlaceholder } = maskedOpts
-      return (maskPlaceholder ? ('' + maskPlaceholder)[0] : '') || '*'
+      return (maskPlaceholder ? ('' + maskPlaceholder)[0] : '') || defaultMaskPlaceholder
     }
   },
   methods: {
@@ -669,6 +671,8 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const { inputLabel } = internalData
       const dateLabelFormat = $xeDatePicker.computeDateLabelFormat
       const maskedOpts = $xeDatePicker.computeMaskedOpts
+      const dateStartDate = $xeDatePicker.computeDateStartDate
+      const dateEndDate = $xeDatePicker.computeDateEndDate
       if (!inpVal) {
         $xeDatePicker.handleChange('', { type: 'check' })
         return
@@ -681,12 +685,16 @@ export default /* define-vxe-component start */ defineVxeComponent({
           allMaskedKeys.forEach(formatKey => {
             const fkIndex = dateLabelFormat.indexOf(formatKey)
             if (fkIndex > -1) {
-              let val = XEUtils.toNumber(inpVal.slice(fkIndex, formatKey.length).replace(/\D/g, ''))
-              // 自动纠错最小值
-              if (!val && ['MM', 'dd'].includes(formatKey)) {
-                val = 1
+              const valStr = inpVal.slice(fkIndex, fkIndex + formatKey.length).replace(/\D/g, '')
+              if (!valStr) {
+                return
               }
-              inpVal = inpVal.slice(0, fkIndex) + XEUtils.padStart(checkDateFormat(val, formatKey), formatKey.length, '0') + inpVal.slice(fkIndex + formatKey.length)
+              let valNum = XEUtils.toNumber(valStr)
+              // 自动纠错最小值
+              if (!valNum && ['MM', 'dd'].includes(formatKey)) {
+                valNum = 1
+              }
+              inpVal = inpVal.slice(0, fkIndex) + XEUtils.padStart(checkDateInputFormat(valNum, formatKey), formatKey.length, '0') + inpVal.slice(fkIndex + formatKey.length)
             }
           })
         }
@@ -711,6 +719,12 @@ export default /* define-vxe-component start */ defineVxeComponent({
         }
         $xeDatePicker.handleInputLabel(inpDateVal, true)
         return
+      }
+      if (dateEndDate && inpDateVal > dateEndDate) {
+        inpDateVal = dateEndDate
+      }
+      if (dateStartDate && inpDateVal < dateStartDate) {
+        inpDateVal = dateStartDate
       }
       let isChange = false
       const firstDayOfWeek = $xeDatePicker.computeFirstDayOfWeek
@@ -748,15 +762,26 @@ export default /* define-vxe-component start */ defineVxeComponent({
         $xeDatePicker.dispatchEvent('suffix-click', { value: inputValue }, evnt)
       }
     },
-    checkMaskedInputValue (numStr: string | number, chunkFormat: string, isFull: boolean) {
+    checkMaskedInputValue (numStr: string, chunkFormat: string, isFull: boolean) {
       const $xeDatePicker = this
 
       const maskedOpts = $xeDatePicker.computeMaskedOpts
       const { align } = maskedOpts
       const maskChar = $xeDatePicker.computeMaskChar
-      const restVal = checkDateFormat(XEUtils.toNumber(numStr), chunkFormat)
+      const numVal = XEUtils.toNumber(numStr)
+      let restVal = checkDateInputFormat(numVal, chunkFormat)
       if (isFull) {
-        return XEUtils.padStart(restVal, chunkFormat.length, '0')
+        // 自动纠错最小值
+        if (!restVal && ['MM', 'dd'].includes(chunkFormat)) {
+          restVal = 1
+        }
+      }
+      let restStr = '' + restVal
+      if (numStr.length > restStr.length) {
+        restStr = restStr.padStart(numStr.length, '0')
+      }
+      if (isFull) {
+        return XEUtils.padStart(restStr, chunkFormat.length, '0')
       }
       return XEUtils[align === 'right' ? 'padStart' : 'padEnd'](restVal, chunkFormat.length, maskChar)
     },
@@ -797,7 +822,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
         const chunkValue = inpValue.slice(chunkStartIndex, chunkEndIndex)
         if (parseInputKayMaps[selectKey]) {
           const chunkNum = (isAllSameChar(chunkValue, maskChar) ? getChunkDefaultNum(selectKey) : XEUtils.toNumber(chunkValue)) + (isUpArrow ? 1 : -1)
-          const restValue = inpValue.slice(0, chunkStartIndex) + $xeDatePicker.checkMaskedInputValue(chunkNum, chunkFormat, true) + inpValue.slice(chunkEndIndex)
+          const restValue = inpValue.slice(0, chunkStartIndex) + $xeDatePicker.checkMaskedInputValue('' + chunkNum, chunkFormat, true) + inpValue.slice(chunkEndIndex)
           evnt.preventDefault()
           if (restValue.indexOf(maskChar) === -1) {
             // 解析日期
@@ -983,6 +1008,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const internalData = $xeDatePicker.internalData
 
       const { type, multiple, value: modelValue } = props
+      internalData.fsTimeout = undefined
       if (multiple) {
         return
       }
@@ -1102,41 +1128,44 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const $xeDatePicker = this
       const props = $xeDatePicker
       const reactData = $xeDatePicker.reactData
+      const internalData = $xeDatePicker.internalData
 
+      const { fsTimeout } = internalData
       const { multiple, editable, maskedConfig } = props
       const maskedOpts = $xeDatePicker.computeMaskedOpts
       const popupOpts = $xeDatePicker.computePopupOpts
       const { trigger } = popupOpts
       reactData.isActivated = true
+      if (fsTimeout) {
+        clearTimeout(fsTimeout)
+      }
       if (!trigger || trigger === 'default') {
         $xeDatePicker.datePickerOpenEvent(evnt)
-        setTimeout(() => {
-          if (editable && !multiple && (isEnableConf(maskedConfig) || maskedOpts.enabled)) {
-            $xeDatePicker.handleMaskedSelectedDate(evnt, true)
-          }
-        }, 15)
       } else if (trigger === 'icon') {
         $xeDatePicker.hidePanel()
-        setTimeout(() => {
-          if (editable && !multiple && (isEnableConf(maskedConfig) || maskedOpts.enabled)) {
-            $xeDatePicker.handleMaskedSelectedDate(evnt, true)
-          }
-        }, 15)
-      } else {
-        if (editable && !multiple && (isEnableConf(maskedConfig) || maskedOpts.enabled)) {
+      }
+      if (editable && !multiple && (isEnableConf(maskedConfig) || maskedOpts.enabled)) {
+        internalData.fsTimeout = setTimeout(() => {
           $xeDatePicker.handleMaskedSelectedDate(evnt, true)
-        }
+        }, 20)
       }
       $xeDatePicker.triggerEvent(evnt)
     },
     clickEvent (evnt: MouseEvent & { type: 'click' }) {
       const $xeDatePicker = this
       const props = $xeDatePicker
+      const internalData = $xeDatePicker.internalData
 
-      const { editable, maskedConfig } = props
+      const { multiple, editable, maskedConfig } = props
+      const { fsTimeout } = internalData
       const maskedOpts = $xeDatePicker.computeMaskedOpts
-      if (editable && (isEnableConf(maskedConfig) || maskedOpts.enabled)) {
-        $xeDatePicker.handleMaskedSelectedDate(evnt)
+      if (fsTimeout) {
+        clearTimeout(fsTimeout)
+      }
+      if (editable && !multiple && (isEnableConf(maskedConfig) || maskedOpts.enabled)) {
+        internalData.fsTimeout = setTimeout(() => {
+          $xeDatePicker.handleMaskedSelectedDate(evnt)
+        }, 10)
       }
       $xeDatePicker.triggerEvent(evnt)
     },

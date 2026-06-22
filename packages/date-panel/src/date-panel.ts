@@ -118,13 +118,13 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const isDateTimeType = $xeDatePanel.computeIsDateTimeType
       return isDateTimeType || ['date', 'week', 'month', 'quarter', 'year'].indexOf(props.type) > -1
     },
-    computeDateStartTime () {
+    computeDateStartDate () {
       const $xeDatePanel = this
       const props = $xeDatePanel
 
       return props.startDate ? XEUtils.toStringDate(props.startDate) : null
     },
-    computeDateEndTime () {
+    computeDateEndDate () {
       const $xeDatePanel = this
       const props = $xeDatePanel
 
@@ -213,7 +213,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const $xeDatePanel = this
       const reactData = $xeDatePanel.reactData as DatePanelReactData
 
-      const dateStartTime = $xeDatePanel.computeDateStartTime as Date | null
+      const dateStartTime = $xeDatePanel.computeDateStartDate as Date | null
       const { selectMonth } = reactData
       if (selectMonth && dateStartTime) {
         return selectMonth <= dateStartTime
@@ -224,7 +224,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const $xeDatePanel = this
       const reactData = $xeDatePanel.reactData as DatePanelReactData
 
-      const dateEndTime = $xeDatePanel.computeDateEndTime as Date | null
+      const dateEndTime = $xeDatePanel.computeDateEndDate as Date | null
       const { selectMonth } = reactData
       if (selectMonth && dateEndTime) {
         return XEUtils.getWhatMonth(selectMonth, 0, 'last') >= dateEndTime
@@ -709,6 +709,8 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const { type } = props
       const { inputLabel, datetimePanelValue } = reactData
       const dateLabelFormat = $xeDatePanel.computeDateLabelFormat
+      const dateStartDate = $xeDatePanel.computeDateStartDate
+      const dateEndDate = $xeDatePanel.computeDateEndDate
       if (inpVal) {
         let inpDateVal: VxeDatePanelPropTypes.ModelValue = $xeDatePanel.parseDate(inpVal, dateLabelFormat as string)
         if (XEUtils.isValidDate(inpDateVal)) {
@@ -719,6 +721,12 @@ export default /* define-vxe-component start */ defineVxeComponent({
             }
             reactData.inputLabel = inpDateVal
           } else {
+            if (dateEndDate && inpDateVal > dateEndDate) {
+              inpDateVal = dateEndDate
+            }
+            if (dateStartDate && inpDateVal < dateStartDate) {
+              inpDateVal = dateStartDate
+            }
             let isChange = false
             const firstDayOfWeek = $xeDatePanel.computeFirstDayOfWeek
             if (type === 'datetime') {
@@ -1050,8 +1058,8 @@ export default /* define-vxe-component start */ defineVxeComponent({
     isRangeDisabled (item: { date: Date }) {
       const $xeDatePanel = this
 
-      const dateStartTime = $xeDatePanel.computeDateStartTime
-      const dateEndTime = $xeDatePanel.computeDateEndTime
+      const dateStartTime = $xeDatePanel.computeDateStartDate
+      const dateEndTime = $xeDatePanel.computeDateEndDate
       const { date } = item
       if (dateStartTime && dateStartTime.getTime() > date.getTime()) {
         return true
