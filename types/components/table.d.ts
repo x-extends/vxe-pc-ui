@@ -4449,6 +4449,10 @@ export interface TableMethods<DT = any> {
    */
   isUpdateByRow(row: any, field?: string | null): boolean
   /**
+   * 用于 edit-config，获取已修改的单元格数据
+   */
+  getUpdateCells(): VxeTableDefines.UpdateCellObj<DT>[]
+  /**
    * 获取表格的可视列，也可以指定索引获取列
    * @param columnIndex 列索引
    */
@@ -5955,6 +5959,15 @@ export namespace VxeTableDefines {
     isFooter: boolean
     slots?: any
     params?: any
+  }
+
+  export interface UpdateCellObj<D = any> {
+    row: D
+    rowid: string
+    column: VxeTableDefines.ColumnInfo<D> | null
+    field: string
+    newValue: any
+    oldValue: any
   }
 
   export interface FilterStoreObj {
