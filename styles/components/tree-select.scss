@@ -72,16 +72,21 @@
   display: flex;
   flex-direction: row;
   white-space: nowrap;
+  align-items: center;
+  min-height: 2em;
 }
 .vxe-tree-select--total-btns {
   padding-left: var(--vxe-ui-current-padding);
-  flex-shrink: 0;
+  flex-grow: 1;
 }
+.vxe-tree-select--total-btns,
 .vxe-tree-select--oper-btns {
   display: flex;
   flex-direction: row;
-  flex-grow: 1;
-  justify-content: right;
+  align-items: center;
+}
+.vxe-tree-select--oper-btns {
+  flex-shrink: 0;
 }
 .vxe-tree-select--footer-button,
 .vxe-tree-select--selected-btns,

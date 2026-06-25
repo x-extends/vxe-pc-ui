@@ -1186,14 +1186,10 @@ export default /* define-vxe-component start */ defineVxeComponent({
       if (editable) {
         if (isEnter) {
           const { inputLabel } = internalData
-          const targetElem = $xeDatePicker.$refs.refInputTarget as HTMLInputElement
           if (visiblePanel) {
             $xeDatePicker.hidePanel()
           }
           $xeDatePicker.afterCheckValue(inputLabel)
-          if (targetElem) {
-            targetElem.blur()
-          }
         } else if (maskedTypes.includes(type)) {
           if (isEnableConf(maskedConfig) || maskedOpts.enabled) {
             if (maskedOpts.isArrow && (isUpArrow || isDwArrow || isLtArrow || isRtArrow)) {
