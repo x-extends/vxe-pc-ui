@@ -63,6 +63,12 @@ const val3 = ref()
 const cascaderOptions3 = reactive<VxeCascaderProps>({
   multiple: true,
   filterable: true,
+  showCheckbox: true,
+  showTotalButton: true,
+  showCheckedButton: true,
+  showClearButton: true,
+  checkedClosable: true,
+  showCloseButton: true,
   optionProps: {
     label: 'title',
     value: 'id'

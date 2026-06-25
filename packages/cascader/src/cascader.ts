@@ -1717,16 +1717,16 @@ export default defineVxeComponent({
                     : renderEmptyElement($xeCascader),
                   (showCheckedButton && multiple) || showClearButton || headerSlot
                     ? h('div', {
-                      class: 'vxe-tree-select--panel-header'
+                      class: 'vxe-cascader--panel-header'
                     }, headerSlot
                       ? headerSlot({})
                       : [
                           h('div', {
-                            class: 'vxe-tree-select--header-button'
+                            class: 'vxe-cascader--header-button'
                           }, [
                             (showCheckedButton && multiple) || showClearButton
                               ? h('div', {
-                                class: 'vxe-tree-select--selected-btns'
+                                class: 'vxe-cascader--selected-btns'
                               }, [
                                 (showCheckedButton && multiple)
                                   ? h(VxeButtonComponent, {

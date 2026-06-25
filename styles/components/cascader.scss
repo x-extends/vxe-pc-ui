@@ -74,16 +74,21 @@
   display: flex;
   flex-direction: row;
   white-space: nowrap;
+  align-items: center;
+  min-height: 2em;
 }
 .vxe-cascader--total-btns {
   padding-left: var(--vxe-ui-current-padding);
-  flex-shrink: 0;
+  flex-grow: 1;
 }
+.vxe-cascader--total-btns,
 .vxe-cascader--oper-btns {
   display: flex;
   flex-direction: row;
-  flex-grow: 1;
-  justify-content: right;
+  align-items: center;
+}
+.vxe-cascader--oper-btns {
+  flex-shrink: 0;
 }
 .vxe-cascader--footer-button,
 .vxe-cascader--selected-btns,
@@ -129,10 +134,6 @@
 .vxe-cascader--radio-option {
   padding-right: 0.4em;
   @include baseMixin.createRadioIcon();
-}
-
-.vxe-cascader--panel-body {
-  border-top: 1px solid var(--vxe-ui-base-popup-border-color)
 }
 
 .vxe-cascader-chunk--wrapper {

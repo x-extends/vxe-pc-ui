@@ -1055,14 +1055,10 @@ export default defineVxeComponent({
       if (editable) {
         if (isEnter) {
           const { inputLabel } = internalData
-          const targetElem = refInputTarget.value
           if (visiblePanel) {
             hidePanel()
           }
           afterCheckValue(inputLabel)
-          if (targetElem) {
-            targetElem.blur()
-          }
         } else if (maskedTypes.includes(type)) {
           if (isEnableConf(maskedConfig) || maskedOpts.enabled) {
             if (maskedOpts.isArrow && (isUpArrow || isDwArrow || isLtArrow || isRtArrow)) {
