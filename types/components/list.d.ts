@@ -81,15 +81,15 @@ export namespace VxeListPropTypes {
      */
     contentField?: string
     /**
-     * 每一项的高度
+     * 每一行的高度
      */
     height?: number | string
     /**
-     * 给每一项的附加 className
+     * 给每一行的附加 className
      */
     className?: string | ((params: { row: D, $list: VxeListConstructor }) => string)
     /**
-     * 当鼠标移到每一项时，是否要高亮当前头
+     * 当鼠标移到每一行时，是否要高亮当前头
      */
     isHover?: boolean
     isCurrent?: boolean
@@ -170,7 +170,7 @@ export namespace VxeListPropTypes {
      */
     oSize?: number
     /**
-     * 指定列表项的 className
+     * 指定行的 className
      */
     sItem?: string
     /**
@@ -193,7 +193,7 @@ export namespace VxeListPropTypes {
      */
     oSize?: number
     /**
-     * 指定列表项的 className
+     * 指定行的 className
      */
     sItem?: string
     /**
@@ -313,19 +313,19 @@ export interface ListMethods<D = any> {
    */
   getRowKey(row: D): string
   /**
-   * 匹配主键是否相同
+   * 判断主键是否相同
    */
   eqRowKey(rowKey1: string | number | null | undefined, rowKey2: string | number | null | undefined): boolean
   /**
-   * 匹配项是否相同
+   * 判断行是否相同
    */
   eqRow(row1: D, row2: D): boolean
   /**
-   * 根据项匹配主键是否相同
+   * 根据行判断主键是否相同
    */
   eqRowByKey(row1: D, rowKey2: string | number | null | undefined): boolean
   /**
-   * 根据项查找
+   * 根据行查找
    */
   findRow(list: D[], row: D): D
   /**
@@ -333,7 +333,7 @@ export interface ListMethods<D = any> {
    */
   findRowByKey(list: D[], rowKey: string | number | null | undefined): D
   /**
-   * 根据项查找索引
+   * 根据行查找索引
    */
   findRowIndexOf(list: D[], row: D): number
   /**
@@ -341,43 +341,43 @@ export interface ListMethods<D = any> {
    */
   findRowIndexOfByKey(list: D[], rowKey: string | number | null | undefined): number
   /**
-   * 根据主键判断单选框项是否选中
+   * 根据主键判断单选框行是否选中
    */
   isCheckedByRadioRowKey(rowKey: string | number | null | undefined): boolean
   /**
-   * 判断单选框项是否选中
+   * 判断单选框行是否选中
    */
   isCheckedByRadioRow(row: D): boolean
   /**
-   * 根据主键判断复选框项是否选中
+   * 根据主键判断复选框行是否选中
    */
   isCheckedByCheckboxRowKey(rowKey: string | number | null | undefined): boolean
   /**
-   * 判断复选框项是否选中
+   * 判断复选框行是否选中
    */
   isCheckedByCheckboxRow(row: D): boolean
   /**
-   * 只对 row-config.isCurrent 有效，设置已选的当前项
+   * 只对 row-config.isCurrent 有效，设置已选的当前行
    */
   setCurrentRow(row: D): Promise<void>
   /**
-   * 只对 show-radio 有效，根据主键设置当前项
+   * 只对 show-radio 有效，根据主键设置当前行
    */
   setCurrentRowByKey(rowKey: string | number | null | undefined): Promise<void>
   /**
-   * 只对 show-radio 有效，获取当前项已选的项
+   * 只对 show-radio 有效，获取当前行已选的行
    */
   getCurrentRow(): D | null
   /**
-   * 只对 show-radio 有效，获取当前项已选的主键
+   * 只对 show-radio 有效，获取当前行已选的主键
    */
   getCurrentRowKey(): string | number | null
   /**
-   * 只对 show-radio 有效，手动清空当前项
+   * 只对 show-radio 有效，手动清空当前行
    */
   clearCurrentRow(): Promise<void>
   /**
-   * 只对 show-radio 有效，设置单选框已选的项
+   * 只对 show-radio 有效，设置单选框已选的行
    */
   setRadioRow(row: D): Promise<void>
   /**
@@ -385,7 +385,7 @@ export interface ListMethods<D = any> {
    */
   setRadioRowByKey(rowKey: string | number | null | undefined): Promise<void>
   /**
-   * 只对 show-radio 有效，获取单选框已选的项
+   * 只对 show-radio 有效，获取单选框已选的行
    */
   getRadioRow(): D | null
   /**
@@ -397,7 +397,7 @@ export interface ListMethods<D = any> {
    */
   clearRadioRow(): Promise<void>
   /**
-   * 只对 show-checkbox 有效，设置单选框已选的项
+   * 只对 show-checkbox 有效，设置单选框已选的行
    */
   setCheckboxRow(rows: D | D[], checked: boolean): Promise<void>
   /**
@@ -405,7 +405,7 @@ export interface ListMethods<D = any> {
    */
   setCheckboxRowByKey(rowKeys: string | number | null | undefined | (string | number | null | undefined)[], checked: boolean): Promise<void>
   /**
-   * 只对 show-checkbox 有效，获取复选框已选的项
+   * 只对 show-checkbox 有效，获取复选框已选的行
    */
   getCheckboxRows(): D[]
   /**
@@ -417,7 +417,7 @@ export interface ListMethods<D = any> {
    */
   clearCheckboxRow(): Promise<void>
   /**
-   * 只对 show-checkbox 有效，设置所有项的选中状态
+   * 只对 show-checkbox 有效，设置所有行的选中状态
    */
   setAllCheckboxRow(checked: boolean): Promise<void>
 }

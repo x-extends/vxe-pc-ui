@@ -1524,7 +1524,7 @@ export default defineVxeComponent({
             headerSlot
               ? h('div', {
                 class: 'vxe-list--header-content'
-              }, headerSlot({ rows: rowList, $list: $xeList }))
+              }, headerSlot({ items: rowList, $list: $xeList }))
               : renderEmptyElement($xeList)
           ])
           : renderEmptyElement($xeList),
@@ -1552,13 +1552,13 @@ export default defineVxeComponent({
             style: {
               marginTop: topSpaceHeight ? `${topSpaceHeight}px` : ''
             }
-          }, defaultSlot ? defaultSlot({ rows: rowList, $list: $xeList }) : rowList.map((row, i) => renderRow(row, i)))
+          }, defaultSlot ? defaultSlot({ items: rowList, $list: $xeList }) : rowList.map((row, i) => renderRow(row, i)))
         ]),
         footerSlot
           ? h('div', {
             ref: refFooterElem,
             class: 'vxe-list--footer-wrapper'
-          }, footerSlot({ rows: rowList, $list: $xeList }))
+          }, footerSlot({ items: rowList, $list: $xeList }))
           : renderEmptyElement($xeList),
         /**
          * 拖拽提示
