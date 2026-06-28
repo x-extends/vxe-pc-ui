@@ -4,8 +4,6 @@ import { warnLog } from '../../ui/src/log'
 
 import type { VxePrintProps, VxePrintPropTypes, VxePrintDefines, VxePrintConstructor, VxePrintPrivateMethods } from '../../../types'
 
-const browseObj = XEUtils.browse()
-
 // 打印
 let printFrame: any
 
@@ -151,6 +149,7 @@ function createHtmlPage (opts: VxePrintProps & { _pageBreaks: boolean }, printHt
 }
 
 function handlePrint (opts: VxePrintProps & { _pageBreaks: boolean }, printHtml = '') {
+  const browseObj = XEUtils.browse()
   const { beforeMethod, styleUrls } = opts
   if (styleUrls && styleUrls.length) {
     styleUrls.forEach(url => {

@@ -401,7 +401,7 @@ export default defineVxeComponent({
           ref: refPulldownContent,
           class: 'vxe-pulldown--content',
           onClick: clickTargetEvent
-        }, defaultSlot ? defaultSlot({ $pulldown: $xePulldown }) : []),
+        }, defaultSlot ? defaultSlot({ options, $pulldown: $xePulldown }) : []),
         h(Teleport, {
           to: 'body',
           disabled: btnTransfer ? !initialized : true
@@ -426,19 +426,19 @@ export default defineVxeComponent({
                   headerSlot
                     ? h('div', {
                       class: 'vxe-pulldown--panel-header'
-                    }, headerSlot({ $pulldown: $xePulldown }))
+                    }, headerSlot({ options, $pulldown: $xePulldown }))
                     : renderEmptyElement($xePulldown),
                   h('div', {
                     class: 'vxe-pulldown--panel-body'
                   }, dropdownSlot
-                    ? dropdownSlot({ $pulldown: $xePulldown })
+                    ? dropdownSlot({ options, $pulldown: $xePulldown })
                     : [
                         renderDefaultPanel(options)
                       ]),
                   footerSlot
                     ? h('div', {
                       class: 'vxe-pulldown--panel-footer'
-                    }, footerSlot({ $pulldown: $xePulldown }))
+                    }, footerSlot({ options, $pulldown: $xePulldown }))
                     : renderEmptyElement($xePulldown)
                 ]
               : [])

@@ -289,9 +289,14 @@ declare module '@vxe-ui/core' {
     CONTEXT_MENU_OPTION_LOADING?: string
     CONTEXT_MENU_CHILDREN?: string
 
-     // cascader
+    // cascader
     CASCADER_NODE_OPEN?: string
     CASCADER_NODE_CLOSE?: string
     CASCADER_NODE_LOADED?: string
+
+    // list
+    LIST_DRAG?: string
+    LIST_DRAG_STATUS_NODE?: string
+    LIST_DRAG_DISABLED?: string
   }
 }

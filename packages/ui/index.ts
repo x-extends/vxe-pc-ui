@@ -231,6 +231,12 @@ setConfig({
   listView: {},
   list: {
     // size: null,
+    dragConfig: {
+      showIcon: true,
+      animation: true,
+      showGuidesStatus: true,
+      showDragTip: true
+    },
     virtualYConfig: {
       enabled: true,
       gt: 100
@@ -386,6 +392,7 @@ setConfig({
       }
     }
   },
+  tableTransfer: {},
   tabs: {
     // destroyOnClose: false
   },
@@ -413,6 +420,7 @@ setConfig({
     leaveDelay: 300,
     isArrow: true
   },
+  transfer: {},
   tree: {
     // autoResize: false,
     indent: 20,
@@ -713,7 +721,12 @@ setIcon({
   // cascader
   CASCADER_NODE_OPEN: iconPrefix + 'arrow-right',
   CASCADER_NODE_CLOSE: iconPrefix + 'arrow-right',
-  CASCADER_NODE_LOADED: iconPrefix + 'spinner roll'
+  CASCADER_NODE_LOADED: iconPrefix + 'spinner roll',
+
+  // list
+  LIST_DRAG: iconPrefix + 'drag-handle',
+  LIST_DRAG_STATUS_NODE: iconPrefix + 'sort',
+  LIST_DRAG_DISABLED: iconPrefix + 'no-drop'
 })
 
 export * from '@vxe-ui/core'

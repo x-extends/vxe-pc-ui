@@ -24,11 +24,11 @@
 import { ref } from 'vue'
 import { VxeUI } from '../packages'
 
-import { VxeMenuPropTypes } from '../types'
+import { VxeMenuPropTypes, VxeLayoutContainerPropTypes } from '../types'
 
 const collapsed = ref(false)
 
-const componentsSize = ref('')
+const componentsSize = ref<VxeLayoutContainerPropTypes.Size>('')
 const sizeOptions = ref([
   { label: '默认', value: '' },
   { label: '中', value: 'medium' },
@@ -102,7 +102,9 @@ const navList = ref<VxeMenuPropTypes.Options>([
   { name: 'CascaderTest', routerLink: { name: 'CascaderTest' } },
   { name: 'SegmentedTest', routerLink: { name: 'SegmentedTest' } },
   { name: 'BacktopTest', routerLink: { name: 'BacktopTest' } },
-  { name: 'ContextMenuTest', routerLink: { name: 'ContextMenuTest' } }
+  { name: 'ContextMenuTest', routerLink: { name: 'ContextMenuTest' } },
+  { name: 'TransferTest', routerLink: { name: 'TransferTest' } },
+  { name: 'TableTransferTest', routerLink: { name: 'TableTransferTest' } }
 ])
 
 const theme = ref((localStorage.getItem('VXE_THEME') as 'light' | 'dark') || 'light')

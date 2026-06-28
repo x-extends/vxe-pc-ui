@@ -41,6 +41,7 @@ export namespace VxePulldownPropTypes {
     label?: string | number
     value?: string | number
     disabled?: string | number
+    [key: string]: any
   }
   export type Options = Option[]
   export type ClassName = string | ((params: { $pulldown: VxePulldownConstructor }) => string)

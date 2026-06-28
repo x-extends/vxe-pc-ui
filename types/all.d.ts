@@ -77,6 +77,7 @@ import VxeSteps from './components/steps'
 import VxeSwitch from './components/switch'
 import VxeTabPane from './components/tab-pane'
 import VxeTableSelect from './components/table-select'
+import VxeTableTransfer from './components/table-transfer'
 import VxeTabs from './components/tabs'
 import VxeTag from './components/tag'
 import VxeTextEllipsis from './components/text-ellipsis'
@@ -89,6 +90,7 @@ import VxeTooltip from './components/tooltip'
 import VxeTour from './components/tour'
 import VxeTree from './components/tree'
 import VxeTreeSelect from './components/tree-select'
+import VxeTransfer from './components/transfer'
 import VxeUpload from './components/upload'
 import VxeWatermark from './components/watermark'
 
@@ -189,6 +191,7 @@ interface AllComponents {
   VxeSwitch: typeof VxeSwitch
   VxeTabPane: typeof VxeTabPane
   VxeTableSelect: typeof VxeTableSelect
+  VxeTableTransfer: typeof VxeTableTransfer
   VxeTabs: typeof VxeTabs
   VxeTag: typeof VxeTag
   VxeTextEllipsis: typeof VxeTextEllipsis
@@ -201,6 +204,7 @@ interface AllComponents {
   VxeTour: typeof VxeTour
   VxeTree: typeof VxeTree
   VxeTreeSelect: typeof VxeTreeSelect
+  VxeTransfer: typeof VxeTransfer
   VxeUpload: typeof VxeUpload
   VxeWatermark: typeof VxeWatermark
 
@@ -311,6 +315,7 @@ export * from './components/steps'
 export * from './components/switch'
 export * from './components/tab-pane'
 export * from './components/table-select'
+export * from './components/table-transfer'
 export * from './components/tabs'
 export * from './components/tag'
 export * from './components/text-ellipsis'
@@ -321,6 +326,7 @@ export * from './components/timeline-item'
 export * from './components/tip'
 export * from './components/tooltip'
 export * from './components/tour'
+export * from './components/transfer'
 export * from './components/tree'
 export * from './components/tree-select'
 export * from './components/upload'

@@ -78,6 +78,7 @@ import VxeSteps from './steps'
 import VxeSwitch from './switch'
 import VxeTabPane from './tab-pane'
 import VxeTableSelect from './table-select'
+import VxeTableTransfer from './table-transfer'
 import VxeTabs from './tabs'
 import VxeTag from './tag'
 import VxeTextEllipsis from './text-ellipsis'
@@ -88,6 +89,7 @@ import VxeTimelineItem from './timeline-item'
 import VxeTip from './tip'
 import VxeTooltip from './tooltip'
 import VxeTour from './tour'
+import VxeTransfer from './transfer'
 import VxeTree from './tree'
 import VxeTreeSelect from './tree-select'
 import VxeUpload from './upload'
@@ -176,6 +178,7 @@ const components = [
   VxeSwitch,
   VxeTabPane,
   VxeTableSelect,
+  VxeTableTransfer,
   VxeTabs,
   VxeTag,
   VxeTextEllipsis,
@@ -186,6 +189,7 @@ const components = [
   VxeTip,
   VxeTooltip,
   VxeTour,
+  VxeTransfer,
   VxeTree,
   VxeTreeSelect,
   VxeUpload,
@@ -291,6 +295,7 @@ export * from './steps'
 export * from './switch'
 export * from './tab-pane'
 export * from './table-select'
+export * from './table-transfer'
 export * from './tabs'
 export * from './tag'
 export * from './text-ellipsis'
@@ -301,6 +306,7 @@ export * from './timeline-item'
 export * from './tip'
 export * from './tooltip'
 export * from './tour'
+export * from './transfer'
 export * from './tree'
 export * from './tree-select'
 export * from './upload'

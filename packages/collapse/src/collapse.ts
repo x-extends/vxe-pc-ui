@@ -10,15 +10,17 @@ import type { CollapseReactData, CollapseInternalData, VxeCollapseEmits, Collaps
 function createReactData (): CollapseReactData {
   return {
     staticPanes: [],
-    activeNames: [],
-    initNames: [],
-    cachePaneMaps: {}
+    cachePaneMaps: {},
+    activeKeyFlag: 0,
+    openKeyFlag: 0
   }
 }
 
 function createInternalData (): CollapseInternalData {
   return {
-    // esTime: null
+    // esTime: null,
+    activeKeyMaps: {},
+    openKeyMaps: {}
   }
 }
 
@@ -92,6 +94,18 @@ export default defineVxeComponent({
       getComputeMaps: () => computeMaps
     } as unknown as VxeCollapseConstructor & VxeCollapsePrivateMethods
 
+    const dispatchEvent = (type: ValueOf<VxeCollapseEmits>, params: Record<string, any>, evnt: Event | null) => {
+      emit(type, createEvent(evnt, { $collapse: $xeCollapse }, params))
+    }
+
+    const collapseMethods: CollapseMethods = {
+      dispatchEvent
+    }
+
+    const emitModel = (value: any) => {
+      emit('update:modelValue', value)
+    }
+
     const handleFilterItem = (item: VxeCollapsePaneProps | VxeCollapsePaneDefines.CollapseConfig) => {
       const { permissionCode } = item
       if (permissionCode) {
@@ -102,10 +116,27 @@ export default defineVxeComponent({
       return true
     }
 
-    const addInitName = (name: VxeCollapsePanePropTypes.Name | undefined) => {
-      const { initNames } = reactData
-      if (name && !initNames.includes(name)) {
-        initNames.push(name)
+    const updateModel = () => {
+      const { modelValue } = props
+      const { openKeyMaps } = internalData
+      const activeMaps: Record<string, boolean> = {}
+      if (modelValue) {
+        modelValue.forEach(name => {
+          if (!openKeyMaps[name as string]) {
+            openKeyMaps[name as string] = true
+          }
+          activeMaps[name as string] = true
+        })
+      }
+      internalData.activeKeyMaps = activeMaps
+      reactData.activeKeyFlag++
+      reactData.openKeyFlag++
+    }
+
+    const handleOpen = (name: VxeCollapsePanePropTypes.Name | undefined) => {
+      const { openKeyMaps } = internalData
+      if (name && !openKeyMaps[name as string]) {
+        openKeyMaps[name as string] = true
         dispatchEvent('load', { name }, null)
         return true
       }
@@ -113,38 +144,25 @@ export default defineVxeComponent({
     }
 
     const initDefaultName = (list?: VxeCollapsePropTypes.Options | VxeCollapsePaneDefines.CollapseConfig[]) => {
-      const { activeNames } = reactData
+      const { activeKeyMaps } = internalData
       const nameMaps: Record<string, VxeCollapseDefines.CacheItemObj> = {}
       if (list && list.length) {
         list.forEach((item) => {
           const { name, preload } = item || {}
           if (name) {
-            const isActive = activeNames.includes(name)
-            nameMaps[`${name}`] = {
+            const isActive = activeKeyMaps[name as string]
+            nameMaps[name as string] = {
               height: 0,
               loading: false
             }
-            if (isActive) {
-              addInitName(name)
-            }
-            if (preload) {
-              if (!isActive) {
-                activeNames.push(name)
-              }
+            if (isActive || preload) {
+              handleOpen(name)
             }
           }
         })
       }
-      reactData.activeNames = activeNames ? activeNames.slice(0) : []
       reactData.cachePaneMaps = nameMaps
-    }
-
-    const dispatchEvent = (type: ValueOf<VxeCollapseEmits>, params: Record<string, any>, evnt: Event | null) => {
-      emit(type, createEvent(evnt, { $collapse: $xeCollapse }, params))
-    }
-
-    const collapseMethods: CollapseMethods = {
-      dispatchEvent
+      reactData.openKeyFlag++
     }
 
     const callSlot = (slotFunc: any, params: any) => {
@@ -160,8 +178,10 @@ export default defineVxeComponent({
     }
 
     const handleClickEvent = (evnt: MouseEvent, item: VxeCollapsePaneDefines.CollapseConfig | VxeCollapsePaneProps) => {
-      const { activeNames } = reactData
+      let { activeKeyMaps } = internalData
       const { esTime } = internalData
+      const expandOpts = computeExpandOpts.value
+      const { accordion } = expandOpts
       const { name } = item
       if (esTime) {
         clearTimeout(esTime)
@@ -169,14 +189,17 @@ export default defineVxeComponent({
       if (name) {
         const headEl = evnt.currentTarget as HTMLDivElement
         const bodyEl = headEl.nextElementSibling as HTMLDivElement
-        const aIndex = activeNames.indexOf(name)
         let expanded = false
-        if (aIndex === -1) {
-          expanded = true
-          activeNames.push(name)
+        if (activeKeyMaps[name as string]) {
+          delete activeKeyMaps[name as string]
         } else {
-          activeNames.splice(aIndex, 1)
+          if (accordion) {
+            activeKeyMaps = {}
+          }
+          expanded = true
+          activeKeyMaps[name as string] = true
         }
+
         const startAnimation = () => {
           const itemEl = bodyEl.firstElementChild as HTMLDivElement
           if (itemEl) {
@@ -195,6 +218,13 @@ export default defineVxeComponent({
             }
           }
         }
+
+        const value = Object.keys(activeKeyMaps)
+        internalData.activeKeyMaps = activeKeyMaps
+        handleOpen(name)
+        reactData.activeKeyFlag++
+        reactData.openKeyFlag++
+
         if (bodyEl) {
           const itemEl = bodyEl.firstElementChild as HTMLDivElement
           if (itemEl) {
@@ -204,9 +234,10 @@ export default defineVxeComponent({
             nextTick(startAnimation)
           }
         }
-        addInitName(name)
-        dispatchEvent('change', { value: activeNames, name }, evnt)
-        dispatchEvent('toggle-expand', { value: activeNames, name, expanded }, evnt)
+
+        emitModel(value)
+        dispatchEvent('change', { value, name }, evnt)
+        dispatchEvent('toggle-expand', { value, name, expanded }, evnt)
       }
     }
 
@@ -216,13 +247,14 @@ export default defineVxeComponent({
     Object.assign($xeCollapse, collapseMethods, collapsePrivateMethods)
 
     const renderList = (itemList: VxeCollapsePropTypes.Options | VxeCollapsePaneDefines.CollapseConfig[]) => {
-      const { activeNames, initNames } = reactData
+      const { activeKeyFlag, openKeyFlag } = reactData
+      const { activeKeyMaps, openKeyMaps } = internalData
       const expandOpts = computeExpandOpts.value
       return itemList.map(item => {
         const { icon, name, title, slots } = item
         const titleSlot = slots ? slots.title : null
         const defaultSlot = slots ? slots.default : null
-        const isActive = name && activeNames.includes(name)
+        const isActive = name && activeKeyFlag && activeKeyMaps[name as string]
         return h('div', {
           class: 'vxe-collapse-item'
         }, [
@@ -260,7 +292,7 @@ export default defineVxeComponent({
               'is--hidden': !isActive
             }]
           }, [
-            name && initNames.includes(name)
+            name && openKeyFlag && openKeyMaps[name as string]
               ? h('div', {
                 class: 'vxe-collapse--item-inner'
               }, [
@@ -295,8 +327,15 @@ export default defineVxeComponent({
       ])
     }
 
-    watch(() => props.modelValue, (val) => {
-      reactData.activeNames = val || []
+    const valFlag = ref(0)
+    watch(() => props.modelValue ? props.modelValue.length : -1, () => {
+      valFlag.value++
+    })
+    watch(() => props.modelValue, () => {
+      valFlag.value++
+    })
+    watch(valFlag, () => {
+      updateModel()
     })
 
     const optsFlag = ref(0)
@@ -321,7 +360,7 @@ export default defineVxeComponent({
       initDefaultName(reactData.staticPanes)
     })
 
-    reactData.activeNames = props.modelValue || []
+    updateModel()
     initDefaultName(reactData.staticPanes.length ? reactData.staticPanes : props.options)
 
     onUnmounted(() => {

@@ -1,13 +1,13 @@
 import { ref, h, reactive, PropType, computed, VNode, watch, onBeforeUnmount, nextTick, onMounted, provide } from 'vue'
 import { defineVxeComponent } from '../../ui/src/comp'
 import { VxeUI, createEvent, useSize, globalEvents, globalResize, renderEmptyElement } from '../../ui'
-import { calcTreeLine, enNodeValue, deNodeValue } from './util'
+import { calcTreeLine } from './util'
 import { createComponentLog } from '../../ui/src/log'
 import { getCrossTreeDragNodeInfo } from './store'
 import XEUtils from 'xe-utils'
 import { getSlotVNs } from '../../ui/src/vn'
 import { toCssUnit, isScale, getPaddingTopBottomSize, addClass, removeClass, getTpImg, hasControlKey, getEventTargetNode } from '../../ui/src/dom'
-import { isEnableConf } from '../../ui/src/utils'
+import { isEnableConf, enModelValue, deModelValue } from '../../ui/src/utils'
 import { moveRowAnimateToTb, clearRowAnimate } from '../../ui/src/anime'
 import VxeLoadingComponent from '../../loading'
 
@@ -151,19 +151,13 @@ export default defineVxeComponent({
       type: Boolean as PropType<VxeTreePropTypes.ShowRadio>,
       default: () => getConfig().tree.showRadio
     },
-    checkNodeKey: {
-      type: [String, Number] as PropType<VxeTreePropTypes.CheckNodeKey>,
-      default: () => getConfig().tree.checkNodeKey
-    },
+    checkNodeKey: [String, Number] as PropType<VxeTreePropTypes.CheckNodeKey>,
     radioConfig: Object as PropType<VxeTreePropTypes.RadioConfig>,
     showCheckbox: {
       type: Boolean as PropType<VxeTreePropTypes.ShowCheckbox>,
       default: () => getConfig().tree.showCheckbox
     },
-    checkNodeKeys: {
-      type: Array as PropType<VxeTreePropTypes.CheckNodeKeys>,
-      default: () => getConfig().tree.checkNodeKeys
-    },
+    checkNodeKeys: Array as PropType<VxeTreePropTypes.CheckNodeKeys>,
     checkboxConfig: Object as PropType<VxeTreePropTypes.CheckboxConfig>,
     nodeConfig: Object as PropType<VxeTreePropTypes.NodeConfig>,
     lazy: Boolean as PropType<VxeTreePropTypes.Lazy>,
@@ -388,7 +382,7 @@ export default defineVxeComponent({
       }
       const valueField = computeValueField.value
       const nodeKey = XEUtils.get(node, valueField)
-      return enNodeValue(nodeKey)
+      return enModelValue(nodeKey)
     }
 
     const isExpandByNode = (node: any) => {
@@ -443,7 +437,7 @@ export default defineVxeComponent({
         }
         const nodeList: any[] = []
         nodeKeys.forEach((nodeKey: string) => {
-          const nodeid = enNodeValue(nodeKey)
+          const nodeid = enModelValue(nodeKey)
           const nodeItem = nodeMaps[nodeid]
           if (nodeItem) {
             nodeList.push(nodeItem.item)
@@ -1344,7 +1338,7 @@ export default defineVxeComponent({
       reactData.updateCheckboxFlag++
       updateCheckboxStatus()
       const nodeids = XEUtils.keys(selectCheckboxMaps)
-      const value = nodeids.map(deNodeValue)
+      const value = nodeids.map(deModelValue)
       emitCheckboxMode(value)
       dispatchEvent('checkbox-change', { node, value, checked: isChecked }, evnt)
     }
@@ -1394,7 +1388,7 @@ export default defineVxeComponent({
         return
       }
       const isChecked = true
-      const value = deNodeValue(nodeid)
+      const value = deModelValue(nodeid)
       reactData.selectRadioKey = nodeid
       emitRadioMode(value)
       dispatchEvent('radio-change', { node, value, checked: isChecked }, evnt)
@@ -1434,7 +1428,7 @@ export default defineVxeComponent({
       getCurrentNodeId () {
         const { currentNode } = reactData
         if (currentNode) {
-          return deNodeValue(getNodeId(currentNode))
+          return deModelValue(getNodeId(currentNode))
         }
         return null
       },
@@ -1451,7 +1445,7 @@ export default defineVxeComponent({
       },
       setCurrentNodeId (nodeKey) {
         const { nodeMaps } = internalData
-        const nodeItem = nodeMaps[enNodeValue(nodeKey)]
+        const nodeItem = nodeMaps[enModelValue(nodeKey)]
         reactData.currentNode = nodeItem ? nodeItem.item : null
         return nextTick()
       },
@@ -1479,7 +1473,7 @@ export default defineVxeComponent({
         return null
       },
       setRadioNodeId (nodeKey) {
-        reactData.selectRadioKey = enNodeValue(nodeKey)
+        reactData.selectRadioKey = enModelValue(nodeKey)
         emitRadioMode(nodeKey)
         return nextTick()
       },
@@ -1487,7 +1481,7 @@ export default defineVxeComponent({
         if (node) {
           const nodeid = getNodeId(node)
           reactData.selectRadioKey = nodeid
-          emitRadioMode(deNodeValue(nodeid))
+          emitRadioMode(deModelValue(nodeid))
         } else {
           emitRadioMode(null)
         }
@@ -1512,7 +1506,7 @@ export default defineVxeComponent({
         const { selectCheckboxMaps } = internalData
         const nodeKeys: any[] = []
         XEUtils.each(selectCheckboxMaps, (item, nodeId) => {
-          nodeKeys.push(deNodeValue(nodeId))
+          nodeKeys.push(deModelValue(nodeId))
         })
         return nodeKeys
       },
@@ -1590,7 +1584,7 @@ export default defineVxeComponent({
             nodeKeys = [nodeKeys]
           }
           nodeKeys.forEach((nodeKey) => {
-            const nodeid = enNodeValue(nodeKey)
+            const nodeid = enModelValue(nodeKey)
             handleSetExpand(nodeid, expanded, treeExpandedMaps)
           })
           reactData.updateExpandedFlag++
@@ -1603,7 +1597,7 @@ export default defineVxeComponent({
         const { treeExpandedMaps } = internalData
         const nodeKeys: any[] = []
         XEUtils.each(treeExpandedMaps, (item, nodeId) => {
-          nodeKeys.push(deNodeValue(nodeId))
+          nodeKeys.push(deModelValue(nodeId))
         })
         return nodeKeys
       },
@@ -1641,7 +1635,7 @@ export default defineVxeComponent({
             nodeKeys = [nodeKeys]
           }
           nodeKeys.forEach((nodeKey) => {
-            const nodeid = enNodeValue(nodeKey)
+            const nodeid = enModelValue(nodeKey)
             handleSetExpand(nodeid, !treeExpandedMaps[`${nodeid}`], treeExpandedMaps)
           })
           reactData.updateExpandedFlag++
@@ -1981,10 +1975,11 @@ export default defineVxeComponent({
         const dragNodeid = getNodeId(dragNode)
         const dragNodeRest = nodeMaps[dragNodeid] || {}
         const _dragNodeIndex = dragNodeRest._index
+        const newNodeid = getNodeId(prevDragNode)
         let dragNodeHeight = 0
         let dragOffsetTop = -1
         if (animation) {
-          const prevItemEl = el.querySelector<HTMLElement>(`.vxe-tree--node-wrapper[nodeid="${prevDragNode}"]`)
+          const prevItemEl = el.querySelector<HTMLElement>(`.vxe-tree--node-wrapper[nodeid="${newNodeid}"]`)
           const oldItemEl = el.querySelector<HTMLElement>(`.vxe-tree--node-wrapper[nodeid="${dragNodeid}"]`)
           const targetItemEl = prevItemEl || oldItemEl
           if (targetItemEl) {
@@ -2001,7 +1996,6 @@ export default defineVxeComponent({
         let isSelfToChildStatus = false
 
         const oldRest = dragNodeRest
-        const newNodeid = getNodeId(prevDragNode)
         const newRest = nodeMaps[newNodeid]
         if (transform) {
           if (oldRest && newRest) {
@@ -2758,7 +2752,7 @@ export default defineVxeComponent({
     })
 
     watch(() => props.checkNodeKey, (nodeKey) => {
-      reactData.selectRadioKey = enNodeValue(nodeKey)
+      reactData.selectRadioKey = enModelValue(nodeKey)
     })
 
     const checkboxFlag = ref(0)
@@ -2836,7 +2830,7 @@ export default defineVxeComponent({
       XEUtils.assign(internalData, createInternalData())
     })
 
-    reactData.selectRadioKey = enNodeValue(props.checkNodeKey)
+    reactData.selectRadioKey = enModelValue(props.checkNodeKey)
     loadData(props.data || [])
 
     $xeTree.renderVN = renderVN

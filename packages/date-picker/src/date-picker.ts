@@ -1687,6 +1687,7 @@ export default defineVxeComponent({
     onUnmounted(() => {
       globalEvents.off($xeDatePicker, 'mousewheel')
       globalEvents.off($xeDatePicker, 'mousedown')
+      globalEvents.off($xeDatePicker, 'keydown')
       globalEvents.off($xeDatePicker, 'blur')
       globalEvents.off($xeDatePicker, 'resize')
     })

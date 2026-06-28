@@ -630,7 +630,7 @@ export interface TreePrivateMethods {
   /**
    * @private
    */
-  findNodeIndexOf(list: any[], row: any): number
+  findNodeIndexOf(list: any[], node: any): number
   /**
    * @private
    */

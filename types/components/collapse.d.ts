@@ -54,13 +54,15 @@ export interface VxeCollapsePrivateComputed extends CollapsePrivateComputed { }
 
 export interface CollapseReactData {
   staticPanes: VxeCollapsePaneDefines.CollapseConfig[]
-  activeNames: VxeCollapsePanePropTypes.Name[]
-  initNames: VxeCollapsePanePropTypes.Name[]
   cachePaneMaps: Record<string, VxeCollapseDefines.CacheItemObj>
+  activeKeyFlag: number
+  openKeyFlag: number
 }
 
 export interface CollapseInternalData {
   esTime?: any
+  activeKeyMaps: Record<string, boolean>
+  openKeyMaps: Record<string, boolean>
 }
 
 export interface CollapseMethods {

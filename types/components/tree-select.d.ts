@@ -111,7 +111,9 @@ export namespace VxeTreeSelectPropTypes {
   }
 
   export type ShowRadio = boolean
+  export interface RadioConfig<D = any> extends VxeTreePropTypes.RadioConfig<D> {}
   export type ShowCheckbox = boolean
+  export interface CheckboxConfig<D = any> extends VxeTreePropTypes.CheckboxConfig<D> {}
 
   export type Transfer = boolean
   export interface PopupConfig {
@@ -205,7 +207,9 @@ export interface VxeTreeSelectProps<D = any> {
   remote?: VxeTreeSelectPropTypes.Remote
   remoteConfig?: VxeTreeSelectPropTypes.RemoteConfig
   showRadio?: VxeTreeSelectPropTypes.ShowRadio
+  radioConfig?: VxeTreeSelectPropTypes.RadioConfig
   showCheckbox?: VxeTreeSelectPropTypes.ShowCheckbox
+  checkboxConfig?: VxeTreeSelectPropTypes.CheckboxConfig
   transfer?: VxeTreeSelectPropTypes.Transfer
   popupConfig?: VxeTreeSelectPropTypes.PopupConfig
   treeConfig?: VxeTreeSelectPropTypes.TreeConfig<D>
