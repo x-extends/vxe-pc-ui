@@ -37,6 +37,13 @@ export function getFuncText (content: string | number | boolean | null | undefin
   return `${translate ? translate('' + content, args) : content}`
 }
 
+export function getText (content: string | number | boolean | null | undefined) {
+  if (XEUtils.eqNull(content)) {
+    return ''
+  }
+  return '' + content
+}
+
 /**
  * 判断值为：'' | null | undefined 时都属于空值
  */
@@ -46,4 +53,12 @@ export function eqEmptyValue (cellValue: any) {
 
 export function handleBooleanDefaultValue (value: boolean | undefined | null) {
   return XEUtils.isBoolean(value) ? value : null
+}
+
+export function enModelValue (nodeid: string | number | null | undefined) {
+  return XEUtils.eqNull(nodeid) ? '' : encodeURIComponent(`${nodeid}`)
+}
+
+export function deModelValue (nodeid: string | number | null) {
+  return nodeid ? decodeURIComponent(`${nodeid}`) : nodeid
 }

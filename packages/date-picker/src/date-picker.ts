@@ -1919,6 +1919,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
     }
     globalEvents.off($xeDatePicker, 'mousewheel')
     globalEvents.off($xeDatePicker, 'mousedown')
+    globalEvents.off($xeDatePicker, 'keydown')
     globalEvents.off($xeDatePicker, 'blur')
     globalEvents.off($xeDatePicker, 'resize')
     XEUtils.assign(reactData, createReactData())

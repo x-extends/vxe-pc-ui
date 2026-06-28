@@ -129,4 +129,14 @@
 
   /*collapse*/
   --vxe-ui-collapse-border-color: #{light_variable.$vxe-ui-collapse-border-color};
+
+  /*list*/
+  --vxe-ui-list-row-hover-background-color: #{light_variable.$vxe-ui-list-row-hover-background-color};
+  --vxe-ui-list-row-radio-checked-background-color: #{light_variable.$vxe-ui-list-row-radio-checked-background-color};
+  --vxe-ui-list-row-hover-radio-checked-background-color: #{light_variable.$vxe-ui-list-row-hover-radio-checked-background-color};
+  --vxe-ui-list-row-checkbox-checked-background-color: #{light_variable.$vxe-ui-list-row-checkbox-checked-background-color};
+  --vxe-ui-list-row-hover-checkbox-checked-background-color: #{light_variable.$vxe-ui-list-row-hover-checkbox-checked-background-color};
+  --vxe-ui-list-row-current-background-color: #{light_variable.$vxe-ui-list-row-current-background-color};
+  --vxe-ui-list-row-hover-current-background-color: #{light_variable.$vxe-ui-list-row-hover-current-background-color};
+  --vxe-ui-list-drag-over-background-color: #{light_variable.$vxe-ui-list-drag-over-background-color};
 }

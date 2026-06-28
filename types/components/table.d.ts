@@ -1792,6 +1792,10 @@ export namespace VxeTablePropTypes {
     transfer?: boolean
     destroyOnClose?: boolean
     /**
+     * 菜单宽度
+     */
+    width?: number | string
+    /**
      * 该函数的返回值用来决定是否允许显示右键菜单（对于需要对菜单进行权限控制时可能会用到）
      */
     visibleMethod?(params: {

@@ -3,8 +3,7 @@ import { defineVxeComponent } from '../../ui/src/comp'
 import XEUtils from 'xe-utils'
 import { getConfig, getI18n, getIcon, globalEvents, createEvent, globalMixins, renderEmptyElement } from '../../ui'
 import { getEventTargetNode, updatePanelPlacement, toCssUnit } from '../../ui/src/dom'
-import { getLastZIndex, nextZIndex } from '../../ui/src/utils'
-import { deNodeValue } from '../../tree/src/util'
+import { getLastZIndex, nextZIndex, deModelValue } from '../../ui/src/utils'
 import { createComponentLog } from '../../ui/src/log'
 import VxeInputComponent from '../../input'
 import VxeButtonComponent from '../../button'
@@ -111,10 +110,12 @@ export default /* define-vxe-component start */ defineVxeComponent({
       type: Boolean as PropType<VxeTreeSelectPropTypes.ShowRadio>,
       default: () => getConfig().treeSelect.showRadio
     },
+    radioConfig: Object as PropType<VxeTreeSelectPropTypes.RadioConfig>,
     showCheckbox: {
       type: Boolean as PropType<VxeTreeSelectPropTypes.ShowCheckbox>,
       default: () => getConfig().treeSelect.showCheckbox
     },
+    checkboxConfig: Object as PropType<VxeTreeSelectPropTypes.CheckboxConfig>,
     popupConfig: Object as PropType<VxeTreeSelectPropTypes.PopupConfig>,
     treeConfig: Object as PropType<VxeTreeSelectPropTypes.TreeConfig>,
     menuConfig: Object as PropType<VxeTreeSelectPropTypes.MenuConfig>,
@@ -290,11 +291,11 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const $xeTreeSelect = this
       const props = $xeTreeSelect
 
-      const { showCheckbox } = props
+      const { showCheckbox, checkboxConfig } = props
       const treeOpts = $xeTreeSelect.computeTreeOpts as VxeTreeSelectPropTypes.TreeConfig
       return Object.assign({
         showIcon: XEUtils.isBoolean(showCheckbox) ? showCheckbox : !!treeOpts.showCheckbox
-      }, treeOpts.checkboxConfig, {
+      }, treeOpts.checkboxConfig, checkboxConfig, {
         trigger: 'node'
       })
     },
@@ -302,11 +303,11 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const $xeTreeSelect = this
       const props = $xeTreeSelect
 
-      const { showRadio } = props
+      const { showRadio, radioConfig } = props
       const treeOpts = $xeTreeSelect.computeTreeOpts as VxeTreeSelectPropTypes.TreeConfig
       return Object.assign({
         showIcon: XEUtils.isBoolean(showRadio) ? showRadio : !!treeOpts.showRadio
-      }, treeOpts.radioConfig, {
+      }, treeOpts.radioConfig, radioConfig, {
         trigger: 'node'
       })
     },
@@ -635,7 +636,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const $xeForm = $xeTreeSelect.$xeForm
       const formItemInfo = $xeTreeSelect.formItemInfo
 
-      const value = XEUtils.isArray(selectValue) ? selectValue.map(deNodeValue) : deNodeValue(selectValue)
+      const value = XEUtils.isArray(selectValue) ? selectValue.map(deModelValue) : deModelValue(selectValue)
       $xeTreeSelect.emitModel(value)
       if (value !== props.value) {
         $xeTreeSelect.dispatchEvent('change', { value, node, option: node }, evnt)

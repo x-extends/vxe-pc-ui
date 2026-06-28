@@ -75,6 +75,7 @@ import { VxeStepsProps } from '../components/steps'
 import { VxeSwitchProps } from '../components/switch'
 import { VxeTabPaneProps } from '../components/tab-pane'
 import { VxeTableSelectProps } from '../components/table-select'
+import { VxeTableTransferProps } from '../components/table-transfer'
 import { VxeTabsProps } from '../components/tabs'
 import { VxeTagProps } from '../components/tag'
 import { VxeTextEllipsisProps } from '../components/text-ellipsis'
@@ -87,6 +88,7 @@ import { VxeTooltipProps } from '../components/tooltip'
 import { VxeTourProps } from '../components/tour'
 import { VxeTreeProps } from '../components/tree'
 import { VxeTreeSelectProps } from '../components/tree-select'
+import { VxeTransferProps } from '../components/transfer'
 import { VxeUploadProps } from '../components/upload'
 import { VxeWatermarkProps } from '../components/watermark'
 
@@ -186,6 +188,7 @@ declare module '@vxe-ui/core' {
     switch?: VxeSwitchProps
     tabPane?: VxeTabPaneProps
     tableSelect?: VxeTableSelectProps
+    tableTransfer?: VxeTableTransferProps
     tabs?: VxeTabsProps
     tag?: VxeTagProps
     textEllipsis?: VxeTextEllipsisProps
@@ -196,6 +199,7 @@ declare module '@vxe-ui/core' {
     tip?: VxeTipProps
     tooltip?: VxeTooltipProps
     tour?: VxeTourProps,
+    transfer?: VxeTransferProps
     tree?: VxeTreeProps
     treeSelect?: VxeTreeSelectProps
     upload?: VxeUploadProps

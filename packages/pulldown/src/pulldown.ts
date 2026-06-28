@@ -445,7 +445,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
           on: {
             click: $xePulldown.clickTargetEvent
           }
-        }, defaultSlot ? defaultSlot({ $pulldown: $xePulldown }) : []),
+        }, defaultSlot ? defaultSlot({ options, $pulldown: $xePulldown }) : []),
         h('div', {
           ref: 'refPulldownPanel',
           class: ['vxe-table--ignore-clear vxe-pulldown--panel', ppClassName ? (XEUtils.isFunction(ppClassName) ? ppClassName({ $pulldown: $xePulldown }) : ppClassName) : '', {
@@ -469,19 +469,19 @@ export default /* define-vxe-component start */ defineVxeComponent({
                     headerSlot
                       ? h('div', {
                         class: 'vxe-pulldown--panel-header'
-                      }, headerSlot({ $pulldown: $xePulldown }))
+                      }, headerSlot({ options, $pulldown: $xePulldown }))
                       : renderEmptyElement($xePulldown),
                     h('div', {
                       class: 'vxe-pulldown--panel-body'
                     }, dropdownSlot
-                      ? dropdownSlot({ $pulldown: $xePulldown })
+                      ? dropdownSlot({ options, $pulldown: $xePulldown })
                       : [
                           $xePulldown.renderDefaultPanel(h, options)
                         ]),
                     footerSlot
                       ? h('div', {
                         class: 'vxe-pulldown--panel-footer'
-                      }, footerSlot({ $pulldown: $xePulldown }))
+                      }, footerSlot({ options, $pulldown: $xePulldown }))
                       : renderEmptyElement($xePulldown)
                   ]
                 : [])

@@ -115,7 +115,9 @@ export default Vue.extend({
         { name: 'CascaderTest', routerLink: { name: 'CascaderTest' } },
         { name: 'SegmentedTest', routerLink: { name: 'SegmentedTest' } },
         { name: 'BacktopTest', routerLink: { name: 'BacktopTest' } },
-        { name: 'ContextMenuTest', routerLink: { name: 'ContextMenuTest' } }
+        { name: 'ContextMenuTest', routerLink: { name: 'ContextMenuTest' } },
+        { name: 'TransferTest', routerLink: { name: 'TransferTest' } },
+        { name: 'TableTransferTest', routerLink: { name: 'TableTransferTest' } }
       ]
     }
   },

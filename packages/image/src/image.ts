@@ -83,20 +83,8 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const $xeImage = this
       const props = $xeImage
 
-      const { width, height, minWidth, minHeight, maxWidth, maxHeight, circle } = props
+      const { width, height, circle } = props
       const stys: Record<string, string> = {}
-      if (minWidth) {
-        stys.minWidth = toCssUnit(minWidth)
-      }
-      if (minHeight) {
-        stys.minHeight = toCssUnit(minHeight)
-      }
-      if (maxWidth) {
-        stys.maxWidth = toCssUnit(maxWidth)
-      }
-      if (maxHeight) {
-        stys.maxHeight = toCssUnit(maxHeight)
-      }
       if (circle) {
         // 圆形只能生效一个
         if (width) {
@@ -118,7 +106,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const $xeImage = this
       const props = $xeImage
 
-      const { width, height } = props
+      const { width, height, minWidth, minHeight, maxHeight, maxWidth } = props
       const stys: Record<string, string> = {}
       if (width && height) {
         stys.maxWidth = toCssUnit(width)
@@ -129,6 +117,18 @@ export default /* define-vxe-component start */ defineVxeComponent({
         }
         if (height) {
           stys.height = toCssUnit(height)
+        }
+        if (minWidth) {
+          stys.minWidth = toCssUnit(minWidth)
+        }
+        if (minHeight) {
+          stys.minHeight = toCssUnit(minHeight)
+        }
+        if (maxWidth) {
+          stys.maxWidth = toCssUnit(maxWidth)
+        }
+        if (maxHeight) {
+          stys.maxHeight = toCssUnit(maxHeight)
         }
       }
       return stys

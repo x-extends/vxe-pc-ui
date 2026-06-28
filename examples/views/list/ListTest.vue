@@ -1,159 +1,82 @@
 <template>
   <div>
-    <p>
-      <vxe-button @click="loadData(10)">加载10条</vxe-button>
-      <vxe-button @click="loadData(500)">加载500条</vxe-button>
-      <vxe-button @click="loadData(10000)">加载1w条</vxe-button>
-      <vxe-button @click="loadData(100000)">加载10w条</vxe-button>
-      <vxe-button @click="loadData(300000)">加载30w条</vxe-button>
-      <vxe-button @click="loadData(500000)">加载50w条</vxe-button>
-    </p>
+    <vxe-button status="success" @click="resultEvent">获取数据</vxe-button>
 
-    <p>
-      <vxe-list height="240" class="my-list" :loading="demo1.loading" :data="demo1.list1">
-        <template #default="{ items }">
-          <div class="my-list-item" v-for="(item, index) in items" :key="index">{{ item.label }}</div>
-        </template>
-      </vxe-list>
-    </p>
-
-    <div class="vxe-row">
-      <div class="vxe-col--4">
-        <vxe-list class="my-list" height="200" :data="demo1.list2">
-          <template #default="{ items }">
-            <div class="my-list-item" v-for="(item, index) in items" :key="index">{{ item.label }}</div>
-          </template>
-        </vxe-list>
-      </div>
-      <div class="vxe-col--4">
-        <vxe-list class="my-list" height="200" :data="demo1.list3">
-          <template #default="{ items }">
-            <div class="my-list-item" v-for="(item, index) in items" :key="index">
-              <img src="/vxe-table/static/other/img2.gif" height="28">
-              <span>{{ item.label }}</span>
-            </div>
-          </template>
-        </vxe-list>
-      </div>
-      <div class="vxe-col--4">
-        <vxe-list class="my-ul-list" height="200" :data="demo1.list4" :scroll-y="{sItem: 'li'}">
-          <template #default="{ items }">
-            <ul>
-              <li v-for="(item, index) in items" :key="index">
-                <img src="/vxe-table/static/other/img1.gif" height="28">
-                <span>{{ item.label }}</span>
-              </li>
-            </ul>
-          </template>
-        </vxe-list>
-      </div>
-      <div class="vxe-col--12">
-        <vxe-list class="my-table-list" height="200" :data="demo1.list5" :scroll-y="{gt: 60, sItem: '.my-tr'}">
-          <template #default="{ items }">
-            <table>
-              <tbody>
-                <tr class="my-tr" v-for="item in items" :key="item.id">
-                  <td>{{ item.label }} - 列1</td>
-                  <td>{{ item.label }} - 列2</td>
-                  <td>{{ item.label }} - 列3</td>
-                </tr>
-              </tbody>
-            </table>
-          </template>
-        </vxe-list>
-      </div>
-    </div>
+    <vxe-list ref="listRef" v-bind="listOptions"></vxe-list>
   </div>
 </template>
 
 <script lang="ts">
 import Vue from 'vue'
-import { VxeUI } from '../../../packages'
+import { VxeListInstance, VxeListProps } from '../../../types'
 
-interface ItemVO {
-  [key: string]: any;
+interface RowVO {
+  id: number
+  label: string
 }
 
 export default Vue.extend({
   data () {
+    const listOptions: VxeListProps<RowVO> = {
+      height: 400,
+      loading: false,
+      rowConfig: {
+        useKey: true,
+        keyField: 'id',
+        contentField: 'label'
+      },
+      dragConfig: {
+        icon: 'vxe-icon-sort'
+      },
+      virtualYConfig: {
+        enabled: true
+      },
+      data: [
+        { id: 10001, label: '数据10001' },
+        { id: 10002, label: '数据10002' },
+        { id: 10003, label: '数据10003' },
+        { id: 10004, label: '数据10004' },
+        { id: 10005, label: '数据10005' },
+        { id: 10006, label: '数据10006' },
+        { id: 10007, label: '数据10007' },
+        { id: 10008, label: '数据10008' },
+        { id: 10009, label: '数据10009' },
+        { id: 10010, label: '数据10010' },
+        { id: 10011, label: '数据10011' },
+        { id: 10012, label: '数据10012' },
+        { id: 10013, label: '数据10013' },
+        { id: 10014, label: '数据10014' },
+        { id: 10015, label: '数据10015' },
+        { id: 10016, label: '数据10016' },
+        { id: 10017, label: '数据10017' },
+        { id: 10018, label: '数据10018' },
+        { id: 10019, label: '数据10019' },
+        { id: 10020, label: '数据10020' },
+        { id: 10021, label: '数据10021' },
+        { id: 10022, label: '数据10022' },
+        { id: 10023, label: '数据10023' },
+        { id: 10024, label: '数据10024' },
+        { id: 10025, label: '数据10025' },
+        { id: 10026, label: '数据10026' },
+        { id: 10027, label: '数据10027' },
+        { id: 10028, label: '数据10028' },
+        { id: 10029, label: '数据10029' },
+        { id: 10030, label: '数据10030' }
+      ]
+    }
+
     return {
-      mockList: [] as ItemVO[],
-      demo1: {
-        loading: false,
-        list1: [] as ItemVO[],
-        list2: [] as ItemVO[],
-        list3: [] as ItemVO[],
-        list4: [] as ItemVO[],
-        list5: [] as ItemVO[]
-      }
+      listOptions
     }
   },
-  async mounted () {
-    // 初始化
-    this.demo1.list1 = await this.getList(200)
-    this.demo1.list2 = await this.getList(200)
-    this.demo1.list3 = await this.getList(500)
-    this.demo1.list4 = await this.getList(2000)
-    this.demo1.list5 = await this.getList(4000)
-  },
   methods: {
-    // 模拟后台
-    getList (size: number): Promise<ItemVO[]> {
-      return new Promise(resolve => {
-        setTimeout(() => {
-          const { mockList } = this
-          if (size > mockList.length) {
-            for (let index = mockList.length; index < size; index++) {
-              mockList.push({
-                id: index,
-                label: `row_${index}`
-              })
-            }
-          }
-          resolve(mockList.slice(0, size))
-        }, 100)
-      })
-    },
-    async loadData  (size: number) {
-      this.demo1.loading = true
-      this.demo1.list1 = await this.getList(size)
-      this.demo1.loading = false
-      const startTime = Date.now()
-      await this.$nextTick()
-      await VxeUI.modal.message({ content: `渲染 ${size} 行，用时 ${Date.now() - startTime}毫秒`, status: 'info' })
+    resultEvent () {
+      const $list = this.$refs.listRef as VxeListInstance<RowVO>
+      if ($list) {
+        const listData = $list.getFullData()
+        console.log(listData)
+      }
     }
   }
 })
 </script>
-
-<style scoped>
-.my-list {
-  border: 1px solid #e8eaec;
-}
-.my-list .my-list-item {
-  height: 28px;
-  padding-left: 15px;
-}
-.my-ul-list {
-  border: 1px solid #e8eaec;
-}
-.my-ul-list li {
-  height: 40px;
-}
-.my-table-list {
-  border: 1px solid #e8eaec;
-}
-.my-table-list table {
-  width: 100%;
-  text-align: center;
-}
-.my-table-list .my-tr {
-  height: 32px;
-}
-.my-table-list .my-tr:hover {
-  background-color: #f5f7fa;
-}
-.my-table-list td {
-  border-right: 1px solid #e8eaec;
-}
-</style>

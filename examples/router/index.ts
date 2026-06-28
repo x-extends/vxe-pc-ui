@@ -321,6 +321,16 @@ const routes: Array<RouteConfig> = [
     path: '/component/context-menu',
     name: 'ContextMenuTest',
     component: () => import('../views/context-menu/ContextMenuTest.vue')
+  },
+  {
+    path: '/component/transfer',
+    name: 'TransferTest',
+    component: () => import('../views/transfer/TransferTest.vue')
+  },
+  {
+    path: '/component/table-transfer',
+    name: 'TableTransferTest',
+    component: () => import('../views/table-transfer/TableTransferTest.vue')
   }
 ]
 
