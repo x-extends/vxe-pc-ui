@@ -17,7 +17,7 @@ export interface VxeCheckboxPrivateRef extends CheckboxPrivateRef { }
 
 export namespace VxeCheckboxPropTypes {
   export type Size = VxeComponentSizeType
-  export type ModelValue = string | number | boolean
+  export type ModelValue = string | number | boolean | null
   export type Label = string | number
   export type Indeterminate = boolean
   export type Title = string | number

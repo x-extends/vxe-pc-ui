@@ -287,6 +287,9 @@ export default {
       fixedRight: 'تجميد الحق',
       cancelFixed: 'إلغاء التجميد'
     },
+    iconPicker: {
+      search: '搜索'
+    },
     datePicker: {
       yearTitle: '{0} سنوات'
     },

@@ -1343,13 +1343,19 @@ export default /* define-vxe-component start */ defineVxeComponent({
     },
     handleRowClickEvent (evnt: MouseEvent, row: any) {
       const $xeList = this
+      const props = $xeList
       const reactData = $xeList.reactData
       const internalData = $xeList.internalData
 
+      const { showRadio, showCheckbox } = props
       const { currentRow } = internalData
+      const radioOpts = $xeList.computeRadioOpts
+      const checkboxOpts = $xeList.computeCheckboxOpts
       const rowOpts = $xeList.computeRowOpts
       const { isCurrent } = rowOpts
       let triggerCurrent = false
+      let triggerRadio = false
+      let triggerCheckbox = false
       if (isCurrent) {
         triggerCurrent = true
         $xeList.changeCurrentEvent(evnt, row)
@@ -1357,7 +1363,15 @@ export default /* define-vxe-component start */ defineVxeComponent({
         internalData.currentRow = null
         reactData.currRowFlag++
       }
-      $xeList.dispatchEvent('row-click', { row, triggerCurrent }, evnt)
+      if (showRadio && radioOpts.trigger === 'row') {
+        triggerRadio = true
+        $xeList.changeRadioEvent(evnt, row)
+      }
+      if (showCheckbox && checkboxOpts.trigger === 'row') {
+        triggerCheckbox = true
+        $xeList.changeCheckboxEvent(evnt, row)
+      }
+      $xeList.dispatchEvent('row-click', { row, triggerCurrent, triggerRadio, triggerCheckbox }, evnt)
     },
     handleRowDblclickEvent (evnt: MouseEvent, row: any) {
       const $xeList = this

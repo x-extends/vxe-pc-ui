@@ -287,6 +287,9 @@ export default {
       fixedRight: 'Заморожуйте право',
       cancelFixed: 'Розморожувати'
     },
+    iconPicker: {
+      search: '搜索'
+    },
     datePicker: {
       yearTitle: '{0} років'
     },

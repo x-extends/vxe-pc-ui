@@ -1,4 +1,4 @@
-import { DefineVxeComponentApp, DefineVxeComponentOptions, DefineVxeComponentInstance, VxeComponentEventParams, VxeComponentSizeType, ValueOf } from '@vxe-ui/core'
+import { DefineVxeComponentApp, DefineVxeComponentOptions, DefineVxeComponentInstance, VxeComponentEventParams, VxeComponentSizeType, ValueOf, VxeComponentStatusType } from '@vxe-ui/core'
 import { VxeCheckboxPropTypes } from './checkbox'
 
 /* eslint-disable @typescript-eslint/no-empty-interface,no-use-before-define,@typescript-eslint/ban-types */
@@ -30,6 +30,7 @@ export namespace VxeCheckboxGroupPropTypes {
     label?: string
     disabled?: string
   }
+  export type Status = VxeComponentStatusType
   export type Max = string | number
   export type Disabled = boolean
   export type Readonly = boolean
@@ -50,6 +51,7 @@ export interface VxeCheckboxGroupProps {
    */
   value?: VxeCheckboxGroupPropTypes.ModelValue
   max?: VxeCheckboxGroupPropTypes.Max
+  status?: VxeCheckboxGroupPropTypes.Status
   /**
    * 是否禁用
    */

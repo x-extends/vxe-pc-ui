@@ -33,6 +33,10 @@ export default /* define-vxe-component start */ defineVxeComponent({
       type: Boolean as PropType<VxeCheckboxGroupPropTypes.Disabled>,
       default: null
     },
+    status: {
+      type: String as PropType<VxeCheckboxGroupPropTypes.Status>,
+      default: () => getConfig().checkboxGroup.status
+    },
     max: {
       type: [String, Number] as PropType<VxeCheckboxGroupPropTypes.Max>,
       default: null
@@ -234,7 +238,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const props = $xeCheckboxGroup
       const slots = $xeCheckboxGroup.$scopedSlots
 
-      const { options } = props
+      const { status, options } = props
       const defaultSlot = slots.default
       const valueField = $xeCheckboxGroup.computeValueField as 'value'
       const labelField = $xeCheckboxGroup.computeLabelField as 'label'
@@ -243,6 +247,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const isDisabled = $xeCheckboxGroup.computeIsDisabled
       return h('div', {
         class: ['vxe-checkbox-group', {
+          [`theme--${status}`]: status,
           'is--readonly': isReadonly,
           'is--disabled': isDisabled
         }]

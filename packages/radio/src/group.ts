@@ -34,6 +34,10 @@ export default /* define-vxe-component start */ defineVxeComponent({
       default: null
     },
     type: String as PropType<VxeRadioGroupPropTypes.Type>,
+    status: {
+      type: String as PropType<VxeRadioGroupPropTypes.Status>,
+      default: () => getConfig().radioGroup.status
+    },
     options: Array as PropType<VxeRadioGroupPropTypes.Options>,
     optionProps: Object as PropType<VxeRadioGroupPropTypes.OptionProps>,
     strict: {
@@ -216,7 +220,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const props = $xeRadioGroup
       const slots = $xeRadioGroup.$scopedSlots
 
-      const { options, type } = props
+      const { options, type, status } = props
       const vSize = $xeRadioGroup.computeSize
       const defaultSlot = slots.default
       const valueField = $xeRadioGroup.computeValueField as 'value'
@@ -226,6 +230,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
 
       return h('div', {
         class: ['vxe-radio-group', {
+          [`theme--${status}`]: status,
           [`size--${vSize}`]: vSize
         }]
       }, defaultSlot

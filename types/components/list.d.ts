@@ -397,11 +397,11 @@ export interface ListMethods<D = any> {
    */
   clearRadioRow(): Promise<void>
   /**
-   * 只对 show-checkbox 有效，设置单选框已选的行
+   * 只对 show-checkbox 有效，设置复选框选中的行
    */
   setCheckboxRow(rows: D | D[], checked: boolean): Promise<void>
   /**
-   * 只对 show-checkbox 有效，根据主键设置单选
+   * 只对 show-checkbox 有效，根据主键设置复选框
    */
   setCheckboxRowByKey(rowKeys: string | number | null | undefined | (string | number | null | undefined)[], checked: boolean): Promise<void>
   /**

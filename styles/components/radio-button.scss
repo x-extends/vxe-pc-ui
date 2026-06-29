@@ -1,7 +1,10 @@
+@use "sass:map";
+@use "sass:list";
+@use '../helpers/baseMixin.scss';
+@use '../helpers/placement.scss';
+@use '../helpers/themeStatus.scss';
+
 .vxe-radio--button {
-  .vxe-radio--label {
-    background-color: var(--vxe-ui-layout-background-color);
-  }
   &:first-child {
     .vxe-radio--label {
       border-left: 1px solid var(--vxe-ui-input-border-color);
@@ -13,12 +16,6 @@
       border-radius: 0 var(--vxe-ui-base-border-radius) var(--vxe-ui-base-border-radius) 0;
     }
   }
-  > input {
-    &:checked+.vxe-radio--label {
-      color: #fff;
-      background-color: var(--vxe-ui-font-primary-color);
-    }
-  }
   .vxe-radio--label {
     padding: 0 1em;
     line-height: calc(var(--vxe-ui-button-height-default) - 2px);
@@ -27,18 +24,73 @@
     border-color: var(--vxe-ui-input-border-color);
     border-width: 1px 1px 1px 0;
     max-width: 50em;
+    user-select: none;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
   }
+}
+
+.vxe-radio--button {
   & > input {
-    &:focus {
-      &+.vxe-radio--label {
-        border-color: var(--vxe-ui-font-primary-color);
-        box-shadow: 0 0 0.2em 0 var(--vxe-ui-font-primary-color);
+    &:checked+.vxe-radio--label {
+      color: #fff;
+      border-color: var(--vxe-ui-font-primary-color);
+      background-color: var(--vxe-ui-font-primary-color);
+      &:not(.is--disabled) {
+        &:hover {
+          background-color: var(--vxe-ui-font-primary-lighten-color);
+          border-color: var(--vxe-ui-font-primary-lighten-color);
+        }
+        &:active {
+          background-color: var(--vxe-ui-font-primary-darken-color);
+          border-color: var(--vxe-ui-font-primary-darken-color);
+        }
+      }
+      &.is--disabled {
+        border-color: var(--vxe-ui-font-primary-disabled-color);
+        background-color: var(--vxe-ui-font-primary-disabled-color);
       }
     }
   }
+}
+
+.vxe-radio-group {
+  @for $index from 0 to list.length(themeStatus.$btnThemeList) {
+    $item: list.nth(themeStatus.$btnThemeList, $index + 1);
+    $textColor: map.get($item, textColor);
+    $btnColor: map.get($item, btnColor);
+    &.theme--#{map.get($item, name)} {
+      .vxe-radio--button {
+        & > input {
+          &:checked+.vxe-radio--label {
+            color: $btnColor;
+            border-color: $textColor;
+            background-color: $textColor;
+            &:not(.is--disabled) {
+              &:hover {
+                color: $btnColor;
+                background-color: map.get($item, btnLightenColor);
+                border-color: map.get($item, btnLightenColor);
+              }
+              &:active {
+                color: $btnColor;
+                background-color: map.get($item, btnDarkenColor);
+                border-color: map.get($item, btnDarkenColor);
+              }
+            }
+            &.is--disabled {
+              border-color: map.get($item, btnDisabledColor);
+              background-color: map.get($item, btnDisabledColor);
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+.vxe-radio--button {
   &.size--medium {
     .vxe-radio--label {
       line-height: calc(var(--vxe-ui-button-height-medium) - 2px);

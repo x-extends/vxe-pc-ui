@@ -287,6 +287,9 @@ export default {
       fixedRight: 'Jobbra fagy',
       cancelFixed: 'Kiolvaszt'
     },
+    iconPicker: {
+      search: '搜索'
+    },
     datePicker: {
       yearTitle: '{0} Évek'
     },

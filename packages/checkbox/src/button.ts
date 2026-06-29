@@ -195,7 +195,9 @@ export default /* define-vxe-component start */ defineVxeComponent({
           }
         }),
         h('span', {
-          class: 'vxe-checkbox--label'
+          class: ['vxe-checkbox--label', {
+            'is--disabled': isDisabled
+          }]
         }, defaultSlot ? defaultSlot({}) : getFuncText(props.content))
       ])
     }

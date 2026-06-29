@@ -2,65 +2,7 @@
 @use "sass:list";
 @use '../helpers/baseMixin.scss';
 @use '../helpers/placement.scss';
-
-$btnThemeList: (
-  (
-    name: "primary",
-    textColor: var(--vxe-ui-font-primary-color),
-    btnColor: #fff,
-    btnLightenColor: var(--vxe-ui-font-primary-lighten-color),
-    btnDarkenColor: var(--vxe-ui-font-primary-darken-color),
-    btnDisabledColor: var(--vxe-ui-font-primary-disabled-color)
-  ),
-  (
-    name: "success",
-    textColor: var(--vxe-ui-status-success-color),
-    btnColor: #fff,
-    btnLightenColor: var(--vxe-ui-status-success-lighten-color),
-    btnDarkenColor: var(--vxe-ui-status-success-darken-color),
-    btnDisabledColor: var(--vxe-ui-status-success-disabled-color)
-  ),
-  (
-    name: "info",
-    textColor: var(--vxe-ui-status-info-color),
-    btnColor: #fff,
-    btnLightenColor: var(--vxe-ui-status-info-lighten-color),
-    btnDarkenColor: var(--vxe-ui-status-info-darken-color),
-    btnDisabledColor: var(--vxe-ui-status-info-disabled-color)
-  ),
-  (
-    name: "warning",
-    textColor: var(--vxe-ui-status-warning-color),
-    btnColor: #fff,
-    btnLightenColor: var(--vxe-ui-status-warning-lighten-color),
-    btnDarkenColor: var(--vxe-ui-status-warning-darken-color),
-    btnDisabledColor: var(--vxe-ui-status-warning-disabled-color)
-  ),
-  (
-    name: "danger",
-    textColor: var(--vxe-ui-status-danger-color),
-    btnColor: #fff,
-    btnLightenColor: var(--vxe-ui-status-danger-lighten-color),
-    btnDarkenColor: var(--vxe-ui-status-danger-darken-color),
-    btnDisabledColor: var(--vxe-ui-status-danger-disabled-color)
-  ),
-  (
-    name: "error",
-    textColor: var(--vxe-ui-status-error-color),
-    btnColor: #fff,
-    btnLightenColor: var(--vxe-ui-status-error-lighten-color),
-    btnDarkenColor: var(--vxe-ui-status-error-darken-color),
-    btnDisabledColor: var(--vxe-ui-status-error-disabled-color)
-  ),
-  (
-    name: "perfect",
-    textColor: var(--vxe-ui-table-header-background-color),
-    btnColor: var(--vxe-ui-font-color),
-    btnLightenColor: var(--vxe-ui-table-header-background-color),
-    btnDarkenColor: var(--vxe-ui-table-header-background-color),
-    btnDisabledColor: var(--vxe-ui-table-header-background-color)
-  )
-);
+@use '../helpers/themeStatus.scss';
 
 .vxe-button {
   display: inline-flex;
@@ -130,8 +72,8 @@ $btnThemeList: (
         color: var(--vxe-ui-font-primary-darken-color);
       }
     }
-    @for $index from 0 to list.length($btnThemeList) {
-      $item: list.nth($btnThemeList, $index + 1);
+    @for $index from 0 to list.length(themeStatus.$btnThemeList) {
+      $item: list.nth(themeStatus.$btnThemeList, $index + 1);
       &.theme--#{map.get($item, name)} {
         color: map.get($item, textColor);
         &:not(.is--disabled) {
@@ -188,8 +130,21 @@ $btnThemeList: (
         background-color: var(--vxe-ui-layout-background-color);
       }
     }
-    @for $index from 0 to list.length($btnThemeList) {
-      $item: list.nth($btnThemeList, $index + 1);
+    &:not(.is--disabled) {
+      &:hover {
+        color: var(--vxe-ui-font-primary-lighten-color);
+      }
+      &:focus {
+        border-color: var(--vxe-ui-font-primary-color);
+      }
+      &:active {
+        color: var(--vxe-ui-font-primary-darken-color);
+        border-color: var(--vxe-ui-font-primary-darken-color);
+        background-color: var(--vxe-ui-layout-background-color);
+      }
+    }
+    @for $index from 0 to list.length(themeStatus.$btnThemeList) {
+      $item: list.nth(themeStatus.$btnThemeList, $index + 1);
       $textColor: map.get($item, textColor);
       $btnColor: map.get($item, btnColor);
       &.theme--#{map.get($item, name)} {
@@ -308,8 +263,8 @@ $btnThemeList: (
   outline: 0;
   & > .vxe-button {
     &.type--button {
-      @for $index from 0 to list.length($btnThemeList) {
-        $item: list.nth($btnThemeList, $index + 1);
+      @for $index from 0 to list.length(themeStatus.$btnThemeList) {
+        $item: list.nth(themeStatus.$btnThemeList, $index + 1);
         $btnColor: map.get($item, btnColor);
         &.theme--#{map.get($item, name)} {
           color: $btnColor;
@@ -323,16 +278,16 @@ $btnThemeList: (
         color: var(--vxe-ui-font-primary-lighten-color);
       }
       &.type--text {
-        @for $index from 0 to list.length($btnThemeList) {
-          $item: list.nth($btnThemeList, $index + 1);
+        @for $index from 0 to list.length(themeStatus.$btnThemeList) {
+          $item: list.nth(themeStatus.$btnThemeList, $index + 1);
           &.theme--#{map.get($item, name)} {
             color: map.get($item, btnLightenColor);
           }
         }
       }
       &.type--button {
-        @for $index from 0 to list.length($btnThemeList) {
-          $item: list.nth($btnThemeList, $index + 1);
+        @for $index from 0 to list.length(themeStatus.$btnThemeList) {
+          $item: list.nth(themeStatus.$btnThemeList, $index + 1);
           &.theme--#{map.get($item, name)} {
             color: map.get($item, btnColor);
             background-color: map.get($item, btnLightenColor);

@@ -231,7 +231,9 @@ export default /* define-vxe-component start */ defineVxeComponent({
           }
         }),
         h('span', {
-          class: 'vxe-radio--label'
+          class: ['vxe-radio--label', {
+            'is--disabled': isDisabled
+          }]
         }, defaultSlot ? defaultSlot({}) : getFuncText(content))
       ])
     }

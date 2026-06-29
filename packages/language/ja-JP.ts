@@ -287,6 +287,9 @@ export default {
       fixedRight: '右にフリーズします',
       cancelFixed: '凍結柱'
     },
+    iconPicker: {
+      search: '搜索'
+    },
     datePicker: {
       yearTitle: '{0}年'
     },

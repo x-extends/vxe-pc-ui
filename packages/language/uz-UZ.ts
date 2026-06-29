@@ -287,6 +287,9 @@ export default {
       fixedRight: "O'ng tomonda muzlatib qo'ying",
       cancelFixed: "Urug'lar ustunini"
     },
+    iconPicker: {
+      search: '搜索'
+    },
     datePicker: {
       yearTitle: '{0} yillar'
     },

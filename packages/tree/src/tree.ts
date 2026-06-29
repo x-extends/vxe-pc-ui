@@ -2,7 +2,7 @@ import { PropType, CreateElement, VNode } from 'vue'
 import { defineVxeComponent } from '../../ui/src/comp'
 import XEUtils from 'xe-utils'
 import { VxeUI, createEvent, globalEvents, globalResize, renderEmptyElement, globalMixins } from '../../ui'
-import { calcTreeLine } from './util'
+import { calcTreeLine, getItemCacheObj } from './util'
 import { createComponentLog } from '../../ui/src/log'
 import { getSlotVNs } from '../../ui/src/vn'
 import { crossTreeDragNodeGlobal, getCrossTreeDragNodeInfo } from './store'
@@ -13,7 +13,7 @@ import VxeLoadingComponent from '../../loading'
 
 import type { TreeReactData, VxeTreeEmits, VxeTreeConstructor, VxeTreePropTypes, TreeInternalData, VxeTreeDefines, VxeTreePrivateMethods, VxeComponentSizeType, ValueOf } from '../../../types'
 
-const { errLog } = createComponentLog('tree')
+const { warnLog, errLog } = createComponentLog('tree')
 
 const { menus, getConfig, getI18n, getIcon } = VxeUI
 
@@ -498,6 +498,47 @@ function handleVisibleOrCheckMode (mode: '' | 'all' | 'first' | 'last' | null | 
   return true
 }
 
+function insertTreeNode ($xeTree: VxeTreeConstructor, newRecords: any[], isAppend: boolean) {
+  const internalData = $xeTree.internalData
+
+  const { treeFullData, nodeMaps } = internalData
+  const keyField = $xeTree.computeKeyField
+  const parentField = $xeTree.computeParentField
+  const childrenField = $xeTree.computeChildrenField
+  const mapChildrenField = $xeTree.computeMapChildrenField
+  const funcName = isAppend ? 'push' : 'unshift'
+  newRecords.forEach((item) => {
+    const parentRowId = item[parentField]
+    const nodeid = $xeTree.getNodeId(item)
+    const matchObj = parentRowId ? XEUtils.findTree(treeFullData, (item) => parentRowId === item[keyField], { children: mapChildrenField }) : null
+    const itemRest = getItemCacheObj(item)
+    if (matchObj) {
+      const { item: parentItem } = matchObj
+      const parentRest = nodeMaps[$xeTree.getNodeId(parentItem)]
+      const parentLevel = parentRest ? parentRest.level : 0
+      let pChilds = parentItem[childrenField]
+      let pMapChilds = parentItem[mapChildrenField]
+      if (!XEUtils.isArray(pChilds)) {
+        pChilds = parentItem[childrenField] = []
+      }
+      if (!XEUtils.isArray(pMapChilds)) {
+        pMapChilds = parentItem[mapChildrenField] = []
+      }
+      itemRest.parent = parentItem
+      itemRest.items = pChilds
+      itemRest.level = parentLevel
+      pChilds[funcName](item)
+      pMapChilds[funcName](item)
+    } else {
+      if (parentRowId) {
+        warnLog('vxe.error.unableInsert')
+      }
+      treeFullData[funcName](item)
+    }
+    nodeMaps[nodeid] = itemRest
+  })
+}
+
 function createInternalData (): TreeInternalData {
   return {
     // initialized: false,
@@ -520,6 +561,9 @@ function createInternalData (): TreeInternalData {
       offsetSize: 0,
       rowHeight: 0
     },
+
+    removeRowMaps: {},
+    insertRowMaps: {},
 
     // prevDragNode: null,
     // prevDragToChild: false,
@@ -544,6 +588,8 @@ function createReactData ():TreeReactData {
     treeList: [],
     updateExpandedFlag: 1,
     updateCheckboxFlag: 1,
+    insertRowFlag: 1,
+    removeRowFlag: 1,
     dragNode: null,
     dragTipText: ''
   }
@@ -1578,6 +1624,207 @@ export default /* define-vxe-component start */ defineVxeComponent({
       internalData.lastScrollTop = 0
       internalData.lastScrollLeft = 0
       return $xeTree.$nextTick()
+    },
+    handleInsertNodeAt (records: any[], targetNodeOrNodeid: any, isInsertNextNode?: any) {
+      const $xeTree = this
+      const props = $xeTree
+      const reactData = $xeTree.reactData
+      const internalData = $xeTree.internalData
+
+      const { transform } = props
+      const { treeFullData, nodeMaps } = internalData
+      const keyField = $xeTree.computeKeyField
+      const parentField = $xeTree.computeParentField
+      const childrenField = $xeTree.computeChildrenField
+      const mapChildrenField = $xeTree.computeMapChildrenField
+      if (!transform) {
+        errLog('vxe.error.reqSupportProp', ['insert() | insertAt() | insertNextAt()', 'transform'])
+        return Promise.resolve({ node: null, nodes: [] })
+      }
+      if (!XEUtils.isArray(records)) {
+        records = [records]
+      }
+      let targetNode = targetNodeOrNodeid
+      if (XEUtils.isString(targetNodeOrNodeid) || XEUtils.isNumber(targetNodeOrNodeid)) {
+        const nodeRest = nodeMaps[targetNodeOrNodeid]
+        if (nodeRest) {
+          targetNode = nodeRest.item
+        }
+      }
+      if (!records.length) {
+        return Promise.resolve({ node: null, nodes: [] })
+      }
+      const newRecords = records.map(record => XEUtils.assign({ [mapChildrenField]: [], [childrenField]: [] }, record))
+      const treeRecords = XEUtils.toArrayTree(newRecords, { key: keyField, parentKey: parentField, children: childrenField })
+
+      if (XEUtils.eqNull(targetNode)) {
+        insertTreeNode($xeTree, newRecords, false)
+      } else {
+        if (targetNode === -1) {
+          insertTreeNode($xeTree, newRecords, true)
+        } else {
+          const matchMapObj = XEUtils.findTree(treeFullData, item => targetNode[keyField] === item[keyField], { children: mapChildrenField })
+          if (matchMapObj) {
+            const { parent: parentNode } = matchMapObj
+            const parentMapChilds = parentNode ? parentNode[mapChildrenField] : treeFullData
+            const parentRest = nodeMaps[$xeTree.getNodeId(parentNode)]
+            const parentLevel = parentRest ? parentRest.level : 0
+            treeRecords.forEach((row, i) => {
+              if (parentNode) {
+                if (row[parentField] !== parentNode[keyField]) {
+                  errLog('vxe.error.errProp', [`${parentField}=${row[parentField]}`, `${parentField}=${parentNode[keyField]}`])
+                  row[parentField] = parentNode[keyField]
+                }
+              } else {
+                if (row[parentField] !== null) {
+                  if (!XEUtils.eqNull(row[parentField])) {
+                    errLog('vxe.error.errProp', [`${parentField}=${row[parentField]}`, 'null'])
+                  }
+                  row[parentField] = null
+                }
+              }
+              let targetIndex = matchMapObj.index + i
+              if (isInsertNextNode) {
+                targetIndex = targetIndex + 1
+              }
+              parentMapChilds.splice(targetIndex, 0, row)
+            })
+            XEUtils.eachTree(treeRecords, (item) => {
+              const nodeid = $xeTree.getNodeId(item)
+              const nodeRest = getItemCacheObj(item)
+              nodeRest.level = parentLevel
+              if (item[childrenField]) {
+                item[mapChildrenField] = item[childrenField]
+              }
+              nodeMaps[nodeid] = nodeRest
+            }, { children: childrenField })
+            // 源
+            if (parentNode) {
+              const matchObj = XEUtils.findTree(treeFullData, item => targetNode[keyField] === item[keyField], { children: childrenField })
+              if (matchObj) {
+                const parentChilds = matchObj.items
+                let targetIndex = matchObj.index
+                if (isInsertNextNode) {
+                  targetIndex = targetIndex + 1
+                }
+                parentChilds.splice(targetIndex, 0, ...treeRecords)
+              }
+            }
+          } else {
+            warnLog('vxe.error.unableInsert')
+            insertTreeNode($xeTree, newRecords, true)
+          }
+        }
+      }
+      reactData.insertRowFlag++
+      $xeTree.cacheNodeMap()
+      $xeTree.handleData(true)
+      $xeTree.updateAfterDataIndex()
+      $xeTree.updateCheckboxStatus()
+      if (reactData.scrollYLoad) {
+        $xeTree.updateYSpace()
+      }
+      return $xeTree.$nextTick().then(() => {
+        return {
+          node: newRecords.length ? newRecords[newRecords.length - 1] : null,
+          nodes: newRecords
+        }
+      })
+    },
+    insert (records: any) {
+      const $xeTree = this
+
+      return $xeTree.handleInsertNodeAt(records, null)
+    },
+    insertAt (records: any, targetNodeOrNodeid?: any) {
+      const $xeTree = this
+
+      return $xeTree.handleInsertNodeAt(records, targetNodeOrNodeid)
+    },
+    insertNextAt (records: any, targetNodeOrNodeid?: any) {
+      const $xeTree = this
+
+      return $xeTree.handleInsertNodeAt(records, targetNodeOrNodeid, true)
+    },
+    remove (nodes?: any) {
+      const $xeTree = this
+      const props = $xeTree
+      const reactData = $xeTree.reactData
+      const internalData = $xeTree.internalData
+
+      const { transform } = props
+      const { treeFullData } = internalData
+      const childrenField = $xeTree.computeChildrenField
+      const mapChildrenField = $xeTree.computeMapChildrenField
+      if (!transform) {
+        errLog('vxe.error.reqSupportProp', ['remove()', 'transform'])
+        return Promise.resolve({ node: null, nodes: [] })
+      }
+      let delList: any[] = []
+      if (!nodes) {
+        nodes = treeFullData
+      } else if (!XEUtils.isArray(nodes)) {
+        nodes = [nodes]
+      }
+      if (!nodes.length) {
+        return Promise.resolve({ node: null, nodes: [] })
+      }
+
+      // 从数据源中移除
+      if (treeFullData === nodes) {
+        nodes = delList = treeFullData.slice(0)
+        internalData.treeFullData = []
+      } else {
+        nodes.forEach((item: any) => {
+          const nodeid = $xeTree.getNodeId(item)
+          const matchMapObj = XEUtils.findTree(treeFullData, item => nodeid === $xeTree.getNodeId(item), { children: mapChildrenField })
+          if (matchMapObj) {
+            const rItems = matchMapObj.items.splice(matchMapObj.index, 1)
+            delList.push(rItems[0])
+          }
+          const matchObj = XEUtils.findTree(treeFullData, item => nodeid === $xeTree.getNodeId(item), { children: childrenField })
+          if (matchObj) {
+            const rItems = matchObj.items.splice(matchObj.index, 1)
+            delList.push(rItems[0])
+          }
+        })
+      }
+      reactData.removeRowFlag++
+      reactData.insertRowFlag++
+      $xeTree.cacheNodeMap()
+      $xeTree.handleData(true)
+      $xeTree.updateAfterDataIndex()
+      $xeTree.updateCheckboxStatus()
+      if (reactData.scrollYLoad) {
+        $xeTree.updateYSpace()
+      }
+      return $xeTree.$nextTick().then(() => {
+        return $xeTree.recalculate()
+      }).then(() => {
+        return { node: delList.length ? delList[delList.length - 1] : null, nodes: delList }
+      })
+    },
+    getInsertRecords () {
+      const $xeTree = this
+      const internalData = $xeTree.internalData
+
+      const { insertRowMaps } = internalData
+      const insertRecords: any[] = []
+      XEUtils.each(insertRowMaps, (row) => {
+        insertRecords.push(row)
+      })
+      return insertRecords
+    },
+    getRemoveRecords () {
+      const $xeTree = this
+      const internalData = $xeTree.internalData
+
+      const { removeRowMaps } = internalData
+      const removeRecords: any[] = []
+      XEUtils.each(removeRowMaps, (row) => {
+        removeRecords.push(row)
+      })
+      return removeRecords
     },
     handleNodeMousedownEvent (evnt: MouseEvent, node: any) {
       const $xeTree = this
@@ -3102,8 +3349,8 @@ export default /* define-vxe-component start */ defineVxeComponent({
     if (drag && !transform) {
       errLog('vxe.error.notSupportProp', ['drag', 'transform=false', 'transform=true'])
     }
-    if (dragOpts.isCrossTreeDrag) {
-      errLog('vxe.error.notProp', ['drag-config.isCrossTreeDrag'])
+    if (dragOpts.isCrossTreeDrag && !dragOpts.isCrossDrag) {
+      errLog('vxe.error.reqSupportProp', ['drag-config.isCrossTreeDrag', 'drag-config.isCrossDrag'])
     }
     // if (valueField) {
     //   errLog('vxe.error.delProp', ['value-field', 'value-field'])
