@@ -9,6 +9,11 @@
   border: 1px solid var(--vxe-ui-input-border-color);
   border-radius: var(--vxe-ui-base-border-radius);
   background-color: var(--vxe-ui-layout-background-color);
+  &.is--disabled {
+    background-color: var(--vxe-ui-input-disabled-background-color);
+    color: var(--vxe-ui-font-disabled-color);
+    cursor: no-drop;
+  }
   &.show--clear {
     &:hover {
       .vxe-ico-picker--clear-icon {
@@ -67,6 +72,15 @@
   }
 }
 
+.vxe-ico-picker--panel-search {
+  display: block;
+  flex-shrink: 0;
+  padding: var(--vxe-ui-layout-padding-default);
+  .vxe-ico-picker-search--input {
+    width: 100%;
+  }
+}
+
 .vxe-ico-picker--readonly {
   color: var(--vxe-ui-font-color);
   display: inline-flex;
@@ -86,10 +100,17 @@
   }
 }
 
+.vxe-ico-picker--all-list {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+}
+
 .vxe-ico-picker--list-wrapper {
   overflow-x: hidden;
   overflow-y: auto;
-  max-height: 22.3em;
+  height: var(--vxe-ui-icon-picker-panel-height);
+  max-height: var(--vxe-ui-icon-picker-panel-max-height, var(--vxe-ui-icon-picker-panel-height, 22.3em));
   padding: var(--vxe-ui-layout-padding-qtr);
 }
 .vxe-ico-picker--list {
@@ -99,18 +120,23 @@
 .vxe-ico-picker--item {
   display: flex;
   flex-direction: column;
-  width: 4.8em;
-  padding: 0.2em;
-  border: 1px solid var(--vxe-ui-input-border-color);
-  border-radius: var(--vxe-ui-base-border-radius);
-  margin: var(--vxe-ui-layout-padding-half);
-  cursor: pointer;
-  &:hover {
-    background-color: var(--vxe-ui-base-hover-background-color);
+  min-width: 4.8em;
+  width: var(--vxe-ui-icon-picker-item-width, 4.8em);
+  padding: var(--vxe-ui-layout-padding-half);
+  .vxe-ico-picker--item-inner {
+    padding: 0.2em;
+    border: 1px solid var(--vxe-ui-input-border-color);
+    border-radius: var(--vxe-ui-base-border-radius);
+    cursor: pointer;
+    &:hover {
+      background-color: var(--vxe-ui-base-hover-background-color);
+    }
   }
   &.is--selected {
-    color: var(--vxe-ui-font-primary-color);
-    border-color: var(--vxe-ui-font-primary-color);
+    .vxe-ico-picker--item-inner {
+      color: var(--vxe-ui-font-primary-color);
+      border-color: var(--vxe-ui-font-primary-color);
+    }
   }
 }
 .vxe-ico-picker--item-icon {

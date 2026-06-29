@@ -1,4 +1,4 @@
-import type { VxeTreeConstructor } from '../../../types'
+import type { VxeTreeConstructor, VxeTreeDefines } from '../../../types'
 
 function countTreeExpand ($xeTree: VxeTreeConstructor, prevNode: any) {
   let count = 1
@@ -32,4 +32,20 @@ export function calcTreeLine ($xeTree: VxeTreeConstructor, node: any, prevNode: 
     expandSize = countTreeExpand($xeTree, prevNode)
   }
   return (rowHeight || 28) * expandSize - (prevNode ? 1 : 12)
+}
+
+export function getItemCacheObj (item: any): VxeTreeDefines.NodeCacheItem {
+  return {
+    item,
+    index: -1,
+    $index: -1,
+    _index: -1,
+    items: [],
+    parent: null,
+    nodes: [],
+    level: 0,
+    treeIndex: -1,
+    lineCount: 0,
+    treeLoaded: false
+  }
 }

@@ -287,6 +287,9 @@ export default {
       fixedRight: 'Geler à droite',
       cancelFixed: 'Dégeler'
     },
+    iconPicker: {
+      search: '搜索'
+    },
     datePicker: {
       yearTitle: '{0} ans'
     },

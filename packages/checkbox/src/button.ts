@@ -153,7 +153,9 @@ export default defineVxeComponent({
           onChange: changeEvent
         }),
         h('span', {
-          class: 'vxe-checkbox--label'
+          class: ['vxe-checkbox--label', {
+            'is--disabled': isDisabled
+          }]
         }, slots.default ? slots.default({}) : getFuncText(content))
       ])
     }

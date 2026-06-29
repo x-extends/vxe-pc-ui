@@ -1,5 +1,5 @@
 import { RenderFunction, SetupContext, Ref, ComputedRef } from 'vue'
-import { DefineVxeComponentApp, DefineVxeComponentOptions, DefineVxeComponentInstance, VxeComponentBaseOptions, VxeComponentEventParams, VxeComponentSizeType, ValueOf } from '@vxe-ui/core'
+import { DefineVxeComponentApp, DefineVxeComponentOptions, DefineVxeComponentInstance, VxeComponentBaseOptions, VxeComponentEventParams, VxeComponentSizeType, ValueOf, VxeComponentStatusType } from '@vxe-ui/core'
 import { VxeCheckboxPropTypes } from './checkbox'
 
 /* eslint-disable no-use-before-define,@typescript-eslint/ban-types */
@@ -37,6 +37,7 @@ export namespace VxeCheckboxGroupPropTypes {
     label?: string
     disabled?: string
   }
+  export type Status = VxeComponentStatusType
   export type Max = string | number
   export type Disabled = boolean
   export type Readonly = boolean
@@ -57,6 +58,7 @@ export type VxeCheckboxGroupProps = {
    */
   modelValue?: VxeCheckboxGroupPropTypes.ModelValue
   max?: VxeCheckboxGroupPropTypes.Max
+  status?: VxeCheckboxGroupPropTypes.Status
   /**
    * 是否禁用
    */

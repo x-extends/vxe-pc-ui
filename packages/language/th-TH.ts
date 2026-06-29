@@ -287,6 +287,9 @@ export default {
       fixedRight: 'แช่แข็งขวา',
       cancelFixed: 'สูดดม'
     },
+    iconPicker: {
+      search: '搜索'
+    },
     datePicker: {
       yearTitle: '{0} ปี'
     },

@@ -115,60 +115,217 @@ import VxeGantt from './components/gantt'
 export function install (app: App, options?: VxeGlobalConfig): void
 
 interface AllComponents {
+  /**
+   * Alert 警告提示
+   */
   VxeAlert: typeof VxeAlert
+  /**
+   * Anchor 锚点
+   */
   VxeAnchor: typeof VxeAnchor
+  /**
+   * AnchorLink 锚点 - 链接
+   */
   VxeAnchorLink: typeof VxeAnchorLink
+  /**
+   * Avatar 头像
+   */
   VxeAvatar: typeof VxeAvatar
+  /**
+   * Backtop 回到顶部
+   */
   VxeBacktop: typeof VxeBacktop
+  /**
+   * Badge 微标
+   */
   VxeBadge: typeof VxeBadge
+  /**
+   * Breadcrumb 面包屑
+   */
   VxeBreadcrumb: typeof VxeBreadcrumb
+  /**
+   * BreadcrumbItem 面包屑 - 项
+   */
   VxeBreadcrumbItem: typeof VxeBreadcrumbItem
+  /**
+   * Button 按钮
+   */
   VxeButton: typeof VxeButton
+  /**
+   * Button 按钮组
+   */
   VxeButtonGroup: typeof VxeButtonGroup
+  /**
+   * Calendar 日历
+   */
   VxeCalendar: typeof VxeCalendar
+  /**
+   * Card 卡片
+   */
   VxeCard: typeof VxeCard
+  /**
+   * Carousel 轮播图
+   */
   VxeCarousel: typeof VxeCarousel
+  /**
+   * Carousel 轮播图 - 项
+   */
   VxeCarouselItem: typeof VxeCarouselItem
+  /**
+   * Cascader 级联选择
+   */
   VxeCascader: typeof VxeCascader
+  /**
+   * Checkbox 复选框
+   */
   VxeCheckbox: typeof VxeCheckbox
+  /**
+   * CheckboxButton 复选框按钮
+   */
   VxeCheckboxButton: typeof VxeCheckboxButton
+  /**
+   * CheckboxGroup 复选框组
+   */
   VxeCheckboxGroup: typeof VxeCheckboxGroup
+  /**
+   * Col 列
+   */
   VxeCol: typeof VxeCol
+  /**
+   * Collapse 折叠面板
+   */
   VxeCollapse: typeof VxeCollapse
+  /**
+   * CollapsePane 折叠面板 - 面板
+   */
   VxeCollapsePane: typeof VxeCollapsePane
+  /**
+   * ColorPicker 颜色选择
+   */
   VxeColorPicker: typeof VxeColorPicker
+  /**
+   * ContextMenu 右键菜单
+   */
   VxeContextMenu: typeof VxeContextMenu
+  /**
+   * Countdown 倒计时
+   */
   VxeCountdown: typeof VxeCountdown
+  /**
+   * DatePanel 日期面板
+   */
   VxeDatePanel: typeof VxeDatePanel
+  /**
+   * DatePicker 日期选择
+   */
   VxeDatePicker: typeof VxeDatePicker
+  /**
+   * DateRangePicker 日期范围选择
+   */
   VxeDateRangePicker: typeof VxeDateRangePicker
+  /**
+   * Drawer 抽屉
+   */
   VxeDrawer: typeof VxeDrawer
+  /**
+   * Empty 空状态
+   */
   VxeEmpty: typeof VxeEmpty
+  /**
+   * Form 表单
+   */
   VxeForm: typeof VxeForm
+  /**
+   * 已废弃，请使用 FormGroup
+   * @deprecated
+   */
   VxeFormGather: typeof VxeFormGather
+  /**
+   * FormGroup 表单 - 组
+   */
   VxeFormGroup: typeof VxeFormGroup
+  /**
+   * FormGroup 表单 - 项
+   */
   VxeFormItem: typeof VxeFormItem
+  /**
+   * Icon 图标
+   */
   VxeIcon: typeof VxeIcon
+  /**
+   * IconPicker 图标选择
+   */
   VxeIconPicker: typeof VxeIconPicker
+  /**
+   * Image 图片
+   */
   VxeImage: typeof VxeImage
+  /**
+   * ImageGroup 图片组
+   */
   VxeImageGroup: typeof VxeImageGroup
+  /**
+   * ImagePreview 图片预览
+   */
   VxeImagePreview: typeof VxeImagePreview
+  /**
+   * Input 单行输入框
+   */
   VxeInput: typeof VxeInput
+  /**
+   * LayoutAside 页面布局 - 侧边栏
+   */
   VxeLayoutAside: typeof VxeLayoutAside
+  /**
+   * LayoutBody 页面布局 - 主体
+   */
   VxeLayoutBody: typeof VxeLayoutBody
+  /**
+   * LayoutContainer 页面布局 - 容器
+   */
   VxeLayoutContainer: typeof VxeLayoutContainer
+  /**
+   * LayoutFooter 页面布局 - 底部
+   */
   VxeLayoutFooter: typeof VxeLayoutFooter
+  /**
+   * LayoutHeader 页面布局 - 头部
+   */
   VxeLayoutHeader: typeof VxeLayoutHeader
+  /**
+   * Link 链接
+   */
   VxeLink: typeof VxeLink
+  /**
+   * List 列表
+   */
   VxeList: typeof VxeList
+  /**
+   * Loading 加载中
+   */
   VxeLoading: typeof VxeLoading
   VxeMention: typeof VxeMention
+  /**
+   * Menu 菜单
+   */
   VxeMenu: typeof VxeMenu
+  /**
+   * Modal 弹窗
+   */
   VxeModal: typeof VxeModal
+  /**
+   * NoticeBar 通知栏
+   */
   VxeNoticeBar: typeof VxeNoticeBar
+  /**
+   * NumberInput 数值输入
+   */
   VxeNumberInput: typeof VxeNumberInput
   VxeOptgroup: typeof VxeOptgroup
   VxeOption: typeof VxeOption
+  /**
+   * Pager 分页
+   */
   VxePager: typeof VxePager
   VxePasswordInput: typeof VxePasswordInput
   VxePrintPageBreak: typeof VxePrintPageBreak
@@ -202,28 +359,76 @@ interface AllComponents {
   VxeTip: typeof VxeTip
   VxeTooltip: typeof VxeTooltip
   VxeTour: typeof VxeTour
+  /**
+   * Tree 树
+   */
   VxeTree: typeof VxeTree
+  /**
+   * TreeSelect 下拉树选择
+   */
   VxeTreeSelect: typeof VxeTreeSelect
   VxeTransfer: typeof VxeTransfer
+  /**
+   * Upload 上传
+   */
   VxeUpload: typeof VxeUpload
+  /**
+   * Watermark 水印
+   */
   VxeWatermark: typeof VxeWatermark
 
   // Vxe Table
+  /**
+   * Column 基础表格 - 列
+   */
   VxeColumn: typeof VxeColumn
+  /**
+   * Colgroup 基础表格 - 分组列
+   */
   VxeColgroup: typeof VxeColgroup
+  /**
+   * Table 基础表格
+   */
   VxeTable: typeof VxeTable
+  /**
+   * Grid 高级表格
+   */
   VxeGrid: typeof VxeGrid
+  /**
+   * Toolbar 基础表格 - 工具栏
+   */
   VxeToolbar: typeof VxeToolbar
 
   // Vxe Design
+  /**
+   * FlowDesign 流程设计器
+   */
   VxeFlowDesign: typeof VxeFlowDesign
+  /**
+   * FlowView 流程设计器 - 视图
+   */
   VxeFlowView: typeof VxeFlowView
+  /**
+   * FormDesign 表单设计器
+   */
   VxeFormDesign: typeof VxeFormDesign
+  /**
+   * FormView 表单设计器 - 视图
+   */
   VxeFormView: typeof VxeFormView
+  /**
+   * ListDesign 列表设计器
+   */
   VxeListDesign: typeof VxeListDesign
+  /**
+   * ListView 列表设计器 - 视图
+   */
   VxeListView: typeof VxeListView
 
   // VxeGantt
+  /**
+   * Gantt 甘特图
+   */
   VxeGantt: typeof VxeGantt
 }
 

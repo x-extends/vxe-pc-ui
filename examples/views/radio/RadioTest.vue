@@ -35,7 +35,7 @@
     </p>
 
     <p>
-      <vxe-radio-group v-model="demo1.value4">
+      <vxe-radio-group v-model="demo1.value4" >
         <vxe-radio-button label="1" content="按钮1"></vxe-radio-button>
         <vxe-radio-button label="2" content="按钮2"></vxe-radio-button>
         <vxe-radio-button label="3" content="按钮3"></vxe-radio-button>
@@ -45,12 +45,12 @@
         <vxe-radio-button label="2" content="按钮2"></vxe-radio-button>
         <vxe-radio-button label="3" content="按钮3"></vxe-radio-button>
       </vxe-radio-group>
-      <vxe-radio-group v-model="demo1.value6" size="small" :strict="false">
+      <vxe-radio-group v-model="demo1.value6" size="small" status="error" :strict="false" disabled>
         <vxe-radio-button label="1" content="按钮1"></vxe-radio-button>
         <vxe-radio-button label="2" content="按钮2"></vxe-radio-button>
         <vxe-radio-button label="3" content="按钮3"></vxe-radio-button>
       </vxe-radio-group>
-      <vxe-radio-group v-model="demo1.value7" size="mini" :strict="false">
+      <vxe-radio-group v-model="demo1.value7" size="mini" status="success" :strict="false">
         <vxe-radio-button label="1" content="按钮1"></vxe-radio-button>
         <vxe-radio-button label="2" content="按钮2"></vxe-radio-button>
         <vxe-radio-button label="3" content="按钮3"></vxe-radio-button>

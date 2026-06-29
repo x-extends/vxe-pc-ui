@@ -377,6 +377,9 @@ export interface TreeReactData {
   updateExpandedFlag: number
   updateCheckboxFlag: number
 
+  insertRowFlag: number
+  removeRowFlag: number
+
   dragNode: any
   dragTipText: string
 }
@@ -404,6 +407,9 @@ export interface TreeInternalData {
   }
   lastScrollTime: number
   hpTimeout?: undefined | number
+
+  insertRowMaps: Record<string, any>
+  removeRowMaps: Record<string, any>
 
   prevDragNode?: any
   prevDragToChild?: boolean
@@ -603,6 +609,34 @@ export interface TreeMethods<D = any> {
    * 手动清除滚动相关信息，还原到初始状态
    */
   clearScroll(): Promise<void>
+
+  /**
+   * 往表格插入临时数据，从第一个节点新增一个节点或多个节点新数据
+   */
+  insert(records: any): Promise<{ node: D, nodes: D[] }>
+  /**
+   * 用于 transform 模式，往表格指定节点中插入临时数据
+   * 如果 node 为空则从插入到顶部，如果为树结构，则插入到目标节点顶部
+   * 如果 node 为 -1 则从插入到底部，如果为树结构，则插入到目标节点底部
+   * 如果 node 为有效节点则插入到该节点的位置，如果为树结构，则有插入到效的目标节点该节点的位置
+   */
+  insertAt(records: any, targetNodeOrNodeid?: any | -1 | null): Promise<{ node: D, nodes: D[] }>
+  /**
+   * 用于 transform 模式，与 insertAt 节点为一致，区别就是会插入指定目标的到下一节点
+   */
+  insertNextAt(records: any, targetNodeOrNodeid?: any | -1 | null): Promise<{ node: D, nodes: D[] }>
+  /**
+   * 用于 transform 模式，删除指定节点数据，指定 node 或 [node, ...] 删除多条数据，如果为空则删除所有数据
+   */
+  remove(nodes?: any | any[]): Promise<{ node: D, nodes: D[] }>
+  /**
+   * 用于 transform 模式，获取新增的临时数据
+   */
+  getInsertRecords(): D[]
+  /**
+   * 用于 transform 模式，获取已删除的数据
+   */
+  getRemoveRecords(): D[]
 }
 export interface VxeTreeMethods<D = any> extends TreeMethods<D> { }
 
@@ -673,6 +707,8 @@ export type VxeTreeEmits = [
   'node-dragstart',
   'node-dragover',
   'node-dragend',
+  'node-remove-dragend',
+  'node-insert-dragend',
   'node-expand',
   'node-menu',
   'menu-click'

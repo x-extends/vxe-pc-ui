@@ -1,13 +1,36 @@
-import { h, Teleport, PropType, ref, inject, watch, computed, provide, onUnmounted, reactive, nextTick, onMounted } from 'vue'
+import { h, Teleport, PropType, ref, inject, watch, computed, provide, onBeforeUnmount, reactive, nextTick, onMounted } from 'vue'
 import { defineVxeComponent } from '../../ui/src/comp'
 import XEUtils from 'xe-utils'
 import { getConfig, getIcon, getI18n, globalEvents, createEvent, renderer, useSize, GLOBAL_EVENT_KEYS, renderEmptyElement } from '../../ui'
-import { getEventTargetNode, updatePanelPlacement } from '../../ui/src/dom'
+import { getEventTargetNode, toCssUnit, updatePanelPlacement } from '../../ui/src/dom'
 import { getLastZIndex, nextZIndex, getFuncText } from '../../ui/src/utils'
 import { getSlotVNs } from '../../ui/src/vn'
+import VxeInputComponent from '../../input/src/input'
 
-import type { VxeIconPickerPropTypes, VxeIconPickerConstructor, IconPickerInternalData, ValueOf, IconPickerReactData, VxeIconPickerEmits, IconPickerMethods, IconPickerPrivateRef, VxeIconPickerMethods, VxeIconPickerDefines, VxeDrawerConstructor, VxeDrawerMethods, VxeFormDefines, VxeFormConstructor, VxeFormPrivateMethods, VxeModalConstructor, VxeModalMethods } from '../../../types'
+import type { VxeIconPickerPropTypes, VxeIconPickerConstructor, IconPickerInternalData, VxeInputConstructor, ValueOf, IconPickerReactData, VxeIconPickerEmits, IconPickerMethods, IconPickerPrivateRef, VxeIconPickerMethods, VxeIconPickerDefines, VxeDrawerConstructor, VxeDrawerMethods, VxeFormDefines, VxeFormConstructor, VxeFormPrivateMethods, VxeModalConstructor, VxeModalMethods, VxeComponentStyleType } from '../../../types'
 import type { VxeTableConstructor, VxeTablePrivateMethods } from '../../../types/components/table'
+
+function createReactData (): IconPickerReactData {
+  return {
+    initialized: false,
+    selectIcon: '',
+    panelIndex: 0,
+    panelStyle: {},
+    panelPlacement: null,
+    visiblePanel: false,
+    isAniVisible: false,
+    isActivated: false,
+    searchValue: '',
+    iconGroups: []
+  }
+}
+
+function createInternalData (): IconPickerInternalData {
+  return {
+    fullList: []
+    // hpTimeout: undefined
+  }
+}
 
 export default defineVxeComponent({
   name: 'VxeIconPicker',
@@ -37,6 +60,11 @@ export default defineVxeComponent({
       type: Boolean as PropType<VxeIconPickerPropTypes.Disabled>,
       default: null
     },
+    filterable: {
+      type: Boolean as PropType<VxeIconPickerPropTypes.Filterable>,
+      default: () => getConfig().iconPicker.filterable
+    },
+    filterConfig: Object as PropType<VxeIconPickerPropTypes.FilterConfig>,
     icons: Array as PropType<VxeIconPickerPropTypes.Icons>,
     placement: String as PropType<VxeIconPickerPropTypes.Placement>,
     popupConfig: Object as PropType<VxeIconPickerPropTypes.PopupConfig>,
@@ -64,24 +92,15 @@ export default defineVxeComponent({
 
     const { computeSize } = useSize(props)
 
-    const reactData = reactive<IconPickerReactData>({
-      initialized: false,
-      selectIcon: `${props.modelValue || ''}`,
-      panelIndex: 0,
-      panelStyle: {},
-      panelPlacement: null,
-      visiblePanel: false,
-      isAniVisible: false,
-      isActivated: false
-    })
+    const reactData = reactive(createReactData())
 
-    const internalData: IconPickerInternalData = {
-      // hpTimeout: undefined
-    }
+    const internalData = createInternalData()
 
     const refElem = ref<HTMLDivElement>()
     const refInput = ref<HTMLInputElement>()
     const refOptionPanel = ref<HTMLDivElement>()
+
+    const refInpSearch = ref<VxeInputConstructor>()
 
     const refMaps: IconPickerPrivateRef = {
       refElem
@@ -149,6 +168,20 @@ export default defineVxeComponent({
       return getI18n('vxe.base.pleaseSelect')
     })
 
+    const computePanelStyle = computed(() => {
+      const popupOpts = computePopupOpts.value
+      const { chunkSize, height, maxHeight } = popupOpts
+      const stys: VxeComponentStyleType = {
+        '--vxe-ui-icon-picker-item-width': `${100 / (chunkSize || 4)}%`
+      }
+      if (height) {
+        stys['--vxe-ui-icon-picker-panel-height'] = toCssUnit(height)
+      } else if (maxHeight) {
+        stys['--vxe-ui-icon-picker-panel-max-height'] = toCssUnit(maxHeight)
+      }
+      return stys
+    })
+
     const computeIconList = computed<VxeIconPickerDefines.IconItemObj[]>(() => {
       let { icons } = props
       if (!icons || !icons.length) {
@@ -169,13 +202,12 @@ export default defineVxeComponent({
       })
     })
 
-    const computePopupOpts = computed(() => {
-      return Object.assign({}, getConfig().iconPicker.popupConfig, props.popupConfig)
+    const computeFilterOpts = computed(() => {
+      return Object.assign({}, getConfig().iconPicker.filterConfig, props.filterConfig)
     })
 
-    const computeIconGroupList = computed(() => {
-      const iconList = computeIconList.value
-      return XEUtils.chunk(iconList, 4)
+    const computePopupOpts = computed(() => {
+      return Object.assign({}, getConfig().iconPicker.popupConfig, props.popupConfig)
     })
 
     const computeSelectIconItem = computed(() => {
@@ -197,6 +229,7 @@ export default defineVxeComponent({
       const panelElem = refOptionPanel.value
       const btnTransfer = computeBtnTransfer.value
       const popupOpts = computePopupOpts.value
+      const { width } = popupOpts
       const handleStyle = () => {
         const ppObj = updatePanelPlacement(targetElem, panelElem, {
           placement: popupOpts.placement || placement,
@@ -206,6 +239,12 @@ export default defineVxeComponent({
         const panelStyle: { [key: string]: string | number } = Object.assign(ppObj.style, {
           zIndex: panelIndex
         })
+        if (width) {
+          Object.assign(panelStyle, {
+            width: toCssUnit(width),
+            minWidth: undefined
+          })
+        }
         reactData.panelStyle = panelStyle
         reactData.panelPlacement = ppObj.placement
       }
@@ -240,6 +279,27 @@ export default defineVxeComponent({
       internalData.hpTimeout = setTimeout(() => {
         reactData.isAniVisible = false
       }, 350)
+    }
+
+    const handleData = () => {
+      const { modelValue } = props
+      const { searchValue } = reactData
+      const filterOpts = computeFilterOpts.value
+      const { filterMethod } = filterOpts
+      const popupOpts = computePopupOpts.value
+      const { chunkSize } = popupOpts
+      const iconList = computeIconList.value
+      let visibleList = iconList
+      if (searchValue) {
+        const searchTxt = `${searchValue}`.toLowerCase()
+        visibleList = iconList.filter(item => {
+          if (filterMethod) {
+            return filterMethod({ option: item, value: modelValue, searchValue: searchTxt, $iconPicker: $xeIconPicker })
+          }
+          return (item.title && `${item.title}`.toLowerCase().indexOf(searchTxt) > -1) || (item.icon && `${item.icon}`.indexOf(searchTxt) > -1)
+        })
+      }
+      reactData.iconGroups = XEUtils.chunk(visibleList, chunkSize || 4)
     }
 
     const changeEvent = (evnt: Event, selectValue: any) => {
@@ -433,47 +493,64 @@ export default defineVxeComponent({
       hideOptionPanel()
     }
 
+    const modelSearchEvent = (value: string) => {
+      reactData.searchValue = value
+    }
+
+    const focusSearchEvent = () => {
+      reactData.isActivated = true
+    }
+
+    const handleSearchEvent = () => {
+      handleData()
+    }
+
+    const triggerSearchEvent = XEUtils.debounce(handleSearchEvent, 350, { trailing: true })
+
     Object.assign($xeIconPicker, iconPickerMethods)
 
     const renderIconWrapper = () => {
       const { showIconTitle } = props
-      const { selectIcon } = reactData
-      const iconGroupList = computeIconGroupList.value
-      const isDisabled = computeIsDisabled.value
+      const { selectIcon, iconGroups } = reactData
 
       return h('div', {
         class: 'vxe-ico-picker--list-wrapper'
-      }, iconGroupList.map(list => {
+      }, iconGroups.map(list => {
         return h('div', {
           class: 'vxe-ico-picker--list'
         }, list.map(item => {
           const { iconRender } = item
           const compConf = iconRender ? renderer.get(iconRender.name) : null
-          const oIconMethod = compConf ? compConf.renderIconPickerOptionIcon : null
+          const iconMethod = compConf ? compConf.renderIconPickerOptionIcon : null
           return h('div', {
             class: ['vxe-ico-picker--item', {
               'is--selected': selectIcon === item.icon
-            }],
-            onClick (evnt) {
-              if (!isDisabled) {
-                handleClickIconEvent(evnt, item)
-              }
-            }
+            }]
           }, [
             h('div', {
-              class: 'vxe-ico-picker--item-icon'
-            }, oIconMethod && iconRender
-              ? getSlotVNs(oIconMethod(iconRender, { $iconPicker: $xeIconPicker, option: item }))
-              : [
-                  h('i', {
-                    class: item.icon || ''
-                  })
-                ]),
-            showIconTitle
-              ? h('div', {
-                class: 'vxe-ico-picker--item-title'
-              }, `${item.title || ''}`)
-              : renderEmptyElement($xeIconPicker)
+              class: 'vxe-ico-picker--item-inner',
+              onClick (evnt) {
+                const isDisabled = computeIsDisabled.value
+                if (!isDisabled) {
+                  handleClickIconEvent(evnt, item)
+                }
+              }
+            }, [
+              h('div', {
+                class: 'vxe-ico-picker--item-icon'
+              }, iconMethod && iconRender
+                ? getSlotVNs(iconMethod(iconRender, { $iconPicker: $xeIconPicker, option: item }))
+                : [
+                    h('i', {
+                      class: item.icon || ''
+                    })
+                  ]),
+              showIconTitle
+                ? h('div', {
+                  class: 'vxe-ico-picker--item-title'
+                }, `${item.title || ''}`)
+                : renderEmptyElement($xeIconPicker)
+            ])
           ])
         }))
       }))
@@ -504,13 +581,14 @@ export default defineVxeComponent({
     }
 
     const renderVN = () => {
-      const { className, clearable } = props
+      const { className, clearable, filterable } = props
       const { initialized, isActivated, isAniVisible, visiblePanel, selectIcon } = reactData
       const vSize = computeSize.value
       const isDisabled = computeIsDisabled.value
       const btnTransfer = computeBtnTransfer.value
       const formReadonly = computeFormReadonly.value
       const inpPlaceholder = computeInpPlaceholder.value
+      const panelStyle = computePanelStyle.value
       const popupOpts = computePopupOpts.value
       const ppClassName = popupOpts.className || props.popupClassName
 
@@ -586,8 +664,30 @@ export default defineVxeComponent({
           }, [
             initialized && (visiblePanel || isAniVisible)
               ? h('div', {
-                class: 'vxe-ico-picker--panel-wrapper'
+                class: 'vxe-ico-picker--panel-wrapper',
+                style: panelStyle
               }, [
+                filterable
+                  ? h('div', {
+                    class: 'vxe-ico-picker--panel-search'
+                  }, [
+                    h(VxeInputComponent, {
+                      ref: refInpSearch,
+                      class: 'vxe-ico-picker-search--input',
+                      modelValue: reactData.searchValue,
+                      type: 'text',
+                      clearable: true,
+                      disabled: false,
+                      readonly: false,
+                      placeholder: getI18n('vxe.iconPicker.search'),
+                      prefixIcon: getIcon().INPUT_SEARCH,
+                      'onUpdate:modelValue': modelSearchEvent,
+                      onFocus: focusSearchEvent,
+                      onChange: triggerSearchEvent,
+                      onSearch: triggerSearchEvent
+                    })
+                  ])
+                  : renderEmptyElement($xeIconPicker),
                 renderIconWrapper()
               ])
               : renderEmptyElement($xeIconPicker)
@@ -596,8 +696,15 @@ export default defineVxeComponent({
       ])
     }
 
+    reactData.selectIcon = `${props.modelValue || ''}`
+    handleData()
+
     watch(() => props.modelValue, (val) => {
       reactData.selectIcon = `${val || ''}`
+    })
+
+    watch(computeIconList, () => {
+      handleData()
     })
 
     onMounted(() => {
@@ -607,11 +714,13 @@ export default defineVxeComponent({
       globalEvents.on($xeIconPicker, 'blur', handleGlobalBlurEvent)
     })
 
-    onUnmounted(() => {
+    onBeforeUnmount(() => {
       globalEvents.off($xeIconPicker, 'mousewheel')
       globalEvents.off($xeIconPicker, 'mousedown')
       globalEvents.off($xeIconPicker, 'keydown')
       globalEvents.off($xeIconPicker, 'blur')
+      XEUtils.assign(reactData, createReactData())
+      XEUtils.assign(internalData, createInternalData())
     })
 
     provide('$xeIconPicker', $xeIconPicker)

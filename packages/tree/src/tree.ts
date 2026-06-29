@@ -1,7 +1,7 @@
 import { ref, h, reactive, PropType, computed, VNode, watch, onBeforeUnmount, nextTick, onMounted, provide } from 'vue'
 import { defineVxeComponent } from '../../ui/src/comp'
 import { VxeUI, createEvent, useSize, globalEvents, globalResize, renderEmptyElement } from '../../ui'
-import { calcTreeLine } from './util'
+import { calcTreeLine, getItemCacheObj } from './util'
 import { createComponentLog } from '../../ui/src/log'
 import { getCrossTreeDragNodeInfo } from './store'
 import XEUtils from 'xe-utils'
@@ -13,7 +13,7 @@ import VxeLoadingComponent from '../../loading'
 
 import type { TreeReactData, VxeTreeEmits, VxeTreePropTypes, TreeInternalData, TreePrivateRef, VxeTreeDefines, VxeTreePrivateComputed, TreePrivateMethods, TreeMethods, ValueOf, VxeTreeConstructor, VxeTreePrivateMethods, VxeComponentStyleType } from '../../../types'
 
-const { errLog } = createComponentLog('tree')
+const { warnLog, errLog } = createComponentLog('tree')
 
 const { menus, getConfig, getI18n, getIcon } = VxeUI
 
@@ -47,6 +47,9 @@ function createInternalData (): TreeInternalData {
       rowHeight: 0
     },
 
+    removeRowMaps: {},
+    insertRowMaps: {},
+
     // prevDragNode: null,
     // prevDragToChild: false,
     // prevDragPos: ''
@@ -70,15 +73,17 @@ function createReactData ():TreeReactData {
     treeList: [],
     updateExpandedFlag: 1,
     updateCheckboxFlag: 1,
+    insertRowFlag: 1,
+    removeRowFlag: 1,
     dragNode: null,
     dragTipText: ''
   }
 }
 
-// let crossTreeDragNodeObj: {
-//   $oldTree: VxeTreeConstructor & VxeTreePrivateMethods
-//   $newTree: (VxeTreeConstructor & VxeTreePrivateMethods) | null
-// } | null = null
+let crossTreeDragNodeObj: {
+  $oldTree: VxeTreeConstructor & VxeTreePrivateMethods
+  $newTree: (VxeTreeConstructor & VxeTreePrivateMethods) | null
+} | null = null
 
 export default defineVxeComponent({
   name: 'VxeTree',
@@ -216,6 +221,8 @@ export default defineVxeComponent({
     'node-dragstart',
     'node-dragover',
     'node-dragend',
+    'node-remove-dragend',
+    'node-insert-dragend',
     'node-expand',
     'node-menu',
     'menu-click'
@@ -1402,6 +1409,147 @@ export default defineVxeComponent({
       recalculate()
     }
 
+    const insertTreeNode = (newRecords: any[], isAppend: boolean) => {
+      const { treeFullData, nodeMaps } = internalData
+      const keyField = computeKeyField.value
+      const parentField = computeParentField.value
+      const childrenField = computeChildrenField.value
+      const mapChildrenField = computeMapChildrenField.value
+      const funcName = isAppend ? 'push' : 'unshift'
+      newRecords.forEach((item) => {
+        const parentRowId = item[parentField]
+        const nodeid = getNodeId(item)
+        const matchObj = parentRowId ? XEUtils.findTree(treeFullData, (item) => parentRowId === item[keyField], { children: mapChildrenField }) : null
+        const itemRest = getItemCacheObj(item)
+        if (matchObj) {
+          const { item: parentItem } = matchObj
+          const parentRest = nodeMaps[getNodeId(parentItem)]
+          const parentLevel = parentRest ? parentRest.level : 0
+          let pChilds = parentItem[childrenField]
+          let pMapChilds = parentItem[mapChildrenField]
+          if (!XEUtils.isArray(pChilds)) {
+            pChilds = parentItem[childrenField] = []
+          }
+          if (!XEUtils.isArray(pMapChilds)) {
+            pMapChilds = parentItem[mapChildrenField] = []
+          }
+          itemRest.parent = parentItem
+          itemRest.items = pChilds
+          itemRest.level = parentLevel
+          pChilds[funcName](item)
+          pMapChilds[funcName](item)
+        } else {
+          if (parentRowId) {
+            warnLog('vxe.error.unableInsert')
+          }
+          treeFullData[funcName](item)
+        }
+        nodeMaps[nodeid] = itemRest
+      })
+    }
+
+    const handleInsertNodeAt = (records: any[], targetNodeOrNodeid: any, isInsertNextNode?: any) => {
+      const { transform } = props
+      const { treeFullData, nodeMaps } = internalData
+      const keyField = computeKeyField.value
+      const parentField = computeParentField.value
+      const childrenField = computeChildrenField.value
+      const mapChildrenField = computeMapChildrenField.value
+      if (!transform) {
+        errLog('vxe.error.reqSupportProp', ['insert() | insertAt() | insertNextAt()', 'transform'])
+        return Promise.resolve({ node: null, nodes: [] })
+      }
+      if (!XEUtils.isArray(records)) {
+        records = [records]
+      }
+      let targetNode = targetNodeOrNodeid
+      if (XEUtils.isString(targetNodeOrNodeid) || XEUtils.isNumber(targetNodeOrNodeid)) {
+        const nodeRest = nodeMaps[targetNodeOrNodeid]
+        if (nodeRest) {
+          targetNode = nodeRest.item
+        }
+      }
+      if (!records.length) {
+        return Promise.resolve({ node: null, nodes: [] })
+      }
+      const newRecords = records.map(record => XEUtils.assign({ [mapChildrenField]: [], [childrenField]: [] }, record))
+      const treeRecords = XEUtils.toArrayTree(newRecords, { key: keyField, parentKey: parentField, children: childrenField })
+
+      if (XEUtils.eqNull(targetNode)) {
+        insertTreeNode(newRecords, false)
+      } else {
+        if (targetNode === -1) {
+          insertTreeNode(newRecords, true)
+        } else {
+          const matchMapObj = XEUtils.findTree(treeFullData, item => targetNode[keyField] === item[keyField], { children: mapChildrenField })
+          if (matchMapObj) {
+            const { parent: parentNode } = matchMapObj
+            const parentMapChilds = parentNode ? parentNode[mapChildrenField] : treeFullData
+            const parentRest = nodeMaps[getNodeId(parentNode)]
+            const parentLevel = parentRest ? parentRest.level : 0
+            treeRecords.forEach((row, i) => {
+              if (parentNode) {
+                if (row[parentField] !== parentNode[keyField]) {
+                  errLog('vxe.error.errProp', [`${parentField}=${row[parentField]}`, `${parentField}=${parentNode[keyField]}`])
+                  row[parentField] = parentNode[keyField]
+                }
+              } else {
+                if (row[parentField] !== null) {
+                  if (!XEUtils.eqNull(row[parentField])) {
+                    errLog('vxe.error.errProp', [`${parentField}=${row[parentField]}`, 'null'])
+                  }
+                  row[parentField] = null
+                }
+              }
+              let targetIndex = matchMapObj.index + i
+              if (isInsertNextNode) {
+                targetIndex = targetIndex + 1
+              }
+              parentMapChilds.splice(targetIndex, 0, row)
+            })
+            XEUtils.eachTree(treeRecords, (item) => {
+              const nodeid = getNodeId(item)
+              const nodeRest = getItemCacheObj(item)
+              nodeRest.level = parentLevel
+              if (item[childrenField]) {
+                item[mapChildrenField] = item[childrenField]
+              }
+              nodeMaps[nodeid] = nodeRest
+            }, { children: childrenField })
+            // 源
+            if (parentNode) {
+              const matchObj = XEUtils.findTree(treeFullData, item => targetNode[keyField] === item[keyField], { children: childrenField })
+              if (matchObj) {
+                const parentChilds = matchObj.items
+                let targetIndex = matchObj.index
+                if (isInsertNextNode) {
+                  targetIndex = targetIndex + 1
+                }
+                parentChilds.splice(targetIndex, 0, ...treeRecords)
+              }
+            }
+          } else {
+            warnLog('vxe.error.unableInsert')
+            insertTreeNode(newRecords, true)
+          }
+        }
+      }
+      reactData.insertRowFlag++
+      cacheNodeMap()
+      handleData(true)
+      updateAfterDataIndex()
+      updateCheckboxStatus()
+      if (reactData.scrollYLoad) {
+        updateYSpace()
+      }
+      return nextTick().then(() => {
+        return {
+          node: newRecords.length ? newRecords[newRecords.length - 1] : null,
+          nodes: newRecords
+        }
+      })
+    }
+
     const treeMethods: TreeMethods = {
       dispatchEvent,
       getNodeId,
@@ -1802,7 +1950,91 @@ export default defineVxeComponent({
         }
         return recalculate()
       },
-      clearScroll
+      clearScroll,
+      insert (records) {
+        return handleInsertNodeAt(records, null)
+      },
+      insertAt (records, targetNodeOrNodeid) {
+        return handleInsertNodeAt(records, targetNodeOrNodeid)
+      },
+      insertNextAt (records, targetNodeOrNodeid) {
+        return handleInsertNodeAt(records, targetNodeOrNodeid, true)
+      },
+      remove (nodes) {
+        const { transform } = props
+        const { treeFullData } = internalData
+        const childrenField = computeChildrenField.value
+        const mapChildrenField = computeMapChildrenField.value
+        if (!transform) {
+          errLog('vxe.error.reqSupportProp', ['remove()', 'transform'])
+          return Promise.resolve({ node: null, nodes: [] })
+        }
+        let delList: any[] = []
+        if (!nodes) {
+          nodes = treeFullData
+        } else if (!XEUtils.isArray(nodes)) {
+          nodes = [nodes]
+        }
+        if (!nodes.length) {
+          return Promise.resolve({ node: null, nodes: [] })
+        }
+
+        // 从数据源中移除
+        if (treeFullData === nodes) {
+          nodes = delList = treeFullData.slice(0)
+          internalData.treeFullData = []
+        } else {
+          nodes.forEach((item: any) => {
+            const nodeid = getNodeId(item)
+            const matchMapObj = XEUtils.findTree(treeFullData, item => nodeid === getNodeId(item), { children: mapChildrenField })
+            if (matchMapObj) {
+              const rItems = matchMapObj.items.splice(matchMapObj.index, 1)
+              delList.push(rItems[0])
+            }
+            const matchObj = XEUtils.findTree(treeFullData, item => nodeid === getNodeId(item), { children: childrenField })
+            if (matchObj) {
+              const rItems = matchObj.items.splice(matchObj.index, 1)
+              delList.push(rItems[0])
+            }
+          })
+        }
+        reactData.removeRowFlag++
+        reactData.insertRowFlag++
+        cacheNodeMap()
+        handleData(true)
+        updateAfterDataIndex()
+        updateCheckboxStatus()
+        if (reactData.scrollYLoad) {
+          updateYSpace()
+        }
+        return nextTick().then(() => {
+          return recalculate()
+        }).then(() => {
+          return { node: delList.length ? delList[delList.length - 1] : null, nodes: delList }
+        })
+      },
+      getInsertRecords () {
+        const { insertRowMaps } = internalData
+        const insertRecords: any[] = []
+        XEUtils.each(insertRowMaps, (row) => {
+          insertRecords.push(row)
+        })
+        return insertRecords
+      },
+      getRemoveRecords () {
+        const { removeRowMaps } = internalData
+        const removeRecords: any[] = []
+        XEUtils.each(removeRowMaps, (row) => {
+          removeRecords.push(row)
+        })
+        return removeRecords
+      }
+    }
+
+    const handleNodeDragEndClearStatus = () => {
+      clearNodeDragData()
+      clearCrossTreeDragStatus()
+      recalculate()
     }
 
     const clearNodeDropOrigin = () => {
@@ -1857,7 +2089,7 @@ export default defineVxeComponent({
     }
 
     const clearCrossTreeDragStatus = () => {
-      // crossTreeDragNodeObj = null
+      crossTreeDragNodeObj = null
       crossTreeDragNodeInfo.node = null
     }
 
@@ -2242,6 +2474,18 @@ export default defineVxeComponent({
       const { dragNode } = reactData
       const { nodeMaps, prevDragNode, prevDragPos, prevDragToChild } = internalData
       const hasChildField = computeHasChildField.value
+      const dragConfig = computeDragOpts.value
+      const { isCrossDrag, isCrossTreeDrag } = dragConfig
+      // 跨树拖拽
+      if (isCrossTreeDrag && crossTreeDragNodeObj) {
+        const { $newTree } = crossTreeDragNodeObj
+        if ($newTree && $newTree.xID !== $xeTree.xID) {
+          if (isCrossDrag) {
+            $newTree.handleCrossTreeNodeDragInsertEvent(evnt)
+          }
+          return
+        }
+      }
       if (lazy && prevDragToChild) {
         // 懒加载
         const newNodeid = getNodeId(prevDragNode)
@@ -2322,17 +2566,194 @@ export default defineVxeComponent({
       /**
        * 处理跨树拖拽完成
        */
-      handleCrossTreeNodeDragFinishEvent () {
+      handleCrossTreeNodeDragFinishEvent (evnt: DragEvent) {
+        const { treeList } = reactData
+        const { nodeMaps } = internalData
+        const dragOpts = computeDragOpts.value
+        const { animation, isCrossTreeDrag } = dragOpts
+        const mapChildrenField = computeMapChildrenField.value
+        const el = refElem.value
+        if (!el) {
+          return
+        }
+        if (isCrossTreeDrag && crossTreeDragNodeObj && crossTreeDragNodeInfo) {
+          const { node: dragNode } = crossTreeDragNodeInfo
+          if (dragNode) {
+            const dragNodeid = getNodeId(dragNode)
+            const dragNodeRest = nodeMaps[dragNodeid]
+            let dragNodeHeight = 0
+            let rsIndex = -1
+            if (dragNodeRest) {
+              if (animation) {
+                const oldItemEl = el.querySelector<HTMLElement>(`.vxe-tree--node-wrapper[nodeid="${dragNodeid}"]`)
+                const targetItemEl = oldItemEl
+                if (targetItemEl) {
+                  dragNodeHeight = targetItemEl.offsetHeight
+                }
+              }
+              rsIndex = dragNodeRest.$index
+            }
+            const dragRangeList = rsIndex > -1 && rsIndex < treeList.length - 1 ? treeList.slice(rsIndex + 1) : []
+            const dragList = XEUtils.toTreeArray([dragNode], {
+              updated: true,
+              children: mapChildrenField
+            })
+            $xeTree.remove(dragList).then(() => {
+              if (animation && dragNodeHeight && dragRangeList.length) {
+                const wrapperEl = el
+                const dtClss: string[] = []
+                dragRangeList.forEach(item => {
+                  const nodeid = getNodeId(item)
+                  dtClss.push(`.vxe-tree--node-wrapper[nodeid="${nodeid}"]`)
+                })
+                const dtTrList = wrapperEl.querySelectorAll<HTMLElement>(dtClss.join(','))
+                moveRowAnimateToTb(dtTrList, dragNodeHeight)
+              }
+            })
+            dispatchEvent('node-remove-dragend', {
+              node: dragNode
+            }, evnt)
+            handleNodeDragEndClearStatus()
+          }
+        }
       },
       /**
        * 处理跨树拖至新的空树
        */
-      handleCrossTreeNodeDragInsertEvent () {
+      handleCrossTreeNodeDragoverEmptyEvent (evnt: DragEvent) {
+        const { treeList } = reactData
+        const dragOpts = computeDragOpts.value
+        const { isCrossTreeDrag } = dragOpts
+        if (isCrossTreeDrag && crossTreeDragNodeObj && !treeList.length) {
+          const { $oldTree, $newTree } = crossTreeDragNodeObj
+          if ($oldTree) {
+            const oldTreeReactData = $oldTree as unknown as TreeReactData
+            if ($oldTree.xID !== $xeTree.xID) {
+              if ($newTree && $newTree.xID !== $xeTree.xID) {
+                $newTree.hideCrossTreeNodeDropClearStatus()
+              }
+              evnt.preventDefault()
+              $oldTree.hideCrossTreeNodeDropClearStatus()
+              crossTreeDragNodeObj.$newTree = $xeTree
+              internalData.prevDragNode = null
+              reactData.dragTipText = oldTreeReactData.dragTipText
+              showDropTip(evnt, evnt.currentTarget as HTMLDivElement, true, '')
+            }
+          }
+        }
       },
       /**
        * 处理跨树拖插入
        */
-      handleCrossTreeNodeDragoverEmptyEvent () {
+      handleCrossTreeNodeDragInsertEvent (evnt: DragEvent) {
+        const { prevDragNode, prevDragPos, prevDragToChild } = internalData
+        const dragOpts = computeDragOpts.value
+        const { animation, isSelfToChildDrag, isCrossTreeDrag, dragEndMethod, dragToChildMethod } = dragOpts
+        const parentField = computeParentField.value
+        const mapChildrenField = computeMapChildrenField.value
+        const childrenField = computeChildrenField.value
+        // 跨表拖拽
+        if (isCrossTreeDrag && crossTreeDragNodeObj && crossTreeDragNodeInfo) {
+          const { node: oldNode } = crossTreeDragNodeInfo
+          const { $oldTree } = crossTreeDragNodeObj
+          const el = refElem.value
+          if (!el) {
+            return
+          }
+          if ($oldTree && oldNode) {
+            const dragNode = oldNode
+            let dragOffsetIndex = -1
+            if (prevDragNode) {
+              dragOffsetIndex = prevDragPos === 'bottom' ? 1 : 0
+            }
+            const dragParams = {
+              oldNode: dragNode,
+              newNode: prevDragNode,
+              dragNode,
+              dragPos: prevDragPos as 'top' | 'bottom',
+              dragToChild: !!prevDragToChild,
+              offsetIndex: dragOffsetIndex as 0 | 1
+            }
+            const isDragToChildFlag = isSelfToChildDrag && dragToChildMethod ? dragToChildMethod(dragParams) : prevDragToChild
+            const errRest = {
+              status: false
+            }
+            Promise.resolve(dragEndMethod ? dragEndMethod(dragParams) : true).then((status) => {
+              if (!status) {
+                if ($oldTree) {
+                  if ($oldTree.xID !== $xeTree.xID) {
+                    $oldTree.handleCrossTreeNodeDragCancelEvent(evnt)
+                  }
+                }
+                handleNodeDragEndClearStatus()
+                return errRest
+              }
+              let insertRest: Promise<any> = Promise.resolve()
+              const dragList = XEUtils.toTreeArray([dragNode], {
+                updated: true,
+                children: mapChildrenField
+              })
+              $oldTree.handleCrossTreeNodeDragFinishEvent(evnt)
+              if (prevDragNode) {
+                dragNode[parentField] = prevDragNode[parentField]
+              } else {
+                dragNode[parentField] = null
+              }
+              dragList.forEach(row => {
+                row[childrenField] = undefined
+                row[mapChildrenField] = undefined
+              })
+              if (prevDragNode) {
+                if (prevDragPos === 'bottom') {
+                  insertRest = $xeTree.insertNextAt(dragList, prevDragNode)
+                } else {
+                  insertRest = $xeTree.insertAt(dragList, prevDragNode)
+                }
+              } else {
+                insertRest = $xeTree.insert(dragList)
+              }
+              $xeTree.dispatchEvent('node-insert-dragend', {
+                oldNode,
+                newNode: prevDragNode,
+                dragNode,
+                dragPos: prevDragPos as any,
+                dragToChild: isDragToChildFlag,
+                offsetIndex: dragOffsetIndex
+              }, evnt)
+              clearNodeDragData()
+
+              insertRest.then(() => {
+                const { treeList } = reactData
+                const { nodeMaps } = internalData
+                const oldNodeid = getNodeId(dragNode)
+                const oldNodeRest = nodeMaps[oldNodeid]
+                let dragNodeHeight = 0
+                let rsIndex = -1
+                if (oldNodeRest) {
+                  if (animation) {
+                    const oldItemEl = el.querySelector<HTMLElement>(`.vxe-tree--node-wrapper[nodeid="${oldNodeid}"]`)
+                    const targetItemEl = oldItemEl
+                    if (targetItemEl) {
+                      dragNodeHeight = targetItemEl.offsetHeight
+                    }
+                  }
+                  rsIndex = oldNodeRest.$index
+                }
+                const dragRangeList = rsIndex > -1 ? treeList.slice(rsIndex) : []
+                if (animation && dragNodeHeight && dragRangeList.length) {
+                  const wrapperEl = el
+                  const dtClss: string[] = []
+                  dragRangeList.forEach(item => {
+                    const nodeid = getNodeId(item)
+                    dtClss.push(`.vxe-tree--node-wrapper[nodeid="${nodeid}"]`)
+                  })
+                  const dtTrList = wrapperEl.querySelectorAll<HTMLElement>(dtClss.join(','))
+                  moveRowAnimateToTb(dtTrList, -dragNodeHeight)
+                }
+              })
+            })
+          }
+        }
       },
       hideCrossTreeNodeDropClearStatus () {
         hideDropTip()
@@ -2663,10 +3084,17 @@ export default defineVxeComponent({
       const loadingOpts = computeLoadingOpts.value
       const isRowHover = computeIsRowHover.value
       const treeStyle = computeTreeStyle.value
+      const dragOpts = computeDragOpts.value
       const loadingSlot = slots.loading
       const headerSlot = slots.header
       const footerSlot = slots.footer
 
+      const teOns: {
+        onDragover?: (...args: any[]) => void
+      } = { }
+      if (dragOpts.isCrossTreeDrag && !treeList.length) {
+        teOns.onDragover = $xeTree.handleCrossTreeNodeDragInsertEvent
+      }
       return h('div', {
         ref: refElem,
         class: ['vxe-tree', {
@@ -2677,7 +3105,8 @@ export default defineVxeComponent({
           'node--hover': isRowHover,
           'node--trigger': trigger === 'node',
           'is--loading': loading
-        }]
+        }],
+        ...teOns
       }, [
         headerSlot
           ? h('div', {
@@ -2790,8 +3219,8 @@ export default defineVxeComponent({
       if (drag && !transform) {
         errLog('vxe.error.notSupportProp', ['drag', 'transform=false', 'transform=true'])
       }
-      if (dragOpts.isCrossTreeDrag) {
-        errLog('vxe.error.notProp', ['drag-config.isCrossTreeDrag'])
+      if (dragOpts.isCrossTreeDrag && !dragOpts.isCrossDrag) {
+        errLog('vxe.error.reqSupportProp', ['drag-config.isCrossTreeDrag', 'drag-config.isCrossDrag'])
       }
       // if (valueField) {
       //   errLog('vxe.error.delProp', ['value-field', 'value-field'])

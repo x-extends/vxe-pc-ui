@@ -34,13 +34,23 @@ export namespace VxeIconPickerPropTypes {
   export type PopupClassName = string | ((params: {$iconPicker: VxeIconPickerConstructor }) => string)
   export type Readonly = boolean
   export type Disabled = boolean
-  export type Icons = string[] | {
+  export type Option = {
     title?: string | number
     icon: string
     iconRender?: VxeIconPickerDefines.OptionIconRender
-  }[]
+  }
+  export type Icons = string[] | Option[]
   export type Clearable = boolean
   export type ShowIconTitle = boolean
+  export type Filterable = boolean
+  export interface FilterConfig {
+    filterMethod?:(params: {
+      $iconPicker: VxeIconPickerConstructor
+      option: VxeIconPickerDefines.IconItemObj
+      searchValue: string
+      value: ModelValue | undefined
+    }) => boolean
+  }
   export type Placement = 'top' | 'bottom' | '' | null
   export interface PopupConfig {
     /**
@@ -56,8 +66,16 @@ export namespace VxeIconPickerPropTypes {
      */
     trigger?: 'default' | 'icon' | 'manual' | '' | null
     transfer?: boolean
+    /**
+     * 分块显示多少个图标
+     */
+    chunkSize?: number
+    /**
+     * 图标展示方式，支持分块和列表
+     */
     width?: number | string
     height?: number | string
+    maxHeight?: number | string
     zIndex?: number | string
     className?: string | ((params: { $iconPicker: VxeIconPickerConstructor }) => string)
   }
@@ -82,6 +100,8 @@ export type VxeIconPickerProps = {
   icons?: VxeIconPickerPropTypes.Icons
   clearable?: VxeIconPickerPropTypes.Clearable
   showIconTitle?: VxeIconPickerPropTypes.ShowIconTitle
+  filterable?: VxeIconPickerPropTypes.Filterable
+  filterConfig?: VxeIconPickerPropTypes.FilterConfig
   placement?: VxeIconPickerPropTypes.Placement
   popupConfig?: VxeIconPickerPropTypes.PopupConfig
   transfer?: VxeIconPickerPropTypes.Transfer
@@ -100,10 +120,13 @@ export interface IconPickerReactData {
   visiblePanel: boolean
   isAniVisible: boolean
   isActivated: boolean
+  searchValue: string
+  iconGroups: VxeIconPickerDefines.IconItemObj[][]
 }
 
 export interface IconPickerInternalData {
   hpTimeout?: undefined | number
+  fullList: VxeIconPickerDefines.IconItemObj[]
 }
 
 export interface IconPickerMethods {
@@ -166,8 +189,8 @@ export namespace VxeIconPickerDefines {
   }
 
   export interface IconItemObj {
-    title?: string
-    icon?: string
+    title: string
+    icon: string
     iconRender?: OptionIconRender
   }
 }

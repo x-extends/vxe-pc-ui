@@ -287,6 +287,9 @@ export default {
       fixedRight: 'Đóng băng bên phải',
       cancelFixed: 'Mở ra cột'
     },
+    iconPicker: {
+      search: '搜索'
+    },
     datePicker: {
       yearTitle: '{0} năm'
     },

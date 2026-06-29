@@ -287,6 +287,9 @@ export default {
       fixedRight: 'Заморозить справа',
       cancelFixed: 'Размороженные столбцы'
     },
+    iconPicker: {
+      search: '搜索'
+    },
     datePicker: {
       yearTitle: '{0} Годы'
     },

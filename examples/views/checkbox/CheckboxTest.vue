@@ -49,12 +49,12 @@
         <vxe-checkbox-button label="2" content="按钮2"></vxe-checkbox-button>
         <vxe-checkbox-button label="3" content="按钮3"></vxe-checkbox-button>
       </vxe-checkbox-group>
-      <vxe-checkbox-group v-model="demo1.value23" size="small">
+      <vxe-checkbox-group v-model="demo1.value23" status="error" size="small">
         <vxe-checkbox-button label="1" content="按钮1"></vxe-checkbox-button>
         <vxe-checkbox-button label="2" content="按钮2"></vxe-checkbox-button>
         <vxe-checkbox-button label="3" content="按钮3"></vxe-checkbox-button>
       </vxe-checkbox-group>
-      <vxe-checkbox-group v-model="demo1.value24" size="mini">
+      <vxe-checkbox-group v-model="demo1.value24" status="success" size="mini">
         <vxe-checkbox-button label="1" content="按钮1"></vxe-checkbox-button>
         <vxe-checkbox-button label="2" content="按钮2"></vxe-checkbox-button>
         <vxe-checkbox-button label="3" content="按钮3"></vxe-checkbox-button>

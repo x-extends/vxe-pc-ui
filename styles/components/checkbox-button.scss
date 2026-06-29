@@ -1,7 +1,10 @@
+@use "sass:map";
+@use "sass:list";
+@use '../helpers/baseMixin.scss';
+@use '../helpers/placement.scss';
+@use '../helpers/themeStatus.scss';
+
 .vxe-checkbox--button {
-  .vxe-checkbox--label {
-    background-color: var(--vxe-ui-layout-background-color);
-  }
   &:first-child {
     .vxe-checkbox--label {
       border-left: 1px solid var(--vxe-ui-input-border-color);
@@ -11,12 +14,6 @@
   &:last-child {
     .vxe-checkbox--label {
       border-radius: 0 var(--vxe-ui-base-border-radius) var(--vxe-ui-base-border-radius) 0;
-    }
-  }
-  > input {
-    &:checked+.vxe-checkbox--label {
-      color: #fff;
-      background-color: var(--vxe-ui-font-primary-color);
     }
   }
   .vxe-checkbox--label {
@@ -32,13 +29,68 @@
     text-overflow: ellipsis;
     white-space: nowrap;
   }
+}
+
+.vxe-checkbox--button {
   & > input {
-    &:focus {
-      &+.vxe-checkbox--label {
-        border-color: var(--vxe-ui-font-primary-color);
+    &:checked+.vxe-checkbox--label {
+      color: #fff;
+      border-color: var(--vxe-ui-font-primary-color);
+      background-color: var(--vxe-ui-font-primary-color);
+      &:not(.is--disabled) {
+        &:hover {
+          background-color: var(--vxe-ui-font-primary-lighten-color);
+          border-color: var(--vxe-ui-font-primary-lighten-color);
+        }
+        &:active {
+          background-color: var(--vxe-ui-font-primary-darken-color);
+          border-color: var(--vxe-ui-font-primary-darken-color);
+        }
+      }
+      &.is--disabled {
+        border-color: var(--vxe-ui-font-primary-disabled-color);
+        background-color: var(--vxe-ui-font-primary-disabled-color);
       }
     }
   }
+}
+
+.vxe-checkbox-group {
+  @for $index from 0 to list.length(themeStatus.$btnThemeList) {
+    $item: list.nth(themeStatus.$btnThemeList, $index + 1);
+    $textColor: map.get($item, textColor);
+    $btnColor: map.get($item, btnColor);
+    &.theme--#{map.get($item, name)} {
+      .vxe-checkbox--button {
+        & > input {
+          &:checked+.vxe-checkbox--label {
+            color: $btnColor;
+            border-color: $textColor;
+            background-color: $textColor;
+            &:not(.is--disabled) {
+              &:hover {
+                color: $btnColor;
+                background-color: map.get($item, btnLightenColor);
+                border-color: map.get($item, btnLightenColor);
+              }
+              &:active {
+                color: $btnColor;
+                background-color: map.get($item, btnDarkenColor);
+                border-color: map.get($item, btnDarkenColor);
+              }
+            }
+            &.is--disabled {
+              border-color: map.get($item, btnDisabledColor);
+              background-color: map.get($item, btnDisabledColor);
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+.vxe-checkbox--button {
   &.size--medium {
     .vxe-checkbox--label {
       line-height: calc(var(--vxe-ui-button-height-medium) - 2px);

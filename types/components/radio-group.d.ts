@@ -1,5 +1,5 @@
 import { RenderFunction, SetupContext, Ref, ComputedRef } from 'vue'
-import { DefineVxeComponentApp, DefineVxeComponentOptions, DefineVxeComponentInstance, VxeComponentBaseOptions, VxeComponentEventParams, VxeComponentSizeType, ValueOf } from '@vxe-ui/core'
+import { DefineVxeComponentApp, DefineVxeComponentOptions, DefineVxeComponentInstance, VxeComponentBaseOptions, VxeComponentEventParams, VxeComponentSizeType, ValueOf, VxeComponentStatusType } from '@vxe-ui/core'
 import { VxeRadioPropTypes } from './radio'
 
 /* eslint-disable no-use-before-define,@typescript-eslint/ban-types */
@@ -39,6 +39,7 @@ export namespace VxeRadioGroupPropTypes {
     disabled?: string
   }
   export type ModelValue = any
+  export type Status = VxeComponentStatusType
   export type Strict = boolean
   export type Disabled = boolean
   export type Readonly = boolean
@@ -55,6 +56,7 @@ export interface VxeRadioGroupProps {
   type?: VxeRadioGroupPropTypes.Type
   options?: VxeRadioGroupPropTypes.Options
   optionProps?: VxeRadioGroupPropTypes.OptionProps
+  status?: VxeRadioGroupPropTypes.Status
   /**
    * 严格模式，不允许取消
    */

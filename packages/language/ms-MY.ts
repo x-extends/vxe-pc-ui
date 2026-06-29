@@ -287,6 +287,9 @@ export default {
       fixedRight: 'Membekukan di sebelah kanan',
       cancelFixed: 'Lajur yang tidak jelas'
     },
+    iconPicker: {
+      search: '搜索'
+    },
     datePicker: {
       yearTitle: '{0} tahun'
     },

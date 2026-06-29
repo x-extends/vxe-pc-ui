@@ -183,7 +183,9 @@ export default defineVxeComponent({
           onClick: clickEvent
         }),
         h('span', {
-          class: 'vxe-radio--label'
+          class: ['vxe-radio--label', {
+            'is--disabled': isDisabled
+          }]
         }, defaultSlot ? defaultSlot({}) : getFuncText(content))
       ])
     }

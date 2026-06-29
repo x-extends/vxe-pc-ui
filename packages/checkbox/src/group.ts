@@ -30,6 +30,10 @@ export default defineVxeComponent({
       type: Boolean as PropType<VxeCheckboxGroupPropTypes.Disabled>,
       default: null
     },
+    status: {
+      type: String as PropType<VxeCheckboxGroupPropTypes.Status>,
+      default: () => getConfig().checkboxGroup.status
+    },
     max: {
       type: [String, Number] as PropType<VxeCheckboxGroupPropTypes.Max>,
       default: null
@@ -194,7 +198,7 @@ export default defineVxeComponent({
     Object.assign($xeCheckboxGroup, checkboxGroupMethods, checkboxGroupPrivateMethods)
 
     const renderVN = () => {
-      const { options } = props
+      const { status, options } = props
       const defaultSlot = slots.default
       const valueField = computeValueField.value as 'value'
       const labelField = computeLabelField.value as 'label'
@@ -203,6 +207,7 @@ export default defineVxeComponent({
       const isDisabled = computeIsDisabled.value
       return h('div', {
         class: ['vxe-checkbox-group', {
+          [`theme--${status}`]: status,
           'is--readonly': isReadonly,
           'is--disabled': isDisabled
         }]

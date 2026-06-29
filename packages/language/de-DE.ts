@@ -287,6 +287,9 @@ export default {
       fixedRight: 'Rechts einfrieren',
       cancelFixed: 'Säulen entfernen'
     },
+    iconPicker: {
+      search: '搜索'
+    },
     datePicker: {
       yearTitle: '{0} Jahre'
     },
