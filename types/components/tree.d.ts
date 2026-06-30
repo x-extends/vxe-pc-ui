@@ -370,11 +370,12 @@ export interface TreeReactData {
   updateExpandedFlag: number
   updateCheckboxFlag: number
 
-  insertRowFlag: number
-  removeRowFlag: number
+  insertNodeFlag: number
+  removeNodeFlag: number
 
   dragNode: any
   dragTipText: string
+  isCrossDragNode: boolean
 }
 
 export interface TreeInternalData {
@@ -385,7 +386,7 @@ export interface TreeInternalData {
   treeFullData: any[]
   afterVisibleList: any[]
   nodeMaps: Record<string, VxeTreeDefines.NodeCacheItem>
-  indeterminateRowMaps: Record<string, any>
+  indeterminateNodeMaps: Record<string, any>
   selectCheckboxMaps: Record<string, any>
   treeExpandedMaps: Record<string, boolean>
   treeExpandLazyLoadedMaps: Record<string, boolean>
@@ -401,8 +402,8 @@ export interface TreeInternalData {
   lastScrollTime: number
   hpTimeout?: undefined | number
 
-  insertRowMaps: Record<string, any>
-  removeRowMaps: Record<string, any>
+  insertNodeMaps: Record<string, any>
+  removeNodeMaps: Record<string, any>
 
   prevDragNode?: any
   prevDragToChild?: boolean
@@ -619,6 +620,29 @@ export interface TreeMethods<D = any> {
    */
   insertNextAt(records: any, targetNodeOrNodeid?: any | -1 | null): Promise<{ node: D, nodes: D[] }>
   /**
+   * 判断行是否为新增的临时数据
+   */
+  insertNextAt(records: any, targetNodeOrNodeid?: any | -1 | null): Promise<{ node: D, nodes: D[] }>
+  /**
+   * 用于树结构，往指定节点插入子级临时数据，从子级的第一行新增一行或多行新数据
+   */
+  insertChild(records: any, parentNodeOrParentId: any): Promise<{ node: D, nodes: D[] }>
+  /**
+   * 用于树结构，往指定节点插入子级临时数据
+   * 如果 targetNode 为空则从插入到顶部，如果为树结构，则插入到目标节点顶部
+   * 如果 targetNode 为 -1 则从插入到底部，如果为树结构，则插入到目标节点底部
+   * 如果 targetNode 为有效行则插入到该行的位置，如果为树结构，则有插入到效的目标节点该行的位置
+   */
+  insertChildAt(records: any, parentNodeOrParentId: any, targetNodeOrNodeid: any | -1 | null): Promise<{ node: D, nodes: D[] }>
+  /**
+   * 与 insertChildAt 行为一致，区别就是会插入指定目标子级的到下一行
+   */
+  insertChildNextAt(records: any, parentNodeOrParentId: any, targetNodeOrNodeid: any | -1 | null): Promise<{ node: D, nodes: D[] }>
+  /**
+   * 判断行是否为新增的临时数据
+   */
+  isInsertByNode(node: any | null): boolean
+  /**
    * 用于 transform 模式，删除指定节点数据，指定 node 或 [node, ...] 删除多条数据，如果为空则删除所有数据
    */
   remove(nodes?: any | any[]): Promise<{ node: D, nodes: D[] }>
@@ -630,6 +654,10 @@ export interface TreeMethods<D = any> {
    * 用于 transform 模式，获取已删除的数据
    */
   getRemoveRecords(): D[]
+  /**
+   * 判断数据是否被删除
+   */
+  isRemoveByNode(node: any | null): boolean
 }
 export interface VxeTreeMethods<D = any> extends TreeMethods<D> { }
 
