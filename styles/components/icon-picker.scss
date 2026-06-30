@@ -1,9 +1,25 @@
 @use '../helpers/baseMixin.scss';
 
-// 避免 class 跟 icon 冲突，取名 ico
+// 局部变量
+.vxe-ico-picker,
+.vxe-ico-picker--panel {
+  --vxe-ui-ico-picker-current-font-size: var(--vxe-ui-font-size-default);
+  &.size--medium {
+    --vxe-ui-ico-picker-current-font-size: var(--vxe-ui-font-size-medium);
+  }
+  &.size--small {
+    --vxe-ui-ico-picker-current-font-size: var(--vxe-ui-font-size-small);
+  }
+  &.size--mini {
+    --vxe-ui-ico-picker-current-font-size: var(--vxe-ui-font-size-mini);
+  }
+}
+
+// 避免 class 跟 icon 冲突，所以 icon-picker 取名 ico-picker
 .vxe-ico-picker {
   position: relative;
   display: inline-block;
+  font-size: var(--vxe-ui-ico-picker-current-font-size);
   color: var(--vxe-ui-font-color);
   width: 100px;
   border: 1px solid var(--vxe-ui-input-border-color);
@@ -146,7 +162,7 @@
   align-items: center;
   justify-content: center;
   height: 1.5em;
-  font-size: 1.4em;
+  font-size: var(--vxe-ui-icon-picker-panel-icon-font-size);
   & > svg {
     max-width: 1em;
     max-height: 1em;
@@ -181,6 +197,7 @@
   position: absolute;
   left: 0;
   padding: 4px 0;
+  font-size: var(--vxe-ui-ico-picker-current-font-size);
   color: var(--vxe-ui-font-color);
   text-align: left;
   &:not(.is--transfer) {
@@ -220,19 +237,5 @@
   &.size--mini {
     height: var(--vxe-ui-input-height-mini);
     line-height: var(--vxe-ui-input-height-mini);
-  }
-}
-
-.vxe-ico-picker,
-.vxe-ico-picker--panel {
-  font-size: var(--vxe-ui-font-size-default);
-  &.size--medium {
-    font-size: var(--vxe-ui-font-size-medium);
-  }
-  &.size--small {
-    font-size: var(--vxe-ui-font-size-small);
-  }
-  &.size--mini {
-    font-size: var(--vxe-ui-font-size-mini);
   }
 }

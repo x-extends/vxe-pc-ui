@@ -1,10 +1,38 @@
 @use '../helpers/baseMixin.scss';
 @use '../helpers/placement.scss';
 
+// 局部变量
+.vxe-select,
+.vxe-select--panel {
+  --vxe-ui-select-current-font-size: var(--vxe-ui-font-size-default);
+  --vxe-ui-select-current-option-height: var(--vxe-ui-select-option-height-default);
+  &.size--medium {
+    --vxe-ui-select-current-font-size: var(--vxe-ui-font-size-medium);
+    --vxe-ui-select-current-option-height: var(--vxe-ui-select-option-height-medium);
+  }
+  &.size--small {
+    --vxe-ui-select-current-font-size: var(--vxe-ui-font-size-small);
+    --vxe-ui-select-current-option-height: var(--vxe-ui-select-option-height-small);
+  }
+  &.size--mini {
+    --vxe-ui-select-current-font-size: var(--vxe-ui-font-size-mini);
+    --vxe-ui-select-current-option-height: var(--vxe-ui-select-option-height-mini);
+  }
+}
+.vxe-select,
+.vxe-select--panel {
+  --vxe-ui-select-current-padding: var(--vxe-ui-layout-padding-default);
+  &.size--small,
+  &.size--mini {
+    --vxe-ui-select-current-padding: var(--vxe-ui-layout-padding-half);
+  }
+}
+
 .vxe-select {
   position: relative;
   display: inline-block;
   width: 180px;
+  font-size: var(--vxe-ui-select-current-font-size);
   color: var(--vxe-ui-font-color);
   text-align: left;
   & > .vxe-input {
@@ -51,6 +79,7 @@
 }
 
 .vxe-select--panel {
+  font-size: var(--vxe-ui-select-current-font-size);
   @include placement.createPlacementPanel();
 }
 
@@ -95,7 +124,7 @@
   min-height: 2em;
 }
 .vxe-select--total-btns {
-  padding-left: var(--vxe-ui-current-padding);
+  padding-left: var(--vxe-ui-select-current-padding);
   flex-grow: 1;
 }
 .vxe-select--total-btns,
@@ -214,66 +243,11 @@
   color: var(--vxe-ui-select-empty-color);
 }
 
-.vxe-select,
-.vxe-select--panel {
-  font-size: var(--vxe-ui-font-size-default);
-  &.size--medium {
-    font-size: var(--vxe-ui-font-size-medium);
-  }
-  &.size--small {
-    font-size: var(--vxe-ui-font-size-small);
-  }
-  &.size--mini {
-    font-size: var(--vxe-ui-font-size-mini);
-  }
+.vxe-select-option {
+  height: var(--vxe-ui-select-current-option-height);
 }
-
-.vxe-select,
-.vxe-select--panel {
-  --vxe-ui-current-padding: var(--vxe-ui-layout-padding-default);
-  &.size--small,
-  &.size--mini {
-    --vxe-ui-current-padding: var(--vxe-ui-layout-padding-half);
-  }
-}
-
-.vxe-select--panel {
-  .vxe-select-option {
-    height: var(--vxe-ui-select-option-height-default);
-  }
-  .vxe-select-option,
-  .vxe-select--search-loading,
-  .vxe-select--empty-placeholder {
-    line-height: var(--vxe-ui-select-option-height-default);
-  }
-  &.size--medium {
-    .vxe-select-option {
-      height: var(--vxe-ui-select-option-height-medium);
-    }
-    .vxe-select-option,
-    .vxe-select--search-loading,
-    .vxe-select--empty-placeholder {
-      line-height: var(--vxe-ui-select-option-height-medium);
-    }
-  }
-  &.size--small {
-    .vxe-select-option {
-      height: var(--vxe-ui-select-option-height-small);
-    }
-    .vxe-select-option,
-    .vxe-select--search-loading,
-    .vxe-select--empty-placeholder {
-      line-height: var(--vxe-ui-select-option-height-small);
-    }
-  }
-  &.size--mini {
-    .vxe-select-option {
-      height: var(--vxe-ui-select-option-height-mini);
-    }
-    .vxe-select-option,
-    .vxe-select--search-loading,
-    .vxe-select--empty-placeholder {
-      line-height: var(--vxe-ui-select-option-height-mini);
-    }
-  }
+.vxe-select-option,
+.vxe-select--search-loading,
+.vxe-select--empty-placeholder {
+  line-height: var(--vxe-ui-select-current-option-height);
 }

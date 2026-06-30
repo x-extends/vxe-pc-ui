@@ -1,5 +1,6 @@
 import { RenderFunction, SetupContext, Ref } from 'vue'
 import { DefineVxeComponentApp, DefineVxeComponentOptions, DefineVxeComponentInstance, VxeComponentBaseOptions, VxeComponentEventParams, ValueOf, VxeComponentStyleType, VxeComponentSizeType } from '@vxe-ui/core'
+import { VxeIconPropTypes } from './icon'
 
 /* eslint-disable no-use-before-define,@typescript-eslint/ban-types */
 
@@ -39,7 +40,7 @@ export namespace VxeIconPickerPropTypes {
     icon: string
     iconRender?: VxeIconPickerDefines.OptionIconRender
   }
-  export type Icons = string[] | Option[]
+  export type Icons = VxeIconPropTypes.Name[] | Option[]
   export type Clearable = boolean
   export type ShowIconTitle = boolean
   export type Filterable = boolean

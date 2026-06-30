@@ -1,3 +1,23 @@
+
+// 局部变量
+.vxe-upload,
+.vxe-upload--more-popup {
+  --vxe-ui-upload-current-font-size: var(--vxe-ui-font-size-default);
+  --vxe-ui-upload-current-image-wh: var(--vxe-ui-upload-image-wh-default);
+  &.size--medium {
+    --vxe-ui-upload-current-font-size: var(--vxe-ui-font-size-medium);
+    --vxe-ui-upload-current-image-wh: var(--vxe-ui-upload-image-wh-medium);
+  }
+  &.size--small {
+    --vxe-ui-upload-current-font-size: var(--vxe-ui-font-size-small);
+    --vxe-ui-upload-current-image-wh: var(--vxe-ui-upload-image-wh-small);
+  }
+  &.size--mini {
+    --vxe-ui-upload-current-font-size: var(--vxe-ui-font-size-mini);
+    --vxe-ui-upload-current-image-wh: var(--vxe-ui-upload-image-wh-mini);
+  }
+}
+
 .vxe-upload {
   position: relative;
   color: var(--vxe-ui-font-color);
@@ -21,6 +41,7 @@
 
 .vxe-upload,
 .vxe-upload--more-popup {
+  font-size: var(--vxe-ui-upload-current-font-size);
   &.is--active {
     .vxe-upload--image-action-box {
       border-color: var(--vxe-ui-font-primary-color);
@@ -446,6 +467,7 @@
 
 .vxe-upload--more-popup {
   position: relative;
+  font-size: var(--vxe-ui-upload-current-font-size);
   .vxe-upload--file-list {
     max-height: none;
   }
@@ -457,42 +479,18 @@
     }
   }
 }
+
 .vxe-upload,
 .vxe-upload--more-popup {
-  font-size: var(--vxe-ui-font-size-default);
   .vxe-upload--image-item-box,
   .vxe-upload--image-action-box {
-    width: var(--vxe-ui-upload-image-wh-default);
-    height: var(--vxe-ui-upload-image-wh-default);
-  }
-  &.size--medium {
-    font-size: var(--vxe-ui-font-size-medium);
-    .vxe-upload--image-item-box,
-    .vxe-upload--image-action-box {
-      width: var(--vxe-ui-upload-image-wh-medium);
-      height: var(--vxe-ui-upload-image-wh-medium);
-    }
-  }
-  &.size--small {
-    font-size: var(--vxe-ui-font-size-small);
-    .vxe-upload--image-item-box,
-    .vxe-upload--image-action-box {
-      width: var(--vxe-ui-upload-image-wh-small);
-      height: var(--vxe-ui-upload-image-wh-small);
-    }
-  }
-  &.size--mini {
-    font-size: var(--vxe-ui-font-size-mini);
-    .vxe-upload--image-item-box,
-    .vxe-upload--image-action-box {
-      width: var(--vxe-ui-upload-image-wh-mini);
-      height: var(--vxe-ui-upload-image-wh-mini);
-    }
+    width: var(--vxe-ui-upload-current-image-wh);
+    height: var(--vxe-ui-upload-current-image-wh);
   }
 }
 .vxe-upload--image-more-list {
   .vxe-upload--image-item-box {
-    width: var(--vxe-ui-upload-image-wh-default);
-    height: var(--vxe-ui-upload-image-wh-default);
+    width: var(--vxe-ui-upload-current-image-wh);
+    height: var(--vxe-ui-upload-current-image-wh);
   }
 }

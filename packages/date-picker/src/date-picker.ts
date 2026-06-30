@@ -16,7 +16,7 @@ import type { VxeTableConstructor, VxeTablePrivateMethods } from '../../../types
 
 const { warnLog, errLog } = createComponentLog('date-picker')
 
-const defaultMaskPlaceholder = '*'
+const defaultMaskPlaceholder = '_'
 const maskedTypes = ['year', 'month', 'date', 'datetime', 'time']
 const inputMaskedKeys = ['y', 'M', 'd', 'H', 'm', 'n', 's']
 const parseInputKayMaps: Record<string, boolean> = {}

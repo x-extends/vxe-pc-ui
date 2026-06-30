@@ -1,7 +1,21 @@
+// 局部变量
+.vxe-notice-bar {
+  --vxe-ui-notice-bar-current-font-size: var(--vxe-ui-font-size-default);
+  &.size--medium {
+    --vxe-ui-notice-bar-current-font-size: var(--vxe-ui-font-size-medium);
+  }
+  &.size--small {
+    --vxe-ui-notice-bar-current-font-size: var(--vxe-ui-font-size-small);
+  }
+  &.size--mini {
+    --vxe-ui-notice-bar-current-font-size: var(--vxe-ui-font-size-mini);
+  }
+}
+
 .vxe-notice-bar {
   display: flex;
   flex-direction: row;
-  font-size: var(--vxe-ui-font-size-default);
+  font-size: var(--vxe-ui-notice-bar-current-font-size);
   color: var(--vxe-ui-font-color);
   font-family: var(--vxe-ui-font-family);
 }
@@ -76,17 +90,5 @@
   }
   100% {
     transform: translateX(-100%);
-  }
-}
-
-.vxe-notice-bar {
-  &.size--medium {
-    font-size: var(--vxe-ui-font-size-medium);
-  }
-  &.size--small {
-    font-size: var(--vxe-ui-font-size-small);
-  }
-  &.size--mini {
-    font-size: var(--vxe-ui-font-size-mini);
   }
 }

@@ -3,10 +3,10 @@
   --vxe-ui-font-family: -apple-system,BlinkMacSystemFont,Segoe UI,PingFang SC,Hiragino Sans GB,Microsoft YaHei,Helvetica Neue,Helvetica,Arial,sans-serif,Apple Color Emoji,Segoe UI Emoji,Segoe UI Symbol;
   
   /*font size*/
-  --vxe-ui-font-size-large: 15px;
+  --vxe-ui-font-size-large: 16px;
   --vxe-ui-font-size-default: 14px;
   --vxe-ui-font-size-medium: 14px;
-  --vxe-ui-font-size-small: 13px;
+  --vxe-ui-font-size-small: 12px;
   --vxe-ui-font-size-mini: 12px;
 
   /*font color*/
@@ -23,11 +23,15 @@
   /*layout*/
   --vxe-ui-layout-padding-qtr: 2px;
   --vxe-ui-layout-padding-half: 4px;
-  --vxe-ui-layout-padding-default: 8px;
   --vxe-ui-layout-padding-double: 16px;
   --vxe-ui-layout-padding-threefold: 24px;
   --vxe-ui-layout-aside-default-width: 300px;
   --vxe-ui-layout-aside-collapse-width: 60px;
+
+  --vxe-ui-layout-padding-default: 8px;
+  --vxe-ui-layout-padding-medium: 7px;
+  --vxe-ui-layout-padding-small: 6px;
+  --vxe-ui-layout-padding-mini: 5px;
 
   /*menu*/
   --vxe-ui-menu-item-height-default: 44px;
@@ -178,6 +182,7 @@
   /*tree*/
   --vxe-ui-tree-node-height: 2em;
   --vxe-ui-tree-node-indent: 20px;
+  --vxe-ui-tree-node-padding: 0;
   --vxe-ui-tree-node-root-indent: 0px;
   --vxe-ui-tree-node-line-color:#909399;
   --vxe-ui-tree-node-line-style: dotted;
@@ -231,4 +236,7 @@
 
   /*list*/
   --vxe-ui-list-row-height: 2em;
+
+  /*icon-picker*/
+  --vxe-ui-icon-picker-panel-icon-font-size: 1.4em;
 }

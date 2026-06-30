@@ -1,7 +1,22 @@
 @use '../helpers/baseMixin.scss';
 
+// 局部变量
+.vxe-tree {
+  --vxe-ui-tree-current-font-size: var(--vxe-ui-font-size-default);
+  &.size--medium {
+    --vxe-ui-tree-current-font-size: var(--vxe-ui-font-size-medium);
+  }
+  &.size--small {
+    --vxe-ui-tree-current-font-size: var(--vxe-ui-font-size-small);
+  }
+  &.size--mini {
+    --vxe-ui-tree-current-font-size: var(--vxe-ui-font-size-mini);
+  }
+}
+
 .vxe-tree {
   position: relative;
+  font-size: var(--vxe-ui-tree-current-font-size);
   color: var(--vxe-ui-font-color);
   font-family: var(--vxe-ui-font-family);
   &.node--trigger {
@@ -100,7 +115,7 @@
   @for $i from 0 to 10 {
     &.node--level-#{$i} {
       & > .vxe-tree--node-item {
-        padding-left: calc(var(--vxe-ui-tree-node-indent) * $i + var(--vxe-ui-tree-node-root-indent));
+        padding-left: calc(var(--vxe-ui-tree-node-indent) * $i + var(--vxe-ui-tree-node-root-indent) + var(--vxe-ui-tree-node-padding));
       }
     }
   }
@@ -290,17 +305,4 @@
 .vxe-tree--y-space {
   width: 0;
   float: left;
-}
-
-.vxe-tree {
-  font-size: var(--vxe-ui-font-size-default);
-  &.size--medium {
-    font-size: var(--vxe-ui-font-size-medium);
-  }
-  &.size--small {
-    font-size: var(--vxe-ui-font-size-small);
-  }
-  &.size--mini {
-    font-size: var(--vxe-ui-font-size-mini);
-  }
 }
