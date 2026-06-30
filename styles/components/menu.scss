@@ -134,15 +134,3 @@
     }
   }
 }
-
-.vxe-menu {
-  .vxe-menu--item-level3 {
-    font-size: var(--vxe-ui-menu-item-height-small);
-  }
-  &.size--small,
-  &.size--mini {
-    .vxe-menu--item-level3 {
-      font-size: var(--vxe-ui-menu-item-height-mini);
-    }
-  }
-}

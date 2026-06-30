@@ -33,7 +33,7 @@ function createInternalData (): TreeInternalData {
     afterVisibleList: [],
     nodeMaps: {},
     selectCheckboxMaps: {},
-    indeterminateRowMaps: {},
+    indeterminateNodeMaps: {},
     treeExpandedMaps: {},
     treeExpandLazyLoadedMaps: {},
 
@@ -47,8 +47,8 @@ function createInternalData (): TreeInternalData {
       rowHeight: 0
     },
 
-    removeRowMaps: {},
-    insertRowMaps: {},
+    removeNodeMaps: {},
+    insertNodeMaps: {},
 
     // prevDragNode: null,
     // prevDragToChild: false,
@@ -73,10 +73,11 @@ function createReactData ():TreeReactData {
     treeList: [],
     updateExpandedFlag: 1,
     updateCheckboxFlag: 1,
-    insertRowFlag: 1,
-    removeRowFlag: 1,
+    insertNodeFlag: 1,
+    removeNodeFlag: 1,
     dragNode: null,
-    dragTipText: ''
+    dragTipText: '',
+    isCrossDragNode: false
   }
 }
 
@@ -285,7 +286,7 @@ export default defineVxeComponent({
       return Object.assign({} as { gt: number }, getConfig().tree.virtualYConfig, props.virtualYConfig)
     })
 
-    const computeIsRowCurrent = computed(() => {
+    const computeIsNodeCurrent = computed(() => {
       const nodeOpts = computeNodeOpts.value
       const { isCurrent } = nodeOpts
       if (XEUtils.isBoolean(isCurrent)) {
@@ -294,7 +295,7 @@ export default defineVxeComponent({
       return props.isCurrent
     })
 
-    const computeIsRowHover = computed(() => {
+    const computeIsNodeHover = computed(() => {
       const nodeOpts = computeNodeOpts.value
       const { isHover } = nodeOpts
       if (XEUtils.isBoolean(isHover)) {
@@ -420,8 +421,8 @@ export default defineVxeComponent({
 
     const isIndeterminateByCheckboxNodeid = (nodeid: any) => {
       const { updateCheckboxFlag } = reactData
-      const { indeterminateRowMaps } = internalData
-      return !!(updateCheckboxFlag && indeterminateRowMaps[nodeid])
+      const { indeterminateNodeMaps } = internalData
+      return !!(updateCheckboxFlag && indeterminateNodeMaps[nodeid])
     }
 
     const isIndeterminateByCheckboxNode = (node: any) => {
@@ -718,10 +719,10 @@ export default defineVxeComponent({
       } = {}
       if (transform) {
         const fullData: any[] = []
-        XEUtils.eachTree(afterTreeList, (item, index, items, path, parentRow) => {
+        XEUtils.eachTree(afterTreeList, (item, index, items, path, parentNode) => {
           const nodeid = getNodeId(item)
-          const parentNodeid = getNodeId(parentRow)
-          if (!parentRow || (expandMaps[parentNodeid] && treeExpandedMaps[parentNodeid])) {
+          const parentNodeid = getNodeId(parentNode)
+          if (!parentNode || (expandMaps[parentNodeid] && treeExpandedMaps[parentNodeid])) {
             expandMaps[nodeid] = 1
             fullData.push(item)
           }
@@ -772,6 +773,10 @@ export default defineVxeComponent({
         })
         : list ? list.slice(0) : []
       internalData.treeFullData = fullData
+      internalData.insertNodeMaps = {}
+      reactData.insertNodeFlag++
+      internalData.removeNodeMaps = {}
+      reactData.removeNodeFlag++
       Object.assign(scrollYStore, {
         startIndex: 0,
         endIndex: 1,
@@ -999,12 +1004,12 @@ export default defineVxeComponent({
       const { showRadio, showCheckbox, trigger } = props
       const radioOpts = computeRadioOpts.value
       const checkboxOpts = computeCheckboxOpts.value
-      const isRowCurrent = computeIsRowCurrent.value
+      const isNodeCurrent = computeIsNodeCurrent.value
       let triggerCurrent = false
       let triggerRadio = false
       let triggerCheckbox = false
       let triggerExpand = false
-      if (isRowCurrent) {
+      if (isNodeCurrent) {
         triggerCurrent = true
         changeCurrentEvent(evnt, node)
       } else if (reactData.currentNode) {
@@ -1031,12 +1036,12 @@ export default defineVxeComponent({
 
     const handleContextmenuEvent = (evnt: MouseEvent, node: any) => {
       const { menuConfig } = props
-      const isRowCurrent = computeIsRowCurrent.value
+      const isNodeCurrent = computeIsNodeCurrent.value
       const menuOpts = computeMenuOpts.value
       if (menuConfig ? isEnableConf(menuOpts) : menuOpts.enabled) {
         const { options, visibleMethod } = menuOpts
         if (!visibleMethod || visibleMethod({ $tree: $xeTree, options, node })) {
-          if (isRowCurrent) {
+          if (isNodeCurrent) {
             changeCurrentEvent(evnt, node)
           } else if (reactData.currentNode) {
             reactData.currentNode = null
@@ -1095,15 +1100,15 @@ export default defineVxeComponent({
               childRecords = []
             }
             if (childRecords) {
-              return $xeTree.loadChildrenNode(node, childRecords).then(childRows => {
+              return $xeTree.loadChildrenNode(node, childRecords).then(childNodes => {
                 const { treeExpandedMaps } = internalData
-                if (childRows.length && !treeExpandedMaps[nodeid]) {
+                if (childNodes.length && !treeExpandedMaps[nodeid]) {
                   treeExpandedMaps[nodeid] = true
                 }
                 reactData.updateExpandedFlag++
                 // 如果当前节点已选中，则展开后子节点也被选中
                 if (!checkStrictly && $xeTree.isCheckedByCheckboxNodeId(nodeid)) {
-                  handleCheckedCheckboxNode(childRows, true)
+                  handleCheckedCheckboxNode(childNodes, true)
                 }
                 dispatchEvent('load-success', { node, data: childRecords }, new Event('load-success'))
                 return nextTick()
@@ -1204,24 +1209,24 @@ export default defineVxeComponent({
 
     const updateCheckboxStatus = () => {
       const { transform } = props
-      const { selectCheckboxMaps, indeterminateRowMaps, afterTreeList } = internalData
+      const { selectCheckboxMaps, indeterminateNodeMaps, afterTreeList } = internalData
       const childrenField = computeChildrenField.value
       const mapChildrenField = computeMapChildrenField.value
       const checkboxOpts = computeCheckboxOpts.value
       const { checkStrictly, checkMethod } = checkboxOpts
       if (!checkStrictly) {
-        const childRowMaps: Record<string, number> = {}
-        const childRowList: any[][] = []
+        const childNodeMaps: Record<string, number> = {}
+        const childNodeList: any[][] = []
         XEUtils.eachTree(afterTreeList, (node) => {
           const nodeid = getNodeId(node)
           const childList = node[childrenField]
-          if (childList && childList.length && !childRowMaps[nodeid]) {
-            childRowMaps[nodeid] = 1
-            childRowList.unshift([node, nodeid, childList])
+          if (childList && childList.length && !childNodeMaps[nodeid]) {
+            childNodeMaps[nodeid] = 1
+            childNodeList.unshift([node, nodeid, childList])
           }
         }, { children: transform ? mapChildrenField : childrenField })
 
-        childRowList.forEach(vals => {
+        childNodeList.forEach(vals => {
           const node: string = vals[0]
           const nodeid: string = vals[1]
           const childList: any[] = vals[2]
@@ -1237,14 +1242,14 @@ export default defineVxeComponent({
                   if (checkMethod({ $tree: $xeTree, node: item })) {
                     if (isSelect) {
                       sLen++
-                    } else if (indeterminateRowMaps[childNodeid]) {
+                    } else if (indeterminateNodeMaps[childNodeid]) {
                       hLen++
                     }
                     vLen++
                   } else {
                     if (isSelect) {
                       sLen++
-                    } else if (indeterminateRowMaps[childNodeid]) {
+                    } else if (indeterminateNodeMaps[childNodeid]) {
                       hLen++
                     }
                   }
@@ -1254,7 +1259,7 @@ export default defineVxeComponent({
                 const isSelect = selectCheckboxMaps[childNodeid]
                 if (isSelect) {
                   sLen++
-                } else if (indeterminateRowMaps[childNodeid]) {
+                } else if (indeterminateNodeMaps[childNodeid]) {
                   hLen++
                 }
                 vLen++
@@ -1283,18 +1288,18 @@ export default defineVxeComponent({
 
           if (isSelected) {
             selectCheckboxMaps[nodeid] = node
-            if (indeterminateRowMaps[nodeid]) {
-              delete indeterminateRowMaps[nodeid]
+            if (indeterminateNodeMaps[nodeid]) {
+              delete indeterminateNodeMaps[nodeid]
             }
           } else {
             if (selectCheckboxMaps[nodeid]) {
               delete selectCheckboxMaps[nodeid]
             }
             if (halfSelect) {
-              indeterminateRowMaps[nodeid] = node
+              indeterminateNodeMaps[nodeid] = node
             } else {
-              if (indeterminateRowMaps[nodeid]) {
-                delete indeterminateRowMaps[nodeid]
+              if (indeterminateNodeMaps[nodeid]) {
+                delete indeterminateNodeMaps[nodeid]
               }
             }
           }
@@ -1417,9 +1422,9 @@ export default defineVxeComponent({
       const mapChildrenField = computeMapChildrenField.value
       const funcName = isAppend ? 'push' : 'unshift'
       newRecords.forEach((item) => {
-        const parentRowId = item[parentField]
+        const parentNodeId = item[parentField]
         const nodeid = getNodeId(item)
-        const matchObj = parentRowId ? XEUtils.findTree(treeFullData, (item) => parentRowId === item[keyField], { children: mapChildrenField }) : null
+        const matchObj = parentNodeId ? XEUtils.findTree(treeFullData, (item) => parentNodeId === item[keyField], { children: mapChildrenField }) : null
         const itemRest = getItemCacheObj(item)
         if (matchObj) {
           const { item: parentItem } = matchObj
@@ -1439,7 +1444,7 @@ export default defineVxeComponent({
           pChilds[funcName](item)
           pMapChilds[funcName](item)
         } else {
-          if (parentRowId) {
+          if (parentNodeId) {
             warnLog('vxe.error.unableInsert')
           }
           treeFullData[funcName](item)
@@ -1450,7 +1455,7 @@ export default defineVxeComponent({
 
     const handleInsertNodeAt = (records: any[], targetNodeOrNodeid: any, isInsertNextNode?: any) => {
       const { transform } = props
-      const { treeFullData, nodeMaps } = internalData
+      const { treeFullData, nodeMaps, removeNodeMaps, insertNodeMaps } = internalData
       const keyField = computeKeyField.value
       const parentField = computeParentField.value
       const childrenField = computeChildrenField.value
@@ -1487,25 +1492,25 @@ export default defineVxeComponent({
             const parentMapChilds = parentNode ? parentNode[mapChildrenField] : treeFullData
             const parentRest = nodeMaps[getNodeId(parentNode)]
             const parentLevel = parentRest ? parentRest.level : 0
-            treeRecords.forEach((row, i) => {
+            treeRecords.forEach((item, i) => {
               if (parentNode) {
-                if (row[parentField] !== parentNode[keyField]) {
-                  errLog('vxe.error.errProp', [`${parentField}=${row[parentField]}`, `${parentField}=${parentNode[keyField]}`])
-                  row[parentField] = parentNode[keyField]
+                if (item[parentField] !== parentNode[keyField]) {
+                  errLog('vxe.error.errProp', [`${parentField}=${item[parentField]}`, `${parentField}=${parentNode[keyField]}`])
+                  item[parentField] = parentNode[keyField]
                 }
               } else {
-                if (row[parentField] !== null) {
-                  if (!XEUtils.eqNull(row[parentField])) {
-                    errLog('vxe.error.errProp', [`${parentField}=${row[parentField]}`, 'null'])
+                if (item[parentField] !== null) {
+                  if (!XEUtils.eqNull(item[parentField])) {
+                    errLog('vxe.error.errProp', [`${parentField}=${item[parentField]}`, 'null'])
                   }
-                  row[parentField] = null
+                  item[parentField] = null
                 }
               }
               let targetIndex = matchMapObj.index + i
               if (isInsertNextNode) {
                 targetIndex = targetIndex + 1
               }
-              parentMapChilds.splice(targetIndex, 0, row)
+              parentMapChilds.splice(targetIndex, 0, item)
             })
             XEUtils.eachTree(treeRecords, (item) => {
               const nodeid = getNodeId(item)
@@ -1534,7 +1539,23 @@ export default defineVxeComponent({
           }
         }
       }
-      reactData.insertRowFlag++
+
+      const handleStatus = (newItem: any) => {
+        const nodeid = getNodeId(newItem)
+        // 如果是被删除的数据，则还原状态
+        if (removeNodeMaps[nodeid]) {
+          delete removeNodeMaps[nodeid]
+          if (insertNodeMaps[nodeid]) {
+            delete insertNodeMaps[nodeid]
+          }
+        } else {
+          insertNodeMaps[nodeid] = newItem
+        }
+      }
+      XEUtils.eachTree(treeRecords, handleStatus, { children: mapChildrenField })
+
+      reactData.removeNodeFlag++
+      reactData.insertNodeFlag++
       cacheNodeMap()
       handleData(true)
       updateAfterDataIndex()
@@ -1548,6 +1569,28 @@ export default defineVxeComponent({
           nodes: newRecords
         }
       })
+    }
+
+    const handleInsertChildNodeAt = (records: any, parentNodeOrParentId: any, targetNodeOrNodeid: any, isInsertNextNode?: boolean) => {
+      const { transform } = props
+      const { nodeMaps } = internalData
+      const keyField = computeKeyField.value
+      const parentField = computeParentField.value
+      if (!transform) {
+        errLog('vxe.error.reqSupportProp', ['insertChild() | insertChildAt() | insertChildNextAt()', 'transform'])
+        return Promise.resolve({ node: null, nodes: [] })
+      }
+      if (!XEUtils.isArray(records)) {
+        records = [records]
+      }
+      let parentNode = parentNodeOrParentId
+      if (XEUtils.isString(parentNodeOrParentId) || XEUtils.isNumber(parentNodeOrParentId)) {
+        const nodeRest = nodeMaps[parentNodeOrParentId]
+        if (nodeRest) {
+          parentNode = nodeRest.item
+        }
+      }
+      return handleInsertNodeAt(records.map((item: any) => Object.assign({}, item, { [parentField]: parentNode[keyField] })), targetNodeOrNodeid, isInsertNextNode)
     }
 
     const treeMethods: TreeMethods = {
@@ -1670,7 +1713,7 @@ export default defineVxeComponent({
         return list
       },
       clearCheckboxNode () {
-        internalData.indeterminateRowMaps = {}
+        internalData.indeterminateNodeMaps = {}
         internalData.selectCheckboxMaps = {}
         reactData.updateCheckboxFlag++
         emitCheckboxMode([])
@@ -1694,7 +1737,7 @@ export default defineVxeComponent({
             selectMaps[nodeid] = true
           }, { children: transform ? mapChildrenField : childrenField })
         }
-        internalData.indeterminateRowMaps = {}
+        internalData.indeterminateNodeMaps = {}
         internalData.selectCheckboxMaps = selectMaps
         reactData.updateCheckboxFlag++
         updateCheckboxStatus()
@@ -1873,10 +1916,10 @@ export default defineVxeComponent({
         const parentLevel = parentNodeItem ? parentNodeItem.level : 0
         const parentNodes = parentNodeItem ? parentNodeItem.nodes : []
         return createNode(childRecords).then((nodeList) => {
-          XEUtils.eachTree(nodeList, (childRow, index, items, path, parent, nodes) => {
-            const itemNodeId = getNodeId(childRow)
+          XEUtils.eachTree(nodeList, (childNode, index, items, path, parent, nodes) => {
+            const itemNodeId = getNodeId(childNode)
             nodeMaps[itemNodeId] = {
-              item: childRow,
+              item: childNode,
               index: -1,
               $index: -1,
               _index: -1,
@@ -1904,9 +1947,9 @@ export default defineVxeComponent({
       isIndeterminateByCheckboxNode,
       isCheckedByCheckboxNode,
       getCheckboxIndeterminateNodes () {
-        const { nodeMaps, indeterminateRowMaps } = internalData
+        const { nodeMaps, indeterminateNodeMaps } = internalData
         const list: any[] = []
-        XEUtils.each(indeterminateRowMaps, (item, nodeid) => {
+        XEUtils.each(indeterminateNodeMaps, (item, nodeid) => {
           const nodeItem = nodeMaps[nodeid]
           if (nodeItem) {
             list.push(nodeItem.item)
@@ -1960,9 +2003,30 @@ export default defineVxeComponent({
       insertNextAt (records, targetNodeOrNodeid) {
         return handleInsertNodeAt(records, targetNodeOrNodeid, true)
       },
+      insertChild (records, parentNodeOrParentId) {
+        return handleInsertChildNodeAt(records, parentNodeOrParentId, null)
+      },
+      insertChildAt (records, parentNodeOrParentId, targetNode) {
+        return handleInsertChildNodeAt(records, parentNodeOrParentId, targetNode)
+      },
+      insertChildNextAt (records, parentNodeOrParentId, targetNode) {
+        return handleInsertChildNodeAt(records, parentNodeOrParentId, targetNode, true)
+      },
+      getInsertRecords () {
+        const { insertNodeMaps } = internalData
+        const insertRecords: any[] = []
+        XEUtils.each(insertNodeMaps, (item) => {
+          insertRecords.push(item)
+        })
+        return insertRecords
+      },
+      isInsertByNode (node) {
+        const nodeid = getNodeId(node)
+        return !!reactData.insertNodeFlag && !!internalData.insertNodeMaps[nodeid]
+      },
       remove (nodes) {
         const { transform } = props
-        const { treeFullData } = internalData
+        const { treeFullData, insertNodeMaps, removeNodeMaps } = internalData
         const childrenField = computeChildrenField.value
         const mapChildrenField = computeMapChildrenField.value
         if (!transform) {
@@ -1978,6 +2042,14 @@ export default defineVxeComponent({
         if (!nodes.length) {
           return Promise.resolve({ node: null, nodes: [] })
         }
+
+        // 如果是新增，则保存记录
+        nodes.forEach((item: any) => {
+          if (!$xeTree.isInsertByNode(item)) {
+            const nodeid = getNodeId(item)
+            removeNodeMaps[nodeid] = item
+          }
+        })
 
         // 从数据源中移除
         if (treeFullData === nodes) {
@@ -1998,8 +2070,17 @@ export default defineVxeComponent({
             }
           })
         }
-        reactData.removeRowFlag++
-        reactData.insertRowFlag++
+
+        // 从新增中移除已删除的数据
+        nodes.forEach((item: any) => {
+          const nodeid = getNodeId(item)
+          if (insertNodeMaps[nodeid]) {
+            delete insertNodeMaps[nodeid]
+          }
+        })
+
+        reactData.removeNodeFlag++
+        reactData.insertNodeFlag++
         cacheNodeMap()
         handleData(true)
         updateAfterDataIndex()
@@ -2013,21 +2094,17 @@ export default defineVxeComponent({
           return { node: delList.length ? delList[delList.length - 1] : null, nodes: delList }
         })
       },
-      getInsertRecords () {
-        const { insertRowMaps } = internalData
-        const insertRecords: any[] = []
-        XEUtils.each(insertRowMaps, (row) => {
-          insertRecords.push(row)
-        })
-        return insertRecords
-      },
       getRemoveRecords () {
-        const { removeRowMaps } = internalData
+        const { removeNodeMaps } = internalData
         const removeRecords: any[] = []
-        XEUtils.each(removeRowMaps, (row) => {
-          removeRecords.push(row)
+        XEUtils.each(removeNodeMaps, (item) => {
+          removeRecords.push(item)
         })
         return removeRecords
+      },
+      isRemoveByNode (node) {
+        const nodeid = getNodeId(node)
+        return !!reactData.removeNodeFlag && !!internalData.removeNodeMaps[nodeid]
       }
     }
 
@@ -2059,7 +2136,7 @@ export default defineVxeComponent({
       }
     }
 
-    const updateRowDropTipContent = (itemEl: HTMLElement) => {
+    const updateNodeDropTipContent = (itemEl: HTMLElement) => {
       const { dragNode } = reactData
       const dragOpts = computeDragOpts.value
       const { tooltipMethod } = dragOpts
@@ -2107,20 +2184,26 @@ export default defineVxeComponent({
       evnt.stopPropagation()
       const { node } = params
       const dragConfig = computeDragOpts.value
-      const { trigger, dragStartMethod } = dragConfig
+      const { isCrossTreeDrag, trigger, dragStartMethod } = dragConfig
       const dragEl = evnt.currentTarget as HTMLElement
       const itemEl = trigger === 'node' ? dragEl : (dragEl.parentElement as HTMLElement).parentElement as HTMLElement
       clearNodeDropOrigin()
       if (dragStartMethod && !dragStartMethod(params)) {
         itemEl.draggable = false
         reactData.dragNode = null
+        clearCrossTreeDragStatus()
         hideDropTip()
         return
       }
+      if (isCrossTreeDrag) {
+        crossTreeDragNodeInfo.node = node
+        crossTreeDragNodeObj = { $oldTree: $xeTree, $newTree: null }
+      }
       reactData.dragNode = node
+      reactData.isCrossDragNode = false
       itemEl.draggable = true
       updateNodeDropOrigin(node)
-      updateRowDropTipContent(itemEl)
+      updateNodeDropTipContent(itemEl)
       dispatchEvent('node-dragstart', params, evnt)
     }
 
@@ -2191,6 +2274,7 @@ export default defineVxeComponent({
         status: false
       }
       if (!(el && prevDragNode && dragNode)) {
+        handleNodeDragEndClearStatus()
         return Promise.resolve(errRest)
       }
       // 判断是否有拖动
@@ -2244,14 +2328,12 @@ export default defineVxeComponent({
               if (isPeerDrag && !isCrossDrag) {
                 if (oldRest.item[parentField] !== newRest.item[parentField]) {
                   // 非同级
-                  clearNodeDragData()
-                  clearCrossTreeDragStatus()
+                  handleNodeDragEndClearStatus()
                   return errRest
                 }
               } else {
                 if (!isCrossDrag) {
-                  clearNodeDragData()
-                  clearCrossTreeDragStatus()
+                  handleNodeDragEndClearStatus()
                   return errRest
                 }
                 if (oldAllMaps[newNodeid]) {
@@ -2263,8 +2345,7 @@ export default defineVxeComponent({
                         content: getI18n('vxe.error.treeDragChild')
                       })
                     }
-                    clearNodeDragData()
-                    clearCrossTreeDragStatus()
+                    handleNodeDragEndClearStatus()
                     return errRest
                   }
                 }
@@ -2273,16 +2354,14 @@ export default defineVxeComponent({
               // 子到根
 
               if (!isCrossDrag) {
-                clearNodeDragData()
-                clearCrossTreeDragStatus()
+                handleNodeDragEndClearStatus()
                 return errRest
               }
             } else if (newLevel) {
               // 根到子
 
               if (!isCrossDrag) {
-                clearNodeDragData()
-                clearCrossTreeDragStatus()
+                handleNodeDragEndClearStatus()
                 return errRest
               }
               if (oldAllMaps[newNodeid]) {
@@ -2294,8 +2373,7 @@ export default defineVxeComponent({
                       content: getI18n('vxe.error.treeDragChild')
                     })
                   }
-                  clearNodeDragData()
-                  clearCrossTreeDragStatus()
+                  handleNodeDragEndClearStatus()
                   return errRest
                 }
               }
@@ -2453,13 +2531,11 @@ export default defineVxeComponent({
         }).catch(() => {
           return errRest
         }).then((rest) => {
-          clearNodeDragData()
-          clearCrossTreeDragStatus()
+          handleNodeDragEndClearStatus()
           return rest
         })
       }
-      clearNodeDragData()
-      clearCrossTreeDragStatus()
+      handleNodeDragEndClearStatus()
       return Promise.resolve(errRest)
     }
 
@@ -2509,7 +2585,7 @@ export default defineVxeComponent({
       const dragConfig = computeDragOpts.value
       const parentField = computeParentField.value
       const hasChildField = computeHasChildField.value
-      const { isCrossDrag, isPeerDrag, isToChildDrag } = dragConfig
+      const { isCrossTreeDrag, isCrossDrag, isPeerDrag, isToChildDrag } = dragConfig
       if (!dragNode && !isCrossDrag) {
         evnt.preventDefault()
       }
@@ -2525,6 +2601,31 @@ export default defineVxeComponent({
         internalData.prevDragToChild = !!(transform && (isCrossDrag && isToChildDrag) && isControlKey)
         internalData.prevDragNode = node
         internalData.prevDragPos = dragPos
+        // 跨树拖拽
+        if (isCrossTreeDrag && isCrossDrag && crossTreeDragNodeObj) {
+          const { $oldTree, $newTree } = crossTreeDragNodeObj
+          if ($oldTree) {
+            const oldTreeReactData = $oldTree.reactData
+            if ($oldTree.xID === $xeTree.xID) {
+              if ($newTree) {
+                $newTree.hideCrossTreeNodeDropClearStatus()
+              }
+              reactData.isCrossDragNode = false
+              oldTreeReactData.isCrossDragNode = false
+              crossTreeDragNodeObj.$newTree = null
+            } else if (isCrossDrag) {
+              if ($newTree && $newTree.xID !== $xeTree.xID) {
+                $newTree.hideCrossTreeNodeDropClearStatus()
+              }
+              $oldTree.hideCrossTreeNodeDropClearStatus()
+              oldTreeReactData.isCrossDragNode = true
+              reactData.dragTipText = oldTreeReactData.dragTipText
+              crossTreeDragNodeObj.$newTree = $xeTree
+              showDropTip(evnt, itemEl, true, dragPos)
+              return
+            }
+          }
+        }
         if ((dragNode && getNodeId(dragNode) === nodeid) ||
             (isControlKey && lazy && node[hasChildField] && nodeItem && !nodeItem.treeLoaded) ||
             (!isCrossDrag && transform && (isPeerDrag ? dragNode[parentField] !== node[parentField] : nodeItem.level))
@@ -2699,9 +2800,9 @@ export default defineVxeComponent({
               } else {
                 dragNode[parentField] = null
               }
-              dragList.forEach(row => {
-                row[childrenField] = undefined
-                row[mapChildrenField] = undefined
+              dragList.forEach(item => {
+                item[childrenField] = undefined
+                item[mapChildrenField] = undefined
               })
               if (prevDragNode) {
                 if (prevDragPos === 'bottom') {
@@ -3082,7 +3183,7 @@ export default defineVxeComponent({
       const radioOpts = computeRadioOpts.value
       const checkboxOpts = computeCheckboxOpts.value
       const loadingOpts = computeLoadingOpts.value
-      const isRowHover = computeIsRowHover.value
+      const isNodeHover = computeIsNodeHover.value
       const treeStyle = computeTreeStyle.value
       const dragOpts = computeDragOpts.value
       const loadingSlot = slots.loading
@@ -3093,7 +3194,7 @@ export default defineVxeComponent({
         onDragover?: (...args: any[]) => void
       } = { }
       if (dragOpts.isCrossTreeDrag && !treeList.length) {
-        teOns.onDragover = $xeTree.handleCrossTreeNodeDragInsertEvent
+        teOns.onDragover = $xeTree.handleCrossTreeNodeDragoverEmptyEvent
       }
       return h('div', {
         ref: refElem,
@@ -3102,7 +3203,7 @@ export default defineVxeComponent({
           'show--line': showLine,
           'checkbox--highlight': checkboxOpts.highlight,
           'radio--highlight': radioOpts.highlight,
-          'node--hover': isRowHover,
+          'node--hover': isNodeHover,
           'node--trigger': trigger === 'node',
           'is--loading': loading
         }],
