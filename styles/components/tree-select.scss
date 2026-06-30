@@ -1,10 +1,31 @@
 @use '../helpers/baseMixin.scss';
 @use '../helpers/placement.scss';
 
+
+// 局部变量
+.vxe-tree-select,
+.vxe-tree-select--panel {
+  --vxe-ui-tree-select-current-font-size: var(--vxe-ui-font-size-default);
+  --vxe-ui-tree-select-current-padding: var(--vxe-ui-layout-padding-default);
+  &.size--medium {
+    --vxe-ui-tree-select-current-font-size: var(--vxe-ui-font-size-medium);
+    --vxe-ui-tree-select-current-padding: var(--vxe-ui-layout-padding-medium);
+  }
+  &.size--small {
+    --vxe-ui-tree-select-current-font-size: var(--vxe-ui-font-size-small);
+    --vxe-ui-tree-select-current-padding: var(--vxe-ui-layout-padding-small);
+  }
+  &.size--mini {
+    --vxe-ui-tree-select-current-font-size: var(--vxe-ui-font-size-mini);
+    --vxe-ui-tree-select-current-padding: var(--vxe-ui-layout-padding-mini);
+  }
+}
+
 .vxe-tree-select {
   position: relative;
   display: inline-block;
   width: 180px;
+  font-size: var(--vxe-ui-tree-select-current-font-size);
   color: var(--vxe-ui-font-color);
   text-align: left;
   & > .vxe-input {
@@ -55,13 +76,14 @@
 }
 
 .vxe-tree-select--panel {
+  font-size: var(--vxe-ui-tree-select-current-font-size);
   pointer-events: none;
   @include placement.createPlacementPanel();
 }
 
 .vxe-tree-select--panel-search {
   display: block;
-  padding: var(--vxe-ui-current-padding);
+  padding: var(--vxe-ui-tree-select-current-padding);
   .vxe-tree-select-search--input {
     width: 100%;
   }
@@ -76,7 +98,7 @@
   min-height: 2em;
 }
 .vxe-tree-select--total-btns {
-  padding-left: var(--vxe-ui-current-padding);
+  padding-left: var(--vxe-ui-tree-select-current-padding);
   flex-grow: 1;
 }
 .vxe-tree-select--total-btns,
@@ -128,10 +150,11 @@
 .vxe-tree-select-tree--wrapper {
   position: relative;
   overflow: auto;
-  padding: var(--vxe-ui-current-padding) 0;
+  padding: var(--vxe-ui-tree-select-current-padding) 0;
   outline: 0;
 }
 .vxe-tree-select--tree {
+  --vxe-ui-tree-node-padding: var(--vxe-ui-tree-select-current-padding);
   width: 100%;
   .vxe-tree--node-item {
     &.is-radio--checked,
@@ -143,29 +166,5 @@
   }
   .vxe-tree--node-item-inner {
     cursor: pointer;
-  }
-}
-
-.vxe-tree-select,
-.vxe-tree-select--panel {
-  --vxe-ui-current-padding: var(--vxe-ui-layout-padding-default);
-  --vxe-ui-tree-node-root-indent: var(--vxe-ui-current-padding);
-  &.size--small,
-  &.size--mini {
-    --vxe-ui-current-padding: var(--vxe-ui-layout-padding-half);
-  }
-}
-
-.vxe-tree-select,
-.vxe-tree-select--panel {
-  font-size: var(--vxe-ui-font-size-default);
-  &.size--medium {
-    font-size: var(--vxe-ui-font-size-medium);
-  }
-  &.size--small {
-    font-size: var(--vxe-ui-font-size-small);
-  }
-  &.size--mini {
-    font-size: var(--vxe-ui-font-size-mini);
   }
 }

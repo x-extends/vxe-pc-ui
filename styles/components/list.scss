@@ -1,9 +1,28 @@
 @use '../helpers/baseMixin.scss';
 
+// 局部变量
+.vxe-list {
+  --vxe-ui-list-current-font-size: var(--vxe-ui-font-size-default);
+  --vxe-ui-list-current-padding: var(--vxe-ui-layout-padding-default);
+  &.size--medium {
+    --vxe-ui-list-current-font-size: var(--vxe-ui-font-size-medium);
+    --vxe-ui-list-current-padding: var(--vxe-ui-layout-padding-medium);
+  }
+  &.size--small {
+    --vxe-ui-list-current-font-size: var(--vxe-ui-font-size-small);
+    --vxe-ui-list-current-padding: var(--vxe-ui-layout-padding-small);
+  }
+  &.size--mini {
+    --vxe-ui-list-current-font-size: var(--vxe-ui-font-size-mini);
+    --vxe-ui-list-current-padding: var(--vxe-ui-layout-padding-mini);
+  }
+}
+
 .vxe-list {
   position: relative;
   display: block;
   padding: 0;
+  font-size: var(--vxe-ui-list-current-font-size);
   color: var(--vxe-ui-font-color);
   font-family: var(--vxe-ui-font-family);
   direction: ltr;
@@ -55,7 +74,7 @@
   }
   &.is--padding {
     & > .vxe-list--row {
-      padding: 0 var(--vxe-ui-current-padding);
+      padding: 0 var(--vxe-ui-list-current-padding);
     }
   }
   
@@ -123,7 +142,7 @@
   flex-direction: row;
   align-items: center;
   flex-shrink: 0;
-  padding-right: var(--vxe-ui-current-padding);
+  padding-right: var(--vxe-ui-list-current-padding);
 }
 .vxe-list--row-content {
   display: flex;
@@ -252,36 +271,15 @@
 }
 
 .vxe-list--checkbox-header {
-  padding-right: var(--vxe-ui-current-padding);
+  padding-right: var(--vxe-ui-list-current-padding);
   user-select: none;
   @include baseMixin.createCheckboxIcon();
 }
 .vxe-list--checkbox-option {
-  padding-right: var(--vxe-ui-current-padding);
+  padding-right: var(--vxe-ui-list-current-padding);
   @include baseMixin.createCheckboxIcon();
 }
 .vxe-list--radio-option {
-  padding-right: var(--vxe-ui-current-padding);
+  padding-right: var(--vxe-ui-list-current-padding);
   @include baseMixin.createRadioIcon();
-}
-
-.vxe-list {
-  --vxe-ui-current-padding: var(--vxe-ui-layout-padding-default);
-  &.size--small,
-  &.size--mini {
-    --vxe-ui-current-padding: var(--vxe-ui-layout-padding-half);
-  }
-}
-
-.vxe-list {
-  font-size: var(--vxe-ui-font-size-default);
-  &.size--medium {
-    font-size: var(--vxe-ui-font-size-medium);
-  }
-  &.size--small {
-    font-size: var(--vxe-ui-font-size-small);
-  }
-  &.size--mini {
-    font-size: var(--vxe-ui-font-size-mini);
-  }
 }

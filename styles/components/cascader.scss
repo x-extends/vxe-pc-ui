@@ -1,10 +1,30 @@
 @use '../helpers/baseMixin.scss';
 @use '../helpers/placement.scss';
 
+// 局部变量
+.vxe-cascader,
+.vxe-cascader--panel {
+  --vxe-ui-cascader-current-font-size: var(--vxe-ui-font-size-default);
+  --vxe-ui-cascader-current-font-size: var(--vxe-ui-layout-padding-default);
+  &.size--medium {
+    --vxe-ui-cascader-current-font-size: var(--vxe-ui-font-size-medium);
+    --vxe-ui-cascader-current-font-size: var(--vxe-ui-layout-padding-medium);
+  }
+  &.size--small {
+    --vxe-ui-cascader-current-font-size: var(--vxe-ui-font-size-small);
+    --vxe-ui-cascader-current-font-size: var(--vxe-ui-layout-padding-small);
+  }
+  &.size--mini {
+    --vxe-ui-cascader-current-font-size: var(--vxe-ui-font-size-mini);
+    --vxe-ui-cascader-current-font-size: var(--vxe-ui-layout-padding-mini);
+  }
+}
+
 .vxe-cascader {
   position: relative;
   display: inline-block;
   width: 180px;
+  font-size: var(--vxe-ui-cascader-current-font-size);
   color: var(--vxe-ui-font-color);
   text-align: left;
   --vxe-ui-cascader-chunk-size: 1;
@@ -56,13 +76,14 @@
 }
 
 .vxe-cascader--panel {
+  font-size: var(--vxe-ui-cascader-current-font-size);
   pointer-events: none;
   @include placement.createPlacementPanel(var(--vxe-ui-cascader-node-width));
 }
 
 .vxe-cascader--panel-search {
   display: block;
-  padding: var(--vxe-ui-current-padding);
+  padding: var(--vxe-ui-cascader-current-font-size);
   width: calc(var(--vxe-ui-cascader-node-width) * var(--vxe-ui-cascader-chunk-size));
   .vxe-cascader-search--input {
     width: 100%;
@@ -74,16 +95,21 @@
   display: flex;
   flex-direction: row;
   white-space: nowrap;
+  align-items: center;
+  min-height: 2em;
 }
 .vxe-cascader--total-btns {
-  padding-left: var(--vxe-ui-current-padding);
-  flex-shrink: 0;
+  padding-left: var(--vxe-ui-cascader-current-font-size);
+  flex-grow: 1;
 }
+.vxe-cascader--total-btns,
 .vxe-cascader--oper-btns {
   display: flex;
   flex-direction: row;
-  flex-grow: 1;
-  justify-content: right;
+  align-items: center;
+}
+.vxe-cascader--oper-btns {
+  flex-shrink: 0;
 }
 .vxe-cascader--footer-button,
 .vxe-cascader--selected-btns,
@@ -131,10 +157,6 @@
   @include baseMixin.createRadioIcon();
 }
 
-.vxe-cascader--panel-body {
-  border-top: 1px solid var(--vxe-ui-base-popup-border-color)
-}
-
 .vxe-cascader-chunk--wrapper {
   position: relative;
   display: flex;
@@ -144,7 +166,7 @@
 .vxe-cascader-chunk--item-wrapper {
   flex-shrink: 0;
   border-left: 1px solid var(--vxe-ui-base-popup-border-color);
-  padding: var(--vxe-ui-current-padding) 0;
+  padding: var(--vxe-ui-cascader-current-font-size) 0;
   &:first-child {
     border-left: 0;
   }
@@ -168,7 +190,7 @@
   flex-direction: row;
   height: var(--vxe-ui-cascader-node-height);
   line-height: var(--vxe-ui-cascader-node-height);
-  padding: 0 calc(var(--vxe-ui-current-padding) + 18px) 0 var(--vxe-ui-current-padding);
+  padding: 0 calc(var(--vxe-ui-cascader-current-font-size) + 18px) 0 var(--vxe-ui-cascader-current-font-size);
   cursor: pointer;
   &:hover {
     background-color: var(--vxe-ui-cascader-node-hover-background-color);
@@ -208,28 +230,5 @@
   .vxe-cascader--node-item-icon > i {
     display: inline-block;
     @include baseMixin.createAnimationTransition(transform, .2s);
-  }
-}
-
-.vxe-cascader,
-.vxe-cascader--panel {
-  --vxe-ui-current-padding: var(--vxe-ui-layout-padding-default);
-  &.size--small,
-  &.size--mini {
-    --vxe-ui-current-padding: var(--vxe-ui-layout-padding-half);
-  }
-}
-
-.vxe-cascader,
-.vxe-cascader--panel {
-  font-size: var(--vxe-ui-font-size-default);
-  &.size--medium {
-    font-size: var(--vxe-ui-font-size-medium);
-  }
-  &.size--small {
-    font-size: var(--vxe-ui-font-size-small);
-  }
-  &.size--mini {
-    font-size: var(--vxe-ui-font-size-mini);
   }
 }

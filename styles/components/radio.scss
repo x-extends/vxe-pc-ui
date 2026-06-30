@@ -1,5 +1,23 @@
 @use '../helpers/baseMixin.scss';
 
+// 局部变量
+.vxe-radio {
+  --vxe-ui-radio-current-font-size: var(--vxe-ui-font-size-default);
+  --vxe-ui-radio-current-margin-right: var(--vxe-ui-base-margin-gap-default);
+  &.size--medium {
+    --vxe-ui-radio-current-font-size: var(--vxe-ui-font-size-medium);
+    --vxe-ui-radio-current-margin-right: var(--vxe-ui-base-margin-gap-medium);
+  }
+  &.size--small {
+    --vxe-ui-radio-current-font-size: var(--vxe-ui-font-size-small);
+    --vxe-ui-radio-current-margin-right: var(--vxe-ui-base-margin-gap-small);
+  }
+  &.size--mini {
+    --vxe-ui-radio-current-font-size: var(--vxe-ui-font-size-mini);
+    --vxe-ui-radio-current-margin-right: var(--vxe-ui-base-margin-gap-mini);
+  }
+}
+
 /*radio-group*/
 .vxe-radio-group {
   display: inline-flex;
@@ -16,9 +34,12 @@
 /*radio*/
 .vxe-radio {
   display: inline-flex;
+  flex-direction: row;
+  align-items: center;
   vertical-align: middle;
   white-space: nowrap;
   line-height: 1;
+  font-size: var(--vxe-ui-radio-current-font-size);
   @include baseMixin.createRadioIcon();
   > input {
     &[type="radio"] {
@@ -47,16 +68,6 @@
 }
 
 .vxe-radio {
-  font-size: var(--vxe-ui-font-size-default);
-  &.size--medium {
-    font-size: var(--vxe-ui-font-size-medium);
-  }
-  &.size--small {
-    font-size: var(--vxe-ui-font-size-small);
-  }
-  &.size--mini {
-    font-size: var(--vxe-ui-font-size-mini);
-  }
   &:last-of-type {
     margin-right: 0;
   }
@@ -64,17 +75,5 @@
 
 .vxe-radio--default,
 .vxe-radio-group {
-  margin-right: var(--vxe-ui-base-margin-gap-default);
-  &.size--medium {
-    margin-right: var(--vxe-ui-base-margin-gap-medium);
-  }
-  &.size--small {
-    margin-right: var(--vxe-ui-base-margin-gap-small);
-  }
-  &.size--mini {
-    margin-right: var(--vxe-ui-base-margin-gap-mini);
-  }
-  &:last-of-type {
-    margin-right: 0;
-  }
+  margin-right: var(--vxe-ui-radio-current-margin-right);
 }

@@ -5,9 +5,34 @@
   border-color: var(--vxe-ui-font-primary-lighten-color);
 }
 
+// 局部变量
+.vxe-form {
+  --vxe-ui-form-current-font-size: var(--vxe-ui-font-size-default);
+  --vxe-ui-form-current-padding: var(--vxe-ui-form-item-padding-default);
+  --vxe-ui-form-current-item-min-height: var(--vxe-ui-form-item-min-height-default);
+  &.size--medium {
+    --vxe-ui-form-current-font-size: var(--vxe-ui-font-size-medium);
+    --vxe-ui-form-current-padding: var(--vxe-ui-form-item-padding-medium);
+    --vxe-ui-form-current-item-min-height: var(--vxe-ui-form-item-min-height-medium);
+    --vxe-ui-form-current-button-height: var(--vxe-ui-button-height-medium)
+  }
+  &.size--small {
+    --vxe-ui-form-current-font-size: var(--vxe-ui-font-size-small);
+    --vxe-ui-form-current-padding: var(--vxe-ui-form-item-padding-small);
+    --vxe-ui-form-current-item-min-height: var(--vxe-ui-form-item-min-height-small);
+    --vxe-ui-form-current-button-height: var(--vxe-ui-button-height-small)
+  }
+  &.size--mini {
+    --vxe-ui-form-current-font-size: var(--vxe-ui-font-size-mini);
+    --vxe-ui-form-current-padding: var(--vxe-ui-form-item-padding-mini);
+    --vxe-ui-form-current-item-min-height: var(--vxe-ui-form-item-min-height-mini);
+    --vxe-ui-form-current-button-height: var(--vxe-ui-button-height-mini)
+  }
+}
+
 .vxe-form {
   position: relative;
-  font-size: var(--vxe-ui-font-size-default);
+  font-size: var(--vxe-ui-form-current-font-size);
   color: var(--vxe-ui-font-color);
   font-family: var(--vxe-ui-font-family);
   background-color: var(--vxe-ui-layout-background-color);
@@ -486,69 +511,14 @@
   &.is--padding {
     &.is--vertical {
       & > .vxe-form--item-title {
-        padding: 0 var(--vxe-ui-form-item-padding-default);
+        padding: 0 var(--vxe-ui-form-current-padding);
       }
     }
     & > .vxe-form--item-title {
-      padding: var(--vxe-ui-form-item-padding-default);
+      padding: var(--vxe-ui-form-current-padding);
     }
     & > .vxe-form--item-content {
-      padding: var(--vxe-ui-form-item-padding-default);
-    }
-  }
-  &.size--medium {
-    &.is--padding {
-      &.is--vertical {
-        & > .vxe-form--item-title {
-          padding: 0 var(--vxe-ui-form-item-padding-medium);
-        }
-      }
-      & > .vxe-form--item-title {
-        padding: var(--vxe-ui-form-item-padding-medium);
-      }
-      & > .vxe-form--item-content {
-        padding: var(--vxe-ui-form-item-padding-medium);
-      }
-    }
-  }
-  &.size--small {
-    &.is--padding {
-      &.is--vertical {
-        & > .vxe-form--item-title {
-          padding: 0 var(--vxe-ui-form-item-padding-small);
-        }
-      }
-      & > .vxe-form--item-title {
-        padding: var(--vxe-ui-form-item-padding-small);
-      }
-      & > .vxe-form--item-content {
-        padding: var(--vxe-ui-form-item-padding-small);
-      }
-    }
-  }
-  &.size--mini {
-    &.is--padding {
-      &.is--vertical {
-        & > .vxe-form--item-title {
-          padding: 0 var(--vxe-ui-form-item-padding-mini);
-        }
-      }
-      & > .vxe-form--item-title {
-        padding: var(--vxe-ui-form-item-padding-mini);
-      }
-      & > .vxe-form--item-content {
-        padding: var(--vxe-ui-form-item-padding-mini);
-      }
-    }
-  }
-}
-
-.vxe-form--item {
-  &.is--padding {
-    & > .vxe-form--group-content {
-      &.vxe-form--item-content {
-        padding: 0;
-      }
+      padding: var(--vxe-ui-form-current-padding);
     }
   }
 }
@@ -585,86 +555,45 @@
       align-items: center;
     }
   }
+}
+
+.vxe-form {
   .vxe-form--item {
     &:not(.is--vertical) {
       .vxe-form--item-title {
-        min-height: var(--vxe-ui-form-item-min-height-default);
+        min-height: var(--vxe-ui-form-current-item-min-height);
       }
     }
     .vxe-form--item-content {
-      min-height: var(--vxe-ui-form-item-min-height-default);
+      min-height: var(--vxe-ui-form-current-item-min-height);
     }
   }
-  &.size--medium {
-    font-size: var(--vxe-ui-font-size-medium);
-    .vxe-default-input[type="submit"],
-    .vxe-default-input[type="reset"] {
-      line-height: calc(var(--vxe-ui-button-height-medium) - 2px);
-    }
-    .vxe-default-input,
-    .vxe-default-select {
-      height: var(--vxe-ui-button-height-medium);
-    }
-    .vxe-default-textarea {
-      height: calc(var(--vxe-ui-button-height-medium) * 2);
-    }
-    .vxe-form--item {
-      &:not(.is--vertical) {
-        .vxe-form--item-title {
-          min-height: var(--vxe-ui-form-item-min-height-medium);
-        }
-      }
-      .vxe-form--item-content {
-        min-height: var(--vxe-ui-form-item-min-height-medium);
+}
+
+.vxe-form--item {
+  &.is--padding {
+    & > .vxe-form--group-content {
+      &.vxe-form--item-content {
+        padding: 0;
       }
     }
   }
-  &.size--small {
-    font-size: var(--vxe-ui-font-size-small);
-    .vxe-default-input[type="submit"],
-    .vxe-default-input[type="reset"] {
-      line-height: calc(var(--vxe-ui-button-height-small) - 2px);
-    }
-    .vxe-default-input,
-    .vxe-default-select {
-      height: var(--vxe-ui-button-height-small);
-    }
-    .vxe-default-textarea {
-      height: calc(var(--vxe-ui-button-height-small) * 2);
-    }
-    .vxe-form--item {
-      &:not(.is--vertical) {
-        .vxe-form--item-title {
-          min-height: var(--vxe-ui-form-item-min-height-small);
-        }
-      }
-      .vxe-form--item-content {
-        min-height: var(--vxe-ui-form-item-min-height-small);
-      }
-    }
-  }
+}
+
+.vxe-form--item {
+  &.size--small,
+  &.size--small,
   &.size--mini {
-    font-size: var(--vxe-ui-font-size-mini);
     .vxe-default-input[type="submit"],
     .vxe-default-input[type="reset"] {
-      line-height: calc(var(--vxe-ui-button-height-mini) - 2px);
+      line-height: calc(var(--vxe-ui-form-current-button-height) - 2px);
     }
     .vxe-default-input,
     .vxe-default-select {
-      height: var(--vxe-ui-button-height-mini);
+      height: var(--vxe-ui-form-current-button-height);
     }
     .vxe-default-textarea {
-      height: calc(var(--vxe-ui-button-height-mini) * 2);
-    }
-    .vxe-form--item {
-      &:not(.is--vertical) {
-        .vxe-form--item-title {
-          min-height: var(--vxe-ui-form-item-min-height-mini);
-        }
-      }
-      .vxe-form--item-content {
-        min-height: var(--vxe-ui-form-item-min-height-mini);
-      }
+      height: calc(var(--vxe-ui-form-current-button-height) * 2);
     }
   }
 }

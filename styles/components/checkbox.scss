@@ -1,5 +1,23 @@
 @use '../helpers/baseMixin.scss';
 
+// 局部变量
+.vxe-checkbox {
+  --vxe-ui-checkbox-current-font-size: var(--vxe-ui-font-size-default);
+  --vxe-ui-checkbox-current-margin-right: var(--vxe-ui-base-margin-gap-default);
+  &.size--medium {
+    --vxe-ui-checkbox-current-font-size: var(--vxe-ui-font-size-medium);
+    --vxe-ui-checkbox-current-margin-right: var(--vxe-ui-base-margin-gap-medium);
+  }
+  &.size--small {
+    --vxe-ui-checkbox-current-font-size: var(--vxe-ui-font-size-small);
+    --vxe-ui-checkbox-current-margin-right: var(--vxe-ui-base-margin-gap-small);
+  }
+  &.size--mini {
+    --vxe-ui-checkbox-current-font-size: var(--vxe-ui-font-size-mini);
+    --vxe-ui-checkbox-current-margin-right: var(--vxe-ui-base-margin-gap-mini);
+  }
+}
+
 /*checkbox-group*/
 .vxe-checkbox-group {
   display: inline-flex;
@@ -18,9 +36,12 @@
 /*checkbox*/
 .vxe-checkbox {
   display: inline-flex;
+  flex-direction: row;
+  align-items: center;
   vertical-align: middle;
   white-space: nowrap;
   line-height: 1;
+  font-size: var(--vxe-ui-checkbox-current-font-size);
   @include baseMixin.createCheckboxIcon();
   > input {
     &[type="checkbox"] {
@@ -41,7 +62,6 @@
     }
   }
   .vxe-checkbox--label {
-    padding-left: 0.5em;
     vertical-align: middle;
     display: inline-block;
     max-width: 50em;
@@ -51,31 +71,9 @@
   }
 }
 
-.vxe-checkbox {
-  font-size: var(--vxe-ui-font-size-default);
-  &.size--medium {
-    font-size: var(--vxe-ui-font-size-medium);
-  }
-  &.size--small {
-    font-size: var(--vxe-ui-font-size-small);
-  }
-  &.size--mini {
-    font-size: var(--vxe-ui-font-size-mini);
-  }
-}
-
 .vxe-checkbox--default,
 .vxe-checkbox-group {
-  margin-right: var(--vxe-ui-base-margin-gap-default);
-  &.size--medium {
-    margin-right: var(--vxe-ui-base-margin-gap-medium);
-  }
-  &.size--small {
-    margin-right: var(--vxe-ui-base-margin-gap-small);
-  }
-  &.size--mini {
-    margin-right: var(--vxe-ui-base-margin-gap-mini);
-  }
+  margin-right: var(--vxe-ui-checkbox-current-margin-right);
   &:last-of-type {
     margin-right: 0;
   }

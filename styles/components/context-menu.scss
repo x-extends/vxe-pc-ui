@@ -1,3 +1,17 @@
+// 局部变量
+.vxe-context-menu {
+  --vxe-ui-context-menu-current-font-size: var(--vxe-ui-font-size-default);
+  &.size--medium {
+    --vxe-ui-context-menu-current-font-size: var(--vxe-ui-font-size-medium);
+  }
+  &.size--small {
+    --vxe-ui-context-menu-current-font-size: var(--vxe-ui-font-size-small);
+  }
+  &.size--mini {
+    --vxe-ui-context-menu-current-font-size: var(--vxe-ui-font-size-mini);
+  }
+}
+
 .vxe-context-menu {
   display: none;
   top: 0;
@@ -24,6 +38,7 @@
 .vxe-context-menu--wrapper,
 .vxe-context-menu--children-wrapper {
   padding: 0;
+  font-size: var(--vxe-ui-context-menu-current-font-size);
   color: var(--vxe-ui-font-color);
   font-family: var(--vxe-ui-font-family);
   border: 1px solid var(--vxe-ui-base-popup-border-color);
@@ -87,17 +102,4 @@
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-}
-
-.vxe-context-menu {
-  font-size: var(--vxe-ui-font-size-default);
-  &.size--medium {
-    font-size: var(--vxe-ui-font-size-medium);
-  }
-  &.size--small {
-    font-size: var(--vxe-ui-font-size-small);
-  }
-  &.size--mini {
-    font-size: var(--vxe-ui-font-size-mini);
-  }
 }

@@ -4,6 +4,32 @@
 @use '../helpers/placement.scss';
 @use '../helpers/themeStatus.scss';
 
+// 局部变量
+.vxe-button {
+  --vxe-ui-button-current-font-size: var(--vxe-ui-font-size-default);
+  --vxe-ui-button-current-margin-left: var(--vxe-ui-base-margin-gap-default);
+  --vxe-ui-button-current-height: var(--vxe-ui-button-height-default);
+  --vxe-ui-button-current-border-radius: var(--vxe-ui-button-round-border-radius-default);
+  &.size--medium {
+    --vxe-ui-button-current-font-size: var(--vxe-ui-font-size-medium);
+    --vxe-ui-button-current-margin-left: var(--vxe-ui-base-margin-gap-medium);
+    --vxe-ui-button-current-height: var(--vxe-ui-button-height-medium);
+    --vxe-ui-button-current-border-radius: var(--vxe-ui-button-round-border-radius-medium);
+  }
+  &.size--small {
+    --vxe-ui-button-current-font-size: var(--vxe-ui-font-size-small);
+    --vxe-ui-button-current-margin-left: var(--vxe-ui-base-margin-gap-small);
+    --vxe-ui-button-current-height: var(--vxe-ui-button-height-small);
+    --vxe-ui-button-current-border-radius: var(--vxe-ui-button-round-border-radius-small);
+  }
+  &.size--mini {
+    --vxe-ui-button-current-font-size: var(--vxe-ui-font-size-mini);
+    --vxe-ui-button-current-margin-left: var(--vxe-ui-base-margin-gap-mini);
+    --vxe-ui-button-current-height: var(--vxe-ui-button-height-mini);
+    --vxe-ui-button-current-border-radius: var(--vxe-ui-button-round-border-radius-mini);
+  }
+}
+
 .vxe-button {
   display: inline-flex;
   flex-direction: row;
@@ -13,7 +39,7 @@
   position: relative;
   background-color: var(--vxe-ui-layout-background-color);
   outline: 0;
-  font-size: var(--vxe-ui-font-size-default);
+  font-size: var(--vxe-ui-button-current-font-size);
   max-width: var(--vxe-ui-button-max-width);
   overflow: hidden;
   text-overflow: ellipsis;
@@ -99,7 +125,7 @@
     border: 1px solid var(--vxe-ui-input-border-color);
     text-decoration: none;
     &.is--round {
-      border-radius: var(--vxe-ui-button-round-border-radius-default);
+      border-radius: var(--vxe-ui-button-current-border-radius);
     }
     &:not(.is--round) {
       border-radius: var(--vxe-ui-base-border-radius);
@@ -108,7 +134,7 @@
       padding: 0 0.5em;
       text-align: center;
       justify-content: center;
-      min-width: var(--vxe-ui-button-height-default);
+      min-width: var(--vxe-ui-button-current-height);
       border-radius: 50%;
     }
     &.is--shadow {
@@ -174,56 +200,12 @@
       }
     }
   }
-  &.size--medium {
-    font-size: var(--vxe-ui-font-size-medium);
-    &.type--button {
-      &.is--circle {
-        min-width: var(--vxe-ui-button-height-medium);
-      }
-      &.is--round {
-        border-radius: var(--vxe-ui-button-round-border-radius-medium);
-      }
-    }
-  }
-  &.size--small {
-    font-size: var(--vxe-ui-font-size-small);
-    &.type--button {
-      height: var(--vxe-ui-button-height-small);
-      &.is--circle {
-        min-width: var(--vxe-ui-button-height-small);
-      }
-      &.is--round {
-        border-radius: var(--vxe-ui-button-round-border-radius-small);
-      }
-    }
-  }
-  &.size--mini {
-    font-size: var(--vxe-ui-font-size-mini);
-    &.type--button {
-      height: var(--vxe-ui-button-height-mini);
-      &.is--circle {
-        min-width: var(--vxe-ui-button-height-mini);
-      }
-      &.is--round {
-        border-radius: var(--vxe-ui-button-round-border-radius-mini);
-      }
-    }
-  }
 }
 
 
 .vxe-button {
   &.type--button {
-    height: var(--vxe-ui-button-height-default);
-    &.size--medium {
-      height: var(--vxe-ui-button-height-medium);
-    }
-    &.size--small {
-      height: var(--vxe-ui-button-height-small);
-    }
-    &.size--mini {
-      height: var(--vxe-ui-button-height-mini);
-    }
+    height: var(--vxe-ui-button-current-height);
   }
 }
 
@@ -341,16 +323,7 @@
 
 .vxe-button.type--button,
 .vxe-button--dropdown {
-  margin-right: var(--vxe-ui-base-margin-gap-default);
-  &.size--medium {
-    margin-right: var(--vxe-ui-base-margin-gap-medium);
-  }
-  &.size--small {
-    margin-right: var(--vxe-ui-base-margin-gap-small);
-  }
-  &.size--mini {
-    margin-right: var(--vxe-ui-base-margin-gap-mini);
-  }
+  margin-right: var(--vxe-ui-button-current-margin-left);
   &:last-of-type {
     margin-right: 0;
   }
@@ -358,14 +331,5 @@
 
 .vxe-button+.vxe-button--dropdown,
 .vxe-button--dropdown+.vxe-button {
-  margin-left: var(--vxe-ui-base-margin-gap-default);
-  &.size--medium {
-    margin-left: var(--vxe-ui-base-margin-gap-medium);
-  }
-  &.size--small {
-    margin-left: var(--vxe-ui-base-margin-gap-small);
-  }
-  &.size--mini {
-    margin-left: var(--vxe-ui-base-margin-gap-mini);
-  }
+  margin-left: var(--vxe-ui-button-current-margin-left);
 }
