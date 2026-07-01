@@ -7,9 +7,9 @@ import { updatePanelPlacement, getEventTargetNode, hasControlKey } from '../../u
 import { getSlotVNs } from '../../ui/src/vn'
 import { parseDateObj, parseDateValue, getDateByCode, handleValueFormat, hasDateValueType, hasTimestampValueType, isAllSameChar, getChunkDefaultNum, checkDateInputFormat } from '../../date-panel/src/util'
 import { createComponentLog } from '../../ui/src/log'
-import VxeDatePanelComponent from '../../date-panel/src/date-panel'
-import VxeButtonComponent from '../../button/src/button'
-import VxeButtonGroupComponent from '../../button/src/button-group'
+import VxeDatePanelComponent from '../../date-panel'
+import VxeButtonComponent from '../../button'
+import VxeButtonGroupComponent from '../../button-group'
 
 import type { VxeDatePickerConstructor, VxeDatePickerEmits, DatePickerInternalData, DatePickerReactData, VxeButtonGroupDefines, VxeComponentSizeType, VxeDatePanelDefines, VxeDatePickerPropTypes, VxeFormConstructor, VxeFormPrivateMethods, VxeFormDefines, ValueOf, VxeModalConstructor, VxeDrawerConstructor, VxeModalMethods, VxeDrawerMethods, VxeDatePickerDefines, VxeDatePanelConstructor } from '../../../types'
 import type { VxeTableConstructor, VxeTablePrivateMethods } from '../../../types/components/table'

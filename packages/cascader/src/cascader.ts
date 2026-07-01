@@ -5,9 +5,9 @@ import { getEventTargetNode, updatePanelPlacement, toCssUnit } from '../../ui/sr
 import { getLastZIndex, nextZIndex } from '../../ui/src/utils'
 import { enNodeValue, deNodeValue } from './util'
 import XEUtils from 'xe-utils'
-import VxeListComponent from '../../list/src/list'
-import VxeInputComponent from '../../input/src/input'
-import VxeButtonComponent from '../../button/src/button'
+import VxeListComponent from '../../list'
+import VxeInputComponent from '../../input'
+import VxeButtonComponent from '../../button'
 
 import type { CascaderReactData, VxeCascaderEmits, CascaderInternalData, VxeComponentSizeType, VxeButtonDefines, VxeCascaderDefines, VxeListSlotTypes, ValueOf, VxeInputConstructor, VxeComponentStyleType, VxeCascaderPropTypes, VxeFormDefines, VxeDrawerConstructor, VxeDrawerMethods, VxeFormConstructor, VxeFormPrivateMethods, VxeModalConstructor, VxeModalMethods } from '../../../types'
 import type { VxeTableConstructor, VxeTablePrivateMethods } from '../../../types/components/table'

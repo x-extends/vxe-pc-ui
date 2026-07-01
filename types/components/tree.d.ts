@@ -1,5 +1,6 @@
 import { DefineVxeComponentApp, DefineVxeComponentOptions, DefineVxeComponentInstance, VxeComponentEventParams, VxeComponentSizeType, ValueOf } from '@vxe-ui/core'
 import { VxeContextMenuPropTypes, VxeContextMenuDefines } from './context-menu'
+import { VxeTooltipPropTypes } from './tooltip'
 
 /* eslint-disable no-use-before-define,@typescript-eslint/ban-types,@typescript-eslint/no-unused-vars */
 
@@ -21,6 +22,51 @@ export namespace VxeTreePropTypes {
   export type Data<D = any> = D[]
   export type Loading = boolean
   export type AutoResize = boolean
+  export type ShowOverflow = boolean
+  /**
+   * 提示信息配置项
+   */
+  export interface TooltipConfig<D = any> {
+    mode?: 'ellipsis' | 'title' | 'tooltip' | '' | null
+    /**
+     * 所有节点开启工具提示
+     */
+    showAll?: boolean
+    theme?: VxeTooltipPropTypes.Theme
+    /**
+     * 鼠标是否可进入到工具提示中
+     */
+    enterable?: VxeTooltipPropTypes.Enterable
+    enterDelay?: VxeTooltipPropTypes.EnterDelay
+    leaveDelay?: VxeTooltipPropTypes.LeaveDelay
+    width?: VxeTooltipPropTypes.Width
+    height?: VxeTooltipPropTypes.Height
+    minWidth?: VxeTooltipPropTypes.MinWidth
+    minHeight?: VxeTooltipPropTypes.MinHeight
+    maxWidth?: VxeTooltipPropTypes.MaxWidth
+    maxHeight?: VxeTooltipPropTypes.MaxHeight
+    /**
+     * 显示为 HTML 标签
+     */
+    useHtml?: VxeTooltipPropTypes.UseHtml
+    /**
+     * 固定方向
+     */
+    placement?: VxeTooltipPropTypes.Placement
+    /**
+     * 默认方向
+     */
+    defaultPlacement?: VxeTooltipPropTypes.DefaultPlacement
+    popupClassName?: VxeTooltipPropTypes.PopupClassName
+    /**
+     * 该方法可以通过返回值来重写默认的提示内容，可以返回 null 使用默认的提示内容，可以返回空内容去掉指定单元格的提示内容
+     */
+    contentMethod?(params: {
+      $tree: VxeTreeConstructor<D>
+      node: D
+      $event: any
+    }): string | boolean | null | void
+  }
   export interface LoadingConfig {
     /**
      * 显示图标
@@ -288,6 +334,8 @@ export interface VxeTreeProps<D = any> {
   childrenField?: VxeTreePropTypes.ChildrenField
   hasChildField?: VxeTreePropTypes.HasChildField
   mapChildrenField?: VxeTreePropTypes.MapChildrenField
+  showOverflow?: VxeTreePropTypes.ShowOverflow
+  tooltipConfig?: VxeTreePropTypes.TooltipConfig
   /**
    * 默认展开所有节点（只会在初始化时被触发一次）
    */
@@ -376,6 +424,11 @@ export interface TreeReactData {
   dragNode: any
   dragTipText: string
   isCrossDragNode: boolean
+
+  tooltipStore: {
+    visible: boolean
+    node: any
+  }
 }
 
 export interface TreeInternalData {
@@ -401,6 +454,7 @@ export interface TreeInternalData {
   }
   lastScrollTime: number
   hpTimeout?: undefined | number
+  tipTimeout?: any
 
   insertNodeMaps: Record<string, any>
   removeNodeMaps: Record<string, any>
@@ -658,6 +712,10 @@ export interface TreeMethods<D = any> {
    * 判断数据是否被删除
    */
   isRemoveByNode(node: any | null): boolean
+  /**
+   * 手动关闭工具提示
+   */
+  closeTooltip(): Promise<void>
 }
 export interface VxeTreeMethods<D = any> extends TreeMethods<D> { }
 
@@ -893,6 +951,9 @@ export namespace VxeTreeSlotTypes {
   export interface HeaderSlotParams {}
   export interface FooterSlotParams {}
   export interface LoadingSlotParams {}
+  export interface TooltipSlotParams {
+    node: any
+  }
 }
 
 export interface VxeTreeSlots {
@@ -902,6 +963,7 @@ export interface VxeTreeSlots {
   header?: (params: VxeTreeSlotTypes.HeaderSlotParams) => any
   footer?: (params: VxeTreeSlotTypes.FooterSlotParams) => any
   loading?: (params: VxeTreeSlotTypes.LoadingSlotParams) => any
+  tooltip?: (params: VxeTreeSlotTypes.TooltipSlotParams) => any
 }
 
 export const Tree: typeof VxeTree

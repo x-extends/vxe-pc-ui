@@ -5,7 +5,8 @@
 @use '../helpers/themeStatus.scss';
 
 // 局部变量
-.vxe-button {
+.vxe-button,
+.vxe-button--dropdown {
   --vxe-ui-button-current-font-size: var(--vxe-ui-font-size-default);
   --vxe-ui-button-current-margin-left: var(--vxe-ui-base-margin-gap-default);
   --vxe-ui-button-current-height: var(--vxe-ui-button-height-default);

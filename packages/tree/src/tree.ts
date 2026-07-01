@@ -7,11 +7,12 @@ import { createComponentLog } from '../../ui/src/log'
 import { getSlotVNs } from '../../ui/src/vn'
 import { crossTreeDragNodeGlobal, getCrossTreeDragNodeInfo } from './store'
 import { toCssUnit, isScale, getPaddingTopBottomSize, addClass, removeClass, getTpImg, hasControlKey, getEventTargetNode } from '../../ui/src/dom'
-import { isEnableConf, enModelValue, deModelValue } from '../../ui/src/utils'
+import { isEnableConf, enModelValue, deModelValue, getText } from '../../ui/src/utils'
 import { moveRowAnimateToTb, clearRowAnimate } from '../../ui/src/anime'
 import VxeLoadingComponent from '../../loading'
+import VxeTooltipComponent from '../../tooltip'
 
-import type { TreeReactData, VxeTreeEmits, VxeTreeConstructor, VxeTreePropTypes, TreeInternalData, VxeTreeDefines, VxeTreePrivateMethods, VxeComponentSizeType, ValueOf } from '../../../types'
+import type { TreeReactData, VxeTreeEmits, VxeTreeConstructor, VxeTreePropTypes, TreeInternalData, VxeTreeDefines, VxeTreePrivateMethods, VxeComponentSizeType, ValueOf, VxeTooltipInstance } from '../../../types'
 
 const { warnLog, errLog } = createComponentLog('tree')
 
@@ -591,7 +592,11 @@ function createReactData ():TreeReactData {
     removeNodeFlag: 1,
     dragNode: null,
     dragTipText: '',
-    isCrossDragNode: false
+    isCrossDragNode: false,
+    tooltipStore: {
+      visible: false,
+      node: null
+    }
   }
 }
 
@@ -681,6 +686,11 @@ export default /* define-vxe-component start */ defineVxeComponent({
     lazy: Boolean as PropType<VxeTreePropTypes.Lazy>,
     toggleMethod: Function as PropType<VxeTreePropTypes.ToggleMethod>,
     loadMethod: Function as PropType<VxeTreePropTypes.LoadMethod>,
+    showOverflow: {
+      type: Boolean as PropType<VxeTreePropTypes.ShowOverflow>,
+      default: () => getConfig().tree.showOverflow
+    },
+    tooltipConfig: Object as PropType<VxeTreePropTypes.TooltipConfig>,
     drag: {
       type: Boolean as PropType<VxeTreePropTypes.Drag>,
       default: () => getConfig().tree.drag
@@ -844,6 +854,12 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const props = $xeTree
 
       return Object.assign({}, getConfig().tree.dragConfig, props.dragConfig)
+    },
+    computeTooltipOpts () {
+      const $xeTree = this
+      const props = $xeTree
+
+      return Object.assign({}, getConfig().tree.tooltipConfig, props.tooltipConfig)
     },
     computeMenuOpts () {
       const $xeTree = this
@@ -1981,6 +1997,106 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const $xeTree = this
 
       $xeTree.dispatchEvent('node-dblclick', { node }, evnt)
+    },
+    handleNodeMouseenterEvent (evnt: MouseEvent, node: any) {
+      const $xeTree = this
+      const reactData = $xeTree.reactData
+      const internalData = $xeTree.internalData
+
+      const $tooltip = $xeTree.$refs.refTooltip as VxeTooltipInstance
+      if (!$tooltip) {
+        return
+      }
+      const { tooltipStore } = reactData
+      const { tipTimeout } = internalData
+      const nodeEl = evnt.currentTarget as HTMLDivElement
+      const tooltipOpts = $xeTree.computeTooltipOpts
+      const { showAll, contentMethod } = tooltipOpts
+      if (tipTimeout) {
+        clearTimeout(tipTimeout)
+        internalData.tipTimeout = undefined
+      }
+      const titleEl = nodeEl.querySelector('.vxe-tree--node-item-title')
+      const tipOverEl = nodeEl.querySelector('.vxe-tree--node-item-wrapper')
+      if (!tipOverEl) {
+        return
+      }
+      const cellText = XEUtils.toString(tipOverEl.textContent).trim()
+      const isOver = tipOverEl.scrollWidth > tipOverEl.clientWidth
+      let isShow = false
+      let customContent: any = null
+      let content = ''
+      if (contentMethod) {
+        customContent = contentMethod({ node, $event: evnt, $tree: $xeTree })
+      }
+      // 是否全部展示
+      if (showAll) {
+        // 如果为 null 默认显示
+        if (XEUtils.eqNull(customContent)) {
+          isShow = true
+          content = cellText
+        } else if (customContent !== '' && customContent !== false) {
+          // 如果为 '' | false 则不显示
+          isShow = true
+          content = '' + customContent
+        }
+      } else {
+        // 如果为 null 使用默认逻辑
+        if (XEUtils.eqNull(customContent)) {
+          isShow = isOver
+          content = cellText
+        } else if (customContent !== '' && customContent !== false) {
+          // 如果为 '' | false 则不显示
+          isShow = true
+          content = '' + customContent
+        } else {
+          content = cellText
+        }
+      }
+      if (isShow && content) {
+        const tipContent = getText(content)
+        tooltipStore.visible = true
+        tooltipStore.node = node
+        if ($tooltip.open) {
+          $tooltip.open((isOver ? tipOverEl : titleEl) || tipOverEl, tipContent)
+        }
+      }
+    },
+    handleNodeMouseleaveEvent () {
+      const $xeTree = this
+      const internalData = $xeTree.internalData
+
+      let $tooltip = $xeTree.$refs.refTooltip as VxeTooltipInstance
+      const tooltipOpts = $xeTree.computeTooltipOpts
+      if ($tooltip && $tooltip.setActived) {
+        $tooltip.setActived(false)
+      }
+      if (tooltipOpts.enterable) {
+        internalData.tipTimeout = setTimeout(() => {
+          $tooltip = $xeTree.$refs.refTooltip as VxeTooltipInstance
+          if ($tooltip && $tooltip.isActived && !$tooltip.isActived()) {
+            $xeTree.closeTooltip()
+          }
+          internalData.tipTimeout = undefined
+        }, tooltipOpts.leaveDelay)
+      } else {
+        $xeTree.closeTooltip()
+      }
+    },
+    closeTooltip () {
+      const $xeTree = this
+      const reactData = $xeTree.reactData
+
+      const { tooltipStore } = reactData
+      if (tooltipStore.visible) {
+        tooltipStore.visible = false
+        tooltipStore.node = null
+        const $tooltip = $xeTree.$refs.refTooltip as VxeTooltipInstance
+        if ($tooltip) {
+          $tooltip.close()
+        }
+      }
+      return $xeTree.$nextTick()
     },
     handleContextmenuEvent (evnt: MouseEvent, node: any) {
       const $xeTree = this
@@ -3295,6 +3411,8 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const { lazy, drag, transform, showRadio, showCheckbox, showLine, iconOpen, iconClose, iconLoaded, showIcon } = props
       const { currentNode, selectRadioKey, updateExpandedFlag } = reactData
       const { afterTreeList, nodeMaps, treeExpandedMaps, treeExpandLazyLoadedMaps } = internalData
+      const tooltipOpts = $xeTree.computeTooltipOpts
+      const { mode: tipMode } = tooltipOpts
       const childrenField = $xeTree.computeChildrenField
       const titleField = $xeTree.computeTitleField
       const hasChildField = $xeTree.computeHasChildField
@@ -3305,7 +3423,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const extraSlot = slots.extra
       const isExpand = updateExpandedFlag && treeExpandedMaps[nodeid]
       const nodeItem = nodeMaps[nodeid] || {}
-      const nodeTitle = XEUtils.get(node, titleField)
+      const nodeTitle = getText(XEUtils.get(node, titleField))
       const nLevel = nodeItem.level
 
       let isRadioChecked = false
@@ -3331,43 +3449,52 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const prevNode = nodeItem.items[nodeItem.treeIndex - 1]
       const nParams = { node, isExpand }
 
-      const itemOn: {
-        mousedown: any
-        mouseup: any
-        click: any
-        dblclick: any
-        dragstart?: any
-        dragend?: any
-        dragover?: any
-        contextmenu?: any
+      const itemOns: {
+        mousedown: (evnt: MouseEvent) => void
+        mouseup: (evnt: MouseEvent) => void
+        click: (evnt: MouseEvent) => void
+        dblclick: (evnt: MouseEvent) => void
+        mouseenter?: (evnt: MouseEvent) => void
+        mouseleave?: (evnt: MouseEvent) => void
+        dragstart?: (evnt: DragEvent) => void
+        dragend?: (evnt: DragEvent) => void
+        dragover?: (evnt: DragEvent) => void
+        contextmenu?: (evnt: MouseEvent) => void
       } = {
-        mousedown (evnt: MouseEvent) {
+        mousedown (evnt) {
           $xeTree.handleNodeMousedownEvent(evnt, node)
         },
         mouseup: $xeTree.handleNodeDragMouseupEvent,
-        click (evnt: MouseEvent) {
+        click (evnt) {
           $xeTree.handleNodeClickEvent(evnt, node)
         },
-        dblclick (evnt: MouseEvent) {
+        dblclick (evnt) {
           $xeTree.handleNodeDblclickEvent(evnt, node)
         },
-        contextmenu (evnt: MouseEvent) {
+        contextmenu (evnt) {
           $xeTree.handleContextmenuEvent(evnt, node)
         }
       }
+      if (tipMode === 'tooltip') {
+        itemOns.mouseenter = (evnt) => {
+          $xeTree.handleNodeMouseenterEvent(evnt, node)
+        }
+        itemOns.mouseleave = $xeTree.handleNodeMouseleaveEvent
+      }
       // 拖拽行事件
       if (drag && transform) {
-        itemOn.dragstart = $xeTree.handleNodeDragDragstartEvent
-        itemOn.dragend = $xeTree.handleNodeDragDragendEvent
-        itemOn.dragover = $xeTree.handleNodeDragDragoverEvent
+        itemOns.dragstart = $xeTree.handleNodeDragDragstartEvent
+        itemOns.dragend = $xeTree.handleNodeDragDragendEvent
+        itemOns.dragover = $xeTree.handleNodeDragDragoverEvent
       }
       return h('div', {
         key: nodeid,
         class: ['vxe-tree--node-wrapper', `node--level-${nLevel}`],
         attrs: {
-          nodeid
+          nodeid,
+          title: tipMode === 'title' ? nodeTitle : ''
         },
-        on: itemOn
+        on: itemOns
       }, [
         h('div', {
           class: ['vxe-tree--node-item', {
@@ -3416,8 +3543,12 @@ export default /* define-vxe-component start */ defineVxeComponent({
             class: 'vxe-tree--node-item-inner'
           }, [
             h('div', {
-              class: 'vxe-tree--node-item-title'
-            }, titleSlot ? getSlotVNs(titleSlot(nParams)) : `${nodeTitle}`),
+              class: 'vxe-tree--node-item-wrapper'
+            }, [
+              h('span', {
+                class: 'vxe-tree--node-item-title'
+              }, titleSlot ? getSlotVNs(titleSlot(nParams)) : nodeTitle)
+            ]),
             extraSlot
               ? h('div', {
                 class: 'vxe-tree--node-item-extra'
@@ -3516,7 +3647,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const reactData = $xeTree.reactData
 
       const { loading, trigger, showLine } = props
-      const { bodyHeight, topSpaceHeight, treeList } = reactData
+      const { bodyHeight, topSpaceHeight, treeList, tooltipStore } = reactData
       const vSize = $xeTree.computeSize
       const radioOpts = $xeTree.computeRadioOpts
       const checkboxOpts = $xeTree.computeCheckboxOpts
@@ -3524,9 +3655,11 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const isNodeHover = $xeTree.computeIsNodeHover
       const treeStyle = $xeTree.computeTreeStyle
       const dragOpts = $xeTree.computeDragOpts
+      const tooltipOpts = $xeTree.computeTooltipOpts
       const loadingSlot = slots.loading
       const headerSlot = slots.header
       const footerSlot = slots.footer
+      const tooltipSlot = slots.tooltip
 
       const teOns: {
         dragover?: (...args: any[]) => void
@@ -3587,6 +3720,38 @@ export default /* define-vxe-component start */ defineVxeComponent({
          */
         $xeTree.renderDragTip(h),
         /**
+          * 工具提示
+          */
+        tooltipOpts.mode === 'tooltip'
+          ? h(VxeTooltipComponent, {
+            ref: 'refTooltip',
+            props: {
+              theme: tooltipOpts.theme,
+              enterable: tooltipOpts.enterable,
+              enterDelay: tooltipOpts.enterDelay,
+              leaveDelay: tooltipOpts.leaveDelay,
+              useHtml: tooltipOpts.useHtml,
+              width: tooltipOpts.width,
+              height: tooltipOpts.height,
+              minWidth: tooltipOpts.minWidth,
+              minHeight: tooltipOpts.minHeight,
+              maxWidth: tooltipOpts.maxWidth,
+              maxHeight: tooltipOpts.maxHeight,
+              placement: tooltipOpts.placement,
+              defaultPlacement: tooltipOpts.defaultPlacement,
+              popupClassName: tooltipOpts.popupClassName
+            },
+            scopedSlots: tooltipSlot
+              ? {
+                  content: () => {
+                    const { node } = tooltipStore
+                    return tooltipSlot({ node, $tree: $xeTree })
+                  }
+                }
+              : undefined
+          })
+          : renderEmptyElement($xeTree),
+        /**
          * 加载中
          */
         h(VxeLoadingComponent, {
@@ -3600,7 +3765,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
             ? {
                 default: () => loadingSlot({ $tree: $xeTree })
               }
-            : {}
+            : undefined
         })
       ])
     }
@@ -3681,8 +3846,11 @@ export default /* define-vxe-component start */ defineVxeComponent({
     const props = $xeTree
     const internalData = $xeTree.internalData
 
-    const { transform, drag, menuConfig } = props
+    const { transform, drag, menuConfig, showOverflow } = props
     const dragOpts = $xeTree.computeDragOpts
+    if (!showOverflow) {
+      errLog('vxe.error.errProp', ['show-overflow=false', 'show-overflow=true'])
+    }
     if (drag && !transform) {
       errLog('vxe.error.notSupportProp', ['drag', 'transform=false', 'transform=true'])
     }

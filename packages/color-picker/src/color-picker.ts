@@ -5,9 +5,9 @@ import { VxeUI, getIcon, getConfig, getI18n, globalEvents, createEvent, globalMi
 import { getEventTargetNode, toCssUnit, updatePanelPlacement } from '../../ui/src/dom'
 import { getLastZIndex, nextZIndex } from '../../ui/src/utils'
 import { parseColor, updateColorAlpha, hexToHsv, rgbToHsv, rgbToHex, hexToRgb, hsvToRgb, toRgb } from './util'
-import VxeButtonComponent from '../../button/src/button'
-import VxeInputComponent from '../../input/src/input'
-import VxeNumberInputComponent from '../../number-input/src/number-input'
+import VxeButtonComponent from '../../button'
+import VxeInputComponent from '../../input'
+import VxeNumberInputComponent from '../../number-input'
 
 import type { ColorPickerReactData, VxeColorPickerPropTypes, VxeColorPickerEmits, VxeComponentSizeType, ColorPickerInternalData, ValueOf, VxeModalConstructor, VxeModalMethods, VxeDrawerConstructor, VxeDrawerMethods, VxeFormDefines, VxeFormConstructor, VxeFormPrivateMethods } from '../../../types'
 import type { VxeTableConstructor, VxeTablePrivateMethods } from '../../../types/components/table'
