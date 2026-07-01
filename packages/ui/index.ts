@@ -428,8 +428,15 @@ setConfig({
     // autoResize: false,
     indent: 20,
     minHeight: 60,
+    showOverflow: true,
     radioConfig: {
       strict: true
+    },
+    tooltipConfig: {
+      mode: 'tooltip',
+      enterable: true,
+      leaveDelay: 300,
+      defaultPlacement: 'top'
     },
     dragConfig: {
       showIcon: true,

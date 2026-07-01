@@ -288,7 +288,8 @@ export default {
       cancelFixed: 'Mở ra cột'
     },
     iconPicker: {
-      search: '搜索'
+      search: '搜索',
+      emptyText: '暂无数据'
     },
     datePicker: {
       yearTitle: '{0} năm'

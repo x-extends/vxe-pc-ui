@@ -5,8 +5,8 @@ import { useSize, getIcon, getConfig, getI18n, globalEvents, GLOBAL_EVENT_KEYS, 
 import { getLastZIndex, nextZIndex, getFuncText } from '../../ui/src/utils'
 import { getDomNode, toCssUnit } from '../../ui/src/dom'
 import { getSlotVNs } from '../../ui/src/vn'
-import VxeButtonComponent from '../../button/src/button'
-import VxeLoadingComponent from '../../loading/index'
+import VxeButtonComponent from '../../button'
+import VxeLoadingComponent from '../../loading'
 
 import type { VxeDrawerPropTypes, DrawerReactData, VxeDrawerEmits, DrawerPrivateRef, DrawerMethods, DrawerPrivateMethods, VxeDrawerPrivateComputed, VxeDrawerConstructor, VxeDrawerMethods, VxeButtonInstance, DrawerEventTypes, ValueOf, VxeModalConstructor, VxeModalMethods, VxeFormConstructor, VxeFormPrivateMethods } from '../../../types'
 import type { VxeTableConstructor, VxeTablePrivateMethods } from '../../../types/components/table'

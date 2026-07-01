@@ -288,7 +288,8 @@ export default {
       cancelFixed: '取消凍結列'
     },
     iconPicker: {
-      search: '搜索'
+      search: '搜索',
+      emptyText: '暂无数据'
     },
     datePicker: {
       yearTitle: '{0} 年'

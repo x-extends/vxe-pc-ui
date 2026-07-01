@@ -288,7 +288,8 @@ export default {
       cancelFixed: '열매 열이 없습니다'
     },
     iconPicker: {
-      search: '搜索'
+      search: '搜索',
+      emptyText: '暂无数据'
     },
     datePicker: {
       yearTitle: '{0} 년'

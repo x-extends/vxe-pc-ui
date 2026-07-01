@@ -176,7 +176,8 @@ export default defineVxeComponent({
       }
       if (height) {
         stys['--vxe-ui-icon-picker-panel-height'] = toCssUnit(height)
-      } else if (maxHeight) {
+      }
+      if (maxHeight) {
         stys['--vxe-ui-icon-picker-panel-max-height'] = toCssUnit(maxHeight)
       }
       return stys
@@ -267,6 +268,7 @@ export default defineVxeComponent({
         reactData.isAniVisible = true
         setTimeout(() => {
           reactData.visiblePanel = true
+          handleFocusSearch()
           updatePlacement()
         }, 10)
         updateZindex()
@@ -279,6 +281,17 @@ export default defineVxeComponent({
       internalData.hpTimeout = setTimeout(() => {
         reactData.isAniVisible = false
       }, 350)
+    }
+
+    const handleFocusSearch = () => {
+      if (props.filterable) {
+        nextTick(() => {
+          const inpSearch = refInpSearch.value
+          if (inpSearch) {
+            inpSearch.focus()
+          }
+        })
+      }
     }
 
     const handleData = () => {
@@ -513,6 +526,11 @@ export default defineVxeComponent({
       const { showIconTitle } = props
       const { selectIcon, iconGroups } = reactData
 
+      if (!iconGroups.length) {
+        return h('div', {
+          class: 'vxe-ico-picker--empty-placeholder'
+        }, getI18n('vxe.iconPicker.emptyText'))
+      }
       return h('div', {
         class: 'vxe-ico-picker--list-wrapper'
       }, iconGroups.map(list => {
