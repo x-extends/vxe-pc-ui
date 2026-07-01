@@ -5879,6 +5879,11 @@ export type VxeTableEmits = [
   'scroll',
   'scroll-boundary',
   'custom',
+  'custom-open',
+  'custom-close',
+  'custom-cancel',
+  'custom-reset',
+  'custom-confirm',
   'custom-visible-change',
   'custom-visible-all',
   'custom-fixed-change',
@@ -6843,6 +6848,12 @@ export namespace VxeTableDefines {
   }
   export interface CustomEventParams<D = any> extends TableEventParams<D>, CustomParams { }
 
+  export interface CustomOpenEventParams<D = any> extends TableEventParams<D> {}
+  export interface CustomCloseEventParams<D = any> extends TableEventParams<D> {}
+  export interface CustomCancelEventParams<D = any> extends TableEventParams<D> {}
+  export interface CustomResetEventParams<D = any> extends TableEventParams<D> {}
+  export interface CustomConfirmEventParams<D = any> extends TableEventParams<D> {}
+
   export interface RowDragstartEventParams<D = any> {
     row: D
     column: VxeTableDefines.ColumnInfo<D>
@@ -7238,6 +7249,11 @@ export interface VxeTableEventProps<D = any> {
   onScroll?: VxeTableEvents.Scroll<D>
   onScrollBoundary?: VxeTableEvents.ScrollBoundary<D>
   onCustom?: VxeTableEvents.Custom<D>
+  onCustomOpen?: VxeTableEvents.CustomOpen<D>
+  onCustomClose?: VxeTableEvents.CustomClose<D>
+  onCustomCancel?: VxeTableEvents.CustomCancel<D>
+  onCustomReset?: VxeTableEvents.CustomReset<D>
+  onCustomConfirm?: VxeTableEvents.CustomConfirm<D>
   onRowDragstart?: VxeTableEvents.RowDragstart<D>
   onRowDragover?: VxeTableEvents.RowDragover<D>
   onRowDragend?: VxeTableEvents.RowDragend<D>
@@ -7331,6 +7347,11 @@ export interface VxeTableListeners<D = any> {
    * 如果与工具栏关联，在自定义列按钮被手动点击后会触发该事件
    */
   custom?: VxeTableEvents.Custom<D>
+  customOpen?: VxeTableEvents.CustomOpen<D>
+  customClose?: VxeTableEvents.CustomClose<D>
+  customCancel?: VxeTableEvents.CustomCancel<D>
+  customReset?: VxeTableEvents.CustomReset<D>
+  customConfirm?: VxeTableEvents.CustomConfirm<D>
   rowDragstart?: VxeTableEvents.RowDragstart<D>
   rowDragover?: VxeTableEvents.RowDragover<D>
   rowDragend?: VxeTableEvents.RowDragend<D>
@@ -7407,6 +7428,11 @@ export namespace VxeTableEvents {
   export type Scroll<D = VxeTablePropTypes.Row> = (params: VxeTableDefines.ScrollEventParams<D>) => void
   export type ScrollBoundary<D = VxeTablePropTypes.Row> = (params: VxeTableDefines.ScrollBoundaryEventParams<D>) => void
   export type Custom<D = VxeTablePropTypes.Row> = (params: VxeTableDefines.CustomEventParams<D>) => void
+  export type CustomOpen<D = VxeTablePropTypes.Row> = (params: VxeTableDefines.CustomOpenEventParams<D>) => void
+  export type CustomClose<D = VxeTablePropTypes.Row> = (params: VxeTableDefines.CustomCloseEventParams<D>) => void
+  export type CustomCancel<D = VxeTablePropTypes.Row> = (params: VxeTableDefines.CustomCancelEventParams<D>) => void
+  export type CustomReset<D = VxeTablePropTypes.Row> = (params: VxeTableDefines.CustomResetEventParams<D>) => void
+  export type CustomConfirm<D = VxeTablePropTypes.Row> = (params: VxeTableDefines.CustomConfirmEventParams<D>) => void
   export type RowDragstart<D = VxeTablePropTypes.Row> = (params: VxeTableDefines.RowDragstartEventParams<D>) => void
   export type RowDragover<D = VxeTablePropTypes.Row> = (params: VxeTableDefines.RowDragoverEventParams<D>) => void
   export type RowDragend<D = VxeTablePropTypes.Row> = (params: VxeTableDefines.RowDragendEventParams<D>) => void
