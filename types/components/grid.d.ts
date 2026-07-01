@@ -540,6 +540,11 @@ export namespace VxeGridDefines {
   export interface ScrollEventParams<D = any> extends GridEventParams<D>, VxeTableDefines.ScrollEventParams<D> { }
   export interface ScrollBoundaryEventParams<D = any> extends GridEventParams<D>, VxeTableDefines.ScrollBoundaryEventParams<D> { }
   export interface CustomEventParams<D = any> extends GridEventParams<D>, VxeTableDefines.CustomEventParams<D> { }
+  export interface CustomOpenEventParams<D = any> extends GridEventParams<D>, VxeTableDefines.CustomOpenEventParams<D> { }
+  export interface CustomCloseEventParams<D = any> extends GridEventParams<D>, VxeTableDefines.CustomCloseEventParams<D> { }
+  export interface CustomCancelEventParams<D = any> extends GridEventParams<D>, VxeTableDefines.CustomCancelEventParams<D> { }
+  export interface CustomResetEventParams<D = any> extends GridEventParams<D>, VxeTableDefines.CustomResetEventParams<D> { }
+  export interface CustomConfirmEventParams<D = any> extends GridEventParams<D>, VxeTableDefines.CustomConfirmEventParams<D> { }
   export interface RowDragstartEventParams<D = any> extends GridEventParams<D>, VxeTableDefines.RowDragstartEventParams<D> { }
   export interface RowDragoverEventParams<D = any> extends GridEventParams<D>, VxeTableDefines.RowDragoverEventParams<D> { }
   export interface RowDragendEventParams<D = any> extends GridEventParams<D>, VxeTableDefines.RowDragendEventParams<D> { }
@@ -676,6 +681,11 @@ export interface VxeGridEventProps<D = any> {
   onScroll?: VxeGridEvents.Scroll<D>
   onScrollBoundary?: VxeGridEvents.ScrollBoundary<D>
   onCustom?: VxeGridEvents.Custom<D>
+  onCustomOpen?: VxeGridEvents.CustomOpen<D>
+  onCustomClose?: VxeGridEvents.CustomClose<D>
+  onCustomCancel?: VxeGridEvents.CustomCancel<D>
+  onCustomReset?: VxeGridEvents.CustomReset<D>
+  onCustomConfirm?: VxeGridEvents.CustomConfirm<D>
   onRowDragstart?: VxeGridEvents.RowDragstart<D>
   onRowDragover?: VxeGridEvents.RowDragover<D>
   onRowDragend?: VxeGridEvents.RowDragend<D>
@@ -764,6 +774,11 @@ export interface VxeGridListeners<D = any> {
   scroll?: VxeGridEvents.Scroll<D>
   scrollBoundary?: VxeGridEvents.ScrollBoundary<D>
   custom?: VxeGridEvents.Custom<D>
+  customOpen?: VxeGridEvents.CustomOpen<D>
+  customClose?: VxeGridEvents.CustomClose<D>
+  customCancel?: VxeGridEvents.CustomCancel<D>
+  customReset?: VxeGridEvents.CustomReset<D>
+  customConfirm?: VxeGridEvents.CustomConfirm<D>
   rowDragstart?: VxeGridEvents.RowDragstart<D>
   rowDragover?: VxeGridEvents.RowDragover<D>
   rowDragend?: VxeGridEvents.RowDragend<D>
@@ -852,6 +867,11 @@ export namespace VxeGridEvents {
   export type Scroll<D = any> = (params: VxeGridDefines.ScrollEventParams<D>) => void
   export type ScrollBoundary<D = any> = (params: VxeGridDefines.ScrollBoundaryEventParams<D>) => void
   export type Custom<D = any> = (params: VxeGridDefines.CustomEventParams<D>) => void
+  export type CustomOpen<D = any> = (params: VxeGridDefines.CustomOpenEventParams<D>) => void
+  export type CustomClose<D = any> = (params: VxeGridDefines.CustomCloseEventParams<D>) => void
+  export type CustomCancel<D = any> = (params: VxeGridDefines.CustomCancelEventParams<D>) => void
+  export type CustomReset<D = any> = (params: VxeGridDefines.CustomResetEventParams<D>) => void
+  export type CustomConfirm<D = any> = (params: VxeGridDefines.CustomConfirmEventParams<D>) => void
   export type RowDragstart<D = any> = (params: VxeGridDefines.RowDragstartEventParams<D>) => void
   export type RowDragover<D = any> = (params: VxeGridDefines.RowDragoverEventParams<D>) => void
   export type RowDragend<D = any> = (params: VxeGridDefines.RowDragendEventParams<D>) => void

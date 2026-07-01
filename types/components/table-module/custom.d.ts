@@ -78,7 +78,7 @@ export interface TableCustomMethods<D = any> {
   /**
    * 保存个性化列操作
    */
-  saveCustom(): Promise<void>
+  saveCustom(isDirectly?: boolean): Promise<void>
   /**
    * 取消个性化列操作
    */
