@@ -317,6 +317,7 @@ export interface VxeUploadPrivateMethods extends UploadPrivateMethods { }
 
 export type VxeUploadEmits = [
   'update:modelValue',
+  'change',
   'add',
   'remove',
   'remove-fail',
@@ -357,15 +358,26 @@ export namespace VxeUploadDefines {
     file: File
   }>
 
+  export interface UploadResultObj {
+    option: VxeUploadDefines.FileObjItem
+    status: 'error' | 'success' | 'pending' | null
+    response: any
+  }
+
   export interface FileCacheItem {
     file: File
     loading: boolean
     status: 'error' | 'success' | 'pending'
     percent: number
+    response: any
   }
 
   export interface FileObjItem {
     [key: string]: any
+  }
+
+  export interface ChangeEventParams {
+    value: VxeUploadPropTypes.ModelValue
   }
 
   export interface AddParams {
@@ -402,7 +414,9 @@ export namespace VxeUploadDefines {
     files: File[]
   }
   export interface UploadQueueEndEventParams extends UploadQueueStartEventParams {
+    value: VxeUploadPropTypes.ModelValue
     options: VxeUploadDefines.FileObjItem[]
+    results: VxeUploadDefines.UploadResultObj[]
   }
 
   export interface MoreVisibleEventParams {
@@ -412,6 +426,7 @@ export namespace VxeUploadDefines {
 
 export type VxeUploadEventProps = {
   'onUpdate:modelValue'?: VxeUploadEvents.UpdateModelValue
+  onChange?: VxeUploadEvents.Change
   onAdd?: VxeUploadEvents.Add
   onRemove?: VxeUploadEvents.Remove
   onRemoveFail?: VxeUploadEvents.RemoveFail
@@ -428,6 +443,7 @@ export type VxeUploadEventProps = {
 
 export interface VxeUploadListeners {
   'update:modelValue'?: VxeUploadEvents.UpdateModelValue
+  change?: VxeUploadEvents.Change
   add?: VxeUploadEvents.Add
   remove?: VxeUploadEvents.Remove
   removeFail?: VxeUploadEvents.RemoveFail
@@ -444,6 +460,7 @@ export interface VxeUploadListeners {
 
 export namespace VxeUploadEvents {
   export type UpdateModelValue = (modelValue: VxeUploadPropTypes.ModelValue) => void
+  export type Change = (params: VxeUploadDefines.ChangeEventParams) => void
   export type Add = (params: VxeUploadDefines.AddEventParams) => void
   export type Remove = (params: VxeUploadDefines.RemoveEventParams) => void
   export type RemoveFail = (params: VxeUploadDefines.RemoveFailEventParams) => void

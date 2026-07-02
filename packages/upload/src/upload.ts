@@ -217,6 +217,7 @@ export default defineVxeComponent({
   },
   emits: [
     'update:modelValue',
+    'change',
     'add',
     'remove',
     'remove-fail',
@@ -491,11 +492,11 @@ export default defineVxeComponent({
       emit('update:modelValue', value)
     }
 
-    const handleChange = (value: VxeUploadDefines.FileObjItem[]) => {
+    const handleChangeEvent = (evnt: Event | null, vals: VxeUploadDefines.FileObjItem[]) => {
       const { singleMode, urlMode, urlArgs } = props
       const urlProp = computeUrlProp.value
       const nameProp = computeNameProp.value
-      let restList = value ? value.slice(0) : []
+      let restList = vals ? vals.slice(0) : []
       if (urlMode) {
         restList = restList.map(item => {
           const url = item[urlProp]
@@ -510,7 +511,10 @@ export default defineVxeComponent({
           return url
         })
       }
-      emitModel(singleMode ? (restList[0] || null) : restList)
+      const value = singleMode ? (restList[0] || null) : restList
+      emitModel(value)
+      dispatchEvent('change', { value }, evnt)
+      return value
     }
 
     const getThumbnailFileUrl = (item: VxeUploadDefines.FileObjItem) => {
@@ -631,6 +635,7 @@ export default defineVxeComponent({
           if (cacheItem) {
             cacheItem.percent = 100
             cacheItem.status = 'success'
+            cacheItem.response = res
           }
           Object.assign(item, res)
           dispatchEvent('upload-success', { option: item, data: res }, null)
@@ -639,6 +644,7 @@ export default defineVxeComponent({
           const cacheItem = fileCacheMaps[fileKey]
           if (cacheItem) {
             cacheItem.status = 'error'
+            cacheItem.response = res
           }
           if (showErrorStatus) {
             Object.assign(item, res)
@@ -665,7 +671,7 @@ export default defineVxeComponent({
       return Promise.resolve()
     }
 
-    const handleReUpload = (item: VxeUploadDefines.FileObjItem) => {
+    const handleReUploadEvent = (evnt: MouseEvent, item: VxeUploadDefines.FileObjItem) => {
       const { uploadMethod, urlMode } = props
       const { fileCacheMaps } = reactData
       const fileKey = getFieldKey(item)
@@ -678,7 +684,7 @@ export default defineVxeComponent({
         cacheItem.percent = 0
         handleUploadResult(item, file).then(() => {
           if (urlMode) {
-            handleChange(reactData.fileList)
+            handleChangeEvent(evnt, reactData.fileList)
           }
         })
       }
@@ -784,7 +790,8 @@ export default defineVxeComponent({
             file: file,
             loading: !!autoSubmit,
             status: 'pending',
-            percent: 0
+            percent: 0,
+            response: null
           }
         }
         const item = reactive(fileObj)
@@ -803,9 +810,19 @@ export default defineVxeComponent({
         dispatchEvent('add', { option: item }, evnt)
       })
       Promise.all(uploadPromiseRests).then(() => {
+        const { fileCacheMaps } = reactData
         const restFileList = reactData.fileList
-        dispatchEvent('upload-queue-end', { options: restFileList, files: selectFiles }, evnt)
-        handleChange(restFileList)
+        const uploadResults: VxeUploadDefines.UploadResultObj[] = restFileList.map(option => {
+          const fileKey = getFieldKey(option)
+          const cacheItem = fileCacheMaps[fileKey]
+          return {
+            option,
+            status: cacheItem ? cacheItem.status : null,
+            response: cacheItem ? cacheItem.response : null
+          }
+        })
+        const value = handleChangeEvent(evnt, restFileList)
+        dispatchEvent('upload-queue-end', { value, options: restFileList, results: uploadResults, files: selectFiles }, evnt)
         // 自动更新校验状态
         if ($xeForm && formItemInfo) {
           $xeForm.triggerItemEvent(evnt as any, formItemInfo.itemConfig.field, restFileList)
@@ -842,7 +859,7 @@ export default defineVxeComponent({
     const handleRemoveEvent = (evnt: Event | null, item: VxeUploadDefines.FileObjItem, index: number) => {
       const { fileList } = reactData
       fileList.splice(index, 1)
-      handleChange(fileList)
+      handleChangeEvent(evnt, fileList)
       // 自动更新校验状态
       if ($xeForm && formItemInfo) {
         $xeForm.triggerItemEvent(evnt || { type: 'remove' }, formItemInfo.itemConfig.field, fileList)
@@ -1483,8 +1500,8 @@ export default defineVxeComponent({
                     mode: 'text',
                     status: 'primary',
                     content: isError ? getI18n('vxe.upload.reUpload') : getI18n('vxe.upload.manualUpload'),
-                    onClick () {
-                      handleReUpload(item)
+                    onClick (evnt) {
+                      handleReUploadEvent(evnt, item)
                     }
                   })
                 ])
@@ -1730,8 +1747,8 @@ export default defineVxeComponent({
                       mode: 'text',
                       status: 'primary',
                       content: isError ? getI18n('vxe.upload.reUpload') : getI18n('vxe.upload.manualUpload'),
-                      onClick () {
-                        handleReUpload(item)
+                      onClick (evnt) {
+                        handleReUploadEvent(evnt, item)
                       }
                     })
                   ])
