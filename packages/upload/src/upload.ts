@@ -732,14 +732,14 @@ export default /* define-vxe-component start */ defineVxeComponent({
       }
       return ''
     },
-    handleChange (value: VxeUploadDefines.FileObjItem[]) {
+    handleChangeEvent (evnt: Event | null, vals: VxeUploadDefines.FileObjItem[]) {
       const $xeUpload = this
       const props = $xeUpload
 
       const { singleMode, urlMode, urlArgs } = props
       const urlProp = $xeUpload.computeUrlProp
       const nameProp = $xeUpload.computeNameProp
-      let restList = value ? value.slice(0) : []
+      let restList = vals ? vals.slice(0) : []
       if (urlMode) {
         restList = restList.map(item => {
           const url = item[urlProp]
@@ -754,7 +754,10 @@ export default /* define-vxe-component start */ defineVxeComponent({
           return url
         })
       }
-      $xeUpload.emitModel(singleMode ? (restList[0] || null) : restList)
+      const value = singleMode ? (restList[0] || null) : restList
+      $xeUpload.emitModel(value)
+      $xeUpload.dispatchEvent('change', { value }, evnt)
+      return value
     },
     getThumbnailFileUrl (item: VxeUploadDefines.FileObjItem) {
       const $xeUpload = this
@@ -887,6 +890,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
           if (cacheItem) {
             cacheItem.percent = 100
             cacheItem.status = 'success'
+            cacheItem.response = res
           }
           // 处理动态字段双向绑定问题
           // Object.assign(item, res)
@@ -899,6 +903,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
           const cacheItem = fileCacheMaps[fileKey]
           if (cacheItem) {
             cacheItem.status = 'error'
+            cacheItem.response = res
           }
           if (showErrorStatus) {
             // 处理动态字段双向绑定问题
@@ -928,7 +933,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       }
       return Promise.resolve()
     },
-    handleReUpload (item: VxeUploadDefines.FileObjItem) {
+    handleReUploadEvent (evnt: MouseEvent, item: VxeUploadDefines.FileObjItem) {
       const $xeUpload = this
       const props = $xeUpload
       const reactData = $xeUpload.reactData
@@ -945,7 +950,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
         cacheItem.percent = 0
         $xeUpload.handleUploadResult(item, file).then(() => {
           if (urlMode) {
-            $xeUpload.handleChange(reactData.fileList)
+            $xeUpload.handleChangeEvent(evnt, reactData.fileList)
           }
         })
       }
@@ -1056,7 +1061,8 @@ export default /* define-vxe-component start */ defineVxeComponent({
             file: file,
             loading: !!autoSubmit,
             status: 'pending',
-            percent: 0
+            percent: 0,
+            response: null
           }
         }
         const item = fileObj
@@ -1075,9 +1081,19 @@ export default /* define-vxe-component start */ defineVxeComponent({
         $xeUpload.dispatchEvent('add', { option: item }, evnt)
       })
       Promise.all(uploadPromiseRests).then(() => {
+        const { fileCacheMaps } = reactData
         const restFileList = reactData.fileList
-        $xeUpload.dispatchEvent('upload-queue-end', { options: restFileList, files: selectFiles }, evnt)
-        $xeUpload.handleChange(restFileList)
+        const uploadResults: VxeUploadDefines.UploadResultObj[] = restFileList.map(option => {
+          const fileKey = $xeUpload.getFieldKey(option)
+          const cacheItem = fileCacheMaps[fileKey]
+          return {
+            option,
+            status: cacheItem ? cacheItem.status : null,
+            response: cacheItem ? cacheItem.response : null
+          }
+        })
+        const value = $xeUpload.handleChangeEvent(evnt, restFileList)
+        $xeUpload.dispatchEvent('upload-queue-end', { value, options: restFileList, results: uploadResults, files: selectFiles }, evnt)
         // 自动更新校验状态
         if ($xeForm && formItemInfo) {
           $xeForm.triggerItemEvent(evnt as any, formItemInfo.itemConfig.field, restFileList)
@@ -1121,7 +1137,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
 
       const { fileList } = reactData
       fileList.splice(index, 1)
-      $xeUpload.handleChange(fileList)
+      $xeUpload.handleChangeEvent(evnt, fileList)
       // 自动更新校验状态
       if ($xeForm && formItemInfo) {
         $xeForm.triggerItemEvent(evnt || { type: 'remove' }, formItemInfo.itemConfig.field, fileList)
@@ -1647,8 +1663,8 @@ export default /* define-vxe-component start */ defineVxeComponent({
                       content: isError ? getI18n('vxe.upload.reUpload') : getI18n('vxe.upload.manualUpload')
                     },
                     on: {
-                      click () {
-                        $xeUpload.handleReUpload(item)
+                      click (evnt: MouseEvent) {
+                        $xeUpload.handleReUploadEvent(evnt, item)
                       }
                     }
                   })
@@ -1928,8 +1944,8 @@ export default /* define-vxe-component start */ defineVxeComponent({
                         content: isError ? getI18n('vxe.upload.reUpload') : getI18n('vxe.upload.manualUpload')
                       },
                       on: {
-                        click () {
-                          $xeUpload.handleReUpload(item)
+                        click (evnt: MouseEvent) {
+                          $xeUpload.handleReUploadEvent(evnt, item)
                         }
                       }
                     })

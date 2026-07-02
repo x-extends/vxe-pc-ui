@@ -994,6 +994,7 @@ export namespace VxeTablePropTypes {
       resize?: VxeModalPropTypes.Resize
       escClosable?: VxeModalPropTypes.EscClosable
       maskClosable?: VxeModalPropTypes.MaskClosable
+      transfer?: VxeDrawerPropTypes.Transfer
     }
     /**
      * 抽屉模式配置项，用于 mode='drawer'
@@ -1008,6 +1009,7 @@ export namespace VxeTablePropTypes {
       resize?: VxeDrawerPropTypes.Resize
       escClosable?: VxeDrawerPropTypes.EscClosable
       maskClosable?: VxeDrawerPropTypes.MaskClosable
+      transfer?: VxeDrawerPropTypes.Transfer
     }
     /**
      * 默认模式配置项
@@ -1015,6 +1017,8 @@ export namespace VxeTablePropTypes {
     popupOptions?: {
       mode?: 'inside' | 'outside' | 'auto' | '' | null
       width?: number | string
+      minWidth?: number | string
+      maxWidth?: number | string
       maxHeight?: number | string
       transfer?: boolean
     }
@@ -7026,7 +7030,8 @@ export namespace VxeTableDefines {
     activeWrapper: boolean
     visible: boolean
     maxHeight: number | string | null
-    popupStyle: VxeComponentStyleType
+    defPopupStyle: VxeComponentStyleType
+    panePopupStyle: VxeComponentStyleType
     oldSortMaps: Record<string, number>
     oldFixedMaps: Record<string, VxeColumnPropTypes.Fixed>
     oldVisibleMaps: Record<string, boolean>
