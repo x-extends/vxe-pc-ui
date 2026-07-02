@@ -46,14 +46,14 @@
         <vxe-radio-button label="3" content="按钮3"></vxe-radio-button>
       </vxe-radio-group>
       <vxe-radio-group v-model="demo1.value6" size="small" status="error" :strict="false" disabled>
-        <vxe-radio-button label="1" content="按钮1"></vxe-radio-button>
+        <vxe-radio-button label="1" icon="vxe-icon-home"></vxe-radio-button>
         <vxe-radio-button label="2" content="按钮2"></vxe-radio-button>
         <vxe-radio-button label="3" content="按钮3"></vxe-radio-button>
       </vxe-radio-group>
       <vxe-radio-group v-model="demo1.value7" size="mini" status="success" :strict="false">
-        <vxe-radio-button label="1" content="按钮1"></vxe-radio-button>
-        <vxe-radio-button label="2" content="按钮2"></vxe-radio-button>
-        <vxe-radio-button label="3" content="按钮3"></vxe-radio-button>
+        <vxe-radio-button checked-value="1" content="按钮1" icon="vxe-icon-home"></vxe-radio-button>
+        <vxe-radio-button checked-value="2" content="按钮2"></vxe-radio-button>
+        <vxe-radio-button checked-value="3" content="按钮3"></vxe-radio-button>
       </vxe-radio-group>
     </p>
     <p>

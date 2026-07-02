@@ -108,6 +108,16 @@ export default defineVxeComponent({
       return propsOpts.value || 'value'
     })
 
+    const computeIconField = computed(() => {
+      const propsOpts = computePropsOpts.value
+      return propsOpts.icon || 'icon'
+    })
+
+    const computeTitleField = computed(() => {
+      const propsOpts = computePropsOpts.value
+      return propsOpts.title || 'title'
+    })
+
     const computeDisabledField = computed(() => {
       const propsOpts = computePropsOpts.value
       return propsOpts.disabled || 'disabled'
@@ -200,9 +210,11 @@ export default defineVxeComponent({
     const renderVN = () => {
       const { status, options } = props
       const defaultSlot = slots.default
-      const valueField = computeValueField.value as 'value'
-      const labelField = computeLabelField.value as 'label'
-      const disabledField = computeDisabledField.value as 'disabled'
+      const valueField = computeValueField.value
+      const labelField = computeLabelField.value
+      const disabledField = computeDisabledField.value
+      const iconField = computeIconField.value
+      const titleField = computeTitleField.value
       const isReadonly = computeIsReadonly.value
       const isDisabled = computeIsDisabled.value
       return h('div', {
@@ -217,8 +229,10 @@ export default defineVxeComponent({
             ? options.map(item => {
               return h(VxeCheckboxComponent, {
                 key: item[valueField],
-                label: item[valueField],
+                checkedValue: item[valueField],
                 content: item[labelField],
+                icon: item[iconField],
+                title: item[titleField],
                 disabled: item[disabledField]
               })
             })

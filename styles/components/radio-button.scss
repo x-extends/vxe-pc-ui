@@ -4,6 +4,21 @@
 @use '../helpers/placement.scss';
 @use '../helpers/themeStatus.scss';
 
+
+// 局部变量
+.vxe-radio--button {
+  --vxe-ui-radio--button-current-margin-left: var(--vxe-ui-base-margin-gap-default);
+  &.size--medium {
+    --vxe-ui-radio--button-current-margin-left: var(--vxe-ui-base-margin-gap-medium);
+  }
+  &.size--small {
+    --vxe-ui-radio--button-current-margin-left: var(--vxe-ui-base-margin-gap-small);
+  }
+  &.size--mini {
+    --vxe-ui-radio--button-current-margin-left: var(--vxe-ui-base-margin-gap-mini);
+  }
+}
+
 .vxe-radio--button {
   &:first-child {
     .vxe-radio--label {
@@ -87,6 +102,12 @@
         }
       }
     }
+  }
+}
+
+.vxe-radio--button-icon {
+  &+.vxe-radio--button-content {
+    margin-left: var(--vxe-ui-radio--button-current-margin-left);
   }
 }
 

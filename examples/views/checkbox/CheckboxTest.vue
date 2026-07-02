@@ -50,14 +50,14 @@
         <vxe-checkbox-button label="3" content="按钮3"></vxe-checkbox-button>
       </vxe-checkbox-group>
       <vxe-checkbox-group v-model="demo1.value23" status="error" size="small">
-        <vxe-checkbox-button label="1" content="按钮1"></vxe-checkbox-button>
+        <vxe-checkbox-button label="1" content="按钮1" icon="vxe-icon-home"></vxe-checkbox-button>
         <vxe-checkbox-button label="2" content="按钮2"></vxe-checkbox-button>
         <vxe-checkbox-button label="3" content="按钮3"></vxe-checkbox-button>
       </vxe-checkbox-group>
       <vxe-checkbox-group v-model="demo1.value24" status="success" size="mini">
-        <vxe-checkbox-button label="1" content="按钮1"></vxe-checkbox-button>
-        <vxe-checkbox-button label="2" content="按钮2"></vxe-checkbox-button>
-        <vxe-checkbox-button label="3" content="按钮3"></vxe-checkbox-button>
+        <vxe-checkbox-button checked-value="1" content="按钮1" icon="vxe-icon-home"></vxe-checkbox-button>
+        <vxe-checkbox-button checked-value="2" content="按钮2"></vxe-checkbox-button>
+        <vxe-checkbox-button checked-value="3" content="按钮3"></vxe-checkbox-button>
       </vxe-checkbox-group>
     </p>
     <p>

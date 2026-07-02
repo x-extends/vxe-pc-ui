@@ -30,6 +30,7 @@ export namespace VxeRadioButtonPropTypes {
   export type CheckedValue = VxeRadioPropTypes.CheckedValue
   export type Title = string | number
   export type Content = string | number
+  export type Icon = string
   export type Disabled = boolean
 
   /**
@@ -48,6 +49,7 @@ export interface VxeRadioButtonProps {
   checkedValue?: VxeRadioButtonPropTypes.CheckedValue
   title?: VxeRadioButtonPropTypes.Title
   content?: VxeRadioButtonPropTypes.Content
+  icon?: VxeRadioButtonPropTypes.Icon
   disabled?: VxeRadioButtonPropTypes.Disabled
 
   /**

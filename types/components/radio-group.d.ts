@@ -30,12 +30,16 @@ export namespace VxeRadioGroupPropTypes {
   export type Options = {
     value?: VxeRadioPropTypes.CheckedValue
     label?: VxeRadioPropTypes.Content
+    icon?: string
+    title?: string
 
     [key: string]: any
   }[]
   export type OptionProps = {
     value?: string
     label?: string
+    icon?: string
+    title?: string
     disabled?: string
   }
   export type ModelValue = any

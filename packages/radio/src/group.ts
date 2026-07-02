@@ -125,6 +125,16 @@ export default defineVxeComponent({
       return propsOpts.disabled || 'disabled'
     })
 
+    const computeIconField = computed(() => {
+      const propsOpts = computePropsOpts.value
+      return propsOpts.icon || 'icon'
+    })
+
+    const computeTitleField = computed(() => {
+      const propsOpts = computePropsOpts.value
+      return propsOpts.title || 'title'
+    })
+
     const emitModel = (value: any) => {
       emit('update:modelValue', value)
     }
@@ -184,9 +194,11 @@ export default defineVxeComponent({
       const { options, type, status } = props
       const vSize = computeSize.value
       const defaultSlot = slots.default
-      const valueField = computeValueField.value as 'value'
-      const labelField = computeLabelField.value as 'label'
-      const disabledField = computeDisabledField.value as 'disabled'
+      const valueField = computeValueField.value
+      const labelField = computeLabelField.value
+      const disabledField = computeDisabledField.value
+      const iconField = computeIconField.value
+      const titleField = computeTitleField.value
       const btnComp = type === 'button' ? VxeRadioButtonComponent : VxeRadioComponent
 
       return h('div', {
@@ -202,6 +214,8 @@ export default defineVxeComponent({
                 key: item[valueField],
                 checkedValue: item[valueField],
                 content: item[labelField],
+                icon: item[iconField],
+                title: item[titleField],
                 disabled: item[disabledField]
               })
             })

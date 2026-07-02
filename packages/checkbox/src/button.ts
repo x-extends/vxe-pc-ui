@@ -10,6 +10,9 @@ export default defineVxeComponent({
   name: 'VxeCheckboxButton',
   props: {
     modelValue: [String, Number, Boolean] as PropType<VxeCheckboxButtonPropTypes.ModelValue>,
+    /**
+     * 已废弃，被 checkedValue 替换
+     */
     label: {
       type: [String, Number, Boolean] as PropType<VxeCheckboxButtonPropTypes.Label>,
       default: null
@@ -17,13 +20,14 @@ export default defineVxeComponent({
     title: [String, Number] as PropType<VxeCheckboxButtonPropTypes.Title>,
     checkedValue: {
       type: [String, Number, Boolean] as PropType<VxeCheckboxButtonPropTypes.CheckedValue>,
-      default: true
+      default: undefined
     },
     uncheckedValue: {
       type: [String, Number, Boolean] as PropType<VxeCheckboxButtonPropTypes.UncheckedValue>,
       default: false
     },
     content: [String, Number] as PropType<VxeCheckboxButtonPropTypes.Content>,
+    icon: [String, Number] as PropType<VxeCheckboxButtonPropTypes.Icon>,
     disabled: {
       type: Boolean as PropType<VxeCheckboxButtonPropTypes.Disabled>,
       default: null
@@ -58,11 +62,17 @@ export default defineVxeComponent({
       reactData
     } as unknown as VxeCheckboxButtonConstructor
 
+    const computeCheckValue = computed(() => {
+      const { checkedValue, label } = props
+      return XEUtils.isUndefined(checkedValue) ? label : checkedValue
+    })
+
     const computeIsChecked = computed(() => {
+      const checkValue = computeCheckValue.value
       if ($xeCheckboxGroup) {
-        return XEUtils.includes($xeCheckboxGroup.props.modelValue, props.label)
+        return XEUtils.includes($xeCheckboxGroup.props.modelValue, checkValue)
       }
-      return props.modelValue === props.checkedValue
+      return props.modelValue === checkValue
     })
 
     const computeIsDisabled = computed(() => {
@@ -81,15 +91,18 @@ export default defineVxeComponent({
     })
 
     const changeEvent = (evnt: Event & { target: { checked: boolean } }) => {
-      const { checkedValue, uncheckedValue } = props
+      const { uncheckedValue } = props
       const isDisabled = computeIsDisabled.value
+      const checkValue = computeCheckValue.value
       if (!isDisabled) {
         const checked = evnt.target.checked
-        const value = checked ? checkedValue : uncheckedValue
-        const params = { checked, value, label: props.label }
         if ($xeCheckboxGroup) {
+          const value = checkValue
+          const params = { checked, value, label: value }
           $xeCheckboxGroup.handleChecked(params, evnt)
         } else {
+          const value = checked ? checkValue : uncheckedValue
+          const params = { checked, value, label: value }
           emit('update:modelValue', value)
           $xeCheckboxButton.dispatchEvent('change', params, evnt)
           // 自动更新校验状态
@@ -112,10 +125,11 @@ export default defineVxeComponent({
     Object.assign($xeCheckboxButton, checkboxButtonMethods, checkboxButtonPrivateMethods)
 
     const renderVN = () => {
-      const { label, content } = props
+      const { icon, content } = props
       const vSize = computeSize.value
       const isDisabled = computeIsDisabled.value
       const isChecked = computeIsChecked.value
+      const checkValue = computeCheckValue.value
       const defaultSlot = slots.default
 
       if ($xeCheckboxGroup) {
@@ -131,14 +145,29 @@ export default defineVxeComponent({
             }, [
               h('span', {
                 class: 'vxe-checkbox--label'
-              }, defaultSlot ? defaultSlot({}) : getFuncText(content))
+              }, defaultSlot
+                ? defaultSlot({})
+                : [
+                    icon
+                      ? h('span', {
+                        class: 'vxe-checkbox--button-icon'
+                      }, [
+                        h('i', { class: icon })
+                      ])
+                      : renderEmptyElement($xeCheckboxButton),
+                    content
+                      ? h('span', {
+                        class: 'vxe-checkbox--button-content'
+                      }, getFuncText(content))
+                      : renderEmptyElement($xeCheckboxButton)
+                  ])
             ])
           }
           return renderEmptyElement($xeCheckboxButton)
         }
       }
       return h('label', {
-        key: label,
+        key: `${checkValue}`,
         class: ['vxe-checkbox vxe-checkbox--button', {
           [`size--${vSize}`]: vSize,
           'is--disabled': isDisabled
@@ -156,7 +185,22 @@ export default defineVxeComponent({
           class: ['vxe-checkbox--label', {
             'is--disabled': isDisabled
           }]
-        }, slots.default ? slots.default({}) : getFuncText(content))
+        }, defaultSlot
+          ? defaultSlot({})
+          : [
+              icon
+                ? h('span', {
+                  class: 'vxe-checkbox--button-icon'
+                }, [
+                  h('i', { class: icon })
+                ])
+                : renderEmptyElement($xeCheckboxButton),
+              content
+                ? h('span', {
+                  class: 'vxe-checkbox--button-content'
+                }, getFuncText(content))
+                : renderEmptyElement($xeCheckboxButton)
+            ])
       ])
     }
 

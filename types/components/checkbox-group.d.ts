@@ -29,12 +29,16 @@ export namespace VxeCheckboxGroupPropTypes {
   export type Options = {
     value?: VxeCheckboxPropTypes.Label
     label?: VxeCheckboxPropTypes.Content
+    icon?: string
+    title?: string
 
     [key: string]: any
   }[]
   export type OptionProps = {
     value?: string
     label?: string
+    icon?: string
+    title?: string
     disabled?: string
   }
   export type Status = VxeComponentStatusType
@@ -89,7 +93,7 @@ export interface CheckboxGroupPrivateMethods {
   handleChecked(params: {
     checked: boolean
     value: VxeCheckboxPropTypes.ModelValue
-    label: VxeCheckboxPropTypes.Label
+    label: VxeCheckboxPropTypes.ModelValue
   }, evnt: Event): void
 }
 export interface VxeCheckboxGroupPrivateMethods extends CheckboxGroupPrivateMethods { }
