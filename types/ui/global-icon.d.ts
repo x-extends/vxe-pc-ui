@@ -24,6 +24,15 @@ declare module '@vxe-ui/core' {
     TABLE_RADIO_UNCHECKED?: string
     TABLE_RADIO_DISABLED_UNCHECKED?: string
     TABLE_CUSTOM_SORT?: string
+    TABLE_CUSTOM_FIXED_LEFT?: string
+    TABLE_CUSTOM_FIXED_RIGHT?: string
+    TABLE_CUSTOM_ALIGN_LEFT?: string
+    TABLE_CUSTOM_ALIGN_CENTER?: string
+    TABLE_CUSTOM_ALIGN_RIGHT?: string
+    TABLE_CUSTOM_MOVE_UP?: string
+    TABLE_CUSTOM_MOVE_DN?: string
+    TABLE_CUSTOM_PUT_TOP?: string
+    TABLE_CUSTOM_PUT_BOTTOM?: string
     TABLE_MENU_OPTIONS?: string
     TABLE_MENU_OPTION_LOADING?: string
     TABLE_DRAG_ROW?: string

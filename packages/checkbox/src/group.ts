@@ -140,6 +140,18 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const propsOpts = $xeCheckboxGroup.computePropsOpts as VxeCheckboxGroupPropTypes.OptionProps
       return propsOpts.value || 'value'
     },
+    computeIconField () {
+      const $xeCheckboxGroup = this
+
+      const propsOpts = $xeCheckboxGroup.computePropsOpts as VxeCheckboxGroupPropTypes.OptionProps
+      return propsOpts.icon || 'icon'
+    },
+    computeTitleField () {
+      const $xeCheckboxGroup = this
+
+      const propsOpts = $xeCheckboxGroup.computePropsOpts as VxeCheckboxGroupPropTypes.OptionProps
+      return propsOpts.title || 'title'
+    },
     computeDisabledField () {
       const $xeCheckboxGroup = this
 
@@ -240,9 +252,11 @@ export default /* define-vxe-component start */ defineVxeComponent({
 
       const { status, options } = props
       const defaultSlot = slots.default
-      const valueField = $xeCheckboxGroup.computeValueField as 'value'
-      const labelField = $xeCheckboxGroup.computeLabelField as 'label'
-      const disabledField = $xeCheckboxGroup.computeDisabledField as 'disabled'
+      const valueField = $xeCheckboxGroup.computeValueField
+      const labelField = $xeCheckboxGroup.computeLabelField
+      const disabledField = $xeCheckboxGroup.computeDisabledField
+      const iconField = $xeCheckboxGroup.computeIconField
+      const titleField = $xeCheckboxGroup.computeTitleField
       const isReadonly = $xeCheckboxGroup.computeIsReadonly
       const isDisabled = $xeCheckboxGroup.computeIsDisabled
       return h('div', {
@@ -258,8 +272,10 @@ export default /* define-vxe-component start */ defineVxeComponent({
               return h(VxeCheckboxComponent, {
                 key: item[valueField],
                 props: {
-                  label: item[valueField],
+                  checkedValue: item[valueField],
                   content: item[labelField],
+                  icon: item[iconField],
+                  title: item[titleField],
                   disabled: item[disabledField]
                 }
               })

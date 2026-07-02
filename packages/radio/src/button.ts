@@ -20,6 +20,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
     },
     title: [String, Number] as PropType<VxeRadioButtonPropTypes.Title>,
     content: [String, Number] as PropType<VxeRadioButtonPropTypes.Content>,
+    icon: String as PropType<VxeRadioButtonPropTypes.Icon>,
     disabled: {
       type: Boolean as PropType<VxeRadioButtonPropTypes.Disabled>,
       default: null
@@ -179,7 +180,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const slots = $xeRadioButton.$scopedSlots
       const $xeRadioGroup = $xeRadioButton.$xeRadioGroup
 
-      const { label, content, checkedValue } = props
+      const { label, icon, content, checkedValue } = props
       const radioValue = XEUtils.isUndefined(checkedValue) ? label : checkedValue
       const vSize = $xeRadioButton.computeSize
       const isDisabled = $xeRadioButton.computeIsDisabled
@@ -199,7 +200,22 @@ export default /* define-vxe-component start */ defineVxeComponent({
             }, [
               h('span', {
                 class: 'vxe-checkbox--label'
-              }, defaultSlot ? defaultSlot({}) : getFuncText(content))
+              }, defaultSlot
+                ? defaultSlot({})
+                : [
+                    icon
+                      ? h('span', {
+                        class: 'vxe-radio--button-icon'
+                      }, [
+                        h('i', { class: icon })
+                      ])
+                      : renderEmptyElement($xeRadioButton),
+                    content
+                      ? h('span', {
+                        class: 'vxe-radio--button-content'
+                      }, getFuncText(content))
+                      : renderEmptyElement($xeRadioButton)
+                  ])
             ])
           }
           return renderEmptyElement($xeRadioButton)
@@ -234,7 +250,22 @@ export default /* define-vxe-component start */ defineVxeComponent({
           class: ['vxe-radio--label', {
             'is--disabled': isDisabled
           }]
-        }, defaultSlot ? defaultSlot({}) : getFuncText(content))
+        }, defaultSlot
+          ? defaultSlot({})
+          : [
+              icon
+                ? h('span', {
+                  class: 'vxe-radio--button-icon'
+                }, [
+                  h('i', { class: icon })
+                ])
+                : renderEmptyElement($xeRadioButton),
+              content
+                ? h('span', {
+                  class: 'vxe-radio--button-content'
+                }, getFuncText(content))
+                : renderEmptyElement($xeRadioButton)
+            ])
       ])
     }
   },

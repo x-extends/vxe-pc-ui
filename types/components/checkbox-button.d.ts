@@ -19,22 +19,30 @@ export interface VxeCheckboxButtonPrivateRef extends CheckboxButtonPrivateRef { 
 export namespace VxeCheckboxButtonPropTypes {
   export type Size = VxeCheckboxPropTypes.Size
   export type ModelValue = any
+  /**
+   * 已废弃，被 CheckedValue 替换
+   */
   export type Label = VxeCheckboxPropTypes.Label
   export type Title = VxeCheckboxPropTypes.Title
   export type CheckedValue = VxeCheckboxPropTypes.CheckedValue
-  export type UncheckedValue = VxeCheckboxPropTypes.UncheckedValue
+   export type UncheckedValue = VxeCheckboxPropTypes.UncheckedValue
   export type Content = VxeCheckboxPropTypes.Content
+  export type Icon = string
   export type Disabled = VxeCheckboxPropTypes.Disabled
 }
 
 export interface VxeCheckboxButtonProps {
   size?: VxeCheckboxButtonPropTypes.Size
-  value?: VxeCheckboxButtonPropTypes.ModelValue
+  modelValue?: VxeCheckboxButtonPropTypes.ModelValue
+  /**
+   * 已废弃，被 checked-value 替换
+   */
   label?: VxeCheckboxButtonPropTypes.Label
   title?: VxeCheckboxButtonPropTypes.Title
   checkedValue?: VxeCheckboxButtonPropTypes.CheckedValue
   uncheckedValue?: VxeCheckboxButtonPropTypes.UncheckedValue
   content?: VxeCheckboxButtonPropTypes.Content
+  icon?: VxeCheckboxButtonPropTypes.Icon
   disabled?: VxeCheckboxButtonPropTypes.Disabled
 }
 

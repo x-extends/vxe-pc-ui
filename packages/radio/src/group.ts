@@ -126,20 +126,32 @@ export default /* define-vxe-component start */ defineVxeComponent({
     computeLabelField  () {
       const $xeRadioGroup = this
 
-      const propsOpts: VxeRadioGroupPropTypes.OptionProps = $xeRadioGroup.computePropsOpts
+      const propsOpts = $xeRadioGroup.computePropsOpts as VxeRadioGroupPropTypes.OptionProps
       return propsOpts.label || 'label'
     },
     computeValueField  () {
       const $xeRadioGroup = this
 
-      const propsOpts: VxeRadioGroupPropTypes.OptionProps = $xeRadioGroup.computePropsOpts
+      const propsOpts = $xeRadioGroup.computePropsOpts as VxeRadioGroupPropTypes.OptionProps
       return propsOpts.value || 'value'
     },
     computeDisabledField  () {
       const $xeRadioGroup = this
 
-      const propsOpts: VxeRadioGroupPropTypes.OptionProps = $xeRadioGroup.computePropsOpts
+      const propsOpts = $xeRadioGroup.computePropsOpts as VxeRadioGroupPropTypes.OptionProps
       return propsOpts.disabled || 'disabled'
+    },
+    computeIconField () {
+      const $xeRadioGroup = this
+
+      const propsOpts = $xeRadioGroup.computePropsOpts as VxeRadioGroupPropTypes.OptionProps
+      return propsOpts.icon || 'icon'
+    },
+    computeTitleField () {
+      const $xeRadioGroup = this
+
+      const propsOpts = $xeRadioGroup.computePropsOpts as VxeRadioGroupPropTypes.OptionProps
+      return propsOpts.title || 'title'
     }
   },
   methods: {
@@ -223,9 +235,11 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const { options, type, status } = props
       const vSize = $xeRadioGroup.computeSize
       const defaultSlot = slots.default
-      const valueField = $xeRadioGroup.computeValueField as 'value'
-      const labelField = $xeRadioGroup.computeLabelField as 'label'
-      const disabledField = $xeRadioGroup.computeDisabledField as 'disabled'
+      const valueField = $xeRadioGroup.computeValueField
+      const labelField = $xeRadioGroup.computeLabelField
+      const disabledField = $xeRadioGroup.computeDisabledField
+      const iconField = $xeRadioGroup.computeIconField
+      const titleField = $xeRadioGroup.computeTitleField
       const btnComp = type === 'button' ? VxeRadioButtonComponent : VxeRadioComponent
 
       return h('div', {
@@ -242,6 +256,8 @@ export default /* define-vxe-component start */ defineVxeComponent({
                 props: {
                   checkedValue: item[valueField],
                   content: item[labelField],
+                  icon: item[iconField],
+                  title: item[titleField],
                   disabled: item[disabledField]
                 }
               })

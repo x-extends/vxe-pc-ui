@@ -1043,6 +1043,18 @@ export namespace VxeTablePropTypes {
      */
     allowVisible?: boolean
     /**
+     * 是否允许自定义对齐方式
+     */
+    allowAlign?: boolean
+    /**
+     * 是否允许自定义表头对齐方式
+     */
+    allowHeaderAlign?: boolean
+    /**
+     * 是否允许自定义表尾对齐方式
+     */
+    allowFooterAlign?: boolean
+    /**
      * 是否允许自定义冻结列
      */
     allowFixed?: boolean
@@ -5923,6 +5935,9 @@ export type VxeTableEmits = [
   'custom-visible-all',
   'custom-fixed-change',
   'custom-sort-change',
+  'custom-align-change',
+  'custom-header-align-change',
+  'custom-footer-align-change',
 
   ...VxeTableExtendCellAreaEmits
 ]
@@ -6328,6 +6343,18 @@ export namespace VxeTableDefines {
     /**
      * @private
      */
+    defaultAlign: VxeColumnPropTypes.Align | undefined
+    /**
+     * @private
+     */
+    defaultHeaderAlign: VxeColumnPropTypes.HeaderAlign | undefined
+    /**
+     * @private
+     */
+    defaultFooterAlign: VxeColumnPropTypes.FooterAlign | undefined
+    /**
+     * @private
+     */
     defaultAggGroup: boolean
     /**
      * @private
@@ -6371,6 +6398,18 @@ export namespace VxeTableDefines {
      * @private
      */
     renderVisible: VxeColumnPropTypes.Visible
+    /**
+     * @private
+     */
+    renderAlign: VxeColumnPropTypes.Align
+    /**
+     * @private
+     */
+    renderHeaderAlign: VxeColumnPropTypes.HeaderAlign
+    /**
+     * @private
+     */
+    renderFooterAlign: VxeColumnPropTypes.FooterAlign
 
     /**
      * @private
@@ -6998,9 +7037,12 @@ export namespace VxeTableDefines {
     c?: CustomSortStoreObj[]
   }
 
-  export type CustomEventType = 'reset' | 'confirm' | 'update:width' | 'update:fixed' | 'update:sort' | 'update:visible' | 'update:aggGroup' | 'update:aggFunc'
+  export type CustomEventType = 'reset' | 'confirm' | 'update:width' | 'update:fixed' | 'update:sort' | 'update:visible' | 'update:align' | 'update:headerAlign' | 'update:footerAlign' | 'update:aggGroup' | 'update:aggFunc'
 
   export interface CustomStoreData {
+    alignData?: Record<string, VxeColumnPropTypes.Align>
+    headerAlignData?: Record<string, VxeColumnPropTypes.HeaderAlign>
+    footerAlignData?: Record<string, VxeColumnPropTypes.FooterAlign>
     resizableData?: Record<string, number>
     sortData?: CustomSortStoreObj[]
     visibleData?: Record<string, boolean>
@@ -7011,29 +7053,41 @@ export namespace VxeTableDefines {
 
   export interface VxeTableCustomStorageObj {
     /**
+     * 保存列对齐方式
+     */
+    align?: boolean | null
+    /**
+     * 保存表头对齐方式
+     */
+    headerAlign?: boolean | null
+    /**
+     * 保存表尾对齐方式
+     */
+    footerAlign?: boolean | null
+    /**
      * 保存列可视状态
      */
-    visible?: boolean
+    visible?: boolean | null
     /**
      * 保存列宽调整状态
      */
-    resizable?: boolean
+    resizable?: boolean | null
     /**
      * 保存列冻结状态
      */
-    fixed?: boolean
+    fixed?: boolean | null
     /**
      * 保存列顺序状态
      */
-    sort?: boolean
+    sort?: boolean | null
     /**
      * 保存列的聚合分组状态
      */
-    aggGroup?: boolean
+    aggGroup?: boolean | null
     /**
      * 保存列聚合函数状态
      */
-    aggFunc?: boolean
+    aggFunc?: boolean | null
   }
 
   export interface ExtortSheetMethodParams {
