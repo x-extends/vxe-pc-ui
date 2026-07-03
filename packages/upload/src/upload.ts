@@ -922,7 +922,12 @@ export default /* define-vxe-component start */ defineVxeComponent({
           if (cacheItem) {
             cacheItem.loading = false
           }
-          $xeUpload.dispatchEvent('upload-end', { option: item }, null)
+          const result: VxeUploadDefines.UploadResultObj = {
+            option: item,
+            status: cacheItem ? cacheItem.status : null,
+            response: cacheItem ? cacheItem.response : null
+          }
+          $xeUpload.dispatchEvent('upload-end', { option: item, result }, null)
         })
       } else {
         const { fileCacheMaps } = reactData
@@ -1083,7 +1088,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       Promise.all(uploadPromiseRests).then(() => {
         const { fileCacheMaps } = reactData
         const restFileList = reactData.fileList
-        const uploadResults: VxeUploadDefines.UploadResultObj[] = restFileList.map(option => {
+        const uploadResults: VxeUploadDefines.UploadResultObj[] = newFileList.map(option => {
           const fileKey = $xeUpload.getFieldKey(option)
           const cacheItem = fileCacheMaps[fileKey]
           return {
@@ -1096,7 +1101,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
         $xeUpload.dispatchEvent('upload-queue-end', { value, options: restFileList, results: uploadResults, files: selectFiles }, evnt)
         // 自动更新校验状态
         if ($xeForm && formItemInfo) {
-          $xeForm.triggerItemEvent(evnt as any, formItemInfo.itemConfig.field, restFileList)
+          $xeForm.triggerItemEvent(evnt as any, formItemInfo.itemConfig.field, value)
         }
       })
     },
