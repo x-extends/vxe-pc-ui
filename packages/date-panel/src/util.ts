@@ -197,7 +197,7 @@ function getRangeDateOffsetNum (code: string) {
   return rangeDateOffsetNumMaps[code] || 0
 }
 
-export function getRangeDateByCode (code: 'last1' | 'last3' | 'last7' | 'last30' | 'last60' | 'last90' | 'last180', val: string | number | Date | null | string[] | undefined, type: VxeDatePanelPropTypes.Type, options: {
+export function getRangeDateByCode (code: 'last1' | 'last3' | 'last7' | 'last30' | 'last60' | 'last90' | 'last180', val: string | number | Date | null | (string | number | Date | null)[] | undefined, type: VxeDatePanelPropTypes.Type, options: {
   valueFormat: string
   firstDay: VxeDatePanelPropTypes.StartDay
 }) {

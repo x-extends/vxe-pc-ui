@@ -4,7 +4,7 @@ import XEUtils from 'xe-utils'
 import { getConfig, getIcon, getI18n, commands, globalEvents, createEvent, GLOBAL_EVENT_KEYS, globalMixins, renderEmptyElement } from '../../ui'
 import { getFuncText, getLastZIndex, nextZIndex, isEnableConf } from '../../ui/src/utils'
 import { updatePanelPlacement, getEventTargetNode } from '../../ui/src/dom'
-import { parseDateString, parseDateObj, getRangeDateByCode, handleValueFormat } from '../../date-panel/src/util'
+import { parseDateString, parseDateObj, getRangeDateByCode, handleValueFormat, hasTimestampValueType, hasDateValueType, parseDateValue } from '../../date-panel/src/util'
 import { getSlotVNs } from '../../ui/src/vn'
 import { createComponentLog } from '../../ui/src/log'
 import VxeDatePanelComponent from '../../date-panel/src/date-panel'
@@ -449,12 +449,12 @@ export default /* define-vxe-component start */ defineVxeComponent({
         endLabel
       }
     },
-    getRangeValue (sValue: string, eValue: string) {
+    getRangeValue (sValue: string | number | Date | null, eValue: string | number | Date | null) {
       const $xeDateRangePicker = this
       const props = $xeDateRangePicker
 
-      const { value: modelValue, valueType } = props
-      let isArr = XEUtils.isArray(modelValue)
+      const { value: modelValue, valueType, valueFormat } = props
+      let isArr = valueFormat === 'date' || XEUtils.isArray(modelValue)
       if (valueType) {
         switch (valueType) {
           case 'array':
@@ -466,7 +466,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
         }
       }
       if (sValue || eValue) {
-        const rest = [sValue || '', eValue || '']
+        const rest = [sValue || null, eValue || null]
         if (isArr) {
           return rest
         }
@@ -560,16 +560,36 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const $xeForm = $xeDateRangePicker.$xeForm
       const formItemInfo = $xeDateRangePicker.formItemInfo
 
-      const { value: modelValue } = props
-      reactData.startValue = sValue
-      reactData.endValue = eValue
-      const value = $xeDateRangePicker.getRangeValue(sValue, eValue)
-      const isFinish = (sValue && eValue) || (!sValue && !eValue)
-      $xeDateRangePicker.emitModel(value)
-      $xeDateRangePicker.$emit('update:startValue', sValue || '')
-      $xeDateRangePicker.$emit('update:endValue', eValue || '')
+      const { type, value: modelValue, valueFormat } = props
+      const dateValueFormat = $xeDateRangePicker.computeDateValueFormat
+      let startRest: string | number | Date | null = sValue
+      let endRest: string | number | Date | null = eValue
+      if (hasTimestampValueType(valueFormat)) {
+        if (startRest) {
+          const dateVal = parseDateValue(startRest, type, { valueFormat: dateValueFormat })
+          startRest = dateVal ? dateVal.getTime() : null
+        }
+        if (endRest) {
+          const dateVal = parseDateValue(endRest, type, { valueFormat: dateValueFormat })
+          endRest = dateVal ? dateVal.getTime() : null
+        }
+      } else if (hasDateValueType(valueFormat)) {
+        if (startRest) {
+          startRest = parseDateValue(startRest, type, { valueFormat: dateValueFormat })
+        }
+        if (endRest) {
+          endRest = parseDateValue(endRest, type, { valueFormat: dateValueFormat })
+        }
+      }
+      reactData.startValue = startRest
+      reactData.endValue = endRest
+      const value = $xeDateRangePicker.getRangeValue(startRest, endRest)
+      const isFinish = (startRest && endRest) || (!startRest && !endRest)
+      $xeDateRangePicker.$emit('update:modelValue', value)
+      $xeDateRangePicker.$emit('update:startValue', startRest || '')
+      $xeDateRangePicker.$emit('update:endValue', endRest || '')
       if (XEUtils.toValueString(modelValue) !== value) {
-        $xeDateRangePicker.dispatchEvent('change', { value, startValue: sValue, endValue: eValue, isFinish }, evnt as any)
+        $xeDateRangePicker.dispatchEvent('change', { value, startValue: startRest, endValue: endRest, isFinish }, evnt as any)
         // 自动更新校验状态
         if ($xeForm && formItemInfo) {
           $xeForm.triggerItemEvent(evnt, formItemInfo.itemConfig.field, value)

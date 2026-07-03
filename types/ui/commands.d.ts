@@ -41,9 +41,9 @@ declare module '@vxe-ui/core' {
       $dateRangePicker: VxeDateRangePickerConstructor
       option: VxeDateRangePickerDefines.ShortcutOption
       code: string | undefined
-      value: string | string[]
-      startValue: string
-      endValue: string
+      value: string | number | Date | (string | number | Date | null)[]
+      startValue: string | number | Date | null
+      endValue: string | number | Date | null
     }
 
     export interface TableCommandMethodParams {
