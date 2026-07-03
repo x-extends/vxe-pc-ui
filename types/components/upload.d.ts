@@ -408,7 +408,9 @@ export namespace VxeUploadDefines {
   export interface UploadStartEventParams extends UploadSuccessEventParams {
     option: VxeUploadDefines.FileObjItem
   }
-  export interface UploadEndEventParams extends UploadStartEventParams {}
+  export interface UploadEndEventParams extends UploadStartEventParams {
+    results: VxeUploadDefines.UploadResultObj
+  }
 
   export interface UploadQueueStartEventParams extends UploadSuccessEventParams {
     files: File[]
