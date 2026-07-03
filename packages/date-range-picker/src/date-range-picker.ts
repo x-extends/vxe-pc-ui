@@ -4,7 +4,7 @@ import XEUtils from 'xe-utils'
 import { getConfig, getIcon, getI18n, commands, globalEvents, createEvent, GLOBAL_EVENT_KEYS, useSize, renderEmptyElement } from '../../ui'
 import { getFuncText, getLastZIndex, nextZIndex, isEnableConf } from '../../ui/src/utils'
 import { updatePanelPlacement, getEventTargetNode } from '../../ui/src/dom'
-import { parseDateString, parseDateObj, getRangeDateByCode, handleValueFormat } from '../../date-panel/src/util'
+import { parseDateString, parseDateObj, getRangeDateByCode, handleValueFormat, hasTimestampValueType, hasDateValueType, parseDateValue } from '../../date-panel/src/util'
 import { getSlotVNs } from '../../ui/src/vn'
 import { createComponentLog } from '../../ui/src/log'
 import VxeDatePanelComponent from '../../date-panel'
@@ -383,9 +383,9 @@ export default defineVxeComponent({
       }
     }
 
-    const getRangeValue = (sValue: string, eValue: string) => {
-      const { modelValue, valueType } = props
-      let isArr = XEUtils.isArray(modelValue)
+    const getRangeValue = (sValue: string | number | Date | null, eValue: string | number | Date | null) => {
+      const { modelValue, valueType, valueFormat } = props
+      let isArr = valueFormat === 'date' || XEUtils.isArray(modelValue)
       if (valueType) {
         switch (valueType) {
           case 'array':
@@ -397,7 +397,7 @@ export default defineVxeComponent({
         }
       }
       if (sValue || eValue) {
-        const rest = [sValue || '', eValue || '']
+        const rest = [sValue || null, eValue || null]
         if (isArr) {
           return rest
         }
@@ -477,16 +477,36 @@ export default defineVxeComponent({
     }
 
     const handleChange = (sValue: string, eValue: string, evnt: Event | { type: string }) => {
-      const { modelValue } = props
-      reactData.startValue = sValue
-      reactData.endValue = eValue
-      const value = getRangeValue(sValue, eValue)
-      const isFinish = (sValue && eValue) || (!sValue && !eValue)
+      const { type, modelValue, valueFormat } = props
+      const dateValueFormat = computeDateValueFormat.value
+      let startRest: string | number | Date | null = sValue
+      let endRest: string | number | Date | null = eValue
+      if (hasTimestampValueType(valueFormat)) {
+        if (startRest) {
+          const dateVal = parseDateValue(startRest, type, { valueFormat: dateValueFormat })
+          startRest = dateVal ? dateVal.getTime() : null
+        }
+        if (endRest) {
+          const dateVal = parseDateValue(endRest, type, { valueFormat: dateValueFormat })
+          endRest = dateVal ? dateVal.getTime() : null
+        }
+      } else if (hasDateValueType(valueFormat)) {
+        if (startRest) {
+          startRest = parseDateValue(startRest, type, { valueFormat: dateValueFormat })
+        }
+        if (endRest) {
+          endRest = parseDateValue(endRest, type, { valueFormat: dateValueFormat })
+        }
+      }
+      reactData.startValue = startRest
+      reactData.endValue = endRest
+      const value = getRangeValue(startRest, endRest)
+      const isFinish = (startRest && endRest) || (!startRest && !endRest)
       emit('update:modelValue', value)
-      emit('update:startValue', sValue || '')
-      emit('update:endValue', eValue || '')
+      emit('update:startValue', startRest || '')
+      emit('update:endValue', endRest || '')
       if (XEUtils.toValueString(modelValue) !== value) {
-        dispatchEvent('change', { value, startValue: sValue, endValue: eValue, isFinish }, evnt as any)
+        dispatchEvent('change', { value, startValue: startRest, endValue: endRest, isFinish }, evnt as any)
         // 自动更新校验状态
         if ($xeForm && formItemInfo) {
           $xeForm.triggerItemEvent(evnt, formItemInfo.itemConfig.field, value)
