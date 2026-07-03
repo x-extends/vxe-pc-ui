@@ -1,15 +1,22 @@
-import { h, computed, inject, PropType, reactive } from 'vue'
+import { h, computed, inject, PropType, reactive, onMounted } from 'vue'
 import { defineVxeComponent } from '../../ui/src/comp'
 import XEUtils from 'xe-utils'
 import { getFuncText } from '../../ui/src/utils'
 import { getConfig, createEvent, useSize, getIcon, renderEmptyElement } from '../../ui'
+import { createComponentLog } from '../../ui/src/log'
 
 import type { VxeCheckboxConstructor, VxeCheckboxGroupConstructor, CheckboxReactData, VxeCheckboxEmits, ValueOf, VxeCheckboxGroupPrivateMethods, CheckboxMethods, VxeCheckboxPropTypes, VxeFormConstructor, VxeFormPrivateMethods, VxeFormDefines } from '../../../types'
+
+const { warnLog } = createComponentLog('checkbox')
 
 export default defineVxeComponent({
   name: 'VxeCheckbox',
   props: {
     modelValue: [String, Number, Boolean] as PropType<VxeCheckboxPropTypes.ModelValue>,
+    /**
+     * 已废弃，被 checkedValue 替换
+     * @deprecated
+     */
     label: {
       type: [String, Number] as PropType<VxeCheckboxPropTypes.Label>,
       default: null
@@ -61,9 +68,15 @@ export default defineVxeComponent({
 
     const { computeSize } = useSize(props)
 
+    const computeCheckValue = computed(() => {
+      const { checkedValue, label } = props
+      return XEUtils.isUndefined(checkedValue) ? label : checkedValue
+    })
+
     const computeIsChecked = computed(() => {
+      const checkValue = computeCheckValue.value
       if ($xeCheckboxGroup) {
-        return XEUtils.includes($xeCheckboxGroup.props.modelValue, props.label)
+        return XEUtils.includes($xeCheckboxGroup.props.modelValue, checkValue)
       }
       return props.modelValue === props.checkedValue
     })
@@ -84,15 +97,18 @@ export default defineVxeComponent({
     })
 
     const changeEvent = (evnt: Event & { target: { checked: boolean } }) => {
-      const { checkedValue, uncheckedValue } = props
+      const { uncheckedValue } = props
       const isDisabled = computeIsDisabled.value
+      const checkValue = computeCheckValue.value
       if (!isDisabled) {
         const checked = evnt.target.checked
-        const value = checked ? checkedValue : uncheckedValue
-        const params = { checked, value, label: props.label }
         if ($xeCheckboxGroup) {
+          const value = checkValue
+          const params = { checked, value, label: value }
           $xeCheckboxGroup.handleChecked(params, evnt)
         } else {
+          const value = checked ? checkValue : uncheckedValue
+          const params = { checked, value, label: value }
           emit('update:modelValue', value)
           checkboxMethods.dispatchEvent('change', params, evnt)
           // 自动更新校验状态
@@ -114,10 +130,11 @@ export default defineVxeComponent({
     Object.assign($xeCheckbox, checkboxMethods)
 
     const renderVN = () => {
-      const { label, content } = props
+      const { content } = props
       const vSize = computeSize.value
       const isDisabled = computeIsDisabled.value
       const isChecked = computeIsChecked.value
+      const checkValue = computeCheckValue.value
       const indeterminate = !isChecked && props.indeterminate
       const defaultSlot = slots.default
 
@@ -141,7 +158,7 @@ export default defineVxeComponent({
         }
       }
       return h('label', {
-        key: label,
+        key: `${checkValue}`,
         class: ['vxe-checkbox vxe-checkbox--default', {
           [`size--${vSize}`]: vSize,
           'is--indeterminate': indeterminate,
@@ -165,6 +182,12 @@ export default defineVxeComponent({
         }, defaultSlot ? defaultSlot({}) : getFuncText(content))
       ])
     }
+
+    onMounted(() => {
+      if (props.label !== null) {
+        warnLog('vxe.error.delProp', ['label', 'checked-value'])
+      }
+    })
 
     $xeCheckbox.renderVN = renderVN
 

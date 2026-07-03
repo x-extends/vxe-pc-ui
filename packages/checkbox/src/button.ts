@@ -1,10 +1,13 @@
-import { h, computed, reactive, inject, PropType } from 'vue'
+import { h, computed, reactive, inject, PropType, onMounted } from 'vue'
 import { defineVxeComponent } from '../../ui/src/comp'
 import XEUtils from 'xe-utils'
 import { getFuncText } from '../../ui/src/utils'
 import { getConfig, createEvent, useSize, renderEmptyElement } from '../../ui'
+import { createComponentLog } from '../../ui/src/log'
 
 import type { VxeCheckboxButtonPropTypes, VxeCheckboxGroupConstructor, CheckboxButtonReactData, CheckboxButtonPrivateMethods, VxeCheckboxButtonConstructor, VxeCheckboxButtonEmits, VxeCheckboxGroupPrivateMethods, CheckboxButtonMethods, VxeFormConstructor, VxeFormPrivateMethods, VxeFormDefines } from '../../../types'
+
+const { warnLog } = createComponentLog('checkbox-button')
 
 export default defineVxeComponent({
   name: 'VxeCheckboxButton',
@@ -12,6 +15,7 @@ export default defineVxeComponent({
     modelValue: [String, Number, Boolean] as PropType<VxeCheckboxButtonPropTypes.ModelValue>,
     /**
      * 已废弃，被 checkedValue 替换
+     * @deprecated
      */
     label: {
       type: [String, Number, Boolean] as PropType<VxeCheckboxButtonPropTypes.Label>,
@@ -203,6 +207,12 @@ export default defineVxeComponent({
             ])
       ])
     }
+
+    onMounted(() => {
+      if (props.label !== null) {
+        warnLog('vxe.error.delProp', ['label', 'checked-value'])
+      }
+    })
 
     $xeCheckboxButton.renderVN = renderVN
 

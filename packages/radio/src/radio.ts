@@ -1,10 +1,13 @@
-import { h, computed, inject, PropType, reactive } from 'vue'
+import { h, computed, inject, PropType, reactive, onMounted } from 'vue'
 import { defineVxeComponent } from '../../ui/src/comp'
 import XEUtils from 'xe-utils'
 import { getFuncText } from '../../ui/src/utils'
 import { getConfig, createEvent, useSize, getIcon, renderEmptyElement } from '../../ui'
+import { createComponentLog } from '../../ui/src/log'
 
 import type { VxeRadioPropTypes, VxeRadioConstructor, VxeRadioEmits, RadioReactData, RadioPrivateMethods, VxeRadioGroupConstructor, VxeRadioGroupPrivateMethods, RadioMethods, VxeFormConstructor, ValueOf, VxeFormPrivateMethods, VxeFormDefines } from '../../../types'
+
+const { warnLog } = createComponentLog('radio')
 
 export default defineVxeComponent({
   name: 'VxeRadio',
@@ -32,6 +35,7 @@ export default defineVxeComponent({
 
     /**
      * 已废弃，被 checkedValue 替换
+     * @deprecated
      */
     label: {
       type: [String, Number, Boolean] as PropType<VxeRadioPropTypes.Label>,
@@ -63,6 +67,11 @@ export default defineVxeComponent({
 
     const { computeSize } = useSize(props)
 
+    const computeCheckValue = computed(() => {
+      const { checkedValue, label } = props
+      return XEUtils.isUndefined(checkedValue) ? label : checkedValue
+    })
+
     const computeIsDisabled = computed(() => {
       const { disabled } = props
       if (disabled === null) {
@@ -84,10 +93,12 @@ export default defineVxeComponent({
       return $xeRadioGroup ? $xeRadioGroup.props.strict : props.strict
     })
 
-    const computeChecked = computed(() => {
-      const { label, checkedValue } = props
-      const radioValue = XEUtils.isUndefined(checkedValue) ? label : checkedValue
-      return $xeRadioGroup ? $xeRadioGroup.props.modelValue === radioValue : props.modelValue === radioValue
+    const computeIsChecked = computed(() => {
+      const checkValue = computeCheckValue.value
+      if ($xeRadioGroup) {
+        return $xeRadioGroup.props.modelValue === checkValue
+      }
+      return props.modelValue === checkValue
     })
 
     const handleValue = (checkedValue: VxeRadioPropTypes.CheckedValue, evnt: Event) => {
@@ -107,9 +118,8 @@ export default defineVxeComponent({
     const changeEvent = (evnt: Event) => {
       const isDisabled = computeIsDisabled.value
       if (!isDisabled) {
-        const { label, checkedValue } = props
-        const radioValue = XEUtils.isUndefined(checkedValue) ? label : checkedValue
-        handleValue(radioValue, evnt)
+        const checkValue = computeCheckValue.value
+        handleValue(checkValue, evnt)
       }
     }
 
@@ -117,9 +127,8 @@ export default defineVxeComponent({
       const isDisabled = computeIsDisabled.value
       const isStrict = computeStrict.value
       if (!isDisabled && !isStrict) {
-        const { label, checkedValue } = props
-        const radioValue = XEUtils.isUndefined(checkedValue) ? label : checkedValue
-        if (radioValue === ($xeRadioGroup ? $xeRadioGroup.props.modelValue : props.modelValue)) {
+        const isChecked = computeIsChecked.value
+        if (isChecked) {
           handleValue(null, evnt)
         }
       }
@@ -139,12 +148,12 @@ export default defineVxeComponent({
     Object.assign($xeRadio, radioMethods, radioPrivateMethods)
 
     const renderVN = () => {
-      const { label, content, checkedValue } = props
-      const radioValue = XEUtils.isUndefined(checkedValue) ? label : checkedValue
+      const { content } = props
       const vSize = computeSize.value
       const isDisabled = computeIsDisabled.value
       const name = computeName.value
-      const isChecked = computeChecked.value
+      const isChecked = computeIsChecked.value
+      const checkValue = computeCheckValue.value
       const defaultSlot = slots.default
 
       if ($xeRadioGroup) {
@@ -167,7 +176,7 @@ export default defineVxeComponent({
         }
       }
       return h('label', {
-        key: radioValue,
+        key: `${checkValue}`,
         class: ['vxe-radio vxe-radio--default', {
           [`size--${vSize}`]: vSize,
           'is--checked': isChecked,
@@ -192,6 +201,12 @@ export default defineVxeComponent({
         }, defaultSlot ? defaultSlot({}) : getFuncText(content))
       ])
     }
+
+    onMounted(() => {
+      if (props.label !== null) {
+        warnLog('vxe.error.delProp', ['label', 'checked-value'])
+      }
+    })
 
     $xeRadio.renderVN = renderVN
 
