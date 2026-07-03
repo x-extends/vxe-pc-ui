@@ -18,6 +18,10 @@ export interface VxeCheckboxPrivateRef extends CheckboxPrivateRef { }
 export namespace VxeCheckboxPropTypes {
   export type Size = VxeComponentSizeType
   export type ModelValue = string | number | boolean | null
+  /**
+   * 已废弃，被 CheckedValue 替换
+   * @deprecated
+   */
   export type Label = string | number
   export type Indeterminate = boolean
   export type Title = string | number
@@ -27,14 +31,15 @@ export namespace VxeCheckboxPropTypes {
   export type Disabled = boolean
 }
 
-export interface VxeCheckboxProps {
+export type VxeCheckboxProps = {
   size?: VxeCheckboxPropTypes.Size
   /**
    * 绑定值
    */
-  value?: VxeCheckboxPropTypes.ModelValue
+  modelValue?: VxeCheckboxPropTypes.ModelValue
   /**
-   * 只对 checkbox-group 有效，值
+   * 已废弃，被 checked-value 替换
+   * @deprecated
    */
   label?: VxeCheckboxPropTypes.Label
   /**

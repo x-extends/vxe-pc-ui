@@ -28,13 +28,14 @@ export namespace VxeRadioButtonPropTypes {
 
   /**
    * 已废弃，被 CheckedValue 替换
+   * @deprecated
    */
   export type Label = VxeRadioPropTypes.Label
 }
 
 export interface VxeRadioButtonProps {
   size?: VxeRadioButtonPropTypes.Size
-  value?: VxeRadioButtonPropTypes.ModelValue
+  modelValue?: VxeRadioButtonPropTypes.ModelValue
   /**
    * 严格模式，不允许取消
    */
@@ -46,7 +47,8 @@ export interface VxeRadioButtonProps {
   disabled?: VxeRadioButtonPropTypes.Disabled
 
   /**
-   * 已废弃，被 checkedValue 替换
+   * 已废弃，被 checked-value 替换
+   * @deprecated
    */
   label?: VxeRadioButtonPropTypes.Label
 }

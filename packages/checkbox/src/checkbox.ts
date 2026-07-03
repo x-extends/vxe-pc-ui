@@ -3,8 +3,11 @@ import { defineVxeComponent } from '../../ui/src/comp'
 import XEUtils from 'xe-utils'
 import { getFuncText } from '../../ui/src/utils'
 import { getConfig, createEvent, globalMixins, getIcon, renderEmptyElement } from '../../ui'
+import { createComponentLog } from '../../ui/src/log'
 
 import type { VxeCheckboxGroupConstructor, VxeCheckboxEmits, ValueOf, CheckboxReactData, VxeComponentSizeType, VxeCheckboxGroupPrivateMethods, VxeCheckboxPropTypes, VxeFormConstructor, VxeFormPrivateMethods, VxeFormDefines } from '../../../types'
+
+const { warnLog } = createComponentLog('checkbox')
 
 export default /* define-vxe-component start */ defineVxeComponent({
   name: 'VxeCheckbox',
@@ -13,6 +16,10 @@ export default /* define-vxe-component start */ defineVxeComponent({
   ],
   props: {
     value: [String, Number, Boolean] as PropType<VxeCheckboxPropTypes.ModelValue>,
+    /**
+     * 已废弃，被 checkedValue 替换
+     * @deprecated
+     */
     label: {
       type: [String, Number] as PropType<VxeCheckboxPropTypes.Label>,
       default: null
@@ -64,13 +71,21 @@ export default /* define-vxe-component start */ defineVxeComponent({
       formItemInfo(): VxeFormDefines.ProvideItemInfo | null
       $xeCheckboxGroup(): (VxeCheckboxGroupConstructor & VxeCheckboxGroupPrivateMethods) | null
     }),
+    computeCheckValue () {
+      const $xeCheckbox = this
+      const props = $xeCheckbox
+
+      const { checkedValue, label } = props
+      return XEUtils.isUndefined(checkedValue) ? label : checkedValue
+    },
     computeIsChecked () {
       const $xeCheckbox = this
       const props = $xeCheckbox
       const $xeCheckboxGroup = $xeCheckbox.$xeCheckboxGroup
 
+      const checkValue = $xeCheckbox.computeCheckValue
       if ($xeCheckboxGroup) {
-        return XEUtils.includes($xeCheckboxGroup.value, props.label)
+        return XEUtils.includes($xeCheckboxGroup.value, checkValue)
       }
       return props.value === props.checkedValue
     },
@@ -118,15 +133,18 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const $xeForm = $xeCheckbox.$xeForm
       const formItemInfo = $xeCheckbox.formItemInfo
 
-      const { checkedValue, uncheckedValue } = props
+      const { uncheckedValue } = props
       const isDisabled = $xeCheckbox.computeIsDisabled
+      const checkValue = $xeCheckbox.computeCheckValue
       if (!isDisabled) {
         const checked = evnt.target.checked
-        const value = checked ? checkedValue : uncheckedValue
-        const params = { checked, value, label: props.label }
         if ($xeCheckboxGroup) {
+          const value = checkValue
+          const params = { checked, value, label: value }
           $xeCheckboxGroup.handleChecked(params, evnt)
         } else {
+          const value = checked ? checkValue : uncheckedValue
+          const params = { checked, value, label: value }
           $xeCheckbox.emitModel(value)
           $xeCheckbox.dispatchEvent('change', params, evnt)
           // 自动更新校验状态
@@ -146,10 +164,11 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const slots = $xeCheckbox.$scopedSlots
       const $xeCheckboxGroup = $xeCheckbox.$xeCheckboxGroup
 
-      const { label, content } = props
+      const { content } = props
       const vSize = $xeCheckbox.computeSize
       const isDisabled = $xeCheckbox.computeIsDisabled
       const isChecked = $xeCheckbox.computeIsChecked
+      const checkValue = $xeCheckbox.computeCheckValue
       const indeterminate = !isChecked && props.indeterminate
       const defaultSlot = slots.default
 
@@ -172,7 +191,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
         }
       }
       return h('label', {
-        key: label,
+        key: `${checkValue}`,
         class: ['vxe-checkbox vxe-checkbox--default', {
           [`size--${vSize}`]: vSize,
           'is--indeterminate': indeterminate,
@@ -203,6 +222,14 @@ export default /* define-vxe-component start */ defineVxeComponent({
           class: 'vxe-checkbox--label'
         }, defaultSlot ? defaultSlot({}) : getFuncText(content))
       ])
+    }
+  },
+  mounted () {
+    const $xeCheckbox = this
+    const props = $xeCheckbox
+
+    if (props.label !== null) {
+      warnLog('vxe.error.delProp', ['label', 'checked-value'])
     }
   },
   render (this: any, h) {

@@ -19,6 +19,10 @@ export namespace VxeRadioPropTypes {
   export type Size = VxeComponentSizeType
   export type Strict = boolean
   export type ModelValue = any
+  /**
+   * 已废弃，被 CheckedValue 替换
+   * @deprecated
+   */
   export type Label = any
   export type CheckedValue = any
   export type Title = string | number
@@ -36,7 +40,7 @@ export interface VxeRadioProps {
   /**
    * 绑定值
    */
-  value?: VxeRadioPropTypes.ModelValue
+  modelValue?: VxeRadioPropTypes.ModelValue
   /**
    * 值
    */
@@ -59,7 +63,8 @@ export interface VxeRadioProps {
   name?: VxeRadioPropTypes.Name
 
   /**
-   * 已废弃，被 checkedValue 替换
+   * 已废弃，被 checked-value 替换
+   * @deprecated
    */
   label?: VxeRadioPropTypes.Label
 }

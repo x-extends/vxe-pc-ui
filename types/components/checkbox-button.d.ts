@@ -21,6 +21,7 @@ export namespace VxeCheckboxButtonPropTypes {
   export type ModelValue = any
   /**
    * 已废弃，被 CheckedValue 替换
+   * @deprecated
    */
   export type Label = VxeCheckboxPropTypes.Label
   export type Title = VxeCheckboxPropTypes.Title
@@ -36,6 +37,7 @@ export interface VxeCheckboxButtonProps {
   modelValue?: VxeCheckboxButtonPropTypes.ModelValue
   /**
    * 已废弃，被 checked-value 替换
+   * @deprecated
    */
   label?: VxeCheckboxButtonPropTypes.Label
   title?: VxeCheckboxButtonPropTypes.Title
@@ -72,6 +74,7 @@ export namespace VxeCheckboxButtonDefines {
   }
 
   export interface ChangeParams {
+    value: any
     label: any
   }
   export interface ChangeEventParams extends CheckboxButtonEventParams, ChangeParams { }
