@@ -80,13 +80,13 @@ export function getDateQuarter (date: Date) {
   return 4
 }
 
-export function parseDateValue (val: string | number | Date | (string | number | Date)[] | null | undefined, type: VxeDatePanelPropTypes.Type, options: {
+export function parseDateValue (val: string | number | Date | (string | number | Date | null)[] | null | undefined, type: VxeDatePanelPropTypes.Type, options: {
   valueFormat: string
 }) {
   const { valueFormat } = options
   if (val) {
     if (type === 'time') {
-      return toStringTimeDate(XEUtils.isArray(val) ? val : XEUtils.last(val))
+      return toStringTimeDate(XEUtils.isArray(val) ? XEUtils.last(val) : val)
     }
     if (XEUtils.isNumber(val) || /^[0-9]{10,15}$/.test(`${val}`)) {
       return new Date(Number(val))
@@ -287,6 +287,18 @@ export function checkDateInputFormat (numStr: number, formatKey: string) {
       return (numVal >= 59 ? 59 : (numVal <= 0 ? 0 : numVal))
   }
   return numVal
+}
+
+export const getPrevYear = (date: Date, size = 1) => {
+  const currtYear = date.getFullYear()
+  date.setFullYear(currtYear - size)
+  return date
+}
+
+export const getNextYear = (date: Date, size = 1) => {
+  const currtYear = date.getFullYear()
+  date.setFullYear(currtYear + size)
+  return date
 }
 
 export const getPrevMonth = (date: Date) => {

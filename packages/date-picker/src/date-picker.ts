@@ -261,19 +261,27 @@ export default /* define-vxe-component start */ defineVxeComponent({
       }
       return disabled
     },
-    computeIsDateTimeType () {
+    computeIsTimeType () {
       const $xeDatePicker = this
       const props = $xeDatePicker
 
       const { type } = props
-      return type === 'time' || type === 'datetime'
+      return type === 'time'
+    },
+    computeIsTimeOrDateTimeType () {
+      const $xeDatePicker = this
+      const props = $xeDatePicker
+
+      const { type } = props
+      const isTimeType = $xeDatePicker.computeIsTimeType
+      return isTimeType || type === 'datetime'
     },
     computeIsDatePickerType () {
       const $xeDatePicker = this
       const props = $xeDatePicker
 
-      const isDateTimeType = $xeDatePicker.computeIsDateTimeType
-      return isDateTimeType || ['date', 'week', 'month', 'quarter', 'year'].indexOf(props.type) > -1
+      const isTimeOrDateTimeType = $xeDatePicker.computeIsTimeOrDateTimeType
+      return isTimeOrDateTimeType || ['date', 'week', 'month', 'quarter', 'year'].indexOf(props.type) > -1
     },
     computeIsClearable () {
       const $xeDatePicker = this
@@ -285,8 +293,8 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const $xeDatePicker = this
       const props = $xeDatePicker
 
-      const isDateTimeType = $xeDatePicker.computeIsDateTimeType
-      return isDateTimeType || ['date', 'week', 'month', 'quarter', 'year'].indexOf(props.type) > -1
+      const isTimeOrDateTimeType = $xeDatePicker.computeIsTimeOrDateTimeType
+      return isTimeOrDateTimeType || ['date', 'week', 'month', 'quarter', 'year'].indexOf(props.type) > -1
     },
     computeDateListValue () {
       const $xeDatePicker = this
@@ -604,7 +612,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const props = $xeDatePicker
 
       const { value: modelValue, multiple } = props
-      const isDateTimeType = $xeDatePicker.computeIsDateTimeType
+      const isTimeOrDateTimeType = $xeDatePicker.computeIsTimeOrDateTimeType
       const dateValueFormat = $xeDatePicker.computeDateValueFormat
       const firstDayOfWeek = $xeDatePicker.computeFirstDayOfWeek
       if (props.type === 'week') {
@@ -615,7 +623,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       if (multiple) {
         const overCount = $xeDatePicker.computeOverCount
         // 如果为多选
-        if (isDateTimeType) {
+        if (isTimeOrDateTimeType) {
           // 如果是datetime特殊类型
           const dateListValue = isReload ? [] : [...$xeDatePicker.computeDateListValue]
           const datetimeRest: Date[] = []
@@ -1222,9 +1230,9 @@ export default /* define-vxe-component start */ defineVxeComponent({
 
       const { multiple, autoClose } = props
       const { value, $event } = params
-      const isDateTimeType = $xeDatePicker.computeIsDateTimeType
+      const isTimeOrDateTimeType = $xeDatePicker.computeIsTimeOrDateTimeType
       $xeDatePicker.handleChange(value, $event)
-      if (!multiple && !isDateTimeType) {
+      if (!multiple && !isTimeOrDateTimeType) {
         if (autoClose) {
           $xeDatePicker.hidePanel()
         }
@@ -1568,7 +1576,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const btnTransfer = $xeDatePicker.computeBtnTransfer
       const shortcutOpts = $xeDatePicker.computeShortcutOpts
       const isClearable = $xeDatePicker.computeIsClearable
-      const isDateTimeType = $xeDatePicker.computeIsDateTimeType
+      const isTimeOrDateTimeType = $xeDatePicker.computeIsTimeOrDateTimeType
       const shortcutList = $xeDatePicker.computeShortcutList
       const timeOpts = $xeDatePicker.computeTimeOpts
       const dateStartDate = $xeDatePicker.computeDateStartDate
@@ -1582,7 +1590,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const rightSlot = slots.right
       const ppClassName = popupOpts.className
       const hasShortcutBtn = shortcutList.length > 0
-      const showConfirmBtn = (showConfirmButton === null ? (isDateTimeType || multiple) : showConfirmButton)
+      const showConfirmBtn = (showConfirmButton === null ? (isTimeOrDateTimeType || multiple) : showConfirmButton)
       const showClearBtn = (showClearButton === null ? (isClearable && showConfirmBtn && type !== 'time') : showClearButton)
       return h('div', {
         ref: 'refInputPanel',

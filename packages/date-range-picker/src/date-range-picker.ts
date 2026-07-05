@@ -4,7 +4,7 @@ import XEUtils from 'xe-utils'
 import { getConfig, getIcon, getI18n, commands, globalEvents, createEvent, GLOBAL_EVENT_KEYS, globalMixins, renderEmptyElement } from '../../ui'
 import { getFuncText, getLastZIndex, nextZIndex, isEnableConf } from '../../ui/src/utils'
 import { updatePanelPlacement, getEventTargetNode } from '../../ui/src/dom'
-import { parseDateString, parseDateObj, getRangeDateByCode, handleValueFormat, hasTimestampValueType, hasDateValueType, parseDateValue, getPrevMonth, getNextMonth } from '../../date-panel/src/util'
+import { parseDateString, parseDateObj, getRangeDateByCode, handleValueFormat, hasTimestampValueType, hasDateValueType, parseDateValue, getNextMonth, getPrevMonth, getNextYear, getPrevYear } from '../../date-panel/src/util'
 import { getSlotVNs } from '../../ui/src/vn'
 import { createComponentLog } from '../../ui/src/log'
 import VxeDatePanelComponent from '../../date-panel/src/date-panel'
@@ -27,8 +27,8 @@ function createReactData (): DateRangePickerReactData {
     isActivated: false,
     selectStValue: '',
     selectEdValue: '',
-    paneStartVal: '',
-    paneEndVal: ''
+    paneStartVal: [],
+    paneEndVal: []
   }
 }
 
@@ -293,12 +293,20 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const { startValue, endValue } = props
       return `${startValue || ''}${endValue || ''}`
     },
-    computeIsDateTimeType () {
+    computeIsTimeType () {
       const $xeDateRangePicker = this
       const props = $xeDateRangePicker
 
       const { type } = props
-      return type === 'time' || type === 'datetime'
+      return type === 'time'
+    },
+    computeIsTimeOrDateTimeType () {
+      const $xeDateRangePicker = this
+      const props = $xeDateRangePicker
+
+      const { type } = props
+      const isTimeType = $xeDateRangePicker.computeIsTimeType
+      return isTimeType || type === 'datetime'
     },
     computeIsDatePickerType () {
       const $xeDateRangePicker = this
@@ -529,7 +537,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const props = $xeDateRangePicker
       const reactData = $xeDateRangePicker.reactData
 
-      const { value: modelValue, startValue, endValue } = props
+      const { value: modelValue, startValue, endValue, valueFormat } = props
       let restObj: {
         sValue: string | Date | null
         eValue: string | Date | null
@@ -550,8 +558,20 @@ export default /* define-vxe-component start */ defineVxeComponent({
           restObj = $xeDateRangePicker.paraeUpdateModel()
         }
       }
-      reactData.selectStValue = restObj.sValue
-      reactData.selectEdValue = restObj.eValue
+      let startRest: string | number | Date | null = restObj.sValue
+      let endRest: string | number | Date | null = restObj.eValue
+      if (valueFormat === 'timestamp') {
+        if (XEUtils.isString(startRest) && /^\d+$/.test(startRest)) {
+          startRest = Number(startRest)
+        }
+        if (XEUtils.isString(endRest) && /^\d+$/.test(endRest)) {
+          endRest = Number(endRest)
+        }
+      }
+      reactData.selectStValue = startRest
+      reactData.selectEdValue = endRest
+      reactData.paneEndVal = [startRest, endRest]
+      reactData.paneStartVal = [startRest, endRest]
     },
     triggerEvent (evnt: Event & { type: 'input' | 'change' | 'keydown' | 'keyup' | 'click' | 'focus' | 'blur' }) {
       const $xeDateRangePicker = this
@@ -758,12 +778,16 @@ export default /* define-vxe-component start */ defineVxeComponent({
     confirmEvent (evnt: MouseEvent) {
       const $xeDateRangePicker = this
 
+      const isTimeType = $xeDateRangePicker.computeIsTimeType
       const $startDatePanel = $xeDateRangePicker.$refs.refStartDatePanel as VxeDatePanelConstructor
       const $endDatePanel = $xeDateRangePicker.$refs.refEndDatePanel as VxeDatePanelConstructor
       if ($startDatePanel && $endDatePanel) {
         const startValue = $startDatePanel.getModelValue()
         const endValue = $endDatePanel.getModelValue()
-        if ((startValue && !endValue) || (!startValue && endValue)) {
+        if (isTimeType) {
+          $startDatePanel.confirmByEvent(evnt)
+          $endDatePanel.confirmByEvent(evnt)
+        } else if ((startValue && !endValue) || (!startValue && endValue)) {
           $xeDateRangePicker.handleChange('', '', evnt)
         } else {
           $startDatePanel.confirmByEvent(evnt)
@@ -794,11 +818,15 @@ export default /* define-vxe-component start */ defineVxeComponent({
       } else {
         startValue = currValue || XEUtils.last(paneVals)
       }
-      reactData.paneEndVal = [startValue, endValue].join(',')
-      reactData.paneStartVal = [startValue, endValue].join(',')
+      reactData.paneEndVal = [startValue, endValue]
+      reactData.paneStartVal = [startValue, endValue]
       $xeDateRangePicker.handleChange(startValue, endValue, $event)
       $xeDateRangePicker.handleSelectClose()
-      if (!selectStatus) {
+      if (selectStatus) {
+        if (startValue && endValue) {
+          internalData.selectStatus = false
+        }
+      } else {
         internalData.selectStatus = true
       }
       $xeDateRangePicker.$nextTick(() => {
@@ -826,11 +854,15 @@ export default /* define-vxe-component start */ defineVxeComponent({
       } else {
         endValue = currValue || XEUtils.last(paneVals)
       }
-      reactData.paneEndVal = [startValue, endValue].join(',')
-      reactData.paneStartVal = [startValue, endValue].join(',')
+      reactData.paneEndVal = [startValue, endValue]
+      reactData.paneStartVal = [startValue, endValue]
       $xeDateRangePicker.handleChange(startValue, endValue, $event)
       $xeDateRangePicker.handleSelectClose()
-      if (!selectStatus) {
+      if (selectStatus) {
+        if (startValue && endValue) {
+          internalData.selectStatus = false
+        }
+      } else {
         internalData.selectStatus = true
       }
       $xeDateRangePicker.$nextTick(() => {
@@ -864,6 +896,20 @@ export default /* define-vxe-component start */ defineVxeComponent({
           }
           break
         }
+        case 'month':
+        case 'quarter': {
+          if (endYear <= startYear) {
+            $endDatePanel.setPanelDate(getNextYear(startPanelDate))
+          }
+          break
+        }
+        case 'year': {
+          const yearList = $startDatePanel.computeYearList
+          if (yearList.some((item) => XEUtils.isDateSame(item.date, endPanelDate, 'yyyy'))) {
+            $endDatePanel.setPanelDate(getNextYear(startPanelDate, yearList.length))
+          }
+          break
+        }
       }
     },
     startPanelDateBtnChangeEvent () {
@@ -888,6 +934,16 @@ export default /* define-vxe-component start */ defineVxeComponent({
           case 'date':
           case 'week': {
             $endDatePanel.setPanelDate(getNextMonth(startPanelDate))
+            break
+          }
+          case 'month':
+          case 'quarter': {
+            $endDatePanel.setPanelDate(getNextYear(startPanelDate))
+            break
+          }
+          case 'year': {
+            const yearList = $startDatePanel.computeYearList
+            $endDatePanel.setPanelDate(getNextYear(startPanelDate, yearList.length))
             break
           }
         }
@@ -922,6 +978,20 @@ export default /* define-vxe-component start */ defineVxeComponent({
           }
           break
         }
+        case 'month':
+        case 'quarter': {
+          if (startYear >= endYear) {
+            $startDatePanel.setPanelDate(getPrevYear(endPanelDate))
+          }
+          break
+        }
+        case 'year': {
+          const yearList = $endDatePanel.computeYearList
+          if (yearList.some((item) => XEUtils.isDateSame(item.date, startPanelDate, 'yyyy'))) {
+            $startDatePanel.setPanelDate(getPrevYear(endPanelDate, yearList.length))
+          }
+          break
+        }
       }
     },
     endPanelDateBtnChangeEvent () {
@@ -946,6 +1016,16 @@ export default /* define-vxe-component start */ defineVxeComponent({
           case 'date':
           case 'week': {
             $startDatePanel.setPanelDate(getPrevMonth(endPanelDate))
+            break
+          }
+          case 'month':
+          case 'quarter': {
+            $startDatePanel.setPanelDate(getPrevYear(endPanelDate))
+            break
+          }
+          case 'year': {
+            const yearList = $endDatePanel.computeYearList
+            $startDatePanel.setPanelDate(getPrevYear(endPanelDate, yearList.length))
             break
           }
         }
@@ -1297,7 +1377,8 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const isClearable = $xeDateRangePicker.computeIsClearable
       const panelLabelObj = $xeDateRangePicker.computePanelLabelObj
       const shortcutList = $xeDateRangePicker.computeShortcutList
-      const isDateTimeType = $xeDateRangePicker.computeIsDateTimeType
+      const isTimeType = $xeDateRangePicker.computeIsTimeType
+      const isTimeOrDateTimeType = $xeDateRangePicker.computeIsTimeOrDateTimeType
       const defaultDates = $xeDateRangePicker.computeDefaultDates
       const defaultTimes = $xeDateRangePicker.computeDefaultTimes
       const timeOpts = $xeDateRangePicker.computeTimeOpts
@@ -1313,7 +1394,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const [sdDate, edDate] = defaultDates
       const [sdTime, edTime] = defaultTimes
       const hasShortcutBtn = shortcutList.length > 0
-      const showConfirmBtn = (showConfirmButton === null ? (isDateTimeType || !autoClose) : showConfirmButton)
+      const showConfirmBtn = (showConfirmButton === null ? (isTimeOrDateTimeType || !autoClose) : showConfirmButton)
       const showClearBtn = (showClearButton === null ? isClearable : showClearButton)
       return h('div', {
         ref: 'refInputPanel',
@@ -1367,7 +1448,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
                       ref: 'refStartDatePanel',
                       props: {
                         value: paneStartVal,
-                        multiple: true,
+                        multiple: !isTimeType,
                         valueSort: true,
                         limitCount: 3,
                         defaultMode: 'first',
@@ -1398,7 +1479,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
                       ref: 'refEndDatePanel',
                       props: {
                         value: paneEndVal,
-                        multiple: true,
+                        multiple: !isTimeType,
                         valueSort: true,
                         limitCount: 3,
                         defaultMode: 'last',

@@ -17,7 +17,7 @@ export interface VxeDatePanelPrivateRef extends DatePanelPrivateRef { }
 
 export namespace VxeDatePanelPropTypes {
   export type Size = VxeComponentSizeType
-  export type ModelValue = string | number | Date | null
+  export type ModelValue = string | number | Date | null | (string | number | Date | null)[]
   export type ClassName = string
   export type CellClassName = string | ((params: {
     $datePanel: VxeDatePanelConstructor
@@ -115,6 +115,8 @@ export interface VxeDatePanelProps {
 }
 
 export interface DatePanelPrivateComputed {
+  computeSize: VxeDatePanelPropTypes.Size
+  computeYearList: VxeDatePanelDefines.DateYearItem[]
 }
 export interface VxeDatePanelPrivateComputed extends DatePanelPrivateComputed { }
 
