@@ -57,7 +57,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
     event: 'modelValue'
   },
   props: {
-    value: [String, Number, Date] as PropType<VxeDatePickerPropTypes.ModelValue>,
+    value: [String, Number, Date, Array] as PropType<VxeDatePickerPropTypes.ModelValue>,
     immediate: {
       type: Boolean as PropType<VxeDatePickerPropTypes.Immediate>,
       default: true

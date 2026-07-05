@@ -8,6 +8,30 @@ import { getSlotVNs } from '../../ui/src/vn'
 
 import type { VxeTooltipPropTypes, VxeTooltipEmits, TooltipReactData, TooltipInternalData, VxeComponentSizeType, ValueOf, VxeComponentStyleType } from '../../../types'
 
+function createReactData (): TooltipReactData {
+  return {
+    target: null,
+    isUpdate: false,
+    visible: false,
+    tipPos: null,
+    tipContent: '',
+    tipActive: false,
+    tipTarget: null,
+    tipZindex: 0,
+    tipStore: {
+      style: {},
+      placement: '',
+      arrowStyle: {}
+    }
+  }
+}
+
+function createInternalData (): TooltipInternalData {
+  return {
+    // showDelayTip: undefined
+  }
+}
+
 export default /* define-vxe-component start */ defineVxeComponent({
   name: 'VxeTooltip',
   mixins: [
@@ -93,27 +117,14 @@ export default /* define-vxe-component start */ defineVxeComponent({
     }
   },
   data () {
-    const reactData: TooltipReactData = {
-      target: null,
-      isUpdate: false,
-      visible: false,
-      tipPos: null,
-      tipContent: '',
-      tipActive: false,
-      tipTarget: null,
-      tipZindex: 0,
-      tipStore: {
-        style: {},
-        placement: '',
-        arrowStyle: {}
-      }
-    }
-    const internalData: TooltipInternalData = {
-    }
+    const xID = XEUtils.uniqueId()
+    const reactData = createReactData()
     return {
-      xID: XEUtils.uniqueId(),
-      reactData,
-      internalData
+      ...({} as {
+        internalData: TooltipInternalData
+      }),
+      xID,
+      reactData
     }
   },
   computed: {
@@ -605,6 +616,8 @@ export default /* define-vxe-component start */ defineVxeComponent({
   created () {
     const $xeTooltip = this
 
+    $xeTooltip.internalData = createInternalData()
+
     $xeTooltip.handleDelayFn()
   },
   mounted () {
@@ -670,6 +683,14 @@ export default /* define-vxe-component start */ defineVxeComponent({
         parentNode.removeChild(wrapperElem)
       }
     }
+  },
+  destroyed () {
+    const $xeTooltip = this
+    const reactData = $xeTooltip.reactData
+    const internalData = $xeTooltip.internalData
+
+    XEUtils.assign(reactData, createReactData())
+    XEUtils.assign(internalData, createInternalData())
   },
   render (this: any, h) {
     return this.renderVN(h)

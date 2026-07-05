@@ -4,17 +4,40 @@ import XEUtils from 'xe-utils'
 import { getConfig, getIcon, getI18n, commands, globalEvents, createEvent, GLOBAL_EVENT_KEYS, globalMixins, renderEmptyElement } from '../../ui'
 import { getFuncText, getLastZIndex, nextZIndex, isEnableConf } from '../../ui/src/utils'
 import { updatePanelPlacement, getEventTargetNode } from '../../ui/src/dom'
-import { parseDateString, parseDateObj, getRangeDateByCode, handleValueFormat, hasTimestampValueType, hasDateValueType, parseDateValue } from '../../date-panel/src/util'
+import { parseDateString, parseDateObj, getRangeDateByCode, handleValueFormat, hasTimestampValueType, hasDateValueType, parseDateValue, getPrevMonth, getNextMonth } from '../../date-panel/src/util'
 import { getSlotVNs } from '../../ui/src/vn'
 import { createComponentLog } from '../../ui/src/log'
 import VxeDatePanelComponent from '../../date-panel/src/date-panel'
 import VxeButtonComponent from '../../button/src/button'
 import VxeButtonGroupComponent from '../../button/src/button-group'
 
-import type { VxeDateRangePickerConstructor, VxeDateRangePickerEmits, DateRangePickerReactData, DateRangePickerInternalData, VxeButtonGroupDefines, VxeComponentSizeType, VxeDateRangePickerPropTypes, VxeFormConstructor, VxeFormPrivateMethods, VxeDatePanelDefines, VxeFormDefines, ValueOf, VxeModalConstructor, VxeDrawerConstructor, VxeModalMethods, VxeDrawerMethods, VxeDateRangePickerDefines, VxeDatePanelConstructor } from '../../../types'
+import type { VxeDateRangePickerConstructor, VxeDateRangePickerEmits, DateRangePickerReactData, DateRangePickerInternalData, VxeButtonGroupDefines, VxeComponentSizeType, VxeDateRangePickerPropTypes, VxeFormConstructor, VxeFormPrivateMethods, VxeFormDefines, ValueOf, VxeModalConstructor, VxeDrawerConstructor, VxeModalMethods, VxeDrawerMethods, VxeDateRangePickerDefines, VxeDatePanelConstructor } from '../../../types'
 import type { VxeTableConstructor, VxeTablePrivateMethods } from '../../../types/components/table'
 
 const { errLog } = createComponentLog('date-range-picker')
+
+function createReactData (): DateRangePickerReactData {
+  return {
+    initialized: false,
+    panelIndex: 0,
+    visiblePanel: false,
+    isAniVisible: false,
+    panelStyle: {},
+    panelPlacement: '',
+    isActivated: false,
+    selectStValue: '',
+    selectEdValue: '',
+    paneStartVal: '',
+    paneEndVal: ''
+  }
+}
+
+function createInternalData (): DateRangePickerInternalData {
+  return {
+    // selectStatus: false
+    // hpTimeout: undefined
+  }
+}
 
 export default /* define-vxe-component start */ defineVxeComponent({
   name: 'VxeDateRangePicker',
@@ -161,28 +184,13 @@ export default /* define-vxe-component start */ defineVxeComponent({
   },
   data () {
     const xID = XEUtils.uniqueId()
-
-    const reactData: DateRangePickerReactData = {
-      initialized: false,
-      panelIndex: 0,
-      visiblePanel: false,
-      isAniVisible: false,
-      panelStyle: {},
-      panelPlacement: '',
-      isActivated: false,
-      startValue: '',
-      endValue: ''
-    }
-
-    const internalData: DateRangePickerInternalData = {
-      // selectStatus: false
-      // hpTimeout: undefined
-    }
-
+    const reactData = createReactData()
     return {
+      ...({} as {
+        internalData: DateRangePickerInternalData
+      }),
       xID,
-      reactData,
-      internalData
+      reactData
     }
   },
   computed: {
@@ -382,8 +390,8 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const $xeDateRangePicker = this as VxeDateRangePickerConstructor
       const reactData = $xeDateRangePicker.reactData
 
-      const { startValue, endValue } = reactData
-      const vals: string[] = startValue || endValue ? [startValue || '', endValue || ''] : []
+      const { selectStValue, selectEdValue } = reactData
+      const vals: string[] = selectStValue || selectEdValue ? [selectStValue || '', selectEdValue || ''] : []
       return ($xeDateRangePicker as any).formatRangeLabel(vals) as {
         label: string;
         startLabel: string;
@@ -542,16 +550,16 @@ export default /* define-vxe-component start */ defineVxeComponent({
           restObj = $xeDateRangePicker.paraeUpdateModel()
         }
       }
-      reactData.startValue = restObj.sValue
-      reactData.endValue = restObj.eValue
+      reactData.selectStValue = restObj.sValue
+      reactData.selectEdValue = restObj.eValue
     },
     triggerEvent (evnt: Event & { type: 'input' | 'change' | 'keydown' | 'keyup' | 'click' | 'focus' | 'blur' }) {
       const $xeDateRangePicker = this
       const reactData = $xeDateRangePicker.reactData
 
-      const { startValue, endValue } = reactData
-      const value = $xeDateRangePicker.getRangeValue(startValue, endValue)
-      $xeDateRangePicker.dispatchEvent(evnt.type, { value, startValue, endValue }, evnt)
+      const { selectStValue, selectEdValue } = reactData
+      const value = $xeDateRangePicker.getRangeValue(selectStValue, selectEdValue)
+      $xeDateRangePicker.dispatchEvent(evnt.type, { value, startValue: selectStValue, endValue: selectEdValue }, evnt)
     },
     handleChange (sValue: string, eValue: string, evnt: Event | { type: string }) {
       const $xeDateRangePicker = this
@@ -581,8 +589,8 @@ export default /* define-vxe-component start */ defineVxeComponent({
           endRest = parseDateValue(endRest, type, { valueFormat: dateValueFormat })
         }
       }
-      reactData.startValue = startRest
-      reactData.endValue = endRest
+      reactData.selectStValue = startRest
+      reactData.selectEdValue = endRest
       const value = $xeDateRangePicker.getRangeValue(startRest, endRest)
       const isFinish = (startRest && endRest) || (!startRest && !endRest)
       $xeDateRangePicker.$emit('update:modelValue', value)
@@ -624,9 +632,9 @@ export default /* define-vxe-component start */ defineVxeComponent({
 
       const isDisabled = $xeDateRangePicker.computeIsDisabled
       if (!isDisabled) {
-        const { startValue, endValue } = reactData
-        const value = $xeDateRangePicker.getRangeValue(startValue, endValue)
-        $xeDateRangePicker.dispatchEvent('prefix-click', { value, startValue, endValue }, evnt)
+        const { selectStValue, selectEdValue } = reactData
+        const value = $xeDateRangePicker.getRangeValue(selectStValue, selectEdValue)
+        $xeDateRangePicker.dispatchEvent('prefix-click', { value, startValue: selectStValue, endValue: selectEdValue }, evnt)
       }
     },
     hidePanel () {
@@ -671,8 +679,8 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const $xeDateRangePicker = this
       const reactData = $xeDateRangePicker.reactData
 
-      const startValue = reactData.startValue
-      const endValue = reactData.endValue
+      const startValue = reactData.selectStValue
+      const endValue = reactData.selectEdValue
       if (startValue && endValue) {
         const currTime = date.getTime()
         const startTime = XEUtils.toStringDate(startValue).getTime()
@@ -690,17 +698,17 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const internalData = $xeDateRangePicker.internalData
 
       const { autoClose } = props
-      const { startValue, endValue } = reactData
+      const { selectStValue, selectEdValue } = reactData
       const { selectStatus } = internalData
       const isDatePickerType = $xeDateRangePicker.computeIsDatePickerType
       if (autoClose) {
         if (selectStatus && isDatePickerType) {
-          if (startValue && endValue) {
+          if (selectStValue && selectEdValue) {
             $xeDateRangePicker.hidePanel()
           }
         }
       } else {
-        if (startValue && endValue) {
+        if (selectStValue && selectEdValue) {
           internalData.selectStatus = false
         }
       }
@@ -711,9 +719,9 @@ export default /* define-vxe-component start */ defineVxeComponent({
 
       const isDisabled = $xeDateRangePicker.computeIsDisabled
       if (!isDisabled) {
-        const { startValue, endValue } = reactData
-        const value = $xeDateRangePicker.getRangeValue(startValue, endValue)
-        $xeDateRangePicker.dispatchEvent('suffix-click', { value, startValue, endValue }, evnt)
+        const { selectStValue, selectEdValue } = reactData
+        const value = $xeDateRangePicker.getRangeValue(selectStValue, selectEdValue)
+        $xeDateRangePicker.dispatchEvent('suffix-click', { value, startValue: selectStValue, endValue: selectEdValue }, evnt)
       }
     },
     blurEvent (evnt: Event & { type: 'blur' }) {
@@ -722,16 +730,16 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const $xeForm = $xeDateRangePicker.$xeForm
       const formItemInfo = $xeDateRangePicker.formItemInfo
 
-      const { startValue, endValue } = reactData
+      const { selectStValue, selectEdValue } = reactData
       const inpImmediate = $xeDateRangePicker.computeInpImmediate
       const value = ''
       if (!inpImmediate) {
-        $xeDateRangePicker.handleChange(startValue, endValue, evnt)
+        $xeDateRangePicker.handleChange(selectStValue, selectEdValue, evnt)
       }
       if (!reactData.visiblePanel) {
         reactData.isActivated = false
       }
-      $xeDateRangePicker.dispatchEvent('blur', { value, startValue, endValue }, evnt)
+      $xeDateRangePicker.dispatchEvent('blur', { value, startValue: selectStValue, endValue: selectEdValue }, evnt)
       // 自动更新校验状态
       if ($xeForm && formItemInfo) {
         $xeForm.triggerItemEvent(evnt, formItemInfo.itemConfig.field, value)
@@ -772,22 +780,29 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const internalData = $xeDateRangePicker.internalData
 
       const { selectStatus } = internalData
-      const { value, $event } = params
-      const endValue = selectStatus ? reactData.endValue : ''
-      $xeDateRangePicker.handleChange(value, endValue, $event)
+      const { value, currValue, $event } = params
+      const paneVals = value ? (XEUtils.isString(value) ? value.split(',') : [value]) : []
+      let startValue = ''
+      let endValue = ''
+      if (selectStatus) {
+        startValue = paneVals[0]
+        if (paneVals[1]) {
+          endValue = paneVals[1]
+        } else {
+          endValue = reactData.selectEdValue
+        }
+      } else {
+        startValue = currValue || XEUtils.last(paneVals)
+      }
+      reactData.paneEndVal = [startValue, endValue].join(',')
+      reactData.paneStartVal = [startValue, endValue].join(',')
+      $xeDateRangePicker.handleChange(startValue, endValue, $event)
       $xeDateRangePicker.handleSelectClose()
       if (!selectStatus) {
         internalData.selectStatus = true
       }
       $xeDateRangePicker.$nextTick(() => {
-        const $startDatePanel = $xeDateRangePicker.$refs.refStartDatePanel as VxeDatePanelConstructor
-        const $endDatePanel = $xeDateRangePicker.$refs.refEndDatePanel as VxeDatePanelConstructor
-        if ($startDatePanel && $endDatePanel) {
-          const startValue = $startDatePanel.getModelValue()
-          if (!endValue && startValue) {
-            $endDatePanel.setPanelDate(XEUtils.toStringDate(startValue))
-          }
-        }
+        $xeDateRangePicker.handleUpdateStartPanelDate()
       })
     },
     endPanelChangeEvent (params: any) {
@@ -796,90 +811,146 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const internalData = $xeDateRangePicker.internalData
 
       const { selectStatus } = internalData
-      const { value, $event } = params
-      const startValue = selectStatus ? reactData.startValue : ''
-      $xeDateRangePicker.handleChange(startValue, value, $event)
+      const { value, currValue, $event } = params
+      const paneVals = value ? (XEUtils.isString(value) ? value.split(',') : [value]) : []
+      let startValue = ''
+      let endValue = ''
+      if (selectStatus) {
+        endValue = paneVals[0]
+        if (paneVals[1]) {
+          startValue = paneVals[0]
+          endValue = paneVals[1]
+        } else {
+          startValue = reactData.selectStValue
+        }
+      } else {
+        endValue = currValue || XEUtils.last(paneVals)
+      }
+      reactData.paneEndVal = [startValue, endValue].join(',')
+      reactData.paneStartVal = [startValue, endValue].join(',')
+      $xeDateRangePicker.handleChange(startValue, endValue, $event)
       $xeDateRangePicker.handleSelectClose()
       if (!selectStatus) {
         internalData.selectStatus = true
       }
       $xeDateRangePicker.$nextTick(() => {
-        const $startDatePanel = $xeDateRangePicker.$refs.refStartDatePanel as VxeDatePanelConstructor
-        const $endDatePanel = $xeDateRangePicker.$refs.refEndDatePanel as VxeDatePanelConstructor
-        if ($startDatePanel && $endDatePanel) {
-          const endValue = $endDatePanel.getModelValue()
-          if (!startValue && endValue) {
-            $startDatePanel.setPanelDate(XEUtils.toStringDate(endValue))
-          }
-        }
+        $xeDateRangePicker.handleUpdateEndPanelDate()
       })
     },
-    startPanelDateBtnChangeEvent (params: VxeDatePanelDefines.DateTodayEventParams) {
+    handleUpdateStartPanelDate () {
       const $xeDateRangePicker = this
-      const props = $xeDateRangePicker
 
-      const { linkedPanels } = props
-      if (linkedPanels) {
-        const { viewType } = params
-        const $startDatePanel = $xeDateRangePicker.$refs.refStartDatePanel as VxeDatePanelConstructor
-        const $endDatePanel = $xeDateRangePicker.$refs.refEndDatePanel as VxeDatePanelConstructor
-        if (!$startDatePanel || !$endDatePanel) {
-          return
-        }
-        const startPanelDate = $startDatePanel.getPanelDate()
-        if (!startPanelDate) {
-          return
-        }
-        const endYear = startPanelDate.getFullYear()
-        const endMonth = startPanelDate.getMonth()
-        switch (viewType) {
-          case 'day':
-          case 'date':
-          case 'week': {
-            if (endMonth < 11) {
-              startPanelDate.setMonth(endMonth + 1)
-            } else {
-              startPanelDate.setFullYear(endYear + 1)
-              startPanelDate.setMonth(0)
-            }
-            $endDatePanel.setPanelDate(startPanelDate)
-            break
+      const $startDatePanel = $xeDateRangePicker.$refs.refStartDatePanel as VxeDatePanelConstructor
+      const $endDatePanel = $xeDateRangePicker.$refs.refEndDatePanel as VxeDatePanelConstructor
+      if (!$startDatePanel || !$endDatePanel) {
+        return
+      }
+      const startPanelDate = $startDatePanel.getPanelDate()
+      const endPanelDate = $endDatePanel.getPanelDate()
+      if (!startPanelDate || !endPanelDate) {
+        return
+      }
+      const viewType = $startDatePanel.getViewType()
+      const startYear = startPanelDate.getFullYear()
+      const startMonth = startPanelDate.getMonth()
+      const endYear = endPanelDate.getFullYear()
+      const endMonth = endPanelDate.getMonth()
+      switch (viewType) {
+        case 'day':
+        case 'date':
+        case 'week': {
+          if (endYear <= startYear && endMonth <= startMonth) {
+            $endDatePanel.setPanelDate(getNextMonth(startPanelDate))
           }
+          break
         }
       }
     },
-    endPanelDateBtnChangeEvent (params: VxeDatePanelDefines.DateTodayEventParams) {
+    startPanelDateBtnChangeEvent () {
       const $xeDateRangePicker = this
       const props = $xeDateRangePicker
 
       const { linkedPanels } = props
+      const $startDatePanel = $xeDateRangePicker.$refs.refStartDatePanel as VxeDatePanelConstructor
+      const $endDatePanel = $xeDateRangePicker.$refs.refEndDatePanel as VxeDatePanelConstructor
+      if (!$startDatePanel || !$endDatePanel) {
+        return
+      }
+      const startPanelDate = $startDatePanel.getPanelDate()
+      const endPanelDate = $endDatePanel.getPanelDate()
+      if (!startPanelDate || !endPanelDate) {
+        return
+      }
+      const viewType = $startDatePanel.getViewType()
       if (linkedPanels) {
-        const { viewType } = params
-        const $startDatePanel = $xeDateRangePicker.$refs.refStartDatePanel as VxeDatePanelConstructor
-        const $endDatePanel = $xeDateRangePicker.$refs.refEndDatePanel as VxeDatePanelConstructor
-        if (!$startDatePanel || !$endDatePanel) {
-          return
-        }
-        const endPanelDate = $endDatePanel.getPanelDate()
-        if (!endPanelDate) {
-          return
-        }
-        const endYear = endPanelDate.getFullYear()
-        const endMonth = endPanelDate.getMonth()
         switch (viewType) {
           case 'day':
           case 'date':
           case 'week': {
-            if (endMonth) {
-              endPanelDate.setMonth(endMonth - 1)
-            } else {
-              endPanelDate.setFullYear(endYear - 1)
-              endPanelDate.setMonth(11)
-            }
-            $startDatePanel.setPanelDate(endPanelDate)
+            $endDatePanel.setPanelDate(getNextMonth(startPanelDate))
             break
           }
         }
+      } else {
+        $xeDateRangePicker.handleUpdateStartPanelDate()
+      }
+    },
+    handleUpdateEndPanelDate () {
+      const $xeDateRangePicker = this
+
+      const $startDatePanel = $xeDateRangePicker.$refs.refStartDatePanel as VxeDatePanelConstructor
+      const $endDatePanel = $xeDateRangePicker.$refs.refEndDatePanel as VxeDatePanelConstructor
+      if (!$startDatePanel || !$endDatePanel) {
+        return
+      }
+      const startPanelDate = $startDatePanel.getPanelDate()
+      const endPanelDate = $endDatePanel.getPanelDate()
+      if (!startPanelDate || !endPanelDate) {
+        return
+      }
+      const viewType = $endDatePanel.getViewType()
+      const startYear = startPanelDate.getFullYear()
+      const startMonth = startPanelDate.getMonth()
+      const endYear = endPanelDate.getFullYear()
+      const endMonth = endPanelDate.getMonth()
+      switch (viewType) {
+        case 'day':
+        case 'date':
+        case 'week': {
+          if (startYear >= endYear && startMonth >= endMonth) {
+            $startDatePanel.setPanelDate(getPrevMonth(endPanelDate))
+          }
+          break
+        }
+      }
+    },
+    endPanelDateBtnChangeEvent () {
+      const $xeDateRangePicker = this
+      const props = $xeDateRangePicker
+
+      const { linkedPanels } = props
+      const $startDatePanel = $xeDateRangePicker.$refs.refStartDatePanel as VxeDatePanelConstructor
+      const $endDatePanel = $xeDateRangePicker.$refs.refEndDatePanel as VxeDatePanelConstructor
+      if (!$startDatePanel || !$endDatePanel) {
+        return
+      }
+      const startPanelDate = $startDatePanel.getPanelDate()
+      const endPanelDate = $endDatePanel.getPanelDate()
+      if (!startPanelDate || !endPanelDate) {
+        return
+      }
+      const viewType = $endDatePanel.getViewType()
+      if (linkedPanels) {
+        switch (viewType) {
+          case 'day':
+          case 'date':
+          case 'week': {
+            $startDatePanel.setPanelDate(getPrevMonth(endPanelDate))
+            break
+          }
+        }
+      } else {
+        $xeDateRangePicker.handleUpdateEndPanelDate()
       }
     },
     // 全局事件
@@ -1035,6 +1106,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
         reactData.isAniVisible = true
         setTimeout(() => {
           reactData.visiblePanel = true
+          $xeDateRangePicker.handleUpdateStartPanelDate()
           $xeDateRangePicker.updatePlacement()
         }, 10)
         $xeDateRangePicker.updateZindex()
@@ -1080,8 +1152,8 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const shortcutOpts = $xeDateRangePicker.computeShortcutOpts
       const { autoClose } = shortcutOpts
       const { code, clickMethod } = option as VxeDateRangePickerDefines.ShortcutOption
-      let startValue = reactData.startValue
-      let endValue = reactData.endValue
+      let startValue = reactData.selectStValue
+      let endValue = reactData.selectEdValue
       let value = $xeDateRangePicker.getRangeValue(startValue, endValue)
       const shortcutParams = {
         $dateRangePicker: $xeDateRangePicker,
@@ -1141,8 +1213,8 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const $xeDateRangePicker = this
       const reactData = $xeDateRangePicker.reactData
 
-      reactData.startValue = startValue || ''
-      reactData.endValue = endValue || ''
+      reactData.selectStValue = startValue || ''
+      reactData.selectEdValue = endValue || ''
       const value = $xeDateRangePicker.getRangeValue(startValue, endValue)
       $xeDateRangePicker.emitModel(value)
     },
@@ -1217,8 +1289,8 @@ export default /* define-vxe-component start */ defineVxeComponent({
       if (popupOpts.enabled === false) {
         return renderEmptyElement($xeDateRangePicker)
       }
-      const { type, separator, autoClose, showConfirmButton, showClearButton } = props
-      const { initialized, isAniVisible, visiblePanel, panelPlacement, panelStyle, startValue, endValue } = reactData
+      const { type, separator, autoClose, valueFormat, showConfirmButton, showClearButton } = props
+      const { initialized, isAniVisible, visiblePanel, panelPlacement, panelStyle, selectStValue, selectEdValue, paneStartVal, paneEndVal } = reactData
       const vSize = $xeDateRangePicker.computeSize
       const btnTransfer = $xeDateRangePicker.computeBtnTransfer
       const shortcutOpts = $xeDateRangePicker.computeShortcutOpts
@@ -1294,15 +1366,18 @@ export default /* define-vxe-component start */ defineVxeComponent({
                     h(VxeDatePanelComponent, {
                       ref: 'refStartDatePanel',
                       props: {
-                        value: startValue,
+                        value: paneStartVal,
+                        multiple: true,
+                        valueSort: true,
+                        limitCount: 3,
+                        defaultMode: 'first',
                         type: props.type,
                         className: props.className,
                         minDate: props.minDate,
                         maxDate: props.maxDate,
-                        endDate: endValue,
                         startDay: props.startDay,
                         labelFormat: props.labelFormat,
-                        valueFormat: props.valueFormat,
+                        valueFormat: valueFormat === 'date' || valueFormat === 'timestamp' ? '' : valueFormat,
                         timeFormat: props.timeFormat,
                         defaultDate: sdDate,
                         defaultTime: sdTime,
@@ -1322,15 +1397,18 @@ export default /* define-vxe-component start */ defineVxeComponent({
                     h(VxeDatePanelComponent, {
                       ref: 'refEndDatePanel',
                       props: {
-                        value: endValue,
+                        value: paneEndVal,
+                        multiple: true,
+                        valueSort: true,
+                        limitCount: 3,
+                        defaultMode: 'last',
                         type: props.type,
                         className: props.className,
                         minDate: props.minDate,
                         maxDate: props.maxDate,
-                        startDate: startValue,
                         startDay: props.startDay,
                         labelFormat: props.labelFormat,
-                        valueFormat: props.valueFormat,
+                        valueFormat: valueFormat === 'date' || valueFormat === 'timestamp' ? '' : valueFormat,
                         timeFormat: props.timeFormat,
                         defaultDate: edDate,
                         defaultTime: edTime,
@@ -1370,7 +1448,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
                         ? h(VxeButtonComponent, {
                           props: {
                             size: 'mini',
-                            disabled: !(startValue || endValue),
+                            disabled: !(selectStValue || selectEdValue),
                             content: getI18n('vxe.button.clear')
                           },
                           on: {
@@ -1441,13 +1519,13 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const reactData = $xeDateRangePicker.reactData
 
       const { suffixIcon } = props
-      const { startValue, endValue } = reactData
+      const { selectStValue, selectEdValue } = reactData
       const suffixSlot = slots.suffix
       const isDisabled = $xeDateRangePicker.computeIsDisabled
       const isClearable = $xeDateRangePicker.computeIsClearable
       return h('div', {
         class: ['vxe-date-range-picker--suffix', {
-          'is--clear': isClearable && !isDisabled && (startValue || endValue)
+          'is--clear': isClearable && !isDisabled && (selectStValue || selectEdValue)
         }]
       }, [
         isClearable
@@ -1499,7 +1577,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const reactData = $xeDateRangePicker.reactData
 
       const { className, type, name, autoComplete } = props
-      const { startValue, endValue, visiblePanel, isActivated } = reactData
+      const { selectStValue, selectEdValue, visiblePanel, isActivated } = reactData
       const vSize = $xeDateRangePicker.computeSize
       const isDisabled = $xeDateRangePicker.computeIsDisabled
       const formReadonly = $xeDateRangePicker.computeFormReadonly
@@ -1523,7 +1601,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
           'is--visible': visiblePanel,
           'is--disabled': isDisabled,
           'is--active': isActivated,
-          'show--clear': isClearable && !isDisabled && (startValue || endValue)
+          'show--clear': isClearable && !isDisabled && (selectStValue || selectEdValue)
         }],
         attrs: {
           spellcheck: false
@@ -1578,6 +1656,8 @@ export default /* define-vxe-component start */ defineVxeComponent({
   created () {
     const $xeDateRangePicker = this
 
+    $xeDateRangePicker.internalData = createInternalData()
+
     $xeDateRangePicker.updateModelValue(true)
 
     globalEvents.on($xeDateRangePicker, 'mousewheel', $xeDateRangePicker.handleGlobalMousewheelEvent)
@@ -1593,6 +1673,8 @@ export default /* define-vxe-component start */ defineVxeComponent({
   },
   beforeDestroy () {
     const $xeDateRangePicker = this
+    const reactData = $xeDateRangePicker.reactData
+    const internalData = $xeDateRangePicker.internalData
 
     const panelElem = $xeDateRangePicker.$refs.refInputPanel as HTMLElement | undefined
     if (panelElem && panelElem.parentNode) {
@@ -1603,6 +1685,8 @@ export default /* define-vxe-component start */ defineVxeComponent({
     globalEvents.off($xeDateRangePicker, 'mousedown')
     globalEvents.off($xeDateRangePicker, 'blur')
     globalEvents.off($xeDateRangePicker, 'resize')
+    XEUtils.assign(reactData, createReactData())
+    XEUtils.assign(internalData, createInternalData())
   },
   render (this: any, h) {
     return this.renderVN(h)

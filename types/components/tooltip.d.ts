@@ -103,7 +103,7 @@ export interface TooltipReactData {
 }
 
 export interface TooltipInternalData {
-  showDelayTip?(): any
+  showDelayTip?(): void
 }
 
 export interface TooltipMethods {

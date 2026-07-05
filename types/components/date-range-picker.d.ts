@@ -20,7 +20,7 @@ export interface VxeDateRangePickerPrivateRef extends DateRangePickerPrivateRef 
 
 export namespace VxeDateRangePickerPropTypes {
   export type Size = VxeComponentSizeType
-  export type ModelValue = (string | number | Date)[] | string | null
+  export type ModelValue = (string | number | Date)[] | string | number | Date | null
   export type StartValue = string | number | Date | null
   export type EndValue = string | number | Date | null
   export type ClassName = string
@@ -194,8 +194,10 @@ export interface DateRangePickerReactData {
   panelStyle: VxeComponentStyleType
   panelPlacement: VxeDateRangePickerPropTypes.Placement
   isActivated: boolean
-  startValue: any
-  endValue: any
+  selectStValue: any
+  selectEdValue: any
+  paneStartVal: string
+  paneEndVal: string
 }
 
 export interface DateRangePickerInternalData {

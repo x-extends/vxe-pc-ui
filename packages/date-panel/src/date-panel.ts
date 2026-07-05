@@ -42,6 +42,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       type: [String, Number, Date] as PropType<VxeDatePanelPropTypes.EndDate>,
       default: () => getConfig().datePanel.endDate
     },
+    defaultMode: String as PropType<VxeDatePanelPropTypes.DefaultMode>,
     defaultDate: [String, Number, Date] as PropType<VxeDatePanelPropTypes.DefaultDate>,
     defaultTime: [String, Number, Date] as PropType<VxeDatePanelPropTypes.DefaultTime>,
     minDate: [String, Number, Date] as PropType<VxeDatePanelPropTypes.MinDate>,
@@ -53,6 +54,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
     labelFormat: String as PropType<VxeDatePanelPropTypes.LabelFormat>,
     valueFormat: String as PropType<VxeDatePanelPropTypes.ValueFormat>,
     timeFormat: String as PropType<VxeDatePanelPropTypes.TimeFormat>,
+    valueSort: Boolean as PropType<VxeDatePanelPropTypes.ValueSort>,
     festivalMethod: {
       type: Function as PropType<VxeDatePanelPropTypes.FestivalMethod>,
       default: () => getConfig().datePanel.festivalMethod
@@ -197,12 +199,14 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const $xeDatePanel = this
       const props = $xeDatePanel
 
-      const { value: modelValue } = props
+      const { value: modelValue, defaultMode } = props
       const isDatePanelType = $xeDatePanel.computeIsDatePanelType
       const dateValueFormat = $xeDatePanel.computeDateValueFormat
       let val = null
       if (modelValue && isDatePanelType) {
-        const date = ($xeDatePanel as any).parseDate(modelValue, dateValueFormat)
+        const vals = XEUtils.isString(modelValue) ? modelValue.split(',') : modelValue
+        const currVal = defaultMode === 'last' ? XEUtils.last(vals) : XEUtils.first(vals)
+        const date = ($xeDatePanel as any).parseDate(currVal, dateValueFormat)
         if (XEUtils.isValidDate(date)) {
           val = date
         }
@@ -682,10 +686,10 @@ export default /* define-vxe-component start */ defineVxeComponent({
 
       const { type, multiple } = props
       if (type === 'time') {
-        return toStringTimeDate(value)
+        return toStringTimeDate(XEUtils.isArray(value) ? value : XEUtils.last(value))
       }
       if (XEUtils.isArray(value)) {
-        return XEUtils.toStringDate(value[0], format)
+        return XEUtils.toStringDate(XEUtils.last(value), format)
       }
       if (XEUtils.isString(value)) {
         return XEUtils.toStringDate(multiple ? XEUtils.last(value.split(',')) : value, format)
@@ -754,7 +758,9 @@ export default /* define-vxe-component start */ defineVxeComponent({
         $xeDatePanel.handleChange('', { type: 'check' })
       }
     },
-    handleChange (value: string, evnt: Event | { type: string }) {
+    handleChange (value: string, evnt: Event | { type: string }, params?: {
+      currValue: string
+    }) {
       const $xeDatePanel = this
       const props = $xeDatePanel
       const reactData = $xeDatePanel.reactData
@@ -767,18 +773,18 @@ export default /* define-vxe-component start */ defineVxeComponent({
         const timeNum = dateVal ? dateVal.getTime() : null
         $xeDatePanel.emitModel(timeNum)
         if (modelValue !== timeNum) {
-          $xeDatePanel.dispatchEvent('change', { value: timeNum }, evnt as Event)
+          $xeDatePanel.dispatchEvent('change', { value: timeNum, currValue: params ? params.currValue : '' }, evnt as Event)
         }
       } else if (hasDateValueType(valueFormat)) {
         const dateVal = parseDateValue(value, type, { valueFormat: dateValueFormat })
         $xeDatePanel.emitModel(dateVal)
         if (modelValue && dateVal ? XEUtils.toStringDate(modelValue).getTime() !== dateVal.getTime() : modelValue !== dateVal) {
-          $xeDatePanel.dispatchEvent('change', { value: dateVal }, evnt as Event)
+          $xeDatePanel.dispatchEvent('change', { value: dateVal, currValue: params ? params.currValue : '' }, evnt as Event)
         }
       } else {
         $xeDatePanel.emitModel(value)
         if (XEUtils.toValueString(modelValue) !== value) {
-          $xeDatePanel.dispatchEvent('change', { value }, evnt as Event)
+          $xeDatePanel.dispatchEvent('change', { value, currValue: params ? params.currValue : '' }, evnt as Event)
         }
       }
     },
@@ -795,7 +801,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
         }, 350)
       })
     },
-    dateParseValue (val?: VxeDatePanelPropTypes.ModelValue) {
+    dateParseValue (val?: string | Date | null) {
       const $xeDatePanel = this
       const props = $xeDatePanel
       const reactData = $xeDatePanel.reactData
@@ -858,7 +864,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const props = $xeDatePanel
       const reactData = $xeDatePanel.reactData
 
-      const { value: modelValue, multiple } = props
+      const { value: modelValue, multiple, valueSort } = props
       const { datetimePanelValue } = reactData
       const isDateTimeType = $xeDatePanel.computeIsDateTimeType
       const dateValueFormat = $xeDatePanel.computeDateValueFormat
@@ -881,7 +887,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
         if (isDateTimeType) {
           // 如果是datetime特殊类型
           const dateListValue = isReload ? [] : [...$xeDatePanel.computeDateListValue]
-          const datetimeRest: Date[] = []
+          let datetimeRest: Date[] = []
           const eqIndex = XEUtils.findIndexOf(dateListValue, val => XEUtils.isDateSame(date, val, 'yyyyMMdd'))
           if (eqIndex === -1) {
             if (overCount) {
@@ -902,24 +908,34 @@ export default /* define-vxe-component start */ defineVxeComponent({
               datetimeRest.push(item)
             }
           })
-          $xeDatePanel.handleChange(datetimeRest.map(date => XEUtils.toDateString(date, dateValueFormat)).join(','), { type: 'update' })
+          // 排序
+          if (valueSort) {
+            datetimeRest = datetimeRest.sort((a, b) => a.getTime() - b.getTime())
+          }
+          $xeDatePanel.handleChange(datetimeRest.map(date => XEUtils.toDateString(date, dateValueFormat)).join(','), { type: 'update' }, { currValue: inpVal })
         } else {
           const dateMultipleValue = isReload ? [] : $xeDatePanel.computeDateMultipleValue
+          let dateRest: string[] = []
           // 如果是日期类型
           if (dateMultipleValue.some(val => XEUtils.isEqual(val, inpVal))) {
-            $xeDatePanel.handleChange(dateMultipleValue.filter(val => !XEUtils.isEqual(val, inpVal)).join(','), { type: 'update' })
+            dateRest = dateMultipleValue.filter(val => !XEUtils.isEqual(val, inpVal))
           } else {
             if (overCount) {
               // 如果超出最大多选数量
               return
             }
-            $xeDatePanel.handleChange(dateMultipleValue.concat([inpVal]).join(','), { type: 'update' })
+            dateRest = dateMultipleValue.concat([inpVal])
           }
+          // 排序
+          if (valueSort) {
+            dateRest = dateRest.sort()
+          }
+          $xeDatePanel.handleChange(dateRest.join(','), { type: 'update' }, { currValue: inpVal })
         }
       } else {
         // 如果为单选
         if (!XEUtils.isEqual(modelValue, inpVal)) {
-          $xeDatePanel.handleChange(inpVal, { type: 'update' })
+          $xeDatePanel.handleChange(inpVal, { type: 'update' }, { currValue: inpVal })
         }
       }
     },
@@ -1360,6 +1376,13 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const reactData = $xeDatePanel.reactData
 
       return reactData.inputValue
+    },
+    getViewType () {
+      const $xeDatePanel = this
+      const reactData = $xeDatePanel.reactData
+
+      const { datePanelType } = reactData
+      return datePanelType
     },
     setPanelDate (date: Date) {
       const $xeDatePanel = this

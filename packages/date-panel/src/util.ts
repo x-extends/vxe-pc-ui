@@ -80,19 +80,22 @@ export function getDateQuarter (date: Date) {
   return 4
 }
 
-export const parseDateValue = (val: string | number | Date | null | undefined, type: VxeDatePanelPropTypes.Type, options: {
+export function parseDateValue (val: string | number | Date | (string | number | Date)[] | null | undefined, type: VxeDatePanelPropTypes.Type, options: {
   valueFormat: string
-}) => {
+}) {
   const { valueFormat } = options
   if (val) {
     if (type === 'time') {
-      return toStringTimeDate(val)
+      return toStringTimeDate(XEUtils.isArray(val) ? val : XEUtils.last(val))
     }
     if (XEUtils.isNumber(val) || /^[0-9]{10,15}$/.test(`${val}`)) {
       return new Date(Number(val))
     }
     if (XEUtils.isString(val)) {
       return XEUtils.toStringDate(XEUtils.last(val.split(',')), valueFormat)
+    }
+    if (XEUtils.isArray(val)) {
+      return XEUtils.toStringDate(XEUtils.last(val), valueFormat)
     }
     return XEUtils.toStringDate(val, valueFormat)
   }
@@ -284,4 +287,28 @@ export function checkDateInputFormat (numStr: number, formatKey: string) {
       return (numVal >= 59 ? 59 : (numVal <= 0 ? 0 : numVal))
   }
   return numVal
+}
+
+export const getPrevMonth = (date: Date) => {
+  const currtYear = date.getFullYear()
+  const currMonth = date.getMonth()
+  if (currMonth) {
+    date.setMonth(currMonth - 1)
+  } else {
+    date.setFullYear(currtYear - 1)
+    date.setMonth(11)
+  }
+  return date
+}
+
+export const getNextMonth = (date: Date) => {
+  const currtYear = date.getFullYear()
+  const currMonth = date.getMonth()
+  if (currMonth < 11) {
+    date.setMonth(currMonth + 1)
+  } else {
+    date.setFullYear(currtYear + 1)
+    date.setMonth(0)
+  }
+  return date
 }
