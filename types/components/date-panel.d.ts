@@ -38,6 +38,7 @@ export namespace VxeDatePanelPropTypes {
   export type LimitCount = string | number
   export type StartDate = string | number | Date | null
   export type EndDate = string | number | Date | null
+  export type DefaultMode = 'first' | 'last' | ''
   export type DefaultDate = string | number | Date | null
   export type DefaultTime = string | number | Date | null
   export type MinDate = string | number | Date | null
@@ -47,6 +48,7 @@ export namespace VxeDatePanelPropTypes {
   export type LabelFormat = string
   export type ValueFormat = string
   export type TimeFormat = string
+  export type ValueSort = boolean
   export type FestivalMethod = (params: VxeDatePanelDefines.DateFestivalParams) => VxeDatePanelDefines.DateFestivalInfo | null | void
   export type DisabledMethod = (params: VxeDatePanelDefines.DateDisabledParams) => boolean
 
@@ -92,6 +94,13 @@ export interface VxeDatePanelProps {
    */
   startDate?: VxeDatePanelPropTypes.StartDate
   endDate?: VxeDatePanelPropTypes.EndDate
+  /**
+   * 用于 multiple 模式，当选中值时，视图的显示默认，默认以第一个值来展示视图，可以指定 first 或 last
+   */
+  defaultMode?: VxeDatePanelPropTypes.DefaultMode
+  /**
+   * 当未绑定值时，默认以当前日期来展示视图，可以指定日期
+   */
   defaultDate?: VxeDatePanelPropTypes.DefaultDate
   defaultTime?: VxeDatePanelPropTypes.DefaultTime
   minDate?: VxeDatePanelPropTypes.MinDate
@@ -101,6 +110,7 @@ export interface VxeDatePanelProps {
   labelFormat?: VxeDatePanelPropTypes.LabelFormat
   valueFormat?: VxeDatePanelPropTypes.ValueFormat
   timeFormat?: VxeDatePanelPropTypes.TimeFormat
+  ValueSort?: VxeDatePanelPropTypes.ValueSort
   festivalMethod?: VxeDatePanelPropTypes.FestivalMethod
   disabledMethod?: VxeDatePanelPropTypes.DisabledMethod
 
@@ -141,6 +151,7 @@ export interface DatePanelMethods {
   dispatchEvent(type: ValueOf<VxeDatePanelEmits>, params: Record<string, any>, evnt: Event | null): void
 
   getModelValue(): string
+  getViewType(): VxeDatePanelDefines.DatePanelType
   setPanelDate(date: Date): void
   getPanelDate(): Date
   checkValue(inputLabel: string): void
@@ -258,7 +269,9 @@ export namespace VxeDatePanelDefines {
     value: string
   }
 
-  export interface ChangeEventParams extends DatePanelEventParams, DatePanelParams { }
+  export interface ChangeEventParams extends DatePanelEventParams, DatePanelParams {
+    currValue: string
+  }
 
   export interface ConfirmEventParams extends DatePanelEventParams {}
   export interface RevertEventParams extends DatePanelEventParams {

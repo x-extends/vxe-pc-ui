@@ -1847,6 +1847,7 @@ export default defineVxeComponent({
       globalEvents.off($xeCascader, 'mousedown')
       globalEvents.off($xeCascader, 'blur')
       globalEvents.off($xeCascader, 'resize')
+      XEUtils.assign(reactData, createReactData())
       XEUtils.assign(internalData, createInternalData())
     })
 

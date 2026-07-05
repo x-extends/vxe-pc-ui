@@ -4,7 +4,7 @@ import XEUtils from 'xe-utils'
 import { getConfig, getIcon, getI18n, commands, globalEvents, createEvent, GLOBAL_EVENT_KEYS, useSize, renderEmptyElement } from '../../ui'
 import { getFuncText, getLastZIndex, nextZIndex, isEnableConf } from '../../ui/src/utils'
 import { updatePanelPlacement, getEventTargetNode } from '../../ui/src/dom'
-import { parseDateString, parseDateObj, getRangeDateByCode, handleValueFormat, hasTimestampValueType, hasDateValueType, parseDateValue } from '../../date-panel/src/util'
+import { parseDateString, parseDateObj, getRangeDateByCode, handleValueFormat, hasTimestampValueType, hasDateValueType, parseDateValue, getNextMonth, getPrevMonth } from '../../date-panel/src/util'
 import { getSlotVNs } from '../../ui/src/vn'
 import { createComponentLog } from '../../ui/src/log'
 import VxeDatePanelComponent from '../../date-panel'
@@ -15,6 +15,29 @@ import type { VxeDateRangePickerConstructor, VxeDateRangePickerEmits, DateRangeP
 import type { VxeTableConstructor, VxeTablePrivateMethods } from '../../../types/components/table'
 
 const { errLog } = createComponentLog('date-range-picker')
+
+function createReactData (): DateRangePickerReactData {
+  return {
+    initialized: false,
+    panelIndex: 0,
+    visiblePanel: false,
+    isAniVisible: false,
+    panelStyle: {},
+    panelPlacement: '',
+    isActivated: false,
+    selectStValue: '',
+    selectEdValue: '',
+    paneStartVal: '',
+    paneEndVal: ''
+  }
+}
+
+function createInternalData (): DateRangePickerInternalData {
+  return {
+    // selectStatus: false
+    // hpTimeout: undefined
+  }
+}
 
 export default defineVxeComponent({
   name: 'VxeDateRangePicker',
@@ -160,22 +183,9 @@ export default defineVxeComponent({
 
     const { computeSize } = useSize(props)
 
-    const reactData = reactive<DateRangePickerReactData>({
-      initialized: false,
-      panelIndex: 0,
-      visiblePanel: false,
-      isAniVisible: false,
-      panelStyle: {},
-      panelPlacement: '',
-      isActivated: false,
-      startValue: '',
-      endValue: ''
-    })
+    const reactData = reactive(createReactData())
 
-    const internalData: DateRangePickerInternalData = {
-      // selectStatus: false
-      // hpTimeout: undefined
-    }
+    const internalData = createInternalData()
 
     const refElem = ref() as Ref<HTMLDivElement>
     const refInputTarget = ref() as Ref<HTMLInputElement>
@@ -345,8 +355,8 @@ export default defineVxeComponent({
     })
 
     const computePanelLabelObj = computed(() => {
-      const { startValue, endValue } = reactData
-      const vals: string[] = startValue || endValue ? [startValue || '', endValue || ''] : []
+      const { selectStValue, selectEdValue } = reactData
+      const vals: string[] = selectStValue || selectEdValue ? [selectStValue || '', selectEdValue || ''] : []
       return formatRangeLabel(vals)
     })
 
@@ -466,14 +476,14 @@ export default defineVxeComponent({
           restObj = paraeUpdateModel()
         }
       }
-      reactData.startValue = restObj.sValue
-      reactData.endValue = restObj.eValue
+      reactData.selectStValue = restObj.sValue
+      reactData.selectEdValue = restObj.eValue
     }
 
     const triggerEvent = (evnt: Event & { type: 'input' | 'change' | 'keydown' | 'keyup' | 'click' | 'focus' | 'blur' }) => {
-      const { startValue, endValue } = reactData
-      const value = getRangeValue(startValue, endValue)
-      dispatchEvent(evnt.type, { value, startValue, endValue }, evnt)
+      const { selectStValue, selectEdValue } = reactData
+      const value = getRangeValue(selectStValue, selectEdValue)
+      dispatchEvent(evnt.type, { value, startValue: selectStValue, endValue: selectEdValue }, evnt)
     }
 
     const handleChange = (sValue: string, eValue: string, evnt: Event | { type: string }) => {
@@ -498,8 +508,8 @@ export default defineVxeComponent({
           endRest = parseDateValue(endRest, type, { valueFormat: dateValueFormat })
         }
       }
-      reactData.startValue = startRest
-      reactData.endValue = endRest
+      reactData.selectStValue = startRest
+      reactData.selectEdValue = endRest
       const value = getRangeValue(startRest, endRest)
       const isFinish = (startRest && endRest) || (!startRest && !endRest)
       emit('update:modelValue', value)
@@ -536,9 +546,9 @@ export default defineVxeComponent({
     const clickPrefixEvent = (evnt: Event) => {
       const isDisabled = computeIsDisabled.value
       if (!isDisabled) {
-        const { startValue, endValue } = reactData
-        const value = getRangeValue(startValue, endValue)
-        dispatchEvent('prefix-click', { value, startValue, endValue }, evnt)
+        const { selectStValue, selectEdValue } = reactData
+        const value = getRangeValue(selectStValue, selectEdValue)
+        dispatchEvent('prefix-click', { value, startValue: selectStValue, endValue: selectEdValue }, evnt)
       }
     }
 
@@ -576,8 +586,8 @@ export default defineVxeComponent({
     }
 
     const panelCellClassName: VxeDatePanelPropTypes.CellClassName = ({ date }) => {
-      const startValue = reactData.startValue
-      const endValue = reactData.endValue
+      const startValue = reactData.selectStValue
+      const endValue = reactData.selectEdValue
       if (startValue && endValue) {
         const currTime = date.getTime()
         const startTime = XEUtils.toStringDate(startValue).getTime()
@@ -591,17 +601,17 @@ export default defineVxeComponent({
 
     const handleSelectClose = () => {
       const { autoClose } = props
-      const { startValue, endValue } = reactData
+      const { selectStValue, selectEdValue } = reactData
       const { selectStatus } = internalData
       const isDatePickerType = computeIsDatePickerType.value
       if (autoClose) {
         if (selectStatus && isDatePickerType) {
-          if (startValue && endValue) {
+          if (selectStValue && selectEdValue) {
             hidePanel()
           }
         }
       } else {
-        if (startValue && endValue) {
+        if (selectStValue && selectEdValue) {
           internalData.selectStatus = false
         }
       }
@@ -610,24 +620,24 @@ export default defineVxeComponent({
     const clickSuffixEvent = (evnt: Event) => {
       const isDisabled = computeIsDisabled.value
       if (!isDisabled) {
-        const { startValue, endValue } = reactData
-        const value = getRangeValue(startValue, endValue)
-        dispatchEvent('suffix-click', { value, startValue, endValue }, evnt)
+        const { selectStValue, selectEdValue } = reactData
+        const value = getRangeValue(selectStValue, selectEdValue)
+        dispatchEvent('suffix-click', { value, startValue: selectStValue, endValue: selectEdValue }, evnt)
       }
     }
 
     const blurEvent = (evnt: Event & { type: 'blur' }) => {
-      const { startValue, endValue } = reactData
+      const { selectStValue, selectEdValue } = reactData
       const inpImmediate = computeInpImmediate.value
       const value = ''
       if (!inpImmediate) {
-        handleChange(startValue, endValue, evnt)
+        handleChange(selectStValue, selectEdValue, evnt)
       }
       if (!reactData.visiblePanel) {
         reactData.isActivated = false
         checkValue()
       }
-      dispatchEvent('blur', { value, startValue, endValue }, evnt)
+      dispatchEvent('blur', { value, startValue: selectStValue, endValue: selectEdValue }, evnt)
       // 自动更新校验状态
       if ($xeForm && formItemInfo) {
         $xeForm.triggerItemEvent(evnt, formItemInfo.itemConfig.field, value)
@@ -662,107 +672,168 @@ export default defineVxeComponent({
 
     const startPanelChangeEvent = (params: any) => {
       const { selectStatus } = internalData
-      const { value, $event } = params
-      const endValue = selectStatus ? reactData.endValue : ''
-      handleChange(value, endValue, $event)
+      const { value, currValue, $event } = params
+      const paneVals = value ? (XEUtils.isString(value) ? value.split(',') : [value]) : []
+      let startValue = ''
+      let endValue = ''
+      if (selectStatus) {
+        startValue = paneVals[0]
+        if (paneVals[1]) {
+          endValue = paneVals[1]
+        } else {
+          endValue = reactData.selectEdValue
+        }
+      } else {
+        startValue = currValue || XEUtils.last(paneVals)
+      }
+      reactData.paneEndVal = [startValue, endValue].join(',')
+      reactData.paneStartVal = [startValue, endValue].join(',')
+      handleChange(startValue, endValue, $event)
       handleSelectClose()
       if (!selectStatus) {
         internalData.selectStatus = true
       }
       nextTick(() => {
-        const $startDatePanel = refStartDatePanel.value
-        const $endDatePanel = refEndDatePanel.value
-        if ($startDatePanel && $endDatePanel) {
-          const startValue = $startDatePanel.getModelValue()
-          if (!endValue && startValue) {
-            $endDatePanel.setPanelDate(XEUtils.toStringDate(startValue))
-          }
-        }
+        handleUpdateStartPanelDate()
       })
     }
 
     const endPanelChangeEvent = (params: any) => {
       const { selectStatus } = internalData
-      const { value, $event } = params
-      const startValue = selectStatus ? reactData.startValue : ''
-      handleChange(startValue, value, $event)
+      const { value, currValue, $event } = params
+      const paneVals = value ? (XEUtils.isString(value) ? value.split(',') : [value]) : []
+      let startValue = ''
+      let endValue = ''
+      if (selectStatus) {
+        endValue = paneVals[0]
+        if (paneVals[1]) {
+          startValue = paneVals[0]
+          endValue = paneVals[1]
+        } else {
+          startValue = reactData.selectStValue
+        }
+      } else {
+        endValue = currValue || XEUtils.last(paneVals)
+      }
+      reactData.paneEndVal = [startValue, endValue].join(',')
+      reactData.paneStartVal = [startValue, endValue].join(',')
+      handleChange(startValue, endValue, $event)
       handleSelectClose()
       if (!selectStatus) {
         internalData.selectStatus = true
       }
       nextTick(() => {
-        const $startDatePanel = refStartDatePanel.value
-        const $endDatePanel = refEndDatePanel.value
-        if ($startDatePanel && $endDatePanel) {
-          const endValue = $endDatePanel.getModelValue()
-          if (!startValue && endValue) {
-            $startDatePanel.setPanelDate(XEUtils.toStringDate(endValue))
-          }
-        }
+        handleUpdateEndPanelDate()
       })
     }
 
-    const startPanelDateBtnChangeEvent: VxeDatePanelEvents.DateToday = (params) => {
-      const { linkedPanels } = props
-      if (linkedPanels) {
-        const { viewType } = params
-        const $startDatePanel = refStartDatePanel.value
-        const $endDatePanel = refEndDatePanel.value
-        if (!$startDatePanel || !$endDatePanel) {
-          return
-        }
-        const startPanelDate = $startDatePanel.getPanelDate()
-        if (!startPanelDate) {
-          return
-        }
-        const endYear = startPanelDate.getFullYear()
-        const endMonth = startPanelDate.getMonth()
-        switch (viewType) {
-          case 'day':
-          case 'date':
-          case 'week': {
-            if (endMonth < 11) {
-              startPanelDate.setMonth(endMonth + 1)
-            } else {
-              startPanelDate.setFullYear(endYear + 1)
-              startPanelDate.setMonth(0)
-            }
-            $endDatePanel.setPanelDate(startPanelDate)
-            break
+    const handleUpdateStartPanelDate = () => {
+      const $startDatePanel = refStartDatePanel.value
+      const $endDatePanel = refEndDatePanel.value
+      if (!$startDatePanel || !$endDatePanel) {
+        return
+      }
+      const startPanelDate = $startDatePanel.getPanelDate()
+      const endPanelDate = $endDatePanel.getPanelDate()
+      if (!startPanelDate || !endPanelDate) {
+        return
+      }
+      const viewType = $startDatePanel.getViewType()
+      const startYear = startPanelDate.getFullYear()
+      const startMonth = startPanelDate.getMonth()
+      const endYear = endPanelDate.getFullYear()
+      const endMonth = endPanelDate.getMonth()
+      switch (viewType) {
+        case 'day':
+        case 'date':
+        case 'week': {
+          if (endYear <= startYear && endMonth <= startMonth) {
+            $endDatePanel.setPanelDate(getNextMonth(startPanelDate))
           }
+          break
         }
       }
     }
 
-    const endPanelDateBtnChangeEvent: VxeDatePanelEvents.DateToday = (params) => {
+    const startPanelDateBtnChangeEvent: VxeDatePanelEvents.DateToday = () => {
       const { linkedPanels } = props
+      const $startDatePanel = refStartDatePanel.value
+      const $endDatePanel = refEndDatePanel.value
+      if (!$startDatePanel || !$endDatePanel) {
+        return
+      }
+      const startPanelDate = $startDatePanel.getPanelDate()
+      const endPanelDate = $endDatePanel.getPanelDate()
+      if (!startPanelDate || !endPanelDate) {
+        return
+      }
+      const viewType = $startDatePanel.getViewType()
       if (linkedPanels) {
-        const { viewType } = params
-        const $startDatePanel = refStartDatePanel.value
-        const $endDatePanel = refEndDatePanel.value
-        if (!$startDatePanel || !$endDatePanel) {
-          return
-        }
-        const endPanelDate = $endDatePanel.getPanelDate()
-        if (!endPanelDate) {
-          return
-        }
-        const endYear = endPanelDate.getFullYear()
-        const endMonth = endPanelDate.getMonth()
         switch (viewType) {
           case 'day':
           case 'date':
           case 'week': {
-            if (endMonth) {
-              endPanelDate.setMonth(endMonth - 1)
-            } else {
-              endPanelDate.setFullYear(endYear - 1)
-              endPanelDate.setMonth(11)
-            }
-            $startDatePanel.setPanelDate(endPanelDate)
+            $endDatePanel.setPanelDate(getNextMonth(startPanelDate))
             break
           }
         }
+      } else {
+        handleUpdateStartPanelDate()
+      }
+    }
+
+    const handleUpdateEndPanelDate = () => {
+      const $startDatePanel = refStartDatePanel.value
+      const $endDatePanel = refEndDatePanel.value
+      if (!$startDatePanel || !$endDatePanel) {
+        return
+      }
+      const startPanelDate = $startDatePanel.getPanelDate()
+      const endPanelDate = $endDatePanel.getPanelDate()
+      if (!startPanelDate || !endPanelDate) {
+        return
+      }
+      const viewType = $endDatePanel.getViewType()
+      const startYear = startPanelDate.getFullYear()
+      const startMonth = startPanelDate.getMonth()
+      const endYear = endPanelDate.getFullYear()
+      const endMonth = endPanelDate.getMonth()
+      switch (viewType) {
+        case 'day':
+        case 'date':
+        case 'week': {
+          if (startYear >= endYear && startMonth >= endMonth) {
+            $startDatePanel.setPanelDate(getPrevMonth(endPanelDate))
+          }
+          break
+        }
+      }
+    }
+
+    const endPanelDateBtnChangeEvent: VxeDatePanelEvents.DateToday = () => {
+      const { linkedPanels } = props
+      const $startDatePanel = refStartDatePanel.value
+      const $endDatePanel = refEndDatePanel.value
+      if (!$startDatePanel || !$endDatePanel) {
+        return
+      }
+      const startPanelDate = $startDatePanel.getPanelDate()
+      const endPanelDate = $endDatePanel.getPanelDate()
+      if (!startPanelDate || !endPanelDate) {
+        return
+      }
+      const viewType = $endDatePanel.getViewType()
+      if (linkedPanels) {
+        switch (viewType) {
+          case 'day':
+          case 'date':
+          case 'week': {
+            $startDatePanel.setPanelDate(getPrevMonth(endPanelDate))
+            break
+          }
+        }
+      } else {
+        handleUpdateEndPanelDate()
       }
     }
 
@@ -894,6 +965,7 @@ export default defineVxeComponent({
         reactData.isAniVisible = true
         setTimeout(() => {
           reactData.visiblePanel = true
+          handleUpdateStartPanelDate()
           updatePlacement()
         }, 10)
         updateZindex()
@@ -932,8 +1004,8 @@ export default defineVxeComponent({
       const shortcutOpts = computeShortcutOpts.value
       const { autoClose } = shortcutOpts
       const { code, clickMethod } = option as VxeDateRangePickerDefines.ShortcutOption
-      let startValue = reactData.startValue
-      let endValue = reactData.endValue
+      let startValue = reactData.selectStValue
+      let endValue = reactData.selectEdValue
       let value = getRangeValue(startValue, endValue)
       const shortcutParams = {
         $dateRangePicker: $xeDateRangePicker,
@@ -997,8 +1069,8 @@ export default defineVxeComponent({
       dispatchEvent,
 
       setModelValue (startValue, endValue) {
-        reactData.startValue = startValue || ''
-        reactData.endValue = endValue || ''
+        reactData.selectStValue = startValue || ''
+        reactData.selectEdValue = endValue || ''
         const value = getRangeValue(startValue, endValue)
         emit('update:modelValue', value)
       },
@@ -1055,8 +1127,8 @@ export default defineVxeComponent({
       if (popupOpts.enabled === false) {
         return renderEmptyElement($xeDateRangePicker)
       }
-      const { type, separator, autoClose, showConfirmButton, showClearButton } = props
-      const { initialized, isAniVisible, visiblePanel, panelPlacement, panelStyle, startValue, endValue } = reactData
+      const { type, separator, autoClose, valueFormat, showConfirmButton, showClearButton } = props
+      const { initialized, isAniVisible, visiblePanel, panelPlacement, panelStyle, selectStValue, selectEdValue, paneStartVal, paneEndVal } = reactData
       const vSize = computeSize.value
       const btnTransfer = computeBtnTransfer.value
       const shortcutOpts = computeShortcutOpts.value
@@ -1133,15 +1205,18 @@ export default defineVxeComponent({
                     }, [
                       h(VxeDatePanelComponent, {
                         ref: refStartDatePanel,
-                        modelValue: startValue,
+                        modelValue: paneStartVal,
+                        multiple: true,
+                        valueSort: true,
+                        limitCount: 3,
+                        defaultMode: 'first',
                         type: props.type,
                         className: props.className,
                         minDate: props.minDate,
                         maxDate: props.maxDate,
-                        endDate: endValue,
                         startDay: props.startDay,
                         labelFormat: props.labelFormat,
-                        valueFormat: props.valueFormat,
+                        valueFormat: valueFormat === 'date' || valueFormat === 'timestamp' ? '' : valueFormat,
                         timeFormat: props.timeFormat,
                         defaultDate: sdDate,
                         defaultTime: sdTime,
@@ -1157,15 +1232,18 @@ export default defineVxeComponent({
                       }),
                       h(VxeDatePanelComponent, {
                         ref: refEndDatePanel,
-                        modelValue: endValue,
+                        modelValue: paneEndVal,
+                        multiple: true,
+                        valueSort: true,
+                        limitCount: 3,
+                        defaultMode: 'last',
                         type: props.type,
                         className: props.className,
                         minDate: props.minDate,
                         maxDate: props.maxDate,
-                        startDate: startValue,
                         startDay: props.startDay,
                         labelFormat: props.labelFormat,
-                        valueFormat: props.valueFormat,
+                        valueFormat: valueFormat === 'date' || valueFormat === 'timestamp' ? '' : valueFormat,
                         timeFormat: props.timeFormat,
                         defaultDate: edDate,
                         defaultTime: edTime,
@@ -1201,7 +1279,7 @@ export default defineVxeComponent({
                         showClearBtn
                           ? h(VxeButtonComponent, {
                             size: 'mini',
-                            disabled: !(startValue || endValue),
+                            disabled: !(selectStValue || selectEdValue),
                             content: getI18n('vxe.button.clear'),
                             onClick: clearValueEvent
                           })
@@ -1257,13 +1335,13 @@ export default defineVxeComponent({
 
     const renderSuffixIcon = () => {
       const { suffixIcon } = props
-      const { startValue, endValue } = reactData
+      const { selectStValue, selectEdValue } = reactData
       const suffixSlot = slots.suffix
       const isDisabled = computeIsDisabled.value
       const isClearable = computeIsClearable.value
       return h('div', {
         class: ['vxe-date-range-picker--suffix', {
-          'is--clear': isClearable && !isDisabled && (startValue || endValue)
+          'is--clear': isClearable && !isDisabled && (selectStValue || selectEdValue)
         }]
       }, [
         isClearable
@@ -1305,7 +1383,7 @@ export default defineVxeComponent({
 
     const renderVN = () => {
       const { className, type, name, autoComplete } = props
-      const { startValue, endValue, visiblePanel, isActivated } = reactData
+      const { selectStValue, selectEdValue, visiblePanel, isActivated } = reactData
       const vSize = computeSize.value
       const isDisabled = computeIsDisabled.value
       const formReadonly = computeFormReadonly.value
@@ -1329,7 +1407,7 @@ export default defineVxeComponent({
           'is--visible': visiblePanel,
           'is--disabled': isDisabled,
           'is--active': isActivated,
-          'show--clear': isClearable && !isDisabled && (startValue || endValue)
+          'show--clear': isClearable && !isDisabled && (selectStValue || selectEdValue)
         }],
         spellcheck: false
       }, [
@@ -1383,15 +1461,17 @@ export default defineVxeComponent({
       checkValue()
     })
 
+    onBeforeUnmount(() => {
+      checkValue()
+    })
+
     onUnmounted(() => {
       globalEvents.off($xeDateRangePicker, 'mousewheel')
       globalEvents.off($xeDateRangePicker, 'mousedown')
       globalEvents.off($xeDateRangePicker, 'blur')
       globalEvents.off($xeDateRangePicker, 'resize')
-    })
-
-    onBeforeUnmount(() => {
-      checkValue()
+      XEUtils.assign(reactData, createReactData())
+      XEUtils.assign(internalData, createInternalData())
     })
 
     provide('$xeDateRangePicker', $xeDateRangePicker)

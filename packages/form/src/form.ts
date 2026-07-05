@@ -1009,6 +1009,7 @@ export default defineVxeComponent({
 
     onUnmounted(() => {
       globalEvents.off($xeForm, 'resize')
+      XEUtils.assign(reactData, createReactData())
       XEUtils.assign(internalData, createInternalData())
     })
 

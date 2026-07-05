@@ -9,7 +9,7 @@ import type { VxeDatePanelConstructor, DatePanelInternalData, DatePanelReactData
 export default defineVxeComponent({
   name: 'VxeDatePanel',
   props: {
-    modelValue: [String, Number, Date] as PropType<VxeDatePanelPropTypes.ModelValue>,
+    modelValue: [String, Number, Date, Array] as PropType<VxeDatePanelPropTypes.ModelValue>,
     type: {
       type: String as PropType<VxeDatePanelPropTypes.Type>,
       default: 'date'
@@ -35,6 +35,7 @@ export default defineVxeComponent({
       type: [String, Number, Date] as PropType<VxeDatePanelPropTypes.EndDate>,
       default: () => getConfig().datePanel.endDate
     },
+    defaultMode: String as PropType<VxeDatePanelPropTypes.DefaultMode>,
     defaultDate: [String, Number, Date] as PropType<VxeDatePanelPropTypes.DefaultDate>,
     defaultTime: [String, Number, Date] as PropType<VxeDatePanelPropTypes.DefaultTime>,
     minDate: [String, Number, Date] as PropType<VxeDatePanelPropTypes.MinDate>,
@@ -46,6 +47,7 @@ export default defineVxeComponent({
     labelFormat: String as PropType<VxeDatePanelPropTypes.LabelFormat>,
     valueFormat: String as PropType<VxeDatePanelPropTypes.ValueFormat>,
     timeFormat: String as PropType<VxeDatePanelPropTypes.TimeFormat>,
+    valueSort: Boolean as PropType<VxeDatePanelPropTypes.ValueSort>,
     festivalMethod: {
       type: Function as PropType<VxeDatePanelPropTypes.FestivalMethod>,
       default: () => getConfig().datePanel.festivalMethod
@@ -138,10 +140,10 @@ export default defineVxeComponent({
     })
 
     const computeDateListValue = computed(() => {
-      const { modelValue, multiple } = props
+      const { modelValue } = props
       const isDatePanelType = computeIsDatePanelType.value
       const dateValueFormat = computeDateValueFormat.value
-      if (multiple && modelValue && isDatePanelType) {
+      if (modelValue && isDatePanelType) {
         return XEUtils.toValueString(modelValue).split(',').map(item => {
           const date = parseDate(item, dateValueFormat)
           if (XEUtils.isValidDate(date)) {
@@ -189,12 +191,14 @@ export default defineVxeComponent({
     })
 
     const computeDateValue = computed(() => {
-      const { modelValue } = props
+      const { modelValue, defaultMode } = props
       const isDatePanelType = computeIsDatePanelType.value
       const dateValueFormat = computeDateValueFormat.value
       let val = null
       if (modelValue && isDatePanelType) {
-        const date = parseDate(modelValue, dateValueFormat)
+        const vals = XEUtils.isString(modelValue) ? modelValue.split(',') : modelValue
+        const currVal = defaultMode === 'last' ? XEUtils.last(vals) : XEUtils.first(vals)
+        const date = parseDate(currVal, dateValueFormat)
         if (XEUtils.isValidDate(date)) {
           val = date
         }
@@ -605,10 +609,10 @@ export default defineVxeComponent({
     const parseDate = (value: VxeDatePanelPropTypes.ModelValue, format: string) => {
       const { type, multiple } = props
       if (type === 'time') {
-        return toStringTimeDate(value)
+        return toStringTimeDate(XEUtils.isArray(value) ? value : XEUtils.last(value))
       }
       if (XEUtils.isArray(value)) {
-        return XEUtils.toStringDate(value[0], format)
+        return XEUtils.toStringDate(XEUtils.last(value), format)
       }
       if (XEUtils.isString(value)) {
         return XEUtils.toStringDate(multiple ? XEUtils.last(value.split(',')) : value, format)
@@ -677,7 +681,9 @@ export default defineVxeComponent({
       emit('update:modelValue', value)
     }
 
-    const handleChange = (value: string, evnt: Event | { type: string }) => {
+    const handleChange = (value: string, evnt: Event | { type: string }, params?: {
+      currValue: string
+    }) => {
       const { type, modelValue, valueFormat } = props
       const dateValueFormat = computeDateValueFormat.value
       reactData.inputLabel = value
@@ -686,18 +692,18 @@ export default defineVxeComponent({
         const timeNum = dateVal ? dateVal.getTime() : null
         emitModel(timeNum)
         if (modelValue !== timeNum) {
-          dispatchEvent('change', { value: timeNum }, evnt as Event)
+          dispatchEvent('change', { value: timeNum, currValue: params ? params.currValue : '' }, evnt as Event)
         }
       } else if (hasDateValueType(valueFormat)) {
         const dateVal = parseDateValue(value, type, { valueFormat: dateValueFormat })
         emitModel(dateVal)
         if (modelValue && dateVal ? XEUtils.toStringDate(modelValue).getTime() !== dateVal.getTime() : modelValue !== dateVal) {
-          dispatchEvent('change', { value: dateVal }, evnt as Event)
+          dispatchEvent('change', { value: dateVal, currValue: params ? params.currValue : '' }, evnt as Event)
         }
       } else {
         emitModel(value)
         if (XEUtils.toValueString(modelValue) !== value) {
-          dispatchEvent('change', { value }, evnt as Event)
+          dispatchEvent('change', { value, currValue: params ? params.currValue : '' }, evnt as Event)
         }
       }
     }
@@ -712,7 +718,7 @@ export default defineVxeComponent({
       })
     }
 
-    const dateParseValue = (val?: VxeDatePanelPropTypes.ModelValue) => {
+    const dateParseValue = (val?: string | Date | null) => {
       const { type } = props
       const dateLabelFormat = computeDateLabelFormat.value
       const dateValueFormat = computeDateValueFormat.value
@@ -761,7 +767,7 @@ export default defineVxeComponent({
     }
 
     const dateChange = (date: Date, isReload?: boolean) => {
-      const { modelValue, multiple } = props
+      const { modelValue, multiple, valueSort } = props
       const { datetimePanelValue } = reactData
       const isDateTimeType = computeIsDateTimeType.value
       const dateValueFormat = computeDateValueFormat.value
@@ -784,7 +790,7 @@ export default defineVxeComponent({
         if (isDateTimeType) {
           // 如果是datetime特殊类型
           const dateListValue = isReload ? [] : [...computeDateListValue.value]
-          const datetimeRest: Date[] = []
+          let datetimeRest: Date[] = []
           const eqIndex = XEUtils.findIndexOf(dateListValue, val => XEUtils.isDateSame(date, val, 'yyyyMMdd'))
           if (eqIndex === -1) {
             if (overCount) {
@@ -805,24 +811,34 @@ export default defineVxeComponent({
               datetimeRest.push(item)
             }
           })
-          handleChange(datetimeRest.map(date => XEUtils.toDateString(date, dateValueFormat)).join(','), { type: 'update' })
+          // 排序
+          if (valueSort) {
+            datetimeRest = datetimeRest.sort((a, b) => a.getTime() - b.getTime())
+          }
+          handleChange(datetimeRest.map(date => XEUtils.toDateString(date, dateValueFormat)).join(','), { type: 'update' }, { currValue: inpVal })
         } else {
           const dateMultipleValue = isReload ? [] : computeDateMultipleValue.value
+          let dateRest: string[] = []
           // 如果是日期类型
           if (dateMultipleValue.some(val => XEUtils.isEqual(val, inpVal))) {
-            handleChange(dateMultipleValue.filter(val => !XEUtils.isEqual(val, inpVal)).join(','), { type: 'update' })
+            dateRest = dateMultipleValue.filter(val => !XEUtils.isEqual(val, inpVal))
           } else {
             if (overCount) {
               // 如果超出最大多选数量
               return
             }
-            handleChange(dateMultipleValue.concat([inpVal]).join(','), { type: 'update' })
+            dateRest = dateMultipleValue.concat([inpVal])
           }
+          // 排序
+          if (valueSort) {
+            dateRest = dateRest.sort()
+          }
+          handleChange(dateRest.join(','), { type: 'update' }, { currValue: inpVal })
         }
       } else {
         // 如果为单选
         if (!XEUtils.isEqual(modelValue, inpVal)) {
-          handleChange(inpVal, { type: 'update' })
+          handleChange(inpVal, { type: 'update' }, { currValue: inpVal })
         }
       }
     }
@@ -1218,6 +1234,10 @@ export default defineVxeComponent({
 
       getModelValue () {
         return reactData.inputValue
+      },
+      getViewType () {
+        const { datePanelType } = reactData
+        return datePanelType
       },
       setPanelDate (date) {
         if (date) {

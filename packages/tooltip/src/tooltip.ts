@@ -1,4 +1,4 @@
-import { h, ref, nextTick, onBeforeUnmount, onMounted, computed, reactive, watch, PropType, VNode } from 'vue'
+import { h, ref, nextTick, onBeforeUnmount, onMounted, computed, reactive, watch, PropType, VNode, onUnmounted } from 'vue'
 import { defineVxeComponent } from '../../ui/src/comp'
 import XEUtils from 'xe-utils'
 import { getConfig, createEvent, useSize } from '../../ui'
@@ -7,6 +7,30 @@ import { toCssUnit } from '../../ui/src/dom'
 import { getSlotVNs } from '../../ui/src/vn'
 
 import type { VxeTooltipPropTypes, VxeTooltipConstructor, VxeTooltipEmits, TooltipInternalData, TooltipReactData, TooltipMethods, TooltipPrivateRef, VxeComponentStyleType } from '../../../types'
+
+function createReactData (): TooltipReactData {
+  return {
+    target: null,
+    isUpdate: false,
+    visible: false,
+    tipPos: null,
+    tipContent: '',
+    tipActive: false,
+    tipTarget: null,
+    tipZindex: 0,
+    tipStore: {
+      style: {},
+      placement: '',
+      arrowStyle: {}
+    }
+  }
+}
+
+function createInternalData (): TooltipInternalData {
+  return {
+    // showDelayTip: undefined
+  }
+}
 
 export default defineVxeComponent({
   name: 'VxeTooltip',
@@ -99,24 +123,9 @@ export default defineVxeComponent({
 
     const { computeSize } = useSize(props)
 
-    const reactData = reactive<TooltipReactData>({
-      target: null,
-      isUpdate: false,
-      visible: false,
-      tipPos: null,
-      tipContent: '',
-      tipActive: false,
-      tipTarget: null,
-      tipZindex: 0,
-      tipStore: {
-        style: {},
-        placement: '',
-        arrowStyle: {}
-      }
-    })
+    const reactData = reactive(createReactData())
 
-    const internalData: TooltipInternalData = {
-    }
+    const internalData = createInternalData()
 
     const refElem = ref<HTMLDivElement>()
     const contentWrapperfElem = ref<HTMLDivElement>()
@@ -526,6 +535,8 @@ export default defineVxeComponent({
       reactData.isUpdate = false
     })
 
+    handleDelayFn()
+
     onMounted(() => {
       const contentWrapperfEl = contentWrapperfElem.value
       if (contentWrapperfEl) {
@@ -585,7 +596,10 @@ export default defineVxeComponent({
       }
     })
 
-    handleDelayFn()
+    onUnmounted(() => {
+      XEUtils.assign(reactData, createReactData())
+      XEUtils.assign(internalData, createInternalData())
+    })
 
     $xeTooltip.renderVN = renderVN
 

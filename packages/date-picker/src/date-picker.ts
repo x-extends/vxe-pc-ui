@@ -1664,6 +1664,8 @@ export default defineVxeComponent({
       updateModelValue()
     })
 
+    updateModelValue()
+
     nextTick(() => {
       globalEvents.on($xeDatePicker, 'mousewheel', handleGlobalMousewheelEvent)
       globalEvents.on($xeDatePicker, 'mousedown', handleGlobalMousedownEvent)
@@ -1690,9 +1692,9 @@ export default defineVxeComponent({
       globalEvents.off($xeDatePicker, 'keydown')
       globalEvents.off($xeDatePicker, 'blur')
       globalEvents.off($xeDatePicker, 'resize')
+      XEUtils.assign(reactData, createReactData())
+      XEUtils.assign(internalData, createInternalData())
     })
-
-    updateModelValue()
 
     provide('$xeDatePicker', $xeDatePicker)
 

@@ -152,7 +152,7 @@ const demo1 = reactive({
   val6: '',
   val7: '',
   val8: '',
-  value100: '',
+  value100: '2020-10-10,2020-11-01',
   value101: '',
   value102: '',
   value103: '',
