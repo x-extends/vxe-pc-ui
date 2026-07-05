@@ -204,8 +204,8 @@ export interface DateRangePickerReactData {
   isActivated: boolean
   selectStValue: any
   selectEdValue: any
-  paneStartVal: string
-  paneEndVal: string
+  paneStartVal: (string | number | Date | null)[]
+  paneEndVal: (string | number | Date | null)[]
 }
 
 export interface DateRangePickerInternalData {

@@ -252,14 +252,20 @@ export default defineVxeComponent({
       return disabled
     })
 
-    const computeIsDateTimeType = computed(() => {
+    const computeIsTimeType = computed(() => {
       const { type } = props
-      return type === 'time' || type === 'datetime'
+      return type === 'time'
+    })
+
+    const computeIsTimeOrDateTimeType = computed(() => {
+      const { type } = props
+      const isTimeType = computeIsTimeType.value
+      return isTimeType || type === 'datetime'
     })
 
     const computeIsDatePickerType = computed(() => {
-      const isDateTimeType = computeIsDateTimeType.value
-      return isDateTimeType || ['date', 'week', 'month', 'quarter', 'year'].indexOf(props.type) > -1
+      const isTimeOrDateTimeType = computeIsTimeOrDateTimeType.value
+      return isTimeOrDateTimeType || ['date', 'week', 'month', 'quarter', 'year'].indexOf(props.type) > -1
     })
 
     const computeIsClearable = computed(() => {
@@ -267,8 +273,8 @@ export default defineVxeComponent({
     })
 
     const computeIsDatePanelType = computed(() => {
-      const isDateTimeType = computeIsDateTimeType.value
-      return isDateTimeType || ['date', 'week', 'month', 'quarter', 'year'].indexOf(props.type) > -1
+      const isTimeOrDateTimeType = computeIsTimeOrDateTimeType.value
+      return isTimeOrDateTimeType || ['date', 'week', 'month', 'quarter', 'year'].indexOf(props.type) > -1
     })
 
     const computeDateListValue = computed(() => {
@@ -508,7 +514,7 @@ export default defineVxeComponent({
 
     const dateChange = (date: Date, isReload?: boolean) => {
       const { modelValue, multiple } = props
-      const isDateTimeType = computeIsDateTimeType.value
+      const isTimeOrDateTimeType = computeIsTimeOrDateTimeType.value
       const dateValueFormat = computeDateValueFormat.value
       const firstDayOfWeek = computeFirstDayOfWeek.value
       if (props.type === 'week') {
@@ -519,7 +525,7 @@ export default defineVxeComponent({
       if (multiple) {
         const overCount = computeOverCount.value
         // 如果为多选
-        if (isDateTimeType) {
+        if (isTimeOrDateTimeType) {
           // 如果是datetime特殊类型
           const dateListValue = isReload ? [] : [...computeDateListValue.value]
           const datetimeRest: Date[] = []
@@ -1087,9 +1093,9 @@ export default defineVxeComponent({
     const panelChangeEvent = (params: VxeDatePickerDefines.ChangeEventParams) => {
       const { multiple, autoClose } = props
       const { value, $event } = params
-      const isDateTimeType = computeIsDateTimeType.value
+      const isTimeOrDateTimeType = computeIsTimeOrDateTimeType.value
       handleChange(value, $event)
-      if (!multiple && !isDateTimeType) {
+      if (!multiple && !isTimeOrDateTimeType) {
         if (autoClose) {
           hidePanel()
         }
@@ -1387,7 +1393,7 @@ export default defineVxeComponent({
       const btnTransfer = computeBtnTransfer.value
       const shortcutOpts = computeShortcutOpts.value
       const isClearable = computeIsClearable.value
-      const isDateTimeType = computeIsDateTimeType.value
+      const isTimeOrDateTimeType = computeIsTimeOrDateTimeType.value
       const shortcutList = computeShortcutList.value
       const timeOpts = computeTimeOpts.value
       const dateStartDate = computeDateStartDate.value
@@ -1401,7 +1407,7 @@ export default defineVxeComponent({
       const rightSlot = slots.right
       const ppClassName = popupOpts.className
       const hasShortcutBtn = shortcutList.length > 0
-      const showConfirmBtn = (showConfirmButton === null ? (isDateTimeType || multiple) : showConfirmButton)
+      const showConfirmBtn = (showConfirmButton === null ? (isTimeOrDateTimeType || multiple) : showConfirmButton)
       const showClearBtn = (showClearButton === null ? (isClearable && showConfirmBtn && type !== 'time') : showClearButton)
       return h(Teleport, {
         to: 'body',

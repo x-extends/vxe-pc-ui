@@ -1,10 +1,13 @@
-import { h, ref, Ref, computed, reactive, nextTick, watch, PropType, VNode } from 'vue'
+import { h, ref, Ref, computed, reactive, nextTick, watch, PropType, VNode, onMounted } from 'vue'
 import { defineVxeComponent } from '../../ui/src/comp'
 import XEUtils from 'xe-utils'
 import { getConfig, getI18n, createEvent, useSize, renderEmptyElement } from '../../ui'
 import { toStringTimeDate, getDateQuarter, parseDateValue, parseDateObj, handleValueFormat, hasDateValueType, hasTimestampValueType } from './util'
+import { createComponentLog } from '../../ui/src/log'
 
-import type { VxeDatePanelConstructor, DatePanelInternalData, DatePanelReactData, VxeDatePanelPropTypes, DatePanelMethods, ValueOf, VxeDatePanelEmits, VxeDatePanelDefines } from '../../../types'
+import type { VxeDatePanelConstructor, DatePanelInternalData, DatePanelReactData, VxeDatePanelPropTypes, VxeDatePanelPrivateComputed, DatePanelMethods, ValueOf, VxeDatePanelEmits, VxeDatePanelDefines } from '../../../types'
+
+const { errLog } = createComponentLog('date-panel')
 
 export default defineVxeComponent({
   name: 'VxeDatePanel',
@@ -98,9 +101,9 @@ export default defineVxeComponent({
     })
 
     const internalData: DatePanelInternalData = {
-      yearSize: 12,
-      monthSize: 20,
-      quarterSize: 8,
+      yearSize: 16,
+      monthSize: 12,
+      quarterSize: 4,
       hpTimeout: undefined as any
     }
 
@@ -108,27 +111,20 @@ export default defineVxeComponent({
     const refPanelWrapper = ref() as Ref<HTMLDivElement>
     const refInputTimeBody = ref() as Ref<HTMLDivElement>
 
-    const refMaps = {
-      refElem
-    }
-
-    const $xeDatePanel = {
-      xID,
-      props,
-      context,
-      reactData,
-      internalData,
-      getRefMaps: () => refMaps
-    } as unknown as VxeDatePanelConstructor
-
-    const computeIsDateTimeType = computed(() => {
+    const computeIsTimeType = computed(() => {
       const { type } = props
-      return type === 'time' || type === 'datetime'
+      return type === 'time'
+    })
+
+    const computeIsTimeOrDateTimeType = computed(() => {
+      const { type } = props
+      const isTimeType = computeIsTimeType.value
+      return isTimeType || type === 'datetime'
     })
 
     const computeIsDatePanelType = computed(() => {
-      const isDateTimeType = computeIsDateTimeType.value
-      return isDateTimeType || ['date', 'week', 'month', 'quarter', 'year'].indexOf(props.type) > -1
+      const isTimeOrDateTimeType = computeIsTimeOrDateTimeType.value
+      return isTimeOrDateTimeType || ['date', 'week', 'month', 'quarter', 'year'].indexOf(props.type) > -1
     })
 
     const computeDateStartDate = computed(() => {
@@ -140,19 +136,25 @@ export default defineVxeComponent({
     })
 
     const computeDateListValue = computed(() => {
-      const { modelValue } = props
+      const { modelValue, valueFormat } = props
       const isDatePanelType = computeIsDatePanelType.value
       const dateValueFormat = computeDateValueFormat.value
+      const restList: Date[] = []
       if (modelValue && isDatePanelType) {
-        return XEUtils.toValueString(modelValue).split(',').map(item => {
-          const date = parseDate(item, dateValueFormat)
-          if (XEUtils.isValidDate(date)) {
-            return date
+        (XEUtils.isArray(modelValue) ? modelValue : XEUtils.toValueString(modelValue).split(',')).forEach(val => {
+          let strVal: string | number | Date | null = val
+          if (val) {
+            if (valueFormat === 'timestamp') {
+              if (XEUtils.isString(val) && /^\d+$/.test(val)) {
+                strVal = Number(strVal)
+              }
+            }
+            const date = parseDate(strVal, dateValueFormat)
+            restList.push(date)
           }
-          return date
         })
       }
-      return []
+      return restList
     })
 
     const computeDateMultipleValue = computed(() => {
@@ -236,8 +238,8 @@ export default defineVxeComponent({
 
     const computeDateHMSTime = computed(() => {
       const dateValue = computeDateValue.value
-      const isDateTimeType = computeIsDateTimeType.value
-      return dateValue && isDateTimeType ? (dateValue.getHours() * 3600 + dateValue.getMinutes() * 60 + dateValue.getSeconds()) * 1000 : 0
+      const isTimeOrDateTimeType = computeIsTimeOrDateTimeType.value
+      return dateValue && isTimeOrDateTimeType ? (dateValue.getHours() * 3600 + dateValue.getMinutes() * 60 + dateValue.getSeconds()) * 1000 : 0
     })
 
     const computeDateLabelFormat = computed(() => {
@@ -257,7 +259,7 @@ export default defineVxeComponent({
         const currFullYear = currentDate.getFullYear()
         const selectFullYear = selectMonth.getFullYear()
         const startYearDate = new Date(selectFullYear - selectFullYear % yearSize, 0, 1)
-        for (let index = -4; index < yearSize + 4; index++) {
+        for (let index = 0; index < yearSize; index++) {
           const date = XEUtils.getWhatYear(startYearDate, index, 'first')
           const itemFullYear = date.getFullYear()
           years.push({
@@ -361,7 +363,7 @@ export default defineVxeComponent({
         const currQuarter = getDateQuarter(currentDate)
         const firstYear = XEUtils.getWhatYear(selectMonth, 0, 'first')
         const selFullYear = firstYear.getFullYear()
-        for (let index = -2; index < quarterSize - 2; index++) {
+        for (let index = 0; index < quarterSize; index++) {
           const date = XEUtils.getWhatQuarter(firstYear, index)
           const itemFullYear = date.getFullYear()
           const itemQuarter = getDateQuarter(date)
@@ -392,7 +394,7 @@ export default defineVxeComponent({
         const currFullYear = currentDate.getFullYear()
         const currMonth = currentDate.getMonth()
         const selFullYear = XEUtils.getWhatYear(selectMonth, 0, 'first').getFullYear()
-        for (let index = -4; index < monthSize - 4; index++) {
+        for (let index = 0; index < monthSize; index++) {
           const date = XEUtils.getWhatYear(selectMonth, 0, index)
           const itemFullYear = date.getFullYear()
           const itemMonth = date.getMonth()
@@ -475,8 +477,8 @@ export default defineVxeComponent({
       const timeOpts = computeTimeOpts.value
       const { hours: hourOptions, hourDisabledMethod } = timeOpts
       const list: VxeDatePanelDefines.DateHourMinuteSecondItem[] = []
-      const isDateTimeType = computeIsDateTimeType.value
-      if (isDateTimeType) {
+      const isTimeOrDateTimeType = computeIsTimeOrDateTimeType.value
+      if (isTimeOrDateTimeType) {
         if (hourOptions && hourOptions.length) {
           hourOptions.forEach(item => {
             if (XEUtils.isNumber(item) || XEUtils.isString(item)) {
@@ -513,8 +515,8 @@ export default defineVxeComponent({
       const timeOpts = computeTimeOpts.value
       const { minutes: minuteOptions, minuteDisabledMethod } = timeOpts
       const list: VxeDatePanelDefines.DateHourMinuteSecondItem[] = []
-      const isDateTimeType = computeIsDateTimeType.value
-      if (isDateTimeType) {
+      const isTimeOrDateTimeType = computeIsTimeOrDateTimeType.value
+      if (isTimeOrDateTimeType) {
         if (minuteOptions && minuteOptions.length) {
           minuteOptions.forEach(item => {
             if (XEUtils.isNumber(item) || XEUtils.isString(item)) {
@@ -563,8 +565,8 @@ export default defineVxeComponent({
       const timeOpts = computeTimeOpts.value
       const { seconds: secondOptions, secondDisabledMethod } = timeOpts
       const list: VxeDatePanelDefines.DateHourMinuteSecondItem[] = []
-      const isDateTimeType = computeIsDateTimeType.value
-      if (isDateTimeType) {
+      const isTimeOrDateTimeType = computeIsTimeOrDateTimeType.value
+      if (isTimeOrDateTimeType) {
         if (secondOptions && secondOptions.length) {
           secondOptions.forEach(item => {
             if (XEUtils.isNumber(item) || XEUtils.isString(item)) {
@@ -597,6 +599,25 @@ export default defineVxeComponent({
       return list
     })
 
+    const refMaps = {
+      refElem
+    }
+
+    const computeMaps: VxeDatePanelPrivateComputed = {
+      computeSize,
+      computeYearList
+    }
+
+    const $xeDatePanel = {
+      xID,
+      props,
+      context,
+      reactData,
+      internalData,
+      getRefMaps: () => refMaps,
+      getComputeMaps: () => computeMaps
+    } as unknown as VxeDatePanelConstructor
+
     const updateModelValue = (modelValue: VxeDatePanelPropTypes.ModelValue | undefined) => {
       const { type } = props
       const dateValueFormat = computeDateValueFormat.value
@@ -609,7 +630,7 @@ export default defineVxeComponent({
     const parseDate = (value: VxeDatePanelPropTypes.ModelValue, format: string) => {
       const { type, multiple } = props
       if (type === 'time') {
-        return toStringTimeDate(XEUtils.isArray(value) ? value : XEUtils.last(value))
+        return toStringTimeDate(XEUtils.isArray(value) ? XEUtils.last(value) : value)
       }
       if (XEUtils.isArray(value)) {
         return XEUtils.toStringDate(XEUtils.last(value), format)
@@ -769,13 +790,14 @@ export default defineVxeComponent({
     const dateChange = (date: Date, isReload?: boolean) => {
       const { modelValue, multiple, valueSort } = props
       const { datetimePanelValue } = reactData
-      const isDateTimeType = computeIsDateTimeType.value
+      const isTimeType = computeIsTimeType.value
+      const isTimeOrDateTimeType = computeIsTimeOrDateTimeType.value
       const dateValueFormat = computeDateValueFormat.value
       const firstDayOfWeek = computeFirstDayOfWeek.value
       if (props.type === 'week') {
         const sWeek = XEUtils.toNumber(props.selectDay) as VxeDatePanelPropTypes.SelectDay
         date = XEUtils.getWhatWeek(date, 0, sWeek, firstDayOfWeek)
-      } else if (isDateTimeType) {
+      } else if (isTimeOrDateTimeType) {
         if (datetimePanelValue) {
           date.setHours(datetimePanelValue.getHours())
           date.setMinutes(datetimePanelValue.getMinutes())
@@ -784,10 +806,10 @@ export default defineVxeComponent({
       }
       const inpVal = XEUtils.toDateString(date, dateValueFormat, { firstDay: firstDayOfWeek })
       dateCheckMonth(date)
-      if (multiple) {
+      if (!isTimeType && multiple) {
         const overCount = computeOverCount.value
         // 如果为多选
-        if (isDateTimeType) {
+        if (isTimeOrDateTimeType) {
           // 如果是datetime特殊类型
           const dateListValue = isReload ? [] : [...computeDateListValue.value]
           let datetimeRest: Date[] = []
@@ -1121,19 +1143,21 @@ export default defineVxeComponent({
 
     const dateConfirmEvent = (evnt: Event) => {
       const { multiple } = props
-      const { datetimePanelValue } = reactData
+      const { datetimePanelValue, currentDate } = reactData
       const dateValue = computeDateValue.value
-      const isDateTimeType = computeIsDateTimeType.value
-      if (isDateTimeType) {
+      const isTimeType = computeIsTimeType.value
+      const isTimeOrDateTimeType = computeIsTimeOrDateTimeType.value
+      if (isTimeOrDateTimeType) {
         const dateValueFormat = computeDateValueFormat.value
-        if (multiple) {
+        if (!isTimeType && multiple) {
           // 如果为多选
           const dateMultipleValue = computeDateMultipleValue.value
-          if (isDateTimeType) {
+          const dateListValue = computeDateListValue.value
+          if (isTimeOrDateTimeType) {
             // 如果是datetime特殊类型
-            const dateListValue = [...computeDateListValue.value]
+            const listVals = dateListValue.length ? [...dateListValue] : []
             const datetimeRest: Date[] = []
-            dateListValue.forEach(item => {
+            listVals.forEach(item => {
               if (item) {
                 if (datetimePanelValue) {
                   item.setHours(datetimePanelValue.getHours())
@@ -1149,7 +1173,7 @@ export default defineVxeComponent({
             handleChange(dateMultipleValue.join(','), { type: 'update' })
           }
         } else {
-          dateChange(dateValue || reactData.currentDate as Date)
+          dateChange(dateValue || currentDate as Date)
         }
       }
       hidePanel()
@@ -1178,7 +1202,7 @@ export default defineVxeComponent({
 
     const dateOpenPanel = () => {
       const { type, defaultDate, defaultTime } = props
-      const isDateTimeType = computeIsDateTimeType.value
+      const isTimeOrDateTimeType = computeIsTimeOrDateTimeType.value
       const dateValue = computeDateValue.value
       if (['year', 'quarter', 'month', 'week'].indexOf(type) > -1) {
         reactData.datePanelType = type as VxeDatePanelDefines.DatePanelType
@@ -1202,7 +1226,7 @@ export default defineVxeComponent({
           dateNowHandle()
         }
       }
-      if (isDateTimeType) {
+      if (isTimeOrDateTimeType) {
         let dtPanelValue = reactData.datePanelValue
         if (!dtPanelValue) {
           dtPanelValue = XEUtils.getWhatDay(Date.now(), 0, 'first')
@@ -1831,6 +1855,13 @@ export default defineVxeComponent({
 
     initValue()
     dateOpenPanel()
+
+    onMounted(() => {
+      const { type, multiple } = props
+      if (multiple && type === 'time') {
+        errLog('vxe.error.notSupportProp', [`type=${type}`, 'multiple=true', 'multiple=false'])
+      }
+    })
 
     $xeDatePanel.renderVN = renderVN
 

@@ -1,4 +1,4 @@
-import { RenderFunction, SetupContext, Ref } from 'vue'
+import { RenderFunction, SetupContext, Ref, ComputedRef } from 'vue'
 import { DefineVxeComponentApp, DefineVxeComponentOptions, DefineVxeComponentInstance, VxeComponentBaseOptions, VxeComponentEventParams, ValueOf, VxeComponentStyleType, VxeComponentSizeType } from '@vxe-ui/core'
 
 /* eslint-disable no-use-before-define,@typescript-eslint/ban-types */
@@ -25,7 +25,7 @@ export interface VxeDatePanelPrivateRef extends DatePanelPrivateRef { }
 
 export namespace VxeDatePanelPropTypes {
   export type Size = VxeComponentSizeType
-  export type ModelValue = string | number | Date | null
+  export type ModelValue = string | number | Date | null | (string | number | Date | null)[]
   export type ClassName = string
   export type CellClassName = string | ((params: {
     $datePanel: VxeDatePanelConstructor
@@ -123,6 +123,8 @@ export interface VxeDatePanelProps {
 }
 
 export interface DatePanelPrivateComputed {
+  computeSize: ComputedRef<VxeDatePanelPropTypes.Size>
+  computeYearList: ComputedRef<VxeDatePanelDefines.DateYearItem[]>
 }
 export interface VxeDatePanelPrivateComputed extends DatePanelPrivateComputed { }
 

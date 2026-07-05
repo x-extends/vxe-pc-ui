@@ -4,7 +4,7 @@ import XEUtils from 'xe-utils'
 import { getConfig, getIcon, getI18n, commands, globalEvents, createEvent, GLOBAL_EVENT_KEYS, useSize, renderEmptyElement } from '../../ui'
 import { getFuncText, getLastZIndex, nextZIndex, isEnableConf } from '../../ui/src/utils'
 import { updatePanelPlacement, getEventTargetNode } from '../../ui/src/dom'
-import { parseDateString, parseDateObj, getRangeDateByCode, handleValueFormat, hasTimestampValueType, hasDateValueType, parseDateValue, getNextMonth, getPrevMonth } from '../../date-panel/src/util'
+import { parseDateString, parseDateObj, getRangeDateByCode, handleValueFormat, hasTimestampValueType, hasDateValueType, parseDateValue, getNextMonth, getPrevMonth, getNextYear, getPrevYear } from '../../date-panel/src/util'
 import { getSlotVNs } from '../../ui/src/vn'
 import { createComponentLog } from '../../ui/src/log'
 import VxeDatePanelComponent from '../../date-panel'
@@ -27,8 +27,8 @@ function createReactData (): DateRangePickerReactData {
     isActivated: false,
     selectStValue: '',
     selectEdValue: '',
-    paneStartVal: '',
-    paneEndVal: ''
+    paneStartVal: [],
+    paneEndVal: []
   }
 }
 
@@ -284,9 +284,15 @@ export default defineVxeComponent({
       return `${startValue || ''}${endValue || ''}`
     })
 
-    const computeIsDateTimeType = computed(() => {
+    const computeIsTimeType = computed(() => {
       const { type } = props
-      return type === 'time' || type === 'datetime'
+      return type === 'time'
+    })
+
+    const computeIsTimeOrDateTimeType = computed(() => {
+      const { type } = props
+      const isTimeType = computeIsTimeType.value
+      return isTimeType || type === 'datetime'
     })
 
     const computeIsDatePickerType = computed(() => {
@@ -455,7 +461,7 @@ export default defineVxeComponent({
     }
 
     const updateModelValue = (isModel: boolean) => {
-      const { modelValue, startValue, endValue } = props
+      const { modelValue, startValue, endValue, valueFormat } = props
       let restObj: {
         sValue: string | Date | null
         eValue: string | Date | null
@@ -476,8 +482,20 @@ export default defineVxeComponent({
           restObj = paraeUpdateModel()
         }
       }
-      reactData.selectStValue = restObj.sValue
-      reactData.selectEdValue = restObj.eValue
+      let startRest: string | number | Date | null = restObj.sValue
+      let endRest: string | number | Date | null = restObj.eValue
+      if (valueFormat === 'timestamp') {
+        if (XEUtils.isString(startRest) && /^\d+$/.test(startRest)) {
+          startRest = Number(startRest)
+        }
+        if (XEUtils.isString(endRest) && /^\d+$/.test(endRest)) {
+          endRest = Number(endRest)
+        }
+      }
+      reactData.selectStValue = startRest
+      reactData.selectEdValue = endRest
+      reactData.paneEndVal = [startRest, endRest]
+      reactData.paneStartVal = [startRest, endRest]
     }
 
     const triggerEvent = (evnt: Event & { type: 'input' | 'change' | 'keydown' | 'keyup' | 'click' | 'focus' | 'blur' }) => {
@@ -653,12 +671,16 @@ export default defineVxeComponent({
     }
 
     const confirmEvent = (evnt: MouseEvent) => {
+      const isTimeType = computeIsTimeType.value
       const $startDatePanel = refStartDatePanel.value
       const $endDatePanel = refEndDatePanel.value
       if ($startDatePanel && $endDatePanel) {
         const startValue = $startDatePanel.getModelValue()
         const endValue = $endDatePanel.getModelValue()
-        if ((startValue && !endValue) || (!startValue && endValue)) {
+        if (isTimeType) {
+          $startDatePanel.confirmByEvent(evnt)
+          $endDatePanel.confirmByEvent(evnt)
+        } else if ((startValue && !endValue) || (!startValue && endValue)) {
           handleChange('', '', evnt)
         } else {
           $startDatePanel.confirmByEvent(evnt)
@@ -686,11 +708,15 @@ export default defineVxeComponent({
       } else {
         startValue = currValue || XEUtils.last(paneVals)
       }
-      reactData.paneEndVal = [startValue, endValue].join(',')
-      reactData.paneStartVal = [startValue, endValue].join(',')
+      reactData.paneEndVal = [startValue, endValue]
+      reactData.paneStartVal = [startValue, endValue]
       handleChange(startValue, endValue, $event)
       handleSelectClose()
-      if (!selectStatus) {
+      if (selectStatus) {
+        if (startValue && endValue) {
+          internalData.selectStatus = false
+        }
+      } else {
         internalData.selectStatus = true
       }
       nextTick(() => {
@@ -715,11 +741,15 @@ export default defineVxeComponent({
       } else {
         endValue = currValue || XEUtils.last(paneVals)
       }
-      reactData.paneEndVal = [startValue, endValue].join(',')
-      reactData.paneStartVal = [startValue, endValue].join(',')
+      reactData.paneEndVal = [startValue, endValue]
+      reactData.paneStartVal = [startValue, endValue]
       handleChange(startValue, endValue, $event)
       handleSelectClose()
-      if (!selectStatus) {
+      if (selectStatus) {
+        if (startValue && endValue) {
+          internalData.selectStatus = false
+        }
+      } else {
         internalData.selectStatus = true
       }
       nextTick(() => {
@@ -752,6 +782,21 @@ export default defineVxeComponent({
           }
           break
         }
+        case 'month':
+        case 'quarter': {
+          if (endYear <= startYear) {
+            $endDatePanel.setPanelDate(getNextYear(startPanelDate))
+          }
+          break
+        }
+        case 'year': {
+          const { computeYearList } = $startDatePanel.getComputeMaps()
+          const yearList = computeYearList.value
+          if (yearList.some((item) => XEUtils.isDateSame(item.date, endPanelDate, 'yyyy'))) {
+            $endDatePanel.setPanelDate(getNextYear(startPanelDate, yearList.length))
+          }
+          break
+        }
       }
     }
 
@@ -774,6 +819,17 @@ export default defineVxeComponent({
           case 'date':
           case 'week': {
             $endDatePanel.setPanelDate(getNextMonth(startPanelDate))
+            break
+          }
+          case 'month':
+          case 'quarter': {
+            $endDatePanel.setPanelDate(getNextYear(startPanelDate))
+            break
+          }
+          case 'year': {
+            const { computeYearList } = $startDatePanel.getComputeMaps()
+            const yearList = computeYearList.value
+            $endDatePanel.setPanelDate(getNextYear(startPanelDate, yearList.length))
             break
           }
         }
@@ -807,6 +863,21 @@ export default defineVxeComponent({
           }
           break
         }
+        case 'month':
+        case 'quarter': {
+          if (startYear >= endYear) {
+            $startDatePanel.setPanelDate(getPrevYear(endPanelDate))
+          }
+          break
+        }
+        case 'year': {
+          const { computeYearList } = $endDatePanel.getComputeMaps()
+          const yearList = computeYearList.value
+          if (yearList.some((item) => XEUtils.isDateSame(item.date, startPanelDate, 'yyyy'))) {
+            $startDatePanel.setPanelDate(getPrevYear(endPanelDate, yearList.length))
+          }
+          break
+        }
       }
     }
 
@@ -829,6 +900,17 @@ export default defineVxeComponent({
           case 'date':
           case 'week': {
             $startDatePanel.setPanelDate(getPrevMonth(endPanelDate))
+            break
+          }
+          case 'month':
+          case 'quarter': {
+            $startDatePanel.setPanelDate(getPrevYear(endPanelDate))
+            break
+          }
+          case 'year': {
+            const { computeYearList } = $endDatePanel.getComputeMaps()
+            const yearList = computeYearList.value
+            $startDatePanel.setPanelDate(getPrevYear(endPanelDate, yearList.length))
             break
           }
         }
@@ -1135,7 +1217,8 @@ export default defineVxeComponent({
       const isClearable = computeIsClearable.value
       const panelLabelObj = computePanelLabelObj.value
       const shortcutList = computeShortcutList.value
-      const isDateTimeType = computeIsDateTimeType.value
+      const isTimeType = computeIsTimeType.value
+      const isTimeOrDateTimeType = computeIsTimeOrDateTimeType.value
       const defaultDates = computeDefaultDates.value
       const defaultTimes = computeDefaultTimes.value
       const timeOpts = computeTimeOpts.value
@@ -1151,7 +1234,7 @@ export default defineVxeComponent({
       const [sdDate, edDate] = defaultDates
       const [sdTime, edTime] = defaultTimes
       const hasShortcutBtn = shortcutList.length > 0
-      const showConfirmBtn = (showConfirmButton === null ? (isDateTimeType || !autoClose) : showConfirmButton)
+      const showConfirmBtn = (showConfirmButton === null ? (isTimeOrDateTimeType || !autoClose) : showConfirmButton)
       const showClearBtn = (showClearButton === null ? isClearable : showClearButton)
       return h(Teleport, {
         to: 'body',
@@ -1206,7 +1289,7 @@ export default defineVxeComponent({
                       h(VxeDatePanelComponent, {
                         ref: refStartDatePanel,
                         modelValue: paneStartVal,
-                        multiple: true,
+                        multiple: !isTimeType,
                         valueSort: true,
                         limitCount: 3,
                         defaultMode: 'first',
@@ -1233,7 +1316,7 @@ export default defineVxeComponent({
                       h(VxeDatePanelComponent, {
                         ref: refEndDatePanel,
                         modelValue: paneEndVal,
-                        multiple: true,
+                        multiple: !isTimeType,
                         valueSort: true,
                         limitCount: 3,
                         defaultMode: 'last',
