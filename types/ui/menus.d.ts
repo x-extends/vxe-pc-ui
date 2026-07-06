@@ -1,6 +1,7 @@
 import { VxeTableConstructor, VxeTableDefines } from '../components/table'
 import { VxeGridConstructor } from '../components/grid'
 import { VxeTreeConstructor } from '../components/tree'
+import { VxeListConstructor } from '../components/list'
 import { VxeCalendarConstructor } from '../components/calendar'
 import { VxeFormDesignConstructor, VxeFormDesignDefines } from '../components/form-design'
 import { VxeMenuConstructor, VxeMenuPropTypes } from '../components/menu'
@@ -19,6 +20,10 @@ declare module '@vxe-ui/core' {
        * 树 - 自定义菜单方法
        */
       treeMenuMethod?: (params: TreeMenuMethodParams, event: Event) => void
+      /**
+       * 列表 - 自定义菜单方法
+       */
+      listMenuMethod?: (params: ListMenuMethodParams, event: Event) => void
       /**
        * 日历 - 自定义菜单方法
        */
@@ -47,9 +52,16 @@ declare module '@vxe-ui/core' {
     }
 
     export interface TreeMenuMethodParams<D = any> {
-      $tree: VxeTreeConstructor
+      $tree: VxeTreeConstructor<D>
       $event: MouseEvent
       node: D
+      menu: VxeContextMenuDefines.MenuFirstOption | VxeContextMenuDefines.MenuChildOption
+    }
+
+    export interface ListMenuMethodParams<D = any> {
+      $list: VxeListConstructor<D>
+      $event: MouseEvent
+      row: D
       menu: VxeContextMenuDefines.MenuFirstOption | VxeContextMenuDefines.MenuChildOption
     }
 

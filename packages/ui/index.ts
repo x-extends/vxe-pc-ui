@@ -234,6 +234,9 @@ setConfig({
   listView: {},
   list: {
     // size: null,
+    rowConfig: {
+      contentField: 'label'
+    },
     dragConfig: {
       showIcon: true,
       animation: true,

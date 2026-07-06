@@ -1,18 +1,24 @@
 import { PropType, CreateElement, VNode } from 'vue'
 import { defineVxeComponent } from '../../ui/src/comp'
 import XEUtils, { XEBrowse } from 'xe-utils'
-import { getConfig, getIcon, getI18n, globalEvents, globalResize, createEvent, globalMixins, renderEmptyElement } from '../../ui'
+import { VxeUI, getConfig, getIcon, getI18n, menus, globalEvents, globalResize, createEvent, globalMixins, renderEmptyElement } from '../../ui'
 import { crossListDragRowGlobal, getCrossListDragRowInfo } from './store'
 import { addClass, getTpImg, isScale, removeClass, toCssUnit } from '../../ui/src/dom'
 import { isEnableConf, getText, enModelValue, deModelValue } from '../../ui/src/utils'
 import { getSlotVNs } from '../../ui/src/vn'
 import { createComponentLog } from '../../ui/src/log'
 import { moveRowAnimateToTb, clearRowAnimate } from '../../ui/src/anime'
+import { getItemCacheObj } from './util'
 import VxeLoadingComponent from '../../loading/src/loading'
 
 import type { VxeListPropTypes, VxeListEmits, VxeComponentSizeType, ListReactData, VxeListDefines, ValueOf, ListInternalData, VxeListConstructor, VxeListPrivateMethods, VxeComponentStyleType } from '../../../types'
 
-const { errLog } = createComponentLog('tree')
+const { warnLog, errLog } = createComponentLog('tree')
+
+let crossListDragRowObj: {
+  $oldList: VxeListConstructor & VxeListPrivateMethods
+  $newList: (VxeListConstructor & VxeListPrivateMethods) | null
+} | null = null
 
 function eqRowKey (rowKey1: any, rowKey2: any) {
   return ('' + rowKey1) === ('' + rowKey2)
@@ -46,8 +52,11 @@ function createReactData (): ListReactData {
     updateCheckboxFlag: 1,
     isAllChecked: false,
     isAllIndeterminate: false,
+    insertRowFlag: 1,
+    removeRowFlag: 1,
     dragRow: null,
-    dragTipText: ''
+    dragTipText: '',
+    isCrossDragRow: false
   }
 }
 
@@ -55,7 +64,9 @@ function createInternalData (): ListInternalData {
   return {
     resizeObserver: undefined,
     fullData: [],
+    afterList: [],
     fullKeyMaps: {},
+    rowMaps: {},
     lastScrollLeft: 0,
     lastScrollTop: 0,
     scrollYStore: {
@@ -66,7 +77,9 @@ function createInternalData (): ListInternalData {
       rowHeight: 0
     },
     currentRow: null,
-    selectCheckboxMaps: {}
+    selectCheckboxMaps: {},
+    insertRowMaps: {},
+    removeRowMaps: {}
     // prevDragRow: null,
     // prevDragPos: ''
   }
@@ -92,6 +105,10 @@ export default /* define-vxe-component start */ defineVxeComponent({
       default: () => getConfig().list.autoResize
     },
     syncResize: [Boolean, String, Number] as PropType<VxeListPropTypes.SyncResize>,
+    showSeq: {
+      type: Boolean as PropType<VxeListPropTypes.ShowSeq>,
+      default: () => getConfig().list.showSeq
+    },
     showRadio: {
       type: Boolean as PropType<VxeListPropTypes.ShowRadio>,
       default: () => getConfig().list.showRadio
@@ -106,6 +123,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
     checkboxConfig: Object as PropType<VxeListPropTypes.CheckboxConfig>,
     rowConfig: Object as PropType<VxeListPropTypes.RowConfig>,
     dragConfig: Object as PropType<VxeListPropTypes.DragConfig>,
+    menuConfig: Object as PropType<VxeListPropTypes.MenuConfig>,
     virtualYConfig: Object as PropType<VxeListPropTypes.VirtualYConfig>,
     scrollY: Object as PropType<VxeListPropTypes.ScrollY>
   },
@@ -179,6 +197,12 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const props = $xeList
 
       return Object.assign({ showIcon: true }, getConfig().list.checkboxConfig, props.checkboxConfig)
+    },
+    computeMenuOpts () {
+      const $xeList = this
+      const props = $xeList
+
+      return Object.assign({}, getConfig().list.menuConfig, props.menuConfig)
     },
     computeWrapperStyles () {
       const $xeList = this
@@ -282,6 +306,30 @@ export default /* define-vxe-component start */ defineVxeComponent({
       internalData.selectCheckboxMaps = selectMaps
       $xeList.updateCheckboxStatus()
     },
+    updateAfterDataIndex () {
+      const $xeList = this
+      const internalData = $xeList.internalData
+
+      const { afterList, rowMaps } = internalData
+      const keyField = $xeList.computeKeyField
+      let vtIndex = 0
+      afterList.forEach((item, index) => {
+        const roweid = getRowIdByField(item, keyField)
+        const rowRest = rowMaps[roweid]
+        if (rowRest) {
+          rowRest._index = vtIndex
+        } else {
+          const rest = {
+            item,
+            index,
+            $index: -1,
+            _index: vtIndex
+          }
+          rowMaps[roweid] = rest
+        }
+        vtIndex++
+      })
+    },
     cacheRowMap () {
       const $xeList = this
       const internalData = $xeList.internalData
@@ -306,17 +354,21 @@ export default /* define-vxe-component start */ defineVxeComponent({
 
       const { scrollYStore } = internalData
       const sYOpts = $xeList.computeSYOpts
-      const fullData = datas || []
+      const fullData = datas ? datas.slice(0) : []
       Object.assign(scrollYStore, {
         startIndex: 0,
         endIndex: 1,
         visibleSize: 0
       })
       internalData.fullData = fullData
+      internalData.insertRowMaps = {}
+      reactData.insertRowFlag++
+      internalData.removeRowMaps = {}
+      reactData.removeRowFlag++
       // 如果gt为0，则总是启用
       reactData.scrollYLoad = !!sYOpts.enabled && sYOpts.gt > -1 && (sYOpts.gt === 0 || sYOpts.gt <= fullData.length)
       $xeList.cacheRowMap()
-      $xeList.handleData()
+      $xeList.handleData(true)
       $xeList.updateRadioModeValue()
       $xeList.updateCheckboxModeValue()
       return $xeList.computeScrollLoad().then(() => {
@@ -383,14 +435,37 @@ export default /* define-vxe-component start */ defineVxeComponent({
       reactData.bodyHeight = scrollYLoad ? fullData.length * scrollYStore.rowHeight : 0
       reactData.topSpaceHeight = scrollYLoad ? Math.max(scrollYStore.startIndex * scrollYStore.rowHeight, 0) : 0
     },
-    handleData () {
+    updateAfterFullData () {
+      const $xeList = this
+      const internalData = $xeList.internalData
+
+      const { fullData } = internalData
+      internalData.afterList = fullData.slice(0)
+      $xeList.updateAfterDataIndex()
+    },
+    handleData (force?: boolean) {
       const $xeList = this
       const reactData = $xeList.reactData
       const internalData = $xeList.internalData
 
       const { scrollYLoad } = reactData
-      const { fullData, scrollYStore } = internalData
-      reactData.rowList = scrollYLoad ? fullData.slice(scrollYStore.startIndex, scrollYStore.endIndex) : fullData.slice(0)
+      const { fullData, scrollYStore, rowMaps } = internalData
+      const keyField = $xeList.computeKeyField
+      if (force) {
+        // 更新数据，处理筛选和排序
+        $xeList.updateAfterFullData()
+      }
+      const rowList = scrollYLoad ? fullData.slice(scrollYStore.startIndex, scrollYStore.endIndex) : fullData.slice(0)
+      if (keyField) {
+        rowList.forEach((item, $index) => {
+          const rowid = getRowIdByField(item, keyField)
+          const rowRest = rowMaps[rowid]
+          if (rowRest) {
+            rowRest.$index = $index
+          }
+        })
+      }
+      reactData.rowList = rowList
       return $xeList.$nextTick()
     },
     updateYData () {
@@ -966,6 +1041,13 @@ export default /* define-vxe-component start */ defineVxeComponent({
       $xeList.emitRadioMode(value)
       $xeList.dispatchEvent('radio-change', { row, value, checked: isChecked }, evnt)
     },
+    handleRowDragEndClearStatus () {
+      const $xeList = this
+
+      $xeList.clearRowDragData()
+      $xeList.clearCrossListDragStatus()
+      $xeList.recalculate()
+    },
     clearRowDropOrigin () {
       const $xeList = this
 
@@ -1028,7 +1110,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const $xeList = this
       const crossListDragRowInfo = getCrossListDragRowInfo($xeList as VxeListConstructor & VxeListPrivateMethods)
 
-      // crossListDragRowObj = null
+      crossListDragRowObj = null
       crossListDragRowInfo.row = null
     },
     clearDragStatus () {
@@ -1046,11 +1128,12 @@ export default /* define-vxe-component start */ defineVxeComponent({
     handleRowDragMousedownEvent (evnt: MouseEvent, params: { row: any }) {
       const $xeList = this
       const reactData = $xeList.reactData
+      const crossListDragRowInfo = getCrossListDragRowInfo($xeList as VxeListConstructor & VxeListPrivateMethods)
 
       evnt.stopPropagation()
       const { row } = params
       const dragConfig = $xeList.computeDragOpts
-      const { trigger, dragStartMethod } = dragConfig
+      const { isCrossListDrag, trigger, dragStartMethod } = dragConfig
       const dragEl = evnt.currentTarget as HTMLElement
       const rowEl = trigger === 'row' ? dragEl : (dragEl.parentElement as HTMLElement).parentElement as HTMLElement
       $xeList.clearRowDropOrigin()
@@ -1059,6 +1142,10 @@ export default /* define-vxe-component start */ defineVxeComponent({
         reactData.dragRow = null
         $xeList.hideDropTip()
         return
+      }
+      if (isCrossListDrag) {
+        crossListDragRowInfo.row = row
+        crossListDragRowObj = { $oldList: $xeList, $newList: null }
       }
       const dragstartEventParams: VxeListDefines.RowDragstartEventParams = {
         row
@@ -1288,6 +1375,16 @@ export default /* define-vxe-component start */ defineVxeComponent({
 
       const { dragRow } = reactData
       const { prevDragRow, prevDragPos } = internalData
+      const dragConfig = $xeList.computeDragOpts
+      const { isCrossListDrag } = dragConfig
+      // 跨列表拖拽
+      if (isCrossListDrag && crossListDragRowObj) {
+        const { $newList } = crossListDragRowObj
+        if ($newList && $newList.xID !== $xeList.xID) {
+          $newList.handleCrossListRowDragInsertEvent(evnt)
+          return
+        }
+      }
       $xeList.handleRowDragSwapEvent(evnt, dragRow, prevDragRow, prevDragPos)
     },
     handleRowDragDragoverEvent (evnt: DragEvent) {
@@ -1377,6 +1474,460 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const $xeList = this
 
       $xeList.dispatchEvent('row-dblclick', { row }, evnt)
+    },
+    insertListRow (newRecords: any[], isAppend: boolean) {
+      const $xeList = this
+      const internalData = $xeList.internalData
+
+      const { fullData, rowMaps } = internalData
+      const keyField = $xeList.computeKeyField
+      const funcName = isAppend ? 'push' : 'unshift'
+      newRecords.forEach((item) => {
+        const rowid = getRowIdByField(item, keyField)
+        const rowRest = getItemCacheObj(item)
+        fullData[funcName](item)
+        rowMaps[rowid] = rowRest
+      })
+    },
+    handleInsertRowAt (records: any[], targetRowOrRowKey: any, isInsertNextRow?: any) {
+      const $xeList = this
+      const reactData = $xeList.reactData
+      const internalData = $xeList.internalData
+
+      const { fullData, rowMaps, removeRowMaps, insertRowMaps } = internalData
+      const keyField = $xeList.computeKeyField
+      if (!keyField) {
+        errLog('vxe.error.reqSupportProp', ['insert() | insertAt() | insertNextAt()', 'row-config.keyField'])
+        return Promise.resolve({ row: null, rows: [] })
+      }
+      if (!XEUtils.isArray(records)) {
+        records = [records]
+      }
+      let targetRow = targetRowOrRowKey
+      if (XEUtils.isString(targetRowOrRowKey) || XEUtils.isNumber(targetRowOrRowKey)) {
+        const rowRest = rowMaps[targetRowOrRowKey]
+        if (rowRest) {
+          targetRow = rowRest.item
+        }
+      }
+      if (!records.length) {
+        return Promise.resolve({ row: null, rows: [] })
+      }
+      const newRecords = records.map(record => XEUtils.assign({}, record))
+
+      if (XEUtils.eqNull(targetRow)) {
+        $xeList.insertListRow(newRecords, false)
+      } else {
+        if (targetRow === -1) {
+          $xeList.insertListRow(newRecords, true)
+        } else {
+          const rowIndex = fullData.findIndex(item => targetRow[keyField] === item[keyField])
+          if (rowIndex > -1) {
+            newRecords.forEach(item => {
+              const rowid = getRowIdByField(item, keyField)
+              const rowRest = getItemCacheObj(item)
+              rowMaps[rowid] = rowRest
+            })
+            let targetIndex = rowIndex
+            if (isInsertNextRow) {
+              targetIndex = targetIndex + 1
+            }
+            fullData.splice(targetIndex, 0, ...newRecords)
+          } else {
+            warnLog('vxe.error.unableInsert')
+            $xeList.insertListRow(newRecords, true)
+          }
+        }
+      }
+
+      newRecords.forEach((newItem: any) => {
+        const rowid = getRowIdByField(newItem, keyField)
+        // 如果是被删除的数据，则还原状态
+        if (removeRowMaps[rowid]) {
+          delete removeRowMaps[rowid]
+          if (insertRowMaps[rowid]) {
+            delete insertRowMaps[rowid]
+          }
+        } else {
+          insertRowMaps[rowid] = newItem
+        }
+      })
+
+      reactData.removeRowFlag++
+      reactData.insertRowFlag++
+      $xeList.cacheRowMap()
+      $xeList.handleData(true)
+      $xeList.updateAfterDataIndex()
+      $xeList.updateCheckboxStatus()
+      if (reactData.scrollYLoad) {
+        $xeList.updateYSpace()
+      }
+      return $xeList.$nextTick().then(() => {
+        return {
+          row: newRecords.length ? newRecords[newRecords.length - 1] : null,
+          rows: newRecords
+        }
+      })
+    },
+    insert (records: any) {
+      const $xeList = this
+
+      return $xeList.handleInsertRowAt(records, null)
+    },
+    insertAt (records: any, targetRowOrRowKey?: any) {
+      const $xeList = this
+
+      return $xeList.handleInsertRowAt(records, targetRowOrRowKey)
+    },
+    insertNextAt (records: any, targetRowOrRowKey?: any) {
+      const $xeList = this
+
+      return $xeList.handleInsertRowAt(records, targetRowOrRowKey, true)
+    },
+    getInsertRecords () {
+      const $xeList = this
+      const internalData = $xeList.internalData
+
+      const { insertRowMaps } = internalData
+      const insertRecords: any[] = []
+      XEUtils.each(insertRowMaps, (item) => {
+        insertRecords.push(item)
+      })
+      return insertRecords
+    },
+    isInsertByRow (row: any) {
+      const $xeList = this
+      const reactData = $xeList.reactData
+      const internalData = $xeList.internalData
+
+      const rowid = $xeList.getRowId(row)
+      return !!reactData.insertRowFlag && !!internalData.insertRowMaps[rowid]
+    },
+    remove (rows: any) {
+      const $xeList = this
+      const reactData = $xeList.reactData
+      const internalData = $xeList.internalData
+
+      const { fullData, insertRowMaps, removeRowMaps } = internalData
+      const keyField = $xeList.computeKeyField
+      if (!keyField) {
+        errLog('vxe.error.reqSupportProp', ['insert() | insertAt() | insertNextAt()', 'row-config.keyField'])
+        return Promise.resolve({ row: null, rows: [] })
+      }
+      let delList: any[] = []
+      if (!rows) {
+        rows = fullData
+      } else if (!XEUtils.isArray(rows)) {
+        rows = [rows]
+      }
+      if (!rows.length) {
+        return Promise.resolve({ row: null, rows: [] })
+      }
+
+      // 如果是新增，则保存记录
+      rows.forEach((item: any) => {
+        if (!$xeList.isInsertByRow(item)) {
+          const rowid = $xeList.getRowId(item)
+          removeRowMaps[rowid] = item
+        }
+      })
+
+      // 从数据源中移除
+      if (fullData === rows) {
+        rows = delList = fullData.slice(0)
+        internalData.fullData = []
+      } else {
+        rows.forEach((item: any) => {
+          const rowid = $xeList.getRowId(item)
+          const rowIndex = XEUtils.findIndexOf(fullData, item => rowid === $xeList.getRowId(item))
+          if (rowIndex > -1) {
+            const rItems = fullData.splice(rowIndex, 1)
+            delList.push(rItems[0])
+          }
+        })
+      }
+
+      // 从新增中移除已删除的数据
+      rows.forEach((item: any) => {
+        const rowid = $xeList.getRowId(item)
+        if (insertRowMaps[rowid]) {
+          delete insertRowMaps[rowid]
+        }
+      })
+
+      reactData.removeRowFlag++
+      reactData.insertRowFlag++
+      $xeList.cacheRowMap()
+      $xeList.handleData(true)
+      $xeList.updateAfterDataIndex()
+      $xeList.updateCheckboxStatus()
+      if (reactData.scrollYLoad) {
+        $xeList.updateYSpace()
+      }
+      return $xeList.$nextTick().then(() => {
+        return $xeList.recalculate()
+      }).then(() => {
+        return { row: delList.length ? delList[delList.length - 1] : null, rows: delList }
+      })
+    },
+    getRemoveRecords () {
+      const $xeList = this
+      const internalData = $xeList.internalData
+
+      const { removeRowMaps } = internalData
+      const removeRecords: any[] = []
+      XEUtils.each(removeRowMaps, (item) => {
+        removeRecords.push(item)
+      })
+      return removeRecords
+    },
+    isRemoveByRow (row: any) {
+      const $xeList = this
+      const reactData = $xeList.reactData
+      const internalData = $xeList.internalData
+
+      const rowid = $xeList.getRowId(row)
+      return !!reactData.removeRowFlag && !!internalData.removeRowMaps[rowid]
+    },
+    handleCrossListRowDragCancelEvent () {
+      const $xeList = this
+
+      $xeList.clearRowDragData()
+      $xeList.clearCrossListDragStatus()
+    },
+    /**
+       * 处理跨树拖拽完成
+       */
+    handleCrossListRowDragFinishEvent (evnt: DragEvent) {
+      const $xeList = this
+      const reactData = $xeList.reactData
+      const internalData = $xeList.internalData
+      const crossListDragRowInfo = getCrossListDragRowInfo($xeList as VxeListConstructor & VxeListPrivateMethods)
+
+      const { rowList } = reactData
+      const { rowMaps } = internalData
+      const dragOpts = $xeList.computeDragOpts
+      const { animation, isCrossListDrag } = dragOpts
+      const el = $xeList.$refs.refElem as HTMLDivElement
+      if (!el) {
+        return
+      }
+      if (isCrossListDrag && crossListDragRowObj && crossListDragRowInfo) {
+        const { row: dragRow } = crossListDragRowInfo
+        if (dragRow) {
+          const dragRowid = $xeList.getRowId(dragRow)
+          const dragRowRest = rowMaps[dragRowid]
+          let dragRowHeight = 0
+          let rsIndex = -1
+          if (dragRowRest) {
+            if (animation) {
+              const oldItemEl = el.querySelector<HTMLElement>(`.vxe-list--row[rowid="${dragRowid}"]`)
+              const targetItemEl = oldItemEl
+              if (targetItemEl) {
+                dragRowHeight = targetItemEl.offsetHeight
+              }
+            }
+            rsIndex = dragRowRest.$index
+          }
+          const dragRangeList = rsIndex > -1 && rsIndex < rowList.length - 1 ? rowList.slice(rsIndex + 1) : []
+          const dragList = [dragRow]
+          $xeList.remove(dragList).then(() => {
+            if (animation && dragRowHeight && dragRangeList.length) {
+              const wrapperEl = el
+              const dtClss: string[] = []
+              dragRangeList.forEach(item => {
+                const rowid = $xeList.getRowId(item)
+                dtClss.push(`.vxe-list--row[rowid="${rowid}"]`)
+              })
+              const dtTrList = wrapperEl.querySelectorAll<HTMLElement>(dtClss.join(','))
+              moveRowAnimateToTb(dtTrList, dragRowHeight)
+            }
+          })
+          $xeList.dispatchEvent('row-remove-dragend', {
+            row: dragRow
+          }, evnt)
+          $xeList.handleRowDragEndClearStatus()
+        }
+      }
+    },
+    /**
+       * 处理跨树拖至新的空树
+       */
+    handleCrossListRowDragoverEmptyEvent (evnt: DragEvent) {
+      const $xeList = this
+      const reactData = $xeList.reactData
+      const internalData = $xeList.internalData
+
+      const { rowList } = reactData
+      const dragOpts = $xeList.computeDragOpts
+      const { isCrossListDrag } = dragOpts
+      if (isCrossListDrag && crossListDragRowObj && !rowList.length) {
+        const { $oldList, $newList } = crossListDragRowObj
+        if ($oldList) {
+          const oldListReactData = $oldList as unknown as ListReactData
+          if ($oldList.xID !== $xeList.xID) {
+            if ($newList && $newList.xID !== $xeList.xID) {
+              $newList.hideCrossListRowDropClearStatus()
+            }
+            evnt.preventDefault()
+            $oldList.hideCrossListRowDropClearStatus()
+            crossListDragRowObj.$newList = $xeList
+            internalData.prevDragRow = null
+            reactData.dragTipText = oldListReactData.dragTipText
+            $xeList.showDropTip(evnt, evnt.currentTarget as HTMLDivElement, true, '')
+          }
+        }
+      }
+    },
+    /**
+       * 处理跨树拖插入
+       */
+    handleCrossListRowDragInsertEvent (evnt: DragEvent) {
+      const $xeList = this
+      const reactData = $xeList.reactData
+      const internalData = $xeList.internalData
+      const crossListDragRowInfo = getCrossListDragRowInfo($xeList as VxeListConstructor & VxeListPrivateMethods)
+
+      const { prevDragRow, prevDragPos } = internalData
+      const dragOpts = $xeList.computeDragOpts
+      const { animation, isCrossListDrag, dragEndMethod } = dragOpts
+      // 跨表拖拽
+      if (isCrossListDrag && crossListDragRowObj && crossListDragRowInfo) {
+        const { row: oldRow } = crossListDragRowInfo
+        const { $oldList } = crossListDragRowObj
+        const el = $xeList.$refs.refElem as HTMLDivElement
+        if (!el) {
+          return
+        }
+        if ($oldList && oldRow) {
+          const dragRow = oldRow
+          let dragOffsetIndex = -1
+          if (prevDragRow) {
+            dragOffsetIndex = prevDragPos === 'bottom' ? 1 : 0
+          }
+          const dragParams = {
+            oldRow: dragRow,
+            newRow: prevDragRow,
+            dragRow,
+            dragPos: prevDragPos as 'top' | 'bottom',
+            offsetIndex: dragOffsetIndex as 0 | 1
+          }
+          const errRest = {
+            status: false
+          }
+          Promise.resolve(dragEndMethod ? dragEndMethod(dragParams) : true).then((status) => {
+            if (!status) {
+              if ($oldList) {
+                if ($oldList.xID !== $xeList.xID) {
+                  $oldList.handleCrossListRowDragCancelEvent(evnt)
+                }
+              }
+              $xeList.handleRowDragEndClearStatus()
+              return errRest
+            }
+            let insertRest: Promise<any> = Promise.resolve()
+            const dragList = [dragRow]
+            $oldList.handleCrossListRowDragFinishEvent(evnt)
+            if (prevDragRow) {
+              if (prevDragPos === 'bottom') {
+                insertRest = $xeList.insertNextAt(dragList, prevDragRow)
+              } else {
+                insertRest = $xeList.insertAt(dragList, prevDragRow)
+              }
+            } else {
+              insertRest = $xeList.insert(dragList)
+            }
+            $xeList.dispatchEvent('row-insert-dragend', {
+              oldRow,
+              newRow: prevDragRow,
+              dragRow,
+              dragPos: prevDragPos as any,
+              offsetIndex: dragOffsetIndex
+            }, evnt)
+            $xeList.clearRowDragData()
+
+            insertRest.then(() => {
+              const { rowList } = reactData
+              const { rowMaps } = internalData
+              const oldRowid = $xeList.getRowId(dragRow)
+              const oldRowRest = rowMaps[oldRowid]
+              let dragRowHeight = 0
+              let rsIndex = -1
+              if (oldRowRest) {
+                if (animation) {
+                  const oldItemEl = el.querySelector<HTMLElement>(`.vxe-list--row[rowid="${oldRowid}"]`)
+                  const targetItemEl = oldItemEl
+                  if (targetItemEl) {
+                    dragRowHeight = targetItemEl.offsetHeight
+                  }
+                }
+                rsIndex = oldRowRest.$index
+              }
+              const dragRangeList = rsIndex > -1 ? rowList.slice(rsIndex) : []
+              if (animation && dragRowHeight && dragRangeList.length) {
+                const wrapperEl = el
+                const dtClss: string[] = []
+                dragRangeList.forEach(item => {
+                  const rowid = $xeList.getRowId(item)
+                  dtClss.push(`.vxe-list--row[rowid="${rowid}"]`)
+                })
+                const dtTrList = wrapperEl.querySelectorAll<HTMLElement>(dtClss.join(','))
+                moveRowAnimateToTb(dtTrList, -dragRowHeight)
+              }
+            })
+          })
+        }
+      }
+    },
+    hideCrossListRowDropClearStatus () {
+      const $xeList = this
+
+      $xeList.hideDropTip()
+    },
+    handleContextmenuEvent (evnt: MouseEvent, row: any) {
+      const $xeList = this
+      const props = $xeList
+      const reactData = $xeList.reactData
+      const internalData = $xeList.internalData
+
+      const { menuConfig } = props
+      const menuOpts = $xeList.computeMenuOpts
+      const rowOpts = $xeList.computeRowOpts
+      const { isCurrent } = rowOpts
+      if (menuConfig ? isEnableConf(menuOpts) : menuOpts.enabled) {
+        const { options, visibleMethod } = menuOpts
+        if (!visibleMethod || visibleMethod({ $list: $xeList, options, row })) {
+          if (isCurrent) {
+            $xeList.changeCurrentEvent(evnt, row)
+          } else if (internalData.currentRow) {
+            internalData.currentRow = null
+            reactData.currRowFlag++
+          }
+          if (VxeUI.contextMenu) {
+            VxeUI.contextMenu.openByEvent(evnt, {
+              options,
+              events: {
+                optionClick (eventParams) {
+                  const { option } = eventParams
+                  const gMenuOpts = menus.get(option.code)
+                  const tmMethod = gMenuOpts ? gMenuOpts.listMenuMethod : null
+                  const params = {
+                    menu: option,
+                    row,
+                    $event: evnt,
+                    $list: $xeList
+                  }
+                  if (tmMethod) {
+                    tmMethod(params, evnt)
+                  }
+                  $xeList.dispatchEvent('menu-click', params, eventParams.$event)
+                }
+              }
+            })
+          }
+        }
+      }
+      $xeList.dispatchEvent('row-menu', { row }, evnt)
     },
 
     //
@@ -1501,6 +2052,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const { selectRadioRow, currRowFlag, updateCheckboxFlag } = reactData
       const { selectCheckboxMaps, currentRow } = internalData
       const contentSlot = slots.content
+      const extraSlot = slots.extra
       const dragOpts = $xeList.computeDragOpts
       const { trigger, icon, disabledMethod, visibleMethod } = dragOpts
       const rowOpts = $xeList.computeRowOpts
@@ -1573,12 +2125,21 @@ export default /* define-vxe-component start */ defineVxeComponent({
           class: 'vxe-list--row-content'
         }, contentSlot ? contentSlot(rowParams) : (contentField ? getText(row[contentField]) : ''))
       )
+      if (extraSlot) {
+        ctVNs.push(
+          h('div', {
+            key: 'ct7',
+            class: 'vxe-list--row-extra'
+          }, extraSlot(rowParams))
+        )
+      }
 
       const rowOns: {
         mousedown: (evnt: MouseEvent) => void
         mouseup: (evnt: MouseEvent) => void
         click: (evnt: MouseEvent) => void
         dblclick: (evnt: MouseEvent) => void
+        contextmenu?: (evnt: MouseEvent) => void
         dragstart?: (evnt: DragEvent) => void
         dragend?: (evnt: DragEvent) => void
         dragover?: (evnt: DragEvent) => void
@@ -1592,6 +2153,9 @@ export default /* define-vxe-component start */ defineVxeComponent({
         },
         dblclick (evnt: MouseEvent) {
           $xeList.handleRowDblclickEvent(evnt, row)
+        },
+        contextmenu (evnt) {
+          $xeList.handleContextmenuEvent(evnt, row)
         }
       }
       // 拖拽行事件
@@ -1634,16 +2198,24 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const radioOpts = $xeList.computeRadioOpts
       const checkboxOpts = $xeList.computeCheckboxOpts
       const dragOpts = $xeList.computeDragOpts
-      const { trigger } = dragOpts
+      const { trigger, isCrossListDrag } = dragOpts
       const rowOpts = $xeList.computeRowOpts
       const { isHover, padding } = rowOpts
       const showDefChekboxHead = showCheckbox && checkboxOpts.showHeader !== false
+
+      const leOns: {
+        dragover?: (...args: any[]) => void
+      } = { }
+      if (isCrossListDrag && !rowList.length) {
+        leOns.dragover = $xeList.handleCrossListRowDragoverEmptyEvent
+      }
       return h('div', {
         ref: 'refElem',
         class: ['vxe-list', className ? (XEUtils.isFunction(className) ? className({ $list: $xeList }) : className) : '', {
           [`size--${vSize}`]: vSize,
           'is--loading': loading
         }],
+        on: leOns,
         style: wrapperStyles
       }, [
         headerSlot || showDefChekboxHead
@@ -1786,11 +2358,14 @@ export default /* define-vxe-component start */ defineVxeComponent({
     const props = $xeList
     const internalData = $xeList.internalData
 
-    const { showRadio, showCheckbox } = props
+    const { showSeq, showRadio, showCheckbox } = props
     const rowOpts = $xeList.computeRowOpts
     const { useKey, keyField } = rowOpts
     const isDrag = $xeList.computeIsDrag
     if (!keyField) {
+      if (showSeq) {
+        errLog('vxe.error.reqSupportProp', ['show-seq', 'row-config.keyField'])
+      }
       if (showRadio) {
         errLog('vxe.error.reqSupportProp', ['show-radio', 'row-config.keyField'])
       }
