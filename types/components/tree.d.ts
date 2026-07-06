@@ -675,11 +675,11 @@ export interface TreeMethods<D = any> {
    * 如果 node 为 -1 则从插入到底部，如果为树结构，则插入到目标节点底部
    * 如果 node 为有效节点则插入到该节点的位置，如果为树结构，则有插入到效的目标节点该节点的位置
    */
-  insertAt(records: any, targetNodeOrNodeid?: any | -1 | null): Promise<{ node: D, nodes: D[] }>
+  insertAt(records: any, targetNodeOrNodeKey?: any | -1 | null): Promise<{ node: D, nodes: D[] }>
   /**
    * 用于 transform 模式，与 insertAt 节点为一致，区别就是会插入指定目标的到下一节点
    */
-  insertNextAt(records: any, targetNodeOrNodeid?: any | -1 | null): Promise<{ node: D, nodes: D[] }>
+  insertNextAt(records: any, targetNodeOrNodeKey?: any | -1 | null): Promise<{ node: D, nodes: D[] }>
   /**
    * 用于树结构，往指定节点插入子级临时数据，从子级的第一行新增一行或多行新数据
    */

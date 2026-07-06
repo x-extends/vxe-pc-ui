@@ -1,5 +1,6 @@
 import { RenderFunction, SetupContext, Ref } from 'vue'
 import { DefineVxeComponentApp, DefineVxeComponentOptions, DefineVxeComponentInstance, VxeComponentBaseOptions, VxeComponentEventParams, VxeComponentSizeType, ValueOf } from '@vxe-ui/core'
+import { VxeContextMenuPropTypes, VxeContextMenuDefines } from './context-menu'
 
 /* eslint-disable no-use-before-define,@typescript-eslint/ban-types */
 
@@ -33,6 +34,7 @@ export namespace VxeListPropTypes {
   export type ClassName = string | ((params: { $list: VxeListConstructor }) => string)
   export type SyncResize = boolean | string | number
 
+  export type ShowSeq = boolean
   export type ShowRadio = boolean
   export type CheckRowKey = string | number | null
   export interface RadioConfig<D = any> {
@@ -126,6 +128,10 @@ export namespace VxeListPropTypes {
      */
     showGuidesStatus?: boolean
     /**
+     * 是否允许在不同列表之间进行拖拽
+     */
+    isCrossListDrag?: boolean
+    /**
      * 是否显示拖拽动画，启用后由数据量的大小来影响渲染性能
      */
     animation?: boolean
@@ -158,6 +164,25 @@ export namespace VxeListPropTypes {
      * 拖拽结束时是否允许行拖拽调整顺序的方法，该方法的返回值用来决定是否允许被拖拽调整顺序
      */
     dragEndMethod?(params: Omit<VxeListDefines.RowDragendEventParams<D>, '_index'>): Promise<boolean> | boolean
+  }
+
+  export interface MenuConfig<D = any> {
+    /**
+     * 是否启用
+     */
+    enabled?: boolean
+    /**
+     * 菜单配置
+     */
+    options: VxeContextMenuPropTypes.Options
+    /**
+     * 该函数的返回值用来决定是否允许显示右键菜单（对于需要对菜单进行权限控制时可能会用到）
+     */
+    visibleMethod?(params: {
+      $list: VxeListConstructor
+      options: VxeContextMenuPropTypes.Options
+      row: D
+    }): boolean
   }
 
   export interface VirtualYConfig {
@@ -212,6 +237,7 @@ export interface VxeListProps<D = any> {
   autoResize?: VxeListPropTypes.AutoResize
   syncResize?: VxeListPropTypes.SyncResize
   className?: VxeListPropTypes.ClassName
+  showSeq?: VxeListPropTypes.ShowSeq
   showRadio?: VxeListPropTypes.ShowRadio
   checkRowKey?: VxeListPropTypes.CheckRowKey
   radioConfig?: VxeListPropTypes.RadioConfig
@@ -220,6 +246,7 @@ export interface VxeListProps<D = any> {
   checkboxConfig?: VxeListPropTypes.CheckboxConfig
   rowConfig?: VxeListPropTypes.RowConfig
   dragConfig?: VxeListPropTypes.DragConfig
+  menuConfig?: VxeListPropTypes.MenuConfig
   virtualYConfig?: VxeListPropTypes.VirtualYConfig
 
   /**
@@ -249,14 +276,20 @@ export interface ListReactData {
   isAllChecked: boolean
   isAllIndeterminate: boolean
 
+  insertRowFlag: number
+  removeRowFlag: number
+
   dragRow: any
   dragTipText: string
+  isCrossDragRow: boolean
 }
 
 export interface ListInternalData {
   resizeObserver: ResizeObserver | undefined
   fullData: any[]
+  afterList: any[]
   fullKeyMaps: Record<string, any>
+  rowMaps: Record<string, VxeListDefines.RowCacheItem>
   lastScrollLeft: number
   lastScrollTop: number
   scrollYStore: {
@@ -268,6 +301,9 @@ export interface ListInternalData {
   }
   currentRow: any
   selectCheckboxMaps: Record<string, any>
+
+  insertRowMaps: Record<string, any>
+  removeRowMaps: Record<string, any>
 
   prevDragRow?: any
   prevDragPos?: 'top' | 'bottom' | ''
@@ -420,10 +456,67 @@ export interface ListMethods<D = any> {
    * 只对 show-checkbox 有效，设置所有行的选中状态
    */
   setAllCheckboxRow(checked: boolean): Promise<void>
+
+  /**
+   * 往列表插入临时数据，从第一个行新增一个行或多个行新数据
+   */
+  insert(records: any): Promise<{ row: D, rows: D[] }>
+  /**
+   * 往列表指定行中插入临时数据
+   * 如果 row 为空则从插入到顶部，如果为树结构，则插入到目标行顶部
+   * 如果 row 为 -1 则从插入到底部，如果为树结构，则插入到目标行底部
+   * 如果 row 为有效行则插入到该行的位置
+   */
+  insertAt(records: any, targetRowOrRowKey?: any | -1 | null): Promise<{ row: D, rows: D[] }>
+  /**
+   * 用于 transform 模式，与 insertAt 行为一致，区别就是会插入指定目标的到下一行
+   */
+  insertNextAt(records: any, targetRowOrRowKey?: any | -1 | null): Promise<{ row: D, rows: D[] }>
+  /**
+   * 判断行是否为新增的临时数据
+   */
+  isInsertByRow(row: any | null): boolean
+  /**
+   * 用于 transform 模式，删除指定行数据，指定 row 或 [row, ...] 删除多条数据，如果为空则删除所有数据
+   */
+  remove(rows?: any | any[]): Promise<{ row: D, rows: D[] }>
+  /**
+   * 用于 transform 模式，获取新增的临时数据
+   */
+  getInsertRecords(): D[]
+  /**
+   * 用于 transform 模式，获取已删除的数据
+   */
+  getRemoveRecords(): D[]
+  /**
+   * 判断数据是否被删除
+   */
+  isRemoveByRow(row: any | null): boolean
 }
 export interface VxeListMethods<D = any> extends ListMethods<D> { }
 
-export interface ListPrivateMethods<D = any> {}
+export interface ListPrivateMethods<D = any> {
+  /**
+   * @private
+   */
+  handleCrossListRowDragInsertEvent(evnt: DragEvent): void
+  /**
+   * @private
+   */
+  handleCrossListRowDragCancelEvent(evnt: DragEvent): void
+  /**
+   * @private
+   */
+  handleCrossListRowDragFinishEvent(evnt: DragEvent): void
+  /**
+   * @private
+   */
+  handleCrossListRowDragoverEmptyEvent(evnt: DragEvent): void
+  /**
+   * @private
+   */
+  hideCrossListRowDropClearStatus(): void
+}
 export interface VxeListPrivateMethods<D = any> extends ListPrivateMethods<D> { }
 
 export type VxeListEmits = [
@@ -438,12 +531,24 @@ export type VxeListEmits = [
   'scroll',
   'row-dragstart',
   'row-dragover',
-  'row-dragend'
+  'row-dragend',
+  'row-remove-dragend',
+  'row-insert-dragend',
+  'row-menu',
+  'menu-click'
 ]
 
 export namespace VxeListDefines {
-  export interface ListEventParams extends VxeComponentEventParams {
-    $list: VxeListConstructor
+
+  export interface RowCacheItem {
+    item: any
+    index: number
+    $index: number
+    _index: number
+  }
+
+  export interface ListEventParams<D = any> extends VxeComponentEventParams {
+    $list: VxeListConstructor<D>
   }
 
   export interface RowClickParams<D = any> {
@@ -479,6 +584,11 @@ export namespace VxeListDefines {
 
   export interface ScrollParams { }
   export interface ScrollEventParams extends ListEventParams, ScrollParams { }
+
+  export interface MenuClickEventParams<D = any> extends ListEventParams<D> {
+    row: D
+    menu: VxeContextMenuDefines.MenuFirstOption | VxeContextMenuDefines.MenuChildOption
+  }
 }
 
 export type VxeListEventProps<D = any> = {
@@ -488,6 +598,7 @@ export type VxeListEventProps<D = any> = {
   onRowDragstart?: VxeListEvents.RowDragstart<D>
   onRowDragover?: VxeListEvents.RowDragover<D>
   onRowDragend?: VxeListEvents.RowDragend<D>
+  onMenuClick?: VxeListEvents.MenuClick<D>
 }
 
 export interface VxeListListeners<D = any> {
@@ -497,6 +608,7 @@ export interface VxeListListeners<D = any> {
   rowDragstart?: VxeListEvents.RowDragstart<D>
   rowDragover?: VxeListEvents.RowDragover<D>
   rowDragend?: VxeListEvents.RowDragend<D>
+  menuClick?: VxeListEvents.MenuClick<D>
 }
 
 export namespace VxeListEvents {
@@ -506,6 +618,7 @@ export namespace VxeListEvents {
   export type RowDragstart<D = any> = (params: VxeListDefines.RowDragstartEventParams<D>) => void
   export type RowDragover<D = any> = (params: VxeListDefines.RowDragoverEventParams<D>) => void
   export type RowDragend<D = any> = (params: VxeListDefines.RowDragendEventParams<D>) => void
+  export type MenuClick<D = any> = (params: VxeListDefines.MenuClickEventParams<D>) => void
 }
 
 export namespace VxeListSlotTypes {
@@ -519,6 +632,7 @@ export namespace VxeListSlotTypes {
   export interface ContentSlotParams<D = any> {
     row: D
   }
+  export interface ExtraSlotParams<D = any> extends ContentSlotParams<D> {}
   export interface DragSlotParams<D = any> {
     row: D
   }
@@ -529,6 +643,7 @@ export interface VxeListSlots {
   header?:(params: VxeListSlotTypes.HeaderSlotParams) => any
   footer?:(params: VxeListSlotTypes.FooterSlotParams) => any
   content?:(params: VxeListSlotTypes.ContentSlotParams) => any
+  extra?:(params: VxeListSlotTypes.ExtraSlotParams) => any
   tip?:(params: VxeListSlotTypes.DragSlotParams) => any
 }
 
