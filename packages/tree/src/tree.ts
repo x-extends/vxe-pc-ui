@@ -684,6 +684,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
     checkboxConfig: Object as PropType<VxeTreePropTypes.CheckboxConfig>,
     nodeConfig: Object as PropType<VxeTreePropTypes.NodeConfig>,
     lazy: Boolean as PropType<VxeTreePropTypes.Lazy>,
+    visibleMethod: Function as PropType<VxeTreePropTypes.VisibleMethod>,
     toggleMethod: Function as PropType<VxeTreePropTypes.ToggleMethod>,
     loadMethod: Function as PropType<VxeTreePropTypes.LoadMethod>,
     showOverflow: {
@@ -3408,7 +3409,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const reactData = $xeTree.reactData
       const internalData = $xeTree.internalData
 
-      const { lazy, drag, transform, showRadio, showCheckbox, showLine, iconOpen, iconClose, iconLoaded, showIcon } = props
+      const { lazy, drag, transform, showRadio, showCheckbox, showLine, visibleMethod, iconOpen, iconClose, iconLoaded, showIcon } = props
       const { currentNode, selectRadioKey, updateExpandedFlag } = reactData
       const { afterTreeList, nodeMaps, treeExpandedMaps, treeExpandLazyLoadedMaps } = internalData
       const tooltipOpts = $xeTree.computeTooltipOpts
@@ -3447,7 +3448,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
         isLazyLoaded = !!nodeItem.treeLoaded
       }
       const prevNode = nodeItem.items[nodeItem.treeIndex - 1]
-      const nParams = { node, isExpand }
+      const nParams = { node, isExpand, $tree: $xeTree }
 
       const itemOns: {
         mousedown: (evnt: MouseEvent) => void
@@ -3518,7 +3519,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
             : renderEmptyElement($xeTree),
           h('div', {
             class: 'vxe-tree--node-item-switcher'
-          }, showIcon && (lazy ? (isLazyLoaded ? isExistChild : hasLazyChilds) : isExistChild)
+          }, showIcon && (lazy ? (isLazyLoaded ? isExistChild : hasLazyChilds) : isExistChild) && (!visibleMethod || visibleMethod(nParams))
             ? [
                 h('div', {
                   class: 'vxe-tree--node-item-icon',
