@@ -451,8 +451,9 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const $xeColorPicker = this
       const reactData = $xeColorPicker.reactData
 
-      const { selectColor } = reactData
-      $xeColorPicker.changeEvent(evnt, selectColor)
+      const { selectTyle, selectColor, hexValue } = reactData
+      const value = selectTyle === 'hex' ? hexValue : selectColor
+      $xeColorPicker.changeEvent(evnt, value)
       $xeColorPicker.hideOptionPanel()
     },
     togglePanelEvent (evnt: MouseEvent) {
