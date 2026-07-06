@@ -1752,6 +1752,20 @@ export namespace VxeTablePropTypes {
       row: D
     }): Promise<any[]>
     /**
+     * 该方法返回值用来决定该行是否显示树展开按钮
+     */
+    visibleMethod?(params: {
+      $table: VxeTableConstructor<D>
+      row: D
+      rowIndex: number
+      $rowIndex: number
+      _rowIndex: number
+      column: VxeTableDefines.ColumnInfo<D>
+      columnIndex: number
+      $columnIndex: number
+      _columnIndex: number
+    }): boolean
+    /**
      * 该方法在展开或关闭触发之前调用，可以通过返回值来决定是否允许继续执行
      */
     toggleMethod?(params: {
@@ -1761,6 +1775,7 @@ export namespace VxeTablePropTypes {
       column: VxeTableDefines.ColumnInfo<D>
       columnIndex: number
       $columnIndex: number
+      _columnIndex: number
     }): boolean
     /**
      * 是否显示图标按钮

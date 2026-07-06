@@ -161,6 +161,10 @@ export namespace VxeTreePropTypes {
     trigger?: '' | 'default' | 'all' | 'parent' | 'child'
   }
   export type Lazy = boolean
+  export type VisibleMethod<D = any> = (params: {
+    $tree: VxeTreeConstructor
+    node: D
+  }) => boolean
   export type ToggleMethod<D = any> = (params: {
     $tree: VxeTreeConstructor
     expanded: boolean
@@ -384,6 +388,7 @@ export interface VxeTreeProps<D = any> {
   filterValue?: VxeTreePropTypes.FilterValue
   filterConfig?: VxeTreePropTypes.FilterConfig
   lazy?: VxeTreePropTypes.Lazy
+  visibleMethod?: VxeTreePropTypes.VisibleMethod<D>
   toggleMethod?: VxeTreePropTypes.ToggleMethod<D>
   /**
      * 该方法用于异步加载子节点
