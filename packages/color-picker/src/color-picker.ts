@@ -376,8 +376,9 @@ export default defineVxeComponent({
     }
 
     const confirmEvent = (evnt: MouseEvent) => {
-      const { selectColor } = reactData
-      changeEvent(evnt, selectColor)
+      const { selectTyle, selectColor, hexValue } = reactData
+      const value = selectTyle === 'hex' ? hexValue : selectColor
+      changeEvent(evnt, value)
       hideOptionPanel()
     }
 
