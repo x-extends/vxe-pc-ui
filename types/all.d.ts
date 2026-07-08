@@ -120,7 +120,7 @@ declare global {
 
 export function install (app: VueConstructor, options?: VxeGlobalConfig): void
 
-interface AllComponents {
+interface UIComponents {
   /**
    * Alert 警告提示
    */
@@ -382,7 +382,9 @@ interface AllComponents {
    * Watermark 水印
    */
   VxeWatermark: typeof VxeWatermark
+}
 
+interface AllComponents extends UIComponents {
   // Vxe Table
   /**
    * Column 基础表格 - 列
