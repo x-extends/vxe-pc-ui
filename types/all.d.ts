@@ -114,7 +114,7 @@ import VxeGantt from './components/gantt'
 
 export function install (app: App, options?: VxeGlobalConfig): void
 
-interface AllComponents {
+interface UIComponents {
   /**
    * Alert 警告提示
    */
@@ -376,7 +376,9 @@ interface AllComponents {
    * Watermark 水印
    */
   VxeWatermark: typeof VxeWatermark
+}
 
+interface AllComponents extends UIComponents {
   // Vxe Table
   /**
    * Column 基础表格 - 列
@@ -433,7 +435,7 @@ interface AllComponents {
 }
 
 declare module '@vue/runtime-core' {
-  export interface GlobalComponents extends AllComponents {}
+  export interface GlobalComponents extends UIComponents {}
 }
 
 declare module '@vxe-ui/core' {
