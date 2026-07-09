@@ -843,6 +843,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const reactData = $xeCascader.reactData
       const internalData = $xeCascader.internalData
 
+      const { currentNode } = reactData
       const { afterTreeList } = internalData
       const selectVals = $xeCascader.computeSelectVals
       const childrenField = $xeCascader.computeChildrenField
@@ -851,8 +852,8 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const { transform } = treeOpts
       const stItems: string[] = []
       const expandedMaps: Record<string, boolean> = {}
-      if (selectVals.length) {
-        const lastVal = enNodeValue(XEUtils.last(selectVals))
+      const lastVal = currentNode ? $xeCascader.getNodeId(currentNode) : enNodeValue(XEUtils.last(selectVals))
+      if (lastVal) {
         const stRest = XEUtils.findTree(afterTreeList, (item) => lastVal === $xeCascader.getNodeId(item), { children: transform ? mapChildrenField : childrenField })
         if (stRest) {
           const { nodes } = stRest
@@ -863,8 +864,8 @@ export default /* define-vxe-component start */ defineVxeComponent({
           })
         }
       }
-      internalData.treeExpandedMaps = expandedMaps
       reactData.currentItems = stItems
+      internalData.treeExpandedMaps = expandedMaps
     },
     updateZindex () {
       const $xeCascader = this
@@ -2027,13 +2028,10 @@ export default /* define-vxe-component start */ defineVxeComponent({
   watch: {
     value () {
       const $xeCascader = this
-      const reactData = $xeCascader.reactData
 
-      if (!reactData.visiblePanel) {
-        $xeCascader.updateModelChecked()
-        $xeCascader.handleCurrentItems()
-        $xeCascader.updateCurrentChunk()
-      }
+      $xeCascader.updateModelChecked()
+      $xeCascader.handleCurrentItems()
+      $xeCascader.updateCurrentChunk()
     },
     options () {
       const $xeCascader = this
