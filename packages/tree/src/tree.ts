@@ -1193,16 +1193,18 @@ export default defineVxeComponent({
       const { loadMethod } = props
       const { checkStrictly } = checkboxOpts
       return new Promise<void>(resolve => {
+        const { nodeMaps } = internalData
+        const nodeid = getNodeId(node)
+        const nodeItem = nodeMaps[nodeid]
         if (loadMethod) {
-          const { nodeMaps } = internalData
-          const nodeid = getNodeId(node)
-          const nodeItem = nodeMaps[nodeid]
           internalData.treeExpandLazyLoadedMaps[nodeid] = true
           Promise.resolve(
             loadMethod({ $tree: $xeTree, node })
           ).then((childRecords: any) => {
             const { treeExpandLazyLoadedMaps } = internalData
-            nodeItem.treeLoaded = true
+            if (nodeItem) {
+              nodeItem.treeLoaded = true
+            }
             if (treeExpandLazyLoadedMaps[nodeid]) {
               treeExpandLazyLoadedMaps[nodeid] = false
             }
@@ -1228,7 +1230,9 @@ export default defineVxeComponent({
             }
           }).catch((e) => {
             const { treeExpandLazyLoadedMaps } = internalData
-            nodeItem.treeLoaded = false
+            if (nodeItem) {
+              nodeItem.treeLoaded = false
+            }
             if (treeExpandLazyLoadedMaps[nodeid]) {
               treeExpandLazyLoadedMaps[nodeid] = false
             }
@@ -1239,6 +1243,9 @@ export default defineVxeComponent({
             return recalculate()
           })
         } else {
+          if (nodeItem) {
+            nodeItem.treeLoaded = true
+          }
           resolve()
         }
       })
@@ -3472,7 +3479,7 @@ export default defineVxeComponent({
     })
 
     onMounted(() => {
-      const { transform, drag, menuConfig, showOverflow } = props
+      const { transform, drag, menuConfig, showOverflow, lazy, loadMethod } = props
       const dragOpts = computeDragOpts.value
       if (!showOverflow) {
         errLog('vxe.error.errProp', ['show-overflow=false', 'show-overflow=true'])
@@ -3482,6 +3489,9 @@ export default defineVxeComponent({
       }
       if (dragOpts.isCrossTreeDrag && !dragOpts.isCrossDrag) {
         errLog('vxe.error.reqSupportProp', ['drag-config.isCrossTreeDrag', 'drag-config.isCrossDrag'])
+      }
+      if (lazy && !loadMethod) {
+        warnLog('vxe.error.reqSupportProp', ['lazy', 'load-method'])
       }
       // if (valueField) {
       //   errLog('vxe.error.delProp', ['value-field', 'value-field'])
