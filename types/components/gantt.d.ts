@@ -591,6 +591,7 @@ export interface GanttPrivateComputed<D = any> extends GridPrivateComputed<D> {
   computeDateFormat: string
   computeScaleUnit: VxeGanttDefines.ColumnScaleType
   computeMinScale: VxeGanttDefines.ColumnScaleObj
+  computeScaleStep: number
   computeWeekScale: VxeGanttDefines.ColumnScaleObj | null | undefined
   computeTitleField: string
   computeStartField: string
