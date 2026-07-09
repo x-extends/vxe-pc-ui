@@ -778,7 +778,8 @@ export default defineVxeComponent({
       dispatchEvent('upload-queue-start', { files: selectFiles }, evnt)
 
       const cacheMaps = Object.assign({}, reactData.fileCacheMaps)
-      const newFileList = multiple ? fileList : []
+      const uploadFileList = multiple ? fileList : []
+      const newFileList: VxeUploadDefines.FileObjItem[] = []
       const uploadPromiseRests: any[] = []
       selectFiles.forEach(file => {
         const { name } = file
@@ -807,11 +808,12 @@ export default defineVxeComponent({
             )
           }
           newFileList.push(item)
+          uploadFileList.push(item)
         }
       })
-      reactData.fileList = newFileList
+      reactData.fileList = uploadFileList
       reactData.fileCacheMaps = cacheMaps
-      newFileList.forEach(item => {
+      uploadFileList.forEach(item => {
         dispatchEvent('add', { option: item }, evnt)
       })
       Promise.all(uploadPromiseRests).then(() => {

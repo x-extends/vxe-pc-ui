@@ -746,6 +746,7 @@ export default defineVxeComponent({
     }
 
     const handleCurrentItems = () => {
+      const { currentNode } = reactData
       const { afterTreeList } = internalData
       const selectVals = computeSelectVals.value
       const childrenField = computeChildrenField.value
@@ -754,8 +755,8 @@ export default defineVxeComponent({
       const { transform } = treeOpts
       const stItems: string[] = []
       const expandedMaps: Record<string, boolean> = {}
-      if (selectVals.length) {
-        const lastVal = enNodeValue(XEUtils.last(selectVals))
+      const lastVal = currentNode ? getNodeId(currentNode) : enNodeValue(XEUtils.last(selectVals))
+      if (lastVal) {
         const stRest = XEUtils.findTree(afterTreeList, (item) => lastVal === getNodeId(item), { children: transform ? mapChildrenField : childrenField })
         if (stRest) {
           const { nodes } = stRest
@@ -766,8 +767,8 @@ export default defineVxeComponent({
           })
         }
       }
-      internalData.treeExpandedMaps = expandedMaps
       reactData.currentItems = stItems
+      internalData.treeExpandedMaps = expandedMaps
     }
 
     const updateZindex = () => {
@@ -1811,11 +1812,9 @@ export default defineVxeComponent({
     }
 
     watch(() => props.modelValue, () => {
-      if (!reactData.visiblePanel) {
-        updateModelChecked()
-        handleCurrentItems()
-        updateCurrentChunk()
-      }
+      updateModelChecked()
+      handleCurrentItems()
+      updateCurrentChunk()
     })
 
     watch(() => props.options, () => {
