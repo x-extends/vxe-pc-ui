@@ -21,7 +21,7 @@ function createReactData (): IconPickerReactData {
     isAniVisible: false,
     isActivated: false,
     searchValue: '',
-    iconGroups: []
+    iconList: []
   }
 }
 
@@ -170,9 +170,9 @@ export default defineVxeComponent({
 
     const computeWrapperStyle = computed(() => {
       const popupOpts = computePopupOpts.value
-      const { chunkSize, height, maxHeight } = popupOpts
+      const { chunkSize, height, chunkWidth, maxHeight } = popupOpts
       const stys: VxeComponentStyleType = {
-        '--vxe-ui-icon-picker-item-width': `${100 / (chunkSize || 4)}%`
+        '--vxe-ui-icon-picker-item-width': chunkWidth ? toCssUnit(chunkWidth) : `${100 / (chunkSize || 4)}%`
       }
       if (height) {
         stys['--vxe-ui-icon-picker-panel-height'] = toCssUnit(height)
@@ -230,7 +230,7 @@ export default defineVxeComponent({
       const panelElem = refOptionPanel.value
       const btnTransfer = computeBtnTransfer.value
       const popupOpts = computePopupOpts.value
-      const { width, transfer } = popupOpts
+      const { width } = popupOpts
       const handleStyle = () => {
         const ppObj = updatePanelPlacement(targetElem, panelElem, {
           placement: popupOpts.placement || placement,
@@ -238,12 +238,12 @@ export default defineVxeComponent({
           teleportTo: btnTransfer
         })
         const panelStyle: { [key: string]: string | number } = Object.assign(ppObj.style, {
-          zIndex: panelIndex
+          zIndex: panelIndex,
+          minWidth: undefined
         })
         if (width) {
           Object.assign(panelStyle, {
-            width: toCssUnit(width),
-            minWidth: transfer ? undefined : toCssUnit(width)
+            width: toCssUnit(width)
           })
         }
         reactData.panelStyle = panelStyle
@@ -299,8 +299,6 @@ export default defineVxeComponent({
       const { searchValue } = reactData
       const filterOpts = computeFilterOpts.value
       const { filterMethod } = filterOpts
-      const popupOpts = computePopupOpts.value
-      const { chunkSize } = popupOpts
       const iconList = computeIconList.value
       let visibleList = iconList
       if (searchValue) {
@@ -312,7 +310,7 @@ export default defineVxeComponent({
           return (item.title && `${item.title}`.toLowerCase().indexOf(searchTxt) > -1) || (item.icon && `${item.icon}`.indexOf(searchTxt) > -1)
         })
       }
-      reactData.iconGroups = XEUtils.chunk(visibleList, chunkSize || 4)
+      reactData.iconList = visibleList
     }
 
     const changeEvent = (evnt: Event, selectValue: any) => {
@@ -524,19 +522,19 @@ export default defineVxeComponent({
 
     const renderIconWrapper = () => {
       const { showIconTitle } = props
-      const { selectIcon, iconGroups } = reactData
+      const { selectIcon, iconList } = reactData
 
-      if (!iconGroups.length) {
+      if (!iconList.length) {
         return h('div', {
           class: 'vxe-ico-picker--empty-placeholder'
         }, getI18n('vxe.iconPicker.emptyText'))
       }
       return h('div', {
         class: 'vxe-ico-picker--list-wrapper'
-      }, iconGroups.map(list => {
-        return h('div', {
+      }, [
+        h('div', {
           class: 'vxe-ico-picker--list'
-        }, list.map(item => {
+        }, iconList.map(item => {
           const { iconRender } = item
           const compConf = iconRender ? renderer.get(iconRender.name) : null
           const iconMethod = compConf ? compConf.renderIconPickerOptionIcon : null
@@ -571,7 +569,7 @@ export default defineVxeComponent({
             ])
           ])
         }))
-      }))
+      ])
     }
 
     const renderIconView = () => {
