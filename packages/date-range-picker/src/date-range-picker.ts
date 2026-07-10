@@ -613,7 +613,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       reactData.selectEdValue = endRest
       const value = $xeDateRangePicker.getRangeValue(startRest, endRest)
       const isFinish = (startRest && endRest) || (!startRest && !endRest)
-      $xeDateRangePicker.$emit('update:modelValue', value)
+      $xeDateRangePicker.emitModel(value)
       $xeDateRangePicker.$emit('update:startValue', startRest || '')
       $xeDateRangePicker.$emit('update:endValue', endRest || '')
       if (XEUtils.toValueString(modelValue) !== value) {

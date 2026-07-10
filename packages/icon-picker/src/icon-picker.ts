@@ -189,7 +189,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       }
       return getI18n('vxe.base.pleaseSelect')
     },
-    computePanelStyle () {
+    computeWrapperStyle () {
       const $xeIconPicker = this
 
       const popupOpts = $xeIconPicker.computePopupOpts
@@ -352,7 +352,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const panelElem = $xeIconPicker.$refs.refOptionPanel as HTMLDivElement
       const btnTransfer = $xeIconPicker.computeBtnTransfer
       const popupOpts = $xeIconPicker.computePopupOpts
-      const { width } = popupOpts
+      const { width, transfer } = popupOpts
       const handleStyle = () => {
         const ppObj = updatePanelPlacement(targetElem, panelElem, {
           placement: popupOpts.placement || placement,
@@ -365,7 +365,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
         if (width) {
           Object.assign(panelStyle, {
             width: toCssUnit(width),
-            minWidth: undefined
+            minWidth: transfer ? undefined : toCssUnit(width)
           })
         }
         reactData.panelStyle = panelStyle
@@ -743,7 +743,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const btnTransfer = $xeIconPicker.computeBtnTransfer
       const formReadonly = $xeIconPicker.computeFormReadonly
       const inpPlaceholder = $xeIconPicker.computeInpPlaceholder
-      const panelStyle = $xeIconPicker.computePanelStyle
+      const wrapperStyle = $xeIconPicker.computeWrapperStyle
       const popupOpts = $xeIconPicker.computePopupOpts
       const ppClassName = popupOpts.className || props.popupClassName
 
@@ -824,7 +824,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
           initialized && (visiblePanel || isAniVisible)
             ? h('div', {
               class: 'vxe-ico-picker--panel-wrapper',
-              style: panelStyle
+              style: wrapperStyle
             }, [
               filterable
                 ? h('div', {
