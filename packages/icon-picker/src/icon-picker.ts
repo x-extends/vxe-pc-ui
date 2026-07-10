@@ -21,7 +21,7 @@ function createReactData (): IconPickerReactData {
     isAniVisible: false,
     isActivated: false,
     searchValue: '',
-    iconGroups: []
+    iconList: []
   }
 }
 
@@ -193,9 +193,9 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const $xeIconPicker = this
 
       const popupOpts = $xeIconPicker.computePopupOpts
-      const { chunkSize, height, maxHeight } = popupOpts
+      const { chunkSize, height, chunkWidth, maxHeight } = popupOpts
       const stys: VxeComponentStyleType = {
-        '--vxe-ui-icon-picker-item-width': `${100 / (chunkSize || 4)}%`
+        '--vxe-ui-icon-picker-item-width': chunkWidth ? toCssUnit(chunkWidth) : `${100 / (chunkSize || 4)}%`
       }
       if (height) {
         stys['--vxe-ui-icon-picker-panel-height'] = toCssUnit(height)
@@ -439,8 +439,6 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const { searchValue } = reactData
       const filterOpts = $xeIconPicker.computeFilterOpts
       const { filterMethod } = filterOpts
-      const popupOpts = $xeIconPicker.computePopupOpts
-      const { chunkSize } = popupOpts
       const iconList = $xeIconPicker.computeIconList
       let visibleList = iconList
       if (searchValue) {
@@ -452,7 +450,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
           return (item.title && `${item.title}`.toLowerCase().indexOf(searchTxt) > -1) || (item.icon && `${item.icon}`.indexOf(searchTxt) > -1)
         })
       }
-      reactData.iconGroups = XEUtils.chunk(visibleList, chunkSize || 4)
+      reactData.iconList = visibleList
     },
     changeEvent  (evnt: Event, selectValue: any) {
       const $xeIconPicker = this
@@ -654,19 +652,19 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const reactData = $xeIconPicker.reactData
 
       const { showIconTitle } = props
-      const { selectIcon, iconGroups } = reactData
+      const { selectIcon, iconList } = reactData
 
-      if (!iconGroups.length) {
+      if (!iconList.length) {
         return h('div', {
           class: 'vxe-ico-picker--empty-placeholder'
         }, getI18n('vxe.iconPicker.emptyText'))
       }
       return h('div', {
         class: 'vxe-ico-picker--list-wrapper'
-      }, iconGroups.map(list => {
-        return h('div', {
+      }, [
+        h('div', {
           class: 'vxe-ico-picker--list'
-        }, list.map(item => {
+        }, iconList.map(item => {
           const { iconRender } = item
           const compConf = iconRender ? renderer.get(iconRender.name) : null
           const iconMethod = compConf ? compConf.renderIconPickerOptionIcon : null
@@ -703,7 +701,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
             ])
           ])
         }))
-      }))
+      ])
     },
     renderIconView (h: CreateElement) {
       const $xeIconPicker = this

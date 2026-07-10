@@ -61,11 +61,15 @@ export namespace VxeIconPickerPropTypes {
     trigger?: 'default' | 'icon' | 'manual' | '' | null
     transfer?: boolean
     /**
-     * 分块显示多少个图标
+     * 每行显示出多少个图标，如果设置了 chunkWidth 则该参数无效
      */
     chunkSize?: number
     /**
-     * 图标展示方式，支持分块和列表
+     * 每个图标的宽度
+     */
+    chunkWidth?: number | string
+    /**
+     * 宽度
      */
     width?: number | string
     height?: number | string
@@ -115,7 +119,7 @@ export interface IconPickerReactData {
   isAniVisible: boolean
   isActivated: boolean
   searchValue: string
-  iconGroups: VxeIconPickerDefines.IconItemObj[][]
+  iconList: VxeIconPickerDefines.IconItemObj[]
 }
 
 export interface IconPickerInternalData {
