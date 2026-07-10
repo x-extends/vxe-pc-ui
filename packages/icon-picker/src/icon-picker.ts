@@ -168,7 +168,7 @@ export default defineVxeComponent({
       return getI18n('vxe.base.pleaseSelect')
     })
 
-    const computePanelStyle = computed(() => {
+    const computeWrapperStyle = computed(() => {
       const popupOpts = computePopupOpts.value
       const { chunkSize, height, maxHeight } = popupOpts
       const stys: VxeComponentStyleType = {
@@ -230,7 +230,7 @@ export default defineVxeComponent({
       const panelElem = refOptionPanel.value
       const btnTransfer = computeBtnTransfer.value
       const popupOpts = computePopupOpts.value
-      const { width } = popupOpts
+      const { width, transfer } = popupOpts
       const handleStyle = () => {
         const ppObj = updatePanelPlacement(targetElem, panelElem, {
           placement: popupOpts.placement || placement,
@@ -243,7 +243,7 @@ export default defineVxeComponent({
         if (width) {
           Object.assign(panelStyle, {
             width: toCssUnit(width),
-            minWidth: undefined
+            minWidth: transfer ? undefined : toCssUnit(width)
           })
         }
         reactData.panelStyle = panelStyle
@@ -606,7 +606,7 @@ export default defineVxeComponent({
       const btnTransfer = computeBtnTransfer.value
       const formReadonly = computeFormReadonly.value
       const inpPlaceholder = computeInpPlaceholder.value
-      const panelStyle = computePanelStyle.value
+      const wrapperStyle = computeWrapperStyle.value
       const popupOpts = computePopupOpts.value
       const ppClassName = popupOpts.className || props.popupClassName
 
@@ -683,7 +683,7 @@ export default defineVxeComponent({
             initialized && (visiblePanel || isAniVisible)
               ? h('div', {
                 class: 'vxe-ico-picker--panel-wrapper',
-                style: panelStyle
+                style: wrapperStyle
               }, [
                 filterable
                   ? h('div', {

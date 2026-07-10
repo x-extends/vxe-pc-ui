@@ -530,7 +530,7 @@ export default defineVxeComponent({
       reactData.selectEdValue = endRest
       const value = getRangeValue(startRest, endRest)
       const isFinish = (startRest && endRest) || (!startRest && !endRest)
-      emit('update:modelValue', value)
+      emitModel(value)
       emit('update:startValue', startRest || '')
       emit('update:endValue', endRest || '')
       if (XEUtils.toValueString(modelValue) !== value) {
@@ -1147,6 +1147,10 @@ export default defineVxeComponent({
       emit(type, createEvent(evnt, { $dateRangePicker: $xeDateRangePicker }, params))
     }
 
+    const emitModel = (value: any) => {
+      emit('update:modelValue', value)
+    }
+
     dateRangePickerMethods = {
       dispatchEvent,
 
@@ -1154,7 +1158,7 @@ export default defineVxeComponent({
         reactData.selectStValue = startValue || ''
         reactData.selectEdValue = endValue || ''
         const value = getRangeValue(startValue, endValue)
-        emit('update:modelValue', value)
+        emitModel(value)
       },
       setModelValueByEvent (evnt, startValue, endValue) {
         handleChange(startValue || '', endValue || '', evnt)

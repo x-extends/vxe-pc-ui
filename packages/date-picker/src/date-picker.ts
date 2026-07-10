@@ -450,7 +450,7 @@ export default defineVxeComponent({
       if (hasTimestampValueType(valueFormat)) {
         const dateVal = parseDateValue(value, type, { valueFormat: dateValueFormat })
         const timeNum = dateVal ? dateVal.getTime() : null
-        emit('update:modelValue', timeNum)
+        emitModel(timeNum)
         if (modelValue !== timeNum) {
           dispatchEvent('change', { value: timeNum }, evnt as Event)
           // 自动更新校验状态
@@ -460,7 +460,7 @@ export default defineVxeComponent({
         }
       } else if (hasDateValueType(valueFormat)) {
         const dateVal = parseDateValue(value, type, { valueFormat: dateValueFormat })
-        emit('update:modelValue', dateVal)
+        emitModel(dateVal)
         if (modelValue && dateVal ? XEUtils.toStringDate(modelValue).getTime() !== dateVal.getTime() : modelValue !== dateVal) {
           dispatchEvent('change', { value: dateVal }, evnt as Event)
           // 自动更新校验状态
@@ -469,7 +469,7 @@ export default defineVxeComponent({
           }
         }
       } else {
-        emit('update:modelValue', value)
+        emitModel(value)
         if (XEUtils.toValueString(modelValue) !== value) {
           dispatchEvent('change', { value }, evnt as Event)
           // 自动更新校验状态
@@ -1327,12 +1327,16 @@ export default defineVxeComponent({
       emit(type, createEvent(evnt, { $datePicker: $xeDatePicker }, params))
     }
 
+    const emitModel = (value: any) => {
+      emit('update:modelValue', value)
+    }
+
     const datePickerMethods: DatePickerMethods = {
       dispatchEvent,
 
       setModelValue (value) {
         reactData.inputValue = value
-        emit('update:modelValue', value)
+        emitModel(value)
       },
       setModelValueByEvent (evnt, value) {
         handleChange(value || '', evnt)
