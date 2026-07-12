@@ -1819,6 +1819,9 @@ export default defineVxeComponent({
         return nodeKeys
       },
       getCheckboxNodes () {
+        return $xeTree.getCheckboxRecords()
+      },
+      getCheckboxRecords () {
         const { nodeMaps, selectCheckboxMaps } = internalData
         const list: any[] = []
         XEUtils.each(selectCheckboxMaps, (item, nodeid) => {
@@ -2223,7 +2226,13 @@ export default defineVxeComponent({
         const nodeid = getNodeId(node)
         return !!reactData.removeNodeFlag && !!internalData.removeNodeMaps[nodeid]
       },
-      closeTooltip
+      closeTooltip,
+      getRecordset () {
+        return {
+          insertRecords: $xeTree.getInsertRecords(),
+          removeRecords: $xeTree.getRemoveRecords()
+        }
+      }
     }
 
     const handleNodeDragEndClearStatus = () => {
@@ -3210,9 +3219,9 @@ export default defineVxeComponent({
                     ])
               ]
             : []),
-          renderDragIcon(node, nodeid),
           renderRadio(node, nodeid, isExistChild, nLevel, isRadioChecked),
           renderCheckbox(node, nodeid, isExistChild, nLevel, isCheckboxChecked, isIndeterminate),
+          renderDragIcon(node, nodeid),
           h('div', {
             class: 'vxe-tree--node-item-inner'
           }, [
@@ -3517,6 +3526,7 @@ export default defineVxeComponent({
         internalData.resizeObserver = resizeObserver
       }
 
+      recalculate()
       globalEvents.on($xeTree, 'resize', handleGlobalResizeEvent)
     })
 

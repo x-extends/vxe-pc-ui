@@ -114,7 +114,9 @@
 }
 
 .vxe-menu--item-group {
-  display: none;
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.3s ease-in-out;
 }
 .vxe-menu--item-wrapper {
   &.is--active {
@@ -130,7 +132,7 @@
   }
   &.is--expand {
     & > .vxe-menu--item-group {
-      display: block;
+      max-height: 1000px;
     }
   }
 }

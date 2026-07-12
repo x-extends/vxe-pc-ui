@@ -420,7 +420,12 @@ export default defineVxeComponent({
       const el = refElem.value
       if (el) {
         const parentEl = el.parentElement
-        reactData.parentHeight = parentEl ? parentEl.clientHeight : 0
+        let parentHeight = 0
+        if (parentEl) {
+          const parentStyle = getComputedStyle(parentEl)
+          parentHeight = parentEl.clientHeight - Math.ceil(XEUtils.toNumber(parentStyle.paddingLeft) + XEUtils.toNumber(parentStyle.paddingRight))
+        }
+        reactData.parentHeight = parentHeight
         updateHeight()
         if (el.clientWidth && el.clientHeight) {
           return computeScrollLoad()
@@ -1164,7 +1169,7 @@ export default defineVxeComponent({
       return updateCheckboxStatus()
     }
 
-    const getCheckboxRows = () => {
+    const getCheckboxRecords = () => {
       const { updateCheckboxFlag } = reactData
       const { selectCheckboxMaps } = internalData
       const rowList: string[] = []
@@ -1517,7 +1522,8 @@ export default defineVxeComponent({
       clearRadioRow,
       setCheckboxRow,
       setCheckboxRowByKey,
-      getCheckboxRows,
+      getCheckboxRecords,
+      getCheckboxRows: getCheckboxRecords,
       getCheckboxRowKeys,
       clearCheckboxRow,
       setAllCheckboxRow,
@@ -1616,6 +1622,12 @@ export default defineVxeComponent({
       isRemoveByRow (row) {
         const rowid = getRowId(row)
         return !!reactData.removeRowFlag && !!internalData.removeRowMaps[rowid]
+      },
+      getRecordset () {
+        return {
+          insertRecords: $xeList.getInsertRecords(),
+          removeRecords: $xeList.getRemoveRecords()
+        }
       }
     }
 
@@ -1930,6 +1942,16 @@ export default defineVxeComponent({
       }
 
       const ctVNs: VNode[] = []
+      if (showRadio) {
+        ctVNs.push(
+          renderRadio(row, rowid, isRadioChecked)
+        )
+      }
+      if (showCheckbox) {
+        ctVNs.push(
+          renderCheckbox(row, rowid, isCheckboxChecked)
+        )
+      }
       let isDragDisabled = false
       if (isDrag && keyField && (!visibleMethod || visibleMethod(rowParams))) {
         const handleOns: {
@@ -1959,16 +1981,6 @@ export default defineVxeComponent({
               })
             ])
           ])
-        )
-      }
-      if (showRadio) {
-        ctVNs.push(
-          renderRadio(row, rowid, isRadioChecked)
-        )
-      }
-      if (showCheckbox) {
-        ctVNs.push(
-          renderCheckbox(row, rowid, isCheckboxChecked)
         )
       }
       ctVNs.push(

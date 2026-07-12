@@ -545,6 +545,10 @@ export interface TreeMethods<D = any> {
    */
   getCheckboxNodes(): D[]
   /**
+   * 只对 show-checkbox 有效，获取复选框的节点
+   */
+  getCheckboxRecords(): D[]
+  /**
    * 用于 showCheckbox，手动清空复选框的
    */
   clearCheckboxNode(): Promise<{
@@ -724,6 +728,14 @@ export interface TreeMethods<D = any> {
    * 手动关闭工具提示
    */
   closeTooltip(): Promise<void>
+  /**
+   * 获取列表数据集
+   * 获取新增、删除的数据
+   */
+  getRecordset(): {
+    insertRecords: D[]
+    removeRecords: D[]
+  }
 }
 export interface VxeTreeMethods<D = any> extends TreeMethods<D> { }
 

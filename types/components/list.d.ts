@@ -443,6 +443,10 @@ export interface ListMethods<D = any> {
   /**
    * 只对 show-checkbox 有效，获取复选框已选的行
    */
+  getCheckboxRecords(): D[]
+  /**
+   * 只对 show-checkbox 有效，获取复选框已选的行
+   */
   getCheckboxRows(): D[]
   /**
    * 只对 show-checkbox 有效，获取复选框已选的主键
@@ -492,6 +496,14 @@ export interface ListMethods<D = any> {
    * 判断数据是否被删除
    */
   isRemoveByRow(row: any | null): boolean
+  /**
+   * 获取列表数据集
+   * 获取新增、删除的数据
+   */
+  getRecordset(): {
+    insertRecords: D[]
+    removeRecords: D[]
+  }
 }
 export interface VxeListMethods<D = any> extends ListMethods<D> { }
 
