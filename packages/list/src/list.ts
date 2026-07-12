@@ -583,7 +583,12 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const el = $xeList.$refs.refElem as HTMLDivElement
       if (el) {
         const parentEl = el.parentElement
-        reactData.parentHeight = parentEl ? parentEl.clientHeight : 0
+        let parentHeight = 0
+        if (parentEl) {
+          const parentStyle = getComputedStyle(parentEl)
+          parentHeight = parentEl.clientHeight - Math.ceil(XEUtils.toNumber(parentStyle.paddingLeft) + XEUtils.toNumber(parentStyle.paddingRight))
+        }
+        reactData.parentHeight = parentHeight
         $xeList.updateHeight()
         if (el.clientWidth && el.clientHeight) {
           return $xeList.computeScrollLoad()
@@ -837,7 +842,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       $xeList.emitCheckboxMode(value)
       return $xeList.updateCheckboxStatus()
     },
-    getCheckboxRows () {
+    getCheckboxRecords () {
       const $xeList = this
       const reactData = $xeList.reactData
       const internalData = $xeList.internalData
@@ -853,6 +858,11 @@ export default /* define-vxe-component start */ defineVxeComponent({
         })
       }
       return rowList
+    },
+    getCheckboxRows () {
+      const $xeList = this
+
+      return $xeList.getCheckboxRecords()
     },
     getCheckboxRowKeys () {
       const $xeList = this
@@ -1689,6 +1699,14 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const rowid = $xeList.getRowId(row)
       return !!reactData.removeRowFlag && !!internalData.removeRowMaps[rowid]
     },
+    getRecordset () {
+      const $xeList = this
+
+      return {
+        insertRecords: $xeList.getInsertRecords(),
+        removeRecords: $xeList.getRemoveRecords()
+      }
+    },
     handleCrossListRowDragCancelEvent () {
       const $xeList = this
 
@@ -2078,6 +2096,16 @@ export default /* define-vxe-component start */ defineVxeComponent({
       }
 
       const ctVNs: VNode[] = []
+      if (showRadio) {
+        ctVNs.push(
+          $xeList.renderRadio(h, row, rowid, isRadioChecked)
+        )
+      }
+      if (showCheckbox) {
+        ctVNs.push(
+          $xeList.renderCheckbox(h, row, rowid, isCheckboxChecked)
+        )
+      }
       let isDragDisabled = false
       if (isDrag && keyField && (!visibleMethod || visibleMethod(rowParams))) {
         const handleOns: {
@@ -2107,16 +2135,6 @@ export default /* define-vxe-component start */ defineVxeComponent({
               })
             ])
           ])
-        )
-      }
-      if (showRadio) {
-        ctVNs.push(
-          $xeList.renderRadio(h, row, rowid, isRadioChecked)
-        )
-      }
-      if (showCheckbox) {
-        ctVNs.push(
-          $xeList.renderCheckbox(h, row, rowid, isCheckboxChecked)
         )
       }
       ctVNs.push(

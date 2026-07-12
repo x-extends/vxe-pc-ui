@@ -2099,6 +2099,14 @@ export default /* define-vxe-component start */ defineVxeComponent({
       }
       return $xeTree.$nextTick()
     },
+    getRecordset () {
+      const $xeTree = this
+
+      return {
+        insertRecords: $xeTree.getInsertRecords(),
+        removeRecords: $xeTree.getRemoveRecords()
+      }
+    },
     handleContextmenuEvent (evnt: MouseEvent, node: any) {
       const $xeTree = this
       const props = $xeTree
@@ -2617,6 +2625,11 @@ export default /* define-vxe-component start */ defineVxeComponent({
       return nodeKeys
     },
     getCheckboxNodes () {
+      const $xeTree = this
+
+      return $xeTree.getCheckboxRecords()
+    },
+    getCheckboxRecords () {
       const $xeTree = this
       const internalData = $xeTree.internalData
 
@@ -3544,9 +3557,9 @@ export default /* define-vxe-component start */ defineVxeComponent({
                     ])
               ]
             : []),
-          $xeTree.renderDragIcon(h, node, nodeid),
           $xeTree.renderRadio(h, node, nodeid, isExistChild, nLevel, isRadioChecked),
           $xeTree.renderCheckbox(h, node, nodeid, isExistChild, nLevel, isCheckboxChecked, isIndeterminate),
+          $xeTree.renderDragIcon(h, node, nodeid),
           h('div', {
             class: 'vxe-tree--node-item-inner'
           }, [
@@ -3892,6 +3905,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       internalData.resizeObserver = resizeObserver
     }
 
+    $xeTree.recalculate()
     globalEvents.on($xeTree, 'resize', $xeTree.handleGlobalResizeEvent)
   },
   beforeDestroy () {
