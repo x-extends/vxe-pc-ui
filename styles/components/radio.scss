@@ -50,6 +50,7 @@
   vertical-align: middle;
   white-space: nowrap;
   line-height: 1;
+  color: var(--vxe-ui-font-color);
   font-size: var(--vxe-ui-radio-current-font-size);
   @include baseMixin.createRadioIcon();
   > input {

@@ -52,6 +52,7 @@
   vertical-align: middle;
   white-space: nowrap;
   line-height: 1;
+  color: var(--vxe-ui-font-color);
   font-size: var(--vxe-ui-checkbox-current-font-size);
   @include baseMixin.createCheckboxIcon();
   > input {

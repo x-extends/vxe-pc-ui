@@ -27,8 +27,8 @@ export type ModalType = 'alert' | 'confirm' | 'message' | 'notification' | 'moda
 export type ModalStatus = 'info' | 'success' | 'warning' | 'question' | 'error' | 'loading'
 
 export type ModalPosition = {
-  top?: number
-  left?: number
+  top?: number | string
+  left?: number | string
 }
 
 /**
