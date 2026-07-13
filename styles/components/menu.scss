@@ -1,7 +1,8 @@
 @use '../helpers/baseMixin.scss';
 
 // 局部变量
-.vxe-menu {
+.vxe-menu,
+.vxe-menu--collapse-wrapper {
   --vxe-ui-menu-current-font-size: var(--vxe-ui-font-size-default);
   --vxe-ui-menu-current-item-height: var(--vxe-ui-menu-item-height-default);
   &.size--medium {
@@ -31,7 +32,8 @@
     min-height: 4em;
   }
 }
-.vxe-menu {
+.vxe-menu,
+.vxe-menu--collapse-wrapper  {
   font-size: var(--vxe-ui-menu-current-font-size);
   color: var(--vxe-ui-font-color);
   font-family: var(--vxe-ui-font-family);
@@ -114,9 +116,11 @@
 }
 
 .vxe-menu--item-group {
-  max-height: 0;
+  height: 0;
   overflow: hidden;
-  transition: max-height 0.3s ease-in-out;
+  &[data-effect] {
+    transition: height 0.3s ease-in-out;
+  }
 }
 .vxe-menu--item-wrapper {
   &.is--active {
@@ -132,7 +136,7 @@
   }
   &.is--expand {
     & > .vxe-menu--item-group {
-      max-height: 1000px;
+      height: auto;
     }
   }
 }

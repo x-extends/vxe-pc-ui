@@ -257,6 +257,7 @@ export interface CascaderInternalData {
   selectCheckboxMaps: Record<string, any>
   treeExpandedMaps: Record<string, boolean>
   treeExpandLazyLoadedMaps: Record<string, boolean>
+  isUpdateMode?: boolean
 }
 
 export interface CascaderMethods {

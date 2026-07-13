@@ -13,6 +13,7 @@ export type VxeMenuInstance = DefineVxeComponentInstance<VxeMenuProps, VxeMenuCo
 export interface VxeMenuConstructor extends VxeComponentBaseOptions, VxeMenuMethods {
   props: VxeMenuProps
   context: SetupContext<VxeMenuEmits>
+  internalData: MenuInternalData
   reactData: MenuReactData
   getRefMaps(): MenuPrivateRef
   getComputeMaps(): MenuPrivateComputed
@@ -85,6 +86,10 @@ export interface MenuPrivateComputed {
 }
 export interface VxeMenuPrivateComputed extends MenuPrivateComputed { }
 
+export interface MenuInternalData {
+  menuEffectMaps: Record<number, number>
+}
+
 export interface MenuReactData {
   initialized: boolean
   collapseStyle: VxeComponentStyleType
@@ -116,6 +121,7 @@ export namespace VxeMenuDefines {
   }
 
   export interface MenuItem extends VxeMenuPropTypes.MenuOption {
+    itemId: number
     itemKey: string | number
     level: number,
     parentKey: string | number

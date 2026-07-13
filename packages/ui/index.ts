@@ -513,8 +513,8 @@ setIcon({
   BUTTON_TOOLTIP_ICON: iconPrefix + 'question-circle-fill',
 
   // menu
-  MENU_ITEM_EXPAND_OPEN: iconPrefix + 'arrow-down rotate180',
-  MENU_ITEM_EXPAND_CLOSE: iconPrefix + 'arrow-down',
+  MENU_ITEM_EXPAND_OPEN: iconPrefix + 'arrow-right rotate90',
+  MENU_ITEM_EXPAND_CLOSE: iconPrefix + 'arrow-right',
 
   // select
   SELECT_LOADED: iconPrefix + 'spinner roll',

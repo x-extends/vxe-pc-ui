@@ -8,11 +8,31 @@ import { getSlotVNs } from '../../ui/src/vn'
 import { createComponentLog } from '../../ui/src/log'
 import VxeLoadingComponent from '../../loading'
 
-import type { VxeMenuDefines, VxeMenuPropTypes, MenuReactData, VxeMenuEmits, MenuMethods, VxeComponentSlotType, VxeLayoutAsidePropTypes, MenuPrivateMethods, MenuPrivateRef, VxeMenuPrivateComputed, VxeMenuConstructor, VxeMenuPrivateMethods, ValueOf, VxeLayoutAsideConstructor, VxeLayoutAsidePrivateMethods } from '../../../types'
+import type { VxeMenuDefines, VxeMenuPropTypes, MenuInternalData, MenuReactData, VxeMenuEmits, MenuMethods, VxeComponentSlotType, VxeLayoutAsidePropTypes, MenuPrivateMethods, MenuPrivateRef, VxeMenuPrivateComputed, VxeMenuConstructor, VxeMenuPrivateMethods, ValueOf, VxeLayoutAsideConstructor, VxeLayoutAsidePrivateMethods } from '../../../types'
 
 const { errLog } = createComponentLog('menu')
 
 const { menus, getConfig, getIcon } = VxeUI
+
+function createInternalData (): MenuInternalData {
+  return {
+    menuEffectMaps: {}
+  }
+}
+
+function createReactData (): MenuReactData {
+  return {
+    initialized: false,
+    isEnterCollapse: false,
+    collapseStyle: {},
+    collapseZindex: 0,
+    activeName: '',
+    menuList: [],
+    itemHeight: 1
+  }
+}
+
+let nemuUniqueKey = 100000000
 
 export default defineVxeComponent({
   name: 'VxeMenu',
@@ -57,15 +77,8 @@ export default defineVxeComponent({
 
     const { computeSize } = useSize(props)
 
-    const reactData = reactive<MenuReactData>({
-      initialized: !!props.collapsed,
-      isEnterCollapse: false,
-      collapseStyle: {},
-      collapseZindex: 0,
-      activeName: props.modelValue,
-      menuList: [],
-      itemHeight: 1
-    })
+    const reactData = reactive(createReactData())
+    const internalData = createInternalData()
 
     const refMaps: MenuPrivateRef = {
       refElem
@@ -151,6 +164,7 @@ export default defineVxeComponent({
           ...item,
           parentKey: parent ? (parent.name || path.slice(0, path.length - 1).join(',')) : '',
           level: path.length,
+          itemId: ++nemuUniqueKey,
           itemKey: item.name || path.join(','),
           isExactActive: false,
           isActive: false,
@@ -211,10 +225,18 @@ export default defineVxeComponent({
 
     const handleClickIconCollapse = (evnt: MouseEvent, item: VxeMenuDefines.MenuItem, itemList: VxeMenuDefines.MenuItem[]) => {
       const { accordion } = props
-      const { hasChild, isExpand } = item
+      const { menuEffectMaps } = internalData
+      const { itemId, hasChild, isExpand } = item
+      const isCollapsed = computeIsCollapsed.value
+      const expanded = !isExpand
       if (hasChild) {
         evnt.stopPropagation()
         evnt.preventDefault()
+
+        if (menuEffectMaps[itemId]) {
+          clearTimeout(menuEffectMaps[itemId])
+        }
+
         if (accordion) {
           itemList.forEach(obj => {
             if (obj !== item) {
@@ -222,7 +244,33 @@ export default defineVxeComponent({
             }
           })
         }
-        item.isExpand = !isExpand
+        item.isExpand = expanded
+
+        const wrapperEl = isCollapsed ? refCollapseElem.value : refElem.value
+        if (wrapperEl) {
+          const nemuEl = wrapperEl.querySelector<HTMLDivElement>(`.vxe-menu--item-wrapper[data-menu-id="${itemId}"]`)
+          const groupEl = nemuEl ? nemuEl.querySelector<HTMLDivElement>('.vxe-menu--item-group') : null
+          if (groupEl) {
+            if (expanded) {
+              groupEl.style.height = '0'
+              groupEl.setAttribute('data-effect', 'y')
+              requestAnimationFrame(() => {
+                groupEl.style.height = `${groupEl.scrollHeight}px`
+              })
+            } else {
+              groupEl.style.height = `${groupEl.scrollHeight}px`
+              groupEl.setAttribute('data-effect', 'y')
+              requestAnimationFrame(() => {
+                groupEl.style.height = '0'
+              })
+            }
+            menuEffectMaps[itemId] = setTimeout(() => {
+              delete menuEffectMaps[itemId]
+              groupEl.removeAttribute('data-effect')
+              groupEl.style.height = ''
+            }, 350)
+          }
+        }
       }
     }
 
@@ -382,7 +430,7 @@ export default defineVxeComponent({
     }
 
     const renderDefaultChildren = (item: VxeMenuDefines.MenuItem, itemList: VxeMenuDefines.MenuItem[]): VNode => {
-      const { itemKey, level, hasChild, isActive, isExactActive, isExpand, routerLink, childList } = item
+      const { itemId, itemKey, level, hasChild, isActive, isExactActive, isExpand, routerLink, childList } = item
       const { isEnterCollapse } = reactData
       const isCollapsed = computeIsCollapsed.value
       if (item.permissionCode) {
@@ -396,7 +444,8 @@ export default defineVxeComponent({
           'is--exact-active': isExactActive,
           'is--active': isActive,
           'is--expand': (!isCollapsed || isEnterCollapse) && isExpand
-        }]
+        }],
+        'data-menu-id': itemId
       }, [
         routerLink
           ? h(resolveComponent('router-link'), {
@@ -429,7 +478,7 @@ export default defineVxeComponent({
     }
 
     const renderCollapseChildren = (item: VxeMenuDefines.MenuItem, itemList: VxeMenuDefines.MenuItem[]): VNode => {
-      const { itemKey, level, hasChild, isActive, isExactActive, routerLink, childList } = item
+      const { itemId, itemKey, level, hasChild, isActive, isExactActive, routerLink, childList } = item
       if (item.permissionCode) {
         if (!permission.checkVisible(item.permissionCode)) {
           return renderEmptyElement($xeMenu)
@@ -440,7 +489,8 @@ export default defineVxeComponent({
         class: ['vxe-menu--item-wrapper', `vxe-menu--item-level${level}`, {
           'is--exact-active': isExactActive,
           'is--active': isActive
-        }]
+        }],
+        'data-menu-id': itemId
       }, [
         routerLink
           ? h(resolveComponent('router-link'), {
@@ -560,7 +610,6 @@ export default defineVxeComponent({
     })
 
     onBeforeUnmount(() => {
-      globalEvents.off($xeMenu, 'resize')
       const collapseEl = refCollapseElem.value
       if (collapseEl) {
         const parentNode = collapseEl.parentNode
@@ -568,8 +617,13 @@ export default defineVxeComponent({
           parentNode.removeChild(collapseEl)
         }
       }
+      globalEvents.off($xeMenu, 'resize')
+      XEUtils.assign(reactData, createReactData())
+      XEUtils.assign(internalData, createInternalData())
     })
 
+    reactData.initialized = !!props.collapsed
+    reactData.activeName = props.modelValue
     updateMenuConfig()
     updateActiveMenu(true)
 
