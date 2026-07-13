@@ -344,18 +344,18 @@ export default defineVxeComponent({
         const clientVisibleWidth = document.documentElement.clientWidth || document.body.clientWidth
         const clientVisibleHeight = document.documentElement.clientHeight || document.body.clientHeight
         const isPosCenter = position === 'center'
-        const { top, left }: any = XEUtils.isString(position) ? { top: position, left: position } : Object.assign({}, position)
+        const { top, left } = XEUtils.isString(position) ? { top: position, left: position } : Object.assign({}, position)
         const topCenter = isPosCenter || top === 'center'
         const leftCenter = isPosCenter || left === 'center'
         let posTop = ''
         let posLeft = ''
         if (left && !leftCenter) {
-          posLeft = isNaN(left) ? left : `${left}px`
+          posLeft = XEUtils.isNumber(left) ? `${left}px` : left
         } else {
           posLeft = `${Math.max(marginSize, clientVisibleWidth / 2 - boxElem.offsetWidth / 2)}px`
         }
         if (top && !topCenter) {
-          posTop = isNaN(top) ? top : `${top}px`
+          posTop = XEUtils.isNumber(top) ? `${top}px` : top
         } else {
           posTop = `${Math.max(marginSize, clientVisibleHeight / 2 - boxElem.offsetHeight / 2)}px`
         }
