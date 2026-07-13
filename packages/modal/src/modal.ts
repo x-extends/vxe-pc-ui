@@ -350,12 +350,12 @@ export default defineVxeComponent({
         let posTop = ''
         let posLeft = ''
         if (left && !leftCenter) {
-          posLeft = XEUtils.isNumber(left) ? `${left}px` : left
+          posLeft = toCssUnit(left)
         } else {
           posLeft = `${Math.max(marginSize, clientVisibleWidth / 2 - boxElem.offsetWidth / 2)}px`
         }
         if (top && !topCenter) {
-          posTop = XEUtils.isNumber(top) ? `${top}px` : top
+          posTop = toCssUnit(top)
         } else {
           posTop = `${Math.max(marginSize, clientVisibleHeight / 2 - boxElem.offsetHeight / 2)}px`
         }
