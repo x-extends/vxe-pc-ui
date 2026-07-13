@@ -4,6 +4,14 @@
 .vxe-checkbox {
   --vxe-ui-checkbox-current-font-size: var(--vxe-ui-font-size-default);
   --vxe-ui-checkbox-current-margin-right: var(--vxe-ui-base-margin-gap-default);
+  &.size--xlarge {
+    --vxe-ui-checkbox-current-font-size: var(--vxe-ui-font-size-xlarge);
+    --vxe-ui-checkbox-current-margin-right: var(--vxe-ui-base-margin-gap-xlarge);
+  }
+  &.size--large {
+    --vxe-ui-checkbox-current-font-size: var(--vxe-ui-font-size-large);
+    --vxe-ui-checkbox-current-margin-right: var(--vxe-ui-base-margin-gap-large);
+  }
   &.size--medium {
     --vxe-ui-checkbox-current-font-size: var(--vxe-ui-font-size-medium);
     --vxe-ui-checkbox-current-margin-right: var(--vxe-ui-base-margin-gap-medium);
@@ -23,6 +31,9 @@
   display: inline-flex;
   vertical-align: middle;
   line-height: 1;
+  &.type--button {
+    border-radius: var(--vxe-ui-base-border-radius);
+  }
 }
 
 .vxe-checkbox-slots {

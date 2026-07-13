@@ -2,8 +2,8 @@ import { h, provide, PropType, inject, computed, reactive, watch, onMounted, nex
 import { defineVxeComponent } from '../../ui/src/comp'
 import XEUtils from 'xe-utils'
 import { getConfig, createEvent, useSize } from '../../ui'
-import VxeRadioComponent from './radio'
-import VxeRadioButtonComponent from './button'
+import VxeRadioComponent from '../../radio'
+import VxeRadioButtonComponent from '../../radio-button'
 
 import type { VxeRadioGroupPropTypes, RadioGroupInternalData, VxeRadioGroupConstructor, RadioGroupReactData, VxeRadioGroupEmits, VxeRadioGroupPrivateMethods, RadioGroupPrivateMethods, RadioGroupPrivateComputed, RadioGroupMethods, VxeFormConstructor, VxeFormPrivateMethods, VxeFormDefines, ValueOf } from '../../../types'
 
@@ -202,7 +202,7 @@ export default defineVxeComponent({
       const btnComp = type === 'button' ? VxeRadioButtonComponent : VxeRadioComponent
 
       return h('div', {
-        class: ['vxe-radio-group', {
+        class: ['vxe-radio-group', `type--${type === 'button' ? type : ''}`, {
           [`theme--${status}`]: status,
           [`size--${vSize}`]: vSize
         }]

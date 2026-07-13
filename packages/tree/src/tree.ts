@@ -108,6 +108,10 @@ export default defineVxeComponent({
       type: [String, Number] as PropType<VxeTreePropTypes.MinHeight>,
       default: () => getConfig().tree.minHeight
     },
+    emptyText: {
+      type: [String, Number] as PropType<VxeTreePropTypes.EmptyText>,
+      default: () => getConfig().tree.emptyText
+    },
     loading: Boolean as PropType<VxeTreePropTypes.Loading>,
     loadingConfig: Object as PropType<VxeTreePropTypes.LoadingConfig>,
     accordion: {
@@ -3243,14 +3247,21 @@ export default defineVxeComponent({
     }
 
     const renderList = (treeList: any[]) => {
-      const { transform } = props
+      const { transform, emptyText } = props
       const { treeExpandedMaps } = internalData
       const childrenField = computeChildrenField.value
+      const emptySlot = slots.empty
       if (!treeList.length) {
         return [
           h('div', {
             class: 'vxe-tree--empty-placeholder'
-          }, getI18n('vxe.tree.searchEmpty'))
+          }, emptySlot
+            ? emptySlot({})
+            : [
+                h('div', {
+                  class: 'vxe-tree--empty-placeholder-content'
+                }, getText(emptyText || getI18n('vxe.tree.searchEmpty')))
+              ])
         ]
       }
       const nodeVNs: VNode[] = []

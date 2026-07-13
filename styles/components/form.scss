@@ -10,6 +10,18 @@
   --vxe-ui-form-current-font-size: var(--vxe-ui-font-size-default);
   --vxe-ui-form-current-padding: var(--vxe-ui-form-item-padding-default);
   --vxe-ui-form-current-item-min-height: var(--vxe-ui-form-item-min-height-default);
+  &.size--xlarge {
+    --vxe-ui-form-current-font-size: var(--vxe-ui-font-size-xlarge);
+    --vxe-ui-form-current-padding: var(--vxe-ui-form-item-padding-xlarge);
+    --vxe-ui-form-current-item-min-height: var(--vxe-ui-form-item-min-height-xlarge);
+    --vxe-ui-form-current-button-height: var(--vxe-ui-button-height-xlarge)
+  }
+  &.size--large {
+    --vxe-ui-form-current-font-size: var(--vxe-ui-font-size-large);
+    --vxe-ui-form-current-padding: var(--vxe-ui-form-item-padding-large);
+    --vxe-ui-form-current-item-min-height: var(--vxe-ui-form-item-min-height-large);
+    --vxe-ui-form-current-button-height: var(--vxe-ui-button-height-large)
+  }
   &.size--medium {
     --vxe-ui-form-current-font-size: var(--vxe-ui-font-size-medium);
     --vxe-ui-form-current-padding: var(--vxe-ui-form-item-padding-medium);

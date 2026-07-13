@@ -1,8 +1,35 @@
+// 局部变量
+.vxe-switch {
+  --vxe-ui-switch-current-font-size: var(--vxe-ui-font-size-default);
+  --vxe-ui-switch-current-height: var(--vxe-ui-switch-height-default);
+  &.size--xlarge {
+    --vxe-ui-switch-current-font-size: var(--vxe-ui-font-size-xlarge);
+    --vxe-ui-switch-current-height: var(--vxe-ui-switch-height-xlarge);
+  }
+  &.size--large {
+    --vxe-ui-switch-current-font-size: var(--vxe-ui-font-size-large);
+    --vxe-ui-switch-current-height: var(--vxe-ui-switch-height-large);
+  }
+  &.size--medium {
+    --vxe-ui-switch-current-font-size: var(--vxe-ui-font-size-medium);
+    --vxe-ui-switch-current-height: var(--vxe-ui-switch-height-medium);
+  }
+  &.size--small {
+    --vxe-ui-switch-current-font-size: var(--vxe-ui-font-size-small);
+    --vxe-ui-switch-current-height: var(--vxe-ui-switch-height-small);
+  }
+  &.size--mini {
+    --vxe-ui-switch-current-font-size: var(--vxe-ui-font-size-mini);
+    --vxe-ui-switch-current-height: var(--vxe-ui-switch-height-mini);
+  }
+}
+
 .vxe-switch {
   display: inline-block;
   color: var(--vxe-ui-font-color);
+  font-size: var(--vxe-ui-switch-current-font-size);
   vertical-align: middle;
-  padding: 0.4em;
+  padding: 0.2em;
   user-select: none;
   text-align: center;
   &.is--animat {
@@ -20,7 +47,7 @@
     }
     .vxe-switch--icon {
       left: 100%;
-      transform: translateX(-1.4em);
+      transform: translateY(-50%) translateX(calc(var(--vxe-ui-switch-current-height) * -1));
       color: var(--vxe-primary-color);
     }
   }
@@ -30,8 +57,8 @@
       background-color: var(--vxe-ui-switch-close-background-color);
     }
     .vxe-switch--icon {
-      left: 0.2em;
-      transform: translateX(0);
+      left: 0.25em;
+      transform: translateY(-50%) translateX(0);
       color: var(--vxe-switch-close-background-color);
     }
   }
@@ -84,9 +111,9 @@
   .vxe-switch--button {
     display: block;
     position: relative;
-    height: 1.6em;
+    height: var(--vxe-ui-switch-current-height);
     line-height: 1;
-    min-width: 3.2em;
+    min-width: calc(var(--vxe-ui-switch-current-height) * 2);
     padding: 0 0.6em;
     border-radius: 1em;
     border: 0;
@@ -100,29 +127,17 @@
   }
   .vxe-switch--icon {
     position: absolute;
-    top: 0.2em;
+    top: 50%;
     left: 0;
-    width: 1.2em;
-    height: 1.2em;
+    width: calc(var(--vxe-ui-switch-current-height) - 4px);
+    height: calc(var(--vxe-ui-switch-current-height) - 4px);
     line-height: 1.4em;
+    transform: translateY(-50%);
     text-align: center;
     border-radius: 50%;
     background-color: var(--vxe-ui-switch-icon-background-color);
   }
   .vxe-switch--label-icon {
     margin-right: 0.25em;
-  }
-}
-
-.vxe-switch {
-  font-size: var(--vxe-ui-font-size-default);
-  &.size--medium {
-    font-size: var(--vxe-ui-font-size-medium);
-  }
-  &.size--small {
-    font-size: var(--vxe-ui-font-size-small);
-  }
-  &.size--mini {
-    font-size: var(--vxe-ui-font-size-mini);
   }
 }

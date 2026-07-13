@@ -83,6 +83,12 @@ $btnThemeList: (
 }
 
 .vxe-icon {
+  &.size--xlarge {
+    font-size: var(--vxe-ui-font-size-xlarge);
+  }
+  &.size--large {
+    font-size: var(--vxe-ui-font-size-large);
+  }
   &.size--medium {
     font-size: var(--vxe-ui-font-size-medium);
   }

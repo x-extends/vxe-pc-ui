@@ -2,9 +2,9 @@
 
 [简体中文](README.md) | [繁體中文](README.zh-TW.md) | [English](README.en.md) | 日本語  
 
-[![github star](https://img.shields.io/github/stars/x-extends/vxe-pc-ui.svg)](https://github.com/x-extends/vxe-pc-ui/stargazers)
-[![gitee star](https://gitee.com/x-extends/vxe-pc-ui/badge/star.svg)](https://gitee.com/x-extends/vxe-pc-ui/stargazers)
-[![gitcode star](https://gitcode.com/x-extends/vxe-pc-ui/star/badge.svg)](https://gitcode.com/x-extends/vxe-pc-ui/stargazers)
+[![github star](https://img.shields.io/github/stars/x-extends/vxe-pc-ui.svg)](https://github.com/x-extends/vxe-pc-ui)
+[![gitee star](https://gitee.com/x-extends/vxe-pc-ui/badge/star.svg)](https://gitee.com/x-extends/vxe-pc-ui)
+[![gitcode star](https://gitcode.com/x-extends/vxe-pc-ui/star/badge.svg)](https://gitcode.com/x-extends/vxe-pc-ui)
 [![npm version](https://img.shields.io/npm/v/vxe-pc-ui.svg?style=flat-square)](https://www.npmjs.com/package/vxe-pc-ui)
 [![NodeJS with Webpack](https://github.com/x-extends/vxe-pc-ui/actions/workflows/webpack.yml/badge.svg)](https://github.com/x-extends/vxe-pc-ui/actions/workflows/webpack.yml)
 [![npm downloads](https://img.shields.io/npm/dt/vxe-pc-uie.svg?style=flat-square)](https://npm-stat.com/charts.html?package=vxe-pc-ui)

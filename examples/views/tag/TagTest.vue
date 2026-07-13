@@ -1,6 +1,14 @@
 <template>
   <div>
     <p>
+      <vxe-tag status="primary" content="主要颜色" size="xlarge"></vxe-tag>
+      <vxe-tag status="primary" content="主要颜色" size="large"></vxe-tag>
+      <vxe-tag status="primary" content="主要颜色"></vxe-tag>
+      <vxe-tag status="primary" content="主要颜色" size="medium"></vxe-tag>
+      <vxe-tag status="primary" content="主要颜色" size="small"></vxe-tag>
+      <vxe-tag status="primary" content="主要颜色" size="mini"></vxe-tag>
+    </p>
+    <p>
       <vxe-tag content="默认颜色"></vxe-tag>
       <vxe-tag status="primary" content="主要颜色"></vxe-tag>
       <vxe-tag status="success" content="信息颜色"></vxe-tag>

@@ -1,6 +1,8 @@
 <template>
   <div>
     <p>
+      <vxe-switch v-model="demo1.value2" size="xlarge"></vxe-switch>
+      <vxe-switch v-model="demo1.value2" size="large"></vxe-switch>
       <vxe-switch v-model="demo1.value1"></vxe-switch>
       <vxe-switch v-model="demo1.value2" size="medium"></vxe-switch>
       <vxe-switch v-model="demo1.value3" size="small"></vxe-switch>

@@ -2,7 +2,8 @@ import { h, provide, PropType, computed, inject, reactive, onUnmounted, watch, o
 import { defineVxeComponent } from '../../ui/src/comp'
 import { getConfig, createEvent, useSize } from '../../ui'
 import XEUtils from 'xe-utils'
-import VxeCheckboxComponent from './checkbox'
+import VxeCheckboxComponent from '../../checkbox'
+import VxeCheckboxButtonComponent from '../../checkbox-button'
 
 import type { VxeCheckboxGroupConstructor, CheckboxGroupInternalData, VxeCheckboxGroupEmits, ValueOf, CheckboxGroupReactData, VxeCheckboxGroupPrivateMethods, CheckboxGroupPrivateMethods, CheckboxGroupPrivateComputed, CheckboxGroupMethods, VxeCheckboxGroupPropTypes, VxeFormConstructor, VxeFormPrivateMethods, VxeFormDefines } from '../../../types'
 
@@ -26,6 +27,7 @@ export default defineVxeComponent({
       type: Boolean as PropType<VxeCheckboxGroupPropTypes.Readonly>,
       default: null
     },
+    type: String as PropType<VxeCheckboxGroupPropTypes.Type>,
     disabled: {
       type: Boolean as PropType<VxeCheckboxGroupPropTypes.Disabled>,
       default: null
@@ -208,7 +210,7 @@ export default defineVxeComponent({
     Object.assign($xeCheckboxGroup, checkboxGroupMethods, checkboxGroupPrivateMethods)
 
     const renderVN = () => {
-      const { status, options } = props
+      const { status, options, type } = props
       const defaultSlot = slots.default
       const valueField = computeValueField.value
       const labelField = computeLabelField.value
@@ -217,8 +219,9 @@ export default defineVxeComponent({
       const titleField = computeTitleField.value
       const isReadonly = computeIsReadonly.value
       const isDisabled = computeIsDisabled.value
+      const btnComp = type === 'button' ? VxeCheckboxButtonComponent : VxeCheckboxComponent
       return h('div', {
-        class: ['vxe-checkbox-group', {
+        class: ['vxe-checkbox-group', `type--${type === 'button' ? type : ''}`, {
           [`theme--${status}`]: status,
           'is--readonly': isReadonly,
           'is--disabled': isDisabled
@@ -227,7 +230,7 @@ export default defineVxeComponent({
         ? defaultSlot({})
         : (options
             ? options.map(item => {
-              return h(VxeCheckboxComponent, {
+              return h(btnComp, {
                 key: item[valueField],
                 checkedValue: item[valueField],
                 content: item[labelField],

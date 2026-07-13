@@ -1,6 +1,8 @@
 <template>
   <div>
     <p>
+      <vxe-number-input v-model="demo1.value101" placeholder="中等尺寸" size="xlarge"></vxe-number-input>
+      <vxe-number-input v-model="demo1.value101" placeholder="中等尺寸" size="large"></vxe-number-input>
       <vxe-number-input v-model="demo1.value100" placeholder="默认尺寸"></vxe-number-input>
       <vxe-number-input v-model="demo1.value101" placeholder="中等尺寸" size="medium"></vxe-number-input>
       <vxe-number-input v-model="demo1.value102" placeholder="小型尺寸" size="small"></vxe-number-input>

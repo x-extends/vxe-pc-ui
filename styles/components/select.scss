@@ -6,6 +6,14 @@
 .vxe-select--panel {
   --vxe-ui-select-current-font-size: var(--vxe-ui-font-size-default);
   --vxe-ui-select-current-option-height: var(--vxe-ui-select-option-height-default);
+  &.size--xlarge {
+    --vxe-ui-select-current-font-size: var(--vxe-ui-font-size-xlarge);
+    --vxe-ui-select-current-option-height: var(--vxe-ui-select-option-height-xlarge);
+  }
+  &.size--large {
+    --vxe-ui-select-current-font-size: var(--vxe-ui-font-size-large);
+    --vxe-ui-select-current-option-height: var(--vxe-ui-select-option-height-large);
+  }
   &.size--medium {
     --vxe-ui-select-current-font-size: var(--vxe-ui-font-size-medium);
     --vxe-ui-select-current-option-height: var(--vxe-ui-select-option-height-medium);

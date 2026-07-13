@@ -1,6 +1,8 @@
 <template>
   <div>
     <p>
+      <vxe-button size="xlarge" content="大号尺寸"></vxe-button>
+      <vxe-button size="large" content="大号尺寸"></vxe-button>
       <vxe-button content="默认尺寸"></vxe-button>
       <vxe-button size="medium" content="中等尺寸"></vxe-button>
       <vxe-button size="small" content="小型尺寸"></vxe-button>

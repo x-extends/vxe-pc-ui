@@ -4,6 +4,14 @@
 .vxe-upload--more-popup {
   --vxe-ui-upload-current-font-size: var(--vxe-ui-font-size-default);
   --vxe-ui-upload-current-image-wh: var(--vxe-ui-upload-image-wh-default);
+  &.size--xlarge {
+    --vxe-ui-upload-current-font-size: var(--vxe-ui-font-size-xlarge);
+    --vxe-ui-upload-current-image-wh: var(--vxe-ui-upload-image-wh-xlarge);
+  }
+  &.size--large {
+    --vxe-ui-upload-current-font-size: var(--vxe-ui-font-size-large);
+    --vxe-ui-upload-current-image-wh: var(--vxe-ui-upload-image-wh-large);
+  }
   &.size--medium {
     --vxe-ui-upload-current-font-size: var(--vxe-ui-font-size-medium);
     --vxe-ui-upload-current-image-wh: var(--vxe-ui-upload-image-wh-medium);
