@@ -72,6 +72,7 @@ function createInternalData (): CascaderInternalData {
     selectCheckboxMaps: {},
     treeExpandedMaps: {},
     treeExpandLazyLoadedMaps: {}
+    // isUpdateMode: false
   }
 }
 
@@ -415,6 +416,22 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const nodeKey = node[valueField]
       return enNodeValue(nodeKey)
     },
+    isPathInTree (treeData: any[], pathIds: string[]) {
+      const $xeCascader = this
+
+      if (!pathIds || !pathIds.length) {
+        return false
+      }
+      let currentNodes = treeData
+      for (const nodeid of pathIds) {
+        const found = currentNodes.find(node => $xeCascader.getNodeId(node) === nodeid)
+        if (!found) {
+          return false
+        }
+        currentNodes = found.children || []
+      }
+      return true
+    },
     isCheckedByCheckboxNodeId (nodeid: any) {
       const $xeCascader = this
       const reactData = $xeCascader.reactData
@@ -645,7 +662,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
         if (transform) {
           treeList = XEUtils.searchTree(treeFullData, handleSearch, {
             original: true,
-            isEvery: true,
+            isEvery: false,
             children: childrenField,
             mapChildren: mapChildrenField
           })
@@ -663,7 +680,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
         if (transform) {
           treeList = XEUtils.searchTree(treeFullData, () => true, {
             original: true,
-            isEvery: true,
+            isEvery: false,
             children: childrenField,
             mapChildren: mapChildrenField
           })
@@ -770,16 +787,25 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const internalData = $xeCascader.internalData
 
       $xeCascader.handleData(true)
-      $xeCascader.updateModelChecked()
+      $xeCascader.updateCheckboxStatus()
+      const { currentItems } = reactData
+      const { afterTreeList } = internalData
       const filterOpts = $xeCascader.computeFilterOpts
       const { autoExpandMode } = filterOpts
-      const { afterTreeList } = internalData
-      // 默认展开第
-      if (autoExpandMode === 'first' || autoExpandMode === 'last') {
-        const stItems = $xeCascader.handleHasChildNodeIds(afterTreeList, autoExpandMode)
-        reactData.currentItems = stItems
-      } else {
-        $xeCascader.handleCurrentItems()
+      // 如果当前不在列表情况下，触发默认行为
+      if (!$xeCascader.isPathInTree(afterTreeList, currentItems)) {
+        // 默认展开
+        if (autoExpandMode === 'first' || autoExpandMode === 'last') {
+          const stItems: string[] = $xeCascader.handleHasChildNodeIds(afterTreeList, autoExpandMode)
+          const expandedMaps: Record<string, boolean> = {}
+          stItems.forEach(nodeid => {
+            expandedMaps[nodeid] = true
+          })
+          internalData.treeExpandedMaps = expandedMaps
+          reactData.currentItems = stItems
+        } else {
+          $xeCascader.handleCurrentItems()
+        }
       }
       $xeCascader.updateCurrentChunk()
     }, 350, { trailing: true }),
@@ -1005,10 +1031,12 @@ export default /* define-vxe-component start */ defineVxeComponent({
     changeEvent (evnt: Event, selectValue: any, node: any) {
       const $xeCascader = this
       const props = $xeCascader
+      const internalData = $xeCascader.internalData
       const $xeForm = $xeCascader.$xeForm
       const formItemInfo = $xeCascader.formItemInfo
 
       const value = XEUtils.isArray(selectValue) ? selectValue.map(deNodeValue) : deNodeValue(selectValue)
+      internalData.isUpdateMode = true
       $xeCascader.emitModel(value)
       if (value !== props.value) {
         $xeCascader.dispatchEvent('change', { value, node, option: node }, evnt)
@@ -1148,13 +1176,14 @@ export default /* define-vxe-component start */ defineVxeComponent({
       reactData.currentNode = node
       $xeCascader.dispatchEvent('current-change', { node, checked: isChecked }, evnt)
     },
-    changeRadioEvent (evnt: Event, node: any) {
+    changeRadioEvent (evnt: MouseEvent, node: any, chunks: any[], chunkIndex: number) {
       const $xeCascader = this
       const reactData = $xeCascader.reactData
       const internalData = $xeCascader.internalData
 
       evnt.preventDefault()
       evnt.stopPropagation()
+      const { currentItems } = reactData
       const { nodeMaps } = internalData
       const radioOpts = $xeCascader.computeRadioOpts
       const childrenField = $xeCascader.computeChildrenField
@@ -1174,6 +1203,10 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const value = nodeid
       reactData.selectRadioKey = value
       $xeCascader.changeEvent(evnt, value, node)
+      if (!currentItems.includes(nodeid)) {
+        $xeCascader.changeCurrentEvent(evnt, node)
+        $xeCascader.toggleExpandEvent(evnt, node, chunks, chunkIndex)
+      }
       $xeCascader.hideOptionPanel(evnt)
     },
     handleAsyncTreeExpandChilds (node: any) {
@@ -1427,13 +1460,15 @@ export default /* define-vxe-component start */ defineVxeComponent({
         reactData.updateCheckboxFlag++
       }
     },
-    changeCheckboxEvent (evnt: Event, node: any) {
+    changeCheckboxEvent (evnt: MouseEvent, node: any, chunks: any[], chunkIndex: number) {
       const $xeCascader = this
       const reactData = $xeCascader.reactData
       const internalData = $xeCascader.internalData
 
       evnt.preventDefault()
       evnt.stopPropagation()
+      // const { filterable } = props
+      const { currentItems } = reactData
       const { selectCheckboxMaps, nodeMaps } = internalData
       const childrenField = $xeCascader.computeChildrenField
       const mapChildrenField = $xeCascader.computeMapChildrenField
@@ -1458,7 +1493,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
         selectCheckboxMaps[nodeid] = node
       }
       if (!checkStrictly) {
-        XEUtils.eachTree(XEUtils.get(node, transform ? mapChildrenField : childrenField), (childNode) => {
+        XEUtils.eachTree(childList, (childNode) => {
           const childNodeid = $xeCascader.getNodeId(childNode)
           if (isChecked) {
             if (!selectCheckboxMaps[childNodeid]) {
@@ -1476,6 +1511,10 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const nodeids = XEUtils.keys(selectCheckboxMaps)
       const value = nodeids
       $xeCascader.changeEvent(evnt, value, node)
+      if (!currentItems.includes(nodeid)) {
+        $xeCascader.changeCurrentEvent(evnt, node)
+        $xeCascader.toggleExpandEvent(evnt, node, chunks, chunkIndex)
+      }
     },
     handleNodeClickEvent (evnt: MouseEvent, node: any, chunks: any[], chunkIndex: number) {
       const $xeCascader = this
@@ -1502,12 +1541,12 @@ export default /* define-vxe-component start */ defineVxeComponent({
       if (multiple) {
         if (checkboxOpts.trigger === 'node' || (!showCheckbox && (!childList || !childList.length))) {
           triggerCheckbox = true
-          $xeCascader.changeCheckboxEvent(evnt, node)
+          $xeCascader.changeCheckboxEvent(evnt, node, chunks, chunkIndex)
         }
       } else {
         if (radioOpts.trigger === 'node' || (!showRadio && (!childList || !childList.length))) {
           triggerRadio = true
-          $xeCascader.changeRadioEvent(evnt, node)
+          $xeCascader.changeRadioEvent(evnt, node, chunks, chunkIndex)
         }
       }
       $xeCascader.dispatchEvent('node-click', { node, triggerCurrent, triggerRadio, triggerCheckbox, triggerExpand }, evnt)
@@ -1643,7 +1682,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
     //
     // Render
     //
-    renderRadio (h: CreateElement, node: any, isExistChild: boolean, nLevel: number, isChecked: boolean) {
+    renderRadio (h: CreateElement, node: any, isExistChild: boolean, nLevel: number, isChecked: boolean, chunks: any[], chunkIndex: number) {
       const $xeCascader = this
       const props = $xeCascader
 
@@ -1661,7 +1700,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
           on: {
             click: (evnt: MouseEvent) => {
               if (!isDisabled) {
-                $xeCascader.changeRadioEvent(evnt, node)
+                $xeCascader.changeRadioEvent(evnt, node, chunks, chunkIndex)
               }
             }
           }
@@ -1673,7 +1712,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       }
       return renderEmptyElement($xeCascader)
     },
-    renderCheckbox (h: CreateElement, node: any, isExistChild: boolean, nLevel: number, isChecked: boolean, isIndeterminate: boolean) {
+    renderCheckbox (h: CreateElement, node: any, isExistChild: boolean, nLevel: number, isChecked: boolean, isIndeterminate: boolean, chunks: any[], chunkIndex: number) {
       const $xeCascader = this
       const props = $xeCascader
 
@@ -1692,7 +1731,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
           on: {
             click (evnt: MouseEvent) {
               if (!isDisabled) {
-                $xeCascader.changeCheckboxEvent(evnt, node)
+                $xeCascader.changeCheckboxEvent(evnt, node, chunks, chunkIndex)
               }
             }
           }
@@ -1774,7 +1813,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
           }
         }
       }, [
-        multiple ? $xeCascader.renderCheckbox(h, node, isExistChild, nLevel, isCheckboxChecked, isIndeterminate) : $xeCascader.renderRadio(h, node, isExistChild, nLevel, isRadioChecked),
+        multiple ? $xeCascader.renderCheckbox(h, node, isExistChild, nLevel, isCheckboxChecked, isIndeterminate, chunks, chunkIndex) : $xeCascader.renderRadio(h, node, isExistChild, nLevel, isRadioChecked, chunks, chunkIndex),
         h('div', {
           class: 'vxe-cascader-chunk--node-item-inner'
         }, [
@@ -2028,10 +2067,14 @@ export default /* define-vxe-component start */ defineVxeComponent({
   watch: {
     value () {
       const $xeCascader = this
+      const internalData = $xeCascader.internalData
 
-      $xeCascader.updateModelChecked()
-      $xeCascader.handleCurrentItems()
-      $xeCascader.updateCurrentChunk()
+      if (!internalData.isUpdateMode) {
+        $xeCascader.updateModelChecked()
+        $xeCascader.handleCurrentItems()
+        $xeCascader.updateCurrentChunk()
+      }
+      internalData.isUpdateMode = false
     },
     options () {
       const $xeCascader = this

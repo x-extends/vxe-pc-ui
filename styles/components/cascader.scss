@@ -5,18 +5,18 @@
 .vxe-cascader,
 .vxe-cascader--panel {
   --vxe-ui-cascader-current-font-size: var(--vxe-ui-font-size-default);
-  --vxe-ui-cascader-current-font-size: var(--vxe-ui-layout-padding-default);
+  --vxe-ui-cascader-current-padding: var(--vxe-ui-layout-padding-default);
   &.size--medium {
     --vxe-ui-cascader-current-font-size: var(--vxe-ui-font-size-medium);
-    --vxe-ui-cascader-current-font-size: var(--vxe-ui-layout-padding-medium);
+    --vxe-ui-cascader-current-padding: var(--vxe-ui-layout-padding-medium);
   }
   &.size--small {
     --vxe-ui-cascader-current-font-size: var(--vxe-ui-font-size-small);
-    --vxe-ui-cascader-current-font-size: var(--vxe-ui-layout-padding-small);
+    --vxe-ui-cascader-current-padding: var(--vxe-ui-layout-padding-small);
   }
   &.size--mini {
     --vxe-ui-cascader-current-font-size: var(--vxe-ui-font-size-mini);
-    --vxe-ui-cascader-current-font-size: var(--vxe-ui-layout-padding-mini);
+    --vxe-ui-cascader-current-padding: var(--vxe-ui-layout-padding-mini);
   }
 }
 
@@ -83,8 +83,8 @@
 
 .vxe-cascader--panel-search {
   display: block;
-  padding: var(--vxe-ui-cascader-current-font-size);
-  width: calc(var(--vxe-ui-cascader-node-width) * var(--vxe-ui-cascader-chunk-size));
+  padding: var(--vxe-ui-cascader-current-padding);
+  width: 100%;
   .vxe-cascader-search--input {
     width: 100%;
   }
@@ -99,7 +99,7 @@
   min-height: 2em;
 }
 .vxe-cascader--total-btns {
-  padding-left: var(--vxe-ui-cascader-current-font-size);
+  padding-left: var(--vxe-ui-cascader-current-padding);
   flex-grow: 1;
 }
 .vxe-cascader--total-btns,
@@ -166,7 +166,7 @@
 .vxe-cascader-chunk--item-wrapper {
   flex-shrink: 0;
   border-left: 1px solid var(--vxe-ui-base-popup-border-color);
-  padding: var(--vxe-ui-cascader-current-font-size) 0;
+  padding: var(--vxe-ui-cascader-current-padding) 0;
   &:first-child {
     border-left: 0;
   }
@@ -190,7 +190,7 @@
   flex-direction: row;
   height: var(--vxe-ui-cascader-node-height);
   line-height: var(--vxe-ui-cascader-node-height);
-  padding: 0 calc(var(--vxe-ui-cascader-current-font-size) + 18px) 0 var(--vxe-ui-cascader-current-font-size);
+  padding: 0 calc(var(--vxe-ui-cascader-current-padding) + 18px) 0 var(--vxe-ui-cascader-current-padding);
   cursor: pointer;
   &:hover {
     background-color: var(--vxe-ui-cascader-node-hover-background-color);

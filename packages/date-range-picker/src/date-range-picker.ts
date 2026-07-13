@@ -803,17 +803,24 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const reactData = $xeDateRangePicker.reactData
       const internalData = $xeDateRangePicker.internalData
 
+      const { paneStartVal } = reactData
       const { selectStatus } = internalData
       const { value, currValue, $event } = params
       const paneVals = value ? (XEUtils.isString(value) ? value.split(',') : [value]) : []
       let startValue = ''
       let endValue = ''
       if (selectStatus) {
-        startValue = paneVals[0]
-        if (paneVals[1]) {
-          endValue = paneVals[1]
+        // 如果选择同一天
+        if (!value && currValue === paneStartVal[0]) {
+          startValue = currValue
+          endValue = currValue
         } else {
-          endValue = reactData.selectEdValue
+          startValue = paneVals[0]
+          if (paneVals[1]) {
+            endValue = paneVals[1]
+          } else {
+            endValue = reactData.selectEdValue
+          }
         }
       } else {
         startValue = currValue || XEUtils.last(paneVals)
@@ -838,18 +845,25 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const reactData = $xeDateRangePicker.reactData
       const internalData = $xeDateRangePicker.internalData
 
+      const { paneEndVal } = reactData
       const { selectStatus } = internalData
       const { value, currValue, $event } = params
       const paneVals = value ? (XEUtils.isString(value) ? value.split(',') : [value]) : []
       let startValue = ''
       let endValue = ''
       if (selectStatus) {
-        endValue = paneVals[0]
-        if (paneVals[1]) {
-          startValue = paneVals[0]
-          endValue = paneVals[1]
+        // 如果选择同一天
+        if (!value && currValue === paneEndVal[1]) {
+          startValue = currValue
+          endValue = currValue
         } else {
-          startValue = reactData.selectStValue
+          endValue = paneVals[0]
+          if (paneVals[1]) {
+            startValue = paneVals[0]
+            endValue = paneVals[1]
+          } else {
+            startValue = reactData.selectStValue
+          }
         }
       } else {
         endValue = currValue || XEUtils.last(paneVals)

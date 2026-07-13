@@ -9,6 +9,7 @@ export declare const VxeMenu: DefineVxeComponentApp<VxeMenuProps, VxeMenuEventPr
 export type VxeMenuComponent = DefineVxeComponentOptions<VxeMenuProps>
 
 export type VxeMenuInstance = DefineVxeComponentInstance<{
+  internalData: MenuInternalData
   reactData: MenuReactData
 }, VxeMenuProps, VxeMenuPrivateComputed, VxeMenuMethods>
 
@@ -79,6 +80,10 @@ export interface MenuPrivateComputed {
 }
 export interface VxeMenuPrivateComputed extends MenuPrivateComputed { }
 
+export interface MenuInternalData {
+  menuEffectMaps: Record<number, number>
+}
+
 export interface MenuReactData {
   initialized: boolean
   collapseStyle: VxeComponentStyleType
@@ -111,6 +116,7 @@ export namespace VxeMenuDefines {
   }
 
   export interface MenuItem extends VxeMenuPropTypes.MenuOption {
+    itemId: number
     itemKey: string | number
     level: number,
     parentKey: string | number
