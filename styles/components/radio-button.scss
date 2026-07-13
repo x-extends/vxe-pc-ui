@@ -8,6 +8,12 @@
 // 局部变量
 .vxe-radio--button {
   --vxe-ui-radio--button-current-margin-left: var(--vxe-ui-base-margin-gap-default);
+  &.size--xlarge {
+    --vxe-ui-radio--button-current-margin-left: var(--vxe-ui-base-margin-gap-xlarge);
+  }
+  &.size--large {
+    --vxe-ui-radio--button-current-margin-left: var(--vxe-ui-base-margin-gap-large);
+  }
   &.size--medium {
     --vxe-ui-radio--button-current-margin-left: var(--vxe-ui-base-margin-gap-medium);
   }

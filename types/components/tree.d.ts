@@ -23,6 +23,7 @@ export namespace VxeTreePropTypes {
   export type Loading = boolean
   export type AutoResize = boolean
   export type ShowOverflow = boolean
+  export type EmptyText = string | number
   /**
    * 提示信息配置项
    */
@@ -331,6 +332,10 @@ export interface VxeTreeProps<D = any> {
   loading?: VxeTreePropTypes.Loading
   loadingConfig?: VxeTreePropTypes.LoadingConfig
   accordion?: VxeTreePropTypes.Accordion
+  /**
+   * 空数据时显示的内容
+   */
+  emptyText?: VxeTreePropTypes.EmptyText
   parentField?: VxeTreePropTypes.ParentField
   valueField?: VxeTreePropTypes.ValueField
   keyField?: VxeTreePropTypes.KeyField
@@ -967,6 +972,7 @@ export namespace VxeTreeSlotTypes {
   export interface TooltipSlotParams {
     node: any
   }
+  export interface EmptySlotParams {}
 }
 
 export interface VxeTreeSlots {
@@ -977,6 +983,7 @@ export interface VxeTreeSlots {
   footer?: (params: VxeTreeSlotTypes.FooterSlotParams) => any
   loading?: (params: VxeTreeSlotTypes.LoadingSlotParams) => any
   tooltip?: (params: VxeTreeSlotTypes.TooltipSlotParams) => any
+  empty?: (params: VxeTreeSlotTypes.EmptySlotParams) => any
 }
 
 export const Tree: typeof VxeTree

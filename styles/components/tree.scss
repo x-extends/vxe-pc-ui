@@ -296,10 +296,12 @@
 }
 
 .vxe-tree--empty-placeholder {
+  color: var(--vxe-ui-input-placeholder-color);
+}
+.vxe-tree--empty-placeholder-content {
   margin-top: 1.4em;
   text-align: center;
   height: var(--vxe-ui-tree-node-height);
-  color: var(--vxe-ui-input-placeholder-color);
 }
 
 .vxe-tree--y-space {

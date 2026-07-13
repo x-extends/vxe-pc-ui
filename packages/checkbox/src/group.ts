@@ -2,7 +2,8 @@ import { PropType, CreateElement, VNode } from 'vue'
 import { defineVxeComponent } from '../../ui/src/comp'
 import XEUtils from 'xe-utils'
 import { getConfig, createEvent, globalMixins } from '../../ui'
-import VxeCheckboxComponent from './checkbox'
+import VxeCheckboxComponent from '../../checkbox'
+import VxeCheckboxButtonComponent from '../../checkbox-button'
 
 import type { VxeCheckboxGroupEmits, CheckboxGroupInternalData, VxeCheckboxPropTypes, ValueOf, CheckboxGroupReactData, VxeComponentSizeType, VxeCheckboxGroupPropTypes, VxeFormConstructor, VxeFormPrivateMethods, VxeFormDefines } from '../../../types'
 
@@ -29,6 +30,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       type: Boolean as PropType<VxeCheckboxGroupPropTypes.Readonly>,
       default: null
     },
+    type: String as PropType<VxeCheckboxGroupPropTypes.Type>,
     disabled: {
       type: Boolean as PropType<VxeCheckboxGroupPropTypes.Disabled>,
       default: null
@@ -250,7 +252,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const props = $xeCheckboxGroup
       const slots = $xeCheckboxGroup.$scopedSlots
 
-      const { status, options } = props
+      const { status, options, type } = props
       const defaultSlot = slots.default
       const valueField = $xeCheckboxGroup.computeValueField
       const labelField = $xeCheckboxGroup.computeLabelField
@@ -259,8 +261,9 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const titleField = $xeCheckboxGroup.computeTitleField
       const isReadonly = $xeCheckboxGroup.computeIsReadonly
       const isDisabled = $xeCheckboxGroup.computeIsDisabled
+      const btnComp = type === 'button' ? VxeCheckboxButtonComponent : VxeCheckboxComponent
       return h('div', {
-        class: ['vxe-checkbox-group', {
+        class: ['vxe-checkbox-group', `type--${type === 'button' ? type : ''}`, {
           [`theme--${status}`]: status,
           'is--readonly': isReadonly,
           'is--disabled': isDisabled
@@ -269,7 +272,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
         ? defaultSlot({})
         : (options
             ? options.map(item => {
-              return h(VxeCheckboxComponent, {
+              return h(btnComp, {
                 key: item[valueField],
                 props: {
                   checkedValue: item[valueField],

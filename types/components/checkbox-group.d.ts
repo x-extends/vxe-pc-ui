@@ -38,6 +38,7 @@ export namespace VxeCheckboxGroupPropTypes {
   export type Max = string | number
   export type Disabled = boolean
   export type Readonly = boolean
+  export type Type = 'button' | 'default' | '' | null
   export interface DefaultConfig {
     /**
      * 默认选择模式，默认选中行为只会在初始化时触发一次
@@ -61,6 +62,7 @@ export interface VxeCheckboxGroupProps {
    */
   disabled?: VxeCheckboxGroupPropTypes.Disabled
   readonly?: VxeCheckboxGroupPropTypes.Readonly
+  type?: VxeCheckboxGroupPropTypes.Type
   defaultConfig?: VxeCheckboxGroupPropTypes.DefaultConfig
 }
 

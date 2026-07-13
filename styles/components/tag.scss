@@ -1,6 +1,26 @@
 @use "sass:map";
 @use "sass:list";
 
+// 局部变量
+.vxe-tag {
+  --vxe-ui-tag-current-font-size: inherit;
+  &.size--xlarge {
+    --vxe-ui-tag-current-font-size: var(--vxe-ui-font-size-xlarge);
+  }
+  &.size--large {
+    --vxe-ui-tag-current-font-size: var(--vxe-ui-font-size-large);
+  }
+  &.size--medium {
+    --vxe-ui-tag-current-font-size: var(--vxe-ui-font-size-medium);
+  }
+  &.size--small {
+    --vxe-ui-tag-current-font-size: var(--vxe-ui-font-size-small);
+  }
+  &.size--mini {
+    --vxe-ui-tag-current-font-size: var(--vxe-ui-font-size-mini);
+  }
+}
+
 $tagThemeList: (
   (
     name: "primary",
@@ -94,6 +114,7 @@ $tagThemeList: (
   flex-direction: row;
   align-items: center;
   padding: 0.25em 0.5em;
+  font-size: var(--vxe-ui-tag-current-font-size);
   color: var(--vxe-ui-font-color);
   border-radius: var(--vxe-ui-base-border-radius);
   @for $index from 0 to list.length($tagThemeList) {
@@ -116,15 +137,6 @@ $tagThemeList: (
   }
   &.is--round {
     border-radius: 1em;
-  }
-  &.size--medium {
-    font-size: var(--vxe-ui-font-size-medium);
-  }
-  &.size--small {
-    font-size: var(--vxe-ui-font-size-small);
-  }
-  &.size--mini {
-    font-size: var(--vxe-ui-font-size-mini);
   }
   & + .vxe-tag {
     margin-left: 8px;
@@ -170,16 +182,4 @@ $tagThemeList: (
 .vxe-tag--close,
 .vxe-tag--loading {
   user-select: none;
-}
-
-.vxe-tag {
-  &.size--medium {
-    font-size: var(--vxe-ui-font-size-medium);
-  }
-  &.size--small {
-    font-size: var(--vxe-ui-font-size-small);
-  }
-  &.size--mini {
-    font-size: var(--vxe-ui-font-size-mini);
-  }
 }

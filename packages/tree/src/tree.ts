@@ -620,6 +620,10 @@ export default /* define-vxe-component start */ defineVxeComponent({
       type: [String, Number] as PropType<VxeTreePropTypes.MinHeight>,
       default: () => getConfig().tree.minHeight
     },
+    emptyText: {
+      type: [String, Number] as PropType<VxeTreePropTypes.EmptyText>,
+      default: () => getConfig().tree.emptyText
+    },
     loading: Boolean as PropType<VxeTreePropTypes.Loading>,
     loadingConfig: Object as PropType<VxeTreePropTypes.LoadingConfig>,
     accordion: {
@@ -3582,16 +3586,24 @@ export default /* define-vxe-component start */ defineVxeComponent({
     renderList (h: CreateElement, treeList: any[]) {
       const $xeTree = this
       const props = $xeTree
+      const slots = $xeTree.$scopedSlots
       const internalData = $xeTree.internalData
 
-      const { transform } = props
+      const { transform, emptyText } = props
       const { treeExpandedMaps } = internalData
       const childrenField = $xeTree.computeChildrenField
+      const emptySlot = slots.empty
       if (!treeList.length) {
         return [
           h('div', {
             class: 'vxe-tree--empty-placeholder'
-          }, getI18n('vxe.tree.searchEmpty'))
+          }, emptySlot
+            ? emptySlot({})
+            : [
+                h('div', {
+                  class: 'vxe-tree--empty-placeholder-content'
+                }, getText(emptyText || getI18n('vxe.tree.searchEmpty')))
+              ])
         ]
       }
       const nodeVNs: VNode[] = []

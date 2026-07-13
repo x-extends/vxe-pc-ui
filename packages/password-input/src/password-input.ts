@@ -239,6 +239,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
 
       const { inputValue } = reactData
       const value = inputValue
+      reactData.isActivated = false
       $xePasswordInput.dispatchEvent('blur', { value }, evnt)
       // 自动更新校验状态
       if ($xeForm && formItemInfo) {

@@ -4,6 +4,14 @@
 .vxe-radio {
   --vxe-ui-radio-current-font-size: var(--vxe-ui-font-size-default);
   --vxe-ui-radio-current-margin-right: var(--vxe-ui-base-margin-gap-default);
+  &.size--xlarge {
+    --vxe-ui-radio-current-font-size: var(--vxe-ui-font-size-xlarge);
+    --vxe-ui-radio-current-margin-right: var(--vxe-ui-base-margin-gap-xlarge);
+  }
+  &.size--large {
+    --vxe-ui-radio-current-font-size: var(--vxe-ui-font-size-large);
+    --vxe-ui-radio-current-margin-right: var(--vxe-ui-base-margin-gap-large);
+  }
   &.size--medium {
     --vxe-ui-radio-current-font-size: var(--vxe-ui-font-size-medium);
     --vxe-ui-radio-current-margin-right: var(--vxe-ui-base-margin-gap-medium);
@@ -24,6 +32,9 @@
   vertical-align: middle;
   line-height: 1;
   font-size: 0;
+  &.type--button {
+    border-radius: var(--vxe-ui-base-border-radius);
+  }
 }
 
 .vxe-radio--readonly {

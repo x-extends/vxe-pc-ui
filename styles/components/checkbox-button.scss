@@ -7,6 +7,12 @@
 // 局部变量
 .vxe-checkbox--button {
   --vxe-ui-checkbox--button-current-margin-left: var(--vxe-ui-base-margin-gap-default);
+  &.size--xlarge {
+    --vxe-ui-checkbox--button-current-margin-left: var(--vxe-ui-base-margin-gap-xlarge);
+  }
+  &.size--large {
+    --vxe-ui-checkbox--button-current-margin-left: var(--vxe-ui-base-margin-gap-large);
+  }
   &.size--medium {
     --vxe-ui-checkbox--button-current-margin-left: var(--vxe-ui-base-margin-gap-medium);
   }

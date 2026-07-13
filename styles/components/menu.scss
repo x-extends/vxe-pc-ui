@@ -5,6 +5,14 @@
 .vxe-menu--collapse-wrapper {
   --vxe-ui-menu-current-font-size: var(--vxe-ui-font-size-default);
   --vxe-ui-menu-current-item-height: var(--vxe-ui-menu-item-height-default);
+  &.size--xlarge {
+    --vxe-ui-menu-current-font-size: var(--vxe-ui-font-size-xlarge);
+    --vxe-ui-menu-current-item-height: var(--vxe-ui-menu-item-height-xlarge);
+  }
+  &.size--large {
+    --vxe-ui-menu-current-font-size: var(--vxe-ui-font-size-large);
+    --vxe-ui-menu-current-item-height: var(--vxe-ui-menu-item-height-large);
+  }
   &.size--medium {
     --vxe-ui-menu-current-font-size: var(--vxe-ui-font-size-medium);
     --vxe-ui-menu-current-item-height: var(--vxe-ui-menu-item-height-medium);

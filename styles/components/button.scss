@@ -11,6 +11,18 @@
   --vxe-ui-button-current-margin-left: var(--vxe-ui-base-margin-gap-default);
   --vxe-ui-button-current-height: var(--vxe-ui-button-height-default);
   --vxe-ui-button-current-border-radius: var(--vxe-ui-button-round-border-radius-default);
+  &.size--xlarge {
+    --vxe-ui-button-current-font-size: var(--vxe-ui-font-size-xlarge);
+    --vxe-ui-button-current-margin-left: var(--vxe-ui-base-margin-gap-xlarge);
+    --vxe-ui-button-current-height: var(--vxe-ui-button-height-xlarge);
+    --vxe-ui-button-current-border-radius: var(--vxe-ui-button-round-border-radius-xlarge);
+  }
+  &.size--large {
+    --vxe-ui-button-current-font-size: var(--vxe-ui-font-size-large);
+    --vxe-ui-button-current-margin-left: var(--vxe-ui-base-margin-gap-large);
+    --vxe-ui-button-current-height: var(--vxe-ui-button-height-large);
+    --vxe-ui-button-current-border-radius: var(--vxe-ui-button-round-border-radius-large);
+  }
   &.size--medium {
     --vxe-ui-button-current-font-size: var(--vxe-ui-font-size-medium);
     --vxe-ui-button-current-margin-left: var(--vxe-ui-base-margin-gap-medium);
