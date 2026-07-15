@@ -5,7 +5,7 @@ import { getConfig, useSize, createEvent } from '../../ui'
 import VxeLoadingComponent from '../../loading'
 import XEUtils from 'xe-utils'
 
-import type { VxeLayoutAsidePropTypes, LayoutAsideReactData, VxeLayoutAsideEmits, LayoutAsidePrivateRef, LayoutAsideMethods, LayoutAsidePrivateMethods, VxeLayoutAsidePrivateComputed, VxeLayoutAsideConstructor, VxeLayoutAsidePrivateMethods, ValueOf } from '../../../types'
+import type { VxeLayoutAsidePropTypes, LayoutAsideReactData, VxeLayoutAsideEmits, LayoutAsidePrivateRef, LayoutAsideMethods, LayoutAsidePrivateMethods, VxeLayoutAsidePrivateComputed, VxeLayoutAsideConstructor, VxeLayoutAsidePrivateMethods, ValueOf, VxeComponentStyleType } from '../../../types'
 
 export default defineVxeComponent({
   name: 'VxeLayoutAside',
@@ -41,22 +41,21 @@ export default defineVxeComponent({
       return Object.assign({}, getConfig().layoutAside.collapseConfig, props.collapseConfig)
     })
 
-    const computeWrapperWidth = computed(() => {
-      const { width, collapsed, collapseWidth } = props
-      if (collapsed) {
-        if (collapseWidth) {
-          return toCssUnit(collapseWidth)
-        }
-      } else {
-        if (width) {
-          return toCssUnit(width)
-        }
+    const computeVarStyle = computed(() => {
+      const { width, collapseWidth } = props
+      const stys: VxeComponentStyleType = {}
+      if (collapseWidth) {
+        stys['--vxe-ui-layout-aside-collapse-width'] = toCssUnit(collapseWidth)
       }
-      return ''
+      if (width) {
+        stys['--vxe-ui-layout-aside-default-width'] = toCssUnit(width)
+      }
+      return stys
     })
 
     const computeMaps: VxeLayoutAsidePrivateComputed = {
-      computeSize
+      computeSize,
+      computeVarStyle
     }
 
     const $xeLayoutAside = {
@@ -83,8 +82,8 @@ export default defineVxeComponent({
     Object.assign($xeLayoutAside, layoutAsideMethods, layoutAsidePrivateMethods)
 
     const renderVN = () => {
-      const { width, collapsed, loading, padding } = props
-      const wrapperWidth = computeWrapperWidth.value
+      const { collapsed, loading, padding } = props
+      const varStyle = computeVarStyle.value
       const vSize = computeSize.value
       const collapseOpts = computeCollapseOpts.value
       const defaultSlot = slots.default
@@ -95,15 +94,10 @@ export default defineVxeComponent({
           [`size--${vSize}`]: vSize,
           'is--animat': collapseOpts.animation !== false,
           'is--padding': padding,
-          'is--default-width': !width,
           'is--collapse': collapsed,
           'is--loading': loading
         }],
-        style: wrapperWidth
-          ? {
-              width: wrapperWidth
-            }
-          : null
+        style: varStyle
       }, [
         h('div', {
           class: 'vxe-layout-aside--inner'

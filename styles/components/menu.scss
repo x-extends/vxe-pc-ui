@@ -5,25 +5,41 @@
 .vxe-menu--collapse-wrapper {
   --vxe-ui-menu-current-font-size: var(--vxe-ui-font-size-default);
   --vxe-ui-menu-current-item-height: var(--vxe-ui-menu-item-height-default);
+  --vxe-ui-menu-current-item-padding: var(--vxe-ui-layout-padding-default);
+  --vxe-ui-menu-current-margin: 4px;
   &.size--xlarge {
     --vxe-ui-menu-current-font-size: var(--vxe-ui-font-size-xlarge);
     --vxe-ui-menu-current-item-height: var(--vxe-ui-menu-item-height-xlarge);
+    --vxe-ui-menu-current-item-padding: var(--vxe-ui-layout-padding-xlarge);
   }
   &.size--large {
     --vxe-ui-menu-current-font-size: var(--vxe-ui-font-size-large);
     --vxe-ui-menu-current-item-height: var(--vxe-ui-menu-item-height-large);
+    --vxe-ui-menu-current-item-padding: var(--vxe-ui-layout-padding-large);
   }
   &.size--medium {
     --vxe-ui-menu-current-font-size: var(--vxe-ui-font-size-medium);
     --vxe-ui-menu-current-item-height: var(--vxe-ui-menu-item-height-medium);
+    --vxe-ui-menu-current-item-padding: var(--vxe-ui-layout-padding-medium);
   }
   &.size--small {
     --vxe-ui-menu-current-font-size: var(--vxe-ui-font-size-small);
     --vxe-ui-menu-current-item-height: var(--vxe-ui-menu-item-height-small);
+    --vxe-ui-menu-current-item-padding: var(--vxe-ui-layout-padding-small);
   }
   &.size--mini {
     --vxe-ui-menu-current-font-size: var(--vxe-ui-font-size-mini);
     --vxe-ui-menu-current-item-height: var(--vxe-ui-menu-item-height-mini);
+    --vxe-ui-menu-current-item-padding: var(--vxe-ui-layout-padding-mini);
+  }
+
+  &.size--xlarge,
+  &.size--large {
+    --vxe-ui-menu-current-margin: 6px;
+  }
+  &.size--small,
+  &.size--mini {
+    --vxe-ui-menu-current-margin: 2px;
   }
 }
 
@@ -38,6 +54,38 @@
   }
   &.is--loading {
     min-height: 4em;
+  }
+  &.border--first {
+    .vxe-menu--item-level1 {
+      & > .vxe-menu--item-link {
+        border-bottom: 1px solid var(--vxe-ui-menu-border-color);
+      }
+    }
+  }
+  &.border--first-group {
+    .vxe-menu--item-level1 {
+      &.has--child {
+        & > .vxe-menu--item-link {
+          border-bottom: 1px solid var(--vxe-ui-menu-border-color);
+        }
+      }
+    }
+  }
+  &.border--group {
+    .vxe-menu--item-wrapper {
+      &.has--child {
+        & > .vxe-menu--item-link {
+          border-bottom: 1px solid var(--vxe-ui-menu-border-color);
+        }
+      }
+    }
+  }
+  &.border--all {
+    .vxe-menu--item-wrapper {
+      & > .vxe-menu--item-link {
+        border-bottom: 1px solid var(--vxe-ui-menu-border-color);
+      }
+    }
   }
 }
 .vxe-menu,
@@ -58,6 +106,7 @@
     @include baseMixin.createAnimationTransition(all, 0.25s);
   }
   &:not(.is--enter) {
+    width: var(--vxe-ui-layout-aside-collapse-width);
     .vxe-menu--item-link-title,
     .vxe-menu--item-custom-title,
     .vxe-menu--item-link-collapse {
@@ -65,6 +114,7 @@
     }
   }
   &.is--enter {
+    width: var(--vxe-ui-layout-aside-default-width);
     box-shadow: var(--vxe-ui-menu-collapse-wrapper-box-shadow);
   }
 }
@@ -73,10 +123,12 @@
   display: flex;
   flex-direction: row;
   align-items: center;
+  margin: 0 var(--vxe-ui-menu-current-item-padding);
   height: var(--vxe-ui-menu-current-item-height);
   color: var(--vxe-ui-font-color);
+  border-radius: var(--vxe-ui-base-border-radius);
   text-decoration: none;
-  user-select: none;
+  cursor: pointer;
   &:hover {
     background-color: var(--vxe-ui-base-hover-background-color);
   }
@@ -92,6 +144,9 @@
   flex-shrink: 0;
   width: var(--vxe-ui-menu-icon-width);
   text-align: center;
+  i {
+    font-size: 1.25em;
+  }
 }
 .vxe-menu--item-link-title,
 .vxe-menu--item-custom-title {
@@ -101,6 +156,7 @@
 .vxe-menu--item-link-collapse {
   flex-shrink: 0;
   padding: 0.5em;
+  user-select: none;
   i {
     display: inline-block;
     font-size: 0.8em;
@@ -109,6 +165,13 @@
 }
 
 .vxe-menu--item-wrapper {
+  margin: var(--vxe-ui-menu-current-margin) 0;
+  &:first-child {
+    margin-top: 0;
+  }
+  &:last-child {
+    margin-bottom: 0;
+  }
   &.vxe-menu--item-level1 {
     & > .vxe-menu--item-link {
       padding: 0 var(--vxe-ui-layout-padding-double);

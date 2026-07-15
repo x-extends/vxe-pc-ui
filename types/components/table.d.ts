@@ -537,7 +537,7 @@ export namespace VxeTablePropTypes {
      */
     excludeValuesFields?: string[]
     /**
-     * 自定义列聚合数据的计算方法
+     * 个性化设置聚合数据的计算方法
      */
     calcValuesMethod?:(params: {
       $table: VxeTableConstructor<D>
@@ -550,7 +550,7 @@ export namespace VxeTablePropTypes {
       aggValue: number
     }) => number
     /**
-     * 自定义列聚合数据的显示值
+     * 个性化设置聚合数据的显示值
      */
     formatValuesMethod?:(params: {
       $table: VxeTableConstructor<D>
@@ -964,7 +964,7 @@ export namespace VxeTablePropTypes {
   }
 
   /**
-   * 自定义列配置项
+   * 个性化设置配置项
    */
   export interface CustomConfig<D = VxeTablePropTypes.Row> {
     /**
@@ -1051,14 +1051,14 @@ export namespace VxeTablePropTypes {
     immediate?: boolean
     placement?: 'left' | 'right' | 'top-left' | 'top-right' | 'bottom-left' | 'bottom-right'
     /**
-     * 自定义列是否允许列选中的方法，该方法的返回值用来决定这一列的 checkbox 是否可以选中
+     * 个性化设置是否允许列选中的方法，该方法的返回值用来决定这一列的 checkbox 是否可以选中
      */
     checkMethod?(params: {
       $table: VxeTableConstructor<D>
       column: VxeTableDefines.ColumnInfo<D>
     }): boolean
     /**
-     * 自定义列是否的方法，该方法的返回值用来决定这一列是否显示
+     * 个性化设置是否的方法，该方法的返回值用来决定这一列是否显示
      */
     visibleMethod?(params: {
       $table: VxeTableConstructor<D>
@@ -1132,7 +1132,7 @@ export namespace VxeTablePropTypes {
     confirmButtonText?: string
 
     /**
-     * 自定义列的插槽模板
+     * 个性化设置的插槽模板
      */
     slots?: {
       header?: string | ((params: VxeTableDefines.CustomSlotParams) => VxeComponentSlotType | VxeComponentSlotType[])
@@ -1312,7 +1312,7 @@ export namespace VxeTablePropTypes {
       column: VxeTableDefines.ColumnInfo<D>
     }): boolean
     /**
-     * 自定义列头升级按钮的 title 提示语
+     * 自定义列头升序按钮的 title 提示语
      */
     ascTitle?: string | number
     /**
@@ -3884,7 +3884,7 @@ export interface TableReactData<D = any> {
     export: boolean
     custom: boolean
   }
-  // 自定义列相关的信息
+  // 个性化设置相关的信息
   customStore: VxeTableDefines.VxeTableCustomStoreObj
   customColumnList: VxeTableDefines.ColumnInfo<D>[]
   // 当前选中的筛选列
@@ -5273,11 +5273,11 @@ export interface TableMethods<DT = any> {
    */
   blur(): Promise<void>
   /**
-   * 用于 custom-config，用于手动恢复自定义列设置信息，恢复为初始状态
+   * 用于 custom-config，用于手动恢复个性化设置，恢复为初始状态
    */
   setCustomStoreData(storeData: VxeTableDefines.CustomStoreData | null): Promise<void>
   /**
-   * 用于 custom-config，用于获取自定义列设置信息，用于自定义保持
+   * 用于 custom-config，用于获取个性化设置，用于自定义保持
    */
   getCustomStoreData(): VxeTableDefines.CustomStoreData
 }
@@ -7421,7 +7421,7 @@ export interface VxeTableListeners<D = any> {
   scroll?: VxeTableEvents.Scroll<D>
   scrollBoundary?: VxeTableEvents.ScrollBoundary<D>
   /**
-   * 如果与工具栏关联，在自定义列按钮被手动点击后会触发该事件
+   * 如果与工具栏关联，在个性化设置按钮被手动点击后会触发该事件
    */
   custom?: VxeTableEvents.Custom<D>
   customOpen?: VxeTableEvents.CustomOpen<D>

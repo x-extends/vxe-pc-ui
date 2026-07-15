@@ -29,12 +29,25 @@ export namespace VxeMenuPropTypes {
   export type ModelValue = string | number | null
   export type Size = VxeComponentSizeType
   export type Loading = boolean
+  export type Border = boolean | 'first' | 'first-group' | 'group' | 'all'
   export type Accordion = boolean
+  export interface OptionProps {
+   name?: string
+   title?: string
+   icon?: string
+   children?: string
+   linkUrl?: string
+   linkTarget?: string
+   routerLink?: string
+   routerTarget?: string
+  }
 
   export interface MenuOption {
     name?: VxeMenuPropTypes.ModelValue
     title?: string | number
     icon?: string
+    linkUrl?: string
+    linkTarget?: VxeLinkPropTypes.Target
     routerLink?: VxeLinkPropTypes.RouterLink
     expanded?: boolean
     permissionCode?: VxeComponentPermissionCodeType
@@ -44,11 +57,14 @@ export namespace VxeMenuPropTypes {
       title?: string | ((params: VxeMenuSlotTypes.TitleSlotParams) => VxeComponentSlotType | VxeComponentSlotType[]) | null
       default?: string | ((params: VxeMenuSlotTypes.TitleSlotParams) => VxeComponentSlotType | VxeComponentSlotType[]) | null
     }
+
+    [key: string]: any
   }
 
   export type Collapsed = boolean
   export type CollapseFixed = boolean
   export type ExpandAll = boolean
+  export type ExpandKeys = (string | number)[]
   export type Options = MenuOption[]
   export interface MenuConfig {
     /**
@@ -66,6 +82,7 @@ export namespace VxeMenuPropTypes {
       $menu: VxeMenuConstructor
       options: VxeContextMenuPropTypes.Options
       currentMenu: VxeMenuDefines.MenuItem
+      currentOption: VxeMenuPropTypes.MenuOption
     }): boolean
   }
 }
@@ -74,10 +91,19 @@ export interface VxeMenuProps {
   modelValue?: VxeMenuPropTypes.ModelValue
   size?: VxeMenuPropTypes.Size
   loading?: VxeMenuPropTypes.Loading
+  border?: VxeMenuPropTypes.Border
   accordion?: VxeMenuPropTypes.Accordion
+  optionProps?: VxeMenuPropTypes.OptionProps
   collapsed?: VxeMenuPropTypes.Collapsed
-  CollapseFixed?: VxeMenuPropTypes.CollapseFixed
+  collapseFixed?: VxeMenuPropTypes.CollapseFixed
+  /**
+   * 默认展开所有菜单项（只会在初始化时被触发一次）
+   */
   expandAll?: VxeMenuPropTypes.ExpandAll
+  /**
+   * 默认展开指定菜单项（只会在初始化时被触发一次）
+   */
+  expandKeys?: VxeMenuPropTypes.ExpandKeys
   options?: VxeMenuPropTypes.Options
   menuConfig?: VxeMenuPropTypes.MenuConfig
 }
@@ -87,6 +113,10 @@ export interface MenuPrivateComputed {
 export interface VxeMenuPrivateComputed extends MenuPrivateComputed { }
 
 export interface MenuInternalData {
+  lastActiveTime: number
+  menuInitMaps: Record<number, boolean>
+  menuCacheMaps: Record<string, VxeMenuDefines.MenuItem>
+  menuKeyMaps: Record<string, VxeMenuDefines.MenuItem>
   menuEffectMaps: Record<number, number>
 }
 
@@ -102,8 +132,24 @@ export interface MenuReactData {
 
 export interface MenuMethods {
   dispatchEvent(type: ValueOf<VxeMenuEmits>, params: Record<string, any>, evnt: Event | null): void
+  /**
+   * 设置指定菜单 key 为展开状态，第二个参数为选中与否
+   */
+  setExpandByMenuKey(menuKeys: string | number | (string | number)[], expanded: boolean): Promise<any>
+  /**
+   * 手动清除所有菜单的展开状态
+   */
+  clearAllExpandMenu(): Promise<any>
+  /**
+   * 自动滚动到指定菜单
+   */
+  scrollToMenuKey(menuKey: string | number): Promise<any>
+  /**
+   * 自动滚动到旋转的菜单
+   */
+  scrollToActiveMenu(): Promise<any>
 }
-export interface VxeMenuMethods extends MenuMethods { }
+export interface VxeMenuMethods extends MenuMethods {}
 
 export interface MenuPrivateMethods { }
 export interface VxeMenuPrivateMethods extends MenuPrivateMethods { }
@@ -121,6 +167,7 @@ export namespace VxeMenuDefines {
   }
 
   export interface MenuItem extends VxeMenuPropTypes.MenuOption {
+    itemConf: VxeMenuPropTypes.MenuOption
     itemId: number
     itemKey: string | number
     level: number,
@@ -130,26 +177,23 @@ export namespace VxeMenuDefines {
     isExpand: boolean
     hasChild: boolean
     childList: MenuItem[]
-    allChildSize: number
-    childHeight: number
   }
 
   export interface ClickParams {
     currentMenu: VxeMenuDefines.MenuItem
-
-    /**
-     * 已废弃，请使用 currentMenu
-     * @deprecated
-     */
-    menu: VxeMenuDefines.MenuItem
+    currentOption: VxeMenuPropTypes.MenuOption
+    option: VxeMenuPropTypes.MenuOption
   }
   export interface ClickEventParams extends MenuEventParams, ClickParams { }
 
   export interface OptionMenuEventParams extends MenuEventParams {
     currentMenu: VxeMenuDefines.MenuItem
+    currentOption: VxeMenuPropTypes.MenuOption
+    option: VxeMenuPropTypes.MenuOption
   }
   export interface MenuClickEventParams extends MenuEventParams {
     currentMenu: VxeMenuDefines.MenuItem
+    currentOption: VxeMenuPropTypes.MenuOption
     menu: VxeContextMenuDefines.MenuFirstOption | VxeContextMenuDefines.MenuChildOption
   }
 }
@@ -177,17 +221,18 @@ export namespace VxeMenuEvents {
 
 export namespace VxeMenuSlotTypes {
   export interface DefaultSlotParams {
-    currentMenu: Required<VxeMenuPropTypes.MenuOption>
+    currentMenu: VxeMenuDefines.MenuItem
+    currentOption: VxeMenuPropTypes.MenuOption
+    option: VxeMenuPropTypes.MenuOption
     collapsed: boolean
-
-    /**
-     * 已废弃，请使用 currentMenu
-     * @deprecated
-     */
-    option: Required<VxeMenuPropTypes.MenuOption>
   }
   export interface IconSlotParams extends DefaultSlotParams {}
   export interface TitleSlotParams extends DefaultSlotParams {}
+
+  export interface HeaderSlotParams {
+    collapsed: boolean
+  }
+  export interface FooterSlotParams extends HeaderSlotParams {}
 }
 
 export interface VxeMenuSlots {
@@ -211,6 +256,9 @@ export interface VxeMenuSlots {
   'option-title'?: (params: VxeMenuSlotTypes.TitleSlotParams) => any
 
   option?: (params: VxeMenuSlotTypes.TitleSlotParams) => any
+
+  header?: (params: VxeMenuSlotTypes.HeaderSlotParams) => any
+  footer?: (params: VxeMenuSlotTypes.FooterSlotParams) => any
 }
 
 export const Menu: typeof VxeMenu

@@ -277,7 +277,7 @@ export default defineVxeComponent({
     })
 
     const computePropsOpts = computed(() => {
-      return props.optionProps || {}
+      return Object.assign({}, getConfig().treeSelect.optionProps, props.optionProps)
     })
 
     const computeNodeKeyField = computed(() => {

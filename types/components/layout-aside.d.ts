@@ -1,5 +1,5 @@
-import { RenderFunction, SetupContext, Ref } from 'vue'
-import { DefineVxeComponentApp, DefineVxeComponentOptions, DefineVxeComponentInstance, VxeComponentBaseOptions, VxeComponentEventParams, ValueOf, VxeComponentSizeType } from '@vxe-ui/core'
+import { RenderFunction, ComputedRef, SetupContext, Ref } from 'vue'
+import { DefineVxeComponentApp, DefineVxeComponentOptions, DefineVxeComponentInstance, VxeComponentBaseOptions, VxeComponentEventParams, ValueOf, VxeComponentSizeType, VxeComponentStyleType } from '@vxe-ui/core'
 
 /* eslint-disable no-use-before-define,@typescript-eslint/ban-types */
 
@@ -46,10 +46,11 @@ export interface VxeLayoutAsideProps {
   size?: VxeLayoutAsidePropTypes.Size
   collapseConfig?: VxeLayoutAsidePropTypes.CollapseConfig
 }
-
 export interface LayoutAsidePrivateComputed {
+  computeSize: ComputedRef<VxeLayoutAsidePropTypes.Size>
+  computeVarStyle: ComputedRef<VxeComponentStyleType>
 }
-export interface VxeLayoutAsidePrivateComputed extends LayoutAsidePrivateComputed { }
+export interface VxeLayoutAsidePrivateComputed extends LayoutAsidePrivateComputed {}
 
 export interface LayoutAsideReactData {}
 
