@@ -3985,6 +3985,7 @@ export interface TableReactData<D = any> {
   exportParams: VxeTableDefines.ExportParamsObj
 
   rowHeightStore: {
+    xlarge: number
     large: number
     default: number
     medium: number
