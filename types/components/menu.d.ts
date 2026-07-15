@@ -178,6 +178,12 @@ export namespace VxeMenuDefines {
     currentMenu: VxeMenuDefines.MenuItem
     currentOption: VxeMenuPropTypes.MenuOption
     option: VxeMenuPropTypes.MenuOption
+
+    /**
+     * 已废弃
+     * @deprecated
+     */
+    menu: VxeMenuDefines.MenuItem
   }
   export interface ClickEventParams extends MenuEventParams, ClickParams { }
 
