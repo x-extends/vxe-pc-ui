@@ -1,4 +1,4 @@
-import { DefineVxeComponentApp, DefineVxeComponentOptions, DefineVxeComponentInstance, VxeComponentEventParams, ValueOf, VxeComponentSizeType } from '@vxe-ui/core'
+import { DefineVxeComponentApp, DefineVxeComponentOptions, DefineVxeComponentInstance, VxeComponentEventParams, ValueOf, VxeComponentSizeType, VxeComponentStyleType } from '@vxe-ui/core'
 
 /* eslint-disable @typescript-eslint/no-empty-interface,no-use-before-define,@typescript-eslint/ban-types */
 
@@ -41,6 +41,8 @@ export interface VxeLayoutAsideProps {
 }
 
 export interface LayoutAsidePrivateComputed {
+  computeSize: VxeLayoutAsidePropTypes.Size
+  computeVarStyle: VxeComponentStyleType
 }
 export interface VxeLayoutAsidePrivateComputed extends LayoutAsidePrivateComputed { }
 

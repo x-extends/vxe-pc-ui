@@ -3,12 +3,10 @@
   display: flex;
   flex-direction: column;
   flex-shrink: 0;
+  width: var(--vxe-ui-layout-aside-default-width);
   overflow: hidden;
   &.is--animat {
     transition: width .3s;
-  }
-  &.is--default-width {
-    width: var(--vxe-ui-layout-aside-default-width);
   }
   &.is--collapse {
     width: var(--vxe-ui-layout-aside-collapse-width);

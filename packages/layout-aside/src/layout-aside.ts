@@ -5,7 +5,7 @@ import { getConfig, createEvent, globalMixins } from '../../ui'
 import VxeLoadingComponent from '../../loading'
 import XEUtils from 'xe-utils'
 
-import type { VxeLayoutAsidePropTypes, LayoutAsideReactData, VxeComponentSizeType, VxeLayoutAsideEmits, ValueOf } from '../../../types'
+import type { VxeLayoutAsidePropTypes, LayoutAsideReactData, VxeComponentSizeType, VxeLayoutAsideEmits, ValueOf, VxeComponentStyleType } from '../../../types'
 
 export default /* define-vxe-component start */ defineVxeComponent({
   name: 'VxeLayoutAside',
@@ -49,21 +49,19 @@ export default /* define-vxe-component start */ defineVxeComponent({
 
       return Object.assign({}, getConfig().layoutAside.collapseConfig, props.collapseConfig)
     },
-    computeWrapperWidth () {
+    computeVarStyle () {
       const $xeLayoutAside = this
       const props = $xeLayoutAside
 
-      const { width, collapsed, collapseWidth } = props
-      if (collapsed) {
-        if (collapseWidth) {
-          return toCssUnit(collapseWidth)
-        }
-      } else {
-        if (width) {
-          return toCssUnit(width)
-        }
+      const { width, collapseWidth } = props
+      const stys: VxeComponentStyleType = {}
+      if (collapseWidth) {
+        stys['--vxe-ui-layout-aside-collapse-width'] = toCssUnit(collapseWidth)
       }
-      return ''
+      if (width) {
+        stys['--vxe-ui-layout-aside-default-width'] = toCssUnit(width)
+      }
+      return stys
     }
   },
   methods: {
@@ -82,8 +80,8 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const props = $xeLayoutAside
       const slots = $xeLayoutAside.$scopedSlots
 
-      const { width, collapsed, loading, padding } = props
-      const wrapperWidth = $xeLayoutAside.computeWrapperWidth
+      const { collapsed, loading, padding } = props
+      const varStyle = $xeLayoutAside.computeVarStyle
       const vSize = $xeLayoutAside.computeSize
       const collapseOpts = $xeLayoutAside.computeCollapseOpts
       const defaultSlot = slots.default
@@ -93,15 +91,10 @@ export default /* define-vxe-component start */ defineVxeComponent({
           [`size--${vSize}`]: vSize,
           'is--animat': collapseOpts.animation !== false,
           'is--padding': padding,
-          'is--default-width': !width,
           'is--collapse': collapsed,
           'is--loading': loading
         }],
-        style: wrapperWidth
-          ? {
-              width: wrapperWidth
-            }
-          : {}
+        style: varStyle
       }, [
         h('div', {
           class: 'vxe-layout-aside--inner'

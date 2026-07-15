@@ -315,7 +315,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const $xeTreeSelect = this
       const props = $xeTreeSelect
 
-      return Object.assign({}, props.optionProps)
+      return Object.assign({}, getConfig().treeSelect.optionProps, props.optionProps)
     },
     computeNodeKeyField () {
       const $xeTreeSelect = this

@@ -214,7 +214,7 @@ export type VxeToolbarProps = {
   zoom?: VxeToolbarPropTypes.Zoom
   zoomOptions?: VxeToolbarPropTypes.ZoomOptions
   /**
-   * 自定义列配置
+   * 个性化设置配置
    */
   custom?: VxeToolbarPropTypes.Custom
   customOptions?: VxeToolbarPropTypes.CustomOptions
