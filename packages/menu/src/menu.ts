@@ -125,7 +125,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const $xeMenu = this
 
       const propsOpts = $xeMenu.computePropsOpts as VxeMenuPropTypes.OptionProps
-      return propsOpts.linkUrl || 'href'
+      return propsOpts.linkUrl || 'linkUrl'
     },
     computeRouterLinkField () {
       const $xeMenu = this
@@ -886,6 +886,9 @@ export default /* define-vxe-component start */ defineVxeComponent({
     }
     $xeMenu.updateCollapseStyle()
     globalEvents.on($xeMenu, 'resize', $xeMenu.updateCollapseStyle)
+    $xeMenu.$nextTick(() => {
+      $xeMenu.scrollToActiveMenu()
+    })
   },
   beforeDestroy () {
     const $xeMenu = this
