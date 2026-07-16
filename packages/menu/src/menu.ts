@@ -122,7 +122,7 @@ export default defineVxeComponent({
 
     const computeLinkUrlField = computed(() => {
       const propsOpts = computePropsOpts.value
-      return propsOpts.linkUrl || 'href'
+      return propsOpts.linkUrl || 'linkUrl'
     })
 
     const computeRouterLinkField = computed(() => {
@@ -784,6 +784,9 @@ export default defineVxeComponent({
       }
       globalEvents.on($xeMenu, 'resize', updateCollapseStyle)
       updateCollapseStyle()
+      nextTick(() => {
+        $xeMenu.scrollToActiveMenu()
+      })
     })
 
     onBeforeUnmount(() => {
