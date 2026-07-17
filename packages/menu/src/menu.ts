@@ -852,6 +852,9 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const $xeMenu = this
       $xeMenu.updateMenuConfig()
       $xeMenu.updateActiveMenu(true)
+      $xeMenu.$nextTick(() => {
+        $xeMenu.scrollToActiveMenu()
+      })
     },
     'reactData.activeName' () {
       const $xeMenu = this

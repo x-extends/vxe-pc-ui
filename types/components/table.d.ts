@@ -1510,6 +1510,10 @@ export namespace VxeTablePropTypes {
    */
  export interface TooltipConfig<D = VxeTablePropTypes.Row> {
     /**
+     * 当 show-overflow=true 时，默认使用指定提示类型
+     */
+    mode?: 'ellipsis' | 'title' | 'tooltip' | '' | null
+    /**
      * 所有单元格开启工具提示
      */
     showAll?: boolean
@@ -3022,6 +3026,7 @@ export namespace VxeTablePropTypes {
     colid?: number
     type?: string
     field?: string
+    width?: number | string
   }
 
   interface ExportAndPrintConfig {
@@ -3198,7 +3203,8 @@ export namespace VxeTablePropTypes {
     }): void
   }
   export interface ExportOpts extends ExportConfig { }
-  export interface ExportHandleOptions extends Exclude<ExportConfig, 'filename' | 'sheetName'> {
+
+  export interface ExportHandleOptions extends Exclude<ExportConfig, 'filename' | 'sheetName'>, PrintConfig {
     filename: string
     sheetName: string
     data: any[]
@@ -3218,6 +3224,10 @@ export namespace VxeTablePropTypes {
     /**
      * @private
      */
+    _columnConfs?: VxeTableDefines.ColumnInfo[] | ExportOrPrintColumnOption[]
+    /**
+     * @private
+     */
     print?: boolean
   }
 
@@ -3225,6 +3235,10 @@ export namespace VxeTablePropTypes {
    * 打印参数
    */
   export interface PrintConfig extends ExportAndPrintConfig {
+    /**
+     * 列宽计算模式，支持默认default，等比例scale，自适应auto
+     */
+    widthMode?: 'default' | 'scale' | 'auto' | '' | null
     /**
      * 打印样式
      */
@@ -6031,6 +6045,7 @@ export namespace VxeTableDefines {
      * 是否展开所有分组层级
      */
     isRowGroupAllExpanded: boolean
+    widthMode?: 'default' | 'scale' | 'auto' | '' | null
     useStyle: boolean
     original: boolean
     message: boolean
