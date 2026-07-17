@@ -35,6 +35,9 @@ export namespace VxeTreePropTypes {
    * 提示信息配置项
    */
   export interface TooltipConfig<D = any> {
+    /**
+     * 当 show-overflow=true 时，默认使用指定提示类型
+     */
     mode?: 'ellipsis' | 'title' | 'tooltip' | '' | null
     /**
      * 所有节点开启工具提示

@@ -7,8 +7,8 @@
       <vxe-radio-group class="switch-size" v-model="componentsSize" :options="sizeOptions" type="button" size="mini"></vxe-radio-group>
     </vxe-layout-header>
     <vxe-layout-container>
-      <vxe-layout-aside class="page-layout-aside" :collapsed="collapsed" width="600">
-        <VxeMenu :options="navList" border collapse-fixed />
+      <vxe-layout-aside class="page-layout-aside" :collapsed="collapsed">
+        <VxeMenu :options="navList" collapse-fixed />
       </vxe-layout-aside>
       <vxe-layout-container vertical>
         <vxe-layout-body padding>

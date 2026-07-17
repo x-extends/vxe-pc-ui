@@ -762,6 +762,9 @@ export default defineVxeComponent({
     watch(optFlag, () => {
       updateMenuConfig()
       updateActiveMenu(true)
+      nextTick(() => {
+        $xeMenu.scrollToActiveMenu()
+      })
     })
 
     watch(() => props.modelValue, (val) => {
