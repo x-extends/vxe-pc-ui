@@ -2971,7 +2971,7 @@ export namespace VxeTablePropTypes {
   /**
      * 导入参数
      */
-  export interface ImportConfig {
+  export interface ImportConfig<D = any> {
     // 内置属性
     _typeMaps?: Record<string, number>
 
@@ -3563,15 +3563,15 @@ export interface VxeTableProps<D = any> {
   /**
    * 导出配置项
    */
-  exportConfig?: VxeTablePropTypes.ExportConfig
+  exportConfig?: VxeTablePropTypes.ExportConfig<D>
   /**
    * 导入配置项
    */
-  importConfig?: VxeTablePropTypes.ImportConfig
+  importConfig?: VxeTablePropTypes.ImportConfig<D>
   /**
    * 打印配置项
    */
-  printConfig?: VxeTablePropTypes.PrintConfig
+  printConfig?: VxeTablePropTypes.PrintConfig<D>
   /**
    * 展开行配置项
    */
@@ -4733,12 +4733,14 @@ export interface TableMethods<DT = any> {
    * @param checked 是否选中
    */
   setCheckboxRow(rows: any | any[], checked: boolean): Promise<any>
+  // 后续可能废弃
+  setCheckboxRowKey(keys: string | number | (string | number)[] | null | undefined, checked: boolean): Promise<any>
   /**
    * 用于 type=checkbox，设置行为选中状态，第二个参数为选中与否
    * @param keys 指定主键
    * @param checked 是否选中
    */
-  setCheckboxRowKey(keys: string | number | (string | number)[] | null | undefined, checked: boolean): Promise<any>
+  setCheckboxRowByKey(keys: string | number | (string | number)[] | null | undefined, checked: boolean): Promise<any>
   /**
    * 用于 type=checkbox，判断列头复选框是否被选中
    */
@@ -4825,11 +4827,12 @@ export interface TableMethods<DT = any> {
    * @param row 指定行
    */
   setRadioRow(row: any): Promise<any>
+  setRadioRowKey(key: string | number | null | undefined): Promise<any>
   /**
    * 用于 type=radio，设置某一行为选中状态
    * @param key 指定主键
    */
-  setRadioRowKey(key: string | number | null | undefined): Promise<any>
+  setRadioByRowKey(key: string | number | null | undefined): Promise<any>
   /**
    * 将指定行设置为取消/标记待删除状态
    */
