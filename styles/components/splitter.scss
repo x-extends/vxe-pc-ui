@@ -162,7 +162,6 @@
   border-radius: var(--vxe-ui-base-border-radius);
   color: var(--vxe-ui-layout-background-color);
   background-color: var(--vxe-ui-splitter-handle-button-background-color);
-  border: 1px solid var(--vxe-ui-input-border-color);
   cursor: pointer;
   pointer-events: all;
   @include baseMixin.createAnimationTransition(transform, 0.1s);
@@ -174,7 +173,7 @@
     transform: scale(0.9);
   }
   & > i {
-    font-size: 0.6em;
+    font-size: 0.76em;
   }
 }
 .vxe-splitter-panel-handle {
@@ -197,8 +196,8 @@
       height: 100%;
     }
     .vxe-splitter-panel-action-btn {
-      width: var(--vxe-ui-splitter-handle-bar-horizontal-width);
-      height: var(--vxe-ui-splitter-handle-bar-horizontal-height);
+      width: var(--vxe-ui-splitter-handle-bar-horizontal-action-btn-width);
+      height: var(--vxe-ui-splitter-handle-bar-horizontal-action-btn-height);
     }
   }
   &.is--vertical {
@@ -220,8 +219,8 @@
       width: 100%;
     }
     .vxe-splitter-panel-action-btn {
-      width: var(--vxe-ui-splitter-handle-bar-vertical-width);
-      height: var(--vxe-ui-splitter-handle-bar-vertical-height);
+      width: var(--vxe-ui-splitter-handle-bar-vertical-action-btn-width);
+      height: var(--vxe-ui-splitter-handle-bar-vertical-action-btn-height);
     }
   }
   &.is--resize {
