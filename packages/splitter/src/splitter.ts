@@ -877,6 +877,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const { immediate } = resizeOpts
       const visibleItems = $xeSplitter.computeVisibleItems
       const { autoItems } = $xeSplitter.computeAutoItems
+      const isOnlyView = visibleItems.length <= 1
       const itemVNs: VNode[] = []
       itemList.forEach((prevItem, index) => {
         const { id, name, slots, renderHeight, resizeHeight, foldHeight, renderWidth, resizeWidth, foldWidth, isExpand } = prevItem
@@ -947,7 +948,8 @@ export default /* define-vxe-component start */ defineVxeComponent({
       })
       return h('div', {
         class: ['vxe-splitter-wrapper', {
-          'is--ah-btn': autoHideButton
+          'is--ah-btn': autoHideButton,
+          'is--only-view': isOnlyView
         }]
       }, itemVNs)
     },

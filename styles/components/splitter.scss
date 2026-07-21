@@ -304,6 +304,15 @@
     }
   }
 }
+.vxe-splitter-wrapper {
+  &.is--only-view {
+    & > .vxe-splitter-panel-handle {
+      .vxe-splitter-panel-handle-bar {
+        width: 0;
+      }
+    }
+  }
+} 
 
 .vxe-splitter--render-vars {
   width: 0;

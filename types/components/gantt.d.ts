@@ -613,6 +613,14 @@ export interface GanttReactData<D = any> extends GridReactData<D> {
   showRightView: boolean
   taskScaleList: VxeGanttDefines.ColumnScaleObj[]
   tableLinks: VxeGanttDefines.LinkConfObj[]
+  // 是否存在纵向滚动条
+  overflowY: boolean
+  // 是否存在横向滚动条
+  overflowX: boolean
+  // 纵向滚动条的宽度
+  scrollbarWidth: number
+  // 横向滚动条的高度
+  scrollbarHeight: number
 
   // 存放 bar tooltip 相关信息
   barTipStore: {
