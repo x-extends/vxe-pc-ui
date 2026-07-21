@@ -370,6 +370,9 @@ setConfig({
     resizeConfig: {
       // immediate: false,
       showTip: true
+    },
+    actionConfig: {
+      autoHideButton: true
     }
   },
   splitterPanel: {},

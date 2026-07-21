@@ -58,7 +58,14 @@ export namespace VxeColorPickerPropTypes {
      * 触发方式
      */
     trigger?: 'default' | 'icon' | 'manual' | '' | null
+    /**
+     * 是否启用元素挂载
+     */
     transfer?: boolean
+    /**
+     * 挂载到指定元素下
+     */
+    appendTo?: string | HTMLElement | (() => string | HTMLElement)
     width?: number | string
     height?: number | string
     zIndex?: number | string

@@ -246,6 +246,10 @@ export namespace VxeGanttPropTypes {
      */
     resize?: boolean
     /**
+     * 是否自动隐藏折叠按钮
+     */
+    autoHideCollapseButton?: boolean
+    /**
      * 是否显示左侧表格的折叠按钮
      */
     showCollapseTableButton?: boolean

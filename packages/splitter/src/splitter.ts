@@ -133,17 +133,25 @@ export default /* define-vxe-component start */ defineVxeComponent({
         autoItems
       }
     },
-    computeBarStyle () {
+    computeWrapperStyle () {
       const $xeSplitter = this
+      const props = $xeSplitter
 
+      const { width, height } = props
       const barOpts = $xeSplitter.computeBarOpts
-      const { width, height } = barOpts
+      const { width: barWidth, height: barHeight } = barOpts
       const stys: Record<string, string | number> = {}
       if (height) {
         stys.height = toCssUnit(height)
       }
       if (width) {
         stys.width = toCssUnit(width)
+      }
+      if (barHeight) {
+        stys['--vxe-ui-splitter-handle-bar-vertical-height'] = toCssUnit(barHeight)
+      }
+      if (barWidth) {
+        stys['--vxe-ui-splitter-handle-bar-horizontal-width'] = toCssUnit(barWidth)
       }
       return stys
     },
@@ -803,7 +811,6 @@ export default /* define-vxe-component start */ defineVxeComponent({
 
       const { border, resize, vertical } = props
       const { itemList } = reactData
-      const barStyle = $xeSplitter.computeBarStyle
       const actionOpts = $xeSplitter.computeActionOpts
       const { direction } = actionOpts
       const showPrevButton = XEUtils.isBoolean(actionOpts.showPrevButton) ? actionOpts.showPrevButton : (itemList.some(item => item.showAction))
@@ -818,7 +825,6 @@ export default /* define-vxe-component start */ defineVxeComponent({
       }, [
         h('div', {
           class: 'vxe-splitter-panel-handle-bar',
-          style: barStyle,
           on: {
             mousedown: $xeSplitter.dragEvent
           }
@@ -829,7 +835,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
           }, [
             showPrevButton && nextItem.isExpand
               ? h('div', {
-                class: 'vxe-splitter-panel-action-btn',
+                class: ['vxe-splitter-panel-action-btn', prevItem.isExpand ? 'is--prev' : 'is--next'],
                 on: {
                   dblclick: $xeSplitter.handlePrevActionDblclickEvent,
                   click: $xeSplitter.handlePrevActionClickEvent
@@ -842,7 +848,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
               : renderEmptyElement($xeSplitter),
             showNextButton && prevItem.isExpand
               ? h('div', {
-                class: 'vxe-splitter-panel-action-btn',
+                class: ['vxe-splitter-panel-action-btn', nextItem.isExpand ? 'is--next' : 'is--prev'],
                 on: {
                   dblclick: $xeSplitter.handleNextActionDblclickEvent,
                   click: $xeSplitter.handleNextActionClickEvent
@@ -865,6 +871,8 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const { border, padding, resize, vertical } = props
       const { itemList } = reactData
       const vSize = $xeSplitter.computeSize
+      const actionOpts = $xeSplitter.computeActionOpts
+      const { autoHideButton } = actionOpts
       const resizeOpts = $xeSplitter.computeResizeOpts
       const { immediate } = resizeOpts
       const visibleItems = $xeSplitter.computeVisibleItems
@@ -938,7 +946,9 @@ export default /* define-vxe-component start */ defineVxeComponent({
         }
       })
       return h('div', {
-        class: 'vxe-splitter-wrapper'
+        class: ['vxe-splitter-wrapper', {
+          'is--ah-btn': autoHideButton
+        }]
       }, itemVNs)
     },
     renderVN (h: CreateElement): VNode {
@@ -946,24 +956,18 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const props = $xeSplitter
       const slots = $xeSplitter.$scopedSlots
 
-      const { vertical, width, height } = props
+      const { vertical } = props
       const vSize = $xeSplitter.computeSize
       const resizeOpts = $xeSplitter.computeResizeOpts
+      const wrapperStyle = $xeSplitter.computeWrapperStyle
       const { immediate, showTip } = resizeOpts
       const defaultSlot = slots.default
-      const stys: Record<string, string | number> = {}
-      if (height) {
-        stys.height = toCssUnit(height)
-      }
-      if (width) {
-        stys.width = toCssUnit(width)
-      }
       return h('div', {
         ref: 'refElem',
         class: ['vxe-splitter', vertical ? 'is--vertical' : 'is--horizontal', immediate ? 'is-resize--immediate' : 'is-resize--lazy', {
           [`size--${vSize}`]: vSize
         }],
-        style: stys
+        style: wrapperStyle
       }, [
         h('div', {
           class: 'vxe-splitter-slots'
