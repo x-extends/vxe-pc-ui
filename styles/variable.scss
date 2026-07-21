@@ -109,9 +109,9 @@ $vxe-ui-tree-drag-over-background-color: rgba(255,255,200,0.3) !default;
 $vxe-ui-rate-item-color: #f7ba2a !default;
 
 /*split*/
-$vxe-ui-splitter-handle-button-background-color: #a4a4a4 !default;
 $vxe-ui-splitter-handle-bar-background-color: #e2e2e3 !default;
 $vxe-ui-splitter-handle-bar-hover-background-color: #d8d8d8 !default;
+$vxe-ui-splitter-handle-button-background-color: $vxe-ui-splitter-handle-bar-background-color !default;
 
 /*cascader*/
 $vxe-ui-cascader-node-hover-background-color: #f5f7fa !default;

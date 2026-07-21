@@ -248,12 +248,11 @@
   --vxe-ui-calendar-notice-selected-background-color: var(--vxe-ui-calendar-selected-color);
 
   /*splitter*/
-  --vxe-ui-splitter-handle-bar-horizontal-width: 0.65em;
-  // --vxe-ui-splitter-handle-bar-horizontal-height: 3.2em;
-  // --vxe-ui-splitter-handle-bar-vertical-width: var(--vxe-ui-splitter-handle-bar-horizontal-height);
+  --vxe-ui-splitter-handle-button-background-color: var(--vxe-ui-splitter-handle-bar-background-color);
+  --vxe-ui-splitter-handle-bar-horizontal-width: 2px;
+  --vxe-ui-splitter-handle-bar-horizontal-action-btn-width: 1.2em;
+  --vxe-ui-splitter-handle-bar-horizontal-action-btn-height: 2.4em;
   --vxe-ui-splitter-handle-bar-vertical-height: var(--vxe-ui-splitter-handle-bar-horizontal-width);
-  --vxe-ui-splitter-handle-bar-horizontal-action-btn-width: var(--vxe-ui-splitter-handle-bar-horizontal-width);
-  --vxe-ui-splitter-handle-bar-horizontal-action-btn-height: 3em;
   --vxe-ui-splitter-handle-bar-vertical-action-btn-width: var(--vxe-ui-splitter-handle-bar-horizontal-action-btn-height);
   --vxe-ui-splitter-handle-bar-vertical-action-btn-height: var(--vxe-ui-splitter-handle-bar-horizontal-action-btn-width);
   --vxe-ui-splitter-resizable-line-color: #D9DDDF;

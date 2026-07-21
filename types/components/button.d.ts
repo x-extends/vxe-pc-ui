@@ -95,7 +95,14 @@ export namespace VxeButtonPropTypes {
      * 设置弹出面板方向
      */
     placement?: 'top' | 'bottom' | '' | null
+    /**
+     * 是否启用元素挂载
+     */
     transfer?: boolean
+    /**
+     * 挂载到指定元素下
+     */
+    appendTo?: string | HTMLElement | (() => string | HTMLElement)
     zIndex?: number | string
     className?: string | ((params: { $button: VxeButtonConstructor }) => string)
   }

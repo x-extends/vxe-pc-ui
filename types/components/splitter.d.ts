@@ -60,6 +60,10 @@ export namespace VxeSplitterPropTypes {
      */
     trigger?: 'click' | 'dblclick' | '' | null
     /**
+     * 是否自动隐藏折叠按钮
+     */
+    autoHideButton?: boolean
+    /**
      * 显示往向前折叠按钮
      */
     showPrevButton?: boolean

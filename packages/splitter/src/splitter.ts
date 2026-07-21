@@ -125,15 +125,22 @@ export default defineVxeComponent({
       }
     })
 
-    const computeBarStyle = computed(() => {
+    const computeWrapperStyle = computed(() => {
+      const { width, height } = props
       const barOpts = computeBarOpts.value
-      const { width, height } = barOpts
+      const { width: barWidth, height: barHeight } = barOpts
       const stys: Record<string, string | number> = {}
       if (height) {
         stys.height = toCssUnit(height)
       }
       if (width) {
         stys.width = toCssUnit(width)
+      }
+      if (barHeight) {
+        stys['--vxe-ui-splitter-handle-bar-vertical-height'] = toCssUnit(barHeight)
+      }
+      if (barWidth) {
+        stys['--vxe-ui-splitter-handle-bar-horizontal-width'] = toCssUnit(barWidth)
       }
       return stys
     })
@@ -757,7 +764,6 @@ export default defineVxeComponent({
     const renderHandleBar = (prevItem: VxeSplitterDefines.PaneConfig, nextItem: VxeSplitterDefines.PaneConfig) => {
       const { border, resize, vertical } = props
       const { itemList } = reactData
-      const barStyle = computeBarStyle.value
       const actionOpts = computeActionOpts.value
       const { direction } = actionOpts
       const showPrevButton = XEUtils.isBoolean(actionOpts.showPrevButton) ? actionOpts.showPrevButton : (itemList.some(item => item.showAction))
@@ -772,7 +778,6 @@ export default defineVxeComponent({
       }, [
         h('div', {
           class: 'vxe-splitter-panel-handle-bar',
-          style: barStyle,
           onMousedown: dragEvent
         }),
         itemList.length === 2
@@ -781,7 +786,7 @@ export default defineVxeComponent({
           }, [
             showPrevButton && nextItem.isExpand
               ? h('div', {
-                class: 'vxe-splitter-panel-action-btn',
+                class: ['vxe-splitter-panel-action-btn', prevItem.isExpand ? 'is--prev' : 'is--next'],
                 onDblclick: handlePrevActionDblclickEvent,
                 onClick: handlePrevActionClickEvent
               }, [
@@ -792,7 +797,7 @@ export default defineVxeComponent({
               : renderEmptyElement($xeSplitter),
             showNextButton && prevItem.isExpand
               ? h('div', {
-                class: 'vxe-splitter-panel-action-btn',
+                class: ['vxe-splitter-panel-action-btn', nextItem.isExpand ? 'is--next' : 'is--prev'],
                 onDblclick: handleNextActionDblclickEvent,
                 onClick: handleNextActionClickEvent
               }, [
@@ -810,6 +815,8 @@ export default defineVxeComponent({
       const { border, padding, resize, vertical } = props
       const { itemList } = reactData
       const vSize = computeSize.value
+      const actionOpts = computeActionOpts.value
+      const { autoHideButton } = actionOpts
       const resizeOpts = computeResizeOpts.value
       const { immediate } = resizeOpts
       const visibleItems = computeVisibleItems.value
@@ -879,29 +886,25 @@ export default defineVxeComponent({
         }
       })
       return h('div', {
-        class: 'vxe-splitter-wrapper'
+        class: ['vxe-splitter-wrapper', {
+          'is--ah-btn': autoHideButton
+        }]
       }, itemVNs)
     }
 
     const renderVN = () => {
-      const { vertical, width, height } = props
+      const { vertical } = props
       const vSize = computeSize.value
       const resizeOpts = computeResizeOpts.value
+      const wrapperStyle = computeWrapperStyle.value
       const { immediate, showTip } = resizeOpts
       const defaultSlot = slots.default
-      const stys: Record<string, string | number> = {}
-      if (height) {
-        stys.height = toCssUnit(height)
-      }
-      if (width) {
-        stys.width = toCssUnit(width)
-      }
       return h('div', {
         ref: refElem,
         class: ['vxe-splitter', vertical ? 'is--vertical' : 'is--horizontal', immediate ? 'is-resize--immediate' : 'is-resize--lazy', {
           [`size--${vSize}`]: vSize
         }],
-        style: stys
+        style: wrapperStyle
       }, [
         h('div', {
           class: 'vxe-splitter-slots'
