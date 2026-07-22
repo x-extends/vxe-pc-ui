@@ -2,7 +2,7 @@ import { CreateElement, VNode, PropType } from 'vue'
 import XEUtils from 'xe-utils'
 import { getConfig, globalEvents, getIcon, createEvent, renderer, globalMixins, permission, renderEmptyElement } from '../../ui'
 import { defineVxeComponent } from '../../ui/src/comp'
-import { getEventTargetNode, updatePanelPlacement } from '../../ui/src/dom'
+import { getEventTargetNode, getPopupContainer, updatePanelPlacement } from '../../ui/src/dom'
 import { getFuncText, getLastZIndex, nextZIndex } from '../../ui/src/utils'
 import { getSlotVNs, getEventCaseName } from '../../ui/src/vn'
 import { createComponentLog } from '../../ui/src/log'
@@ -328,13 +328,15 @@ export default /* define-vxe-component start */ defineVxeComponent({
 
       const { trigger } = props
       const btnTransfer = $xeButton.computeBtnTransfer
+      const popupOpts = $xeButton.computePopupOpts
       const panelElem = $xeButton.$refs.refBtnPanel as HTMLElement | undefined
       if (panelElem) {
         panelElem.dataset.active = 'Y'
         if (!reactData.initialized) {
           reactData.initialized = true
           if (btnTransfer) {
-            document.body.appendChild(panelElem)
+            const { appendTo } = popupOpts
+            getPopupContainer(appendTo).appendChild(panelElem)
           }
         }
         internalData.showTime = setTimeout(() => {

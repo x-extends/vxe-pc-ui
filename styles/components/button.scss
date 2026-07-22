@@ -335,6 +335,7 @@
 }
 
 .vxe-button.type--button,
+.vxe-button.vxe-button--link,
 .vxe-button--dropdown {
   margin-right: var(--vxe-ui-button-current-margin-left);
   &:last-of-type {

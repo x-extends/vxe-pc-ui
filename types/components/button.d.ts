@@ -94,7 +94,7 @@ export namespace VxeButtonPropTypes {
     /**
      * 挂载到指定元素下
      */
-    appendTo?: string | HTMLElement | (() => string | HTMLElement)
+    appendTo?: string | HTMLElement | ((params: {}) => string | HTMLElement)
     zIndex?: number | string
     className?: string | ((params: { $button: VxeButtonConstructor }) => string)
   }

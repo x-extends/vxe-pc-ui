@@ -3,7 +3,7 @@ import { defineVxeComponent } from '../../ui/src/comp'
 import XEUtils from 'xe-utils'
 import { globalMixins, getIcon, getConfig, getI18n, globalEvents, GLOBAL_EVENT_KEYS, createEvent, renderEmptyElement } from '../../ui'
 import { getLastZIndex, nextZIndex, getFuncText } from '../../ui/src/utils'
-import { getDomNode, toCssUnit } from '../../ui/src/dom'
+import { getDomNode, getPopupContainer, toCssUnit } from '../../ui/src/dom'
 import { getSlotVNs } from '../../ui/src/vn'
 import VxeButtonComponent from '../../button'
 import VxeLoadingComponent from '../../loading'
@@ -109,6 +109,10 @@ export default /* define-vxe-component start */ defineVxeComponent({
     transfer: {
       type: Boolean as PropType<VxeDrawerPropTypes.Transfer>,
       default: () => getConfig().drawer.transfer
+    },
+    appendTo: {
+      type: [String, Function] as PropType<VxeDrawerPropTypes.AppendTo>,
+      default: () => getConfig().drawer.appendTo
     },
     padding: {
       type: Boolean as PropType<VxeDrawerPropTypes.Padding>,
@@ -340,14 +344,14 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const props = $xeDrawer
       const reactData = $xeDrawer.reactData
 
-      const { showFooter } = props
+      const { showFooter, appendTo } = props
       const { initialized, visible } = reactData
       const btnTransfer = $xeDrawer.computeBtnTransfer
       if (!initialized) {
         reactData.initialized = true
         if (btnTransfer) {
           const panelElem = $xeDrawer.$refs.refElem as HTMLDivElement
-          document.body.appendChild(panelElem)
+          getPopupContainer(appendTo).appendChild(panelElem)
         }
       }
       if (!visible) {

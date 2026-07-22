@@ -2,7 +2,7 @@ import { CreateElement, VNode, PropType } from 'vue'
 import { defineVxeComponent } from '../../ui/src/comp'
 import XEUtils from 'xe-utils'
 import { VxeUI, getIcon, getConfig, getI18n, globalEvents, createEvent, globalMixins, renderEmptyElement } from '../../ui'
-import { getEventTargetNode, toCssUnit, updatePanelPlacement } from '../../ui/src/dom'
+import { getEventTargetNode, getPopupContainer, toCssUnit, updatePanelPlacement } from '../../ui/src/dom'
 import { getLastZIndex, nextZIndex } from '../../ui/src/utils'
 import { parseColor, updateColorAlpha, hexToHsv, rgbToHsv, rgbToHex, hexToRgb, hsvToRgb, toRgb } from './util'
 import VxeButtonComponent from '../../button'
@@ -372,12 +372,14 @@ export default /* define-vxe-component start */ defineVxeComponent({
           internalData.hpTimeout = undefined
         }
         const btnTransfer = $xeColorPicker.computeBtnTransfer
+        const popupOpts = $xeColorPicker.computePopupOpts
         const panelElem = $xeColorPicker.$refs.refOptionPanel as HTMLElement
         if (!reactData.initialized) {
           reactData.initialized = true
           if (btnTransfer) {
             if (panelElem) {
-              document.body.appendChild(panelElem)
+              const { appendTo } = popupOpts
+              getPopupContainer(appendTo).appendChild(panelElem)
             }
           }
         }

@@ -59,7 +59,14 @@ export namespace VxeIconPickerPropTypes {
      * 触发方式
      */
     trigger?: 'default' | 'icon' | 'manual' | '' | null
+    /**
+     * 是否启用元素挂载
+     */
     transfer?: boolean
+    /**
+     * 挂载到指定元素下
+     */
+    appendTo?: string | HTMLElement | ((params: {}) => string | HTMLElement)
     /**
      * 每行显示出多少个图标，如果设置了 chunkWidth 则该参数无效
      */

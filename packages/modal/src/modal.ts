@@ -2,7 +2,7 @@ import { PropType, CreateElement, VNode } from 'vue'
 import { defineVxeComponent } from '../../ui/src/comp'
 import XEUtils from 'xe-utils'
 import { VxeUI, getConfig, getI18n, getIcon, createEvent, globalEvents, globalMixins, renderEmptyElement, GLOBAL_EVENT_KEYS } from '../../ui'
-import { getDomNode, getEventTargetNode, toCssUnit } from '../../ui/src/dom'
+import { getDomNode, getEventTargetNode, getPopupContainer, toCssUnit } from '../../ui/src/dom'
 import { getLastZIndex, nextZIndex, getSubLastZIndex, nextSubZIndex, getFuncText, handleBooleanDefaultValue } from '../../ui/src/utils'
 import VxeButtonComponent from '../../button'
 import VxeLoadingComponent from '../../loading'
@@ -166,6 +166,10 @@ export default /* define-vxe-component start */ defineVxeComponent({
     transfer: {
       type: Boolean as PropType<VxeModalPropTypes.Transfer>,
       default: () => getConfig().modal.transfer
+    },
+    appendTo: {
+      type: [String, Function] as PropType<VxeModalPropTypes.AppendTo>,
+      default: () => getConfig().modal.appendTo
     },
     storage: {
       type: Boolean as PropType<VxeModalPropTypes.Storage>,
@@ -901,7 +905,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const props = $xeModal
       const reactData = $xeModal.reactData
 
-      const { remember, showFooter } = props
+      const { remember, showFooter, appendTo } = props
       const { initialized, visible } = reactData
       const isMsg = $xeModal.computeIsMsg
       const btnTransfer = $xeModal.computeBtnTransfer
@@ -909,7 +913,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
         reactData.initialized = true
         if (btnTransfer) {
           const panelElem = $xeModal.$refs.refElem as HTMLDivElement
-          document.body.appendChild(panelElem)
+          getPopupContainer(appendTo).appendChild(panelElem)
         }
       }
       if (!visible) {
@@ -1176,7 +1180,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const { visibleHeight, visibleWidth } = getDomNode()
       const marginSize = XEUtils.toNumber(props.marginSize)
       const targetElem = evnt.target as HTMLSpanElement
-      const type = targetElem.getAttribute('type')
+      const type = targetElem.getAttribute('data-type')
       const minWidth = XEUtils.toNumber(props.minWidth)
       const minHeight = XEUtils.toNumber(props.minHeight)
       const maxWidth = visibleWidth
@@ -1636,7 +1640,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
                         return h('span', {
                           class: `${type}-resize`,
                           attrs: {
-                            type: type
+                            'data-type': type
                           },
                           on: {
                             mousedown: $xeModal.dragEvent

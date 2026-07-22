@@ -3,7 +3,7 @@ import { defineVxeComponent } from '../../ui/src/comp'
 import XEUtils from 'xe-utils'
 import { getConfig, getIcon, getI18n, commands, createEvent, globalEvents, GLOBAL_EVENT_KEYS, globalMixins, renderEmptyElement } from '../../ui'
 import { getFuncText, getLastZIndex, nextZIndex, isEnableConf } from '../../ui/src/utils'
-import { updatePanelPlacement, getEventTargetNode, hasControlKey } from '../../ui/src/dom'
+import { updatePanelPlacement, getEventTargetNode, hasControlKey, getPopupContainer } from '../../ui/src/dom'
 import { getSlotVNs } from '../../ui/src/vn'
 import { parseDateObj, parseDateValue, getDateByCode, handleValueFormat, hasDateValueType, hasTimestampValueType, isAllSameChar, getChunkDefaultNum, checkDateInputFormat } from '../../date-panel/src/util'
 import { createComponentLog } from '../../ui/src/log'
@@ -1388,12 +1388,14 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const { visiblePanel } = reactData
       const isDisabled = $xeDatePicker.computeIsDisabled
       const btnTransfer = $xeDatePicker.computeBtnTransfer
+      const popupOpts = $xeDatePicker.computePopupOpts
       const panelElem = $xeDatePicker.$refs.refInputPanel as HTMLElement
       if (!isDisabled && !visiblePanel) {
         if (!reactData.initialized) {
           reactData.initialized = true
           if (btnTransfer && panelElem) {
-            document.body.appendChild(panelElem)
+            const { appendTo } = popupOpts
+            getPopupContainer(appendTo).appendChild(panelElem)
           }
         }
         if (internalData.hpTimeout) {

@@ -116,7 +116,7 @@ export namespace VxeDatePickerPropTypes {
     /**
      * 挂载到指定元素下
      */
-    appendTo?: string | HTMLElement | (() => string | HTMLElement)
+    appendTo?: string | HTMLElement | ((params: {}) => string | HTMLElement)
     width?: number | string
     height?: number | string
     zIndex?: number | string

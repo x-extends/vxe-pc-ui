@@ -2,7 +2,7 @@ import { PropType, CreateElement, VNode } from 'vue'
 import { defineVxeComponent } from '../../ui/src/comp'
 import XEUtils from 'xe-utils'
 import { VxeUI, createEvent, permission, globalMixins, globalEvents, renderEmptyElement } from '../../ui'
-import { scrollToView, toCssUnit } from '../../ui/src/dom'
+import { getPopupContainer, scrollToView, toCssUnit } from '../../ui/src/dom'
 import { getLastZIndex, nextZIndex, isEnableConf } from '../../ui/src/utils'
 import { getSlotVNs } from '../../ui/src/vn'
 import { createComponentLog } from '../../ui/src/log'
@@ -74,7 +74,11 @@ export default /* define-vxe-component start */ defineVxeComponent({
       type: String as PropType<VxeMenuPropTypes.Size>,
       default: () => getConfig().menu.size || getConfig().size
     },
-    menuConfig: Object as PropType<VxeMenuPropTypes.MenuConfig>
+    menuConfig: Object as PropType<VxeMenuPropTypes.MenuConfig>,
+    appendTo: {
+      type: [String, Function] as PropType<VxeMenuPropTypes.AppendTo>,
+      default: () => getConfig().menu.appendTo
+    }
   },
   inject: {
     $xeLayoutAside: {
@@ -419,7 +423,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const props = $xeMenu
       const reactData = $xeMenu.reactData
 
-      const { collapseFixed } = props
+      const { collapseFixed, appendTo } = props
       if (collapseFixed) {
         const { initialized } = reactData
         const isCollapsed = $xeMenu.computeIsCollapsed
@@ -429,7 +433,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
             $xeMenu.$nextTick(() => {
               const collapseEl = $xeMenu.$refs.refCollapseElem as HTMLDivElement
               if (collapseEl) {
-                document.body.appendChild(collapseEl)
+                getPopupContainer(appendTo).appendChild(collapseEl)
               }
             })
           }

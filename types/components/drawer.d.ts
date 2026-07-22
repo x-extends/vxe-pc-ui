@@ -58,6 +58,7 @@ export namespace VxeDrawerPropTypes {
   export type DestroyOnClose = boolean
   export type ShowTitleOverflow = boolean
   export type Transfer = boolean
+  export type AppendTo = string | HTMLElement | ((params: {}) => string | HTMLElement)
   export type Padding = boolean
   export type BeforeHideMethod = (params: VxeDrawerDefines.DrawerVisibleParams) => Promise<any>
   export type Slots = VxeDrawerSlots
@@ -94,7 +95,14 @@ export interface VxeDrawerProps {
   zIndex?: VxeDrawerPropTypes.ZIndex
   destroyOnClose?: VxeDrawerPropTypes.DestroyOnClose
   showTitleOverflow?: VxeDrawerPropTypes.ShowTitleOverflow
+  /**
+   * 是否启用元素挂载
+   */
   transfer?: VxeDrawerPropTypes.Transfer
+  /**
+   * 挂载到指定元素下
+   */
+  appendTo?: VxeDrawerPropTypes.AppendTo
   padding?: VxeDrawerPropTypes.Padding
   beforeHideMethod?: VxeDrawerPropTypes.BeforeHideMethod
   slots?: VxeDrawerPropTypes.Slots

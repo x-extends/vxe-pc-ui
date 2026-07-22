@@ -1,6 +1,6 @@
 <template>
   <div>
-    <vxe-select v-model="val1" placeholder="自定义某一行模板" clearable>
+    <vxe-select v-model="val1" placeholder="自定义某一行模板" clearable transfer :popup-config="{appendTo:'#app'}">
       <vxe-option value="1" label="选项1"></vxe-option>
       <vxe-option value="2" label="选项2"></vxe-option>
       <vxe-option value="3" label="选项3">

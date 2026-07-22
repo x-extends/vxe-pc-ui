@@ -2,7 +2,7 @@ import { PropType, CreateElement, VNode } from 'vue'
 import { defineVxeComponent } from '../../ui/src/comp'
 import XEUtils from 'xe-utils'
 import { getConfig, getIcon, getI18n, globalEvents, renderer, createEvent, globalMixins, GLOBAL_EVENT_KEYS, renderEmptyElement } from '../../ui'
-import { getEventTargetNode, toCssUnit, updatePanelPlacement } from '../../ui/src/dom'
+import { getEventTargetNode, getPopupContainer, toCssUnit, updatePanelPlacement } from '../../ui/src/dom'
 import { getLastZIndex, nextZIndex, getFuncText } from '../../ui/src/utils'
 import { getSlotVNs } from '../../ui/src/vn'
 import VxeInputComponent from '../../input/src/input'
@@ -381,6 +381,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
 
       const { hpTimeout } = internalData
       const isDisabled = $xeIconPicker.computeIsDisabled
+      const popupOpts = $xeIconPicker.computePopupOpts
       if (!isDisabled) {
         if (hpTimeout) {
           clearTimeout(hpTimeout)
@@ -392,7 +393,8 @@ export default /* define-vxe-component start */ defineVxeComponent({
           reactData.initialized = true
           if (btnTransfer) {
             if (panelElem) {
-              document.body.appendChild(panelElem)
+              const { appendTo } = popupOpts
+              getPopupContainer(appendTo).appendChild(panelElem)
             }
           }
         }
