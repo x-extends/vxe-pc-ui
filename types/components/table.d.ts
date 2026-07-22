@@ -1016,7 +1016,10 @@ export namespace VxeTablePropTypes {
       resize?: VxeModalPropTypes.Resize
       escClosable?: VxeModalPropTypes.EscClosable
       maskClosable?: VxeModalPropTypes.MaskClosable
-      transfer?: VxeModalPropTypes.Transfer
+      /**
+       * 是否启用元素挂载
+       */
+      transfer?: boolean
     }
     /**
      * 抽屉模式配置项，用于 mode='drawer'
@@ -1031,7 +1034,10 @@ export namespace VxeTablePropTypes {
       resize?: VxeDrawerPropTypes.Resize
       escClosable?: VxeDrawerPropTypes.EscClosable
       maskClosable?: VxeDrawerPropTypes.MaskClosable
-      transfer?: VxeDrawerPropTypes.Transfer
+      /**
+       * 是否启用元素挂载
+       */
+      transfer?: boolean
     }
     /**
      * 默认模式配置项
@@ -1042,6 +1048,9 @@ export namespace VxeTablePropTypes {
       minWidth?: number | string
       maxWidth?: number | string
       maxHeight?: number | string
+      /**
+       * 是否启用元素挂载
+       */
       transfer?: boolean
     }
     trigger?: 'manual' | 'hover' | 'click' | '' | null
@@ -1370,6 +1379,9 @@ export namespace VxeTablePropTypes {
     }): boolean
     className?: string
     zIndex?: number
+    /**
+     * 是否启用元素挂载
+     */
     transfer?: boolean
     iconNone?: string
     iconMatch?: string
@@ -1846,6 +1858,9 @@ export namespace VxeTablePropTypes {
      */
     className?: string
     zIndex?: number
+    /**
+     * 是否启用元素挂载
+     */
     transfer?: boolean
     destroyOnClose?: boolean
     /**

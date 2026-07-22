@@ -1,7 +1,7 @@
 import { h, Teleport, ref, Ref, inject, computed, reactive, provide, nextTick, watch, PropType, VNode, onMounted, onUnmounted } from 'vue'
 import { defineVxeComponent } from '../../ui/src/comp'
 import XEUtils from 'xe-utils'
-import { getDomNode, getEventTargetNode, toCssUnit } from '../../ui/src/dom'
+import { getDomNode, getEventTargetNode, getPopupContainer, toCssUnit } from '../../ui/src/dom'
 import { getLastZIndex, nextZIndex, getSubLastZIndex, nextSubZIndex, getFuncText, handleBooleanDefaultValue } from '../../ui/src/utils'
 import { VxeUI, getConfig, getIcon, getI18n, globalEvents, GLOBAL_EVENT_KEYS, createEvent, useSize, renderEmptyElement } from '../../ui'
 import VxeButtonComponent from '../../button'
@@ -162,6 +162,10 @@ export default defineVxeComponent({
     transfer: {
       type: Boolean as PropType<VxeModalPropTypes.Transfer>,
       default: () => getConfig().modal.transfer
+    },
+    appendTo: {
+      type: [String, Function] as PropType<VxeModalPropTypes.AppendTo>,
+      default: () => getConfig().modal.appendTo
     },
     storage: {
       type: Boolean as PropType<VxeModalPropTypes.Storage>,
@@ -993,7 +997,7 @@ export default defineVxeComponent({
       const { visibleHeight, visibleWidth } = getDomNode()
       const marginSize = XEUtils.toNumber(props.marginSize)
       const targetElem = evnt.target as HTMLSpanElement
-      const type = targetElem.getAttribute('type')
+      const type = targetElem.getAttribute('data-type')
       const minWidth = XEUtils.toNumber(props.minWidth)
       const minHeight = XEUtils.toNumber(props.minHeight)
       const maxWidth = visibleWidth
@@ -1377,7 +1381,7 @@ export default defineVxeComponent({
     }
 
     const renderVN = () => {
-      const { slots: propSlots = {}, className, type, animat, draggable, iconStatus, position, loading, destroyOnClose, status, lockScroll, padding, lockView, mask, resize } = props
+      const { slots: propSlots = {}, className, type, animat, draggable, iconStatus, position, loading, destroyOnClose, status, lockScroll, padding, lockView, mask, resize, appendTo } = props
       const { initialized, modalTop, contentVisible, visible, zoomStatus } = reactData
       const asideSlot = slots.aside || propSlots.aside
       const vSize = computeSize.value
@@ -1390,7 +1394,7 @@ export default defineVxeComponent({
         ons.onMouseout = selfMouseoutEvent
       }
       return h(Teleport, {
-        to: 'body',
+        to: getPopupContainer(appendTo),
         disabled: btnTransfer ? !initialized : true
       }, [
         h('div', {
@@ -1454,7 +1458,7 @@ export default defineVxeComponent({
                     }, ['wl', 'wr', 'swst', 'sest', 'st', 'swlb', 'selb', 'sb'].map(type => {
                       return h('span', {
                         class: `${type}-resize`,
-                        type: type,
+                        'data-type': type,
                         onMousedown: dragEvent
                       })
                     }))

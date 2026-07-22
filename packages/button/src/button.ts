@@ -2,7 +2,7 @@ import { h, ref, computed, Teleport, resolveComponent, VNode, onUnmounted, react
 import { defineVxeComponent } from '../../ui/src/comp'
 import XEUtils from 'xe-utils'
 import { getConfig, globalEvents, getIcon, createEvent, useSize, renderer, usePermission, permission, renderEmptyElement } from '../../ui'
-import { getEventTargetNode, updatePanelPlacement } from '../../ui/src/dom'
+import { getEventTargetNode, getPopupContainer, updatePanelPlacement } from '../../ui/src/dom'
 import { getFuncText, getLastZIndex, nextZIndex } from '../../ui/src/utils'
 import { getSlotVNs } from '../../ui/src/vn'
 import { createComponentLog } from '../../ui/src/log'
@@ -631,6 +631,7 @@ const VxeButtonComponent = defineVxeComponent({
       const downBtnList = computeDownBtnList.value
       const popupOpts = computePopupOpts.value
       const vSize = computeSize.value
+      const { appendTo } = popupOpts
       const dropdownsSlot = slots.dropdowns
       const ppClassName = popupOpts.className || props.popupClassName
 
@@ -712,7 +713,7 @@ const VxeButtonComponent = defineVxeComponent({
                 ]
               : [])),
           h(Teleport, {
-            to: 'body',
+            to: getPopupContainer(appendTo),
             disabled: btnTransfer ? !initialized : true
           }, [
             h('div', {

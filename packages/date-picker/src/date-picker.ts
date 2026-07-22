@@ -3,7 +3,7 @@ import { defineVxeComponent } from '../../ui/src/comp'
 import XEUtils from 'xe-utils'
 import { getConfig, getIcon, getI18n, commands, createEvent, globalEvents, GLOBAL_EVENT_KEYS, useSize, renderEmptyElement } from '../../ui'
 import { getFuncText, getLastZIndex, nextZIndex, isEnableConf } from '../../ui/src/utils'
-import { updatePanelPlacement, getEventTargetNode, hasControlKey } from '../../ui/src/dom'
+import { updatePanelPlacement, getEventTargetNode, hasControlKey, getPopupContainer } from '../../ui/src/dom'
 import { getSlotVNs } from '../../ui/src/vn'
 import { parseDateObj, parseDateValue, getDateByCode, handleValueFormat, hasDateValueType, hasTimestampValueType, isAllSameChar, getChunkDefaultNum, checkDateInputFormat } from '../../date-panel/src/util'
 import { createComponentLog } from '../../ui/src/log'
@@ -1402,6 +1402,7 @@ export default defineVxeComponent({
       const timeOpts = computeTimeOpts.value
       const dateStartDate = computeDateStartDate.value
       const dateEndDate = computeDateEndDate.value
+      const { appendTo } = popupOpts
       const { position } = shortcutOpts
       const headerSlot = slots.header
       const footerSlot = slots.footer
@@ -1414,7 +1415,7 @@ export default defineVxeComponent({
       const showConfirmBtn = (showConfirmButton === null ? (isTimeOrDateTimeType || multiple) : showConfirmButton)
       const showClearBtn = (showClearButton === null ? (isClearable && showConfirmBtn && type !== 'time') : showClearButton)
       return h(Teleport, {
-        to: 'body',
+        to: getPopupContainer(appendTo),
         disabled: btnTransfer ? !initialized : true
       }, [
         h('div', {

@@ -2,7 +2,7 @@ import { h, Teleport, PropType, ref, inject, watch, computed, provide, onBeforeU
 import { defineVxeComponent } from '../../ui/src/comp'
 import XEUtils from 'xe-utils'
 import { getConfig, getIcon, getI18n, globalEvents, createEvent, renderer, useSize, GLOBAL_EVENT_KEYS, renderEmptyElement } from '../../ui'
-import { getEventTargetNode, toCssUnit, updatePanelPlacement } from '../../ui/src/dom'
+import { getEventTargetNode, getPopupContainer, toCssUnit, updatePanelPlacement } from '../../ui/src/dom'
 import { getLastZIndex, nextZIndex, getFuncText } from '../../ui/src/utils'
 import { getSlotVNs } from '../../ui/src/vn'
 import VxeInputComponent from '../../input/src/input'
@@ -606,6 +606,7 @@ export default defineVxeComponent({
       const inpPlaceholder = computeInpPlaceholder.value
       const wrapperStyle = computeWrapperStyle.value
       const popupOpts = computePopupOpts.value
+      const { appendTo } = popupOpts
       const ppClassName = popupOpts.className || props.popupClassName
 
       if (formReadonly) {
@@ -664,7 +665,7 @@ export default defineVxeComponent({
           ])
         ]),
         h(Teleport, {
-          to: 'body',
+          to: getPopupContainer(appendTo),
           disabled: btnTransfer ? !initialized : true
         }, [
           h('div', {

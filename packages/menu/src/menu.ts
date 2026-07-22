@@ -2,7 +2,7 @@ import { ref, h, reactive, Teleport, PropType, inject, resolveComponent, watch, 
 import { defineVxeComponent } from '../../ui/src/comp'
 import XEUtils from 'xe-utils'
 import { VxeUI, createEvent, permission, useSize, globalEvents, renderEmptyElement } from '../../ui'
-import { scrollToView, toCssUnit } from '../../ui/src/dom'
+import { getPopupContainer, scrollToView, toCssUnit } from '../../ui/src/dom'
 import { getLastZIndex, nextZIndex, isEnableConf } from '../../ui/src/utils'
 import { getSlotVNs } from '../../ui/src/vn'
 import { createComponentLog } from '../../ui/src/log'
@@ -70,7 +70,11 @@ export default defineVxeComponent({
       type: String as PropType<VxeMenuPropTypes.Size>,
       default: () => getConfig().menu.size || getConfig().size
     },
-    menuConfig: Object as PropType<VxeMenuPropTypes.MenuConfig>
+    menuConfig: Object as PropType<VxeMenuPropTypes.MenuConfig>,
+    appendTo: {
+      type: [String, Function] as PropType<VxeMenuPropTypes.AppendTo>,
+      default: () => getConfig().menu.appendTo
+    }
   },
   emits: [
     'update:modelValue',
@@ -672,7 +676,7 @@ export default defineVxeComponent({
     }
 
     const renderVN = () => {
-      const { loading, collapseFixed } = props
+      const { loading, collapseFixed, appendTo } = props
       const { initialized, menuList, collapseStyle, isEnterCollapse } = reactData
       const vSize = computeSize.value
       const isCollapsed = computeIsCollapsed.value
@@ -711,7 +715,7 @@ export default defineVxeComponent({
           }, footerSlot(stParams))
           : renderEmptyElement($xeMenu),
         h(Teleport, {
-          to: 'body',
+          to: getPopupContainer(appendTo),
           disabled: !initialized
         }, [
           h('div', {

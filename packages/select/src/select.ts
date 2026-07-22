@@ -2,7 +2,7 @@ import { h, Teleport, PropType, ref, inject, computed, provide, onUnmounted, rea
 import { defineVxeComponent } from '../../ui/src/comp'
 import XEUtils from 'xe-utils'
 import { VxeUI, getConfig, getIcon, getI18n, globalEvents, GLOBAL_EVENT_KEYS, createEvent, useSize, renderEmptyElement } from '../../ui'
-import { getEventTargetNode, toCssUnit, updatePanelPlacement } from '../../ui/src/dom'
+import { getEventTargetNode, getPopupContainer, toCssUnit, updatePanelPlacement } from '../../ui/src/dom'
 import { getLastZIndex, nextZIndex, getFuncText, eqEmptyValue } from '../../ui/src/utils'
 import { getSlotVNs } from '../../ui/src/vn'
 import { createComponentLog } from '../../ui/src/log'
@@ -1621,6 +1621,7 @@ export default defineVxeComponent({
       const inpPlaceholder = computeInpPlaceholder.value
       const popupWrapperStyle = computePopupWrapperStyle.value
       const popupOpts = computePopupOpts.value
+      const { appendTo } = popupOpts
       const defaultSlot = slots.default
       const headerSlot = slots.header
       const footerSlot = slots.footer
@@ -1680,7 +1681,7 @@ export default defineVxeComponent({
             }
           : {}),
         h(Teleport, {
-          to: 'body',
+          to: getPopupContainer(appendTo),
           disabled: btnTransfer ? !initialized : true
         }, [
           h('div', {

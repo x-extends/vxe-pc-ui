@@ -2,7 +2,7 @@ import { watch, computed, provide, ref, inject, Teleport, h, nextTick, PropType,
 import { defineVxeComponent } from '../../ui/src/comp'
 import XEUtils from 'xe-utils'
 import { VxeUI, getIcon, getConfig, getI18n, globalEvents, createEvent, useSize, renderEmptyElement } from '../../ui'
-import { getEventTargetNode, toCssUnit, updatePanelPlacement } from '../../ui/src/dom'
+import { getEventTargetNode, getPopupContainer, toCssUnit, updatePanelPlacement } from '../../ui/src/dom'
 import { getLastZIndex, nextZIndex } from '../../ui/src/utils'
 import { parseColor, updateColorAlpha, hexToHsv, rgbToHsv, rgbToHex, hexToRgb, hsvToRgb, toRgb } from './util'
 import VxeButtonComponent from '../../button'
@@ -986,6 +986,8 @@ export default defineVxeComponent({
       const isDisabled = computeIsDisabled.value
       const btnTransfer = computeBtnTransfer.value
       const formReadonly = computeFormReadonly.value
+      const popupOpts = computePopupOpts.value
+      const { appendTo } = popupOpts
 
       if (formReadonly) {
         return h('div', {
@@ -1028,7 +1030,7 @@ export default defineVxeComponent({
           })
         ]),
         h(Teleport, {
-          to: 'body',
+          to: getPopupContainer(appendTo),
           disabled: btnTransfer ? !initialized : true
         }, [
           h('div', {

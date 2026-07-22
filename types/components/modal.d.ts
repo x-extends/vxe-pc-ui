@@ -114,6 +114,7 @@ export namespace VxeModalPropTypes {
   export type DestroyOnClose = boolean
   export type ShowTitleOverflow = boolean
   export type Transfer = boolean
+  export type AppendTo = string | HTMLElement | ((params: {}) => string | HTMLElement)
   export type Storage = boolean
   export type StorageKey = string
   export type Animat = boolean
@@ -171,7 +172,14 @@ export interface VxeModalProps {
   remember?: VxeModalPropTypes.Remember
   destroyOnClose?: VxeModalPropTypes.DestroyOnClose
   showTitleOverflow?: VxeModalPropTypes.ShowTitleOverflow
+  /**
+   * 是否启用元素挂载
+   */
   transfer?: VxeModalPropTypes.Transfer
+  /**
+   * 挂载到指定元素下
+   */
+  appendTo?: VxeModalPropTypes.AppendTo
   storage?: VxeModalPropTypes.Storage
   storageKey?: VxeModalPropTypes.StorageKey
   animat?: VxeModalPropTypes.Animat

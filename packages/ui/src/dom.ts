@@ -278,3 +278,7 @@ export function updatePanelPlacement (targetElem: HTMLElement | null | undefined
     placement: panelPlacement
   }
 }
+
+export function getPopupContainer (appendTo: string | HTMLElement | ((params: any) => string | HTMLElement) | undefined) {
+  return appendTo ? ((XEUtils.isFunction(appendTo) ? appendTo({}) : appendTo) || 'body') : 'body'
+}

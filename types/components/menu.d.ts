@@ -39,7 +39,6 @@ export namespace VxeMenuPropTypes {
    linkUrl?: string
    linkTarget?: string
    routerLink?: string
-   routerTarget?: string
   }
 
   export interface MenuOption {
@@ -85,6 +84,7 @@ export namespace VxeMenuPropTypes {
       currentOption: VxeMenuPropTypes.MenuOption
     }): boolean
   }
+  export type AppendTo = string | HTMLElement | ((params: {}) => string | HTMLElement)
 }
 
 export interface VxeMenuProps {
@@ -106,6 +106,10 @@ export interface VxeMenuProps {
   expandKeys?: VxeMenuPropTypes.ExpandKeys
   options?: VxeMenuPropTypes.Options
   menuConfig?: VxeMenuPropTypes.MenuConfig
+  /**
+   * 挂载到指定元素下
+   */
+  appendTo?: VxeMenuPropTypes.AppendTo
 }
 
 export interface MenuPrivateComputed {

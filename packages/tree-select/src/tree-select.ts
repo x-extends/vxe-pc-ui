@@ -1,7 +1,7 @@
 import { ref, computed, h, PropType, nextTick, inject, provide, reactive, Teleport, onMounted, onBeforeUnmount, watch, VNode } from 'vue'
 import { defineVxeComponent } from '../../ui/src/comp'
 import { getConfig, getI18n, getIcon, globalEvents, createEvent, useSize, renderEmptyElement } from '../../ui'
-import { getEventTargetNode, updatePanelPlacement, toCssUnit } from '../../ui/src/dom'
+import { getEventTargetNode, updatePanelPlacement, toCssUnit, getPopupContainer } from '../../ui/src/dom'
 import { getLastZIndex, nextZIndex, deModelValue } from '../../ui/src/utils'
 import { createComponentLog } from '../../ui/src/log'
 import { getSlotVNs } from '../../ui/src/vn'
@@ -784,6 +784,7 @@ export default defineVxeComponent({
       const footerSlot = slots.footer
       const prefixSlot = slots.prefix
       const popupOpts = computePopupOpts.value
+      const { appendTo } = popupOpts
       const ppClassName = popupOpts.className || props.popupClassName
 
       if (formReadonly) {
@@ -861,7 +862,7 @@ export default defineVxeComponent({
             }
           : {}),
         h(Teleport, {
-          to: 'body',
+          to: getPopupContainer(appendTo),
           disabled: btnTransfer ? !initialized : true
         }, [
           h('div', {

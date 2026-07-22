@@ -3,7 +3,7 @@ import { defineVxeComponent } from '../../ui/src/comp'
 import XEUtils from 'xe-utils'
 import { useSize, getIcon, getConfig, getI18n, globalEvents, GLOBAL_EVENT_KEYS, createEvent, renderEmptyElement } from '../../ui'
 import { getLastZIndex, nextZIndex, getFuncText } from '../../ui/src/utils'
-import { getDomNode, toCssUnit } from '../../ui/src/dom'
+import { getDomNode, getPopupContainer, toCssUnit } from '../../ui/src/dom'
 import { getSlotVNs } from '../../ui/src/vn'
 import VxeButtonComponent from '../../button'
 import VxeLoadingComponent from '../../loading'
@@ -105,6 +105,10 @@ export default defineVxeComponent({
     transfer: {
       type: Boolean as PropType<VxeDrawerPropTypes.Transfer>,
       default: () => getConfig().drawer.transfer
+    },
+    appendTo: {
+      type: [String, Function] as PropType<VxeDrawerPropTypes.AppendTo>,
+      default: () => getConfig().drawer.appendTo
     },
     padding: {
       type: Boolean as PropType<VxeDrawerPropTypes.Padding>,
@@ -566,14 +570,14 @@ export default defineVxeComponent({
     }
 
     const renderVN = () => {
-      const { slots: propSlots = {}, className, position, loading, lockScroll, padding, lockView, mask, resize, destroyOnClose } = props
+      const { slots: propSlots = {}, className, position, loading, lockScroll, padding, lockView, mask, resize, appendTo, destroyOnClose } = props
       const { initialized, contentVisible, visible } = reactData
       const asideSlot = slots.aside || propSlots.aside
       const vSize = computeSize.value
       const dragType = computeDragType.value
       const btnTransfer = computeBtnTransfer.value
       return h(Teleport, {
-        to: 'body',
+        to: getPopupContainer(appendTo),
         disabled: btnTransfer ? !initialized : true
       }, [
         h('div', {

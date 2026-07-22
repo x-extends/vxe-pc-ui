@@ -2,7 +2,7 @@ import { ref, h, PropType, computed, inject, watch, provide, nextTick, Teleport,
 import { defineVxeComponent } from '../../ui/src/comp'
 import XEUtils from 'xe-utils'
 import { VxeUI, getConfig, getIcon, globalEvents, getI18n, createEvent, useSize, renderEmptyElement } from '../../ui'
-import { getEventTargetNode, updatePanelPlacement, toCssUnit } from '../../ui/src/dom'
+import { getEventTargetNode, updatePanelPlacement, toCssUnit, getPopupContainer } from '../../ui/src/dom'
 import { getOnName } from '../../ui/src/vn'
 import { getLastZIndex, nextZIndex } from '../../ui/src/utils'
 import { createComponentLog } from '../../ui/src/log'
@@ -649,6 +649,7 @@ export default defineVxeComponent({
       const selectGridOpts = computeSelectGridOpts.value
       const rowOpts = computeRowOpts.value
       const popupWrapperStyle = computePopupWrapperStyle.value
+      const { appendTo } = popupOpts
       const headerSlot = slots.header
       const footerSlot = slots.footer
       const prefixSlot = slots.prefix
@@ -695,7 +696,7 @@ export default defineVxeComponent({
             }
           : {}),
         h(Teleport, {
-          to: 'body',
+          to: getPopupContainer(appendTo),
           disabled: btnTransfer ? !initialized : true
         }, [
           h('div', {
