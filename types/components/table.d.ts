@@ -4653,7 +4653,7 @@ export interface TableMethods<DT = any> {
     fullData: DT[]
     visibleData: DT[]
     tableData: DT[]
-    footerData: DT[][]
+    footerData: DT[]
   }
   /**
    * 获取表格的全量数据，如果是 tree-config 则返回带层级的树结构
@@ -6710,7 +6710,7 @@ export namespace VxeTableDefines {
 
   export interface FooterDataChangeEventParams<D = any> extends TableEventParams<D> {
     visibleColumn: ColumnInfo<D>[]
-    footerData: D[][]
+    footerData: D[]
   }
 
   export interface CurrentRowChangeParams<D = any> extends TableBaseCellParams<D> {
