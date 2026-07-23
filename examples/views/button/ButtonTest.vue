@@ -225,7 +225,7 @@
       <vxe-button mode="text" icon="fa fa-plus"></vxe-button>
       <vxe-button mode="text" icon="fa fa-refresh"></vxe-button>
       <vxe-button content="图标按钮" status="primary" icon="fa fa-download"></vxe-button>
-      <vxe-button content="自定义按钮颜色" class="my-purple" icon="fa fa-save"></vxe-button>
+      <vxe-button :router-link="{}" content="自定义按钮颜色" class="my-purple" icon="fa fa-save"></vxe-button>
       <vxe-button content="自定义图标颜色" icon="fa fa-graduation-cap my-green"></vxe-button>
     </p>
 
