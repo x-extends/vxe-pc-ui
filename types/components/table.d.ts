@@ -1043,7 +1043,11 @@ export namespace VxeTablePropTypes {
       column: VxeTableDefines.ColumnInfo<D>
     }): boolean
     /**
-     * 是否允许个性化列显示与隐藏
+     * 是否允许设置分页设置
+     */
+    allowPager?: boolean
+    /**
+     * 是否允许设置列的显示与隐藏
      */
     allowVisible?: boolean
     /**
@@ -2618,7 +2622,7 @@ export namespace VxeTablePropTypes {
    */
   export interface EditDirtyConfig {
     /**
-     * 监听数据额外的列的字段，如果同时指定 includeFields 则会被覆盖
+     * 监听数据额外的列的字段，如果同时指定 includeFields 则无效
      */
     extraFields?: string[]
     /**
@@ -3027,6 +3031,7 @@ export namespace VxeTablePropTypes {
     type?: string
     field?: string
     width?: number | string
+    children?: ExportOrPrintColumnOption[]
   }
 
   interface ExportAndPrintConfig<D = any> {
@@ -3101,6 +3106,10 @@ export namespace VxeTablePropTypes {
      * 自定义列
      */
     columns?: VxeTableDefines.ColumnInfo[] | ExportOrPrintColumnOption[]
+    /**
+     * 额外的列
+     */
+    extraFields?: string[]
     /**
      * 指定列
      */
@@ -7080,6 +7089,9 @@ export namespace VxeTableDefines {
   export type CustomEventType = 'reset' | 'confirm' | 'update:width' | 'update:fixed' | 'update:sort' | 'update:visible' | 'update:align' | 'update:headerAlign' | 'update:footerAlign' | 'update:aggGroup' | 'update:aggFunc'
 
   export interface CustomStoreData {
+    pageData?: {
+      ps?: number
+    }
     alignData?: Record<string, VxeColumnPropTypes.Align>
     headerAlignData?: Record<string, VxeColumnPropTypes.HeaderAlign>
     footerAlignData?: Record<string, VxeColumnPropTypes.FooterAlign>
@@ -7092,6 +7104,10 @@ export namespace VxeTableDefines {
   }
 
   export interface VxeTableCustomStorageObj {
+    /**
+     * 保存分页设置
+     */
+    pager?: boolean | null
     /**
      * 保存列对齐方式
      */
