@@ -49,6 +49,7 @@
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
+    @include baseMixin.createAnimationTransition(all, 0.2s);
   }
 }
 

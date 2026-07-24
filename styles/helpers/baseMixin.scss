@@ -8,6 +8,7 @@
   }
   .vxe-checkbox--icon {
     font-size: 1.22em;
+    @include createAnimationTransition(all, 0.2s);
   }
   .vxe-checkbox--icon {
     color: var(--vxe-ui-input-border-color);
@@ -54,6 +55,7 @@
   }
   .vxe-radio--icon {
     font-size: 1.26em;
+    @include createAnimationTransition(all, 0.2s);
   }
   .vxe-radio--icon {
     color: var(--vxe-ui-input-border-color);
