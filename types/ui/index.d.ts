@@ -1,6 +1,7 @@
 import { App } from 'vue'
 import { VxeUI, getI18n, setConfig } from '@vxe-ui/core'
 import { LoadingController } from '../components/loading'
+import { ColorController } from '../components/color-picker'
 import { ModalController } from '../components/modal'
 import { DrawerController } from '../components/drawer'
 import { WatermarkController } from '../components/watermark'
@@ -34,6 +35,7 @@ export const readFile: VxeUploadDefines.ReadFileFunction
 declare module '@vxe-ui/core' {
   export interface VxeUIExport {
     loading: LoadingController
+    color: ColorController
     modal: ModalController
     drawer: DrawerController
     watermark: WatermarkController

@@ -7070,8 +7070,8 @@ export namespace VxeTableDefines {
   export type CustomEventType = 'reset' | 'confirm' | 'update:width' | 'update:fixed' | 'update:sort' | 'update:visible' | 'update:align' | 'update:headerAlign' | 'update:footerAlign' | 'update:aggGroup' | 'update:aggFunc'
 
   export interface CustomStoreData {
-    pageData?: {
-      ps?: number
+    pagerData?: {
+      pSize?: number
     }
     alignData?: Record<string, VxeColumnPropTypes.Align>
     headerAlignData?: Record<string, VxeColumnPropTypes.HeaderAlign>
