@@ -11,7 +11,7 @@ import VxeDatePanelComponent from '../../date-panel'
 import VxeButtonComponent from '../../button'
 import VxeButtonGroupComponent from '../../button-group'
 
-import type { VxeDatePickerConstructor, VxeDatePickerEmits, DatePickerInternalData, DatePickerReactData, VxeButtonGroupDefines, VxeComponentSizeType, VxeDatePanelDefines, VxeDatePickerPropTypes, VxeFormConstructor, VxeFormPrivateMethods, VxeFormDefines, ValueOf, VxeModalConstructor, VxeDrawerConstructor, VxeModalMethods, VxeDrawerMethods, VxeDatePickerDefines, VxeDatePanelConstructor } from '../../../types'
+import type { VxeDatePickerConstructor, VxeDatePickerEmits, DatePickerInternalData, DatePickerReactData, VxeButtonGroupDefines, VxeComponentSizeType, VxeDatePanelDefines, VxeDatePickerPropTypes, VxeFormConstructor, VxeFormPrivateMethods, VxeFormDefines, ValueOf, VxeModalConstructor, VxeDrawerConstructor, VxeModalMethods, VxeDrawerMethods, VxeDatePickerDefines, VxeDatePanelConstructor, VxeCardConstructor, VxeCardPrivateMethods } from '../../../types'
 import type { VxeTableConstructor, VxeTablePrivateMethods } from '../../../types/components/table'
 
 const { warnLog, errLog } = createComponentLog('date-picker')
@@ -206,6 +206,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       $xeModal(): (VxeModalConstructor & VxeModalMethods) | null
       $xeDrawer(): (VxeDrawerConstructor & VxeDrawerMethods) | null
       $xeTable(): (VxeTableConstructor & VxeTablePrivateMethods) | null
+      $xeCard(): (VxeCardConstructor & VxeCardPrivateMethods) | null
       $xeForm(): (VxeFormConstructor & VxeFormPrivateMethods) | null
       formItemInfo(): VxeFormDefines.ProvideItemInfo | null
     }),
@@ -215,6 +216,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const $xeTable = $xeDatePicker.$xeTable
       const $xeModal = $xeDatePicker.$xeModal
       const $xeDrawer = $xeDatePicker.$xeDrawer
+      const $xeCard = $xeDatePicker.$xeCard
       const $xeForm = $xeDatePicker.$xeForm
 
       const { transfer } = props
@@ -227,7 +229,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
         if (XEUtils.isBoolean(globalTransfer)) {
           return globalTransfer
         }
-        if ($xeTable || $xeModal || $xeDrawer || $xeForm) {
+        if ($xeTable || $xeModal || $xeDrawer || $xeCard || $xeForm) {
           return true
         }
       }

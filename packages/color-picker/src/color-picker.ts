@@ -4,12 +4,12 @@ import XEUtils from 'xe-utils'
 import { VxeUI, getIcon, getConfig, getI18n, globalEvents, createEvent, globalMixins, renderEmptyElement } from '../../ui'
 import { getEventTargetNode, getPopupContainer, toCssUnit, updatePanelPlacement } from '../../ui/src/dom'
 import { getLastZIndex, nextZIndex } from '../../ui/src/utils'
-import { parseColor, updateColorAlpha, hexToHsv, rgbToHsv, rgbToHex, hexToRgb, hsvToRgb, toRgb } from './util'
+import { parseValColor, updateColorAlpha, hexToHsv, rgbToHsv, rgbToHexVal, hexToRgb, hsvToRgb, toValRgb } from './util'
 import VxeButtonComponent from '../../button'
 import VxeInputComponent from '../../input'
 import VxeNumberInputComponent from '../../number-input'
 
-import type { ColorPickerReactData, VxeColorPickerPropTypes, VxeColorPickerEmits, VxeComponentSizeType, ColorPickerInternalData, ValueOf, VxeModalConstructor, VxeModalMethods, VxeDrawerConstructor, VxeDrawerMethods, VxeFormDefines, VxeFormConstructor, VxeFormPrivateMethods } from '../../../types'
+import type { ColorPickerReactData, VxeColorPickerPropTypes, VxeColorPickerEmits, VxeComponentSizeType, ColorPickerInternalData, ValueOf, VxeModalConstructor, VxeModalMethods, VxeDrawerConstructor, VxeDrawerMethods, VxeFormDefines, VxeFormConstructor, VxeFormPrivateMethods, VxeCardConstructor, VxeCardPrivateMethods } from '../../../types'
 import type { VxeTableConstructor, VxeTablePrivateMethods } from '../../../types/components/table'
 
 const WinEyeDropper = typeof window !== 'undefined' ? (window as any).EyeDropper : null
@@ -143,6 +143,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       $xeModal(): (VxeModalConstructor & VxeModalMethods) | null
       $xeDrawer(): (VxeDrawerConstructor & VxeDrawerMethods) | null
       $xeTable(): (VxeTableConstructor & VxeTablePrivateMethods) | null
+      $xeCard(): (VxeCardConstructor & VxeCardPrivateMethods) | null
       $xeForm(): (VxeFormConstructor & VxeFormPrivateMethods) | null
       formItemInfo(): VxeFormDefines.ProvideItemInfo | null
     }),
@@ -180,6 +181,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const $xeTable = $xeColorPicker.$xeTable
       const $xeModal = $xeColorPicker.$xeModal
       const $xeDrawer = $xeColorPicker.$xeDrawer
+      const $xeCard = $xeColorPicker.$xeCard
       const $xeForm = $xeColorPicker.$xeForm
 
       const { transfer } = props
@@ -188,7 +190,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
         if (XEUtils.isBoolean(globalTransfer)) {
           return globalTransfer
         }
-        if ($xeTable || $xeModal || $xeDrawer || $xeForm) {
+        if ($xeTable || $xeModal || $xeDrawer || $xeCard || $xeForm) {
           return true
         }
       }
@@ -284,31 +286,41 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const isRgb = $xeColorPicker.computeIsRgb
       const hueSliderEl = $xeColorPicker.$refs.refHueSliderElem as HTMLDivElement
       const alphaSliderEl = $xeColorPicker.$refs.refAlphaSliderElem as HTMLDivElement
-      const colorRest = parseColor(selectColor)
-      reactData.hexValue = colorRest.hex
-      reactData.rValue = colorRest.r
-      reactData.gValue = colorRest.g
-      reactData.bValue = colorRest.b
-      reactData.aValue = colorRest.a
-      if (colorRest.value) {
-        if (isRgb) {
-          if (colorRest.type === 'hex') {
-            const rgbRest = hexToRgb(colorRest.hex)
-            if (rgbRest) {
-              reactData.rValue = rgbRest.r
-              reactData.gValue = rgbRest.g
-              reactData.bValue = rgbRest.b
-              reactData.aValue = rgbRest.a
-            }
-          }
+      const colorRest = parseValColor(selectColor)
+      reactData.hexValue = ''
+      reactData.rValue = 0
+      reactData.gValue = 0
+      reactData.bValue = 0
+      reactData.aValue = 1
+      if (colorRest) {
+        if (colorRest.type === 'hex') {
+          reactData.hexValue = colorRest.hex
         } else {
-          if (colorRest.type !== 'hex') {
-            reactData.hexValue = rgbToHex(colorRest)
+          reactData.rValue = colorRest.r
+          reactData.gValue = colorRest.g
+          reactData.bValue = colorRest.b
+          reactData.aValue = colorRest.a
+        }
+        if (colorRest.value) {
+          if (isRgb) {
+            if (colorRest.type === 'hex') {
+              const rgbRest = hexToRgb(colorRest.hex)
+              if (rgbRest) {
+                reactData.rValue = rgbRest.r
+                reactData.gValue = rgbRest.g
+                reactData.bValue = rgbRest.b
+                reactData.aValue = rgbRest.a
+              }
+            }
+          } else {
+            if (colorRest.type !== 'hex') {
+              reactData.hexValue = rgbToHexVal(colorRest.r, colorRest.g, colorRest.b, colorRest.a)
+            }
           }
         }
       }
       if (isAniVisible) {
-        const hsvRest = colorRest.type === 'hex' ? hexToHsv(colorRest.hex) : rgbToHsv(colorRest)
+        const hsvRest = colorRest ? (colorRest.type === 'hex' ? hexToHsv(colorRest.hex) : rgbToHsv(colorRest)) : null
         const colorPanelEl = $xeColorPicker.$refs.refColorPanelElem as HTMLDivElement
         if (hsvRest) {
           if (colorPanelEl) {
@@ -321,7 +333,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
           }
         }
         if (alphaSliderEl) {
-          $xeColorPicker.handleAlphaColor(alphaSliderEl.clientWidth * colorRest.a)
+          $xeColorPicker.handleAlphaColor(alphaSliderEl.clientWidth * reactData.aValue)
         }
       }
     },
@@ -543,7 +555,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
             gNum = itemNum - offsetNum
             break
         }
-        reactData.panelColor = toRgb(rNum, gNum, bNum)
+        reactData.panelColor = toValRgb(rNum, gNum, bNum)
         hueSliderBtnEl.style.left = toCssUnit(offsetLeft)
       }
     },
@@ -627,7 +639,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const reactData = $xeColorPicker.reactData
 
       const { rValue, gValue, bValue, aValue } = reactData
-      reactData.selectColor = toRgb(rValue, gValue, bValue, aValue)
+      reactData.selectColor = toValRgb(rValue, gValue, bValue, aValue)
       $xeColorPicker.updateModelColor()
     },
     handleInputAlphaEvent () {
@@ -692,12 +704,12 @@ export default /* define-vxe-component start */ defineVxeComponent({
         const colorPanelRect = colorPanelEl.getBoundingClientRect()
         const offsetTop = Math.min(clientHeight, Math.max(0, clientY - colorPanelRect.y))
         const offsetLeft = Math.min(clientWidth, Math.max(0, clientX - colorPanelRect.x))
-        const colorRest = parseColor(panelColor)
+        const colorRest = parseValColor(panelColor)
         if (colorRest) {
           const hsvRest = colorRest.type === 'hex' ? hexToHsv(colorRest.hex) : rgbToHsv(colorRest)
           if (hsvRest) {
             const ragRest = hsvToRgb(hsvRest.h, offsetLeft / clientWidth, (1 - offsetTop / clientHeight))
-            reactData.selectColor = toRgb(ragRest.r, ragRest.g, ragRest.b, showAlpha ? aValue : null)
+            reactData.selectColor = toValRgb(ragRest.r, ragRest.g, ragRest.b, showAlpha ? aValue : null)
             $xeColorPicker.handlePanelColor(offsetLeft, offsetTop)
           }
         }
@@ -1089,7 +1101,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
                         reactData.hexValue = val
                       },
                       change () {
-                        const colorRest = parseColor(reactData.hexValue)
+                        const colorRest = parseValColor(reactData.hexValue)
                         if (colorRest) {
                           if (colorRest.value) {
                             reactData.selectColor = colorRest.value

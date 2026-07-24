@@ -9,7 +9,7 @@ import { createComponentLog } from '../../ui/src/log'
 import VxeInputComponent from '../../input/src/input'
 import VxeButtonComponent from '../../button/src/button'
 
-import type { VxeSelectPropTypes, SelectInternalData, ValueOf, VxeComponentSizeType, SelectReactData, VxeSelectEmits, VxeButtonDefines, VxeInputDefines, VxeSelectDefines, VxeOptionProps, VxeDrawerConstructor, VxeDrawerMethods, VxeFormDefines, VxeFormConstructor, VxeFormPrivateMethods, VxeModalConstructor, VxeModalMethods, VxeInputConstructor, VxeComponentSlotType, VxeComponentStyleType } from '../../../types'
+import type { VxeSelectPropTypes, SelectInternalData, ValueOf, VxeComponentSizeType, SelectReactData, VxeSelectEmits, VxeButtonDefines, VxeInputDefines, VxeSelectDefines, VxeOptionProps, VxeDrawerConstructor, VxeDrawerMethods, VxeFormDefines, VxeFormConstructor, VxeFormPrivateMethods, VxeModalConstructor, VxeModalMethods, VxeInputConstructor, VxeComponentSlotType, VxeComponentStyleType, VxeCardConstructor, VxeCardPrivateMethods } from '../../../types'
 import type { VxeTableConstructor, VxeTablePrivateMethods } from '../../../types/components/table'
 
 const { errLog } = createComponentLog('select')
@@ -247,6 +247,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       $xeModal(): (VxeModalConstructor & VxeModalMethods) | null
       $xeDrawer(): (VxeDrawerConstructor & VxeDrawerMethods) | null
       $xeTable(): (VxeTableConstructor & VxeTablePrivateMethods) | null
+      $xeCard(): (VxeCardConstructor & VxeCardPrivateMethods) | null
       $xeForm(): (VxeFormConstructor & VxeFormPrivateMethods) | null
       formItemInfo(): VxeFormDefines.ProvideItemInfo | null
     }),
@@ -284,6 +285,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const $xeTable = $xeSelect.$xeTable
       const $xeModal = $xeSelect.$xeModal
       const $xeDrawer = $xeSelect.$xeDrawer
+      const $xeCard = $xeSelect.$xeCard
       const $xeForm = $xeSelect.$xeForm
 
       const { transfer } = props
@@ -296,7 +298,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
         if (XEUtils.isBoolean(globalTransfer)) {
           return globalTransfer
         }
-        if ($xeTable || $xeModal || $xeDrawer || $xeForm) {
+        if ($xeTable || $xeModal || $xeDrawer || $xeCard || $xeForm) {
           return true
         }
       }

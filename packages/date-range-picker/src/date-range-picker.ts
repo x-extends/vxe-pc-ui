@@ -11,7 +11,7 @@ import VxeDatePanelComponent from '../../date-panel/src/date-panel'
 import VxeButtonComponent from '../../button/src/button'
 import VxeButtonGroupComponent from '../../button/src/button-group'
 
-import type { VxeDateRangePickerConstructor, VxeDateRangePickerEmits, DateRangePickerReactData, DateRangePickerInternalData, VxeButtonGroupDefines, VxeComponentSizeType, VxeDateRangePickerPropTypes, VxeFormConstructor, VxeFormPrivateMethods, VxeFormDefines, ValueOf, VxeModalConstructor, VxeDrawerConstructor, VxeModalMethods, VxeDrawerMethods, VxeDateRangePickerDefines, VxeDatePanelConstructor } from '../../../types'
+import type { VxeDateRangePickerConstructor, VxeDateRangePickerEmits, DateRangePickerReactData, DateRangePickerInternalData, VxeButtonGroupDefines, VxeComponentSizeType, VxeDateRangePickerPropTypes, VxeFormConstructor, VxeFormPrivateMethods, VxeFormDefines, ValueOf, VxeModalConstructor, VxeDrawerConstructor, VxeModalMethods, VxeDrawerMethods, VxeDateRangePickerDefines, VxeDatePanelConstructor, VxeCardConstructor, VxeCardPrivateMethods } from '../../../types'
 import type { VxeTableConstructor, VxeTablePrivateMethods } from '../../../types/components/table'
 
 const { errLog } = createComponentLog('date-range-picker')
@@ -199,6 +199,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       $xeModal(): (VxeModalConstructor & VxeModalMethods) | null
       $xeDrawer(): (VxeDrawerConstructor & VxeDrawerMethods) | null
       $xeTable(): (VxeTableConstructor & VxeTablePrivateMethods) | null
+      $xeCard(): (VxeCardConstructor & VxeCardPrivateMethods) | null
       $xeForm(): (VxeFormConstructor & VxeFormPrivateMethods) | null
       formItemInfo(): VxeFormDefines.ProvideItemInfo | null
     }),
@@ -208,6 +209,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const $xeTable = $xeDateRangePicker.$xeTable
       const $xeModal = $xeDateRangePicker.$xeModal
       const $xeDrawer = $xeDateRangePicker.$xeDrawer
+      const $xeCard = $xeDateRangePicker.$xeCard
       const $xeForm = $xeDateRangePicker.$xeForm
 
       const { transfer } = props
@@ -220,7 +222,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
         if (XEUtils.isBoolean(globalTransfer)) {
           return globalTransfer
         }
-        if ($xeTable || $xeModal || $xeDrawer || $xeForm) {
+        if ($xeTable || $xeModal || $xeDrawer || $xeCard || $xeForm) {
           return true
         }
       }

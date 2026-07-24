@@ -418,6 +418,12 @@ export interface GridMethods<D = any> {
     pendingRecords: D[]
   } | null
   /**
+   * 获取个性化设置分页数据
+   */
+  getCustomPagerData(): {
+    pSize?: number
+  },
+  /**
    * 获取自定义的 params 属性
    */
   getParams (): any
