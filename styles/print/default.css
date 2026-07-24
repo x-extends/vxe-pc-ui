@@ -27,6 +27,7 @@ body * {
 .vxe-table th,
 .vxe-table td,
 .vxe-table td {
+	white-space: pre-line;
   word-break: break-all;
 	border-color: #D0D0D0;
 	border-style: solid;

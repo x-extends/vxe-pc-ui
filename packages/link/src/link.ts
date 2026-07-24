@@ -123,7 +123,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
             custom: true,
             to: disabled ? null : routerLink
           },
-          on: {
+          nativeOn: {
             click: $xeLink.clickEvent
           }
         }, $xeLink.renderContent(h))

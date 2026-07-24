@@ -687,7 +687,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
                     to: routerLink,
                     target: linkTarget
                   },
-                  on: linkOns
+                  nativeOn: linkOns
                 }, $xeMenu.renderMenuTitle(h, item, itemList))
                 : h('div', {
                   class: 'vxe-menu--item-link is--default',
@@ -747,7 +747,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
                     to: routerLink,
                     target: linkTarget
                   },
-                  on: linkOns
+                  nativeOn: linkOns
                 }, $xeMenu.renderMenuTitle(h, item, itemList))
                 : h('div', {
                   class: 'vxe-menu--item-link is--default',

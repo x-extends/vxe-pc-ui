@@ -893,7 +893,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
             custom: true,
             to: routerLink
           },
-          on: {
+          nativeOn: {
             click: $xeButton.clickEvent,
             mouseenter: $xeButton.mouseenterEvent,
             mouseleave: $xeButton.mouseleaveEvent,
