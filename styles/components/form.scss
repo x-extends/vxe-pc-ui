@@ -161,7 +161,7 @@
 .vxe-form-item--valid-error-tip {
   position: absolute;
   width: 100%;
-  font-size: 0.9em;
+  font-size: var(--vxe-ui-form-validate-error-font-size, var(--vxe-ui-form-current-font-size));
   line-height: 1em;
   color: var(--vxe-ui-form-validate-error-color);
   background-color: var(--vxe-ui-form-validate-error-background-color);
@@ -176,7 +176,7 @@
     pointer-events: auto;
   }
   .vxe-form-item--valid-error-theme-beautify {
-    padding: 0.15em 0.6em 0.2em 0.6em;
+    padding: var(--vxe-ui-form-validate-error-padding, 0.2em 0.6em);
     color: #fff;
     background-color: var(--vxe-ui-status-error-color);
     .vxe-form-item--valid-error-msg {
