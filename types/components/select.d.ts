@@ -19,7 +19,8 @@ export interface VxeSelectPrivateRef extends SelectPrivateRef { }
 
 export namespace VxeSelectPropTypes {
   export type Size = VxeComponentSizeType
-  export type ModelValue = string | number | boolean | null | (string | number | boolean)[]
+  export type ModelValue = string | number | boolean | null | undefined | (string | number | boolean)[]
+  export type EmptyValue = ModelValue
   export interface DefaultConfig {
     /**
      * 默认选择模式，默认选中行为只会在初始化时触发一次
@@ -196,6 +197,7 @@ export namespace VxeSelectPropTypes {
 export interface VxeSelectProps {
   size?: VxeSelectPropTypes.Size
   value?: VxeSelectPropTypes.ModelValue
+  emptyValue?: VxeSelectPropTypes.EmptyValue
   defaultConfig?: VxeSelectPropTypes.DefaultConfig
   clearable?: VxeSelectPropTypes.Clearable
   /**

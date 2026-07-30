@@ -342,6 +342,7 @@ setConfig({
   row: {},
   segmented: {},
   select: {
+    emptyValue: null,
     multiCharOverflow: 8,
     radioConfig: {
       showIcon: true,

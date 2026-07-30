@@ -84,6 +84,10 @@ export default /* define-vxe-component start */ defineVxeComponent({
   props: {
     value: [String, Number, Boolean, Array] as PropType<VxeSelectPropTypes.ModelValue>,
     defaultConfig: Object as PropType<VxeSelectPropTypes.DefaultConfig>,
+    emptyValue: {
+      type: [String, Number, Boolean, Array] as PropType<VxeSelectPropTypes.EmptyValue>,
+      default: () => getConfig().select.emptyValue
+    },
     clearable: {
       type: Boolean as PropType<VxeSelectPropTypes.Clearable>,
       default: () => getConfig().select.clearable
@@ -948,9 +952,11 @@ export default /* define-vxe-component start */ defineVxeComponent({
     },
     clearEvent (params: VxeInputDefines.ClearEventParams) {
       const $xeSelect = this
+      const props = $xeSelect
 
+      const { emptyValue } = props
       const { $event } = params
-      $xeSelect.clearValueEvent($event, null)
+      $xeSelect.clearValueEvent($event, emptyValue)
       $xeSelect.hideOptionPanel($event)
     },
     allCheckedPanelEvent (params: VxeButtonDefines.ClickEventParams) {
@@ -993,9 +999,9 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const $xeSelect = this
       const props = $xeSelect
 
-      const { clearClosable } = props
+      const { emptyValue, clearClosable } = props
       const { $event } = params
-      $xeSelect.clearValueEvent($event, null)
+      $xeSelect.clearValueEvent($event, emptyValue)
       if (clearClosable) {
         $xeSelect.hideOptionPanel($event)
       }
@@ -1159,7 +1165,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const props = $xeSelect
       const reactData = $xeSelect.reactData
 
-      const { clearable } = props
+      const { emptyValue, clearable } = props
       const { visiblePanel, currentOption } = reactData
       const isDisabled = $xeSelect.computeIsDisabled
       const popupOpts = $xeSelect.computePopupOpts
@@ -1203,7 +1209,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
         }
         if (reactData.isActivated) {
           if (isDel && clearable) {
-            $xeSelect.clearValueEvent(evnt, null)
+            $xeSelect.clearValueEvent(evnt, emptyValue)
           }
         }
       }
