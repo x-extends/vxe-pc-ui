@@ -77,6 +77,10 @@ export default defineVxeComponent({
   props: {
     modelValue: [String, Number, Boolean, Array] as PropType<VxeSelectPropTypes.ModelValue>,
     defaultConfig: Object as PropType<VxeSelectPropTypes.DefaultConfig>,
+    emptyValue: {
+      type: [String, Number, Boolean, Array] as PropType<VxeSelectPropTypes.EmptyValue>,
+      default: () => getConfig().select.emptyValue
+    },
     clearable: {
       type: Boolean as PropType<VxeSelectPropTypes.Clearable>,
       default: () => getConfig().select.clearable
@@ -712,8 +716,9 @@ export default defineVxeComponent({
     }
 
     const clearEvent: VxeInputEvents.Clear = (params) => {
+      const { emptyValue } = props
       const { $event } = params
-      clearValueEvent($event, null)
+      clearValueEvent($event, emptyValue)
       hideOptionPanel($event)
     }
 
@@ -751,9 +756,9 @@ export default defineVxeComponent({
     }
 
     const clearCheckedPanelEvent: VxeButtonEvents.Click = (params) => {
-      const { clearClosable } = props
+      const { emptyValue, clearClosable } = props
       const { $event } = params
-      clearValueEvent($event, null)
+      clearValueEvent($event, emptyValue)
       if (clearClosable) {
         hideOptionPanel($event)
       }
@@ -900,7 +905,7 @@ export default defineVxeComponent({
     }
 
     const handleGlobalKeydownEvent = (evnt: KeyboardEvent) => {
-      const { clearable } = props
+      const { emptyValue, clearable } = props
       const { visiblePanel, currentOption } = reactData
       const isDisabled = computeIsDisabled.value
       const popupOpts = computePopupOpts.value
@@ -944,7 +949,7 @@ export default defineVxeComponent({
         }
         if (reactData.isActivated) {
           if (isDel && clearable) {
-            clearValueEvent(evnt, null)
+            clearValueEvent(evnt, emptyValue)
           }
         }
       }
