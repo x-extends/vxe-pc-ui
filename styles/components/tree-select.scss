@@ -115,7 +115,13 @@
 .vxe-tree-select--expand-btns {
   display: flex;
   flex-direction: row;
+}
+.vxe-tree-select--footer-button,
+.vxe-tree-select--selected-btns {
   flex-grow: 1;
+}
+.vxe-tree-select--expand-btns {
+  flex-shrink: 0;
 }
 .vxe-tree-select--selected-btns {
   & + .vxe-tree-select--expand-btns {

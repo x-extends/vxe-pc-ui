@@ -1848,13 +1848,14 @@ export default defineVxeComponent({
       },
       setAllCheckboxNode (checked) {
         const { transform } = props
+        const { afterTreeList, afterVisibleList } = internalData
         const selectMaps: Record<string, boolean> = {}
         const childrenField = computeChildrenField.value
         const mapChildrenField = computeMapChildrenField.value
         const checkKeys: string[] = []
         const checkNodes: any[] = []
         if (checked) {
-          XEUtils.eachTree(internalData.afterTreeList, (node) => {
+          XEUtils.eachTree(transform ? afterTreeList : afterVisibleList, (node) => {
             const nodeid = getNodeId(node)
             checkKeys.push(nodeid)
             checkNodes.push(node)

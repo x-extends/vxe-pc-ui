@@ -492,7 +492,7 @@ export default defineVxeComponent({
       emit('update:modelValue', value)
     }
 
-    const handleChangeEvent = (evnt: Event | null, vals: VxeUploadDefines.FileObjItem[]) => {
+    const handleModel = (vals: VxeUploadDefines.FileObjItem[]) => {
       const { singleMode, urlMode, urlArgs } = props
       const urlProp = computeUrlProp.value
       const nameProp = computeNameProp.value
@@ -513,6 +513,11 @@ export default defineVxeComponent({
       }
       const value = singleMode ? (restList[0] || null) : restList
       emitModel(value)
+      return value
+    }
+
+    const handleChangeEvent = (evnt: Event | null, vals: VxeUploadDefines.FileObjItem[]) => {
+      const value = handleModel(vals)
       dispatchEvent('change', { value }, evnt)
       return value
     }
@@ -638,6 +643,7 @@ export default defineVxeComponent({
             cacheItem.response = res
           }
           Object.assign(item, res)
+          handleModel(reactData.fileList)
           dispatchEvent('upload-success', { option: item, data: res }, null)
         }).catch((res) => {
           const { fileCacheMaps } = reactData
@@ -652,6 +658,7 @@ export default defineVxeComponent({
             reactData.fileList = reactData.fileList.filter(obj => getFieldKey(obj) !== fileKey)
             delete fileCacheMaps[fileKey]
           }
+          handleModel(reactData.fileList)
           dispatchEvent('upload-error', { option: item, data: res }, null)
         }).finally(() => {
           const { fileCacheMaps } = reactData
