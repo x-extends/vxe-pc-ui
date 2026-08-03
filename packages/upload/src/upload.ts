@@ -732,7 +732,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       }
       return ''
     },
-    handleChangeEvent (evnt: Event | null, vals: VxeUploadDefines.FileObjItem[]) {
+    handleModel (vals: VxeUploadDefines.FileObjItem[]) {
       const $xeUpload = this
       const props = $xeUpload
 
@@ -747,7 +747,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
             const urlObj = XEUtils.parseUrl(url)
             if (!urlObj.searchQuery[nameProp]) {
               if (url.indexOf('blob:') === -1) {
-                return `${url}${url.indexOf('?') === -1 ? '?' : '&'}${encodeURIComponent(item[nameProp] || '')}`
+                return `${url}${url.indexOf('?') === -1 ? '?' : '&'}${nameProp}=${encodeURIComponent(item[nameProp] || '')}`
               }
             }
           }
@@ -756,6 +756,12 @@ export default /* define-vxe-component start */ defineVxeComponent({
       }
       const value = singleMode ? (restList[0] || null) : restList
       $xeUpload.emitModel(value)
+      return value
+    },
+    handleChangeEvent (evnt: Event | null, vals: VxeUploadDefines.FileObjItem[]) {
+      const $xeUpload = this
+
+      const value = $xeUpload.handleModel(vals)
       $xeUpload.dispatchEvent('change', { value }, evnt)
       return value
     },
@@ -897,6 +903,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
           XEUtils.each(res, (val, key) => {
             $xeUpload.$set(item, key, val)
           })
+          $xeUpload.handleModel(reactData.fileList)
           $xeUpload.dispatchEvent('upload-success', { option: item, data: res }, null)
         }).catch((res) => {
           const { fileCacheMaps } = reactData
@@ -915,6 +922,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
             reactData.fileList = reactData.fileList.filter(obj => $xeUpload.getFieldKey(obj) !== fileKey)
             delete fileCacheMaps[fileKey]
           }
+          $xeUpload.handleModel(reactData.fileList)
           $xeUpload.dispatchEvent('upload-error', { option: item, data: res }, null)
         }).finally(() => {
           const { fileCacheMaps } = reactData

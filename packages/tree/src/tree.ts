@@ -2668,13 +2668,14 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const internalData = $xeTree.internalData
 
       const { transform } = props
+      const { afterTreeList, afterVisibleList } = internalData
       const selectMaps: Record<string, boolean> = {}
       const childrenField = $xeTree.computeChildrenField
       const mapChildrenField = $xeTree.computeMapChildrenField
       const checkKeys: string[] = []
       const checkNodes: any[] = []
       if (checked) {
-        XEUtils.eachTree(internalData.afterTreeList, (node) => {
+        XEUtils.eachTree(transform ? afterTreeList : afterVisibleList, (node) => {
           const nodeid = $xeTree.getNodeId(node)
           checkKeys.push(nodeid)
           checkNodes.push(node)
