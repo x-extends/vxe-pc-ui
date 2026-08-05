@@ -316,6 +316,8 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const $xeTextarea = this
       const props = $xeTextarea
       const reactData = $xeTextarea.reactData
+      const $xeForm = $xeTextarea.$xeForm
+      const formItemInfo = $xeTextarea.formItemInfo
 
       const { immediate } = props
       const textElem = evnt.target as HTMLTextAreaElement
@@ -323,6 +325,11 @@ export default /* define-vxe-component start */ defineVxeComponent({
       reactData.inputValue = value
       if (immediate) {
         $xeTextarea.handleChange(value, evnt)
+      } else {
+        // 自动更新校验状态
+        if ($xeForm && formItemInfo) {
+          $xeForm.triggerItemEvent(evnt, formItemInfo.itemConfig.field, value)
+        }
       }
       $xeTextarea.dispatchEvent('input', { value }, evnt)
       $xeTextarea.handleResize()

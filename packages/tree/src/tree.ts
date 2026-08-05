@@ -3366,16 +3366,15 @@ export default /* define-vxe-component start */ defineVxeComponent({
       }
       return renderEmptyElement($xeTree)
     },
-    renderRadio (h: CreateElement, node: any, nodeid: string, isExistChild: boolean, nLevel: number, isChecked: boolean) {
+    renderRadio (h: CreateElement, node: any, nodeid: string, isExistChild: boolean, nLevel: number, isDisabled: boolean, isChecked: boolean) {
       const $xeTree = this
       const props = $xeTree
 
       const { showRadio } = props
       const radioOpts = $xeTree.computeRadioOpts
-      const { showIcon, checkMode, checkMethod, visibleMode, visibleMethod } = radioOpts
+      const { showIcon, visibleMode, visibleMethod } = radioOpts
       const isVisible = visibleMethod ? visibleMethod({ $tree: $xeTree, node }) : handleVisibleOrCheckMode(visibleMode, isExistChild, nLevel)
       if (showRadio && showIcon && isVisible) {
-        const isDisabled = checkMethod ? !checkMethod({ $tree: $xeTree, node }) : !handleVisibleOrCheckMode(checkMode, isExistChild, nLevel)
         return h('div', {
           class: ['vxe-tree--radio-option', {
             'is--checked': isChecked,
@@ -3396,16 +3395,15 @@ export default /* define-vxe-component start */ defineVxeComponent({
       }
       return renderEmptyElement($xeTree)
     },
-    renderCheckbox  (h: CreateElement, node: any, nodeid: string, isExistChild: boolean, nLevel: number, isChecked: boolean, isIndeterminate: boolean) {
+    renderCheckbox  (h: CreateElement, node: any, nodeid: string, isExistChild: boolean, nLevel: number, isDisabled: boolean, isChecked: boolean, isIndeterminate: boolean) {
       const $xeTree = this
       const props = $xeTree
 
       const { showCheckbox } = props
       const checkboxOpts = $xeTree.computeCheckboxOpts
-      const { showIcon, checkMode, checkMethod, visibleMode, visibleMethod } = checkboxOpts
+      const { showIcon, visibleMode, visibleMethod } = checkboxOpts
       const isVisible = visibleMethod ? visibleMethod({ $tree: $xeTree, node }) : handleVisibleOrCheckMode(visibleMode, isExistChild, nLevel)
       if (showCheckbox && showIcon && isVisible) {
-        const isDisabled = checkMethod ? !checkMethod({ $tree: $xeTree, node }) : !handleVisibleOrCheckMode(checkMode, isExistChild, nLevel)
         return h('div', {
           class: ['vxe-tree--checkbox-option', {
             'is--checked': isChecked,
@@ -3439,6 +3437,8 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const { afterTreeList, nodeMaps, treeExpandedMaps, treeExpandLazyLoadedMaps } = internalData
       const tooltipOpts = $xeTree.computeTooltipOpts
       const { mode: tipMode } = tooltipOpts
+      const radioOpts = $xeTree.computeRadioOpts
+      const checkboxOpts = $xeTree.computeCheckboxOpts
       const childrenField = $xeTree.computeChildrenField
       const titleField = $xeTree.computeTitleField
       const hasChildField = $xeTree.computeHasChildField
@@ -3453,15 +3453,19 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const nLevel = nodeItem.level
 
       let isRadioChecked = false
+      let isRadioDisabled = false
       if (showRadio) {
         isRadioChecked = nodeid === String(selectRadioKey)
+        isRadioDisabled = radioOpts.checkMethod ? !radioOpts.checkMethod({ $tree: $xeTree, node }) : !handleVisibleOrCheckMode(radioOpts.checkMode, isExistChild, nLevel)
       }
 
       let isCheckboxChecked = false
-      let isIndeterminate = false
+      let isCheckboxIndeterminate = false
+      let isCheckboxDisabled = false
       if (showCheckbox) {
         isCheckboxChecked = $xeTree.isCheckedByCheckboxNodeId(nodeid)
-        isIndeterminate = $xeTree.isIndeterminateByCheckboxNodeid(nodeid)
+        isCheckboxIndeterminate = $xeTree.isIndeterminateByCheckboxNodeid(nodeid)
+        isCheckboxDisabled = checkboxOpts.checkMethod ? !checkboxOpts.checkMethod({ $tree: $xeTree, node }) : !handleVisibleOrCheckMode(checkboxOpts.checkMode, isExistChild, nLevel)
       }
 
       let hasLazyChilds = false
@@ -3525,9 +3529,11 @@ export default /* define-vxe-component start */ defineVxeComponent({
         h('div', {
           class: ['vxe-tree--node-item', {
             'is--current': currentNode && nodeid === $xeTree.getNodeId(currentNode),
+            'is-radio--disabled': isRadioDisabled,
             'is-radio--checked': isRadioChecked,
+            'is-checkbox--disabled': isCheckboxDisabled,
             'is-checkbox--checked': isCheckboxChecked,
-            'is-checkbox--indeterminate': isIndeterminate
+            'is-checkbox--indeterminate': isCheckboxIndeterminate
           }]
         }, [
           showLine
@@ -3562,8 +3568,8 @@ export default /* define-vxe-component start */ defineVxeComponent({
                     ])
               ]
             : []),
-          $xeTree.renderRadio(h, node, nodeid, isExistChild, nLevel, isRadioChecked),
-          $xeTree.renderCheckbox(h, node, nodeid, isExistChild, nLevel, isCheckboxChecked, isIndeterminate),
+          $xeTree.renderRadio(h, node, nodeid, isExistChild, nLevel, isRadioDisabled, isRadioChecked),
+          $xeTree.renderCheckbox(h, node, nodeid, isExistChild, nLevel, isCheckboxDisabled, isCheckboxChecked, isCheckboxIndeterminate),
           $xeTree.renderDragIcon(h, node, nodeid),
           h('div', {
             class: 'vxe-tree--node-item-inner'

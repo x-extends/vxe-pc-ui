@@ -54,7 +54,12 @@ export namespace VxeTreeSelectPropTypes {
   export type Placement = 'top' | 'bottom'
   export type Filterable = boolean
 
-  export interface FilterConfig<D = any> extends VxeTreePropTypes.FilterConfig<D> {}
+  export interface FilterConfig<D = any> extends VxeTreePropTypes.FilterConfig<D> {
+    /**
+     * 是否在关闭下拉面板时自动清空筛选条件
+     */
+    clearOnClose?: boolean
+  }
   export interface Option {
     value?: string | number
     label?: string | number

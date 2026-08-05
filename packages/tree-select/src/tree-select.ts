@@ -565,6 +565,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const popupOpts = $xeTreeSelect.computePopupOpts
       const handleStyle = () => {
         const ppObj = updatePanelPlacement(targetElem, panelElem, {
+          isMinWidth: !popupOpts.width,
           placement: popupOpts.placement || placement,
           defaultPlacement: popupOpts.defaultPlacement,
           teleportTo: btnTransfer
@@ -623,9 +624,17 @@ export default /* define-vxe-component start */ defineVxeComponent({
     },
     hideOptionPanel (evnt?: Event) {
       const $xeTreeSelect = this
+      const props = $xeTreeSelect
       const reactData = $xeTreeSelect.reactData
       const internalData = $xeTreeSelect.internalData
 
+      const { filterable } = props
+      const filterOpts = $xeTreeSelect.computeFilterOpts
+      if (filterable) {
+        if (filterOpts.clearOnClose) {
+          reactData.searchValue = ''
+        }
+      }
       reactData.visiblePanel = false
       internalData.hpTimeout = setTimeout(() => {
         reactData.isAniVisible = false

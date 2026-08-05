@@ -1010,6 +1010,10 @@ export default /* define-vxe-component start */ defineVxeComponent({
     emitInputEvent (value: any, evnt: Event) {
       const $xeInput = this
       const reactData = $xeInput.reactData
+      const $xeForm = $xeInput.$xeForm
+      const formItemInfo = $xeInput.formItemInfo
+      const $xeSelect = $xeInput.$xeSelect
+      const $xeTreeSelect = $xeInput.$xeTreeSelect
 
       const isDatePickerType = $xeInput.computeIsDatePickerType
       const inpImmediate = $xeInput.computeInpImmediate
@@ -1019,6 +1023,12 @@ export default /* define-vxe-component start */ defineVxeComponent({
           $xeInput.handleChange(value, evnt)
         } else {
           $xeInput.dispatchEvent('input', { value }, evnt)
+          if (!$xeSelect && !$xeTreeSelect) {
+            // 自动更新校验状态
+            if ($xeForm && formItemInfo) {
+              $xeForm.triggerItemEvent(evnt, formItemInfo.itemConfig.field, value)
+            }
+          }
         }
       }
     },

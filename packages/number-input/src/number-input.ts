@@ -469,6 +469,8 @@ export default /* define-vxe-component start */ defineVxeComponent({
     emitInputEvent (inputValue: any, evnt: Event) {
       const $xeNumberInput = this
       const reactData = $xeNumberInput.reactData
+      const $xeForm = $xeNumberInput.$xeForm
+      const formItemInfo = $xeNumberInput.formItemInfo
 
       const inpImmediate = $xeNumberInput.computeInpImmediate
       const value = inputValue === eqEmptyValue(inputValue) ? null : XEUtils.toNumber(inputValue)
@@ -477,6 +479,10 @@ export default /* define-vxe-component start */ defineVxeComponent({
         $xeNumberInput.handleChange(value, inputValue, evnt)
       } else {
         $xeNumberInput.dispatchEvent('input', { value }, evnt)
+        // 自动更新校验状态
+        if ($xeForm && formItemInfo) {
+          $xeForm.triggerItemEvent(evnt, formItemInfo.itemConfig.field, value)
+        }
       }
     },
     inputEvent (evnt: Event & { type: 'input' }) {

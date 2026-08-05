@@ -169,6 +169,13 @@
         color: var(--vxe-ui-font-primary-color);
       }
     }
+    &.is-radio--disabled,
+    &.is-checkbox--disabled {
+      color: var(--vxe-ui-font-disabled-color);
+      .vxe-tree--node-item-inner {
+        cursor: not-allowed;
+      }
+    }
   }
   .vxe-tree--node-item-inner {
     cursor: pointer;

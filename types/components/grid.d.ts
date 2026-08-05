@@ -88,6 +88,7 @@ export namespace VxeGridPropTypes {
     $table: VxeTableConstructor<D>
     $grid: VxeGridConstructor<D> | null | undefined
     $gantt: VxeGanttConstructor<D> | null | undefined
+    page: ProxyAjaxQueryPageParams
     filters: VxeTableDefines.FilterCheckedParams[]
     form: {
       [key: string]: any
@@ -133,44 +134,219 @@ export namespace VxeGridPropTypes {
   }
 
   export interface ProxyConfig<D = any> {
+    /**
+     * 是否启用
+     */
     enabled?: boolean
+    /**
+     * 是否自动加载查询数据
+     */
     autoLoad?: boolean
     /**
      * 已废弃，请使用 showResponseMsg
      * @deprecated
      */
     message?: boolean
+    /**
+     * 是否自动显示加载中
+     */
     showLoading?: boolean
+    /**
+     * 是否显示内置的消息提示（可以设为 false 关闭内置的消息提示）
+     */
     showResponseMsg?: boolean
     /**
      * 已废弃，请使用 showActionMsg
      * @deprecated
      */
     showActiveMsg?: boolean
+    /**
+     * 是否显示内置的消息提示（可以设为 false 关闭内置的消息提示）
+     */
     showActionMsg?: boolean
+    /**
+     * 是否代理动态序号，自动根据分页来动态显示累计序号
+     */
     seq?: boolean
+    /**
+     * 是否代理排序
+     */
     sort?: boolean
+    /**
+     * 是否代理筛选
+     */
     filter?: boolean
+    /**
+     * 是否代理表单
+     */
     form?: boolean
+    /**
+     * 是否代理表尾
+     */
     footer?: boolean
+    /**
+     * 获取请求响应的属性配置
+     */
     response?: VxeGridDefines.ProxyConfigResponseConfig<D>
+    /**
+     * 异步请求配置
+     */
     ajax?: {
+      /**
+       * 查询列表数据之前方法，用与在查询之前执行的方法
+       */
+      beforeQuery?(params: ProxyAjaxQueryParams<D>, ...args: any[]): boolean | Promise<boolean>
+      /**
+       * 查询列表数据方法，执行顺序 beforeQuery > query > afterQuery > querySuccess|queryError
+       */
       query?(params: ProxyAjaxQueryParams<D>, ...args: any[]): Promise<any>
+      /**
+       * 该方法用于重写查询列表数据的默认行为，用于自定义加载数据的处理方法
+       */
+      afterQuery?(params: ProxyAjaxQueryParams<D> & ProxyAjaxResponseParams & { status: 'success' | 'error' }, ...args: any[]): void
+      /**
+       * 查询列表数据成功后的处理方法
+       */
       querySuccess?(params: ProxyAjaxQueryParams<D> & ProxyAjaxResponseParams): void
+      /**
+       * 查询列表数据失败后的处理方法
+       */
       queryError?(params: ProxyAjaxQueryParams<D> & ProxyAjaxResponseParams): void
+
+      /**
+       * 查询全量数据之前方法，用与在查询之前执行的方法
+       */
+      beforeQueryAll?(params: ProxyAjaxQueryAllParams<D>): boolean | Promise<boolean>
+      /**
+       * 查询全量数据的方法，执行顺序 beforeQueryAll > queryAll > afterQueryAll > queryAllSuccess|queryAllError
+       */
       queryAll?(params: ProxyAjaxQueryAllParams<D>): Promise<any>
+      /**
+       * 该方法用于重写查询全量数据的默认行为，用于自定义加载数据的处理方法
+       */
+      afterQueryAll?(params: ProxyAjaxQueryAllParams<D> & ProxyAjaxResponseParams & { status: 'success' | 'error' }): void
+      /**
+       * 查询全量数据成功后的处理方法
+       */
       queryAllSuccess?(params: ProxyAjaxQueryAllParams<D> & ProxyAjaxResponseParams): void
+      /**
+       * 查询全量数据失败后的处理方法
+       */
       queryAllError?(params: ProxyAjaxQueryAllParams<D> & ProxyAjaxResponseParams): void
+
+      /**
+       * 查询表尾数据之前方法，用与在查询之前执行的方法
+       */
+      beforeQueryFooter?(params: ProxyAjaxQueryFooterParams<D>, ...args: any[]): boolean | Promise<boolean>
+      /**
+       * 查询表尾数据的方法，执行顺序 beforeQueryFooter > queryFooter > afterQueryFooter > queryFooterSuccess|queryFooterError
+       */
       queryFooter?(params: ProxyAjaxQueryFooterParams<D>, ...args: any[]): Promise<any>
+      /**
+       * 该方法用于重写查询表尾数据的默认行为，用于自定义加载数据的处理方法
+       */
+      afterQueryFooter?(params: ProxyAjaxQueryFooterParams<D> & ProxyAjaxResponseParams & { status: 'success' | 'error' }, ...args: any[]): Promise<any>
+      /**
+       * 查询表尾数据成功后的处理方法
+       */
       queryFooterSuccess?(params: ProxyAjaxQueryFooterParams<D> & ProxyAjaxResponseParams): void
+      /**
+       * 查询表尾数据失败后的处理方法
+       */
       queryFooterError?(params: ProxyAjaxQueryFooterParams<D> & ProxyAjaxResponseParams): void
+
+      /**
+       * 删除列表数据之前方法，用与在删除之前执行的方法
+       */
+      beforeDelete?(params: ProxyAjaxDeleteParams<D>, ...args: any[]): boolean | Promise<boolean>
+      /**
+       * 删除列表数据的方法，执行顺序 beforeDelete > delete > afterDelete > deleteSuccess|deleteError
+       */
       delete?(params: ProxyAjaxDeleteParams<D>, ...args: any[]): Promise<any>
+      /**
+       * 该方法用于重写删除列表数据的默认行为，用于自定义删除数据的处理方法
+       */
+      afterDelete?(params: ProxyAjaxDeleteParams<D> & ProxyAjaxResponseParams & { status: 'success' | 'error' }, ...args: any[]): void
+      /**
+       * 删除列表数据成功后的处理方法
+       */
       deleteSuccess?(params: ProxyAjaxDeleteParams<D> & ProxyAjaxResponseParams): void
+      /**
+       * 删除列表数据失败后的处理方法
+       */
       deleteError?(params: ProxyAjaxDeleteParams<D> & ProxyAjaxResponseParams): void
+
+      /**
+       * 保存数据之前方法，用与在保存之前执行的方法
+       */
+      beforeSave?(params: ProxyAjaxSaveParams<D>, ...args: any[]): boolean | Promise<boolean>
+      /**
+       * 保存数据的方法，执行顺序 beforeSave > save > afterSave > saveSuccess|saveError
+       */
       save?(params: ProxyAjaxSaveParams<D>, ...args: any[]): Promise<any>
+      /**
+       * 该方法用于重写保存数据的默认行为，用于自定义保存数据的处理方法
+       */
+      afterSave?(params: ProxyAjaxSaveParams<D> & ProxyAjaxResponseParams & { status: 'success' | 'error' }, ...args: any[]): void
+      /**
+       * 保存数据成功后的处理方法
+       */
       saveSuccess?(params: ProxyAjaxSaveParams<D> & ProxyAjaxResponseParams): void
+      /**
+       * 保存数据失败后的处理方法
+       */
       saveError?(params: ProxyAjaxSaveParams<D> & ProxyAjaxResponseParams): void
     }
+    /**
+     * 用于重写 ajax.query，已废弃，被 ajax.beforeQuery 替换
+     * @deprecated
+     */
+    beforeQuery?(params: ProxyAjaxQueryParams<D>, ...args: any[]): Promise<any>
+    /**
+     * 已废弃，被 ajax.afterQuery 替换
+     * @deprecated
+     */
+    afterQuery?(params: ProxyAjaxQueryParams<D> & ProxyAjaxResponseParams, ...args: any[]): void
+    /**
+     * 用于重写 ajax.queryAll，已废弃，被 ajax.beforeQueryAll 替换
+     * @deprecated
+     */
+    beforeQueryAll?(params: ProxyAjaxQueryAllParams<D>, ...args: any[]): Promise<any>
+    /**
+     * 已废弃，被 ajax.afterQueryAll 替换
+     * @deprecated
+     */
+    afterQueryAll?(params: ProxyAjaxQueryAllParams<D> & ProxyAjaxResponseParams, ...args: any[]): void
+    /**
+     * 用于重写 ajax.queryFooter 不建议使用，已废弃，被 ajax.beforeQueryFooter 替换
+     * @deprecated
+     */
+    beforeQueryFooter?(params: ProxyAjaxQueryFooterParams<D>, ...args: any[]): Promise<any>
+    /**
+     * 已废弃，被 ajax.afterQueryFooter 替换
+     * @deprecated
+     */
+    afterQueryFooter?(params: ProxyAjaxQueryFooterParams<D> & ProxyAjaxResponseParams, ...args: any[]): void
+    /**
+     * 用于重写 ajax.delete 不建议使用，已废弃，被 ajax.beforeDelete 替换
+     * @deprecated
+     */
+    beforeDelete?(params: ProxyAjaxDeleteParams<D>, ...args: any[]): Promise<any>
+    /**
+     * 已废弃，被 ajax.afterDelete 替换
+     * @deprecated
+     */
+    afterDelete?(params: ProxyAjaxDeleteParams<D> & ProxyAjaxResponseParams, ...args: any[]): void
+    /**
+     * 用于重写 ajax.save 不建议使用，已废弃，被 ajax.beforeSave 替换
+     * @deprecated
+     */
+    beforeSave?(params: ProxyAjaxSaveParams<D>, ...args: any[]): Promise<any>
+    /**
+     * 已废弃，被 ajax.afterSave 替换
+     * @deprecated
+     */
+    afterSave?(params: ProxyAjaxSaveParams<D> & ProxyAjaxResponseParams, ...args: any[]): void
     beforeColumn?(params: {
       $table: VxeTableConstructor<D>
       $grid: VxeGridConstructor<D> | null | undefined
