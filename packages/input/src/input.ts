@@ -861,6 +861,12 @@ export default defineVxeComponent({
           handleChange(value, evnt)
         } else {
           inputMethods.dispatchEvent('input', { value }, evnt)
+          if (!$xeSelect && !$xeTreeSelect) {
+            // 自动更新校验状态
+            if ($xeForm && formItemInfo) {
+              $xeForm.triggerItemEvent(evnt, formItemInfo.itemConfig.field, value)
+            }
+          }
         }
       }
     }

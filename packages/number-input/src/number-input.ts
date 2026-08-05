@@ -403,6 +403,10 @@ export default defineVxeComponent({
         handleChange(value, inputValue, evnt)
       } else {
         numberInputMethods.dispatchEvent('input', { value }, evnt)
+        // 自动更新校验状态
+        if ($xeForm && formItemInfo) {
+          $xeForm.triggerItemEvent(evnt, formItemInfo.itemConfig.field, value)
+        }
       }
     }
 

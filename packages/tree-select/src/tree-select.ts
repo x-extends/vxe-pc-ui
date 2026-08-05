@@ -496,6 +496,7 @@ export default defineVxeComponent({
       const popupOpts = computePopupOpts.value
       const handleStyle = () => {
         const ppObj = updatePanelPlacement(targetElem, panelElem, {
+          isMinWidth: !popupOpts.width,
           placement: popupOpts.placement || placement,
           defaultPlacement: popupOpts.defaultPlacement,
           teleportTo: btnTransfer
@@ -539,6 +540,13 @@ export default defineVxeComponent({
     }
 
     const hideOptionPanel = (evnt?: Event) => {
+      const { filterable } = props
+      const filterOpts = computeFilterOpts.value
+      if (filterable) {
+        if (filterOpts.clearOnClose) {
+          reactData.searchValue = ''
+        }
+      }
       reactData.visiblePanel = false
       internalData.hpTimeout = setTimeout(() => {
         reactData.isAniVisible = false

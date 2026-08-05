@@ -1857,13 +1857,12 @@ export default defineVxeComponent({
       return renderEmptyElement($xeList)
     }
 
-    const renderRadio = (row: any, rowid: string, isChecked: boolean) => {
+    const renderRadio = (row: any, rowid: string, isDisabled: boolean, isChecked: boolean) => {
       const { showRadio } = props
       const radioOpts = computeRadioOpts.value
-      const { showIcon, checkMethod, visibleMethod } = radioOpts
+      const { showIcon, visibleMethod } = radioOpts
       const isVisible = !visibleMethod || visibleMethod({ $list: $xeList, row })
       if (showRadio && showIcon && isVisible) {
-        const isDisabled = checkMethod ? !checkMethod({ $list: $xeList, row }) : false
         return h('div', {
           key: 'ct2',
           class: ['vxe-list--radio-option', {
@@ -1884,13 +1883,12 @@ export default defineVxeComponent({
       return renderEmptyElement($xeList)
     }
 
-    const renderCheckbox = (row: any, rowid: string, isChecked: boolean) => {
+    const renderCheckbox = (row: any, rowid: string, isDisabled: boolean, isChecked: boolean) => {
       const { showCheckbox } = props
       const checkboxOpts = computeCheckboxOpts.value
-      const { showIcon, checkMethod, visibleMethod } = checkboxOpts
+      const { showIcon, visibleMethod } = checkboxOpts
       const isVisible = !visibleMethod || visibleMethod({ $list: $xeList, row })
       if (showCheckbox && showIcon && isVisible) {
-        const isDisabled = checkMethod ? !checkMethod({ $list: $xeList, row }) : false
         return h('div', {
           key: 'ct3',
           class: ['vxe-list--checkbox-option', {
@@ -1919,6 +1917,8 @@ export default defineVxeComponent({
       const extraSlot = slots.extra
       const dragOpts = computeDragOpts.value
       const { trigger, icon, disabledMethod, visibleMethod } = dragOpts
+      const radioOpts = computeRadioOpts.value
+      const checkboxOpts = computeCheckboxOpts.value
       const rowOpts = computeRowOpts.value
       const { useKey, contentField, className: rowClassName, isCurrent } = rowOpts
       const isDrag = computeIsDrag.value
@@ -1932,24 +1932,28 @@ export default defineVxeComponent({
       const rowParams = { row, $list: $xeList }
 
       let isRadioChecked = false
+      let isRadioDisabled = false
       if (showRadio) {
         isRadioChecked = selectRadioRow && (row === selectRadioRow || eqRowByKey(selectRadioRow, rowKey))
+        isRadioDisabled = radioOpts.checkMethod ? !radioOpts.checkMethod({ $list: $xeList, row }) : false
       }
 
       let isCheckboxChecked = false
+      let isCheckboxDisabled = false
       if (showCheckbox) {
         isCheckboxChecked = !!(updateCheckboxFlag && selectCheckboxMaps[rowid])
+        isCheckboxDisabled = checkboxOpts.checkMethod ? !checkboxOpts.checkMethod({ $list: $xeList, row }) : false
       }
 
       const ctVNs: VNode[] = []
       if (showRadio) {
         ctVNs.push(
-          renderRadio(row, rowid, isRadioChecked)
+          renderRadio(row, rowid, isRadioDisabled, isRadioChecked)
         )
       }
       if (showCheckbox) {
         ctVNs.push(
-          renderCheckbox(row, rowid, isCheckboxChecked)
+          renderCheckbox(row, rowid, isCheckboxDisabled, isCheckboxChecked)
         )
       }
       let isDragDisabled = false
@@ -2034,7 +2038,9 @@ export default defineVxeComponent({
         class: ['vxe-list--row', isRowFnCls ? rowClassName(rowParams) : (rowClassName || ''), {
           'is--drag-disabled': isDragDisabled,
           'is--current': currRowFlag && currentRow && eqRowByKey(currentRow, rowKey),
+          'is-radio--disabled': isRadioDisabled,
           'is-radio--checked': isRadioChecked,
+          'is-checkbox--disabled': isCheckboxDisabled,
           'is-checkbox--checked': isCheckboxChecked
         }],
         rowid: hasKey && keyField ? rowid : undefined,
