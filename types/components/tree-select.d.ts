@@ -53,7 +53,8 @@ export namespace VxeTreeSelectPropTypes {
   export type PrefixIcon = string
   export type Placement = 'top' | 'bottom'
   export type Filterable = boolean
-  export type FilterConfig = VxeTreePropTypes.FilterConfig
+
+  export interface FilterConfig<D = any> extends VxeTreePropTypes.FilterConfig<D> {}
   export interface Option {
     value?: string | number
     label?: string | number
@@ -200,16 +201,16 @@ export interface VxeTreeSelectProps<D = any> {
   prefixIcon?: VxeTreeSelectPropTypes.PrefixIcon
   placement?: VxeTreeSelectPropTypes.Placement
   filterable?: VxeTreeSelectPropTypes.Filterable
-  filterConfig?: VxeTreeSelectPropTypes.FilterConfig
+  filterConfig?: VxeTreeSelectPropTypes.FilterConfig<D>
   lazyOptions?: VxeTreeSelectPropTypes.LazyOptions<D>
   options?: VxeTreeSelectPropTypes.Options<D>
   optionProps?: VxeTreeSelectPropTypes.OptionProps
   remote?: VxeTreeSelectPropTypes.Remote
   remoteConfig?: VxeTreeSelectPropTypes.RemoteConfig
   showRadio?: VxeTreeSelectPropTypes.ShowRadio
-  radioConfig?: VxeTreeSelectPropTypes.RadioConfig
+  radioConfig?: VxeTreeSelectPropTypes.RadioConfig<D>
   showCheckbox?: VxeTreeSelectPropTypes.ShowCheckbox
-  checkboxConfig?: VxeTreeSelectPropTypes.CheckboxConfig
+  checkboxConfig?: VxeTreeSelectPropTypes.CheckboxConfig<D>
   transfer?: VxeTreeSelectPropTypes.Transfer
   popupConfig?: VxeTreeSelectPropTypes.PopupConfig
   treeConfig?: VxeTreeSelectPropTypes.TreeConfig<D>
