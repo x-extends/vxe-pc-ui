@@ -125,7 +125,7 @@ export namespace VxeGanttPropTypes {
     /**
      * 此刻线的显示方式：start（显示到左侧）,center（显示居中），end（显示到右侧），progress（显示实际进度）
      */
-    mode?: 'start' | 'progress' | 'center' | 'end'
+    mode?: 'start' | 'progress' | 'center' | 'end' | '' | null
     /**
      * 字体颜色
      */
@@ -221,6 +221,8 @@ export namespace VxeGanttPropTypes {
         type: string
         scaleType: VxeGanttDefines.ColumnScaleType
         dateObj: VxeGanttDefines.ScaleDateObj
+        startDateObj: VxeGanttDefines.ScaleDateObj
+        endDateObj: VxeGanttDefines.ScaleDateObj
         column?: VxeGanttDefines.ViewColumn<D>
         row: D
         rowIndex: number
@@ -235,6 +237,8 @@ export namespace VxeGanttPropTypes {
         type: string
         scaleType: VxeGanttDefines.ColumnScaleType
         dateObj: VxeGanttDefines.ScaleDateObj
+        startDateObj: VxeGanttDefines.ScaleDateObj
+        endDateObj: VxeGanttDefines.ScaleDateObj
         column?: VxeGanttDefines.ViewColumn<D>
         row: D
         rowIndex: number
@@ -471,6 +475,10 @@ export namespace VxeGanttPropTypes {
 
   export interface TaskBarResizeConfig<D = any> {
     /**
+     * 拖拽模式
+     */
+    mode?: 'scale' | 'progress' | 'default' | '' | null
+    /**
      * 是否允许拖拽调整任务起始日期
      */
     allowStart?: boolean
@@ -522,6 +530,10 @@ export namespace VxeGanttPropTypes {
   }
 
   export interface TaskBarMoveConfig<D = any> {
+    /**
+     * 拖拽模式
+     */
+    mode?: 'scale' | 'progress' | 'default' | '' | null
     /**
      * 拖拽移动任务后自动更新依赖线关联任务的日期
      */
@@ -931,6 +943,8 @@ export namespace VxeGanttDefines {
     field: string
     title: string
     dateObj: VxeGanttDefines.ScaleDateObj
+    startDateObj: VxeGanttDefines.ScaleDateObj
+    endDateObj: VxeGanttDefines.ScaleDateObj
     childCount?: number
     children?: ViewColumn<D>[]
   }
@@ -1177,6 +1191,8 @@ export namespace VxeGanttSlotTypes {
   export interface TaskViewCellTitleSlotParams {
     title: string | number
     dateObj: VxeGanttDefines.ScaleDateObj
+    startDateObj: VxeGanttDefines.ScaleDateObj
+    endDateObj: VxeGanttDefines.ScaleDateObj
     scaleObj: VxeGanttDefines.ColumnScaleObj
     $rowIndex: number
   }
