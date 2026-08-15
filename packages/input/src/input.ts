@@ -66,6 +66,10 @@ export default /* define-vxe-component start */ defineVxeComponent({
     align: String as PropType<VxeInputPropTypes.Align>,
     form: String as PropType<VxeInputPropTypes.Form>,
     className: String as PropType<VxeInputPropTypes.ClassName>,
+    inputClassName: {
+      type: String as PropType<VxeInputPropTypes.InputClassName>,
+      default: () => getConfig().input.inputClassName
+    },
     size: {
       type: String as PropType<VxeInputPropTypes.Size>,
       default: () => getConfig().input.size || getConfig().size
@@ -3020,7 +3024,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const props = $xeInput
       const reactData = $xeInput.reactData
 
-      const { className, controls, type, title, align, showWordCount, countMethod, name, autoComplete, autocomplete } = props
+      const { className, inputClassName, controls, type, title, align, showWordCount, countMethod, name, autoComplete, autocomplete } = props
       const { inputValue, visiblePanel, isActivated } = reactData
       const vSize = $xeInput.computeSize
       const isDisabled = $xeInput.computeIsDisabled
@@ -3070,7 +3074,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
         }, [
           h('input', {
             ref: 'refInputTarget',
-            class: 'vxe-input--inner',
+            class: 'vxe-input--inner' + (inputClassName ? (' ' + inputClassName) : ''),
             domProps: {
               value: inputValue
             },

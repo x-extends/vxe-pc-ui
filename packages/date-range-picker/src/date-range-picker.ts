@@ -84,6 +84,10 @@ export default /* define-vxe-component start */ defineVxeComponent({
     },
     form: String as PropType<VxeDateRangePickerPropTypes.Form>,
     className: String as PropType<VxeDateRangePickerPropTypes.ClassName>,
+    inputClassName: {
+      type: String as PropType<VxeDateRangePickerPropTypes.InputClassName>,
+      default: () => getConfig().dateRangePicker.inputClassName
+    },
     zIndex: Number as PropType<VxeDateRangePickerPropTypes.ZIndex>,
     size: {
       type: String as PropType<VxeDateRangePickerPropTypes.Size>,
@@ -1675,7 +1679,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const props = $xeDateRangePicker
       const reactData = $xeDateRangePicker.reactData
 
-      const { className, type, name, autoComplete } = props
+      const { className, inputClassName, type, name, autoComplete } = props
       const { selectStValue, selectEdValue, visiblePanel, isActivated } = reactData
       const vSize = $xeDateRangePicker.computeSize
       const isDisabled = $xeDateRangePicker.computeIsDisabled
@@ -1712,7 +1716,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
         }, [
           h('input', {
             ref: 'refInputTarget',
-            class: 'vxe-date-range-picker--inner',
+            class: 'vxe-date-range-picker--inner' + (inputClassName ? (' ' + inputClassName) : ''),
             domProps: {
               value: inputLabel
             },

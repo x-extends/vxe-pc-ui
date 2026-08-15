@@ -60,6 +60,10 @@ export default /* define-vxe-component start */ defineVxeComponent({
     align: String as PropType<VxeNumberInputPropTypes.Align>,
     form: String as PropType<VxeNumberInputPropTypes.Form>,
     className: String as PropType<VxeNumberInputPropTypes.ClassName>,
+    inputClassName: {
+      type: String as PropType<VxeNumberInputPropTypes.InputClassName>,
+      default: () => getConfig().numberInput.inputClassName
+    },
     size: {
       type: String as PropType<VxeNumberInputPropTypes.Size>,
       default: () => getConfig().numberInput.size || getConfig().size
@@ -1041,7 +1045,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const props = $xeNumberInput
       const reactData = $xeNumberInput.reactData
 
-      const { type, name, autocomplete, autoComplete } = props
+      const { inputClassName, type, name, autocomplete, autoComplete } = props
       const { inputValue, isFocus } = reactData
       const isDisabled = $xeNumberInput.computeIsDisabled
       const numLabel = $xeNumberInput.computeNumLabel
@@ -1058,7 +1062,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
         }, [
           h('input', {
             ref: 'refInputTarget',
-            class: 'vxe-number-input--input',
+            class: 'vxe-number-input--input' + (inputClassName ? (' ' + inputClassName) : ''),
             domProps: {
               value: !isFocus && type === 'amount' ? numLabel : inputValue
             },

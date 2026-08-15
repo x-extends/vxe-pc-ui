@@ -23,6 +23,14 @@ export default /* define-vxe-component start */ defineVxeComponent({
       type: [Number, String] as PropType<VxeSplitterPanelPropTypes.MinHeight>,
       default: () => null
     },
+    maxWidth: {
+      type: [Number, String] as PropType<VxeSplitterPanelPropTypes.MaxWidth>,
+      default: () => null
+    },
+    maxHeight: {
+      type: [Number, String] as PropType<VxeSplitterPanelPropTypes.MaxHeight>,
+      default: () => null
+    },
 
     // 已废弃
     showAction: Boolean as PropType<VxeSplitterPanelPropTypes.ShowAction>
@@ -49,6 +57,8 @@ export default /* define-vxe-component start */ defineVxeComponent({
       height: 0,
       minWidth: 0,
       minHeight: 0,
+      maxWidth: 0,
+      maxHeight: 0,
       showAction: false,
       isExpand: true,
       renderWidth: 0,
@@ -103,6 +113,18 @@ export default /* define-vxe-component start */ defineVxeComponent({
 
       paneConfig.minHeight = val
     },
+    maxWidth (val) {
+      const $xeSplitterItem = this
+      const paneConfig = $xeSplitterItem.paneConfig
+
+      paneConfig.maxWidth = val
+    },
+    maxHeight (val) {
+      const $xeSplitterItem = this
+      const paneConfig = $xeSplitterItem.paneConfig
+
+      paneConfig.maxHeight = val
+    },
     showAction (val) {
       const $xeSplitterItem = this
       const paneConfig = $xeSplitterItem.paneConfig
@@ -139,6 +161,8 @@ export default /* define-vxe-component start */ defineVxeComponent({
       height: props.height,
       minWidth: props.minWidth,
       minHeight: props.minHeight,
+      maxWidth: props.maxWidth,
+      maxHeight: props.maxHeight,
       showAction: props.showAction,
       slots
     })

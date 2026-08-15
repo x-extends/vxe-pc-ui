@@ -19,6 +19,7 @@ export namespace VxeInputPropTypes {
   export type Size = VxeComponentSizeType
   export type ModelValue = string | number | Date | undefined | null
   export type ClassName = string
+  export type InputClassName = string
   export type Immediate = boolean
   export type Name = string
   export type Title = string
@@ -86,6 +87,7 @@ export interface VxeInputProps {
   size?: VxeInputPropTypes.Size
   value?: VxeInputPropTypes.ModelValue
   className?: VxeInputPropTypes.ClassName
+  inputClassName?: VxeInputPropTypes.InputClassName
   immediate?: VxeInputPropTypes.Immediate
   name?: VxeInputPropTypes.Name
   title?: VxeInputPropTypes.Title

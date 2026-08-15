@@ -26,8 +26,16 @@ export namespace VxeSplitterPropTypes {
   export type Resize = boolean
   export type Items = VxeSplitterPanelProps[]
   export interface ItemConfig {
+    /**
+     * 用于左右布局，面板最小宽度
+     */
     minWidth?: string | number
+    /**
+     * 用于上下布局，面板最小高度
+     */
     minHeight?: string | number
+    maxWidth?: string | number
+    maxHeight?: string | number
   }
   export interface BarConfig {
     width?: string | number

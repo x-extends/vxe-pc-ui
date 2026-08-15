@@ -24,6 +24,7 @@ export namespace VxeDateRangePickerPropTypes {
   export type StartValue = string | number | Date | null
   export type EndValue = string | number | Date | null
   export type ClassName = string
+  export type InputClassName = string
   export type Immediate = boolean
   export type Name = string
   export type Type = VxeDatePanelPropTypes.Type
@@ -125,6 +126,7 @@ export interface VxeDateRangePickerProps {
   startValue?: VxeDateRangePickerPropTypes.StartValue
   endValue?: VxeDateRangePickerPropTypes.EndValue
   className?: VxeDateRangePickerPropTypes.ClassName
+  inputClassName?: VxeDateRangePickerPropTypes.InputClassName
   immediate?: VxeDateRangePickerPropTypes.Immediate
   name?: VxeDateRangePickerPropTypes.Name
   type?: VxeDateRangePickerPropTypes.Type
