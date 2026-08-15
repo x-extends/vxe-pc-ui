@@ -122,7 +122,7 @@ declare module '@vxe-ui/core' {
     /**
      * 表格 - 激活编辑状态时，设置自动聚焦的 class
      */
-    tableAutoFocus?: boolean | string | ((params: VxeGlobalRendererHandles.RenderTableEditParams<any> | VxeGlobalRendererHandles.RenderTableCellParams<any>) => HTMLElement | null)
+    tableAutoFocus?: boolean | string | ((params: VxeGlobalRendererHandles.TableAutoFocusParams) => HTMLElement | null)
     /**
      * 表格 - 激活编辑状态时，设置是否自动选中 tableAutoFocus 指定的元素
      */
@@ -205,12 +205,12 @@ declare module '@vxe-ui/core' {
      * 已废弃，请使用 tableAutoFocus
      * @deprecated
      */
-    autofocus?: string | ((params: VxeGlobalRendererHandles.RenderTableEditParams<any> | VxeGlobalRendererHandles.RenderTableCellParams<any>) => HTMLElement | null)
+    autofocus?: string | ((params: VxeGlobalRendererHandles.TableAutoFocusParams) => HTMLElement | null)
     /**
      * 已废弃，请使用 tableAutoFocus
      * @deprecated
      */
-    tableAutofocus?: string | ((params: VxeGlobalRendererHandles.RenderTableEditParams<any> | VxeGlobalRendererHandles.RenderTableCellParams<any>) => HTMLElement | null)
+    tableAutofocus?: string | ((params: VxeGlobalRendererHandles.TableAutoFocusParams) => HTMLElement | null)
     /**
      * 已废弃，请使用 tableAutoSelect
      * @deprecated
@@ -425,6 +425,12 @@ declare module '@vxe-ui/core' {
     export interface TableCellCopyMethodParams<D = any> extends VxeColumnDefines.CellCopyParams<D> {}
     export interface TableCellCutMethodParams<D = any> extends VxeColumnDefines.CellCutParams<D> {}
     export interface TableCellPasteMethodParams<D = any> extends VxeColumnDefines.CellPasteParams<D> {}
+
+    export interface TableAutoFocusParams<D = any> {
+      $table: VxeTableConstructor<D>
+      column: VxeTableDefines.ColumnInfo<D>
+      row: D
+    }
 
     /**
      * @deprecated

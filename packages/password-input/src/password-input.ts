@@ -29,6 +29,10 @@ export default defineVxeComponent({
       default: 'off'
     },
     className: String as PropType<VxePasswordInputPropTypes.ClassName>,
+    inputClassName: {
+      type: String as PropType<VxePasswordInputPropTypes.InputClassName>,
+      default: () => getConfig().passwordInput.inputClassName
+    },
     size: {
       type: String as PropType<VxePasswordInputPropTypes.Size>,
       default: () => getConfig().passwordInput.size || getConfig().size
@@ -321,7 +325,7 @@ export default defineVxeComponent({
     })
 
     const renderVN = () => {
-      const { className, name, disabled, readonly, autocomplete, autoComplete, maxLength } = props
+      const { className, inputClassName, name, disabled, readonly, autocomplete, autoComplete, maxLength } = props
       const { inputValue, isActivated } = reactData
       const vSize = computeSize.value
       const inpReadonly = computeInpReadonly.value
@@ -349,7 +353,7 @@ export default defineVxeComponent({
         }, [
           h('input', {
             ref: refInputTarget,
-            class: 'vxe-password-input--inner',
+            class: 'vxe-password-input--inner' + (inputClassName ? (' ' + inputClassName) : ''),
             value: inputValue,
             name,
             type: inputType,

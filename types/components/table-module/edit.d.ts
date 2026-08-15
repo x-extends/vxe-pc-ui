@@ -1,4 +1,4 @@
-import { VxeTableDefines } from '../table'
+import { VxeTableConstructor, VxeTableDefines } from '../table'
 
 /* eslint-disable no-use-before-define */
 
@@ -206,7 +206,17 @@ export interface TableEditPrivateMethods<D = any> {
   /**
    * @private
    */
-  handleEdit(params: any, evnt: any, options?: {
+  handleEdit(params: {
+    $table: VxeTableConstructor<D>
+    column: VxeTableDefines.ColumnInfo<D>
+    columnIndex: number
+    _columnIndex: number
+    $columnIndex: number
+    row: D
+    rowIndex: number
+    $rowIndex: number
+    _rowIndex: number
+  }, evnt: any, options?: {
     isClear?: boolean
   }): Promise<any>
   /**
@@ -216,11 +226,34 @@ export interface TableEditPrivateMethods<D = any> {
   /**
    * @private
    */
-  handleFocus(params: any, evnt?: any): void
+  handleCellFocus(cell: HTMLElement, params: {
+    $table: VxeTableConstructor<D>
+    column: VxeTableDefines.ColumnInfo<D>
+    row: D
+  }): HTMLInputElement | null
   /**
    * @private
    */
-  handleSelected(params: any, evnt: any): Promise<any>
+  handleFocus(params: {
+    $table: VxeTableConstructor<D>
+    column: VxeTableDefines.ColumnInfo<D>
+    row: D
+    cell: HTMLElement
+  }, evnt?: Event | null): void
+  /**
+   * @private
+   */
+  handleSelected(params: {
+    $table: VxeTableConstructor<D>
+    column: VxeTableDefines.ColumnInfo<D>
+    columnIndex: number
+    _columnIndex: number
+    $columnIndex: number
+    row: D
+    rowIndex: number
+    $rowIndex: number
+    _rowIndex: number
+  }, evnt: Event | null): Promise<any>
   /**
    * @private
    */

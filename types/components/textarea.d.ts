@@ -27,6 +27,7 @@ export namespace VxeTextareaPropTypes {
   export type Size = VxeComponentSizeType
   export type ModelValue = string | number | null
   export type ClassName = string
+  export type InputClassName = string
   export type Immediate = boolean
   export type Name = string
   export type Readonly = boolean
@@ -78,6 +79,7 @@ export type VxeTextareaProps = {
    */
   modelValue?: VxeTextareaPropTypes.ModelValue
   className?: VxeTextareaPropTypes.ClassName
+  inputClassName?: VxeTextareaPropTypes.InputClassName
   immediate?: VxeTextareaPropTypes.Immediate
   /**
    * 原生 name 属性

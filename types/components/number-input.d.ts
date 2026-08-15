@@ -26,6 +26,7 @@ export namespace VxeNumberInputPropTypes {
   export type Size = VxeComponentSizeType
   export type ModelValue = string | number | null
   export type ClassName = string
+  export type InputClassName = string
   export type Immediate = boolean
   export type Name = string
   export type Type = 'number' | 'integer' | 'float' | 'amount'
@@ -112,6 +113,7 @@ export interface VxeNumberInputProps {
   size?: VxeNumberInputPropTypes.Size
   modelValue?: VxeNumberInputPropTypes.ModelValue
   className?: VxeNumberInputPropTypes.ClassName
+  inputClassName?: VxeNumberInputPropTypes.InputClassName
   immediate?: VxeNumberInputPropTypes.Immediate
   name?: VxeNumberInputPropTypes.Name
   type?: VxeNumberInputPropTypes.Type

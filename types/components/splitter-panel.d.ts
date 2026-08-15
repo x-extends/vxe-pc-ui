@@ -28,6 +28,8 @@ export namespace VxeSplitterPanelPropTypes {
   export type Height = string | number
   export type MinWidth = string | number
   export type MinHeight = string | number
+  export type MaxWidth = string | number
+  export type MaxHeight = string | number
 
   /**
    * 已废弃
@@ -37,12 +39,35 @@ export namespace VxeSplitterPanelPropTypes {
 }
 
 export interface VxeSplitterPanelProps {
+  /**
+   * 面板唯一标识
+   */
   name?: VxeSplitterPanelPropTypes.Name
+  /**
+   * 用于左右布局，面板宽度
+   */
   width?: VxeSplitterPanelPropTypes.Width
+  /**
+   * 用于上下布局，面板高度
+   */
   height?: VxeSplitterPanelPropTypes.Height
+  /**
+   * 用于左右布局，面板最小宽度
+   */
   minWidth?: VxeSplitterPanelPropTypes.MinWidth
+  /**
+   * 用于上下布局，面板最小高度
+   */
   minHeight?: VxeSplitterPanelPropTypes.MinHeight
+  maxWidth?: VxeSplitterPanelPropTypes.MaxWidth
+  maxHeight?: VxeSplitterPanelPropTypes.MaxHeight
+  /**
+   * 自定义插槽模板
+   */
   slots?: {
+    /**
+     * 自定义面板内容插槽模板
+     */
     default?: string | ((params: VxeSplitterPanelSlotTypes.DefaultSlotParams) => VxeComponentSlotType | VxeComponentSlotType[])
   }
 

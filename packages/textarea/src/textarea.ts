@@ -16,6 +16,10 @@ export default defineVxeComponent({
   props: {
     modelValue: [String, Number] as PropType<VxeTextareaPropTypes.ModelValue>,
     className: String as PropType<VxeTextareaPropTypes.ClassName>,
+    inputClassName: {
+      type: String as PropType<VxeTextareaPropTypes.InputClassName>,
+      default: () => getConfig().textarea.inputClassName
+    },
     immediate: {
       type: Boolean as PropType<VxeTextareaPropTypes.Immediate>,
       default: true
@@ -314,7 +318,7 @@ export default defineVxeComponent({
     Object.assign($xeTextarea, textareaMethods)
 
     const renderVN = () => {
-      const { className, resize, autosize, autoSize, showWordCount, countMethod, rows, cols } = props
+      const { className, inputClassName, resize, autosize, autoSize, showWordCount, countMethod, rows, cols } = props
       const { inputValue } = reactData
       const vSize = computeSize.value
       const isDisabled = computeIsDisabled.value
@@ -349,7 +353,7 @@ export default defineVxeComponent({
       }, [
         h('textarea', {
           ref: refTextarea,
-          class: 'vxe-textarea--inner',
+          class: 'vxe-textarea--inner' + (inputClassName ? (' ' + inputClassName) : ''),
           value: inputValue,
           name: props.name,
           placeholder: inpPlaceholder,

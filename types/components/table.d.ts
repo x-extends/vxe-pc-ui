@@ -2617,11 +2617,16 @@ export namespace VxeTablePropTypes {
      */
     cache?: boolean
     /**
+     * 启用可复用渲染模式，对于全键盘方式编辑单元格时对中文输入法兼容性较好
+     */
+    isReuseKeep?: boolean
+    /**
      * 自定义编辑之前逻辑，该方法的返回值用来决定该单元格是否允许编辑
      */
     beforeEditMethod?(params: {
       $table: VxeTableConstructor<DT> & VxeTablePrivateMethods<DT>
       $grid: VxeGridConstructor<DT> | null | undefined
+      $gantt: VxeGanttConstructor | null | undefined
       row: DT
       rowIndex: number
       column: VxeTableDefines.ColumnInfo<DT>
@@ -2633,6 +2638,7 @@ export namespace VxeTablePropTypes {
     afterEditMethod?(params: {
       $table: VxeTableConstructor<DT> & VxeTablePrivateMethods<DT>
       $grid: VxeGridConstructor<DT> | null | undefined
+      $gantt: VxeGanttConstructor | null | undefined
       row: DT
       rowIndex: number
       column: VxeTableDefines.ColumnInfo<DT>
@@ -2646,6 +2652,7 @@ export namespace VxeTablePropTypes {
     activeMethod?(params: {
       $table: VxeTableConstructor<DT> & VxeTablePrivateMethods<DT>
       $grid: VxeGridConstructor<DT> | null | undefined
+      $gantt: VxeGanttConstructor | null | undefined
       row: DT
       rowIndex: number
       column: VxeTableDefines.ColumnInfo<DT>
@@ -4464,7 +4471,7 @@ export interface TableMethods<DT = any> {
   /**
    * 获取单元格 td 元素
    */
-  getCellElement(row: any, fieldOrColumn: VxeColumnPropTypes.Field | VxeTableDefines.ColumnInfo<any> | null): HTMLTableCellElement | null
+  getCellElement(row: any, fieldOrColumn: VxeColumnPropTypes.Field | VxeTableDefines.ColumnInfo<any> | null): HTMLElement | null
   /**
    * 获取单元格显示值
    */
@@ -5848,7 +5855,7 @@ export interface TablePrivateMethods<D = any> {
    * 已废弃，被 getCellElement 替换
    * @deprecated
    */
-  getCell(row: any, column: VxeTableDefines.ColumnInfo<any>): HTMLTableCellElement | null
+  getCell(row: any, column: VxeTableDefines.ColumnInfo<any>): HTMLTableCellElement | HTMLElement | null
   /**
    * 内部方法
    * @private
