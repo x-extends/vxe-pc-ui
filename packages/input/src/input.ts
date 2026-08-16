@@ -823,8 +823,9 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const $xeInput = this
       const props = $xeInput
 
-      const { type, editable, multiple, readonly } = props
-      return readonly || multiple || !editable || type === 'week' || type === 'quarter'
+      const { type, editable, multiple } = props
+      const formReadonly = $xeInput.computeFormReadonly
+      return formReadonly || multiple || !editable || type === 'week' || type === 'quarter'
     },
     computeInputType (this: any) {
       const $xeInput = this

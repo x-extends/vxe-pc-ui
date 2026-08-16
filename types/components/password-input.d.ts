@@ -31,6 +31,7 @@ export namespace VxePasswordInputPropTypes {
   export type PrefixIcon = string
   export type SuffixIcon = string
   export type Controls = boolean
+  export type Editable = boolean
   /**
    * 请使用 AutoComplete
    * @deprecated
@@ -54,6 +55,7 @@ export interface VxePasswordInputProps {
   prefixIcon?: VxePasswordInputPropTypes.PrefixIcon
   suffixIcon?: VxePasswordInputPropTypes.SuffixIcon
   controls?: VxePasswordInputPropTypes.Controls
+  editable?: VxePasswordInputPropTypes.Editable
   /**
    * 请使用 AutoComplete
    * @deprecated

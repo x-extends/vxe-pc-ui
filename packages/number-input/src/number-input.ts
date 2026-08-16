@@ -337,7 +337,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       return XEUtils.toString(inputValue)
     },
     computeIsDisabledSubtractNumber () {
-      const $xeNumberInput = this as any
+      const $xeNumberInput = this
       const props = $xeNumberInput
       const reactData = $xeNumberInput.reactData
 
@@ -351,7 +351,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       return false
     },
     computeIsDisabledAddNumber () {
-      const $xeNumberInput = this as any
+      const $xeNumberInput = this
       const props = $xeNumberInput
       const reactData = $xeNumberInput.reactData
 
@@ -363,6 +363,13 @@ export default /* define-vxe-component start */ defineVxeComponent({
         return numValue >= XEUtils.toNumber(max)
       }
       return false
+    },
+    computeInpClassNamevalue () {
+      const $xeNumberInput = this
+      const props = $xeNumberInput
+
+      const { inputClassName } = props
+      return 'vxe-number-input--input' + (inputClassName ? (' ' + inputClassName) : '')
     }
   },
   methods: {
@@ -373,7 +380,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const $xeNumberInput = this
       $xeNumberInput.$emit(type, createEvent(evnt, { $numberInput: $xeNumberInput }, params))
     },
-    emitModel  (value: any) {
+    emitModel (value: any) {
       const $xeNumberInput = this
 
       const { _events } = $xeNumberInput as any
@@ -1045,13 +1052,14 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const props = $xeNumberInput
       const reactData = $xeNumberInput.reactData
 
-      const { inputClassName, type, name, autocomplete, autoComplete } = props
+      const { type, name, autocomplete, autoComplete } = props
       const { inputValue, isFocus } = reactData
       const isDisabled = $xeNumberInput.computeIsDisabled
       const numLabel = $xeNumberInput.computeNumLabel
       const inputReadonly = $xeNumberInput.computeInputReadonly
       const inpMaxLength = $xeNumberInput.computeInpMaxLength
       const inpPlaceholder = $xeNumberInput.computeInpPlaceholder
+      const inpClassName = $xeNumberInput.computeInpClassNamevalue
       return h('div', {
         key: 'ni',
         class: 'vxe-number-input--input-wrapper'
@@ -1062,7 +1070,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
         }, [
           h('input', {
             ref: 'refInputTarget',
-            class: 'vxe-number-input--input' + (inputClassName ? (' ' + inputClassName) : ''),
+            class: inpClassName,
             domProps: {
               value: !isFocus && type === 'amount' ? numLabel : inputValue
             },

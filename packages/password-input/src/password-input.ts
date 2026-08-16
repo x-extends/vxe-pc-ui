@@ -2,7 +2,7 @@ import { CreateElement, PropType, VNode } from 'vue'
 import { defineVxeComponent } from '../../ui/src/comp'
 import XEUtils from 'xe-utils'
 import { getConfig, getIcon, getI18n, createEvent, globalMixins, renderEmptyElement } from '../../ui'
-import { getFuncText } from '../../ui/src/utils'
+import { getFuncText, getText } from '../../ui/src/utils'
 import { getSlotVNs } from '../../ui/src/vn'
 
 import type { VxePasswordInputEmits, VxeComponentSizeType, PasswordInputReactData, ValueOf, VxePasswordInputPropTypes, VxeFormConstructor, VxeFormPrivateMethods, VxeFormDefines } from '../../../types'
@@ -50,6 +50,10 @@ export default /* define-vxe-component start */ defineVxeComponent({
       type: Boolean as PropType<VxePasswordInputPropTypes.Controls>,
       default: () => getConfig().passwordInput.controls
     },
+    editable: {
+      type: Boolean as PropType<VxePasswordInputPropTypes.Editable>,
+      default: true
+    },
 
     // 已废弃
     autocomplete: String as PropType<VxePasswordInputPropTypes.Autocomplete>
@@ -87,13 +91,6 @@ export default /* define-vxe-component start */ defineVxeComponent({
 
       return props.clearable
     },
-    computeInpReadonly () {
-      const $xePasswordInput = this
-      const props = $xePasswordInput
-
-      const { readonly } = props
-      return readonly
-    },
     computeInpPlaceholder () {
       const $xePasswordInput = this
       const props = $xePasswordInput
@@ -107,6 +104,40 @@ export default /* define-vxe-component start */ defineVxeComponent({
         return getFuncText(globalPlaceholder)
       }
       return getI18n('vxe.base.pleaseInput')
+    },
+    computeFormReadonly () {
+      const $xePasswordInput = this
+      const props = $xePasswordInput
+      const $xeForm = $xePasswordInput.$xeForm
+
+      if (getConfig().inputReadonly === 'obsolete') {
+        if ($xeForm) {
+          return $xeForm.readonly
+        }
+        return false
+      }
+      const { readonly } = props
+      if (readonly === null) {
+        if ($xeForm) {
+          return $xeForm.readonly
+        }
+        return false
+      }
+      return readonly
+    },
+    computeIsDisabled () {
+      const $xePasswordInput = this
+      const props = $xePasswordInput
+      const $xeForm = $xePasswordInput.$xeForm
+
+      const { disabled } = props
+      if (disabled === null) {
+        if ($xeForm) {
+          return $xeForm.disabled
+        }
+        return false
+      }
+      return disabled
     },
     computeInputType () {
       const $xePasswordInput = this
@@ -124,6 +155,14 @@ export default /* define-vxe-component start */ defineVxeComponent({
 
       const { immediate } = props
       return immediate
+    },
+    computeInputReadonly () {
+      const $xePasswordInput = this
+      const props = $xePasswordInput
+
+      const { editable } = props
+      const formReadonly = $xePasswordInput.computeFormReadonly
+      return formReadonly || !editable
     }
   },
   methods: {
@@ -252,12 +291,12 @@ export default /* define-vxe-component start */ defineVxeComponent({
     },
     passwordToggleEvent  (evnt: Event) {
       const $xePasswordInput = this
-      const props = $xePasswordInput
       const reactData = $xePasswordInput.reactData
 
-      const { readonly, disabled } = props
       const { showPwd } = reactData
-      if (!disabled && !readonly) {
+      const isDisabled = $xePasswordInput.computeIsDisabled
+      const formReadonly = $xePasswordInput.computeFormReadonly
+      if (!isDisabled && !formReadonly) {
         reactData.showPwd = !showPwd
       }
       $xePasswordInput.dispatchEvent('toggle-visible', { visible: reactData.showPwd }, evnt)
@@ -277,22 +316,20 @@ export default /* define-vxe-component start */ defineVxeComponent({
     },
     clickSuffixEvent  (evnt: Event) {
       const $xePasswordInput = this
-      const props = $xePasswordInput
       const reactData = $xePasswordInput.reactData
 
-      const { disabled } = props
-      if (!disabled) {
+      const isDisabled = $xePasswordInput.computeIsDisabled
+      if (!isDisabled) {
         const { inputValue } = reactData
         $xePasswordInput.dispatchEvent('suffix-click', { value: inputValue }, evnt)
       }
     },
     clickPrefixEvent (evnt: Event) {
       const $xePasswordInput = this
-      const props = $xePasswordInput
       const reactData = $xePasswordInput.reactData
 
-      const { disabled } = props
-      if (!disabled) {
+      const isDisabled = $xePasswordInput.computeIsDisabled
+      if (!isDisabled) {
         const { inputValue } = reactData
         $xePasswordInput.dispatchEvent('prefix-click', { value: inputValue }, evnt)
       }
@@ -349,14 +386,15 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const slots = $xePasswordInput.$scopedSlots
       const reactData = $xePasswordInput.reactData
 
-      const { disabled, suffixIcon, controls } = props
+      const { suffixIcon, controls } = props
       const { inputValue } = reactData
-      const suffixSlot = slots.suffix
+      const isDisabled = $xePasswordInput.computeIsDisabled
       const isClearable = $xePasswordInput.computeIsClearable
+      const suffixSlot = slots.suffix
       return isClearable || controls || suffixSlot || suffixIcon
         ? h('div', {
           class: ['vxe-password-input--suffix', {
-            'is--clear': isClearable && !disabled && !(inputValue === '' || XEUtils.eqNull(inputValue))
+            'is--clear': isClearable && !isDisabled && !(inputValue === '' || XEUtils.eqNull(inputValue))
           }]
         }, [
           isClearable
@@ -394,13 +432,21 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const props = $xePasswordInput
       const reactData = $xePasswordInput.reactData
 
-      const { className, inputClassName, name, disabled, readonly, autocomplete, autoComplete, maxLength } = props
+      const { className, inputClassName, name, autocomplete, autoComplete, maxLength } = props
       const { inputValue, isActivated } = reactData
+      const isDisabled = $xePasswordInput.computeIsDisabled
+      const formReadonly = $xePasswordInput.computeFormReadonly
+      if (formReadonly) {
+        return h('div', {
+          ref: 'refElem',
+          class: ['vxe-password-input--readonly', className]
+        }, getText(inputValue))
+      }
       const vSize = $xePasswordInput.computeSize
-      const inpReadonly = $xePasswordInput.computeInpReadonly
       const inputType = $xePasswordInput.computeInputType
       const inpPlaceholder = $xePasswordInput.computeInpPlaceholder
       const isClearable = $xePasswordInput.computeIsClearable
+      const inputReadonly = $xePasswordInput.computeInputReadonly
       const prefix = $xePasswordInput.renderPrefixIcon(h)
       const suffix = $xePasswordInput.renderSuffixIcon(h)
       return h('div', {
@@ -409,10 +455,10 @@ export default /* define-vxe-component start */ defineVxeComponent({
           [`size--${vSize}`]: vSize,
           'is--prefix': !!prefix,
           'is--suffix': !!suffix,
-          'is--readonly': readonly,
-          'is--disabled': disabled,
+          'is--readonly': formReadonly,
+          'is--disabled': isDisabled,
           'is--active': isActivated,
-          'show--clear': isClearable && !disabled && !(inputValue === '' || XEUtils.eqNull(inputValue))
+          'show--clear': isClearable && !isDisabled && !(inputValue === '' || XEUtils.eqNull(inputValue))
         }],
         attrs: {
           spellcheck: false
@@ -432,8 +478,8 @@ export default /* define-vxe-component start */ defineVxeComponent({
               name,
               type: inputType,
               placeholder: inpPlaceholder,
-              readonly: inpReadonly,
-              disabled,
+              readonly: inputReadonly,
+              disabled: isDisabled,
               autocomplete: autocomplete || autoComplete,
               maxlength: maxLength
             },
