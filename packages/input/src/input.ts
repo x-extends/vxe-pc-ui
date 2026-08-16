@@ -241,8 +241,6 @@ export default defineVxeComponent({
       getRefMaps: () => refMaps
     } as unknown as VxeInputConstructor
 
-    let inputMethods = {} as InputMethods
-
     const parseDate = (value: VxeInputPropTypes.ModelValue, format: string) => {
       const { type } = props
       if (type === 'time') {
@@ -748,8 +746,9 @@ export default defineVxeComponent({
     })
 
     const computeInputReadonly = computed(() => {
-      const { type, editable, multiple, readonly } = props
-      return readonly || multiple || !editable || type === 'week' || type === 'quarter'
+      const { type, editable, multiple } = props
+      const formReadonly = computeFormReadonly.value
+      return formReadonly || multiple || !editable || type === 'week' || type === 'quarter'
     })
 
     const computeInputType = computed(() => {
@@ -818,6 +817,11 @@ export default defineVxeComponent({
       return false
     })
 
+    const computeDomValue = computed(() => {
+      const { inputValue } = reactData
+      return inputValue
+    })
+
     const getNumberValue = (val: any) => {
       const { type, exponential } = props
       const inpMaxLength = computeInpMaxLength.value
@@ -829,13 +833,25 @@ export default defineVxeComponent({
       return restVal.slice(0, inpMaxLength)
     }
 
+    const dispatchEvent = (type: ValueOf<VxeInputEmits>, params: Record<string, any>, evnt: Event | null) => {
+      emit(type, createEvent(evnt, { $input: $xeInput }, params))
+    }
+
+    const updateDomValue = () => {
+      const domValue = computeDomValue.value
+      const inputElem = refInputTarget.value
+      if (inputElem) {
+        inputElem.value = XEUtils.eqNull(domValue) ? '' : ('' + domValue)
+      }
+    }
+
     const emitModel = (value: string) => {
       emit('update:modelValue', value)
     }
 
     const triggerEvent = (evnt: Event & { type: 'input' | 'change' | 'keydown' | 'keyup' | 'wheel' | 'click' | 'focus' | 'blur' }) => {
       const { inputValue } = reactData
-      inputMethods.dispatchEvent(evnt.type, { value: inputValue }, evnt)
+      dispatchEvent(evnt.type, { value: inputValue }, evnt)
     }
 
     const handleChange = (value: string, evnt: Event | { type: string }) => {
@@ -844,9 +860,9 @@ export default defineVxeComponent({
       }
       reactData.inputValue = value
       emitModel(value)
-      inputMethods.dispatchEvent('input', { value }, evnt as any)
+      dispatchEvent('input', { value }, evnt as any)
       if (XEUtils.toValueString(props.modelValue) !== value) {
-        inputMethods.dispatchEvent('change', { value }, evnt as any)
+        dispatchEvent('change', { value }, evnt as any)
         if (!$xeSelect && !$xeTreeSelect) {
           // 自动更新校验状态
           if ($xeForm && formItemInfo) {
@@ -864,7 +880,7 @@ export default defineVxeComponent({
         if (inpImmediate) {
           handleChange(value, evnt)
         } else {
-          inputMethods.dispatchEvent('input', { value }, evnt)
+          dispatchEvent('input', { value }, evnt)
           if (!$xeSelect && !$xeTreeSelect) {
             // 自动更新校验状态
             if ($xeForm && formItemInfo) {
@@ -886,7 +902,7 @@ export default defineVxeComponent({
       if (!inpImmediate) {
         triggerEvent(evnt)
       }
-      $xeInput.dispatchEvent('lazy-change', { value: reactData.inputValue }, evnt)
+      dispatchEvent('lazy-change', { value: reactData.inputValue }, evnt)
     }
 
     const blurEvent = (evnt: Event & { type: 'blur' }) => {
@@ -900,7 +916,7 @@ export default defineVxeComponent({
       if (!reactData.visiblePanel) {
         reactData.isActivated = false
       }
-      inputMethods.dispatchEvent('blur', { value }, evnt)
+      dispatchEvent('blur', { value }, evnt)
       if (!$xeSelect && !$xeTreeSelect) {
         // 自动更新校验状态
         if ($xeForm && formItemInfo) {
@@ -926,7 +942,7 @@ export default defineVxeComponent({
       const isDisabled = computeIsDisabled.value
       if (!isDisabled) {
         const { inputValue } = reactData
-        $xeInput.dispatchEvent('prefix-click', { value: inputValue }, evnt)
+        dispatchEvent('prefix-click', { value: inputValue }, evnt)
       }
     }
 
@@ -953,15 +969,15 @@ export default defineVxeComponent({
         }
       }
       handleChange('', evnt)
-      $xeInput.dispatchEvent('clear', { value }, evnt)
-      $xeInput.dispatchEvent('lazy-change', { value }, evnt)
+      dispatchEvent('clear', { value }, evnt)
+      dispatchEvent('lazy-change', { value }, evnt)
     }
 
     const clickSuffixEvent = (evnt: Event) => {
       const isDisabled = computeIsDisabled.value
       if (!isDisabled) {
         const { inputValue } = reactData
-        $xeInput.dispatchEvent('suffix-click', { value: inputValue }, evnt)
+        dispatchEvent('suffix-click', { value: inputValue }, evnt)
       }
     }
 
@@ -1190,13 +1206,13 @@ export default defineVxeComponent({
       if (!isDisabled && !inputReadonly) {
         reactData.showPwd = !showPwd
       }
-      inputMethods.dispatchEvent('toggle-visible', { visible: reactData.showPwd }, evnt)
+      dispatchEvent('toggle-visible', { visible: reactData.showPwd }, evnt)
     }
     // 密码
 
     // 搜索
     const searchEvent = (evnt: Event) => {
-      inputMethods.dispatchEvent('search-click', {}, evnt)
+      dispatchEvent('search-click', {}, evnt)
     }
     // 搜索
 
@@ -1226,7 +1242,7 @@ export default defineVxeComponent({
       if (!isDisabled && !inputReadonly && !isDisabledSubtractNumber) {
         numberChange(false, evnt)
       }
-      inputMethods.dispatchEvent('next-number', { value: reactData.inputValue }, evnt)
+      dispatchEvent('next-number', { value: reactData.inputValue }, evnt)
     }
 
     const numberDownNextEvent = (evnt: Event) => {
@@ -1244,7 +1260,7 @@ export default defineVxeComponent({
       if (!isDisabled && !inputReadonly && !isDisabledAddNumber) {
         numberChange(true, evnt)
       }
-      inputMethods.dispatchEvent('prev-number', { value: reactData.inputValue }, evnt)
+      dispatchEvent('prev-number', { value: reactData.inputValue }, evnt)
     }
 
     const numberKeydownEvent = (evnt: KeyboardEvent) => {
@@ -1398,7 +1414,7 @@ export default defineVxeComponent({
           }
         }
         reactData.selectMonth = viewDate
-        inputMethods.dispatchEvent('date-prev', { viewType: datePanelType, viewDate, value, type }, evnt)
+        dispatchEvent('date-prev', { viewType: datePanelType, viewDate, value, type }, evnt)
       }
     }
 
@@ -1408,7 +1424,7 @@ export default defineVxeComponent({
         dateChange(reactData.currentDate)
         hidePanel()
       }
-      inputMethods.dispatchEvent('date-today', { type: props.type }, evnt)
+      dispatchEvent('date-today', { type: props.type }, evnt)
     }
 
     const dateNextEvent = (evnt: Event) => {
@@ -1437,7 +1453,7 @@ export default defineVxeComponent({
           }
         }
         reactData.selectMonth = viewDate
-        inputMethods.dispatchEvent('date-next', { viewType: datePanelType, viewDate, value, type }, evnt)
+        dispatchEvent('date-next', { viewType: datePanelType, viewDate, value, type }, evnt)
       }
     }
 
@@ -1974,6 +1990,33 @@ export default defineVxeComponent({
         }
       }
     }
+
+    const inputMethods: InputMethods = {
+      dispatchEvent,
+      focus () {
+        const inputElem = refInputTarget.value
+        reactData.isActivated = true
+        inputElem.focus()
+        return nextTick()
+      },
+      blur () {
+        const inputElem = refInputTarget.value
+        inputElem.blur()
+        reactData.isActivated = false
+        return nextTick()
+      },
+      select () {
+        const inputElem = refInputTarget.value
+        inputElem.select()
+        reactData.isActivated = false
+        return nextTick()
+      },
+      showPanel,
+      hidePanel,
+      updatePlacement
+    }
+
+    Object.assign($xeInput, inputMethods)
 
     const renderDateLabel = (item: VxeDatePanelDefines.DateYearItem | VxeDatePanelDefines.DateQuarterItem | VxeDatePanelDefines.DateMonthItem | VxeDatePanelDefines.DateDayItem, label: string | number) => {
       const { festivalMethod } = props
@@ -2619,38 +2662,6 @@ export default defineVxeComponent({
       return createCommentVNode()
     }
 
-    const dispatchEvent = (type: ValueOf<VxeInputEmits>, params: Record<string, any>, evnt: Event | null) => {
-      emit(type, createEvent(evnt, { $input: $xeInput }, params))
-    }
-
-    inputMethods = {
-      dispatchEvent,
-
-      focus () {
-        const inputElem = refInputTarget.value
-        reactData.isActivated = true
-        inputElem.focus()
-        return nextTick()
-      },
-      blur () {
-        const inputElem = refInputTarget.value
-        inputElem.blur()
-        reactData.isActivated = false
-        return nextTick()
-      },
-      select () {
-        const inputElem = refInputTarget.value
-        inputElem.select()
-        reactData.isActivated = false
-        return nextTick()
-      },
-      showPanel,
-      hidePanel,
-      updatePlacement
-    }
-
-    Object.assign($xeInput, inputMethods)
-
     const renderVN = () => {
       const { className, inputClassName, controls, type, title, align, showWordCount, countMethod, name, autoComplete, autocomplete } = props
       const { inputValue, visiblePanel, isActivated } = reactData
@@ -2697,7 +2708,6 @@ export default defineVxeComponent({
           h('input', {
             ref: refInputTarget,
             class: 'vxe-input--inner' + (inputClassName ? (' ' + inputClassName) : ''),
-            value: inputValue,
             name,
             type: inputType,
             placeholder: inpPlaceholder,
@@ -2755,6 +2765,20 @@ export default defineVxeComponent({
       }
     })
 
+    const rDvFlag = ref(0)
+    watch(computeFormReadonly, () => {
+      rDvFlag.value++
+    })
+    watch(computeDomValue, () => {
+      rDvFlag.value++
+    })
+    watch(rDvFlag, () => {
+      updateDomValue()
+      nextTick(() => {
+        updateDomValue()
+      })
+    })
+
     onMounted(() => {
       const { type } = props
       if (['date', 'time', 'datetime', 'week', 'month', 'quarter', 'year'].includes(type)) {
@@ -2773,6 +2797,7 @@ export default defineVxeComponent({
       globalEvents.on($xeInput, 'mousedown', handleGlobalMousedownEvent)
       globalEvents.on($xeInput, 'keydown', handleGlobalKeydownEvent)
       globalEvents.on($xeInput, 'blur', handleGlobalBlurEvent)
+      updateDomValue()
     })
 
     onBeforeUnmount(() => {

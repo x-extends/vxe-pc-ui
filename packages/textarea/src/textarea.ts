@@ -1,11 +1,11 @@
-import { h, ref, Ref, computed, nextTick, watch, PropType, reactive, inject } from 'vue'
+import { h, ref, Ref, computed, nextTick, watch, PropType, reactive, inject, onMounted } from 'vue'
 import { defineVxeComponent } from '../../ui/src/comp'
 import XEUtils from 'xe-utils'
 import { getConfig, getI18n, createEvent, useSize } from '../../ui'
 import { getFuncText } from '../../ui/src/utils'
 import { createComponentLog } from '../../ui/src/log'
 
-import type { VxeTextareaPropTypes, TextareaReactData, TextareaMethods, VxeTextareaConstructor, VxeTextareaEmits, TextareaPrivateRef, VxeFormConstructor, VxeFormPrivateMethods, VxeFormDefines } from '../../../types'
+import type { VxeTextareaPropTypes, TextareaReactData, TextareaMethods, VxeTextareaConstructor, VxeTextareaEmits, TextareaPrivateRef, VxeFormConstructor, VxeFormPrivateMethods, VxeFormDefines, ValueOf } from '../../../types'
 
 const { warnLog } = createComponentLog('textarea')
 
@@ -118,8 +118,6 @@ export default defineVxeComponent({
       getRefMaps: () => refMaps
     } as unknown as VxeTextareaConstructor
 
-    let textareaMethods = {} as TextareaMethods
-
     const computeFormReadonly = computed(() => {
       const { readonly } = props
       if (readonly === null) {
@@ -182,6 +180,23 @@ export default defineVxeComponent({
       return Object.assign({ minRows: 1, maxRows: 10 }, getConfig().textarea.autoSize, autoSize)
     })
 
+    const computeDomValue = computed(() => {
+      const { inputValue } = reactData
+      return inputValue
+    })
+
+    const dispatchEvent = (type: ValueOf<VxeTextareaEmits>, params: Record<string, any>, evnt: Event | null) => {
+      emit(type, createEvent(evnt, { $textarea: $xeTextarea }, params))
+    }
+
+    const updateDomValue = () => {
+      const domValue = computeDomValue.value
+      const taElem = refTextarea.value
+      if (taElem) {
+        taElem.value = XEUtils.eqNull(domValue) ? '' : ('' + domValue)
+      }
+    }
+
     const updateAutoTxt = () => {
       const { size, autosize, autoSize } = props
       const { inputValue } = reactData
@@ -243,7 +258,7 @@ export default defineVxeComponent({
 
     const triggerEvent = (evnt: Event & { type: 'focus' | 'blur' | 'change' }) => {
       const value = reactData.inputValue
-      $xeTextarea.dispatchEvent(evnt.type, { value }, evnt)
+      dispatchEvent(evnt.type, { value }, evnt)
     }
 
     const handleChange = (value: string, evnt: Event) => {
@@ -274,7 +289,7 @@ export default defineVxeComponent({
           $xeForm.triggerItemEvent(evnt, formItemInfo.itemConfig.field, value)
         }
       }
-      $xeTextarea.dispatchEvent('input', { value }, evnt)
+      dispatchEvent('input', { value }, evnt)
       handleResize()
     }
 
@@ -285,7 +300,7 @@ export default defineVxeComponent({
       } else {
         handleChange(reactData.inputValue, evnt)
       }
-      $xeTextarea.dispatchEvent('lazy-change', { value: reactData.inputValue }, evnt)
+      dispatchEvent('lazy-change', { value: reactData.inputValue }, evnt)
     }
 
     const blurEvent = (evnt: Event & { type: 'blur' }) => {
@@ -294,20 +309,16 @@ export default defineVxeComponent({
       if (!immediate) {
         handleChange(inputValue, evnt)
       }
-      $xeTextarea.dispatchEvent('blur', { value: inputValue }, evnt)
+      dispatchEvent('blur', { value: inputValue }, evnt)
     }
 
-    textareaMethods = {
-      dispatchEvent (type, params, evnt) {
-        emit(type, createEvent(evnt, { $textarea: $xeTextarea }, params))
-      },
-
+    const textareaMethods: TextareaMethods = {
+      dispatchEvent,
       focus () {
         const textElem = refTextarea.value
         textElem.focus()
         return nextTick()
       },
-
       blur () {
         const textElem = refTextarea.value
         textElem.blur()
@@ -354,7 +365,6 @@ export default defineVxeComponent({
         h('textarea', {
           ref: refTextarea,
           class: 'vxe-textarea--inner' + (inputClassName ? (' ' + inputClassName) : ''),
-          value: inputValue,
           name: props.name,
           placeholder: inpPlaceholder,
           maxlength: inpMaxLength,
@@ -406,6 +416,24 @@ export default defineVxeComponent({
     watch(reFlag, () => {
       updateAutoTxt()
       handleResize()
+    })
+
+    const rDvFlag = ref(0)
+    watch(computeFormReadonly, () => {
+      rDvFlag.value++
+    })
+    watch(computeDomValue, () => {
+      rDvFlag.value++
+    })
+    watch(rDvFlag, () => {
+      updateDomValue()
+    })
+
+    onMounted(() => {
+      updateDomValue()
+      nextTick(() => {
+        updateDomValue()
+      })
     })
 
     nextTick(() => {

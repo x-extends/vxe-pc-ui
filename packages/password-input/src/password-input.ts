@@ -1,11 +1,11 @@
-import { h, ref, Ref, computed, reactive, inject, nextTick, watch, PropType } from 'vue'
+import { h, ref, Ref, computed, reactive, inject, nextTick, watch, PropType, onMounted } from 'vue'
 import { defineVxeComponent } from '../../ui/src/comp'
 import XEUtils from 'xe-utils'
 import { getConfig, getIcon, getI18n, createEvent, useSize, renderEmptyElement } from '../../ui'
-import { getFuncText } from '../../ui/src/utils'
+import { getFuncText, getText } from '../../ui/src/utils'
 import { getSlotVNs } from '../../ui/src/vn'
 
-import type { VxePasswordInputConstructor, VxePasswordInputEmits, PasswordInputReactData, PasswordInputMethods, VxePasswordInputPropTypes, InputPrivateRef, VxeFormConstructor, VxeFormPrivateMethods, VxeFormDefines } from '../../../types'
+import type { VxePasswordInputConstructor, VxePasswordInputEmits, PasswordInputReactData, PasswordInputMethods, VxePasswordInputPropTypes, InputPrivateRef, VxeFormConstructor, VxeFormPrivateMethods, VxeFormDefines, ValueOf } from '../../../types'
 
 export default defineVxeComponent({
   name: 'VxePasswordInput',
@@ -42,6 +42,10 @@ export default defineVxeComponent({
     controls: {
       type: Boolean as PropType<VxePasswordInputPropTypes.Controls>,
       default: () => getConfig().passwordInput.controls
+    },
+    editable: {
+      type: Boolean as PropType<VxePasswordInputPropTypes.Editable>,
+      default: true
     },
 
     // 已废弃
@@ -91,15 +95,8 @@ export default defineVxeComponent({
       getRefMaps: () => refMaps
     } as unknown as VxePasswordInputConstructor
 
-    let passwordInputMethods = {} as PasswordInputMethods
-
     const computeIsClearable = computed(() => {
       return props.clearable
-    })
-
-    const computeInpReadonly = computed(() => {
-      const { readonly } = props
-      return readonly
     })
 
     const computeInpPlaceholder = computed(() => {
@@ -112,6 +109,34 @@ export default defineVxeComponent({
         return getFuncText(globalPlaceholder)
       }
       return getI18n('vxe.base.pleaseInput')
+    })
+
+    const computeFormReadonly = computed(() => {
+      if (getConfig().inputReadonly === 'obsolete') {
+        if ($xeForm) {
+          return $xeForm.props.readonly
+        }
+        return false
+      }
+      const { readonly } = props
+      if (readonly === null) {
+        if ($xeForm) {
+          return $xeForm.props.readonly
+        }
+        return false
+      }
+      return readonly
+    })
+
+    const computeIsDisabled = computed(() => {
+      const { disabled } = props
+      if (disabled === null) {
+        if ($xeForm) {
+          return $xeForm.props.disabled
+        }
+        return false
+      }
+      return disabled
     })
 
     const computeInputType = computed(() => {
@@ -127,9 +152,32 @@ export default defineVxeComponent({
       return immediate
     })
 
+    const computeInputReadonly = computed(() => {
+      const { editable } = props
+      const formReadonly = computeFormReadonly.value
+      return formReadonly || !editable
+    })
+
+    const computeDomValue = computed(() => {
+      const { inputValue } = reactData
+      return inputValue
+    })
+
+    const dispatchEvent = (type: ValueOf<VxePasswordInputEmits>, params: Record<string, any>, evnt: Event | null) => {
+      emit(type, createEvent(evnt, { $passwordInput: $xePasswordInput }, params))
+    }
+
+    const updateDomValue = () => {
+      const domValue = computeDomValue.value
+      const inputElem = refInputTarget.value
+      if (inputElem) {
+        inputElem.value = XEUtils.eqNull(domValue) ? '' : ('' + domValue)
+      }
+    }
+
     const triggerEvent = (evnt: Event & { type: 'input' | 'change' | 'click' | 'focus' | 'blur' }) => {
       const { inputValue } = reactData
-      passwordInputMethods.dispatchEvent(evnt.type, { value: inputValue }, evnt)
+      dispatchEvent(evnt.type, { value: inputValue }, evnt)
     }
 
     const emitInputEvent = (value: any, evnt: Event) => {
@@ -138,7 +186,7 @@ export default defineVxeComponent({
       if (inpImmediate) {
         handleChange(value, evnt)
       } else {
-        passwordInputMethods.dispatchEvent('input', { value }, evnt)
+        dispatchEvent('input', { value }, evnt)
       }
     }
 
@@ -151,9 +199,9 @@ export default defineVxeComponent({
     const handleChange = (value: string, evnt: Event | { type: string }) => {
       reactData.inputValue = value
       emit('update:modelValue', value)
-      passwordInputMethods.dispatchEvent('input', { value }, evnt as any)
+      dispatchEvent('input', { value }, evnt as any)
       if (XEUtils.toValueString(props.modelValue) !== value) {
-        passwordInputMethods.dispatchEvent('change', { value }, evnt as any)
+        dispatchEvent('change', { value }, evnt as any)
         // 自动更新校验状态
         if ($xeForm && formItemInfo) {
           $xeForm.triggerItemEvent(evnt, formItemInfo.itemConfig.field, value)
@@ -163,7 +211,7 @@ export default defineVxeComponent({
 
     const changeEvent = (evnt: Event & { type: 'change' }) => {
       triggerEvent(evnt)
-      $xePasswordInput.dispatchEvent('lazy-change', { value: reactData.inputValue }, evnt)
+      dispatchEvent('lazy-change', { value: reactData.inputValue }, evnt)
       // 自动更新校验状态
       if ($xeForm && formItemInfo) {
         $xeForm.triggerItemEvent(evnt, formItemInfo.itemConfig.field, reactData.inputValue)
@@ -179,7 +227,7 @@ export default defineVxeComponent({
       const { inputValue } = reactData
       const value = inputValue
       reactData.isActivated = false
-      $xePasswordInput.dispatchEvent('blur', { value }, evnt)
+      dispatchEvent('blur', { value }, evnt)
       // 自动更新校验状态
       if ($xeForm && formItemInfo) {
         $xeForm.triggerItemEvent(evnt, formItemInfo.itemConfig.field, value)
@@ -187,12 +235,13 @@ export default defineVxeComponent({
     }
 
     const passwordToggleEvent = (evnt: Event) => {
-      const { readonly, disabled } = props
       const { showPwd } = reactData
-      if (!disabled && !readonly) {
+      const isDisabled = computeIsDisabled.value
+      const formReadonly = computeFormReadonly.value
+      if (!isDisabled && !formReadonly) {
         reactData.showPwd = !showPwd
       }
-      $xePasswordInput.dispatchEvent('toggle-visible', { visible: reactData.showPwd }, evnt)
+      dispatchEvent('toggle-visible', { visible: reactData.showPwd }, evnt)
     }
 
     const clickEvent = (evnt: Event & { type: 'click' }) => {
@@ -202,25 +251,49 @@ export default defineVxeComponent({
     const clearValueEvent = (evnt: Event, value: VxePasswordInputPropTypes.ModelValue) => {
       focus()
       handleChange('', evnt)
-      $xePasswordInput.dispatchEvent('clear', { value }, evnt)
-      $xePasswordInput.dispatchEvent('lazy-change', { value: reactData.inputValue }, evnt)
+      dispatchEvent('clear', { value }, evnt)
+      dispatchEvent('lazy-change', { value: reactData.inputValue }, evnt)
     }
 
     const clickSuffixEvent = (evnt: Event) => {
-      const { disabled } = props
-      if (!disabled) {
+      const isDisabled = computeIsDisabled.value
+      if (!isDisabled) {
         const { inputValue } = reactData
-        $xePasswordInput.dispatchEvent('suffix-click', { value: inputValue }, evnt)
+        dispatchEvent('suffix-click', { value: inputValue }, evnt)
       }
     }
 
     const clickPrefixEvent = (evnt: Event) => {
-      const { disabled } = props
-      if (!disabled) {
+      const isDisabled = computeIsDisabled.value
+      if (!isDisabled) {
         const { inputValue } = reactData
-        $xePasswordInput.dispatchEvent('prefix-click', { value: inputValue }, evnt)
+        dispatchEvent('prefix-click', { value: inputValue }, evnt)
       }
     }
+
+    const passwordInputMethods: PasswordInputMethods = {
+      dispatchEvent,
+      focus () {
+        const inputElem = refInputTarget.value
+        reactData.isActivated = true
+        inputElem.focus()
+        return nextTick()
+      },
+      blur () {
+        const inputElem = refInputTarget.value
+        inputElem.blur()
+        reactData.isActivated = false
+        return nextTick()
+      },
+      select () {
+        const inputElem = refInputTarget.value
+        inputElem.select()
+        reactData.isActivated = false
+        return nextTick()
+      }
+    }
+
+    Object.assign($xePasswordInput, passwordInputMethods)
 
     const renderPasswordIcon = () => {
       const { showPwd } = reactData
@@ -256,14 +329,15 @@ export default defineVxeComponent({
     }
 
     const renderSuffixIcon = () => {
-      const { disabled, suffixIcon, controls } = props
+      const { suffixIcon, controls } = props
       const { inputValue } = reactData
-      const suffixSlot = slots.suffix
+      const isDisabled = computeIsDisabled.value
       const isClearable = computeIsClearable.value
+      const suffixSlot = slots.suffix
       return isClearable || controls || suffixSlot || suffixIcon
         ? h('div', {
           class: ['vxe-password-input--suffix', {
-            'is--clear': isClearable && !disabled && !(inputValue === '' || XEUtils.eqNull(inputValue))
+            'is--clear': isClearable && !isDisabled && !(inputValue === '' || XEUtils.eqNull(inputValue))
           }]
         }, [
           isClearable
@@ -293,45 +367,22 @@ export default defineVxeComponent({
         : null
     }
 
-    passwordInputMethods = {
-      dispatchEvent (type, params, evnt) {
-        emit(type, createEvent(evnt, { $passwordInput: $xePasswordInput }, params))
-      },
-
-      focus () {
-        const inputElem = refInputTarget.value
-        reactData.isActivated = true
-        inputElem.focus()
-        return nextTick()
-      },
-      blur () {
-        const inputElem = refInputTarget.value
-        inputElem.blur()
-        reactData.isActivated = false
-        return nextTick()
-      },
-      select () {
-        const inputElem = refInputTarget.value
-        inputElem.select()
-        reactData.isActivated = false
-        return nextTick()
-      }
-    }
-
-    Object.assign($xePasswordInput, passwordInputMethods)
-
-    watch(() => props.modelValue, (val) => {
-      reactData.inputValue = val
-    })
-
     const renderVN = () => {
-      const { className, inputClassName, name, disabled, readonly, autocomplete, autoComplete, maxLength } = props
+      const { className, inputClassName, name, readonly, autocomplete, autoComplete, maxLength } = props
       const { inputValue, isActivated } = reactData
+      const isDisabled = computeIsDisabled.value
+      const formReadonly = computeFormReadonly.value
+      if (formReadonly) {
+        return h('div', {
+          ref: refElem,
+          class: ['vxe-password-input--readonly', className]
+        }, getText(inputValue))
+      }
       const vSize = computeSize.value
-      const inpReadonly = computeInpReadonly.value
       const inputType = computeInputType.value
       const inpPlaceholder = computeInpPlaceholder.value
       const isClearable = computeIsClearable.value
+      const inputReadonly = computeInputReadonly.value
       const prefix = renderPrefixIcon()
       const suffix = renderSuffixIcon()
       return h('div', {
@@ -341,9 +392,9 @@ export default defineVxeComponent({
           'is--prefix': !!prefix,
           'is--suffix': !!suffix,
           'is--readonly': readonly,
-          'is--disabled': disabled,
+          'is--disabled': isDisabled,
           'is--active': isActivated,
-          'show--clear': isClearable && !disabled && !(inputValue === '' || XEUtils.eqNull(inputValue))
+          'show--clear': isClearable && !isDisabled && !(inputValue === '' || XEUtils.eqNull(inputValue))
         }],
         spellcheck: false
       }, [
@@ -354,12 +405,11 @@ export default defineVxeComponent({
           h('input', {
             ref: refInputTarget,
             class: 'vxe-password-input--inner' + (inputClassName ? (' ' + inputClassName) : ''),
-            value: inputValue,
             name,
             type: inputType,
             placeholder: inpPlaceholder,
-            readonly: inpReadonly,
-            disabled,
+            readonly: inputReadonly,
+            disabled: isDisabled,
             autocomplete: autocomplete || autoComplete,
             maxlength: maxLength,
             onClick: clickEvent,
@@ -372,6 +422,28 @@ export default defineVxeComponent({
         suffix || renderEmptyElement($xePasswordInput)
       ])
     }
+
+    watch(() => props.modelValue, (val) => {
+      reactData.inputValue = val
+    })
+
+    const rDvFlag = ref(0)
+    watch(computeFormReadonly, () => {
+      rDvFlag.value++
+    })
+    watch(computeDomValue, () => {
+      rDvFlag.value++
+    })
+    watch(rDvFlag, () => {
+      updateDomValue()
+      nextTick(() => {
+        updateDomValue()
+      })
+    })
+
+    onMounted(() => {
+      updateDomValue()
+    })
 
     $xePasswordInput.renderVN = renderVN
 

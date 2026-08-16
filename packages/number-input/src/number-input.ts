@@ -324,6 +324,11 @@ export default defineVxeComponent({
       return false
     })
 
+    const computeInpClassNamevalue = computed(() => {
+      const { inputClassName } = props
+      return 'vxe-number-input--input' + (inputClassName ? (' ' + inputClassName) : '')
+    })
+
     const refMaps: InputPrivateRef = {
       refElem,
       refInput: refInputTarget
@@ -343,7 +348,9 @@ export default defineVxeComponent({
       getComputeMaps: () => computeMaps
     } as unknown as VxeNumberInputConstructor
 
-    let numberInputMethods = {} as NumberInputMethods
+    const dispatchEvent = (type: ValueOf<VxeNumberInputEmits>, params: Record<string, any>, evnt: Event | null) => {
+      emit(type, createEvent(evnt, { $numberInput: $xeNumberInput }, params))
+    }
 
     const handleNumberString = (val: any) => {
       if (XEUtils.eqNull(val)) {
@@ -374,7 +381,7 @@ export default defineVxeComponent({
 
     const triggerEvent = (evnt: Event & { type: 'input' | 'change' | 'keydown' | 'keyup' | 'wheel' | 'click' | 'focus' | 'blur' }) => {
       const { inputValue } = reactData
-      numberInputMethods.dispatchEvent(evnt.type, { value: inputValue }, evnt)
+      dispatchEvent(evnt.type, { value: inputValue }, evnt)
     }
 
     const handleChange = (val: number | null, inputValue: string, evnt: Event | { type: string }) => {
@@ -389,9 +396,9 @@ export default defineVxeComponent({
           reactData.inputValue = inputValue || ''
         })
       }
-      numberInputMethods.dispatchEvent('input', { value }, evnt as Event)
+      dispatchEvent('input', { value }, evnt as Event)
       if (isChange) {
-        numberInputMethods.dispatchEvent('change', { value }, evnt as Event)
+        dispatchEvent('change', { value }, evnt as Event)
         // 自动更新校验状态
         if ($xeForm && formItemInfo) {
           $xeForm.triggerItemEvent(evnt, formItemInfo.itemConfig.field, value)
@@ -406,7 +413,7 @@ export default defineVxeComponent({
       if (inpImmediate) {
         handleChange(value, inputValue, evnt)
       } else {
-        numberInputMethods.dispatchEvent('input', { value }, evnt)
+        dispatchEvent('input', { value }, evnt)
         // 自动更新校验状态
         if ($xeForm && formItemInfo) {
           $xeForm.triggerItemEvent(evnt, formItemInfo.itemConfig.field, value)
@@ -425,7 +432,7 @@ export default defineVxeComponent({
       if (!inpImmediate) {
         triggerEvent(evnt)
       }
-      $xeNumberInput.dispatchEvent('lazy-change', { value: reactData.inputValue }, evnt)
+      dispatchEvent('lazy-change', { value: reactData.inputValue }, evnt)
     }
 
     const focusEvent = (evnt: Event & { type: 'focus' }) => {
@@ -443,22 +450,22 @@ export default defineVxeComponent({
       const isDisabled = computeIsDisabled.value
       if (!isDisabled) {
         const { inputValue } = reactData
-        numberInputMethods.dispatchEvent('prefix-click', { value: inputValue }, evnt)
+        dispatchEvent('prefix-click', { value: inputValue }, evnt)
       }
     }
 
     const clearValueEvent = (evnt: Event, value: VxeNumberInputPropTypes.ModelValue) => {
       focus()
       handleChange(null, '', evnt)
-      numberInputMethods.dispatchEvent('clear', { value }, evnt)
-      $xeNumberInput.dispatchEvent('lazy-change', { value }, evnt)
+      dispatchEvent('clear', { value }, evnt)
+      dispatchEvent('lazy-change', { value }, evnt)
     }
 
     const clickSuffixEvent = (evnt: Event) => {
       const isDisabled = computeIsDisabled.value
       if (!isDisabled) {
         const { inputValue } = reactData
-        numberInputMethods.dispatchEvent('suffix-click', { value: inputValue }, evnt)
+        dispatchEvent('suffix-click', { value: inputValue }, evnt)
       }
     }
 
@@ -563,7 +570,7 @@ export default defineVxeComponent({
       afterCheckValue()
       reactData.isFocus = false
       reactData.isActivated = false
-      numberInputMethods.dispatchEvent('blur', { value }, evnt)
+      dispatchEvent('blur', { value }, evnt)
       // 自动更新校验状态
       if ($xeForm && formItemInfo) {
         $xeForm.triggerItemEvent(evnt, formItemInfo.itemConfig.field, value)
@@ -596,10 +603,10 @@ export default defineVxeComponent({
         numberChange(true, evnt)
       }
       reactData.isActivated = true
-      numberInputMethods.dispatchEvent('plus-number', { value: reactData.inputValue }, evnt)
-      $xeNumberInput.dispatchEvent('lazy-change', { value: reactData.inputValue }, evnt)
+      dispatchEvent('plus-number', { value: reactData.inputValue }, evnt)
+      dispatchEvent('lazy-change', { value: reactData.inputValue }, evnt)
       // 已废弃
-      numberInputMethods.dispatchEvent('next-number', { value: reactData.inputValue }, evnt)
+      dispatchEvent('next-number', { value: reactData.inputValue }, evnt)
     }
 
     const numberMinusEvent = (evnt: Event) => {
@@ -610,10 +617,10 @@ export default defineVxeComponent({
         numberChange(false, evnt)
       }
       reactData.isActivated = true
-      numberInputMethods.dispatchEvent('minus-number', { value: reactData.inputValue }, evnt)
-      $xeNumberInput.dispatchEvent('lazy-change', { value: reactData.inputValue }, evnt)
+      dispatchEvent('minus-number', { value: reactData.inputValue }, evnt)
+      dispatchEvent('lazy-change', { value: reactData.inputValue }, evnt)
       // 已废弃
-      numberInputMethods.dispatchEvent('prev-number', { value: reactData.inputValue }, evnt)
+      dispatchEvent('prev-number', { value: reactData.inputValue }, evnt)
     }
 
     const numberKeydownEvent = (evnt: KeyboardEvent) => {
@@ -809,13 +816,8 @@ export default defineVxeComponent({
       }
     }
 
-    const dispatchEvent = (type: ValueOf<VxeNumberInputEmits>, params: Record<string, any>, evnt: Event | null) => {
-      emit(type, createEvent(evnt, { $numberInput: $xeNumberInput }, params))
-    }
-
-    numberInputMethods = {
+    const numberInputMethods: NumberInputMethods = {
       dispatchEvent,
-
       focus () {
         const inputReadonly = computeInputReadonly.value
         if (!inputReadonly) {
@@ -919,13 +921,14 @@ export default defineVxeComponent({
     }
 
     const renderInput = () => {
-      const { inputClassName, type, name, autocomplete, autoComplete } = props
+      const { type, name, autocomplete, autoComplete } = props
       const { inputValue, isFocus } = reactData
       const isDisabled = computeIsDisabled.value
       const numLabel = computeNumLabel.value
       const inputReadonly = computeInputReadonly.value
       const inpMaxLength = computeInpMaxLength.value
       const inpPlaceholder = computeInpPlaceholder.value
+      const inpClassName = computeInpClassNamevalue.value
       return h('div', {
         key: 'ni',
         class: 'vxe-number-input--input-wrapper'
@@ -936,10 +939,10 @@ export default defineVxeComponent({
         }, [
           h('input', {
             ref: refInputTarget,
-            class: 'vxe-number-input--input' + (inputClassName ? (' ' + inputClassName) : ''),
-            value: !isFocus && type === 'amount' ? numLabel : inputValue,
+            class: inpClassName,
             name,
             type: 'text',
+            value: !isFocus && type === 'amount' ? numLabel : inputValue,
             placeholder: inpPlaceholder,
             maxlength: inpMaxLength,
             readonly: inputReadonly,
