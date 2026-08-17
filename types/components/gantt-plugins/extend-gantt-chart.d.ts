@@ -104,12 +104,12 @@ export interface VxeGanttExtendChartPrivateMethods<D = any> {
    * 内部方法
    * @private
    */
-  handleUpdateTaskLinkData(): void
+  handleUpTaskLinkData(): void
   /**
    * 内部方法
    * @private
    */
-  handleUpdateTaskLinkStyle($xeGanttView: VxeGanttViewConstructor & VxeGanttViewPrivateMethods): void
+  handleUpTaskLinkStyle($xeGanttView: VxeGanttViewConstructor & VxeGanttViewPrivateMethods): void
   /**
    * 内部方法
    * @private
