@@ -371,10 +371,15 @@ export namespace VxeGanttPropTypes {
      * 任务条样式
      */
     barStyle?: VxeGanttDefines.BarStyleConfig | ((params: {
+      source: string
+      type: string
       scaleType: VxeGanttDefines.ColumnScaleType
       $gantt: VxeGanttConstructor<D>
       row: D
-    }) => VxeGanttDefines.BarStyleConfig)
+      rowIndex: number
+      $rowIndex: number
+      _rowIndex: number
+    }) => void | null | undefined | VxeGanttDefines.BarStyleConfig)
     /**
      * 是否启用拖拽移动日期
      */
@@ -435,7 +440,7 @@ export namespace VxeGanttPropTypes {
     /**
      * 子视图任务条样式
      */
-    barStyle?: CSSStyleDeclaration | ((params: {
+    barStyle?: VxeGanttDefines.BarStyleConfig | ((params: {
       source: string
       type: string
       scaleType: VxeGanttDefines.ColumnScaleType
@@ -443,7 +448,7 @@ export namespace VxeGanttPropTypes {
       rowIndex: number
       $rowIndex: number
       _rowIndex: number
-    }) => void | null | Partial<CSSStyleDeclaration>)
+    }) => void | null | undefined | VxeGanttDefines.BarStyleConfig)
   }
 
   export interface TaskBarTooltipConfig<D = any> {
@@ -932,6 +937,10 @@ export namespace VxeGanttDefines {
      * 子任务视图概况任务条的背景颜色
      */
     overviewBgColor?: string
+    /**
+     * 给任务条附加 style
+     */
+    style?: Partial<CSSStyleDeclaration> | null
   }
 
   export interface GroupColumn<D = any> {
