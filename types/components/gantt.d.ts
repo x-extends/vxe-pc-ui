@@ -362,7 +362,7 @@ export namespace VxeGanttPropTypes {
     /**
      * 任务条样式
      */
-    barStyle?: VxeGanttDefines.BarStyleConfig | ((params: {
+    barStyle?: VxeGanttDefines.DefaultBarStyleConfig | ((params: {
       source: string
       type: string
       scaleType: VxeGanttDefines.ColumnScaleType
@@ -371,7 +371,7 @@ export namespace VxeGanttPropTypes {
       rowIndex: number
       $rowIndex: number
       _rowIndex: number
-    }) => void | null | undefined | VxeGanttDefines.BarStyleConfig)
+    }) => void | null | undefined | VxeGanttDefines.DefaultBarStyleConfig)
     /**
      * 是否启用拖拽移动日期
      */
@@ -415,6 +415,18 @@ export namespace VxeGanttPropTypes {
      * 是否显示图标
      */
     showIcon?: boolean
+    /**
+     * 里程碑任务条样式
+     */
+    barStyle?: VxeGanttDefines.MilestoneBarStyleConfig | ((params: {
+      source: string
+      type: string
+      scaleType: VxeGanttDefines.ColumnScaleType
+      row: D
+      rowIndex: number
+      $rowIndex: number
+      _rowIndex: number
+    }) => void | null | undefined | VxeGanttDefines.MilestoneBarStyleConfig)
   }
 
   /**
@@ -432,7 +444,7 @@ export namespace VxeGanttPropTypes {
     /**
      * 子视图任务条样式
      */
-    barStyle?: VxeGanttDefines.BarStyleConfig | ((params: {
+    barStyle?: VxeGanttDefines.SubviewBarStyleConfig | ((params: {
       source: string
       type: string
       scaleType: VxeGanttDefines.ColumnScaleType
@@ -440,7 +452,7 @@ export namespace VxeGanttPropTypes {
       rowIndex: number
       $rowIndex: number
       _rowIndex: number
-    }) => void | null | undefined | VxeGanttDefines.BarStyleConfig)
+    }) => void | null | undefined | VxeGanttDefines.SubviewBarStyleConfig)
   }
 
   export interface TaskBarTooltipConfig<D = any> {
@@ -914,7 +926,7 @@ export namespace VxeGanttDefines {
     fromRows: D[]
   }
 
-  export interface BarStyleConfig {
+  export interface DefaultBarStyleConfig {
     /**
      * 圆角
      */
@@ -935,6 +947,20 @@ export namespace VxeGanttDefines {
      * 子任务视图概况任务条的背景颜色
      */
     overviewBgColor?: string
+    /**
+     * 给任务条附加 style
+     */
+    style?: Partial<CSSStyleDeclaration> | null
+  }
+
+  export interface SubviewBarStyleConfig {
+    /**
+     * 给任务条附加 style
+     */
+    style?: Partial<CSSStyleDeclaration> | null
+  }
+
+  export interface MilestoneBarStyleConfig {
     /**
      * 给任务条附加 style
      */
