@@ -33,6 +33,7 @@ export namespace VxeInputPropTypes {
   export type Title = string
   export type Type = 'text' | 'search' | 'number' | 'integer' | 'float' | 'password' | 'date' | 'time' | 'datetime' | 'week' | 'month' | 'quarter' | 'year'
   export type Clearable = boolean
+  export type DelClearable = boolean
   export type Editable = boolean
   export type Readonly = boolean
   export type Disabled = boolean
@@ -101,6 +102,11 @@ export interface VxeInputProps {
   title?: VxeInputPropTypes.Title
   type?: VxeInputPropTypes.Type
   clearable?: VxeInputPropTypes.Clearable
+  /**
+   * 不建议使用
+   * @deprecated
+   */
+  delClearable?: VxeInputPropTypes.DelClearable
   readonly?: VxeInputPropTypes.Readonly
   disabled?: VxeInputPropTypes.Disabled
   placeholder?: VxeInputPropTypes.Placeholder

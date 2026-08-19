@@ -67,6 +67,10 @@ export namespace VxePrintPropTypes {
   export type FooterHtml = string | ((params: VxePrintDefines.PageBreakParams) => string)
   export type LeftHtml = string | ((params: VxePrintDefines.PageBreakParams) => string)
   export type RightHtml = string | ((params: VxePrintDefines.PageBreakParams) => string)
+  /**
+   * 已废弃，请使用 BeforePrintMethod
+   * @deprecated
+   */
   export type BeforeMethod = (params: {
     html: string
     options: VxePrintProps
@@ -97,6 +101,10 @@ export namespace VxePrintPropTypes {
      */
     content: string
   }) => string
+  export type AfterPrintMethod = (params: {
+    html: string
+    options: VxePrintProps
+  }) => void
 }
 
 export interface VxePrintProps {
@@ -122,9 +130,23 @@ export interface VxePrintProps {
   rightHtml?: VxePrintPropTypes.RightHtml
   pageBreaks?: VxePrintPropTypes.PageBreaks
   showAllPageTitle?: VxePrintPropTypes.ShowAllPageTitle
+  /**
+   * 已废弃，请使用 beforePrintMethod
+   * @deprecated
+   */
   beforeMethod?: VxePrintPropTypes.BeforeMethod
+  /**
+   * 打印之前的方法，可以返回 false 阻止打印行为
+   */
   beforePrintMethod?: VxePrintPropTypes.BeforePrintMethod
+  /**
+   * 自定义打印方法，可以通过返回自定义打印的内容
+   */
   printMethod?: VxePrintPropTypes.PrintMethod
+  /**
+   * 打印之后的方法
+   */
+  afterPrintMethod?: VxePrintPropTypes.AfterPrintMethod
 
   /**
    * 已废弃，请使用 html

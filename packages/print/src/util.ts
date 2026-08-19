@@ -151,7 +151,7 @@ function createHtmlPage (opts: VxePrintProps & { _pageBreaks: boolean }, printHt
 
 function handlePrint (opts: VxePrintProps & { _pageBreaks: boolean }, printHtml = '') {
   const browseObj = XEUtils.browse()
-  const { styleUrls } = opts
+  const { printMethod, afterPrintMethod, styleUrls } = opts
   const beforePrintMethod = opts.beforePrintMethod || opts.beforeMethod
   if (styleUrls && styleUrls.length) {
     styleUrls.forEach(url => {
@@ -173,6 +173,9 @@ function handlePrint (opts: VxePrintProps & { _pageBreaks: boolean }, printHtml 
       errLog('vxe.error.notSupportReturn', [bpRest, 'beforePrintMethod', 'printMethod'])
       printHtml = bpRest || ''
     }
+  }
+  if (printMethod) {
+    printHtml = printMethod({ content: printHtml, html: printHtml, options: opts }) || ''
   }
   printHtml = createHtmlPage(opts, printHtml)
   const blob = getExportBlobByString(printHtml, 'html')
@@ -202,7 +205,12 @@ function handlePrint (opts: VxePrintProps & { _pageBreaks: boolean }, printHtml 
             try {
               const contentWindow = frameEl.contentWindow
               if (contentWindow) {
-                contentWindow.onafterprint = afterPrintEvent
+                contentWindow.onafterprint = () => {
+                  if (afterPrintMethod) {
+                    afterPrintMethod({ html: printHtml, options: opts })
+                  }
+                  afterPrintEvent()
+                }
                 contentWindow.print()
               }
             } catch (e) {}

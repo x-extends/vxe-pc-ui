@@ -3323,6 +3323,16 @@ export namespace VxeTablePropTypes {
        */
       content: string
     }): string
+    /**
+     * 打印之后的方法
+     */
+    afterPrintMethod?(params: {
+      $table: VxeTableConstructor
+      $grid: VxeGridConstructor | null | undefined
+      $gantt: VxeGanttConstructor | null | undefined
+      html: string
+      options: PrintHandleOptions
+    }): string
 
     /**
      * 已被 html 替换
