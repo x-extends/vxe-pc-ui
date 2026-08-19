@@ -672,6 +672,7 @@ export namespace VxeColumnDefines {
   }
 
   export interface CellFormatterParams<D = any> {
+    $table: VxeTableConstructor<D> & VxeTablePrivateMethods<D>
     cellValue: any
     column: VxeTableDefines.ColumnInfo<D>
     row: D

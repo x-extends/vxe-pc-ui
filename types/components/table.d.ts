@@ -3041,7 +3041,7 @@ export namespace VxeTablePropTypes {
     beforeImportMethod?(params: {
       $table: VxeTableConstructor
       options: any
-    }): void
+    }): boolean
     afterImportMethod?(params: {
       $table: VxeTableConstructor
       options: any
@@ -3241,7 +3241,7 @@ export namespace VxeTablePropTypes {
       $grid: VxeGridConstructor | null | undefined
       $gantt: VxeGanttConstructor | null | undefined
       options: ExportHandleOptions
-    }): void
+    }): boolean
     afterExportMethod?(params: {
       $table: VxeTableConstructor
       $grid: VxeGridConstructor | null | undefined
@@ -3292,9 +3292,25 @@ export namespace VxeTablePropTypes {
      */
     html?: string
     /**
-     * 打印之前的方法，可以通过返回自定义打印的内容
+     * 打印之前的方法，可以通过返回自false阻止打印
      */
     beforePrintMethod?(params: {
+      $table: VxeTableConstructor
+      $grid: VxeGridConstructor | null | undefined
+      $gantt: VxeGanttConstructor | null | undefined
+      html: string
+      options: PrintHandleOptions
+
+      /**
+       * 已被 html 替换
+       * @deprecated
+       */
+      content: string
+    }): string | boolean
+    /**
+     * 自定义打印方法，可以通过返回自定义打印的内容
+     */
+    printMethod?(params: {
       $table: VxeTableConstructor
       $grid: VxeGridConstructor | null | undefined
       $gantt: VxeGanttConstructor | null | undefined

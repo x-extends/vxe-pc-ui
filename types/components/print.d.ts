@@ -76,6 +76,26 @@ export namespace VxePrintPropTypes {
      * @deprecated
      */
     content: string
+  }) => string | boolean
+  export type BeforePrintMethod = (params: {
+    html: string
+    options: VxePrintProps
+
+    /**
+     * 已废弃，请使用 html
+     * @deprecated
+     */
+    content: string
+  }) => string | boolean
+  export type PrintMethod = (params: {
+    html: string
+    options: VxePrintProps
+
+    /**
+     * 已废弃，请使用 html
+     * @deprecated
+     */
+    content: string
   }) => string
 }
 
@@ -103,6 +123,8 @@ export interface VxePrintProps {
   pageBreaks?: VxePrintPropTypes.PageBreaks
   showAllPageTitle?: VxePrintPropTypes.ShowAllPageTitle
   beforeMethod?: VxePrintPropTypes.BeforeMethod
+  beforePrintMethod?: VxePrintPropTypes.BeforePrintMethod
+  printMethod?: VxePrintPropTypes.PrintMethod
 
   /**
    * 已废弃，请使用 html
@@ -170,11 +192,6 @@ export namespace VxePrintDefines {
      * @deprecated
      */
     style?: string
-    /**
-     * 请使用 customStyle
-     * @deprecated
-     */
-    beforePrintMethod?: VxePrintPropTypes.BeforeMethod
   }) => Promise<{
     status: boolean
   }>

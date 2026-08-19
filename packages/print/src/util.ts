@@ -1,8 +1,10 @@
 import XEUtils from 'xe-utils'
 import { toCssUnit } from '../../ui/src/dom'
-import { warnLog } from '../../ui/src/log'
+import { createComponentLog } from '../../ui/src/log'
 
 import type { VxePrintProps, VxePrintPropTypes, VxePrintDefines, VxePrintConstructor, VxePrintPrivateMethods } from '../../../types'
+
+const { warnLog, errLog } = createComponentLog('print')
 
 // 打印
 let printFrame: any
@@ -149,7 +151,8 @@ function createHtmlPage (opts: VxePrintProps & { _pageBreaks: boolean }, printHt
 
 function handlePrint (opts: VxePrintProps & { _pageBreaks: boolean }, printHtml = '') {
   const browseObj = XEUtils.browse()
-  const { beforeMethod, styleUrls } = opts
+  const { styleUrls } = opts
+  const beforePrintMethod = opts.beforePrintMethod || opts.beforeMethod
   if (styleUrls && styleUrls.length) {
     styleUrls.forEach(url => {
       if (!/.css$/.test(url)) {
@@ -157,8 +160,19 @@ function handlePrint (opts: VxePrintProps & { _pageBreaks: boolean }, printHtml 
       }
     })
   }
-  if (beforeMethod) {
-    printHtml = beforeMethod({ content: printHtml, html: printHtml, options: opts }) || ''
+  if (beforePrintMethod) {
+    const bpRest = beforePrintMethod({ content: printHtml, html: printHtml, options: opts })
+    if (XEUtils.isBoolean(bpRest)) {
+      if (!bpRest) {
+        return Promise.resolve({
+          status: false
+        })
+      }
+    } else {
+      warnLog('vxe.error.returnErr', ['beforePrintMethod', 'boolean', bpRest])
+      errLog('vxe.error.notSupportReturn', [bpRest, 'beforePrintMethod', 'printMethod'])
+      printHtml = bpRest || ''
+    }
   }
   printHtml = createHtmlPage(opts, printHtml)
   const blob = getExportBlobByString(printHtml, 'html')

@@ -1894,13 +1894,13 @@ export default defineVxeComponent({
     }
 
     const handleGlobalKeydownEvent = (evnt: KeyboardEvent) => {
-      const { clearable } = props
+      // const { clearable } = props
       const { visiblePanel } = reactData
       const isDisabled = computeIsDisabled.value
       const isDatePickerType = computeIsDatePickerType.value
       if (!isDisabled) {
         const isTab = globalEvents.hasKey(evnt, GLOBAL_EVENT_KEYS.TAB)
-        const isDel = globalEvents.hasKey(evnt, GLOBAL_EVENT_KEYS.DELETE)
+        // const isDel = globalEvents.hasKey(evnt, GLOBAL_EVENT_KEYS.DELETE)
         const isEsc = globalEvents.hasKey(evnt, GLOBAL_EVENT_KEYS.ESCAPE)
         const isEnter = globalEvents.hasKey(evnt, GLOBAL_EVENT_KEYS.ENTER)
         const isLeftArrow = globalEvents.hasKey(evnt, GLOBAL_EVENT_KEYS.ARROW_LEFT)
@@ -1950,11 +1950,12 @@ export default defineVxeComponent({
           if (visiblePanel) {
             hidePanel()
           }
-        } else if (isDel && clearable) {
-          if (isActivated) {
-            clearValueEvent(evnt, null)
-          }
         }
+        // else if (isDel && clearable) {
+        //   if (isActivated) {
+        //     clearValueEvent(evnt, null)
+        //   }
+        // }
       }
     }
 

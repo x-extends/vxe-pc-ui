@@ -6,7 +6,6 @@ import { printHtml, trimHtml } from './util'
 import { getSlotVNs } from '../../ui/src/vn'
 
 import type { VxePrintPropTypes, PrintReactData, PrintPrivateRef, VxePrintEmits, PrintPrivateMethods, ValueOf, VxePrintPrivateComputed, VxePrintConstructor, VxePrintPrivateMethods, PrintMethods } from '../../../types'
-
 export default defineVxeComponent({
   name: 'VxePrint',
   props: {
@@ -51,7 +50,12 @@ export default defineVxeComponent({
       type: Array as PropType<VxePrintPropTypes.StyleUrls>,
       default: () => getConfig().print.styleUrls
     },
-    beforeMethod: Function as PropType<VxePrintPropTypes.BeforeMethod>
+    /**
+     * 请使用 beforePrintMethod
+     * @deprecated
+     */
+    beforeMethod: Function as PropType<VxePrintPropTypes.BeforeMethod>,
+    beforePrintMethod: Function as PropType<VxePrintPropTypes.BeforePrintMethod>
   },
   emits: [] as VxePrintEmits,
   setup (props, context) {
@@ -89,7 +93,7 @@ export default defineVxeComponent({
     const printMethods: PrintMethods = {
       dispatchEvent,
       print () {
-        const { align, title, headerAlign, footerAlign, showPageNumber, customLayout, pageBreaks, content, headerHtml, footerHtml, leftHtml, rightHtml, showAllPageTitle, pageStyle, customStyle, styleUrls, beforeMethod } = props
+        const { align, title, headerAlign, footerAlign, showPageNumber, customLayout, pageBreaks, content, headerHtml, footerHtml, leftHtml, rightHtml, showAllPageTitle, pageStyle, customStyle, styleUrls, beforeMethod, beforePrintMethod } = props
         const elem = refElem.value
         return printHtml(Object.assign({}, {
           align,
@@ -108,7 +112,8 @@ export default defineVxeComponent({
           pageStyle,
           customStyle,
           styleUrls,
-          beforeMethod
+          beforeMethod,
+          beforePrintMethod
         }, {
           _pageBreaks: !!reactData.staticPageBreaks.length,
           html: trimHtml(elem ? elem.outerHTML : '') || props.html || props.content || ''
