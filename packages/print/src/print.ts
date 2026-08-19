@@ -56,7 +56,9 @@ export default /* define-vxe-component start */ defineVxeComponent({
      * @deprecated
      */
     beforeMethod: Function as PropType<VxePrintPropTypes.BeforeMethod>,
-    beforePrintMethod: Function as PropType<VxePrintPropTypes.BeforePrintMethod>
+    beforePrintMethod: Function as PropType<VxePrintPropTypes.BeforePrintMethod>,
+    printMethod: Function as PropType<VxePrintPropTypes.PrintMethod>,
+    afterPrintMethod: Function as PropType<VxePrintPropTypes.AfterPrintMethod>
   },
   provide () {
     const $xePrint = this
@@ -86,7 +88,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const props = $xePrint
       const reactData = $xePrint.reactData
 
-      const { align, title, headerAlign, footerAlign, showPageNumber, customLayout, pageBreaks, content, headerHtml, footerHtml, leftHtml, rightHtml, showAllPageTitle, pageStyle, customStyle, styleUrls, beforeMethod, beforePrintMethod } = props
+      const { align, title, headerAlign, footerAlign, showPageNumber, customLayout, pageBreaks, content, headerHtml, footerHtml, leftHtml, rightHtml, showAllPageTitle, pageStyle, customStyle, styleUrls, beforeMethod, beforePrintMethod, printMethod, afterPrintMethod } = props
       const elem = $xePrint.$refs.refElem as HTMLDivElement
       return printHtml(Object.assign({}, {
         align,
@@ -106,7 +108,9 @@ export default /* define-vxe-component start */ defineVxeComponent({
         customStyle,
         styleUrls,
         beforeMethod,
-        beforePrintMethod
+        beforePrintMethod,
+        printMethod,
+        afterPrintMethod
       }, {
         _pageBreaks: !!reactData.staticPageBreaks.length,
         html: trimHtml(elem ? elem.outerHTML : '') || props.html || props.content || ''

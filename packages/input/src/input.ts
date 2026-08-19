@@ -39,6 +39,13 @@ export default /* define-vxe-component start */ defineVxeComponent({
       type: Boolean as PropType<VxeInputPropTypes.Clearable>,
       default: () => getConfig().input.clearable
     },
+    /**
+     * 已废弃
+     */
+    delClearable: {
+      type: Boolean as PropType<VxeInputPropTypes.DelClearable>,
+      default: () => getConfig().input.delClearable
+    },
     readonly: {
       type: Boolean as PropType<VxeInputPropTypes.Readonly>,
       default: null
@@ -2170,16 +2177,16 @@ export default /* define-vxe-component start */ defineVxeComponent({
     },
     handleGlobalKeydownEvent  (evnt: KeyboardEvent) {
       const $xeInput = this
-      // const props = $xeInput
+      const props = $xeInput
       const reactData = $xeInput.reactData
 
-      // const { clearable } = props
+      const { clearable, delClearable } = props
       const { visiblePanel } = reactData
       const isDisabled = $xeInput.computeIsDisabled
       const isDatePickerType = $xeInput.computeIsDatePickerType
       if (!isDisabled) {
         const isTab = globalEvents.hasKey(evnt, GLOBAL_EVENT_KEYS.TAB)
-        // const isDel = globalEvents.hasKey(evnt, GLOBAL_EVENT_KEYS.DELETE)
+        const isDel = globalEvents.hasKey(evnt, GLOBAL_EVENT_KEYS.DELETE)
         const isEsc = globalEvents.hasKey(evnt, GLOBAL_EVENT_KEYS.ESCAPE)
         const isEnter = globalEvents.hasKey(evnt, GLOBAL_EVENT_KEYS.ENTER)
         const isLeftArrow = globalEvents.hasKey(evnt, GLOBAL_EVENT_KEYS.ARROW_LEFT)
@@ -2230,11 +2237,13 @@ export default /* define-vxe-component start */ defineVxeComponent({
             $xeInput.hidePanel()
           }
         }
-        // else if (isDel && clearable) {
-        //   if (isActivated) {
-        //     $xeInput.clearValueEvent(evnt, null)
-        //   }
-        // }
+
+        // 已废弃
+        if (delClearable && isDel && clearable) {
+          if (isActivated) {
+            $xeInput.clearValueEvent(evnt, null)
+          }
+        }
       }
     },
     handleGlobalMousewheelEvent  (evnt: Event) {
