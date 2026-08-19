@@ -3030,7 +3030,7 @@ export namespace VxeTablePropTypes {
      */
     params?: Record<string, any>
     /**
-     * 只对 remote=true 有效，用于自定义导入逻辑
+     * 自定义导入方法
      */
     importMethod?(params: {
       $table: VxeTableConstructor
@@ -3038,15 +3038,45 @@ export namespace VxeTablePropTypes {
       file: File
       options: ImportHandleOptions
     }): Promise<any>
+    /**
+     * 导入之前的方法，可以返回false阻止导入行为
+     */
     beforeImportMethod?(params: {
       $table: VxeTableConstructor
       options: any
     }): boolean
+    /**
+     * 导入之后的方法
+     */
     afterImportMethod?(params: {
       $table: VxeTableConstructor
       options: any
       status: boolean
     }): void
+
+    /**
+     * 面板参数配置项
+     */
+    modelOptions?: {
+      title?: string
+      width?: number
+      height?: number
+      minWidth?: number
+      minHeight?: number
+      showMaximize?: boolean
+      showMinimize?: boolean
+      resize?: boolean
+    }
+
+    /**
+     * 面板选项配置项
+     */
+    settingOptions?: {
+      /**
+       * 是否显示导入模式
+       */
+      showMode?: boolean
+    }
 
     /**
      * 自定义高级导入窗口的插槽模板
@@ -3193,6 +3223,54 @@ export namespace VxeTablePropTypes {
     params?: Record<string, any>
 
     /**
+     * 面板参数配置项
+     */
+    modelOptions?: {
+      title?: string
+      width?: number
+      height?: number
+      minWidth?: number
+      minHeight?: number
+      showMaximize?: boolean
+      showMinimize?: boolean
+      resize?: boolean
+    }
+
+    /**
+     * 面板选项配置项
+     */
+    settingOptions?: {
+      /**
+       * 是否显示文件名
+       */
+      showFileName?: boolean
+      /**
+       * 是否显示标题
+       */
+      showSheet?: boolean
+      /**
+       * 是否显示文件类型
+       */
+      showType?: boolean
+      /**
+       * 是否显示选择数据
+       */
+      showMode?: boolean
+      /**
+       * 是否显示自定义列
+       */
+      showColumn?: boolean
+      /**
+       * 是否显示列宽模式
+       */
+      showWidthMode?: boolean
+      /**
+       * 是否显示参数设置
+       */
+      showParameter?: boolean
+    }
+
+    /**
      * 自定义高级导出窗口的插槽模板
      */
     slots?: {
@@ -3226,9 +3304,12 @@ export namespace VxeTablePropTypes {
      * 只对 remote=html,xlsx 有效，是否使用样式
      */
     useStyle?: boolean
+    /**
+     * 用于特定的文件类型，例如 xlsx，自定义文件处理逻辑
+     */
     sheetMethod?(params: VxeTableDefines.ExtortSheetMethodParams): void
     /**
-     * 只对 remote=true 有效，用于自定义导出逻辑
+     * 自定义导出方法
      */
     exportMethod?(params: {
       $table: VxeTableConstructor
@@ -3236,12 +3317,18 @@ export namespace VxeTablePropTypes {
       $gantt: VxeGanttConstructor | null | undefined
       options: ExportHandleOptions
     }): Promise<any>
+    /**
+     * 导出之前的方法，可以返回false阻止导出行为
+     */
     beforeExportMethod?(params: {
       $table: VxeTableConstructor
       $grid: VxeGridConstructor | null | undefined
       $gantt: VxeGanttConstructor | null | undefined
       options: ExportHandleOptions
     }): boolean
+    /**
+     * 导出之后的方法
+     */
     afterExportMethod?(params: {
       $table: VxeTableConstructor
       $grid: VxeGridConstructor | null | undefined
