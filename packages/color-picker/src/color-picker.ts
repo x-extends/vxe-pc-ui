@@ -77,6 +77,10 @@ export default /* define-vxe-component start */ defineVxeComponent({
       type: Boolean as PropType<VxeColorPickerPropTypes.ClickToCopy>,
       default: () => getConfig().colorPicker.clickToCopy
     },
+    defaultColor: {
+      type: String as PropType<VxeColorPickerPropTypes.DefaultColor>,
+      default: () => getConfig().colorPicker.defaultColor
+    },
     placement: String as PropType<VxeColorPickerPropTypes.Placement>,
     transfer: {
       type: Boolean as PropType<VxeColorPickerPropTypes.Transfer>,
@@ -280,13 +284,15 @@ export default /* define-vxe-component start */ defineVxeComponent({
     },
     updateModelColor () {
       const $xeColorPicker = this
+      const props = $xeColorPicker
       const reactData = $xeColorPicker.reactData
 
+      const { value: modelValue, defaultColor } = props
       const { selectColor, isAniVisible } = reactData
       const isRgb = $xeColorPicker.computeIsRgb
       const hueSliderEl = $xeColorPicker.$refs.refHueSliderElem as HTMLDivElement
       const alphaSliderEl = $xeColorPicker.$refs.refAlphaSliderElem as HTMLDivElement
-      const colorRest = parseValColor(selectColor)
+      const colorRest = parseValColor(modelValue ? selectColor : defaultColor)
       reactData.hexValue = ''
       reactData.rValue = 0
       reactData.gValue = 0
@@ -329,7 +335,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
             $xeColorPicker.handlePanelColor(offsetLeft, offsetTop)
           }
           if (hueSliderEl) {
-            $xeColorPicker.handleHueColor(XEUtils.ceil((1 - hsvRest.h / 360) * hueSliderEl.clientWidth))
+            $xeColorPicker.handleHueColor(XEUtils.ceil((1 - hsvRest.h / 360) * hueSliderEl.clientWidth) - 1)
           }
         }
         if (alphaSliderEl) {
@@ -1153,7 +1159,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const props = $xeColorPicker
       const reactData = $xeColorPicker.reactData
 
-      const { className, popupClassName, clearable, value } = props
+      const { className, popupClassName, clearable, value: modelValue } = props
       const { initialized, isActivated, isAniVisible, visiblePanel } = reactData
       const vSize = $xeColorPicker.computeSize
       const isDisabled = $xeColorPicker.computeIsDisabled
@@ -1168,7 +1174,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
           h('div', {
             class: 'vxe-color-picker--readonly-color',
             style: {
-              backgroundColor: value
+              backgroundColor: modelValue
             }
           })
         ])
@@ -1177,7 +1183,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
         ref: 'refElem',
         class: ['vxe-color-picker', className ? (XEUtils.isFunction(className) ? className({ $colorPicker: $xeColorPicker }) : className) : '', {
           [`size--${vSize}`]: vSize,
-          'is--selected': !!value,
+          'is--selected': !!modelValue,
           'is--visible': visiblePanel,
           'is--disabled': isDisabled,
           'is--active': isActivated
@@ -1200,7 +1206,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
           h('div', {
             class: 'vxe-color-picker--inner-color',
             style: {
-              backgroundColor: value
+              backgroundColor: modelValue
             }
           })
         ]),

@@ -34,6 +34,7 @@ export namespace VxeColorPickerPropTypes {
   export type Placeholder = string
   export type ClickToCopy = boolean
   export type Clearable = boolean
+  export type DefaultColor = string
   /**
    * 已废弃，请使用 PopupConfig.placement
    * @deprecated
@@ -92,6 +93,7 @@ export interface VxeColorPickerProps {
   placeholder?: VxeColorPickerPropTypes.Placeholder
   clickToCopy?: VxeColorPickerPropTypes.ClickToCopy
   clearable?: VxeColorPickerPropTypes.Clearable
+  defaultColor?: VxeColorPickerPropTypes.DefaultColor
   /**
    * 已废弃，请使用 popupConfig.placement
    * @deprecated
