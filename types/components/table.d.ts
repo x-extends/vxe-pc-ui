@@ -3026,17 +3026,19 @@ export namespace VxeTablePropTypes {
      * 面板参数配置项
      */
     modelOptions?: {
-      title?: string
-      width?: number
-      height?: number
-      minWidth?: number
-      minHeight?: number
-      mask?: boolean
-      lockView?: boolean
-      fullscreen?: boolean
-      showMaximize?: boolean
-      showMinimize?: boolean
-      resize?: boolean
+      title?: VxeModalPropTypes.Title
+      width?: VxeModalPropTypes.Width
+      height?: VxeModalPropTypes.Height
+      minWidth?: VxeModalPropTypes.MinWidth
+      minHeight?: VxeModalPropTypes.MinHeight
+      mask?: VxeModalPropTypes.Mask
+      lockView?: VxeModalPropTypes.LockView
+      fullscreen?: VxeModalPropTypes.Fullscreen
+      remember?: VxeModalPropTypes.Remember
+      position?: VxeModalPropTypes.Position
+      showMaximize?: VxeModalPropTypes.ShowMaximize
+      showMinimize?: VxeModalPropTypes.ShowMinimize
+      resize?: VxeModalPropTypes.Resize
     }
 
     /**
@@ -3197,17 +3199,19 @@ export namespace VxeTablePropTypes {
      * 面板参数配置项
      */
     modelOptions?: {
-      title?: string
-      width?: number
-      height?: number
-      minWidth?: number
-      minHeight?: number
-      mask?: boolean
-      lockView?: boolean
-      fullscreen?: boolean
-      showMaximize?: boolean
-      showMinimize?: boolean
-      resize?: boolean
+      title?: VxeModalPropTypes.Title
+      width?: VxeModalPropTypes.Width
+      height?: VxeModalPropTypes.Height
+      minWidth?: VxeModalPropTypes.MinWidth
+      minHeight?: VxeModalPropTypes.MinHeight
+      mask?: VxeModalPropTypes.Mask
+      lockView?: VxeModalPropTypes.LockView
+      fullscreen?: VxeModalPropTypes.Fullscreen
+      remember?: VxeModalPropTypes.Remember
+      position?: VxeModalPropTypes.Position
+      showMaximize?: VxeModalPropTypes.ShowMaximize
+      showMinimize?: VxeModalPropTypes.ShowMinimize
+      resize?: VxeModalPropTypes.Resize
     }
 
     /**
