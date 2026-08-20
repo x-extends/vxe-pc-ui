@@ -192,24 +192,25 @@ export function updatePanelPlacement (targetElem: HTMLElement | null | undefined
   let panelPlacement: 'top' | 'bottom' = 'bottom'
   let top: number | '' = ''
   let bottom: number | '' = ''
-  let left: number = 0
+  let left = 0
   let minWidth: number | '' = ''
   let arrowLeft: number | '' = ''
   const stys: Record<string, string> = {}
   if (panelElem && targetElem) {
+    const bodyEl = document.body
     const parentEl = panelElem.parentElement
-    const parentWrapperEl = parentEl === document.body ? document.documentElement : parentEl
+    const parentWrapperEl = parentEl === bodyEl ? document.documentElement : parentEl
     if (parentWrapperEl) {
       const targetWidth = targetElem.offsetWidth
       const targetHeight = targetElem.offsetHeight
-      const panelHeight = panelElem.offsetHeight
       const panelWidth = panelElem.offsetWidth
+      const panelHeight = panelElem.offsetHeight
 
       const parentWrapperRect = parentWrapperEl.getBoundingClientRect()
       const panelRect = panelElem.getBoundingClientRect()
       const targetRect = targetElem.getBoundingClientRect()
-      const visibleHeight = parentWrapperEl.clientHeight
-      const visibleWidth = parentWrapperEl.clientWidth
+      const visibleHeight = bodyEl.clientHeight
+      const visibleWidth = bodyEl.clientWidth
 
       const offsetLeft = parentWrapperRect.left
       const offsetTop = parentWrapperRect.top
@@ -227,7 +228,9 @@ export function updatePanelPlacement (targetElem: HTMLElement | null | undefined
         } else if (!placement) {
           if (defaultPlacement === 'top') {
             panelPlacement = 'top'
-            top = targetTop - panelHeight
+            if (!defaultTop) {
+              top = targetTop - panelHeight
+            }
             // 如果上面不够放，则向下
             if (top < marginSize) {
               panelPlacement = 'bottom'

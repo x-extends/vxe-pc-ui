@@ -1,5 +1,5 @@
 <template>
-  <!-- <vxe-layout-container :size="componentsSize" vertical>
+  <vxe-layout-container :size="componentsSize" vertical>
     <vxe-layout-header>
       <vxe-button @click="collapsed = !collapsed">折叠</vxe-button>
       <vxe-switch v-model="theme" close-value="light" open-value="dark" @change="changeTheme">主题切换</vxe-switch>
@@ -17,8 +17,8 @@
         <vxe-layout-footer fixed>11111</vxe-layout-footer>
       </vxe-layout-container>
     </vxe-layout-container>
-  </vxe-layout-container> -->
-   <RouterView />
+  </vxe-layout-container>
+   <!-- <RouterView /> -->
 </template>
 
 <script lang="ts" setup>
