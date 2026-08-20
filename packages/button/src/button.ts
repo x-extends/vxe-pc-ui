@@ -2,7 +2,7 @@ import { CreateElement, VNode, PropType } from 'vue'
 import XEUtils from 'xe-utils'
 import { getConfig, globalEvents, getIcon, createEvent, renderer, globalMixins, permission, renderEmptyElement } from '../../ui'
 import { defineVxeComponent } from '../../ui/src/comp'
-import { getEventTargetNode, getPopupContainer, updatePanelPlacement } from '../../ui/src/dom'
+import { getEventTargetNode, getPopupAppendElement, updatePanelPlacement } from '../../ui/src/dom'
 import { getFuncText, getLastZIndex, nextZIndex } from '../../ui/src/utils'
 import { getSlotVNs, getEventCaseName } from '../../ui/src/vn'
 import { createComponentLog } from '../../ui/src/log'
@@ -336,7 +336,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
           reactData.initialized = true
           if (btnTransfer) {
             const { appendTo } = popupOpts
-            getPopupContainer(appendTo).appendChild(panelElem)
+            getPopupAppendElement(appendTo).appendChild(panelElem)
           }
         }
         internalData.showTime = setTimeout(() => {

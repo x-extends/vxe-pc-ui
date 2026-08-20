@@ -3,7 +3,7 @@ import { defineVxeComponent } from '../../ui/src/comp'
 import XEUtils from 'xe-utils'
 import { getConfig, createEvent, globalMixins } from '../../ui'
 import { getLastZIndex, nextZIndex } from '../../ui/src/utils'
-import { toCssUnit } from '../../ui/src/dom'
+import { getPopupAppendElement, toCssUnit, updatePanelPlacement } from '../../ui/src/dom'
 import { getSlotVNs } from '../../ui/src/vn'
 
 import type { VxeTooltipPropTypes, VxeTooltipEmits, TooltipReactData, TooltipInternalData, VxeComponentSizeType, ValueOf, VxeComponentStyleType } from '../../../types'
@@ -114,6 +114,10 @@ export default /* define-vxe-component start */ defineVxeComponent({
     leaveDelay: {
       type: Number as PropType<VxeTooltipPropTypes.LeaveDelay>,
       default: () => getConfig().tooltip.leaveDelay
+    },
+    appendTo: {
+      type: [String, Function] as PropType<VxeTooltipPropTypes.AppendTo>,
+      default: () => getConfig().tooltip.appendTo
     }
   },
   data () {
@@ -224,25 +228,59 @@ export default /* define-vxe-component start */ defineVxeComponent({
 
       return $xeTooltip.handleVisible(target, content)
     },
-    updatePlacement () {
+    updateTipStyle () {
       const $xeTooltip = this
+      const props = $xeTooltip
       const reactData = $xeTooltip.reactData
 
-      const { visible, tipTarget } = reactData
-      let el = $xeTooltip.$refs.refElem as HTMLElement
-      if (visible && tipTarget && el) {
-        $xeTooltip.updateTipStyle()
+      const { placement, defaultPlacement, isArrow } = props
+      const { tipTarget: targetElem, tipStore, tipPos, tipZindex } = reactData
+      const panelElem = $xeTooltip.$refs.refElem as HTMLElement
+      if (!targetElem || !panelElem) {
+        return
       }
-      return $xeTooltip.$nextTick().then(() => {
-        const { tipTarget } = reactData
-        el = $xeTooltip.$refs.refElem as HTMLElement
-        if (tipTarget && el) {
-          $xeTooltip.updateTipStyle()
-          return $xeTooltip.$nextTick().then(() => {
-            $xeTooltip.updateTipStyle()
-          })
+      const targetRect = targetElem.getBoundingClientRect()
+
+      const targetWidth = targetElem.offsetWidth
+      const targetHeight = targetElem.offsetHeight
+      const panelWidth = panelElem.offsetWidth
+
+      const targetLeft = targetRect.left
+      const targetTop = targetRect.top
+
+      // 支持特殊定位逻辑
+      let left = targetLeft
+      let top = targetTop + targetHeight
+      if (tipPos && (tipPos.oLeft || tipPos.oTop)) {
+        if (isArrow) {
+          left = left + Math.max(8, Math.min(targetWidth - 8, tipPos.oLeft)) - panelWidth / 2
+        } else {
+          left = tipPos.x + 1
+          top = tipPos.y + 1
         }
+      } else {
+        left = targetLeft + (targetWidth - panelWidth) / 2
+      }
+
+      const ppObj = updatePanelPlacement(targetElem, panelElem, {
+        defaultTop: top,
+        defaultLeft: left,
+        placement: placement,
+        defaultPlacement: defaultPlacement,
+        teleportTo: true
       })
+      const panelStyle = Object.assign(ppObj.style, {
+        zIndex: tipZindex
+      })
+      tipStore.placement = ppObj.placement
+      tipStore.style = panelStyle
+      tipStore.arrowStyle.left = `${ppObj.arrowLeft}px`
+    },
+    updatePlacement () {
+      const $xeTooltip = this
+
+      $xeTooltip.updateTipStyle()
+      return $xeTooltip.$nextTick().then(() => $xeTooltip.updateTipStyle())
     },
     isActived () {
       const $xeTooltip = this
@@ -256,101 +294,6 @@ export default /* define-vxe-component start */ defineVxeComponent({
 
       reactData.tipActive = !!active
     },
-    updateTipStyle () {
-      const $xeTooltip = this
-      const props = $xeTooltip
-      const reactData = $xeTooltip.reactData
-
-      const { isArrow, placement, defaultPlacement } = props
-      const { tipTarget: targetElem, tipStore, tipPos } = reactData
-      let top: number | '' = ''
-      let left: number | '' = ''
-      let panelPlacement: 'top' | 'bottom' = 'bottom'
-      let arrowLeft: number | '' = ''
-      const panelElem = $xeTooltip.$refs.refElem as HTMLElement
-      if (panelElem && targetElem) {
-        const documentElement = document.documentElement
-        const bodyElem = document.body
-        const targetWidth = targetElem.offsetWidth
-        const targetHeight = targetElem.offsetHeight
-        const panelHeight = panelElem.offsetHeight
-        const panelWidth = panelElem.offsetWidth
-
-        const targetRect = targetElem.getBoundingClientRect()
-        const visibleHeight = documentElement.clientHeight || bodyElem.clientHeight
-        const visibleWidth = documentElement.clientWidth || bodyElem.clientWidth
-
-        const marginSize = 6
-        left = targetRect.left
-        top = targetRect.top + targetHeight
-        if (tipPos && (tipPos.oLeft || tipPos.oTop)) {
-          if (isArrow) {
-            left = left + Math.max(8, Math.min(targetWidth - 8, tipPos.oLeft)) - panelWidth / 2
-          } else {
-            left = tipPos.x + 1
-            top = tipPos.y + 1
-          }
-        } else {
-          left = targetRect.left + (targetWidth - panelWidth) / 2
-        }
-        if (placement === 'top') {
-          panelPlacement = 'top'
-          top = targetRect.top - panelHeight
-        } else if (!placement) {
-          if (defaultPlacement === 'top') {
-            panelPlacement = 'top'
-            top = targetRect.top - panelHeight
-            // 如果上面不够放，则向下
-            if (top < marginSize) {
-              panelPlacement = 'bottom'
-              top = targetRect.top + targetHeight
-            }
-            // 如果下面不够放，则向上（优先）
-            if (top + panelHeight + marginSize > visibleHeight) {
-              panelPlacement = 'top'
-              top = targetRect.top - panelHeight
-            }
-          } else {
-            // 如果下面不够放，则向上
-            if (top + panelHeight + marginSize > visibleHeight) {
-              panelPlacement = 'top'
-              top = targetRect.top - panelHeight
-            }
-            // 如果上面不够放，则向下（优先）
-            if (top < marginSize) {
-              panelPlacement = 'bottom'
-              top = targetRect.top + targetHeight
-            }
-          }
-        }
-        // 如果溢出右边
-        if (left + panelWidth + marginSize > visibleWidth) {
-          left -= left + panelWidth + marginSize - visibleWidth
-        }
-        // 如果溢出左边
-        if (left < marginSize) {
-          left = marginSize
-        }
-
-        // 箭头
-        if (left === targetRect.left) {
-          if (targetWidth <= panelWidth) {
-            arrowLeft = targetWidth / 2
-          }
-        } else if (left < targetRect.left) {
-          if (left + panelWidth > targetRect.left + targetWidth) {
-            arrowLeft = (targetRect.left - left) + targetWidth / 2
-          } else {
-            arrowLeft = (targetRect.left - left) + (panelWidth - (targetRect.left - left)) / 2
-          }
-        }
-
-        tipStore.placement = panelPlacement
-        tipStore.style.top = `${top}px`
-        tipStore.style.left = `${left}px`
-        tipStore.arrowStyle.left = `${arrowLeft}px`
-      }
-    },
     updateValue (value: VxeTooltipPropTypes.ModelValue) {
       const $xeTooltip = this
       const reactData = $xeTooltip.reactData
@@ -361,11 +304,15 @@ export default /* define-vxe-component start */ defineVxeComponent({
         $xeTooltip.emitModel(value)
       }
     },
-    updateZindex () {
+    updateZIndex () {
       const $xeTooltip = this
+      const props = $xeTooltip
       const reactData = $xeTooltip.reactData
 
-      if (reactData.tipZindex < getLastZIndex()) {
+      const { zIndex } = props
+      if (zIndex) {
+        reactData.tipZindex = XEUtils.toNumber(zIndex)
+      } else if (reactData.tipZindex < getLastZIndex()) {
         reactData.tipZindex = nextZIndex()
       }
     },
@@ -430,16 +377,17 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const props = $xeTooltip
       const reactData = $xeTooltip.reactData
 
+      const { appendTo } = props
       const { tipStore } = reactData
-      const el = $xeTooltip.$refs.refElem as HTMLElement
-      if (el) {
-        const parentNode = el.parentNode
+      const panelElem = $xeTooltip.$refs.refElem as HTMLElement
+      if (panelElem) {
+        const parentNode = panelElem.parentNode
         if (!parentNode) {
-          document.body.appendChild(el)
+          getPopupAppendElement(appendTo).appendChild(panelElem)
         }
       }
       $xeTooltip.updateValue(true)
-      $xeTooltip.updateZindex()
+      $xeTooltip.updateZIndex()
       tipStore.placement = 'top'
       tipStore.style = { width: 'auto', left: 0, top: 0, zIndex: props.zIndex || reactData.tipZindex }
       tipStore.arrowStyle = { left: '50%' }
@@ -631,21 +579,21 @@ export default /* define-vxe-component start */ defineVxeComponent({
     }
     $xeTooltip.$nextTick(() => {
       const { trigger, content } = props
-      const wrapperElem = $xeTooltip.$refs.refElem as HTMLElement
-      if (wrapperElem) {
-        const parentNode = wrapperElem.parentNode
+      const panelElem = $xeTooltip.$refs.refElem as HTMLElement
+      if (panelElem) {
+        const parentNode = panelElem.parentNode
         if (parentNode) {
           reactData.tipContent = content
           reactData.tipZindex = nextZIndex()
-          XEUtils.arrayEach(wrapperElem.children, (elem, index) => {
+          XEUtils.arrayEach(panelElem.children, (elem, index) => {
             if (index) {
-              parentNode.insertBefore(elem, wrapperElem)
+              parentNode.insertBefore(elem, panelElem)
               if (!reactData.target) {
                 reactData.target = elem as HTMLElement
               }
             }
           })
-          parentNode.removeChild(wrapperElem)
+          parentNode.removeChild(panelElem)
           const { target } = reactData
           if (target) {
             if (trigger === 'hover') {
@@ -667,7 +615,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
     const reactData = $xeTooltip.reactData
 
     const { target } = reactData
-    const wrapperElem = $xeTooltip.$refs.refElem as HTMLElement
+    const panelElem = $xeTooltip.$refs.refElem as HTMLElement
     if (target) {
       target.onmouseenter = null
       target.onmouseleave = null
@@ -677,10 +625,10 @@ export default /* define-vxe-component start */ defineVxeComponent({
     if (contentWrapperfEl) {
       contentWrapperfEl.removeEventListener('wheel', $xeTooltip.wheelEvent)
     }
-    if (wrapperElem) {
-      const parentNode = wrapperElem.parentNode
+    if (panelElem) {
+      const parentNode = panelElem.parentNode
       if (parentNode) {
-        parentNode.removeChild(wrapperElem)
+        parentNode.removeChild(panelElem)
       }
     }
   },

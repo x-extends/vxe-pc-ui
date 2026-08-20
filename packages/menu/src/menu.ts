@@ -2,7 +2,7 @@ import { PropType, CreateElement, VNode } from 'vue'
 import { defineVxeComponent } from '../../ui/src/comp'
 import XEUtils from 'xe-utils'
 import { VxeUI, createEvent, permission, globalMixins, globalEvents, renderEmptyElement } from '../../ui'
-import { getPopupContainer, scrollToView, toCssUnit } from '../../ui/src/dom'
+import { getPopupAppendElement, scrollToView, toCssUnit } from '../../ui/src/dom'
 import { getLastZIndex, nextZIndex, isEnableConf } from '../../ui/src/utils'
 import { getSlotVNs } from '../../ui/src/vn'
 import { createComponentLog } from '../../ui/src/log'
@@ -433,7 +433,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
             $xeMenu.$nextTick(() => {
               const collapseEl = $xeMenu.$refs.refCollapseElem as HTMLDivElement
               if (collapseEl) {
-                getPopupContainer(appendTo).appendChild(collapseEl)
+                getPopupAppendElement(appendTo).appendChild(collapseEl)
               }
             })
           }

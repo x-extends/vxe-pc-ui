@@ -2,7 +2,7 @@ import { CreateElement, VNode, PropType } from 'vue'
 import { defineVxeComponent } from '../../ui/src/comp'
 import XEUtils from 'xe-utils'
 import { VxeUI, getIcon, getConfig, getI18n, globalEvents, createEvent, globalMixins, renderEmptyElement } from '../../ui'
-import { getEventTargetNode, getPopupContainer, toCssUnit, updatePanelPlacement } from '../../ui/src/dom'
+import { getEventTargetNode, getPopupAppendElement, toCssUnit, updatePanelPlacement } from '../../ui/src/dom'
 import { getLastZIndex, nextZIndex } from '../../ui/src/utils'
 import { parseValColor, updateColorAlpha, hexToHsv, rgbToHsv, rgbToHexVal, hexToRgb, hsvToRgb, toValRgb } from './util'
 import VxeButtonComponent from '../../button'
@@ -397,7 +397,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
           if (btnTransfer) {
             if (panelElem) {
               const { appendTo } = popupOpts
-              getPopupContainer(appendTo).appendChild(panelElem)
+              getPopupAppendElement(appendTo).appendChild(panelElem)
             }
           }
         }

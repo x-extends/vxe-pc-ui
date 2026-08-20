@@ -2,7 +2,7 @@ import { PropType, CreateElement, VNode } from 'vue'
 import { defineVxeComponent } from '../../ui/src/comp'
 import XEUtils from 'xe-utils'
 import { VxeUI, getConfig, getI18n, getIcon, createEvent, globalEvents, globalMixins, renderEmptyElement, GLOBAL_EVENT_KEYS } from '../../ui'
-import { getDomNode, getEventTargetNode, getPopupContainer, toCssUnit } from '../../ui/src/dom'
+import { getDomNode, getEventTargetNode, getPopupAppendElement, toCssUnit } from '../../ui/src/dom'
 import { getLastZIndex, nextZIndex, getSubLastZIndex, nextSubZIndex, getFuncText, handleBooleanDefaultValue } from '../../ui/src/utils'
 import VxeButtonComponent from '../../button'
 import VxeLoadingComponent from '../../loading'
@@ -913,7 +913,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
         reactData.initialized = true
         if (btnTransfer) {
           const panelElem = $xeModal.$refs.refElem as HTMLDivElement
-          getPopupContainer(appendTo).appendChild(panelElem)
+          getPopupAppendElement(appendTo).appendChild(panelElem)
         }
       }
       if (!visible) {

@@ -2,7 +2,7 @@ import { PropType, CreateElement, VNode } from 'vue'
 import { defineVxeComponent } from '../../ui/src/comp'
 import XEUtils from 'xe-utils'
 import { VxeUI, getConfig, getIcon, getI18n, globalEvents, GLOBAL_EVENT_KEYS, createEvent, globalMixins, renderEmptyElement } from '../../ui'
-import { getEventTargetNode, getPopupContainer, toCssUnit, updatePanelPlacement } from '../../ui/src/dom'
+import { getEventTargetNode, getPopupAppendElement, toCssUnit, updatePanelPlacement } from '../../ui/src/dom'
 import { getLastZIndex, nextZIndex, getFuncText, eqEmptyValue } from '../../ui/src/utils'
 import { getSlotVNs } from '../../ui/src/vn'
 import { createComponentLog } from '../../ui/src/log'
@@ -867,7 +867,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
           const panelElem = $xeSelect.$refs.refOptionPanel as HTMLElement
           if (btnTransfer && panelElem) {
             const { appendTo } = popupOpts
-            getPopupContainer(appendTo).appendChild(panelElem)
+            getPopupAppendElement(appendTo).appendChild(panelElem)
           }
         }
         reactData.isActivated = true

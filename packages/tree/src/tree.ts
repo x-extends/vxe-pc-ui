@@ -3596,11 +3596,11 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const slots = $xeTree.$scopedSlots
       const internalData = $xeTree.internalData
 
-      const { transform, emptyText } = props
+      const { loading, transform, emptyText } = props
       const { treeExpandedMaps } = internalData
       const childrenField = $xeTree.computeChildrenField
       const emptySlot = slots.empty
-      if (!treeList.length) {
+      if (!loading && !treeList.length) {
         return [
           h('div', {
             class: 'vxe-tree--empty-placeholder'

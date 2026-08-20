@@ -3,7 +3,7 @@ import { defineVxeComponent } from '../../ui/src/comp'
 import XEUtils from 'xe-utils'
 import { globalMixins, getIcon, getConfig, getI18n, globalEvents, GLOBAL_EVENT_KEYS, createEvent, renderEmptyElement } from '../../ui'
 import { getLastZIndex, nextZIndex, getFuncText } from '../../ui/src/utils'
-import { getDomNode, getPopupContainer, toCssUnit } from '../../ui/src/dom'
+import { getDomNode, getPopupAppendElement, toCssUnit } from '../../ui/src/dom'
 import { getSlotVNs } from '../../ui/src/vn'
 import VxeButtonComponent from '../../button'
 import VxeLoadingComponent from '../../loading'
@@ -351,7 +351,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
         reactData.initialized = true
         if (btnTransfer) {
           const panelElem = $xeDrawer.$refs.refElem as HTMLDivElement
-          getPopupContainer(appendTo).appendChild(panelElem)
+          getPopupAppendElement(appendTo).appendChild(panelElem)
         }
       }
       if (!visible) {
