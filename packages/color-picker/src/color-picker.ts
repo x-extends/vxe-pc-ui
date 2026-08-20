@@ -63,6 +63,10 @@ export default defineVxeComponent({
       type: Boolean as PropType<VxeColorPickerPropTypes.ClickToCopy>,
       default: () => getConfig().colorPicker.clickToCopy
     },
+    defaultColor: {
+      type: String as PropType<VxeColorPickerPropTypes.DefaultColor>,
+      default: () => getConfig().colorPicker.defaultColor
+    },
     placement: String as PropType<VxeColorPickerPropTypes.Placement>,
     transfer: {
       type: Boolean as PropType<VxeColorPickerPropTypes.Transfer>,
@@ -237,11 +241,12 @@ export default defineVxeComponent({
     }
 
     const updateModelColor = () => {
+      const { modelValue, defaultColor } = props
       const { selectColor, isAniVisible } = reactData
       const isRgb = computeIsRgb.value
       const hueSliderEl = refHueSliderElem.value
       const alphaSliderEl = refAlphaSliderElem.value
-      const colorRest = parseValColor(selectColor)
+      const colorRest = parseValColor(modelValue ? selectColor : defaultColor)
       reactData.hexValue = ''
       reactData.rValue = 0
       reactData.gValue = 0
@@ -284,7 +289,7 @@ export default defineVxeComponent({
             handlePanelColor(offsetLeft, offsetTop)
           }
           if (hueSliderEl) {
-            handleHueColor(XEUtils.ceil((1 - hsvRest.h / 360) * hueSliderEl.clientWidth))
+            handleHueColor(XEUtils.ceil((1 - hsvRest.h / 360) * hueSliderEl.clientWidth) - 1)
           }
         }
         if (alphaSliderEl) {
