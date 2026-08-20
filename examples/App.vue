@@ -13,6 +13,7 @@
       <vxe-layout-container vertical>
         <vxe-layout-body padding>
           <RouterView />
+          <div style="height:100px"></div>
         </vxe-layout-body>
         <vxe-layout-footer fixed>11111</vxe-layout-footer>
       </vxe-layout-container>

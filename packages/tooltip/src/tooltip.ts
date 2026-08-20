@@ -325,17 +325,17 @@ export default defineVxeComponent({
       const targetTop = targetRect.top
 
       // 支持特殊定位逻辑
-      let left = targetLeft
-      let top = targetTop + targetHeight
+      let left = 0
+      let top = 0
       if (tipPos && (tipPos.oLeft || tipPos.oTop)) {
+        left = targetLeft
+        top = targetTop + targetHeight
         if (isArrow) {
           left = left + Math.max(8, Math.min(targetWidth - 8, tipPos.oLeft)) - panelWidth / 2
         } else {
           left = tipPos.x + 1
           top = tipPos.y + 1
         }
-      } else {
-        left = targetLeft + (targetWidth - panelWidth) / 2
       }
 
       const ppObj = updatePanelPlacement(targetElem, panelElem, {
