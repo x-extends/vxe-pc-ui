@@ -22,8 +22,10 @@
     & > .vxe-button--dropdown {
       margin-right: 0;
     }
-    & > .vxe-button+.vxe-button--dropdown,
-    & > .vxe-button--dropdown+.vxe-button {
+    & > .vxe-button.type--button+.vxe-button.type--button,
+    & > .vxe-button.type--button+.vxe-button--dropdown,
+    & > .vxe-button--dropdown+.vxe-button.type--button,
+    & > .vxe-button--dropdown+.vxe-button--dropdown {
       margin-left: 0;
     }
   }

@@ -12,6 +12,9 @@ import '../styles/all.scss'
 import VxeUITable from 'vxe-table'
 import 'vxe-table/lib/style.css'
 
+import VxeUIGantt from 'vxe-gantt'
+import 'vxe-gantt/lib/style.css'
+
 declare global {
   interface Window {
     axios: any;
@@ -43,5 +46,6 @@ const app = createApp(App)
 app.use(router)
 app.use(VxeUIBase)
 app.use(VxeUITable)
+app.use(VxeUIGantt)
 
 app.mount('#app')

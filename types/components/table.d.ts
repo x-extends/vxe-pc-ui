@@ -3063,6 +3063,9 @@ export namespace VxeTablePropTypes {
       height?: number
       minWidth?: number
       minHeight?: number
+      mask?: boolean
+      lockView?: boolean
+      fullscreen?: boolean
       showMaximize?: boolean
       showMinimize?: boolean
       resize?: boolean
@@ -3231,6 +3234,9 @@ export namespace VxeTablePropTypes {
       height?: number
       minWidth?: number
       minHeight?: number
+      mask?: boolean
+      lockView?: boolean
+      fullscreen?: boolean
       showMaximize?: boolean
       showMinimize?: boolean
       resize?: boolean

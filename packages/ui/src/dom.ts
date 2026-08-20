@@ -170,121 +170,166 @@ export function isNodeElement (elem: any): elem is HTMLElement {
   return elem && elem.nodeType === 1
 }
 
-export function updatePanelPlacement (targetElem: HTMLElement | null | undefined, panelElem: HTMLElement | null | undefined, options: {
+interface PanelPlacementOptions {
+  defaultTop?: number
+  defaultLeft?: number
   placement?: '' | 'top' | 'bottom' | null
   defaultPlacement?: '' | 'top' | 'bottom' | null
   teleportTo?: boolean
   marginSize?: number
   isMinWidth?: boolean
-}) {
-  const { placement, defaultPlacement, teleportTo, marginSize, isMinWidth } = Object.assign({ teleportTo: false, marginSize: 18, isMinWidth: true }, options)
+}
+
+/**
+ * 通用定位计算
+ */
+export function updatePanelPlacement (targetElem: HTMLElement | null | undefined, panelElem: HTMLElement | null | undefined, options: PanelPlacementOptions) {
+  const { defaultTop, defaultLeft, placement, defaultPlacement, teleportTo, marginSize, isMinWidth } = Object.assign({
+    teleportTo: false,
+    marginSize: 18,
+    isMinWidth: true
+  }, options)
   let panelPlacement: 'top' | 'bottom' = 'bottom'
   let top: number | '' = ''
   let bottom: number | '' = ''
-  let left: number | '' = ''
-  const right: number | '' = ''
+  let left: number = 0
   let minWidth: number | '' = ''
+  let arrowLeft: number | '' = ''
   const stys: Record<string, string> = {}
   if (panelElem && targetElem) {
-    const documentElement = document.documentElement
-    const bodyElem = document.body
-    const targetHeight = targetElem.offsetHeight
-    const panelHeight = panelElem.offsetHeight
-    const panelWidth = panelElem.offsetWidth
+    const parentEl = panelElem.parentElement
+    const parentWrapperEl = parentEl === document.body ? document.documentElement : parentEl
+    if (parentWrapperEl) {
+      const targetWidth = targetElem.offsetWidth
+      const targetHeight = targetElem.offsetHeight
+      const panelHeight = panelElem.offsetHeight
+      const panelWidth = panelElem.offsetWidth
 
-    const panelRect = panelElem.getBoundingClientRect()
-    const targetRect = targetElem.getBoundingClientRect()
-    const visibleHeight = documentElement.clientHeight || bodyElem.clientHeight
-    const visibleWidth = documentElement.clientWidth || bodyElem.clientWidth
-    minWidth = targetElem.offsetWidth
-    if (teleportTo) {
-      left = targetRect.left
-      top = targetRect.top + targetHeight
-      if (placement === 'top') {
-        panelPlacement = 'top'
-        top = targetRect.top - panelHeight
-      } else if (!placement) {
-        if (defaultPlacement === 'top') {
+      const parentWrapperRect = parentWrapperEl.getBoundingClientRect()
+      const panelRect = panelElem.getBoundingClientRect()
+      const targetRect = targetElem.getBoundingClientRect()
+      const visibleHeight = parentWrapperEl.clientHeight
+      const visibleWidth = parentWrapperEl.clientWidth
+
+      const offsetLeft = parentWrapperRect.left
+      const offsetTop = parentWrapperRect.top
+      const targetLeft = targetRect.left
+      const targetTop = targetRect.top
+
+      minWidth = targetElem.offsetWidth
+
+      if (teleportTo) {
+        left = defaultLeft || (targetLeft)
+        top = defaultTop || (targetTop + targetHeight)
+        if (placement === 'top') {
           panelPlacement = 'top'
-          top = targetRect.top - panelHeight
-          // 如果上面不够放，则向下
-          if (top < marginSize) {
-            panelPlacement = 'bottom'
-            top = targetRect.top + targetHeight
-          }
-          // 如果下面不够放，则向上（优先）
-          if (top + panelHeight + marginSize > visibleHeight) {
+          top = targetTop - panelHeight
+        } else if (!placement) {
+          if (defaultPlacement === 'top') {
             panelPlacement = 'top'
-            top = targetRect.top - panelHeight
+            top = targetTop - panelHeight
+            // 如果上面不够放，则向下
+            if (top < marginSize) {
+              panelPlacement = 'bottom'
+              top = targetTop + targetHeight
+            }
+            // 如果下面不够放，则向上（优先）
+            if (top + panelHeight + marginSize > visibleHeight) {
+              panelPlacement = 'top'
+              top = targetTop - panelHeight
+            }
+          } else {
+            // 如果下面不够放，则向上
+            if (top + panelHeight + marginSize > visibleHeight) {
+              panelPlacement = 'top'
+              top = targetTop - panelHeight
+            }
+            // 如果上面不够放，则向下（优先）
+            if (top < marginSize) {
+              panelPlacement = 'bottom'
+              top = targetTop + targetHeight
+            }
           }
-        } else {
+        }
+        // 如果溢出右边
+        if (left + panelWidth + marginSize > visibleWidth) {
+          left -= left + panelWidth + marginSize - visibleWidth
+        }
+        // 如果溢出左边
+        if (left < marginSize) {
+          left = marginSize
+        }
+
+        // 偏移
+        top -= offsetTop
+        left -= offsetLeft
+      } else {
+        if (placement === 'top') {
+          panelPlacement = 'top'
+          bottom = targetHeight
+        } else if (!placement) {
           // 如果下面不够放，则向上
-          if (top + panelHeight + marginSize > visibleHeight) {
-            panelPlacement = 'top'
-            top = targetRect.top - panelHeight
-          }
-          // 如果上面不够放，则向下（优先）
-          if (top < marginSize) {
-            panelPlacement = 'bottom'
-            top = targetRect.top + targetHeight
-          }
-        }
-      }
-      // 如果溢出右边
-      if (left + panelWidth + marginSize > visibleWidth) {
-        left -= left + panelWidth + marginSize - visibleWidth
-      }
-      // 如果溢出左边
-      if (left < marginSize) {
-        left = marginSize
-      }
-    } else {
-      if (placement === 'top') {
-        panelPlacement = 'top'
-        bottom = targetHeight
-      } else if (!placement) {
-        // 如果下面不够放，则向上
-        top = targetHeight
-        if (targetRect.top + targetHeight + panelHeight + marginSize > visibleHeight) {
-          // 如果上面不够放，则向下（优先）
-          if (targetRect.top - targetHeight - panelHeight > marginSize) {
-            panelPlacement = 'top'
-            top = ''
-            bottom = targetHeight
+          top = targetHeight
+          if (targetTop + targetHeight + panelHeight + marginSize > visibleHeight) {
+            // 如果上面不够放，则向下（优先）
+            if (targetTop - targetHeight - panelHeight > marginSize) {
+              panelPlacement = 'top'
+              top = ''
+              bottom = targetHeight
+            }
           }
         }
+        // 是否超出右侧
+        if (panelRect.left + panelRect.width + marginSize > visibleWidth) {
+          left = -(panelRect.left + panelRect.width + marginSize - visibleWidth)
+        }
       }
-      // 是否超出右侧
-      if (panelRect.left + panelRect.width + marginSize > visibleWidth) {
-        left = -(panelRect.left + panelRect.width + marginSize - visibleWidth)
+      if (XEUtils.isNumber(top)) {
+        stys.top = toCssUnit(top)
       }
-    }
-    if (XEUtils.isNumber(top)) {
-      stys.top = toCssUnit(top)
-    }
-    if (XEUtils.isNumber(bottom)) {
-      stys.bottom = toCssUnit(bottom)
-    }
-    if (XEUtils.isNumber(left)) {
-      stys.left = toCssUnit(left)
-    }
-    if (XEUtils.isNumber(right)) {
-      stys.right = toCssUnit(right)
-    }
-    if (isMinWidth && XEUtils.isNumber(minWidth)) {
-      stys.minWidth = toCssUnit(minWidth)
+      if (XEUtils.isNumber(bottom)) {
+        stys.bottom = toCssUnit(bottom)
+      }
+      if (XEUtils.isNumber(left)) {
+        stys.left = toCssUnit(left)
+      }
+      if (isMinWidth && XEUtils.isNumber(minWidth)) {
+        stys.minWidth = toCssUnit(minWidth)
+      }
+
+      // 箭头
+      if (left === targetLeft) {
+        if (targetWidth <= panelWidth) {
+          arrowLeft = targetWidth / 2
+        }
+      } else if (left < targetLeft) {
+        if (left + panelWidth > targetLeft + targetWidth) {
+          arrowLeft = (targetLeft - left) + targetWidth / 2
+        } else {
+          arrowLeft = (targetLeft - left) + (panelWidth - (targetLeft - left)) / 2
+        }
+      }
     }
   }
   return {
     top: top || 0,
     bottom: bottom || 0,
     left: left || 0,
-    right: right || 0,
+    arrowLeft: arrowLeft || 0,
     style: stys,
     placement: panelPlacement
   }
 }
 
 export function getPopupContainer (appendTo: string | HTMLElement | ((params: any) => string | HTMLElement) | undefined) {
-  return appendTo ? ((XEUtils.isFunction(appendTo) ? appendTo({}) : appendTo) || 'body') : 'body'
+  const selectElem = appendTo && XEUtils.isFunction(appendTo) ? appendTo({}) : appendTo
+  return selectElem || 'body'
+}
+
+export function getPopupAppendElement (appendTo: string | HTMLElement | ((params: any) => string | HTMLElement) | undefined) {
+  const selectElem = getPopupContainer(appendTo)
+  if (XEUtils.isString(selectElem)) {
+    return document.querySelector<HTMLElement>(selectElem) || document.body
+  }
+  return selectElem
 }

@@ -428,7 +428,8 @@ setConfig({
     theme: 'dark',
     enterDelay: 500,
     leaveDelay: 300,
-    isArrow: true
+    isArrow: true,
+    defaultPlacement: 'top'
   },
   transfer: {},
   tree: {
@@ -442,8 +443,7 @@ setConfig({
     tooltipConfig: {
       mode: 'tooltip',
       enterable: true,
-      leaveDelay: 300,
-      defaultPlacement: 'top'
+      leaveDelay: 300
     },
     dragConfig: {
       showIcon: true,

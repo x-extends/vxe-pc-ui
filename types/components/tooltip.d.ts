@@ -46,6 +46,8 @@ export namespace VxeTooltipPropTypes {
   export type EnterDelay = number
   export type LeaveDelay = number
   export type LeaveMethod = (params: { $event: MouseEvent }) => boolean
+  export type AppendTo = string | HTMLElement | ((params: {}) => string | HTMLElement)
+  export type Transfer = boolean
 
   /**
    * 已废弃，请使用 UseHtml
@@ -82,6 +84,8 @@ export interface VxeTooltipProps {
   enterDelay?: VxeTooltipPropTypes.EnterDelay
   leaveDelay?: VxeTooltipPropTypes.LeaveDelay
   leaveMethod?: VxeTooltipPropTypes.LeaveMethod
+  transfer?: VxeTooltipPropTypes.Transfer
+  appendTo?: VxeTooltipPropTypes.AppendTo
 }
 
 export interface TooltipPrivateComputed {
