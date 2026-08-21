@@ -287,12 +287,12 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const props = $xeColorPicker
       const reactData = $xeColorPicker.reactData
 
-      const { value: modelValue, defaultColor } = props
+      const { defaultColor } = props
       const { selectColor, isAniVisible } = reactData
       const isRgb = $xeColorPicker.computeIsRgb
       const hueSliderEl = $xeColorPicker.$refs.refHueSliderElem as HTMLDivElement
       const alphaSliderEl = $xeColorPicker.$refs.refAlphaSliderElem as HTMLDivElement
-      const colorRest = parseValColor(modelValue ? selectColor : defaultColor)
+      const colorRest = parseValColor(selectColor || defaultColor)
       reactData.hexValue = ''
       reactData.rValue = 0
       reactData.gValue = 0
@@ -610,7 +610,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
         const alpha = XEUtils.ceil(100 / barWidth * offsetLeft / 100, 2)
         reactData.aValue = alpha
         alphaSliderBtnEl.style.left = toCssUnit(offsetLeft)
-        reactData.selectColor = updateColorAlpha(selectColor, alpha)
+        reactData.selectColor = selectColor ? updateColorAlpha(selectColor, alpha) : ''
       }
     },
     handleAlphaBarEvent (evnt: MouseEvent) {
